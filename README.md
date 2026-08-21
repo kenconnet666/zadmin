@@ -41,3 +41,12 @@ pnpm lint
 pnpm test
 pnpm build
 ```
+
+## Documentation
+
+- [Architecture](./apps/docs/content/architecture.md)
+- [Plugin development](./apps/docs/content/plugin-development.md)
+- [Plugin lifecycle](./apps/docs/content/plugin-lifecycle.md)
+- [Development HMR](./apps/docs/content/development-hmr.md)
+- [Testing](./apps/docs/content/testing.md)
+- [Engineering preferences](./apps/docs/content/engineering-preferences.md)
