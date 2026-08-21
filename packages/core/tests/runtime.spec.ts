@@ -1,8 +1,8 @@
 import { describe, expect, expectTypeOf, it, vi } from 'vitest';
-import { defineApp, definePlugin } from './definition.ts';
-import { DuplicatePluginError, PluginCycleError, PluginNotActiveError } from './errors.ts';
-import { PluginRuntime } from './runtime.ts';
-import type { AnyPluginDefinition, PluginState } from './types.ts';
+import { defineApp, definePlugin } from '../src/definition.ts';
+import { DuplicatePluginError, PluginCycleError, PluginNotActiveError } from '../src/errors.ts';
+import { PluginRuntime } from '../src/runtime.ts';
+import type { AnyPluginDefinition, PluginState } from '../src/types.ts';
 
 function state(runtime: PluginRuntime, id: string): PluginState | undefined {
 	return runtime.snapshot.plugins.find((plugin) => plugin.id === id)?.state;

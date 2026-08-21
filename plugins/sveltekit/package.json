@@ -37,7 +37,7 @@
 		"prepare": "svelte-kit sync || echo ''",
 		"build": "svelte-package",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"test": "vitest --run"
+		"test": "vitest --run tests"
 	},
 	"dependencies": {
 		"@zadmin/core": "workspace:^"

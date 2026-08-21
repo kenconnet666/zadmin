@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { PluginScope } from '@zadmin/core';
-import { PluginRouteRegistry } from './routes.ts';
+import { PluginRouteRegistry } from '../src/lib/routes.ts';
 
 describe('PluginRouteRegistry', () => {
 	it('matches static, parameter and wildcard routes by specificity', async () => {

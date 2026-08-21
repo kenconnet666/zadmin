@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { defineApp, definePlugin } from './definition.ts';
-import { disposeApp, runApp } from './hmr.ts';
+import { defineApp, definePlugin } from '../src/definition.ts';
+import { disposeApp, runApp } from '../src/hmr.ts';
 
 const appIds = new Set<string>();
 
