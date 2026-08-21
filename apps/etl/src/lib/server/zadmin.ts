@@ -1,4 +1,4 @@
-import { defineApp } from '@zadmin/core';
+import { defineApp, disposeApp, runApp } from '@zadmin/core';
 import { etlPlugin } from '@zadmin/etl';
 import { ossPlugin } from '@zadmin/oss';
 import { postgresPlugin } from '@zadmin/postgres';
@@ -9,3 +9,14 @@ export const etlApp = defineApp({
 	id: 'etl',
 	plugins: [sveltekitPlugin, postgresPlugin, redisPlugin, ossPlugin, etlPlugin]
 });
+
+export const etlRuntime = await runApp(etlApp);
+
+if (import.meta.hot) {
+	import.meta.hot.accept();
+	import.meta.hot.prune(() => {
+		void disposeApp(etlApp.id);
+	});
+} else {
+	process.once('sveltekit:shutdown', () => etlRuntime.dispose());
+}
