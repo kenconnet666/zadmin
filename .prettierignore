@@ -1,9 +1,14 @@
-# Package Managers
+# Package managers
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
 bun.lock
 bun.lockb
 
-# Miscellaneous
-/static/
+# Generated output
+**/.svelte-kit/
+**/dist/
+**/static/
+**/storybook-static/
+**/src/lib/paraglide/
+**/project.inlang/cache/

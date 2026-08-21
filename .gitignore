@@ -8,6 +8,9 @@ node_modules
 .wrangler
 /.svelte-kit
 /build
+**/.svelte-kit/
+**/build/
+**/dist/
 
 # OS
 .DS_Store
@@ -26,7 +29,9 @@ vite.config.ts.timestamp-*
 test-results
 # Paraglide
 src/lib/paraglide
+**/src/lib/paraglide/
 project.inlang/cache/
+**/project.inlang/cache/
 
 *storybook.log
 storybook-static

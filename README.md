@@ -1,42 +1,43 @@
-# sv
+# ZAdmin
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+ZAdmin is a pnpm workspace for SvelteKit applications, reusable libraries, and full-stack plugins.
 
-## Creating a project
+## Workspace
 
-If you're seeing this, you've probably already done this step. Congrats!
+```text
+apps/
+  admin/     Administration application
+  etl/       ETL application
+  docs/      Component and development documentation
 
-```sh
-# create a new project
-npx sv create my-app
+packages/
+  core/      Plugin runtime and shared application foundation
+  zui/       Reusable Svelte component library
+  drizzle/   Reusable Drizzle enhancements
+
+plugins/
+  sveltekit/ SvelteKit integration plugin
+  postgres/  PostgreSQL plugin
+  redis/     Redis plugin
+  oss/       Object storage plugin
+  auth/      Authentication and authorization plugin
+  etl/       ETL plugin
 ```
 
-To recreate this project with the same configuration:
+## Development
 
 ```sh
-# recreate this project
-pnpm dlx sv@0.17.0 create --template demo --types ts --add prettier eslint vitest="usages:unit,component" playwright sveltekit-adapter="adapter:auto" paraglide="languageTags:en,zh-CN+demo:yes" storybook ai-tools="ide:other" --install pnpm zadmin
+pnpm install
+pnpm dev:admin
+pnpm dev:etl
+pnpm dev:docs
 ```
 
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+## Validation
 
 ```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+pnpm check
+pnpm lint
+pnpm test
+pnpm build
 ```
-
-## Building
-
-To create a production version of your app:
-
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
