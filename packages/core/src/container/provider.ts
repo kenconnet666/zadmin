@@ -107,8 +107,9 @@ export function service<
 
 	return <Constructor extends ServiceConstructor<ServiceOf<Token>, Dependencies>>(
 		target: Constructor,
-		_context: ClassDecoratorContext<Constructor>
+		context: ClassDecoratorContext<Constructor>
 	): void => {
+		if (context.kind !== 'class') throw new TypeError('@service() can only decorate a class.');
 		Object.defineProperty(target, SERVICE_METADATA, {
 			configurable: false,
 			enumerable: false,

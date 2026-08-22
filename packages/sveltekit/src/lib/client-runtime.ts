@@ -142,8 +142,7 @@ export class ClientPluginRuntime {
 				}
 				for (const artifact of changed) {
 					const module = modules.get(artifact.id)!;
-					const dispose = await module.activate(this.#context(artifact.id));
-					const plugin = Object.freeze({ artifact, module, dispose });
+					const plugin = await this.#activate(artifact, module);
 					this.#active.set(artifact.id, plugin);
 					activated.push(plugin);
 				}
@@ -152,21 +151,76 @@ export class ClientPluginRuntime {
 			await this.#batchPages(async () => {
 				for (const plugin of activated.reverse()) await plugin.dispose();
 				for (const plugin of disposedPrevious) {
-					const dispose = await plugin.module.activate(this.#context(plugin.artifact.id));
-					this.#active.set(plugin.artifact.id, Object.freeze({ ...plugin, dispose }));
+					this.#active.set(
+						plugin.artifact.id,
+						await this.#activate(plugin.artifact, plugin.module)
+					);
 				}
 			});
 			throw error;
 		}
 	}
 
-	#context(owner: string): ClientPluginContext {
-		return Object.freeze({ pages: this.pages.forOwner(owner) });
+	async #activate(
+		artifact: ClientPluginArtifact,
+		module: ClientPluginModule
+	): Promise<ActiveClientPlugin> {
+		const registrations: PluginDisposer[] = [];
+		const pages = this.pages.forOwner(artifact.id);
+		const context: ClientPluginContext = Object.freeze({
+			pages: Object.freeze({
+				register: (page: ClientPluginPage) => {
+					const dispose = pages.register(page);
+					registrations.push(dispose);
+					return dispose;
+				}
+			})
+		});
+		try {
+			const returned = await module.activate(context);
+			let disposed = false;
+			const dispose = async () => {
+				if (disposed) return;
+				disposed = true;
+				const errors: unknown[] = [];
+				try {
+					await returned();
+				} catch (error) {
+					errors.push(error);
+				}
+				errors.push(...(await disposeAll(registrations)));
+				if (errors.length)
+					throw new AggregateError(errors, `${artifact.id} client cleanup failed.`);
+			};
+			return Object.freeze({ artifact, module, dispose });
+		} catch (error) {
+			const cleanup = await disposeAll(registrations);
+			if (cleanup.length) {
+				throw new AggregateError(
+					[error, ...cleanup],
+					`${artifact.id} client activation and cleanup failed.`,
+					{ cause: error }
+				);
+			}
+			throw error;
+		}
 	}
 
 	async #batchPages(operation: () => Promise<void>): Promise<void> {
 		await this.pages.batch(operation);
 	}
+}
+
+async function disposeAll(disposers: readonly PluginDisposer[]): Promise<unknown[]> {
+	const errors: unknown[] = [];
+	for (let index = disposers.length - 1; index >= 0; index -= 1) {
+		try {
+			await disposers[index]?.();
+		} catch (error) {
+			errors.push(error);
+		}
+	}
+	return errors;
 }
 
 async function importClientPlugin(artifact: ClientPluginArtifact): Promise<ClientPluginModule> {

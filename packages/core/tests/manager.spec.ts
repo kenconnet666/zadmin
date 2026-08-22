@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import type { PluginArtifact } from '../src/artifact.ts';
+import type { PluginArtifact } from '../src/artifact/types.ts';
 import { inject } from '../src/container/injection.ts';
 import { defineModule } from '../src/container/module.ts';
 import { provideValue } from '../src/container/provider.ts';
 import { token } from '../src/container/token.ts';
-import { parsePluginManifest } from '../src/manifest.ts';
+import { parsePluginManifest } from '../src/artifact/manifest.ts';
 import { PluginManager } from '../src/plugin/manager.ts';
 import { defineApp } from '../src/plugin/definition.ts';
 import { PluginRuntime } from '../src/plugin/runtime.ts';
@@ -33,6 +33,26 @@ describe('PluginManager', () => {
 		await runtime.dispose();
 	});
 
+	it('publishes a client-only revision without rebuilding the server generation', async () => {
+		const runtime = new PluginRuntime();
+		await runtime.reconcile(defineApp({ id: 'manager-client', plugins: [] }));
+		const manager = managerForTests(runtime, 'manager-client');
+		const initial = artifact('server-one', 'return { revision: "server-one" }');
+		await manager.reconcile([initial]);
+		const server = runtime.resolve(inject<{ revision: string }>('@zadmin/example'));
+		const clientOnly: PluginArtifact = Object.freeze({
+			...initial,
+			revision: 'full-two',
+			clientRevision: 'client-two',
+			clientEntry: new URL('data:text/javascript,export function activate() {}')
+		});
+
+		await manager.reconcile([clientOnly]);
+		expect(runtime.resolve(inject<{ revision: string }>('@zadmin/example'))).toBe(server);
+		expect(manager.artifacts[0]?.clientRevision).toBe('client-two');
+		await runtime.dispose();
+	});
+
 	it('injects host capabilities into a dynamically imported artifact', async () => {
 		const hostToken = token<{ readonly value: number }>('@zadmin/host-value');
 		const host = defineModule({
@@ -55,6 +75,25 @@ describe('PluginManager', () => {
 		]);
 
 		expect(runtime.resolve(inject<{ value: number }>('@zadmin/example')).value).toBe(42);
+		await runtime.dispose();
+	});
+
+	it('keeps client artifacts hidden while required server services are unavailable', async () => {
+		const runtime = new PluginRuntime();
+		await runtime.reconcile(defineApp({ id: 'manager-waiting', plugins: [] }));
+		const manager = managerForTests(runtime, 'manager-waiting');
+		await manager.reconcile([
+			artifact(
+				'waiting-revision',
+				'return dependencies.host',
+				{ '@zadmin/missing': '^1.0.0' },
+				`{ id: '@zadmin/missing', token: { id: '@zadmin/missing' }, optional: false, kind: 'service' }`
+			)
+		]);
+
+		expect(runtime.snapshot.plugins[0]).toMatchObject({ state: 'waiting' });
+		expect(manager.artifacts).toHaveLength(1);
+		expect(manager.activeArtifacts).toEqual([]);
 		await runtime.dispose();
 	});
 });
@@ -94,7 +133,7 @@ export default {
   configure(config) { return { plugin: this, config } }
 }`;
 	const manifest = parsePluginManifest({
-		protocol: 1,
+		protocol: 2,
 		id: '@zadmin/example',
 		version: '0.0.0',
 		displayName: 'Example',
@@ -108,6 +147,7 @@ export default {
 		id: manifest.id,
 		version: manifest.version,
 		revision,
+		serverRevision: revision,
 		root: 'memory',
 		manifest,
 		serverEntry: new URL(`data:text/javascript,${encodeURIComponent(module)}`)

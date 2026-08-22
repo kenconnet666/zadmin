@@ -5,6 +5,7 @@ import type { PluginManager, PluginManagerEvent, PluginDisposer } from '@zadmin/
 export class AdminPluginBridge {
 	readonly #manager: PluginManager;
 	readonly #subscribers = new Set<(type: PluginManagerEvent['type']) => void>();
+	readonly #streams = new Set<ReadableStreamDefaultController<Uint8Array>>();
 	readonly #unsubscribe: PluginDisposer;
 
 	constructor(manager: PluginManager) {
@@ -15,11 +16,11 @@ export class AdminPluginBridge {
 	}
 
 	get clientArtifacts() {
-		return this.#manager.artifacts
+		return this.#manager.activeArtifacts
 			.filter((artifact) => artifact.clientEntry)
 			.map((artifact) => ({
 				id: artifact.id,
-				revision: artifact.revision,
+				revision: artifact.clientRevision!,
 				url: `/__zadmin/plugins/client.js?id=${encodeURIComponent(artifact.id)}`
 			}));
 	}
@@ -32,7 +33,7 @@ export class AdminPluginBridge {
 		if (!artifact?.clientEntry)
 			return new Response('Plugin client artifact not found.', { status: 404 });
 		const revision = url.searchParams.get('revision');
-		if (revision !== artifact.revision) {
+		if (revision !== artifact.clientRevision) {
 			return new Response('Plugin client revision is no longer active.', { status: 409 });
 		}
 		return new Response(await readFile(fileURLToPath(artifact.clientEntry)), {
@@ -48,6 +49,7 @@ export class AdminPluginBridge {
 		let unsubscribe: (() => void) | undefined;
 		const stream = new ReadableStream<Uint8Array>({
 			start: (controller) => {
+				this.#streams.add(controller);
 				const send = (event: { type: 'connected' | PluginManagerEvent['type'] }) => {
 					controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
 				};
@@ -56,6 +58,7 @@ export class AdminPluginBridge {
 				this.#subscribers.add(subscriber);
 				unsubscribe = () => {
 					this.#subscribers.delete(subscriber);
+					this.#streams.delete(controller);
 				};
 			},
 			cancel: () => unsubscribe?.()
@@ -72,5 +75,13 @@ export class AdminPluginBridge {
 	dispose(): void {
 		this.#unsubscribe();
 		this.#subscribers.clear();
+		for (const stream of this.#streams) {
+			try {
+				stream.close();
+			} catch {
+				// The browser may already have cancelled the stream.
+			}
+		}
+		this.#streams.clear();
 	}
 }

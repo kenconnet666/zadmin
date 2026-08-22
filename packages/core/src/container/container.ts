@@ -26,6 +26,7 @@ interface ServiceInstance {
 	readonly node: ProviderNode;
 	readonly generation: ModuleGeneration;
 	readonly createdAt: number;
+	created: boolean;
 	value: unknown;
 	state: ProviderState;
 	activatedAt?: number;
@@ -90,6 +91,7 @@ export class ServiceContainer {
 						instance.value as never,
 						instance.generation.scope
 					);
+					instance.error = undefined;
 					unhealthy ||= instance.health.status !== 'healthy';
 				} catch (error) {
 					instance.error = error;
@@ -100,8 +102,7 @@ export class ServiceContainer {
 					unhealthy = true;
 				}
 			}
-			this.#degraded ||= unhealthy;
-			this.#state = this.#degraded || this.#leaks.size ? 'degraded' : 'active';
+			this.#state = this.#degraded || unhealthy || this.#leaks.size ? 'degraded' : 'active';
 			return this.#snapshot();
 		});
 	}
@@ -109,7 +110,9 @@ export class ServiceContainer {
 	dispose(): Promise<void> {
 		return this.#enqueue(async () => {
 			if (this.#state === 'disposed') return;
-			const errors: unknown[] = [];
+			const errors: unknown[] = [...this.#leaks.keys()].map(
+				(moduleId) => new LeakedGenerationError(moduleId)
+			);
 			const generations = new Map(this.#generations);
 			try {
 				await this.#deactivateGenerations(generations, this.#plan);
@@ -306,12 +309,14 @@ export class ServiceContainer {
 				node,
 				generation,
 				createdAt: Date.now(),
+				created: false,
 				value: undefined,
 				state: 'creating'
 			};
 			generation.instances.set(id, instance);
 			try {
 				instance.value = await node.definition.create(generation.scope, dependencies as never);
+				instance.created = true;
 				instance.state = 'preparing';
 				await node.definition.prepare?.(instance.value as never, generation.scope);
 				instance.state = 'prepared';
@@ -446,6 +451,10 @@ export class ServiceContainer {
 			const instance = this.#instanceIn(generations, id);
 			if (!instance || visited.has(id) || instance.state === 'disposed') continue;
 			visited.add(id);
+			if (!instance.created) {
+				instance.state = 'disposed';
+				continue;
+			}
 			try {
 				instance.state = 'disposing';
 				await instance.node.definition.dispose?.(
@@ -511,7 +520,10 @@ export class ServiceContainer {
 	#snapshot(): ContainerSnapshot {
 		const plan = this.#plan;
 		const modules: ModuleSnapshot[] = [];
-		for (const [id, registration] of plan?.modules ?? []) {
+		const moduleIds = new Set([...(plan?.modules.keys() ?? []), ...this.#leaks.keys()]);
+		for (const id of moduleIds) {
+			const registration = plan?.modules.get(id) ?? this.#leaks.get(id)?.at(-1)?.registration;
+			if (!registration) continue;
 			const generation = this.#generations.get(id);
 			modules.push(
 				Object.freeze({
@@ -520,7 +532,11 @@ export class ServiceContainer {
 					version: registration.version,
 					revision: registration.revision,
 					...(generation ? { generation: generation.id, createdAt: generation.createdAt } : {}),
-					state: generation ? ('active' as const) : ('waiting' as const),
+					state: generation
+						? ('active' as const)
+						: plan?.modules.has(id)
+							? ('waiting' as const)
+							: ('leaked' as const),
 					providers: Object.freeze(registration.definition.providers.map(({ token }) => token.id)),
 					dependencies: plan?.moduleDependencies.get(id) ?? Object.freeze([]),
 					dependents: plan?.moduleDependents.get(id) ?? Object.freeze([]),
@@ -575,7 +591,13 @@ export class ServiceContainer {
 			snapshot: this.#snapshot(),
 			...(error === undefined ? {} : { error: serializeError(error) })
 		});
-		for (const listener of this.#listeners) listener(event);
+		for (const listener of this.#listeners) {
+			try {
+				listener(event);
+			} catch {
+				// Diagnostics observers must not change a committed lifecycle transaction.
+			}
+		}
 	}
 
 	#assertRunning(): void {

@@ -11,7 +11,11 @@ describe('ClientPluginRuntime', () => {
 			[
 				'broken',
 				{
-					activate() {
+					activate(context) {
+						context.pages.register({
+							path: '/partial',
+							mount: () => () => undefined
+						});
 						throw new Error('broken client');
 					}
 				}

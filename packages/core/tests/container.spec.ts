@@ -1,7 +1,6 @@
 import { describe, expect, expectTypeOf, it, vi } from 'vitest';
 import { ServiceContainer } from '../src/container/container.ts';
 import {
-	ContainerError,
 	HostDependsOnPluginError,
 	LeakedGenerationError,
 	ServiceCycleError,
@@ -62,6 +61,7 @@ describe('ServiceContainer', () => {
 		expectTypeOf<ResolveInjections<typeof dependencies>>().toEqualTypeOf<{
 			readonly upstream: UpstreamApi;
 		}>();
+		expect(upstream.id).toBe('@test/upstream');
 		expect(dependencies.upstream.kind).toBe('plugin');
 	});
 
@@ -409,6 +409,7 @@ describe('ServiceContainer', () => {
 		await expect(
 			container.reconcile([registration(module(3), { revision: 'three' })])
 		).rejects.toBeInstanceOf(LeakedGenerationError);
+		await expect(container.dispose()).rejects.toThrow('leaked generation');
 	});
 
 	it('rejects namespace, visibility, host-to-plugin and provider-cycle violations', async () => {
@@ -517,6 +518,73 @@ describe('ServiceContainer', () => {
 		gate.resolve();
 		await Promise.all([firstReconcile, secondReconcile]);
 		expect(container.resolve(api).revision).toBe(2);
+		await container.dispose();
+	});
+
+	it('does not dispose an instance whose factory never completed', async () => {
+		const api = token<object>('@test/create-failure');
+		const dispose = vi.fn();
+		const module = defineModule({
+			id: '@test/create-failure',
+			primary: api,
+			providers: [
+				provideFactory({
+					token: api,
+					create() {
+						throw new Error('create failed');
+					},
+					dispose
+				})
+			]
+		});
+		const container = new ServiceContainer();
+		await expect(container.reconcile([registration(module)])).rejects.toThrow(
+			'Failed to prepare service'
+		);
+		expect(dispose).not.toHaveBeenCalled();
+		expect(container.snapshot.state).toBe('active');
+		await container.dispose();
+	});
+
+	it('recovers its health state after a service becomes healthy again', async () => {
+		const api = token<object>('@test/recover-health');
+		let healthy = true;
+		const module = defineModule({
+			id: '@test/recover-health',
+			primary: api,
+			providers: [
+				provideFactory({
+					token: api,
+					create: () => ({}),
+					health: () =>
+						healthy
+							? { status: 'healthy' }
+							: { status: 'unhealthy', message: 'temporarily unavailable' }
+				})
+			]
+		});
+		const container = new ServiceContainer();
+		await container.reconcile([registration(module)]);
+		healthy = false;
+		expect((await container.checkHealth()).state).toBe('degraded');
+		healthy = true;
+		expect((await container.checkHealth()).state).toBe('active');
+		await container.dispose();
+	});
+
+	it('isolates diagnostics observer failures from lifecycle commits', async () => {
+		const api = token<object>('@test/observer');
+		const module = defineModule({
+			id: '@test/observer',
+			primary: api,
+			providers: [provideValue(api, {})]
+		});
+		const container = new ServiceContainer();
+		container.onEvent(() => {
+			throw new Error('observer failed');
+		});
+		await expect(container.reconcile([registration(module)])).resolves.toBeUndefined();
+		expect(container.resolve(api)).toEqual({});
 		await container.dispose();
 	});
 });

@@ -22,6 +22,8 @@ export interface AdminHostOptions {
 	readonly pluginDataRoot?: string;
 }
 
+export type AdminHost = Awaited<ReturnType<typeof createAdminHost>>;
+
 export async function createAdminHost(options: AdminHostOptions = {}) {
 	const runtime = new PluginRuntime({
 		modules: [sveltekitModule, postgresModule, redisModule, ossModule, authModule]
@@ -49,6 +51,35 @@ export async function createAdminHost(options: AdminHostOptions = {}) {
 		return plugins.reconcile(
 			[...artifacts.values()].sort((left, right) => left.id.localeCompare(right.id))
 		);
+	};
+	const refreshInstalledPlugins = async () => {
+		installedArtifacts = [...(await installedProvider.scan())];
+		await reconcileArtifacts();
+	};
+	let mutationOperation: Promise<unknown> = Promise.resolve();
+	const mutatePlugins = <Result>(mutation: () => Promise<Result>): Promise<Result> => {
+		const next = mutationOperation.then(async () => {
+			const previous = await installer.read();
+			try {
+				const result = await mutation();
+				await refreshInstalledPlugins();
+				return result;
+			} catch (error) {
+				await installer.restore(previous);
+				try {
+					await refreshInstalledPlugins();
+				} catch (rollbackError) {
+					throw new AggregateError(
+						[error, rollbackError],
+						'Plugin mutation and runtime rollback both failed.',
+						{ cause: rollbackError }
+					);
+				}
+				throw error;
+			}
+		});
+		mutationOperation = next.catch(() => undefined);
+		return next;
 	};
 	await reconcileArtifacts();
 	if (options.enableInstalledPlugins !== false) {
@@ -82,32 +113,83 @@ export async function createAdminHost(options: AdminHostOptions = {}) {
 		plugins,
 		bridge,
 		installer,
+		mutatePlugins,
 		pluginDataRoot,
-		async refreshInstalledPlugins() {
-			installedArtifacts = [...(await installedProvider.scan())];
-			await reconcileArtifacts();
-		},
+		refreshInstalledPlugins,
 		async dispose() {
 			if (disposed) return;
 			disposed = true;
-			await stopWorkspaceProvider?.();
-			await stopInstalledProvider?.();
-			bridge.dispose();
-			await plugins.dispose();
-			await runtime.dispose();
+			const errors: unknown[] = [];
+			const clean = async (cleanup: () => void | Promise<void>) => {
+				try {
+					await cleanup();
+				} catch (error) {
+					errors.push(error);
+				}
+			};
+			await clean(() => mutationOperation.then(() => undefined));
+			await clean(() => stopWorkspaceProvider?.());
+			await clean(() => stopInstalledProvider?.());
+			await clean(() => bridge.dispose());
+			await clean(() => plugins.dispose());
+			await clean(() => runtime.dispose());
+			if (errors.length) throw new AggregateError(errors, 'Admin host cleanup failed.');
 		}
 	});
 }
 
-export const adminHost = await createAdminHost({
-	enableInstalledPlugins: import.meta.env.MODE !== 'test'
-});
+const ADMIN_HOST_STORE = Symbol.for('@zadmin/admin/host');
+
+interface RetainedAdminHost {
+	current?: AdminHost;
+	operation: Promise<unknown>;
+}
+
+function retainedAdminHost(): RetainedAdminHost {
+	const scope = globalThis as typeof globalThis & {
+		[ADMIN_HOST_STORE]?: RetainedAdminHost;
+	};
+	return (scope[ADMIN_HOST_STORE] ??= { operation: Promise.resolve() });
+}
+
+async function replaceAdminHost(): Promise<AdminHost> {
+	const retained = retainedAdminHost();
+	let created: AdminHost | undefined;
+	const next = retained.operation.then(async () => {
+		await retained.current?.dispose();
+		created = await createAdminHost({
+			enableInstalledPlugins: import.meta.env.MODE !== 'test'
+		});
+		retained.current = created;
+	});
+	retained.operation = next;
+	await next;
+	return created!;
+}
+
+async function disposeRetainedAdminHost(host: AdminHost): Promise<void> {
+	const retained = retainedAdminHost();
+	const next = retained.operation.then(async () => {
+		await host.dispose();
+		if (retained.current === host) retained.current = undefined;
+	});
+	retained.operation = next;
+	await next;
+}
+
+export const adminHost = await replaceAdminHost();
 
 if (import.meta.hot) {
 	import.meta.hot.accept();
 	import.meta.hot.dispose(() => {
-		void adminHost.dispose();
+		void disposeRetainedAdminHost(adminHost).catch((error) =>
+			console.error('Admin host HMR cleanup failed.', error)
+		);
 	});
 } else {
-	process.once('sveltekit:shutdown', () => adminHost.dispose());
+	process.once('sveltekit:shutdown', () => {
+		void disposeRetainedAdminHost(adminHost).catch((error) =>
+			console.error('Admin host shutdown failed.', error)
+		);
+	});
 }

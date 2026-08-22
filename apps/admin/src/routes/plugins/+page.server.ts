@@ -32,18 +32,17 @@ export const actions: Actions = {
 		try {
 			switch (action) {
 				case 'enable':
-					await adminHost.installer.enable(id);
+					await adminHost.mutatePlugins(() => adminHost.installer.enable(id));
 					break;
 				case 'disable':
-					await adminHost.installer.disable(id);
+					await adminHost.mutatePlugins(() => adminHost.installer.disable(id));
 					break;
 				case 'uninstall':
-					await adminHost.installer.uninstall(id);
+					await adminHost.mutatePlugins(() => adminHost.installer.uninstall(id));
 					break;
 				default:
 					return fail(400, { message: 'Unsupported action.' });
 			}
-			await adminHost.refreshInstalledPlugins();
 			return { success: true };
 		} catch (error) {
 			return fail(400, { message: String(error) });

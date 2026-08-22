@@ -1,12 +1,20 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, expectTypeOf, it } from 'vitest';
+import type { ApprovalRecord } from '@zadmin/approval';
 import { defineApp, PluginRuntime } from '@zadmin/core';
+import type { PluginApi } from '@zadmin/core/plugin';
 import { authModule } from '@zadmin/auth';
 import { postgresModule } from '@zadmin/postgres';
 import { redisModule } from '@zadmin/redis';
 import { SVELTEKIT, sveltekitModule } from '@zadmin/sveltekit';
-import crmPlugin from '../src/server/index.ts';
+import crmPlugin, { type CrmPlugin } from '../src/server/index.ts';
 
 describe('crm plugin', () => {
+	it('carries its upstream plugin types through the CRM plugin API', () => {
+		expectTypeOf<PluginApi<CrmPlugin>['startApproval']>().returns.toEqualTypeOf<
+			ApprovalRecord | undefined
+		>();
+	});
+
 	it('starts without its optional approval capability', async () => {
 		const runtime = new PluginRuntime({
 			modules: [sveltekitModule, postgresModule, redisModule, authModule]

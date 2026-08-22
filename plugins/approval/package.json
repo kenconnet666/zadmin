@@ -29,8 +29,10 @@
 	},
 	"scripts": {
 		"clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
-		"build": "pnpm clean && vite build && tsc -p tsconfig.build.json",
-		"dev": "vite build --watch",
+		"build": "pnpm clean && vite build && tsc -p tsconfig.build.json && node ../../packages/core/src/cli.ts validate dist",
+		"dev": "pnpm --filter . --parallel run \"/^dev:.*/\"",
+		"dev:bundle": "vite build --watch",
+		"dev:types": "tsc -p tsconfig.json --noEmit --watch --preserveWatchOutput",
 		"pack:plugin": "pnpm build && node ../../packages/core/src/cli.ts pack dist artifacts/approval-0.0.0.zplugin",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
 		"test": "vitest --run"

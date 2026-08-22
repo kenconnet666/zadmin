@@ -8,6 +8,10 @@ export const handle: Handle = async ({ event, resolve }) => {
 	if (event.url.pathname === '/__zadmin/runtime') {
 		return Response.json(adminHost.runtime.snapshot);
 	}
+	if (event.url.pathname === '/__zadmin/health') {
+		const snapshot = await adminHost.runtime.container.checkHealth();
+		return Response.json(snapshot, { status: snapshot.state === 'active' ? 200 : 503 });
+	}
 	if (event.url.pathname === '/__zadmin/plugins/client') {
 		return Response.json(adminHost.bridge.clientArtifacts);
 	}
@@ -37,8 +41,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		const upload = join(uploadRoot, `${randomUUID()}.zplugin`);
 		try {
 			await writeFile(upload, bytes, { flag: 'wx' });
-			const installed = await adminHost.installer.install(upload);
-			await adminHost.refreshInstalledPlugins();
+			const installed = await adminHost.mutatePlugins(() => adminHost.installer.install(upload));
 			return Response.json(installed, { status: 201 });
 		} finally {
 			await rm(upload, { force: true });
@@ -54,29 +57,32 @@ export const handle: Handle = async ({ event, resolve }) => {
 			id?: unknown;
 			version?: unknown;
 		};
-		if (typeof body.id !== 'string' || typeof body.action !== 'string') {
+		const { action, id } = body;
+		if (typeof id !== 'string' || typeof action !== 'string') {
 			return new Response('Plugin id and action are required.', { status: 400 });
 		}
-		switch (body.action) {
+		switch (action) {
 			case 'enable':
-				await adminHost.installer.enable(body.id);
+				await adminHost.mutatePlugins(() => adminHost.installer.enable(id));
 				break;
 			case 'disable':
-				await adminHost.installer.disable(body.id);
+				await adminHost.mutatePlugins(() => adminHost.installer.disable(id));
 				break;
 			case 'activate':
 				if (typeof body.version !== 'string') {
 					return new Response('Plugin version is required.', { status: 400 });
 				}
-				await adminHost.installer.activate(body.id, body.version);
+				{
+					const version = body.version;
+					await adminHost.mutatePlugins(() => adminHost.installer.activate(id, version));
+				}
 				break;
 			case 'uninstall':
-				await adminHost.installer.uninstall(body.id);
+				await adminHost.mutatePlugins(() => adminHost.installer.uninstall(id));
 				break;
 			default:
 				return new Response('Unsupported plugin action.', { status: 400 });
 		}
-		await adminHost.refreshInstalledPlugins();
 		return Response.json(await adminHost.installer.read());
 	}
 	const response = await adminHost.web.routes.handle(event.request);

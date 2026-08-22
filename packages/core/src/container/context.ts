@@ -20,6 +20,9 @@ export interface ServiceContext<Config = unknown> {
 	effect(acquire: () => MaybePromise<void | Disposer>): Promise<void>;
 }
 
+export type PluginContext<Config = unknown> = ServiceContext<Config>;
+export type PluginDisposer = Disposer;
+
 export class ServiceScope<Config = unknown> implements ServiceContext<Config> {
 	readonly #controller = new AbortController();
 	readonly #activations: Activation[] = [];
@@ -143,6 +146,13 @@ export class ServiceScope<Config = unknown> implements ServiceContext<Config> {
 		if (this.#state === 'disposing' || this.#state === 'disposed') {
 			throw new Error(`Cannot ${action}; module "${this.moduleId}" is ${this.#state}.`);
 		}
+	}
+}
+
+/** Small manually controlled scope used by contribution registries and focused tests. */
+export class PluginScope extends ServiceScope<undefined> {
+	constructor(id: string) {
+		super({ moduleId: id, generation: 'manual', kind: 'plugin', config: undefined });
 	}
 }
 

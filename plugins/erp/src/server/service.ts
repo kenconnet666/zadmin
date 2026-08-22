@@ -29,7 +29,7 @@ export const erpProvider = provideFactory({
 		return Object.freeze({
 			domain: 'erp' as const,
 			startApproval(subjectId: string) {
-				return services.approval?.start(subjectId).id;
+				return services.approval?.start(subjectId);
 			}
 		});
 	}

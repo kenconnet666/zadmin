@@ -1,20 +1,9 @@
-import { copyFileSync, mkdirSync } from 'node:fs';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
-import { standardDecorators } from '@zadmin/core/vite';
+import { zadminPlugin } from '@zadmin/core/vite';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-	plugins: [
-		standardDecorators(),
-		svelte(),
-		{
-			name: 'zadmin-plugin-manifest',
-			closeBundle() {
-				mkdirSync('dist', { recursive: true });
-				copyFileSync('zadmin.plugin.json', 'dist/zadmin.plugin.json');
-			}
-		}
-	],
+	plugins: [...zadminPlugin(), svelte()],
 	build: {
 		emptyOutDir: true,
 		lib: {

@@ -29,7 +29,7 @@ export const crmProvider = provideFactory({
 		return Object.freeze({
 			domain: 'crm' as const,
 			startApproval(subjectId: string) {
-				return services.approval?.start(subjectId).id;
+				return services.approval?.start(subjectId);
 			}
 		});
 	}

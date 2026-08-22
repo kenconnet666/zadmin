@@ -1,4 +1,4 @@
-export const PLUGIN_PROTOCOL_VERSION = 1;
+export const PLUGIN_PROTOCOL_VERSION = 2;
 
 export interface PluginEntries {
 	readonly server: string;

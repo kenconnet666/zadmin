@@ -3,9 +3,9 @@ import { watch, type FSWatcher } from 'node:fs';
 import { readdir, readFile, stat } from 'node:fs/promises';
 import { dirname, relative, resolve, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import type { PluginArtifact, PluginArtifactListener, PluginArtifactProvider } from './artifact.ts';
+import type { PluginDisposer } from '../container/context.ts';
 import { parsePluginManifest } from './manifest.ts';
-import type { PluginDisposer } from './types.ts';
+import type { PluginArtifact, PluginArtifactListener, PluginArtifactProvider } from './types.ts';
 
 export interface WorkspacePluginProviderOptions {
 	readonly roots: readonly string[];
@@ -70,7 +70,12 @@ export class WorkspacePluginArtifactProvider implements PluginArtifactProvider {
 			running = true;
 			try {
 				const artifacts = await this.scan();
-				const revisionSet = artifacts.map(({ id, revision }) => `${id}:${revision}`).join('|');
+				const revisionSet = artifacts
+					.map(
+						({ id, serverRevision, clientRevision }) =>
+							`${id}:${serverRevision}:${clientRevision ?? ''}`
+					)
+					.join('|');
 				if (revisionSet !== lastRevisionSet) {
 					await listener(artifacts);
 					lastRevisionSet = revisionSet;
@@ -138,11 +143,24 @@ export async function loadPluginArtifact(root: string): Promise<PluginArtifact> 
 		? resolveEntry(root, manifest.entries.client)
 		: undefined;
 	if (clientPath) await assertFile(clientPath);
-	const revision = await hashDirectory(root);
+	const paths = await files(root);
+	const revision = await hashFiles(root, paths);
+	const serverRevision = await hashFiles(
+		root,
+		paths.filter((path) => belongsToEntry(root, path, manifest.entries.client))
+	);
+	const clientRevision = manifest.entries.client
+		? await hashFiles(
+				root,
+				paths.filter((path) => belongsToEntry(root, path, manifest.entries.server))
+			)
+		: undefined;
 	return Object.freeze({
 		id: manifest.id,
 		version: manifest.version,
 		revision,
+		serverRevision,
+		...(clientRevision ? { clientRevision } : {}),
 		root,
 		manifest,
 		serverEntry: pathToFileURL(serverPath),
@@ -162,14 +180,23 @@ async function assertFile(path: string): Promise<void> {
 	if (!(await stat(path)).isFile()) throw new Error(`Plugin entry is not a file: ${path}`);
 }
 
-async function hashDirectory(root: string): Promise<string> {
+async function hashFiles(root: string, paths: readonly string[]): Promise<string> {
 	const hash = createHash('sha256');
-	for (const path of await files(root)) {
+	for (const path of paths) {
 		if (path.endsWith('.map')) continue;
 		hash.update(relative(root, path).replaceAll('\\', '/'));
 		hash.update(await readFile(path));
 	}
 	return hash.digest('hex');
+}
+
+function belongsToEntry(root: string, path: string, excludedEntry: string | undefined): boolean {
+	const name = relative(root, path).replaceAll('\\', '/');
+	if (name === 'zadmin.plugin.json') return true;
+	if (name.startsWith('types/')) return false;
+	if (!excludedEntry) return true;
+	const excludedArea = excludedEntry.slice(2).split('/', 1)[0];
+	return !excludedArea || !name.startsWith(`${excludedArea}/`);
 }
 
 async function files(root: string): Promise<string[]> {

@@ -1,9 +1,9 @@
 import { satisfies } from 'semver';
-import type { PluginArtifact } from '../artifact.ts';
+import type { PluginArtifact } from '../artifact/types.ts';
 import type { Disposer } from '../container/context.ts';
-import type { AnyPluginDefinition } from '../container/module.ts';
 import { defineApp, type AppDefinition, type LoadedPlugin } from './definition.ts';
 import { PluginRuntime } from './runtime.ts';
+import { isPluginDefinition, validatePluginDefinition } from './validation.ts';
 
 const nativeImport = Function('url', 'return import(url)') as (
 	url: string
@@ -42,6 +42,13 @@ export class PluginManager {
 		return this.#artifacts;
 	}
 
+	get activeArtifacts(): readonly PluginArtifact[] {
+		const active = new Set(
+			this.#runtime.snapshot.plugins.filter(({ state }) => state === 'active').map(({ id }) => id)
+		);
+		return Object.freeze(this.#artifacts.filter(({ id }) => active.has(id)));
+	}
+
 	onEvent(listener: (event: PluginManagerEvent) => void): Disposer {
 		this.#listeners.add(listener);
 		return () => {
@@ -63,6 +70,11 @@ export class PluginManager {
 
 	async #reconcile(artifacts: readonly PluginArtifact[]): Promise<void> {
 		if (sameArtifacts(artifacts, this.#artifacts)) return;
+		if (sameServerArtifacts(artifacts, this.#artifacts)) {
+			this.#artifacts = artifacts;
+			this.#emit({ type: 'reconciled', artifacts });
+			return;
+		}
 		const previousApp = this.#currentApp;
 		const previousArtifacts = this.#artifacts;
 		try {
@@ -122,7 +134,13 @@ export class PluginManager {
 
 	#emit(event: PluginManagerEvent): void {
 		const frozen = Object.freeze(event);
-		for (const listener of this.#listeners) listener(frozen);
+		for (const listener of this.#listeners) {
+			try {
+				listener(frozen);
+			} catch {
+				// Observers cannot roll back an artifact transaction that already committed.
+			}
+		}
 	}
 }
 
@@ -131,56 +149,20 @@ async function loadPlugin(
 	importModule: (url: string) => Promise<Record<string, unknown>>
 ): Promise<LoadedPlugin> {
 	const url = new URL(artifact.serverEntry);
-	if (url.protocol === 'data:') url.hash = `revision=${artifact.revision}`;
-	else url.searchParams.set('revision', artifact.revision);
+	if (url.protocol === 'data:') url.hash = `revision=${artifact.serverRevision}`;
+	else url.searchParams.set('revision', artifact.serverRevision);
 	const module = await importModule(url.href);
 	const definition = module.default;
 	if (!isPluginDefinition(definition)) {
 		throw new Error(`${artifact.id}: server entry must default-export a PluginDefinition.`);
 	}
-	if (definition.id !== artifact.id) {
-		throw new Error(
-			`${artifact.id}: server PluginDefinition id "${definition.id}" does not match its manifest.`
-		);
-	}
-	validateInjections(artifact, definition);
+	validatePluginDefinition(artifact.manifest, definition);
 	return Object.freeze({
 		plugin: definition,
 		config: definition.defaultConfig,
 		version: artifact.version,
-		artifactRevision: artifact.revision
+		artifactRevision: artifact.serverRevision
 	});
-}
-
-function validateInjections(artifact: PluginArtifact, definition: AnyPluginDefinition): void {
-	const injections = new Map<string, boolean>();
-	for (const provider of definition.providers) {
-		for (const injection of Object.values(provider.dependencies)) {
-			if (injection.id === definition.id || injection.id.startsWith(`${definition.id}/`)) {
-				continue;
-			}
-			const previous = injections.get(injection.id);
-			injections.set(injection.id, previous === false ? false : injection.optional);
-		}
-	}
-	for (const [id, optional] of injections) {
-		const declared = optional ? artifact.manifest.optional[id] : artifact.manifest.requires[id];
-		if (!declared) {
-			throw new Error(
-				`${artifact.id}: ${optional ? 'optional' : 'required'} injection "${id}" is missing from its manifest.`
-			);
-		}
-	}
-	for (const id of Object.keys(artifact.manifest.requires)) {
-		if (injections.get(id) !== false) {
-			throw new Error(`${artifact.id}: manifest requires unused injection "${id}".`);
-		}
-	}
-	for (const id of Object.keys(artifact.manifest.optional)) {
-		if (injections.get(id) !== true) {
-			throw new Error(`${artifact.id}: manifest declares unused optional injection "${id}".`);
-		}
-	}
 }
 
 function assertVersion(
@@ -208,19 +190,24 @@ function sameArtifacts(left: readonly PluginArtifact[], right: readonly PluginAr
 		left.length === right.length &&
 		left.every((artifact, index) => {
 			const candidate = right[index];
-			return candidate?.id === artifact.id && candidate.revision === artifact.revision;
+			return (
+				candidate?.id === artifact.id &&
+				candidate.serverRevision === artifact.serverRevision &&
+				candidate.clientRevision === artifact.clientRevision
+			);
 		})
 	);
 }
 
-function isPluginDefinition(value: unknown): value is AnyPluginDefinition {
-	if (typeof value !== 'object' || value === null) return false;
-	const definition = value as Record<string, unknown>;
+function sameServerArtifacts(
+	left: readonly PluginArtifact[],
+	right: readonly PluginArtifact[]
+): boolean {
 	return (
-		definition.plugin === true &&
-		typeof definition.id === 'string' &&
-		typeof definition.primary === 'object' &&
-		definition.primary !== null &&
-		Array.isArray(definition.providers)
+		left.length === right.length &&
+		left.every((artifact, index) => {
+			const candidate = right[index];
+			return candidate?.id === artifact.id && candidate.serverRevision === artifact.serverRevision;
+		})
 	);
 }

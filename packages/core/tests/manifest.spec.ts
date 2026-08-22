@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { parsePluginManifest, PluginManifestError } from '../src/manifest.ts';
+import { parsePluginManifest, PluginManifestError } from '../src/artifact/manifest.ts';
 
 const valid = {
-	protocol: 1,
+	protocol: 2,
 	id: '@zadmin/example',
 	version: '0.0.0',
 	displayName: 'Example',
@@ -16,12 +16,13 @@ const valid = {
 describe('parsePluginManifest', () => {
 	it('normalizes and freezes a valid trusted manifest', () => {
 		const manifest = parsePluginManifest(valid);
-		expect(manifest).toMatchObject({ id: '@zadmin/example', protocol: 1 });
+		expect(manifest).toMatchObject({ id: '@zadmin/example', protocol: 2 });
 		expect(Object.isFrozen(manifest)).toBe(true);
 		expect(Object.isFrozen(manifest.entries)).toBe(true);
 	});
 
 	it('rejects unsupported trust and unsafe entry paths', () => {
+		expect(() => parsePluginManifest({ ...valid, protocol: 1 })).toThrow('unsupported protocol 1');
 		expect(() => parsePluginManifest({ ...valid, requiredTrust: 'sandboxed' })).toThrow(
 			PluginManifestError
 		);

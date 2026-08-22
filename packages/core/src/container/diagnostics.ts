@@ -51,7 +51,7 @@ export interface ModuleSnapshot {
 	readonly version: string;
 	readonly revision: string;
 	readonly generation?: string;
-	readonly state: 'active' | 'waiting';
+	readonly state: 'active' | 'leaked' | 'waiting';
 	readonly providers: readonly string[];
 	readonly dependencies: readonly string[];
 	readonly dependents: readonly string[];

@@ -7,7 +7,7 @@ import {
 	InstalledPluginArtifactProvider,
 	packPluginArtifact,
 	PluginInstaller
-} from '../src/installed.ts';
+} from '../src/artifact/installed.ts';
 
 const roots: string[] = [];
 
@@ -34,8 +34,11 @@ describe('PluginInstaller', () => {
 
 		await installer.install(v2);
 		expect((await provider.scan())[0]).toMatchObject({ version: '0.2.0' });
+		const v2State = await installer.read();
 		await installer.activate('@zadmin/example', '0.1.0');
 		expect((await provider.scan())[0]).toMatchObject({ version: '0.1.0' });
+		await installer.restore(v2State);
+		expect((await provider.scan())[0]).toMatchObject({ version: '0.2.0' });
 
 		await installer.uninstall('@zadmin/example');
 		expect(await provider.scan()).toEqual([]);
@@ -68,7 +71,7 @@ async function fixtureArchive(root: string, version: string, content: string): P
 	await writeFile(
 		join(source, 'zadmin.plugin.json'),
 		JSON.stringify({
-			protocol: 1,
+			protocol: 2,
 			id: '@zadmin/example',
 			version,
 			displayName: 'Example',

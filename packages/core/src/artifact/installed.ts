@@ -3,9 +3,9 @@ import { watch, type FSWatcher } from 'node:fs';
 import { access, mkdir, mkdtemp, readFile, readdir, rename, rm, writeFile } from 'node:fs/promises';
 import { basename, dirname, isAbsolute, join, resolve } from 'node:path';
 import * as tar from 'tar';
-import type { PluginArtifact, PluginArtifactListener, PluginArtifactProvider } from './artifact.ts';
-import type { PluginDisposer } from './types.ts';
+import type { PluginDisposer } from '../container/context.ts';
 import { loadPluginArtifact } from './workspace.ts';
+import type { PluginArtifact, PluginArtifactListener, PluginArtifactProvider } from './types.ts';
 
 const INSTALLED_PROTOCOL = 1;
 const STATE_FILE = 'installed.json';
@@ -41,6 +41,10 @@ export class PluginInstaller {
 
 	read(): Promise<InstalledPluginState> {
 		return readState(this.#root);
+	}
+
+	restore(state: InstalledPluginState): Promise<void> {
+		return this.#enqueue(() => writeState(this.#root, state.plugins));
 	}
 
 	install(archive: string): Promise<InstalledPlugin> {
@@ -179,7 +183,12 @@ export class InstalledPluginArtifactProvider implements PluginArtifactProvider {
 			running = true;
 			try {
 				const artifacts = await this.scan();
-				const key = artifacts.map(({ id, revision }) => `${id}:${revision}`).join('|');
+				const key = artifacts
+					.map(
+						({ id, serverRevision, clientRevision }) =>
+							`${id}:${serverRevision}:${clientRevision ?? ''}`
+					)
+					.join('|');
 				if (key !== last) {
 					await listener(artifacts);
 					last = key;

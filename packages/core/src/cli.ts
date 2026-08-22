@@ -1,13 +1,29 @@
 #!/usr/bin/env node
 import { resolve } from 'node:path';
-import { packPluginArtifact } from './installed.ts';
+import { packPluginArtifact } from './artifact/installed.ts';
+import { validatePluginPackage } from './artifact/validation.ts';
 
 const [command, source, destination] = process.argv.slice(2);
 
-if (command !== 'pack' || !source || !destination) {
-	console.error('Usage: zadmin-plugin pack <artifact-directory> <output.zplugin>');
-	process.exitCode = 2;
-} else {
-	await packPluginArtifact(resolve(source), resolve(destination));
-	console.log(resolve(destination));
+switch (command) {
+	case 'validate':
+		if (!source) usage();
+		await validatePluginPackage(resolve(source));
+		console.log(resolve(source));
+		break;
+	case 'pack':
+		if (!source || !destination) usage();
+		await validatePluginPackage(resolve(source));
+		await packPluginArtifact(resolve(source), resolve(destination));
+		console.log(resolve(destination));
+		break;
+	default:
+		usage();
+}
+
+function usage(): never {
+	console.error(
+		'Usage:\n  zadmin-plugin validate <artifact-directory>\n  zadmin-plugin pack <artifact-directory> <output.zplugin>'
+	);
+	process.exit(2);
 }

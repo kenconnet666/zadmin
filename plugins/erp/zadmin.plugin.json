@@ -1,5 +1,5 @@
 {
-	"protocol": 1,
+	"protocol": 2,
 	"id": "@zadmin/erp",
 	"version": "0.0.0",
 	"displayName": "ERP",
@@ -9,15 +9,14 @@
 		"client": "./client/index.js"
 	},
 	"requiresHost": {
-		"@zadmin/core": "0.0.0",
-		"@zadmin/sveltekit": "0.0.0"
+		"@zadmin/core": "^0.0.0"
 	},
 	"requires": {
-		"@zadmin/auth": "0.0.0",
-		"@zadmin/postgres": "0.0.0",
-		"@zadmin/sveltekit": "0.0.0"
+		"@zadmin/auth": "^0.0.0",
+		"@zadmin/postgres": "^0.0.0",
+		"@zadmin/sveltekit": "^0.0.0"
 	},
 	"optional": {
-		"@zadmin/approval": "0.0.0"
+		"@zadmin/approval": "^0.0.0"
 	}
 }

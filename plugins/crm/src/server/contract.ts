@@ -1,4 +1,6 @@
+import type { ApprovalRecord } from '@zadmin/approval';
+
 export interface CrmApi {
 	readonly domain: 'crm';
-	startApproval(subjectId: string): string | undefined;
+	startApproval(subjectId: string): ApprovalRecord | undefined;
 }
