@@ -1,18 +1,28 @@
-import { PluginNotActiveError, PluginNotFoundError, PluginRuntimeError } from './errors.ts';
+import {
+	DuplicateProviderError,
+	PluginNotActiveError,
+	PluginNotFoundError,
+	PluginRuntimeError,
+	ProviderNotActiveError
+} from './errors.ts';
 import {
 	collectDependents,
 	createPluginGraph,
 	type NormalizedPlugin,
 	type PluginGraph
 } from './graph.ts';
+import type { Injection } from './injection.ts';
 import { PluginScope } from './scope.ts';
 import type {
 	AnyPluginDefinition,
 	AppDefinition,
+	HostProvider,
 	LifecycleEvent,
 	PluginApi,
+	PluginDisposer,
 	PluginSnapshot,
 	PluginState,
+	ProviderSnapshot,
 	RuntimeSnapshot
 } from './types.ts';
 
@@ -25,11 +35,19 @@ interface PluginRecord extends NormalizedPlugin {
 	error?: unknown;
 }
 
+interface ProviderRecord {
+	readonly id: string;
+	readonly version: string;
+	readonly owner: 'host' | string;
+	readonly value: unknown;
+}
+
 type LifecycleListener = (event: LifecycleEvent) => void;
 
 export class PluginRuntime {
 	readonly instanceId = globalThis.crypto.randomUUID();
 	readonly #records = new Map<string, PluginRecord>();
+	readonly #providers = new Map<string, ProviderRecord>();
 	readonly #listeners = new Set<LifecycleListener>();
 	#graph?: PluginGraph;
 	#appId?: string;
@@ -39,12 +57,36 @@ export class PluginRuntime {
 		return Object.freeze({
 			instanceId: this.instanceId,
 			appId: this.#appId,
+			providers: Object.freeze(
+				[...this.#providers.values()]
+					.map((provider) => this.#providerSnapshot(provider))
+					.sort((left, right) => left.id.localeCompare(right.id))
+			),
 			plugins: Object.freeze(
 				[...this.#records.values()]
-					.map((record) => this.#snapshot(record))
+					.map((record) => this.#pluginSnapshot(record))
 					.sort((left, right) => left.id.localeCompare(right.id))
 			)
 		});
+	}
+
+	provide<T>(provider: HostProvider<T>): PluginDisposer {
+		const existing = this.#providers.get(provider.id);
+		if (existing) throw new DuplicateProviderError(provider.id, existing.owner);
+		const record = Object.freeze({ ...provider, owner: 'host' as const });
+		this.#providers.set(record.id, record);
+		let active = true;
+		return () => {
+			if (!active) return;
+			active = false;
+			if (this.#providers.get(record.id) === record) this.#providers.delete(record.id);
+		};
+	}
+
+	resolve<T>(injection: Injection<T, boolean>): T {
+		const provider = this.#providers.get(injection.id);
+		if (!provider) throw new ProviderNotActiveError(injection.id);
+		return provider.value as T;
 	}
 
 	onLifecycle(listener: LifecycleListener): () => void {
@@ -94,7 +136,7 @@ export class PluginRuntime {
 				}
 				return;
 			}
-			if (replacement && replacement.id !== id) {
+			if (replacement.id !== id) {
 				throw new PluginRuntimeError(
 					`Replacement plugin id "${replacement.id}" does not match "${id}".`
 				);
@@ -139,11 +181,10 @@ export class PluginRuntime {
 		}
 
 		if (previousGraph && changed.size) {
-			const previousAffected = collectDependents(
-				previousGraph,
-				[...changed].filter((id) => previousGraph.plugins.has(id))
-			);
-			await this.#stopIds(previousAffected, 'reconcile');
+			const affected = new Set<string>();
+			for (const id of collectDependents(previousGraph, changed)) affected.add(id);
+			for (const id of collectDependents(nextGraph, changed)) affected.add(id);
+			await this.#stopIds(affected, 'reconcile');
 		}
 
 		for (const id of [...this.#records.keys()]) {
@@ -178,8 +219,9 @@ export class PluginRuntime {
 
 		const dependencyEntries = Object.entries(record.definition.dependencies);
 		const waitingFor = dependencyEntries
-			.map(([, dependency]) => dependency.id)
-			.filter((dependencyId) => this.#records.get(dependencyId)?.state !== 'active');
+			.map(([, dependency]) => dependency)
+			.filter((dependency) => !dependency.optional && !this.#providers.has(dependency.id))
+			.map((dependency) => dependency.id);
 		if (waitingFor.length) {
 			record.waitingFor = Object.freeze(waitingFor);
 			this.#transition(record, 'waiting', 'dependencies unavailable');
@@ -195,9 +237,16 @@ export class PluginRuntime {
 
 		try {
 			const dependencies = Object.fromEntries(
-				dependencyEntries.map(([key, dependency]) => [key, this.#records.get(dependency.id)?.api])
+				dependencyEntries.map(([key, dependency]) => [
+					key,
+					this.#providers.get(dependency.id)?.value
+				])
 			);
-			record.api = await record.definition.setup(scope, dependencies, record.config);
+			const api = await record.definition.setup(scope, dependencies, record.config);
+			const existingProvider = this.#providers.get(id);
+			if (existingProvider) throw new DuplicateProviderError(id, existingProvider.owner);
+			record.api = api;
+			this.#providers.set(id, Object.freeze({ id, version: '0.0.0', owner: id, value: api }));
 			this.#transition(record, 'active');
 			started = true;
 		} catch (caught) {
@@ -210,6 +259,7 @@ export class PluginRuntime {
 					`Plugin "${id}" failed to start and clean up.`
 				);
 			}
+			this.#removePluginProvider(id);
 			record.api = undefined;
 			record.scope = undefined;
 			record.error = error;
@@ -226,9 +276,11 @@ export class PluginRuntime {
 		for (const id of [...graph.order].reverse()) {
 			if (!ids.has(id)) continue;
 			const record = this.#records.get(id);
-			if (!record || !['active', 'failed', 'waiting', 'registered'].includes(record.state))
+			if (!record || !['active', 'failed', 'waiting', 'registered'].includes(record.state)) {
 				continue;
+			}
 
+			this.#removePluginProvider(id);
 			if (record.state === 'active') {
 				this.#transition(record, 'stopping', reason);
 				try {
@@ -281,7 +333,7 @@ export class PluginRuntime {
 		return this.#graph;
 	}
 
-	#snapshot(record: PluginRecord): PluginSnapshot {
+	#pluginSnapshot(record: PluginRecord): PluginSnapshot {
 		return Object.freeze({
 			id: record.definition.id,
 			state: record.state,
@@ -292,6 +344,18 @@ export class PluginRuntime {
 			revision: record.revision,
 			error: record.error
 		});
+	}
+
+	#providerSnapshot(provider: ProviderRecord): ProviderSnapshot {
+		return Object.freeze({
+			id: provider.id,
+			version: provider.version,
+			owner: provider.owner
+		});
+	}
+
+	#removePluginProvider(id: string): void {
+		if (this.#providers.get(id)?.owner === id) this.#providers.delete(id);
 	}
 
 	#enqueue<T>(operation: () => Promise<T>): Promise<T> {

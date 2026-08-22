@@ -31,7 +31,9 @@ export function createPluginGraph(app: AppDefinition): PluginGraph {
 	const dependencies = new Map<string, readonly string[]>();
 	const mutableDependents = new Map<string, string[]>();
 	for (const [id, plugin] of plugins) {
-		const ids = Object.values(plugin.definition.dependencies).map((dependency) => dependency.id);
+		const ids = Object.values(plugin.definition.dependencies)
+			.map((dependency) => dependency.id)
+			.filter((dependencyId) => plugins.has(dependencyId));
 		dependencies.set(id, Object.freeze(ids));
 		for (const dependencyId of ids) {
 			if (!plugins.has(dependencyId)) continue;

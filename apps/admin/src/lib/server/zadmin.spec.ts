@@ -7,11 +7,11 @@ afterAll(() => adminRuntime.dispose());
 describe('admin plugin composition', () => {
 	it('starts all configured plugins', () => {
 		expect(adminRuntime.snapshot.plugins).toEqual([
-			expect.objectContaining({ id: 'auth', state: 'active' }),
-			expect.objectContaining({ id: 'oss', state: 'active' }),
-			expect.objectContaining({ id: 'postgres', state: 'active' }),
-			expect.objectContaining({ id: 'redis', state: 'active' }),
-			expect.objectContaining({ id: 'sveltekit', state: 'active' })
+			expect.objectContaining({ id: '@zadmin/auth', state: 'active' }),
+			expect.objectContaining({ id: '@zadmin/oss', state: 'active' }),
+			expect.objectContaining({ id: '@zadmin/postgres', state: 'active' }),
+			expect.objectContaining({ id: '@zadmin/redis', state: 'active' }),
+			expect.objectContaining({ id: '@zadmin/sveltekit', state: 'active' })
 		]);
 	});
 

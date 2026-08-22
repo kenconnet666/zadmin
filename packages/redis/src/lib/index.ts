@@ -1,9 +1,12 @@
-import { definePlugin } from '@zadmin/core';
-import { sveltekitPlugin } from '@zadmin/sveltekit';
+import { definePlugin, inject } from '@zadmin/core';
+
+interface SvelteKit {
+	readonly framework: 'sveltekit';
+}
 
 export const redisPlugin = definePlugin({
-	id: 'redis',
-	dependencies: { sveltekit: sveltekitPlugin },
+	id: '@zadmin/redis',
+	dependencies: { sveltekit: inject<SvelteKit>('@zadmin/sveltekit') },
 	setup(_context, { sveltekit }) {
 		return { driver: 'redis', framework: sveltekit.framework } as const;
 	}

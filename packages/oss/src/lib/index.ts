@@ -1,9 +1,12 @@
-import { definePlugin } from '@zadmin/core';
-import { sveltekitPlugin } from '@zadmin/sveltekit';
+import { definePlugin, inject } from '@zadmin/core';
+
+interface SvelteKit {
+	readonly framework: 'sveltekit';
+}
 
 export const ossPlugin = definePlugin({
-	id: 'oss',
-	dependencies: { sveltekit: sveltekitPlugin },
+	id: '@zadmin/oss',
+	dependencies: { sveltekit: inject<SvelteKit>('@zadmin/sveltekit') },
 	setup(_context, { sveltekit }) {
 		return { protocol: 's3', framework: sveltekit.framework } as const;
 	}

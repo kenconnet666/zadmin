@@ -1,6 +1,13 @@
 import { describe, expect, expectTypeOf, it, vi } from 'vitest';
 import { defineApp, definePlugin } from '../src/definition.ts';
-import { DuplicatePluginError, PluginCycleError, PluginNotActiveError } from '../src/errors.ts';
+import {
+	DuplicatePluginError,
+	DuplicateProviderError,
+	PluginCycleError,
+	PluginNotActiveError,
+	ProviderNotActiveError
+} from '../src/errors.ts';
+import { inject, injectOptional } from '../src/injection.ts';
 import { PluginRuntime } from '../src/runtime.ts';
 import type { AnyPluginDefinition, PluginState } from '../src/types.ts';
 
@@ -20,7 +27,7 @@ describe('PluginRuntime', () => {
 		});
 		const auth = definePlugin({
 			id: 'auth',
-			dependencies: { database },
+			dependencies: { database: inject<{ query: () => 'ok' }>('database') },
 			setup(_context, dependencies) {
 				expectTypeOf(dependencies.database.query).toEqualTypeOf<() => 'ok'>();
 				order.push(`auth:${dependencies.database.query()}`);
@@ -65,10 +72,9 @@ describe('PluginRuntime', () => {
 	});
 
 	it('keeps plugins waiting while required dependencies are absent', async () => {
-		const missing = definePlugin({ id: 'missing' });
 		const consumer = definePlugin({
 			id: 'consumer',
-			dependencies: { missing }
+			dependencies: { missing: inject<unknown>('missing') }
 		});
 		const runtime = new PluginRuntime();
 
@@ -89,8 +95,8 @@ describe('PluginRuntime', () => {
 
 		const a = unsafePlugin('a');
 		const b = unsafePlugin('b');
-		a.dependencies.b = b;
-		b.dependencies.a = a;
+		a.dependencies.b = inject('b');
+		b.dependencies.a = inject('a');
 
 		await expect(
 			runtime.reconcile(defineApp({ id: 'cycle', plugins: [a, b] }))
@@ -108,7 +114,7 @@ describe('PluginRuntime', () => {
 		});
 		const consumer = definePlugin({
 			id: 'consumer',
-			dependencies: { provider }
+			dependencies: { provider: inject<unknown>('provider') }
 		});
 		const runtime = new PluginRuntime();
 
@@ -132,7 +138,7 @@ describe('PluginRuntime', () => {
 		});
 		const consumer = definePlugin({
 			id: 'consumer',
-			dependencies: { provider },
+			dependencies: { provider: inject<unknown>('provider') },
 			setup(context) {
 				context.onDispose(() => {
 					order.push('consumer');
@@ -161,7 +167,7 @@ describe('PluginRuntime', () => {
 		});
 		const consumerV1 = definePlugin({
 			id: 'consumer',
-			dependencies: { provider: providerV1 },
+			dependencies: { provider: inject<{ version: number }>('provider') },
 			setup(context, { provider }) {
 				events.push(`consumer:${provider.version}:start`);
 				context.onDispose(() => {
@@ -195,7 +201,7 @@ describe('PluginRuntime', () => {
 		});
 		const consumerV2 = definePlugin({
 			id: 'consumer',
-			dependencies: { provider: providerV2 },
+			dependencies: { provider: inject<{ version: number }>('provider') },
 			setup(_context, { provider }) {
 				events.push(`consumer:${provider.version}:start`);
 			}
@@ -282,7 +288,7 @@ describe('PluginRuntime', () => {
 		});
 		const consumer = definePlugin({
 			id: 'late-consumer',
-			dependencies: { provider },
+			dependencies: { provider: inject<{ value: number }>('late-provider') },
 			setup(_context, { provider }) {
 				return { value: provider.value };
 			}
@@ -297,10 +303,80 @@ describe('PluginRuntime', () => {
 		expect(state(runtime, consumer.id)).toBe('active');
 		expect(runtime.get(consumer)).toEqual({ value: 42 });
 	});
+
+	it('injects host providers and exposes them through the same container', async () => {
+		const database = inject<{ query: () => string }>('@zadmin/postgres');
+		const runtime = new PluginRuntime();
+		const dispose = runtime.provide({
+			id: database.id,
+			version: '1.0.0',
+			value: { query: () => 'host' }
+		});
+		const consumer = definePlugin({
+			id: 'consumer',
+			dependencies: { database },
+			setup(_context, { database }) {
+				return database.query();
+			}
+		});
+
+		await runtime.reconcile(defineApp({ id: 'host-provider', plugins: [consumer] }));
+
+		expect(runtime.get(consumer)).toBe('host');
+		expect(runtime.resolve(database).query()).toBe('host');
+		expect(runtime.snapshot.providers).toEqual(
+			expect.arrayContaining([
+				expect.objectContaining({ id: '@zadmin/postgres', owner: 'host', version: '1.0.0' })
+			])
+		);
+		await runtime.dispose();
+		await dispose();
+		expect(() => runtime.resolve(database)).toThrow(ProviderNotActiveError);
+	});
+
+	it('injects undefined for optional providers and reloads when one is installed', async () => {
+		const values: string[] = [];
+		const approvalV1 = definePlugin({
+			id: 'approval',
+			setup() {
+				return { version: 'v1' };
+			}
+		});
+		const consumer = definePlugin({
+			id: 'consumer',
+			dependencies: {
+				approval: injectOptional<{ version: string }>('approval')
+			},
+			setup(_context, { approval }) {
+				values.push(approval?.version ?? 'none');
+			}
+		});
+		const runtime = new PluginRuntime();
+
+		await runtime.reconcile(defineApp({ id: 'optional', plugins: [consumer] }));
+		await runtime.reconcile(defineApp({ id: 'optional', plugins: [consumer, approvalV1] }));
+		await runtime.reconcile(defineApp({ id: 'optional', plugins: [consumer] }));
+
+		expect(values).toEqual(['none', 'v1', 'none']);
+	});
+
+	it('rejects providers that collide with a host capability', async () => {
+		const runtime = new PluginRuntime();
+		runtime.provide({ id: 'collision', version: '1.0.0', value: {} });
+		const plugin = definePlugin({ id: 'collision' });
+
+		await runtime.reconcile(defineApp({ id: 'collision', plugins: [plugin] }));
+
+		expect(state(runtime, plugin.id)).toBe('failed');
+		expect(runtime.snapshot.plugins[0]?.error).toBeInstanceOf(DuplicateProviderError);
+		expect(runtime.snapshot.providers).toEqual([
+			expect.objectContaining({ id: 'collision', owner: 'host' })
+		]);
+	});
 });
 
 function unsafePlugin(id: string): AnyPluginDefinition & {
-	dependencies: Record<string, AnyPluginDefinition>;
+	dependencies: Record<string, ReturnType<typeof inject>>;
 } {
 	return {
 		id,

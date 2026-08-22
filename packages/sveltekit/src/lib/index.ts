@@ -4,7 +4,7 @@ import { PluginRouteRegistry } from './routes.ts';
 export * from './routes.ts';
 
 export const sveltekitPlugin = definePlugin({
-	id: 'sveltekit',
+	id: '@zadmin/sveltekit',
 	setup() {
 		return {
 			framework: 'sveltekit' as const,

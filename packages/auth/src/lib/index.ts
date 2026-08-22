@@ -1,14 +1,29 @@
-import { definePlugin } from '@zadmin/core';
-import { postgresPlugin } from '@zadmin/postgres';
-import { redisPlugin } from '@zadmin/redis';
-import { sveltekitPlugin } from '@zadmin/sveltekit';
+import { definePlugin, inject, type PluginContext } from '@zadmin/core';
+
+interface SvelteKit {
+	readonly framework: 'sveltekit';
+	readonly routes: {
+		register(
+			context: PluginContext,
+			route: { readonly path: string; readonly handler: () => Response }
+		): void;
+	};
+}
+
+interface Postgres {
+	readonly driver: 'postgres';
+}
+
+interface Redis {
+	readonly driver: 'redis';
+}
 
 export const authPlugin = definePlugin({
-	id: 'auth',
+	id: '@zadmin/auth',
 	dependencies: {
-		sveltekit: sveltekitPlugin,
-		postgres: postgresPlugin,
-		redis: redisPlugin
+		sveltekit: inject<SvelteKit>('@zadmin/sveltekit'),
+		postgres: inject<Postgres>('@zadmin/postgres'),
+		redis: inject<Redis>('@zadmin/redis')
 	},
 	setup(context, dependencies) {
 		dependencies.sveltekit.routes.register(context, {

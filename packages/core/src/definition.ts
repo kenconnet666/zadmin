@@ -5,7 +5,7 @@ import type {
 	MaybePromise,
 	PluginContext,
 	PluginDefinition,
-	PluginDependencyApis,
+	ResolveInjections,
 	PluginDependencyMap
 } from './types.ts';
 
@@ -22,7 +22,7 @@ export function definePlugin<
 	readonly config?: Config;
 	readonly setup?: (
 		context: PluginContext,
-		dependencies: PluginDependencyApis<Dependencies>,
+		dependencies: ResolveInjections<Dependencies>,
 		config: Config
 	) => MaybePromise<Api>;
 }): PluginDefinition<Id, Api, Config, Dependencies> {

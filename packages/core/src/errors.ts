@@ -12,6 +12,20 @@ export class DuplicatePluginError extends PluginRuntimeError {
 	}
 }
 
+export class DuplicateProviderError extends PluginRuntimeError {
+	constructor(id: string, owner: string) {
+		super(`Provider "${id}" is already owned by "${owner}".`);
+		this.name = 'DuplicateProviderError';
+	}
+}
+
+export class ProviderNotActiveError extends PluginRuntimeError {
+	constructor(id: string) {
+		super(`Provider "${id}" is not active.`);
+		this.name = 'ProviderNotActiveError';
+	}
+}
+
 export class PluginCycleError extends PluginRuntimeError {
 	readonly cycle: readonly string[];
 
