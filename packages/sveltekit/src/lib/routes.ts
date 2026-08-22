@@ -37,6 +37,10 @@ export class PluginRouteRegistry {
 	}
 
 	register(context: PluginContext, route: PluginRoute): void {
+		context.onDispose(this.add(context.id, route));
+	}
+
+	add(ownerId: string, route: PluginRoute): () => void {
 		const method = route.method ?? 'GET';
 		const path = normalizePath(route.path);
 		if (this.#entries.some((entry) => entry.method === method && entry.path === path)) {
@@ -47,16 +51,19 @@ export class PluginRouteRegistry {
 		const entry: RouteEntry = {
 			method,
 			path,
-			pluginId: context.id,
+			pluginId: ownerId,
 			handler: route.handler,
 			...compiled
 		};
 		this.#entries.push(entry);
 		this.#entries.sort((left, right) => right.score - left.score);
-		context.onDispose(() => {
+		let active = true;
+		return () => {
+			if (!active) return;
+			active = false;
 			const index = this.#entries.indexOf(entry);
 			if (index >= 0) this.#entries.splice(index, 1);
-		});
+		};
 	}
 
 	async handle(request: Request): Promise<Response | undefined> {

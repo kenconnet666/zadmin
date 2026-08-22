@@ -1,39 +1,30 @@
-import { definePlugin, inject, type PluginContext } from '@zadmin/core';
+import type { PostgresService } from '@zadmin/postgres';
+import type { RedisService } from '@zadmin/redis';
+import type { SvelteKitHost } from '@zadmin/sveltekit';
 
-interface SvelteKit {
-	readonly framework: 'sveltekit';
-	readonly routes: {
-		register(
-			context: PluginContext,
-			route: { readonly path: string; readonly handler: () => Response }
-		): void;
-	};
+export interface AuthOptions {
+	readonly database: PostgresService;
+	readonly cache: RedisService;
+	readonly web: SvelteKitHost;
 }
 
-interface Postgres {
-	readonly driver: 'postgres';
+export interface AuthService {
+	readonly provider: 'auth';
+	readonly database: PostgresService;
+	readonly cache: RedisService;
+	dispose(): void;
 }
 
-interface Redis {
-	readonly driver: 'redis';
-}
+export function createAuth(options: AuthOptions): AuthService {
+	const disposeRoute = options.web.routes.add('@zadmin/auth', {
+		path: '/auth/api/status',
+		handler: () => Response.json({ package: '@zadmin/auth', status: 'active' })
+	});
 
-export const authPlugin = definePlugin({
-	id: '@zadmin/auth',
-	dependencies: {
-		sveltekit: inject<SvelteKit>('@zadmin/sveltekit'),
-		postgres: inject<Postgres>('@zadmin/postgres'),
-		redis: inject<Redis>('@zadmin/redis')
-	},
-	setup(context, dependencies) {
-		dependencies.sveltekit.routes.register(context, {
-			path: '/auth/api/status',
-			handler: () => Response.json({ plugin: 'auth', status: 'active' })
-		});
-		return {
-			framework: dependencies.sveltekit.framework,
-			database: dependencies.postgres.driver,
-			cache: dependencies.redis.driver
-		} as const;
-	}
-});
+	return Object.freeze({
+		provider: 'auth' as const,
+		database: options.database,
+		cache: options.cache,
+		dispose: disposeRoute
+	});
+}

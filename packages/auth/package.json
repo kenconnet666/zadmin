@@ -39,12 +39,9 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json"
 	},
 	"dependencies": {
-		"@zadmin/core": "workspace:^",
-		"@zadmin/drizzle": "workspace:^",
 		"@zadmin/postgres": "workspace:^",
 		"@zadmin/redis": "workspace:^",
-		"@zadmin/sveltekit": "workspace:^",
-		"@zadmin/zui": "workspace:^"
+		"@zadmin/sveltekit": "workspace:^"
 	},
 	"peerDependencies": {
 		"@sveltejs/kit": "^2.0.0",

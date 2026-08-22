@@ -57,6 +57,20 @@ describe('PluginRouteRegistry', () => {
 		expect(await registry.handle(new Request('http://localhost/auth'))).toBeUndefined();
 	});
 
+	it('returns a disposer for routes owned by a static package', async () => {
+		const registry = new PluginRouteRegistry();
+		const dispose = registry.add('@zadmin/auth', {
+			path: '/auth/status',
+			handler: () => new Response('active')
+		});
+
+		expect(await registry.handle(new Request('http://localhost/auth/status'))).toBeInstanceOf(
+			Response
+		);
+		dispose();
+		expect(await registry.handle(new Request('http://localhost/auth/status'))).toBeUndefined();
+	});
+
 	it('rejects duplicate and malformed routes', () => {
 		const registry = new PluginRouteRegistry();
 		const scope = new PluginScope('auth');

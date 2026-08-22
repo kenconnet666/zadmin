@@ -1,14 +1,15 @@
-import { definePlugin } from '@zadmin/core';
 import { PluginRouteRegistry } from './routes.ts';
 
 export * from './routes.ts';
 
-export const sveltekitPlugin = definePlugin({
-	id: '@zadmin/sveltekit',
-	setup() {
-		return {
-			framework: 'sveltekit' as const,
-			routes: new PluginRouteRegistry()
-		};
-	}
-});
+export interface SvelteKitHost {
+	readonly framework: 'sveltekit';
+	readonly routes: PluginRouteRegistry;
+}
+
+export function createSvelteKitHost(): SvelteKitHost {
+	return Object.freeze({
+		framework: 'sveltekit',
+		routes: new PluginRouteRegistry()
+	});
+}

@@ -1,10 +1,8 @@
 {
-	"extends": "./.svelte-kit/tsconfig.json",
+	"extends": "../../tsconfig.json",
 	"compilerOptions": {
-		"esModuleInterop": true,
-		"moduleResolution": "bundler",
-		"rewriteRelativeImportExtensions": true,
-		"skipLibCheck": true,
-		"strict": true
-	}
+		"outDir": "dist",
+		"rootDir": "src"
+	},
+	"include": ["src/**/*.ts"]
 }
