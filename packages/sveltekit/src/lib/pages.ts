@@ -1,4 +1,5 @@
 import type { Component } from 'svelte';
+import type { MaybePromise, PluginDisposer } from '@zadmin/core';
 
 export interface PluginPageModule {
 	readonly default: Component;
@@ -7,6 +8,23 @@ export interface PluginPageModule {
 export interface PluginPageDefinition {
 	readonly path: string;
 	readonly load: () => Promise<PluginPageModule>;
+}
+
+export interface ClientPluginPage {
+	readonly path: string;
+	readonly mount: (target: Element) => MaybePromise<PluginDisposer>;
+}
+
+export interface ClientPageRegistry {
+	register(page: ClientPluginPage): PluginDisposer;
+}
+
+export interface ClientPluginContext {
+	readonly pages: ClientPageRegistry;
+}
+
+export interface ClientPluginModule {
+	activate(context: ClientPluginContext): MaybePromise<PluginDisposer>;
 }
 
 export function definePluginPage(definition: PluginPageDefinition): PluginPageDefinition {

@@ -1,0 +1,23 @@
+{
+	"protocol": 1,
+	"id": "@zadmin/crm",
+	"version": "0.0.0",
+	"displayName": "CRM",
+	"requiredTrust": "trusted",
+	"entries": {
+		"server": "./server/index.js",
+		"client": "./client/index.js"
+	},
+	"requiresHost": {
+		"@zadmin/core": "0.0.0",
+		"@zadmin/sveltekit": "0.0.0"
+	},
+	"requires": {
+		"@zadmin/auth": "0.0.0",
+		"@zadmin/postgres": "0.0.0",
+		"@zadmin/sveltekit": "0.0.0"
+	},
+	"optional": {
+		"@zadmin/approval": "0.0.0"
+	}
+}

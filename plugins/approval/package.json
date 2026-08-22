@@ -1,0 +1,31 @@
+{
+	"name": "@zadmin/approval",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"files": [
+		"dist",
+		"zadmin.plugin.json"
+	],
+	"scripts": {
+		"clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
+		"build": "pnpm clean && vite build --mode server && vite build --mode client && node -e \"require('node:fs').copyFileSync('zadmin.plugin.json','dist/zadmin.plugin.json')\"",
+		"check": "svelte-check --tsconfig ./tsconfig.json",
+		"test": "vitest --run"
+	},
+	"peerDependencies": {
+		"@zadmin/core": "workspace:^",
+		"@zadmin/sveltekit": "workspace:^",
+		"svelte": "^5.0.0"
+	},
+	"devDependencies": {
+		"@sveltejs/vite-plugin-svelte": "catalog:",
+		"@zadmin/core": "workspace:^",
+		"@zadmin/sveltekit": "workspace:^",
+		"svelte": "catalog:",
+		"svelte-check": "catalog:",
+		"typescript": "catalog:",
+		"vite": "catalog:",
+		"vitest": "catalog:"
+	}
+}
