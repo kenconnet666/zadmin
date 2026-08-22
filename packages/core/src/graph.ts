@@ -4,6 +4,8 @@ import type { AnyPluginDefinition, AppDefinition, ConfiguredPlugin, PluginUse } 
 export interface NormalizedPlugin {
 	definition: AnyPluginDefinition;
 	config: unknown;
+	version: string;
+	artifactRevision?: string;
 }
 
 export interface PluginGraph {
@@ -24,7 +26,10 @@ export function createPluginGraph(app: AppDefinition): PluginGraph {
 		if (plugins.has(definition.id)) throw new DuplicatePluginError(definition.id);
 		plugins.set(definition.id, {
 			definition,
-			config: isConfiguredPlugin(use) ? use.config : definition.defaultConfig
+			config: isConfiguredPlugin(use) ? use.config : definition.defaultConfig,
+			version: isConfiguredPlugin(use) && 'version' in use ? use.version : '0.0.0',
+			artifactRevision:
+				isConfiguredPlugin(use) && 'artifactRevision' in use ? use.artifactRevision : undefined
 		});
 	}
 

@@ -1,4 +1,4 @@
-import { definePlugin, inject, type PluginContext } from '@zadmin/core';
+import { definePlugin, inject, type PluginContext } from '@zadmin/core/plugin';
 
 interface Auth {
 	readonly provider: 'auth';

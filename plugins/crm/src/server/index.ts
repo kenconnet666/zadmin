@@ -1,4 +1,4 @@
-import { definePlugin, inject, injectOptional, type PluginContext } from '@zadmin/core';
+import { definePlugin, inject, injectOptional, type PluginContext } from '@zadmin/core/plugin';
 
 interface Approval {
 	start(subjectId: string): { readonly id: string; readonly status: string };

@@ -58,7 +58,14 @@ export interface ConfiguredPlugin<TPlugin extends AnyPluginDefinition = AnyPlugi
 	readonly config: PluginConfig<TPlugin>;
 }
 
-export type PluginUse = AnyPluginDefinition | ConfiguredPlugin;
+export interface LoadedPlugin<TPlugin extends AnyPluginDefinition = AnyPluginDefinition> {
+	readonly plugin: TPlugin;
+	readonly config: PluginConfig<TPlugin>;
+	readonly version: string;
+	readonly artifactRevision: string;
+}
+
+export type PluginUse = AnyPluginDefinition | ConfiguredPlugin | LoadedPlugin;
 
 export interface AppDefinition<Id extends string = string> {
 	readonly id: Id;
@@ -82,6 +89,8 @@ export type PluginState =
 
 export interface PluginSnapshot {
 	readonly id: string;
+	readonly version: string;
+	readonly artifactRevision?: string;
 	readonly state: PluginState;
 	readonly dependencies: readonly string[];
 	readonly waitingFor: readonly string[];

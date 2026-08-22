@@ -9,7 +9,8 @@
 	],
 	"scripts": {
 		"clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
-		"build": "pnpm clean && vite build --mode server && vite build --mode client && node -e \"require('node:fs').copyFileSync('zadmin.plugin.json','dist/zadmin.plugin.json')\"",
+		"build": "pnpm clean && vite build",
+		"dev": "vite build --watch",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
 		"test": "vitest --run"
 	},

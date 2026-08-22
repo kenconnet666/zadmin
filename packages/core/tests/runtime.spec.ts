@@ -221,6 +221,7 @@ describe('PluginRuntime', () => {
 			'consumer:2:start'
 		]);
 		expect(runtime.snapshot.plugins.find((plugin) => plugin.id === 'unrelated')?.revision).toBe(0);
+		expect(runtime.snapshot.plugins.find((plugin) => plugin.id === 'consumer')?.revision).toBe(1);
 	});
 
 	it('emits lifecycle transitions', async () => {

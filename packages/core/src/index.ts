@@ -1,7 +1,11 @@
 export * from './definition.ts';
+export * from './artifact.ts';
 export * from './errors.ts';
 export * from './hmr.ts';
 export * from './injection.ts';
+export * from './manager.ts';
+export * from './manifest.ts';
 export * from './runtime.ts';
 export * from './scope.ts';
+export * from './workspace.ts';
 export type * from './types.ts';

@@ -142,10 +142,19 @@ export class PluginRuntime {
 				);
 			}
 
-			const plugins = [...graph.plugins.values()].map((plugin) => ({
-				plugin: plugin.definition.id === id ? replacement : plugin.definition,
-				config: plugin.config
-			}));
+			const plugins = [...graph.plugins.values()].map((plugin) => {
+				const use = {
+					plugin: plugin.definition.id === id ? replacement : plugin.definition,
+					config: plugin.config
+				};
+				return plugin.artifactRevision
+					? {
+							...use,
+							version: plugin.version,
+							artifactRevision: plugin.artifactRevision
+						}
+					: use;
+			});
 			await this.#reconcile({ id: this.#appId ?? 'app', plugins });
 		});
 	}
@@ -163,6 +172,7 @@ export class PluginRuntime {
 		const nextGraph = createPluginGraph(app);
 		const previousGraph = this.#graph;
 		const changed = new Set<string>();
+		const restarted = new Set<string>();
 
 		if (previousGraph) {
 			for (const [id, previous] of previousGraph.plugins) {
@@ -170,7 +180,9 @@ export class PluginRuntime {
 				if (
 					!next ||
 					next.definition !== previous.definition ||
-					!Object.is(next.config, previous.config)
+					!Object.is(next.config, previous.config) ||
+					next.version !== previous.version ||
+					next.artifactRevision !== previous.artifactRevision
 				) {
 					changed.add(id);
 				}
@@ -184,6 +196,7 @@ export class PluginRuntime {
 			const affected = new Set<string>();
 			for (const id of collectDependents(previousGraph, changed)) affected.add(id);
 			for (const id of collectDependents(nextGraph, changed)) affected.add(id);
+			for (const id of affected) restarted.add(id);
 			await this.#stopIds(affected, 'reconcile');
 		}
 
@@ -195,7 +208,9 @@ export class PluginRuntime {
 			if (existing) {
 				existing.definition = plugin.definition;
 				existing.config = plugin.config;
-				existing.revision += changed.has(id) ? 1 : 0;
+				existing.version = plugin.version;
+				existing.artifactRevision = plugin.artifactRevision;
+				existing.revision += restarted.has(id) ? 1 : 0;
 				existing.error = undefined;
 			} else {
 				this.#records.set(id, {
@@ -246,7 +261,10 @@ export class PluginRuntime {
 			const existingProvider = this.#providers.get(id);
 			if (existingProvider) throw new DuplicateProviderError(id, existingProvider.owner);
 			record.api = api;
-			this.#providers.set(id, Object.freeze({ id, version: '0.0.0', owner: id, value: api }));
+			this.#providers.set(
+				id,
+				Object.freeze({ id, version: record.version, owner: id, value: api })
+			);
 			this.#transition(record, 'active');
 			started = true;
 		} catch (caught) {
@@ -336,6 +354,8 @@ export class PluginRuntime {
 	#pluginSnapshot(record: PluginRecord): PluginSnapshot {
 		return Object.freeze({
 			id: record.definition.id,
+			version: record.version,
+			artifactRevision: record.artifactRevision,
 			state: record.state,
 			dependencies: Object.freeze(
 				Object.values(record.definition.dependencies).map((dependency) => dependency.id)

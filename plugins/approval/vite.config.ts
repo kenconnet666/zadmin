@@ -1,17 +1,30 @@
+import { copyFileSync, mkdirSync } from 'node:fs';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { defineConfig } from 'vite';
 
-export default defineConfig(({ mode }) => ({
-	plugins: [svelte()],
+export default defineConfig({
+	plugins: [
+		svelte(),
+		{
+			name: 'zadmin-plugin-manifest',
+			closeBundle() {
+				mkdirSync('dist', { recursive: true });
+				copyFileSync('zadmin.plugin.json', 'dist/zadmin.plugin.json');
+			}
+		}
+	],
 	build: {
-		emptyOutDir: mode === 'server',
+		emptyOutDir: true,
 		lib: {
-			entry: mode === 'server' ? 'src/server/index.ts' : 'src/client/index.ts',
+			entry: {
+				'client/index': 'src/client/index.ts',
+				'server/index': 'src/server/index.ts'
+			},
 			formats: ['es'],
-			fileName: () => `${mode}/index.js`
+			fileName: (_format, entryName) => `${entryName}.js`
 		},
 		outDir: 'dist',
 		sourcemap: true,
-		target: mode === 'server' ? 'node24' : 'es2024'
+		target: 'es2024'
 	}
-}));
+});

@@ -9,5 +9,10 @@ export default defineConfig({
 	},
 	ssr: {
 		noExternal: [/^@zadmin\//]
+	},
+	server: {
+		watch: {
+			ignored: ['**/plugins/*/dist/**']
+		}
 	}
 });

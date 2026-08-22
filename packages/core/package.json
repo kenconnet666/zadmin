@@ -9,6 +9,10 @@
 		".": {
 			"types": "./src/index.ts",
 			"import": "./src/index.ts"
+		},
+		"./plugin": {
+			"types": "./src/plugin.ts",
+			"import": "./src/plugin.ts"
 		}
 	},
 	"publishConfig": {
@@ -16,6 +20,10 @@
 			".": {
 				"types": "./dist/index.d.ts",
 				"import": "./dist/index.js"
+			},
+			"./plugin": {
+				"types": "./dist/plugin.d.ts",
+				"import": "./dist/plugin.js"
 			}
 		}
 	},
@@ -24,7 +32,12 @@
 		"check": "tsc -p tsconfig.test.json --noEmit",
 		"test": "vitest --run tests"
 	},
+	"dependencies": {
+		"semver": "catalog:"
+	},
 	"devDependencies": {
+		"@types/semver": "^7.7.1",
+		"@types/node": "catalog:",
 		"typescript": "catalog:",
 		"vitest": "catalog:"
 	}
