@@ -44,6 +44,7 @@ pnpm build
 
 ## Documentation
 
+- [Next implementation blueprint](./apps/docs/content/implementation-blueprint.md)
 - [Device handoff and development recovery](./apps/docs/content/handoff.md)
 - [Architecture](./apps/docs/content/architecture.md)
 - [Plugin development](./apps/docs/content/plugin-development.md)

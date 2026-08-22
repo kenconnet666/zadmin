@@ -2,6 +2,7 @@
 
 本目录记录 ZAdmin 当前已经实现并验证的架构约束。文档与代码同仓库演进，代码行为变更时必须同步更新对应文档。
 
+- [下一阶段实现蓝图](./implementation-blueprint.md)
 - [换设备开发交接](./handoff.md)
 - [工作区与架构](./architecture.md)
 - [插件开发](./plugin-development.md)
