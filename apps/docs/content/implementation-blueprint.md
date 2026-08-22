@@ -1,6 +1,6 @@
 # 下一阶段实现蓝图
 
-本文是 ZAdmin 下一阶段的实现基线，记录于 **2026-08-22**。它描述目标架构和实施边界，不代表当前代码已经完成这些能力。当前实现行为仍以[工作区与架构](./architecture.md)、[插件生命周期](./plugin-lifecycle.md)和[开发态热重载](./development-hmr.md)为准。
+本文是 ZAdmin 本轮重构的实现蓝图，记录于 **2026-08-22**。蓝图中的目录分类、依赖注入、Workspace HMR和本地安装制品已经实施并通过验收；当前行为以[工作区与架构](./architecture.md)、[插件生命周期](./plugin-lifecycle.md)和[开发态热重载](./development-hmr.md)为准。本文继续保留为决策范围、阶段提交和完成标准记录。
 
 实现过程中如果需要改变本文的固定决策，应先更新本文并单独说明理由，再修改代码，避免代码与架构同时漂移。
 
@@ -179,7 +179,7 @@ declare const injectionType: unique symbol;
 export interface Injection<T, Optional extends boolean = false> {
 	readonly id: string;
 	readonly optional: Optional;
-	readonly [injectionType]?: (value: T) => T;
+	readonly [injectionType]?: () => T;
 }
 
 export function inject<T>(id: string): Injection<T, false>;
@@ -322,7 +322,7 @@ apps/admin/src/routes/[...pluginPath]/+page.svelte
 
 ### ETL
 
-ETL 是独立 App。当前 `plugins/etl` 的页面和状态能力迁入 `apps/etl`，之后删除 `plugins/etl`。
+ETL 是独立 App。原 `plugins/etl` 的页面和状态能力已经迁入 `apps/etl`，`plugins/etl` 已删除。
 
 最小目标：
 

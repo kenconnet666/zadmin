@@ -1,135 +1,156 @@
 # 插件开发
 
-## 目录
-
-普通插件保持一个 package：
+## 新插件目录
 
 ```text
 plugins/example/
-  src/lib/index.ts
-  src/lib/client.ts       可选
-  src/lib/ExamplePage.svelte
-  src/svelte.d.ts         有 Svelte入口时使用
+  src/server/index.ts
+  src/client/index.ts
+  src/client/ExamplePage.svelte
+  tests/lifecycle.spec.ts
   package.json
   svelte.config.js
   tsconfig.json
+  vite.config.ts
+  zadmin.plugin.json
 ```
 
-不要默认创建独立 API、server和client package。只有真实存在独立发布、多个 provider或大量外部消费者时才拆包。
+只创建真实需要的文件。一个插件同时包含服务端和客户端入口，但仍是一个 package、一个版本和一个安装制品。
 
-## 定义插件
+## 服务端定义
 
 ```ts
-import { definePlugin } from '@zadmin/core';
-import { postgresPlugin } from '@zadmin/postgres';
+import { definePlugin, inject, type PluginContext } from '@zadmin/core/plugin';
 
-export const examplePlugin = definePlugin({
-	id: 'example',
+interface Web {
+	readonly routes: {
+		register(context: PluginContext, route: { path: string; handler: () => Response }): void;
+	};
+}
+
+export default definePlugin({
+	id: '@vendor/example',
 	dependencies: {
-		postgres: postgresPlugin
+		web: inject<Web>('@zadmin/sveltekit')
 	},
-	config: {
-		enabled: true
-	},
-	setup(context, { postgres }, config) {
-		context.onDispose(() => {
-			// 清理插件持有的资源
+	setup(context, { web }) {
+		web.routes.register(context, {
+			path: '/example/api/status',
+			handler: () => Response.json({ status: 'active' })
 		});
-
-		return {
-			query() {
-				return postgres.driver;
-			},
-			enabled: config.enabled
-		};
+		return { ping: () => 'pong' as const };
 	}
 });
 ```
 
-TypeScript从 `setup()` 返回值推断插件 API，从 `dependencies` 推断依赖 API，从 `config` 推断配置类型。
+Consumer 从容器取得 `setup()` 返回值并直接调用。类型由 Consumer 自己声明，Core 不维护全局 API表。
 
-## Effect与资源
-
-所有具有生命周期的资源都必须归属插件 Context：
+## 生命周期资源
 
 ```ts
 await context.effect(async () => {
-	const connection = await connect();
-	return () => connection.close();
+	const resource = await openResource();
+	return () => resource.close();
 });
 ```
 
-也可以注册清理函数：
+禁止在模块顶层建立连接、定时器和全局监听器。每个运行时资源必须由 `PluginScope` 拥有。
+
+## 客户端入口
 
 ```ts
-context.onDispose(() => subscription.unsubscribe());
-```
-
-清理顺序与注册顺序相反，并且按顺序等待异步清理完成。插件停止时 `context.signal` 会先进入 aborted状态。
-
-禁止在模块顶层创建数据库连接、定时器、全局监听器或进程级可变单例。这些对象无法被 Runtime可靠追踪和回收。
-
-## 注册服务端路由
-
-依赖 `sveltekitPlugin` 后直接注册：
-
-```ts
-sveltekit.routes.register(context, {
-	method: 'GET',
-	path: '/example/api/status',
-	handler: () => Response.json({ status: 'active' })
-});
-```
-
-支持静态路径、`:parameter` 和末尾 `*wildcard`。静态路由优先于参数路由，参数路由优先于 wildcard。
-
-## 注册 Svelte页面
-
-```ts
-import { definePluginPage } from '@zadmin/sveltekit/client';
+import { mount, unmount } from 'svelte';
+import type { ClientPluginContext } from '@zadmin/sveltekit/client';
 import ExamplePage from './ExamplePage.svelte';
 
-export const examplePages = [
-	definePluginPage({
+export function activate(context: ClientPluginContext) {
+	return context.pages.register({
 		path: '/example',
-		load: async () => ({ default: ExamplePage })
-	})
-];
-```
-
-应用的 catch-all 页面把对应 pages传给 `PluginPageOutlet`。
-
-## 安装到应用
-
-先加入应用 package依赖：
-
-```json
-{
-	"dependencies": {
-		"@zadmin/example": "workspace:^"
-	}
+		mount(target) {
+			const component = mount(ExamplePage, { target });
+			return () => unmount(component);
+		}
+	});
 }
 ```
 
-再加入组合：
+Client revision 被替换时，Host 先调用旧 disposer，再 activate新入口；失败时重新 activate旧模块。
 
-```ts
-export const app = defineApp({
-	id: 'admin',
-	plugins: [sveltekitPlugin, postgresPlugin, examplePlugin]
-});
+## Manifest
+
+`zadmin.plugin.json` 必须与 `package.json` 的 name/version 一致：
+
+```json
+{
+	"protocol": 1,
+	"id": "@vendor/example",
+	"version": "0.0.0",
+	"displayName": "Example",
+	"requiredTrust": "trusted",
+	"entries": {
+		"server": "./server/index.js",
+		"client": "./client/index.js"
+	},
+	"requiresHost": {
+		"@zadmin/core": "0.0.0",
+		"@zadmin/sveltekit": "0.0.0"
+	},
+	"requires": {
+		"@zadmin/sveltekit": "0.0.0"
+	},
+	"optional": {}
+}
 ```
 
-应用不需要手写启动顺序。Runtime根据依赖图按拓扑顺序启动，并在卸载时反向停止。
+代码中的 required/optional Injection 必须在对应 Manifest 字段出现；多余或缺失声明会阻止加载。
+
+## 命令
+
+仓库内开发：
+
+```powershell
+pnpm dev:admin
+```
+
+该命令同时运行 Admin 和三个 Plugin build watcher。插件成功构建后复制 Manifest作为 revision ready标记，Workspace Provider 再加载完整产物。
+
+单包检查和构建：
+
+```powershell
+pnpm --filter @zadmin/approval check
+pnpm --filter @zadmin/approval test
+pnpm --filter @zadmin/approval build
+```
+
+生成安装制品：
+
+```powershell
+pnpm --filter @zadmin/approval pack:plugin
+```
+
+输出位于插件 `artifacts/`，该目录不会进入 Git。外部仓库安装已发布的 `@zadmin/core` 后，可直接使用：
+
+```text
+zadmin-plugin pack dist artifacts/example.zplugin
+```
+
+## 安装 API
+
+开发态可直接上传原始 `.zplugin` 请求体：
+
+```text
+POST /__zadmin/plugins/install
+```
+
+启停和版本切换：
+
+```json
+POST /__zadmin/plugins/action
+{ "id": "@vendor/example", "action": "disable" }
+```
+
+支持 `enable`、`disable`、`activate` 和 `uninstall`。生产态必须携带 `Authorization: Bearer <ZADMIN_PLUGIN_ADMIN_TOKEN>`。
 
 ## 必需验证
 
-插件变更至少运行：
-
-```sh
-pnpm check
-pnpm test
-pnpm build
-```
-
-涉及页面时还应在 dev server中确认浏览器 HMR；涉及生命周期资源时必须有停止、重载和失败清理测试。
+插件变更至少运行 check、test、build。涉及 Runtime、客户端入口或 watcher 时，还必须启动真实 `pnpm dev:admin`，保持浏览器打开验证服务端响应和 DOM 都更新，并还原临时文案。

@@ -2,97 +2,70 @@
 
 ## 状态
 
-| 状态         | 含义                                     |
-| ------------ | ---------------------------------------- |
-| `registered` | 已进入 Runtime，但尚未尝试启动           |
-| `waiting`    | 必需依赖缺失或未激活                     |
-| `starting`   | 正在执行 `setup()`                       |
-| `active`     | API可被依赖插件使用                      |
-| `stopping`   | 已停止接收新的生命周期注册，正在清理     |
-| `stopped`    | 已完成清理，可再次启动                   |
-| `failed`     | setup或dispose失败，错误保留在诊断快照中 |
+| 状态         | 含义                                 |
+| ------------ | ------------------------------------ |
+| `registered` | 已进入 Runtime，尚未启动             |
+| `waiting`    | 必需 Injection 没有 active Provider  |
+| `starting`   | 正在执行 `setup()`                   |
+| `active`     | 返回值已经注册为 Provider            |
+| `stopping`   | 正在撤销资源和贡献                   |
+| `stopped`    | 已完成清理，可再次启动               |
+| `failed`     | setup或dispose失败，错误保留在快照中 |
 
-主要转换：
+## Provider
 
-```text
-registered → starting → active
-registered → waiting
-waiting → starting → active
-starting → failed
-active → stopping → stopped
-active → stopping → failed
-failed/stopped/waiting → starting
-```
+Host Package 通过 `runtime.provide()` 注册静态 Provider。动态 Plugin 的 `setup()` 返回值自动以 Plugin ID注册 Provider。
+
+同一个 ID 只能有一个 active Provider。Host 与 Plugin 冲突、两个 Plugin ID重复都会失败。
 
 ## 启动
 
-1. App定义规范化并检查重复 ID。
-2. 构建依赖图并检查循环。
-3. 按拓扑顺序启动插件。
-4. 必需依赖没有处于 `active` 时，插件进入 `waiting`。
-5. 创建独立 `PluginScope` 和 `AbortController`。
-6. 执行 `setup(context, dependencyApis, config)`。
-7. setup返回值保存为直接调用 API。
-8. setup失败时立即回收已经注册的 Effect并进入 `failed`。
+1. 规范化 Plugin Definition、version和artifactRevision；
+2. 由 Injection ID构建依赖图并拒绝必需依赖环；
+3. 按拓扑顺序启动；
+4. required Provider缺失时进入 waiting；
+5. optional Provider缺失时注入 `undefined`；
+6. 创建 `PluginScope` 和 AbortSignal；
+7. 执行 `setup(context, dependencies, config)`；
+8. 注册返回值并进入 active；
+9. setup失败时清理已经注册的 Effect并进入 failed。
 
 ## 停止
 
-停止 provider时必须先停止全部传递依赖者：
+停止 Provider前先反向拓扑停止所有 dependents。每个 Plugin：
+
+1. 从 Provider容器撤销当前值；
+2. 进入 stopping；
+3. AbortSignal触发；
+4. Effect按 LIFO顺序异步清理；
+5. 清除 API、Scope和 waiting状态；
+6. 成功进入 stopped，失败进入 failed。
+
+## Revision reconcile
+
+Artifact ID/version/content hash、Definition或配置变化都会触发 reconcile。变化 Provider 的 required 和 optional dependents 都会重新 setup并取得新对象；无关 Plugin 不停止。
+
+`PluginSnapshot.revision` 是该记录被重启的次数，`artifactRevision` 是当前内容哈希。
+
+## 事务式 Manager
+
+PluginManager 在改变当前 Runtime 前先加载所有候选 Server Artifact。候选激活后如果任何 Plugin failed或waiting：
 
 ```text
-report → sales → auth → postgres
+停止候选
+  → reconcile旧 App Definition
+  → 恢复旧 Provider和dependents
+  → 保持旧 artifacts为current
 ```
 
-停止 postgres的顺序是：
+相同 ID/revision集合是 no-op，不会因为轮询重复重载。
 
-```text
-report
-sales
-auth
-postgres
-```
+## Client 生命周期
 
-每个插件停止过程：
+ClientPluginRuntime 先 import所有变化模块，再批量 dispose旧 Client Plugin并 activate新模块。新模块失败时，已激活候选被清理，旧模块重新 activate。
 
-1. 状态切换到 `stopping`。
-2. AbortSignal触发。
-3. 按 LIFO顺序执行 Effect disposer。
-4. 清除公开 API和 Scope引用。
-5. 成功进入 `stopped`，失败进入 `failed`。
+页面路径只能由一个 owner注册。Plugin disposer必须撤销它拥有的全部页面和 DOM资源。
 
-## 重载
+## 进程边界
 
-显式 `runtime.reload(id)` 会停止插件及其所有下游依赖，然后按拓扑顺序重新启动。
-
-HMR reconcile使用 definition对象身份识别源码变化：
-
-- provider变化：重载 provider和全部下游。
-- consumer变化：只重载 consumer及其下游。
-- 无关插件保持运行，revision不变。
-- 插件移除：停止并删除记录，下游进入 `waiting`。
-- 后续重新安装依赖：waiting插件自动启动。
-
-## 配置
-
-`plugin.configure(config)` 创建带类型配置的安装项。配置对象变化会触发插件和下游重载。
-
-配置应当是数据，不应在配置对象中保存连接、定时器或其他运行时资源。
-
-## 观测
-
-`runtime.onLifecycle(listener)` 可观察所有状态转换，返回取消订阅函数。
-
-`runtime.snapshot` 包含：
-
-```text
-instanceId
-appId
-plugin id
-state
-dependencies
-waitingFor
-revision
-error
-```
-
-Admin和ETL应用通过 `/__zadmin/runtime` 暴露当前诊断快照。生产环境后续接入鉴权时，该入口必须仅允许管理员访问。
+Node.js ESM模块记录不能真正卸载。ZAdmin 的卸载定义为释放 Scope、路由、页面、Provider和业务资源；新 revision使用带哈希的 URL导入。旧模块记录最终由进程重启清理。

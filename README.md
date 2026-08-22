@@ -11,17 +11,19 @@ apps/
   docs/      Component and development documentation
 
 packages/
-  core/      Plugin runtime and shared application foundation
+  core/      Dependency injection, plugin runtime, artifacts, and installer
+  sveltekit/ SvelteKit host and client plugin runtime
+  auth/      Authentication foundation
+  postgres/  PostgreSQL foundation
+  redis/     Redis foundation
+  oss/       Object storage foundation
   zui/       Reusable Svelte component library
   drizzle/   Reusable Drizzle enhancements
 
 plugins/
-  sveltekit/ SvelteKit integration plugin
-  postgres/  PostgreSQL plugin
-  redis/     Redis plugin
-  oss/       Object storage plugin
-  auth/      Authentication and authorization plugin
-  etl/       ETL plugin
+  approval/  Approval workflow plugin
+  erp/       ERP plugin
+  crm/       CRM plugin
 ```
 
 ## Development
@@ -32,6 +34,8 @@ pnpm dev:admin
 pnpm dev:etl
 pnpm dev:docs
 ```
+
+`pnpm dev:admin` starts Admin together with the Approval, ERP, and CRM artifact watchers.
 
 ## Validation
 

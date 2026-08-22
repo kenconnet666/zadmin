@@ -1,60 +1,51 @@
 # 工程倾向与决策原则
 
-本文件记录本项目的长期倾向，架构讨论和代码评审默认遵守。它们不是不可改变的教条，但修改时必须有具体收益和验证证据。
+## 目录与边界
 
-## 目录
-
-- 根业务目录保持 `apps/`、`packages/`、`plugins/` 三层。
-- `apps/admin`、`apps/etl`、`apps/docs` 是最终应用。
-- `packages/core`、`packages/zui`、`packages/drizzle` 是基础库。
-- `plugins/sveltekit`、`postgres`、`redis`、`oss`、`auth`、`etl` 是插件。
-- 不因为理论上可能复用就增加 `tooling/`、`config/` 或多层 package目录。
-
-## 插件形态
-
-- 一个插件默认一个 package，同时承载 Svelte页面和服务端能力。
-- 不默认拆 frontend/backend package。
-- 不默认创建独立 API包。
-- 插件之间可以直接 package依赖，并通过 Runtime注入的对象 API直接调用。
-- 禁止插件通过 HTTP/RPC调用同进程插件。
-- 禁止导入其他插件的内部源码和模块级 singleton。
-- 只有出现多个独立 provider、广泛外部消费者或独立版本需求时才抽公共能力包。
-
-## SvelteKit
-
-- 应用和插件统一采用 SvelteKit/Svelte 5模式。
-- 客户端/服务端子路径只是 bundle安全边界，不是拆成两个产品。
-- 动态服务端路由归属插件生命周期。
-- Svelte页面通过插件 client子路径贡献并参与 Vite HMR。
-
-## 依赖
-
-- 优先使用最新或较新的稳定依赖。
-- “最新”必须经过 peer dependency、类型、测试和生产构建验证。
-- 最新主版本不兼容时使用最近兼容版本，并记录原因；当前 TypeScript因此使用 6.0.3而不是 7.0.2。
-- pnpm catalog统一框架版本。
-- 不同时保留两套解决同一问题的核心依赖。
-- provider依赖由 provider插件持有，不塞进 Core。
+- 根业务目录固定为 `apps/`、`packages/`、`plugins/`。
+- Admin、ETL、Docs 是 App；Approval、ERP、CRM 是动态 Plugin。
+- Core、SvelteKit、Auth、PostgreSQL、Redis、OSS、ZUI、Drizzle 是 Package。
+- 不增加没有明确收益的顶层 config或 tooling目录。
+- Apps 不互相导入；Packages 不依赖 Apps或 Plugins。
 
 ## 代码
 
-- 优先简洁、低冗余、可维护的直接实现。
-- 抽象必须解决已经存在的问题，不为遥远假设提前造层。
-- 使用不可变定义、显式依赖、可逆 Effect和可观察状态。
-- 生命周期资源不能在模块顶层隐式创建。
-- 不用注释重复代码；注释解释约束、原因和非显然行为。
+- 优先简洁、低冗余和可维护的直接实现。
+- 抽象必须解决已经发生的问题。
+- 跨模块调用使用依赖注入后的普通对象，不使用同进程 RPC。
+- Consumer 在自己的 package 中声明所需最小类型。
+- 生命周期资源归属 Scope，禁止模块顶层隐式连接和定时器。
+- 不用注释复述代码；注释解释约束和非显然原因。
 
-## 热重载
+## 插件
 
-- 开发时插件源码、插件页面和 Core插件系统都必须可实时更新。
-- 插件更新优先局部重载插件及其下游，不全量重启 Runtime。
-- Core更新必须清理旧 Runtime后重建，不能继续运行旧类实例。
-- HMR行为必须有自动化测试和真实 dev server验证。
+- 一个 Plugin 一个 package、一个 Manifest、一个制品版本。
+- Server和Client是同一插件的不同入口，不拆成两个产品。
+- Plugin ID等于 package name。
+- 生产只安装预构建 `.zplugin`，不执行未知 install/build脚本。
+- 第一阶段只允许 trusted插件；未实现信任级别直接拒绝。
+- 安装新版本不覆盖旧版本，失败升级恢复旧 revision。
+
+## 依赖
+
+- 优先较新的兼容稳定版本。
+- pnpm catalog统一共享版本。
+- 最新主版本必须通过 peer、类型、测试和构建；不兼容时使用最近兼容版本并记录原因。
+- TypeScript当前使用 6.0.3，因为已验证工具链没有共同支持 TypeScript 7。
+
+## HMR
+
+- 开发者不手工重启。
+- App/Package变化允许自动 Host重建；Plugin变化必须局部重载。
+- 构建失败不能卸载当前可用 Plugin。
+- Server和Client候选失败都必须回滚。
+- 无关 Plugin不得因单个 revision变化停止。
+- HMR必须通过真实 dev server和浏览器验证。
 
 ## Git与验证
 
-- 实施过程中使用阶段性 Git提交。
-- 每个里程碑提交应保持可构建、可测试。
-- 不把无关重构混入当前提交。
-- 最终交付前执行 peer、lint、check、test、build和工作树检查。
-- 文档和实现放在同一仓库、同一变更链中维护。
+- 使用阶段性 Git提交，每个提交保持可检查、可测试和可构建。
+- 不把目录迁移、API重构、业务实现混进同一提交。
+- 保护用户已有改动，不使用破坏性 reset。
+- 测试临时目录和制品在取证后精确清理。
+- 文档必须描述当前行为，旧设计被替换后直接重写而不是继续叠加例外。

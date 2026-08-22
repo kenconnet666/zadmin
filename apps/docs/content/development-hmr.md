@@ -1,91 +1,86 @@
 # 开发态热重载
 
-## 目标
+## 启动
 
-开发时修改 app、插件、Core或 Svelte页面都不需要手工重启 dev server。
+```powershell
+pnpm dev:admin
+```
 
-HMR分三层：
+根脚本并行启动：
 
 ```text
-Svelte组件变化     → Svelte/Vite组件 HMR
-普通插件定义变化   → 复用 Runtime，局部 reconcile
-Core插件系统变化   → dispose旧 Runtime，创建新 Runtime
+Admin Vite dev server
+Approval Vite build --watch
+ERP Vite build --watch
+CRM Vite build --watch
 ```
 
-## Vite配置
+插件一次构建同时生成 `dist/server/index.js` 和 `dist/client/index.js`，最后复制 `zadmin.plugin.json`。Workspace Provider 把 Manifest写入视为完整 revision ready信号，并用全部非 sourcemap文件计算 SHA-256。
 
-所有 app必须包含：
-
-```ts
-export default defineConfig({
-	resolve: {
-		dedupe: ['svelte']
-	},
-	ssr: {
-		noExternal: [/^@zadmin\//]
-	}
-});
-```
-
-`ssr.noExternal` 很关键：如果 ZAdmin workspace包被外部化，Node会直接加载源码，Vite不会跟踪插件模块，也不会触发插件 HMR。`dedupe` 保证 workspace内只使用一个 Svelte运行时。
-
-## Runtime保持
-
-`runApp()` 把 Runtime保存在：
+## 两种变化语义
 
 ```text
-globalThis[Symbol.for('@zadmin/core/runtimes')]
+Apps或Packages变化
+  → 标准 Svelte HMR或完整 Host dispose/rebuild
+
+Plugins变化
+  → 保持 Admin Runtime instance
+  → 只重载变化 Plugin和dependents
+  → SSE通知浏览器重载对应 Client Plugin
 ```
 
-键是 app ID。这样即使 app组合模块重新求值，仍能取得同一 Runtime。
+Admin Vite watcher忽略 `plugins/*/dist`，避免产物变化触发全页 reload；Workspace Provider使用独立文件监听和轮询恢复网络盘/丢失事件。
 
-每个 Core模块实例带一个 `CORE_HMR_TOKEN`：
+## 服务端更新
 
-- 插件模块变化时 token不变，Runtime保持，调用 `reconcile()`。
-- Core模块变化时 token变化，旧 Runtime完整 dispose，新 Runtime重新创建。
-- app模块被 Vite prune 时调用 `disposeApp(appId)`。
-- 生产 adapter-node触发 `sveltekit:shutdown` 时完整 dispose Runtime。
+```text
+源码保存
+  → Vite watch构建
+  → content hash变化
+  → PluginManager native import新 URL
+  → Runtime反向停止受影响链
+  → 激活新 Provider
+  → 正向重启 dependents
+```
 
-## 插件更新算法
+构建失败不会发布 Manifest ready信号。Import或setup失败时 Manager恢复旧 App和旧 artifact集合。
 
-1. Vite检测插件源码变化并使 app组合模块成为 HMR边界。
-2. 新插件模块产生新的 definition对象。
-3. `runApp()`取回现有 Runtime。
-4. Runtime比较旧/新 definition和配置。
-5. 计算变化插件的传递 dependents。
-6. 反向拓扑停止受影响插件。
-7. 替换 definition。
-8. 正向拓扑重新启动。
-9. 无关插件、Runtime instance ID保持不变。
+## 浏览器更新
+
+Admin 提供：
+
+```text
+GET /__zadmin/plugins/client
+GET /__zadmin/plugins/client.js?id=...&revision=...
+GET /__zadmin/plugins/events
+```
+
+浏览器 EventSource 收到变更后重新读取清单。ClientPluginRuntime预加载新模块、dispose旧页面、activate新页面；失败时恢复旧模块。浏览器 Shell和无关 Plugin不会刷新。
 
 ## 已验证行为
 
-真实 admin dev server验证结果：
+真实 Admin dev server和 in-app browser 已验证：
 
-- 修改 `plugins/auth/src/lib/index.ts` 后 `/auth/api/status` 即时更新。
-- Runtime instance ID保持不变。
-- auth revision从 0变为 1。
-- 修改 `packages/core/src/runtime.ts` 后 Runtime instance ID变化，全部插件重新进入 active。
-- 浏览器保持 `/auth` 页面打开时修改 `AuthPage.svelte`，标题从 `Authentication` 即时变为 `Authentication hot`，没有刷新浏览器或重启 Vite。
+- Approval、ERP、CRM 从 workspace artifact动态加载；
+- 修改 Approval服务端响应后 Runtime instance ID不变；
+- Approval artifactRevision和revision更新；
+- ERP、CRM作为 optional dependents重新 setup；
+- 修改 Approval Svelte页面后已打开 DOM更新；
+- Admin Vite没有输出插件 dist导致的 page reload；
+- 浏览器控制台没有错误；
+- 临时源码还原后再次正常重载。
 
 ## 调试
 
-```sh
-pnpm dev:admin
-pnpm dev:etl
-```
-
-查看诊断：
-
 ```text
-GET http://localhost:5173/__zadmin/runtime
-GET http://localhost:5173/auth/api/status
+GET /__zadmin/runtime
+GET /__zadmin/plugins/client
+GET /__zadmin/plugins/installed
+GET /approval/api/status
+GET /erp/api/status
+GET /crm/api/status
 ```
 
-如果插件没有更新，依次检查：
+依次检查：plugin watcher是否完成、dist Manifest是否存在、hash是否改变、Manager事件、Runtime state、client清单和浏览器控制台。
 
-1. app Vite配置是否包含 `ssr.noExternal`。
-2. 插件是否通过 package公开入口被 app依赖。
-3. app组合模块是否包含 `import.meta.hot.accept()`。
-4. definition对象是否真的来自发生变化的模块。
-5. 插件是否在模块顶层保存了无法回收的资源。
+如果修改 Core、SvelteKit或 Admin Vite配置，预期 Host被 dispose/rebuild；这不属于 Plugin局部 HMR失败。

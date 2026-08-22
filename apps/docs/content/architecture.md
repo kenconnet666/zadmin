@@ -1,97 +1,169 @@
 # 工作区与架构
 
-> 本文记录当前已经实现的架构。下一阶段的目录分类、统一依赖注入、动态插件制品和热重载目标以[下一阶段实现蓝图](./implementation-blueprint.md)为准；在迁移完成前，两者需要明确区分。
+## 总体模型
 
-## 目标
+ZAdmin 是 SvelteKit、TypeScript 和 pnpm workspace 项目，明确分为三层：
 
-ZAdmin 是以 SvelteKit 为宿主、pnpm 为包管理器的同进程全栈插件系统。插件之间通过 TypeScript对象直接调用，不使用内部 HTTP、RPC或微服务发现。浏览器到服务端仍然经过正常的 Web传输边界，但服务端插件之间没有网络边界。
+```text
+Apps     独立产品和启动入口
+Packages 静态安装、可直接依赖的基础能力
+Plugins  可动态安装和热重载的粗粒度业务扩展
+```
 
-## 工作区
+服务端 Package 和 Plugin 之间使用同进程依赖注入与普通 JavaScript 对象调用，不使用内部 HTTP、RPC 或微服务发现。
+
+## 目录
 
 ```text
 apps/
-  admin/       后台管理应用
-  etl/         ETL应用
-  docs/        文档、Storybook和演示
+  admin/        管理产品、静态能力组合和主要插件宿主
+  etl/          独立 ETL应用
+  docs/         文档、Storybook和开发演示
 
 packages/
-  core/        插件定义、Runtime、生命周期、HMR
-  zui/         可独立发布的 Svelte组件库
-  drizzle/     可独立发布的 Drizzle增强库
+  core/         DI、Runtime、Manifest、Artifact Provider和Installer
+  sveltekit/    动态路由、客户端插件运行时和页面出口
+  auth/         静态鉴权骨架
+  postgres/     静态 PostgreSQL骨架
+  redis/        静态 Redis骨架
+  oss/          静态对象存储骨架
+  zui/          通用 Svelte组件库
+  drizzle/      通用 Drizzle增强库
 
 plugins/
-  sveltekit/   SvelteKit路由和页面桥
-  postgres/    PostgreSQL插件
-  redis/       Redis插件
-  oss/         S3兼容对象存储插件
-  auth/        鉴权插件和 /auth 页面
-  etl/         ETL插件和 /etl 页面
+  approval/     审批流插件骨架
+  erp/          ERP插件骨架
+  crm/          CRM插件骨架
 ```
 
-应用是插件组合根。`apps/admin` 安装 SvelteKit、PostgreSQL、Redis、OSS和 Auth；`apps/etl` 安装 SvelteKit、PostgreSQL、Redis、OSS和 ETL。
+ETL 和 Docs 是 App；Auth、SvelteKit、PostgreSQL、Redis、OSS 是 Package；Approval、ERP、CRM 是 Plugin。
 
 ## 依赖方向
 
 ```text
-apps → packages + plugins
-plugins → core + 其他插件的公开入口
-core → 不依赖任何具体插件
-zui → 不依赖 core 或业务插件
-drizzle → 不依赖 core 或业务插件
+apps → packages
+apps → Plugin Runtime → plugins
+plugins → packages公开入口
+
+packages ─X→ plugins
+packages ─X→ apps
+plugins ─X→ apps内部源码
+apps ─X→ 其他apps内部源码
 ```
 
-禁止插件导入其他插件的内部 `src` 路径。跨插件依赖必须使用 package根公开入口，并在 `definePlugin({ dependencies })` 中声明。
+Admin 和 ETL 需要共享的实现必须提取到 Package。
 
-## 插件定义与直接调用
+## 静态 Host 能力
 
-插件用对象声明依赖：
+Admin 使用普通工厂创建基础能力：
 
 ```ts
-export const authPlugin = definePlugin({
-	id: 'auth',
-	dependencies: {
-		sveltekit: sveltekitPlugin,
-		postgres: postgresPlugin,
-		redis: redisPlugin
-	},
-	setup(context, dependencies) {
-		return {
-			database: dependencies.postgres.driver,
-			cache: dependencies.redis.driver
-		};
-	}
-});
+const web = createSvelteKitHost();
+const database = createPostgres();
+const cache = createRedis();
+const storage = createOss();
+const auth = createAuth({ database, cache, web });
 ```
 
-`setup()` 返回值就是插件公开 API。下游插件获得的是完整 TypeScript类型，运行时调用是普通 JavaScript对象方法调用。
+然后把对象提供给 Plugin Runtime：
 
-## 全栈 SvelteKit插件
+```ts
+runtime.provide({ id: '@zadmin/postgres', version: '0.0.0', value: database });
+```
 
-一个插件只有一个 package，但可使用不同子路径控制浏览器和服务端依赖边界：
+静态能力不支持生产态动态卸载；Package 变化需要重启 App，开发态由 Vite 自动重建 Host。
+
+## 动态依赖注入
+
+插件不导入 Provider 实例。调用方在自己的 package 中声明需要的最小结构：
+
+```ts
+interface Approval {
+	start(subjectId: string): { id: string; status: string };
+}
+```
+
+通过稳定字符串 ID 声明依赖：
+
+```ts
+dependencies: {
+	approval: injectOptional<Approval>('@zadmin/approval');
+}
+```
+
+Runtime 只用 ID 查找当前 active 值。Provider 是静态 Package 还是动态 Plugin，对 Consumer 没有区别。
+
+必需依赖缺失时 Plugin 进入 `waiting`；可选依赖缺失时注入 `undefined`。Provider 新增、删除或替换时，dependents 会重新执行 `setup()` 并取得新对象。
+
+## 服务端插件
+
+每个插件是一个预构建 ESM Artifact，默认导出 `PluginDefinition`。`setup()` 返回值成为该 Plugin ID 的 Provider。
+
+动态路由由 `@zadmin/sveltekit` 注册，并归属 `PluginScope`。插件停止、失败、禁用或升级时，路由随 Effect 自动撤销。
+
+当前动态接口：
 
 ```text
-@zadmin/auth          服务端插件定义和直接 API
-@zadmin/auth/client   Svelte页面贡献
+/approval/api/status
+/erp/api/status
+/crm/api/status
 ```
 
-这不是前后端拆包。它们共享一个版本、一个发布制品和一个插件生命周期，只是避免浏览器 bundle引入服务端实现。
+## 客户端插件
 
-## 路由
+Client Artifact 导出：
 
-服务端动态路由由 `@zadmin/sveltekit` 的 `PluginRouteRegistry` 管理。注册路由时传入插件 Context，路由自动成为该插件的 Effect；插件停止或重载时路由自动撤销。
+```ts
+activate(context: ClientPluginContext): PluginDisposer
+```
 
-客户端页面由 `PluginPageDefinition` 描述，应用中的 `[...pluginPath]` SvelteKit catch-all 页面使用 `PluginPageOutlet` 加载插件组件。
+插件向 `ClientPageStore` 注册 mount/unmount 函数。客户端 Bundle 第一阶段自包含 Svelte Runtime，Host 不跨 Bundle 传递 Svelte Component对象。
 
-当前验证路由：
+当前动态页面：
 
 ```text
-/auth                Auth Svelte页面
-/auth/api/status     Auth服务端生命周期路由
-/etl                 ETL Svelte页面
-/etl/api/status      ETL服务端生命周期路由
-/__zadmin/runtime    Runtime诊断快照
+/approval
+/erp
+/crm
 ```
 
-## 当前边界
+Auth 是静态 Package，但其 `/auth` 页面注册到同一个 ClientPageStore。
 
-当前基础设施已经实现插件生命周期、依赖、直接 API、配置实例、动态路由和 HMR。PostgreSQL、Redis、OSS、Auth和 ETL包目前只提供可运行骨架，没有提前实现真实数据库连接或业务模型。
+## Artifact 来源
+
+Core 有两个实现相同接口的来源：
+
+```text
+WorkspacePluginArtifactProvider
+  开发态扫描 plugins/*/dist
+
+InstalledPluginArtifactProvider
+  生产态读取 ZADMIN_DATA_DIR 下 installed.json和版本目录
+```
+
+二者都输出 `PluginArtifact`，后续 Manifest 校验、SemVer 检查、动态 import、Runtime reconcile 和 Client reload 共用同一路径。
+
+## 安装状态
+
+生产数据不写仓库。默认使用系统应用数据目录，也可用绝对路径环境变量 `ZADMIN_DATA_DIR` 覆盖。
+
+```text
+<data>/apps/admin/plugins/
+  installed.json
+  staging/
+  packages/
+    %40zadmin%2Fapproval/
+      0.0.0/
+```
+
+安装新版本不覆盖旧目录；`activate(id, version)` 可以切回旧版本。Uninstall 删除安装状态但保留版本文件和业务数据，便于恢复。
+
+## 信任边界
+
+当前只接受 `requiredTrust: "trusted"`。插件在 Admin 进程权限下运行，尚无恶意代码沙箱。Manifest 声明其他信任级别会被拒绝。
+
+Admin 生产 mutation API 要求 `ZADMIN_PLUGIN_ADMIN_TOKEN` Bearer token；未配置时返回 503。真正的 Auth 管理员权限接入属于后续业务阶段。
+
+## 当前业务边界
+
+插件系统、Artifact、Installer 和开发 HMR 已实现；PostgreSQL、Redis、OSS、Auth、ETL、Approval、ERP、CRM 仍然只是最小骨架，不应描述为业务可用。
