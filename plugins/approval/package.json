@@ -11,6 +11,7 @@
 		"clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
 		"build": "pnpm clean && vite build",
 		"dev": "vite build --watch",
+		"pack:plugin": "pnpm build && node ../../packages/core/src/cli.ts pack dist artifacts/approval-0.0.0.zplugin",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
 		"test": "vitest --run"
 	},

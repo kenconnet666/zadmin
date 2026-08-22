@@ -3,6 +3,7 @@ export * from './artifact.ts';
 export * from './errors.ts';
 export * from './hmr.ts';
 export * from './injection.ts';
+export * from './installed.ts';
 export * from './manager.ts';
 export * from './manifest.ts';
 export * from './runtime.ts';

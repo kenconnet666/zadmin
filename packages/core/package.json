@@ -2,6 +2,9 @@
 	"name": "@zadmin/core",
 	"version": "0.0.0",
 	"type": "module",
+	"bin": {
+		"zadmin-plugin": "./src/cli.ts"
+	},
 	"files": [
 		"dist"
 	],
@@ -16,6 +19,9 @@
 		}
 	},
 	"publishConfig": {
+		"bin": {
+			"zadmin-plugin": "./dist/cli.js"
+		},
 		"exports": {
 			".": {
 				"types": "./dist/index.d.ts",
@@ -33,7 +39,8 @@
 		"test": "vitest --run tests"
 	},
 	"dependencies": {
-		"semver": "catalog:"
+		"semver": "catalog:",
+		"tar": "catalog:"
 	},
 	"devDependencies": {
 		"@types/semver": "^7.7.1",

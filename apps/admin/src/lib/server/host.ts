@@ -1,8 +1,11 @@
 import {
 	defineApp,
+	InstalledPluginArtifactProvider,
 	PluginManager,
+	PluginInstaller,
 	PluginRuntime,
 	WorkspacePluginArtifactProvider,
+	type PluginArtifact,
 	type PluginDisposer
 } from '@zadmin/core';
 import { createAuth } from '@zadmin/auth';
@@ -12,8 +15,14 @@ import { createRedis } from '@zadmin/redis';
 import { createSvelteKitHost } from '@zadmin/sveltekit';
 import { fileURLToPath } from 'node:url';
 import { AdminPluginBridge } from './plugins.ts';
+import { resolvePluginDataRoot } from './data.ts';
 
-export async function createAdminHost() {
+export interface AdminHostOptions {
+	readonly enableInstalledPlugins?: boolean;
+	readonly pluginDataRoot?: string;
+}
+
+export async function createAdminHost(options: AdminHostOptions = {}) {
 	const web = createSvelteKitHost();
 	const database = createPostgres();
 	const cache = createRedis();
@@ -35,14 +44,42 @@ export async function createAdminHost() {
 		}
 	});
 	const bridge = new AdminPluginBridge(plugins);
+	const pluginDataRoot = options.pluginDataRoot ?? resolvePluginDataRoot();
+	const installer = new PluginInstaller({ root: pluginDataRoot });
+	const installedProvider = new InstalledPluginArtifactProvider({ root: pluginDataRoot });
+	let installedArtifacts: readonly PluginArtifact[] =
+		options.enableInstalledPlugins === false ? [] : await installedProvider.scan();
+	let workspaceArtifacts: readonly PluginArtifact[] = [];
 	let stopWorkspaceProvider: PluginDisposer | undefined;
+	let stopInstalledProvider: PluginDisposer | undefined;
+	const reconcileArtifacts = () => {
+		const artifacts = new Map(installedArtifacts.map((artifact) => [artifact.id, artifact]));
+		for (const artifact of workspaceArtifacts) artifacts.set(artifact.id, artifact);
+		return plugins.reconcile(
+			[...artifacts.values()].sort((left, right) => left.id.localeCompare(right.id))
+		);
+	};
+	await reconcileArtifacts();
+	if (options.enableInstalledPlugins !== false) {
+		stopInstalledProvider = installedProvider.watch(
+			(artifacts) => {
+				installedArtifacts = [...artifacts];
+				return reconcileArtifacts();
+			},
+			(error) => console.error('Installed plugin reload failed.', error)
+		);
+	}
 	if (import.meta.env.MODE === 'development') {
 		const provider = new WorkspacePluginArtifactProvider({
 			roots: [fileURLToPath(new URL('../../../../../plugins/', import.meta.url))]
 		});
-		await plugins.reconcile(await provider.scan());
+		workspaceArtifacts = [...(await provider.scan())];
+		await reconcileArtifacts();
 		stopWorkspaceProvider = provider.watch(
-			(artifacts) => plugins.reconcile(artifacts),
+			(artifacts) => {
+				workspaceArtifacts = [...artifacts];
+				return reconcileArtifacts();
+			},
 			(error) => console.error('Workspace plugin reload failed.', error)
 		);
 	}
@@ -53,10 +90,17 @@ export async function createAdminHost() {
 		runtime,
 		plugins,
 		bridge,
+		installer,
+		pluginDataRoot,
+		async refreshInstalledPlugins() {
+			installedArtifacts = [...(await installedProvider.scan())];
+			await reconcileArtifacts();
+		},
 		async dispose() {
 			if (disposed) return;
 			disposed = true;
 			await stopWorkspaceProvider?.();
+			await stopInstalledProvider?.();
 			bridge.dispose();
 			await plugins.dispose();
 			await runtime.dispose();
@@ -68,7 +112,9 @@ export async function createAdminHost() {
 	});
 }
 
-export const adminHost = await createAdminHost();
+export const adminHost = await createAdminHost({
+	enableInstalledPlugins: import.meta.env.MODE !== 'test'
+});
 
 if (import.meta.hot) {
 	import.meta.hot.accept();

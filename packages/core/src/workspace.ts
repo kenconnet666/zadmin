@@ -39,7 +39,7 @@ export class WorkspacePluginArtifactProvider implements PluginArtifactProvider {
 				const artifactRoot = resolve(root, entry.name, 'dist');
 				const manifestPath = resolve(artifactRoot, 'zadmin.plugin.json');
 				try {
-					artifacts.push(await loadArtifact(artifactRoot, manifestPath));
+					artifacts.push(await loadWorkspaceArtifact(artifactRoot, manifestPath));
 				} catch (error) {
 					if ((error as NodeJS.ErrnoException).code === 'ENOENT') continue;
 					throw error;
@@ -112,11 +112,9 @@ export class WorkspacePluginArtifactProvider implements PluginArtifactProvider {
 	}
 }
 
-async function loadArtifact(root: string, manifestPath: string): Promise<PluginArtifact> {
-	const manifest = parsePluginManifest(
-		JSON.parse(await readFile(manifestPath, 'utf8')),
-		manifestPath
-	);
+async function loadWorkspaceArtifact(root: string, manifestPath: string): Promise<PluginArtifact> {
+	const artifact = await loadPluginArtifact(root);
+	const manifest = artifact.manifest;
 	const packagePath = resolve(dirname(root), 'package.json');
 	const packageJson = JSON.parse(await readFile(packagePath, 'utf8')) as {
 		name?: unknown;
@@ -125,6 +123,15 @@ async function loadArtifact(root: string, manifestPath: string): Promise<PluginA
 	if (packageJson.name !== manifest.id || packageJson.version !== manifest.version) {
 		throw new Error(`${manifestPath}: id/version must match ${packagePath}.`);
 	}
+	return artifact;
+}
+
+export async function loadPluginArtifact(root: string): Promise<PluginArtifact> {
+	const manifestPath = resolve(root, 'zadmin.plugin.json');
+	const manifest = parsePluginManifest(
+		JSON.parse(await readFile(manifestPath, 'utf8')),
+		manifestPath
+	);
 	const serverPath = resolveEntry(root, manifest.entries.server);
 	await assertFile(serverPath);
 	const clientPath = manifest.entries.client
