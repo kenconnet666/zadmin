@@ -11,15 +11,6 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"test": "vitest --run"
 	},
-	"dependencies": {
-		"@zadmin/core": "workspace:^",
-		"@zadmin/etl": "workspace:^",
-		"@zadmin/oss": "workspace:^",
-		"@zadmin/postgres": "workspace:^",
-		"@zadmin/redis": "workspace:^",
-		"@zadmin/sveltekit": "workspace:^",
-		"@zadmin/zui": "workspace:^"
-	},
 	"devDependencies": {
 		"@sveltejs/adapter-node": "catalog:",
 		"@sveltejs/kit": "catalog:",

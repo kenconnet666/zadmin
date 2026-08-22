@@ -1,8 +1,8 @@
 <svelte:head>
-	<title>ZAdmin ETL</title>
+	<title>ETL | ZAdmin</title>
 </svelte:head>
 
 <main>
-	<h1>ZAdmin ETL</h1>
-	<p>ETL application workspace.</p>
+	<h1>ETL</h1>
+	<p>The standalone ETL application is ready.</p>
 </main>
