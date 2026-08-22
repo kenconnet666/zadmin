@@ -1,28 +1,55 @@
 {
 	"name": "@zadmin/erp",
 	"version": "0.0.0",
-	"private": true,
 	"type": "module",
+	"exports": {
+		".": {
+			"types": "./src/server/index.ts",
+			"import": "./dist/server/index.js"
+		},
+		"./client": {
+			"types": "./src/client/index.ts",
+			"import": "./dist/client/index.js"
+		}
+	},
 	"files": [
 		"dist",
 		"zadmin.plugin.json"
 	],
+	"publishConfig": {
+		"exports": {
+			".": {
+				"types": "./dist/types/index.d.ts",
+				"import": "./dist/server/index.js"
+			},
+			"./client": {
+				"import": "./dist/client/index.js"
+			}
+		}
+	},
 	"scripts": {
 		"clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
-		"build": "pnpm clean && vite build",
+		"build": "pnpm clean && vite build && tsc -p tsconfig.build.json",
 		"dev": "vite build --watch",
 		"pack:plugin": "pnpm build && node ../../packages/core/src/cli.ts pack dist artifacts/erp-0.0.0.zplugin",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
 		"test": "vitest --run"
 	},
 	"peerDependencies": {
+		"@zadmin/approval": "workspace:^",
+		"@zadmin/auth": "workspace:^",
 		"@zadmin/core": "workspace:^",
+		"@zadmin/postgres": "workspace:^",
 		"@zadmin/sveltekit": "workspace:^",
 		"svelte": "^5.0.0"
 	},
 	"devDependencies": {
 		"@sveltejs/vite-plugin-svelte": "catalog:",
+		"@zadmin/approval": "workspace:^",
+		"@zadmin/auth": "workspace:^",
 		"@zadmin/core": "workspace:^",
+		"@zadmin/postgres": "workspace:^",
+		"@zadmin/redis": "workspace:^",
 		"@zadmin/sveltekit": "workspace:^",
 		"svelte": "catalog:",
 		"svelte-check": "catalog:",

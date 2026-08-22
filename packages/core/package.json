@@ -17,6 +17,10 @@
 			"types": "./src/plugin.ts",
 			"import": "./src/plugin.ts"
 		},
+		"./di": {
+			"types": "./src/di.ts",
+			"import": "./src/di.ts"
+		},
 		"./vite": {
 			"types": "./src/artifact/vite.ts",
 			"import": "./src/artifact/vite.ts"
@@ -34,6 +38,10 @@
 			"./plugin": {
 				"types": "./dist/plugin.d.ts",
 				"import": "./dist/plugin.js"
+			},
+			"./di": {
+				"types": "./dist/di.d.ts",
+				"import": "./dist/di.js"
 			},
 			"./vite": {
 				"types": "./dist/artifact/vite.d.ts",

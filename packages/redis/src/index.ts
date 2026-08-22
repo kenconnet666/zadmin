@@ -1,6 +1,31 @@
+import { defineModule, provideFactory, token } from '@zadmin/core/di';
+
 export interface RedisOptions {
 	readonly url?: string;
 }
+
+export const REDIS = token<RedisService>('@zadmin/redis');
+
+export function createRedisModule(options: RedisOptions = {}) {
+	return defineModule({
+		id: REDIS.id,
+		primary: REDIS,
+		exports: [REDIS],
+		providers: [
+			provideFactory({
+				token: REDIS,
+				create: () => createRedis(options),
+				dispose: (cache) => cache.close(),
+				health: (cache) =>
+					cache.closed
+						? { status: 'unhealthy', message: 'Redis service is closed.' }
+						: { status: 'healthy' }
+			})
+		]
+	});
+}
+
+export const redisModule = createRedisModule();
 
 export interface RedisService {
 	readonly driver: 'redis';

@@ -1,5 +1,5 @@
 import type { Component } from 'svelte';
-import type { MaybePromise, PluginDisposer } from '@zadmin/core';
+import type { Disposer as PluginDisposer, MaybePromise } from '@zadmin/core/di';
 
 export interface PluginPageModule {
 	readonly default: Component;

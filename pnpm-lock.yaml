@@ -331,6 +331,9 @@ importers:
 
   packages/auth:
     dependencies:
+      '@zadmin/core':
+        specifier: workspace:^
+        version: link:../core
       '@zadmin/postgres':
         specifier: workspace:^
         version: link:../postgres
@@ -402,6 +405,9 @@ importers:
       '@aws-sdk/s3-request-presigner':
         specifier: 'catalog:'
         version: 3.1115.0
+      '@zadmin/core':
+        specifier: workspace:^
+        version: link:../core
     devDependencies:
       typescript:
         specifier: 'catalog:'
@@ -409,6 +415,9 @@ importers:
 
   packages/postgres:
     dependencies:
+      '@zadmin/core':
+        specifier: workspace:^
+        version: link:../core
       '@zadmin/drizzle':
         specifier: workspace:^
         version: link:../drizzle
@@ -425,6 +434,9 @@ importers:
 
   packages/redis:
     dependencies:
+      '@zadmin/core':
+        specifier: workspace:^
+        version: link:../core
       redis:
         specifier: 'catalog:'
         version: 6.2.1
@@ -481,9 +493,18 @@ importers:
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 7.3.0(svelte@5.56.10(@typescript-eslint/types@8.67.0))(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(tsx@4.23.12))
+      '@zadmin/auth':
+        specifier: workspace:^
+        version: link:../../packages/auth
       '@zadmin/core':
         specifier: workspace:^
         version: link:../../packages/core
+      '@zadmin/postgres':
+        specifier: workspace:^
+        version: link:../../packages/postgres
+      '@zadmin/redis':
+        specifier: workspace:^
+        version: link:../../packages/redis
       '@zadmin/sveltekit':
         specifier: workspace:^
         version: link:../../packages/sveltekit
@@ -508,9 +529,21 @@ importers:
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 7.3.0(svelte@5.56.10(@typescript-eslint/types@8.67.0))(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(tsx@4.23.12))
+      '@zadmin/approval':
+        specifier: workspace:^
+        version: link:../approval
+      '@zadmin/auth':
+        specifier: workspace:^
+        version: link:../../packages/auth
       '@zadmin/core':
         specifier: workspace:^
         version: link:../../packages/core
+      '@zadmin/postgres':
+        specifier: workspace:^
+        version: link:../../packages/postgres
+      '@zadmin/redis':
+        specifier: workspace:^
+        version: link:../../packages/redis
       '@zadmin/sveltekit':
         specifier: workspace:^
         version: link:../../packages/sveltekit
@@ -535,9 +568,21 @@ importers:
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 7.3.0(svelte@5.56.10(@typescript-eslint/types@8.67.0))(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(tsx@4.23.12))
+      '@zadmin/approval':
+        specifier: workspace:^
+        version: link:../approval
+      '@zadmin/auth':
+        specifier: workspace:^
+        version: link:../../packages/auth
       '@zadmin/core':
         specifier: workspace:^
         version: link:../../packages/core
+      '@zadmin/postgres':
+        specifier: workspace:^
+        version: link:../../packages/postgres
+      '@zadmin/redis':
+        specifier: workspace:^
+        version: link:../../packages/redis
       '@zadmin/sveltekit':
         specifier: workspace:^
         version: link:../../packages/sveltekit

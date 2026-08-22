@@ -24,6 +24,7 @@
 		"check": "tsc -p tsconfig.json --noEmit"
 	},
 	"dependencies": {
+		"@zadmin/core": "workspace:^",
 		"@aws-sdk/client-s3": "catalog:",
 		"@aws-sdk/s3-request-presigner": "catalog:"
 	},

@@ -24,6 +24,7 @@
 		"check": "tsc -p tsconfig.json --noEmit"
 	},
 	"dependencies": {
+		"@zadmin/core": "workspace:^",
 		"@zadmin/drizzle": "workspace:^",
 		"drizzle-orm": "catalog:",
 		"postgres": "catalog:"

@@ -1,50 +1,61 @@
 import { describe, expect, it } from 'vitest';
 import type { PluginArtifact } from '../src/artifact.ts';
-import { inject } from '../src/injection.ts';
-import { PluginManager } from '../src/manager.ts';
+import { inject } from '../src/container/injection.ts';
+import { defineModule } from '../src/container/module.ts';
+import { provideValue } from '../src/container/provider.ts';
+import { token } from '../src/container/token.ts';
 import { parsePluginManifest } from '../src/manifest.ts';
-import { PluginRuntime } from '../src/runtime.ts';
+import { PluginManager } from '../src/plugin/manager.ts';
+import { defineApp } from '../src/plugin/definition.ts';
+import { PluginRuntime } from '../src/plugin/runtime.ts';
 
 describe('PluginManager', () => {
-	it('loads artifact revisions and rolls back a failed replacement', async () => {
+	it('loads artifact revisions and retains the active revision after a failed replacement', async () => {
 		const runtime = new PluginRuntime();
+		await runtime.reconcile(defineApp({ id: 'manager-test', plugins: [] }));
 		const manager = managerForTests(runtime, 'manager-test');
 		const v1 = artifact('revision-1', 'return { revision: "revision-1" }');
 		await manager.reconcile([v1]);
 		expect(runtime.snapshot.plugins[0]).toMatchObject({
 			id: '@zadmin/example',
-			artifactRevision: 'revision-1',
+			revision: 'revision-1',
 			state: 'active'
 		});
 
 		const broken = artifact('revision-2', 'throw new Error("broken revision")');
-		await expect(manager.reconcile([broken])).rejects.toThrow('activation failed');
+		await expect(manager.reconcile([broken])).rejects.toThrow('Failed to prepare service');
 
 		expect(manager.artifacts).toEqual([v1]);
 		expect(runtime.snapshot.plugins[0]).toMatchObject({
-			artifactRevision: 'revision-1',
+			revision: 'revision-1',
 			state: 'active'
 		});
+		await runtime.dispose();
 	});
 
 	it('injects host capabilities into a dynamically imported artifact', async () => {
-		const runtime = new PluginRuntime();
-		runtime.provide({ id: 'host-value', version: '1.0.0', value: { value: 42 } });
+		const hostToken = token<{ readonly value: number }>('@zadmin/host-value');
+		const host = defineModule({
+			id: hostToken.id,
+			version: '1.0.0',
+			primary: hostToken,
+			exports: [hostToken],
+			providers: [provideValue(hostToken, { value: 42 })]
+		});
+		const runtime = new PluginRuntime({ modules: [host] });
+		await runtime.reconcile(defineApp({ id: 'manager-host', plugins: [] }));
 		const manager = managerForTests(runtime, 'manager-host');
-		const source = `
-const injection = { id: 'host-value', optional: false }
-export default {
-  id: '@zadmin/example',
-  dependencies: { host: injection },
-  defaultConfig: undefined,
-  setup(_context, dependencies) { return dependencies.host },
-  configure(config) { return { plugin: this, config } }
-}`;
 		await manager.reconcile([
-			artifact('host-revision', undefined, source, { 'host-value': '1.0.0' })
+			artifact(
+				'host-revision',
+				'return dependencies.host',
+				{ '@zadmin/host-value': '1.0.0' },
+				`{ id: '@zadmin/host-value', token: { id: '@zadmin/host-value' }, optional: false, kind: 'service' }`
+			)
 		]);
 
 		expect(runtime.resolve(inject<{ value: number }>('@zadmin/example')).value).toBe(42);
+		await runtime.dispose();
 	});
 });
 
@@ -56,17 +67,30 @@ function managerForTests(runtime: PluginRuntime, appId: string): PluginManager {
 
 function artifact(
 	revision: string,
-	setupBody?: string,
-	source?: string,
-	requires: Record<string, string> = {}
+	createBody: string,
+	requires: Record<string, string> = {},
+	injection = ''
 ): PluginArtifact {
-	const module =
-		source ??
-		`export default {
+	const dependencies = injection ? `{ host: ${injection} }` : '{}';
+	const module = `
+const token = { id: '@zadmin/example' }
+const provider = {
+  token,
+  dependencies: ${dependencies},
+  source: 'factory',
+  create(_context, dependencies) { ${createBody} },
+  prepare(value) {
+    if (value && value.revision === 'revision-2') throw new Error('broken revision')
+  }
+}
+export default {
+  plugin: true,
   id: '@zadmin/example',
-  dependencies: {},
+  version: '0.0.0',
+  primary: token,
+  providers: [provider],
+  exports: [token],
   defaultConfig: undefined,
-  setup() { ${setupBody} },
   configure(config) { return { plugin: this, config } }
 }`;
 	const manifest = parsePluginManifest({

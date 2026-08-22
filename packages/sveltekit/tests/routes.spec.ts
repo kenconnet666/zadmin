@@ -18,6 +18,7 @@ describe('PluginRouteRegistry', () => {
 			path: '/auth/users/new',
 			handler: () => Response.json({ route: 'new' })
 		});
+		await scope.activate();
 
 		await expectJson(registry, '/auth/users/new', { route: 'new' });
 		await expectJson(registry, '/auth/users/42', { route: 'user', id: '42' });
@@ -34,6 +35,7 @@ describe('PluginRouteRegistry', () => {
 			path: '/health/',
 			handler: ({ request }) => new Response(request.method)
 		});
+		await scope.activate();
 
 		const response = await registry.handle(
 			new Request('http://localhost/health/', { method: 'HEAD' })
@@ -49,6 +51,7 @@ describe('PluginRouteRegistry', () => {
 			path: '/auth',
 			handler: () => new Response('auth')
 		});
+		await scope.activate();
 		expect(registry.routes).toHaveLength(1);
 
 		await scope.dispose();

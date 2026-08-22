@@ -6,12 +6,12 @@ afterAll(() => adminHost.dispose());
 describe('admin host composition', () => {
 	it('provides the configured static capabilities', () => {
 		expect(adminHost.runtime.snapshot.plugins).toEqual([]);
-		expect(adminHost.runtime.snapshot.providers).toEqual([
-			expect.objectContaining({ id: '@zadmin/auth', owner: 'host' }),
-			expect.objectContaining({ id: '@zadmin/oss', owner: 'host' }),
-			expect.objectContaining({ id: '@zadmin/postgres', owner: 'host' }),
-			expect.objectContaining({ id: '@zadmin/redis', owner: 'host' }),
-			expect.objectContaining({ id: '@zadmin/sveltekit', owner: 'host' })
+		expect(adminHost.runtime.snapshot.modules).toEqual([
+			expect.objectContaining({ id: '@zadmin/auth', kind: 'host', state: 'active' }),
+			expect.objectContaining({ id: '@zadmin/oss', kind: 'host', state: 'active' }),
+			expect.objectContaining({ id: '@zadmin/postgres', kind: 'host', state: 'active' }),
+			expect.objectContaining({ id: '@zadmin/redis', kind: 'host', state: 'active' }),
+			expect.objectContaining({ id: '@zadmin/sveltekit', kind: 'host', state: 'active' })
 		]);
 	});
 

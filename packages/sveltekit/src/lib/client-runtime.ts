@@ -4,7 +4,7 @@ import type {
 	ClientPluginModule,
 	ClientPluginPage
 } from './pages.ts';
-import type { PluginDisposer } from '@zadmin/core';
+import type { Disposer as PluginDisposer } from '@zadmin/core/di';
 
 export interface ClientPluginArtifact {
 	readonly id: string;

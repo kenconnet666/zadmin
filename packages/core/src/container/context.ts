@@ -7,6 +7,7 @@ export type ScopeState =
 	'active' | 'activating' | 'deactivating' | 'disposed' | 'disposing' | 'prepared';
 
 export interface ServiceContext<Config = unknown> {
+	readonly id: string;
 	readonly moduleId: string;
 	readonly generation: string;
 	readonly kind: ModuleKind;
@@ -45,6 +46,10 @@ export class ServiceScope<Config = unknown> implements ServiceContext<Config> {
 
 	get signal(): AbortSignal {
 		return this.#controller.signal;
+	}
+
+	get id(): string {
+		return this.moduleId;
 	}
 
 	get state(): ScopeState {

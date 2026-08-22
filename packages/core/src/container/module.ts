@@ -22,6 +22,7 @@ export interface ServiceModuleDefinition<
 	Config = unknown
 > {
 	readonly id: Id;
+	readonly version: string;
 	readonly primary: Primary;
 	readonly providers: readonly ProviderDefinition[];
 	readonly exports: readonly AnyServiceToken[];
@@ -69,6 +70,7 @@ export function defineModule<
 	Config = undefined
 >(definition: {
 	readonly id: Id;
+	readonly version?: string;
 	readonly primary?: Primary;
 	readonly providers: readonly ProviderDefinition[];
 	readonly exports?: readonly AnyServiceToken[];
@@ -80,6 +82,7 @@ export function defineModule<
 	for (const serviceToken of definition.exports ?? []) exported.set(serviceToken.id, serviceToken);
 	return Object.freeze({
 		id: definition.id,
+		version: definition.version ?? '0.0.0',
 		primary,
 		providers: Object.freeze([...definition.providers]),
 		exports: Object.freeze([...exported.values()]),
@@ -93,12 +96,14 @@ export function definePlugin<
 	Config = undefined
 >(definition: {
 	readonly id: Id;
+	readonly version?: string;
 	readonly primary: Primary;
 	readonly providers: readonly ProviderDefinition[];
 	readonly config?: Config;
 }): PluginDefinition<Id, Primary, Config> {
 	const module = defineModule({
 		id: definition.id,
+		version: definition.version,
 		primary: definition.primary,
 		providers: definition.providers,
 		exports: [definition.primary],

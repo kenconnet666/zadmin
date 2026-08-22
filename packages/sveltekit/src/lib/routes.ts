@@ -1,4 +1,4 @@
-import type { PluginContext } from '@zadmin/core';
+import type { ServiceContext } from '@zadmin/core/di';
 
 export type RouteMethod = 'DELETE' | 'GET' | 'HEAD' | 'OPTIONS' | 'PATCH' | 'POST' | 'PUT';
 
@@ -29,6 +29,10 @@ interface RouteEntry extends RegisteredRoute {
 
 export class PluginRouteRegistry {
 	readonly #entries: RouteEntry[] = [];
+	readonly #reservations = new Map<
+		string,
+		{ readonly generation: string; readonly owner: string }
+	>();
 
 	get routes(): readonly RegisteredRoute[] {
 		return Object.freeze(
@@ -36,25 +40,42 @@ export class PluginRouteRegistry {
 		);
 	}
 
-	register(context: PluginContext, route: PluginRoute): void {
-		context.onDispose(this.add(context.id, route));
+	register(context: ServiceContext, route: PluginRoute): void {
+		const entry = createEntry(context.id, route);
+		const key = routeKey(entry);
+		const reservation = this.#reservations.get(key);
+		if (reservation) {
+			throw new Error(`Route ${entry.method} ${entry.path} is already registered.`);
+		}
+		const active = this.#entries.find(
+			(candidate) => candidate.method === entry.method && candidate.path === entry.path
+		);
+		if (active && active.pluginId !== context.moduleId) {
+			throw new Error(`Route ${entry.method} ${entry.path} is already registered.`);
+		}
+		const owner = Object.freeze({ owner: context.moduleId, generation: context.generation });
+		this.#reservations.set(key, owner);
+		context.onActivate(() => {
+			if (this.#reservations.get(key) === owner) this.#reservations.delete(key);
+			return this.#activate(entry);
+		});
+		context.onDispose(() => {
+			if (this.#reservations.get(key) === owner) this.#reservations.delete(key);
+		});
 	}
 
 	add(ownerId: string, route: PluginRoute): () => void {
-		const method = route.method ?? 'GET';
-		const path = normalizePath(route.path);
-		if (this.#entries.some((entry) => entry.method === method && entry.path === path)) {
-			throw new Error(`Route ${method} ${path} is already registered.`);
-		}
+		return this.#activate(createEntry(ownerId, route));
+	}
 
-		const compiled = compilePath(path);
-		const entry: RouteEntry = {
-			method,
-			path,
-			pluginId: ownerId,
-			handler: route.handler,
-			...compiled
-		};
+	#activate(entry: RouteEntry): () => void {
+		if (
+			this.#entries.some(
+				(candidate) => candidate.method === entry.method && candidate.path === entry.path
+			)
+		) {
+			throw new Error(`Route ${entry.method} ${entry.path} is already registered.`);
+		}
 		this.#entries.push(entry);
 		this.#entries.sort((left, right) => right.score - left.score);
 		let active = true;
@@ -84,6 +105,22 @@ export class PluginRouteRegistry {
 
 		return undefined;
 	}
+}
+
+function createEntry(ownerId: string, route: PluginRoute): RouteEntry {
+	const method = route.method ?? 'GET';
+	const path = normalizePath(route.path);
+	return {
+		method,
+		path,
+		pluginId: ownerId,
+		handler: route.handler,
+		...compilePath(path)
+	};
+}
+
+function routeKey(route: Pick<RouteEntry, 'method' | 'path'>): string {
+	return `${route.method} ${route.path}`;
 }
 
 function normalizePath(path: string): string {

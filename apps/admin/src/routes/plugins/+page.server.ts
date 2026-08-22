@@ -4,10 +4,17 @@ import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => ({
 	installed: await adminHost.installer.read(),
-	providers: adminHost.runtime.snapshot.providers.filter(({ owner }) => owner === 'host'),
+	providers: adminHost.runtime.snapshot.modules
+		.filter(({ kind }) => kind === 'host')
+		.map(({ id, version }) => ({ id, version, owner: 'host' as const })),
 	plugins: adminHost.runtime.snapshot.plugins.map((plugin) => ({
-		...plugin,
-		error: plugin.error ? String(plugin.error) : undefined
+		id: plugin.id,
+		version: plugin.version,
+		artifactRevision: plugin.revision,
+		state: plugin.state,
+		error: plugin.leakedGenerations.length
+			? `Leaked generations: ${plugin.leakedGenerations.join(', ')}`
+			: undefined
 	})),
 	development: import.meta.env.MODE === 'development'
 });

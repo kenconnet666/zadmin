@@ -1,47 +1,14 @@
-import { definePlugin, inject, injectOptional, type PluginContext } from '@zadmin/core/plugin';
+import { definePlugin } from '@zadmin/core/plugin';
+import { ERP, ERP_ID, erpProvider } from './service.ts';
 
-interface Approval {
-	start(subjectId: string): { readonly id: string; readonly status: string };
-}
-
-interface Auth {
-	readonly provider: 'auth';
-}
-
-interface Database {
-	readonly driver: 'postgres';
-}
-
-interface Web {
-	readonly routes: {
-		register(
-			context: PluginContext,
-			route: { readonly path: string; readonly handler: () => Response }
-		): void;
-	};
-}
+export type { ErpApi } from './contract.ts';
 
 export const erpPlugin = definePlugin({
-	id: '@zadmin/erp',
-	dependencies: {
-		approval: injectOptional<Approval>('@zadmin/approval'),
-		auth: inject<Auth>('@zadmin/auth'),
-		database: inject<Database>('@zadmin/postgres'),
-		web: inject<Web>('@zadmin/sveltekit')
-	},
-	setup(context, dependencies) {
-		dependencies.web.routes.register(context, {
-			path: '/erp/api/status',
-			handler: () =>
-				Response.json({
-					plugin: '@zadmin/erp',
-					status: 'active',
-					approval: dependencies.approval?.start('erp-check').id
-				})
-		});
-
-		return Object.freeze({ domain: 'erp' as const });
-	}
+	id: ERP_ID,
+	primary: ERP,
+	providers: [erpProvider]
 });
+
+export type ErpPlugin = typeof erpPlugin;
 
 export default erpPlugin;
