@@ -1,51 +1,66 @@
-# 工程倾向与决策原则
+# 工程倾向与长期约束
 
-## 目录与边界
+本文件是项目级约束，不是一次任务的临时偏好。
 
-- 根业务目录固定为 `apps/`、`packages/`、`plugins/`。
-- Admin、ETL、Docs 是 App；Approval、ERP、CRM 是动态 Plugin。
-- Core、SvelteKit、Auth、PostgreSQL、Redis、OSS、ZUI、Drizzle 是 Package。
-- 不增加没有明确收益的顶层 config或 tooling目录。
-- Apps 不互相导入；Packages 不依赖 Apps或 Plugins。
+## 代码与依赖
 
-## 代码
+- 优先使用当前且相互兼容的新版本依赖、新 TypeScript语法和标准 ECMAScript能力。
+- 少即是多。一个抽象必须解决已经出现的责任，不能只为“以后可能需要”而存在。
+- 代码应直接、低冗余、可读、可测试；避免反射魔法、隐藏全局状态、重复依赖图和无收益分层。
+- Provider依赖必须显式。业务服务不得通过全局 Service Locator临时查找未声明能力。
+- 异步资源必须有清晰 owner、generation 和 disposer；禁止在插件模块顶层创建连接、timer、watcher或订阅。
+- 一个 Runtime中同一 Service ID和同一 Plugin ID只能有一个 active版本。
 
-- 优先简洁、低冗余和可维护的直接实现。
-- 抽象必须解决已经发生的问题。
-- 跨模块调用使用依赖注入后的普通对象，不使用同进程 RPC。
-- Consumer 在自己的 package 中声明所需最小类型。
-- 生命周期资源归属 Scope，禁止模块顶层隐式连接和定时器。
-- 不用注释复述代码；注释解释约束和非显然原因。
+## 目录
 
-## 插件
+- 仓库根职责固定为 `apps/`、`packages/`、`plugins/`，配置文件属于允许的根级例外。
+- 一个文件夹下面尽量要么全是子文件夹，要么全是代码文件；入口文件、配置、声明和 Manifest可以豁免。
+- 一个文件夹中约 5–10 个同类项目最佳。少量骨架可以更少，超过 10 个时应按真实职责拆分。
+- 不为满足数量机械拆出 `utils/`、`common/`、`base/`；目录名必须表达所有权或业务职责。
+- 当前 `packages/core/src/` 是四个职责目录加四个公开入口：
 
-- 一个 Plugin 一个 package、一个 Manifest、一个制品版本。
-- Server和Client是同一插件的不同入口，不拆成两个产品。
-- Plugin ID等于 package name。
-- 生产只安装预构建 `.zplugin`，不执行未知 install/build脚本。
-- 第一阶段只允许 trusted插件；未实现信任级别直接拒绝。
-- 安装新版本不覆盖旧版本，失败升级恢复旧 revision。
+  ```text
+  app/        应用 Runtime HMR
+  artifact/   Manifest、watch、install、validate、Vite构建策略
+  container/  Token、Injection、Provider、Graph、Scope、Container
+  plugin/     Plugin定义、Manager、Runtime、Validation
 
-## 依赖
+  index.ts    完整服务端入口
+  di.ts       跨平台 DI入口
+  plugin.ts   插件作者入口
+  cli.ts      zadmin-plugin CLI
+  ```
 
-- 优先较新的兼容稳定版本。
-- pnpm catalog统一共享版本。
-- 最新主版本必须通过 peer、类型、测试和构建；不兼容时使用最近兼容版本并记录原因。
-- TypeScript当前使用 6.0.3，因为已验证工具链没有共同支持 TypeScript 7。
+## 类型和插件依赖
 
-## HMR
+- 不创建 `*-api`、`*-provider-api` 等伴生包。
+- 插件 package本身发布 `.d.ts`，下游插件通过正常 pnpm依赖和 `import type`获得上游 Plugin API。
+- 运行时实例仍由 `injectPlugin<TPlugin>(id)`注入，禁止直接 import并执行上游插件实现。
+- 少量并行开发或弱耦合场景允许消费者本地声明最小结构，再使用 `inject<T>(id)`；它是例外，不是默认模式。
+- TypeScript类型可以间接向下游传播；运行时依赖必须由每个直接消费者显式声明，不能依靠传递性 Service Locator。
+- 插件版本同时是其公开 API版本；破坏公开类型必须提升 major版本。
 
-- 开发者不手工重启。
-- App/Package变化允许自动 Host重建；Plugin变化必须局部重载。
-- 构建失败不能卸载当前可用 Plugin。
-- Server和Client候选失败都必须回滚。
-- 无关 Plugin不得因单个 revision变化停止。
-- HMR必须通过真实 dev server和浏览器验证。
+## 装饰器
 
-## Git与验证
+- 只提供现代标准 class decorator `@service()`。
+- 不启用 `experimentalDecorators`、`emitDecoratorMetadata` 或 `reflect-metadata`。
+- 不提供 parameter decorator、property injection、自动扫描或 import时全局注册。
+- 装饰器只在 class constructor自身挂元数据；真正注册仍由 `provideClass()`和 Module显式完成。
+- Factory Provider永远是一等路径，任何功能不得强迫使用装饰器。
 
-- 使用阶段性 Git提交，每个提交保持可检查、可测试和可构建。
-- 不把目录迁移、API重构、业务实现混进同一提交。
-- 保护用户已有改动，不使用破坏性 reset。
-- 测试临时目录和制品在取证后精确清理。
-- 文档必须描述当前行为，旧设计被替换后直接重写而不是继续叠加例外。
+## 生命周期和失败
+
+- 候选 generation先 prepare并通过 health，再撤销旧版本、原子交换 Registry、激活新版本。
+- 候选失败必须保留旧 generation。
+- 旧版本 deactivate失败必须取消切换并尝试恢复旧版本。
+- 新版本 activate失败必须恢复旧 Registry并重新激活旧版本。
+- 新版本已经 active后，旧版本 dispose失败不得伪装成功回滚；旧 generation标为 `leaked`，阻止再次热升级并要求重启 Host。
+- Observer、日志监听器和诊断 UI错误不得改变已经提交的生命周期事务。
+
+## Git、测试和文档
+
+- 大改动阶段性提交；每个提交都必须可以构建和验证。
+- 提交前检查并发进程和工作树，避免把其他人的变化混入当前检查点。
+- 验证按风险递进：类型检查 → focused tests → 全仓测试 → build → lint → 真实集成/HMR。
+- 临时测试源码、浏览器标签、watcher、上传包和临时目录在验收后必须恢复或清理。
+- 行为变化必须同步更新文档和换设备交接；过期蓝图直接删除，不累积“历史正确、当前错误”的说明。

@@ -1,17 +1,30 @@
-# ZAdmin 换设备开发交接
+# 换设备开发交接
 
-更新日期：**2026-08-22**。当前实现基线以本次最终文档提交为准；换设备前使用 `git log -1 --oneline` 记录实际 HEAD。
+更新时间：2026-08-23。
 
-## 环境
+## 当前结论
 
-- Node.js：已验证 `v24.18.0`；
-- pnpm：`11.22.0`，由根 `package.json` 固定；
-- 当前骨架不需要 Docker、PostgreSQL、Redis或 OSS服务；
-- Playwright Chromium 缺失时执行 `pnpm --filter @zadmin/docs exec playwright install chromium`。
+DI容器、Plugin Module、上下游插件类型传播、服务端/客户端独立HMR、Artifact安装和构建验证已经实现并完成真实浏览器验收。后续业务开发直接在此基础上添加真实数据库、鉴权、ERP/CRM/审批流业务，不需要再设计第二套插件调用方式。
+
+关键代码检查点：
+
+```text
+cbd4c12 feat: add generation-aware service container
+857e4a1 refactor: run host and plugins through service modules
+587d393 feat: harden plugin builds and hot replacement
+```
+
+最终文档提交之后请用下面命令确认实际HEAD：
 
 ```powershell
-corepack enable
-corepack prepare pnpm@11.22.0 --activate
+git log -5 --oneline
+git status --short --branch
+```
+
+## 新设备恢复
+
+```powershell
+cd C:\code\zadmin
 pnpm install --frozen-lockfile
 pnpm check
 pnpm test
@@ -19,91 +32,189 @@ pnpm build
 pnpm lint
 ```
 
-## 当前结构
+如果仓库位于其他路径，命令不依赖 `C:\code\zadmin`；只有本文档中的示例路径需要替换。
 
-```text
-apps/       admin、etl、docs
-packages/   core、sveltekit、auth、postgres、redis、oss、zui、drizzle
-plugins/    approval、erp、crm
-```
-
-ETL 是原生 SvelteKit App；Approval、ERP、CRM 是动态插件；基础能力是静态 Package。
-
-## 日常命令
+启动Admin：
 
 ```powershell
 pnpm dev:admin
-pnpm dev:etl
-pnpm dev:docs
 ```
 
-`dev:admin` 同时启动 Admin和三个 Plugin build watcher。若只需要自定义 Admin端口，直接运行：
+打开：
 
-```powershell
-pnpm --filter @zadmin/admin exec vite dev --port 5174
+```text
+http://localhost:5173/
+http://localhost:5173/plugins
+http://localhost:5173/approval
+http://localhost:5173/erp
+http://localhost:5173/crm
 ```
 
-注意：直接启动 Admin不会同时启动插件 watcher，适合只调试 App；完整插件 HMR必须用根命令。
+运行时诊断：
 
-## 已完成
+```text
+GET /__zadmin/runtime
+GET /__zadmin/health
+GET /__zadmin/plugins/client
+GET /__zadmin/plugins/installed
+```
 
-- Apps/Packages/Plugins目录重新分类；
-- ETL移除 Plugin Runtime，改为独立 App；
-- 字符串 ID强类型 Injection；
-- Host和Plugin统一 Provider容器；
-- required/optional依赖图和 dependent重启；
-- 服务端和客户端失败 revision回滚；
-- Workspace插件自动构建、发现和 HMR；
-- 自包含 Svelte Client Artifact动态页面；
-- Manifest、SemVer和信任级别校验；
-- `.zplugin` pack、安全解包和版本目录；
-- install、enable、disable、activate、uninstall；
-- Installed Provider和生产启动冒烟；
-- 最小 Admin插件诊断页面和 mutation API。
+## 当前目录
 
-## 仍是骨架
+```text
+apps/
+  admin/
+  docs/
+  etl/
 
-- PostgreSQL、Redis、OSS没有真实连接；
-- Auth没有真实用户、会话和权限；
-- ETL没有数据源、作业、调度和执行器；
-- Approval、ERP、CRM只有页面、状态接口和最小调用；
-- 没有插件签名、市场和恶意代码沙箱；
-- 生产管理 UI尚未接真实 Auth，mutation API临时使用 `ZADMIN_PLUGIN_ADMIN_TOKEN`。
+packages/
+  auth/
+  core/
+  drizzle/
+  oss/
+  postgres/
+  redis/
+  sveltekit/
+  zui/
+
+plugins/
+  approval/
+  crm/
+  erp/
+```
+
+根目录没有独立 `config/`或 `tooling/`目录。
+
+`packages/core/src/`已经整理为：
+
+```text
+app/
+artifact/
+container/
+plugin/
+cli.ts
+di.ts
+index.ts
+plugin.ts
+```
+
+旧版 `runtime.ts`、`types.ts`、`injection.ts`等顶层转发文件已删除，不能按旧路径继续实现。
 
 ## 关键入口
 
-| 目的                   | 文件                                                      |
-| ---------------------- | --------------------------------------------------------- |
-| Injection与 Plugin定义 | `packages/core/src/injection.ts`、`definition.ts`         |
-| Runtime和依赖图        | `packages/core/src/runtime.ts`、`graph.ts`                |
-| Manifest和Manager      | `packages/core/src/manifest.ts`、`manager.ts`             |
-| Workspace监听          | `packages/core/src/workspace.ts`                          |
-| 安装制品               | `packages/core/src/installed.ts`、`cli.ts`                |
-| 服务端路由             | `packages/sveltekit/src/lib/routes.ts`                    |
-| Client Runtime         | `packages/sveltekit/src/lib/client-runtime.ts`            |
-| Admin Host             | `apps/admin/src/lib/server/host.ts`                       |
-| Admin Plugin桥         | `apps/admin/src/lib/server/plugins.ts`、`hooks.server.ts` |
-| 插件示例               | `plugins/approval`、`plugins/erp`、`plugins/crm`          |
+| 责任                        | 文件                                                   |
+| --------------------------- | ------------------------------------------------------ |
+| ServiceContainer事务        | `packages/core/src/container/container.ts`             |
+| Provider图和可见性          | `packages/core/src/container/graph.ts`                 |
+| Scope和资源回调             | `packages/core/src/container/context.ts`               |
+| Provider与`@service`        | `packages/core/src/container/provider.ts`              |
+| Token/Injection             | `packages/core/src/container/token.ts`、`injection.ts` |
+| Plugin定义                  | `packages/core/src/container/module.ts`                |
+| PluginRuntime               | `packages/core/src/plugin/runtime.ts`                  |
+| Artifact Manager            | `packages/core/src/plugin/manager.ts`                  |
+| Manifest/Definition校验     | `packages/core/src/plugin/validation.ts`               |
+| Artifact扫描与revision      | `packages/core/src/artifact/workspace.ts`              |
+| 安装器                      | `packages/core/src/artifact/installed.ts`              |
+| Plugin构建策略              | `packages/core/src/artifact/vite.ts`                   |
+| Package/Manifest校验        | `packages/core/src/artifact/validation.ts`             |
+| Admin组合和HMR              | `apps/admin/src/lib/server/host.ts`                    |
+| EventSource/Client Artifact | `apps/admin/src/lib/server/plugins.ts`                 |
+| 服务端动态路由              | `packages/sveltekit/src/lib/routes.ts`                 |
+| 浏览器Plugin Runtime        | `packages/sveltekit/src/lib/client-runtime.ts`         |
+| Approval公开类型            | `plugins/approval/src/server/contract.ts`              |
+| CRM上游类型依赖示例         | `plugins/crm/src/server/contract.ts`、`service.ts`     |
 
-## 生产数据
+## 当前调用方式
 
-默认插件数据位于系统应用数据目录。部署时建议显式设置绝对路径：
+默认：下游 package依赖上游Plugin package，类型自然传播：
+
+```ts
+import type { ApprovalPlugin } from '@zadmin/approval';
+
+approval: injectPlugin<ApprovalPlugin>('@zadmin/approval');
+```
+
+少量并行编译或弱耦合场景：
+
+```ts
+interface ApprovalStarter {
+	start(id: string): { readonly id: string };
+}
+
+approval: inject<ApprovalStarter>('@zadmin/approval');
+```
+
+两种形式运行时都进入同一个Provider图；禁止直接import上游Plugin实现值。
+
+## 当前生命周期
+
+-所有 Provider为Module generation单例，启动时全部构造。
+-candidate先create/prepare/health。
+-旧版本deactivate后原子切换Registry。
+-candidate activate失败恢复旧Registry。
+-旧版本dispose失败标记leaked并阻止后续热升级。
+-Host Module不能依赖Dynamic Plugin。
+-Plugin primary是唯一默认公开能力，内部Provider私有。
+-Module依赖可以互相出现，实际Provider图不能成环。
+
+## HMR实测结论
+
+2026-08-23在Windows本机完成：
+
+-服务端Approval变化只重建Approval、CRM、ERP；Host generation保持。
+-client revision不随server变化。
+-客户端Approval变化通过EventSource更新当前DOM，不重启server generation。
+-Host HMR会close旧EventSource stream，浏览器自动重连刷新。
+-Approval类型签名变化会被CRM、ERP watcher同时发现，恢复后自动清错。
+-正常 `dev:admin`只有7个相关Node进程，不再倍增watcher。
+
+详见 [开发态热重载](./development-hmr.md)。
+
+## Artifact与数据目录
+
+开发Artifact：
+
+```text
+plugins/*/dist
+```
+
+生产安装状态默认：
+
+```text
+Windows: %LOCALAPPDATA%\ZAdmin\apps\admin\plugins
+Linux:   $XDG_DATA_HOME/ZAdmin/apps/admin/plugins
+```
+
+可通过绝对路径环境变量覆盖：
 
 ```powershell
 $env:ZADMIN_DATA_DIR = 'D:\zadmin-data'
-$env:ZADMIN_PLUGIN_ADMIN_TOKEN = '<secret-from-secure-store>'
 ```
 
-不要提交这些值。`.env*` 已忽略；密钥通过部署系统或安全凭据存储提供。
+生产修改插件安装状态还需要：
 
-## 下一业务顺序
+```powershell
+$env:ZADMIN_PLUGIN_ADMIN_TOKEN = '<secret>'
+```
 
-1. PostgreSQL + Drizzle真实纵向切片；
-2. Auth最小用户/会话/权限闭环，并保护诊断与管理接口；
-3. Approval最小审批闭环和迁移；
-4. ERP或CRM选择一个最小业务闭环；
-5. Redis、OSS按真实需求接入；
-6. ETL最小可执行作业；
-7. 插件签名、权限声明和更高信任级别。
+不要把token写入仓库、命令输出或文档。
 
-继续开发前先读[工作区与架构](./architecture.md)、[插件开发](./plugin-development.md)、[插件生命周期](./plugin-lifecycle.md)和[开发态热重载](./development-hmr.md)。
+## 已知且刻意保留的边界
+
+-只支持可信插件；没有沙箱。
+-Node ESM Module Record不能真正卸载，业务资源和Registry可以卸载。
+-没有transient/request/resolution scope；短生命周期用显式factory或SvelteKit RequestEvent。
+-没有multi-binding、AOP、自动扫描、property/parameter injection和循环代理。
+-Admin已安装插件当前只使用Plugin `defaultConfig`，尚无业务配置UI和schema持久化。
+-卸载删除安装记录但保留历史版本目录，方便回滚和诊断；磁盘清理策略需在真实运维需求出现后单独设计。
+-真实PostgreSQL、Redis和OSS客户端仍是基础骨架，后续业务接入不能把DI/HMR测试误当成真实外部服务验收。
+
+这些不是未完成的DI路线图；除非出现明确业务需求，不添加占位接口。
+
+## 下一位开发者的第一步
+
+1. 先运行四条全仓验证命令。
+2. 阅读 `dependency-injection.md`和`plugin-development.md`。
+3. 业务插件优先扩展自己的primary API和内部Provider，不开放内部Bean ID。
+4. 修改Runtime/HMR后按 `testing.md`执行真实浏览器验收。
+5. 阶段性提交并更新本交接文件。

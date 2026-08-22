@@ -1,58 +1,77 @@
 # ZAdmin
 
-ZAdmin is a pnpm workspace for SvelteKit applications, reusable libraries, and full-stack plugins.
+ZAdmin 是一个以 SvelteKit、TypeScript 和 pnpm workspace 为基础的全栈脚手架。静态基础能力和动态业务插件运行在同一个进程内，通过强类型 DI 容器直接调用；动态插件可以安装、禁用、升级和局部热替换。
 
-## Workspace
+## 工作区
 
 ```text
 apps/
-  admin/     Administration application
-  etl/       ETL application
-  docs/      Component and development documentation
+  admin/       管理宿主，同时装载静态能力与动态插件
+  etl/         独立 ETL 应用
+  docs/        组件、示例与开发文档应用
 
 packages/
-  core/      Dependency injection, plugin runtime, artifacts, and installer
-  sveltekit/ SvelteKit host and client plugin runtime
-  auth/      Authentication foundation
-  postgres/  PostgreSQL foundation
-  redis/     Redis foundation
-  oss/       Object storage foundation
-  zui/       Reusable Svelte component library
-  drizzle/   Reusable Drizzle enhancements
+  core/        DI 容器、插件 Runtime、Artifact、Installer
+  sveltekit/   服务端动态路由与浏览器插件 Runtime
+  auth/        鉴权基础能力
+  postgres/    PostgreSQL 基础能力
+  redis/       Redis 基础能力
+  oss/         对象存储基础能力
+  zui/         可供任意项目使用的 Svelte 组件库
+  drizzle/     可供任意项目使用的 Drizzle 增强库
 
 plugins/
-  approval/  Approval workflow plugin
-  erp/       ERP plugin
-  crm/       CRM plugin
+  approval/    审批流插件
+  crm/         CRM 插件，类型依赖 Approval
+  erp/         ERP 插件，类型依赖 Approval
 ```
 
-## Development
+## 开发
 
-```sh
+```powershell
 pnpm install
 pnpm dev:admin
+```
+
+`dev:admin` 启动：
+
+- 一个 Admin Vite开发服务器；
+- 每个动态插件一个 Vite artifact watcher；
+- 每个动态插件一个 TypeScript watcher，用于把上游插件类型变化立即传播给下游插件。
+
+其他应用：
+
+```powershell
 pnpm dev:etl
 pnpm dev:docs
 ```
 
-`pnpm dev:admin` starts Admin together with the Approval, ERP, and CRM artifact watchers.
+## 验证
 
-## Validation
-
-```sh
+```powershell
 pnpm check
-pnpm lint
 pnpm test
 pnpm build
+pnpm lint
 ```
 
-## Documentation
+动态插件构建还会自动执行：
 
-- [Next implementation blueprint](./apps/docs/content/implementation-blueprint.md)
-- [Device handoff and development recovery](./apps/docs/content/handoff.md)
-- [Architecture](./apps/docs/content/architecture.md)
-- [Plugin development](./apps/docs/content/plugin-development.md)
-- [Plugin lifecycle](./apps/docs/content/plugin-lifecycle.md)
-- [Development HMR](./apps/docs/content/development-hmr.md)
-- [Testing](./apps/docs/content/testing.md)
-- [Engineering preferences](./apps/docs/content/engineering-preferences.md)
+- Manifest Protocol v2 校验；
+- package name/version 校验；
+- peerDependencies 与运行时 Injection范围校验；
+- 跨插件 runtime import检查；
+- server/client 独立 revision计算；
+- 标准装饰器降级和产物加载验证。
+
+## 文档
+
+- [文档索引](./apps/docs/content/README.md)
+- [架构与目录](./apps/docs/content/architecture.md)
+- [DI 容器](./apps/docs/content/dependency-injection.md)
+- [插件开发](./apps/docs/content/plugin-development.md)
+- [插件生命周期](./apps/docs/content/plugin-lifecycle.md)
+- [开发态热重载](./apps/docs/content/development-hmr.md)
+- [测试与验收](./apps/docs/content/testing.md)
+- [工程倾向](./apps/docs/content/engineering-preferences.md)
+- [换设备交接](./apps/docs/content/handoff.md)

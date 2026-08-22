@@ -1,169 +1,140 @@
-# 工作区与架构
+# 架构与目录
 
-## 总体模型
+## 总体形态
 
-ZAdmin 是 SvelteKit、TypeScript 和 pnpm workspace 项目，明确分为三层：
-
-```text
-Apps     独立产品和启动入口
-Packages 静态安装、可直接依赖的基础能力
-Plugins  可动态安装和热重载的粗粒度业务扩展
-```
-
-服务端 Package 和 Plugin 之间使用同进程依赖注入与普通 JavaScript 对象调用，不使用内部 HTTP、RPC 或微服务发现。
-
-## 目录
+ZAdmin是一个 pnpm workspace中的多应用、可复用 Package和动态 Plugin系统。SvelteKit同时承担页面、SSR和服务端入口，不拆分单独 Java后端或 HTTP微服务层。
 
 ```text
 apps/
-  admin/        管理产品、静态能力组合和主要插件宿主
-  etl/          独立 ETL应用
-  docs/         文档、Storybook和开发演示
+  admin/       宿主应用和插件控制面
+  etl/         独立 ETL 应用，不是动态插件
+  docs/        ZUI/文档/演示应用
 
 packages/
-  core/         DI、Runtime、Manifest、Artifact Provider和Installer
-  sveltekit/    动态路由、客户端插件运行时和页面出口
-  auth/         静态鉴权骨架
-  postgres/     静态 PostgreSQL骨架
-  redis/        静态 Redis骨架
-  oss/          静态对象存储骨架
-  zui/          通用 Svelte组件库
-  drizzle/      通用 Drizzle增强库
+  core/        DI、Plugin Runtime、Artifact、Installer
+  sveltekit/   动态服务端路由、浏览器页面 Runtime
+  auth/        可选鉴权 Module
+  postgres/    可选数据库 Module
+  redis/       可选缓存 Module
+  oss/         可选对象存储 Module
+  zui/         公共 UI库
+  drizzle/     公共 ORM增强库
 
 plugins/
-  approval/     审批流插件骨架
-  erp/          ERP插件骨架
-  crm/          CRM插件骨架
+  approval/    动态业务插件
+  crm/         动态业务插件
+  erp/         动态业务插件
 ```
 
-ETL 和 Docs 是 App；Auth、SvelteKit、PostgreSQL、Redis、OSS 是 Package；Approval、ERP、CRM 是 Plugin。
+## Provider、Module与Plugin
 
-## 依赖方向
+所有可注入能力都是 Provider，但不是所有 Module都是动态 Plugin。
 
 ```text
-apps → packages
-apps → Plugin Runtime → plugins
-plugins → packages公开入口
-
-packages ─X→ plugins
-packages ─X→ apps
-plugins ─X→ apps内部源码
-apps ─X→ 其他apps内部源码
+ServiceContainer
+  ├─ Host ServiceModule generation
+  │    ├─ @zadmin/sveltekit
+  │    ├─ @zadmin/postgres
+  │    ├─ @zadmin/redis
+  │    ├─ @zadmin/oss
+  │    └─ @zadmin/auth
+  └─ Dynamic Plugin generation
+       ├─ @zadmin/approval
+       ├─ @zadmin/crm
+       └─ @zadmin/erp
 ```
 
-Admin 和 ETL 需要共享的实现必须提取到 Package。
+- Host Module随 Admin Host启动和关闭；修改静态 Package后完整重建 Host。
+- Dynamic Plugin来自 workspace或已安装 artifact，可以独立安装、禁用和升级。
+- Host Module和Plugin使用同一个 Provider图、同一个 Scope语义和同一个异步释放机制。
+- Artifact扫描、版本兼容和客户端入口只属于 Plugin控制面。
 
-## 静态 Host 能力
+## 公开与私有能力
 
-Admin 使用普通工厂创建基础能力：
-
-```ts
-const web = createSvelteKitHost();
-const database = createPostgres();
-const cache = createRedis();
-const storage = createOss();
-const auth = createAuth({ database, cache, web });
-```
-
-然后把对象提供给 Plugin Runtime：
-
-```ts
-runtime.provide({ id: '@zadmin/postgres', version: '0.0.0', value: database });
-```
-
-静态能力不支持生产态动态卸载；Package 变化需要重启 App，开发态由 Vite 自动重建 Host。
-
-## 动态依赖注入
-
-插件不导入 Provider 实例。调用方在自己的 package 中声明需要的最小结构：
-
-```ts
-interface Approval {
-	start(subjectId: string): { id: string; status: string };
-}
-```
-
-通过稳定字符串 ID 声明依赖：
-
-```ts
-dependencies: {
-	approval: injectOptional<Approval>('@zadmin/approval');
-}
-```
-
-Runtime 只用 ID 查找当前 active 值。Provider 是静态 Package 还是动态 Plugin，对 Consumer 没有区别。
-
-必需依赖缺失时 Plugin 进入 `waiting`；可选依赖缺失时注入 `undefined`。Provider 新增、删除或替换时，dependents 会重新执行 `setup()` 并取得新对象。
-
-## 服务端插件
-
-每个插件是一个预构建 ESM Artifact，默认导出 `PluginDefinition`。`setup()` 返回值成为该 Plugin ID 的 Provider。
-
-动态路由由 `@zadmin/sveltekit` 注册，并归属 `PluginScope`。插件停止、失败、禁用或升级时，路由随 Effect 自动撤销。
-
-当前动态接口：
+每个动态 Plugin必须有一个 primary Provider，ID与 Plugin ID完全一致：
 
 ```text
-/approval/api/status
-/erp/api/status
-/crm/api/status
+Plugin:          @zadmin/crm
+Primary Service: @zadmin/crm
+Internal Bean:   @zadmin/crm/customer-index
 ```
 
-## 客户端插件
+- 跨插件默认只能注入 primary Provider。
+- 插件内部 Provider必须位于 `plugin-id/`命名空间，且默认私有。
+- Host Module只有显式列入 `exports`的 Provider才能被其他 Module注入。
+- Host Module不能依赖动态 Plugin；动态 Plugin可以依赖 Host Module或其他 Plugin。
+- Dynamic Plugin之间允许 Module层面互相出现依赖，只要实际 Provider/Bean图仍是有向无环图。这支持“不同 Bean分别调用、并没有构造循环”的场景。
 
-Client Artifact 导出：
+## 插件 package就是类型来源
+
+不拆分独立 API package。上游插件导出：
 
 ```ts
-activate(context: ClientPluginContext): PluginDisposer
+export const approvalPlugin = definePlugin({ ... });
+export type ApprovalPlugin = typeof approvalPlugin;
+export type { ApprovalApi, ApprovalRecord } from './contract.ts';
 ```
 
-插件向 `ClientPageStore` 注册 mount/unmount 函数。客户端 Bundle 第一阶段自包含 Svelte Runtime，Host 不跨 Bundle 传递 Svelte Component对象。
+下游插件：
 
-当前动态页面：
+```ts
+import type { ApprovalPlugin } from '@zadmin/approval';
+
+const dependencies = {
+	approval: injectOptionalPlugin<ApprovalPlugin>('@zadmin/approval')
+};
+```
+
+`import type`在产物中消失；运行时只保留字符串 ID和 DI查找。Vite构建策略会 externalize Manifest中的 runtime dependency，一旦发现实际 JavaScript import就直接构建失败。
+
+## 服务端与浏览器隔离
+
+服务端 Container可以持有数据库、Redis、OSS、鉴权、路由和后台任务。浏览器端只有：
+
+- 页面 contribution；
+- mount/unmount disposer；
+- client artifact revision；
+  -批量替换和失败回滚。
+
+浏览器端不是服务端 Container的 child scope，不能解析数据库或凭据。两端只共享：
+
+- Plugin ID；
+- Manifest；
+- public TypeScript类型；
+  -分别计算的 server/client revision。
+
+## Artifact与安装
+
+Plugin build输出：
 
 ```text
-/approval
-/erp
-/crm
+dist/
+  server/index.js
+  client/index.js
+  types/*.d.ts
+  zadmin.plugin.json
 ```
 
-Auth 是静态 Package，但其 `/auth` 页面注册到同一个 ClientPageStore。
+Artifact具有三个内容身份：
 
-## Artifact 来源
+- `revision`：完整 artifact，用于同版本不可变安装检查；
+- `serverRevision`：忽略 client和types，只决定服务端 generation；
+- `clientRevision`：忽略 server和types，只决定浏览器插件更新。
 
-Core 有两个实现相同接口的来源：
+因此：
 
-```text
-WorkspacePluginArtifactProvider
-  开发态扫描 plugins/*/dist
-
-InstalledPluginArtifactProvider
-  生产态读取 ZADMIN_DATA_DIR 下 installed.json和版本目录
-```
-
-二者都输出 `PluginArtifact`，后续 Manifest 校验、SemVer 检查、动态 import、Runtime reconcile 和 Client reload 共用同一路径。
-
-## 安装状态
-
-生产数据不写仓库。默认使用系统应用数据目录，也可用绝对路径环境变量 `ZADMIN_DATA_DIR` 覆盖。
-
-```text
-<data>/apps/admin/plugins/
-  installed.json
-  staging/
-  packages/
-    %40zadmin%2Fapproval/
-      0.0.0/
-```
-
-安装新版本不覆盖旧目录；`activate(id, version)` 可以切回旧版本。Uninstall 删除安装状态但保留版本文件和业务数据，便于恢复。
+- 只改 server：重建该 Plugin及其服务端 dependents，浏览器不重载；
+- 只改 client：浏览器局部替换，服务端 generation保持原对象；
+- 只改公开类型：TypeScript watcher检查下游，不制造运行时 revision。
 
 ## 信任边界
 
-当前只接受 `requiredTrust: "trusted"`。插件在 Admin 进程权限下运行，尚无恶意代码沙箱。Manifest 声明其他信任级别会被拒绝。
+Protocol v2当前只接受 `requiredTrust: "trusted"`。动态 import的是同进程 JavaScript，拥有 Host进程权限。所谓卸载是：
 
-Admin 生产 mutation API 要求 `ZADMIN_PLUGIN_ADMIN_TOKEN` Bearer token；未配置时返回 503。真正的 Auth 管理员权限接入属于后续业务阶段。
+-撤销 Provider Registry；
+-撤销路由和页面；
+-停止任务和订阅；
+-触发 AbortSignal；
+-释放 Scope资源。
 
-## 当前业务边界
-
-插件系统、Artifact、Installer 和开发 HMR 已实现；PostgreSQL、Redis、OSS、Auth、ETL、Approval、ERP、CRM 仍然只是最小骨架，不应描述为业务可用。
+Node.js ESM Module Record不能真正从进程缓存中删除。恶意代码沙箱、进程隔离和权限模型不在当前实现范围内。

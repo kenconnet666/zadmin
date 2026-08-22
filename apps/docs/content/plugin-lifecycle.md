@@ -1,71 +1,168 @@
 # 插件生命周期
 
-## 状态
+## 身份与状态单位
 
-| 状态         | 含义                                 |
-| ------------ | ------------------------------------ |
-| `registered` | 已进入 Runtime，尚未启动             |
-| `waiting`    | 必需 Injection 没有 active Provider  |
-| `starting`   | 正在执行 `setup()`                   |
-| `active`     | 返回值已经注册为 Provider            |
-| `stopping`   | 正在撤销资源和贡献                   |
-| `stopped`    | 已完成清理，可再次启动               |
-| `failed`     | setup或dispose失败，错误保留在快照中 |
+三个概念不能混淆：
 
-## Provider
+- Plugin ID：稳定业务身份，例如 `@zadmin/approval`。
+- Artifact version：SemVer兼容身份。
+- Generation ID：一次实际装载实例，包含内容 revision前缀和 UUID。
 
-Host Package 通过 `runtime.provide()` 注册静态 Provider。动态 Plugin 的 `setup()` 返回值自动以 Plugin ID注册 Provider。
+同一 Plugin ID在一个 Runtime中最多有一个 active generation，但失败释放的旧 generation可能以 `leaked`诊断记录存在。
 
-同一个 ID 只能有一个 active Provider。Host 与 Plugin 冲突、两个 Plugin ID重复都会失败。
+## Artifact发现
 
-## 启动
-
-1. 规范化 Plugin Definition、version和artifactRevision；
-2. 由 Injection ID构建依赖图并拒绝必需依赖环；
-3. 按拓扑顺序启动；
-4. required Provider缺失时进入 waiting；
-5. optional Provider缺失时注入 `undefined`；
-6. 创建 `PluginScope` 和 AbortSignal；
-7. 执行 `setup(context, dependencies, config)`；
-8. 注册返回值并进入 active；
-9. setup失败时清理已经注册的 Effect并进入 failed。
-
-## 停止
-
-停止 Provider前先反向拓扑停止所有 dependents。每个 Plugin：
-
-1. 从 Provider容器撤销当前值；
-2. 进入 stopping；
-3. AbortSignal触发；
-4. Effect按 LIFO顺序异步清理；
-5. 清除 API、Scope和 waiting状态；
-6. 成功进入 stopped，失败进入 failed。
-
-## Revision reconcile
-
-Artifact ID/version/content hash、Definition或配置变化都会触发 reconcile。变化 Provider 的 required 和 optional dependents 都会重新 setup并取得新对象；无关 Plugin 不停止。
-
-`PluginSnapshot.revision` 是该记录被重启的次数，`artifactRevision` 是当前内容哈希。
-
-## 事务式 Manager
-
-PluginManager 在改变当前 Runtime 前先加载所有候选 Server Artifact。候选激活后如果任何 Plugin failed或waiting：
+开发态：
 
 ```text
-停止候选
-  → reconcile旧 App Definition
-  → 恢复旧 Provider和dependents
-  → 保持旧 artifacts为current
+plugins/*/dist
+  → WorkspacePluginArtifactProvider
+  → serverRevision/clientRevision变化
+  → PluginManager串行reconcile
 ```
 
-相同 ID/revision集合是 no-op，不会因为轮询重复重载。
+生产态：
 
-## Client 生命周期
+```text
+installed.json
+  → InstalledPluginArtifactProvider
+  → 选中的id/version/enabled
+  → PluginManager串行reconcile
+```
 
-ClientPluginRuntime 先 import所有变化模块，再批量 dispose旧 Client Plugin并 activate新模块。新模块失败时，已激活候选被清理，旧模块重新 activate。
+Workspace artifact覆盖同 ID的installed artifact，便于本地开发。
 
-页面路径只能由一个 owner注册。Plugin disposer必须撤销它拥有的全部页面和 DOM资源。
+## 安装
 
-## 进程边界
+`.zplugin`只允许普通文件和目录；安装前检查：
 
-Node.js ESM模块记录不能真正卸载。ZAdmin 的卸载定义为释放 Scope、路由、页面、Provider和业务资源；新 revision使用带哈希的 URL导入。旧模块记录最终由进程重启清理。
+-路径穿越、绝对路径、Windows drive路径；
+-文件数和解压后总字节上限；
+-Manifest Protocol、trust、entry路径；
+-entry文件存在；
+-同 ID/version已有内容时 revision必须完全一致。
+
+解压在数据目录下的 staging完成，然后原子 rename到版本目录。安装状态通过临时文件加 rename写入。
+
+Admin对 install、enable、disable、activate和uninstall再包一层 Runtime事务：
+
+```text
+保存installed.json快照
+  → 修改安装状态
+  → scan + Runtime reconcile
+  → 成功：保留新状态
+  → 失败：恢复状态快照并reconcile旧集合
+```
+
+已解压但未激活的版本文件不会在失败时删除，可用于后续诊断或重新激活；`uninstall`当前删除安装记录，不物理删除历史版本目录。
+
+## Waiting
+
+required Injection不存在时：
+
+- Plugin仍在 desired Module计划中；
+  -没有 Scope和Provider实例；
+  -状态为 `waiting`并列出 `waitingFor`；
+  -其 required dependents也会等待；
+  -Client Artifact不会发布。
+
+依赖后来出现时，Runtime自动构造 Plugin及受影响 dependents。
+
+Manifest版本不兼容与“依赖不存在”不同：已安装但版本不满足范围时，Manager拒绝新的 artifact集合并保留旧集合，防止把不兼容实例注入强类型调用点。
+
+## 激活
+
+候选阶段：
+
+1. 根据新旧Provider图计算changed Module和传递dependents。
+2. 为每个可运行affected Module创建 candidate Scope。
+3. 正向拓扑执行 Provider `create()`。
+4. 执行 `prepare()`。
+5. 执行 `health()`，非healthy候选不能提交。
+6. 此时路由、页面、队列consumer和timer不得对外发布。
+
+提交阶段：
+
+1. 反向撤销旧 Scope activation contribution。
+2. 反向执行旧 Provider `deactivate()`。
+3. 一次替换 active Registry引用。
+4. 正向执行新 Provider `activate()`。
+5. 正向执行新 Scope activation contribution。
+6. 反向 `dispose()`旧 generation。
+
+## 回滚
+
+### Candidate准备失败
+
+```text
+dispose candidate
+  → 旧Registry不变
+  → 旧路由和实例不动
+```
+
+Factory在抛错前没有成功返回实例时，Container不会把 `undefined`传给其dispose；Factory必须自行清理“创建到一半后抛错”的局部资源。
+
+### 旧版本Deactivate失败
+
+```text
+不交换Registry
+  → 重新activate旧generation
+  → dispose candidate
+```
+
+### 新版本Activate失败
+
+```text
+deactivate candidate
+  → 恢复旧Registry
+  → reactivate old
+  → dispose candidate
+```
+
+### 旧版本Dispose失败
+
+新版本已经对外提供服务，此时不伪装为可安全回滚：
+
+-新版本保持 active；
+-旧 generation标为 `leaked`；
+-Runtime进入 `degraded`；
+-同 Module再次replacement抛出 `LeakedGenerationError`；
+-Host关闭返回错误；
+-必须重启进程清理不可证明已释放的资源。
+
+## 禁用、移除和重新启用
+
+-禁用 Plugin等价于从当前 artifact集合删除它。
+-Runtime撤销该 Plugin和传递 dependents。
+-仍被保留但缺少required dependency的dependent进入waiting。
+-重新启用上游后，waiting Plugin用新generation重新构造。
+-optional dependency移除时消费者仍会重建，获得 `undefined`而不是继续持有旧API对象。
+
+## 关闭
+
+Admin Host依次且尽量完整清理：
+
+1. 等待正在执行的插件状态事务；
+2. 停止 workspace watcher；
+3. 停止 installed watcher；
+4. 关闭EventSource bridge，并主动close全部浏览器stream；
+5. 移除动态 Plugin；
+6. 反向停止和释放 Host Module。
+
+某一步失败不会阻止后续清理；最终以 `AggregateError`报告。静态代码 HMR使用 `Symbol.for('@zadmin/admin/host')`串行等待旧 Host完全释放后才创建新 Host，避免多个数据库连接、watcher或EventSource bridge并存。
+
+## 浏览器生命周期
+
+Client Runtime先import全部changed module，然后在一个页面批次中：
+
+```text
+dispose old/removed
+  → activate changed
+  → 一次通知页面订阅者
+```
+
+失败时反向dispose新模块并重新activate旧模块。Runtime还会单独跟踪 activate期间的所有页面注册，即使插件在返回总disposer之前抛错，也不会遗留半注册页面。
+
+## ESM边界
+
+带 revision query的动态 import保证新代码得到新的 Module Record。业务层卸载完成后，Container和诊断不再保存旧 API/class/Error对象引用；但 Node ESM缓存本身不提供强制删除接口。长期进程仍应结合正常部署滚动重启，而不是把无限次热升级当作进程永不重启的替代品。
