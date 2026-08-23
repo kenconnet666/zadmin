@@ -40,6 +40,16 @@
 - TypeScript类型可以间接向下游传播；运行时依赖必须由每个直接消费者显式声明，不能依靠传递性 Service Locator。
 - 插件版本同时是其公开 API版本；破坏公开类型必须提升 major版本。
 
+## ZUI与样式
+
+- `icss()`公开层永远只返回class字符串，不返回`{ class, style }`，也不要求action、attachment或`css` prop。
+- Svelte编译器优化是性能路径，普通TypeScript运行时必须仍然功能正确。
+- 动态叶子值进入元素inline CSS自定义属性；结构、selector和theme token进入确定性CSS rule。
+- 不执行用户模块来静态提取CSS，不引入WyW、Babel或SWC编译体系。
+- 条件优先使用原生TypeScript `if`、`switch`和表达式，不预先创造大规模recipe或selector语法糖。
+- CSS类型、运行时能力和文档从同一属性元数据生成，避免旧ZUI式多份配置漂移。
+- 高频值变化不得生成新class、rule或style tag；这是行为验收，不是可选性能建议。
+
 ## 装饰器
 
 - 只提供现代标准 class decorator `@service()`。

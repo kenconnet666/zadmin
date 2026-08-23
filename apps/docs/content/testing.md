@@ -18,6 +18,23 @@ pnpm lint
 
 当前 `packages/zui`只有空骨架，`svelte-check`会提示“没有Svelte输入文件”的warning；它不是错误，也不是本次改动回归。
 
+该说明只适用于ZUI实现前的历史基线。ZUI ICSS开始实现后必须由实际Svelte组件、类型测试、编译器fixture和浏览器测试替代，不再接受空包warning作为长期状态。
+
+## ZUI ICSS验收矩阵
+
+实现合同见[ZUI ICSS生产架构](./zui-icss.md)。最低自动验收包括：
+
+- DSL属性、token、keyword、unit、条件、嵌套selector和escape；
+- canonical序列化、确定性hash、collision检查和Stylis输出；
+- Svelte direct class、本地`$derived`、class组合、条件保护和回退诊断；
+- SSR/hydration、50并发请求隔离和客户端规则接管；
+- CSP nonce/hash、`inline-vars`和`class-rules`模式；
+- Chromium、Firefox、WebKit中的动态变量和组件边界；
+- 10,000次动态值变化后class、rule、style tag和结构cache均不增长；
+- 真实Vite HMR结构替换与旧规则清理；
+- `pnpm pack`后在外部SvelteKit fixture安装、check、build和SSR访问；
+- compiler和server模块进入client bundle为0 B。
+
 ## Core覆盖矩阵
 
 `packages/core/tests/`当前覆盖：

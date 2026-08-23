@@ -6,6 +6,8 @@
 
 DI容器、Plugin Module、上下游插件类型传播、服务端/客户端独立HMR、Artifact安装和构建验证已经实现并完成真实浏览器验收。后续业务开发直接在此基础上添加真实数据库、鉴权、ERP/CRM/审批流业务，不需要再设计第二套插件调用方式。
 
+ZUI下一阶段已经冻结[ICSS生产架构](./zui-icss.md)：公开API只有class字符串；Svelte编译器把动态叶子提升为inline CSS变量；运行时负责结构CSS、普通TS回退、SSR Registry和HMR。该文档是实现合同，不再回到`{ class, style }`或完整静态提取路线。
+
 关键代码检查点：
 
 ```text
