@@ -12,8 +12,8 @@ export interface SerializedStyle {
 export function hyphenateProperty(property: string): string {
 	if (property.startsWith('--')) return property;
 	return property
-		.replace(/^ms-/, '-ms-')
-		.replace(/[A-Z]/g, (character) => `-${character.toLowerCase()}`);
+		.replace(/[A-Z]/g, (character) => `-${character.toLowerCase()}`)
+		.replace(/^ms-/, '-ms-');
 }
 
 function serializeValue(declaration: IcssDeclarationValue): string {

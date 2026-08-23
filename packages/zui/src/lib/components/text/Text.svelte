@@ -4,7 +4,7 @@
 	import { icss } from '../../icss/runtime.js';
 	import { useZuiTheme } from '../provider/context.js';
 	import {
-		applyIcssVariables,
+		applyIcssRootStyle,
 		mergeStyles,
 		serializeIcssVariables
 	} from '../provider/variables.js';
@@ -35,8 +35,7 @@
 			css.fontWeight(weightValue);
 		})
 	);
-	const initialVariables = untrack(() => serializeIcssVariables(__icssVariables));
-	const rootStyle = $derived(mergeStyles(style, initialVariables));
+	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(__icssVariables)));
 </script>
 
 <svelte:element
@@ -44,8 +43,8 @@
 	{...rest}
 	bind:this={ref}
 	class={[textClass, className]}
-	style={rootStyle}
-	use:applyIcssVariables={__icssVariables}
+	style={initialStyle}
+	use:applyIcssRootStyle={{ style, variables: __icssVariables }}
 >
 	{@render children?.()}
 </svelte:element>

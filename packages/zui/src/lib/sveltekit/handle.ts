@@ -1,7 +1,12 @@
 import type { Handle, RequestEvent } from '@sveltejs/kit';
 
 import { createRequestIcssRuntime, runWithRequestIcssRuntime } from './registry.js';
-import { addStyleHashHeaders, createStyleHash, injectCriticalCss } from './server.js';
+import {
+	addStyleHashHeaders,
+	addStyleHashMeta,
+	createStyleHash,
+	injectCriticalCss
+} from './server.js';
 import type { IcssHandleOptions, IcssNonce } from './types.js';
 
 async function resolveNonce(
@@ -20,18 +25,22 @@ export function icssHandle(options: IcssHandleOptions = {}): Handle {
 		const request = createRequestIcssRuntime();
 		const nonce = await resolveNonce(options.nonce, event);
 		let bufferedHtml = '';
+		let styleHash: string | undefined;
 
 		return runWithRequestIcssRuntime(request, async () => {
 			let response = await resolve(event, {
 				transformPageChunk({ done, html }) {
 					bufferedHtml += html;
 					if (!done) return '';
-					return injectCriticalCss(bufferedHtml, request.registry.styleTag({ nonce }));
+					const output = injectCriticalCss(bufferedHtml, request.registry.styleTag({ nonce }));
+					if (options.cspHash !== true || request.registry.size === 0) return output;
+					styleHash = createStyleHash(request.registry.htmlStyleText());
+					return addStyleHashMeta(output, styleHash);
 				}
 			});
 
-			if (options.cspHash === true && request.registry.size > 0) {
-				response = addStyleHashHeaders(response, createStyleHash(request.registry.cssText()));
+			if (styleHash !== undefined) {
+				response = addStyleHashHeaders(response, styleHash);
 			}
 			return response;
 		});

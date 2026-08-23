@@ -4,7 +4,7 @@
 	import { icss } from '../../icss/runtime.js';
 	import { useZuiTheme } from '../provider/context.js';
 	import {
-		applyIcssVariables,
+		applyIcssRootStyle,
 		mergeStyles,
 		serializeIcssVariables
 	} from '../provider/variables.js';
@@ -101,16 +101,15 @@
 			}
 		})
 	);
-	const initialVariables = untrack(() => serializeIcssVariables(__icssVariables));
-	const rootStyle = $derived(mergeStyles(style, initialVariables));
+	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(__icssVariables)));
 </script>
 
 <button
 	{...rest}
 	bind:this={ref}
 	class={[buttonClass, className]}
-	style={rootStyle}
-	use:applyIcssVariables={__icssVariables}
+	style={initialStyle}
+	use:applyIcssRootStyle={{ style, variables: __icssVariables }}
 	{type}
 	disabled={disabled || loading}
 	aria-busy={loading || undefined}

@@ -2,7 +2,7 @@
 	import { untrack } from 'svelte';
 
 	import {
-		applyIcssVariables,
+		applyIcssRootStyle,
 		mergeStyles,
 		serializeIcssVariables
 	} from '../provider/variables.js';
@@ -16,16 +16,15 @@
 		style,
 		...rest
 	}: BoxProps = $props();
-	const initialVariables = untrack(() => serializeIcssVariables(__icssVariables));
-	const rootStyle = $derived(mergeStyles(style, initialVariables));
+	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(__icssVariables)));
 </script>
 
 <div
 	{...rest}
 	bind:this={ref}
 	class={className}
-	style={rootStyle}
-	use:applyIcssVariables={__icssVariables}
+	style={initialStyle}
+	use:applyIcssRootStyle={{ style, variables: __icssVariables }}
 >
 	{@render children?.()}
 </div>

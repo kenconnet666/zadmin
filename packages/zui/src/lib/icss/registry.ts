@@ -71,6 +71,10 @@ export class StyleRegistry {
 		return [...this.#byCanonical.values()].map((entry) => entry.cssText).join('');
 	}
 
+	htmlStyleText(): string {
+		return escapeStyleText(this.cssText());
+	}
+
 	ensure(program: StyleProgram, owner?: string): RegisteredStyle {
 		const canonical = canonicalizeStyleProgram(program);
 		if (canonical.length === 0) return EMPTY_STYLE;
@@ -91,7 +95,7 @@ export class StyleRegistry {
 		this.#retain(className, owner);
 		this.#byCanonical.set(canonical, entry);
 		this.#byClassName.set(className, canonical);
-		if (!this.#sheet.hydratedClassNames.has(className)) this.#sheet.insert(entry);
+		this.#sheet.insert(entry);
 		return entry;
 	}
 
@@ -128,7 +132,7 @@ export class StyleRegistry {
 		if (entries.length === 0) return '';
 		const classes = entries.map((entry) => entry.className).join(' ');
 		const nonce = options.nonce === undefined ? '' : ` nonce="${escapeAttribute(options.nonce)}"`;
-		return `<style data-icss="${classes}"${nonce}>${escapeStyleText(this.cssText())}</style>`;
+		return `<style data-icss="${classes}"${nonce}>${this.htmlStyleText()}</style>`;
 	}
 
 	#retain(className: string, owner: string | undefined): void {

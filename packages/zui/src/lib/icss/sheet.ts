@@ -36,14 +36,18 @@ export interface BrowserStyleSheetOptions {
 	readonly speedy?: boolean;
 }
 
-function readHydratedClassNames(root: Document | ShadowRoot): ReadonlySet<string> {
+function readHydratedStyles(root: Document | ShadowRoot): {
+	readonly classNames: Set<string>;
+	readonly styles: HTMLStyleElement[];
+} {
 	const names = new Set<string>();
-	for (const element of root.querySelectorAll<HTMLStyleElement>('style[data-icss]')) {
+	const styles = [...root.querySelectorAll<HTMLStyleElement>('style[data-icss]')];
+	for (const element of styles) {
 		for (const className of (element.dataset.icss ?? '').split(/\s+/)) {
 			if (className.length > 0) names.add(className);
 		}
 	}
-	return names;
+	return { classNames: names, styles };
 }
 
 function isDocument(root: Document | ShadowRoot): root is Document {
@@ -58,24 +62,31 @@ function discoverNonce(root: Document | ShadowRoot): string | undefined {
 }
 
 export class BrowserStyleSheet implements IcssStyleSheet {
-	readonly hydratedClassNames: ReadonlySet<string>;
+	readonly #hydratedClassNames: Set<string>;
 	readonly #document: Document;
 	readonly #insertionPoint?: Node;
 	readonly #nonce?: string;
 	readonly #root: Document | ShadowRoot;
 	readonly #speedy: boolean;
 	readonly #entries = new Map<string, StyleSheetEntry>();
+	#hydratedStyles: HTMLStyleElement[];
 	#classNames: string[] = [];
 	#style?: HTMLStyleElement;
 
 	constructor(options: BrowserStyleSheetOptions = {}) {
 		const root = options.root ?? document;
+		const hydrated = readHydratedStyles(root);
 		this.#root = root;
 		this.#document = isDocument(root) ? root : root.ownerDocument;
 		this.#insertionPoint = options.insertionPoint;
 		this.#nonce = options.nonce ?? discoverNonce(root);
 		this.#speedy = options.speedy ?? true;
-		this.hydratedClassNames = readHydratedClassNames(root);
+		this.#hydratedClassNames = hydrated.classNames;
+		this.#hydratedStyles = hydrated.styles;
+	}
+
+	get hydratedClassNames(): ReadonlySet<string> {
+		return this.#hydratedClassNames;
 	}
 
 	clear(): void {
@@ -87,15 +98,22 @@ export class BrowserStyleSheet implements IcssStyleSheet {
 
 	insert(entry: StyleSheetEntry): void {
 		this.#entries.set(entry.className, entry);
-		this.#insertEntry(entry);
+		if (!this.#hydratedClassNames.has(entry.className)) this.#insertEntry(entry);
 	}
 
 	remove(className: string): void {
 		if (!this.#entries.delete(className)) return;
+		if (this.#hydratedClassNames.has(className)) {
+			for (const style of this.#hydratedStyles) style.remove();
+			this.#hydratedStyles = [];
+			this.#hydratedClassNames.clear();
+		}
 		this.#style?.remove();
 		this.#style = undefined;
 		this.#classNames = [];
-		for (const entry of this.#entries.values()) this.#insertEntry(entry);
+		for (const entry of this.#entries.values()) {
+			if (!this.#hydratedClassNames.has(entry.className)) this.#insertEntry(entry);
+		}
 	}
 
 	#insertEntry(entry: StyleSheetEntry): void {

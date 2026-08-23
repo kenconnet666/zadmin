@@ -231,6 +231,41 @@ function controlFlow(
 	return { guards: guards.reverse(), unsupported: false };
 }
 
+function selectorCanInherit(selector: string): boolean {
+	return selector.split(',').every((part) => {
+		const normalized = part.trim();
+		const anchor = normalized.indexOf('&');
+		if (anchor !== 0) return false;
+		const tail = normalized.slice(1).trimStart();
+		return !tail.startsWith('+') && !tail.startsWith('~');
+	});
+}
+
+function hasUnsafeSelector(node: Node, parents: WeakMap<Node, ParentLink>): boolean {
+	let current = node;
+	let link = parents.get(current);
+	while (link !== undefined) {
+		const { parent } = link;
+		if (
+			parent.type === 'CallExpression' &&
+			parent.callee.type === 'MemberExpression' &&
+			memberName(parent.callee) === '_selector'
+		) {
+			const selector = parent.arguments[0];
+			if (
+				selector?.type !== 'Literal' ||
+				typeof selector.value !== 'string' ||
+				!selectorCanInherit(selector.value)
+			) {
+				return true;
+			}
+		}
+		current = parent;
+		link = parents.get(current);
+	}
+	return false;
+}
+
 export function analyzeDynamicSlots(
 	callsite: IcssCallsite,
 	source: string,
@@ -258,6 +293,18 @@ export function analyzeDynamicSlots(
 				const expression = positioned(argument) as PositionedExpression | undefined;
 				if (expression === undefined) continue;
 				const flow = controlFlow(node, parents, source);
+				if (hasUnsafeSelector(node, parents)) {
+					diagnostics.push(
+						createDiagnostic(
+							'unsupported-selector-scope',
+							'Dynamic ICSS values targeting siblings, ancestors or external selectors use runtime class-rule fallback.',
+							expression.start,
+							expression.end,
+							filename
+						)
+					);
+					continue;
+				}
 				if (flow.unsupported) {
 					diagnostics.push(
 						createDiagnostic(

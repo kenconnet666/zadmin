@@ -32,7 +32,7 @@ describe('ICSS Svelte preprocessor', () => {
 
 		expect(output).toContain('__icssSlot as __zuiIcssSlot');
 		expect(output).toMatch(/__zuiIcssOwned\('m-[a-z0-9]+:[a-z0-9]+', defaultTheme/u);
-		expect(output).toContain("import.meta.hot.dispose(() => __zuiDisposeIcssModule('m-");
+		expect(output).toContain("__zuiRegisterIcssHmr(import.meta, 'm-");
 		expect(output).toMatch(/style\.width\.px\(__zuiIcssSlot\('--width-[a-z0-9]+-0'\)\)/u);
 		expect(output).toMatch(/style:--width-[a-z0-9]+-0=\{width\}/u);
 		expect(output).toContain('style.padding.px(16)');
@@ -123,6 +123,17 @@ describe('ICSS Svelte preprocessor', () => {
 
 		expect(output).toMatch(/__icssVariables=\{\{ '--width-[a-z0-9]+-0': \(width\) \}\}/u);
 		expect(output).toContain("__zuiIcssOwned('m-");
+	});
+
+	it('optimizes dynamic svelte:element roots', async () => {
+		const output = await transform(`<script>
+			import { defaultTheme, icss } from '@zadmin/zui';
+			let as = $state('span'), color = $state('red');
+			const value = $derived(icss(defaultTheme, s => s.color(color)));
+		</script><svelte:element this={as} class={value}></svelte:element>`);
+
+		expect(output).toContain('style:--color-');
+		expect(() => compile(output, { generate: 'client', runes: true })).not.toThrow();
 	});
 
 	it('can disable inline variables for strict CSP', async () => {

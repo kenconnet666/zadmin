@@ -16,9 +16,7 @@ pnpm lint
 - `build`：所有Package声明产物、三个SvelteKit生产构建、三个Plugin Artifact和Plugin CLI验证。
 - `lint`：全仓Prettier检查和ESLint。
 
-当前 `packages/zui`只有空骨架，`svelte-check`会提示“没有Svelte输入文件”的warning；它不是错误，也不是本次改动回归。
-
-该说明只适用于ZUI实现前的历史基线。ZUI ICSS开始实现后必须由实际Svelte组件、类型测试、编译器fixture和浏览器测试替代，不再接受空包warning作为长期状态。
+`packages/zui`已经包含实际Svelte组件、编译器fixture、SSR测试和浏览器矩阵，`svelte-check`必须保持0 errors、0 warnings。
 
 ## ZUI ICSS验收矩阵
 
@@ -34,6 +32,29 @@ pnpm lint
 - 真实Vite HMR结构替换与旧规则清理；
 - `pnpm pack`后在外部SvelteKit fixture安装、check、build和SSR访问；
 - compiler和server模块进入client bundle为0 B。
+
+### ZUI标准命令
+
+```powershell
+pnpm --filter @zadmin/zui check
+pnpm --filter @zadmin/zui test
+pnpm --filter @zadmin/zui test:coverage
+pnpm --filter @zadmin/zui build
+pnpm --filter @zadmin/docs test:e2e
+pnpm --filter @zadmin/docs build-storybook
+```
+
+2026-08-24生产验收结果：
+
+- Chromium、Firefox、WebKit共18个test files、92项测试通过；
+- 10,000次状态变化后class、rule和style tag数量不变；
+- 覆盖率：statements 96.38%、branches 92.38%、functions 97.36%、lines 98.34%；
+- Compiler branches 91.06%，ICSS branches 93.47%；
+- 50个并发SSR请求无CSS串扰；
+- 真实Vite HMR结构修改前后均为9条rule、1个style tag、0 console error；
+- `@zadmin/zui@0.1.0` tarball在仓库外项目check/build/SSR通过；
+- 外部fixture页面节点gzip 10,243 bytes，compiler/server客户端文件0个；
+- `pnpm audit --prod`无已知漏洞，gitleaks无泄漏。
 
 ## Core覆盖矩阵
 

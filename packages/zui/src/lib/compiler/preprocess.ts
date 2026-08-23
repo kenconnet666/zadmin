@@ -50,7 +50,7 @@ export function icssPreprocess(options: IcssPreprocessOptions = {}): Preprocesso
 			const magic = new MagicString(content);
 			const slotLocal = chooseLocal(content, '__zuiIcssSlot');
 			const ownedLocal = chooseLocal(content, '__zuiIcssOwned');
-			const disposeLocal = chooseLocal(content, '__zuiDisposeIcssModule');
+			const hmrLocal = chooseLocal(content, '__zuiRegisterIcssHmr');
 			const owner = createModuleId(filename, root);
 			const rewritten = rewriteIcssBindings(
 				ast.fragment,
@@ -68,8 +68,8 @@ export function icssPreprocess(options: IcssPreprocessOptions = {}): Preprocesso
 			for (const diagnostic of rewritten.diagnostics) options.onDiagnostic?.(diagnostic);
 			if (!rewritten.changed) return undefined;
 
-			const internalModuleCode = `import { __disposeIcssModule as ${disposeLocal}, __icssOwned as ${ownedLocal}, __icssSlot as ${slotLocal} } from '${internalModule}'; /* ${COMPILED_MARKER} */
-if (import.meta.hot) import.meta.hot.dispose(() => ${disposeLocal}('${owner}'));
+			const internalModuleCode = `import { __icssOwned as ${ownedLocal}, __icssSlot as ${slotLocal}, __registerIcssHmr as ${hmrLocal} } from '${internalModule}'; /* ${COMPILED_MARKER} */
+${hmrLocal}(import.meta, '${owner}');
 `;
 			if (ast.module == null) {
 				magic.prepend(`<script module>\n${internalModuleCode}</script>\n`);

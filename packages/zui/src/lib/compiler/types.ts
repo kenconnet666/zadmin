@@ -23,7 +23,11 @@ export type DynamicValuesMode = 'class-rules' | 'inline-vars';
 
 export interface IcssCompilerDiagnostic {
 	readonly code:
-		'component-boundary' | 'factory-local-value' | 'invalid-factory' | 'unsupported-control-flow';
+		| 'component-boundary'
+		| 'factory-local-value'
+		| 'invalid-factory'
+		| 'unsupported-control-flow'
+		| 'unsupported-selector-scope';
 	readonly end: number;
 	readonly filename?: string;
 	readonly message: string;

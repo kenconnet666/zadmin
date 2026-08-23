@@ -117,7 +117,7 @@ export function rewriteIcssBindings(
 	const unsafe = new Set<IcssCallsite>();
 
 	visitSvelteNodes(fragment, (node) => {
-		const regular = node.type === 'RegularElement';
+		const regular = node.type === 'RegularElement' || node.type === 'SvelteElement';
 		const component = node.type === 'Component' || node.type === 'SvelteComponent';
 		if ((!regular && !component) || node.attributes === undefined) return;
 		const classAttribute = node.attributes.find(

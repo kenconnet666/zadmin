@@ -1,6 +1,10 @@
 import { expect, test } from '@playwright/test';
 
 test('ICSS demo keeps class and rule count stable', async ({ page }) => {
+	const consoleErrors: string[] = [];
+	page.on('console', (message) => {
+		if (message.type() === 'error') consoleErrors.push(message.text());
+	});
 	await page.goto('/icss');
 	const panel = page.getByTestId('dynamic-panel');
 	const slider = page.getByTestId('width');
@@ -37,4 +41,5 @@ test('ICSS demo keeps class and rule count stable', async ({ page }) => {
 
 	expect(finalRules).toBe(initialRules);
 	expect(await page.locator('svelte-css-wrapper').count()).toBe(0);
+	expect(consoleErrors).toEqual([]);
 });

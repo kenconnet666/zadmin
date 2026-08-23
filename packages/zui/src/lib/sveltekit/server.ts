@@ -48,3 +48,12 @@ export function injectCriticalCss(html: string, styleTag: string): string {
 	if (closingHead >= 0) return `${html.slice(0, closingHead)}${styleTag}${html.slice(closingHead)}`;
 	return `${styleTag}${html}`;
 }
+
+export function addStyleHashMeta(html: string, hash: string): string {
+	return html.replace(/<meta\b[^>]*>/giu, (tag) => {
+		if (!/http-equiv=(['"])content-security-policy\1/iu.test(tag)) return tag;
+		return tag.replace(/content=(['"])(.*?)\1/iu, (_match, quote: string, policy: string) => {
+			return `content=${quote}${addSourceToDirective(policy, hash)}${quote}`;
+		});
+	});
+}

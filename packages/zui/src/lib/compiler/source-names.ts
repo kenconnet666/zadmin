@@ -8,7 +8,8 @@ import type { Positioned, PositionedCallExpression } from './types.ts';
 function normalizeRelativeFilename(filename: string | undefined, root: string): string {
 	if (filename === undefined) return 'anonymous.svelte';
 	const relative = path.relative(root, filename).replaceAll(path.sep, '/');
-	if (!relative.startsWith('../') && relative !== '..') return relative;
+	if (!path.isAbsolute(relative) && !relative.startsWith('../') && relative !== '..')
+		return relative;
 	return path.basename(filename);
 }
 

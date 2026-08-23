@@ -1,12 +1,12 @@
 # 换设备开发交接
 
-更新时间：2026-08-23。
+更新时间：2026-08-24。
 
 ## 当前结论
 
 DI容器、Plugin Module、上下游插件类型传播、服务端/客户端独立HMR、Artifact安装和构建验证已经实现并完成真实浏览器验收。后续业务开发直接在此基础上添加真实数据库、鉴权、ERP/CRM/审批流业务，不需要再设计第二套插件调用方式。
 
-ZUI下一阶段已经冻结[ICSS生产架构](./zui-icss.md)：公开API只有class字符串；Svelte编译器把动态叶子提升为inline CSS变量；运行时负责结构CSS、普通TS回退、SSR Registry和HMR。该文档是实现合同，不再回到`{ class, style }`或完整静态提取路线。
+ZUI ICSS和五个基础组件已经按[ICSS生产架构](./zui-icss.md)完成生产验收：公开API只有class字符串；Svelte编译器把安全动态叶子提升为inline CSS变量；运行时负责结构CSS、普通TS回退、SSR Registry和HMR。不要回到`{ class, style }`或完整静态提取路线。外部接入见[ZUI使用与外部接入](./zui-usage.md)。
 
 关键代码检查点：
 
@@ -14,6 +14,10 @@ ZUI下一阶段已经冻结[ICSS生产架构](./zui-icss.md)：公开API只有cl
 cbd4c12 feat: add generation-aware service container
 857e4a1 refactor: run host and plugins through service modules
 587d393 feat: harden plugin builds and hot replacement
+ddcc4f9 feat(zui): compile dynamic icss values to inline variables
+547f0e3 feat(zui): harden sveltekit ssr and hmr integration
+a613cb4 feat(zui): add provider and foundational components
+fecc5a2 docs(zui): replace starter content with zui documentation
 ```
 
 最终文档提交之后请用下面命令确认实际HEAD：
@@ -125,6 +129,11 @@ plugin.ts
 | 浏览器Plugin Runtime        | `packages/sveltekit/src/lib/client-runtime.ts`         |
 | Approval公开类型            | `plugins/approval/src/server/contract.ts`              |
 | CRM上游类型依赖示例         | `plugins/crm/src/server/contract.ts`、`service.ts`     |
+| ICSS Runtime与Registry      | `packages/zui/src/lib/icss/`                           |
+| Svelte ICSS编译器           | `packages/zui/src/lib/compiler/`                       |
+| SvelteKit ICSS SSR          | `packages/zui/src/lib/sveltekit/`                      |
+| ZUI基础组件                 | `packages/zui/src/lib/components/`                     |
+| ZUI接入文档                 | `apps/docs/content/zui-usage.md`                       |
 
 ## 当前调用方式
 
@@ -172,6 +181,28 @@ approval: inject<ApprovalStarter>('@zadmin/approval');
 
 详见 [开发态热重载](./development-hmr.md)。
 
+## ZUI实测结论
+
+2026-08-24在Windows本机完成：
+
+- Chromium、Firefox、WebKit的ZUI测试全部通过；
+- 10,000次响应式状态变化只更新inline变量，class/rule/style tag数量不增长；
+- Compiler branch coverage 91.06%，ICSS branch coverage 93.47%；
+- 50个并发SvelteKit SSR请求无Registry串扰，hydration不重复插入规则；
+- CSP nonce、header hash和prerender meta hash均有测试；
+- 真实Vite HMR将背景结构从primary改为danger时，rule维持9、style tag维持1；
+- `@zadmin/zui@0.1.0`发布tarball在仓库外SvelteKit工程安装、check、build和SSR通过；
+- 外部fixture的ZUI页面节点gzip 10,243 bytes，客户端没有compiler/server模块；
+- Docs、Storybook和Playwright动态示例全部通过。
+
+ZUI重点命令：
+
+```powershell
+pnpm --filter @zadmin/zui test:coverage
+pnpm --filter @zadmin/docs test:e2e
+pnpm --filter @zadmin/docs build-storybook
+```
+
 ## Artifact与数据目录
 
 开发Artifact：
@@ -210,13 +241,16 @@ $env:ZADMIN_PLUGIN_ADMIN_TOKEN = '<secret>'
 -Admin已安装插件当前只使用Plugin `defaultConfig`，尚无业务配置UI和schema持久化。
 -卸载删除安装记录但保留历史版本目录，方便回滚和诊断；磁盘清理策略需在真实运维需求出现后单独设计。
 -真实PostgreSQL、Redis和OSS客户端仍是基础骨架，后续业务接入不能把DI/HMR测试误当成真实外部服务验收。
+-ZUI编译器只优化可证明安全的本地数据流；循环、switch中的动态声明、factory局部值、兄弟/祖先selector和未知组件边界会使用完整class-rule回退。
+\-`inline-vars`要求CSP允许`style-src-attr`；严格禁止inline attribute时使用`dynamicValues: 'class-rules'`。
+-当前ZUI组件范围只有Provider、Box、Stack、Text和Button；旧Vue组件库不是待机械迁移清单。
 
 这些不是未完成的DI路线图；除非出现明确业务需求，不添加占位接口。
 
 ## 下一位开发者的第一步
 
 1. 先运行四条全仓验证命令。
-2. 阅读 `dependency-injection.md`和`plugin-development.md`。
+2. 阅读 `dependency-injection.md`、`plugin-development.md`和`zui-usage.md`。
 3. 业务插件优先扩展自己的primary API和内部Provider，不开放内部Bean ID。
 4. 修改Runtime/HMR后按 `testing.md`执行真实浏览器验收。
 5. 阶段性提交并更新本交接文件。

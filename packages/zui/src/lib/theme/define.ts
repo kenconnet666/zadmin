@@ -8,7 +8,7 @@ function copyTokenGroup(
 		throw new TypeError(`Theme group "${groupName}" must be an object.`);
 	}
 
-	const copy: Record<string, ThemeTokenValue> = {};
+	const copy = Object.create(null) as Record<string, ThemeTokenValue>;
 	for (const [token, value] of Object.entries(group)) {
 		if (typeof value !== 'string' && typeof value !== 'number') {
 			throw new TypeError(`Theme token "${groupName}.${token}" must be a string or number.`);
@@ -24,7 +24,7 @@ function copyTokenGroup(
 export function defineTheme<const TSchema extends ThemeSchema>(
 	schema: TSchema
 ): Theme<DeepReadonly<TSchema>> {
-	const copy: Record<string, Readonly<Record<string, ThemeTokenValue>>> = {};
+	const copy = Object.create(null) as Record<string, Readonly<Record<string, ThemeTokenValue>>>;
 	for (const [groupName, group] of Object.entries(schema)) {
 		copy[groupName] = copyTokenGroup(groupName, group);
 	}

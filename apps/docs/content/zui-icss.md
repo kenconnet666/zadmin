@@ -2,6 +2,10 @@
 
 本文是 `@zadmin/zui` 第一版实现合同。目标是提供强类型、运行时 CSS、Svelte 编译优化和单一 class API；后续实现不得重新引入公开的 `{ class, style }`、`css` prop 或 action API。
 
+## 实现状态
+
+`@zadmin/zui@0.1.0`已经于2026-08-24完成本文范围和生产验收。当前实现包含Runtime、Compiler、SvelteKit SSR/CSP/HMR、Provider/Box/Stack/Text/Button、Docs和Storybook；验收数据见[测试与验收](./testing.md)。
+
 ## 范围
 
 本阶段做到生产可用的是：
@@ -296,16 +300,17 @@ style tag 数量不增加
 - Core/Compiler branch coverage至少 90%，基础组件至少 80%；
 - 全仓 `check`、`test`、`build`、`lint`。
 
-## 分阶段提交
+## 实现检查点
 
-1. 冻结本文和验收矩阵；
-2. 建立包、依赖、生成器和测试边界；
-3. 实现主题和强类型 DSL；
-4. 实现确定性运行时和 Registry；
-5. 实现 Svelte class-only 编译器；
-6. 实现 SSR、CSP、hydration 和 HMR；
-7. 实现五个基础组件；
-8. 重建 docs/Storybook；
-9. 完成生产验收、清理和交接。
+```text
+1d3dd82 docs(zui): freeze production icss architecture
+18fe91a chore(zui): establish package and test boundaries
+0f51f12 feat(zui): add typed theme and icss builder
+4b36e7c feat(zui): add deterministic css runtime
+ddcc4f9 feat(zui): compile dynamic icss values to inline variables
+547f0e3 feat(zui): harden sveltekit ssr and hmr integration
+a613cb4 feat(zui): add provider and foundational components
+fecc5a2 docs(zui): replace starter content with zui documentation
+```
 
-每个提交都必须可构建，失败证据和临时产物在下一阶段前处理干净。
+后续改动仍要保持阶段提交可构建，并持续满足本文生产不变量。

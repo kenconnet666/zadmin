@@ -3,6 +3,11 @@ import type { Action } from 'svelte/action';
 export type IcssVariableValue = string | number | null | undefined;
 export type IcssVariables = Readonly<Record<`--${string}`, IcssVariableValue>>;
 
+export interface IcssRootStyle {
+	readonly style?: string | null;
+	readonly variables?: IcssVariables;
+}
+
 function validVariable(name: string): name is `--${string}` {
 	return /^--[a-zA-Z][\w-]*$/u.test(name);
 }
@@ -56,6 +61,22 @@ export const applyIcssVariables: Action<HTMLElement, IcssVariables | undefined> 
 	return {
 		update(next) {
 			applied = applyVariables(node, applied, next);
+		}
+	};
+};
+
+export const applyIcssRootStyle: Action<HTMLElement, IcssRootStyle> = (node, initial) => {
+	let authored = initial.style?.trim().replace(/;+$/u, '') ?? '';
+	let applied = applyVariables(node, new Map(), initial.variables);
+	return {
+		update(next) {
+			const nextAuthored = next.style?.trim().replace(/;+$/u, '') ?? '';
+			if (nextAuthored !== authored) {
+				node.style.cssText = nextAuthored;
+				authored = nextAuthored;
+				applied = new Map();
+			}
+			applied = applyVariables(node, applied, next.variables);
 		}
 	};
 };

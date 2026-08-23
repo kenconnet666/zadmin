@@ -62,4 +62,60 @@ describe('ICSS SvelteKit integration', () => {
 	it('rejects conflicting CSP modes', () => {
 		expect(() => icssHandle({ cspHash: true, nonce: 'x' })).toThrow(/either cspHash or nonce/);
 	});
+
+	it('buffers future streamed chunks and resolves request-local nonces', async () => {
+		const handle = icssHandle({ nonce: async () => 'async-nonce' });
+		const response = await handle({
+			event: {} as Parameters<Handle>[0]['event'],
+			resolve: async (_event, options) => {
+				icss(defaultTheme, (style) => style.display.grid);
+				expect(await options?.transformPageChunk?.({ done: false, html: '<html><head>' })).toBe('');
+				const html = await options?.transformPageChunk?.({
+					done: true,
+					html: '</head><body></body></html>'
+				});
+				return new Response(html);
+			}
+		} as Parameters<Handle>[0]);
+		const html = await response.text();
+
+		expect(html).toContain('<html><head><style data-icss=');
+		expect(html).toContain('nonce="async-nonce"');
+	});
+
+	it('leaves CSP headers unchanged when no ICSS rules are rendered', async () => {
+		const handle = icssHandle({ cspHash: true });
+		const response = await handle({
+			event: {} as Parameters<Handle>[0]['event'],
+			resolve: async (_event, options) => {
+				const html = await options?.transformPageChunk?.({
+					done: true,
+					html: '<html><head></head><body></body></html>'
+				});
+				return new Response(html, {
+					headers: { 'content-security-policy': "default-src 'self'" }
+				});
+			}
+		} as Parameters<Handle>[0]);
+
+		expect(response.headers.get('content-security-policy')).toBe("default-src 'self'");
+		expect(await response.text()).not.toContain('data-icss');
+	});
+
+	it('adds hashes to prerender-style CSP metadata', async () => {
+		const handle = icssHandle({ cspHash: true });
+		const response = await handle({
+			event: {} as Parameters<Handle>[0]['event'],
+			resolve: async (_event, options) => {
+				icss(defaultTheme, (style) => style.color._primary);
+				const html = await options?.transformPageChunk?.({
+					done: true,
+					html: `<html><head><meta http-equiv="content-security-policy" content="default-src 'self'; style-src 'self'"></head><body></body></html>`
+				});
+				return new Response(html);
+			}
+		} as Parameters<Handle>[0]);
+
+		expect(await response.text()).toMatch(/style-src-elem 'self' 'sha256-[A-Za-z0-9+/=]+'/u);
+	});
 });
