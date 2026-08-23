@@ -24,12 +24,15 @@ catalog:
   '@types/node': ^26.2.0
   '@vitest/browser-playwright': ^4.1.11
   '@vitest/coverage-v8': ^4.1.11
+  csstype: ^3.2.3
   drizzle-kit: ^0.31.10
   drizzle-orm: ^0.45.2
   eslint: ^10.9.0
   eslint-config-prettier: ^10.1.8
   eslint-plugin-svelte: ^3.23.0
+  estree-walker: ^3.0.3
   globals: ^17.11.0
+  magic-string: ^1.2.2
   playwright: ^1.62.1
   postgres: ^3.4.9
   prettier: ^3.9.6
@@ -39,6 +42,7 @@ catalog:
   react: ^19.2.8
   react-dom: ^19.2.8
   storybook: ^10.5.10
+  stylis: ^4.4.0
   tar: ^7.5.22
   svelte: ^5.56.10
   svelte-check: ^4.7.6
