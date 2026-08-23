@@ -8,8 +8,9 @@
 4. [插件生命周期](./plugin-lifecycle.md)：安装、等待、激活、升级、禁用、泄漏和关闭。
 5. [开发态热重载](./development-hmr.md)：服务端、客户端和上游类型的三条独立更新链。
 6. [ZUI ICSS](./zui-icss.md)：单一 class API、运行时 CSS、Svelte 编译优化和生产验收合同。
-7. [测试与验收](./testing.md)：自动化命令、覆盖矩阵和真实浏览器 HMR步骤。
-8. [工程倾向](./engineering-preferences.md)：目录、依赖、代码、提交和文档的长期约束。
-9. [换设备交接](./handoff.md)：当前状态、恢复命令、关键入口和已知边界。
+7. [ZUI 使用与外部接入](./zui-usage.md)：安装、编译器、SSR、CSP、主题和组件示例。
+8. [测试与验收](./testing.md)：自动化命令、覆盖矩阵和真实浏览器 HMR步骤。
+9. [工程倾向](./engineering-preferences.md)：目录、依赖、代码、提交和文档的长期约束。
+10. [换设备交接](./handoff.md)：当前状态、恢复命令、关键入口和已知边界。
 
 当前插件协议：`2`。第一阶段只支持自家可信插件，不提供恶意代码沙箱。

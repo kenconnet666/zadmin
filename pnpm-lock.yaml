@@ -21,9 +21,6 @@ catalogs:
     '@fontsource/fira-mono':
       specifier: ^5.2.7
       version: 5.3.0
-    '@neoconfetti/svelte':
-      specifier: ^2.2.2
-      version: 2.2.2
     '@playwright/test':
       specifier: ^1.62.1
       version: 1.62.1
@@ -237,15 +234,6 @@ importers:
       '@fontsource/fira-mono':
         specifier: 'catalog:'
         version: 5.3.0
-      '@neoconfetti/svelte':
-        specifier: 'catalog:'
-        version: 2.2.2(svelte@5.56.10(@typescript-eslint/types@8.67.0))
-      '@zadmin/core':
-        specifier: workspace:^
-        version: link:../../packages/core
-      '@zadmin/drizzle':
-        specifier: workspace:^
-        version: link:../../packages/drizzle
       '@zadmin/zui':
         specifier: workspace:^
         version: link:../../packages/zui
@@ -1356,11 +1344,6 @@ packages:
 
   '@neoconfetti/react@1.0.0':
     resolution: {integrity: sha512-klcSooChXXOzIm+SE5IISIAn3bYzYfPjbX7D7HoqZL84oAfgREeSg5vSIaSFH+DaGzzvImTyWe1OyrJ67vik4A==}
-
-  '@neoconfetti/svelte@2.2.2':
-    resolution: {integrity: sha512-E7xCFVEEm5Ctnj2udTJy1b9oaTvjz1zi1mYdEtE8rB5BVwq6kHisosDS+zdWN5PMfEMjtbsOV9Cl6tsNSAD1sA==}
-    peerDependencies:
-      svelte: ^3.0.0 || ^4.0.0 || ^5.0.0
 
   '@oxc-parser/binding-android-arm-eabi@0.127.0':
     resolution: {integrity: sha512-0LC7ye4hvqbIKxAzThzvswgHLFu2AURKzYLeSVvLdu2TBOYWQDmHnTqPLeA597BcUCxiLqLsS4CJ5uoI5WYWCQ==}
@@ -4180,10 +4163,6 @@ snapshots:
     optional: true
 
   '@neoconfetti/react@1.0.0': {}
-
-  '@neoconfetti/svelte@2.2.2(svelte@5.56.10(@typescript-eslint/types@8.67.0))':
-    dependencies:
-      svelte: 5.56.10(@typescript-eslint/types@8.67.0)
 
   '@oxc-parser/binding-android-arm-eabi@0.127.0':
     optional: true

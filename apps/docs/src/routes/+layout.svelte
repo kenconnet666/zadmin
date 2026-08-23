@@ -1,56 +1,44 @@
 <script lang="ts">
-	import Header from './Header.svelte';
+	import { page } from '$app/state';
+	import { resolve } from '$app/paths';
+	import { ZuiProvider } from '@zadmin/zui';
 	import './layout.css';
 
 	let { children } = $props();
+	const navigation = [
+		{ href: '/', label: '概览' },
+		{ href: '/icss', label: 'ICSS' },
+		{ href: '/components', label: '组件' },
+		{ href: '/runtime', label: '运行时' },
+		{ href: '/architecture', label: '架构' }
+	] as const;
 </script>
 
-<div class="app">
-	<Header />
-	<main>{@render children()}</main>
+<ZuiProvider>
+	<div class="docs-shell">
+		<header class="topbar">
+			<a class="brand" href={resolve('/')} aria-label="ZUI 首页">
+				<span class="brand-mark">Z</span>
+				<span>ZUI</span>
+			</a>
+			<nav aria-label="主导航">
+				{#each navigation as item (item.href)}
+					<a
+						href={resolve(item.href)}
+						aria-current={page.url.pathname === item.href ? 'page' : undefined}
+					>
+						{item.label}
+					</a>
+				{/each}
+			</nav>
+			<a class="repository" href="https://github.com/kenconnet666/zadmin">GitHub</a>
+		</header>
 
-	<footer>
-		<p>
-			visit
-			<a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a>
-			to learn about SvelteKit
-		</p>
-	</footer>
-</div>
+		<main>{@render children()}</main>
 
-<style>
-	.app {
-		display: flex;
-		flex-direction: column;
-		min-height: 100vh;
-	}
-
-	main {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		padding: 1rem;
-		width: 100%;
-		max-width: 64rem;
-		margin: 0 auto;
-		box-sizing: border-box;
-	}
-
-	footer {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		padding: 12px;
-	}
-
-	footer a {
-		font-weight: bold;
-	}
-
-	@media (min-width: 480px) {
-		footer {
-			padding: 12px 0;
-		}
-	}
-</style>
+		<footer>
+			<span>ZUI · Svelte 5 · TypeScript</span>
+			<span>运行时 CSS，编译期优化，单一 class API</span>
+		</footer>
+	</div>
+</ZuiProvider>

@@ -73,6 +73,7 @@ pnpm lint
 - [插件生命周期](./apps/docs/content/plugin-lifecycle.md)
 - [开发态热重载](./apps/docs/content/development-hmr.md)
 - [ZUI ICSS 生产架构](./apps/docs/content/zui-icss.md)
+- [ZUI 使用与外部接入](./apps/docs/content/zui-usage.md)
 - [测试与验收](./apps/docs/content/testing.md)
 - [工程倾向](./apps/docs/content/engineering-preferences.md)
 - [换设备交接](./apps/docs/content/handoff.md)

@@ -16,9 +16,6 @@
 	},
 	"dependencies": {
 		"@fontsource/fira-mono": "catalog:",
-		"@neoconfetti/svelte": "catalog:",
-		"@zadmin/core": "workspace:^",
-		"@zadmin/drizzle": "workspace:^",
 		"@zadmin/zui": "workspace:^"
 	},
 	"devDependencies": {
