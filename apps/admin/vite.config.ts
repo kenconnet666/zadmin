@@ -1,9 +1,10 @@
 import adapter from '@sveltejs/adapter-node';
 import { sveltekit } from '@sveltejs/kit/vite';
+import { icssPreprocess } from '@zadmin/zui/compiler';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-	plugins: [sveltekit({ adapter: adapter() })],
+	plugins: [sveltekit({ adapter: adapter(), preprocess: [icssPreprocess()] })],
 	resolve: {
 		dedupe: ['svelte']
 	},

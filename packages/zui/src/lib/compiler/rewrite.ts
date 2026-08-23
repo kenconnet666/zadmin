@@ -5,6 +5,7 @@ import type MagicString from 'magic-string';
 import { createDirectCallsite } from './analyze.ts';
 import { analyzeDynamicSlots } from './bindings.ts';
 import { createDiagnostic } from './diagnostics.ts';
+import { createCallsiteId } from './source-names.ts';
 import type { IcssCallsite, IcssCompilerDiagnostic, PositionedCallExpression } from './types.ts';
 
 interface SvelteNode {
@@ -105,6 +106,8 @@ export function rewriteIcssBindings(
 	magic: MagicString,
 	source: string,
 	slotLocal: string,
+	ownedLocal: string,
+	owner: string,
 	root: string,
 	filename?: string
 ): RewriteResult {
@@ -158,6 +161,7 @@ export function rewriteIcssBindings(
 	}
 
 	const overwritten = new Set<string>();
+	const owned = new Set<IcssCallsite>();
 	for (const analysis of analyses.values()) {
 		for (const slot of analysis.slots) {
 			const key = `${slot.replacementStart}:${slot.replacementEnd}`;
@@ -169,6 +173,29 @@ export function rewriteIcssBindings(
 				`${slotLocal}('${slot.variable}')`
 			);
 		}
+	}
+	for (const callsite of analyses.keys()) {
+		if (owned.has(callsite)) continue;
+		owned.add(callsite);
+		const callee = callsite.call.callee;
+		const positionedCallee = callee as typeof callee & {
+			readonly end?: unknown;
+			readonly start?: unknown;
+		};
+		if (
+			callee.type !== 'Identifier' ||
+			typeof positionedCallee.start !== 'number' ||
+			typeof positionedCallee.end !== 'number'
+		) {
+			continue;
+		}
+		const start = positionedCallee.start;
+		const end = positionedCallee.end;
+		const openingParenthesis = source.indexOf('(', end);
+		if (openingParenthesis < 0 || openingParenthesis >= callsite.call.end) continue;
+		magic.overwrite(start, end, ownedLocal);
+		const callsiteOwner = `${owner}:${createCallsiteId(callsite.call, source, filename, root)}`;
+		magic.appendLeft(openingParenthesis + 1, `'${callsiteOwner}', `);
 	}
 
 	for (const use of uses) {
@@ -187,5 +214,5 @@ export function rewriteIcssBindings(
 		if (directives.size > 0) magic.appendRight(use.attributeEnd, [...directives.values()].join(''));
 	}
 
-	return { changed: overwritten.size > 0, diagnostics };
+	return { changed: owned.size > 0 || overwritten.size > 0, diagnostics };
 }

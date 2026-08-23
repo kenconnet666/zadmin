@@ -1,4 +1,10 @@
+import { disposeIcssModule, ownedIcss } from './icss/runtime.js';
 import { createIcssSlot } from './icss/values.js';
+
+export { setServerRuntimeResolver as __setServerRuntimeResolver } from './icss/runtime.js';
+
+export const __icssOwned = ownedIcss;
+export const __disposeIcssModule = disposeIcssModule;
 
 /** @internal Compiler carrier: `never` keeps generated calls assignable to every CSS value type. */
 export function __icssSlot(variable: `--${string}`): never {

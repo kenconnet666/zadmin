@@ -8,6 +8,7 @@ export interface IcssStyleSheet {
 	readonly hydratedClassNames: ReadonlySet<string>;
 	clear(): void;
 	insert(entry: StyleSheetEntry): void;
+	remove(className: string): void;
 }
 
 export class MemoryStyleSheet implements IcssStyleSheet {
@@ -20,6 +21,11 @@ export class MemoryStyleSheet implements IcssStyleSheet {
 
 	insert(entry: StyleSheetEntry): void {
 		this.entries.push(entry);
+	}
+
+	remove(className: string): void {
+		const index = this.entries.findIndex((entry) => entry.className === className);
+		if (index >= 0) this.entries.splice(index, 1);
 	}
 }
 
@@ -44,6 +50,13 @@ function isDocument(root: Document | ShadowRoot): root is Document {
 	return root.nodeType === 9;
 }
 
+function discoverNonce(root: Document | ShadowRoot): string | undefined {
+	const style = root.querySelector<HTMLStyleElement>('style[data-icss][nonce]');
+	if (style?.nonce) return style.nonce;
+	const meta = root.querySelector<HTMLMetaElement>('meta[name="icss-nonce"]');
+	return meta?.content || undefined;
+}
+
 export class BrowserStyleSheet implements IcssStyleSheet {
 	readonly hydratedClassNames: ReadonlySet<string>;
 	readonly #document: Document;
@@ -51,6 +64,7 @@ export class BrowserStyleSheet implements IcssStyleSheet {
 	readonly #nonce?: string;
 	readonly #root: Document | ShadowRoot;
 	readonly #speedy: boolean;
+	readonly #entries = new Map<string, StyleSheetEntry>();
 	#classNames: string[] = [];
 	#style?: HTMLStyleElement;
 
@@ -59,7 +73,7 @@ export class BrowserStyleSheet implements IcssStyleSheet {
 		this.#root = root;
 		this.#document = isDocument(root) ? root : root.ownerDocument;
 		this.#insertionPoint = options.insertionPoint;
-		this.#nonce = options.nonce;
+		this.#nonce = options.nonce ?? discoverNonce(root);
 		this.#speedy = options.speedy ?? true;
 		this.hydratedClassNames = readHydratedClassNames(root);
 	}
@@ -68,9 +82,23 @@ export class BrowserStyleSheet implements IcssStyleSheet {
 		this.#style?.remove();
 		this.#style = undefined;
 		this.#classNames = [];
+		this.#entries.clear();
 	}
 
 	insert(entry: StyleSheetEntry): void {
+		this.#entries.set(entry.className, entry);
+		this.#insertEntry(entry);
+	}
+
+	remove(className: string): void {
+		if (!this.#entries.delete(className)) return;
+		this.#style?.remove();
+		this.#style = undefined;
+		this.#classNames = [];
+		for (const entry of this.#entries.values()) this.#insertEntry(entry);
+	}
+
+	#insertEntry(entry: StyleSheetEntry): void {
 		const style = this.#style ?? this.#createStyle();
 		if (this.#speedy && style.sheet !== null) {
 			for (const rule of entry.rules) {

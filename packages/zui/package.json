@@ -24,6 +24,10 @@
 			"types": "./src/lib/internal.ts",
 			"svelte": "./src/lib/internal.ts",
 			"import": "./src/lib/internal.ts"
+		},
+		"./sveltekit": {
+			"types": "./src/lib/sveltekit/handle.ts",
+			"import": "./src/lib/sveltekit/handle.ts"
 		}
 	},
 	"publishConfig": {
@@ -42,6 +46,10 @@
 				"types": "./dist/internal.d.ts",
 				"svelte": "./dist/internal.js",
 				"import": "./dist/internal.js"
+			},
+			"./sveltekit": {
+				"types": "./dist/sveltekit/handle.d.ts",
+				"import": "./dist/sveltekit/handle.js"
 			}
 		}
 	},

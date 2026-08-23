@@ -1,10 +1,12 @@
 import type { Handle } from '@sveltejs/kit';
+import { sequence } from '@sveltejs/kit/hooks';
+import { icssHandle } from '@zadmin/zui/sveltekit';
 import { randomUUID, timingSafeEqual } from 'node:crypto';
 import { mkdir, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { adminHost } from '$lib/server/host';
 
-export const handle: Handle = async ({ event, resolve }) => {
+const adminHandle: Handle = async ({ event, resolve }) => {
 	if (event.url.pathname === '/__zadmin/runtime') {
 		return Response.json(adminHost.runtime.snapshot);
 	}
@@ -88,6 +90,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 	const response = await adminHost.web.routes.handle(event.request);
 	return response ?? resolve(event);
 };
+
+export const handle = sequence(icssHandle(), adminHandle);
 
 function authorizePluginMutation(request: Request): Response | undefined {
 	if (import.meta.env.MODE === 'development' || import.meta.env.MODE === 'test') return undefined;

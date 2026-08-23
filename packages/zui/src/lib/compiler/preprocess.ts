@@ -5,16 +5,17 @@ import { parse, type PreprocessorGroup } from 'svelte/compiler';
 
 import { findIcssBindings, findVariableCallsites } from './analyze.ts';
 import { rewriteIcssBindings } from './rewrite.ts';
+import { createModuleId } from './source-names.ts';
 import type { IcssPreprocessOptions, PositionedProgram } from './types.ts';
 
 const COMPILED_MARKER = '@zui-icss-compiled';
 
-function chooseSlotLocal(source: string): string {
+function chooseLocal(source: string, base: string): string {
 	let suffix = 0;
-	let candidate = '__zuiIcssSlot';
+	let candidate = base;
 	while (new RegExp(`\\b${candidate}\\b`, 'u').test(source)) {
 		suffix += 1;
-		candidate = `__zuiIcssSlot${suffix}`;
+		candidate = `${base}${suffix}`;
 	}
 	return candidate;
 }
@@ -46,7 +47,10 @@ export function icssPreprocess(options: IcssPreprocessOptions = {}): Preprocesso
 			for (const diagnostic of analyzed.diagnostics) options.onDiagnostic?.(diagnostic);
 
 			const magic = new MagicString(content);
-			const slotLocal = chooseSlotLocal(content);
+			const slotLocal = chooseLocal(content, '__zuiIcssSlot');
+			const ownedLocal = chooseLocal(content, '__zuiIcssOwned');
+			const disposeLocal = chooseLocal(content, '__zuiDisposeIcssModule');
+			const owner = createModuleId(filename, root);
 			const rewritten = rewriteIcssBindings(
 				ast.fragment,
 				analyzed.callsites,
@@ -54,14 +58,23 @@ export function icssPreprocess(options: IcssPreprocessOptions = {}): Preprocesso
 				magic,
 				content,
 				slotLocal,
+				ownedLocal,
+				owner,
 				root,
 				filename
 			);
 			for (const diagnostic of rewritten.diagnostics) options.onDiagnostic?.(diagnostic);
 			if (!rewritten.changed) return undefined;
 
-			const internalImport = `import { __icssSlot as ${slotLocal} } from '${internalModule}'; /* ${COMPILED_MARKER} */\n`;
-			magic.appendLeft(program.start, internalImport);
+			const internalModuleCode = `import { __disposeIcssModule as ${disposeLocal}, __icssOwned as ${ownedLocal}, __icssSlot as ${slotLocal} } from '${internalModule}'; /* ${COMPILED_MARKER} */
+if (import.meta.hot) import.meta.hot.dispose(() => ${disposeLocal}('${owner}'));
+`;
+			if (ast.module == null) {
+				magic.prepend(`<script module>\n${internalModuleCode}</script>\n`);
+			} else {
+				const moduleProgram = ast.module.content as PositionedProgram;
+				magic.appendLeft(moduleProgram.start, internalModuleCode);
+			}
 			return {
 				code: magic.toString(),
 				map: magic.generateMap({

@@ -23,6 +23,10 @@ export function createCallsiteId(
 	return hashString(`${moduleName}:${call.start}:${callSource}`).slice(0, 8);
 }
 
+export function createModuleId(filename: string | undefined, root: string): string {
+	return `m-${hashString(normalizeRelativeFilename(filename, root)).slice(0, 10)}`;
+}
+
 export function sourceVariableName(expression: Positioned<Expression>): string | undefined {
 	if (expression.type !== 'Identifier') return undefined;
 	const normalized = expression.name

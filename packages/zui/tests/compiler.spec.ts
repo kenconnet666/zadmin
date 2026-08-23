@@ -30,7 +30,9 @@ describe('ICSS Svelte preprocessor', () => {
 		</script>
 		<div class={panelClass}></div>`);
 
-		expect(output).toContain("import { __icssSlot as __zuiIcssSlot } from '@zadmin/zui/internal'");
+		expect(output).toContain('__icssSlot as __zuiIcssSlot');
+		expect(output).toMatch(/__zuiIcssOwned\('m-[a-z0-9]+:[a-z0-9]+', defaultTheme/u);
+		expect(output).toContain("import.meta.hot.dispose(() => __zuiDisposeIcssModule('m-");
 		expect(output).toMatch(/style\.width\.px\(__zuiIcssSlot\('--width-[a-z0-9]+-0'\)\)/u);
 		expect(output).toMatch(/style:--width-[a-z0-9]+-0=\{width\}/u);
 		expect(output).toContain('style.padding.px(16)');
@@ -90,7 +92,9 @@ describe('ICSS Svelte preprocessor', () => {
 		<div class={panel}></div>`;
 		const output = await transform(source, diagnostics);
 
-		expect(output).toBe(source);
+		expect(output).toContain('s.width.px(doubled)');
+		expect(output).not.toContain('style:--');
+		expect(output).toContain("__zuiIcssOwned('m-");
 		expect(diagnostics).toContainEqual(expect.objectContaining({ code: 'factory-local-value' }));
 	});
 

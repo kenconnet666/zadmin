@@ -77,4 +77,38 @@ describe('ICSS runtime', () => {
 		expect(registry.size).toBe(0);
 		expect(registry.styleTag()).toBe('');
 	});
+
+	it('releases HMR-owned rules without removing shared or persistent styles', () => {
+		const registry = createServerStyleRegistry();
+		const runtime = createIcssRuntime({ registry });
+		const factory = (style: IcssStyle<typeof defaultTheme>) => style.color._primary;
+
+		runtime.ownedIcss('module-a', defaultTheme, factory);
+		runtime.ownedIcss('module-b', defaultTheme, factory);
+		expect(registry.size).toBe(1);
+		registry.releaseOwner('module-a');
+		expect(registry.size).toBe(1);
+		registry.releaseOwner('module-b');
+		expect(registry.size).toBe(0);
+
+		runtime.icss(defaultTheme, factory);
+		runtime.ownedIcss('module-c', defaultTheme, factory);
+		registry.releaseOwner('module-c');
+		expect(registry.size).toBe(1);
+	});
+
+	it('bounds structural variants per compiler callsite', () => {
+		const registry = createServerStyleRegistry({ maxVariantsPerOwner: 2 });
+		const runtime = createIcssRuntime({ registry });
+		const themed = (color: string) => ({
+			...defaultTheme,
+			color: { ...defaultTheme.color, primary: color }
+		});
+
+		runtime.ownedIcss('module:callsite', themed('#000001'), (style) => style.color._primary);
+		runtime.ownedIcss('module:callsite', themed('#000002'), (style) => style.color._primary);
+		expect(() =>
+			runtime.ownedIcss('module:callsite', themed('#000003'), (style) => style.color._primary)
+		).toThrow(/exceeded 2 structural variants/);
+	});
 });
