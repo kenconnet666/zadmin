@@ -54,6 +54,9 @@ catalogs:
     '@sveltejs/vite-plugin-svelte':
       specifier: ^7.3.0
       version: 7.3.0
+    '@types/estree':
+      specifier: ^1.0.9
+      version: 1.0.9
     '@types/node':
       specifier: ^26.2.0
       version: 26.2.0
@@ -487,6 +490,9 @@ importers:
 
   packages/zui:
     dependencies:
+      '@types/estree':
+        specifier: 'catalog:'
+        version: 1.0.9
       csstype:
         specifier: 'catalog:'
         version: 3.2.3

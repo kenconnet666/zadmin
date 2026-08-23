@@ -15,6 +15,15 @@
 			"types": "./src/lib/index.ts",
 			"svelte": "./src/lib/index.ts",
 			"import": "./src/lib/index.ts"
+		},
+		"./compiler": {
+			"types": "./src/lib/compiler/preprocess.ts",
+			"import": "./src/lib/compiler/preprocess.ts"
+		},
+		"./internal": {
+			"types": "./src/lib/internal.ts",
+			"svelte": "./src/lib/internal.ts",
+			"import": "./src/lib/internal.ts"
 		}
 	},
 	"publishConfig": {
@@ -24,6 +33,15 @@
 				"types": "./dist/index.d.ts",
 				"svelte": "./dist/index.js",
 				"import": "./dist/index.js"
+			},
+			"./compiler": {
+				"types": "./dist/compiler/preprocess.d.ts",
+				"import": "./dist/compiler/preprocess.js"
+			},
+			"./internal": {
+				"types": "./dist/internal.d.ts",
+				"svelte": "./dist/internal.js",
+				"import": "./dist/internal.js"
 			}
 		}
 	},
@@ -35,6 +53,7 @@
 		"test:coverage": "vitest --run --coverage"
 	},
 	"dependencies": {
+		"@types/estree": "catalog:",
 		"csstype": "catalog:",
 		"estree-walker": "catalog:",
 		"magic-string": "catalog:",
