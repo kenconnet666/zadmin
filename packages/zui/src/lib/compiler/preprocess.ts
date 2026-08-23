@@ -3,7 +3,7 @@ import path from 'node:path';
 import MagicString from 'magic-string';
 import { parse, type PreprocessorGroup } from 'svelte/compiler';
 
-import { findIcssBindings, findVariableCallsites } from './analyze.ts';
+import { findIcssBindings, findVariableCallsites, findZuiComponentBindings } from './analyze.ts';
 import { rewriteIcssBindings } from './rewrite.ts';
 import { createModuleId } from './source-names.ts';
 import type { IcssPreprocessOptions, PositionedProgram } from './types.ts';
@@ -42,6 +42,7 @@ export function icssPreprocess(options: IcssPreprocessOptions = {}): Preprocesso
 			if (program === undefined) return undefined;
 			const icssBindings = findIcssBindings(program, modules);
 			if (icssBindings.size === 0) return undefined;
+			const zuiComponents = findZuiComponentBindings(program, modules);
 
 			const analyzed = findVariableCallsites(program, icssBindings, filename);
 			for (const diagnostic of analyzed.diagnostics) options.onDiagnostic?.(diagnostic);
@@ -55,6 +56,7 @@ export function icssPreprocess(options: IcssPreprocessOptions = {}): Preprocesso
 				ast.fragment,
 				analyzed.callsites,
 				icssBindings,
+				zuiComponents,
 				magic,
 				content,
 				slotLocal,

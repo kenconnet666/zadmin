@@ -151,6 +151,7 @@ export const PROPERTY_DEFINITIONS = {
 	},
 	opacity: { token: 'opacity' },
 	outlineColor: { token: 'color' },
+	outlineOffset: { units: ['length'] },
 	overflow: { keywords: OVERFLOW },
 	overflowX: { keywords: OVERFLOW },
 	overflowY: { keywords: OVERFLOW },

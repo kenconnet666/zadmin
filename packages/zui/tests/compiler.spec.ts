@@ -113,6 +113,18 @@ describe('ICSS Svelte preprocessor', () => {
 		expect(diagnostics).toContainEqual(expect.objectContaining({ code: 'component-boundary' }));
 	});
 
+	it('forwards hidden variables to known ZUI component roots', async () => {
+		const output = await transform(`<script>
+			import { Button, defaultTheme, icss } from '@zadmin/zui';
+			let width = $state(20);
+			const panel = $derived(icss(defaultTheme, (s) => s.width.px(width)));
+		</script>
+		<Button class={panel}>Save</Button>`);
+
+		expect(output).toMatch(/__icssVariables=\{\{ '--width-[a-z0-9]+-0': \(width\) \}\}/u);
+		expect(output).toContain("__zuiIcssOwned('m-");
+	});
+
 	it('can disable inline variables for strict CSP', async () => {
 		const source = `<script>import { icss } from '@zadmin/zui';</script><div class={icss(theme, s => s.width.px(width))}></div>`;
 		const result = await preprocess(source, icssPreprocess({ dynamicValues: 'class-rules' }));

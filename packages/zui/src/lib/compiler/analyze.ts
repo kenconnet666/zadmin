@@ -104,6 +104,30 @@ export function findIcssBindings(
 	return bindings;
 }
 
+const ZUI_COMPONENTS = new Set(['Box', 'Button', 'Stack', 'Text', 'ZuiProvider']);
+
+export function findZuiComponentBindings(
+	program: PositionedProgram,
+	modules: ReadonlySet<string>
+): ReadonlySet<string> {
+	const bindings = new Set<string>();
+	for (const statement of program.body) {
+		if (statement.type !== 'ImportDeclaration') continue;
+		const declaration = statement as ImportDeclaration;
+		if (typeof declaration.source.value !== 'string' || !modules.has(declaration.source.value)) {
+			continue;
+		}
+		for (const specifier of declaration.specifiers) {
+			if (specifier.type !== 'ImportSpecifier') continue;
+			const imported = (specifier as ImportSpecifier).imported;
+			if (isIdentifier(imported) && ZUI_COMPONENTS.has(imported.name)) {
+				bindings.add(specifier.local.name);
+			}
+		}
+	}
+	return bindings;
+}
+
 function variableName(declarator: VariableDeclarator): string | undefined {
 	return declarator.id.type === 'Identifier' ? declarator.id.name : undefined;
 }

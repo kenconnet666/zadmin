@@ -22,7 +22,7 @@ interface SvelteNode {
 interface ElementUse {
 	readonly attributeEnd: number;
 	readonly callsites: Set<IcssCallsite>;
-	readonly regular: boolean;
+	readonly kind: 'regular' | 'unknown-component' | 'zui-component';
 }
 
 export interface RewriteResult {
@@ -103,6 +103,7 @@ export function rewriteIcssBindings(
 	fragment: unknown,
 	variableCallsites: ReadonlyMap<string, IcssCallsite>,
 	icssBindings: ReadonlySet<string>,
+	zuiComponents: ReadonlySet<string>,
 	magic: MagicString,
 	source: string,
 	slotLocal: string,
@@ -133,8 +134,13 @@ export function rewriteIcssBindings(
 			diagnostics
 		);
 		if (callsites.size === 0) return;
-		if (!regular) for (const callsite of callsites) unsafe.add(callsite);
-		uses.push({ attributeEnd: classAttribute.end, callsites, regular });
+		const kind = regular
+			? 'regular'
+			: node.name !== undefined && zuiComponents.has(node.name)
+				? 'zui-component'
+				: 'unknown-component';
+		if (kind === 'unknown-component') for (const callsite of callsites) unsafe.add(callsite);
+		uses.push({ attributeEnd: classAttribute.end, callsites, kind });
 	});
 
 	const analyses = new Map<IcssCallsite, ReturnType<typeof analyzeDynamicSlots>>();
@@ -199,19 +205,27 @@ export function rewriteIcssBindings(
 	}
 
 	for (const use of uses) {
-		if (!use.regular) continue;
+		if (use.kind === 'unknown-component') continue;
 		const directives = new Map<string, string>();
 		for (const callsite of use.callsites) {
 			const analysis = analyses.get(callsite);
 			if (analysis === undefined) continue;
 			for (const slot of analysis.slots) {
+				const binding = renderBinding(slot.expression, slot.guards);
 				directives.set(
 					slot.variable,
-					` style:${slot.variable}={${renderBinding(slot.expression, slot.guards)}}`
+					use.kind === 'regular'
+						? ` style:${slot.variable}={${binding}}`
+						: `'${slot.variable}': (${binding})`
 				);
 			}
 		}
-		if (directives.size > 0) magic.appendRight(use.attributeEnd, [...directives.values()].join(''));
+		if (directives.size === 0) continue;
+		const generated =
+			use.kind === 'regular'
+				? [...directives.values()].join('')
+				: ` __icssVariables={{ ${[...directives.values()].join(', ')} }}`;
+		magic.appendRight(use.attributeEnd, generated);
 	}
 
 	return { changed: owned.size > 0 || overwritten.size > 0, diagnostics };

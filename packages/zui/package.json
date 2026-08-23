@@ -81,11 +81,14 @@
 		"@sveltejs/kit": "catalog:",
 		"@sveltejs/package": "catalog:",
 		"@types/stylis": "catalog:",
+		"@vitest/browser-playwright": "catalog:",
 		"@vitest/coverage-v8": "catalog:",
+		"playwright": "catalog:",
 		"svelte": "catalog:",
 		"svelte-check": "catalog:",
 		"typescript": "catalog:",
 		"vite": "catalog:",
-		"vitest": "catalog:"
+		"vitest": "catalog:",
+		"vitest-browser-svelte": "catalog:"
 	}
 }
