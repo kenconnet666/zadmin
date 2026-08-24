@@ -9,6 +9,7 @@ apps/
   admin/       管理宿主，同时装载静态能力与动态插件
   etl/         独立 ETL 应用
   docs/        组件、示例与开发文档应用
+  wechat/      Svelte→Taro 微信小程序宿主与验收应用
 
 packages/
   core/        DI 容器、插件 Runtime、Artifact、Installer
@@ -19,6 +20,8 @@ packages/
   oss/         对象存储基础能力
   zui-core/    平台无关的主题、Token、ICSS 和设计契约
   zui-web/     可供任意 Web 项目使用的 Svelte 组件库
+  zui-taro/    微信小程序 ZUI 组件与 ICSS 子集
+  svelte-taro/ Svelte compiler、Taro renderer/runtime 和微信平台能力
   drizzle/     可供任意项目使用的 Drizzle 增强库
 
 plugins/
@@ -45,6 +48,7 @@ pnpm dev:admin
 ```powershell
 pnpm dev:etl
 pnpm dev:docs
+pnpm dev:wechat
 ```
 
 ## 验证
@@ -75,6 +79,9 @@ pnpm lint
 - [开发态热重载](./apps/docs/content/development-hmr.md)
 - [ZUI ICSS 生产架构](./apps/docs/content/zui-icss.md)
 - [ZUI 使用与外部接入](./apps/docs/content/zui-usage.md)
+- [Svelte Taro 生产验收](./apps/docs/content/wechat-production-acceptance.md)
+- [微信 Fast Refresh](./apps/docs/content/wechat-fast-refresh.md)
+- [微信能力报告](./apps/docs/content/wechat-capability-report.md)
 - [测试与验收](./apps/docs/content/testing.md)
 - [工程倾向](./apps/docs/content/engineering-preferences.md)
 - [换设备交接](./apps/docs/content/handoff.md)

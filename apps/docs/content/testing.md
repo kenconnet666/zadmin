@@ -57,6 +57,46 @@ pnpm --filter @zadmin/docs build-storybook
 - 外部fixture包含critical CSS和初始动态变量，compiler/server客户端文件0个；
 - `pnpm audit --prod`无已知漏洞，gitleaks无泄漏；Taro开发工具链审计例外在最终交接单独记录。
 
+## Svelte Taro与微信验收
+
+重点命令：
+
+```powershell
+pnpm --filter @zadmin/svelte-taro check
+pnpm --filter @zadmin/svelte-taro test:coverage
+pnpm --filter @zadmin/zui-taro check
+pnpm --filter @zadmin/zui-taro test:coverage
+pnpm --filter @zadmin/wechat-app build
+pnpm --filter @zadmin/svelte-taro test:package
+pnpm --filter @zadmin/svelte-taro benchmark
+```
+
+2026-08-25最终结果：
+
+- `svelte-taro` 13个test files、40项测试通过；statements 80.44%、branches 67.09%、functions 84.79%、lines 84.23%；
+- compiler目录statements 95.12%，renderer statements/lines 96.42%；
+- `zui-taro` 2个test files、4项测试通过；statements 85.62%、branches 72.72%、functions 93.47%、lines 88.52%；
+- conformance覆盖runes、effect cleanup、props、component binding、生命周期、context、snippet、if/keyed each/key/await、boundary onerror恢复、class/style/event和嵌套组件；
+- renderer树与App/Page runtime分别完成100次mount/unmount；platform listener/session/connection完成100次scope释放后回到基线；
+  -32项capability catalog、PlatformError脱敏、login/phone branded code、支付服务端权威、Taro/fake driver、配置诊断、native type和静态Taro module通过；
+  -微信开发者工具中WebView组件交互、network、临时storage roundtrip/cleanup、只读privacy probe和wx API mock/restore通过；
+  -四个tarball在空临时目录安装，frozen reinstall、外部类型、单Svelte/Taro runtime和生产Taro build通过；
+  -同场景200个keyed节点的三轮交替基准：Svelte 11,169ms，Taro Solid 10,969ms，中位比1.018x，满足≤1.25x；
+  -WebView为simulator-verified；Skyline仅build-verified，详见[renderer报告](./wechat-renderers.md)。
+
+生产内容必须断言以下字符串在非source-map JS中为0：
+
+```text
+__ZADMIN_BUILD_ID__
+__zadmin_build_id__
+ZADMIN_WECHAT_SUPERVISED
+FakePlatformDriver
+@zadmin/svelte-taro/testing
+workspace绝对路径
+```
+
+完整证据见[Svelte Taro生产验收](./wechat-production-acceptance.md)。微信upload不属于默认测试命令，必须另获用户授权。
+
 ## Core覆盖矩阵
 
 `packages/core/tests/`当前覆盖：

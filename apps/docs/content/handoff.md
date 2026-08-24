@@ -1,6 +1,6 @@
 # 换设备开发交接
 
-更新时间：2026-08-24。
+更新时间：2026-08-25。
 
 ## 当前结论
 
@@ -9,6 +9,8 @@ DI容器、Plugin Module、上下游插件类型传播、服务端/客户端独�
 ZUI ICSS和五个基础组件已经按[ICSS生产架构](./zui-icss.md)完成生产验收：公开API只有class字符串；Svelte编译器把安全动态叶子提升为inline CSS变量；运行时负责结构CSS、普通TS回退、SSR Registry和HMR。不要回到`{ class, style }`或完整静态提取路线。外部接入见[ZUI使用与外部接入](./zui-usage.md)。
 
 2026-08-25 已把平台无关的Theme、Token、ICSS Program和设计Props提取到`@zadmin/zui-core`，原Web能力迁移为`@zadmin/zui-web`；Web API与行为未扩展，两个tarball已完成隔离安装、check、build和SSR回归。
+
+Svelte→Taro微信链路也已完成默认WebView生产验收：`@zadmin/svelte-taro`提供CJS framework plugin、compiler、renderer、App/Page runtime、静态Taro module、native types和scoped WeChat platform；`@zadmin/zui-taro`提供五个基础组件、三个流程组件和严格ICSS子集；`apps/wechat`是受版本控制的验收宿主。Fast Refresh、外部tarball、能力报告和Taro Solid性能对比均已落库。不要把Skyline build-verified或账号/硬件mock证据写成真机验收。
 
 关键代码检查点：
 
@@ -20,6 +22,17 @@ ddcc4f9 feat(zui): compile dynamic icss values to inline variables
 547f0e3 feat(zui): harden sveltekit ssr and hmr integration
 a613cb4 feat(zui): add provider and foundational components
 fecc5a2 docs(zui): replace starter content with zui documentation
+1d65349 docs(wechat): approve Svelte Taro production blueprint
+976e0d6 chore(workspace): isolate the WeChat toolchain
+4dc0450 refactor(zui): extract platform-neutral core
+ece5528 refactor(zui): isolate the Web renderer package
+33a9cdf feat(svelte-taro): add typed Taro framework plugin
+cf0d2f4 feat(svelte-taro): compile Svelte through the Taro renderer
+38a6395 feat(wechat): add Svelte app and page runtime
+bc9f939 feat(zui-taro): add foundational components and ICSS
+19124a1 feat(svelte-taro): add scoped WeChat platform capabilities
+7ec35b3 feat(wechat): add supervised Fast Refresh
+edd8ad7 test(wechat): complete Svelte Taro production acceptance
 ```
 
 最终文档提交之后请用下面命令确认实际HEAD：
@@ -38,6 +51,7 @@ pnpm check
 pnpm test
 pnpm build
 pnpm lint
+pnpm build:wechat
 ```
 
 如果仓库位于其他路径，命令不依赖 `C:\code\zadmin`；只有本文档中的示例路径需要替换。
@@ -74,6 +88,7 @@ apps/
   admin/
   docs/
   etl/
+  wechat/
 
 packages/
   auth/
@@ -83,7 +98,9 @@ packages/
   postgres/
   redis/
   sveltekit/
+  svelte-taro/
   zui-core/
+  zui-taro/
   zui-web/
 
 plugins/
@@ -111,32 +128,40 @@ plugin.ts
 
 ## 关键入口
 
-| 责任                        | 文件                                                   |
-| --------------------------- | ------------------------------------------------------ |
-| ServiceContainer事务        | `packages/core/src/container/container.ts`             |
-| Provider图和可见性          | `packages/core/src/container/graph.ts`                 |
-| Scope和资源回调             | `packages/core/src/container/context.ts`               |
-| Provider与`@service`        | `packages/core/src/container/provider.ts`              |
-| Token/Injection             | `packages/core/src/container/token.ts`、`injection.ts` |
-| Plugin定义                  | `packages/core/src/container/module.ts`                |
-| PluginRuntime               | `packages/core/src/plugin/runtime.ts`                  |
-| Artifact Manager            | `packages/core/src/plugin/manager.ts`                  |
-| Manifest/Definition校验     | `packages/core/src/plugin/validation.ts`               |
-| Artifact扫描与revision      | `packages/core/src/artifact/workspace.ts`              |
-| 安装器                      | `packages/core/src/artifact/installed.ts`              |
-| Plugin构建策略              | `packages/core/src/artifact/vite.ts`                   |
-| Package/Manifest校验        | `packages/core/src/artifact/validation.ts`             |
-| Admin组合和HMR              | `apps/admin/src/lib/server/host.ts`                    |
-| EventSource/Client Artifact | `apps/admin/src/lib/server/plugins.ts`                 |
-| 服务端动态路由              | `packages/sveltekit/src/lib/routes.ts`                 |
-| 浏览器Plugin Runtime        | `packages/sveltekit/src/lib/client-runtime.ts`         |
-| Approval公开类型            | `plugins/approval/src/server/contract.ts`              |
-| CRM上游类型依赖示例         | `plugins/crm/src/server/contract.ts`、`service.ts`     |
-| ICSS Runtime与Registry      | `packages/zui-web/src/lib/icss/`                       |
-| Svelte ICSS编译器           | `packages/zui-web/src/lib/compiler/`                   |
-| SvelteKit ICSS SSR          | `packages/zui-web/src/lib/sveltekit/`                  |
-| ZUI基础组件                 | `packages/zui-web/src/lib/components/`                 |
-| ZUI接入文档                 | `apps/docs/content/zui-usage.md`                       |
+| 责任                        | 文件                                                      |
+| --------------------------- | --------------------------------------------------------- |
+| ServiceContainer事务        | `packages/core/src/container/container.ts`                |
+| Provider图和可见性          | `packages/core/src/container/graph.ts`                    |
+| Scope和资源回调             | `packages/core/src/container/context.ts`                  |
+| Provider与`@service`        | `packages/core/src/container/provider.ts`                 |
+| Token/Injection             | `packages/core/src/container/token.ts`、`injection.ts`    |
+| Plugin定义                  | `packages/core/src/container/module.ts`                   |
+| PluginRuntime               | `packages/core/src/plugin/runtime.ts`                     |
+| Artifact Manager            | `packages/core/src/plugin/manager.ts`                     |
+| Manifest/Definition校验     | `packages/core/src/plugin/validation.ts`                  |
+| Artifact扫描与revision      | `packages/core/src/artifact/workspace.ts`                 |
+| 安装器                      | `packages/core/src/artifact/installed.ts`                 |
+| Plugin构建策略              | `packages/core/src/artifact/vite.ts`                      |
+| Package/Manifest校验        | `packages/core/src/artifact/validation.ts`                |
+| Admin组合和HMR              | `apps/admin/src/lib/server/host.ts`                       |
+| EventSource/Client Artifact | `apps/admin/src/lib/server/plugins.ts`                    |
+| 服务端动态路由              | `packages/sveltekit/src/lib/routes.ts`                    |
+| 浏览器Plugin Runtime        | `packages/sveltekit/src/lib/client-runtime.ts`            |
+| Approval公开类型            | `plugins/approval/src/server/contract.ts`                 |
+| CRM上游类型依赖示例         | `plugins/crm/src/server/contract.ts`、`service.ts`        |
+| ICSS Runtime与Registry      | `packages/zui-web/src/lib/icss/`                          |
+| Svelte ICSS编译器           | `packages/zui-web/src/lib/compiler/`                      |
+| SvelteKit ICSS SSR          | `packages/zui-web/src/lib/sveltekit/`                     |
+| ZUI基础组件                 | `packages/zui-web/src/lib/components/`                    |
+| ZUI接入文档                 | `apps/docs/content/zui-usage.md`                          |
+| Taro framework plugin       | `packages/svelte-taro/src/plugin/index.cts`               |
+| Svelte Taro compiler        | `packages/svelte-taro/src/compiler/`                      |
+| Taro renderer/runtime       | `packages/svelte-taro/src/renderer/`、`runtime/`          |
+| WeChat platform/catalog     | `packages/svelte-taro/src/platform/`                      |
+| Taro module/native/testing  | `packages/svelte-taro/src/module/`、`native/`、`testing/` |
+| ZUI Taro                    | `packages/zui-taro/src/`                                  |
+| WeChat supervisor           | `apps/wechat/config/supervisor.mjs`                       |
+| 微信生产验收                | `apps/docs/content/wechat-production-acceptance.md`       |
 
 ## 当前调用方式
 
@@ -206,6 +231,31 @@ pnpm --filter @zadmin/docs test:e2e
 pnpm --filter @zadmin/docs build-storybook
 ```
 
+## 微信实测结论
+
+2026-08-25在Windows本机完成：
+
+-生产Taro build使用141个transform modules，内部构建约7.4秒；产物不含buildId、supervisor、fake driver、testing入口或workspace绝对路径；
+-Svelte Taro 13个test files/40项测试、ZUI Taro 2个files/4项测试通过，两条100-cycle释放链回到基线；
+-WebView模拟器中组件、state/if/keyed list/theme/dynamic ICSS和流程`open-type`通过；network、临时storage cleanup和只读privacy probe通过；
+-32项capability逐项记录等级；支付/手机号/SOTER/硬件等没有被无人值守真实触发；
+-四个tarball空目录安装、frozen reinstall、外部module/native/ZUI类型、单runtime和Taro build通过；
+-同场景Taro Solid/Svelte三轮交替冷构建中位比1.018x，达到≤1.25x；
+-Fast Refresh的App/ZUI/platform变化约1.5–2.8秒；compiler/config完整重启约11.4秒，仍未达到最初的8/10秒总链目标；
+-WebView为simulator-verified；Skyline在补齐`glass-easel`和`lazyCodeLoading: requiredComponents`后build通过，但授权模态阻止最终模拟器复核，因此仅build-verified。
+
+重点命令：
+
+```powershell
+pnpm --filter @zadmin/wechat-app setup:local -- C:\Users\lionheart\WeChatProjects\miniprogram-1
+pnpm build:wechat
+pnpm dev:wechat
+pnpm --filter @zadmin/svelte-taro test:package
+pnpm --filter @zadmin/svelte-taro benchmark
+```
+
+`setup:local`只生成被忽略的`project.private.config.json`，不打印AppID。换设备时把最后一个参数替换为该设备上已经授权的微信项目目录。
+
 ## Artifact与数据目录
 
 开发Artifact：
@@ -247,13 +297,20 @@ $env:ZADMIN_PLUGIN_ADMIN_TOKEN = '<secret>'
 -ZUI编译器只优化可证明安全的本地数据流；循环、switch中的动态声明、factory局部值、兄弟/祖先selector和未知组件边界会使用完整class-rule回退。
 \-`inline-vars`要求CSP允许`style-src-attr`；严格禁止inline attribute时使用`dynamicValues: 'class-rules'`。
 -当前ZUI组件范围只有Provider、Box、Stack、Text和Button；旧Vue组件库不是待机械迁移清单。
+-微信默认生产目标是WebView；Skyline不是simulator-verified。
+-固定Svelte artifact的boundary `failed/pending` snippet存在上游compiler崩溃；当前支持并测试`<svelte:boundary onerror>`，坏路径有提前诊断。
+-微信完整dev audit有21项固定工具链advisory，但`pnpm audit --prod`无已知漏洞，开发supervisor不启动Vite HTTP服务。
+-没有执行微信upload、审核、支付、手机号、订阅、权限弹窗、云写入或真实硬件操作。
+-本机微信开发者工具仍可能显示此前诊断留下的`zadmin-supervisor` MCP客户端授权模态；本轮未替用户点击允许或拒绝。
+-四个失败的clean-package诊断目录因宿主递归删除策略未能自动清理，位于`%TEMP%\zadmin-wechat-package-{zhYiko,d8QoR6,iZYX7l,B8Img4}`；它们不在仓库内，可在确认无需诊断后手工删除。最后一次成功fixture已自动清理。
 
 这些不是未完成的DI路线图；除非出现明确业务需求，不添加占位接口。
 
 ## 下一位开发者的第一步
 
 1. 先运行四条全仓验证命令。
-2. 阅读 `dependency-injection.md`、`plugin-development.md`和`zui-usage.md`。
+2. 阅读 `dependency-injection.md`、`plugin-development.md`、`zui-usage.md`和`wechat-production-acceptance.md`。
 3. 业务插件优先扩展自己的primary API和内部Provider，不开放内部Bean ID。
 4. 修改Runtime/HMR后按 `testing.md`执行真实浏览器验收。
 5. 阶段性提交并更新本交接文件。
+6. 微信开发先运行`setup:local`，再用`pnpm dev:wechat`；不要另起第二组Taro/package watcher。

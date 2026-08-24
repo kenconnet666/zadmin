@@ -42,13 +42,30 @@
 
 ## ZUI与样式
 
-- `icss()`公开层永远只返回class字符串，不返回`{ class, style }`，也不要求action、attachment或`css` prop。
+- `@zadmin/zui-web`的`icss()`公开层永远只返回class字符串，不返回`{ class, style }`，也不要求action、attachment或`css` prop。
 - Svelte编译器优化是性能路径，普通TypeScript运行时必须仍然功能正确。
 - 动态叶子值进入元素inline CSS自定义属性；结构、selector和theme token进入确定性CSS rule。
 - 不执行用户模块来静态提取CSS，不引入WyW、Babel或SWC编译体系。
 - 条件优先使用原生TypeScript `if`、`switch`和表达式，不预先创造大规模recipe或selector语法糖。
 - CSS类型、运行时能力和文档从同一属性元数据生成，避免旧ZUI式多份配置漂移。
 - 高频值变化不得生成新class、rule或style tag；这是行为验收，不是可选性能建议。
+
+Taro不是把Web CSS API原样搬过去：
+
+- `zui-core`只保存Theme、Token、StyleProgram、dynamic slot和设计Props；不能出现Svelte、Taro、DOM、wx或Node依赖。
+- `zui-web`与`zui-taro`允许各自拥有薄Svelte模板，不能互相依赖；至少三个模板被真实证明相同前，不提取共享Svelte源码。
+- Taro ICSS只承诺可诊断子集：平面declaration、token、px/percent/显式rpx、稳定class、静态WXSS和动态叶子inline style。浏览器selector/CSSOM语义不能静默假装支持。
+- 动态Taro叶子每轮只更新style值，不生成新class或WXSS rule；空值跳过，数值必须finite。
+
+## 微信与多目标
+
+- 微信端固定Taro 4.2.1、Vite 4.5.14和精确Svelte custom-renderer artifact；不能与Web Vite 8/registry Svelte混用解析图。
+- 默认生产目标是WebView。Skyline、账号、商户、类目和真实硬件按独立verification grade记录，不能由类型检查或模拟器结果冒充真机验收。
+- `platform.raw`直接保留Taro类型；managed API只有在增加权限/隐私/错误/资源生命周期/测试价值时才存在，禁止复制数百个wx接口做自研Facade。
+- 登录code、手机号code、支付签名、精确位置和硬件payload不得进入默认日志、错误message、截图或snapshot。登录/手机号兑换、支付签名和最终订单状态必须留在服务端。
+- 敏感API不得在页面加载时自动调用；授权、隐私、手机号、支付、订阅和系统设置必须由明确用户手势触发。
+- 业务Taro module在构建时静态组合；生产不能网络加载可执行JavaScript。外部插件源码可以在开发态按realpath watch，但manifest/lockfile变化必须停止并重启安装流程。
+- 开发态只有一个supervisor owner；退出必须清理所有children、watcher和lock。Taro Hook没有disposer，compiler/plugin变化必须重启Taro child，不能删除require.cache后重复注册。
 
 ## 装饰器
 

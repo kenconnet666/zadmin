@@ -12,5 +12,12 @@
 8. [测试与验收](./testing.md)：自动化命令、覆盖矩阵和真实浏览器 HMR步骤。
 9. [工程倾向](./engineering-preferences.md)：目录、依赖、代码、提交和文档的长期约束。
 10. [换设备交接](./handoff.md)：当前状态、恢复命令、关键入口和已知边界。
+11. [Svelte Taro 生产验收](./wechat-production-acceptance.md)：默认 WebView 发布范围、完整门禁与限制。
+12. [微信 Fast Refresh](./wechat-fast-refresh.md)：单 supervisor、文件分类、buildId 和实测耗时。
+13. [微信能力报告](./wechat-capability-report.md)：32 项 capability 的稳定性和真实验证等级。
+14. [微信 clean-package 验收](./wechat-package-acceptance.md)：四个 tarball 的外部安装、类型和构建证据。
+15. [微信性能基线](./wechat-performance.md)：与同版本 Taro Solid 的三轮交替生产构建对比。
+16. [微信 renderer 验收](./wechat-renderers.md)：WebView 证据和 Skyline 的明确边界。
+17. [微信人工真机/账号验收](./wechat-manual-acceptance.md)：支付、手机号、权限和硬件的安全检查表。
 
 当前插件协议：`2`。第一阶段只支持自家可信插件，不提供恶意代码沙箱。

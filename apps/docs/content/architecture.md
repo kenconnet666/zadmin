@@ -6,11 +6,14 @@ ZAdmin是一个 pnpm workspace中的多应用、可复用 Package和动态 Plugi
 
 `packages/zui-web`的样式层使用运行时 ICSS和Svelte编译优化双轨架构。公开调用只返回class字符串；可追踪的Svelte响应式叶子在编译时提升为inline CSS自定义属性，结构CSS由运行时确定性生成和缓存。完整合同见[ZUI ICSS生产架构](./zui-icss.md)。
 
+微信小程序不是 Web renderer 的条件分支。`@zadmin/zui-core`只保存跨目标设计合同，`@zadmin/zui-web`和`@zadmin/zui-taro`拥有各自薄 Svelte模板；`@zadmin/svelte-taro`独立承担 Taro framework plugin、compiler、renderer、App/Page runtime、微信平台能力与开发态监督器所需协议。默认生产目标是WebView，Skyline单独分级。
+
 ```text
 apps/
   admin/       宿主应用和插件控制面
   etl/         独立 ETL 应用，不是动态插件
   docs/        ZUI/文档/演示应用
+  wechat/      Svelte→Taro 微信小程序宿主、能力实验室和验收入口
 
 packages/
   core/        DI、Plugin Runtime、Artifact、Installer
@@ -21,6 +24,8 @@ packages/
   oss/         可选对象存储 Module
   zui-core/    平台无关的主题、Token、ICSS 和设计契约
   zui-web/     Web UI 库
+  zui-taro/    Taro UI 库和严格 ICSS 子集
+  svelte-taro/ Taro framework plugin、renderer/runtime/platform/module/native
   drizzle/     公共 ORM增强库
 
 plugins/
@@ -28,6 +33,46 @@ plugins/
   crm/         动态业务插件
   erp/         动态业务插件
 ```
+
+## Web 与微信依赖边界
+
+```text
+                         @zadmin/zui-core
+                          ▲             ▲
+                          │             │
+               @zadmin/zui-web   @zadmin/zui-taro
+
+                               @zadmin/svelte-taro ──→ Taro 4.2.1
+
+apps/admin, apps/docs ──→ zui-web
+apps/wechat           ──→ zui-taro + svelte-taro
+```
+
+- `zui-core`不依赖Svelte、Taro、DOM、wx、Node或任一renderer。
+- `zui-web`和`zui-taro`互不依赖；Web没有因本轮增加组件或公开API。
+- `svelte-taro`不依赖ZUI。它的`platform.raw`保留完整Taro类型，managed层只包装权限、错误、资源owner和服务端安全边界。
+- 微信端前后端不拆成两个项目；小程序包只包含客户端代码，登录code兑换、手机号兑换、支付签名/回调等仍由现有服务端package/plugin负责。
+- 微信业务module在构建时静态合入小程序。开发时可以监听外部package realpath，生产安装/升级后必须重新构建、审核和发布，不能从网络加载可执行JavaScript。
+
+## Svelte Taro编译与运行时
+
+```text
+.svelte
+  → 固定 Svelte 5.56.10 custom-renderer compiler
+  → Taro native element marker + external CSS
+  → @zadmin/svelte-taro/renderer
+  → Taro document/TaroNode
+  → base.wxml + WXSS + page JS
+```
+
+- Taro Node plugin是CJS；其余公开运行时是ESM。
+- Taro CLI封闭的framework类型由`defineSvelteConfig()`接收`svelte`，运行时适配为Taro官方`none`以跳过内置React/Vue/Solid plugin，再显式加载本framework plugin。
+- 原生标签经marker和`onParseCreateElement`进入Taro模板；未知浏览器标签在编译期拒绝。
+- App/Page各有`ResourceScope`；Page卸载自动释放listener、session、connection和context。
+- 固定Svelte runtime在package build时生成一个tree-shakeable dev/prod ESM。Taro产物仍只有一个Svelte runtime，生产图由246–247个transform module降到141–142个。
+- 第一阶段Fast Refresh是增量重建+开发者工具reload，不承诺保留组件局部状态的HMR。
+
+完整生产边界见[Svelte Taro生产验收](./wechat-production-acceptance.md)。
 
 ## Provider、Module与Plugin
 

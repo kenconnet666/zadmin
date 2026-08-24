@@ -32,6 +32,7 @@ Acceptance date: 2026-08-25. The default supported release target is a trusted f
 - [Clean-package acceptance](./wechat-package-acceptance.md)
 - [Performance baseline](./wechat-performance.md)
 - [Renderer acceptance](./wechat-renderers.md)
+- [Manual device/account acceptance](./wechat-manual-acceptance.md)
 - [WebView screenshot](/wechat/webview.jpg)
 
 The result is production-usable for the documented default WebView target and stable managed capabilities. Provisional/raw capabilities and Skyline are not represented as device- or account-verified.

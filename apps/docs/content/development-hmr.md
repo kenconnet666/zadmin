@@ -141,3 +141,29 @@ Workspace watcher比较 server/client revision集合，忽略只影响发布声�
 1. 确认下游使用 `import type`从真实上游插件package导入。
 2. 确认上游同时位于peerDependencies和devDependencies。
 3. 确认每插件恰有一个 `tsc --noEmit --watch`进程。
+
+## 微信 Fast Refresh
+
+微信使用独立命令和单一owner：
+
+```powershell
+pnpm dev:wechat
+```
+
+```text
+WeChat supervisor
+  ├─ svelte-taro tsc --watch
+  ├─ zui-taro svelte-package --watch
+  ├─ Taro Vite build --watch
+  ├─ app/package/external realpath watchers
+  └─ build status + optional DevTools refresh adapter
+```
+
+- App `.svelte`、ZUI组件和platform/runtime源码走Taro增量构建，实测约1.5–2.8秒。
+- compiler/plugin与app config变化只重启Taro child；预打包runtime后完整链约11.4秒。
+- package manifest、workspace配置或lockfile变化以退出码75停止，要求重新install/restart。
+- 每次成功构建才更新虚拟build-id模块；失败构建保留上次ID。生产构建完全删除ID、storage镜像和supervisor代码。
+- `.wechat/build-status.json`和`.jsonl`记录source、buildId、起止、duration、结果、restart reason和watcher count；目录被Git忽略。
+- DevTools优先自动编译。只有已经授权的`ZADMIN_WECHATIDE_CLIENT`才启用CLI fallback；无人值守时不会弹授权并自动同意。
+
+完整分类、性能和排错见[微信Fast Refresh](./wechat-fast-refresh.md)。
