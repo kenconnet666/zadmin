@@ -9,6 +9,7 @@ type VitePlugin = {
 	readonly enforce?: 'pre' | 'post';
 	readonly name: string;
 	readonly buildStart?: (this: unknown, ...args: readonly unknown[]) => unknown;
+	readonly config?: () => unknown;
 	readonly resolveId?: (source: string) => unknown;
 };
 
@@ -153,6 +154,9 @@ function createSveltePackageImportsPlugin(): VitePlugin {
 	return {
 		enforce: 'pre',
 		name: 'zadmin:svelte-package-imports',
+		config() {
+			return { build: { target: 'es2018' }, esbuild: { target: 'es2018' } };
+		},
 		resolveId(source: string) {
 			return source === '#client/constants' ? clientConstants : undefined;
 		}

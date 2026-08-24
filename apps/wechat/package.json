@@ -8,8 +8,8 @@
 		"node": ">=22.0.0"
 	},
 	"scripts": {
-		"prebuild": "pnpm --filter @zadmin/svelte-taro build",
-		"predev": "pnpm --filter @zadmin/svelte-taro build",
+		"prebuild": "pnpm --filter @zadmin/svelte-taro build && pnpm --filter @zadmin/zui-taro build",
+		"predev": "pnpm --filter @zadmin/svelte-taro build && pnpm --filter @zadmin/zui-taro build",
 		"build": "taro build --type weapp",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
 		"clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
@@ -22,6 +22,7 @@
 		"@tarojs/runtime": "catalog:wechat",
 		"@tarojs/taro": "catalog:wechat",
 		"@zadmin/svelte-taro": "workspace:^",
+		"@zadmin/zui-taro": "workspace:^",
 		"svelte": "https://pkg.svelte.dev/svelte/c/eb7532dd70fb11b36258347c44cf3910d244f987"
 	},
 	"devDependencies": {

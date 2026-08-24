@@ -6,5 +6,4 @@ export type {
 	SvelteProjectConfig,
 	SvelteTaroPluginOptions
 } from './plugin/types.ts';
-export { createSvelteApp, getSvelteTaroContext, ResourceScope } from './runtime/index.ts';
 export type { ScopeCleanup, SvelteTaroApp, SvelteTaroRuntimeContext } from './runtime/index.ts';

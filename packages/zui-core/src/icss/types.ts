@@ -3,7 +3,7 @@ import type * as CSS from 'csstype';
 import type { PROPERTY_DEFINITIONS } from '../theme/properties.ts';
 import type { ThemeSchema } from '../theme/types.ts';
 import type { UNIT_FAMILIES, UnitFamilyName } from '../theme/units.ts';
-import type { IcssDeclarationValue } from './values.ts';
+import type { IcssDeclarationValue, IcssDynamicSlot } from './values.ts';
 
 declare const ICSS_CLASS: unique symbol;
 
@@ -83,17 +83,19 @@ type UnitNamesFor<TProperty extends string> =
 		: never;
 
 type UnitAccessors<TProperty extends string> = {
-	readonly [TUnit in UnitNamesFor<TProperty>]: (...values: CssQuad<number>) => void;
+	readonly [TUnit in UnitNamesFor<TProperty>]: (
+		...values: CssQuad<number | IcssDynamicSlot>
+	) => void;
 };
 
 export type IcssPropertyCarrier<TTheme extends ThemeSchema, TProperty extends CssPropertyName> = ((
-	value: CssPropertyValue<TProperty> | null | undefined
+	value: CssPropertyValue<TProperty> | IcssDynamicSlot | null | undefined
 ) => void) &
 	GlobalKeywordAccessors &
 	KeywordAccessors<TProperty> &
 	TokenAccessors<TTheme, TProperty> &
 	UnitAccessors<TProperty> & {
-		readonly raw: (value: string | number | null | undefined) => void;
+		readonly raw: (value: string | number | IcssDynamicSlot | null | undefined) => void;
 	};
 
 type IcssProperties<TTheme extends ThemeSchema> = {
