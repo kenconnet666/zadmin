@@ -112,7 +112,10 @@ function createCompilerPlugin(options: SvelteTaroPluginOptions): VitePlugin {
 	let implementation: Promise<SvelteCompilerPlugin> | undefined;
 	const load = () =>
 		(implementation ??= import('../compiler/index.js').then(({ createSvelteVitePlugin }) =>
-			createSvelteVitePlugin({ renderer: options.renderer ?? DEFAULT_RENDERER })
+			createSvelteVitePlugin({
+				dev: process.env.ZADMIN_WECHAT_SUPERVISED === '1' || process.env.NODE_ENV === 'development',
+				renderer: options.renderer ?? DEFAULT_RENDERER
+			})
 		));
 	return {
 		enforce: 'pre',
@@ -129,9 +132,15 @@ function createCompilerPlugin(options: SvelteTaroPluginOptions): VitePlugin {
 		async resolveId(source: string) {
 			return (await load()).resolveId?.call(this, source);
 		},
+		async shouldTransformCachedModule(options: { id: string }) {
+			return (await load()).shouldTransformCachedModule?.call(this, options);
+		},
 		async transform(source: string, id: string) {
 			const plugin = await load();
 			return plugin.transform?.call(this as never, source, id);
+		},
+		async writeBundle() {
+			return (await load()).writeBundle?.call(this as never);
 		}
 	} as VitePlugin;
 }

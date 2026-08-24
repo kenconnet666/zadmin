@@ -203,7 +203,7 @@ const media = {
 	})
 } as const;
 
-const location = {
+const locationCapabilities = {
 	background: capability({
 		api: 'startLocationUpdateBackground',
 		dataClasses: ['location', 'personal'],
@@ -463,7 +463,7 @@ export const wechatCapabilities = Object.freeze({
 	compute,
 	hardware,
 	identity,
-	location,
+	location: locationCapabilities,
 	media,
 	messaging,
 	network,

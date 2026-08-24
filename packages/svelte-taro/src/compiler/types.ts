@@ -13,8 +13,10 @@ export interface SvelteCompilerPlugin {
 	readonly name: 'zadmin:svelte-taro-compiler';
 	buildStart?(): void;
 	configResolved?(config: { command?: string; mode?: string; root?: string }): void;
+	writeBundle?(): void;
 	load?(id: string): string | undefined;
 	resolveId?(source: string): string | undefined;
+	shouldTransformCachedModule?(options: { id: string }): boolean;
 	transform?(
 		this: { warn(warning: unknown): void },
 		source: string,

@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import {
 	componentMarkerId,
@@ -10,6 +10,7 @@ describe('Svelte Taro compiler', () => {
 	it('compiles through the custom renderer and emits CSS and component metadata', async () => {
 		const plugin = createSvelteVitePlugin({ dev: true });
 		plugin.configResolved?.({ command: 'build', mode: 'development', root: 'C:/fixture' });
+		plugin.buildStart?.();
 		const warnings: unknown[] = [];
 		const filename = 'C:/fixture/Panel.svelte';
 		const result = await plugin.transform?.call(
@@ -19,6 +20,7 @@ describe('Svelte Taro compiler', () => {
 		);
 
 		expect(result?.code).toContain("from '@zadmin/svelte-taro/renderer'");
+		expect(result?.code).toContain('virtual:zadmin-svelte-taro-build-id');
 		expect(result?.code).toContain(JSON.stringify(componentMarkerId(filename)));
 		expect(result?.code).toContain(JSON.stringify(styleVirtualId(filename)));
 		expect(plugin.load?.(styleVirtualId(filename))).toContain('.panel');
@@ -28,6 +30,39 @@ describe('Svelte Taro compiler', () => {
 		expect(marker).toContain('createElement("view"');
 		expect(componentMarkerId(filename).startsWith('\0')).toBe(false);
 		expect(warnings).toEqual([]);
+		plugin.buildStart?.();
+		expect(plugin.load?.(styleVirtualId(filename))).toContain('.panel');
+		expect(plugin.load?.(componentMarkerId(filename))).toContain('createElement("view"');
+	});
+
+	it('publishes a build id only after a successful development bundle and erases it in production', async () => {
+		const development = createSvelteVitePlugin({ dev: true });
+		development.buildStart?.();
+		const output = await development.transform?.call(
+			{ warn() {} },
+			'<view>development</view>',
+			'C:/fixture/Development.svelte'
+		);
+		const log = vi.spyOn(console, 'log').mockImplementation(() => undefined);
+		development.writeBundle?.();
+		expect(output?.code).toContain('virtual:zadmin-svelte-taro-build-id');
+		const virtualId = development.resolveId?.('virtual:zadmin-svelte-taro-build-id');
+		expect(virtualId).toBe('\0zadmin-svelte-taro-build-id');
+		expect(development.load?.(virtualId ?? '')).toMatch(
+			/globalThis\.__ZADMIN_BUILD_ID__ = "[a-z0-9-]+"/u
+		);
+		expect(development.shouldTransformCachedModule?.({ id: virtualId ?? '' })).toBe(true);
+		expect(log).toHaveBeenCalledWith(expect.stringMatching(/^\[zadmin-build\] /u));
+		log.mockRestore();
+
+		const production = createSvelteVitePlugin({ dev: false });
+		production.buildStart?.();
+		const productionOutput = await production.transform?.call(
+			{ warn() {} },
+			'<view>production</view>',
+			'C:/fixture/Production.svelte'
+		);
+		expect(productionOutput?.code).not.toContain('zadmin-svelte-taro-build-id');
 	});
 
 	it('ignores non-Svelte modules and surfaces unsupported renderer syntax', async () => {
