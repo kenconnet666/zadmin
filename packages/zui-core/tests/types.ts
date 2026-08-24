@@ -1,4 +1,4 @@
-import { defaultTheme, type IcssStyle } from '../src/lib/index.js';
+import { defaultTheme, type IcssStyle } from '../src/index.ts';
 
 declare const style: IcssStyle<typeof defaultTheme>;
 

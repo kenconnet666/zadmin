@@ -9,7 +9,7 @@ import type {
 } from 'estree';
 import { walk } from 'estree-walker';
 
-import { UNIT_FAMILIES } from '../theme/units.ts';
+import { UNIT_FAMILIES } from '@zadmin/zui-core';
 import { createDiagnostic } from './diagnostics.ts';
 import { createCallsiteId, createVariableName, sourceVariableName } from './source-names.ts';
 import type {

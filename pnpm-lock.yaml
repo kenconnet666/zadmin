@@ -558,6 +558,9 @@ importers:
       '@types/estree':
         specifier: 'catalog:'
         version: 1.0.9
+      '@zadmin/zui-core':
+        specifier: workspace:^
+        version: link:../zui-core
       csstype:
         specifier: 'catalog:'
         version: 3.2.3
@@ -610,6 +613,25 @@ importers:
       vitest-browser-svelte:
         specifier: 'catalog:'
         version: 3.0.0(svelte@5.56.10(@typescript-eslint/types@8.67.0))(vitest@4.1.11)
+
+  packages/zui-core:
+    dependencies:
+      csstype:
+        specifier: 'catalog:'
+        version: 3.2.3
+    devDependencies:
+      '@vitest/coverage-v8':
+        specifier: 'catalog:'
+        version: 4.1.11(@vitest/browser@4.1.11)(vitest@4.1.11)
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.3
+      vite:
+        specifier: 'catalog:'
+        version: 8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(sass@1.103.1)(terser@5.50.0)(tsx@4.23.12)(yaml@2.9.0)
+      vitest:
+        specifier: 'catalog:'
+        version: 4.1.11(@types/node@26.2.0)(@vitest/browser-playwright@4.1.11)(@vitest/coverage-v8@4.1.11)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(sass@1.103.1)(terser@5.50.0)(tsx@4.23.12)(yaml@2.9.0))
 
   plugins/approval:
     devDependencies:

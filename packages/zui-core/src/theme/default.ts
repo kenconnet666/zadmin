@@ -1,4 +1,4 @@
-import { defineTheme } from './define.js';
+import { defineTheme } from './define.ts';
 
 export const defaultTheme = defineTheme({
 	borderWidth: {

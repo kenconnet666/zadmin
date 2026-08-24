@@ -1,8 +1,12 @@
-import type { ThemeSchema } from '../theme/types.js';
-import { createStyleProgram } from './builder.js';
+import {
+	createStyleProgram,
+	type IcssClassName,
+	type IcssFactory,
+	type ThemeSchema
+} from '@zadmin/zui-core';
+
 import { StyleRegistry, type StyleRegistryOptions } from './registry.js';
 import { BrowserStyleSheet, type BrowserStyleSheetOptions } from './sheet.js';
-import type { IcssClassName, IcssFactory } from './types.js';
 
 export interface IcssRuntime {
 	readonly registry: StyleRegistry;

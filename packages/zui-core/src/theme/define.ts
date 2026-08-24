@@ -1,4 +1,4 @@
-import type { DeepReadonly, Theme, ThemeSchema, ThemeTokenValue } from './types.js';
+import type { DeepReadonly, Theme, ThemeSchema, ThemeTokenValue } from './types.ts';
 
 function copyTokenGroup(
 	groupName: string,

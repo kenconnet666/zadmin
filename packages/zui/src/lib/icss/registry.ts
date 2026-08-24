@@ -1,7 +1,7 @@
-import { hashString } from './hash.js';
+import { hashString, type IcssClassName, type StyleProgram } from '@zadmin/zui-core';
+
 import { canonicalizeStyleProgram, serializeStyleProgram } from './serialize.js';
 import { MemoryStyleSheet, type IcssStyleSheet } from './sheet.js';
-import type { IcssClassName, StyleProgram } from './types.js';
 
 export interface RegisteredStyle {
 	readonly canonical: string;

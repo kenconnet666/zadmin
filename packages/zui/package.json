@@ -80,6 +80,7 @@
 		"url": "https://github.com/kenconnet666/zadmin/issues"
 	},
 	"dependencies": {
+		"@zadmin/zui-core": "workspace:^",
 		"@types/estree": "catalog:",
 		"csstype": "catalog:",
 		"estree-walker": "catalog:",

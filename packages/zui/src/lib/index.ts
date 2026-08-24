@@ -19,13 +19,14 @@ export type { TextElement, TextProps } from './components/text/index.js';
 export { icss } from './icss/runtime.js';
 export { createIcssRuntime } from './icss/runtime.js';
 export { createServerStyleRegistry, StyleRegistry } from './icss/registry.js';
-export type { IcssClassName, IcssFactory, IcssStyle } from './icss/types.js';
-export { defaultTheme } from './theme/default.js';
-export { defineTheme } from './theme/define.js';
+export { defaultTheme, defineTheme } from '@zadmin/zui-core';
 export type {
 	DeepReadonly,
+	IcssClassName,
+	IcssFactory,
+	IcssStyle,
 	Theme,
 	ThemeSchema,
 	ThemeTokenGroup,
 	ThemeTokenValue
-} from './theme/types.js';
+} from '@zadmin/zui-core';

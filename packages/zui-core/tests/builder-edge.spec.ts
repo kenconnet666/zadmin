@@ -1,9 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { createStyleProgram } from '../src/lib/icss/builder.js';
-import { createIcssSlot } from '../src/lib/icss/values.js';
-import { defaultTheme } from '../src/lib/index.js';
-import { getUnitSuffix } from '../src/lib/theme/units.js';
+import { createIcssSlot, createStyleProgram, defaultTheme, getUnitSuffix } from '../src/index.ts';
 
 describe('ICSS builder edge behavior', () => {
 	it('records raw, global keywords, low-level properties and all nested primitives', () => {
@@ -68,6 +65,7 @@ describe('ICSS builder edge behavior', () => {
 		).toThrow(/Unknown theme token/);
 
 		const slot = createIcssSlot('--width-test-0');
+		expect(slot.id).toBe('--width-test-0');
 		const program = createStyleProgram(defaultTheme, (style) => {
 			(style.width.px as (...values: unknown[]) => void)(slot);
 		});
@@ -75,5 +73,11 @@ describe('ICSS builder edge behavior', () => {
 			values: [{ unit: 'px', value: slot }]
 		});
 		expect(getUnitSuffix('unknown' as never)).toBeUndefined();
+	});
+
+	it('returns undefined for unknown carrier members', () => {
+		createStyleProgram(defaultTheme, (style) => {
+			expect((style.color as unknown as Record<string, unknown>).unknown).toBeUndefined();
+		});
 	});
 });

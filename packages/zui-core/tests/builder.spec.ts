@@ -1,7 +1,6 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
 
-import { createStyleProgram } from '../src/lib/icss/builder.js';
-import { defaultTheme, type IcssStyle } from '../src/lib/index.js';
+import { createStyleProgram, defaultTheme, type IcssStyle } from '../src/index.ts';
 
 describe('ICSS builder', () => {
 	it('records ordered raw, keyword, token and unit declarations', () => {

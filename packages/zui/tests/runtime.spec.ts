@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { createIcssSlot } from '@zadmin/zui-core';
 
 import {
 	createIcssRuntime,
@@ -8,7 +9,6 @@ import {
 	StyleRegistry,
 	type IcssStyle
 } from '../src/lib/index.js';
-import { createIcssSlot } from '../src/lib/icss/values.js';
 
 describe('ICSS runtime', () => {
 	it('creates a deterministic class and prefixed nested CSS', () => {

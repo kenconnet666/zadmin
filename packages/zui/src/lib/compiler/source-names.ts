@@ -1,8 +1,8 @@
 import path from 'node:path';
 
 import type { Expression } from 'estree';
+import { hashString } from '@zadmin/zui-core';
 
-import { hashString } from '../icss/hash.ts';
 import type { Positioned, PositionedCallExpression } from './types.ts';
 
 function normalizeRelativeFilename(filename: string | undefined, root: string): string {

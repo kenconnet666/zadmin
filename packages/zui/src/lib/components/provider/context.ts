@@ -1,7 +1,5 @@
 import { getContext, setContext } from 'svelte';
-
-import { defaultTheme } from '../../theme/default.js';
-import type { ThemeSchema } from '../../theme/types.js';
+import { defaultTheme, type ThemeSchema } from '@zadmin/zui-core';
 
 type DefaultGroup<TGroup> = { readonly [TKey in keyof TGroup]: string | number };
 

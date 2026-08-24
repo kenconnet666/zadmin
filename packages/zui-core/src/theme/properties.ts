@@ -1,4 +1,4 @@
-import type { UnitFamilyName, UnitName } from './units.js';
+import type { UnitFamilyName, UnitName } from './units.ts';
 
 const DISPLAY = {
 	block: 'block',

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { defaultTheme, defineTheme } from '../src/lib/index.js';
+import { defaultTheme, defineTheme } from '../src/index.ts';
 
 describe('defineTheme', () => {
 	it('copies and freezes token groups', () => {

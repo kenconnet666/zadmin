@@ -1,6 +1,6 @@
-import { getPropertyDefinition } from '../theme/properties.js';
-import type { ThemeSchema } from '../theme/types.js';
-import { getUnitNames, getUnitSuffix, type UnitName } from '../theme/units.js';
+import { getPropertyDefinition } from '../theme/properties.ts';
+import type { ThemeSchema } from '../theme/types.ts';
+import { getUnitNames, getUnitSuffix, type UnitName } from '../theme/units.ts';
 import type {
 	DeclarationInstruction,
 	IcssFactory,
@@ -8,13 +8,13 @@ import type {
 	NestedInstruction,
 	StyleBlock,
 	StyleProgram
-} from './types.js';
+} from './types.ts';
 import {
 	isIcssSlot,
 	normalizeDeclarationValues,
 	type IcssInputValue,
-	type IcssRuntimeSlot
-} from './values.js';
+	type IcssDynamicSlot
+} from './values.ts';
 
 const GLOBAL_KEYWORDS: Readonly<Record<string, string>> = {
 	inherit: 'inherit',
@@ -195,6 +195,6 @@ export function createStyleProgram<TTheme extends ThemeSchema>(
 	return { block, theme };
 }
 
-export function isRuntimeSlot(value: unknown): value is IcssRuntimeSlot {
+export function isDynamicSlot(value: unknown): value is IcssDynamicSlot {
 	return isIcssSlot(value);
 }

@@ -1,8 +1,11 @@
 import { compile, middleware, prefixer, rulesheet, serialize, stringify } from 'stylis';
-
-import { getUnitSuffix } from '../theme/units.js';
-import type { StyleBlock, StyleProgram } from './types.js';
-import { isIcssSlot, type IcssDeclarationValue } from './values.js';
+import {
+	getUnitSuffix,
+	isIcssSlot,
+	type IcssDeclarationValue,
+	type StyleBlock,
+	type StyleProgram
+} from '@zadmin/zui-core';
 
 export interface SerializedStyle {
 	readonly cssText: string;
@@ -19,10 +22,10 @@ export function hyphenateProperty(property: string): string {
 function serializeValue(declaration: IcssDeclarationValue): string {
 	const { unit, value } = declaration;
 	if (isIcssSlot(value)) {
-		if (unit === undefined) return `var(${value.variable})`;
+		if (unit === undefined) return `var(${value.id})`;
 		const suffix = getUnitSuffix(unit);
 		if (suffix === undefined) throw new TypeError(`Unknown ICSS unit "${unit}".`);
-		return `calc(var(${value.variable}) * 1${suffix})`;
+		return `calc(var(${value.id}) * 1${suffix})`;
 	}
 	if (unit === undefined || typeof value === 'string') return String(value);
 	const suffix = getUnitSuffix(unit);

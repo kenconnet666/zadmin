@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
+import { hashString } from '@zadmin/zui-core';
 
-import { hashString } from '../src/lib/icss/hash.js';
 import { StyleRegistry } from '../src/lib/icss/registry.js';
 import { createIcssRuntime } from '../src/lib/icss/runtime.js';
 import { hyphenateProperty } from '../src/lib/icss/serialize.js';

@@ -1,9 +1,9 @@
 import type * as CSS from 'csstype';
 
-import type { PROPERTY_DEFINITIONS } from '../theme/properties.js';
-import type { ThemeSchema } from '../theme/types.js';
-import type { UNIT_FAMILIES, UnitFamilyName } from '../theme/units.js';
-import type { IcssDeclarationValue } from './values.js';
+import type { PROPERTY_DEFINITIONS } from '../theme/properties.ts';
+import type { ThemeSchema } from '../theme/types.ts';
+import type { UNIT_FAMILIES, UnitFamilyName } from '../theme/units.ts';
+import type { IcssDeclarationValue } from './values.ts';
 
 declare const ICSS_CLASS: unique symbol;
 

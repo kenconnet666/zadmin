@@ -1,5 +1,5 @@
 import { disposeIcssModule, ownedIcss } from './icss/runtime.js';
-import { createIcssSlot } from './icss/values.js';
+import { createIcssSlot } from '@zadmin/zui-core';
 
 export { setServerRuntimeResolver as __setServerRuntimeResolver } from './icss/runtime.js';
 
