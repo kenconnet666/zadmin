@@ -1,0 +1,20 @@
+{
+	"checkedAt": "2026-08-25",
+	"webview": {
+		"build": "passed",
+		"console": "passed before the authorization modal was introduced",
+		"interaction": "passed",
+		"screenshot": "/wechat/webview.jpg",
+		"verification": "simulator-verified"
+	},
+	"skyline": {
+		"build": "passed",
+		"configuration": {
+			"componentFramework": "glass-easel",
+			"lazyCodeLoading": "requiredComponents",
+			"renderer": "skyline"
+		},
+		"simulator": "blocked by an unattended wechatide client-authorization modal",
+		"verification": "build-verified"
+	}
+}

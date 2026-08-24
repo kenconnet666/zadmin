@@ -85,6 +85,16 @@ describe('Taro framework plugin', () => {
 		const viteConfig: { plugins?: Array<{ name?: string }> } = {};
 		state.modifyVite?.({ viteConfig });
 		expect(viteConfig.plugins?.[0]?.name).toBe('zadmin:svelte-package-imports');
+		const compatibility = viteConfig.plugins?.[0] as {
+			resolveId(source: string): string | undefined;
+		};
+		expect(compatibility.resolveId('svelte')).toMatch(
+			/dist[\\/]vendor[\\/]svelte-runtime\.prod\.js$/u
+		);
+		expect(compatibility.resolveId('svelte/internal/client')).toBe(
+			compatibility.resolveId('svelte')
+		);
+		expect(compatibility.resolveId('svelte/renderer')).toBe(compatibility.resolveId('svelte'));
 		const includes = new Set<string>();
 		state.parseElement?.({ componentConfig: { includes }, nodeName: 'button' });
 		expect(includes).toEqual(new Set(['button']));

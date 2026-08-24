@@ -85,7 +85,7 @@ describe('Svelte Taro compiler', () => {
 				'<svelte:window onkeydown={() => undefined} />',
 				'C:/fixture/Unsupported.svelte'
 			)
-		).rejects.toThrow(/svelte:window|custom renderer/i);
+		).rejects.toThrow(/not supported|lifecycle/i);
 	});
 
 	it('collects typed native elements and rejects accidental browser tags', async () => {
@@ -108,5 +108,51 @@ describe('Svelte Taro compiler', () => {
 				'C:/fixture/Browser.svelte'
 			)
 		).rejects.toThrow(/Unsupported Mini Program native element "div"/u);
+	});
+
+	it.each([
+		[
+			'regular binding',
+			'<script>let value = $state(0)</script><input bind:value />',
+			/component-level \$bindable/u
+		],
+		[
+			'transition',
+			'<script>import { fade } from "svelte/transition"</script><view transition:fade></view>',
+			/Mini Program animation/u
+		],
+		[
+			'browser global',
+			'<svelte:window onkeydown={() => undefined} />',
+			/platform or App\/Page lifecycle/u
+		],
+		[
+			'dynamic element',
+			'<script>let tag = "view"</script><svelte:element this={tag} />',
+			/statically enumerable/u
+		],
+		['raw HTML', '<script>let html = "<b>x</b>"</script>{@html html}', /arbitrary HTML/u],
+		[
+			'raw snippet',
+			'<script>import { createRawSnippet } from "svelte"; const raw = createRawSnippet(() => ({ render: () => "x" }))</script>',
+			/declarative snippet/u
+		],
+		[
+			'boundary fallback snippet',
+			'<svelte:boundary>{#snippet failed(error)}<text>{error}</text>{/snippet}</svelte:boundary>',
+			/onerror/u
+		]
+	])('reports a stable diagnostic for unsupported %s', async (_name, source, suggestion) => {
+		const plugin = createSvelteVitePlugin();
+		const error = await plugin.transform
+			?.call({ warn() {} }, source, 'C:/fixture/Unsupported.svelte')
+			.catch((reason: unknown) => reason);
+		expect(error).toMatchObject({
+			code: 'svelte_taro_unsupported',
+			column: expect.any(Number),
+			filename: 'C:/fixture/Unsupported.svelte',
+			line: expect.any(Number)
+		});
+		expect((error as Error).message).toMatch(suggestion);
 	});
 });

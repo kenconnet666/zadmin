@@ -89,11 +89,13 @@
 		}
 	},
 	"scripts": {
-		"build": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\" && tsc -p tsconfig.json",
+		"build": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\" && tsc -p tsconfig.json && node scripts/build-runtime.mjs",
+		"benchmark": "pnpm build && node scripts/benchmark.mjs && pnpm -w exec prettier --write apps/docs/content/wechat-performance.json apps/docs/content/wechat-performance.md",
 		"check": "tsc -p tsconfig.test.json --noEmit && svelte-check --tsconfig ./tsconfig.test.json",
 		"report": "pnpm build && node scripts/generate-capability-report.mjs && pnpm -w exec prettier --write apps/docs/content/wechat-capability-report.json apps/docs/content/wechat-capability-report.md",
 		"test": "pnpm build && vitest --run tests",
-		"test:coverage": "pnpm build && vitest --run --coverage tests"
+		"test:coverage": "pnpm build && vitest --run --coverage tests",
+		"test:package": "node scripts/accept-package.mjs && pnpm -w exec prettier --write apps/docs/content/wechat-package-acceptance.json apps/docs/content/wechat-package-acceptance.md"
 	},
 	"keywords": [
 		"svelte",
@@ -124,6 +126,7 @@
 		"@tarojs/taro": "catalog:wechat",
 		"@types/node": "catalog:",
 		"@vitest/coverage-v8": "catalog:",
+		"esbuild": "0.28.2",
 		"svelte": "https://pkg.svelte.dev/svelte/c/eb7532dd70fb11b36258347c44cf3910d244f987",
 		"svelte-check": "catalog:",
 		"typescript": "catalog:",

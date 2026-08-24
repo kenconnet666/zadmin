@@ -59,14 +59,18 @@ catalogs:
     '@tarojs/cli': 4.2.1
     '@tarojs/components': 4.2.1
     '@tarojs/helper': 4.2.1
+    '@tarojs/plugin-framework-solid': 4.2.1
     '@tarojs/plugin-platform-weapp': 4.2.1
     '@tarojs/runtime': 4.2.1
     '@tarojs/service': 4.2.1
     '@tarojs/shared': 4.2.1
     '@tarojs/taro': 4.2.1
     '@tarojs/vite-runner': 4.2.1
+    babel-plugin-transform-solid-jsx: 4.2.1
     miniprogram-api-typings: 5.2.3
+    solid-js: 1.9.15
     vite: 4.5.14
+    vite-plugin-solid: 2.11.14
 
 catalogMode: strict
 disallowWorkspaceCycles: true

@@ -1,0 +1,32 @@
+{
+	"checkedAt": "2026-08-25",
+	"defaultTarget": "weapp-webview",
+	"status": "passed-with-documented-optional-limits",
+	"gates": {
+		"frozenInstall": "passed",
+		"peerDependencies": "passed",
+		"productionAudit": "passed-no-known-vulnerabilities",
+		"developmentAudit": "21-fixed-toolchain-advisories",
+		"repositoryCheck": "passed",
+		"repositoryTest": "passed",
+		"repositoryBuild": "passed",
+		"repositoryLint": "passed",
+		"secretScan": "passed",
+		"cleanTarballs": "passed",
+		"productionContentGuards": "passed",
+		"resourceCleanup100Cycles": "passed",
+		"performanceRatio": {
+			"ratio": 1.018,
+			"targetMaximum": 1.25,
+			"status": "passed"
+		},
+		"webviewSimulator": "passed",
+		"skyline": "build-passed-simulator-blocked",
+		"wechatUpload": "not-run-no-authorization"
+	},
+	"fixedVersions": {
+		"svelte": "5.56.10 custom renderer commit eb7532dd70fb11b36258347c44cf3910d244f987",
+		"taro": "4.2.1",
+		"viteWechat": "4.5.14"
+	}
+}

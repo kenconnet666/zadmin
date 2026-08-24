@@ -1,0 +1,22 @@
+{
+	"checkedAt": "2026-08-25",
+	"environment": {
+		"node": "v24.18.0",
+		"platform": "win32-x64",
+		"taro": "4.2.1",
+		"vite": "4.5.14"
+	},
+	"ratio": 1.018,
+	"solid": {
+		"buildMs": [10189, 10969, 10989],
+		"bundleBytes": 171488,
+		"medianBuildMs": 10969
+	},
+	"svelte": {
+		"buildMs": [10959, 11169, 11528],
+		"bundleBytes": 216950,
+		"medianBuildMs": 11169
+	},
+	"target": "Svelte median build time <= 1.25x Taro Solid",
+	"targetMet": true
+}

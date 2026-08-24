@@ -1,0 +1,21 @@
+{
+	"name": "@zadmin/performance-solid",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"dependencies": {
+		"@tarojs/cli": "4.2.1",
+		"@tarojs/components": "4.2.1",
+		"@tarojs/helper": "4.2.1",
+		"@tarojs/plugin-framework-solid": "4.2.1",
+		"@tarojs/plugin-platform-weapp": "4.2.1",
+		"@tarojs/runtime": "4.2.1",
+		"@tarojs/service": "4.2.1",
+		"@tarojs/shared": "4.2.1",
+		"@tarojs/taro": "4.2.1",
+		"@tarojs/vite-runner": "4.2.1",
+		"babel-plugin-transform-solid-jsx": "4.2.1",
+		"solid-js": "1.9.15",
+		"vite-plugin-solid": "2.11.14"
+	}
+}

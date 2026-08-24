@@ -1,6 +1,7 @@
 import { compile, parse } from 'svelte/compiler';
 
 import { collectNativeElements, createComponentMarkerCode } from './marker.ts';
+import { assertSupportedSvelteSource } from './diagnostics.ts';
 import type {
 	SvelteCompilerOptions,
 	SvelteCompilerPlugin,
@@ -66,6 +67,7 @@ export function createSvelteVitePlugin(options: SvelteCompilerOptions = {}): Sve
 		async transform(source, id): Promise<SvelteTransformResult | undefined> {
 			if (!isSvelteSource(id)) return undefined;
 			const filename = id.split('?')[0];
+			assertSupportedSvelteSource(source, filename);
 			const dev = isDevelopment();
 			const renderer = options.renderer ?? '@zadmin/svelte-taro/renderer';
 			const ast = parse(source, { filename, modern: true });
@@ -111,3 +113,4 @@ export function createSvelteVitePlugin(options: SvelteCompilerOptions = {}): Sve
 
 export type { SvelteCompilerOptions, SvelteCompilerPlugin } from './types.ts';
 export { collectNativeElements, createComponentMarkerCode } from './marker.ts';
+export { assertSupportedSvelteSource, SvelteTaroCompileError } from './diagnostics.ts';

@@ -160,6 +160,14 @@ function createMiniIntegrationPlugin(context: PluginContext): VitePlugin {
 function createSveltePackageImportsPlugin(): VitePlugin {
 	const svelteRoot = dirname(localRequire.resolve('svelte/package.json'));
 	const clientConstants = join(svelteRoot, 'src/internal/client/constants.js');
+	const runtime = join(
+		__dirname,
+		`../vendor/svelte-runtime.${
+			process.env.ZADMIN_WECHAT_SUPERVISED === '1' || process.env.NODE_ENV === 'development'
+				? 'dev'
+				: 'prod'
+		}.js`
+	);
 	return {
 		enforce: 'pre',
 		name: 'zadmin:svelte-package-imports',
@@ -167,6 +175,13 @@ function createSveltePackageImportsPlugin(): VitePlugin {
 			return { build: { target: 'es2018' }, esbuild: { target: 'es2018' } };
 		},
 		resolveId(source: string) {
+			if (
+				source === 'svelte' ||
+				source === 'svelte/internal/client' ||
+				source === 'svelte/renderer'
+			) {
+				return runtime;
+			}
 			return source === '#client/constants' ? clientConstants : undefined;
 		}
 	};

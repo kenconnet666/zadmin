@@ -1,6 +1,6 @@
 # WeChat Fast Refresh
 
-`pnpm dev:wechat` starts one supervisor. It directly owns one TypeScript watcher for `@zadmin/svelte-taro`, one `svelte-package` watcher for `@zadmin/zui-taro`, and one Taro Vite watcher. It does not nest `concurrently` processes, and it removes its lock plus all children on `SIGINT`/`SIGTERM`.
+`pnpm dev:wechat` starts one supervisor. It first builds the package and its single prebundled Svelte runtime, then directly owns one TypeScript watcher for `@zadmin/svelte-taro`, one `svelte-package` watcher for `@zadmin/zui-taro`, and one Taro Vite watcher. It does not nest `concurrently` processes, and it removes its lock plus all children on `SIGINT`/`SIGTERM`.
 
 ## Change policy
 
@@ -31,15 +31,15 @@ WeChat DevTools normally notices `dist` itself. If an already-authorized `wechat
 
 Measured on 2026-08-25 with Node 24.18, Taro 4.2.1, Vite 4.5.14, and WeChat DevTools Stable 2.02.2608040:
 
-| Scenario                 |      Taro-reported build | Observed source-to-success | Result                                                                     |
-| ------------------------ | -----------------------: | -------------------------: | -------------------------------------------------------------------------- |
-| App `.svelte` edit       |              1.54–2.05 s |                1.25–2.81 s | passed; visible text and runtime build ID updated automatically            |
-| ZUI Taro component edit  |              1.51–1.56 s |                  under 3 s | passed; no Taro restart                                                    |
-| Platform TypeScript edit |              1.50–1.53 s |                  under 3 s | passed after retaining virtual marker/CSS caches across incremental rounds |
-| Compiler/plugin edit     | 10.41–10.88 s cold build |              15.76–16.34 s | functionally passed, but misses the provisional 8 s target                 |
-| App-config/route edit    | 10.55–10.60 s cold build |         approximately 16 s | functionally passed, but misses the provisional 10 s target                |
+| Scenario                 |    Taro-reported build | Observed source-to-success | Result                                                                                            |
+| ------------------------ | ---------------------: | -------------------------: | ------------------------------------------------------------------------------------------------- |
+| App `.svelte` edit       |            1.54–2.05 s |                1.25–2.81 s | passed; visible text and runtime build ID updated automatically                                   |
+| ZUI Taro component edit  |            1.51–1.56 s |                  under 3 s | passed; no Taro restart                                                                           |
+| Platform TypeScript edit |            1.50–1.53 s |                  under 3 s | passed after retaining virtual marker/CSS caches across incremental rounds                        |
+| Compiler/plugin edit     | 6.69–6.92 s cold build |       approximately 11.4 s | functionally passed; improved by runtime prebundling, but misses the provisional 8 s total target |
+| App-config/route edit    |    approximately 6.9 s |       approximately 11.5 s | functionally passed; narrowly misses the provisional 10 s total target                            |
 
-The cold-restart targets remain a measured performance gap, not a correctness gap. The dominant cost is Taro Vite's full 246–247 module rebuild plus process startup. The supervisor already removes duplicate file events, limits intentional child shutdown to 500 ms, and refuses in-process Taro Hook replacement because Taro has no Hook disposer.
+The cold-restart targets remain a measured performance gap, not a correctness gap. Prebundling the exact pinned Svelte runtime reduced the Taro graph from 246–247 to 141–142 transformed modules and the cold build itself by about four seconds. The remaining cost is Taro CLI process startup plus the full build. The supervisor already removes duplicate file events, limits intentional child shutdown to 500 ms, and refuses in-process Taro Hook replacement because Taro has no Hook disposer.
 
 Taro Vite may log that `src/comp` is missing during incremental rounds while it injects `usingComponents.comp`; the same build emits the expected root `dist/comp.js`, `comp.json`, and `comp.wxml`. Production builds do not log this warning, and simulator interaction passed. Revisit it when upgrading the fixed Taro version rather than adding a fake source component.
 

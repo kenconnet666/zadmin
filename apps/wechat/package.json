@@ -27,14 +27,18 @@
 	"devDependencies": {
 		"@tarojs/cli": "catalog:wechat",
 		"@tarojs/helper": "catalog:wechat",
+		"@tarojs/plugin-framework-solid": "catalog:wechat",
 		"@tarojs/plugin-platform-weapp": "catalog:wechat",
 		"@tarojs/service": "catalog:wechat",
 		"@tarojs/shared": "catalog:wechat",
 		"@tarojs/vite-runner": "catalog:wechat",
 		"@types/node": "catalog:",
+		"babel-plugin-transform-solid-jsx": "catalog:wechat",
 		"miniprogram-api-typings": "catalog:wechat",
 		"svelte-check": "catalog:",
+		"solid-js": "catalog:wechat",
 		"typescript": "catalog:",
-		"vite": "catalog:wechat"
+		"vite": "catalog:wechat",
+		"vite-plugin-solid": "catalog:wechat"
 	}
 }

@@ -2,7 +2,7 @@ import { spawn } from 'node:child_process';
 import { watch } from 'node:fs';
 import { mkdir, open, readFile, readdir, realpath, stat, unlink } from 'node:fs/promises';
 import { createRequire } from 'node:module';
-import { dirname, relative, resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { refreshDevtoolsIfStale } from './devtools-refresh.mjs';
@@ -101,7 +101,9 @@ async function acquireLock() {
 			if (error?.code !== 'EEXIST') throw error;
 			const owner = Number.parseInt(await readFile(path, 'utf8').catch(() => ''), 10);
 			if (Number.isInteger(owner) && processExists(owner)) {
-				throw new Error(`A WeChat supervisor is already running as process ${owner}.`);
+				throw new Error(`A WeChat supervisor is already running as process ${owner}.`, {
+					cause: error
+				});
 			}
 			await unlink(path).catch(() => undefined);
 		}
@@ -173,7 +175,7 @@ export async function runSupervisor() {
 				if (/\b(?:error|failed)\b/iu.test(line)) void status.failure(line);
 			},
 			onLine(line) {
-				if (line === 'build started...' && status.snapshot.phase !== 'building') {
+				if (line === 'build started...' && status.snapshot.startedAt === null) {
 					void status.begin(status.snapshot.source ?? 'taro-watch');
 				}
 				const match = /^\[zadmin-build\] ([a-z0-9-]+)$/u.exec(line);
@@ -291,6 +293,12 @@ export async function runSupervisor() {
 		await runNode('svelte-taro:build', tscBin, ['-p', 'tsconfig.json'], {
 			cwd: resolve(workspaceRoot, 'packages/svelte-taro')
 		});
+		await runNode(
+			'svelte-runtime:build',
+			resolve(workspaceRoot, 'packages/svelte-taro/scripts/build-runtime.mjs'),
+			[],
+			{ cwd: resolve(workspaceRoot, 'packages/svelte-taro') }
+		);
 		await runNode('zui-taro:build', sveltePackageBin, ['--input', 'src', '--output', 'dist'], {
 			cwd: resolve(workspaceRoot, 'packages/zui-taro')
 		});
