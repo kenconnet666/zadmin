@@ -1,5 +1,6 @@
 import { getContext } from 'svelte';
 
+import type { WeChatPlatform } from '../platform/service.ts';
 import type { ResourceScope } from './scope.ts';
 
 export const SVELTE_TARO_CONTEXT = Symbol.for('@zadmin/svelte-taro/runtime-context');
@@ -7,6 +8,7 @@ export const SVELTE_TARO_CONTEXT = Symbol.for('@zadmin/svelte-taro/runtime-conte
 export interface SvelteTaroRuntimeContext {
 	readonly appScope: ResourceScope;
 	readonly pageId?: string;
+	readonly platform?: WeChatPlatform;
 	readonly scope: ResourceScope;
 }
 

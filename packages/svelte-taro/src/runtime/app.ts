@@ -14,11 +14,14 @@ import {
 import { hooks } from '@tarojs/shared';
 import { mount, tick, unmount as svelteUnmount, type Component } from 'svelte';
 
+import { createTaroPlatformDriver } from '../platform/driver.ts';
+import { createWeChatPlatform, type WeChatPlatform } from '../platform/service.ts';
 import taroRenderer from '../renderer/index.ts';
 import { ResourceScope } from './scope.ts';
 import { SVELTE_TARO_CONTEXT, type SvelteTaroRuntimeContext } from './context.ts';
 
-type SvelteComponent = Component<Record<string, unknown>, Record<string, unknown>>;
+type SvelteComponent = Component<never, Record<string, unknown>>;
+type MountableSvelteComponent = Component<Record<string, unknown>, Record<string, unknown>>;
 type MountedComponent = Record<string, unknown>;
 
 type MountedPage = {
@@ -33,6 +36,10 @@ export interface SvelteTaroApp {
 	mount(component: SvelteComponent, id: string, callback: () => void): void;
 	render(callback: () => void): void;
 	unmount(id: string, callback: () => void): void;
+}
+
+export interface SvelteTaroRuntimeOptions {
+	readonly platform?: WeChatPlatform;
 }
 
 let reconcilerInstalled = false;
@@ -72,7 +79,8 @@ function reportRuntimeError(error: unknown): void {
 
 export function createSvelteApp(
 	App: SvelteComponent,
-	config: Record<string, unknown> = {}
+	config: Record<string, unknown> = {},
+	options: SvelteTaroRuntimeOptions = {}
 ): SvelteTaroApp {
 	installReconciler();
 	const appId = typeof config.appId === 'string' ? config.appId : 'app';
@@ -80,8 +88,11 @@ export function createSvelteApp(
 	if (target === null) throw new Error(`Taro App root "${appId}" was not found.`);
 
 	const appScope = new ResourceScope();
-	const appContext: SvelteTaroRuntimeContext = { appScope, scope: appScope };
-	const appComponent = mount(App, {
+	const platform =
+		options.platform ??
+		createWeChatPlatform({ driver: createTaroPlatformDriver(), scope: appScope });
+	const appContext: SvelteTaroRuntimeContext = { appScope, platform, scope: appScope };
+	const appComponent = mount(App as unknown as MountableSvelteComponent, {
 		context: contextMap(appContext),
 		props: {},
 		renderer: taroRenderer,
@@ -100,9 +111,14 @@ export function createSvelteApp(
 			root.id = id;
 			target.appendChild(root);
 			const scope = appScope.child();
-			const pageContext: SvelteTaroRuntimeContext = { appScope, pageId: id, scope };
+			const pageContext: SvelteTaroRuntimeContext = {
+				appScope,
+				pageId: id,
+				platform: platform.forScope(scope),
+				scope
+			};
 			try {
-				const component = mount(Page, {
+				const component = mount(Page as unknown as MountableSvelteComponent, {
 					context: contextMap(pageContext),
 					props: { tid: id },
 					renderer: taroRenderer,

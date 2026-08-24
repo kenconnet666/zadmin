@@ -1,7 +1,7 @@
 import type { AppConfig } from '@tarojs/taro';
 
 export default {
-	pages: ['pages/index/index'],
+	pages: ['pages/index/index', 'pages/capabilities/index'],
 	window: {
 		backgroundTextStyle: 'light',
 		navigationBarBackgroundColor: '#ffffff',

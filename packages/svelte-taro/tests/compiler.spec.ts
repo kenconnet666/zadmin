@@ -52,4 +52,26 @@ describe('Svelte Taro compiler', () => {
 			)
 		).rejects.toThrow(/svelte:window|custom renderer/i);
 	});
+
+	it('collects typed native elements and rejects accidental browser tags', async () => {
+		const plugin = createSvelteVitePlugin();
+		const filename = 'C:/fixture/Native.svelte';
+		const result = await plugin.transform?.call(
+			{ warn() {} },
+			'<view><camera></camera><live-player></live-player><web-view></web-view></view>',
+			filename
+		);
+		expect(result?.code).toContain(JSON.stringify(componentMarkerId(filename)));
+		const marker = plugin.load?.(componentMarkerId(filename));
+		expect(marker).toContain('createElement("camera"');
+		expect(marker).toContain('createElement("live-player"');
+		expect(marker).toContain('createElement("web-view"');
+		await expect(
+			plugin.transform?.call(
+				{ warn() {} },
+				'<div>Browser DOM is invalid here.</div>',
+				'C:/fixture/Browser.svelte'
+			)
+		).rejects.toThrow(/Unsupported Mini Program native element "div"/u);
+	});
 });

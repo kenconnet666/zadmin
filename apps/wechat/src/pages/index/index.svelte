@@ -15,6 +15,7 @@
 		Text,
 		ZuiProvider
 	} from '@zadmin/zui-taro';
+	import { getWeChatPlatform } from '@zadmin/svelte-taro/platform';
 
 	let count = $state(0);
 	let alternate = $state(false);
@@ -50,6 +51,10 @@
 	function rotateItems(): void {
 		items = items.length < 5 ? [...items, items.length + 1] : [...items.slice(1), items[0]];
 	}
+
+	function openCapabilityLab(): void {
+		void getWeChatPlatform().raw.navigateTo({ url: '/pages/capabilities/index' });
+	}
 </script>
 
 <ZuiProvider {theme}>
@@ -82,6 +87,9 @@
 					>Platform flow components are wired; sensitive actions stay manual.</Text
 				>
 			</CapabilityGate>
+			<Button id="capability-lab" variant="secondary" onclick={openCapabilityLab}>
+				Open capability lab
+			</Button>
 			<Stack direction="row" gap="small">
 				<PrivacyConsent id="privacy" size="small" variant="ghost">Privacy flow</PrivacyConsent>
 				<PhoneNumberButton id="phone" size="small" variant="ghost">Phone flow</PhoneNumberButton>

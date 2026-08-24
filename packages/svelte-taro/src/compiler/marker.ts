@@ -4,6 +4,79 @@ type AstNode = {
 	readonly type?: unknown;
 };
 
+const NATIVE_ELEMENTS = new Set([
+	'ad',
+	'ad-custom',
+	'animation-video',
+	'ar-camera',
+	'audio',
+	'block',
+	'button',
+	'camera',
+	'canvas',
+	'channel-live',
+	'channel-video',
+	'checkbox',
+	'checkbox-group',
+	'cover-image',
+	'cover-view',
+	'custom-wrapper',
+	'editor',
+	'form',
+	'grid-builder',
+	'grid-view',
+	'icon',
+	'image',
+	'input',
+	'keyboard-accessory',
+	'label',
+	'list',
+	'list-builder',
+	'list-item',
+	'live-player',
+	'live-pusher',
+	'map',
+	'match-media',
+	'movable-area',
+	'movable-view',
+	'native-slot',
+	'navigation-bar',
+	'navigator',
+	'nested-scroll-body',
+	'nested-scroll-header',
+	'official-account',
+	'open-container',
+	'open-data',
+	'page-container',
+	'page-meta',
+	'picker',
+	'picker-view',
+	'picker-view-column',
+	'progress',
+	'pull-to-refresh',
+	'radio',
+	'radio-group',
+	'rich-text',
+	'root-portal',
+	'scroll-view',
+	'share-element',
+	'slider',
+	'slot',
+	'snapshot',
+	'span',
+	'sticky-header',
+	'sticky-section',
+	'swiper',
+	'swiper-item',
+	'switch',
+	'text',
+	'textarea',
+	'video',
+	'view',
+	'voip-room',
+	'web-view'
+]);
+
 function visit(value: unknown, elements: Set<string>, seen: WeakSet<object>): void {
 	if (typeof value !== 'object' || value === null || seen.has(value)) return;
 	seen.add(value);
@@ -13,6 +86,11 @@ function visit(value: unknown, elements: Set<string>, seen: WeakSet<object>): vo
 		typeof node.name === 'string' &&
 		/^[a-z][a-z0-9-]*$/u.test(node.name)
 	) {
+		if (!NATIVE_ELEMENTS.has(node.name)) {
+			throw new TypeError(
+				`Unsupported Mini Program native element "${node.name}". Use a typed Taro element or a Svelte component.`
+			);
+		}
 		elements.add(node.name);
 	}
 	for (const child of Object.values(node)) visit(child, elements, seen);

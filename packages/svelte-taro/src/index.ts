@@ -7,3 +7,4 @@ export type {
 	SvelteTaroPluginOptions
 } from './plugin/types.ts';
 export type { ScopeCleanup, SvelteTaroApp, SvelteTaroRuntimeContext } from './runtime/index.ts';
+export type { SvelteTaroRuntimeOptions } from './runtime/index.ts';

@@ -546,6 +546,9 @@ importers:
 
   packages/svelte-taro:
     devDependencies:
+      '@tarojs/components':
+        specifier: catalog:wechat
+        version: 4.2.1(@tarojs/helper@4.2.1(supports-color@7.2.0))(postcss@8.5.26)(rollup@3.30.0)
       '@tarojs/runtime':
         specifier: catalog:wechat
         version: 4.2.1
@@ -567,6 +570,9 @@ importers:
       svelte:
         specifier: https://pkg.svelte.dev/svelte/c/eb7532dd70fb11b36258347c44cf3910d244f987
         version: https://pkg.svelte.dev/svelte/c/eb7532dd70fb11b36258347c44cf3910d244f987(@typescript-eslint/types@8.67.0)
+      svelte-check:
+        specifier: 'catalog:'
+        version: 4.7.6(picomatch@4.0.5)(svelte@https://pkg.svelte.dev/svelte/c/eb7532dd70fb11b36258347c44cf3910d244f987(@typescript-eslint/types@8.67.0))(typescript@6.0.3)
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
