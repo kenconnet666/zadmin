@@ -39,3 +39,7 @@ project.inlang/cache/
 
 *storybook.log
 storybook-static
+
+# WeChat developer-local state
+/apps/wechat/project.private.config.json
+/apps/wechat/.wechat/

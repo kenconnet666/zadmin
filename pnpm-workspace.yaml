@@ -54,12 +54,31 @@ catalog:
   vitest: ^4.1.11
   vitest-browser-svelte: ^3.0.0
 
+catalogs:
+  wechat:
+    '@tarojs/cli': 4.2.1
+    '@tarojs/components': 4.2.1
+    '@tarojs/helper': 4.2.1
+    '@tarojs/plugin-platform-weapp': 4.2.1
+    '@tarojs/runtime': 4.2.1
+    '@tarojs/service': 4.2.1
+    '@tarojs/shared': 4.2.1
+    '@tarojs/taro': 4.2.1
+    '@tarojs/vite-runner': 4.2.1
+    miniprogram-api-typings: 5.2.3
+    vite: 4.5.14
+
 catalogMode: strict
 disallowWorkspaceCycles: true
 linkWorkspacePackages: false
 sharedWorkspaceLockfile: true
 
 allowBuilds:
+  '@parcel/watcher': true
+  '@swc/core': true
+  '@tarojs/binding': true
+  '@tarojs/cli': false
+  core-js: false
   esbuild: true
 
 minimumReleaseAgeExclude:

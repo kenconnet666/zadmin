@@ -1,0 +1,27 @@
+{
+	"name": "@zadmin/wechat-app",
+	"version": "0.0.0",
+	"private": true,
+	"description": "Svelte-powered Taro host for the ZAdmin WeChat Mini Program.",
+	"type": "module",
+	"engines": {
+		"node": ">=22.0.0"
+	},
+	"dependencies": {
+		"@tarojs/components": "catalog:wechat",
+		"@tarojs/runtime": "catalog:wechat",
+		"@tarojs/taro": "catalog:wechat",
+		"svelte": "https://pkg.svelte.dev/svelte/c/eb7532dd70fb11b36258347c44cf3910d244f987"
+	},
+	"devDependencies": {
+		"@tarojs/cli": "catalog:wechat",
+		"@tarojs/helper": "catalog:wechat",
+		"@tarojs/plugin-platform-weapp": "catalog:wechat",
+		"@tarojs/service": "catalog:wechat",
+		"@tarojs/shared": "catalog:wechat",
+		"@tarojs/vite-runner": "catalog:wechat",
+		"miniprogram-api-typings": "catalog:wechat",
+		"typescript": "catalog:",
+		"vite": "catalog:wechat"
+	}
+}
