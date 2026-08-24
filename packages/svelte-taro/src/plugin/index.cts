@@ -1,9 +1,10 @@
 import type { SvelteTaroPluginOptions } from './types.ts';
+import type { SvelteCompilerPlugin } from '../compiler/types.ts';
 
 type VitePlugin = {
 	readonly enforce?: 'pre' | 'post';
 	readonly name: string;
-	readonly buildStart?: (this: unknown) => void;
+	readonly buildStart?: (this: unknown, ...args: readonly unknown[]) => unknown;
 };
 
 type CompilerOptions = {
@@ -60,11 +61,31 @@ function getLoaderMeta(): Record<string, unknown> {
 }
 
 function createCompilerPlugin(options: SvelteTaroPluginOptions): VitePlugin {
+	let implementation: Promise<SvelteCompilerPlugin> | undefined;
+	const load = () =>
+		(implementation ??= import('../compiler/index.js').then(({ createSvelteVitePlugin }) =>
+			createSvelteVitePlugin({ renderer: options.renderer ?? DEFAULT_RENDERER })
+		));
 	return {
 		enforce: 'pre',
 		name: 'zadmin:svelte-taro-compiler',
-		...({ renderer: options.renderer ?? DEFAULT_RENDERER } as object)
-	};
+		async buildStart(...args: readonly unknown[]) {
+			return (await load()).buildStart?.apply(this, args as []);
+		},
+		async configResolved(config: unknown) {
+			return (await load()).configResolved?.call(this, config as never);
+		},
+		async load(id: string) {
+			return (await load()).load?.call(this, id);
+		},
+		async resolveId(source: string) {
+			return (await load()).resolveId?.call(this, source);
+		},
+		async transform(source: string, id: string) {
+			const plugin = await load();
+			return plugin.transform?.call(this as never, source, id);
+		}
+	} as VitePlugin;
 }
 
 function createMiniIntegrationPlugin(context: PluginContext): VitePlugin {

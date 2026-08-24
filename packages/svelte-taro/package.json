@@ -22,6 +22,10 @@
 		"./plugin": {
 			"types": "./src/plugin/types.ts",
 			"require": "./dist/plugin/index.cjs"
+		},
+		"./renderer": {
+			"types": "./src/renderer/index.ts",
+			"import": "./src/renderer/index.ts"
 		}
 	},
 	"publishConfig": {
@@ -37,6 +41,10 @@
 			"./plugin": {
 				"types": "./dist/plugin/types.d.ts",
 				"require": "./dist/plugin/index.cjs"
+			},
+			"./renderer": {
+				"types": "./dist/renderer/index.d.ts",
+				"import": "./dist/renderer/index.js"
 			}
 		}
 	},

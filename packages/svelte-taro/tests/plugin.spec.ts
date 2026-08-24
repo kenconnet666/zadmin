@@ -6,6 +6,17 @@ const require = createRequire(import.meta.url);
 
 type PluginFunction = (context: Record<string, unknown>, options?: Record<string, unknown>) => void;
 
+type InjectedVitePlugin = {
+	buildStart?: (this: unknown) => unknown;
+	configResolved?: (config: Record<string, unknown>) => Promise<unknown>;
+	name: string;
+	transform?: (
+		this: { warn(warning: unknown): void },
+		source: string,
+		id: string
+	) => Promise<{ code: string } | undefined>;
+};
+
 function loadPlugin(): PluginFunction & { getLoaderMeta(): Record<string, unknown> } {
 	return require('../dist/plugin/index.cjs') as ReturnType<typeof loadPlugin>;
 }
@@ -41,7 +52,7 @@ describe('Taro framework plugin', () => {
 		expect(state.schema).toBeUndefined();
 	});
 
-	it('injects Svelte extensions, compiler, and loader metadata', () => {
+	it('injects Svelte extensions, a lazy compiler, and loader metadata', async () => {
 		const { compilerContext, context, state } = createContext();
 		loadPlugin()(context, { renderer: '@fixture/renderer' });
 		expect(state.schema).toBeTypeOf('function');
@@ -49,7 +60,7 @@ describe('Taro framework plugin', () => {
 		const opts: Record<string, unknown> = { compiler: 'vite' };
 		state.modify?.({ opts });
 		expect(opts.frameworkExts).toEqual(['.svelte']);
-		const compiler = opts.compiler as { type: string; vitePlugins: Array<Record<string, unknown>> };
+		const compiler = opts.compiler as { type: string; vitePlugins: InjectedVitePlugin[] };
 		expect(compiler.type).toBe('vite');
 		expect(compiler.vitePlugins.map((plugin) => plugin.name)).toEqual([
 			'zadmin:svelte-taro-compiler',
@@ -62,6 +73,14 @@ describe('Taro framework plugin', () => {
 			creator: 'createSvelteApp',
 			creatorLocation: '@zadmin/svelte-taro/runtime'
 		});
+
+		await compiler.vitePlugins[0].configResolved?.({ command: 'build', mode: 'production' });
+		const transformed = await compiler.vitePlugins[0].transform?.call(
+			{ warn() {} },
+			'<view><text>loaded</text></view>',
+			'C:/fixture/Lazy.svelte'
+		);
+		expect(transformed?.code).toContain("from '@fixture/renderer'");
 	});
 
 	it('rejects a Webpack runner instead of silently compiling incorrectly', () => {
