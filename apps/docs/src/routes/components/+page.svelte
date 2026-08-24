@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Box, Button, Stack, Text } from '@zadmin/zui';
+	import { Box, Button, Stack, Text } from '@zadmin/zui-web';
 </script>
 
 <svelte:head>

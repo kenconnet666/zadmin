@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Box, defaultTheme, icss } from '@zadmin/zui';
+	import { Box, defaultTheme, icss } from '@zadmin/zui-web';
 
 	let width = $state(10);
 	const panelClass = $derived(icss(defaultTheme, (style) => style.width.px(width)));

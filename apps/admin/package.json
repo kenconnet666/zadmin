@@ -18,7 +18,7 @@
 		"@zadmin/postgres": "workspace:^",
 		"@zadmin/redis": "workspace:^",
 		"@zadmin/sveltekit": "workspace:^",
-		"@zadmin/zui": "workspace:^"
+		"@zadmin/zui-web": "workspace:^"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-node": "catalog:",

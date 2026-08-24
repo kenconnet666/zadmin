@@ -17,7 +17,8 @@ packages/
   postgres/    PostgreSQL 基础能力
   redis/       Redis 基础能力
   oss/         对象存储基础能力
-  zui/         可供任意项目使用的 Svelte 组件库
+  zui-core/    平台无关的主题、Token、ICSS 和设计契约
+  zui-web/     可供任意 Web 项目使用的 Svelte 组件库
   drizzle/     可供任意项目使用的 Drizzle 增强库
 
 plugins/

@@ -1,5 +1,5 @@
 import adapter from '@sveltejs/adapter-node';
-import { icssPreprocess } from '@zadmin/zui/compiler';
+import { icssPreprocess } from '@zadmin/zui-web/compiler';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {

@@ -73,6 +73,12 @@ disallowWorkspaceCycles: true
 linkWorkspacePackages: false
 sharedWorkspaceLockfile: true
 
+# Taro 4.2.1 pins vulnerable transitive releases. These target-only overrides
+# stay until upstream moves to patched versions; real WeChat builds cover them.
+overrides:
+  '@tarojs/components>swiper': 12.1.2
+  '@tarojs/helper>esbuild': 0.25.12
+
 allowBuilds:
   '@parcel/watcher': true
   '@swc/core': true

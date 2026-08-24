@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Box, Button, Stack, defaultTheme, icss } from '@zadmin/zui';
+	import { Box, Button, Stack, defaultTheme, icss } from '@zadmin/zui-web';
 
 	let width = $state(320);
 	let opacity = $state(0.85);

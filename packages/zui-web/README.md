@@ -1,10 +1,10 @@
-# @zadmin/zui
+# @zadmin/zui-web
 
 Type-safe runtime CSS and foundational Svelte 5 components. Public ICSS calls return one class string; the optional Svelte preprocessor lifts traceable reactive leaf values to private inline CSS custom properties without changing source-level usage.
 
 ```svelte
 <script lang="ts">
-	import { defaultTheme, icss } from '@zadmin/zui';
+	import { defaultTheme, icss } from '@zadmin/zui-web';
 
 	let width = $state(320);
 	const panelClass = $derived(icss(defaultTheme, (style) => style.width.px(width)));
@@ -17,14 +17,14 @@ Type-safe runtime CSS and foundational Svelte 5 components. Public ICSS calls re
 
 ```ts
 // vite.config.ts
-import { icssPreprocess } from '@zadmin/zui/compiler';
+import { icssPreprocess } from '@zadmin/zui-web/compiler';
 
 sveltekit({ preprocess: [icssPreprocess()] });
 ```
 
 ```ts
 // src/hooks.server.ts
-import { icssHandle } from '@zadmin/zui/sveltekit';
+import { icssHandle } from '@zadmin/zui-web/sveltekit';
 
 export const handle = icssHandle();
 ```
@@ -33,7 +33,7 @@ export const handle = icssHandle();
 
 ```svelte
 <script lang="ts">
-	import { Box, Button, Stack, Text, ZuiProvider } from '@zadmin/zui';
+	import { Box, Button, Stack, Text, ZuiProvider } from '@zadmin/zui-web';
 </script>
 
 <ZuiProvider>

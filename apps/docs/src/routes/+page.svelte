@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { Stack, Text } from '@zadmin/zui';
+	import { Stack, Text } from '@zadmin/zui-web';
 </script>
 
 <svelte:head>

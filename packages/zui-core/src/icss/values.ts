@@ -1,6 +1,6 @@
 import type { UnitName } from '../theme/units.ts';
 
-export const ICSS_SLOT = Symbol.for('@zadmin/zui/icss-slot');
+export const ICSS_SLOT = Symbol.for('@zadmin/zui-core/icss-slot');
 
 export interface IcssDynamicSlot {
 	readonly [ICSS_SLOT]: true;

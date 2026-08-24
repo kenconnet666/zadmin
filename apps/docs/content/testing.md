@@ -16,7 +16,7 @@ pnpm lint
 - `build`：所有Package声明产物、三个SvelteKit生产构建、三个Plugin Artifact和Plugin CLI验证。
 - `lint`：全仓Prettier检查和ESLint。
 
-`packages/zui`已经包含实际Svelte组件、编译器fixture、SSR测试和浏览器矩阵，`svelte-check`必须保持0 errors、0 warnings。
+`packages/zui-web`已经包含实际Svelte组件、编译器fixture、SSR测试和浏览器矩阵，`svelte-check`必须保持0 errors、0 warnings。
 
 ## ZUI ICSS验收矩阵
 
@@ -36,25 +36,26 @@ pnpm lint
 ### ZUI标准命令
 
 ```powershell
-pnpm --filter @zadmin/zui check
-pnpm --filter @zadmin/zui test
-pnpm --filter @zadmin/zui test:coverage
-pnpm --filter @zadmin/zui build
+pnpm --filter @zadmin/zui-web check
+pnpm --filter @zadmin/zui-web test
+pnpm --filter @zadmin/zui-web test:coverage
+pnpm --filter @zadmin/zui-web build
 pnpm --filter @zadmin/docs test:e2e
 pnpm --filter @zadmin/docs build-storybook
 ```
 
-2026-08-24生产验收结果：
+2026-08-25 拆包与重命名后的生产回归结果：
 
-- Chromium、Firefox、WebKit共18个test files、92项测试通过；
+- `zui-core` 5个test files、19项测试通过；`zui-web`在Chromium、Firefox、WebKit共15个test files、81项测试通过；
 - 10,000次状态变化后class、rule和style tag数量不变；
-- 覆盖率：statements 96.38%、branches 92.38%、functions 97.36%、lines 98.34%；
-- Compiler branches 91.06%，ICSS branches 93.47%；
+- `zui-core`覆盖率：statements 97.85%、branches 95.5%、functions 100%、lines 100%；
+- `zui-web`覆盖率：statements 96.42%、branches 91.85%、functions 97.54%、lines 98.35%；
+- Web Compiler branches 91.06%，Web ICSS branches 92.1%；
 - 50个并发SSR请求无CSS串扰；
 - 真实Vite HMR结构修改前后均为9条rule、1个style tag、0 console error；
-- `@zadmin/zui@0.1.0` tarball在仓库外项目check/build/SSR通过；
-- 外部fixture页面节点gzip 10,243 bytes，compiler/server客户端文件0个；
-- `pnpm audit --prod`无已知漏洞，gitleaks无泄漏。
+- `@zadmin/zui-core@0.1.0`与`@zadmin/zui-web@0.1.0` tarball在隔离SvelteKit项目安装、check、build和SSR 200通过；
+- 外部fixture包含critical CSS和初始动态变量，compiler/server客户端文件0个；
+- `pnpm audit --prod`无已知漏洞，gitleaks无泄漏；Taro开发工具链审计例外在最终交接单独记录。
 
 ## Core覆盖矩阵
 

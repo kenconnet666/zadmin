@@ -4,7 +4,7 @@
 
 ZAdmin是一个 pnpm workspace中的多应用、可复用 Package和动态 Plugin系统。SvelteKit同时承担页面、SSR和服务端入口，不拆分单独 Java后端或 HTTP微服务层。
 
-`packages/zui`的样式层使用运行时 ICSS和Svelte编译优化双轨架构。公开调用只返回class字符串；可追踪的Svelte响应式叶子在编译时提升为inline CSS自定义属性，结构CSS由运行时确定性生成和缓存。完整合同见[ZUI ICSS生产架构](./zui-icss.md)。
+`packages/zui-web`的样式层使用运行时 ICSS和Svelte编译优化双轨架构。公开调用只返回class字符串；可追踪的Svelte响应式叶子在编译时提升为inline CSS自定义属性，结构CSS由运行时确定性生成和缓存。完整合同见[ZUI ICSS生产架构](./zui-icss.md)。
 
 ```text
 apps/
@@ -19,7 +19,8 @@ packages/
   postgres/    可选数据库 Module
   redis/       可选缓存 Module
   oss/         可选对象存储 Module
-  zui/         公共 UI库
+  zui-core/    平台无关的主题、Token、ICSS 和设计契约
+  zui-web/     Web UI 库
   drizzle/     公共 ORM增强库
 
 plugins/
