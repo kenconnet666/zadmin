@@ -1,4 +1,4 @@
-import type { SvelteProjectConfig } from './types.ts';
+import type { ResolvedSvelteProjectConfig, SvelteProjectConfig } from './types.ts';
 
 const PACKAGE_NAME = '@zadmin/svelte-taro';
 
@@ -8,7 +8,7 @@ function pluginName(item: SvelteProjectConfig['plugins'][number]): string | unde
 
 export function defineSvelteConfig<const TConfig extends SvelteProjectConfig>(
 	config: TConfig
-): TConfig {
+): ResolvedSvelteProjectConfig<TConfig> {
 	if (config.framework !== 'svelte') {
 		throw new TypeError('Svelte Taro projects must use framework="svelte".');
 	}
@@ -20,5 +20,5 @@ export function defineSvelteConfig<const TConfig extends SvelteProjectConfig>(
 	if (compilerType !== 'vite') {
 		throw new TypeError('Svelte Taro projects currently require compiler.type="vite".');
 	}
-	return config;
+	return { ...config, framework: 'none' };
 }

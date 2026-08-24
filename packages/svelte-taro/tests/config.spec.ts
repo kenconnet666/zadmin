@@ -10,7 +10,7 @@ describe('defineSvelteConfig', () => {
 			plugins: ['@zadmin/svelte-taro'],
 			projectName: 'fixture'
 		});
-		expect(config.framework).toBe('svelte');
+		expect(config.framework).toBe('none');
 		expect(config.projectName).toBe('fixture');
 	});
 

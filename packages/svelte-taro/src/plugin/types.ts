@@ -9,3 +9,10 @@ export type SvelteProjectConfig = Omit<IProjectConfig, 'framework' | 'plugins'> 
 	readonly framework: 'svelte';
 	readonly plugins: readonly PluginItem[];
 };
+
+export type ResolvedSvelteProjectConfig<TConfig extends SvelteProjectConfig> = Omit<
+	TConfig,
+	'framework'
+> & {
+	readonly framework: 'none';
+};

@@ -1,0 +1,15 @@
+{
+	"appid": "touristappid",
+	"compileType": "miniprogram",
+	"description": "ZAdmin Svelte Taro host",
+	"libVersion": "3.17.1",
+	"miniprogramRoot": "dist/",
+	"projectname": "zadmin-wechat",
+	"setting": {
+		"enhance": false,
+		"es6": false,
+		"minified": false,
+		"postcss": false,
+		"uploadWithSourceMap": true
+	}
+}

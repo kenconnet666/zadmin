@@ -19,7 +19,12 @@ export function componentMarkerId(id: string): string {
 }
 
 function isSvelteSource(id: string): boolean {
-	return id.split('?')[0].endsWith('.svelte');
+	const [filename, query = ''] = id.split('?', 2);
+	return (
+		filename.endsWith('.svelte') &&
+		!query.includes('entry-loader=true') &&
+		!query.includes('page-loader=true')
+	);
 }
 
 export function createSvelteVitePlugin(options: SvelteCompilerOptions = {}): SvelteCompilerPlugin {

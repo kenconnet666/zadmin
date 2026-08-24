@@ -35,6 +35,15 @@ describe('Svelte Taro compiler', () => {
 		expect(
 			await plugin.transform?.call({ warn() {} }, 'export const value = 1', 'plain.ts')
 		).toBeUndefined();
+		for (const loader of ['entry-loader', 'page-loader']) {
+			expect(
+				await plugin.transform?.call(
+					{ warn() {} },
+					'export default function generatedByTaro() {}',
+					`\0C:/fixture/App.svelte?${loader}=true`
+				)
+			).toBeUndefined();
+		}
 		await expect(
 			plugin.transform?.call(
 				{ warn() {} },

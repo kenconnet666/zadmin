@@ -1,0 +1,10 @@
+{
+	"appid": "touristappid",
+	"libVersion": "3.17.1",
+	"projectname": "zadmin-wechat-local",
+	"setting": {
+		"compileHotReLoad": true,
+		"skylineRenderEnable": true,
+		"urlCheck": false
+	}
+}

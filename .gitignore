@@ -43,3 +43,4 @@ storybook-static
 # WeChat developer-local state
 /apps/wechat/project.private.config.json
 /apps/wechat/.wechat/
+/apps/wechat/.swc/

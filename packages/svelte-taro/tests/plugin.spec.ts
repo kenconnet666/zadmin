@@ -1,4 +1,5 @@
 import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
@@ -17,13 +18,18 @@ type InjectedVitePlugin = {
 	) => Promise<{ code: string } | undefined>;
 };
 
-function loadPlugin(): PluginFunction & { getLoaderMeta(): Record<string, unknown> } {
+function loadPlugin(): PluginFunction & {
+	defineSvelteConfig<TConfig extends Record<string, unknown>>(config: TConfig): TConfig;
+	getLoaderMeta(): Record<string, unknown>;
+} {
 	return require('../dist/plugin/index.cjs') as ReturnType<typeof loadPlugin>;
 }
 
-function createContext(framework = 'svelte') {
+function createContext(framework = 'none') {
 	const state: {
 		modify?: (args: { opts: Record<string, unknown> }) => void;
+		modifyVite?: (args: { viteConfig: { plugins?: unknown[] } }) => void;
+		parseElement?: (args: { componentConfig: { includes: Set<string> }; nodeName: string }) => void;
 		schema?: (joi: unknown) => unknown;
 	} = {};
 	const compilerContext: { loaderMeta?: Record<string, unknown> } = {};
@@ -35,6 +41,14 @@ function createContext(framework = 'svelte') {
 		modifyRunnerOpts(callback: (args: { opts: Record<string, unknown> }) => void) {
 			state.modify = callback;
 		},
+		modifyViteConfig(callback: (args: { viteConfig: { plugins?: unknown[] } }) => void) {
+			state.modifyVite = callback;
+		},
+		onParseCreateElement(
+			callback: (args: { componentConfig: { includes: Set<string> }; nodeName: string }) => void
+		) {
+			state.parseElement = callback;
+		},
 		runnerUtils: {
 			getViteMiniCompilerContext() {
 				return compilerContext;
@@ -45,10 +59,22 @@ function createContext(framework = 'svelte') {
 }
 
 describe('Taro framework plugin', () => {
+	it('exposes the config helper through the CJS plugin condition', () => {
+		const plugin = loadPlugin();
+		const config = plugin.defineSvelteConfig({
+			compiler: { type: 'vite' },
+			framework: 'svelte',
+			plugins: ['@zadmin/svelte-taro']
+		});
+		expect(config.framework).toBe('none');
+	});
+
 	it('does nothing for another framework', () => {
 		const { context, state } = createContext('react');
 		loadPlugin()(context);
 		expect(state.modify).toBeUndefined();
+		expect(state.modifyVite).toBeUndefined();
+		expect(state.parseElement).toBeUndefined();
 		expect(state.schema).toBeUndefined();
 	});
 
@@ -56,10 +82,18 @@ describe('Taro framework plugin', () => {
 		const { compilerContext, context, state } = createContext();
 		loadPlugin()(context, { renderer: '@fixture/renderer' });
 		expect(state.schema).toBeTypeOf('function');
+		const viteConfig: { plugins?: Array<{ name?: string }> } = {};
+		state.modifyVite?.({ viteConfig });
+		expect(viteConfig.plugins?.[0]?.name).toBe('zadmin:svelte-package-imports');
+		const includes = new Set<string>();
+		state.parseElement?.({ componentConfig: { includes }, nodeName: 'button' });
+		expect(includes).toEqual(new Set(['button']));
 
-		const opts: Record<string, unknown> = { compiler: 'vite' };
+		const appEntry = fileURLToPath(new URL('./RuntimeApp', import.meta.url));
+		const opts: Record<string, unknown> = { compiler: 'vite', entry: { app: [appEntry] } };
 		state.modify?.({ opts });
 		expect(opts.frameworkExts).toEqual(['.svelte']);
+		expect(opts.entry).toEqual({ app: [`${appEntry}.svelte`] });
 		const compiler = opts.compiler as { type: string; vitePlugins: InjectedVitePlugin[] };
 		expect(compiler.type).toBe('vite');
 		expect(compiler.vitePlugins.map((plugin) => plugin.name)).toEqual([

@@ -7,6 +7,16 @@
 	"engines": {
 		"node": ">=22.0.0"
 	},
+	"scripts": {
+		"prebuild": "pnpm --filter @zadmin/svelte-taro build",
+		"predev": "pnpm --filter @zadmin/svelte-taro build",
+		"build": "taro build --type weapp",
+		"check": "svelte-check --tsconfig ./tsconfig.json",
+		"clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
+		"dev": "taro build --type weapp --watch",
+		"setup:local": "node config/sync-local.mjs",
+		"test": "node --test tests/*.test.mjs"
+	},
 	"dependencies": {
 		"@tarojs/components": "catalog:wechat",
 		"@tarojs/runtime": "catalog:wechat",
@@ -21,7 +31,9 @@
 		"@tarojs/service": "catalog:wechat",
 		"@tarojs/shared": "catalog:wechat",
 		"@tarojs/vite-runner": "catalog:wechat",
+		"@types/node": "catalog:",
 		"miniprogram-api-typings": "catalog:wechat",
+		"svelte-check": "catalog:",
 		"typescript": "catalog:",
 		"vite": "catalog:wechat"
 	}

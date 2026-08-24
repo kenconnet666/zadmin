@@ -409,9 +409,15 @@ importers:
       '@tarojs/vite-runner':
         specifier: catalog:wechat
         version: 4.2.1(@tarojs/runtime@4.2.1)(postcss@8.5.26)(rollup@3.30.0)(supports-color@7.2.0)(terser@5.50.0)(tsx@4.23.12)(typescript@6.0.3)(vite@4.5.14(@types/node@26.2.0)(lightningcss@1.33.0)(sass@1.103.1)(terser@5.50.0))
+      '@types/node':
+        specifier: 'catalog:'
+        version: 26.2.0
       miniprogram-api-typings:
         specifier: catalog:wechat
         version: 5.2.3
+      svelte-check:
+        specifier: 'catalog:'
+        version: 4.7.6(picomatch@4.0.5)(svelte@https://pkg.svelte.dev/svelte/c/eb7532dd70fb11b36258347c44cf3910d244f987(@typescript-eslint/types@8.67.0))(typescript@6.0.3)
       typescript:
         specifier: 'catalog:'
         version: 6.0.3
@@ -11779,6 +11785,19 @@ snapshots:
       picocolors: 1.1.1
       sade: 1.8.1
       svelte: 5.56.10(@typescript-eslint/types@8.67.0)
+      typescript: 6.0.3
+    transitivePeerDependencies:
+      - picomatch
+
+  svelte-check@4.7.6(picomatch@4.0.5)(svelte@https://pkg.svelte.dev/svelte/c/eb7532dd70fb11b36258347c44cf3910d244f987(@typescript-eslint/types@8.67.0))(typescript@6.0.3):
+    dependencies:
+      '@jridgewell/trace-mapping': 0.3.31
+      '@sveltejs/load-config': 0.2.3
+      chokidar: 4.0.3
+      fdir: 6.5.0(picomatch@4.0.5)
+      picocolors: 1.1.1
+      sade: 1.8.1
+      svelte: https://pkg.svelte.dev/svelte/c/eb7532dd70fb11b36258347c44cf3910d244f987(@typescript-eslint/types@8.67.0)
       typescript: 6.0.3
     transitivePeerDependencies:
       - picomatch
