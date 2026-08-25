@@ -1,10 +1,14 @@
-import { document, safeExecute } from '@tarojs/runtime';
+import { document, eventHandler, safeExecute } from '@tarojs/runtime';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { createSvelteApp } from '../src/runtime/index.ts';
 import RuntimeApp from './RuntimeApp.svelte';
 import RuntimePage from './RuntimePage.svelte';
-import { lifecycleEvents, resetLifecycleEvents } from './lifecycle-tracker.ts';
+import {
+	lifecycleEvents,
+	resetLifecycleEvents,
+	setRuntimeNavigation
+} from './lifecycle-tracker.ts';
 
 beforeEach(resetLifecycleEvents);
 
@@ -18,6 +22,30 @@ describe('Svelte Taro App/Page runtime', () => {
 
 		await new Promise<void>((resolve) => app.unmount('runtime-page', resolve));
 		expect(document.getElementById('runtime-page')).toBeNull();
+		await app.dispose();
+	});
+
+	it('preserves Svelte context when a page is mounted synchronously from an event', async () => {
+		const app = createSvelteApp(RuntimeApp, {});
+		await new Promise<void>((resolve) => app.mount(RuntimePage, 'runtime-source', resolve));
+		const source = document.getElementById('runtime-source');
+		const button = document.getElementById('runtime-navigate');
+		if (source === null || button === null) throw new Error('Navigation fixture was not mounted.');
+
+		const mounted = new Promise<void>((resolve) => {
+			setRuntimeNavigation(() => app.mount(RuntimePage, 'runtime-target', resolve));
+		});
+		eventHandler({
+			currentTarget: { dataset: {}, id: 'runtime-navigate' },
+			detail: {},
+			target: { dataset: {}, id: 'runtime-navigate' },
+			type: 'tap'
+		} as never);
+		await mounted;
+		expect(document.getElementById('runtime-target')?.textContent).toContain('platform:ready');
+
+		await new Promise<void>((resolve) => app.unmount('runtime-source', resolve));
+		await new Promise<void>((resolve) => app.unmount('runtime-target', resolve));
 		await app.dispose();
 	});
 

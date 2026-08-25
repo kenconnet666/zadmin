@@ -21,6 +21,7 @@
 	let alternate = $state(false);
 	let details = $state(true);
 	let items = $state([1, 2, 3]);
+	const platform = getWeChatPlatform();
 	const alternateTheme = defineTheme({
 		...defaultTheme,
 		color: {
@@ -53,7 +54,7 @@
 	}
 
 	function openCapabilityLab(): void {
-		void getWeChatPlatform().raw.navigateTo({ url: '/pages/capabilities/index' });
+		void platform.navigation.navigateTo({ url: '/pages/capabilities/index' });
 	}
 </script>
 

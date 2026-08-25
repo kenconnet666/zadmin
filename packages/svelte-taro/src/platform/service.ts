@@ -10,7 +10,8 @@ import type {
 	CapabilityDescriptor,
 	DisposableHandle,
 	PlatformDriver,
-	TaroMethodName
+	TaroMethodName,
+	TaroMethodResult
 } from './types.ts';
 
 declare const LOGIN_CODE: unique symbol;
@@ -48,6 +49,8 @@ type ListenerValue<TKey extends keyof Taro.TaroStatic> = Taro.TaroStatic[TKey] e
 	: unknown;
 
 type PaymentOptions = Omit<Taro.requestPayment.Option, 'complete' | 'fail' | 'success'>;
+type PromiseOptions<TOptions> = Omit<TOptions, 'complete' | 'fail' | 'success'>;
+type NavigateToResult = Parameters<NonNullable<Taro.navigateTo.Option['success']>>[0];
 
 export interface PaymentClientResult {
 	readonly clientAccepted: true;
@@ -94,6 +97,20 @@ function ignoreFailure(action: () => Promise<unknown>): Promise<void> {
 		() => undefined,
 		() => undefined
 	);
+}
+
+function afterNativeEvent<TResult>(action: () => Promise<TResult>): Promise<TResult> {
+	return new Promise<TResult>((resolve, reject) => {
+		// WeChat can attach the destination Page synchronously while Taro is still dispatching
+		// a native event. A new task gives Svelte a clean component-context boundary.
+		setTimeout(() => {
+			try {
+				void action().then(resolve, reject);
+			} catch (error) {
+				reject(error);
+			}
+		}, 0);
+	});
 }
 
 function promisifyObject<TResult>(
@@ -192,6 +209,19 @@ export interface WeChatPlatform {
 			| Taro.requestSubscribeMessage.SuccessCallbackResult
 			| Taro.requestSubscribeMessage.FailCallbackResult
 		>;
+	};
+	readonly navigation: {
+		navigateBack(
+			options?: PromiseOptions<Taro.navigateBack.Option>
+		): Promise<TaroMethodResult<'navigateBack'>>;
+		navigateTo(options: PromiseOptions<Taro.navigateTo.Option>): Promise<NavigateToResult>;
+		reLaunch(options: PromiseOptions<Taro.reLaunch.Option>): Promise<TaroMethodResult<'reLaunch'>>;
+		redirectTo(
+			options: PromiseOptions<Taro.redirectTo.Option>
+		): Promise<TaroMethodResult<'redirectTo'>>;
+		switchTab(
+			options: PromiseOptions<Taro.switchTab.Option>
+		): Promise<TaroMethodResult<'switchTab'>>;
 	};
 	readonly network: {
 		mdns(serviceType: string): Promise<DisposableHandle>;
@@ -379,6 +409,25 @@ export function createWeChatPlatform(options: {
 						tmplIds: [...templateIds]
 					} as Taro.requestSubscribeMessage.Option)
 				);
+			}
+		},
+		navigation: {
+			navigateBack(navigateOptions = {}) {
+				return afterNativeEvent(() => callAs(driver, 'navigateBack', navigateOptions));
+			},
+			navigateTo(navigateOptions) {
+				return afterNativeEvent(() =>
+					callAs<NavigateToResult>(driver, 'navigateTo', navigateOptions)
+				);
+			},
+			reLaunch(navigateOptions) {
+				return afterNativeEvent(() => callAs(driver, 'reLaunch', navigateOptions));
+			},
+			redirectTo(navigateOptions) {
+				return afterNativeEvent(() => callAs(driver, 'redirectTo', navigateOptions));
+			},
+			switchTab(navigateOptions) {
+				return afterNativeEvent(() => callAs(driver, 'switchTab', navigateOptions));
 			}
 		},
 		network: {

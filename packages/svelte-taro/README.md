@@ -51,6 +51,26 @@ export default defineSvelteConfig({
 
 Compiler/plugin helpers not listed above remain internal except the root config/compiler exports already declared by `package.json`.
 
+## Platform access and navigation
+
+Capture the scoped platform once during component initialization. Use the typed navigation facade for page transitions; it starts the transition after the current native event dispatch so the destination Svelte Page receives a valid context. `raw` remains an explicit escape hatch for APIs without a managed wrapper.
+
+```svelte
+<script lang="ts">
+	import { getWeChatPlatform } from '@zadmin/svelte-taro/platform';
+
+	const platform = getWeChatPlatform();
+
+	function openDetails(): void {
+		void platform.navigation.navigateTo({ url: '/pages/details/index?id=1' });
+	}
+</script>
+
+<button onclick={openDetails}>Details</button>
+```
+
+The Promise-first navigation methods are `navigateTo`, `redirectTo`, `reLaunch`, `switchTab`, and `navigateBack`. Their options intentionally omit callback-style `success`, `fail`, and `complete` fields. Do not call `getWeChatPlatform()` lazily inside an event handler: like Svelte `getContext`, it belongs to component initialization.
+
 ## Supported boundary
 
 The tested Svelte matrix includes runes, effects/cleanup, props, component binding, lifecycle, context, same-renderer snippets, if/keyed each/key/await, nested components, class/style/events, mount/unmount, and `<svelte:boundary onerror>` recovery.

@@ -1,7 +1,9 @@
 <script lang="ts">
-	import { lifecycleEvents } from './lifecycle-tracker.ts';
+	import { getWeChatPlatform } from '../src/platform/index.ts';
+	import { invokeRuntimeNavigation, lifecycleEvents } from './lifecycle-tracker.ts';
 
 	let count = $state(0);
+	const platform = getWeChatPlatform();
 
 	export function onLoad(): void {
 		lifecycleEvents.push('page:load');
@@ -16,4 +18,8 @@
 	}
 </script>
 
-<view><text>runtime:{count}</text><button onclick={() => (count += 1)}>add</button></view>
+<view>
+	<text>runtime:{count} · platform:{platform.raw === undefined ? 'missing' : 'ready'}</text>
+	<button id="runtime-add" onclick={() => (count += 1)}>add</button>
+	<button id="runtime-navigate" onclick={invokeRuntimeNavigation}>navigate</button>
+</view>

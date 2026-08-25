@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import {
 	allWechatCapabilities,
@@ -148,6 +148,48 @@ describe('WeChat platform core', () => {
 		await expect(platform.system.storage.get('fixture')).resolves.toEqual({ ready: true });
 		await platform.system.storage.remove('fixture');
 		await scope.dispose();
+	});
+
+	it('defers typed page transitions beyond the native event dispatch boundary', async () => {
+		vi.useFakeTimers();
+		try {
+			const { driver, platform } = fixture();
+			const eventChannel = { emit: vi.fn(), off: vi.fn(), on: vi.fn(), once: vi.fn() };
+			driver.setHandler('navigateTo', () => ({
+				errMsg: 'navigateTo:ok',
+				eventChannel
+			}));
+
+			const navigate = platform.navigation.navigateTo({ url: '/pages/target/index?id=1' });
+			const redirect = platform.navigation.redirectTo({ url: '/pages/target/index' });
+			const launch = platform.navigation.reLaunch({ url: '/pages/target/index' });
+			const tab = platform.navigation.switchTab({ url: '/pages/home/index' });
+			const back = platform.navigation.navigateBack({ delta: 1 });
+			expect(driver.calls).not.toEqual(
+				expect.arrayContaining([
+					'navigateTo',
+					'redirectTo',
+					'reLaunch',
+					'switchTab',
+					'navigateBack'
+				])
+			);
+
+			await vi.runAllTimersAsync();
+			await expect(navigate).resolves.toMatchObject({ eventChannel });
+			await Promise.all([redirect, launch, tab, back]);
+			expect(driver.calls).toEqual(
+				expect.arrayContaining([
+					'navigateTo',
+					'redirectTo',
+					'reLaunch',
+					'switchTab',
+					'navigateBack'
+				])
+			);
+		} finally {
+			vi.useRealTimers();
+		}
 	});
 
 	it('keeps consent, SOTER, subscription, location, and file-manager boundaries explicit', async () => {
