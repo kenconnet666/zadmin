@@ -12,8 +12,8 @@ pnpm lint
 ```
 
 - `check`：TypeScript、Svelte和workspace类型边界。
-- `test`：Core、SvelteKit、Admin、ETL、Docs和三个Plugin测试。
-- `build`：所有Package声明产物、三个SvelteKit生产构建、三个Plugin Artifact和Plugin CLI验证。
+- `test`：Core、SvelteKit、ZUI、Tauri、Admin、Desktop、ETL、Docs、微信和三个Plugin测试。
+- `build`：所有Package声明产物、Admin/ETL/Docs/Desktop静态或服务端构建、微信生产构建、三个Plugin Artifact和Plugin CLI验证。
 - `lint`：全仓Prettier检查和ESLint。
 
 `ui/zui-svelte`已经包含实际Svelte组件、编译器fixture、SSR测试和浏览器矩阵，`svelte-check`必须保持0 errors、0 warnings。
@@ -56,6 +56,37 @@ pnpm --filter @zadmin/docs build-storybook
 - `@zadmin/zui-core@0.1.0`与`@zadmin/zui-svelte@0.1.0` tarball在隔离SvelteKit项目安装、check、build和SSR 200通过；
 - 外部fixture包含critical CSS和初始动态变量，compiler/server客户端文件0个；
 - `pnpm audit --prod`无已知漏洞，gitleaks无泄漏；Taro开发工具链审计例外在最终交接单独记录。
+
+## Tauri Windows桌面端验收
+
+完整证据见[Tauri Windows桌面端生产验收](./desktop-production-acceptance.md)。标准命令：
+
+```powershell
+pnpm --filter @zadmin/tauri check
+pnpm --filter @zadmin/tauri test:coverage
+pnpm --filter @zadmin/tauri test:package
+pnpm --filter @zadmin/desktop check
+pnpm --filter @zadmin/desktop test
+pnpm --filter @zadmin/desktop bindings
+pnpm --filter @zadmin/desktop rust:fmt
+pnpm --filter @zadmin/desktop rust:check
+pnpm --filter @zadmin/desktop rust:clippy
+pnpm --filter @zadmin/desktop rust:test
+pnpm --filter @zadmin/desktop tauri:build:debug
+pnpm build:desktop
+```
+
+2026-08-26第一阶段结果：
+
+- `@zadmin/tauri` 5个test files、25项测试通过；statements 96.97%、branches 85.22%、functions 99.32%、lines 98.62%；
+- 根入口产物没有Svelte/ZUI import，`/svelte`和`/testing`分别隔离；
+- 三包tarball在空临时目录完成非workspace安装、frozen reinstall、check和build；
+- `apps/desktop` 3个test files、7项测试通过，Svelte check为0 errors/0 warnings；
+- Rust fmt、all-target check、Clippy `-D warnings`、2项MockRuntime测试和bindings确定性通过；
+- `tauri dev`连续两次页面HMR通过，Vite不再监听锁定的Rust target；
+- 真实静态exe通过runtime report、tagged error、Channel、AppData、Store、Log和Window State探针；
+- release x64 GUI和NSIS current-user installer完成静默安装/卸载，注册表、安装目录和进程均无残留；
+- 当前发布件未签名，正式外部分发前必须补Authenticode签名；Dialog、共享剪贴板、通知视觉、Opener和进程操作保留受监督验收。
 
 ## Svelte Taro与微信验收
 

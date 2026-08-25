@@ -1,6 +1,6 @@
 # 换设备开发交接
 
-更新时间：2026-08-25。
+更新时间：2026-08-26。
 
 ## 当前结论
 
@@ -9,6 +9,8 @@ DI容器、Plugin Module、上下游插件类型传播、服务端/客户端独�
 ZUI ICSS和五个基础组件已经按[ICSS生产架构](./zui-icss.md)完成生产验收：公开API只有class字符串；Svelte编译器把安全动态叶子提升为inline CSS变量；运行时负责结构CSS、普通TS回退、SSR Registry和HMR。不要回到`{ class, style }`或完整静态提取路线。外部接入见[ZUI使用与外部接入](./zui-usage.md)。
 
 2026-08-25 已把平台无关的Theme、Token、ICSS Program和设计Props提取到`@zadmin/zui-core`，原Web能力迁移为`@zadmin/zui-svelte`；Web API与行为未扩展，两个tarball已完成隔离安装、check、build和SSR回归。
+
+2026-08-26 已把Svelte/UI平台包统一迁入根`ui/`，并完成`@zadmin/tauri`、9个桌面组件和`apps/desktop`。桌面端使用SvelteKit SPA静态产物、Tauri 2最小capability和`tauri-specta`生成bindings；真实Win11 x64静态页面、系统探针、HMR、release exe、NSIS安装/卸载均通过。当前发布件未签名，正式外部分发前必须补Authenticode；完整证据见[桌面生产验收](./desktop-production-acceptance.md)。
 
 Svelte→Taro微信链路也已完成默认WebView生产验收：`@zadmin/svelte-taro`提供CJS framework plugin、compiler、renderer、App/Page runtime、静态Taro module、native types和scoped WeChat platform；`@zadmin/zui-taro`提供五个基础组件、三个流程组件和严格ICSS子集；`apps/wechat`是受版本控制的验收宿主。Fast Refresh、外部tarball、能力报告和Taro Solid性能对比均已落库。不要把Skyline build-verified或账号/硬件mock证据写成真机验收。
 
@@ -43,6 +45,13 @@ edd8ad7 test(wechat): complete Svelte Taro production acceptance
 b75e46f fix(svelte-taro): defer typed page navigation
 ab7df4c docs(wechat): record supervised device acceptance
 4803a9f feat(wechat): add safe platform probes
+59a1580 docs(workspace): plan ui root and tauri desktop
+bb480ea refactor(workspace): move ui packages under ui
+f128d1d refactor(zui): rename web package to zui-svelte
+8a9239a refactor(ui): normalize package source layout
+42f8eb9 feat(tauri): add typed desktop system platform
+8b12293 feat(tauri): add svelte desktop integrations
+75f755c feat(desktop): add win11 tauri capability host
 ```
 
 最终文档提交之后请用下面命令确认实际HEAD：
@@ -62,6 +71,15 @@ pnpm test
 pnpm build
 pnpm lint
 pnpm build:wechat
+pnpm check:desktop
+pnpm test:desktop
+pnpm --filter @zadmin/desktop bindings:check
+```
+
+需要重建Windows发布件时再执行（耗时明显高于普通workspace build）：
+
+```powershell
+pnpm build:desktop
 ```
 
 如果仓库位于其他路径，命令不依赖 `C:\code\zadmin`；只有本文档中的示例路径需要替换。

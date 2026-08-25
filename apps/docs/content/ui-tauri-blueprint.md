@@ -1,6 +1,6 @@
 # UI Workspace 与 Tauri 桌面端蓝图
 
-状态：执行中。本文是本轮迁移、实现与生产验收的唯一活动蓝图；实现中的必要取舍必须同步回写本文，不能留下代码与规划分叉。
+状态：已完成（2026-08-26）。本文规划的迁移、实现、阶段提交和Windows 11 x64生产验收均已完成；最终证据见[Tauri Windows桌面端生产验收](./desktop-production-acceptance.md)。
 
 规划基线：2026-08-25，目标平台为 Windows 11 x64。第一阶段不承诺 Windows 10、Windows ARM64、macOS、Linux 或移动端。
 
@@ -960,3 +960,32 @@ pnpm --filter @zadmin/desktop tauri build --debug --no-bundle
 6. 接受第一阶段广系统 API、首批 9 个桌面能力组件、无 shell、无 sidecar，并使用精确锁定的 `tauri-specta` v2 生成自定义 Rust IPC 类型。
 
 本文提交后严格从阶段 1 的纯物理迁移开始，并持续执行到阶段 7 验收与交接完成。
+
+## 24. 实施结果
+
+所有阶段均已完成并形成可独立构建的Git提交：
+
+```text
+59a1580 docs(workspace): plan ui root and tauri desktop
+bb480ea refactor(workspace): move ui packages under ui
+f128d1d refactor(zui): rename web package to zui-svelte
+8a9239a refactor(ui): normalize package source layout
+42f8eb9 feat(tauri): add typed desktop system platform
+8b12293 feat(tauri): add svelte desktop integrations
+75f755c feat(desktop): add win11 tauri capability host
+```
+
+实现相对初始蓝图的必要收敛：
+
+- 正式采用精确锁定的`tauri-specta 2.0.0-rc.25`、`specta 2.0.0-rc.25`和`specta-typescript 0.0.12`；
+- bindings测试使用Tauri MockRuntime，正式应用默认使用独立`desktop-runtime` feature，避免类型生成测试加载原生GUI运行时；
+- Rust最低版本按实际解析从1.85修正为1.88，本机使用1.97.1完成验收；
+- `DesktopPlatform`增加disabled updater合同，但第一阶段不注册Updater插件或权限；
+- 真实桌面自动化使用Windows应用控制做静态exe和安装后页面验收，没有把普通浏览器测试误写成Tauri IPC证据；
+- WDIO测试插件没有进入依赖、capability或生产bundle；当前真实窗口验收不需要在release中嵌入WebDriver server；
+- Vite明确忽略Rust target/gen并预优化linked Tauri依赖，解决Windows锁定DLL导致的开发崩溃；
+- 组件目录最终为9个公开组件加context/types/index共12个同类代码文件，符合目录密度约束；
+- Windows icons目录最终只保留一个6层DIB`icon.ico`，可编辑SVG和确定性生成脚本归属`apps/desktop`；
+- NSIS产物完成current-user安装、启动、卸载和清理；未提供签名证书，因此签名仍是外部分发前置条件，不属于实现缺陷。
+
+完整命令、覆盖率、真实探针、安装器哈希和未触发能力边界见[生产验收报告](./desktop-production-acceptance.md)。
