@@ -10,6 +10,7 @@
 | `packages/zui-taro/src/**`                            | package watch plus Taro incremental build          |
 | `svelte-taro` runtime/platform/native/module/renderer | TypeScript watch plus Taro incremental build       |
 | `svelte-taro` compiler/plugin/vite                    | rebuild package and restart only the Taro child    |
+| `apps/wechat/src/workers/**`                          | restart Taro child and recopy the Worker entry     |
 | `app.config.ts` or Taro host config                   | restart only the Taro child                        |
 | package manifest, workspace file, or lockfile         | stop with exit code 75 and require install/restart |
 
@@ -36,12 +37,15 @@ Measured on 2026-08-25 with Node 24.18, Taro 4.2.1, Vite 4.5.14, and WeChat DevT
 | App `.svelte` edit       |            1.54–2.05 s |                1.25–2.81 s | passed; visible text and runtime build ID updated automatically                                   |
 | ZUI Taro component edit  |            1.51–1.56 s |                  under 3 s | passed; no Taro restart                                                                           |
 | Platform TypeScript edit |            1.50–1.53 s |                  under 3 s | passed after retaining virtual marker/CSS caches across incremental rounds                        |
+| Worker entry edit        |            7.10–7.20 s |              12.12–12.22 s | passed twice; Taro child restart is required because static-copy does not watch Worker sources    |
 | Compiler/plugin edit     | 6.69–6.92 s cold build |       approximately 11.4 s | functionally passed; improved by runtime prebundling, but misses the provisional 8 s total target |
 | App-config/route edit    |    approximately 6.9 s |       approximately 11.5 s | functionally passed; narrowly misses the provisional 10 s total target                            |
 
 The cold-restart targets remain a measured performance gap, not a correctness gap. Prebundling the exact pinned Svelte runtime reduced the Taro graph from 246–247 to 141–142 transformed modules and the cold build itself by about four seconds. The remaining cost is Taro CLI process startup plus the full build. The supervisor already removes duplicate file events, limits intentional child shutdown to 500 ms, and refuses in-process Taro Hook replacement because Taro has no Hook disposer.
 
 Taro Vite may log that `src/comp` is missing during incremental rounds while it injects `usingComponents.comp`; the same build emits the expected root `dist/comp.js`, `comp.json`, and `comp.wxml`. Production builds do not log this warning, and simulator interaction passed. Revisit it when upgrading the fixed Taro version rather than adding a fake source component.
+
+Taro builds use the documented `--no-check` option. Taro 4.2.1 Doctor fetches its schema at build time; its offline fallback rejects the intentional plugin runtime `framework: "none"` and may still exit with code 0 before building. The app instead performs deterministic package config validation, clears old `dist`, executes the real target build, and verifies the new Worker declaration/output so stale artifacts cannot masquerade as success.
 
 ## Cleanup evidence
 

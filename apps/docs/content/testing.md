@@ -73,16 +73,16 @@ pnpm --filter @zadmin/svelte-taro benchmark
 
 2026-08-25最终结果：
 
-- `svelte-taro` 13个test files、42项测试通过；statements 82.08%、branches 67.83%、functions 87.39%、lines 85.68%；
+- `svelte-taro` 13个test files、43项测试通过；statements 82.11%、branches 67.83%、functions 87.44%、lines 85.71%；
 - compiler目录statements 95.12%，renderer statements/lines 96.42%；
 - `zui-taro` 2个test files、4项测试通过；statements 85.62%、branches 72.72%、functions 93.47%、lines 88.52%；
 - conformance覆盖runes、effect cleanup、props、component binding、生命周期、context、snippet、if/keyed each/key/await、boundary onerror恢复、class/style/event和嵌套组件；
 - renderer树与App/Page runtime分别完成100次mount/unmount；platform listener/session/connection完成100次scope释放后回到基线；
   -32项capability catalog、PlatformError脱敏、login/phone branded code、支付服务端权威、Taro/fake driver、配置诊断、native type和静态Taro module通过；
-  -微信开发者工具中WebView组件交互、network、临时storage roundtrip/cleanup、只读privacy probe和wx API mock/restore通过；
+  -微信开发者工具中WebView组件交互、8项device-verified capability、安全文件清理、连续两次Worker create/message/terminate和wx API mock/restore通过；微信宿主另有7项Node测试与4项TypeScript探针测试；
   -四个tarball在空临时目录安装，frozen reinstall、外部类型、单Svelte/Taro runtime和生产Taro build通过；
   -同场景200个keyed节点的三轮交替基准：Svelte 11,169ms，Taro Solid 10,969ms，中位比1.018x，满足≤1.25x；
-  -WebView完整组件矩阵为simulator-verified；指定Android真机已验证首页渲染、页面导航及network/storage/privacy三项安全探针，后三项capability为device-verified；Skyline仅build-verified，详见[renderer报告](./wechat-renderers.md)。
+  -WebView完整组件矩阵为simulator-verified；指定Android真机已验证首页渲染、导航/卸载及8项明确capability；Skyline仅build-verified，详见[renderer报告](./wechat-renderers.md)。
 
 生产内容必须断言以下字符串在非source-map JS中为0：
 

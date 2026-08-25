@@ -7,9 +7,29 @@ import { createCapabilityReport, serializeCapabilityReport } from '../dist/platf
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const outputRoot = resolve(packageRoot, '../../apps/docs/content');
 const overrides = {
+	'wechat.compute.worker': {
+		grade: 'device-verified',
+		note: 'Two consecutive Worker message roundtrips and terminate cycles passed on Android API 35 / WeChat 8.0.76 / base library 3.17.1 with an empty device console on 2026-08-25.'
+	},
+	'wechat.identity.check-session': {
+		grade: 'device-verified',
+		note: 'checkSession returned valid without requesting a login code on Android API 35 / WeChat 8.0.76 / base library 3.17.1 with an empty device console on 2026-08-25.'
+	},
 	'wechat.privacy.setting': {
 		grade: 'device-verified',
 		note: 'Read-only getPrivacySetting returned no pending consent on Android API 35 / WeChat 8.0.76 / base library 3.17.1; no prompt and an empty device console on 2026-08-25.'
+	},
+	'wechat.support.can-i-use': {
+		grade: 'device-verified',
+		note: 'Capability support check returned available on Android API 35 / WeChat 8.0.76 / base library 3.17.1 with an empty device console on 2026-08-25.'
+	},
+	'wechat.support.system': {
+		grade: 'device-verified',
+		note: 'getSystemSetting returned a valid read-only shape without opening settings on Android API 35 / WeChat 8.0.76 / base library 3.17.1 with an empty device console on 2026-08-25.'
+	},
+	'wechat.system.files': {
+		grade: 'device-verified',
+		note: 'Sandbox file write/read/unlink and post-unlink absence verification passed on Android API 35 / WeChat 8.0.76 / base library 3.17.1 with an empty device console on 2026-08-25.'
 	},
 	'wechat.system.network': {
 		grade: 'device-verified',
@@ -38,7 +58,7 @@ const rows = report.map(({ descriptor, grade, note }) =>
 );
 const markdown = `# WeChat capability verification report
 
-Generated from the fixed Taro 4.2.1 capability catalog on 2026-08-25. Verification grades are evidence levels, not interchangeable claims. Supervised WebView device acceptance covered only network type, temporary storage roundtrip/cleanup, and read-only privacy state. No payment, phone-number, subscription, permission prompt, upload, cloud write, merchant flow, or hardware session was triggered.
+Generated from the fixed Taro 4.2.1 capability catalog on 2026-08-25. Verification grades are evidence levels, not interchangeable claims. Supervised WebView device acceptance covered only the eight rows explicitly marked device-verified. No payment, phone-number, login-code request, subscription, permission prompt, upload, cloud write, merchant flow, or hardware session was triggered.
 
 | Capability | Stability | Highest grade | Real device | Account entitlement | Evidence / limit |
 | --- | --- | --- | --- | --- | --- |

@@ -8,8 +8,8 @@ Checked on 2026-08-25 with WeChat DevTools Stable 2.02.2608040 and base library 
 - ZUI layout, count update, keyed list, conditional content, theme update, dynamic ICSS, and flow-button `open-type` values passed in the simulator.
 - The typed navigation facade opened the capability page without crossing Svelte's component-context boundary. Network, temporary storage roundtrip/cleanup, and read-only privacy probes passed after a fresh project-window open.
 - The simulator console was clean after a fresh project-window open; transient `MPPage.getCurrent` errors observed after cache clearing came from the DevTools inspectee rather than the Mini Program stack.
-- A supervised Xiaomi 22081212C (arm64-v8a), Android API 35, WeChat 8.0.76, base-library 3.17.1 session rendered the homepage and exposed `pages/capabilities/index` in the real-device WXML tree after navigation. Network returned `wifi`, storage roundtrip/removal passed, and read-only privacy reported no pending consent. The real-device Console stayed empty; service status remained normal with zero queued/unacknowledged messages.
-- Evidence: [WebView screenshot](/wechat/webview.jpg) and [capability page](/wechat/capabilities-webview.jpg).
+- Supervised Xiaomi 22081212C (arm64-v8a), Android API 35, WeChat 8.0.76, base-library 3.17.1 sessions rendered the homepage and exposed `pages/capabilities/index` in the real-device WXML tree. Eight specific catalog rows passed on-device, including sandbox file cleanup and two consecutive Worker create/message/terminate cycles. Returning restored `pages/index/index`; after startup-only environment messages were captured and cleared, the device Console stayed empty and service/queue state remained healthy through unload.
+- Evidence: [WebView screenshot](/wechat/webview.jpg), [capability page](/wechat/capabilities-webview.jpg), and [safe-probe simulator](/wechat/safe-probes-simulator.jpg).
 
 Highest level: **device-verified for the named rendering/navigation/probe flows**; the broader component interaction matrix remains **simulator-verified**.
 

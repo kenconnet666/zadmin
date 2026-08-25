@@ -5,7 +5,18 @@
 		"console": "passed in simulator and supervised Android device sessions",
 		"deviceAcceptance": {
 			"device": "Xiaomi 22081212C arm64-v8a",
-			"flows": ["homepage", "navigation", "network", "storage-cleanup", "privacy-read"],
+			"flows": [
+				"homepage",
+				"navigation-unload",
+				"support",
+				"system-settings-read",
+				"session-check",
+				"file-roundtrip-cleanup",
+				"worker-double-lifecycle",
+				"network",
+				"storage-cleanup",
+				"privacy-read"
+			],
 			"platform": "Android API 35 / WeChat 8.0.76 / base library 3.17.1",
 			"verification": "device-verified"
 		},

@@ -31,19 +31,19 @@ pnpm test:wechat
 }
 ```
 
-源码变化增量构建；compiler/app config变化重启Taro child；manifest、workspace或lockfile变化以退出码75停止并要求重新install。
+源码变化增量构建；Worker、compiler和app config变化重启Taro child；manifest、workspace或lockfile变化以退出码75停止并要求重新install。Worker自动重建实测约12.1–12.2秒。
 
 ## 页面
 
 - `pages/index/index`：ZUI、state、if、keyed list、theme和动态ICSS验证。
-- `pages/capabilities/index`：capability catalog与安全探针。只有network、临时storage和只读privacy可在无人值守时自动执行。
+- `pages/capabilities/index`：capability catalog与安全探针。Support、System、Session、Files、Worker、network、临时storage和只读privacy均不会申请权限；Files和Worker强制验证清理。
 
 页面加载不得自动触发隐私、权限、登录、手机号、支付、订阅、系统设置或硬件操作。
 
 ## 发布边界
 
 - 默认生产目标：WeChat WebView。
-- WebView：完整组件矩阵为simulator-verified；首页渲染、页面导航、network、临时storage清理和只读privacy已在指定Android真机达到device-verified。
+- WebView：完整组件矩阵为simulator-verified；首页渲染、导航/卸载和能力报告中明确标记的8项能力已在指定Android真机达到device-verified。
 - Skyline：官方前置配置已补齐且build-verified；当前Taro 4.2.1/DevTools/base-library组合下，Svelte与Taro Solid对照页均出现黑色模拟器画布，尚非simulator-verified。
 - 不从网络加载可执行插件；业务Taro module静态打包，变更后重新构建、审核和发布。
 - 本仓库不执行upload。上传、体验版、审核和正式发布需要单独用户授权。

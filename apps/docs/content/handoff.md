@@ -14,7 +14,9 @@ Svelte→Taro微信链路也已完成默认WebView生产验收：`@zadmin/svelte
 
 2026-08-25 补充真实模拟器验收时发现从原生`tap`同步调用Taro路由会让目标Svelte Page越过context初始化边界。`@zadmin/svelte-taro`现提供Promise-first强类型`platform.navigation`，把五种页面切换延迟到原生事件分发结束后的下一任务；首页到能力页、三个安全探针和空控制台已经复核。不要在事件处理器里延迟调用`getWeChatPlatform()`，应在组件初始化时捕获platform。
 
-同日完成受监督Android真机验收：Xiaomi 22081212C / Android API 35 / WeChat 8.0.76 / base library 3.17.1。首页渲染正常，真机WXML树确认导航到`pages/capabilities/index`；network=`wifi`、临时storage roundtrip/removal、只读privacy=`no pending consent`通过，Console始终为空，服务正常且等待/未确认消息均为0。只提升这三个capability到device-verified；没有触发账号、商户、权限或硬件能力。
+同日完成受监督Android真机验收：Xiaomi 22081212C / Android API 35 / WeChat 8.0.76 / base library 3.17.1。首页渲染正常，真机WXML树确认导航到`pages/capabilities/index`；network=`wifi`、临时storage roundtrip/removal、只读privacy=`no pending consent`通过，Console始终为空，服务正常且等待/未确认消息均为0。该次只提升这三个capability到device-verified；没有触发账号、商户、权限或硬件能力。
+
+第一批安全能力随后完成：新增Support、System、Session、Files、Worker正式探针，连同原三项共8个capability达到device-verified。Files验证唯一临时文件写/读/unlink及删除后不存在；Worker连续两次create/message/terminate通过，返回首页后WXML恢复且Console为空。Worker源码变化由supervisor自动restart Taro child，实测12.1–12.2秒。生产构建使用`--no-check`避开Taro Doctor网络schema/离线旧schema漂移，先清空`dist`并在构建后验证Worker声明与文件。
 
 关键代码检查点：
 
@@ -39,6 +41,8 @@ bc9f939 feat(zui-taro): add foundational components and ICSS
 edd8ad7 test(wechat): complete Svelte Taro production acceptance
 41ff750 docs(wechat): finalize Svelte Taro architecture and handoff
 b75e46f fix(svelte-taro): defer typed page navigation
+ab7df4c docs(wechat): record supervised device acceptance
+4803a9f feat(wechat): add safe platform probes
 ```
 
 最终文档提交之后请用下面命令确认实际HEAD：
@@ -165,6 +169,8 @@ plugin.ts
 | Taro renderer/runtime       | `packages/svelte-taro/src/renderer/`、`runtime/`          |
 | WeChat platform/catalog     | `packages/svelte-taro/src/platform/`                      |
 | WeChat安全页面导航          | `packages/svelte-taro/src/platform/service.ts`            |
+| WeChat安全探针              | `apps/wechat/src/pages/capabilities/probes.ts`            |
+| WeChat安全Worker            | `apps/wechat/src/workers/safe-probe.js`                   |
 | Taro module/native/testing  | `packages/svelte-taro/src/module/`、`native/`、`testing/` |
 | ZUI Taro                    | `packages/zui-taro/src/`                                  |
 | WeChat supervisor           | `apps/wechat/config/supervisor.mjs`                       |
@@ -242,13 +248,13 @@ pnpm --filter @zadmin/docs build-storybook
 
 2026-08-25在Windows本机完成：
 
--生产Taro build使用141个transform modules，内部构建约7.4秒；产物不含buildId、supervisor、fake driver、testing入口或workspace绝对路径；
--Svelte Taro 13个test files/42项测试、ZUI Taro 2个files/4项测试通过，两条100-cycle释放链回到基线；
--WebView模拟器中组件、state/if/keyed list/theme/dynamic ICSS、流程`open-type`和强类型页面导航通过；指定Android真机进一步确认首页渲染、页面导航、network、临时storage cleanup和只读privacy probe，后三项capability为device-verified；
+-生产Taro build使用142个transform modules，内部构建约7.8秒；先清空旧产物，Worker复制/声明有构建后验证，产物不含buildId、supervisor、fake driver、testing入口或workspace绝对路径；
+-Svelte Taro 13个test files/43项测试、微信宿主7项Node+4项TS探针测试、ZUI Taro 2个files/4项测试通过，两条100-cycle释放链回到基线；
+-WebView模拟器中组件、state/if/keyed list/theme/dynamic ICSS、流程`open-type`和强类型页面导航通过；指定Android真机进一步确认首页渲染、导航/卸载及8个明确capability；
 -32项capability逐项记录等级；支付/手机号/SOTER/硬件等没有被无人值守真实触发；
 -四个tarball空目录安装、frozen reinstall、外部module/native/ZUI类型、单runtime和Taro build通过；
 -同场景Taro Solid/Svelte三轮交替冷构建中位比1.018x，达到≤1.25x；
--Fast Refresh的App/ZUI/platform变化约1.5–2.8秒；compiler/config完整重启约11.4秒，仍未达到最初的8/10秒总链目标；
+-Fast Refresh的App/ZUI/platform变化约1.5–2.8秒；compiler/config完整重启约11.4秒；Worker自动重启/复制约12.1–12.2秒，仍未达到最初的8/10秒总链目标；
 -WebView为simulator-verified；Skyline补齐`glass-easel`、`navigationStyle: custom`、`lazyCodeLoading: requiredComponents`和`rendererOptions.skyline`后build通过，但当前DevTools中Svelte与Taro Solid对照页均呈黑色画布，automator/inspectee均在`MPPage.getCurrent`失败，因此仅build-verified。
 
 重点命令：
@@ -307,6 +313,8 @@ $env:ZADMIN_PLUGIN_ADMIN_TOKEN = '<secret>'
 -微信默认生产目标是WebView；Skyline不是simulator-verified。
 -固定Svelte artifact的boundary `failed/pending` snippet存在上游compiler崩溃；当前支持并测试`<svelte:boundary onerror>`，坏路径有提前诊断。
 -微信完整dev audit有21项固定工具链advisory，但`pnpm audit --prod`无已知漏洞，开发supervisor不启动Vite HTTP服务。
+-Taro 4.2.1 Doctor依赖远程schema且离线fallback不接受插件的`framework: none`；所有宿主/外部fixture构建固定使用`--no-check`，由包级配置校验、清空旧dist、真实目标构建和产物验证取代。
+-真机启动时微信内部广告调优可能报告`WAServiceMainContext invalid scope`，远程调试也可能报告`/usr/app.js.map`截断；本地无广告API且7个map均可解析。记录并清空这些环境消息后，8项探针及卸载阶段Console保持为空。
 -没有执行微信upload、审核、支付、手机号、订阅、权限弹窗、云写入或真实硬件操作。
 -当前Taro 4.2.1/DevTools Stable 2.02.2608040/基础库3.17.1组合下，Skyline在Svelte与Taro Solid对照页都出现黑色模拟器画布；升级Taro、DevTools或基础库后必须按renderer验收文档重测，不能从build通过推断可发布。
 -四个失败的clean-package诊断目录因宿主递归删除策略未能自动清理，位于`%TEMP%\zadmin-wechat-package-{zhYiko,d8QoR6,iZYX7l,B8Img4}`；它们不在仓库内，可在确认无需诊断后手工删除。最后一次成功fixture已自动清理。

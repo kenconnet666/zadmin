@@ -1,6 +1,6 @@
 {
 	"checkedAt": "2026-08-25",
-	"durationMs": 88665,
+	"durationMs": 90575,
 	"packages": ["zui-core", "zui-web", "zui-taro", "svelte-taro"],
 	"productionFiles": 21,
 	"runtimes": {

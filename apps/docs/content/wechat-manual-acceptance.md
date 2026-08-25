@@ -63,3 +63,15 @@ For every run record date, package commit, DevTools/base-library version, device
 - `wechat.privacy.setting`: `Privacy probe: no pending consent reported.` The call was read-only and did not open a consent prompt.
 - The real-device Console was empty before navigation and after each probe. Service status stayed normal; debugger waiting-send and unacknowledged counts stayed at zero. Observed round-trip latency ranged from roughly 240–386 ms.
 - No login, phone-number, payment, subscription, permission prompt, upload, location, media, Bluetooth, NFC, Wi-Fi-session, sensor, socket, cloud, or merchant action was executed. No broader descriptor or renderer grade is implied.
+
+## Executed safe-probe WebView batch — 2026-08-25
+
+- Build/package checkpoint: `4803a9f`; same named Android device, WeChat, base library, renderer, and authorized test-project boundary as the earlier record.
+- Startup-only evidence was separated before testing: a `WAServiceMainContext` ad-optimization `invalid scope` error had no application ad API/reference, and the remote debugger reported a truncated `/usr/app.js.map` although all seven local maps parsed successfully. The Console was then cleared without refreshing or changing Storage.
+- `wechat.support.can-i-use`: `Support probe: available.`
+- `wechat.support.system`: `System probe: settings read passed.` No system settings page was opened and no switch was changed.
+- `wechat.identity.check-session`: `Session probe: valid.` No login request or code was created.
+- `wechat.system.files`: `Files probe: roundtrip and cleanup passed.` A unique sandbox file was written, read, unlinked, and confirmed absent afterward.
+- `wechat.compute.worker`: `Worker probe: roundtrip and terminate passed.` Two consecutive create/message/terminate cycles passed, proving the first Worker released the one-Worker slot.
+- The debugger WXML tree showed `pages/capabilities/index` during probes and returned to `pages/index/index` afterward. The post-baseline Console stayed empty after every probe and page unload; service status stayed normal and waiting-send/unacknowledged counts stayed at zero.
+- Unit tests also cover file cleanup after validation failure, combined operation/cleanup failure preservation, Worker response timeout, and Worker termination. No permission, account-code, merchant, media, location, network-session, or hardware action was added to this batch.
