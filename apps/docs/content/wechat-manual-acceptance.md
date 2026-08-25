@@ -9,8 +9,9 @@ For every run record date, package commit, DevTools/base-library version, device
 ## Renderer
 
 1. Build the default WebView project and verify index/capability pages, counter, theme, if, keyed list, navigation, and no application console errors.
-2. In a temporary branch set PageConfig `renderer: 'skyline'`, `componentFramework: 'glass-easel'`, retain AppConfig `lazyCodeLoading: 'requiredComponents'`, rebuild, and repeat visual/interaction checks on supported devices.
+2. In a temporary branch set PageConfig `renderer: 'skyline'`, `componentFramework: 'glass-easel'`, and `navigationStyle: 'custom'`; retain AppConfig `lazyCodeLoading: 'requiredComponents'` plus `rendererOptions.skyline.defaultDisplayBlock/defaultContentBox`; rebuild and repeat visual/interaction checks on supported devices.
 3. Restore WebView unless Skyline is explicitly approved as a release target.
+4. Do not promote Skyline while the current Taro/DevTools combination renders the control fixture as a black surface or while automator fails to resolve the current Skyline page. Re-run both the Svelte app and a same-version official-framework control after toolchain upgrades.
 
 ## Identity and privacy
 
@@ -51,3 +52,14 @@ For every run record date, package commit, DevTools/base-library version, device
 - Promote to `device-verified` only with named device/OS evidence and successful cleanup.
 - Promote to `account-verified` only with the relevant verified主体/merchant/template/category/backend end-to-end evidence.
 - Never promote a whole domain because one method passed; update only the tested descriptor rows in `wechat-capability-report.json` and regenerate the Markdown report.
+
+## Executed supervised WebView record — 2026-08-25
+
+- Build/package checkpoint: `b75e46f`; Taro 4.2.1; WebView; authorized developer test project with AppID omitted.
+- Device: Xiaomi 22081212C, arm64-v8a, Android API 35; WeChat 8.0.76; base library 3.17.1; Wi-Fi real-device debugger.
+- Homepage rendering was confirmed by the user. The debugger WXML tree changed from `pages/index/index` to `pages/capabilities/index` after the typed navigation action.
+- `wechat.system.network`: `Network probe: wifi`.
+- `wechat.system.storage`: `Storage probe: roundtrip and cleanup passed.` The probe key was read and removed by the tested flow.
+- `wechat.privacy.setting`: `Privacy probe: no pending consent reported.` The call was read-only and did not open a consent prompt.
+- The real-device Console was empty before navigation and after each probe. Service status stayed normal; debugger waiting-send and unacknowledged counts stayed at zero. Observed round-trip latency ranged from roughly 240–386 ms.
+- No login, phone-number, payment, subscription, permission prompt, upload, location, media, Bluetooth, NFC, Wi-Fi-session, sensor, socket, cloud, or merchant action was executed. No broader descriptor or renderer grade is implied.

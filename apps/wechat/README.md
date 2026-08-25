@@ -43,7 +43,8 @@ pnpm test:wechat
 ## 发布边界
 
 - 默认生产目标：WeChat WebView。
-- Skyline：build-verified，尚非simulator-verified。
+- WebView：完整组件矩阵为simulator-verified；首页渲染、页面导航、network、临时storage清理和只读privacy已在指定Android真机达到device-verified。
+- Skyline：官方前置配置已补齐且build-verified；当前Taro 4.2.1/DevTools/base-library组合下，Svelte与Taro Solid对照页均出现黑色模拟器画布，尚非simulator-verified。
 - 不从网络加载可执行插件；业务Taro module静态打包，变更后重新构建、审核和发布。
 - 本仓库不执行upload。上传、体验版、审核和正式发布需要单独用户授权。
 - 登录code兑换、手机号兑换、支付签名/回调和最终订单状态属于服务端package/plugin。

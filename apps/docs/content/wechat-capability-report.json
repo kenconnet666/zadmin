@@ -577,8 +577,8 @@
 			"taroType": "types/api/open-api/privacy.d.ts#getPrivacySetting",
 			"title": "Privacy authorization state"
 		},
-		"grade": "simulator-verified",
-		"note": "Read-only getPrivacySetting probe passed in WeChat DevTools on 2026-08-25."
+		"grade": "device-verified",
+		"note": "Read-only getPrivacySetting returned no pending consent on Android API 35 / WeChat 8.0.76 / base library 3.17.1; no prompt and an empty device console on 2026-08-25."
 	},
 	{
 		"descriptor": {
@@ -663,8 +663,8 @@
 			"taroType": "types/api/device/network.d.ts#getNetworkType",
 			"title": "Network state"
 		},
-		"grade": "simulator-verified",
-		"note": "getNetworkType returned wifi in WeChat DevTools on 2026-08-25."
+		"grade": "device-verified",
+		"note": "getNetworkType returned wifi on Android API 35 / WeChat 8.0.76 / base library 3.17.1 with an empty device console on 2026-08-25."
 	},
 	{
 		"descriptor": {
@@ -685,7 +685,7 @@
 			"taroType": "types/api/storage/index.d.ts#getStorage",
 			"title": "Local storage"
 		},
-		"grade": "simulator-verified",
-		"note": "Temporary value roundtrip and cleanup passed in WeChat DevTools on 2026-08-25."
+		"grade": "device-verified",
+		"note": "Temporary value roundtrip and removal passed on Android API 35 / WeChat 8.0.76 / base library 3.17.1 with an empty device console on 2026-08-25."
 	}
 ]

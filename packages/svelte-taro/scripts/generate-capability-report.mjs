@@ -8,16 +8,16 @@ const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const outputRoot = resolve(packageRoot, '../../apps/docs/content');
 const overrides = {
 	'wechat.privacy.setting': {
-		grade: 'simulator-verified',
-		note: 'Read-only getPrivacySetting probe passed in WeChat DevTools on 2026-08-25.'
+		grade: 'device-verified',
+		note: 'Read-only getPrivacySetting returned no pending consent on Android API 35 / WeChat 8.0.76 / base library 3.17.1; no prompt and an empty device console on 2026-08-25.'
 	},
 	'wechat.system.network': {
-		grade: 'simulator-verified',
-		note: 'getNetworkType returned wifi in WeChat DevTools on 2026-08-25.'
+		grade: 'device-verified',
+		note: 'getNetworkType returned wifi on Android API 35 / WeChat 8.0.76 / base library 3.17.1 with an empty device console on 2026-08-25.'
 	},
 	'wechat.system.storage': {
-		grade: 'simulator-verified',
-		note: 'Temporary value roundtrip and cleanup passed in WeChat DevTools on 2026-08-25.'
+		grade: 'device-verified',
+		note: 'Temporary value roundtrip and removal passed on Android API 35 / WeChat 8.0.76 / base library 3.17.1 with an empty device console on 2026-08-25.'
 	}
 };
 const report = createCapabilityReport(overrides);
@@ -38,7 +38,7 @@ const rows = report.map(({ descriptor, grade, note }) =>
 );
 const markdown = `# WeChat capability verification report
 
-Generated from the fixed Taro 4.2.1 capability catalog on 2026-08-25. Verification grades are evidence levels, not interchangeable claims. No payment, phone-number, subscription, permission prompt, upload, cloud write, or real-hardware action was triggered during unattended acceptance.
+Generated from the fixed Taro 4.2.1 capability catalog on 2026-08-25. Verification grades are evidence levels, not interchangeable claims. Supervised WebView device acceptance covered only network type, temporary storage roundtrip/cleanup, and read-only privacy state. No payment, phone-number, subscription, permission prompt, upload, cloud write, merchant flow, or hardware session was triggered.
 
 | Capability | Stability | Highest grade | Real device | Account entitlement | Evidence / limit |
 | --- | --- | --- | --- | --- | --- |
