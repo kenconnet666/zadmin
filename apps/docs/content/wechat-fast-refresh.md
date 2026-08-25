@@ -7,7 +7,7 @@
 | Change                                                | Action                                             |
 | ----------------------------------------------------- | -------------------------------------------------- |
 | `apps/wechat/**/*.svelte`                             | Taro incremental build                             |
-| `packages/zui-taro/src/**`                            | package watch plus Taro incremental build          |
+| `ui/zui-taro/src/**`                                  | package watch plus Taro incremental build          |
 | `svelte-taro` runtime/platform/native/module/renderer | TypeScript watch plus Taro incremental build       |
 | `svelte-taro` compiler/plugin/vite                    | rebuild package and restart only the Taro child    |
 | `apps/wechat/src/workers/**`                          | restart Taro child and recopy the Worker entry     |

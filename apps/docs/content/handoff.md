@@ -107,6 +107,8 @@ packages/
   oss/
   postgres/
   redis/
+
+ui/
   sveltekit/
   svelte-taro/
   zui-core/
@@ -138,43 +140,43 @@ plugin.ts
 
 ## 关键入口
 
-| 责任                        | 文件                                                      |
-| --------------------------- | --------------------------------------------------------- |
-| ServiceContainer事务        | `packages/core/src/container/container.ts`                |
-| Provider图和可见性          | `packages/core/src/container/graph.ts`                    |
-| Scope和资源回调             | `packages/core/src/container/context.ts`                  |
-| Provider与`@service`        | `packages/core/src/container/provider.ts`                 |
-| Token/Injection             | `packages/core/src/container/token.ts`、`injection.ts`    |
-| Plugin定义                  | `packages/core/src/container/module.ts`                   |
-| PluginRuntime               | `packages/core/src/plugin/runtime.ts`                     |
-| Artifact Manager            | `packages/core/src/plugin/manager.ts`                     |
-| Manifest/Definition校验     | `packages/core/src/plugin/validation.ts`                  |
-| Artifact扫描与revision      | `packages/core/src/artifact/workspace.ts`                 |
-| 安装器                      | `packages/core/src/artifact/installed.ts`                 |
-| Plugin构建策略              | `packages/core/src/artifact/vite.ts`                      |
-| Package/Manifest校验        | `packages/core/src/artifact/validation.ts`                |
-| Admin组合和HMR              | `apps/admin/src/lib/server/host.ts`                       |
-| EventSource/Client Artifact | `apps/admin/src/lib/server/plugins.ts`                    |
-| 服务端动态路由              | `packages/sveltekit/src/lib/routes.ts`                    |
-| 浏览器Plugin Runtime        | `packages/sveltekit/src/lib/client-runtime.ts`            |
-| Approval公开类型            | `plugins/approval/src/server/contract.ts`                 |
-| CRM上游类型依赖示例         | `plugins/crm/src/server/contract.ts`、`service.ts`        |
-| ICSS Runtime与Registry      | `packages/zui-web/src/lib/icss/`                          |
-| Svelte ICSS编译器           | `packages/zui-web/src/lib/compiler/`                      |
-| SvelteKit ICSS SSR          | `packages/zui-web/src/lib/sveltekit/`                     |
-| ZUI基础组件                 | `packages/zui-web/src/lib/components/`                    |
-| ZUI接入文档                 | `apps/docs/content/zui-usage.md`                          |
-| Taro framework plugin       | `packages/svelte-taro/src/plugin/index.cts`               |
-| Svelte Taro compiler        | `packages/svelte-taro/src/compiler/`                      |
-| Taro renderer/runtime       | `packages/svelte-taro/src/renderer/`、`runtime/`          |
-| WeChat platform/catalog     | `packages/svelte-taro/src/platform/`                      |
-| WeChat安全页面导航          | `packages/svelte-taro/src/platform/service.ts`            |
-| WeChat安全探针              | `apps/wechat/src/pages/capabilities/probes.ts`            |
-| WeChat安全Worker            | `apps/wechat/src/workers/safe-probe.js`                   |
-| Taro module/native/testing  | `packages/svelte-taro/src/module/`、`native/`、`testing/` |
-| ZUI Taro                    | `packages/zui-taro/src/`                                  |
-| WeChat supervisor           | `apps/wechat/config/supervisor.mjs`                       |
-| 微信生产验收                | `apps/docs/content/wechat-production-acceptance.md`       |
+| 责任                        | 文件                                                   |
+| --------------------------- | ------------------------------------------------------ |
+| ServiceContainer事务        | `packages/core/src/container/container.ts`             |
+| Provider图和可见性          | `packages/core/src/container/graph.ts`                 |
+| Scope和资源回调             | `packages/core/src/container/context.ts`               |
+| Provider与`@service`        | `packages/core/src/container/provider.ts`              |
+| Token/Injection             | `packages/core/src/container/token.ts`、`injection.ts` |
+| Plugin定义                  | `packages/core/src/container/module.ts`                |
+| PluginRuntime               | `packages/core/src/plugin/runtime.ts`                  |
+| Artifact Manager            | `packages/core/src/plugin/manager.ts`                  |
+| Manifest/Definition校验     | `packages/core/src/plugin/validation.ts`               |
+| Artifact扫描与revision      | `packages/core/src/artifact/workspace.ts`              |
+| 安装器                      | `packages/core/src/artifact/installed.ts`              |
+| Plugin构建策略              | `packages/core/src/artifact/vite.ts`                   |
+| Package/Manifest校验        | `packages/core/src/artifact/validation.ts`             |
+| Admin组合和HMR              | `apps/admin/src/lib/server/host.ts`                    |
+| EventSource/Client Artifact | `apps/admin/src/lib/server/plugins.ts`                 |
+| 服务端动态路由              | `ui/sveltekit/src/lib/routes.ts`                       |
+| 浏览器Plugin Runtime        | `ui/sveltekit/src/lib/client-runtime.ts`               |
+| Approval公开类型            | `plugins/approval/src/server/contract.ts`              |
+| CRM上游类型依赖示例         | `plugins/crm/src/server/contract.ts`、`service.ts`     |
+| ICSS Runtime与Registry      | `ui/zui-web/src/lib/icss/`                             |
+| Svelte ICSS编译器           | `ui/zui-web/src/lib/compiler/`                         |
+| SvelteKit ICSS SSR          | `ui/zui-web/src/lib/sveltekit/`                        |
+| ZUI基础组件                 | `ui/zui-web/src/lib/components/`                       |
+| ZUI接入文档                 | `apps/docs/content/zui-usage.md`                       |
+| Taro framework plugin       | `ui/svelte-taro/src/plugin/index.cts`                  |
+| Svelte Taro compiler        | `ui/svelte-taro/src/compiler/`                         |
+| Taro renderer/runtime       | `ui/svelte-taro/src/renderer/`、`runtime/`             |
+| WeChat platform/catalog     | `ui/svelte-taro/src/platform/`                         |
+| WeChat安全页面导航          | `ui/svelte-taro/src/platform/service.ts`               |
+| WeChat安全探针              | `apps/wechat/src/pages/capabilities/probes.ts`         |
+| WeChat安全Worker            | `apps/wechat/src/workers/safe-probe.js`                |
+| Taro module/native/testing  | `ui/svelte-taro/src/module/`、`native/`、`testing/`    |
+| ZUI Taro                    | `ui/zui-taro/src/`                                     |
+| WeChat supervisor           | `apps/wechat/config/supervisor.mjs`                    |
+| 微信生产验收                | `apps/docs/content/wechat-production-acceptance.md`    |
 
 ## 当前调用方式
 

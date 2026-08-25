@@ -13,16 +13,18 @@ apps/
 
 packages/
   core/        DI 容器、插件 Runtime、Artifact、Installer
-  sveltekit/   服务端动态路由与浏览器插件 Runtime
   auth/        鉴权基础能力
   postgres/    PostgreSQL 基础能力
   redis/       Redis 基础能力
   oss/         对象存储基础能力
+  drizzle/     可供任意项目使用的 Drizzle 增强库
+
+ui/
+  sveltekit/   服务端动态路由与浏览器插件 Runtime
   zui-core/    平台无关的主题、Token、ICSS 和设计契约
   zui-web/     可供任意 Web 项目使用的 Svelte 组件库
   zui-taro/    微信小程序 ZUI 组件与 ICSS 子集
   svelte-taro/ Svelte compiler、Taro renderer/runtime 和微信平台能力
-  drizzle/     可供任意项目使用的 Drizzle 增强库
 
 plugins/
   approval/    审批流插件

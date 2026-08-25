@@ -4,7 +4,7 @@
 
 ZAdmin是一个 pnpm workspace中的多应用、可复用 Package和动态 Plugin系统。SvelteKit同时承担页面、SSR和服务端入口，不拆分单独 Java后端或 HTTP微服务层。
 
-`packages/zui-web`的样式层使用运行时 ICSS和Svelte编译优化双轨架构。公开调用只返回class字符串；可追踪的Svelte响应式叶子在编译时提升为inline CSS自定义属性，结构CSS由运行时确定性生成和缓存。完整合同见[ZUI ICSS生产架构](./zui-icss.md)。
+`ui/zui-web`的样式层使用运行时 ICSS和Svelte编译优化双轨架构。公开调用只返回class字符串；可追踪的Svelte响应式叶子在编译时提升为inline CSS自定义属性，结构CSS由运行时确定性生成和缓存。完整合同见[ZUI ICSS生产架构](./zui-icss.md)。
 
 微信小程序不是 Web renderer 的条件分支。`@zadmin/zui-core`只保存跨目标设计合同，`@zadmin/zui-web`和`@zadmin/zui-taro`拥有各自薄 Svelte模板；`@zadmin/svelte-taro`独立承担 Taro framework plugin、compiler、renderer、App/Page runtime、微信平台能力与开发态监督器所需协议。默认生产目标是WebView，Skyline单独分级。
 
@@ -17,16 +17,18 @@ apps/
 
 packages/
   core/        DI、Plugin Runtime、Artifact、Installer
-  sveltekit/   动态服务端路由、浏览器页面 Runtime
   auth/        可选鉴权 Module
   postgres/    可选数据库 Module
   redis/       可选缓存 Module
   oss/         可选对象存储 Module
+  drizzle/     公共 ORM增强库
+
+ui/
+  sveltekit/   动态服务端路由、浏览器页面 Runtime
   zui-core/    平台无关的主题、Token、ICSS 和设计契约
   zui-web/     Web UI 库
   zui-taro/    Taro UI 库和严格 ICSS 子集
   svelte-taro/ Taro framework plugin、renderer/runtime/platform/module/native
-  drizzle/     公共 ORM增强库
 
 plugins/
   approval/    动态业务插件

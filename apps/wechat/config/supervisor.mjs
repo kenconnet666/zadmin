@@ -12,7 +12,7 @@ import { BuildStatusStore } from './status.mjs';
 const appRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const workspaceRoot = resolve(appRoot, '../..');
 const appRequire = createRequire(resolve(appRoot, 'package.json'));
-const zuiRequire = createRequire(resolve(workspaceRoot, 'packages/zui-taro/package.json'));
+const zuiRequire = createRequire(resolve(workspaceRoot, 'ui/zui-taro/package.json'));
 
 async function packageBin(requireFrom, packageName, binName) {
 	const packagePath = requireFrom.resolve(`${packageName}/package.json`);
@@ -296,16 +296,16 @@ export async function runSupervisor() {
 		await status.initialize(0);
 		await status.record('supervisor-start', { pid: process.pid });
 		await runNode('svelte-taro:build', tscBin, ['-p', 'tsconfig.json'], {
-			cwd: resolve(workspaceRoot, 'packages/svelte-taro')
+			cwd: resolve(workspaceRoot, 'ui/svelte-taro')
 		});
 		await runNode(
 			'svelte-runtime:build',
-			resolve(workspaceRoot, 'packages/svelte-taro/scripts/build-runtime.mjs'),
+			resolve(workspaceRoot, 'ui/svelte-taro/scripts/build-runtime.mjs'),
 			[],
-			{ cwd: resolve(workspaceRoot, 'packages/svelte-taro') }
+			{ cwd: resolve(workspaceRoot, 'ui/svelte-taro') }
 		);
 		await runNode('zui-taro:build', sveltePackageBin, ['--input', 'src', '--output', 'dist'], {
-			cwd: resolve(workspaceRoot, 'packages/zui-taro')
+			cwd: resolve(workspaceRoot, 'ui/zui-taro')
 		});
 
 		keepRequired(
@@ -314,7 +314,7 @@ export async function runSupervisor() {
 				'svelte-taro',
 				tscBin,
 				['-p', 'tsconfig.json', '--watch', '--preserveWatchOutput', '--pretty', 'false'],
-				{ cwd: resolve(workspaceRoot, 'packages/svelte-taro') }
+				{ cwd: resolve(workspaceRoot, 'ui/svelte-taro') }
 			)
 		);
 		keepRequired(
@@ -323,15 +323,15 @@ export async function runSupervisor() {
 				'zui-taro',
 				sveltePackageBin,
 				['--input', 'src', '--output', 'dist', '--watch', '--preserve-output'],
-				{ cwd: resolve(workspaceRoot, 'packages/zui-taro') }
+				{ cwd: resolve(workspaceRoot, 'ui/zui-taro') }
 			)
 		);
 		startTaro();
 
 		for (const root of [
 			resolve(appRoot, 'src'),
-			resolve(workspaceRoot, 'packages/svelte-taro/src'),
-			resolve(workspaceRoot, 'packages/zui-taro/src')
+			resolve(workspaceRoot, 'ui/svelte-taro/src'),
+			resolve(workspaceRoot, 'ui/zui-taro/src')
 		]) {
 			await watchRoot(root);
 		}

@@ -16,7 +16,7 @@ pnpm lint
 - `build`：所有Package声明产物、三个SvelteKit生产构建、三个Plugin Artifact和Plugin CLI验证。
 - `lint`：全仓Prettier检查和ESLint。
 
-`packages/zui-web`已经包含实际Svelte组件、编译器fixture、SSR测试和浏览器矩阵，`svelte-check`必须保持0 errors、0 warnings。
+`ui/zui-web`已经包含实际Svelte组件、编译器fixture、SSR测试和浏览器矩阵，`svelte-check`必须保持0 errors、0 warnings。
 
 ## ZUI ICSS验收矩阵
 
@@ -125,7 +125,7 @@ workspace绝对路径
 
 ## SvelteKit覆盖矩阵
 
-`packages/sveltekit/tests/`覆盖：
+`ui/sveltekit/tests/`覆盖：
 
 -静态、参数和wildcard路由优先级；
 -候选route reservation；

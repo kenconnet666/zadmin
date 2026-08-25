@@ -250,7 +250,7 @@ Provider Box Stack Text Button
 ## 目录
 
 ```text
-packages/zui-web/src/lib/
+ui/zui-web/src/lib/
   compiler/   AST分析、绑定、诊断、改写、源码名称
   components/ Provider、Box、Stack、Text、Button
   icss/       Builder、hash、Registry、序列化、Sheet、值和单位

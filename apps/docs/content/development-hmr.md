@@ -82,7 +82,7 @@ Workspace watcher比较 server/client revision集合，忽略只影响发布声�
 
 ## Static Package和Host HMR
 
-修改 `packages/core`、`auth`、`postgres`、`redis`、`oss`、`sveltekit`或 Admin Host代码，属于静态依赖变化：
+修改 `packages/`下的静态服务包、`ui/sveltekit`或 Admin Host代码，属于静态依赖变化：
 
 -SvelteKit触发SSR模块HMR；
 -全局Retained Host串行dispose旧Host；

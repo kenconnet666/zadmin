@@ -29,20 +29,18 @@ export function classifyChange(path, options = {}) {
 		return 'dependencies-changed';
 	}
 	if (
-		/^packages\/svelte-taro\/src\/(?:compiler|plugin|vite)\//u.test(normalized) ||
+		/^ui\/svelte-taro\/src\/(?:compiler|plugin|vite)\//u.test(normalized) ||
 		/^apps\/wechat\/src\/workers\//u.test(normalized) ||
 		normalized === 'apps/wechat/src/app.config.ts' ||
 		normalized === 'apps/wechat/config/index.ts'
 	) {
 		return 'restart-taro';
 	}
-	if (
-		/^packages\/svelte-taro\/src\/(?:module|native|platform|renderer|runtime)\//u.test(normalized)
-	) {
+	if (/^ui\/svelte-taro\/src\/(?:module|native|platform|renderer|runtime)\//u.test(normalized)) {
 		return 'package-incremental';
 	}
 	if (
-		/^packages\/zui-taro\/src\//u.test(normalized) ||
+		/^ui\/zui-taro\/src\//u.test(normalized) ||
 		/^apps\/wechat\/src\//u.test(normalized) ||
 		options.external === true
 	) {
