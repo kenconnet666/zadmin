@@ -7,7 +7,7 @@
 		ZuiProvider,
 		defaultTheme,
 		defineTheme
-	} from '@zadmin/zui-web';
+	} from '@zadmin/zui-svelte';
 
 	const theme = defineTheme({
 		...defaultTheme,

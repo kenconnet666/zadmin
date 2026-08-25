@@ -22,14 +22,14 @@ async function compileSource(
 
 describe('ICSS compiler edge behavior', () => {
 	it('ignores files without a matching value import', async () => {
-		const source = `<script>import * as zui from '@zadmin/zui-web'; const value = zui.icss(theme, s => s.color('red'));</script><div class={value}></div>`;
+		const source = `<script>import * as zui from '@zadmin/zui-svelte'; const value = zui.icss(theme, s => s.color('red'));</script><div class={value}></div>`;
 		expect(await compileSource(source)).toBe(source);
 	});
 
 	it('diagnoses non-inline and invalid factory parameters', async () => {
 		const diagnostics: IcssCompilerDiagnostic[] = [];
 		const source = `<script>
-			import { icss } from '@zadmin/zui-web';
+			import { icss } from '@zadmin/zui-svelte';
 			const factory = s => s.width.px(width);
 			const first = icss(theme, factory);
 			const second = icss(theme, ({ width }) => width);
@@ -43,7 +43,7 @@ describe('ICSS compiler edge behavior', () => {
 
 	it('preserves if, else, logical and ternary guards', async () => {
 		const output = await compileSource(`<script>
-			import { icss } from '@zadmin/zui-web';
+			import { icss } from '@zadmin/zui-svelte';
 			let active = $state(true), width = $state(10), height = $state(20);
 			const value = $derived(icss(theme, s => {
 				if (active) s.width.px(width); else s.height.px(height);
@@ -63,7 +63,7 @@ describe('ICSS compiler edge behavior', () => {
 		const diagnostics: IcssCompilerDiagnostic[] = [];
 		const output = await compileSource(
 			`<script>
-				import { icss } from '@zadmin/zui-web';
+				import { icss } from '@zadmin/zui-svelte';
 				let values = $state([1]), mode = $state('a'), width = $state(2);
 				const value = $derived(icss(theme, s => {
 					for (const item of values) s.width.px(item);
@@ -82,7 +82,7 @@ describe('ICSS compiler edge behavior', () => {
 
 	it('lifts low-level set and raw calls', async () => {
 		const output = await compileSource(`<script>
-			import { icss } from '@zadmin/zui-web';
+			import { icss } from '@zadmin/zui-svelte';
 			let width = $state('10rem'), height = $state('20rem');
 			const value = $derived(icss(theme, s => {
 				s.set('width', width);
@@ -97,7 +97,7 @@ describe('ICSS compiler edge behavior', () => {
 
 	it('does not lift static template, unary and undefined values', async () => {
 		const output = await compileSource(`<script>
-			import { icss } from '@zadmin/zui-web';
+			import { icss } from '@zadmin/zui-svelte';
 			const value = icss(theme, s => {
 				s.width.px(-1);
 				s.content(\`fixed\`);
@@ -112,7 +112,7 @@ describe('ICSS compiler edge behavior', () => {
 	it('uses an existing module script and collision-free helper aliases', async () => {
 		const output = await compileSource(`<script module>const marker = true;</script>
 		<script>
-			import { icss } from '@zadmin/zui-web';
+			import { icss } from '@zadmin/zui-svelte';
 			let __zuiIcssSlot = 1, width = $state(2);
 			const value = $derived(icss(theme, s => s.width.px(width)));
 		</script><div class={value}></div>`);
@@ -125,7 +125,7 @@ describe('ICSS compiler edge behavior', () => {
 	it('recognizes aliased ZUI components but not unknown imports', async () => {
 		const output = await compileSource(`<script>
 			import Unknown from './Unknown.svelte';
-			import { Box as Panel, icss } from '@zadmin/zui-web';
+			import { Box as Panel, icss } from '@zadmin/zui-svelte';
 			let width = $state(2);
 			const value = $derived(icss(theme, s => s.width.px(width)));
 		</script><Panel class={value}></Panel><Unknown class="external"></Unknown>`);
@@ -134,7 +134,7 @@ describe('ICSS compiler edge behavior', () => {
 	});
 
 	it('uses anonymous module IDs when no filename is available', async () => {
-		const source = `<script>import { icss } from '@zadmin/zui-web'; let width=$state(1); const value=$derived(icss(theme,s=>s.width.px(width)));</script><div class={value}></div>`;
+		const source = `<script>import { icss } from '@zadmin/zui-svelte'; let width=$state(1); const value=$derived(icss(theme,s=>s.width.px(width)));</script><div class={value}></div>`;
 		const output = (await preprocess(source, icssPreprocess({ root: 'C:/project' }))).code;
 
 		expect(output).toContain("__zuiIcssOwned('m-");
@@ -144,7 +144,7 @@ describe('ICSS compiler edge behavior', () => {
 		const diagnostics: IcssCompilerDiagnostic[] = [];
 		const output = await compileSource(
 			`<script>
-				import { icss } from '@zadmin/zui-web';
+				import { icss } from '@zadmin/zui-svelte';
 				let width = $state(2);
 				const value = $derived(icss(theme, s => {
 					const [first = width, ...rest] = [width];
@@ -166,7 +166,7 @@ describe('ICSS compiler edge behavior', () => {
 
 	it('applies one compiled binding to every local element use', async () => {
 		const output = await compileSource(`<script>
-			import { icss } from '@zadmin/zui-web';
+			import { icss } from '@zadmin/zui-svelte';
 			let width = $state(2);
 			const value = $derived(icss(theme, s => s.width.px(width)));
 		</script><div class={value}></div><section class={['base', value]}></section>`);
@@ -177,7 +177,7 @@ describe('ICSS compiler edge behavior', () => {
 
 	it('leaves computed, spread and unknown carrier calls on runtime fallback', async () => {
 		const output = await compileSource(`<script>
-			import { icss } from '@zadmin/zui-web';
+			import { icss } from '@zadmin/zui-svelte';
 			let width = $state(2), values = $state([1, 2]);
 			const value = $derived(icss(theme, s => {
 				s['width'](width);
@@ -193,7 +193,7 @@ describe('ICSS compiler edge behavior', () => {
 	it('diagnoses an invalid direct class factory and ignores member property references', async () => {
 		const diagnostics: IcssCompilerDiagnostic[] = [];
 		const source = `<script>
-			import { icss } from '@zadmin/zui-web';
+			import { icss } from '@zadmin/zui-svelte';
 			const factory = s => s.width.px(width);
 			const value = icss(theme, s => s.height.px(height));
 			const holder = { value };
@@ -206,7 +206,7 @@ describe('ICSS compiler edge behavior', () => {
 
 	it('supports function factories and deeply nested builder callbacks', async () => {
 		const output = await compileSource(`<script>
-			import { icss } from '@zadmin/zui-web';
+			import { icss } from '@zadmin/zui-svelte';
 			let opacity = $state(0.5);
 			const value = $derived(icss(theme, function (s) {
 				s._hover(h => h._focus(f => f.opacity(opacity)));
@@ -219,7 +219,7 @@ describe('ICSS compiler edge behavior', () => {
 
 	it('handles missing set values and non-arrow nested callbacks conservatively', async () => {
 		const output = await compileSource(`<script>
-			import { icss } from '@zadmin/zui-web';
+			import { icss } from '@zadmin/zui-svelte';
 			let width = $state(2);
 			const value = $derived(icss(theme, s => {
 				s.set('width');
@@ -235,7 +235,7 @@ describe('ICSS compiler edge behavior', () => {
 		const diagnostics: IcssCompilerDiagnostic[] = [];
 		const output = await compileSource(
 			`<script>
-				import { icss } from '@zadmin/zui-web';
+				import { icss } from '@zadmin/zui-svelte';
 				let color = $state('red'), width = $state(2);
 				const value = $derived(icss(theme, s => {
 					s._selector('& > span', child => child.color(color));

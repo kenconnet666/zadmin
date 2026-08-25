@@ -64,7 +64,7 @@ try {
 	await mkdir(tarballRoot, { recursive: true });
 	for (const name of [
 		'@zadmin/zui-core',
-		'@zadmin/zui-web',
+		'@zadmin/zui-svelte',
 		'@zadmin/zui-taro',
 		'@zadmin/svelte-taro'
 	]) {
@@ -99,7 +99,7 @@ try {
 					'@zadmin/svelte-taro': tarball('@zadmin/svelte-taro'),
 					'@zadmin/zui-core': tarball('@zadmin/zui-core'),
 					'@zadmin/zui-taro': tarball('@zadmin/zui-taro'),
-					'@zadmin/zui-web': tarball('@zadmin/zui-web'),
+					'@zadmin/zui-svelte': tarball('@zadmin/zui-svelte'),
 					svelte: 'https://pkg.svelte.dev/svelte/c/eb7532dd70fb11b36258347c44cf3910d244f987'
 				},
 				devDependencies: {
@@ -120,7 +120,7 @@ try {
 	);
 	await write(
 		resolve(fixtureRoot, 'pnpm-workspace.yaml'),
-		`packages:\n  - .\n\nallowBuilds:\n  '@parcel/watcher': true\n  '@swc/core': true\n  '@tarojs/binding': true\n  '@tarojs/cli': false\n  core-js: false\n  esbuild: true\n\noverrides:\n  '@tarojs/components>swiper': 12.1.2\n  '@tarojs/helper>esbuild': 0.25.12\n  '@zadmin/svelte-taro': '${tarball('@zadmin/svelte-taro')}'\n  '@zadmin/zui-core': '${tarball('@zadmin/zui-core')}'\n  '@zadmin/zui-taro': '${tarball('@zadmin/zui-taro')}'\n  '@zadmin/zui-web': '${tarball('@zadmin/zui-web')}'\n`
+		`packages:\n  - .\n\nallowBuilds:\n  '@parcel/watcher': true\n  '@swc/core': true\n  '@tarojs/binding': true\n  '@tarojs/cli': false\n  core-js: false\n  esbuild: true\n\noverrides:\n  '@tarojs/components>swiper': 12.1.2\n  '@tarojs/helper>esbuild': 0.25.12\n  '@zadmin/svelte-taro': '${tarball('@zadmin/svelte-taro')}'\n  '@zadmin/zui-core': '${tarball('@zadmin/zui-core')}'\n  '@zadmin/zui-taro': '${tarball('@zadmin/zui-taro')}'\n  '@zadmin/zui-svelte': '${tarball('@zadmin/zui-svelte')}'\n`
 	);
 	await write(
 		resolve(fixtureRoot, 'config/index.ts'),
@@ -171,7 +171,7 @@ void route;
 	);
 	await write(
 		resolve(fixtureRoot, 'src/types.ts'),
-		`import type { BoxProps as WebBoxProps } from '@zadmin/zui-web';
+		`import type { BoxProps as WebBoxProps } from '@zadmin/zui-svelte';
 import type { NativeElementProps } from '@zadmin/svelte-taro/native';
 const web: WebBoxProps = {};
 const camera: Pick<NativeElementProps<'camera'>, 'devicePosition'> = { devicePosition: 'back' };
@@ -249,7 +249,7 @@ void [web, camera];
 	const report = {
 		checkedAt: '2026-08-25',
 		durationMs: Math.round(performance.now() - started),
-		packages: ['zui-core', 'zui-web', 'zui-taro', 'svelte-taro'],
+		packages: ['zui-core', 'zui-svelte', 'zui-taro', 'svelte-taro'],
 		productionFiles: outputFiles.length,
 		runtimes: { svelte: svelteVersions[0], taro: runtimeVersions[0] },
 		status: 'passed'

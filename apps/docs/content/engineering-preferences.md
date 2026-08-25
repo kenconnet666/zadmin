@@ -42,7 +42,7 @@
 
 ## ZUI与样式
 
-- `@zadmin/zui-web`的`icss()`公开层永远只返回class字符串，不返回`{ class, style }`，也不要求action、attachment或`css` prop。
+- `@zadmin/zui-svelte`的`icss()`公开层永远只返回class字符串，不返回`{ class, style }`，也不要求action、attachment或`css` prop。
 - Svelte编译器优化是性能路径，普通TypeScript运行时必须仍然功能正确。
 - 动态叶子值进入元素inline CSS自定义属性；结构、selector和theme token进入确定性CSS rule。
 - 不执行用户模块来静态提取CSS，不引入WyW、Babel或SWC编译体系。
@@ -53,7 +53,7 @@
 Taro不是把Web CSS API原样搬过去：
 
 - `zui-core`只保存Theme、Token、StyleProgram、dynamic slot和设计Props；不能出现Svelte、Taro、DOM、wx或Node依赖。
-- `zui-web`与`zui-taro`允许各自拥有薄Svelte模板，不能互相依赖；至少三个模板被真实证明相同前，不提取共享Svelte源码。
+- `zui-svelte`与`zui-taro`允许各自拥有薄Svelte模板，不能互相依赖；至少三个模板被真实证明相同前，不提取共享Svelte源码。
 - Taro ICSS只承诺可诊断子集：平面declaration、token、px/percent/显式rpx、稳定class、静态WXSS和动态叶子inline style。浏览器selector/CSSOM语义不能静默假装支持。
 - 动态Taro叶子每轮只更新style值，不生成新class或WXSS rule；空值跳过，数值必须finite。
 

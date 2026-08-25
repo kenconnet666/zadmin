@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { resolve } from '$app/paths';
-	import { ZuiProvider } from '@zadmin/zui-web';
+	import { ZuiProvider } from '@zadmin/zui-svelte';
 	import './layout.css';
 
 	let { children } = $props();

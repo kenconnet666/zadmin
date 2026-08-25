@@ -1,4 +1,4 @@
-export const ZUI_PACKAGE_NAME = '@zadmin/zui-web';
+export const ZUI_PACKAGE_NAME = '@zadmin/zui-svelte';
 
 export { Box } from './components/box/index.js';
 export type { BoxProps } from './components/box/index.js';

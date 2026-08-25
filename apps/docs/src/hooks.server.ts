@@ -1,3 +1,3 @@
-import { icssHandle } from '@zadmin/zui-web/sveltekit';
+import { icssHandle } from '@zadmin/zui-svelte/sveltekit';
 
 export const handle = icssHandle();

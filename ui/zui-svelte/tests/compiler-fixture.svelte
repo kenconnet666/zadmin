@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { defaultTheme, icss } from '@zadmin/zui-web';
+	import { defaultTheme, icss } from '@zadmin/zui-svelte';
 
 	let width = $state(320);
 	const panelClass = $derived(

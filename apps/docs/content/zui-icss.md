@@ -1,10 +1,10 @@
 # ZUI ICSS 生产架构
 
-本文是 `@zadmin/zui-web` 第一版实现合同。目标是提供强类型、运行时 CSS、Svelte 编译优化和单一 class API；后续实现不得重新引入公开的 `{ class, style }`、`css` prop 或 action API。
+本文是 `@zadmin/zui-svelte` 第一版实现合同。目标是提供强类型、运行时 CSS、Svelte 编译优化和单一 class API；后续实现不得重新引入公开的 `{ class, style }`、`css` prop 或 action API。
 
 ## 实现状态
 
-`@zadmin/zui-web@0.1.0`已经于2026-08-24完成本文范围和生产验收。当前实现包含Runtime、Compiler、SvelteKit SSR/CSP/HMR、Provider/Box/Stack/Text/Button、Docs和Storybook；验收数据见[测试与验收](./testing.md)。
+`@zadmin/zui-svelte@0.1.0`已经于2026-08-24完成本文范围和生产验收。当前实现包含Runtime、Compiler、SvelteKit SSR/CSP/HMR、Provider/Box/Stack/Text/Button、Docs和Storybook；验收数据见[测试与验收](./testing.md)。
 
 ## 范围
 
@@ -250,7 +250,7 @@ Provider Box Stack Text Button
 ## 目录
 
 ```text
-ui/zui-web/src/lib/
+ui/zui-svelte/src/lib/
   compiler/   AST分析、绑定、诊断、改写、源码名称
   components/ Provider、Box、Stack、Text、Button
   icss/       Builder、hash、Registry、序列化、Sheet、值和单位
@@ -262,10 +262,10 @@ ui/zui-web/src/lib/
 公开 subpath：
 
 ```text
-@zadmin/zui-web
-@zadmin/zui-web/compiler
-@zadmin/zui-web/sveltekit
-@zadmin/zui-web/internal   仅编译产物使用
+@zadmin/zui-svelte
+@zadmin/zui-svelte/compiler
+@zadmin/zui-svelte/sveltekit
+@zadmin/zui-svelte/internal   仅编译产物使用
 ```
 
 compiler/server 代码进入浏览器 bundle 必须为 0 B。

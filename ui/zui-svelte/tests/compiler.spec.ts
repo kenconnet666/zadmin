@@ -21,7 +21,7 @@ async function transform(
 describe('ICSS Svelte preprocessor', () => {
 	it('lifts direct identifier values from a local derived class', async () => {
 		const output = await transform(`<script lang="ts">
-			import { defaultTheme, icss } from '@zadmin/zui-web';
+			import { defaultTheme, icss } from '@zadmin/zui-svelte';
 			let width = $state(320);
 			const panelClass = $derived(icss(defaultTheme, (style) => {
 				style.width.px(width);
@@ -41,7 +41,7 @@ describe('ICSS Svelte preprocessor', () => {
 
 	it('supports direct class calls and anonymous complex expressions', async () => {
 		const output = await transform(`<script>
-			import { defaultTheme, icss as css } from '@zadmin/zui-web';
+			import { defaultTheme, icss as css } from '@zadmin/zui-svelte';
 			let width = $state(20);
 			let zoom = $state(2);
 		</script>
@@ -53,7 +53,7 @@ describe('ICSS Svelte preprocessor', () => {
 
 	it('preserves if guards around nullable expressions', async () => {
 		const output = await transform(`<script lang="ts">
-			import { defaultTheme, icss } from '@zadmin/zui-web';
+			import { defaultTheme, icss } from '@zadmin/zui-svelte';
 			let item = $state<{ width: number } | undefined>();
 			const panel = $derived(icss(defaultTheme, (s) => {
 				if (item) s.width.px(item.width);
@@ -67,7 +67,7 @@ describe('ICSS Svelte preprocessor', () => {
 
 	it('lifts nested selector values and class arrays', async () => {
 		const output = await transform(`<script>
-			import { defaultTheme, icss } from '@zadmin/zui-web';
+			import { defaultTheme, icss } from '@zadmin/zui-svelte';
 			let opacity = $state(0.5);
 			const panel = $derived(icss(defaultTheme, (s) => {
 				s._hover((hover) => hover.opacity(opacity));
@@ -82,7 +82,7 @@ describe('ICSS Svelte preprocessor', () => {
 	it('falls back when a value depends on a factory-local binding', async () => {
 		const diagnostics: IcssCompilerDiagnostic[] = [];
 		const source = `<script>
-			import { defaultTheme, icss } from '@zadmin/zui-web';
+			import { defaultTheme, icss } from '@zadmin/zui-svelte';
 			let width = $state(20);
 			const panel = $derived(icss(defaultTheme, (s) => {
 				const doubled = width * 2;
@@ -102,7 +102,7 @@ describe('ICSS Svelte preprocessor', () => {
 		const diagnostics: IcssCompilerDiagnostic[] = [];
 		const source = `<script>
 			import Button from './Button.svelte';
-			import { defaultTheme, icss } from '@zadmin/zui-web';
+			import { defaultTheme, icss } from '@zadmin/zui-svelte';
 			let width = $state(20);
 			const panel = $derived(icss(defaultTheme, (s) => s.width.px(width)));
 		</script>
@@ -115,7 +115,7 @@ describe('ICSS Svelte preprocessor', () => {
 
 	it('forwards hidden variables to known ZUI component roots', async () => {
 		const output = await transform(`<script>
-			import { Button, defaultTheme, icss } from '@zadmin/zui-web';
+			import { Button, defaultTheme, icss } from '@zadmin/zui-svelte';
 			let width = $state(20);
 			const panel = $derived(icss(defaultTheme, (s) => s.width.px(width)));
 		</script>
@@ -127,7 +127,7 @@ describe('ICSS Svelte preprocessor', () => {
 
 	it('optimizes dynamic svelte:element roots', async () => {
 		const output = await transform(`<script>
-			import { defaultTheme, icss } from '@zadmin/zui-web';
+			import { defaultTheme, icss } from '@zadmin/zui-svelte';
 			let as = $state('span'), color = $state('red');
 			const value = $derived(icss(defaultTheme, s => s.color(color)));
 		</script><svelte:element this={as} class={value}></svelte:element>`);
@@ -137,7 +137,7 @@ describe('ICSS Svelte preprocessor', () => {
 	});
 
 	it('can disable inline variables for strict CSP', async () => {
-		const source = `<script>import { icss } from '@zadmin/zui-web';</script><div class={icss(theme, s => s.width.px(width))}></div>`;
+		const source = `<script>import { icss } from '@zadmin/zui-svelte';</script><div class={icss(theme, s => s.width.px(width))}></div>`;
 		const result = await preprocess(source, icssPreprocess({ dynamicValues: 'class-rules' }));
 
 		expect(result.code).toBe(source);

@@ -4,7 +4,7 @@ import { icssPreprocess } from './src/lib/compiler/preprocess.ts';
 const config = {
 	preprocess: [
 		icssPreprocess({
-			modules: ['@zadmin/zui-web', '../../icss/runtime.js'],
+			modules: ['@zadmin/zui-svelte', '../../icss/runtime.js'],
 			root: import.meta.dirname
 		})
 	]

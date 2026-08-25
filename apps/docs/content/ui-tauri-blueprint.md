@@ -241,7 +241,7 @@ ui/zui-taro/src/
 
 需要更新的已知范围至少包括：
 
-- 30 个当前源码、测试、应用和文档文件；
+- 32 个当前源码、测试、应用和文档文件，共 109 处旧名称引用；
 - `apps/admin` imports 与 Vite preprocess；
 - `apps/docs` imports、Storybook 与 Svelte config；
 - `ui/zui-svelte` 自引用和 compiler 默认 module 名；
@@ -596,6 +596,11 @@ capabilities → 哪些 Window/WebView 获得权限
 - updater 私钥只在 CI secret 中；
 - updater 签名校验不可关闭；
 - custom Rust command 必须在 capability 和参数校验中同时约束。
+- `tauri-specta`不会生成 ACL；所有自定义 command 必须在`build.rs`的`tauri_build::AppManifest::commands`登记，再只向`main`窗口授予生成的`allow-*` permission；
+- 不使用`core:default`、`notification:default`或`opener:default`，第一阶段逐命令列出最小 permission；
+- Opener 第一阶段只开放明确域名的 HTTPS URL，不承诺打开任意 Dialog 所选本地路径；
+- Dialog 动态文件 scope 只在当前进程有效，持久化 scope 属于第二阶段；
+- 生产 capability 显式列入`tauri.conf.json`，不依赖 capabilities 目录的自动全量启用。
 
 ## 15. 强类型策略
 
@@ -609,6 +614,10 @@ Rust 合同：
 4. error 使用 `thiserror` 和 `#[serde(tag = "type", content = "data")]` 生成可判别联合；
 5. `Builder::<tauri::Wry>` 集中收集 commands/events，并同时生成 invoke handler；
 6. `specta_typescript::Typescript` 生成 `apps/desktop/src/lib/generated/tauri.ts`。
+7. `Builder::commands()`和`Builder::events()`都只能在中央 builder 各调用一次，因为重复调用会覆盖此前集合；
+8. typed event 必须在 Tauri `setup`中调用`mount_events()`；
+9. 保留默认 serde serialize/deserialize phase，不调用`disable_serde_phases()`；
+10. 首版使用单一`Layout::FlatFile`，导出后由仓库 Prettier 格式化。
 
 TypeScript 合同：
 
@@ -619,6 +628,9 @@ TypeScript 合同：
 5. `DesktopPlatform` facade 统一处理 availability、权限、错误和资源生命周期；
 6. 只有自定义 Rust/Windows 能力经过 `tauri-specta`；
 7. Rust 与 TypeScript 共享 golden fixture 验证序列化边界。
+8. facade 必须验证 generated typed error 的判别字段；Tauri transport error 可能不是声明的 Rust error，必须归一化为`DesktopTransportError`；
+9. IPC DTO 不直接使用可能损失精度的`u64`、`i64`、`u128`或`i128`，大整数使用字符串 newtype；
+10. fake command client 使用`satisfies typeof commands`，不能复制生成签名。
 
 生成门禁：
 
@@ -742,7 +754,7 @@ ui/zui-web       → ui/zui-svelte
 @zadmin/zui-web  → @zadmin/zui-svelte
 ```
 
-同步更新全部 30 个已知引用文件、compiler 默认 module 名、package metadata、fixtures 和文档。
+同步更新全部 32 个已知引用文件中的 109 处旧名称、compiler 默认 module 名、package metadata、fixtures 和文档。
 
 提交：
 
@@ -805,8 +817,8 @@ docs(desktop): finalize tauri handoff
 
 - `pnpm-workspace.yaml`；
 - `pnpm-lock.yaml`；
-- 5 个移动包的 package repository/homepage；
-- `@zadmin/zui-web` 的 30 个已知引用文件；
+- 4 个已有 package repository/homepage（`@zadmin/sveltekit`当前没有这些元数据）；
+- `@zadmin/zui-web` 的 32 个已知引用文件、109 处旧名称；
 - `apps/admin` Vite、hooks 和 package；
 - `apps/docs` Svelte config、hooks、Storybook、routes 和 content；
 - `apps/wechat` supervisor、file-policy 和 tests；

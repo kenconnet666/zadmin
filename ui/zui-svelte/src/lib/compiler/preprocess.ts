@@ -22,8 +22,8 @@ function chooseLocal(source: string, base: string): string {
 
 export function icssPreprocess(options: IcssPreprocessOptions = {}): PreprocessorGroup {
 	const dynamicValues = options.dynamicValues ?? 'inline-vars';
-	const internalModule = options.internalModule ?? '@zadmin/zui-web/internal';
-	const modules = new Set(options.modules ?? ['@zadmin/zui-web']);
+	const internalModule = options.internalModule ?? '@zadmin/zui-svelte/internal';
+	const modules = new Set(options.modules ?? ['@zadmin/zui-svelte']);
 	const root = path.resolve(options.root ?? process.cwd());
 
 	return {
