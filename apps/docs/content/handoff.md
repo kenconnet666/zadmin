@@ -96,6 +96,7 @@ GET /__zadmin/plugins/installed
 ```text
 apps/
   admin/
+  desktop/
   docs/
   etl/
   wechat/
@@ -177,6 +178,9 @@ plugin.ts
 | Taro module/native/testing  | `ui/svelte-taro/src/module/`、`native/`、`testing/`    |
 | ZUI Taro                    | `ui/zui-taro/src/`                                     |
 | Tauri 系统能力              | `ui/tauri/src/api/`、`runtime/`、`testing/`            |
+| Tauri Svelte组件            | `ui/tauri/src/components/`                             |
+| Windows桌面宿主             | `apps/desktop/src/`、`src-tauri/`                      |
+| tauri-specta bindings       | `apps/desktop/src/lib/generated/tauri.ts`              |
 | WeChat supervisor           | `apps/wechat/config/supervisor.mjs`                    |
 | 微信生产验收                | `apps/docs/content/wechat-production-acceptance.md`    |
 

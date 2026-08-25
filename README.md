@@ -7,6 +7,7 @@ ZAdmin 是一个以 SvelteKit、TypeScript 和 pnpm workspace 为基础的全栈
 ```text
 apps/
   admin/       管理宿主，同时装载静态能力与动态插件
+  desktop/     Tauri 2 + SvelteKit SPA 的 Windows 11 x64 宿主
   etl/         独立 ETL 应用
   docs/        组件、示例与开发文档应用
   wechat/      Svelte→Taro 微信小程序宿主与验收应用
@@ -51,6 +52,7 @@ pnpm dev:admin
 ```powershell
 pnpm dev:etl
 pnpm dev:docs
+pnpm dev:desktop
 pnpm dev:wechat
 ```
 

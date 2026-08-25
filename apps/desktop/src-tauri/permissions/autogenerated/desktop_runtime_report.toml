@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-desktop-runtime-report"
+description = "Enables the desktop_runtime_report command without any pre-configured scope."
+commands.allow = ["desktop_runtime_report"]
+
+[[permission]]
+identifier = "deny-desktop-runtime-report"
+description = "Denies the desktop_runtime_report command without any pre-configured scope."
+commands.deny = ["desktop_runtime_report"]

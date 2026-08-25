@@ -11,6 +11,7 @@ ZAdmin是一个 pnpm workspace中的多应用、可复用 Package和动态 Plugi
 ```text
 apps/
   admin/       宿主应用和插件控制面
+  desktop/     Tauri 2 + SvelteKit SPA 的 Windows 11 x64 能力宿主
   etl/         独立 ETL 应用，不是动态插件
   docs/        ZUI/文档/演示应用
   wechat/      Svelte→Taro 微信小程序宿主、能力实验室和验收入口
@@ -56,6 +57,8 @@ apps/wechat           ──→ zui-taro + svelte-taro
 - `svelte-taro`不依赖ZUI。它的`platform.raw`保留完整Taro类型，managed层只包装权限、错误、资源owner和服务端安全边界。
 - 微信端前后端不拆成两个项目；小程序包只包含客户端代码，登录code兑换、手机号兑换、支付签名/回调等仍由现有服务端package/plugin负责。
 - 微信业务module在构建时静态合入小程序。开发时可以监听外部package realpath，生产安装/升级后必须重新构建、审核和发布，不能从网络加载可执行JavaScript。
+
+桌面端复用`@zadmin/zui-svelte`，通过`@zadmin/tauri`的强类型 facade调用系统能力。SvelteKit仅输出本地SPA静态文件；自定义Rust command/event/Channel由`tauri-specta`生成TypeScript bindings，正式应用不启动Node、SSR、sidecar或本地HTTP后端。
 
 ## Svelte Taro编译与运行时
 

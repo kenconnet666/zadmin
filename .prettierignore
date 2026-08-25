@@ -10,5 +10,7 @@ bun.lockb
 **/dist/
 **/static/
 **/storybook-static/
+**/target/
+**/gen/schemas/
 **/src/lib/paraglide/
 **/project.inlang/cache/

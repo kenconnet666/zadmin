@@ -1,0 +1,42 @@
+{
+	"name": "@zadmin/desktop",
+	"private": true,
+	"version": "0.1.0",
+	"type": "module",
+	"scripts": {
+		"dev": "vite dev --host 127.0.0.1 --port 5173 --strictPort",
+		"dev:web": "vite dev --host 127.0.0.1 --port 5173 --strictPort",
+		"build": "vite build",
+		"build:web": "vite build",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"test": "vitest --run",
+		"bindings": "pnpm build:web && cargo test --manifest-path src-tauri/Cargo.toml --lib --no-default-features --features bindings export_bindings -- --nocapture && pnpm exec prettier --write src/lib/generated/tauri.ts",
+		"bindings:check": "pnpm bindings && git diff --exit-code -- src/lib/generated/tauri.ts",
+		"rust:check": "cargo check --manifest-path src-tauri/Cargo.toml --all-targets",
+		"rust:clippy": "cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings",
+		"rust:fmt": "cargo fmt --manifest-path src-tauri/Cargo.toml --check",
+		"rust:test": "cargo test --manifest-path src-tauri/Cargo.toml --lib --no-default-features --features bindings",
+		"tauri": "tauri",
+		"tauri:dev": "tauri dev",
+		"tauri:build": "tauri build --target x86_64-pc-windows-msvc",
+		"tauri:build:debug": "tauri build --debug --no-bundle --target x86_64-pc-windows-msvc"
+	},
+	"dependencies": {
+		"@tauri-apps/api": "catalog:desktop",
+		"@zadmin/tauri": "workspace:^",
+		"@zadmin/zui-svelte": "workspace:^"
+	},
+	"devDependencies": {
+		"@sveltejs/adapter-static": "catalog:desktop",
+		"@sveltejs/kit": "catalog:",
+		"@sveltejs/vite-plugin-svelte": "catalog:",
+		"@tauri-apps/cli": "catalog:desktop",
+		"@types/node": "catalog:",
+		"@vitest/coverage-v8": "catalog:",
+		"svelte": "catalog:",
+		"svelte-check": "catalog:",
+		"typescript": "catalog:",
+		"vite": "catalog:",
+		"vitest": "catalog:"
+	}
+}

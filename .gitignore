@@ -13,6 +13,8 @@ node_modules
 **/dist/
 **/artifacts/
 **/coverage/
+**/target/
+**/gen/schemas/
 **/.vitest-attachments/
 **/tests/__screenshots__/
 
