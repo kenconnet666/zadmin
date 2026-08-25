@@ -111,6 +111,7 @@ packages/
 ui/
   sveltekit/
   svelte-taro/
+  tauri/
   zui-core/
   zui-taro/
   zui-svelte/
@@ -175,6 +176,7 @@ plugin.ts
 | WeChat安全Worker            | `apps/wechat/src/workers/safe-probe.js`                |
 | Taro module/native/testing  | `ui/svelte-taro/src/module/`、`native/`、`testing/`    |
 | ZUI Taro                    | `ui/zui-taro/src/`                                     |
+| Tauri 系统能力              | `ui/tauri/src/api/`、`runtime/`、`testing/`            |
 | WeChat supervisor           | `apps/wechat/config/supervisor.mjs`                    |
 | 微信生产验收                | `apps/docs/content/wechat-production-acceptance.md`    |
 

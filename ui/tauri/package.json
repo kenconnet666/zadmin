@@ -1,0 +1,97 @@
+{
+	"name": "@zadmin/tauri",
+	"version": "0.1.0",
+	"description": "Typed Tauri system capabilities and Svelte desktop integrations for ZAdmin.",
+	"type": "module",
+	"sideEffects": [
+		"**/*.svelte"
+	],
+	"engines": {
+		"node": ">=22.0.0"
+	},
+	"files": [
+		"dist",
+		"README.md"
+	],
+	"exports": {
+		".": {
+			"types": "./src/index.ts",
+			"import": "./src/index.ts"
+		},
+		"./testing": {
+			"types": "./src/testing/index.ts",
+			"import": "./src/testing/index.ts"
+		}
+	},
+	"publishConfig": {
+		"access": "public",
+		"exports": {
+			".": {
+				"types": "./dist/index.d.ts",
+				"import": "./dist/index.js"
+			},
+			"./testing": {
+				"types": "./dist/testing/index.d.ts",
+				"import": "./dist/testing/index.js"
+			}
+		}
+	},
+	"scripts": {
+		"build": "svelte-package --input src --output dist",
+		"check": "tsc -p tsconfig.json --noEmit",
+		"test": "vitest --run",
+		"test:coverage": "vitest --run --coverage"
+	},
+	"keywords": [
+		"desktop",
+		"svelte",
+		"tauri",
+		"typescript",
+		"windows"
+	],
+	"homepage": "https://github.com/kenconnet666/zadmin/tree/master/ui/tauri",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/kenconnet666/zadmin.git",
+		"directory": "ui/tauri"
+	},
+	"bugs": {
+		"url": "https://github.com/kenconnet666/zadmin/issues"
+	},
+	"dependencies": {
+		"@tauri-apps/api": "catalog:desktop",
+		"@tauri-apps/plugin-clipboard-manager": "catalog:desktop",
+		"@tauri-apps/plugin-dialog": "catalog:desktop",
+		"@tauri-apps/plugin-fs": "catalog:desktop",
+		"@tauri-apps/plugin-log": "catalog:desktop",
+		"@tauri-apps/plugin-notification": "catalog:desktop",
+		"@tauri-apps/plugin-opener": "catalog:desktop",
+		"@tauri-apps/plugin-os": "catalog:desktop",
+		"@tauri-apps/plugin-process": "catalog:desktop",
+		"@tauri-apps/plugin-store": "catalog:desktop",
+		"@tauri-apps/plugin-window-state": "catalog:desktop"
+	},
+	"peerDependencies": {
+		"@zadmin/zui-svelte": "^0.1.0",
+		"svelte": ">=5.56.0 <6"
+	},
+	"peerDependenciesMeta": {
+		"@zadmin/zui-svelte": {
+			"optional": true
+		},
+		"svelte": {
+			"optional": true
+		}
+	},
+	"devDependencies": {
+		"@sveltejs/package": "catalog:",
+		"@types/node": "catalog:",
+		"@vitest/coverage-v8": "catalog:",
+		"@zadmin/zui-svelte": "workspace:^",
+		"svelte": "catalog:",
+		"svelte-check": "catalog:",
+		"typescript": "catalog:",
+		"vite": "catalog:",
+		"vitest": "catalog:"
+	}
+}

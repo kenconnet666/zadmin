@@ -25,6 +25,7 @@ packages/
 
 ui/
   sveltekit/   动态服务端路由、浏览器页面 Runtime
+  tauri/       Tauri 系统 API、typed result、资源生命周期和 fake driver
   zui-core/    平台无关的主题、Token、ICSS 和设计契约
   zui-svelte/     Web UI 库
   zui-taro/    Taro UI 库和严格 ICSS 子集
