@@ -24,9 +24,9 @@
 			"import": "./src/compiler/index.ts"
 		},
 		"./internal": {
-			"types": "./src/internal.ts",
-			"svelte": "./src/internal.ts",
-			"import": "./src/internal.ts"
+			"types": "./src/runtime/internal.ts",
+			"svelte": "./src/runtime/internal.ts",
+			"import": "./src/runtime/internal.ts"
 		}
 	},
 	"publishConfig": {
@@ -42,9 +42,9 @@
 				"import": "./dist/compiler/index.js"
 			},
 			"./internal": {
-				"types": "./dist/internal.d.ts",
-				"svelte": "./dist/internal.js",
-				"import": "./dist/internal.js"
+				"types": "./dist/runtime/internal.d.ts",
+				"svelte": "./dist/runtime/internal.js",
+				"import": "./dist/runtime/internal.js"
 			}
 		}
 	},

@@ -22,9 +22,9 @@
 			"import": "./src/lib/compiler/preprocess.ts"
 		},
 		"./internal": {
-			"types": "./src/lib/internal.ts",
-			"svelte": "./src/lib/internal.ts",
-			"import": "./src/lib/internal.ts"
+			"types": "./src/lib/runtime/internal.ts",
+			"svelte": "./src/lib/runtime/internal.ts",
+			"import": "./src/lib/runtime/internal.ts"
 		},
 		"./sveltekit": {
 			"types": "./src/lib/sveltekit/handle.ts",
@@ -44,9 +44,9 @@
 				"import": "./dist/compiler/preprocess.js"
 			},
 			"./internal": {
-				"types": "./dist/internal.d.ts",
-				"svelte": "./dist/internal.js",
-				"import": "./dist/internal.js"
+				"types": "./dist/runtime/internal.d.ts",
+				"svelte": "./dist/runtime/internal.js",
+				"import": "./dist/runtime/internal.js"
 			},
 			"./sveltekit": {
 				"types": "./dist/sveltekit/handle.d.ts",
