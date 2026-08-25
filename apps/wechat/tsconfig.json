@@ -7,5 +7,5 @@
 		"target": "ES2022",
 		"types": ["node", "miniprogram-api-typings"]
 	},
-	"include": ["config/**/*.ts", "src/**/*.ts", "src/**/*.svelte", "tests/**/*.mjs"]
+	"include": ["config/**/*.ts", "src/**/*.ts", "src/**/*.svelte", "tests/**/*.mjs", "tests/**/*.ts"]
 }

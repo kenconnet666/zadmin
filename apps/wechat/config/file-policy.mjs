@@ -30,6 +30,7 @@ export function classifyChange(path, options = {}) {
 	}
 	if (
 		/^packages\/svelte-taro\/src\/(?:compiler|plugin|vite)\//u.test(normalized) ||
+		/^apps\/wechat\/src\/workers\//u.test(normalized) ||
 		normalized === 'apps/wechat/src/app.config.ts' ||
 		normalized === 'apps/wechat/config/index.ts'
 	) {

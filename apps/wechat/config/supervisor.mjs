@@ -168,20 +168,25 @@ export async function runSupervisor() {
 	}
 
 	function startTaro() {
-		const child = spawnNode('taro', taroBin, ['build', '--type', 'weapp', '--watch'], {
-			cwd: appRoot,
-			env: { NODE_ENV: 'development', ZADMIN_WECHAT_SUPERVISED: '1' },
-			onErrorLine(line) {
-				if (/\b(?:error|failed)\b/iu.test(line)) void status.failure(line);
-			},
-			onLine(line) {
-				if (line === 'build started...' && status.snapshot.startedAt === null) {
-					void status.begin(status.snapshot.source ?? 'taro-watch');
+		const child = spawnNode(
+			'taro',
+			taroBin,
+			['build', '--type', 'weapp', '--watch', '--no-check'],
+			{
+				cwd: appRoot,
+				env: { NODE_ENV: 'development', ZADMIN_WECHAT_SUPERVISED: '1' },
+				onErrorLine(line) {
+					if (/\b(?:error|failed)\b/iu.test(line)) void status.failure(line);
+				},
+				onLine(line) {
+					if (line === 'build started...' && status.snapshot.startedAt === null) {
+						void status.begin(status.snapshot.source ?? 'taro-watch');
+					}
+					const match = /^\[zadmin-build\] ([a-z0-9-]+)$/u.exec(line);
+					if (match !== null) void onSuccessfulBuild(match[1]);
 				}
-				const match = /^\[zadmin-build\] ([a-z0-9-]+)$/u.exec(line);
-				if (match !== null) void onSuccessfulBuild(match[1]);
 			}
-		});
+		);
 		children.set('taro', child);
 		child.once('exit', (code) => {
 			children.delete('taro');

@@ -2,7 +2,10 @@ import { defineSvelteConfig } from '@zadmin/svelte-taro';
 
 export default defineSvelteConfig({
 	compiler: { type: 'vite' },
-	copy: { options: {}, patterns: [] },
+	copy: {
+		options: {},
+		patterns: [{ from: 'src/workers', to: 'dist/workers' }]
+	},
 	date: '2026-08-25',
 	defineConstants: {},
 	designWidth: 750,

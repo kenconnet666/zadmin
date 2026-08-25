@@ -23,3 +23,7 @@ void navigation.then(({ eventChannel }) => eventChannel.emit('ready', { accepted
 
 // @ts-expect-error Promise-first navigation does not accept callback-style handlers.
 void platform.navigation.navigateTo({ success: () => undefined, url: '/pages/detail/index' });
+
+const systemSettings = platform.support.system();
+const wifiEnabled: boolean | undefined = systemSettings.wifiEnabled;
+void wifiEnabled;

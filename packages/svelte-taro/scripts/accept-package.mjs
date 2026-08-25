@@ -89,7 +89,7 @@ try {
 				type: 'module',
 				packageManager: 'pnpm@11.22.0',
 				scripts: {
-					build: 'taro build --type weapp',
+					build: 'taro build --type weapp --no-check',
 					check: 'svelte-check --tsconfig ./tsconfig.json && tsc --noEmit'
 				},
 				dependencies: {

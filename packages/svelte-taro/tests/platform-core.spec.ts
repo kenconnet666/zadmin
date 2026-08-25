@@ -150,6 +150,23 @@ describe('WeChat platform core', () => {
 		await scope.dispose();
 	});
 
+	it('reads system support settings without opening system configuration', () => {
+		const { driver, platform } = fixture();
+		driver.setHandler('getSystemSetting', () => ({
+			bluetoothEnabled: true,
+			deviceOrientation: 'portrait',
+			locationEnabled: false,
+			wifiEnabled: true
+		}));
+		expect(platform.support.system()).toEqual({
+			bluetoothEnabled: true,
+			deviceOrientation: 'portrait',
+			locationEnabled: false,
+			wifiEnabled: true
+		});
+		expect(driver.calls).toContain('getSystemSetting');
+	});
+
 	it('defers typed page transitions beyond the native event dispatch boundary', async () => {
 		vi.useFakeTimers();
 		try {

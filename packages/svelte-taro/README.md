@@ -40,6 +40,8 @@ export default defineSvelteConfig({
 
 `defineSvelteConfig` validates the public `framework: 'svelte'` declaration and returns an ordinary Taro-compatible config using official runtime framework `none`; this is required because Taro Doctor rejects unknown framework names before third-party plugins run.
 
+Consumers should invoke Taro builds with `--no-check` after `defineSvelteConfig`. Taro 4.2.1 Doctor downloads its schema at build time and its offline fallback rejects the intentional runtime `framework: 'none'`; the package's deterministic config validation, compiler tests, and real target builds replace that network-dependent gate.
+
 ## Stable entries
 
 - `@zadmin/svelte-taro/module`: typed static business modules, routes, capability declarations, and config diagnostics.

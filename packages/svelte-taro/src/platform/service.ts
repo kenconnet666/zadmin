@@ -240,6 +240,7 @@ export interface WeChatPlatform {
 			descriptor: CapabilityDescriptor,
 			options?: AvailabilityOptions
 		): Promise<AvailabilityResult>;
+		system(): Taro.getSystemSetting.Result;
 	};
 	readonly system: {
 		files(): Taro.FileSystemManager;
@@ -559,6 +560,9 @@ export function createWeChatPlatform(options: {
 					};
 				}
 				return { descriptor, status: 'available' };
+			},
+			system() {
+				return driver.create('getSystemSetting');
 			}
 		},
 		system: {

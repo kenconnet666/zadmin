@@ -8,13 +8,13 @@
 		"node": ">=22.0.0"
 	},
 	"scripts": {
-		"prebuild": "pnpm --filter @zadmin/svelte-taro build && pnpm --filter @zadmin/zui-taro build",
-		"build": "taro build --type weapp",
+		"prebuild": "pnpm --filter @zadmin/svelte-taro build && pnpm --filter @zadmin/zui-taro build && pnpm clean",
+		"build": "taro build --type weapp --no-check && node config/verify-build.mjs",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
 		"clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
 		"dev": "node config/supervisor.mjs",
 		"setup:local": "node config/sync-local.mjs",
-		"test": "node --test tests/*.test.mjs"
+		"test": "node --test tests/*.test.mjs && tsx --test tests/*.spec.ts"
 	},
 	"dependencies": {
 		"@tarojs/components": "catalog:wechat",
@@ -37,6 +37,7 @@
 		"miniprogram-api-typings": "catalog:wechat",
 		"svelte-check": "catalog:",
 		"solid-js": "catalog:wechat",
+		"tsx": "catalog:",
 		"typescript": "catalog:",
 		"vite": "catalog:wechat",
 		"vite-plugin-solid": "catalog:wechat"

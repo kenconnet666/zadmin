@@ -50,6 +50,7 @@ catalog:
   svelte-check: ^4.7.6
   typescript: ^6.0.3
   typescript-eslint: ^8.67.0
+  tsx: ^4.23.12
   vite: ^8.2.2
   vitest: ^4.1.11
   vitest-browser-svelte: ^3.0.0

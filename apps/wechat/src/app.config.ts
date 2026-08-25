@@ -9,6 +9,7 @@ export default {
 			defaultDisplayBlock: true
 		}
 	},
+	workers: 'workers',
 	window: {
 		backgroundTextStyle: 'light',
 		navigationBarBackgroundColor: '#ffffff',

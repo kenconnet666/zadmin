@@ -132,6 +132,9 @@ catalogs:
     tar:
       specifier: ^7.5.22
       version: 7.5.22
+    tsx:
+      specifier: ^4.23.12
+      version: 4.23.12
     typescript:
       specifier: ^6.0.3
       version: 6.0.3
@@ -442,6 +445,9 @@ importers:
       svelte-check:
         specifier: 'catalog:'
         version: 4.7.6(picomatch@4.0.5)(svelte@https://pkg.svelte.dev/svelte/c/eb7532dd70fb11b36258347c44cf3910d244f987(@typescript-eslint/types@8.67.0))(typescript@6.0.3)
+      tsx:
+        specifier: 'catalog:'
+        version: 4.23.12
       typescript:
         specifier: 'catalog:'
         version: 6.0.3

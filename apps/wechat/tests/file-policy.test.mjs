@@ -5,6 +5,7 @@ import { classifyChange } from '../config/file-policy.mjs';
 
 test('classifies source changes into incremental, restart, and dependency boundaries', () => {
 	assert.equal(classifyChange('apps/wechat/src/pages/index/index.svelte'), 'incremental');
+	assert.equal(classifyChange('apps/wechat/src/workers/safe-probe.js'), 'restart-taro');
 	assert.equal(classifyChange('packages/zui-taro/src/components/Button.svelte'), 'incremental');
 	assert.equal(
 		classifyChange('packages/svelte-taro/src/platform/service.ts'),
