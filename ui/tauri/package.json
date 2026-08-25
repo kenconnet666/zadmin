@@ -50,7 +50,8 @@
 		"build": "svelte-package --input src --output dist",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
 		"test": "vitest --run",
-		"test:coverage": "vitest --run --coverage"
+		"test:coverage": "vitest --run --coverage",
+		"test:package": "node scripts/accept-package.mjs"
 	},
 	"keywords": [
 		"desktop",
