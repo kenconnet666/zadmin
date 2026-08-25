@@ -19,5 +19,6 @@
 15. [微信性能基线](./wechat-performance.md)：与同版本 Taro Solid 的三轮交替生产构建对比。
 16. [微信 renderer 验收](./wechat-renderers.md)：WebView 证据和 Skyline 的明确边界。
 17. [微信人工真机/账号验收](./wechat-manual-acceptance.md)：支付、手机号、权限和硬件的安全检查表。
+18. [UI Workspace 与 Tauri 桌面端蓝图](./ui-tauri-blueprint.md)：UI 包迁移、ZUI Svelte 重命名、系统 API、桌面组件层、Win11 x64 和阶段性验收路线。
 
 当前插件协议：`2`。第一阶段只支持自家可信插件，不提供恶意代码沙箱。
