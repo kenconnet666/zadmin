@@ -6,7 +6,7 @@ ZAdmin是一个 pnpm workspace中的多应用、可复用 Package和动态 Plugi
 
 `ui/zui`的样式层使用运行时 ICSS和Svelte编译优化双轨架构。公开调用只返回class字符串；可追踪的Svelte响应式叶子在编译时提升为inline CSS自定义属性，结构CSS由运行时确定性生成和缓存。完整合同见[ZUI ICSS生产架构](./zui-icss.md)。
 
-微信小程序不是 Web renderer 的条件分支。`@zadmin/zui/core`只保存跨目标设计合同，`@zadmin/zui`和`@zadmin/zui-taro`拥有各自薄 Svelte模板；`@zadmin/miniapp`独立承担 Taro framework plugin、compiler、renderer、App/Page runtime、微信平台能力与开发态监督器所需协议。默认生产目标是WebView，Skyline单独分级。
+微信小程序不是 Web renderer 的条件分支。`@zadmin/miniapp`不依赖`@zadmin/zui`，独立拥有移动端Theme、`mcss()`、8个`M*`组件、compiler、App/Page runtime、微信平台能力与开发态监督器。当前迁移阶段仍以Taro renderer作为内部受测后端，公开组件和样式合同已经独立；下一阶段由微信target直接生成原生产物。
 
 ```text
 apps/
@@ -14,7 +14,7 @@ apps/
   desktop/     Tauri 2 + SvelteKit SPA 的 Windows 11 x64 能力宿主
   etl/         独立 ETL 应用，不是动态插件
   docs/        ZUI/文档/演示应用
-  wechat/      Svelte→Taro 微信小程序宿主、能力实验室和验收入口
+  wechat/      Svelte Miniapp 微信宿主、能力实验室和验收入口
 
 packages/
   core/        DI、Plugin Runtime、Artifact、Installer
@@ -27,10 +27,8 @@ packages/
 ui/
   sveltekit/   动态服务端路由、浏览器页面 Runtime
   tauri/       Tauri 系统 API、typed result、资源生命周期和 fake driver
-  zui-core/    平台无关的主题、Token、ICSS 和设计契约
-  zui-svelte/     Web UI 库
-  zui-taro/    Taro UI 库和严格 ICSS 子集
-  miniapp/ Taro framework plugin、renderer/runtime/platform/module/native
+  zui/         浏览器/WebView Theme、ICSS和8个Z*基础组件
+  miniapp/     独立Theme、mcss、8个M*组件、compiler/runtime/platform
 
 plugins/
   approval/    动态业务插件
@@ -41,20 +39,15 @@ plugins/
 ## Web 与微信依赖边界
 
 ```text
-                         @zadmin/zui/core
-                          ▲             ▲
-                          │             │
-               @zadmin/zui   @zadmin/zui-taro
+apps/admin, apps/docs ──→ @zadmin/zui
 
-                               @zadmin/miniapp ──→ Taro 4.2.1
-
-apps/admin, apps/docs ──→ zui-svelte
-apps/wechat           ──→ zui-taro + miniapp
+apps/wechat ──→ @zadmin/miniapp ──→ 微信target
+                    └─ temporary internal Taro backend
 ```
 
-- `zui-core`不依赖Svelte、Taro、DOM、wx、Node或任一renderer。
-- `zui-svelte`和`zui-taro`互不依赖；Web没有因本轮增加组件或公开API。
-- `miniapp`不依赖ZUI。它的`platform.raw`保留完整Taro类型，managed层只包装权限、错误、资源owner和服务端安全边界。
+- `zui`不依赖Miniapp、Taro、wx或任一小程序renderer。
+- `miniapp`不依赖ZUI；Theme、Token、组件Props和样式程序均为移动端独立实现。
+- 过渡期`platform.raw`仍保留完整Taro类型；直接微信target完成后改为`WechatMiniprogram.Wx`并删除Taro生产依赖。
 - 微信端前后端不拆成两个项目；小程序包只包含客户端代码，登录code兑换、手机号兑换、支付签名/回调等仍由现有服务端package/plugin负责。
 - 微信业务module在构建时静态合入小程序。开发时可以监听外部package realpath，生产安装/升级后必须重新构建、审核和发布，不能从网络加载可执行JavaScript。
 

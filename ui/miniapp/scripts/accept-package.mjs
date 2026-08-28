@@ -62,7 +62,7 @@ let succeeded = false;
 const started = performance.now();
 try {
 	await mkdir(tarballRoot, { recursive: true });
-	for (const name of ['@zadmin/zui', '@zadmin/zui-taro', '@zadmin/miniapp']) {
+	for (const name of ['@zadmin/miniapp']) {
 		await runPnpm(['--filter', name, 'build'], workspaceRoot);
 		await runPnpm(['--filter', name, 'pack', '--pack-destination', tarballRoot], workspaceRoot);
 	}
@@ -92,8 +92,6 @@ try {
 					'@tarojs/runtime': '4.2.1',
 					'@tarojs/taro': '4.2.1',
 					'@zadmin/miniapp': tarball('@zadmin/miniapp'),
-					'@zadmin/zui-taro': tarball('@zadmin/zui-taro'),
-					'@zadmin/zui': tarball('@zadmin/zui'),
 					svelte: 'https://pkg.svelte.dev/svelte/c/eb7532dd70fb11b36258347c44cf3910d244f987'
 				},
 				devDependencies: {
@@ -114,11 +112,11 @@ try {
 	);
 	await write(
 		resolve(fixtureRoot, 'pnpm-workspace.yaml'),
-		`packages:\n  - .\n\nallowBuilds:\n  '@parcel/watcher': true\n  '@swc/core': true\n  '@tarojs/binding': true\n  '@tarojs/cli': false\n  core-js: false\n  esbuild: true\n\noverrides:\n  '@tarojs/components>swiper': 12.1.2\n  '@tarojs/helper>esbuild': 0.25.12\n  '@zadmin/miniapp': '${tarball('@zadmin/miniapp')}'\n  '@zadmin/zui-taro': '${tarball('@zadmin/zui-taro')}'\n  '@zadmin/zui': '${tarball('@zadmin/zui')}'\n`
+		`packages:\n  - .\n\nallowBuilds:\n  '@parcel/watcher': true\n  '@swc/core': true\n  '@tarojs/binding': true\n  '@tarojs/cli': false\n  core-js: false\n  esbuild: true\n\noverrides:\n  '@tarojs/components>swiper': 12.1.2\n  '@tarojs/helper>esbuild': 0.25.12\n  '@zadmin/miniapp': '${tarball('@zadmin/miniapp')}'\n`
 	);
 	await write(
 		resolve(fixtureRoot, 'config/index.ts'),
-		`import { defineSvelteConfig } from '@zadmin/miniapp';
+		`import { defineSvelteConfig } from '@zadmin/miniapp/vite';
 export default defineSvelteConfig({
 	compiler: { type: 'vite' }, date: '2026-08-25', designWidth: 750,
 	framework: 'svelte', mini: { enableSourceMap: true }, outputRoot: 'dist',
@@ -145,10 +143,10 @@ export default { navigationBarTitleText: 'External fixture' } satisfies PageConf
 	await write(
 		resolve(fixtureRoot, 'src/pages/index/index.svelte'),
 		`<script lang="ts">
-	import { Button, Stack, Text, ZuiProvider } from '@zadmin/zui-taro';
+	import { MButton, MProvider, MStack, MText } from '@zadmin/miniapp';
 	let count = $state(0);
 </script>
-<ZuiProvider><Stack><Text>count:{count}</Text><Button onclick={() => count += 1}>increment</Button></Stack></ZuiProvider>
+<MProvider><MStack><MText>count:{count}</MText><MButton onclick={() => count += 1}>increment</MButton></MStack></MProvider>
 `
 	);
 	await write(
@@ -165,13 +163,11 @@ void route;
 	);
 	await write(
 		resolve(fixtureRoot, 'src/types.ts'),
-		`import type { ZBoxProps as WebBoxProps } from '@zadmin/zui';
-import { __icssSlot } from '@zadmin/zui/internal';
-import { useZuiTaroTheme } from '@zadmin/zui-taro/internal';
+		`import type { MBoxProps } from '@zadmin/miniapp';
 import type { NativeElementProps } from '@zadmin/miniapp/native';
-const web: WebBoxProps = {};
+const box: MBoxProps = {};
 const camera: Pick<NativeElementProps<'camera'>, 'devicePosition'> = { devicePosition: 'back' };
-void [web, camera, __icssSlot, useZuiTaroTheme];
+void [box, camera];
 `
 	);
 	await write(
@@ -245,7 +241,7 @@ void [web, camera, __icssSlot, useZuiTaroTheme];
 	const report = {
 		checkedAt: '2026-08-25',
 		durationMs: Math.round(performance.now() - started),
-		packages: ['zui', 'zui-taro', 'miniapp'],
+		packages: ['miniapp'],
 		productionFiles: outputFiles.length,
 		runtimes: { svelte: svelteVersions[0], taro: runtimeVersions[0] },
 		status: 'passed'
@@ -256,7 +252,7 @@ void [web, camera, __icssSlot, useZuiTaroTheme];
 	);
 	await write(
 		resolve(workspaceRoot, 'apps/docs/content/wechat-package-acceptance.md'),
-		`# WeChat clean-package acceptance\n\nPassed on 2026-08-25 from an empty system-temporary directory. The fixture installed all four packed libraries, repeated installation with a frozen lockfile, type-checked an external Taro module and native/ZUI types, and produced a Taro WeChat bundle.\n\n- Duration: ${report.durationMs} ms\n- Production files: ${report.productionFiles}\n- Resolved Svelte runtime: ${report.runtimes.svelte}\n- Resolved Taro runtime: ${report.runtimes.taro}\n- No workspace path, fake driver, testing entry, or development build ID was present in emitted JavaScript.\n`
+		`# WeChat clean-package acceptance\n\nThe fixture installed the packed @zadmin/miniapp package, repeated installation with a frozen lockfile, type-checked an external module plus native and M* component types, and produced a WeChat bundle.\n\n- Duration: ${report.durationMs} ms\n- Production files: ${report.productionFiles}\n- Resolved Svelte runtime: ${report.runtimes.svelte}\n- Resolved Taro runtime: ${report.runtimes.taro}\n- No workspace path, fake driver, testing entry, or development build ID was present in emitted JavaScript.\n`
 	);
 	succeeded = true;
 	console.log(JSON.stringify(report));

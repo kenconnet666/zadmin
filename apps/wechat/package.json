@@ -2,13 +2,13 @@
 	"name": "@zadmin/wechat-app",
 	"version": "0.0.0",
 	"private": true,
-	"description": "Svelte-powered Taro host for the ZAdmin WeChat Mini Program.",
+	"description": "Svelte-powered host for the self-contained ZAdmin WeChat Mini Program framework.",
 	"type": "module",
 	"engines": {
 		"node": ">=22.0.0"
 	},
 	"scripts": {
-		"prebuild": "pnpm --filter @zadmin/miniapp build && pnpm --filter @zadmin/zui-taro build && pnpm clean",
+		"prebuild": "pnpm --filter @zadmin/miniapp build && pnpm clean",
 		"build": "taro build --type weapp --no-check && node config/verify-build.mjs",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
 		"clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
@@ -21,7 +21,6 @@
 		"@tarojs/runtime": "catalog:wechat",
 		"@tarojs/taro": "catalog:wechat",
 		"@zadmin/miniapp": "workspace:^",
-		"@zadmin/zui-taro": "workspace:^",
 		"svelte": "https://pkg.svelte.dev/svelte/c/eb7532dd70fb11b36258347c44cf3910d244f987"
 	},
 	"devDependencies": {

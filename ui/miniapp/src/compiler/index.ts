@@ -1,3 +1,6 @@
+import { existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
 import { compile, parse } from 'svelte/compiler';
 
 import { collectNativeElements, createComponentMarkerCode } from './marker.ts';
@@ -12,6 +15,11 @@ const STYLE_SUFFIX = '.zadmin-miniapp.css';
 const COMPONENT_SUFFIX = '.taro-components.tsx';
 const BUILD_ID_SOURCE = 'virtual:zadmin-miniapp-build-id';
 const BUILD_ID_RESOLVED = '\0zadmin-miniapp-build-id';
+const DEFAULT_RENDERER = '@zadmin/miniapp/renderer';
+const rendererJavaScript = fileURLToPath(new URL('../renderer/index.js', import.meta.url));
+const rendererSource = existsSync(rendererJavaScript)
+	? rendererJavaScript
+	: rendererJavaScript.replace(/\.js$/u, '.ts');
 
 export function styleVirtualId(id: string): string {
 	return `${id.split('?')[0]}${STYLE_SUFFIX}`;
@@ -52,6 +60,7 @@ export function createSvelteVitePlugin(options: SvelteCompilerOptions = {}): Sve
 		},
 		resolveId(source) {
 			if (source === BUILD_ID_SOURCE) return BUILD_ID_RESOLVED;
+			if (source === DEFAULT_RENDERER) return rendererSource;
 			if (styles.has(source) || componentMarkers.has(source)) return source;
 			return undefined;
 		},
@@ -69,7 +78,7 @@ export function createSvelteVitePlugin(options: SvelteCompilerOptions = {}): Sve
 			const filename = id.split('?')[0];
 			assertSupportedSvelteSource(source, filename);
 			const dev = isDevelopment();
-			const renderer = options.renderer ?? '@zadmin/miniapp/renderer';
+			const renderer = options.renderer ?? DEFAULT_RENDERER;
 			const ast = parse(source, { filename, modern: true });
 			const elements = collectNativeElements(ast.fragment);
 			const markerId = componentMarkerId(filename);

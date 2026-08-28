@@ -1,20 +1,15 @@
 <script lang="ts">
 	import {
-		Box,
-		Button,
-		CapabilityGate,
-		bindTaroIcss,
-		createIcssSlot,
-		defaultTheme,
-		defaultIcss,
-		defineTheme,
-		PhoneNumberButton,
-		PrivacyConsent,
-		Stack,
-		slotValues,
-		Text,
-		ZuiProvider
-	} from '@zadmin/zui-taro';
+		MBox,
+		MButton,
+		MIcon,
+		MProvider,
+		MStack,
+		MText,
+		defaultMiniappTheme,
+		extendMiniappTheme,
+		rpx
+	} from '@zadmin/miniapp';
 	import { getWeChatPlatform } from '@zadmin/miniapp/platform';
 
 	let count = $state(0);
@@ -22,32 +17,19 @@
 	let details = $state(true);
 	let items = $state([1, 2, 3]);
 	const platform = getWeChatPlatform();
-	const alternateTheme = defineTheme({
-		...defaultTheme,
+	const alternateTheme = extendMiniappTheme(defaultMiniappTheme, {
 		color: {
-			...defaultTheme.color,
 			canvas: '#faf5ff',
 			primary: '#7c3aed',
-			primaryHover: '#6d28d9',
+			primaryActive: '#6d28d9',
 			surface: '#ede9fe'
 		}
 	});
-	const theme = $derived(alternate ? alternateTheme : defaultTheme);
-	const statusWidth = createIcssSlot('status-width', 'statusWidth');
-	const statusOpacity = createIcssSlot('status-opacity', 'statusOpacity');
-	const statusIcss = defaultIcss((css) => {
-		css.width.px(statusWidth);
-		css.opacity(statusOpacity);
+	const theme = $derived(alternate ? alternateTheme : defaultMiniappTheme);
+	const statusStyle = $derived({
+		opacity: count % 2 === 0 ? theme.opacity.active : theme.opacity.opaque,
+		width: rpx(480 + count * 8)
 	});
-	const statusStyle = $derived(
-		bindTaroIcss(
-			statusIcss,
-			slotValues([
-				[statusWidth, 240 + count * 4],
-				[statusOpacity, count % 2 === 0 ? 0.72 : 1]
-			])
-		)
-	);
 
 	function rotateItems(): void {
 		items = items.length < 5 ? [...items, items.length + 1] : [...items.slice(1), items[0]];
@@ -58,43 +40,38 @@
 	}
 </script>
 
-<ZuiProvider {theme}>
-	<Box style={{ backgroundColor: theme.color.canvas, minHeight: '100vh', padding: '24px 16px' }}>
-		<Stack gap="large">
-			<Text size="xlarge" weight="bold">Svelte → Taro → ZUI</Text>
-			<Box id="dynamic-style" class={statusIcss.className} style={statusStyle}>
-				<Text id="status" color="textMuted">runtime ready · count {count}</Text>
-			</Box>
+<MProvider {theme}>
+	<MBox style={{ backgroundColor: theme.color.canvas, minHeight: '100vh', padding: '48rpx 32rpx' }}>
+		<MStack gap="large">
+			<MText size="xlarge" weight="bold">Svelte → Miniapp → WeChat</MText>
+			<MBox id="dynamic-style" style={statusStyle}>
+				<MText id="status" tone="muted">runtime ready · count {count}</MText>
+			</MBox>
 
-			<Stack direction="row" gap="small">
-				<Button id="counter" onclick={() => (count += 1)}>Increment</Button>
-				<Button id="theme" variant="secondary" onclick={() => (alternate = !alternate)}>
+			<MStack direction="row" gap="small" wrap>
+				<MButton id="counter" onclick={() => (count += 1)}>Increment</MButton>
+				<MButton id="theme" variant="secondary" onclick={() => (alternate = !alternate)}>
 					Theme
-				</Button>
-				<Button id="details" variant="ghost" onclick={() => (details = !details)}>Details</Button>
-			</Stack>
+				</MButton>
+				<MButton id="details" variant="ghost" onclick={() => (details = !details)}>Details</MButton>
+			</MStack>
 
-			{#if details}<Text id="details-text">Conditional content is active.</Text>{/if}
+			{#if details}<MText id="details-text">Conditional content is active.</MText>{/if}
 
-			<Stack direction="row" gap="small">
-				{#each items as item (item)}<Text>#{item}</Text>{/each}
-				<Button id="items" size="small" variant="secondary" onclick={rotateItems}
-					>Update list</Button
-				>
-			</Stack>
+			<MStack direction="row" gap="small" align="center">
+				<MIcon name="menu" label="Items" />
+				{#each items as item (item)}<MText>#{item}</MText>{/each}
+				<MButton id="items" size="small" variant="secondary" onclick={rotateItems}>
+					Update list
+				</MButton>
+			</MStack>
 
-			<CapabilityGate status="available">
-				<Text color="textMuted"
-					>Platform flow components are wired; sensitive actions stay manual.</Text
-				>
-			</CapabilityGate>
-			<Button id="capability-lab" variant="secondary" onclick={openCapabilityLab}>
+			<MText tone="muted">
+				Sensitive authorization and payment remain explicit server-coordinated business flows.
+			</MText>
+			<MButton id="capability-lab" variant="secondary" onclick={openCapabilityLab}>
 				Open capability lab
-			</Button>
-			<Stack direction="row" gap="small">
-				<PrivacyConsent id="privacy" size="small" variant="ghost">Privacy flow</PrivacyConsent>
-				<PhoneNumberButton id="phone" size="small" variant="ghost">Phone flow</PhoneNumberButton>
-			</Stack>
-		</Stack>
-	</Box>
-</ZuiProvider>
+			</MButton>
+		</MStack>
+	</MBox>
+</MProvider>

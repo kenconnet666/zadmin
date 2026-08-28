@@ -491,9 +491,6 @@ importers:
       '@zadmin/miniapp':
         specifier: workspace:^
         version: link:../../ui/miniapp
-      '@zadmin/zui-taro':
-        specifier: workspace:^
-        version: link:../../ui/zui-taro
       svelte:
         specifier: https://pkg.svelte.dev/svelte/c/eb7532dd70fb11b36258347c44cf3910d244f987
         version: https://pkg.svelte.dev/svelte/c/eb7532dd70fb11b36258347c44cf3910d244f987(@typescript-eslint/types@8.67.0)
@@ -779,6 +776,9 @@ importers:
 
   ui/miniapp:
     devDependencies:
+      '@sveltejs/package':
+        specifier: 'catalog:'
+        version: 2.5.8(svelte@https://pkg.svelte.dev/svelte/c/eb7532dd70fb11b36258347c44cf3910d244f987(@typescript-eslint/types@8.67.0))(typescript@6.0.3)
       '@tarojs/components':
         specifier: catalog:wechat
         version: 4.2.1(@tarojs/helper@4.2.1(supports-color@7.2.0))(postcss@8.5.26)(rollup@3.30.0)
@@ -983,43 +983,6 @@ importers:
       vitest-browser-svelte:
         specifier: 'catalog:'
         version: 3.0.0(svelte@5.56.10(@typescript-eslint/types@8.67.0))(vitest@4.1.11)
-
-  ui/zui-taro:
-    dependencies:
-      '@zadmin/zui':
-        specifier: workspace:^
-        version: link:../zui
-    devDependencies:
-      '@sveltejs/package':
-        specifier: 'catalog:'
-        version: 2.5.8(svelte@https://pkg.svelte.dev/svelte/c/eb7532dd70fb11b36258347c44cf3910d244f987(@typescript-eslint/types@8.67.0))(typescript@6.0.3)
-      '@tarojs/components':
-        specifier: catalog:wechat
-        version: 4.2.1(@tarojs/helper@4.2.1(supports-color@7.2.0))(postcss@8.5.26)(rollup@3.30.0)
-      '@tarojs/runtime':
-        specifier: catalog:wechat
-        version: 4.2.1
-      '@types/node':
-        specifier: 'catalog:'
-        version: 26.2.0
-      '@vitest/coverage-v8':
-        specifier: 'catalog:'
-        version: 4.1.11(@vitest/browser@4.1.11)(vitest@4.1.11)
-      '@zadmin/miniapp':
-        specifier: workspace:^
-        version: link:../miniapp
-      svelte:
-        specifier: https://pkg.svelte.dev/svelte/c/eb7532dd70fb11b36258347c44cf3910d244f987
-        version: https://pkg.svelte.dev/svelte/c/eb7532dd70fb11b36258347c44cf3910d244f987(@typescript-eslint/types@8.67.0)
-      svelte-check:
-        specifier: 'catalog:'
-        version: 4.7.6(picomatch@4.0.5)(svelte@https://pkg.svelte.dev/svelte/c/eb7532dd70fb11b36258347c44cf3910d244f987(@typescript-eslint/types@8.67.0))(typescript@6.0.3)
-      typescript:
-        specifier: 'catalog:'
-        version: 6.0.3
-      vitest:
-        specifier: 'catalog:'
-        version: 4.1.11(@types/node@26.2.0)(@vitest/browser-playwright@4.1.11)(@vitest/coverage-v8@4.1.11)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(sass@1.103.1)(terser@5.50.0)(tsx@4.23.12)(yaml@2.9.0))
 
 packages:
 

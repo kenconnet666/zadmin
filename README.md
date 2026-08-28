@@ -10,7 +10,7 @@ apps/
   desktop/     Tauri 2 + SvelteKit SPA 的 Windows 11 x64 宿主
   etl/         独立 ETL 应用
   docs/        组件、示例与开发文档应用
-  wechat/      Svelte→Taro 微信小程序宿主与验收应用
+  wechat/      Svelte Miniapp 微信宿主与验收应用
 
 packages/
   core/        DI 容器、插件 Runtime、Artifact、Installer
@@ -23,9 +23,8 @@ packages/
 ui/
   sveltekit/   服务端动态路由与浏览器插件 Runtime
   tauri/       Tauri 系统能力、权限结果、生命周期和测试驱动
-  zui/            浏览器/WebView 通用的 Theme、ICSS 与 Svelte 组件库
-  zui-taro/    微信小程序 ZUI 组件与 ICSS 子集
-  miniapp/ Svelte compiler、Taro renderer/runtime 和微信平台能力
+  zui/         浏览器/WebView 通用的 Theme、ICSS 与 Svelte 组件库
+  miniapp/     自包含 Miniapp Theme、M* 组件、compiler、runtime 与微信平台能力
 
 plugins/
   approval/    审批流插件

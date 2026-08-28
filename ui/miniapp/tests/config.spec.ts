@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { defineSvelteConfig } from '../src/index.ts';
+import { defineSvelteConfig } from '../src/vite/index.ts';
 
 describe('defineSvelteConfig', () => {
 	it('preserves a valid strongly typed Taro config', () => {

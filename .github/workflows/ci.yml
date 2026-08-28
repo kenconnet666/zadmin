@@ -122,9 +122,6 @@ jobs:
       - name: Run Miniapp coverage
         run: pnpm --filter @zadmin/miniapp test:coverage
 
-      - name: Run ZUI Taro coverage
-        run: pnpm --filter @zadmin/zui-taro test:coverage
-
       - name: Run Tauri facade coverage
         run: pnpm --filter @zadmin/tauri test:coverage
 

@@ -4,7 +4,7 @@
 		createCapabilityReport,
 		getWeChatPlatform
 	} from '@zadmin/miniapp/platform';
-	import { Box, Button, Stack, Text, ZuiProvider } from '@zadmin/zui-taro';
+	import { MBox, MButton, MProvider, MStack, MText } from '@zadmin/miniapp';
 	import { runSafeProbe, type SafeProbeName } from './probes.ts';
 
 	const platform = getWeChatPlatform();
@@ -54,59 +54,84 @@
 	}
 </script>
 
-<ZuiProvider>
-	<Box style={{ minHeight: '100vh', padding: '20px 16px' }}>
-		<Stack gap="large">
-			<Text size="xlarge" weight="bold">WeChat platform capability lab</Text>
-			<Text color="textMuted">
+<MProvider>
+	<MBox style={{ minHeight: '100vh', padding: '40rpx 32rpx' }}>
+		<MStack gap="large">
+			<MText size="xlarge" weight="bold">WeChat platform capability lab</MText>
+			<MText tone="muted">
 				{allWechatCapabilities.length} descriptors · {report.filter(
 					(entry) => entry.grade === 'mock-verified'
 				).length}
 				mock-verified
-			</Text>
-			<Text weight="semibold">Safe platform probes</Text>
-			<Stack direction="row" gap="small">
-				<Button id="probe-support" size="small" disabled={busy} onclick={() => runProbe('support')}>
+			</MText>
+			<MText weight="semibold">Safe platform probes</MText>
+			<MStack direction="row" gap="small">
+				<MButton
+					id="probe-support"
+					size="small"
+					disabled={busy}
+					onclick={() => runProbe('support')}
+				>
 					Support
-				</Button>
-				<Button id="probe-system" size="small" disabled={busy} onclick={() => runProbe('system')}>
+				</MButton>
+				<MButton id="probe-system" size="small" disabled={busy} onclick={() => runProbe('system')}>
 					System
-				</Button>
-				<Button id="probe-session" size="small" disabled={busy} onclick={() => runProbe('session')}>
+				</MButton>
+				<MButton
+					id="probe-session"
+					size="small"
+					disabled={busy}
+					onclick={() => runProbe('session')}
+				>
 					Session
-				</Button>
-			</Stack>
-			<Stack direction="row" gap="small">
-				<Button id="probe-files" size="small" disabled={busy} onclick={() => runProbe('files')}>
+				</MButton>
+			</MStack>
+			<MStack direction="row" gap="small">
+				<MButton id="probe-files" size="small" disabled={busy} onclick={() => runProbe('files')}>
 					Files
-				</Button>
-				<Button id="probe-worker" size="small" disabled={busy} onclick={() => runProbe('worker')}>
+				</MButton>
+				<MButton id="probe-worker" size="small" disabled={busy} onclick={() => runProbe('worker')}>
 					Worker
-				</Button>
-			</Stack>
-			<Text weight="semibold">Previously verified probes</Text>
-			<Stack direction="row" gap="small">
-				<Button id="probe-network" size="small" disabled={busy} onclick={() => runProbe('network')}>
+				</MButton>
+			</MStack>
+			<MText weight="semibold">Previously verified probes</MText>
+			<MStack direction="row" gap="small">
+				<MButton
+					id="probe-network"
+					size="small"
+					disabled={busy}
+					onclick={() => runProbe('network')}
+				>
 					Network
-				</Button>
-				<Button id="probe-storage" size="small" disabled={busy} onclick={() => runProbe('storage')}>
+				</MButton>
+				<MButton
+					id="probe-storage"
+					size="small"
+					disabled={busy}
+					onclick={() => runProbe('storage')}
+				>
 					Storage
-				</Button>
-				<Button id="probe-privacy" size="small" disabled={busy} onclick={() => runProbe('privacy')}>
+				</MButton>
+				<MButton
+					id="probe-privacy"
+					size="small"
+					disabled={busy}
+					onclick={() => runProbe('privacy')}
+				>
 					Privacy (read-only)
-				</Button>
-			</Stack>
-			<Text id="probe-result">{result}</Text>
-			<Stack gap="small">
+				</MButton>
+			</MStack>
+			<MText id="probe-result">{result}</MText>
+			<MStack gap="small">
 				{#each report as entry (entry.descriptor.id)}
-					<Box style={{ borderBottom: '1px solid #e2e8f0', padding: '8px 0' }}>
-						<Text weight="semibold">{entry.descriptor.title}</Text>
-						<Text color="textMuted" size="small">
+					<MBox style={{ borderBottom: '2rpx solid #e2e8f0', padding: '16rpx 0' }}>
+						<MText weight="semibold">{entry.descriptor.title}</MText>
+						<MText tone="muted" size="small">
 							{entry.descriptor.id} · {entry.descriptor.stability} · {entry.grade}
-						</Text>
-					</Box>
+						</MText>
+					</MBox>
 				{/each}
-			</Stack>
-		</Stack>
-	</Box>
-</ZuiProvider>
+			</MStack>
+		</MStack>
+	</MBox>
+</MProvider>

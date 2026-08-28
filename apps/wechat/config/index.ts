@@ -1,4 +1,4 @@
-import { defineSvelteConfig } from '@zadmin/miniapp';
+import { defineSvelteConfig } from '@zadmin/miniapp/vite';
 
 export default defineSvelteConfig({
 	compiler: { type: 'vite' },

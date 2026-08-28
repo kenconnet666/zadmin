@@ -1,13 +1,13 @@
 # WeChat Fast Refresh
 
-`pnpm dev:wechat` starts one supervisor. It first builds the package and its single prebundled Svelte runtime, then directly owns one TypeScript watcher for `@zadmin/miniapp`, one `svelte-package` watcher for `@zadmin/zui-taro`, and one Taro Vite watcher. It does not nest `concurrently` processes, and it removes its lock plus all children on `SIGINT`/`SIGTERM`.
+`pnpm dev:wechat` starts one supervisor. It first builds `@zadmin/miniapp` and its single prebundled Svelte runtime, then directly owns one TypeScript watcher, one `svelte-package` component watcher, and the temporary Taro Vite target watcher. It does not nest `concurrently` processes, and it removes its lock plus all children on `SIGINT`/`SIGTERM`.
 
 ## Change policy
 
 | Change                                            | Action                                             |
 | ------------------------------------------------- | -------------------------------------------------- |
 | `apps/wechat/**/*.svelte`                         | Taro incremental build                             |
-| `ui/zui-taro/src/**`                              | package watch plus Taro incremental build          |
+| `miniapp` components/theme/styles                 | component package watch plus incremental build     |
 | `miniapp` runtime/platform/native/module/renderer | TypeScript watch plus Taro incremental build       |
 | `miniapp` compiler/plugin/vite                    | rebuild package and restart only the Taro child    |
 | `apps/wechat/src/workers/**`                      | restart Taro child and recopy the Worker entry     |
@@ -35,7 +35,7 @@ Measured on 2026-08-25 with Node 24.18, Taro 4.2.1, Vite 4.5.14, and WeChat DevT
 | Scenario                 |    Taro-reported build | Observed source-to-success | Result                                                                                            |
 | ------------------------ | ---------------------: | -------------------------: | ------------------------------------------------------------------------------------------------- |
 | App `.svelte` edit       |            1.54–2.05 s |                1.25–2.81 s | passed; visible text and runtime build ID updated automatically                                   |
-| ZUI Taro component edit  |            1.51–1.56 s |                  under 3 s | passed; no Taro restart                                                                           |
+| Miniapp component edit   |            1.51–1.56 s |                  under 3 s | passed; no full supervisor restart                                                                |
 | Platform TypeScript edit |            1.50–1.53 s |                  under 3 s | passed after retaining virtual marker/CSS caches across incremental rounds                        |
 | Worker entry edit        |            7.10–7.20 s |              12.12–12.22 s | passed twice; Taro child restart is required because static-copy does not watch Worker sources    |
 | Compiler/plugin edit     | 6.69–6.92 s cold build |       approximately 11.4 s | functionally passed; improved by runtime prebundling, but misses the provisional 8 s total target |

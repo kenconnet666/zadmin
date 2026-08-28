@@ -36,14 +36,14 @@ export function classifyChange(path, options = {}) {
 	) {
 		return 'restart-taro';
 	}
-	if (/^ui\/miniapp\/src\/(?:module|native|platform|renderer|runtime)\//u.test(normalized)) {
+	if (
+		/^ui\/miniapp\/src\/(?:components|module|native|platform|renderer|runtime|styles|theme)\//u.test(
+			normalized
+		)
+	) {
 		return 'package-incremental';
 	}
-	if (
-		/^ui\/zui-taro\/src\//u.test(normalized) ||
-		/^apps\/wechat\/src\//u.test(normalized) ||
-		options.external === true
-	) {
+	if (/^apps\/wechat\/src\//u.test(normalized) || options.external === true) {
 		return 'incremental';
 	}
 	return 'ignore';

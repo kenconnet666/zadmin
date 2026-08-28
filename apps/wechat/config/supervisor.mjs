@@ -12,7 +12,7 @@ import { BuildStatusStore } from './status.mjs';
 const appRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const workspaceRoot = resolve(appRoot, '../..');
 const appRequire = createRequire(resolve(appRoot, 'package.json'));
-const zuiRequire = createRequire(resolve(workspaceRoot, 'ui/zui-taro/package.json'));
+const miniappRequire = createRequire(resolve(workspaceRoot, 'ui/miniapp/package.json'));
 
 async function packageBin(requireFrom, packageName, binName) {
 	const packagePath = requireFrom.resolve(`${packageName}/package.json`);
@@ -140,7 +140,7 @@ export async function runSupervisor() {
 
 	const tscBin = appRequire.resolve('typescript/bin/tsc');
 	const taroBin = await packageBin(appRequire, '@tarojs/cli', 'taro');
-	const sveltePackageBin = await packageBin(zuiRequire, '@sveltejs/package', 'svelte-package');
+	const sveltePackageBin = await packageBin(miniappRequire, '@sveltejs/package', 'svelte-package');
 
 	async function shutdown(code = exitCode) {
 		if (stopping) return;
@@ -304,9 +304,14 @@ export async function runSupervisor() {
 			[],
 			{ cwd: resolve(workspaceRoot, 'ui/miniapp') }
 		);
-		await runNode('zui-taro:build', sveltePackageBin, ['--input', 'src', '--output', 'dist'], {
-			cwd: resolve(workspaceRoot, 'ui/zui-taro')
-		});
+		await runNode(
+			'miniapp-components:build',
+			sveltePackageBin,
+			['--input', 'src/components', '--output', 'dist/components'],
+			{
+				cwd: resolve(workspaceRoot, 'ui/miniapp')
+			}
+		);
 
 		keepRequired(
 			'miniapp',
@@ -318,21 +323,24 @@ export async function runSupervisor() {
 			)
 		);
 		keepRequired(
-			'zui-taro',
+			'miniapp-components',
 			spawnNode(
-				'zui-taro',
+				'miniapp-components',
 				sveltePackageBin,
-				['--input', 'src', '--output', 'dist', '--watch', '--preserve-output'],
-				{ cwd: resolve(workspaceRoot, 'ui/zui-taro') }
+				[
+					'--input',
+					'src/components',
+					'--output',
+					'dist/components',
+					'--watch',
+					'--preserve-output'
+				],
+				{ cwd: resolve(workspaceRoot, 'ui/miniapp') }
 			)
 		);
 		startTaro();
 
-		for (const root of [
-			resolve(appRoot, 'src'),
-			resolve(workspaceRoot, 'ui/miniapp/src'),
-			resolve(workspaceRoot, 'ui/zui-taro/src')
-		]) {
+		for (const root of [resolve(appRoot, 'src'), resolve(workspaceRoot, 'ui/miniapp/src')]) {
 			await watchRoot(root);
 		}
 		for (const root of await externalRoots()) await watchRoot(root, true);
