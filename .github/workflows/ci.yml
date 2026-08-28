@@ -46,7 +46,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Install Playwright browsers
-        run: pnpm exec playwright install --with-deps chromium firefox webkit
+        run: pnpm --filter @zadmin/docs exec playwright install --with-deps chromium firefox webkit
 
       - name: Check types and Svelte contracts
         run: pnpm check
@@ -105,7 +105,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Install Chromium for coverage suites
-        run: pnpm exec playwright install --with-deps chromium
+        run: pnpm --filter @zadmin/docs exec playwright install --with-deps chromium
 
       - name: Run ZUI Core coverage
         run: pnpm --filter @zadmin/zui-core test:coverage
