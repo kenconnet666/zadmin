@@ -1,6 +1,6 @@
 import type { Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
-import { icssHandle } from '@zadmin/zui/sveltekit';
+import { zuiHandle } from '@zadmin/sveltekit/zui';
 import { randomUUID, timingSafeEqual } from 'node:crypto';
 import { mkdir, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -91,7 +91,7 @@ const adminHandle: Handle = async ({ event, resolve }) => {
 	return response ?? resolve(event);
 };
 
-export const handle = sequence(icssHandle(), adminHandle);
+export const handle = sequence(zuiHandle(), adminHandle);
 
 function authorizePluginMutation(request: Request): Response | undefined {
 	if (import.meta.env.MODE === 'development' || import.meta.env.MODE === 'test') return undefined;

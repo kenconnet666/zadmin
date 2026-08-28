@@ -21,10 +21,19 @@ export type {
 } from './components/stack/index.js';
 export { ZText } from './components/text/index.js';
 export type { ZTextElement, ZTextProps, ZTextTone } from './components/text/index.js';
-export { icss } from './icss/runtime.js';
-export { createIcssRuntime } from './icss/runtime.js';
-export type { IcssRuntime, IcssRuntimeOptions } from './icss/runtime.js';
-export { createServerStyleRegistry, StyleRegistry } from './icss/registry.js';
+export {
+	createBrowserIcssRuntime,
+	createIcssRuntime,
+	createServerStyleRegistry,
+	icss,
+	StyleRegistry
+} from './runtime.js';
+export type {
+	BrowserStyleSheetOptions,
+	IcssRuntime,
+	IcssRuntimeOptions,
+	StyleRegistryMetrics
+} from './runtime.js';
 export {
 	createStyleProgram,
 	defaultTheme,

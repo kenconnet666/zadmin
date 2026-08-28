@@ -7,23 +7,27 @@ import {
 	createStyleHash,
 	injectCriticalCss
 } from './server.js';
-import type { IcssHandleOptions, IcssNonce } from './types.js';
+import type { ZuiHandleOptions, ZuiNonce } from './types.js';
 
 async function resolveNonce(
-	nonce: IcssNonce | undefined,
+	nonce: ZuiNonce | undefined,
 	event: RequestEvent
 ): Promise<string | undefined> {
 	return typeof nonce === 'function' ? nonce(event) : nonce;
 }
 
-export function icssHandle(options: IcssHandleOptions = {}): Handle {
-	if (options.cspHash === true && options.nonce !== undefined) {
-		throw new TypeError('ICSS SvelteKit integration accepts either cspHash or nonce, not both.');
+export function zuiHandle(options: ZuiHandleOptions = {}): Handle {
+	const csp = options.csp;
+	if (csp !== undefined && 'hash' in csp && 'nonce' in csp) {
+		throw new TypeError('ZUI SvelteKit integration accepts either CSP hash or nonce, not both.');
 	}
 
 	return async ({ event, resolve }) => {
 		const request = createRequestIcssRuntime();
-		const nonce = await resolveNonce(options.nonce, event);
+		const nonce = await resolveNonce(
+			csp !== undefined && 'nonce' in csp ? csp.nonce : undefined,
+			event
+		);
 		let bufferedHtml = '';
 		let styleHash: string | undefined;
 
@@ -33,7 +37,7 @@ export function icssHandle(options: IcssHandleOptions = {}): Handle {
 					bufferedHtml += html;
 					if (!done) return '';
 					const output = injectCriticalCss(bufferedHtml, request.registry.styleTag({ nonce }));
-					if (options.cspHash !== true || request.registry.size === 0) return output;
+					if (csp?.hash !== true || request.registry.size === 0) return output;
 					styleHash = createStyleHash(request.registry.htmlStyleText());
 					return addStyleHashMeta(output, styleHash);
 				}
@@ -48,4 +52,4 @@ export function icssHandle(options: IcssHandleOptions = {}): Handle {
 }
 
 export { createRequestIcssRuntime, runWithRequestIcssRuntime } from './registry.js';
-export type { IcssHandleOptions, IcssNonce } from './types.js';
+export type { ZuiCspOptions, ZuiHandleOptions, ZuiNonce } from './types.js';

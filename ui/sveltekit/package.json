@@ -3,7 +3,8 @@
 	"version": "0.0.0",
 	"type": "module",
 	"files": [
-		"dist"
+		"dist",
+		"README.md"
 	],
 	"svelte": "./src/lib/index.ts",
 	"exports": {
@@ -16,6 +17,14 @@
 			"types": "./src/lib/client.ts",
 			"svelte": "./src/lib/client.ts",
 			"import": "./src/lib/client.ts"
+		},
+		"./zui": {
+			"types": "./src/lib/zui/index.ts",
+			"import": "./src/lib/zui/index.ts"
+		},
+		"./zui/client": {
+			"types": "./src/lib/zui/client.ts",
+			"import": "./src/lib/zui/client.ts"
 		}
 	},
 	"publishConfig": {
@@ -30,6 +39,14 @@
 				"types": "./dist/client.d.ts",
 				"svelte": "./dist/client.js",
 				"import": "./dist/client.js"
+			},
+			"./zui": {
+				"types": "./dist/zui/index.d.ts",
+				"import": "./dist/zui/index.js"
+			},
+			"./zui/client": {
+				"types": "./dist/zui/client.d.ts",
+				"import": "./dist/zui/client.js"
 			}
 		}
 	},
@@ -37,10 +54,12 @@
 		"prepare": "svelte-kit sync || echo ''",
 		"build": "svelte-package",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"test": "vitest --run tests"
+		"test": "vitest --run tests",
+		"test:coverage": "vitest --run --coverage tests"
 	},
 	"dependencies": {
-		"@zadmin/core": "workspace:^"
+		"@zadmin/core": "workspace:^",
+		"@zadmin/zui": "workspace:^"
 	},
 	"peerDependencies": {
 		"@sveltejs/kit": "^2.0.0",
@@ -49,6 +68,7 @@
 	"devDependencies": {
 		"@sveltejs/kit": "catalog:",
 		"@sveltejs/package": "catalog:",
+		"@vitest/coverage-v8": "catalog:",
 		"svelte": "catalog:",
 		"svelte-check": "catalog:",
 		"typescript": "catalog:",

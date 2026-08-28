@@ -8,6 +8,7 @@ import {
 	extendTheme,
 	ZBox,
 	ZButton,
+	ZField,
 	ZIcon,
 	ZInput,
 	ZStack,
@@ -58,6 +59,9 @@ describe('ZUI foundational components', () => {
 		expect(field).toMatch(/<input[^>]+id="[^"]+-control"/u);
 		expect(field).toContain('aria-invalid="true"');
 		expect(field).toContain('required');
+		expect(render(ZField, { props: { label: 'Optional' } }).body).not.toContain(
+			'aria-hidden="true"> *'
+		);
 	});
 
 	it('inherits an explicit runtime through nested providers during SSR', () => {

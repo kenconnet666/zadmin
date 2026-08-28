@@ -21,6 +21,14 @@ export interface StyleTagOptions {
 	readonly nonce?: string;
 }
 
+export interface StyleRegistryMetrics {
+	readonly classes: number;
+	readonly hydrated: number;
+	readonly owners: number;
+	readonly recipes: number;
+	readonly rules: number;
+}
+
 const EMPTY_STYLE: RegisteredStyle = {
 	canonical: '',
 	className: '' as IcssClassName,
@@ -57,6 +65,21 @@ export class StyleRegistry {
 
 	get size(): number {
 		return this.#byCanonical.size;
+	}
+
+	get metrics(): StyleRegistryMetrics {
+		const recipes = new Set<string>();
+		for (const owner of this.#classesByOwner.keys()) {
+			const match = /^(recipe|slot-recipe):([^:]+)/u.exec(owner);
+			if (match !== null) recipes.add(`${match[1]}:${match[2]}`);
+		}
+		return Object.freeze({
+			classes: this.#byCanonical.size,
+			hydrated: this.#sheet.hydratedClassNames.size,
+			owners: this.#classesByOwner.size,
+			recipes: recipes.size,
+			rules: [...this.#byCanonical.values()].reduce((total, entry) => total + entry.rules.length, 0)
+		});
 	}
 
 	clear(): void {

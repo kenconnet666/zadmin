@@ -50,6 +50,7 @@ describe('defineRecipe', () => {
 		expect(second.split(' ')).toHaveLength(4);
 		expect(runtime.recipe(defaultTheme, recipe)).toBe(first);
 		expect(registry.size).toBe(5);
+		expect(registry.metrics).toMatchObject({ classes: 5, recipes: 1 });
 	});
 
 	it('caches each recipe branch once per theme', () => {
@@ -85,6 +86,37 @@ describe('defineRecipe', () => {
 		).toThrow(/maximum is 64/);
 	});
 
+	it('validates malformed recipe definitions at their exact boundary', () => {
+		expect(() => defineRecipe(null as never)).toThrow(/must be an object/);
+		expect(() => defineRecipe({ base: 'bad', variants: {} } as never)).toThrow(
+			/base must be a style factory/
+		);
+		expect(() => defineRecipe({ variants: { tone: null } } as never)).toThrow(/options object/);
+		expect(() => defineRecipe({ variants: { tone: {} } })).toThrow(/at least one value/);
+		expect(() => defineRecipe({ variants: { tone: { bad: 1 } } } as never)).toThrow(
+			/style factory/
+		);
+		expect(() =>
+			defineRecipe({
+				defaultVariants: { missing: 'x' },
+				variants: { tone: { primary: () => undefined } }
+			})
+		).toThrow(/Unknown recipe variant/);
+		expect(() =>
+			defineRecipe({
+				defaultVariants: { tone: 'missing' },
+				variants: { tone: { primary: () => undefined } }
+			})
+		).toThrow(/Unknown recipe value/);
+		expect(() =>
+			defineRecipe({
+				compoundVariants: [{ style: 1, when: {} }],
+				variants: { tone: { primary: () => undefined } }
+			} as never)
+		).toThrow(/compoundVariants\[0\]\.style/);
+		expect(() => disposeRecipe({} as never)).toThrow(/Expected a recipe/);
+	});
+
 	it('releases only recipe-owned rules during HMR disposal', () => {
 		const recipe = createFixtureRecipe();
 		const registry = createServerStyleRegistry();
@@ -106,6 +138,7 @@ describe('defineRecipe', () => {
 		);
 		hotDispose?.();
 		expect(registry.size).toBe(1);
+		expect(registry.metrics.recipes).toBe(0);
 
 		disposeRecipe(recipe);
 		expect(registry.size).toBe(1);
@@ -144,6 +177,7 @@ describe('defineSlotRecipe', () => {
 		expect(invalid.control).not.toBe('');
 		expect(runtime.slots(defaultTheme, recipe)).toEqual(defaults);
 		expect(registry.size).toBe(5);
+		expect(registry.metrics.recipes).toBe(1);
 		expect(() => runtime.slots(defaultTheme, recipe, { size: 'large' } as never)).toThrow(
 			/Unknown slot recipe value/
 		);
@@ -161,6 +195,34 @@ describe('defineSlotRecipe', () => {
 		);
 		hotDispose?.();
 		expect(registry.size).toBe(0);
+		expect(registry.metrics.recipes).toBe(0);
 		disposeSlotRecipe(recipe);
+	});
+
+	it('rejects invalid slot topology and branch definitions', () => {
+		expect(() => defineSlotRecipe({ slots: [], variants: {} })).toThrow(/at least one slot/);
+		expect(() => defineSlotRecipe({ slots: ['root', 'root'], variants: {} })).toThrow(/unique/);
+		expect(() =>
+			defineSlotRecipe({
+				base: { missing: () => undefined },
+				slots: ['root'] as const,
+				variants: {}
+			} as never)
+		).toThrow(/Unknown slot/);
+		expect(() =>
+			defineSlotRecipe({
+				base: { root: 1 },
+				slots: ['root'] as const,
+				variants: {}
+			} as never)
+		).toThrow(/style factory/);
+		expect(() =>
+			defineSlotRecipe({
+				defaultVariants: { missing: 'x' },
+				slots: ['root'] as const,
+				variants: {}
+			})
+		).toThrow(/Unknown slot recipe variant/);
+		expect(() => disposeSlotRecipe({} as never)).toThrow(/Expected a recipe/);
 	});
 });

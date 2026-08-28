@@ -225,7 +225,7 @@ ui/zui-taro/src/
 @zadmin/zui-web           → @zadmin/zui
 @zadmin/zui-web/compiler  → @zadmin/zui/compiler
 @zadmin/zui-web/internal  → @zadmin/zui/internal
-@zadmin/zui-web/sveltekit → @zadmin/zui/sveltekit
+@zadmin/zui-web/sveltekit → @zadmin/sveltekit/zui
 ```
 
 保持不变：

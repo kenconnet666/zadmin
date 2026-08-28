@@ -30,9 +30,9 @@
 			"svelte": "./src/lib/runtime/internal.ts",
 			"import": "./src/lib/runtime/internal.ts"
 		},
-		"./sveltekit": {
-			"types": "./src/lib/sveltekit/handle.ts",
-			"import": "./src/lib/sveltekit/handle.ts"
+		"./runtime": {
+			"types": "./src/lib/runtime.ts",
+			"import": "./src/lib/runtime.ts"
 		}
 	},
 	"publishConfig": {
@@ -56,9 +56,9 @@
 				"svelte": "./dist/runtime/internal.js",
 				"import": "./dist/runtime/internal.js"
 			},
-			"./sveltekit": {
-				"types": "./dist/sveltekit/handle.d.ts",
-				"import": "./dist/sveltekit/handle.js"
+			"./runtime": {
+				"types": "./dist/runtime.d.ts",
+				"import": "./dist/runtime.js"
 			}
 		}
 	},
@@ -93,13 +93,7 @@
 		"stylis": "catalog:"
 	},
 	"peerDependencies": {
-		"@sveltejs/kit": "^2.20.0",
 		"svelte": ">=5.56.0 <6"
-	},
-	"peerDependenciesMeta": {
-		"@sveltejs/kit": {
-			"optional": true
-		}
 	},
 	"devDependencies": {
 		"@sveltejs/vite-plugin-svelte": "catalog:",

@@ -41,6 +41,22 @@
 		oninput?.(event);
 		onValueChange?.(value);
 	}
+
+	function syncFormReset(input: HTMLInputElement): () => void {
+		const form = input?.form;
+		if (form === null) return () => undefined;
+		let resetTimer: ReturnType<typeof setTimeout> | undefined;
+		const reset = (): void => {
+			resetTimer = setTimeout(() => {
+				value = input.value;
+			}, 0);
+		};
+		form.addEventListener('reset', reset);
+		return () => {
+			form.removeEventListener('reset', reset);
+			if (resetTimer !== undefined) clearTimeout(resetTimer);
+		};
+	}
 </script>
 
 <input
@@ -49,9 +65,10 @@
 	class={[rootClass, field?.controlClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
+	{@attach syncFormReset}
 	id={id ?? field?.controlId}
 	{type}
-	bind:value
+	{value}
 	oninput={handleInput}
 	required={required || field?.required}
 	aria-describedby={ariaDescribedBy ?? field?.describedBy}

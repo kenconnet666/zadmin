@@ -71,30 +71,30 @@ icssPreprocess({ dynamicValues: 'class-rules' });
 在`src/hooks.server.ts`中安装请求级Registry：
 
 ```ts
-import { icssHandle } from '@zadmin/zui/sveltekit';
+import { zuiHandle } from '@zadmin/sveltekit/zui';
 
-export const handle = icssHandle();
+export const handle = zuiHandle();
 ```
 
 与已有handle组合：
 
 ```ts
 import { sequence } from '@sveltejs/kit/hooks';
-import { icssHandle } from '@zadmin/zui/sveltekit';
+import { zuiHandle } from '@zadmin/sveltekit/zui';
 
-export const handle = sequence(icssHandle(), applicationHandle);
+export const handle = sequence(zuiHandle(), applicationHandle);
 ```
 
 nonce模式：
 
 ```ts
-icssHandle({ nonce: (event) => event.locals.cspNonce });
+zuiHandle({ csp: { nonce: (event) => event.locals.cspNonce } });
 ```
 
 已有CSP header使用hash模式：
 
 ```ts
-icssHandle({ cspHash: true });
+zuiHandle({ csp: { hash: true } });
 ```
 
 nonce和hash不能同时开启。`inline-vars`仍需要允许`style-src-attr 'unsafe-inline'`；nonce/hash保护的是运行时critical style element。

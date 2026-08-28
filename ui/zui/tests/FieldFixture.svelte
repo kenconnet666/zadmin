@@ -20,6 +20,9 @@
 			}}
 		/>
 	</ZField>
+	<ZField label="Optional account">
+		<ZInput data-testid="optional-input" />
+	</ZField>
 	<button type="reset">Reset</button>
 	<output data-testid="field-output">{value}:{changes}</output>
 </form>

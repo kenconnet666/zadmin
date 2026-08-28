@@ -1,5 +1,14 @@
 <script lang="ts">
-	import { ZBox, ZButton, ZProvider, ZStack, ZText, defaultTheme, defineTheme } from '@zadmin/zui';
+	import {
+		ZBox,
+		ZButton,
+		ZIcon,
+		ZProvider,
+		ZStack,
+		ZText,
+		defaultTheme,
+		defineTheme
+	} from '@zadmin/zui';
 	import { __icssCarrier } from '@zadmin/zui/internal';
 
 	const theme = defineTheme({
@@ -16,7 +25,9 @@
 	<ZButton data-testid="button" variant="secondary">Save</ZButton>
 	<ZStack data-testid="stack" direction="row" gap="medium">
 		<ZText data-testid="text" tone="primary">Label</ZText>
+		<ZIcon data-testid="icon" label="Search" name="search" size={20} />
 	</ZStack>
+	<ZStack data-testid="numeric-stack" direction="row" gap={6}></ZStack>
 	<ZBox
 		{...__icssCarrier({ '--manual-value': variable })}
 		data-testid="manual"

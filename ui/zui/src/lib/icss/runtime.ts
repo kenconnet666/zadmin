@@ -72,7 +72,7 @@ export function createBrowserIcssRuntime(options: BrowserStyleSheetOptions = {})
 	});
 }
 
-let defaultBrowserRuntime: IcssRuntime | undefined;
+const browserRuntimes = new WeakMap<Document, IcssRuntime>();
 const defaultServerRuntime = createIcssRuntime();
 let serverRuntimeResolver: (() => IcssRuntime | undefined) | undefined;
 
@@ -83,8 +83,12 @@ export function setServerRuntimeResolver(resolver: () => IcssRuntime | undefined
 
 export function getDefaultIcssRuntime(): IcssRuntime {
 	if (typeof document === 'undefined') return serverRuntimeResolver?.() ?? defaultServerRuntime;
-	defaultBrowserRuntime ??= createBrowserIcssRuntime();
-	return defaultBrowserRuntime;
+	let runtime = browserRuntimes.get(document);
+	if (runtime === undefined) {
+		runtime = createBrowserIcssRuntime({ root: document });
+		browserRuntimes.set(document, runtime);
+	}
+	return runtime;
 }
 
 export function icss<TTheme extends ThemeSchema>(

@@ -183,7 +183,7 @@ plugin.ts
 | CRM上游类型依赖示例         | `plugins/crm/src/server/contract.ts`、`service.ts`     |
 | ICSS Runtime与Registry      | `ui/zui/src/lib/icss/`                                 |
 | Svelte ICSS编译器           | `ui/zui/src/lib/compiler/`                             |
-| SvelteKit ICSS SSR          | `ui/zui/src/lib/sveltekit/`                            |
+| SvelteKit ZUI SSR/CSP       | `ui/sveltekit/src/lib/zui/`                            |
 | ZUI基础组件                 | `ui/zui/src/lib/components/`                           |
 | ZUI接入文档                 | `apps/docs/content/zui-usage.md`                       |
 | Taro framework plugin       | `ui/svelte-taro/src/plugin/index.cts`                  |

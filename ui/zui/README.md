@@ -24,9 +24,9 @@ sveltekit({ preprocess: [icssPreprocess()] });
 
 ```ts
 // src/hooks.server.ts
-import { icssHandle } from '@zadmin/zui/sveltekit';
+import { zuiHandle } from '@zadmin/sveltekit/zui';
 
-export const handle = icssHandle();
+export const handle = zuiHandle();
 ```
 
 ## Components

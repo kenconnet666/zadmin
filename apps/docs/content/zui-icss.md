@@ -219,10 +219,12 @@ Builder -> canonical serializer -> deterministic hash -> Stylis -> StyleRegistry
 
 ## SSR、CSP 与 HMR
 
-SvelteKit 集成提供 `icssHandle()`：
+SvelteKit 集成由`@zadmin/sveltekit/zui`提供`zuiHandle()`：
 
 ```ts
-export const handle = sequence(icssHandle(), existingHandle);
+import { zuiHandle } from '@zadmin/sveltekit/zui';
+
+export const handle = sequence(zuiHandle(), existingHandle);
 ```
 
 每个请求创建独立 Registry，SSR 后把 critical CSS 注入 head。客户端从 `data-icss` 标记接管。通用 SSR 另提供显式 `createServerStyleRegistry()` 和 CSS 提取接口。
@@ -242,7 +244,7 @@ HMR 必须区分：
 第一批组件：
 
 ```text
-Provider Box Stack Text Button
+ZProvider ZBox ZStack ZText ZIcon ZButton ZInput ZField
 ```
 
 它们用于验证主题、组件边界、响应式槽位、状态 selector、SSR、HMR 和可访问性，不作为旧组件迁移的开始信号。
@@ -251,12 +253,15 @@ Provider Box Stack Text Button
 
 ```text
 ui/zui/src/lib/
-  compiler/   AST分析、绑定、诊断、改写、源码名称
-  components/ Provider、Box、Stack、Text、Button
-  icss/       Builder、hash、Registry、序列化、Sheet、值和单位
-  sveltekit/  client、handle、server registry和类型
-  theme/      默认主题、定义、属性元数据、类型和单位
-  index.ts    公开入口例外
+	compiler/   AST分析、绑定、诊断、改写、源码名称
+	components/ 8个Z前缀基础组件
+	icss/       Builder、hash、Registry、序列化、Sheet、值和单位
+	recipes/    recipe与slot recipe定义、缓存和HMR所有权
+	theme/      默认主题、定义、属性元数据、类型和单位
+	index.ts    公开入口例外
+
+ui/sveltekit/src/lib/zui/
+	client、handle、request registry、CSP和类型
 ```
 
 公开 subpath：
@@ -264,8 +269,9 @@ ui/zui/src/lib/
 ```text
 @zadmin/zui
 @zadmin/zui/compiler
-@zadmin/zui/sveltekit
+@zadmin/zui/runtime
 @zadmin/zui/internal   仅编译产物使用
+@zadmin/sveltekit/zui
 ```
 
 compiler/server 代码进入浏览器 bundle 必须为 0 B。

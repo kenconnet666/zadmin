@@ -116,6 +116,9 @@ jobs:
       - name: Run ZUI coverage
         run: pnpm --filter @zadmin/zui test:coverage
 
+      - name: Run SvelteKit integration coverage
+        run: pnpm --filter @zadmin/sveltekit test:coverage
+
       - name: Run Svelte Taro coverage
         run: pnpm --filter @zadmin/svelte-taro test:coverage
 

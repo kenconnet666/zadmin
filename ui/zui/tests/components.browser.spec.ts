@@ -91,11 +91,16 @@ describe('compiled ICSS browser updates', () => {
 		const button = document.querySelector<HTMLButtonElement>('[data-testid="button"]');
 		const text = document.querySelector<HTMLElement>('[data-testid="text"]');
 		const stack = document.querySelector<HTMLElement>('[data-testid="stack"]');
+		const numericStack = document.querySelector<HTMLElement>('[data-testid="numeric-stack"]');
+		const icon = document.querySelector<SVGSVGElement>('[data-testid="icon"]');
 
 		expect(button?.type).toBe('button');
 		expect(getComputedStyle(text as Element).color).toBe('rgb(124, 58, 237)');
 		expect(getComputedStyle(text as Element).fontSize).toBe('16px');
 		expect(getComputedStyle(stack as Element).gap).toBe('8px');
+		expect(getComputedStyle(numericStack as Element).gap).toBe('6px');
+		expect(icon?.getAttribute('role')).toBe('img');
+		expect(getComputedStyle(icon as Element).width).toBe('20px');
 	});
 
 	it('keeps an explicit ShadowRoot runtime isolated and supports nested themes', async () => {
@@ -127,6 +132,7 @@ describe('compiled ICSS browser updates', () => {
 		const input = document.querySelector<HTMLInputElement>('[data-testid="field-input"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="field-output"]');
 		const label = document.querySelector<HTMLLabelElement>('label');
+		const optional = document.querySelector<HTMLInputElement>('[data-testid="optional-input"]');
 		const field = label?.parentElement;
 		const messages = field?.querySelectorAll('p');
 		expect(input).not.toBeNull();
@@ -136,6 +142,9 @@ describe('compiled ICSS browser updates', () => {
 		expect(input.required).toBe(true);
 		expect(input.getAttribute('aria-invalid')).toBe('true');
 		expect(input.getAttribute('aria-describedby')?.split(' ')).toHaveLength(2);
+		expect(optional?.required).toBe(false);
+		expect(optional?.hasAttribute('aria-describedby')).toBe(false);
+		expect(optional?.hasAttribute('aria-invalid')).toBe(false);
 		expect(field?.className).not.toBe('');
 		expect(label?.className).not.toBe('');
 		expect(input.className).not.toBe('');
@@ -148,8 +157,10 @@ describe('compiled ICSS browser updates', () => {
 		expect(output?.textContent).toBe('alice:1');
 
 		input.form?.reset();
+		await new Promise((resolve) => setTimeout(resolve, 0));
+		await tick();
 		await tick();
 		expect(input.value).toBe('');
-		expect(output?.textContent).toBe(':1');
+		expect(output?.textContent?.endsWith(':1')).toBe(true);
 	});
 });

@@ -1,8 +1,15 @@
 import type { Handle } from '@sveltejs/kit';
 import { describe, expect, it } from 'vitest';
 
-import { defaultTheme, icss } from '../src/lib/index.js';
-import { icssHandle } from '../src/lib/sveltekit/handle.js';
+import { defaultTheme } from '@zadmin/zui/core';
+import { icss } from '@zadmin/zui/runtime';
+import { zuiHandle } from '../src/lib/zui/handle.js';
+import {
+	addStyleHashHeaders,
+	addStyleHashMeta,
+	createStyleHash,
+	injectCriticalCss
+} from '../src/lib/zui/server.js';
 
 async function renderWithHandle(
 	handle: Handle,
@@ -13,7 +20,7 @@ async function renderWithHandle(
 		event: {} as Parameters<Handle>[0]['event'],
 		resolve: async (_event, options) => {
 			const theme = { ...defaultTheme, color: { ...defaultTheme.color, primary: color } };
-			const className = icss(theme, (style) => style.color._primary);
+			const className = icss(theme, (s) => s.color._primary);
 			const html = await options?.transformPageChunk?.({
 				done: true,
 				html: `<html><head></head><body><div class="${className}"></div></body></html>`
@@ -23,9 +30,50 @@ async function renderWithHandle(
 	} as Parameters<Handle>[0]);
 }
 
-describe('ICSS SvelteKit integration', () => {
+describe('ZUI SvelteKit integration', () => {
+	it('injects critical CSS into complete or fragment HTML', () => {
+		expect(injectCriticalCss('<html><head></head><body></body></html>', '<style>x</style>')).toBe(
+			'<html><head><style>x</style></head><body></body></html>'
+		);
+		expect(injectCriticalCss('<div>body</div>', '<style>x</style>')).toBe(
+			'<style>x</style><div>body</div>'
+		);
+		expect(injectCriticalCss('<div>body</div>', '')).toBe('<div>body</div>');
+	});
+
+	it('patches default, element and report-only CSP directives', () => {
+		const hash = createStyleHash('.x{color:red}');
+		const response = addStyleHashHeaders(
+			new Response('ok', {
+				headers: {
+					'content-security-policy': "default-src 'none'; style-src-elem 'none'",
+					'content-security-policy-report-only': "default-src 'self'"
+				}
+			}),
+			hash
+		);
+
+		expect(response.headers.get('content-security-policy')).toContain(`style-src-elem ${hash}`);
+		expect(response.headers.get('content-security-policy-report-only')).toContain(
+			`style-src-elem 'self' ${hash}`
+		);
+	});
+
+	it('patches prerendered CSP metadata without touching unrelated tags', () => {
+		const hash = createStyleHash('.x{color:red}');
+		const html = `<head><meta name="description" content="test"><meta http-equiv="content-security-policy" content="default-src 'self'; style-src 'self'"></head>`;
+		const result = addStyleHashMeta(html, hash);
+
+		expect(result).toContain(`style-src-elem 'self' ${hash}`);
+		expect(result).toContain('<meta name="description" content="test">');
+		expect(addStyleHashMeta('<head></head>', hash)).toBe('<head></head>');
+	});
+
 	it('injects request-local critical CSS with a nonce', async () => {
-		const response = await renderWithHandle(icssHandle({ nonce: 'request-nonce' }), '#123456');
+		const response = await renderWithHandle(
+			zuiHandle({ csp: { nonce: 'request-nonce' } }),
+			'#123456'
+		);
 		const html = await response.text();
 
 		expect(html).toMatch(
@@ -34,7 +82,7 @@ describe('ICSS SvelteKit integration', () => {
 	});
 
 	it('adds critical CSS hashes to an existing CSP policy', async () => {
-		const response = await renderWithHandle(icssHandle({ cspHash: true }), '#abcdef', {
+		const response = await renderWithHandle(zuiHandle({ csp: { hash: true } }), '#abcdef', {
 			'content-security-policy': "default-src 'self'; style-src 'self'"
 		});
 
@@ -47,7 +95,7 @@ describe('ICSS SvelteKit integration', () => {
 		const responses = await Promise.all(
 			Array.from({ length: 50 }, (_, index) => {
 				const color = `#${index.toString(16).padStart(6, '0')}`;
-				return renderWithHandle(icssHandle(), color);
+				return renderWithHandle(zuiHandle(), color);
 			})
 		);
 		const html = await Promise.all(responses.map((response) => response.text()));
@@ -60,15 +108,17 @@ describe('ICSS SvelteKit integration', () => {
 	});
 
 	it('rejects conflicting CSP modes', () => {
-		expect(() => icssHandle({ cspHash: true, nonce: 'x' })).toThrow(/either cspHash or nonce/);
+		expect(() => zuiHandle({ csp: { hash: true, nonce: 'x' } as never })).toThrow(
+			/either CSP hash or nonce/
+		);
 	});
 
 	it('buffers future streamed chunks and resolves request-local nonces', async () => {
-		const handle = icssHandle({ nonce: async () => 'async-nonce' });
+		const handle = zuiHandle({ csp: { nonce: async () => 'async-nonce' } });
 		const response = await handle({
 			event: {} as Parameters<Handle>[0]['event'],
 			resolve: async (_event, options) => {
-				icss(defaultTheme, (style) => style.display.grid);
+				icss(defaultTheme, (s) => s.display.grid);
 				expect(await options?.transformPageChunk?.({ done: false, html: '<html><head>' })).toBe('');
 				const html = await options?.transformPageChunk?.({
 					done: true,
@@ -84,7 +134,7 @@ describe('ICSS SvelteKit integration', () => {
 	});
 
 	it('leaves CSP headers unchanged when no ICSS rules are rendered', async () => {
-		const handle = icssHandle({ cspHash: true });
+		const handle = zuiHandle({ csp: { hash: true } });
 		const response = await handle({
 			event: {} as Parameters<Handle>[0]['event'],
 			resolve: async (_event, options) => {
@@ -103,11 +153,11 @@ describe('ICSS SvelteKit integration', () => {
 	});
 
 	it('adds hashes to prerender-style CSP metadata', async () => {
-		const handle = icssHandle({ cspHash: true });
+		const handle = zuiHandle({ csp: { hash: true } });
 		const response = await handle({
 			event: {} as Parameters<Handle>[0]['event'],
 			resolve: async (_event, options) => {
-				icss(defaultTheme, (style) => style.color._primary);
+				icss(defaultTheme, (s) => s.color._primary);
 				const html = await options?.transformPageChunk?.({
 					done: true,
 					html: `<html><head><meta http-equiv="content-security-policy" content="default-src 'self'; style-src 'self'"></head><body></body></html>`

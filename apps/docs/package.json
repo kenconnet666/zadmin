@@ -16,6 +16,7 @@
 	},
 	"dependencies": {
 		"@fontsource/fira-mono": "catalog:",
+		"@zadmin/sveltekit": "workspace:^",
 		"@zadmin/zui": "workspace:^"
 	},
 	"devDependencies": {

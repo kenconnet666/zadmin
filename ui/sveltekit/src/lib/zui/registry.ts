@@ -1,7 +1,12 @@
 import { AsyncLocalStorage } from 'node:async_hooks';
 
-import { createIcssRuntime, setServerRuntimeResolver, type IcssRuntime } from '../icss/runtime.js';
-import { createServerStyleRegistry, type StyleRegistry } from '../icss/registry.js';
+import {
+	createIcssRuntime,
+	createServerStyleRegistry,
+	type IcssRuntime,
+	type StyleRegistry
+} from '@zadmin/zui/runtime';
+import { __setServerRuntimeResolver } from '@zadmin/zui/internal';
 
 export interface RequestIcssRuntime {
 	readonly registry: StyleRegistry;
@@ -10,7 +15,7 @@ export interface RequestIcssRuntime {
 
 const requestRuntime = new AsyncLocalStorage<RequestIcssRuntime>();
 
-setServerRuntimeResolver(() => requestRuntime.getStore()?.runtime);
+__setServerRuntimeResolver(() => requestRuntime.getStore()?.runtime);
 
 export function createRequestIcssRuntime(): RequestIcssRuntime {
 	const registry = createServerStyleRegistry();

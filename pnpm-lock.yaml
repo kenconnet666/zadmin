@@ -373,6 +373,9 @@ importers:
       '@fontsource/fira-mono':
         specifier: 'catalog:'
         version: 5.3.0
+      '@zadmin/sveltekit':
+        specifier: workspace:^
+        version: link:../../ui/sveltekit
       '@zadmin/zui':
         specifier: workspace:^
         version: link:../../ui/zui
@@ -821,6 +824,9 @@ importers:
       '@zadmin/core':
         specifier: workspace:^
         version: link:../../packages/core
+      '@zadmin/zui':
+        specifier: workspace:^
+        version: link:../zui
     devDependencies:
       '@sveltejs/kit':
         specifier: 'catalog:'
@@ -828,6 +834,9 @@ importers:
       '@sveltejs/package':
         specifier: 'catalog:'
         version: 2.5.8(svelte@5.56.10(@typescript-eslint/types@8.67.0))(typescript@6.0.3)
+      '@vitest/coverage-v8':
+        specifier: 'catalog:'
+        version: 4.1.11(@vitest/browser@4.1.11)(vitest@4.1.11)
       svelte:
         specifier: 'catalog:'
         version: 5.56.10(@typescript-eslint/types@8.67.0)

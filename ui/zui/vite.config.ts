@@ -33,12 +33,6 @@ export default defineConfig({
 					functions: 95,
 					lines: 95,
 					statements: 95
-				},
-				'src/lib/sveltekit/**': {
-					branches: 90,
-					functions: 95,
-					lines: 95,
-					statements: 95
 				}
 			}
 		},
