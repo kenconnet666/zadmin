@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { Stack, Text, defaultTheme, icss } from '@zadmin/zui-svelte';
+	import { Stack, Text, defaultTheme, icss } from '@zadmin/zui';
 
 	import type { DesktopError } from '../runtime/error.js';
 	import { useDesktopPlatform } from './context.js';

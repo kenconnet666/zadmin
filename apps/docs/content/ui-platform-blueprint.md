@@ -38,8 +38,8 @@ ui/
 
 | 目录             | 包名                  | 当前职责                                                        |
 | ---------------- | --------------------- | --------------------------------------------------------------- |
-| `ui/zui-core`    | `@zadmin/zui-core`    | 平台无关Theme、Token、StyleProgram、ICSS指令和设计Props         |
-| `ui/zui-svelte`  | `@zadmin/zui-svelte`  | Web Svelte组件、运行时CSS、编译优化和SvelteKit SSR              |
+| `ui/zui-core`    | `@zadmin/zui/core`    | 平台无关Theme、Token、StyleProgram、ICSS指令和设计Props         |
+| `ui/zui`  | `@zadmin/zui`  | Web Svelte组件、运行时CSS、编译优化和SvelteKit SSR              |
 | `ui/sveltekit`   | `@zadmin/sveltekit`   | 动态插件路由、客户端插件runtime和页面Outlet                     |
 | `ui/svelte-taro` | `@zadmin/svelte-taro` | Taro framework plugin、Svelte renderer、App/Page、平台能力      |
 | `ui/zui-taro`    | `@zadmin/zui-taro`    | Taro小程序组件和严格ICSS子集                                    |
@@ -608,7 +608,7 @@ docs(ui): plan browser miniapp and webview platforms
 ### P1：合并浏览器ZUI
 
 ```text
-ui/zui-core + ui/zui-svelte → ui/zui
+ui/zui-core + ui/zui → ui/zui
 ```
 
 - 只移动和改名，不改变ICSS或组件行为；

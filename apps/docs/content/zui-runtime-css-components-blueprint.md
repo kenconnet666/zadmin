@@ -203,7 +203,7 @@ export {
 } from './components/index.js';
 ```
 
-不保留旧`@zadmin/zui-svelte`兼容转发包，除非发布状态检查证明外部已有消费者；即使需要迁移包，也只发布deprecation版本，不让兼容层长期留在仓库。
+不保留旧`@zadmin/zui`兼容转发包，除非发布状态检查证明外部已有消费者；即使需要迁移包，也只发布deprecation版本，不让兼容层长期留在仓库。
 
 ## 5. Theme API
 

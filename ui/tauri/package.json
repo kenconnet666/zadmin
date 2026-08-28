@@ -83,11 +83,11 @@
 		"@tauri-apps/plugin-window-state": "catalog:desktop"
 	},
 	"peerDependencies": {
-		"@zadmin/zui-svelte": "^0.1.0",
+		"@zadmin/zui": "^0.1.0",
 		"svelte": ">=5.56.0 <6"
 	},
 	"peerDependenciesMeta": {
-		"@zadmin/zui-svelte": {
+		"@zadmin/zui": {
 			"optional": true
 		},
 		"svelte": {
@@ -100,7 +100,7 @@
 		"@types/node": "catalog:",
 		"@vitest/browser-playwright": "catalog:",
 		"@vitest/coverage-v8": "catalog:",
-		"@zadmin/zui-svelte": "workspace:^",
+		"@zadmin/zui": "workspace:^",
 		"playwright": "catalog:",
 		"svelte": "catalog:",
 		"svelte-check": "catalog:",

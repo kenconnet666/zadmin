@@ -62,12 +62,7 @@ let succeeded = false;
 const started = performance.now();
 try {
 	await mkdir(tarballRoot, { recursive: true });
-	for (const name of [
-		'@zadmin/zui-core',
-		'@zadmin/zui-svelte',
-		'@zadmin/zui-taro',
-		'@zadmin/svelte-taro'
-	]) {
+	for (const name of ['@zadmin/zui', '@zadmin/zui-taro', '@zadmin/svelte-taro']) {
 		await runPnpm(['--filter', name, 'build'], workspaceRoot);
 		await runPnpm(['--filter', name, 'pack', '--pack-destination', tarballRoot], workspaceRoot);
 	}
@@ -97,9 +92,8 @@ try {
 					'@tarojs/runtime': '4.2.1',
 					'@tarojs/taro': '4.2.1',
 					'@zadmin/svelte-taro': tarball('@zadmin/svelte-taro'),
-					'@zadmin/zui-core': tarball('@zadmin/zui-core'),
 					'@zadmin/zui-taro': tarball('@zadmin/zui-taro'),
-					'@zadmin/zui-svelte': tarball('@zadmin/zui-svelte'),
+					'@zadmin/zui': tarball('@zadmin/zui'),
 					svelte: 'https://pkg.svelte.dev/svelte/c/eb7532dd70fb11b36258347c44cf3910d244f987'
 				},
 				devDependencies: {
@@ -120,7 +114,7 @@ try {
 	);
 	await write(
 		resolve(fixtureRoot, 'pnpm-workspace.yaml'),
-		`packages:\n  - .\n\nallowBuilds:\n  '@parcel/watcher': true\n  '@swc/core': true\n  '@tarojs/binding': true\n  '@tarojs/cli': false\n  core-js: false\n  esbuild: true\n\noverrides:\n  '@tarojs/components>swiper': 12.1.2\n  '@tarojs/helper>esbuild': 0.25.12\n  '@zadmin/svelte-taro': '${tarball('@zadmin/svelte-taro')}'\n  '@zadmin/zui-core': '${tarball('@zadmin/zui-core')}'\n  '@zadmin/zui-taro': '${tarball('@zadmin/zui-taro')}'\n  '@zadmin/zui-svelte': '${tarball('@zadmin/zui-svelte')}'\n`
+		`packages:\n  - .\n\nallowBuilds:\n  '@parcel/watcher': true\n  '@swc/core': true\n  '@tarojs/binding': true\n  '@tarojs/cli': false\n  core-js: false\n  esbuild: true\n\noverrides:\n  '@tarojs/components>swiper': 12.1.2\n  '@tarojs/helper>esbuild': 0.25.12\n  '@zadmin/svelte-taro': '${tarball('@zadmin/svelte-taro')}'\n  '@zadmin/zui-taro': '${tarball('@zadmin/zui-taro')}'\n  '@zadmin/zui': '${tarball('@zadmin/zui')}'\n`
 	);
 	await write(
 		resolve(fixtureRoot, 'config/index.ts'),
@@ -171,8 +165,8 @@ void route;
 	);
 	await write(
 		resolve(fixtureRoot, 'src/types.ts'),
-		`import type { BoxProps as WebBoxProps } from '@zadmin/zui-svelte';
-import { __icssSlot } from '@zadmin/zui-svelte/internal';
+		`import type { BoxProps as WebBoxProps } from '@zadmin/zui';
+import { __icssSlot } from '@zadmin/zui/internal';
 import { useZuiTaroTheme } from '@zadmin/zui-taro/internal';
 import type { NativeElementProps } from '@zadmin/svelte-taro/native';
 const web: WebBoxProps = {};
@@ -251,7 +245,7 @@ void [web, camera, __icssSlot, useZuiTaroTheme];
 	const report = {
 		checkedAt: '2026-08-25',
 		durationMs: Math.round(performance.now() - started),
-		packages: ['zui-core', 'zui-svelte', 'zui-taro', 'svelte-taro'],
+		packages: ['zui', 'zui-taro', 'svelte-taro'],
 		productionFiles: outputFiles.length,
 		runtimes: { svelte: svelteVersions[0], taro: runtimeVersions[0] },
 		status: 'passed'

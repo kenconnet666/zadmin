@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { defaultTheme, defineTheme } from '@zadmin/zui-core';
+	import { defaultTheme, defineTheme } from '@zadmin/zui/core';
 
 	import {
 		Box,

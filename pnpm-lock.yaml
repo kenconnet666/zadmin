@@ -293,9 +293,9 @@ importers:
       '@zadmin/sveltekit':
         specifier: workspace:^
         version: link:../../ui/sveltekit
-      '@zadmin/zui-svelte':
+      '@zadmin/zui':
         specifier: workspace:^
-        version: link:../../ui/zui-svelte
+        version: link:../../ui/zui
     devDependencies:
       '@sveltejs/adapter-node':
         specifier: 'catalog:'
@@ -330,9 +330,9 @@ importers:
       '@zadmin/tauri':
         specifier: workspace:^
         version: link:../../ui/tauri
-      '@zadmin/zui-svelte':
+      '@zadmin/zui':
         specifier: workspace:^
-        version: link:../../ui/zui-svelte
+        version: link:../../ui/zui
     devDependencies:
       '@sveltejs/adapter-static':
         specifier: catalog:desktop
@@ -373,9 +373,9 @@ importers:
       '@fontsource/fira-mono':
         specifier: 'catalog:'
         version: 5.3.0
-      '@zadmin/zui-svelte':
+      '@zadmin/zui':
         specifier: workspace:^
-        version: link:../../ui/zui-svelte
+        version: link:../../ui/zui
     devDependencies:
       '@chromatic-com/storybook':
         specifier: 'catalog:'
@@ -892,9 +892,9 @@ importers:
       '@vitest/coverage-v8':
         specifier: 'catalog:'
         version: 4.1.11(@vitest/browser@4.1.11)(vitest@4.1.11)
-      '@zadmin/zui-svelte':
+      '@zadmin/zui':
         specifier: workspace:^
-        version: link:../zui-svelte
+        version: link:../zui
       playwright:
         specifier: 'catalog:'
         version: 1.62.1
@@ -917,33 +917,11 @@ importers:
         specifier: 'catalog:'
         version: 3.0.0(svelte@5.56.10(@typescript-eslint/types@8.67.0))(vitest@4.1.11)
 
-  ui/zui-core:
-    dependencies:
-      csstype:
-        specifier: 'catalog:'
-        version: 3.2.3
-    devDependencies:
-      '@vitest/coverage-v8':
-        specifier: 'catalog:'
-        version: 4.1.11(@vitest/browser@4.1.11)(vitest@4.1.11)
-      typescript:
-        specifier: 'catalog:'
-        version: 6.0.3
-      vite:
-        specifier: 'catalog:'
-        version: 8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(sass@1.103.1)(terser@5.50.0)(tsx@4.23.12)(yaml@2.9.0)
-      vitest:
-        specifier: 'catalog:'
-        version: 4.1.11(@types/node@26.2.0)(@vitest/browser-playwright@4.1.11)(@vitest/coverage-v8@4.1.11)(vite@8.2.2(@types/node@26.2.0)(esbuild@0.28.2)(sass@1.103.1)(terser@5.50.0)(tsx@4.23.12)(yaml@2.9.0))
-
-  ui/zui-svelte:
+  ui/zui:
     dependencies:
       '@types/estree':
         specifier: 'catalog:'
         version: 1.0.9
-      '@zadmin/zui-core':
-        specifier: workspace:^
-        version: link:../zui-core
       csstype:
         specifier: 'catalog:'
         version: 3.2.3
@@ -999,9 +977,9 @@ importers:
 
   ui/zui-taro:
     dependencies:
-      '@zadmin/zui-core':
+      '@zadmin/zui':
         specifier: workspace:^
-        version: link:../zui-core
+        version: link:../zui
     devDependencies:
       '@sveltejs/package':
         specifier: 'catalog:'

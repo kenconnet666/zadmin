@@ -25,7 +25,7 @@
 	"dependencies": {
 		"@tauri-apps/api": "catalog:desktop",
 		"@zadmin/tauri": "workspace:^",
-		"@zadmin/zui-svelte": "workspace:^"
+		"@zadmin/zui": "workspace:^"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-static": "catalog:desktop",

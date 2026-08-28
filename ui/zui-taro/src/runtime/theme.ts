@@ -1,5 +1,5 @@
 import { getContext, setContext } from 'svelte';
-import { defaultTheme, type DefaultTheme, type ThemeSchema } from '@zadmin/zui-core';
+import { defaultTheme, type DefaultTheme, type ThemeSchema } from '@zadmin/zui/core';
 
 const ZUI_TARO_THEME = Symbol.for('@zadmin/zui-taro/theme');
 

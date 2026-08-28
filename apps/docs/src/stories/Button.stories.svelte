@@ -1,6 +1,6 @@
 <script module lang="ts">
 	import { defineMeta } from '@storybook/addon-svelte-csf';
-	import { Button } from '@zadmin/zui-svelte';
+	import { Button } from '@zadmin/zui';
 	import { createRawSnippet } from 'svelte';
 
 	const label = (text: string) =>

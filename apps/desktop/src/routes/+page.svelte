@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { Channel } from '@tauri-apps/api/core';
-	import { Box, Button, Stack, Text, defaultTheme, icss } from '@zadmin/zui-svelte';
+	import { Box, Button, Stack, Text, defaultTheme, icss } from '@zadmin/zui';
 	import { BaseDirectory, type DesktopResult } from '@zadmin/tauri';
 	import {
 		ClipboardButton,

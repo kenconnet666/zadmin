@@ -48,7 +48,7 @@ function fileSpec(path) {
 let succeeded = false;
 try {
 	await mkdir(tarballRoot, { recursive: true });
-	for (const packageName of ['@zadmin/zui-core', '@zadmin/zui-svelte', '@zadmin/tauri']) {
+	for (const packageName of ['@zadmin/zui', '@zadmin/tauri']) {
 		await runPnpm(['--filter', packageName, 'build'], workspaceRoot);
 		await runPnpm(
 			['--filter', packageName, 'pack', '--pack-destination', tarballRoot],
@@ -86,8 +86,7 @@ try {
 				},
 				dependencies: {
 					'@zadmin/tauri': tarball('@zadmin/tauri'),
-					'@zadmin/zui-core': tarball('@zadmin/zui-core'),
-					'@zadmin/zui-svelte': tarball('@zadmin/zui-svelte'),
+					'@zadmin/zui': tarball('@zadmin/zui'),
 					svelte: '5.56.10'
 				},
 				devDependencies: {
@@ -108,8 +107,7 @@ try {
 
 overrides:
   '@zadmin/tauri': '${tarball('@zadmin/tauri')}'
-  '@zadmin/zui-core': '${tarball('@zadmin/zui-core')}'
-  '@zadmin/zui-svelte': '${tarball('@zadmin/zui-svelte')}'
+  '@zadmin/zui': '${tarball('@zadmin/zui')}'
 
 allowBuilds:
   '@parcel/watcher': true
@@ -138,7 +136,7 @@ allowBuilds:
 	await write(
 		resolve(fixtureRoot, 'src/App.svelte'),
 		`<script lang="ts">
-import { ZuiProvider } from '@zadmin/zui-svelte';
+import { ZuiProvider } from '@zadmin/zui';
 import { createUnsupportedDesktopPlatform } from '@zadmin/tauri';
 import { DesktopProvider, FilePickerButton, WindowFrame } from '@zadmin/tauri/svelte';
 const platform = createUnsupportedDesktopPlatform();

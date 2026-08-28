@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import type { HTMLAnchorAttributes } from 'svelte/elements';
-	import { defaultTheme, icss } from '@zadmin/zui-svelte';
+	import { defaultTheme, icss } from '@zadmin/zui';
 
 	import type { DesktopError } from '../runtime/error.js';
 	import { useDesktopPlatform } from './context.js';

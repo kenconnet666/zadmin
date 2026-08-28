@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { Box, defaultTheme, icss } from '@zadmin/zui-svelte';
+	import { Box, defaultTheme, icss } from '@zadmin/zui';
 
 	import type { DesktopError } from '../runtime/error.js';
 	import WindowControls from './WindowControls.svelte';

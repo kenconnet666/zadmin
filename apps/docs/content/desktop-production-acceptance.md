@@ -20,11 +20,11 @@ apps/
 ```
 
 - `@zadmin/tauri`根入口只包含系统API、typed result/error、权限可用性、资源生命周期和命令类型推导，不加载Svelte或ZUI；
-- `@zadmin/tauri/svelte`提供9个桌面组件，普通视觉原语全部复用`@zadmin/zui-svelte`；
+- `@zadmin/tauri/svelte`提供9个桌面组件，普通视觉原语全部复用`@zadmin/zui`；
 - `@zadmin/tauri/testing`提供完整fake driver和fixture；
 - `apps/desktop`使用SvelteKit SPA和`adapter-static`，生产页面由`tauri.localhost`本地协议加载；
 - 生产应用不启动Node、Vite、SvelteKit SSR、sidecar或本地HTTP后端；
-- 不存在`zui-desktop`；原`@zadmin/zui-web`已直接改名为`@zadmin/zui-svelte`，仓库没有兼容转发包。
+- 不存在`zui-desktop`；原`@zadmin/zui-web`已直接改名为`@zadmin/zui`，仓库没有兼容转发包。
 
 ## 强类型IPC
 
@@ -111,7 +111,7 @@ Svelte check: 0 errors, 0 warnings
 
 浏览器组件测试使用Chromium和fake driver，覆盖文件/剪贴板/通知/外链/窗口队列、权限失败、Provider缺失和listener释放。测试曾发现连续窗口操作会被`busy`状态吞掉，最终实现改为串行action queue并完成回归。
 
-外部clean-package验收把`@zadmin/zui-core`、`@zadmin/zui-svelte`和`@zadmin/tauri`打为tarball，在系统临时目录完成：
+外部clean-package验收把`@zadmin/zui/core`、`@zadmin/zui`和`@zadmin/tauri`打为tarball，在系统临时目录完成：
 
 - 非workspace安装；
 - frozen reinstall；

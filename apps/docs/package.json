@@ -16,7 +16,7 @@
 	},
 	"dependencies": {
 		"@fontsource/fira-mono": "catalog:",
-		"@zadmin/zui-svelte": "workspace:^"
+		"@zadmin/zui": "workspace:^"
 	},
 	"devDependencies": {
 		"@chromatic-com/storybook": "catalog:",

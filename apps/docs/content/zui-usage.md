@@ -1,6 +1,6 @@
 # ZUI 使用与外部接入
 
-`@zadmin/zui-svelte`同时提供Svelte组件、ICSS运行时、Svelte预处理器和SvelteKit SSR集成。公开样式API只返回class字符串；预处理器是性能优化，未启用时运行时仍能正确生成完整class rule。
+`@zadmin/zui`同时提供Svelte组件、ICSS运行时、Svelte预处理器和SvelteKit SSR集成。公开样式API只返回class字符串；预处理器是性能优化，未启用时运行时仍能正确生成完整class rule。
 
 ## 安装
 
@@ -9,7 +9,7 @@
 ```json
 {
 	"dependencies": {
-		"@zadmin/zui-svelte": "workspace:^"
+		"@zadmin/zui": "workspace:^"
 	}
 }
 ```
@@ -17,7 +17,7 @@
 发布后外部仓库：
 
 ```powershell
-pnpm add @zadmin/zui-svelte
+pnpm add @zadmin/zui
 ```
 
 支持范围：
@@ -34,7 +34,7 @@ Svelte >= 5.56 < 6
 
 ```js
 import adapter from '@sveltejs/adapter-node';
-import { icssPreprocess } from '@zadmin/zui-svelte/compiler';
+import { icssPreprocess } from '@zadmin/zui/compiler';
 
 export default {
 	preprocess: [icssPreprocess()],
@@ -47,7 +47,7 @@ export default {
 ```ts
 import adapter from '@sveltejs/adapter-node';
 import { sveltekit } from '@sveltejs/kit/vite';
-import { icssPreprocess } from '@zadmin/zui-svelte/compiler';
+import { icssPreprocess } from '@zadmin/zui/compiler';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
@@ -71,7 +71,7 @@ icssPreprocess({ dynamicValues: 'class-rules' });
 在`src/hooks.server.ts`中安装请求级Registry：
 
 ```ts
-import { icssHandle } from '@zadmin/zui-svelte/sveltekit';
+import { icssHandle } from '@zadmin/zui/sveltekit';
 
 export const handle = icssHandle();
 ```
@@ -80,7 +80,7 @@ export const handle = icssHandle();
 
 ```ts
 import { sequence } from '@sveltejs/kit/hooks';
-import { icssHandle } from '@zadmin/zui-svelte/sveltekit';
+import { icssHandle } from '@zadmin/zui/sveltekit';
 
 export const handle = sequence(icssHandle(), applicationHandle);
 ```
@@ -103,7 +103,7 @@ nonce和hash不能同时开启。`inline-vars`仍需要允许`style-src-attr 'un
 
 ```svelte
 <script lang="ts">
-	import { defaultTheme, icss } from '@zadmin/zui-svelte';
+	import { defaultTheme, icss } from '@zadmin/zui';
 
 	let width = $state(320);
 	let opacity = $state(0.8);
@@ -127,7 +127,7 @@ nonce和hash不能同时开启。`inline-vars`仍需要允许`style-src-attr 'un
 普通TypeScript同样可用：
 
 ```ts
-import { defaultTheme, icss } from '@zadmin/zui-svelte';
+import { defaultTheme, icss } from '@zadmin/zui';
 
 const className = icss(defaultTheme, (style) => {
 	style.color._primary;
@@ -140,7 +140,7 @@ const className = icss(defaultTheme, (style) => {
 ## 主题
 
 ```ts
-import { defineTheme } from '@zadmin/zui-svelte';
+import { defineTheme } from '@zadmin/zui';
 
 export const theme = defineTheme({
 	color: {
@@ -161,7 +161,7 @@ export const theme = defineTheme({
 
 ```svelte
 <script lang="ts">
-	import { Box, Button, Stack, Text, ZuiProvider } from '@zadmin/zui-svelte';
+	import { Box, Button, Stack, Text, ZuiProvider } from '@zadmin/zui';
 </script>
 
 <ZuiProvider>

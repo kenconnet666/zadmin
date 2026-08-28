@@ -1,4 +1,4 @@
-import { createIcssSlot, createStyleProgram, defaultTheme } from '@zadmin/zui-core';
+import { createIcssSlot, createStyleProgram, defaultTheme } from '@zadmin/zui/core';
 import { describe, expect, it } from 'vitest';
 
 import { bindTaroIcss, compileTaroIcss, rpx, slotValues } from '../src/compiler/index.ts';

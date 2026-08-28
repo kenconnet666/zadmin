@@ -23,8 +23,7 @@ packages/
 ui/
   sveltekit/   服务端动态路由与浏览器插件 Runtime
   tauri/       Tauri 系统能力、权限结果、生命周期和测试驱动
-  zui-core/    平台无关的主题、Token、ICSS 和设计契约
-  zui-svelte/     可供任意 Web 项目使用的 Svelte 组件库
+  zui/            浏览器/WebView 通用的 Theme、ICSS 与 Svelte 组件库
   zui-taro/    微信小程序 ZUI 组件与 ICSS 子集
   svelte-taro/ Svelte compiler、Taro renderer/runtime 和微信平台能力
 

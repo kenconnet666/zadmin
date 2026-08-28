@@ -42,7 +42,7 @@
 
 ## ZUI与样式
 
-- 目标`@zadmin/zui`（迁移前为`@zadmin/zui-svelte`）的`icss()`公开层永远只返回class字符串，不返回`{ class, style }`，也不要求action、attachment或`css` prop。
+- 目标`@zadmin/zui`（迁移前为`@zadmin/zui`）的`icss()`公开层永远只返回class字符串，不返回`{ class, style }`，也不要求action、attachment或`css` prop。
 - ICSS回调参数在第一方组件、recipe、Docs和测试中统一命名为`s`，例如`icss(theme, (s) => s.display.flex)`。
 - 第一方组件需要`transparent`、`none`、`auto`等CSS标准关键字而属性元数据尚未暴露时，应补充系统关键字、类型和测试，再使用`s.property.keyword`；禁止长期保留`s.property('keyword')`。
 - 第一方组件出现`#FFFFFF`等稳定视觉字面量时，应先复用或新增语义Theme token，再使用`s.property._token`；token按`canvas`、`surface`、`border`等用途命名，不按具体颜色值命名。

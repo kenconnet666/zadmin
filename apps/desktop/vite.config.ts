@@ -20,7 +20,7 @@ export default defineConfig({
 			'@zadmin/tauri > @tauri-apps/plugin-process',
 			'@zadmin/tauri > @tauri-apps/plugin-store',
 			'@zadmin/tauri > @tauri-apps/plugin-window-state',
-			'@zadmin/zui-svelte > stylis'
+			'@zadmin/zui > stylis'
 		]
 	},
 	plugins: [sveltekit()],

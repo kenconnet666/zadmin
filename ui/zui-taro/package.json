@@ -71,7 +71,7 @@
 		"url": "https://github.com/kenconnet666/zadmin/issues"
 	},
 	"dependencies": {
-		"@zadmin/zui-core": "workspace:^"
+		"@zadmin/zui": "workspace:^"
 	},
 	"peerDependencies": {
 		"@tarojs/components": "4.2.1",

@@ -8,7 +8,7 @@ DI容器、Plugin Module、上下游插件类型传播、服务端/客户端独�
 
 ZUI ICSS和五个基础组件已经按[ICSS生产架构](./zui-icss.md)完成生产验收：公开API只有class字符串；Svelte编译器把安全动态叶子提升为inline CSS变量；运行时负责结构CSS、普通TS回退、SSR Registry和HMR。不要回到`{ class, style }`或完整静态提取路线。外部接入见[ZUI使用与外部接入](./zui-usage.md)。
 
-2026-08-25 已把平台无关的Theme、Token、ICSS Program和设计Props提取到`@zadmin/zui-core`，原Web能力迁移为`@zadmin/zui-svelte`；Web API与行为未扩展，两个tarball已完成隔离安装、check、build和SSR回归。
+2026-08-25 已把平台无关的Theme、Token、ICSS Program和设计Props提取到`@zadmin/zui/core`，原Web能力迁移为`@zadmin/zui`；Web API与行为未扩展，两个tarball已完成隔离安装、check、build和SSR回归。
 
 2026-08-26 已把Svelte/UI平台包统一迁入根`ui/`，并完成`@zadmin/tauri`、9个桌面组件和`apps/desktop`。桌面端使用SvelteKit SPA静态产物、Tauri 2最小capability和`tauri-specta`生成bindings；真实Win11 x64静态页面、系统探针、HMR、release exe、NSIS安装/卸载均通过。当前发布件未签名，正式外部分发前必须补Authenticode；完整证据见[桌面生产验收](./desktop-production-acceptance.md)。
 
@@ -181,10 +181,10 @@ plugin.ts
 | 浏览器Plugin Runtime        | `ui/sveltekit/src/lib/client-runtime.ts`               |
 | Approval公开类型            | `plugins/approval/src/server/contract.ts`              |
 | CRM上游类型依赖示例         | `plugins/crm/src/server/contract.ts`、`service.ts`     |
-| ICSS Runtime与Registry      | `ui/zui-svelte/src/lib/icss/`                          |
-| Svelte ICSS编译器           | `ui/zui-svelte/src/lib/compiler/`                      |
-| SvelteKit ICSS SSR          | `ui/zui-svelte/src/lib/sveltekit/`                     |
-| ZUI基础组件                 | `ui/zui-svelte/src/lib/components/`                    |
+| ICSS Runtime与Registry      | `ui/zui/src/lib/icss/`                          |
+| Svelte ICSS编译器           | `ui/zui/src/lib/compiler/`                      |
+| SvelteKit ICSS SSR          | `ui/zui/src/lib/sveltekit/`                     |
+| ZUI基础组件                 | `ui/zui/src/lib/components/`                    |
 | ZUI接入文档                 | `apps/docs/content/zui-usage.md`                       |
 | Taro framework plugin       | `ui/svelte-taro/src/plugin/index.cts`                  |
 | Svelte Taro compiler        | `ui/svelte-taro/src/compiler/`                         |
@@ -258,14 +258,14 @@ approval: inject<ApprovalStarter>('@zadmin/approval');
 - 50个并发SvelteKit SSR请求无Registry串扰，hydration不重复插入规则；
 - CSP nonce、header hash和prerender meta hash均有测试；
 - 真实Vite HMR将背景结构从primary改为danger时，rule维持9、style tag维持1；
-- `@zadmin/zui-svelte@0.1.0`发布tarball在仓库外SvelteKit工程安装、check、build和SSR通过；
+- `@zadmin/zui@0.1.0`发布tarball在仓库外SvelteKit工程安装、check、build和SSR通过；
 - 外部fixture的ZUI页面节点gzip 10,243 bytes，客户端没有compiler/server模块；
 - Docs、Storybook和Playwright动态示例全部通过。
 
 ZUI重点命令：
 
 ```powershell
-pnpm --filter @zadmin/zui-svelte test:coverage
+pnpm --filter @zadmin/zui test:coverage
 pnpm --filter @zadmin/docs test:e2e
 pnpm --filter @zadmin/docs build-storybook
 ```

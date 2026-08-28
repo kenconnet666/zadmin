@@ -1,6 +1,6 @@
 import type { Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
-import { icssHandle } from '@zadmin/zui-svelte/sveltekit';
+import { icssHandle } from '@zadmin/zui/sveltekit';
 import { randomUUID, timingSafeEqual } from 'node:crypto';
 import { mkdir, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';

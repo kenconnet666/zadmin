@@ -5,7 +5,7 @@ import type {
 	DefaultTheme,
 	StackDesignProps,
 	ThemeSchema
-} from '@zadmin/zui-core';
+} from '@zadmin/zui/core';
 
 import type { TaroStyle } from '../runtime/index.ts';
 

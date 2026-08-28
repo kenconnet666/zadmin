@@ -5,7 +5,7 @@ import {
 	type IcssDeclarationValue,
 	type IcssDynamicSlot,
 	type StyleProgram
-} from '@zadmin/zui-core';
+} from '@zadmin/zui/core';
 
 import { hyphenateTaroProperty } from '../runtime/styles.ts';
 

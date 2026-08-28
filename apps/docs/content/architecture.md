@@ -4,9 +4,9 @@
 
 ZAdmin是一个 pnpm workspace中的多应用、可复用 Package和动态 Plugin系统。SvelteKit同时承担页面、SSR和服务端入口，不拆分单独 Java后端或 HTTP微服务层。
 
-`ui/zui-svelte`的样式层使用运行时 ICSS和Svelte编译优化双轨架构。公开调用只返回class字符串；可追踪的Svelte响应式叶子在编译时提升为inline CSS自定义属性，结构CSS由运行时确定性生成和缓存。完整合同见[ZUI ICSS生产架构](./zui-icss.md)。
+`ui/zui`的样式层使用运行时 ICSS和Svelte编译优化双轨架构。公开调用只返回class字符串；可追踪的Svelte响应式叶子在编译时提升为inline CSS自定义属性，结构CSS由运行时确定性生成和缓存。完整合同见[ZUI ICSS生产架构](./zui-icss.md)。
 
-微信小程序不是 Web renderer 的条件分支。`@zadmin/zui-core`只保存跨目标设计合同，`@zadmin/zui-svelte`和`@zadmin/zui-taro`拥有各自薄 Svelte模板；`@zadmin/svelte-taro`独立承担 Taro framework plugin、compiler、renderer、App/Page runtime、微信平台能力与开发态监督器所需协议。默认生产目标是WebView，Skyline单独分级。
+微信小程序不是 Web renderer 的条件分支。`@zadmin/zui/core`只保存跨目标设计合同，`@zadmin/zui`和`@zadmin/zui-taro`拥有各自薄 Svelte模板；`@zadmin/svelte-taro`独立承担 Taro framework plugin、compiler、renderer、App/Page runtime、微信平台能力与开发态监督器所需协议。默认生产目标是WebView，Skyline单独分级。
 
 ```text
 apps/
@@ -41,10 +41,10 @@ plugins/
 ## Web 与微信依赖边界
 
 ```text
-                         @zadmin/zui-core
+                         @zadmin/zui/core
                           ▲             ▲
                           │             │
-               @zadmin/zui-svelte   @zadmin/zui-taro
+               @zadmin/zui   @zadmin/zui-taro
 
                                @zadmin/svelte-taro ──→ Taro 4.2.1
 
@@ -58,7 +58,7 @@ apps/wechat           ──→ zui-taro + svelte-taro
 - 微信端前后端不拆成两个项目；小程序包只包含客户端代码，登录code兑换、手机号兑换、支付签名/回调等仍由现有服务端package/plugin负责。
 - 微信业务module在构建时静态合入小程序。开发时可以监听外部package realpath，生产安装/升级后必须重新构建、审核和发布，不能从网络加载可执行JavaScript。
 
-桌面端复用`@zadmin/zui-svelte`，通过`@zadmin/tauri`的强类型 facade调用系统能力。SvelteKit仅输出本地SPA静态文件；自定义Rust command/event/Channel由`tauri-specta`生成TypeScript bindings，正式应用不启动Node、SSR、sidecar或本地HTTP后端。
+桌面端复用`@zadmin/zui`，通过`@zadmin/tauri`的强类型 facade调用系统能力。SvelteKit仅输出本地SPA静态文件；自定义Rust command/event/Channel由`tauri-specta`生成TypeScript bindings，正式应用不启动Node、SSR、sidecar或本地HTTP后端。
 
 ## Svelte Taro编译与运行时
 

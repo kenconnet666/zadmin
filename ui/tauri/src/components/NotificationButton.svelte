@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { Button, type ButtonProps } from '@zadmin/zui-svelte';
+	import { Button, type ButtonProps } from '@zadmin/zui';
 
 	import type { DesktopNotificationOptions } from '../api/notification.js';
 	import type { DesktopError } from '../runtime/error.js';

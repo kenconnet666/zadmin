@@ -3,7 +3,7 @@ import {
 	defaultTheme,
 	type IcssFactory,
 	type ThemeSchema
-} from '@zadmin/zui-core';
+} from '@zadmin/zui/core';
 
 import { compileTaroIcss, type CompiledTaroIcss } from '../compiler/index.ts';
 

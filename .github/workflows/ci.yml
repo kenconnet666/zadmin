@@ -113,11 +113,8 @@ jobs:
       - name: Install Chromium for coverage suites
         run: pnpm --filter @zadmin/docs exec playwright install --with-deps chromium
 
-      - name: Run ZUI Core coverage
-        run: pnpm --filter @zadmin/zui-core test:coverage
-
-      - name: Run ZUI Svelte coverage
-        run: pnpm --filter @zadmin/zui-svelte test:coverage
+      - name: Run ZUI coverage
+        run: pnpm --filter @zadmin/zui test:coverage
 
       - name: Run Svelte Taro coverage
         run: pnpm --filter @zadmin/svelte-taro test:coverage
@@ -181,6 +178,9 @@ jobs:
 
       - name: Test desktop frontend
         run: pnpm test:desktop
+
+      - name: Build desktop frontend for Tauri macros
+        run: pnpm --filter @zadmin/desktop build
 
       - name: Check Rust formatting
         run: pnpm --filter @zadmin/desktop rust:fmt

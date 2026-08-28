@@ -15,11 +15,11 @@ if (result.ok) console.log(result.value);
 
 Use `@zadmin/tauri/testing` for deterministic fake capabilities. System permissions and filesystem scopes remain owned by each Tauri host application's capability files.
 
-Svelte desktop integrations are isolated behind a separate entry and reuse `@zadmin/zui-svelte`:
+Svelte desktop integrations are isolated behind a separate entry and reuse `@zadmin/zui`:
 
 ```svelte
 <script lang="ts">
-	import { ZuiProvider } from '@zadmin/zui-svelte';
+	import { ZuiProvider } from '@zadmin/zui';
 	import { DesktopProvider, WindowFrame } from '@zadmin/tauri/svelte';
 	import { createTauriDesktopPlatform } from '@zadmin/tauri';
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Stack, Text, ZuiProvider } from '@zadmin/zui-svelte';
+	import { Stack, Text, ZuiProvider } from '@zadmin/zui';
 
 	import type { DesktopPlatform } from '../src/index.js';
 	import {

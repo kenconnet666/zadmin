@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Button, Stack } from '@zadmin/zui-svelte';
+	import { Button, Stack } from '@zadmin/zui';
 
 	import type { DesktopError } from '../runtime/error.js';
 	import type { DesktopResourceHandle } from '../runtime/context.js';

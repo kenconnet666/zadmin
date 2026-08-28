@@ -9,15 +9,15 @@
 1. UI 和 Svelte 平台相关包统一从 `packages/` 迁入根目录 `ui/`。
 2. `packages/sveltekit` 迁为 `ui/sveltekit`，包名继续是 `@zadmin/sveltekit`。
 3. `packages/svelte-taro` 迁为 `ui/svelte-taro`，包名继续是 `@zadmin/svelte-taro`。
-4. `packages/zui-core` 迁为 `ui/zui-core`，包名继续是 `@zadmin/zui-core`。
+4. `packages/zui-core` 迁为 `ui/zui-core`，包名继续是 `@zadmin/zui/core`。
 5. `packages/zui-taro` 迁为 `ui/zui-taro`，包名继续是 `@zadmin/zui-taro`。
-6. `packages/zui-web` 迁为 `ui/zui-svelte`，包名直接从 `@zadmin/zui-web` 改为 `@zadmin/zui-svelte`。
+6. `packages/zui-web` 迁为 `ui/zui`，包名直接从 `@zadmin/zui-web` 改为 `@zadmin/zui`。
 7. 不保留 `@zadmin/zui-web` 兼容包，不增加重复的转发 package；仓库内和外部使用方执行一次明确迁移。
 8. 新增 `ui/tauri`，包名为 `@zadmin/tauri`。
 9. 不新增 `zui-desktop`；Tauri 的 Svelte 适配层和桌面专属组件统一放入 `@zadmin/tauri/svelte`。
-10. 桌面端通用组件、Theme 和 ICSS 继续直接使用 `@zadmin/zui-svelte`。
+10. 桌面端通用组件、Theme 和 ICSS 继续直接使用 `@zadmin/zui`。
 11. `@zadmin/tauri` 同时承担两类职责：尽可能完整、强类型、受权限约束地接入本地系统 API，以及提供组合这些能力的桌面组件封装层。
-12. Tauri 组件层可以封装 `@zadmin/zui-svelte`，但不能复制或改名转发普通 Button、Box、Stack 等 Web 组件。
+12. Tauri 组件层可以封装 `@zadmin/zui`，但不能复制或改名转发普通 Button、Box、Stack 等 Web 组件。
 13. 所有自定义 Rust command 和 event 统一通过 `tauri-specta` 生成 TypeScript bindings，不手写重复的 IPC 参数或返回类型。
 14. 新增 `apps/desktop` 作为 Tauri + SvelteKit SPA 验收宿主。
 
@@ -26,7 +26,7 @@
 Tauri 的前端使用 Web 技术，但不是把应用实现为远程网站。在 Windows 11 上，SvelteKit 产物由系统 Microsoft Edge WebView2 渲染，通过 Tauri IPC 调用 Rust 宿主、官方插件和 Windows 系统能力。
 
 ```text
-@zadmin/zui-svelte + SvelteKit SPA
+@zadmin/zui + SvelteKit SPA
               │
               ▼
        Windows WebView2
@@ -43,7 +43,7 @@ Tauri 的前端使用 Web 技术，但不是把应用实现为远程网站。在
 
 因此桌面端不会复制一套 Web 组件库：
 
-- `Box`、`Button`、`Stack`、`Text`、Theme、ICSS、表单和普通布局属于 `@zadmin/zui-svelte`；
+- `Box`、`Button`、`Stack`、`Text`、Theme、ICSS、表单和普通布局属于 `@zadmin/zui`；
 - 桌面 Provider、窗口框架、标题栏、窗口按钮、文件选择和其他系统能力组件属于 `@zadmin/tauri/svelte`；
 - 系统 API 属于 `@zadmin/tauri` 根入口；
 - Tauri 组件可以组合 ZUI 视觉原语与一个或多个本地能力，但不能只为普通 ZUI 组件换名字；
@@ -116,16 +116,16 @@ packages:
 
 | 物理路径         | npm 包名              | 职责                                                                    |
 | ---------------- | --------------------- | ----------------------------------------------------------------------- |
-| `ui/zui-core`    | `@zadmin/zui-core`    | 平台无关 Theme、Token、ICSS Program、设计 Props                         |
-| `ui/zui-svelte`  | `@zadmin/zui-svelte`  | Web/WebView2 Svelte 组件、ICSS runtime/compiler、SvelteKit SSR 集成     |
+| `ui/zui-core`    | `@zadmin/zui/core`    | 平台无关 Theme、Token、ICSS Program、设计 Props                         |
+| `ui/zui`  | `@zadmin/zui`  | Web/WebView2 Svelte 组件、ICSS runtime/compiler、SvelteKit SSR 集成     |
 | `ui/zui-taro`    | `@zadmin/zui-taro`    | Taro/微信自定义 renderer 专用组件和 ICSS 子集                           |
 | `ui/svelte-taro` | `@zadmin/svelte-taro` | Svelte→Taro compiler、renderer、runtime、微信平台能力                   |
 | `ui/sveltekit`   | `@zadmin/sveltekit`   | 动态插件页、客户端插件 runtime、SvelteKit host module                   |
 | `ui/tauri`       | `@zadmin/tauri`       | Tauri/Windows 系统 API、权限与生命周期、Svelte 桌面适配层和系统能力组件 |
 
-`@zadmin/zui-web` → `@zadmin/zui-svelte` 是唯一包名 breaking change。新名称明确表达它是 Svelte renderer，同时可运行在浏览器和 Tauri WebView2；其他四个现有包保持 npm 名称、exports 和类型传播方式不变。
+`@zadmin/zui-web` → `@zadmin/zui` 是唯一包名 breaking change。新名称明确表达它是 Svelte renderer，同时可运行在浏览器和 Tauri WebView2；其他四个现有包保持 npm 名称、exports 和类型传播方式不变。
 
-若 `@zadmin/zui-web` 尚未发布到 registry，则 `@zadmin/zui-svelte` 延续当前 `0.1.0` 实现历史；若已经发布，则发布迁移说明并对旧包标记 deprecated，但仓库内不保留兼容转发包。
+若 `@zadmin/zui-web` 尚未发布到 registry，则 `@zadmin/zui` 延续当前 `0.1.0` 实现历史；若已经发布，则发布迁移说明并对旧包标记 deprecated，但仓库内不保留兼容转发包。
 
 ## 5. 最终依赖图
 
@@ -134,8 +134,8 @@ packages:
     ▲
     └──────────── @zadmin/sveltekit
 
-@zadmin/zui-core
-    ├──────────── @zadmin/zui-svelte
+@zadmin/zui/core
+    ├──────────── @zadmin/zui
     │                 ▲
     │                 ├──────── apps/admin
     │                 ├──────── apps/docs
@@ -153,14 +153,14 @@ packages:
     ├──────────── apps/desktop
     └─ /svelte ── apps/desktop
                      ▲
-                     └──────── @zadmin/zui-svelte
+                     └──────── @zadmin/zui
 ```
 
 约束：
 
-- `@zadmin/zui-svelte` 不依赖 Tauri；普通浏览器项目可以独立使用；
+- `@zadmin/zui` 不依赖 Tauri；普通浏览器项目可以独立使用；
 - `@zadmin/tauri` 根入口不 import Svelte 或 ZUI；
-- `@zadmin/tauri/svelte` 以 Svelte 与 `@zadmin/zui-svelte` 为 peer dependency；
+- `@zadmin/tauri/svelte` 以 Svelte 与 `@zadmin/zui` 为 peer dependency；
 - `@zadmin/tauri/testing` 不能进入生产 bundle；
 - `@zadmin/svelte-taro` 不依赖 ZUI；
 - `@zadmin/zui-taro` 不依赖 Web renderer；
@@ -184,7 +184,7 @@ packages:
 ### 6.2 适当整理的目录
 
 ```text
-ui/zui-svelte/src/lib/
+ui/zui/src/lib/
 ├─ compiler/
 ├─ components/
 ├─ icss/
@@ -197,7 +197,7 @@ ui/zui-svelte/src/lib/
 原 `internal.ts` 移到 `runtime/internal.ts`，但公开路径继续是：
 
 ```text
-@zadmin/zui-svelte/internal
+@zadmin/zui/internal
 ```
 
 ```text
@@ -217,15 +217,15 @@ ui/zui-taro/src/
 
 物理整理和包名重命名分开提交，避免一次变更同时包含多个故障来源。
 
-## 7. `@zadmin/zui-svelte` 重命名合同
+## 7. `@zadmin/zui` 重命名合同
 
 迁移：
 
 ```text
-@zadmin/zui-web           → @zadmin/zui-svelte
-@zadmin/zui-web/compiler  → @zadmin/zui-svelte/compiler
-@zadmin/zui-web/internal  → @zadmin/zui-svelte/internal
-@zadmin/zui-web/sveltekit → @zadmin/zui-svelte/sveltekit
+@zadmin/zui-web           → @zadmin/zui
+@zadmin/zui-web/compiler  → @zadmin/zui/compiler
+@zadmin/zui-web/internal  → @zadmin/zui/internal
+@zadmin/zui-web/sveltekit → @zadmin/zui/sveltekit
 ```
 
 保持不变：
@@ -244,7 +244,7 @@ ui/zui-taro/src/
 - 32 个当前源码、测试、应用和文档文件，共 109 处旧名称引用；
 - `apps/admin` imports 与 Vite preprocess；
 - `apps/docs` imports、Storybook 与 Svelte config；
-- `ui/zui-svelte` 自引用和 compiler 默认 module 名；
+- `ui/zui` 自引用和 compiler 默认 module 名；
 - `ui/svelte-taro` 外部 tarball acceptance fixture；
 - `pnpm-lock.yaml` importer/link；
 - package repository/homepage 元数据；
@@ -320,7 +320,7 @@ ui/tauri/
 }
 ```
 
-`@zadmin/tauri` 根入口必须可在不加载 Svelte/ZUI 的 TypeScript 环境中被 tree-shake；`./svelte` 才能 import `@zadmin/zui-svelte`。
+`@zadmin/tauri` 根入口必须可在不加载 Svelte/ZUI 的 TypeScript 环境中被 tree-shake；`./svelte` 才能 import `@zadmin/zui`。
 
 ## 9. DesktopPlatform 系统 API
 
@@ -433,7 +433,7 @@ type DesktopPlatformWith<TCommands extends CommandBindings> = DesktopPlatform & 
 
 ## 11. Tauri Svelte 适配与桌面组件层
 
-`@zadmin/tauri/svelte` 是一个可持续扩展的桌面组件层，不只是系统 API 的演示包装。它负责把 `@zadmin/zui-svelte` 的视觉原语、Svelte 状态和 Tauri 本地能力组合成可直接用于桌面应用的强类型组件。
+`@zadmin/tauri/svelte` 是一个可持续扩展的桌面组件层，不只是系统 API 的演示包装。它负责把 `@zadmin/zui` 的视觉原语、Svelte 状态和 Tauri 本地能力组合成可直接用于桌面应用的强类型组件。
 
 允许进入这一层的代码至少满足一项：
 
@@ -443,7 +443,7 @@ type DesktopPlatformWith<TCommands extends CommandBindings> = DesktopPlatform & 
 - 提供桌面窗口框架、拖动区、系统状态或原生交互语义；
 - 给浏览器、Storybook 和测试提供一致的 fake/fallback 行为。
 
-不允许只把 `Button`、`Box`、`Stack`、`Text` 换名后重新导出。普通视觉组件始终从 `@zadmin/zui-svelte` 使用，避免形成第二套主题、Props 和样式实现。
+不允许只把 `Button`、`Box`、`Stack`、`Text` 换名后重新导出。普通视觉组件始终从 `@zadmin/zui` 使用，避免形成第二套主题、Props 和样式实现。
 
 第一阶段实现以下 9 个组件：
 
@@ -456,7 +456,7 @@ type DesktopPlatformWith<TCommands extends CommandBindings> = DesktopPlatform & 
    - 统一安全区、焦点、主题和无边框窗口布局。
 3. `WindowTitleBar`
    - 自定义标题栏与拖动区域；
-   - 复用 `@zadmin/zui-svelte` 的布局、文字和主题。
+   - 复用 `@zadmin/zui` 的布局、文字和主题。
 4. `WindowControls`
    - minimize、maximize/restore、close；
    - 同步真实窗口状态，不复制 Button 样式。
@@ -516,7 +516,7 @@ apps/desktop/
 
 验证内容：
 
-- `@zadmin/zui-svelte` Theme、ICSS 和基础组件；
+- `@zadmin/zui` Theme、ICSS 和基础组件；
 - DesktopProvider、WindowFrame 和窗口控制组件；
 - FilePickerButton、ClipboardButton、ExternalLink 与 NotificationButton；
 - app/os/window 只读信息；
@@ -750,8 +750,8 @@ refactor(workspace): move ui packages under ui
 ### 阶段 2：ZUI 包名重命名
 
 ```text
-ui/zui-web       → ui/zui-svelte
-@zadmin/zui-web  → @zadmin/zui-svelte
+ui/zui-web       → ui/zui
+@zadmin/zui-web  → @zadmin/zui
 ```
 
 同步更新全部 32 个已知引用文件中的 109 处旧名称、compiler 默认 module 名、package metadata、fixtures 和文档。
@@ -784,7 +784,7 @@ feat(tauri): add typed desktop system platform
 
 ### 阶段 5：Tauri Svelte 适配与桌面组件层
 
-新增 `@zadmin/tauri/svelte` 的首批 9 个组件。普通视觉原语全部复用 `@zadmin/zui-svelte`，桌面层只增加系统能力、权限、native event 和资源生命周期语义。
+新增 `@zadmin/tauri/svelte` 的首批 9 个组件。普通视觉原语全部复用 `@zadmin/zui`，桌面层只增加系统能力、权限、native event 和资源生命周期语义。
 
 提交：
 
@@ -823,7 +823,7 @@ docs(desktop): finalize tauri handoff
 - `apps/docs` Svelte config、hooks、Storybook、routes 和 content；
 - `apps/wechat` supervisor、file-policy 和 tests；
 - `ui/svelte-taro` tarball acceptance 路径；
-- `ui/zui-svelte` 自引用和 compiler module 识别；
+- `ui/zui` 自引用和 compiler module 识别；
 - `ui/zui-taro` 对 `@zadmin/svelte-taro` 的 dev dependency；
 - `@zadmin/sveltekit` 的 lockfile 物理 links 与文档路径；
 - handoff、architecture、testing、ZUI 和微信文档。
@@ -834,7 +834,7 @@ docs(desktop): finalize tauri handoff
 - 插件公开依赖方式；
 - `@zadmin/sveltekit` npm 名称和运行时 ID；
 - `@zadmin/svelte-taro` npm 名称；
-- `@zadmin/zui-core` npm 名称；
+- `@zadmin/zui/core` npm 名称；
 - `@zadmin/zui-taro` npm 名称；
 - 现有 Web/Taro 行为和验证等级。
 
@@ -854,8 +854,8 @@ pnpm lint
 专项：
 
 ```powershell
-pnpm --filter @zadmin/zui-core test:coverage
-pnpm --filter @zadmin/zui-svelte test:coverage
+pnpm --filter @zadmin/zui/core test:coverage
+pnpm --filter @zadmin/zui test:coverage
 pnpm --filter @zadmin/zui-taro test:coverage
 pnpm --filter @zadmin/svelte-taro test:coverage
 pnpm --filter @zadmin/svelte-taro test:package
@@ -914,7 +914,7 @@ pnpm --filter @zadmin/desktop tauri build --debug --no-bundle
 
 ## 21. 第一阶段不做
 
-- 不复制 `@zadmin/zui-svelte` 的普通视觉组件；
+- 不复制 `@zadmin/zui` 的普通视觉组件；
 - 不新增 `zui-desktop`；
 - 不把 Tauri 变成独立 HTTP backend；
 - 不启动 Node sidecar；
@@ -953,7 +953,7 @@ pnpm --filter @zadmin/desktop tauri build --debug --no-bundle
 需要确认的最终选择已经压缩为以下六项：
 
 1. 接受 `ui/` 六包最终结构；
-2. 接受 `@zadmin/zui-web` 无兼容包直接改名 `@zadmin/zui-svelte`；
+2. 接受 `@zadmin/zui-web` 无兼容包直接改名 `@zadmin/zui`；
 3. 接受 `@zadmin/tauri` 同时提供系统 API、`/svelte` 和 `/testing`，但根入口保持无 Svelte；
 4. 接受 `apps/desktop` 使用 SvelteKit SPA 而非 SSR；
 5. 接受 Win11 x64 + NSIS 为第一阶段唯一发布目标；
