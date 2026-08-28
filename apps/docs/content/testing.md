@@ -1,5 +1,52 @@
 # 测试与验收
 
+## 本地快速验证与云端全量门禁
+
+默认开发节奏改为“本地窄验证、GitHub Actions全量验证”：
+
+```text
+本地每轮编码
+  → git diff --check
+  → 受影响Package的check
+  → 与改动直接相关的focused test
+  → 必要时受影响Package build
+  → 提交并推送
+
+GitHub Actions
+  → 全仓check/lint/test/build
+  → Chromium/Firefox/WebKit
+  → Docs E2E与Storybook
+  → 覆盖率阈值
+  → 外部tarball安装验收
+  → 微信生产构建
+  → Windows Rust/Tauri与安装包
+```
+
+本地不再要求每个小改动重复执行根级`pnpm check/test/build/lint`。默认最低本地门槛：
+
+1. `git diff --check`；
+2. 受影响Package的类型或Svelte check；
+3. 至少一个覆盖改动行为的focused test；
+4. 修改package exports、构建器、生成器或发布配置时增加受影响Package build；
+5. 修改GitHub Actions时运行Prettier、`actionlint`和YAML解析检查。
+
+以下高风险变化仍应在推送前扩大本地验证：
+
+- 数据迁移、安装器、凭据、权限或安全边界；
+- 无法在GitHub hosted runner复现的微信开发者工具、真实浏览器HMR或硬件流程；
+- 可能破坏工作区依赖图、lockfile或生成类型的改动；
+- CI不可用、远程网络不可用或目标workflow被跳过。
+
+推送后必须观察对应Actions结果。云端失败时不能把任务称为完成；应读取失败job日志，修正并再次推送，或者明确记录外部blocker。GitHub产物只证明自动化范围，不替代账号、真机、签名和人工发布验收。
+
+当前workflow：`.github/workflows/ci.yml`。
+
+| Job                               | Runner  | 全量职责                                                                       |
+| --------------------------------- | ------- | ------------------------------------------------------------------------------ |
+| Workspace, browsers, and builds   | Ubuntu  | 全仓check/lint/test/build、三浏览器、Docs E2E、微信构建、构建产物              |
+| Coverage, packages, and Storybook | Ubuntu  | 覆盖率、外部tarball、Storybook和生成报告漂移                                   |
+| Windows desktop and Rust          | Windows | Desktop check/test、Rust fmt/check/clippy/test、bindings、debug/release bundle |
+
 ## 标准命令
 
 在仓库根执行：
@@ -10,6 +57,8 @@ pnpm test
 pnpm build
 pnpm lint
 ```
+
+这些仍是全量标准命令，由GitHub Actions在push、pull request和手动运行时执行；本地按本节的风险分级选择focused子集。
 
 - `check`：TypeScript、Svelte和workspace类型边界。
 - `test`：Core、SvelteKit、ZUI、Tauri、Admin、Desktop、ETL、Docs、微信和三个Plugin测试。
