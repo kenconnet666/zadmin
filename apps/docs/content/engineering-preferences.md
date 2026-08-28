@@ -15,7 +15,7 @@
 
 - 仓库根职责固定为 `apps/`、`packages/`、`plugins/`、`ui/`，配置文件属于允许的根级例外。
 - 一个文件夹下面尽量要么全是子文件夹，要么全是代码文件；入口文件、配置、声明和 Manifest可以豁免。
-- 一个文件夹中约 5–10 个同类项目最佳。少量骨架可以更少，超过 10 个时应按真实职责拆分。
+- 一个文件夹中约 5–15 个同类项目最佳。少量骨架可以更少，明显超过 15 个时应按真实职责拆分。
 - 不为满足数量机械拆出 `utils/`、`common/`、`base/`；目录名必须表达所有权或业务职责。
 - 当前 `packages/core/src/` 是四个职责目录加四个公开入口：
 
@@ -42,7 +42,11 @@
 
 ## ZUI与样式
 
-- `@zadmin/zui-svelte`的`icss()`公开层永远只返回class字符串，不返回`{ class, style }`，也不要求action、attachment或`css` prop。
+- 目标`@zadmin/zui`（迁移前为`@zadmin/zui-svelte`）的`icss()`公开层永远只返回class字符串，不返回`{ class, style }`，也不要求action、attachment或`css` prop。
+- ICSS回调参数在第一方组件、recipe、Docs和测试中统一命名为`s`，例如`icss(theme, (s) => s.display.flex)`。
+- 第一方组件需要`transparent`、`none`、`auto`等CSS标准关键字而属性元数据尚未暴露时，应补充系统关键字、类型和测试，再使用`s.property.keyword`；禁止长期保留`s.property('keyword')`。
+- 第一方组件出现`#FFFFFF`等稳定视觉字面量时，应先复用或新增语义Theme token，再使用`s.property._token`；token按`canvas`、`surface`、`border`等用途命名，不按具体颜色值命名。
+- 不为结构性`0`、百分比、运行时业务值或一次性算法常量机械创建Theme token；第一方组件保留原始值的例外必须有原因、文档和测试。
 - Svelte编译器优化是性能路径，普通TypeScript运行时必须仍然功能正确。
 - 动态叶子值进入元素inline CSS自定义属性；结构、selector和theme token进入确定性CSS rule。
 - 不执行用户模块来静态提取CSS，不引入WyW、Babel或SWC编译体系。
@@ -88,6 +92,9 @@ Taro不是把Web CSS API原样搬过去：
 
 - 大改动阶段性提交；每个提交都必须可以构建和验证。
 - 提交前检查并发进程和工作树，避免把其他人的变化混入当前检查点。
-- 验证按风险递进：类型检查 → focused tests → 全仓测试 → build → lint → 真实集成/HMR。
+- 默认采用“本地窄验证、GitHub Actions全量门禁”：本地优先受影响Package check、focused tests和必要build，减少重复全仓测试等待。
+- 验证按风险递进：本地类型检查与focused tests → 推送 → 云端全仓check/test/build/lint与覆盖率 → 真实集成/HMR。
+- 推送后必须观察对应GitHub Actions；云端失败时不能称为完成，必须修复重推或明确外部blocker。
+- CI、权限、安装器、数据迁移、lockfile和无法云端复现的真实设备改动，仍应扩大本地验证，不能机械地把风险全部转移到云端。
 - 临时测试源码、浏览器标签、watcher、上传包和临时目录在验收后必须恢复或清理。
 - 行为变化必须同步更新文档和换设备交接；过期蓝图直接删除，不累积“历史正确、当前错误”的说明。
