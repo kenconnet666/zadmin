@@ -29,6 +29,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - name: Ignore Linux-only file mode changes
+        run: git config core.fileMode false
+
       - name: Install pnpm
         uses: pnpm/action-setup@v6
         with:
@@ -87,6 +90,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
+      - name: Ignore Linux-only file mode changes
+        run: git config core.fileMode false
 
       - name: Install pnpm
         uses: pnpm/action-setup@v6
