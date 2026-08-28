@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { Stack, Text } from '@zadmin/zui';
+	import { ZStack, ZText } from '@zadmin/zui';
 </script>
 
 <svelte:head>
@@ -19,10 +19,10 @@
 		编译优化组合在一起。结构样式只生成一次，高频值由 Svelte 精确更新元素上的私有 CSS 变量。
 	</p>
 	<div class="actions">
-		<Stack direction="row" gap="medium">
+		<ZStack direction="row" gap="medium">
 			<a class="action primary" href={resolve('/icss')}>查看实时 ICSS</a>
 			<a class="action secondary" href={resolve('/components')}>浏览组件</a>
-		</Stack>
+		</ZStack>
 	</div>
 </section>
 
@@ -30,17 +30,17 @@
 	<article class="surface">
 		<span>01</span>
 		<h2>Class-only</h2>
-		<Text color="textMuted">源码中不暴露 style 对象、action 或绑定协议。</Text>
+		<ZText tone="muted">源码中不暴露 style 对象、action 或绑定协议。</ZText>
 	</article>
 	<article class="surface">
 		<span>02</span>
 		<h2>Runtime-first</h2>
-		<Text color="textMuted">普通 TypeScript 和未编译环境仍能完整生成 class rule。</Text>
+		<ZText tone="muted">普通 TypeScript 和未编译环境仍能完整生成 class rule。</ZText>
 	</article>
 	<article class="surface">
 		<span>03</span>
 		<h2>Svelte-fast</h2>
-		<Text color="textMuted">可追踪动态值编译成原生 inline custom property 更新。</Text>
+		<ZText tone="muted">可追踪动态值编译成原生 inline custom property 更新。</ZText>
 	</article>
 </section>
 

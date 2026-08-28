@@ -1,12 +1,12 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { Button, type ButtonProps } from '@zadmin/zui';
+	import { ZButton, type ZButtonProps } from '@zadmin/zui';
 
 	import type { DesktopNotificationOptions } from '../api/notification.js';
 	import type { DesktopError } from '../runtime/error.js';
 	import { useDesktopPlatform } from './context.js';
 
-	type Props = Omit<ButtonProps, 'children' | 'onclick' | 'onerror'> & {
+	type Props = Omit<ZButtonProps, 'children' | 'onclick' | 'onerror'> & {
 		children?: Snippet;
 		label?: string;
 		notification: DesktopNotificationOptions | string;
@@ -57,6 +57,6 @@
 	}
 </script>
 
-<Button {...rest} {disabled} {loading} onclick={notify}>
+<ZButton {...rest} {disabled} {loading} onclick={notify}>
 	{#if children}{@render children()}{:else}{label}{/if}
-</Button>
+</ZButton>

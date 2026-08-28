@@ -1,8 +1,7 @@
-export { default as Stack } from './Stack.svelte';
+export { default as ZStack } from './ZStack.svelte';
 export type {
-	StackAlignment,
-	StackDirection,
-	StackGap,
-	StackJustification,
-	StackProps
+	ZStackAlignment,
+	ZStackDirection,
+	ZStackJustification,
+	ZStackProps
 } from './types.js';

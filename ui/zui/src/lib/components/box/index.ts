@@ -1,2 +1,2 @@
-export { default as Box } from './Box.svelte';
-export type { BoxProps } from './types.js';
+export { default as ZBox } from './ZBox.svelte';
+export type { ZBoxProps } from './types.js';

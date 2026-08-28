@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { Stack, Text, defaultTheme, icss } from '@zadmin/zui';
+	import { ZStack, ZText, defaultTheme, icss } from '@zadmin/zui';
 
 	import type { DesktopError } from '../runtime/error.js';
 	import { useDesktopPlatform } from './context.js';
@@ -33,17 +33,17 @@
 	}
 </script>
 
-<Stack
+<ZStack
 	direction="row"
 	align="center"
-	justify="space-between"
+	justify="between"
 	gap="small"
 	class={titleBarClass}
 	data-tauri-drag-region
 	onpointerdown={startDragging}
 	ondblclick={() => run(() => desktop.window.toggleMaximize())}
 >
-	<Text as="strong" size="small" data-tauri-drag-region>{title}</Text>
+	<ZText as="strong" size="small" data-tauri-drag-region>{title}</ZText>
 	<div
 		role="group"
 		aria-label="Window controls"
@@ -52,4 +52,4 @@
 	>
 		{@render children?.()}
 	</div>
-</Stack>
+</ZStack>

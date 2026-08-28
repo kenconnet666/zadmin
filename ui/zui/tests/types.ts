@@ -1,5 +1,10 @@
 import { defaultTheme, type IcssStyle } from '../src/lib/core.js';
-import { defineRecipe, type RecipeVariants } from '../src/lib/index.js';
+import {
+	defineRecipe,
+	defineSlotRecipe,
+	type RecipeVariants,
+	type SlotRecipeSelection
+} from '../src/lib/index.js';
 
 declare const style: IcssStyle<typeof defaultTheme>;
 
@@ -23,6 +28,7 @@ const recipe = defineRecipe({
 		size: { large: () => undefined, small: () => undefined }
 	}
 });
+void recipe;
 
 const validRecipeVariants: RecipeVariants<typeof recipe> = { disabled: true, size: 'small' };
 void validRecipeVariants;
@@ -34,3 +40,20 @@ void invalidBooleanRecipe;
 // @ts-expect-error variant values are inferred exactly
 const invalidSizeRecipe: RecipeVariants<typeof recipe> = { size: 'medium' };
 void invalidSizeRecipe;
+
+const slotRecipe = defineSlotRecipe({
+	slots: ['root', 'control'] as const,
+	variants: {
+		invalid: {
+			false: {},
+			true: { control: () => undefined }
+		}
+	}
+});
+void slotRecipe;
+const validSlotVariants: SlotRecipeSelection<typeof slotRecipe> = { invalid: true };
+void validSlotVariants;
+
+// @ts-expect-error slot recipe boolean variants are normalized
+const invalidSlotVariants: SlotRecipeSelection<typeof slotRecipe> = { invalid: 'true' };
+void invalidSlotVariants;

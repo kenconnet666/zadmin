@@ -115,13 +115,13 @@ describe('ICSS Svelte preprocessor', () => {
 
 	it('forwards hidden variables to known ZUI component roots', async () => {
 		const output = await transform(`<script>
-			import { Button, defaultTheme, icss } from '@zadmin/zui';
+			import { ZButton, defaultTheme, icss } from '@zadmin/zui';
 			let width = $state(20);
 			const panel = $derived(icss(defaultTheme, (s) => s.width.px(width)));
 		</script>
-		<Button class={panel}>Save</Button>`);
+		<ZButton class={panel}>Save</ZButton>`);
 
-		expect(output).toMatch(/__icssVariables=\{\{ '--width-[a-z0-9]+-0': \(width\) \}\}/u);
+		expect(output).toMatch(/__zuiIcssCarrier\(\{ '--width-[a-z0-9]+-0': \(width\) \}\)/u);
 		expect(output).toContain("__zuiIcssOwned('m-");
 	});
 

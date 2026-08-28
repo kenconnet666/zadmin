@@ -62,6 +62,7 @@ export const PROPERTY_DEFINITIONS = {
 		}
 	},
 	animationDuration: { token: 'duration', tokenUnit: 'ms', units: ['time'] },
+	appearance: { keywords: { auto: 'auto', none: 'none' } },
 	backgroundColor: { keywords: { transparent: 'transparent' }, token: 'color' },
 	borderBottomColor: { token: 'color' },
 	borderBottomLeftRadius: { token: 'radius', tokenUnit: 'px', units: ['length', 'percent'] },
@@ -203,6 +204,7 @@ export const PROPERTY_DEFINITIONS = {
 		}
 	},
 	textDecorationColor: { token: 'color' },
+	textOverflow: { keywords: { clip: 'clip', ellipsis: 'ellipsis' } },
 	textShadow: { token: 'shadow' },
 	top: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
 	transitionDuration: { token: 'duration', tokenUnit: 'ms', units: ['time'] },
@@ -219,6 +221,18 @@ export const PROPERTY_DEFINITIONS = {
 		keywords: { all: 'all', auto: 'auto', contain: 'contain', none: 'none', text: 'text' }
 	},
 	visibility: { keywords: { collapse: 'collapse', hidden: 'hidden', visible: 'visible' } },
+	verticalAlign: {
+		keywords: {
+			baseline: 'baseline',
+			bottom: 'bottom',
+			middle: 'middle',
+			sub: 'sub',
+			super: 'super',
+			textBottom: 'text-bottom',
+			textTop: 'text-top',
+			top: 'top'
+		}
+	},
 	whiteSpace: {
 		keywords: {
 			breakSpaces: 'break-spaces',

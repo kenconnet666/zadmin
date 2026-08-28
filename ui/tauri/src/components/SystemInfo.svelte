@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Stack, Text } from '@zadmin/zui';
+	import { ZStack, ZText } from '@zadmin/zui';
 
 	import type { DesktopError } from '../runtime/error.js';
 	import { useDesktopPlatform } from './context.js';
@@ -45,17 +45,17 @@
 	});
 </script>
 
-<Stack gap="small" data-tauri-system-info aria-busy={loading || undefined}>
-	<Text as="strong">{title}</Text>
+<ZStack gap="small" data-tauri-system-info aria-busy={loading || undefined}>
+	<ZText as="strong">{title}</ZText>
 	{#if loading}
-		<Text color="textMuted">Loading…</Text>
+		<ZText tone="muted">Loading…</ZText>
 	{:else if info}
-		<Text>{info.app.name} {info.app.version}</Text>
-		<Text color="textMuted">Tauri {info.app.tauriVersion}</Text>
-		<Text>{info.os.platform} {info.os.version} ({info.os.arch})</Text>
-		<Text color="textMuted">Locale: {info.os.locale ?? 'unknown'}</Text>
-		<Text color="textMuted">Scale: {info.window.scaleFactor}</Text>
+		<ZText>{info.app.name} {info.app.version}</ZText>
+		<ZText tone="muted">Tauri {info.app.tauriVersion}</ZText>
+		<ZText>{info.os.platform} {info.os.version} ({info.os.arch})</ZText>
+		<ZText tone="muted">Locale: {info.os.locale ?? 'unknown'}</ZText>
+		<ZText tone="muted">Scale: {info.window.scaleFactor}</ZText>
 	{:else}
-		<Text color="danger">System information is unavailable.</Text>
+		<ZText tone="danger">System information is unavailable.</ZText>
 	{/if}
-</Stack>
+</ZStack>

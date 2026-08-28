@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { resolve } from '$app/paths';
-	import { ZuiProvider } from '@zadmin/zui';
+	import { ZProvider } from '@zadmin/zui';
 	import './layout.css';
 
 	let { children } = $props();
@@ -14,7 +14,7 @@
 	] as const;
 </script>
 
-<ZuiProvider>
+<ZProvider>
 	<div class="docs-shell">
 		<header class="topbar">
 			<a class="brand" href={resolve('/')} aria-label="ZUI 首页">
@@ -41,4 +41,4 @@
 			<span>运行时 CSS，编译期优化，单一 class API</span>
 		</footer>
 	</div>
-</ZuiProvider>
+</ZProvider>

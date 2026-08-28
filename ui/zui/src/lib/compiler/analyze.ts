@@ -104,7 +104,7 @@ export function findIcssBindings(
 	return bindings;
 }
 
-const ZUI_COMPONENTS = new Set(['Box', 'Button', 'Stack', 'Text', 'ZuiProvider']);
+const ZUI_COMPONENTS = new Set(['ZBox', 'ZButton', 'ZField', 'ZIcon', 'ZInput', 'ZStack', 'ZText']);
 
 export function findZuiComponentBindings(
 	program: PositionedProgram,

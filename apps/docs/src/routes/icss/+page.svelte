@@ -1,17 +1,17 @@
 <script lang="ts">
-	import { Box, Button, Stack, defaultTheme, icss } from '@zadmin/zui';
+	import { ZBox, ZButton, ZStack, defaultTheme, icss } from '@zadmin/zui';
 
 	let width = $state(320);
 	let opacity = $state(0.85);
 	const panelClass = $derived(
-		icss(defaultTheme, (style) => {
-			style.width.px(width);
-			style.opacity(opacity);
-			style.padding._large;
-			style.borderRadius._large;
-			style.backgroundColor._primary;
-			style.color._canvas;
-			style._hover((hover) => hover.backgroundColor._primaryHover);
+		icss(defaultTheme, (s) => {
+			s.width.px(width);
+			s.opacity(opacity);
+			s.padding._large;
+			s.borderRadius._large;
+			s.backgroundColor._primary;
+			s.color._canvas;
+			s._hover((hover) => hover.backgroundColor._primaryHover);
 		})
 	);
 </script>
@@ -39,17 +39,17 @@
 			<span>透明度</span><output>{opacity.toFixed(2)}</output>
 			<input type="range" min="0.2" max="1" step="0.01" bind:value={opacity} />
 		</label>
-		<Stack direction="row" gap="small">
-			<Button onclick={() => (width = 320)}>重置</Button>
-			<Button variant="secondary" onclick={() => (width = Math.min(640, width + 32))}>+32</Button>
-		</Stack>
+		<ZStack direction="row" gap="small">
+			<ZButton onclick={() => (width = 320)}>重置</ZButton>
+			<ZButton variant="secondary" onclick={() => (width = Math.min(640, width + 32))}>+32</ZButton>
+		</ZStack>
 	</div>
 
 	<div class="preview surface">
-		<Box data-testid="dynamic-panel" class={panelClass}>
+		<ZBox data-testid="dynamic-panel" class={panelClass}>
 			<strong>动态面板</strong>
 			<span>拖动滑块并检查 DevTools</span>
-		</Box>
+		</ZBox>
 	</div>
 </section>
 
@@ -64,7 +64,7 @@
   })
 )
 
-<Box class={panelClass} />`}</code
+<ZBox class={panelClass} />`}</code
 			></pre>
 	</div>
 	<div>

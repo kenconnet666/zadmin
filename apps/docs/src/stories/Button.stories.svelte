@@ -1,13 +1,13 @@
 <script module lang="ts">
 	import { defineMeta } from '@storybook/addon-svelte-csf';
-	import { Button } from '@zadmin/zui';
+	import { ZButton } from '@zadmin/zui';
 	import { createRawSnippet } from 'svelte';
 
 	const label = (text: string) =>
 		createRawSnippet(() => ({ render: () => `<span>${text}</span>` }));
 	const { Story } = defineMeta({
-		title: 'ZUI/Button',
-		component: Button,
+		title: 'ZUI/ZButton',
+		component: ZButton,
 		tags: ['autodocs'],
 		argTypes: {
 			size: { control: 'select', options: ['small', 'medium', 'large'] },

@@ -1,16 +1,17 @@
+import type { Snippet } from 'svelte';
 import type { HTMLAttributes } from 'svelte/elements';
-import type { DefaultTheme } from '../../theme/default.js';
 
-import type { IcssVariables } from '../provider/variables.js';
+import type { ZuiTheme } from '../../theme/types.js';
 
-export type TextElement = 'label' | 'p' | 'small' | 'span' | 'strong';
+export type ZTextElement = 'label' | 'p' | 'small' | 'span' | 'strong';
+export type ZTextTone = 'danger' | 'default' | 'muted' | 'primary';
 
-export interface TextProps extends HTMLAttributes<HTMLElement> {
-	/** @internal Compiler-generated dynamic style values. */
-	__icssVariables?: IcssVariables;
-	as?: TextElement;
-	color?: keyof DefaultTheme['color'];
+export interface ZTextProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
+	readonly as?: ZTextElement;
+	readonly children?: Snippet;
+	readonly size?: keyof ZuiTheme['fontSize'];
+	readonly tone?: ZTextTone;
+	readonly truncate?: boolean;
+	readonly weight?: keyof ZuiTheme['fontWeight'];
 	ref?: HTMLElement | null;
-	size?: keyof DefaultTheme['fontSize'];
-	weight?: keyof DefaultTheme['fontWeight'];
 }

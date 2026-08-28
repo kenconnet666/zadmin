@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { ZuiProvider } from '@zadmin/zui';
+	import { ZProvider } from '@zadmin/zui';
 	import { createTauriDesktopPlatform } from '@zadmin/tauri';
 	import { DesktopProvider } from '@zadmin/tauri/svelte';
 
@@ -12,8 +12,8 @@
 	});
 </script>
 
-<ZuiProvider>
+<ZProvider>
 	<DesktopProvider platform={desktop}>
 		{@render children?.()}
 	</DesktopProvider>
-</ZuiProvider>
+</ZProvider>

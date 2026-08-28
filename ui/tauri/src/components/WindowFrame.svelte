@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { Box, defaultTheme, icss } from '@zadmin/zui';
+	import { ZBox, defaultTheme, icss } from '@zadmin/zui';
 
 	import type { DesktopError } from '../runtime/error.js';
 	import WindowControls from './WindowControls.svelte';
@@ -30,7 +30,7 @@
 	});
 </script>
 
-<Box class={[frameClass, className]} data-tauri-window-frame>
+<ZBox class={[frameClass, className]} data-tauri-window-frame>
 	{#if titlebar}
 		{@render titlebar()}
 	{:else}
@@ -39,4 +39,4 @@
 	<main class={contentClass}>
 		{@render children?.()}
 	</main>
-</Box>
+</ZBox>

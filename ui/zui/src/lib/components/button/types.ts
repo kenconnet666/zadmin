@@ -1,12 +1,15 @@
+import type { Snippet } from 'svelte';
 import type { HTMLButtonAttributes } from 'svelte/elements';
-import type { ButtonDesignProps } from './design.js';
 
-import type { IcssVariables } from '../provider/variables.js';
+import type { RecipeVariants } from '../../recipes/types.js';
+import { buttonRecipe } from './button.recipe.js';
 
-export type { ButtonSize, ButtonVariant } from './design.js';
+export type ZButtonVariants = Omit<RecipeVariants<typeof buttonRecipe>, 'disabled'>;
 
-export interface ButtonProps extends HTMLButtonAttributes, Omit<ButtonDesignProps, 'disabled'> {
-	/** @internal Compiler-generated dynamic style values. */
-	__icssVariables?: IcssVariables;
-	ref?: HTMLButtonElement | null;
-}
+export type ZButtonProps = Omit<HTMLButtonAttributes, 'children' | 'disabled'> &
+	ZButtonVariants & {
+		readonly children?: Snippet;
+		readonly disabled?: boolean;
+		readonly loading?: boolean;
+		ref?: HTMLButtonElement | null;
+	};

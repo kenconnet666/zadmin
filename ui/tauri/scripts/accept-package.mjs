@@ -136,12 +136,12 @@ allowBuilds:
 	await write(
 		resolve(fixtureRoot, 'src/App.svelte'),
 		`<script lang="ts">
-import { ZuiProvider } from '@zadmin/zui';
+import { ZProvider } from '@zadmin/zui';
 import { createUnsupportedDesktopPlatform } from '@zadmin/tauri';
 import { DesktopProvider, FilePickerButton, WindowFrame } from '@zadmin/tauri/svelte';
 const platform = createUnsupportedDesktopPlatform();
 </script>
-<ZuiProvider><DesktopProvider {platform}><WindowFrame title="External fixture"><FilePickerButton disabled /></WindowFrame></DesktopProvider></ZuiProvider>
+<ZProvider><DesktopProvider {platform}><WindowFrame title="External fixture"><FilePickerButton disabled /></WindowFrame></DesktopProvider></ZProvider>
 `
 	);
 	await write(

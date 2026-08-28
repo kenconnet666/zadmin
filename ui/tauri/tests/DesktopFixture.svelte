@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Stack, Text, ZuiProvider } from '@zadmin/zui';
+	import { ZStack, ZText, ZProvider } from '@zadmin/zui';
 
 	import type { DesktopPlatform } from '../src/index.js';
 	import {
@@ -22,10 +22,10 @@
 	let selected = $state('');
 </script>
 
-<ZuiProvider>
+<ZProvider>
 	<DesktopProvider {platform}>
 		<WindowFrame title="Desktop fixture">
-			<Stack gap="small">
+			<ZStack gap="small">
 				<SystemInfo title="Runtime" />
 				<FilePickerButton
 					data-testid="file-picker"
@@ -45,10 +45,10 @@
 					notification="Desktop ready"
 					onsuccess={() => (notification = 'sent')}
 				/>
-				<Text data-testid="selected">{selected}</Text>
-				<Text data-testid="clipboard-value">{clipboard}</Text>
-				<Text data-testid="notification-value">{notification}</Text>
-			</Stack>
+				<ZText data-testid="selected">{selected}</ZText>
+				<ZText data-testid="clipboard-value">{clipboard}</ZText>
+				<ZText data-testid="notification-value">{notification}</ZText>
+			</ZStack>
 		</WindowFrame>
 	</DesktopProvider>
-</ZuiProvider>
+</ZProvider>

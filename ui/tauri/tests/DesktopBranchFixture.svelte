@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Stack, Text, ZuiProvider } from '@zadmin/zui';
+	import { ZStack, ZText, ZProvider } from '@zadmin/zui';
 
 	import type { DesktopPlatform } from '../src/index.js';
 	import {
@@ -24,12 +24,12 @@
 	const onerror = (value: { code: string }) => (error = value.code);
 </script>
 
-<ZuiProvider>
+<ZProvider>
 	<DesktopProvider {platform}>
 		<WindowTitleBar title="Branch fixture" {onerror}>
 			<WindowControls {onerror} />
 		</WindowTitleBar>
-		<Stack gap="small">
+		<ZStack gap="small">
 			<FilePickerButton
 				data-testid="directory"
 				mode="directory"
@@ -59,9 +59,9 @@
 				Permission
 			</NotificationButton>
 			<SystemInfo {onerror} />
-			<Text data-testid="selection">{selection}</Text>
-			<Text data-testid="permission-value">{permission}</Text>
-			<Text data-testid="error-value">{error}</Text>
-		</Stack>
+			<ZText data-testid="selection">{selection}</ZText>
+			<ZText data-testid="permission-value">{permission}</ZText>
+			<ZText data-testid="error-value">{error}</ZText>
+		</ZStack>
 	</DesktopProvider>
-</ZuiProvider>
+</ZProvider>

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Button, Stack } from '@zadmin/zui';
+	import { ZButton, ZStack } from '@zadmin/zui';
 
 	import type { DesktopError } from '../runtime/error.js';
 	import type { DesktopResourceHandle } from '../runtime/context.js';
@@ -58,28 +58,28 @@
 	});
 </script>
 
-<Stack direction="row" gap="none" align="center" data-tauri-window-controls>
-	<Button
+<ZStack direction="row" gap="none" align="center" data-tauri-window-controls>
+	<ZButton
 		variant="ghost"
 		size="small"
 		aria-busy={busy || undefined}
 		aria-label="Minimize window"
-		onclick={() => run(() => desktop.window.minimize())}>—</Button
+		onclick={() => run(() => desktop.window.minimize())}>—</ZButton
 	>
-	<Button
+	<ZButton
 		variant="ghost"
 		size="small"
 		aria-busy={busy || undefined}
 		aria-label={maximized ? 'Restore window' : 'Maximize window'}
 		aria-pressed={maximized}
 		onclick={() => run(() => (maximized ? desktop.window.restore() : desktop.window.maximize()))}
-		>{maximized ? '❐' : '□'}</Button
+		>{maximized ? '❐' : '□'}</ZButton
 	>
-	<Button
+	<ZButton
 		variant="danger"
 		size="small"
 		aria-busy={busy || undefined}
 		aria-label="Close window"
-		onclick={() => run(() => desktop.window.close({ confirmed: true }))}>×</Button
+		onclick={() => run(() => desktop.window.close({ confirmed: true }))}>×</ZButton
 	>
-</Stack>
+</ZStack>

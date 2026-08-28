@@ -7,7 +7,7 @@ Type-safe runtime CSS and foundational Svelte 5 components. Public ICSS calls re
 	import { defaultTheme, icss } from '@zadmin/zui';
 
 	let width = $state(320);
-	const panelClass = $derived(icss(defaultTheme, (style) => style.width.px(width)));
+	const panelClass = $derived(icss(defaultTheme, (s) => s.width.px(width)));
 </script>
 
 <div class={panelClass}>...</div>
@@ -33,16 +33,16 @@ export const handle = icssHandle();
 
 ```svelte
 <script lang="ts">
-	import { Box, Button, Stack, Text, ZuiProvider } from '@zadmin/zui';
+	import { ZBox, ZButton, ZProvider, ZStack, ZText } from '@zadmin/zui';
 </script>
 
-<ZuiProvider>
-	<Stack gap="medium">
-		<Text as="strong">Account</Text>
-		<Box>Content</Box>
-		<Button>Save</Button>
-	</Stack>
-</ZuiProvider>
+<ZProvider>
+	<ZStack gap="medium">
+		<ZText as="strong">Account</ZText>
+		<ZBox>Content</ZBox>
+		<ZButton>Save</ZButton>
+	</ZStack>
+</ZProvider>
 ```
 
 Requires Node 22 or newer and Svelte `>=5.56 <6`.

@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { Box, Button, Stack, Text, ZuiProvider, defaultTheme, defineTheme } from '@zadmin/zui';
+	import { ZBox, ZButton, ZProvider, ZStack, ZText, defaultTheme, defineTheme } from '@zadmin/zui';
+	import { __icssCarrier } from '@zadmin/zui/internal';
 
 	const theme = defineTheme({
 		...defaultTheme,
@@ -11,15 +12,17 @@
 	let authoredStyle = $state('color: red');
 </script>
 
-<ZuiProvider {theme}>
-	<Button data-testid="button" variant="secondary">Save</Button>
-	<Stack data-testid="stack" direction="row" gap="medium">
-		<Text data-testid="text" color="primary">Label</Text>
-	</Stack>
-	<Box data-testid="manual" __icssVariables={{ '--manual-value': variable }} style={authoredStyle}
-		>Manual</Box
+<ZProvider {theme}>
+	<ZButton data-testid="button" variant="secondary">Save</ZButton>
+	<ZStack data-testid="stack" direction="row" gap="medium">
+		<ZText data-testid="text" tone="primary">Label</ZText>
+	</ZStack>
+	<ZBox
+		{...__icssCarrier({ '--manual-value': variable })}
+		data-testid="manual"
+		style={authoredStyle}>Manual</ZBox
 	>
 	<button data-testid="change" onclick={() => (variable = 2)}>Change</button>
 	<button data-testid="style" onclick={() => (authoredStyle = 'color: blue')}>Style</button>
 	<button data-testid="remove" onclick={() => (variable = undefined)}>Remove</button>
-</ZuiProvider>
+</ZProvider>

@@ -120,7 +120,13 @@ export class BrowserStyleSheet implements IcssStyleSheet {
 		const style = this.#style ?? this.#createStyle();
 		if (this.#speedy && style.sheet !== null) {
 			for (const rule of entry.rules) {
-				style.sheet.insertRule(rule, style.sheet.cssRules.length);
+				try {
+					style.sheet.insertRule(rule, style.sheet.cssRules.length);
+				} catch (error) {
+					// CSS text parsing ignores selectors unsupported by the current engine. CSSOM
+					// insertRule throws instead, so speedy mode must preserve normal browser semantics.
+					if (!(error instanceof DOMException) || error.name !== 'SyntaxError') throw error;
+				}
 			}
 		} else {
 			style.append(this.#document.createTextNode(entry.cssText));

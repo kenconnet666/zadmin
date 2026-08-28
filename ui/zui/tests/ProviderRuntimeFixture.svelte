@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Button, ZuiProvider, type IcssRuntime, type ZuiTheme } from '../src/lib/index.js';
+	import { ZButton, ZProvider, type IcssRuntime, type ZuiTheme } from '../src/lib/index.js';
 
 	interface Props {
 		nestedTheme?: ZuiTheme;
@@ -10,11 +10,11 @@
 	let { nestedTheme, runtime, theme }: Props = $props();
 </script>
 
-<ZuiProvider {runtime} {theme}>
-	<Button data-testid="outer-provider">Outer</Button>
+<ZProvider {runtime} {theme}>
+	<ZButton data-testid="outer-provider">Outer</ZButton>
 	{#if nestedTheme}
-		<ZuiProvider theme={nestedTheme}>
-			<Button data-testid="inner-provider">Inner</Button>
-		</ZuiProvider>
+		<ZProvider theme={nestedTheme}>
+			<ZButton data-testid="inner-provider">Inner</ZButton>
+		</ZProvider>
 	{/if}
-</ZuiProvider>
+</ZProvider>

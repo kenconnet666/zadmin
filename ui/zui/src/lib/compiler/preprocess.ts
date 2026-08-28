@@ -49,6 +49,7 @@ export function icssPreprocess(options: IcssPreprocessOptions = {}): Preprocesso
 
 			const magic = new MagicString(content);
 			const slotLocal = chooseLocal(content, '__zuiIcssSlot');
+			const carrierLocal = chooseLocal(content, '__zuiIcssCarrier');
 			const ownedLocal = chooseLocal(content, '__zuiIcssOwned');
 			const hmrLocal = chooseLocal(content, '__zuiRegisterIcssHmr');
 			const owner = createModuleId(filename, root);
@@ -60,6 +61,7 @@ export function icssPreprocess(options: IcssPreprocessOptions = {}): Preprocesso
 				magic,
 				content,
 				slotLocal,
+				carrierLocal,
 				ownedLocal,
 				owner,
 				root,
@@ -68,7 +70,7 @@ export function icssPreprocess(options: IcssPreprocessOptions = {}): Preprocesso
 			for (const diagnostic of rewritten.diagnostics) options.onDiagnostic?.(diagnostic);
 			if (!rewritten.changed) return undefined;
 
-			const internalModuleCode = `import { __icssOwned as ${ownedLocal}, __icssSlot as ${slotLocal}, __registerIcssHmr as ${hmrLocal} } from '${internalModule}'; /* ${COMPILED_MARKER} */
+			const internalModuleCode = `import { __icssCarrier as ${carrierLocal}, __icssOwned as ${ownedLocal}, __icssSlot as ${slotLocal}, __registerIcssHmr as ${hmrLocal} } from '${internalModule}'; /* ${COMPILED_MARKER} */
 ${hmrLocal}(import.meta, '${owner}');
 `;
 			if (ast.module == null) {

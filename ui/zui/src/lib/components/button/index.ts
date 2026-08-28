@@ -1,2 +1,2 @@
-export { default as Button } from './Button.svelte';
-export type { ButtonProps, ButtonSize, ButtonVariant } from './types.js';
+export { default as ZButton } from './ZButton.svelte';
+export type { ZButtonProps, ZButtonVariants } from './types.js';

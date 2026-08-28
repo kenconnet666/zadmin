@@ -109,12 +109,12 @@ nonce和hash不能同时开启。`inline-vars`仍需要允许`style-src-attr 'un
 	let opacity = $state(0.8);
 
 	const panelClass = $derived(
-		icss(defaultTheme, (style) => {
-			style.display.flex;
-			style.width.px(width);
-			style.padding._medium;
-			style.opacity(opacity);
-			style._hover((hover) => hover.color._primary);
+		icss(defaultTheme, (s) => {
+			s.display.flex;
+			s.width.px(width);
+			s.padding._medium;
+			s.opacity(opacity);
+			s._hover((hover) => hover.color._primary);
 		})
 	);
 </script>
@@ -129,9 +129,9 @@ nonce和hash不能同时开启。`inline-vars`仍需要允许`style-src-attr 'un
 ```ts
 import { defaultTheme, icss } from '@zadmin/zui';
 
-const className = icss(defaultTheme, (style) => {
-	style.color._primary;
-	style.padding.px(8, 16);
+const className = icss(defaultTheme, (s) => {
+	s.color._primary;
+	s.padding.px(8, 16);
 });
 ```
 
@@ -140,17 +140,15 @@ const className = icss(defaultTheme, (style) => {
 ## 主题
 
 ```ts
-import { defineTheme } from '@zadmin/zui';
+import { defaultTheme, extendTheme } from '@zadmin/zui';
 
-export const theme = defineTheme({
+export const theme = extendTheme(defaultTheme, {
 	color: {
 		primary: '#7c3aed',
 		primaryHover: '#6d28d9'
 	},
 	space: {
-		small: 4,
-		medium: 8,
-		large: 16
+		medium: 10
 	}
 });
 ```
@@ -161,16 +159,20 @@ export const theme = defineTheme({
 
 ```svelte
 <script lang="ts">
-	import { Box, Button, Stack, Text, ZuiProvider } from '@zadmin/zui';
+	import { ZBox, ZButton, ZField, ZIcon, ZInput, ZProvider, ZStack, ZText } from '@zadmin/zui';
 </script>
 
-<ZuiProvider>
-	<Stack gap="medium">
-		<Text as="strong" size="large">Account</Text>
-		<Box>Content</Box>
-		<Button variant="primary">Save</Button>
-	</Stack>
-</ZuiProvider>
+<ZProvider>
+	<ZStack gap="medium">
+		<ZText as="strong" size="large">Account</ZText>
+		<ZIcon name="user" label="Account" />
+		<ZField label="Name" required>
+			<ZInput />
+		</ZField>
+		<ZBox>Content</ZBox>
+		<ZButton variant="primary">Save</ZButton>
+	</ZStack>
+</ZProvider>
 ```
 
 组件标准转发`class`和HTML attributes。编译器只向已知ZUI组件传递内部变量carrier；未知第三方组件使用运行时class-rule回退，不添加wrapper。

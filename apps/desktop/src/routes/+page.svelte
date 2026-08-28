@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { Channel } from '@tauri-apps/api/core';
-	import { Box, Button, Stack, Text, defaultTheme, icss } from '@zadmin/zui';
+	import { ZBox, ZButton, ZStack, ZText, defaultTheme, icss } from '@zadmin/zui';
 	import { BaseDirectory, type DesktopResult } from '@zadmin/tauri';
 	import {
 		ClipboardButton,
@@ -161,35 +161,35 @@
 	title="ZAdmin Desktop capability lab"
 	onerror={(error) => setResult('Window', { error, ok: false }, String)}
 >
-	<Stack class={pageClass} gap="large">
-		<Stack gap="small">
-			<Text as="strong" size="xlarge">Windows 11 capability lab</Text>
-			<Text color="textMuted">
+	<ZStack class={pageClass} gap="large">
+		<ZStack gap="small">
+			<ZText as="strong" size="xlarge">Windows 11 capability lab</ZText>
+			<ZText tone="muted">
 				SvelteKit SPA + ZUI Svelte + typed Tauri system APIs. No production Node or local HTTP
 				backend.
-			</Text>
-		</Stack>
+			</ZText>
+		</ZStack>
 
-		<Box class={panelClass}>
+		<ZBox class={panelClass}>
 			<SystemInfo onerror={(error) => setResult('System', { error, ok: false }, String)} />
-		</Box>
+		</ZBox>
 
-		<Stack class={panelClass} gap="small">
-			<Text as="strong">Safe automated probes</Text>
-			<Stack direction="row" gap="small">
-				<Button onclick={runtimeReport}>Typed runtime report</Button>
-				<Button variant="secondary" onclick={typedErrorProbe}>Typed error</Button>
-				<Button variant="secondary" onclick={channelProbe}>Typed channel</Button>
-				<Button variant="secondary" onclick={filesystemProbe}>AppData roundtrip</Button>
-				<Button variant="secondary" onclick={storeProbe}>Store roundtrip</Button>
-				<Button variant="secondary" onclick={logProbe}>Write log</Button>
-				<Button variant="secondary" onclick={windowStateProbe}>Save window state</Button>
-			</Stack>
-		</Stack>
+		<ZStack class={panelClass} gap="small">
+			<ZText as="strong">Safe automated probes</ZText>
+			<ZStack direction="row" gap="small">
+				<ZButton onclick={runtimeReport}>Typed runtime report</ZButton>
+				<ZButton variant="secondary" onclick={typedErrorProbe}>Typed error</ZButton>
+				<ZButton variant="secondary" onclick={channelProbe}>Typed channel</ZButton>
+				<ZButton variant="secondary" onclick={filesystemProbe}>AppData roundtrip</ZButton>
+				<ZButton variant="secondary" onclick={storeProbe}>Store roundtrip</ZButton>
+				<ZButton variant="secondary" onclick={logProbe}>Write log</ZButton>
+				<ZButton variant="secondary" onclick={windowStateProbe}>Save window state</ZButton>
+			</ZStack>
+		</ZStack>
 
-		<Stack class={panelClass} gap="small">
-			<Text as="strong">Supervised native capabilities</Text>
-			<Stack direction="row" gap="small">
+		<ZStack class={panelClass} gap="small">
+			<ZText as="strong">Supervised native capabilities</ZText>
+			<ZStack direction="row" gap="small">
 				<FilePickerButton onselect={(value) => (selectedPath = JSON.stringify(value))} />
 				<ClipboardButton
 					mode="read"
@@ -205,20 +205,20 @@
 					notification={{ title: 'ZAdmin Desktop', body: 'Notification probe' }}
 				/>
 				<ExternalLink href="https://v2.tauri.app/plugin/">Tauri plugin docs</ExternalLink>
-			</Stack>
-			<Text color="textMuted">{selectedPath}</Text>
-		</Stack>
+			</ZStack>
+			<ZText tone="muted">{selectedPath}</ZText>
+		</ZStack>
 
-		<Stack class={panelClass} gap="small">
-			<Text as="strong" color="danger">Destructive process actions</Text>
-			<Stack direction="row" gap="small">
-				<Button variant="danger" onclick={() => requestExit(false)}>Exit</Button>
-				<Button variant="danger" onclick={() => requestExit(true)}>Relaunch</Button>
-			</Stack>
-		</Stack>
+		<ZStack class={panelClass} gap="small">
+			<ZText as="strong" tone="danger">Destructive process actions</ZText>
+			<ZStack direction="row" gap="small">
+				<ZButton variant="danger" onclick={() => requestExit(false)}>Exit</ZButton>
+				<ZButton variant="danger" onclick={() => requestExit(true)}>Relaunch</ZButton>
+			</ZStack>
+		</ZStack>
 
-		<Box class={panelClass} aria-live="polite">
-			<Text>{status}</Text>
-		</Box>
-	</Stack>
+		<ZBox class={panelClass} aria-live="polite">
+			<ZText>{status}</ZText>
+		</ZBox>
+	</ZStack>
 </WindowFrame>

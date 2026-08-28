@@ -1,12 +1,12 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { Button, type ButtonProps } from '@zadmin/zui';
+	import { ZButton, type ZButtonProps } from '@zadmin/zui';
 
 	import type { DesktopError } from '../runtime/error.js';
 	import { useDesktopPlatform } from './context.js';
 	import type { DesktopFilePickerMode, DesktopFileSelection } from './types.js';
 
-	type Props = Omit<ButtonProps, 'children' | 'onclick' | 'onerror' | 'onselect'> & {
+	type Props = Omit<ZButtonProps, 'children' | 'onclick' | 'onerror' | 'onselect'> & {
 		children?: Snippet;
 		label?: string;
 		mode?: DesktopFilePickerMode;
@@ -41,6 +41,6 @@
 	}
 </script>
 
-<Button {...rest} {disabled} {loading} onclick={choose}>
+<ZButton {...rest} {disabled} {loading} onclick={choose}>
 	{#if children}{@render children()}{:else}{label}{/if}
-</Button>
+</ZButton>

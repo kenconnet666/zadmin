@@ -7,6 +7,11 @@ import type {
 	RecipeSelectionFrom,
 	RecipeVariantDefinitions
 } from '../../recipes/types.js';
+import type {
+	SlotRecipeDefinition,
+	SlotRecipeSelectionFrom,
+	SlotVariantDefinitions
+} from '../../recipes/slots.js';
 import { defaultTheme } from '../../theme/default.js';
 import type { ZuiTheme } from '../../theme/types.js';
 
@@ -20,6 +25,13 @@ export interface ZuiContext {
 		recipe: RecipeDefinition<TVariants>,
 		variants?: RecipeSelectionFrom<NoInfer<TVariants>>
 	): IcssClassName;
+	slots<
+		const TSlots extends readonly string[],
+		const TVariants extends SlotVariantDefinitions<TSlots[number]>
+	>(
+		recipe: SlotRecipeDefinition<TSlots, TVariants>,
+		variants?: SlotRecipeSelectionFrom<NoInfer<TVariants>>
+	): { readonly [TSlot in TSlots[number]]: IcssClassName };
 }
 
 export interface ZuiContextSource {
@@ -42,6 +54,9 @@ function createZuiContext(read: () => Required<ZuiContextSource>): ZuiContext {
 		},
 		recipe(recipe, variants) {
 			return context.runtime.recipe(context.theme, recipe, variants);
+		},
+		slots(recipe, variants) {
+			return context.runtime.slots(context.theme, recipe, variants);
 		}
 	};
 	return context;

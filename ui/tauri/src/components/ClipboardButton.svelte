@@ -1,12 +1,12 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { Button, type ButtonProps } from '@zadmin/zui';
+	import { ZButton, type ZButtonProps } from '@zadmin/zui';
 
 	import type { DesktopError } from '../runtime/error.js';
 	import { useDesktopPlatform } from './context.js';
 	import type { DesktopClipboardMode } from './types.js';
 
-	type Props = Omit<ButtonProps, 'children' | 'onclick' | 'onerror'> & {
+	type Props = Omit<ZButtonProps, 'children' | 'onclick' | 'onerror'> & {
 		children?: Snippet;
 		label?: string;
 		mode?: DesktopClipboardMode;
@@ -51,6 +51,6 @@
 	}
 </script>
 
-<Button {...rest} {disabled} {loading} onclick={useClipboard}>
+<ZButton {...rest} {disabled} {loading} onclick={useClipboard}>
 	{#if children}{@render children()}{:else}{label}{/if}
-</Button>
+</ZButton>

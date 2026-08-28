@@ -1,6 +1,12 @@
 import type { ThemeSchema } from '../theme/types.js';
 import type { ZuiTheme } from '../theme/types.js';
 import { createRecipeExecutor } from '../recipes/runtime.js';
+import { createSlotRecipeExecutor } from '../recipes/slots.js';
+import type {
+	SlotRecipeDefinition,
+	SlotRecipeSelectionFrom,
+	SlotVariantDefinitions
+} from '../recipes/slots.js';
 import type {
 	RecipeDefinition,
 	RecipeSelectionFrom,
@@ -25,6 +31,14 @@ export interface IcssRuntime {
 		recipe: RecipeDefinition<TVariants>,
 		variants?: RecipeSelectionFrom<NoInfer<TVariants>>
 	): IcssClassName;
+	slots<
+		const TSlots extends readonly string[],
+		const TVariants extends SlotVariantDefinitions<TSlots[number]>
+	>(
+		theme: ZuiTheme,
+		recipe: SlotRecipeDefinition<TSlots, TVariants>,
+		variants?: SlotRecipeSelectionFrom<NoInfer<TVariants>>
+	): { readonly [TSlot in TSlots[number]]: IcssClassName };
 }
 
 export interface IcssRuntimeOptions extends StyleRegistryOptions {
@@ -34,6 +48,7 @@ export interface IcssRuntimeOptions extends StyleRegistryOptions {
 export function createIcssRuntime(options: IcssRuntimeOptions = {}): IcssRuntime {
 	const registry = options.registry ?? new StyleRegistry(options);
 	const recipes = createRecipeExecutor(registry);
+	const slotRecipes = createSlotRecipeExecutor(registry);
 	return {
 		registry,
 		ownedIcss(owner, theme, factory) {
@@ -44,6 +59,9 @@ export function createIcssRuntime(options: IcssRuntimeOptions = {}): IcssRuntime
 		},
 		recipe(theme, recipe, variants) {
 			return recipes.recipe(theme, recipe, variants);
+		},
+		slots(theme, recipe, variants) {
+			return slotRecipes.slots(theme, recipe, variants);
 		}
 	};
 }

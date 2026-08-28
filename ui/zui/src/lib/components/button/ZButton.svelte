@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { untrack } from 'svelte';
 
+	import { readIcssCarrier } from '../../runtime/internal.js';
 	import { useZui } from '../provider/context.js';
 	import {
 		applyIcssRootStyle,
@@ -8,13 +9,13 @@
 		serializeIcssVariables
 	} from '../provider/variables.js';
 	import { buttonRecipe } from './button.recipe.js';
-	import type { ButtonProps } from './types.js';
+	import type { ZButtonProps } from './types.js';
 
 	let {
-		__icssVariables,
 		children,
 		class: className,
 		disabled = false,
+		fullWidth = false,
 		loading = false,
 		ref = $bindable(null),
 		size = 'medium',
@@ -22,28 +23,31 @@
 		type = 'button',
 		variant = 'primary',
 		...rest
-	}: ButtonProps = $props();
+	}: ZButtonProps = $props();
 
 	const zui = useZui();
-	const buttonClass = $derived(
+	const rootClass = $derived(
 		zui.recipe(buttonRecipe, {
 			disabled: disabled || loading,
+			fullWidth,
 			size,
 			variant
 		})
 	);
-	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(__icssVariables)));
+	const icssVariables = $derived(readIcssCarrier(rest));
+	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 </script>
 
 <button
 	{...rest}
 	bind:this={ref}
-	class={[buttonClass, className]}
+	class={[rootClass, className]}
 	style={initialStyle}
-	use:applyIcssRootStyle={{ style, variables: __icssVariables }}
+	use:applyIcssRootStyle={{ style, variables: icssVariables }}
 	{type}
 	disabled={disabled || loading}
 	aria-busy={loading || undefined}
+	data-loading={loading || undefined}
 >
 	{#if loading}<span aria-hidden="true">…</span>{/if}
 	{@render children?.()}

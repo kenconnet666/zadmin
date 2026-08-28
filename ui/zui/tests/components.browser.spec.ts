@@ -4,6 +4,7 @@ import { render } from 'vitest-browser-svelte';
 
 import DynamicBox from './DynamicBox.svelte';
 import ComponentGallery from './ComponentGallery.svelte';
+import FieldFixture from './FieldFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
 import { createBrowserIcssRuntime } from '../src/lib/icss/runtime.js';
 import { defaultTheme } from '../src/lib/theme/default.js';
@@ -43,6 +44,25 @@ describe('compiled ICSS browser updates', () => {
 		expect(insertedRuleCount()).toBe(initialRules);
 		expect(document.querySelectorAll('style[data-icss]')).toHaveLength(initialStyleTags);
 		expect(document.querySelector('svelte-css-wrapper')).toBeNull();
+	});
+
+	it('mounts and unmounts the Symbol carrier 100 times without growing CSS resources', async () => {
+		const target = document.createElement('div');
+		document.body.append(target);
+		const warmup = mount(DynamicBox, { target });
+		await unmount(warmup);
+		const baselineRules = insertedRuleCount();
+		const baselineTags = document.querySelectorAll('style[data-icss]').length;
+
+		for (let count = 0; count < 100; count += 1) {
+			const component = mount(DynamicBox, { target });
+			await unmount(component);
+		}
+
+		expect(insertedRuleCount()).toBe(baselineRules);
+		expect(document.querySelectorAll('style[data-icss]')).toHaveLength(baselineTags);
+		expect(target.childNodes).toHaveLength(0);
+		target.remove();
 	});
 
 	it('updates and removes component-boundary variables without wrappers', async () => {
@@ -100,5 +120,36 @@ describe('compiled ICSS browser updates', () => {
 		await unmount(component);
 		runtime.registry.clear();
 		host.remove();
+	});
+
+	it('links field semantics and calls onValueChange once per user input', async () => {
+		render(FieldFixture);
+		const input = document.querySelector<HTMLInputElement>('[data-testid="field-input"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="field-output"]');
+		const label = document.querySelector<HTMLLabelElement>('label');
+		const field = label?.parentElement;
+		const messages = field?.querySelectorAll('p');
+		expect(input).not.toBeNull();
+		if (input === null) return;
+
+		expect(label?.htmlFor).toBe(input.id);
+		expect(input.required).toBe(true);
+		expect(input.getAttribute('aria-invalid')).toBe('true');
+		expect(input.getAttribute('aria-describedby')?.split(' ')).toHaveLength(2);
+		expect(field?.className).not.toBe('');
+		expect(label?.className).not.toBe('');
+		expect(input.className).not.toBe('');
+		expect(messages).toHaveLength(2);
+		expect([...(messages ?? [])].every((message) => message.className.length > 0)).toBe(true);
+
+		input.value = 'alice';
+		input.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		await tick();
+		expect(output?.textContent).toBe('alice:1');
+
+		input.form?.reset();
+		await tick();
+		expect(input.value).toBe('');
+		expect(output?.textContent).toBe(':1');
 	});
 });

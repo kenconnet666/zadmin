@@ -19,7 +19,7 @@ Svelte desktop integrations are isolated behind a separate entry and reuse `@zad
 
 ```svelte
 <script lang="ts">
-	import { ZuiProvider } from '@zadmin/zui';
+	import { ZProvider } from '@zadmin/zui';
 	import { DesktopProvider, WindowFrame } from '@zadmin/tauri/svelte';
 	import { createTauriDesktopPlatform } from '@zadmin/tauri';
 
@@ -28,11 +28,11 @@ Svelte desktop integrations are isolated behind a separate entry and reuse `@zad
 	});
 </script>
 
-<ZuiProvider>
+<ZProvider>
 	<DesktopProvider platform={desktop}>
 		<WindowFrame>Desktop content</WindowFrame>
 	</DesktopProvider>
-</ZuiProvider>
+</ZProvider>
 ```
 
 The first component set is `DesktopProvider`, `WindowFrame`, `WindowTitleBar`, `WindowControls`, `FilePickerButton`, `ClipboardButton`, `ExternalLink`, `NotificationButton`, and `SystemInfo`. Components use the injected platform and never import Tauri plugins directly.

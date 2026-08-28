@@ -165,7 +165,7 @@ void route;
 	);
 	await write(
 		resolve(fixtureRoot, 'src/types.ts'),
-		`import type { BoxProps as WebBoxProps } from '@zadmin/zui';
+		`import type { ZBoxProps as WebBoxProps } from '@zadmin/zui';
 import { __icssSlot } from '@zadmin/zui/internal';
 import { useZuiTaroTheme } from '@zadmin/zui-taro/internal';
 import type { NativeElementProps } from '@zadmin/svelte-taro/native';

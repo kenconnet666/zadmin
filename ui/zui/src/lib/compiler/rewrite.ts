@@ -107,6 +107,7 @@ export function rewriteIcssBindings(
 	magic: MagicString,
 	source: string,
 	slotLocal: string,
+	carrierLocal: string,
 	ownedLocal: string,
 	owner: string,
 	root: string,
@@ -224,7 +225,7 @@ export function rewriteIcssBindings(
 		const generated =
 			use.kind === 'regular'
 				? [...directives.values()].join('')
-				: ` __icssVariables={{ ${[...directives.values()].join(', ')} }}`;
+				: ` {...${carrierLocal}({ ${[...directives.values()].join(', ')} })}`;
 		magic.appendRight(use.attributeEnd, generated);
 	}
 

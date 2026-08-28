@@ -125,12 +125,12 @@ describe('ICSS compiler edge behavior', () => {
 	it('recognizes aliased ZUI components but not unknown imports', async () => {
 		const output = await compileSource(`<script>
 			import Unknown from './Unknown.svelte';
-			import { Box as Panel, icss } from '@zadmin/zui';
+			import { ZBox as Panel, icss } from '@zadmin/zui';
 			let width = $state(2);
 			const value = $derived(icss(theme, s => s.width.px(width)));
 		</script><Panel class={value}></Panel><Unknown class="external"></Unknown>`);
 
-		expect(output).toContain('__icssVariables={{');
+		expect(output).toContain('__zuiIcssCarrier({');
 	});
 
 	it('uses anonymous module IDs when no filename is available', async () => {

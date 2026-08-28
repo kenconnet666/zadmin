@@ -33,7 +33,7 @@ export function mergeStyles(
 }
 
 function applyVariables(
-	node: HTMLElement,
+	node: HTMLElement | SVGElement,
 	previous: ReadonlyMap<string, string>,
 	variables: IcssVariables | undefined
 ): Map<string, string> {
@@ -53,7 +53,7 @@ function applyVariables(
 	return next;
 }
 
-export const applyIcssVariables: Action<HTMLElement, IcssVariables | undefined> = (
+export const applyIcssVariables: Action<HTMLElement | SVGElement, IcssVariables | undefined> = (
 	node,
 	variables
 ) => {
@@ -65,7 +65,10 @@ export const applyIcssVariables: Action<HTMLElement, IcssVariables | undefined> 
 	};
 };
 
-export const applyIcssRootStyle: Action<HTMLElement, IcssRootStyle> = (node, initial) => {
+export const applyIcssRootStyle: Action<HTMLElement | SVGElement, IcssRootStyle> = (
+	node,
+	initial
+) => {
 	let authored = initial.style?.trim().replace(/;+$/u, '') ?? '';
 	let applied = applyVariables(node, new Map(), initial.variables);
 	return {

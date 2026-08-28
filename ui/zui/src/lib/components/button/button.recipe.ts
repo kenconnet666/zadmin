@@ -32,6 +32,10 @@ export const buttonRecipe = defineRecipe({
 				s.opacity._disabled;
 			}
 		},
+		fullWidth: {
+			false: () => undefined,
+			true: (s) => s.width.percent(100)
+		},
 		size: {
 			large: (s) => {
 				s.minHeight._large;
@@ -87,6 +91,7 @@ export const buttonRecipe = defineRecipe({
 	],
 	defaultVariants: {
 		disabled: false,
+		fullWidth: false,
 		size: 'medium',
 		variant: 'primary'
 	}
