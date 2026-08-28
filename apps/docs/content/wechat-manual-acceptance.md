@@ -25,7 +25,7 @@ For every run record date, package commit, DevTools/base-library version, device
 
 1. Create and sign a minimal-value test order on the backend; the client only receives prepared payment fields.
 2. Test user cancellation and success. Do not fulfill from the client callback; verify fulfillment only after signed callback or server-side query.
-3. Verify duplicate callback/idempotency, timeout, pending order, refund, and reconciliation in the payment business package—not in `svelte-taro`.
+3. Verify duplicate callback/idempotency, timeout, pending order, refund, and reconciliation in the payment business package—not in `miniapp`.
 4. Request one to three test subscription templates from an explicit button; record accept/reject/ban without assuming a message was sent. Verify sending and tracking server-side.
 
 ## Media and location

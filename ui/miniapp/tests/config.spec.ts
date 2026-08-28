@@ -7,7 +7,7 @@ describe('defineSvelteConfig', () => {
 		const config = defineSvelteConfig({
 			compiler: { type: 'vite' },
 			framework: 'svelte',
-			plugins: ['@zadmin/svelte-taro'],
+			plugins: ['@zadmin/miniapp'],
 			projectName: 'fixture'
 		});
 		expect(config.framework).toBe('none');
@@ -27,7 +27,7 @@ describe('defineSvelteConfig', () => {
 			defineSvelteConfig({
 				compiler: { type: 'webpack5' },
 				framework: 'svelte',
-				plugins: ['@zadmin/svelte-taro'],
+				plugins: ['@zadmin/miniapp'],
 				projectName: 'webpack'
 			})
 		).toThrow(/require compiler/);

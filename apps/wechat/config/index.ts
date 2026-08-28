@@ -1,4 +1,4 @@
-import { defineSvelteConfig } from '@zadmin/svelte-taro';
+import { defineSvelteConfig } from '@zadmin/miniapp';
 
 export default defineSvelteConfig({
 	compiler: { type: 'vite' },
@@ -32,7 +32,7 @@ export default defineSvelteConfig({
 		}
 	},
 	outputRoot: 'dist',
-	plugins: [['@zadmin/svelte-taro', { target: 'weapp' }]],
+	plugins: [['@zadmin/miniapp', { target: 'weapp' }]],
 	projectName: 'zadmin-wechat',
 	sourceRoot: 'src'
 });

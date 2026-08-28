@@ -51,8 +51,8 @@
 	"scripts": {
 		"build": "svelte-package --input src --output dist",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
-		"test": "pnpm --filter @zadmin/svelte-taro build && vitest --run",
-		"test:coverage": "pnpm --filter @zadmin/svelte-taro build && vitest --run --coverage"
+		"test": "pnpm --filter @zadmin/miniapp build && vitest --run",
+		"test:coverage": "pnpm --filter @zadmin/miniapp build && vitest --run --coverage"
 	},
 	"keywords": [
 		"svelte",
@@ -84,7 +84,7 @@
 		"@tarojs/runtime": "catalog:wechat",
 		"@types/node": "catalog:",
 		"@vitest/coverage-v8": "catalog:",
-		"@zadmin/svelte-taro": "workspace:^",
+		"@zadmin/miniapp": "workspace:^",
 		"svelte": "https://pkg.svelte.dev/svelte/c/eb7532dd70fb11b36258347c44cf3910d244f987",
 		"svelte-check": "catalog:",
 		"typescript": "catalog:",

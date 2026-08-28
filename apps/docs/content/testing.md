@@ -142,18 +142,18 @@ pnpm build:desktop
 重点命令：
 
 ```powershell
-pnpm --filter @zadmin/svelte-taro check
-pnpm --filter @zadmin/svelte-taro test:coverage
+pnpm --filter @zadmin/miniapp check
+pnpm --filter @zadmin/miniapp test:coverage
 pnpm --filter @zadmin/zui-taro check
 pnpm --filter @zadmin/zui-taro test:coverage
 pnpm --filter @zadmin/wechat-app build
-pnpm --filter @zadmin/svelte-taro test:package
-pnpm --filter @zadmin/svelte-taro benchmark
+pnpm --filter @zadmin/miniapp test:package
+pnpm --filter @zadmin/miniapp benchmark
 ```
 
 2026-08-25最终结果：
 
-- `svelte-taro` 13个test files、43项测试通过；statements 82.11%、branches 67.83%、functions 87.44%、lines 85.71%；
+- `miniapp` 13个test files、43项测试通过；statements 82.11%、branches 67.83%、functions 87.44%、lines 85.71%；
 - compiler目录statements 95.12%，renderer statements/lines 96.42%；
 - `zui-taro` 2个test files、4项测试通过；statements 85.62%、branches 72.72%、functions 93.47%、lines 88.52%；
 - conformance覆盖runes、effect cleanup、props、component binding、生命周期、context、snippet、if/keyed each/key/await、boundary onerror恢复、class/style/event和嵌套组件；
@@ -171,7 +171,7 @@ __ZADMIN_BUILD_ID__
 __zadmin_build_id__
 ZADMIN_WECHAT_SUPERVISED
 FakePlatformDriver
-@zadmin/svelte-taro/testing
+@zadmin/miniapp/testing
 workspace绝对路径
 ```
 

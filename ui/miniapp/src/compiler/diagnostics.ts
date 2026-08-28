@@ -43,7 +43,7 @@ const UNSUPPORTED: readonly UnsupportedFeature[] = [
 	{
 		feature: 'Browser global special elements',
 		pattern: /<svelte:(?:body|document|head|window)\b/u,
-		suggestion: 'Use @zadmin/svelte-taro/platform or App/Page lifecycle hooks.'
+		suggestion: 'Use @zadmin/miniapp/platform or App/Page lifecycle hooks.'
 	},
 	{
 		feature: 'Dynamic svelte:element',

@@ -6,7 +6,7 @@ ZAdmin是一个 pnpm workspace中的多应用、可复用 Package和动态 Plugi
 
 `ui/zui`的样式层使用运行时 ICSS和Svelte编译优化双轨架构。公开调用只返回class字符串；可追踪的Svelte响应式叶子在编译时提升为inline CSS自定义属性，结构CSS由运行时确定性生成和缓存。完整合同见[ZUI ICSS生产架构](./zui-icss.md)。
 
-微信小程序不是 Web renderer 的条件分支。`@zadmin/zui/core`只保存跨目标设计合同，`@zadmin/zui`和`@zadmin/zui-taro`拥有各自薄 Svelte模板；`@zadmin/svelte-taro`独立承担 Taro framework plugin、compiler、renderer、App/Page runtime、微信平台能力与开发态监督器所需协议。默认生产目标是WebView，Skyline单独分级。
+微信小程序不是 Web renderer 的条件分支。`@zadmin/zui/core`只保存跨目标设计合同，`@zadmin/zui`和`@zadmin/zui-taro`拥有各自薄 Svelte模板；`@zadmin/miniapp`独立承担 Taro framework plugin、compiler、renderer、App/Page runtime、微信平台能力与开发态监督器所需协议。默认生产目标是WebView，Skyline单独分级。
 
 ```text
 apps/
@@ -30,7 +30,7 @@ ui/
   zui-core/    平台无关的主题、Token、ICSS 和设计契约
   zui-svelte/     Web UI 库
   zui-taro/    Taro UI 库和严格 ICSS 子集
-  svelte-taro/ Taro framework plugin、renderer/runtime/platform/module/native
+  miniapp/ Taro framework plugin、renderer/runtime/platform/module/native
 
 plugins/
   approval/    动态业务插件
@@ -46,15 +46,15 @@ plugins/
                           │             │
                @zadmin/zui   @zadmin/zui-taro
 
-                               @zadmin/svelte-taro ──→ Taro 4.2.1
+                               @zadmin/miniapp ──→ Taro 4.2.1
 
 apps/admin, apps/docs ──→ zui-svelte
-apps/wechat           ──→ zui-taro + svelte-taro
+apps/wechat           ──→ zui-taro + miniapp
 ```
 
 - `zui-core`不依赖Svelte、Taro、DOM、wx、Node或任一renderer。
 - `zui-svelte`和`zui-taro`互不依赖；Web没有因本轮增加组件或公开API。
-- `svelte-taro`不依赖ZUI。它的`platform.raw`保留完整Taro类型，managed层只包装权限、错误、资源owner和服务端安全边界。
+- `miniapp`不依赖ZUI。它的`platform.raw`保留完整Taro类型，managed层只包装权限、错误、资源owner和服务端安全边界。
 - 微信端前后端不拆成两个项目；小程序包只包含客户端代码，登录code兑换、手机号兑换、支付签名/回调等仍由现有服务端package/plugin负责。
 - 微信业务module在构建时静态合入小程序。开发时可以监听外部package realpath，生产安装/升级后必须重新构建、审核和发布，不能从网络加载可执行JavaScript。
 
@@ -66,7 +66,7 @@ apps/wechat           ──→ zui-taro + svelte-taro
 .svelte
   → 固定 Svelte 5.56.10 custom-renderer compiler
   → Taro native element marker + external CSS
-  → @zadmin/svelte-taro/renderer
+  → @zadmin/miniapp/renderer
   → Taro document/TaroNode
   → base.wxml + WXSS + page JS
 ```

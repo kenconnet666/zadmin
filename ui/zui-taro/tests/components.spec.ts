@@ -1,5 +1,5 @@
 import type { TaroElement } from '@tarojs/runtime';
-import taroRenderer, { createTaroFragment } from '@zadmin/svelte-taro/renderer';
+import taroRenderer, { createTaroFragment } from '@zadmin/miniapp/renderer';
 import { mount, tick, unmount } from 'svelte';
 import { describe, expect, it } from 'vitest';
 

@@ -295,26 +295,26 @@ export async function runSupervisor() {
 	try {
 		await status.initialize(0);
 		await status.record('supervisor-start', { pid: process.pid });
-		await runNode('svelte-taro:build', tscBin, ['-p', 'tsconfig.json'], {
-			cwd: resolve(workspaceRoot, 'ui/svelte-taro')
+		await runNode('miniapp:build', tscBin, ['-p', 'tsconfig.json'], {
+			cwd: resolve(workspaceRoot, 'ui/miniapp')
 		});
 		await runNode(
 			'svelte-runtime:build',
-			resolve(workspaceRoot, 'ui/svelte-taro/scripts/build-runtime.mjs'),
+			resolve(workspaceRoot, 'ui/miniapp/scripts/build-runtime.mjs'),
 			[],
-			{ cwd: resolve(workspaceRoot, 'ui/svelte-taro') }
+			{ cwd: resolve(workspaceRoot, 'ui/miniapp') }
 		);
 		await runNode('zui-taro:build', sveltePackageBin, ['--input', 'src', '--output', 'dist'], {
 			cwd: resolve(workspaceRoot, 'ui/zui-taro')
 		});
 
 		keepRequired(
-			'svelte-taro',
+			'miniapp',
 			spawnNode(
-				'svelte-taro',
+				'miniapp',
 				tscBin,
 				['-p', 'tsconfig.json', '--watch', '--preserveWatchOutput', '--pretty', 'false'],
-				{ cwd: resolve(workspaceRoot, 'ui/svelte-taro') }
+				{ cwd: resolve(workspaceRoot, 'ui/miniapp') }
 			)
 		);
 		keepRequired(
@@ -330,7 +330,7 @@ export async function runSupervisor() {
 
 		for (const root of [
 			resolve(appRoot, 'src'),
-			resolve(workspaceRoot, 'ui/svelte-taro/src'),
+			resolve(workspaceRoot, 'ui/miniapp/src'),
 			resolve(workspaceRoot, 'ui/zui-taro/src')
 		]) {
 			await watchRoot(root);

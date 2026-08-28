@@ -8,10 +8,10 @@ import type {
 	SvelteTransformResult
 } from './types.ts';
 
-const STYLE_SUFFIX = '.zadmin-svelte-taro.css';
+const STYLE_SUFFIX = '.zadmin-miniapp.css';
 const COMPONENT_SUFFIX = '.taro-components.tsx';
-const BUILD_ID_SOURCE = 'virtual:zadmin-svelte-taro-build-id';
-const BUILD_ID_RESOLVED = '\0zadmin-svelte-taro-build-id';
+const BUILD_ID_SOURCE = 'virtual:zadmin-miniapp-build-id';
+const BUILD_ID_RESOLVED = '\0zadmin-miniapp-build-id';
 
 export function styleVirtualId(id: string): string {
 	return `${id.split('?')[0]}${STYLE_SUFFIX}`;
@@ -41,7 +41,7 @@ export function createSvelteVitePlugin(options: SvelteCompilerOptions = {}): Sve
 
 	return {
 		enforce: 'pre',
-		name: 'zadmin:svelte-taro-compiler',
+		name: 'zadmin:miniapp-compiler',
 		buildStart() {
 			buildId = isDevelopment()
 				? `${Date.now().toString(36)}-${(++buildSequence).toString(36)}`
@@ -69,7 +69,7 @@ export function createSvelteVitePlugin(options: SvelteCompilerOptions = {}): Sve
 			const filename = id.split('?')[0];
 			assertSupportedSvelteSource(source, filename);
 			const dev = isDevelopment();
-			const renderer = options.renderer ?? '@zadmin/svelte-taro/renderer';
+			const renderer = options.renderer ?? '@zadmin/miniapp/renderer';
 			const ast = parse(source, { filename, modern: true });
 			const elements = collectNativeElements(ast.fragment);
 			const markerId = componentMarkerId(filename);

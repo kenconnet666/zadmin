@@ -36,25 +36,25 @@ ui/
 
 当前`ui/`包含六个已经实现和验证的包：
 
-| 目录             | 包名                  | 当前职责                                                        |
-| ---------------- | --------------------- | --------------------------------------------------------------- |
-| `ui/zui-core`    | `@zadmin/zui/core`    | 平台无关Theme、Token、StyleProgram、ICSS指令和设计Props         |
-| `ui/zui`         | `@zadmin/zui`         | Web Svelte组件、运行时CSS、编译优化和SvelteKit SSR              |
-| `ui/sveltekit`   | `@zadmin/sveltekit`   | 动态插件路由、客户端插件runtime和页面Outlet                     |
-| `ui/svelte-taro` | `@zadmin/svelte-taro` | Taro framework plugin、Svelte renderer、App/Page、平台能力      |
-| `ui/zui-taro`    | `@zadmin/zui-taro`    | Taro小程序组件和严格ICSS子集                                    |
-| `ui/tauri`       | `@zadmin/tauri`       | Tauri系统API、typed result、资源生命周期、fake driver和桌面组件 |
+| 目录           | 包名                | 当前职责                                                        |
+| -------------- | ------------------- | --------------------------------------------------------------- |
+| `ui/zui-core`  | `@zadmin/zui/core`  | 平台无关Theme、Token、StyleProgram、ICSS指令和设计Props         |
+| `ui/zui`       | `@zadmin/zui`       | Web Svelte组件、运行时CSS、编译优化和SvelteKit SSR              |
+| `ui/sveltekit` | `@zadmin/sveltekit` | 动态插件路由、客户端插件runtime和页面Outlet                     |
+| `ui/miniapp`   | `@zadmin/miniapp`   | Taro framework plugin、Svelte renderer、App/Page、平台能力      |
+| `ui/zui-taro`  | `@zadmin/zui-taro`  | Taro小程序组件和严格ICSS子集                                    |
+| `ui/tauri`     | `@zadmin/tauri`     | Tauri系统API、typed result、资源生命周期、fake driver和桌面组件 |
 
 当前源码规模约为：
 
-| 目录          | 源码文件 | 源码行数 |
-| ------------- | -------: | -------: |
-| `svelte-taro` |       29 |     2635 |
-| `sveltekit`   |        7 |      512 |
-| `tauri`       |       35 |     1836 |
-| `zui-core`    |       13 |      813 |
-| `zui-svelte`  |       34 |     1879 |
-| `zui-taro`    |       18 |      596 |
+| 目录         | 源码文件 | 源码行数 |
+| ------------ | -------: | -------: |
+| `miniapp`    |       29 |     2635 |
+| `sveltekit`  |        7 |      512 |
+| `tauri`      |       35 |     1836 |
+| `zui-core`   |       13 |      813 |
+| `zui-svelte` |       34 |     1879 |
+| `zui-taro`   |       18 |      596 |
 
 这些实现不能作为临时目录直接删除。迁移应保留其测试、package acceptance、HMR、资源释放和真实宿主证据，再逐层替换底层依赖。
 
@@ -629,7 +629,7 @@ ui/zui/src/sveltekit/* → ui/sveltekit/src/zui/*
 ### P3：建立自包含Miniapp包
 
 ```text
-ui/svelte-taro + ui/zui-taro → ui/miniapp
+ui/miniapp + ui/zui-taro → ui/miniapp
 ```
 
 - 第一阶段可暂时保留Taro后端；

@@ -3,7 +3,7 @@ import {
 	wechatCapabilities,
 	type DisposableHandle,
 	type WeChatPlatform
-} from '@zadmin/svelte-taro/platform';
+} from '@zadmin/miniapp/platform';
 
 export type SafeProbeName = 'files' | 'session' | 'support' | 'system' | 'worker';
 

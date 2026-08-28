@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 
 import type Taro from '@tarojs/taro';
-import type { DisposableHandle, WeChatPlatform } from '@zadmin/svelte-taro/platform';
+import type { DisposableHandle, WeChatPlatform } from '@zadmin/miniapp/platform';
 
 Object.assign(globalThis, {
 	ENABLE_ADJACENT_HTML: true,

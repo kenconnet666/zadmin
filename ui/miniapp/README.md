@@ -1,4 +1,4 @@
-# @zadmin/svelte-taro
+# @zadmin/miniapp
 
 Typed Svelte 5 integration for Taro 4.2.1 and WeChat Mini Programs. The package provides a Taro framework plugin, a Svelte custom renderer, App/Page runtime integration, static business modules, native element types, scoped platform capabilities, and test drivers.
 
@@ -9,7 +9,7 @@ The Svelte custom renderer API is still experimental. Consumers must install the
 ```json
 {
 	"dependencies": {
-		"@zadmin/svelte-taro": "0.1.0",
+		"@zadmin/miniapp": "0.1.0",
 		"@tarojs/components": "4.2.1",
 		"@tarojs/runtime": "4.2.1",
 		"@tarojs/taro": "4.2.1",
@@ -23,12 +23,12 @@ The package build creates one tree-shakeable Svelte runtime ESM for development 
 ## Taro config
 
 ```ts
-import { defineSvelteConfig } from '@zadmin/svelte-taro';
+import { defineSvelteConfig } from '@zadmin/miniapp';
 
 export default defineSvelteConfig({
 	compiler: { type: 'vite' },
 	framework: 'svelte',
-	plugins: ['@zadmin/svelte-taro'],
+	plugins: ['@zadmin/miniapp'],
 	sourceRoot: 'src',
 	outputRoot: 'dist',
 	projectName: 'example',
@@ -44,12 +44,12 @@ Consumers should invoke Taro builds with `--no-check` after `defineSvelteConfig`
 
 ## Stable entries
 
-- `@zadmin/svelte-taro/module`: typed static business modules, routes, capability declarations, and config diagnostics.
-- `@zadmin/svelte-taro/native`: Taro 4.2.1 native-element prop map and Svelte augmentation.
-- `@zadmin/svelte-taro/platform`: raw Taro plus scoped managed WeChat capabilities.
-- `@zadmin/svelte-taro/renderer`: Svelte custom renderer operations over Taro nodes.
-- `@zadmin/svelte-taro/runtime`: App/Page mounting, context, ResourceScope, and development build ID reader.
-- `@zadmin/svelte-taro/testing`: fake platform driver; never import this entry from production application code.
+- `@zadmin/miniapp/module`: typed static business modules, routes, capability declarations, and config diagnostics.
+- `@zadmin/miniapp/native`: Taro 4.2.1 native-element prop map and Svelte augmentation.
+- `@zadmin/miniapp/platform`: raw Taro plus scoped managed WeChat capabilities.
+- `@zadmin/miniapp/renderer`: Svelte custom renderer operations over Taro nodes.
+- `@zadmin/miniapp/runtime`: App/Page mounting, context, ResourceScope, and development build ID reader.
+- `@zadmin/miniapp/testing`: fake platform driver; never import this entry from production application code.
 
 Compiler/plugin helpers not listed above remain internal except the root config/compiler exports already declared by `package.json`.
 
@@ -59,7 +59,7 @@ Capture the scoped platform once during component initialization. Use the typed 
 
 ```svelte
 <script lang="ts">
-	import { getWeChatPlatform } from '@zadmin/svelte-taro/platform';
+	import { getWeChatPlatform } from '@zadmin/miniapp/platform';
 
 	const platform = getWeChatPlatform();
 

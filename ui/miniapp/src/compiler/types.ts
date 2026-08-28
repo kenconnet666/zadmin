@@ -10,7 +10,7 @@ export interface SvelteTransformResult {
 
 export interface SvelteCompilerPlugin {
 	readonly enforce: 'pre';
-	readonly name: 'zadmin:svelte-taro-compiler';
+	readonly name: 'zadmin:miniapp-compiler';
 	buildStart?(): void;
 	configResolved?(config: { command?: string; mode?: string; root?: string }): void;
 	writeBundle?(): void;

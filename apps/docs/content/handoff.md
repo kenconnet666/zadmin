@@ -12,9 +12,9 @@ ZUI ICSS和五个基础组件已经按[ICSS生产架构](./zui-icss.md)完成生
 
 2026-08-26 已把Svelte/UI平台包统一迁入根`ui/`，并完成`@zadmin/tauri`、9个桌面组件和`apps/desktop`。桌面端使用SvelteKit SPA静态产物、Tauri 2最小capability和`tauri-specta`生成bindings；真实Win11 x64静态页面、系统探针、HMR、release exe、NSIS安装/卸载均通过。当前发布件未签名，正式外部分发前必须补Authenticode；完整证据见[桌面生产验收](./desktop-production-acceptance.md)。
 
-Svelte→Taro微信链路也已完成默认WebView生产验收：`@zadmin/svelte-taro`提供CJS framework plugin、compiler、renderer、App/Page runtime、静态Taro module、native types和scoped WeChat platform；`@zadmin/zui-taro`提供五个基础组件、三个流程组件和严格ICSS子集；`apps/wechat`是受版本控制的验收宿主。Fast Refresh、外部tarball、能力报告和Taro Solid性能对比均已落库。不要把Skyline build-verified或账号/硬件mock证据写成真机验收。
+Svelte→Taro微信链路也已完成默认WebView生产验收：`@zadmin/miniapp`提供CJS framework plugin、compiler、renderer、App/Page runtime、静态Taro module、native types和scoped WeChat platform；`@zadmin/zui-taro`提供五个基础组件、三个流程组件和严格ICSS子集；`apps/wechat`是受版本控制的验收宿主。Fast Refresh、外部tarball、能力报告和Taro Solid性能对比均已落库。不要把Skyline build-verified或账号/硬件mock证据写成真机验收。
 
-2026-08-25 补充真实模拟器验收时发现从原生`tap`同步调用Taro路由会让目标Svelte Page越过context初始化边界。`@zadmin/svelte-taro`现提供Promise-first强类型`platform.navigation`，把五种页面切换延迟到原生事件分发结束后的下一任务；首页到能力页、三个安全探针和空控制台已经复核。不要在事件处理器里延迟调用`getWeChatPlatform()`，应在组件初始化时捕获platform。
+2026-08-25 补充真实模拟器验收时发现从原生`tap`同步调用Taro路由会让目标Svelte Page越过context初始化边界。`@zadmin/miniapp`现提供Promise-first强类型`platform.navigation`，把五种页面切换延迟到原生事件分发结束后的下一任务；首页到能力页、三个安全探针和空控制台已经复核。不要在事件处理器里延迟调用`getWeChatPlatform()`，应在组件初始化时捕获platform。
 
 同日完成受监督Android真机验收：Xiaomi 22081212C / Android API 35 / WeChat 8.0.76 / base library 3.17.1。首页渲染正常，真机WXML树确认导航到`pages/capabilities/index`；network=`wifi`、临时storage roundtrip/removal、只读privacy=`no pending consent`通过，Console始终为空，服务正常且等待/未确认消息均为0。该次只提升这三个capability到device-verified；没有触发账号、商户、权限或硬件能力。
 
@@ -34,15 +34,15 @@ fecc5a2 docs(zui): replace starter content with zui documentation
 976e0d6 chore(workspace): isolate the WeChat toolchain
 4dc0450 refactor(zui): extract platform-neutral core
 ece5528 refactor(zui): isolate the Web renderer package
-33a9cdf feat(svelte-taro): add typed Taro framework plugin
-cf0d2f4 feat(svelte-taro): compile Svelte through the Taro renderer
+33a9cdf feat(miniapp): add typed Taro framework plugin
+cf0d2f4 feat(miniapp): compile Svelte through the Taro renderer
 38a6395 feat(wechat): add Svelte app and page runtime
 bc9f939 feat(zui-taro): add foundational components and ICSS
-19124a1 feat(svelte-taro): add scoped WeChat platform capabilities
+19124a1 feat(miniapp): add scoped WeChat platform capabilities
 7ec35b3 feat(wechat): add supervised Fast Refresh
 edd8ad7 test(wechat): complete Svelte Taro production acceptance
 41ff750 docs(wechat): finalize Svelte Taro architecture and handoff
-b75e46f fix(svelte-taro): defer typed page navigation
+b75e46f fix(miniapp): defer typed page navigation
 ab7df4c docs(wechat): record supervised device acceptance
 4803a9f feat(wechat): add safe platform probes
 59a1580 docs(workspace): plan ui root and tauri desktop
@@ -129,7 +129,7 @@ packages/
 
 ui/
   sveltekit/
-  svelte-taro/
+  miniapp/
   tauri/
   zui-core/
   zui-taro/
@@ -186,14 +186,14 @@ plugin.ts
 | SvelteKit ZUI SSR/CSP       | `ui/sveltekit/src/lib/zui/`                            |
 | ZUI基础组件                 | `ui/zui/src/lib/components/`                           |
 | ZUI接入文档                 | `apps/docs/content/zui-usage.md`                       |
-| Taro framework plugin       | `ui/svelte-taro/src/plugin/index.cts`                  |
-| Svelte Taro compiler        | `ui/svelte-taro/src/compiler/`                         |
-| Taro renderer/runtime       | `ui/svelte-taro/src/renderer/`、`runtime/`             |
-| WeChat platform/catalog     | `ui/svelte-taro/src/platform/`                         |
-| WeChat安全页面导航          | `ui/svelte-taro/src/platform/service.ts`               |
+| Taro framework plugin       | `ui/miniapp/src/plugin/index.cts`                      |
+| Svelte Taro compiler        | `ui/miniapp/src/compiler/`                             |
+| Taro renderer/runtime       | `ui/miniapp/src/renderer/`、`runtime/`                 |
+| WeChat platform/catalog     | `ui/miniapp/src/platform/`                             |
+| WeChat安全页面导航          | `ui/miniapp/src/platform/service.ts`                   |
 | WeChat安全探针              | `apps/wechat/src/pages/capabilities/probes.ts`         |
 | WeChat安全Worker            | `apps/wechat/src/workers/safe-probe.js`                |
-| Taro module/native/testing  | `ui/svelte-taro/src/module/`、`native/`、`testing/`    |
+| Taro module/native/testing  | `ui/miniapp/src/module/`、`native/`、`testing/`        |
 | ZUI Taro                    | `ui/zui-taro/src/`                                     |
 | Tauri 系统能力              | `ui/tauri/src/api/`、`runtime/`、`testing/`            |
 | Tauri Svelte组件            | `ui/tauri/src/components/`                             |
@@ -289,8 +289,8 @@ pnpm --filter @zadmin/docs build-storybook
 pnpm --filter @zadmin/wechat-app setup:local -- C:\Users\lionheart\WeChatProjects\miniprogram-1
 pnpm build:wechat
 pnpm dev:wechat
-pnpm --filter @zadmin/svelte-taro test:package
-pnpm --filter @zadmin/svelte-taro benchmark
+pnpm --filter @zadmin/miniapp test:package
+pnpm --filter @zadmin/miniapp benchmark
 ```
 
 `setup:local`只生成被忽略的`project.private.config.json`，不打印AppID。换设备时把最后一个参数替换为该设备上已经授权的微信项目目录。

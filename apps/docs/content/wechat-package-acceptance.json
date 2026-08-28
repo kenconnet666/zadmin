@@ -1,7 +1,7 @@
 {
 	"checkedAt": "2026-08-25",
 	"durationMs": 87841,
-	"packages": ["zui-core", "zui-svelte", "zui-taro", "svelte-taro"],
+	"packages": ["zui-core", "zui-svelte", "zui-taro", "miniapp"],
 	"productionFiles": 21,
 	"runtimes": {
 		"svelte": "5.56.10",

@@ -1,4 +1,4 @@
-import { defineSvelteConfig } from '@zadmin/svelte-taro';
+import { defineSvelteConfig } from '@zadmin/miniapp';
 
 export default defineSvelteConfig({
 	compiler: { type: 'vite' },
@@ -7,7 +7,7 @@ export default defineSvelteConfig({
 	framework: 'svelte',
 	mini: { enableSourceMap: false },
 	outputRoot: 'dist',
-	plugins: ['@zadmin/svelte-taro'],
+	plugins: ['@zadmin/miniapp'],
 	projectName: 'performance-svelte',
 	sourceRoot: 'src'
 });

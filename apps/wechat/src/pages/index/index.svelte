@@ -15,7 +15,7 @@
 		Text,
 		ZuiProvider
 	} from '@zadmin/zui-taro';
-	import { getWeChatPlatform } from '@zadmin/svelte-taro/platform';
+	import { getWeChatPlatform } from '@zadmin/miniapp/platform';
 
 	let count = $state(0);
 	let alternate = $state(false);

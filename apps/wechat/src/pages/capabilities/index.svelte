@@ -3,7 +3,7 @@
 		allWechatCapabilities,
 		createCapabilityReport,
 		getWeChatPlatform
-	} from '@zadmin/svelte-taro/platform';
+	} from '@zadmin/miniapp/platform';
 	import { Box, Button, Stack, Text, ZuiProvider } from '@zadmin/zui-taro';
 	import { runSafeProbe, type SafeProbeName } from './probes.ts';
 

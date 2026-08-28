@@ -1,7 +1,7 @@
 {
-	"name": "@zadmin/svelte-taro",
+	"name": "@zadmin/miniapp",
 	"version": "0.1.0",
-	"description": "A typed Svelte 5 framework plugin, renderer, runtime, and platform layer for Taro.",
+	"description": "Self-contained Svelte framework, components, compiler, runtime, and platform APIs for WeChat Mini Programs.",
 	"type": "module",
 	"sideEffects": false,
 	"main": "./dist/plugin/index.cjs",
@@ -22,6 +22,10 @@
 		"./plugin": {
 			"types": "./src/plugin/types.ts",
 			"require": "./dist/plugin/index.cjs"
+		},
+		"./compiler": {
+			"types": "./src/compiler/index.ts",
+			"import": "./dist/compiler/index.js"
 		},
 		"./module": {
 			"types": "./src/module/index.ts",
@@ -46,6 +50,10 @@
 		"./testing": {
 			"types": "./src/testing/index.ts",
 			"import": "./dist/testing/index.js"
+		},
+		"./vite": {
+			"types": "./src/compiler/index.ts",
+			"import": "./dist/compiler/index.js"
 		}
 	},
 	"publishConfig": {
@@ -61,6 +69,10 @@
 			"./plugin": {
 				"types": "./dist/plugin/types.d.ts",
 				"require": "./dist/plugin/index.cjs"
+			},
+			"./compiler": {
+				"types": "./dist/compiler/index.d.ts",
+				"import": "./dist/compiler/index.js"
 			},
 			"./module": {
 				"types": "./dist/module/index.d.ts",
@@ -85,6 +97,10 @@
 			"./testing": {
 				"types": "./dist/testing/index.d.ts",
 				"import": "./dist/testing/index.js"
+			},
+			"./vite": {
+				"types": "./dist/compiler/index.d.ts",
+				"import": "./dist/compiler/index.js"
 			}
 		}
 	},
@@ -104,11 +120,11 @@
 		"mini-program",
 		"custom-renderer"
 	],
-	"homepage": "https://github.com/kenconnet666/zadmin/tree/master/ui/svelte-taro",
+	"homepage": "https://github.com/kenconnet666/zadmin/tree/master/ui/miniapp",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/kenconnet666/zadmin.git",
-		"directory": "ui/svelte-taro"
+		"directory": "ui/miniapp"
 	},
 	"peerDependencies": {
 		"@tarojs/components": "4.2.1",

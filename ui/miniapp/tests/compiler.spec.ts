@@ -19,8 +19,8 @@ describe('Svelte Taro compiler', () => {
 			filename
 		);
 
-		expect(result?.code).toContain("from '@zadmin/svelte-taro/renderer'");
-		expect(result?.code).toContain('virtual:zadmin-svelte-taro-build-id');
+		expect(result?.code).toContain("from '@zadmin/miniapp/renderer'");
+		expect(result?.code).toContain('virtual:zadmin-miniapp-build-id');
 		expect(result?.code).toContain(JSON.stringify(componentMarkerId(filename)));
 		expect(result?.code).toContain(JSON.stringify(styleVirtualId(filename)));
 		expect(plugin.load?.(styleVirtualId(filename))).toContain('.panel');
@@ -45,9 +45,9 @@ describe('Svelte Taro compiler', () => {
 		);
 		const log = vi.spyOn(console, 'log').mockImplementation(() => undefined);
 		development.writeBundle?.();
-		expect(output?.code).toContain('virtual:zadmin-svelte-taro-build-id');
-		const virtualId = development.resolveId?.('virtual:zadmin-svelte-taro-build-id');
-		expect(virtualId).toBe('\0zadmin-svelte-taro-build-id');
+		expect(output?.code).toContain('virtual:zadmin-miniapp-build-id');
+		const virtualId = development.resolveId?.('virtual:zadmin-miniapp-build-id');
+		expect(virtualId).toBe('\0zadmin-miniapp-build-id');
 		expect(development.load?.(virtualId ?? '')).toMatch(
 			/globalThis\.__ZADMIN_BUILD_ID__ = "[a-z0-9-]+"/u
 		);
@@ -62,7 +62,7 @@ describe('Svelte Taro compiler', () => {
 			'<view>production</view>',
 			'C:/fixture/Production.svelte'
 		);
-		expect(productionOutput?.code).not.toContain('zadmin-svelte-taro-build-id');
+		expect(productionOutput?.code).not.toContain('zadmin-miniapp-build-id');
 	});
 
 	it('ignores non-Svelte modules and surfaces unsupported renderer syntax', async () => {

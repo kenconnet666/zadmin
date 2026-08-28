@@ -9,7 +9,7 @@
 ```text
 ui/
   sveltekit/
-  svelte-taro/
+  miniapp/
   tauri/
   zui-core/
   zui-svelte/

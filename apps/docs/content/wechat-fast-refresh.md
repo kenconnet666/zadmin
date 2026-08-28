@@ -1,18 +1,18 @@
 # WeChat Fast Refresh
 
-`pnpm dev:wechat` starts one supervisor. It first builds the package and its single prebundled Svelte runtime, then directly owns one TypeScript watcher for `@zadmin/svelte-taro`, one `svelte-package` watcher for `@zadmin/zui-taro`, and one Taro Vite watcher. It does not nest `concurrently` processes, and it removes its lock plus all children on `SIGINT`/`SIGTERM`.
+`pnpm dev:wechat` starts one supervisor. It first builds the package and its single prebundled Svelte runtime, then directly owns one TypeScript watcher for `@zadmin/miniapp`, one `svelte-package` watcher for `@zadmin/zui-taro`, and one Taro Vite watcher. It does not nest `concurrently` processes, and it removes its lock plus all children on `SIGINT`/`SIGTERM`.
 
 ## Change policy
 
-| Change                                                | Action                                             |
-| ----------------------------------------------------- | -------------------------------------------------- |
-| `apps/wechat/**/*.svelte`                             | Taro incremental build                             |
-| `ui/zui-taro/src/**`                                  | package watch plus Taro incremental build          |
-| `svelte-taro` runtime/platform/native/module/renderer | TypeScript watch plus Taro incremental build       |
-| `svelte-taro` compiler/plugin/vite                    | rebuild package and restart only the Taro child    |
-| `apps/wechat/src/workers/**`                          | restart Taro child and recopy the Worker entry     |
-| `app.config.ts` or Taro host config                   | restart only the Taro child                        |
-| package manifest, workspace file, or lockfile         | stop with exit code 75 and require install/restart |
+| Change                                            | Action                                             |
+| ------------------------------------------------- | -------------------------------------------------- |
+| `apps/wechat/**/*.svelte`                         | Taro incremental build                             |
+| `ui/zui-taro/src/**`                              | package watch plus Taro incremental build          |
+| `miniapp` runtime/platform/native/module/renderer | TypeScript watch plus Taro incremental build       |
+| `miniapp` compiler/plugin/vite                    | rebuild package and restart only the Taro child    |
+| `apps/wechat/src/workers/**`                      | restart Taro child and recopy the Worker entry     |
+| `app.config.ts` or Taro host config               | restart only the Taro child                        |
+| package manifest, workspace file, or lockfile     | stop with exit code 75 and require install/restart |
 
 External first-party plugin source roots can be listed in ignored `apps/wechat/.wechat/plugins.json` as an array of absolute paths or `{ "paths": [] }`. The supervisor resolves real paths and follows their source changes. A dependency-manifest change still stops instead of mutating the install while children are active.
 

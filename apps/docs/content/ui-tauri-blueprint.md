@@ -8,7 +8,7 @@
 
 1. UI 和 Svelte 平台相关包统一从 `packages/` 迁入根目录 `ui/`。
 2. `packages/sveltekit` 迁为 `ui/sveltekit`，包名继续是 `@zadmin/sveltekit`。
-3. `packages/svelte-taro` 迁为 `ui/svelte-taro`，包名继续是 `@zadmin/svelte-taro`。
+3. `packages/miniapp` 迁为 `ui/miniapp`，包名继续是 `@zadmin/miniapp`。
 4. `packages/zui-core` 迁为 `ui/zui-core`，包名继续是 `@zadmin/zui/core`。
 5. `packages/zui-taro` 迁为 `ui/zui-taro`，包名继续是 `@zadmin/zui-taro`。
 6. `packages/zui-web` 迁为 `ui/zui`，包名直接从 `@zadmin/zui-web` 改为 `@zadmin/zui`。
@@ -84,7 +84,7 @@ C:\code\zadmin
 │
 └─ ui/
    ├─ sveltekit/
-   ├─ svelte-taro/
+   ├─ miniapp/
    ├─ tauri/
    ├─ zui-core/
    ├─ zui-svelte/
@@ -114,14 +114,14 @@ packages:
 
 ## 4. 包职责和公开名称
 
-| 物理路径         | npm 包名              | 职责                                                                    |
-| ---------------- | --------------------- | ----------------------------------------------------------------------- |
-| `ui/zui-core`    | `@zadmin/zui/core`    | 平台无关 Theme、Token、ICSS Program、设计 Props                         |
-| `ui/zui`         | `@zadmin/zui`         | Web/WebView2 Svelte 组件、ICSS runtime/compiler、SvelteKit SSR 集成     |
-| `ui/zui-taro`    | `@zadmin/zui-taro`    | Taro/微信自定义 renderer 专用组件和 ICSS 子集                           |
-| `ui/svelte-taro` | `@zadmin/svelte-taro` | Svelte→Taro compiler、renderer、runtime、微信平台能力                   |
-| `ui/sveltekit`   | `@zadmin/sveltekit`   | 动态插件页、客户端插件 runtime、SvelteKit host module                   |
-| `ui/tauri`       | `@zadmin/tauri`       | Tauri/Windows 系统 API、权限与生命周期、Svelte 桌面适配层和系统能力组件 |
+| 物理路径       | npm 包名            | 职责                                                                    |
+| -------------- | ------------------- | ----------------------------------------------------------------------- |
+| `ui/zui-core`  | `@zadmin/zui/core`  | 平台无关 Theme、Token、ICSS Program、设计 Props                         |
+| `ui/zui`       | `@zadmin/zui`       | Web/WebView2 Svelte 组件、ICSS runtime/compiler、SvelteKit SSR 集成     |
+| `ui/zui-taro`  | `@zadmin/zui-taro`  | Taro/微信自定义 renderer 专用组件和 ICSS 子集                           |
+| `ui/miniapp`   | `@zadmin/miniapp`   | Svelte→Taro compiler、renderer、runtime、微信平台能力                   |
+| `ui/sveltekit` | `@zadmin/sveltekit` | 动态插件页、客户端插件 runtime、SvelteKit host module                   |
+| `ui/tauri`     | `@zadmin/tauri`     | Tauri/Windows 系统 API、权限与生命周期、Svelte 桌面适配层和系统能力组件 |
 
 `@zadmin/zui-web` → `@zadmin/zui` 是唯一包名 breaking change。新名称明确表达它是 Svelte renderer，同时可运行在浏览器和 Tauri WebView2；其他四个现有包保持 npm 名称、exports 和类型传播方式不变。
 
@@ -145,7 +145,7 @@ packages:
                       ▲
                       └──────── apps/wechat
 
-@zadmin/svelte-taro ─────────── apps/wechat
+@zadmin/miniapp ─────────── apps/wechat
         ▲
         └──── dev/runtime ───── @zadmin/zui-taro
 
@@ -162,7 +162,7 @@ packages:
 - `@zadmin/tauri` 根入口不 import Svelte 或 ZUI；
 - `@zadmin/tauri/svelte` 以 Svelte 与 `@zadmin/zui` 为 peer dependency；
 - `@zadmin/tauri/testing` 不能进入生产 bundle；
-- `@zadmin/svelte-taro` 不依赖 ZUI；
+- `@zadmin/miniapp` 不依赖 ZUI；
 - `@zadmin/zui-taro` 不依赖 Web renderer；
 - `apps/desktop` 不依赖 `apps/admin` 的 SSR 产物。
 
@@ -172,10 +172,10 @@ packages:
 
 以下目录当前条目密度已经合适，不做形式主义拆分：
 
-- `ui/svelte-taro`：8 个根条目；
-- `ui/svelte-taro/src`：8 个目录 + `index.ts`；
-- `ui/svelte-taro/src/platform`：9 个代码文件；
-- `ui/svelte-taro/src/runtime`：5 个代码文件；
+- `ui/miniapp`：8 个根条目；
+- `ui/miniapp/src`：8 个目录 + `index.ts`；
+- `ui/miniapp/src/platform`：9 个代码文件；
+- `ui/miniapp/src/runtime`：5 个代码文件；
 - `ui/sveltekit/src/lib`：7 个代码文件；
 - `ui/zui-core`：7 个根条目。
 
@@ -245,7 +245,7 @@ ui/zui-taro/src/
 - `apps/admin` imports 与 Vite preprocess；
 - `apps/docs` imports、Storybook 与 Svelte config；
 - `ui/zui` 自引用和 compiler 默认 module 名；
-- `ui/svelte-taro` 外部 tarball acceptance fixture；
+- `ui/miniapp` 外部 tarball acceptance fixture；
 - `pnpm-lock.yaml` importer/link；
 - package repository/homepage 元数据；
 - 全部物理路径文档。
@@ -725,7 +725,7 @@ docs(workspace): plan ui root and tauri desktop
 
 ```text
 packages/sveltekit    → ui/sveltekit
-packages/svelte-taro  → ui/svelte-taro
+packages/miniapp  → ui/miniapp
 packages/zui-core     → ui/zui-core
 packages/zui-taro     → ui/zui-taro
 packages/zui-web      → ui/zui-web
@@ -822,9 +822,9 @@ docs(desktop): finalize tauri handoff
 - `apps/admin` Vite、hooks 和 package；
 - `apps/docs` Svelte config、hooks、Storybook、routes 和 content；
 - `apps/wechat` supervisor、file-policy 和 tests；
-- `ui/svelte-taro` tarball acceptance 路径；
+- `ui/miniapp` tarball acceptance 路径；
 - `ui/zui` 自引用和 compiler module 识别；
-- `ui/zui-taro` 对 `@zadmin/svelte-taro` 的 dev dependency；
+- `ui/zui-taro` 对 `@zadmin/miniapp` 的 dev dependency；
 - `@zadmin/sveltekit` 的 lockfile 物理 links 与文档路径；
 - handoff、architecture、testing、ZUI 和微信文档。
 
@@ -833,7 +833,7 @@ docs(desktop): finalize tauri handoff
 - `@zadmin/core` token/DI；
 - 插件公开依赖方式；
 - `@zadmin/sveltekit` npm 名称和运行时 ID；
-- `@zadmin/svelte-taro` npm 名称；
+- `@zadmin/miniapp` npm 名称；
 - `@zadmin/zui/core` npm 名称；
 - `@zadmin/zui-taro` npm 名称；
 - 现有 Web/Taro 行为和验证等级。
@@ -857,8 +857,8 @@ pnpm lint
 pnpm --filter @zadmin/zui/core test:coverage
 pnpm --filter @zadmin/zui test:coverage
 pnpm --filter @zadmin/zui-taro test:coverage
-pnpm --filter @zadmin/svelte-taro test:coverage
-pnpm --filter @zadmin/svelte-taro test:package
+pnpm --filter @zadmin/miniapp test:coverage
+pnpm --filter @zadmin/miniapp test:package
 pnpm --filter @zadmin/sveltekit test
 pnpm build:wechat
 ```
@@ -933,7 +933,7 @@ pnpm --filter @zadmin/desktop tauri build --debug --no-bundle
 
 蓝图整体完成需要同时满足：
 
-1. `packages/` 中不再存在 sveltekit、svelte-taro 和 zui 包；
+1. `packages/` 中不再存在 sveltekit、miniapp 和 zui 包；
 2. `ui/` 只有 6 个目标目录；
 3. 全仓没有非迁移文档中的 `packages/zui-*`、`packages/svelte-*` 旧物理路径；
 4. 全仓没有 `@zadmin/zui-web` import 或 dependency；

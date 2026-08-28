@@ -2,7 +2,7 @@
 
 Svelte 5 components and a deliberately small ICSS compiler for Taro 4.2.1 WeChat mini programs.
 
-The package shares tokens and design contracts with `@zadmin/zui/core`; it does not depend on the Web renderer. Use it together with `@zadmin/svelte-taro` and the exact custom-renderer Svelte artifact documented by that package.
+The package shares tokens and design contracts with `@zadmin/zui/core`; it does not depend on the Web renderer. Use it together with `@zadmin/miniapp` and the exact custom-renderer Svelte artifact documented by that package.
 
 ## Components
 
@@ -23,7 +23,7 @@ The package shares tokens and design contracts with `@zadmin/zui/core`; it does 
 
 The foundational set is `ZuiProvider`, `Box`, `Stack`, `Text`, and `Button`. WeChat flow components are `CapabilityGate`, `PrivacyConsent`, and `PhoneNumberButton`. The latter two only bridge explicit user gestures; they never exchange a phone code, accept privacy consent, or log sensitive values.
 
-`Button` preserves ZUI design props and typed WeChat `openType` event callbacks. Camera, map, canvas, media, live, WebView, and similar tags remain native elements typed by `@zadmin/svelte-taro/native`; they are not disguised as design components.
+`Button` preserves ZUI design props and typed WeChat `openType` event callbacks. Camera, map, canvas, media, live, WebView, and similar tags remain native elements typed by `@zadmin/miniapp/native`; they are not disguised as design components.
 
 ## ICSS subset
 

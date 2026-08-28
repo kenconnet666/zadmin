@@ -8,8 +8,8 @@ test('classifies source changes into incremental, restart, and dependency bounda
 	assert.equal(classifyChange('apps/wechat/src/workers/safe-probe.js'), 'restart-taro');
 	assert.equal(classifyChange('ui/zui-taro/src/components/Button.svelte'), 'incremental');
 	assert.equal(classifyChange('packages/zui-taro/src/components/Button.svelte'), 'ignore');
-	assert.equal(classifyChange('ui/svelte-taro/src/platform/service.ts'), 'package-incremental');
-	assert.equal(classifyChange('ui/svelte-taro/src/compiler/index.ts'), 'restart-taro');
+	assert.equal(classifyChange('ui/miniapp/src/platform/service.ts'), 'package-incremental');
+	assert.equal(classifyChange('ui/miniapp/src/compiler/index.ts'), 'restart-taro');
 	assert.equal(classifyChange('apps/wechat/src/app.config.ts'), 'restart-taro');
 	assert.equal(classifyChange('ui/zui-taro/package.json'), 'dependencies-changed');
 	assert.equal(classifyChange('pnpm-lock.yaml'), 'dependencies-changed');

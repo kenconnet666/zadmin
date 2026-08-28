@@ -1,7 +1,7 @@
 import { createRequire } from 'node:module';
 import { dirname, resolve } from 'node:path';
 
-import { createSvelteVitePlugin } from '@zadmin/svelte-taro';
+import { createSvelteVitePlugin } from '@zadmin/miniapp';
 import { defineConfig } from 'vitest/config';
 
 const require = createRequire(import.meta.url);

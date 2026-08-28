@@ -152,7 +152,7 @@ pnpm dev:wechat
 
 ```text
 WeChat supervisor
-  ├─ svelte-taro tsc --watch
+  ├─ miniapp tsc --watch
   ├─ zui-taro svelte-package --watch
   ├─ Taro Vite build --watch
   ├─ app/package/external realpath watchers

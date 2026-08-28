@@ -62,8 +62,8 @@ type JoiRoot = {
 	string(): JoiSchema;
 };
 
-const DEFAULT_RENDERER = '@zadmin/svelte-taro/renderer';
-const PACKAGE_NAME = '@zadmin/svelte-taro';
+const DEFAULT_RENDERER = '@zadmin/miniapp/renderer';
+const PACKAGE_NAME = '@zadmin/miniapp';
 const localRequire = createRequire(__filename);
 
 function defineSvelteConfig<TConfig extends Record<string, unknown>>(config: TConfig): TConfig {
@@ -94,7 +94,7 @@ function defineSvelteConfig<TConfig extends Record<string, unknown>>(config: TCo
 function getLoaderMeta(): Record<string, unknown> {
 	return {
 		creator: 'createSvelteApp',
-		creatorLocation: '@zadmin/svelte-taro/runtime',
+		creatorLocation: '@zadmin/miniapp/runtime',
 		execBeforeCreateWebApp: '',
 		extraImportForWeb: '',
 		frameworkArgs: 'config',
@@ -119,7 +119,7 @@ function createCompilerPlugin(options: SvelteTaroPluginOptions): VitePlugin {
 		));
 	return {
 		enforce: 'pre',
-		name: 'zadmin:svelte-taro-compiler',
+		name: 'zadmin:miniapp-compiler',
 		async buildStart(...args: readonly unknown[]) {
 			return (await load()).buildStart?.apply(this, args as []);
 		},
@@ -147,7 +147,7 @@ function createCompilerPlugin(options: SvelteTaroPluginOptions): VitePlugin {
 
 function createMiniIntegrationPlugin(context: PluginContext): VitePlugin {
 	return {
-		name: 'zadmin:svelte-taro-loader-meta',
+		name: 'zadmin:miniapp-loader-meta',
 		buildStart() {
 			const compilerContext = context.runnerUtils?.getViteMiniCompilerContext(this);
 			if (compilerContext === undefined) return;
@@ -226,7 +226,7 @@ function svelteTaroPlugin(context: PluginContext, options: SvelteTaroPluginOptio
 		const compiler = normalizeCompiler(opts);
 		if (compiler === undefined) return;
 		if (compiler.type !== 'vite') {
-			throw new Error('@zadmin/svelte-taro currently supports only the Taro Vite compiler.');
+			throw new Error('@zadmin/miniapp currently supports only the Taro Vite compiler.');
 		}
 		compiler.vitePlugins ??= [];
 		compiler.vitePlugins.unshift(createCompilerPlugin(options));

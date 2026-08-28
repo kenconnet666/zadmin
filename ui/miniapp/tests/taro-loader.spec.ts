@@ -23,14 +23,10 @@ describe('Taro service loader integration', () => {
 			PluginType: { Plugin: string };
 		};
 		const appPath = resolve(import.meta.dirname, '../../../apps/wechat');
-		const plugins = resolvePresetsOrPlugins(
-			appPath,
-			{ '@zadmin/svelte-taro': {} },
-			PluginType.Plugin
-		);
+		const plugins = resolvePresetsOrPlugins(appPath, { '@zadmin/miniapp': {} }, PluginType.Plugin);
 
 		expect(plugins).toHaveLength(1);
-		expect(plugins[0].id).toMatch(/svelte-taro[\\/]dist[\\/]plugin[\\/]index\.cjs$/u);
+		expect(plugins[0].id).toMatch(/miniapp[\\/]dist[\\/]plugin[\\/]index\.cjs$/u);
 		expect(plugins[0].apply()).toBeTypeOf('function');
 	});
 });

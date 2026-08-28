@@ -25,7 +25,7 @@ ui/
   tauri/       Tauri 系统能力、权限结果、生命周期和测试驱动
   zui/            浏览器/WebView 通用的 Theme、ICSS 与 Svelte 组件库
   zui-taro/    微信小程序 ZUI 组件与 ICSS 子集
-  svelte-taro/ Svelte compiler、Taro renderer/runtime 和微信平台能力
+  miniapp/ Svelte compiler、Taro renderer/runtime 和微信平台能力
 
 plugins/
   approval/    审批流插件

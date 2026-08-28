@@ -1,6 +1,6 @@
 import type { ResolvedSvelteProjectConfig, SvelteProjectConfig } from './types.ts';
 
-const PACKAGE_NAME = '@zadmin/svelte-taro';
+const PACKAGE_NAME = '@zadmin/miniapp';
 
 function pluginName(item: SvelteProjectConfig['plugins'][number]): string | undefined {
 	return typeof item === 'string' ? item : item[0];

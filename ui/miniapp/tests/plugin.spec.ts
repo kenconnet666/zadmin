@@ -64,7 +64,7 @@ describe('Taro framework plugin', () => {
 		const config = plugin.defineSvelteConfig({
 			compiler: { type: 'vite' },
 			framework: 'svelte',
-			plugins: ['@zadmin/svelte-taro']
+			plugins: ['@zadmin/miniapp']
 		});
 		expect(config.framework).toBe('none');
 	});
@@ -107,15 +107,15 @@ describe('Taro framework plugin', () => {
 		const compiler = opts.compiler as { type: string; vitePlugins: InjectedVitePlugin[] };
 		expect(compiler.type).toBe('vite');
 		expect(compiler.vitePlugins.map((plugin) => plugin.name)).toEqual([
-			'zadmin:svelte-taro-compiler',
-			'zadmin:svelte-taro-loader-meta'
+			'zadmin:miniapp-compiler',
+			'zadmin:miniapp-loader-meta'
 		]);
 		const buildStart = compiler.vitePlugins[1].buildStart;
 		expect(buildStart).toBeTypeOf('function');
 		if (typeof buildStart === 'function') buildStart.call({});
 		expect(compilerContext.loaderMeta).toMatchObject({
 			creator: 'createSvelteApp',
-			creatorLocation: '@zadmin/svelte-taro/runtime'
+			creatorLocation: '@zadmin/miniapp/runtime'
 		});
 
 		await compiler.vitePlugins[0].configResolved?.({ command: 'build', mode: 'production' });
