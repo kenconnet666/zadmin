@@ -39,7 +39,7 @@ ui/
 | 目录             | 包名                  | 当前职责                                                        |
 | ---------------- | --------------------- | --------------------------------------------------------------- |
 | `ui/zui-core`    | `@zadmin/zui/core`    | 平台无关Theme、Token、StyleProgram、ICSS指令和设计Props         |
-| `ui/zui`  | `@zadmin/zui`  | Web Svelte组件、运行时CSS、编译优化和SvelteKit SSR              |
+| `ui/zui`         | `@zadmin/zui`         | Web Svelte组件、运行时CSS、编译优化和SvelteKit SSR              |
 | `ui/sveltekit`   | `@zadmin/sveltekit`   | 动态插件路由、客户端插件runtime和页面Outlet                     |
 | `ui/svelte-taro` | `@zadmin/svelte-taro` | Taro framework plugin、Svelte renderer、App/Page、平台能力      |
 | `ui/zui-taro`    | `@zadmin/zui-taro`    | Taro小程序组件和严格ICSS子集                                    |

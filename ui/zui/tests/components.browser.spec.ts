@@ -1,9 +1,13 @@
-import { tick } from 'svelte';
+import { mount, tick, unmount } from 'svelte';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
 import DynamicBox from './DynamicBox.svelte';
 import ComponentGallery from './ComponentGallery.svelte';
+import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
+import { createBrowserIcssRuntime } from '../src/lib/icss/runtime.js';
+import { defaultTheme } from '../src/lib/theme/default.js';
+import { extendTheme } from '../src/lib/theme/define.js';
 
 function insertedRuleCount(): number {
 	return [...document.querySelectorAll<HTMLStyleElement>('style[data-icss]')].reduce(
@@ -72,5 +76,29 @@ describe('compiled ICSS browser updates', () => {
 		expect(getComputedStyle(text as Element).color).toBe('rgb(124, 58, 237)');
 		expect(getComputedStyle(text as Element).fontSize).toBe('16px');
 		expect(getComputedStyle(stack as Element).gap).toBe('8px');
+	});
+
+	it('keeps an explicit ShadowRoot runtime isolated and supports nested themes', async () => {
+		const host = document.createElement('div');
+		const shadow = host.attachShadow({ mode: 'open' });
+		document.body.append(host);
+		const runtime = createBrowserIcssRuntime({ root: shadow });
+		const nestedTheme = extendTheme(defaultTheme, {
+			color: { primary: '#6d28d9', primaryHover: '#5b21b6' }
+		});
+		const component = mount(ProviderRuntimeFixture, {
+			props: { nestedTheme, runtime, theme: defaultTheme },
+			target: shadow
+		});
+		await tick();
+
+		expect(shadow.querySelectorAll('style[data-icss]')).toHaveLength(1);
+		expect(shadow.querySelectorAll('button')).toHaveLength(2);
+		expect(runtime.registry.cssText()).toContain('#2563eb');
+		expect(runtime.registry.cssText()).toContain('#6d28d9');
+
+		await unmount(component);
+		runtime.registry.clear();
+		host.remove();
 	});
 });

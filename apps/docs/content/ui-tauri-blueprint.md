@@ -117,7 +117,7 @@ packages:
 | 物理路径         | npm 包名              | 职责                                                                    |
 | ---------------- | --------------------- | ----------------------------------------------------------------------- |
 | `ui/zui-core`    | `@zadmin/zui/core`    | 平台无关 Theme、Token、ICSS Program、设计 Props                         |
-| `ui/zui`  | `@zadmin/zui`  | Web/WebView2 Svelte 组件、ICSS runtime/compiler、SvelteKit SSR 集成     |
+| `ui/zui`         | `@zadmin/zui`         | Web/WebView2 Svelte 组件、ICSS runtime/compiler、SvelteKit SSR 集成     |
 | `ui/zui-taro`    | `@zadmin/zui-taro`    | Taro/微信自定义 renderer 专用组件和 ICSS 子集                           |
 | `ui/svelte-taro` | `@zadmin/svelte-taro` | Svelte→Taro compiler、renderer、runtime、微信平台能力                   |
 | `ui/sveltekit`   | `@zadmin/sveltekit`   | 动态插件页、客户端插件 runtime、SvelteKit host module                   |

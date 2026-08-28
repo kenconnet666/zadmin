@@ -62,12 +62,22 @@ export const PROPERTY_DEFINITIONS = {
 		}
 	},
 	animationDuration: { token: 'duration', tokenUnit: 'ms', units: ['time'] },
-	backgroundColor: { token: 'color' },
+	backgroundColor: { keywords: { transparent: 'transparent' }, token: 'color' },
 	borderBottomColor: { token: 'color' },
 	borderBottomLeftRadius: { token: 'radius', tokenUnit: 'px', units: ['length', 'percent'] },
 	borderBottomRightRadius: { token: 'radius', tokenUnit: 'px', units: ['length', 'percent'] },
 	borderBottomWidth: { token: 'borderWidth', tokenUnit: 'px', units: ['length'] },
-	borderColor: { token: 'color' },
+	borderColor: { keywords: { transparent: 'transparent' }, token: 'color' },
+	borderStyle: {
+		keywords: {
+			dashed: 'dashed',
+			dotted: 'dotted',
+			double: 'double',
+			hidden: 'hidden',
+			none: 'none',
+			solid: 'solid'
+		}
+	},
 	borderLeftColor: { token: 'color' },
 	borderLeftWidth: { token: 'borderWidth', tokenUnit: 'px', units: ['length'] },
 	borderRadius: { token: 'radius', tokenUnit: 'px', units: ['length', 'percent'] },
@@ -196,6 +206,15 @@ export const PROPERTY_DEFINITIONS = {
 	textShadow: { token: 'shadow' },
 	top: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
 	transitionDuration: { token: 'duration', tokenUnit: 'ms', units: ['time'] },
+	transitionTimingFunction: {
+		keywords: {
+			ease: 'ease',
+			easeIn: 'ease-in',
+			easeInOut: 'ease-in-out',
+			easeOut: 'ease-out',
+			linear: 'linear'
+		}
+	},
 	userSelect: {
 		keywords: { all: 'all', auto: 'auto', contain: 'contain', none: 'none', text: 'text' }
 	},

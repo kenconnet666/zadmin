@@ -1,33 +1,78 @@
 import { getContext, setContext } from 'svelte';
+
+import { getDefaultIcssRuntime, type IcssRuntime } from '../../icss/runtime.js';
+import type { IcssClassName, IcssFactory } from '../../icss/types.js';
+import type {
+	RecipeDefinition,
+	RecipeSelectionFrom,
+	RecipeVariantDefinitions
+} from '../../recipes/types.js';
 import { defaultTheme } from '../../theme/default.js';
-import type { ThemeSchema } from '../../theme/types.js';
+import type { ZuiTheme } from '../../theme/types.js';
 
-type DefaultGroup<TGroup> = { readonly [TKey in keyof TGroup]: string | number };
+export type { ZuiTheme } from '../../theme/types.js';
 
-export type ZuiTheme = ThemeSchema & {
-	readonly color: { readonly [TKey in keyof typeof defaultTheme.color]: string };
-	readonly fontSize: DefaultGroup<typeof defaultTheme.fontSize>;
-	readonly fontWeight: DefaultGroup<typeof defaultTheme.fontWeight>;
-	readonly space: DefaultGroup<typeof defaultTheme.space>;
-};
-
-export interface ZuiThemeContext {
+export interface ZuiContext {
+	readonly runtime: IcssRuntime;
 	readonly theme: ZuiTheme;
+	icss(factory: IcssFactory<ZuiTheme>): IcssClassName;
+	recipe<const TVariants extends RecipeVariantDefinitions>(
+		recipe: RecipeDefinition<TVariants>,
+		variants?: RecipeSelectionFrom<NoInfer<TVariants>>
+	): IcssClassName;
 }
 
-const THEME_CONTEXT = Symbol('zui-theme');
-const DEFAULT_CONTEXT: ZuiThemeContext = { theme: defaultTheme };
+export interface ZuiContextSource {
+	readonly runtime?: IcssRuntime;
+	readonly theme?: ZuiTheme;
+}
 
-export function provideZuiTheme(readTheme: () => ZuiTheme): ZuiThemeContext {
-	const context: ZuiThemeContext = {
+const ZUI_CONTEXT = Symbol('zui-context');
+
+function createZuiContext(read: () => Required<ZuiContextSource>): ZuiContext {
+	const context: ZuiContext = {
+		get runtime() {
+			return read().runtime;
+		},
 		get theme() {
-			return readTheme();
+			return read().theme;
+		},
+		icss(factory) {
+			return context.runtime.icss(context.theme, factory);
+		},
+		recipe(recipe, variants) {
+			return context.runtime.recipe(context.theme, recipe, variants);
 		}
 	};
-	setContext(THEME_CONTEXT, context);
 	return context;
 }
 
-export function useZuiTheme(): ZuiThemeContext {
-	return getContext<ZuiThemeContext | undefined>(THEME_CONTEXT) ?? DEFAULT_CONTEXT;
+const DEFAULT_CONTEXT = createZuiContext(() => ({
+	runtime: getDefaultIcssRuntime(),
+	theme: defaultTheme
+}));
+
+export function provideZui(read: () => ZuiContextSource): ZuiContext {
+	const parent = getContext<ZuiContext | undefined>(ZUI_CONTEXT) ?? DEFAULT_CONTEXT;
+	const context = createZuiContext(() => {
+		const source = read();
+		return {
+			runtime: source.runtime ?? parent.runtime,
+			theme: source.theme ?? parent.theme
+		};
+	});
+	setContext(ZUI_CONTEXT, context);
+	return context;
 }
+
+export function useZui(): ZuiContext {
+	return getContext<ZuiContext | undefined>(ZUI_CONTEXT) ?? DEFAULT_CONTEXT;
+}
+
+/** @deprecated Use provideZui(). */
+export function provideZuiTheme(readTheme: () => ZuiTheme): ZuiContext {
+	return provideZui(() => ({ theme: readTheme() }));
+}
+
+/** @deprecated Use useZui(). */
+export const useZuiTheme = useZui;

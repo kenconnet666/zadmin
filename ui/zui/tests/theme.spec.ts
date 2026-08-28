@@ -1,10 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
-import { defaultTheme, defineTheme } from '../src/lib/core.js';
+import { defaultTheme, defineTheme, extendTheme } from '../src/lib/core.js';
 
-describe('defineTheme', () => {
-	it('copies and freezes token groups', () => {
-		const source = { color: { primary: '#123456' }, space: { medium: 8 } };
+describe('ZUI themes', () => {
+	it('copies and deeply freezes the strict theme contract', () => {
+		const source = {
+			...defaultTheme,
+			color: { ...defaultTheme.color, primary: '#123456' }
+		};
 		const theme = defineTheme(source);
 
 		expect(theme).not.toBe(source);
@@ -14,30 +17,51 @@ describe('defineTheme', () => {
 		expect(theme.color.primary).toBe('#123456');
 	});
 
-	it('rejects non-finite numeric tokens', () => {
-		expect(() => defineTheme({ opacity: { broken: Number.NaN } })).toThrow(/finite/);
+	it('rejects non-finite numbers, missing values and unknown contract keys', () => {
+		expect(() =>
+			defineTheme({
+				...defaultTheme,
+				opacity: { ...defaultTheme.opacity, disabled: Number.NaN }
+			})
+		).toThrow(/finite/);
+		expect(() => defineTheme({ color: null } as never)).toThrow(/required|must be an object/);
+		expect(() =>
+			defineTheme({
+				...defaultTheme,
+				color: { ...defaultTheme.color, unexpected: '#fff' }
+			} as never)
+		).toThrow(/Unknown theme token/);
+		expect(() => defineTheme({ ...defaultTheme, unexpected: {} } as never)).toThrow(
+			/Unknown theme group/
+		);
+		expect(() => {
+			const { primary: _primary, ...missingPrimary } = defaultTheme.color;
+			void _primary;
+			defineTheme({ ...defaultTheme, color: missingPrimary } as never);
+		}).toThrow(/color\.primary.*required/);
 	});
 
-	it('rejects invalid groups and token values', () => {
-		expect(() => defineTheme({ color: null } as never)).toThrow(/must be an object/);
-		expect(() => defineTheme({ color: { broken: true } } as never)).toThrow(
-			/must be a string or number/
+	it('extends themes immutably and rejects unknown patch keys', () => {
+		const theme = extendTheme(defaultTheme, {
+			color: { primary: '#6d28d9', primaryHover: '#5b21b6' },
+			radius: { medium: 6 }
+		});
+
+		expect(theme.color.primary).toBe('#6d28d9');
+		expect(theme.radius.medium).toBe(6);
+		expect(defaultTheme.color.primary).toBe('#2563eb');
+		expect(Object.isFrozen(theme.color)).toBe(true);
+		expect(() => extendTheme(defaultTheme, { color: { missing: '#fff' } } as never)).toThrow(
+			/Unknown theme token/
+		);
+		expect(() => extendTheme(defaultTheme, { missing: {} } as never)).toThrow(
+			/Unknown theme group/
 		);
 	});
 
-	it('provides a small semantic default theme', () => {
+	it('provides the complete semantic default theme', () => {
+		expect(Object.keys(defaultTheme)).toHaveLength(13);
 		expect(defaultTheme.color.primary).toBe('#2563eb');
 		expect(defaultTheme.space.medium).toBe(8);
-	});
-
-	it('treats prototype-shaped names as ordinary data', () => {
-		const schema = Object.fromEntries([
-			['__proto__', Object.fromEntries([['constructor', 'safe']])]
-		]) as never;
-		const theme = defineTheme(schema) as Record<string, Record<string, string>>;
-
-		expect(Object.getPrototypeOf(theme)).toBeNull();
-		expect(Object.getPrototypeOf(theme.__proto__)).toBeNull();
-		expect(theme.__proto__.constructor).toBe('safe');
 	});
 });

@@ -1,13 +1,5 @@
 <script lang="ts">
-	import {
-		Box,
-		Button,
-		Stack,
-		Text,
-		ZuiProvider,
-		defaultTheme,
-		defineTheme
-	} from '@zadmin/zui';
+	import { Box, Button, Stack, Text, ZuiProvider, defaultTheme, defineTheme } from '@zadmin/zui';
 
 	const theme = defineTheme({
 		...defaultTheme,

@@ -1,16 +1,9 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
-	import { defaultTheme } from '../../theme/default.js';
+	import { provideZui } from './context.js';
+	import type { ZProviderProps } from './types.js';
 
-	import { provideZuiTheme, type ZuiTheme } from './context.js';
-
-	interface Props {
-		children?: Snippet;
-		theme?: ZuiTheme;
-	}
-
-	let { children, theme = defaultTheme }: Props = $props();
-	provideZuiTheme(() => theme);
+	let { children, runtime, theme }: ZProviderProps = $props();
+	provideZui(() => ({ runtime, theme }));
 </script>
 
 {@render children?.()}

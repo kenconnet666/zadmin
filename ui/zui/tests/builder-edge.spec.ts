@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
-import { createIcssSlot, createStyleProgram, defaultTheme, getUnitSuffix } from '../src/lib/core.js';
+import {
+	createIcssSlot,
+	createStyleProgram,
+	defaultTheme,
+	getUnitSuffix
+} from '../src/lib/core.js';
 
 describe('ICSS builder edge behavior', () => {
 	it('records raw, global keywords, low-level properties and all nested primitives', () => {

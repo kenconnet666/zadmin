@@ -1,7 +1,17 @@
 import { render } from 'svelte/server';
 import { describe, expect, it } from 'vitest';
 
-import { Box, Button, Stack, Text } from '../src/lib/index.js';
+import {
+	Box,
+	Button,
+	createIcssRuntime,
+	createServerStyleRegistry,
+	defaultTheme,
+	extendTheme,
+	Stack,
+	Text
+} from '../src/lib/index.js';
+import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
 
 describe('ZUI foundational components', () => {
 	it('renders compiler variables on the real Box root without wrappers', () => {
@@ -29,5 +39,21 @@ describe('ZUI foundational components', () => {
 		expect(result.body).toContain('disabled');
 		expect(result.body).toContain('aria-busy="true"');
 		expect(result.body).not.toContain('svelte-css-wrapper');
+	});
+
+	it('inherits an explicit runtime through nested providers during SSR', () => {
+		const registry = createServerStyleRegistry();
+		const runtime = createIcssRuntime({ registry });
+		const nestedTheme = extendTheme(defaultTheme, {
+			color: { primary: '#6d28d9', primaryHover: '#5b21b6' }
+		});
+		const result = render(ProviderRuntimeFixture, {
+			props: { nestedTheme, runtime, theme: defaultTheme }
+		});
+
+		expect(result.body).toContain('data-testid="outer-provider"');
+		expect(result.body).toContain('data-testid="inner-provider"');
+		expect(registry.cssText()).toContain('#2563eb');
+		expect(registry.cssText()).toContain('#6d28d9');
 	});
 });

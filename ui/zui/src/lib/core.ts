@@ -29,15 +29,17 @@ export type {
 } from './icss/values.js';
 export { defaultTheme } from './theme/default.js';
 export type { DefaultTheme } from './theme/default.js';
-export { defineTheme } from './theme/define.js';
+export { defineTheme, extendTheme } from './theme/define.js';
 export { getPropertyDefinition, PROPERTY_DEFINITIONS } from './theme/properties.js';
 export type { DefinedPropertyName, PropertyDefinition } from './theme/properties.js';
 export type {
+	DeepPartial,
 	DeepReadonly,
 	Theme,
 	ThemeSchema,
 	ThemeTokenGroup,
-	ThemeTokenValue
+	ThemeTokenValue,
+	ZuiTheme
 } from './theme/types.js';
 export { getUnitNames, getUnitSuffix, UNIT_FAMILIES } from './theme/units.js';
 export type { UnitFamilyName, UnitName } from './theme/units.js';

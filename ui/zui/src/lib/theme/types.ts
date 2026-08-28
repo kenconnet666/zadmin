@@ -1,3 +1,5 @@
+import type { DEFAULT_THEME_SCHEMA } from './schema.js';
+
 export type ThemeTokenValue = string | number;
 
 export type ThemeTokenGroup = Readonly<Record<string, ThemeTokenValue>>;
@@ -12,4 +14,28 @@ export type DeepReadonly<T> = T extends ThemeTokenValue
 			? { readonly [TKey in keyof T]: DeepReadonly<T[TKey]> }
 			: T;
 
+export type DeepPartial<T> = T extends ThemeTokenValue
+	? T
+	: T extends ReadonlyArray<infer TItem>
+		? ReadonlyArray<DeepPartial<TItem>>
+		: T extends object
+			? { readonly [TKey in keyof T]?: DeepPartial<T[TKey]> }
+			: T;
+
 export type Theme<TSchema extends ThemeSchema = ThemeSchema> = DeepReadonly<TSchema>;
+
+type WidenToken<TToken> = TToken extends string
+	? string
+	: TToken extends number
+		? string | number
+		: ThemeTokenValue;
+
+type WidenTokenGroup<TGroup> = {
+	readonly [TToken in keyof TGroup]: WidenToken<TGroup[TToken]>;
+};
+
+export type ZuiTheme = {
+	readonly [TGroup in keyof typeof DEFAULT_THEME_SCHEMA]: WidenTokenGroup<
+		(typeof DEFAULT_THEME_SCHEMA)[TGroup]
+	>;
+};
