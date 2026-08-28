@@ -8,6 +8,9 @@
 	],
 	"main": "./dist/plugin/index.cjs",
 	"types": "./src/index.ts",
+	"bin": {
+		"miniapp": "./dist/cli.js"
+	},
 	"engines": {
 		"node": ">=22.0.0"
 	},
@@ -132,6 +135,10 @@
 		"url": "git+https://github.com/kenconnet666/zadmin.git",
 		"directory": "ui/miniapp"
 	},
+	"dependencies": {
+		"esbuild": "0.28.2",
+		"miniprogram-api-typings": "catalog:wechat"
+	},
 	"peerDependencies": {
 		"@tarojs/components": "4.2.1",
 		"@tarojs/runtime": "4.2.1",
@@ -149,7 +156,6 @@
 		"@tarojs/taro": "catalog:wechat",
 		"@types/node": "catalog:",
 		"@vitest/coverage-v8": "catalog:",
-		"esbuild": "0.28.2",
 		"svelte": "https://pkg.svelte.dev/svelte/c/eb7532dd70fb11b36258347c44cf3910d244f987",
 		"svelte-check": "catalog:",
 		"typescript": "catalog:",

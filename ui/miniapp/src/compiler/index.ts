@@ -123,3 +123,8 @@ export function createSvelteVitePlugin(options: SvelteCompilerOptions = {}): Sve
 export type { SvelteCompilerOptions, SvelteCompilerPlugin } from './types.ts';
 export { collectNativeElements, createComponentMarkerCode } from './marker.ts';
 export { assertSupportedSvelteSource, SvelteTaroCompileError } from './diagnostics.ts';
+export { analyzeMiniappComponent } from './ir.ts';
+export type { MiniappComponentIr } from './ir.ts';
+export { buildMiniapp, watchMiniapp } from './build.ts';
+export type { MiniappBuildOptions, MiniappBuildResult } from './build.ts';
+export type { MiniappAppConfig, MiniappPageConfig } from '../targets/wechat/manifest.ts';

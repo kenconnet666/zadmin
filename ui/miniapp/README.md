@@ -33,4 +33,11 @@ Miniapp 不依赖 `@zadmin/zui`。它拥有独立的移动端 Theme、`mcss()`/W
 
 开发期由 `apps/wechat/config/supervisor.mjs` 同时维护 TypeScript、组件 package 与应用增量构建；组件或 Theme 修改不重启整个监督器，compiler/plugin 修改才重启构建 child。
 
-当前迁移阶段仍以内部 Taro renderer 作为受测后端；公开组件、Theme 和样式合同已经独立。下一阶段会由微信 target 直接生成 WXML、WXSS、JS 和 JSON，并删除所有 Taro 生产依赖。
+直接微信 target 已可独立调用：
+
+```powershell
+pnpm miniapp build --target wechat --project C:\path\to\app
+pnpm miniapp dev --target wechat --project C:\path\to\app
+```
+
+它生成`dist/wechat`下的WXML、WXSS、JS、JSON、共享runtime template和sourcemap，并在同一microtask内合并节点变化。当前真实宿主切换前仍保留内部Taro renderer作为对照后端；下一提交会让`apps/wechat`使用直接target并删除所有Taro生产依赖。
