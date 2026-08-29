@@ -167,10 +167,9 @@ export const handle = sequence(zuiHandle({ csp: { hash: true } }), base);
 	);
 	await write(
 		resolve(fixtureRoot, 'src/routes/+layout.svelte'),
-		`<script lang="ts">
-import type { Snippet } from 'svelte';
+		`<script>
 import { ZProvider } from '@zadmin/zui';
-let { children }: { children?: Snippet } = $props();
+let { children } = $props();
 </script>
 <ZProvider>{@render children?.()}</ZProvider>
 `
@@ -186,7 +185,7 @@ const panel = icss(defaultTheme, (s) => { s.padding._large; s.backgroundColor._s
 	);
 	await write(
 		resolve(fixtureRoot, 'testing.mjs'),
-		`import { defaultTheme } from '@zadmin/zui';
+		`import { defaultTheme } from '@zadmin/zui/theme';
 import { createPluginRouteHandle } from '@zadmin/sveltekit/server';
 import {
   createHandleFixture,
