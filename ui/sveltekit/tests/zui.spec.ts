@@ -77,7 +77,7 @@ describe('ZUI SvelteKit integration', () => {
 		const html = await response.text();
 
 		expect(html).toMatch(
-			/<head><style data-icss="c-[a-z0-9]+" nonce="request-nonce">\.c-[a-z0-9]+\{color:#123456;\}<\/style><\/head>/u
+			/<head><style data-icss="(c-[a-z0-9]+)" nonce="request-nonce">@layer zui\.components,zui\.utilities;@layer zui\.utilities\{\.\1\{color:#123456;\}\}<\/style><\/head>/u
 		);
 	});
 
