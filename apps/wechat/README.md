@@ -1,52 +1,17 @@
-# @zadmin/wechat-app
+# ZAdmin WeChat Mini Program
 
-仓库内受版本控制的Svelte→Taro微信小程序宿主。它是验证和集成应用，`private: true`，不发布到registry。
-
-## 本机初始化
-
-先在微信开发者工具中拥有一个已经授权的本地项目，然后只同步AppID和本地开发设置：
-
-```powershell
-pnpm --filter @zadmin/wechat-app setup:local -- C:\Users\lionheart\WeChatProjects\miniprogram-1
-```
-
-命令生成被Git忽略的`project.private.config.json`，不会打印AppID。公开`project.config.json`继续保留`touristappid`，生产源码不提交设备私有配置。
-
-## 开发与构建
+`apps/wechat`是`@zadmin/miniapp`直接微信target的验收宿主。业务使用Svelte语法和8个`M*`基础组件；构建直接生成WXML、WXSS、JS和JSON，不经过Web组件库或第三方跨端runtime。
 
 ```powershell
 pnpm dev:wechat
 pnpm build:wechat
-pnpm check:wechat
-pnpm test:wechat
 ```
 
-`dev:wechat`只有一个supervisor owner。它管理Svelte Taro TypeScript、ZUI Taro package和Taro Vite三个watcher；不要另开第二组watch命令。状态位于被忽略的`.wechat/`。
+- 开发产物：`dist/wechat/`；
+- 微信开发者工具根目录：`dist/wechat/`；
+- `miniapp dev`监听应用和workspace内Miniapp源码，使用串行合并重建避免并发覆盖；
+- compiler不支持的DOM action、browser global、raw HTML和动态原生标签会给出源码位置与替代建议；
+- Worker由`src/workers`复制并在生产构建后验证；
+- 支付签名、登录code兑换、手机号code兑换和隐私敏感业务必须留在服务端。
 
-外部第一方业务package源码可在`.wechat/plugins.json`中配置：
-
-```json
-{
-	"paths": ["D:/code/example-plugin"]
-}
-```
-
-源码变化增量构建；Worker、compiler和app config变化重启Taro child；manifest、workspace或lockfile变化以退出码75停止并要求重新install。Worker自动重建实测约12.1–12.2秒。
-
-## 页面
-
-- `pages/index/index`：ZUI、state、if、keyed list、theme和动态ICSS验证。
-- `pages/capabilities/index`：capability catalog与安全探针。Support、System、Session、Files、Worker、network、临时storage和只读privacy均不会申请权限；Files和Worker强制验证清理。
-
-页面加载不得自动触发隐私、权限、登录、手机号、支付、订阅、系统设置或硬件操作。
-
-## 发布边界
-
-- 默认生产目标：WeChat WebView。
-- WebView：完整组件矩阵为simulator-verified；首页渲染、导航/卸载和能力报告中明确标记的8项能力已在指定Android真机达到device-verified。
-- Skyline：官方前置配置已补齐且build-verified；当前Taro 4.2.1/DevTools/base-library组合下，Svelte与Taro Solid对照页均出现黑色模拟器画布，尚非simulator-verified。
-- 不从网络加载可执行插件；业务Taro module静态打包，变更后重新构建、审核和发布。
-- 本仓库不执行upload。上传、体验版、审核和正式发布需要单独用户授权。
-- 登录code兑换、手机号兑换、支付签名/回调和最终订单状态属于服务端package/plugin。
-
-完整证据见[生产验收](../docs/content/wechat-production-acceptance.md)与[Fast Refresh](../docs/content/wechat-fast-refresh.md)。
+项目默认使用`touristappid`，只用于无账号能力的编译与模拟器基础验证。预览、上传、真实授权、支付或真机硬件能力必须单独获得用户授权。

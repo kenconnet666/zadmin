@@ -144,26 +144,23 @@ Workspace watcher比较 server/client revision集合，忽略只影响发布声�
 
 ## 微信 Fast Refresh
 
-微信使用独立命令和单一owner：
+微信使用独立命令和单一 watcher owner：
 
 ```powershell
 pnpm dev:wechat
 ```
 
 ```text
-WeChat supervisor
-  ├─ miniapp tsc --watch
-  ├─ zui-taro svelte-package --watch
-  ├─ Taro Vite build --watch
-  ├─ app/package/external realpath watchers
-  └─ build status + optional DevTools refresh adapter
+miniapp dev
+  ├─ apps/wechat/src watcher
+  ├─ ui/miniapp/src watcher
+  ├─ serial coalesced rebuild
+  └─ native WeChat dist + build ID
 ```
 
-- App `.svelte`、ZUI组件和platform/runtime源码走Taro增量构建，实测约1.5–2.8秒。
-- compiler/plugin与app config变化只重启Taro child；预打包runtime后完整链约11.4秒。
-- package manifest、workspace配置或lockfile变化以退出码75停止，要求重新install/restart。
-- 每次成功构建才更新虚拟build-id模块；失败构建保留上次ID。生产构建完全删除ID、storage镜像和supervisor代码。
-- `.wechat/build-status.json`和`.jsonl`记录source、buildId、起止、duration、结果、restart reason和watcher count；目录被Git忽略。
-- DevTools优先自动编译。只有已经授权的`ZADMIN_WECHATIDE_CLIENT`才启用CLI fallback；无人值守时不会弹授权并自动同意。
+- App、组件、Theme、compiler、runtime、platform、Worker和配置统一走直接微信target；没有Taro child和重复package watcher。
+- 构建进行中收到的变化合并为下一轮，任意时刻只写一次`dist/wechat`；失败轮保留watcher并等待修复。
+- 每次成功开发构建才更新bundle和微信storage中的build ID；失败构建保留上次ID，生产构建不含开发标记。
+- DevTools优先依靠`dist/wechat`文件变化自动刷新；模拟器端到端耗时须在直编target获得授权会话后重新记录。
 
-完整分类、性能和排错见[微信Fast Refresh](./wechat-fast-refresh.md)。
+完整分类、边界和排错见[微信Fast Refresh](./wechat-fast-refresh.md)。

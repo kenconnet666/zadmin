@@ -137,31 +137,28 @@ pnpm build:desktop
 - release x64 GUI和NSIS current-user installer完成静默安装/卸载，注册表、安装目录和进程均无残留；
 - 当前发布件未签名，正式外部分发前必须补Authenticode签名；Dialog、共享剪贴板、通知视觉、Opener和进程操作保留受监督验收。
 
-## Svelte Taro与微信验收
+## Svelte Miniapp与微信直编验收
 
 重点命令：
 
 ```powershell
 pnpm --filter @zadmin/miniapp check
-pnpm --filter @zadmin/miniapp test:coverage
-pnpm --filter @zadmin/zui-taro check
-pnpm --filter @zadmin/zui-taro test:coverage
+pnpm --filter @zadmin/miniapp exec vitest --run tests
+pnpm --filter @zadmin/miniapp build
+pnpm --filter @zadmin/wechat-app check
+pnpm --filter @zadmin/wechat-app test
 pnpm --filter @zadmin/wechat-app build
-pnpm --filter @zadmin/miniapp test:package
-pnpm --filter @zadmin/miniapp benchmark
 ```
 
-2026-08-25最终结果：
+2026-08-29直编阶段本地结果：
 
-- `miniapp` 13个test files、43项测试通过；statements 82.11%、branches 67.83%、functions 87.44%、lines 85.71%；
-- compiler目录statements 95.12%，renderer statements/lines 96.42%；
-- `zui-taro` 2个test files、4项测试通过；statements 85.62%、branches 72.72%、functions 93.47%、lines 88.52%；
-- conformance覆盖runes、effect cleanup、props、component binding、生命周期、context、snippet、if/keyed each/key/await、boundary onerror恢复、class/style/event和嵌套组件；
-- renderer树与App/Page runtime分别完成100次mount/unmount；platform listener/session/connection完成100次scope释放后回到基线；
-  -32项capability catalog、PlatformError脱敏、login/phone branded code、支付服务端权威、Taro/fake driver、配置诊断、native type和静态Taro module通过；
-  -微信开发者工具中WebView组件交互、8项device-verified capability、安全文件清理、连续两次Worker create/message/terminate和wx API mock/restore通过；微信宿主另有7项Node测试与4项TypeScript探针测试；
-  -四个tarball在空临时目录安装，frozen reinstall、外部类型、单Svelte/Taro runtime和生产Taro build通过；
-  -同场景200个keyed节点的三轮交替基准：Svelte 11,169ms，Taro Solid 10,969ms，中位比1.018x，满足≤1.25x；
+- `miniapp` 13个test files、41项测试通过；conformance覆盖runes、effect cleanup、props、component binding、生命周期、context、snippet、if/keyed each/key/await、boundary onerror恢复、class/style/event和嵌套组件；
+- renderer树、App/Page runtime、平台scope与资源释放有自动化覆盖；事件按`data-zid`分发，`setData`在微任务内合并；
+- 8个`M*`组件、独立Theme、`mcss()`和微信原生元素类型通过check/build；
+- 微信宿主4项Node测试与4项TypeScript安全探针通过，实际生成15个原生文件并验证Worker声明；
+- 生产源码、manifest和直编产物不含`@tarojs`，Miniapp不依赖ZUI；
+- coverage、空目录tarball安装和全仓门禁由GitHub Actions执行，避免本地重复阻塞；
+- 微信开发者工具直编target仍需在当前CLI授权后复核，旧Taro模拟器/真机证据不得继承。
   -WebView完整组件矩阵为simulator-verified；指定Android真机已验证首页渲染、导航/卸载及8项明确capability；Skyline仅build-verified，详见[renderer报告](./wechat-renderers.md)。
 
 生产内容必须断言以下字符串在非source-map JS中为0：
@@ -175,7 +172,7 @@ FakePlatformDriver
 workspace绝对路径
 ```
 
-完整证据见[Svelte Taro生产验收](./wechat-production-acceptance.md)。微信upload不属于默认测试命令，必须另获用户授权。
+完整证据见[Svelte Miniapp微信直编验收](./wechat-production-acceptance.md)。微信upload不属于默认测试命令，必须另获用户授权。
 
 ## Core覆盖矩阵
 

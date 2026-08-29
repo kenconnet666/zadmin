@@ -12,7 +12,7 @@ import type {
 } from './types.ts';
 
 const STYLE_SUFFIX = '.zadmin-miniapp.css';
-const COMPONENT_SUFFIX = '.taro-components.tsx';
+const COMPONENT_SUFFIX = '.miniapp-components.js';
 const BUILD_ID_SOURCE = 'virtual:zadmin-miniapp-build-id';
 const BUILD_ID_RESOLVED = '\0zadmin-miniapp-build-id';
 const DEFAULT_RENDERER = '@zadmin/miniapp/renderer';
@@ -122,7 +122,7 @@ export function createSvelteVitePlugin(options: SvelteCompilerOptions = {}): Sve
 
 export type { SvelteCompilerOptions, SvelteCompilerPlugin } from './types.ts';
 export { collectNativeElements, createComponentMarkerCode } from './marker.ts';
-export { assertSupportedSvelteSource, SvelteTaroCompileError } from './diagnostics.ts';
+export { assertSupportedSvelteSource, MiniappCompileError } from './diagnostics.ts';
 export { analyzeMiniappComponent } from './ir.ts';
 export type { MiniappComponentIr } from './ir.ts';
 export { buildMiniapp, watchMiniapp } from './build.ts';

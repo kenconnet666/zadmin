@@ -1,7 +1,7 @@
 export { allWechatCapabilities, wechatCapabilities } from './catalog.ts';
 export type { WeChatCapabilityId } from './catalog.ts';
 export { getWeChatPlatform } from './context.ts';
-export { createTaroPlatformDriver } from './driver.ts';
+export { createWechatPlatformDriver } from './driver.ts';
 export { PlatformError, toPlatformError } from './error.ts';
 export { ScopedHandle, scopedListener } from './handles.ts';
 export { createCapabilityReport, serializeCapabilityReport } from './report.ts';
@@ -26,8 +26,9 @@ export type {
 	DisposableHandle,
 	PlatformDriver,
 	PlatformDriverEnvironment,
-	TaroMethodName,
-	TaroMethodParameters,
-	TaroMethodResult,
+	WeChatMethodName,
+	WeChatMethodParameters,
+	WeChatMethodResult,
+	WeChatMethodReturn,
 	VerificationGrade
 } from './types.ts';

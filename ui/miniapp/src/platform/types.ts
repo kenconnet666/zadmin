@@ -1,5 +1,3 @@
-import type Taro from '@tarojs/taro';
-
 export type CapabilityClient = 'android' | 'harmony' | 'ios' | 'mac' | 'windows';
 export type CapabilityRenderer = 'skyline' | 'webview';
 export type CapabilityStability = 'provisional' | 'raw' | 'stable' | 'unsupported';
@@ -47,8 +45,8 @@ export interface CapabilityDescriptor<Id extends string = string> {
 	readonly requiresUserGesture: boolean;
 	readonly resource: 'connection' | 'context' | 'listener' | 'one-shot' | 'session';
 	readonly stability: CapabilityStability;
-	readonly taroType: string;
 	readonly title: string;
+	readonly wechatType: string;
 }
 
 export interface AvailabilityOptions {
@@ -65,24 +63,36 @@ export interface AvailabilityResult {
 	readonly status: CapabilityAvailability;
 }
 
+type WeChatApi = WechatMiniprogram.Wx;
 type AnyFunction = (...args: never[]) => unknown;
 
-export type TaroMethodName = {
-	[TKey in keyof Taro.TaroStatic]: Taro.TaroStatic[TKey] extends AnyFunction ? TKey : never;
-}[keyof Taro.TaroStatic] &
+export type WeChatMethodName = {
+	[TKey in keyof WeChatApi]: WeChatApi[TKey] extends AnyFunction ? TKey : never;
+}[keyof WeChatApi] &
 	string;
 
-export type TaroMethodParameters<TKey extends TaroMethodName> = Taro.TaroStatic[TKey] extends (
+export type WeChatMethodParameters<TKey extends WeChatMethodName> = WeChatApi[TKey] extends (
 	...args: infer TArgs
 ) => unknown
 	? TArgs
 	: never;
 
-export type TaroMethodResult<TKey extends TaroMethodName> = Taro.TaroStatic[TKey] extends (
+type FirstParameter<TKey extends WeChatMethodName> = WeChatMethodParameters<TKey>[0];
+
+export type WeChatMethodResult<TKey extends WeChatMethodName> =
+	FirstParameter<TKey> extends {
+		readonly success?: (result: infer TResult) => void;
+	}
+		? TResult
+		: WeChatApi[TKey] extends (...args: never[]) => infer TResult
+			? Awaited<TResult>
+			: unknown;
+
+export type WeChatMethodReturn<TKey extends WeChatMethodName> = WeChatApi[TKey] extends (
 	...args: never[]
 ) => infer TResult
-	? Awaited<TResult>
-	: never;
+	? TResult
+	: unknown;
 
 export interface PlatformDriverEnvironment {
 	readonly baseLibraryVersion?: string;
@@ -93,19 +103,19 @@ export interface PlatformDriverEnvironment {
 
 export interface PlatformDriver {
 	readonly environment: PlatformDriverEnvironment;
-	readonly raw: Taro.TaroStatic;
-	call<TKey extends TaroMethodName>(
+	readonly raw: WeChatApi;
+	call<TKey extends WeChatMethodName>(
 		method: TKey,
-		...args: TaroMethodParameters<TKey>
-	): Promise<TaroMethodResult<TKey>>;
+		...args: WeChatMethodParameters<TKey>
+	): Promise<WeChatMethodResult<TKey>>;
 	canIUse(schema: string): boolean;
-	create<TKey extends TaroMethodName>(
+	create<TKey extends WeChatMethodName>(
 		method: TKey,
-		...args: TaroMethodParameters<TKey>
-	): TaroMethodResult<TKey>;
+		...args: WeChatMethodParameters<TKey>
+	): WeChatMethodReturn<TKey>;
 	listen<TValue>(
-		onMethod: TaroMethodName,
-		offMethod: TaroMethodName,
+		onMethod: WeChatMethodName,
+		offMethod: WeChatMethodName,
 		listener: (value: TValue) => void
 	): () => void;
 }

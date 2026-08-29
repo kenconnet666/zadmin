@@ -1,6 +1,6 @@
 # ZUI 运行时 CSS 与组件 API 蓝图
 
-状态：详细设计草案，尚未实施（2026-08-28）。本文细化[UI 平台重构蓝图](./ui-platform-blueprint.md)中的 `@zadmin/zui`；当前已经实现和验证的行为仍以[ZUI ICSS 生产架构](./zui-icss.md)与[ZUI 使用与外部接入](./zui-usage.md)为准。
+状态：基础API与首批组件已实施（2026-08-29）。`@zadmin/zui`已落地严格Theme、`useZui`、recipe/slot recipe、Symbol attachment carrier、运行时CSS和8个基础组件；`@zadmin/sveltekit/zui`已落地SSR/CSP/HMR集成。本文继续作为扩展组件与高级验收清单，当前事实同时以[ZUI ICSS 生产架构](./zui-icss.md)与[ZUI 使用与外部接入](./zui-usage.md)为准。
 
 ## 1. 目标
 

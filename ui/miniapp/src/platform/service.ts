@@ -1,5 +1,3 @@
-import type Taro from '@tarojs/taro';
-
 import type { ResourceScope } from '../runtime/scope.ts';
 import { wechatCapabilities } from './catalog.ts';
 import { toPlatformError } from './error.ts';
@@ -10,8 +8,10 @@ import type {
 	CapabilityDescriptor,
 	DisposableHandle,
 	PlatformDriver,
-	TaroMethodName,
-	TaroMethodResult
+	WeChatMethodName,
+	WeChatMethodParameters,
+	WeChatMethodResult,
+	WeChatMethodReturn
 } from './types.ts';
 
 declare const LOGIN_CODE: unique symbol;
@@ -42,15 +42,16 @@ export class OneTimeCredential<TCredential extends string> {
 	}
 }
 
-type ListenerValue<TKey extends keyof Taro.TaroStatic> = Taro.TaroStatic[TKey] extends (
+type ListenerValue<TKey extends WeChatMethodName> = WechatMiniprogram.Wx[TKey] extends (
 	listener: (value: infer TValue) => void
 ) => unknown
 	? TValue
 	: unknown;
 
-type PaymentOptions = Omit<Taro.requestPayment.Option, 'complete' | 'fail' | 'success'>;
+type MethodOptions<TKey extends WeChatMethodName> = NonNullable<WeChatMethodParameters<TKey>[0]>;
+type PaymentOptions = Omit<MethodOptions<'requestPayment'>, 'complete' | 'fail' | 'success'>;
 type PromiseOptions<TOptions> = Omit<TOptions, 'complete' | 'fail' | 'success'>;
-type NavigateToResult = Parameters<NonNullable<Taro.navigateTo.Option['success']>>[0];
+type NavigateToResult = WeChatMethodResult<'navigateTo'>;
 
 export interface PaymentClientResult {
 	readonly clientAccepted: true;
@@ -60,7 +61,7 @@ export interface PaymentClientResult {
 export interface BluetoothSession extends DisposableHandle {
 	connect(deviceId: string, timeout?: number): Promise<DisposableHandle>;
 	discover(
-		options?: Omit<Taro.startBluetoothDevicesDiscovery.Option, 'complete' | 'fail' | 'success'>
+		options?: Omit<MethodOptions<'startBluetoothDevicesDiscovery'>, 'complete' | 'fail' | 'success'>
 	): Promise<DisposableHandle>;
 }
 
@@ -88,7 +89,7 @@ async function safeCall<TResult>(
 	}
 }
 
-function callAs<TResult>(driver: PlatformDriver, method: TaroMethodName, ...args: unknown[]) {
+function callAs<TResult>(driver: PlatformDriver, method: WeChatMethodName, ...args: unknown[]) {
 	return driver.call(method, ...(args as never)) as Promise<TResult>;
 }
 
@@ -101,8 +102,8 @@ function ignoreFailure(action: () => Promise<unknown>): Promise<void> {
 
 function afterNativeEvent<TResult>(action: () => Promise<TResult>): Promise<TResult> {
 	return new Promise<TResult>((resolve, reject) => {
-		// WeChat can attach the destination Page synchronously while Taro is still dispatching
-		// a native event. A new task gives Svelte a clean component-context boundary.
+		// WeChat can attach the destination Page synchronously while a native event is still dispatching.
+		// A new task gives Svelte a clean component-context boundary.
 		setTimeout(() => {
 			try {
 				void action().then(resolve, reject);
@@ -143,7 +144,10 @@ class BluetoothSessionHandle extends ScopedHandle implements BluetoothSession {
 	}
 
 	async discover(
-		options: Omit<Taro.startBluetoothDevicesDiscovery.Option, 'complete' | 'fail' | 'success'> = {}
+		options: Omit<
+			MethodOptions<'startBluetoothDevicesDiscovery'>,
+			'complete' | 'fail' | 'success'
+		> = {}
 	): Promise<DisposableHandle> {
 		await safeCall(wechatCapabilities.hardware.bluetooth, 'discover', () =>
 			callAs(this.#driver, 'startBluetoothDevicesDiscovery', options)
@@ -169,11 +173,11 @@ export interface WeChatPlatform {
 		requestPayment(options: PaymentOptions): Promise<PaymentClientResult>;
 	};
 	readonly compute: {
-		worker(path: string): DisposableHandle<Taro.Worker>;
+		worker(path: string): DisposableHandle<WeChatMethodReturn<'createWorker'>>;
 	};
 	readonly hardware: {
 		bluetooth(): Promise<BluetoothSession>;
-		nfc(): Promise<DisposableHandle<Taro.NFCAdapter>>;
+		nfc(): Promise<DisposableHandle<WeChatMethodReturn<'getNFCAdapter'>>>;
 		sensor<TValue = unknown>(
 			kind: SensorKind,
 			listener: (value: TValue) => void
@@ -185,67 +189,68 @@ export interface WeChatPlatform {
 		login(): Promise<OneTimeCredential<LoginCode>>;
 		phoneCode(value: string): OneTimeCredential<PhoneNumberCode>;
 		soter(
-			options: Taro.startSoterAuthentication.Option
-		): Promise<Taro.startSoterAuthentication.SuccessCallbackResult>;
+			options: MethodOptions<'startSoterAuthentication'>
+		): Promise<WeChatMethodResult<'startSoterAuthentication'>>;
 	};
 	readonly location: {
 		current(
-			options?: Omit<Taro.getLocation.Option, 'complete' | 'fail' | 'success'>
-		): Promise<Taro.getLocation.SuccessCallbackResult>;
+			options?: Omit<MethodOptions<'getLocation'>, 'complete' | 'fail' | 'success'>
+		): Promise<WeChatMethodResult<'getLocation'>>;
 		observe(
 			listener: (value: ListenerValue<'onLocationChange'>) => void,
 			background?: boolean
 		): Promise<DisposableHandle>;
 	};
 	readonly media: {
-		camera(id?: string): DisposableHandle<Taro.CameraContext>;
-		choose(options: Taro.chooseMedia.Option): Promise<Taro.chooseMedia.SuccessCallbackResult>;
-		scan(options?: Taro.scanCode.Option): Promise<Taro.scanCode.SuccessCallbackResult>;
+		camera(id?: string): DisposableHandle<WeChatMethodReturn<'createCameraContext'>>;
+		choose(options: MethodOptions<'chooseMedia'>): Promise<WeChatMethodResult<'chooseMedia'>>;
+		scan(options?: MethodOptions<'scanCode'>): Promise<WeChatMethodResult<'scanCode'>>;
 	};
 	readonly messaging: {
 		subscribe(
 			templateIds: readonly string[]
-		): Promise<
-			| Taro.requestSubscribeMessage.SuccessCallbackResult
-			| Taro.requestSubscribeMessage.FailCallbackResult
-		>;
+		): Promise<WeChatMethodResult<'requestSubscribeMessage'>>;
 	};
 	readonly navigation: {
 		navigateBack(
-			options?: PromiseOptions<Taro.navigateBack.Option>
-		): Promise<TaroMethodResult<'navigateBack'>>;
-		navigateTo(options: PromiseOptions<Taro.navigateTo.Option>): Promise<NavigateToResult>;
-		reLaunch(options: PromiseOptions<Taro.reLaunch.Option>): Promise<TaroMethodResult<'reLaunch'>>;
+			options?: PromiseOptions<MethodOptions<'navigateBack'>>
+		): Promise<WeChatMethodResult<'navigateBack'>>;
+		navigateTo(options: PromiseOptions<MethodOptions<'navigateTo'>>): Promise<NavigateToResult>;
+		reLaunch(
+			options: PromiseOptions<MethodOptions<'reLaunch'>>
+		): Promise<WeChatMethodResult<'reLaunch'>>;
 		redirectTo(
-			options: PromiseOptions<Taro.redirectTo.Option>
-		): Promise<TaroMethodResult<'redirectTo'>>;
+			options: PromiseOptions<MethodOptions<'redirectTo'>>
+		): Promise<WeChatMethodResult<'redirectTo'>>;
 		switchTab(
-			options: PromiseOptions<Taro.switchTab.Option>
-		): Promise<TaroMethodResult<'switchTab'>>;
+			options: PromiseOptions<MethodOptions<'switchTab'>>
+		): Promise<WeChatMethodResult<'switchTab'>>;
 	};
 	readonly network: {
 		mdns(serviceType: string): Promise<DisposableHandle>;
-		tcp(): DisposableHandle<Taro.TCPSocket>;
-		udp(): DisposableHandle<Taro.UDPSocket>;
-		websocket(options: Taro.connectSocket.Option): Promise<DisposableHandle<Taro.SocketTask>>;
+		tcp(): DisposableHandle<WeChatMethodReturn<'createTCPSocket'>>;
+		udp(): DisposableHandle<WeChatMethodReturn<'createUDPSocket'>>;
+		websocket(
+			options: MethodOptions<'connectSocket'>
+		): Promise<DisposableHandle<WeChatMethodReturn<'connectSocket'>>>;
 	};
 	readonly privacy: {
 		authorize(scope: string): Promise<void>;
 		permission(scope: string): Promise<'denied' | 'granted' | 'prompt'>;
-		setting(): Promise<Taro.getPrivacySetting.SuccessCallbackResult>;
+		setting(): Promise<WeChatMethodResult<'getPrivacySetting'>>;
 	};
-	readonly raw: Taro.TaroStatic;
+	readonly raw: WechatMiniprogram.Wx;
 	readonly support: {
 		check(
 			descriptor: CapabilityDescriptor,
 			options?: AvailabilityOptions
 		): Promise<AvailabilityResult>;
-		system(): Taro.getSystemSetting.Result;
+		system(): WeChatMethodResult<'getSystemSetting'>;
 	};
 	readonly system: {
-		files(): Taro.FileSystemManager;
+		files(): WeChatMethodReturn<'getFileSystemManager'>;
 		network: {
-			current(): Promise<Taro.getNetworkType.SuccessCallbackResult>;
+			current(): Promise<WeChatMethodResult<'getNetworkType'>>;
 			observe(listener: (value: ListenerValue<'onNetworkStatusChange'>) => void): DisposableHandle;
 		};
 		storage: {
@@ -262,7 +267,7 @@ export function createWeChatPlatform(options: {
 	scope: ResourceScope;
 }): WeChatPlatform {
 	const { driver, scope } = options;
-	const platform: WeChatPlatform = {
+	return {
 		commerce: {
 			async requestPayment(paymentOptions) {
 				await safeCall(wechatCapabilities.commerce.payment, 'request', () =>
@@ -386,7 +391,8 @@ export function createWeChatPlatform(options: {
 		},
 		media: {
 			camera(id) {
-				const context = driver.create('createCameraContext', id);
+				void id;
+				const context = driver.create('createCameraContext');
 				return new ScopedHandle(scope, context, () => undefined);
 			},
 			choose(chooseOptions) {
@@ -408,7 +414,7 @@ export function createWeChatPlatform(options: {
 				return safeCall(wechatCapabilities.messaging.subscribe, 'request', () =>
 					driver.call('requestSubscribeMessage', {
 						tmplIds: [...templateIds]
-					} as Taro.requestSubscribeMessage.Option)
+					} as MethodOptions<'requestSubscribeMessage'>)
 				);
 			}
 		},
@@ -450,9 +456,7 @@ export function createWeChatPlatform(options: {
 				return new ScopedHandle(scope, socket, () => socket.close());
 			},
 			async websocket(socketOptions) {
-				const task = await safeCall(wechatCapabilities.network.websocket, 'connect', () =>
-					driver.call('connectSocket', socketOptions)
-				);
+				const task = driver.create('connectSocket', socketOptions);
 				return new ScopedHandle(scope, task, () => task.close({}));
 			}
 		},
@@ -610,5 +614,4 @@ export function createWeChatPlatform(options: {
 			return createWeChatPlatform({ driver, scope: childScope });
 		}
 	};
-	return platform;
 }

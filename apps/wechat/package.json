@@ -9,36 +9,23 @@
 	},
 	"scripts": {
 		"prebuild": "pnpm --filter @zadmin/miniapp build && pnpm clean",
-		"build": "taro build --type weapp --no-check && node config/verify-build.mjs",
+		"build": "miniapp build --project . --output dist/wechat --target wechat && node config/verify-build.mjs",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
 		"clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
-		"dev": "node config/supervisor.mjs",
+		"predev": "pnpm --filter @zadmin/miniapp build",
+		"dev": "miniapp dev --project . --output dist/wechat --target wechat",
 		"setup:local": "node config/sync-local.mjs",
 		"test": "node --test tests/*.test.mjs && tsx --test tests/*.spec.ts"
 	},
 	"dependencies": {
-		"@tarojs/components": "catalog:wechat",
-		"@tarojs/runtime": "catalog:wechat",
-		"@tarojs/taro": "catalog:wechat",
 		"@zadmin/miniapp": "workspace:^",
 		"svelte": "https://pkg.svelte.dev/svelte/c/eb7532dd70fb11b36258347c44cf3910d244f987"
 	},
 	"devDependencies": {
-		"@tarojs/cli": "catalog:wechat",
-		"@tarojs/helper": "catalog:wechat",
-		"@tarojs/plugin-framework-solid": "catalog:wechat",
-		"@tarojs/plugin-platform-weapp": "catalog:wechat",
-		"@tarojs/service": "catalog:wechat",
-		"@tarojs/shared": "catalog:wechat",
-		"@tarojs/vite-runner": "catalog:wechat",
 		"@types/node": "catalog:",
-		"babel-plugin-transform-solid-jsx": "catalog:wechat",
 		"miniprogram-api-typings": "catalog:wechat",
 		"svelte-check": "catalog:",
-		"solid-js": "catalog:wechat",
 		"tsx": "catalog:",
-		"typescript": "catalog:",
-		"vite": "catalog:wechat",
-		"vite-plugin-solid": "catalog:wechat"
+		"typescript": "catalog:"
 	}
 }

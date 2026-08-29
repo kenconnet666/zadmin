@@ -31,7 +31,7 @@ describe('WeChat platform core', () => {
 		for (const descriptor of allWechatCapabilities) {
 			expect(descriptor.id).toMatch(/^wechat\./u);
 			expect(descriptor.officialDoc).toMatch(/^https:\/\//u);
-			expect(descriptor.taroType).not.toBe('');
+			expect(descriptor.wechatType).not.toBe('');
 			expect(descriptor.checkedAt).toBe('2026-08-25');
 		}
 		const first = serializeCapabilityReport();

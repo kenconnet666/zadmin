@@ -3,6 +3,10 @@ import type { Component } from 'svelte';
 import { mount, unmount } from 'svelte';
 
 import { mergeMiniStyles } from '../../styles/index.ts';
+import { createWechatPlatformDriver } from '../../platform/driver.ts';
+import { createWeChatPlatform } from '../../platform/service.ts';
+import { MINIAPP_RUNTIME_CONTEXT, type MiniappRuntimeContext } from '../../runtime/context.ts';
+import { ResourceScope } from '../../runtime/scope.ts';
 import { assertWeChatElement, type WeChatSnapshot } from './elements.ts';
 import { toWeChatEventType, type WeChatRuntimeEvent } from './events.ts';
 
@@ -199,11 +203,20 @@ export const wechatRenderer = createRenderer<{
 		element.attributes.has(name) ? String(element.attributes.get(name)) : null,
 	getFirstChild: (node) => node.firstChild as MiniElement | MiniFragment | MiniText | null,
 	getLastChild: (node) => node.lastChild as MiniElement | MiniFragment | MiniText | null,
-	getNextSibling: (node) => node.nextSibling as MiniElement | MiniFragment | MiniText | null,
+	getNextSibling: (node) =>
+		((node as MiniNode | null)?.nextSibling ?? null) as
+			MiniElement | MiniFragment | MiniText | null,
 	getNodeValue: (node) => node.nodeValue,
-	getParent: (node) => node.parentNode as MiniElement | MiniFragment | MiniText | null,
+	getParent: (node) =>
+		((node as MiniNode | null)?.parentNode ?? null) as MiniElement | MiniFragment | MiniText | null,
 	hasAttribute: (element, name) => element.attributes.has(name),
-	insert: (parent, node, anchor) => parent.insertBefore(node, anchor),
+	insert: (parent, node, anchor) => {
+		if (node instanceof MiniFragment && node !== parent) {
+			for (const child of [...node.childNodes]) parent.insertBefore(child, anchor);
+			return;
+		}
+		parent.insertBefore(node, anchor);
+	},
 	nodeType: (node) => node.kind,
 	remove: (node) => node.remove(),
 	removeAttribute: (element, name) => {
@@ -232,8 +245,18 @@ export interface WeChatPageEvent extends WeChatRuntimeEvent {
 }
 
 type Mounted = Record<string, unknown>;
-type PageState = { readonly component: Mounted; readonly target: MiniFragment };
+type PageState = {
+	readonly component: Mounted;
+	readonly scope: ResourceScope;
+	readonly target: MiniFragment;
+};
 const pageStates = new WeakMap<object, PageState>();
+
+function runtimeContext(scope: ResourceScope, pageId?: string): Map<unknown, unknown> {
+	const platform = createWeChatPlatform({ driver: createWechatPlatformDriver(), scope });
+	const context: MiniappRuntimeContext = { appScope: scope, pageId, platform, scope };
+	return new Map([[MINIAPP_RUNTIME_CONTEXT, context]]);
+}
 
 export function createWechatPage(
 	component: Component<Record<string, unknown>>
@@ -247,12 +270,18 @@ export function createWechatPage(
 		data: { root: { children: [], kind: 'fragment' } },
 		onLoad(this: WeChatPageInstance & object, query: Record<string, string> = {}) {
 			const target = new MiniFragment();
+			const scope = new ResourceScope();
 			target.connect((root) => this.setData({ root }));
 			const mounted = mount(
 				component as unknown as Component<Record<string, unknown>, Record<string, unknown>>,
-				{ props: { query }, renderer: wechatRenderer, target } as never
+				{
+					context: runtimeContext(scope),
+					props: { query },
+					renderer: wechatRenderer,
+					target
+				} as never
 			);
-			pageStates.set(this, { component: mounted as Mounted, target });
+			pageStates.set(this, { component: mounted as Mounted, scope, target });
 		},
 		async onUnload(this: object) {
 			const state = pageStates.get(this);
@@ -260,6 +289,7 @@ export function createWechatPage(
 			pageStates.delete(this);
 			state.target.disconnect();
 			await unmount(state.component);
+			await state.scope.dispose();
 		},
 		__zadmin_confirm: dispatch,
 		__zadmin_error: dispatch,
@@ -273,13 +303,20 @@ export function createWechatApp(
 	component: Component<Record<string, unknown>>
 ): Record<string, unknown> {
 	let mounted: Mounted | undefined;
+	let scope: ResourceScope | undefined;
 	let target: MiniFragment | undefined;
 	return {
 		onLaunch(options: Record<string, unknown> = {}) {
 			target = new MiniFragment();
+			scope = new ResourceScope();
 			mounted = mount(
 				component as unknown as Component<Record<string, unknown>, Record<string, unknown>>,
-				{ props: { options }, renderer: wechatRenderer, target } as never
+				{
+					context: runtimeContext(scope),
+					props: { options },
+					renderer: wechatRenderer,
+					target
+				} as never
 			) as Mounted;
 		},
 		async onHide() {
@@ -287,8 +324,10 @@ export function createWechatApp(
 		},
 		async onUnload() {
 			if (mounted !== undefined) await unmount(mounted);
+			await scope?.dispose();
 			target?.disconnect();
 			mounted = undefined;
+			scope = undefined;
 			target = undefined;
 		}
 	};

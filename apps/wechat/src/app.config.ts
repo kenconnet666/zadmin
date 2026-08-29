@@ -1,4 +1,4 @@
-import type { AppConfig } from '@tarojs/taro';
+import type { MiniappAppConfig } from '@zadmin/miniapp/compiler';
 
 export default {
 	lazyCodeLoading: 'requiredComponents',
@@ -16,4 +16,4 @@ export default {
 		navigationBarTextStyle: 'black',
 		navigationBarTitleText: 'ZAdmin'
 	}
-} satisfies AppConfig;
+} satisfies MiniappAppConfig;

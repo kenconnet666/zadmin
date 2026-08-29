@@ -15,7 +15,7 @@
 			"id": "wechat.commerce.payment",
 			"officialDoc": "https://developers.weixin.qq.com/miniprogram/dev/api/payment/wx.requestPayment.html",
 			"resource": "one-shot",
-			"taroType": "types/api/payment/index.d.ts#requestPayment",
+			"wechatType": "types/api/payment/index.d.ts#requestPayment",
 			"title": "Client payment bridge"
 		},
 		"grade": "mock-verified"
@@ -36,7 +36,7 @@
 			"id": "wechat.compute.worker",
 			"officialDoc": "https://developers.weixin.qq.com/miniprogram/dev/api/worker/wx.createWorker.html",
 			"resource": "connection",
-			"taroType": "types/api/worker/index.d.ts#createWorker",
+			"wechatType": "types/api/worker/index.d.ts#createWorker",
 			"title": "Worker context"
 		},
 		"grade": "device-verified",
@@ -58,7 +58,7 @@
 			"id": "wechat.compute.experimental",
 			"officialDoc": "https://developers.weixin.qq.com/miniprogram/dev/api/ai/",
 			"resource": "context",
-			"taroType": "types/api/ai, cloud, ad, media/voip",
+			"wechatType": "types/api/ai, cloud, ad, media/voip",
 			"title": "Experimental AI, XR, cloud, ads, and VoIP"
 		},
 		"grade": "contract-tested"
@@ -79,7 +79,7 @@
 			"id": "wechat.hardware.beacon",
 			"officialDoc": "https://developers.weixin.qq.com/miniprogram/dev/api/device/ibeacon/wx.startBeaconDiscovery.html",
 			"resource": "session",
-			"taroType": "types/api/device/iBeacon.d.ts#startBeaconDiscovery",
+			"wechatType": "types/api/device/iBeacon.d.ts#startBeaconDiscovery",
 			"title": "iBeacon discovery"
 		},
 		"grade": "contract-tested"
@@ -100,7 +100,7 @@
 			"id": "wechat.hardware.bluetooth",
 			"officialDoc": "https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth/wx.openBluetoothAdapter.html",
 			"resource": "session",
-			"taroType": "types/api/device/bluetooth.d.ts#openBluetoothAdapter",
+			"wechatType": "types/api/device/bluetooth.d.ts#openBluetoothAdapter",
 			"title": "Bluetooth adapter"
 		},
 		"grade": "mock-verified"
@@ -121,7 +121,7 @@
 			"id": "wechat.hardware.ble-connection",
 			"officialDoc": "https://developers.weixin.qq.com/miniprogram/dev/api/device/bluetooth-ble/wx.createBLEConnection.html",
 			"resource": "connection",
-			"taroType": "types/api/device/bluetooth-ble.d.ts#createBLEConnection",
+			"wechatType": "types/api/device/bluetooth-ble.d.ts#createBLEConnection",
 			"title": "BLE central connection"
 		},
 		"grade": "mock-verified"
@@ -144,7 +144,7 @@
 			"minBaseLibrary": "2.11.0",
 			"officialDoc": "https://developers.weixin.qq.com/miniprogram/dev/api/device/nfc/wx.getNFCAdapter.html",
 			"resource": "session",
-			"taroType": "types/api/device/nfc.d.ts#getNFCAdapter",
+			"wechatType": "types/api/device/nfc.d.ts#getNFCAdapter",
 			"title": "NFC discovery"
 		},
 		"grade": "mock-verified"
@@ -165,7 +165,7 @@
 			"id": "wechat.hardware.sensors",
 			"officialDoc": "https://developers.weixin.qq.com/miniprogram/dev/api/device/accelerometer/wx.startAccelerometer.html",
 			"resource": "listener",
-			"taroType": "types/api/device/accelerometer.d.ts#startAccelerometer",
+			"wechatType": "types/api/device/accelerometer.d.ts#startAccelerometer",
 			"title": "Motion sensors"
 		},
 		"grade": "mock-verified"
@@ -186,7 +186,7 @@
 			"id": "wechat.hardware.wifi",
 			"officialDoc": "https://developers.weixin.qq.com/miniprogram/dev/api/device/wifi/wx.startWifi.html",
 			"resource": "session",
-			"taroType": "types/api/device/wifi.d.ts#startWifi",
+			"wechatType": "types/api/device/wifi.d.ts#startWifi",
 			"title": "Wi-Fi session"
 		},
 		"grade": "mock-verified"
@@ -207,7 +207,7 @@
 			"id": "wechat.identity.check-session",
 			"officialDoc": "https://developers.weixin.qq.com/miniprogram/dev/api/open-api/login/wx.checkSession.html",
 			"resource": "one-shot",
-			"taroType": "types/api/open-api/login.d.ts#checkSession",
+			"wechatType": "types/api/open-api/login.d.ts#checkSession",
 			"title": "Session validity check"
 		},
 		"grade": "device-verified",
@@ -229,7 +229,7 @@
 			"id": "wechat.identity.login",
 			"officialDoc": "https://developers.weixin.qq.com/miniprogram/dev/api/open-api/login/wx.login.html",
 			"resource": "one-shot",
-			"taroType": "types/api/open-api/login.d.ts#login",
+			"wechatType": "types/api/open-api/login.d.ts#login",
 			"title": "One-time login code"
 		},
 		"grade": "mock-verified"
@@ -250,7 +250,7 @@
 			"id": "wechat.identity.phone-number",
 			"officialDoc": "https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/getPhoneNumber.html",
 			"resource": "one-shot",
-			"taroType": "@tarojs/components/types/Button.d.ts#onGetPhoneNumber",
+			"wechatType": "miniprogram-api-typings#ButtonGetPhoneNumber",
 			"title": "One-time phone number code"
 		},
 		"grade": "mock-verified"
@@ -271,7 +271,7 @@
 			"id": "wechat.identity.soter",
 			"officialDoc": "https://developers.weixin.qq.com/miniprogram/dev/api/open-api/soter/wx.startSoterAuthentication.html",
 			"resource": "one-shot",
-			"taroType": "types/api/open-api/soter.d.ts#startSoterAuthentication",
+			"wechatType": "types/api/open-api/soter.d.ts#startSoterAuthentication",
 			"title": "SOTER biometric challenge"
 		},
 		"grade": "mock-verified"
@@ -296,7 +296,7 @@
 			"requiredBackgroundMode": "location",
 			"requiredPrivateInfo": "startLocationUpdateBackground",
 			"resource": "listener",
-			"taroType": "types/api/location/index.d.ts#startLocationUpdateBackground",
+			"wechatType": "types/api/location/index.d.ts#startLocationUpdateBackground",
 			"title": "Background location stream"
 		},
 		"grade": "mock-verified"
@@ -319,7 +319,7 @@
 			"permissionScope": "scope.userLocation",
 			"requiredPrivateInfo": "getLocation",
 			"resource": "one-shot",
-			"taroType": "types/api/location/index.d.ts#getLocation",
+			"wechatType": "types/api/location/index.d.ts#getLocation",
 			"title": "Current location"
 		},
 		"grade": "mock-verified"
@@ -342,7 +342,7 @@
 			"permissionScope": "scope.userLocation",
 			"requiredPrivateInfo": "startLocationUpdate",
 			"resource": "listener",
-			"taroType": "types/api/location/index.d.ts#startLocationUpdate",
+			"wechatType": "types/api/location/index.d.ts#startLocationUpdate",
 			"title": "Foreground location stream"
 		},
 		"grade": "mock-verified"
@@ -364,7 +364,7 @@
 			"officialDoc": "https://developers.weixin.qq.com/miniprogram/dev/api/media/camera/wx.createCameraContext.html",
 			"permissionScope": "scope.camera",
 			"resource": "context",
-			"taroType": "types/api/media/camera.d.ts#createCameraContext",
+			"wechatType": "types/api/media/camera.d.ts#createCameraContext",
 			"title": "Scoped camera context"
 		},
 		"grade": "mock-verified"
@@ -386,7 +386,7 @@
 			"minBaseLibrary": "2.10.0",
 			"officialDoc": "https://developers.weixin.qq.com/miniprogram/dev/api/media/video/wx.chooseMedia.html",
 			"resource": "one-shot",
-			"taroType": "types/api/media/video.d.ts#chooseMedia",
+			"wechatType": "types/api/media/video.d.ts#chooseMedia",
 			"title": "Choose image or video"
 		},
 		"grade": "mock-verified"
@@ -407,7 +407,7 @@
 			"id": "wechat.media.scan",
 			"officialDoc": "https://developers.weixin.qq.com/miniprogram/dev/api/device/scan/wx.scanCode.html",
 			"resource": "one-shot",
-			"taroType": "types/api/device/scan.d.ts#scanCode",
+			"wechatType": "types/api/device/scan.d.ts#scanCode",
 			"title": "Scan QR or barcode"
 		},
 		"grade": "mock-verified"
@@ -428,7 +428,7 @@
 			"id": "wechat.messaging.share",
 			"officialDoc": "https://developers.weixin.qq.com/miniprogram/dev/reference/api/Page.html#onShareAppMessage-Object-object",
 			"resource": "listener",
-			"taroType": "types/taro.lifecycle.d.ts#onShareAppMessage",
+			"wechatType": "miniprogram-api-typings#onShareAppMessage",
 			"title": "Share lifecycle bridge"
 		},
 		"grade": "contract-tested"
@@ -449,7 +449,7 @@
 			"id": "wechat.messaging.subscribe",
 			"officialDoc": "https://developers.weixin.qq.com/miniprogram/dev/api/open-api/subscribe-message/wx.requestSubscribeMessage.html",
 			"resource": "one-shot",
-			"taroType": "types/api/open-api/subscribe-message.d.ts#requestSubscribeMessage",
+			"wechatType": "types/api/open-api/subscribe-message.d.ts#requestSubscribeMessage",
 			"title": "Subscription message consent"
 		},
 		"grade": "mock-verified"
@@ -470,7 +470,7 @@
 			"id": "wechat.network.mdns",
 			"officialDoc": "https://developers.weixin.qq.com/miniprogram/dev/api/network/mdns/wx.startLocalServiceDiscovery.html",
 			"resource": "session",
-			"taroType": "types/api/network/mdns.d.ts#startLocalServiceDiscovery",
+			"wechatType": "types/api/network/mdns.d.ts#startLocalServiceDiscovery",
 			"title": "mDNS discovery"
 		},
 		"grade": "mock-verified"
@@ -491,7 +491,7 @@
 			"id": "wechat.network.tcp",
 			"officialDoc": "https://developers.weixin.qq.com/miniprogram/dev/api/network/tcp/wx.createTCPSocket.html",
 			"resource": "connection",
-			"taroType": "types/api/network/tcp.d.ts#createTCPSocket",
+			"wechatType": "types/api/network/tcp.d.ts#createTCPSocket",
 			"title": "TCP socket"
 		},
 		"grade": "mock-verified"
@@ -512,7 +512,7 @@
 			"id": "wechat.network.udp",
 			"officialDoc": "https://developers.weixin.qq.com/miniprogram/dev/api/network/udp/wx.createUDPSocket.html",
 			"resource": "connection",
-			"taroType": "types/api/network/udp.d.ts#createUDPSocket",
+			"wechatType": "types/api/network/udp.d.ts#createUDPSocket",
 			"title": "UDP socket"
 		},
 		"grade": "mock-verified"
@@ -533,7 +533,7 @@
 			"id": "wechat.network.websocket",
 			"officialDoc": "https://developers.weixin.qq.com/miniprogram/dev/api/network/websocket/wx.connectSocket.html",
 			"resource": "connection",
-			"taroType": "types/api/network/websocket.d.ts#connectSocket",
+			"wechatType": "types/api/network/websocket.d.ts#connectSocket",
 			"title": "WebSocket connection"
 		},
 		"grade": "mock-verified"
@@ -554,7 +554,7 @@
 			"id": "wechat.privacy.permission",
 			"officialDoc": "https://developers.weixin.qq.com/miniprogram/dev/api/open-api/authorize/wx.authorize.html",
 			"resource": "one-shot",
-			"taroType": "types/api/open-api/authorize.d.ts#authorize",
+			"wechatType": "types/api/open-api/authorize.d.ts#authorize",
 			"title": "Permission request"
 		},
 		"grade": "mock-verified"
@@ -576,7 +576,7 @@
 			"minBaseLibrary": "2.32.3",
 			"officialDoc": "https://developers.weixin.qq.com/miniprogram/dev/api/open-api/privacy/wx.getPrivacySetting.html",
 			"resource": "one-shot",
-			"taroType": "types/api/open-api/privacy.d.ts#getPrivacySetting",
+			"wechatType": "types/api/open-api/privacy.d.ts#getPrivacySetting",
 			"title": "Privacy authorization state"
 		},
 		"grade": "device-verified",
@@ -598,7 +598,7 @@
 			"id": "wechat.support.can-i-use",
 			"officialDoc": "https://developers.weixin.qq.com/miniprogram/dev/api/base/wx.canIUse.html",
 			"resource": "one-shot",
-			"taroType": "types/api/base/index.d.ts#canIUse",
+			"wechatType": "types/api/base/index.d.ts#canIUse",
 			"title": "Capability support probe"
 		},
 		"grade": "device-verified",
@@ -621,7 +621,7 @@
 			"minBaseLibrary": "2.20.1",
 			"officialDoc": "https://developers.weixin.qq.com/miniprogram/dev/api/base/system/wx.getSystemSetting.html",
 			"resource": "one-shot",
-			"taroType": "types/api/base/system.d.ts#getSystemSetting",
+			"wechatType": "types/api/base/system.d.ts#getSystemSetting",
 			"title": "System switches and device support"
 		},
 		"grade": "device-verified",
@@ -643,7 +643,7 @@
 			"id": "wechat.system.files",
 			"officialDoc": "https://developers.weixin.qq.com/miniprogram/dev/api/file/wx.getFileSystemManager.html",
 			"resource": "context",
-			"taroType": "types/api/files/index.d.ts#getFileSystemManager",
+			"wechatType": "types/api/files/index.d.ts#getFileSystemManager",
 			"title": "Sandbox file system"
 		},
 		"grade": "device-verified",
@@ -665,7 +665,7 @@
 			"id": "wechat.system.network",
 			"officialDoc": "https://developers.weixin.qq.com/miniprogram/dev/api/device/network/wx.getNetworkType.html",
 			"resource": "listener",
-			"taroType": "types/api/device/network.d.ts#getNetworkType",
+			"wechatType": "types/api/device/network.d.ts#getNetworkType",
 			"title": "Network state"
 		},
 		"grade": "device-verified",
@@ -687,7 +687,7 @@
 			"id": "wechat.system.storage",
 			"officialDoc": "https://developers.weixin.qq.com/miniprogram/dev/api/storage/wx.getStorage.html",
 			"resource": "one-shot",
-			"taroType": "types/api/storage/index.d.ts#getStorage",
+			"wechatType": "types/api/storage/index.d.ts#getStorage",
 			"title": "Local storage"
 		},
 		"grade": "device-verified",

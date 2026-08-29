@@ -1,6 +1,6 @@
 # UI 平台重构蓝图
 
-状态：规划已确认，尚未实施（2026-08-28）。本文定义下一阶段 UI、Web、小程序和多目标桌面宿主的目标边界、迁移顺序与验收门槛；当前生产事实仍以[架构与目录](./architecture.md)、[Svelte Taro 生产验收](./wechat-production-acceptance.md)和[Tauri Windows 桌面端生产验收](./desktop-production-acceptance.md)为准。
+状态：实施中（2026-08-29）。P0–P5 已完成代码迁移与本地窄验收：浏览器ZUI已合包、SvelteKit ZUI集成已独立、自包含Miniapp已由Svelte直编微信原生产物并移除Taro。P6–P7的C# WebView公共层与Windows target正在实施；微信开发者工具直编模拟器验收和云端全量门禁仍按本文边界追踪。
 
 ## 1. 决策摘要
 
@@ -34,29 +34,17 @@ ui/
 
 ## 2. 当前基线
 
-当前`ui/`包含六个已经实现和验证的包：
+当前`ui/`包含四个已落地包和一个迁移期桌面包：
 
-| 目录           | 包名                | 当前职责                                                        |
-| -------------- | ------------------- | --------------------------------------------------------------- |
-| `ui/zui-core`  | `@zadmin/zui/core`  | 平台无关Theme、Token、StyleProgram、ICSS指令和设计Props         |
-| `ui/zui`       | `@zadmin/zui`       | Web Svelte组件、运行时CSS、编译优化和SvelteKit SSR              |
-| `ui/sveltekit` | `@zadmin/sveltekit` | 动态插件路由、客户端插件runtime和页面Outlet                     |
-| `ui/miniapp`   | `@zadmin/miniapp`   | Taro framework plugin、Svelte renderer、App/Page、平台能力      |
-| `ui/zui-taro`  | `@zadmin/zui-taro`  | Taro小程序组件和严格ICSS子集                                    |
-| `ui/tauri`     | `@zadmin/tauri`     | Tauri系统API、typed result、资源生命周期、fake driver和桌面组件 |
+| 目录           | 包名                | 当前职责                                                                             |
+| -------------- | ------------------- | ------------------------------------------------------------------------------------ |
+| `ui/zui`       | `@zadmin/zui`       | 浏览器/WebView Theme、ICSS、recipe、8个Svelte组件和runtime                           |
+| `ui/sveltekit` | `@zadmin/sveltekit` | 动态插件runtime，以及`/zui`的SSR、CSP、critical CSS和client集成                      |
+| `ui/miniapp`   | `@zadmin/miniapp`   | 独立移动Theme、`mcss()`、8个`M*`组件、Svelte compiler/renderer、微信target与平台能力 |
+| `ui/webview`   | `@zadmin/webview`   | C#公共协议、前端bridge、平台facade和多桌面target；正在实施                           |
+| `ui/tauri`     | `@zadmin/tauri`     | 已验收旧桌面实现；只在C# Windows target达到替换门槛后删除                            |
 
-当前源码规模约为：
-
-| 目录         | 源码文件 | 源码行数 |
-| ------------ | -------: | -------: |
-| `miniapp`    |       29 |     2635 |
-| `sveltekit`  |        7 |      512 |
-| `tauri`      |       35 |     1836 |
-| `zui-core`   |       13 |      813 |
-| `zui-svelte` |       34 |     1879 |
-| `zui-taro`   |       18 |      596 |
-
-这些实现不能作为临时目录直接删除。迁移应保留其测试、package acceptance、HMR、资源释放和真实宿主证据，再逐层替换底层依赖。
+`ui/zui-core`、`ui/zui-svelte`、`ui/zui-taro`和旧`svelte-taro`边界已迁移或删除。微信生产依赖不含ZUI和Taro；桌面迁移继续保留Tauri对照基线，避免在新宿主未验收前丢失可发布路径。
 
 ## 3. 目标依赖图
 
@@ -592,7 +580,9 @@ apps/
 
 ## 9. 分阶段迁移
 
-### P0：冻结蓝图和验收清单
+当前阶段状态：P0–P5完成，P6–P7进行中，P8不在v1范围。
+
+### P0：冻结蓝图和验收清单（已完成）
 
 - 评审本文；
 - 确认包名、exports、target和非目标；
@@ -605,7 +595,7 @@ apps/
 docs(ui): plan browser miniapp and webview platforms
 ```
 
-### P1：合并浏览器ZUI
+### P1：合并浏览器ZUI（已完成）
 
 ```text
 ui/zui-core + ui/zui → ui/zui
@@ -616,7 +606,7 @@ ui/zui-core + ui/zui → ui/zui
 - 更新admin、docs和desktop旧宿主；
 - 不接触微信链路。
 
-### P2：迁移SvelteKit ZUI集成
+### P2：迁移SvelteKit ZUI集成（已完成）
 
 ```text
 ui/zui/src/sveltekit/* → ui/sveltekit/src/zui/*
@@ -626,7 +616,7 @@ ui/zui/src/sveltekit/* → ui/sveltekit/src/zui/*
 - 更新`hooks.server.ts`到`@zadmin/sveltekit/zui`；
 - 验证并发SSR请求隔离、CSP hash/nonce和hydration。
 
-### P3：建立自包含Miniapp包
+### P3：建立自包含Miniapp包（已完成）
 
 ```text
 ui/miniapp + ui/zui-taro → ui/miniapp
@@ -637,14 +627,14 @@ ui/miniapp + ui/zui-taro → ui/miniapp
 - 公开包名和exports先稳定；
 - 当前微信生产验收不得退化。
 
-### P4：建立微信最小闭环
+### P4：建立微信最小闭环（已完成）
 
 - 建立App、Page、事件、样式、导航和storage；
 - 实现MProvider、MBox、MStack、MText、MIcon、MButton、MInput和MImage；
 - 每个组件有类型、编译fixture、运行时fixture和微信产物快照；
 - 基础闭环稳定前不增加复杂组件和业务流程组件。
 
-### P5：微信target脱离Taro
+### P5：微信target脱离Taro（代码完成，DevTools待复核）
 
 顺序：
 
@@ -658,13 +648,13 @@ ui/miniapp + ui/zui-taro → ui/miniapp
 8. 微信开发者工具模拟器、真机和package acceptance；
 9. 删除Taro依赖。
 
-### P6：平台中立化桌面合同
+### P6：平台中立化桌面合同（进行中）
 
 - 从`@zadmin/tauri`提取DesktopPlatform、error、scope、fake driver和组件语义；
 - 清除所有Tauri类型泄漏；
 - 旧Tauri实现继续通过现有生产验收。
 
-### P7：实现C# WebView公共层与Windows target
+### P7：实现C# WebView公共层与Windows target（进行中）
 
 - 建立typed protocol生成与漂移检查；
 - 建立`@zadmin/webview`的build、platform、svelte和testing入口；

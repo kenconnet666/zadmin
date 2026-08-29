@@ -1,7 +1,7 @@
-export { createSvelteApp } from './app.ts';
-export type { SvelteTaroApp, SvelteTaroRuntimeOptions } from './app.ts';
-export { getSvelteTaroContext, SVELTE_TARO_CONTEXT } from './context.ts';
+export { createWechatApp, createWechatPage } from '../targets/wechat/runtime.ts';
+export { registerWechatApp, registerWechatPage } from '../targets/wechat/lifecycle.ts';
+export { getMiniappRuntimeContext, MINIAPP_RUNTIME_CONTEXT } from './context.ts';
 export { getDevelopmentBuildId } from './build.ts';
-export type { SvelteTaroRuntimeContext } from './context.ts';
+export type { MiniappRuntimeContext } from './context.ts';
 export { ResourceScope } from './scope.ts';
 export type { ScopeCleanup } from './scope.ts';

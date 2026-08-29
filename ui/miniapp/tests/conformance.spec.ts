@@ -1,34 +1,36 @@
-import type { TaroElement } from '@tarojs/runtime';
 import { mount, tick, unmount } from 'svelte';
 import { describe, expect, it, vi } from 'vitest';
 
-import taroRenderer, { createTaroFragment } from '../src/renderer/index.ts';
+import miniappRenderer, { createMiniappFragment } from '../src/renderer/index.ts';
+import type { WeChatSnapshot } from '../src/targets/wechat/elements.ts';
 import ConformanceFixture from './ConformanceFixture.svelte';
 import ReactiveFixture from './ReactiveFixture.svelte';
 
-function elements(node: TaroElement): TaroElement[] {
-	return node.childNodes.flatMap((child) => {
-		if (!('childNodes' in child)) return [];
-		const element = child as TaroElement;
-		return [element, ...elements(element)];
-	});
+function snapshotId(node: WeChatSnapshot, id: string): string | undefined {
+	if (node.kind === 'text') return undefined;
+	if (node.kind === 'element' && node.attributes.id === id) return node.id;
+	for (const child of node.children) {
+		const found = snapshotId(child, id);
+		if (found !== undefined) return found;
+	}
+	return undefined;
 }
 
-function tap(root: TaroElement, id: string): void {
-	const element = elements(root).find((candidate) => candidate.id === id);
-	if (element === undefined) throw new Error(`Missing fixture element #${id}.`);
-	element.__handlers.tap[0].call(element, { type: 'tap' });
+function tap(root: ReturnType<typeof createMiniappFragment>, id: string): void {
+	const runtimeId = snapshotId(root.snapshot(), id);
+	if (runtimeId === undefined) throw new Error(`Missing fixture element #${id}.`);
+	root.dispatch(runtimeId, 'tap', { detail: {}, type: 'tap' });
 }
 
 describe('Svelte custom-renderer conformance', () => {
 	it('supports runes, lifecycle, binding, snippets, context, key, await, and boundaries', async () => {
-		const target = createTaroFragment();
+		const target = createMiniappFragment();
 		const onCleanup = vi.fn();
 		const onEffect = vi.fn();
 		const onLifecycle = vi.fn();
 		const component = mount(ConformanceFixture, {
 			props: { onCleanup, onEffect, onLifecycle },
-			renderer: taroRenderer,
+			renderer: miniappRenderer,
 			target
 		});
 		await tick();
@@ -63,10 +65,10 @@ describe('Svelte custom-renderer conformance', () => {
 		expect(target.childNodes).toHaveLength(0);
 	});
 
-	it('returns the Taro node tree to baseline after 100 mount/unmount cycles', async () => {
-		const target = createTaroFragment();
+	it('returns the Miniapp node tree to baseline after 100 mount/unmount cycles', async () => {
+		const target = createMiniappFragment();
 		for (let index = 0; index < 100; index += 1) {
-			const component = mount(ReactiveFixture, { renderer: taroRenderer, target });
+			const component = mount(ReactiveFixture, { renderer: miniappRenderer, target });
 			await unmount(component);
 			expect(target.childNodes).toHaveLength(0);
 		}

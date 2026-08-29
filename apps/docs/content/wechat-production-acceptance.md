@@ -1,44 +1,36 @@
-# Svelte Taro production acceptance
+# Svelte Miniapp direct WeChat target acceptance
 
-Acceptance date: 2026-08-25. The default supported release target is a trusted first-party WeChat Mini Program using WebView, Taro 4.2.1, Vite 4.5.14, and the exact Svelte custom-renderer artifact at commit `eb7532dd70fb11b36258347c44cf3910d244f987`.
+验收日期：2026-08-29。当前发布候选是 `@zadmin/miniapp` 自包含的微信 target：业务使用 Svelte 5 和 `M*` 组件，构建直接生成 WXML、WXSS、JavaScript、JSON 与 sourcemap，不经过 ZUI、Taro 或其他跨端 runtime。
 
-## Passed gates
+## 已通过门禁
 
-- `pnpm install --frozen-lockfile` and `pnpm peers check` passed.
-- Production dependency audit reported no known vulnerabilities.
-- Full repository check, test, build, Prettier, ESLint, and gitleaks passed.
-- Svelte compiler/renderer/runtime/platform tests: 13 files and 43 tests passed, including two independent 100-cycle cleanup checks and native-event navigation/context regression coverage. The WeChat host adds 7 Node tests and 4 TypeScript safe-probe tests.
-- The conformance fixture covers `$state`, `$derived`, `$effect` and cleanup, `$props`, component `$bindable`, lifecycle, context, snippets, `#if`, keyed `#each`, `#key`, `#await`, nested components, class/style updates, events, mount/unmount, and `<svelte:boundary onerror>` recovery.
-- Unsupported browser-only syntax has a stable `svelte_taro_unsupported` diagnostic with filename, line, column, and replacement guidance.
-- Five ZUI design components, three flow components, static WXSS, theme switching, dynamic ICSS leaf binding, and the deferred typed navigation facade passed package tests, production build, and WebView simulator interaction.
-- The platform catalog contains 32 attributed capabilities. Eight named rows reached supervised device verification: Worker, check-session, privacy state, can-I-use, system settings, sandbox files, network type, and local storage. Hardware/account/merchant-dependent items retain their lower truthful grades in the capability report.
-- Four clean tarballs installed into an empty system-temporary project. Frozen reinstall, external-module literal inference, native/ZUI types, Taro production build, production-content guards, and one Svelte/Taro runtime version passed.
-- The exact Svelte runtime is prebundled once into condition-specific, tree-shakeable ESM. The application graph fell from 246–247 to 141–142 transformed modules, while clean install still resolved one Svelte instance.
-- A three-round alternating Taro Solid reference measured a Svelte/Solid cold-build median ratio of 1.018x, passing the 1.25x limit.
-- Production bundles contain no development build ID/storage bridge, supervisor, fake driver, testing entry, tracked secret, or workspace absolute path.
-- Production build clears stale output, uses deterministic config validation instead of network-dependent Taro Doctor, copies the bounded Worker entry, and verifies the resulting `app.json` plus Worker file.
+- `@zadmin/miniapp` 与 `apps/wechat` 的 TypeScript/Svelte check 通过；
+- Miniapp 13 个测试文件、41 项测试通过，覆盖 compiler、renderer、Svelte conformance、组件、平台、模块和诊断；
+- 微信宿主 4 项 Node 测试与 4 项 TypeScript 安全探针测试通过；
+- 实际宿主生成 15 个原生文件，构建后验证 Worker 声明与文件存在；
+- 8 个独立移动组件可用：`MProvider`、`MBox`、`MStack`、`MText`、`MIcon`、`MButton`、`MInput`、`MImage`；
+- 独立 Theme、`mcss()`、WXSS 属性白名单和 `rpx()` 不依赖浏览器 ZUI；
+- App/Page mount、unmount、事件 ID 分发、微任务 `setData` 合并、平台 scope 和资源释放有自动化覆盖；
+- package 生产依赖只有构建器与官方微信 API 类型，源码和宿主依赖图不含 `@tarojs`；
+- 开发 watcher 同时跟踪宿主与 workspace Miniapp 源码，串行合并重建，并为成功开发构建写入 build ID。
 
-## Explicit limits
+## 明确边界
 
-- The pinned upstream Svelte artifact crashes internally when compiling a boundary `failed`/`pending` snippet under custom rendering. `<svelte:boundary onerror>` is supported and tested; the broken snippet form is rejected before upstream compilation with guidance to render recovery state outside the boundary. Re-run this gate when changing the artifact.
-- WebView's complete component matrix remains simulator-verified. Supervised Android sessions additionally verified homepage rendering, navigation/unload, all eight device-verified capability rows, sandbox cleanup, and two consecutive Worker lifecycle cycles; after the captured startup-only environment messages were cleared, the device Console stayed empty and debugger queues stayed at zero.
-- A corrected Skyline build passed with `renderer: skyline`, `componentFramework: glass-easel`, `navigationStyle: custom`, `lazyCodeLoading: requiredComponents`, and the official `rendererOptions.skyline` defaults. DevTools recognized Skyline but rendered a black surface, while its automator failed inside `MPPage.getCurrent`. A temporary Taro Solid reference build reproduced the same surface and inspectee failure, so this run did not isolate the problem to the Svelte renderer. Taro's current Skyline documentation is reflected in config, but the open [Taro 4.2 Skyline issue](https://github.com/NervJS/taro/issues/19141) and the lack of a related fix in the [4.2.1 release notes](https://github.com/NervJS/taro/releases/tag/v4.2.1) keep Skyline at build-verified only.
-- Compiler/config cold restarts improved from roughly 16 seconds to roughly 11.4 seconds after runtime prebundling. Incremental app/ZUI/platform updates remain around 1.5–2.8 seconds. The provisional 8/10-second total restart targets remain narrowly unmet because a fresh Taro CLI process is required.
-- Worker source changes automatically restart only the Taro child because Taro static-copy does not watch Worker sources; two change/restore rounds passed at roughly 12.1–12.2 seconds source-to-success.
-- The supervised debugger emitted one WeChat-internal ad-optimization `invalid scope` error and one remote `/usr/app.js.map` truncation warning at startup. Application sources contain no ad API/reference and all seven local maps parse successfully. After those environment messages were captured and the Console was cleared, no probe or unload produced a new log entry.
-- Full development audit reports 21 advisories in the fixed Taro CLI/Vite4 and existing development toolchain. They are absent from `pnpm audit --prod`; the supervisor uses local build-watch only and does not expose a Vite HTTP server.
-- No upload, review submission, payment, phone-number exchange, subscription request, permission prompt, cloud write, merchant flow, or real-hardware operation was performed. Those require separate user authorization and environment-specific acceptance.
+- v1 使用通用递归 WXML 模板承载 Svelte custom-renderer 节点快照；这是一条已允许的第一阶段直编路径，不等同于完成逐节点静态 WXML lowering。后续优化必须保持现有 compiler/renderer 合同和基准可替换性；
+- 当前只支持蓝图声明的 Svelte 子集和微信原生元素白名单，不承诺浏览器 DOM、任意 action、完整 CSS selector 或所有 Svelte 语法；不支持内容会产生带文件位置和替代建议的稳定诊断；
+- 微信开发者工具的直编 target 模拟器/真机验收尚待当前 CLI 授权完成。2026-08-25 的 Taro WebView/真机证据只证明平台 API 语义与旧链路，不能冒充新 runtime 验收；
+- Skyline、支付宝 target、上传、审核、支付、手机号兑换、订阅、权限弹窗、云写、商户流程和真实硬件操作均不在本阶段无人值守范围；
+- package tarball 的空目录安装由云端 CI 执行，本地只保留类型、单元、宿主构建和产物边界检查以缩短迭代。
 
-## Evidence
+## 当前复核命令
 
-- [Capability report](./wechat-capability-report.md)
-- [Fast Refresh](./wechat-fast-refresh.md)
-- [Clean-package acceptance](./wechat-package-acceptance.md)
-- [Performance baseline](./wechat-performance.md)
-- [Renderer acceptance](./wechat-renderers.md)
-- [Manual device/account acceptance](./wechat-manual-acceptance.md)
-- [WebView screenshot](/wechat/webview.jpg)
-- [WebView capability and navigation screenshot](/wechat/capabilities-webview.jpg)
-- [Safe-probe simulator screenshot](/wechat/safe-probes-simulator.jpg)
+```powershell
+pnpm --filter @zadmin/miniapp check
+pnpm --filter @zadmin/miniapp exec vitest --run tests
+pnpm --filter @zadmin/miniapp build
+pnpm --filter @zadmin/wechat-app check
+pnpm --filter @zadmin/wechat-app test
+pnpm --filter @zadmin/wechat-app build
+```
 
-The result is production-usable for the documented default WebView target and stable managed capabilities. Provisional/raw capabilities and Skyline are not represented as device- or account-verified.
+完整能力等级见[微信能力报告](./wechat-capability-report.md)，开发更新链见[微信 Fast Refresh](./wechat-fast-refresh.md)，账号与真机安全门禁见[微信人工真机/账号验收](./wechat-manual-acceptance.md)。

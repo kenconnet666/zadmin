@@ -1,18 +1,19 @@
-import Taro from '@tarojs/taro';
-
+import { requireWechatApi } from '../targets/wechat/api.ts';
 import type {
 	PlatformDriver,
 	PlatformDriverEnvironment,
-	TaroMethodName,
-	TaroMethodParameters,
-	TaroMethodResult
+	WeChatMethodName,
+	WeChatMethodParameters,
+	WeChatMethodResult,
+	WeChatMethodReturn
 } from './types.ts';
 
+type WeChatApi = WechatMiniprogram.Wx;
 type Callable = (...args: readonly unknown[]) => unknown;
 
-function callable(raw: Taro.TaroStatic, method: TaroMethodName): Callable {
+function callable(raw: WeChatApi, method: WeChatMethodName): Callable {
 	const candidate = raw[method] as unknown;
-	if (typeof candidate !== 'function') throw new TypeError(`Taro.${method} is unavailable.`);
+	if (typeof candidate !== 'function') throw new TypeError(`wx.${method} is unavailable.`);
 	return candidate as Callable;
 }
 
@@ -25,26 +26,24 @@ function callbackOptions(
 	return { ...(options ?? {}), fail: reject, success: resolve };
 }
 
-export function createTaroPlatformDriver(
+export function createWechatPlatformDriver(
+	raw: WeChatApi = requireWechatApi(),
 	environment: Partial<PlatformDriverEnvironment> = {}
 ): PlatformDriver {
-	const resolvedEnvironment: PlatformDriverEnvironment = {
-		realDevice: false,
-		...environment
-	};
+	const resolvedEnvironment: PlatformDriverEnvironment = { realDevice: false, ...environment };
 	return {
 		environment: resolvedEnvironment,
-		raw: Taro,
-		call<TKey extends TaroMethodName>(
+		raw,
+		call<TKey extends WeChatMethodName>(
 			method: TKey,
-			...args: TaroMethodParameters<TKey>
-		): Promise<TaroMethodResult<TKey>> {
-			return new Promise<TaroMethodResult<TKey>>((resolve, reject) => {
+			...args: WeChatMethodParameters<TKey>
+		): Promise<WeChatMethodResult<TKey>> {
+			return new Promise<WeChatMethodResult<TKey>>((resolve, reject) => {
 				let settled = false;
 				const succeed = (value: unknown) => {
 					if (settled) return;
 					settled = true;
-					resolve(value as TaroMethodResult<TKey>);
+					resolve(value as WeChatMethodResult<TKey>);
 				};
 				const fail = (error: unknown) => {
 					if (settled) return;
@@ -54,7 +53,7 @@ export function createTaroPlatformDriver(
 				try {
 					const input = [...args] as unknown[];
 					input[0] = callbackOptions(input[0], succeed, fail);
-					const result = callable(Taro, method).apply(Taro, input);
+					const result = callable(raw, method).apply(raw, input);
 					if (result instanceof Promise) void result.then(succeed, fail);
 					else if (result !== undefined) succeed(result);
 				} catch (error) {
@@ -62,22 +61,16 @@ export function createTaroPlatformDriver(
 				}
 			});
 		},
-		canIUse(schema: string): boolean {
-			return typeof Taro.canIUse === 'function' && Taro.canIUse(schema);
-		},
-		create<TKey extends TaroMethodName>(
+		canIUse: (schema) => raw.canIUse(schema),
+		create<TKey extends WeChatMethodName>(
 			method: TKey,
-			...args: TaroMethodParameters<TKey>
-		): TaroMethodResult<TKey> {
-			return callable(Taro, method).apply(Taro, args) as TaroMethodResult<TKey>;
+			...args: WeChatMethodParameters<TKey>
+		): WeChatMethodReturn<TKey> {
+			return callable(raw, method).apply(raw, args) as WeChatMethodReturn<TKey>;
 		},
-		listen<TValue>(
-			onMethod: TaroMethodName,
-			offMethod: TaroMethodName,
-			listener: (value: TValue) => void
-		): () => void {
-			callable(Taro, onMethod).call(Taro, listener);
-			return () => callable(Taro, offMethod).call(Taro, listener);
+		listen(onMethod, offMethod, listener) {
+			callable(raw, onMethod).call(raw, listener);
+			return () => callable(raw, offMethod).call(raw, listener);
 		}
 	};
 }

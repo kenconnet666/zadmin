@@ -99,12 +99,17 @@ async function bundleEntry(
 	component: string,
 	register: 'registerWechatApp' | 'registerWechatPage',
 	output: string,
-	dev: boolean
+	dev: boolean,
+	buildId?: string
 ): Promise<string> {
 	const css: string[] = [];
 	const lifecycle = await existingSource(resolve(sourceRoot, 'targets/wechat/lifecycle.js'));
 	const renderer = await existingSource(resolve(sourceRoot, 'targets/wechat/runtime.js'));
-	const entry = `import Component from ${JSON.stringify(portable(component))};\nimport { ${register} } from ${JSON.stringify(portable(lifecycle))};\n${register}(Component);\n`;
+	const identity =
+		buildId === undefined
+			? ''
+			: `globalThis.__ZADMIN_BUILD_ID__ = ${JSON.stringify(buildId)}; if (typeof wx !== 'undefined') wx.setStorageSync('__zadmin_build_id__', ${JSON.stringify(buildId)});\n`;
+	const entry = `${identity}import Component from ${JSON.stringify(portable(component))};\nimport { ${register} } from ${JSON.stringify(portable(lifecycle))};\n${register}(Component);\n`;
 	const options: BuildOptions = {
 		bundle: true,
 		conditions: ['svelte', 'browser', dev ? 'development' : 'production'],
@@ -142,6 +147,7 @@ export async function buildMiniapp(options: MiniappBuildOptions): Promise<Miniap
 	const appConfig = normalizeAppConfig(
 		await evaluateConfig<MiniappAppConfig>(resolve(projectRoot, 'src/app.config.ts'))
 	);
+	const buildId = options.dev ? Date.now().toString(36) : undefined;
 	const files: string[] = [];
 	const write = async (name: string, content: string): Promise<void> => {
 		const filename = resolve(outputRoot, name);
@@ -155,7 +161,8 @@ export async function buildMiniapp(options: MiniappBuildOptions): Promise<Miniap
 		resolve(projectRoot, 'src/app.svelte'),
 		'registerWechatApp',
 		resolve(outputRoot, 'app.js'),
-		options.dev === true
+		options.dev === true,
+		buildId
 	);
 	files.push('app.js', 'app.js.map');
 	const authoredAppStyle = await readFile(resolve(projectRoot, 'src/app.wxss'), 'utf8').catch(
@@ -170,7 +177,8 @@ export async function buildMiniapp(options: MiniappBuildOptions): Promise<Miniap
 			source,
 			'registerWechatPage',
 			resolve(outputRoot, `${route}.js`),
-			options.dev === true
+			options.dev === true,
+			buildId
 		);
 		files.push(`${route}.js`, `${route}.js.map`);
 		const config = await evaluateConfig<Record<string, unknown>>(
@@ -184,7 +192,6 @@ export async function buildMiniapp(options: MiniappBuildOptions): Promise<Miniap
 	await cp(resolve(projectRoot, 'src/workers'), resolve(outputRoot, 'workers'), {
 		recursive: true
 	}).catch(() => undefined);
-	const buildId = options.dev ? Date.now().toString(36) : undefined;
 	if (buildId !== undefined) await write('__zadmin_build_id__.txt', buildId);
 	return Object.freeze({
 		...(buildId === undefined ? {} : { buildId }),
@@ -215,13 +222,12 @@ export function watchMiniapp(options: MiniappBuildOptions): () => Promise<void> 
 		}
 	};
 	void rebuild();
-	const watcher = watch(
-		resolve(options.projectRoot, 'src'),
-		{ recursive: true },
-		() => void rebuild()
+	const watchRoots = new Set([resolve(options.projectRoot, 'src'), sourceRoot]);
+	const watchers = [...watchRoots].map((root) =>
+		watch(root, { recursive: true }, () => void rebuild())
 	);
 	return async () => {
 		closed = true;
-		watcher.close();
+		for (const watcher of watchers) watcher.close();
 	};
 }

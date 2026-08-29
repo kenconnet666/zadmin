@@ -2,12 +2,12 @@ import type { ResourceScope } from '../runtime/scope.ts';
 import type { WeChatPlatform } from '../platform/service.ts';
 import type { CapabilityDescriptor } from '../platform/types.ts';
 
-export interface TaroModuleContext {
+export interface MiniappModuleContext {
 	readonly platform: WeChatPlatform;
 	readonly scope: ResourceScope;
 }
 
-export interface TaroModule<
+export interface MiniappModule<
 	TRoutes extends readonly string[] = readonly string[],
 	TRequired extends readonly CapabilityDescriptor[] = readonly CapabilityDescriptor[],
 	TOptional extends readonly CapabilityDescriptor[] = readonly CapabilityDescriptor[]
@@ -18,38 +18,40 @@ export interface TaroModule<
 	};
 	readonly id: string;
 	readonly routes: TRoutes;
-	setup?(context: TaroModuleContext): unknown | Promise<unknown>;
+	setup?(context: MiniappModuleContext): unknown | Promise<unknown>;
 }
 
-export function defineTaroModule<
+export function defineMiniappModule<
 	const TRoutes extends readonly string[],
 	const TRequired extends readonly CapabilityDescriptor[],
 	const TOptional extends readonly CapabilityDescriptor[] = readonly []
->(module: TaroModule<TRoutes, TRequired, TOptional>): TaroModule<TRoutes, TRequired, TOptional> {
+>(
+	module: MiniappModule<TRoutes, TRequired, TOptional>
+): MiniappModule<TRoutes, TRequired, TOptional> {
 	if (!/^@?[a-z0-9][a-z0-9._/-]*$/u.test(module.id)) {
-		throw new TypeError(`Invalid Taro module id "${module.id}".`);
+		throw new TypeError(`Invalid Miniapp module id "${module.id}".`);
 	}
 	if (module.routes.some((route) => !route.endsWith('.svelte') || !route.startsWith('./'))) {
-		throw new TypeError('Taro module routes must be relative .svelte paths.');
+		throw new TypeError('Miniapp module routes must be relative .svelte paths.');
 	}
 	return Object.freeze(module);
 }
 
-export interface ComposedTaroModules {
+export interface ComposedMiniappModules {
 	readonly capabilities: readonly CapabilityDescriptor[];
-	readonly modules: readonly TaroModule[];
+	readonly modules: readonly MiniappModule[];
 	readonly routes: readonly string[];
 }
 
-export function composeTaroModules(modules: readonly TaroModule[]): ComposedTaroModules {
+export function composeMiniappModules(modules: readonly MiniappModule[]): ComposedMiniappModules {
 	const ids = new Set<string>();
 	const routes = new Set<string>();
 	const capabilities = new Map<string, CapabilityDescriptor>();
 	for (const module of modules) {
-		if (ids.has(module.id)) throw new TypeError(`Duplicate Taro module id "${module.id}".`);
+		if (ids.has(module.id)) throw new TypeError(`Duplicate Miniapp module id "${module.id}".`);
 		ids.add(module.id);
 		for (const route of module.routes) {
-			if (routes.has(route)) throw new TypeError(`Duplicate Taro module route "${route}".`);
+			if (routes.has(route)) throw new TypeError(`Duplicate Miniapp module route "${route}".`);
 			routes.add(route);
 		}
 		for (const descriptor of [

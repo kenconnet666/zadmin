@@ -31,7 +31,7 @@ Miniapp 不依赖 `@zadmin/zui`。它拥有独立的移动端 Theme、`mcss()`/W
 - `@zadmin/miniapp/module`：静态业务模块合同；
 - `@zadmin/miniapp/testing`：fake platform，仅限测试。
 
-开发期由 `apps/wechat/config/supervisor.mjs` 同时维护 TypeScript、组件 package 与应用增量构建；组件或 Theme 修改不重启整个监督器，compiler/plugin 修改才重启构建 child。
+开发期由`miniapp dev`直接监听应用源码和workspace内Miniapp源码。重建串行合并，组件、Theme和业务状态修改不创建并发构建进程；每次成功开发构建都会写入build ID供微信开发者工具刷新核对。
 
 直接微信 target 已可独立调用：
 
@@ -40,4 +40,4 @@ pnpm miniapp build --target wechat --project C:\path\to\app
 pnpm miniapp dev --target wechat --project C:\path\to\app
 ```
 
-它生成`dist/wechat`下的WXML、WXSS、JS、JSON、共享runtime template和sourcemap，并在同一microtask内合并节点变化。当前真实宿主切换前仍保留内部Taro renderer作为对照后端；下一提交会让`apps/wechat`使用直接target并删除所有Taro生产依赖。
+它生成`dist/wechat`下的WXML、WXSS、JS、JSON、共享runtime template和sourcemap，并在同一microtask内合并节点变化。`apps/wechat`已经使用该直接target；包和宿主的生产依赖图中不存在ZUI、DOM runtime或第三方跨端框架。

@@ -88,7 +88,7 @@ function visit(value: unknown, elements: Set<string>, seen: WeakSet<object>): vo
 	) {
 		if (!NATIVE_ELEMENTS.has(node.name)) {
 			throw new TypeError(
-				`Unsupported Mini Program native element "${node.name}". Use a typed Taro element or a Svelte component.`
+				`Unsupported Mini Program native element "${node.name}". Use a typed Miniapp element or a Svelte component.`
 			);
 		}
 		elements.add(node.name);
@@ -104,7 +104,9 @@ export function collectNativeElements(ast: unknown): readonly string[] {
 
 export function createComponentMarkerCode(elements: readonly string[]): string {
 	const calls = elements
-		.map((element) => `  __zadmin_taro_marker__.createElement(${JSON.stringify(element)}, null);`)
+		.map(
+			(element) => `  __zadmin_miniapp_marker__.createElement(${JSON.stringify(element)}, null);`
+		)
 		.join('\n');
-	return `const __zadmin_taro_marker__ = null;\nexport function __zadmin_collect_components__() {\n${calls}\n}\n`;
+	return `const __zadmin_miniapp_marker__ = null;\nexport function __zadmin_collect_components__() {\n${calls}\n}\n`;
 }

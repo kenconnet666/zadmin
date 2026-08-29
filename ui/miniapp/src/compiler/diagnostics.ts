@@ -1,5 +1,5 @@
-export class SvelteTaroCompileError extends Error {
-	readonly code = 'svelte_taro_unsupported';
+export class MiniappCompileError extends Error {
+	readonly code = 'miniapp_unsupported';
 	readonly column: number;
 	readonly filename: string;
 	readonly line: number;
@@ -13,9 +13,9 @@ export class SvelteTaroCompileError extends Error {
 		suggestion: string;
 	}) {
 		super(
-			`${options.filename}:${options.line}:${options.column} ${options.feature} is not supported by the Svelte Taro renderer. ${options.suggestion}`
+			`${options.filename}:${options.line}:${options.column} ${options.feature} is not supported by the Miniapp renderer. ${options.suggestion}`
 		);
-		this.name = 'SvelteTaroCompileError';
+		this.name = 'MiniappCompileError';
 		this.column = options.column;
 		this.filename = options.filename;
 		this.line = options.line;
@@ -78,7 +78,7 @@ export function assertSupportedSvelteSource(source: string, filename: string): v
 	for (const unsupported of UNSUPPORTED) {
 		const match = unsupported.pattern.exec(source);
 		if (match === null) continue;
-		throw new SvelteTaroCompileError({
+		throw new MiniappCompileError({
 			...position(source, match.index),
 			feature: unsupported.feature,
 			filename,

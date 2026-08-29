@@ -1,6 +1,6 @@
 # WeChat capability verification report
 
-Generated from the fixed Taro 4.2.1 capability catalog on 2026-08-25. Verification grades are evidence levels, not interchangeable claims. Supervised WebView device acceptance covered only the eight rows explicitly marked device-verified. No payment, phone-number, login-code request, subscription, permission prompt, upload, cloud write, merchant flow, or hardware session was triggered.
+Generated from the pinned official WeChat Mini Program API type catalog. Verification grades are evidence levels, not interchangeable claims. Supervised WebView device acceptance covered only the rows explicitly marked device-verified. No payment, phone-number, login-code request, subscription, permission prompt, upload, cloud write, merchant flow, or hardware session was triggered.
 
 | Capability                     | Stability   | Highest grade   | Real device | Account entitlement | Evidence / limit                                                                                                                                                               |
 | ------------------------------ | ----------- | --------------- | ----------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |

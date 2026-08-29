@@ -12,12 +12,12 @@
 8. [测试与验收](./testing.md)：自动化命令、覆盖矩阵和真实浏览器 HMR步骤。
 9. [工程倾向](./engineering-preferences.md)：目录、依赖、代码、提交和文档的长期约束。
 10. [换设备交接](./handoff.md)：当前状态、恢复命令、关键入口和已知边界。
-11. [Svelte Taro 生产验收](./wechat-production-acceptance.md)：默认 WebView 发布范围、完整门禁与限制。
-12. [微信 Fast Refresh](./wechat-fast-refresh.md)：单 supervisor、文件分类、buildId 和实测耗时。
+11. [Svelte Miniapp 微信直编验收](./wechat-production-acceptance.md)：无 Taro 原生 target、自动化门禁与当前限制。
+12. [微信 Fast Refresh](./wechat-fast-refresh.md)：单 watcher、串行合并重建和 build ID。
 13. [微信能力报告](./wechat-capability-report.md)：32 项 capability 的稳定性和真实验证等级。
-14. [微信 clean-package 验收](./wechat-package-acceptance.md)：四个 tarball 的外部安装、类型和构建证据。
-15. [微信性能基线](./wechat-performance.md)：与同版本 Taro Solid 的三轮交替生产构建对比。
-16. [微信 renderer 验收](./wechat-renderers.md)：WebView 证据和 Skyline 的明确边界。
+14. [微信 clean-package 验收](./wechat-package-acceptance.md)：Miniapp tarball 的外部安装、类型和直编证据。
+15. [微信性能历史基线](./wechat-performance.md)：迁移前与同版本 Taro Solid 的构建对比，仅作历史参考。
+16. [微信 renderer 历史验收](./wechat-renderers.md)：迁移前 WebView/Skyline 证据，不替代直编 target 复核。
 17. [微信人工真机/账号验收](./wechat-manual-acceptance.md)：支付、手机号、权限和硬件的安全检查表。
 18. [UI Workspace 与 Tauri 桌面端蓝图](./ui-tauri-blueprint.md)：UI 包迁移、ZUI Svelte 重命名、系统 API、桌面组件层、Win11 x64 和阶段性验收路线。
 19. [Tauri Windows 桌面端生产验收](./desktop-production-acceptance.md)：类型生成、权限、组件、HMR、真实系统探针、NSIS 和发布边界。

@@ -1,4 +1,3 @@
-import type Taro from '@tarojs/taro';
 import {
 	wechatCapabilities,
 	type DisposableHandle,
@@ -9,13 +8,16 @@ export type SafeProbeName = 'files' | 'session' | 'support' | 'system' | 'worker
 
 export const SAFE_PROBE_WORKER = 'workers/safe-probe.js';
 
-function accessFile(files: Taro.FileSystemManager, filePath: string): Promise<boolean> {
+type FileSystemManager = ReturnType<WechatMiniprogram.Wx['getFileSystemManager']>;
+type Worker = ReturnType<WechatMiniprogram.Wx['createWorker']>;
+
+function accessFile(files: FileSystemManager, filePath: string): Promise<boolean> {
 	return new Promise((resolve) => {
 		files.access({ fail: () => resolve(false), path: filePath, success: () => resolve(true) });
 	});
 }
 
-function readFile(files: Taro.FileSystemManager, filePath: string): Promise<string | ArrayBuffer> {
+function readFile(files: FileSystemManager, filePath: string): Promise<string | ArrayBuffer> {
 	return new Promise((resolve, reject) => {
 		files.readFile({
 			encoding: 'utf8',
@@ -26,13 +28,13 @@ function readFile(files: Taro.FileSystemManager, filePath: string): Promise<stri
 	});
 }
 
-function unlinkFile(files: Taro.FileSystemManager, filePath: string): Promise<void> {
+function unlinkFile(files: FileSystemManager, filePath: string): Promise<void> {
 	return new Promise((resolve, reject) => {
 		files.unlink({ fail: reject, filePath, success: () => resolve() });
 	});
 }
 
-function writeFile(files: Taro.FileSystemManager, filePath: string, data: string): Promise<void> {
+function writeFile(files: FileSystemManager, filePath: string, data: string): Promise<void> {
 	return new Promise((resolve, reject) => {
 		files.writeFile({ data, encoding: 'utf8', fail: reject, filePath, success: () => resolve() });
 	});
@@ -72,7 +74,7 @@ async function runFilesProbe(platform: WeChatPlatform): Promise<string> {
 	return 'Files probe: roundtrip and cleanup passed.';
 }
 
-function workerRoundtrip(handle: DisposableHandle<Taro.Worker>): Promise<void> {
+function workerRoundtrip(handle: DisposableHandle<Worker>): Promise<void> {
 	return new Promise((resolve, reject) => {
 		const requestId = `safe-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 		let settled = false;

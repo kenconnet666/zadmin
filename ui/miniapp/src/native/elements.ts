@@ -1,46 +1,34 @@
-import type { CameraProps } from '@tarojs/components/types/Camera.js';
-import type { CanvasProps } from '@tarojs/components/types/Canvas.js';
-import type { LivePlayerProps } from '@tarojs/components/types/LivePlayer.js';
-import type { LivePusherProps } from '@tarojs/components/types/LivePusher.js';
-import type { MapProps } from '@tarojs/components/types/Map.js';
-import type { OfficialAccountProps } from '@tarojs/components/types/OfficialAccount.js';
-import type { OpenDataProps } from '@tarojs/components/types/OpenData.js';
-import type {
-	PickerDateProps,
-	PickerMultiSelectorProps,
-	PickerRegionProps,
-	PickerSelectorProps,
-	PickerTimeProps
-} from '@tarojs/components/types/Picker.js';
-import type { ScrollViewProps } from '@tarojs/components/types/ScrollView.js';
-import type { SwiperProps } from '@tarojs/components/types/Swiper.js';
-import type { SwiperItemProps } from '@tarojs/components/types/SwiperItem.js';
-import type { TextProps } from '@tarojs/components/types/Text.js';
-import type { ViewProps } from '@tarojs/components/types/View.js';
-import type { VoipRoomProps } from '@tarojs/components/types/VoipRoom.js';
-import type { WebViewProps } from '@tarojs/components/types/WebView.js';
+interface NativeBaseProps {
+	class?: string;
+	id?: string;
+	style?: string;
+}
 
 export interface NativeElementPropsMap {
-	camera: CameraProps;
-	canvas: CanvasProps;
-	'live-player': LivePlayerProps;
-	'live-pusher': LivePusherProps;
-	map: MapProps;
-	'official-account': OfficialAccountProps;
-	'open-data': OpenDataProps;
-	picker:
-		| PickerDateProps
-		| PickerMultiSelectorProps
-		| PickerRegionProps
-		| PickerSelectorProps
-		| PickerTimeProps;
-	'scroll-view': ScrollViewProps;
-	swiper: SwiperProps;
-	'swiper-item': SwiperItemProps;
-	text: TextProps;
-	view: ViewProps;
-	'voip-room': VoipRoomProps;
-	'web-view': WebViewProps;
+	camera: NativeBaseProps & {
+		devicePosition?: 'back' | 'front';
+		flash?: 'auto' | 'off' | 'on' | 'torch';
+		mode?: 'normal' | 'scanCode';
+	};
+	canvas: NativeBaseProps & { canvasId?: string; type?: '2d' | 'webgl' };
+	'live-player': NativeBaseProps & { autoplay?: boolean; src: string };
+	'live-pusher': NativeBaseProps & { enableCamera?: boolean; url: string };
+	map: NativeBaseProps & { latitude: number; longitude: number; scale?: number };
+	'official-account': NativeBaseProps;
+	'open-data': NativeBaseProps & { type: string };
+	picker: NativeBaseProps & {
+		disabled?: boolean;
+		mode?: string;
+		range?: readonly unknown[];
+		value?: unknown;
+	};
+	'scroll-view': NativeBaseProps & { scrollX?: boolean; scrollY?: boolean };
+	swiper: NativeBaseProps & { autoplay?: boolean; circular?: boolean; current?: number };
+	'swiper-item': NativeBaseProps & { itemId?: string };
+	text: NativeBaseProps & { decode?: boolean; selectable?: boolean; userSelect?: boolean };
+	view: NativeBaseProps & { hidden?: boolean; hoverClass?: string };
+	'voip-room': NativeBaseProps & { openId?: string; roomId?: number };
+	'web-view': NativeBaseProps & { src: string };
 }
 
 export type NativeElementName = keyof NativeElementPropsMap;

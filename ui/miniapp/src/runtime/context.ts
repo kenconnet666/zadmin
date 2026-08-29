@@ -3,19 +3,19 @@ import { getContext } from 'svelte';
 import type { WeChatPlatform } from '../platform/service.ts';
 import type { ResourceScope } from './scope.ts';
 
-export const SVELTE_TARO_CONTEXT = Symbol.for('@zadmin/miniapp/runtime-context');
+export const MINIAPP_RUNTIME_CONTEXT = Symbol.for('@zadmin/miniapp/runtime-context');
 
-export interface SvelteTaroRuntimeContext {
+export interface MiniappRuntimeContext {
 	readonly appScope: ResourceScope;
 	readonly pageId?: string;
 	readonly platform?: WeChatPlatform;
 	readonly scope: ResourceScope;
 }
 
-export function getSvelteTaroContext(): SvelteTaroRuntimeContext {
-	const context = getContext<SvelteTaroRuntimeContext>(SVELTE_TARO_CONTEXT);
+export function getMiniappRuntimeContext(): MiniappRuntimeContext {
+	const context = getContext<MiniappRuntimeContext>(MINIAPP_RUNTIME_CONTEXT);
 	if (context === undefined) {
-		throw new Error('Svelte Taro runtime context is unavailable outside an App/Page mount.');
+		throw new Error('Miniapp runtime context is unavailable outside an App/Page mount.');
 	}
 	return context;
 }

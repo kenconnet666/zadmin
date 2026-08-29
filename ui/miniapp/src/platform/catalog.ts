@@ -53,7 +53,7 @@ const support = {
 		id: 'wechat.support.can-i-use',
 		officialDoc: `${WECHAT_API}/base/wx.canIUse.html`,
 		resource: 'one-shot',
-		taroType: 'types/api/base/index.d.ts#canIUse',
+		wechatType: 'types/api/base/index.d.ts#canIUse',
 		title: 'Capability support probe'
 	}),
 	system: capability({
@@ -62,7 +62,7 @@ const support = {
 		minBaseLibrary: '2.20.1',
 		officialDoc: `${WECHAT_API}/base/system/wx.getSystemSetting.html`,
 		resource: 'one-shot',
-		taroType: 'types/api/base/system.d.ts#getSystemSetting',
+		wechatType: 'types/api/base/system.d.ts#getSystemSetting',
 		title: 'System switches and device support'
 	})
 } as const;
@@ -76,7 +76,7 @@ const privacy = {
 		resource: 'one-shot',
 		requiresPrivacyConsent: true,
 		requiresUserGesture: true,
-		taroType: 'types/api/open-api/authorize.d.ts#authorize',
+		wechatType: 'types/api/open-api/authorize.d.ts#authorize',
 		title: 'Permission request'
 	}),
 	setting: capability({
@@ -86,7 +86,7 @@ const privacy = {
 		minBaseLibrary: '2.32.3',
 		officialDoc: `${WECHAT_API}/open-api/privacy/wx.getPrivacySetting.html`,
 		resource: 'one-shot',
-		taroType: 'types/api/open-api/privacy.d.ts#getPrivacySetting',
+		wechatType: 'types/api/open-api/privacy.d.ts#getPrivacySetting',
 		title: 'Privacy authorization state'
 	})
 } as const;
@@ -98,7 +98,7 @@ const identity = {
 		id: 'wechat.identity.check-session',
 		officialDoc: `${WECHAT_API}/open-api/login/wx.checkSession.html`,
 		resource: 'one-shot',
-		taroType: 'types/api/open-api/login.d.ts#checkSession',
+		wechatType: 'types/api/open-api/login.d.ts#checkSession',
 		title: 'Session validity check'
 	}),
 	login: capability({
@@ -108,7 +108,7 @@ const identity = {
 		officialDoc: `${WECHAT_API}/open-api/login/wx.login.html`,
 		resource: 'one-shot',
 		requiresBackend: true,
-		taroType: 'types/api/open-api/login.d.ts#login',
+		wechatType: 'types/api/open-api/login.d.ts#login',
 		title: 'One-time login code'
 	}),
 	phoneNumber: capability({
@@ -125,7 +125,7 @@ const identity = {
 		requiresPrivacyConsent: true,
 		requiresUserGesture: true,
 		stability: 'provisional',
-		taroType: '@tarojs/components/types/Button.d.ts#onGetPhoneNumber',
+		wechatType: 'miniprogram-api-typings#ButtonGetPhoneNumber',
 		title: 'One-time phone number code'
 	}),
 	soter: capability({
@@ -138,7 +138,7 @@ const identity = {
 		requiresBackend: true,
 		requiresUserGesture: true,
 		stability: 'provisional',
-		taroType: 'types/api/open-api/soter.d.ts#startSoterAuthentication',
+		wechatType: 'types/api/open-api/soter.d.ts#startSoterAuthentication',
 		title: 'SOTER biometric challenge'
 	})
 } as const;
@@ -156,7 +156,7 @@ const commerce = {
 		requiresBackend: true,
 		requiresUserGesture: true,
 		stability: 'provisional',
-		taroType: 'types/api/payment/index.d.ts#requestPayment',
+		wechatType: 'types/api/payment/index.d.ts#requestPayment',
 		title: 'Client payment bridge'
 	})
 } as const;
@@ -173,7 +173,7 @@ const media = {
 		requiresPrivacyConsent: true,
 		requiresUserGesture: true,
 		stability: 'provisional',
-		taroType: 'types/api/media/camera.d.ts#createCameraContext',
+		wechatType: 'types/api/media/camera.d.ts#createCameraContext',
 		title: 'Scoped camera context'
 	}),
 	choose: capability({
@@ -186,7 +186,7 @@ const media = {
 		resource: 'one-shot',
 		requiresPrivacyConsent: true,
 		requiresUserGesture: true,
-		taroType: 'types/api/media/video.d.ts#chooseMedia',
+		wechatType: 'types/api/media/video.d.ts#chooseMedia',
 		title: 'Choose image or video'
 	}),
 	scan: capability({
@@ -198,7 +198,7 @@ const media = {
 		resource: 'one-shot',
 		requiresUserGesture: true,
 		stability: 'provisional',
-		taroType: 'types/api/device/scan.d.ts#scanCode',
+		wechatType: 'types/api/device/scan.d.ts#scanCode',
 		title: 'Scan QR or barcode'
 	})
 } as const;
@@ -219,7 +219,7 @@ const locationCapabilities = {
 		requiresPrivacyConsent: true,
 		requiresUserGesture: true,
 		stability: 'provisional',
-		taroType: 'types/api/location/index.d.ts#startLocationUpdateBackground',
+		wechatType: 'types/api/location/index.d.ts#startLocationUpdateBackground',
 		title: 'Background location stream'
 	}),
 	current: capability({
@@ -234,7 +234,7 @@ const locationCapabilities = {
 		requiresPrivacyConsent: true,
 		requiresUserGesture: true,
 		stability: 'provisional',
-		taroType: 'types/api/location/index.d.ts#getLocation',
+		wechatType: 'types/api/location/index.d.ts#getLocation',
 		title: 'Current location'
 	}),
 	foreground: capability({
@@ -249,7 +249,7 @@ const locationCapabilities = {
 		requiresPrivacyConsent: true,
 		requiresUserGesture: true,
 		stability: 'provisional',
-		taroType: 'types/api/location/index.d.ts#startLocationUpdate',
+		wechatType: 'types/api/location/index.d.ts#startLocationUpdate',
 		title: 'Foreground location stream'
 	})
 } as const;
@@ -264,7 +264,7 @@ const hardware = {
 		resource: 'session',
 		requiresPrivacyConsent: true,
 		stability: 'provisional',
-		taroType: 'types/api/device/iBeacon.d.ts#startBeaconDiscovery',
+		wechatType: 'types/api/device/iBeacon.d.ts#startBeaconDiscovery',
 		title: 'iBeacon discovery'
 	}),
 	bluetooth: capability({
@@ -275,7 +275,7 @@ const hardware = {
 		realDevice: 'required',
 		resource: 'session',
 		stability: 'provisional',
-		taroType: 'types/api/device/bluetooth.d.ts#openBluetoothAdapter',
+		wechatType: 'types/api/device/bluetooth.d.ts#openBluetoothAdapter',
 		title: 'Bluetooth adapter'
 	}),
 	bleConnection: capability({
@@ -286,7 +286,7 @@ const hardware = {
 		realDevice: 'required',
 		resource: 'connection',
 		stability: 'provisional',
-		taroType: 'types/api/device/bluetooth-ble.d.ts#createBLEConnection',
+		wechatType: 'types/api/device/bluetooth-ble.d.ts#createBLEConnection',
 		title: 'BLE central connection'
 	}),
 	nfc: capability({
@@ -299,7 +299,7 @@ const hardware = {
 		realDevice: 'required',
 		resource: 'session',
 		stability: 'provisional',
-		taroType: 'types/api/device/nfc.d.ts#getNFCAdapter',
+		wechatType: 'types/api/device/nfc.d.ts#getNFCAdapter',
 		title: 'NFC discovery'
 	}),
 	sensors: capability({
@@ -310,7 +310,7 @@ const hardware = {
 		realDevice: 'required',
 		resource: 'listener',
 		stability: 'provisional',
-		taroType: 'types/api/device/accelerometer.d.ts#startAccelerometer',
+		wechatType: 'types/api/device/accelerometer.d.ts#startAccelerometer',
 		title: 'Motion sensors'
 	}),
 	wifi: capability({
@@ -322,7 +322,7 @@ const hardware = {
 		resource: 'session',
 		requiresPrivacyConsent: true,
 		stability: 'provisional',
-		taroType: 'types/api/device/wifi.d.ts#startWifi',
+		wechatType: 'types/api/device/wifi.d.ts#startWifi',
 		title: 'Wi-Fi session'
 	})
 } as const;
@@ -334,7 +334,7 @@ const system = {
 		id: 'wechat.system.files',
 		officialDoc: `${WECHAT_API}/file/wx.getFileSystemManager.html`,
 		resource: 'context',
-		taroType: 'types/api/files/index.d.ts#getFileSystemManager',
+		wechatType: 'types/api/files/index.d.ts#getFileSystemManager',
 		title: 'Sandbox file system'
 	}),
 	network: capability({
@@ -343,7 +343,7 @@ const system = {
 		id: 'wechat.system.network',
 		officialDoc: `${WECHAT_API}/device/network/wx.getNetworkType.html`,
 		resource: 'listener',
-		taroType: 'types/api/device/network.d.ts#getNetworkType',
+		wechatType: 'types/api/device/network.d.ts#getNetworkType',
 		title: 'Network state'
 	}),
 	storage: capability({
@@ -352,7 +352,7 @@ const system = {
 		id: 'wechat.system.storage',
 		officialDoc: `${WECHAT_API}/storage/wx.getStorage.html`,
 		resource: 'one-shot',
-		taroType: 'types/api/storage/index.d.ts#getStorage',
+		wechatType: 'types/api/storage/index.d.ts#getStorage',
 		title: 'Local storage'
 	})
 } as const;
@@ -366,7 +366,7 @@ const network = {
 		realDevice: 'required',
 		resource: 'session',
 		stability: 'provisional',
-		taroType: 'types/api/network/mdns.d.ts#startLocalServiceDiscovery',
+		wechatType: 'types/api/network/mdns.d.ts#startLocalServiceDiscovery',
 		title: 'mDNS discovery'
 	}),
 	tcp: capability({
@@ -377,7 +377,7 @@ const network = {
 		realDevice: 'recommended',
 		resource: 'connection',
 		stability: 'provisional',
-		taroType: 'types/api/network/tcp.d.ts#createTCPSocket',
+		wechatType: 'types/api/network/tcp.d.ts#createTCPSocket',
 		title: 'TCP socket'
 	}),
 	udp: capability({
@@ -388,7 +388,7 @@ const network = {
 		realDevice: 'recommended',
 		resource: 'connection',
 		stability: 'provisional',
-		taroType: 'types/api/network/udp.d.ts#createUDPSocket',
+		wechatType: 'types/api/network/udp.d.ts#createUDPSocket',
 		title: 'UDP socket'
 	}),
 	websocket: capability({
@@ -397,7 +397,7 @@ const network = {
 		id: 'wechat.network.websocket',
 		officialDoc: `${WECHAT_API}/network/websocket/wx.connectSocket.html`,
 		resource: 'connection',
-		taroType: 'types/api/network/websocket.d.ts#connectSocket',
+		wechatType: 'types/api/network/websocket.d.ts#connectSocket',
 		title: 'WebSocket connection'
 	})
 } as const;
@@ -411,7 +411,7 @@ const messaging = {
 			'https://developers.weixin.qq.com/miniprogram/dev/reference/api/Page.html#onShareAppMessage-Object-object',
 		resource: 'listener',
 		requiresUserGesture: true,
-		taroType: 'types/taro.lifecycle.d.ts#onShareAppMessage',
+		wechatType: 'miniprogram-api-typings#onShareAppMessage',
 		title: 'Share lifecycle bridge'
 	}),
 	subscribe: capability({
@@ -425,7 +425,7 @@ const messaging = {
 		requiresPrivacyConsent: true,
 		requiresUserGesture: true,
 		stability: 'provisional',
-		taroType: 'types/api/open-api/subscribe-message.d.ts#requestSubscribeMessage',
+		wechatType: 'types/api/open-api/subscribe-message.d.ts#requestSubscribeMessage',
 		title: 'Subscription message consent'
 	})
 } as const;
@@ -438,7 +438,7 @@ const compute = {
 		officialDoc: `${WECHAT_API}/worker/wx.createWorker.html`,
 		resource: 'connection',
 		stability: 'raw',
-		taroType: 'types/api/worker/index.d.ts#createWorker',
+		wechatType: 'types/api/worker/index.d.ts#createWorker',
 		title: 'Worker context'
 	}),
 	experimental: capability({
@@ -453,7 +453,7 @@ const compute = {
 		requiresAccountEntitlement: true,
 		requiresBackend: true,
 		stability: 'raw',
-		taroType: 'types/api/ai, cloud, ad, media/voip',
+		wechatType: 'types/api/ai, cloud, ad, media/voip',
 		title: 'Experimental AI, XR, cloud, ads, and VoIP'
 	})
 } as const;

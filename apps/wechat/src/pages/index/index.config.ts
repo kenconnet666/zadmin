@@ -1,5 +1,5 @@
-import type { PageConfig } from '@tarojs/taro';
+import type { MiniappPageConfig } from '@zadmin/miniapp/compiler';
 
 export default {
-	navigationBarTitleText: 'Svelte Taro'
-} satisfies PageConfig;
+	navigationBarTitleText: 'Svelte Miniapp'
+} satisfies MiniappPageConfig;

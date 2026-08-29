@@ -6,7 +6,7 @@ ZAdmin是一个 pnpm workspace中的多应用、可复用 Package和动态 Plugi
 
 `ui/zui`的样式层使用运行时 ICSS和Svelte编译优化双轨架构。公开调用只返回class字符串；可追踪的Svelte响应式叶子在编译时提升为inline CSS自定义属性，结构CSS由运行时确定性生成和缓存。完整合同见[ZUI ICSS生产架构](./zui-icss.md)。
 
-微信小程序不是 Web renderer 的条件分支。`@zadmin/miniapp`不依赖`@zadmin/zui`，独立拥有移动端Theme、`mcss()`、8个`M*`组件、compiler、App/Page runtime、微信平台能力与开发态监督器。当前迁移阶段仍以Taro renderer作为内部受测后端，公开组件和样式合同已经独立；下一阶段由微信target直接生成原生产物。
+微信小程序不是 Web renderer 的条件分支。`@zadmin/miniapp`不依赖`@zadmin/zui`，独立拥有移动端Theme、`mcss()`、8个`M*`组件、compiler、App/Page runtime、微信平台能力与开发态增量构建。微信target直接生成WXML、WXSS、JS和JSON，生产依赖图中没有第三方跨端runtime。
 
 ```text
 apps/
@@ -41,37 +41,35 @@ plugins/
 ```text
 apps/admin, apps/docs ──→ @zadmin/zui
 
-apps/wechat ──→ @zadmin/miniapp ──→ 微信target
-                    └─ temporary internal Taro backend
+apps/wechat ──→ @zadmin/miniapp ──→ 微信原生target
 ```
 
 - `zui`不依赖Miniapp、Taro、wx或任一小程序renderer。
 - `miniapp`不依赖ZUI；Theme、Token、组件Props和样式程序均为移动端独立实现。
-- 过渡期`platform.raw`仍保留完整Taro类型；直接微信target完成后改为`WechatMiniprogram.Wx`并删除Taro生产依赖。
+- `platform.raw`使用官方`WechatMiniprogram.Wx`类型；稳定facade负责权限、错误、资源owner和服务端安全边界。
 - 微信端前后端不拆成两个项目；小程序包只包含客户端代码，登录code兑换、手机号兑换、支付签名/回调等仍由现有服务端package/plugin负责。
 - 微信业务module在构建时静态合入小程序。开发时可以监听外部package realpath，生产安装/升级后必须重新构建、审核和发布，不能从网络加载可执行JavaScript。
 
 桌面端复用`@zadmin/zui`，通过`@zadmin/tauri`的强类型 facade调用系统能力。SvelteKit仅输出本地SPA静态文件；自定义Rust command/event/Channel由`tauri-specta`生成TypeScript bindings，正式应用不启动Node、SSR、sidecar或本地HTTP后端。
 
-## Svelte Taro编译与运行时
+## Svelte Miniapp编译与运行时
 
 ```text
 .svelte
   → 固定 Svelte 5.56.10 custom-renderer compiler
-  → Taro native element marker + external CSS
+  → Miniapp IR + 微信原生元素/WXSS白名单
   → @zadmin/miniapp/renderer
-  → Taro document/TaroNode
-  → base.wxml + WXSS + page JS
+  → 自有轻量节点树 + microtask setData
+  → WXML template + WXSS + Page/App JS + JSON
 ```
 
-- Taro Node plugin是CJS；其余公开运行时是ESM。
-- Taro CLI封闭的framework类型由`defineSvelteConfig()`接收`svelte`，运行时适配为Taro官方`none`以跳过内置React/Vue/Solid plugin，再显式加载本framework plugin。
-- 原生标签经marker和`onParseCreateElement`进入Taro模板；未知浏览器标签在编译期拒绝。
+- Node构建入口、浏览器/小程序runtime和测试入口分离；root入口不加载compiler或testing。
+- 原生标签必须存在于微信target白名单；未知浏览器标签在编译期拒绝。
 - App/Page各有`ResourceScope`；Page卸载自动释放listener、session、connection和context。
-- 固定Svelte runtime在package build时生成一个tree-shakeable dev/prod ESM。Taro产物仍只有一个Svelte runtime，生产图由246–247个transform module降到141–142个。
-- 第一阶段Fast Refresh是增量重建+开发者工具reload，不承诺保留组件局部状态的HMR。
+- 每个Page bundle只包含一份可tree-shake的Svelte runtime；节点变化在同一microtask合并为一次`setData`。
+- Fast Refresh是串行增量重建+开发者工具reload；compiler变更由CLI进程重启接管，不产生第二组watcher。
 
-完整生产边界见[Svelte Taro生产验收](./wechat-production-acceptance.md)。
+完整生产边界见[微信Miniapp生产验收](./wechat-production-acceptance.md)。
 
 ## Provider、Module与Plugin
 

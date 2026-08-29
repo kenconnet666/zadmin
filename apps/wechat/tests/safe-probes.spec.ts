@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import type Taro from '@tarojs/taro';
 import type { DisposableHandle, WeChatPlatform } from '@zadmin/miniapp/platform';
 
 Object.assign(globalThis, {
@@ -16,6 +15,11 @@ Object.assign(globalThis, {
 
 const { runSafeProbe, SAFE_PROBE_WORKER } = await import('../src/pages/capabilities/probes.ts');
 
+type FileSystemManager = ReturnType<WechatMiniprogram.Wx['getFileSystemManager']>;
+type Worker = ReturnType<WechatMiniprogram.Wx['createWorker']>;
+type WorkerListener = Parameters<Worker['onMessage']>[0];
+type ProcessKilledListener = Parameters<Worker['onProcessKilled']>[0];
+
 function fixture(
 	options: {
 		readonly fileValue?: string;
@@ -24,56 +28,58 @@ function fixture(
 	} = {}
 ) {
 	const files = new Map<string, string>();
-	let messageListener: Taro.Worker.OnMessageCallback = () => undefined;
-	let processKilledListener: Taro.Worker.OnMessageCallback = () => undefined;
+	let messageListener: WorkerListener = () => undefined;
+	let processKilledListener: ProcessKilledListener = () => undefined;
 	let workerClosed = false;
 	let workerPath: string | undefined;
 	let checkCalls = 0;
 	const fileSystem = {
-		access({ fail, path, success }: Taro.FileSystemManager.AccessOption) {
-			files.has(path) ? success?.({ errMsg: 'access:ok' }) : fail?.({ errMsg: 'access:fail' });
+		access({ fail, path, success }: Parameters<FileSystemManager['access']>[0]) {
+			files.has(path)
+				? success?.({ errCode: 0, errMsg: 'access:ok' })
+				: fail?.({ errCode: -1, errMsg: 'access:fail' });
 		},
-		readFile({ fail, filePath, success }: Taro.FileSystemManager.ReadFileOption) {
+		readFile({ fail, filePath, success }: Parameters<FileSystemManager['readFile']>[0]) {
 			const value = files.get(filePath);
 			value === undefined
-				? fail?.({ errMsg: 'readFile:fail' })
+				? fail?.({ errCode: -1, errMsg: 'readFile:fail' })
 				: success?.({ data: options.fileValue ?? value, errMsg: 'readFile:ok' });
 		},
-		unlink({ fail, filePath, success }: Taro.FileSystemManager.UnlinkOption) {
+		unlink({ fail, filePath, success }: Parameters<FileSystemManager['unlink']>[0]) {
 			if (options.unlinkFails === true) {
-				fail?.({ errMsg: 'unlink:fail' });
+				fail?.({ errCode: -1, errMsg: 'unlink:fail' });
 				return;
 			}
 			files.delete(filePath)
-				? success?.({ errMsg: 'unlink:ok' })
-				: fail?.({ errMsg: 'unlink:fail' });
+				? success?.({ errCode: 0, errMsg: 'unlink:ok' })
+				: fail?.({ errCode: -1, errMsg: 'unlink:fail' });
 		},
-		writeFile({ data, filePath, success }: Taro.FileSystemManager.WriteFileOption) {
+		writeFile({ data, filePath, success }: Parameters<FileSystemManager['writeFile']>[0]) {
 			files.set(filePath, String(data));
-			success?.({ errMsg: 'writeFile:ok' });
+			success?.({ errCode: 0, errMsg: 'writeFile:ok' });
 		}
-	} as unknown as Taro.FileSystemManager;
+	} as unknown as FileSystemManager;
 	const worker = {
-		onMessage(listener: Taro.Worker.OnMessageCallback) {
+		onMessage(listener: WorkerListener) {
 			messageListener = listener;
 		},
-		onProcessKilled(listener: Taro.Worker.OnMessageCallback) {
+		onProcessKilled(listener: ProcessKilledListener) {
 			processKilledListener = listener;
 		},
-		postMessage(message: TaroGeneral.IAnyObject) {
+		postMessage(message: Record<string, unknown>) {
 			if (options.workerResponds === false) return;
 			queueMicrotask(() =>
 				messageListener({
 					ready: message.payload === 'ping',
 					requestId: message.requestId
-				} as unknown as Taro.Worker.OnMessageCallbackResult)
+				} as never)
 			);
 		},
 		terminate() {
 			workerClosed = true;
 		}
-	} as Taro.Worker;
-	const handle: DisposableHandle<Taro.Worker> = {
+	} as unknown as Worker;
+	const handle: DisposableHandle<Worker> = {
 		get closed() {
 			return workerClosed;
 		},
@@ -112,7 +118,7 @@ function fixture(
 		checkCalls: () => checkCalls,
 		files,
 		platform,
-		processKilled: () => processKilledListener({ message: {} }),
+		processKilled: () => processKilledListener({ message: {} } as never),
 		workerClosed: () => workerClosed,
 		workerPath: () => workerPath
 	};

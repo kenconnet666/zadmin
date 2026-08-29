@@ -1,35 +1,15 @@
 import { describe, expect, it } from 'vitest';
 
-import { defineSvelteConfig } from '../src/vite/index.ts';
+import { defineMiniappConfig } from '../src/vite/index.ts';
 
-describe('defineSvelteConfig', () => {
-	it('preserves a valid strongly typed Taro config', () => {
-		const config = defineSvelteConfig({
-			compiler: { type: 'vite' },
-			framework: 'svelte',
-			plugins: ['@zadmin/miniapp'],
-			projectName: 'fixture'
-		});
-		expect(config.framework).toBe('none');
-		expect(config.projectName).toBe('fixture');
+describe('defineMiniappConfig', () => {
+	it('freezes the direct WeChat build contract', () => {
+		const config = defineMiniappConfig({ outputRoot: 'dist/wechat', target: 'wechat' });
+		expect(config).toEqual({ outputRoot: 'dist/wechat', target: 'wechat' });
+		expect(Object.isFrozen(config)).toBe(true);
 	});
 
-	it('rejects missing plugin and non-Vite compilers', () => {
-		expect(() =>
-			defineSvelteConfig({
-				compiler: { type: 'vite' },
-				framework: 'svelte',
-				plugins: [],
-				projectName: 'missing'
-			})
-		).toThrow(/must register/);
-		expect(() =>
-			defineSvelteConfig({
-				compiler: { type: 'webpack5' },
-				framework: 'svelte',
-				plugins: ['@zadmin/miniapp'],
-				projectName: 'webpack'
-			})
-		).toThrow(/require compiler/);
+	it('rejects unimplemented targets', () => {
+		expect(() => defineMiniappConfig({ target: 'alipay' } as never)).toThrow(/only supports/);
 	});
 });

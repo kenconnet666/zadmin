@@ -1,29 +1,33 @@
 import { mount, tick, unmount } from 'svelte';
 import { describe, expect, it } from 'vitest';
 
-import taroRenderer, { createTaroFragment } from '../src/renderer/index.ts';
+import miniappRenderer, { createMiniappFragment } from '../src/renderer/index.ts';
+import type { WeChatSnapshot } from '../src/targets/wechat/elements.ts';
 import ReactiveFixture from './ReactiveFixture.svelte';
 
-function text(node: { childNodes: unknown[]; nodeName: string; textContent: string }): string {
-	if (node.nodeName === '#text') return node.textContent;
-	return node.childNodes.map((child) => text(child as typeof node)).join('');
+function elementId(node: WeChatSnapshot, name: string): string | undefined {
+	if (node.kind === 'text') return undefined;
+	if (node.kind === 'element' && node.name === name) return node.id;
+	for (const child of node.children) {
+		const found = elementId(child, name);
+		if (found !== undefined) return found;
+	}
+	return undefined;
 }
 
 describe('compiled Svelte renderer integration', () => {
 	it('updates runes, events, if blocks, keyed each blocks, and unmounts cleanly', async () => {
-		const target = createTaroFragment();
-		const component = mount(ReactiveFixture, { renderer: taroRenderer, target });
-		const view = target.firstChild;
-		if (view === null || !('childNodes' in view)) throw new Error('Fixture root was not mounted.');
-		expect(text(view)).toContain('count:0');
-		expect(text(view)).toContain('item:1item:2');
+		const target = createMiniappFragment();
+		const component = mount(ReactiveFixture, { renderer: miniappRenderer, target });
+		expect(target.textContent).toContain('count:0');
+		expect(target.textContent).toContain('item:1item:2');
 
-		const button = view.childNodes.find((node) => node.nodeName === 'button');
+		const button = elementId(target.snapshot(), 'button');
 		if (button === undefined) throw new Error('Fixture button was not mounted.');
-		button.__handlers.tap[0].call(button, { type: 'tap' });
+		target.dispatch(button, 'tap', { detail: {}, type: 'tap' });
 		await tick();
-		expect(text(view)).toContain('count:1');
-		expect(text(view)).toContain('active');
+		expect(target.textContent).toContain('count:1');
+		expect(target.textContent).toContain('active');
 
 		await unmount(component);
 		expect(target.childNodes).toHaveLength(0);

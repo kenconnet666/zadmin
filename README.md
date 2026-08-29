@@ -82,7 +82,7 @@ pnpm lint
 - [开发态热重载](./apps/docs/content/development-hmr.md)
 - [ZUI ICSS 生产架构](./apps/docs/content/zui-icss.md)
 - [ZUI 使用与外部接入](./apps/docs/content/zui-usage.md)
-- [Svelte Taro 生产验收](./apps/docs/content/wechat-production-acceptance.md)
+- [Svelte Miniapp 微信直编验收](./apps/docs/content/wechat-production-acceptance.md)
 - [微信 Fast Refresh](./apps/docs/content/wechat-fast-refresh.md)
 - [微信能力报告](./apps/docs/content/wechat-capability-report.md)
 - [测试与验收](./apps/docs/content/testing.md)

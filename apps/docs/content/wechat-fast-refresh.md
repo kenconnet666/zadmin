@@ -1,52 +1,36 @@
 # WeChat Fast Refresh
 
-`pnpm dev:wechat` starts one supervisor. It first builds `@zadmin/miniapp` and its single prebundled Svelte runtime, then directly owns one TypeScript watcher, one `svelte-package` component watcher, and the temporary Taro Vite target watcher. It does not nest `concurrently` processes, and it removes its lock plus all children on `SIGINT`/`SIGTERM`.
+`pnpm dev:wechat` 现在直接运行 `@zadmin/miniapp` 的 `miniapp dev`。它不再启动 Taro、额外 TypeScript watcher 或组件打包 watcher；一个进程同时监听应用源码和 workspace 内 Miniapp 源码，并串行合并短时间内重复的文件事件。
 
-## Change policy
+## 变化与重建
 
-| Change                                            | Action                                             |
-| ------------------------------------------------- | -------------------------------------------------- |
-| `apps/wechat/**/*.svelte`                         | Taro incremental build                             |
-| `miniapp` components/theme/styles                 | component package watch plus incremental build     |
-| `miniapp` runtime/platform/native/module/renderer | TypeScript watch plus Taro incremental build       |
-| `miniapp` compiler/plugin/vite                    | rebuild package and restart only the Taro child    |
-| `apps/wechat/src/workers/**`                      | restart Taro child and recopy the Worker entry     |
-| `app.config.ts` or Taro host config               | restart only the Taro child                        |
-| package manifest, workspace file, or lockfile     | stop with exit code 75 and require install/restart |
+| 变化                                       | 行为                                            |
+| ------------------------------------------ | ----------------------------------------------- |
+| `apps/wechat/src/**`                       | 重新编译应用、页面、Worker 与配置               |
+| `ui/miniapp/src/**`                        | 重新构建当前 workspace Miniapp 包后再编译宿主   |
+| `package.json`、lockfile 或 workspace 配置 | 不在运行中的 watcher 内安装依赖；开发者重启命令 |
 
-External first-party plugin source roots can be listed in ignored `apps/wechat/.wechat/plugins.json` as an array of absolute paths or `{ "paths": [] }`. The supervisor resolves real paths and follows their source changes. A dependency-manifest change still stops instead of mutating the install while children are active.
+watcher 的约束：
 
-## Build identity and state
+- 首次构建完成后才开始监听，避免把初始产物写入识别为源码变化；
+- 任意时刻最多有一次构建；构建期间收到的变化合并为下一轮，不并发覆盖 `dist/wechat`；
+- 失败只报告诊断并继续监听，下一次有效修改可恢复；
+- `Ctrl+C`、`SIGINT` 或 `SIGTERM` 会关闭文件 watcher，不留下子进程或锁文件；
+- 生产命令始终先清理目标目录，再写出完整原生产物。
 
-Every successful development bundle publishes one ID through `globalThis.__ZADMIN_BUILD_ID__` and the development-only storage key `__zadmin_build_id__`. The virtual build-id module is forcibly reloaded on every Rollup watch cycle, including cycles that only transform platform TypeScript. A failed build never reaches `writeBundle`, so it cannot replace the last successful ID. Production compilation emits neither identifier.
+## Build identity
 
-Ignored runtime evidence:
+每次成功的开发构建都会生成新的 build ID，并同时写入：
 
-- `.wechat/build-status.json`: current source, ID, timestamps, duration, result, restart reason, and watcher count.
-- `.wechat/build-events.jsonl`: append-only status/change/restart/refresh trail.
-- `.wechat/supervisor.lock`: one-supervisor process lock; stale locks are recovered only when their PID is no longer alive.
+- bundle 中的 `globalThis.__ZADMIN_BUILD_ID__`；
+- 微信开发期 storage key `__zadmin_build_id__`。
 
-WeChat DevTools normally notices `dist` itself. If an already-authorized `wechatide` CLI client is available, set `ZADMIN_WECHATIDE_CLIENT` to its client name; the supervisor waits for automatic reload, compares the storage build ID, and calls `simulator_refresh` once only when stale. Without that opt-in, fallback remains disabled rather than opening an unattended authorization flow. MCP acceptance can still perform the same compare/refresh explicitly.
+失败构建不会替换上一次成功 ID。生产构建不包含这两个标记。微信开发者工具通常会自动发现 `dist/wechat` 变化；自动刷新是否发生必须以模拟器实际 build ID 为准，不能只以 watcher 日志为准。
 
-## Measured acceptance on this Windows machine
+## 当前验证边界
 
-Measured on 2026-08-25 with Node 24.18, Taro 4.2.1, Vite 4.5.14, and WeChat DevTools Stable 2.02.2608040:
+2026-08-29 已验证实际宿主直编成功，输出 15 个 WXML、WXSS、JS、JSON 与 sourcemap 文件，且生产源码和产物不含 `@tarojs`。本地还验证了 watcher 的串行重建和 build-ID 写入代码路径。
 
-| Scenario                 |    Taro-reported build | Observed source-to-success | Result                                                                                            |
-| ------------------------ | ---------------------: | -------------------------: | ------------------------------------------------------------------------------------------------- |
-| App `.svelte` edit       |            1.54–2.05 s |                1.25–2.81 s | passed; visible text and runtime build ID updated automatically                                   |
-| Miniapp component edit   |            1.51–1.56 s |                  under 3 s | passed; no full supervisor restart                                                                |
-| Platform TypeScript edit |            1.50–1.53 s |                  under 3 s | passed after retaining virtual marker/CSS caches across incremental rounds                        |
-| Worker entry edit        |            7.10–7.20 s |              12.12–12.22 s | passed twice; Taro child restart is required because static-copy does not watch Worker sources    |
-| Compiler/plugin edit     | 6.69–6.92 s cold build |       approximately 11.4 s | functionally passed; improved by runtime prebundling, but misses the provisional 8 s total target |
-| App-config/route edit    |    approximately 6.9 s |       approximately 11.5 s | functionally passed; narrowly misses the provisional 10 s total target                            |
+微信开发者工具的本轮授权仍由外部 CLI 流程控制；在授权完成并重新跑模拟器前，直编 target 只标记为 build/test-verified，不把旧 Taro 模拟器或真机截图继承为新 runtime 的证据。
 
-The cold-restart targets remain a measured performance gap, not a correctness gap. Prebundling the exact pinned Svelte runtime reduced the Taro graph from 246–247 to 141–142 transformed modules and the cold build itself by about four seconds. The remaining cost is Taro CLI process startup plus the full build. The supervisor already removes duplicate file events, limits intentional child shutdown to 500 ms, and refuses in-process Taro Hook replacement because Taro has no Hook disposer.
-
-Taro Vite may log that `src/comp` is missing during incremental rounds while it injects `usingComponents.comp`; the same build emits the expected root `dist/comp.js`, `comp.json`, and `comp.wxml`. Production builds do not log this warning, and simulator interaction passed. Revisit it when upgrading the fixed Taro version rather than adding a fake source component.
-
-Taro builds use the documented `--no-check` option. Taro 4.2.1 Doctor fetches its schema at build time; its offline fallback rejects the intentional plugin runtime `framework: "none"` and may still exit with code 0 before building. The app instead performs deterministic package config validation, clears old `dist`, executes the real target build, and verifies the new Worker declaration/output so stale artifacts cannot masquerade as success.
-
-## Cleanup evidence
-
-After an interactive `Ctrl+C`, acceptance found zero matching supervisor, Taro-watch, TypeScript-watch, or `svelte-package` Node processes and no remaining supervisor lock. Temporary source edits used for timing were restored before production validation.
+旧 Taro supervisor 在 2026-08-25 的 1.5–12.2 秒数据属于迁移前历史基线，不再是当前 HMR 合同。新 watcher 的端到端编辑到模拟器耗时需在直编 target 获得 DevTools 会话后重新记录。

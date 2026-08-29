@@ -1,24 +1,18 @@
 # 换设备开发交接
 
-更新时间：2026-08-26。
+更新时间：2026-08-29。
 
 ## 当前结论
 
 DI容器、Plugin Module、上下游插件类型传播、服务端/客户端独立HMR、Artifact安装和构建验证已经实现并完成真实浏览器验收。后续业务开发直接在此基础上添加真实数据库、鉴权、ERP/CRM/审批流业务，不需要再设计第二套插件调用方式。
 
-ZUI ICSS和五个基础组件已经按[ICSS生产架构](./zui-icss.md)完成生产验收：公开API只有class字符串；Svelte编译器把安全动态叶子提升为inline CSS变量；运行时负责结构CSS、普通TS回退、SSR Registry和HMR。不要回到`{ class, style }`或完整静态提取路线。外部接入见[ZUI使用与外部接入](./zui-usage.md)。
-
-2026-08-25 已把平台无关的Theme、Token、ICSS Program和设计Props提取到`@zadmin/zui/core`，原Web能力迁移为`@zadmin/zui`；Web API与行为未扩展，两个tarball已完成隔离安装、check、build和SSR回归。
+`@zadmin/zui`现为唯一浏览器组件包，内部包含Theme、Token、ICSS、recipe/slot recipe、Symbol attachment carrier和8个`Z*`基础组件。`@zadmin/sveltekit/zui`负责request-local SSR runtime、critical CSS、CSP nonce/hash和客户端集成。公开ICSS API仍只返回class字符串；第一方回调参数统一为`s`，CSS标准关键字补系统元数据，稳定视觉字面量补语义Theme token。
 
 2026-08-26 已把Svelte/UI平台包统一迁入根`ui/`，并完成`@zadmin/tauri`、9个桌面组件和`apps/desktop`。桌面端使用SvelteKit SPA静态产物、Tauri 2最小capability和`tauri-specta`生成bindings；真实Win11 x64静态页面、系统探针、HMR、release exe、NSIS安装/卸载均通过。当前发布件未签名，正式外部分发前必须补Authenticode；完整证据见[桌面生产验收](./desktop-production-acceptance.md)。
 
-Svelte→Taro微信链路也已完成默认WebView生产验收：`@zadmin/miniapp`提供CJS framework plugin、compiler、renderer、App/Page runtime、静态Taro module、native types和scoped WeChat platform；`@zadmin/zui-taro`提供五个基础组件、三个流程组件和严格ICSS子集；`apps/wechat`是受版本控制的验收宿主。Fast Refresh、外部tarball、能力报告和Taro Solid性能对比均已落库。不要把Skyline build-verified或账号/硬件mock证据写成真机验收。
+`@zadmin/miniapp`现为独立移动框架：不依赖ZUI，内含Theme、`mcss()`、8个`M*`组件、compiler、custom renderer、App/Page runtime、官方微信类型平台能力和直接微信target。`apps/wechat`从Svelte源码生成WXML、WXSS、JS、JSON和sourcemap，生产依赖及产物没有Taro。当前本地13个测试文件/41项测试、宿主8项测试和15文件实际构建通过；clean-package和coverage留给云端CI。
 
-2026-08-25 补充真实模拟器验收时发现从原生`tap`同步调用Taro路由会让目标Svelte Page越过context初始化边界。`@zadmin/miniapp`现提供Promise-first强类型`platform.navigation`，把五种页面切换延迟到原生事件分发结束后的下一任务；首页到能力页、三个安全探针和空控制台已经复核。不要在事件处理器里延迟调用`getWeChatPlatform()`，应在组件初始化时捕获platform。
-
-同日完成受监督Android真机验收：Xiaomi 22081212C / Android API 35 / WeChat 8.0.76 / base library 3.17.1。首页渲染正常，真机WXML树确认导航到`pages/capabilities/index`；network=`wifi`、临时storage roundtrip/removal、只读privacy=`no pending consent`通过，Console始终为空，服务正常且等待/未确认消息均为0。该次只提升这三个capability到device-verified；没有触发账号、商户、权限或硬件能力。
-
-第一批安全能力随后完成：新增Support、System、Session、Files、Worker正式探针，连同原三项共8个capability达到device-verified。Files验证唯一临时文件写/读/unlink及删除后不存在；Worker连续两次create/message/terminate通过，返回首页后WXML恢复且Console为空。Worker源码变化由supervisor自动restart Taro child，实测12.1–12.2秒。生产构建使用`--no-check`避开Taro Doctor网络schema/离线旧schema漂移，先清空`dist`并在构建后验证Worker声明与文件。
+2026-08-25的Taro模拟器、Android真机、Skyline、性能和能力探针记录只作为迁移前历史证据。直编target尚需在当前微信开发者工具CLI授权完成后重新做模拟器/HMR复核，不能继承旧runtime的截图或验证等级。账号、支付、手机号、权限、上传与硬件操作继续要求单独授权。
 
 关键代码检查点：
 
@@ -131,9 +125,8 @@ ui/
   sveltekit/
   miniapp/
   tauri/
-  zui-core/
-  zui-taro/
-  zui-svelte/
+  webview/        # C# Windows target实施中
+  zui/
 
 plugins/
   approval/
@@ -186,20 +179,19 @@ plugin.ts
 | SvelteKit ZUI SSR/CSP       | `ui/sveltekit/src/lib/zui/`                            |
 | ZUI基础组件                 | `ui/zui/src/lib/components/`                           |
 | ZUI接入文档                 | `apps/docs/content/zui-usage.md`                       |
-| Taro framework plugin       | `ui/miniapp/src/plugin/index.cts`                      |
-| Svelte Taro compiler        | `ui/miniapp/src/compiler/`                             |
-| Taro renderer/runtime       | `ui/miniapp/src/renderer/`、`runtime/`                 |
+| Svelte Miniapp compiler     | `ui/miniapp/src/compiler/`                             |
+| Miniapp renderer/runtime    | `ui/miniapp/src/renderer/`、`runtime/`                 |
+| 微信直接target              | `ui/miniapp/src/targets/wechat/`                       |
 | WeChat platform/catalog     | `ui/miniapp/src/platform/`                             |
 | WeChat安全页面导航          | `ui/miniapp/src/platform/service.ts`                   |
 | WeChat安全探针              | `apps/wechat/src/pages/capabilities/probes.ts`         |
 | WeChat安全Worker            | `apps/wechat/src/workers/safe-probe.js`                |
-| Taro module/native/testing  | `ui/miniapp/src/module/`、`native/`、`testing/`        |
-| ZUI Taro                    | `ui/zui-taro/src/`                                     |
+| Miniapp module/native/test  | `ui/miniapp/src/module/`、`native/`、`testing/`        |
 | Tauri 系统能力              | `ui/tauri/src/api/`、`runtime/`、`testing/`            |
 | Tauri Svelte组件            | `ui/tauri/src/components/`                             |
 | Windows桌面宿主             | `apps/desktop/src/`、`src-tauri/`                      |
 | tauri-specta bindings       | `apps/desktop/src/lib/generated/tauri.ts`              |
-| WeChat supervisor           | `apps/wechat/config/supervisor.mjs`                    |
+| WeChat直编/HMR CLI          | `ui/miniapp/src/cli.ts`、`compiler/build.ts`           |
 | 微信生产验收                | `apps/docs/content/wechat-production-acceptance.md`    |
 
 ## 当前调用方式

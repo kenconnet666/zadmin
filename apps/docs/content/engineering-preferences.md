@@ -54,12 +54,12 @@
 - CSS类型、运行时能力和文档从同一属性元数据生成，避免旧ZUI式多份配置漂移。
 - 高频值变化不得生成新class、rule或style tag；这是行为验收，不是可选性能建议。
 
-Taro不是把Web CSS API原样搬过去：
+Miniapp不是把Web CSS API原样搬过去：
 
-- `zui-core`只保存Theme、Token、StyleProgram、dynamic slot和设计Props；不能出现Svelte、Taro、DOM、wx或Node依赖。
-- `zui-svelte`与`zui-taro`允许各自拥有薄Svelte模板，不能互相依赖；至少三个模板被真实证明相同前，不提取共享Svelte源码。
-- Taro ICSS只承诺可诊断子集：平面declaration、token、px/percent/显式rpx、稳定class、静态WXSS和动态叶子inline style。浏览器selector/CSSOM语义不能静默假装支持。
-- 动态Taro叶子每轮只更新style值，不生成新class或WXSS rule；空值跳过，数值必须finite。
+- `@zadmin/zui`只服务浏览器和通用WebView，不能出现wx或小程序renderer依赖。
+- `@zadmin/miniapp`拥有独立Theme、`mcss()`、WXSS白名单和`M*`组件，不依赖或包装ZUI组件。
+- Miniapp样式只承诺可诊断子集：平面declaration、移动端token、px/percent/显式rpx、稳定class和静态WXSS；浏览器selector/CSSOM语义不能静默假装支持。
+- 微信target直接生成WXML、WXSS、JS和JSON；生产依赖中禁止引入Taro或其他跨端runtime。
 
 ## 微信与多目标
 

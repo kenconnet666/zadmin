@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-	composeTaroModules,
-	defineTaroModule,
+	composeMiniappModules,
+	defineMiniappModule,
 	diagnoseCapabilityConfig
 } from '../src/module/index.ts';
 import { wechatCapabilities } from '../src/platform/index.ts';
 
-describe('static Taro modules', () => {
-	const inventory = defineTaroModule({
+describe('static Miniapp modules', () => {
+	const inventory = defineMiniappModule({
 		capabilities: {
 			optional: [wechatCapabilities.media.scan],
 			required: [wechatCapabilities.identity.login]
@@ -19,23 +19,25 @@ describe('static Taro modules', () => {
 
 	it('preserves route and capability literals while composing deterministically', () => {
 		expect(inventory.routes[0]).toBe('./pages/inventory/index.svelte');
-		const composed = composeTaroModules([inventory]);
+		const composed = composeMiniappModules([inventory]);
 		expect(composed.routes).toEqual(['./pages/inventory/index.svelte']);
 		expect(composed.capabilities.map(({ id }) => id)).toEqual([
 			'wechat.identity.login',
 			'wechat.media.scan'
 		]);
-		expect(() => composeTaroModules([inventory, inventory])).toThrow(/Duplicate Taro module id/u);
+		expect(() => composeMiniappModules([inventory, inventory])).toThrow(
+			/Duplicate Miniapp module id/u
+		);
 	});
 
 	it('rejects malformed modules and diagnoses required app configuration', () => {
 		expect(() =>
-			defineTaroModule({
+			defineMiniappModule({
 				capabilities: { required: [] },
 				id: 'bad module',
 				routes: ['./page.ts']
 			})
-		).toThrow(/Invalid Taro module id/u);
+		).toThrow(/Invalid Miniapp module id/u);
 		const diagnostics = diagnoseCapabilityConfig({}, [wechatCapabilities.location.background]);
 		expect(diagnostics.map(({ field }) => field).sort()).toEqual([
 			'permission',

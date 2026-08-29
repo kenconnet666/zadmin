@@ -6,7 +6,6 @@
 	"sideEffects": [
 		"**/*.svelte"
 	],
-	"main": "./dist/plugin/index.cjs",
 	"types": "./src/index.ts",
 	"bin": {
 		"miniapp": "./dist/cli.js"
@@ -22,12 +21,7 @@
 		".": {
 			"types": "./src/index.ts",
 			"svelte": "./src/index.ts",
-			"import": "./dist/index.js",
-			"require": "./dist/plugin/index.cjs"
-		},
-		"./plugin": {
-			"types": "./src/plugin/types.ts",
-			"require": "./dist/plugin/index.cjs"
+			"import": "./dist/index.js"
 		},
 		"./compiler": {
 			"types": "./src/compiler/index.ts",
@@ -59,24 +53,17 @@
 		},
 		"./vite": {
 			"types": "./src/vite/index.ts",
-			"import": "./dist/vite/index.js",
-			"require": "./dist/plugin/index.cjs"
+			"import": "./dist/vite/index.js"
 		}
 	},
 	"publishConfig": {
 		"access": "public",
-		"main": "./dist/plugin/index.cjs",
 		"types": "./dist/index.d.ts",
 		"exports": {
 			".": {
 				"types": "./dist/index.d.ts",
 				"svelte": "./dist/index.js",
-				"import": "./dist/index.js",
-				"require": "./dist/plugin/index.cjs"
-			},
-			"./plugin": {
-				"types": "./dist/plugin/types.d.ts",
-				"require": "./dist/plugin/index.cjs"
+				"import": "./dist/index.js"
 			},
 			"./compiler": {
 				"types": "./dist/compiler/index.d.ts",
@@ -108,23 +95,20 @@
 			},
 			"./vite": {
 				"types": "./dist/vite/index.d.ts",
-				"import": "./dist/vite/index.js",
-				"require": "./dist/plugin/index.cjs"
+				"import": "./dist/vite/index.js"
 			}
 		}
 	},
 	"scripts": {
-		"build": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\" && tsc -p tsconfig.json && svelte-package --input src/components --output dist/components && node scripts/build-runtime.mjs",
-		"benchmark": "pnpm build && node scripts/benchmark.mjs && pnpm -w exec prettier --write apps/docs/content/wechat-performance.json apps/docs/content/wechat-performance.md",
+		"build": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\" && tsc -p tsconfig.json && svelte-package --input src/components --output dist/components",
 		"check": "tsc -p tsconfig.test.json --noEmit && svelte-check --tsconfig ./tsconfig.test.json",
 		"report": "pnpm build && node scripts/generate-capability-report.mjs && pnpm -w exec prettier --write apps/docs/content/wechat-capability-report.json apps/docs/content/wechat-capability-report.md",
 		"test": "pnpm build && vitest --run tests",
 		"test:coverage": "pnpm build && vitest --run --coverage tests",
-		"test:package": "node scripts/accept-package.mjs && pnpm -w exec prettier --write apps/docs/content/wechat-package-acceptance.json apps/docs/content/wechat-package-acceptance.md"
+		"test:package": "node scripts/accept-package.mjs && pnpm -w exec prettier --write apps/docs/content/wechat-package-acceptance.json"
 	},
 	"keywords": [
 		"svelte",
-		"taro",
 		"wechat",
 		"mini-program",
 		"custom-renderer"
@@ -140,20 +124,10 @@
 		"miniprogram-api-typings": "catalog:wechat"
 	},
 	"peerDependencies": {
-		"@tarojs/components": "4.2.1",
-		"@tarojs/runtime": "4.2.1",
-		"@tarojs/service": "4.2.1",
-		"@tarojs/shared": "4.2.1",
-		"@tarojs/taro": "4.2.1",
 		"svelte": "5.56.10"
 	},
 	"devDependencies": {
 		"@sveltejs/package": "catalog:",
-		"@tarojs/components": "catalog:wechat",
-		"@tarojs/runtime": "catalog:wechat",
-		"@tarojs/service": "catalog:wechat",
-		"@tarojs/shared": "catalog:wechat",
-		"@tarojs/taro": "catalog:wechat",
 		"@types/node": "catalog:",
 		"@vitest/coverage-v8": "catalog:",
 		"svelte": "https://pkg.svelte.dev/svelte/c/eb7532dd70fb11b36258347c44cf3910d244f987",

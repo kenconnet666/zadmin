@@ -6,7 +6,7 @@ import {
 	styleVirtualId
 } from '../src/compiler/index.ts';
 
-describe('Svelte Taro compiler', () => {
+describe('Svelte Miniapp compiler', () => {
 	it('compiles through the custom renderer and emits CSS and component metadata', async () => {
 		const plugin = createSvelteVitePlugin({ dev: true });
 		plugin.configResolved?.({ command: 'build', mode: 'development', root: 'C:/fixture' });
@@ -148,7 +148,7 @@ describe('Svelte Taro compiler', () => {
 			?.call({ warn() {} }, source, 'C:/fixture/Unsupported.svelte')
 			.catch((reason: unknown) => reason);
 		expect(error).toMatchObject({
-			code: 'svelte_taro_unsupported',
+			code: 'miniapp_unsupported',
 			column: expect.any(Number),
 			filename: 'C:/fixture/Unsupported.svelte',
 			line: expect.any(Number)
