@@ -1,4 +1,4 @@
-import { icssPreprocess } from './src/lib/compiler/preprocess.ts';
+import { icssPreprocess } from './src/compiler/preprocess.ts';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {

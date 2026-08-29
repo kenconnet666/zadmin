@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { defaultTheme, defineTheme, extendTheme } from '../src/lib/core.js';
+import { defaultTheme, defineTheme, extendTheme } from '../src/entrypoints/index.js';
 
 describe('ZUI themes', () => {
 	it('copies and deeply freezes the strict theme contract', () => {

@@ -1,8 +1,8 @@
 import type { ComponentProps } from 'svelte';
 
-import { defaultTheme, type IcssStyle } from '../src/lib/core.js';
-import DirectZBox from '../src/lib/components/gene/ZBox.svelte';
-import type { ZBoxProps as DirectZBoxProps } from '../src/lib/components/gene/ZBox.svelte';
+import { defaultTheme, type IcssStyle } from '../src/entrypoints/index.js';
+import DirectZBox from '../src/components/gene/ZBox.svelte';
+import type { ZBoxProps as DirectZBoxProps } from '../src/components/gene/ZBox.svelte';
 import {
 	ZBox,
 	ZButton,
@@ -12,7 +12,7 @@ import {
 	type SlotRecipeSelection,
 	type ZBoxProps,
 	type ZButtonProps
-} from '../src/lib/index.js';
+} from '../src/entrypoints/index.js';
 
 const boxProps: ZBoxProps = { 'aria-label': 'Box' };
 const inferredBoxProps: ComponentProps<typeof ZBox> = boxProps;

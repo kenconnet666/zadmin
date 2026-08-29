@@ -6,9 +6,9 @@ import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { build } from 'vite';
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const sourceRoot = resolve(packageRoot, 'src/lib');
+const sourceRoot = resolve(packageRoot, 'src');
 const portable = (path) => path.replaceAll('\\', '/');
-const runtime = portable(resolve(sourceRoot, 'runtime.ts'));
+const runtime = portable(resolve(sourceRoot, 'entrypoints/runtime.ts'));
 const components = [
 	{ id: 'provider', name: 'ZProvider', path: 'gene/ZProvider.svelte' },
 	{ id: 'box', name: 'ZBox', path: 'gene/ZBox.svelte' },
@@ -103,7 +103,7 @@ for (const component of components) {
 	};
 }
 
-const codeEntry = portable(resolve(sourceRoot, 'code.ts'));
+const codeEntry = portable(resolve(sourceRoot, 'entrypoints/code.ts'));
 const codeBundle = await bundle(
 	`import * as runtime from ${JSON.stringify(runtime)}; import * as code from ${JSON.stringify(codeEntry)}; globalThis.__zuiRuntimeBudget = runtime; globalThis.__zuiCodeBudget = code;`,
 	(id) => id === 'shiki' || id.startsWith('shiki/')

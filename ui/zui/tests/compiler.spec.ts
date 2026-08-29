@@ -1,7 +1,7 @@
 import { compile, preprocess } from 'svelte/compiler';
 import { describe, expect, it } from 'vitest';
 
-import { icssPreprocess, type IcssCompilerDiagnostic } from '../src/lib/compiler/preprocess.js';
+import { icssPreprocess, type IcssCompilerDiagnostic } from '../src/compiler/preprocess.js';
 
 async function transform(
 	source: string,

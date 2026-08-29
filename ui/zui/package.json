@@ -15,84 +15,34 @@
 	],
 	"exports": {
 		".": {
-			"types": "./src/lib/index.ts",
-			"svelte": "./src/lib/index.ts",
-			"import": "./src/lib/index.ts"
+			"types": "./src/entrypoints/index.ts",
+			"svelte": "./src/entrypoints/index.ts",
+			"default": "./src/entrypoints/index.ts"
 		},
-		"./core": {
-			"types": "./src/lib/core.ts",
-			"import": "./src/lib/core.ts"
-		},
-		"./compiler": {
-			"types": "./src/lib/compiler/preprocess.ts",
-			"import": "./src/lib/compiler/preprocess.ts"
-		},
-		"./code": {
-			"types": "./src/lib/code.ts",
-			"svelte": "./src/lib/code.ts",
-			"import": "./src/lib/code.ts"
-		},
-		"./internal": {
-			"types": "./src/lib/runtime/internal.ts",
-			"svelte": "./src/lib/runtime/internal.ts",
-			"import": "./src/lib/runtime/internal.ts"
-		},
-		"./metadata": {
-			"types": "./src/lib/metadata.ts",
-			"import": "./src/lib/metadata.ts"
-		},
-		"./runtime": {
-			"types": "./src/lib/runtime.ts",
-			"import": "./src/lib/runtime.ts"
-		},
-		"./testing": {
-			"types": "./src/lib/testing/index.ts",
-			"import": "./src/lib/testing/index.ts"
+		"./*": {
+			"types": "./src/entrypoints/*.ts",
+			"svelte": "./src/entrypoints/*.ts",
+			"default": "./src/entrypoints/*.ts"
 		}
 	},
 	"publishConfig": {
 		"access": "public",
 		"exports": {
 			".": {
-				"types": "./dist/index.d.ts",
-				"svelte": "./dist/index.js",
-				"import": "./dist/index.js"
+				"types": "./dist/entrypoints/index.d.ts",
+				"svelte": "./dist/entrypoints/index.js",
+				"default": "./dist/entrypoints/index.js"
 			},
-			"./core": {
-				"types": "./dist/core.d.ts",
-				"import": "./dist/core.js"
-			},
-			"./compiler": {
-				"types": "./dist/compiler/preprocess.d.ts",
-				"import": "./dist/compiler/preprocess.js"
-			},
-			"./code": {
-				"types": "./dist/code.d.ts",
-				"svelte": "./dist/code.js",
-				"import": "./dist/code.js"
-			},
-			"./internal": {
-				"types": "./dist/runtime/internal.d.ts",
-				"svelte": "./dist/runtime/internal.js",
-				"import": "./dist/runtime/internal.js"
-			},
-			"./metadata": {
-				"types": "./dist/metadata.d.ts",
-				"import": "./dist/metadata.js"
-			},
-			"./runtime": {
-				"types": "./dist/runtime.d.ts",
-				"import": "./dist/runtime.js"
-			},
-			"./testing": {
-				"types": "./dist/testing/index.d.ts",
-				"import": "./dist/testing/index.js"
+			"./*": {
+				"types": "./dist/entrypoints/*.d.ts",
+				"svelte": "./dist/entrypoints/*.js",
+				"default": "./dist/entrypoints/*.js"
 			}
 		}
 	},
 	"scripts": {
 		"prepare": "svelte-kit sync || echo ''",
-		"build": "svelte-package",
+		"build": "svelte-package --input src",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"test": "vitest --run",
 		"test:coverage": "vitest --run --coverage",

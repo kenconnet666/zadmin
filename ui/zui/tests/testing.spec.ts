@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
-import { defaultTheme } from '../src/lib/core.js';
+import { defaultTheme } from '../src/entrypoints/index.js';
 import {
 	assertIcssClassName,
 	assertIcssResourcesStable,
 	createIcssFixture,
 	createTestIcssRuntime
-} from '../src/lib/testing/index.js';
+} from '../src/testing/index.js';
 
 describe('@zadmin/zui/testing', () => {
 	it('creates an inspectable memory runtime and deterministic fixture', () => {

@@ -16,7 +16,7 @@ export interface ZuiComponentMetadata {
 	readonly importStatement: string;
 	readonly name: `Z${string}`;
 	readonly props: readonly ZuiPropMetadata[];
-	readonly source: `ui/zui/src/lib/components/${string}.svelte`;
+	readonly source: `ui/zui/src/components/${string}.svelte`;
 	readonly status: ZuiComponentStatus;
 	readonly summary: string;
 }

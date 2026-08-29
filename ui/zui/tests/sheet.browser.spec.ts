@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { BrowserStyleSheet, type StyleSheetEntry } from '../src/lib/icss/sheet.js';
+import { BrowserStyleSheet, type StyleSheetEntry } from '../src/icss/sheet.js';
 
 function entry(className: string, declaration = 'color:red'): StyleSheetEntry {
 	const rule = `.${className}{${declaration};}`;

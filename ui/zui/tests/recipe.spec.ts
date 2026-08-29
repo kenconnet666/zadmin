@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
 
-import { createIcssRuntime, createServerStyleRegistry } from '../src/lib/index.js';
-import { defineRecipe, disposeRecipe, registerRecipeHmr } from '../src/lib/recipes/define.js';
+import { createIcssRuntime, createServerStyleRegistry } from '../src/entrypoints/index.js';
+import { defineRecipe, disposeRecipe, registerRecipeHmr } from '../src/recipes/define.js';
 import {
 	defineSlotRecipe,
 	disposeSlotRecipe,
 	registerSlotRecipeHmr
-} from '../src/lib/recipes/slots.js';
-import { defaultTheme } from '../src/lib/theme/default.js';
-import { extendTheme } from '../src/lib/theme/define.js';
+} from '../src/recipes/slots.js';
+import { defaultTheme } from '../src/theme/default.js';
+import { extendTheme } from '../src/theme/define.js';
 
 function createFixtureRecipe() {
 	return defineRecipe({

@@ -6,10 +6,10 @@ import DynamicBox from './DynamicBox.svelte';
 import ComponentGallery from './ComponentGallery.svelte';
 import FieldFixture from './FieldFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
-import { createBrowserIcssRuntime } from '../src/lib/icss/runtime.js';
-import { defaultTheme } from '../src/lib/theme/default.js';
-import { extendTheme } from '../src/lib/theme/define.js';
-import { ZCode } from '../src/lib/code.js';
+import { createBrowserIcssRuntime } from '../src/icss/runtime.js';
+import { defaultTheme } from '../src/theme/default.js';
+import { extendTheme } from '../src/theme/define.js';
+import { ZCode } from '../src/entrypoints/code.js';
 
 function insertedRuleCount(): number {
 	return [...document.querySelectorAll<HTMLStyleElement>('style[data-icss]')].reduce(

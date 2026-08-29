@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { hashString } from '../src/lib/core.js';
+import { hashString } from '../src/icss/hash.js';
 
 describe('hashString', () => {
 	it('is deterministic, compact, and input-sensitive', () => {

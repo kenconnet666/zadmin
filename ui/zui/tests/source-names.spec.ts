@@ -6,8 +6,8 @@ import {
 	createModuleId,
 	createVariableName,
 	sourceVariableName
-} from '../src/lib/compiler/source-names.js';
-import type { Positioned, PositionedCallExpression } from '../src/lib/compiler/types.js';
+} from '../src/compiler/source-names.js';
+import type { Positioned, PositionedCallExpression } from '../src/compiler/types.js';
 
 function identifier(name: string): Positioned<Identifier> {
 	return { end: name.length, name, start: 0, type: 'Identifier' };

@@ -1,11 +1,8 @@
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 
-import { ControllableState } from '../src/lib/component-runtime/controllable-state.svelte.js';
-import {
-	mergeAriaIds,
-	normalizeFieldMessages
-} from '../src/lib/component-runtime/form-control.svelte.js';
+import { ControllableState } from '../src/runtime/controllable-state.svelte.js';
+import { mergeAriaIds, normalizeFieldMessages } from '../src/runtime/form-control.svelte.js';
 
 describe('component runtime state', () => {
 	it('keeps user updates, external updates and reset behavior distinct', () => {

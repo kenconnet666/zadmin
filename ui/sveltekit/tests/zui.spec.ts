@@ -1,7 +1,7 @@
 import type { Handle } from '@sveltejs/kit';
 import { describe, expect, it } from 'vitest';
 
-import { defaultTheme } from '@zadmin/zui/core';
+import { defaultTheme } from '@zadmin/zui';
 import { icss } from '@zadmin/zui/runtime';
 import { zuiHandle } from '../src/lib/zui/handle.js';
 import {

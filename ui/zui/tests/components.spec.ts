@@ -13,11 +13,11 @@ import {
 	ZInput,
 	ZStack,
 	ZText
-} from '../src/lib/index.js';
-import { ZCode } from '../src/lib/code.js';
+} from '../src/entrypoints/index.js';
+import { ZCode } from '../src/entrypoints/code.js';
 import Camera from '@lucide/svelte/icons/camera';
-import { getIconComponent, iconManifest } from '../src/lib/components/gene/ZIcon.svelte';
-import { __icssCarrier } from '../src/lib/runtime/internal.js';
+import { getIconComponent, iconManifest } from '../src/components/gene/ZIcon.svelte';
+import { __icssCarrier } from '../src/runtime/compiler-bridge.js';
 import FieldFixture from './FieldFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
 

@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { hashString } from '@zadmin/zui/core';
+import { hashString } from '../src/icss/hash.js';
 
-import { StyleRegistry } from '../src/lib/icss/registry.js';
-import { createIcssRuntime } from '../src/lib/icss/runtime.js';
-import { hyphenateProperty } from '../src/lib/icss/serialize.js';
-import { MemoryStyleSheet } from '../src/lib/icss/sheet.js';
-import { defaultTheme } from '../src/lib/index.js';
+import { StyleRegistry } from '../src/icss/registry.js';
+import { createIcssRuntime } from '../src/icss/runtime.js';
+import { hyphenateProperty } from '../src/icss/serialize.js';
+import { MemoryStyleSheet } from '../src/icss/sheet.js';
+import { defaultTheme } from '../src/entrypoints/index.js';
 
 describe('ICSS runtime edge behavior', () => {
 	it('hashes deterministically and hyphenates standard and custom properties', () => {

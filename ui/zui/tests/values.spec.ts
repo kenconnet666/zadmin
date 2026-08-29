@@ -1,11 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import {
-	createIcssSlot,
-	isDynamicSlot,
-	isIcssSlot,
-	normalizeDeclarationValues
-} from '../src/lib/core.js';
+import { isDynamicSlot } from '../src/icss/builder.js';
+import { createIcssSlot, isIcssSlot, normalizeDeclarationValues } from '../src/icss/values.js';
 
 describe('ICSS dynamic values', () => {
 	it('creates immutable target-neutral slots with optional debug names', () => {

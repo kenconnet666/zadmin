@@ -36,19 +36,19 @@ export default defineConfig({
 				functions: 95,
 				lines: 95,
 				statements: 95,
-				'src/lib/compiler/**': {
+				'src/compiler/**': {
 					branches: 90,
 					functions: 100,
 					lines: 95,
 					statements: 90
 				},
-				'src/lib/components/**': {
+				'src/components/**': {
 					branches: 85,
 					functions: 85,
 					lines: 85,
 					statements: 85
 				},
-				'src/lib/icss/**': {
+				'src/icss/**': {
 					branches: 90,
 					functions: 95,
 					lines: 95,
