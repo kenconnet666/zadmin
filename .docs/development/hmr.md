@@ -6,6 +6,17 @@
 pnpm dev:admin
 ```
 
+开发和preview服务统一监听全部网络接口，但客户端访问、自动化探测和WebView可信origin继续使用回环地址：
+
+| 应用    | Dev监听        | Preview监听    | 本机访问地址            |
+| ------- | -------------- | -------------- | ----------------------- |
+| Admin   | `0.0.0.0:5173` | `0.0.0.0:4173` | `http://127.0.0.1:5173` |
+| Docs    | `0.0.0.0:5174` | `0.0.0.0:4174` | `http://127.0.0.1:5174` |
+| ETL     | `0.0.0.0:5175` | `0.0.0.0:4175` | `http://127.0.0.1:5175` |
+| Desktop | `0.0.0.0:5176` | `0.0.0.0:4176` | `http://127.0.0.1:5176` |
+
+`0.0.0.0`只用于bind，不作为浏览器URL、CSP origin或native消息来源。
+
 正常进程形态：
 
 ```text
@@ -150,12 +161,12 @@ pnpm dev:desktop
 
 开发owner并行启动Vite和C# Debug build，随后直接启动生成的`ZAdmin.exe`。不用`dotnet run`的调试身份激活路径，因为该路径会丢失开发origin等自定义环境变量。
 
-- WebView只允许`http://127.0.0.1:5173`显式loopback origin，native注入与当前origin一致的不可写bridge标记；
+- WebView只允许`http://127.0.0.1:5176`显式loopback origin，native注入与当前origin一致的不可写bridge标记；
 - Vite client在WebView内保持标准Svelte HMR，页面、ZUI和普通TypeScript修改不重启C#宿主；
 - C#、XAML或协议生成物修改需要重建宿主，`generate:check`阻止TypeScript/C# method漂移；
 - Vite首次启动约2.1秒；首次页面请求可能因依赖优化额外耗时，本实现让它与约18秒C# Debug build重叠，不串行等待两遍；
 - 开发进程不继承名称中含`AUTH`、`PASSWORD`、`SECRET`、`TOKEN`或`API_KEY`的环境变量；
-- 正常关闭和失败都按owner PID终止宿主与Vite进程树。自动smoke退出后已复核5173和`ZAdmin.exe`零残留。
+- 正常关闭和失败都按owner PID终止宿主与Vite进程树。自动smoke退出后已复核5176和`ZAdmin.exe`零残留。
 
 ```powershell
 pnpm --filter @zadmin/desktop webview:dev:smoke

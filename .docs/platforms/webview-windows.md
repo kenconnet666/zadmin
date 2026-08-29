@@ -12,7 +12,7 @@
 - 生产HTML的内联SvelteKit bootstrap由C#按内容计算CSP SHA-256 hash；没有把`script-src`放宽为`unsafe-inline`；
 - native侧再次验证origin、协议版本、1 MiB消息上限、method allowlist、外链origin、用户选择的文件范围和敏感操作确认；
 - 远程导航、新窗口、网页权限和下载默认拒绝，进程失败最多自动reload三次；
-- Vite开发宿主只允许显式loopback HTTP origin，由native注入匹配origin的不可写标记；真实smoke确认Vite client、页面hydration、bridge、C#系统信息和退出后5173/宿主进程零残留；
+- Vite开发服务监听`0.0.0.0:5176`，宿主只信任并访问显式`http://127.0.0.1:5176` loopback origin；native注入匹配origin的不可写标记，真实smoke确认Vite client、页面hydration、bridge、C#系统信息和退出后5176/宿主进程零残留；
 - build与Vite/C# Debug并行准备，首次依赖优化不会与C#编译串行叠加；失败和正常退出都按精确PID终止进程树；
 - Windows x64发布目录包含533个payload文件、233,775,520 bytes；portable ZIP为90,779,828 bytes；`manifest.json`和533条SHA-256位于产物内；
 - SvelteKit asset hash固定为hex，避免Windows PRI把`-`后的片段误判为资源qualifier；WinUI XBF在publish阶段显式复制，发布exe真实启动通过。

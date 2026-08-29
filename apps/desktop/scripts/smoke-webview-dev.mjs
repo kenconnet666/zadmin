@@ -49,7 +49,7 @@ try {
 	/** @type {{ error?: string; page?: { bodyText?: string; errors?: string[]; hasBridge?: boolean; origin?: string; viteClient?: boolean } }} */
 	const report = JSON.parse(await readFile(reportPath, 'utf8'));
 	if (report.error) throw new Error(report.error);
-	if (report.page?.origin !== 'http://127.0.0.1:5173')
+	if (report.page?.origin !== 'http://127.0.0.1:5176')
 		throw new Error('Unexpected development origin.');
 	if (!report.page?.hasBridge || !report.page?.viteClient) {
 		throw new Error(`WebView Vite/bridge injection is incomplete: ${JSON.stringify(report.page)}`);

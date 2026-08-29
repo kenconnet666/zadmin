@@ -8,10 +8,10 @@ export default defineConfig({
 		{ name: 'firefox', use: { ...devices['Desktop Firefox'] } },
 		{ name: 'webkit', use: { ...devices['Desktop Safari'] } }
 	],
-	use: { baseURL: 'http://127.0.0.1:4173' },
+	use: { baseURL: 'http://127.0.0.1:4174' },
 	webServer: {
-		command: 'pnpm build && pnpm preview --host 127.0.0.1',
-		port: 4173,
+		command: 'pnpm build && pnpm preview',
+		port: 4174,
 		reuseExistingServer: !process.env.CI
 	}
 });

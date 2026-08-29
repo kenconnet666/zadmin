@@ -9,9 +9,14 @@ export default defineConfig({
 	},
 	clearScreen: false,
 	plugins: [sveltekit()],
+	preview: {
+		host: '0.0.0.0',
+		port: 4176,
+		strictPort: true
+	},
 	server: {
-		host: '127.0.0.1',
-		port: 5173,
+		host: '0.0.0.0',
+		port: 5176,
 		strictPort: true,
 		watch: {
 			ignored: ['**/dist/desktop/**']

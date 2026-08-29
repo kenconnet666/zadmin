@@ -8,8 +8,8 @@ export default defineWebviewConfig({
 	web: {
 		assets: 'build',
 		command: 'pnpm build:web',
-		devCommand: 'vite dev --host 127.0.0.1 --port 5173 --strictPort',
-		devUrl: 'http://127.0.0.1:5173'
+		devCommand: 'vite dev --host 0.0.0.0 --port 5176 --strictPort',
+		devUrl: 'http://127.0.0.1:5176'
 	},
 	targets: {
 		'windows-x64': {
