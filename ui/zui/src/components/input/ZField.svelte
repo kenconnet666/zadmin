@@ -189,8 +189,8 @@
 	class={[classes.root, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
-	data-disabled={disabled ? 'true' : undefined}
-	data-invalid={invalid ? 'true' : undefined}
+	data-disabled={disabled || undefined}
+	data-invalid={invalid || undefined}
 >
 	<label class={classes.label} for={resolvedControlId}>
 		{#if typeof label === 'string'}{label}{:else}{@render label()}{/if}
