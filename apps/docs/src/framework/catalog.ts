@@ -28,6 +28,7 @@ import { contextMenuDoc } from '../content/components/navigation/context-menu/do
 import { dropdownMenuDoc } from '../content/components/navigation/dropdown-menu/doc.js';
 import { paginationDoc } from '../content/components/navigation/pagination/doc.js';
 import { tabsDoc } from '../content/components/navigation/tabs/doc.js';
+import { treeDoc } from '../content/components/navigation/tree/doc.js';
 import { menuDoc } from '../content/components/navigation/menu/doc.js';
 import { alertDialogDoc } from '../content/components/overlay/alert-dialog/doc.js';
 import { popoverDoc } from '../content/components/overlay/popover/doc.js';
@@ -77,6 +78,7 @@ export const componentDocs = Object.freeze([
 	menuDoc,
 	paginationDoc,
 	tabsDoc,
+	treeDoc,
 	alertDialogDoc,
 	dialogDoc,
 	drawerDoc,

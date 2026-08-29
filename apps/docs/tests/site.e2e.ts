@@ -393,6 +393,25 @@ test('keeps Accordion selection, roving focus and Presence synchronized', async 
 	await expect(page.getByText(/value = none · 用户变更次数 = 2/u)).toBeVisible();
 });
 
+test('keeps Tree hierarchy, visible keyboard navigation, selection and reset synchronized', async ({
+	page
+}) => {
+	await page.goto('/#/components/tree');
+	const docs = page.getByRole('treeitem', { name: /文档站/u });
+	await expect(docs).toHaveAttribute('aria-selected', 'true');
+	await docs.focus();
+	await page.keyboard.press('ArrowDown');
+	const worker = page.getByRole('treeitem', { name: /任务执行器/u });
+	await expect(worker).toBeFocused();
+	await page.keyboard.press('Enter');
+	await expect(worker).toHaveAttribute('aria-selected', 'true');
+	await expect(page.getByText(/selected = worker/u)).toBeVisible();
+	await page.keyboard.press('ArrowLeft');
+	await expect(page.getByRole('treeitem', { name: /平台/u })).toBeFocused();
+	await page.getByRole('button', { name: '重置' }).click();
+	await expect(docs).toHaveAttribute('aria-selected', 'true');
+});
+
 test('keeps Popover portal, ARIA, focus, positioning and dismiss synchronized', async ({
 	page
 }) => {
@@ -577,6 +596,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/menu',
 		'#/components/pagination',
 		'#/components/tabs',
+		'#/components/tree',
 		'#/components/alert-dialog',
 		'#/components/dialog',
 		'#/components/drawer',

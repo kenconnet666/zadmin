@@ -151,6 +151,9 @@ export { default as ZTabsPanel } from '../components/compound/tabs/ZTabsPanel.sv
 export type { ZTabsPanelProps } from '../components/compound/tabs/ZTabsPanel.svelte';
 export { default as ZTabsTrigger } from '../components/compound/tabs/ZTabsTrigger.svelte';
 export type { ZTabsTriggerProps } from '../components/compound/tabs/ZTabsTrigger.svelte';
+export { default as ZTree } from '../components/compound/tree/ZTree.svelte';
+export type { TreeSelectionMode, ZTreeProps } from '../components/compound/tree/ZTree.svelte';
+export type { TreeEntry, TreeIndex, TreeNode } from '../runtime/tree.js';
 export type { TabsActivationMode } from '../components/compound/tabs/context.svelte.js';
 export { default as ZTooltip } from '../components/compound/tooltip/ZTooltip.svelte';
 export type { ZTooltipProps } from '../components/compound/tooltip/ZTooltip.svelte';

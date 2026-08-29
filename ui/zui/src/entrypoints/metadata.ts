@@ -63,6 +63,7 @@ export { zuiMetadata as tabsMetadata } from '../components/compound/tabs/ZTabs.s
 export { zuiMetadata as tabsListMetadata } from '../components/compound/tabs/ZTabsList.svelte';
 export { zuiMetadata as tabsPanelMetadata } from '../components/compound/tabs/ZTabsPanel.svelte';
 export { zuiMetadata as tabsTriggerMetadata } from '../components/compound/tabs/ZTabsTrigger.svelte';
+export { zuiMetadata as treeMetadata } from '../components/compound/tree/ZTree.svelte';
 export { zuiMetadata as tooltipMetadata } from '../components/compound/tooltip/ZTooltip.svelte';
 export { zuiMetadata as tooltipContentMetadata } from '../components/compound/tooltip/ZTooltipContent.svelte';
 export { zuiMetadata as tooltipTriggerMetadata } from '../components/compound/tooltip/ZTooltipTrigger.svelte';

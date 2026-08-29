@@ -43,5 +43,7 @@ export type { Selection, SelectionKey, SelectionMode } from '../runtime/collecti
 export { RovingFocus } from '../runtime/collection/roving-focus.svelte.js';
 export type { RovingFocusOptions } from '../runtime/collection/roving-focus.svelte.js';
 export { normalizeSliderValue } from '../runtime/slider.js';
+export { createTreeIndex } from '../runtime/tree.js';
+export type { TreeEntry, TreeIndex, TreeNode } from '../runtime/tree.js';
 export { Typeahead } from '../runtime/collection/typeahead.js';
 export type { TypeaheadOptions } from '../runtime/collection/typeahead.js';

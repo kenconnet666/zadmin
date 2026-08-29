@@ -26,6 +26,7 @@ import SliderFixture from './SliderFixture.svelte';
 import ToggleButtonFixture from './ToggleButtonFixture.svelte';
 import SwitchFixture from './SwitchFixture.svelte';
 import TabsFixture from './TabsFixture.svelte';
+import TreeFixture from './TreeFixture.svelte';
 import TooltipFixture from './TooltipFixture.svelte';
 import TagsInputFixture from './TagsInputFixture.svelte';
 import { createBrowserIcssRuntime } from '../src/icss/runtime.js';
@@ -309,6 +310,33 @@ describe('compiled ICSS browser updates', () => {
 		await Promise.resolve();
 		await tick();
 		expect(output?.textContent).toBe('alpha:4:');
+	});
+
+	it('coordinates Tree visible navigation, expansion, selection, form value and reset', async () => {
+		render(TreeFixture);
+		const form = document.querySelector<HTMLFormElement>('[data-testid="tree-form"]');
+		const web = document.querySelector<HTMLElement>('[role="treeitem"][data-key="web"]');
+		const worker = document.querySelector<HTMLElement>('[role="treeitem"][data-key="worker"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="tree-output"]');
+		web?.focus();
+		web?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
+		expect(document.activeElement).toBe(worker);
+		worker?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+		await tick();
+		expect(worker?.getAttribute('aria-selected')).toBe('true');
+		expect(new FormData(form!).get('node')).toBe('worker');
+		expect(output?.textContent).toBe('app:worker:1');
+		worker?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowLeft' }));
+		expect(document.activeElement?.getAttribute('data-key')).toBe('app');
+		document.activeElement?.dispatchEvent(
+			new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowRight' })
+		);
+		expect(document.activeElement).toBe(web);
+		form?.reset();
+		await Promise.resolve();
+		await tick();
+		expect(new FormData(form!).get('node')).toBe('web');
+		expect(output?.textContent).toBe('app:web:1');
 	});
 	it('keeps AlertDialog open until an explicit action is chosen', async () => {
 		render(AlertDialogFixture);

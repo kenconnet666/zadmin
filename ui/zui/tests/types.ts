@@ -80,6 +80,7 @@ import {
 	ZTooltip,
 	ZTooltipContent,
 	ZTooltipTrigger,
+	ZTree,
 	ZToggleButton,
 	defineRecipe,
 	defineSlotRecipe,
@@ -161,6 +162,7 @@ import {
 	type ZTooltipContentProps,
 	type ZTooltipProps,
 	type ZTooltipTriggerProps,
+	type ZTreeProps,
 	type ZToggleButtonProps
 } from '../src/entrypoints/index.js';
 
@@ -312,6 +314,9 @@ const tagsInputProps: ComponentProps<typeof ZTagsInput> = {
 	defaultValues: ['alpha'],
 	delimiters: [',', ';']
 } satisfies ZTagsInputProps;
+const treeProps: ComponentProps<typeof ZTree> = {
+	nodes: [{ key: 'root', label: 'Root' }]
+} satisfies ZTreeProps;
 const sliderProps: ComponentProps<typeof ZSlider> = {
 	defaultValue: 25,
 	max: 50,
@@ -409,6 +414,7 @@ void selectContentProps;
 void selectItemProps;
 void segmentedProps;
 void tagsInputProps;
+void treeProps;
 void sliderProps;
 void switchProps;
 void tabsProps;

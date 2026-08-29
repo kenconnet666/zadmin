@@ -48,6 +48,7 @@ import RadioGroupFixture from './RadioGroupFixture.svelte';
 import SelectFixture from './SelectFixture.svelte';
 import SegmentedFixture from './SegmentedFixture.svelte';
 import TabsFixture from './TabsFixture.svelte';
+import TreeFixture from './TreeFixture.svelte';
 import TooltipFixture from './TooltipFixture.svelte';
 import TagsInputFixture from './TagsInputFixture.svelte';
 
@@ -313,6 +314,16 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain('aria-label="Remove alpha"');
 		expect(result).toContain('aria-label="Add fixture tag"');
 		expect(result).toContain('name="tag"');
+	});
+
+	it('renders Tree hierarchy metadata, expansion, selection and form value during SSR', () => {
+		const result = render(TreeFixture).body;
+		expect(result).toContain('role="tree"');
+		expect(result.match(/role="treeitem"/gu)).toHaveLength(4);
+		expect(result).toContain('aria-level="2"');
+		expect(result).toContain('aria-expanded="true"');
+		expect(result).toContain('aria-selected="true"');
+		expect(result).toContain('name="node"');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

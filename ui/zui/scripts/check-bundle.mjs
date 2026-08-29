@@ -200,6 +200,7 @@ const components = [
 	{ id: 'tabs-list', name: 'ZTabsList', path: 'compound/tabs/ZTabsList.svelte' },
 	{ id: 'tabs-trigger', name: 'ZTabsTrigger', path: 'compound/tabs/ZTabsTrigger.svelte' },
 	{ id: 'tabs-panel', name: 'ZTabsPanel', path: 'compound/tabs/ZTabsPanel.svelte' },
+	{ id: 'tree', name: 'ZTree', path: 'compound/tree/ZTree.svelte' },
 	{ id: 'tooltip', name: 'ZTooltip', path: 'compound/tooltip/ZTooltip.svelte' },
 	{
 		id: 'tooltip-trigger',
