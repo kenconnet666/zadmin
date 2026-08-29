@@ -4,6 +4,10 @@ import { defaultTheme, type IcssStyle } from '../src/entrypoints/index.js';
 import DirectZBox from '../src/components/gene/ZBox.svelte';
 import type { ZBoxProps as DirectZBoxProps } from '../src/components/gene/ZBox.svelte';
 import {
+	ZAccordion,
+	ZAccordionContent,
+	ZAccordionItem,
+	ZAccordionTrigger,
 	ZBox,
 	ZButton,
 	ZCheckbox,
@@ -21,6 +25,10 @@ import {
 	defineSlotRecipe,
 	type RecipeVariants,
 	type SlotRecipeSelection,
+	type ZAccordionContentProps,
+	type ZAccordionItemProps,
+	type ZAccordionProps,
+	type ZAccordionTriggerProps,
 	type ZBoxProps,
 	type ZButtonProps,
 	type ZCheckboxProps,
@@ -37,6 +45,17 @@ import {
 } from '../src/entrypoints/index.js';
 
 const boxProps: ZBoxProps = { 'aria-label': 'Box' };
+const accordionProps: ComponentProps<typeof ZAccordion> = {
+	defaultValue: ['one'],
+	type: 'multiple'
+} satisfies ZAccordionProps;
+const accordionItemProps: ComponentProps<typeof ZAccordionItem> = {
+	value: 'one'
+} satisfies ZAccordionItemProps;
+const accordionTriggerProps: ComponentProps<typeof ZAccordionTrigger> =
+	{} satisfies ZAccordionTriggerProps;
+const accordionContentProps: ComponentProps<typeof ZAccordionContent> =
+	{} satisfies ZAccordionContentProps;
 const inferredBoxProps: ComponentProps<typeof ZBox> = boxProps;
 const directBoxProps: DirectZBoxProps = inferredBoxProps;
 const buttonProps: ComponentProps<typeof ZButton> = { variant: 'primary' } satisfies ZButtonProps;
@@ -80,6 +99,10 @@ const toggleButtonProps: ComponentProps<typeof ZToggleButton> = {
 	onPressedChange: (pressed) => void pressed
 } satisfies ZToggleButtonProps;
 void DirectZBox;
+void accordionProps;
+void accordionItemProps;
+void accordionTriggerProps;
+void accordionContentProps;
 void directBoxProps;
 void buttonProps;
 void checkboxProps;

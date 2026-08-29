@@ -25,6 +25,7 @@ describe('ZUI component documentation catalog', () => {
 			'ZRadioGroup',
 			'ZSwitch',
 			'ZSlider',
+			'ZAccordion',
 			'ZPagination',
 			'ZTabs'
 		]);
@@ -50,6 +51,7 @@ describe('ZUI component documentation catalog', () => {
 			'input',
 			'input',
 			'input',
+			'navigation',
 			'navigation',
 			'navigation'
 		]);

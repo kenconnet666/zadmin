@@ -1,3 +1,7 @@
+export { zuiMetadata as accordionMetadata } from '../components/compound/accordion/ZAccordion.svelte';
+export { zuiMetadata as accordionContentMetadata } from '../components/compound/accordion/ZAccordionContent.svelte';
+export { zuiMetadata as accordionItemMetadata } from '../components/compound/accordion/ZAccordionItem.svelte';
+export { zuiMetadata as accordionTriggerMetadata } from '../components/compound/accordion/ZAccordionTrigger.svelte';
 export { zuiMetadata as radioGroupMetadata } from '../components/compound/radio-group/ZRadioGroup.svelte';
 export { zuiMetadata as radioGroupItemMetadata } from '../components/compound/radio-group/ZRadioGroupItem.svelte';
 export { zuiMetadata as tabsMetadata } from '../components/compound/tabs/ZTabs.svelte';

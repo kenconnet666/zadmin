@@ -31,6 +31,7 @@ import { normalizeAspectRatio } from '../src/components/layout/ZAspectRatio.svel
 import { getIconComponent, iconManifest } from '../src/components/gene/ZIcon.svelte';
 import { __icssCarrier } from '../src/runtime/compiler-bridge.js';
 import ContextProbe from './ContextProbe.svelte';
+import AccordionFixture from './AccordionFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
 import RadioGroupFixture from './RadioGroupFixture.svelte';
@@ -147,6 +148,17 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain('name="threshold"');
 		expect(result).toContain('value="35"');
 		expect(result).toContain('aria-valuetext="35%"');
+	});
+
+	it('renders Accordion Trigger and open Content with stable ARIA relationships during SSR', () => {
+		const result = render(AccordionFixture).body;
+		const contentId = result.match(/aria-controls="([^"]+)"/u)?.[1];
+
+		expect(result).toContain('aria-expanded="true"');
+		expect(contentId).toBeDefined();
+		expect(result).toContain(`id="${contentId}"`);
+		expect(result).toContain('role="region"');
+		expect(result).toContain('Alpha content');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

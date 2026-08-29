@@ -9,7 +9,7 @@ test('renders the component catalog and real demo source', async ({ page }) => {
 
 	await page.goto('/#/');
 	await expect(page.getByRole('heading', { level: 1 })).toContainText('看见组件');
-	await expect(page.getByTestId('component-card')).toHaveCount(22);
+	await expect(page.getByTestId('component-card')).toHaveCount(23);
 	await expect(page.getByRole('heading', { level: 3 })).toHaveText([
 		'通用组件',
 		'布局组件',
@@ -220,6 +220,29 @@ test('keeps Slider keyboard, value text, FormData and reset synchronized', async
 	await expect(page.getByText(/value = 35% · 用户变更次数 = 2 · 尚未提交/u)).toBeVisible();
 });
 
+test('keeps Accordion selection, roving focus and Presence synchronized', async ({ page }) => {
+	await page.goto('/#/components/accordion');
+	const runtime = page.getByRole('button', { name: /运行时合同/u });
+	const delivery = page.getByRole('button', { name: /交付门禁/u });
+	const legacy = page.getByRole('button', { name: /旧版合同/u });
+	await expect(runtime).toHaveAttribute('aria-expanded', 'true');
+	await expect(page.getByText('Collection、Selection与Presence拥有独立生命周期。')).toBeVisible();
+	await expect(legacy).toBeDisabled();
+	await delivery.click();
+	await expect(delivery).toHaveAttribute('aria-expanded', 'true');
+	await expect(runtime).toHaveAttribute('aria-expanded', 'false');
+	await expect(page.getByText(/value = delivery · 用户变更次数 = 1/u)).toBeVisible();
+	await delivery.press('ArrowDown');
+	await expect(runtime).toBeFocused();
+
+	await page.locator('summary[aria-label="调整显示偏好"]').click();
+	await page.locator('#zui-docs-motion').selectOption('reduced');
+	await delivery.click();
+	await expect(delivery).toHaveAttribute('aria-expanded', 'false');
+	await expect(page.getByText('类型、浏览器、bundle与外部安装在CI中验收。')).toHaveCount(0);
+	await expect(page.getByText(/value = none · 用户变更次数 = 2/u)).toBeVisible();
+});
+
 test('keeps S1 primitives semantic and display preferences effective', async ({ page }) => {
 	await page.goto('/#/guides/theme');
 	await expect(page.getByRole('heading', { level: 1 })).toContainText('主题不是一组颜色');
@@ -275,6 +298,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/radio-group',
 		'#/components/switch',
 		'#/components/slider',
+		'#/components/accordion',
 		'#/components/pagination',
 		'#/components/tabs'
 	]) {

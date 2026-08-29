@@ -4,6 +4,7 @@ import { render } from 'vitest-browser-svelte';
 
 import DynamicBox from './DynamicBox.svelte';
 import ComponentGallery from './ComponentGallery.svelte';
+import AccordionFixture from './AccordionFixture.svelte';
 import CheckboxFixture from './CheckboxFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
@@ -34,6 +35,40 @@ function insertedRuleCount(): number {
 }
 
 describe('compiled ICSS browser updates', () => {
+	it('keeps Accordion focus, single/multiple selection and Presence synchronized', async () => {
+		render(AccordionFixture);
+		const alpha = document.querySelector<HTMLButtonElement>('[data-testid="accordion-a"]');
+		const disabled = document.querySelector<HTMLButtonElement>('[data-testid="accordion-b"]');
+		const charlie = document.querySelector<HTMLButtonElement>('[data-testid="accordion-c"]');
+		const alphaContent = document.querySelector<HTMLElement>('[data-testid="accordion-content-a"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="accordion-output"]');
+		expect(alpha?.getAttribute('aria-expanded')).toBe('true');
+		expect(disabled?.disabled).toBe(true);
+
+		alpha?.focus();
+		alpha?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
+		await tick();
+		expect(document.activeElement).toBe(charlie);
+		expect(alpha?.getAttribute('aria-expanded')).toBe('true');
+
+		charlie?.click();
+		await tick();
+		expect(charlie?.getAttribute('aria-expanded')).toBe('true');
+		expect(alphaContent?.dataset.presence).toBe('exiting');
+		expect(output?.textContent).toBe('c:1');
+		await new Promise((resolve) => setTimeout(resolve, 220));
+		await tick();
+		expect(document.querySelector('[data-testid="accordion-content-a"]')).toBeNull();
+
+		const yankee = document.querySelector<HTMLButtonElement>('[data-testid="accordion-y"]');
+		const multipleOutput = document.querySelector<HTMLOutputElement>(
+			'[data-testid="accordion-multiple-output"]'
+		);
+		yankee?.click();
+		await tick();
+		expect(multipleOutput?.textContent?.trim()).toBe('x,y');
+	});
+
 	it('keeps native Slider input, FormData and reset synchronized', async () => {
 		render(SliderFixture);
 		const control = document.querySelector<HTMLInputElement>('[data-testid="slider"]');
@@ -54,7 +89,7 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		await tick();
 		expect(control?.valueAsNumber).toBe(35);
-		expect(output?.textContent).toBe('35:1');
+		await expect.poll(() => output?.textContent).toBe('35:1');
 	});
 
 	it('keeps pagination window, current page and callbacks synchronized', async () => {
@@ -132,7 +167,7 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		await tick();
 		expect(beta?.checked).toBe(true);
-		expect(output?.textContent).toBe('b:1');
+		await expect.poll(() => output?.textContent).toBe('b:1');
 	});
 
 	it('keeps switch state, FormData and reset synchronized', async () => {
@@ -155,7 +190,7 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		await tick();
 		expect(control?.checked).toBe(false);
-		expect(output?.textContent).toBe('false:1');
+		await expect.poll(() => output?.textContent).toBe('false:1');
 	});
 
 	it('keeps checkbox mixed state, FormData and reset synchronized', async () => {
@@ -180,7 +215,7 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(checkbox?.indeterminate).toBe(true);
 		expect(checkbox?.getAttribute('aria-checked')).toBe('mixed');
-		expect(output?.textContent).toBe('indeterminate:1');
+		await expect.poll(() => output?.textContent).toBe('indeterminate:1');
 	});
 
 	it('keeps toggle state controllable and cancellable', async () => {

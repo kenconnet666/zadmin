@@ -5,6 +5,7 @@ import { CollectionStore } from '../src/runtime/collection.svelte.js';
 import { createFormEntries, serializeFormValue } from '../src/runtime/form-value.js';
 import { moveIndex, navigationIntent } from '../src/runtime/list-navigation.js';
 import { clampPage, createPaginationItems } from '../src/runtime/pagination.js';
+import { durationMilliseconds, Presence } from '../src/runtime/presence.svelte.js';
 import { RovingFocus } from '../src/runtime/roving-focus.svelte.js';
 import {
 	emptySelection,
@@ -137,6 +138,26 @@ describe('ZUI foundation runtime', () => {
 		expect(() => normalizeSliderValue(Number.NaN)).toThrow(/finite/u);
 		expect(() => normalizeSliderValue(1, 2, 1)).toThrow(/greater than/u);
 		expect(() => normalizeSliderValue(1, 0, 10, 0)).toThrow(/positive/u);
+	});
+
+	it('keeps Presence mounted through exit duration and parses theme times', () => {
+		vi.useFakeTimers();
+		const presence = new Presence(true);
+		presence.update(false, 200);
+		expect(presence.mounted).toBe(true);
+		expect(presence.state).toBe('exiting');
+		vi.advanceTimersByTime(200);
+		expect(presence.mounted).toBe(false);
+		expect(presence.state).toBe('exited');
+		presence.update(true);
+		expect(presence.state).toBe('entered');
+		presence.destroy();
+		vi.useRealTimers();
+
+		expect(durationMilliseconds('0.2s')).toBe(200);
+		expect(durationMilliseconds('120ms')).toBe(120);
+		expect(() => durationMilliseconds('fast')).toThrow(/ms or s/u);
+		expect(() => durationMilliseconds(-1)).toThrow(/non-negative/u);
 	});
 
 	it('matches locale-aware typeahead with timeout, cycling and disabled filtering', () => {

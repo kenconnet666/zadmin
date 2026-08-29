@@ -3,6 +3,10 @@ import { describe, expect, it } from 'vitest';
 
 import { ZUI_PACKAGE_NAME } from '../src/entrypoints/index.js';
 import {
+	accordionContentMetadata,
+	accordionItemMetadata,
+	accordionMetadata,
+	accordionTriggerMetadata,
 	aspectRatioMetadata,
 	boxMetadata,
 	buttonMetadata,
@@ -67,6 +71,10 @@ describe('@zadmin/zui package', () => {
 
 	it('keeps component metadata unique and colocated with public source files', () => {
 		const metadata = [
+			accordionMetadata,
+			accordionItemMetadata,
+			accordionTriggerMetadata,
+			accordionContentMetadata,
 			providerMetadata,
 			boxMetadata,
 			stackMetadata,

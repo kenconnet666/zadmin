@@ -1,5 +1,17 @@
 export const ZUI_PACKAGE_NAME = '@zadmin/zui';
 
+export { default as ZAccordion } from '../components/compound/accordion/ZAccordion.svelte';
+export type {
+	AccordionType,
+	AccordionValue,
+	ZAccordionProps
+} from '../components/compound/accordion/ZAccordion.svelte';
+export { default as ZAccordionContent } from '../components/compound/accordion/ZAccordionContent.svelte';
+export type { ZAccordionContentProps } from '../components/compound/accordion/ZAccordionContent.svelte';
+export { default as ZAccordionItem } from '../components/compound/accordion/ZAccordionItem.svelte';
+export type { ZAccordionItemProps } from '../components/compound/accordion/ZAccordionItem.svelte';
+export { default as ZAccordionTrigger } from '../components/compound/accordion/ZAccordionTrigger.svelte';
+export type { ZAccordionTriggerProps } from '../components/compound/accordion/ZAccordionTrigger.svelte';
 export { default as ZRadioGroup } from '../components/compound/radio-group/ZRadioGroup.svelte';
 export type {
 	RadioGroupOrientation,

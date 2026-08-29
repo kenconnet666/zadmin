@@ -10,6 +10,22 @@ const sourceRoot = resolve(packageRoot, 'src');
 const portable = (path) => path.replaceAll('\\', '/');
 const runtime = portable(resolve(sourceRoot, 'entrypoints/runtime.ts'));
 const components = [
+	{ id: 'accordion', name: 'ZAccordion', path: 'compound/accordion/ZAccordion.svelte' },
+	{
+		id: 'accordion-item',
+		name: 'ZAccordionItem',
+		path: 'compound/accordion/ZAccordionItem.svelte'
+	},
+	{
+		id: 'accordion-trigger',
+		name: 'ZAccordionTrigger',
+		path: 'compound/accordion/ZAccordionTrigger.svelte'
+	},
+	{
+		id: 'accordion-content',
+		name: 'ZAccordionContent',
+		path: 'compound/accordion/ZAccordionContent.svelte'
+	},
 	{
 		id: 'radio-group',
 		maxIncrementalGzip: 3.375 * 1024,
