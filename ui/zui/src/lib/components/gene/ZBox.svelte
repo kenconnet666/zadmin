@@ -1,13 +1,22 @@
+<script module lang="ts">
+	import type { Snippet } from 'svelte';
+	import type { HTMLAttributes } from 'svelte/elements';
+
+	export interface ZBoxProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
+		readonly children?: Snippet;
+		ref?: HTMLDivElement | null;
+	}
+</script>
+
 <script lang="ts">
 	import { untrack } from 'svelte';
 
-	import { readIcssCarrier } from '../../runtime/internal.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
 		serializeIcssVariables
-	} from '../provider/variables.js';
-	import type { ZBoxProps } from './types.js';
+	} from '../../component-runtime/root-style.js';
+	import { readIcssCarrier } from '../../runtime/internal.js';
 
 	let { children, class: className, ref = $bindable(null), style, ...rest }: ZBoxProps = $props();
 	const icssVariables = $derived(readIcssCarrier(rest));

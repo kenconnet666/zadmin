@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { mergeStyles, serializeIcssVariables } from '../src/lib/components/provider/variables.js';
+import { mergeStyles, serializeIcssVariables } from '../src/lib/component-runtime/root-style.js';
 
 describe('component ICSS variables', () => {
 	it('serializes defined values and omits nullish entries', () => {

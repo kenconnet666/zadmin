@@ -1,16 +1,55 @@
+<script module lang="ts">
+	import type { Snippet } from 'svelte';
+	import type { HTMLAttributes } from 'svelte/elements';
+
+	import { defineSlotRecipe, registerSlotRecipeHmr } from '../../recipes/slots.js';
+
+	export interface ZFieldProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
+		readonly children?: Snippet;
+		readonly controlId?: string;
+		readonly description?: string;
+		readonly error?: string;
+		readonly label: string;
+		readonly required?: boolean;
+		ref?: HTMLDivElement | null;
+	}
+
+	const fieldRecipe = defineSlotRecipe({
+		slots: ['root', 'label', 'control', 'description', 'error'] as const,
+		base: {
+			control: () => undefined,
+			description: (s) => s.color._textMuted,
+			error: (s) => s.color._danger,
+			label: (s) => s.fontWeight._medium,
+			root: (s) => s.display.grid
+		},
+		variants: {
+			invalid: {
+				false: {},
+				true: { control: (s) => s.borderColor._danger }
+			},
+			size: {
+				medium: { root: (s) => s.gap._small },
+				small: { root: (s) => s.gap._xsmall }
+			}
+		},
+		defaultVariants: { invalid: false, size: 'medium' }
+	});
+
+	registerSlotRecipeHmr(import.meta, fieldRecipe);
+</script>
+
 <script lang="ts">
 	import { untrack } from 'svelte';
 
-	import { readIcssCarrier } from '../../runtime/internal.js';
-	import { useZui } from '../provider/context.js';
+	import { provideZField } from '../../component-runtime/field-context.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
 		serializeIcssVariables
-	} from '../provider/variables.js';
-	import { provideZField } from './context.js';
-	import { fieldRecipe } from './field.recipe.js';
-	import type { ZFieldProps } from './types.js';
+	} from '../../component-runtime/root-style.js';
+	import { useZui } from '../../component-runtime/zui-context.js';
+	import { readIcssCarrier } from '../../runtime/internal.js';
 
 	let {
 		children,

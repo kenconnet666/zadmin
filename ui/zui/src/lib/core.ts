@@ -1,11 +1,15 @@
-export type { ButtonDesignProps, ButtonSize, ButtonVariant } from './components/button/design.js';
+export type {
+	ButtonDesignProps,
+	ButtonSize,
+	ButtonVariant
+} from './components/gene/ZButton.svelte';
 export type {
 	StackAlignment,
 	StackDesignProps,
 	StackDirection,
 	StackGap,
 	StackJustification
-} from './components/stack/design.js';
+} from './components/layout/ZStack.svelte';
 export { createStyleProgram, isDynamicSlot } from './icss/builder.js';
 export { hashString } from './icss/hash.js';
 export type {

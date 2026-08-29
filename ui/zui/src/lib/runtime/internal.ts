@@ -1,6 +1,6 @@
 import { disposeIcssModule, ownedIcss } from '../icss/runtime.js';
 import { createIcssSlot } from '../icss/values.js';
-import type { IcssVariables } from '../components/provider/variables.js';
+import type { IcssVariables } from '../component-runtime/root-style.js';
 import type { Attachment } from 'svelte/attachments';
 
 export { setServerRuntimeResolver as __setServerRuntimeResolver } from '../icss/runtime.js';

@@ -49,6 +49,11 @@ export default defineConfig({
 				extends: true,
 				test: {
 					browser: {
+						api: {
+							host: '127.0.0.1',
+							port: 63315,
+							strictPort: true
+						},
 						enabled: true,
 						headless: true,
 						instances: collectingCoverage

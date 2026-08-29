@@ -1,6 +1,6 @@
 import { getContext, setContext } from 'svelte';
 
-import type { IcssClassName } from '../../icss/types.js';
+import type { IcssClassName } from '../icss/types.js';
 
 export interface ZFieldContext {
 	readonly controlClass: IcssClassName;
