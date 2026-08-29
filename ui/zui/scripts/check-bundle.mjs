@@ -84,6 +84,11 @@ const components = [
 		path: 'compound/drawer/ZDrawerDescription.svelte'
 	},
 	{ id: 'drawer-close', name: 'ZDrawerClose', path: 'compound/drawer/ZDrawerClose.svelte' },
+	{ id: 'menu', name: 'ZMenu', path: 'compound/menu/ZMenu.svelte' },
+	{ id: 'menu-item', name: 'ZMenuItem', path: 'compound/menu/ZMenuItem.svelte' },
+	{ id: 'menu-group', name: 'ZMenuGroup', path: 'compound/menu/ZMenuGroup.svelte' },
+	{ id: 'menu-label', name: 'ZMenuLabel', path: 'compound/menu/ZMenuLabel.svelte' },
+	{ id: 'menu-separator', name: 'ZMenuSeparator', path: 'compound/menu/ZMenuSeparator.svelte' },
 	{ id: 'popconfirm', name: 'ZPopconfirm', path: 'compound/popconfirm/ZPopconfirm.svelte' },
 	{
 		id: 'popconfirm-trigger',

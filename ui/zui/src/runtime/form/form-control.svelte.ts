@@ -1,3 +1,5 @@
+import { flushSync } from 'svelte';
+
 export type FieldMessage = string;
 export type FieldMessages = FieldMessage | readonly FieldMessage[];
 
@@ -31,7 +33,15 @@ export function listenForFormReset(
 
 export function listenToFormReset(form: HTMLFormElement | null, reset: () => void): () => void {
 	if (!form) return () => undefined;
-	const handleReset = () => reset();
+	let active = true;
+	const handleReset = (event: Event) => {
+		queueMicrotask(() => {
+			if (active && !event.defaultPrevented) flushSync(reset);
+		});
+	};
 	form.addEventListener('reset', handleReset);
-	return () => form.removeEventListener('reset', handleReset);
+	return () => {
+		active = false;
+		form.removeEventListener('reset', handleReset);
+	};
 }

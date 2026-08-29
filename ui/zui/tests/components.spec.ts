@@ -6,22 +6,30 @@ import {
 	createServerStyleRegistry,
 	defaultTheme,
 	extendTheme,
+	ZAccordionTrigger,
 	ZAspectRatio,
 	ZBox,
 	ZButton,
 	ZContainer,
 	ZCheckbox,
+	ZDialogTrigger,
 	ZField,
 	ZIcon,
 	ZInput,
 	ZKbd,
 	ZLink,
+	ZMenuItem,
 	ZPagination,
+	ZPopconfirmTitle,
+	ZPopoverTrigger,
+	ZRadioGroupItem,
 	ZSeparator,
 	ZSlider,
 	ZStack,
 	ZSwitch,
+	ZTabsTrigger,
 	ZText,
+	ZTooltipTrigger,
 	ZToggleButton,
 	ZVisuallyHidden
 } from '../src/entrypoints/index.js';
@@ -34,6 +42,7 @@ import ContextProbe from './ContextProbe.svelte';
 import AccordionFixture from './AccordionFixture.svelte';
 import AlertDialogFixture from './AlertDialogFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
+import MenuFixture from './MenuFixture.svelte';
 import DialogFixture from './DialogFixture.svelte';
 import DrawerFixture from './DrawerFixture.svelte';
 import PopoverFixture from './PopoverFixture.svelte';
@@ -44,6 +53,18 @@ import TabsFixture from './TabsFixture.svelte';
 import TooltipFixture from './TooltipFixture.svelte';
 
 describe('ZUI foundational components', () => {
+	it('rejects compound members rendered outside their owning root', () => {
+		expect(() => render(ZAccordionTrigger)).toThrow(/inside ZAccordion/u);
+		expect(() => render(ZDialogTrigger)).toThrow(/inside ZDialog/u);
+		expect(() => render(ZMenuItem, { props: { value: 'orphan' } })).toThrow(/require ZMenu/u);
+		expect(() => render(ZPopconfirmTitle)).toThrow(/require ZPopconfirm/u);
+		expect(() => render(ZPopoverTrigger)).toThrow(/require ZPopover/u);
+		expect(() => render(ZRadioGroupItem, { props: { value: 'orphan' } })).toThrow(
+			/inside ZRadioGroup/u
+		);
+		expect(() => render(ZTabsTrigger, { props: { value: 'orphan' } })).toThrow(/inside ZTabs/u);
+		expect(() => render(ZTooltipTrigger)).toThrow(/require ZTooltip/u);
+	});
 	it('renders Symbol-carried compiler variables on the real ZBox root', () => {
 		const result = render(ZBox, {
 			props: {
@@ -230,6 +251,15 @@ describe('ZUI foundational components', () => {
 		expect(open).toContain('aria-modal="true"');
 		expect(open).toContain('Fixture drawer');
 		expect(new Set(rendered)).toHaveLength(variants.length);
+	});
+
+	it('renders Menu SSR with native ARIA roles and disabled state', () => {
+		const result = render(MenuFixture).body;
+		expect(result).toContain('role="menu"');
+		expect(result.match(/role="menuitem"/gu)).toHaveLength(4);
+		expect(result).toContain('aria-disabled="true"');
+		expect(result).toContain('role="group"');
+		expect(result).toContain('role="separator"');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

@@ -60,6 +60,17 @@ export { default as ZDrawerTitle } from '../components/compound/drawer/ZDrawerTi
 export type { ZDrawerTitleProps } from '../components/compound/drawer/ZDrawerTitle.svelte';
 export { default as ZDrawerTrigger } from '../components/compound/drawer/ZDrawerTrigger.svelte';
 export type { ZDrawerTriggerProps } from '../components/compound/drawer/ZDrawerTrigger.svelte';
+export { default as ZMenu } from '../components/compound/menu/ZMenu.svelte';
+export type { ZMenuProps } from '../components/compound/menu/ZMenu.svelte';
+export { default as ZMenuGroup } from '../components/compound/menu/ZMenuGroup.svelte';
+export type { ZMenuGroupProps } from '../components/compound/menu/ZMenuGroup.svelte';
+export { default as ZMenuItem } from '../components/compound/menu/ZMenuItem.svelte';
+export type { ZMenuItemProps } from '../components/compound/menu/ZMenuItem.svelte';
+export { default as ZMenuLabel } from '../components/compound/menu/ZMenuLabel.svelte';
+export type { ZMenuLabelProps } from '../components/compound/menu/ZMenuLabel.svelte';
+export { default as ZMenuSeparator } from '../components/compound/menu/ZMenuSeparator.svelte';
+export type { ZMenuSeparatorProps } from '../components/compound/menu/ZMenuSeparator.svelte';
+export { MenuActionEvent } from '../components/compound/menu/context.svelte.js';
 export { default as ZPopconfirm } from '../components/compound/popconfirm/ZPopconfirm.svelte';
 export type { ZPopconfirmProps } from '../components/compound/popconfirm/ZPopconfirm.svelte';
 export { default as ZPopconfirmAction } from '../components/compound/popconfirm/ZPopconfirmAction.svelte';

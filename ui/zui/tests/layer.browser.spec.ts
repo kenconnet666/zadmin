@@ -7,8 +7,28 @@ import { inertOthers } from '../src/runtime/layer/inert-others.js';
 import { LayerStack } from '../src/runtime/layer/layer-stack.svelte.js';
 import { portal } from '../src/runtime/layer/portal.js';
 import { lockScroll } from '../src/runtime/layer/scroll-lock.js';
+import { listenToFormReset } from '../src/runtime/form/form-control.svelte.js';
 
 describe('ZUI layer runtime', () => {
+	it('flushes uncancelled form resets after native default behavior and cancels cleanup', async () => {
+		const form = document.createElement('form');
+		const reset = vi.fn();
+		const prevent = (event: Event) => event.preventDefault();
+		form.addEventListener('reset', prevent);
+		const stop = listenToFormReset(form, reset);
+		form.dispatchEvent(new Event('reset', { cancelable: true }));
+		await Promise.resolve();
+		expect(reset).not.toHaveBeenCalled();
+
+		form.removeEventListener('reset', prevent);
+		form.dispatchEvent(new Event('reset', { cancelable: true }));
+		await Promise.resolve();
+		expect(reset).toHaveBeenCalledOnce();
+		stop();
+		form.dispatchEvent(new Event('reset', { cancelable: true }));
+		await Promise.resolve();
+		expect(reset).toHaveBeenCalledOnce();
+	});
 	it('moves portal content between inline, Element and ShadowRoot targets reversibly', () => {
 		const host = document.createElement('div');
 		const target = document.createElement('div');

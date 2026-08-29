@@ -33,6 +33,11 @@ import {
 	ZDrawerOverlay,
 	ZDrawerTitle,
 	ZDrawerTrigger,
+	ZMenu,
+	ZMenuGroup,
+	ZMenuItem,
+	ZMenuLabel,
+	ZMenuSeparator,
 	ZPagination,
 	ZPopconfirm,
 	ZPopconfirmAction,
@@ -89,6 +94,11 @@ import {
 	type ZDrawerProps,
 	type ZDrawerTitleProps,
 	type ZDrawerTriggerProps,
+	type ZMenuGroupProps,
+	type ZMenuItemProps,
+	type ZMenuLabelProps,
+	type ZMenuProps,
+	type ZMenuSeparatorProps,
 	type ZPaginationProps,
 	type ZPopconfirmActionProps,
 	type ZPopconfirmCancelProps,
@@ -169,6 +179,11 @@ const drawerTitleProps: ComponentProps<typeof ZDrawerTitle> = {} satisfies ZDraw
 const drawerDescriptionProps: ComponentProps<typeof ZDrawerDescription> =
 	{} satisfies ZDrawerDescriptionProps;
 const drawerCloseProps: ComponentProps<typeof ZDrawerClose> = {} satisfies ZDrawerCloseProps;
+const menuProps: ComponentProps<typeof ZMenu> = { loop: false } satisfies ZMenuProps;
+const menuGroupProps: ComponentProps<typeof ZMenuGroup> = {} satisfies ZMenuGroupProps;
+const menuItemProps: ComponentProps<typeof ZMenuItem> = { value: 'open' } satisfies ZMenuItemProps;
+const menuLabelProps: ComponentProps<typeof ZMenuLabel> = {} satisfies ZMenuLabelProps;
+const menuSeparatorProps: ComponentProps<typeof ZMenuSeparator> = {} satisfies ZMenuSeparatorProps;
 const paginationProps: ComponentProps<typeof ZPagination> = {
 	defaultPage: 2,
 	totalPages: 20
@@ -262,6 +277,11 @@ void drawerContentProps;
 void drawerTitleProps;
 void drawerDescriptionProps;
 void drawerCloseProps;
+void menuProps;
+void menuGroupProps;
+void menuItemProps;
+void menuLabelProps;
+void menuSeparatorProps;
 void paginationProps;
 void popconfirmProps;
 void popconfirmTriggerProps;
@@ -295,6 +315,7 @@ s.display.inlineFlex;
 s.inlineSize._small;
 s.padding.px(4, 8);
 s.width.percent(100);
+s.width.fitContent;
 
 // @ts-expect-error color does not accept length units
 s.color.px(4);

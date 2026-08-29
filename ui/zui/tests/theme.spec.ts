@@ -89,6 +89,7 @@ describe('ZUI themes', () => {
 		expect(defaultTheme.size.drawerMedium).toBe(400);
 		expect(defaultTheme.size.drawerLarge).toBe(560);
 		expect(defaultTheme.size.popconfirm).toBe(320);
+		expect(defaultTheme.size.menu).toBe(192);
 		expect(defaultTheme.color.primary).toBe('#2563eb');
 		expect(defaultTheme.size.dialogMedium).toBe(512);
 		expect(defaultTheme.indicatorSize.medium).toBe(18);

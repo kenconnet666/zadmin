@@ -325,7 +325,17 @@ export const PROPERTY_DEFINITIONS = {
 			preWrap: 'pre-wrap'
 		}
 	},
-	width: { token: 'size', tokenUnit: 'px', units: ['length', 'percent'] },
+	width: {
+		keywords: {
+			auto: 'auto',
+			fitContent: 'fit-content',
+			maxContent: 'max-content',
+			minContent: 'min-content'
+		},
+		token: 'size',
+		tokenUnit: 'px',
+		units: ['length', 'percent']
+	},
 	zIndex: { token: 'zIndex' }
 } as const satisfies Readonly<Record<string, PropertyDefinition>>;
 

@@ -24,6 +24,11 @@ export { zuiMetadata as drawerDescriptionMetadata } from '../components/compound
 export { zuiMetadata as drawerOverlayMetadata } from '../components/compound/drawer/ZDrawerOverlay.svelte';
 export { zuiMetadata as drawerTitleMetadata } from '../components/compound/drawer/ZDrawerTitle.svelte';
 export { zuiMetadata as drawerTriggerMetadata } from '../components/compound/drawer/ZDrawerTrigger.svelte';
+export { zuiMetadata as menuMetadata } from '../components/compound/menu/ZMenu.svelte';
+export { zuiMetadata as menuGroupMetadata } from '../components/compound/menu/ZMenuGroup.svelte';
+export { zuiMetadata as menuItemMetadata } from '../components/compound/menu/ZMenuItem.svelte';
+export { zuiMetadata as menuLabelMetadata } from '../components/compound/menu/ZMenuLabel.svelte';
+export { zuiMetadata as menuSeparatorMetadata } from '../components/compound/menu/ZMenuSeparator.svelte';
 export { zuiMetadata as popconfirmMetadata } from '../components/compound/popconfirm/ZPopconfirm.svelte';
 export { zuiMetadata as popconfirmActionMetadata } from '../components/compound/popconfirm/ZPopconfirmAction.svelte';
 export { zuiMetadata as popconfirmCancelMetadata } from '../components/compound/popconfirm/ZPopconfirmCancel.svelte';

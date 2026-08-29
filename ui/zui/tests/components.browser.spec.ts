@@ -10,6 +10,7 @@ import CheckboxFixture from './CheckboxFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
 import DialogFixture from './DialogFixture.svelte';
 import DrawerFixture from './DrawerFixture.svelte';
+import MenuFixture from './MenuFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
 import PaginationFixture from './PaginationFixture.svelte';
 import PopoverFixture from './PopoverFixture.svelte';
@@ -41,6 +42,30 @@ function insertedRuleCount(): number {
 }
 
 describe('compiled ICSS browser updates', () => {
+	it('coordinates Menu roving focus, disabled skipping, typeahead and cancellable action', async () => {
+		render(MenuFixture);
+		await tick();
+		const alpha = document.querySelector<HTMLElement>('[data-testid="menu-alpha"]');
+		const beta = document.querySelector<HTMLElement>('[data-testid="menu-beta"]');
+		const charlie = document.querySelector<HTMLElement>('[data-testid="menu-charlie"]');
+		const delta = document.querySelector<HTMLElement>('[data-testid="menu-delta"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="menu-output"]');
+		expect(alpha?.tabIndex).toBe(0);
+		expect(beta?.tabIndex).toBe(-1);
+		alpha?.focus();
+		alpha?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
+		expect(document.activeElement).toBe(charlie);
+
+		charlie?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'd' }));
+		expect(document.activeElement).toBe(delta);
+		delta?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+		expect(output?.textContent).toBe('none');
+
+		delta?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Home' }));
+		expect(document.activeElement).toBe(alpha);
+		alpha?.click();
+		expect(output?.textContent).toBe('alpha');
+	});
 	it('keeps AlertDialog open until an explicit action is chosen', async () => {
 		render(AlertDialogFixture);
 		const trigger = document.querySelector<HTMLButtonElement>(

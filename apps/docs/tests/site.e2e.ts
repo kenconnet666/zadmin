@@ -201,6 +201,24 @@ test('keeps pagination locale labels, current page and window synchronized', asy
 	await expect(navigation.locator('[data-slot="ellipsis"]')).toHaveCount(2);
 });
 
+test('keeps Menu roving focus, disabled skipping, typeahead and actions synchronized', async ({
+	page
+}) => {
+	await page.goto('/#/components/menu');
+	const open = page.getByRole('menuitem', { name: '打开详情' });
+	await open.focus();
+	await page.keyboard.press('ArrowDown');
+	await expect(page.getByRole('menuitem', { name: '复制部署' })).toBeFocused();
+	await page.keyboard.type('删');
+	await expect(page.getByRole('menuitem', { name: '删除部署' })).toBeFocused();
+	await page.keyboard.press('Enter');
+	await expect(page.getByText('action = delete')).toBeVisible();
+	await expect(page.getByRole('menuitem', { name: /回滚/u })).toHaveAttribute(
+		'aria-disabled',
+		'true'
+	);
+});
+
 test('keeps Slider keyboard, value text, FormData and reset synchronized', async ({ page }) => {
 	await page.goto('/#/components/slider');
 	const slider = page.getByRole('slider', { name: '告警阈值' });
@@ -418,6 +436,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/switch',
 		'#/components/slider',
 		'#/components/accordion',
+		'#/components/menu',
 		'#/components/pagination',
 		'#/components/tabs',
 		'#/components/alert-dialog',

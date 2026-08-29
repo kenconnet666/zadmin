@@ -10,6 +10,7 @@ describe('ICSS builder', () => {
 			s.color._primary;
 			s.padding.px(8, 16);
 			s.opacity(0.8);
+			s.width.fitContent;
 		});
 
 		expect(program.block.instructions).toEqual([
@@ -45,6 +46,12 @@ describe('ICSS builder', () => {
 				kind: 'declaration',
 				property: 'opacity',
 				values: [{ value: 0.8 }]
+			},
+			{
+				important: false,
+				kind: 'declaration',
+				property: 'width',
+				values: [{ value: 'fit-content' }]
 			}
 		]);
 	});
@@ -92,6 +99,7 @@ describe('ICSS builder', () => {
 		expectTypeOf<Style['insetBlockStart']['_small']>().toEqualTypeOf<void>();
 		expectTypeOf<Style['insetInlineEnd']['percent']>().toBeFunction();
 		expectTypeOf<Style['padding']['px']>().toBeFunction();
+		expectTypeOf<Style['width']['fitContent']>().toEqualTypeOf<void>();
 	});
 
 	it('records a tokenized focus outline without shorthand raw values', () => {
