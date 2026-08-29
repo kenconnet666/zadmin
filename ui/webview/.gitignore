@@ -1,0 +1,6 @@
+.svelte-kit/
+coverage/
+dist/
+node_modules/
+**/bin/
+**/obj/

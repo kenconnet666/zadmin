@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="ZAdmin.WebView.Core/ZAdmin.WebView.Core.csproj" />
+  <Project Path="ZAdmin.WebView.Core.Tests/ZAdmin.WebView.Core.Tests.csproj" />
+</Solution>

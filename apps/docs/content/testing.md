@@ -137,6 +137,27 @@ pnpm build:desktop
 - release x64 GUI和NSIS current-user installer完成静默安装/卸载，注册表、安装目录和进程均无残留；
 - 当前发布件未签名，正式外部分发前必须补Authenticode签名；Dialog、共享剪贴板、通知视觉、Opener和进程操作保留受监督验收。
 
+## C# WebView公共层验收
+
+重点命令：
+
+```powershell
+pnpm --filter @zadmin/webview check
+pnpm --filter @zadmin/webview test:coverage
+pnpm --filter @zadmin/webview build
+pnpm --filter @zadmin/webview dotnet:build
+pnpm --filter @zadmin/webview dotnet:test
+```
+
+2026-08-29公共层结果：
+
+- 单一IDL生成34个TypeScript/C#协议method，`generate:check`验证漂移；
+- TypeScript 6个test files、23项测试通过；statements 98.15%、branches 89.92%、functions/lines 100%；
+- timeout、AbortSignal、错误归一化、事件、资源scope、origin allowlist、browser fallback和fake bridge通过；
+- 9个Svelte桌面组件check为0 errors/0 warnings；
+- `net10.0` C# Core与合同测试零警告构建，验证origin、version、allowlist、dispatcher和resource dispose；
+- Windows WinUI 3/WebView2宿主及发布验收在P7单独记录，不能用公共层测试代替。
+
 ## Svelte Miniapp与微信直编验收
 
 重点命令：

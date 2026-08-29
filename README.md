@@ -23,6 +23,7 @@ packages/
 ui/
   sveltekit/   服务端动态路由与浏览器插件 Runtime
   tauri/       Tauri 系统能力、权限结果、生命周期和测试驱动
+  webview/     C#公共协议、WebView bridge、桌面平台facade与Windows target
   zui/         浏览器/WebView 通用的 Theme、ICSS 与 Svelte 组件库
   miniapp/     自包含 Miniapp Theme、M* 组件、compiler、runtime 与微信平台能力
 

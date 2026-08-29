@@ -125,6 +125,9 @@ jobs:
       - name: Run Tauri facade coverage
         run: pnpm --filter @zadmin/tauri test:coverage
 
+      - name: Run WebView facade coverage
+        run: pnpm --filter @zadmin/webview test:coverage
+
       - name: Run Miniapp external package acceptance
         run: pnpm --filter @zadmin/miniapp test:package
 
@@ -163,8 +166,18 @@ jobs:
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
 
+      - name: Install .NET 10 SDK
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Build and test C# WebView core
+        run: |
+          pnpm --filter @zadmin/webview dotnet:build
+          pnpm --filter @zadmin/webview dotnet:test
 
       - name: Install Rust components and target
         shell: pwsh

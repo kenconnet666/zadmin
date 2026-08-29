@@ -1,6 +1,6 @@
 # UI 平台重构蓝图
 
-状态：实施中（2026-08-29）。P0–P5 已完成代码迁移与本地窄验收：浏览器ZUI已合包、SvelteKit ZUI集成已独立、自包含Miniapp已由Svelte直编微信原生产物并移除Taro。P6–P7的C# WebView公共层与Windows target正在实施；微信开发者工具直编模拟器验收和云端全量门禁仍按本文边界追踪。
+状态：实施中（2026-08-29）。P0–P6 已完成代码迁移与本地窄验收：浏览器ZUI已合包、SvelteKit ZUI集成已独立、自包含Miniapp已由Svelte直编微信原生产物并移除Taro，WebView平台中立协议、TypeScript facade、C# Core和9个桌面组件已落地。P7的Windows/WebView2 target正在实施；微信开发者工具直编模拟器验收和云端全量门禁仍按本文边界追踪。
 
 ## 1. 决策摘要
 
@@ -648,7 +648,7 @@ ui/miniapp + ui/zui-taro → ui/miniapp
 8. 微信开发者工具模拟器、真机和package acceptance；
 9. 删除Taro依赖。
 
-### P6：平台中立化桌面合同（进行中）
+### P6：平台中立化桌面合同（已完成）
 
 - 从`@zadmin/tauri`提取DesktopPlatform、error、scope、fake driver和组件语义；
 - 清除所有Tauri类型泄漏；

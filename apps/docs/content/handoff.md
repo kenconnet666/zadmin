@@ -12,6 +12,8 @@ DI容器、Plugin Module、上下游插件类型传播、服务端/客户端独�
 
 `@zadmin/miniapp`现为独立移动框架：不依赖ZUI，内含Theme、`mcss()`、8个`M*`组件、compiler、custom renderer、App/Page runtime、官方微信类型平台能力和直接微信target。`apps/wechat`从Svelte源码生成WXML、WXSS、JS、JSON和sourcemap，生产依赖及产物没有Taro。当前本地13个测试文件/41项测试、宿主8项测试和15文件实际构建通过；clean-package和coverage留给云端CI。
 
+`@zadmin/webview`平台中立层已落地：34个IDL方法、typed bridge、timeout/cancel/event/dispose、`DesktopPlatform`、browser fallback、fake driver、9个Svelte组件和C# dispatcher。TypeScript 23项测试覆盖率statements 98.15%、branches 89.92%、functions/lines 100%；`net10.0` C# Core零警告构建并通过独立合同测试。Windows/WinUI 3/WebView2宿主和发布件仍在P7实施，旧Tauri发布路径暂不删除。
+
 2026-08-25的Taro模拟器、Android真机、Skyline、性能和能力探针记录只作为迁移前历史证据。直编target尚需在当前微信开发者工具CLI授权完成后重新做模拟器/HMR复核，不能继承旧runtime的截图或验证等级。账号、支付、手机号、权限、上传与硬件操作继续要求单独授权。
 
 关键代码检查点：
@@ -327,15 +329,11 @@ $env:ZADMIN_PLUGIN_ADMIN_TOKEN = '<secret>'
 -真实PostgreSQL、Redis和OSS客户端仍是基础骨架，后续业务接入不能把DI/HMR测试误当成真实外部服务验收。
 -ZUI编译器只优化可证明安全的本地数据流；循环、switch中的动态声明、factory局部值、兄弟/祖先selector和未知组件边界会使用完整class-rule回退。
 \-`inline-vars`要求CSP允许`style-src-attr`；严格禁止inline attribute时使用`dynamicValues: 'class-rules'`。
--当前ZUI组件范围只有Provider、Box、Stack、Text和Button；旧Vue组件库不是待机械迁移清单。
--微信默认生产目标是WebView；Skyline不是simulator-verified。
--固定Svelte artifact的boundary `failed/pending` snippet存在上游compiler崩溃；当前支持并测试`<svelte:boundary onerror>`，坏路径有提前诊断。
--微信完整dev audit有21项固定工具链advisory，但`pnpm audit --prod`无已知漏洞，开发supervisor不启动Vite HTTP服务。
--Taro 4.2.1 Doctor依赖远程schema且离线fallback不接受插件的`framework: none`；所有宿主/外部fixture构建固定使用`--no-check`，由包级配置校验、清空旧dist、真实目标构建和产物验证取代。
--真机启动时微信内部广告调优可能报告`WAServiceMainContext invalid scope`，远程调试也可能报告`/usr/app.js.map`截断；本地无广告API且7个map均可解析。记录并清空这些环境消息后，8项探针及卸载阶段Console保持为空。
+-当前ZUI基础范围是Provider、Box、Stack、Text、Icon、Button、Input和Field；旧Vue组件库不是待机械迁移清单。
+-微信直编target当前是build/test-verified；微信开发者工具CLI仍等待外部授权，不能继承迁移前Taro模拟器或真机证据。
+-固定Svelte artifact的boundary `failed/pending` snippet上游限制仍保留提前诊断；`<svelte:boundary onerror>`已覆盖。
 -没有执行微信upload、审核、支付、手机号、订阅、权限弹窗、云写入或真实硬件操作。
--当前Taro 4.2.1/DevTools Stable 2.02.2608040/基础库3.17.1组合下，Skyline在Svelte与Taro Solid对照页都出现黑色模拟器画布；升级Taro、DevTools或基础库后必须按renderer验收文档重测，不能从build通过推断可发布。
--四个失败的clean-package诊断目录因宿主递归删除策略未能自动清理，位于`%TEMP%\zadmin-wechat-package-{zhYiko,d8QoR6,iZYX7l,B8Img4}`；它们不在仓库内，可在确认无需诊断后手工删除。最后一次成功fixture已自动清理。
+-WebView C# Core已验证，Windows WinUI 3窗口、WebView2 Evergreen缺失恢复、真实IPC、HMR、MSIX/portable、签名与安装卸载仍属于P7，不得从Core build推断可发布。
 
 这些不是未完成的DI路线图；除非出现明确业务需求，不添加占位接口。
 
@@ -346,4 +344,4 @@ $env:ZADMIN_PLUGIN_ADMIN_TOKEN = '<secret>'
 3. 业务插件优先扩展自己的primary API和内部Provider，不开放内部Bean ID。
 4. 修改Runtime/HMR后按 `testing.md`执行真实浏览器验收。
 5. 阶段性提交并更新本交接文件。
-6. 微信开发先运行`setup:local`，再用`pnpm dev:wechat`；不要另起第二组Taro/package watcher。
+6. 微信开发先运行`setup:local`，再用`pnpm dev:wechat`；该命令已经是唯一Miniapp直编watcher。
