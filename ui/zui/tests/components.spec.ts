@@ -15,7 +15,8 @@ import {
 	ZText
 } from '../src/lib/index.js';
 import { ZCode } from '../src/lib/code.js';
-import { getIconPaths } from '../src/lib/components/gene/ZIcon.svelte';
+import Camera from '@lucide/svelte/icons/camera';
+import { getIconComponent, iconManifest } from '../src/lib/components/gene/ZIcon.svelte';
 import { __icssCarrier } from '../src/lib/runtime/internal.js';
 import FieldFixture from './FieldFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
@@ -64,7 +65,10 @@ describe('ZUI foundational components', () => {
 		expect(labelled).toContain('aria-label="Search"');
 		expect(ariaLabelled).toContain('aria-label="External search"');
 		expect(ariaLabelled).toContain('role="img"');
-		expect(() => getIconPaths('missing' as never)).toThrow(/Unknown ZIcon/);
+		expect(labelled).toContain('lucide-search');
+		expect(getIconComponent('search')).toBe(iconManifest.search);
+		expect(() => getIconComponent('missing' as never)).toThrow(/Unknown ZIcon/);
+		expect(render(Camera).body).toContain('lucide-camera');
 		expect(render(ZInput).body).toContain('type="text"');
 		expect(render(ZInput, { props: { defaultValue: 'seed' } }).body).toContain('value="seed"');
 		expect(field).toMatch(/<label[^>]+for="[^"]+-control"/u);

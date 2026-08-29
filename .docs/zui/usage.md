@@ -17,8 +17,10 @@
 发布后外部仓库：
 
 ```powershell
-pnpm add @zadmin/zui
+pnpm add @zadmin/zui @lucide/svelte
 ```
+
+`@lucide/svelte`是ZUI的必需peer dependency，由使用项目显式安装；ZUI不会复制或转出第三方图标包。
 
 支持范围：
 
@@ -176,6 +178,34 @@ export const theme = extendTheme(defaultTheme, {
 ```
 
 组件标准转发`class`和HTML attributes。编译器只向已知ZUI组件传递内部变量carrier；未知第三方组件使用运行时class-rule回退，不添加wrapper。
+
+### 图标组件
+
+`@lucide/svelte`是ZUI的必需peer dependency。业务项目显式安装后，直接通过单图标子路径使用完整图标集：
+
+```svelte
+<script lang="ts">
+	import Camera from '@lucide/svelte/icons/camera';
+	import Settings from '@lucide/svelte/icons/settings';
+	import Trash2 from '@lucide/svelte/icons/trash-2';
+</script>
+
+<Camera aria-label="Camera" role="img" size={20} />
+<Settings aria-hidden="true" size={20} />
+<Trash2 aria-label="Delete" role="img" size={20} />
+```
+
+常用系统图标继续使用统一封装，获得Theme尺寸、ICSS、可访问名称和真实SVG ref：
+
+```svelte
+<script lang="ts">
+	import { ZIcon } from '@zadmin/zui';
+</script>
+
+<ZIcon name="search" label="Search" size="small" />
+```
+
+不要从Lucide总入口导入图标全集对象做运行时字符串查找；使用`@lucide/svelte/icons/*`静态子路径时，实际产物只包含引用的组件。ZUI内部也遵循同一约束。
 
 ### 按需代码高亮
 

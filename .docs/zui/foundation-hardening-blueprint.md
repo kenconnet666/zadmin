@@ -349,8 +349,12 @@ CI完整门禁：
 - 保持受控manifest和无任意SVG HTML注入；
 - 明确装饰、有label、外部`aria-label`冲突时的优先级；
 - 验证非法name的开发错误，而不是静默空图标；
-- 若需要项目级扩展，使用Provider注册的强类型icon source边界，当前不接第三方图标库；
-- 图标扩展不能让所有业务图标进入基础bundle。
+- 使用官方`@lucide/svelte`替换自维护SVG path，并把它声明为ZUI的必需peer dependency；
+- 使用项目必须显式安装`@lucide/svelte`，ZUI不复制、不转出第三方图标入口；
+- `iconManifest`只登记需要ZIcon统一Theme尺寸、ICSS、可访问性和ref合同的常用图标；其余场景直接从`@lucide/svelte/icons/*`静态子路径导入；
+- 禁止把全量图标收集成运行时字符串索引，也不从Lucide总入口导入；业务产物只保留静态引用的组件；
+- ZIcon因包含受控基础图标集合使用独立`4 KiB gzip`增量上限，其他基础组件继续使用`3.25 KiB`上限；
+- 新增ZIcon常用名称时必须显式导入并经过bundle门禁。
 
 ### 6.6 ZButton
 
@@ -360,7 +364,7 @@ CI完整门禁：
 - loading保持原生disabled与`aria-busy`，增加`loadingLabel`和可选loading snippet；
 - 内置指示器保留在ZButton文件中，不新增Spinner组件；
 - loading切换尽量不改变按钮宽度和可访问名称；
-- start/end icon通过Snippet支持，但不引入图标库；
+- start/end icon继续通过Snippet支持；调用方可以传入ZIcon或直接按需导入的Lucide组件；
 - danger hover使用用途token；
 - 验证submit/reset/button、onclick一次、disabled无点击、键盘和form owner。
 

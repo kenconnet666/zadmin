@@ -14,7 +14,7 @@ const components = [
 	{ id: 'box', name: 'ZBox', path: 'gene/ZBox.svelte' },
 	{ id: 'stack', name: 'ZStack', path: 'layout/ZStack.svelte' },
 	{ id: 'text', name: 'ZText', path: 'gene/ZText.svelte' },
-	{ id: 'icon', name: 'ZIcon', path: 'gene/ZIcon.svelte' },
+	{ id: 'icon', maxIncrementalGzip: 4 * 1024, name: 'ZIcon', path: 'gene/ZIcon.svelte' },
 	{ id: 'button', name: 'ZButton', path: 'gene/ZButton.svelte' },
 	{ id: 'input', name: 'ZInput', path: 'input/ZInput.svelte' },
 	{ id: 'field', name: 'ZField', path: 'input/ZField.svelte' }
@@ -82,8 +82,11 @@ for (const component of components) {
 		`import * as runtime from ${JSON.stringify(runtime)}; import component from ${JSON.stringify(componentEntry)}; globalThis.__zuiRuntimeBudget = runtime; globalThis.__zuiComponentBudget = component;`
 	);
 	const incremental = Math.max(0, output.gzip - runtimeBundle.gzip);
-	if (incremental > 3.25 * 1024) {
-		throw new Error(`${component.name} incremental gzip ${incremental} exceeds 3.25 KiB.`);
+	const maxIncrementalGzip = component.maxIncrementalGzip ?? 3.25 * 1024;
+	if (incremental > maxIncrementalGzip) {
+		throw new Error(
+			`${component.name} incremental gzip ${incremental} exceeds ${maxIncrementalGzip} bytes.`
+		);
 	}
 	if (/node:async_hooks|compiler\/preprocess|svelte\/compiler/u.test(output.code)) {
 		throw new Error(`${component.name} browser bundle contains compiler/server code.`);
@@ -93,7 +96,11 @@ for (const component of components) {
 			throw new Error(`${component.name} unexpectedly contains ${dependency}.`);
 		}
 	}
-	report.components[component.id] = { gzip: output.gzip, incrementalGzip: incremental };
+	report.components[component.id] = {
+		gzip: output.gzip,
+		incrementalGzip: incremental,
+		maxIncrementalGzip
+	};
 }
 
 const codeEntry = portable(resolve(sourceRoot, 'code.ts'));

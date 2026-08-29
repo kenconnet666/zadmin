@@ -28,6 +28,15 @@
 
 <script lang="ts">
 	import { ZIcon, ZStack, ZText, iconManifest, useZui } from '@zadmin/zui';
+	import Camera from '@lucide/svelte/icons/camera';
+	import Settings from '@lucide/svelte/icons/settings';
+	import Trash2 from '@lucide/svelte/icons/trash-2';
+
+	const directIcons = [
+		{ component: Camera, name: 'Camera' },
+		{ component: Settings, name: 'Settings' },
+		{ component: Trash2, name: 'Trash2' }
+	] as const;
 	const zui = useZui();
 	const classes = $derived(zui.slots(galleryRecipe));
 </script>
@@ -37,6 +46,13 @@
 		<ZStack class={classes.item} gap="small" align="center">
 			<ZIcon name={name as keyof typeof iconManifest} label={name} size={28} />
 			<ZText size="small" tone="muted">{name}</ZText>
+		</ZStack>
+	{/each}
+	{#each directIcons as item (item.name)}
+		{@const Icon = item.component}
+		<ZStack class={classes.item} gap="small" align="center">
+			<Icon aria-label={item.name} role="img" size={28} />
+			<ZText size="small" tone="muted">{item.name}</ZText>
 		</ZStack>
 	{/each}
 </div>

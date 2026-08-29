@@ -7,10 +7,11 @@ export const iconDoc = defineComponentDoc(iconMetadata, {
 	demos: [
 		{
 			component: GalleryDemo,
-			description: 'manifest只包含当前真实使用的受控图标。',
+			description:
+				'ZIcon提供常用名称封装；项目安装必需peer后，可从@lucide/svelte/icons/*直接使用完整图标组件。',
 			id: 'icon-gallery',
 			source: gallerySource,
-			title: '内置图标'
+			title: '受控图标与完整图标入口'
 		}
 	],
 	accessibility: ['没有可访问名称时设置aria-hidden。', '具名图标使用role=img。']

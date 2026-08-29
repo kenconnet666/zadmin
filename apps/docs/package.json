@@ -13,6 +13,7 @@
 	},
 	"dependencies": {
 		"@fontsource/fira-mono": "catalog:",
+		"@lucide/svelte": "catalog:",
 		"@zadmin/zui": "workspace:^",
 		"shiki": "catalog:"
 	},

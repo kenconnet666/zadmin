@@ -226,7 +226,7 @@ component-runtime/
 - ZButton增加loading snippet/label、稳定spinner和避免布局跳动的策略；
 - ZField允许Snippet label/description/messages并增加size；
 - ZProvider增加locale、direction和Portal容器合同；
-- ZIcon增加受控项目图标注册接口，但不接入整套第三方图标库。
+- `@zadmin/zui`把`@lucide/svelte`声明为必需peer dependency，由使用项目显式安装并直接按单图标子路径使用；ZIcon保留常用名称、统一尺寸、可访问性和真实SVG ref，不暴露任意SVG字符串。
 
 ## 6. 新组件阶段
 
