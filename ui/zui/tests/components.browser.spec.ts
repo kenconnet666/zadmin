@@ -10,6 +10,14 @@ import { createBrowserIcssRuntime } from '../src/icss/runtime.js';
 import { defaultTheme } from '../src/theme/default.js';
 import { extendTheme } from '../src/theme/define.js';
 import { ZCode } from '../src/entrypoints/code.js';
+import {
+	ZAspectRatio,
+	ZContainer,
+	ZKbd,
+	ZLink,
+	ZSeparator,
+	ZVisuallyHidden
+} from '../src/entrypoints/index.js';
 
 function insertedRuleCount(): number {
 	return [...document.querySelectorAll<HTMLStyleElement>('style[data-icss]')].reduce(
@@ -19,6 +27,62 @@ function insertedRuleCount(): number {
 }
 
 describe('compiled ICSS browser updates', () => {
+	it('runs S1 semantic primitives through their client lifecycle', async () => {
+		let activations = 0;
+		render(ZLink, {
+			href: '#ready',
+			onclick: (event) => {
+				event.preventDefault();
+				activations += 1;
+			},
+			tone: 'danger',
+			underline: 'always'
+		});
+		const activeLink = document.querySelector<HTMLAnchorElement>('a[href="#ready"]');
+		activeLink?.click();
+		expect(activations).toBe(1);
+
+		render(ZLink, {
+			disabled: true,
+			href: '#blocked',
+			onclick: () => (activations += 1),
+			tone: 'muted',
+			underline: 'none'
+		});
+		const disabledLink = document.querySelector<HTMLAnchorElement>('a[aria-disabled="true"]');
+		expect(disabledLink?.hasAttribute('href')).toBe(false);
+		disabledLink?.click();
+		expect(activations).toBe(1);
+
+		render(ZSeparator, { orientation: 'horizontal' });
+		render(ZSeparator, { orientation: 'vertical' });
+		expect(document.querySelector('hr[data-orientation="horizontal"]')).not.toBeNull();
+		expect(
+			document.querySelector('[role="separator"][aria-orientation="vertical"]')
+		).not.toBeNull();
+
+		render(ZKbd, { 'data-testid': 'kbd' });
+		render(ZVisuallyHidden, { 'data-testid': 'visually-hidden' });
+		expect(document.querySelector('[data-testid="kbd"]')?.tagName).toBe('KBD');
+		expect(
+			getComputedStyle(document.querySelector('[data-testid="visually-hidden"]')!).position
+		).toBe('absolute');
+
+		render(ZAspectRatio, { 'data-testid': 'ratio-fraction', ratio: '4 / 3' });
+		render(ZAspectRatio, { 'data-testid': 'ratio-number', ratio: 1.5 });
+		expect(
+			getComputedStyle(document.querySelector('[data-testid="ratio-fraction"]')!).aspectRatio
+		).toBe('4 / 3');
+		expect(
+			getComputedStyle(document.querySelector('[data-testid="ratio-number"]')!).aspectRatio
+		).toBe('1.5 / 1');
+
+		render(ZContainer, { 'data-testid': 'container', gutter: 'large', size: 'small' });
+		const container = document.querySelector('[data-testid="container"]');
+		expect(getComputedStyle(container!).maxWidth).toBe('640px');
+		expect(getComputedStyle(container!).paddingInline).toBe('16px');
+	});
+
 	it('enhances ZCode with Shiki tokens without replacing its text semantics', async () => {
 		render(ZCode, {
 			code: 'const answer: number = 42;',

@@ -146,7 +146,7 @@
 	}
 </script>
 
-<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -- library links preserve caller-owned native and external hrefs -->
+<!-- eslint-disable svelte/no-navigation-without-resolve -- library links preserve caller-owned native and external hrefs -->
 <a
 	{...rest}
 	bind:this={ref}
@@ -163,3 +163,4 @@
 >
 	{@render children?.()}
 </a>
+<!-- eslint-enable svelte/no-navigation-without-resolve -->
