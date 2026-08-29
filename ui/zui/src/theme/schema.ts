@@ -50,6 +50,20 @@ export const DEFAULT_THEME_SCHEMA = {
 		normal: 400,
 		semibold: 600
 	},
+	indicatorSize: {
+		large: 20,
+		medium: 18,
+		small: 16,
+		switchLargeBlock: 26,
+		switchLargeInline: 48,
+		switchMediumBlock: 22,
+		switchMediumInline: 40,
+		switchSmallBlock: 18,
+		switchSmallInline: 32,
+		switchThumbLarge: 22,
+		switchThumbMedium: 18,
+		switchThumbSmall: 14
+	},
 	lineHeight: {
 		compact: 1.25,
 		normal: 1.5,
@@ -74,9 +88,6 @@ export const DEFAULT_THEME_SCHEMA = {
 	},
 	size: {
 		full: '100%',
-		indicatorLarge: 20,
-		indicatorMedium: 18,
-		indicatorSmall: 16,
 		large: 48,
 		medium: 32,
 		small: 24

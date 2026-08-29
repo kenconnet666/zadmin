@@ -18,6 +18,7 @@ import {
 	ZLink,
 	ZSeparator,
 	ZStack,
+	ZSwitch,
 	ZText,
 	ZToggleButton,
 	ZVisuallyHidden
@@ -85,6 +86,18 @@ describe('ZUI foundational components', () => {
 		expect(mixed).toContain('aria-checked="mixed"');
 		expect(mixed).toContain('data-state="indeterminate"');
 		expect(mixed).toContain('value="42"');
+	});
+
+	it('renders switch accessibility and native form contracts during SSR', () => {
+		const result = render(ZSwitch, {
+			props: { defaultChecked: true, name: 'alerts', value: 'enabled' }
+		}).body;
+
+		expect(result).toContain('type="checkbox"');
+		expect(result).toContain('role="switch"');
+		expect(result).toContain('aria-checked="true"');
+		expect(result).toContain('data-state="checked"');
+		expect(result).toContain('value="enabled"');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

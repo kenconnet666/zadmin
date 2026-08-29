@@ -9,7 +9,7 @@ test('renders the component catalog and real demo source', async ({ page }) => {
 
 	await page.goto('/#/');
 	await expect(page.getByRole('heading', { level: 1 })).toContainText('看见组件');
-	await expect(page.getByTestId('component-card')).toHaveCount(17);
+	await expect(page.getByTestId('component-card')).toHaveCount(18);
 	await expect(page.getByRole('heading', { level: 3 })).toHaveText([
 		'通用组件',
 		'布局组件',
@@ -99,6 +99,34 @@ test('keeps checkbox indeterminate, FormData and reset synchronized', async ({ p
 	await expect(page.getByText(/state = indeterminate · 用户变更次数 = 1/u)).toBeVisible();
 });
 
+test('keeps switch semantics, keyboard state, FormData and reset synchronized', async ({
+	page
+}) => {
+	await page.goto('/#/components/switch');
+	const control = page.getByTestId('switch-alerts');
+	await expect(control).toHaveRole('switch');
+	await expect(control).toHaveAttribute('aria-checked', 'false');
+	await page.locator('summary[aria-label="调整显示偏好"]').click();
+	const preferences = page.locator('details select');
+	await preferences.nth(2).selectOption('reduced');
+	await preferences.nth(3).selectOption('rtl');
+	await expect(control).toHaveCSS('transition-duration', '0s');
+	await expect
+		.poll(() => control.evaluate((element) => getComputedStyle(element, '::before').transform))
+		.toBe('matrix(1, 0, 0, 1, 18, 0)');
+	await control.press('Space');
+	await expect(control).toHaveAttribute('aria-checked', 'true');
+	await expect
+		.poll(() => control.evaluate((element) => getComputedStyle(element, '::before').transform))
+		.toBe('matrix(1, 0, 0, 1, 0, 0)');
+	await expect(page.getByText(/checked = true · 用户变更次数 = 1/u)).toBeVisible();
+	await page.getByRole('button', { name: '读取FormData' }).click();
+	await expect(page.getByText(/enabled/u)).toBeVisible();
+	await page.getByRole('button', { name: '重置' }).click();
+	await expect(control).toHaveAttribute('aria-checked', 'false');
+	await expect(page.getByText(/checked = false · 用户变更次数 = 1 · 尚未提交/u)).toBeVisible();
+});
+
 test('keeps S1 primitives semantic and display preferences effective', async ({ page }) => {
 	await page.goto('/#/guides/theme');
 	await expect(page.getByRole('heading', { level: 1 })).toContainText('主题不是一组颜色');
@@ -150,7 +178,8 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/container',
 		'#/components/checkbox',
 		'#/components/input',
-		'#/components/field'
+		'#/components/field',
+		'#/components/switch'
 	]) {
 		await page.goto(`/${route}`);
 		const results = await new AxeBuilder({ page }).analyze();

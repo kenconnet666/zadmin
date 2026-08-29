@@ -76,7 +76,7 @@ describe('ZUI themes', () => {
 	});
 
 	it('provides the complete semantic default theme', () => {
-		expect(Object.keys(defaultTheme)).toHaveLength(14);
+		expect(Object.keys(defaultTheme)).toHaveLength(15);
 		expect(defaultTheme.fontFamily.mono).toContain('ui-monospace');
 		expect(defaultTheme.shadow.codeHighlight).toContain('inset');
 		expect(defaultTheme.color.accent).toBe('#7c3aed');
@@ -85,7 +85,7 @@ describe('ZUI themes', () => {
 		expect(defaultTheme.color.dangerHover).toBe('#b91c1c');
 		expect(defaultTheme.color.focus).toBe('#60a5fa');
 		expect(defaultTheme.color.primary).toBe('#2563eb');
-		expect(defaultTheme.size.indicatorMedium).toBe(18);
+		expect(defaultTheme.indicatorSize.medium).toBe(18);
 		expect(defaultTheme.space.medium).toBe(8);
 	});
 

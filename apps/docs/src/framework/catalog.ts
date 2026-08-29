@@ -12,6 +12,7 @@ import { visuallyHiddenDoc } from '../content/components/gene/visually-hidden/do
 import { checkboxDoc } from '../content/components/input/checkbox/doc.js';
 import { fieldDoc } from '../content/components/input/field/doc.js';
 import { inputDoc } from '../content/components/input/input/doc.js';
+import { switchDoc } from '../content/components/input/switch/doc.js';
 import { stackDoc } from '../content/components/layout/stack/doc.js';
 import { aspectRatioDoc } from '../content/components/layout/aspect-ratio/doc.js';
 import { containerDoc } from '../content/components/layout/container/doc.js';
@@ -40,7 +41,8 @@ export const componentDocs = Object.freeze([
 	containerDoc,
 	checkboxDoc,
 	inputDoc,
-	fieldDoc
+	fieldDoc,
+	switchDoc
 ] satisfies readonly ComponentDoc[]);
 
 export const componentDocsById: ReadonlyMap<string, ComponentDoc> = new Map(

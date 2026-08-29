@@ -17,6 +17,7 @@ import {
 	providerMetadata,
 	separatorMetadata,
 	stackMetadata,
+	switchMetadata,
 	textMetadata,
 	toggleButtonMetadata,
 	visuallyHiddenMetadata
@@ -74,7 +75,8 @@ describe('@zadmin/zui package', () => {
 			aspectRatioMetadata,
 			containerMetadata,
 			inputMetadata,
-			fieldMetadata
+			fieldMetadata,
+			switchMetadata
 		];
 		expect(new Set(metadata.map(({ id }) => id)).size).toBe(metadata.length);
 		expect(metadata.every(({ name }) => name.startsWith('Z'))).toBe(true);

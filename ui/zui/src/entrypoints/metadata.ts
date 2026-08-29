@@ -12,6 +12,7 @@ export { zuiMetadata as visuallyHiddenMetadata } from '../components/gene/ZVisua
 export { zuiMetadata as checkboxMetadata } from '../components/input/ZCheckbox.svelte';
 export { zuiMetadata as fieldMetadata } from '../components/input/ZField.svelte';
 export { zuiMetadata as inputMetadata } from '../components/input/ZInput.svelte';
+export { zuiMetadata as switchMetadata } from '../components/input/ZSwitch.svelte';
 export { zuiMetadata as stackMetadata } from '../components/layout/ZStack.svelte';
 export { zuiMetadata as containerMetadata } from '../components/layout/ZContainer.svelte';
 export { zuiMetadata as aspectRatioMetadata } from '../components/layout/ZAspectRatio.svelte';

@@ -7,6 +7,7 @@ import {
 	ZBox,
 	ZButton,
 	ZCheckbox,
+	ZSwitch,
 	ZToggleButton,
 	defineRecipe,
 	defineSlotRecipe,
@@ -15,6 +16,7 @@ import {
 	type ZBoxProps,
 	type ZButtonProps,
 	type ZCheckboxProps,
+	type ZSwitchProps,
 	type ZToggleButtonProps
 } from '../src/entrypoints/index.js';
 
@@ -26,6 +28,10 @@ const checkboxProps: ComponentProps<typeof ZCheckbox> = {
 	defaultChecked: 'indeterminate',
 	value: 42n
 } satisfies ZCheckboxProps;
+const switchProps: ComponentProps<typeof ZSwitch> = {
+	defaultChecked: true,
+	value: 1n
+} satisfies ZSwitchProps;
 const toggleButtonProps: ComponentProps<typeof ZToggleButton> = {
 	defaultPressed: true,
 	onPressedChange: (pressed) => void pressed
@@ -34,15 +40,16 @@ void DirectZBox;
 void directBoxProps;
 void buttonProps;
 void checkboxProps;
+void switchProps;
 void toggleButtonProps;
 
 declare const s: IcssStyle<typeof defaultTheme>;
 
 s.color._primary;
 s.accentColor._primary;
-s.blockSize._indicatorMedium;
+s.blockSize._medium;
 s.display.inlineFlex;
-s.inlineSize._indicatorSmall;
+s.inlineSize._small;
 s.padding.px(4, 8);
 s.width.percent(100);
 

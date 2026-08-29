@@ -31,6 +31,12 @@ export type {
 } from '../components/input/ZCheckbox.svelte';
 export { default as ZInput } from '../components/input/ZInput.svelte';
 export type { ZInputProps, ZInputSize, ZInputType } from '../components/input/ZInput.svelte';
+export { default as ZSwitch } from '../components/input/ZSwitch.svelte';
+export type {
+	SwitchValue,
+	ZSwitchProps,
+	ZSwitchVariants
+} from '../components/input/ZSwitch.svelte';
 export { default as ZStack } from '../components/layout/ZStack.svelte';
 export type {
 	ZStackAlignment,

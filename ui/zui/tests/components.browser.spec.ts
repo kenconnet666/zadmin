@@ -8,6 +8,7 @@ import CheckboxFixture from './CheckboxFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
 import ToggleButtonFixture from './ToggleButtonFixture.svelte';
+import SwitchFixture from './SwitchFixture.svelte';
 import { createBrowserIcssRuntime } from '../src/icss/runtime.js';
 import { defaultTheme } from '../src/theme/default.js';
 import { extendTheme } from '../src/theme/define.js';
@@ -29,6 +30,28 @@ function insertedRuleCount(): number {
 }
 
 describe('compiled ICSS browser updates', () => {
+	it('keeps switch state, FormData and reset synchronized', async () => {
+		render(SwitchFixture);
+		const control = document.querySelector<HTMLInputElement>('[data-testid="switch"]');
+		const form = document.querySelector<HTMLFormElement>('[data-testid="switch-form"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="switch-output"]');
+		expect(control?.role).toBe('switch');
+		expect(new FormData(form!).get('alerts')).toBeNull();
+
+		control?.click();
+		await tick();
+		expect(control?.checked).toBe(true);
+		expect(control?.getAttribute('aria-checked')).toBe('true');
+		expect(new FormData(form!).get('alerts')).toBe('enabled');
+		expect(output?.textContent).toBe('true:1');
+
+		form?.reset();
+		await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+		await tick();
+		expect(control?.checked).toBe(false);
+		expect(output?.textContent).toBe('false:1');
+	});
+
 	it('keeps checkbox mixed state, FormData and reset synchronized', async () => {
 		render(CheckboxFixture);
 		const checkbox = document.querySelector<HTMLInputElement>('[data-testid="checkbox"]');
@@ -46,7 +69,7 @@ describe('compiled ICSS browser updates', () => {
 		expect(output?.textContent).toBe('true:1');
 
 		form?.reset();
-		await new Promise((resolve) => queueMicrotask(resolve));
+		await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
 		await tick();
 		expect(checkbox?.indeterminate).toBe(true);
 		expect(checkbox?.getAttribute('aria-checked')).toBe('mixed');

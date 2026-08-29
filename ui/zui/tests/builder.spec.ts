@@ -117,20 +117,20 @@ describe('ICSS builder', () => {
 		const program = createStyleProgram(defaultTheme, (s) => {
 			s.accentColor._primary;
 			s.aspectRatio.raw('16 / 9');
-			s.blockSize._indicatorMedium;
+			s.blockSize._medium;
 			s.clip.raw('rect(0 0 0 0)');
 			s.clipPath.raw('inset(50%)');
-			s.inlineSize._indicatorSmall;
+			s.inlineSize._small;
 			s.marginInline.auto;
 		});
 
 		expect(program.block.instructions).toMatchObject([
-			{ property: 'accentColor', values: [{ token: 'primary' }] },
+			{ property: 'accentColor', values: [{ value: '#2563eb' }] },
 			{ property: 'aspectRatio', values: [{ value: '16 / 9' }] },
-			{ property: 'blockSize', values: [{ token: 'indicatorMedium' }] },
+			{ property: 'blockSize', values: [{ unit: 'px', value: 18 }] },
 			{ property: 'clip', values: [{ value: 'rect(0 0 0 0)' }] },
 			{ property: 'clipPath', values: [{ value: 'inset(50%)' }] },
-			{ property: 'inlineSize', values: [{ token: 'indicatorSmall' }] },
+			{ property: 'inlineSize', values: [{ unit: 'px', value: 16 }] },
 			{ property: 'marginInline', values: [{ value: 'auto' }] }
 		]);
 	});

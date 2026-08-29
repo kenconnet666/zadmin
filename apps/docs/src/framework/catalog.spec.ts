@@ -21,7 +21,8 @@ describe('ZUI component documentation catalog', () => {
 			'ZContainer',
 			'ZCheckbox',
 			'ZInput',
-			'ZField'
+			'ZField',
+			'ZSwitch'
 		]);
 		expect(componentDocsById.size).toBe(componentDocs.length);
 		expect(componentDocs.map(({ category }) => category)).toEqual([
@@ -39,6 +40,7 @@ describe('ZUI component documentation catalog', () => {
 			'gene',
 			'layout',
 			'layout',
+			'input',
 			'input',
 			'input',
 			'input'
