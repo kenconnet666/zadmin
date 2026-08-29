@@ -157,7 +157,8 @@ public sealed class WebViewHost : IAsyncDisposable
         try
         {
             _smokeRequest = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
-            for (var attempt = 0; attempt < 50; attempt++)
+			// Cold CI runs may spend several seconds optimizing newly added Vite dependencies.
+			for (var attempt = 0; attempt < 150; attempt++)
             {
                 if (await sender.ExecuteScriptAsync("document.body?.innerText?.length??0") != "0") break;
                 await Task.Delay(100);

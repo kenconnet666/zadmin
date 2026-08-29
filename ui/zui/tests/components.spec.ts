@@ -111,7 +111,7 @@ describe('ZUI foundational components', () => {
 		const inline = render(ZCode, { props: { code: 'inline', inline: true, wrap: true } });
 		expect(inline.body).toContain('<code');
 		expect(inline.body).toContain('>inline');
-		const dark = render(ZCode, { props: { code: 'dark', scheme: 'dark' } });
+		const dark = render(ZCode, { props: { code: 'dark', embedded: true, scheme: 'dark' } });
 		expect(dark.body).toContain('data-color-scheme="dark"');
 	});
 });
