@@ -4,14 +4,18 @@
 
 	let { demo }: { demo: DemoDefinition } = $props();
 	let expanded = $state(false);
-	let copied = $state(false);
+	let copyState = $state<'copied' | 'failed' | 'idle'>('idle');
 	const source = $derived(demo.source.trim());
 	const Demo = $derived(demo.component);
 
 	async function copySource() {
-		await navigator.clipboard.writeText(source);
-		copied = true;
-		setTimeout(() => (copied = false), 1200);
+		try {
+			await navigator.clipboard.writeText(source);
+			copyState = 'copied';
+		} catch {
+			copyState = 'failed';
+		}
+		setTimeout(() => (copyState = 'idle'), 1200);
 	}
 </script>
 
@@ -27,7 +31,7 @@
 				{expanded ? '收起源码' : '查看源码'}
 			</ZButton>
 			<ZButton size="small" variant="secondary" onclick={copySource}>
-				{copied ? '已复制' : '复制'}
+				{copyState === 'copied' ? '已复制' : copyState === 'failed' ? '复制失败' : '复制'}
 			</ZButton>
 		</ZStack>
 	</header>

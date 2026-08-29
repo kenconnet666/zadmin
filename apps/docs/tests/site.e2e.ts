@@ -40,3 +40,25 @@ test('has no automatically detectable accessibility violations', async ({ page }
 	const results = await new AxeBuilder({ page }).analyze();
 	expect(results.violations).toEqual([]);
 });
+
+test('handles denied clipboard permission without a console error', async ({ page }) => {
+	const errors: string[] = [];
+	page.on('console', (message) => {
+		if (message.type() === 'error') errors.push(message.text());
+	});
+	page.on('pageerror', (error) => errors.push(error.message));
+	await page.addInitScript(() => {
+		Object.defineProperty(navigator, 'clipboard', {
+			value: {
+				writeText: async () => {
+					throw new DOMException('Denied', 'NotAllowedError');
+				}
+			}
+		});
+	});
+
+	await page.goto('/#/components/button');
+	await page.getByRole('button', { name: '复制' }).first().click();
+	await expect(page.getByRole('button', { name: '复制失败' })).toBeVisible();
+	expect(errors).toEqual([]);
+});
