@@ -47,7 +47,7 @@
 				cardIcon: (s) => {
 					s.backgroundColor._surface;
 					s.borderRadius._medium;
-					s.color._primary;
+					s.color._accent;
 					s.display.grid;
 					s.height._medium;
 					s.placeItems.center;
@@ -74,7 +74,7 @@
 					s.maxWidth.rem(48);
 				},
 				eyebrow: (s) => {
-					s.color._primary;
+					s.color._accent;
 					s.fontSize._small;
 					s.fontWeight._bold;
 					s.letterSpacing.em(0.12);
@@ -169,6 +169,7 @@
 					s.letterSpacing.em(-0.06);
 					s.lineHeight(0.98);
 					s.margin.px(0);
+					s.textShadow._small;
 				}
 			},
 			variants: {}

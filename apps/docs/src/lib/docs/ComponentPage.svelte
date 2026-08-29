@@ -5,6 +5,7 @@
 		{
 			slots: [
 				'layout',
+				'article',
 				'header',
 				'eyebrow',
 				'titleLine',
@@ -14,6 +15,7 @@
 				'importLine',
 				'sourceLink',
 				'section',
+				'demoSection',
 				'sectionTitle',
 				'accessibility',
 				'accessibilityList',
@@ -23,6 +25,7 @@
 				'tocNested'
 			] as const,
 			base: {
+				article: (s) => s.minWidth.px(0),
 				accessibility: (s) => {
 					s.backgroundColor._canvas;
 					s.borderColor._border;
@@ -38,24 +41,30 @@
 					s.paddingInlineStart._xlarge;
 				},
 				eyebrow: (s) => {
-					s.color._primary;
+					s.color._accent;
 					s.fontSize._small;
 					s.fontWeight._bold;
 					s.letterSpacing.em(0.12);
 					s.margin.raw('0 0 0.8rem');
 					s.textTransform.uppercase;
 				},
-				header: (s) => s.paddingBottom.rem(4),
+				demoSection: (s) => s.paddingTop.rem(2),
+				header: (s) => {
+					s.borderBottomColor._border;
+					s.borderBottomStyle.solid;
+					s.borderBottomWidth._hairline;
+					s.paddingBottom.rem(2);
+				},
 				importLine: (s) => {
 					s.marginTop._xlarge;
 					s.maxWidth.rem(46);
 				},
 				layout: (s) => {
 					s.display.grid;
-					s.gap.raw('clamp(2rem, 5vw, 5rem)');
-					s.gridTemplateColumns.raw('minmax(0, 56rem) 12rem');
+					s.gap.raw('clamp(2rem, 3vw, 3rem)');
+					s.gridTemplateColumns.raw('minmax(0, 64rem) minmax(10rem, 13rem)');
 					s.justifyContent.center;
-					s._media('(max-width: 68rem)', (tablet) =>
+					s._media('(max-width: 78rem)', (tablet) =>
 						tablet.gridTemplateColumns.raw('minmax(0, 1fr)')
 					);
 				},
@@ -64,10 +73,10 @@
 					s.fontSize._large;
 					s.lineHeight._relaxed;
 					s.marginTop._large;
-					s.maxWidth.rem(46);
+					s.maxWidth.rem(52);
 				},
 				section: (s) => {
-					s.paddingTop.rem(5);
+					s.paddingTop.rem(4);
 					s.scrollMarginTop.rem(5.5);
 				},
 				sectionTitle: (s) => {
@@ -87,11 +96,11 @@
 				},
 				status: (s) => {
 					s.backgroundColor._surface;
-					s.borderColor._border;
+					s.borderColor._accent;
 					s.borderRadius.rem(999);
 					s.borderStyle.solid;
 					s.borderWidth._hairline;
-					s.color._primaryHover;
+					s.color._accent;
 					s.fontSize._small;
 					s.fontWeight._bold;
 					s.paddingBlock._xsmall;
@@ -99,10 +108,11 @@
 					s.textTransform.uppercase;
 				},
 				title: (s) => {
-					s.fontSize.raw('clamp(2.5rem, 5vw, 4.5rem)');
+					s.fontSize.raw('clamp(2.4rem, 4vw, 3.75rem)');
 					s.letterSpacing.em(-0.05);
 					s.lineHeight._compact;
 					s.margin.px(0);
+					s.textShadow._small;
 				},
 				titleLine: (s) => {
 					s.alignItems.center;
@@ -110,17 +120,20 @@
 					s.gap._large;
 				},
 				toc: (s) => {
-					s.borderLeftColor._border;
-					s.borderLeftStyle.solid;
-					s.borderLeftWidth._hairline;
+					s.backgroundColor._canvas;
+					s.borderColor._border;
+					s.borderRadius._large;
+					s.borderStyle.solid;
+					s.borderWidth._hairline;
+					s.boxShadow._small;
 					s.display.flex;
 					s.flexDirection.column;
 					s.gap._xsmall;
 					s.height.fitContent;
-					s.paddingInlineStart._large;
+					s.padding._large;
 					s.position.sticky;
 					s.top.rem(6);
-					s._media('(max-width: 68rem)', (tablet) => tablet.display.none);
+					s._media('(max-width: 78rem)', (tablet) => tablet.display.none);
 				},
 				tocButton: (s) => {
 					s.backgroundColor.transparent;
@@ -128,26 +141,42 @@
 					s.color._textMuted;
 					s.cursor.pointer;
 					s.fontSize._small;
+					s.borderRadius._small;
 					s.paddingBlock._xsmall;
-					s.paddingInline.px(0);
+					s.paddingInline._small;
 					s.textAlign.left;
 					s.textDecoration.none;
 					s._hover((hover) => hover.color._primaryHover);
 				},
 				tocNested: (s) => s.paddingInlineStart._medium,
 				tocTitle: (s) => {
+					s.color._accent;
 					s.fontSize._small;
 					s.marginBottom._small;
 				}
 			},
-			variants: {}
+			variants: {
+				active: {
+					false: {},
+					true: {
+						tocButton: (s) => {
+							s.backgroundColor._surface;
+							s.color._primaryHover;
+							s.fontWeight._semibold;
+						}
+					}
+				}
+			},
+			defaultVariants: { active: false }
 		},
 		import.meta
 	);
 </script>
 
 <script lang="ts">
-	import { ZIcon, ZStack, ZText, useZui } from '@zadmin/zui';
+	import ExternalLink from '@lucide/svelte/icons/external-link';
+	import { onMount } from 'svelte';
+	import { ZStack, ZText, useZui } from '@zadmin/zui';
 	import { ZCode } from '@zadmin/zui/code';
 	import type { ComponentDoc } from '../catalog/index.js';
 	import { componentRoute } from '../router.js';
@@ -155,12 +184,35 @@
 	import DemoBlock from './DemoBlock.svelte';
 
 	let { doc }: { doc: ComponentDoc } = $props();
+	let activeSection = $state('demos');
 	const zui = useZui();
 	const classes = $derived(zui.slots(pageRecipe));
+	function tocButtonClass(id: string, nested = false) {
+		const current = zui.slots(pageRecipe, { active: activeSection === id });
+		return nested ? [current.tocButton, classes.tocNested] : current.tocButton;
+	}
+
+	onMount(() => {
+		const ids = ['demos', ...doc.demos.map((demo) => demo.id), 'api', 'accessibility'];
+		const observer = new IntersectionObserver(
+			(entries) => {
+				const visible = entries
+					.filter((entry) => entry.isIntersecting)
+					.sort((left, right) => left.boundingClientRect.top - right.boundingClientRect.top)[0];
+				if (visible?.target.id) activeSection = visible.target.id;
+			},
+			{ rootMargin: '-18% 0px -70% 0px', threshold: 0 }
+		);
+		for (const id of ids) {
+			const section = document.getElementById(id);
+			if (section) observer.observe(section);
+		}
+		return () => observer.disconnect();
+	});
 </script>
 
 <div class={classes.layout}>
-	<article>
+	<article class={classes.article}>
 		<header class={classes.header}>
 			<p class={classes.eyebrow}>ZUI FOUNDATION</p>
 			<div class={classes.titleLine}>
@@ -180,11 +232,11 @@
 				class={classes.sourceLink}
 				href={`https://github.com/kenconnet666/zadmin/blob/master/${doc.source}`}
 			>
-				<ZIcon name="plus" size={16} /> 查看组件源码
+				<ExternalLink aria-hidden="true" size={15} /> 查看组件源码
 			</a>
 		</header>
 
-		<section id="demos" class={classes.section}>
+		<section id="demos" class={[classes.section, classes.demoSection]}>
 			<h2 class={classes.sectionTitle}>实时演示</h2>
 			<ZStack gap="large">
 				{#each doc.demos as demo (demo.id)}
@@ -209,13 +261,15 @@
 
 	<aside class={classes.toc} aria-label="当前页目录">
 		<strong class={classes.tocTitle}>当前页面</strong>
-		<a class={classes.tocButton} href={componentRoute(doc.id, 'demos')}>实时演示</a>
+		<a class={tocButtonClass('demos')} href={componentRoute(doc.id, 'demos')}>实时演示</a>
 		{#each doc.demos as demo (demo.id)}
-			<a class={[classes.tocButton, classes.tocNested]} href={componentRoute(doc.id, demo.id)}
+			<a class={tocButtonClass(demo.id, true)} href={componentRoute(doc.id, demo.id)}
 				>{demo.title}</a
 			>
 		{/each}
-		<a class={classes.tocButton} href={componentRoute(doc.id, 'api')}>API</a>
-		<a class={classes.tocButton} href={componentRoute(doc.id, 'accessibility')}>可访问性</a>
+		<a class={tocButtonClass('api')} href={componentRoute(doc.id, 'api')}>API</a>
+		<a class={tocButtonClass('accessibility')} href={componentRoute(doc.id, 'accessibility')}
+			>可访问性</a
+		>
 	</aside>
 </div>

@@ -6,7 +6,7 @@
 			slots: ['root', 'nav', 'category', 'link', 'icon', 'footer', 'empty'] as const,
 			base: {
 				category: (s) => {
-					s.color._textMuted;
+					s.color._accent;
 					s.fontSize._small;
 					s.fontWeight._bold;
 					s.letterSpacing.em(0.08);
@@ -34,12 +34,15 @@
 					s._media('(max-width: 48rem)', (mobile) => mobile.display.none);
 				},
 				icon: (s) => {
-					s.opacity._disabled;
+					s.color._textMuted;
 					s.transform.raw('rotate(-90deg)');
 					s._media('(max-width: 48rem)', (mobile) => mobile.display.none);
 				},
 				link: (s) => {
 					s.alignItems.center;
+					s.borderLeftColor.transparent;
+					s.borderLeftStyle.solid;
+					s.borderLeftWidth._medium;
 					s.borderRadius._medium;
 					s.color._textMuted;
 					s.display.flex;
@@ -101,7 +104,9 @@
 					true: {
 						link: (s) => {
 							s.backgroundColor._canvas;
+							s.borderLeftColor._accent;
 							s.color._primaryHover;
+							s.boxShadow._small;
 						}
 					}
 				}

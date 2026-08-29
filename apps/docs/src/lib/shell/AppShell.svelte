@@ -29,8 +29,8 @@
 				},
 				main: (s) => {
 					s.minWidth.px(0);
-					s.padding.raw('4rem clamp(1.5rem, 4vw, 4.5rem) 7rem');
-					s._media('(max-width: 48rem)', (mobile) => mobile.padding.raw('2.5rem 1rem 5rem'));
+					s.padding.raw('3rem clamp(1.25rem, 3vw, 3.5rem) 6rem');
+					s._media('(max-width: 48rem)', (mobile) => mobile.padding.raw('2rem 1rem 4rem'));
 				},
 				notFound: (s) => {
 					s.maxWidth.rem(45);
@@ -38,10 +38,14 @@
 				},
 				shell: (s) => {
 					s.backgroundColor._surface;
+					s.color._text;
 					s.display.grid;
 					s.gridTemplateColumns.raw('16.5rem minmax(0, 1fr)');
 					s.gridTemplateRows.raw('4.25rem 1fr');
 					s.minHeight.vh(100);
+					s.transitionDuration._normal;
+					s.transitionProperty.raw('background-color, color');
+					s.transitionTimingFunction.ease;
 					s._media('(max-width: 48rem)', (mobile) => mobile.display.block);
 				},
 				title: (s) => {
@@ -61,11 +65,14 @@
 	import { onMount, tick } from 'svelte';
 	import { useZui } from '@zadmin/zui';
 	import { componentDocs, componentDocsById } from '../catalog/index.js';
+	import type { DocsThemeMode } from '../docs-theme.js';
 	import { parseDocsRoute } from '../router.js';
 	import ComponentPage from '../docs/ComponentPage.svelte';
 	import HomePage from '../docs/HomePage.svelte';
 	import AppHeader from './AppHeader.svelte';
 	import AppSidebar from './AppSidebar.svelte';
+
+	let { themeMode = $bindable('light') }: { themeMode?: DocsThemeMode } = $props();
 
 	let route = $state(parseDocsRoute(globalThis.location?.hash ?? '#/'));
 	let query = $state('');
@@ -98,7 +105,7 @@
 </script>
 
 <div class={classes.shell}>
-	<AppHeader bind:query />
+	<AppHeader bind:query bind:themeMode />
 	<AppSidebar docs={componentDocs} {currentId} {query} />
 	<main class={classes.main}>
 		{#if currentDoc}

@@ -9,14 +9,14 @@ export const buttonDoc = defineComponentDoc(buttonMetadata, {
 	demos: [
 		{
 			component: VariantsDemo,
-			description: '每个variant组合稳定recipe branch class。',
+			description: '每一种视觉变体都生成稳定、可复用的 recipe class。',
 			id: 'button-variants',
 			source: variantsSource,
-			title: 'Variants'
+			title: '视觉变体'
 		},
 		{
 			component: StatesDemo,
-			description: 'loading和disabled映射到原生disabled，点击使用onclick。',
+			description: '尺寸、加载和禁用状态都保留原生 button 语义，点击事件通过 onclick 传递。',
 			id: 'button-states',
 			source: statesSource,
 			title: '尺寸与状态'

@@ -23,11 +23,37 @@ test('renders the component catalog and real demo source', async ({ page }) => {
 		/\/components\/gene\/ZButton\.svelte$/u
 	);
 	await page.getByRole('button', { name: '查看源码' }).first().click();
-	await expect(page.getByTestId('source-button-variants')).toContainText("from '@zadmin/zui'");
+	const source = page.getByTestId('source-button-variants');
+	await expect(source).toContainText("from '@zadmin/zui'");
+	const lightCode = source.locator('[data-color-scheme="light"]');
+	await expect(lightCode).toBeVisible();
+	await expect(lightCode).toHaveCSS('background-color', 'rgb(255, 255, 255)');
+	await expect(lightCode).toHaveCSS('font-size', '14px');
+	expect(await source.evaluate((element) => getComputedStyle(element).overflowY)).not.toBe('auto');
 
 	await page.getByTestId('button-counter').click();
 	await expect(page.getByText('count = 1')).toBeVisible();
 	expect(errors).toEqual([]);
+});
+
+test('switches and persists coordinated light and cyberpunk themes', async ({ page }) => {
+	await page.goto('/#/components/button');
+	const shell = page.locator('#app > div').first();
+	await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+	await expect(shell).toHaveCSS('background-color', 'rgb(238, 244, 255)');
+	await page.getByRole('button', { name: '切换到赛博朋克暗色主题' }).click();
+	await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+	await expect(shell).toHaveCSS('background-color', 'rgb(5, 9, 20)');
+	await expect(page.getByRole('button', { name: '切换到亮色主题' })).toBeVisible();
+	await page.getByRole('button', { name: '查看源码' }).first().click();
+	const darkCode = page.getByTestId('source-button-variants').locator('[data-color-scheme="dark"]');
+	await expect(darkCode).toBeVisible();
+	await expect(darkCode).toHaveCSS('background-color', 'rgb(2, 4, 12)');
+	await page.reload();
+	await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+
+	const results = await new AxeBuilder({ page }).analyze();
+	expect(results.violations).toEqual([]);
 });
 
 test('keeps input binding and field validation interactive', async ({ page }) => {
