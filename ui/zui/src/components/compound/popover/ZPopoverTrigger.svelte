@@ -7,6 +7,7 @@
 		'aria-controls' | 'aria-expanded' | 'aria-haspopup' | 'onclick'
 	> & {
 		readonly onclick?: ZButtonProps['onclick'];
+		readonly popupRole?: 'dialog' | 'listbox' | 'menu' | 'tree';
 	};
 
 	export const zuiMetadata = {
@@ -26,6 +27,12 @@
 		keyboard: [{ description: '切换Popover。', key: 'Enter / Space' }],
 		parts: [],
 		props: [
+			{
+				default: "'dialog'",
+				description: 'aria-haspopup值，供Menu、Listbox与Tree复合封装使用。',
+				name: 'popupRole',
+				type: "'dialog' | 'menu' | 'listbox' | 'tree'"
+			},
 			{
 				bindable: true,
 				default: 'null',
@@ -47,7 +54,12 @@
 	import ZButton from '../../gene/ZButton.svelte';
 	import { useZPopover } from './context.svelte.js';
 
-	let { onclick, ref = $bindable(null), ...rest }: ZPopoverTriggerProps = $props();
+	let {
+		onclick,
+		popupRole = 'dialog',
+		ref = $bindable(null),
+		...rest
+	}: ZPopoverTriggerProps = $props();
 	const popover = useZPopover();
 
 	$effect(() => {
@@ -69,7 +81,7 @@
 	id={popover.triggerId}
 	aria-controls={popover.contentId}
 	aria-expanded={popover.open}
-	aria-haspopup="dialog"
+	aria-haspopup={popupRole}
 	data-state={popover.open ? 'open' : 'closed'}
 	onclick={handleClick}
 />

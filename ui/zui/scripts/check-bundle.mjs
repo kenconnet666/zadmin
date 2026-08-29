@@ -73,6 +73,21 @@ const components = [
 		path: 'compound/dialog/ZDialogDescription.svelte'
 	},
 	{ id: 'dialog-close', name: 'ZDialogClose', path: 'compound/dialog/ZDialogClose.svelte' },
+	{
+		id: 'dropdown-menu',
+		name: 'ZDropdownMenu',
+		path: 'compound/dropdown-menu/ZDropdownMenu.svelte'
+	},
+	{
+		id: 'dropdown-menu-trigger',
+		name: 'ZDropdownMenuTrigger',
+		path: 'compound/dropdown-menu/ZDropdownMenuTrigger.svelte'
+	},
+	{
+		id: 'dropdown-menu-content',
+		name: 'ZDropdownMenuContent',
+		path: 'compound/dropdown-menu/ZDropdownMenuContent.svelte'
+	},
 	{ id: 'drawer', name: 'ZDrawer', path: 'compound/drawer/ZDrawer.svelte' },
 	{ id: 'drawer-trigger', name: 'ZDrawerTrigger', path: 'compound/drawer/ZDrawerTrigger.svelte' },
 	{ id: 'drawer-overlay', name: 'ZDrawerOverlay', path: 'compound/drawer/ZDrawerOverlay.svelte' },

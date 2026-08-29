@@ -6,6 +6,7 @@
 	import type { MenuActionEvent } from './context.svelte.js';
 
 	export interface ZMenuProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'role'> {
+		readonly appearance?: 'bare' | 'menu';
 		readonly children?: Snippet;
 		readonly loop?: boolean;
 		readonly onAction?: (event: MenuActionEvent) => void;
@@ -35,6 +36,12 @@
 		],
 		parts: [],
 		props: [
+			{
+				default: "'menu'",
+				description: '独立Menu shell或浮层内部bare布局。',
+				name: 'appearance',
+				type: "'menu' | 'bare'"
+			},
 			{ default: 'true', description: '键盘导航是否首尾循环。', name: 'loop', type: 'boolean' },
 			{
 				bindable: true,
@@ -77,25 +84,32 @@
 
 	const menuRecipe = defineRecipe({
 		base: (s) => {
-			s.backgroundColor._canvas;
-			s.borderColor._border;
-			s.borderRadius._medium;
-			s.borderStyle.solid;
-			s.borderWidth._hairline;
-			s.boxShadow._small;
 			s.display.flex;
 			s.flexDirection.column;
 			s.gap._xsmall;
 			s.minWidth._menu;
-			s.padding._small;
-			s.width.fitContent;
 		},
-		variants: {},
-		defaultVariants: {}
+		variants: {
+			appearance: {
+				bare: () => undefined,
+				menu: (s) => {
+					s.backgroundColor._canvas;
+					s.borderColor._border;
+					s.borderRadius._medium;
+					s.borderStyle.solid;
+					s.borderWidth._hairline;
+					s.boxShadow._small;
+					s.padding._small;
+					s.width.fitContent;
+				}
+			}
+		},
+		defaultVariants: { appearance: 'menu' }
 	});
 	registerRecipeHmr(import.meta, menuRecipe);
 
 	let {
+		appearance = 'menu',
 		children,
 		class: className,
 		loop = true,
@@ -129,7 +143,7 @@
 		typeahead
 	};
 	provideZMenu(context);
-	const rootClass = $derived(zui.recipe(menuRecipe));
+	const rootClass = $derived(zui.recipe(menuRecipe, { appearance }));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
 

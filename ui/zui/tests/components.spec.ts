@@ -45,6 +45,7 @@ import FieldFixture from './FieldFixture.svelte';
 import MenuFixture from './MenuFixture.svelte';
 import DialogFixture from './DialogFixture.svelte';
 import DrawerFixture from './DrawerFixture.svelte';
+import DropdownMenuFixture from './DropdownMenuFixture.svelte';
 import PopoverFixture from './PopoverFixture.svelte';
 import PopconfirmFixture from './PopconfirmFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
@@ -260,6 +261,15 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain('aria-disabled="true"');
 		expect(result).toContain('role="group"');
 		expect(result).toContain('role="separator"');
+	});
+
+	it('renders DropdownMenu closed by default and with menu semantics when open', () => {
+		expect(render(DropdownMenuFixture).body).not.toContain('role="menu"');
+		const open = render(DropdownMenuFixture, { props: { defaultOpen: true } }).body;
+		expect(open).toContain('aria-haspopup="menu"');
+		expect(open).toContain('role="presentation"');
+		expect(open).toContain('role="menu"');
+		expect(open).toContain('role="menuitem"');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

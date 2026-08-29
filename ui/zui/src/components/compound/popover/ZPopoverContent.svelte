@@ -10,9 +10,10 @@
 		'aria-labelledby' | 'children' | 'id' | 'role'
 	> {
 		readonly ariaDescribedBy?: string;
-		readonly ariaLabelledBy?: string;
+		readonly ariaLabelledBy?: string | null;
 		readonly children?: Snippet;
 		ref?: HTMLDivElement | null;
+		readonly role?: 'dialog' | 'presentation';
 	}
 
 	const popoverContentRecipe = defineRecipe({
@@ -72,6 +73,12 @@
 		parts: [],
 		props: [
 			{
+				default: "'dialog'",
+				description: 'Popover shell角色；Menu等复合封装使用presentation。',
+				name: 'role',
+				type: "'dialog' | 'presentation'"
+			},
+			{
 				default: 'Trigger id',
 				description: '覆盖dialog可访问名称来源，供复合封装使用。',
 				name: 'ariaLabelledBy',
@@ -128,6 +135,7 @@
 		children,
 		class: className,
 		ref = $bindable(null),
+		role = 'dialog',
 		style,
 		...rest
 	}: ZPopoverContentProps = $props();
@@ -182,11 +190,11 @@
 		use:applyIcssRootStyle={{ style, variables: icssVariables }}
 		use:portal={{ target: popover.portalTarget }}
 		id={popover.contentId}
-		role="dialog"
+		{role}
 		tabindex={-1}
 		inert={!popover.open}
 		aria-hidden={!popover.open}
-		aria-labelledby={ariaLabelledBy ?? popover.triggerId}
+		aria-labelledby={ariaLabelledBy === null ? undefined : (ariaLabelledBy ?? popover.triggerId)}
 		aria-describedby={ariaDescribedBy}
 		data-presence={presenceState}
 		data-state={popover.open ? 'open' : 'closed'}

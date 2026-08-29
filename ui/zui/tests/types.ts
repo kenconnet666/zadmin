@@ -26,6 +26,9 @@ import {
 	ZDialogOverlay,
 	ZDialogTitle,
 	ZDialogTrigger,
+	ZDropdownMenu,
+	ZDropdownMenuContent,
+	ZDropdownMenuTrigger,
 	ZDrawer,
 	ZDrawerClose,
 	ZDrawerContent,
@@ -87,6 +90,9 @@ import {
 	type ZDialogProps,
 	type ZDialogTitleProps,
 	type ZDialogTriggerProps,
+	type ZDropdownMenuContentProps,
+	type ZDropdownMenuProps,
+	type ZDropdownMenuTriggerProps,
 	type ZDrawerCloseProps,
 	type ZDrawerContentProps,
 	type ZDrawerDescriptionProps,
@@ -168,6 +174,13 @@ const dialogTitleProps: ComponentProps<typeof ZDialogTitle> = {} satisfies ZDial
 const dialogDescriptionProps: ComponentProps<typeof ZDialogDescription> =
 	{} satisfies ZDialogDescriptionProps;
 const dialogCloseProps: ComponentProps<typeof ZDialogClose> = {} satisfies ZDialogCloseProps;
+const dropdownMenuProps: ComponentProps<typeof ZDropdownMenu> = {
+	placement: 'bottom-end'
+} satisfies ZDropdownMenuProps;
+const dropdownMenuTriggerProps: ComponentProps<typeof ZDropdownMenuTrigger> =
+	{} satisfies ZDropdownMenuTriggerProps;
+const dropdownMenuContentProps: ComponentProps<typeof ZDropdownMenuContent> =
+	{} satisfies ZDropdownMenuContentProps;
 const drawerProps: ComponentProps<typeof ZDrawer> = { defaultOpen: true } satisfies ZDrawerProps;
 const drawerTriggerProps: ComponentProps<typeof ZDrawerTrigger> = {} satisfies ZDrawerTriggerProps;
 const drawerOverlayProps: ComponentProps<typeof ZDrawerOverlay> = {} satisfies ZDrawerOverlayProps;
@@ -270,6 +283,9 @@ void dialogContentProps;
 void dialogTitleProps;
 void dialogDescriptionProps;
 void dialogCloseProps;
+void dropdownMenuProps;
+void dropdownMenuTriggerProps;
+void dropdownMenuContentProps;
 void drawerProps;
 void drawerTriggerProps;
 void drawerOverlayProps;

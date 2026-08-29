@@ -17,6 +17,9 @@ export { zuiMetadata as dialogDescriptionMetadata } from '../components/compound
 export { zuiMetadata as dialogOverlayMetadata } from '../components/compound/dialog/ZDialogOverlay.svelte';
 export { zuiMetadata as dialogTitleMetadata } from '../components/compound/dialog/ZDialogTitle.svelte';
 export { zuiMetadata as dialogTriggerMetadata } from '../components/compound/dialog/ZDialogTrigger.svelte';
+export { zuiMetadata as dropdownMenuMetadata } from '../components/compound/dropdown-menu/ZDropdownMenu.svelte';
+export { zuiMetadata as dropdownMenuContentMetadata } from '../components/compound/dropdown-menu/ZDropdownMenuContent.svelte';
+export { zuiMetadata as dropdownMenuTriggerMetadata } from '../components/compound/dropdown-menu/ZDropdownMenuTrigger.svelte';
 export { zuiMetadata as drawerMetadata } from '../components/compound/drawer/ZDrawer.svelte';
 export { zuiMetadata as drawerCloseMetadata } from '../components/compound/drawer/ZDrawerClose.svelte';
 export { zuiMetadata as drawerContentMetadata } from '../components/compound/drawer/ZDrawerContent.svelte';

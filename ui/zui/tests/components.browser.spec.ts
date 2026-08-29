@@ -10,6 +10,7 @@ import CheckboxFixture from './CheckboxFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
 import DialogFixture from './DialogFixture.svelte';
 import DrawerFixture from './DrawerFixture.svelte';
+import DropdownMenuFixture from './DropdownMenuFixture.svelte';
 import MenuFixture from './MenuFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
 import PaginationFixture from './PaginationFixture.svelte';
@@ -65,6 +66,38 @@ describe('compiled ICSS browser updates', () => {
 		expect(document.activeElement).toBe(alpha);
 		alpha?.click();
 		expect(output?.textContent).toBe('alpha');
+	});
+
+	it('coordinates DropdownMenu positioning, focus, action dismiss and cancellation', async () => {
+		render(DropdownMenuFixture);
+		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="dropdown-trigger"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="dropdown-output"]');
+		trigger?.focus();
+		trigger?.click();
+		await tick();
+		let content = document.querySelector<HTMLElement>('[data-testid="dropdown-content"]');
+		const inspect = document.querySelector<HTMLElement>('[data-testid="dropdown-inspect"]');
+		const copy = document.querySelector<HTMLElement>('[data-testid="dropdown-copy"]');
+		expect(trigger?.getAttribute('aria-haspopup')).toBe('menu');
+		expect(content?.parentNode).toBe(document.body);
+		expect(document.activeElement).toBe(inspect);
+		inspect?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
+		expect(document.activeElement).toBe(copy);
+		copy?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+		await new Promise((resolve) => setTimeout(resolve, 140));
+		await tick();
+		expect(document.querySelector('[data-testid="dropdown-content"]')).toBeNull();
+		expect(document.activeElement).toBe(trigger);
+		expect(output?.textContent).toBe('false:copy');
+
+		trigger?.click();
+		await tick();
+		const stay = document.querySelector<HTMLElement>('[data-testid="dropdown-stay"]');
+		stay?.click();
+		await tick();
+		content = document.querySelector('[data-testid="dropdown-content"]');
+		expect(content?.getAttribute('data-state')).toBe('open');
+		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
 	});
 	it('keeps AlertDialog open until an explicit action is chosen', async () => {
 		render(AlertDialogFixture);

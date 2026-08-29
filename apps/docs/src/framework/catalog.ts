@@ -19,6 +19,7 @@ import { stackDoc } from '../content/components/layout/stack/doc.js';
 import { aspectRatioDoc } from '../content/components/layout/aspect-ratio/doc.js';
 import { containerDoc } from '../content/components/layout/container/doc.js';
 import { accordionDoc } from '../content/components/navigation/accordion/doc.js';
+import { dropdownMenuDoc } from '../content/components/navigation/dropdown-menu/doc.js';
 import { paginationDoc } from '../content/components/navigation/pagination/doc.js';
 import { tabsDoc } from '../content/components/navigation/tabs/doc.js';
 import { menuDoc } from '../content/components/navigation/menu/doc.js';
@@ -60,6 +61,7 @@ export const componentDocs = Object.freeze([
 	switchDoc,
 	sliderDoc,
 	accordionDoc,
+	dropdownMenuDoc,
 	menuDoc,
 	paginationDoc,
 	tabsDoc,

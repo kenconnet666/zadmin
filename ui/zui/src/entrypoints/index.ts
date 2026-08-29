@@ -42,6 +42,12 @@ export { default as ZDialogTitle } from '../components/compound/dialog/ZDialogTi
 export type { ZDialogTitleProps } from '../components/compound/dialog/ZDialogTitle.svelte';
 export { default as ZDialogTrigger } from '../components/compound/dialog/ZDialogTrigger.svelte';
 export type { ZDialogTriggerProps } from '../components/compound/dialog/ZDialogTrigger.svelte';
+export { default as ZDropdownMenu } from '../components/compound/dropdown-menu/ZDropdownMenu.svelte';
+export type { ZDropdownMenuProps } from '../components/compound/dropdown-menu/ZDropdownMenu.svelte';
+export { default as ZDropdownMenuContent } from '../components/compound/dropdown-menu/ZDropdownMenuContent.svelte';
+export type { ZDropdownMenuContentProps } from '../components/compound/dropdown-menu/ZDropdownMenuContent.svelte';
+export { default as ZDropdownMenuTrigger } from '../components/compound/dropdown-menu/ZDropdownMenuTrigger.svelte';
+export type { ZDropdownMenuTriggerProps } from '../components/compound/dropdown-menu/ZDropdownMenuTrigger.svelte';
 export { default as ZDrawer } from '../components/compound/drawer/ZDrawer.svelte';
 export type { ZDrawerProps } from '../components/compound/drawer/ZDrawer.svelte';
 export { default as ZDrawerClose } from '../components/compound/drawer/ZDrawerClose.svelte';
