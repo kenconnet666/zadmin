@@ -15,6 +15,7 @@ import SliderFixture from './SliderFixture.svelte';
 import ToggleButtonFixture from './ToggleButtonFixture.svelte';
 import SwitchFixture from './SwitchFixture.svelte';
 import TabsFixture from './TabsFixture.svelte';
+import TooltipFixture from './TooltipFixture.svelte';
 import { createBrowserIcssRuntime } from '../src/icss/runtime.js';
 import { defaultTheme } from '../src/theme/default.js';
 import { extendTheme } from '../src/theme/define.js';
@@ -36,6 +37,30 @@ function insertedRuleCount(): number {
 }
 
 describe('compiled ICSS browser updates', () => {
+	it('coordinates Tooltip hover, focus, delay, portal and Escape', async () => {
+		render(TooltipFixture);
+		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="tooltip-trigger"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="tooltip-output"]');
+		trigger?.dispatchEvent(new PointerEvent('pointerenter'));
+		await new Promise((resolve) => setTimeout(resolve, 0));
+		await tick();
+		let content = document.querySelector<HTMLElement>('[data-testid="tooltip-content"]');
+		expect(content?.parentNode).toBe(document.body);
+		expect(content?.getAttribute('role')).toBe('tooltip');
+		expect(trigger?.getAttribute('aria-describedby')).toBe(content?.id);
+		expect(document.activeElement).not.toBe(content);
+		expect(output?.textContent).toBe('true:1');
+
+		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+		await tick();
+		expect(trigger?.getAttribute('aria-describedby')).toBeNull();
+		await new Promise((resolve) => setTimeout(resolve, 140));
+		await tick();
+		content = document.querySelector('[data-testid="tooltip-content"]');
+		expect(content).toBeNull();
+		expect(output?.textContent).toBe('false:2');
+	});
+
 	it('coordinates Popover portal, focus, dismiss and Presence cleanup', async () => {
 		render(PopoverFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="popover-trigger"]');

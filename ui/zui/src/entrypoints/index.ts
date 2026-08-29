@@ -40,6 +40,12 @@ export type { ZTabsPanelProps } from '../components/compound/tabs/ZTabsPanel.sve
 export { default as ZTabsTrigger } from '../components/compound/tabs/ZTabsTrigger.svelte';
 export type { ZTabsTriggerProps } from '../components/compound/tabs/ZTabsTrigger.svelte';
 export type { TabsActivationMode } from '../components/compound/tabs/context.svelte.js';
+export { default as ZTooltip } from '../components/compound/tooltip/ZTooltip.svelte';
+export type { ZTooltipProps } from '../components/compound/tooltip/ZTooltip.svelte';
+export { default as ZTooltipContent } from '../components/compound/tooltip/ZTooltipContent.svelte';
+export type { ZTooltipContentProps } from '../components/compound/tooltip/ZTooltipContent.svelte';
+export { default as ZTooltipTrigger } from '../components/compound/tooltip/ZTooltipTrigger.svelte';
+export type { ZTooltipTriggerProps } from '../components/compound/tooltip/ZTooltipTrigger.svelte';
 export { default as ZBox } from '../components/gene/ZBox.svelte';
 export type { ZBoxProps } from '../components/gene/ZBox.svelte';
 export { default as ZButton } from '../components/gene/ZButton.svelte';

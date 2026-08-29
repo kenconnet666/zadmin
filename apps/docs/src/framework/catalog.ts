@@ -22,6 +22,7 @@ import { accordionDoc } from '../content/components/navigation/accordion/doc.js'
 import { paginationDoc } from '../content/components/navigation/pagination/doc.js';
 import { tabsDoc } from '../content/components/navigation/tabs/doc.js';
 import { popoverDoc } from '../content/components/overlay/popover/doc.js';
+import { tooltipDoc } from '../content/components/overlay/tooltip/doc.js';
 import type { ComponentCategory, ComponentDoc } from './component-doc.js';
 
 export const componentCategories = Object.freeze([
@@ -56,7 +57,8 @@ export const componentDocs = Object.freeze([
 	accordionDoc,
 	paginationDoc,
 	tabsDoc,
-	popoverDoc
+	popoverDoc,
+	tooltipDoc
 ] satisfies readonly ComponentDoc[]);
 
 export const componentDocsById: ReadonlyMap<string, ComponentDoc> = new Map(

@@ -11,6 +11,9 @@ export { zuiMetadata as tabsMetadata } from '../components/compound/tabs/ZTabs.s
 export { zuiMetadata as tabsListMetadata } from '../components/compound/tabs/ZTabsList.svelte';
 export { zuiMetadata as tabsPanelMetadata } from '../components/compound/tabs/ZTabsPanel.svelte';
 export { zuiMetadata as tabsTriggerMetadata } from '../components/compound/tabs/ZTabsTrigger.svelte';
+export { zuiMetadata as tooltipMetadata } from '../components/compound/tooltip/ZTooltip.svelte';
+export { zuiMetadata as tooltipContentMetadata } from '../components/compound/tooltip/ZTooltipContent.svelte';
+export { zuiMetadata as tooltipTriggerMetadata } from '../components/compound/tooltip/ZTooltipTrigger.svelte';
 export { zuiMetadata as boxMetadata } from '../components/gene/ZBox.svelte';
 export { zuiMetadata as buttonMetadata } from '../components/gene/ZButton.svelte';
 export { zuiMetadata as codeMetadata } from '../components/gene/ZCode.svelte';

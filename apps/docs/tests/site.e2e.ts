@@ -9,7 +9,7 @@ test('renders the component catalog and real demo source', async ({ page }) => {
 
 	await page.goto('/#/');
 	await expect(page.getByRole('heading', { level: 1 })).toContainText('看见组件');
-	await expect(page.getByTestId('component-card')).toHaveCount(24);
+	await expect(page.getByTestId('component-card')).toHaveCount(25);
 	await expect(page.getByRole('heading', { level: 3 })).toHaveText([
 		'通用组件',
 		'布局组件',
@@ -263,6 +263,21 @@ test('keeps Popover portal, ARIA, focus, positioning and dismiss synchronized', 
 	await expect(page.getByText(/open = false · 用户变更次数 = 2/u)).toBeVisible();
 });
 
+test('keeps Tooltip hover, focus, delay and Escape synchronized', async ({ page }) => {
+	await page.goto('/#/components/tooltip');
+	const trigger = page.getByTestId('tooltip-trigger');
+	await trigger.hover();
+	const tooltip = page.getByRole('tooltip');
+	await expect(tooltip).toHaveText('所有生产探针均正常');
+	const tooltipId = await tooltip.getAttribute('id');
+	await expect(trigger).toHaveAttribute('aria-describedby', tooltipId!);
+	await page.keyboard.press('Escape');
+	await expect(tooltip).toHaveCount(0);
+	await expect(page.getByText(/open = false · 用户变更次数 = 2/u)).toBeVisible();
+	await trigger.focus();
+	await expect(page.getByRole('tooltip')).toBeVisible();
+});
+
 test('keeps S1 primitives semantic and display preferences effective', async ({ page }) => {
 	await page.goto('/#/guides/theme');
 	await expect(page.getByRole('heading', { level: 1 })).toContainText('主题不是一组颜色');
@@ -321,7 +336,8 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/accordion',
 		'#/components/pagination',
 		'#/components/tabs',
-		'#/components/popover'
+		'#/components/popover',
+		'#/components/tooltip'
 	]) {
 		await page.goto(`/${route}`);
 		const results = await new AxeBuilder({ page }).analyze();

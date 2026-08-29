@@ -28,7 +28,8 @@ describe('ZUI component documentation catalog', () => {
 			'ZAccordion',
 			'ZPagination',
 			'ZTabs',
-			'ZPopover'
+			'ZPopover',
+			'ZTooltip'
 		]);
 		expect(componentDocsById.size).toBe(componentDocs.length);
 		expect(componentDocs.map(({ category }) => category)).toEqual([
@@ -55,6 +56,7 @@ describe('ZUI component documentation catalog', () => {
 			'navigation',
 			'navigation',
 			'navigation',
+			'overlay',
 			'overlay'
 		]);
 	});

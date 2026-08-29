@@ -37,6 +37,7 @@ import FieldFixture from './FieldFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
 import RadioGroupFixture from './RadioGroupFixture.svelte';
 import TabsFixture from './TabsFixture.svelte';
+import TooltipFixture from './TooltipFixture.svelte';
 
 describe('ZUI foundational components', () => {
 	it('renders Symbol-carried compiler variables on the real ZBox root', () => {
@@ -167,6 +168,13 @@ describe('ZUI foundational components', () => {
 		const open = render(PopoverFixture, { props: { defaultOpen: true } }).body;
 		expect(open).toContain('aria-expanded="true"');
 		expect(open).toContain('role="dialog"');
+	});
+
+	it('renders Tooltip SSR only when initially open with description linkage', () => {
+		expect(render(TooltipFixture).body).not.toContain('role="tooltip"');
+		const open = render(TooltipFixture, { props: { defaultOpen: true } }).body;
+		expect(open).toContain('aria-describedby=');
+		expect(open).toContain('role="tooltip"');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

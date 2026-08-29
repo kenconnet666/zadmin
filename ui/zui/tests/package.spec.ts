@@ -34,6 +34,9 @@ import {
 	tabsPanelMetadata,
 	tabsTriggerMetadata,
 	textMetadata,
+	tooltipContentMetadata,
+	tooltipMetadata,
+	tooltipTriggerMetadata,
 	toggleButtonMetadata,
 	visuallyHiddenMetadata
 } from '../src/entrypoints/metadata.js';
@@ -107,7 +110,10 @@ describe('@zadmin/zui package', () => {
 			tabsMetadata,
 			tabsListMetadata,
 			tabsTriggerMetadata,
-			tabsPanelMetadata
+			tabsPanelMetadata,
+			tooltipMetadata,
+			tooltipTriggerMetadata,
+			tooltipContentMetadata
 		];
 		expect(new Set(metadata.map(({ id }) => id)).size).toBe(metadata.length);
 		expect(metadata.every(({ name }) => name.startsWith('Z'))).toBe(true);

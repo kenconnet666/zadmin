@@ -23,6 +23,9 @@ import {
 	ZTabsList,
 	ZTabsPanel,
 	ZTabsTrigger,
+	ZTooltip,
+	ZTooltipContent,
+	ZTooltipTrigger,
 	ZToggleButton,
 	defineRecipe,
 	defineSlotRecipe,
@@ -47,6 +50,9 @@ import {
 	type ZTabsPanelProps,
 	type ZTabsProps,
 	type ZTabsTriggerProps,
+	type ZTooltipContentProps,
+	type ZTooltipProps,
+	type ZTooltipTriggerProps,
 	type ZToggleButtonProps
 } from '../src/entrypoints/index.js';
 
@@ -108,6 +114,11 @@ const tabsTriggerProps: ComponentProps<typeof ZTabsTrigger> = {
 const tabsPanelProps: ComponentProps<typeof ZTabsPanel> = {
 	value: 'overview'
 } satisfies ZTabsPanelProps;
+const tooltipProps: ComponentProps<typeof ZTooltip> = { delay: 200 } satisfies ZTooltipProps;
+const tooltipTriggerProps: ComponentProps<typeof ZTooltipTrigger> =
+	{} satisfies ZTooltipTriggerProps;
+const tooltipContentProps: ComponentProps<typeof ZTooltipContent> =
+	{} satisfies ZTooltipContentProps;
 const toggleButtonProps: ComponentProps<typeof ZToggleButton> = {
 	defaultPressed: true,
 	onPressedChange: (pressed) => void pressed
@@ -132,6 +143,9 @@ void tabsProps;
 void tabsListProps;
 void tabsTriggerProps;
 void tabsPanelProps;
+void tooltipProps;
+void tooltipTriggerProps;
+void tooltipContentProps;
 void toggleButtonProps;
 
 declare const s: IcssStyle<typeof defaultTheme>;
