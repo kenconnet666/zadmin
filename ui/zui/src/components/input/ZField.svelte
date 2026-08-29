@@ -166,6 +166,7 @@
 	const resolvedControlId = $derived(controlId ?? `${uid}-control`);
 	const descriptionId = $derived(description ? `${uid}-description` : undefined);
 	const messages = $derived(normalizeFieldMessages(error));
+	const invalid = $derived(messages.length > 0);
 	const errorIds = $derived(messages.map((_, index) => `${uid}-error-${index + 1}`));
 	const describedBy = $derived(mergeAriaIds(descriptionId, errorIds.join(' ')));
 	const classes = $derived(zui.slots(fieldRecipe, { size }));
@@ -173,7 +174,7 @@
 		controlId: resolvedControlId,
 		describedBy,
 		disabled,
-		invalid: messages.length > 0,
+		invalid,
 		name,
 		readonly,
 		required
@@ -189,7 +190,7 @@
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
 	data-disabled={disabled ? 'true' : undefined}
-	data-invalid={messages.length > 0 ? 'true' : undefined}
+	data-invalid={invalid ? 'true' : undefined}
 >
 	<label class={classes.label} for={resolvedControlId}>
 		{#if typeof label === 'string'}{label}{:else}{@render label()}{/if}
@@ -201,7 +202,7 @@
 			{#if typeof description === 'string'}{description}{:else}{@render description()}{/if}
 		</div>
 	{/if}
-	{#if messages.length > 0}
+	{#if invalid}
 		<div class={classes.messages} aria-live="polite" aria-atomic="true">
 			{#each messages as message, index (errorIds[index])}
 				<p class={classes.error} id={errorIds[index]}>{message}</p>
