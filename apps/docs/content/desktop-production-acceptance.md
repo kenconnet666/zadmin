@@ -4,7 +4,7 @@
 
 ## 已通过门禁
 
-- 单一IDL生成34个TypeScript/C#协议method；`generate:check`验证漂移；
+- 单一IDL生成34个TypeScript/C#协议method与28个DTO/enum；C# method descriptor在dispatch前按生成类型验证params，`generate:check`验证双端漂移；
 - TypeScript 6个test files、24项测试通过；statements 98.16%、branches 90.15%、functions/lines 100%；
 - `apps/desktop` 2个test files、4项测试通过，Svelte check为0 errors/0 warnings；
 - C# Core、合同测试和Windows target以`net10.0`零warning、零error构建；

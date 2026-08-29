@@ -129,7 +129,7 @@ pnpm --filter @zadmin/desktop webview:dev:smoke
 
 2026-08-29公共层结果：
 
-- 单一IDL生成34个TypeScript/C#协议method，`generate:check`验证漂移；
+- 单一IDL生成34个TypeScript/C#协议method与28个DTO/enum，C# dispatcher按生成descriptor验证params，`generate:check`验证漂移；
 - TypeScript 6个test files、24项测试通过；statements 98.16%、branches 90.15%、functions/lines 100%；
 - timeout、AbortSignal、错误归一化、事件、资源scope、origin allowlist、browser fallback和fake bridge通过；
 - 9个Svelte桌面组件check为0 errors/0 warnings；

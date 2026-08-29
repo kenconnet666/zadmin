@@ -1,124 +1,50 @@
+import type {
+	AppSnapshot,
+	ConfirmedAction,
+	DesktopError,
+	JsonValue,
+	LogRecord,
+	NotificationOptions,
+	NotificationPermissionValue,
+	OpenDialogOptions,
+	OsSnapshot,
+	SaveDialogOptions,
+	UpdateInfo,
+	WindowSnapshot
+} from '../generated/protocol.js';
+
+export type {
+	AppSnapshot,
+	BooleanValue,
+	ConfirmedAction,
+	ConfirmedPath,
+	DesktopError,
+	DesktopErrorCode,
+	DesktopLogLevel,
+	Empty,
+	ExitOptions,
+	JsonValue,
+	KeyValue,
+	LogRecord,
+	NotificationOptions,
+	NotificationPermissionValue,
+	NullablePath,
+	OpenDialogOptions,
+	OsSnapshot,
+	PathSelection,
+	PathValue,
+	SaveDialogOptions,
+	StoreSetOptions,
+	StringList,
+	TextValue,
+	UpdateInfo,
+	UrlValue,
+	Void,
+	WindowSnapshot,
+	WriteTextOptions
+} from '../generated/protocol.js';
+
 export type DesktopRuntime = 'browser' | 'fake' | 'webview';
-export type JsonValue =
-	null | boolean | number | string | JsonValue[] | { [key: string]: JsonValue };
-
-export type Empty = Record<string, never>;
-export type Void = undefined;
-export interface TextValue {
-	readonly text: string;
-}
-export interface PathValue {
-	readonly path: string;
-}
-export interface ConfirmedPath extends PathValue {
-	readonly confirmed: true;
-}
-export interface BooleanValue {
-	readonly value: boolean;
-}
-export interface KeyValue {
-	readonly key: string;
-}
-export interface UrlValue {
-	readonly url: string;
-}
-export interface StringList {
-	readonly values: readonly string[];
-}
-export interface NullablePath {
-	readonly path: string | null;
-}
-export interface PathSelection {
-	readonly paths: readonly string[];
-}
-export interface ConfirmedAction {
-	readonly confirmed: true;
-}
-export interface ExitOptions extends ConfirmedAction {
-	readonly code: number;
-}
-export interface WriteTextOptions extends PathValue {
-	readonly contents: string;
-}
-export interface StoreSetOptions extends KeyValue {
-	readonly value: JsonValue;
-}
-
-export interface AppSnapshot {
-	readonly environment: string;
-	readonly name: string;
-	readonly version: string;
-	readonly webviewVersion: string;
-}
-
-export interface OsSnapshot {
-	readonly arch: string;
-	readonly locale: string;
-	readonly platform: string;
-	readonly version: string;
-}
-
-export interface WindowSnapshot {
-	readonly focused: boolean;
-	readonly height: number;
-	readonly maximized: boolean;
-	readonly minimized: boolean;
-	readonly scaleFactor: number;
-	readonly visible: boolean;
-	readonly width: number;
-}
-
-export interface OpenDialogOptions {
-	readonly directory?: boolean;
-	readonly filters?: Readonly<Record<string, readonly string[]>>;
-	readonly multiple?: boolean;
-	readonly title?: string;
-}
-
-export interface SaveDialogOptions {
-	readonly defaultPath?: string;
-	readonly filters?: Readonly<Record<string, readonly string[]>>;
-	readonly title?: string;
-}
-
-export type DesktopLogLevel = 'debug' | 'error' | 'info' | 'trace' | 'warn';
-export interface LogRecord {
-	readonly fields?: Readonly<Record<string, JsonValue>>;
-	readonly level: DesktopLogLevel;
-	readonly message: string;
-}
-
-export type NotificationPermissionValue = 'default' | 'denied' | 'granted';
-export interface NotificationOptions {
-	readonly body?: string;
-	readonly icon?: string;
-	readonly title: string;
-}
-
-export type UpdateInfo = null | {
-	readonly body?: string;
-	readonly currentVersion: string;
-	readonly date?: string;
-	readonly version: string;
-};
-
-export type DesktopErrorCode =
-	| 'cancelled'
-	| 'disposed'
-	| 'invalid-input'
-	| 'permission-denied'
-	| 'protocol-error'
-	| 'system-error'
-	| 'timeout'
-	| 'transport-error'
-	| 'unsupported';
-
-export interface DesktopError {
-	readonly code: DesktopErrorCode;
-	readonly message: string;
-	readonly operation: string;
-	readonly retryable: boolean;
-}
 
 export type DesktopResult<T> =
 	{ readonly ok: true; readonly value: T } | { readonly error: DesktopError; readonly ok: false };

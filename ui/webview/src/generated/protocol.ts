@@ -1,5 +1,145 @@
 // Generated from protocol/desktop.protocol.json. Do not edit.
-import type * as Dto from '../platform/types.js';
+
+export type Empty = Record<string, never>;
+
+export type Void = undefined;
+
+export type JsonValue =
+	null | boolean | number | string | JsonValue[] | { [key: string]: JsonValue };
+
+export interface TextValue {
+	readonly text: string;
+}
+
+export interface PathValue {
+	readonly path: string;
+}
+
+export interface ConfirmedPath {
+	readonly confirmed: true;
+	readonly path: string;
+}
+
+export interface BooleanValue {
+	readonly value: boolean;
+}
+
+export interface KeyValue {
+	readonly key: string;
+}
+
+export interface UrlValue {
+	readonly url: string;
+}
+
+export interface StringList {
+	readonly values: readonly string[];
+}
+
+export interface NullablePath {
+	readonly path: string | null;
+}
+
+export interface PathSelection {
+	readonly paths: readonly string[];
+}
+
+export interface ConfirmedAction {
+	readonly confirmed: true;
+}
+
+export interface ExitOptions {
+	readonly code: number;
+	readonly confirmed: true;
+}
+
+export interface WriteTextOptions {
+	readonly contents: string;
+	readonly path: string;
+}
+
+export interface StoreSetOptions {
+	readonly key: string;
+	readonly value: JsonValue;
+}
+
+export interface AppSnapshot {
+	readonly environment: string;
+	readonly name: string;
+	readonly version: string;
+	readonly webviewVersion: string;
+}
+
+export interface OsSnapshot {
+	readonly arch: string;
+	readonly locale: string;
+	readonly platform: string;
+	readonly version: string;
+}
+
+export interface WindowSnapshot {
+	readonly focused: boolean;
+	readonly height: number;
+	readonly maximized: boolean;
+	readonly minimized: boolean;
+	readonly scaleFactor: number;
+	readonly visible: boolean;
+	readonly width: number;
+}
+
+export interface OpenDialogOptions {
+	readonly directory?: boolean;
+	readonly filters?: Readonly<Record<string, readonly string[]>>;
+	readonly multiple?: boolean;
+	readonly title?: string;
+}
+
+export interface SaveDialogOptions {
+	readonly defaultPath?: string;
+	readonly filters?: Readonly<Record<string, readonly string[]>>;
+	readonly title?: string;
+}
+
+export type DesktopLogLevel = 'debug' | 'error' | 'info' | 'trace' | 'warn';
+
+export interface LogRecord {
+	readonly fields?: Readonly<Record<string, JsonValue>>;
+	readonly level: DesktopLogLevel;
+	readonly message: string;
+}
+
+export type NotificationPermissionValue = 'default' | 'denied' | 'granted';
+
+export interface NotificationOptions {
+	readonly body?: string;
+	readonly icon?: string;
+	readonly title: string;
+}
+
+export type UpdateInfo = {
+	readonly body?: string;
+	readonly currentVersion: string;
+	readonly date?: string;
+	readonly version: string;
+} | null;
+
+export type DesktopErrorCode =
+	| 'cancelled'
+	| 'disposed'
+	| 'invalid-input'
+	| 'permission-denied'
+	| 'protocol-error'
+	| 'system-error'
+	| 'timeout'
+	| 'transport-error'
+	| 'unsupported';
+
+export interface DesktopError {
+	readonly code: DesktopErrorCode;
+	readonly message: string;
+	readonly operation: string;
+	readonly retryable: boolean;
+}
 
 export const WEBVIEW_PROTOCOL_VERSION = 1 as const;
 export const WEBVIEW_MAX_MESSAGE_BYTES = 1048576 as const;
@@ -45,40 +185,40 @@ export type WebviewMethod = (typeof webviewProtocolMethods)[number];
 export type WebviewEventTopic = (typeof webviewProtocolEvents)[number];
 
 export interface WebviewMethodMap {
-	'app.snapshot': { params: Dto.Empty; result: Dto.AppSnapshot };
-	'clipboard.clear': { params: Dto.Empty; result: Dto.Void };
-	'clipboard.readText': { params: Dto.Empty; result: Dto.TextValue };
-	'clipboard.writeText': { params: Dto.TextValue; result: Dto.Void };
-	'dialog.open': { params: Dto.OpenDialogOptions; result: Dto.PathSelection };
-	'dialog.save': { params: Dto.SaveDialogOptions; result: Dto.NullablePath };
-	'filesystem.exists': { params: Dto.PathValue; result: Dto.BooleanValue };
-	'filesystem.readText': { params: Dto.PathValue; result: Dto.TextValue };
-	'filesystem.remove': { params: Dto.ConfirmedPath; result: Dto.Void };
-	'filesystem.writeText': { params: Dto.WriteTextOptions; result: Dto.Void };
-	'log.write': { params: Dto.LogRecord; result: Dto.Void };
-	'notification.permission': { params: Dto.Empty; result: Dto.NotificationPermissionValue };
-	'notification.requestPermission': { params: Dto.Empty; result: Dto.NotificationPermissionValue };
-	'notification.send': { params: Dto.NotificationOptions; result: Dto.Void };
-	'opener.openUrl': { params: Dto.UrlValue; result: Dto.Void };
-	'os.snapshot': { params: Dto.Empty; result: Dto.OsSnapshot };
-	'process.exit': { params: Dto.ExitOptions; result: Dto.Void };
-	'process.relaunch': { params: Dto.ConfirmedAction; result: Dto.Void };
-	'store.clear': { params: Dto.Empty; result: Dto.Void };
-	'store.delete': { params: Dto.KeyValue; result: Dto.BooleanValue };
-	'store.get': { params: Dto.KeyValue; result: Dto.JsonValue };
-	'store.keys': { params: Dto.Empty; result: Dto.StringList };
-	'store.save': { params: Dto.Empty; result: Dto.Void };
-	'store.set': { params: Dto.StoreSetOptions; result: Dto.Void };
-	'updater.check': { params: Dto.Empty; result: Dto.UpdateInfo };
-	'window.close': { params: Dto.Empty; result: Dto.Void };
-	'window.maximize': { params: Dto.Empty; result: Dto.Void };
-	'window.minimize': { params: Dto.Empty; result: Dto.Void };
-	'window.restore': { params: Dto.Empty; result: Dto.Void };
-	'window.snapshot': { params: Dto.Empty; result: Dto.WindowSnapshot };
-	'window.startDragging': { params: Dto.Empty; result: Dto.Void };
-	'window.toggleMaximize': { params: Dto.Empty; result: Dto.Void };
-	'windowState.restore': { params: Dto.Empty; result: Dto.Void };
-	'windowState.save': { params: Dto.Empty; result: Dto.Void };
+	'app.snapshot': { params: Empty; result: AppSnapshot };
+	'clipboard.clear': { params: Empty; result: Void };
+	'clipboard.readText': { params: Empty; result: TextValue };
+	'clipboard.writeText': { params: TextValue; result: Void };
+	'dialog.open': { params: OpenDialogOptions; result: PathSelection };
+	'dialog.save': { params: SaveDialogOptions; result: NullablePath };
+	'filesystem.exists': { params: PathValue; result: BooleanValue };
+	'filesystem.readText': { params: PathValue; result: TextValue };
+	'filesystem.remove': { params: ConfirmedPath; result: Void };
+	'filesystem.writeText': { params: WriteTextOptions; result: Void };
+	'log.write': { params: LogRecord; result: Void };
+	'notification.permission': { params: Empty; result: NotificationPermissionValue };
+	'notification.requestPermission': { params: Empty; result: NotificationPermissionValue };
+	'notification.send': { params: NotificationOptions; result: Void };
+	'opener.openUrl': { params: UrlValue; result: Void };
+	'os.snapshot': { params: Empty; result: OsSnapshot };
+	'process.exit': { params: ExitOptions; result: Void };
+	'process.relaunch': { params: ConfirmedAction; result: Void };
+	'store.clear': { params: Empty; result: Void };
+	'store.delete': { params: KeyValue; result: BooleanValue };
+	'store.get': { params: KeyValue; result: JsonValue };
+	'store.keys': { params: Empty; result: StringList };
+	'store.save': { params: Empty; result: Void };
+	'store.set': { params: StoreSetOptions; result: Void };
+	'updater.check': { params: Empty; result: UpdateInfo };
+	'window.close': { params: Empty; result: Void };
+	'window.maximize': { params: Empty; result: Void };
+	'window.minimize': { params: Empty; result: Void };
+	'window.restore': { params: Empty; result: Void };
+	'window.snapshot': { params: Empty; result: WindowSnapshot };
+	'window.startDragging': { params: Empty; result: Void };
+	'window.toggleMaximize': { params: Empty; result: Void };
+	'windowState.restore': { params: Empty; result: Void };
+	'windowState.save': { params: Empty; result: Void };
 }
 
 export type WebviewRequest = {
@@ -95,7 +235,7 @@ export type WebviewResponse =
 			kind: 'response';
 			id: string;
 			ok: false;
-			error: Dto.DesktopError;
+			error: DesktopError;
 	  };
 export type WebviewEvent = {
 	v: typeof WEBVIEW_PROTOCOL_VERSION;

@@ -24,12 +24,23 @@ catch (ArgumentException)
 await using var dispatcher = new WebViewDispatcher(security);
 dispatcher.Register(WebViewProtocol.AppSnapshot, (_, _) =>
     ValueTask.FromResult<JsonNode?>(new JsonObject { ["name"] = "ZAdmin" }));
+dispatcher.Register(WebViewProtocol.ClipboardWriteText, (_, _) =>
+    ValueTask.FromResult<JsonNode?>(null));
+Assert(WebViewProtocol.Descriptors.Count == 34, "Generated method descriptor count drifted.");
+Assert(
+    WebViewProtocol.Descriptors[WebViewProtocol.ClipboardWriteText].ParamsType == typeof(TextValue),
+    "Generated clipboard parameter type drifted.");
 
 var success = await dispatcher.DispatchAsync(
     """{"v":1,"kind":"request","id":"one","method":"app.snapshot","params":{}}""",
     WebViewSecurityPolicy.DefaultAppOrigin);
 Assert(success?.Contains("\"ok\":true", StringComparison.Ordinal) is true, "Registered request failed.");
 Assert(success?.Contains("ZAdmin", StringComparison.Ordinal) is true, "Result payload was lost.");
+
+var invalidParams = await dispatcher.DispatchAsync(
+    """{"v":1,"kind":"request","id":"invalid","method":"clipboard.writeText","params":{}}""",
+    WebViewSecurityPolicy.DefaultAppOrigin);
+Assert(invalidParams?.Contains("invalid-input", StringComparison.Ordinal) is true, "Missing required DTO field was accepted.");
 
 var unsupported = await dispatcher.DispatchAsync(
     """{"v":1,"kind":"request","id":"two","method":"os.snapshot","params":{}}""",

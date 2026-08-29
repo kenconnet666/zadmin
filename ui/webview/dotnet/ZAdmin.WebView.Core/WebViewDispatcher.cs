@@ -88,6 +88,21 @@ public sealed class WebViewDispatcher : IAsyncDisposable
             return SerializeFailure(id, "unsupported", method, "Desktop capability is not registered by this target.");
         }
 
+        try
+        {
+            var descriptor = WebViewProtocol.Descriptors[method];
+            if (message["params"] is not JsonNode parameters)
+            {
+                return SerializeFailure(id, "invalid-input", method, "Command params are required.");
+            }
+
+            _ = parameters.Deserialize(descriptor.ParamsType, SerializerOptions);
+        }
+        catch (JsonException error)
+        {
+            return SerializeFailure(id, "invalid-input", method, error.Message);
+        }
+
         using var linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         if (!_active.TryAdd(id, linked)) return SerializeFailure(id, "protocol-error", method, "Duplicate request id.");
         try
@@ -143,7 +158,7 @@ public sealed class WebViewDispatcher : IAsyncDisposable
                 id,
                 false,
                 null,
-                new ProtocolError(code, message, operation, retryable)),
+                new DesktopError(code, message, operation, retryable)),
             SerializerOptions);
 
     public async ValueTask DisposeAsync()

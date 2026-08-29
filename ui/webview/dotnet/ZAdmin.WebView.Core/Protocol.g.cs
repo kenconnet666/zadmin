@@ -5,6 +5,136 @@ using System.Text.Json.Serialization;
 
 namespace ZAdmin.WebView.Core.Generated;
 
+public sealed record Empty;
+
+public sealed record TextValue(
+    [property: JsonRequired, JsonPropertyName("text")] string Text);
+
+public sealed record PathValue(
+    [property: JsonRequired, JsonPropertyName("path")] string Path);
+
+public sealed record ConfirmedPath(
+    [property: JsonRequired, JsonPropertyName("confirmed")] bool Confirmed,
+    [property: JsonRequired, JsonPropertyName("path")] string Path);
+
+public sealed record BooleanValue(
+    [property: JsonRequired, JsonPropertyName("value")] bool Value);
+
+public sealed record KeyValue(
+    [property: JsonRequired, JsonPropertyName("key")] string Key);
+
+public sealed record UrlValue(
+    [property: JsonRequired, JsonPropertyName("url")] string Url);
+
+public sealed record StringList(
+    [property: JsonRequired, JsonPropertyName("values")] IReadOnlyList<string> Values);
+
+public sealed record NullablePath(
+    [property: JsonRequired, JsonPropertyName("path")] string? Path);
+
+public sealed record PathSelection(
+    [property: JsonRequired, JsonPropertyName("paths")] IReadOnlyList<string> Paths);
+
+public sealed record ConfirmedAction(
+    [property: JsonRequired, JsonPropertyName("confirmed")] bool Confirmed);
+
+public sealed record ExitOptions(
+    [property: JsonRequired, JsonPropertyName("code")] int Code,
+    [property: JsonRequired, JsonPropertyName("confirmed")] bool Confirmed);
+
+public sealed record WriteTextOptions(
+    [property: JsonRequired, JsonPropertyName("contents")] string Contents,
+    [property: JsonRequired, JsonPropertyName("path")] string Path);
+
+public sealed record StoreSetOptions(
+    [property: JsonRequired, JsonPropertyName("key")] string Key,
+    [property: JsonRequired, JsonPropertyName("value")] JsonNode? Value);
+
+public sealed record AppSnapshot(
+    [property: JsonRequired, JsonPropertyName("environment")] string Environment,
+    [property: JsonRequired, JsonPropertyName("name")] string Name,
+    [property: JsonRequired, JsonPropertyName("version")] string Version,
+    [property: JsonRequired, JsonPropertyName("webviewVersion")] string WebviewVersion);
+
+public sealed record OsSnapshot(
+    [property: JsonRequired, JsonPropertyName("arch")] string Arch,
+    [property: JsonRequired, JsonPropertyName("locale")] string Locale,
+    [property: JsonRequired, JsonPropertyName("platform")] string Platform,
+    [property: JsonRequired, JsonPropertyName("version")] string Version);
+
+public sealed record WindowSnapshot(
+    [property: JsonRequired, JsonPropertyName("focused")] bool Focused,
+    [property: JsonRequired, JsonPropertyName("height")] double Height,
+    [property: JsonRequired, JsonPropertyName("maximized")] bool Maximized,
+    [property: JsonRequired, JsonPropertyName("minimized")] bool Minimized,
+    [property: JsonRequired, JsonPropertyName("scaleFactor")] double ScaleFactor,
+    [property: JsonRequired, JsonPropertyName("visible")] bool Visible,
+    [property: JsonRequired, JsonPropertyName("width")] double Width);
+
+public sealed record OpenDialogOptions(
+    [property: JsonPropertyName("directory")] bool? Directory = null,
+    [property: JsonPropertyName("filters")] IReadOnlyDictionary<string, IReadOnlyList<string>>? Filters = null,
+    [property: JsonPropertyName("multiple")] bool? Multiple = null,
+    [property: JsonPropertyName("title")] string? Title = null);
+
+public sealed record SaveDialogOptions(
+    [property: JsonPropertyName("defaultPath")] string? DefaultPath = null,
+    [property: JsonPropertyName("filters")] IReadOnlyDictionary<string, IReadOnlyList<string>>? Filters = null,
+    [property: JsonPropertyName("title")] string? Title = null);
+
+public static class DesktopLogLevelValues
+{
+    public const string Debug = "debug";
+    public const string Error = "error";
+    public const string Info = "info";
+    public const string Trace = "trace";
+    public const string Warn = "warn";
+}
+
+public sealed record LogRecord(
+    [property: JsonRequired, JsonPropertyName("level")] string Level,
+    [property: JsonRequired, JsonPropertyName("message")] string Message,
+    [property: JsonPropertyName("fields")] IReadOnlyDictionary<string, JsonNode?>? Fields = null);
+
+public static class NotificationPermissionValueValues
+{
+    public const string Default = "default";
+    public const string Denied = "denied";
+    public const string Granted = "granted";
+}
+
+public sealed record NotificationOptions(
+    [property: JsonRequired, JsonPropertyName("title")] string Title,
+    [property: JsonPropertyName("body")] string? Body = null,
+    [property: JsonPropertyName("icon")] string? Icon = null);
+
+public sealed record UpdateInfo(
+    [property: JsonRequired, JsonPropertyName("currentVersion")] string CurrentVersion,
+    [property: JsonRequired, JsonPropertyName("version")] string Version,
+    [property: JsonPropertyName("body")] string? Body = null,
+    [property: JsonPropertyName("date")] string? Date = null);
+
+public static class DesktopErrorCodeValues
+{
+    public const string Cancelled = "cancelled";
+    public const string Disposed = "disposed";
+    public const string InvalidInput = "invalid-input";
+    public const string PermissionDenied = "permission-denied";
+    public const string ProtocolError = "protocol-error";
+    public const string SystemError = "system-error";
+    public const string Timeout = "timeout";
+    public const string TransportError = "transport-error";
+    public const string Unsupported = "unsupported";
+}
+
+public sealed record DesktopError(
+    [property: JsonRequired, JsonPropertyName("code")] string Code,
+    [property: JsonRequired, JsonPropertyName("message")] string Message,
+    [property: JsonRequired, JsonPropertyName("operation")] string Operation,
+    [property: JsonRequired, JsonPropertyName("retryable")] bool Retryable);
+
+public sealed record ProtocolMethodDescriptor(string Name, Type ParamsType, Type ResultType);
+
 public static class WebViewProtocol
 {
     public const int Version = 1;
@@ -43,43 +173,46 @@ public static class WebViewProtocol
     public const string WindowToggleMaximize = "window.toggleMaximize";
     public const string WindowStateRestore = "windowState.restore";
     public const string WindowStateSave = "windowState.save";
-    public static readonly IReadOnlySet<string> Methods = new HashSet<string>(StringComparer.Ordinal)
-    {
-        AppSnapshot,
-        ClipboardClear,
-        ClipboardReadText,
-        ClipboardWriteText,
-        DialogOpen,
-        DialogSave,
-        FilesystemExists,
-        FilesystemReadText,
-        FilesystemRemove,
-        FilesystemWriteText,
-        LogWrite,
-        NotificationPermission,
-        NotificationRequestPermission,
-        NotificationSend,
-        OpenerOpenUrl,
-        OsSnapshot,
-        ProcessExit,
-        ProcessRelaunch,
-        StoreClear,
-        StoreDelete,
-        StoreGet,
-        StoreKeys,
-        StoreSave,
-        StoreSet,
-        UpdaterCheck,
-        WindowClose,
-        WindowMaximize,
-        WindowMinimize,
-        WindowRestore,
-        WindowSnapshot,
-        WindowStartDragging,
-        WindowToggleMaximize,
-        WindowStateRestore,
-        WindowStateSave,
-    };
+    public static readonly IReadOnlyDictionary<string, ProtocolMethodDescriptor> Descriptors =
+        new Dictionary<string, ProtocolMethodDescriptor>(StringComparer.Ordinal)
+        {
+            [AppSnapshot] = new(AppSnapshot, typeof(Empty), typeof(AppSnapshot)),
+            [ClipboardClear] = new(ClipboardClear, typeof(Empty), typeof(void)),
+            [ClipboardReadText] = new(ClipboardReadText, typeof(Empty), typeof(TextValue)),
+            [ClipboardWriteText] = new(ClipboardWriteText, typeof(TextValue), typeof(void)),
+            [DialogOpen] = new(DialogOpen, typeof(OpenDialogOptions), typeof(PathSelection)),
+            [DialogSave] = new(DialogSave, typeof(SaveDialogOptions), typeof(NullablePath)),
+            [FilesystemExists] = new(FilesystemExists, typeof(PathValue), typeof(BooleanValue)),
+            [FilesystemReadText] = new(FilesystemReadText, typeof(PathValue), typeof(TextValue)),
+            [FilesystemRemove] = new(FilesystemRemove, typeof(ConfirmedPath), typeof(void)),
+            [FilesystemWriteText] = new(FilesystemWriteText, typeof(WriteTextOptions), typeof(void)),
+            [LogWrite] = new(LogWrite, typeof(LogRecord), typeof(void)),
+            [NotificationPermission] = new(NotificationPermission, typeof(Empty), typeof(string)),
+            [NotificationRequestPermission] = new(NotificationRequestPermission, typeof(Empty), typeof(string)),
+            [NotificationSend] = new(NotificationSend, typeof(NotificationOptions), typeof(void)),
+            [OpenerOpenUrl] = new(OpenerOpenUrl, typeof(UrlValue), typeof(void)),
+            [OsSnapshot] = new(OsSnapshot, typeof(Empty), typeof(OsSnapshot)),
+            [ProcessExit] = new(ProcessExit, typeof(ExitOptions), typeof(void)),
+            [ProcessRelaunch] = new(ProcessRelaunch, typeof(ConfirmedAction), typeof(void)),
+            [StoreClear] = new(StoreClear, typeof(Empty), typeof(void)),
+            [StoreDelete] = new(StoreDelete, typeof(KeyValue), typeof(BooleanValue)),
+            [StoreGet] = new(StoreGet, typeof(KeyValue), typeof(JsonNode)),
+            [StoreKeys] = new(StoreKeys, typeof(Empty), typeof(StringList)),
+            [StoreSave] = new(StoreSave, typeof(Empty), typeof(void)),
+            [StoreSet] = new(StoreSet, typeof(StoreSetOptions), typeof(void)),
+            [UpdaterCheck] = new(UpdaterCheck, typeof(Empty), typeof(UpdateInfo)),
+            [WindowClose] = new(WindowClose, typeof(Empty), typeof(void)),
+            [WindowMaximize] = new(WindowMaximize, typeof(Empty), typeof(void)),
+            [WindowMinimize] = new(WindowMinimize, typeof(Empty), typeof(void)),
+            [WindowRestore] = new(WindowRestore, typeof(Empty), typeof(void)),
+            [WindowSnapshot] = new(WindowSnapshot, typeof(Empty), typeof(WindowSnapshot)),
+            [WindowStartDragging] = new(WindowStartDragging, typeof(Empty), typeof(void)),
+            [WindowToggleMaximize] = new(WindowToggleMaximize, typeof(Empty), typeof(void)),
+            [WindowStateRestore] = new(WindowStateRestore, typeof(Empty), typeof(void)),
+            [WindowStateSave] = new(WindowStateSave, typeof(Empty), typeof(void)),
+        };
+    public static readonly IReadOnlySet<string> Methods =
+        Descriptors.Keys.ToHashSet(StringComparer.Ordinal);
 }
 
 public sealed record ProtocolRequest(
@@ -88,9 +221,3 @@ public sealed record ProtocolRequest(
     [property: JsonPropertyName("id")] string Id,
     [property: JsonPropertyName("method")] string Method,
     [property: JsonPropertyName("params")] JsonNode? Params);
-
-public sealed record ProtocolError(
-    [property: JsonPropertyName("code")] string Code,
-    [property: JsonPropertyName("message")] string Message,
-    [property: JsonPropertyName("operation")] string Operation,
-    [property: JsonPropertyName("retryable")] bool Retryable);

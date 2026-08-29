@@ -12,7 +12,7 @@ DI容器、Plugin Module、上下游插件类型传播、服务端/客户端独�
 
 `@zadmin/miniapp`现为独立移动框架：不依赖ZUI，内含Theme、`mcss()`、8个`M*`组件、compiler、custom renderer、App/Page runtime、官方微信类型平台能力和直接微信target。`apps/wechat`从Svelte源码生成WXML、WXSS、JS、JSON和sourcemap，生产依赖及产物没有Taro。当前本地13个测试文件/41项测试、宿主8项测试和15文件实际构建通过；clean-package和coverage留给云端CI。
 
-`@zadmin/webview`已成为当前桌面实现：34个IDL方法、typed bridge、timeout/cancel/event/dispose、`DesktopPlatform`、browser fallback、fake driver、9个Svelte组件、C# dispatcher和WinUI 3/WebView2 Windows target。TypeScript 24项测试覆盖率statements 98.16%、branches 90.15%、functions/lines 100%；`net10.0` C# Core零警告。真实生产宿主加载SvelteKit/ZUI页面、严格CSP hash与JS→C# IPC通过；开发宿主在loopback origin确认Vite client、页面hydration、native bridge和退出零残留。portable ZIP为90,779,828 bytes，解包payload为233,775,520 bytes/533文件；self-contained路线相对旧Tauri installer/exe约35.85x/19.96x，正式优化包体前不能把C#替代描述成天然更轻。
+`@zadmin/webview`已成为当前桌面实现：单一IDL生成34个method和28个TypeScript/C# DTO/enum，C# dispatcher按生成descriptor验证params；同时包含typed bridge、timeout/cancel/event/dispose、`DesktopPlatform`、browser fallback、fake driver、9个Svelte组件和WinUI 3/WebView2 Windows target。TypeScript 24项测试覆盖率statements 98.16%、branches 90.15%、functions/lines 100%；`net10.0` C# Core零警告。真实生产宿主加载SvelteKit/ZUI页面、严格CSP hash与JS→C# IPC通过；开发宿主在loopback origin确认Vite client、页面hydration、native bridge和退出零残留。portable ZIP为90,779,828 bytes，解包payload为233,775,520 bytes/533文件；self-contained路线相对旧Tauri installer/exe约35.85x/19.96x，正式优化包体前不能把C#替代描述成天然更轻。
 
 2026-08-25的Taro模拟器、Android真机、Skyline、性能和能力探针记录只作为迁移前历史证据。2026-08-29直编WebView target已在微信开发者工具完成页面截图、页面栈、空error console、按钮事件、响应式count和自动完整remount验收；真机、账号、支付、手机号、权限、上传与硬件操作继续要求单独授权。
 

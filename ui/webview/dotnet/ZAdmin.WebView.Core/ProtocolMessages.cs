@@ -9,7 +9,7 @@ public sealed record ProtocolResponse(
     [property: JsonPropertyName("id")] string Id,
     [property: JsonPropertyName("ok")] bool Ok,
     [property: JsonPropertyName("result")] JsonNode? Result,
-    [property: JsonPropertyName("error")] Generated.ProtocolError? Error);
+    [property: JsonPropertyName("error")] Generated.DesktopError? Error);
 
 public sealed record ProtocolEvent(
     [property: JsonPropertyName("v")] int Version,

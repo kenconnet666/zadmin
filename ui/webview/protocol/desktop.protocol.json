@@ -1,6 +1,167 @@
 {
 	"version": 1,
 	"maxMessageBytes": 1048576,
+	"types": {
+		"Empty": { "kind": "object", "properties": {} },
+		"Void": { "kind": "void" },
+		"JsonValue": { "kind": "json" },
+		"TextValue": {
+			"kind": "object",
+			"properties": { "text": "string" }
+		},
+		"PathValue": {
+			"kind": "object",
+			"properties": { "path": "string" }
+		},
+		"ConfirmedPath": {
+			"kind": "object",
+			"properties": { "confirmed": { "literal": true }, "path": "string" }
+		},
+		"BooleanValue": {
+			"kind": "object",
+			"properties": { "value": "boolean" }
+		},
+		"KeyValue": {
+			"kind": "object",
+			"properties": { "key": "string" }
+		},
+		"UrlValue": {
+			"kind": "object",
+			"properties": { "url": "string" }
+		},
+		"StringList": {
+			"kind": "object",
+			"properties": { "values": { "array": "string" } }
+		},
+		"NullablePath": {
+			"kind": "object",
+			"properties": { "path": { "nullable": "string" } }
+		},
+		"PathSelection": {
+			"kind": "object",
+			"properties": { "paths": { "array": "string" } }
+		},
+		"ConfirmedAction": {
+			"kind": "object",
+			"properties": { "confirmed": { "literal": true } }
+		},
+		"ExitOptions": {
+			"kind": "object",
+			"properties": { "code": "integer", "confirmed": { "literal": true } }
+		},
+		"WriteTextOptions": {
+			"kind": "object",
+			"properties": { "contents": "string", "path": "string" }
+		},
+		"StoreSetOptions": {
+			"kind": "object",
+			"properties": { "key": "string", "value": "JsonValue" }
+		},
+		"AppSnapshot": {
+			"kind": "object",
+			"properties": {
+				"environment": "string",
+				"name": "string",
+				"version": "string",
+				"webviewVersion": "string"
+			}
+		},
+		"OsSnapshot": {
+			"kind": "object",
+			"properties": {
+				"arch": "string",
+				"locale": "string",
+				"platform": "string",
+				"version": "string"
+			}
+		},
+		"WindowSnapshot": {
+			"kind": "object",
+			"properties": {
+				"focused": "boolean",
+				"height": "number",
+				"maximized": "boolean",
+				"minimized": "boolean",
+				"scaleFactor": "number",
+				"visible": "boolean",
+				"width": "number"
+			}
+		},
+		"OpenDialogOptions": {
+			"kind": "object",
+			"properties": {
+				"directory": { "optional": "boolean" },
+				"filters": { "optional": { "record": { "array": "string" } } },
+				"multiple": { "optional": "boolean" },
+				"title": { "optional": "string" }
+			}
+		},
+		"SaveDialogOptions": {
+			"kind": "object",
+			"properties": {
+				"defaultPath": { "optional": "string" },
+				"filters": { "optional": { "record": { "array": "string" } } },
+				"title": { "optional": "string" }
+			}
+		},
+		"DesktopLogLevel": {
+			"kind": "enum",
+			"values": ["debug", "error", "info", "trace", "warn"]
+		},
+		"LogRecord": {
+			"kind": "object",
+			"properties": {
+				"fields": { "optional": { "record": "JsonValue" } },
+				"level": "DesktopLogLevel",
+				"message": "string"
+			}
+		},
+		"NotificationPermissionValue": {
+			"kind": "enum",
+			"values": ["default", "denied", "granted"]
+		},
+		"NotificationOptions": {
+			"kind": "object",
+			"properties": {
+				"body": { "optional": "string" },
+				"icon": { "optional": "string" },
+				"title": "string"
+			}
+		},
+		"UpdateInfo": {
+			"kind": "object",
+			"nullable": true,
+			"properties": {
+				"body": { "optional": "string" },
+				"currentVersion": "string",
+				"date": { "optional": "string" },
+				"version": "string"
+			}
+		},
+		"DesktopErrorCode": {
+			"kind": "enum",
+			"values": [
+				"cancelled",
+				"disposed",
+				"invalid-input",
+				"permission-denied",
+				"protocol-error",
+				"system-error",
+				"timeout",
+				"transport-error",
+				"unsupported"
+			]
+		},
+		"DesktopError": {
+			"kind": "object",
+			"properties": {
+				"code": "DesktopErrorCode",
+				"message": "string",
+				"operation": "string",
+				"retryable": "boolean"
+			}
+		}
+	},
 	"methods": {
 		"app.snapshot": { "params": "Empty", "result": "AppSnapshot" },
 		"clipboard.clear": { "params": "Empty", "result": "Void" },
