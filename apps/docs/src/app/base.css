@@ -3,25 +3,25 @@
 *,
 *::before,
 *::after {
-    box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 html {
-    scroll-behavior: smooth;
+	scroll-behavior: smooth;
 }
 
 body {
-    margin: 0;
-    min-width: 20rem;
-    min-height: 100vh;
+	margin: 0;
+	min-width: 20rem;
+	min-height: 100vh;
 }
 
 button,
 input,
 select {
-    font: inherit;
+	font: inherit;
 }
 
 #app {
-    min-height: 100vh;
+	min-height: 100vh;
 }

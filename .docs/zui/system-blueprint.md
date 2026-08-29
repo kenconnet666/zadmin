@@ -286,7 +286,7 @@ runtime/
 计划提供6套官方预设，但不一次性实现：
 
 | 预设                | Scheme | 定位          | 主要视觉                       |
-|---------------------|--------|---------------|--------------------------------|
+| ------------------- | ------ | ------------- | ------------------------------ |
 | `auroraLight`       | light  | 默认明快主题  | 蓝、紫、青，多层浅色surface    |
 | `paperLight`        | light  | 内容/后台主题 | 暖白、墨色、陶土强调，低阴影   |
 | `neonDark`          | dark   | 赛博朋克主题  | 近黑蓝、霓虹青、洋红、黄色焦点 |
@@ -327,15 +327,15 @@ type RadiusStyle = 'rounded' | 'sharp';
 
 ```svelte
 <ZProvider
-  theme={neonDark}
-  colorScheme="dark"
-  contrast="normal"
-  density="compact"
-  motion="auto"
-  direction="ltr"
-  locale="zh-CN"
+	theme={neonDark}
+	colorScheme="dark"
+	contrast="normal"
+	density="compact"
+	motion="auto"
+	direction="ltr"
+	locale="zh-CN"
 >
-  {@render children?.()}
+	{@render children?.()}
 </ZProvider>
 ```
 
@@ -404,7 +404,7 @@ DTCG JSON
 ### 6.1 Foundation
 
 | 模块            | 职责                         | 首个消费者             |
-|-----------------|------------------------------|------------------------|
+| --------------- | ---------------------------- | ---------------------- |
 | `ids`           | SSR稳定ID、Provider prefix   | Field、Dialog、Tabs    |
 | `presence`      | mounted/unmounted与退出动画  | Dialog、Popover、Toast |
 | `direction`     | RTL逻辑方向                  | Tabs、Slider、Menu     |
@@ -416,7 +416,7 @@ DTCG JSON
 ### 6.2 Collection
 
 | 模块                | 职责                              | 消费者                          |
-|---------------------|-----------------------------------|---------------------------------|
+| ------------------- | --------------------------------- | ------------------------------- |
 | `collection`        | key注册、顺序、动态增删、disabled | Menu、Select、Tabs、Tree、Table |
 | `selection`         | none/single/multiple、受控Set     | Select、Listbox、Tree、DataGrid |
 | `list-navigation`   | 上下左右、Home、End、wrap         | Menu、Tabs、Listbox             |
@@ -436,7 +436,7 @@ type Selection = 'all' | ReadonlySet<Key>;
 ### 6.3 Layer与浮层
 
 | 模块                | 职责                                     |
-|---------------------|------------------------------------------|
+| ------------------- | ---------------------------------------- |
 | `portal`            | Document/ShadowRoot目标、SSR占位         |
 | `layer-stack`       | modal层级、Escape归属、pointer屏蔽       |
 | `dismissable-layer` | outside pointer/focus、Escape、分支元素  |
@@ -464,7 +464,7 @@ middleware顺序成为ZUI合同；定位与动画transform使用两个DOM层，�
 ### 6.4 Form
 
 | 模块            | 职责                                            |
-|-----------------|-------------------------------------------------|
+| --------------- | ----------------------------------------------- |
 | `form-control`  | id、name、disabled、readonly、required、invalid |
 | `form-value`    | value序列化、hidden input、FormData             |
 | `form-reset`    | 默认值快照与owner reset                         |
@@ -490,10 +490,10 @@ ZUI自己实现部件关系，但不复制Bits UI的实现。
 
 ```svelte
 <ZSelect bind:value>
-  <ZSelectTrigger>...</ZSelectTrigger>
-  <ZSelectContent>
-    <ZSelectItem value="a">A</ZSelectItem>
-  </ZSelectContent>
+	<ZSelectTrigger>...</ZSelectTrigger>
+	<ZSelectContent>
+		<ZSelectItem value="a">A</ZSelectItem>
+	</ZSelectContent>
 </ZSelect>
 ```
 
@@ -534,7 +534,7 @@ components/input/ZInput.svelte
 ### 8.1 Gene与基础语义
 
 | 组件            | 状态         | 说明                               |
-|-----------------|--------------|------------------------------------|
+| --------------- | ------------ | ---------------------------------- |
 | ZProvider       | 已有，需整改 | Theme与系统上下文                  |
 | ZBox            | 已有，需整改 | 最小多态容器                       |
 | ZText           | 已有，需整改 | 有限文本语义                       |
@@ -551,7 +551,7 @@ components/input/ZInput.svelte
 ### 8.2 Layout
 
 | 组件         | 依赖                                 |
-|--------------|--------------------------------------|
+| ------------ | ------------------------------------ |
 | ZStack       | 已有，需整改                         |
 | ZGrid        | ICSS Grid属性完整性                  |
 | ZContainer   | 尺寸与inline padding token           |
@@ -569,7 +569,7 @@ components/input/ZInput.svelte
 ### 8.3 Input与Form
 
 | 组件             | 基础设施                                |
-|------------------|-----------------------------------------|
+| ---------------- | --------------------------------------- |
 | ZField           | 已有，需整改                            |
 | ZInput           | 已有，需整改                            |
 | ZInputGroup      | prefix/suffix/action组合                |
@@ -605,7 +605,7 @@ components/input/ZInput.svelte
 ### 8.4 Navigation与Collection
 
 | 组件            | 基础设施                              |
-|-----------------|---------------------------------------|
+| --------------- | ------------------------------------- |
 | ZTabs           | roving-focus、selection、orientation  |
 | ZAccordion      | collection、single/multiple、presence |
 | ZBreadcrumb     | 原生nav/ol                            |
@@ -625,7 +625,7 @@ components/input/ZInput.svelte
 ### 8.5 Overlay
 
 | 组件         | 基础设施                                      |
-|--------------|-----------------------------------------------|
+| ------------ | --------------------------------------------- |
 | ZTooltip     | hover/focus、Floating、delay、nonmodal        |
 | ZPopover     | Trigger/Content、Floating、dismiss            |
 | ZHoverCard   | hover intent、Floating、nonmodal              |
@@ -640,7 +640,7 @@ ZSheet不单独实现，作为ZDrawer的尺寸和placement变体讨论，避免�
 ### 8.6 Data Display
 
 | 组件                   | 说明                                          |
-|------------------------|-----------------------------------------------|
+| ---------------------- | --------------------------------------------- |
 | ZAvatar / ZAvatarGroup | 图片fallback、名称、group overflow            |
 | ZBadge                 | status/count/dot                              |
 | ZTag                   | 静态标签、可关闭                              |
@@ -665,7 +665,7 @@ ZTable只负责原生表格语义和视觉；ZDataTable才拥有column、sort、
 ### 8.7 Feedback与服务
 
 | 组件              | 说明                                    |
-|-------------------|-----------------------------------------|
+| ----------------- | --------------------------------------- |
 | ZAlert            | inline反馈，info/success/warning/danger |
 | ZSpinner          | 加载指示，reduced motion                |
 | ZLoadingBar       | 页面级进度                              |
@@ -678,7 +678,7 @@ Toast、Message、Notification共享同一个队列和live-region内核；不复
 ### 8.8 Utility
 
 | 组件             | 说明                               |
-|------------------|------------------------------------|
+| ---------------- | ---------------------------------- |
 | ZCountdown       | 时间源、暂停、完成事件             |
 | ZNumberAnimation | Intl格式、reduced motion           |
 | ZMarquee         | overflow检测后启用、reduced motion |
@@ -867,22 +867,22 @@ DataTable必须在Collection、Selection、Virtualizer和Table均被真实组件
 
 ```ts
 interface ZuiComponentMetadata {
-  id: string;
-  name: `Z${string}`;
-  category: ComponentCategory;
-  status: ComponentStatus;
-  since: string;
-  summary: string;
-  source: string;
-  importStatement: string;
-  props: readonly PropMetadata[];
-  bindings: readonly BindingMetadata[];
-  events: readonly EventMetadata[];
-  snippets: readonly SnippetMetadata[];
-  parts: readonly PartMetadata[];
-  states: readonly DataStateMetadata[];
-  keyboard: readonly KeyboardMetadata[];
-  dependencies: readonly string[];
+	id: string;
+	name: `Z${string}`;
+	category: ComponentCategory;
+	status: ComponentStatus;
+	since: string;
+	summary: string;
+	source: string;
+	importStatement: string;
+	props: readonly PropMetadata[];
+	bindings: readonly BindingMetadata[];
+	events: readonly EventMetadata[];
+	snippets: readonly SnippetMetadata[];
+	parts: readonly PartMetadata[];
+	states: readonly DataStateMetadata[];
+	keyboard: readonly KeyboardMetadata[];
+	dependencies: readonly string[];
 }
 ```
 
@@ -970,7 +970,7 @@ CI负责：
 允许并已经确定用途：
 
 | 依赖                      | 用途                                        |
-|---------------------------|---------------------------------------------|
+| ------------------------- | ------------------------------------------- |
 | `runed`                   | Svelte底层状态辅助，不能隐藏DOM和资源所有权 |
 | `@floating-ui/dom`        | 浮层几何和autoUpdate                        |
 | `@internationalized/date` | 日期、日历和时区模型                        |
@@ -999,7 +999,7 @@ ZUI自研的是组件合同、状态所有权和Svelte组合方式，不重复�
 优先评估并直接使用：
 
 | API                                        | ZUI用途                                    |
-|--------------------------------------------|--------------------------------------------|
+| ------------------------------------------ | ------------------------------------------ |
 | `Context`                                  | 新复合组件的类型安全Context封装            |
 | `FiniteStateMachine`                       | 状态确实是有限图且进入/退出动作明确的组件  |
 | `Debounced` / `useDebounce`                | typeahead、hover intent、异步搜索          |
@@ -1078,7 +1078,7 @@ ZUI负责Svelte state、segment编辑、键盘、ARIA、Range选择和视觉，�
 ZForm直接消费`StandardSchemaV1`：
 
 ```ts
-schema['~standard'].validate(value)
+schema['~standard'].validate(value);
 ```
 
 并使用标准`value/issues/path`结果。ZUI不绑定Zod、Valibot或ArkType，也不复制Schema DSL；只负责竞态取消、字段path映射、错误展示和提交合同。
@@ -1377,7 +1377,7 @@ ZUI中的Svelte Snippet和复合部件Context承担MUI slots的一部分职责�
 ### 17.1 优先采用
 
 | CSS能力              | ZUI用途                                          | JavaScript减少             |
-|----------------------|--------------------------------------------------|----------------------------|
+| -------------------- | ------------------------------------------------ | -------------------------- |
 | logical properties   | RTL、书写方向、padding/margin/inset              | 删除左右方向分支           |
 | container queries    | Card、InputGroup、Toolbar、DataTable工具栏自适应 | 减少ResizeObserver布局判断 |
 | container units      | 可复用组件内尺寸比例                             | 减少视口耦合               |
@@ -1395,7 +1395,7 @@ ZUI中的Svelte Snippet和复合部件Context承担MUI slots的一部分职责�
 ### 17.2 渐进增强采用
 
 | CSS/API                        | 计划                                                                   |
-|--------------------------------|------------------------------------------------------------------------|
+| ------------------------------ | ---------------------------------------------------------------------- |
 | Popover API/top layer          | Tooltip/Popover/Menu可做平台增强；Layer、焦点和嵌套fallback仍由ZUI控制 |
 | CSS Anchor Positioning         | 简单浮层可优先；复杂flip/shift/size继续用Floating UI fallback          |
 | `@starting-style`              | Presence进入动画；不替代销毁时机管理                                   |

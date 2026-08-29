@@ -18,6 +18,8 @@ describe('ZUI themes', () => {
 	});
 
 	it('rejects non-finite numbers, missing values and unknown contract keys', () => {
+		expect(() => defineTheme(null as never)).toThrow(/Theme must be an object/);
+		expect(() => defineTheme([] as never)).toThrow(/Theme must be an object/);
 		expect(() =>
 			defineTheme({
 				...defaultTheme,
@@ -39,6 +41,15 @@ describe('ZUI themes', () => {
 			void _primary;
 			defineTheme({ ...defaultTheme, color: missingPrimary } as never);
 		}).toThrow(/color\.primary.*required/);
+		expect(() => defineTheme({ ...defaultTheme, color: [] } as never)).toThrow(
+			/color.*must be an object/
+		);
+		expect(() =>
+			defineTheme({
+				...defaultTheme,
+				color: { ...defaultTheme.color, primary: true }
+			} as never)
+		).toThrow(/color\.primary.*string or number/);
 	});
 
 	it('extends themes immutably and rejects unknown patch keys', () => {
@@ -51,6 +62,12 @@ describe('ZUI themes', () => {
 		expect(theme.radius.medium).toBe(6);
 		expect(defaultTheme.color.primary).toBe('#2563eb');
 		expect(Object.isFrozen(theme.color)).toBe(true);
+		expect(() => extendTheme(defaultTheme, null as never)).toThrow(
+			/Theme patch must be an object/
+		);
+		expect(() => extendTheme(defaultTheme, { color: [] } as never)).toThrow(
+			/color.*must be an object/
+		);
 		expect(() => extendTheme(defaultTheme, { color: { missing: '#fff' } } as never)).toThrow(
 			/Unknown theme token/
 		);
