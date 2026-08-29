@@ -48,3 +48,4 @@ storybook-static
 /apps/wechat/project.private.config.json
 /apps/wechat/.wechat/
 **/.swc/
+/.idea/
