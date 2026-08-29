@@ -46,6 +46,7 @@ import PopconfirmFixture from './PopconfirmFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
 import RadioGroupFixture from './RadioGroupFixture.svelte';
 import SelectFixture from './SelectFixture.svelte';
+import SegmentedFixture from './SegmentedFixture.svelte';
 import TabsFixture from './TabsFixture.svelte';
 import TooltipFixture from './TooltipFixture.svelte';
 
@@ -295,6 +296,14 @@ describe('ZUI foundational components', () => {
 		const open = render(MultiSelectFixture, { props: { defaultOpen: true } }).body;
 		expect(open).toContain('aria-multiselectable="true"');
 		expect(open.match(/aria-selected="true"/gu)).toHaveLength(2);
+	});
+
+	it('renders Segmented radiogroup, checked state and form value during SSR', () => {
+		const result = render(SegmentedFixture).body;
+		expect(result).toContain('role="radiogroup"');
+		expect(result.match(/role="radio"/gu)).toHaveLength(4);
+		expect(result).toMatch(/role="radio"[^>]*aria-checked="true"[^>]*>Beta/u);
+		expect(result).toContain('name="period"');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

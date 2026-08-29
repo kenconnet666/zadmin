@@ -1,0 +1,20 @@
+import { segmentedMetadata } from '@zadmin/zui/metadata';
+import FormDemo from './FormDemo.svelte';
+import formSource from './FormDemo.svelte?raw';
+import { defineComponentDoc } from '../../../../framework/component-doc.js';
+export const segmentedDoc = defineComponentDoc(segmentedMetadata, {
+	demos: [
+		{
+			component: FormDemo,
+			description: '紧凑视觉保持radiogroup/radio语义、单一Tab stop、方向键选择和隐藏表单值。',
+			id: 'segmented-form',
+			source: formSource,
+			title: '单选周期'
+		}
+	],
+	accessibility: [
+		'Root使用radiogroup，segment按钮使用radio与aria-checked。',
+		'方向键按orientation和RTL选择并移动焦点，disabled segment跳过。',
+		'name提交稳定value，reset恢复defaultValue且不触发用户回调。'
+	]
+});

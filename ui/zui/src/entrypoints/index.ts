@@ -189,6 +189,8 @@ export type {
 } from '../components/input/ZCheckbox.svelte';
 export { default as ZInput } from '../components/input/ZInput.svelte';
 export type { ZInputProps, ZInputSize, ZInputType } from '../components/input/ZInput.svelte';
+export { default as ZSegmented } from '../components/input/ZSegmented.svelte';
+export type { SegmentedItem, ZSegmentedProps } from '../components/input/ZSegmented.svelte';
 export { default as ZSlider } from '../components/input/ZSlider.svelte';
 export type { ZSliderProps, ZSliderVariants } from '../components/input/ZSlider.svelte';
 export { default as ZSwitch } from '../components/input/ZSwitch.svelte';

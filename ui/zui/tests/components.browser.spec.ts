@@ -21,6 +21,7 @@ import PopoverFixture from './PopoverFixture.svelte';
 import PopconfirmFixture from './PopconfirmFixture.svelte';
 import RadioGroupFixture from './RadioGroupFixture.svelte';
 import SelectFixture from './SelectFixture.svelte';
+import SegmentedFixture from './SegmentedFixture.svelte';
 import SliderFixture from './SliderFixture.svelte';
 import ToggleButtonFixture from './ToggleButtonFixture.svelte';
 import SwitchFixture from './SwitchFixture.svelte';
@@ -247,6 +248,28 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(new FormData(form!).getAll('choice')).toEqual(['a', 'c']);
 		expect(output?.textContent).toBe('a,c:1:false');
+	});
+
+	it('coordinates Segmented roving selection, disabled skipping, form value and reset', async () => {
+		render(SegmentedFixture);
+		const form = document.querySelector<HTMLFormElement>('[data-testid="segmented-form"]');
+		const beta = document.querySelector<HTMLButtonElement>('[role="radio"][aria-checked="true"]');
+		const delta = [...document.querySelectorAll<HTMLButtonElement>('[role="radio"]')].find(
+			(item) => item.textContent === 'Delta'
+		);
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="segmented-output"]');
+		beta?.focus();
+		beta?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowRight' }));
+		await tick();
+		expect(document.activeElement).toBe(delta);
+		expect(delta?.getAttribute('aria-checked')).toBe('true');
+		expect(new FormData(form!).get('period')).toBe('d');
+		expect(output?.textContent).toBe('d:1');
+		form?.reset();
+		await Promise.resolve();
+		await tick();
+		expect(new FormData(form!).get('period')).toBe('b');
+		expect(output?.textContent).toBe('b:1');
 	});
 	it('keeps AlertDialog open until an explicit action is chosen', async () => {
 		render(AlertDialogFixture);

@@ -69,6 +69,7 @@ import {
 	ZSelectContent,
 	ZSelectItem,
 	ZSelectTrigger,
+	ZSegmented,
 	ZSlider,
 	ZSwitch,
 	ZTabs,
@@ -148,6 +149,7 @@ import {
 	type ZSelectItemProps,
 	type ZSelectProps,
 	type ZSelectTriggerProps,
+	type ZSegmentedProps,
 	type ZSliderProps,
 	type ZSwitchProps,
 	type ZTabsListProps,
@@ -301,6 +303,9 @@ const selectContentProps: ComponentProps<typeof ZSelectContent> = {} satisfies Z
 const selectItemProps: ComponentProps<typeof ZSelectItem> = {
 	value: 'ready'
 } satisfies ZSelectItemProps;
+const segmentedProps: ComponentProps<typeof ZSegmented> = {
+	items: [{ label: 'Ready', value: 'ready' }]
+} satisfies ZSegmentedProps;
 const sliderProps: ComponentProps<typeof ZSlider> = {
 	defaultValue: 25,
 	max: 50,
@@ -396,6 +401,7 @@ void selectProps;
 void selectTriggerProps;
 void selectContentProps;
 void selectItemProps;
+void segmentedProps;
 void sliderProps;
 void switchProps;
 void tabsProps;

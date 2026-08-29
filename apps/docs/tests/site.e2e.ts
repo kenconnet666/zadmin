@@ -338,6 +338,20 @@ test('keeps MultiSelect tags, persistent toggles, form values and reset synchron
 	await expect(trigger).not.toContainText('预发');
 });
 
+test('keeps Segmented radio semantics, roving selection and reset synchronized', async ({
+	page
+}) => {
+	await page.goto('/#/components/segmented');
+	const week = page.getByRole('radio', { name: '周' });
+	await expect(week).toHaveAttribute('aria-checked', 'true');
+	await week.focus();
+	await page.keyboard.press('ArrowRight');
+	await expect(page.getByRole('radio', { name: '月' })).toBeFocused();
+	await expect(page.getByText('value = month · 变更 = 1')).toBeVisible();
+	await page.getByRole('button', { name: '重置' }).click();
+	await expect(week).toHaveAttribute('aria-checked', 'true');
+});
+
 test('keeps Accordion selection, roving focus and Presence synchronized', async ({ page }) => {
 	await page.goto('/#/components/accordion');
 	const runtime = page.getByRole('button', { name: /运行时合同/u });
@@ -535,6 +549,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/field',
 		'#/components/radio-group',
 		'#/components/select',
+		'#/components/segmented',
 		'#/components/switch',
 		'#/components/slider',
 		'#/components/accordion',

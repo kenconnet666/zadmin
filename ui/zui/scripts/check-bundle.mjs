@@ -231,6 +231,7 @@ const components = [
 	},
 	{ id: 'checkbox', name: 'ZCheckbox', path: 'input/ZCheckbox.svelte' },
 	{ id: 'input', name: 'ZInput', path: 'input/ZInput.svelte' },
+	{ id: 'segmented', name: 'ZSegmented', path: 'input/ZSegmented.svelte' },
 	{
 		id: 'slider',
 		maxIncrementalGzip: 3.375 * 1024,
