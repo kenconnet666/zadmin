@@ -55,7 +55,7 @@ export function createTreeIndex<TKey extends SelectionKey>(
 	);
 	return Object.freeze({
 		children,
-		flatten(expanded) {
+		flatten(expanded: ReadonlySet<TKey>) {
 			const entries: TreeEntry<TKey>[] = [];
 			const visit = (parentKey: TKey | undefined, level: number) => {
 				const siblings = children.get(parentKey) ?? [];

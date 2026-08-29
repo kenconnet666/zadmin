@@ -197,7 +197,9 @@
 	});
 	const valueState = new ControllableState<SelectionKey | undefined>({
 		defaultValue: () => defaultValue,
-		onChange: () => onValueChange,
+		onChange: () => (next) => {
+			if (next !== undefined) onValueChange?.(next);
+		},
 		read: () => value,
 		write: (next) => (value = next)
 	});

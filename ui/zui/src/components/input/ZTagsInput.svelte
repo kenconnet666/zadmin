@@ -227,11 +227,15 @@
 		values = $bindable(),
 		...rest
 	}: ZTagsInputProps = $props();
-	if (!(maxTags === Number.POSITIVE_INFINITY || (Number.isInteger(maxTags) && maxTags >= 0)))
-		throw new TypeError('ZTagsInput maxTags must be a non-negative integer.');
 	const zui = useZui();
 	const uid = $props.id();
 	const inputId = $derived(createZuiId(zui.idPrefix, uid, 'tags-input'));
+	const resolvedMaxTags = $derived.by(() => {
+		if (!(maxTags === Number.POSITIVE_INFINITY || (Number.isInteger(maxTags) && maxTags >= 0))) {
+			throw new TypeError('ZTagsInput maxTags must be a non-negative integer.');
+		}
+		return maxTags;
+	});
 	let proxy = $state<HTMLInputElement | null>(null);
 	const valueState = new ControllableState<readonly string[]>({
 		defaultValue: () => normalize(defaultValues, allowDuplicates),
@@ -245,8 +249,10 @@
 		read: () => inputValue,
 		write: (next) => (inputValue = next)
 	});
-	const resolvedValues = $derived(normalize(valueState.current, allowDuplicates).slice(0, maxTags));
-	const full = $derived(resolvedValues.length >= maxTags);
+	const resolvedValues = $derived(
+		normalize(valueState.current, allowDuplicates).slice(0, resolvedMaxTags)
+	);
+	const full = $derived(resolvedValues.length >= resolvedMaxTags);
 	const rootClass = $derived(zui.recipe(rootRecipe, { disabled }));
 	const tagClass = $derived(zui.recipe(tagRecipe));
 	const inputClass = $derived(zui.recipe(inputRecipe));
@@ -316,7 +322,7 @@
 			const candidate = raw.trim();
 			if (
 				candidate.length === 0 ||
-				next.length >= maxTags ||
+				next.length >= resolvedMaxTags ||
 				validate?.(candidate) === false ||
 				(!allowDuplicates && next.includes(candidate))
 			)
