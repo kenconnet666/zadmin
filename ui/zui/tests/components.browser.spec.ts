@@ -7,6 +7,7 @@ import ComponentGallery from './ComponentGallery.svelte';
 import AccordionFixture from './AccordionFixture.svelte';
 import CheckboxFixture from './CheckboxFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
+import DialogFixture from './DialogFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
 import PaginationFixture from './PaginationFixture.svelte';
 import PopoverFixture from './PopoverFixture.svelte';
@@ -37,6 +38,44 @@ function insertedRuleCount(): number {
 }
 
 describe('compiled ICSS browser updates', () => {
+	it('coordinates Dialog modal focus, inert, scroll, dismiss and cleanup', async () => {
+		render(DialogFixture);
+		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="dialog-trigger"]');
+		const inlineHost = document.querySelector<HTMLElement>('[data-testid="dialog-inline-host"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="dialog-output"]');
+		const outsideRoot = inlineHost?.closest('body > *') as HTMLElement | null | undefined;
+		const originalOverflow = document.body.style.overflow;
+		trigger?.click();
+		await tick();
+		const content = document.querySelector<HTMLElement>('[data-testid="dialog-content"]');
+		const overlay = document.querySelector<HTMLElement>('[data-testid="dialog-overlay"]');
+		const input = document.querySelector<HTMLInputElement>('[aria-label="Dialog input"]');
+		const close = document.querySelector<HTMLButtonElement>('[data-testid="dialog-close"]');
+		expect(content?.parentNode).toBe(document.body);
+		expect(overlay?.parentNode).toBe(document.body);
+		expect(document.body.style.overflow).toBe('hidden');
+		expect(outsideRoot?.inert).toBe(true);
+		expect(document.activeElement).toBe(input);
+		input?.dispatchEvent(
+			new KeyboardEvent('keydown', { bubbles: true, key: 'Tab', shiftKey: true })
+		);
+		expect(document.activeElement).toBe(close);
+		close?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Tab' }));
+		expect(document.activeElement).toBe(input);
+		expect(output?.textContent).toBe('true:1');
+
+		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+		await tick();
+		await new Promise((resolve) => setTimeout(resolve, 220));
+		await tick();
+		expect(document.querySelector('[data-testid="dialog-content"]')).toBeNull();
+		expect(document.querySelector('[data-testid="dialog-overlay"]')).toBeNull();
+		expect(document.body.style.overflow).toBe(originalOverflow);
+		expect(outsideRoot?.inert).toBe(false);
+		expect(document.activeElement).toBe(trigger);
+		expect(output?.textContent).toBe('false:2');
+	});
+
 	it('coordinates Tooltip hover, focus, delay, portal and Escape', async () => {
 		render(TooltipFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="tooltip-trigger"]');

@@ -146,7 +146,10 @@ describe('ZUI foundation runtime', () => {
 		presence.update(false, 200);
 		expect(presence.mounted).toBe(true);
 		expect(presence.state).toBe('exiting');
-		vi.advanceTimersByTime(200);
+		vi.advanceTimersByTime(100);
+		presence.update(false, 200);
+		expect(presence.mounted).toBe(true);
+		vi.advanceTimersByTime(100);
 		expect(presence.mounted).toBe(false);
 		expect(presence.state).toBe('exited');
 		presence.update(true);

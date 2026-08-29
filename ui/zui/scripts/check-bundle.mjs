@@ -26,6 +26,17 @@ const components = [
 		name: 'ZAccordionContent',
 		path: 'compound/accordion/ZAccordionContent.svelte'
 	},
+	{ id: 'dialog', name: 'ZDialog', path: 'compound/dialog/ZDialog.svelte' },
+	{ id: 'dialog-trigger', name: 'ZDialogTrigger', path: 'compound/dialog/ZDialogTrigger.svelte' },
+	{ id: 'dialog-overlay', name: 'ZDialogOverlay', path: 'compound/dialog/ZDialogOverlay.svelte' },
+	{ id: 'dialog-content', name: 'ZDialogContent', path: 'compound/dialog/ZDialogContent.svelte' },
+	{ id: 'dialog-title', name: 'ZDialogTitle', path: 'compound/dialog/ZDialogTitle.svelte' },
+	{
+		id: 'dialog-description',
+		name: 'ZDialogDescription',
+		path: 'compound/dialog/ZDialogDescription.svelte'
+	},
+	{ id: 'dialog-close', name: 'ZDialogClose', path: 'compound/dialog/ZDialogClose.svelte' },
 	{ id: 'popover', name: 'ZPopover', path: 'compound/popover/ZPopover.svelte' },
 	{
 		id: 'popover-trigger',

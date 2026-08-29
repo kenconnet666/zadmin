@@ -90,7 +90,7 @@
 <script lang="ts">
 	import { onDestroy, untrack } from 'svelte';
 
-	import { Presence } from '../../../runtime/foundation/presence.svelte.js';
+	import { createPresence } from '../../../runtime/foundation/presence.svelte.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -111,7 +111,10 @@
 	const accordion = useZAccordion();
 	const item = useZAccordionItem();
 	const open = $derived(accordion.isOpen(item.value));
-	const presence = new Presence(untrack(() => open));
+	const initiallyOpen = untrack(() => open);
+	const presence = createPresence(initiallyOpen);
+	const mounted = $derived(presence.mounted);
+	const presenceState = $derived(presence.state);
 	const classes = $derived(zui.slots(accordionContentRecipe, { motion: zui.motion, open }));
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
@@ -120,7 +123,7 @@
 	onDestroy(() => presence.destroy());
 </script>
 
-{#if presence.mounted}
+{#if mounted}
 	<div
 		{...rest}
 		bind:this={ref}
@@ -132,8 +135,11 @@
 		inert={!open}
 		aria-hidden={!open}
 		aria-labelledby={accordion.triggerId(item.value)}
-		data-presence={presence.state}
+		data-presence={presenceState}
 		data-state={open ? 'open' : 'closed'}
+		ontransitionend={(event) => {
+			if (event.target === event.currentTarget) presence.finishExit();
+		}}
 	>
 		<div class={classes.inner} data-slot="inner">{@render children?.()}</div>
 	</div>

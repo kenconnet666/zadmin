@@ -30,6 +30,24 @@ describe('ZUI layer runtime', () => {
 		shadowHost.remove();
 	});
 
+	it('does not resurrect content already removed by its owner during teardown', () => {
+		const host = document.createElement('div');
+		const target = document.createElement('div');
+		const node = document.createElement('section');
+		host.append(node);
+		document.body.append(host, target);
+		const action = portal(node, { target });
+		expect(node.parentNode).toBe(target);
+
+		node.remove();
+		action.destroy();
+		expect(node.isConnected).toBe(false);
+		expect(host.childNodes).toHaveLength(0);
+
+		host.remove();
+		target.remove();
+	});
+
 	it('owns nested layer order, modal pointer blocking and branch containment', () => {
 		const stack = new LayerStack();
 		const root = document.createElement('div');

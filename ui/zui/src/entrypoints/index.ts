@@ -12,6 +12,20 @@ export { default as ZAccordionItem } from '../components/compound/accordion/ZAcc
 export type { ZAccordionItemProps } from '../components/compound/accordion/ZAccordionItem.svelte';
 export { default as ZAccordionTrigger } from '../components/compound/accordion/ZAccordionTrigger.svelte';
 export type { ZAccordionTriggerProps } from '../components/compound/accordion/ZAccordionTrigger.svelte';
+export { default as ZDialog } from '../components/compound/dialog/ZDialog.svelte';
+export type { ZDialogProps } from '../components/compound/dialog/ZDialog.svelte';
+export { default as ZDialogClose } from '../components/compound/dialog/ZDialogClose.svelte';
+export type { ZDialogCloseProps } from '../components/compound/dialog/ZDialogClose.svelte';
+export { default as ZDialogContent } from '../components/compound/dialog/ZDialogContent.svelte';
+export type { ZDialogContentProps } from '../components/compound/dialog/ZDialogContent.svelte';
+export { default as ZDialogDescription } from '../components/compound/dialog/ZDialogDescription.svelte';
+export type { ZDialogDescriptionProps } from '../components/compound/dialog/ZDialogDescription.svelte';
+export { default as ZDialogOverlay } from '../components/compound/dialog/ZDialogOverlay.svelte';
+export type { ZDialogOverlayProps } from '../components/compound/dialog/ZDialogOverlay.svelte';
+export { default as ZDialogTitle } from '../components/compound/dialog/ZDialogTitle.svelte';
+export type { ZDialogTitleProps } from '../components/compound/dialog/ZDialogTitle.svelte';
+export { default as ZDialogTrigger } from '../components/compound/dialog/ZDialogTrigger.svelte';
+export type { ZDialogTriggerProps } from '../components/compound/dialog/ZDialogTrigger.svelte';
 export { default as ZPopover } from '../components/compound/popover/ZPopover.svelte';
 export type {
 	PopoverPlacement,
@@ -51,7 +65,7 @@ export type { ZBoxProps } from '../components/gene/ZBox.svelte';
 export { default as ZButton } from '../components/gene/ZButton.svelte';
 export type { ZButtonProps, ZButtonVariants } from '../components/gene/ZButton.svelte';
 export { default as ZIcon, iconManifest } from '../components/gene/ZIcon.svelte';
-export type { ZIconName, ZIconProps } from '../components/gene/ZIcon.svelte';
+export type { ZIconName, ZIconProps, ZIconSize } from '../components/gene/ZIcon.svelte';
 export { default as ZKbd } from '../components/gene/ZKbd.svelte';
 export type { ZKbdProps } from '../components/gene/ZKbd.svelte';
 export { default as ZLink } from '../components/gene/ZLink.svelte';

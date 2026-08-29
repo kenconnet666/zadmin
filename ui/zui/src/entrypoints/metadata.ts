@@ -2,6 +2,13 @@ export { zuiMetadata as accordionMetadata } from '../components/compound/accordi
 export { zuiMetadata as accordionContentMetadata } from '../components/compound/accordion/ZAccordionContent.svelte';
 export { zuiMetadata as accordionItemMetadata } from '../components/compound/accordion/ZAccordionItem.svelte';
 export { zuiMetadata as accordionTriggerMetadata } from '../components/compound/accordion/ZAccordionTrigger.svelte';
+export { zuiMetadata as dialogMetadata } from '../components/compound/dialog/ZDialog.svelte';
+export { zuiMetadata as dialogCloseMetadata } from '../components/compound/dialog/ZDialogClose.svelte';
+export { zuiMetadata as dialogContentMetadata } from '../components/compound/dialog/ZDialogContent.svelte';
+export { zuiMetadata as dialogDescriptionMetadata } from '../components/compound/dialog/ZDialogDescription.svelte';
+export { zuiMetadata as dialogOverlayMetadata } from '../components/compound/dialog/ZDialogOverlay.svelte';
+export { zuiMetadata as dialogTitleMetadata } from '../components/compound/dialog/ZDialogTitle.svelte';
+export { zuiMetadata as dialogTriggerMetadata } from '../components/compound/dialog/ZDialogTrigger.svelte';
 export { zuiMetadata as popoverMetadata } from '../components/compound/popover/ZPopover.svelte';
 export { zuiMetadata as popoverContentMetadata } from '../components/compound/popover/ZPopoverContent.svelte';
 export { zuiMetadata as popoverTriggerMetadata } from '../components/compound/popover/ZPopoverTrigger.svelte';

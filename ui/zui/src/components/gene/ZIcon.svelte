@@ -11,7 +11,6 @@
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
-	import type { ZuiTheme } from '../../theme/types.js';
 
 	export const iconManifest = {
 		check: Check,
@@ -25,6 +24,7 @@
 	} as const satisfies Readonly<Record<string, LucideIcon>>;
 
 	export type ZIconName = keyof typeof iconManifest;
+	export type ZIconSize = 'full' | 'large' | 'medium' | 'small';
 
 	export function getIconComponent(name: ZIconName): LucideIcon {
 		const component = iconManifest[name];
@@ -35,7 +35,7 @@
 	export interface ZIconProps extends Omit<LucideProps, 'children' | 'name' | 'size'> {
 		readonly label?: string;
 		readonly name: ZIconName;
-		readonly size?: keyof ZuiTheme['size'] | number;
+		readonly size?: ZIconSize | number;
 		ref?: SVGSVGElement | null;
 	}
 
@@ -63,7 +63,7 @@
 				default: "'small'",
 				description: 'Theme尺寸token或明确px值。',
 				name: 'size',
-				type: "keyof ZuiTheme['size'] | number"
+				type: 'ZIconSize | number'
 			},
 			{ default: '—', description: '可访问图像名称。', name: 'label', type: 'string' },
 			{

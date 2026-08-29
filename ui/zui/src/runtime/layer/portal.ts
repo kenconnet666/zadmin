@@ -25,9 +25,6 @@ export function portal(node: HTMLElement, options: PortalOptions) {
 	move(options.target);
 	return {
 		destroy() {
-			if (placeholder.parentNode && node.parentNode !== placeholder.parentNode) {
-				placeholder.parentNode.insertBefore(node, placeholder.nextSibling);
-			}
 			placeholder.remove();
 		},
 		update(next: PortalOptions) {

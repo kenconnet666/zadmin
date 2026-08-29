@@ -21,6 +21,7 @@ export const DEFAULT_THEME_SCHEMA = {
 		danger: '#dc2626',
 		dangerHover: '#b91c1c',
 		focus: '#60a5fa',
+		overlay: '#0f172a99',
 		primary: '#2563eb',
 		primaryHover: '#1d4ed8',
 		success: '#16a34a',
@@ -87,6 +88,7 @@ export const DEFAULT_THEME_SCHEMA = {
 		small: '0 1px 2px rgb(0 0 0 / 0.08)'
 	},
 	size: {
+		dialogMedium: 512,
 		full: '100%',
 		large: 48,
 		medium: 32,

@@ -5,10 +5,12 @@ interface InertSnapshot {
 }
 
 export function inertOthers(root: HTMLElement, branches: readonly HTMLElement[] = []): () => void {
-	const body = root.ownerDocument.body;
+	const rootNode = root.getRootNode();
+	const container =
+		root.parentElement ?? (rootNode instanceof ShadowRoot ? rootNode : root.ownerDocument.body);
 	const allowed = [root, ...branches];
 	const snapshots: InertSnapshot[] = [];
-	for (const element of body.children) {
+	for (const element of container.children) {
 		if (!(element instanceof HTMLElement)) continue;
 		if (allowed.some((entry) => element.contains(entry) || entry.contains(element))) continue;
 		snapshots.push({

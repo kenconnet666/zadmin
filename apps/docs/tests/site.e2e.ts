@@ -9,7 +9,7 @@ test('renders the component catalog and real demo source', async ({ page }) => {
 
 	await page.goto('/#/');
 	await expect(page.getByRole('heading', { level: 1 })).toContainText('看见组件');
-	await expect(page.getByTestId('component-card')).toHaveCount(25);
+	await expect(page.getByTestId('component-card')).toHaveCount(26);
 	await expect(page.getByRole('heading', { level: 3 })).toHaveText([
 		'通用组件',
 		'布局组件',
@@ -278,6 +278,32 @@ test('keeps Tooltip hover, focus, delay and Escape synchronized', async ({ page 
 	await expect(page.getByRole('tooltip')).toBeVisible();
 });
 
+test('keeps Dialog modal focus, inert, scroll, ARIA and dismiss synchronized', async ({ page }) => {
+	await page.goto('/#/components/dialog');
+	const trigger = page.getByTestId('dialog-trigger');
+	await trigger.click();
+	const dialog = page.getByTestId('dialog-content');
+	await expect(dialog).toHaveAttribute('role', 'dialog');
+	await expect(dialog).toHaveAttribute('aria-modal', 'true');
+	const titleId = await dialog.getAttribute('aria-labelledby');
+	const descriptionId = await dialog.getAttribute('aria-describedby');
+	await expect(page.locator(`#${titleId}`)).toHaveText('编辑生产部署');
+	await expect(page.locator(`#${descriptionId}`)).toContainText('关闭后焦点会返回');
+	await expect(page.getByRole('textbox', { name: '部署名称' })).toBeFocused();
+	await expect(page.locator('#app')).toHaveJSProperty('inert', true);
+	await expect(page.locator('body')).toHaveCSS('overflow', 'hidden');
+	await page.getByTestId('dialog-close').click();
+	await expect(dialog).toHaveCount(0);
+	await expect(trigger).toBeFocused();
+	await expect(page.locator('#app')).toHaveJSProperty('inert', false);
+	await expect(page.getByText(/open = false · 用户变更次数 = 2/u)).toBeVisible();
+
+	await trigger.click();
+	await page.getByTestId('dialog-overlay').click({ position: { x: 2, y: 2 } });
+	await expect(page.getByTestId('dialog-content')).toHaveCount(0);
+	await expect(page.getByText(/open = false · 用户变更次数 = 4/u)).toBeVisible();
+});
+
 test('keeps S1 primitives semantic and display preferences effective', async ({ page }) => {
 	await page.goto('/#/guides/theme');
 	await expect(page.getByRole('heading', { level: 1 })).toContainText('主题不是一组颜色');
@@ -336,6 +362,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/accordion',
 		'#/components/pagination',
 		'#/components/tabs',
+		'#/components/dialog',
 		'#/components/popover',
 		'#/components/tooltip'
 	]) {

@@ -21,8 +21,16 @@ export type {
 } from '../runtime/collection/list-navigation.js';
 export { clampPage, createPaginationItems } from '../runtime/pagination.js';
 export type { PaginationItem } from '../runtime/pagination.js';
-export { durationMilliseconds, Presence } from '../runtime/foundation/presence.svelte.js';
-export type { PresenceState } from '../runtime/foundation/presence.svelte.js';
+export {
+	createPresence,
+	durationMilliseconds,
+	Presence
+} from '../runtime/foundation/presence.svelte.js';
+export type {
+	PresenceController,
+	PresenceSnapshot,
+	PresenceState
+} from '../runtime/foundation/presence.svelte.js';
 export {
 	emptySelection,
 	isSelected,

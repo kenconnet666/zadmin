@@ -34,6 +34,7 @@ import { __icssCarrier } from '../src/runtime/foundation/compiler-bridge.js';
 import ContextProbe from './ContextProbe.svelte';
 import AccordionFixture from './AccordionFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
+import DialogFixture from './DialogFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
 import RadioGroupFixture from './RadioGroupFixture.svelte';
 import TabsFixture from './TabsFixture.svelte';
@@ -175,6 +176,16 @@ describe('ZUI foundational components', () => {
 		const open = render(TooltipFixture, { props: { defaultOpen: true } }).body;
 		expect(open).toContain('aria-describedby=');
 		expect(open).toContain('role="tooltip"');
+	});
+
+	it('renders Dialog SSR with stable title and description relationships', () => {
+		expect(render(DialogFixture).body).not.toContain('role="dialog"');
+		const open = render(DialogFixture, { props: { defaultOpen: true } }).body;
+		expect(open).toContain('role="dialog"');
+		expect(open).toContain('aria-modal="true"');
+		expect(open).toMatch(/aria-labelledby="([^"]+)"/u);
+		expect(open).toMatch(/aria-describedby="([^"]+)"/u);
+		expect(open).toContain('Fixture dialog');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

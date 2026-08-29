@@ -86,7 +86,7 @@
 <script lang="ts">
 	import { onDestroy, untrack } from 'svelte';
 
-	import { Presence } from '../../../runtime/foundation/presence.svelte.js';
+	import { createPresence } from '../../../runtime/foundation/presence.svelte.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -108,7 +108,10 @@
 	}: ZTooltipContentProps = $props();
 	const zui = useZui();
 	const tooltip = useZTooltip();
-	const presence = new Presence(untrack(() => tooltip.open));
+	const initiallyOpen = untrack(() => tooltip.open);
+	const presence = createPresence(initiallyOpen);
+	const mounted = $derived(presence.mounted);
+	const presenceState = $derived(presence.state);
 	const rootClass = $derived(
 		zui.recipe(tooltipContentRecipe, { motion: zui.motion, open: tooltip.open })
 	);
@@ -138,7 +141,7 @@
 	onDestroy(() => presence.destroy());
 </script>
 
-{#if presence.mounted}
+{#if mounted}
 	<div
 		{...rest}
 		bind:this={ref}
@@ -149,8 +152,11 @@
 		id={tooltip.contentId}
 		role="tooltip"
 		aria-hidden={!tooltip.open}
-		data-presence={presence.state}
+		data-presence={presenceState}
 		data-state={tooltip.open ? 'open' : 'closed'}
+		ontransitionend={(event) => {
+			if (event.target === event.currentTarget) presence.finishExit();
+		}}
 	>
 		{@render children?.()}
 	</div>

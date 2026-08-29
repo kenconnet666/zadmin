@@ -11,6 +11,13 @@ import {
 	ZBox,
 	ZButton,
 	ZCheckbox,
+	ZDialog,
+	ZDialogClose,
+	ZDialogContent,
+	ZDialogDescription,
+	ZDialogOverlay,
+	ZDialogTitle,
+	ZDialogTrigger,
 	ZPagination,
 	ZPopover,
 	ZPopoverContent,
@@ -38,6 +45,13 @@ import {
 	type ZBoxProps,
 	type ZButtonProps,
 	type ZCheckboxProps,
+	type ZDialogCloseProps,
+	type ZDialogContentProps,
+	type ZDialogDescriptionProps,
+	type ZDialogOverlayProps,
+	type ZDialogProps,
+	type ZDialogTitleProps,
+	type ZDialogTriggerProps,
 	type ZPaginationProps,
 	type ZPopoverContentProps,
 	type ZPopoverProps,
@@ -75,6 +89,14 @@ const checkboxProps: ComponentProps<typeof ZCheckbox> = {
 	defaultChecked: 'indeterminate',
 	value: 42n
 } satisfies ZCheckboxProps;
+const dialogProps: ComponentProps<typeof ZDialog> = { defaultOpen: true } satisfies ZDialogProps;
+const dialogTriggerProps: ComponentProps<typeof ZDialogTrigger> = {} satisfies ZDialogTriggerProps;
+const dialogOverlayProps: ComponentProps<typeof ZDialogOverlay> = {} satisfies ZDialogOverlayProps;
+const dialogContentProps: ComponentProps<typeof ZDialogContent> = {} satisfies ZDialogContentProps;
+const dialogTitleProps: ComponentProps<typeof ZDialogTitle> = {} satisfies ZDialogTitleProps;
+const dialogDescriptionProps: ComponentProps<typeof ZDialogDescription> =
+	{} satisfies ZDialogDescriptionProps;
+const dialogCloseProps: ComponentProps<typeof ZDialogClose> = {} satisfies ZDialogCloseProps;
 const paginationProps: ComponentProps<typeof ZPagination> = {
 	defaultPage: 2,
 	totalPages: 20
@@ -131,6 +153,13 @@ void accordionContentProps;
 void directBoxProps;
 void buttonProps;
 void checkboxProps;
+void dialogProps;
+void dialogTriggerProps;
+void dialogOverlayProps;
+void dialogContentProps;
+void dialogTitleProps;
+void dialogDescriptionProps;
+void dialogCloseProps;
 void paginationProps;
 void popoverProps;
 void popoverTriggerProps;
