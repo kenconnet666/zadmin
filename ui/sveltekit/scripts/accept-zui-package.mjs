@@ -186,7 +186,7 @@ const panel = icss(defaultTheme, (s) => { s.padding._large; s.backgroundColor._s
 	);
 	await write(
 		resolve(fixtureRoot, 'testing.mjs'),
-		`import { defaultTheme } from '@zadmin/zui';
+		`import { defaultTheme } from '@zadmin/zui/core';
 import { createPluginRouteHandle } from '@zadmin/sveltekit/server';
 import {
   createHandleFixture,

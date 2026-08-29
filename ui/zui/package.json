@@ -63,6 +63,10 @@
 			"./runtime": {
 				"types": "./dist/runtime.d.ts",
 				"import": "./dist/runtime.js"
+			},
+			"./testing": {
+				"types": "./dist/testing/index.d.ts",
+				"import": "./dist/testing/index.js"
 			}
 		}
 	},
