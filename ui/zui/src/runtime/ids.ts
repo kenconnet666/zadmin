@@ -1,0 +1,12 @@
+function assertIdPart(value: string, label: string): void {
+	if (value.length === 0 || /\s/u.test(value)) {
+		throw new TypeError(`${label} must be a non-empty identifier without whitespace.`);
+	}
+}
+
+export function createZuiId(prefix: string, localId: string, suffix?: string): string {
+	assertIdPart(prefix, 'ZUI id prefix');
+	assertIdPart(localId, 'ZUI local id');
+	if (suffix !== undefined) assertIdPart(suffix, 'ZUI id suffix');
+	return suffix === undefined ? `${prefix}-${localId}` : `${prefix}-${localId}-${suffix}`;
+}

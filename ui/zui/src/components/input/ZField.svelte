@@ -27,9 +27,7 @@
 		id: 'field',
 		importStatement: "import { ZField } from '@zadmin/zui';",
 		name: 'ZField',
-		bindings: [
-			{ description: 'Field真实div根元素引用。', name: 'ref', type: 'HTMLDivElement | null' }
-		],
+		bindings: [{ description: '根div。', name: 'ref', type: 'HTMLDivElement | null' }],
 		dependencies: [],
 		events: [],
 		keyboard: [],
@@ -37,7 +35,7 @@
 		props: [
 			{
 				default: '必填',
-				description: 'control的可见label。',
+				description: '控件标签。',
 				name: 'label',
 				required: true,
 				type: 'Snippet | string'
@@ -51,60 +49,60 @@
 			},
 			{
 				default: 'false',
-				description: '显示并传递required状态。',
+				description: '必填状态。',
 				name: 'required',
 				type: 'boolean'
 			},
 			{
 				default: 'false',
-				description: '向control传递disabled状态。',
+				description: '禁用状态。',
 				name: 'disabled',
 				type: 'boolean'
 			},
 			{
 				default: 'false',
-				description: '向control传递readonly状态。',
+				description: '只读状态。',
 				name: 'readonly',
 				type: 'boolean'
 			},
-			{ default: '—', description: '向control传递原生表单name。', name: 'name', type: 'string' },
+			{ default: '—', description: '原生表单name。', name: 'name', type: 'string' },
 			{
 				default: '自动生成',
-				description: '显式label for目标。',
+				description: 'label目标ID。',
 				name: 'controlId',
 				type: 'string'
 			},
 			{
 				default: "'medium'",
-				description: 'Field间距尺寸。',
+				description: '间距尺寸。',
 				name: 'size',
 				type: "'small' | 'medium'"
 			},
 			{
 				bindable: true,
 				default: 'null',
-				description: 'Field根元素引用。',
+				description: '根div。',
 				name: 'ref',
 				type: 'HTMLDivElement | null'
 			}
 		],
 		since: '0.1.0',
 		snippets: [
-			{ description: '表单控件内容。', name: 'children', type: 'Snippet' },
-			{ description: '可见label内容，也支持字符串简写。', name: 'label', type: 'Snippet' },
+			{ description: '控件内容。', name: 'children', type: 'Snippet' },
+			{ description: '标签内容。', name: 'label', type: 'Snippet' },
 			{
-				description: '辅助说明内容，也支持字符串简写。',
+				description: '辅助说明。',
 				name: 'description',
 				type: 'Snippet'
 			}
 		],
 		source: 'ui/zui/src/components/input/ZField.svelte',
 		states: [
-			{ description: 'Field及其control处于禁用状态。', name: 'data-disabled', values: ['true'] },
-			{ description: 'Field包含一个或多个错误消息。', name: 'data-invalid', values: ['true'] }
+			{ description: '禁用。', name: 'data-disabled', values: ['true'] },
+			{ description: '包含错误。', name: 'data-invalid', values: ['true'] }
 		],
 		status: 'stable',
-		summary: '建立label、description、messages、required和control之间的可访问关系。'
+		summary: '关联label、说明、错误与control ARIA。'
 	} as const satisfies ZuiComponentMetadata;
 
 	const fieldRecipe = defineSlotRecipe({
@@ -136,6 +134,7 @@
 
 	import { provideZField } from '../../runtime/field-context.js';
 	import { mergeAriaIds, normalizeFieldMessages } from '../../runtime/form-control.svelte.js';
+	import { createZuiId } from '../../runtime/ids.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -163,11 +162,15 @@
 
 	const zui = useZui();
 	const uid = $props.id();
-	const resolvedControlId = $derived(controlId ?? `${uid}-control`);
-	const descriptionId = $derived(description ? `${uid}-description` : undefined);
+	const resolvedControlId = $derived(controlId ?? createZuiId(zui.idPrefix, uid, 'control'));
+	const descriptionId = $derived(
+		description ? createZuiId(zui.idPrefix, uid, 'description') : undefined
+	);
 	const messages = $derived(normalizeFieldMessages(error));
 	const invalid = $derived(messages.length > 0);
-	const errorIds = $derived(messages.map((_, index) => `${uid}-error-${index + 1}`));
+	const errorIds = $derived(
+		messages.map((_, index) => createZuiId(zui.idPrefix, uid, `error-${index + 1}`))
+	);
 	const describedBy = $derived(mergeAriaIds(descriptionId, errorIds.join(' ')));
 	const classes = $derived(zui.slots(fieldRecipe, { size }));
 	provideZField(() => ({
