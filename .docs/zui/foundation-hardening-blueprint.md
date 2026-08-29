@@ -485,6 +485,7 @@ ComponentPage.svelte
 DemoBlock.svelte
 HomePage.svelte
 AppHeader.svelte
+AppShell.svelte
 AppSidebar.svelte
 ```
 
@@ -497,8 +498,9 @@ AppSidebar.svelte
 - copy timer在重复点击和destroy时清理；
 - Demo源码继续使用`?raw`来自真实Svelte文件；
 - 控件修改Props后生成可复制的最小Svelte代码；
-- 现有一文件Demo目录扁平化为`demos/`下具名Svelte文件；
-- Demo组件数量超过15时再按gene/input/layout拆分，不创建一文件目录。
+- 每个组件的`doc.ts`与真实Demo共同放在`content/components/<category>/<component>/`；
+- 单Demo组件不再增加`demos/`中间层，直接保留`doc.ts + Demo.svelte`；
+- 单组件文件超过15个时再按真实职责拆`demos/`、`fixtures/`，不预建空目录。
 
 ### 8.4 路由、导航与可访问性
 

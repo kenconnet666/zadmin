@@ -331,9 +331,10 @@ ZTimeField
 
 ### 目录和样式
 
-- 将一文件Demo目录扁平化为`demos/`下约5–15个具名Svelte文件，组件增多后再按大类拆分；
+- 每个组件的`doc.ts`与真实Demo共同放在`content/components/<category>/<component>/`，分类层直接子项保持为组件目录；
+- 单Demo组件直接使用`doc.ts + Demo.svelte`，不再增加一层`demos/`；单组件文件超过15个时再按真实职责拆分；
 - Docs局部视觉使用ICSS/recipes与基础组件，只保留字体、reset和根尺寸所需的极小全局CSS；
-- Docs Svelte目录继续按catalog、demos、docs和shell等职责分组；
+- Docs `src`按`app`、`content`、`framework`、`views`分组；`views`保持纯Svelte文件，`framework`保持纯TypeScript代码；
 - 不把`.docs` Markdown读取或展示到网页。
 
 ### 路由和搜索
@@ -345,12 +346,7 @@ ZTimeField
 
 ## 8. 验收与测试策略
 
-本地保持快速门禁：
-
-- 受影响package的`svelte-check`；
-- 新增状态机的少量focused unit/property case；
-- 受影响组件的单浏览器smoke；
-- `git diff --check`和依赖解析。
+本地只使用WebStorm检查语法和IDE错误，不运行类型检查、单元测试、浏览器测试、bundle或全量build；完成阶段后提交并推送，不等待CI。
 
 CI运行完整门禁：
 
