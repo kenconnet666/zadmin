@@ -199,6 +199,8 @@ export type {
 	ZSwitchProps,
 	ZSwitchVariants
 } from '../components/input/ZSwitch.svelte';
+export { default as ZTagsInput } from '../components/input/ZTagsInput.svelte';
+export type { ZTagsInputProps } from '../components/input/ZTagsInput.svelte';
 export { default as ZPagination } from '../components/navigation/ZPagination.svelte';
 export type { ZPaginationProps } from '../components/navigation/ZPagination.svelte';
 export { default as ZStack } from '../components/layout/ZStack.svelte';

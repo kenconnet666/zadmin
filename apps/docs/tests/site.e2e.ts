@@ -352,6 +352,24 @@ test('keeps Segmented radio semantics, roving selection and reset synchronized',
 	await expect(week).toHaveAttribute('aria-checked', 'true');
 });
 
+test('keeps TagsInput commits, removals, repeated form values and reset synchronized', async ({
+	page
+}) => {
+	await page.goto('/#/components/tags-input');
+	const input = page.getByRole('textbox', { name: '添加部署标签' });
+	await input.fill('critical');
+	await page.keyboard.press('Enter');
+	await expect(page.getByRole('button', { name: 'Remove critical' })).toBeVisible();
+	await page.getByRole('button', { name: '读取FormData' }).click();
+	await expect(
+		page.getByText(/values = production,critical · 变更 = 1 · production,critical/u)
+	).toBeVisible();
+	await page.getByRole('button', { name: 'Remove production' }).click();
+	await expect(page.getByText(/values = critical · 变更 = 2/u)).toBeVisible();
+	await page.getByRole('button', { name: '重置' }).click();
+	await expect(page.getByRole('button', { name: 'Remove production' })).toBeVisible();
+});
+
 test('keeps Accordion selection, roving focus and Presence synchronized', async ({ page }) => {
 	await page.goto('/#/components/accordion');
 	const runtime = page.getByRole('button', { name: /运行时合同/u });
@@ -550,6 +568,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/radio-group',
 		'#/components/select',
 		'#/components/segmented',
+		'#/components/tags-input',
 		'#/components/switch',
 		'#/components/slider',
 		'#/components/accordion',

@@ -27,6 +27,7 @@ import ToggleButtonFixture from './ToggleButtonFixture.svelte';
 import SwitchFixture from './SwitchFixture.svelte';
 import TabsFixture from './TabsFixture.svelte';
 import TooltipFixture from './TooltipFixture.svelte';
+import TagsInputFixture from './TagsInputFixture.svelte';
 import { createBrowserIcssRuntime } from '../src/icss/runtime.js';
 import { defaultTheme } from '../src/theme/default.js';
 import { extendTheme } from '../src/theme/define.js';
@@ -270,6 +271,44 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(new FormData(form!).get('period')).toBe('b');
 		expect(output?.textContent).toBe('b:1');
+	});
+
+	it('coordinates TagsInput commit, dedupe, paste batch, Backspace, removal and reset', async () => {
+		render(TagsInputFixture);
+		const input = document.querySelector<HTMLInputElement>('[aria-label="Add fixture tag"]');
+		const form = document.querySelector<HTMLFormElement>('[data-testid="tags-form"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="tags-output"]');
+		if (input) {
+			input.value = 'beta';
+			input.dispatchEvent(new InputEvent('input', { bubbles: true }));
+			input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+		}
+		await tick();
+		expect(new FormData(form!).getAll('tag')).toEqual(['alpha', 'beta']);
+		expect(output?.textContent).toBe('alpha,beta:1:');
+		if (input) {
+			input.value = 'beta';
+			input.dispatchEvent(new InputEvent('input', { bubbles: true }));
+			input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+		}
+		await tick();
+		expect(output?.textContent).toBe('alpha,beta:1:beta');
+		const transfer = new DataTransfer();
+		transfer.setData('text', 'gamma,delta,beta');
+		input?.dispatchEvent(new ClipboardEvent('paste', { bubbles: true, clipboardData: transfer }));
+		await tick();
+		expect(new FormData(form!).getAll('tag')).toEqual(['alpha', 'beta', 'gamma', 'delta']);
+		expect(output?.textContent).toBe('alpha,beta,gamma,delta:2:');
+		input?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Backspace' }));
+		await tick();
+		expect(output?.textContent).toBe('alpha,beta,gamma:3:');
+		document.querySelector<HTMLButtonElement>('[aria-label="Remove alpha"]')?.click();
+		await tick();
+		expect(output?.textContent).toBe('beta,gamma:4:');
+		form?.reset();
+		await Promise.resolve();
+		await tick();
+		expect(output?.textContent).toBe('alpha:4:');
 	});
 	it('keeps AlertDialog open until an explicit action is chosen', async () => {
 		render(AlertDialogFixture);

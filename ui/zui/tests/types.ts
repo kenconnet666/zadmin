@@ -76,6 +76,7 @@ import {
 	ZTabsList,
 	ZTabsPanel,
 	ZTabsTrigger,
+	ZTagsInput,
 	ZTooltip,
 	ZTooltipContent,
 	ZTooltipTrigger,
@@ -156,6 +157,7 @@ import {
 	type ZTabsPanelProps,
 	type ZTabsProps,
 	type ZTabsTriggerProps,
+	type ZTagsInputProps,
 	type ZTooltipContentProps,
 	type ZTooltipProps,
 	type ZTooltipTriggerProps,
@@ -306,6 +308,10 @@ const selectItemProps: ComponentProps<typeof ZSelectItem> = {
 const segmentedProps: ComponentProps<typeof ZSegmented> = {
 	items: [{ label: 'Ready', value: 'ready' }]
 } satisfies ZSegmentedProps;
+const tagsInputProps: ComponentProps<typeof ZTagsInput> = {
+	defaultValues: ['alpha'],
+	delimiters: [',', ';']
+} satisfies ZTagsInputProps;
 const sliderProps: ComponentProps<typeof ZSlider> = {
 	defaultValue: 25,
 	max: 50,
@@ -402,6 +408,7 @@ void selectTriggerProps;
 void selectContentProps;
 void selectItemProps;
 void segmentedProps;
+void tagsInputProps;
 void sliderProps;
 void switchProps;
 void tabsProps;

@@ -86,6 +86,7 @@ import {
 	tabsMetadata,
 	tabsPanelMetadata,
 	tabsTriggerMetadata,
+	tagsInputMetadata,
 	textMetadata,
 	tooltipContentMetadata,
 	tooltipMetadata,
@@ -217,6 +218,7 @@ describe('@zadmin/zui package', () => {
 			tabsListMetadata,
 			tabsTriggerMetadata,
 			tabsPanelMetadata,
+			tagsInputMetadata,
 			tooltipMetadata,
 			tooltipTriggerMetadata,
 			tooltipContentMetadata

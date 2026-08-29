@@ -49,6 +49,7 @@ import SelectFixture from './SelectFixture.svelte';
 import SegmentedFixture from './SegmentedFixture.svelte';
 import TabsFixture from './TabsFixture.svelte';
 import TooltipFixture from './TooltipFixture.svelte';
+import TagsInputFixture from './TagsInputFixture.svelte';
 
 describe('ZUI foundational components', () => {
 	it('renders Symbol-carried compiler variables on the real ZBox root', () => {
@@ -304,6 +305,14 @@ describe('ZUI foundational components', () => {
 		expect(result.match(/role="radio"/gu)).toHaveLength(4);
 		expect(result).toMatch(/role="radio"[^>]*aria-checked="true"[^>]*>Beta/u);
 		expect(result).toContain('name="period"');
+	});
+
+	it('renders TagsInput group, removable tags and repeated form values during SSR', () => {
+		const result = render(TagsInputFixture).body;
+		expect(result).toContain('role="group"');
+		expect(result).toContain('aria-label="Remove alpha"');
+		expect(result).toContain('aria-label="Add fixture tag"');
+		expect(result).toContain('name="tag"');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {
