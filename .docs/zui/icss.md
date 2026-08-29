@@ -252,14 +252,16 @@ ZProvider ZBox ZStack ZText ZIcon ZButton ZInput ZField
 ## 目录
 
 ```text
-ui/zui/src/lib/
+ui/zui/src/
 	compiler/   AST分析、绑定、诊断、改写、源码名称
-	component-runtime/ 多组件共享的Context与根样式机制
-	components/ gene、input、layout分类下的8个单文件组件
+	components/ gene、input、layout分类下的9个单文件组件
+	entrypoints/ package公开入口文件
 	icss/       Builder、hash、Registry、序列化、Sheet、值和单位
+	metadata/   组件元数据合同
 	recipes/    recipe与slot recipe定义、缓存和HMR所有权
+	runtime/    Context、表单状态、根样式和编译桥接
+	testing/    内存runtime、fixture和资源断言
 	theme/      默认主题、定义、属性元数据、类型和单位
-	index.ts    公开入口例外
 
 ui/sveltekit/src/lib/zui/
 	client、handle、request registry、CSP和类型

@@ -84,28 +84,25 @@ defineSlotRecipe
 ```text
 ui/zui/
   src/
-    lib/
-      compiler/
-      component-runtime/
-      components/
-        gene/
-        input/
-        layout/
-      icss/
-      recipes/
-      runtime/
-      testing/
-      theme/
-      core.ts
-      index.ts
-      runtime.ts
+    compiler/
+    components/
+      gene/
+      input/
+      layout/
+    entrypoints/
+    icss/
+    metadata/
+    recipes/
+    runtime/
+    testing/
+    theme/
   package.json
   svelte.config.js
   tsconfig.json
   vite.config.ts
 ```
 
-`src/lib/components`首层只包含分类目录，分类目录只包含Svelte组件文件。组件独占的Props、recipe、manifest和静态常量与实现共同位于一个`.svelte`文件；多个组件共享的Context和ICSS根样式机制位于`component-runtime`纯TypeScript目录。
+`src/components`首层只包含分类目录，分类目录只包含Svelte组件文件。组件独占的Props、recipe、manifest和静态常量与实现共同位于一个`.svelte`文件；多个组件共享的Context、表单状态、ICSS根样式和编译桥接位于`runtime`纯TypeScript目录。`src`首层只放领域目录，公开入口统一位于`entrypoints`纯代码文件目录。
 
 推荐内部目录：
 
@@ -119,12 +116,15 @@ src/compiler/
   source-names.ts
   types.ts
 
-src/lib/component-runtime/
+src/runtime/
+  compiler-bridge.ts
+  context.ts
+  controllable-state.svelte.ts
   field-context.ts
+  form-control.svelte.ts
   root-style.ts
-  zui-context.ts
 
-src/lib/icss/
+src/icss/
   builder.ts
   hash.ts
   registry.ts
@@ -134,7 +134,7 @@ src/lib/icss/
   types.ts
   values.ts
 
-src/lib/theme/
+src/theme/
   default.ts
   define.ts
   properties.ts
@@ -146,10 +146,11 @@ src/lib/theme/
 当前组件分类：
 
 ```text
-src/lib/components/
+src/components/
   gene/
     ZBox.svelte
     ZButton.svelte
+    ZCode.svelte
     ZIcon.svelte
     ZProvider.svelte
     ZText.svelte
@@ -178,7 +179,9 @@ src/lib/components/
 
 ```text
 @zadmin/zui
+@zadmin/zui/code
 @zadmin/zui/compiler
+@zadmin/zui/metadata
 @zadmin/zui/runtime
 @zadmin/zui/testing
 @zadmin/zui/internal
@@ -187,7 +190,9 @@ src/lib/components/
 | 入口         | 内容                                  | 客户端生产bundle   |
 | ------------ | ------------------------------------- | ------------------ |
 | 根入口       | 组件、Theme、`icss`、recipe、`useZui` | 允许               |
+| `./code`     | 可选Shiki代码展示组件                 | 按实际引用         |
 | `./compiler` | Svelte preprocess与诊断               | 禁止               |
+| `./metadata` | Docs和工具使用的组件API元数据         | 禁止业务端使用     |
 | `./runtime`  | 显式Runtime、Registry、Sheet高级API   | 按实际引用         |
 | `./testing`  | fake runtime、fixtures和断言          | 禁止               |
 | `./internal` | 编译器生成代码使用                    | 允许但不供业务调用 |
@@ -195,15 +200,18 @@ src/lib/components/
 根入口计划：
 
 ```ts
-export { defaultTheme, defineTheme, extendTheme } from './theme/index.js';
+export { defaultTheme } from '../theme/default.js';
+export { defineTheme, extendTheme } from '../theme/define.js';
 
-export { icss, defineRecipe, defineSlotRecipe, useZui } from './styles/index.js';
+export { icss } from './runtime.js';
+export { defineRecipe, defineSlotRecipe } from '../recipes/index.js';
+export { useZui } from '../runtime/context.js';
 
-export { default as ZBox } from './components/gene/ZBox.svelte';
-export type { ZBoxProps } from './components/gene/ZBox.svelte';
+export { default as ZBox } from '../components/gene/ZBox.svelte';
+export type { ZBoxProps } from '../components/gene/ZBox.svelte';
 
-export { default as ZStack } from './components/layout/ZStack.svelte';
-export type { ZStackProps } from './components/layout/ZStack.svelte';
+export { default as ZStack } from '../components/layout/ZStack.svelte';
+export type { ZStackProps } from '../components/layout/ZStack.svelte';
 ```
 
 不保留旧`@zadmin/zui`兼容转发包，除非发布状态检查证明外部已有消费者；即使需要迁移包，也只发布deprecation版本，不让兼容层长期留在仓库。
@@ -1066,7 +1074,7 @@ export interface ZFieldProps extends Omit<HTMLAttributes<HTMLDivElement>, 'child
 </script>
 
 <script lang="ts">
-	import { useZui } from '../../component-runtime/zui-context.js';
+	import { useZui } from '../../runtime/context.js';
 
 	let {
 		children,

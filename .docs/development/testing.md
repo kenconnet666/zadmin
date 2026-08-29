@@ -103,7 +103,7 @@ pnpm --filter @zadmin/docs build
 - Web Compiler branches 91.06%，Web ICSS branches 92.1%；
 - 50个并发SSR请求无CSS串扰；
 - 真实Vite HMR结构修改前后均为9条rule、1个style tag、0 console error；
-- `@zadmin/zui/core@0.1.0`与`@zadmin/zui@0.1.0` tarball在隔离SvelteKit项目安装、check、build和SSR 200通过；
+- 当时拆分的Core与ZUI tarball在隔离SvelteKit项目安装、check、build和SSR 200通过；后续目录收口已取消独立`@zadmin/zui/core`公开入口；
 - 外部fixture包含critical CSS和初始动态变量，compiler/server客户端文件0个；
 - `pnpm audit --prod`无已知漏洞，gitleaks无泄漏。
 

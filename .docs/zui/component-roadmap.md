@@ -71,12 +71,13 @@ Docs的API表由手工TypeScript对象维护，已经出现可复现差异：
 
 #### 共享组件runtime不足
 
-`component-runtime`当前只有：
+`runtime`当前的组件共享模块包括：
 
 ```text
 field-context.ts
+form-control.svelte.ts
 root-style.ts
-zui-context.ts
+context.ts
 ```
 
 它可以支持基础组件，但不能统一承载后续复杂组件需要的：
@@ -159,10 +160,11 @@ ZButton和ZInput的focus-visible使用原始`outline: 2px solid currentColor`，
 
 ## 4. 共享组件runtime规划
 
-`component-runtime`保持直接子项全部为TypeScript代码文件，并控制在15个：
+`runtime`保持直接子项全部为TypeScript代码文件；当前控制在5–15个，交互基础设施全部落地后若超过15个再按`interaction`、`layer`等真实职责拆分，不预建空目录：
 
 ```text
-component-runtime/
+runtime/
+  compiler-bridge.ts
   collection.svelte.ts
   controllable-state.svelte.ts
   dismissable-layer.svelte.ts
@@ -177,7 +179,7 @@ component-runtime/
   selection.svelte.ts
   typeahead.svelte.ts
   virtualizer.svelte.ts
-  zui-context.ts
+  context.ts
 ```
 
 职责：

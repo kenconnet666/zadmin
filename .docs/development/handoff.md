@@ -177,10 +177,10 @@ plugin.ts
 | 浏览器Plugin Runtime        | `ui/sveltekit/src/lib/client-runtime.ts`               |
 | Approval公开类型            | `plugins/approval/src/server/contract.ts`              |
 | CRM上游类型依赖示例         | `plugins/crm/src/server/contract.ts`、`service.ts`     |
-| ICSS Runtime与Registry      | `ui/zui/src/lib/icss/`                                 |
-| Svelte ICSS编译器           | `ui/zui/src/lib/compiler/`                             |
+| ICSS Runtime与Registry      | `ui/zui/src/icss/`                                     |
+| Svelte ICSS编译器           | `ui/zui/src/compiler/`                                 |
 | SvelteKit ZUI SSR/CSP       | `ui/sveltekit/src/lib/zui/`                            |
-| ZUI基础组件                 | `ui/zui/src/lib/components/`                           |
+| ZUI基础组件                 | `ui/zui/src/components/`                               |
 | ZUI接入文档                 | `.docs/zui/usage.md`                                   |
 | Svelte Miniapp compiler     | `ui/miniapp/src/compiler/`                             |
 | Miniapp renderer/runtime    | `ui/miniapp/src/renderer/`、`runtime/`                 |

@@ -119,27 +119,30 @@ ZUI负责：
 ### 4.2 源码结构
 
 ```text
-ui/zui/src/lib/
+ui/zui/src/
   compiler/
-  component-runtime/
   components/
-    gene/       5个通用单文件组件
+    gene/       6个通用单文件组件
     input/      ZField与ZInput
     layout/     ZStack
+  entrypoints/  公开package入口
   icss/
+  metadata/
   recipes/
-  runtime/
+  runtime/      Context、表单状态、根样式与编译桥接
   testing/
   theme/
-  index.ts
 ```
 
 推荐导出：
 
 ```text
 @zadmin/zui
+@zadmin/zui/code
 @zadmin/zui/compiler
 @zadmin/zui/internal
+@zadmin/zui/metadata
+@zadmin/zui/runtime
 @zadmin/zui/testing
 ```
 

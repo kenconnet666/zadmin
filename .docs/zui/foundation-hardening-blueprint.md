@@ -228,15 +228,16 @@ Runed可以帮助清理，但不能代替这些所有权决策。
 当前只实现被已有组件使用的内部模块：
 
 ```text
-component-runtime/
+runtime/
+  compiler-bridge.ts
   controllable-state.svelte.ts
   field-context.ts
   form-control.svelte.ts
   root-style.ts
-  zui-context.ts
+  context.ts
 ```
 
-直接子项保持同类代码文件且达到5个。Collection、Selection、Layer、Portal、FocusScope、Floating、typeahead和virtualizer只保留在后续架构文档，不在本阶段创建空文件或无消费者实现。
+直接子项保持同类代码文件，目前共6个。Collection、Selection、Layer、Portal、FocusScope、Floating、typeahead和virtualizer只保留在后续架构文档，不在本阶段创建空文件或无消费者实现。
 
 `controllable-state`先由ZInput验证：
 
