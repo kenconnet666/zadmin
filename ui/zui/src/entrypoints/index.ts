@@ -208,6 +208,8 @@ export { default as ZTagsInput } from '../components/input/ZTagsInput.svelte';
 export type { ZTagsInputProps } from '../components/input/ZTagsInput.svelte';
 export { default as ZTreeSelect } from '../components/input/ZTreeSelect.svelte';
 export type { ZTreeSelectProps } from '../components/input/ZTreeSelect.svelte';
+export { default as ZTransfer } from '../components/input/ZTransfer.svelte';
+export type { TransferItem, ZTransferProps } from '../components/input/ZTransfer.svelte';
 export { default as ZPagination } from '../components/navigation/ZPagination.svelte';
 export type { ZPaginationProps } from '../components/navigation/ZPagination.svelte';
 export { default as ZStack } from '../components/layout/ZStack.svelte';

@@ -29,6 +29,7 @@ import SwitchFixture from './SwitchFixture.svelte';
 import TabsFixture from './TabsFixture.svelte';
 import TreeFixture from './TreeFixture.svelte';
 import TreeSelectFixture from './TreeSelectFixture.svelte';
+import TransferFixture from './TransferFixture.svelte';
 import TooltipFixture from './TooltipFixture.svelte';
 import TagsInputFixture from './TagsInputFixture.svelte';
 import { createBrowserIcssRuntime } from '../src/icss/runtime.js';
@@ -386,6 +387,36 @@ describe('compiled ICSS browser updates', () => {
 		await Promise.resolve();
 		await tick();
 		expect(trigger?.textContent?.trim()).toBe('Root / Alpha / Leaf');
+	});
+
+	it('coordinates Transfer filtering, keyboard selection, moves, form values and reset', async () => {
+		render(TransferFixture);
+		const form = document.querySelector<HTMLFormElement>('[data-testid="transfer-form"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="transfer-output"]');
+		const source = document.querySelector<HTMLElement>('[role="listbox"][aria-label="Available"]');
+		const production = [...(source?.querySelectorAll<HTMLElement>('[role="option"]') ?? [])].find(
+			(item) => item.textContent?.trim() === 'Production'
+		);
+		production?.focus();
+		production?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: ' ' }));
+		document.querySelector<HTMLButtonElement>('[aria-label="Move to selected"]')?.click();
+		await tick();
+		expect(output?.textContent).toBe('production,staging');
+		expect(new FormData(form!).getAll('channel')).toEqual(['production', 'staging']);
+		const sourceSearch = document.querySelector<HTMLInputElement>(
+			'input[aria-label="Available: Filter items"]'
+		);
+		if (sourceSearch) {
+			sourceSearch.value = 'Preview';
+			sourceSearch.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		}
+		await tick();
+		expect(source?.querySelectorAll('[role="option"]')).toHaveLength(1);
+		form?.reset();
+		await Promise.resolve();
+		await tick();
+		expect(output?.textContent).toBe('staging');
+		expect(source?.querySelectorAll('[role="option"]')).toHaveLength(3);
 	});
 	it('keeps AlertDialog open until an explicit action is chosen', async () => {
 		render(AlertDialogFixture);

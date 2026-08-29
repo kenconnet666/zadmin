@@ -83,6 +83,7 @@ import {
 	ZTooltipTrigger,
 	ZTree,
 	ZTreeSelect,
+	ZTransfer,
 	ZToggleButton,
 	defineRecipe,
 	defineSlotRecipe,
@@ -167,6 +168,7 @@ import {
 	type ZTooltipTriggerProps,
 	type ZTreeProps,
 	type ZTreeSelectProps,
+	type ZTransferProps,
 	type ZToggleButtonProps
 } from '../src/entrypoints/index.js';
 
@@ -328,6 +330,10 @@ const cascaderProps: ComponentProps<typeof ZCascader> = {
 	nodes: [{ key: 'root', label: 'Root' }],
 	value: ['root']
 } satisfies ZCascaderProps;
+const transferProps: ComponentProps<typeof ZTransfer> = {
+	items: [{ key: 'ready', label: 'Ready' }],
+	value: ['ready']
+} satisfies ZTransferProps;
 const sliderProps: ComponentProps<typeof ZSlider> = {
 	defaultValue: 25,
 	max: 50,
@@ -428,6 +434,7 @@ void tagsInputProps;
 void treeProps;
 void treeSelectProps;
 void cascaderProps;
+void transferProps;
 void sliderProps;
 void switchProps;
 void tabsProps;

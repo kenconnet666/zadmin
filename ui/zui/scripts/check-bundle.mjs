@@ -254,6 +254,7 @@ const components = [
 	},
 	{ id: 'tags-input', name: 'ZTagsInput', path: 'input/ZTagsInput.svelte' },
 	{ id: 'tree-select', name: 'ZTreeSelect', path: 'input/ZTreeSelect.svelte' },
+	{ id: 'transfer', name: 'ZTransfer', path: 'input/ZTransfer.svelte' },
 	{
 		id: 'field',
 		maxIncrementalGzip: 3.375 * 1024,

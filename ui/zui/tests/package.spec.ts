@@ -94,6 +94,7 @@ import {
 	tooltipTriggerMetadata,
 	treeMetadata,
 	treeSelectMetadata,
+	transferMetadata,
 	toggleButtonMetadata,
 	visuallyHiddenMetadata
 } from '../src/entrypoints/metadata.js';
@@ -227,7 +228,8 @@ describe('@zadmin/zui package', () => {
 			tooltipTriggerMetadata,
 			tooltipContentMetadata,
 			treeMetadata,
-			treeSelectMetadata
+			treeSelectMetadata,
+			transferMetadata
 		];
 		expect(new Set(metadata.map(({ id }) => id)).size).toBe(metadata.length);
 		expect(metadata.every(({ name }) => name.startsWith('Z'))).toBe(true);

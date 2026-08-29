@@ -51,6 +51,7 @@ import SegmentedFixture from './SegmentedFixture.svelte';
 import TabsFixture from './TabsFixture.svelte';
 import TreeFixture from './TreeFixture.svelte';
 import TreeSelectFixture from './TreeSelectFixture.svelte';
+import TransferFixture from './TransferFixture.svelte';
 import TooltipFixture from './TooltipFixture.svelte';
 import TagsInputFixture from './TagsInputFixture.svelte';
 
@@ -344,6 +345,16 @@ describe('ZUI foundational components', () => {
 		const open = render(CascaderFixture, { props: { defaultOpen: true } }).body;
 		expect(open.match(/role="listbox"/gu)).toHaveLength(3);
 		expect(open).toContain('name="path"');
+	});
+
+	it('renders Transfer dual listboxes and repeated form values during SSR', () => {
+		const result = render(TransferFixture).body;
+		expect(result.match(/role="listbox"/gu)).toHaveLength(2);
+		expect(result).toContain('aria-multiselectable="true"');
+		expect(result).toContain('Available');
+		expect(result).toContain('Selected');
+		expect(result).toContain('name="channel"');
+		expect(result).toContain('value="staging"');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

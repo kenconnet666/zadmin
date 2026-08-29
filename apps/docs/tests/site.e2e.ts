@@ -442,6 +442,22 @@ test('keeps Cascader columns, path commit, focus restoration and reset synchroni
 	await expect(trigger).toBeVisible();
 });
 
+test('keeps Transfer filter, selection, move, repeated form values and reset synchronized', async ({
+	page
+}) => {
+	await page.goto('/#/components/transfer');
+	const source = page.getByRole('listbox', { name: '可用通道' });
+	await source.getByRole('option', { name: /生产环境/u }).click();
+	await page.getByRole('button', { name: '加入已选通道' }).click();
+	await expect(page.getByRole('listbox', { name: '已选通道' })).toContainText('生产环境');
+	await expect(page.getByText('selected = production/staging')).toBeVisible();
+	await page.getByRole('textbox', { name: '可用通道: 筛选通道' }).fill('预览');
+	await expect(source.getByRole('option')).toHaveCount(1);
+	await page.getByRole('button', { name: '重置' }).click();
+	await expect(page.getByText('selected = staging')).toBeVisible();
+	await expect(source.getByRole('option')).toHaveCount(3);
+});
+
 test('keeps Popover portal, ARIA, focus, positioning and dismiss synchronized', async ({
 	page
 }) => {
@@ -620,6 +636,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/segmented',
 		'#/components/tags-input',
 		'#/components/tree-select',
+		'#/components/transfer',
 		'#/components/switch',
 		'#/components/slider',
 		'#/components/accordion',
