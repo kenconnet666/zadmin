@@ -16,6 +16,7 @@ import {
 	ZInput,
 	ZKbd,
 	ZLink,
+	ZPagination,
 	ZSeparator,
 	ZStack,
 	ZSwitch,
@@ -124,6 +125,16 @@ describe('ZUI foundational components', () => {
 		expect(controls).toBeDefined();
 		expect(labelledBy).toBeDefined();
 		expect(result).toContain(`id="${labelledBy}"`);
+	});
+
+	it('renders localized pagination with aria-current and boundary controls during SSR', () => {
+		const result = render(ZPagination, { props: { defaultPage: 3, totalPages: 10 } }).body;
+
+		expect(result).toContain('<nav');
+		expect(result).toContain('aria-label="Pagination"');
+		expect(result).toContain('aria-current="page"');
+		expect(result).toContain('aria-label="Previous page"');
+		expect(result).toContain('aria-label="Next page"');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

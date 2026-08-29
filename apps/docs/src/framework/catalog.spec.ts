@@ -24,6 +24,7 @@ describe('ZUI component documentation catalog', () => {
 			'ZField',
 			'ZRadioGroup',
 			'ZSwitch',
+			'ZPagination',
 			'ZTabs'
 		]);
 		expect(componentDocsById.size).toBe(componentDocs.length);
@@ -47,6 +48,7 @@ describe('ZUI component documentation catalog', () => {
 			'input',
 			'input',
 			'input',
+			'navigation',
 			'navigation'
 		]);
 	});

@@ -1,9 +1,9 @@
 import { getContext, setContext } from 'svelte';
 
 import type { CollectionItem, CollectionStore } from '../../../runtime/collection.svelte.js';
-import type { NavigationOrientation } from '../../../runtime/list-navigation.js';
 
 export type TabsActivationMode = 'automatic' | 'manual';
+export type TabsOrientation = 'horizontal' | 'vertical';
 
 export interface TabsCollectionItem extends CollectionItem<string> {
 	readonly textValue: string;
@@ -13,7 +13,7 @@ export interface ZTabsContext {
 	readonly activationMode: TabsActivationMode;
 	readonly collection: CollectionStore<TabsCollectionItem>;
 	readonly disabled: boolean;
-	readonly orientation: NavigationOrientation;
+	readonly orientation: TabsOrientation;
 	focus(value: string): void;
 	handleKey(event: KeyboardEvent): void;
 	isSelected(value: string): boolean;

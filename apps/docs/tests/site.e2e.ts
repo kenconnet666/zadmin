@@ -9,7 +9,7 @@ test('renders the component catalog and real demo source', async ({ page }) => {
 
 	await page.goto('/#/');
 	await expect(page.getByRole('heading', { level: 1 })).toContainText('看见组件');
-	await expect(page.getByTestId('component-card')).toHaveCount(20);
+	await expect(page.getByTestId('component-card')).toHaveCount(21);
 	await expect(page.getByRole('heading', { level: 3 })).toHaveText([
 		'通用组件',
 		'布局组件',
@@ -182,6 +182,24 @@ test('keeps Tabs ARIA relationships, disabled skipping and RTL activation synchr
 	await expect(page.getByText(/value = events · 用户变更次数 = 4/u)).toBeVisible();
 });
 
+test('keeps pagination locale labels, current page and window synchronized', async ({ page }) => {
+	await page.goto('/#/components/pagination');
+	const navigation = page.getByRole('navigation', { name: '分页导航' });
+	await expect(navigation.getByRole('button', { name: '第6页' })).toHaveAttribute(
+		'aria-current',
+		'page'
+	);
+	await navigation.getByRole('button', { name: '第7页' }).click();
+	await expect(navigation.getByRole('button', { name: '第7页' })).toHaveAttribute(
+		'aria-current',
+		'page'
+	);
+	await expect(page.getByText('page = 7 · 用户变更次数 = 1')).toBeVisible();
+	await navigation.getByRole('button', { name: '下一页' }).click();
+	await expect(page.getByText('page = 8 · 用户变更次数 = 2')).toBeVisible();
+	await expect(navigation.locator('[data-slot="ellipsis"]')).toHaveCount(2);
+});
+
 test('keeps S1 primitives semantic and display preferences effective', async ({ page }) => {
 	await page.goto('/#/guides/theme');
 	await expect(page.getByRole('heading', { level: 1 })).toContainText('主题不是一组颜色');
@@ -236,6 +254,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/field',
 		'#/components/radio-group',
 		'#/components/switch',
+		'#/components/pagination',
 		'#/components/tabs'
 	]) {
 		await page.goto(`/${route}`);

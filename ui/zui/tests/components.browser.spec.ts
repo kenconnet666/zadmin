@@ -7,6 +7,7 @@ import ComponentGallery from './ComponentGallery.svelte';
 import CheckboxFixture from './CheckboxFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
+import PaginationFixture from './PaginationFixture.svelte';
 import RadioGroupFixture from './RadioGroupFixture.svelte';
 import ToggleButtonFixture from './ToggleButtonFixture.svelte';
 import SwitchFixture from './SwitchFixture.svelte';
@@ -32,6 +33,21 @@ function insertedRuleCount(): number {
 }
 
 describe('compiled ICSS browser updates', () => {
+	it('keeps pagination window, current page and callbacks synchronized', async () => {
+		render(PaginationFixture);
+		const navigation = document.querySelector<HTMLElement>('[aria-label="Fixture pagination"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="pagination-output"]');
+		const current = navigation?.querySelector<HTMLButtonElement>('[aria-current="page"]');
+		expect(current?.textContent).toContain('6');
+
+		const pageSeven = navigation?.querySelector<HTMLButtonElement>('[aria-label="Page 7"]');
+		pageSeven?.click();
+		await tick();
+		expect(navigation?.dataset.page).toBe('7');
+		expect(output?.textContent).toBe('7:1');
+		expect(pageSeven?.getAttribute('aria-current')).toBe('page');
+	});
+
 	it('separates Tabs focus from automatic and manual activation', async () => {
 		render(TabsFixture);
 		const beta = document.querySelector<HTMLButtonElement>('[data-testid="tab-b"]');

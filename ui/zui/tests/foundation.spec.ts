@@ -4,6 +4,7 @@ import { createZuiId, createZuiIdScope } from '../src/runtime/ids.js';
 import { CollectionStore } from '../src/runtime/collection.svelte.js';
 import { createFormEntries, serializeFormValue } from '../src/runtime/form-value.js';
 import { moveIndex, navigationIntent } from '../src/runtime/list-navigation.js';
+import { clampPage, createPaginationItems } from '../src/runtime/pagination.js';
 import { RovingFocus } from '../src/runtime/roving-focus.svelte.js';
 import {
 	emptySelection,
@@ -105,6 +106,26 @@ describe('ZUI foundation runtime', () => {
 		expect(moveIndex(3, 0, 'previous', false)).toBe(0);
 		expect(moveIndex(0, 0, 'next')).toBe(-1);
 		expect(() => moveIndex(-1, 0, 'next')).toThrow(/non-negative integer/);
+	});
+
+	it('builds deterministic pagination windows and validates numeric bounds', () => {
+		expect(createPaginationItems(20, 10)).toEqual([
+			1,
+			'ellipsis-start',
+			9,
+			10,
+			11,
+			'ellipsis-end',
+			20
+		]);
+		expect(createPaginationItems(5, 1, 1, 1)).toEqual([1, 2, 'ellipsis-end', 5]);
+		expect(createPaginationItems(10, 5, 0, 0)).toEqual(['ellipsis-start', 5, 'ellipsis-end']);
+		expect(clampPage(-2, 10)).toBe(1);
+		expect(clampPage(99, 10)).toBe(10);
+		expect(clampPage(2.9, 10)).toBe(2);
+		expect(() => createPaginationItems(0, 1)).toThrow(/positive integer/u);
+		expect(() => createPaginationItems(10, 1, -1)).toThrow(/non-negative integer/u);
+		expect(() => clampPage(Number.NaN, 10)).toThrow(/finite/u);
 	});
 
 	it('matches locale-aware typeahead with timeout, cycling and disabled filtering', () => {

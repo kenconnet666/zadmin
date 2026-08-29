@@ -2,11 +2,11 @@
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
-	import type { TabsActivationMode } from './context.svelte.js';
+	import type { TabsActivationMode, TabsOrientation } from './context.svelte.js';
 
 	import { defineRecipe, registerRecipeHmr } from '../../../recipes/define.js';
 
-	export type TabsOrientation = 'horizontal' | 'vertical';
+	export type { TabsOrientation } from './context.svelte.js';
 
 	export interface ZTabsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
 		readonly activationMode?: TabsActivationMode;

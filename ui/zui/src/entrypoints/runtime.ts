@@ -19,6 +19,8 @@ export type {
 	NavigationIntent,
 	NavigationOrientation
 } from '../runtime/list-navigation.js';
+export { clampPage, createPaginationItems } from '../runtime/pagination.js';
+export type { PaginationItem } from '../runtime/pagination.js';
 export {
 	emptySelection,
 	isSelected,

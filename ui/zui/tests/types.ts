@@ -7,6 +7,7 @@ import {
 	ZBox,
 	ZButton,
 	ZCheckbox,
+	ZPagination,
 	ZRadioGroup,
 	ZRadioGroupItem,
 	ZSwitch,
@@ -22,6 +23,7 @@ import {
 	type ZBoxProps,
 	type ZButtonProps,
 	type ZCheckboxProps,
+	type ZPaginationProps,
 	type ZRadioGroupItemProps,
 	type ZRadioGroupProps,
 	type ZSwitchProps,
@@ -40,6 +42,10 @@ const checkboxProps: ComponentProps<typeof ZCheckbox> = {
 	defaultChecked: 'indeterminate',
 	value: 42n
 } satisfies ZCheckboxProps;
+const paginationProps: ComponentProps<typeof ZPagination> = {
+	defaultPage: 2,
+	totalPages: 20
+} satisfies ZPaginationProps;
 const radioGroupProps: ComponentProps<typeof ZRadioGroup> = {
 	defaultValue: 'ready',
 	orientation: 'horizontal'
@@ -70,6 +76,7 @@ void DirectZBox;
 void directBoxProps;
 void buttonProps;
 void checkboxProps;
+void paginationProps;
 void radioGroupProps;
 void radioGroupItemProps;
 void switchProps;

@@ -17,6 +17,7 @@ import { switchDoc } from '../content/components/input/switch/doc.js';
 import { stackDoc } from '../content/components/layout/stack/doc.js';
 import { aspectRatioDoc } from '../content/components/layout/aspect-ratio/doc.js';
 import { containerDoc } from '../content/components/layout/container/doc.js';
+import { paginationDoc } from '../content/components/navigation/pagination/doc.js';
 import { tabsDoc } from '../content/components/navigation/tabs/doc.js';
 import type { ComponentCategory, ComponentDoc } from './component-doc.js';
 
@@ -47,6 +48,7 @@ export const componentDocs = Object.freeze([
 	fieldDoc,
 	radioGroupDoc,
 	switchDoc,
+	paginationDoc,
 	tabsDoc
 ] satisfies readonly ComponentDoc[]);
 

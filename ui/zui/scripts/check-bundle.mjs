@@ -12,6 +12,7 @@ const runtime = portable(resolve(sourceRoot, 'entrypoints/runtime.ts'));
 const components = [
 	{
 		id: 'radio-group',
+		maxIncrementalGzip: 3.375 * 1024,
 		name: 'ZRadioGroup',
 		path: 'compound/radio-group/ZRadioGroup.svelte'
 	},
@@ -44,6 +45,7 @@ const components = [
 	},
 	{ id: 'checkbox', name: 'ZCheckbox', path: 'input/ZCheckbox.svelte' },
 	{ id: 'input', name: 'ZInput', path: 'input/ZInput.svelte' },
+	{ id: 'pagination', name: 'ZPagination', path: 'navigation/ZPagination.svelte' },
 	{
 		id: 'switch',
 		maxIncrementalGzip: 3.625 * 1024,
