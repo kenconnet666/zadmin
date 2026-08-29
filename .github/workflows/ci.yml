@@ -193,7 +193,6 @@ jobs:
         run: pnpm --filter @zadmin/desktop webview:smoke
 
       - name: Smoke test Vite development host
-        if: github.event_name == 'pull_request'
         run: pnpm --filter @zadmin/desktop webview:dev:smoke
 
       - name: Verify generated tracked files are unchanged
