@@ -134,7 +134,7 @@
 
 	import { provideZField } from '../../runtime/field-context.js';
 	import { mergeAriaIds, normalizeFieldMessages } from '../../runtime/form-control.svelte.js';
-	import { createZuiIdScope } from '../../runtime/ids.js';
+	import { createZuiId } from '../../runtime/ids.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -162,12 +162,12 @@
 
 	const zui = useZui();
 	const uid = $props.id();
-	const scopedId = $derived(createZuiIdScope(zui.idPrefix, uid));
-	const resolvedControlId = $derived(controlId ?? scopedId('control'));
-	const descriptionId = $derived(description ? scopedId('description') : undefined);
+	const idBase = $derived(createZuiId(zui.idPrefix, uid));
+	const resolvedControlId = $derived(controlId ?? `${idBase}-control`);
+	const descriptionId = $derived(description ? `${idBase}-description` : undefined);
 	const messages = $derived(normalizeFieldMessages(error));
 	const invalid = $derived(messages.length > 0);
-	const errorIds = $derived(messages.map((_, index) => scopedId(`error-${index + 1}`)));
+	const errorIds = $derived(messages.map((_, index) => `${idBase}-error-${index + 1}`));
 	const describedBy = $derived(mergeAriaIds(descriptionId, errorIds.join(' ')));
 	const classes = $derived(zui.slots(fieldRecipe, { size }));
 	provideZField(() => ({
