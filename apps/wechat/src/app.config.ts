@@ -3,12 +3,6 @@ import type { MiniappAppConfig } from '@zadmin/miniapp/compiler';
 export default {
 	lazyCodeLoading: 'requiredComponents',
 	pages: ['pages/index/index', 'pages/capabilities/index'],
-	rendererOptions: {
-		skyline: {
-			defaultContentBox: true,
-			defaultDisplayBlock: true
-		}
-	},
 	workers: 'workers',
 	window: {
 		backgroundTextStyle: 'light',

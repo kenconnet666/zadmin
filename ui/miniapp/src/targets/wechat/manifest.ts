@@ -7,6 +7,7 @@ export interface MiniappAppConfig {
 
 export interface MiniappPageConfig {
 	readonly navigationBarTitleText?: string;
+	readonly renderer?: 'skyline' | 'webview';
 	readonly [key: string]: unknown;
 }
 

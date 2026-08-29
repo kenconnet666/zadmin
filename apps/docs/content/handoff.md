@@ -8,13 +8,13 @@ DI容器、Plugin Module、上下游插件类型传播、服务端/客户端独�
 
 `@zadmin/zui`现为唯一浏览器组件包，内部包含Theme、Token、ICSS、recipe/slot recipe、Symbol attachment carrier和8个`Z*`基础组件。`@zadmin/sveltekit/zui`负责request-local SSR runtime、critical CSS、CSP nonce/hash和客户端集成。公开ICSS API仍只返回class字符串；第一方回调参数统一为`s`，CSS标准关键字补系统元数据，稳定视觉字面量补语义Theme token。
 
-2026-08-26 已把Svelte/UI平台包统一迁入根`ui/`，并完成`@zadmin/tauri`、9个桌面组件和`apps/desktop`。桌面端使用SvelteKit SPA静态产物、Tauri 2最小capability和`tauri-specta`生成bindings；真实Win11 x64静态页面、系统探针、HMR、release exe、NSIS安装/卸载均通过。当前发布件未签名，正式外部分发前必须补Authenticode；完整证据见[桌面生产验收](./desktop-production-acceptance.md)。
+2026-08-26 的Tauri/Rust桌面实现已经完成过生产验收，现只作为Git历史中的迁移对照；2026-08-29在C# WebView2替代链通过真实生产页面与开发宿主smoke后，`ui/tauri`、`src-tauri`、Rust命令、bindings和依赖已从当前工作区删除。
 
 `@zadmin/miniapp`现为独立移动框架：不依赖ZUI，内含Theme、`mcss()`、8个`M*`组件、compiler、custom renderer、App/Page runtime、官方微信类型平台能力和直接微信target。`apps/wechat`从Svelte源码生成WXML、WXSS、JS、JSON和sourcemap，生产依赖及产物没有Taro。当前本地13个测试文件/41项测试、宿主8项测试和15文件实际构建通过；clean-package和coverage留给云端CI。
 
-`@zadmin/webview`平台中立层已落地：34个IDL方法、typed bridge、timeout/cancel/event/dispose、`DesktopPlatform`、browser fallback、fake driver、9个Svelte组件和C# dispatcher。TypeScript 23项测试覆盖率statements 98.15%、branches 89.92%、functions/lines 100%；`net10.0` C# Core零警告构建并通过独立合同测试。Windows/WinUI 3/WebView2宿主和发布件仍在P7实施，旧Tauri发布路径暂不删除。
+`@zadmin/webview`已成为当前桌面实现：34个IDL方法、typed bridge、timeout/cancel/event/dispose、`DesktopPlatform`、browser fallback、fake driver、9个Svelte组件、C# dispatcher和WinUI 3/WebView2 Windows target。TypeScript 24项测试覆盖率statements 98.16%、branches 90.15%、functions/lines 100%；`net10.0` C# Core零警告。真实生产宿主加载SvelteKit/ZUI页面、严格CSP hash与JS→C# IPC通过；开发宿主在loopback origin确认Vite client、页面hydration、native bridge和退出零残留。portable ZIP为90,779,828 bytes，解包payload为233,775,520 bytes/533文件；self-contained路线相对旧Tauri installer/exe约35.85x/19.96x，正式优化包体前不能把C#替代描述成天然更轻。
 
-2026-08-25的Taro模拟器、Android真机、Skyline、性能和能力探针记录只作为迁移前历史证据。直编target尚需在当前微信开发者工具CLI授权完成后重新做模拟器/HMR复核，不能继承旧runtime的截图或验证等级。账号、支付、手机号、权限、上传与硬件操作继续要求单独授权。
+2026-08-25的Taro模拟器、Android真机、Skyline、性能和能力探针记录只作为迁移前历史证据。2026-08-29直编WebView target已在微信开发者工具完成页面截图、页面栈、空error console、按钮事件、响应式count和自动完整remount验收；真机、账号、支付、手机号、权限、上传与硬件操作继续要求单独授权。
 
 关键代码检查点：
 
@@ -69,13 +69,15 @@ pnpm lint
 pnpm build:wechat
 pnpm check:desktop
 pnpm test:desktop
-pnpm --filter @zadmin/desktop bindings:check
+pnpm --filter @zadmin/webview generate:check
+pnpm --filter @zadmin/webview dotnet:test
 ```
 
 需要重建Windows发布件时再执行（耗时明显高于普通workspace build）：
 
 ```powershell
 pnpm build:desktop
+pnpm --filter @zadmin/desktop webview:smoke
 ```
 
 如果仓库位于其他路径，命令不依赖 `C:\code\zadmin`；只有本文档中的示例路径需要替换。
@@ -126,8 +128,7 @@ packages/
 ui/
   sveltekit/
   miniapp/
-  tauri/
-  webview/        # C# Windows target实施中
+  webview/        # C#公共层与Windows WebView2 target
   zui/
 
 plugins/
@@ -189,10 +190,10 @@ plugin.ts
 | WeChat安全探针              | `apps/wechat/src/pages/capabilities/probes.ts`         |
 | WeChat安全Worker            | `apps/wechat/src/workers/safe-probe.js`                |
 | Miniapp module/native/test  | `ui/miniapp/src/module/`、`native/`、`testing/`        |
-| Tauri 系统能力              | `ui/tauri/src/api/`、`runtime/`、`testing/`            |
-| Tauri Svelte组件            | `ui/tauri/src/components/`                             |
-| Windows桌面宿主             | `apps/desktop/src/`、`src-tauri/`                      |
-| tauri-specta bindings       | `apps/desktop/src/lib/generated/tauri.ts`              |
+| WebView平台与组件           | `ui/webview/src/platform/`、`bridge/`、`components/`   |
+| C#公共dispatcher            | `ui/webview/dotnet/ZAdmin.WebView.Core/`               |
+| Windows桌面target           | `ui/webview/targets/windows/`                          |
+| Windows产品页面/配置        | `apps/desktop/src/`、`webview.config.ts`               |
 | WeChat直编/HMR CLI          | `ui/miniapp/src/cli.ts`、`compiler/build.ts`           |
 | 微信生产验收                | `apps/docs/content/wechat-production-acceptance.md`    |
 
@@ -266,16 +267,16 @@ pnpm --filter @zadmin/docs build-storybook
 
 ## 微信实测结论
 
-2026-08-25在Windows本机完成：
+2026-08-29在Windows本机完成直编WebView target验收：
 
--生产Taro build使用142个transform modules，内部构建约7.8秒；先清空旧产物，Worker复制/声明有构建后验证，产物不含buildId、supervisor、fake driver、testing入口或workspace绝对路径；
--Svelte Taro 13个test files/43项测试、微信宿主7项Node+4项TS探针测试、ZUI Taro 2个files/4项测试通过，两条100-cycle释放链回到基线；
--WebView模拟器中组件、state/if/keyed list/theme/dynamic ICSS、流程`open-type`和强类型页面导航通过；指定Android真机进一步确认首页渲染、导航/卸载及8个明确capability；
--32项capability逐项记录等级；支付/手机号/SOTER/硬件等没有被无人值守真实触发；
--四个tarball空目录安装、frozen reinstall、外部module/native/ZUI类型、单runtime和Taro build通过；
--同场景Taro Solid/Svelte三轮交替冷构建中位比1.018x，达到≤1.25x；
--Fast Refresh的App/ZUI/platform变化约1.5–2.8秒；compiler/config完整重启约11.4秒；Worker自动重启/复制约12.1–12.2秒，仍未达到最初的8/10秒总链目标；
--WebView为simulator-verified；Skyline补齐`glass-easel`、`navigationStyle: custom`、`lazyCodeLoading: requiredComponents`和`rendererOptions.skyline`后build通过，但当前DevTools中Svelte与Taro Solid对照页均呈黑色画布，automator/inspectee均在`MPPage.getCurrent`失败，因此仅build-verified。
+- 生产build生成15个受控文件，Worker声明和文件通过构建后验证，生产源码/依赖/产物不含Taro或ZUI；
+- Miniapp 13个test files/41项测试与微信宿主8项测试通过；
+- WXML通用renderer改为0–24层有限template展开，同名template递归warning消失；
+- WebView模拟器真实显示8个`M*`组件页面，page stack与`#status`可读，console只有系统info；
+- 点击`#counter`后count从0变1，验证事件ID分发、Svelte响应式更新和`setData`链；
+- `runtime ready`→`runtime hot ready`→恢复的自动直编/完整Page remount通过，临时源码已恢复；
+- 32项capability继续逐项记录等级；支付、手机号、SOTER、硬件、账号和上传没有被无人值守触发；
+- 2026-08-25的Taro/Solid性能、旧真机和Skyline记录仅作迁移前历史，不是当前runtime证据。
 
 重点命令：
 
@@ -284,10 +285,9 @@ pnpm --filter @zadmin/wechat-app setup:local -- C:\Users\lionheart\WeChatProject
 pnpm build:wechat
 pnpm dev:wechat
 pnpm --filter @zadmin/miniapp test:package
-pnpm --filter @zadmin/miniapp benchmark
 ```
 
-`setup:local`只生成被忽略的`project.private.config.json`，不打印AppID。换设备时把最后一个参数替换为该设备上已经授权的微信项目目录。
+`setup:local`只生成被忽略的`project.private.config.json`，不打印AppID，并固定`compileHotReLoad: false`、`skylineRenderEnable: false`。换设备时把最后一个参数替换为该设备上已经授权的微信项目目录。需要自动模拟器remount时设置`ZADMIN_WECHATIDE_CLIENT`。
 
 ## Artifact与数据目录
 
@@ -330,10 +330,10 @@ $env:ZADMIN_PLUGIN_ADMIN_TOKEN = '<secret>'
 -ZUI编译器只优化可证明安全的本地数据流；循环、switch中的动态声明、factory局部值、兄弟/祖先selector和未知组件边界会使用完整class-rule回退。
 \-`inline-vars`要求CSP允许`style-src-attr`；严格禁止inline attribute时使用`dynamicValues: 'class-rules'`。
 -当前ZUI基础范围是Provider、Box、Stack、Text、Icon、Button、Input和Field；旧Vue组件库不是待机械迁移清单。
--微信直编target当前是build/test-verified；微信开发者工具CLI仍等待外部授权，不能继承迁移前Taro模拟器或真机证据。
+-微信直编WebView target已达到simulator-verified；自动刷新为清compile cache后的完整Page remount，不保留页面状态；真机等级仍不能继承迁移前Taro证据。
 -固定Svelte artifact的boundary `failed/pending` snippet上游限制仍保留提前诊断；`<svelte:boundary onerror>`已覆盖。
 -没有执行微信upload、审核、支付、手机号、订阅、权限弹窗、云写入或真实硬件操作。
--WebView C# Core已验证，Windows WinUI 3窗口、WebView2 Evergreen缺失恢复、真实IPC、HMR、MSIX/portable、签名与安装卸载仍属于P7，不得从Core build推断可发布。
+-Windows WinUI 3/WebView2真实IPC、生产页面与Vite开发链已验证；当前portable发布件未做Authenticode签名，MSIX、签名和安装升级仍必须在正式外部分发前单独验收。
 
 这些不是未完成的DI路线图；除非出现明确业务需求，不添加占位接口。
 

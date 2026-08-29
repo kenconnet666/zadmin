@@ -19,7 +19,7 @@ GitHub Actions
   → 覆盖率阈值
   → 外部tarball安装验收
   → 微信生产构建
-  → Windows Rust/Tauri与安装包
+  → Windows C# WebView2、真实宿主smoke与发布包
 ```
 
 本地不再要求每个小改动重复执行根级`pnpm check/test/build/lint`。默认最低本地门槛：
@@ -41,11 +41,11 @@ GitHub Actions
 
 当前workflow：`.github/workflows/ci.yml`。
 
-| Job                               | Runner  | 全量职责                                                                       |
-| --------------------------------- | ------- | ------------------------------------------------------------------------------ |
-| Workspace, browsers, and builds   | Ubuntu  | 全仓check/lint/test/build、三浏览器、Docs E2E、微信构建、构建产物              |
-| Coverage, packages, and Storybook | Ubuntu  | 覆盖率、外部tarball、Storybook和生成报告漂移                                   |
-| Windows desktop and Rust          | Windows | Desktop check/test、Rust fmt/check/clippy/test、bindings、debug/release bundle |
+| Job                               | Runner  | 全量职责                                                                     |
+| --------------------------------- | ------- | ---------------------------------------------------------------------------- |
+| Workspace, browsers, and builds   | Ubuntu  | 全仓check/lint/test/build、三浏览器、Docs E2E、微信构建、构建产物            |
+| Coverage, packages, and Storybook | Ubuntu  | 覆盖率、外部tarball、Storybook和生成报告漂移                                 |
+| Windows C# WebView2 desktop       | Windows | Desktop check/test、C# Core、WinUI 3/WebView2、生产与Vite宿主smoke、发布产物 |
 
 ## 标准命令
 
@@ -61,7 +61,7 @@ pnpm lint
 这些仍是全量标准命令，由GitHub Actions在push、pull request和手动运行时执行；本地按本节的风险分级选择focused子集。
 
 - `check`：TypeScript、Svelte和workspace类型边界。
-- `test`：Core、SvelteKit、ZUI、Tauri、Admin、Desktop、ETL、Docs、微信和三个Plugin测试。
+- `test`：Core、SvelteKit、ZUI、WebView、Admin、Desktop、ETL、Docs、微信和三个Plugin测试。
 - `build`：所有Package声明产物、Admin/ETL/Docs/Desktop静态或服务端构建、微信生产构建、三个Plugin Artifact和Plugin CLI验证。
 - `lint`：全仓Prettier检查和ESLint。
 
@@ -104,38 +104,7 @@ pnpm --filter @zadmin/docs build-storybook
 - 真实Vite HMR结构修改前后均为9条rule、1个style tag、0 console error；
 - `@zadmin/zui/core@0.1.0`与`@zadmin/zui@0.1.0` tarball在隔离SvelteKit项目安装、check、build和SSR 200通过；
 - 外部fixture包含critical CSS和初始动态变量，compiler/server客户端文件0个；
-- `pnpm audit --prod`无已知漏洞，gitleaks无泄漏；Taro开发工具链审计例外在最终交接单独记录。
-
-## Tauri Windows桌面端验收
-
-完整证据见[Tauri Windows桌面端生产验收](./desktop-production-acceptance.md)。标准命令：
-
-```powershell
-pnpm --filter @zadmin/tauri check
-pnpm --filter @zadmin/tauri test:coverage
-pnpm --filter @zadmin/tauri test:package
-pnpm --filter @zadmin/desktop check
-pnpm --filter @zadmin/desktop test
-pnpm --filter @zadmin/desktop bindings
-pnpm --filter @zadmin/desktop rust:fmt
-pnpm --filter @zadmin/desktop rust:check
-pnpm --filter @zadmin/desktop rust:clippy
-pnpm --filter @zadmin/desktop rust:test
-pnpm --filter @zadmin/desktop tauri:build:debug
-pnpm build:desktop
-```
-
-2026-08-26第一阶段结果：
-
-- `@zadmin/tauri` 5个test files、25项测试通过；statements 96.97%、branches 85.22%、functions 99.32%、lines 98.62%；
-- 根入口产物没有Svelte/ZUI import，`/svelte`和`/testing`分别隔离；
-- 三包tarball在空临时目录完成非workspace安装、frozen reinstall、check和build；
-- `apps/desktop` 3个test files、7项测试通过，Svelte check为0 errors/0 warnings；
-- Rust fmt、all-target check、Clippy `-D warnings`、2项MockRuntime测试和bindings确定性通过；
-- `tauri dev`连续两次页面HMR通过，Vite不再监听锁定的Rust target；
-- 真实静态exe通过runtime report、tagged error、Channel、AppData、Store、Log和Window State探针；
-- release x64 GUI和NSIS current-user installer完成静默安装/卸载，注册表、安装目录和进程均无残留；
-- 当前发布件未签名，正式外部分发前必须补Authenticode签名；Dialog、共享剪贴板、通知视觉、Opener和进程操作保留受监督验收。
+- `pnpm audit --prod`无已知漏洞，gitleaks无泄漏。
 
 ## C# WebView公共层验收
 
@@ -147,16 +116,23 @@ pnpm --filter @zadmin/webview test:coverage
 pnpm --filter @zadmin/webview build
 pnpm --filter @zadmin/webview dotnet:build
 pnpm --filter @zadmin/webview dotnet:test
+pnpm --filter @zadmin/webview test:package
+pnpm --filter @zadmin/desktop check
+pnpm --filter @zadmin/desktop test
+pnpm build:desktop
+pnpm --filter @zadmin/desktop webview:smoke
+pnpm --filter @zadmin/desktop webview:dev:smoke
 ```
 
 2026-08-29公共层结果：
 
 - 单一IDL生成34个TypeScript/C#协议method，`generate:check`验证漂移；
-- TypeScript 6个test files、23项测试通过；statements 98.15%、branches 89.92%、functions/lines 100%；
+- TypeScript 6个test files、24项测试通过；statements 98.16%、branches 90.15%、functions/lines 100%；
 - timeout、AbortSignal、错误归一化、事件、资源scope、origin allowlist、browser fallback和fake bridge通过；
 - 9个Svelte桌面组件check为0 errors/0 warnings；
 - `net10.0` C# Core与合同测试零警告构建，验证origin、version、allowlist、dispatcher和resource dispose；
-- Windows WinUI 3/WebView2宿主及发布验收在P7单独记录，不能用公共层测试代替。
+- Windows WinUI 3/WebView2真实生产页面、Vite开发宿主与JS→C#桥接smoke通过；portable ZIP为90,779,828 bytes，解包payload 233,775,520 bytes/533文件；
+- 当前发布件未签名，MSIX/企业安装器和正式安装升级仍须单独验收。
 
 ## Svelte Miniapp与微信直编验收
 
@@ -179,7 +155,8 @@ pnpm --filter @zadmin/wechat-app build
 - 微信宿主4项Node测试与4项TypeScript安全探针通过，实际生成15个原生文件并验证Worker声明；
 - 生产源码、manifest和直编产物不含`@tarojs`，Miniapp不依赖ZUI；
 - coverage、空目录tarball安装和全仓门禁由GitHub Actions执行，避免本地重复阻塞；
-- 微信开发者工具直编target仍需在当前CLI授权后复核，旧Taro模拟器/真机证据不得继承。
+- 微信开发者工具直编WebView target已完成页面截图、page stack、console、`#counter`点击与count更新；自动直编把文案改为hot再恢复，两次完整Page remount均显示新源码；
+- 新runtime真机、账号、支付、手机号、权限、上传与硬件能力仍不得继承旧Taro证据。
   -WebView完整组件矩阵为simulator-verified；指定Android真机已验证首页渲染、导航/卸载及8项明确capability；Skyline仅build-verified，详见[renderer报告](./wechat-renderers.md)。
 
 生产内容必须断言以下字符串在非source-map JS中为0：

@@ -4,6 +4,7 @@ import { resolve } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import { buildMiniapp } from '../src/compiler/build.ts';
+import { WECHAT_TEMPLATE_DEPTH } from '../src/targets/wechat/template.ts';
 
 const projectRoot = resolve(import.meta.dirname, 'direct');
 const outputRoot = resolve(projectRoot, 'dist-test');
@@ -34,8 +35,15 @@ describe('direct WeChat target', () => {
 		const runtimeTemplate = await readFile(resolve(outputRoot, 'templates/runtime.wxml'), 'utf8');
 		expect(pageScript).toContain('registerWechatPage');
 		expect(pageScript).not.toContain('@tarojs');
-		expect(pageTemplate).toContain('template is="zadmin-children"');
+		expect(pageTemplate).toContain('template is="zadmin-children-0"');
 		expect(runtimeTemplate).toContain('bindtap="__zadmin_tap"');
+		expect(runtimeTemplate).toContain(`template name="zadmin-node-${WECHAT_TEMPLATE_DEPTH}"`);
+		expect(runtimeTemplate.match(/template name="zadmin-children-/g)).toHaveLength(
+			WECHAT_TEMPLATE_DEPTH + 1
+		);
+		expect(runtimeTemplate).not.toContain(
+			'<template is="zadmin-children-0" data="{{children:node.children}}" />'
+		);
 	});
 
 	it('rejects outputs outside the project boundary', async () => {

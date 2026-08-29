@@ -25,12 +25,23 @@ watcher 的约束：
 - bundle 中的 `globalThis.__ZADMIN_BUILD_ID__`；
 - 微信开发期 storage key `__zadmin_build_id__`。
 
-失败构建不会替换上一次成功 ID。生产构建不包含这两个标记。微信开发者工具通常会自动发现 `dist/wechat` 变化；自动刷新是否发生必须以模拟器实际 build ID 为准，不能只以 watcher 日志为准。
+失败构建不会替换上一次成功 ID。生产构建不包含这两个标记。build ID只证明新模块已加载，不能证明保留中的旧Page实例已经重新mount。
+
+当前Svelte custom renderer不使用DevTools的实例保留：`project.private.config`固定`compileHotReLoad: false`和`skylineRenderEnable: false`。配置`ZADMIN_WECHATIDE_CLIENT`后，每次成功build会等待文件稳定、清理项目compile cache、等待清理落地，再调用一次`simulator_refresh`，从而完整remount当前Page：
+
+```powershell
+$env:ZADMIN_WECHATIDE_CLIENT = 'codex'
+pnpm dev:wechat
+```
+
+未配置或未授权wechatide client时，watcher仍持续直编并报告refresh unavailable，不让IDE集成失败杀死源码watcher。
 
 ## 当前验证边界
 
-2026-08-29 已验证实际宿主直编成功，输出 15 个 WXML、WXSS、JS、JSON 与 sourcemap 文件，且生产源码和产物不含 `@tarojs`。本地还验证了 watcher 的串行重建和 build-ID 写入代码路径。
+2026-08-29 已验证实际宿主直编成功，输出 15 个WXML、WXSS、JS、JSON与sourcemap文件，且生产源码和产物不含`@tarojs`。微信开发者工具fullMode中WebView页面真实渲染；console只有系统info；`#counter`点击后`#status`从count 0变为count 1。
 
-微信开发者工具的本轮授权仍由外部 CLI 流程控制；在授权完成并重新跑模拟器前，直编 target 只标记为 build/test-verified，不把旧 Taro 模拟器或真机截图继承为新 runtime 的证据。
+通用WXML renderer不能递归调用同名template；v1改为0–24层有限展开。真实console中的recursive-template warning消失，`#status`可被inspectee读取。
 
-旧 Taro supervisor 在 2026-08-25 的 1.5–12.2 秒数据属于迁移前历史基线，不再是当前 HMR 合同。新 watcher 的端到端编辑到模拟器耗时需在直编 target 获得 DevTools 会话后重新记录。
+开发验收把文案从`runtime ready`改为`runtime hot ready`再恢复。配置绝对projectRoot、compile-cache清理和2秒清理稳定窗后，两次自动完整remount都显示正确新文案，临时源码已恢复；退出watcher后没有遗留子进程。
+
+旧Taro supervisor在2026-08-25的1.5–12.2秒数据属于迁移前历史基线，不再是当前HMR合同。当前链优先保证正确remount；尚未建立精确端到端耗时基准，不能从人工25秒观察窗推断真实刷新耗时。

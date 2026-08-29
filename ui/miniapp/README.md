@@ -31,7 +31,9 @@ Miniapp 不依赖 `@zadmin/zui`。它拥有独立的移动端 Theme、`mcss()`/W
 - `@zadmin/miniapp/module`：静态业务模块合同；
 - `@zadmin/miniapp/testing`：fake platform，仅限测试。
 
-开发期由`miniapp dev`直接监听应用源码和workspace内Miniapp源码。重建串行合并，组件、Theme和业务状态修改不创建并发构建进程；每次成功开发构建都会写入build ID供微信开发者工具刷新核对。
+开发期由`miniapp dev`直接监听应用源码和workspace内Miniapp源码。重建串行合并，组件、Theme和业务状态修改不创建并发构建进程；每次成功开发构建都会写入build ID。设置`ZADMIN_WECHATIDE_CLIENT`后，CLI会清compile cache并触发一次完整Page remount；当前custom renderer不承诺DevTools实例保留式热替换。
+
+微信不允许同名WXML template递归，通用runtime template因此有限展开0–24层；超过该深度不属于v1支持范围。
 
 直接微信 target 已可独立调用：
 

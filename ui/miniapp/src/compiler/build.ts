@@ -26,6 +26,10 @@ export interface MiniappBuildResult {
 	readonly pages: readonly string[];
 }
 
+export interface MiniappWatchOptions extends MiniappBuildOptions {
+	readonly onBuild?: (result: MiniappBuildResult) => Promise<void> | void;
+}
+
 const sourceRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 function portable(path: string): string {
@@ -201,10 +205,11 @@ export async function buildMiniapp(options: MiniappBuildOptions): Promise<Miniap
 	});
 }
 
-export function watchMiniapp(options: MiniappBuildOptions): () => Promise<void> {
+export function watchMiniapp(options: MiniappWatchOptions): () => Promise<void> {
 	let building = false;
 	let pending = false;
 	let closed = false;
+	let debounce: ReturnType<typeof setTimeout> | undefined;
 	const rebuild = async (): Promise<void> => {
 		if (building) {
 			pending = true;
@@ -212,7 +217,8 @@ export function watchMiniapp(options: MiniappBuildOptions): () => Promise<void> 
 		}
 		building = true;
 		try {
-			await buildMiniapp({ ...options, dev: true });
+			const result = await buildMiniapp({ ...options, dev: true });
+			await options.onBuild?.(result);
 		} finally {
 			building = false;
 			if (pending && !closed) {
@@ -221,13 +227,23 @@ export function watchMiniapp(options: MiniappBuildOptions): () => Promise<void> 
 			}
 		}
 	};
-	void rebuild();
+	const schedule = (): void => {
+		if (debounce !== undefined) clearTimeout(debounce);
+		debounce = setTimeout(() => {
+			debounce = undefined;
+			void rebuild();
+		}, 500);
+	};
 	const watchRoots = new Set([resolve(options.projectRoot, 'src'), sourceRoot]);
-	const watchers = [...watchRoots].map((root) =>
-		watch(root, { recursive: true }, () => void rebuild())
-	);
+	const watchers: ReturnType<typeof watch>[] = [];
+	const startWatchers = (): void => {
+		if (closed) return;
+		for (const root of watchRoots) watchers.push(watch(root, { recursive: true }, schedule));
+	};
+	void rebuild().then(startWatchers, startWatchers);
 	return async () => {
 		closed = true;
+		if (debounce !== undefined) clearTimeout(debounce);
 		for (const watcher of watchers) watcher.close();
 	};
 }

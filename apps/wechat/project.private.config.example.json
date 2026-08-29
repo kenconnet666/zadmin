@@ -3,8 +3,8 @@
 	"libVersion": "3.17.1",
 	"projectname": "zadmin-wechat-local",
 	"setting": {
-		"compileHotReLoad": true,
-		"skylineRenderEnable": true,
+		"compileHotReLoad": false,
+		"skylineRenderEnable": false,
 		"urlCheck": false
 	}
 }

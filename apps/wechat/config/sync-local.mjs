@@ -27,7 +27,8 @@ const target = {
 	projectname: 'zadmin-wechat-local',
 	setting: {
 		...(sourcePrivate.setting ?? {}),
-		compileHotReLoad: true
+		compileHotReLoad: false,
+		skylineRenderEnable: false
 	}
 };
 
