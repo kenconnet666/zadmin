@@ -39,66 +39,83 @@ export interface ComponentDoc extends ZuiComponentMetadata {
 	readonly status: ZuiComponentStatus;
 }
 
-export function defineComponentDoc(
+interface ComponentDocDefinition extends Pick<ComponentDoc, 'accessibility' | 'demos'> {
+	readonly members?: readonly ZuiComponentMetadata[];
+}
+
+function appendMetadataApi(
+	api: ApiSection[],
 	metadata: ZuiComponentMetadata,
-	doc: Pick<ComponentDoc, 'accessibility' | 'demos'>
-): ComponentDoc {
-	const api: ApiSection[] = [
-		{
-			description: '下表来自组件单文件中的公开metadata；组件同时转发适用的原生属性。',
-			id: 'props',
-			rows: metadata.props,
-			title: 'Props'
-		}
-	];
+	prefix = '',
+	titlePrefix = ''
+): void {
+	api.push({
+		description: '下表来自组件单文件中的公开metadata；组件同时转发适用的原生属性。',
+		id: `${prefix}props`,
+		rows: metadata.props,
+		title: `${titlePrefix}Props`
+	});
 	if (metadata.bindings.length > 0) {
 		api.push({
-			id: 'bindings',
+			id: `${prefix}bindings`,
 			rows: metadata.bindings.map((binding) => ({ ...binding, bindable: true })),
-			title: 'Bindings'
+			title: `${titlePrefix}Bindings`
 		});
 	}
 	if (metadata.events.length > 0) {
-		api.push({ id: 'events', rows: metadata.events, title: 'Events' });
+		api.push({ id: `${prefix}events`, rows: metadata.events, title: `${titlePrefix}Events` });
 	}
 	if (metadata.snippets.length > 0) {
-		api.push({ id: 'snippets', rows: metadata.snippets, title: 'Snippets' });
+		api.push({ id: `${prefix}snippets`, rows: metadata.snippets, title: `${titlePrefix}Snippets` });
 	}
 	if (metadata.parts.length > 0) {
 		api.push({
-			id: 'parts',
+			id: `${prefix}parts`,
 			rows: metadata.parts.map((part) => ({ ...part, feature: 'DOM part', type: 'string' })),
-			title: 'Parts'
+			title: `${titlePrefix}Parts`
 		});
 	}
 	if (metadata.states.length > 0) {
 		api.push({
-			id: 'states',
+			id: `${prefix}states`,
 			rows: metadata.states.map((state) => ({
 				description: state.description,
 				feature: 'data attribute',
 				name: state.name,
 				type: state.values.map((value) => JSON.stringify(value)).join(' | ')
 			})),
-			title: 'States'
+			title: `${titlePrefix}States`
 		});
 	}
 	if (metadata.keyboard.length > 0) {
 		api.push({
-			id: 'keyboard',
+			id: `${prefix}keyboard`,
 			rows: metadata.keyboard.map((item) => ({
 				description: item.description,
 				feature: 'keyboard',
 				name: item.key,
 				type: 'KeyboardEvent'
 			})),
-			title: 'Keyboard'
+			title: `${titlePrefix}Keyboard`
 		});
 	}
+}
+
+export function defineComponentDoc(
+	metadata: ZuiComponentMetadata,
+	doc: ComponentDocDefinition
+): ComponentDoc {
+	const api: ApiSection[] = [];
+	appendMetadataApi(api, metadata);
+	for (const member of doc.members ?? []) {
+		appendMetadataApi(api, member, `${member.id}-`, `${member.name} `);
+	}
+	const { members: _members, ...page } = doc;
+	void _members;
 
 	return Object.freeze({
 		...metadata,
-		...doc,
+		...page,
 		api: Object.freeze(api)
 	});
 }

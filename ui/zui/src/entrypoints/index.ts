@@ -1,5 +1,15 @@
 export const ZUI_PACKAGE_NAME = '@zadmin/zui';
 
+export { default as ZRadioGroup } from '../components/compound/radio-group/ZRadioGroup.svelte';
+export type {
+	RadioGroupOrientation,
+	ZRadioGroupProps
+} from '../components/compound/radio-group/ZRadioGroup.svelte';
+export { default as ZRadioGroupItem } from '../components/compound/radio-group/ZRadioGroupItem.svelte';
+export type {
+	ZRadioGroupItemProps,
+	ZRadioGroupItemVariants
+} from '../components/compound/radio-group/ZRadioGroupItem.svelte';
 export { default as ZBox } from '../components/gene/ZBox.svelte';
 export type { ZBoxProps } from '../components/gene/ZBox.svelte';
 export { default as ZButton } from '../components/gene/ZButton.svelte';

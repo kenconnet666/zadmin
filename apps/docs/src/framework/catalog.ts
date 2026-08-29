@@ -12,6 +12,7 @@ import { visuallyHiddenDoc } from '../content/components/gene/visually-hidden/do
 import { checkboxDoc } from '../content/components/input/checkbox/doc.js';
 import { fieldDoc } from '../content/components/input/field/doc.js';
 import { inputDoc } from '../content/components/input/input/doc.js';
+import { radioGroupDoc } from '../content/components/input/radio-group/doc.js';
 import { switchDoc } from '../content/components/input/switch/doc.js';
 import { stackDoc } from '../content/components/layout/stack/doc.js';
 import { aspectRatioDoc } from '../content/components/layout/aspect-ratio/doc.js';
@@ -42,6 +43,7 @@ export const componentDocs = Object.freeze([
 	checkboxDoc,
 	inputDoc,
 	fieldDoc,
+	radioGroupDoc,
 	switchDoc
 ] satisfies readonly ComponentDoc[]);
 

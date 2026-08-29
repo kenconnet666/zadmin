@@ -22,6 +22,7 @@ describe('ZUI component documentation catalog', () => {
 			'ZCheckbox',
 			'ZInput',
 			'ZField',
+			'ZRadioGroup',
 			'ZSwitch'
 		]);
 		expect(componentDocsById.size).toBe(componentDocs.length);
@@ -43,8 +44,15 @@ describe('ZUI component documentation catalog', () => {
 			'input',
 			'input',
 			'input',
+			'input',
 			'input'
 		]);
+	});
+
+	it('includes compound member metadata on the owning component page', () => {
+		const radio = componentDocsById.get('radio-group');
+		expect(radio?.api.map(({ title }) => title)).toContain('ZRadioGroupItem Props');
+		expect(radio?.api.find(({ id }) => id === 'radio-group-item-props')?.rows).toHaveLength(5);
 	});
 
 	it('gives every page runnable demos, real source and API metadata', () => {

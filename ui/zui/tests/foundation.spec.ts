@@ -10,6 +10,7 @@ import {
 	isSelected,
 	selectAll,
 	selectRange,
+	singleSelection,
 	toggleSelection
 } from '../src/runtime/selection.js';
 import { Typeahead } from '../src/runtime/typeahead.js';
@@ -37,6 +38,8 @@ describe('ZUI foundation runtime', () => {
 		expect(selectAll('multiple')).toBe('all');
 		expect([...selectAll('single')]).toEqual([]);
 		expect([...emptySelection()]).toEqual([]);
+		expect([...singleSelection('a')]).toEqual(['a']);
+		expect([...singleSelection()]).toEqual([]);
 		expect(isSelected('all', 'missing')).toBe(true);
 		expect(isSelected(new Set(['a']), 'missing')).toBe(false);
 		expect([...toggleSelection(new Set(['a', 'b']), 'a', 'multiple')]).toEqual(['b']);

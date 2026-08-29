@@ -1,3 +1,4 @@
+import { untrack } from 'svelte';
 import { SvelteSet } from 'svelte/reactivity';
 
 import type { SelectionKey } from './selection.js';
@@ -51,15 +52,17 @@ export class CollectionStore<TItem extends CollectionItem> {
 
 	register(read: () => TItem): () => void {
 		const initial = read();
-		if (this.get(initial.key))
+		if (untrack(() => this.get(initial.key)))
 			throw new Error(`Duplicate collection key "${String(initial.key)}".`);
 		const registration = { id: (this.#nextId += 1), read };
-		this.#registrations = [...this.#registrations, registration];
+		this.#registrations = [...untrack(() => this.#registrations), registration];
 		let active = true;
 		return () => {
 			if (!active) return;
 			active = false;
-			this.#registrations = this.#registrations.filter(({ id }) => id !== registration.id);
+			this.#registrations = untrack(() => this.#registrations).filter(
+				({ id }) => id !== registration.id
+			);
 		};
 	}
 }

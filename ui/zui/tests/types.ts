@@ -7,6 +7,8 @@ import {
 	ZBox,
 	ZButton,
 	ZCheckbox,
+	ZRadioGroup,
+	ZRadioGroupItem,
 	ZSwitch,
 	ZToggleButton,
 	defineRecipe,
@@ -16,6 +18,8 @@ import {
 	type ZBoxProps,
 	type ZButtonProps,
 	type ZCheckboxProps,
+	type ZRadioGroupItemProps,
+	type ZRadioGroupProps,
 	type ZSwitchProps,
 	type ZToggleButtonProps
 } from '../src/entrypoints/index.js';
@@ -28,6 +32,13 @@ const checkboxProps: ComponentProps<typeof ZCheckbox> = {
 	defaultChecked: 'indeterminate',
 	value: 42n
 } satisfies ZCheckboxProps;
+const radioGroupProps: ComponentProps<typeof ZRadioGroup> = {
+	defaultValue: 'ready',
+	orientation: 'horizontal'
+} satisfies ZRadioGroupProps;
+const radioGroupItemProps: ComponentProps<typeof ZRadioGroupItem> = {
+	value: 'ready'
+} satisfies ZRadioGroupItemProps;
 const switchProps: ComponentProps<typeof ZSwitch> = {
 	defaultChecked: true,
 	value: 1n
@@ -40,6 +51,8 @@ void DirectZBox;
 void directBoxProps;
 void buttonProps;
 void checkboxProps;
+void radioGroupProps;
+void radioGroupItemProps;
 void switchProps;
 void toggleButtonProps;
 

@@ -6,6 +6,10 @@ export function emptySelection<TKey extends SelectionKey>(): ReadonlySet<TKey> {
 	return new Set<TKey>();
 }
 
+export function singleSelection<TKey extends SelectionKey>(key?: TKey): ReadonlySet<TKey> {
+	return key === undefined ? emptySelection() : new Set([key]);
+}
+
 export function isSelected<TKey extends SelectionKey>(
 	selection: Selection<TKey>,
 	key: TKey

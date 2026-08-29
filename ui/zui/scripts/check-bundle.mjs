@@ -10,6 +10,16 @@ const sourceRoot = resolve(packageRoot, 'src');
 const portable = (path) => path.replaceAll('\\', '/');
 const runtime = portable(resolve(sourceRoot, 'entrypoints/runtime.ts'));
 const components = [
+	{
+		id: 'radio-group',
+		name: 'ZRadioGroup',
+		path: 'compound/radio-group/ZRadioGroup.svelte'
+	},
+	{
+		id: 'radio-group-item',
+		name: 'ZRadioGroupItem',
+		path: 'compound/radio-group/ZRadioGroupItem.svelte'
+	},
 	{ id: 'provider', name: 'ZProvider', path: 'gene/ZProvider.svelte' },
 	{ id: 'box', name: 'ZBox', path: 'gene/ZBox.svelte' },
 	{ id: 'link', name: 'ZLink', path: 'gene/ZLink.svelte' },
@@ -30,7 +40,12 @@ const components = [
 	},
 	{ id: 'checkbox', name: 'ZCheckbox', path: 'input/ZCheckbox.svelte' },
 	{ id: 'input', name: 'ZInput', path: 'input/ZInput.svelte' },
-	{ id: 'switch', name: 'ZSwitch', path: 'input/ZSwitch.svelte' },
+	{
+		id: 'switch',
+		maxIncrementalGzip: 3.625 * 1024,
+		name: 'ZSwitch',
+		path: 'input/ZSwitch.svelte'
+	},
 	{
 		id: 'field',
 		maxIncrementalGzip: 3.375 * 1024,

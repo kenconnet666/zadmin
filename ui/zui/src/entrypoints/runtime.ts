@@ -24,6 +24,7 @@ export {
 	isSelected,
 	selectAll,
 	selectRange,
+	singleSelection,
 	toggleSelection
 } from '../runtime/selection.js';
 export type { Selection, SelectionKey, SelectionMode } from '../runtime/selection.js';

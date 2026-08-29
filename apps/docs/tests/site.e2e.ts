@@ -9,7 +9,7 @@ test('renders the component catalog and real demo source', async ({ page }) => {
 
 	await page.goto('/#/');
 	await expect(page.getByRole('heading', { level: 1 })).toContainText('看见组件');
-	await expect(page.getByTestId('component-card')).toHaveCount(18);
+	await expect(page.getByTestId('component-card')).toHaveCount(19);
 	await expect(page.getByRole('heading', { level: 3 })).toHaveText([
 		'通用组件',
 		'布局组件',
@@ -127,6 +127,34 @@ test('keeps switch semantics, keyboard state, FormData and reset synchronized', 
 	await expect(page.getByText(/checked = false · 用户变更次数 = 1 · 尚未提交/u)).toBeVisible();
 });
 
+test('keeps radio group roving focus, selection, RTL and FormData synchronized', async ({
+	page
+}) => {
+	await page.goto('/#/components/radio-group');
+	const starter = page.getByRole('radio', { name: '入门版' });
+	const team = page.getByRole('radio', { name: '团队版' });
+	const legacy = page.getByRole('radio', { name: '旧版' });
+	const enterprise = page.getByRole('radio', { name: '企业版' });
+	await expect(team).toBeChecked();
+	await expect(team).toHaveAttribute('tabindex', '0');
+	await expect(legacy).toBeDisabled();
+	await team.press('ArrowRight');
+	await expect(enterprise).toBeChecked();
+	await expect(enterprise).toBeFocused();
+	await enterprise.press('Home');
+	await expect(starter).toBeChecked();
+	await page.getByRole('button', { name: '读取FormData' }).click();
+	await expect(page.getByText(/starter/u)).toBeVisible();
+
+	await page.locator('summary[aria-label="调整显示偏好"]').click();
+	await page.locator('#zui-docs-direction').selectOption('rtl');
+	await starter.press('ArrowRight');
+	await expect(enterprise).toBeChecked();
+	await page.getByRole('button', { name: '重置' }).click();
+	await expect(team).toBeChecked();
+	await expect(page.getByText(/value = team · 用户变更次数 = 3 · 尚未提交/u)).toBeVisible();
+});
+
 test('keeps S1 primitives semantic and display preferences effective', async ({ page }) => {
 	await page.goto('/#/guides/theme');
 	await expect(page.getByRole('heading', { level: 1 })).toContainText('主题不是一组颜色');
@@ -179,6 +207,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/checkbox',
 		'#/components/input',
 		'#/components/field',
+		'#/components/radio-group',
 		'#/components/switch'
 	]) {
 		await page.goto(`/${route}`);

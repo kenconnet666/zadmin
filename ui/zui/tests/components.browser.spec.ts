@@ -7,6 +7,7 @@ import ComponentGallery from './ComponentGallery.svelte';
 import CheckboxFixture from './CheckboxFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
+import RadioGroupFixture from './RadioGroupFixture.svelte';
 import ToggleButtonFixture from './ToggleButtonFixture.svelte';
 import SwitchFixture from './SwitchFixture.svelte';
 import { createBrowserIcssRuntime } from '../src/icss/runtime.js';
@@ -30,6 +31,34 @@ function insertedRuleCount(): number {
 }
 
 describe('compiled ICSS browser updates', () => {
+	it('keeps radio roving focus, selection, FormData and reset synchronized', async () => {
+		render(RadioGroupFixture);
+		const form = document.querySelector<HTMLFormElement>('[data-testid="radio-form"]');
+		const beta = document.querySelector<HTMLInputElement>('[data-testid="radio-b"]');
+		const disabled = document.querySelector<HTMLInputElement>('[data-testid="radio-c"]');
+		const delta = document.querySelector<HTMLInputElement>('[data-testid="radio-d"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="radio-output"]');
+		expect(beta?.checked).toBe(true);
+		expect(beta?.tabIndex).toBe(0);
+		expect(disabled?.disabled).toBe(true);
+		expect(new FormData(form!).get('choice')).toBe('b');
+
+		beta?.focus();
+		beta?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowRight' }));
+		await tick();
+		expect(delta?.checked).toBe(true);
+		expect(document.activeElement).toBe(delta);
+		expect(new FormData(form!).get('choice')).toBe('d');
+		expect(output?.textContent).toBe('d:1');
+
+		form?.reset();
+		await new Promise<void>((resolve) => setTimeout(resolve, 0));
+		await tick();
+		await tick();
+		expect(beta?.checked).toBe(true);
+		expect(output?.textContent).toBe('b:1');
+	});
+
 	it('keeps switch state, FormData and reset synchronized', async () => {
 		render(SwitchFixture);
 		const control = document.querySelector<HTMLInputElement>('[data-testid="switch"]');
@@ -46,7 +75,8 @@ describe('compiled ICSS browser updates', () => {
 		expect(output?.textContent).toBe('true:1');
 
 		form?.reset();
-		await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+		await new Promise<void>((resolve) => setTimeout(resolve, 0));
+		await tick();
 		await tick();
 		expect(control?.checked).toBe(false);
 		expect(output?.textContent).toBe('false:1');
@@ -69,7 +99,8 @@ describe('compiled ICSS browser updates', () => {
 		expect(output?.textContent).toBe('true:1');
 
 		form?.reset();
-		await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+		await new Promise<void>((resolve) => setTimeout(resolve, 0));
+		await tick();
 		await tick();
 		expect(checkbox?.indeterminate).toBe(true);
 		expect(checkbox?.getAttribute('aria-checked')).toBe('mixed');

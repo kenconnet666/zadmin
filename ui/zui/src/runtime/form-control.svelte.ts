@@ -26,9 +26,19 @@ export function listenForFormReset(
 	control: { readonly form: HTMLFormElement | null },
 	reset: () => void
 ): () => void {
-	const form = control.form;
+	return listenToFormReset(control.form, reset);
+}
+
+export function listenToFormReset(form: HTMLFormElement | null, reset: () => void): () => void {
 	if (!form) return () => undefined;
-	const handleReset = () => queueMicrotask(reset);
+	let resetTimer: ReturnType<typeof setTimeout> | undefined;
+	const handleReset = () => {
+		if (resetTimer !== undefined) clearTimeout(resetTimer);
+		resetTimer = setTimeout(reset, 0);
+	};
 	form.addEventListener('reset', handleReset);
-	return () => form.removeEventListener('reset', handleReset);
+	return () => {
+		form.removeEventListener('reset', handleReset);
+		if (resetTimer !== undefined) clearTimeout(resetTimer);
+	};
 }

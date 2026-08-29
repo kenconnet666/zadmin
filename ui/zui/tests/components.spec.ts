@@ -16,6 +16,7 @@ import {
 	ZInput,
 	ZKbd,
 	ZLink,
+	ZRadioGroupItem,
 	ZSeparator,
 	ZStack,
 	ZSwitch,
@@ -31,6 +32,7 @@ import { __icssCarrier } from '../src/runtime/compiler-bridge.js';
 import ContextProbe from './ContextProbe.svelte';
 import FieldFixture from './FieldFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
+import RadioGroupFixture from './RadioGroupFixture.svelte';
 
 describe('ZUI foundational components', () => {
 	it('renders Symbol-carried compiler variables on the real ZBox root', () => {
@@ -98,6 +100,18 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain('aria-checked="true"');
 		expect(result).toContain('data-state="checked"');
 		expect(result).toContain('value="enabled"');
+	});
+
+	it('renders compound radio group with native checked state during SSR', () => {
+		const result = render(RadioGroupFixture).body;
+
+		expect(result).toContain('role="radiogroup"');
+		expect(result).toContain('aria-orientation="horizontal"');
+		expect(result).toContain('type="radio"');
+		expect(result).toMatch(/value="b"[^>]*checked/u);
+		expect(() => render(ZRadioGroupItem, { props: { value: 'orphan' } })).toThrow(
+			/must be rendered inside ZRadioGroup/u
+		);
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {
