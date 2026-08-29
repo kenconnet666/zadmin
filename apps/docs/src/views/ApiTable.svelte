@@ -69,7 +69,7 @@
 	const classes = $derived(zui.slots(apiRecipe));
 </script>
 
-<section class={classes.root} id={`api-${section.title.toLowerCase()}`}>
+<section class={classes.root} id={`api-${section.id}`}>
 	<h2 class={classes.title}>{section.title}</h2>
 	{#if section.description}<p class={classes.description}>{section.description}</p>{/if}
 	<!-- svelte-ignore a11y_no_noninteractive_tabindex (keyboard focus is required for horizontal scrolling) -->
@@ -89,9 +89,9 @@
 					<tr>
 						<td><code>{row.name}</code></td>
 						<td><code>{row.type}</code></td>
-						<td><code>{row.default}</code></td>
+						<td><code>{row.default ?? '—'}</code></td>
 						<td
-							>{[row.required ? 'required' : '', row.bindable ? 'bindable' : '']
+							>{[row.required ? 'required' : '', row.bindable ? 'bindable' : '', row.feature ?? '']
 								.filter(Boolean)
 								.join(' · ') || '—'}</td
 						>

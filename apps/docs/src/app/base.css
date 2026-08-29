@@ -10,6 +10,34 @@ html {
 	scroll-behavior: smooth;
 }
 
+html[data-motion='reduced'] {
+	scroll-behavior: auto;
+}
+
+html[data-motion='reduced'] *,
+html[data-motion='reduced'] *::before,
+html[data-motion='reduced'] *::after {
+	animation-duration: 0.01ms !important;
+	animation-iteration-count: 1 !important;
+	scroll-behavior: auto !important;
+	transition-duration: 0.01ms !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html[data-motion='auto'] {
+		scroll-behavior: auto;
+	}
+
+	html[data-motion='auto'] *,
+	html[data-motion='auto'] *::before,
+	html[data-motion='auto'] *::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		scroll-behavior: auto !important;
+		transition-duration: 0.01ms !important;
+	}
+}
+
 body {
 	margin: 0;
 	min-width: 20rem;

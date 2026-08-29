@@ -1,6 +1,6 @@
 # ZUI 组件与展示站改进蓝图
 
-状态：后续组件候选路线，当前暂停。依赖基线已落地，审计日期：2026-08-29。当前实施以[ZUI基础设施、已有组件与Docs加固蓝图](./foundation-hardening-blueprint.md)为准；该蓝图验收完成并由用户明确开始下一组件阶段前，本文P3–P8不进入实现。
+状态：P0–P2已由[ZUI基础设施、已有组件与Docs加固蓝图](./foundation-hardening-blueprint.md)H0–H5吸收完成；P3–P8保留为中期候选映射。自2026-08-30起，实际实施阶段统一以[完整组件系统总蓝图](./system-blueprint.md)S0–S8为准。
 
 ## 1. 范围与决策
 

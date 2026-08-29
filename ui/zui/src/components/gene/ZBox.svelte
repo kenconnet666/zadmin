@@ -13,6 +13,11 @@
 		id: 'box',
 		importStatement: "import { ZBox } from '@zadmin/zui';",
 		name: 'ZBox',
+		bindings: [{ description: '真实div根元素引用。', name: 'ref', type: 'HTMLDivElement | null' }],
+		dependencies: [],
+		events: [],
+		keyboard: [],
+		parts: [],
 		props: [
 			{ default: '—', description: '容器内容。', name: 'children', type: 'Snippet' },
 			{
@@ -23,7 +28,10 @@
 				type: 'HTMLDivElement | null'
 			}
 		],
+		since: '0.1.0',
+		snippets: [{ description: '容器内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/gene/ZBox.svelte',
+		states: [],
 		status: 'stable',
 		summary: '严格的div容器，class、style、ref和ICSS变量直接落到真实根元素。'
 	} as const satisfies ZuiComponentMetadata;

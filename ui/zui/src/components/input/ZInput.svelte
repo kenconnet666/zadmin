@@ -25,6 +25,20 @@
 		id: 'input',
 		importStatement: "import { ZInput } from '@zadmin/zui';",
 		name: 'ZInput',
+		bindings: [
+			{ description: '受控或非受控文本值。', name: 'value', type: 'string' },
+			{ description: '真实input元素引用。', name: 'ref', type: 'HTMLInputElement | null' }
+		],
+		dependencies: [],
+		events: [
+			{
+				description: '仅在用户输入改变值时调用一次；外部更新不触发。',
+				name: 'onValueChange',
+				type: '(value: string) => void'
+			}
+		],
+		keyboard: [],
+		parts: [],
 		props: [
 			{
 				bindable: true,
@@ -71,7 +85,10 @@
 				type: 'HTMLInputElement | null'
 			}
 		],
+		since: '0.1.0',
+		snippets: [],
 		source: 'ui/zui/src/components/input/ZInput.svelte',
+		states: [{ description: '输入值或Field上下文无效。', name: 'data-invalid', values: ['true'] }],
 		status: 'stable',
 		summary: '保留原生input能力，并提供受控/非受控值、binding和Field语义关联。'
 	} as const satisfies ZuiComponentMetadata;

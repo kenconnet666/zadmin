@@ -34,8 +34,11 @@ describe('ZUI component documentation catalog', () => {
 			expect(doc.demos.length).toBeGreaterThan(0);
 			expect(doc.api.length).toBeGreaterThan(0);
 			expect(doc.accessibility.length).toBeGreaterThan(0);
-			expect(doc.source).toMatch(/^ui\/zui\/src\/lib\/components\//u);
+			expect(doc.source).toMatch(/^ui\/zui\/src\/components\//u);
+			expect(doc.since).toMatch(/^\d+\.\d+\.\d+$/u);
+			expect(Array.isArray(doc.dependencies)).toBe(true);
 			expect(doc.api[0]?.rows).toBe(doc.props);
+			expect(new Set(doc.api.map(({ id }) => id)).size).toBe(doc.api.length);
 			expect(['experimental', 'stable']).toContain(doc.status);
 			for (const demo of doc.demos) {
 				expect(demo.source).toContain('<script');

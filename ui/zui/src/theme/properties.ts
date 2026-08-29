@@ -150,6 +150,10 @@ export const PROPERTY_DEFINITIONS = {
 		units: ['length', 'percent']
 	},
 	inset: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
+	insetBlockEnd: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
+	insetBlockStart: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
+	insetInlineEnd: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
+	insetInlineStart: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
 	justifyContent: {
 		keywords: {
 			center: 'center',

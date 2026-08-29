@@ -12,6 +12,8 @@
 				'title',
 				'status',
 				'lead',
+				'meta',
+				'metaItem',
 				'importLine',
 				'sourceLink',
 				'section',
@@ -74,6 +76,23 @@
 					s.lineHeight._relaxed;
 					s.marginTop._large;
 					s.maxWidth.rem(52);
+				},
+				meta: (s) => {
+					s.display.flex;
+					s.flexWrap.wrap;
+					s.gap._small;
+					s.marginTop._large;
+				},
+				metaItem: (s) => {
+					s.backgroundColor._surface;
+					s.borderColor._border;
+					s.borderRadius.rem(999);
+					s.borderStyle.solid;
+					s.borderWidth._hairline;
+					s.color._textMuted;
+					s.fontSize._small;
+					s.paddingBlock._xsmall;
+					s.paddingInline._medium;
 				},
 				section: (s) => {
 					s.paddingTop.rem(4);
@@ -221,6 +240,12 @@
 				<span class={classes.status}>{doc.status}</span>
 			</div>
 			<ZText class={classes.lead} tone="muted">{doc.summary}</ZText>
+			<div class={classes.meta} aria-label="组件发布信息">
+				<span class={classes.metaItem}>Since {doc.since}</span>
+				<span class={classes.metaItem}>
+					{doc.dependencies.length > 0 ? `依赖：${doc.dependencies.join('、')}` : '无额外组件依赖'}
+				</span>
+			</div>
 			<div class={classes.importLine}>
 				<ZCode
 					ariaLabel={`${doc.name}导入语句`}
@@ -272,6 +297,12 @@
 			>
 		{/each}
 		<a class={tocButtonClass('api')} href={componentRoute(doc.id, 'api')}>API</a>
+		{#each doc.api as section (section.id)}
+			<a
+				class={tocButtonClass(`api-${section.id}`, true)}
+				href={componentRoute(doc.id, `api-${section.id}`)}>{section.title}</a
+			>
+		{/each}
 		<a class={tocButtonClass('accessibility')} href={componentRoute(doc.id, 'accessibility')}
 			>可访问性</a
 		>

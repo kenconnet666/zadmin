@@ -48,6 +48,7 @@ export function createRecipeExecutor(registry: StyleRegistry): RecipeExecutor {
 				? ''
 				: registry.ensure(createStyleProgram(theme, factory), `${owner}:${branch}`, 'components')
 						.className;
+		const base = ensure('base', recipe.base);
 		const variants = new Map<string, ReadonlyMap<string, string>>();
 		for (const [variantName, options] of Object.entries(recipe.variants)) {
 			variants.set(
@@ -61,7 +62,7 @@ export function createRecipeExecutor(registry: StyleRegistry): RecipeExecutor {
 			);
 		}
 		const compiled = {
-			base: ensure('base', recipe.base),
+			base,
 			compounds: (recipe.compoundVariants ?? []).map((compound, index) =>
 				ensure(`compound:${index}`, compound.style)
 			),

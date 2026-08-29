@@ -35,6 +35,11 @@
 		id: 'code',
 		importStatement: "import { ZCode } from '@zadmin/zui/code';",
 		name: 'ZCode',
+		bindings: [{ description: '真实code或pre元素引用。', name: 'ref', type: 'HTMLElement | null' }],
+		dependencies: ['shiki (optional peer)'],
+		events: [],
+		keyboard: [],
+		parts: [],
 		props: [
 			{
 				default: '必填',
@@ -80,7 +85,21 @@
 				type: 'HTMLElement | null'
 			}
 		],
+		since: '0.1.0',
+		snippets: [{ description: '异步高亮期间的可选占位内容。', name: 'loading', type: 'Snippet' }],
 		source: 'ui/zui/src/components/gene/ZCode.svelte',
+		states: [
+			{
+				description: '当前代码表面的明暗模式。',
+				name: 'data-color-scheme',
+				values: ['light', 'dark']
+			},
+			{
+				description: '语法高亮的异步生命周期状态。',
+				name: 'data-highlight-status',
+				values: ['plain', 'loading', 'highlighted', 'failed', 'too-large']
+			}
+		],
 		status: 'experimental',
 		summary: 'SSR安全的代码展示组件，按需使用Shiki进行客户端语法高亮。'
 	} as const satisfies ZuiComponentMetadata;

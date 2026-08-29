@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
-import { docsDarkTheme, docsLightTheme, resolveDocsThemeMode } from './theme.js';
+import {
+	docsDarkTheme,
+	docsHighContrastDarkTheme,
+	docsHighContrastLightTheme,
+	docsLightTheme,
+	resolveDocsPreferences,
+	resolveDocsThemeMode
+} from './theme.js';
 
 function luminance(hex: string): number {
 	const channels = [1, 3, 5].map(
@@ -20,7 +27,9 @@ function contrast(foreground: string, background: string): number {
 describe('docs themes', () => {
 	it.each([
 		['light', docsLightTheme],
-		['dark', docsDarkTheme]
+		['dark', docsDarkTheme],
+		['high-contrast-light', docsHighContrastLightTheme],
+		['high-contrast-dark', docsHighContrastDarkTheme]
 	] as const)('keeps %s text and code colors above WCAG AA', (_name, theme) => {
 		expect(contrast(theme.color.text, theme.color.canvas)).toBeGreaterThanOrEqual(4.5);
 		expect(contrast(theme.color.textMuted, theme.color.canvas)).toBeGreaterThanOrEqual(4.5);
@@ -34,5 +43,34 @@ describe('docs themes', () => {
 		expect(resolveDocsThemeMode('dark', false)).toBe('dark');
 		expect(resolveDocsThemeMode(null, true)).toBe('dark');
 		expect(resolveDocsThemeMode('invalid', false)).toBe('light');
+	});
+
+	it('restores valid display preferences and repairs invalid fields independently', () => {
+		expect(
+			resolveDocsPreferences(
+				JSON.stringify({
+					contrast: 'high',
+					density: 'compact',
+					direction: 'rtl',
+					motion: 'reduced',
+					themeMode: 'dark'
+				}),
+				'light'
+			)
+		).toEqual({
+			contrast: 'high',
+			density: 'compact',
+			direction: 'rtl',
+			motion: 'reduced',
+			themeMode: 'dark'
+		});
+		expect(resolveDocsPreferences('{"density":"invalid","themeMode":"dark"}', 'light')).toEqual({
+			contrast: 'normal',
+			density: 'comfortable',
+			direction: 'ltr',
+			motion: 'auto',
+			themeMode: 'dark'
+		});
+		expect(resolveDocsPreferences('not-json', 'dark').themeMode).toBe('dark');
 	});
 });

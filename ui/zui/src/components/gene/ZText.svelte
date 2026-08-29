@@ -24,6 +24,11 @@
 		id: 'text',
 		importStatement: "import { ZText } from '@zadmin/zui';",
 		name: 'ZText',
+		bindings: [{ description: '真实文本根元素引用。', name: 'ref', type: 'HTMLElement | null' }],
+		dependencies: [],
+		events: [],
+		keyboard: [],
+		parts: [],
 		props: [
 			{
 				default: "'span'",
@@ -58,7 +63,10 @@
 				type: 'HTMLElement | null'
 			}
 		],
+		since: '0.1.0',
+		snippets: [{ description: '文本或富内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/gene/ZText.svelte',
+		states: [],
 		status: 'stable',
 		summary: '在有限语义元素上应用字号、字重、tone和截断。'
 	} as const satisfies ZuiComponentMetadata;

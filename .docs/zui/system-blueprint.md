@@ -1,6 +1,6 @@
 # ZUI 主题、基础设施与完整组件系统总蓝图
 
-> 状态：待审阅。本文是ZUI未来演进的总纲，不代表其中所有组件已经进入实现。
+> 状态：已于2026-08-30批准进入无人值守持续实施。本文是ZUI未来演进总纲；组件表仍是上限蓝图，只有进入对应S阶段并完成前置合同后才获得实现授权。
 
 ## 1. 目标与边界
 
@@ -179,12 +179,12 @@ runtime/
 
 ### 4.2 ZBox
 
-现状：有限多态root和ICSS承载。
+现状：严格`div`根和ICSS承载。
 
 目标：
 
-- 保持兜底布局组件，不扩张成万能属性组件；
-- 校准`as`的属性类型，至少为常用sectioning元素提供准确类型；
+- 保持严格`div`容器，不扩张成万能属性或多态组件；
+- sectioning语义由调用方使用原生元素或职责明确的组件表达；
 - 支持ref、class、style、data/aria和事件完整透传；
 - 不增加margin、padding、color等重复快捷Props，样式走ICSS；
 - 验证SSR、attachment carrier和自定义元素边界。
@@ -1477,25 +1477,28 @@ s._layer('zui.recipe', ...)
 
 CSS负责表现和可由平台可靠表达的关系，不能为了“无JS”牺牲语义与行为。
 
-## 18. 审阅决策点
+## 18. 已批准的执行决策
 
-实施前需要确认以下决策：
+2026-08-30已授权无人值守持续实施，以下决策成为后续编码合同：
 
-1. 是否同意首批公开主题只发布`auroraLight`和`neonDark`；
-2. 是否同意Theme偏好拆为scheme、contrast、density、motion四个主要轴；
-3. 是否同意多部件组件使用平铺`ZSelectTrigger`等导出，而不是namespace对象；
-4. 是否同意复杂多部件组件统一进入`components/compound/<component>/`；
-5. 是否同意S1先做主题和无状态基础组件，不立即进入Select/Dialog；
-6. 是否同意S2先做Checkbox、RadioGroup、Switch、Tabs验证Collection和Focus；
-7. 是否同意Toast/Message/Notification共享一个服务内核；
-8. 是否同意ZTable与ZDataTable保持两个组件；
-9. 是否同意二维码、图表、富文本和地图不进入ZUI范围；
-10. 是否同意未来API snapshot和metadata diff成为发布门禁。
-11. 是否同意主流组件库只作为组件需求和API反例/参考，不成为依赖或兼容目标；
-12. 是否同意现代CSS采用“优先平台能力 + `@supports` + Runtime fallback”；
-13. 是否同意增加Cascader、TreeSelect、Transfer、Mention、Segmented，但排在Collection基础设施之后；
-14. 是否同意ZButton拒绝Element Plus式boolean组合，继续使用正交枚举；
-15. 是否同意ZUI不实现MUI式`sx`与全局component styleOverrides。
+1. 首批公开主题只发布`auroraLight`和`neonDark`；
+2. Theme偏好拆为scheme、contrast、density、motion四个主要轴；
+3. 多部件组件使用平铺`ZSelectTrigger`等导出，不使用运行时namespace对象；
+4. 复杂多部件组件统一进入`components/compound/<component>/`；
+5. S1先完成主题和无状态基础组件，不抢跑Select或Dialog；
+6. S2先用Checkbox、RadioGroup、Switch、Tabs验证Collection、Focus和FormValue；
+7. Toast、Message、Notification共享一个服务内核；
+8. ZTable与ZDataTable保持两个职责不同的组件；
+9. 二维码、图表、富文本和地图不进入ZUI范围；
+10. API snapshot和metadata diff成为发布门禁；
+11. 主流组件库只作为需求、职责拆分和API反例参考，不成为依赖或兼容目标；
+12. 现代CSS采用“优先平台能力 + `@supports` + Runtime fallback”；
+13. Cascader、TreeSelect、Transfer、Mention、Segmented排在Collection基础设施之后；
+14. ZButton拒绝Element Plus式boolean组合，继续使用正交枚举；
+15. ZUI不实现MUI式`sx`与全局component styleOverrides；
+16. ZBox保持严格`div`，不引入多态`as`；
+17. 组件状态使用`candidate → approved → experimental → stable → deprecated`，蓝图候选不会自动成为公开承诺；
+18. S4按Menu基础、Select/Listbox、Combobox/MultiSelect、层级集合、Command/Tree五个可独立验收批次实施。
 
 ## 19. 与现有蓝图的关系
 

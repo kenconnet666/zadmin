@@ -25,6 +25,13 @@
 		id: 'stack',
 		importStatement: "import { ZStack } from '@zadmin/zui';",
 		name: 'ZStack',
+		bindings: [
+			{ description: '真实div布局根元素引用。', name: 'ref', type: 'HTMLDivElement | null' }
+		],
+		dependencies: [],
+		events: [],
+		keyboard: [],
+		parts: [],
 		props: [
 			{
 				default: "'column'",
@@ -59,7 +66,10 @@
 				type: 'HTMLDivElement | null'
 			}
 		],
+		since: '0.1.0',
+		snippets: [{ description: '布局内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/layout/ZStack.svelte',
+		states: [],
 		status: 'stable',
 		summary: '类型安全的Flex布局容器，支持方向、间距、对齐、分布和换行。'
 	} as const satisfies ZuiComponentMetadata;

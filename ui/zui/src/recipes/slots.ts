@@ -209,6 +209,7 @@ export function createSlotRecipeExecutor(registry: StyleRegistry): SlotRecipeExe
 						: []
 				)
 			);
+		const base = compileSlots('base', recipe.base ?? {});
 		const variants = new Map<string, ReadonlyMap<string, ReadonlyMap<string, string>>>();
 		for (const [variantName, options] of Object.entries(recipe.variants)) {
 			variants.set(
@@ -221,7 +222,7 @@ export function createSlotRecipeExecutor(registry: StyleRegistry): SlotRecipeExe
 				)
 			);
 		}
-		const compiled = { base: compileSlots('base', recipe.base ?? {}), variants };
+		const compiled = { base, variants };
 		if (!disposers.has(recipe)) {
 			const state = getSlotRecipeState(recipe);
 			const dispose = (): void => {

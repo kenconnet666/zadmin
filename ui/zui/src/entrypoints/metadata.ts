@@ -8,8 +8,15 @@ export { zuiMetadata as fieldMetadata } from '../components/input/ZField.svelte'
 export { zuiMetadata as inputMetadata } from '../components/input/ZInput.svelte';
 export { zuiMetadata as stackMetadata } from '../components/layout/ZStack.svelte';
 export type {
+	ZuiApiMetadata,
+	ZuiBindingMetadata,
 	ZuiComponentCategory,
 	ZuiComponentMetadata,
 	ZuiComponentStatus,
-	ZuiPropMetadata
+	ZuiDataStateMetadata,
+	ZuiEventMetadata,
+	ZuiKeyboardMetadata,
+	ZuiPartMetadata,
+	ZuiPropMetadata,
+	ZuiSnippetMetadata
 } from '../metadata/types.js';

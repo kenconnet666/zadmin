@@ -22,7 +22,16 @@ export type {
 	ZStackProps
 } from '../components/layout/ZStack.svelte';
 export { useZui } from '../runtime/context.js';
-export type { ZuiContext } from '../runtime/context.js';
+export type {
+	ZuiColorScheme,
+	ZuiContext,
+	ZuiContrast,
+	ZuiDensity,
+	ZuiDirection,
+	ZuiMotion,
+	ZuiPortalContainer,
+	ZuiTranslations
+} from '../runtime/context.js';
 export {
 	createBrowserIcssRuntime,
 	createIcssRuntime,

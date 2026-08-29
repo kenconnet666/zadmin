@@ -93,8 +93,12 @@ describe('ZUI foundational components', () => {
 
 		expect(result.body).toContain('data-testid="outer-provider"');
 		expect(result.body).toContain('data-testid="inner-provider"');
-		expect(result.body).toContain('data-testid="outer-context">zh-CN:rtl:dark');
-		expect(result.body).toContain('data-testid="inner-context">zh-CN:rtl:dark');
+		expect(result.body).toContain(
+			'data-testid="outer-context">zh-CN:rtl:dark:high:compact:reduced:test:关闭'
+		);
+		expect(result.body).toContain(
+			'data-testid="inner-context">zh-CN:rtl:dark:high:compact:reduced:test:关闭'
+		);
 		expect(registry.cssText()).toContain('#2563eb');
 		expect(registry.cssText()).toContain('#6d28d9');
 	});

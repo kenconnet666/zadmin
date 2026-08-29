@@ -27,6 +27,13 @@
 		id: 'field',
 		importStatement: "import { ZField } from '@zadmin/zui';",
 		name: 'ZField',
+		bindings: [
+			{ description: 'Field真实div根元素引用。', name: 'ref', type: 'HTMLDivElement | null' }
+		],
+		dependencies: [],
+		events: [],
+		keyboard: [],
+		parts: [],
 		props: [
 			{
 				default: '必填',
@@ -81,7 +88,21 @@
 				type: 'HTMLDivElement | null'
 			}
 		],
+		since: '0.1.0',
+		snippets: [
+			{ description: '表单控件内容。', name: 'children', type: 'Snippet' },
+			{ description: '可见label内容，也支持字符串简写。', name: 'label', type: 'Snippet' },
+			{
+				description: '辅助说明内容，也支持字符串简写。',
+				name: 'description',
+				type: 'Snippet'
+			}
+		],
 		source: 'ui/zui/src/components/input/ZField.svelte',
+		states: [
+			{ description: 'Field及其control处于禁用状态。', name: 'data-disabled', values: ['true'] },
+			{ description: 'Field包含一个或多个错误消息。', name: 'data-invalid', values: ['true'] }
+		],
 		status: 'stable',
 		summary: '建立label、description、messages、required和control之间的可访问关系。'
 	} as const satisfies ZuiComponentMetadata;

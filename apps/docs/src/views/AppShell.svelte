@@ -55,7 +55,24 @@
 					s.margin.px(0);
 				}
 			},
-			variants: {}
+			variants: {
+				density: {
+					compact: {
+						main: (s) => s.padding.raw('2rem clamp(1rem, 2vw, 2rem) 4rem')
+					},
+					comfortable: {},
+					spacious: {
+						main: (s) => s.padding.raw('4rem clamp(2rem, 4vw, 5rem) 8rem')
+					}
+				},
+				motion: {
+					auto: {},
+					full: {},
+					reduced: {
+						shell: (s) => s.transitionDuration.ms(0)
+					}
+				}
+			}
 		},
 		import.meta
 	);
@@ -63,7 +80,13 @@
 
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
-	import { useZui } from '@zadmin/zui';
+	import {
+		useZui,
+		type ZuiContrast,
+		type ZuiDensity,
+		type ZuiDirection,
+		type ZuiMotion
+	} from '@zadmin/zui';
 	import type { DocsThemeMode } from '../app/theme.js';
 	import { componentDocs, componentDocsById } from '../framework/catalog.js';
 	import { parseDocsRoute } from '../framework/router.js';
@@ -72,12 +95,24 @@
 	import AppHeader from './AppHeader.svelte';
 	import AppSidebar from './AppSidebar.svelte';
 
-	let { themeMode = $bindable('light') }: { themeMode?: DocsThemeMode } = $props();
+	let {
+		contrast = $bindable('normal'),
+		density = $bindable('comfortable'),
+		direction = $bindable('ltr'),
+		motion = $bindable('auto'),
+		themeMode = $bindable('light')
+	}: {
+		contrast?: ZuiContrast;
+		density?: ZuiDensity;
+		direction?: ZuiDirection;
+		motion?: ZuiMotion;
+		themeMode?: DocsThemeMode;
+	} = $props();
 
 	let route = $state(parseDocsRoute(globalThis.location?.hash ?? '#/'));
 	let query = $state('');
 	const zui = useZui();
-	const classes = $derived(zui.slots(appRecipe));
+	const classes = $derived(zui.slots(appRecipe, { density, motion }));
 	const currentId = $derived(route.kind === 'component' ? route.componentId : undefined);
 	const currentDoc = $derived(currentId ? componentDocsById.get(currentId) : undefined);
 	const invalidRoute = $derived(
@@ -105,7 +140,7 @@
 </script>
 
 <div class={classes.shell}>
-	<AppHeader bind:query bind:themeMode />
+	<AppHeader bind:contrast bind:density bind:direction bind:motion bind:query bind:themeMode />
 	<AppSidebar docs={componentDocs} {currentId} {query} />
 	<main class={classes.main}>
 		{#if currentDoc}

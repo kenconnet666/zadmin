@@ -51,6 +51,17 @@ describe('defineRecipe', () => {
 		expect(runtime.recipe(defaultTheme, recipe)).toBe(first);
 		expect(registry.size).toBe(5);
 		expect(registry.metrics).toMatchObject({ classes: 5, recipes: 1 });
+		const selectedClasses = second.split(' ');
+		const css = registry.cssText();
+		expect(css.indexOf(`.${selectedClasses[0]}`)).toBeLessThan(
+			css.indexOf(`.${selectedClasses[1]}`)
+		);
+		expect(css.indexOf(`.${selectedClasses[1]}`)).toBeLessThan(
+			css.indexOf(`.${selectedClasses[2]}`)
+		);
+		expect(css.indexOf(`.${selectedClasses[2]}`)).toBeLessThan(
+			css.indexOf(`.${selectedClasses[3]}`)
+		);
 	});
 
 	it('caches each recipe branch once per theme', () => {
@@ -178,6 +189,9 @@ describe('defineSlotRecipe', () => {
 		expect(runtime.slots(defaultTheme, recipe)).toEqual(defaults);
 		expect(registry.size).toBe(5);
 		expect(registry.metrics.recipes).toBe(1);
+		const rootClasses = invalid.root.split(' ');
+		const css = registry.cssText();
+		expect(css.indexOf(`.${rootClasses[0]}`)).toBeLessThan(css.indexOf(`.${rootClasses[1]}`));
 		expect(() => runtime.slots(defaultTheme, recipe, { size: 'large' } as never)).toThrow(
 			/Unknown slot recipe value/
 		);

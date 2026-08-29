@@ -44,6 +44,13 @@
 		id: 'icon',
 		importStatement: "import { ZIcon } from '@zadmin/zui';",
 		name: 'ZIcon',
+		bindings: [
+			{ description: '真实Lucide SVG元素引用。', name: 'ref', type: 'SVGSVGElement | null' }
+		],
+		dependencies: ['@lucide/svelte'],
+		events: [],
+		keyboard: [],
+		parts: [],
 		props: [
 			{
 				default: '必填',
@@ -67,7 +74,10 @@
 				type: 'SVGSVGElement | null'
 			}
 		],
+		since: '0.1.0',
+		snippets: [],
 		source: 'ui/zui/src/components/gene/ZIcon.svelte',
+		states: [],
 		status: 'stable',
 		summary: '统一封装按需导入的Lucide图标，不维护手写SVG path，也不接受任意SVG字符串。'
 	} as const satisfies ZuiComponentMetadata;

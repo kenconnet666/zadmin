@@ -134,6 +134,20 @@
 		id: 'button',
 		importStatement: "import { ZButton } from '@zadmin/zui';",
 		name: 'ZButton',
+		bindings: [
+			{ description: '真实button元素引用。', name: 'ref', type: 'HTMLButtonElement | null' }
+		],
+		dependencies: [],
+		events: [],
+		keyboard: [
+			{ description: '在按钮获得焦点时触发原生click。', key: 'Enter' },
+			{ description: '在按钮获得焦点时触发原生click。', key: 'Space' }
+		],
+		parts: [
+			{ description: '按钮前置内容容器。', name: 'start' },
+			{ description: '加载指示器容器。', name: 'loading' },
+			{ description: '按钮后置内容容器。', name: 'end' }
+		],
 		props: [
 			{
 				default: "'primary'",
@@ -177,7 +191,15 @@
 				type: 'HTMLButtonElement | null'
 			}
 		],
+		since: '0.1.0',
+		snippets: [
+			{ description: '按钮主体内容。', name: 'children', type: 'Snippet' },
+			{ description: '主体内容之前的图标或内容。', name: 'start', type: 'Snippet' },
+			{ description: '主体内容之后的图标或内容。', name: 'end', type: 'Snippet' },
+			{ description: '替换内置加载指示器。', name: 'loadingIndicator', type: 'Snippet' }
+		],
 		source: 'ui/zui/src/components/gene/ZButton.svelte',
+		states: [{ description: '按钮正在执行异步操作。', name: 'data-loading', values: ['true'] }],
 		status: 'stable',
 		summary: '原生button语义、稳定recipe变体和Svelte 5 callback props的操作组件。'
 	} as const satisfies ZuiComponentMetadata;

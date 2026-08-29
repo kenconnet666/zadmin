@@ -3,15 +3,30 @@
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 
 	import type { IcssRuntime } from '../../icss/runtime.js';
+	import type {
+		ZuiColorScheme,
+		ZuiContrast,
+		ZuiDensity,
+		ZuiDirection,
+		ZuiMotion,
+		ZuiPortalContainer,
+		ZuiTranslations
+	} from '../../runtime/context.js';
 	import type { ZuiTheme } from '../../theme/types.js';
 
 	export interface ZProviderProps {
 		children?: Snippet;
-		colorScheme?: 'dark' | 'light';
-		direction?: 'ltr' | 'rtl';
+		colorScheme?: ZuiColorScheme;
+		contrast?: ZuiContrast;
+		density?: ZuiDensity;
+		direction?: ZuiDirection;
+		idPrefix?: string;
 		locale?: string;
+		motion?: ZuiMotion;
+		portalContainer?: ZuiPortalContainer;
 		runtime?: IcssRuntime;
 		theme?: ZuiTheme;
+		translations?: ZuiTranslations;
 	}
 
 	export const zuiMetadata = {
@@ -19,6 +34,11 @@
 		id: 'provider',
 		importStatement: "import { ZProvider } from '@zadmin/zui';",
 		name: 'ZProvider',
+		bindings: [],
+		dependencies: [],
+		events: [],
+		keyboard: [],
+		parts: [],
 		props: [
 			{ default: '—', description: 'Provider子树。', name: 'children', type: 'Snippet' },
 			{
@@ -28,10 +48,28 @@
 				type: "'light' | 'dark'"
 			},
 			{
+				default: "继承父级或 'normal'",
+				description: '高对比度偏好；auto由平台偏好与组件CSS渐进增强解析。',
+				name: 'contrast',
+				type: "'auto' | 'high' | 'normal'"
+			},
+			{
+				default: "继承父级或 'comfortable'",
+				description: '组件密度轴；组件的显式size始终优先。',
+				name: 'density',
+				type: "'compact' | 'comfortable' | 'spacious'"
+			},
+			{
 				default: '继承父级或 ltr',
 				description: '组件方向，不从客户端环境猜测。',
 				name: 'direction',
 				type: "'ltr' | 'rtl'"
+			},
+			{
+				default: "继承父级或 'zui'",
+				description: 'SSR稳定ID命名空间前缀。',
+				name: 'idPrefix',
+				type: 'string'
 			},
 			{
 				default: '继承父级或 en-US',
@@ -39,25 +77,71 @@
 				name: 'locale',
 				type: 'string'
 			},
+			{
+				default: "继承父级或 'auto'",
+				description: '动画偏好；auto尊重reduced-motion并保持SSR稳定。',
+				name: 'motion',
+				type: "'auto' | 'full' | 'reduced'"
+			},
+			{
+				default: '继承父级或 null',
+				description: '未来Portal的Document、ShadowRoot或HTMLElement挂载边界。',
+				name: 'portalContainer',
+				type: 'Document | HTMLElement | ShadowRoot | null'
+			},
 			{ default: 'defaultTheme', description: '严格ZUI主题。', name: 'theme', type: 'ZuiTheme' },
 			{
 				default: '当前默认runtime',
 				description: 'Document、ShadowRoot或SSR runtime。',
 				name: 'runtime',
 				type: 'IcssRuntime'
+			},
+			{
+				default: '继承父级或空字典',
+				description: '组件系统文案覆盖，不把业务翻译对象暴露给底层依赖。',
+				name: 'translations',
+				type: 'Readonly<Record<string, string>>'
 			}
 		],
+		since: '0.1.0',
+		snippets: [{ description: 'Provider子树。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/gene/ZProvider.svelte',
+		states: [],
 		status: 'stable',
-		summary: '提供Theme、colorScheme、locale、direction和ICSS runtime，不创建额外DOM。'
+		summary: '提供Theme、偏好轴、locale、direction、Portal边界和ICSS runtime，不创建额外DOM。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
 
 <script lang="ts">
 	import { provideZui } from '../../runtime/context.js';
 
-	let { children, colorScheme, direction, locale, runtime, theme }: ZProviderProps = $props();
-	provideZui(() => ({ colorScheme, direction, locale, runtime, theme }));
+	let {
+		children,
+		colorScheme,
+		contrast,
+		density,
+		direction,
+		idPrefix,
+		locale,
+		motion,
+		portalContainer,
+		runtime,
+		theme,
+		translations
+	}: ZProviderProps = $props();
+	provideZui(() => ({
+		colorScheme,
+		contrast,
+		density,
+		direction,
+		idPrefix,
+		locale,
+		motion,
+		portalContainer,
+		runtime,
+		theme,
+		translations
+	}));
 </script>
 
 {@render children?.()}

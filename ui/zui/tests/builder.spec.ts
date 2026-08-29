@@ -86,6 +86,8 @@ describe('ICSS builder', () => {
 		expectTypeOf<Style['outlineColor']['_focus']>().toEqualTypeOf<void>();
 		expectTypeOf<Style['outlineStyle']['solid']>().toEqualTypeOf<void>();
 		expectTypeOf<Style['outlineWidth']['_medium']>().toEqualTypeOf<void>();
+		expectTypeOf<Style['insetBlockStart']['_small']>().toEqualTypeOf<void>();
+		expectTypeOf<Style['insetInlineEnd']['percent']>().toBeFunction();
 		expectTypeOf<Style['padding']['px']>().toBeFunction();
 	});
 
@@ -96,6 +98,8 @@ describe('ICSS builder', () => {
 				focus.outlineStyle.solid;
 				focus.outlineColor._focus;
 				focus.outlineOffset.px(2);
+				focus.insetBlockStart._small;
+				focus.insetInlineEnd.percent(0);
 			});
 		});
 

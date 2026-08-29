@@ -11,7 +11,18 @@
 	let { nestedTheme, runtime, theme }: Props = $props();
 </script>
 
-<ZProvider colorScheme="dark" direction="rtl" locale="zh-CN" {runtime} {theme}>
+<ZProvider
+	colorScheme="dark"
+	contrast="high"
+	density="compact"
+	direction="rtl"
+	idPrefix="test"
+	locale="zh-CN"
+	motion="reduced"
+	translations={{ close: '关闭' }}
+	{runtime}
+	{theme}
+>
 	<ZButton data-testid="outer-provider">Outer</ZButton>
 	<ContextProbe id="outer-context" />
 	{#if nestedTheme}
