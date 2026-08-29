@@ -1,11 +1,17 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { createZuiId, createZuiIdScope } from '../src/runtime/ids.js';
 import { CollectionStore } from '../src/runtime/collection.svelte.js';
 import { createFormEntries, serializeFormValue } from '../src/runtime/form-value.js';
 import { moveIndex, navigationIntent } from '../src/runtime/list-navigation.js';
 import { RovingFocus } from '../src/runtime/roving-focus.svelte.js';
-import { isSelected, selectAll, selectRange, toggleSelection } from '../src/runtime/selection.js';
+import {
+	emptySelection,
+	isSelected,
+	selectAll,
+	selectRange,
+	toggleSelection
+} from '../src/runtime/selection.js';
 import { Typeahead } from '../src/runtime/typeahead.js';
 
 describe('ZUI foundation runtime', () => {
@@ -30,11 +36,16 @@ describe('ZUI foundation runtime', () => {
 		expect(toggleSelection('all', 'b', 'multiple', ['a', 'b', 'c'])).toEqual(new Set(['a', 'c']));
 		expect(selectAll('multiple')).toBe('all');
 		expect([...selectAll('single')]).toEqual([]);
+		expect([...emptySelection()]).toEqual([]);
 		expect(isSelected('all', 'missing')).toBe(true);
+		expect(isSelected(new Set(['a']), 'missing')).toBe(false);
+		expect([...toggleSelection(new Set(['a', 'b']), 'a', 'multiple')]).toEqual(['b']);
 		expect(selectRange(new Set(['x']), ['a', 'b', 'c'], 'b', 'c')).toEqual(
 			new Set(['x', 'b', 'c'])
 		);
+		expect(selectRange(new Set(), ['a', 'b', 'c'], 'c', 'a')).toEqual(new Set(['a', 'b', 'c']));
 		expect(selectRange('all', ['a', 'b'], 'missing', 'b')).toEqual(new Set(['a', 'b']));
+		expect(selectRange(new Set(['a']), ['a', 'b'], 'missing', 'b')).toEqual(new Set(['a']));
 	});
 
 	it('registers dynamic collection items with stable keys and idempotent cleanup', () => {
@@ -60,15 +71,33 @@ describe('ZUI foundation runtime', () => {
 		expect(collection.items).toEqual([]);
 	});
 
+	it('sorts connected collection elements by DOM position and tolerates disconnected nodes', () => {
+		const before = { compareDocumentPosition: vi.fn(() => 4) } as unknown as HTMLElement;
+		const after = { compareDocumentPosition: vi.fn(() => 2) } as unknown as HTMLElement;
+		const disconnected = { compareDocumentPosition: vi.fn(() => 1) } as unknown as HTMLElement;
+		const collection = new CollectionStore();
+		collection.register(() => ({ element: after, key: 'after' }));
+		collection.register(() => ({ element: before, key: 'before' }));
+		collection.register(() => ({ element: disconnected, key: 'disconnected' }));
+
+		expect(collection.keys).toEqual(['before', 'after', 'disconnected']);
+		expect(collection.get('missing')).toBeUndefined();
+	});
+
 	it('maps directional keys and moves indexes with RTL and loop contracts', () => {
 		expect(navigationIntent('ArrowRight', 'horizontal')).toBe('next');
 		expect(navigationIntent('ArrowRight', 'horizontal', 'rtl')).toBe('previous');
 		expect(navigationIntent('ArrowDown', 'vertical')).toBe('next');
+		expect(navigationIntent('ArrowUp', 'vertical')).toBe('previous');
 		expect(navigationIntent('ArrowLeft', 'vertical')).toBeUndefined();
+		expect(navigationIntent('ArrowLeft', 'both')).toBe('previous');
 		expect(navigationIntent('Home', 'both')).toBe('first');
+		expect(navigationIntent('End', 'both')).toBe('last');
 		expect(moveIndex(3, 2, 'next')).toBe(0);
 		expect(moveIndex(3, 2, 'next', false)).toBe(2);
 		expect(moveIndex(3, -1, 'previous')).toBe(2);
+		expect(moveIndex(3, 99, 'next')).toBe(0);
+		expect(moveIndex(3, 0, 'previous', false)).toBe(0);
 		expect(moveIndex(0, 0, 'next')).toBe(-1);
 		expect(() => moveIndex(-1, 0, 'next')).toThrow(/non-negative integer/);
 	});
@@ -83,6 +112,7 @@ describe('ZUI foundation runtime', () => {
 			{ key: 'blueberry', textValue: 'Blueberry' }
 		];
 		expect(typeahead.search('b', items)).toBe('banana');
+		expect(typeahead.buffer).toBe('b');
 		now = 100;
 		expect(typeahead.search('b', items, 'banana')).toBe('blueberry');
 		typeahead.clear();
@@ -92,7 +122,11 @@ describe('ZUI foundation runtime', () => {
 		now = 800;
 		expect(typeahead.search('b', items)).toBe('banana');
 		expect(typeahead.search(' ', items)).toBeUndefined();
+		typeahead.clear();
+		expect(typeahead.search('z', items)).toBeUndefined();
+		expect(typeahead.search('a', [])).toBeUndefined();
 		expect(() => new Typeahead({ timeout: 0 })).toThrow(/must be positive/);
+		expect(() => new Typeahead({ timeout: Number.POSITIVE_INFINITY })).toThrow(/must be positive/);
 	});
 
 	it('serializes scalar and repeated values into native form entries', () => {
@@ -109,7 +143,8 @@ describe('ZUI foundation runtime', () => {
 
 	it('owns one roving tab stop without coupling focus to selection', () => {
 		const collection = new CollectionStore<{ disabled?: boolean; key: string }>();
-		collection.register(() => ({ key: 'a' }));
+		const focus = vi.fn();
+		collection.register(() => ({ element: { focus } as unknown as HTMLElement, key: 'a' }));
 		collection.register(() => ({ disabled: true, key: 'b' }));
 		collection.register(() => ({ key: 'c' }));
 		let current: string | undefined;
@@ -125,5 +160,12 @@ describe('ZUI foundation runtime', () => {
 		expect(current).toBe('c');
 		expect(roving.set('b')).toBe(false);
 		expect(roving.move('ArrowRight')).toBe('a');
+		const preventDefault = vi.fn();
+		expect(roving.handleKey({ key: 'End', preventDefault } as unknown as KeyboardEvent)).toBe('c');
+		expect(preventDefault).toHaveBeenCalledOnce();
+		expect(roving.handleKey({ key: 'PageDown', preventDefault } as unknown as KeyboardEvent)).toBe(
+			undefined
+		);
+		expect(focus).toHaveBeenCalled();
 	});
 });

@@ -7,6 +7,7 @@ export { zuiMetadata as linkMetadata } from '../components/gene/ZLink.svelte';
 export { zuiMetadata as providerMetadata } from '../components/gene/ZProvider.svelte';
 export { zuiMetadata as separatorMetadata } from '../components/gene/ZSeparator.svelte';
 export { zuiMetadata as textMetadata } from '../components/gene/ZText.svelte';
+export { zuiMetadata as toggleButtonMetadata } from '../components/gene/ZToggleButton.svelte';
 export { zuiMetadata as visuallyHiddenMetadata } from '../components/gene/ZVisuallyHidden.svelte';
 export { zuiMetadata as fieldMetadata } from '../components/input/ZField.svelte';
 export { zuiMetadata as inputMetadata } from '../components/input/ZInput.svelte';

@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { componentDocs, componentDocsById } from './catalog.js';
 
 describe('ZUI component documentation catalog', () => {
-	it('covers the approved S1 catalog exactly once', () => {
+	it('covers the approved component catalog exactly once', () => {
 		expect(componentDocs.map(({ name }) => name)).toEqual([
 			'ZProvider',
 			'ZBox',
@@ -12,6 +12,7 @@ describe('ZUI component documentation catalog', () => {
 			'ZIcon',
 			'ZCode',
 			'ZButton',
+			'ZToggleButton',
 			'ZLink',
 			'ZSeparator',
 			'ZVisuallyHidden',
@@ -26,6 +27,7 @@ describe('ZUI component documentation catalog', () => {
 			'gene',
 			'gene',
 			'layout',
+			'gene',
 			'gene',
 			'gene',
 			'gene',

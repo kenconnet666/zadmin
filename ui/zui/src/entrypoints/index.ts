@@ -16,6 +16,8 @@ export { default as ZSeparator } from '../components/gene/ZSeparator.svelte';
 export type { ZSeparatorOrientation, ZSeparatorProps } from '../components/gene/ZSeparator.svelte';
 export { default as ZText } from '../components/gene/ZText.svelte';
 export type { ZTextElement, ZTextProps, ZTextTone } from '../components/gene/ZText.svelte';
+export { default as ZToggleButton } from '../components/gene/ZToggleButton.svelte';
+export type { ZToggleButtonProps } from '../components/gene/ZToggleButton.svelte';
 export { default as ZVisuallyHidden } from '../components/gene/ZVisuallyHidden.svelte';
 export type { ZVisuallyHiddenProps } from '../components/gene/ZVisuallyHidden.svelte';
 export { default as ZField } from '../components/input/ZField.svelte';

@@ -242,7 +242,13 @@
 	</a>
 	<label class={classes.search}>
 		<ZIcon name="search" size={18} />
-		<ZInput bind:value={query} aria-label="搜索组件" placeholder="搜索组件…" />
+		<ZInput
+			bind:value={query}
+			aria-label="搜索组件"
+			id="zui-docs-component-search"
+			name="component-search"
+			placeholder="搜索组件…"
+		/>
 	</label>
 	<div class={classes.actions}>
 		<ZButton
@@ -266,7 +272,7 @@
 			<div class={classes.preferencesPanel}>
 				<label class={classes.preference}>
 					<span>密度</span>
-					<select class={classes.select} bind:value={density}>
+					<select class={classes.select} bind:value={density} id="zui-docs-density" name="density">
 						<option value="compact">紧凑</option>
 						<option value="comfortable">舒适</option>
 						<option value="spacious">宽松</option>
@@ -274,7 +280,12 @@
 				</label>
 				<label class={classes.preference}>
 					<span>对比度</span>
-					<select class={classes.select} bind:value={contrast}>
+					<select
+						class={classes.select}
+						bind:value={contrast}
+						id="zui-docs-contrast"
+						name="contrast"
+					>
 						<option value="normal">标准</option>
 						<option value="high">高对比</option>
 						<option value="auto">跟随系统</option>
@@ -282,7 +293,7 @@
 				</label>
 				<label class={classes.preference}>
 					<span>动画</span>
-					<select class={classes.select} bind:value={motion}>
+					<select class={classes.select} bind:value={motion} id="zui-docs-motion" name="motion">
 						<option value="auto">跟随系统</option>
 						<option value="full">完整</option>
 						<option value="reduced">减少</option>
@@ -290,7 +301,12 @@
 				</label>
 				<label class={classes.preference}>
 					<span>方向</span>
-					<select class={classes.select} bind:value={direction}>
+					<select
+						class={classes.select}
+						bind:value={direction}
+						id="zui-docs-direction"
+						name="direction"
+					>
 						<option value="ltr">从左到右</option>
 						<option value="rtl">从右到左</option>
 					</select>

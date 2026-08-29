@@ -6,6 +6,7 @@ import DynamicBox from './DynamicBox.svelte';
 import ComponentGallery from './ComponentGallery.svelte';
 import FieldFixture from './FieldFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
+import ToggleButtonFixture from './ToggleButtonFixture.svelte';
 import { createBrowserIcssRuntime } from '../src/icss/runtime.js';
 import { defaultTheme } from '../src/theme/default.js';
 import { extendTheme } from '../src/theme/define.js';
@@ -27,6 +28,24 @@ function insertedRuleCount(): number {
 }
 
 describe('compiled ICSS browser updates', () => {
+	it('keeps toggle state controllable and cancellable', async () => {
+		render(ToggleButtonFixture);
+		const toggle = document.querySelector<HTMLButtonElement>('[data-testid="toggle"]');
+		const cancelled = document.querySelector<HTMLButtonElement>('[data-testid="cancelled-toggle"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="toggle-output"]');
+
+		expect(toggle?.getAttribute('aria-pressed')).toBe('false');
+		toggle?.click();
+		await tick();
+		expect(toggle?.getAttribute('aria-pressed')).toBe('true');
+		expect(toggle?.dataset.state).toBe('on');
+		expect(output?.textContent).toBe('true:1');
+
+		cancelled?.click();
+		await tick();
+		expect(cancelled?.getAttribute('aria-pressed')).toBe('false');
+	});
+
 	it('runs S1 semantic primitives through their client lifecycle', async () => {
 		let activations = 0;
 		render(ZLink, {

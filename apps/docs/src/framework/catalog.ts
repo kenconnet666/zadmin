@@ -7,6 +7,7 @@ import { linkDoc } from '../content/components/gene/link/doc.js';
 import { providerDoc } from '../content/components/gene/provider/doc.js';
 import { separatorDoc } from '../content/components/gene/separator/doc.js';
 import { textDoc } from '../content/components/gene/text/doc.js';
+import { toggleButtonDoc } from '../content/components/gene/toggle-button/doc.js';
 import { visuallyHiddenDoc } from '../content/components/gene/visually-hidden/doc.js';
 import { fieldDoc } from '../content/components/input/field/doc.js';
 import { inputDoc } from '../content/components/input/input/doc.js';
@@ -29,6 +30,7 @@ export const componentDocs = Object.freeze([
 	iconDoc,
 	codeDoc,
 	buttonDoc,
+	toggleButtonDoc,
 	linkDoc,
 	separatorDoc,
 	visuallyHiddenDoc,

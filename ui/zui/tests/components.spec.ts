@@ -18,6 +18,7 @@ import {
 	ZSeparator,
 	ZStack,
 	ZText,
+	ZToggleButton,
 	ZVisuallyHidden
 } from '../src/entrypoints/index.js';
 import { ZCode } from '../src/entrypoints/code.js';
@@ -58,6 +59,17 @@ describe('ZUI foundational components', () => {
 		expect(result.body).toContain('aria-busy="true"');
 		expect(result.body).toContain('aria-label="Saving"');
 		expect(result.body).not.toContain('svelte-css-wrapper');
+	});
+
+	it('renders toggle button state without changing native button semantics', () => {
+		const off = render(ZToggleButton).body;
+		const on = render(ZToggleButton, { props: { defaultPressed: true } }).body;
+
+		expect(off).toContain('<button');
+		expect(off).toContain('aria-pressed="false"');
+		expect(off).toContain('data-state="off"');
+		expect(on).toContain('aria-pressed="true"');
+		expect(on).toContain('data-state="on"');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

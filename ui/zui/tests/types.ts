@@ -6,21 +6,28 @@ import type { ZBoxProps as DirectZBoxProps } from '../src/components/gene/ZBox.s
 import {
 	ZBox,
 	ZButton,
+	ZToggleButton,
 	defineRecipe,
 	defineSlotRecipe,
 	type RecipeVariants,
 	type SlotRecipeSelection,
 	type ZBoxProps,
-	type ZButtonProps
+	type ZButtonProps,
+	type ZToggleButtonProps
 } from '../src/entrypoints/index.js';
 
 const boxProps: ZBoxProps = { 'aria-label': 'Box' };
 const inferredBoxProps: ComponentProps<typeof ZBox> = boxProps;
 const directBoxProps: DirectZBoxProps = inferredBoxProps;
 const buttonProps: ComponentProps<typeof ZButton> = { variant: 'primary' } satisfies ZButtonProps;
+const toggleButtonProps: ComponentProps<typeof ZToggleButton> = {
+	defaultPressed: true,
+	onPressedChange: (pressed) => void pressed
+} satisfies ZToggleButtonProps;
 void DirectZBox;
 void directBoxProps;
 void buttonProps;
+void toggleButtonProps;
 
 declare const s: IcssStyle<typeof defaultTheme>;
 

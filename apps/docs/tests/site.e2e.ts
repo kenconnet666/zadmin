@@ -9,7 +9,7 @@ test('renders the component catalog and real demo source', async ({ page }) => {
 
 	await page.goto('/#/');
 	await expect(page.getByRole('heading', { level: 1 })).toContainText('看见组件');
-	await expect(page.getByTestId('component-card')).toHaveCount(15);
+	await expect(page.getByTestId('component-card')).toHaveCount(16);
 	await expect(page.getByRole('heading', { level: 3 })).toHaveText([
 		'通用组件',
 		'布局组件',
@@ -70,6 +70,19 @@ test('keeps input binding and field validation interactive', async ({ page }) =>
 	await expect(page.getByText('账号至少需要3个字符')).toHaveCount(0);
 });
 
+test('keeps toggle button state native, bindable and keyboard accessible', async ({ page }) => {
+	await page.goto('/#/components/toggle-button');
+	const toggle = page.getByTestId('toggle-button-controlled');
+	await expect(toggle).toHaveAttribute('aria-pressed', 'false');
+	await toggle.click();
+	await expect(toggle).toHaveAttribute('aria-pressed', 'true');
+	await expect(toggle).toHaveAttribute('data-state', 'on');
+	await expect(page.getByText('pressed = true · 用户变更次数 = 1')).toBeVisible();
+	await toggle.press('Space');
+	await expect(toggle).toHaveAttribute('aria-pressed', 'false');
+	await expect(page.getByText('pressed = false · 用户变更次数 = 2')).toBeVisible();
+});
+
 test('keeps S1 primitives semantic and display preferences effective', async ({ page }) => {
 	await page.goto('/#/guides/theme');
 	await expect(page.getByRole('heading', { level: 1 })).toContainText('主题不是一组颜色');
@@ -112,6 +125,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/icon',
 		'#/components/code',
 		'#/components/button',
+		'#/components/toggle-button',
 		'#/components/link',
 		'#/components/separator',
 		'#/components/visually-hidden',

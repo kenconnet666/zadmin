@@ -17,6 +17,7 @@ import {
 	separatorMetadata,
 	stackMetadata,
 	textMetadata,
+	toggleButtonMetadata,
 	visuallyHiddenMetadata
 } from '../src/entrypoints/metadata.js';
 
@@ -63,6 +64,7 @@ describe('@zadmin/zui package', () => {
 			iconMetadata,
 			codeMetadata,
 			buttonMetadata,
+			toggleButtonMetadata,
 			linkMetadata,
 			separatorMetadata,
 			visuallyHiddenMetadata,
