@@ -1,7 +1,7 @@
 import { spawn } from 'node:child_process';
 import { mkdtemp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { dirname, resolve } from 'node:path';
+import { basename, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -55,7 +55,7 @@ try {
 	const tarballs = (await readdir(tarballRoot)).map((name) => resolve(tarballRoot, name));
 	const tarball = (name) => {
 		const marker = name.replace('@zadmin/', 'zadmin-');
-		const match = tarballs.find((path) => path.replaceAll('\\', '/').includes(marker));
+		const match = tarballs.find((path) => basename(path).includes(marker));
 		if (!match) throw new Error(`Missing tarball for ${name}.`);
 		return `file:${match.replaceAll('\\', '/')}`;
 	};

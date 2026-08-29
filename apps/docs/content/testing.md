@@ -89,6 +89,7 @@ pnpm --filter @zadmin/zui check
 pnpm --filter @zadmin/zui test
 pnpm --filter @zadmin/zui test:coverage
 pnpm --filter @zadmin/zui build
+pnpm --filter @zadmin/sveltekit test:zui-package
 pnpm --filter @zadmin/docs test:e2e
 pnpm --filter @zadmin/docs build-storybook
 ```
@@ -105,6 +106,8 @@ pnpm --filter @zadmin/docs build-storybook
 - `@zadmin/zui/core@0.1.0`与`@zadmin/zui@0.1.0` tarball在隔离SvelteKit项目安装、check、build和SSR 200通过；
 - 外部fixture包含critical CSS和初始动态变量，compiler/server客户端文件0个；
 - `pnpm audit --prod`无已知漏洞，gitleaks无泄漏。
+
+2026-08-29合包后的外部验收：Core、ZUI和SvelteKit三个tarball在系统临时目录安装并frozen reinstall；fixture的Svelte check为0 errors/0 warnings，adapter-node生产build与真实Node SSR通过，响应包含`data-icss` critical CSS及`style-src-elem` SHA-256，client产物不含workspace路径、compiler或server入口。
 
 ## C# WebView公共层验收
 

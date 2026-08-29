@@ -119,6 +119,9 @@ jobs:
       - name: Run SvelteKit integration coverage
         run: pnpm --filter @zadmin/sveltekit test:coverage
 
+      - name: Run external ZUI and SvelteKit SSR acceptance
+        run: pnpm --filter @zadmin/sveltekit test:zui-package
+
       - name: Run Miniapp coverage
         run: pnpm --filter @zadmin/miniapp test:coverage
 

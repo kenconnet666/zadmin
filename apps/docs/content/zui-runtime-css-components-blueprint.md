@@ -1,6 +1,6 @@
 # ZUI 运行时 CSS 与组件 API 蓝图
 
-状态：基础API与首批组件已实施（2026-08-29）。`@zadmin/zui`已落地严格Theme、`useZui`、recipe/slot recipe、Symbol attachment carrier、运行时CSS和8个基础组件；`@zadmin/sveltekit/zui`已落地SSR/CSP/HMR集成。本文继续作为扩展组件与高级验收清单，当前事实同时以[ZUI ICSS 生产架构](./zui-icss.md)与[ZUI 使用与外部接入](./zui-usage.md)为准。
+状态：Z0–Z8基础范围已实施并完成本地生产验收（2026-08-29）。`@zadmin/zui`已落地严格Theme、`useZui`、recipe/slot recipe、Symbol attachment carrier、运行时CSS和8个基础组件；`@zadmin/sveltekit/zui`已落地SSR/CSP/HMR集成。Core/ZUI/SvelteKit三个tarball已在仓库外完成安装、frozen reinstall、check、build、Node SSR、critical CSS、CSP hash和client边界验收；云端同门禁随最新CI复核。第21节仍明确列出不属于首批范围的组件和API。
 
 ## 1. 目标
 
@@ -1162,59 +1162,59 @@ testing进入production bundle = 0 B
 
 ## 20. 分阶段实现
 
-### Z0：冻结本文
+### Z0：冻结本文（已完成）
 
 - 确认API命名和8个基础组件；
 - 不修改现有实现；
 - 将本文链接到总蓝图和文档索引。
 
-### Z1：合并包和目录
+### Z1：合并包和目录（已完成）
 
 - `zui-core + zui-svelte → zui`；
 - 保持现有`icss()`、SSR、HMR和组件行为；
 - 不同时引入recipe或组件重写。
 
-### Z2：Context与Theme
+### Z2：Context与Theme（已完成）
 
 - 新增`useZui()`；
 - Provider同时提供Theme和Runtime；
 - 新增`extendTheme()`；
 - 验证nested provider、SSR和ShadowRoot显式runtime。
 
-### Z3：Recipe
+### Z3：Recipe（已完成）
 
 - 实现`defineRecipe()`和类型推导；
 - Button改用recipe；
 - 验证稳定branch class、Theme cache和HMR owner；
 - 不同时实现slot recipe。
 
-### Z4：Slot Recipe
+### Z4：Slot Recipe（已完成）
 
 - 实现`defineSlotRecipe()`；
 - 只由ZField验证；
 - 没有第二个真实多part组件前不扩展slot API。
 
-### Z5：Attachment carrier
+### Z5：Attachment carrier（已完成）
 
 - spike Svelte attachment；
 - 覆盖native root、ZUI root、SSR、hydration和HMR；
 - 成功后移除公开`__icssVariables`；
 - 失败则使用内部unique-symbol carrier。
 
-### Z6：8个基础组件
+### Z6：8个基础组件（已完成）
 
 - 保留现有Box、Stack、Text、Button行为后重命名`Z*`；
 - 新增Icon、Input、Field；
 - Provider升级为ZProvider；
 - 每个组件独立完成类型、SSR、浏览器和无障碍门槛。
 
-### Z7：SvelteKit迁移
+### Z7：SvelteKit迁移（已完成）
 
 - `icssHandle`迁到`@zadmin/sveltekit/zui`并重命名`zuiHandle`；
 - compiler/server client bundle保持0 B；
 - 重新做并发SSR、CSP和外部tarball验收。
 
-### Z8：生产验收
+### Z8：生产验收（本地完成，云端复核中）
 
 - 全仓check/test/build/lint；
 - 三浏览器；

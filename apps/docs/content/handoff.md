@@ -6,7 +6,7 @@
 
 DI容器、Plugin Module、上下游插件类型传播、服务端/客户端独立HMR、Artifact安装和构建验证已经实现并完成真实浏览器验收。后续业务开发直接在此基础上添加真实数据库、鉴权、ERP/CRM/审批流业务，不需要再设计第二套插件调用方式。
 
-`@zadmin/zui`现为唯一浏览器组件包，内部包含Theme、Token、ICSS、recipe/slot recipe、Symbol attachment carrier和8个`Z*`基础组件。`@zadmin/sveltekit/zui`负责request-local SSR runtime、critical CSS、CSP nonce/hash和客户端集成。公开ICSS API仍只返回class字符串；第一方回调参数统一为`s`，CSS标准关键字补系统元数据，稳定视觉字面量补语义Theme token。
+`@zadmin/zui`现为唯一浏览器组件包，内部包含Theme、Token、ICSS、recipe/slot recipe、Symbol attachment carrier和8个`Z*`基础组件。`@zadmin/sveltekit/zui`负责request-local SSR runtime、critical CSS、CSP nonce/hash和客户端集成。公开ICSS API仍只返回class字符串；第一方回调参数统一为`s`，CSS标准关键字补系统元数据，稳定视觉字面量补语义Theme token。Core/ZUI/SvelteKit三个tarball的仓库外安装、frozen reinstall、check/build、Node SSR、critical CSS、CSP hash与client边界已通过。
 
 2026-08-26 的Tauri/Rust桌面实现已经完成过生产验收，现只作为Git历史中的迁移对照；2026-08-29在C# WebView2替代链通过真实生产页面与开发宿主smoke后，`ui/tauri`、`src-tauri`、Rust命令、bindings和依赖已从当前工作区删除。
 
