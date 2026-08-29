@@ -1,19 +1,10 @@
 <script lang="ts">
-	import { untrack } from 'svelte';
-	import type { HTMLTextareaAttributes } from 'svelte/elements';
 	import { listenForFormReset } from '../../runtime/form/form-control.svelte.js';
-	import {
-		applyIcssRootStyle,
-		mergeStyles,
-		serializeIcssVariables
-	} from '../../runtime/foundation/root-style.js';
-	import { useZui } from '../../runtime/foundation/context.js';
-	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
-	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 	import { useZPopover } from '../compound/popover/context.svelte.js';
+	import ZTextarea, { type ZTextareaProps } from './ZTextarea.svelte';
 
 	interface ZMentionEditorProps extends Omit<
-		HTMLTextareaAttributes,
+		ZTextareaProps,
 		'aria-activedescendant' | 'aria-controls' | 'aria-expanded' | 'aria-haspopup' | 'value'
 	> {
 		readonly activeId?: string;
@@ -25,38 +16,6 @@
 		ref?: HTMLTextAreaElement | null;
 		readonly value: string;
 	}
-
-	const editorRecipe = defineRecipe({
-		base: (s) => {
-			s.appearance.none;
-			s.backgroundColor._canvas;
-			s.borderColor._border;
-			s.borderRadius._medium;
-			s.borderStyle.solid;
-			s.borderWidth._hairline;
-			s.color._text;
-			s.fontFamily._sans;
-			s.fontSize._medium;
-			s.lineHeight._normal;
-			s.minHeight.rem(6);
-			s.padding._medium;
-			s.resize.vertical;
-			s.transitionDuration._fast;
-			s.transitionProperty.raw('border-color, box-shadow');
-			s.transitionTimingFunction.ease;
-			s.width._full;
-			s._selector('&::placeholder', (placeholder) => placeholder.color._textMuted);
-			s._focusVisible((focus) => {
-				focus.outlineColor._focus;
-				focus.outlineOffset.px(2);
-				focus.outlineStyle.solid;
-				focus.outlineWidth._medium;
-			});
-		},
-		variants: {},
-		defaultVariants: {}
-	});
-	registerRecipeHmr(import.meta, editorRecipe);
 
 	let {
 		activeId,
@@ -73,11 +32,7 @@
 		value,
 		...rest
 	}: ZMentionEditorProps = $props();
-	const zui = useZui();
 	const popover = useZPopover();
-	const rootClass = $derived(zui.recipe(editorRecipe));
-	const variables = $derived(readIcssCarrier(rest));
-	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
 	$effect(() => {
 		popover.setTrigger(ref);
 		return () => {
@@ -90,14 +45,11 @@
 	});
 </script>
 
-<!-- Multiline mention editors retain textbox semantics while exposing the ARIA combobox popup state. -->
-<!-- svelte-ignore a11y_role_supports_aria_props_implicit -->
-<textarea
+<ZTextarea
 	{...rest}
-	bind:this={ref}
-	class={[rootClass, className]}
-	style={initialStyle}
-	use:applyIcssRootStyle={{ style, variables }}
+	bind:ref
+	class={className}
+	{style}
 	id={popover.triggerId}
 	{defaultValue}
 	{value}
@@ -121,4 +73,5 @@
 	onkeydown={(event) => {
 		onkeydown?.(event);
 		if (!event.defaultPrevented) onEditorKeydown(event);
-	}}></textarea>
+	}}
+/>

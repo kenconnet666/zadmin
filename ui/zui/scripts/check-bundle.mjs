@@ -260,6 +260,7 @@ const components = [
 		path: 'input/ZSwitch.svelte'
 	},
 	{ id: 'tags-input', name: 'ZTagsInput', path: 'input/ZTagsInput.svelte' },
+	{ id: 'textarea', name: 'ZTextarea', path: 'input/ZTextarea.svelte' },
 	{ id: 'tree-select', name: 'ZTreeSelect', path: 'input/ZTreeSelect.svelte' },
 	{ id: 'transfer', name: 'ZTransfer', path: 'input/ZTransfer.svelte' },
 	{

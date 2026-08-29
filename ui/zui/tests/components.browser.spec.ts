@@ -35,6 +35,7 @@ import TreeSelectFixture from './TreeSelectFixture.svelte';
 import TransferFixture from './TransferFixture.svelte';
 import TooltipFixture from './TooltipFixture.svelte';
 import TagsInputFixture from './TagsInputFixture.svelte';
+import TextareaFixture from './TextareaFixture.svelte';
 import { createBrowserIcssRuntime } from '../src/icss/runtime.js';
 import { defaultTheme } from '../src/theme/default.js';
 import { extendTheme } from '../src/theme/define.js';
@@ -498,6 +499,29 @@ describe('compiled ICSS browser updates', () => {
 		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
 		await new Promise((resolve) => setTimeout(resolve, 220));
 		expect(document.querySelector('[role="dialog"]')).toBeNull();
+	});
+
+	it('coordinates Textarea autosize, Field semantics, FormData and reset', async () => {
+		render(TextareaFixture);
+		const textarea = document.querySelector<HTMLTextAreaElement>('textarea[name="description"]');
+		const form = document.querySelector<HTMLFormElement>('[data-testid="textarea-form"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="textarea-output"]');
+		if (textarea) {
+			textarea.value = 'Line one\nLine two\nLine three\nLine four';
+			textarea.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		}
+		await tick();
+		await new Promise((resolve) => requestAnimationFrame(() => resolve(undefined)));
+		expect(Number.parseFloat(textarea?.style.height ?? '0')).toBeGreaterThan(0);
+		expect(new FormData(form!).get('description')).toBe(
+			'Line one\nLine two\nLine three\nLine four'
+		);
+		expect(output?.textContent?.startsWith('Line one\nLine two')).toBe(true);
+		form?.reset();
+		await Promise.resolve();
+		await tick();
+		expect(textarea?.value).toBe('Seed');
+		expect(output?.textContent?.startsWith('Seed:')).toBe(true);
 	});
 	it('keeps AlertDialog open until an explicit action is chosen', async () => {
 		render(AlertDialogFixture);

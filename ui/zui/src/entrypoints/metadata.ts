@@ -87,6 +87,7 @@ export { zuiMetadata as segmentedMetadata } from '../components/input/ZSegmented
 export { zuiMetadata as sliderMetadata } from '../components/input/ZSlider.svelte';
 export { zuiMetadata as switchMetadata } from '../components/input/ZSwitch.svelte';
 export { zuiMetadata as tagsInputMetadata } from '../components/input/ZTagsInput.svelte';
+export { zuiMetadata as textareaMetadata } from '../components/input/ZTextarea.svelte';
 export { zuiMetadata as treeSelectMetadata } from '../components/input/ZTreeSelect.svelte';
 export { zuiMetadata as transferMetadata } from '../components/input/ZTransfer.svelte';
 export { zuiMetadata as paginationMetadata } from '../components/navigation/ZPagination.svelte';

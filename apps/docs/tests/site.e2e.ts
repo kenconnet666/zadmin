@@ -370,6 +370,27 @@ test('keeps TagsInput commits, removals, repeated form values and reset synchron
 	await expect(page.getByRole('button', { name: 'Remove production' })).toBeVisible();
 });
 
+test('keeps Textarea autosize, Field semantics, FormData and reset synchronized', async ({
+	page
+}) => {
+	await page.goto('/#/components/textarea');
+	const textarea = page.getByRole('textbox', { name: '变更说明' });
+	const initialBox = await textarea.boundingBox();
+	await textarea.fill('第一行\n第二行\n第三行\n第四行\n第五行');
+	await expect(page.getByText('value = 第一行 / 第二行 / 第三行 / 第四行 / 第五行')).toBeVisible();
+	const expandedBox = await textarea.boundingBox();
+	expect(expandedBox!.height).toBeGreaterThan(initialBox!.height);
+	await expect
+		.poll(() =>
+			page
+				.locator('form')
+				.evaluate((form) => new FormData(form as HTMLFormElement).get('description'))
+		)
+		.toBe('第一行\n第二行\n第三行\n第四行\n第五行');
+	await page.getByRole('button', { name: '重置' }).click();
+	await expect(textarea).toHaveValue('生产变更说明');
+});
+
 test('keeps Accordion selection, roving focus and Presence synchronized', async ({ page }) => {
 	await page.goto('/#/components/accordion');
 	const runtime = page.getByRole('button', { name: /运行时合同/u });
@@ -683,6 +704,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/select',
 		'#/components/segmented',
 		'#/components/tags-input',
+		'#/components/textarea',
 		'#/components/tree-select',
 		'#/components/transfer',
 		'#/components/switch',

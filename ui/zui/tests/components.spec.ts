@@ -57,6 +57,7 @@ import TreeSelectFixture from './TreeSelectFixture.svelte';
 import TransferFixture from './TransferFixture.svelte';
 import TooltipFixture from './TooltipFixture.svelte';
 import TagsInputFixture from './TagsInputFixture.svelte';
+import TextareaFixture from './TextareaFixture.svelte';
 
 describe('ZUI foundational components', () => {
 	it('renders Symbol-carried compiler variables on the real ZBox root', () => {
@@ -386,6 +387,16 @@ describe('ZUI foundational components', () => {
 		expect(open).toContain('role="dialog"');
 		expect(open).toContain('Quick actions');
 		expect(open).toContain('Search palette');
+	});
+
+	it('renders Textarea native form, Field and autosize contracts during SSR', () => {
+		const result = render(TextareaFixture).body;
+		expect(result).toContain('<textarea');
+		expect(result).toContain('name="description"');
+		expect(result).toContain('data-autosize="true"');
+		expect(result).toContain('aria-describedby');
+		expect(result).toContain('required');
+		expect(result).toContain('Seed');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

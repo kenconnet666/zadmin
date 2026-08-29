@@ -1,8 +1,8 @@
 <script module lang="ts">
-	import type { HTMLTextareaAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import type { SelectionKey } from '../../runtime/collection/selection.js';
 	import type { PopoverPlacement } from '../compound/popover/ZPopover.svelte';
+	import type { ZTextareaProps } from './ZTextarea.svelte';
 
 	export interface MentionItem {
 		readonly description?: string;
@@ -13,7 +13,7 @@
 		readonly value?: string;
 	}
 
-	export interface ZMentionProps extends Omit<HTMLTextareaAttributes, 'value'> {
+	export interface ZMentionProps extends Omit<ZTextareaProps, 'onValueChange' | 'value'> {
 		readonly appendSpace?: boolean;
 		readonly defaultValue?: string;
 		readonly emptyText?: string;

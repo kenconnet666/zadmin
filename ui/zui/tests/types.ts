@@ -81,6 +81,7 @@ import {
 	ZTabsPanel,
 	ZTabsTrigger,
 	ZTagsInput,
+	ZTextarea,
 	ZTooltip,
 	ZTooltipContent,
 	ZTooltipTrigger,
@@ -169,6 +170,7 @@ import {
 	type ZTabsProps,
 	type ZTabsTriggerProps,
 	type ZTagsInputProps,
+	type ZTextareaProps,
 	type ZTooltipContentProps,
 	type ZTooltipProps,
 	type ZTooltipTriggerProps,
@@ -351,6 +353,11 @@ const commandPaletteProps: ComponentProps<typeof ZCommandPalette> = {
 	items: [{ key: 'open', label: 'Open' }],
 	shortcut: { key: 'k', modKey: true }
 } satisfies ZCommandPaletteProps;
+const textareaProps: ComponentProps<typeof ZTextarea> = {
+	autosize: true,
+	defaultValue: 'Description',
+	resize: 'none'
+} satisfies ZTextareaProps;
 const sliderProps: ComponentProps<typeof ZSlider> = {
 	defaultValue: 25,
 	max: 50,
@@ -455,6 +462,7 @@ void transferProps;
 void mentionProps;
 void commandProps;
 void commandPaletteProps;
+void textareaProps;
 void sliderProps;
 void switchProps;
 void tabsProps;

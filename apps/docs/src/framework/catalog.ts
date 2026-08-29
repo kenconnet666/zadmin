@@ -22,6 +22,7 @@ import { segmentedDoc } from '../content/components/input/segmented/doc.js';
 import { sliderDoc } from '../content/components/input/slider/doc.js';
 import { switchDoc } from '../content/components/input/switch/doc.js';
 import { tagsInputDoc } from '../content/components/input/tags-input/doc.js';
+import { textareaDoc } from '../content/components/input/textarea/doc.js';
 import { treeSelectDoc } from '../content/components/input/tree-select/doc.js';
 import { transferDoc } from '../content/components/input/transfer/doc.js';
 import { stackDoc } from '../content/components/layout/stack/doc.js';
@@ -79,6 +80,7 @@ export const componentDocs = Object.freeze([
 	segmentedDoc,
 	switchDoc,
 	tagsInputDoc,
+	textareaDoc,
 	treeSelectDoc,
 	transferDoc,
 	sliderDoc,

@@ -208,6 +208,12 @@ export type {
 } from '../components/input/ZSwitch.svelte';
 export { default as ZTagsInput } from '../components/input/ZTagsInput.svelte';
 export type { ZTagsInputProps } from '../components/input/ZTagsInput.svelte';
+export { default as ZTextarea } from '../components/input/ZTextarea.svelte';
+export type {
+	ZTextareaProps,
+	ZTextareaResize,
+	ZTextareaSize
+} from '../components/input/ZTextarea.svelte';
 export { default as ZTreeSelect } from '../components/input/ZTreeSelect.svelte';
 export type { ZTreeSelectProps } from '../components/input/ZTreeSelect.svelte';
 export { default as ZTransfer } from '../components/input/ZTransfer.svelte';
