@@ -10,6 +10,20 @@ const reportPath = resolve(tmpdir(), `zadmin-webview-dev-smoke-${process.pid}.js
 const pnpmCli = process.env.npm_execpath;
 if (!pnpmCli) throw new Error('Development smoke must be launched through pnpm.');
 
+async function readReport() {
+	for (let attempt = 1; attempt <= 50; attempt += 1) {
+		try {
+			return await readFile(reportPath, 'utf8');
+		} catch (error) {
+			const code = /** @type {{ code?: string }} */ (error).code;
+			if (!['EACCES', 'EBUSY', 'ENOENT', 'EPERM'].includes(code ?? '') || attempt === 50)
+				throw error;
+			await new Promise((resolveRetry) => setTimeout(resolveRetry, 100));
+		}
+	}
+	throw new Error('Development smoke report did not become readable.');
+}
+
 const child = spawn(
 	process.execPath,
 	[pnpmCli, '--filter', '@zadmin/desktop', 'webview:dev', '--', '--smoke-report', reportPath],
@@ -47,7 +61,7 @@ const exitCode = await new Promise((resolveExit, rejectExit) => {
 try {
 	if (exitCode !== 0) throw new Error(`WebView development host exited with code ${exitCode}.`);
 	/** @type {{ error?: string; page?: { bodyText?: string; errors?: string[]; hasBridge?: boolean; origin?: string; viteClient?: boolean } }} */
-	const report = JSON.parse(await readFile(reportPath, 'utf8'));
+	const report = JSON.parse(await readReport());
 	if (report.error) throw new Error(report.error);
 	if (report.page?.origin !== 'http://127.0.0.1:5176')
 		throw new Error('Unexpected development origin.');

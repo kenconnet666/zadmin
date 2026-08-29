@@ -62,9 +62,7 @@ describe('ZUI themes', () => {
 		expect(theme.radius.medium).toBe(6);
 		expect(defaultTheme.color.primary).toBe('#2563eb');
 		expect(Object.isFrozen(theme.color)).toBe(true);
-		expect(() => extendTheme(defaultTheme, null as never)).toThrow(
-			/Theme patch must be an object/
-		);
+		expect(() => extendTheme(defaultTheme, null as never)).toThrow(/Theme patch must be an object/);
 		expect(() => extendTheme(defaultTheme, { color: [] } as never)).toThrow(
 			/color.*must be an object/
 		);
