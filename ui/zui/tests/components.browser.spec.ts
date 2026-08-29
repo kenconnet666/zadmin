@@ -32,6 +32,40 @@ describe('compiled ICSS browser updates', () => {
 		expect(root?.querySelectorAll('[data-highlighted="true"]')).toHaveLength(1);
 		expect(root?.querySelector('[aria-hidden="true"]')?.textContent).toBe('1');
 	});
+
+	it('keeps ZCode resilient for plain, oversized and invalid language inputs', async () => {
+		render(ZCode, { ariaLabel: 'plain-code', code: 'plain', inline: true, wrap: true });
+		const plain = document.querySelector<HTMLElement>('[aria-label="plain-code"]');
+		expect(plain?.tagName).toBe('CODE');
+		expect(plain?.dataset.highlightStatus).toBe('plain');
+		expect(plain?.textContent).toBe('plain');
+
+		render(ZCode, {
+			ariaLabel: 'large-code',
+			code: 'x'.repeat(100_001),
+			lang: 'css'
+		});
+		const large = document.querySelector<HTMLElement>('[aria-label="large-code"]');
+		expect(large?.dataset.highlightStatus).toBe('too-large');
+
+		render(ZCode, {
+			ariaLabel: 'invalid-code',
+			code: 'value',
+			lang: 'missing' as never
+		});
+		const invalid = document.querySelector<HTMLElement>('[aria-label="invalid-code"]');
+		await expect.poll(() => invalid?.dataset.highlightStatus).toBe('failed');
+		expect(invalid?.textContent).toBe('value');
+
+		for (const [language, source] of [
+			['css', '.ready { display: block; }'],
+			['json', '{"ready":true}']
+		] as const) {
+			render(ZCode, { ariaLabel: `${language}-code`, code: source, lang: language });
+			const highlighted = document.querySelector<HTMLElement>(`[aria-label="${language}-code"]`);
+			await expect.poll(() => highlighted?.dataset.highlightStatus).toBe('highlighted');
+		}
+	});
 	it('updates only the inline variable while class and rules stay stable', async () => {
 		render(DynamicBox);
 		const target = document.querySelector<HTMLElement>('[data-testid="target"]');

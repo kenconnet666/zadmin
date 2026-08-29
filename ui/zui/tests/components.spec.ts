@@ -104,5 +104,8 @@ describe('ZUI foundational components', () => {
 		expect(result.body).toContain('data-highlight-status="plain"');
 		expect(result.body).toContain('&lt;script>unsafe()&lt;/script>');
 		expect(result.body).not.toContain('<script>');
+		const inline = render(ZCode, { props: { code: 'inline', inline: true, wrap: true } });
+		expect(inline.body).toContain('<code');
+		expect(inline.body).toContain('>inline');
 	});
 });
