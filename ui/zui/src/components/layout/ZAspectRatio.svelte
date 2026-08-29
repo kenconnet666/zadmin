@@ -94,6 +94,7 @@
 	}: ZAspectRatioProps = $props();
 	const zui = useZui();
 	const rootClass = $derived(zui.recipe(aspectRatioRecipe));
+	untrack(() => normalizeRatio(ratio));
 	const icssVariables = $derived({
 		...readIcssCarrier(rest),
 		'--zui-aspect-ratio': normalizeRatio(ratio)

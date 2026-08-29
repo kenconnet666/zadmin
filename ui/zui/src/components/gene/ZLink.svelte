@@ -146,6 +146,7 @@
 	}
 </script>
 
+<!-- svelte-ignore no-navigation-without-resolve (library links preserve caller-owned native and external hrefs) -->
 <a
 	{...rest}
 	bind:this={ref}
