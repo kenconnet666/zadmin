@@ -59,7 +59,7 @@
 
 	registerRecipeHmr(import.meta, aspectRatioRecipe);
 
-	function normalizeRatio(value: ZAspectRatioValue): string {
+	export function normalizeAspectRatio(value: ZAspectRatioValue): string {
 		if (typeof value === 'number') {
 			if (!Number.isFinite(value) || value <= 0)
 				throw new TypeError('ZAspectRatio ratio must be positive.');
@@ -94,10 +94,10 @@
 	}: ZAspectRatioProps = $props();
 	const zui = useZui();
 	const rootClass = $derived(zui.recipe(aspectRatioRecipe));
-	untrack(() => normalizeRatio(ratio));
+	untrack(() => normalizeAspectRatio(ratio));
 	const icssVariables = $derived({
 		...readIcssCarrier(rest),
-		'--zui-aspect-ratio': normalizeRatio(ratio)
+		'--zui-aspect-ratio': normalizeAspectRatio(ratio)
 	} satisfies IcssVariables);
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 </script>

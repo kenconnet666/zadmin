@@ -22,6 +22,7 @@ import {
 } from '../src/entrypoints/index.js';
 import { ZCode } from '../src/entrypoints/code.js';
 import Camera from '@lucide/svelte/icons/camera';
+import { normalizeAspectRatio } from '../src/components/layout/ZAspectRatio.svelte';
 import { getIconComponent, iconManifest } from '../src/components/gene/ZIcon.svelte';
 import { __icssCarrier } from '../src/runtime/compiler-bridge.js';
 import ContextProbe from './ContextProbe.svelte';
@@ -155,6 +156,8 @@ describe('ZUI foundational components', () => {
 		expect(render(ZAspectRatio, { props: { ratio: '4 / 3' } }).body).toContain(
 			'--zui-aspect-ratio:4 / 3'
 		);
-		expect(() => render(ZAspectRatio, { props: { ratio: 0 } })).toThrow(/must be positive/);
+		expect(normalizeAspectRatio(1.5)).toBe('1.5');
+		expect(() => normalizeAspectRatio(0)).toThrow(/must be positive/);
+		expect(() => normalizeAspectRatio('4 / 0')).toThrow(/positive width \/ height/);
 	});
 });
