@@ -412,6 +412,22 @@ test('keeps Tree hierarchy, visible keyboard navigation, selection and reset syn
 	await expect(docs).toHaveAttribute('aria-selected', 'true');
 });
 
+test('keeps TreeSelect popup tree, selection, form value and reset synchronized', async ({
+	page
+}) => {
+	await page.goto('/#/components/tree-select');
+	const trigger = page.getByRole('button', { name: '文档站' });
+	await trigger.click();
+	const tree = page.getByRole('tree', { name: '选择项目节点' });
+	await expect(tree).toBeVisible();
+	await page.getByRole('treeitem', { name: /任务执行器/u }).click();
+	await expect(tree).toHaveCount(0);
+	await expect(page.getByRole('button', { name: '任务执行器' })).toBeFocused();
+	await expect(page.getByText('value = worker')).toBeVisible();
+	await page.getByRole('button', { name: '重置' }).click();
+	await expect(page.getByRole('button', { name: '文档站' })).toBeVisible();
+});
+
 test('keeps Popover portal, ARIA, focus, positioning and dismiss synchronized', async ({
 	page
 }) => {
@@ -588,6 +604,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/select',
 		'#/components/segmented',
 		'#/components/tags-input',
+		'#/components/tree-select',
 		'#/components/switch',
 		'#/components/slider',
 		'#/components/accordion',

@@ -20,6 +20,7 @@ import { segmentedDoc } from '../content/components/input/segmented/doc.js';
 import { sliderDoc } from '../content/components/input/slider/doc.js';
 import { switchDoc } from '../content/components/input/switch/doc.js';
 import { tagsInputDoc } from '../content/components/input/tags-input/doc.js';
+import { treeSelectDoc } from '../content/components/input/tree-select/doc.js';
 import { stackDoc } from '../content/components/layout/stack/doc.js';
 import { aspectRatioDoc } from '../content/components/layout/aspect-ratio/doc.js';
 import { containerDoc } from '../content/components/layout/container/doc.js';
@@ -71,6 +72,7 @@ export const componentDocs = Object.freeze([
 	segmentedDoc,
 	switchDoc,
 	tagsInputDoc,
+	treeSelectDoc,
 	sliderDoc,
 	accordionDoc,
 	contextMenuDoc,

@@ -252,6 +252,7 @@ const components = [
 		path: 'input/ZSwitch.svelte'
 	},
 	{ id: 'tags-input', name: 'ZTagsInput', path: 'input/ZTagsInput.svelte' },
+	{ id: 'tree-select', name: 'ZTreeSelect', path: 'input/ZTreeSelect.svelte' },
 	{
 		id: 'field',
 		maxIncrementalGzip: 3.375 * 1024,

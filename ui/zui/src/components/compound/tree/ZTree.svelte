@@ -5,6 +5,7 @@
 	import type { TreeNode } from '../../../runtime/tree.js';
 	export type TreeSelectionMode = 'multiple' | 'none' | 'single';
 	export interface ZTreeProps extends Omit<HTMLAttributes<HTMLDivElement>, 'role'> {
+		readonly appearance?: 'bare' | 'tree';
 		readonly defaultExpandedKeys?: readonly SelectionKey[];
 		readonly defaultSelectedKeys?: readonly SelectionKey[];
 		readonly disabled?: boolean;
@@ -50,6 +51,12 @@
 		],
 		parts: [{ description: '可见treeitem。', name: 'item' }],
 		props: [
+			{
+				default: "'tree'",
+				description: '独立Tree shell或浮层内bare布局。',
+				name: 'appearance',
+				type: "'tree' | 'bare'"
+			},
 			{
 				default: '必填',
 				description: '扁平节点与parentKey关系。',
@@ -113,16 +120,22 @@
 	import { readIcssCarrier } from '../../../runtime/foundation/compiler-bridge.js';
 	import { defineRecipe, registerRecipeHmr } from '../../../recipes/define.js';
 	const rootRecipe = defineRecipe({
-		base: (s) => {
-			s.backgroundColor._canvas;
-			s.borderColor._border;
-			s.borderRadius._medium;
-			s.borderStyle.solid;
-			s.borderWidth._hairline;
-			s.padding._small;
+		base: () => undefined,
+		variants: {
+			appearance: {
+				bare: () => undefined,
+				tree: (s) => {
+					s.backgroundColor._canvas;
+					s.borderColor._border;
+					s.borderRadius._medium;
+					s.borderStyle.solid;
+					s.borderWidth._hairline;
+					s.padding._small;
+				}
+			},
+			disabled: { false: () => undefined, true: (s) => s.opacity._disabled }
 		},
-		variants: { disabled: { false: () => undefined, true: (s) => s.opacity._disabled } },
-		defaultVariants: { disabled: false }
+		defaultVariants: { appearance: 'tree', disabled: false }
 	});
 	const itemRecipe = defineRecipe({
 		base: (s) => {
@@ -158,6 +171,7 @@
 	registerRecipeHmr(import.meta, itemRecipe);
 	const unique = (keys: readonly SelectionKey[]) => Object.freeze([...new Set(keys)]);
 	let {
+		appearance = 'tree',
 		class: className,
 		defaultExpandedKeys = [],
 		defaultSelectedKeys = [],
@@ -205,7 +219,7 @@
 			: (enabled.find(({ entry }) => selected.has(entry.key))?.entry.key ?? enabled[0]?.entry.key)
 	);
 	const typeahead = new Typeahead<SelectionKey>({ locale: zui.locale });
-	const rootClass = $derived(zui.recipe(rootRecipe, { disabled }));
+	const rootClass = $derived(zui.recipe(rootRecipe, { appearance, disabled }));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
 	$effect(() => {

@@ -49,6 +49,7 @@ import SelectFixture from './SelectFixture.svelte';
 import SegmentedFixture from './SegmentedFixture.svelte';
 import TabsFixture from './TabsFixture.svelte';
 import TreeFixture from './TreeFixture.svelte';
+import TreeSelectFixture from './TreeSelectFixture.svelte';
 import TooltipFixture from './TooltipFixture.svelte';
 import TagsInputFixture from './TagsInputFixture.svelte';
 
@@ -324,6 +325,15 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain('aria-expanded="true"');
 		expect(result).toContain('aria-selected="true"');
 		expect(result).toContain('name="node"');
+	});
+
+	it('renders TreeSelect closed trigger and open popup tree during SSR', () => {
+		const closed = render(TreeSelectFixture).body;
+		expect(closed).toContain('aria-haspopup="tree"');
+		expect(closed).not.toContain('role="tree"');
+		const open = render(TreeSelectFixture, { props: { defaultOpen: true } }).body;
+		expect(open).toContain('role="tree"');
+		expect(open).toContain('name="node"');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

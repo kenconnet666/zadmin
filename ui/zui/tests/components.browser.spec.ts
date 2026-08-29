@@ -27,6 +27,7 @@ import ToggleButtonFixture from './ToggleButtonFixture.svelte';
 import SwitchFixture from './SwitchFixture.svelte';
 import TabsFixture from './TabsFixture.svelte';
 import TreeFixture from './TreeFixture.svelte';
+import TreeSelectFixture from './TreeSelectFixture.svelte';
 import TooltipFixture from './TooltipFixture.svelte';
 import TagsInputFixture from './TagsInputFixture.svelte';
 import { createBrowserIcssRuntime } from '../src/icss/runtime.js';
@@ -337,6 +338,28 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(new FormData(form!).get('node')).toBe('web');
 		expect(output?.textContent).toBe('app:web:1');
+	});
+
+	it('coordinates TreeSelect popup tree, selection, focus restoration, form value and reset', async () => {
+		render(TreeSelectFixture);
+		const trigger = document.querySelector<HTMLButtonElement>('[aria-haspopup="tree"]');
+		const form = document.querySelector<HTMLFormElement>('[data-testid="tree-select-form"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="tree-select-output"]');
+		trigger?.focus();
+		trigger?.click();
+		await tick();
+		const beta = document.querySelector<HTMLElement>('[role="treeitem"][data-key="beta"]');
+		beta?.click();
+		await new Promise((resolve) => setTimeout(resolve, 140));
+		await tick();
+		expect(trigger?.textContent?.trim()).toBe('Beta');
+		expect(document.activeElement).toBe(trigger);
+		expect(new FormData(form!).get('node')).toBe('beta');
+		expect(output?.textContent).toBe('beta');
+		form?.reset();
+		await Promise.resolve();
+		await tick();
+		expect(trigger?.textContent?.trim()).toBe('Alpha');
 	});
 	it('keeps AlertDialog open until an explicit action is chosen', async () => {
 		render(AlertDialogFixture);
