@@ -27,7 +27,7 @@ public sealed partial class MainWindow : Window
             if (!string.IsNullOrWhiteSpace(smokeReport))
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(smokeReport)!);
-                await File.WriteAllTextAsync(
+                await WebViewHost.WriteSmokeReportAsync(
                     smokeReport,
                     System.Text.Json.JsonSerializer.Serialize(new { error = error.ToString() }));
                 DispatcherQueue.TryEnqueue(Close);

@@ -38,7 +38,7 @@ public sealed class WebViewHost : IAsyncDisposable
         if (_options.SmokeReportPath is { } smokeReport)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(smokeReport)!);
-            await File.WriteAllTextAsync(smokeReport, JsonSerializer.Serialize(new { phase = "initializing" }));
+            await WriteSmokeReportAsync(smokeReport, JsonSerializer.Serialize(new { phase = "initializing" }));
         }
         var version = CoreWebView2Environment.GetAvailableBrowserVersionString();
         await WriteSmokePhaseAsync("runtime-detected");
@@ -184,13 +184,13 @@ public sealed class WebViewHost : IAsyncDisposable
                 source = _webview.Source?.ToString()
             };
             Directory.CreateDirectory(Path.GetDirectoryName(_options.SmokeReportPath)!);
-            await File.WriteAllTextAsync(
+            await WriteSmokeReportAsync(
                 _options.SmokeReportPath,
                 JsonSerializer.Serialize(report, new JsonSerializerOptions(SerializerOptions) { WriteIndented = true }));
         }
         catch (Exception error)
         {
-            await File.WriteAllTextAsync(
+            await WriteSmokeReportAsync(
                 _options.SmokeReportPath,
                 JsonSerializer.Serialize(new { error = error.Message }));
         }
@@ -215,9 +215,29 @@ public sealed class WebViewHost : IAsyncDisposable
             ? uri.GetLeftPart(UriPartial.Authority)
             : string.Empty;
 
+    internal static async Task WriteSmokeReportAsync(string path, string contents)
+    {
+        for (var attempt = 0; ; attempt++)
+        {
+            try
+            {
+                await File.WriteAllTextAsync(path, contents);
+                return;
+            }
+            catch (IOException) when (attempt < 49)
+            {
+                await Task.Delay(100);
+            }
+            catch (UnauthorizedAccessException) when (attempt < 49)
+            {
+                await Task.Delay(100);
+            }
+        }
+    }
+
     private Task WriteSmokePhaseAsync(string phase) =>
         _options.SmokeReportPath is { } path
-            ? File.WriteAllTextAsync(path, JsonSerializer.Serialize(new { phase }))
+            ? WriteSmokeReportAsync(path, JsonSerializer.Serialize(new { phase }))
             : Task.CompletedTask;
 
     public async ValueTask DisposeAsync()
