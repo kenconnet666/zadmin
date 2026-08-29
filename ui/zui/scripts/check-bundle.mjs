@@ -231,6 +231,7 @@ const components = [
 		path: 'gene/ZToggleButton.svelte'
 	},
 	{ id: 'checkbox', name: 'ZCheckbox', path: 'input/ZCheckbox.svelte' },
+	{ id: 'cascader', name: 'ZCascader', path: 'input/ZCascader.svelte' },
 	{ id: 'input', name: 'ZInput', path: 'input/ZInput.svelte' },
 	{ id: 'segmented', name: 'ZSegmented', path: 'input/ZSegmented.svelte' },
 	{

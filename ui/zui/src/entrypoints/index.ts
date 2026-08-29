@@ -190,6 +190,8 @@ export type {
 	ZCheckboxProps,
 	ZCheckboxVariants
 } from '../components/input/ZCheckbox.svelte';
+export { default as ZCascader } from '../components/input/ZCascader.svelte';
+export type { ZCascaderProps } from '../components/input/ZCascader.svelte';
 export { default as ZInput } from '../components/input/ZInput.svelte';
 export type { ZInputProps, ZInputSize, ZInputType } from '../components/input/ZInput.svelte';
 export { default as ZSegmented } from '../components/input/ZSegmented.svelte';

@@ -5,6 +5,7 @@ import { render } from 'vitest-browser-svelte';
 import DynamicBox from './DynamicBox.svelte';
 import ComponentGallery from './ComponentGallery.svelte';
 import ComboboxFixture from './ComboboxFixture.svelte';
+import CascaderFixture from './CascaderFixture.svelte';
 import ContextMenuFixture from './ContextMenuFixture.svelte';
 import AccordionFixture from './AccordionFixture.svelte';
 import AlertDialogFixture from './AlertDialogFixture.svelte';
@@ -360,6 +361,31 @@ describe('compiled ICSS browser updates', () => {
 		await Promise.resolve();
 		await tick();
 		expect(trigger?.textContent?.trim()).toBe('Alpha');
+	});
+
+	it('coordinates Cascader columns, leaf path commit, form value and reset', async () => {
+		render(CascaderFixture);
+		const trigger = document.querySelector<HTMLButtonElement>('[aria-haspopup="listbox"]');
+		const form = document.querySelector<HTMLFormElement>('[data-testid="cascader-form"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="cascader-output"]');
+		trigger?.focus();
+		trigger?.click();
+		await tick();
+		expect(document.querySelectorAll('[role="listbox"]')).toHaveLength(3);
+		const worker = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find(
+			(item) => item.textContent?.trim() === 'Worker'
+		);
+		worker?.click();
+		await new Promise((resolve) => setTimeout(resolve, 140));
+		await tick();
+		expect(trigger?.textContent?.trim()).toBe('Root / Worker');
+		expect(document.activeElement).toBe(trigger);
+		expect(new FormData(form!).get('path')).toBe('root/worker');
+		expect(output?.textContent).toBe('root/worker');
+		form?.reset();
+		await Promise.resolve();
+		await tick();
+		expect(trigger?.textContent?.trim()).toBe('Root / Alpha / Leaf');
 	});
 	it('keeps AlertDialog open until an explicit action is chosen', async () => {
 		render(AlertDialogFixture);

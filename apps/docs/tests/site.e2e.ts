@@ -428,6 +428,20 @@ test('keeps TreeSelect popup tree, selection, form value and reset synchronized'
 	await expect(page.getByRole('button', { name: '文档站' })).toBeVisible();
 });
 
+test('keeps Cascader columns, path commit, focus restoration and reset synchronized', async ({
+	page
+}) => {
+	await page.goto('/#/components/cascader');
+	const trigger = page.getByRole('button', { name: '平台 / Web应用 / 文档站' });
+	await trigger.click();
+	await expect(page.getByRole('listbox')).toHaveCount(3);
+	await page.getByRole('option', { name: '任务执行器' }).click();
+	await expect(page.getByRole('button', { name: '平台 / 任务执行器' })).toBeFocused();
+	await expect(page.getByText('path = platform/worker')).toBeVisible();
+	await page.getByRole('button', { name: '重置' }).click();
+	await expect(trigger).toBeVisible();
+});
+
 test('keeps Popover portal, ARIA, focus, positioning and dismiss synchronized', async ({
 	page
 }) => {
@@ -596,6 +610,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/aspect-ratio',
 		'#/components/container',
 		'#/components/checkbox',
+		'#/components/cascader',
 		'#/components/combobox',
 		'#/components/input',
 		'#/components/multi-select',

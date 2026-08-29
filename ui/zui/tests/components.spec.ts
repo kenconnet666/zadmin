@@ -33,6 +33,7 @@ import { __icssCarrier } from '../src/runtime/foundation/compiler-bridge.js';
 import ContextProbe from './ContextProbe.svelte';
 import ContextMenuFixture from './ContextMenuFixture.svelte';
 import ComboboxFixture from './ComboboxFixture.svelte';
+import CascaderFixture from './CascaderFixture.svelte';
 import AccordionFixture from './AccordionFixture.svelte';
 import AlertDialogFixture from './AlertDialogFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
@@ -334,6 +335,15 @@ describe('ZUI foundational components', () => {
 		const open = render(TreeSelectFixture, { props: { defaultOpen: true } }).body;
 		expect(open).toContain('role="tree"');
 		expect(open).toContain('name="node"');
+	});
+
+	it('renders Cascader path trigger and layered listboxes during SSR', () => {
+		const closed = render(CascaderFixture).body;
+		expect(closed).toContain('Root / Alpha / Leaf');
+		expect(closed).not.toContain('role="listbox"');
+		const open = render(CascaderFixture, { props: { defaultOpen: true } }).body;
+		expect(open.match(/role="listbox"/gu)).toHaveLength(3);
+		expect(open).toContain('name="path"');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

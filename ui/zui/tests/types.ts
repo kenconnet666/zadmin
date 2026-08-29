@@ -18,6 +18,7 @@ import {
 	ZAlertDialogTrigger,
 	ZBox,
 	ZButton,
+	ZCascader,
 	ZCheckbox,
 	ZCombobox,
 	ZComboboxContent,
@@ -101,6 +102,7 @@ import {
 	type ZAlertDialogTriggerProps,
 	type ZBoxProps,
 	type ZButtonProps,
+	type ZCascaderProps,
 	type ZCheckboxProps,
 	type ZComboboxContentProps,
 	type ZComboboxInputProps,
@@ -322,6 +324,10 @@ const treeProps: ComponentProps<typeof ZTree> = {
 const treeSelectProps: ComponentProps<typeof ZTreeSelect> = {
 	nodes: [{ key: 'root', label: 'Root' }]
 } satisfies ZTreeSelectProps;
+const cascaderProps: ComponentProps<typeof ZCascader> = {
+	nodes: [{ key: 'root', label: 'Root' }],
+	value: ['root']
+} satisfies ZCascaderProps;
 const sliderProps: ComponentProps<typeof ZSlider> = {
 	defaultValue: 25,
 	max: 50,
@@ -421,6 +427,7 @@ void segmentedProps;
 void tagsInputProps;
 void treeProps;
 void treeSelectProps;
+void cascaderProps;
 void sliderProps;
 void switchProps;
 void tabsProps;

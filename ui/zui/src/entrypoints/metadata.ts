@@ -79,6 +79,7 @@ export { zuiMetadata as textMetadata } from '../components/gene/ZText.svelte';
 export { zuiMetadata as toggleButtonMetadata } from '../components/gene/ZToggleButton.svelte';
 export { zuiMetadata as visuallyHiddenMetadata } from '../components/gene/ZVisuallyHidden.svelte';
 export { zuiMetadata as checkboxMetadata } from '../components/input/ZCheckbox.svelte';
+export { zuiMetadata as cascaderMetadata } from '../components/input/ZCascader.svelte';
 export { zuiMetadata as fieldMetadata } from '../components/input/ZField.svelte';
 export { zuiMetadata as inputMetadata } from '../components/input/ZInput.svelte';
 export { zuiMetadata as segmentedMetadata } from '../components/input/ZSegmented.svelte';
