@@ -4,10 +4,11 @@ import { defineComponentDoc } from './types.js';
 
 export const stackDoc = defineComponentDoc({
 	id: 'stack',
+	category: 'layout',
 	name: 'ZStack',
 	summary: '类型安全的Flex布局容器，覆盖方向、间距、对齐、分布和换行。',
 	importStatement: "import { ZStack } from '@zadmin/zui';",
-	source: 'ui/zui/src/lib/components/stack/ZStack.svelte',
+	source: 'ui/zui/src/lib/components/layout/ZStack.svelte',
 	demos: [
 		{
 			id: 'stack-layout',

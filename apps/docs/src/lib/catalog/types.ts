@@ -21,9 +21,12 @@ export interface DemoDefinition {
 	readonly title: string;
 }
 
+export type ComponentCategory = 'gene' | 'input' | 'layout';
+
 export interface ComponentDoc {
 	readonly accessibility: readonly string[];
 	readonly api: readonly ApiSection[];
+	readonly category: ComponentCategory;
 	readonly demos: readonly DemoDefinition[];
 	readonly id: string;
 	readonly importStatement: string;

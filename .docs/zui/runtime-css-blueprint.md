@@ -84,23 +84,28 @@ defineSlotRecipe
 ```text
 ui/zui/
   src/
-    compiler/
-    components/
-    runtime/
-    styles/
-    testing/
-    theme/
-    types/
-    index.ts
+    lib/
+      compiler/
+      component-runtime/
+      components/
+        gene/
+        input/
+        layout/
+      icss/
+      recipes/
+      runtime/
+      testing/
+      theme/
+      core.ts
+      index.ts
+      runtime.ts
   package.json
-  README.md
   svelte.config.js
   tsconfig.json
   vite.config.ts
-  vitest.config.ts
 ```
 
-`src/`下以目录为主，只保留`index.ts`一个入口例外。
+`src/lib/components`首层只包含分类目录，分类目录只包含Svelte组件文件。组件独占的Props、recipe、manifest和静态常量与实现共同位于一个`.svelte`文件；多个组件共享的Context和ICSS根样式机制位于`component-runtime`纯TypeScript目录。
 
 推荐内部目录：
 
@@ -114,56 +119,59 @@ src/compiler/
   source-names.ts
   types.ts
 
-src/runtime/
-  context.ts
+src/lib/component-runtime/
+  field-context.ts
+  root-style.ts
+  zui-context.ts
+
+src/lib/icss/
+  builder.ts
   hash.ts
   registry.ts
   runtime.ts
   serialize.ts
   sheet.ts
-  variables.ts
-
-src/styles/
-  builder.ts
-  conditions.ts
-  recipe.ts
-  slots.ts
   types.ts
   values.ts
 
-src/theme/
-  contract.ts
+src/lib/theme/
   default.ts
   define.ts
   properties.ts
+  schema.ts
   types.ts
   units.ts
 ```
 
-组件首层保持8个目录：
+当前组件分类：
 
 ```text
-src/components/
-  box/
-  button/
-  field/
-  icon/
+src/lib/components/
+  gene/
+    ZBox.svelte
+    ZButton.svelte
+    ZIcon.svelte
+    ZProvider.svelte
+    ZText.svelte
   input/
-  provider/
-  stack/
-  text/
+    ZField.svelte
+    ZInput.svelte
+  layout/
+    ZStack.svelte
 ```
 
-每个组件目录以代码文件为主，例如：
+没有真实组件时不创建`display`、`feedback`、`navigation`或`tool`空目录。每个组件使用两个script边界：
 
-```text
-src/components/button/
-  ZButton.svelte
-  button.browser.spec.ts
-  button.recipe.ts
-  button.spec.ts
-  button.types.ts
-  index.ts
+```svelte
+<script module lang="ts">
+	// Props、公开类型、recipe、manifest和静态常量
+</script>
+
+<script lang="ts">
+	// $props、context、derived state和实例逻辑
+</script>
+
+<!-- 单一语义root -->
 ```
 
 ## 4. Package exports
@@ -191,16 +199,11 @@ export { defaultTheme, defineTheme, extendTheme } from './theme/index.js';
 
 export { icss, defineRecipe, defineSlotRecipe, useZui } from './styles/index.js';
 
-export {
-	ZBox,
-	ZButton,
-	ZField,
-	ZIcon,
-	ZInput,
-	ZProvider,
-	ZStack,
-	ZText
-} from './components/index.js';
+export { default as ZBox } from './components/gene/ZBox.svelte';
+export type { ZBoxProps } from './components/gene/ZBox.svelte';
+
+export { default as ZStack } from './components/layout/ZStack.svelte';
+export type { ZStackProps } from './components/layout/ZStack.svelte';
 ```
 
 不保留旧`@zadmin/zui`兼容转发包，除非发布状态检查证明外部已有消费者；即使需要迁移包，也只发布deprecation版本，不让兼容层长期留在仓库。
@@ -1045,10 +1048,25 @@ export interface ZFieldProps extends Omit<HTMLAttributes<HTMLDivElement>, 'child
 ## 17. 组件实现模板
 
 ```svelte
+<script module lang="ts">
+	import type { Snippet } from 'svelte';
+	import type { HTMLButtonAttributes } from 'svelte/elements';
+	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
+
+	const buttonRecipe = defineRecipe({
+		// base、variants和compound variants
+	});
+
+	registerRecipeHmr(import.meta, buttonRecipe);
+
+	export interface ZButtonProps extends HTMLButtonAttributes {
+		readonly children?: Snippet;
+		readonly loading?: boolean;
+	}
+</script>
+
 <script lang="ts">
-	import { useZui } from '../../runtime/context.js';
-	import { buttonRecipe } from './button.recipe.js';
-	import type { ZButtonProps } from './button.types.js';
+	import { useZui } from '../../component-runtime/zui-context.js';
 
 	let {
 		children,
@@ -1094,8 +1112,8 @@ export interface ZFieldProps extends Omit<HTMLAttributes<HTMLDivElement>, 'child
 
 实现顺序固定：
 
-1. type imports；
-2. Props解构和默认值；
+1. module script中的公开类型和组件独占定义；
+2. instance script中的Props解构和默认值；
 3. context；
 4. derived classes/state；
 5. 单一语义root；

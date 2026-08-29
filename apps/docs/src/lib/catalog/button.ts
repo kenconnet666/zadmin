@@ -6,10 +6,11 @@ import { defineComponentDoc } from './types.js';
 
 export const buttonDoc = defineComponentDoc({
 	id: 'button',
+	category: 'gene',
 	name: 'ZButton',
 	summary: '使用原生button语义、稳定recipe变体和Svelte 5 callback props的基础操作组件。',
 	importStatement: "import { ZButton } from '@zadmin/zui';",
-	source: 'ui/zui/src/lib/components/button/ZButton.svelte',
+	source: 'ui/zui/src/lib/components/gene/ZButton.svelte',
 	demos: [
 		{
 			id: 'button-variants',

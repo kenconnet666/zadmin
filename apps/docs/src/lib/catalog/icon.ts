@@ -4,10 +4,11 @@ import { defineComponentDoc } from './types.js';
 
 export const iconDoc = defineComponentDoc({
 	id: 'icon',
+	category: 'gene',
 	name: 'ZIcon',
 	summary: '由受控manifest生成的SVG图标，禁止注入任意SVG字符串。',
 	importStatement: "import { ZIcon } from '@zadmin/zui';",
-	source: 'ui/zui/src/lib/components/icon/ZIcon.svelte',
+	source: 'ui/zui/src/lib/components/gene/ZIcon.svelte',
 	demos: [
 		{
 			id: 'icon-gallery',

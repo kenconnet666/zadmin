@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ZBox, ZIcon, ZStack, ZText } from '@zadmin/zui';
-	import type { ComponentDoc } from '../catalog/index.js';
+	import { componentCategories, type ComponentDoc } from '../catalog/index.js';
 
 	let { docs }: { docs: readonly ComponentDoc[] } = $props();
 </script>
@@ -40,16 +40,22 @@
 		<p class="eyebrow">FOUNDATIONS</p>
 		<h2>基础组件</h2>
 	</header>
-	<div class="component-grid">
-		{#each docs as doc (doc.id)}
-			<a class="component-card" href={`#/components/${doc.id}`}>
-				<ZBox>
-					<div class="card-icon"><ZIcon name="plus" size={18} /></div>
-					<h3>{doc.name}</h3>
-					<ZText tone="muted">{doc.summary}</ZText>
-					<span class="learn-more">查看Demo与API →</span>
-				</ZBox>
-			</a>
-		{/each}
-	</div>
+	{#each componentCategories as category (category.id)}
+		{@const categoryDocs = docs.filter((doc) => doc.category === category.id)}
+		<div class="catalog-group">
+			<h3>{category.label}</h3>
+			<div class="component-grid">
+				{#each categoryDocs as doc (doc.id)}
+					<a class="component-card" href={`#/components/${doc.id}`}>
+						<ZBox>
+							<div class="card-icon"><ZIcon name="plus" size={18} /></div>
+							<h4>{doc.name}</h4>
+							<ZText tone="muted">{doc.summary}</ZText>
+							<span class="learn-more">查看Demo与API →</span>
+						</ZBox>
+					</a>
+				{/each}
+			</div>
+		</div>
+	{/each}
 </section>

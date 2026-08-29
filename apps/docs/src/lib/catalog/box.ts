@@ -4,10 +4,11 @@ import { defineComponentDoc } from './types.js';
 
 export const boxDoc = defineComponentDoc({
 	id: 'box',
+	category: 'gene',
 	name: 'ZBox',
 	summary: '严格的div容器，用于验证class、style、ref和ICSS变量落到真实根元素。',
 	importStatement: "import { ZBox } from '@zadmin/zui';",
-	source: 'ui/zui/src/lib/components/box/ZBox.svelte',
+	source: 'ui/zui/src/lib/components/gene/ZBox.svelte',
 	demos: [
 		{
 			id: 'box-basic',

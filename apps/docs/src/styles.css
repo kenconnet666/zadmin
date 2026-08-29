@@ -320,6 +320,18 @@ main {
 	letter-spacing: -0.035em;
 }
 
+.catalog-group {
+	margin-top: 2.25rem;
+}
+
+.catalog-group > h3 {
+	margin: 0;
+	color: #4b586b;
+	font-size: 0.78rem;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
+
 .component-grid {
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -342,7 +354,7 @@ main {
 	box-shadow: 0 20px 48px rgb(37 99 235 / 0.1);
 }
 
-.component-card h3 {
+.component-card h4 {
 	margin: 1rem 0 0.6rem;
 	font-size: 1.15rem;
 }

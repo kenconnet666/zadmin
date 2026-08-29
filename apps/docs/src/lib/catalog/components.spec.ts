@@ -15,6 +15,16 @@ describe('ZUI component documentation catalog', () => {
 			'ZField'
 		]);
 		expect(componentDocsById.size).toBe(componentDocs.length);
+		expect(componentDocs.map(({ category }) => category)).toEqual([
+			'gene',
+			'gene',
+			'layout',
+			'gene',
+			'gene',
+			'gene',
+			'input',
+			'input'
+		]);
 	});
 
 	it('gives every page runnable demos, real source and API metadata', () => {

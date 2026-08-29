@@ -4,10 +4,11 @@ import { defineComponentDoc } from './types.js';
 
 export const textDoc = defineComponentDoc({
 	id: 'text',
+	category: 'gene',
 	name: 'ZText',
 	summary: '在有限语义元素集合上应用字号、字重、tone和截断，不用视觉variant改变语义。',
 	importStatement: "import { ZText } from '@zadmin/zui';",
-	source: 'ui/zui/src/lib/components/text/ZText.svelte',
+	source: 'ui/zui/src/lib/components/gene/ZText.svelte',
 	demos: [
 		{
 			id: 'text-semantics',

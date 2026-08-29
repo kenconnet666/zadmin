@@ -119,15 +119,18 @@ ZUI负责：
 ### 4.2 源码结构
 
 ```text
-ui/zui/src/
-  theme/
-  tokens/
-  icss/
-  css/
+ui/zui/src/lib/
   compiler/
+  component-runtime/
   components/
+    gene/       5个通用单文件组件
+    input/      ZField与ZInput
+    layout/     ZStack
+  icss/
+  recipes/
   runtime/
   testing/
+  theme/
   index.ts
 ```
 

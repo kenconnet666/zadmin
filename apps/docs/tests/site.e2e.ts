@@ -10,9 +10,18 @@ test('renders the component catalog and real demo source', async ({ page }) => {
 	await page.goto('/#/');
 	await expect(page.getByRole('heading', { level: 1 })).toContainText('看见组件');
 	await expect(page.locator('.component-card')).toHaveCount(8);
+	await expect(page.locator('.catalog-group > h3')).toHaveText([
+		'通用组件',
+		'布局组件',
+		'输入组件'
+	]);
 
 	await page.goto('/#/components/button');
 	await expect(page.getByRole('heading', { level: 1 })).toHaveText('ZButton');
+	await expect(page.locator('.source-link')).toHaveAttribute(
+		'href',
+		/\/components\/gene\/ZButton\.svelte$/u
+	);
 	await page.getByRole('button', { name: '查看源码' }).first().click();
 	await expect(page.getByTestId('source-button-variants')).toContainText("from '@zadmin/zui'");
 

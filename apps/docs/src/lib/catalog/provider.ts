@@ -4,10 +4,11 @@ import { defineComponentDoc } from './types.js';
 
 export const providerDoc = defineComponentDoc({
 	id: 'provider',
+	category: 'gene',
 	name: 'ZProvider',
 	summary: '向组件树提供严格Theme和ICSS Runtime，不创建额外DOM根节点。',
 	importStatement: "import { ZProvider } from '@zadmin/zui';",
-	source: 'ui/zui/src/lib/components/provider/ZProvider.svelte',
+	source: 'ui/zui/src/lib/components/gene/ZProvider.svelte',
 	demos: [
 		{
 			id: 'provider-theme',

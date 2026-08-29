@@ -4,6 +4,7 @@ import { defineComponentDoc } from './types.js';
 
 export const inputDoc = defineComponentDoc({
 	id: 'input',
+	category: 'input',
 	name: 'ZInput',
 	summary: '保留原生input能力，同时提供bind:value、onValueChange和Field语义关联。',
 	importStatement: "import { ZInput } from '@zadmin/zui';",

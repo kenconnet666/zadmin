@@ -4,10 +4,11 @@ import { defineComponentDoc } from './types.js';
 
 export const fieldDoc = defineComponentDoc({
 	id: 'field',
+	category: 'input',
 	name: 'ZField',
 	summary: '为单一ZUI control建立label、description、error和required可访问关系。',
 	importStatement: "import { ZField } from '@zadmin/zui';",
-	source: 'ui/zui/src/lib/components/field/ZField.svelte',
+	source: 'ui/zui/src/lib/components/input/ZField.svelte',
 	demos: [
 		{
 			id: 'field-validation',

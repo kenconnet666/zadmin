@@ -254,7 +254,8 @@ ZProvider ZBox ZStack ZText ZIcon ZButton ZInput ZField
 ```text
 ui/zui/src/lib/
 	compiler/   AST分析、绑定、诊断、改写、源码名称
-	components/ 8个Z前缀基础组件
+	component-runtime/ 多组件共享的Context与根样式机制
+	components/ gene、input、layout分类下的8个单文件组件
 	icss/       Builder、hash、Registry、序列化、Sheet、值和单位
 	recipes/    recipe与slot recipe定义、缓存和HMR所有权
 	theme/      默认主题、定义、属性元数据、类型和单位
