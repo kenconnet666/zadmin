@@ -2,16 +2,16 @@
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
 	import type { ZDialogTitleProps } from '../dialog/ZDialogTitle.svelte';
 
-	export type ZAlertDialogTitleProps = ZDialogTitleProps;
+	export type ZDrawerTitleProps = ZDialogTitleProps;
 	export const zuiMetadata = {
 		category: 'overlay',
-		id: 'alert-dialog-title',
-		importStatement: "import { ZAlertDialogTitle } from '@zadmin/zui';",
-		name: 'ZAlertDialogTitle',
+		id: 'drawer-title',
+		importStatement: "import { ZDrawerTitle } from '@zadmin/zui';",
+		name: 'ZDrawerTitle',
 		bindings: [
 			{ description: '真实heading引用。', name: 'ref', type: 'HTMLHeadingElement | null' }
 		],
-		dependencies: ['ZAlertDialog', 'ZDialogTitle'],
+		dependencies: ['ZDrawer', 'ZDialogTitle'],
 		events: [],
 		keyboard: [],
 		parts: [],
@@ -25,18 +25,18 @@
 			}
 		],
 		since: '0.3.0',
-		snippets: [{ description: 'AlertDialog标题。', name: 'children', type: 'Snippet' }],
-		source: 'ui/zui/src/components/compound/alert-dialog/ZAlertDialogTitle.svelte',
+		snippets: [{ description: 'Drawer标题。', name: 'children', type: 'Snippet' }],
+		source: 'ui/zui/src/components/compound/drawer/ZDrawerTitle.svelte',
 		states: [],
 		status: 'experimental',
-		summary: '提供AlertDialog稳定可访问名称的标题。'
+		summary: '提供Drawer稳定可访问名称的标题。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
 
 <script lang="ts">
 	import ZDialogTitle from '../dialog/ZDialogTitle.svelte';
 
-	let { ref = $bindable(null), ...rest }: ZAlertDialogTitleProps = $props();
+	let { ref = $bindable(null), ...rest }: ZDrawerTitleProps = $props();
 </script>
 
 <ZDialogTitle {...rest} bind:ref />

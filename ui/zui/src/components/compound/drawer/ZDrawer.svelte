@@ -2,7 +2,7 @@
 	import type { Snippet } from 'svelte';
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
 
-	export interface ZAlertDialogProps {
+	export interface ZDrawerProps {
 		readonly children?: Snippet;
 		readonly defaultOpen?: boolean;
 		readonly onOpenChange?: (open: boolean) => void;
@@ -11,22 +11,22 @@
 
 	export const zuiMetadata = {
 		category: 'overlay',
-		id: 'alert-dialog',
+		id: 'drawer',
 		importStatement:
-			"import { ZAlertDialog, ZAlertDialogTrigger, ZAlertDialogOverlay, ZAlertDialogContent, ZAlertDialogTitle, ZAlertDialogDescription, ZAlertDialogCancel, ZAlertDialogAction } from '@zadmin/zui';",
-		name: 'ZAlertDialog',
+			"import { ZDrawer, ZDrawerTrigger, ZDrawerOverlay, ZDrawerContent, ZDrawerTitle, ZDrawerDescription, ZDrawerClose } from '@zadmin/zui';",
+		name: 'ZDrawer',
 		bindings: [{ description: '当前打开状态。', name: 'open', type: 'boolean' }],
-		dependencies: ['ZDialog', 'FocusScope', 'inert others', 'scroll lock'],
+		dependencies: ['ZDialog', 'logical placement', 'Presence'],
 		events: [
 			{
-				description: '用户显式打开、取消或确认后调用一次。',
+				description: '打开或关闭后调用一次。',
 				name: 'onOpenChange',
 				type: '(open: boolean) => void'
 			}
 		],
 		keyboard: [
-			{ description: '在Trigger、Cancel与Action之间使用原生按钮键盘语义。', key: 'Enter / Space' },
-			{ description: '在AlertDialog中循环焦点；Escape不会隐式关闭。', key: 'Tab / Escape' }
+			{ description: '关闭最顶层Drawer并恢复焦点。', key: 'Escape' },
+			{ description: '在Drawer内部循环焦点。', key: 'Tab / Shift+Tab' }
 		],
 		parts: [],
 		props: [
@@ -45,23 +45,18 @@
 			}
 		],
 		since: '0.3.0',
-		snippets: [{ description: 'AlertDialog复合部件。', name: 'children', type: 'Snippet' }],
-		source: 'ui/zui/src/components/compound/alert-dialog/ZAlertDialog.svelte',
+		snippets: [{ description: 'Drawer复合部件。', name: 'children', type: 'Snippet' }],
+		source: 'ui/zui/src/components/compound/drawer/ZDrawer.svelte',
 		states: [],
 		status: 'experimental',
-		summary: '建立强制显式取消或确认语义的modal alertdialog复合根组件。'
+		summary: '复用Dialog modal合同并提供四向逻辑placement的侧滑面板根组件。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
 
 <script lang="ts">
 	import ZDialog from '../dialog/ZDialog.svelte';
 
-	let {
-		children,
-		defaultOpen = false,
-		onOpenChange,
-		open = $bindable()
-	}: ZAlertDialogProps = $props();
+	let { children, defaultOpen = false, onOpenChange, open = $bindable() }: ZDrawerProps = $props();
 </script>
 
 <ZDialog bind:open {defaultOpen} {onOpenChange}>

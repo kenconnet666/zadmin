@@ -26,6 +26,13 @@ import {
 	ZDialogOverlay,
 	ZDialogTitle,
 	ZDialogTrigger,
+	ZDrawer,
+	ZDrawerClose,
+	ZDrawerContent,
+	ZDrawerDescription,
+	ZDrawerOverlay,
+	ZDrawerTitle,
+	ZDrawerTrigger,
 	ZPagination,
 	ZPopover,
 	ZPopoverContent,
@@ -68,6 +75,13 @@ import {
 	type ZDialogProps,
 	type ZDialogTitleProps,
 	type ZDialogTriggerProps,
+	type ZDrawerCloseProps,
+	type ZDrawerContentProps,
+	type ZDrawerDescriptionProps,
+	type ZDrawerOverlayProps,
+	type ZDrawerProps,
+	type ZDrawerTitleProps,
+	type ZDrawerTriggerProps,
 	type ZPaginationProps,
 	type ZPopoverContentProps,
 	type ZPopoverProps,
@@ -130,6 +144,17 @@ const dialogTitleProps: ComponentProps<typeof ZDialogTitle> = {} satisfies ZDial
 const dialogDescriptionProps: ComponentProps<typeof ZDialogDescription> =
 	{} satisfies ZDialogDescriptionProps;
 const dialogCloseProps: ComponentProps<typeof ZDialogClose> = {} satisfies ZDialogCloseProps;
+const drawerProps: ComponentProps<typeof ZDrawer> = { defaultOpen: true } satisfies ZDrawerProps;
+const drawerTriggerProps: ComponentProps<typeof ZDrawerTrigger> = {} satisfies ZDrawerTriggerProps;
+const drawerOverlayProps: ComponentProps<typeof ZDrawerOverlay> = {} satisfies ZDrawerOverlayProps;
+const drawerContentProps: ComponentProps<typeof ZDrawerContent> = {
+	placement: 'start',
+	size: 'large'
+} satisfies ZDrawerContentProps;
+const drawerTitleProps: ComponentProps<typeof ZDrawerTitle> = {} satisfies ZDrawerTitleProps;
+const drawerDescriptionProps: ComponentProps<typeof ZDrawerDescription> =
+	{} satisfies ZDrawerDescriptionProps;
+const drawerCloseProps: ComponentProps<typeof ZDrawerClose> = {} satisfies ZDrawerCloseProps;
 const paginationProps: ComponentProps<typeof ZPagination> = {
 	defaultPage: 2,
 	totalPages: 20
@@ -201,6 +226,13 @@ void dialogContentProps;
 void dialogTitleProps;
 void dialogDescriptionProps;
 void dialogCloseProps;
+void drawerProps;
+void drawerTriggerProps;
+void drawerOverlayProps;
+void drawerContentProps;
+void drawerTitleProps;
+void drawerDescriptionProps;
+void drawerCloseProps;
 void paginationProps;
 void popoverProps;
 void popoverTriggerProps;

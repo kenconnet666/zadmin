@@ -9,6 +9,7 @@ import AlertDialogFixture from './AlertDialogFixture.svelte';
 import CheckboxFixture from './CheckboxFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
 import DialogFixture from './DialogFixture.svelte';
+import DrawerFixture from './DrawerFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
 import PaginationFixture from './PaginationFixture.svelte';
 import PopoverFixture from './PopoverFixture.svelte';
@@ -90,6 +91,8 @@ describe('compiled ICSS browser updates', () => {
 		expect(document.body.style.overflow).toBe('hidden');
 		expect(outsideRoot?.inert).toBe(true);
 		expect(document.activeElement).toBe(input);
+		trigger?.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+		expect(content?.getAttribute('data-state')).toBe('open');
 		input?.dispatchEvent(
 			new KeyboardEvent('keydown', { bubbles: true, key: 'Tab', shiftKey: true })
 		);
@@ -108,6 +111,26 @@ describe('compiled ICSS browser updates', () => {
 		expect(outsideRoot?.inert).toBe(false);
 		expect(document.activeElement).toBe(trigger);
 		expect(output?.textContent).toBe('false:2');
+	});
+
+	it('coordinates Drawer placement, focus, Escape and Presence cleanup', async () => {
+		render(DrawerFixture);
+		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="drawer-trigger"]');
+		trigger?.focus();
+		trigger?.click();
+		await tick();
+		const content = document.querySelector<HTMLElement>('[data-testid="drawer-content"]');
+		expect(content?.parentNode).toBe(document.body);
+		expect(getComputedStyle(content!).insetInlineEnd).toBe('0px');
+		expect(getComputedStyle(content!).width).toBe('400px');
+		expect(document.activeElement?.getAttribute('aria-label')).toBe('Drawer input');
+
+		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+		await tick();
+		await new Promise((resolve) => setTimeout(resolve, 220));
+		await tick();
+		expect(document.querySelector('[data-testid="drawer-content"]')).toBeNull();
+		expect(document.activeElement).toBe(trigger);
 	});
 
 	it('coordinates Tooltip hover, focus, delay, portal and Escape', async () => {

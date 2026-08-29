@@ -42,6 +42,24 @@ export { default as ZDialogTitle } from '../components/compound/dialog/ZDialogTi
 export type { ZDialogTitleProps } from '../components/compound/dialog/ZDialogTitle.svelte';
 export { default as ZDialogTrigger } from '../components/compound/dialog/ZDialogTrigger.svelte';
 export type { ZDialogTriggerProps } from '../components/compound/dialog/ZDialogTrigger.svelte';
+export { default as ZDrawer } from '../components/compound/drawer/ZDrawer.svelte';
+export type { ZDrawerProps } from '../components/compound/drawer/ZDrawer.svelte';
+export { default as ZDrawerClose } from '../components/compound/drawer/ZDrawerClose.svelte';
+export type { ZDrawerCloseProps } from '../components/compound/drawer/ZDrawerClose.svelte';
+export { default as ZDrawerContent } from '../components/compound/drawer/ZDrawerContent.svelte';
+export type {
+	DrawerPlacement,
+	DrawerSize,
+	ZDrawerContentProps
+} from '../components/compound/drawer/ZDrawerContent.svelte';
+export { default as ZDrawerDescription } from '../components/compound/drawer/ZDrawerDescription.svelte';
+export type { ZDrawerDescriptionProps } from '../components/compound/drawer/ZDrawerDescription.svelte';
+export { default as ZDrawerOverlay } from '../components/compound/drawer/ZDrawerOverlay.svelte';
+export type { ZDrawerOverlayProps } from '../components/compound/drawer/ZDrawerOverlay.svelte';
+export { default as ZDrawerTitle } from '../components/compound/drawer/ZDrawerTitle.svelte';
+export type { ZDrawerTitleProps } from '../components/compound/drawer/ZDrawerTitle.svelte';
+export { default as ZDrawerTrigger } from '../components/compound/drawer/ZDrawerTrigger.svelte';
+export type { ZDrawerTriggerProps } from '../components/compound/drawer/ZDrawerTrigger.svelte';
 export { default as ZPopover } from '../components/compound/popover/ZPopover.svelte';
 export type {
 	PopoverPlacement,

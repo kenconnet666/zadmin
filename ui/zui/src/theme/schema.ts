@@ -89,6 +89,9 @@ export const DEFAULT_THEME_SCHEMA = {
 	},
 	size: {
 		dialogMedium: 512,
+		drawerLarge: 560,
+		drawerMedium: 400,
+		drawerSmall: 320,
 		full: '100%',
 		large: 48,
 		medium: 32,

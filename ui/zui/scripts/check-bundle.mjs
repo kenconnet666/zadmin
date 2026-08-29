@@ -73,6 +73,17 @@ const components = [
 		path: 'compound/dialog/ZDialogDescription.svelte'
 	},
 	{ id: 'dialog-close', name: 'ZDialogClose', path: 'compound/dialog/ZDialogClose.svelte' },
+	{ id: 'drawer', name: 'ZDrawer', path: 'compound/drawer/ZDrawer.svelte' },
+	{ id: 'drawer-trigger', name: 'ZDrawerTrigger', path: 'compound/drawer/ZDrawerTrigger.svelte' },
+	{ id: 'drawer-overlay', name: 'ZDrawerOverlay', path: 'compound/drawer/ZDrawerOverlay.svelte' },
+	{ id: 'drawer-content', name: 'ZDrawerContent', path: 'compound/drawer/ZDrawerContent.svelte' },
+	{ id: 'drawer-title', name: 'ZDrawerTitle', path: 'compound/drawer/ZDrawerTitle.svelte' },
+	{
+		id: 'drawer-description',
+		name: 'ZDrawerDescription',
+		path: 'compound/drawer/ZDrawerDescription.svelte'
+	},
+	{ id: 'drawer-close', name: 'ZDrawerClose', path: 'compound/drawer/ZDrawerClose.svelte' },
 	{ id: 'popover', name: 'ZPopover', path: 'compound/popover/ZPopover.svelte' },
 	{
 		id: 'popover-trigger',

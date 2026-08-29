@@ -17,6 +17,13 @@ export { zuiMetadata as dialogDescriptionMetadata } from '../components/compound
 export { zuiMetadata as dialogOverlayMetadata } from '../components/compound/dialog/ZDialogOverlay.svelte';
 export { zuiMetadata as dialogTitleMetadata } from '../components/compound/dialog/ZDialogTitle.svelte';
 export { zuiMetadata as dialogTriggerMetadata } from '../components/compound/dialog/ZDialogTrigger.svelte';
+export { zuiMetadata as drawerMetadata } from '../components/compound/drawer/ZDrawer.svelte';
+export { zuiMetadata as drawerCloseMetadata } from '../components/compound/drawer/ZDrawerClose.svelte';
+export { zuiMetadata as drawerContentMetadata } from '../components/compound/drawer/ZDrawerContent.svelte';
+export { zuiMetadata as drawerDescriptionMetadata } from '../components/compound/drawer/ZDrawerDescription.svelte';
+export { zuiMetadata as drawerOverlayMetadata } from '../components/compound/drawer/ZDrawerOverlay.svelte';
+export { zuiMetadata as drawerTitleMetadata } from '../components/compound/drawer/ZDrawerTitle.svelte';
+export { zuiMetadata as drawerTriggerMetadata } from '../components/compound/drawer/ZDrawerTrigger.svelte';
 export { zuiMetadata as popoverMetadata } from '../components/compound/popover/ZPopover.svelte';
 export { zuiMetadata as popoverContentMetadata } from '../components/compound/popover/ZPopoverContent.svelte';
 export { zuiMetadata as popoverTriggerMetadata } from '../components/compound/popover/ZPopoverTrigger.svelte';

@@ -41,7 +41,7 @@
 <script lang="ts">
 	import ZButton from '../../gene/ZButton.svelte';
 	import { useZDialog } from './context.svelte.js';
-	let { onclick, ...rest }: ZDialogCloseProps = $props();
+	let { onclick, ref = $bindable(null), ...rest }: ZDialogCloseProps = $props();
 	const dialog = useZDialog();
 	function handleClick(event: MouseEvent & { currentTarget: HTMLButtonElement }): void {
 		onclick?.(event);
@@ -49,4 +49,4 @@
 	}
 </script>
 
-<ZButton {...rest} onclick={handleClick} />
+<ZButton {...rest} bind:ref onclick={handleClick} />

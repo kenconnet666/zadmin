@@ -325,6 +325,22 @@ test('requires an explicit AlertDialog action and restores focus after the decis
 	await expect(page.getByText(/open = false · 结果 = 已确认删除/u)).toBeVisible();
 });
 
+test('positions Drawer on logical edges and restores modal resources', async ({ page }) => {
+	await page.goto('/#/components/drawer');
+	const trigger = page.getByTestId('drawer-trigger');
+	await trigger.click();
+	const drawer = page.getByTestId('drawer-content');
+	await expect(drawer).toHaveAttribute('role', 'dialog');
+	await expect(drawer).toHaveCSS('position', 'fixed');
+	await expect(drawer).toHaveCSS('right', '0px');
+	await expect(drawer).toHaveCSS('width', '400px');
+	await expect(page.getByRole('textbox', { name: '发布通道' })).toBeFocused();
+	await page.keyboard.press('Escape');
+	await expect(drawer).toHaveCount(0);
+	await expect(trigger).toBeFocused();
+	await expect(page.locator('body')).not.toHaveCSS('overflow', 'hidden');
+});
+
 test('keeps S1 primitives semantic and display preferences effective', async ({ page }) => {
 	await page.goto('/#/guides/theme');
 	await expect(page.getByRole('heading', { level: 1 })).toContainText('主题不是一组颜色');
@@ -385,6 +401,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/tabs',
 		'#/components/alert-dialog',
 		'#/components/dialog',
+		'#/components/drawer',
 		'#/components/popover',
 		'#/components/tooltip'
 	]) {

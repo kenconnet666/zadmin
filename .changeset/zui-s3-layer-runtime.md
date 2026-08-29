@@ -2,4 +2,4 @@
 '@zadmin/zui': minor
 ---
 
-增加独立`@zadmin/zui/layer`入口与LayerStack、Portal、DismissableLayer、FocusScope、scroll lock、inert others、Floating UI定位基础设施，以及ZPopover、ZTooltip、ZDialog和强制显式决策的ZAlertDialog消费者；同时按foundation、collection、form、layer职责重组runtime目录，保持基础runtime不打入浮层依赖。
+增加独立`@zadmin/zui/layer`入口与LayerStack、Portal、DismissableLayer、FocusScope、scroll lock、inert others、Floating UI定位基础设施，以及ZPopover、ZTooltip、ZDialog、强制显式决策的ZAlertDialog和逻辑方向ZDrawer消费者；同时按foundation、collection、form、layer职责重组runtime目录，保持基础runtime不打入浮层依赖。

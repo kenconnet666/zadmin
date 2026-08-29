@@ -36,6 +36,7 @@ import AccordionFixture from './AccordionFixture.svelte';
 import AlertDialogFixture from './AlertDialogFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
 import DialogFixture from './DialogFixture.svelte';
+import DrawerFixture from './DrawerFixture.svelte';
 import PopoverFixture from './PopoverFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
 import RadioGroupFixture from './RadioGroupFixture.svelte';
@@ -197,6 +198,26 @@ describe('ZUI foundational components', () => {
 		expect(open).toContain('aria-modal="true"');
 		expect(open).toContain('Delete production?');
 		expect(open).toContain('This cannot be undone.');
+	});
+
+	it('renders Drawer SSR with dialog relationships when initially open', () => {
+		expect(render(DrawerFixture).body).not.toContain('role="dialog"');
+		const variants = [
+			{ direction: 'ltr', motion: 'auto', placement: 'start', size: 'small' },
+			{ direction: 'rtl', motion: 'full', placement: 'start', size: 'medium' },
+			{ direction: 'ltr', motion: 'reduced', placement: 'end', size: 'large' },
+			{ direction: 'rtl', motion: 'auto', placement: 'end', size: 'full' },
+			{ direction: 'ltr', motion: 'auto', placement: 'top', size: 'medium' },
+			{ direction: 'ltr', motion: 'auto', placement: 'bottom', size: 'medium' }
+		] as const;
+		const rendered = variants.map(
+			(variant) => render(DrawerFixture, { props: { defaultOpen: true, ...variant } }).body
+		);
+		const open = rendered[0] ?? '';
+		expect(open).toContain('role="dialog"');
+		expect(open).toContain('aria-modal="true"');
+		expect(open).toContain('Fixture drawer');
+		expect(new Set(rendered)).toHaveLength(variants.length);
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

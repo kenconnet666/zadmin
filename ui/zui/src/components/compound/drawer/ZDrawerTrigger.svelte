@@ -2,14 +2,14 @@
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
 	import type { ZDialogTriggerProps } from '../dialog/ZDialogTrigger.svelte';
 
-	export type ZAlertDialogTriggerProps = ZDialogTriggerProps;
+	export type ZDrawerTriggerProps = ZDialogTriggerProps;
 	export const zuiMetadata = {
 		category: 'overlay',
-		id: 'alert-dialog-trigger',
-		importStatement: "import { ZAlertDialogTrigger } from '@zadmin/zui';",
-		name: 'ZAlertDialogTrigger',
+		id: 'drawer-trigger',
+		importStatement: "import { ZDrawerTrigger } from '@zadmin/zui';",
+		name: 'ZDrawerTrigger',
 		bindings: [{ description: '真实button引用。', name: 'ref', type: 'HTMLButtonElement | null' }],
-		dependencies: ['ZAlertDialog', 'ZButton'],
+		dependencies: ['ZDrawer', 'ZButton'],
 		events: [
 			{
 				description: 'preventDefault可取消打开。',
@@ -17,7 +17,7 @@
 				type: 'MouseEventHandler<HTMLButtonElement>'
 			}
 		],
-		keyboard: [{ description: '打开AlertDialog。', key: 'Enter / Space' }],
+		keyboard: [{ description: '打开Drawer。', key: 'Enter / Space' }],
 		parts: [],
 		props: [
 			{
@@ -30,17 +30,17 @@
 		],
 		since: '0.3.0',
 		snippets: [{ description: 'Trigger内容。', name: 'children', type: 'Snippet' }],
-		source: 'ui/zui/src/components/compound/alert-dialog/ZAlertDialogTrigger.svelte',
+		source: 'ui/zui/src/components/compound/drawer/ZDrawerTrigger.svelte',
 		states: [{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] }],
 		status: 'experimental',
-		summary: '建立alertdialog aria关系并打开所属AlertDialog。'
+		summary: '建立Drawer aria关系并打开所属Drawer。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
 
 <script lang="ts">
 	import ZDialogTrigger from '../dialog/ZDialogTrigger.svelte';
 
-	let { ref = $bindable(null), ...rest }: ZAlertDialogTriggerProps = $props();
+	let { ref = $bindable(null), ...rest }: ZDrawerTriggerProps = $props();
 </script>
 
 <ZDialogTrigger {...rest} bind:ref />

@@ -30,6 +30,7 @@ describe('ZUI component documentation catalog', () => {
 			'ZTabs',
 			'ZAlertDialog',
 			'ZDialog',
+			'ZDrawer',
 			'ZPopover',
 			'ZTooltip'
 		]);
@@ -58,6 +59,7 @@ describe('ZUI component documentation catalog', () => {
 			'navigation',
 			'navigation',
 			'navigation',
+			'overlay',
 			'overlay',
 			'overlay',
 			'overlay',

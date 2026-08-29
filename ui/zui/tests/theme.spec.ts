@@ -85,6 +85,9 @@ describe('ZUI themes', () => {
 		expect(defaultTheme.color.dangerHover).toBe('#b91c1c');
 		expect(defaultTheme.color.focus).toBe('#60a5fa');
 		expect(defaultTheme.color.overlay).toBe('#0f172a99');
+		expect(defaultTheme.size.drawerSmall).toBe(320);
+		expect(defaultTheme.size.drawerMedium).toBe(400);
+		expect(defaultTheme.size.drawerLarge).toBe(560);
 		expect(defaultTheme.color.primary).toBe('#2563eb');
 		expect(defaultTheme.size.dialogMedium).toBe(512);
 		expect(defaultTheme.indicatorSize.medium).toBe(18);

@@ -2,22 +2,22 @@
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
 	import type { ZDialogCloseProps } from '../dialog/ZDialogClose.svelte';
 
-	export type ZAlertDialogCancelProps = ZDialogCloseProps;
+	export type ZDrawerCloseProps = ZDialogCloseProps;
 	export const zuiMetadata = {
 		category: 'overlay',
-		id: 'alert-dialog-cancel',
-		importStatement: "import { ZAlertDialogCancel } from '@zadmin/zui';",
-		name: 'ZAlertDialogCancel',
+		id: 'drawer-close',
+		importStatement: "import { ZDrawerClose } from '@zadmin/zui';",
+		name: 'ZDrawerClose',
 		bindings: [{ description: '真实button引用。', name: 'ref', type: 'HTMLButtonElement | null' }],
-		dependencies: ['ZAlertDialog', 'ZDialogClose', 'ZButton'],
+		dependencies: ['ZDrawer', 'ZDialogClose'],
 		events: [
 			{
-				description: 'preventDefault可保持AlertDialog打开。',
+				description: 'preventDefault可取消关闭。',
 				name: 'onclick',
 				type: 'MouseEventHandler<HTMLButtonElement>'
 			}
 		],
-		keyboard: [{ description: '显式取消并关闭AlertDialog。', key: 'Enter / Space' }],
+		keyboard: [{ description: '关闭Drawer。', key: 'Enter / Space' }],
 		parts: [],
 		props: [
 			{
@@ -29,18 +29,18 @@
 			}
 		],
 		since: '0.3.0',
-		snippets: [{ description: '取消操作内容。', name: 'children', type: 'Snippet' }],
-		source: 'ui/zui/src/components/compound/alert-dialog/ZAlertDialogCancel.svelte',
+		snippets: [{ description: 'Close内容。', name: 'children', type: 'Snippet' }],
+		source: 'ui/zui/src/components/compound/drawer/ZDrawerClose.svelte',
 		states: [],
 		status: 'experimental',
-		summary: '默认secondary视觉并显式取消AlertDialog。'
+		summary: '显式关闭Drawer并恢复Trigger焦点。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
 
 <script lang="ts">
 	import ZDialogClose from '../dialog/ZDialogClose.svelte';
 
-	let { ref = $bindable(null), variant = 'secondary', ...rest }: ZAlertDialogCancelProps = $props();
+	let { ref = $bindable(null), ...rest }: ZDrawerCloseProps = $props();
 </script>
 
-<ZDialogClose {...rest} {variant} bind:ref />
+<ZDialogClose {...rest} bind:ref />
