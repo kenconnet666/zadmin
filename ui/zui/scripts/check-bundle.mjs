@@ -247,6 +247,12 @@ const components = [
 		name: 'ZPagination',
 		path: 'navigation/ZPagination.svelte'
 	},
+	{ id: 'command', name: 'ZCommand', path: 'navigation/ZCommand.svelte' },
+	{
+		id: 'command-palette',
+		name: 'ZCommandPalette',
+		path: 'navigation/ZCommandPalette.svelte'
+	},
 	{
 		id: 'switch',
 		maxIncrementalGzip: 3.625 * 1024,

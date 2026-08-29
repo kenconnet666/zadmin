@@ -474,6 +474,37 @@ test('keeps Mention textarea focus, active descendant, insertion, form value and
 	await expect(editor).toHaveValue('发布通知：');
 });
 
+test('keeps Command ranking, active descendant and action synchronized', async ({ page }) => {
+	await page.goto('/#/components/command');
+	const input = page.getByRole('combobox', { name: '搜索管理命令' });
+	await input.fill('deploy');
+	await expect(page.getByRole('listbox', { name: '管理命令' }).getByRole('option')).toHaveCount(2);
+	await expect(input).toHaveAttribute('aria-activedescendant', /option/u);
+	await page.keyboard.press('Enter');
+	await expect(page.getByText('query = deploy · action = preview')).toBeVisible();
+});
+
+test('keeps CommandPalette shortcut, modal focus, action close and focus restoration synchronized', async ({
+	page
+}) => {
+	await page.goto('/#/components/command-palette');
+	const trigger = page.getByRole('button', { name: '打开快速操作' });
+	await trigger.click();
+	const dialog = page.getByRole('dialog', { name: '快速操作' });
+	await expect(dialog).toBeVisible();
+	const input = page.getByRole('combobox', { name: '搜索快捷命令' });
+	await expect(input).toBeFocused();
+	await input.fill('dark');
+	await page.keyboard.press('Enter');
+	await expect(dialog).toHaveCount(0);
+	await expect(trigger).toBeFocused();
+	await expect(page.getByText('open = false · action = theme')).toBeVisible();
+	await page.keyboard.press('Control+k');
+	await expect(dialog).toBeVisible();
+	await page.keyboard.press('Escape');
+	await expect(dialog).toHaveCount(0);
+});
+
 test('keeps Popover portal, ARIA, focus, positioning and dismiss synchronized', async ({
 	page
 }) => {
@@ -657,6 +688,8 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/switch',
 		'#/components/slider',
 		'#/components/accordion',
+		'#/components/command',
+		'#/components/command-palette',
 		'#/components/context-menu',
 		'#/components/dropdown-menu',
 		'#/components/menu',

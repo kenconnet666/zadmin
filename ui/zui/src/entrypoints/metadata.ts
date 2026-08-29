@@ -90,6 +90,8 @@ export { zuiMetadata as tagsInputMetadata } from '../components/input/ZTagsInput
 export { zuiMetadata as treeSelectMetadata } from '../components/input/ZTreeSelect.svelte';
 export { zuiMetadata as transferMetadata } from '../components/input/ZTransfer.svelte';
 export { zuiMetadata as paginationMetadata } from '../components/navigation/ZPagination.svelte';
+export { zuiMetadata as commandMetadata } from '../components/navigation/ZCommand.svelte';
+export { zuiMetadata as commandPaletteMetadata } from '../components/navigation/ZCommandPalette.svelte';
 export { zuiMetadata as stackMetadata } from '../components/layout/ZStack.svelte';
 export { zuiMetadata as containerMetadata } from '../components/layout/ZContainer.svelte';
 export { zuiMetadata as aspectRatioMetadata } from '../components/layout/ZAspectRatio.svelte';

@@ -187,7 +187,7 @@
 	}: ZCascaderProps = $props();
 	const zui = useZui();
 	const tree = $derived(createTreeIndex(nodes));
-	let draft = $state<readonly SelectionKey[]>([]);
+	let draft = $state<readonly SelectionKey[]>(Object.freeze([...defaultValue]));
 	let proxy = $state<HTMLInputElement | null>(null);
 	const options = new Map<string, HTMLDivElement>();
 	const valueState = new ControllableState<readonly SelectionKey[]>({

@@ -90,6 +90,8 @@
 	});
 </script>
 
+<!-- Multiline mention editors retain textbox semantics while exposing the ARIA combobox popup state. -->
+<!-- svelte-ignore a11y_role_supports_aria_props_implicit -->
 <textarea
 	{...rest}
 	bind:this={ref}
@@ -112,7 +114,9 @@
 	}}
 	oninput={(event) => {
 		oninput?.(event);
-		if (!event.defaultPrevented) onEditorInput(event);
+		if (!event.defaultPrevented) {
+			onEditorInput(event as unknown as InputEvent & { currentTarget: HTMLTextAreaElement });
+		}
 	}}
 	onkeydown={(event) => {
 		onkeydown?.(event);

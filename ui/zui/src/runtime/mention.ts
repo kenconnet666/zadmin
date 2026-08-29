@@ -14,25 +14,24 @@ export function findMentionQuery(
 ): MentionQuery | undefined {
 	const end = Math.max(0, Math.min(value.length, caret));
 	const beforeCaret = value.slice(0, end);
-	let match: { index: number; trigger: string } | undefined;
-	for (const trigger of triggers) {
-		if (!trigger) continue;
-		const index = beforeCaret.lastIndexOf(trigger);
-		if (
-			index >= 0 &&
-			(!match ||
-				index > match.index ||
-				(index === match.index && trigger.length > match.trigger.length))
-		) {
-			match = { index, trigger };
-		}
+	const matches = triggers
+		.filter(Boolean)
+		.map((trigger) => ({ index: beforeCaret.lastIndexOf(trigger), trigger }))
+		.filter(({ index }) => index >= 0)
+		.sort(
+			(left, right) =>
+				right.index + right.trigger.length - (left.index + left.trigger.length) ||
+				right.trigger.length - left.trigger.length
+		);
+	for (const match of matches) {
+		const preceding = Array.from(value.slice(0, match.index)).at(-1) ?? '';
+		if (!isBoundary(preceding)) continue;
+		const query = value.slice(match.index + match.trigger.length, end);
+		if (/\s/u.test(query) || triggers.some((trigger) => trigger && query.includes(trigger)))
+			continue;
+		return Object.freeze({ end, query, start: match.index, trigger: match.trigger });
 	}
-	const preceding = match ? (Array.from(value.slice(0, match.index)).at(-1) ?? '') : '';
-	if (!match || !isBoundary(preceding)) return undefined;
-	const query = value.slice(match.index + match.trigger.length, end);
-	if (/\s/u.test(query) || triggers.some((trigger) => trigger && query.includes(trigger)))
-		return undefined;
-	return Object.freeze({ end, query, start: match.index, trigger: match.trigger });
+	return undefined;
 }
 
 export function insertMention(

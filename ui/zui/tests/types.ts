@@ -24,6 +24,8 @@ import {
 	ZComboboxContent,
 	ZComboboxInput,
 	ZComboboxItem,
+	ZCommand,
+	ZCommandPalette,
 	ZContextMenu,
 	ZContextMenuContent,
 	ZContextMenuTrigger,
@@ -110,6 +112,8 @@ import {
 	type ZComboboxInputProps,
 	type ZComboboxItemProps,
 	type ZComboboxProps,
+	type ZCommandPaletteProps,
+	type ZCommandProps,
 	type ZContextMenuContentProps,
 	type ZContextMenuProps,
 	type ZContextMenuTriggerProps,
@@ -340,6 +344,13 @@ const mentionProps: ComponentProps<typeof ZMention> = {
 	items: [{ key: 'alice', label: 'Alice' }],
 	value: 'Notify @alice'
 } satisfies ZMentionProps;
+const commandProps: ComponentProps<typeof ZCommand> = {
+	items: [{ key: 'open', label: 'Open' }]
+} satisfies ZCommandProps;
+const commandPaletteProps: ComponentProps<typeof ZCommandPalette> = {
+	items: [{ key: 'open', label: 'Open' }],
+	shortcut: { key: 'k', modKey: true }
+} satisfies ZCommandPaletteProps;
 const sliderProps: ComponentProps<typeof ZSlider> = {
 	defaultValue: 25,
 	max: 50,
@@ -442,6 +453,8 @@ void treeSelectProps;
 void cascaderProps;
 void transferProps;
 void mentionProps;
+void commandProps;
+void commandPaletteProps;
 void sliderProps;
 void switchProps;
 void tabsProps;

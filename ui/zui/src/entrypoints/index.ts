@@ -214,6 +214,15 @@ export { default as ZTransfer } from '../components/input/ZTransfer.svelte';
 export type { TransferItem, ZTransferProps } from '../components/input/ZTransfer.svelte';
 export { default as ZPagination } from '../components/navigation/ZPagination.svelte';
 export type { ZPaginationProps } from '../components/navigation/ZPagination.svelte';
+export { default as ZCommand } from '../components/navigation/ZCommand.svelte';
+export type {
+	CommandActionEvent,
+	CommandItem,
+	ZCommandProps
+} from '../components/navigation/ZCommand.svelte';
+export { default as ZCommandPalette } from '../components/navigation/ZCommandPalette.svelte';
+export type { ZCommandPaletteProps } from '../components/navigation/ZCommandPalette.svelte';
+export type { CommandShortcut } from '../runtime/command.js';
 export { default as ZStack } from '../components/layout/ZStack.svelte';
 export type {
 	ZStackAlignment,

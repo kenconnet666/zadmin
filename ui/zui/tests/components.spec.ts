@@ -33,6 +33,8 @@ import { __icssCarrier } from '../src/runtime/foundation/compiler-bridge.js';
 import ContextProbe from './ContextProbe.svelte';
 import ContextMenuFixture from './ContextMenuFixture.svelte';
 import ComboboxFixture from './ComboboxFixture.svelte';
+import CommandFixture from './CommandFixture.svelte';
+import CommandPaletteFixture from './CommandPaletteFixture.svelte';
 import CascaderFixture from './CascaderFixture.svelte';
 import AccordionFixture from './AccordionFixture.svelte';
 import AlertDialogFixture from './AlertDialogFixture.svelte';
@@ -365,6 +367,25 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain('aria-expanded="false"');
 		expect(result).toContain('name="message"');
 		expect(result).not.toContain('role="listbox"');
+	});
+
+	it('renders Command grouped active-descendant results during SSR', () => {
+		const result = render(CommandFixture).body;
+		expect(result).toContain('role="combobox"');
+		expect(result).toContain('role="listbox"');
+		expect(result.match(/role="group"/gu)).toHaveLength(2);
+		expect(result.match(/role="option"/gu)).toHaveLength(3);
+		expect(result).toContain('aria-activedescendant');
+	});
+
+	it('renders CommandPalette trigger closed and modal dialog when initially open', () => {
+		const closed = render(CommandPaletteFixture).body;
+		expect(closed).toContain('Open palette');
+		expect(closed).not.toContain('role="dialog"');
+		const open = render(CommandPaletteFixture, { props: { defaultOpen: true } }).body;
+		expect(open).toContain('role="dialog"');
+		expect(open).toContain('Quick actions');
+		expect(open).toContain('Search palette');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

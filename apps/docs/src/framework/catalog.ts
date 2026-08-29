@@ -28,6 +28,8 @@ import { stackDoc } from '../content/components/layout/stack/doc.js';
 import { aspectRatioDoc } from '../content/components/layout/aspect-ratio/doc.js';
 import { containerDoc } from '../content/components/layout/container/doc.js';
 import { accordionDoc } from '../content/components/navigation/accordion/doc.js';
+import { commandDoc } from '../content/components/navigation/command/doc.js';
+import { commandPaletteDoc } from '../content/components/navigation/command-palette/doc.js';
 import { contextMenuDoc } from '../content/components/navigation/context-menu/doc.js';
 import { dropdownMenuDoc } from '../content/components/navigation/dropdown-menu/doc.js';
 import { paginationDoc } from '../content/components/navigation/pagination/doc.js';
@@ -81,6 +83,8 @@ export const componentDocs = Object.freeze([
 	transferDoc,
 	sliderDoc,
 	accordionDoc,
+	commandDoc,
+	commandPaletteDoc,
 	contextMenuDoc,
 	dropdownMenuDoc,
 	menuDoc,

@@ -346,10 +346,17 @@
 					})}
 					data-slot="item"
 					role="option"
+					tabindex={-1}
 					aria-selected={Object.is(activeKey, item.key)}
 					aria-disabled={disabled || item.disabled || undefined}
 					onpointerdown={(event) => event.preventDefault()}
 					onclick={() => choose(item)}
+					onkeydown={(event) => {
+						if (event.key === 'Enter' || event.key === ' ') {
+							event.preventDefault();
+							choose(item);
+						}
+					}}
 				>
 					<div>{item.label}</div>
 					{#if item.description}<div class={descriptionClass}>{item.description}</div>{/if}

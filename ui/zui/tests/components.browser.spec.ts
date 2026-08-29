@@ -5,6 +5,8 @@ import { render } from 'vitest-browser-svelte';
 import DynamicBox from './DynamicBox.svelte';
 import ComponentGallery from './ComponentGallery.svelte';
 import ComboboxFixture from './ComboboxFixture.svelte';
+import CommandFixture from './CommandFixture.svelte';
+import CommandPaletteFixture from './CommandPaletteFixture.svelte';
 import CascaderFixture from './CascaderFixture.svelte';
 import ContextMenuFixture from './ContextMenuFixture.svelte';
 import AccordionFixture from './AccordionFixture.svelte';
@@ -400,6 +402,7 @@ describe('compiled ICSS browser updates', () => {
 		);
 		production?.focus();
 		production?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: ' ' }));
+		await tick();
 		document.querySelector<HTMLButtonElement>('[aria-label="Move to selected"]')?.click();
 		await tick();
 		expect(output?.textContent).toBe('production,staging');
@@ -443,6 +446,58 @@ describe('compiled ICSS browser updates', () => {
 		await Promise.resolve();
 		await tick();
 		expect(editor?.value).toBe('Notify ');
+	});
+
+	it('coordinates Command ranking, active descendant action and form reset', async () => {
+		render(CommandFixture);
+		const input = document.querySelector<HTMLInputElement>('input[aria-label="Search commands"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="command-output"]');
+		const form = document.querySelector<HTMLFormElement>('[data-testid="command-form"]');
+		if (input) {
+			input.value = 'dep';
+			input.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		}
+		await tick();
+		expect(document.querySelectorAll('[role="option"]')).toHaveLength(2);
+		expect(input?.getAttribute('aria-activedescendant')).toBeTruthy();
+		input?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+		await tick();
+		expect(output?.textContent).toBe('dep:preview');
+		form?.reset();
+		await Promise.resolve();
+		await tick();
+		expect(input?.value).toBe('');
+	});
+
+	it('coordinates CommandPalette modal focus, action close, shortcut and Escape', async () => {
+		render(CommandPaletteFixture);
+		const trigger = document.querySelector<HTMLButtonElement>('[aria-label="Open palette"]');
+		trigger?.focus();
+		trigger?.click();
+		await tick();
+		await Promise.resolve();
+		const input = document.querySelector<HTMLInputElement>('input[aria-label="Search palette"]');
+		expect(document.activeElement).toBe(input);
+		if (input) {
+			input.value = 'dark';
+			input.dispatchEvent(new InputEvent('input', { bubbles: true }));
+			input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+		}
+		await new Promise((resolve) => setTimeout(resolve, 220));
+		await tick();
+		expect(document.querySelector('[role="dialog"]')).toBeNull();
+		expect(document.activeElement).toBe(trigger);
+		expect(document.querySelector('[data-testid="command-palette-output"]')?.textContent).toBe(
+			'false:theme'
+		);
+		document.dispatchEvent(
+			new KeyboardEvent('keydown', { bubbles: true, ctrlKey: true, key: 'k' })
+		);
+		await tick();
+		expect(document.querySelector('[role="dialog"]')).not.toBeNull();
+		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+		await new Promise((resolve) => setTimeout(resolve, 220));
+		expect(document.querySelector('[role="dialog"]')).toBeNull();
 	});
 	it('keeps AlertDialog open until an explicit action is chosen', async () => {
 		render(AlertDialogFixture);
