@@ -689,7 +689,7 @@ Toast、Message、Notification共享同一个队列和live-region内核；不复
 
 ## 9. 实施阶段与依赖顺序
 
-### S0：现有资产收口
+### S0：现有资产收口（已完成，CI run 33269196968）
 
 范围：ICSS、Theme、Runtime、Docs和已有9个组件。
 
@@ -701,7 +701,7 @@ Toast、Message、Notification共享同一个队列和live-region内核；不复
 - Docs展示亮暗主题、RTL、density、contrast和motion；
 - 不新增公开组件。
 
-### S1：主题系统与无状态基础组件
+### S1：主题系统与无状态基础组件（已完成，CI run 33269196968）
 
 实现：
 
@@ -718,7 +718,7 @@ ZContainer
 
 同时扩展Provider轴和Theme Lab。
 
-### S2：无浮层交互
+### S2：无浮层交互（实施中）
 
 先实现基础设施：
 
