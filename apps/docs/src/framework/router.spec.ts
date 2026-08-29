@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { componentDocs } from './catalog.js';
-import { componentRoute, parseDocsRoute } from './router.js';
+import { componentRoute, guideRoute, parseDocsRoute } from './router.js';
 import { searchComponentDocs } from './search.js';
 
 describe('Docs routing', () => {
@@ -16,6 +16,7 @@ describe('Docs routing', () => {
 			kind: 'component',
 			section: 'api'
 		});
+		expect(parseDocsRoute(guideRoute('theme'))).toEqual({ guideId: 'theme', kind: 'guide' });
 		expect(parseDocsRoute('#/missing')).toMatchObject({ kind: 'not-found' });
 		expect(parseDocsRoute('#/components/%E0%A4%A')).toMatchObject({ kind: 'not-found' });
 	});

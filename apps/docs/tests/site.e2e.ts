@@ -71,6 +71,10 @@ test('keeps input binding and field validation interactive', async ({ page }) =>
 });
 
 test('keeps S1 primitives semantic and display preferences effective', async ({ page }) => {
+	await page.goto('/#/guides/theme');
+	await expect(page.getByRole('heading', { level: 1 })).toContainText('主题不是一组颜色');
+	await expect(page.locator('[style^="background:"]')).toHaveCount(19);
+
 	await page.goto('/#/components/link');
 	await expect(page.locator('main a[aria-disabled="true"]')).not.toHaveAttribute('href');
 	await expect(page.locator('main a[target="_blank"]').first()).toHaveAttribute(
@@ -100,6 +104,7 @@ test('keeps S1 primitives semantic and display preferences effective', async ({ 
 test('has no automatically detectable accessibility violations', async ({ page }) => {
 	for (const route of [
 		'#/',
+		'#/guides/theme',
 		'#/components/provider',
 		'#/components/box',
 		'#/components/stack',

@@ -92,6 +92,7 @@
 	import { parseDocsRoute } from '../framework/router.js';
 	import ComponentPage from './ComponentPage.svelte';
 	import HomePage from './HomePage.svelte';
+	import ThemeLabPage from './ThemeLabPage.svelte';
 	import AppHeader from './AppHeader.svelte';
 	import AppSidebar from './AppSidebar.svelte';
 
@@ -114,9 +115,12 @@
 	const zui = useZui();
 	const classes = $derived(zui.slots(appRecipe, { density, motion }));
 	const currentId = $derived(route.kind === 'component' ? route.componentId : undefined);
+	const currentGuideId = $derived(route.kind === 'guide' ? route.guideId : undefined);
 	const currentDoc = $derived(currentId ? componentDocsById.get(currentId) : undefined);
 	const invalidRoute = $derived(
-		route.kind === 'not-found' || (currentId !== undefined && currentDoc === undefined)
+		route.kind === 'not-found' ||
+			(currentId !== undefined && currentDoc === undefined) ||
+			(currentGuideId !== undefined && currentGuideId !== 'theme')
 	);
 
 	onMount(() => {
@@ -135,16 +139,22 @@
 	});
 
 	$effect(() => {
-		document.title = currentDoc ? `${currentDoc.name} · ZUI Components` : 'ZUI Components';
+		document.title = currentDoc
+			? `${currentDoc.name} · ZUI Components`
+			: currentGuideId === 'theme'
+				? 'Theme Lab · ZUI Components'
+				: 'ZUI Components';
 	});
 </script>
 
 <div class={classes.shell}>
 	<AppHeader bind:contrast bind:density bind:direction bind:motion bind:query bind:themeMode />
-	<AppSidebar docs={componentDocs} {currentId} {query} />
+	<AppSidebar docs={componentDocs} {currentGuideId} {currentId} {query} />
 	<main class={classes.main}>
 		{#if currentDoc}
 			<ComponentPage doc={currentDoc} />
+		{:else if currentGuideId === 'theme'}
+			<ThemeLabPage />
 		{:else if invalidRoute}
 			<section class={classes.notFound}>
 				<p class={classes.eyebrow}>404</p>

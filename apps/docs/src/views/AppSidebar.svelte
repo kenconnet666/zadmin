@@ -124,18 +124,38 @@
 
 	let {
 		docs,
+		currentGuideId,
 		currentId,
 		query
-	}: { docs: readonly ComponentDoc[]; currentId?: string; query: string } = $props();
+	}: {
+		docs: readonly ComponentDoc[];
+		currentGuideId?: string;
+		currentId?: string;
+		query: string;
+	} = $props();
 	const filtered = $derived(searchComponentDocs(docs, query));
 	const zui = useZui();
 	const baseClasses = $derived(zui.slots(sidebarRecipe));
-	const homeClasses = $derived(zui.slots(sidebarRecipe, { active: !currentId }));
+	const homeClasses = $derived(zui.slots(sidebarRecipe, { active: !currentId && !currentGuideId }));
+	const themeClasses = $derived(zui.slots(sidebarRecipe, { active: currentGuideId === 'theme' }));
 </script>
 
 <aside class={baseClasses.root}>
 	<nav class={baseClasses.nav} aria-label="组件导航">
-		<a class={homeClasses.link} aria-current={!currentId ? 'page' : undefined} href="#/">概览</a>
+		<a
+			class={homeClasses.link}
+			aria-current={!currentId && !currentGuideId ? 'page' : undefined}
+			href="#/">概览</a
+		>
+		<p class={baseClasses.category}>系统</p>
+		<a
+			class={themeClasses.link}
+			aria-current={currentGuideId === 'theme' ? 'page' : undefined}
+			href="#/guides/theme"
+		>
+			<span>Theme Lab</span>
+			<ZIcon class={themeClasses.icon} name="chevronDown" size={14} />
+		</a>
 		{#each componentCategories as category (category.id)}
 			{@const categoryDocs = filtered.filter((doc) => doc.category === category.id)}
 			{#if categoryDocs.length > 0}
