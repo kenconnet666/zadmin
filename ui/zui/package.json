@@ -67,7 +67,8 @@
 		"build": "svelte-package",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"test": "vitest --run",
-		"test:coverage": "vitest --run --coverage"
+		"test:coverage": "vitest --run --coverage",
+		"test:bundle": "node scripts/check-bundle.mjs"
 	},
 	"keywords": [
 		"css-in-js",

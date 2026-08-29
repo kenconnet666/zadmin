@@ -1223,6 +1223,8 @@ testing进入production bundle = 0 B
 - 外部package fixture；
 - 更新当前事实文档，蓝图仍保留决策历史。
 
+当前真实tree-shaken测量：browser runtime gzip 9,149 bytes；8个基础组件相对runtime增量677–2,655 bytes，均低于15 KiB/3 KiB门槛；组件bundle未发现Svelte compiler、ICSS preprocess或Node server入口。
+
 ## 21. 暂不实现
 
 - public `css` prop；
