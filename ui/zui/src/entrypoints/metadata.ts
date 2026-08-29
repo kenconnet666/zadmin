@@ -2,6 +2,9 @@ export { zuiMetadata as accordionMetadata } from '../components/compound/accordi
 export { zuiMetadata as accordionContentMetadata } from '../components/compound/accordion/ZAccordionContent.svelte';
 export { zuiMetadata as accordionItemMetadata } from '../components/compound/accordion/ZAccordionItem.svelte';
 export { zuiMetadata as accordionTriggerMetadata } from '../components/compound/accordion/ZAccordionTrigger.svelte';
+export { zuiMetadata as contextMenuMetadata } from '../components/compound/context-menu/ZContextMenu.svelte';
+export { zuiMetadata as contextMenuContentMetadata } from '../components/compound/context-menu/ZContextMenuContent.svelte';
+export { zuiMetadata as contextMenuTriggerMetadata } from '../components/compound/context-menu/ZContextMenuTrigger.svelte';
 export { zuiMetadata as alertDialogMetadata } from '../components/compound/alert-dialog/ZAlertDialog.svelte';
 export { zuiMetadata as alertDialogActionMetadata } from '../components/compound/alert-dialog/ZAlertDialogAction.svelte';
 export { zuiMetadata as alertDialogCancelMetadata } from '../components/compound/alert-dialog/ZAlertDialogCancel.svelte';

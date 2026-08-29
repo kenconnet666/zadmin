@@ -106,7 +106,7 @@
 		read: () => open,
 		write: (next) => (open = next)
 	});
-	let trigger = $state<HTMLButtonElement | null>(null);
+	let trigger = $state<HTMLElement | null>(null);
 	const context: ZPopoverContext = {
 		get contentId() {
 			return `${idBase}-content`;

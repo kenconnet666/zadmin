@@ -24,10 +24,10 @@ export interface ZPopoverContext {
 	readonly open: boolean;
 	readonly placement: PopoverPlacement;
 	readonly portalTarget: PortalTarget;
-	readonly trigger: HTMLButtonElement | null;
+	readonly trigger: HTMLElement | null;
 	readonly triggerId: string;
 	setOpen(open: boolean): void;
-	setTrigger(trigger: HTMLButtonElement | null): void;
+	setTrigger(trigger: HTMLElement | null): void;
 }
 
 const POPOVER_CONTEXT = Symbol('zui-popover-context');

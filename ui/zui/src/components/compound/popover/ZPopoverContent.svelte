@@ -182,6 +182,8 @@
 </script>
 
 {#if mounted}
+	<!-- The shell is the intentional focus fallback when no descendant is tabbable. -->
+	<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 	<div
 		{...rest}
 		bind:this={ref}

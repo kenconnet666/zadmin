@@ -12,6 +12,12 @@ export { default as ZAccordionItem } from '../components/compound/accordion/ZAcc
 export type { ZAccordionItemProps } from '../components/compound/accordion/ZAccordionItem.svelte';
 export { default as ZAccordionTrigger } from '../components/compound/accordion/ZAccordionTrigger.svelte';
 export type { ZAccordionTriggerProps } from '../components/compound/accordion/ZAccordionTrigger.svelte';
+export { default as ZContextMenu } from '../components/compound/context-menu/ZContextMenu.svelte';
+export type { ZContextMenuProps } from '../components/compound/context-menu/ZContextMenu.svelte';
+export { default as ZContextMenuContent } from '../components/compound/context-menu/ZContextMenuContent.svelte';
+export type { ZContextMenuContentProps } from '../components/compound/context-menu/ZContextMenuContent.svelte';
+export { default as ZContextMenuTrigger } from '../components/compound/context-menu/ZContextMenuTrigger.svelte';
+export type { ZContextMenuTriggerProps } from '../components/compound/context-menu/ZContextMenuTrigger.svelte';
 export { default as ZAlertDialog } from '../components/compound/alert-dialog/ZAlertDialog.svelte';
 export type { ZAlertDialogProps } from '../components/compound/alert-dialog/ZAlertDialog.svelte';
 export { default as ZAlertDialogAction } from '../components/compound/alert-dialog/ZAlertDialogAction.svelte';

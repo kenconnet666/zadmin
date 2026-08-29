@@ -3,13 +3,13 @@
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
 	import type { SelectionKey } from '../../../runtime/collection/selection.js';
-	import type { MenuActionEvent } from './context.svelte.js';
+	import type { MenuActionEvent as MenuActionEventType } from './context.svelte.js';
 
 	export interface ZMenuProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'role'> {
 		readonly appearance?: 'bare' | 'menu';
 		readonly children?: Snippet;
 		readonly loop?: boolean;
-		readonly onAction?: (event: MenuActionEvent) => void;
+		readonly onAction?: (event: MenuActionEventType) => void;
 		ref?: HTMLDivElement | null;
 	}
 

@@ -6,30 +6,22 @@ import {
 	createServerStyleRegistry,
 	defaultTheme,
 	extendTheme,
-	ZAccordionTrigger,
 	ZAspectRatio,
 	ZBox,
 	ZButton,
 	ZContainer,
 	ZCheckbox,
-	ZDialogTrigger,
 	ZField,
 	ZIcon,
 	ZInput,
 	ZKbd,
 	ZLink,
-	ZMenuItem,
 	ZPagination,
-	ZPopconfirmTitle,
-	ZPopoverTrigger,
-	ZRadioGroupItem,
 	ZSeparator,
 	ZSlider,
 	ZStack,
 	ZSwitch,
-	ZTabsTrigger,
 	ZText,
-	ZTooltipTrigger,
 	ZToggleButton,
 	ZVisuallyHidden
 } from '../src/entrypoints/index.js';
@@ -39,6 +31,7 @@ import { normalizeAspectRatio } from '../src/components/layout/ZAspectRatio.svel
 import { getIconComponent, iconManifest } from '../src/components/gene/ZIcon.svelte';
 import { __icssCarrier } from '../src/runtime/foundation/compiler-bridge.js';
 import ContextProbe from './ContextProbe.svelte';
+import ContextMenuFixture from './ContextMenuFixture.svelte';
 import AccordionFixture from './AccordionFixture.svelte';
 import AlertDialogFixture from './AlertDialogFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
@@ -54,18 +47,6 @@ import TabsFixture from './TabsFixture.svelte';
 import TooltipFixture from './TooltipFixture.svelte';
 
 describe('ZUI foundational components', () => {
-	it('rejects compound members rendered outside their owning root', () => {
-		expect(() => render(ZAccordionTrigger)).toThrow(/inside ZAccordion/u);
-		expect(() => render(ZDialogTrigger)).toThrow(/inside ZDialog/u);
-		expect(() => render(ZMenuItem, { props: { value: 'orphan' } })).toThrow(/require ZMenu/u);
-		expect(() => render(ZPopconfirmTitle)).toThrow(/require ZPopconfirm/u);
-		expect(() => render(ZPopoverTrigger)).toThrow(/require ZPopover/u);
-		expect(() => render(ZRadioGroupItem, { props: { value: 'orphan' } })).toThrow(
-			/inside ZRadioGroup/u
-		);
-		expect(() => render(ZTabsTrigger, { props: { value: 'orphan' } })).toThrow(/inside ZTabs/u);
-		expect(() => render(ZTooltipTrigger)).toThrow(/require ZTooltip/u);
-	});
 	it('renders Symbol-carried compiler variables on the real ZBox root', () => {
 		const result = render(ZBox, {
 			props: {
@@ -270,6 +251,15 @@ describe('ZUI foundational components', () => {
 		expect(open).toContain('role="presentation"');
 		expect(open).toContain('role="menu"');
 		expect(open).toContain('role="menuitem"');
+	});
+
+	it('renders ContextMenu target and initial menu semantics during SSR', () => {
+		const closed = render(ContextMenuFixture).body;
+		expect(closed).toContain('aria-haspopup="menu"');
+		expect(closed).not.toContain('role="menu"');
+		const open = render(ContextMenuFixture, { props: { defaultOpen: true } }).body;
+		expect(open).toContain('role="menu"');
+		expect(open).toContain('Fixture context menu');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

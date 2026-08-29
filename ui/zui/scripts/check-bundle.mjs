@@ -26,6 +26,17 @@ const components = [
 		name: 'ZAccordionContent',
 		path: 'compound/accordion/ZAccordionContent.svelte'
 	},
+	{ id: 'context-menu', name: 'ZContextMenu', path: 'compound/context-menu/ZContextMenu.svelte' },
+	{
+		id: 'context-menu-trigger',
+		name: 'ZContextMenuTrigger',
+		path: 'compound/context-menu/ZContextMenuTrigger.svelte'
+	},
+	{
+		id: 'context-menu-content',
+		name: 'ZContextMenuContent',
+		path: 'compound/context-menu/ZContextMenuContent.svelte'
+	},
 	{ id: 'alert-dialog', name: 'ZAlertDialog', path: 'compound/alert-dialog/ZAlertDialog.svelte' },
 	{
 		id: 'alert-dialog-trigger',

@@ -19,6 +19,9 @@ import {
 	ZBox,
 	ZButton,
 	ZCheckbox,
+	ZContextMenu,
+	ZContextMenuContent,
+	ZContextMenuTrigger,
 	ZDialog,
 	ZDialogClose,
 	ZDialogContent,
@@ -83,6 +86,9 @@ import {
 	type ZBoxProps,
 	type ZButtonProps,
 	type ZCheckboxProps,
+	type ZContextMenuContentProps,
+	type ZContextMenuProps,
+	type ZContextMenuTriggerProps,
 	type ZDialogCloseProps,
 	type ZDialogContentProps,
 	type ZDialogDescriptionProps,
@@ -166,6 +172,14 @@ const checkboxProps: ComponentProps<typeof ZCheckbox> = {
 	defaultChecked: 'indeterminate',
 	value: 42n
 } satisfies ZCheckboxProps;
+const contextMenuProps: ComponentProps<typeof ZContextMenu> = {
+	placement: 'right-start'
+} satisfies ZContextMenuProps;
+const contextMenuTriggerProps: ComponentProps<typeof ZContextMenuTrigger> =
+	{} satisfies ZContextMenuTriggerProps;
+const contextMenuContentProps: ComponentProps<typeof ZContextMenuContent> = {
+	ariaLabel: 'Actions'
+} satisfies ZContextMenuContentProps;
 const dialogProps: ComponentProps<typeof ZDialog> = { defaultOpen: true } satisfies ZDialogProps;
 const dialogTriggerProps: ComponentProps<typeof ZDialogTrigger> = {} satisfies ZDialogTriggerProps;
 const dialogOverlayProps: ComponentProps<typeof ZDialogOverlay> = {} satisfies ZDialogOverlayProps;
@@ -276,6 +290,9 @@ void alertDialogActionProps;
 void directBoxProps;
 void buttonProps;
 void checkboxProps;
+void contextMenuProps;
+void contextMenuTriggerProps;
+void contextMenuContentProps;
 void dialogProps;
 void dialogTriggerProps;
 void dialogOverlayProps;

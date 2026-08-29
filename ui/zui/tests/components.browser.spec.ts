@@ -4,6 +4,7 @@ import { render } from 'vitest-browser-svelte';
 
 import DynamicBox from './DynamicBox.svelte';
 import ComponentGallery from './ComponentGallery.svelte';
+import ContextMenuFixture from './ContextMenuFixture.svelte';
 import AccordionFixture from './AccordionFixture.svelte';
 import AlertDialogFixture from './AlertDialogFixture.svelte';
 import CheckboxFixture from './CheckboxFixture.svelte';
@@ -65,6 +66,7 @@ describe('compiled ICSS browser updates', () => {
 		delta?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Home' }));
 		expect(document.activeElement).toBe(alpha);
 		alpha?.click();
+		await tick();
 		expect(output?.textContent).toBe('alpha');
 	});
 
@@ -96,6 +98,41 @@ describe('compiled ICSS browser updates', () => {
 		stay?.click();
 		await tick();
 		content = document.querySelector('[data-testid="dropdown-content"]');
+		expect(content?.getAttribute('data-state')).toBe('open');
+		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+	});
+
+	it('coordinates ContextMenu pointer and keyboard anchors with focus restoration', async () => {
+		render(ContextMenuFixture);
+		const trigger = document.querySelector<HTMLElement>('[data-testid="context-trigger"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="context-output"]');
+		trigger?.dispatchEvent(
+			new MouseEvent('contextmenu', {
+				bubbles: true,
+				cancelable: true,
+				clientX: 120,
+				clientY: 80
+			})
+		);
+		await new Promise((resolve) => setTimeout(resolve, 0));
+		await tick();
+		let content = document.querySelector<HTMLElement>('[data-testid="context-content"]');
+		const inspect = document.querySelector<HTMLElement>('[data-testid="context-inspect"]');
+		expect(content?.parentNode).toBe(document.body);
+		expect(content?.getBoundingClientRect().left).toBeCloseTo(120, 0);
+		expect(content?.getBoundingClientRect().top).toBeCloseTo(82, 0);
+		expect(document.activeElement).toBe(inspect);
+		inspect?.click();
+		await new Promise((resolve) => setTimeout(resolve, 140));
+		await tick();
+		expect(output?.textContent).toBe('false:inspect');
+		expect(document.activeElement).toBe(trigger);
+
+		trigger?.dispatchEvent(
+			new KeyboardEvent('keydown', { bubbles: true, key: 'F10', shiftKey: true })
+		);
+		await tick();
+		content = document.querySelector('[data-testid="context-content"]');
 		expect(content?.getAttribute('data-state')).toBe('open');
 		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
 	});

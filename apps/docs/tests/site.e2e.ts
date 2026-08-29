@@ -237,6 +237,25 @@ test('keeps DropdownMenu positioning, focus, action dismiss and restoration sync
 	await expect(page.getByText(/open = false · action = duplicate/u)).toBeVisible();
 });
 
+test('anchors ContextMenu to pointer coordinates and supports the keyboard entry path', async ({
+	page
+}) => {
+	await page.goto('/#/components/context-menu');
+	const trigger = page.getByTestId('context-menu-trigger');
+	const box = await trigger.boundingBox();
+	expect(box).not.toBeNull();
+	await trigger.click({ button: 'right', position: { x: 80, y: 20 } });
+	const menu = page.getByRole('menu', { name: '部署上下文菜单' });
+	await expect(menu).toBeVisible();
+	const menuBox = await menu.boundingBox();
+	expect(menuBox?.x).toBeCloseTo((box?.x ?? 0) + 80, 0);
+	expect(menuBox?.y).toBeCloseTo((box?.y ?? 0) + 22, 0);
+	await page.keyboard.press('Escape');
+	await expect(trigger).toBeFocused();
+	await page.keyboard.press('Shift+F10');
+	await expect(menu).toBeVisible();
+});
+
 test('keeps Slider keyboard, value text, FormData and reset synchronized', async ({ page }) => {
 	await page.goto('/#/components/slider');
 	const slider = page.getByRole('slider', { name: '告警阈值' });
@@ -454,6 +473,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/switch',
 		'#/components/slider',
 		'#/components/accordion',
+		'#/components/context-menu',
 		'#/components/dropdown-menu',
 		'#/components/menu',
 		'#/components/pagination',
