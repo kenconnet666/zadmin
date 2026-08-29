@@ -7,17 +7,12 @@ packages:
 catalog:
   '@aws-sdk/client-s3': ^3.1115.0
   '@aws-sdk/s3-request-presigner': ^3.1115.0
-  '@chromatic-com/storybook': ^5.3.0
+  '@axe-core/playwright': ^4.13.0
   '@eslint/js': ^10.0.1
   '@fontsource/fira-mono': ^5.2.7
   '@neoconfetti/svelte': ^2.2.2
   '@playwright/test': ^1.62.1
   '@standard-schema/spec': ^1.1.0
-  '@storybook/addon-a11y': ^10.5.10
-  '@storybook/addon-docs': ^10.5.10
-  '@storybook/addon-svelte-csf': ^5.1.2
-  '@storybook/addon-vitest': ^10.5.10
-  '@storybook/sveltekit': ^10.5.10
   '@sveltejs/adapter-node': ^5.5.7
   '@sveltejs/kit': ^2.70.3
   '@sveltejs/package': ^2.5.8
@@ -42,9 +37,6 @@ catalog:
   prettier-plugin-svelte: ^4.1.1
   redis: ^6.2.1
   semver: ^7.8.5
-  react: ^19.2.8
-  react-dom: ^19.2.8
-  storybook: ^10.5.10
   stylis: ^4.4.0
   tar: ^7.5.22
   svelte: ^5.56.10

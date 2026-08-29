@@ -2,7 +2,7 @@
 
 - **Language**: TypeScript
 - **Package Manager**: pnpm
-- **Add-ons**: prettier, eslint, vitest, playwright, sveltekit-adapter, paraglide, storybook, ai-tools
+- **Add-ons**: prettier, eslint, vitest, playwright, sveltekit-adapter, paraglide, ai-tools
 
 ---
 

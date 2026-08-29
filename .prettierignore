@@ -12,7 +12,6 @@ bun.lockb
 **/coverage/
 **/dist/
 **/static/
-**/storybook-static/
 **/target/
 **/gen/schemas/
 **/src/lib/paraglide/

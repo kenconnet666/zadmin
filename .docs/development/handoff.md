@@ -255,14 +255,14 @@ approval: inject<ApprovalStarter>('@zadmin/approval');
 - 真实Vite HMR将背景结构从primary改为danger时，rule维持9、style tag维持1；
 - `@zadmin/zui@0.1.0`发布tarball在仓库外SvelteKit工程安装、check、build和SSR通过；
 - 外部fixture的ZUI页面节点gzip 10,243 bytes，客户端没有compiler/server模块；
-- Docs、Storybook和Playwright动态示例全部通过。
+- Docs纯Svelte展示站和Playwright动态示例全部通过。
 
 ZUI重点命令：
 
 ```powershell
 pnpm --filter @zadmin/zui test:coverage
 pnpm --filter @zadmin/docs test:e2e
-pnpm --filter @zadmin/docs build-storybook
+pnpm --filter @zadmin/docs build
 ```
 
 ## 微信实测结论

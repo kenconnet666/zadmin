@@ -15,7 +15,7 @@
 GitHub Actions
   → 全仓check/lint/test/build
   → Chromium/Firefox/WebKit
-  → Docs E2E与Storybook
+  → Docs组件展示站E2E与可访问性
   → 覆盖率阈值
   → 外部tarball安装验收
   → 微信生产构建
@@ -41,11 +41,11 @@ GitHub Actions
 
 当前workflow：`.github/workflows/ci.yml`。
 
-| Job                               | Runner  | 全量职责                                                                     |
-| --------------------------------- | ------- | ---------------------------------------------------------------------------- |
-| Workspace, browsers, and builds   | Ubuntu  | 全仓check/lint/test/build、三浏览器、Docs E2E、微信构建、构建产物            |
-| Coverage, packages, and Storybook | Ubuntu  | 覆盖率、外部tarball、Storybook和生成报告漂移                                 |
-| Windows C# WebView2 desktop       | Windows | Desktop check/test、C# Core、WinUI 3/WebView2、生产与Vite宿主smoke、发布产物 |
+| Job                             | Runner  | 全量职责                                                                     |
+| ------------------------------- | ------- | ---------------------------------------------------------------------------- |
+| Workspace, browsers, and builds | Ubuntu  | 全仓check/lint/test/build、三浏览器、Docs E2E、微信构建、构建产物            |
+| Coverage and packages           | Ubuntu  | 覆盖率、外部tarball和生成报告漂移                                            |
+| Windows C# WebView2 desktop     | Windows | Desktop check/test、C# Core、WinUI 3/WebView2、生产与Vite宿主smoke、发布产物 |
 
 ## 标准命令
 
@@ -91,7 +91,7 @@ pnpm --filter @zadmin/zui test:coverage
 pnpm --filter @zadmin/zui build
 pnpm --filter @zadmin/sveltekit test:zui-package
 pnpm --filter @zadmin/docs test:e2e
-pnpm --filter @zadmin/docs build-storybook
+pnpm --filter @zadmin/docs build
 ```
 
 2026-08-25 拆包与重命名后的生产回归结果：

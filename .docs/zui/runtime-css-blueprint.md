@@ -583,7 +583,7 @@ export type ButtonVariants = Omit<RecipeVariants<typeof buttonRecipe>, 'disabled
 - variant选择只拼接已存在class；
 - dynamic叶子不放入recipe，使用`zui.icss()`；
 - unknown variant在类型层拒绝，运行时开发构建也给出诊断；
-- recipe暴露只读`variantMap`，供Docs、Storybook和测试生成矩阵；
+- recipe暴露只读`variantMap`，供Docs展示站和测试生成矩阵；
 - 每个recipe的分支总数默认上限64，超出需要拆分职责。
 
 这借鉴vanilla-extract/Panda的`base + variants + compoundVariants + defaultVariants`形态，但CSS仍由ZUI runtime生成和缓存，不引入其构建器。

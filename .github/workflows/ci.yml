@@ -84,7 +84,7 @@ jobs:
             ui/*/dist
 
   acceptance:
-    name: Coverage, packages, and Storybook
+    name: Coverage and packages
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -136,9 +136,6 @@ jobs:
 
       - name: Run Miniapp external package acceptance
         run: pnpm --filter @zadmin/miniapp test:package
-
-      - name: Build Storybook
-        run: pnpm --filter @zadmin/docs build-storybook
 
       - name: Verify reports and generated tracked files are unchanged
         run: >-

@@ -8,8 +8,7 @@
 		"node": ">=22.0.0"
 	},
 	"files": [
-		"dist",
-		"README.md"
+		"dist"
 	],
 	"exports": {
 		".": {

@@ -17,8 +17,7 @@
 		"dist",
 		"dotnet",
 		"protocol",
-		"targets",
-		"README.md"
+		"targets"
 	],
 	"exports": {
 		".": {
