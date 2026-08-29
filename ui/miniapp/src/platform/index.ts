@@ -5,7 +5,7 @@ export { createWechatPlatformDriver } from './driver.ts';
 export { PlatformError, toPlatformError } from './error.ts';
 export { ScopedHandle, scopedListener } from './handles.ts';
 export { createCapabilityReport, serializeCapabilityReport } from './report.ts';
-export { createWeChatPlatform, OneTimeCredential } from './service.ts';
+export { createWeChatPlatform, isWeChatPlatform, OneTimeCredential } from './service.ts';
 export type {
 	BluetoothSession,
 	LoginCode,

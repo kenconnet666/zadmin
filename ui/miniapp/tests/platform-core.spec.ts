@@ -4,6 +4,7 @@ import {
 	allWechatCapabilities,
 	createCapabilityReport,
 	createWeChatPlatform,
+	isWeChatPlatform,
 	PlatformError,
 	serializeCapabilityReport,
 	wechatCapabilities
@@ -24,6 +25,11 @@ function fixture() {
 
 describe('WeChat platform core', () => {
 	it('ships a deterministic, fully attributed capability catalog and report', () => {
+		const { platform } = fixture();
+		expect(platform.kind).toBe('wechat');
+		expect(platform.capabilities).toBe(wechatCapabilities);
+		expect(isWeChatPlatform(platform)).toBe(true);
+		expect(isWeChatPlatform({ kind: 'alipay' })).toBe(false);
 		expect(allWechatCapabilities.length).toBeGreaterThanOrEqual(25);
 		expect(new Set(allWechatCapabilities.map(({ id }) => id)).size).toBe(
 			allWechatCapabilities.length

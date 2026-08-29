@@ -169,6 +169,7 @@ class BluetoothSessionHandle extends ScopedHandle implements BluetoothSession {
 }
 
 export interface WeChatPlatform {
+	readonly capabilities: typeof wechatCapabilities;
 	readonly commerce: {
 		requestPayment(options: PaymentOptions): Promise<PaymentClientResult>;
 	};
@@ -192,6 +193,7 @@ export interface WeChatPlatform {
 			options: MethodOptions<'startSoterAuthentication'>
 		): Promise<WeChatMethodResult<'startSoterAuthentication'>>;
 	};
+	readonly kind: 'wechat';
 	readonly location: {
 		current(
 			options?: Omit<MethodOptions<'getLocation'>, 'complete' | 'fail' | 'success'>
@@ -262,12 +264,21 @@ export interface WeChatPlatform {
 	forScope(scope: ResourceScope): WeChatPlatform;
 }
 
+export function isWeChatPlatform(value: unknown): value is WeChatPlatform {
+	return (
+		typeof value === 'object' &&
+		value !== null &&
+		(value as { readonly kind?: unknown }).kind === 'wechat'
+	);
+}
+
 export function createWeChatPlatform(options: {
 	driver: PlatformDriver;
 	scope: ResourceScope;
 }): WeChatPlatform {
 	const { driver, scope } = options;
 	return {
+		capabilities: wechatCapabilities,
 		commerce: {
 			async requestPayment(paymentOptions) {
 				await safeCall(wechatCapabilities.commerce.payment, 'request', () =>
@@ -368,6 +379,7 @@ export function createWeChatPlatform(options: {
 				);
 			}
 		},
+		kind: 'wechat',
 		location: {
 			current(locationOptions = {}) {
 				return safeCall(wechatCapabilities.location.current, 'get', () =>
