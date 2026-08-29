@@ -1,6 +1,6 @@
 # ZUI 基础设施、已有组件与 Docs 加固蓝图
 
-状态：H0–H5已完成本地实现与自动验收，等待当前提交进入GitHub Actions。制定与完成日期：2026-08-29。
+状态：H0–H5已完成实现与自动验收。最终代码提交`a6ea25b`的GitHub Actions run `33256806135`三组job全部通过。制定与完成日期：2026-08-29。
 
 优先级：本文件高于[ZUI组件与展示站改进蓝图](./component-roadmap.md)中的后续组件路线。在本蓝图全部完成并通过验收前，不启动Select、Dialog、Table、Tree、DatePicker等新展示组件。
 

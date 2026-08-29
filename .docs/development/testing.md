@@ -109,6 +109,8 @@ pnpm --filter @zadmin/docs build
 
 2026-08-29基础设施加固后的外部验收：Core、ZUI和SvelteKit三个tarball在系统临时目录安装并frozen reinstall；fixture在未安装Shiki时实际执行`@zadmin/zui/testing`、`@zadmin/sveltekit/server`和`@zadmin/sveltekit/testing`，Svelte check、adapter-node生产build与真实Node SSR通过，client产物不含Shiki、workspace路径、compiler、testing或server入口。随后fixture安装Shiki、导入`@zadmin/zui/code`并再次check/build，`/code`真实SSR返回稳定纯文本源码。当前tree-shaken browser runtime gzip为9,507 bytes；8个基础组件增量为670–3,115 bytes，预算为3.25 KiB；ZCode壳增量为4,210 bytes，Shiki保持外部可选边界并使用6个允许语言、2个主题和JavaScript regex engine。
 
+同一最终代码提交`a6ea25b`的GitHub Actions run `33256806135`已通过Workspace、Coverage/packages和Windows C# WebView2三个job；ZUI coverage为statements 96.49%、branches 90.02%、functions 97.5%、lines 98.53%。
+
 ## C# WebView公共层验收
 
 重点命令：
