@@ -92,6 +92,15 @@ export type { ZMenuLabelProps } from '../components/compound/menu/ZMenuLabel.sve
 export { default as ZMenuSeparator } from '../components/compound/menu/ZMenuSeparator.svelte';
 export type { ZMenuSeparatorProps } from '../components/compound/menu/ZMenuSeparator.svelte';
 export { MenuActionEvent } from '../components/compound/menu/context.svelte.js';
+export { default as ZMultiSelect } from '../components/compound/multi-select/ZMultiSelect.svelte';
+export type { ZMultiSelectProps } from '../components/compound/multi-select/ZMultiSelect.svelte';
+export { default as ZMultiSelectContent } from '../components/compound/multi-select/ZMultiSelectContent.svelte';
+export type { ZMultiSelectContentProps } from '../components/compound/multi-select/ZMultiSelectContent.svelte';
+export { default as ZMultiSelectItem } from '../components/compound/multi-select/ZMultiSelectItem.svelte';
+export type { ZMultiSelectItemProps } from '../components/compound/multi-select/ZMultiSelectItem.svelte';
+export { default as ZMultiSelectTrigger } from '../components/compound/multi-select/ZMultiSelectTrigger.svelte';
+export type { ZMultiSelectTriggerProps } from '../components/compound/multi-select/ZMultiSelectTrigger.svelte';
+export { MultiSelectEvent } from '../components/compound/multi-select/context.svelte.js';
 export { default as ZPopconfirm } from '../components/compound/popconfirm/ZPopconfirm.svelte';
 export type { ZPopconfirmProps } from '../components/compound/popconfirm/ZPopconfirm.svelte';
 export { default as ZPopconfirmAction } from '../components/compound/popconfirm/ZPopconfirmAction.svelte';

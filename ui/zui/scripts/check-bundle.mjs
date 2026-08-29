@@ -123,6 +123,22 @@ const components = [
 	{ id: 'menu-group', name: 'ZMenuGroup', path: 'compound/menu/ZMenuGroup.svelte' },
 	{ id: 'menu-label', name: 'ZMenuLabel', path: 'compound/menu/ZMenuLabel.svelte' },
 	{ id: 'menu-separator', name: 'ZMenuSeparator', path: 'compound/menu/ZMenuSeparator.svelte' },
+	{ id: 'multi-select', name: 'ZMultiSelect', path: 'compound/multi-select/ZMultiSelect.svelte' },
+	{
+		id: 'multi-select-trigger',
+		name: 'ZMultiSelectTrigger',
+		path: 'compound/multi-select/ZMultiSelectTrigger.svelte'
+	},
+	{
+		id: 'multi-select-content',
+		name: 'ZMultiSelectContent',
+		path: 'compound/multi-select/ZMultiSelectContent.svelte'
+	},
+	{
+		id: 'multi-select-item',
+		name: 'ZMultiSelectItem',
+		path: 'compound/multi-select/ZMultiSelectItem.svelte'
+	},
 	{ id: 'popconfirm', name: 'ZPopconfirm', path: 'compound/popconfirm/ZPopconfirm.svelte' },
 	{
 		id: 'popconfirm-trigger',

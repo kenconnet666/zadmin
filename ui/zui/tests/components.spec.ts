@@ -37,6 +37,7 @@ import AccordionFixture from './AccordionFixture.svelte';
 import AlertDialogFixture from './AlertDialogFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
 import MenuFixture from './MenuFixture.svelte';
+import MultiSelectFixture from './MultiSelectFixture.svelte';
 import DialogFixture from './DialogFixture.svelte';
 import DrawerFixture from './DrawerFixture.svelte';
 import DropdownMenuFixture from './DropdownMenuFixture.svelte';
@@ -285,6 +286,15 @@ describe('ZUI foundational components', () => {
 		expect(open).toContain('role="listbox"');
 		expect(open.match(/role="option"/gu)).toHaveLength(4);
 		expect(open).toContain('name="choice"');
+	});
+
+	it('renders MultiSelect tags, multiple form values and listbox semantics during SSR', () => {
+		const closed = render(MultiSelectFixture).body;
+		expect(closed).toContain('aria-haspopup="listbox"');
+		expect(closed.match(/name="choice"/gu)).toHaveLength(2);
+		const open = render(MultiSelectFixture, { props: { defaultOpen: true } }).body;
+		expect(open).toContain('aria-multiselectable="true"');
+		expect(open.match(/aria-selected="true"/gu)).toHaveLength(2);
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

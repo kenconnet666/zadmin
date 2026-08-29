@@ -48,6 +48,10 @@ import {
 	ZMenuItem,
 	ZMenuLabel,
 	ZMenuSeparator,
+	ZMultiSelect,
+	ZMultiSelectContent,
+	ZMultiSelectItem,
+	ZMultiSelectTrigger,
 	ZPagination,
 	ZPopconfirm,
 	ZPopconfirmAction,
@@ -123,6 +127,10 @@ import {
 	type ZMenuLabelProps,
 	type ZMenuProps,
 	type ZMenuSeparatorProps,
+	type ZMultiSelectContentProps,
+	type ZMultiSelectItemProps,
+	type ZMultiSelectProps,
+	type ZMultiSelectTriggerProps,
 	type ZPaginationProps,
 	type ZPopconfirmActionProps,
 	type ZPopconfirmCancelProps,
@@ -239,6 +247,17 @@ const menuGroupProps: ComponentProps<typeof ZMenuGroup> = {} satisfies ZMenuGrou
 const menuItemProps: ComponentProps<typeof ZMenuItem> = { value: 'open' } satisfies ZMenuItemProps;
 const menuLabelProps: ComponentProps<typeof ZMenuLabel> = {} satisfies ZMenuLabelProps;
 const menuSeparatorProps: ComponentProps<typeof ZMenuSeparator> = {} satisfies ZMenuSeparatorProps;
+const multiSelectProps: ComponentProps<typeof ZMultiSelect> = {
+	defaultValues: ['a', 2],
+	name: 'choice'
+} satisfies ZMultiSelectProps;
+const multiSelectTriggerProps: ComponentProps<typeof ZMultiSelectTrigger> =
+	{} satisfies ZMultiSelectTriggerProps;
+const multiSelectContentProps: ComponentProps<typeof ZMultiSelectContent> =
+	{} satisfies ZMultiSelectContentProps;
+const multiSelectItemProps: ComponentProps<typeof ZMultiSelectItem> = {
+	value: 'a'
+} satisfies ZMultiSelectItemProps;
 const paginationProps: ComponentProps<typeof ZPagination> = {
 	defaultPage: 2,
 	totalPages: 20
@@ -356,6 +375,10 @@ void menuGroupProps;
 void menuItemProps;
 void menuLabelProps;
 void menuSeparatorProps;
+void multiSelectProps;
+void multiSelectTriggerProps;
+void multiSelectContentProps;
+void multiSelectItemProps;
 void paginationProps;
 void popconfirmProps;
 void popconfirmTriggerProps;

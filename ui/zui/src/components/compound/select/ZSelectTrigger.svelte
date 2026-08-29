@@ -52,7 +52,13 @@
 <script lang="ts">
 	import ZPopoverTrigger from '../popover/ZPopoverTrigger.svelte';
 	import { useZSelect } from './context.svelte.js';
-	let { children, onkeydown, ref = $bindable(null), ...rest }: ZSelectTriggerProps = $props();
+	let {
+		children,
+		onkeydown,
+		ref = $bindable(null),
+		variant = 'secondary',
+		...rest
+	}: ZSelectTriggerProps = $props();
 	const select = useZSelect();
 	function handleKeydown(event: KeyboardEvent & { currentTarget: HTMLButtonElement }): void {
 		onkeydown?.(event);
@@ -69,6 +75,7 @@
 	bind:ref
 	disabled={select.disabled}
 	popupRole="listbox"
+	{variant}
 	onkeydown={handleKeydown}
 	data-placeholder={select.value === undefined || undefined}
 >

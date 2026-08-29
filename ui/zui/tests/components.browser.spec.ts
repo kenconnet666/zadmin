@@ -14,6 +14,7 @@ import DialogFixture from './DialogFixture.svelte';
 import DrawerFixture from './DrawerFixture.svelte';
 import DropdownMenuFixture from './DropdownMenuFixture.svelte';
 import MenuFixture from './MenuFixture.svelte';
+import MultiSelectFixture from './MultiSelectFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
 import PaginationFixture from './PaginationFixture.svelte';
 import PopoverFixture from './PopoverFixture.svelte';
@@ -212,6 +213,40 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(input?.value).toBe('Beta');
 		expect(output?.textContent).toBe('b:Beta:1:false');
+	});
+
+	it('coordinates MultiSelect toggles, persistent content, labels, form values and reset', async () => {
+		render(MultiSelectFixture);
+		const trigger = document.querySelector<HTMLButtonElement>(
+			'[data-testid="multi-select-trigger"]'
+		);
+		const form = document.querySelector<HTMLFormElement>('[data-testid="multi-select-form"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="multi-select-output"]');
+		trigger?.focus();
+		trigger?.click();
+		await tick();
+		const alpha = document.querySelector<HTMLElement>('[data-testid="multi-a"]');
+		const beta = document.querySelector<HTMLElement>('[data-testid="multi-b"]');
+		expect(document.activeElement).toBe(alpha);
+		expect(alpha?.getAttribute('aria-selected')).toBe('true');
+		alpha?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
+		expect(document.activeElement).toBe(beta);
+		beta?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+		await tick();
+		expect(document.querySelector('[data-testid="multi-select-content"]')).not.toBeNull();
+		expect(beta?.getAttribute('aria-selected')).toBe('true');
+		expect(new FormData(form!).getAll('choice')).toEqual(['a', 'c', 'b']);
+		expect(output?.textContent).toBe('a,c,b:1:true');
+		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+		await new Promise((resolve) => setTimeout(resolve, 140));
+		await tick();
+		expect(trigger?.textContent).toContain('Beta');
+		expect(document.activeElement).toBe(trigger);
+		form?.reset();
+		await Promise.resolve();
+		await tick();
+		expect(new FormData(form!).getAll('choice')).toEqual(['a', 'c']);
+		expect(output?.textContent).toBe('a,c:1:false');
 	});
 	it('keeps AlertDialog open until an explicit action is chosen', async () => {
 		render(AlertDialogFixture);

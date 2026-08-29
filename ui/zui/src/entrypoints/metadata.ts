@@ -39,6 +39,10 @@ export { zuiMetadata as menuGroupMetadata } from '../components/compound/menu/ZM
 export { zuiMetadata as menuItemMetadata } from '../components/compound/menu/ZMenuItem.svelte';
 export { zuiMetadata as menuLabelMetadata } from '../components/compound/menu/ZMenuLabel.svelte';
 export { zuiMetadata as menuSeparatorMetadata } from '../components/compound/menu/ZMenuSeparator.svelte';
+export { zuiMetadata as multiSelectMetadata } from '../components/compound/multi-select/ZMultiSelect.svelte';
+export { zuiMetadata as multiSelectContentMetadata } from '../components/compound/multi-select/ZMultiSelectContent.svelte';
+export { zuiMetadata as multiSelectItemMetadata } from '../components/compound/multi-select/ZMultiSelectItem.svelte';
+export { zuiMetadata as multiSelectTriggerMetadata } from '../components/compound/multi-select/ZMultiSelectTrigger.svelte';
 export { zuiMetadata as popconfirmMetadata } from '../components/compound/popconfirm/ZPopconfirm.svelte';
 export { zuiMetadata as popconfirmActionMetadata } from '../components/compound/popconfirm/ZPopconfirmAction.svelte';
 export { zuiMetadata as popconfirmCancelMetadata } from '../components/compound/popconfirm/ZPopconfirmCancel.svelte';

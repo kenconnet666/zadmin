@@ -317,6 +317,27 @@ test('keeps Combobox focus, filtering, active descendant and stable form value s
 	).toBeVisible();
 });
 
+test('keeps MultiSelect tags, persistent toggles, form values and reset synchronized', async ({
+	page
+}) => {
+	await page.goto('/#/components/multi-select');
+	const trigger = page.getByTestId('multi-select-trigger');
+	await trigger.click();
+	const listbox = page.getByRole('listbox', { name: '部署环境' });
+	await expect(listbox).toHaveAttribute('aria-multiselectable', 'true');
+	await page.getByRole('option', { name: '预发' }).click();
+	await expect(listbox).toBeVisible();
+	await expect(page.getByRole('option', { name: '预发' })).toHaveAttribute('aria-selected', 'true');
+	await page.keyboard.press('Escape');
+	await expect(trigger).toContainText('预发');
+	await page.getByRole('button', { name: '读取FormData' }).click();
+	await expect(
+		page.getByText(/values = 开发,生产,预发 · 变更 = 1 · 开发,生产,预发/u)
+	).toBeVisible();
+	await page.getByRole('button', { name: '重置' }).click();
+	await expect(trigger).not.toContainText('预发');
+});
+
 test('keeps Accordion selection, roving focus and Presence synchronized', async ({ page }) => {
 	await page.goto('/#/components/accordion');
 	const runtime = page.getByRole('button', { name: /运行时合同/u });
@@ -510,6 +531,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/checkbox',
 		'#/components/combobox',
 		'#/components/input',
+		'#/components/multi-select',
 		'#/components/field',
 		'#/components/radio-group',
 		'#/components/select',
