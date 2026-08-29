@@ -270,6 +270,7 @@ ui/sveltekit/src/lib/zui/
 @zadmin/zui
 @zadmin/zui/compiler
 @zadmin/zui/runtime
+@zadmin/zui/testing    内存runtime、fixture和资源断言，仅供测试
 @zadmin/zui/internal   仅编译产物使用
 @zadmin/sveltekit/zui
 ```

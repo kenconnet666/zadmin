@@ -1,6 +1,6 @@
 # UI 平台重构蓝图
 
-状态：实施与验收收口中（2026-08-29）。P0–P7代码已落地：浏览器ZUI已合包、SvelteKit ZUI集成已独立、自包含Miniapp已由Svelte直编微信原生产物并移除Taro，微信开发者工具WebView模拟器与自动完整remount已通过，WebView平台中立协议、TypeScript facade、C# Core、9个桌面组件和Windows/WinUI 3/WebView2 target均已实现，旧Tauri/Rust链已删除。剩余边界是云端全量门禁和正式分发签名/MSIX验收。
+状态：v1蓝图已完成（2026-08-29）。P0–P7代码与自动验收合同均已落地：浏览器ZUI已合包并提供完整runtime/compiler/testing公开面，SvelteKit server/client/testing与ZUI集成已独立，自包含Miniapp已由Svelte直编微信原生产物并移除Taro，微信开发者工具WebView模拟器与自动完整remount已通过，WebView平台中立协议、TypeScript facade、C# Core、9个桌面组件和Windows x64/WinUI 3/WebView2 target均已实现，旧Tauri/Rust链及重构遗留空包已删除。Authenticode签名、MSIX、正式安装升级、微信账号/真机敏感能力和未来其他平台继续作为明确的外部分发边界，不冒充v1自动验收结果。
 
 ## 1. 决策摘要
 
@@ -36,12 +36,12 @@ ui/
 
 当前`ui/`包含四个已落地包：
 
-| 目录           | 包名                | 当前职责                                                                             |
-| -------------- | ------------------- | ------------------------------------------------------------------------------------ |
-| `ui/zui`       | `@zadmin/zui`       | 浏览器/WebView Theme、ICSS、recipe、8个Svelte组件和runtime                           |
-| `ui/sveltekit` | `@zadmin/sveltekit` | 动态插件runtime，以及`/zui`的SSR、CSP、critical CSS和client集成                      |
-| `ui/miniapp`   | `@zadmin/miniapp`   | 独立移动Theme、`mcss()`、8个`M*`组件、Svelte compiler/renderer、微信target与平台能力 |
-| `ui/webview`   | `@zadmin/webview`   | C#公共协议、前端bridge、平台facade、9个桌面组件和Windows WebView2 target             |
+| 目录           | 包名                | 当前职责                                                                  |
+| -------------- | ------------------- | ------------------------------------------------------------------------- |
+| `ui/zui`       | `@zadmin/zui`       | 浏览器/WebView Theme、ICSS、recipe、8个Svelte组件、runtime和testing工具   |
+| `ui/sveltekit` | `@zadmin/sveltekit` | 动态插件server/client/testing，以及`/zui`的SSR、CSP、critical CSS集成     |
+| `ui/miniapp`   | `@zadmin/miniapp`   | 独立移动Theme、`mcss()`、8个`M*`组件、Svelte直编微信target与平台身份/能力 |
+| `ui/webview`   | `@zadmin/webview`   | C#公共协议、前端bridge、平台facade、9个桌面组件和Windows WebView2 target  |
 
 `ui/zui-core`、`ui/zui-svelte`、`ui/zui-taro`、旧`svelte-taro`和`ui/tauri`边界已迁移或删除。微信生产依赖不含ZUI和Taro，桌面生产依赖不含Tauri或Rust。
 
@@ -364,6 +364,8 @@ API层次：
 4. 只有无法封装的微信专属能力访问强类型`platform.raw`；
 5. 运行环境不存在`wx`或与微信构建目标不匹配时启动失败。
 
+当前公开实现同时提供`isWeChatPlatform(value)`类型guard；`platform.capabilities`引用同一份只读能力目录，避免实例报告与构建期目录漂移。导航、身份、隐私、支付、设备、网络、存储和资源生命周期按职责继续分组，不为未来未实现的平台预建空facade。
+
 ### 6.9 微信产物
 
 命令合同：
@@ -579,7 +581,7 @@ apps/
 
 ## 9. 分阶段迁移
 
-当前阶段状态：P0–P7代码与本地目标验收完成，P8不在v1范围；最新云端CI与正式签名/MSIX仍在收口。
+当前阶段状态：P0–P7及v1自动验收合同已完成，P8不在v1范围；正式Authenticode签名、MSIX和安装升级仍是外部分发门禁。
 
 ### P0：冻结蓝图和验收清单（已完成）
 
@@ -653,7 +655,7 @@ ui/miniapp + ui/zui-taro → ui/miniapp
 - 清除所有Tauri类型泄漏；
 - 以旧Tauri生产验收作为迁移对照，替代链通过后删除旧实现。
 
-### P7：实现C# WebView公共层与Windows target（代码与portable宿主完成）
+### P7：实现C# WebView公共层与Windows target（已完成，portable x64）
 
 - 建立typed protocol生成与漂移检查；
 - 建立`@zadmin/webview`的build、platform、svelte和testing入口；
@@ -798,3 +800,5 @@ ui/miniapp + ui/zui-taro → ui/miniapp
 6. `@zadmin/webview`能从同一Web源码发布Windows目标产物，且C# WebView2宿主达到旧Tauri宿主的能力、安全、HMR和发布门槛；
 7. 文档、package exports、测试、构建和真实宿主在同一阶段保持一致；
 8. 未完成的真机、账号、上传、签名和发布验证被明确列为边界，不以模拟或mock代替。
+
+当前v1实现满足以上8项：四个包和微信/Windows验收宿主已落地；旧包已迁移或删除；ZUI/SvelteKit、Miniapp和WebView拥有独立coverage、外部tarball、真实宿主与CI证据；所有未获授权或依赖证书、商店、账号、真机的流程继续保留为第8项边界。

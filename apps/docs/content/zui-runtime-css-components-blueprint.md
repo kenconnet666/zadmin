@@ -1,6 +1,6 @@
 # ZUI 运行时 CSS 与组件 API 蓝图
 
-状态：Z0–Z8基础范围已实施并完成本地生产验收（2026-08-29）。`@zadmin/zui`已落地严格Theme、`useZui`、recipe/slot recipe、Symbol attachment carrier、运行时CSS和8个基础组件；`@zadmin/sveltekit/zui`已落地SSR/CSP/HMR集成。Core/ZUI/SvelteKit三个tarball已在仓库外完成安装、frozen reinstall、check、build、Node SSR、critical CSS、CSP hash和client边界验收；云端同门禁随最新CI复核。第21节仍明确列出不属于首批范围的组件和API。
+状态：Z0–Z8基础范围与自动生产验收已完成（2026-08-29）。`@zadmin/zui`已落地严格Theme、`useZui`、recipe/slot recipe、Symbol attachment carrier、运行时CSS、testing工具和8个基础组件；`@zadmin/sveltekit`已落地server/client/testing公开面及ZUI SSR/CSP/HMR集成。Core/ZUI/SvelteKit三个tarball已在仓库外完成安装、frozen reinstall、testing入口执行、check、build、Node SSR、critical CSS、CSP hash和client边界验收；同一门禁进入GitHub Actions。第21节仍明确列出不属于首批范围的组件和API。
 
 ## 1. 目标
 
@@ -1214,7 +1214,7 @@ testing进入production bundle = 0 B
 - compiler/server client bundle保持0 B；
 - 重新做并发SSR、CSP和外部tarball验收。
 
-### Z8：生产验收（本地完成，云端复核中）
+### Z8：生产验收（已完成）
 
 - 全仓check/test/build/lint；
 - 三浏览器；

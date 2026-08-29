@@ -1,6 +1,6 @@
 # @zadmin/webview
 
-`@zadmin/webview`把同一套Svelte/Web源码发布为独立桌面target。TypeScript提供版本化bridge、平台能力facade、资源生命周期、Svelte组件和fake driver；C#提供共享dispatcher和目标适配器。v1只实现Windows x64/arm64，渲染器是Microsoft Edge WebView2。
+`@zadmin/webview`把同一套Svelte/Web源码发布为独立桌面target。TypeScript提供版本化bridge、平台能力facade、资源生命周期、Svelte组件和fake driver；C#提供共享dispatcher和目标适配器。v1只实现Windows，当前产品与CI生产验收目标是`windows-x64`，渲染器是Microsoft Edge WebView2；`windows-arm64`只有公共target/RID支持，尚未作为已发布产物验收。
 
 ```ts
 import { createWebviewDesktopPlatform } from '@zadmin/webview/platform';

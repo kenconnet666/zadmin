@@ -45,6 +45,26 @@ export const handle = zuiHandle();
 </ZProvider>
 ```
 
+## Testing
+
+`@zadmin/zui/testing`提供不依赖DOM或测试框架的内存runtime、fixture和资源断言：
+
+```ts
+import { defaultTheme } from '@zadmin/zui';
+import {
+	assertIcssResourcesStable,
+	createIcssFixture,
+	createTestIcssRuntime
+} from '@zadmin/zui/testing';
+
+const harness = createTestIcssRuntime();
+const before = harness.snapshot();
+assertIcssResourcesStable(before, harness.snapshot());
+const fixture = createIcssFixture(harness, defaultTheme, (s) => s.display.flex);
+```
+
+该子入口仅供测试导入，根入口和生产组件bundle不引用它。
+
 Requires Node 22 or newer and Svelte `>=5.56 <6`.
 
 Full architecture, CSP, SSR, HMR and external integration documentation lives in the [ZAdmin documentation](https://github.com/kenconnet666/zadmin/tree/master/apps/docs/content).

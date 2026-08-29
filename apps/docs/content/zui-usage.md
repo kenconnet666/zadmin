@@ -177,6 +177,29 @@ export const theme = extendTheme(defaultTheme, {
 
 组件标准转发`class`和HTML attributes。编译器只向已知ZUI组件传递内部变量carrier；未知第三方组件使用运行时class-rule回退，不添加wrapper。
 
+## 测试工具
+
+测试代码从独立子入口创建内存runtime，不需要浏览器DOM，也不会把测试工具带入业务根入口：
+
+```ts
+import { defaultTheme } from '@zadmin/zui';
+import {
+	assertIcssClassName,
+	assertIcssResourcesStable,
+	createIcssFixture,
+	createTestIcssRuntime
+} from '@zadmin/zui/testing';
+
+const harness = createTestIcssRuntime();
+const before = harness.snapshot();
+assertIcssResourcesStable(before, harness.snapshot());
+
+const fixture = createIcssFixture(harness, defaultTheme, (s) => s.display.flex);
+assertIcssClassName(fixture.className);
+```
+
+`snapshot()`提供CSS文本、style tag、内存sheet entry和Registry metrics；`reset()`清理全部fixture资源。外部tarball验收会实际导入该入口，并扫描生产客户端产物中`testing`代码为0。
+
 ## 开发和HMR
 
 改变普通状态只更新inline变量。修改ICSS结构后，Vite重新预处理组件；规则所有权按模块和callsite清理。每个callsite默认最多128个结构变体，超过时抛出带owner信息的明确错误。
