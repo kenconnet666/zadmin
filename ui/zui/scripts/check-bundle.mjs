@@ -23,7 +23,12 @@ const components = [
 	{ id: 'icon', maxIncrementalGzip: 4 * 1024, name: 'ZIcon', path: 'gene/ZIcon.svelte' },
 	{ id: 'button', name: 'ZButton', path: 'gene/ZButton.svelte' },
 	{ id: 'input', name: 'ZInput', path: 'input/ZInput.svelte' },
-	{ id: 'field', name: 'ZField', path: 'input/ZField.svelte' }
+	{
+		id: 'field',
+		maxIncrementalGzip: 3.375 * 1024,
+		name: 'ZField',
+		path: 'input/ZField.svelte'
+	}
 ];
 
 const FORBIDDEN_FOUNDATION_DEPENDENCIES = [

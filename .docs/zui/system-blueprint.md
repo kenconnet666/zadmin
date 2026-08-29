@@ -861,6 +861,8 @@ DataTable必须在Collection、Selection、Virtualizer和Table均被真实组件
 
 缺少其中关键项时不开始编码。
 
+当前基础组件预算仍默认为`3.25 KiB gzip`。`ZIcon`因受控Lucide manifest使用`4 KiB`；`ZField`因同时承担多消息ARIA关系、Field Context和scoped ID合同使用`3.375 KiB`。这些是逐组件显式上限，不改变其他组件默认门禁。
+
 ## 11. Metadata扩展
 
 当前metadata重点是Props。未来扩展为：
