@@ -70,9 +70,9 @@
 		applyIcssRootStyle,
 		mergeStyles,
 		serializeIcssVariables
-	} from '../../../runtime/root-style.js';
-	import { useZui } from '../../../runtime/context.js';
-	import { readIcssCarrier } from '../../../runtime/compiler-bridge.js';
+	} from '../../../runtime/foundation/root-style.js';
+	import { useZui } from '../../../runtime/foundation/context.js';
+	import { readIcssCarrier } from '../../../runtime/foundation/compiler-bridge.js';
 	import { provideZAccordionItem, useZAccordion } from './context.svelte.js';
 
 	let {

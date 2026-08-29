@@ -90,7 +90,7 @@ export type {
 	ZAspectRatioProps,
 	ZAspectRatioValue
 } from '../components/layout/ZAspectRatio.svelte';
-export { useZui } from '../runtime/context.js';
+export { useZui } from '../runtime/foundation/context.js';
 export type {
 	ZuiColorScheme,
 	ZuiContext,
@@ -100,7 +100,7 @@ export type {
 	ZuiMotion,
 	ZuiPortalContainer,
 	ZuiTranslations
-} from '../runtime/context.js';
+} from '../runtime/foundation/context.js';
 export {
 	createBrowserIcssRuntime,
 	createIcssRuntime,

@@ -90,14 +90,14 @@
 <script lang="ts">
 	import { onDestroy, untrack } from 'svelte';
 
-	import { Presence } from '../../../runtime/presence.svelte.js';
+	import { Presence } from '../../../runtime/foundation/presence.svelte.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
 		serializeIcssVariables
-	} from '../../../runtime/root-style.js';
-	import { useZui } from '../../../runtime/context.js';
-	import { readIcssCarrier } from '../../../runtime/compiler-bridge.js';
+	} from '../../../runtime/foundation/root-style.js';
+	import { useZui } from '../../../runtime/foundation/context.js';
+	import { readIcssCarrier } from '../../../runtime/foundation/compiler-bridge.js';
 	import { useZAccordion, useZAccordionItem } from './context.svelte.js';
 
 	let {
@@ -111,7 +111,7 @@
 	const accordion = useZAccordion();
 	const item = useZAccordionItem();
 	const open = $derived(accordion.isOpen(item.value));
-	const presence = new Presence(open);
+	const presence = new Presence(untrack(() => open));
 	const classes = $derived(zui.slots(accordionContentRecipe, { motion: zui.motion, open }));
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));

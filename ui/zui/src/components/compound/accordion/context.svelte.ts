@@ -1,6 +1,9 @@
 import { getContext, setContext } from 'svelte';
 
-import type { CollectionItem, CollectionStore } from '../../../runtime/collection.svelte.js';
+import type {
+	CollectionItem,
+	CollectionStore
+} from '../../../runtime/collection/collection.svelte.js';
 
 export type AccordionType = 'multiple' | 'single';
 export type AccordionValue = string | readonly string[];

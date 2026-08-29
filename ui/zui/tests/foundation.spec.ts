@@ -1,12 +1,12 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { createZuiId, createZuiIdScope } from '../src/runtime/ids.js';
-import { CollectionStore } from '../src/runtime/collection.svelte.js';
-import { createFormEntries, serializeFormValue } from '../src/runtime/form-value.js';
-import { moveIndex, navigationIntent } from '../src/runtime/list-navigation.js';
+import { createZuiId, createZuiIdScope } from '../src/runtime/foundation/ids.js';
+import { CollectionStore } from '../src/runtime/collection/collection.svelte.js';
+import { createFormEntries, serializeFormValue } from '../src/runtime/form/form-value.js';
+import { moveIndex, navigationIntent } from '../src/runtime/collection/list-navigation.js';
 import { clampPage, createPaginationItems } from '../src/runtime/pagination.js';
-import { durationMilliseconds, Presence } from '../src/runtime/presence.svelte.js';
-import { RovingFocus } from '../src/runtime/roving-focus.svelte.js';
+import { durationMilliseconds, Presence } from '../src/runtime/foundation/presence.svelte.js';
+import { RovingFocus } from '../src/runtime/collection/roving-focus.svelte.js';
 import {
 	emptySelection,
 	isSelected,
@@ -14,9 +14,9 @@ import {
 	selectRange,
 	singleSelection,
 	toggleSelection
-} from '../src/runtime/selection.js';
+} from '../src/runtime/collection/selection.js';
 import { normalizeSliderValue } from '../src/runtime/slider.js';
-import { Typeahead } from '../src/runtime/typeahead.js';
+import { Typeahead } from '../src/runtime/collection/typeahead.js';
 
 describe('ZUI foundation runtime', () => {
 	it('creates scoped SSR-stable ids and rejects ambiguous parts', () => {

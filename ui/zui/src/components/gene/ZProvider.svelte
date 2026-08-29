@@ -11,7 +11,7 @@
 		ZuiMotion,
 		ZuiPortalContainer,
 		ZuiTranslations
-	} from '../../runtime/context.js';
+	} from '../../runtime/foundation/context.js';
 	import type { ZuiTheme } from '../../theme/types.js';
 
 	export interface ZProviderProps {
@@ -113,7 +113,7 @@
 </script>
 
 <script lang="ts">
-	import { provideZui } from '../../runtime/context.js';
+	import { provideZui } from '../../runtime/foundation/context.js';
 
 	let {
 		children,

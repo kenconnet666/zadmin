@@ -44,8 +44,8 @@
 		applyIcssRootStyle,
 		mergeStyles,
 		serializeIcssVariables
-	} from '../../runtime/root-style.js';
-	import { readIcssCarrier } from '../../runtime/compiler-bridge.js';
+	} from '../../runtime/foundation/root-style.js';
+	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 
 	let { children, class: className, ref = $bindable(null), style, ...rest }: ZBoxProps = $props();
 	const icssVariables = $derived(readIcssCarrier(rest));

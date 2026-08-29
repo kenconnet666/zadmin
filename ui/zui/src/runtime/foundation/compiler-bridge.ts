@@ -1,9 +1,9 @@
-import { disposeIcssModule, ownedIcss } from '../icss/runtime.js';
-import { createIcssSlot } from '../icss/values.js';
+import { disposeIcssModule, ownedIcss } from '../../icss/runtime.js';
+import { createIcssSlot } from '../../icss/values.js';
 import type { IcssVariables } from './root-style.js';
 import type { Attachment } from 'svelte/attachments';
 
-export { setServerRuntimeResolver as __setServerRuntimeResolver } from '../icss/runtime.js';
+export { setServerRuntimeResolver as __setServerRuntimeResolver } from '../../icss/runtime.js';
 
 export const __icssOwned = ownedIcss;
 export const __disposeIcssModule = disposeIcssModule;

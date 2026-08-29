@@ -56,6 +56,7 @@ describe('@zadmin/zui package', () => {
 			'compiler.ts',
 			'index.ts',
 			'internal.ts',
+			'layer.ts',
 			'metadata.ts',
 			'runtime.ts',
 			'testing.ts',

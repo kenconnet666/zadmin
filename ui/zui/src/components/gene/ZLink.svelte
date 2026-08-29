@@ -107,13 +107,13 @@
 
 <script lang="ts">
 	import { untrack } from 'svelte';
-	import { readIcssCarrier } from '../../runtime/compiler-bridge.js';
-	import { useZui } from '../../runtime/context.js';
+	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
+	import { useZui } from '../../runtime/foundation/context.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
 		serializeIcssVariables
-	} from '../../runtime/root-style.js';
+	} from '../../runtime/foundation/root-style.js';
 
 	let {
 		children,

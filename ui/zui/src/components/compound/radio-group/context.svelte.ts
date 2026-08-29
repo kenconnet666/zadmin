@@ -1,7 +1,10 @@
 import { getContext, setContext } from 'svelte';
 
-import type { CollectionItem, CollectionStore } from '../../../runtime/collection.svelte.js';
-import type { NavigationOrientation } from '../../../runtime/list-navigation.js';
+import type {
+	CollectionItem,
+	CollectionStore
+} from '../../../runtime/collection/collection.svelte.js';
+import type { NavigationOrientation } from '../../../runtime/collection/list-navigation.js';
 
 export interface RadioGroupCollectionItem extends CollectionItem<string> {
 	readonly textValue: string;

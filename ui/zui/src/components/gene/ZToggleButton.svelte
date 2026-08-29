@@ -93,7 +93,7 @@
 </script>
 
 <script lang="ts">
-	import { ControllableState } from '../../runtime/controllable-state.svelte.js';
+	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import ZButton from './ZButton.svelte';
 
 	let {

@@ -31,14 +31,7 @@ export function listenForFormReset(
 
 export function listenToFormReset(form: HTMLFormElement | null, reset: () => void): () => void {
 	if (!form) return () => undefined;
-	let resetTimer: ReturnType<typeof setTimeout> | undefined;
-	const handleReset = () => {
-		if (resetTimer !== undefined) clearTimeout(resetTimer);
-		resetTimer = setTimeout(reset, 0);
-	};
+	const handleReset = () => reset();
 	form.addEventListener('reset', handleReset);
-	return () => {
-		form.removeEventListener('reset', handleReset);
-		if (resetTimer !== undefined) clearTimeout(resetTimer);
-	};
+	return () => form.removeEventListener('reset', handleReset);
 }

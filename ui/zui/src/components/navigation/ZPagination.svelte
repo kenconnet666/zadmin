@@ -114,15 +114,15 @@
 <script lang="ts">
 	import { untrack } from 'svelte';
 
-	import { ControllableState } from '../../runtime/controllable-state.svelte.js';
+	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { clampPage, createPaginationItems } from '../../runtime/pagination.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
 		serializeIcssVariables
-	} from '../../runtime/root-style.js';
-	import { useZui } from '../../runtime/context.js';
-	import { readIcssCarrier } from '../../runtime/compiler-bridge.js';
+	} from '../../runtime/foundation/root-style.js';
+	import { useZui } from '../../runtime/foundation/context.js';
+	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import ZButton from '../gene/ZButton.svelte';
 
 	let {

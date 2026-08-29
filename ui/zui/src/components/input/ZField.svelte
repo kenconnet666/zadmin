@@ -3,7 +3,7 @@
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 
-	import type { FieldMessages } from '../../runtime/form-control.svelte.js';
+	import type { FieldMessages } from '../../runtime/form/form-control.svelte.js';
 	import { defineSlotRecipe, registerSlotRecipeHmr } from '../../recipes/slots.js';
 
 	export type ZFieldSize = 'medium' | 'small';
@@ -132,16 +132,16 @@
 <script lang="ts">
 	import { untrack } from 'svelte';
 
-	import { provideZField } from '../../runtime/field-context.js';
-	import { mergeAriaIds, normalizeFieldMessages } from '../../runtime/form-control.svelte.js';
-	import { createZuiId } from '../../runtime/ids.js';
+	import { provideZField } from '../../runtime/form/field-context.js';
+	import { mergeAriaIds, normalizeFieldMessages } from '../../runtime/form/form-control.svelte.js';
+	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
 		serializeIcssVariables
-	} from '../../runtime/root-style.js';
-	import { useZui } from '../../runtime/context.js';
-	import { readIcssCarrier } from '../../runtime/compiler-bridge.js';
+	} from '../../runtime/foundation/root-style.js';
+	import { useZui } from '../../runtime/foundation/context.js';
+	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 
 	let {
 		children,

@@ -124,19 +124,19 @@
 <script lang="ts">
 	import { untrack } from 'svelte';
 
-	import { CollectionStore } from '../../../runtime/collection.svelte.js';
-	import { ControllableState } from '../../../runtime/controllable-state.svelte.js';
-	import { useZField } from '../../../runtime/field-context.js';
-	import { listenToFormReset, mergeAriaIds } from '../../../runtime/form-control.svelte.js';
+	import { CollectionStore } from '../../../runtime/collection/collection.svelte.js';
+	import { ControllableState } from '../../../runtime/foundation/controllable-state.svelte.js';
+	import { useZField } from '../../../runtime/form/field-context.js';
+	import { listenToFormReset, mergeAriaIds } from '../../../runtime/form/form-control.svelte.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
 		serializeIcssVariables
-	} from '../../../runtime/root-style.js';
-	import { RovingFocus } from '../../../runtime/roving-focus.svelte.js';
-	import { isSelected, singleSelection } from '../../../runtime/selection.js';
-	import { useZui } from '../../../runtime/context.js';
-	import { readIcssCarrier } from '../../../runtime/compiler-bridge.js';
+	} from '../../../runtime/foundation/root-style.js';
+	import { RovingFocus } from '../../../runtime/collection/roving-focus.svelte.js';
+	import { isSelected, singleSelection } from '../../../runtime/collection/selection.js';
+	import { useZui } from '../../../runtime/foundation/context.js';
+	import { readIcssCarrier } from '../../../runtime/foundation/compiler-bridge.js';
 	import {
 		provideZRadioGroup,
 		type RadioGroupCollectionItem,

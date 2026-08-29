@@ -29,7 +29,7 @@ import { ZCode } from '../src/entrypoints/code.js';
 import Camera from '@lucide/svelte/icons/camera';
 import { normalizeAspectRatio } from '../src/components/layout/ZAspectRatio.svelte';
 import { getIconComponent, iconManifest } from '../src/components/gene/ZIcon.svelte';
-import { __icssCarrier } from '../src/runtime/compiler-bridge.js';
+import { __icssCarrier } from '../src/runtime/foundation/compiler-bridge.js';
 import ContextProbe from './ContextProbe.svelte';
 import AccordionFixture from './AccordionFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';

@@ -61,7 +61,12 @@ const components = [
 	},
 	{ id: 'checkbox', name: 'ZCheckbox', path: 'input/ZCheckbox.svelte' },
 	{ id: 'input', name: 'ZInput', path: 'input/ZInput.svelte' },
-	{ id: 'slider', name: 'ZSlider', path: 'input/ZSlider.svelte' },
+	{
+		id: 'slider',
+		maxIncrementalGzip: 3.375 * 1024,
+		name: 'ZSlider',
+		path: 'input/ZSlider.svelte'
+	},
 	{
 		id: 'pagination',
 		maxIncrementalGzip: 4.625 * 1024,
@@ -133,6 +138,15 @@ if (runtimeBundle.gzip > 15 * 1024) {
 }
 
 const report = { runtimeGzip: runtimeBundle.gzip, components: {} };
+
+const layerEntry = portable(resolve(sourceRoot, 'entrypoints/layer.ts'));
+const layerBundle = await bundle(
+	`import * as layer from ${JSON.stringify(layerEntry)}; globalThis.__zuiLayerBudget = layer;`
+);
+if (layerBundle.gzip > 30 * 1024) {
+	throw new Error(`ZUI layer runtime gzip ${layerBundle.gzip} exceeds 30 KiB.`);
+}
+report.layerGzip = layerBundle.gzip;
 for (const dependency of FORBIDDEN_FOUNDATION_DEPENDENCIES) {
 	if (runtimeBundle.code.includes(dependency)) {
 		throw new Error(`ZUI root runtime unexpectedly contains ${dependency}.`);

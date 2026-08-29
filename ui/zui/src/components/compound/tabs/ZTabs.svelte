@@ -109,18 +109,18 @@
 	import { untrack } from 'svelte';
 
 	import { hashString } from '../../../icss/hash.js';
-	import { CollectionStore } from '../../../runtime/collection.svelte.js';
-	import { ControllableState } from '../../../runtime/controllable-state.svelte.js';
-	import { createZuiId } from '../../../runtime/ids.js';
+	import { CollectionStore } from '../../../runtime/collection/collection.svelte.js';
+	import { ControllableState } from '../../../runtime/foundation/controllable-state.svelte.js';
+	import { createZuiId } from '../../../runtime/foundation/ids.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
 		serializeIcssVariables
-	} from '../../../runtime/root-style.js';
-	import { RovingFocus } from '../../../runtime/roving-focus.svelte.js';
-	import { isSelected, singleSelection } from '../../../runtime/selection.js';
-	import { useZui } from '../../../runtime/context.js';
-	import { readIcssCarrier } from '../../../runtime/compiler-bridge.js';
+	} from '../../../runtime/foundation/root-style.js';
+	import { RovingFocus } from '../../../runtime/collection/roving-focus.svelte.js';
+	import { isSelected, singleSelection } from '../../../runtime/collection/selection.js';
+	import { useZui } from '../../../runtime/foundation/context.js';
+	import { readIcssCarrier } from '../../../runtime/foundation/compiler-bridge.js';
 	import { provideZTabs, type TabsCollectionItem, type ZTabsContext } from './context.svelte.js';
 
 	let {
