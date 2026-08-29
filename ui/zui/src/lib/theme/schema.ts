@@ -12,6 +12,7 @@ export const DEFAULT_THEME_SCHEMA = {
 		border: '#e2e8f0',
 		canvas: '#ffffff',
 		danger: '#dc2626',
+		dangerHover: '#b91c1c',
 		focus: '#60a5fa',
 		primary: '#2563eb',
 		primaryHover: '#1d4ed8',
@@ -23,6 +24,10 @@ export const DEFAULT_THEME_SCHEMA = {
 		fast: 120,
 		normal: 200,
 		slow: 320
+	},
+	fontFamily: {
+		mono: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+		sans: 'Inter, ui-sans-serif, system-ui, sans-serif'
 	},
 	fontSize: {
 		large: 18,
@@ -53,6 +58,7 @@ export const DEFAULT_THEME_SCHEMA = {
 		small: 4
 	},
 	shadow: {
+		codeHighlight: 'inset 3px 0 0 #2563eb',
 		medium: '0 8px 24px rgb(0 0 0 / 0.12)',
 		none: 'none',
 		small: '0 1px 2px rgb(0 0 0 / 0.08)'

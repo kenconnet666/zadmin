@@ -16,7 +16,7 @@
 
 ## 约束
 
-- 仓库Markdown只允许放在`.docs`；
+- 代码、架构、开发和验收Markdown只允许放在`.docs`；`.changeset/*.md`是Changesets强制格式的机器消费发布元数据，不作为文档展示；
 - `apps/docs`只存放Svelte展示站代码、组件Demo和TypeScript API数据；
 - 自动生成的内部报告直接写入`.docs`对应分类；
 - 移动或重命名文档时必须更新仓库内链接与生成脚本；

@@ -18,6 +18,8 @@ import type { ZuiTheme } from '../theme/types.js';
 export type { ZuiTheme } from '../theme/types.js';
 
 export interface ZuiContext {
+	readonly direction: 'ltr' | 'rtl';
+	readonly locale: string;
 	readonly runtime: IcssRuntime;
 	readonly theme: ZuiTheme;
 	icss(factory: IcssFactory<ZuiTheme>): IcssClassName;
@@ -35,6 +37,8 @@ export interface ZuiContext {
 }
 
 export interface ZuiContextSource {
+	readonly direction?: 'ltr' | 'rtl';
+	readonly locale?: string;
 	readonly runtime?: IcssRuntime;
 	readonly theme?: ZuiTheme;
 }
@@ -43,6 +47,12 @@ const ZUI_CONTEXT = Symbol('zui-context');
 
 function createZuiContext(read: () => Required<ZuiContextSource>): ZuiContext {
 	const context: ZuiContext = {
+		get direction() {
+			return read().direction;
+		},
+		get locale() {
+			return read().locale;
+		},
 		get runtime() {
 			return read().runtime;
 		},
@@ -63,6 +73,8 @@ function createZuiContext(read: () => Required<ZuiContextSource>): ZuiContext {
 }
 
 const DEFAULT_CONTEXT = createZuiContext(() => ({
+	direction: 'ltr',
+	locale: 'en-US',
 	runtime: getDefaultIcssRuntime(),
 	theme: defaultTheme
 }));
@@ -72,6 +84,8 @@ export function provideZui(read: () => ZuiContextSource): ZuiContext {
 	const context = createZuiContext(() => {
 		const source = read();
 		return {
+			direction: source.direction ?? parent.direction,
+			locale: source.locale ?? parent.locale,
 			runtime: source.runtime ?? parent.runtime,
 			theme: source.theme ?? parent.theme
 		};

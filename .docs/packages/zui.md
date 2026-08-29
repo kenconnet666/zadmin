@@ -45,6 +45,18 @@ export const handle = zuiHandle();
 </ZProvider>
 ```
 
+Docs与业务需要代码展示时，从独立子入口按需使用：
+
+```svelte
+<script lang="ts">
+	import { ZCode } from '@zadmin/zui/code';
+</script>
+
+<ZCode code="const value = 1;" lang="typescript" />
+```
+
+`shiki`是optional peer；根入口、8个基础组件和未使用ZCode的浏览器bundle不包含Shiki。
+
 ## Testing
 
 `@zadmin/zui/testing`提供不依赖DOM或测试框架的内存runtime、fixture和资源断言：

@@ -13,6 +13,7 @@
 		"dev:wechat": "pnpm --filter @zadmin/wechat-app dev",
 		"build:desktop": "pnpm --filter @zadmin/desktop webview:build",
 		"build:wechat": "pnpm --filter @zadmin/wechat-app build",
+		"changeset": "changeset",
 		"check:desktop": "pnpm --filter @zadmin/desktop check",
 		"check:wechat": "pnpm --filter @zadmin/wechat-app check",
 		"test:desktop": "pnpm --filter @zadmin/desktop test",
@@ -20,6 +21,9 @@
 		"build": "pnpm -r --if-present build",
 		"check": "pnpm -r --if-present check",
 		"lint": "prettier --check . && eslint .",
+		"release:publish": "changeset publish",
+		"release:status": "changeset status",
+		"release:version": "changeset version",
 		"format": "prettier --write .",
 		"test": "pnpm -r --if-present test"
 	},

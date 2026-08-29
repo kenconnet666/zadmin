@@ -1,9 +1,16 @@
 import type { Component } from 'svelte';
+import type {
+	ZuiComponentCategory,
+	ZuiComponentMetadata,
+	ZuiComponentStatus
+} from '@zadmin/zui/metadata';
 
 export interface ApiRow {
+	readonly bindable?: boolean;
 	readonly default: string;
 	readonly description: string;
 	readonly name: string;
+	readonly required?: boolean;
 	readonly type: string;
 }
 
@@ -21,20 +28,28 @@ export interface DemoDefinition {
 	readonly title: string;
 }
 
-export type ComponentCategory = 'gene' | 'input' | 'layout';
+export type ComponentCategory = ZuiComponentCategory;
 
-export interface ComponentDoc {
+export interface ComponentDoc extends ZuiComponentMetadata {
 	readonly accessibility: readonly string[];
 	readonly api: readonly ApiSection[];
-	readonly category: ComponentCategory;
 	readonly demos: readonly DemoDefinition[];
-	readonly id: string;
-	readonly importStatement: string;
-	readonly name: string;
-	readonly source: string;
-	readonly summary: string;
+	readonly status: ZuiComponentStatus;
 }
 
-export function defineComponentDoc<const TDoc extends ComponentDoc>(doc: TDoc): Readonly<TDoc> {
-	return Object.freeze(doc);
+export function defineComponentDoc(
+	metadata: ZuiComponentMetadata,
+	doc: Pick<ComponentDoc, 'accessibility' | 'demos'>
+): ComponentDoc {
+	return Object.freeze({
+		...metadata,
+		...doc,
+		api: Object.freeze([
+			{
+				description: '下表来自组件单文件中的公开metadata；组件同时转发适用的原生属性。',
+				rows: metadata.props,
+				title: 'Props'
+			}
+		])
+	});
 }

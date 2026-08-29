@@ -1,5 +1,6 @@
 <script module lang="ts">
 	import type { HTMLInputAttributes } from 'svelte/elements';
+	import type { ZuiComponentMetadata } from '../../component-metadata.js';
 
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 
@@ -8,8 +9,9 @@
 
 	export interface ZInputProps extends Omit<
 		HTMLInputAttributes,
-		'children' | 'size' | 'type' | 'value'
+		'children' | 'defaultValue' | 'size' | 'type' | 'value'
 	> {
+		readonly defaultValue?: string;
 		readonly invalid?: boolean;
 		readonly onValueChange?: (value: string) => void;
 		readonly size?: ZInputSize;
@@ -17,6 +19,62 @@
 		value?: string;
 		ref?: HTMLInputElement | null;
 	}
+
+	export const zuiMetadata = {
+		category: 'input',
+		id: 'input',
+		importStatement: "import { ZInput } from '@zadmin/zui';",
+		name: 'ZInput',
+		props: [
+			{
+				bindable: true,
+				default: 'undefined',
+				description: '受控或双向绑定值。',
+				name: 'value',
+				type: 'string'
+			},
+			{
+				default: "''",
+				description: '非受控初值和原生form reset目标；受控状态由外部owner重置。',
+				name: 'defaultValue',
+				type: 'string'
+			},
+			{
+				default: "'text'",
+				description: '受支持的原生输入类型。',
+				name: 'type',
+				type: "'text' | 'email' | 'password' | 'search' | 'tel' | 'url'"
+			},
+			{
+				default: "'medium'",
+				description: '输入框尺寸。',
+				name: 'size',
+				type: "'small' | 'medium' | 'large'"
+			},
+			{
+				default: '继承Field或false',
+				description: '设置invalid状态。',
+				name: 'invalid',
+				type: 'boolean'
+			},
+			{
+				default: '—',
+				description: '只在用户输入时触发。',
+				name: 'onValueChange',
+				type: '(value: string) => void'
+			},
+			{
+				bindable: true,
+				default: 'null',
+				description: '真实input引用。',
+				name: 'ref',
+				type: 'HTMLInputElement | null'
+			}
+		],
+		source: 'ui/zui/src/lib/components/input/ZInput.svelte',
+		status: 'stable',
+		summary: '保留原生input能力，并提供受控/非受控值、binding和Field语义关联。'
+	} as const satisfies ZuiComponentMetadata;
 
 	const inputRecipe = defineRecipe({
 		base: (s) => {
@@ -32,8 +90,9 @@
 			s.transitionTimingFunction.ease;
 			s._selector('&::placeholder', (placeholder) => placeholder.color._textMuted);
 			s._focusVisible((focus) => {
-				// This composed focus ring intentionally follows the current text color.
-				focus.outline.raw('2px solid currentColor');
+				focus.outlineWidth._medium;
+				focus.outlineStyle.solid;
+				focus.outlineColor._focus;
 				focus.outlineOffset.px(2);
 			});
 		},
@@ -69,7 +128,9 @@
 <script lang="ts">
 	import { untrack } from 'svelte';
 
+	import { ControllableState } from '../../component-runtime/controllable-state.svelte.js';
 	import { useZField } from '../../component-runtime/field-context.js';
+	import { mergeAriaIds } from '../../component-runtime/form-control.svelte.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -82,16 +143,20 @@
 		'aria-describedby': ariaDescribedBy,
 		'aria-invalid': ariaInvalid,
 		class: className,
+		defaultValue = '',
+		disabled = false,
 		id,
 		invalid,
+		name,
 		oninput,
 		onValueChange,
+		readonly = false,
 		ref = $bindable(null),
 		required = false,
 		size = 'medium',
 		style,
 		type = 'text',
-		value = $bindable(''),
+		value = $bindable(),
 		...rest
 	}: ZInputProps = $props();
 
@@ -99,45 +164,39 @@
 	const field = useZField();
 	const resolvedInvalid = $derived(invalid ?? field?.invalid ?? false);
 	const rootClass = $derived(zui.recipe(inputRecipe, { invalid: resolvedInvalid, size }));
+	const state = new ControllableState<string>({
+		defaultValue: () => defaultValue,
+		onChange: () => onValueChange,
+		read: () => value,
+		write: (next) => (value = next)
+	});
+	const resolvedValue = $derived(state.current);
+	const resolvedDescribedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 
 	function handleInput(event: Event & { currentTarget: HTMLInputElement }): void {
-		value = event.currentTarget.value;
+		state.setFromUser(event.currentTarget.value);
 		oninput?.(event);
-		onValueChange?.(value);
-	}
-
-	function syncFormReset(input: HTMLInputElement): () => void {
-		const form = input?.form;
-		if (form === null) return () => undefined;
-		let resetTimer: ReturnType<typeof setTimeout> | undefined;
-		const reset = (): void => {
-			resetTimer = setTimeout(() => {
-				value = input.value;
-			}, 0);
-		};
-		form.addEventListener('reset', reset);
-		return () => {
-			form.removeEventListener('reset', reset);
-			if (resetTimer !== undefined) clearTimeout(resetTimer);
-		};
 	}
 </script>
 
 <input
 	{...rest}
 	bind:this={ref}
-	class={[rootClass, field?.controlClass, className]}
+	class={[rootClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
-	{@attach syncFormReset}
 	id={id ?? field?.controlId}
+	name={name ?? field?.name}
 	{type}
-	{value}
+	{defaultValue}
+	value={resolvedValue}
 	oninput={handleInput}
+	disabled={disabled || field?.disabled}
+	readonly={readonly || field?.readonly}
 	required={required || field?.required}
-	aria-describedby={ariaDescribedBy ?? field?.describedBy}
+	aria-describedby={resolvedDescribedBy}
 	aria-invalid={resolvedInvalid ? 'true' : ariaInvalid}
 	data-invalid={resolvedInvalid ? 'true' : undefined}
 />

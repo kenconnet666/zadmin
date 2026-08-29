@@ -7,7 +7,8 @@
 		ZStack,
 		ZText,
 		defaultTheme,
-		defineTheme
+		defineTheme,
+		icss
 	} from '@zadmin/zui';
 	import { __icssCarrier } from '@zadmin/zui/internal';
 
@@ -17,12 +18,13 @@
 		fontSize: { ...defaultTheme.fontSize, medium: '1rem' },
 		space: { ...defaultTheme.space, medium: '0.5rem' }
 	});
+	const overrideClass = icss(defaultTheme, (s) => s.backgroundColor._danger);
 	let variable = $state<number | undefined>(1);
 	let authoredStyle = $state('color: red');
 </script>
 
 <ZProvider {theme}>
-	<ZButton data-testid="button" variant="secondary">Save</ZButton>
+	<ZButton class={overrideClass} data-testid="button" variant="secondary">Save</ZButton>
 	<ZStack data-testid="stack" direction="row" gap="medium">
 		<ZText data-testid="text" tone="primary">Label</ZText>
 		<ZIcon data-testid="icon" label="Search" name="search" size={20} />

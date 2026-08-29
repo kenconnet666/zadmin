@@ -64,7 +64,8 @@ function cloneVariants<TVariants extends RecipeVariantDefinitions>(variants: TVa
 }
 
 export function defineRecipe<const TVariants extends RecipeVariantDefinitions>(
-	input: RecipeInput<TVariants>
+	input: RecipeInput<TVariants>,
+	meta?: ImportMeta
 ): RecipeDefinition<TVariants> {
 	if (typeof input !== 'object' || input === null || Array.isArray(input)) {
 		throw new TypeError('Recipe definition must be an object.');
@@ -97,7 +98,7 @@ export function defineRecipe<const TVariants extends RecipeVariantDefinitions>(
 	) as RecipeDefinition<TVariants>['variantMap'];
 	const state: RecipeState = { dispose: new Set() };
 	recipeSequence += 1;
-	return Object.freeze({
+	const recipe = Object.freeze({
 		[RECIPE_STATE]: state,
 		base: input.base,
 		compoundVariants: Object.freeze(compounds),
@@ -106,6 +107,8 @@ export function defineRecipe<const TVariants extends RecipeVariantDefinitions>(
 		variantMap: Object.freeze(variantMap),
 		variants
 	}) as RecipeDefinition<TVariants>;
+	if (meta !== undefined) registerRecipeHmr(meta, recipe);
+	return recipe;
 }
 
 export function getRecipeState(recipe: RuntimeRecipeDefinition): RecipeState {

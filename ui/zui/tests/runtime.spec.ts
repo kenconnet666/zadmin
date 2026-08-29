@@ -5,6 +5,7 @@ import {
 	createIcssRuntime,
 	createServerStyleRegistry,
 	defaultTheme,
+	defineRecipe,
 	icss,
 	StyleRegistry,
 	type IcssStyle
@@ -25,6 +26,8 @@ describe('ICSS runtime', () => {
 
 		expect(first).toBe(second);
 		expect(registry.size).toBe(1);
+		expect(registry.cssText().startsWith('@layer zui.components,zui.utilities;')).toBe(true);
+		expect(registry.cssText()).toContain('@layer zui.utilities{');
 		expect(registry.cssText()).toContain(`.${first}{`);
 		expect(registry.cssText()).toContain('display:-webkit-box');
 		expect(registry.cssText()).toContain(`.${first}:hover{color:#1d4ed8;}`);
@@ -65,6 +68,22 @@ describe('ICSS runtime', () => {
 
 	it('keeps the ordinary TypeScript API class-only', () => {
 		expect(typeof icss(defaultTheme, (s) => s.display.block)).toBe('string');
+	});
+
+	it('separates component recipes from utility ICSS with deterministic cascade layers', () => {
+		const recipe = defineRecipe({
+			base: (s) => s.color._danger,
+			variants: {}
+		});
+		const registry = createServerStyleRegistry();
+		const runtime = createIcssRuntime({ registry });
+		const utility = runtime.icss(defaultTheme, (s) => s.color._primary);
+		const component = runtime.recipe(defaultTheme, recipe);
+		const css = registry.cssText();
+
+		expect(utility).not.toBe(component);
+		expect(css).toContain(`@layer zui.components{.${component}{color:#dc2626;}}`);
+		expect(css).toContain(`@layer zui.utilities{.${utility}{color:#2563eb;}}`);
 	});
 
 	it('does not register empty style programs', () => {

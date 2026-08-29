@@ -11,7 +11,7 @@ export type { ZProviderProps } from './components/gene/ZProvider.svelte';
 export { default as ZText } from './components/gene/ZText.svelte';
 export type { ZTextElement, ZTextProps, ZTextTone } from './components/gene/ZText.svelte';
 export { default as ZField } from './components/input/ZField.svelte';
-export type { ZFieldProps } from './components/input/ZField.svelte';
+export type { ZFieldProps, ZFieldSize } from './components/input/ZField.svelte';
 export { default as ZInput } from './components/input/ZInput.svelte';
 export type { ZInputProps, ZInputSize, ZInputType } from './components/input/ZInput.svelte';
 export { default as ZStack } from './components/layout/ZStack.svelte';

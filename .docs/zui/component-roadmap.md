@@ -1,6 +1,6 @@
 # ZUI 组件与展示站改进蓝图
 
-状态：依赖基线已落地，组件与展示站改进待分阶段实施。审计日期：2026-08-29。
+状态：后续组件候选路线，当前暂停。依赖基线已落地，审计日期：2026-08-29。当前实施以[ZUI基础设施、已有组件与Docs加固蓝图](./foundation-hardening-blueprint.md)为准；该蓝图验收完成并由用户明确开始下一组件阶段前，本文P3–P8不进入实现。
 
 ## 1. 范围与决策
 
@@ -330,7 +330,7 @@ ZTimeField
 ### 目录和样式
 
 - 将一文件Demo目录扁平化为`demos/`下约5–15个具名Svelte文件，组件增多后再按大类拆分；
-- 将689行`styles.css`拆为`styles/`下的tokens、base、shell、docs、demo、responsive等同类CSS文件；
+- Docs局部视觉使用ICSS/recipes与基础组件，只保留字体、reset和根尺寸所需的极小全局CSS；
 - Docs Svelte目录继续按catalog、demos、docs和shell等职责分组；
 - 不把`.docs` Markdown读取或展示到网页。
 

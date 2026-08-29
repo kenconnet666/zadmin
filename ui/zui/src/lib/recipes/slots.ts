@@ -119,7 +119,10 @@ function assertSlotStyles(
 export function defineSlotRecipe<
 	const TSlots extends readonly string[],
 	const TVariants extends SlotVariantDefinitions<TSlots[number]>
->(input: SlotRecipeInput<TSlots, TVariants>): SlotRecipeDefinition<TSlots, TVariants> {
+>(
+	input: SlotRecipeInput<TSlots, TVariants>,
+	meta?: ImportMeta
+): SlotRecipeDefinition<TSlots, TVariants> {
 	if (!Array.isArray(input.slots) || input.slots.length === 0) {
 		throw new TypeError('Slot recipe must define at least one slot.');
 	}
@@ -150,7 +153,7 @@ export function defineSlotRecipe<
 	) as SlotRecipeDefinition<TSlots, TVariants>['variantMap'];
 	const state: SlotRecipeState = { dispose: new Set() };
 	slotRecipeSequence += 1;
-	return Object.freeze({
+	const recipe = Object.freeze({
 		[SLOT_RECIPE_STATE]: state,
 		base: Object.freeze({ ...(input.base ?? {}) }),
 		defaultVariants:
@@ -160,6 +163,8 @@ export function defineSlotRecipe<
 		variantMap: Object.freeze(variantMap),
 		variants: Object.freeze(variants) as TVariants
 	}) as SlotRecipeDefinition<TSlots, TVariants>;
+	if (meta !== undefined) registerSlotRecipeHmr(meta, recipe);
+	return recipe;
 }
 
 function getSlotRecipeState(recipe: SlotRecipeDefinition): SlotRecipeState {
@@ -194,8 +199,11 @@ export function createSlotRecipeExecutor(registry: StyleRegistry): SlotRecipeExe
 						? [
 								[
 									slot,
-									registry.ensure(createStyleProgram(theme, factory), `${owner}:${branch}:${slot}`)
-										.className
+									registry.ensure(
+										createStyleProgram(theme, factory),
+										`${owner}:${branch}:${slot}`,
+										'components'
+									).className
 								] as const
 							]
 						: []

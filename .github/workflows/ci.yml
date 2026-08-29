@@ -110,6 +110,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Validate Changesets release metadata
+        run: pnpm release:status
+
       - name: Install Chromium for coverage suites
         run: pnpm --filter @zadmin/docs exec playwright install --with-deps chromium
 

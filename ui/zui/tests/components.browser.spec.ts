@@ -9,6 +9,7 @@ import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
 import { createBrowserIcssRuntime } from '../src/lib/icss/runtime.js';
 import { defaultTheme } from '../src/lib/theme/default.js';
 import { extendTheme } from '../src/lib/theme/define.js';
+import { ZCode } from '../src/lib/code.js';
 
 function insertedRuleCount(): number {
 	return [...document.querySelectorAll<HTMLStyleElement>('style[data-icss]')].reduce(
@@ -18,6 +19,19 @@ function insertedRuleCount(): number {
 }
 
 describe('compiled ICSS browser updates', () => {
+	it('enhances ZCode with Shiki tokens without replacing its text semantics', async () => {
+		render(ZCode, {
+			code: 'const answer: number = 42;',
+			highlightedLines: [1],
+			lang: 'typescript',
+			lineNumbers: true
+		});
+		const root = document.querySelector<HTMLElement>('[data-highlight-status]');
+		expect(root?.textContent).toContain('const answer: number = 42;');
+		await expect.poll(() => root?.dataset.highlightStatus, { timeout: 10_000 }).toBe('highlighted');
+		expect(root?.querySelectorAll('[data-highlighted="true"]')).toHaveLength(1);
+		expect(root?.querySelector('[aria-hidden="true"]')?.textContent).toBe('1');
+	});
 	it('updates only the inline variable while class and rules stay stable', async () => {
 		render(DynamicBox);
 		const target = document.querySelector<HTMLElement>('[data-testid="target"]');
@@ -95,6 +109,7 @@ describe('compiled ICSS browser updates', () => {
 		const icon = document.querySelector<SVGSVGElement>('[data-testid="icon"]');
 
 		expect(button?.type).toBe('button');
+		expect(getComputedStyle(button as Element).backgroundColor).toBe('rgb(220, 38, 38)');
 		expect(getComputedStyle(text as Element).color).toBe('rgb(124, 58, 237)');
 		expect(getComputedStyle(text as Element).fontSize).toBe('16px');
 		expect(getComputedStyle(stack as Element).gap).toBe('8px');
@@ -119,6 +134,8 @@ describe('compiled ICSS browser updates', () => {
 
 		expect(shadow.querySelectorAll('style[data-icss]')).toHaveLength(1);
 		expect(shadow.querySelectorAll('button')).toHaveLength(2);
+		expect(shadow.querySelector('[data-testid="outer-context"]')?.textContent).toBe('zh-CN:rtl');
+		expect(shadow.querySelector('[data-testid="inner-context"]')?.textContent).toBe('zh-CN:rtl');
 		expect(runtime.registry.cssText()).toContain('#2563eb');
 		expect(runtime.registry.cssText()).toContain('#6d28d9');
 
@@ -133,18 +150,24 @@ describe('compiled ICSS browser updates', () => {
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="field-output"]');
 		const label = document.querySelector<HTMLLabelElement>('label');
 		const optional = document.querySelector<HTMLInputElement>('[data-testid="optional-input"]');
+		const inherited = document.querySelector<HTMLInputElement>('[data-testid="inherited-input"]');
 		const field = label?.parentElement;
-		const messages = field?.querySelectorAll('p');
+		const messages = field?.querySelectorAll('[aria-live] p');
 		expect(input).not.toBeNull();
 		if (input === null) return;
+		let resetEvents = 0;
+		input.form?.addEventListener('reset', () => (resetEvents += 1));
 
 		expect(label?.htmlFor).toBe(input.id);
 		expect(input.required).toBe(true);
 		expect(input.getAttribute('aria-invalid')).toBe('true');
-		expect(input.getAttribute('aria-describedby')?.split(' ')).toHaveLength(2);
+		expect(input.getAttribute('aria-describedby')?.split(' ')).toHaveLength(4);
 		expect(optional?.required).toBe(false);
 		expect(optional?.hasAttribute('aria-describedby')).toBe(false);
 		expect(optional?.hasAttribute('aria-invalid')).toBe(false);
+		expect(inherited?.disabled).toBe(true);
+		expect(inherited?.readOnly).toBe(true);
+		expect(inherited?.name).toBe('inherited');
 		expect(field?.className).not.toBe('');
 		expect(label?.className).not.toBe('');
 		expect(input.className).not.toBe('');
@@ -157,10 +180,11 @@ describe('compiled ICSS browser updates', () => {
 		expect(output?.textContent).toBe('alice:1');
 
 		input.form?.reset();
+		expect(resetEvents).toBe(1);
 		await new Promise((resolve) => setTimeout(resolve, 0));
 		await tick();
 		await tick();
-		expect(input.value).toBe('');
-		expect(output?.textContent?.endsWith(':1')).toBe(true);
+		expect(input.value).toBe('seed');
+		expect(output?.textContent).toBe('alice:1');
 	});
 });

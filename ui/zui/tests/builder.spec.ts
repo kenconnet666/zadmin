@@ -75,6 +75,26 @@ describe('ICSS builder', () => {
 		expectTypeOf<Style['color']>().toBeCallableWith('#fff');
 		expectTypeOf<Style['color']['_primary']>().toEqualTypeOf<void>();
 		expectTypeOf<Style['display']['inlineFlex']>().toEqualTypeOf<void>();
+		expectTypeOf<Style['outlineColor']['_focus']>().toEqualTypeOf<void>();
+		expectTypeOf<Style['outlineStyle']['solid']>().toEqualTypeOf<void>();
+		expectTypeOf<Style['outlineWidth']['_medium']>().toEqualTypeOf<void>();
 		expectTypeOf<Style['padding']['px']>().toBeFunction();
+	});
+
+	it('records a tokenized focus outline without shorthand raw values', () => {
+		const program = createStyleProgram(defaultTheme, (s) => {
+			s._focusVisible((focus) => {
+				focus.outlineWidth._medium;
+				focus.outlineStyle.solid;
+				focus.outlineColor._focus;
+				focus.outlineOffset.px(2);
+			});
+		});
+
+		expect(program.block.instructions[0]).toMatchObject({
+			kind: 'nested',
+			query: '&:focus-visible'
+		});
+		expect(JSON.stringify(program)).not.toContain('currentColor');
 	});
 });

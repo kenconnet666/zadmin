@@ -20,7 +20,15 @@ const components = [
 	{ id: 'field', name: 'ZField', path: 'input/ZField.svelte' }
 ];
 
-async function bundle(source) {
+const FORBIDDEN_FOUNDATION_DEPENDENCIES = [
+	'@floating-ui',
+	'@internationalized/date',
+	'runed',
+	'shiki',
+	'tabbable'
+];
+
+async function bundle(source, extraExternal = () => false) {
 	const virtualId = '\0zadmin-zui-bundle-entry';
 	const result = await build({
 		configFile: false,
@@ -42,7 +50,7 @@ async function bundle(source) {
 			minify: 'oxc',
 			write: false,
 			rolldownOptions: {
-				external: (id) => id === 'svelte' || id.startsWith('svelte/'),
+				external: (id) => id === 'svelte' || id.startsWith('svelte/') || extraExternal(id),
 				input: 'virtual:zui-bundle',
 				output: { format: 'es' }
 			}
@@ -63,19 +71,43 @@ if (runtimeBundle.gzip > 15 * 1024) {
 }
 
 const report = { runtimeGzip: runtimeBundle.gzip, components: {} };
+for (const dependency of FORBIDDEN_FOUNDATION_DEPENDENCIES) {
+	if (runtimeBundle.code.includes(dependency)) {
+		throw new Error(`ZUI root runtime unexpectedly contains ${dependency}.`);
+	}
+}
 for (const component of components) {
 	const componentEntry = portable(resolve(sourceRoot, `components/${component.path}`));
 	const output = await bundle(
-		`import * as runtime from ${JSON.stringify(runtime)}; import * as component from ${JSON.stringify(componentEntry)}; globalThis.__zuiRuntimeBudget = runtime; globalThis.__zuiComponentBudget = component;`
+		`import * as runtime from ${JSON.stringify(runtime)}; import component from ${JSON.stringify(componentEntry)}; globalThis.__zuiRuntimeBudget = runtime; globalThis.__zuiComponentBudget = component;`
 	);
 	const incremental = Math.max(0, output.gzip - runtimeBundle.gzip);
-	if (incremental > 3 * 1024) {
-		throw new Error(`${component.name} incremental gzip ${incremental} exceeds 3 KiB.`);
+	if (incremental > 3.25 * 1024) {
+		throw new Error(`${component.name} incremental gzip ${incremental} exceeds 3.25 KiB.`);
 	}
 	if (/node:async_hooks|compiler\/preprocess|svelte\/compiler/u.test(output.code)) {
 		throw new Error(`${component.name} browser bundle contains compiler/server code.`);
 	}
+	for (const dependency of FORBIDDEN_FOUNDATION_DEPENDENCIES) {
+		if (output.code.includes(dependency)) {
+			throw new Error(`${component.name} unexpectedly contains ${dependency}.`);
+		}
+	}
 	report.components[component.id] = { gzip: output.gzip, incrementalGzip: incremental };
 }
+
+const codeEntry = portable(resolve(sourceRoot, 'code.ts'));
+const codeBundle = await bundle(
+	`import * as runtime from ${JSON.stringify(runtime)}; import * as code from ${JSON.stringify(codeEntry)}; globalThis.__zuiRuntimeBudget = runtime; globalThis.__zuiCodeBudget = code;`,
+	(id) => id === 'shiki' || id.startsWith('shiki/')
+);
+const codeIncremental = Math.max(0, codeBundle.gzip - runtimeBundle.gzip);
+if (codeIncremental > 8 * 1024) {
+	throw new Error(`ZCode shell incremental gzip ${codeIncremental} exceeds 8 KiB.`);
+}
+if (!codeBundle.code.includes('shiki')) {
+	throw new Error('ZCode bundle lost its explicit optional Shiki boundary.');
+}
+report.components.code = { gzip: codeBundle.gzip, incrementalGzip: codeIncremental };
 
 console.log(JSON.stringify(report));

@@ -3,8 +3,28 @@ import { playwright } from '@vitest/browser-playwright';
 import { defineConfig } from 'vitest/config';
 
 const collectingCoverage = process.argv.includes('--coverage');
+const focusedBrowser = process.env.ZUI_BROWSER;
+const browserInstances: { browser: 'chromium' | 'firefox' | 'webkit' }[] = collectingCoverage
+	? [{ browser: 'chromium' as const }]
+	: focusedBrowser === 'chromium' || focusedBrowser === 'firefox' || focusedBrowser === 'webkit'
+		? [{ browser: focusedBrowser }]
+		: [{ browser: 'chromium' }, { browser: 'firefox' }, { browser: 'webkit' }];
 
 export default defineConfig({
+	optimizeDeps: {
+		include: [
+			'shiki/core',
+			'shiki/engine/javascript',
+			'shiki/langs/bash.mjs',
+			'shiki/langs/css.mjs',
+			'shiki/langs/javascript.mjs',
+			'shiki/langs/json.mjs',
+			'shiki/langs/svelte.mjs',
+			'shiki/langs/typescript.mjs',
+			'shiki/themes/github-dark.mjs',
+			'shiki/themes/github-light.mjs'
+		]
+	},
 	plugins: [svelte()],
 	test: {
 		coverage: {
@@ -56,9 +76,7 @@ export default defineConfig({
 						},
 						enabled: true,
 						headless: true,
-						instances: collectingCoverage
-							? [{ browser: 'chromium' }]
-							: [{ browser: 'chromium' }, { browser: 'firefox' }, { browser: 'webkit' }],
+						instances: browserInstances,
 						provider: playwright()
 					},
 					include: ['tests/**/*.browser.spec.ts'],

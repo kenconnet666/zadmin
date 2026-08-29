@@ -123,7 +123,7 @@ describe('defineRecipe', () => {
 		const runtime = createIcssRuntime({ registry });
 		runtime.icss(defaultTheme, (s) => s.display.inlineFlex);
 		runtime.recipe(defaultTheme, recipe, { disabled: true, tone: 'secondary' });
-		expect(registry.size).toBe(5);
+		expect(registry.size).toBe(6);
 
 		let hotDispose: (() => void) | undefined;
 		registerRecipeHmr(

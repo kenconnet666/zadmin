@@ -242,7 +242,23 @@ console.log('External ZUI and SvelteKit testing entry acceptance passed.');
 		) {
 			throw new Error(`External client output contains server/compiler code: ${file}`);
 		}
+		if (output.includes('shiki')) {
+			throw new Error(`External root-only client output unexpectedly contains Shiki: ${file}`);
+		}
 	}
+
+	await write(
+		resolve(fixtureRoot, 'src/routes/code/+page.svelte'),
+		`<script lang="ts">
+import { ZCode } from '@zadmin/zui/code';
+const source = 'const ready: boolean = true;';
+</script>
+<h1>External ZCode</h1><ZCode code={source} lang="typescript" lineNumbers />
+`
+	);
+	await runPnpm(['add', '--save-exact', 'shiki@4.4.3'], fixtureRoot);
+	await runPnpm(['check'], fixtureRoot);
+	await runPnpm(['build'], fixtureRoot);
 
 	const port = 43_000 + (process.pid % 1000);
 	server = spawn(process.execPath, ['build'], {
@@ -262,6 +278,15 @@ console.log('External ZUI and SvelteKit testing entry acceptance passed.');
 		)
 	) {
 		throw new Error('External SSR response is missing the ZUI CSP style hash.');
+	}
+	const codeResponse = await fetch(`http://127.0.0.1:${port}/code`);
+	const codeHtml = await codeResponse.text();
+	if (
+		!codeResponse.ok ||
+		!codeHtml.includes('External ZCode') ||
+		!codeHtml.includes('const ready')
+	) {
+		throw new Error('External ZCode optional-peer route did not render stable SSR output.');
 	}
 
 	succeeded = true;

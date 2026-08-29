@@ -64,9 +64,14 @@ export const PROPERTY_DEFINITIONS = {
 	animationDuration: { token: 'duration', tokenUnit: 'ms', units: ['time'] },
 	appearance: { keywords: { auto: 'auto', none: 'none' } },
 	backgroundColor: { keywords: { transparent: 'transparent' }, token: 'color' },
+	backdropFilter: {},
+	borderCollapse: { keywords: { collapse: 'collapse', separate: 'separate' } },
 	borderBottomColor: { token: 'color' },
 	borderBottomLeftRadius: { token: 'radius', tokenUnit: 'px', units: ['length', 'percent'] },
 	borderBottomRightRadius: { token: 'radius', tokenUnit: 'px', units: ['length', 'percent'] },
+	borderBottomStyle: {
+		keywords: { dashed: 'dashed', dotted: 'dotted', double: 'double', none: 'none', solid: 'solid' }
+	},
 	borderBottomWidth: { token: 'borderWidth', tokenUnit: 'px', units: ['length'] },
 	borderColor: { keywords: { transparent: 'transparent' }, token: 'color' },
 	borderStyle: {
@@ -80,13 +85,22 @@ export const PROPERTY_DEFINITIONS = {
 		}
 	},
 	borderLeftColor: { token: 'color' },
+	borderLeftStyle: {
+		keywords: { dashed: 'dashed', dotted: 'dotted', double: 'double', none: 'none', solid: 'solid' }
+	},
 	borderLeftWidth: { token: 'borderWidth', tokenUnit: 'px', units: ['length'] },
 	borderRadius: { token: 'radius', tokenUnit: 'px', units: ['length', 'percent'] },
 	borderRightColor: { token: 'color' },
+	borderRightStyle: {
+		keywords: { dashed: 'dashed', dotted: 'dotted', double: 'double', none: 'none', solid: 'solid' }
+	},
 	borderRightWidth: { token: 'borderWidth', tokenUnit: 'px', units: ['length'] },
 	borderTopColor: { token: 'color' },
 	borderTopLeftRadius: { token: 'radius', tokenUnit: 'px', units: ['length', 'percent'] },
 	borderTopRightRadius: { token: 'radius', tokenUnit: 'px', units: ['length', 'percent'] },
+	borderTopStyle: {
+		keywords: { dashed: 'dashed', dotted: 'dotted', double: 'double', none: 'none', solid: 'solid' }
+	},
 	borderTopWidth: { token: 'borderWidth', tokenUnit: 'px', units: ['length'] },
 	borderWidth: { token: 'borderWidth', tokenUnit: 'px', units: ['length'] },
 	bottom: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
@@ -117,10 +131,24 @@ export const PROPERTY_DEFINITIONS = {
 		}
 	},
 	flexWrap: { keywords: { nowrap: 'nowrap', wrap: 'wrap', wrapReverse: 'wrap-reverse' } },
+	fontFamily: { token: 'fontFamily' },
 	fontSize: { token: 'fontSize', tokenUnit: 'px', units: ['length', 'percent'] },
 	fontWeight: { token: 'fontWeight' },
 	gap: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
-	height: { token: 'size', tokenUnit: 'px', units: ['length', 'percent'] },
+	gridColumn: {},
+	gridTemplateColumns: {},
+	gridTemplateRows: {},
+	height: {
+		keywords: {
+			auto: 'auto',
+			fitContent: 'fit-content',
+			maxContent: 'max-content',
+			minContent: 'min-content'
+		},
+		token: 'size',
+		tokenUnit: 'px',
+		units: ['length', 'percent']
+	},
 	inset: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
 	justifyContent: {
 		keywords: {
@@ -134,7 +162,11 @@ export const PROPERTY_DEFINITIONS = {
 			start: 'start'
 		}
 	},
+	justifySelf: {
+		keywords: { auto: 'auto', center: 'center', end: 'end', start: 'start', stretch: 'stretch' }
+	},
 	left: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
+	letterSpacing: { units: ['length'] },
 	lineHeight: { token: 'lineHeight', units: ['length', 'percent'] },
 	margin: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
 	marginBlock: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
@@ -163,6 +195,16 @@ export const PROPERTY_DEFINITIONS = {
 	opacity: { token: 'opacity' },
 	outlineColor: { token: 'color' },
 	outlineOffset: { units: ['length'] },
+	outlineStyle: {
+		keywords: {
+			dashed: 'dashed',
+			dotted: 'dotted',
+			double: 'double',
+			none: 'none',
+			solid: 'solid'
+		}
+	},
+	outlineWidth: { token: 'borderWidth', tokenUnit: 'px', units: ['length'] },
 	overflow: { keywords: OVERFLOW },
 	overflowX: { keywords: OVERFLOW },
 	overflowY: { keywords: OVERFLOW },
@@ -187,10 +229,14 @@ export const PROPERTY_DEFINITIONS = {
 			sticky: 'sticky'
 		}
 	},
+	placeItems: {
+		keywords: { center: 'center', end: 'end', start: 'start', stretch: 'stretch' }
+	},
 	resize: {
 		keywords: { both: 'both', horizontal: 'horizontal', none: 'none', vertical: 'vertical' }
 	},
 	right: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
+	scrollMarginTop: { token: 'space', tokenUnit: 'px', units: ['length'] },
 	rowGap: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
 	stroke: { token: 'color' },
 	textAlign: {
@@ -203,6 +249,23 @@ export const PROPERTY_DEFINITIONS = {
 			start: 'start'
 		}
 	},
+	textDecoration: {
+		keywords: {
+			lineThrough: 'line-through',
+			none: 'none',
+			overline: 'overline',
+			underline: 'underline'
+		}
+	},
+	textTransform: {
+		keywords: {
+			capitalize: 'capitalize',
+			lowercase: 'lowercase',
+			none: 'none',
+			uppercase: 'uppercase'
+		}
+	},
+	tabSize: {},
 	textDecorationColor: { token: 'color' },
 	textOverflow: { keywords: { clip: 'clip', ellipsis: 'ellipsis' } },
 	textShadow: { token: 'shadow' },

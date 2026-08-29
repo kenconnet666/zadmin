@@ -1,5 +1,6 @@
 <script module lang="ts">
 	import type { SVGAttributes } from 'svelte/elements';
+	import type { ZuiComponentMetadata } from '../../component-metadata.js';
 
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 	import type { ZuiTheme } from '../../theme/types.js';
@@ -21,12 +22,51 @@
 
 	export type ZIconName = keyof typeof iconManifest;
 
+	export function getIconPaths(name: ZIconName): readonly string[] {
+		const paths = iconManifest[name];
+		if (paths === undefined) throw new TypeError(`Unknown ZIcon name "${String(name)}".`);
+		return paths;
+	}
+
 	export interface ZIconProps extends Omit<SVGAttributes<SVGSVGElement>, 'children'> {
 		readonly label?: string;
 		readonly name: ZIconName;
 		readonly size?: keyof ZuiTheme['size'] | number;
 		ref?: SVGSVGElement | null;
 	}
+
+	export const zuiMetadata = {
+		category: 'gene',
+		id: 'icon',
+		importStatement: "import { ZIcon } from '@zadmin/zui';",
+		name: 'ZIcon',
+		props: [
+			{
+				default: '必填',
+				description: '受控manifest图标名。',
+				name: 'name',
+				required: true,
+				type: 'keyof typeof iconManifest'
+			},
+			{
+				default: "'small'",
+				description: 'Theme尺寸token或明确px值。',
+				name: 'size',
+				type: "keyof ZuiTheme['size'] | number"
+			},
+			{ default: '—', description: '可访问图像名称。', name: 'label', type: 'string' },
+			{
+				bindable: true,
+				default: 'null',
+				description: '真实svg引用。',
+				name: 'ref',
+				type: 'SVGSVGElement | null'
+			}
+		],
+		source: 'ui/zui/src/lib/components/gene/ZIcon.svelte',
+		status: 'stable',
+		summary: '由受控manifest生成的SVG图标，不接受任意SVG字符串。'
+	} as const satisfies ZuiComponentMetadata;
 
 	const iconRecipe = defineRecipe({
 		base: (s) => {
@@ -36,6 +76,7 @@
 		},
 		variants: {
 			size: {
+				custom: () => undefined,
 				full: (s) => {
 					s.width._full;
 					s.height._full;
@@ -72,6 +113,7 @@
 	import { readIcssCarrier } from '../../runtime/internal.js';
 
 	let {
+		'aria-label': ariaLabel,
 		class: className,
 		label,
 		name,
@@ -83,7 +125,7 @@
 
 	const zui = useZui();
 	const recipeClass = $derived(
-		zui.recipe(iconRecipe, { size: typeof size === 'number' ? 'small' : size })
+		zui.recipe(iconRecipe, { size: typeof size === 'number' ? 'custom' : size })
 	);
 	const numericSizeClass = $derived(
 		typeof size === 'number'
@@ -93,6 +135,7 @@
 				})
 			: undefined
 	);
+	const accessibleLabel = $derived(label ?? ariaLabel);
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 </script>
@@ -105,12 +148,12 @@
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
 	viewBox="0 0 24 24"
 	fill="currentColor"
-	role={label ? 'img' : undefined}
-	aria-label={label}
-	aria-hidden={label ? undefined : 'true'}
+	role={accessibleLabel ? 'img' : undefined}
+	aria-label={accessibleLabel}
+	aria-hidden={accessibleLabel ? undefined : 'true'}
 	focusable="false"
 >
-	{#each iconManifest[name] as path (path)}
+	{#each getIconPaths(name) as path (path)}
 		<path d={path}></path>
 	{/each}
 </svg>

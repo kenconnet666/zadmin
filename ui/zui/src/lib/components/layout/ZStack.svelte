@@ -1,23 +1,10 @@
 <script module lang="ts">
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
+	import type { ZuiComponentMetadata } from '../../component-metadata.js';
 
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
-	import type { DefaultTheme } from '../../theme/default.js';
 	import type { ZuiTheme } from '../../theme/types.js';
-
-	export type StackGap = keyof DefaultTheme['space'] | number;
-	export type StackDirection = 'column' | 'column-reverse' | 'row' | 'row-reverse';
-	export type StackAlignment = 'baseline' | 'center' | 'end' | 'start' | 'stretch';
-	export type StackJustification =
-		'center' | 'end' | 'space-around' | 'space-between' | 'space-evenly' | 'start';
-
-	export interface StackDesignProps {
-		align?: StackAlignment;
-		direction?: StackDirection;
-		gap?: StackGap;
-		justify?: StackJustification;
-	}
 
 	export type ZStackDirection = 'column' | 'column-reverse' | 'row' | 'row-reverse';
 	export type ZStackAlignment = 'baseline' | 'center' | 'end' | 'start' | 'stretch';
@@ -32,6 +19,50 @@
 		readonly wrap?: boolean;
 		ref?: HTMLDivElement | null;
 	}
+
+	export const zuiMetadata = {
+		category: 'layout',
+		id: 'stack',
+		importStatement: "import { ZStack } from '@zadmin/zui';",
+		name: 'ZStack',
+		props: [
+			{
+				default: "'column'",
+				description: 'Flex主轴方向。',
+				name: 'direction',
+				type: "'row' | 'row-reverse' | 'column' | 'column-reverse'"
+			},
+			{
+				default: "'none'",
+				description: 'Theme间距token或明确px值。',
+				name: 'gap',
+				type: "keyof ZuiTheme['space'] | number"
+			},
+			{
+				default: "'stretch'",
+				description: '交叉轴对齐。',
+				name: 'align',
+				type: "'start' | 'center' | 'end' | 'baseline' | 'stretch'"
+			},
+			{
+				default: "'start'",
+				description: '主轴分布。',
+				name: 'justify',
+				type: "'start' | 'center' | 'end' | 'between' | 'around' | 'evenly'"
+			},
+			{ default: 'false', description: '是否允许Flex换行。', name: 'wrap', type: 'boolean' },
+			{
+				bindable: true,
+				default: 'null',
+				description: '真实div引用。',
+				name: 'ref',
+				type: 'HTMLDivElement | null'
+			}
+		],
+		source: 'ui/zui/src/lib/components/layout/ZStack.svelte',
+		status: 'stable',
+		summary: '类型安全的Flex布局容器，支持方向、间距、对齐、分布和换行。'
+	} as const satisfies ZuiComponentMetadata;
 
 	const stackRecipe = defineRecipe({
 		base: (s) => s.display.flex,
@@ -50,6 +81,7 @@
 				'row-reverse': (s) => s.flexDirection.rowReverse
 			},
 			gap: {
+				custom: () => undefined,
 				large: (s) => s.gap._large,
 				medium: (s) => s.gap._medium,
 				none: (s) => s.gap._none,
@@ -111,7 +143,7 @@
 		zui.recipe(stackRecipe, {
 			align,
 			direction,
-			gap: typeof gap === 'number' ? 'none' : gap,
+			gap: typeof gap === 'number' ? 'custom' : gap,
 			justify,
 			wrap
 		})

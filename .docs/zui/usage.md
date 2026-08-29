@@ -177,6 +177,24 @@ export const theme = extendTheme(defaultTheme, {
 
 组件标准转发`class`和HTML attributes。编译器只向已知ZUI组件传递内部变量carrier；未知第三方组件使用运行时class-rule回退，不添加wrapper。
 
+### 按需代码高亮
+
+`ZCode`位于独立子入口并使用optional Shiki peer。普通ZUI消费者不需要安装Shiki；只有使用代码展示时安装并导入：
+
+```powershell
+pnpm add shiki
+```
+
+```svelte
+<script lang="ts">
+	import { ZCode } from '@zadmin/zui/code';
+</script>
+
+<ZCode code="const ready: boolean = true;" lang="typescript" lineNumbers />
+```
+
+SSR先输出安全的纯文本源码，客户端再按需加载允许的语言、两套GitHub主题和JavaScript regex engine。实现不接受外部HTML，不使用完整Shiki语言/主题bundle，也不把Shiki带入ZUI根入口。
+
 ## 测试工具
 
 测试代码从独立子入口创建内存runtime，不需要浏览器DOM，也不会把测试工具带入业务根入口：

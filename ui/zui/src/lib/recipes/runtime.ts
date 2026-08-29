@@ -46,7 +46,8 @@ export function createRecipeExecutor(registry: StyleRegistry): RecipeExecutor {
 		const ensure = (branch: string, factory: RuntimeRecipeDefinition['base']): string =>
 			factory === undefined
 				? ''
-				: registry.ensure(createStyleProgram(theme, factory), `${owner}:${branch}`).className;
+				: registry.ensure(createStyleProgram(theme, factory), `${owner}:${branch}`, 'components')
+						.className;
 		const variants = new Map<string, ReadonlyMap<string, string>>();
 		for (const [variantName, options] of Object.entries(recipe.variants)) {
 			variants.set(

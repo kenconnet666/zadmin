@@ -1,6 +1,7 @@
 <script module lang="ts">
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
+	import type { ZuiComponentMetadata } from '../../component-metadata.js';
 
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 	import type { ZuiTheme } from '../../theme/types.js';
@@ -17,6 +18,50 @@
 		readonly weight?: keyof ZuiTheme['fontWeight'];
 		ref?: HTMLElement | null;
 	}
+
+	export const zuiMetadata = {
+		category: 'gene',
+		id: 'text',
+		importStatement: "import { ZText } from '@zadmin/zui';",
+		name: 'ZText',
+		props: [
+			{
+				default: "'span'",
+				description: '有限的真实语义元素。',
+				name: 'as',
+				type: "'label' | 'p' | 'small' | 'span' | 'strong'"
+			},
+			{
+				default: "'medium'",
+				description: 'Theme字号token。',
+				name: 'size',
+				type: "keyof ZuiTheme['fontSize']"
+			},
+			{
+				default: "'normal'",
+				description: 'Theme字重token。',
+				name: 'weight',
+				type: "keyof ZuiTheme['fontWeight']"
+			},
+			{
+				default: "'default'",
+				description: '语义颜色。',
+				name: 'tone',
+				type: "'default' | 'muted' | 'primary' | 'danger'"
+			},
+			{ default: 'false', description: '单行省略显示。', name: 'truncate', type: 'boolean' },
+			{
+				bindable: true,
+				default: 'null',
+				description: '真实文本元素引用。',
+				name: 'ref',
+				type: 'HTMLElement | null'
+			}
+		],
+		source: 'ui/zui/src/lib/components/gene/ZText.svelte',
+		status: 'stable',
+		summary: '在有限语义元素上应用字号、字重、tone和截断。'
+	} as const satisfies ZuiComponentMetadata;
 
 	const textRecipe = defineRecipe({
 		variants: {

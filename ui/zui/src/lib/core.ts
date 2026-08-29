@@ -4,11 +4,10 @@ export type {
 	ButtonVariant
 } from './components/gene/ZButton.svelte';
 export type {
-	StackAlignment,
-	StackDesignProps,
-	StackDirection,
-	StackGap,
-	StackJustification
+	ZStackAlignment,
+	ZStackDirection,
+	ZStackJustification,
+	ZStackProps
 } from './components/layout/ZStack.svelte';
 export { createStyleProgram, isDynamicSlot } from './icss/builder.js';
 export { hashString } from './icss/hash.js';

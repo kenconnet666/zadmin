@@ -2,13 +2,16 @@
 	"name": "@zadmin/zui",
 	"version": "0.1.0",
 	"description": "Type-safe Web runtime CSS and foundational Svelte components with class-only compiler optimization.",
+	"author": "kenconnet666 <kenconnet@foxmail.com>",
 	"type": "module",
+	"license": "MIT",
 	"sideEffects": false,
 	"engines": {
 		"node": ">=22.0.0"
 	},
 	"files": [
-		"dist"
+		"dist",
+		"LICENSE"
 	],
 	"exports": {
 		".": {
@@ -24,10 +27,19 @@
 			"types": "./src/lib/compiler/preprocess.ts",
 			"import": "./src/lib/compiler/preprocess.ts"
 		},
+		"./code": {
+			"types": "./src/lib/code.ts",
+			"svelte": "./src/lib/code.ts",
+			"import": "./src/lib/code.ts"
+		},
 		"./internal": {
 			"types": "./src/lib/runtime/internal.ts",
 			"svelte": "./src/lib/runtime/internal.ts",
 			"import": "./src/lib/runtime/internal.ts"
+		},
+		"./metadata": {
+			"types": "./src/lib/metadata.ts",
+			"import": "./src/lib/metadata.ts"
 		},
 		"./runtime": {
 			"types": "./src/lib/runtime.ts",
@@ -54,10 +66,19 @@
 				"types": "./dist/compiler/preprocess.d.ts",
 				"import": "./dist/compiler/preprocess.js"
 			},
+			"./code": {
+				"types": "./dist/code.d.ts",
+				"svelte": "./dist/code.js",
+				"import": "./dist/code.js"
+			},
 			"./internal": {
 				"types": "./dist/runtime/internal.d.ts",
 				"svelte": "./dist/runtime/internal.js",
 				"import": "./dist/runtime/internal.js"
+			},
+			"./metadata": {
+				"types": "./dist/metadata.d.ts",
+				"import": "./dist/metadata.js"
 			},
 			"./runtime": {
 				"types": "./dist/runtime.d.ts",

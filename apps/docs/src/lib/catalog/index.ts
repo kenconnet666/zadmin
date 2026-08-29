@@ -1,5 +1,6 @@
 import { boxDoc } from './box.js';
 import { buttonDoc } from './button.js';
+import { codeDoc } from './code.js';
 import { fieldDoc } from './field.js';
 import { iconDoc } from './icon.js';
 import { inputDoc } from './input.js';
@@ -20,6 +21,7 @@ export const componentDocs = Object.freeze([
 	stackDoc,
 	textDoc,
 	iconDoc,
+	codeDoc,
 	buttonDoc,
 	inputDoc,
 	fieldDoc

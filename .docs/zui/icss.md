@@ -280,7 +280,7 @@ compiler/server 代码进入浏览器 bundle 必须为 0 B。
 
 ## 依赖
 
-本节描述已落地的ICSS子系统：其运行路径只使用`stylis`和type-only `csstype`，编译器使用`magic-string`、`estree-walker`和peer `svelte/compiler`，不依赖Emotion、dx-styles、WyW、color2k、Babel、SWC或ts-morph。后续组件阶段已经安装但尚未接入现有8个组件的通用API依赖、Shiki可选入口和实施顺序见[ZUI组件与展示站改进蓝图](./component-roadmap.md)；这些依赖不得进入未使用对应能力的tree-shaken浏览器产物。
+本节描述已落地的ICSS子系统：其运行路径只使用`stylis`和type-only `csstype`，编译器使用`magic-string`、`estree-walker`和peer `svelte/compiler`，不依赖Emotion、dx-styles、WyW、color2k、Babel、SWC或ts-morph。已经安装但尚未接入现有8个组件的通用API依赖、Shiki可选入口和当前实施顺序见[ZUI基础设施、已有组件与Docs加固蓝图](./foundation-hardening-blueprint.md)；后续新组件候选见[ZUI组件与展示站改进蓝图](./component-roadmap.md)。这些依赖不得进入未使用对应能力的tree-shaken浏览器产物。
 
 Svelte peer 必须收紧到实际验证的现代 Svelte 5 范围，不能继续宣称兼容所有早期 Svelte 5 编译行为。
 

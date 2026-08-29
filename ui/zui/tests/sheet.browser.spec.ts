@@ -55,7 +55,8 @@ describe('BrowserStyleSheet', () => {
 		const style = marker.nextSibling as HTMLStyleElement | null;
 		expect(style?.tagName).toBe('STYLE');
 		expect(style?.nonce).toBe('explicit');
-		expect(style?.sheet?.cssRules).toHaveLength(1);
+		expect(style?.sheet?.cssRules).toHaveLength(2);
+		expect(style?.sheet?.cssRules[0]?.cssText).toContain('zui.components, zui.utilities');
 	});
 
 	it('supports isolated ShadowRoot registries', () => {

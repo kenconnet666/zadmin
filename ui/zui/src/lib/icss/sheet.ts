@@ -4,6 +4,8 @@ export interface StyleSheetEntry {
 	readonly rules: readonly string[];
 }
 
+export const ICSS_LAYER_PRELUDE = '@layer zui.components,zui.utilities;';
+
 export interface IcssStyleSheet {
 	readonly hydratedClassNames: ReadonlySet<string>;
 	clear(): void;
@@ -151,6 +153,11 @@ export class BrowserStyleSheet implements IcssStyleSheet {
 			this.#root.append(style);
 		}
 		this.#style = style;
+		if (this.#speedy && style.sheet !== null) {
+			style.sheet.insertRule(ICSS_LAYER_PRELUDE, 0);
+		} else {
+			style.append(this.#document.createTextNode(ICSS_LAYER_PRELUDE));
+		}
 		return style;
 	}
 }

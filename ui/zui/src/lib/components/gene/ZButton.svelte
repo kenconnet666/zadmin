@@ -1,6 +1,7 @@
 <script module lang="ts">
 	import type { Snippet } from 'svelte';
 	import type { HTMLButtonAttributes } from 'svelte/elements';
+	import type { ZuiComponentMetadata } from '../../component-metadata.js';
 
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 	import type { RecipeVariants } from '../../recipes/types.js';
@@ -33,8 +34,9 @@
 			s.transitionTimingFunction.ease;
 			s.userSelect.none;
 			s._focusVisible((focus) => {
-				// The composed outline value has no safe single-keyword accessor.
-				focus.outline.raw('2px solid currentColor');
+				focus.outlineWidth._medium;
+				focus.outlineStyle.solid;
+				focus.outlineColor._focus;
 				focus.outlineOffset.px(2);
 			});
 		},
@@ -75,7 +77,7 @@
 					s.backgroundColor._danger;
 					s.borderColor._danger;
 					s.color._canvas;
-					s._hover((hover) => hover.backgroundColor._danger);
+					s._hover((hover) => hover.backgroundColor._dangerHover);
 				},
 				ghost: (s) => {
 					s.backgroundColor.transparent;
@@ -119,9 +121,66 @@
 		ZButtonVariants & {
 			readonly children?: Snippet;
 			readonly disabled?: boolean;
+			readonly end?: Snippet;
 			readonly loading?: boolean;
+			readonly loadingIndicator?: Snippet;
+			readonly loadingLabel?: string;
+			readonly start?: Snippet;
 			ref?: HTMLButtonElement | null;
 		};
+
+	export const zuiMetadata = {
+		category: 'gene',
+		id: 'button',
+		importStatement: "import { ZButton } from '@zadmin/zui';",
+		name: 'ZButton',
+		props: [
+			{
+				default: "'primary'",
+				description: '视觉与语义变体。',
+				name: 'variant',
+				type: "'primary' | 'secondary' | 'danger' | 'ghost'"
+			},
+			{
+				default: "'medium'",
+				description: '按钮尺寸。',
+				name: 'size',
+				type: "'small' | 'medium' | 'large'"
+			},
+			{ default: 'false', description: '扩展到父容器宽度。', name: 'fullWidth', type: 'boolean' },
+			{
+				default: 'false',
+				description: '设置busy状态并禁用交互。',
+				name: 'loading',
+				type: 'boolean'
+			},
+			{
+				default: '—',
+				description: 'loading时的可访问名称。',
+				name: 'loadingLabel',
+				type: 'string'
+			},
+			{
+				default: '—',
+				description: '自定义loading指示内容。',
+				name: 'loadingIndicator',
+				type: 'Snippet'
+			},
+			{ default: '—', description: '按钮内容前的Snippet。', name: 'start', type: 'Snippet' },
+			{ default: '—', description: '按钮内容后的Snippet。', name: 'end', type: 'Snippet' },
+			{ default: 'false', description: '映射到原生disabled。', name: 'disabled', type: 'boolean' },
+			{
+				bindable: true,
+				default: 'null',
+				description: '真实button引用。',
+				name: 'ref',
+				type: 'HTMLButtonElement | null'
+			}
+		],
+		source: 'ui/zui/src/lib/components/gene/ZButton.svelte',
+		status: 'stable',
+		summary: '原生button语义、稳定recipe变体和Svelte 5 callback props的操作组件。'
+	} as const satisfies ZuiComponentMetadata;
 </script>
 
 <script lang="ts">
@@ -136,14 +195,19 @@
 	import { readIcssCarrier } from '../../runtime/internal.js';
 
 	let {
+		'aria-label': ariaLabel,
 		children,
 		class: className,
 		disabled = false,
+		end,
 		fullWidth = false,
 		loading = false,
+		loadingIndicator,
+		loadingLabel,
 		ref = $bindable(null),
 		size = 'medium',
 		style,
+		start,
 		type = 'button',
 		variant = 'primary',
 		...rest
@@ -171,8 +235,15 @@
 	{type}
 	disabled={disabled || loading}
 	aria-busy={loading || undefined}
+	aria-label={loading && loadingLabel ? loadingLabel : ariaLabel}
 	data-loading={loading || undefined}
 >
-	{#if loading}<span aria-hidden="true">…</span>{/if}
+	{#if start}<span data-slot="start">{@render start()}</span>{/if}
+	{#if loading}
+		<span aria-hidden="true" data-slot="loading">
+			{#if loadingIndicator}{@render loadingIndicator()}{:else}…{/if}
+		</span>
+	{/if}
 	{@render children?.()}
+	{#if end}<span data-slot="end">{@render end()}</span>{/if}
 </button>

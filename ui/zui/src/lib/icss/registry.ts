@@ -2,12 +2,15 @@ import { hashString } from './hash.js';
 import type { IcssClassName, StyleProgram } from './types.js';
 
 import { canonicalizeStyleProgram, serializeStyleProgram } from './serialize.js';
-import { MemoryStyleSheet, type IcssStyleSheet } from './sheet.js';
+import { ICSS_LAYER_PRELUDE, MemoryStyleSheet, type IcssStyleSheet } from './sheet.js';
+
+export type IcssLayer = 'components' | 'utilities';
 
 export interface RegisteredStyle {
 	readonly canonical: string;
 	readonly className: IcssClassName;
 	readonly cssText: string;
+	readonly layer: IcssLayer;
 	readonly rules: readonly string[];
 }
 
@@ -33,6 +36,7 @@ const EMPTY_STYLE: RegisteredStyle = {
 	canonical: '',
 	className: '' as IcssClassName,
 	cssText: '',
+	layer: 'utilities',
 	rules: []
 };
 
@@ -92,33 +96,42 @@ export class StyleRegistry {
 	}
 
 	cssText(): string {
-		return [...this.#byCanonical.values()].map((entry) => entry.cssText).join('');
+		const body = [...this.#byCanonical.values()].map((entry) => entry.cssText).join('');
+		return body.length === 0 ? '' : `${ICSS_LAYER_PRELUDE}${body}`;
 	}
 
 	htmlStyleText(): string {
 		return escapeStyleText(this.cssText());
 	}
 
-	ensure(program: StyleProgram, owner?: string): RegisteredStyle {
+	ensure(program: StyleProgram, owner?: string, layer: IcssLayer = 'utilities'): RegisteredStyle {
 		const canonical = canonicalizeStyleProgram(program);
 		if (canonical.length === 0) return EMPTY_STYLE;
-		const existing = this.#byCanonical.get(canonical);
+		const layeredCanonical = `${layer}\u0000${canonical}`;
+		const existing = this.#byCanonical.get(layeredCanonical);
 		if (existing !== undefined) {
 			this.#retain(existing.className, owner);
 			return existing;
 		}
 
-		const className = `c-${this.#hash(canonical)}` as IcssClassName;
+		const className = `c-${this.#hash(layeredCanonical)}` as IcssClassName;
 		const collision = this.#byClassName.get(className);
-		if (collision !== undefined && collision !== canonical) {
+		if (collision !== undefined && collision !== layeredCanonical) {
 			throw new Error(`ICSS hash collision for class "${className}".`);
 		}
 
 		const serialized = serializeStyleProgram(program, className);
-		const entry: RegisteredStyle = { canonical, className, ...serialized };
+		const rules = serialized.rules.map((rule) => `@layer zui.${layer}{${rule}}`);
+		const entry: RegisteredStyle = {
+			canonical: layeredCanonical,
+			className,
+			cssText: rules.join(''),
+			layer,
+			rules
+		};
 		this.#retain(className, owner);
-		this.#byCanonical.set(canonical, entry);
-		this.#byClassName.set(className, canonical);
+		this.#byCanonical.set(layeredCanonical, entry);
+		this.#byClassName.set(className, layeredCanonical);
 		this.#sheet.insert(entry);
 		return entry;
 	}
