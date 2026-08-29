@@ -9,9 +9,9 @@ export interface ZuiApiMetadata {
 	readonly type: string;
 }
 
-export interface ZuiBindingMetadata extends ZuiApiMetadata {}
-export interface ZuiEventMetadata extends ZuiApiMetadata {}
-export interface ZuiSnippetMetadata extends ZuiApiMetadata {}
+export type ZuiBindingMetadata = ZuiApiMetadata;
+export type ZuiEventMetadata = ZuiApiMetadata;
+export type ZuiSnippetMetadata = ZuiApiMetadata;
 
 export interface ZuiPartMetadata {
 	readonly description: string;

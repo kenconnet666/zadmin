@@ -18,6 +18,7 @@ import { ZCode } from '../src/entrypoints/code.js';
 import Camera from '@lucide/svelte/icons/camera';
 import { getIconComponent, iconManifest } from '../src/components/gene/ZIcon.svelte';
 import { __icssCarrier } from '../src/runtime/compiler-bridge.js';
+import ContextProbe from './ContextProbe.svelte';
 import FieldFixture from './FieldFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
 
@@ -94,13 +95,19 @@ describe('ZUI foundational components', () => {
 		expect(result.body).toContain('data-testid="outer-provider"');
 		expect(result.body).toContain('data-testid="inner-provider"');
 		expect(result.body).toContain(
-			'data-testid="outer-context">zh-CN:rtl:dark:high:compact:reduced:test:关闭'
+			'data-testid="outer-context">zh-CN:rtl:dark:high:compact:reduced:test:关闭:default-portal'
 		);
 		expect(result.body).toContain(
-			'data-testid="inner-context">zh-CN:rtl:dark:high:compact:reduced:test:关闭'
+			'data-testid="inner-context">zh-CN:rtl:dark:high:compact:reduced:test:关闭:default-portal'
 		);
 		expect(registry.cssText()).toContain('#2563eb');
 		expect(registry.cssText()).toContain('#6d28d9');
+	});
+
+	it('provides SSR-stable defaults outside an explicit provider', () => {
+		expect(render(ContextProbe, { props: { id: 'default-context' } }).body).toContain(
+			'data-testid="default-context">en-US:ltr:light:normal:comfortable:auto:zui:none:default-portal'
+		);
 	});
 
 	it('renders ZCode as stable escaped plain code during SSR', () => {

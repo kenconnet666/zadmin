@@ -173,10 +173,10 @@ describe('compiled ICSS browser updates', () => {
 		expect(shadow.querySelectorAll('style[data-icss]')).toHaveLength(1);
 		expect(shadow.querySelectorAll('button')).toHaveLength(2);
 		expect(shadow.querySelector('[data-testid="outer-context"]')?.textContent).toBe(
-			'zh-CN:rtl:dark'
+			'zh-CN:rtl:dark:high:compact:reduced:test:关闭:default-portal'
 		);
 		expect(shadow.querySelector('[data-testid="inner-context"]')?.textContent).toBe(
-			'zh-CN:rtl:dark'
+			'zh-CN:rtl:dark:high:compact:reduced:test:关闭:default-portal'
 		);
 		expect(runtime.registry.cssText()).toContain('#2563eb');
 		expect(runtime.registry.cssText()).toContain('#6d28d9');

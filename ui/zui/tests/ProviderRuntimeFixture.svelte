@@ -19,6 +19,7 @@
 	idPrefix="test"
 	locale="zh-CN"
 	motion="reduced"
+	portalContainer={null}
 	translations={{ close: '关闭' }}
 	{runtime}
 	{theme}

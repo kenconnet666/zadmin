@@ -18,6 +18,7 @@ public sealed class WebViewHost : IAsyncDisposable
     private WebViewDispatcher? _dispatcher;
     private WindowsCommandModule? _commands;
     private int _recoveryAttempts;
+    private int _smokeNavigationGeneration;
     private TaskCompletionSource<bool>? _smokeRequest;
 
     public WebViewHost(Microsoft.UI.Xaml.Window window, WebView2 webview, HostOptions options)
@@ -154,6 +155,11 @@ public sealed class WebViewHost : IAsyncDisposable
     private async void OnDomContentLoaded(CoreWebView2 sender, CoreWebView2DOMContentLoadedEventArgs args)
     {
         if (_options.SmokeReportPath is null) return;
+        var generation = Interlocked.Increment(ref _smokeNavigationGeneration);
+        // Vite may reload once after its first dependency optimization. Only the last quiet navigation
+        // owns the smoke report so overlapping DOMContentLoaded handlers never race on the same file.
+        await Task.Delay(750);
+        if (generation != Volatile.Read(ref _smokeNavigationGeneration)) return;
         try
         {
             _smokeRequest = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
