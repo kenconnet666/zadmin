@@ -18,6 +18,14 @@
 			"svelte": "./src/lib/client.ts",
 			"import": "./src/lib/client.ts"
 		},
+		"./server": {
+			"types": "./src/lib/server.ts",
+			"import": "./src/lib/server.ts"
+		},
+		"./testing": {
+			"types": "./src/lib/testing/index.ts",
+			"import": "./src/lib/testing/index.ts"
+		},
 		"./zui": {
 			"types": "./src/lib/zui/index.ts",
 			"import": "./src/lib/zui/index.ts"

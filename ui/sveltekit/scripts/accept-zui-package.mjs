@@ -187,6 +187,14 @@ const panel = icss(defaultTheme, (s) => { s.padding._large; s.backgroundColor._s
 	await write(
 		resolve(fixtureRoot, 'testing.mjs'),
 		`import { defaultTheme } from '@zadmin/zui';
+import { createPluginRouteHandle } from '@zadmin/sveltekit/server';
+import {
+  createHandleFixture,
+  createJsonRouteFixture,
+  createRouteRequest,
+  createSsrResolveFixture,
+  createTestSvelteKitHost
+} from '@zadmin/sveltekit/testing';
 import {
   assertIcssClassName,
   assertIcssResourcesStable,
@@ -201,7 +209,16 @@ assertIcssClassName(fixture.className);
 if (fixture.snapshot.metrics.classes !== 1 || !fixture.snapshot.cssText.includes('display:flex')) {
   throw new Error('External ZUI testing fixture produced an invalid snapshot.');
 }
-console.log('External ZUI testing entry acceptance passed.');
+const host = createTestSvelteKitHost();
+host.routes.add('fixture', createJsonRouteFixture({ body: { ready: true }, path: '/health' }));
+const resolve = createSsrResolveFixture({ html: 'fallback', status: 404 });
+const response = await createPluginRouteHandle(host.routes)(
+  createHandleFixture(createRouteRequest('/health'), resolve)
+);
+if (!response.ok || !(await response.json()).ready) {
+  throw new Error('External SvelteKit server/testing entries produced an invalid response.');
+}
+console.log('External ZUI and SvelteKit testing entry acceptance passed.');
 `
 	);
 
@@ -219,7 +236,9 @@ console.log('External ZUI testing entry acceptance passed.');
 			throw new Error(`External client output contains workspace path: ${file}`);
 		}
 		if (
-			/node:async_hooks|@zadmin\/zui\/(?:compiler|testing)|@zadmin\/sveltekit\/zui/u.test(output)
+			/node:async_hooks|@zadmin\/zui\/(?:compiler|testing)|@zadmin\/sveltekit\/(?:server|testing|zui)/u.test(
+				output
+			)
 		) {
 			throw new Error(`External client output contains server/compiler code: ${file}`);
 		}
