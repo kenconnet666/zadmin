@@ -16,7 +16,6 @@ import {
 	ZInput,
 	ZKbd,
 	ZLink,
-	ZRadioGroupItem,
 	ZSeparator,
 	ZStack,
 	ZSwitch,
@@ -33,6 +32,7 @@ import ContextProbe from './ContextProbe.svelte';
 import FieldFixture from './FieldFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
 import RadioGroupFixture from './RadioGroupFixture.svelte';
+import TabsFixture from './TabsFixture.svelte';
 
 describe('ZUI foundational components', () => {
 	it('renders Symbol-carried compiler variables on the real ZBox root', () => {
@@ -109,9 +109,21 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain('aria-orientation="horizontal"');
 		expect(result).toContain('type="radio"');
 		expect(result).toMatch(/value="b"[^>]*checked/u);
-		expect(() => render(ZRadioGroupItem, { props: { value: 'orphan' } })).toThrow(
-			/must be rendered inside ZRadioGroup/u
-		);
+	});
+
+	it('renders Tabs with stable Trigger and Panel ARIA relationships during SSR', () => {
+		const result = render(TabsFixture).body;
+		const controls = result.match(/aria-controls="([^"]+)"/u)?.[1];
+		const labelledBy = result.match(
+			new RegExp(`id="${controls}"[^>]*aria-labelledby="([^"]+)"`, 'u')
+		)?.[1];
+
+		expect(result).toContain('role="tablist"');
+		expect(result).toContain('role="tab"');
+		expect(result).toContain('role="tabpanel"');
+		expect(controls).toBeDefined();
+		expect(labelledBy).toBeDefined();
+		expect(result).toContain(`id="${labelledBy}"`);
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

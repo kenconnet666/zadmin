@@ -10,6 +10,7 @@ import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
 import RadioGroupFixture from './RadioGroupFixture.svelte';
 import ToggleButtonFixture from './ToggleButtonFixture.svelte';
 import SwitchFixture from './SwitchFixture.svelte';
+import TabsFixture from './TabsFixture.svelte';
 import { createBrowserIcssRuntime } from '../src/icss/runtime.js';
 import { defaultTheme } from '../src/theme/default.js';
 import { extendTheme } from '../src/theme/define.js';
@@ -31,6 +32,41 @@ function insertedRuleCount(): number {
 }
 
 describe('compiled ICSS browser updates', () => {
+	it('separates Tabs focus from automatic and manual activation', async () => {
+		render(TabsFixture);
+		const beta = document.querySelector<HTMLButtonElement>('[data-testid="tab-b"]');
+		const disabled = document.querySelector<HTMLButtonElement>('[data-testid="tab-c"]');
+		const delta = document.querySelector<HTMLButtonElement>('[data-testid="tab-d"]');
+		const panel = document.querySelector<HTMLElement>('[data-testid="panel-d"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="tabs-output"]');
+		expect(beta?.getAttribute('aria-selected')).toBe('true');
+		expect(disabled?.disabled).toBe(true);
+
+		beta?.focus();
+		beta?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowRight' }));
+		await tick();
+		expect(delta?.getAttribute('aria-selected')).toBe('true');
+		expect(document.activeElement).toBe(delta);
+		expect(panel?.hidden).toBe(false);
+		expect(output?.textContent).toBe('d:1');
+
+		const one = document.querySelector<HTMLButtonElement>('[data-testid="manual-one"]');
+		const two = document.querySelector<HTMLButtonElement>('[data-testid="manual-two"]');
+		const manualOutput = document.querySelector<HTMLOutputElement>(
+			'[data-testid="manual-tabs-output"]'
+		);
+		one?.focus();
+		one?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowRight' }));
+		await tick();
+		expect(document.activeElement).toBe(two);
+		expect(one?.getAttribute('aria-selected')).toBe('true');
+		expect(manualOutput?.textContent).toBe('one:0');
+		two?.click();
+		await tick();
+		expect(two?.getAttribute('aria-selected')).toBe('true');
+		expect(manualOutput?.textContent).toBe('two:1');
+	});
+
 	it('keeps radio roving focus, selection, FormData and reset synchronized', async () => {
 		render(RadioGroupFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="radio-form"]');

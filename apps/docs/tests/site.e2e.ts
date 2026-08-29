@@ -9,11 +9,12 @@ test('renders the component catalog and real demo source', async ({ page }) => {
 
 	await page.goto('/#/');
 	await expect(page.getByRole('heading', { level: 1 })).toContainText('看见组件');
-	await expect(page.getByTestId('component-card')).toHaveCount(19);
+	await expect(page.getByTestId('component-card')).toHaveCount(20);
 	await expect(page.getByRole('heading', { level: 3 })).toHaveText([
 		'通用组件',
 		'布局组件',
-		'输入组件'
+		'输入组件',
+		'导航组件'
 	]);
 
 	await page.goto('/#/components/button');
@@ -155,6 +156,32 @@ test('keeps radio group roving focus, selection, RTL and FormData synchronized',
 	await expect(page.getByText(/value = team · 用户变更次数 = 3 · 尚未提交/u)).toBeVisible();
 });
 
+test('keeps Tabs ARIA relationships, disabled skipping and RTL activation synchronized', async ({
+	page
+}) => {
+	await page.goto('/#/components/tabs');
+	const overview = page.getByRole('tab', { name: '概览' });
+	const metrics = page.getByRole('tab', { name: '指标' });
+	const legacy = page.getByRole('tab', { name: '旧版' });
+	const events = page.getByRole('tab', { name: '事件' });
+	await expect(overview).toHaveAttribute('aria-selected', 'true');
+	const panelId = await overview.getAttribute('aria-controls');
+	await expect(page.locator(`#${panelId}`)).toBeVisible();
+	await expect(legacy).toBeDisabled();
+	await overview.press('ArrowRight');
+	await expect(metrics).toHaveAttribute('aria-selected', 'true');
+	await metrics.press('ArrowRight');
+	await expect(events).toHaveAttribute('aria-selected', 'true');
+	await events.press('Home');
+	await expect(overview).toHaveAttribute('aria-selected', 'true');
+
+	await page.locator('summary[aria-label="调整显示偏好"]').click();
+	await page.locator('#zui-docs-direction').selectOption('rtl');
+	await overview.press('ArrowRight');
+	await expect(events).toHaveAttribute('aria-selected', 'true');
+	await expect(page.getByText(/value = events · 用户变更次数 = 4/u)).toBeVisible();
+});
+
 test('keeps S1 primitives semantic and display preferences effective', async ({ page }) => {
 	await page.goto('/#/guides/theme');
 	await expect(page.getByRole('heading', { level: 1 })).toContainText('主题不是一组颜色');
@@ -208,7 +235,8 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/input',
 		'#/components/field',
 		'#/components/radio-group',
-		'#/components/switch'
+		'#/components/switch',
+		'#/components/tabs'
 	]) {
 		await page.goto(`/${route}`);
 		const results = await new AxeBuilder({ page }).analyze();

@@ -10,6 +10,15 @@ export type {
 	ZRadioGroupItemProps,
 	ZRadioGroupItemVariants
 } from '../components/compound/radio-group/ZRadioGroupItem.svelte';
+export { default as ZTabs } from '../components/compound/tabs/ZTabs.svelte';
+export type { TabsOrientation, ZTabsProps } from '../components/compound/tabs/ZTabs.svelte';
+export { default as ZTabsList } from '../components/compound/tabs/ZTabsList.svelte';
+export type { ZTabsListProps } from '../components/compound/tabs/ZTabsList.svelte';
+export { default as ZTabsPanel } from '../components/compound/tabs/ZTabsPanel.svelte';
+export type { ZTabsPanelProps } from '../components/compound/tabs/ZTabsPanel.svelte';
+export { default as ZTabsTrigger } from '../components/compound/tabs/ZTabsTrigger.svelte';
+export type { ZTabsTriggerProps } from '../components/compound/tabs/ZTabsTrigger.svelte';
+export type { TabsActivationMode } from '../components/compound/tabs/context.svelte.js';
 export { default as ZBox } from '../components/gene/ZBox.svelte';
 export type { ZBoxProps } from '../components/gene/ZBox.svelte';
 export { default as ZButton } from '../components/gene/ZButton.svelte';

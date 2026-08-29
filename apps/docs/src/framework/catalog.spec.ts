@@ -23,7 +23,8 @@ describe('ZUI component documentation catalog', () => {
 			'ZInput',
 			'ZField',
 			'ZRadioGroup',
-			'ZSwitch'
+			'ZSwitch',
+			'ZTabs'
 		]);
 		expect(componentDocsById.size).toBe(componentDocs.length);
 		expect(componentDocs.map(({ category }) => category)).toEqual([
@@ -45,8 +46,15 @@ describe('ZUI component documentation catalog', () => {
 			'input',
 			'input',
 			'input',
-			'input'
+			'input',
+			'navigation'
 		]);
+	});
+
+	it('includes every Tabs compound member on the owning page', () => {
+		const tabs = componentDocsById.get('tabs');
+		expect(tabs?.api.map(({ title }) => title)).toContain('ZTabsTrigger Props');
+		expect(tabs?.api.map(({ title }) => title)).toContain('ZTabsPanel Props');
 	});
 
 	it('includes compound member metadata on the owning component page', () => {

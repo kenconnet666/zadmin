@@ -224,7 +224,6 @@
 	onfocus={handleFocus}
 	onkeydown={handleKeydown}
 	aria-checked={selected}
-	aria-invalid={group.invalid || undefined}
 	data-disabled={resolvedDisabled || undefined}
 	data-state={selected ? 'checked' : 'unchecked'}
 />

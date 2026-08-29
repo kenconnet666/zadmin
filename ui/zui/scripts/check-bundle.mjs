@@ -20,6 +20,10 @@ const components = [
 		name: 'ZRadioGroupItem',
 		path: 'compound/radio-group/ZRadioGroupItem.svelte'
 	},
+	{ id: 'tabs', name: 'ZTabs', path: 'compound/tabs/ZTabs.svelte' },
+	{ id: 'tabs-list', name: 'ZTabsList', path: 'compound/tabs/ZTabsList.svelte' },
+	{ id: 'tabs-trigger', name: 'ZTabsTrigger', path: 'compound/tabs/ZTabsTrigger.svelte' },
+	{ id: 'tabs-panel', name: 'ZTabsPanel', path: 'compound/tabs/ZTabsPanel.svelte' },
 	{ id: 'provider', name: 'ZProvider', path: 'gene/ZProvider.svelte' },
 	{ id: 'box', name: 'ZBox', path: 'gene/ZBox.svelte' },
 	{ id: 'link', name: 'ZLink', path: 'gene/ZLink.svelte' },

@@ -1,13 +1,16 @@
 <script module lang="ts">
 	import type { Snippet } from 'svelte';
-	import type { HTMLDivAttributes } from 'svelte/elements';
+	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
 
 	import { defineRecipe, registerRecipeHmr } from '../../../recipes/define.js';
 
 	export type RadioGroupOrientation = 'horizontal' | 'vertical';
 
-	export interface ZRadioGroupProps extends Omit<HTMLDivAttributes, 'children' | 'role'> {
+	export interface ZRadioGroupProps extends Omit<
+		HTMLAttributes<HTMLDivElement>,
+		'children' | 'role'
+	> {
 		readonly children?: Snippet;
 		readonly defaultValue?: string;
 		readonly disabled?: boolean;

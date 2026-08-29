@@ -118,6 +118,8 @@ describe('ICSS builder', () => {
 			s.accentColor._primary;
 			s.aspectRatio.raw('16 / 9');
 			s.blockSize._medium;
+			s.borderInlineEndStyle.solid;
+			s.borderInlineEndWidth._hairline;
 			s.clip.raw('rect(0 0 0 0)');
 			s.clipPath.raw('inset(50%)');
 			s.inlineSize._small;
@@ -128,6 +130,8 @@ describe('ICSS builder', () => {
 			{ property: 'accentColor', values: [{ value: '#2563eb' }] },
 			{ property: 'aspectRatio', values: [{ value: '16 / 9' }] },
 			{ property: 'blockSize', values: [{ unit: 'px', value: 18 }] },
+			{ property: 'borderInlineEndStyle', values: [{ value: 'solid' }] },
+			{ property: 'borderInlineEndWidth', values: [{ unit: 'px', value: 1 }] },
 			{ property: 'clip', values: [{ value: 'rect(0 0 0 0)' }] },
 			{ property: 'clipPath', values: [{ value: 'inset(50%)' }] },
 			{ property: 'inlineSize', values: [{ unit: 'px', value: 16 }] },

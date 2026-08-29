@@ -10,6 +10,10 @@ import {
 	ZRadioGroup,
 	ZRadioGroupItem,
 	ZSwitch,
+	ZTabs,
+	ZTabsList,
+	ZTabsPanel,
+	ZTabsTrigger,
 	ZToggleButton,
 	defineRecipe,
 	defineSlotRecipe,
@@ -21,6 +25,10 @@ import {
 	type ZRadioGroupItemProps,
 	type ZRadioGroupProps,
 	type ZSwitchProps,
+	type ZTabsListProps,
+	type ZTabsPanelProps,
+	type ZTabsProps,
+	type ZTabsTriggerProps,
 	type ZToggleButtonProps
 } from '../src/entrypoints/index.js';
 
@@ -43,6 +51,17 @@ const switchProps: ComponentProps<typeof ZSwitch> = {
 	defaultChecked: true,
 	value: 1n
 } satisfies ZSwitchProps;
+const tabsProps: ComponentProps<typeof ZTabs> = {
+	activationMode: 'manual',
+	defaultValue: 'overview'
+} satisfies ZTabsProps;
+const tabsListProps: ComponentProps<typeof ZTabsList> = {} satisfies ZTabsListProps;
+const tabsTriggerProps: ComponentProps<typeof ZTabsTrigger> = {
+	value: 'overview'
+} satisfies ZTabsTriggerProps;
+const tabsPanelProps: ComponentProps<typeof ZTabsPanel> = {
+	value: 'overview'
+} satisfies ZTabsPanelProps;
 const toggleButtonProps: ComponentProps<typeof ZToggleButton> = {
 	defaultPressed: true,
 	onPressedChange: (pressed) => void pressed
@@ -54,6 +73,10 @@ void checkboxProps;
 void radioGroupProps;
 void radioGroupItemProps;
 void switchProps;
+void tabsProps;
+void tabsListProps;
+void tabsTriggerProps;
+void tabsPanelProps;
 void toggleButtonProps;
 
 declare const s: IcssStyle<typeof defaultTheme>;

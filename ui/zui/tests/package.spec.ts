@@ -20,6 +20,10 @@ import {
 	separatorMetadata,
 	stackMetadata,
 	switchMetadata,
+	tabsListMetadata,
+	tabsMetadata,
+	tabsPanelMetadata,
+	tabsTriggerMetadata,
 	textMetadata,
 	toggleButtonMetadata,
 	visuallyHiddenMetadata
@@ -80,7 +84,11 @@ describe('@zadmin/zui package', () => {
 			containerMetadata,
 			inputMetadata,
 			fieldMetadata,
-			switchMetadata
+			switchMetadata,
+			tabsMetadata,
+			tabsListMetadata,
+			tabsTriggerMetadata,
+			tabsPanelMetadata
 		];
 		expect(new Set(metadata.map(({ id }) => id)).size).toBe(metadata.length);
 		expect(metadata.every(({ name }) => name.startsWith('Z'))).toBe(true);

@@ -17,12 +17,14 @@ import { switchDoc } from '../content/components/input/switch/doc.js';
 import { stackDoc } from '../content/components/layout/stack/doc.js';
 import { aspectRatioDoc } from '../content/components/layout/aspect-ratio/doc.js';
 import { containerDoc } from '../content/components/layout/container/doc.js';
+import { tabsDoc } from '../content/components/navigation/tabs/doc.js';
 import type { ComponentCategory, ComponentDoc } from './component-doc.js';
 
 export const componentCategories = Object.freeze([
 	{ id: 'gene', label: '通用组件' },
 	{ id: 'layout', label: '布局组件' },
-	{ id: 'input', label: '输入组件' }
+	{ id: 'input', label: '输入组件' },
+	{ id: 'navigation', label: '导航组件' }
 ] satisfies readonly { readonly id: ComponentCategory; readonly label: string }[]);
 
 export const componentDocs = Object.freeze([
@@ -44,7 +46,8 @@ export const componentDocs = Object.freeze([
 	inputDoc,
 	fieldDoc,
 	radioGroupDoc,
-	switchDoc
+	switchDoc,
+	tabsDoc
 ] satisfies readonly ComponentDoc[]);
 
 export const componentDocsById: ReadonlyMap<string, ComponentDoc> = new Map(

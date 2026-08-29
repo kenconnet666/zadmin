@@ -91,6 +91,10 @@ export const PROPERTY_DEFINITIONS = {
 		keywords: { dashed: 'dashed', dotted: 'dotted', double: 'double', none: 'none', solid: 'solid' }
 	},
 	borderLeftWidth: { token: 'borderWidth', tokenUnit: 'px', units: ['length'] },
+	borderInlineEndStyle: {
+		keywords: { dashed: 'dashed', dotted: 'dotted', double: 'double', none: 'none', solid: 'solid' }
+	},
+	borderInlineEndWidth: { token: 'borderWidth', tokenUnit: 'px', units: ['length'] },
 	borderRadius: { token: 'radius', tokenUnit: 'px', units: ['length', 'percent'] },
 	borderRightColor: { token: 'color' },
 	borderRightStyle: {

@@ -1,5 +1,9 @@
 export { zuiMetadata as radioGroupMetadata } from '../components/compound/radio-group/ZRadioGroup.svelte';
 export { zuiMetadata as radioGroupItemMetadata } from '../components/compound/radio-group/ZRadioGroupItem.svelte';
+export { zuiMetadata as tabsMetadata } from '../components/compound/tabs/ZTabs.svelte';
+export { zuiMetadata as tabsListMetadata } from '../components/compound/tabs/ZTabsList.svelte';
+export { zuiMetadata as tabsPanelMetadata } from '../components/compound/tabs/ZTabsPanel.svelte';
+export { zuiMetadata as tabsTriggerMetadata } from '../components/compound/tabs/ZTabsTrigger.svelte';
 export { zuiMetadata as boxMetadata } from '../components/gene/ZBox.svelte';
 export { zuiMetadata as buttonMetadata } from '../components/gene/ZButton.svelte';
 export { zuiMetadata as codeMetadata } from '../components/gene/ZCode.svelte';
