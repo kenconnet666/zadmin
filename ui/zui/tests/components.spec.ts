@@ -43,6 +43,7 @@ import PopoverFixture from './PopoverFixture.svelte';
 import PopconfirmFixture from './PopconfirmFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
 import RadioGroupFixture from './RadioGroupFixture.svelte';
+import SelectFixture from './SelectFixture.svelte';
 import TabsFixture from './TabsFixture.svelte';
 import TooltipFixture from './TooltipFixture.svelte';
 
@@ -260,6 +261,18 @@ describe('ZUI foundational components', () => {
 		const open = render(ContextMenuFixture, { props: { defaultOpen: true } }).body;
 		expect(open).toContain('role="menu"');
 		expect(open).toContain('Fixture context menu');
+	});
+
+	it('renders Select form value and listbox semantics during SSR', () => {
+		const closed = render(SelectFixture).body;
+		expect(closed).toContain('aria-haspopup="listbox"');
+		expect(closed).toContain('type="hidden"');
+		expect(closed).toContain('name="choice"');
+		expect(closed).not.toContain('role="listbox"');
+		const open = render(SelectFixture, { props: { defaultOpen: true } }).body;
+		expect(open).toContain('role="listbox"');
+		expect(open.match(/role="option"/gu)).toHaveLength(4);
+		expect(open).toContain('aria-selected="true"');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

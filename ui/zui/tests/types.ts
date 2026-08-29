@@ -57,6 +57,10 @@ import {
 	ZPopoverTrigger,
 	ZRadioGroup,
 	ZRadioGroupItem,
+	ZSelect,
+	ZSelectContent,
+	ZSelectItem,
+	ZSelectTrigger,
 	ZSlider,
 	ZSwitch,
 	ZTabs,
@@ -124,6 +128,10 @@ import {
 	type ZPopoverTriggerProps,
 	type ZRadioGroupItemProps,
 	type ZRadioGroupProps,
+	type ZSelectContentProps,
+	type ZSelectItemProps,
+	type ZSelectProps,
+	type ZSelectTriggerProps,
 	type ZSliderProps,
 	type ZSwitchProps,
 	type ZTabsListProps,
@@ -245,6 +253,15 @@ const radioGroupProps: ComponentProps<typeof ZRadioGroup> = {
 const radioGroupItemProps: ComponentProps<typeof ZRadioGroupItem> = {
 	value: 'ready'
 } satisfies ZRadioGroupItemProps;
+const selectProps: ComponentProps<typeof ZSelect> = {
+	defaultValue: 'ready',
+	name: 'status'
+} satisfies ZSelectProps;
+const selectTriggerProps: ComponentProps<typeof ZSelectTrigger> = {} satisfies ZSelectTriggerProps;
+const selectContentProps: ComponentProps<typeof ZSelectContent> = {} satisfies ZSelectContentProps;
+const selectItemProps: ComponentProps<typeof ZSelectItem> = {
+	value: 'ready'
+} satisfies ZSelectItemProps;
 const sliderProps: ComponentProps<typeof ZSlider> = {
 	defaultValue: 25,
 	max: 50,
@@ -328,6 +345,10 @@ void popoverTriggerProps;
 void popoverContentProps;
 void radioGroupProps;
 void radioGroupItemProps;
+void selectProps;
+void selectTriggerProps;
+void selectContentProps;
+void selectItemProps;
 void sliderProps;
 void switchProps;
 void tabsProps;

@@ -13,6 +13,7 @@ import { checkboxDoc } from '../content/components/input/checkbox/doc.js';
 import { fieldDoc } from '../content/components/input/field/doc.js';
 import { inputDoc } from '../content/components/input/input/doc.js';
 import { radioGroupDoc } from '../content/components/input/radio-group/doc.js';
+import { selectDoc } from '../content/components/input/select/doc.js';
 import { sliderDoc } from '../content/components/input/slider/doc.js';
 import { switchDoc } from '../content/components/input/switch/doc.js';
 import { stackDoc } from '../content/components/layout/stack/doc.js';
@@ -59,6 +60,7 @@ export const componentDocs = Object.freeze([
 	inputDoc,
 	fieldDoc,
 	radioGroupDoc,
+	selectDoc,
 	switchDoc,
 	sliderDoc,
 	accordionDoc,

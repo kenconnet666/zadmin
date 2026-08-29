@@ -168,6 +168,10 @@ const components = [
 		name: 'ZRadioGroupItem',
 		path: 'compound/radio-group/ZRadioGroupItem.svelte'
 	},
+	{ id: 'select', name: 'ZSelect', path: 'compound/select/ZSelect.svelte' },
+	{ id: 'select-trigger', name: 'ZSelectTrigger', path: 'compound/select/ZSelectTrigger.svelte' },
+	{ id: 'select-content', name: 'ZSelectContent', path: 'compound/select/ZSelectContent.svelte' },
+	{ id: 'select-item', name: 'ZSelectItem', path: 'compound/select/ZSelectItem.svelte' },
 	{ id: 'tabs', name: 'ZTabs', path: 'compound/tabs/ZTabs.svelte' },
 	{ id: 'tabs-list', name: 'ZTabsList', path: 'compound/tabs/ZTabsList.svelte' },
 	{ id: 'tabs-trigger', name: 'ZTabsTrigger', path: 'compound/tabs/ZTabsTrigger.svelte' },

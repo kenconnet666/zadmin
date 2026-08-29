@@ -13,7 +13,7 @@
 		readonly ariaLabelledBy?: string | null;
 		readonly children?: Snippet;
 		ref?: HTMLDivElement | null;
-		readonly role?: 'dialog' | 'presentation';
+		readonly role?: 'dialog' | 'listbox' | 'presentation';
 	}
 
 	const popoverContentRecipe = defineRecipe({
@@ -76,7 +76,7 @@
 				default: "'dialog'",
 				description: 'Popover shell角色；Menu等复合封装使用presentation。',
 				name: 'role',
-				type: "'dialog' | 'presentation'"
+				type: "'dialog' | 'listbox' | 'presentation'"
 			},
 			{
 				default: 'Trigger id',
@@ -159,6 +159,7 @@
 		const positioner = new FloatingPositioner();
 		const stopPositioning = positioner.start(trigger, content, {
 			gutter: popover.gutter,
+			matchWidth: popover.matchWidth,
 			placement: popover.placement
 		});
 		const dismissable = new DismissableLayer(content, {

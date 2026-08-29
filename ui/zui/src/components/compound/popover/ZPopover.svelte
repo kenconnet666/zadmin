@@ -9,6 +9,7 @@
 		readonly children?: Snippet;
 		readonly defaultOpen?: boolean;
 		readonly gutter?: number;
+		readonly matchWidth?: boolean;
 		readonly modal?: boolean;
 		readonly onOpenChange?: (open: boolean) => void;
 		open?: boolean;
@@ -67,6 +68,12 @@
 			},
 			{
 				default: 'false',
+				description: 'Content inline尺寸是否匹配Trigger。',
+				name: 'matchWidth',
+				type: 'boolean'
+			},
+			{
+				default: 'false',
 				description: '启用焦点trap、scroll lock与inert others。',
 				name: 'modal',
 				type: 'boolean'
@@ -92,6 +99,7 @@
 		children,
 		defaultOpen = false,
 		gutter = 8,
+		matchWidth = false,
 		modal = false,
 		onOpenChange,
 		open = $bindable(),
@@ -116,6 +124,9 @@
 		},
 		get gutter() {
 			return gutter;
+		},
+		get matchWidth() {
+			return matchWidth;
 		},
 		get modal() {
 			return modal;

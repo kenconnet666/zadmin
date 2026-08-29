@@ -116,6 +116,15 @@ export type {
 	ZRadioGroupItemProps,
 	ZRadioGroupItemVariants
 } from '../components/compound/radio-group/ZRadioGroupItem.svelte';
+export { default as ZSelect } from '../components/compound/select/ZSelect.svelte';
+export type { ZSelectProps } from '../components/compound/select/ZSelect.svelte';
+export { default as ZSelectContent } from '../components/compound/select/ZSelectContent.svelte';
+export type { ZSelectContentProps } from '../components/compound/select/ZSelectContent.svelte';
+export { default as ZSelectItem } from '../components/compound/select/ZSelectItem.svelte';
+export type { ZSelectItemProps } from '../components/compound/select/ZSelectItem.svelte';
+export { default as ZSelectTrigger } from '../components/compound/select/ZSelectTrigger.svelte';
+export type { ZSelectTriggerProps } from '../components/compound/select/ZSelectTrigger.svelte';
+export { SelectEvent } from '../components/compound/select/context.svelte.js';
 export { default as ZTabs } from '../components/compound/tabs/ZTabs.svelte';
 export type { TabsOrientation, ZTabsProps } from '../components/compound/tabs/ZTabs.svelte';
 export { default as ZTabsList } from '../components/compound/tabs/ZTabsList.svelte';

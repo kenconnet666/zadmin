@@ -47,6 +47,10 @@ export { zuiMetadata as popoverContentMetadata } from '../components/compound/po
 export { zuiMetadata as popoverTriggerMetadata } from '../components/compound/popover/ZPopoverTrigger.svelte';
 export { zuiMetadata as radioGroupMetadata } from '../components/compound/radio-group/ZRadioGroup.svelte';
 export { zuiMetadata as radioGroupItemMetadata } from '../components/compound/radio-group/ZRadioGroupItem.svelte';
+export { zuiMetadata as selectMetadata } from '../components/compound/select/ZSelect.svelte';
+export { zuiMetadata as selectContentMetadata } from '../components/compound/select/ZSelectContent.svelte';
+export { zuiMetadata as selectItemMetadata } from '../components/compound/select/ZSelectItem.svelte';
+export { zuiMetadata as selectTriggerMetadata } from '../components/compound/select/ZSelectTrigger.svelte';
 export { zuiMetadata as tabsMetadata } from '../components/compound/tabs/ZTabs.svelte';
 export { zuiMetadata as tabsListMetadata } from '../components/compound/tabs/ZTabsList.svelte';
 export { zuiMetadata as tabsPanelMetadata } from '../components/compound/tabs/ZTabsPanel.svelte';

@@ -18,6 +18,7 @@ import PaginationFixture from './PaginationFixture.svelte';
 import PopoverFixture from './PopoverFixture.svelte';
 import PopconfirmFixture from './PopconfirmFixture.svelte';
 import RadioGroupFixture from './RadioGroupFixture.svelte';
+import SelectFixture from './SelectFixture.svelte';
 import SliderFixture from './SliderFixture.svelte';
 import ToggleButtonFixture from './ToggleButtonFixture.svelte';
 import SwitchFixture from './SwitchFixture.svelte';
@@ -135,6 +136,45 @@ describe('compiled ICSS browser updates', () => {
 		content = document.querySelector('[data-testid="context-content"]');
 		expect(content?.getAttribute('data-state')).toBe('open');
 		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+	});
+
+	it('coordinates Select listbox focus, selection, form value, Escape and reset', async () => {
+		render(SelectFixture);
+		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="select-trigger"]');
+		const form = document.querySelector<HTMLFormElement>('[data-testid="select-form"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="select-output"]');
+		trigger?.focus();
+		trigger?.click();
+		await tick();
+		const content = document.querySelector<HTMLElement>('[data-testid="select-content"]');
+		const beta = document.querySelector<HTMLElement>('[data-testid="select-b"]');
+		const disabled = document.querySelector<HTMLElement>('[data-testid="select-c"]');
+		const delta = document.querySelector<HTMLElement>('[data-testid="select-d"]');
+		expect(content?.parentNode).toBe(document.body);
+		expect(content?.getAttribute('role')).toBe('listbox');
+		expect(document.activeElement).toBe(beta);
+		expect(disabled?.getAttribute('aria-disabled')).toBe('true');
+		beta?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
+		expect(document.activeElement).toBe(delta);
+		delta?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+		await new Promise((resolve) => setTimeout(resolve, 140));
+		await tick();
+		expect(document.querySelector('[data-testid="select-content"]')).toBeNull();
+		expect(document.activeElement).toBe(trigger);
+		expect(trigger?.textContent?.trim()).toBe('Delta');
+		expect(new FormData(form!).get('choice')).toBe('d');
+		expect(output?.textContent).toBe('d:1:false');
+
+		trigger?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
+		await tick();
+		expect(document.querySelector('[data-testid="select-content"]')).not.toBeNull();
+		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+		await new Promise((resolve) => setTimeout(resolve, 140));
+		form?.reset();
+		await Promise.resolve();
+		await tick();
+		expect(trigger?.textContent?.trim()).toBe('Beta');
+		expect(output?.textContent).toBe('b:1:false');
 	});
 	it('keeps AlertDialog open until an explicit action is chosen', async () => {
 		render(AlertDialogFixture);

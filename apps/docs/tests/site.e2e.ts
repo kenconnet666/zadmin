@@ -276,6 +276,26 @@ test('keeps Slider keyboard, value text, FormData and reset synchronized', async
 	await expect(page.getByText(/value = 35% · 用户变更次数 = 2 · 尚未提交/u)).toBeVisible();
 });
 
+test('keeps Select listbox, keyboard, form value and reset synchronized', async ({ page }) => {
+	await page.goto('/#/components/select');
+	const trigger = page.getByTestId('select-trigger');
+	await expect(trigger).toHaveAttribute('aria-haspopup', 'listbox');
+	await trigger.click();
+	const listbox = page.getByRole('listbox', { name: '部署环境' });
+	await expect(listbox).toBeVisible();
+	await expect(page.getByRole('option', { name: '生产' })).toBeFocused();
+	await page.keyboard.press('ArrowUp');
+	await expect(page.getByRole('option', { name: '预发' })).toBeFocused();
+	await page.keyboard.press('Enter');
+	await expect(listbox).toHaveCount(0);
+	await expect(trigger).toBeFocused();
+	await expect(trigger).toHaveText('预发');
+	await page.getByRole('button', { name: '读取FormData' }).click();
+	await expect(page.getByText(/value = 预发 · 用户变更次数 = 1 · 预发/u)).toBeVisible();
+	await page.getByRole('button', { name: '重置' }).click();
+	await expect(trigger).toHaveText('生产');
+});
+
 test('keeps Accordion selection, roving focus and Presence synchronized', async ({ page }) => {
 	await page.goto('/#/components/accordion');
 	const runtime = page.getByRole('button', { name: /运行时合同/u });
@@ -470,6 +490,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/input',
 		'#/components/field',
 		'#/components/radio-group',
+		'#/components/select',
 		'#/components/switch',
 		'#/components/slider',
 		'#/components/accordion',

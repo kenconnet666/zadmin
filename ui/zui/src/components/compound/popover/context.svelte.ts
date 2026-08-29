@@ -20,6 +20,7 @@ export interface ZPopoverContext {
 	readonly contentId: string;
 	readonly exitDuration: number;
 	readonly gutter: number;
+	readonly matchWidth: boolean;
 	readonly modal: boolean;
 	readonly open: boolean;
 	readonly placement: PopoverPlacement;
