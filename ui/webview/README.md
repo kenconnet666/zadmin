@@ -15,7 +15,7 @@ import { defineWebviewConfig } from '@zadmin/webview/build';
 
 export default defineWebviewConfig({
 	web: { assets: 'build', command: 'pnpm build:web' },
-	targets: { 'windows-x64': { package: 'msix' } }
+	targets: { 'windows-x64': { package: 'portable' } }
 });
 ```
 

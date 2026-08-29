@@ -11,6 +11,7 @@ interface WebView2Bridge {
 }
 
 interface WebView2Global {
+	readonly __ZADMIN_WEBVIEW_TRUSTED_ORIGIN__?: string;
 	readonly chrome?: { readonly webview?: WebView2Bridge };
 	readonly location?: { readonly origin?: string };
 }
@@ -21,9 +22,12 @@ export function createWebView2Transport(
 	root: WebView2Global = globalThis as WebView2Global
 ): WebviewTransport | null {
 	const webview = root.chrome?.webview;
-	if (!webview || root.location?.origin !== WEBVIEW_APP_ORIGIN) return null;
+	const origin = root.location?.origin;
+	const trusted =
+		origin === WEBVIEW_APP_ORIGIN || root.__ZADMIN_WEBVIEW_TRUSTED_ORIGIN__ === origin;
+	if (!webview || !origin || !trusted) return null;
 	return {
-		origin: WEBVIEW_APP_ORIGIN,
+		origin,
 		postMessage(message) {
 			webview.postMessage(message);
 		},

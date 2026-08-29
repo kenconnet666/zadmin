@@ -1,13 +1,13 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { ZProvider } from '@zadmin/zui';
-	import { createTauriDesktopPlatform } from '@zadmin/tauri';
-	import { DesktopProvider } from '@zadmin/tauri/svelte';
+	import { createWebviewDesktopPlatform } from '@zadmin/webview/platform';
+	import { DesktopProvider } from '@zadmin/webview/svelte';
 
 	let { children }: { children?: Snippet } = $props();
-	const desktop = createTauriDesktopPlatform({
+	const desktop = createWebviewDesktopPlatform({
 		opener: {
-			allowedOrigins: ['https://github.com', 'https://v2.tauri.app']
+			allowedOrigins: ['https://github.com', 'https://learn.microsoft.com']
 		}
 	});
 </script>

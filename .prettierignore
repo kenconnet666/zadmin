@@ -7,6 +7,9 @@ bun.lockb
 
 # Generated output
 **/.svelte-kit/
+**/bin/
+**/obj/
+**/coverage/
 **/dist/
 **/static/
 **/storybook-static/

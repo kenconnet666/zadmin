@@ -122,17 +122,14 @@ jobs:
       - name: Run Miniapp coverage
         run: pnpm --filter @zadmin/miniapp test:coverage
 
-      - name: Run Tauri facade coverage
-        run: pnpm --filter @zadmin/tauri test:coverage
-
       - name: Run WebView facade coverage
         run: pnpm --filter @zadmin/webview test:coverage
 
+      - name: Run WebView external package acceptance
+        run: pnpm --filter @zadmin/webview test:package
+
       - name: Run Miniapp external package acceptance
         run: pnpm --filter @zadmin/miniapp test:package
-
-      - name: Run Tauri external package acceptance
-        run: pnpm --filter @zadmin/tauri test:package
 
       - name: Build Storybook
         run: pnpm --filter @zadmin/docs build-storybook
@@ -144,11 +141,9 @@ jobs:
           ':(exclude)apps/docs/content/wechat-package-acceptance.md'
 
   desktop-windows:
-    name: Windows desktop and Rust
+    name: Windows C# WebView2 desktop
     runs-on: windows-latest
     timeout-minutes: 75
-    env:
-      RUST_BACKTRACE: '1'
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -179,44 +174,21 @@ jobs:
           pnpm --filter @zadmin/webview dotnet:build
           pnpm --filter @zadmin/webview dotnet:test
 
-      - name: Install Rust components and target
-        shell: pwsh
-        run: |
-          rustup toolchain install stable --profile minimal --component rustfmt,clippy
-          rustup default stable
-          rustup target add x86_64-pc-windows-msvc
-
       - name: Check desktop TypeScript and Svelte
         run: pnpm check:desktop
 
       - name: Test desktop frontend
         run: pnpm test:desktop
 
-      - name: Build desktop frontend for Tauri macros
-        run: pnpm --filter @zadmin/desktop build
-
-      - name: Check Rust formatting
-        run: pnpm --filter @zadmin/desktop rust:fmt
-
-      - name: Check Rust targets
-        run: pnpm --filter @zadmin/desktop rust:check
-
-      - name: Run Clippy with warnings denied
-        run: pnpm --filter @zadmin/desktop rust:clippy
-
-      - name: Test Rust commands
-        run: pnpm --filter @zadmin/desktop rust:test
-
-      - name: Verify generated TypeScript bindings
-        run: pnpm --filter @zadmin/desktop bindings:check
-
-      - name: Build debug desktop executable for pull requests
-        if: github.event_name == 'pull_request'
-        run: pnpm --filter @zadmin/desktop tauri:build:debug
-
-      - name: Build release desktop bundles
-        if: github.event_name != 'pull_request'
+      - name: Build release C# WebView2 desktop
         run: pnpm build:desktop
+
+      - name: Smoke test production WebView2 host
+        run: pnpm --filter @zadmin/desktop webview:smoke
+
+      - name: Smoke test Vite development host
+        if: github.event_name == 'pull_request'
+        run: pnpm --filter @zadmin/desktop webview:dev:smoke
 
       - name: Verify generated tracked files are unchanged
         run: git diff --exit-code
@@ -228,4 +200,4 @@ jobs:
           name: desktop-windows-${{ github.sha }}
           retention-days: 14
           if-no-files-found: error
-          path: apps/desktop/src-tauri/target/x86_64-pc-windows-msvc/release/bundle/**
+          path: apps/desktop/dist/desktop/**

@@ -19,9 +19,8 @@
 15. [微信性能历史基线](./wechat-performance.md)：迁移前与同版本 Taro Solid 的构建对比，仅作历史参考。
 16. [微信 renderer 历史验收](./wechat-renderers.md)：迁移前 WebView/Skyline 证据，不替代直编 target 复核。
 17. [微信人工真机/账号验收](./wechat-manual-acceptance.md)：支付、手机号、权限和硬件的安全检查表。
-18. [UI Workspace 与 Tauri 桌面端蓝图](./ui-tauri-blueprint.md)：UI 包迁移、ZUI Svelte 重命名、系统 API、桌面组件层、Win11 x64 和阶段性验收路线。
-19. [Tauri Windows 桌面端生产验收](./desktop-production-acceptance.md)：类型生成、权限、组件、HMR、真实系统探针、NSIS 和发布边界。
-20. [UI 平台重构蓝图](./ui-platform-blueprint.md)：浏览器 ZUI、SvelteKit、独立 Miniapp 微信目标和 C# WebView 多桌面 target 的目标边界、迁移阶段与 MCP 开发基线。
-21. [ZUI 运行时 CSS 与组件 API 蓝图](./zui-runtime-css-components-blueprint.md)：ICSS、Theme、recipe、slot recipe、Svelte 组件 Props、目录、无障碍和生产验收。
+18. [C# WebView2 Windows生产验收](./desktop-production-acceptance.md)：协议、CSP、安全、生产/开发smoke、portable发布件和签名边界。
+19. [UI 平台重构蓝图](./ui-platform-blueprint.md)：浏览器 ZUI、SvelteKit、独立 Miniapp 微信目标和 C# WebView 多桌面 target 的目标边界、迁移阶段与 MCP 开发基线。
+20. [ZUI 运行时 CSS 与组件 API 蓝图](./zui-runtime-css-components-blueprint.md)：ICSS、Theme、recipe、slot recipe、Svelte 组件 Props、目录、无障碍和生产验收。
 
 当前插件协议：`2`。第一阶段只支持自家可信插件，不提供恶意代码沙箱。

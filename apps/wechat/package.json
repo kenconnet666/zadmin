@@ -9,11 +9,11 @@
 	},
 	"scripts": {
 		"prebuild": "pnpm --filter @zadmin/miniapp build && pnpm clean",
-		"build": "miniapp build --project . --output dist/wechat --target wechat && node config/verify-build.mjs",
+		"build": "node ../../ui/miniapp/dist/cli.js build --project . --output dist/wechat --target wechat && node config/verify-build.mjs",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
 		"clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
 		"predev": "pnpm --filter @zadmin/miniapp build",
-		"dev": "miniapp dev --project . --output dist/wechat --target wechat",
+		"dev": "node ../../ui/miniapp/dist/cli.js dev --project . --output dist/wechat --target wechat",
 		"setup:local": "node config/sync-local.mjs",
 		"test": "node --test tests/*.test.mjs && tsx --test tests/*.spec.ts"
 	},

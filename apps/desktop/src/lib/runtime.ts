@@ -1,4 +1,4 @@
-import type { DesktopError, DesktopResult } from '@zadmin/tauri';
+import type { DesktopError, DesktopResult } from '@zadmin/webview/platform';
 
 export function resultMessage<T>(result: DesktopResult<T>, format: (value: T) => string): string {
 	return result.ok ? format(result.value) : errorMessage(result.error);

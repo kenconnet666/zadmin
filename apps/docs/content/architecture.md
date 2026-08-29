@@ -8,12 +8,12 @@ ZAdmin是一个 pnpm workspace中的多应用、可复用 Package和动态 Plugi
 
 微信小程序不是 Web renderer 的条件分支。`@zadmin/miniapp`不依赖`@zadmin/zui`，独立拥有移动端Theme、`mcss()`、8个`M*`组件、compiler、App/Page runtime、微信平台能力与开发态增量构建。微信target直接生成WXML、WXSS、JS和JSON，生产依赖图中没有第三方跨端runtime。
 
-`@zadmin/webview`是桌面迁移中的平台中立层：34个显式版本化协议方法由同一IDL生成TypeScript与C#常量/消息类型，前端bridge负责timeout、AbortSignal、event和资源释放，C# Core负责origin、版本、大小、method allowlist和dispatcher。Windows target达到旧Tauri发布门槛前，两套宿主并存，页面和ZUI仍共享同一Web源码。
+`@zadmin/webview`是当前桌面平台层：34个显式版本化协议方法由同一IDL生成TypeScript与C#常量/消息类型，前端bridge负责timeout、AbortSignal、event和资源释放，C# Core负责origin、版本、大小、method allowlist和dispatcher。Windows target与普通浏览器共享页面和ZUI源码，旧Tauri/Rust链已经删除。
 
 ```text
 apps/
   admin/       宿主应用和插件控制面
-  desktop/     Tauri 2 + SvelteKit SPA 的 Windows 11 x64 能力宿主
+  desktop/     C# WinUI 3 + WebView2 + SvelteKit SPA 的Windows能力宿主
   etl/         独立 ETL 应用，不是动态插件
   docs/        ZUI/文档/演示应用
   wechat/      Svelte Miniapp 微信宿主、能力实验室和验收入口
@@ -28,7 +28,6 @@ packages/
 
 ui/
   sveltekit/   动态服务端路由、浏览器页面 Runtime
-  tauri/       Tauri 系统 API、typed result、资源生命周期和 fake driver
   webview/     C#协议/dispatcher、TypeScript bridge/platform、9个桌面组件和target编排
   zui/         浏览器/WebView Theme、ICSS和8个Z*基础组件
   miniapp/     独立Theme、mcss、8个M*组件、compiler/runtime/platform
@@ -53,7 +52,7 @@ apps/wechat ──→ @zadmin/miniapp ──→ 微信原生target
 - 微信端前后端不拆成两个项目；小程序包只包含客户端代码，登录code兑换、手机号兑换、支付签名/回调等仍由现有服务端package/plugin负责。
 - 微信业务module在构建时静态合入小程序。开发时可以监听外部package realpath，生产安装/升级后必须重新构建、审核和发布，不能从网络加载可执行JavaScript。
 
-桌面端复用`@zadmin/zui`。当前已验收发布路径仍通过`@zadmin/tauri`，新的`@zadmin/webview`保持相同能力分组与组件语义，但IPC和系统实现迁到C#；Windows target使用受控虚拟HTTPS origin与WebView2。SvelteKit只输出SPA静态文件，正式应用不启动Node、SSR、sidecar或本地HTTP后端。
+桌面端复用`@zadmin/zui`，通过`@zadmin/webview`的强类型facade调用C#系统能力。Windows target使用WinUI 3、受控虚拟HTTPS origin和WebView2；SvelteKit只输出SPA静态文件，正式应用不启动Node、SSR、sidecar或本地HTTP后端。旧Tauri/Rust宿主已经在真实生产与开发smoke通过后删除。
 
 ## Svelte Miniapp编译与运行时
 

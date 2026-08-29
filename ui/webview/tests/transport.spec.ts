@@ -35,4 +35,25 @@ describe('WebView2 transport detection', () => {
 		expect(listener).toHaveBeenCalledWith('response');
 		expect(removeEventListener).toHaveBeenCalledWith('message', receive);
 	});
+
+	it('allows only a host-injected development origin marker', () => {
+		const native = {
+			addEventListener: vi.fn(),
+			postMessage: vi.fn(),
+			removeEventListener: vi.fn()
+		};
+		const trusted = createWebView2Transport({
+			__ZADMIN_WEBVIEW_TRUSTED_ORIGIN__: 'http://127.0.0.1:5173',
+			chrome: { webview: native },
+			location: { origin: 'http://127.0.0.1:5173' }
+		});
+		expect(trusted?.origin).toBe('http://127.0.0.1:5173');
+		expect(
+			createWebView2Transport({
+				__ZADMIN_WEBVIEW_TRUSTED_ORIGIN__: 'http://127.0.0.1:5173',
+				chrome: { webview: native },
+				location: { origin: 'https://evil.example' }
+			})
+		).toBeNull();
+	});
 });

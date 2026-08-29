@@ -63,13 +63,17 @@ Miniapp不是把Web CSS API原样搬过去：
 
 ## 微信与多目标
 
-- 微信端固定Taro 4.2.1、Vite 4.5.14和精确Svelte custom-renderer artifact；不能与Web Vite 8/registry Svelte混用解析图。
-- 默认生产目标是WebView。Skyline、账号、商户、类目和真实硬件按独立verification grade记录，不能由类型检查或模拟器结果冒充真机验收。
-- `platform.raw`直接保留Taro类型；managed API只有在增加权限/隐私/错误/资源生命周期/测试价值时才存在，禁止复制数百个wx接口做自研Facade。
+- 微信端使用自有compiler/renderer/runtime和精确Svelte custom-renderer artifact，生产依赖中不能重新引入Taro。
+- 微信v1默认renderer是WebView；Skyline、账号、商户、类目和真实硬件按独立verification grade记录，不能由类型检查或旧runtime证据冒充直编target验收。
+- `platform.raw`直接保留官方`WechatMiniprogram.Wx`类型；managed API只有在增加权限/隐私/错误/资源生命周期/测试价值时才存在，禁止复制数百个wx接口做自研Facade。
 - 登录code、手机号code、支付签名、精确位置和硬件payload不得进入默认日志、错误message、截图或snapshot。登录/手机号兑换、支付签名和最终订单状态必须留在服务端。
 - 敏感API不得在页面加载时自动调用；授权、隐私、手机号、支付、订阅和系统设置必须由明确用户手势触发。
-- 业务Taro module在构建时静态组合；生产不能网络加载可执行JavaScript。外部插件源码可以在开发态按realpath watch，但manifest/lockfile变化必须停止并重启安装流程。
-- 开发态只有一个supervisor owner；退出必须清理所有children、watcher和lock。Taro Hook没有disposer，compiler/plugin变化必须重启Taro child，不能删除require.cache后重复注册。
+- Miniapp业务module在构建时静态组合；生产不能网络加载可执行JavaScript。
+- Miniapp开发态只有一个直编watcher owner；构建串行合并，退出必须清理watcher，不创建重复child链。
+- 桌面公共协议由单一IDL生成TypeScript/C# method，禁止反射式任意native调用或平台类型泄漏。
+- WebView生产页面只来自受控虚拟HTTPS origin；开发HTTP只允许显式loopback，native和TypeScript两侧都验证origin。
+- 桌面外链、文件、权限、下载和敏感操作必须在C#再次校验，不能只信任前端guard。
+- WebView开发owner直接持有Vite与C#宿主进程；退出按精确PID清理，且Web工具链默认不继承凭据型环境变量。
 
 ## 装饰器
 

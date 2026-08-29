@@ -142,6 +142,27 @@ Workspace watcher比较 server/client revision集合，忽略只影响发布声�
 2. 确认上游同时位于peerDependencies和devDependencies。
 3. 确认每插件恰有一个 `tsc --noEmit --watch`进程。
 
+## Windows C# WebView2 HMR
+
+```powershell
+pnpm dev:desktop
+```
+
+开发owner并行启动Vite和C# Debug build，随后直接启动生成的`ZAdmin.exe`。不用`dotnet run`的调试身份激活路径，因为该路径会丢失开发origin等自定义环境变量。
+
+- WebView只允许`http://127.0.0.1:5173`显式loopback origin，native注入与当前origin一致的不可写bridge标记；
+- Vite client在WebView内保持标准Svelte HMR，页面、ZUI和普通TypeScript修改不重启C#宿主；
+- C#、XAML或协议生成物修改需要重建宿主，`generate:check`阻止TypeScript/C# method漂移；
+- Vite首次启动约2.1秒；首次页面请求可能因依赖优化额外耗时，本实现让它与约18秒C# Debug build重叠，不串行等待两遍；
+- 开发进程不继承名称中含`AUTH`、`PASSWORD`、`SECRET`、`TOKEN`或`API_KEY`的环境变量；
+- 正常关闭和失败都按owner PID终止宿主与Vite进程树。自动smoke退出后已复核5173和`ZAdmin.exe`零残留。
+
+```powershell
+pnpm --filter @zadmin/desktop webview:dev:smoke
+```
+
+smoke验证loopback origin、Vite client、Svelte页面hydration、JS→C# bridge、页面error列表与资源清理，不临时改写业务源码伪造视觉HMR。
+
 ## 微信 Fast Refresh
 
 微信使用独立命令和单一 watcher owner：

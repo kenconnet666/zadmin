@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Channel } from '@tauri-apps/api/core';
 	import { ZBox, ZButton, ZStack, ZText, defaultTheme, icss } from '@zadmin/zui';
-	import { BaseDirectory, type DesktopResult } from '@zadmin/tauri';
+	import type { DesktopResult } from '@zadmin/webview/platform';
 	import {
 		ClipboardButton,
 		ExternalLink,
@@ -11,32 +10,25 @@
 		SystemInfo,
 		WindowFrame,
 		useDesktopPlatform
-	} from '@zadmin/tauri/svelte';
+	} from '@zadmin/webview/svelte';
 
-	import { normalizeCommandResult } from '$lib/commands.js';
-	import {
-		commands,
-		events,
-		IPC_SCHEMA_VERSION,
-		type ChannelProbeEvent
-	} from '$lib/generated/tauri.js';
 	import { resultMessage } from '$lib/runtime.js';
 
 	const desktop = useDesktopPlatform();
 	let status = $state('Ready. Choose a capability probe.');
-	let selectedPath = $state('No native path selected.');
-	const pageClass = icss(defaultTheme, (css) => {
-		css.padding._large;
-		css.maxWidth('1100px');
-		css.margin('0 auto');
+	let selectedPath = $state<string>();
+	const pageClass = icss(defaultTheme, (s) => {
+		s.padding._large;
+		s.maxWidth('1100px');
+		s.margin('0 auto');
 	});
-	const panelClass = icss(defaultTheme, (css) => {
-		css.padding._large;
-		css.borderWidth._hairline;
-		css.borderStyle('solid');
-		css.borderColor._border;
-		css.borderRadius._large;
-		css.backgroundColor._surface;
+	const panelClass = icss(defaultTheme, (s) => {
+		s.padding._large;
+		s.borderWidth._hairline;
+		s.borderStyle.solid;
+		s.borderColor._border;
+		s.borderRadius._large;
+		s.backgroundColor._surface;
 	});
 
 	function setResult<T>(label: string, result: DesktopResult<T>, format: (value: T) => string) {
@@ -44,70 +36,31 @@
 	}
 
 	async function runtimeReport(): Promise<void> {
-		if (!desktop.environment.snapshot().isTauri) {
-			status = 'Typed IPC: unavailable outside Tauri.';
-			return;
-		}
-		try {
-			const report = await commands.desktopRuntimeReport();
-			status = `Typed IPC schema ${report.schemaVersion}/${IPC_SCHEMA_VERSION}: ${report.targetOs} ${report.targetArch}; ${report.capabilities.length} capabilities; uptime ${report.uptimeMs} ms.`;
-		} catch (error) {
-			status = `Typed IPC transport failure: ${String(error)}`;
-		}
+		const environment = desktop.environment.snapshot();
+		const [app, os, window] = await Promise.all([
+			desktop.app.snapshot(),
+			desktop.os.snapshot(),
+			desktop.window.snapshot()
+		]);
+		if (!app.ok) return setResult('Runtime', app, String);
+		if (!os.ok) return setResult('Runtime', os, String);
+		if (!window.ok) return setResult('Runtime', window, String);
+		status = `Protocol ${environment.protocolVersion} · ${environment.runtime} · ${app.value.webviewVersion} · ${os.value.arch} · ${window.value.width}×${window.value.height}`;
 	}
 
 	async function typedErrorProbe(): Promise<void> {
-		const generated = await commands.desktopErrorProbe({
-			forceFailure: true,
-			message: 'camera'
-		});
-		setResult('Typed error', normalizeCommandResult(generated), (value) => value.echoed);
-	}
-
-	async function channelProbe(): Promise<void> {
-		const received: ChannelProbeEvent[] = [];
-		const channel = new Channel<ChannelProbeEvent>((event) => received.push(event));
-		const generated = await commands.desktopChannelProbe(
-			{ count: 3, message: 'channel-ready' },
-			channel
+		setResult(
+			'Native guard',
+			await desktop.opener.openUrl('https://not-allowed.example'),
+			() => 'unexpected'
 		);
-		setResult('Typed channel', normalizeCommandResult(generated), (value) => {
-			return `${value.delivered} delivered / ${received.length} received`;
-		});
-	}
-
-	async function filesystemProbe(): Promise<void> {
-		const directory = 'zadmin';
-		const path = `${directory}/capability-probe.txt`;
-		const created = await desktop.filesystem.mkdir(directory, {
-			baseDir: BaseDirectory.AppData,
-			recursive: true
-		});
-		if (!created.ok) {
-			setResult('Filesystem', created, () => 'created');
-			return;
-		}
-		const written = await desktop.filesystem.writeText(path, 'desktop-ready', {
-			baseDir: BaseDirectory.AppData
-		});
-		if (!written.ok) {
-			setResult('Filesystem', written, () => 'written');
-			return;
-		}
-		const read = await desktop.filesystem.readText(path, { baseDir: BaseDirectory.AppData });
-		const removed = await desktop.filesystem.remove(path, { baseDir: BaseDirectory.AppData });
-		if (!read.ok) setResult('Filesystem', read, String);
-		else if (!removed.ok) setResult('Filesystem cleanup', removed, () => 'removed');
-		else status = `Filesystem: ${read.value}; roundtrip and cleanup passed.`;
 	}
 
 	async function storeProbe(): Promise<void> {
 		const key = 'capability-probe';
-		const set = await desktop.store.set(key, { ready: true, schema: IPC_SCHEMA_VERSION });
-		if (!set.ok) {
-			setResult('Store', set, () => 'saved');
-			return;
-		}
+		const written = await desktop.store.set(key, { ready: true, schema: 1 });
+		if (!written.ok) return setResult('Store', written, () => 'written');
+		await desktop.store.save();
 		const value = await desktop.store.get(key);
 		await desktop.store.delete(key);
 		await desktop.store.save();
@@ -117,28 +70,30 @@
 	async function logProbe(): Promise<void> {
 		setResult(
 			'Log',
-			await desktop.log.info('ZAdmin desktop log probe', {
-				keyValues: { source: 'capability-lab' }
+			await desktop.log.write({
+				fields: { source: 'capability-lab' },
+				level: 'info',
+				message: 'ZAdmin WebView log probe'
 			}),
 			() => 'written'
 		);
 	}
 
+	async function fileReadProbe(): Promise<void> {
+		if (!selectedPath) {
+			status = 'File: select a text file first.';
+			return;
+		}
+		const result = await desktop.filesystem.readText(selectedPath);
+		setResult('File', result, (text) => `${text.length} chars · ${text.slice(0, 80)}`);
+	}
+
 	async function windowStateProbe(): Promise<void> {
-		const saved = await desktop.windowState.save();
-		if (!saved.ok) setResult('Window state', saved, () => 'saved');
-		else setResult('Window state', await desktop.windowState.filename(), String);
+		setResult('Window state', await desktop.windowState.save(), () => 'saved');
 	}
 
 	async function requestExit(relaunch: boolean): Promise<void> {
-		const confirmed = await desktop.dialog.confirm(
-			relaunch ? 'Relaunch the desktop application now?' : 'Exit the desktop application now?',
-			{ kind: 'warning', title: 'Confirm process action' }
-		);
-		if (!confirmed.ok || !confirmed.value) {
-			if (!confirmed.ok) setResult('Process confirmation', confirmed, String);
-			return;
-		}
+		if (!globalThis.confirm(relaunch ? 'Relaunch ZAdmin now?' : 'Exit ZAdmin now?')) return;
 		const result = relaunch
 			? await desktop.process.relaunch({ confirmed: true })
 			: await desktop.process.exit({ confirmed: true });
@@ -146,27 +101,33 @@
 	}
 
 	onMount(() => {
-		if (!desktop.environment.snapshot().isTauri) return;
-		let unlisten: (() => void) | undefined;
-		void events.desktopRuntimeReady
-			.listen((event) => {
-				status = `Typed event: desktop runtime schema ${event.payload.schemaVersion} ready.`;
+		let active = true;
+		let dispose = () => Promise.resolve();
+		void desktop.window
+			.listen((snapshot) => {
+				if (active)
+					status = `Window event: ${snapshot.width}×${snapshot.height}; maximized=${snapshot.maximized}`;
 			})
-			.then((dispose) => (unlisten = dispose));
-		return () => unlisten?.();
+			.then((result) => {
+				if (result.ok) dispose = () => result.value.dispose();
+			});
+		return () => {
+			active = false;
+			void dispose();
+		};
 	});
 </script>
 
 <WindowFrame
-	title="ZAdmin Desktop capability lab"
+	title="ZAdmin WebView capability lab"
 	onerror={(error) => setResult('Window', { error, ok: false }, String)}
 >
 	<ZStack class={pageClass} gap="large">
 		<ZStack gap="small">
-			<ZText as="strong" size="xlarge">Windows 11 capability lab</ZText>
+			<ZText as="strong" size="xlarge">Windows WebView2 capability lab</ZText>
 			<ZText tone="muted">
-				SvelteKit SPA + ZUI Svelte + typed Tauri system APIs. No production Node or local HTTP
-				backend.
+				SvelteKit SPA + ZUI + typed C# WebView protocol. No production Node, SSR, sidecar or local
+				HTTP backend.
 			</ZText>
 		</ZStack>
 
@@ -176,11 +137,9 @@
 
 		<ZStack class={panelClass} gap="small">
 			<ZText as="strong">Safe automated probes</ZText>
-			<ZStack direction="row" gap="small">
-				<ZButton onclick={runtimeReport}>Typed runtime report</ZButton>
-				<ZButton variant="secondary" onclick={typedErrorProbe}>Typed error</ZButton>
-				<ZButton variant="secondary" onclick={channelProbe}>Typed channel</ZButton>
-				<ZButton variant="secondary" onclick={filesystemProbe}>AppData roundtrip</ZButton>
+			<ZStack direction="row" gap="small" wrap>
+				<ZButton onclick={runtimeReport}>Runtime report</ZButton>
+				<ZButton variant="secondary" onclick={typedErrorProbe}>Native guard error</ZButton>
 				<ZButton variant="secondary" onclick={storeProbe}>Store roundtrip</ZButton>
 				<ZButton variant="secondary" onclick={logProbe}>Write log</ZButton>
 				<ZButton variant="secondary" onclick={windowStateProbe}>Save window state</ZButton>
@@ -189,8 +148,14 @@
 
 		<ZStack class={panelClass} gap="small">
 			<ZText as="strong">Supervised native capabilities</ZText>
-			<ZStack direction="row" gap="small">
-				<FilePickerButton onselect={(value) => (selectedPath = JSON.stringify(value))} />
+			<ZStack direction="row" gap="small" wrap>
+				<FilePickerButton
+					onselect={(value) => {
+						selectedPath = typeof value === 'string' ? value : value?.[0];
+						status = selectedPath ? `Selected: ${selectedPath}` : 'Selection cancelled.';
+					}}
+				/>
+				<ZButton variant="secondary" onclick={fileReadProbe}>Read selected text</ZButton>
 				<ClipboardButton
 					mode="read"
 					label="Read clipboard"
@@ -198,15 +163,17 @@
 				/>
 				<ClipboardButton
 					mode="write"
-					text="ZAdmin desktop clipboard probe"
+					text="ZAdmin WebView clipboard probe"
 					label="Write clipboard"
 				/>
 				<NotificationButton
-					notification={{ title: 'ZAdmin Desktop', body: 'Notification probe' }}
+					notification={{ title: 'ZAdmin Desktop', body: 'WebView2 notification probe' }}
 				/>
-				<ExternalLink href="https://v2.tauri.app/plugin/">Tauri plugin docs</ExternalLink>
+				<ExternalLink href="https://learn.microsoft.com/microsoft-edge/webview2/"
+					>WebView2 docs</ExternalLink
+				>
 			</ZStack>
-			<ZText tone="muted">{selectedPath}</ZText>
+			<ZText tone="muted">{selectedPath ?? 'No native path selected.'}</ZText>
 		</ZStack>
 
 		<ZStack class={panelClass} gap="small">
@@ -217,8 +184,6 @@
 			</ZStack>
 		</ZStack>
 
-		<ZBox class={panelClass} aria-live="polite">
-			<ZText>{status}</ZText>
-		</ZBox>
+		<ZBox class={panelClass} aria-live="polite"><ZText>{status}</ZText></ZBox>
 	</ZStack>
 </WindowFrame>

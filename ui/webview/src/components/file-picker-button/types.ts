@@ -5,7 +5,10 @@ import type { DesktopError } from '../../platform/types.js';
 
 export type DesktopFilePickerMode = 'directory' | 'file' | 'save';
 export type DesktopFileSelection = string | readonly string[] | null;
-export type FilePickerButtonProps = Omit<ZButtonProps, 'children' | 'onclick' | 'onerror'> & {
+export type FilePickerButtonProps = Omit<
+	ZButtonProps,
+	'children' | 'onclick' | 'onerror' | 'onselect'
+> & {
 	readonly children?: Snippet;
 	readonly label?: string;
 	readonly mode?: DesktopFilePickerMode;

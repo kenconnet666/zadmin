@@ -81,7 +81,10 @@ try {
 			'\t'
 		)}\n`
 	);
-	await write(resolve(fixtureRoot, 'pnpm-workspace.yaml'), `packages:\n  - .\n`);
+	await write(
+		resolve(fixtureRoot, 'pnpm-workspace.yaml'),
+		`packages:\n  - .\n\nallowBuilds:\n  esbuild: true\n`
+	);
 	await write(
 		resolve(fixtureRoot, 'src/app.config.ts'),
 		`import type { MiniappAppConfig } from '@zadmin/miniapp/compiler';

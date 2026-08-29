@@ -11,6 +11,8 @@ node_modules
 **/.svelte-kit/
 **/build/
 **/dist/
+!ui/webview/src/build/
+!ui/webview/src/build/**
 **/artifacts/
 **/coverage/
 **/target/

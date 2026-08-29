@@ -36,7 +36,7 @@
 		},
 		"./build": {
 			"types": "./src/build/index.ts",
-			"import": "./src/build/index.ts"
+			"import": "./dist/build/index.js"
 		},
 		"./testing": {
 			"types": "./src/testing/index.ts",
@@ -75,10 +75,13 @@
 		"check": "pnpm generate:check && svelte-check --tsconfig ./tsconfig.json",
 		"dotnet:build": "dotnet build dotnet/ZAdmin.WebView.slnx --configuration Release",
 		"dotnet:test": "node scripts/run-dotnet-tests.mjs",
+		"windows:build": "dotnet build targets/windows/dotnet/ZAdmin.WebView.Windows.csproj --configuration Release --runtime win-x64",
+		"windows:smoke": "pnpm windows:build && node scripts/smoke-windows.mjs",
 		"generate": "node scripts/generate-protocol.mjs",
 		"generate:check": "node scripts/generate-protocol.mjs --check",
 		"test": "pnpm generate:check && vitest --run",
-		"test:coverage": "pnpm generate:check && vitest --run --coverage"
+		"test:coverage": "pnpm generate:check && vitest --run --coverage",
+		"test:package": "node scripts/accept-package.mjs"
 	},
 	"keywords": [
 		"csharp",

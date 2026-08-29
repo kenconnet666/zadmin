@@ -10,6 +10,16 @@ static void Assert(bool condition, string message)
 var security = new WebViewSecurityPolicy();
 Assert(security.AllowsOrigin(WebViewSecurityPolicy.DefaultAppOrigin), "Default app origin was rejected.");
 Assert(!security.AllowsOrigin("https://evil.example"), "Foreign origin was accepted.");
+Assert(new WebViewSecurityPolicy("http://127.0.0.1:5173", allowLoopbackHttp: true)
+    .AllowsOrigin("http://127.0.0.1:5173"), "Explicit loopback development origin was rejected.");
+try
+{
+    _ = new WebViewSecurityPolicy("http://evil.example", allowLoopbackHttp: true);
+    throw new InvalidOperationException("Non-loopback HTTP origin was accepted.");
+}
+catch (ArgumentException)
+{
+}
 
 await using var dispatcher = new WebViewDispatcher(security);
 dispatcher.Register(WebViewProtocol.AppSnapshot, (_, _) =>

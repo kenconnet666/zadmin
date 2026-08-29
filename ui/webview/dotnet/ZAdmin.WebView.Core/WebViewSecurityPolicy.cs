@@ -4,9 +4,11 @@ public sealed class WebViewSecurityPolicy
 {
     public const string DefaultAppOrigin = "https://app.zadmin.local";
 
-    public WebViewSecurityPolicy(string appOrigin = DefaultAppOrigin)
+    public WebViewSecurityPolicy(string appOrigin = DefaultAppOrigin, bool allowLoopbackHttp = false)
     {
-        if (!Uri.TryCreate(appOrigin, UriKind.Absolute, out var uri) || uri.Scheme != Uri.UriSchemeHttps)
+        if (!Uri.TryCreate(appOrigin, UriKind.Absolute, out var uri) ||
+            (uri.Scheme != Uri.UriSchemeHttps &&
+             !(allowLoopbackHttp && uri.IsLoopback && uri.Scheme == Uri.UriSchemeHttp)))
         {
             throw new ArgumentException("The WebView app origin must be an absolute HTTPS origin.", nameof(appOrigin));
         }

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { desktopError, desktopFail, desktopOk } from '@zadmin/tauri';
+import { desktopError, desktopFail, desktopOk } from '@zadmin/webview/platform';
 
 import { resultMessage } from './runtime.js';
 

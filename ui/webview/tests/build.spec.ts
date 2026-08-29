@@ -7,7 +7,7 @@ describe('multi-target build configuration', () => {
 		web: { assets: 'build', command: 'pnpm build:web' },
 		targets: {
 			'windows-arm64': { package: 'portable' },
-			'windows-x64': { package: 'msix' }
+			'windows-x64': { package: 'portable' }
 		}
 	});
 
@@ -21,13 +21,13 @@ describe('multi-target build configuration', () => {
 		expect(() =>
 			defineWebviewConfig({
 				web: { assets: 'build', command: '' },
-				targets: { 'windows-x64': { package: 'msix' } }
+				targets: { 'windows-x64': { package: 'portable' } }
 			})
 		).toThrow('command');
 		expect(() =>
 			defineWebviewConfig({
 				web: { assets: '', command: 'build' },
-				targets: { 'windows-x64': { package: 'msix' } }
+				targets: { 'windows-x64': { package: 'portable' } }
 			})
 		).toThrow('assets');
 		expect(() =>

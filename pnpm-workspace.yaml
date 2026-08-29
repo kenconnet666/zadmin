@@ -59,19 +59,6 @@ catalog:
 catalogs:
   desktop:
     '@sveltejs/adapter-static': 3.0.10
-    '@tauri-apps/api': 2.11.1
-    '@tauri-apps/cli': 2.11.4
-    '@tauri-apps/plugin-clipboard-manager': 2.3.2
-    '@tauri-apps/plugin-dialog': 2.7.2
-    '@tauri-apps/plugin-fs': 2.5.1
-    '@tauri-apps/plugin-log': 2.9.0
-    '@tauri-apps/plugin-notification': 2.3.3
-    '@tauri-apps/plugin-opener': 2.5.4
-    '@tauri-apps/plugin-os': 2.3.2
-    '@tauri-apps/plugin-process': 2.3.1
-    '@tauri-apps/plugin-store': 2.4.4
-    '@tauri-apps/plugin-updater': 2.10.1
-    '@tauri-apps/plugin-window-state': 2.4.1
   wechat:
     miniprogram-api-typings: 5.2.3
 
