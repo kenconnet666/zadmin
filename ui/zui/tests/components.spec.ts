@@ -10,6 +10,7 @@ import {
 	ZBox,
 	ZButton,
 	ZContainer,
+	ZCheckbox,
 	ZField,
 	ZIcon,
 	ZInput,
@@ -70,6 +71,20 @@ describe('ZUI foundational components', () => {
 		expect(off).toContain('data-state="off"');
 		expect(on).toContain('aria-pressed="true"');
 		expect(on).toContain('data-state="on"');
+	});
+
+	it('renders native checkbox and mixed state contracts during SSR', () => {
+		const checked = render(ZCheckbox, { props: { defaultChecked: true, name: 'ready' } }).body;
+		const mixed = render(ZCheckbox, {
+			props: { defaultChecked: 'indeterminate', value: 42n }
+		}).body;
+
+		expect(checked).toContain('type="checkbox"');
+		expect(checked).toContain('checked');
+		expect(checked).toContain('name="ready"');
+		expect(mixed).toContain('aria-checked="mixed"');
+		expect(mixed).toContain('data-state="indeterminate"');
+		expect(mixed).toContain('value="42"');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

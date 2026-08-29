@@ -4,6 +4,7 @@ import { render } from 'vitest-browser-svelte';
 
 import DynamicBox from './DynamicBox.svelte';
 import ComponentGallery from './ComponentGallery.svelte';
+import CheckboxFixture from './CheckboxFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
 import ToggleButtonFixture from './ToggleButtonFixture.svelte';
@@ -28,6 +29,30 @@ function insertedRuleCount(): number {
 }
 
 describe('compiled ICSS browser updates', () => {
+	it('keeps checkbox mixed state, FormData and reset synchronized', async () => {
+		render(CheckboxFixture);
+		const checkbox = document.querySelector<HTMLInputElement>('[data-testid="checkbox"]');
+		const form = document.querySelector<HTMLFormElement>('[data-testid="checkbox-form"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="checkbox-output"]');
+		expect(checkbox?.indeterminate).toBe(true);
+		expect(checkbox?.getAttribute('aria-checked')).toBe('mixed');
+		expect(new FormData(form!).get('choice')).toBeNull();
+
+		checkbox?.click();
+		await tick();
+		expect(checkbox?.checked).toBe(true);
+		expect(checkbox?.indeterminate).toBe(false);
+		expect(new FormData(form!).get('choice')).toBe('selected');
+		expect(output?.textContent).toBe('true:1');
+
+		form?.reset();
+		await new Promise((resolve) => queueMicrotask(resolve));
+		await tick();
+		expect(checkbox?.indeterminate).toBe(true);
+		expect(checkbox?.getAttribute('aria-checked')).toBe('mixed');
+		expect(output?.textContent).toBe('indeterminate:1');
+	});
+
 	it('keeps toggle state controllable and cancellable', async () => {
 		render(ToggleButtonFixture);
 		const toggle = document.querySelector<HTMLButtonElement>('[data-testid="toggle"]');

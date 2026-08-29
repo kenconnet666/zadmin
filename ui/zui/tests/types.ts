@@ -6,6 +6,7 @@ import type { ZBoxProps as DirectZBoxProps } from '../src/components/gene/ZBox.s
 import {
 	ZBox,
 	ZButton,
+	ZCheckbox,
 	ZToggleButton,
 	defineRecipe,
 	defineSlotRecipe,
@@ -13,6 +14,7 @@ import {
 	type SlotRecipeSelection,
 	type ZBoxProps,
 	type ZButtonProps,
+	type ZCheckboxProps,
 	type ZToggleButtonProps
 } from '../src/entrypoints/index.js';
 
@@ -20,6 +22,10 @@ const boxProps: ZBoxProps = { 'aria-label': 'Box' };
 const inferredBoxProps: ComponentProps<typeof ZBox> = boxProps;
 const directBoxProps: DirectZBoxProps = inferredBoxProps;
 const buttonProps: ComponentProps<typeof ZButton> = { variant: 'primary' } satisfies ZButtonProps;
+const checkboxProps: ComponentProps<typeof ZCheckbox> = {
+	defaultChecked: 'indeterminate',
+	value: 42n
+} satisfies ZCheckboxProps;
 const toggleButtonProps: ComponentProps<typeof ZToggleButton> = {
 	defaultPressed: true,
 	onPressedChange: (pressed) => void pressed
@@ -27,12 +33,16 @@ const toggleButtonProps: ComponentProps<typeof ZToggleButton> = {
 void DirectZBox;
 void directBoxProps;
 void buttonProps;
+void checkboxProps;
 void toggleButtonProps;
 
 declare const s: IcssStyle<typeof defaultTheme>;
 
 s.color._primary;
+s.accentColor._primary;
+s.blockSize._indicatorMedium;
 s.display.inlineFlex;
+s.inlineSize._indicatorSmall;
 s.padding.px(4, 8);
 s.width.percent(100);
 

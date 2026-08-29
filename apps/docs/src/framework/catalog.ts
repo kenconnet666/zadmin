@@ -9,6 +9,7 @@ import { separatorDoc } from '../content/components/gene/separator/doc.js';
 import { textDoc } from '../content/components/gene/text/doc.js';
 import { toggleButtonDoc } from '../content/components/gene/toggle-button/doc.js';
 import { visuallyHiddenDoc } from '../content/components/gene/visually-hidden/doc.js';
+import { checkboxDoc } from '../content/components/input/checkbox/doc.js';
 import { fieldDoc } from '../content/components/input/field/doc.js';
 import { inputDoc } from '../content/components/input/input/doc.js';
 import { stackDoc } from '../content/components/layout/stack/doc.js';
@@ -37,6 +38,7 @@ export const componentDocs = Object.freeze([
 	kbdDoc,
 	aspectRatioDoc,
 	containerDoc,
+	checkboxDoc,
 	inputDoc,
 	fieldDoc
 ] satisfies readonly ComponentDoc[]);

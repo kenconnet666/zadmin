@@ -115,16 +115,22 @@ describe('ICSS builder', () => {
 
 	it('records modern layout and visually-hidden primitives through typed properties', () => {
 		const program = createStyleProgram(defaultTheme, (s) => {
+			s.accentColor._primary;
 			s.aspectRatio.raw('16 / 9');
+			s.blockSize._indicatorMedium;
 			s.clip.raw('rect(0 0 0 0)');
 			s.clipPath.raw('inset(50%)');
+			s.inlineSize._indicatorSmall;
 			s.marginInline.auto;
 		});
 
 		expect(program.block.instructions).toMatchObject([
+			{ property: 'accentColor', values: [{ token: 'primary' }] },
 			{ property: 'aspectRatio', values: [{ value: '16 / 9' }] },
+			{ property: 'blockSize', values: [{ token: 'indicatorMedium' }] },
 			{ property: 'clip', values: [{ value: 'rect(0 0 0 0)' }] },
 			{ property: 'clipPath', values: [{ value: 'inset(50%)' }] },
+			{ property: 'inlineSize', values: [{ token: 'indicatorSmall' }] },
 			{ property: 'marginInline', values: [{ value: 'auto' }] }
 		]);
 	});

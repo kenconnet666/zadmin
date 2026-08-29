@@ -22,6 +22,13 @@ export { default as ZVisuallyHidden } from '../components/gene/ZVisuallyHidden.s
 export type { ZVisuallyHiddenProps } from '../components/gene/ZVisuallyHidden.svelte';
 export { default as ZField } from '../components/input/ZField.svelte';
 export type { ZFieldProps, ZFieldSize } from '../components/input/ZField.svelte';
+export { default as ZCheckbox } from '../components/input/ZCheckbox.svelte';
+export type {
+	CheckboxState,
+	CheckboxValue,
+	ZCheckboxProps,
+	ZCheckboxVariants
+} from '../components/input/ZCheckbox.svelte';
 export { default as ZInput } from '../components/input/ZInput.svelte';
 export type { ZInputProps, ZInputSize, ZInputType } from '../components/input/ZInput.svelte';
 export { default as ZStack } from '../components/layout/ZStack.svelte';

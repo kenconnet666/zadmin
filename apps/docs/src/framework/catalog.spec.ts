@@ -19,6 +19,7 @@ describe('ZUI component documentation catalog', () => {
 			'ZKbd',
 			'ZAspectRatio',
 			'ZContainer',
+			'ZCheckbox',
 			'ZInput',
 			'ZField'
 		]);
@@ -38,6 +39,7 @@ describe('ZUI component documentation catalog', () => {
 			'gene',
 			'layout',
 			'layout',
+			'input',
 			'input',
 			'input'
 		]);

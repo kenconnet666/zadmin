@@ -9,7 +9,7 @@ test('renders the component catalog and real demo source', async ({ page }) => {
 
 	await page.goto('/#/');
 	await expect(page.getByRole('heading', { level: 1 })).toContainText('看见组件');
-	await expect(page.getByTestId('component-card')).toHaveCount(16);
+	await expect(page.getByTestId('component-card')).toHaveCount(17);
 	await expect(page.getByRole('heading', { level: 3 })).toHaveText([
 		'通用组件',
 		'布局组件',
@@ -83,6 +83,22 @@ test('keeps toggle button state native, bindable and keyboard accessible', async
 	await expect(page.getByText('pressed = false · 用户变更次数 = 2')).toBeVisible();
 });
 
+test('keeps checkbox indeterminate, FormData and reset synchronized', async ({ page }) => {
+	await page.goto('/#/components/checkbox');
+	const checkbox = page.getByTestId('checkbox-reports');
+	await expect(checkbox).toHaveAttribute('aria-checked', 'mixed');
+	await expect(checkbox).toHaveJSProperty('indeterminate', true);
+	await checkbox.check();
+	await expect(checkbox).toBeChecked();
+	await expect(page.getByText(/state = true · 用户变更次数 = 1/u)).toBeVisible();
+	await page.getByRole('button', { name: '读取FormData' }).click();
+	await expect(page.getByText(/weekly/u)).toBeVisible();
+	await page.getByRole('button', { name: '重置' }).click();
+	await expect(checkbox).toHaveAttribute('aria-checked', 'mixed');
+	await expect(checkbox).toHaveJSProperty('indeterminate', true);
+	await expect(page.getByText(/state = indeterminate · 用户变更次数 = 1/u)).toBeVisible();
+});
+
 test('keeps S1 primitives semantic and display preferences effective', async ({ page }) => {
 	await page.goto('/#/guides/theme');
 	await expect(page.getByRole('heading', { level: 1 })).toContainText('主题不是一组颜色');
@@ -132,6 +148,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/kbd',
 		'#/components/aspect-ratio',
 		'#/components/container',
+		'#/components/checkbox',
 		'#/components/input',
 		'#/components/field'
 	]) {

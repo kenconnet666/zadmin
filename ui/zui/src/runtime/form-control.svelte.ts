@@ -21,3 +21,14 @@ export function mergeAriaIds(
 	}
 	return ids.length === 0 ? undefined : ids.join(' ');
 }
+
+export function listenForFormReset(
+	control: { readonly form: HTMLFormElement | null },
+	reset: () => void
+): () => void {
+	const form = control.form;
+	if (!form) return () => undefined;
+	const handleReset = () => queueMicrotask(reset);
+	form.addEventListener('reset', handleReset);
+	return () => form.removeEventListener('reset', handleReset);
+}

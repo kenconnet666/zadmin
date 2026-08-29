@@ -74,6 +74,9 @@ export const DEFAULT_THEME_SCHEMA = {
 	},
 	size: {
 		full: '100%',
+		indicatorLarge: 20,
+		indicatorMedium: 18,
+		indicatorSmall: 16,
 		large: 48,
 		medium: 32,
 		small: 24

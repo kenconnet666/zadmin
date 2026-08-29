@@ -61,6 +61,7 @@ export const PROPERTY_DEFINITIONS = {
 			stretch: 'stretch'
 		}
 	},
+	accentColor: { token: 'color' },
 	aspectRatio: { keywords: { auto: 'auto' } },
 	animationDuration: { token: 'duration', tokenUnit: 'ms', units: ['time'] },
 	appearance: { keywords: { auto: 'auto', none: 'none' } },
@@ -104,6 +105,7 @@ export const PROPERTY_DEFINITIONS = {
 	},
 	borderTopWidth: { token: 'borderWidth', tokenUnit: 'px', units: ['length'] },
 	borderWidth: { token: 'borderWidth', tokenUnit: 'px', units: ['length'] },
+	blockSize: { token: 'size', tokenUnit: 'px', units: ['length', 'percent'] },
 	bottom: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
 	boxShadow: { token: 'shadow' },
 	boxSizing: { keywords: { borderBox: 'border-box', contentBox: 'content-box' } },
@@ -138,6 +140,7 @@ export const PROPERTY_DEFINITIONS = {
 	fontSize: { token: 'fontSize', tokenUnit: 'px', units: ['length', 'percent'] },
 	fontWeight: { token: 'fontWeight' },
 	gap: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
+	inlineSize: { token: 'size', tokenUnit: 'px', units: ['length', 'percent'] },
 	gridColumn: {},
 	gridTemplateColumns: {},
 	gridTemplateRows: {},

@@ -22,7 +22,13 @@ const components = [
 	{ id: 'text', name: 'ZText', path: 'gene/ZText.svelte' },
 	{ id: 'icon', maxIncrementalGzip: 4 * 1024, name: 'ZIcon', path: 'gene/ZIcon.svelte' },
 	{ id: 'button', name: 'ZButton', path: 'gene/ZButton.svelte' },
-	{ id: 'toggle-button', name: 'ZToggleButton', path: 'gene/ZToggleButton.svelte' },
+	{
+		id: 'toggle-button',
+		maxIncrementalGzip: 3.625 * 1024,
+		name: 'ZToggleButton',
+		path: 'gene/ZToggleButton.svelte'
+	},
+	{ id: 'checkbox', name: 'ZCheckbox', path: 'input/ZCheckbox.svelte' },
 	{ id: 'input', name: 'ZInput', path: 'input/ZInput.svelte' },
 	{
 		id: 'field',

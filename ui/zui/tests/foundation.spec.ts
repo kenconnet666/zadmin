@@ -43,7 +43,9 @@ describe('ZUI foundation runtime', () => {
 		expect(selectRange(new Set(['x']), ['a', 'b', 'c'], 'b', 'c')).toEqual(
 			new Set(['x', 'b', 'c'])
 		);
-		expect(selectRange(new Set(), ['a', 'b', 'c'], 'c', 'a')).toEqual(new Set(['a', 'b', 'c']));
+		expect(selectRange(new Set<string>(), ['a', 'b', 'c'], 'c', 'a')).toEqual(
+			new Set(['a', 'b', 'c'])
+		);
 		expect(selectRange('all', ['a', 'b'], 'missing', 'b')).toEqual(new Set(['a', 'b']));
 		expect(selectRange(new Set(['a']), ['a', 'b'], 'missing', 'b')).toEqual(new Set(['a']));
 	});
