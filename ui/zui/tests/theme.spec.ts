@@ -63,6 +63,9 @@ describe('ZUI themes', () => {
 		expect(Object.keys(defaultTheme)).toHaveLength(14);
 		expect(defaultTheme.fontFamily.mono).toContain('ui-monospace');
 		expect(defaultTheme.shadow.codeHighlight).toContain('inset');
+		expect(defaultTheme.color.accent).toBe('#7c3aed');
+		expect(defaultTheme.color.codeBackground).toBe('#0d1117');
+		expect(defaultTheme.color.codeText).toBe('#e6edf3');
 		expect(defaultTheme.color.dangerHover).toBe('#b91c1c');
 		expect(defaultTheme.color.focus).toBe('#60a5fa');
 		expect(defaultTheme.color.primary).toBe('#2563eb');

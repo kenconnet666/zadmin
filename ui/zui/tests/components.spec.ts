@@ -93,8 +93,8 @@ describe('ZUI foundational components', () => {
 
 		expect(result.body).toContain('data-testid="outer-provider"');
 		expect(result.body).toContain('data-testid="inner-provider"');
-		expect(result.body).toContain('data-testid="outer-context">zh-CN:rtl');
-		expect(result.body).toContain('data-testid="inner-context">zh-CN:rtl');
+		expect(result.body).toContain('data-testid="outer-context">zh-CN:rtl:dark');
+		expect(result.body).toContain('data-testid="inner-context">zh-CN:rtl:dark');
 		expect(registry.cssText()).toContain('#2563eb');
 		expect(registry.cssText()).toContain('#6d28d9');
 	});
@@ -111,5 +111,7 @@ describe('ZUI foundational components', () => {
 		const inline = render(ZCode, { props: { code: 'inline', inline: true, wrap: true } });
 		expect(inline.body).toContain('<code');
 		expect(inline.body).toContain('>inline');
+		const dark = render(ZCode, { props: { code: 'dark', scheme: 'dark' } });
+		expect(dark.body).toContain('data-color-scheme="dark"');
 	});
 });

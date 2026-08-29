@@ -7,6 +7,7 @@
 	import { defineSlotRecipe, registerSlotRecipeHmr } from '../../recipes/slots.js';
 
 	export type ZCodeLanguage = 'bash' | 'css' | 'javascript' | 'json' | 'svelte' | 'typescript';
+	export type ZCodeScheme = 'dark' | 'light';
 	export type ZCodeThemeName = 'github-dark' | 'github-light';
 
 	export interface ZCodeTheme {
@@ -17,11 +18,13 @@
 	export interface ZCodeProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
 		readonly ariaLabel?: string;
 		readonly code: string;
+		readonly embedded?: boolean;
 		readonly highlightedLines?: readonly number[];
 		readonly inline?: boolean;
 		readonly lang?: ZCodeLanguage;
 		readonly lineNumbers?: boolean;
 		readonly loading?: Snippet;
+		readonly scheme?: ZCodeScheme;
 		readonly theme?: ZCodeTheme;
 		readonly wrap?: boolean;
 		ref?: HTMLElement | null;
@@ -46,6 +49,18 @@
 				description: '亮暗Shiki主题。',
 				name: 'theme',
 				type: 'ZCodeTheme'
+			},
+			{
+				default: "继承Provider或'light'",
+				description: '覆盖Provider的代码背景与Shiki token配色，不跟随系统偏好猜测。',
+				name: 'scheme',
+				type: "'light' | 'dark'"
+			},
+			{
+				default: 'false',
+				description: '移除外层边框和圆角，用于嵌入已有容器。',
+				name: 'embedded',
+				type: 'boolean'
 			},
 			{ default: 'false', description: '渲染为inline code。', name: 'inline', type: 'boolean' },
 			{ default: 'false', description: '允许长行换行。', name: 'wrap', type: 'boolean' },
@@ -143,7 +158,6 @@
 		base: {
 			line: (s) => s.display.block,
 			lineNumber: (s) => {
-				s.color._textMuted;
 				s.display.inlineBlock;
 				s.minWidth.ch(4);
 				s.paddingInlineEnd._medium;
@@ -152,17 +166,24 @@
 			},
 			root: (s) => {
 				s.fontFamily._mono;
-				s.fontSize._small;
 				s.lineHeight._normal;
-			},
-			token: (s) => {
-				s.color.raw('var(--z-code-light, currentColor)');
-				s._media('(prefers-color-scheme: dark)', (dark) => {
-					dark.color.raw('var(--z-code-dark, var(--z-code-light, currentColor))');
+				s._selector('& ::selection', (selection) => {
+					selection.backgroundColor._codeSelection;
+					selection.color._codeText;
 				});
-			}
+			},
+			token: () => undefined
 		},
 		variants: {
+			embedded: {
+				false: {},
+				true: {
+					root: (s) => {
+						s.borderRadius.px(0);
+						s.borderWidth.px(0);
+					}
+				}
+			},
 			highlighted: {
 				false: {},
 				true: { line: (s) => s.boxShadow._codeHighlight }
@@ -170,13 +191,11 @@
 			inline: {
 				false: {
 					root: (s) => {
-						s.backgroundColor._canvas;
-						s.borderColor._border;
 						s.borderRadius._medium;
 						s.borderStyle.solid;
 						s.borderWidth._hairline;
-						s.color._text;
 						s.display.block;
+						s.fontSize._medium;
 						s.margin.px(0);
 						s.overflowX.auto;
 						s.padding._large;
@@ -184,13 +203,32 @@
 				},
 				true: {
 					root: (s) => {
-						s.backgroundColor._canvas;
 						s.borderRadius._small;
-						s.color._text;
 						s.display.inlineBlock;
+						s.fontSize._small;
 						s.paddingBlock._xsmall;
 						s.paddingInline._small;
 					}
+				}
+			},
+			scheme: {
+				dark: {
+					lineNumber: (s) => s.color._codeMuted,
+					root: (s) => {
+						s.backgroundColor._codeBackground;
+						s.borderColor._codeBorder;
+						s.color._codeText;
+					},
+					token: (s) => s.color.raw('var(--z-code-dark, var(--z-code-light, currentColor))')
+				},
+				light: {
+					lineNumber: (s) => s.color._textMuted,
+					root: (s) => {
+						s.backgroundColor._canvas;
+						s.borderColor._border;
+						s.color._text;
+					},
+					token: (s) => s.color.raw('var(--z-code-light, currentColor)')
 				}
 			},
 			wrap: {
@@ -198,7 +236,13 @@
 				true: { root: (s) => s.whiteSpace.preWrap }
 			}
 		},
-		defaultVariants: { highlighted: false, inline: false, wrap: false }
+		defaultVariants: {
+			embedded: false,
+			highlighted: false,
+			inline: false,
+			scheme: 'light',
+			wrap: false
+		}
 	});
 
 	registerSlotRecipeHmr(import.meta, codeRecipe);
@@ -219,12 +263,14 @@
 		ariaLabel,
 		class: className,
 		code,
+		embedded = false,
 		highlightedLines = [],
 		inline = false,
 		lang,
 		lineNumbers = false,
 		loading,
 		ref = $bindable(null),
+		scheme,
 		style,
 		theme = DEFAULT_THEME,
 		wrap = false,
@@ -232,7 +278,16 @@
 	}: ZCodeProps = $props();
 
 	const zui = useZui();
-	const classes = $derived(zui.slots(codeRecipe, { highlighted: false, inline, wrap }));
+	const resolvedScheme = $derived(scheme ?? zui.colorScheme);
+	const classes = $derived(
+		zui.slots(codeRecipe, {
+			embedded,
+			highlighted: false,
+			inline,
+			scheme: resolvedScheme,
+			wrap
+		})
+	);
 	const highlighted = $derived(new Set(highlightedLines));
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
@@ -284,8 +339,10 @@
 	{#if tokens}
 		{#each tokens as line, index (index)}
 			{@const lineClasses = zui.slots(codeRecipe, {
+				embedded,
 				highlighted: highlighted.has(index + 1),
 				inline,
+				scheme: resolvedScheme,
 				wrap
 			})}
 			<span class={lineClasses.line} data-highlighted={highlighted.has(index + 1) || undefined}>
@@ -308,6 +365,7 @@
 		style={initialStyle}
 		use:applyIcssRootStyle={{ style, variables: icssVariables }}
 		aria-label={ariaLabel}
+		data-color-scheme={resolvedScheme}
 		data-highlight-status={status}
 	>
 		{#if status === 'loading' && loading}{@render loading()}{:else}{@render highlightedContent()}{/if}
@@ -320,5 +378,6 @@
 		style={initialStyle}
 		use:applyIcssRootStyle={{ style, variables: icssVariables }}
 		aria-label={ariaLabel}
+		data-color-scheme={resolvedScheme}
 		data-highlight-status={status}><code>{@render highlightedContent()}</code></pre>
 {/if}

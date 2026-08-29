@@ -7,6 +7,7 @@
 
 	export interface ZProviderProps {
 		children?: Snippet;
+		colorScheme?: 'dark' | 'light';
 		direction?: 'ltr' | 'rtl';
 		locale?: string;
 		runtime?: IcssRuntime;
@@ -20,6 +21,12 @@
 		name: 'ZProvider',
 		props: [
 			{ default: '—', description: 'Provider子树。', name: 'children', type: 'Snippet' },
+			{
+				default: "继承父级或 'light'",
+				description: '显式主题明暗模式，供代码等需要配套表面的组件继承。',
+				name: 'colorScheme',
+				type: "'light' | 'dark'"
+			},
 			{
 				default: '继承父级或 ltr',
 				description: '组件方向，不从客户端环境猜测。',
@@ -42,15 +49,15 @@
 		],
 		source: 'ui/zui/src/lib/components/gene/ZProvider.svelte',
 		status: 'stable',
-		summary: '提供Theme、locale、direction和ICSS runtime，不创建额外DOM。'
+		summary: '提供Theme、colorScheme、locale、direction和ICSS runtime，不创建额外DOM。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
 
 <script lang="ts">
 	import { provideZui } from '../../component-runtime/zui-context.js';
 
-	let { children, direction, locale, runtime, theme }: ZProviderProps = $props();
-	provideZui(() => ({ direction, locale, runtime, theme }));
+	let { children, colorScheme, direction, locale, runtime, theme }: ZProviderProps = $props();
+	provideZui(() => ({ colorScheme, direction, locale, runtime, theme }));
 </script>
 
 {@render children?.()}

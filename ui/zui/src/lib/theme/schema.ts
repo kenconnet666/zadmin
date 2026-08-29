@@ -9,16 +9,25 @@ export const DEFAULT_THEME_SCHEMA = {
 		small: '30rem'
 	},
 	color: {
+		accent: '#7c3aed',
+		accentHover: '#6d28d9',
 		border: '#e2e8f0',
 		canvas: '#ffffff',
+		codeBackground: '#0d1117',
+		codeBorder: '#30363d',
+		codeMuted: '#8b949e',
+		codeSelection: '#1d4ed8',
+		codeText: '#e6edf3',
 		danger: '#dc2626',
 		dangerHover: '#b91c1c',
 		focus: '#60a5fa',
 		primary: '#2563eb',
 		primaryHover: '#1d4ed8',
+		success: '#16a34a',
 		surface: '#f8fafc',
 		text: '#0f172a',
-		textMuted: '#64748b'
+		textMuted: '#64748b',
+		warning: '#d97706'
 	},
 	duration: {
 		fast: 120,

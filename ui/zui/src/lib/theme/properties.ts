@@ -84,7 +84,7 @@ export const PROPERTY_DEFINITIONS = {
 			solid: 'solid'
 		}
 	},
-	borderLeftColor: { token: 'color' },
+	borderLeftColor: { keywords: { transparent: 'transparent' }, token: 'color' },
 	borderLeftStyle: {
 		keywords: { dashed: 'dashed', dotted: 'dotted', double: 'double', none: 'none', solid: 'solid' }
 	},

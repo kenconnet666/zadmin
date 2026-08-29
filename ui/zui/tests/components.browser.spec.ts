@@ -24,13 +24,17 @@ describe('compiled ICSS browser updates', () => {
 			code: 'const answer: number = 42;',
 			highlightedLines: [1],
 			lang: 'typescript',
-			lineNumbers: true
+			lineNumbers: true,
+			scheme: 'dark'
 		});
 		const root = document.querySelector<HTMLElement>('[data-highlight-status]');
 		expect(root?.textContent).toContain('const answer: number = 42;');
 		await expect.poll(() => root?.dataset.highlightStatus, { timeout: 10_000 }).toBe('highlighted');
 		expect(root?.querySelectorAll('[data-highlighted="true"]')).toHaveLength(1);
 		expect(root?.querySelector('[aria-hidden="true"]')?.textContent).toBe('1');
+		expect(root?.dataset.colorScheme).toBe('dark');
+		expect(getComputedStyle(root as Element).backgroundColor).toBe('rgb(13, 17, 23)');
+		expect(getComputedStyle(root as Element).fontSize).toBe('14px');
 	});
 
 	it('keeps ZCode resilient for plain, oversized and invalid language inputs', async () => {
@@ -168,8 +172,12 @@ describe('compiled ICSS browser updates', () => {
 
 		expect(shadow.querySelectorAll('style[data-icss]')).toHaveLength(1);
 		expect(shadow.querySelectorAll('button')).toHaveLength(2);
-		expect(shadow.querySelector('[data-testid="outer-context"]')?.textContent).toBe('zh-CN:rtl');
-		expect(shadow.querySelector('[data-testid="inner-context"]')?.textContent).toBe('zh-CN:rtl');
+		expect(shadow.querySelector('[data-testid="outer-context"]')?.textContent).toBe(
+			'zh-CN:rtl:dark'
+		);
+		expect(shadow.querySelector('[data-testid="inner-context"]')?.textContent).toBe(
+			'zh-CN:rtl:dark'
+		);
 		expect(runtime.registry.cssText()).toContain('#2563eb');
 		expect(runtime.registry.cssText()).toContain('#6d28d9');
 

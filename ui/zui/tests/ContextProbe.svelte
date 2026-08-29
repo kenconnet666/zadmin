@@ -4,4 +4,4 @@
 	const zui = useZui();
 </script>
 
-<output data-testid={id}>{zui.locale}:{zui.direction}</output>
+<output data-testid={id}>{zui.locale}:{zui.direction}:{zui.colorScheme}</output>

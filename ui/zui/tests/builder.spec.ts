@@ -6,6 +6,7 @@ describe('ICSS builder', () => {
 	it('records ordered raw, keyword, token and unit declarations', () => {
 		const program = createStyleProgram(defaultTheme, (s) => {
 			s.display.flex;
+			s.borderLeftColor.transparent;
 			s.color._primary;
 			s.padding.px(8, 16);
 			s.opacity(0.8);
@@ -17,6 +18,12 @@ describe('ICSS builder', () => {
 				kind: 'declaration',
 				property: 'display',
 				values: [{ value: 'flex' }]
+			},
+			{
+				important: false,
+				kind: 'declaration',
+				property: 'borderLeftColor',
+				values: [{ value: 'transparent' }]
 			},
 			{
 				important: false,
@@ -75,6 +82,7 @@ describe('ICSS builder', () => {
 		expectTypeOf<Style['color']>().toBeCallableWith('#fff');
 		expectTypeOf<Style['color']['_primary']>().toEqualTypeOf<void>();
 		expectTypeOf<Style['display']['inlineFlex']>().toEqualTypeOf<void>();
+		expectTypeOf<Style['borderLeftColor']['transparent']>().toEqualTypeOf<void>();
 		expectTypeOf<Style['outlineColor']['_focus']>().toEqualTypeOf<void>();
 		expectTypeOf<Style['outlineStyle']['solid']>().toEqualTypeOf<void>();
 		expectTypeOf<Style['outlineWidth']['_medium']>().toEqualTypeOf<void>();
