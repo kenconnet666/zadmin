@@ -9,6 +9,8 @@ export type {
 } from '../icss/registry.js';
 export type { BrowserStyleSheetOptions } from '../icss/sheet.js';
 export { createZuiId, createZuiIdScope } from '../runtime/ids.js';
+export { createFormEntries, serializeFormValue } from '../runtime/form-value.js';
+export type { FormValue, PrimitiveFormValue } from '../runtime/form-value.js';
 export { CollectionStore } from '../runtime/collection.svelte.js';
 export type { CollectionItem } from '../runtime/collection.svelte.js';
 export { moveIndex, navigationIntent } from '../runtime/list-navigation.js';
@@ -25,5 +27,7 @@ export {
 	toggleSelection
 } from '../runtime/selection.js';
 export type { Selection, SelectionKey, SelectionMode } from '../runtime/selection.js';
+export { RovingFocus } from '../runtime/roving-focus.svelte.js';
+export type { RovingFocusOptions } from '../runtime/roving-focus.svelte.js';
 export { Typeahead } from '../runtime/typeahead.js';
 export type { TypeaheadOptions } from '../runtime/typeahead.js';

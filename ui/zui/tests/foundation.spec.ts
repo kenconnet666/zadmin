@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest';
 
 import { createZuiId, createZuiIdScope } from '../src/runtime/ids.js';
 import { CollectionStore } from '../src/runtime/collection.svelte.js';
+import { createFormEntries, serializeFormValue } from '../src/runtime/form-value.js';
 import { moveIndex, navigationIntent } from '../src/runtime/list-navigation.js';
+import { RovingFocus } from '../src/runtime/roving-focus.svelte.js';
 import { isSelected, selectAll, selectRange, toggleSelection } from '../src/runtime/selection.js';
 import { Typeahead } from '../src/runtime/typeahead.js';
 
@@ -91,5 +93,37 @@ describe('ZUI foundation runtime', () => {
 		expect(typeahead.search('b', items)).toBe('banana');
 		expect(typeahead.search(' ', items)).toBeUndefined();
 		expect(() => new Typeahead({ timeout: 0 })).toThrow(/must be positive/);
+	});
+
+	it('serializes scalar and repeated values into native form entries', () => {
+		expect(createFormEntries('ready', true)).toEqual([['ready', 'on']]);
+		expect(createFormEntries('tag', ['a', 'b', false])).toEqual([
+			['tag', 'a'],
+			['tag', 'b']
+		]);
+		expect(createFormEntries('empty', null)).toEqual([]);
+		expect(serializeFormValue(12n)).toBe('12');
+		expect(() => serializeFormValue(Number.NaN)).toThrow(/must be finite/);
+		expect(() => createFormEntries('', 'value')).toThrow(/must not be empty/);
+	});
+
+	it('owns one roving tab stop without coupling focus to selection', () => {
+		const collection = new CollectionStore<{ disabled?: boolean; key: string }>();
+		collection.register(() => ({ key: 'a' }));
+		collection.register(() => ({ disabled: true, key: 'b' }));
+		collection.register(() => ({ key: 'c' }));
+		let current: string | undefined;
+		const roving = new RovingFocus({
+			collection,
+			orientation: () => 'horizontal',
+			read: () => current,
+			write: (key) => (current = key)
+		});
+		expect(roving.tabIndex('a')).toBe(0);
+		expect(roving.tabIndex('c')).toBe(-1);
+		expect(roving.move('ArrowRight')).toBe('c');
+		expect(current).toBe('c');
+		expect(roving.set('b')).toBe(false);
+		expect(roving.move('ArrowRight')).toBe('a');
 	});
 });
