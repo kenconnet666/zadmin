@@ -5,6 +5,7 @@ import { render } from 'vitest-browser-svelte';
 import DynamicBox from './DynamicBox.svelte';
 import ComponentGallery from './ComponentGallery.svelte';
 import AccordionFixture from './AccordionFixture.svelte';
+import AlertDialogFixture from './AlertDialogFixture.svelte';
 import CheckboxFixture from './CheckboxFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
 import DialogFixture from './DialogFixture.svelte';
@@ -38,6 +39,38 @@ function insertedRuleCount(): number {
 }
 
 describe('compiled ICSS browser updates', () => {
+	it('keeps AlertDialog open until an explicit action is chosen', async () => {
+		render(AlertDialogFixture);
+		const trigger = document.querySelector<HTMLButtonElement>(
+			'[data-testid="alert-dialog-trigger"]'
+		);
+		trigger?.focus();
+		trigger?.click();
+		await tick();
+		const content = document.querySelector<HTMLElement>('[data-testid="alert-dialog-content"]');
+		const overlay = document.querySelector<HTMLElement>('[data-testid="alert-dialog-overlay"]');
+		const cancel = document.querySelector<HTMLButtonElement>('[data-testid="alert-dialog-cancel"]');
+		const action = document.querySelector<HTMLButtonElement>('[data-testid="alert-dialog-action"]');
+		expect(content?.getAttribute('role')).toBe('alertdialog');
+		expect(document.activeElement).toBe(cancel);
+
+		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+		overlay?.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+		await tick();
+		expect(content?.getAttribute('data-state')).toBe('open');
+		expect(document.querySelector('[data-testid="alert-dialog-content"]')).toBe(content);
+
+		action?.click();
+		await tick();
+		await new Promise((resolve) => setTimeout(resolve, 220));
+		await tick();
+		expect(document.querySelector('[data-testid="alert-dialog-content"]')).toBeNull();
+		expect(document.activeElement).toBe(trigger);
+		expect(document.querySelector('[data-testid="alert-dialog-output"]')?.textContent).toBe(
+			'false:action'
+		);
+	});
+
 	it('coordinates Dialog modal focus, inert, scroll, dismiss and cleanup', async () => {
 		render(DialogFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="dialog-trigger"]');
@@ -45,6 +78,7 @@ describe('compiled ICSS browser updates', () => {
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="dialog-output"]');
 		const outsideRoot = inlineHost?.closest('body > *') as HTMLElement | null | undefined;
 		const originalOverflow = document.body.style.overflow;
+		trigger?.focus();
 		trigger?.click();
 		await tick();
 		const content = document.querySelector<HTMLElement>('[data-testid="dialog-content"]');
@@ -106,6 +140,7 @@ describe('compiled ICSS browser updates', () => {
 		const inlineHost = document.querySelector<HTMLElement>('[data-testid="popover-inline-host"]');
 		const outside = document.querySelector<HTMLButtonElement>('[data-testid="popover-outside"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="popover-output"]');
+		trigger?.focus();
 		trigger?.click();
 		await tick();
 		const content = document.querySelector<HTMLElement>('[data-testid="popover-content"]');

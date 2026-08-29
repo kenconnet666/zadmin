@@ -304,6 +304,27 @@ test('keeps Dialog modal focus, inert, scroll, ARIA and dismiss synchronized', a
 	await expect(page.getByText(/open = false · 用户变更次数 = 4/u)).toBeVisible();
 });
 
+test('requires an explicit AlertDialog action and restores focus after the decision', async ({
+	page
+}) => {
+	await page.goto('/#/components/alert-dialog');
+	const trigger = page.getByTestId('alert-dialog-trigger');
+	await trigger.click();
+	const dialog = page.getByTestId('alert-dialog-content');
+	await expect(dialog).toHaveAttribute('role', 'alertdialog');
+	await expect(dialog).toHaveAttribute('aria-modal', 'true');
+	await expect(page.getByTestId('alert-dialog-cancel')).toBeFocused();
+
+	await page.keyboard.press('Escape');
+	await expect(dialog).toBeVisible();
+	await page.getByTestId('alert-dialog-overlay').click({ position: { x: 2, y: 2 } });
+	await expect(dialog).toBeVisible();
+	await page.getByTestId('alert-dialog-action').click();
+	await expect(dialog).toHaveCount(0);
+	await expect(trigger).toBeFocused();
+	await expect(page.getByText(/open = false · 结果 = 已确认删除/u)).toBeVisible();
+});
+
 test('keeps S1 primitives semantic and display preferences effective', async ({ page }) => {
 	await page.goto('/#/guides/theme');
 	await expect(page.getByRole('heading', { level: 1 })).toContainText('主题不是一组颜色');
@@ -362,6 +383,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/accordion',
 		'#/components/pagination',
 		'#/components/tabs',
+		'#/components/alert-dialog',
 		'#/components/dialog',
 		'#/components/popover',
 		'#/components/tooltip'

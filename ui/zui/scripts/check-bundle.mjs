@@ -26,6 +26,42 @@ const components = [
 		name: 'ZAccordionContent',
 		path: 'compound/accordion/ZAccordionContent.svelte'
 	},
+	{ id: 'alert-dialog', name: 'ZAlertDialog', path: 'compound/alert-dialog/ZAlertDialog.svelte' },
+	{
+		id: 'alert-dialog-trigger',
+		name: 'ZAlertDialogTrigger',
+		path: 'compound/alert-dialog/ZAlertDialogTrigger.svelte'
+	},
+	{
+		id: 'alert-dialog-overlay',
+		name: 'ZAlertDialogOverlay',
+		path: 'compound/alert-dialog/ZAlertDialogOverlay.svelte'
+	},
+	{
+		id: 'alert-dialog-content',
+		name: 'ZAlertDialogContent',
+		path: 'compound/alert-dialog/ZAlertDialogContent.svelte'
+	},
+	{
+		id: 'alert-dialog-title',
+		name: 'ZAlertDialogTitle',
+		path: 'compound/alert-dialog/ZAlertDialogTitle.svelte'
+	},
+	{
+		id: 'alert-dialog-description',
+		name: 'ZAlertDialogDescription',
+		path: 'compound/alert-dialog/ZAlertDialogDescription.svelte'
+	},
+	{
+		id: 'alert-dialog-cancel',
+		name: 'ZAlertDialogCancel',
+		path: 'compound/alert-dialog/ZAlertDialogCancel.svelte'
+	},
+	{
+		id: 'alert-dialog-action',
+		name: 'ZAlertDialogAction',
+		path: 'compound/alert-dialog/ZAlertDialogAction.svelte'
+	},
 	{ id: 'dialog', name: 'ZDialog', path: 'compound/dialog/ZDialog.svelte' },
 	{ id: 'dialog-trigger', name: 'ZDialogTrigger', path: 'compound/dialog/ZDialogTrigger.svelte' },
 	{ id: 'dialog-overlay', name: 'ZDialogOverlay', path: 'compound/dialog/ZDialogOverlay.svelte' },

@@ -33,8 +33,10 @@ import { getIconComponent, iconManifest } from '../src/components/gene/ZIcon.sve
 import { __icssCarrier } from '../src/runtime/foundation/compiler-bridge.js';
 import ContextProbe from './ContextProbe.svelte';
 import AccordionFixture from './AccordionFixture.svelte';
+import AlertDialogFixture from './AlertDialogFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
 import DialogFixture from './DialogFixture.svelte';
+import PopoverFixture from './PopoverFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
 import RadioGroupFixture from './RadioGroupFixture.svelte';
 import TabsFixture from './TabsFixture.svelte';
@@ -186,6 +188,15 @@ describe('ZUI foundational components', () => {
 		expect(open).toMatch(/aria-labelledby="([^"]+)"/u);
 		expect(open).toMatch(/aria-describedby="([^"]+)"/u);
 		expect(open).toContain('Fixture dialog');
+	});
+
+	it('renders AlertDialog SSR with explicit-action semantics', () => {
+		expect(render(AlertDialogFixture).body).not.toContain('role="alertdialog"');
+		const open = render(AlertDialogFixture, { props: { defaultOpen: true } }).body;
+		expect(open).toContain('role="alertdialog"');
+		expect(open).toContain('aria-modal="true"');
+		expect(open).toContain('Delete production?');
+		expect(open).toContain('This cannot be undone.');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

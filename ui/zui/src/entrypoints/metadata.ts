@@ -2,6 +2,14 @@ export { zuiMetadata as accordionMetadata } from '../components/compound/accordi
 export { zuiMetadata as accordionContentMetadata } from '../components/compound/accordion/ZAccordionContent.svelte';
 export { zuiMetadata as accordionItemMetadata } from '../components/compound/accordion/ZAccordionItem.svelte';
 export { zuiMetadata as accordionTriggerMetadata } from '../components/compound/accordion/ZAccordionTrigger.svelte';
+export { zuiMetadata as alertDialogMetadata } from '../components/compound/alert-dialog/ZAlertDialog.svelte';
+export { zuiMetadata as alertDialogActionMetadata } from '../components/compound/alert-dialog/ZAlertDialogAction.svelte';
+export { zuiMetadata as alertDialogCancelMetadata } from '../components/compound/alert-dialog/ZAlertDialogCancel.svelte';
+export { zuiMetadata as alertDialogContentMetadata } from '../components/compound/alert-dialog/ZAlertDialogContent.svelte';
+export { zuiMetadata as alertDialogDescriptionMetadata } from '../components/compound/alert-dialog/ZAlertDialogDescription.svelte';
+export { zuiMetadata as alertDialogOverlayMetadata } from '../components/compound/alert-dialog/ZAlertDialogOverlay.svelte';
+export { zuiMetadata as alertDialogTitleMetadata } from '../components/compound/alert-dialog/ZAlertDialogTitle.svelte';
+export { zuiMetadata as alertDialogTriggerMetadata } from '../components/compound/alert-dialog/ZAlertDialogTrigger.svelte';
 export { zuiMetadata as dialogMetadata } from '../components/compound/dialog/ZDialog.svelte';
 export { zuiMetadata as dialogCloseMetadata } from '../components/compound/dialog/ZDialogClose.svelte';
 export { zuiMetadata as dialogContentMetadata } from '../components/compound/dialog/ZDialogContent.svelte';

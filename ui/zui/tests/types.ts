@@ -8,6 +8,14 @@ import {
 	ZAccordionContent,
 	ZAccordionItem,
 	ZAccordionTrigger,
+	ZAlertDialog,
+	ZAlertDialogAction,
+	ZAlertDialogCancel,
+	ZAlertDialogContent,
+	ZAlertDialogDescription,
+	ZAlertDialogOverlay,
+	ZAlertDialogTitle,
+	ZAlertDialogTrigger,
 	ZBox,
 	ZButton,
 	ZCheckbox,
@@ -42,6 +50,14 @@ import {
 	type ZAccordionItemProps,
 	type ZAccordionProps,
 	type ZAccordionTriggerProps,
+	type ZAlertDialogActionProps,
+	type ZAlertDialogCancelProps,
+	type ZAlertDialogContentProps,
+	type ZAlertDialogDescriptionProps,
+	type ZAlertDialogOverlayProps,
+	type ZAlertDialogProps,
+	type ZAlertDialogTitleProps,
+	type ZAlertDialogTriggerProps,
 	type ZBoxProps,
 	type ZButtonProps,
 	type ZCheckboxProps,
@@ -82,6 +98,23 @@ const accordionTriggerProps: ComponentProps<typeof ZAccordionTrigger> =
 	{} satisfies ZAccordionTriggerProps;
 const accordionContentProps: ComponentProps<typeof ZAccordionContent> =
 	{} satisfies ZAccordionContentProps;
+const alertDialogProps: ComponentProps<typeof ZAlertDialog> = {
+	defaultOpen: true
+} satisfies ZAlertDialogProps;
+const alertDialogTriggerProps: ComponentProps<typeof ZAlertDialogTrigger> =
+	{} satisfies ZAlertDialogTriggerProps;
+const alertDialogOverlayProps: ComponentProps<typeof ZAlertDialogOverlay> =
+	{} satisfies ZAlertDialogOverlayProps;
+const alertDialogContentProps: ComponentProps<typeof ZAlertDialogContent> =
+	{} satisfies ZAlertDialogContentProps;
+const alertDialogTitleProps: ComponentProps<typeof ZAlertDialogTitle> =
+	{} satisfies ZAlertDialogTitleProps;
+const alertDialogDescriptionProps: ComponentProps<typeof ZAlertDialogDescription> =
+	{} satisfies ZAlertDialogDescriptionProps;
+const alertDialogCancelProps: ComponentProps<typeof ZAlertDialogCancel> =
+	{} satisfies ZAlertDialogCancelProps;
+const alertDialogActionProps: ComponentProps<typeof ZAlertDialogAction> =
+	{} satisfies ZAlertDialogActionProps;
 const inferredBoxProps: ComponentProps<typeof ZBox> = boxProps;
 const directBoxProps: DirectZBoxProps = inferredBoxProps;
 const buttonProps: ComponentProps<typeof ZButton> = { variant: 'primary' } satisfies ZButtonProps;
@@ -150,6 +183,14 @@ void accordionProps;
 void accordionItemProps;
 void accordionTriggerProps;
 void accordionContentProps;
+void alertDialogProps;
+void alertDialogTriggerProps;
+void alertDialogOverlayProps;
+void alertDialogContentProps;
+void alertDialogTitleProps;
+void alertDialogDescriptionProps;
+void alertDialogCancelProps;
+void alertDialogActionProps;
 void directBoxProps;
 void buttonProps;
 void checkboxProps;

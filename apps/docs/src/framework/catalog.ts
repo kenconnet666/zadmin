@@ -21,6 +21,7 @@ import { containerDoc } from '../content/components/layout/container/doc.js';
 import { accordionDoc } from '../content/components/navigation/accordion/doc.js';
 import { paginationDoc } from '../content/components/navigation/pagination/doc.js';
 import { tabsDoc } from '../content/components/navigation/tabs/doc.js';
+import { alertDialogDoc } from '../content/components/overlay/alert-dialog/doc.js';
 import { popoverDoc } from '../content/components/overlay/popover/doc.js';
 import { dialogDoc } from '../content/components/overlay/dialog/doc.js';
 import { tooltipDoc } from '../content/components/overlay/tooltip/doc.js';
@@ -58,6 +59,7 @@ export const componentDocs = Object.freeze([
 	accordionDoc,
 	paginationDoc,
 	tabsDoc,
+	alertDialogDoc,
 	dialogDoc,
 	popoverDoc,
 	tooltipDoc
