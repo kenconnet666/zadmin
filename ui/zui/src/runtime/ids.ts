@@ -4,9 +4,17 @@ function assertIdPart(value: string, label: string): void {
 	}
 }
 
-export function createZuiId(prefix: string, localId: string, suffix?: string): string {
+export function createZuiIdScope(prefix: string, localId: string): (suffix?: string) => string {
 	assertIdPart(prefix, 'ZUI id prefix');
 	assertIdPart(localId, 'ZUI local id');
-	if (suffix !== undefined) assertIdPart(suffix, 'ZUI id suffix');
-	return suffix === undefined ? `${prefix}-${localId}` : `${prefix}-${localId}-${suffix}`;
+	const base = `${prefix}-${localId}`;
+	return (suffix) => {
+		if (suffix === undefined) return base;
+		assertIdPart(suffix, 'ZUI id suffix');
+		return `${base}-${suffix}`;
+	};
+}
+
+export function createZuiId(prefix: string, localId: string, suffix?: string): string {
+	return createZuiIdScope(prefix, localId)(suffix);
 }

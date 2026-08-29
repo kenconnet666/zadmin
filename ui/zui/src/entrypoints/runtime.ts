@@ -8,4 +8,4 @@ export type {
 	StyleTagOptions
 } from '../icss/registry.js';
 export type { BrowserStyleSheetOptions } from '../icss/sheet.js';
-export { createZuiId } from '../runtime/ids.js';
+export { createZuiId, createZuiIdScope } from '../runtime/ids.js';
