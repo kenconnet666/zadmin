@@ -70,7 +70,7 @@ try {
 				},
 				dependencies: {
 					'@zadmin/miniapp': tarball,
-					svelte: '5.56.10'
+					svelte: 'https://pkg.svelte.dev/svelte/c/eb7532dd70fb11b36258347c44cf3910d244f987'
 				},
 				devDependencies: {
 					'svelte-check': '4.7.6',

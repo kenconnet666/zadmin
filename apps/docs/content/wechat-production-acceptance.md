@@ -18,6 +18,7 @@
 
 - v1 使用通用递归 WXML 模板承载 Svelte custom-renderer 节点快照；这是一条已允许的第一阶段直编路径，不等同于完成逐节点静态 WXML lowering。后续优化必须保持现有 compiler/renderer 合同和基准可替换性；
 - 当前只支持蓝图声明的 Svelte 子集和微信原生元素白名单，不承诺浏览器 DOM、任意 action、完整 CSS selector 或所有 Svelte 语法；不支持内容会产生带文件位置和替代建议的稳定诊断；
+- 外部项目必须安装固定的Svelte custom-renderer artifact；同版本号的官方registry包不含`experimental.customRenderer`和`svelte/renderer`，不能替代；
 - 微信开发者工具直编WebView target已完成模拟器验收：真实页面截图、页面栈、`#counter`事件、count响应式更新和空error console通过；真机仍只保留迁移前平台API语义证据，不能冒充新runtime真机验收；
 - Skyline、支付宝 target、上传、审核、支付、手机号兑换、订阅、权限弹窗、云写、商户流程和真实硬件操作均不在本阶段无人值守范围；
 - package tarball 的空目录安装由云端 CI 执行，本地只保留类型、单元、宿主构建和产物边界检查以缩短迭代。

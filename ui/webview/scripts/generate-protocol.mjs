@@ -92,7 +92,7 @@ let stale = false;
 for (const [path, content] of outputs) {
 	if (check) {
 		const current = await readFile(path, 'utf8').catch(() => '');
-		if (current !== content) {
+		if (current.replaceAll('\r\n', '\n') !== content.replaceAll('\r\n', '\n')) {
 			console.error(`Generated protocol is stale: ${path}`);
 			stale = true;
 		}

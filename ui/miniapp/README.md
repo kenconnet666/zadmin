@@ -4,6 +4,14 @@
 
 Miniapp 不依赖 `@zadmin/zui`。它拥有独立的移动端 Theme、`mcss()`/WXSS 白名单、8 个 `M*` 基础组件、平台能力 facade、编译器、runtime、模块合同和测试工具。
 
+custom renderer依赖固定Svelte artifact，外部项目必须与框架使用同一份runtime：
+
+```powershell
+pnpm add @zadmin/miniapp "svelte@https://pkg.svelte.dev/svelte/c/eb7532dd70fb11b36258347c44cf3910d244f987"
+```
+
+仅安装registry `svelte@5.56.10`不包含`experimental.customRenderer`与`svelte/renderer`，不能用于Miniapp target。
+
 ```svelte
 <script lang="ts">
 	import { MBox, MButton, MInput, MProvider, MStack, MText } from '@zadmin/miniapp';
