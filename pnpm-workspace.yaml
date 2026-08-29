@@ -73,38 +73,16 @@ catalogs:
     '@tauri-apps/plugin-updater': 2.10.1
     '@tauri-apps/plugin-window-state': 2.4.1
   wechat:
-    '@tarojs/cli': 4.2.1
-    '@tarojs/components': 4.2.1
-    '@tarojs/helper': 4.2.1
-    '@tarojs/plugin-framework-solid': 4.2.1
-    '@tarojs/plugin-platform-weapp': 4.2.1
-    '@tarojs/runtime': 4.2.1
-    '@tarojs/service': 4.2.1
-    '@tarojs/shared': 4.2.1
-    '@tarojs/taro': 4.2.1
-    '@tarojs/vite-runner': 4.2.1
-    babel-plugin-transform-solid-jsx: 4.2.1
     miniprogram-api-typings: 5.2.3
-    solid-js: 1.9.15
-    vite: 4.5.14
-    vite-plugin-solid: 2.11.14
 
 catalogMode: strict
 disallowWorkspaceCycles: true
 linkWorkspacePackages: false
 sharedWorkspaceLockfile: true
 
-# Taro 4.2.1 pins vulnerable transitive releases. These target-only overrides
-# stay until upstream moves to patched versions; real WeChat builds cover them.
-overrides:
-  '@tarojs/components>swiper': 12.1.2
-  '@tarojs/helper>esbuild': 0.25.12
-
 allowBuilds:
   '@parcel/watcher': true
   '@swc/core': true
-  '@tarojs/binding': true
-  '@tarojs/cli': false
   core-js: false
   esbuild: true
 
