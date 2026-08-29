@@ -458,6 +458,22 @@ test('keeps Transfer filter, selection, move, repeated form values and reset syn
 	await expect(source.getByRole('option')).toHaveCount(3);
 });
 
+test('keeps Mention textarea focus, active descendant, insertion, form value and reset synchronized', async ({
+	page
+}) => {
+	await page.goto('/#/components/mention');
+	const editor = page.getByRole('textbox', { name: '发布通知' });
+	await editor.fill('发布通知：@li');
+	await expect(page.getByRole('listbox', { name: '成员建议' })).toBeVisible();
+	await expect(editor).toHaveAttribute('aria-activedescendant', /option/u);
+	await page.keyboard.press('Enter');
+	await expect(editor).toBeFocused();
+	await expect(editor).toHaveValue('发布通知：@lilei ');
+	await expect(page.getByText('message = 发布通知：@lilei ')).toBeVisible();
+	await page.getByRole('button', { name: '重置' }).click();
+	await expect(editor).toHaveValue('发布通知：');
+});
+
 test('keeps Popover portal, ARIA, focus, positioning and dismiss synchronized', async ({
 	page
 }) => {
@@ -629,6 +645,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/cascader',
 		'#/components/combobox',
 		'#/components/input',
+		'#/components/mention',
 		'#/components/multi-select',
 		'#/components/field',
 		'#/components/radio-group',

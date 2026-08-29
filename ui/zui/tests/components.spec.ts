@@ -38,6 +38,7 @@ import AccordionFixture from './AccordionFixture.svelte';
 import AlertDialogFixture from './AlertDialogFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
 import MenuFixture from './MenuFixture.svelte';
+import MentionFixture from './MentionFixture.svelte';
 import MultiSelectFixture from './MultiSelectFixture.svelte';
 import DialogFixture from './DialogFixture.svelte';
 import DrawerFixture from './DrawerFixture.svelte';
@@ -355,6 +356,15 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain('Selected');
 		expect(result).toContain('name="channel"');
 		expect(result).toContain('value="staging"');
+	});
+
+	it('renders Mention native textarea and closed active-descendant popup during SSR', () => {
+		const result = render(MentionFixture).body;
+		expect(result).toContain('<textarea');
+		expect(result).toContain('aria-autocomplete="list"');
+		expect(result).toContain('aria-expanded="false"');
+		expect(result).toContain('name="message"');
+		expect(result).not.toContain('role="listbox"');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

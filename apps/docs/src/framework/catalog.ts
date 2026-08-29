@@ -14,6 +14,7 @@ import { cascaderDoc } from '../content/components/input/cascader/doc.js';
 import { comboboxDoc } from '../content/components/input/combobox/doc.js';
 import { fieldDoc } from '../content/components/input/field/doc.js';
 import { inputDoc } from '../content/components/input/input/doc.js';
+import { mentionDoc } from '../content/components/input/mention/doc.js';
 import { multiSelectDoc } from '../content/components/input/multi-select/doc.js';
 import { radioGroupDoc } from '../content/components/input/radio-group/doc.js';
 import { selectDoc } from '../content/components/input/select/doc.js';
@@ -68,6 +69,7 @@ export const componentDocs = Object.freeze([
 	cascaderDoc,
 	comboboxDoc,
 	inputDoc,
+	mentionDoc,
 	multiSelectDoc,
 	fieldDoc,
 	radioGroupDoc,

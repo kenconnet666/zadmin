@@ -15,6 +15,7 @@ import DialogFixture from './DialogFixture.svelte';
 import DrawerFixture from './DrawerFixture.svelte';
 import DropdownMenuFixture from './DropdownMenuFixture.svelte';
 import MenuFixture from './MenuFixture.svelte';
+import MentionFixture from './MentionFixture.svelte';
 import MultiSelectFixture from './MultiSelectFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
 import PaginationFixture from './PaginationFixture.svelte';
@@ -417,6 +418,31 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(output?.textContent).toBe('staging');
 		expect(source?.querySelectorAll('[role="option"]')).toHaveLength(3);
+	});
+
+	it('coordinates Mention caret parsing, active descendant insertion, form value and reset', async () => {
+		render(MentionFixture);
+		const editor = document.querySelector<HTMLTextAreaElement>('textarea[aria-label="Message"]');
+		const form = document.querySelector<HTMLFormElement>('[data-testid="mention-form"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="mention-output"]');
+		if (editor) {
+			editor.value = 'Notify @al';
+			editor.setSelectionRange(10, 10);
+			editor.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		}
+		await tick();
+		expect(editor?.getAttribute('aria-expanded')).toBe('true');
+		expect(editor?.getAttribute('aria-activedescendant')).toBeTruthy();
+		editor?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+		await tick();
+		expect(editor?.value).toBe('Notify @alice ');
+		expect(document.activeElement).toBe(editor);
+		expect(new FormData(form!).get('message')).toBe('Notify @alice ');
+		expect(output?.textContent).toBe('Notify @alice ');
+		form?.reset();
+		await Promise.resolve();
+		await tick();
+		expect(editor?.value).toBe('Notify ');
 	});
 	it('keeps AlertDialog open until an explicit action is chosen', async () => {
 		render(AlertDialogFixture);

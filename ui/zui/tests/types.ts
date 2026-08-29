@@ -49,6 +49,7 @@ import {
 	ZMenuItem,
 	ZMenuLabel,
 	ZMenuSeparator,
+	ZMention,
 	ZMultiSelect,
 	ZMultiSelectContent,
 	ZMultiSelectItem,
@@ -134,6 +135,7 @@ import {
 	type ZMenuLabelProps,
 	type ZMenuProps,
 	type ZMenuSeparatorProps,
+	type ZMentionProps,
 	type ZMultiSelectContentProps,
 	type ZMultiSelectItemProps,
 	type ZMultiSelectProps,
@@ -334,6 +336,10 @@ const transferProps: ComponentProps<typeof ZTransfer> = {
 	items: [{ key: 'ready', label: 'Ready' }],
 	value: ['ready']
 } satisfies ZTransferProps;
+const mentionProps: ComponentProps<typeof ZMention> = {
+	items: [{ key: 'alice', label: 'Alice' }],
+	value: 'Notify @alice'
+} satisfies ZMentionProps;
 const sliderProps: ComponentProps<typeof ZSlider> = {
 	defaultValue: 25,
 	max: 50,
@@ -435,6 +441,7 @@ void treeProps;
 void treeSelectProps;
 void cascaderProps;
 void transferProps;
+void mentionProps;
 void sliderProps;
 void switchProps;
 void tabsProps;
