@@ -3,9 +3,9 @@
 
 	let width = $state(320);
 	const panelClass = $derived(
-		icss(defaultTheme, (style) => {
-			style.width.px(width);
-			style.padding._medium;
+		icss(defaultTheme, (s) => {
+			s.width.px(width);
+			s.padding._medium;
 		})
 	);
 </script>

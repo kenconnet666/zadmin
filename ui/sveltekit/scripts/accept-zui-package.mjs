@@ -90,7 +90,8 @@ try {
 				packageManager: 'pnpm@11.22.0',
 				scripts: {
 					build: 'vite build',
-					check: 'svelte-kit sync && svelte-check --tsconfig ./tsconfig.json'
+					check: 'svelte-kit sync && svelte-check --tsconfig ./tsconfig.json',
+					'test:zui': 'node testing.mjs'
 				},
 				dependencies: {
 					'@sveltejs/adapter-node': '5.5.7',
@@ -183,9 +184,30 @@ const panel = icss(defaultTheme, (s) => { s.padding._large; s.backgroundColor._s
 <ZBox class={panel}><ZStack><ZText as="strong">External ZUI SSR</ZText><ZButton>Ready</ZButton></ZStack></ZBox>
 `
 	);
+	await write(
+		resolve(fixtureRoot, 'testing.mjs'),
+		`import { defaultTheme } from '@zadmin/zui';
+import {
+  assertIcssClassName,
+  assertIcssResourcesStable,
+  createIcssFixture,
+  createTestIcssRuntime
+} from '@zadmin/zui/testing';
+const harness = createTestIcssRuntime();
+const before = harness.snapshot();
+assertIcssResourcesStable(before, harness.snapshot());
+const fixture = createIcssFixture(harness, defaultTheme, (s) => s.display.flex);
+assertIcssClassName(fixture.className);
+if (fixture.snapshot.metrics.classes !== 1 || !fixture.snapshot.cssText.includes('display:flex')) {
+  throw new Error('External ZUI testing fixture produced an invalid snapshot.');
+}
+console.log('External ZUI testing entry acceptance passed.');
+`
+	);
 
 	await runPnpm(['install', '--no-frozen-lockfile'], fixtureRoot);
 	await runPnpm(['install', '--frozen-lockfile'], fixtureRoot);
+	await runPnpm(['test:zui'], fixtureRoot);
 	await runPnpm(['check'], fixtureRoot);
 	await runPnpm(['build'], fixtureRoot);
 
@@ -196,7 +218,9 @@ const panel = icss(defaultTheme, (s) => { s.padding._large; s.backgroundColor._s
 		if (output.includes(workspaceRoot) || output.includes(workspaceRoot.replaceAll('\\', '/'))) {
 			throw new Error(`External client output contains workspace path: ${file}`);
 		}
-		if (/node:async_hooks|@zadmin\/zui\/compiler|@zadmin\/sveltekit\/zui/u.test(output)) {
+		if (
+			/node:async_hooks|@zadmin\/zui\/(?:compiler|testing)|@zadmin\/sveltekit\/zui/u.test(output)
+		) {
 			throw new Error(`External client output contains server/compiler code: ${file}`);
 		}
 	}

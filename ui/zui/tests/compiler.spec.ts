@@ -23,9 +23,9 @@ describe('ICSS Svelte preprocessor', () => {
 		const output = await transform(`<script lang="ts">
 			import { defaultTheme, icss } from '@zadmin/zui';
 			let width = $state(320);
-			const panelClass = $derived(icss(defaultTheme, (style) => {
-				style.width.px(width);
-				style.padding.px(16);
+			const panelClass = $derived(icss(defaultTheme, (s) => {
+				s.width.px(width);
+				s.padding.px(16);
 			}));
 		</script>
 		<div class={panelClass}></div>`);
@@ -33,9 +33,9 @@ describe('ICSS Svelte preprocessor', () => {
 		expect(output).toContain('__icssSlot as __zuiIcssSlot');
 		expect(output).toMatch(/__zuiIcssOwned\('m-[a-z0-9]+:[a-z0-9]+', defaultTheme/u);
 		expect(output).toContain("__zuiRegisterIcssHmr(import.meta, 'm-");
-		expect(output).toMatch(/style\.width\.px\(__zuiIcssSlot\('--width-[a-z0-9]+-0'\)\)/u);
+		expect(output).toMatch(/s\.width\.px\(__zuiIcssSlot\('--width-[a-z0-9]+-0'\)\)/u);
 		expect(output).toMatch(/style:--width-[a-z0-9]+-0=\{width\}/u);
-		expect(output).toContain('style.padding.px(16)');
+		expect(output).toContain('s.padding.px(16)');
 		expect(() => compile(output, { generate: 'client', runes: true })).not.toThrow();
 	});
 

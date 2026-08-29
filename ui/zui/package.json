@@ -33,6 +33,10 @@
 		"./runtime": {
 			"types": "./src/lib/runtime.ts",
 			"import": "./src/lib/runtime.ts"
+		},
+		"./testing": {
+			"types": "./src/lib/testing/index.ts",
+			"import": "./src/lib/testing/index.ts"
 		}
 	},
 	"publishConfig": {

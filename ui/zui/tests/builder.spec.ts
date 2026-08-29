@@ -4,11 +4,11 @@ import { createStyleProgram, defaultTheme, type IcssStyle } from '../src/lib/cor
 
 describe('ICSS builder', () => {
 	it('records ordered raw, keyword, token and unit declarations', () => {
-		const program = createStyleProgram(defaultTheme, (style) => {
-			style.display.flex;
-			style.color._primary;
-			style.padding.px(8, 16);
-			style.opacity(0.8);
+		const program = createStyleProgram(defaultTheme, (s) => {
+			s.display.flex;
+			s.color._primary;
+			s.padding.px(8, 16);
+			s.opacity(0.8);
 		});
 
 		expect(program.block.instructions).toEqual([
@@ -43,10 +43,10 @@ describe('ICSS builder', () => {
 	});
 
 	it('records nested selectors and at-rules without empty blocks', () => {
-		const program = createStyleProgram(defaultTheme, (style) => {
-			style._hover((hover) => hover.color._primaryHover);
-			style._media('(min-width: 48rem)', (media) => media.padding._large);
-			style._focus(() => undefined);
+		const program = createStyleProgram(defaultTheme, (s) => {
+			s._hover((hover) => hover.color._primaryHover);
+			s._media('(min-width: 48rem)', (media) => media.padding._large);
+			s._focus(() => undefined);
 		});
 
 		expect(program.block.instructions).toHaveLength(2);
@@ -64,11 +64,9 @@ describe('ICSS builder', () => {
 
 	it('validates selectors, values and theme tokens', () => {
 		expect(() =>
-			createStyleProgram(defaultTheme, (style) => style._selector('.outside', () => undefined))
+			createStyleProgram(defaultTheme, (s) => s._selector('.outside', () => undefined))
 		).toThrow(/contain "&"/);
-		expect(() => createStyleProgram(defaultTheme, (style) => style.width.px(Number.NaN))).toThrow(
-			/finite/
-		);
+		expect(() => createStyleProgram(defaultTheme, (s) => s.width.px(Number.NaN))).toThrow(/finite/);
 	});
 
 	it('infers property, token, keyword and unit APIs', () => {

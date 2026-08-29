@@ -6,21 +6,21 @@ import {
 	type SlotRecipeSelection
 } from '../src/lib/index.js';
 
-declare const style: IcssStyle<typeof defaultTheme>;
+declare const s: IcssStyle<typeof defaultTheme>;
 
-style.color._primary;
-style.display.inlineFlex;
-style.padding.px(4, 8);
-style.width.percent(100);
+s.color._primary;
+s.display.inlineFlex;
+s.padding.px(4, 8);
+s.width.percent(100);
 
 // @ts-expect-error color does not accept length units
-style.color.px(4);
+s.color.px(4);
 
 // @ts-expect-error unknown theme tokens are rejected
-style.color._missing;
+s.color._missing;
 
 // @ts-expect-error padding does not accept time units
-style.padding.ms(100);
+s.padding.ms(100);
 
 const recipe = defineRecipe({
 	variants: {
