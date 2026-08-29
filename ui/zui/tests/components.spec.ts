@@ -17,6 +17,7 @@ import {
 	ZKbd,
 	ZLink,
 	ZPagination,
+	ZPopover,
 	ZSeparator,
 	ZSlider,
 	ZStack,
@@ -159,6 +160,13 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain(`id="${contentId}"`);
 		expect(result).toContain('role="region"');
 		expect(result).toContain('Alpha content');
+	});
+
+	it('renders Popover SSR closed by default and inline when initially open', () => {
+		expect(render(PopoverFixture).body).not.toContain('role="dialog"');
+		const open = render(PopoverFixture, { props: { defaultOpen: true } }).body;
+		expect(open).toContain('aria-expanded="true"');
+		expect(open).toContain('role="dialog"');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

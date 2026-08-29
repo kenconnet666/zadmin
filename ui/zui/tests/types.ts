@@ -12,6 +12,9 @@ import {
 	ZButton,
 	ZCheckbox,
 	ZPagination,
+	ZPopover,
+	ZPopoverContent,
+	ZPopoverTrigger,
 	ZRadioGroup,
 	ZRadioGroupItem,
 	ZSlider,
@@ -33,6 +36,9 @@ import {
 	type ZButtonProps,
 	type ZCheckboxProps,
 	type ZPaginationProps,
+	type ZPopoverContentProps,
+	type ZPopoverProps,
+	type ZPopoverTriggerProps,
 	type ZRadioGroupItemProps,
 	type ZRadioGroupProps,
 	type ZSliderProps,
@@ -67,6 +73,14 @@ const paginationProps: ComponentProps<typeof ZPagination> = {
 	defaultPage: 2,
 	totalPages: 20
 } satisfies ZPaginationProps;
+const popoverProps: ComponentProps<typeof ZPopover> = {
+	placement: 'bottom-start'
+} satisfies ZPopoverProps;
+const popoverTriggerProps: ComponentProps<typeof ZPopoverTrigger> = {
+	variant: 'secondary'
+} satisfies ZPopoverTriggerProps;
+const popoverContentProps: ComponentProps<typeof ZPopoverContent> =
+	{} satisfies ZPopoverContentProps;
 const radioGroupProps: ComponentProps<typeof ZRadioGroup> = {
 	defaultValue: 'ready',
 	orientation: 'horizontal'
@@ -107,6 +121,9 @@ void directBoxProps;
 void buttonProps;
 void checkboxProps;
 void paginationProps;
+void popoverProps;
+void popoverTriggerProps;
+void popoverContentProps;
 void radioGroupProps;
 void radioGroupItemProps;
 void sliderProps;

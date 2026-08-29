@@ -1,0 +1,75 @@
+<script module lang="ts">
+	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
+	import type { ZButtonProps } from '../../gene/ZButton.svelte';
+
+	export type ZPopoverTriggerProps = Omit<
+		ZButtonProps,
+		'aria-controls' | 'aria-expanded' | 'aria-haspopup' | 'onclick'
+	> & {
+		readonly onclick?: ZButtonProps['onclick'];
+	};
+
+	export const zuiMetadata = {
+		category: 'overlay',
+		id: 'popover-trigger',
+		importStatement: "import { ZPopoverTrigger } from '@zadmin/zui';",
+		name: 'ZPopoverTrigger',
+		bindings: [{ description: '真实button引用。', name: 'ref', type: 'HTMLButtonElement | null' }],
+		dependencies: ['ZPopover', 'ZButton'],
+		events: [
+			{
+				description: '原生click回调；preventDefault可取消切换。',
+				name: 'onclick',
+				type: 'MouseEventHandler<HTMLButtonElement>'
+			}
+		],
+		keyboard: [{ description: '切换Popover。', key: 'Enter / Space' }],
+		parts: [],
+		props: [
+			{
+				bindable: true,
+				default: 'null',
+				description: '真实button引用。',
+				name: 'ref',
+				type: 'HTMLButtonElement | null'
+			}
+		],
+		since: '0.3.0',
+		snippets: [{ description: 'Trigger内容。', name: 'children', type: 'Snippet' }],
+		source: 'ui/zui/src/components/compound/popover/ZPopoverTrigger.svelte',
+		states: [{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] }],
+		status: 'experimental',
+		summary: '复用ZButton并建立aria-haspopup/expanded/controls关系的Popover Trigger。'
+	} as const satisfies ZuiComponentMetadata;
+</script>
+
+<script lang="ts">
+	import ZButton from '../../gene/ZButton.svelte';
+	import { useZPopover } from './context.svelte.js';
+
+	let { onclick, ref = $bindable(null), ...rest }: ZPopoverTriggerProps = $props();
+	const popover = useZPopover();
+
+	$effect(() => {
+		popover.setTrigger(ref);
+		return () => {
+			if (popover.trigger === ref) popover.setTrigger(null);
+		};
+	});
+
+	function handleClick(event: MouseEvent & { currentTarget: HTMLButtonElement }): void {
+		onclick?.(event);
+		if (!event.defaultPrevented) popover.setOpen(!popover.open);
+	}
+</script>
+
+<ZButton
+	{...rest}
+	bind:ref
+	id={popover.triggerId}
+	aria-controls={popover.contentId}
+	aria-expanded={popover.open}
+	aria-haspopup="dialog"
+	data-state={popover.open ? 'open' : 'closed'}
+	onclick={handleClick}
+/>

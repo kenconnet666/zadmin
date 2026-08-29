@@ -12,6 +12,15 @@ export { default as ZAccordionItem } from '../components/compound/accordion/ZAcc
 export type { ZAccordionItemProps } from '../components/compound/accordion/ZAccordionItem.svelte';
 export { default as ZAccordionTrigger } from '../components/compound/accordion/ZAccordionTrigger.svelte';
 export type { ZAccordionTriggerProps } from '../components/compound/accordion/ZAccordionTrigger.svelte';
+export { default as ZPopover } from '../components/compound/popover/ZPopover.svelte';
+export type {
+	PopoverPlacement,
+	ZPopoverProps
+} from '../components/compound/popover/ZPopover.svelte';
+export { default as ZPopoverContent } from '../components/compound/popover/ZPopoverContent.svelte';
+export type { ZPopoverContentProps } from '../components/compound/popover/ZPopoverContent.svelte';
+export { default as ZPopoverTrigger } from '../components/compound/popover/ZPopoverTrigger.svelte';
+export type { ZPopoverTriggerProps } from '../components/compound/popover/ZPopoverTrigger.svelte';
 export { default as ZRadioGroup } from '../components/compound/radio-group/ZRadioGroup.svelte';
 export type {
 	RadioGroupOrientation,

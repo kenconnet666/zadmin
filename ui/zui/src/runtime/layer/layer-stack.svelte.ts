@@ -19,12 +19,14 @@ interface LayerRecord extends LayerOptions {
 
 interface LayerBranch {
 	readonly element: HTMLElement;
+	readonly id: number;
 	readonly layerId: string;
 }
 
 export class LayerStack {
 	#branches = $state<readonly LayerBranch[]>([]);
 	#layers = $state<readonly LayerRecord[]>([]);
+	#nextBranchId = 0;
 	#nextId = 0;
 
 	get layers(): readonly string[] {
@@ -47,7 +49,7 @@ export class LayerStack {
 			destroy: () => {
 				if (!active) return;
 				active = false;
-				this.#layers = untrack(() => this.#layers).filter((layer) => layer !== record);
+				this.#layers = untrack(() => this.#layers).filter((layer) => layer.id !== id);
 				this.#branches = untrack(() => this.#branches).filter((branch) => branch.layerId !== id);
 			},
 			id,
@@ -59,13 +61,13 @@ export class LayerStack {
 		if (!untrack(() => this.#layers).some(({ id }) => id === layerId)) {
 			throw new Error(`Unknown layer id "${layerId}".`);
 		}
-		const branch = { element, layerId };
+		const branch = { element, id: (this.#nextBranchId += 1), layerId };
 		this.#branches = [...untrack(() => this.#branches), branch];
 		let active = true;
 		return () => {
 			if (!active) return;
 			active = false;
-			this.#branches = untrack(() => this.#branches).filter((entry) => entry !== branch);
+			this.#branches = untrack(() => this.#branches).filter((entry) => entry.id !== branch.id);
 		};
 	}
 

@@ -2,6 +2,9 @@ export { zuiMetadata as accordionMetadata } from '../components/compound/accordi
 export { zuiMetadata as accordionContentMetadata } from '../components/compound/accordion/ZAccordionContent.svelte';
 export { zuiMetadata as accordionItemMetadata } from '../components/compound/accordion/ZAccordionItem.svelte';
 export { zuiMetadata as accordionTriggerMetadata } from '../components/compound/accordion/ZAccordionTrigger.svelte';
+export { zuiMetadata as popoverMetadata } from '../components/compound/popover/ZPopover.svelte';
+export { zuiMetadata as popoverContentMetadata } from '../components/compound/popover/ZPopoverContent.svelte';
+export { zuiMetadata as popoverTriggerMetadata } from '../components/compound/popover/ZPopoverTrigger.svelte';
 export { zuiMetadata as radioGroupMetadata } from '../components/compound/radio-group/ZRadioGroup.svelte';
 export { zuiMetadata as radioGroupItemMetadata } from '../components/compound/radio-group/ZRadioGroupItem.svelte';
 export { zuiMetadata as tabsMetadata } from '../components/compound/tabs/ZTabs.svelte';

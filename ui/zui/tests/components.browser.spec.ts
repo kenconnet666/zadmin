@@ -9,6 +9,7 @@ import CheckboxFixture from './CheckboxFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
 import PaginationFixture from './PaginationFixture.svelte';
+import PopoverFixture from './PopoverFixture.svelte';
 import RadioGroupFixture from './RadioGroupFixture.svelte';
 import SliderFixture from './SliderFixture.svelte';
 import ToggleButtonFixture from './ToggleButtonFixture.svelte';
@@ -35,6 +36,38 @@ function insertedRuleCount(): number {
 }
 
 describe('compiled ICSS browser updates', () => {
+	it('coordinates Popover portal, focus, dismiss and Presence cleanup', async () => {
+		render(PopoverFixture);
+		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="popover-trigger"]');
+		const inlineHost = document.querySelector<HTMLElement>('[data-testid="popover-inline-host"]');
+		const outside = document.querySelector<HTMLButtonElement>('[data-testid="popover-outside"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="popover-output"]');
+		trigger?.click();
+		await tick();
+		const content = document.querySelector<HTMLElement>('[data-testid="popover-content"]');
+		expect(content?.parentNode).toBe(document.body);
+		expect(inlineHost?.contains(content ?? null)).toBe(false);
+		expect(document.activeElement?.getAttribute('aria-label')).toBe('Inside');
+		expect(trigger?.getAttribute('aria-expanded')).toBe('true');
+		expect(output?.textContent).toBe('true:1');
+
+		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+		await tick();
+		expect(trigger?.getAttribute('aria-expanded')).toBe('false');
+		expect(content?.dataset.presence).toBe('exiting');
+		await new Promise((resolve) => setTimeout(resolve, 140));
+		await tick();
+		expect(document.querySelector('[data-testid="popover-content"]')).toBeNull();
+		expect(document.activeElement).toBe(trigger);
+		expect(output?.textContent).toBe('false:2');
+
+		trigger?.click();
+		await tick();
+		outside?.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+		await tick();
+		expect(trigger?.getAttribute('aria-expanded')).toBe('false');
+	});
+
 	it('keeps Accordion focus, single/multiple selection and Presence synchronized', async () => {
 		render(AccordionFixture);
 		const alpha = document.querySelector<HTMLButtonElement>('[data-testid="accordion-a"]');

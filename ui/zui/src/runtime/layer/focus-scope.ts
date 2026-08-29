@@ -82,7 +82,7 @@ export class FocusScope {
 		next?.focus({ preventScroll: true });
 	};
 
-	#candidates(): HTMLElement[] {
+	#candidates(): ReturnType<typeof tabbable> {
 		return tabbable(this.#container);
 	}
 

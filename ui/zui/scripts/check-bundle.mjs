@@ -26,6 +26,17 @@ const components = [
 		name: 'ZAccordionContent',
 		path: 'compound/accordion/ZAccordionContent.svelte'
 	},
+	{ id: 'popover', name: 'ZPopover', path: 'compound/popover/ZPopover.svelte' },
+	{
+		id: 'popover-trigger',
+		name: 'ZPopoverTrigger',
+		path: 'compound/popover/ZPopoverTrigger.svelte'
+	},
+	{
+		id: 'popover-content',
+		name: 'ZPopoverContent',
+		path: 'compound/popover/ZPopoverContent.svelte'
+	},
 	{
 		id: 'radio-group',
 		maxIncrementalGzip: 3.375 * 1024,

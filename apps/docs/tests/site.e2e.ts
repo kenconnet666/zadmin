@@ -9,12 +9,13 @@ test('renders the component catalog and real demo source', async ({ page }) => {
 
 	await page.goto('/#/');
 	await expect(page.getByRole('heading', { level: 1 })).toContainText('看见组件');
-	await expect(page.getByTestId('component-card')).toHaveCount(23);
+	await expect(page.getByTestId('component-card')).toHaveCount(24);
 	await expect(page.getByRole('heading', { level: 3 })).toHaveText([
 		'通用组件',
 		'布局组件',
 		'输入组件',
-		'导航组件'
+		'导航组件',
+		'浮层组件'
 	]);
 
 	await page.goto('/#/components/button');
@@ -243,6 +244,25 @@ test('keeps Accordion selection, roving focus and Presence synchronized', async 
 	await expect(page.getByText(/value = none · 用户变更次数 = 2/u)).toBeVisible();
 });
 
+test('keeps Popover portal, ARIA, focus, positioning and dismiss synchronized', async ({
+	page
+}) => {
+	await page.goto('/#/components/popover');
+	const trigger = page.getByTestId('popover-trigger');
+	await trigger.click();
+	await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+	const content = page.getByTestId('popover-content');
+	await expect(content).toBeVisible();
+	await expect(content).toHaveAttribute('role', 'dialog');
+	await expect(content).toHaveCSS('position', 'absolute');
+	await expect(page.getByRole('textbox', { name: '部署备注' })).toBeFocused();
+	await page.keyboard.press('Escape');
+	await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+	await expect(content).toHaveCount(0);
+	await expect(trigger).toBeFocused();
+	await expect(page.getByText(/open = false · 用户变更次数 = 2/u)).toBeVisible();
+});
+
 test('keeps S1 primitives semantic and display preferences effective', async ({ page }) => {
 	await page.goto('/#/guides/theme');
 	await expect(page.getByRole('heading', { level: 1 })).toContainText('主题不是一组颜色');
@@ -300,7 +320,8 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/slider',
 		'#/components/accordion',
 		'#/components/pagination',
-		'#/components/tabs'
+		'#/components/tabs',
+		'#/components/popover'
 	]) {
 		await page.goto(`/${route}`);
 		const results = await new AxeBuilder({ page }).analyze();
