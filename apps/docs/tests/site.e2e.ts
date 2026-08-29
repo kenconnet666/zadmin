@@ -9,7 +9,7 @@ test('renders the component catalog and real demo source', async ({ page }) => {
 
 	await page.goto('/#/');
 	await expect(page.getByRole('heading', { level: 1 })).toContainText('看见组件');
-	await expect(page.getByTestId('component-card')).toHaveCount(9);
+	await expect(page.getByTestId('component-card')).toHaveCount(15);
 	await expect(page.getByRole('heading', { level: 3 })).toHaveText([
 		'通用组件',
 		'布局组件',
@@ -70,6 +70,33 @@ test('keeps input binding and field validation interactive', async ({ page }) =>
 	await expect(page.getByText('账号至少需要3个字符')).toHaveCount(0);
 });
 
+test('keeps S1 primitives semantic and display preferences effective', async ({ page }) => {
+	await page.goto('/#/components/link');
+	await expect(page.locator('main a[aria-disabled="true"]')).not.toHaveAttribute('href');
+	await expect(page.locator('main a[target="_blank"]').first()).toHaveAttribute(
+		'rel',
+		'noopener noreferrer'
+	);
+
+	await page.goto('/#/components/separator');
+	await expect(page.locator('main hr[data-orientation="horizontal"]')).toHaveCount(1);
+	await expect(page.locator('main [role="separator"][aria-orientation="vertical"]')).toHaveCount(1);
+
+	await page.goto('/#/components/visually-hidden');
+	await expect(page.getByRole('button', { name: '搜索文档', exact: true })).toBeVisible();
+
+	await page.locator('summary[aria-label="调整显示偏好"]').click();
+	const preferences = page.locator('details select');
+	await preferences.nth(0).selectOption('compact');
+	await preferences.nth(1).selectOption('high');
+	await preferences.nth(2).selectOption('reduced');
+	await preferences.nth(3).selectOption('rtl');
+	await expect(page.locator('html')).toHaveAttribute('data-density', 'compact');
+	await expect(page.locator('html')).toHaveAttribute('data-contrast', 'high');
+	await expect(page.locator('html')).toHaveAttribute('data-motion', 'reduced');
+	await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+});
+
 test('has no automatically detectable accessibility violations', async ({ page }) => {
 	for (const route of [
 		'#/',
@@ -80,6 +107,12 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/icon',
 		'#/components/code',
 		'#/components/button',
+		'#/components/link',
+		'#/components/separator',
+		'#/components/visually-hidden',
+		'#/components/kbd',
+		'#/components/aspect-ratio',
+		'#/components/container',
 		'#/components/input',
 		'#/components/field'
 	]) {

@@ -6,13 +6,19 @@ import {
 	createServerStyleRegistry,
 	defaultTheme,
 	extendTheme,
+	ZAspectRatio,
 	ZBox,
 	ZButton,
+	ZContainer,
 	ZField,
 	ZIcon,
 	ZInput,
+	ZKbd,
+	ZLink,
+	ZSeparator,
 	ZStack,
-	ZText
+	ZText,
+	ZVisuallyHidden
 } from '../src/entrypoints/index.js';
 import { ZCode } from '../src/entrypoints/code.js';
 import Camera from '@lucide/svelte/icons/camera';
@@ -124,5 +130,31 @@ describe('ZUI foundational components', () => {
 		expect(inline.body).toContain('>inline');
 		const dark = render(ZCode, { props: { code: 'dark', embedded: true, scheme: 'dark' } });
 		expect(dark.body).toContain('data-color-scheme="dark"');
+	});
+
+	it('renders S1 semantic and layout primitives without wrapper abstractions', () => {
+		const link = render(ZLink, {
+			props: { href: '/docs', target: '_blank' }
+		}).body;
+		const disabledLink = render(ZLink, {
+			props: { disabled: true, href: '/hidden' }
+		}).body;
+
+		expect(link).toContain('<a');
+		expect(link).toContain('href="/docs"');
+		expect(link).toContain('rel="noopener noreferrer"');
+		expect(disabledLink).toContain('aria-disabled="true"');
+		expect(disabledLink).not.toContain('href=');
+		expect(render(ZSeparator).body).toContain('<hr');
+		expect(render(ZSeparator, { props: { orientation: 'vertical' } }).body).toContain(
+			'role="separator"'
+		);
+		expect(render(ZKbd).body).toContain('<kbd');
+		expect(render(ZVisuallyHidden).body).toContain('<span');
+		expect(render(ZContainer, { props: { size: 'small' } }).body).toContain('<div');
+		expect(render(ZAspectRatio, { props: { ratio: '4 / 3' } }).body).toContain(
+			'--zui-aspect-ratio:4 / 3'
+		);
+		expect(() => render(ZAspectRatio, { props: { ratio: 0 } })).toThrow(/must be positive/);
 	});
 });

@@ -3,15 +3,21 @@ import { describe, expect, it } from 'vitest';
 
 import { ZUI_PACKAGE_NAME } from '../src/entrypoints/index.js';
 import {
+	aspectRatioMetadata,
 	boxMetadata,
 	buttonMetadata,
 	codeMetadata,
+	containerMetadata,
 	fieldMetadata,
 	iconMetadata,
 	inputMetadata,
+	kbdMetadata,
+	linkMetadata,
 	providerMetadata,
+	separatorMetadata,
 	stackMetadata,
-	textMetadata
+	textMetadata,
+	visuallyHiddenMetadata
 } from '../src/entrypoints/metadata.js';
 
 interface PackageManifest {
@@ -37,7 +43,9 @@ describe('@zadmin/zui package', () => {
 			'internal.ts',
 			'metadata.ts',
 			'runtime.ts',
-			'testing.ts'
+			'testing.ts',
+			'theme.ts',
+			'themes.ts'
 		]);
 		expect(Object.keys(manifest.exports)).toEqual(['.', './*']);
 		expect(Object.keys(manifest.publishConfig.exports)).toEqual(['.', './*']);
@@ -55,6 +63,12 @@ describe('@zadmin/zui package', () => {
 			iconMetadata,
 			codeMetadata,
 			buttonMetadata,
+			linkMetadata,
+			separatorMetadata,
+			visuallyHiddenMetadata,
+			kbdMetadata,
+			aspectRatioMetadata,
+			containerMetadata,
 			inputMetadata,
 			fieldMetadata
 		];

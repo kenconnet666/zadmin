@@ -6,10 +6,18 @@ export { default as ZButton } from '../components/gene/ZButton.svelte';
 export type { ZButtonProps, ZButtonVariants } from '../components/gene/ZButton.svelte';
 export { default as ZIcon, iconManifest } from '../components/gene/ZIcon.svelte';
 export type { ZIconName, ZIconProps } from '../components/gene/ZIcon.svelte';
+export { default as ZKbd } from '../components/gene/ZKbd.svelte';
+export type { ZKbdProps } from '../components/gene/ZKbd.svelte';
+export { default as ZLink } from '../components/gene/ZLink.svelte';
+export type { ZLinkProps, ZLinkTone, ZLinkUnderline } from '../components/gene/ZLink.svelte';
 export { default as ZProvider } from '../components/gene/ZProvider.svelte';
 export type { ZProviderProps } from '../components/gene/ZProvider.svelte';
+export { default as ZSeparator } from '../components/gene/ZSeparator.svelte';
+export type { ZSeparatorOrientation, ZSeparatorProps } from '../components/gene/ZSeparator.svelte';
 export { default as ZText } from '../components/gene/ZText.svelte';
 export type { ZTextElement, ZTextProps, ZTextTone } from '../components/gene/ZText.svelte';
+export { default as ZVisuallyHidden } from '../components/gene/ZVisuallyHidden.svelte';
+export type { ZVisuallyHiddenProps } from '../components/gene/ZVisuallyHidden.svelte';
 export { default as ZField } from '../components/input/ZField.svelte';
 export type { ZFieldProps, ZFieldSize } from '../components/input/ZField.svelte';
 export { default as ZInput } from '../components/input/ZInput.svelte';
@@ -21,6 +29,17 @@ export type {
 	ZStackJustification,
 	ZStackProps
 } from '../components/layout/ZStack.svelte';
+export { default as ZContainer } from '../components/layout/ZContainer.svelte';
+export type {
+	ZContainerGutter,
+	ZContainerProps,
+	ZContainerSize
+} from '../components/layout/ZContainer.svelte';
+export { default as ZAspectRatio } from '../components/layout/ZAspectRatio.svelte';
+export type {
+	ZAspectRatioProps,
+	ZAspectRatioValue
+} from '../components/layout/ZAspectRatio.svelte';
 export { useZui } from '../runtime/context.js';
 export type {
 	ZuiColorScheme,

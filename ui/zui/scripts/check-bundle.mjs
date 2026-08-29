@@ -12,7 +12,13 @@ const runtime = portable(resolve(sourceRoot, 'entrypoints/runtime.ts'));
 const components = [
 	{ id: 'provider', name: 'ZProvider', path: 'gene/ZProvider.svelte' },
 	{ id: 'box', name: 'ZBox', path: 'gene/ZBox.svelte' },
+	{ id: 'link', name: 'ZLink', path: 'gene/ZLink.svelte' },
+	{ id: 'separator', name: 'ZSeparator', path: 'gene/ZSeparator.svelte' },
+	{ id: 'visually-hidden', name: 'ZVisuallyHidden', path: 'gene/ZVisuallyHidden.svelte' },
+	{ id: 'kbd', name: 'ZKbd', path: 'gene/ZKbd.svelte' },
 	{ id: 'stack', name: 'ZStack', path: 'layout/ZStack.svelte' },
+	{ id: 'aspect-ratio', name: 'ZAspectRatio', path: 'layout/ZAspectRatio.svelte' },
+	{ id: 'container', name: 'ZContainer', path: 'layout/ZContainer.svelte' },
 	{ id: 'text', name: 'ZText', path: 'gene/ZText.svelte' },
 	{ id: 'icon', maxIncrementalGzip: 4 * 1024, name: 'ZIcon', path: 'gene/ZIcon.svelte' },
 	{ id: 'button', name: 'ZButton', path: 'gene/ZButton.svelte' },

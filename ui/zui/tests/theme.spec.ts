@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { defaultTheme, defineTheme, extendTheme } from '../src/entrypoints/index.js';
+import { auroraLight, neonDark } from '../src/entrypoints/themes.js';
 
 describe('ZUI themes', () => {
 	it('copies and deeply freezes the strict theme contract', () => {
@@ -85,5 +86,13 @@ describe('ZUI themes', () => {
 		expect(defaultTheme.color.focus).toBe('#60a5fa');
 		expect(defaultTheme.color.primary).toBe('#2563eb');
 		expect(defaultTheme.space.medium).toBe(8);
+	});
+
+	it('publishes distinct frozen light and dark production presets', () => {
+		expect(auroraLight.color.canvas).toBe('#ffffff');
+		expect(neonDark.color.canvas).toBe('#0c1424');
+		expect(auroraLight.color.primary).not.toBe(neonDark.color.primary);
+		expect(Object.isFrozen(auroraLight)).toBe(true);
+		expect(Object.isFrozen(neonDark.color)).toBe(true);
 	});
 });

@@ -83,6 +83,9 @@ describe('ICSS builder', () => {
 		expectTypeOf<Style['color']['_primary']>().toEqualTypeOf<void>();
 		expectTypeOf<Style['display']['inlineFlex']>().toEqualTypeOf<void>();
 		expectTypeOf<Style['borderLeftColor']['transparent']>().toEqualTypeOf<void>();
+		expectTypeOf<Style['aspectRatio']['auto']>().toEqualTypeOf<void>();
+		expectTypeOf<Style['clipPath']['raw']>().toBeFunction();
+		expectTypeOf<Style['marginInline']['auto']>().toEqualTypeOf<void>();
 		expectTypeOf<Style['outlineColor']['_focus']>().toEqualTypeOf<void>();
 		expectTypeOf<Style['outlineStyle']['solid']>().toEqualTypeOf<void>();
 		expectTypeOf<Style['outlineWidth']['_medium']>().toEqualTypeOf<void>();
@@ -108,5 +111,21 @@ describe('ICSS builder', () => {
 			query: '&:focus-visible'
 		});
 		expect(JSON.stringify(program)).not.toContain('currentColor');
+	});
+
+	it('records modern layout and visually-hidden primitives through typed properties', () => {
+		const program = createStyleProgram(defaultTheme, (s) => {
+			s.aspectRatio.raw('16 / 9');
+			s.clip.raw('rect(0 0 0 0)');
+			s.clipPath.raw('inset(50%)');
+			s.marginInline.auto;
+		});
+
+		expect(program.block.instructions).toMatchObject([
+			{ property: 'aspectRatio', values: [{ value: '16 / 9' }] },
+			{ property: 'clip', values: [{ value: 'rect(0 0 0 0)' }] },
+			{ property: 'clipPath', values: [{ value: 'inset(50%)' }] },
+			{ property: 'marginInline', values: [{ value: 'auto' }] }
+		]);
 	});
 });

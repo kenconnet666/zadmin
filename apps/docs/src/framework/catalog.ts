@@ -2,11 +2,17 @@ import { boxDoc } from '../content/components/gene/box/doc.js';
 import { buttonDoc } from '../content/components/gene/button/doc.js';
 import { codeDoc } from '../content/components/gene/code/doc.js';
 import { iconDoc } from '../content/components/gene/icon/doc.js';
+import { kbdDoc } from '../content/components/gene/kbd/doc.js';
+import { linkDoc } from '../content/components/gene/link/doc.js';
 import { providerDoc } from '../content/components/gene/provider/doc.js';
+import { separatorDoc } from '../content/components/gene/separator/doc.js';
 import { textDoc } from '../content/components/gene/text/doc.js';
+import { visuallyHiddenDoc } from '../content/components/gene/visually-hidden/doc.js';
 import { fieldDoc } from '../content/components/input/field/doc.js';
 import { inputDoc } from '../content/components/input/input/doc.js';
 import { stackDoc } from '../content/components/layout/stack/doc.js';
+import { aspectRatioDoc } from '../content/components/layout/aspect-ratio/doc.js';
+import { containerDoc } from '../content/components/layout/container/doc.js';
 import type { ComponentCategory, ComponentDoc } from './component-doc.js';
 
 export const componentCategories = Object.freeze([
@@ -23,6 +29,12 @@ export const componentDocs = Object.freeze([
 	iconDoc,
 	codeDoc,
 	buttonDoc,
+	linkDoc,
+	separatorDoc,
+	visuallyHiddenDoc,
+	kbdDoc,
+	aspectRatioDoc,
+	containerDoc,
 	inputDoc,
 	fieldDoc
 ] satisfies readonly ComponentDoc[]);

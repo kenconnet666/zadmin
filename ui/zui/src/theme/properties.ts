@@ -61,6 +61,7 @@ export const PROPERTY_DEFINITIONS = {
 			stretch: 'stretch'
 		}
 	},
+	aspectRatio: { keywords: { auto: 'auto' } },
 	animationDuration: { token: 'duration', tokenUnit: 'ms', units: ['time'] },
 	appearance: { keywords: { auto: 'auto', none: 'none' } },
 	backgroundColor: { keywords: { transparent: 'transparent' }, token: 'color' },
@@ -106,6 +107,8 @@ export const PROPERTY_DEFINITIONS = {
 	bottom: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
 	boxShadow: { token: 'shadow' },
 	boxSizing: { keywords: { borderBox: 'border-box', contentBox: 'content-box' } },
+	clip: {},
+	clipPath: {},
 	color: { token: 'color' },
 	columnGap: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
 	cursor: {
@@ -177,7 +180,12 @@ export const PROPERTY_DEFINITIONS = {
 	marginBlockEnd: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
 	marginBlockStart: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
 	marginBottom: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
-	marginInline: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
+	marginInline: {
+		keywords: { auto: 'auto' },
+		token: 'space',
+		tokenUnit: 'px',
+		units: ['length', 'percent']
+	},
 	marginInlineEnd: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
 	marginInlineStart: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
 	marginLeft: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
