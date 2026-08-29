@@ -10,6 +10,7 @@ import { textDoc } from '../content/components/gene/text/doc.js';
 import { toggleButtonDoc } from '../content/components/gene/toggle-button/doc.js';
 import { visuallyHiddenDoc } from '../content/components/gene/visually-hidden/doc.js';
 import { checkboxDoc } from '../content/components/input/checkbox/doc.js';
+import { comboboxDoc } from '../content/components/input/combobox/doc.js';
 import { fieldDoc } from '../content/components/input/field/doc.js';
 import { inputDoc } from '../content/components/input/input/doc.js';
 import { radioGroupDoc } from '../content/components/input/radio-group/doc.js';
@@ -57,6 +58,7 @@ export const componentDocs = Object.freeze([
 	aspectRatioDoc,
 	containerDoc,
 	checkboxDoc,
+	comboboxDoc,
 	inputDoc,
 	fieldDoc,
 	radioGroupDoc,

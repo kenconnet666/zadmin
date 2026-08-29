@@ -32,6 +32,7 @@ import { getIconComponent, iconManifest } from '../src/components/gene/ZIcon.sve
 import { __icssCarrier } from '../src/runtime/foundation/compiler-bridge.js';
 import ContextProbe from './ContextProbe.svelte';
 import ContextMenuFixture from './ContextMenuFixture.svelte';
+import ComboboxFixture from './ComboboxFixture.svelte';
 import AccordionFixture from './AccordionFixture.svelte';
 import AlertDialogFixture from './AlertDialogFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
@@ -273,6 +274,17 @@ describe('ZUI foundational components', () => {
 		expect(open).toContain('role="listbox"');
 		expect(open.match(/role="option"/gu)).toHaveLength(4);
 		expect(open).toContain('aria-selected="true"');
+	});
+
+	it('renders Combobox input and filtered-listbox contracts during SSR', () => {
+		const closed = render(ComboboxFixture).body;
+		expect(closed).toContain('role="combobox"');
+		expect(closed).toContain('aria-autocomplete="list"');
+		expect(closed).not.toContain('role="listbox"');
+		const open = render(ComboboxFixture, { props: { defaultOpen: true } }).body;
+		expect(open).toContain('role="listbox"');
+		expect(open.match(/role="option"/gu)).toHaveLength(4);
+		expect(open).toContain('name="choice"');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

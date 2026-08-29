@@ -12,6 +12,7 @@
 		readonly ariaDescribedBy?: string;
 		readonly ariaLabelledBy?: string | null;
 		readonly children?: Snippet;
+		readonly manageFocus?: boolean;
 		ref?: HTMLDivElement | null;
 		readonly role?: 'dialog' | 'listbox' | 'presentation';
 	}
@@ -72,6 +73,13 @@
 		keyboard: [{ description: '关闭顶层Popover。', key: 'Escape' }],
 		parts: [],
 		props: [
+			{
+				default: 'true',
+				description:
+					'是否在打开时移动并在关闭时恢复焦点；Combobox等active-descendant封装关闭此项。',
+				name: 'manageFocus',
+				type: 'boolean'
+			},
 			{
 				default: "'dialog'",
 				description: 'Popover shell角色；Menu等复合封装使用presentation。',
@@ -134,6 +142,7 @@
 		ariaLabelledBy,
 		children,
 		class: className,
+		manageFocus = true,
 		ref = $bindable(null),
 		role = 'dialog',
 		style,
@@ -167,13 +176,15 @@
 			onDismiss: () => popover.setOpen(false)
 		});
 		const removeTriggerBranch = dismissable.registerBranch(trigger);
-		const focusScope = new FocusScope(content, { restoreFocus: true, trap: popover.modal });
+		const focusScope = manageFocus
+			? new FocusScope(content, { restoreFocus: true, trap: popover.modal })
+			: undefined;
 		const releaseScroll = popover.modal ? lockScroll(content.ownerDocument) : undefined;
 		const restoreOthers = popover.modal ? inertOthers(content) : undefined;
 		return () => {
 			restoreOthers?.();
 			releaseScroll?.();
-			focusScope.destroy();
+			focusScope?.destroy();
 			removeTriggerBranch();
 			dismissable.destroy();
 			stopPositioning();

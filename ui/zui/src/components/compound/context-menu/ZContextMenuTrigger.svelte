@@ -87,6 +87,8 @@
 	}
 </script>
 
+<!-- The context target is intentionally keyboard focusable for ContextMenu and Shift+F10. -->
+<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 <div
 	{...rest}
 	bind:this={ref}

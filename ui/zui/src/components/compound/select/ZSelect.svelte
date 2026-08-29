@@ -217,7 +217,9 @@
 		if (!hidden) return;
 		return listenForFormReset(hidden, () => valueState.reset());
 	});
-	const serializedValue = $derived(serializeFormValue(valueState.current) ?? '');
+	const serializedValue = $derived(
+		valueState.current === undefined ? '' : (serializeFormValue(valueState.current) ?? '')
+	);
 </script>
 
 <ZPopover

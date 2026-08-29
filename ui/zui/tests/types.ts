@@ -19,6 +19,10 @@ import {
 	ZBox,
 	ZButton,
 	ZCheckbox,
+	ZCombobox,
+	ZComboboxContent,
+	ZComboboxInput,
+	ZComboboxItem,
 	ZContextMenu,
 	ZContextMenuContent,
 	ZContextMenuTrigger,
@@ -90,6 +94,10 @@ import {
 	type ZBoxProps,
 	type ZButtonProps,
 	type ZCheckboxProps,
+	type ZComboboxContentProps,
+	type ZComboboxInputProps,
+	type ZComboboxItemProps,
+	type ZComboboxProps,
 	type ZContextMenuContentProps,
 	type ZContextMenuProps,
 	type ZContextMenuTriggerProps,
@@ -180,6 +188,18 @@ const checkboxProps: ComponentProps<typeof ZCheckbox> = {
 	defaultChecked: 'indeterminate',
 	value: 42n
 } satisfies ZCheckboxProps;
+const comboboxProps: ComponentProps<typeof ZCombobox> = {
+	defaultInputValue: 'Ready',
+	defaultValue: 'ready'
+} satisfies ZComboboxProps;
+const comboboxInputProps: ComponentProps<typeof ZComboboxInput> = {} satisfies ZComboboxInputProps;
+const comboboxContentProps: ComponentProps<typeof ZComboboxContent> = {
+	ariaLabel: 'Suggestions'
+} satisfies ZComboboxContentProps;
+const comboboxItemProps: ComponentProps<typeof ZComboboxItem> = {
+	textValue: 'Ready',
+	value: 'ready'
+} satisfies ZComboboxItemProps;
 const contextMenuProps: ComponentProps<typeof ZContextMenu> = {
 	placement: 'right-start'
 } satisfies ZContextMenuProps;
@@ -307,6 +327,10 @@ void alertDialogActionProps;
 void directBoxProps;
 void buttonProps;
 void checkboxProps;
+void comboboxProps;
+void comboboxInputProps;
+void comboboxContentProps;
+void comboboxItemProps;
 void contextMenuProps;
 void contextMenuTriggerProps;
 void contextMenuContentProps;

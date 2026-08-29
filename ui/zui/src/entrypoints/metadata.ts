@@ -5,6 +5,10 @@ export { zuiMetadata as accordionTriggerMetadata } from '../components/compound/
 export { zuiMetadata as contextMenuMetadata } from '../components/compound/context-menu/ZContextMenu.svelte';
 export { zuiMetadata as contextMenuContentMetadata } from '../components/compound/context-menu/ZContextMenuContent.svelte';
 export { zuiMetadata as contextMenuTriggerMetadata } from '../components/compound/context-menu/ZContextMenuTrigger.svelte';
+export { zuiMetadata as comboboxMetadata } from '../components/compound/combobox/ZCombobox.svelte';
+export { zuiMetadata as comboboxContentMetadata } from '../components/compound/combobox/ZComboboxContent.svelte';
+export { zuiMetadata as comboboxInputMetadata } from '../components/compound/combobox/ZComboboxInput.svelte';
+export { zuiMetadata as comboboxItemMetadata } from '../components/compound/combobox/ZComboboxItem.svelte';
 export { zuiMetadata as alertDialogMetadata } from '../components/compound/alert-dialog/ZAlertDialog.svelte';
 export { zuiMetadata as alertDialogActionMetadata } from '../components/compound/alert-dialog/ZAlertDialogAction.svelte';
 export { zuiMetadata as alertDialogCancelMetadata } from '../components/compound/alert-dialog/ZAlertDialogCancel.svelte';

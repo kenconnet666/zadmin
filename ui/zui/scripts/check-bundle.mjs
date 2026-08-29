@@ -26,6 +26,14 @@ const components = [
 		name: 'ZAccordionContent',
 		path: 'compound/accordion/ZAccordionContent.svelte'
 	},
+	{ id: 'combobox', name: 'ZCombobox', path: 'compound/combobox/ZCombobox.svelte' },
+	{ id: 'combobox-input', name: 'ZComboboxInput', path: 'compound/combobox/ZComboboxInput.svelte' },
+	{
+		id: 'combobox-content',
+		name: 'ZComboboxContent',
+		path: 'compound/combobox/ZComboboxContent.svelte'
+	},
+	{ id: 'combobox-item', name: 'ZComboboxItem', path: 'compound/combobox/ZComboboxItem.svelte' },
 	{ id: 'context-menu', name: 'ZContextMenu', path: 'compound/context-menu/ZContextMenu.svelte' },
 	{
 		id: 'context-menu-trigger',

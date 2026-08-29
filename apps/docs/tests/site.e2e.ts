@@ -296,6 +296,27 @@ test('keeps Select listbox, keyboard, form value and reset synchronized', async 
 	await expect(trigger).toHaveText('生产');
 });
 
+test('keeps Combobox focus, filtering, active descendant and stable form value synchronized', async ({
+	page
+}) => {
+	await page.goto('/#/components/combobox');
+	const input = page.getByRole('combobox', { name: '搜索部署环境' });
+	await input.focus();
+	const listbox = page.getByRole('listbox', { name: '部署环境建议' });
+	await expect(listbox).toBeVisible();
+	await input.fill('预');
+	await expect(page.getByRole('option', { name: '预发' })).toBeVisible();
+	await expect(page.locator('[role="option"]', { hasText: '生产' })).toBeHidden();
+	await expect(input).toBeFocused();
+	await page.keyboard.press('Enter');
+	await expect(listbox).toHaveCount(0);
+	await expect(input).toHaveValue('预发');
+	await page.getByRole('button', { name: '读取FormData' }).click();
+	await expect(
+		page.getByText(/value = staging · input = 预发 · 变更 = 1 · staging/u)
+	).toBeVisible();
+});
+
 test('keeps Accordion selection, roving focus and Presence synchronized', async ({ page }) => {
 	await page.goto('/#/components/accordion');
 	const runtime = page.getByRole('button', { name: /运行时合同/u });
@@ -487,6 +508,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/aspect-ratio',
 		'#/components/container',
 		'#/components/checkbox',
+		'#/components/combobox',
 		'#/components/input',
 		'#/components/field',
 		'#/components/radio-group',

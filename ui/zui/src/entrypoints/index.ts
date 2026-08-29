@@ -18,6 +18,15 @@ export { default as ZContextMenuContent } from '../components/compound/context-m
 export type { ZContextMenuContentProps } from '../components/compound/context-menu/ZContextMenuContent.svelte';
 export { default as ZContextMenuTrigger } from '../components/compound/context-menu/ZContextMenuTrigger.svelte';
 export type { ZContextMenuTriggerProps } from '../components/compound/context-menu/ZContextMenuTrigger.svelte';
+export { default as ZCombobox } from '../components/compound/combobox/ZCombobox.svelte';
+export type { ZComboboxProps } from '../components/compound/combobox/ZCombobox.svelte';
+export { default as ZComboboxContent } from '../components/compound/combobox/ZComboboxContent.svelte';
+export type { ZComboboxContentProps } from '../components/compound/combobox/ZComboboxContent.svelte';
+export { default as ZComboboxInput } from '../components/compound/combobox/ZComboboxInput.svelte';
+export type { ZComboboxInputProps } from '../components/compound/combobox/ZComboboxInput.svelte';
+export { default as ZComboboxItem } from '../components/compound/combobox/ZComboboxItem.svelte';
+export type { ZComboboxItemProps } from '../components/compound/combobox/ZComboboxItem.svelte';
+export { ComboboxSelectEvent } from '../components/compound/combobox/context.svelte.js';
 export { default as ZAlertDialog } from '../components/compound/alert-dialog/ZAlertDialog.svelte';
 export type { ZAlertDialogProps } from '../components/compound/alert-dialog/ZAlertDialog.svelte';
 export { default as ZAlertDialogAction } from '../components/compound/alert-dialog/ZAlertDialogAction.svelte';

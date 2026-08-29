@@ -4,6 +4,7 @@ import { render } from 'vitest-browser-svelte';
 
 import DynamicBox from './DynamicBox.svelte';
 import ComponentGallery from './ComponentGallery.svelte';
+import ComboboxFixture from './ComboboxFixture.svelte';
 import ContextMenuFixture from './ContextMenuFixture.svelte';
 import AccordionFixture from './AccordionFixture.svelte';
 import AlertDialogFixture from './AlertDialogFixture.svelte';
@@ -175,6 +176,42 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(trigger?.textContent?.trim()).toBe('Beta');
 		expect(output?.textContent).toBe('b:1:false');
+	});
+
+	it('coordinates Combobox filtering, active descendant, selection, form value and reset', async () => {
+		render(ComboboxFixture);
+		const input = document.querySelector<HTMLInputElement>('[data-testid="combobox-input"]');
+		const form = document.querySelector<HTMLFormElement>('[data-testid="combobox-form"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="combobox-output"]');
+		input?.focus();
+		await tick();
+		expect(document.activeElement).toBe(input);
+		expect(document.querySelector('[data-testid="combobox-content"]')).not.toBeNull();
+		if (input) {
+			input.value = 'de';
+			input.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		}
+		await tick();
+		const delta = document.querySelector<HTMLElement>('[data-testid="combobox-d"]');
+		const alpha = document.querySelector<HTMLElement>('[data-testid="combobox-a"]');
+		expect(alpha?.hidden).toBe(true);
+		expect(delta?.hidden).toBe(false);
+		expect(input?.getAttribute('aria-activedescendant')).toBe(delta?.id);
+		expect(document.activeElement).toBe(input);
+
+		input?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+		await new Promise((resolve) => setTimeout(resolve, 140));
+		await tick();
+		expect(input?.value).toBe('Delta');
+		expect(new FormData(form!).get('choice')).toBe('d');
+		expect(output?.textContent).toBe('d:Delta:1:false');
+		expect(document.activeElement).toBe(input);
+
+		form?.reset();
+		await Promise.resolve();
+		await tick();
+		expect(input?.value).toBe('Beta');
+		expect(output?.textContent).toBe('b:Beta:1:false');
 	});
 	it('keeps AlertDialog open until an explicit action is chosen', async () => {
 		render(AlertDialogFixture);
