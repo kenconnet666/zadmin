@@ -24,6 +24,7 @@ describe('ZUI component documentation catalog', () => {
 			'ZField',
 			'ZRadioGroup',
 			'ZSwitch',
+			'ZSlider',
 			'ZPagination',
 			'ZTabs'
 		]);
@@ -43,6 +44,7 @@ describe('ZUI component documentation catalog', () => {
 			'gene',
 			'layout',
 			'layout',
+			'input',
 			'input',
 			'input',
 			'input',

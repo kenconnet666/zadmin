@@ -10,6 +10,7 @@ import {
 	ZPagination,
 	ZRadioGroup,
 	ZRadioGroupItem,
+	ZSlider,
 	ZSwitch,
 	ZTabs,
 	ZTabsList,
@@ -26,6 +27,7 @@ import {
 	type ZPaginationProps,
 	type ZRadioGroupItemProps,
 	type ZRadioGroupProps,
+	type ZSliderProps,
 	type ZSwitchProps,
 	type ZTabsListProps,
 	type ZTabsPanelProps,
@@ -53,6 +55,11 @@ const radioGroupProps: ComponentProps<typeof ZRadioGroup> = {
 const radioGroupItemProps: ComponentProps<typeof ZRadioGroupItem> = {
 	value: 'ready'
 } satisfies ZRadioGroupItemProps;
+const sliderProps: ComponentProps<typeof ZSlider> = {
+	defaultValue: 25,
+	max: 50,
+	step: 5
+} satisfies ZSliderProps;
 const switchProps: ComponentProps<typeof ZSwitch> = {
 	defaultChecked: true,
 	value: 1n
@@ -79,6 +86,7 @@ void checkboxProps;
 void paginationProps;
 void radioGroupProps;
 void radioGroupItemProps;
+void sliderProps;
 void switchProps;
 void tabsProps;
 void tabsListProps;

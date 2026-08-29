@@ -9,6 +9,7 @@ import FieldFixture from './FieldFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
 import PaginationFixture from './PaginationFixture.svelte';
 import RadioGroupFixture from './RadioGroupFixture.svelte';
+import SliderFixture from './SliderFixture.svelte';
 import ToggleButtonFixture from './ToggleButtonFixture.svelte';
 import SwitchFixture from './SwitchFixture.svelte';
 import TabsFixture from './TabsFixture.svelte';
@@ -33,6 +34,29 @@ function insertedRuleCount(): number {
 }
 
 describe('compiled ICSS browser updates', () => {
+	it('keeps native Slider input, FormData and reset synchronized', async () => {
+		render(SliderFixture);
+		const control = document.querySelector<HTMLInputElement>('[data-testid="slider"]');
+		const form = document.querySelector<HTMLFormElement>('[data-testid="slider-form"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="slider-output"]');
+		expect(control?.valueAsNumber).toBe(35);
+
+		if (control) {
+			control.value = '40';
+			control.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		}
+		await tick();
+		expect(new FormData(form!).get('threshold')).toBe('40');
+		expect(output?.textContent).toBe('40:1');
+
+		form?.reset();
+		await new Promise<void>((resolve) => setTimeout(resolve, 0));
+		await tick();
+		await tick();
+		expect(control?.valueAsNumber).toBe(35);
+		expect(output?.textContent).toBe('35:1');
+	});
+
 	it('keeps pagination window, current page and callbacks synchronized', async () => {
 		render(PaginationFixture);
 		const navigation = document.querySelector<HTMLElement>('[aria-label="Fixture pagination"]');

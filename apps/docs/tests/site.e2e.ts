@@ -9,7 +9,7 @@ test('renders the component catalog and real demo source', async ({ page }) => {
 
 	await page.goto('/#/');
 	await expect(page.getByRole('heading', { level: 1 })).toContainText('看见组件');
-	await expect(page.getByTestId('component-card')).toHaveCount(21);
+	await expect(page.getByTestId('component-card')).toHaveCount(22);
 	await expect(page.getByRole('heading', { level: 3 })).toHaveText([
 		'通用组件',
 		'布局组件',
@@ -200,6 +200,26 @@ test('keeps pagination locale labels, current page and window synchronized', asy
 	await expect(navigation.locator('[data-slot="ellipsis"]')).toHaveCount(2);
 });
 
+test('keeps Slider keyboard, value text, FormData and reset synchronized', async ({ page }) => {
+	await page.goto('/#/components/slider');
+	const slider = page.getByRole('slider', { name: '告警阈值' });
+	await expect(slider).toHaveValue('35');
+	await expect(slider).toHaveAttribute('aria-valuetext', '35%');
+	await slider.press('ArrowRight');
+	await expect(slider).toHaveValue('40');
+	await expect(page.getByText(/value = 40% · 用户变更次数 = 1/u)).toBeVisible();
+	await page.getByRole('button', { name: '读取FormData' }).click();
+	await expect(page.getByText(/ · 40$/u)).toBeVisible();
+	await page.locator('summary[aria-label="调整显示偏好"]').click();
+	await page.locator('#zui-docs-direction').selectOption('rtl');
+	await slider.press('ArrowRight');
+	await expect(slider).toHaveValue('35');
+	await expect(page.getByText(/value = 35% · 用户变更次数 = 2/u)).toBeVisible();
+	await page.getByRole('button', { name: '重置' }).click();
+	await expect(slider).toHaveValue('35');
+	await expect(page.getByText(/value = 35% · 用户变更次数 = 2 · 尚未提交/u)).toBeVisible();
+});
+
 test('keeps S1 primitives semantic and display preferences effective', async ({ page }) => {
 	await page.goto('/#/guides/theme');
 	await expect(page.getByRole('heading', { level: 1 })).toContainText('主题不是一组颜色');
@@ -254,6 +274,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/field',
 		'#/components/radio-group',
 		'#/components/switch',
+		'#/components/slider',
 		'#/components/pagination',
 		'#/components/tabs'
 	]) {

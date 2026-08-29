@@ -18,6 +18,7 @@ import {
 	ZLink,
 	ZPagination,
 	ZSeparator,
+	ZSlider,
 	ZStack,
 	ZSwitch,
 	ZText,
@@ -135,6 +136,17 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain('aria-current="page"');
 		expect(result).toContain('aria-label="Previous page"');
 		expect(result).toContain('aria-label="Next page"');
+	});
+
+	it('renders native range Slider with normalized value and form semantics during SSR', () => {
+		const result = render(ZSlider, {
+			props: { defaultValue: 37, formatValue: (value) => `${value}%`, name: 'threshold', step: 5 }
+		}).body;
+
+		expect(result).toContain('type="range"');
+		expect(result).toContain('name="threshold"');
+		expect(result).toContain('value="35"');
+		expect(result).toContain('aria-valuetext="35%"');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

@@ -45,7 +45,13 @@ const components = [
 	},
 	{ id: 'checkbox', name: 'ZCheckbox', path: 'input/ZCheckbox.svelte' },
 	{ id: 'input', name: 'ZInput', path: 'input/ZInput.svelte' },
-	{ id: 'pagination', name: 'ZPagination', path: 'navigation/ZPagination.svelte' },
+	{ id: 'slider', name: 'ZSlider', path: 'input/ZSlider.svelte' },
+	{
+		id: 'pagination',
+		maxIncrementalGzip: 4.625 * 1024,
+		name: 'ZPagination',
+		path: 'navigation/ZPagination.svelte'
+	},
 	{
 		id: 'switch',
 		maxIncrementalGzip: 3.625 * 1024,

@@ -32,5 +32,6 @@ export {
 export type { Selection, SelectionKey, SelectionMode } from '../runtime/selection.js';
 export { RovingFocus } from '../runtime/roving-focus.svelte.js';
 export type { RovingFocusOptions } from '../runtime/roving-focus.svelte.js';
+export { normalizeSliderValue } from '../runtime/slider.js';
 export { Typeahead } from '../runtime/typeahead.js';
 export type { TypeaheadOptions } from '../runtime/typeahead.js';

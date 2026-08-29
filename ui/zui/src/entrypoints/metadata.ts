@@ -18,6 +18,7 @@ export { zuiMetadata as visuallyHiddenMetadata } from '../components/gene/ZVisua
 export { zuiMetadata as checkboxMetadata } from '../components/input/ZCheckbox.svelte';
 export { zuiMetadata as fieldMetadata } from '../components/input/ZField.svelte';
 export { zuiMetadata as inputMetadata } from '../components/input/ZInput.svelte';
+export { zuiMetadata as sliderMetadata } from '../components/input/ZSlider.svelte';
 export { zuiMetadata as switchMetadata } from '../components/input/ZSwitch.svelte';
 export { zuiMetadata as paginationMetadata } from '../components/navigation/ZPagination.svelte';
 export { zuiMetadata as stackMetadata } from '../components/layout/ZStack.svelte';

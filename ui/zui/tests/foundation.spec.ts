@@ -14,6 +14,7 @@ import {
 	singleSelection,
 	toggleSelection
 } from '../src/runtime/selection.js';
+import { normalizeSliderValue } from '../src/runtime/slider.js';
 import { Typeahead } from '../src/runtime/typeahead.js';
 
 describe('ZUI foundation runtime', () => {
@@ -126,6 +127,16 @@ describe('ZUI foundation runtime', () => {
 		expect(() => createPaginationItems(0, 1)).toThrow(/positive integer/u);
 		expect(() => createPaginationItems(10, 1, -1)).toThrow(/non-negative integer/u);
 		expect(() => clampPage(Number.NaN, 10)).toThrow(/finite/u);
+	});
+
+	it('normalizes slider values across bounds, steps and decimal precision', () => {
+		expect(normalizeSliderValue(37, 0, 100, 5)).toBe(35);
+		expect(normalizeSliderValue(-2, 0, 100, 5)).toBe(0);
+		expect(normalizeSliderValue(102, 0, 100, 5)).toBe(100);
+		expect(normalizeSliderValue(0.34, 0.1, 1, 0.1)).toBe(0.3);
+		expect(() => normalizeSliderValue(Number.NaN)).toThrow(/finite/u);
+		expect(() => normalizeSliderValue(1, 2, 1)).toThrow(/greater than/u);
+		expect(() => normalizeSliderValue(1, 0, 10, 0)).toThrow(/positive/u);
 	});
 
 	it('matches locale-aware typeahead with timeout, cycling and disabled filtering', () => {
