@@ -160,6 +160,7 @@ public sealed class WebViewHost : IAsyncDisposable
         // owns the smoke report so overlapping DOMContentLoaded handlers never race on the same file.
         await Task.Delay(750);
         if (generation != Volatile.Read(ref _smokeNavigationGeneration)) return;
+        var closeWindow = true;
         try
         {
             _smokeRequest = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
@@ -188,6 +189,12 @@ public sealed class WebViewHost : IAsyncDisposable
                 _options.SmokeReportPath,
                 JsonSerializer.Serialize(report, new JsonSerializerOptions(SerializerOptions) { WriteIndented = true }));
         }
+        catch (Exception error) when (_options.Development && error.HResult == unchecked((int)0x8007139F))
+        {
+            // Vite's first dependency optimization can replace the current document while the old
+            // DOMContentLoaded handler is reading it. The replacement navigation owns the report.
+            closeWindow = false;
+        }
         catch (Exception error)
         {
             await WriteSmokeReportAsync(
@@ -196,7 +203,7 @@ public sealed class WebViewHost : IAsyncDisposable
         }
         finally
         {
-            _window.DispatcherQueue.TryEnqueue(_window.Close);
+            if (closeWindow) _window.DispatcherQueue.TryEnqueue(_window.Close);
         }
     }
 
