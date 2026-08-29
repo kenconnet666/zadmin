@@ -166,7 +166,7 @@ void [box, camera];
 		status: 'passed'
 	};
 	await write(
-		resolve(workspaceRoot, 'apps/docs/content/wechat-package-acceptance.json'),
+		resolve(workspaceRoot, '.docs/miniapp/wechat-package-acceptance.json'),
 		`${JSON.stringify(report, null, '\t')}\n`
 	);
 	succeeded = true;

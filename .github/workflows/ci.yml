@@ -143,8 +143,8 @@ jobs:
       - name: Verify reports and generated tracked files are unchanged
         run: >-
           git diff --exit-code -- .
-          ':(exclude)apps/docs/content/wechat-package-acceptance.json'
-          ':(exclude)apps/docs/content/wechat-package-acceptance.md'
+          ':(exclude).docs/miniapp/wechat-package-acceptance.json'
+          ':(exclude).docs/miniapp/wechat-package-acceptance.md'
 
   desktop-windows:
     name: Windows C# WebView2 desktop

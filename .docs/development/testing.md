@@ -69,7 +69,7 @@ pnpm lint
 
 ## ZUI ICSS验收矩阵
 
-实现合同见[ZUI ICSS生产架构](./zui-icss.md)。最低自动验收包括：
+实现合同见[ZUI ICSS生产架构](../zui/icss.md)。最低自动验收包括：
 
 - DSL属性、token、keyword、unit、条件、嵌套selector和escape；
 - canonical序列化、确定性hash、collision检查和Stylis输出；
@@ -160,7 +160,7 @@ pnpm --filter @zadmin/wechat-app build
 - coverage、空目录tarball安装和全仓门禁由GitHub Actions执行，避免本地重复阻塞；
 - 微信开发者工具直编WebView target已完成页面截图、page stack、console、`#counter`点击与count更新；自动直编把文案改为hot再恢复，两次完整Page remount均显示新源码；
 - 新runtime真机、账号、支付、手机号、权限、上传与硬件能力仍不得继承旧Taro证据。
-  -WebView完整组件矩阵为simulator-verified；指定Android真机已验证首页渲染、导航/卸载及8项明确capability；Skyline仅build-verified，详见[renderer报告](./wechat-renderers.md)。
+  -WebView完整组件矩阵为simulator-verified；指定Android真机已验证首页渲染、导航/卸载及8项明确capability；Skyline仅build-verified，详见[renderer报告](../miniapp/wechat-renderers.md)。
 
 生产内容必须断言以下字符串在非source-map JS中为0：
 
@@ -173,7 +173,7 @@ FakePlatformDriver
 workspace绝对路径
 ```
 
-完整证据见[Svelte Miniapp微信直编验收](./wechat-production-acceptance.md)。微信upload不属于默认测试命令，必须另获用户授权。
+完整证据见[Svelte Miniapp微信直编验收](../miniapp/wechat-production-acceptance.md)。微信upload不属于默认测试命令，必须另获用户授权。
 
 ## Core覆盖矩阵
 

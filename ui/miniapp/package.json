@@ -102,10 +102,10 @@
 	"scripts": {
 		"build": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\" && tsc -p tsconfig.json && svelte-package --input src/components --output dist/components",
 		"check": "tsc -p tsconfig.test.json --noEmit && svelte-check --tsconfig ./tsconfig.test.json",
-		"report": "pnpm build && node scripts/generate-capability-report.mjs && pnpm -w exec prettier --write apps/docs/content/wechat-capability-report.json apps/docs/content/wechat-capability-report.md",
+		"report": "pnpm build && node scripts/generate-capability-report.mjs && pnpm -w exec prettier --write .docs/miniapp/wechat-capability-report.json .docs/miniapp/wechat-capability-report.md",
 		"test": "pnpm build && vitest --run tests",
 		"test:coverage": "pnpm build && vitest --run --coverage tests",
-		"test:package": "node scripts/accept-package.mjs && pnpm -w exec prettier --write apps/docs/content/wechat-package-acceptance.json"
+		"test:package": "node scripts/accept-package.mjs && pnpm -w exec prettier --write .docs/miniapp/wechat-package-acceptance.json"
 	},
 	"keywords": [
 		"svelte",

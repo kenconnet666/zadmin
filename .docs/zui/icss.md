@@ -4,7 +4,7 @@
 
 ## 实现状态
 
-`@zadmin/zui@0.1.0`已经于2026-08-24完成本文范围和生产验收。当前实现包含Runtime、Compiler、SvelteKit SSR/CSP/HMR、Provider/Box/Stack/Text/Button、Docs和Storybook；验收数据见[测试与验收](./testing.md)。
+`@zadmin/zui@0.1.0`已经于2026-08-24完成本文范围和生产验收。当前实现包含Runtime、Compiler、SvelteKit SSR/CSP/HMR、8个基础组件和Svelte展示站；验收数据见[测试与验收](../development/testing.md)。
 
 ## 范围
 

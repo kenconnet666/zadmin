@@ -4,7 +4,7 @@
 
 ZAdmin是一个 pnpm workspace中的多应用、可复用 Package和动态 Plugin系统。SvelteKit同时承担页面、SSR和服务端入口，不拆分单独 Java后端或 HTTP微服务层。
 
-`ui/zui`的样式层使用运行时 ICSS和Svelte编译优化双轨架构。公开调用只返回class字符串；可追踪的Svelte响应式叶子在编译时提升为inline CSS自定义属性，结构CSS由运行时确定性生成和缓存。完整合同见[ZUI ICSS生产架构](./zui-icss.md)。
+`ui/zui`的样式层使用运行时 ICSS和Svelte编译优化双轨架构。公开调用只返回class字符串；可追踪的Svelte响应式叶子在编译时提升为inline CSS自定义属性，结构CSS由运行时确定性生成和缓存。完整合同见[ZUI ICSS生产架构](../zui/icss.md)。
 
 微信小程序不是 Web renderer 的条件分支。`@zadmin/miniapp`不依赖`@zadmin/zui`，独立拥有移动端Theme、`mcss()`、8个`M*`组件、compiler、App/Page runtime、微信平台能力与开发态增量构建。微信target直接生成WXML、WXSS、JS和JSON，生产依赖图中没有第三方跨端runtime。
 
@@ -71,7 +71,7 @@ apps/wechat ──→ @zadmin/miniapp ──→ 微信原生target
 - 每个Page bundle只包含一份可tree-shake的Svelte runtime；节点变化在同一microtask合并为一次`setData`。
 - Fast Refresh是串行增量重建+开发者工具reload；compiler变更由CLI进程重启接管，不产生第二组watcher。
 
-完整生产边界见[微信Miniapp生产验收](./wechat-production-acceptance.md)。
+完整生产边界见[微信Miniapp生产验收](../miniapp/wechat-production-acceptance.md)。
 
 ## Provider、Module与Plugin
 

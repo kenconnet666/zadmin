@@ -67,4 +67,4 @@ const fixture = createIcssFixture(harness, defaultTheme, (s) => s.display.flex);
 
 Requires Node 22 or newer and Svelte `>=5.56 <6`.
 
-Full architecture, CSP, SSR, HMR and external integration documentation lives in the [ZAdmin documentation](https://github.com/kenconnet666/zadmin/tree/master/apps/docs/content).
+Full architecture, CSP, SSR, HMR and external integration documentation lives in the internal [ZAdmin code documentation](https://github.com/kenconnet666/zadmin/tree/master/.docs/zui).

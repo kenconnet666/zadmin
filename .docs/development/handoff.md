@@ -181,7 +181,7 @@ plugin.ts
 | Svelte ICSS编译器           | `ui/zui/src/lib/compiler/`                             |
 | SvelteKit ZUI SSR/CSP       | `ui/sveltekit/src/lib/zui/`                            |
 | ZUI基础组件                 | `ui/zui/src/lib/components/`                           |
-| ZUI接入文档                 | `apps/docs/content/zui-usage.md`                       |
+| ZUI接入文档                 | `.docs/zui/usage.md`                                   |
 | Svelte Miniapp compiler     | `ui/miniapp/src/compiler/`                             |
 | Miniapp renderer/runtime    | `ui/miniapp/src/renderer/`、`runtime/`                 |
 | 微信直接target              | `ui/miniapp/src/targets/wechat/`                       |
@@ -195,7 +195,7 @@ plugin.ts
 | Windows桌面target           | `ui/webview/targets/windows/`                          |
 | Windows产品页面/配置        | `apps/desktop/src/`、`webview.config.ts`               |
 | WeChat直编/HMR CLI          | `ui/miniapp/src/cli.ts`、`compiler/build.ts`           |
-| 微信生产验收                | `apps/docs/content/wechat-production-acceptance.md`    |
+| 微信生产验收                | `.docs/miniapp/wechat-production-acceptance.md`        |
 
 ## 当前调用方式
 
@@ -241,7 +241,7 @@ approval: inject<ApprovalStarter>('@zadmin/approval');
 -Approval类型签名变化会被CRM、ERP watcher同时发现，恢复后自动清错。
 -正常 `dev:admin`只有7个相关Node进程，不再倍增watcher。
 
-详见 [开发态热重载](./development-hmr.md)。
+详见 [开发态热重载](./hmr.md)。
 
 ## ZUI实测结论
 

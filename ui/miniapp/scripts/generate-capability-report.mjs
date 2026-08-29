@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { createCapabilityReport, serializeCapabilityReport } from '../dist/platform/report.js';
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const outputRoot = resolve(packageRoot, '../../apps/docs/content');
+const outputRoot = resolve(packageRoot, '../../.docs/miniapp');
 const overrides = {
 	'wechat.compute.worker': {
 		grade: 'device-verified',

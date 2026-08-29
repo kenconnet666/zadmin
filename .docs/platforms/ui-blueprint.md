@@ -96,7 +96,7 @@ packages/core ────────────────┐
 
 `@zadmin/zui`合并当前`zui-core`和`zui-svelte`，只为浏览器渲染环境负责。WebView2使用Edge Chromium，因此属于该支持范围，不需要第二套桌面ZUI。
 
-运行时CSS、Theme、recipe、组件Props、目录与分阶段API详见[ZUI运行时CSS与组件API蓝图](./zui-runtime-css-components-blueprint.md)。
+运行时CSS、Theme、recipe、组件Props、目录与分阶段API详见[ZUI运行时CSS与组件API蓝图](../zui/runtime-css-blueprint.md)。
 
 ZUI负责：
 

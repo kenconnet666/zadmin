@@ -184,4 +184,4 @@ miniapp dev
 - 每次成功开发构建才更新bundle和微信storage中的build ID；失败构建保留上次ID，生产构建不含开发标记。
 - DevTools优先依靠`dist/wechat`文件变化自动刷新；模拟器端到端耗时须在直编target获得授权会话后重新记录。
 
-完整分类、边界和排错见[微信Fast Refresh](./wechat-fast-refresh.md)。
+完整分类、边界和排错见[微信Fast Refresh](../miniapp/wechat-fast-refresh.md)。
