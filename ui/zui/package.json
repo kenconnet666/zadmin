@@ -94,14 +94,25 @@
 		"url": "https://github.com/kenconnet666/zadmin/issues"
 	},
 	"dependencies": {
+		"@floating-ui/dom": "catalog:",
+		"@internationalized/date": "catalog:",
+		"@standard-schema/spec": "catalog:",
 		"@types/estree": "catalog:",
 		"csstype": "catalog:",
 		"estree-walker": "catalog:",
 		"magic-string": "catalog:",
-		"stylis": "catalog:"
+		"runed": "catalog:",
+		"stylis": "catalog:",
+		"tabbable": "catalog:"
 	},
 	"peerDependencies": {
+		"shiki": "^4.4.3",
 		"svelte": ">=5.56.0 <6"
+	},
+	"peerDependenciesMeta": {
+		"shiki": {
+			"optional": true
+		}
 	},
 	"devDependencies": {
 		"@sveltejs/vite-plugin-svelte": "catalog:",
@@ -110,7 +121,9 @@
 		"@types/stylis": "catalog:",
 		"@vitest/browser-playwright": "catalog:",
 		"@vitest/coverage-v8": "catalog:",
+		"fast-check": "catalog:",
 		"playwright": "catalog:",
+		"shiki": "catalog:",
 		"svelte": "catalog:",
 		"svelte-check": "catalog:",
 		"typescript": "catalog:",

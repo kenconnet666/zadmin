@@ -13,7 +13,8 @@
 	},
 	"dependencies": {
 		"@fontsource/fira-mono": "catalog:",
-		"@zadmin/zui": "workspace:^"
+		"@zadmin/zui": "workspace:^",
+		"shiki": "catalog:"
 	},
 	"devDependencies": {
 		"@axe-core/playwright": "catalog:",

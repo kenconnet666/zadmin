@@ -24,6 +24,7 @@
 		"test": "pnpm -r --if-present test"
 	},
 	"devDependencies": {
+		"@changesets/cli": "catalog:",
 		"@eslint/js": "catalog:",
 		"eslint": "catalog:",
 		"eslint-config-prettier": "catalog:",
