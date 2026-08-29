@@ -11,6 +11,12 @@ export type { BrowserStyleSheetOptions } from '../icss/sheet.js';
 export { createZuiId, createZuiIdScope } from '../runtime/ids.js';
 export { CollectionStore } from '../runtime/collection.svelte.js';
 export type { CollectionItem } from '../runtime/collection.svelte.js';
+export { moveIndex, navigationIntent } from '../runtime/list-navigation.js';
+export type {
+	NavigationDirection,
+	NavigationIntent,
+	NavigationOrientation
+} from '../runtime/list-navigation.js';
 export {
 	emptySelection,
 	isSelected,
@@ -19,3 +25,5 @@ export {
 	toggleSelection
 } from '../runtime/selection.js';
 export type { Selection, SelectionKey, SelectionMode } from '../runtime/selection.js';
+export { Typeahead } from '../runtime/typeahead.js';
+export type { TypeaheadOptions } from '../runtime/typeahead.js';

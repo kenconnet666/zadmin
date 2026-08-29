@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest';
 
 import { createZuiId, createZuiIdScope } from '../src/runtime/ids.js';
 import { CollectionStore } from '../src/runtime/collection.svelte.js';
+import { moveIndex, navigationIntent } from '../src/runtime/list-navigation.js';
 import { isSelected, selectAll, selectRange, toggleSelection } from '../src/runtime/selection.js';
+import { Typeahead } from '../src/runtime/typeahead.js';
 
 describe('ZUI foundation runtime', () => {
 	it('creates scoped SSR-stable ids and rejects ambiguous parts', () => {
@@ -54,5 +56,40 @@ describe('ZUI foundation runtime', () => {
 		expect(collection.keys).toEqual(['b']);
 		removeB();
 		expect(collection.items).toEqual([]);
+	});
+
+	it('maps directional keys and moves indexes with RTL and loop contracts', () => {
+		expect(navigationIntent('ArrowRight', 'horizontal')).toBe('next');
+		expect(navigationIntent('ArrowRight', 'horizontal', 'rtl')).toBe('previous');
+		expect(navigationIntent('ArrowDown', 'vertical')).toBe('next');
+		expect(navigationIntent('ArrowLeft', 'vertical')).toBeUndefined();
+		expect(navigationIntent('Home', 'both')).toBe('first');
+		expect(moveIndex(3, 2, 'next')).toBe(0);
+		expect(moveIndex(3, 2, 'next', false)).toBe(2);
+		expect(moveIndex(3, -1, 'previous')).toBe(2);
+		expect(moveIndex(0, 0, 'next')).toBe(-1);
+		expect(() => moveIndex(-1, 0, 'next')).toThrow(/non-negative integer/);
+	});
+
+	it('matches locale-aware typeahead with timeout, cycling and disabled filtering', () => {
+		let now = 0;
+		const typeahead = new Typeahead<string>({ locale: 'en', now: () => now, timeout: 500 });
+		const items = [
+			{ key: 'apple', textValue: 'Apple' },
+			{ disabled: true, key: 'apricot', textValue: 'Apricot' },
+			{ key: 'banana', textValue: 'Banana' },
+			{ key: 'blueberry', textValue: 'Blueberry' }
+		];
+		expect(typeahead.search('b', items)).toBe('banana');
+		now = 100;
+		expect(typeahead.search('b', items, 'banana')).toBe('blueberry');
+		typeahead.clear();
+		expect(typeahead.search('a', items)).toBe('apple');
+		now = 200;
+		expect(typeahead.search('p', items)).toBe('apple');
+		now = 800;
+		expect(typeahead.search('b', items)).toBe('banana');
+		expect(typeahead.search(' ', items)).toBeUndefined();
+		expect(() => new Typeahead({ timeout: 0 })).toThrow(/must be positive/);
 	});
 });
