@@ -60,6 +60,20 @@ export { default as ZDrawerTitle } from '../components/compound/drawer/ZDrawerTi
 export type { ZDrawerTitleProps } from '../components/compound/drawer/ZDrawerTitle.svelte';
 export { default as ZDrawerTrigger } from '../components/compound/drawer/ZDrawerTrigger.svelte';
 export type { ZDrawerTriggerProps } from '../components/compound/drawer/ZDrawerTrigger.svelte';
+export { default as ZPopconfirm } from '../components/compound/popconfirm/ZPopconfirm.svelte';
+export type { ZPopconfirmProps } from '../components/compound/popconfirm/ZPopconfirm.svelte';
+export { default as ZPopconfirmAction } from '../components/compound/popconfirm/ZPopconfirmAction.svelte';
+export type { ZPopconfirmActionProps } from '../components/compound/popconfirm/ZPopconfirmAction.svelte';
+export { default as ZPopconfirmCancel } from '../components/compound/popconfirm/ZPopconfirmCancel.svelte';
+export type { ZPopconfirmCancelProps } from '../components/compound/popconfirm/ZPopconfirmCancel.svelte';
+export { default as ZPopconfirmContent } from '../components/compound/popconfirm/ZPopconfirmContent.svelte';
+export type { ZPopconfirmContentProps } from '../components/compound/popconfirm/ZPopconfirmContent.svelte';
+export { default as ZPopconfirmDescription } from '../components/compound/popconfirm/ZPopconfirmDescription.svelte';
+export type { ZPopconfirmDescriptionProps } from '../components/compound/popconfirm/ZPopconfirmDescription.svelte';
+export { default as ZPopconfirmTitle } from '../components/compound/popconfirm/ZPopconfirmTitle.svelte';
+export type { ZPopconfirmTitleProps } from '../components/compound/popconfirm/ZPopconfirmTitle.svelte';
+export { default as ZPopconfirmTrigger } from '../components/compound/popconfirm/ZPopconfirmTrigger.svelte';
+export type { ZPopconfirmTriggerProps } from '../components/compound/popconfirm/ZPopconfirmTrigger.svelte';
 export { default as ZPopover } from '../components/compound/popover/ZPopover.svelte';
 export type {
 	PopoverPlacement,

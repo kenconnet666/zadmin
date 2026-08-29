@@ -30,10 +30,8 @@ export class DismissableLayer {
 	readonly #document: Document;
 	readonly #options: DismissableLayerOptions;
 	readonly #registration: LayerRegistration;
-	readonly #root: HTMLElement;
 
 	constructor(root: HTMLElement, options: DismissableLayerOptions) {
-		this.#root = root;
 		this.#document = root.ownerDocument;
 		this.#options = options;
 		const stack = options.stack ?? getLayerStack(this.#document);

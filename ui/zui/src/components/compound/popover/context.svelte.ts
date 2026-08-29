@@ -39,6 +39,6 @@ export function provideZPopover(context: ZPopoverContext): ZPopoverContext {
 
 export function useZPopover(): ZPopoverContext {
 	const context = getContext<ZPopoverContext | undefined>(POPOVER_CONTEXT);
-	if (!context) throw new Error('ZPopoverTrigger and ZPopoverContent require ZPopover.');
+	if (!context) throw new Error('ZPopover compound components require ZPopover.');
 	return context;
 }

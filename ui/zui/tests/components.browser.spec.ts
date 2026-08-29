@@ -13,6 +13,7 @@ import DrawerFixture from './DrawerFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
 import PaginationFixture from './PaginationFixture.svelte';
 import PopoverFixture from './PopoverFixture.svelte';
+import PopconfirmFixture from './PopconfirmFixture.svelte';
 import RadioGroupFixture from './RadioGroupFixture.svelte';
 import SliderFixture from './SliderFixture.svelte';
 import ToggleButtonFixture from './ToggleButtonFixture.svelte';
@@ -122,7 +123,10 @@ describe('compiled ICSS browser updates', () => {
 		const content = document.querySelector<HTMLElement>('[data-testid="drawer-content"]');
 		expect(content?.parentNode).toBe(document.body);
 		expect(getComputedStyle(content!).insetInlineEnd).toBe('0px');
-		expect(getComputedStyle(content!).width).toBe('400px');
+		expect(Number.parseFloat(getComputedStyle(content!).width)).toBeCloseTo(
+			Math.min(400, innerWidth * 0.9),
+			0
+		);
 		expect(document.activeElement?.getAttribute('aria-label')).toBe('Drawer input');
 
 		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
@@ -188,6 +192,46 @@ describe('compiled ICSS browser updates', () => {
 		outside?.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
 		await tick();
 		expect(trigger?.getAttribute('aria-expanded')).toBe('false');
+	});
+
+	it('coordinates Popconfirm focus, explicit actions and safe dismiss paths', async () => {
+		render(PopconfirmFixture);
+		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="popconfirm-trigger"]');
+		const outside = document.querySelector<HTMLButtonElement>('[data-testid="popconfirm-outside"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="popconfirm-output"]');
+		trigger?.focus();
+		trigger?.click();
+		await tick();
+		let content = document.querySelector<HTMLElement>('[data-testid="popconfirm-content"]');
+		const cancel = document.querySelector<HTMLButtonElement>('[data-testid="popconfirm-cancel"]');
+		const action = document.querySelector<HTMLButtonElement>('[data-testid="popconfirm-action"]');
+		expect(content?.parentNode).toBe(document.body);
+		expect(document.activeElement).toBe(cancel);
+		expect(content?.getAttribute('aria-labelledby')).toBe(
+			document.querySelector('[data-testid="popconfirm-content"] h2')?.id
+		);
+
+		action?.click();
+		await new Promise((resolve) => setTimeout(resolve, 140));
+		await tick();
+		expect(document.querySelector('[data-testid="popconfirm-content"]')).toBeNull();
+		expect(document.activeElement).toBe(trigger);
+		expect(output?.textContent).toBe('false:action');
+
+		trigger?.click();
+		await tick();
+		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+		await new Promise((resolve) => setTimeout(resolve, 140));
+		await tick();
+		expect(document.querySelector('[data-testid="popconfirm-content"]')).toBeNull();
+
+		trigger?.click();
+		await tick();
+		content = document.querySelector('[data-testid="popconfirm-content"]');
+		outside?.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+		await new Promise((resolve) => setTimeout(resolve, 140));
+		await tick();
+		expect(content?.isConnected).toBe(false);
 	});
 
 	it('keeps Accordion focus, single/multiple selection and Presence synchronized', async () => {

@@ -341,6 +341,27 @@ test('positions Drawer on logical edges and restores modal resources', async ({ 
 	await expect(page.locator('body')).not.toHaveCSS('overflow', 'hidden');
 });
 
+test('keeps Popconfirm labelled, positioned and focused through explicit action', async ({
+	page
+}) => {
+	await page.goto('/#/components/popconfirm');
+	const trigger = page.getByTestId('popconfirm-trigger');
+	await trigger.click();
+	const dialog = page.getByTestId('popconfirm-content');
+	await expect(dialog).toHaveAttribute('role', 'dialog');
+	await expect(dialog).not.toHaveAttribute('aria-modal');
+	const titleId = await dialog.getAttribute('aria-labelledby');
+	const descriptionId = await dialog.getAttribute('aria-describedby');
+	await expect(page.locator(`#${titleId}`)).toHaveText('删除这条发布记录？');
+	await expect(page.locator(`#${descriptionId}`)).toContainText('不能再次部署');
+	await expect(page.getByTestId('popconfirm-cancel')).toBeFocused();
+	await expect(dialog).toHaveCSS('position', 'absolute');
+	await page.getByTestId('popconfirm-action').click();
+	await expect(dialog).toHaveCount(0);
+	await expect(trigger).toBeFocused();
+	await expect(page.getByText(/open = false · 结果 = 已删除/u)).toBeVisible();
+});
+
 test('keeps S1 primitives semantic and display preferences effective', async ({ page }) => {
 	await page.goto('/#/guides/theme');
 	await expect(page.getByRole('heading', { level: 1 })).toContainText('主题不是一组颜色');
@@ -402,6 +423,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/alert-dialog',
 		'#/components/dialog',
 		'#/components/drawer',
+		'#/components/popconfirm',
 		'#/components/popover',
 		'#/components/tooltip'
 	]) {

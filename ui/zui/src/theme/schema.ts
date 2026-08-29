@@ -95,6 +95,7 @@ export const DEFAULT_THEME_SCHEMA = {
 		full: '100%',
 		large: 48,
 		medium: 32,
+		popconfirm: 320,
 		small: 24
 	},
 	space: {

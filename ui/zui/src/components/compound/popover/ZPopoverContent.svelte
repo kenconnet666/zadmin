@@ -9,6 +9,8 @@
 		HTMLAttributes<HTMLDivElement>,
 		'aria-labelledby' | 'children' | 'id' | 'role'
 	> {
+		readonly ariaDescribedBy?: string;
+		readonly ariaLabelledBy?: string;
 		readonly children?: Snippet;
 		ref?: HTMLDivElement | null;
 	}
@@ -70,6 +72,18 @@
 		parts: [],
 		props: [
 			{
+				default: 'Trigger id',
+				description: '覆盖dialog可访问名称来源，供复合封装使用。',
+				name: 'ariaLabelledBy',
+				type: 'string'
+			},
+			{
+				default: 'undefined',
+				description: 'dialog可访问说明元素id，供复合封装使用。',
+				name: 'ariaDescribedBy',
+				type: 'string'
+			},
+			{
 				bindable: true,
 				default: 'null',
 				description: '挂载期间的真实dialog引用。',
@@ -109,6 +123,8 @@
 	import { useZPopover } from './context.svelte.js';
 
 	let {
+		ariaDescribedBy,
+		ariaLabelledBy,
 		children,
 		class: className,
 		ref = $bindable(null),
@@ -170,7 +186,8 @@
 		tabindex={-1}
 		inert={!popover.open}
 		aria-hidden={!popover.open}
-		aria-labelledby={popover.triggerId}
+		aria-labelledby={ariaLabelledBy ?? popover.triggerId}
+		aria-describedby={ariaDescribedBy}
 		data-presence={presenceState}
 		data-state={popover.open ? 'open' : 'closed'}
 		ontransitionend={(event) => {

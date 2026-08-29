@@ -17,7 +17,6 @@ import {
 	ZKbd,
 	ZLink,
 	ZPagination,
-	ZPopover,
 	ZSeparator,
 	ZSlider,
 	ZStack,
@@ -38,6 +37,7 @@ import FieldFixture from './FieldFixture.svelte';
 import DialogFixture from './DialogFixture.svelte';
 import DrawerFixture from './DrawerFixture.svelte';
 import PopoverFixture from './PopoverFixture.svelte';
+import PopconfirmFixture from './PopconfirmFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
 import RadioGroupFixture from './RadioGroupFixture.svelte';
 import TabsFixture from './TabsFixture.svelte';
@@ -172,6 +172,18 @@ describe('ZUI foundational components', () => {
 		const open = render(PopoverFixture, { props: { defaultOpen: true } }).body;
 		expect(open).toContain('aria-expanded="true"');
 		expect(open).toContain('role="dialog"');
+	});
+
+	it('renders Popconfirm SSR with stable label and description relationships', () => {
+		expect(render(PopconfirmFixture).body).not.toContain('role="dialog"');
+		const open = render(PopconfirmFixture, { props: { defaultOpen: true } }).body;
+		const labelledBy = open.match(/aria-labelledby="([^"]+)"/u)?.[1];
+		const describedBy = open.match(/aria-describedby="([^"]+)"/u)?.[1];
+		expect(labelledBy).toBeDefined();
+		expect(describedBy).toBeDefined();
+		expect(open).toContain(`id="${labelledBy}"`);
+		expect(open).toContain(`id="${describedBy}"`);
+		expect(open).toContain('Delete this release?');
 	});
 
 	it('renders Tooltip SSR only when initially open with description linkage', () => {

@@ -25,6 +25,7 @@ import { alertDialogDoc } from '../content/components/overlay/alert-dialog/doc.j
 import { popoverDoc } from '../content/components/overlay/popover/doc.js';
 import { dialogDoc } from '../content/components/overlay/dialog/doc.js';
 import { drawerDoc } from '../content/components/overlay/drawer/doc.js';
+import { popconfirmDoc } from '../content/components/overlay/popconfirm/doc.js';
 import { tooltipDoc } from '../content/components/overlay/tooltip/doc.js';
 import type { ComponentCategory, ComponentDoc } from './component-doc.js';
 
@@ -63,6 +64,7 @@ export const componentDocs = Object.freeze([
 	alertDialogDoc,
 	dialogDoc,
 	drawerDoc,
+	popconfirmDoc,
 	popoverDoc,
 	tooltipDoc
 ] satisfies readonly ComponentDoc[]);

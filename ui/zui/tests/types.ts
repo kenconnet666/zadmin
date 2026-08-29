@@ -34,6 +34,13 @@ import {
 	ZDrawerTitle,
 	ZDrawerTrigger,
 	ZPagination,
+	ZPopconfirm,
+	ZPopconfirmAction,
+	ZPopconfirmCancel,
+	ZPopconfirmContent,
+	ZPopconfirmDescription,
+	ZPopconfirmTitle,
+	ZPopconfirmTrigger,
 	ZPopover,
 	ZPopoverContent,
 	ZPopoverTrigger,
@@ -83,6 +90,13 @@ import {
 	type ZDrawerTitleProps,
 	type ZDrawerTriggerProps,
 	type ZPaginationProps,
+	type ZPopconfirmActionProps,
+	type ZPopconfirmCancelProps,
+	type ZPopconfirmContentProps,
+	type ZPopconfirmDescriptionProps,
+	type ZPopconfirmProps,
+	type ZPopconfirmTitleProps,
+	type ZPopconfirmTriggerProps,
 	type ZPopoverContentProps,
 	type ZPopoverProps,
 	type ZPopoverTriggerProps,
@@ -159,6 +173,21 @@ const paginationProps: ComponentProps<typeof ZPagination> = {
 	defaultPage: 2,
 	totalPages: 20
 } satisfies ZPaginationProps;
+const popconfirmProps: ComponentProps<typeof ZPopconfirm> = {
+	placement: 'bottom-start'
+} satisfies ZPopconfirmProps;
+const popconfirmTriggerProps: ComponentProps<typeof ZPopconfirmTrigger> =
+	{} satisfies ZPopconfirmTriggerProps;
+const popconfirmContentProps: ComponentProps<typeof ZPopconfirmContent> =
+	{} satisfies ZPopconfirmContentProps;
+const popconfirmTitleProps: ComponentProps<typeof ZPopconfirmTitle> =
+	{} satisfies ZPopconfirmTitleProps;
+const popconfirmDescriptionProps: ComponentProps<typeof ZPopconfirmDescription> =
+	{} satisfies ZPopconfirmDescriptionProps;
+const popconfirmCancelProps: ComponentProps<typeof ZPopconfirmCancel> =
+	{} satisfies ZPopconfirmCancelProps;
+const popconfirmActionProps: ComponentProps<typeof ZPopconfirmAction> =
+	{} satisfies ZPopconfirmActionProps;
 const popoverProps: ComponentProps<typeof ZPopover> = {
 	placement: 'bottom-start'
 } satisfies ZPopoverProps;
@@ -234,6 +263,13 @@ void drawerTitleProps;
 void drawerDescriptionProps;
 void drawerCloseProps;
 void paginationProps;
+void popconfirmProps;
+void popconfirmTriggerProps;
+void popconfirmContentProps;
+void popconfirmTitleProps;
+void popconfirmDescriptionProps;
+void popconfirmCancelProps;
+void popconfirmActionProps;
 void popoverProps;
 void popoverTriggerProps;
 void popoverContentProps;

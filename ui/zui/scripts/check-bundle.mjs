@@ -84,6 +84,37 @@ const components = [
 		path: 'compound/drawer/ZDrawerDescription.svelte'
 	},
 	{ id: 'drawer-close', name: 'ZDrawerClose', path: 'compound/drawer/ZDrawerClose.svelte' },
+	{ id: 'popconfirm', name: 'ZPopconfirm', path: 'compound/popconfirm/ZPopconfirm.svelte' },
+	{
+		id: 'popconfirm-trigger',
+		name: 'ZPopconfirmTrigger',
+		path: 'compound/popconfirm/ZPopconfirmTrigger.svelte'
+	},
+	{
+		id: 'popconfirm-content',
+		name: 'ZPopconfirmContent',
+		path: 'compound/popconfirm/ZPopconfirmContent.svelte'
+	},
+	{
+		id: 'popconfirm-title',
+		name: 'ZPopconfirmTitle',
+		path: 'compound/popconfirm/ZPopconfirmTitle.svelte'
+	},
+	{
+		id: 'popconfirm-description',
+		name: 'ZPopconfirmDescription',
+		path: 'compound/popconfirm/ZPopconfirmDescription.svelte'
+	},
+	{
+		id: 'popconfirm-cancel',
+		name: 'ZPopconfirmCancel',
+		path: 'compound/popconfirm/ZPopconfirmCancel.svelte'
+	},
+	{
+		id: 'popconfirm-action',
+		name: 'ZPopconfirmAction',
+		path: 'compound/popconfirm/ZPopconfirmAction.svelte'
+	},
 	{ id: 'popover', name: 'ZPopover', path: 'compound/popover/ZPopover.svelte' },
 	{
 		id: 'popover-trigger',
