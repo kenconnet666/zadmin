@@ -123,6 +123,10 @@
 
 <script lang="ts">
 	/* eslint-disable svelte/prefer-svelte-reactivity -- Sets are immutable derived snapshots. */
+	import ChevronDown from '@lucide/svelte/icons/chevron-down';
+	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
+	import ChevronRight from '@lucide/svelte/icons/chevron-right';
+	import Circle from '@lucide/svelte/icons/circle';
 	import { onMount, untrack } from 'svelte';
 	import { ControllableState } from '../../../runtime/foundation/controllable-state.svelte.js';
 	import { listenForFormReset } from '../../../runtime/form/form-control.svelte.js';
@@ -245,6 +249,7 @@
 		...rest
 	}: ZTreeProps = $props();
 	const zui = useZui();
+	const CollapsedIcon = $derived(zui.direction === 'rtl' ? ChevronLeft : ChevronRight);
 	const elements = $state<(HTMLDivElement | null)[]>([]);
 	let focusKey = $state<SelectionKey>();
 	let proxy = $state<HTMLInputElement | null>(null);
@@ -475,9 +480,15 @@
 				onfocus={() => (focusKey = entry.key)}
 				onkeydown={(event) => handleKeydown(event, entry)}
 			>
-				<span aria-hidden="true"
-					>{entry.childCount > 0 ? (expanded.has(entry.key) ? '▾' : '▸') : '•'}</span
-				><span>{entry.label}</span>
+				<span aria-hidden="true">
+					{#if entry.childCount > 0}
+						{#if expanded.has(entry.key)}<ChevronDown size={15} />{:else}<CollapsedIcon
+								size={15}
+							/>{/if}
+					{:else}
+						<Circle fill="currentColor" size={6} />
+					{/if}
+				</span><span>{entry.label}</span>
 			</div>
 		{/each}
 	</div>

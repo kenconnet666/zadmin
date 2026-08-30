@@ -127,13 +127,52 @@ describe('compiled ICSS browser updates', () => {
 
 			for (const suffix of [
 				'/input/date-picker/ConstraintsDemo.svelte',
-				'/input/date-range-picker/StatesDemo.svelte',
-				'/input/tree-select/StatesDemo.svelte',
-				'/input/cascader/StatesDemo.svelte'
+				'/input/date-range-picker/StatesDemo.svelte'
 			]) {
 				example(suffix).querySelector<HTMLButtonElement>('button:not(:disabled)')?.click();
 				await tick();
 				await dismissTop();
+			}
+
+			const calendar = example('/input/calendar/ConstraintsDemo.svelte');
+			const calendarCell = calendar.querySelector<HTMLButtonElement>(
+				'[role="grid"] button:not(:disabled)'
+			);
+			calendarCell?.focus();
+			for (const key of ['PageDown', 'PageUp', 'Home', 'End']) {
+				calendarCell?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key }));
+			}
+
+			example('/input/tree-select/StatesDemo.svelte')
+				.querySelector<HTMLButtonElement>('button:not(:disabled)')
+				?.click();
+			await tick();
+			[...document.querySelectorAll<HTMLElement>('[role="treeitem"]')]
+				.find((item) => item.textContent?.trim() === 'API服务')
+				?.click();
+			await new Promise((resolve) => setTimeout(resolve, 140));
+
+			example('/input/cascader/StatesDemo.svelte')
+				.querySelector<HTMLButtonElement>('button:not(:disabled)')
+				?.click();
+			await tick();
+			for (const label of ['中国', '华东', '上海']) {
+				[...document.querySelectorAll<HTMLElement>('[role="option"]')]
+					.find((option) => option.textContent?.trim() === label)
+					?.click();
+				await tick();
+			}
+			await new Promise((resolve) => setTimeout(resolve, 140));
+
+			const mention = example('/input/mention/TriggersDemo.svelte').querySelector(
+				'textarea'
+			) as HTMLTextAreaElement | null;
+			if (mention) {
+				mention.value = '#de';
+				mention.setSelectionRange(3, 3);
+				mention.dispatchEvent(new InputEvent('input', { bubbles: true }));
+				mention.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
+				mention.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
 			}
 
 			example('/input/number-field/StatesDemo.svelte')
@@ -199,11 +238,13 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		await Promise.resolve();
 		const output = document.querySelector('[data-testid="context-boundary-output"]');
-		expect(output?.textContent).toMatch(/^14:/u);
+		expect(output?.textContent).toMatch(/^16:/u);
 		expect(output?.textContent).toContain('ZAccordion');
 		expect(output?.textContent).toContain('ZTooltip');
 		expect(output?.textContent).toContain('Duplicate ZList');
 		expect(output?.textContent).toContain('Duplicate ZTimeline');
+		expect(output?.textContent).toContain('unsupported trigger');
+		expect(output?.textContent).toContain('validationDelay');
 	});
 
 	it('pauses, resumes, times out and disposes explicit ToastQueue timers', async () => {
@@ -826,6 +867,18 @@ describe('compiled ICSS browser updates', () => {
 		const web = document.querySelector<HTMLElement>('[role="treeitem"][data-key="web"]');
 		const worker = document.querySelector<HTMLElement>('[role="treeitem"][data-key="worker"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="tree-output"]');
+		web?.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+		await tick();
+		web?.focus();
+		web?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowRight' }));
+		expect(document.activeElement?.getAttribute('data-key')).toBe('admin');
+		document.activeElement?.dispatchEvent(
+			new KeyboardEvent('keydown', { bubbles: true, key: 'd' })
+		);
+		expect(document.activeElement?.getAttribute('data-key')).toBe('docs');
+		for (const key of ['Home', 'End', 'ArrowUp']) {
+			document.activeElement?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key }));
+		}
 		web?.focus();
 		web?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
 		expect(document.activeElement).toBe(worker);

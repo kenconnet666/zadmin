@@ -28,6 +28,7 @@
 		ZTimeField,
 		ZToast,
 		ZTransfer,
+		ZTree,
 		ZTreeSelect,
 		ZVirtualList,
 		type SelectionKey
@@ -46,7 +47,8 @@
 			time: '09:00',
 			title: 'Done'
 		},
-		{ id: 'queued', status: 'current' as const, title: 'Queued' }
+		{ id: 'queued', status: 'current' as const, title: 'Queued' },
+		{ id: 'pending', title: 'Pending' }
 	];
 	const slides = [
 		{ id: 'a', label: 'Alpha' },
@@ -281,6 +283,14 @@
 <ZPinInput disabled length={2} />
 <ZTransfer disabled filterable={false} items={transferItems} value={['one']} />
 <ZTreeSelect disabled nodes={treeNodes} defaultExpandedKeys={['root']} />
+<ZTree
+	aria-label="Multiple coverage tree"
+	nodes={treeNodes}
+	defaultExpandedKeys={['root']}
+	defaultSelectedKeys={['root']}
+	selectionMode="multiple"
+/>
+<ZTree aria-label="Non-selectable coverage tree" nodes={treeNodes} selectionMode="none" />
 <ZCheckbox disabled invalid size="small" defaultChecked value="disabled" />
 <ZSwitch disabled invalid size="small" defaultChecked />
 <ZTimeField
