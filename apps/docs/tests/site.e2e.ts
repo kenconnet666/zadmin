@@ -339,6 +339,26 @@ test('keeps native Table structure and VirtualList DOM bounded across large scro
 	await expect(list.getByRole('listitem')).toHaveCount(14);
 });
 
+test('keeps DataTable sorting, stable selection and virtual row count synchronized', async ({
+	page
+}) => {
+	await page.goto('/#/components/data-table');
+	const viewport = page.getByTestId('docs-data-table');
+	const table = page.getByRole('table', { name: '一千条部署记录' });
+	await expect(table.locator('tbody tr[data-slot="row"]')).toHaveCount(11);
+	await page.getByRole('checkbox', { name: '选择 部署 1' }).check();
+	await expect(page.getByText(/selected = deploy-0/u)).toBeVisible();
+	await table.getByRole('button', { name: '耗时(ms)' }).click();
+	await table.getByRole('button', { name: '耗时(ms)' }).click();
+	await expect(table.getByRole('columnheader', { name: /耗时/u })).toHaveAttribute(
+		'aria-sort',
+		'descending'
+	);
+	await expect(page.getByText(/sort = duration\/descending/u)).toBeVisible();
+	await expect(page.getByText(/selected = deploy-0/u)).toBeVisible();
+	await expect(viewport).toHaveAttribute('data-virtualized', 'true');
+});
+
 test('keeps PinInput roving entry, completion, single FormData value and reset synchronized', async ({
 	page
 }) => {
@@ -1016,6 +1036,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/statistic',
 		'#/components/table',
 		'#/components/virtual-list',
+		'#/components/data-table',
 		'#/components/alert',
 		'#/components/loading-bar',
 		'#/components/result',

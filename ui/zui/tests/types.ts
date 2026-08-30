@@ -38,6 +38,7 @@ import {
 	ZDateField,
 	ZDatePicker,
 	ZDateRangePicker,
+	ZDataTable,
 	ZDialog,
 	ZDialogClose,
 	ZDialogContent,
@@ -160,6 +161,7 @@ import {
 	type ZDateFieldProps,
 	type ZDatePickerProps,
 	type ZDateRangePickerProps,
+	type ZDataTableProps,
 	type ZDialogCloseProps,
 	type ZDialogContentProps,
 	type ZDialogDescriptionProps,
@@ -293,6 +295,12 @@ const virtualListProps: ComponentProps<typeof ZVirtualList> = {
 	itemKey: () => 'one',
 	items: [{ id: 'one' }]
 } satisfies ZVirtualListProps;
+const dataTableProps: ComponentProps<typeof ZDataTable> = {
+	caption: 'Rows',
+	columns: [{ accessor: () => 'One', header: 'Name', id: 'name' }],
+	rowKey: () => 'one',
+	rows: [{ id: 'one' }]
+} satisfies ZDataTableProps;
 const accordionProps: ComponentProps<typeof ZAccordion> = {
 	defaultValue: ['one'],
 	type: 'multiple'
@@ -569,6 +577,7 @@ void timelineProps;
 void statisticProps;
 void tableProps;
 void virtualListProps;
+void dataTableProps;
 void accordionItemProps;
 void accordionTriggerProps;
 void accordionContentProps;

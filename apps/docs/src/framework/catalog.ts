@@ -12,6 +12,7 @@ import { statisticDoc } from '../content/components/data-display/statistic/doc.j
 import { timelineDoc } from '../content/components/data-display/timeline/doc.js';
 import { tableDoc } from '../content/components/data-display/table/doc.js';
 import { virtualListDoc } from '../content/components/data-display/virtual-list/doc.js';
+import { dataTableDoc } from '../content/components/data-display/data-table/doc.js';
 import { alertDoc } from '../content/components/feedback/alert/doc.js';
 import { loadingBarDoc } from '../content/components/feedback/loading-bar/doc.js';
 import { resultDoc } from '../content/components/feedback/result/doc.js';
@@ -115,6 +116,7 @@ export const componentDocs = Object.freeze([
 	statisticDoc,
 	tableDoc,
 	virtualListDoc,
+	dataTableDoc,
 	alertDoc,
 	loadingBarDoc,
 	resultDoc,

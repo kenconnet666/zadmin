@@ -4,7 +4,7 @@
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 	export type StatisticTrend = 'down' | 'neutral' | 'up';
-	export interface ZStatisticProps extends HTMLAttributes<HTMLDListElement> {
+	export interface ZStatisticProps extends Omit<HTMLAttributes<HTMLDListElement>, 'prefix'> {
 		readonly formatOptions?: Intl.NumberFormatOptions;
 		readonly label: string;
 		readonly locale?: string;

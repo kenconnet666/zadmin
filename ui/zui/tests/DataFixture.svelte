@@ -1,9 +1,31 @@
 <script lang="ts">
-	import { ZTable, ZVirtualList } from '../src/entrypoints/index.js';
+	import {
+		ZDataTable,
+		ZTable,
+		ZVirtualList,
+		type DataSortDescriptor,
+		type SelectionKey
+	} from '../src/entrypoints/index.js';
 	const rows = Array.from({ length: 1000 }, (_, index) => ({
 		id: `row-${index}`,
 		label: `Row ${index}`
 	}));
+	const columns = [
+		{
+			accessor: (row: (typeof rows)[number]) => Number(row.id.slice(4)),
+			header: 'Index',
+			id: 'index',
+			sortable: true
+		},
+		{
+			accessor: (row: (typeof rows)[number]) => row.label,
+			header: 'Label',
+			id: 'label',
+			sortable: true
+		}
+	];
+	let selectedKeys = $state<readonly SelectionKey[]>(['row-2']);
+	let sort = $state<DataSortDescriptor>();
 </script>
 
 <ZTable caption="Deployments" striped data-testid="table">
@@ -22,3 +44,20 @@
 >
 	{#snippet item(row, index)}<span>{index}: {row.label}</span>{/snippet}
 </ZVirtualList>
+
+<ZDataTable
+	caption="Large deployment table"
+	{columns}
+	{rows}
+	rowKey={(row) => row.id}
+	virtualized
+	height={132}
+	rowHeight={44}
+	selectionMode="multiple"
+	bind:selectedKeys
+	bind:sort
+	data-testid="data-table"
+/>
+<output data-testid="data-table-output"
+	>{selectedKeys.join(',') || 'none'}:{sort ? `${sort.columnId}-${sort.direction}` : 'none'}</output
+>

@@ -84,6 +84,27 @@ describe('compiled ICSS browser updates', () => {
 		expect(viewport?.querySelectorAll('[role="listitem"]').length).toBeLessThan(20);
 	});
 
+	it('keeps DataTable sort, stable selection and virtual rows synchronized', async () => {
+		render(DataFixture);
+		const viewport = document.querySelector<HTMLDivElement>('[data-testid="data-table"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="data-table-output"]');
+		expect(viewport?.querySelectorAll('tbody tr[data-slot="row"]')).toHaveLength(7);
+		document.querySelector<HTMLInputElement>('[aria-label="Select row 1"]')?.click();
+		await tick();
+		expect(output?.textContent).toContain('row-2,row-0');
+		const sort = [...document.querySelectorAll<HTMLButtonElement>('th button')].find((button) =>
+			button.textContent?.includes('Index')
+		);
+		sort?.click();
+		sort?.click();
+		await tick();
+		expect(output?.textContent).toContain('index-descending');
+		expect(viewport?.querySelector('tbody tr[data-slot="row"]')?.getAttribute('data-key')).toBe(
+			'row-999'
+		);
+		expect(output?.textContent).toContain('row-2,row-0');
+	});
+
 	it('coordinates feedback semantics, motion cleanup, Toast action and paused timeout', async () => {
 		render(FeedbackFixture);
 		const determinate = document.querySelector<HTMLElement>('[data-testid="loading-determinate"]');

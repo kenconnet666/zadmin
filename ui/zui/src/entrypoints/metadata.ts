@@ -92,6 +92,7 @@ export { zuiMetadata as statisticMetadata } from '../components/data-display/ZSt
 export { zuiMetadata as timelineMetadata } from '../components/data-display/ZTimeline.svelte';
 export { zuiMetadata as tableMetadata } from '../components/data-display/ZTable.svelte';
 export { zuiMetadata as virtualListMetadata } from '../components/data-display/ZVirtualList.svelte';
+export { zuiMetadata as dataTableMetadata } from '../components/data-display/ZDataTable.svelte';
 export { zuiMetadata as alertMetadata } from '../components/feedback/ZAlert.svelte';
 export { zuiMetadata as loadingBarMetadata } from '../components/feedback/ZLoadingBar.svelte';
 export { zuiMetadata as resultMetadata } from '../components/feedback/ZResult.svelte';

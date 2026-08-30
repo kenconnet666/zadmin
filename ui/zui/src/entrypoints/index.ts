@@ -224,6 +224,15 @@ export { default as ZTable } from '../components/data-display/ZTable.svelte';
 export type { TableDensity, ZTableProps } from '../components/data-display/ZTable.svelte';
 export { default as ZVirtualList } from '../components/data-display/ZVirtualList.svelte';
 export type { ZVirtualListProps } from '../components/data-display/ZVirtualList.svelte';
+export { default as ZDataTable } from '../components/data-display/ZDataTable.svelte';
+export type {
+	DataTableColumn,
+	DataTableSelectionMode,
+	DataTableWidth,
+	ZDataTableProps
+} from '../components/data-display/ZDataTable.svelte';
+export { compareDataValues, stableSortRows } from '../runtime/collection/data-table.js';
+export type { DataSortDescriptor, DataSortDirection } from '../runtime/collection/data-table.js';
 export { calculateVirtualRange, virtualScrollOffset } from '../runtime/collection/virtualizer.js';
 export type {
 	VirtualAlign,

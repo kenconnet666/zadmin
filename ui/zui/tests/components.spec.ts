@@ -496,8 +496,8 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain('<ol');
 		expect(result.match(/<li/gu)).toHaveLength(5);
 		expect(result).toContain('<dl');
-		expect(result.match(/<dt/gu)).toHaveLength(2);
-		expect(result.match(/<dd/gu)).toHaveLength(2);
+		expect(result.match(/<dt/gu)).toHaveLength(3);
+		expect(result.match(/<dd/gu)).toHaveLength(4);
 		expect(result).toContain('<progress');
 		expect(result).toContain('aria-label="Analysis progress"');
 		expect(result).toContain('<meter');
@@ -521,6 +521,9 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain('data-range-start="0"');
 		expect(result).toContain('data-range-end="7"');
 		expect(result).not.toContain('999: Row 999');
+		expect(result).toContain('Large deployment table');
+		expect(result).toContain('aria-rowcount="1001"');
+		expect(result).toContain('data-virtualized="true"');
 	});
 
 	it('renders feedback live regions, progress states, Result and queued Toasts during SSR', () => {
