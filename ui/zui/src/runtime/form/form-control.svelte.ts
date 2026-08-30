@@ -25,23 +25,32 @@ export function mergeAriaIds(
 }
 
 export function listenForFormReset(
-	control: { readonly form: HTMLFormElement | null },
+	control: { readonly form: HTMLFormElement | null; readonly ownerDocument: Document },
 	reset: () => void
 ): () => void {
-	return listenToFormReset(control.form, reset);
+	return listenToResetEvent(control.ownerDocument, (event) => event.target === control.form, reset);
 }
 
 export function listenToFormReset(form: HTMLFormElement | null, reset: () => void): () => void {
 	if (!form) return () => undefined;
+	return listenToResetEvent(form, (event) => event.target === form, reset);
+}
+
+function listenToResetEvent(
+	target: Document | HTMLFormElement,
+	accepts: (event: Event) => boolean,
+	reset: () => void
+): () => void {
 	let active = true;
 	const handleReset = (event: Event) => {
+		if (!accepts(event)) return;
 		queueMicrotask(() => {
 			if (active && !event.defaultPrevented) flushSync(reset);
 		});
 	};
-	form.addEventListener('reset', handleReset);
+	target.addEventListener('reset', handleReset, true);
 	return () => {
 		active = false;
-		form.removeEventListener('reset', handleReset);
+		target.removeEventListener('reset', handleReset, true);
 	};
 }

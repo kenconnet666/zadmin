@@ -76,6 +76,15 @@ function insertedRuleCount(): number {
 	);
 }
 
+function dispatchPaste(target: HTMLElement | null | undefined, text: string): void {
+	if (!target) return;
+	const transfer = new DataTransfer();
+	transfer.setData('text', text);
+	const event = new ClipboardEvent('paste', { bubbles: true, cancelable: true });
+	Object.defineProperty(event, 'clipboardData', { configurable: true, value: transfer });
+	target.dispatchEvent(event);
+}
+
 describe('compiled ICSS browser updates', () => {
 	it('updates Provider theme recipes through their visual transition', async () => {
 		render(ThemeSwitchFixture);
@@ -985,9 +994,7 @@ describe('compiled ICSS browser updates', () => {
 		}
 		await tick();
 		expect(output?.textContent).toBe('alpha,beta:1:beta');
-		const transfer = new DataTransfer();
-		transfer.setData('text', 'gamma,delta,beta');
-		input?.dispatchEvent(new ClipboardEvent('paste', { bubbles: true, clipboardData: transfer }));
+		dispatchPaste(input, 'gamma,delta,beta');
 		await tick();
 		expect(new FormData(form!).getAll('tag')).toEqual(['alpha', 'beta', 'gamma', 'delta']);
 		expect(output?.textContent).toBe('alpha,beta,gamma,delta:2:');
@@ -1392,11 +1399,7 @@ describe('compiled ICSS browser updates', () => {
 		const inputs = [...document.querySelectorAll<HTMLInputElement>('[data-slot="input"]')];
 		const form = document.querySelector<HTMLFormElement>('[data-testid="pin-input-form"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="pin-input-output"]');
-		const transfer = new DataTransfer();
-		transfer.setData('text', '3456');
-		inputs[2]?.dispatchEvent(
-			new ClipboardEvent('paste', { bubbles: true, clipboardData: transfer })
-		);
+		dispatchPaste(inputs[2], '3456');
 		await tick();
 		expect(output?.textContent).toBe('1234:1');
 		expect(document.activeElement).toBe(inputs[3]);

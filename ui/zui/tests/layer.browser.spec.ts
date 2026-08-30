@@ -7,7 +7,7 @@ import { inertOthers } from '../src/runtime/layer/inert-others.js';
 import { LayerStack } from '../src/runtime/layer/layer-stack.svelte.js';
 import { portal } from '../src/runtime/layer/portal.js';
 import { lockScroll } from '../src/runtime/layer/scroll-lock.js';
-import { listenToFormReset } from '../src/runtime/form/form-control.svelte.js';
+import { listenForFormReset, listenToFormReset } from '../src/runtime/form/form-control.svelte.js';
 
 describe('ZUI layer runtime', () => {
 	it('flushes uncancelled form resets after native default behavior and cancels cleanup', async () => {
@@ -28,6 +28,31 @@ describe('ZUI layer runtime', () => {
 		form.dispatchEvent(new Event('reset', { cancelable: true }));
 		await Promise.resolve();
 		expect(reset).toHaveBeenCalledOnce();
+	});
+
+	it('observes controls whose external form association appears after setup', async () => {
+		const input = document.createElement('input');
+		input.setAttribute('form', 'late-form');
+		document.body.append(input);
+		const reset = vi.fn();
+		const stop = listenForFormReset(input, reset);
+		const unrelated = document.createElement('form');
+		document.body.append(unrelated);
+		unrelated.reset();
+		await Promise.resolve();
+		expect(reset).not.toHaveBeenCalled();
+
+		const form = document.createElement('form');
+		form.id = 'late-form';
+		document.body.append(form);
+		form.reset();
+		await Promise.resolve();
+		expect(reset).toHaveBeenCalledOnce();
+
+		stop();
+		input.remove();
+		form.remove();
+		unrelated.remove();
 	});
 	it('moves portal content between inline, Element and ShadowRoot targets reversibly', () => {
 		const host = document.createElement('div');
