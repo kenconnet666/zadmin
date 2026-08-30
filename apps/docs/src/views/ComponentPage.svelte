@@ -166,7 +166,7 @@
 					s.minHeight.rem(1.5);
 					s.paddingBlock._xsmall;
 					s.paddingInline._small;
-					s.textAlign.left;
+					s.textAlign.start;
 					s.textDecoration.none;
 					s._hover((hover) => hover.color._primaryHover);
 				},

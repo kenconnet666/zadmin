@@ -180,7 +180,7 @@
 				s.display.inlineBlock;
 				s.minWidth.ch(4);
 				s.paddingInlineEnd._medium;
-				s.textAlign.right;
+				s.textAlign.end;
 				s.userSelect.none;
 			},
 			root: (s) => {

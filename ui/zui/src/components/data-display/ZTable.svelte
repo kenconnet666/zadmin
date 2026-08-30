@@ -69,13 +69,13 @@
 			s._selector('& caption', (caption) => {
 				caption.fontWeight._semibold;
 				caption.paddingBlock._medium;
-				caption.textAlign.left;
+				caption.textAlign.start;
 			});
 			s._selector('& th, & td', (cell) => {
 				cell.borderBottomColor._border;
 				cell.borderBottomStyle.solid;
 				cell.borderBottomWidth._hairline;
-				cell.textAlign.left;
+				cell.textAlign.start;
 			});
 			s._selector('& th', (header) => {
 				header.color._textMuted;
