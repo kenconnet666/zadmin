@@ -31,6 +31,7 @@ describe('ZUI component documentation catalog', () => {
 			'ZPinInput',
 			'ZField',
 			'ZFileUpload',
+			'ZForm',
 			'ZRadioGroup',
 			'ZSelect',
 			'ZSegmented',
@@ -93,6 +94,7 @@ describe('ZUI component documentation catalog', () => {
 			'input',
 			'input',
 			'input',
+			'input',
 			'navigation',
 			'navigation',
 			'navigation',
@@ -121,6 +123,11 @@ describe('ZUI component documentation catalog', () => {
 		const radio = componentDocsById.get('radio-group');
 		expect(radio?.api.map(({ title }) => title)).toContain('ZRadioGroupItem Props');
 		expect(radio?.api.find(({ id }) => id === 'radio-group-item-props')?.rows).toHaveLength(5);
+	});
+
+	it('includes FormField state metadata on the Form page', () => {
+		const form = componentDocsById.get('form');
+		expect(form?.api.map(({ title }) => title)).toContain('ZFormField Props');
 	});
 
 	it('gives every page runnable demos, real source and API metadata', () => {

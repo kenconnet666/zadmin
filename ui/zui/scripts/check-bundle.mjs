@@ -273,7 +273,9 @@ const components = [
 		name: 'ZField',
 		path: 'input/ZField.svelte'
 	},
-	{ id: 'file-upload', name: 'ZFileUpload', path: 'input/ZFileUpload.svelte' }
+	{ id: 'file-upload', name: 'ZFileUpload', path: 'input/ZFileUpload.svelte' },
+	{ id: 'form', name: 'ZForm', path: 'input/ZForm.svelte' },
+	{ id: 'form-field', name: 'ZFormField', path: 'input/ZFormField.svelte' }
 ];
 
 const FORBIDDEN_FOUNDATION_DEPENDENCIES = [

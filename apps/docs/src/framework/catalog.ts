@@ -15,6 +15,7 @@ import { colorPickerDoc } from '../content/components/input/color-picker/doc.js'
 import { comboboxDoc } from '../content/components/input/combobox/doc.js';
 import { fieldDoc } from '../content/components/input/field/doc.js';
 import { fileUploadDoc } from '../content/components/input/file-upload/doc.js';
+import { formDoc } from '../content/components/input/form/doc.js';
 import { inputDoc } from '../content/components/input/input/doc.js';
 import { inputGroupDoc } from '../content/components/input/input-group/doc.js';
 import { mentionDoc } from '../content/components/input/mention/doc.js';
@@ -85,6 +86,7 @@ export const componentDocs = Object.freeze([
 	pinInputDoc,
 	fieldDoc,
 	fileUploadDoc,
+	formDoc,
 	radioGroupDoc,
 	selectDoc,
 	segmentedDoc,

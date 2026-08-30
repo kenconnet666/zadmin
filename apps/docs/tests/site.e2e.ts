@@ -107,6 +107,25 @@ test('keeps FileUpload validation, native FormData, removal and reset synchroniz
 		.toBe(0);
 });
 
+test('keeps Form schema errors, async state, first-error focus, valid submit and reset synchronized', async ({
+	page
+}) => {
+	await page.goto('/#/components/form');
+	await page.getByRole('button', { name: '保存' }).click();
+	const account = page.getByRole('textbox', { name: '账号' });
+	const email = page.getByRole('textbox', { name: '邮箱' });
+	await expect(account).toBeFocused();
+	await expect(page.getByText('账号至少需要3个字符')).toBeVisible();
+	await expect(page.getByText('请输入有效邮箱')).toBeVisible();
+	await account.fill('alice');
+	await email.fill('alice@example.com');
+	await page.getByRole('button', { name: '保存' }).click();
+	await expect(page.getByText('submitted = true · errors = 0 · result = alice')).toBeVisible();
+	await page.getByRole('button', { name: '重置' }).click();
+	await expect(page.getByText('submitted = false · errors = 0 · result = alice')).toBeVisible();
+	await expect(page.locator('[data-dirty="true"]')).toHaveCount(0);
+});
+
 test('keeps InputGroup focus boundary, Field context, FormData and reset synchronized', async ({
 	page
 }) => {
@@ -823,6 +842,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/pin-input',
 		'#/components/field',
 		'#/components/file-upload',
+		'#/components/form',
 		'#/components/radio-group',
 		'#/components/select',
 		'#/components/segmented',

@@ -15,6 +15,7 @@ import AlertDialogFixture from './AlertDialogFixture.svelte';
 import CheckboxFixture from './CheckboxFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
 import FileUploadFixture from './FileUploadFixture.svelte';
+import FormFixture from './FormFixture.svelte';
 import InputGroupFixture from './InputGroupFixture.svelte';
 import DialogFixture from './DialogFixture.svelte';
 import DrawerFixture from './DrawerFixture.svelte';
@@ -706,6 +707,43 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(output?.textContent).toBe('none:1');
 		expect(new FormData(form!).getAll('asset')).toHaveLength(0);
+	});
+
+	it('coordinates Form async validation races, field state, first-error focus, submit and reset', async () => {
+		render(FormFixture);
+		const form = document.querySelector<HTMLFormElement>('[data-testid="z-form"]');
+		const account = document.querySelector<HTMLInputElement>('[data-testid="form-account"]');
+		const email = document.querySelector<HTMLInputElement>('[data-testid="form-email"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="form-output"]');
+		form?.requestSubmit();
+		await new Promise((resolve) => setTimeout(resolve, 10));
+		await tick();
+		expect(document.activeElement).toBe(account);
+		expect(account?.getAttribute('aria-invalid')).toBe('true');
+		expect(email?.getAttribute('aria-invalid')).toBe('true');
+		if (account) {
+			account.value = 'x';
+			account.dispatchEvent(new InputEvent('input', { bubbles: true }));
+			account.value = 'alice';
+			account.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		}
+		if (email) {
+			email.value = 'alice@example.com';
+			email.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		}
+		await new Promise((resolve) => setTimeout(resolve, 60));
+		await tick();
+		expect(account?.getAttribute('aria-invalid')).not.toBe('true');
+		expect(form?.querySelector('[data-dirty="true"]')).not.toBeNull();
+		form?.requestSubmit();
+		await new Promise((resolve) => setTimeout(resolve, 10));
+		await tick();
+		expect(output?.textContent).toBe('true:false:0:alice');
+		form?.reset();
+		await Promise.resolve();
+		await tick();
+		expect(output?.textContent).toBe('false:false:0:alice');
+		expect(form?.querySelector('[data-dirty="true"]')).toBeNull();
 	});
 	it('keeps AlertDialog open until an explicit action is chosen', async () => {
 		render(AlertDialogFixture);

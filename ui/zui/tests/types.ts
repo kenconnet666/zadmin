@@ -48,6 +48,8 @@ import {
 	ZDrawerTitle,
 	ZDrawerTrigger,
 	ZFileUpload,
+	ZForm,
+	ZFormField,
 	ZInputGroup,
 	ZMenu,
 	ZMenuGroup,
@@ -142,6 +144,8 @@ import {
 	type ZDrawerTitleProps,
 	type ZDrawerTriggerProps,
 	type ZFileUploadProps,
+	type ZFormFieldProps,
+	type ZFormProps,
 	type ZInputGroupProps,
 	type ZMenuGroupProps,
 	type ZMenuItemProps,
@@ -391,6 +395,14 @@ const fileUploadProps: ComponentProps<typeof ZFileUpload> = {
 	maxFiles: 2,
 	multiple: true
 } satisfies ZFileUploadProps;
+const formProps: ComponentProps<typeof ZForm> = {
+	children: (() => undefined) as never,
+	validateOn: ['submit']
+} satisfies ZFormProps;
+const formFieldProps: ComponentProps<typeof ZFormField> = {
+	label: 'Account',
+	name: 'account'
+} satisfies ZFormFieldProps;
 const sliderProps: ComponentProps<typeof ZSlider> = {
 	defaultValue: 25,
 	max: 50,
@@ -501,6 +513,8 @@ void numberFieldProps;
 void pinInputProps;
 void colorPickerProps;
 void fileUploadProps;
+void formProps;
+void formFieldProps;
 void sliderProps;
 void switchProps;
 void tabsProps;

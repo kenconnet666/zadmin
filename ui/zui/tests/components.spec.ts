@@ -41,6 +41,7 @@ import AccordionFixture from './AccordionFixture.svelte';
 import AlertDialogFixture from './AlertDialogFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
 import FileUploadFixture from './FileUploadFixture.svelte';
+import FormFixture from './FormFixture.svelte';
 import InputGroupFixture from './InputGroupFixture.svelte';
 import MenuFixture from './MenuFixture.svelte';
 import MentionFixture from './MentionFixture.svelte';
@@ -452,6 +453,16 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain('multiple');
 		expect(result).toContain('Drop files here or choose files');
 		expect(result).not.toContain('data-slot="item"');
+	});
+
+	it('renders Form and FormField native semantics and names during SSR', () => {
+		const result = render(FormFixture).body;
+		expect(result).toContain('<form');
+		expect(result).toContain('novalidate');
+		expect(result).toContain('name="account"');
+		expect(result).toContain('name="email"');
+		expect(result).toContain('Account');
+		expect(result).toContain('Email');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {
