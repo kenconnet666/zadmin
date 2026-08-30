@@ -36,9 +36,10 @@ function isExported(statement) {
 }
 
 function publicContract(source, filename) {
+	const normalizedSource = source.replace(/\r\n?/gu, '\n');
 	const sourceFile = ts.createSourceFile(
 		filename,
-		source,
+		normalizedSource,
 		ts.ScriptTarget.Latest,
 		true,
 		ts.ScriptKind.TS
@@ -104,10 +105,12 @@ if (write) {
 	await writeFile(snapshotPath, serialized);
 	console.log(`Wrote ${portable(relative(packageRoot, snapshotPath))}.`);
 } else {
-	const expected = await readFile(snapshotPath, 'utf8').catch(() => '');
-	if (expected !== serialized) {
+	const expectedSource = await readFile(snapshotPath, 'utf8').catch(() => '{}');
+	const expected = JSON.parse(expectedSource);
+	if (JSON.stringify(expected) !== JSON.stringify(actual)) {
+		const expectedFingerprint = expected.overallSha256 ?? 'missing';
 		throw new Error(
-			'ZUI public API contract changed. Review the diff, then run `pnpm --filter @zadmin/zui api:contract:update`.'
+			`ZUI public API contract changed (${expectedFingerprint} -> ${actual.overallSha256}). Review the diff, then run \`pnpm --filter @zadmin/zui api:contract:update\`.`
 		);
 	}
 	console.log(`ZUI public API contract verified (${actual.componentCount} metadata ids).`);

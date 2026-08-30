@@ -25,10 +25,24 @@ export function mergeAriaIds(
 }
 
 export function listenForFormReset(
-	control: { readonly form: HTMLFormElement | null; readonly ownerDocument: Document },
+	control: HTMLElement & { readonly form: HTMLFormElement | null },
 	reset: () => void
 ): () => void {
-	return listenToResetEvent(control.ownerDocument, (event) => event.target === control.form, reset);
+	return listenToResetEvent(
+		control.ownerDocument,
+		(event) => {
+			const form = event.target;
+			const FormElement = control.ownerDocument.defaultView?.HTMLFormElement;
+			if (!FormElement || !(form instanceof FormElement)) return false;
+			const explicitFormId = control.getAttribute('form');
+			return (
+				control.form === form ||
+				form.contains(control) ||
+				(explicitFormId !== null && explicitFormId === form.id)
+			);
+		},
+		reset
+	);
 }
 
 export function listenToFormReset(form: HTMLFormElement | null, reset: () => void): () => void {

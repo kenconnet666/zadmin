@@ -33,6 +33,7 @@ describe('ZUI layer runtime', () => {
 	it('observes controls whose external form association appears after setup', async () => {
 		const input = document.createElement('input');
 		input.setAttribute('form', 'late-form');
+		Object.defineProperty(input, 'form', { configurable: true, get: () => null });
 		document.body.append(input);
 		const reset = vi.fn();
 		const stop = listenForFormReset(input, reset);
@@ -53,6 +54,23 @@ describe('ZUI layer runtime', () => {
 		input.remove();
 		form.remove();
 		unrelated.remove();
+	});
+
+	it('falls back to DOM containment when an engine does not expose control.form', async () => {
+		const form = document.createElement('form');
+		const input = document.createElement('input');
+		Object.defineProperty(input, 'form', { configurable: true, get: () => null });
+		form.append(input);
+		document.body.append(form);
+		const reset = vi.fn();
+		const stop = listenForFormReset(input, reset);
+
+		form.reset();
+		await Promise.resolve();
+		expect(reset).toHaveBeenCalledOnce();
+
+		stop();
+		form.remove();
 	});
 	it('moves portal content between inline, Element and ShadowRoot targets reversibly', () => {
 		const host = document.createElement('div');
