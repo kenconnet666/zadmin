@@ -238,7 +238,7 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		await Promise.resolve();
 		const output = document.querySelector('[data-testid="context-boundary-output"]');
-		expect(output?.textContent).toMatch(/^22:/u);
+		expect(output?.textContent).toMatch(/^25:/u);
 		expect(output?.textContent).toContain('ZAccordion');
 		expect(output?.textContent).toContain('ZTooltip');
 		expect(output?.textContent).toContain('Duplicate ZList');
@@ -248,6 +248,9 @@ describe('compiled ICSS browser updates', () => {
 		expect(output?.textContent).toContain('maxFiles');
 		expect(output?.textContent).toContain('maxSize');
 		expect(output?.textContent).toContain('Virtualizer itemSize');
+		expect(output?.textContent).toContain('Duplicate ZVirtualList key');
+		expect(output?.textContent).toContain('ZPopconfirm compound components');
+		expect(output?.textContent).toContain('ZFormField requires a parent ZForm');
 		expect(output?.textContent).toContain('requires at least one column');
 		expect(output?.textContent).toContain('Duplicate or empty ZDataTable column');
 		expect(output?.textContent).toContain('Duplicate ZDataTable row key');
@@ -1504,6 +1507,30 @@ describe('compiled ICSS browser updates', () => {
 		expect(output?.textContent).toBe('none:1');
 		expect(input?.files).toHaveLength(0);
 		expect((new FormData(form!).get('asset') as File).name).toBe('');
+	});
+
+	it('keeps disabled FileUpload inert across drag, drop, change and remove paths', async () => {
+		const target = document.createElement('div');
+		document.body.append(target);
+		const component = mount(FileUploadFixture, { props: { disabled: true }, target });
+		const root = target.querySelector<HTMLElement>('[role="group"]');
+		const input = target.querySelector<HTMLInputElement>('input[type="file"]');
+		const transfer = new DataTransfer();
+		transfer.items.add(new File(['{}'], 'disabled.json', { type: 'application/json' }));
+
+		root?.dispatchEvent(new DragEvent('dragover', { bubbles: true, dataTransfer: transfer }));
+		root?.dispatchEvent(new DragEvent('drop', { bubbles: true, dataTransfer: transfer }));
+		if (input) {
+			input.files = transfer.files;
+			input.dispatchEvent(new Event('change', { bubbles: true }));
+		}
+		await tick();
+		expect(root?.getAttribute('aria-disabled')).toBe('true');
+		expect(root?.hasAttribute('data-dragging')).toBe(false);
+		expect(target.querySelector('[data-testid="file-upload-output"]')?.textContent).toBe('none:0');
+
+		await unmount(component);
+		target.remove();
 	});
 
 	it('coordinates Form async validation races, field state, first-error focus, submit and reset', async () => {

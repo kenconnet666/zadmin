@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { ZFileUpload, type FileRejection } from '../src/entrypoints/index.js';
 
+	let { disabled = false }: { disabled?: boolean } = $props();
 	let files = $state<readonly File[]>([]);
 	let rejected = $state<readonly FileRejection<File>[]>([]);
 </script>
@@ -9,6 +10,7 @@
 	<ZFileUpload
 		accept="application/json,.yaml"
 		bind:files
+		{disabled}
 		inputLabel="Assets"
 		maxFiles={2}
 		maxSize={8}

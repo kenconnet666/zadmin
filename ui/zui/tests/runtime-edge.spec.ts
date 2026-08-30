@@ -3,8 +3,10 @@ import { hashString } from '../src/icss/hash.js';
 
 import { StyleRegistry } from '../src/icss/registry.js';
 import { createIcssRuntime } from '../src/icss/runtime.js';
-import { hyphenateProperty } from '../src/icss/serialize.js';
+import { canonicalizeStyleProgram, hyphenateProperty } from '../src/icss/serialize.js';
 import { MemoryStyleSheet } from '../src/icss/sheet.js';
+import type { StyleProgram } from '../src/icss/types.js';
+import { createIcssSlot } from '../src/icss/values.js';
 import { defaultTheme } from '../src/entrypoints/index.js';
 
 describe('ICSS runtime edge behavior', () => {
@@ -46,5 +48,63 @@ describe('ICSS runtime edge behavior', () => {
 
 		expect(tag).toContain('nonce="a&quot;&lt;&amp;"');
 		expect(tag).toContain('<\\/style>');
+	});
+
+	it('serializes slots, string units, important declarations and nested blocks', () => {
+		const slot = createIcssSlot('--runtime-width');
+		const program = {
+			block: {
+				instructions: [
+					{ important: false, kind: 'declaration', property: 'width', values: [{ value: slot }] },
+					{
+						important: false,
+						kind: 'declaration',
+						property: 'height',
+						values: [{ unit: 'px', value: slot }]
+					},
+					{
+						important: true,
+						kind: 'declaration',
+						property: 'lineHeight',
+						values: [{ unit: 'px', value: 'normal' }]
+					},
+					{
+						block: {
+							instructions: [
+								{
+									important: false,
+									kind: 'declaration',
+									property: 'display',
+									values: [{ value: 'block' }]
+								}
+							]
+						},
+						kind: 'nested',
+						query: '@media (min-width: 40rem)',
+						type: 'at-rule'
+					}
+				]
+			},
+			theme: defaultTheme
+		} satisfies StyleProgram;
+
+		expect(canonicalizeStyleProgram(program)).toBe(
+			'width:var(--runtime-width);height:calc(var(--runtime-width) * 1px);line-height:normal!important;@media (min-width: 40rem){display:block;}'
+		);
+
+		const invalid = {
+			block: {
+				instructions: [
+					{
+						important: false,
+						kind: 'declaration',
+						property: 'width',
+						values: [{ unit: 'unknown', value: 1 }]
+					}
+				]
+			},
+			theme: defaultTheme
+		} as unknown as StyleProgram;
+		expect(() => canonicalizeStyleProgram(invalid)).toThrow(/Unknown ICSS unit/u);
 	});
 });

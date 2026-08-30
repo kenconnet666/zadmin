@@ -59,6 +59,19 @@ describe('BrowserStyleSheet', () => {
 		expect(style?.sheet?.cssRules[0]?.cssText).toContain('zui.components, zui.utilities');
 	});
 
+	it('skips a browser-rejected CSSOM rule without losing later valid entries', () => {
+		const root = document.implementation.createHTMLDocument('invalid-rule');
+		const sheet = new BrowserStyleSheet({ root });
+		sheet.insert({ className: 'c-invalid', cssText: '.c-invalid{}', rules: ['.c-invalid[{'] });
+		sheet.insert(entry('c-after'));
+
+		const style = root.querySelector<HTMLStyleElement>('style[data-icss]');
+		expect(style?.dataset.icss).toBe('c-invalid c-after');
+		expect(
+			[...(style?.sheet?.cssRules ?? [])].some((rule) => rule.cssText.includes('.c-after'))
+		).toBe(true);
+	});
+
 	it('supports isolated ShadowRoot registries', () => {
 		const host = document.createElement('div');
 		document.body.append(host);

@@ -11,6 +11,9 @@ describe('localized number algorithms', () => {
 		expect(parseLocalizedNumber('', 'en-US')).toEqual({ partial: true, valid: true });
 		expect(parseLocalizedNumber('12x', 'en-US')).toEqual({ partial: false, valid: false });
 		expect(parseLocalizedNumber('+12.5', 'en-US')).toMatchObject({ valid: true, value: 12.5 });
+		expect(parseLocalizedNumber('-.5', 'en-US')).toMatchObject({ valid: true, value: -0.5 });
+		expect(parseLocalizedNumber('+', 'en-US')).toEqual({ partial: true, valid: false });
+		expect(parseLocalizedNumber('.', 'en-US')).toEqual({ partial: true, valid: false });
 		expect(parseLocalizedNumber('9'.repeat(400), 'en-US')).toEqual({
 			partial: false,
 			valid: false
@@ -24,7 +27,10 @@ describe('localized number algorithms', () => {
 		expect(clampNumber(-1, 0, 10)).toBe(0);
 		expect(clampNumber(11, 0, 10)).toBe(10);
 		expect(clampNumber(5)).toBe(5);
+		expect(clampNumber(-1, 0)).toBe(0);
+		expect(clampNumber(11, undefined, 10)).toBe(10);
 		expect(stepNumber(1e-7, 1, 1e-7)).toBe(2e-7);
+		expect(stepNumber(1e21, -1, 1e20)).toBe(900000000000000000000);
 		expect(stepNumber(-1.25, 1, 1)).toBe(-0.25);
 		expect(stepNumber(-1e-7, -1, 1e-7)).toBe(-2e-7);
 	});

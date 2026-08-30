@@ -149,6 +149,35 @@ describe('ZUI layer runtime', () => {
 		outside.remove();
 	});
 
+	it('honors prevented layer callbacks and ignores non-Escape keys', () => {
+		const root = document.createElement('div');
+		const outside = document.createElement('button');
+		document.body.append(root, outside);
+		const dismiss = vi.fn();
+		const pointer = vi.fn((event) => event.preventDefault());
+		const focus = vi.fn((event) => event.preventDefault());
+		const escape = vi.fn((event) => event.preventDefault());
+		const layer = new DismissableLayer(root, {
+			onDismiss: dismiss,
+			onEscape: escape,
+			onFocusOutside: focus,
+			onPointerOutside: pointer
+		});
+
+		outside.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+		outside.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+		expect(pointer).toHaveBeenCalledOnce();
+		expect(focus).toHaveBeenCalledOnce();
+		expect(escape).toHaveBeenCalledOnce();
+		expect(dismiss).not.toHaveBeenCalled();
+
+		layer.destroy();
+		root.remove();
+		outside.remove();
+	});
+
 	it('traps, wraps and restores focus while nested scopes own the top position', async () => {
 		const outside = document.createElement('button');
 		const container = document.createElement('div');
@@ -188,6 +217,27 @@ describe('ZUI layer runtime', () => {
 		expect(document.activeElement).toBe(empty);
 		noRestore.destroy();
 		empty.remove();
+	});
+
+	it('allows focus to leave a non-trapping scope and skips restoration when requested', async () => {
+		const outside = document.createElement('button');
+		const container = document.createElement('div');
+		const inside = document.createElement('button');
+		container.append(inside);
+		document.body.append(outside, container);
+		outside.focus();
+		const scope = new FocusScope(container, { restoreFocus: false, trap: false });
+		await Promise.resolve();
+		expect(document.activeElement).toBe(inside);
+		outside.focus();
+		const tab = new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Tab' });
+		document.dispatchEvent(tab);
+		expect(document.activeElement).toBe(outside);
+		expect(tab.defaultPrevented).toBe(false);
+		scope.destroy();
+		expect(document.activeElement).toBe(outside);
+		outside.remove();
+		container.remove();
 	});
 
 	it('locks scroll and restores inert siblings with nested cleanup', () => {
@@ -241,6 +291,24 @@ describe('ZUI layer runtime', () => {
 		restoreShadow();
 		expect(shadowSibling.inert).toBe(false);
 		shadowHost.remove();
+
+		const zeroWidth = document.createElement('div');
+		Object.defineProperty(zeroWidth, 'offsetWidth', { configurable: true, value: 100 });
+		Object.defineProperty(zeroWidth, 'clientWidth', { configurable: true, value: 100 });
+		document.body.append(zeroWidth);
+		const releaseZeroWidth = lockScroll(zeroWidth);
+		expect(zeroWidth.style.paddingInlineEnd).toBe('');
+		releaseZeroWidth();
+		zeroWidth.remove();
+
+		const detached = document.createElement('div');
+		const bodySibling = document.createElement('main');
+		document.body.append(bodySibling);
+		const restoreDetached = inertOthers(detached);
+		expect(bodySibling.inert).toBe(true);
+		restoreDetached();
+		expect(bodySibling.inert).toBe(false);
+		bodySibling.remove();
 	});
 
 	it('positions floating content and releases autoUpdate resources', async () => {

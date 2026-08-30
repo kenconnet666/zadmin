@@ -13,6 +13,15 @@ describe('command algorithms', () => {
 		expect(scoreCommand({ label: 'Open docs' }, 'missing')).toBeUndefined();
 	});
 
+	it('normalizes empty and escaped queries across every keyword ranking tier', () => {
+		expect(scoreCommand({ label: 'Anything' }, '   ')).toBe(0);
+		expect(scoreCommand({ keywords: ['Release train'], label: 'Build' }, 'rel')).toBe(60);
+		expect(scoreCommand({ keywords: ['Release train'], label: 'Build' }, 'train')).toBe(40);
+		expect(scoreCommand({ label: 'Open C++ tools' }, 'C++')).toBeGreaterThan(40);
+		expect(scoreCommand({ label: 'Command palette' }, 'command palette')).toBe(100);
+		expect(scoreCommand({ label: 'Command palette' }, 'cp')).toBeGreaterThan(0);
+	});
+
 	it('matches explicit and platform-aware modifier shortcuts', () => {
 		const event = { altKey: false, ctrlKey: true, key: 'K', metaKey: false, shiftKey: false };
 		expect(matchesCommandShortcut(event, { key: 'k', modKey: true }, 'Win32')).toBe(true);
@@ -22,6 +31,23 @@ describe('command algorithms', () => {
 				{ ...event, ctrlKey: false, metaKey: true, shiftKey: true },
 				{ key: 'k', modKey: true, shiftKey: true },
 				'MacIntel'
+			)
+		).toBe(true);
+	});
+
+	it('rejects each mismatched shortcut field without masking later modifiers', () => {
+		const event = { altKey: true, ctrlKey: true, key: 'K', metaKey: true, shiftKey: true };
+		const shortcut = { altKey: true, ctrlKey: true, key: 'k', metaKey: true, shiftKey: true };
+		expect(matchesCommandShortcut(event, shortcut, 'Win32')).toBe(true);
+		expect(matchesCommandShortcut({ ...event, key: 'P' }, shortcut, 'Win32')).toBe(false);
+		expect(matchesCommandShortcut({ ...event, altKey: false }, shortcut, 'Win32')).toBe(false);
+		expect(matchesCommandShortcut({ ...event, ctrlKey: false }, shortcut, 'Win32')).toBe(false);
+		expect(matchesCommandShortcut({ ...event, metaKey: false }, shortcut, 'Win32')).toBe(false);
+		expect(matchesCommandShortcut({ ...event, shiftKey: false }, shortcut, 'Win32')).toBe(false);
+		expect(
+			matchesCommandShortcut(
+				{ altKey: false, ctrlKey: true, key: 'k', metaKey: false, shiftKey: false },
+				{ ctrlKey: true, key: 'k' }
 			)
 		).toBe(true);
 	});

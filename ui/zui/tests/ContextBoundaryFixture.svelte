@@ -7,10 +7,12 @@
 		ZDialogContent,
 		ZDataTable,
 		ZFileUpload,
+		ZFormField,
 		ZList,
 		ZMenuItem,
 		ZMultiSelectTrigger,
 		ZPopoverTrigger,
+		ZPopconfirmTitle,
 		ZPopconfirmTrigger,
 		ZRadioGroupItem,
 		ZSelectTrigger,
@@ -36,6 +38,7 @@
 		{ accessor: (row: (typeof tableRows)[number]) => row.name, header: 'One', id: 'same' },
 		{ accessor: (row: (typeof tableRows)[number]) => row.name, header: 'Two', id: 'same' }
 	];
+	const duplicateVirtualItems = [{ id: 'same' }, { id: 'same' }];
 	let errors = $state<string[]>([]);
 	function capture(error: unknown): void {
 		errors = [...errors, error instanceof Error ? error.message : String(error)];
@@ -50,6 +53,8 @@
 <svelte:boundary onerror={capture}><ZMultiSelectTrigger /></svelte:boundary>
 <svelte:boundary onerror={capture}><ZPopoverTrigger /></svelte:boundary>
 <svelte:boundary onerror={capture}><ZPopconfirmTrigger /></svelte:boundary>
+<svelte:boundary onerror={capture}><ZPopconfirmTitle /></svelte:boundary>
+<svelte:boundary onerror={capture}><ZFormField label="Invalid" name="invalid" /></svelte:boundary>
 <svelte:boundary onerror={capture}><ZRadioGroupItem value="one" /></svelte:boundary>
 <svelte:boundary onerror={capture}><ZSelectTrigger /></svelte:boundary>
 <svelte:boundary onerror={capture}><ZTabsList /></svelte:boundary>
@@ -69,6 +74,16 @@
 </svelte:boundary>
 <svelte:boundary onerror={capture}>
 	<ZVirtualList ariaLabel="Invalid" height={40} itemSize={0} items={[]} itemKey={() => 'none'}>
+		{#snippet item()}never{/snippet}
+	</ZVirtualList>
+</svelte:boundary>
+<svelte:boundary onerror={capture}>
+	<ZVirtualList
+		ariaLabel="Duplicates"
+		height={40}
+		items={duplicateVirtualItems}
+		itemKey={(item) => item.id}
+	>
 		{#snippet item()}never{/snippet}
 	</ZVirtualList>
 </svelte:boundary>
