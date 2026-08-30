@@ -9,7 +9,8 @@
 		ZPopconfirmTrigger
 	} from '../src/entrypoints/index.js';
 
-	let { defaultOpen = false }: { defaultOpen?: boolean } = $props();
+	let { defaultOpen = false, prevent = false }: { defaultOpen?: boolean; prevent?: boolean } =
+		$props();
 	let open = $state<boolean>();
 	let outcome = $state('pending');
 </script>
@@ -20,10 +21,22 @@
 		<ZPopconfirmContent data-testid="popconfirm-content">
 			<ZPopconfirmTitle>Delete this release?</ZPopconfirmTitle>
 			<ZPopconfirmDescription>It cannot be deployed again.</ZPopconfirmDescription>
-			<ZPopconfirmCancel data-testid="popconfirm-cancel" onclick={() => (outcome = 'cancel')}>
+			<ZPopconfirmCancel
+				data-testid="popconfirm-cancel"
+				onclick={(event) => {
+					outcome = 'cancel';
+					if (prevent) event.preventDefault();
+				}}
+			>
 				Cancel
 			</ZPopconfirmCancel>
-			<ZPopconfirmAction data-testid="popconfirm-action" onclick={() => (outcome = 'action')}>
+			<ZPopconfirmAction
+				data-testid="popconfirm-action"
+				onclick={(event) => {
+					outcome = 'action';
+					if (prevent) event.preventDefault();
+				}}
+			>
 				Delete
 			</ZPopconfirmAction>
 		</ZPopconfirmContent>

@@ -5,13 +5,18 @@
 		ZContextMenuTrigger,
 		ZMenuItem
 	} from '../src/entrypoints/index.js';
-	let { defaultOpen = false }: { defaultOpen?: boolean } = $props();
+	let { defaultOpen = false, prevent = false }: { defaultOpen?: boolean; prevent?: boolean } =
+		$props();
 	let open = $state<boolean>();
 	let action = $state('none');
 </script>
 
 <ZContextMenu bind:open {defaultOpen}>
-	<ZContextMenuTrigger data-testid="context-trigger">Target</ZContextMenuTrigger>
+	<ZContextMenuTrigger
+		data-testid="context-trigger"
+		oncontextmenu={(event) => prevent && event.preventDefault()}
+		onkeydown={(event) => prevent && event.preventDefault()}>Target</ZContextMenuTrigger
+	>
 	<ZContextMenuContent
 		ariaLabel="Fixture context menu"
 		data-testid="context-content"

@@ -189,6 +189,7 @@
 	actionLabel="Act now"
 	onAction={() => undefined}
 	onDismiss={() => undefined}
+	onPauseChange={() => undefined}
 	data-testid="coverage-toast-dismiss"
 />
 <ZToast

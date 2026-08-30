@@ -249,6 +249,81 @@ describe('compiled ICSS browser updates', () => {
 		expect(output?.textContent).toContain('Duplicate ZCarousel key');
 	});
 
+	it('honors consumer cancellation across trigger and close controllers', async () => {
+		const target = document.createElement('div');
+		document.body.append(target);
+		{
+			const component = mount(TooltipFixture, { props: { prevent: true }, target });
+			const trigger = target.querySelector<HTMLElement>('[data-testid="tooltip-trigger"]');
+			trigger?.dispatchEvent(new PointerEvent('pointerenter', { bubbles: true, cancelable: true }));
+			trigger?.dispatchEvent(new FocusEvent('focus', { bubbles: true, cancelable: true }));
+			await tick();
+			expect(document.querySelector('[data-testid="tooltip-content"]')).toBeNull();
+			await unmount(component);
+		}
+		{
+			const component = mount(ContextMenuFixture, { props: { prevent: true }, target });
+			const trigger = target.querySelector<HTMLElement>('[data-testid="context-trigger"]');
+			trigger?.dispatchEvent(
+				new MouseEvent('contextmenu', { bubbles: true, cancelable: true, clientX: 10, clientY: 10 })
+			);
+			trigger?.dispatchEvent(
+				new KeyboardEvent('keydown', {
+					bubbles: true,
+					cancelable: true,
+					key: 'F10',
+					shiftKey: true
+				})
+			);
+			await tick();
+			expect(document.querySelector('[data-testid="context-content"]')).toBeNull();
+			await unmount(component);
+		}
+		{
+			const component = mount(MultiSelectFixture, {
+				props: { defaultOpen: true, prevent: true },
+				target
+			});
+			await tick();
+			const beta = document.querySelector<HTMLElement>('[data-testid="multi-b"]');
+			beta?.click();
+			await tick();
+			expect(beta?.getAttribute('aria-selected')).toBe('false');
+			await unmount(component);
+		}
+		{
+			const component = mount(DialogFixture, { props: { prevent: true }, target });
+			target.querySelector<HTMLButtonElement>('[data-testid="dialog-trigger"]')?.click();
+			await tick();
+			expect(document.querySelector('[data-testid="dialog-content"]')).toBeNull();
+			await unmount(component);
+		}
+		{
+			const component = mount(DialogFixture, {
+				props: { defaultOpen: true, prevent: true },
+				target
+			});
+			await tick();
+			document.querySelector<HTMLButtonElement>('[data-testid="dialog-close"]')?.click();
+			await tick();
+			expect(document.querySelector('[data-testid="dialog-content"]')).not.toBeNull();
+			await unmount(component);
+		}
+		{
+			const component = mount(PopconfirmFixture, {
+				props: { defaultOpen: true, prevent: true },
+				target
+			});
+			await tick();
+			document.querySelector<HTMLButtonElement>('[data-testid="popconfirm-cancel"]')?.click();
+			document.querySelector<HTMLButtonElement>('[data-testid="popconfirm-action"]')?.click();
+			await tick();
+			expect(document.querySelector('[data-testid="popconfirm-content"]')).not.toBeNull();
+			await unmount(component);
+		}
+		target.remove();
+	});
+
 	it('pauses, resumes, times out and disposes explicit ToastQueue timers', async () => {
 		const dismissed: string[] = [];
 		const queue = createToastQueue();
@@ -308,6 +383,15 @@ describe('compiled ICSS browser updates', () => {
 		document
 			.querySelector<HTMLButtonElement>('[data-testid="coverage-toast-dismiss"] [aria-label]')
 			?.click();
+		const interactiveToast = document.querySelector<HTMLElement>(
+			'[data-testid="coverage-toast-dismiss"]'
+		);
+		interactiveToast?.dispatchEvent(new MouseEvent('mouseenter'));
+		interactiveToast?.dispatchEvent(new MouseEvent('mouseleave'));
+		const toastButtons = interactiveToast?.querySelectorAll<HTMLButtonElement>('button');
+		toastButtons?.[0]?.focus();
+		toastButtons?.[1]?.focus();
+		carousel?.querySelector<HTMLButtonElement>('button')?.focus();
 		await tick();
 		expect(output?.textContent).toBe('a:1:1:1:enabled:0:0');
 		expect(document.querySelector<HTMLInputElement>('[aria-label="Select row 3"]')?.disabled).toBe(

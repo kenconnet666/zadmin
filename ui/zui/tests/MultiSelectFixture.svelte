@@ -5,7 +5,8 @@
 		ZMultiSelectItem,
 		ZMultiSelectTrigger
 	} from '../src/entrypoints/index.js';
-	let { defaultOpen = false }: { defaultOpen?: boolean } = $props();
+	let { defaultOpen = false, prevent = false }: { defaultOpen?: boolean; prevent?: boolean } =
+		$props();
 	let values = $state<readonly (string | number)[]>(['a', 'c']);
 	let open = $state<boolean>();
 	let changes = $state(0);
@@ -25,7 +26,11 @@
 		<ZMultiSelectTrigger aria-label="Choices" data-testid="multi-select-trigger" />
 		<ZMultiSelectContent data-testid="multi-select-content">
 			<ZMultiSelectItem data-testid="multi-a" value="a">Alpha</ZMultiSelectItem>
-			<ZMultiSelectItem data-testid="multi-b" value="b">Beta</ZMultiSelectItem>
+			<ZMultiSelectItem
+				data-testid="multi-b"
+				onSelect={(event) => prevent && event.preventDefault()}
+				value="b">Beta</ZMultiSelectItem
+			>
 			<ZMultiSelectItem data-testid="multi-c" value="c">Charlie</ZMultiSelectItem>
 			<ZMultiSelectItem data-testid="multi-d" disabled value="d">Delta</ZMultiSelectItem>
 		</ZMultiSelectContent>
