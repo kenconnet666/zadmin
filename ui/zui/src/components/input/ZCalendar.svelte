@@ -2,6 +2,7 @@
 	import type { CalendarDate as CalendarDateValue } from '@internationalized/date';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
+	import { styleInternalAction } from '../gene/internal-action.js';
 	import type { CalendarRange, Weekday } from '../../runtime/date.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 
@@ -164,13 +165,10 @@
 	});
 	const navRecipe = defineRecipe({
 		base: (s) => {
-			s.backgroundColor.transparent;
+			styleInternalAction(s);
 			s.borderColor._border;
 			s.borderRadius._small;
-			s.borderStyle.solid;
-			s.borderWidth._hairline;
 			s.color._text;
-			s.cursor.pointer;
 			s.height._medium;
 			s.width._medium;
 		},

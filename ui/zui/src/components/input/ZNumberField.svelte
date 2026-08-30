@@ -1,6 +1,7 @@
 <script module lang="ts">
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
+	import { styleInternalAction } from '../gene/internal-action.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 
 	export interface ZNumberFieldProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onchange'> {
@@ -129,22 +130,20 @@
 	});
 	const buttonRecipe = defineRecipe({
 		base: (s) => {
+			styleInternalAction(s);
 			s.backgroundColor._surface;
 			s.borderStyle.none;
+			s.borderRadius.px(0);
 			s.color._text;
-			s.cursor.pointer;
 			s.fontWeight._semibold;
 			s.minWidth._medium;
 			s.paddingInline._medium;
 			s._focusVisible((focus) => {
-				focus.outlineColor._focus;
 				focus.outlineOffset.px(-2);
-				focus.outlineStyle.solid;
-				focus.outlineWidth._medium;
 			});
 		},
-		variants: { disabled: { false: () => undefined, true: (s) => s.cursor.notAllowed } },
-		defaultVariants: { disabled: false }
+		variants: {},
+		defaultVariants: {}
 	});
 	const inputRecipe = defineRecipe({
 		base: (s) => {
@@ -264,9 +263,7 @@
 	const rootClass = $derived(
 		zui.recipe(rootRecipe, { disabled: resolvedDisabled, invalid: resolvedInvalid })
 	);
-	const buttonClass = $derived(
-		zui.recipe(buttonRecipe, { disabled: resolvedDisabled || resolvedReadonly })
-	);
+	const buttonClass = $derived(zui.recipe(buttonRecipe));
 	const inputClass = $derived(zui.recipe(inputRecipe));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));

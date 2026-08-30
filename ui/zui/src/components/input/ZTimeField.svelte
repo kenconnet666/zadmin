@@ -2,6 +2,7 @@
 	import type { Time as TimeValue } from '@internationalized/date';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
+	import { styleInternalAction } from '../gene/internal-action.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 
 	export type TimeGranularity = 'minute' | 'second';
@@ -119,10 +120,10 @@
 	});
 	const periodRecipe = defineRecipe({
 		base: (s) => {
+			styleInternalAction(s);
 			s.backgroundColor._surface;
 			s.borderStyle.none;
 			s.color._text;
-			s.cursor.pointer;
 			s.padding._small;
 		},
 		variants: {},

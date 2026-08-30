@@ -41,9 +41,18 @@ const componentFiles = await filesUnder(componentsRoot, ['.svelte']);
 const metadata = [];
 const internalComponents = [];
 const transitionFiles = [];
+const rawButtonFiles = [];
 for (const path of componentFiles) {
 	const source = await readFile(path, 'utf8');
 	const filename = portable(relative(workspaceRoot, path));
+	if (/<button\b/u.test(source)) {
+		rawButtonFiles.push(filename);
+		const hasFocusContract =
+			/styleInternalAction|_focusVisible|&:focus-within/u.test(source) ||
+			(filename === 'ui/zui/src/components/overlay/ZTour.svelte' &&
+				/aria-hidden=["']true["'][\s\S]*?tabindex=["']-1["']/u.test(source));
+		if (!hasFocusContract) fail(`${filename} has a raw button without a focus contract.`);
+	}
 	const id = source.match(
 		/export const zuiMetadata\s*=\s*\{[\s\S]*?\bid:\s*['"]([^'"]+)['"]/u
 	)?.[1];
@@ -133,6 +142,7 @@ console.log(
 		docPages: docFiles.length,
 		demoIds: demoIds.length,
 		transitionFiles: transitionFiles.length,
+		rawButtonComponentFiles: rawButtonFiles.length,
 		inlineSvgFiles: inlineSvg.length,
 		docsRawInteractiveElements: 0
 	})
