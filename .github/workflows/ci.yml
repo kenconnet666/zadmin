@@ -113,6 +113,9 @@ jobs:
       - name: Validate Changesets release metadata
         run: pnpm release:status
 
+      - name: Verify ZUI public API contract
+        run: pnpm --filter @zadmin/zui api:contract:check
+
       - name: Install Chromium for coverage suites
         run: pnpm --filter @zadmin/docs exec playwright install --with-deps chromium
 
@@ -127,6 +130,9 @@ jobs:
 
       - name: Run external ZUI and SvelteKit SSR acceptance
         run: pnpm --filter @zadmin/sveltekit test:zui-package
+
+      - name: Dry-run ZUI package publish
+        run: pnpm --filter @zadmin/zui publish --dry-run --no-git-checks
 
       - name: Run Miniapp coverage
         run: pnpm --filter @zadmin/miniapp test:coverage

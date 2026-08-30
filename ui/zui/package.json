@@ -1,7 +1,7 @@
 {
 	"name": "@zadmin/zui",
 	"version": "0.1.0",
-	"description": "Type-safe Web runtime CSS and foundational Svelte components with class-only compiler optimization.",
+	"description": "Production Svelte 5 component system with typed ICSS, themes, accessible state, forms, overlays, and virtualized data surfaces.",
 	"author": "kenconnet666 <kenconnet@foxmail.com>",
 	"type": "module",
 	"license": "MIT",
@@ -11,7 +11,8 @@
 	},
 	"files": [
 		"dist",
-		"LICENSE"
+		"LICENSE",
+		"README.md"
 	],
 	"exports": {
 		".": {
@@ -41,6 +42,8 @@
 		}
 	},
 	"scripts": {
+		"api:contract:check": "node scripts/check-api-contract.mjs",
+		"api:contract:update": "node scripts/check-api-contract.mjs --write",
 		"prepare": "svelte-kit sync || echo ''",
 		"build": "svelte-package --input src",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -49,7 +52,10 @@
 		"test:bundle": "node scripts/check-bundle.mjs"
 	},
 	"keywords": [
+		"accessibility",
+		"component-library",
 		"css-in-js",
+		"design-system",
 		"svelte",
 		"sveltekit",
 		"typescript",

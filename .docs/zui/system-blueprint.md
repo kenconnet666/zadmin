@@ -867,7 +867,7 @@ CI实际构建runtime、layer、每个组件和ZCode shell并记录tree-shaken g
 
 ## 11. Metadata扩展
 
-当前metadata重点是Props。未来扩展为：
+metadata已经扩展为：
 
 ```ts
 interface ZuiComponentMetadata {
@@ -892,7 +892,7 @@ interface ZuiComponentMetadata {
 
 metadata仍与组件源码共置；Docs只补教学内容，不重新手写事实。
 
-发布时生成API快照，用于判断：
+`.docs/zui/api-contract.json`记录全部metadata组件与公开entrypoint的逐项SHA-256和总指纹。`api:contract:check`使用TypeScript AST只提取公开声明，不因私有recipe或实现改动误报；公开API变化必须先审阅，再显式执行`api:contract:update`。发布时用该快照判断：
 
 ```text
 新增Prop              feature

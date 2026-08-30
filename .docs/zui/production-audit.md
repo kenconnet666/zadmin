@@ -19,6 +19,7 @@
 | Svelte组件文件         |  135 | 133个拥有唯一metadata id；`ZMentionEditor`与`ZTextareaAutosize`是非公开内部实现              |
 | 公开组件文档页         |   78 | 每页至少2个不同Demo                                                                          |
 | 实际Demo               |  156 | 少于2个、重复id或空源码会在`defineComponentDoc`中直接失败                                    |
+| 公开API合同            |  133 | TypeScript AST快照覆盖全部metadata组件与10个package entrypoint；变化必须显式更新             |
 | 官方主题               |    6 | `@zadmin/zui/themes`统一导出，文档站真实切换并持久化                                         |
 | 带CSS过渡的组件        |   13 | 13/13显式消费Provider motion，reduced时清除过渡                                              |
 | Docs视图层自建交互控件 |    0 | 能由ZUI表达的按钮、链接、Select、Popover、Table、Code和Card均直接dogfood ZUI                 |
@@ -64,18 +65,19 @@
 
 ## 6. CI结论
 
-最后一次按约回看的门禁：[CI run 33298460787](https://github.com/kenconnet666/zadmin/actions/runs/33298460787)。
+最后一次按约回看的门禁：[CI run 33299490925](https://github.com/kenconnet666/zadmin/actions/runs/33299490925)，检查时仍在运行，不等待完成。
 
-- Coverage与packages job完整成功：全局分支覆盖率90%，bundle构成、SvelteKit/SSR、Miniapp、WebView及外部包验收全部通过；
-- Windows C# WebView2 desktop job完整成功；
-- Workspace的类型、Svelte、Prettier与ESLint成功；全工作区测试失败集中为WebKit reset与Firefox合成paste，根因已在当前批次共享修复；
-- 当前批次推送后不等待CI，下一次正常推送时回看结果。
+- Coverage与packages job已完整成功：全局分支覆盖率90%，bundle构成、SvelteKit/SSR、Miniapp、WebView及外部包验收全部通过；
+- Workspace已完成类型与Svelte合同，检查时正在执行Lint，尚未进入全测试；
+- Windows job已完成C# core、desktop TypeScript/Svelte和前端测试，检查时正在执行Release构建；
+- 前一轮`33298460787`的WebKit reset与Firefox合成paste失败已在`42545fc`修复；
+- 本批新增ZUI发布dry-run门禁；推送后不等待CI，下一次正常推送时回看结果。
 
 最终通过后必须同时满足：
 
 - Windows C# WebView2 desktop完整成功；
 - Workspace类型、Svelte、Prettier、ESLint、全测试、Docs Playwright/Axe、全构建与生成文件完整成功；
-- ZUI覆盖率、bundle构成与依赖检查、SvelteKit/SSR外部安装、Miniapp与WebView包验收完整成功；
+- ZUI覆盖率、bundle构成与依赖检查、publish dry-run、SvelteKit/SSR外部安装、Miniapp与WebView包验收完整成功；
 - 全局分支覆盖率不降低90%阈值，组件分支覆盖率不降低85%阈值。
 
 ## 7. 结论
