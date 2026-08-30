@@ -108,7 +108,7 @@
 	import { untrack } from 'svelte';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { Typeahead } from '../../runtime/collection/typeahead.js';
-	import { listenForFormReset } from '../../runtime/form/form-control.svelte.js';
+	import { formReset } from '../../runtime/form/form-control.svelte.js';
 	import { serializeFormValue } from '../../runtime/form/form-value.js';
 	import {
 		applyIcssRootStyle,
@@ -330,16 +330,13 @@
 	const MoveToSourceIcon = $derived(zui.direction === 'rtl' ? ArrowRight : ArrowLeft);
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
-	$effect(() => {
-		if (!proxy) return;
-		return listenForFormReset(proxy, () => {
-			valueState.reset();
-			sourceChecked = new Set();
-			targetChecked = new Set();
-			sourceQuery = '';
-			targetQuery = '';
-		});
-	});
+	function resetFromForm(): void {
+		valueState.reset();
+		sourceChecked = new Set();
+		targetChecked = new Set();
+		sourceQuery = '';
+		targetQuery = '';
+	}
 	$effect(() => {
 		const nextSource = new Set(
 			[...sourceChecked].filter((key) => sourceItems.some((item) => Object.is(item.key, key)))
@@ -571,7 +568,15 @@
 		</div>
 	</section>
 </div>
-<input bind:this={proxy} aria-hidden="true" tabindex={-1} type="hidden" disabled {form} />
+<input
+	bind:this={proxy}
+	aria-hidden="true"
+	tabindex={-1}
+	type="hidden"
+	disabled
+	{form}
+	use:formReset={resetFromForm}
+/>
 {#if name && !disabled}{#each serializedValues as serialized, index (`${serialized}-${index}`)}<input
 			type="hidden"
 			{form}

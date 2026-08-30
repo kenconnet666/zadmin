@@ -243,7 +243,7 @@
 	import { untrack } from 'svelte';
 	import { SvelteMap } from 'svelte/reactivity';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
-	import { listenForFormReset } from '../../runtime/form/form-control.svelte.js';
+	import { formReset } from '../../runtime/form/form-control.svelte.js';
 	import {
 		calendarMonth,
 		formatDate,
@@ -318,15 +318,12 @@
 	const weekdayClass = $derived(zui.recipe(weekdayRecipe));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
-	$effect(() => {
-		if (!proxy) return;
-		return listenForFormReset(proxy, () => {
-			valueState.reset();
-			const next = defaultFocusedValue ?? defaultValue ?? today(timeZone);
-			focused = next;
-			displayedMonth = new CalendarDate(next.year, next.month, 1);
-		});
-	});
+	function resetFromForm(): void {
+		valueState.reset();
+		const next = defaultFocusedValue ?? defaultValue ?? today(timeZone);
+		focused = next;
+		displayedMonth = new CalendarDate(next.year, next.month, 1);
+	}
 	function unavailable(date: CalendarDate): boolean {
 		return disabled || isDateUnavailable(date, minValue, maxValue, isDateDisabled);
 	}
@@ -483,7 +480,15 @@
 		</tbody>
 	</table>
 </div>
-<input bind:this={proxy} aria-hidden="true" tabindex={-1} type="hidden" disabled {form} />
+<input
+	bind:this={proxy}
+	aria-hidden="true"
+	tabindex={-1}
+	type="hidden"
+	disabled
+	{form}
+	use:formReset={resetFromForm}
+/>
 {#if name && !disabled}<input
 		type="hidden"
 		{form}

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { listenForFormReset } from '../../runtime/form/form-control.svelte.js';
 	import { useZPopover } from '../compound/popover/context.svelte.js';
 	import ZTextarea, { type ZTextareaProps } from './ZTextarea.svelte';
 
@@ -39,10 +38,6 @@
 			if (popover.trigger === ref) popover.setTrigger(null);
 		};
 	});
-	$effect(() => {
-		if (!ref) return;
-		return listenForFormReset(ref, onEditorReset);
-	});
 </script>
 
 <ZTextarea
@@ -53,6 +48,7 @@
 	id={popover.triggerId}
 	{defaultValue}
 	{value}
+	onFormReset={onEditorReset}
 	aria-activedescendant={popover.open ? activeId : undefined}
 	aria-autocomplete="list"
 	aria-controls={popover.open ? popover.contentId : undefined}

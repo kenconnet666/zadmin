@@ -127,7 +127,7 @@
 	import { CollectionStore } from '../../../runtime/collection/collection.svelte.js';
 	import { ControllableState } from '../../../runtime/foundation/controllable-state.svelte.js';
 	import { useZField } from '../../../runtime/form/field-context.js';
-	import { listenToFormReset, mergeAriaIds } from '../../../runtime/form/form-control.svelte.js';
+	import { formReset, mergeAriaIds } from '../../../runtime/form/form-control.svelte.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -240,13 +240,6 @@
 	provideZRadioGroup(context);
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
-
-	$effect(() => {
-		if (!ref) return;
-		const candidate = form ? ref.ownerDocument.getElementById(form) : ref.closest('form');
-		const owner = candidate instanceof HTMLFormElement ? candidate : null;
-		return listenToFormReset(owner, () => valueState.reset());
-	});
 </script>
 
 <div
@@ -267,3 +260,11 @@
 >
 	{@render children?.()}
 </div>
+<input
+	aria-hidden="true"
+	tabindex={-1}
+	type="hidden"
+	disabled
+	{form}
+	use:formReset={() => valueState.reset()}
+/>

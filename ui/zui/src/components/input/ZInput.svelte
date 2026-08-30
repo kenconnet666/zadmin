@@ -13,6 +13,7 @@
 	> {
 		readonly defaultValue?: string;
 		readonly invalid?: boolean;
+		readonly onFormReset?: () => void;
 		readonly onValueChange?: (value: string) => void;
 		readonly size?: ZInputSize;
 		readonly type?: ZInputType;
@@ -35,6 +36,11 @@
 				description: '仅在用户输入改变值时调用一次；外部更新不触发。',
 				name: 'onValueChange',
 				type: '(value: string) => void'
+			},
+			{
+				description: '原生form reset恢复默认值后调用。',
+				name: 'onFormReset',
+				type: '() => void'
 			}
 		],
 		keyboard: [],
@@ -172,6 +178,7 @@
 		invalid,
 		name,
 		oninput,
+		onFormReset,
 		onValueChange,
 		readonly = false,
 		ref = $bindable(null),
@@ -204,6 +211,10 @@
 		state.setFromUser(event.currentTarget.value);
 		oninput?.(event);
 	}
+	function resetFromForm(): void {
+		state.reset();
+		onFormReset?.();
+	}
 </script>
 
 <input
@@ -212,7 +223,7 @@
 	class={[rootClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
-	use:formReset={() => state.reset()}
+	use:formReset={resetFromForm}
 	id={id ?? field?.controlId}
 	name={name ?? field?.name}
 	{type}

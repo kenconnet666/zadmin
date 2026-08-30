@@ -132,7 +132,7 @@
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import { useZField } from '../../runtime/form/field-context.js';
-	import { listenForFormReset, mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
+	import { formReset, mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
 	import { clampDate } from '../../runtime/date.js';
 	import {
 		applyIcssRootStyle,
@@ -258,14 +258,11 @@
 			move(index, event.key === 'Home' ? -99 : 99);
 		}
 	}
-	$effect(() => {
-		if (!proxy) return;
-		return listenForFormReset(proxy, () => {
-			valueState.reset();
-			drafts = {};
-			invalid = false;
-		});
-	});
+	function resetFromForm(): void {
+		valueState.reset();
+		drafts = {};
+		invalid = false;
+	}
 </script>
 
 <div
@@ -307,7 +304,15 @@
 		{/if}
 	{/each}
 </div>
-<input bind:this={proxy} aria-hidden="true" tabindex={-1} type="hidden" disabled {form} />
+<input
+	bind:this={proxy}
+	aria-hidden="true"
+	tabindex={-1}
+	type="hidden"
+	disabled
+	{form}
+	use:formReset={resetFromForm}
+/>
 {#if resolvedName && !resolvedDisabled}<input
 		type="hidden"
 		{form}

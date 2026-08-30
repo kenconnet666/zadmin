@@ -10,6 +10,7 @@
 		readonly autosize?: boolean;
 		readonly defaultValue?: string;
 		readonly invalid?: boolean;
+		readonly onFormReset?: () => void;
 		readonly onResize?: (height: number) => void;
 		readonly onValueChange?: (value: string) => void;
 		ref?: HTMLTextAreaElement | null;
@@ -38,6 +39,11 @@
 				description: '用户输入后调用一次。',
 				name: 'onValueChange',
 				type: '(value: string) => void'
+			},
+			{
+				description: '原生form reset恢复默认值后调用。',
+				name: 'onFormReset',
+				type: '() => void'
 			},
 			{ description: 'autosize高度变化。', name: 'onResize', type: '(height: number) => void' }
 		],
@@ -174,6 +180,7 @@
 		invalid,
 		name,
 		oninput,
+		onFormReset,
 		onResize,
 		onValueChange,
 		readonly = false,
@@ -211,6 +218,10 @@
 		state.setFromUser(event.currentTarget.value);
 		oninput?.(event);
 	}
+	function resetFromForm(): void {
+		state.reset();
+		onFormReset?.();
+	}
 </script>
 
 <textarea
@@ -219,7 +230,7 @@
 	class={[rootClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
-	use:formReset={() => state.reset()}
+	use:formReset={resetFromForm}
 	id={id ?? field?.controlId}
 	name={name ?? field?.name}
 	{defaultValue}

@@ -111,7 +111,7 @@
 	import { moveIndex, navigationIntent } from '../../../runtime/collection/list-navigation.js';
 	import { ControllableState } from '../../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../../runtime/foundation/ids.js';
-	import { listenForFormReset } from '../../../runtime/form/form-control.svelte.js';
+	import { formReset } from '../../../runtime/form/form-control.svelte.js';
 	import { serializeFormValue } from '../../../runtime/form/form-value.js';
 	import { useZui } from '../../../runtime/foundation/context.js';
 	import ZPopover from '../popover/ZPopover.svelte';
@@ -244,13 +244,10 @@
 		}
 	};
 	provideZCombobox(context);
-	$effect(() => {
-		if (!hidden) return;
-		return listenForFormReset(hidden, () => {
-			valueState.reset();
-			inputState.reset();
-		});
-	});
+	function resetFromForm(): void {
+		valueState.reset();
+		inputState.reset();
+	}
 	const serializedValue = $derived(
 		valueState.current === undefined ? '' : (serializeFormValue(valueState.current) ?? '')
 	);
@@ -272,5 +269,6 @@
 		{disabled}
 		{form}
 		{name}
+		use:formReset={resetFromForm}
 		value={serializedValue}
 	/>{/if}

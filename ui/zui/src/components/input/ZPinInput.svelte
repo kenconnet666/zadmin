@@ -136,7 +136,7 @@
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import { useZField } from '../../runtime/form/field-context.js';
-	import { listenForFormReset, mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
+	import { formReset, mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -214,13 +214,10 @@
 	const inputClass = $derived(zui.recipe(inputRecipe, { invalid: resolvedInvalid }));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
-	$effect(() => {
-		if (!proxy) return;
-		return listenForFormReset(proxy, () => {
-			valueState.reset();
-			activeIndex = 0;
-		});
-	});
+	function resetFromForm(): void {
+		valueState.reset();
+		activeIndex = 0;
+	}
 	function focus(index: number): void {
 		const next = Math.max(0, Math.min(resolvedLength - 1, index));
 		activeIndex = next;
@@ -329,7 +326,15 @@
 		/>
 	{/each}
 </div>
-<input bind:this={proxy} aria-hidden="true" tabindex={-1} type="hidden" disabled {form} />
+<input
+	bind:this={proxy}
+	aria-hidden="true"
+	tabindex={-1}
+	type="hidden"
+	disabled
+	{form}
+	use:formReset={resetFromForm}
+/>
 {#if resolvedName && !resolvedDisabled}<input
 		type="hidden"
 		{form}

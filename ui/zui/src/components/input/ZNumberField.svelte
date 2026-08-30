@@ -174,7 +174,7 @@
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import { useZField } from '../../runtime/form/field-context.js';
-	import { listenForFormReset, mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
+	import { formReset, mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
 	import { serializeFormValue } from '../../runtime/form/form-value.js';
 	import { clampNumber, parseLocalizedNumber, stepNumber } from '../../runtime/number.js';
 	import {
@@ -267,15 +267,12 @@
 	const inputClass = $derived(zui.recipe(inputRecipe));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
-	$effect(() => {
-		if (!proxy) return;
-		return listenForFormReset(proxy, () => {
-			valueState.reset();
-			draft = '';
-			draftInvalid = false;
-			editing = false;
-		});
-	});
+	function resetFromForm(): void {
+		valueState.reset();
+		draft = '';
+		draftInvalid = false;
+		editing = false;
+	}
 	function commit(next: number | undefined): void {
 		if (next !== undefined && !Number.isFinite(next)) return;
 		valueState.setFromUser(next);
@@ -411,7 +408,15 @@
 		onclick={() => changeBy(1)}><Plus aria-hidden="true" size={16} /></button
 	>
 </div>
-<input bind:this={proxy} aria-hidden="true" tabindex={-1} type="hidden" disabled {form} />
+<input
+	bind:this={proxy}
+	aria-hidden="true"
+	tabindex={-1}
+	type="hidden"
+	disabled
+	{form}
+	use:formReset={resetFromForm}
+/>
 {#if resolvedName && !resolvedDisabled && serialized !== undefined}<input
 		type="hidden"
 		{form}

@@ -9,6 +9,7 @@ import { portal } from '../src/runtime/layer/portal.js';
 import { lockScroll } from '../src/runtime/layer/scroll-lock.js';
 import {
 	formReset,
+	formElementReset,
 	listenForFormReset,
 	listenToFormReset
 } from '../src/runtime/form/form-control.svelte.js';
@@ -159,6 +160,26 @@ describe('ZUI layer runtime', () => {
 		expect(first).toHaveBeenCalledOnce();
 		expect(second).toHaveBeenCalledOnce();
 
+		action.destroy();
+		form.reset();
+		await settleReset();
+		expect(second).toHaveBeenCalledOnce();
+		form.remove();
+	});
+
+	it('updates and destroys the direct form reset action', async () => {
+		const form = document.createElement('form');
+		document.body.append(form);
+		const first = vi.fn();
+		const second = vi.fn();
+		const action = formElementReset(form, first);
+		form.reset();
+		await settleReset();
+		expect(first).toHaveBeenCalledOnce();
+		action.update(second);
+		form.reset();
+		await settleReset();
+		expect(second).toHaveBeenCalledOnce();
 		action.destroy();
 		form.reset();
 		await settleReset();

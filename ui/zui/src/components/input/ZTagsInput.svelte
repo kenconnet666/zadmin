@@ -129,7 +129,7 @@
 	import { untrack } from 'svelte';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
-	import { listenForFormReset } from '../../runtime/form/form-control.svelte.js';
+	import { formReset } from '../../runtime/form/form-control.svelte.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -265,13 +265,10 @@
 	const removeClass = $derived(zui.recipe(removeRecipe));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
-	$effect(() => {
-		if (!proxy) return;
-		return listenForFormReset(proxy, () => {
-			valueState.reset();
-			draftState.reset();
-		});
-	});
+	function resetFromForm(): void {
+		valueState.reset();
+		draftState.reset();
+	}
 	function add(raw: string): boolean {
 		const candidate = raw.trim();
 		if (
@@ -382,7 +379,15 @@
 		onpaste={handlePaste}
 	/>
 </div>
-<input bind:this={proxy} aria-hidden="true" tabindex={-1} type="hidden" disabled {form} />
+<input
+	bind:this={proxy}
+	aria-hidden="true"
+	tabindex={-1}
+	type="hidden"
+	disabled
+	{form}
+	use:formReset={resetFromForm}
+/>
 {#if name && !disabled}{#each resolvedValues as tag, index (`${tag}-${index}`)}<input
 			type="hidden"
 			{form}

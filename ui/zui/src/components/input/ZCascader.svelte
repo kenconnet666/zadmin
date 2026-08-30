@@ -95,7 +95,7 @@
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import { untrack } from 'svelte';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
-	import { listenForFormReset } from '../../runtime/form/form-control.svelte.js';
+	import { formReset } from '../../runtime/form/form-control.svelte.js';
 	import { createTreeIndex } from '../../runtime/tree.js';
 	import {
 		applyIcssRootStyle,
@@ -225,10 +225,6 @@
 	const columnClass = $derived(zui.recipe(columnRecipe));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
-	$effect(() => {
-		if (!proxy) return;
-		return listenForFormReset(proxy, () => valueState.reset());
-	});
 	function setOpen(next: boolean): void {
 		if (disabled) return;
 		if (next) draft = Object.freeze([...valueState.current]);
@@ -358,6 +354,14 @@
 			</div>
 		</ZPopoverContent>
 	</ZPopover>
-	<input bind:this={proxy} aria-hidden="true" tabindex={-1} type="hidden" disabled {form} />
+	<input
+		bind:this={proxy}
+		aria-hidden="true"
+		tabindex={-1}
+		type="hidden"
+		disabled
+		{form}
+		use:formReset={() => valueState.reset()}
+	/>
 	{#if name && !disabled}<input type="hidden" {form} {name} value={serialized} />{/if}
 </div>

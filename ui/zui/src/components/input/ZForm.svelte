@@ -135,7 +135,7 @@
 		formDataToObject,
 		issuesToFormErrors
 	} from '../../runtime/form/validation.js';
-	import { listenToFormReset } from '../../runtime/form/form-control.svelte.js';
+	import { formElementReset } from '../../runtime/form/form-control.svelte.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -244,18 +244,15 @@
 		const externalErrors = errors;
 		untrack(() => registry.setErrors(errorsToMap(externalErrors)));
 	});
-	$effect(() => {
-		if (!ref) return;
-		return listenToFormReset(ref, () => {
-			validationToken += 1;
-			if (validationTimer !== undefined) clearTimeout(validationTimer);
-			validationTimer = undefined;
-			validating = false;
-			submitted = false;
-			registry.reset();
-			setErrors({});
-		});
-	});
+	function resetFromForm(): void {
+		validationToken += 1;
+		if (validationTimer !== undefined) clearTimeout(validationTimer);
+		validationTimer = undefined;
+		validating = false;
+		submitted = false;
+		registry.reset();
+		setErrors({});
+	}
 	async function handleSubmit(
 		event: SubmitEvent & { currentTarget: HTMLFormElement }
 	): Promise<void> {
@@ -290,6 +287,7 @@
 	class={className}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
+	use:formElementReset={resetFromForm}
 	novalidate={!nativeValidation}
 	aria-busy={validating || undefined}
 	data-validating={validating || undefined}

@@ -114,7 +114,7 @@
 	import { untrack } from 'svelte';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
-	import { listenForFormReset } from '../../runtime/form/form-control.svelte.js';
+	import { formReset } from '../../runtime/form/form-control.svelte.js';
 	import { scoreCommand } from '../../runtime/command.js';
 	import {
 		applyIcssRootStyle,
@@ -371,13 +371,10 @@
 	const emptyClass = $derived(zui.recipe(emptyRecipe));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
-	$effect(() => {
-		if (!inputRef) return;
-		return listenForFormReset(inputRef, () => {
-			queryState.reset();
-			active = undefined;
-		});
-	});
+	function resetFromForm(): void {
+		queryState.reset();
+		active = undefined;
+	}
 	$effect(() => {
 		if (!autofocus) {
 			didAutofocus = false;
@@ -456,6 +453,7 @@
 		aria-controls={`${idBase}-list`}
 		aria-expanded="true"
 		aria-activedescendant={activeId}
+		use:formReset={resetFromForm}
 		oninput={handleInput}
 		onkeydown={handleKeydown}
 	/>

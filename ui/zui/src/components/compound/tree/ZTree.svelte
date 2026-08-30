@@ -129,7 +129,7 @@
 	import Circle from '@lucide/svelte/icons/circle';
 	import { onMount, untrack } from 'svelte';
 	import { ControllableState } from '../../../runtime/foundation/controllable-state.svelte.js';
-	import { listenForFormReset } from '../../../runtime/form/form-control.svelte.js';
+	import { formReset } from '../../../runtime/form/form-control.svelte.js';
 	import { serializeFormValue } from '../../../runtime/form/form-value.js';
 	import { createTreeIndex } from '../../../runtime/tree.js';
 	import { Typeahead } from '../../../runtime/collection/typeahead.js';
@@ -317,13 +317,10 @@
 		'--zui-tree-total-size': `${virtualRange.totalSize}px`
 	} as const);
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
-	$effect(() => {
-		if (!proxy) return;
-		return listenForFormReset(proxy, () => {
-			expandedState.reset();
-			selectedState.reset();
-		});
-	});
+	function resetFromForm(): void {
+		expandedState.reset();
+		selectedState.reset();
+	}
 	onMount(() => {
 		if (!ref || !virtualized) return;
 		const observer = new ResizeObserver(() => {
@@ -493,7 +490,15 @@
 		{/each}
 	</div>
 </div>
-<input bind:this={proxy} aria-hidden="true" tabindex={-1} type="hidden" disabled {form} />
+<input
+	bind:this={proxy}
+	aria-hidden="true"
+	tabindex={-1}
+	type="hidden"
+	disabled
+	{form}
+	use:formReset={resetFromForm}
+/>
 {#if name && !disabled}{#each serializedSelected as value (value)}<input
 			type="hidden"
 			{form}

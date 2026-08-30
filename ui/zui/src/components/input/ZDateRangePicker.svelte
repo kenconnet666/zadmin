@@ -80,7 +80,7 @@
 
 <script lang="ts">
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
-	import { listenForFormReset } from '../../runtime/form/form-control.svelte.js';
+	import { formReset } from '../../runtime/form/form-control.svelte.js';
 	import { formatDate, normalizeRange } from '../../runtime/date.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import ZPopover from '../compound/popover/ZPopover.svelte';
@@ -150,14 +150,11 @@
 		if (!next) pending = undefined;
 		if (restore) queueMicrotask(() => triggerRef?.focus({ preventScroll: true }));
 	}
-	$effect(() => {
-		if (!proxy) return;
-		return listenForFormReset(proxy, () => {
-			valueState.reset();
-			pending = undefined;
-			openState.setFromUser(false);
-		});
-	});
+	function resetFromForm(): void {
+		valueState.reset();
+		pending = undefined;
+		openState.setFromUser(false);
+	}
 </script>
 
 <div {...rest} bind:this={ref} class={className} data-selecting={Boolean(pending) || undefined}>
@@ -192,7 +189,15 @@
 		</ZPopoverContent>
 	</ZPopover>
 </div>
-<input bind:this={proxy} aria-hidden="true" tabindex={-1} type="hidden" disabled {form} />
+<input
+	bind:this={proxy}
+	aria-hidden="true"
+	tabindex={-1}
+	type="hidden"
+	disabled
+	{form}
+	use:formReset={resetFromForm}
+/>
 {#if name && !disabled && valueState.current}<input
 		type="hidden"
 		{form}

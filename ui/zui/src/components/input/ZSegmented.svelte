@@ -98,7 +98,7 @@
 	import { untrack } from 'svelte';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { moveIndex, navigationIntent } from '../../runtime/collection/list-navigation.js';
-	import { listenForFormReset } from '../../runtime/form/form-control.svelte.js';
+	import { formReset } from '../../runtime/form/form-control.svelte.js';
 	import { serializeFormValue } from '../../runtime/form/form-value.js';
 	import {
 		applyIcssRootStyle,
@@ -216,10 +216,6 @@
 	const rootClass = $derived(zui.recipe(rootRecipe, { orientation }));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
-	$effect(() => {
-		if (!proxy) return;
-		return listenForFormReset(proxy, () => valueState.reset());
-	});
 	function select(index: number, originalEvent: Event): void {
 		const item = normalizedItems[index];
 		if (!item || disabled || item.disabled) return;
@@ -270,5 +266,13 @@
 		>
 	{/each}
 </div>
-<input bind:this={proxy} aria-hidden="true" tabindex={-1} type="hidden" disabled {form} />
+<input
+	bind:this={proxy}
+	aria-hidden="true"
+	tabindex={-1}
+	type="hidden"
+	disabled
+	{form}
+	use:formReset={() => valueState.reset()}
+/>
 {#if name && !disabled}<input type="hidden" {form} {name} value={serialized} />{/if}

@@ -98,7 +98,7 @@
 
 <script lang="ts">
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
-	import { listenForFormReset } from '../../runtime/form/form-control.svelte.js';
+	import { formReset } from '../../runtime/form/form-control.svelte.js';
 	import { serializeFormValue } from '../../runtime/form/form-value.js';
 	import { createTreeIndex } from '../../runtime/tree.js';
 	import ZPopover from '../compound/popover/ZPopover.svelte';
@@ -154,13 +154,10 @@
 	const serialized = $derived(
 		valueState.current === undefined ? '' : (serializeFormValue(valueState.current) ?? '')
 	);
-	$effect(() => {
-		if (!proxy) return;
-		return listenForFormReset(proxy, () => {
-			valueState.reset();
-			expandedState.reset();
-		});
-	});
+	function resetFromForm(): void {
+		valueState.reset();
+		expandedState.reset();
+	}
 	function handleSelection(keys: readonly SelectionKey[]): void {
 		const next = keys[0];
 		if (next === undefined) return;
@@ -197,6 +194,14 @@
 			/>
 		</ZPopoverContent>
 	</ZPopover>
-	<input bind:this={proxy} aria-hidden="true" tabindex={-1} type="hidden" disabled {form} />
+	<input
+		bind:this={proxy}
+		aria-hidden="true"
+		tabindex={-1}
+		type="hidden"
+		disabled
+		{form}
+		use:formReset={resetFromForm}
+	/>
 	{#if name && !disabled}<input type="hidden" {form} {name} value={serialized} />{/if}
 </div>

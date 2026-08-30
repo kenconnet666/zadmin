@@ -43,6 +43,7 @@ const internalComponents = [];
 const transitionFiles = [];
 const rawButtonFiles = [];
 const rawControlFiles = [];
+const formResetActionFiles = [];
 for (const path of componentFiles) {
 	const source = await readFile(path, 'utf8');
 	const filename = portable(relative(workspaceRoot, path));
@@ -61,6 +62,10 @@ for (const path of componentFiles) {
 	if (hasVisibleRawControl) rawControlFiles.push(filename);
 	if (hasVisibleRawControl && !/styleInternalFocus|_focusVisible|&:focus-within/u.test(source)) {
 		fail(`${filename} has a visible raw input without a focus contract.`);
+	}
+	if (/use:form(?:Element)?Reset\b/u.test(source)) formResetActionFiles.push(filename);
+	if (/\blisten(?:For|To)FormReset\b/u.test(source)) {
+		fail(`${filename} bypasses the node form reset action.`);
 	}
 	const id = source.match(
 		/export const zuiMetadata\s*=\s*\{[\s\S]*?\bid:\s*['"]([^'"]+)['"]/u
@@ -153,6 +158,7 @@ console.log(
 		transitionFiles: transitionFiles.length,
 		rawButtonComponentFiles: rawButtonFiles.length,
 		rawControlComponentFiles: rawControlFiles.length,
+		formResetActionFiles: formResetActionFiles.length,
 		inlineSvgFiles: inlineSvg.length,
 		docsRawInteractiveElements: 0
 	})

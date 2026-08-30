@@ -172,7 +172,7 @@
 	import { onDestroy, untrack } from 'svelte';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
-	import { listenForFormReset } from '../../runtime/form/form-control.svelte.js';
+	import { formReset } from '../../runtime/form/form-control.svelte.js';
 	import { fileIdentity, validateFileQueue } from '../../runtime/file.js';
 	import {
 		applyIcssRootStyle,
@@ -243,18 +243,15 @@
 		inputRef.files = transfer.files;
 	}
 	$effect(() => syncNative(resolvedFiles));
-	$effect(() => {
-		if (!inputRef) return;
-		return listenForFormReset(inputRef, () => {
-			fileState.reset();
-			dragging = false;
-			if (resetTimer !== undefined) clearTimeout(resetTimer);
-			resetTimer = setTimeout(() => {
-				resetTimer = undefined;
-				syncNative(defaultFiles);
-			}, 0);
-		});
-	});
+	function resetFromForm(): void {
+		fileState.reset();
+		dragging = false;
+		if (resetTimer !== undefined) clearTimeout(resetTimer);
+		resetTimer = setTimeout(() => {
+			resetTimer = undefined;
+			syncNative(defaultFiles);
+		}, 0);
+	}
 	onDestroy(() => {
 		if (resetTimer !== undefined) clearTimeout(resetTimer);
 	});
@@ -315,6 +312,7 @@
 		{multiple}
 		{required}
 		hidden
+		use:formReset={resetFromForm}
 		onchange={handleChange}
 	/>
 	<div>{dropLabel}</div>

@@ -140,7 +140,7 @@
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import { useZField } from '../../runtime/form/field-context.js';
-	import { listenForFormReset, mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
+	import { formReset, mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -284,14 +284,11 @@
 		const base = valueState.current ?? new Time(0);
 		valueState.setFromUser(clamp(base.cycle('hour', 12)));
 	}
-	$effect(() => {
-		if (!proxy) return;
-		return listenForFormReset(proxy, () => {
-			valueState.reset();
-			drafts = {};
-			invalid = false;
-		});
-	});
+	function resetFromForm(): void {
+		valueState.reset();
+		drafts = {};
+		invalid = false;
+	}
 </script>
 
 <div
@@ -339,7 +336,15 @@
 			onclick={togglePeriod}>{(valueState.current?.hour ?? 0) >= 12 ? 'PM' : 'AM'}</button
 		>{/if}
 </div>
-<input bind:this={proxy} aria-hidden="true" tabindex={-1} type="hidden" disabled {form} />
+<input
+	bind:this={proxy}
+	aria-hidden="true"
+	tabindex={-1}
+	type="hidden"
+	disabled
+	{form}
+	use:formReset={resetFromForm}
+/>
 {#if resolvedName && !resolvedDisabled}<input
 		type="hidden"
 		{form}
