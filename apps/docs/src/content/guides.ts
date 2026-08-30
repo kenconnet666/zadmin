@@ -151,7 +151,8 @@ export default {
 				bullets: [
 					'Tabs可选择automatic或manual activation。',
 					'Menu、Select与Tree只移动当前可见、可用项。',
-					'RTL改变逻辑方向，不复制一套组件实现。'
+					'RTL改变逻辑方向，不复制一套组件实现。',
+					'文档搜索用aria-keyshortcuts声明/；仅在非编辑上下文聚焦，Escape清空，输入控件内不劫持字符。'
 				]
 			},
 			{

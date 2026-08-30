@@ -114,6 +114,7 @@
 - Server测试对NativeIdentityFixture做两次独立SSR，要求完整id数组确定一致、内部唯一并保留`consumer-input`显式覆盖。
 - Accessibility指南明确自动id仅服务DOM/ARIA、显式id与Field优先且不可作为业务键；真实Chrome渲染4个ZUI Card章节并保持控制台干净。
 - Accessibility指南补充Presence退场inert/aria-hidden边界与cleanup解析当前Trigger合同，防止业务组合重新引入焦点隐藏警告。
+- Accessibility指南记录文档搜索`/`、Escape和编辑上下文不劫持合同，与真实ZInput的aria-keyshortcuts保持一致。
 - 搜索框关联真实nav与live status；Chrome验证总数78、autosize唯一命中ZTextarea、无结果0和清空恢复，远程Playwright固定三态。
 - 搜索有内容时Escape清空过滤、恢复78个组件并保持输入焦点；远程Playwright固定value、focus与live状态同步。
 - 非编辑上下文按`/`聚焦搜索；搜索框内`/`保留真实输入且不被全局快捷键劫持，组件声明`aria-keyshortcuts`并销毁window监听。
