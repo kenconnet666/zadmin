@@ -1671,6 +1671,8 @@ describe('compiled ICSS browser updates', () => {
 		expect(signal?.disabled).toBe(true);
 		expect(signal?.name).toBe('');
 		expect(signal?.id).toBe('');
+		expect(signal?.value).toBe('zui-reset-armed');
+		expect(signal?.defaultValue).toBe('zui-reset-fired');
 
 		form.reset();
 		await settleFormReset();
