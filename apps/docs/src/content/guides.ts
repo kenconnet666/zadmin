@@ -138,6 +138,8 @@ export default {
 				],
 				bullets: [
 					'装饰图标隐藏于可访问树；独立图标必须有可访问名称。',
+					'基础原生控件自动生成SSR稳定ID；调用方显式id优先，ZField controlId优先于自动值。',
+					'自动ID用于DOM与ARIA连接，不作为数据库、缓存或测试业务键。',
 					'错误、说明与标签通过稳定ID关系连接。',
 					'状态变化使用适当的status或alert，不把普通消息升级为assertive。'
 				]

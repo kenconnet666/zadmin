@@ -96,6 +96,7 @@
 - 远程Docs Playwright固定组件深链首个Tab、skip-link可见/聚焦、Enter后URL不变、main聚焦与H1不变五项合同。
 - 基础默认id上线后真实Chrome从Sidebar提取87条路由逐页复核，缺失字段身份、重复id、H1异常和水平溢出问题均为0，控制台干净。
 - 组件包三浏览器Fixture固定默认id非空/唯一、调用方显式id、Field优先级、RadioGroupItem与DataTable内部选择框身份合同。
+- Accessibility指南明确自动id仅服务DOM/ARIA、显式id与Field优先且不可作为业务键；真实Chrome渲染4个ZUI Card章节并保持控制台干净。
 - 真实Textarea页重复id清单为0；远程78页循环按页面聚合全部`[id]`并输出任何重复值与数量。
 - 六主题最终surface分别为极光`rgb(238, 244, 255)`、纸张`rgb(245, 237, 225)`、霓虹`rgb(5, 9, 20)`、午夜`rgb(11, 18, 32)`、高对比亮色`rgb(255, 255, 255)`、高对比暗色`rgb(0, 0, 0)`。
 - 390×844视口无水平溢出，搜索和主题选择保持可用，组件导航使用横向滚动；验收后已恢复默认1920×936视口。
