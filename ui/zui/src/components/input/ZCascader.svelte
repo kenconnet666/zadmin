@@ -94,6 +94,7 @@
 	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import { untrack } from 'svelte';
+	import { moveIndex, navigationIntent } from '../../runtime/collection/list-navigation.js';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { formReset } from '../../runtime/form/form-control.svelte.js';
 	import { createTreeIndex } from '../../runtime/tree.js';
@@ -272,37 +273,36 @@
 		const node = columns[level]?.[nodeIndex];
 		if (!node) return;
 		const current = siblings.findIndex((entry) => Object.is(entry.key, node.key));
-		if (
-			event.key === 'ArrowDown' ||
-			event.key === 'ArrowUp' ||
-			event.key === 'Home' ||
-			event.key === 'End'
-		) {
+		const intent = navigationIntent(event.key, 'vertical');
+		if (intent) {
 			event.preventDefault();
 			const target =
-				event.key === 'Home'
-					? siblings[0]
-					: event.key === 'End'
-						? siblings.at(-1)
-						: siblings[
-								Math.max(
-									0,
-									Math.min(siblings.length - 1, current + (event.key === 'ArrowDown' ? 1 : -1))
-								)
-							];
+				current < 0 ? siblings[0] : siblings[moveIndex(siblings.length, current, intent, false)];
 			if (target) focus(level, target.key);
-		} else if (event.key === 'ArrowRight') {
-			event.preventDefault();
-			choose(level, node);
-			const child = tree.children.get(node.key)?.find((entry) => !entry.disabled);
-			if (child) queueMicrotask(() => focus(level + 1, child.key));
-		} else if (event.key === 'ArrowLeft' && level > 0) {
-			event.preventDefault();
-			const parent = draft[level - 1];
-			if (parent !== undefined) focus(level - 1, parent);
-		} else if (event.key === 'Enter' || event.key === ' ') {
-			event.preventDefault();
-			choose(level, node);
+			return;
+		}
+		switch (event.key) {
+			case 'ArrowRight': {
+				event.preventDefault();
+				choose(level, node);
+				const child = tree.children.get(node.key)?.find((entry) => !entry.disabled);
+				if (child) queueMicrotask(() => focus(level + 1, child.key));
+				return;
+			}
+			case 'ArrowLeft': {
+				if (level === 0) return;
+				event.preventDefault();
+				const parent = draft[level - 1];
+				if (parent !== undefined) focus(level - 1, parent);
+				return;
+			}
+			case 'Enter':
+			case ' ':
+				event.preventDefault();
+				choose(level, node);
+				return;
+			default:
+				return;
 		}
 	}
 	const serialized = $derived(

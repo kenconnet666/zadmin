@@ -262,6 +262,10 @@ const timeFieldSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/components/input/ZTimeField.svelte'),
 	'utf8'
 );
+const cascaderSource = await readFile(
+	resolve(workspaceRoot, 'ui/zui/src/components/input/ZCascader.svelte'),
+	'utf8'
+);
 const formResetSignalTag = formResetSignalSource.match(/<input\b[\s\S]*?\/>/u)?.[0] ?? '';
 if (
 	!buttonSource.includes("'aria-busy': ariaBusy") ||
@@ -364,6 +368,15 @@ if (
 	)
 ) {
 	fail('ZDateField and ZTimeField must share non-looping horizontal segment navigation.');
+}
+if (
+	!cascaderSource.includes("const intent = navigationIntent(event.key, 'vertical')") ||
+	!cascaderSource.includes('siblings[moveIndex(siblings.length, current, intent, false)]') ||
+	!cascaderSource.includes('switch (event.key)') ||
+	!cascaderSource.includes("case 'ArrowRight':") ||
+	!cascaderSource.includes("case 'ArrowLeft':")
+) {
+	fail('ZCascader must reuse non-looping vertical navigation before its cross-column key switch.');
 }
 const focusScopeSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/runtime/layer/focus-scope.ts'),
@@ -519,6 +532,7 @@ console.log(
 		collectionKeyboardReuseContracts: 2,
 		pinInputKeyboardSwitchContracts: 1,
 		segmentFieldKeyboardReuseContracts: 2,
+		cascaderKeyboardReuseContracts: 1,
 		inlineSvgFiles: inlineSvg.length,
 		brandGradientFiles: gradientFiles.length,
 		docsRawInteractiveElements: 0,

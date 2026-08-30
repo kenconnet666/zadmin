@@ -37,6 +37,7 @@
 | Collection键盘复用合同   |    2 | Command/Tree复用vertical navigationIntent；局部switch只保留action、Escape和树父子语义        |
 | PinInput键盘switch合同   |    1 | RTL方向、Home/End、Backspace/Delete互斥分支显式表达，default不劫持其他文本键                 |
 | Date/Time键盘复用合同    |    2 | 左右/Home/End复用horizontal navigationIntent与非循环moveIndex；switch只处理上下循环          |
+| Cascader键盘复用合同     |    1 | 同列纵向键复用navigationIntent/moveIndex；switch仅保留跨列与选择职责                         |
 | reset mount重绑合同      |    1 | action以mount微任务和短期Observer等待最终root/form，并且只在关联变化时重绑                   |
 | reset update重绑合同     |    1 | action更新时重新检查动态`form`归属，旧表单解绑且新表单直接监听                               |
 | reset微任务合同          |    1 | 与Svelte原生binding使用同一微任务检查点，generation去重捕获并使destroy可取消                 |
@@ -71,6 +72,7 @@
 | Command/Tree重复纵向导航分支          | ArrowUp/Down与Home/End重复已有Collection helper                    | 先解析vertical navigationIntent；Command/Tree switch只表达各自剩余职责             |
 | PinInput键盘删除与方向分支冗长        | 六个互斥event.key分支混合RTL焦点和字符删除                         | 改为switch并逐case返回；未处理键保持原生输入路径                                   |
 | Date/Time分段导航重复且含边界魔数     | 两组件重复RTL左右分支，并以±99表达Home/End                         | 复用horizontal navigationIntent与moveIndex(loop=false)，删除魔数并共享边界语义     |
+| Cascader同列导航重复夹紧算法          | 上下/Home/End手写索引边界，左右/选择又混在同一if链                 | 复用vertical intent与非循环moveIndex；switch表达进入子列、返回父列和选择           |
 | Popover退出时阻止aria-hidden警告      | Presence先隐藏仍含焦点的Content，FocusScope随后才恢复Trigger       | Popover/Dialog/Accordion退出只用inert；Tooltip无焦点管理仍保留aria-hidden          |
 | ContextMenu关闭后焦点落到BODY         | Popover当前Trigger是坐标span，直接focus不会生效且遮蔽previousFocus | FocusScope验证当前目标确实获得焦点，否则回退到打开前的真实ContextMenu目标          |
 | 可取消事件重复实现                    | Select、MultiSelect、Combobox、Menu和Layer各自维护布尔状态         | 抽取最小`CancelableEvent`基类，保留具体事件公开类型                                |
@@ -134,6 +136,7 @@
 - PinInput switch在Chrome验证自动前移、Home/End、LTR左右焦点、Escape不劫持、Backspace/Delete与reset；RTL方向继续由三浏览器Fixture固定。
 - Date/Time分段字段复用horizontal intent后，Chrome验证上下循环、Home/End、LTR左右与未处理键；Docs E2E额外固定DateField RTL下Month按ArrowRight回到Year并恢复LTR。
 - 复合reset所有权拆分后，Chrome中Combobox原生default与父状态都恢复“生产”；Mention恢复通知前缀，Transfer双filter清空且选择恢复staging。
+- Cascader复用非循环纵向intent后，Chrome验证根列/子列Home-End边界、两级ArrowRight、ArrowLeft回父列、Enter提交与reset，控制台干净。
 - 移除reset路径的强制`flushSync`后，真实Chrome中ZCheckbox从true恢复indeterminate，ShadowRoot回调为1；detached
   document的原生reset不派发事件，显式reset事件回调为1。
 - ColorPicker三类输入均有2px Theme焦点；TagsInput由容器显示focus-within且Enter提交后保持焦点；DataTable表头选择框用Space同步选中11个可用行。
