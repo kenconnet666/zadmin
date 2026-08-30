@@ -106,6 +106,7 @@
 | Docs开发站加载陈旧ZUI预构建           | Vite把五个workspace入口纳入依赖优化，源码修改后冷启动仍复用旧缓存  | 显式exclude根/code/compiler/metadata/themes入口并加入静态门禁                      |
 | 批量覆盖污染多浏览器状态              | 覆盖率专用的Docs汇总挂载也在Firefox/WebKit运行                     | 汇总限定到Chromium且显式mount/unmount；三浏览器继续跑独立组件行为套件              |
 | 高对比主题进入Theme Lab后白屏         | 预设色板按颜色值作为key，`canvas`与`surface`可同为`#ffffff`        | 改用语义token名作为稳定key；全新Chrome标签页重载后六主题全部恢复                   |
+| 动态主题只更新根标识                  | App→Shell→Header两层bind让App已变而Header、Provider子树仍保留旧值  | 五个显示轴改为App单一owner与显式回调；静态门禁禁止多层bind                         |
 | ZCode embedded仍有外框                | embedded清零边框的slot分支早于block/inline分支，组合后被重新覆盖   | 把embedded放到最终variant覆盖位；三浏览器锁定border-width/radius均为0              |
 | ZTree多选hidden默认值缺失             | keyed载体只写current value，原生reset阶段的默认值仍为空            | 同步defaultValue与身份值；Fixture和可见Demo固定getAll与reset                       |
 | 组件大小门禁与完整交互职责冲突        | 3.25 KiB阈值把DataTable、Tour、DatePicker等误当成视觉原子          | CI继续构建并记录gzip、检查依赖边界；仅在产物明显异常时人工分析，不设字节门禁       |
@@ -192,14 +193,15 @@
 - 10,000项VirtualList、1,000行DataTable与5,000节点Tree均保持有界DOM；选择、排序和End键定位在虚拟化后仍稳定。
 - 修复Theme Lab重复key并重新加载后，真实Chrome新增控制台记录为0条error/warning；此前Lighthouse基线为Accessibility、Best
   Practices、SEO、Agentic Browsing四项100。
+- 六主题通过真实UI逐套切换；显示轴改为单一owner后，高对比亮色与午夜无需reload即可提交白/黑与深蓝/浅色recipe，Select文本、data-theme和scheme一致，最终恢复午夜。
 
 ## 6. CI结论
 
-最后一次按约回看的门禁：[CI run 33319340139](https://github.com/kenconnet666/zadmin/actions/runs/33319340139)。
+最后一次按约回看的门禁：[CI run 33319947429](https://github.com/kenconnet666/zadmin/actions/runs/33319947429)。
 
-- Coverage/packages完整成功：Chromium组件与全部Docs Demo、bundle、外部SSR、publish dry-run、Miniapp与WebView包验收均通过；
-- Workspace与Windows桌面只在Svelte类型阶段失败：私有`onzuireset`尚未声明且button使用自闭合写法，后续测试未运行；
-- 当前批次在runtime/form局部扩展Svelte button事件类型且不从公开entrypoint导出，并改用显式`</button>`；WebStorm确认0错误；
+- ui/zui自身Svelte检查成功；Docs/Desktop跨包检查没有加载未导出的events.d.ts，仍把`onzuireset`判为未知；API合同也把该声明识别为意外变化；
+- 当前批次删除全局声明，改为组件内`HTMLButtonAttributes & { onzuireset }`类型安全spread；跨包只消费组件类型，不增加公开API合同；
+- Coverage与完整测试均在前置API/类型阶段跳过，本轮没有新的浏览器结论；
 - 因本轮未进入WebKit，事件桥是否减少20项reset失败仍留给下一次推送窗口确认，不以Coverage Chromium成功代替三浏览器结论。
 
 最终通过后必须同时满足：

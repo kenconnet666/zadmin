@@ -129,17 +129,27 @@
 	import AppSidebar from './AppSidebar.svelte';
 
 	let {
-		contrast = $bindable('normal'),
-		density = $bindable('comfortable'),
-		direction = $bindable('ltr'),
-		motion = $bindable('auto'),
-		themeId = $bindable('aurora-light')
+		contrast = 'normal',
+		density = 'comfortable',
+		direction = 'ltr',
+		motion = 'auto',
+		onContrastChange,
+		onDensityChange,
+		onDirectionChange,
+		onMotionChange,
+		onThemeChange,
+		themeId = 'aurora-light'
 	}: {
-		contrast?: ZuiContrast;
-		density?: ZuiDensity;
-		direction?: ZuiDirection;
-		motion?: ZuiMotion;
-		themeId?: DocsThemeId;
+		readonly contrast?: ZuiContrast;
+		readonly density?: ZuiDensity;
+		readonly direction?: ZuiDirection;
+		readonly motion?: ZuiMotion;
+		readonly onContrastChange?: (value: ZuiContrast) => void;
+		readonly onDensityChange?: (value: ZuiDensity) => void;
+		readonly onDirectionChange?: (value: ZuiDirection) => void;
+		readonly onMotionChange?: (value: ZuiMotion) => void;
+		readonly onThemeChange?: (value: DocsThemeId) => void;
+		readonly themeId?: DocsThemeId;
 	} = $props();
 
 	let route = $state(parseDocsRoute(globalThis.location?.hash ?? '#/'));
@@ -208,13 +218,25 @@
 	<ZLink class={classes.skipLink} href={currentHref} underline="none" onclick={skipToMain}
 		>跳到主要内容</ZLink
 	>
-	<AppHeader bind:contrast bind:density bind:direction bind:motion bind:query bind:themeId />
+	<AppHeader
+		{contrast}
+		{density}
+		{direction}
+		{motion}
+		{onContrastChange}
+		{onDensityChange}
+		{onDirectionChange}
+		{onMotionChange}
+		{onThemeChange}
+		bind:query
+		{themeId}
+	/>
 	<AppSidebar docs={componentDocs} {currentGuideId} {currentId} {query} />
 	<main class={classes.main} id="zui-main-content" tabindex="-1">
 		{#if currentDoc}
 			<ComponentPage doc={currentDoc} />
 		{:else if currentGuideId === 'theme'}
-			<ThemeLabPage bind:themeId />
+			<ThemeLabPage {onThemeChange} {themeId} />
 		{:else if currentGuide}
 			<GuidePage guide={currentGuide} />
 		{:else if invalidRoute}

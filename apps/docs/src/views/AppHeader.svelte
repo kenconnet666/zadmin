@@ -234,19 +234,29 @@
 	import { docsThemeById, docsThemes, type DocsThemeId } from '../app/theme.js';
 
 	let {
-		contrast = $bindable('normal'),
-		density = $bindable('comfortable'),
-		direction = $bindable('ltr'),
-		motion = $bindable('auto'),
+		contrast = 'normal',
+		density = 'comfortable',
+		direction = 'ltr',
+		motion = 'auto',
+		onContrastChange,
+		onDensityChange,
+		onDirectionChange,
+		onMotionChange,
+		onThemeChange,
 		query = $bindable(''),
-		themeId = $bindable('aurora-light')
+		themeId = 'aurora-light'
 	}: {
-		contrast?: ZuiContrast;
-		density?: ZuiDensity;
-		direction?: ZuiDirection;
-		motion?: ZuiMotion;
+		readonly contrast?: ZuiContrast;
+		readonly density?: ZuiDensity;
+		readonly direction?: ZuiDirection;
+		readonly motion?: ZuiMotion;
+		readonly onContrastChange?: (value: ZuiContrast) => void;
+		readonly onDensityChange?: (value: ZuiDensity) => void;
+		readonly onDirectionChange?: (value: ZuiDirection) => void;
+		readonly onMotionChange?: (value: ZuiMotion) => void;
+		readonly onThemeChange?: (value: DocsThemeId) => void;
 		query?: string;
-		themeId?: DocsThemeId;
+		readonly themeId?: DocsThemeId;
 	} = $props();
 	const zui = useZui();
 	const classes = $derived(zui.slots(headerRecipe));
@@ -292,24 +302,25 @@
 
 	function setTheme(value: SelectionKey | undefined): void {
 		if (typeof value === 'string' && docsThemes.some((theme) => theme.id === value)) {
-			themeId = value as DocsThemeId;
+			onThemeChange?.(value as DocsThemeId);
 		}
 	}
 
 	function setDensity(value: SelectionKey | undefined): void {
-		if (value === 'compact' || value === 'comfortable' || value === 'spacious') density = value;
+		if (value === 'compact' || value === 'comfortable' || value === 'spacious')
+			onDensityChange?.(value);
 	}
 
 	function setContrast(value: SelectionKey | undefined): void {
-		if (value === 'auto' || value === 'high' || value === 'normal') contrast = value;
+		if (value === 'auto' || value === 'high' || value === 'normal') onContrastChange?.(value);
 	}
 
 	function setMotion(value: SelectionKey | undefined): void {
-		if (value === 'auto' || value === 'full' || value === 'reduced') motion = value;
+		if (value === 'auto' || value === 'full' || value === 'reduced') onMotionChange?.(value);
 	}
 
 	function setDirection(value: SelectionKey | undefined): void {
-		if (value === 'ltr' || value === 'rtl') direction = value;
+		if (value === 'ltr' || value === 'rtl') onDirectionChange?.(value);
 	}
 
 	function handleSearchKeydown(event: KeyboardEvent): void {

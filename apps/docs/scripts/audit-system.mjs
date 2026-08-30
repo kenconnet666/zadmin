@@ -313,7 +313,8 @@ if (
 	!formResetSignalTag.includes('aria-hidden="true"') ||
 	!formResetSignalTag.includes('tabindex="-1"') ||
 	!formResetSignalTag.includes('data-zui-form-reset-signal=""') ||
-	!formResetSignalTag.includes('onzuireset={onReset}') ||
+	!formResetSignalTag.includes('{...resetEventAttributes}') ||
+	!formResetSignalSource.includes('onzuireset: onReset') ||
 	!formResetSignalSource.includes('const associationKey = association') ||
 	!formResetSignalSource.includes('resetOwner = directOwner ?? associatedControl?.form ?? null') ||
 	!formResetSignalSource.includes(
@@ -476,6 +477,8 @@ for (const path of docsSvelteFiles) {
 	}
 }
 const appShellSource = await readFile(resolve(docsRoot, 'src/views/AppShell.svelte'), 'utf8');
+const appSource = await readFile(resolve(docsRoot, 'src/app/App.svelte'), 'utf8');
+const themeLabSource = await readFile(resolve(docsRoot, 'src/views/ThemeLabPage.svelte'), 'utf8');
 const skipLinkContracts = [
 	/<ZLink\b[^>]*class=\{classes\.skipLink\}[^>]*href=\{currentHref\}[^>]*onclick=\{skipToMain\}/u,
 	/function skipToMain\([\s\S]*?event\.preventDefault\(\)[\s\S]*?\.focus\(/u,
@@ -485,6 +488,25 @@ if (!skipLinkContracts.every((contract) => contract.test(appShellSource))) {
 	fail('Docs AppShell must preserve its hash-router-safe skip link contract.');
 }
 const appHeaderSource = await readFile(resolve(docsRoot, 'src/views/AppHeader.svelte'), 'utf8');
+const preferenceSources = [appSource, appShellSource, appHeaderSource, themeLabSource];
+const preferenceCallbacks = [
+	'onContrastChange',
+	'onDensityChange',
+	'onDirectionChange',
+	'onMotionChange',
+	'onThemeChange'
+];
+if (
+	preferenceSources.some((source) =>
+		/bind:(?:contrast|density|direction|motion|themeId)\b/u.test(source)
+	) ||
+	!preferenceCallbacks.every(
+		(callback) => appSource.includes(callback) && appHeaderSource.includes(callback)
+	) ||
+	!themeLabSource.includes('onThemeChange?.(preset.id)')
+) {
+	fail('Docs display preferences must keep one App owner and explicit change callbacks.');
+}
 const appSidebarSource = await readFile(resolve(docsRoot, 'src/views/AppSidebar.svelte'), 'utf8');
 const searchLiveContracts = [
 	/aria-controls=["']zui-docs-component-nav["']/u.test(appHeaderSource),
@@ -594,6 +616,7 @@ console.log(
 		brandGradientFiles: gradientFiles.length,
 		docsRawInteractiveElements: 0,
 		docsWorkspaceOptimizeExclusions: workspaceZuiEntrypoints.length,
+		docsPreferenceOwnerContracts: preferenceCallbacks.length,
 		positiveTabindexElements: 0,
 		ariaHiddenTabStops: 0,
 		implicitSubmitButtons: 0,

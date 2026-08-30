@@ -196,7 +196,13 @@
 	import { ZCode } from '@zadmin/zui/code';
 	import { docsThemeById, docsThemes, type DocsThemeId } from '../app/theme.js';
 
-	let { themeId = $bindable('aurora-light') }: { themeId?: DocsThemeId } = $props();
+	let {
+		onThemeChange,
+		themeId = 'aurora-light'
+	}: {
+		readonly onThemeChange?: (value: DocsThemeId) => void;
+		readonly themeId?: DocsThemeId;
+	} = $props();
 
 	const zui = useZui();
 	const classes = $derived(zui.slots(themeLabRecipe));
@@ -227,7 +233,7 @@
 					<span class={classes.presetMeta}>{preset.id} · {preset.scheme}</span>
 					<ZButton
 						disabled={themeId === preset.id}
-						onclick={() => (themeId = preset.id)}
+						onclick={() => onThemeChange?.(preset.id)}
 						variant={themeId === preset.id ? 'secondary' : 'primary'}
 					>
 						{themeId === preset.id ? '当前主题' : `应用${preset.label}`}

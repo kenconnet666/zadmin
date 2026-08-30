@@ -93,5 +93,16 @@
 	theme={resolvedTheme.theme}
 	colorScheme={resolvedTheme.scheme}
 >
-	<AppShell bind:contrast bind:density bind:direction bind:motion bind:themeId />
+	<AppShell
+		{contrast}
+		{density}
+		{direction}
+		{motion}
+		{themeId}
+		onContrastChange={(next) => (contrast = next)}
+		onDensityChange={(next) => (density = next)}
+		onDirectionChange={(next) => (direction = next)}
+		onMotionChange={(next) => (motion = next)}
+		onThemeChange={(next) => (themeId = next)}
+	/>
 </ZProvider>

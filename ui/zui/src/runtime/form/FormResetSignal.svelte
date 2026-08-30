@@ -8,6 +8,8 @@
 </script>
 
 <script lang="ts">
+	import type { HTMLButtonAttributes } from 'svelte/elements';
+
 	import { portal } from '../layer/portal.js';
 	import { formReset } from './form-control.svelte.js';
 
@@ -17,6 +19,9 @@
 
 	let { association, control = null, onReset, owner = null }: FormResetSignalProps = $props();
 	let resetOwner = $state<HTMLFormElement | null>(null);
+	const resetEventAttributes = $derived({ onzuireset: onReset } as HTMLButtonAttributes & {
+		onzuireset: () => void;
+	});
 
 	$effect(() => {
 		const directOwner = owner;
@@ -72,12 +77,12 @@
 
 {#if resetOwner}
 	<button
+		{...resetEventAttributes}
 		aria-hidden="true"
 		tabindex="-1"
 		type="button"
 		hidden
 		data-zui-form-reset-signal=""
-		onzuireset={onReset}
 		use:portal={{ target: resetOwner }}
 		use:signalFormReset={{ owner: resetOwner }}
 	></button>
