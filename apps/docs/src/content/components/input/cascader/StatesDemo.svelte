@@ -8,6 +8,6 @@
 </script>
 
 <ZStack gap="medium">
-	<ZCascader {nodes} placeholder="选择区域" separator=" › " />
-	<ZCascader {nodes} disabled defaultValue={['cn', 'east', 'shanghai']} separator=" › " />
+	<ZCascader {nodes} placeholder="选择区域" separator=" / " />
+	<ZCascader {nodes} disabled defaultValue={['cn', 'east', 'shanghai']} separator=" / " />
 </ZStack>

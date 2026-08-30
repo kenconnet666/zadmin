@@ -1,39 +1,19 @@
 <script module lang="ts">
-	import { defineSlotRecipe } from '@zadmin/zui';
+	import { defineRecipe } from '@zadmin/zui';
 
-	const layoutRecipe = defineSlotRecipe(
+	const itemRecipe = defineRecipe(
 		{
-			slots: ['control', 'select', 'item'] as const,
-			base: {
-				control: (s) => {
-					s.alignItems.center;
-					s.display.flex;
-					s.fontWeight._bold;
-					s.gap._medium;
-					s.marginBottom._large;
-				},
-				item: (s) => {
-					s.backgroundColor._surface;
-					s.borderColor._primary;
-					s.borderRadius._medium;
-					s.borderStyle.solid;
-					s.borderWidth._hairline;
-					s.color._primaryHover;
-					s.minWidth.rem(5.5);
-					s.paddingBlock._medium;
-					s.paddingInline._large;
-					s.textAlign.center;
-				},
-				select: (s) => {
-					s.backgroundColor._canvas;
-					s.borderColor._border;
-					s.borderRadius._medium;
-					s.borderStyle.solid;
-					s.borderWidth._hairline;
-					s.color._text;
-					s.paddingBlock._small;
-					s.paddingInline._medium;
-				}
+			base: (s) => {
+				s.backgroundColor._surface;
+				s.borderColor._primary;
+				s.borderRadius._medium;
+				s.borderStyle.solid;
+				s.borderWidth._hairline;
+				s.color._primaryHover;
+				s.minWidth.rem(5.5);
+				s.paddingBlock._medium;
+				s.paddingInline._large;
+				s.textAlign.center;
 			},
 			variants: {}
 		},
@@ -42,25 +22,50 @@
 </script>
 
 <script lang="ts">
-	import { ZBox, ZStack, type ZStackDirection, useZui } from '@zadmin/zui';
+	import {
+		ZBox,
+		ZSelect,
+		ZSelectContent,
+		ZSelectItem,
+		ZSelectTrigger,
+		ZStack,
+		ZText,
+		type ZStackDirection,
+		useZui
+	} from '@zadmin/zui';
 
 	let direction = $state<ZStackDirection>('row');
 	const zui = useZui();
-	const classes = $derived(zui.slots(layoutRecipe));
+	const itemClass = $derived(zui.recipe(itemRecipe));
+
+	function setDirection(value: string | number | undefined): void {
+		switch (value) {
+			case 'row':
+			case 'column':
+			case 'row-reverse':
+			case 'column-reverse':
+				direction = value;
+		}
+	}
 </script>
 
-<label class={classes.control}>
-	<span>方向</span>
-	<select class={classes.select} bind:value={direction}>
-		<option value="row">row</option>
-		<option value="column">column</option>
-		<option value="row-reverse">row-reverse</option>
-		<option value="column-reverse">column-reverse</option>
-	</select>
-</label>
+<ZStack gap="large">
+	<ZStack align="center" direction="row" gap="medium">
+		<ZText weight="bold">方向</ZText>
+		<ZSelect value={direction} onValueChange={setDirection}>
+			<ZSelectTrigger aria-label="Stack方向" />
+			<ZSelectContent>
+				<ZSelectItem value="row">row</ZSelectItem>
+				<ZSelectItem value="column">column</ZSelectItem>
+				<ZSelectItem value="row-reverse">row-reverse</ZSelectItem>
+				<ZSelectItem value="column-reverse">column-reverse</ZSelectItem>
+			</ZSelectContent>
+		</ZSelect>
+	</ZStack>
 
-<ZStack {direction} gap="small" wrap>
-	{#each ['Alpha', 'Beta', 'Gamma'] as item (item)}
-		<ZBox class={classes.item}>{item}</ZBox>
-	{/each}
+	<ZStack {direction} gap="small" wrap>
+		{#each ['Alpha', 'Beta', 'Gamma'] as item (item)}
+			<ZBox class={itemClass}>{item}</ZBox>
+		{/each}
+	</ZStack>
 </ZStack>

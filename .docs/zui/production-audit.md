@@ -14,18 +14,18 @@
 
 ## 2. 最终清单
 
-| 项目                   | 结果 | 门禁                                                                                         |
-| ---------------------- | ---: | -------------------------------------------------------------------------------------------- |
-| Svelte组件文件         |  135 | 133个拥有唯一metadata id；`ZMentionEditor`与`ZTextareaAutosize`是非公开内部实现              |
-| 公开组件文档页         |   78 | 每页至少2个不同Demo                                                                          |
-| 实际Demo               |  156 | 少于2个、重复id或空源码会在`defineComponentDoc`中直接失败                                    |
-| 生产指南               |    8 | Getting Started、ICSS、Theme Lab、Accessibility、SSR/CSP、HMR、WebView和Package              |
-| 公开API合同            |  133 | TypeScript AST快照覆盖全部metadata组件与10个package entrypoint；变化必须显式更新             |
-| 官方主题               |    6 | `@zadmin/zui/themes`统一导出，文档站真实切换并持久化                                         |
-| 带CSS过渡的组件        |   13 | 13/13显式消费Provider motion，reduced时清除过渡                                              |
-| Docs视图层自建交互控件 |    0 | 能由ZUI表达的按钮、链接、Select、Popover、Table、Code和Card均直接dogfood ZUI                 |
-| 内联SVG                |    4 | 2个ZAdmin品牌资源；`ZSpinner`与圆形`ZProgress`为组件自身的数据图形；通用UI图标全部来自Lucide |
-| 静态系统审计           |    1 | CI固化metadata唯一性、Demo数量、motion、Docs dogfood、Lucide导入和SVG白名单                  |
+| 项目                 | 结果 | 门禁                                                                                         |
+| -------------------- | ---: | -------------------------------------------------------------------------------------------- |
+| Svelte组件文件       |  135 | 133个拥有唯一metadata id；`ZMentionEditor`与`ZTextareaAutosize`是非公开内部实现              |
+| 公开组件文档页       |   78 | 每页至少2个不同Demo                                                                          |
+| 实际Demo             |  156 | 少于2个、重复id或空源码会在`defineComponentDoc`中直接失败                                    |
+| 生产指南             |    8 | Getting Started、ICSS、Theme Lab、Accessibility、SSR/CSP、HMR、WebView和Package              |
+| 公开API合同          |  133 | TypeScript AST快照覆盖全部metadata组件与10个package entrypoint；变化必须显式更新             |
+| 官方主题             |    6 | `@zadmin/zui/themes`统一导出，文档站真实切换并持久化                                         |
+| 带CSS过渡的组件      |   13 | 13/13显式消费Provider motion，reduced时清除过渡                                              |
+| Docs全站自建交互控件 |    0 | `apps/docs/src`全部Svelte文件由ZUI表达按钮、链接、Select、Popover、Table、Code和Card         |
+| 内联SVG              |    4 | 2个ZAdmin品牌资源；`ZSpinner`与圆形`ZProgress`为组件自身的数据图形；通用UI图标全部来自Lucide |
+| 静态系统审计         |    1 | CI固化metadata唯一性、Demo数量、motion、Docs dogfood、Lucide导入和SVG白名单                  |
 
 分类目录的16–26个直接文件属于蓝图允许的真实大分类（5–30），继续保持“分类目录直接包含简单组件文件”；没有为满足计数制造一文件目录。
 
@@ -42,6 +42,7 @@
 | WebView窗口控制仍用字符图标       | WindowControls早于ZIcon manifest扩展                            | 扩展受控manifest并改用`ZIcon`                                                |
 | 文档页只展示一个场景              | 首轮文档以实现证明为主，没有形成特性矩阵                        | 78页全部补为基础+状态/边界/组合Demo，复杂组件覆盖键盘、焦点、表单或生命周期  |
 | 文档站自建原生控件                | 站点框架早于相关ZUI组件                                         | Header、API表、首页、Sidebar、TOC和Theme Lab改为真实ZUI消费者                |
+| ZStack Demo遗留原生Select         | 旧Demo在ZSelect完成前直接使用平台控件                           | 改用ZStack、ZText与ZSelect组合，并把dogfood门禁从views扩到全部Docs Svelte    |
 | 批量覆盖污染多浏览器状态          | 覆盖率专用的Docs汇总挂载也在Firefox/WebKit运行                  | 汇总限定到Chromium且显式mount/unmount；三浏览器继续跑独立组件行为套件        |
 | 高对比主题进入Theme Lab后白屏     | 预设色板按颜色值作为key，`canvas`与`surface`可同为`#ffffff`     | 改用语义token名作为稳定key；全新Chrome标签页重载后六主题全部恢复             |
 | 组件大小门禁与完整交互职责冲突    | 3.25 KiB阈值把DataTable、Tour、DatePicker等误当成视觉原子       | CI继续构建并记录gzip、检查依赖边界；仅在产物明显异常时人工分析，不设字节门禁 |
@@ -64,6 +65,7 @@
 
 - 78/78组件路由均能渲染，且每页DOM中有2个不同Demo。
 - 七份新增生产指南在真实Chrome中7/7渲染，均有唯一active导航、3–4个ZUI Card章节和正确页面标题。
+- ZStack方向Demo通过ZSelect键盘切换后，Trigger文本、实际`flex-direction`和焦点恢复一致；Docs全站原生交互标签为0。
 - 六主题最终surface分别为极光`rgb(238, 244, 255)`、纸张`rgb(245, 237, 225)`、霓虹`rgb(5, 9, 20)`、午夜`rgb(11, 18, 32)`、高对比亮色`rgb(255, 255, 255)`、高对比暗色`rgb(0, 0, 0)`。
 - 390×844视口无水平溢出，搜索和主题选择保持可用，组件导航使用横向滚动；验收后已恢复默认1920×936视口。
 - 10,000项VirtualList、1,000行DataTable与5,000节点Tree均保持有界DOM；选择、排序和End键定位在虚拟化后仍稳定。

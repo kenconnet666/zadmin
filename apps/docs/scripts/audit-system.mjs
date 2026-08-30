@@ -6,7 +6,7 @@ const docsRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const workspaceRoot = resolve(docsRoot, '../..');
 const componentsRoot = resolve(workspaceRoot, 'ui/zui/src/components');
 const docsComponentsRoot = resolve(docsRoot, 'src/content/components');
-const docsViewsRoot = resolve(docsRoot, 'src/views');
+const docsSourceRoot = resolve(docsRoot, 'src');
 const portable = (path) => path.replaceAll('\\', '/');
 const ignoredDirectories = new Set([
 	'.svelte-kit',
@@ -72,11 +72,11 @@ if (JSON.stringify(internalComponents) !== JSON.stringify(expectedInternal)) {
 	fail(`Unexpected internal component set: ${internalComponents.join(', ') || 'none'}.`);
 }
 
-const docsViewFiles = await filesUnder(docsViewsRoot, ['.svelte']);
+const docsSvelteFiles = await filesUnder(docsSourceRoot, ['.svelte']);
 const rawInteractive =
 	/<(?:a|button|code|details|input|kbd|meter|progress|select|summary|table|textarea)\b/u;
 const forbiddenGlyph = /[×‹›✓]/u;
-for (const path of docsViewFiles) {
+for (const path of docsSvelteFiles) {
 	const source = await readFile(path, 'utf8');
 	const filename = portable(relative(workspaceRoot, path));
 	if (rawInteractive.test(source))
@@ -134,6 +134,6 @@ console.log(
 		demoIds: demoIds.length,
 		transitionFiles: transitionFiles.length,
 		inlineSvgFiles: inlineSvg.length,
-		docsViewRawInteractiveElements: 0
+		docsRawInteractiveElements: 0
 	})
 );
