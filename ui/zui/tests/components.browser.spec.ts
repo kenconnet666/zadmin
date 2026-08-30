@@ -129,7 +129,14 @@ describe('compiled ICSS browser updates', () => {
 			.querySelector<HTMLButtonElement>('[data-testid="coverage-toast-action"] button')
 			?.click();
 		await tick();
-		expect(output?.textContent).toBe('a:1:1:1');
+		expect(output?.textContent).toBe('a:1:1:1:enabled:0:0');
+		expect(document.querySelector<HTMLInputElement>('[aria-label="Select row 3"]')?.disabled).toBe(
+			true
+		);
+		document.querySelector<HTMLInputElement>('[aria-label="Select row 1"]')?.click();
+		await tick();
+		expect(output?.textContent).toContain('a:1:1:1:other:0:0');
+		expect(document.body.textContent).toContain('Nothing to display');
 		expect(
 			document.querySelector('[data-testid="coverage-toast-danger"]')?.getAttribute('role')
 		).toBe('alert');
@@ -662,10 +669,30 @@ describe('compiled ICSS browser updates', () => {
 		trigger?.click();
 		await tick();
 		expect(document.querySelectorAll('[role="listbox"]')).toHaveLength(3);
+		const root = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find(
+			(item) => item.textContent?.trim() === 'Root›'
+		);
+		const alpha = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find(
+			(item) => item.textContent?.trim() === 'Alpha›'
+		);
 		const worker = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find(
 			(item) => item.textContent?.trim() === 'Worker'
 		);
-		worker?.click();
+		root?.focus();
+		for (const key of ['ArrowDown', 'ArrowUp', 'Home', 'End', 'ArrowRight']) {
+			root?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key }));
+		}
+		await Promise.resolve();
+		expect(document.activeElement).toBe(alpha);
+		alpha?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowRight' }));
+		await Promise.resolve();
+		document.activeElement?.dispatchEvent(
+			new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowLeft' })
+		);
+		expect(document.activeElement).toBe(alpha);
+		alpha?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'End' }));
+		expect(document.activeElement).toBe(worker);
+		worker?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
 		await new Promise((resolve) => setTimeout(resolve, 140));
 		await tick();
 		expect(trigger?.textContent?.trim()).toBe('Root / Worker');
@@ -707,6 +734,29 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(output?.textContent).toBe('staging');
 		expect(source?.querySelectorAll('[role="option"]')).toHaveLength(3);
+		const sourceProduction = [
+			...(source?.querySelectorAll<HTMLElement>('[role="option"]') ?? [])
+		].find((item) => item.textContent?.trim() === 'Production');
+		sourceProduction?.focus();
+		for (const key of ['End', 'ArrowUp', 'Home', 'ArrowDown']) {
+			document.activeElement?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key }));
+		}
+		sourceProduction?.dispatchEvent(
+			new KeyboardEvent('keydown', { bubbles: true, ctrlKey: true, key: 'a' })
+		);
+		await tick();
+		document.querySelector<HTMLButtonElement>('[aria-label="Move to selected"]')?.click();
+		await tick();
+		expect(output?.textContent).toBe('production,staging,preview');
+		const target = document.querySelector<HTMLElement>('[role="listbox"][aria-label="Selected"]');
+		const targetProduction = target?.querySelector<HTMLElement>('[role="option"]');
+		targetProduction?.dispatchEvent(
+			new KeyboardEvent('keydown', { bubbles: true, ctrlKey: true, key: 'a' })
+		);
+		await tick();
+		document.querySelector<HTMLButtonElement>('[aria-label="Move to available"]')?.click();
+		await tick();
+		expect(output?.textContent).toBe('');
 	});
 
 	it('coordinates Mention caret parsing, active descendant insertion, form value and reset', async () => {
@@ -722,6 +772,9 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(editor?.getAttribute('aria-expanded')).toBe('true');
 		expect(editor?.getAttribute('aria-activedescendant')).toBeTruthy();
+		for (const key of ['End', 'Home', 'ArrowDown', 'ArrowUp']) {
+			editor?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key }));
+		}
 		editor?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
 		await tick();
 		expect(editor?.value).toBe('Notify @alice ');
@@ -732,6 +785,16 @@ describe('compiled ICSS browser updates', () => {
 		await Promise.resolve();
 		await tick();
 		expect(editor?.value).toBe('Notify ');
+		if (editor) {
+			editor.value = 'Notify @zz';
+			editor.setSelectionRange(10, 10);
+			editor.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		}
+		await tick();
+		expect(document.querySelector('[role="listbox"]')?.textContent).toContain('No suggestions');
+		editor?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+		await tick();
+		expect(editor?.getAttribute('aria-expanded')).toBe('false');
 	});
 
 	it('coordinates Command ranking, active descendant action and form reset', async () => {
@@ -746,13 +809,27 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(document.querySelectorAll('[role="option"]')).toHaveLength(2);
 		expect(input?.getAttribute('aria-activedescendant')).toBeTruthy();
+		for (const key of ['ArrowDown', 'ArrowUp', 'Home', 'End']) {
+			input?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key }));
+		}
 		input?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
 		await tick();
-		expect(output?.textContent).toBe('dep:preview');
+		expect(output?.textContent).toBe('dep:preview:0');
 		form?.reset();
 		await Promise.resolve();
 		await tick();
 		expect(input?.value).toBe('');
+		if (input) {
+			input.value = 'nothing';
+			input.dispatchEvent(new InputEvent('input', { bubbles: true }));
+			input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
+			input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+		}
+		await tick();
+		expect(document.querySelector('[data-slot="list"]')?.textContent).toContain(
+			'No commands found'
+		);
+		expect(output?.textContent).toBe('nothing:preview:1');
 	});
 
 	it('coordinates CommandPalette modal focus, action close, shortcut and Escape', async () => {
@@ -1054,6 +1131,30 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(new FormData(form!).get('calendar')).toBe('2026-08-18');
 		expect(new FormData(form!).get('date')).toBe('2026-08-18');
+	});
+
+	it('covers Calendar page, week-boundary and month navigation keys', async () => {
+		render(DateFixture);
+		const calendar = document.querySelector<HTMLElement>('[role="grid"]');
+		let active = calendar?.querySelector<HTMLButtonElement>('button[data-selected="true"]');
+		active?.focus();
+		for (const key of ['Home', 'End', 'PageDown', 'PageUp']) {
+			(document.activeElement as HTMLElement)?.dispatchEvent(
+				new KeyboardEvent('keydown', { bubbles: true, key })
+			);
+			await tick();
+		}
+		(document.activeElement as HTMLElement)?.dispatchEvent(
+			new KeyboardEvent('keydown', { bubbles: true, key: 'PageDown', shiftKey: true })
+		);
+		await tick();
+		active = document.activeElement as HTMLButtonElement;
+		expect(active?.getAttribute('aria-label')).toContain('2027');
+		const navigation = calendar?.parentElement?.querySelectorAll<HTMLButtonElement>('button');
+		navigation?.[0]?.click();
+		navigation?.[1]?.click();
+		await tick();
+		expect(calendar?.querySelectorAll('[role="gridcell"]')).toHaveLength(42);
 	});
 
 	it('coordinates DatePicker and DateRangePicker popup selection and focus restoration', async () => {

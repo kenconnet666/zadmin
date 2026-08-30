@@ -31,6 +31,7 @@ import { normalizeAspectRatio } from '../src/components/layout/ZAspectRatio.svel
 import { getIconComponent, iconManifest } from '../src/components/gene/ZIcon.svelte';
 import { __icssCarrier } from '../src/runtime/foundation/compiler-bridge.js';
 import ContextProbe from './ContextProbe.svelte';
+import ContextErrorFixture, { type MissingContextKind } from './ContextErrorFixture.svelte';
 import ContextMenuFixture from './ContextMenuFixture.svelte';
 import ComboboxFixture from './ComboboxFixture.svelte';
 import CommandFixture from './CommandFixture.svelte';
@@ -74,6 +75,26 @@ import TagsInputFixture from './TagsInputFixture.svelte';
 import TextareaFixture from './TextareaFixture.svelte';
 
 describe('ZUI foundational components', () => {
+	it('rejects every compound part used outside its owning root context', () => {
+		const kinds: readonly MissingContextKind[] = [
+			'accordion',
+			'accordion-item',
+			'combobox',
+			'dialog',
+			'menu',
+			'multi-select',
+			'popover',
+			'popconfirm',
+			'radio-group',
+			'select',
+			'tabs',
+			'tooltip'
+		];
+		for (const kind of kinds) {
+			expect(() => render(ContextErrorFixture, { props: { kind } })).toThrow(/inside|require/u);
+		}
+	});
+
 	it('renders Symbol-carried compiler variables on the real ZBox root', () => {
 		const result = render(ZBox, {
 			props: {

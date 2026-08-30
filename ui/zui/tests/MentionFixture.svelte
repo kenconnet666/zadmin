@@ -2,7 +2,7 @@
 	import { ZMention, type MentionItem } from '../src/entrypoints/index.js';
 
 	const items: readonly MentionItem[] = [
-		{ key: 'alice', label: 'Alice', value: 'alice' },
+		{ description: 'Platform owner', key: 'alice', label: 'Alice', value: 'alice' },
 		{ key: 'alex', label: 'Alex', value: 'alex' },
 		{ disabled: true, key: 'archive', label: 'Archive' }
 	];
