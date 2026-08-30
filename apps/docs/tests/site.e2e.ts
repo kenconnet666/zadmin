@@ -238,6 +238,25 @@ test('keeps Form schema errors, async state, first-error focus, valid submit and
 	await expect(page.locator('[data-dirty="true"]')).toHaveCount(0);
 });
 
+test('settles pending docs validation delays when navigating away', async ({ page }) => {
+	const errors: string[] = [];
+	page.on('console', (message) => {
+		if (message.type() === 'error') errors.push(message.text());
+	});
+	page.on('pageerror', (error) => errors.push(error.message));
+	await page.goto('/#/components/form');
+	const account = page.getByRole('textbox', { name: '账号' });
+	await account.fill('ab');
+	await account.blur();
+	await page.waitForTimeout(90);
+	await page.goto('/#/');
+	await page.waitForTimeout(160);
+	await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+		'看见组件，运行组件，复制真实源码。'
+	);
+	expect(errors).toEqual([]);
+});
+
 test('keeps InputGroup focus boundary, Field context, FormData and reset synchronized', async ({
 	page
 }) => {

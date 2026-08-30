@@ -107,6 +107,7 @@
 - 非编辑上下文按`/`聚焦搜索；搜索框内`/`保留真实输入且不被全局快捷键劫持，组件声明`aria-keyshortcuts`并销毁window监听。
 - 搜索`/`键帽桌面可见且aria-hidden，500px视口wrapper无布局盒、无溢出，移动端仍可用`/`聚焦；验收后恢复1920×936。
 - FormDemo在异步schema timer启动后立即离页，真实Chrome等待220ms仍保持首页正确状态与干净控制台；Docs资源门禁拒绝无对应释放的创建点。
+- 远程Playwright在blur验证启动90ms后离页，再覆盖160ms迟到窗口；要求首页H1恢复且console/pageerror均为空。
 - 真实Textarea页重复id清单为0；远程78页循环按页面聚合全部`[id]`并输出任何重复值与数量。
 - 远程全路由循环同时要求main内恰好一个H1，并拒绝document级水平溢出；组件内部滚动容器不受误伤。
 - 真实87路由的main、`aria-current=page`、H1与具体页面标题问题均为0；远程循环固定当前链接href必须等于被测hash。
