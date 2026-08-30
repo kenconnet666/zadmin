@@ -149,12 +149,14 @@
 		serializeIcssVariables
 	} from '../../../runtime/foundation/root-style.js';
 	import { useZui } from '../../../runtime/foundation/context.js';
+	import { createZuiId } from '../../../runtime/foundation/ids.js';
 	import { readIcssCarrier } from '../../../runtime/foundation/compiler-bridge.js';
 	import { useZRadioGroup } from './context.svelte.js';
 
 	let {
 		class: className,
 		disabled = false,
+		id,
 		onchange,
 		onfocus,
 		onkeydown,
@@ -167,7 +169,9 @@
 	}: ZRadioGroupItemProps = $props();
 
 	const zui = useZui();
+	const uid = $props.id();
 	const group = useZRadioGroup();
+	const generatedId = $derived(createZuiId(zui.idPrefix, uid, 'radio-item'));
 	const resolvedDisabled = $derived(disabled || group.disabled);
 	const selected = $derived(group.isSelected(value));
 	const rootClass = $derived(
@@ -211,6 +215,7 @@
 	class={[rootClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
+	id={id ?? generatedId}
 	type="radio"
 	form={group.form}
 	name={group.name}

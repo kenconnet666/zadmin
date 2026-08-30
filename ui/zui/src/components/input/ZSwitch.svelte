@@ -222,6 +222,7 @@
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { useZField } from '../../runtime/form/field-context.js';
 	import { formReset, mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
+	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import { serializeFormValue } from '../../runtime/form/form-value.js';
 	import {
 		applyIcssRootStyle,
@@ -252,6 +253,7 @@
 	}: ZSwitchProps = $props();
 
 	const zui = useZui();
+	const uid = $props.id();
 	const field = useZField();
 	const resolvedDisabled = $derived(disabled || field?.disabled || false);
 	const resolvedInvalid = $derived(invalid ?? field?.invalid ?? false);
@@ -273,6 +275,7 @@
 	const resolvedChecked = $derived(state.current);
 	const resolvedDescribedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
 	const resolvedValue = $derived(serializeFormValue(value) ?? 'on');
+	const generatedId = $derived(createZuiId(zui.idPrefix, uid, 'switch'));
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 
@@ -289,7 +292,7 @@
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
 	use:formReset={() => state.reset()}
-	id={id ?? field?.controlId}
+	id={id ?? field?.controlId ?? generatedId}
 	name={name ?? field?.name}
 	type="checkbox"
 	role="switch"

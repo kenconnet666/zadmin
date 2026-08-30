@@ -42,32 +42,32 @@
 
 ## 3. 本轮发现并修复的问题
 
-| 问题                                  | 根因                                                            | 修复                                                                         |
-| ------------------------------------- | --------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| 多边界Pagination出现重复key           | 前后大间隙都被标记为`ellipsis-end`                              | 根据间隙相对当前页的位置生成稳定start/end身份，并加入100页回归               |
-| Select/MultiSelect首屏显示原始key     | Content未挂载时没有Item标签缓存                                 | 增加`valueLabel`回退合同，保留自定义Trigger能力                              |
-| 负数NumberField步进可能错误舍入       | `decimalPlaces`正则没有接受数值符号                             | 支持正负号并覆盖负小数与负科学计数法                                         |
-| 动画合同不一致                        | 早期Button/Input/Textarea/InputGroup/FileUpload只写了transition | 全部接入Provider motion；Accordion指示器也支持reduced-motion                 |
-| 可取消事件重复实现                    | Select、MultiSelect、Combobox、Menu和Layer各自维护布尔状态      | 抽取最小`CancelableEvent`基类，保留具体事件公开类型                          |
-| 内部微型按钮视觉/焦点重复             | Calendar、NumberField与TimeField各自维护相同基础动作样式        | 统一复用`styleInternalAction`，仅保留尺寸、边框和布局差异                    |
-| 可见原生输入焦点依赖浏览器默认        | ColorPicker、TagsInput和DataTable没有统一Theme focus ring       | 抽取内部focus helper并覆盖color/hex/range、编辑框和表格选择框                |
-| 表单reset注册存在effect/action双轨    | 组件普遍依赖`bind:this + $effect`，节点生命周期不够直接         | 26个表单组件统一节点action；Textarea提供`onFormReset`供Mention组合复用       |
-| 文档站没有skip-link                   | Hash路由壳层只提供Header、Sidebar与main landmark                | 使用ZLink提供首个Tab入口；阻止hash导航并显式focus/scroll稳定main目标         |
-| Demo可见表单字段缺少id/name           | Textarea状态示例只依赖aria-label，触发Chrome表单字段issue       | 四个示例补稳定id；78页远程Axe循环同时门禁全部可见input/textarea/select       |
-| 关闭/导航图标不一致                   | 多处使用`×/‹/›/+/-/✓`字符                                       | 统一使用按需Lucide；完整操作复用ZButton，微型内部按钮复用无状态focus样式合同 |
-| Transfer、DataTable与主页残留箭头字符 | 早期实现只补了可访问名称，字符范围没有纳入全树图标审计          | 统一使用按需Lucide/ZIcon；Transfer按LTR/RTL交换方向，DataTable复用ZButton    |
-| WebView窗口控制仍用字符图标           | WindowControls早于ZIcon manifest扩展                            | 扩展受控manifest并改用`ZIcon`                                                |
-| 文档页只展示一个场景                  | 首轮文档以实现证明为主，没有形成特性矩阵                        | 78页全部补为基础+状态/边界/组合Demo，复杂组件覆盖键盘、焦点、表单或生命周期  |
-| 文档站自建原生控件                    | 站点框架早于相关ZUI组件                                         | Header、API表、首页、Sidebar、TOC和Theme Lab改为真实ZUI消费者                |
-| ZStack Demo遗留原生Select             | 旧Demo在ZSelect完成前直接使用平台控件                           | 改用ZStack、ZText与ZSelect组合，并把dogfood门禁从views扩到全部Docs Svelte    |
-| 批量覆盖污染多浏览器状态              | 覆盖率专用的Docs汇总挂载也在Firefox/WebKit运行                  | 汇总限定到Chromium且显式mount/unmount；三浏览器继续跑独立组件行为套件        |
-| 高对比主题进入Theme Lab后白屏         | 预设色板按颜色值作为key，`canvas`与`surface`可同为`#ffffff`     | 改用语义token名作为稳定key；全新Chrome标签页重载后六主题全部恢复             |
-| 组件大小门禁与完整交互职责冲突        | 3.25 KiB阈值把DataTable、Tour、DatePicker等误当成视觉原子       | CI继续构建并记录gzip、检查依赖边界；仅在产物明显异常时人工分析，不设字节门禁 |
-| WebKit表单reset批量失效               | reset不是composed事件，document监听无法跨测试/组件ShadowRoot    | 同时监听组件root、关联form和document，实时按form/包含/id判定并合并重复捕获   |
-| Firefox合成paste缺少payload           | 构造参数中的`clipboardData`没有跨引擎落到只读事件属性           | 测试助手显式定义ClipboardEvent payload；真实用户剪贴板逻辑保持不变           |
-| 文档站缺少生产使用指南                | 只有组件页与Theme Lab，安装、SSR、HMR、WebView和发布边界分散    | 共享指南注册表与GuidePage补齐七份指南，直接使用ZUI Card/List/Code/Link       |
-| 发布包缺少消费者入口说明              | npm tarball没有就地安装、entrypoint与稳定性说明                 | 增加随包README、AST API快照、publish dry-run和仓库外tarball验收              |
-| 发布规划没有release PR自动化          | 只有Changesets CLI脚本，没有成功CI后的版本与Changelog PR        | Changesets v2从成功CI的SHA创建PR；仓库允许Actions建PR，默认token仍保持只读   |
+| 问题                                  | 根因                                                            | 修复                                                                              |
+| ------------------------------------- | --------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| 多边界Pagination出现重复key           | 前后大间隙都被标记为`ellipsis-end`                              | 根据间隙相对当前页的位置生成稳定start/end身份，并加入100页回归                    |
+| Select/MultiSelect首屏显示原始key     | Content未挂载时没有Item标签缓存                                 | 增加`valueLabel`回退合同，保留自定义Trigger能力                                   |
+| 负数NumberField步进可能错误舍入       | `decimalPlaces`正则没有接受数值符号                             | 支持正负号并覆盖负小数与负科学计数法                                              |
+| 动画合同不一致                        | 早期Button/Input/Textarea/InputGroup/FileUpload只写了transition | 全部接入Provider motion；Accordion指示器也支持reduced-motion                      |
+| 可取消事件重复实现                    | Select、MultiSelect、Combobox、Menu和Layer各自维护布尔状态      | 抽取最小`CancelableEvent`基类，保留具体事件公开类型                               |
+| 内部微型按钮视觉/焦点重复             | Calendar、NumberField与TimeField各自维护相同基础动作样式        | 统一复用`styleInternalAction`，仅保留尺寸、边框和布局差异                         |
+| 可见原生输入焦点依赖浏览器默认        | ColorPicker、TagsInput和DataTable没有统一Theme focus ring       | 抽取内部focus helper并覆盖color/hex/range、编辑框和表格选择框                     |
+| 表单reset注册存在effect/action双轨    | 组件普遍依赖`bind:this + $effect`，节点生命周期不够直接         | 26个表单组件统一节点action；Textarea提供`onFormReset`供Mention组合复用            |
+| 文档站没有skip-link                   | Hash路由壳层只提供Header、Sidebar与main landmark                | 使用ZLink提供首个Tab入口；阻止hash导航并显式focus/scroll稳定main目标              |
+| Demo可见表单字段缺少id/name           | 基础原生控件无Field/调用方id时只依赖aria-label                  | Input/Textarea/Checkbox/Switch/Slider/RadioItem默认SSR稳定id；DataTable内部生成id |
+| 关闭/导航图标不一致                   | 多处使用`×/‹/›/+/-/✓`字符                                       | 统一使用按需Lucide；完整操作复用ZButton，微型内部按钮复用无状态focus样式合同      |
+| Transfer、DataTable与主页残留箭头字符 | 早期实现只补了可访问名称，字符范围没有纳入全树图标审计          | 统一使用按需Lucide/ZIcon；Transfer按LTR/RTL交换方向，DataTable复用ZButton         |
+| WebView窗口控制仍用字符图标           | WindowControls早于ZIcon manifest扩展                            | 扩展受控manifest并改用`ZIcon`                                                     |
+| 文档页只展示一个场景                  | 首轮文档以实现证明为主，没有形成特性矩阵                        | 78页全部补为基础+状态/边界/组合Demo，复杂组件覆盖键盘、焦点、表单或生命周期       |
+| 文档站自建原生控件                    | 站点框架早于相关ZUI组件                                         | Header、API表、首页、Sidebar、TOC和Theme Lab改为真实ZUI消费者                     |
+| ZStack Demo遗留原生Select             | 旧Demo在ZSelect完成前直接使用平台控件                           | 改用ZStack、ZText与ZSelect组合，并把dogfood门禁从views扩到全部Docs Svelte         |
+| 批量覆盖污染多浏览器状态              | 覆盖率专用的Docs汇总挂载也在Firefox/WebKit运行                  | 汇总限定到Chromium且显式mount/unmount；三浏览器继续跑独立组件行为套件             |
+| 高对比主题进入Theme Lab后白屏         | 预设色板按颜色值作为key，`canvas`与`surface`可同为`#ffffff`     | 改用语义token名作为稳定key；全新Chrome标签页重载后六主题全部恢复                  |
+| 组件大小门禁与完整交互职责冲突        | 3.25 KiB阈值把DataTable、Tour、DatePicker等误当成视觉原子       | CI继续构建并记录gzip、检查依赖边界；仅在产物明显异常时人工分析，不设字节门禁      |
+| WebKit表单reset批量失效               | reset不是composed事件，document监听无法跨测试/组件ShadowRoot    | 同时监听组件root、关联form和document，实时按form/包含/id判定并合并重复捕获        |
+| Firefox合成paste缺少payload           | 构造参数中的`clipboardData`没有跨引擎落到只读事件属性           | 测试助手显式定义ClipboardEvent payload；真实用户剪贴板逻辑保持不变                |
+| 文档站缺少生产使用指南                | 只有组件页与Theme Lab，安装、SSR、HMR、WebView和发布边界分散    | 共享指南注册表与GuidePage补齐七份指南，直接使用ZUI Card/List/Code/Link            |
+| 发布包缺少消费者入口说明              | npm tarball没有就地安装、entrypoint与稳定性说明                 | 增加随包README、AST API快照、publish dry-run和仓库外tarball验收                   |
+| 发布规划没有release PR自动化          | 只有Changesets CLI脚本，没有成功CI后的版本与Changelog PR        | Changesets v2从成功CI的SHA创建PR；仓库允许Actions建PR，默认token仍保持只读        |
 
 ## 4. 交互与可访问性审计
 
@@ -93,7 +93,7 @@
 - skip-link使用逻辑`inset-inline-start`；真实Chrome切换RTL并reload后出现在右侧起始边，恢复LTR后控制台保持干净。
 - skip-link在reduced-motion下Chrome计算过渡为`1e-05s`（浏览器对0ms的极小钳制，约0.01ms），焦点出现即时；验收后恢复跟随系统。
 - 远程Docs Playwright固定组件深链首个Tab、skip-link可见/聚焦、Enter后URL不变、main聚焦与H1不变五项合同。
-- Textarea状态页补id后可见字段缺失清单为0且Chrome issue清零；远程78页循环会输出任何缺失字段的tag/type/label/placeholder。
+- 基础默认id上线后真实Chrome从Sidebar提取87条路由逐页复核，缺失字段身份、重复id、H1异常和水平溢出问题均为0，控制台干净。
 - 真实Textarea页重复id清单为0；远程78页循环按页面聚合全部`[id]`并输出任何重复值与数量。
 - 六主题最终surface分别为极光`rgb(238, 244, 255)`、纸张`rgb(245, 237, 225)`、霓虹`rgb(5, 9, 20)`、午夜`rgb(11, 18, 32)`、高对比亮色`rgb(255, 255, 255)`、高对比暗色`rgb(0, 0, 0)`。
 - 390×844视口无水平溢出，搜索和主题选择保持可用，组件导航使用横向滚动；验收后已恢复默认1920×936视口。

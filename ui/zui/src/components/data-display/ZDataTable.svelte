@@ -379,6 +379,7 @@
 						>{#if selectionMode === 'multiple'}<input
 								bind:this={selectAll}
 								class={selectionClass}
+								id={`${selectionName}-all`}
 								type="checkbox"
 								aria-label={selectAllLabel}
 								checked={allSelected}
@@ -417,6 +418,7 @@
 				>{#if selectionMode !== 'none'}<td
 						><input
 							class={selectionClass}
+							id={`${selectionName}-row-${entry.index}`}
 							type={selectionMode === 'single' ? 'radio' : 'checkbox'}
 							name={selectionMode === 'single' ? selectionName : undefined}
 							aria-label={selectionLabel(entry.row, entry.index)}

@@ -160,6 +160,7 @@
 	import { useZField } from '../../runtime/form/field-context.js';
 	import { useZInputGroup } from '../../runtime/form/input-group-context.svelte.js';
 	import { formReset, mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
+	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -193,6 +194,7 @@
 		...rest
 	}: ZTextareaProps = $props();
 	const zui = useZui();
+	const uid = $props.id();
 	const field = useZField();
 	const inputGroup = useZInputGroup();
 	const resolvedInvalid = $derived(invalid ?? inputGroup?.invalid ?? field?.invalid ?? false);
@@ -211,6 +213,7 @@
 		write: (next) => (value = next)
 	});
 	const resolvedValue = $derived(state.current);
+	const generatedId = $derived(createZuiId(zui.idPrefix, uid, 'textarea'));
 	const resolvedDescribedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
@@ -231,7 +234,7 @@
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
 	use:formReset={resetFromForm}
-	id={id ?? field?.controlId}
+	id={id ?? field?.controlId ?? generatedId}
 	name={name ?? field?.name}
 	{defaultValue}
 	value={resolvedValue}
