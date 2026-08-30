@@ -53,6 +53,7 @@ import TooltipFixture from './TooltipFixture.svelte';
 import TourFixture from './TourFixture.svelte';
 import TagsInputFixture from './TagsInputFixture.svelte';
 import TextareaFixture from './TextareaFixture.svelte';
+import ThemeSwitchFixture from './ThemeSwitchFixture.svelte';
 import { createBrowserIcssRuntime } from '../src/icss/runtime.js';
 import { defaultTheme } from '../src/theme/default.js';
 import { extendTheme } from '../src/theme/define.js';
@@ -75,6 +76,19 @@ function insertedRuleCount(): number {
 }
 
 describe('compiled ICSS browser updates', () => {
+	it('updates Provider theme recipes in the same state transition', async () => {
+		render(ThemeSwitchFixture);
+		const target = document.querySelector<HTMLElement>('[data-testid="theme-switch-target"]')!;
+		const next = document.querySelector<HTMLButtonElement>('[data-testid="theme-switch-next"]')!;
+		expect(getComputedStyle(target).backgroundColor).toBe('rgb(36, 87, 230)');
+		next.click();
+		await tick();
+		expect(getComputedStyle(target).backgroundColor).toBe('rgb(34, 211, 238)');
+		next.click();
+		await tick();
+		expect(getComputedStyle(target).backgroundColor).toBe('rgb(154, 52, 18)');
+	});
+
 	it('renders every documentation example against the source package', async () => {
 		const target = document.createElement('div');
 		document.body.append(target);
