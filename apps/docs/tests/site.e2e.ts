@@ -762,6 +762,20 @@ test('keeps Tree hierarchy, visible keyboard navigation, selection and reset syn
 	await expect(docs).toHaveAttribute('aria-selected', 'true');
 });
 
+test('keeps virtual Tree DOM bounded while keyboard focus reaches the global final node', async ({
+	page
+}) => {
+	await page.goto('/#/components/tree');
+	const tree = page.getByRole('tree', { name: '五千节点树' });
+	await expect(tree.getByRole('treeitem')).toHaveCount(11);
+	await tree.getByRole('treeitem', { name: '节点 1' }).focus();
+	await page.keyboard.press('End');
+	await expect(tree.getByRole('treeitem', { name: '节点 5000' })).toBeFocused();
+	await expect(tree.getByRole('treeitem')).toHaveCount(11);
+	await page.keyboard.press('Enter');
+	await expect(page.getByText('selected = node-4999')).toBeVisible();
+});
+
 test('keeps TreeSelect popup tree, selection, form value and reset synchronized', async ({
 	page
 }) => {

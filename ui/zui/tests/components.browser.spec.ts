@@ -41,6 +41,7 @@ import ToggleButtonFixture from './ToggleButtonFixture.svelte';
 import SwitchFixture from './SwitchFixture.svelte';
 import TabsFixture from './TabsFixture.svelte';
 import TreeFixture from './TreeFixture.svelte';
+import VirtualTreeFixture from './VirtualTreeFixture.svelte';
 import TreeSelectFixture from './TreeSelectFixture.svelte';
 import TransferFixture from './TransferFixture.svelte';
 import TooltipFixture from './TooltipFixture.svelte';
@@ -470,6 +471,27 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(new FormData(form!).get('node')).toBe('web');
 		expect(output?.textContent).toBe('app:web:1');
+	});
+
+	it('keeps virtual Tree DOM bounded and scrolls keyboard focus to distant nodes', async () => {
+		render(VirtualTreeFixture);
+		const tree = document.querySelector<HTMLElement>('[data-testid="virtual-tree"]');
+		const first = tree?.querySelector<HTMLElement>('[role="treeitem"]');
+		expect(tree?.querySelectorAll('[role="treeitem"]').length).toBeLessThan(20);
+		first?.focus();
+		first?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'End' }));
+		await tick();
+		await Promise.resolve();
+		expect((document.activeElement as HTMLElement)?.dataset.key).toBe('node-4999');
+		expect(tree?.scrollTop).toBeGreaterThan(170000);
+		expect(tree?.querySelectorAll('[role="treeitem"]').length).toBeLessThan(20);
+		(document.activeElement as HTMLElement)?.dispatchEvent(
+			new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' })
+		);
+		await tick();
+		expect(document.querySelector('[data-testid="virtual-tree-output"]')?.textContent).toBe(
+			'node-4999'
+		);
 	});
 
 	it('coordinates TreeSelect popup tree, selection, focus restoration, form value and reset', async () => {

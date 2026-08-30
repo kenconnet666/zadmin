@@ -63,6 +63,7 @@ import SelectFixture from './SelectFixture.svelte';
 import SegmentedFixture from './SegmentedFixture.svelte';
 import TabsFixture from './TabsFixture.svelte';
 import TreeFixture from './TreeFixture.svelte';
+import VirtualTreeFixture from './VirtualTreeFixture.svelte';
 import TreeSelectFixture from './TreeSelectFixture.svelte';
 import TransferFixture from './TransferFixture.svelte';
 import TooltipFixture from './TooltipFixture.svelte';
@@ -341,6 +342,15 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain('aria-expanded="true"');
 		expect(result).toContain('aria-selected="true"');
 		expect(result).toContain('name="node"');
+	});
+
+	it('renders only the initial virtual Tree window with global set metadata during SSR', () => {
+		const result = render(VirtualTreeFixture).body;
+		expect(result).toContain('data-virtualized="true"');
+		expect(result).toContain('data-range-start="0"');
+		expect(result).toContain('data-range-end="9"');
+		expect(result).toContain('aria-setsize="5000"');
+		expect(result).not.toContain('Node 5000');
 	});
 
 	it('renders TreeSelect closed trigger and open popup tree during SSR', () => {

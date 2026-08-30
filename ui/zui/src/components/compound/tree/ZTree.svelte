@@ -18,6 +18,10 @@
 		ref?: HTMLDivElement | null;
 		selectedKeys?: readonly SelectionKey[];
 		readonly selectionMode?: TreeSelectionMode;
+		readonly height?: number;
+		readonly itemSize?: number;
+		readonly overscan?: number;
+		readonly virtualized?: boolean;
 	}
 	export const zuiMetadata = {
 		category: 'navigation',
@@ -29,7 +33,7 @@
 			{ description: '选择key集合。', name: 'selectedKeys', type: 'readonly SelectionKey[]' },
 			{ description: '真实tree引用。', name: 'ref', type: 'HTMLDivElement | null' }
 		],
-		dependencies: ['TreeIndex', 'selection', 'typeahead'],
+		dependencies: ['TreeIndex', 'selection', 'typeahead', 'fixed-size virtualizer'],
 		events: [
 			{
 				description: '展开变化后调用。',
@@ -90,6 +94,18 @@
 				description: '选择值重复使用的表单字段名。',
 				name: 'name',
 				type: 'string'
+			},
+			{
+				default: 'false',
+				description: '启用固定itemSize大数据窗口化。',
+				name: 'virtualized',
+				type: 'boolean'
+			},
+			{
+				default: '36 / 320 / 4',
+				description: '虚拟项高、viewport高度与overscan。',
+				name: 'itemSize / height / overscan',
+				type: 'number'
 			}
 		],
 		since: '0.4.0',
@@ -97,7 +113,8 @@
 		source: 'ui/zui/src/components/compound/tree/ZTree.svelte',
 		states: [
 			{ description: '展开状态。', name: 'aria-expanded', values: ['true', 'false'] },
-			{ description: '选择状态。', name: 'aria-selected', values: ['true', 'false'] }
+			{ description: '选择状态。', name: 'aria-selected', values: ['true', 'false'] },
+			{ description: '虚拟大数据模式。', name: 'data-virtualized', values: ['true'] }
 		],
 		status: 'experimental',
 		summary: '基于扁平节点索引的ARIA Tree，拥有展开、选择、typeahead、键盘与表单合同。'
@@ -106,12 +123,16 @@
 
 <script lang="ts">
 	/* eslint-disable svelte/prefer-svelte-reactivity -- Sets are immutable derived snapshots. */
-	import { untrack } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 	import { ControllableState } from '../../../runtime/foundation/controllable-state.svelte.js';
 	import { listenForFormReset } from '../../../runtime/form/form-control.svelte.js';
 	import { serializeFormValue } from '../../../runtime/form/form-value.js';
 	import { createTreeIndex } from '../../../runtime/tree.js';
 	import { Typeahead } from '../../../runtime/collection/typeahead.js';
+	import {
+		calculateVirtualRange,
+		virtualScrollOffset
+	} from '../../../runtime/collection/virtualizer.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -134,9 +155,17 @@
 					s.padding._small;
 				}
 			},
-			disabled: { false: () => undefined, true: (s) => s.opacity._disabled }
+			disabled: { false: () => undefined, true: (s) => s.opacity._disabled },
+			virtualized: {
+				false: () => undefined,
+				true: (s) => {
+					s.height.raw('var(--zui-tree-height)');
+					s.overflow.auto;
+					s.position.relative;
+				}
+			}
 		},
-		defaultVariants: { appearance: 'tree', disabled: false }
+		defaultVariants: { appearance: 'tree', disabled: false, virtualized: false }
 	});
 	const itemRecipe = defineRecipe({
 		base: (s) => {
@@ -164,12 +193,34 @@
 				}
 			},
 			focused: { false: () => undefined, true: (s) => s.backgroundColor._surface },
-			selected: { false: () => undefined, true: (s) => s.color._primary }
+			selected: { false: () => undefined, true: (s) => s.color._primary },
+			virtualized: {
+				false: () => undefined,
+				true: (s) => {
+					s.insetInlineStart.px(0);
+					s.position.absolute;
+					s.width.percent(100);
+				}
+			}
 		},
-		defaultVariants: { disabled: false, focused: false, selected: false }
+		defaultVariants: { disabled: false, focused: false, selected: false, virtualized: false }
+	});
+	const spacerRecipe = defineRecipe({
+		base: () => undefined,
+		variants: {
+			virtualized: {
+				false: (s) => s.display.contents,
+				true: (s) => {
+					s.height.raw('var(--zui-tree-total-size)');
+					s.position.relative;
+				}
+			}
+		},
+		defaultVariants: { virtualized: false }
 	});
 	registerRecipeHmr(import.meta, rootRecipe);
 	registerRecipeHmr(import.meta, itemRecipe);
+	registerRecipeHmr(import.meta, spacerRecipe);
 	const unique = (keys: readonly SelectionKey[]) => Object.freeze([...new Set(keys)]);
 	let {
 		appearance = 'tree',
@@ -179,20 +230,26 @@
 		disabled = false,
 		expandedKeys = $bindable(),
 		form,
+		height = 320,
+		itemSize = 36,
 		name,
 		nodes,
 		onExpandedChange,
 		onSelectionChange,
+		overscan = 4,
 		ref = $bindable(null),
 		selectedKeys = $bindable(),
 		selectionMode = 'single',
 		style,
+		virtualized = false,
 		...rest
 	}: ZTreeProps = $props();
 	const zui = useZui();
 	const elements = $state<(HTMLDivElement | null)[]>([]);
 	let focusKey = $state<SelectionKey>();
 	let proxy = $state<HTMLInputElement | null>(null);
+	let scrollOffset = $state(0);
+	let viewportSize = $state(height);
 	const index = $derived(createTreeIndex(nodes));
 	const expandedState = new ControllableState<readonly SelectionKey[]>({
 		defaultValue: () => unique(defaultExpandedKeys),
@@ -220,8 +277,40 @@
 			: (enabled.find(({ entry }) => selected.has(entry.key))?.entry.key ?? enabled[0]?.entry.key)
 	);
 	const typeahead = new Typeahead<SelectionKey>({ locale: zui.locale });
-	const rootClass = $derived(zui.recipe(rootRecipe, { appearance, disabled }));
-	const variables = $derived(readIcssCarrier(rest));
+	const virtualRange = $derived.by(() =>
+		virtualized
+			? calculateVirtualRange({
+					count: visible.length,
+					itemSize,
+					overscan,
+					scrollOffset,
+					viewportSize
+				})
+			: {
+					endIndex: visible.length,
+					items: Object.freeze([]),
+					startIndex: 0,
+					totalSize: visible.length * itemSize
+				}
+	);
+	const rendered = $derived(
+		virtualized
+			? virtualRange.items.map((virtual) => ({ entry: visible[virtual.index]!, ...virtual }))
+			: visible.map((entry, itemIndex) => ({
+					end: 0,
+					entry,
+					index: itemIndex,
+					size: 0,
+					start: 0
+				}))
+	);
+	const rootClass = $derived(zui.recipe(rootRecipe, { appearance, disabled, virtualized }));
+	const spacerClass = $derived(zui.recipe(spacerRecipe, { virtualized }));
+	const variables = $derived({
+		...readIcssCarrier(rest),
+		'--zui-tree-height': `${height}px`,
+		'--zui-tree-total-size': `${virtualRange.totalSize}px`
+	} as const);
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
 	$effect(() => {
 		if (!proxy) return;
@@ -230,11 +319,41 @@
 			selectedState.reset();
 		});
 	});
+	onMount(() => {
+		if (!ref || !virtualized) return;
+		const observer = new ResizeObserver(() => {
+			if (ref) viewportSize = ref.clientHeight;
+		});
+		observer.observe(ref);
+		const initialIndex = visible.findIndex((entry) => Object.is(entry.key, resolvedFocusKey));
+		if (initialIndex >= 0) {
+			const offset = virtualScrollOffset(initialIndex, {
+				count: visible.length,
+				itemSize,
+				viewportSize,
+				align: 'nearest'
+			});
+			ref.scrollTop = offset;
+			scrollOffset = offset;
+		}
+		return () => observer.disconnect();
+	});
 	function focus(key: SelectionKey): void {
 		const itemIndex = visible.findIndex((entry) => Object.is(entry.key, key));
 		if (itemIndex < 0 || visible[itemIndex]?.disabled || disabled) return;
 		focusKey = key;
-		elements[itemIndex]?.focus({ preventScroll: true });
+		if (virtualized && ref) {
+			const offset = virtualScrollOffset(itemIndex, {
+				count: visible.length,
+				currentOffset: ref.scrollTop,
+				itemSize,
+				viewportSize,
+				align: 'nearest'
+			});
+			ref.scrollTop = offset;
+			scrollOffset = offset;
+		}
+		queueMicrotask(() => elements[itemIndex]?.focus({ preventScroll: true }));
 	}
 	function toggleExpanded(key: SelectionKey): void {
 		if (disabled) return;
@@ -321,37 +440,46 @@
 	role="tree"
 	aria-disabled={disabled || undefined}
 	aria-multiselectable={selectionMode === 'multiple' || undefined}
+	data-virtualized={virtualized || undefined}
+	data-range-start={virtualRange.startIndex}
+	data-range-end={virtualRange.endIndex}
+	onscroll={(event) => (scrollOffset = event.currentTarget.scrollTop)}
 >
-	{#each visible as entry, itemIndex (entry.key)}
-		<div
-			bind:this={elements[itemIndex]}
-			class={zui.recipe(itemRecipe, {
-				disabled: disabled || entry.disabled,
-				focused: Object.is(entry.key, resolvedFocusKey),
-				selected: selected.has(entry.key)
-			})}
-			style={`padding-inline-start: ${8 + (entry.level - 1) * 16}px;`}
-			role="treeitem"
-			aria-level={entry.level}
-			aria-posinset={entry.position}
-			aria-setsize={entry.setSize}
-			aria-disabled={entry.disabled || undefined}
-			aria-expanded={entry.childCount > 0 ? expanded.has(entry.key) : undefined}
-			aria-selected={selectionMode === 'none' ? undefined : selected.has(entry.key)}
-			tabindex={Object.is(entry.key, resolvedFocusKey) ? 0 : -1}
-			data-key={String(entry.key)}
-			onclick={() => select(entry.key)}
-			ondblclick={() => {
-				if (entry.childCount > 0) toggleExpanded(entry.key);
-			}}
-			onfocus={() => (focusKey = entry.key)}
-			onkeydown={(event) => handleKeydown(event, entry)}
-		>
-			<span aria-hidden="true"
-				>{entry.childCount > 0 ? (expanded.has(entry.key) ? '▾' : '▸') : '•'}</span
-			><span>{entry.label}</span>
-		</div>
-	{/each}
+	<div class={spacerClass} data-slot="spacer">
+		{#each rendered as virtual (virtual.entry.key)}
+			{@const entry = virtual.entry}
+			{@const itemIndex = virtual.index}
+			<div
+				bind:this={elements[itemIndex]}
+				class={zui.recipe(itemRecipe, {
+					disabled: disabled || entry.disabled,
+					focused: Object.is(entry.key, resolvedFocusKey),
+					selected: selected.has(entry.key),
+					virtualized
+				})}
+				style={`padding-inline-start: ${8 + (entry.level - 1) * 16}px;${virtualized ? ` height: ${virtual.size}px; transform: translateY(${virtual.start}px);` : ''}`}
+				role="treeitem"
+				aria-level={entry.level}
+				aria-posinset={entry.position}
+				aria-setsize={entry.setSize}
+				aria-disabled={entry.disabled || undefined}
+				aria-expanded={entry.childCount > 0 ? expanded.has(entry.key) : undefined}
+				aria-selected={selectionMode === 'none' ? undefined : selected.has(entry.key)}
+				tabindex={Object.is(entry.key, resolvedFocusKey) ? 0 : -1}
+				data-key={String(entry.key)}
+				onclick={() => select(entry.key)}
+				ondblclick={() => {
+					if (entry.childCount > 0) toggleExpanded(entry.key);
+				}}
+				onfocus={() => (focusKey = entry.key)}
+				onkeydown={(event) => handleKeydown(event, entry)}
+			>
+				<span aria-hidden="true"
+					>{entry.childCount > 0 ? (expanded.has(entry.key) ? '▾' : '▸') : '•'}</span
+				><span>{entry.label}</span>
+			</div>
+		{/each}
+	</div>
 </div>
 <input bind:this={proxy} aria-hidden="true" tabindex={-1} type="hidden" disabled {form} />
 {#if name && !disabled}{#each serializedSelected as value (value)}<input
