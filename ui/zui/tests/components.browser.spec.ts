@@ -705,7 +705,11 @@ describe('compiled ICSS browser updates', () => {
 		);
 		expect(determinate?.getAttribute('aria-valuenow')).toBe('65');
 		expect(indeterminate?.hasAttribute('aria-valuenow')).toBe(false);
-		expect(document.querySelector('[data-testid="spinner"] svg')?.getAnimations().length).toBe(1);
+		const spinner = document.querySelector<SVGSVGElement>(
+			'[data-testid="spinner"] [data-slot="indicator"]'
+		);
+		expect(spinner?.classList.contains('lucide-loader-circle')).toBe(true);
+		expect(spinner?.getAnimations()).toHaveLength(1);
 
 		document.querySelector<HTMLButtonElement>('[aria-label="Dismiss saved alert"]')?.click();
 		await tick();
