@@ -178,6 +178,15 @@ for (const path of docsSvelteFiles) {
 	if (forbiddenGlyph.test(source))
 		fail(`${filename} contains a character UI icon instead of Lucide.`);
 }
+const appShellSource = await readFile(resolve(docsRoot, 'src/views/AppShell.svelte'), 'utf8');
+const skipLinkContracts = [
+	/<ZLink\b[^>]*class=\{classes\.skipLink\}[^>]*href=\{currentHref\}[^>]*onclick=\{skipToMain\}/u,
+	/function skipToMain\([\s\S]*?event\.preventDefault\(\)[\s\S]*?\.focus\(/u,
+	/<main\b[^>]*id=["']zui-main-content["'][^>]*tabindex=\{-1\}/u
+];
+if (!skipLinkContracts.every((contract) => contract.test(appShellSource))) {
+	fail('Docs AppShell must preserve its hash-router-safe skip link contract.');
+}
 for (const path of componentFiles) {
 	const source = await readFile(path, 'utf8');
 	if (forbiddenGlyph.test(source)) {
@@ -241,6 +250,7 @@ console.log(
 		typescriptEscapeHatches: 0,
 		zuiSourceFiles: zuiSourceFiles.length,
 		resourceLifecycleViolations: 0,
-		dangerousDomSinks: 0
+		dangerousDomSinks: 0,
+		skipLinkContracts: 1
 	})
 );
