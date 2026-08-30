@@ -37,6 +37,19 @@ function fail(message) {
 	throw new Error(message);
 }
 
+function auditTabOrder(source, filename) {
+	if (/tabindex\s*=\s*(?:["'][1-9]\d*["']|\{[1-9]\d*\})/u.test(source)) {
+		fail(`${filename} contains a positive tabindex.`);
+	}
+	for (const match of source.matchAll(
+		/<(?:a|button|input|select|textarea)\b[^>]*aria-hidden=["']true["'][^>]*>/gu
+	)) {
+		if (!/tabindex\s*=\s*(?:["']-1["']|\{-1\})/u.test(match[0])) {
+			fail(`${filename} contains an aria-hidden interactive element in the tab order.`);
+		}
+	}
+}
+
 const componentFiles = await filesUnder(componentsRoot, ['.svelte']);
 const metadata = [];
 const internalComponents = [];
@@ -47,6 +60,7 @@ const formResetActionFiles = [];
 for (const path of componentFiles) {
 	const source = await readFile(path, 'utf8');
 	const filename = portable(relative(workspaceRoot, path));
+	auditTabOrder(source, filename);
 	if (/<button\b/u.test(source)) {
 		rawButtonFiles.push(filename);
 		const hasFocusContract =
@@ -102,6 +116,7 @@ const forbiddenGlyph = /[×‹›✓←→↑↓↕✕✖]/u;
 for (const path of docsSvelteFiles) {
 	const source = await readFile(path, 'utf8');
 	const filename = portable(relative(workspaceRoot, path));
+	auditTabOrder(source, filename);
 	if (rawInteractive.test(source))
 		fail(`${filename} hand-builds an interactive element instead of dogfooding ZUI.`);
 	if (forbiddenGlyph.test(source))
@@ -160,6 +175,8 @@ console.log(
 		rawControlComponentFiles: rawControlFiles.length,
 		formResetActionFiles: formResetActionFiles.length,
 		inlineSvgFiles: inlineSvg.length,
-		docsRawInteractiveElements: 0
+		docsRawInteractiveElements: 0,
+		positiveTabindexElements: 0,
+		ariaHiddenTabStops: 0
 	})
 );
