@@ -1,6 +1,8 @@
 import { loadingBarMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import PageDemo from './PageDemo.svelte';
+import pageSource from './PageDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const loadingBarDoc = defineComponentDoc(loadingBarMetadata, {
@@ -11,6 +13,13 @@ export const loadingBarDoc = defineComponentDoc(loadingBarMetadata, {
 			id: 'loading-bar-values',
 			source,
 			title: '确定与不确定进度'
+		},
+		{
+			component: PageDemo,
+			description: 'page模式固定到逻辑视口顶部，并保留不确定进度公告。',
+			id: 'loading-bar-page',
+			source: pageSource,
+			title: '页面级进度'
 		}
 	],
 	accessibility: [

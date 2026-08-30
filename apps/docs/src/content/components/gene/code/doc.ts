@@ -1,6 +1,8 @@
 import { codeMetadata } from '@zadmin/zui/metadata';
 import HighlightDemo from './HighlightDemo.svelte';
 import highlightSource from './HighlightDemo.svelte?raw';
+import InlineDemo from './InlineDemo.svelte';
+import inlineSource from './InlineDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const codeDoc = defineComponentDoc(codeMetadata, {
@@ -11,6 +13,13 @@ export const codeDoc = defineComponentDoc(codeMetadata, {
 			id: 'code-highlight',
 			source: highlightSource,
 			title: '按需语法高亮'
+		},
+		{
+			component: InlineDemo,
+			description: 'inline、wrap和普通代码块覆盖命令与结构化数据场景。',
+			id: 'code-inline',
+			source: inlineSource,
+			title: '行内与换行代码'
 		}
 	],
 	accessibility: [

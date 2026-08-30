@@ -1,6 +1,8 @@
 import { dataTableMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import CompactDemo from './CompactDemo.svelte';
+import compactSource from './CompactDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const dataTableDoc = defineComponentDoc(dataTableMetadata, {
@@ -11,6 +13,13 @@ export const dataTableDoc = defineComponentDoc(dataTableMetadata, {
 			id: 'data-table-virtual',
 			source,
 			title: '虚拟化部署表'
+		},
+		{
+			component: CompactDemo,
+			description: '小数据集使用原生行、紧凑密度和单选合同，不启用虚拟化。',
+			id: 'data-table-compact',
+			source: compactSource,
+			title: '紧凑单选表格'
 		}
 	],
 	accessibility: [

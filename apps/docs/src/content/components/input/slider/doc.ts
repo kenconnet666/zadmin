@@ -1,6 +1,8 @@
 import { sliderMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import formSource from './FormDemo.svelte?raw';
+import StatesDemo from './StatesDemo.svelte';
+import statesSource from './StatesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const sliderDoc = defineComponentDoc(sliderMetadata, {
@@ -11,6 +13,13 @@ export const sliderDoc = defineComponentDoc(sliderMetadata, {
 			id: 'slider-form',
 			source: formSource,
 			title: '数值与表单'
+		},
+		{
+			component: StatesDemo,
+			description: '范围、步长、尺寸、无效和禁用状态继续使用原生range键盘。',
+			id: 'slider-states',
+			source: statesSource,
+			title: '范围、尺寸与状态'
 		}
 	],
 	accessibility: [

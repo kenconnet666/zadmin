@@ -1,6 +1,8 @@
 import { cascaderMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import StatesDemo from './StatesDemo.svelte';
+import statesSource from './StatesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 export const cascaderDoc = defineComponentDoc(cascaderMetadata, {
 	demos: [
@@ -10,6 +12,13 @@ export const cascaderDoc = defineComponentDoc(cascaderMetadata, {
 			id: 'cascader-path',
 			source,
 			title: '逐级路径选择'
+		},
+		{
+			component: StatesDemo,
+			description: '空值placeholder、自定义分隔符与禁用完整路径保持一致。',
+			id: 'cascader-states',
+			source: statesSource,
+			title: '占位与禁用状态'
 		}
 	],
 	accessibility: [

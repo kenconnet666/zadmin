@@ -1,6 +1,8 @@
 import { toastMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import TonesDemo from './TonesDemo.svelte';
+import tonesSource from './TonesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const toastDoc = defineComponentDoc(toastMetadata, {
@@ -11,6 +13,13 @@ export const toastDoc = defineComponentDoc(toastMetadata, {
 			id: 'toast-queue',
 			source,
 			title: '通知队列'
+		},
+		{
+			component: TonesDemo,
+			description: '独立Toast展示不同tone与公告优先级，队列不是渲染的前置条件。',
+			id: 'toast-tones',
+			source: tonesSource,
+			title: '独立Toast语义'
 		}
 	],
 	accessibility: [

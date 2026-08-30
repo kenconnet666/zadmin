@@ -1,6 +1,8 @@
 import { treeSelectMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import StatesDemo from './StatesDemo.svelte';
+import statesSource from './StatesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 export const treeSelectDoc = defineComponentDoc(treeSelectMetadata, {
 	demos: [
@@ -10,6 +12,13 @@ export const treeSelectDoc = defineComponentDoc(treeSelectMetadata, {
 			id: 'tree-select-form',
 			source,
 			title: '树节点选择'
+		},
+		{
+			component: StatesDemo,
+			description: '空值placeholder、初始展开和禁用稳定值继续复用Tree键盘。',
+			id: 'tree-select-states',
+			source: statesSource,
+			title: '空值、展开与禁用'
 		}
 	],
 	accessibility: [

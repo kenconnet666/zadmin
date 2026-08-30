@@ -1,6 +1,8 @@
 import { listMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import CustomItemsDemo from './CustomItemsDemo.svelte';
+import customItemsSource from './CustomItemsDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 export const listDoc = defineComponentDoc(listMetadata, {
 	demos: [
@@ -10,6 +12,13 @@ export const listDoc = defineComponentDoc(listMetadata, {
 			id: 'list-ordered',
 			source,
 			title: '有序流程'
+		},
+		{
+			component: CustomItemsDemo,
+			description: 'item snippet组合ZUI文本和徽标，同时保留真实li。',
+			id: 'list-custom-items',
+			source: customItemsSource,
+			title: '自定义列表项'
 		}
 	],
 	accessibility: [

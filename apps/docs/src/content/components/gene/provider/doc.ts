@@ -1,6 +1,8 @@
 import { providerMetadata } from '@zadmin/zui/metadata';
 import ThemeDemo from './ThemeDemo.svelte';
 import themeSource from './ThemeDemo.svelte?raw';
+import PreferencesDemo from './PreferencesDemo.svelte';
+import preferencesSource from './PreferencesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const providerDoc = defineComponentDoc(providerMetadata, {
@@ -11,6 +13,13 @@ export const providerDoc = defineComponentDoc(providerMetadata, {
 			id: 'provider-theme',
 			source: themeSource,
 			title: 'Theme与嵌套Provider'
+		},
+		{
+			component: PreferencesDemo,
+			description: '嵌套Provider同时覆盖对比度、密度、方向、locale和动画偏好。',
+			id: 'provider-preferences',
+			source: preferencesSource,
+			title: '显示与区域偏好'
 		}
 	],
 	accessibility: ['不创建无语义wrapper。', '不会改变子组件的原生语义与焦点顺序。']

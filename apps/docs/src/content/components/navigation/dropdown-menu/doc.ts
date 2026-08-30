@@ -5,6 +5,8 @@ import {
 } from '@zadmin/zui/metadata';
 import InteractiveDemo from './InteractiveDemo.svelte';
 import interactiveSource from './InteractiveDemo.svelte?raw';
+import StatesDemo from './StatesDemo.svelte';
+import statesSource from './StatesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const dropdownMenuDoc = defineComponentDoc(dropdownMenuMetadata, {
@@ -17,6 +19,13 @@ export const dropdownMenuDoc = defineComponentDoc(dropdownMenuMetadata, {
 			id: 'dropdown-menu-actions',
 			source: interactiveSource,
 			title: '定位菜单操作'
+		},
+		{
+			component: StatesDemo,
+			description: 'top-end定位、非循环导航与禁用项继续复用Menu集合。',
+			id: 'dropdown-menu-states',
+			source: statesSource,
+			title: '定位与导航边界'
 		}
 	],
 	accessibility: [

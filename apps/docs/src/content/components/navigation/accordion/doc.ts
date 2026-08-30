@@ -6,6 +6,8 @@ import {
 } from '@zadmin/zui/metadata';
 import InteractiveDemo from './InteractiveDemo.svelte';
 import interactiveSource from './InteractiveDemo.svelte?raw';
+import MultipleDemo from './MultipleDemo.svelte';
+import multipleSource from './MultipleDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const accordionDoc = defineComponentDoc(accordionMetadata, {
@@ -17,6 +19,13 @@ export const accordionDoc = defineComponentDoc(accordionMetadata, {
 			id: 'accordion-interactive',
 			source: interactiveSource,
 			title: '展开与生命周期'
+		},
+		{
+			component: MultipleDemo,
+			description: 'multiple模式允许独立展开；loop=false夹紧Trigger焦点。',
+			id: 'accordion-multiple',
+			source: multipleSource,
+			title: '多项展开与导航边界'
 		}
 	],
 	accessibility: [

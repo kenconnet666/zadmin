@@ -1,6 +1,8 @@
 import { formFieldMetadata, formMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import NativeDemo from './NativeDemo.svelte';
+import nativeSource from './NativeDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const formDoc = defineComponentDoc(formMetadata, {
@@ -13,6 +15,13 @@ export const formDoc = defineComponentDoc(formMetadata, {
 			id: 'form-schema',
 			source,
 			title: '异步Schema与字段状态'
+		},
+		{
+			component: NativeDemo,
+			description: '无需schema时可启用浏览器constraint validation，并继续获得FormData提交回调。',
+			id: 'form-native',
+			source: nativeSource,
+			title: '原生约束验证'
 		}
 	],
 	accessibility: [

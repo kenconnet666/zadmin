@@ -10,6 +10,8 @@ import {
 } from '@zadmin/zui/metadata';
 import InteractiveDemo from './InteractiveDemo.svelte';
 import interactiveSource from './InteractiveDemo.svelte?raw';
+import PreventDemo from './PreventDemo.svelte';
+import preventSource from './PreventDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const alertDialogDoc = defineComponentDoc(alertDialogMetadata, {
@@ -29,6 +31,13 @@ export const alertDialogDoc = defineComponentDoc(alertDialogMetadata, {
 			id: 'alert-dialog-explicit-action',
 			source: interactiveSource,
 			title: '强制显式决策'
+		},
+		{
+			component: PreventDemo,
+			description: 'Action回调可preventDefault保持顶层AlertDialog打开，重试后再关闭。',
+			id: 'alert-dialog-prevent',
+			source: preventSource,
+			title: '阻止关闭与重试'
 		}
 	],
 	accessibility: [

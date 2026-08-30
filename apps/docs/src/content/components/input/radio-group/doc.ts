@@ -1,6 +1,8 @@
 import { radioGroupItemMetadata, radioGroupMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import formSource from './FormDemo.svelte?raw';
+import BoundariesDemo from './BoundariesDemo.svelte';
+import boundariesSource from './BoundariesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const radioGroupDoc = defineComponentDoc(radioGroupMetadata, {
@@ -12,6 +14,13 @@ export const radioGroupDoc = defineComponentDoc(radioGroupMetadata, {
 			id: 'radio-group-form',
 			source: formSource,
 			title: '单选、键盘与表单'
+		},
+		{
+			component: BoundariesDemo,
+			description: 'vertical、loop=false、invalid和disabled覆盖方向键边界与组状态。',
+			id: 'radio-group-boundaries',
+			source: boundariesSource,
+			title: '方向与导航边界'
 		}
 	],
 	accessibility: [

@@ -1,6 +1,8 @@
 import { cardMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import VariantsDemo from './VariantsDemo.svelte';
+import variantsSource from './VariantsDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 export const cardDoc = defineComponentDoc(cardMetadata, {
 	demos: [
@@ -10,6 +12,13 @@ export const cardDoc = defineComponentDoc(cardMetadata, {
 			id: 'card-anatomy',
 			source,
 			title: 'Card Anatomy'
+		},
+		{
+			component: VariantsDemo,
+			description: '最小正文和带操作Card使用同一article anatomy。',
+			id: 'card-variants',
+			source: variantsSource,
+			title: '最小与操作Card'
 		}
 	],
 	accessibility: [

@@ -1,6 +1,8 @@
 import { timeFieldMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import ModesDemo from './ModesDemo.svelte';
+import modesSource from './ModesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 export const timeFieldDoc = defineComponentDoc(timeFieldMetadata, {
 	demos: [
@@ -10,6 +12,13 @@ export const timeFieldDoc = defineComponentDoc(timeFieldMetadata, {
 			id: 'time-field-segments',
 			source,
 			title: '时间Segments'
+		},
+		{
+			component: ModesDemo,
+			description: '12/24小时、分钟/秒步长与只读/禁用状态覆盖时间segment模式。',
+			id: 'time-field-modes',
+			source: modesSource,
+			title: '小时制与步长'
 		}
 	],
 	accessibility: [

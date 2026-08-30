@@ -1,6 +1,8 @@
 import { dateRangePickerMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import StatesDemo from './StatesDemo.svelte';
+import statesSource from './StatesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 export const dateRangePickerDoc = defineComponentDoc(dateRangePickerMetadata, {
 	demos: [
@@ -10,6 +12,13 @@ export const dateRangePickerDoc = defineComponentDoc(dateRangePickerMetadata, {
 			id: 'date-range-picker-window',
 			source,
 			title: '发布窗口范围'
+		},
+		{
+			component: StatesDemo,
+			description: '空范围placeholder与禁用完整范围使用同一双日期合同。',
+			id: 'date-range-picker-states',
+			source: statesSource,
+			title: '空值与禁用范围'
 		}
 	],
 	accessibility: [

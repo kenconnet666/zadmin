@@ -5,6 +5,8 @@ import {
 } from '@zadmin/zui/metadata';
 import InteractiveDemo from './InteractiveDemo.svelte';
 import interactiveSource from './InteractiveDemo.svelte?raw';
+import FocusDemo from './FocusDemo.svelte';
+import focusSource from './FocusDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const popoverDoc = defineComponentDoc(popoverMetadata, {
@@ -16,6 +18,13 @@ export const popoverDoc = defineComponentDoc(popoverMetadata, {
 			id: 'popover-interactive',
 			source: interactiveSource,
 			title: '定位与关闭'
+		},
+		{
+			component: FocusDemo,
+			description: 'initialFocus显式选择首个编辑字段，关闭后恢复Trigger。',
+			id: 'popover-focus',
+			source: focusSource,
+			title: '初始焦点策略'
 		}
 	],
 	accessibility: [

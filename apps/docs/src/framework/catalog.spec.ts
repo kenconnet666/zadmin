@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { componentDocs, componentDocsById } from './catalog.js';
+import { defineComponentDoc } from './component-doc.js';
 
 describe('ZUI component documentation catalog', () => {
 	it('covers the approved component catalog exactly once', () => {
@@ -186,7 +187,7 @@ describe('ZUI component documentation catalog', () => {
 
 	it('gives every page runnable demos, real source and API metadata', () => {
 		for (const doc of componentDocs) {
-			expect(doc.demos.length).toBeGreaterThan(0);
+			expect(doc.demos.length).toBeGreaterThanOrEqual(2);
 			expect(doc.api.length).toBeGreaterThan(0);
 			expect(doc.accessibility.length).toBeGreaterThan(0);
 			expect(doc.source).toMatch(/^ui\/zui\/src\/components\//u);
@@ -194,11 +195,32 @@ describe('ZUI component documentation catalog', () => {
 			expect(Array.isArray(doc.dependencies)).toBe(true);
 			expect(doc.api[0]?.rows).toBe(doc.props);
 			expect(new Set(doc.api.map(({ id }) => id)).size).toBe(doc.api.length);
+			expect(new Set(doc.demos.map(({ id }) => id)).size).toBe(doc.demos.length);
 			expect(['experimental', 'stable']).toContain(doc.status);
 			for (const demo of doc.demos) {
 				expect(demo.source).toContain('<script');
 				expect(typeof demo.component).toBe('function');
 			}
 		}
+	});
+
+	it('rejects incomplete, duplicate or sourceless demo catalogs', () => {
+		const metadata = componentDocs[0]!;
+		const [first, second] = metadata.demos;
+		expect(() =>
+			defineComponentDoc(metadata, { accessibility: ['test'], demos: [first!] })
+		).toThrow(/at least two distinct demos/u);
+		expect(() =>
+			defineComponentDoc(metadata, {
+				accessibility: ['test'],
+				demos: [first!, { ...second!, id: first!.id }]
+			})
+		).toThrow(/duplicate demo id/u);
+		expect(() =>
+			defineComponentDoc(metadata, {
+				accessibility: ['test'],
+				demos: [first!, { ...second!, source: '   ' }]
+			})
+		).toThrow(/has no source/u);
 	});
 });

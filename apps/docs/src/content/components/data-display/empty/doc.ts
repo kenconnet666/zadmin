@@ -1,6 +1,8 @@
 import { emptyMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import MinimalDemo from './MinimalDemo.svelte';
+import minimalSource from './MinimalDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const emptyDoc = defineComponentDoc(emptyMetadata, {
@@ -11,6 +13,13 @@ export const emptyDoc = defineComponentDoc(emptyMetadata, {
 			id: 'empty-recovery',
 			source,
 			title: '可恢复空状态'
+		},
+		{
+			component: MinimalDemo,
+			description: '无操作空状态使用Lucide装饰图形并保持具名section。',
+			id: 'empty-minimal',
+			source: minimalSource,
+			title: '最小空状态'
 		}
 	],
 	accessibility: [

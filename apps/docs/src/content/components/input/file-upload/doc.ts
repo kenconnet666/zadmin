@@ -1,6 +1,8 @@
 import { fileUploadMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import StatesDemo from './StatesDemo.svelte';
+import statesSource from './StatesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const fileUploadDoc = defineComponentDoc(fileUploadMetadata, {
@@ -12,6 +14,13 @@ export const fileUploadDoc = defineComponentDoc(fileUploadMetadata, {
 			id: 'file-upload-queue',
 			source,
 			title: '配置文件队列'
+		},
+		{
+			component: StatesDemo,
+			description: '单文件、required和disabled覆盖受限上传场景。',
+			id: 'file-upload-states',
+			source: statesSource,
+			title: '单文件与禁用状态'
 		}
 	],
 	accessibility: [

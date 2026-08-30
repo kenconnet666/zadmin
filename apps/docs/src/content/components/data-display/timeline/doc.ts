@@ -1,6 +1,8 @@
 import { timelineMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import CustomDemo from './CustomDemo.svelte';
+import customSource from './CustomDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const timelineDoc = defineComponentDoc(timelineMetadata, {
@@ -11,6 +13,13 @@ export const timelineDoc = defineComponentDoc(timelineMetadata, {
 			id: 'timeline-release',
 			source,
 			title: '发布历程'
+		},
+		{
+			component: CustomDemo,
+			description: 'item snippet组合状态Badge，外层顺序和稳定key仍由Timeline拥有。',
+			id: 'timeline-custom',
+			source: customSource,
+			title: '自定义时间线项'
 		}
 	],
 	accessibility: [

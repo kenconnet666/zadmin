@@ -1,6 +1,8 @@
 import { colorPickerMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import StatesDemo from './StatesDemo.svelte';
+import statesSource from './StatesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const colorPickerDoc = defineComponentDoc(colorPickerMetadata, {
@@ -12,6 +14,13 @@ export const colorPickerDoc = defineComponentDoc(colorPickerMetadata, {
 			id: 'color-picker-alpha',
 			source,
 			title: 'Hex与透明度'
+		},
+		{
+			component: StatesDemo,
+			description: '不透明、Alpha和禁用颜色分别验证规范化hex合同。',
+			id: 'color-picker-states',
+			source: statesSource,
+			title: 'Alpha与禁用状态'
 		}
 	],
 	accessibility: [

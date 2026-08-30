@@ -1,6 +1,8 @@
 import { textareaMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import StatesDemo from './StatesDemo.svelte';
+import statesSource from './StatesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const textareaDoc = defineComponentDoc(textareaMetadata, {
@@ -12,6 +14,13 @@ export const textareaDoc = defineComponentDoc(textareaMetadata, {
 			id: 'textarea-autosize',
 			source,
 			title: '受控autosize文本域'
+		},
+		{
+			component: StatesDemo,
+			description: '三档尺寸、resize策略、invalid和disabled保留原生textarea编辑合同。',
+			id: 'textarea-states',
+			source: statesSource,
+			title: '尺寸、Resize与状态'
 		}
 	],
 	accessibility: [

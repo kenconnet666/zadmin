@@ -1,6 +1,8 @@
 import { spinnerMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import InlineDemo from './InlineDemo.svelte';
+import inlineSource from './InlineDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const spinnerDoc = defineComponentDoc(spinnerMetadata, {
@@ -11,6 +13,13 @@ export const spinnerDoc = defineComponentDoc(spinnerMetadata, {
 			id: 'spinner-sizes',
 			source,
 			title: '加载尺寸'
+		},
+		{
+			component: InlineDemo,
+			description: '小尺寸Spinner可与持久文本组合，同时保留独立status名称。',
+			id: 'spinner-inline',
+			source: inlineSource,
+			title: '行内加载状态'
 		}
 	],
 	accessibility: [

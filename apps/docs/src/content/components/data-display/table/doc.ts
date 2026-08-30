@@ -1,6 +1,8 @@
 import { tableMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import CompactDemo from './CompactDemo.svelte';
+import compactSource from './CompactDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const tableDoc = defineComponentDoc(tableMetadata, {
@@ -11,6 +13,13 @@ export const tableDoc = defineComponentDoc(tableMetadata, {
 			id: 'table-native',
 			source,
 			title: '原生表格'
+		},
+		{
+			component: CompactDemo,
+			description: '紧凑密度和tfoot适合高信息密度汇总表。',
+			id: 'table-compact',
+			source: compactSource,
+			title: '紧凑表格与汇总'
 		}
 	],
 	accessibility: [

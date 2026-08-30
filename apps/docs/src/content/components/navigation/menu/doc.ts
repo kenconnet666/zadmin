@@ -7,6 +7,8 @@ import {
 } from '@zadmin/zui/metadata';
 import InteractiveDemo from './InteractiveDemo.svelte';
 import interactiveSource from './InteractiveDemo.svelte?raw';
+import BoundariesDemo from './BoundariesDemo.svelte';
+import boundariesSource from './BoundariesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const menuDoc = defineComponentDoc(menuMetadata, {
@@ -19,6 +21,13 @@ export const menuDoc = defineComponentDoc(menuMetadata, {
 			id: 'menu-collection-navigation',
 			source: interactiveSource,
 			title: '集合导航与Action'
+		},
+		{
+			component: BoundariesDemo,
+			description: 'loop=false夹紧首尾，可取消action阻止消费方状态变化。',
+			id: 'menu-boundaries',
+			source: boundariesSource,
+			title: '导航边界与动作拦截'
 		}
 	],
 	accessibility: [

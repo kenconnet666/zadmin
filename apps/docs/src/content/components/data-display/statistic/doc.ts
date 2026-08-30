@@ -1,6 +1,8 @@
 import { statisticMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import AffixesDemo from './AffixesDemo.svelte';
+import affixesSource from './AffixesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const statisticDoc = defineComponentDoc(statisticMetadata, {
@@ -11,6 +13,13 @@ export const statisticDoc = defineComponentDoc(statisticMetadata, {
 			id: 'statistic-format',
 			source,
 			title: '数值与趋势'
+		},
+		{
+			component: AffixesDemo,
+			description: 'prefix和suffix补充单位，数值本体仍由Intl格式化。',
+			id: 'statistic-affixes',
+			source: affixesSource,
+			title: '前后缀与单位'
 		}
 	],
 	accessibility: [

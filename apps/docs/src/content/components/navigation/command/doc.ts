@@ -1,6 +1,8 @@
 import { commandMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import FilterDemo from './FilterDemo.svelte';
+import filterSource from './FilterDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const commandDoc = defineComponentDoc(commandMetadata, {
@@ -11,6 +13,13 @@ export const commandDoc = defineComponentDoc(commandMetadata, {
 			id: 'command-ranked',
 			source,
 			title: '相关性命令搜索'
+		},
+		{
+			component: FilterDemo,
+			description: '自定义前缀策略、结果上限、非循环导航与Escape回调保持正交。',
+			id: 'command-filter',
+			source: filterSource,
+			title: '过滤策略与结果上限'
 		}
 	],
 	accessibility: [

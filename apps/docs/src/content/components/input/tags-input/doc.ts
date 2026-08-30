@@ -1,6 +1,8 @@
 import { tagsInputMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import formSource from './FormDemo.svelte?raw';
+import ConstraintsDemo from './ConstraintsDemo.svelte';
+import constraintsSource from './ConstraintsDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 export const tagsInputDoc = defineComponentDoc(tagsInputMetadata, {
 	demos: [
@@ -10,6 +12,13 @@ export const tagsInputDoc = defineComponentDoc(tagsInputMetadata, {
 			id: 'tags-input-form',
 			source: formSource,
 			title: '编辑、粘贴与表单'
+		},
+		{
+			component: ConstraintsDemo,
+			description: '多分隔符、数量上限、校验、自定义Tag与只读/禁用状态保持独立。',
+			id: 'tags-input-constraints',
+			source: constraintsSource,
+			title: '约束与自定义Tag'
 		}
 	],
 	accessibility: [

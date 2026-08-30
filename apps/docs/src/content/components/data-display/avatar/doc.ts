@@ -1,6 +1,8 @@
 import { avatarMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import StatesDemo from './StatesDemo.svelte';
+import statesSource from './StatesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 export const avatarDoc = defineComponentDoc(avatarMetadata, {
 	demos: [
@@ -10,6 +12,13 @@ export const avatarDoc = defineComponentDoc(avatarMetadata, {
 			id: 'avatar-fallback',
 			source,
 			title: '图片Fallback'
+		},
+		{
+			component: StatesDemo,
+			description: '尺寸和形状正交组合，fallback始终保留名称。',
+			id: 'avatar-states',
+			source: statesSource,
+			title: '尺寸与形状'
 		}
 	],
 	accessibility: [

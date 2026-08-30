@@ -1,6 +1,8 @@
 import { dateFieldMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import LocalesDemo from './LocalesDemo.svelte';
+import localesSource from './LocalesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 export const dateFieldDoc = defineComponentDoc(dateFieldMetadata, {
 	demos: [
@@ -10,6 +12,13 @@ export const dateFieldDoc = defineComponentDoc(dateFieldMetadata, {
 			id: 'date-field-segments',
 			source,
 			title: '日期Segments'
+		},
+		{
+			component: LocalesDemo,
+			description: 'Locale决定segment顺序；readonly和disabled保持不同交互语义。',
+			id: 'date-field-locales',
+			source: localesSource,
+			title: 'Locale与只读状态'
 		}
 	],
 	accessibility: [

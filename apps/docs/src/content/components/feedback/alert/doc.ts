@@ -1,6 +1,8 @@
 import { alertMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import TonesDemo from './TonesDemo.svelte';
+import tonesSource from './TonesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const alertDoc = defineComponentDoc(alertMetadata, {
@@ -11,6 +13,13 @@ export const alertDoc = defineComponentDoc(alertMetadata, {
 			id: 'alert-live',
 			source,
 			title: '行内反馈'
+		},
+		{
+			component: TonesDemo,
+			description: '四种语义tone与live优先级分别表达静态、礼貌和紧急反馈。',
+			id: 'alert-tones',
+			source: tonesSource,
+			title: '语义与Live优先级'
 		}
 	],
 	accessibility: [

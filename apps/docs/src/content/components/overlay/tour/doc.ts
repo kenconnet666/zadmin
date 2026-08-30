@@ -1,6 +1,8 @@
 import { tourMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import NonModalDemo from './NonModalDemo.svelte';
+import nonModalSource from './NonModalDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const tourDoc = defineComponentDoc(tourMetadata, {
@@ -11,6 +13,13 @@ export const tourDoc = defineComponentDoc(tourMetadata, {
 			id: 'tour-guided',
 			source,
 			title: '生产发布导览'
+		},
+		{
+			component: NonModalDemo,
+			description: '非模态模式不trap页面焦点，遮罩不可关闭并在完成时回调。',
+			id: 'tour-non-modal',
+			source: nonModalSource,
+			title: '非模态导览'
 		}
 	],
 	accessibility: [

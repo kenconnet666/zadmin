@@ -6,6 +6,8 @@ import {
 } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import formSource from './FormDemo.svelte?raw';
+import StatesDemo from './StatesDemo.svelte';
+import statesSource from './StatesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const selectDoc = defineComponentDoc(selectMetadata, {
@@ -17,6 +19,13 @@ export const selectDoc = defineComponentDoc(selectMetadata, {
 			id: 'select-form',
 			source: formSource,
 			title: 'Listbox与表单'
+		},
+		{
+			component: StatesDemo,
+			description: '自定义Trigger内容、定位、可取消onSelect和禁用状态保持同一listbox合同。',
+			id: 'select-states',
+			source: statesSource,
+			title: '自定义Trigger与选择拦截'
 		}
 	],
 	accessibility: [

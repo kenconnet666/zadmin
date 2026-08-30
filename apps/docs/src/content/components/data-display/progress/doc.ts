@@ -1,6 +1,8 @@
 import { progressMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import RangeDemo from './RangeDemo.svelte';
+import rangeSource from './RangeDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const progressDoc = defineComponentDoc(progressMetadata, {
@@ -11,6 +13,13 @@ export const progressDoc = defineComponentDoc(progressMetadata, {
 			id: 'progress-views',
 			source,
 			title: 'Line与Circle'
+		},
+		{
+			component: RangeDemo,
+			description: '自定义范围、值文本和不确定状态共享同一进度合同。',
+			id: 'progress-range',
+			source: rangeSource,
+			title: '范围与格式化'
 		}
 	],
 	accessibility: [

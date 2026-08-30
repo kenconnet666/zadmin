@@ -1,6 +1,8 @@
 import { pinInputMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import ModesDemo from './ModesDemo.svelte';
+import modesSource from './ModesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const pinInputDoc = defineComponentDoc(pinInputMetadata, {
@@ -12,6 +14,13 @@ export const pinInputDoc = defineComponentDoc(pinInputMetadata, {
 			id: 'pin-input-otp',
 			source,
 			title: '一次性验证码'
+		},
+		{
+			component: ModesDemo,
+			description: '遮罩数字、自定义文本字符和禁用值覆盖PIN输入模式。',
+			id: 'pin-input-modes',
+			source: modesSource,
+			title: '输入模式与遮罩'
 		}
 	],
 	accessibility: [

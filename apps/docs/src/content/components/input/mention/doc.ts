@@ -1,6 +1,8 @@
 import { mentionMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import TriggersDemo from './TriggersDemo.svelte';
+import triggersSource from './TriggersDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const mentionDoc = defineComponentDoc(mentionMetadata, {
@@ -11,6 +13,13 @@ export const mentionDoc = defineComponentDoc(mentionMetadata, {
 			id: 'mention-caret',
 			source,
 			title: '光标感知建议'
+		},
+		{
+			component: TriggersDemo,
+			description: '自定义触发符、查询门槛、数量上限和插入空格策略保持独立。',
+			id: 'mention-triggers',
+			source: triggersSource,
+			title: '触发符与查询策略'
 		}
 	],
 	accessibility: [

@@ -1,6 +1,8 @@
 import { numberFieldMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import StatesDemo from './StatesDemo.svelte';
+import statesSource from './StatesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const numberFieldDoc = defineComponentDoc(numberFieldMetadata, {
@@ -12,6 +14,13 @@ export const numberFieldDoc = defineComponentDoc(numberFieldMetadata, {
 			id: 'number-field-locale',
 			source,
 			title: '本地数字与步进'
+		},
+		{
+			component: StatesDemo,
+			description: '货币格式、只读、无效和禁用状态共享本地化spinbutton合同。',
+			id: 'number-field-states',
+			source: statesSource,
+			title: '格式与编辑状态'
 		}
 	],
 	accessibility: [

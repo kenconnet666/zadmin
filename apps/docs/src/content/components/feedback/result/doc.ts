@@ -1,6 +1,8 @@
 import { resultMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import TonesDemo from './TonesDemo.svelte';
+import tonesSource from './TonesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const resultDoc = defineComponentDoc(resultMetadata, {
@@ -11,6 +13,13 @@ export const resultDoc = defineComponentDoc(resultMetadata, {
 			id: 'result-success',
 			source,
 			title: '成功结果'
+		},
+		{
+			component: TonesDemo,
+			description: 'Info与Danger结果使用Lucide图形和不同语义色表达后续状态。',
+			id: 'result-tones',
+			source: tonesSource,
+			title: '结果语义'
 		}
 	],
 	accessibility: [

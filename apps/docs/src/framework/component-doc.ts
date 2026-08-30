@@ -107,6 +107,17 @@ export function defineComponentDoc(
 	metadata: ZuiComponentMetadata,
 	doc: ComponentDocDefinition
 ): ComponentDoc {
+	if (doc.demos.length < 2) {
+		throw new TypeError(`${metadata.name} documentation requires at least two distinct demos.`);
+	}
+	const demoIds = new Set<string>();
+	for (const demo of doc.demos) {
+		if (demoIds.has(demo.id))
+			throw new TypeError(`${metadata.name} has duplicate demo id "${demo.id}".`);
+		if (!demo.source.trim())
+			throw new TypeError(`${metadata.name} demo "${demo.id}" has no source.`);
+		demoIds.add(demo.id);
+	}
 	const api: ApiSection[] = [];
 	appendMetadataApi(api, metadata);
 	for (const member of doc.members ?? []) {

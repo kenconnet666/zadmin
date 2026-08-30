@@ -1,6 +1,8 @@
 import { meterMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import RangesDemo from './RangesDemo.svelte';
+import rangesSource from './RangesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const meterDoc = defineComponentDoc(meterMetadata, {
@@ -11,6 +13,13 @@ export const meterDoc = defineComponentDoc(meterMetadata, {
 			id: 'meter-thresholds',
 			source,
 			title: '容量阈值'
+		},
+		{
+			component: RangesDemo,
+			description: '相同阈值分别展示最佳、次优和临界区间。',
+			id: 'meter-ranges',
+			source: rangesSource,
+			title: '阈值区间'
 		}
 	],
 	accessibility: [

@@ -1,6 +1,8 @@
 import { switchMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import formSource from './FormDemo.svelte?raw';
+import PreferencesDemo from './PreferencesDemo.svelte';
+import preferencesSource from './PreferencesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const switchDoc = defineComponentDoc(switchMetadata, {
@@ -11,6 +13,13 @@ export const switchDoc = defineComponentDoc(switchMetadata, {
 			id: 'switch-form',
 			source: formSource,
 			title: '开关与表单'
+		},
+		{
+			component: PreferencesDemo,
+			description: 'RTL翻转thumb方向，reduced-motion清除过渡，无效状态保持焦点可见。',
+			id: 'switch-preferences',
+			source: preferencesSource,
+			title: 'RTL、动画与校验'
 		}
 	],
 	accessibility: [

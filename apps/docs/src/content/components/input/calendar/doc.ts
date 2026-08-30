@@ -1,6 +1,8 @@
 import { calendarMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import ConstraintsDemo from './ConstraintsDemo.svelte';
+import constraintsSource from './ConstraintsDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 export const calendarDoc = defineComponentDoc(calendarMetadata, {
 	demos: [
@@ -10,6 +12,13 @@ export const calendarDoc = defineComponentDoc(calendarMetadata, {
 			id: 'calendar-grid',
 			source,
 			title: '部署日期日历'
+		},
+		{
+			component: ConstraintsDemo,
+			description: '最小/最大日期、周末禁用与outside dates共同约束选择网格。',
+			id: 'calendar-constraints',
+			source: constraintsSource,
+			title: '日期约束'
 		}
 	],
 	accessibility: [

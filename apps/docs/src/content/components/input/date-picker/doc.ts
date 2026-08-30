@@ -1,6 +1,8 @@
 import { datePickerMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import ConstraintsDemo from './ConstraintsDemo.svelte';
+import constraintsSource from './ConstraintsDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 export const datePickerDoc = defineComponentDoc(datePickerMetadata, {
 	demos: [
@@ -10,6 +12,13 @@ export const datePickerDoc = defineComponentDoc(datePickerMetadata, {
 			id: 'date-picker-popover',
 			source,
 			title: '日历日期选择'
+		},
+		{
+			component: ConstraintsDemo,
+			description: '日期边界传递到Calendar；禁用状态关闭Trigger与选择。',
+			id: 'date-picker-constraints',
+			source: constraintsSource,
+			title: '日期边界与禁用'
 		}
 	],
 	accessibility: [

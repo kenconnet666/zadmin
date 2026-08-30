@@ -1,6 +1,8 @@
 import { commandPaletteMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import PersistentDemo from './PersistentDemo.svelte';
+import persistentSource from './PersistentDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const commandPaletteDoc = defineComponentDoc(commandPaletteMetadata, {
@@ -11,6 +13,13 @@ export const commandPaletteDoc = defineComponentDoc(commandPaletteMetadata, {
 			id: 'command-palette-dialog',
 			source,
 			title: '模态快速操作'
+		},
+		{
+			component: PersistentDemo,
+			description: '自定义Lucide Trigger与关闭后保留查询验证可组合Palette合同。',
+			id: 'command-palette-persistent',
+			source: persistentSource,
+			title: '自定义Trigger与查询持久化'
 		}
 	],
 	accessibility: [

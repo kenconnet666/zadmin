@@ -1,6 +1,8 @@
 import { linkMetadata } from '@zadmin/zui/metadata';
 import BasicDemo from './BasicDemo.svelte';
 import basicSource from './BasicDemo.svelte?raw';
+import NavigationDemo from './NavigationDemo.svelte';
+import navigationSource from './NavigationDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const linkDoc = defineComponentDoc(linkMetadata, {
@@ -11,6 +13,13 @@ export const linkDoc = defineComponentDoc(linkMetadata, {
 			id: 'link-basic',
 			source: basicSource,
 			title: '原生导航与状态'
+		},
+		{
+			component: NavigationDemo,
+			description: '当前页、外部目标和弱化导航保留原生anchor能力。',
+			id: 'link-navigation',
+			source: navigationSource,
+			title: '导航上下文'
 		}
 	],
 	accessibility: [

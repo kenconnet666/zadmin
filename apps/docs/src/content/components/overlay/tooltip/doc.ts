@@ -5,6 +5,8 @@ import {
 } from '@zadmin/zui/metadata';
 import InteractiveDemo from './InteractiveDemo.svelte';
 import interactiveSource from './InteractiveDemo.svelte?raw';
+import PlacementsDemo from './PlacementsDemo.svelte';
+import placementsSource from './PlacementsDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const tooltipDoc = defineComponentDoc(tooltipMetadata, {
@@ -16,6 +18,13 @@ export const tooltipDoc = defineComponentDoc(tooltipMetadata, {
 			id: 'tooltip-interactive',
 			source: interactiveSource,
 			title: '延迟提示'
+		},
+		{
+			component: PlacementsDemo,
+			description: '四个主要位置使用同一hover/focus状态与碰撞定位。',
+			id: 'tooltip-placements',
+			source: placementsSource,
+			title: '位置与即时显示'
 		}
 	],
 	accessibility: [

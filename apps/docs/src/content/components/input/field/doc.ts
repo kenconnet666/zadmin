@@ -1,6 +1,8 @@
 import { fieldMetadata } from '@zadmin/zui/metadata';
 import ValidationDemo from './ValidationDemo.svelte';
 import validationSource from './ValidationDemo.svelte?raw';
+import StatesDemo from './StatesDemo.svelte';
+import statesSource from './StatesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const fieldDoc = defineComponentDoc(fieldMetadata, {
@@ -11,6 +13,13 @@ export const fieldDoc = defineComponentDoc(fieldMetadata, {
 			id: 'field-validation',
 			source: validationSource,
 			title: '描述与错误状态'
+		},
+		{
+			component: StatesDemo,
+			description: '紧凑、只读、禁用和多错误消息保持统一label与description关系。',
+			id: 'field-states',
+			source: statesSource,
+			title: '尺寸与字段状态'
 		}
 	],
 	accessibility: [

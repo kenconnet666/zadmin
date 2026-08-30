@@ -6,6 +6,8 @@ import {
 } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import formSource from './FormDemo.svelte?raw';
+import StatesDemo from './StatesDemo.svelte';
+import statesSource from './StatesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const multiSelectDoc = defineComponentDoc(multiSelectMetadata, {
@@ -18,6 +20,13 @@ export const multiSelectDoc = defineComponentDoc(multiSelectMetadata, {
 			id: 'multi-select-form',
 			source: formSource,
 			title: '标签、多选与表单'
+		},
+		{
+			component: StatesDemo,
+			description: '空选择placeholder和禁用多值摘要使用相同Trigger。',
+			id: 'multi-select-states',
+			source: statesSource,
+			title: '空值与禁用状态'
 		}
 	],
 	accessibility: [

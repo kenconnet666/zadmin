@@ -1,6 +1,8 @@
 import { inputGroupMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import ActionsDemo from './ActionsDemo.svelte';
+import actionsSource from './ActionsDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const inputGroupDoc = defineComponentDoc(inputGroupMetadata, {
@@ -12,6 +14,13 @@ export const inputGroupDoc = defineComponentDoc(inputGroupMetadata, {
 			id: 'input-group-affixes',
 			source,
 			title: '前后缀输入组合'
+		},
+		{
+			component: ActionsDemo,
+			description: 'Lucide前缀、按钮后缀、invalid与disabled通过一个focus边界协调。',
+			id: 'input-group-actions',
+			source: actionsSource,
+			title: '图标、操作与状态'
 		}
 	],
 	accessibility: [

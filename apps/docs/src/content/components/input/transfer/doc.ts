@@ -1,6 +1,8 @@
 import { transferMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import StatesDemo from './StatesDemo.svelte';
+import statesSource from './StatesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const transferDoc = defineComponentDoc(transferMetadata, {
@@ -11,6 +13,13 @@ export const transferDoc = defineComponentDoc(transferMetadata, {
 			id: 'transfer-filter',
 			source,
 			title: '过滤与双向转移'
+		},
+		{
+			component: StatesDemo,
+			description: '关闭过滤与禁用整个Transfer覆盖精简和只读业务场景。',
+			id: 'transfer-states',
+			source: statesSource,
+			title: '无筛选与禁用状态'
 		}
 	],
 	accessibility: [

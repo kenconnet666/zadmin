@@ -9,6 +9,8 @@ import {
 } from '@zadmin/zui/metadata';
 import InteractiveDemo from './InteractiveDemo.svelte';
 import interactiveSource from './InteractiveDemo.svelte?raw';
+import SizesDemo from './SizesDemo.svelte';
+import sizesSource from './SizesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const drawerDoc = defineComponentDoc(drawerMetadata, {
@@ -27,6 +29,13 @@ export const drawerDoc = defineComponentDoc(drawerMetadata, {
 			id: 'drawer-logical-placement',
 			source: interactiveSource,
 			title: '逻辑方向与尺寸'
+		},
+		{
+			component: SizesDemo,
+			description: 'start与bottom方向分别组合small和large尺寸，并共享Dialog焦点合同。',
+			id: 'drawer-sizes',
+			source: sizesSource,
+			title: '方向与尺寸组合'
 		}
 	],
 	accessibility: [

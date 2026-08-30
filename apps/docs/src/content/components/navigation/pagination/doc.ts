@@ -1,6 +1,8 @@
 import { paginationMetadata } from '@zadmin/zui/metadata';
 import InteractiveDemo from './InteractiveDemo.svelte';
 import interactiveSource from './InteractiveDemo.svelte?raw';
+import RangesDemo from './RangesDemo.svelte';
+import rangesSource from './RangesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const paginationDoc = defineComponentDoc(paginationMetadata, {
@@ -11,6 +13,13 @@ export const paginationDoc = defineComponentDoc(paginationMetadata, {
 			id: 'pagination-interactive',
 			source: interactiveSource,
 			title: '页码窗口'
+		},
+		{
+			component: RangesDemo,
+			description: '少量页、大窗口和禁用状态覆盖分页模型边界。',
+			id: 'pagination-ranges',
+			source: rangesSource,
+			title: '页数规模与禁用状态'
 		}
 	],
 	accessibility: [

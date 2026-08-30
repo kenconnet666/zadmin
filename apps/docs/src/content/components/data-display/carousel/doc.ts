@@ -1,6 +1,8 @@
 import { carouselMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import BoundariesDemo from './BoundariesDemo.svelte';
+import boundariesSource from './BoundariesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const carouselDoc = defineComponentDoc(carouselMetadata, {
@@ -11,6 +13,13 @@ export const carouselDoc = defineComponentDoc(carouselMetadata, {
 			id: 'carousel-controls',
 			source,
 			title: '可暂停轮播'
+		},
+		{
+			component: BoundariesDemo,
+			description: '关闭loop后首尾控制正确禁用，且不启动自动轮播。',
+			id: 'carousel-boundaries',
+			source: boundariesSource,
+			title: '不循环边界'
 		}
 	],
 	accessibility: [

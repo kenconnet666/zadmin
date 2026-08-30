@@ -1,6 +1,8 @@
 import { segmentedMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import formSource from './FormDemo.svelte?raw';
+import VerticalDemo from './VerticalDemo.svelte';
+import verticalSource from './VerticalDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 export const segmentedDoc = defineComponentDoc(segmentedMetadata, {
 	demos: [
@@ -10,6 +12,13 @@ export const segmentedDoc = defineComponentDoc(segmentedMetadata, {
 			id: 'segmented-form',
 			source: formSource,
 			title: '单选周期'
+		},
+		{
+			component: VerticalDemo,
+			description: '垂直方向切换键盘轴，禁用组阻止选择与提交。',
+			id: 'segmented-vertical',
+			source: verticalSource,
+			title: '垂直与禁用状态'
 		}
 	],
 	accessibility: [

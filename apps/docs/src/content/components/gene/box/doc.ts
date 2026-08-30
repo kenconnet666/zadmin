@@ -1,6 +1,8 @@
 import { boxMetadata } from '@zadmin/zui/metadata';
 import BasicDemo from './BasicDemo.svelte';
 import basicSource from './BasicDemo.svelte?raw';
+import NativeDemo from './NativeDemo.svelte';
+import nativeSource from './NativeDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const boxDoc = defineComponentDoc(boxMetadata, {
@@ -11,6 +13,13 @@ export const boxDoc = defineComponentDoc(boxMetadata, {
 			id: 'box-basic',
 			source: basicSource,
 			title: '真实根元素'
+		},
+		{
+			component: NativeDemo,
+			description: 'ARIA、tabindex、data和ref直接落到真实div。',
+			id: 'box-native',
+			source: nativeSource,
+			title: '原生属性与Ref'
 		}
 	],
 	accessibility: ['不伪造role。', '原生aria-*、data-*和事件直接转发到div。']

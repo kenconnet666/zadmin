@@ -6,6 +6,8 @@ import {
 } from '@zadmin/zui/metadata';
 import InteractiveDemo from './InteractiveDemo.svelte';
 import interactiveSource from './InteractiveDemo.svelte?raw';
+import ManualDemo from './ManualDemo.svelte';
+import manualSource from './ManualDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const tabsDoc = defineComponentDoc(tabsMetadata, {
@@ -17,6 +19,13 @@ export const tabsDoc = defineComponentDoc(tabsMetadata, {
 			id: 'tabs-interactive',
 			source: interactiveSource,
 			title: '自动激活Tabs'
+		},
+		{
+			component: ManualDemo,
+			description: '垂直轴、manual激活和非循环焦点验证Trigger与Panel分离合同。',
+			id: 'tabs-manual',
+			source: manualSource,
+			title: '手动激活的垂直Tabs'
 		}
 	],
 	accessibility: [

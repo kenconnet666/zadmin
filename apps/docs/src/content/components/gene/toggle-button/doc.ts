@@ -1,6 +1,8 @@
 import { toggleButtonMetadata } from '@zadmin/zui/metadata';
 import InteractiveDemo from './InteractiveDemo.svelte';
 import interactiveSource from './InteractiveDemo.svelte?raw';
+import SizesDemo from './SizesDemo.svelte';
+import sizesSource from './SizesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const toggleButtonDoc = defineComponentDoc(toggleButtonMetadata, {
@@ -11,6 +13,13 @@ export const toggleButtonDoc = defineComponentDoc(toggleButtonMetadata, {
 			id: 'toggle-button-interactive',
 			source: interactiveSource,
 			title: '按下状态'
+		},
+		{
+			component: SizesDemo,
+			description: '尺寸、start图标、fullWidth和disabled保持正交。',
+			id: 'toggle-button-sizes',
+			source: sizesSource,
+			title: '尺寸与布局状态'
 		}
 	],
 	accessibility: [

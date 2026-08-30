@@ -1,6 +1,8 @@
 import { virtualListMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import InitialPositionDemo from './InitialPositionDemo.svelte';
+import initialPositionSource from './InitialPositionDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const virtualListDoc = defineComponentDoc(virtualListMetadata, {
@@ -11,6 +13,13 @@ export const virtualListDoc = defineComponentDoc(virtualListMetadata, {
 			id: 'virtual-list-large',
 			source,
 			title: '固定项高窗口化'
+		},
+		{
+			component: InitialPositionDemo,
+			description: 'initialIndex直接定位深处记录，并用较小overscan限制DOM数量。',
+			id: 'virtual-list-initial-position',
+			source: initialPositionSource,
+			title: '初始定位与Overscan'
 		}
 	],
 	accessibility: [

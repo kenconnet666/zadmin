@@ -28,8 +28,8 @@
 			open = true;
 		}}>开始导览</ZButton
 	>
-	<button id="docs-tour-summary" type="button">发布摘要目标</button>
-	<button id="docs-tour-metrics" type="button">生产指标目标</button>
+	<ZButton id="docs-tour-summary" type="button" variant="secondary">发布摘要目标</ZButton>
+	<ZButton id="docs-tour-metrics" type="button" variant="secondary">生产指标目标</ZButton>
 </ZStack>
 <ZTour
 	{steps}

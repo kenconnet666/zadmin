@@ -9,6 +9,8 @@ import {
 } from '@zadmin/zui/metadata';
 import InteractiveDemo from './InteractiveDemo.svelte';
 import interactiveSource from './InteractiveDemo.svelte?raw';
+import NestedDemo from './NestedDemo.svelte';
+import nestedSource from './NestedDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const dialogDoc = defineComponentDoc(dialogMetadata, {
@@ -28,6 +30,13 @@ export const dialogDoc = defineComponentDoc(dialogMetadata, {
 			id: 'dialog-interactive',
 			source: interactiveSource,
 			title: 'Modal生命周期'
+		},
+		{
+			component: NestedDemo,
+			description: '嵌套Dialog验证顶层Escape所有权、独立FocusScope和逐层焦点恢复。',
+			id: 'dialog-nested',
+			source: nestedSource,
+			title: '嵌套层与焦点恢复'
 		}
 	],
 	accessibility: [

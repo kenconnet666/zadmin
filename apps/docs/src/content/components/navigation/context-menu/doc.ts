@@ -5,6 +5,8 @@ import {
 } from '@zadmin/zui/metadata';
 import InteractiveDemo from './InteractiveDemo.svelte';
 import interactiveSource from './InteractiveDemo.svelte?raw';
+import StatesDemo from './StatesDemo.svelte';
+import statesSource from './StatesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const contextMenuDoc = defineComponentDoc(contextMenuMetadata, {
@@ -16,6 +18,13 @@ export const contextMenuDoc = defineComponentDoc(contextMenuMetadata, {
 			id: 'context-menu-coordinate-anchor',
 			source: interactiveSource,
 			title: '指针与键盘锚点'
+		},
+		{
+			component: StatesDemo,
+			description: '非循环导航和disabled动作覆盖只读上下文菜单。',
+			id: 'context-menu-states',
+			source: statesSource,
+			title: '只读菜单与导航边界'
 		}
 	],
 	accessibility: [

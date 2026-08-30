@@ -1,6 +1,8 @@
 import { skeletonMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import LayoutsDemo from './LayoutsDemo.svelte';
+import layoutsSource from './LayoutsDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const skeletonDoc = defineComponentDoc(skeletonMetadata, {
@@ -11,6 +13,13 @@ export const skeletonDoc = defineComponentDoc(skeletonMetadata, {
 			id: 'skeleton-shapes',
 			source,
 			title: '稳定占位'
+		},
+		{
+			component: LayoutsDemo,
+			description: '头像、文本和大块内容采用不同稳定占位尺寸。',
+			id: 'skeleton-layouts',
+			source: layoutsSource,
+			title: '内容布局占位'
 		}
 	],
 	accessibility: [
