@@ -26,6 +26,8 @@ const components = [
 	{ id: 'skeleton', name: 'ZSkeleton', path: 'data-display/ZSkeleton.svelte' },
 	{ id: 'statistic', name: 'ZStatistic', path: 'data-display/ZStatistic.svelte' },
 	{ id: 'timeline', name: 'ZTimeline', path: 'data-display/ZTimeline.svelte' },
+	{ id: 'table', name: 'ZTable', path: 'data-display/ZTable.svelte' },
+	{ id: 'virtual-list', name: 'ZVirtualList', path: 'data-display/ZVirtualList.svelte' },
 	{ id: 'alert', name: 'ZAlert', path: 'feedback/ZAlert.svelte' },
 	{ id: 'loading-bar', name: 'ZLoadingBar', path: 'feedback/ZLoadingBar.svelte' },
 	{ id: 'result', name: 'ZResult', path: 'feedback/ZResult.svelte' },

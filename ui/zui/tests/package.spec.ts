@@ -115,6 +115,7 @@ import {
 	tabsMetadata,
 	tabsPanelMetadata,
 	tabsTriggerMetadata,
+	tableMetadata,
 	tagsInputMetadata,
 	tagMetadata,
 	toastMetadata,
@@ -130,6 +131,7 @@ import {
 	treeSelectMetadata,
 	transferMetadata,
 	toggleButtonMetadata,
+	virtualListMetadata,
 	visuallyHiddenMetadata
 } from '../src/entrypoints/metadata.js';
 
@@ -218,6 +220,8 @@ describe('@zadmin/zui package', () => {
 			emptyMetadata,
 			timelineMetadata,
 			statisticMetadata,
+			tableMetadata,
+			virtualListMetadata,
 			alertMetadata,
 			loadingBarMetadata,
 			resultMetadata,

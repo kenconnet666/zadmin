@@ -50,6 +50,7 @@ import NumberFieldFixture from './NumberFieldFixture.svelte';
 import PinInputFixture from './PinInputFixture.svelte';
 import DialogFixture from './DialogFixture.svelte';
 import DateFixture from './DateFixture.svelte';
+import DataFixture from './DataFixture.svelte';
 import DisplayFixture from './DisplayFixture.svelte';
 import FeedbackFixture from './FeedbackFixture.svelte';
 import DrawerFixture from './DrawerFixture.svelte';
@@ -505,6 +506,21 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain('No releases');
 		expect(result).toContain('<time');
 		expect(result).toContain('<data value="128430"');
+	});
+
+	it('renders native Table and only the initial VirtualList window during SSR', () => {
+		const result = render(DataFixture).body;
+
+		expect(result).toContain('<table');
+		expect(result).toContain('<caption');
+		expect(result).toContain('<thead');
+		expect(result).toContain('<tbody');
+		expect(result).toContain('scope="col"');
+		expect(result).toContain('role="list"');
+		expect(result).toContain('aria-setsize="1000"');
+		expect(result).toContain('data-range-start="0"');
+		expect(result).toContain('data-range-end="7"');
+		expect(result).not.toContain('999: Row 999');
 	});
 
 	it('renders feedback live regions, progress states, Result and queued Toasts during SSR', () => {

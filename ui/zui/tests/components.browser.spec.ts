@@ -19,6 +19,7 @@ import FormFixture from './FormFixture.svelte';
 import InputGroupFixture from './InputGroupFixture.svelte';
 import DialogFixture from './DialogFixture.svelte';
 import DateFixture from './DateFixture.svelte';
+import DataFixture from './DataFixture.svelte';
 import DisplayFixture from './DisplayFixture.svelte';
 import FeedbackFixture from './FeedbackFixture.svelte';
 import DrawerFixture from './DrawerFixture.svelte';
@@ -66,6 +67,23 @@ function insertedRuleCount(): number {
 }
 
 describe('compiled ICSS browser updates', () => {
+	it('keeps Table semantics and VirtualList DOM bounded while scrolling', async () => {
+		render(DataFixture);
+		const table = document.querySelector<HTMLTableElement>('[data-testid="table"]');
+		const viewport = document.querySelector<HTMLDivElement>('[data-testid="virtual-list"]');
+		expect(table?.caption?.textContent).toBe('Deployments');
+		expect(table?.tHead?.rows[0]?.cells).toHaveLength(2);
+		expect(viewport?.querySelectorAll('[role="listitem"]').length).toBeLessThan(20);
+		if (viewport) {
+			viewport.scrollTop = 4000;
+			viewport.dispatchEvent(new Event('scroll'));
+		}
+		await tick();
+		expect(Number(viewport?.dataset.rangeStart)).toBeGreaterThanOrEqual(90);
+		expect(viewport?.textContent).toContain('Row 100');
+		expect(viewport?.querySelectorAll('[role="listitem"]').length).toBeLessThan(20);
+	});
+
 	it('coordinates feedback semantics, motion cleanup, Toast action and paused timeout', async () => {
 		render(FeedbackFixture);
 		const determinate = document.querySelector<HTMLElement>('[data-testid="loading-determinate"]');

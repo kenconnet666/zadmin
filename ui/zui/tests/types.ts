@@ -107,6 +107,7 @@ import {
 	ZTabsTrigger,
 	ZTagsInput,
 	ZTag,
+	ZTable,
 	ZToast,
 	ZToaster,
 	ZTextarea,
@@ -119,6 +120,7 @@ import {
 	ZTreeSelect,
 	ZTransfer,
 	ZToggleButton,
+	ZVirtualList,
 	createToastQueue,
 	defineRecipe,
 	defineSlotRecipe,
@@ -227,6 +229,7 @@ import {
 	type ZTabsTriggerProps,
 	type ZTagsInputProps,
 	type ZTagProps,
+	type ZTableProps,
 	type ZToastProps,
 	type ZToasterProps,
 	type ZTextareaProps,
@@ -238,7 +241,8 @@ import {
 	type ZTreeProps,
 	type ZTreeSelectProps,
 	type ZTransferProps,
-	type ZToggleButtonProps
+	type ZToggleButtonProps,
+	type ZVirtualListProps
 } from '../src/entrypoints/index.js';
 
 const boxProps: ZBoxProps = { 'aria-label': 'Box' };
@@ -282,6 +286,13 @@ const statisticProps: ComponentProps<typeof ZStatistic> = {
 	label: 'Requests',
 	value: 12
 } satisfies ZStatisticProps;
+const tableProps: ComponentProps<typeof ZTable> = { caption: 'Rows' } satisfies ZTableProps;
+const virtualListProps: ComponentProps<typeof ZVirtualList> = {
+	ariaLabel: 'Rows',
+	item: (() => {}) as never,
+	itemKey: () => 'one',
+	items: [{ id: 'one' }]
+} satisfies ZVirtualListProps;
 const accordionProps: ComponentProps<typeof ZAccordion> = {
 	defaultValue: ['one'],
 	type: 'multiple'
@@ -556,6 +567,8 @@ void skeletonProps;
 void emptyProps;
 void timelineProps;
 void statisticProps;
+void tableProps;
+void virtualListProps;
 void accordionItemProps;
 void accordionTriggerProps;
 void accordionContentProps;

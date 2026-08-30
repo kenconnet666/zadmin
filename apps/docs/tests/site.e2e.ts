@@ -319,6 +319,26 @@ test('keeps progress, meter, empty, timeline and statistic native semantics expl
 	await expect(page.locator('main [data-trend="up"]')).toContainText('+12.4%');
 });
 
+test('keeps native Table structure and VirtualList DOM bounded across large scroll offsets', async ({
+	page
+}) => {
+	await page.goto('/#/components/table');
+	const table = page.getByRole('table', { name: '最近发布' });
+	await expect(table.getByRole('columnheader')).toHaveCount(3);
+	await expect(table.getByRole('rowheader')).toHaveCount(2);
+
+	await page.goto('/#/components/virtual-list');
+	const list = page.getByRole('list', { name: '一万条部署记录' });
+	await expect(list.getByRole('listitem')).toHaveCount(10);
+	await list.evaluate((element) => {
+		element.scrollTop = 4000;
+		element.dispatchEvent(new Event('scroll'));
+	});
+	await expect(list).toHaveAttribute('data-range-start', '96');
+	await expect(list).toContainText('部署记录 101');
+	await expect(list.getByRole('listitem')).toHaveCount(14);
+});
+
 test('keeps PinInput roving entry, completion, single FormData value and reset synchronized', async ({
 	page
 }) => {
@@ -994,6 +1014,8 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/empty',
 		'#/components/timeline',
 		'#/components/statistic',
+		'#/components/table',
+		'#/components/virtual-list',
 		'#/components/alert',
 		'#/components/loading-bar',
 		'#/components/result',

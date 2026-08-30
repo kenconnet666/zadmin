@@ -220,6 +220,17 @@ export type {
 	TimelineStatus,
 	ZTimelineProps
 } from '../components/data-display/ZTimeline.svelte';
+export { default as ZTable } from '../components/data-display/ZTable.svelte';
+export type { TableDensity, ZTableProps } from '../components/data-display/ZTable.svelte';
+export { default as ZVirtualList } from '../components/data-display/ZVirtualList.svelte';
+export type { ZVirtualListProps } from '../components/data-display/ZVirtualList.svelte';
+export { calculateVirtualRange, virtualScrollOffset } from '../runtime/collection/virtualizer.js';
+export type {
+	VirtualAlign,
+	VirtualItem,
+	VirtualRange,
+	VirtualRangeOptions
+} from '../runtime/collection/virtualizer.js';
 export { meterState, normalizeMeterRange, normalizeProgressRange } from '../runtime/progress.js';
 export type { MeterRange, MeterState, ProgressRange } from '../runtime/progress.js';
 export { default as ZAlert } from '../components/feedback/ZAlert.svelte';

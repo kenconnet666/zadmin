@@ -49,6 +49,13 @@ export { createTreeIndex } from '../runtime/tree.js';
 export type { TreeEntry, TreeIndex, TreeNode } from '../runtime/tree.js';
 export { Typeahead } from '../runtime/collection/typeahead.js';
 export type { TypeaheadOptions } from '../runtime/collection/typeahead.js';
+export { calculateVirtualRange, virtualScrollOffset } from '../runtime/collection/virtualizer.js';
+export type {
+	VirtualAlign,
+	VirtualItem,
+	VirtualRange,
+	VirtualRangeOptions
+} from '../runtime/collection/virtualizer.js';
 export { createToastQueue, ToastQueue } from '../runtime/toast.svelte.js';
 export type {
 	ToastDismissReason,
