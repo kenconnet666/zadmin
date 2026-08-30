@@ -226,6 +226,10 @@ const treeSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/components/compound/tree/ZTree.svelte'),
 	'utf8'
 );
+const pinInputSource = await readFile(
+	resolve(workspaceRoot, 'ui/zui/src/components/input/ZPinInput.svelte'),
+	'utf8'
+);
 const formResetSignalTag = formResetSignalSource.match(/<input\b[\s\S]*?\/>/u)?.[0] ?? '';
 if (
 	!buttonSource.includes("'aria-busy': ariaBusy") ||
@@ -289,6 +293,15 @@ if (
 	)
 ) {
 	fail('ZCommand and ZTree must reuse vertical navigation intents before their local key switch.');
+}
+if (
+	!pinInputSource.includes('switch (event.key)') ||
+	!pinInputSource.includes("case 'Backspace':") ||
+	!pinInputSource.includes("case 'Delete':") ||
+	!pinInputSource.includes("case 'ArrowLeft':") ||
+	!pinInputSource.includes("case 'ArrowRight':")
+) {
+	fail('ZPinInput must preserve its explicit navigation and deletion key switch.');
 }
 const focusScopeSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/runtime/layer/focus-scope.ts'),
@@ -441,6 +454,7 @@ console.log(
 		formResetSignalComponents: 2,
 		calendarKeyboardSwitchContracts: 1,
 		collectionKeyboardReuseContracts: 2,
+		pinInputKeyboardSwitchContracts: 1,
 		inlineSvgFiles: inlineSvg.length,
 		brandGradientFiles: gradientFiles.length,
 		docsRawInteractiveElements: 0,

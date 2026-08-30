@@ -34,6 +34,7 @@
 | reset signal表单归属     |    1 | 仅解析到owner时portal为form直接子节点；动态prop和同id owner替换会重归属且不污染label         |
 | Calendar键盘switch合同   |    1 | 方向/Home/End/PageUp/PageDown/Enter/Space用互斥switch表达并保留RTL与Shift年跳转              |
 | Collection键盘复用合同   |    2 | Command/Tree复用vertical navigationIntent；局部switch只保留action、Escape和树父子语义        |
+| PinInput键盘switch合同   |    1 | RTL方向、Home/End、Backspace/Delete互斥分支显式表达，default不劫持其他文本键                 |
 | reset mount重绑合同      |    1 | action以mount微任务和短期Observer等待最终root/form，并且只在关联变化时重绑                   |
 | reset update重绑合同     |    1 | action更新时重新检查动态`form`归属，旧表单解绑且新表单直接监听                               |
 | reset微任务合同          |    1 | 与Svelte原生binding使用同一微任务检查点，generation去重捕获并使destroy可取消                 |
@@ -66,6 +67,7 @@
 | 动画合同不一致                        | 早期Button/Input/Textarea/InputGroup/FileUpload只写了transition    | 全部接入Provider motion；Accordion指示器也支持reduced-motion                       |
 | Calendar键盘分支难以审计              | 九种按键由连续if/else表达，方向、周边界和页跳转职责混杂            | 改为显式switch；导航case统一产出next，选择case直接提交，default不拦截              |
 | Command/Tree重复纵向导航分支          | ArrowUp/Down与Home/End重复已有Collection helper                    | 先解析vertical navigationIntent；Command/Tree switch只表达各自剩余职责             |
+| PinInput键盘删除与方向分支冗长        | 六个互斥event.key分支混合RTL焦点和字符删除                         | 改为switch并逐case返回；未处理键保持原生输入路径                                   |
 | Popover退出时阻止aria-hidden警告      | Presence先隐藏仍含焦点的Content，FocusScope随后才恢复Trigger       | Popover/Dialog/Accordion退出只用inert；Tooltip无焦点管理仍保留aria-hidden          |
 | ContextMenu关闭后焦点落到BODY         | Popover当前Trigger是坐标span，直接focus不会生效且遮蔽previousFocus | FocusScope验证当前目标确实获得焦点，否则回退到打开前的真实ContextMenu目标          |
 | 可取消事件重复实现                    | Select、MultiSelect、Combobox、Menu和Layer各自维护布尔状态         | 抽取最小`CancelableEvent`基类，保留具体事件公开类型                                |
@@ -124,6 +126,7 @@
   ；Transfer完成真实移动并在RTL交换Lucide方向。
 - Calendar月导航、NumberField步进与TimeField周期按钮统一internal action；真实Chrome用Enter验证月份、精确数值和AM/PM状态切换并保持可见焦点。
 - Calendar switch在Chrome验证PageDown月跳、Shift+PageDown年跳、Home周起点、Escape不拦截与Space选择；Command/Tree复用纵向intent后继续通过边界导航、action和树父子键。
+- PinInput switch在Chrome验证自动前移、Home/End、LTR左右焦点、Escape不劫持、Backspace/Delete与reset；RTL方向继续由三浏览器Fixture固定。
 - 移除reset路径的强制`flushSync`后，真实Chrome中ZCheckbox从true恢复indeterminate，ShadowRoot回调为1；detached
   document的原生reset不派发事件，显式reset事件回调为1。
 - ColorPicker三类输入均有2px Theme焦点；TagsInput由容器显示focus-within且Enter提交后保持焦点；DataTable表头选择框用Space同步选中11个可用行。

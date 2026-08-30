@@ -1431,6 +1431,13 @@ describe('compiled ICSS browser updates', () => {
 			);
 			expect(document.activeElement).toBe(target);
 		}
+		const ignored = new KeyboardEvent('keydown', {
+			bubbles: true,
+			cancelable: true,
+			key: 'Escape'
+		});
+		(document.activeElement as HTMLElement)?.dispatchEvent(ignored);
+		expect(ignored.defaultPrevented).toBe(false);
 		inputs[3]?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Backspace' }));
 		await tick();
 		expect(output?.textContent).toBe('123:1');

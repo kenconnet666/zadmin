@@ -247,25 +247,34 @@
 	function handleKeydown(event: KeyboardEvent, index: number): void {
 		const previous = zui.direction === 'rtl' ? index + 1 : index - 1;
 		const next = zui.direction === 'rtl' ? index - 1 : index + 1;
-		if (event.key === 'ArrowLeft') {
-			event.preventDefault();
-			focus(previous);
-		} else if (event.key === 'ArrowRight') {
-			event.preventDefault();
-			focus(next);
-		} else if (event.key === 'Home') {
-			event.preventDefault();
-			focus(0);
-		} else if (event.key === 'End') {
-			event.preventDefault();
-			focus(resolvedLength - 1);
-		} else if (event.key === 'Backspace') {
-			event.preventDefault();
-			if (characters[index]) replaceAt(index, '');
-			else if (index > 0) replaceAt(index - 1, '');
-		} else if (event.key === 'Delete') {
-			event.preventDefault();
-			replaceAt(index, '');
+		switch (event.key) {
+			case 'ArrowLeft':
+				event.preventDefault();
+				focus(previous);
+				return;
+			case 'ArrowRight':
+				event.preventDefault();
+				focus(next);
+				return;
+			case 'Home':
+				event.preventDefault();
+				focus(0);
+				return;
+			case 'End':
+				event.preventDefault();
+				focus(resolvedLength - 1);
+				return;
+			case 'Backspace':
+				event.preventDefault();
+				if (characters[index]) replaceAt(index, '');
+				else if (index > 0) replaceAt(index - 1, '');
+				return;
+			case 'Delete':
+				event.preventDefault();
+				replaceAt(index, '');
+				return;
+			default:
+				return;
 		}
 	}
 	function handlePaste(event: ClipboardEvent, index: number): void {
