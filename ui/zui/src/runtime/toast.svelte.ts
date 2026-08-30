@@ -1,3 +1,4 @@
+/* eslint-disable svelte/prefer-svelte-reactivity -- Timers use imperative Map and Set bookkeeping. */
 export type ToastDismissReason = 'action' | 'close' | 'programmatic' | 'timeout';
 export type ToastPauseReason = 'focus' | 'hover' | 'visibility';
 export type ToastPriority = 'assertive' | 'polite';
@@ -145,4 +146,3 @@ export class ToastQueue {
 }
 
 export const createToastQueue = (): ToastQueue => new ToastQueue();
-/* eslint-disable svelte/prefer-svelte-reactivity -- Timers use imperative Map and Set bookkeeping. */

@@ -219,7 +219,7 @@
 			{#each docsThemes as preset (preset.id)}
 				<article class={classes.preset} aria-current={themeId === preset.id ? 'true' : undefined}>
 					<div class={classes.presetColors} aria-hidden="true">
-						{#each [preset.theme.color.canvas, preset.theme.color.surface, preset.theme.color.primary, preset.theme.color.accent] as color}
+						{#each [preset.theme.color.canvas, preset.theme.color.surface, preset.theme.color.primary, preset.theme.color.accent] as color (color)}
 							<span class={classes.presetSwatch} style={`background:${color}`}></span>
 						{/each}
 					</div>

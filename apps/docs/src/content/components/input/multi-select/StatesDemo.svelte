@@ -13,14 +13,14 @@
 	<ZMultiSelect placeholder="至少选择一个环境">
 		<ZMultiSelectTrigger aria-label="空的环境多选" />
 		<ZMultiSelectContent
-			>{#each values as value}<ZMultiSelectItem {value}>{value}</ZMultiSelectItem
+			>{#each values as value (value)}<ZMultiSelectItem {value}>{value}</ZMultiSelectItem
 				>{/each}</ZMultiSelectContent
 		>
 	</ZMultiSelect>
 	<ZMultiSelect disabled defaultValues={['开发', '生产']}>
 		<ZMultiSelectTrigger aria-label="禁用的环境多选" />
 		<ZMultiSelectContent
-			>{#each values as value}<ZMultiSelectItem {value}>{value}</ZMultiSelectItem
+			>{#each values as value (value)}<ZMultiSelectItem {value}>{value}</ZMultiSelectItem
 				>{/each}</ZMultiSelectContent
 		>
 	</ZMultiSelect>

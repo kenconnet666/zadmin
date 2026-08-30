@@ -103,6 +103,7 @@
 </script>
 
 <script lang="ts">
+	/* eslint-disable svelte/prefer-svelte-reactivity -- Keys are local validation scratch state. */
 	import { untrack } from 'svelte';
 	import {
 		applyIcssRootStyle,
@@ -122,9 +123,7 @@
 	}: ZTimelineProps = $props();
 	const zui = useZui();
 	const validated = $derived.by(() => {
-		/* eslint-disable-next-line svelte/prefer-svelte-reactivity */ const keys = new Set<
-			number | string
-		>();
+		const keys = new Set<number | string>();
 		for (const entry of items) {
 			if (keys.has(entry.id)) throw new Error(`Duplicate ZTimeline id "${entry.id}".`);
 			keys.add(entry.id);

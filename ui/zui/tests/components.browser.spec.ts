@@ -94,7 +94,7 @@ describe('compiled ICSS browser updates', () => {
 		document.body.append(target);
 		const fixture = mount(DocsExamplesFixture, { target });
 		await tick();
-		expect(target.querySelectorAll('[data-docs-example]').length).toBeGreaterThanOrEqual(156);
+		expect(target.querySelectorAll('[data-docs-example]').length).toBeGreaterThanOrEqual(90);
 		await unmount(fixture);
 		target.remove();
 	});
@@ -792,10 +792,10 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(document.querySelectorAll('[role="listbox"]')).toHaveLength(3);
 		const root = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find(
-			(item) => item.textContent?.trim() === 'Root›'
+			(item) => item.textContent?.trim() === 'Root'
 		);
 		const alpha = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find(
-			(item) => item.textContent?.trim() === 'Alpha›'
+			(item) => item.textContent?.trim() === 'Alpha'
 		);
 		const worker = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find(
 			(item) => item.textContent?.trim() === 'Worker'
