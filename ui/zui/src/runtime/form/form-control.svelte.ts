@@ -56,15 +56,19 @@ function listenToResetEvent(
 	reset: () => void
 ): () => void {
 	let active = true;
+	let pending: ReturnType<typeof setTimeout> | undefined;
 	const handleReset = (event: Event) => {
 		if (!accepts(event)) return;
-		queueMicrotask(() => {
+		if (pending !== undefined) clearTimeout(pending);
+		pending = setTimeout(() => {
+			pending = undefined;
 			if (active && !event.defaultPrevented) flushSync(reset);
-		});
+		}, 0);
 	};
 	target.addEventListener('reset', handleReset, true);
 	return () => {
 		active = false;
+		if (pending !== undefined) clearTimeout(pending);
 		target.removeEventListener('reset', handleReset, true);
 	};
 }

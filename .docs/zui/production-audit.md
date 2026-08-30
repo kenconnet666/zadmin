@@ -71,13 +71,14 @@
 
 ## 6. CI结论
 
-最后一次按约回看的门禁：[CI run 33301160228](https://github.com/kenconnet666/zadmin/actions/runs/33301160228)，检查时仍在运行，不等待完成。
+最后一次按约回看的门禁：[CI run 33301394023](https://github.com/kenconnet666/zadmin/actions/runs/33301394023)。
 
-- Changesets状态与跨平台API contract门禁成功；
-- ZUI覆盖率、bundle inspection、SvelteKit coverage、仓库外ZUI/SvelteKit SSR、publish dry-run、Miniapp coverage、WebView coverage与外部包验收成功；
-- Workspace在Docs类型检查发现3个指南类型错误：ZList使用了`text`而非公共`label`，guide map key过窄；当前批次改为标准ListItem和`ReadonlyMap<string, GuideDefinition>`；
-- Windows C# core、desktop类型/测试与Release构建成功，检查时仍在执行Host smoke；Miniapp外部包验收仍运行；
-- 当前仅记录权威快照，不把运行中写成全绿；类型修复已用WebStorm和真实Chrome验证后再推送。
+- Windows C# WebView2 desktop与Coverage/packages两个job完整成功；
+- Changesets状态、跨平台API contract、ZUI与平台覆盖率、bundle inspection、外部SSR与包验收、publish dry-run全部成功；
+- Workspace类型/Svelte、Lint和静态源码审计成功；Firefox与Chromium组件矩阵成功；
+- 唯一失败类别是WebKit中native reset后DOM已复位但Svelte状态仍未提交，导致18个共享reset断言失败；
+- 当前批次把reset同步移到原生默认动作完成后的下一task，合并重复事件、销毁时取消pending，并统一浏览器测试通过两task helper等待含FileUpload timer的完整合同；
+- Docs E2E、全构建与生成文件检查因全测试失败被跳过，待下一轮验证。
 
 最终通过后必须同时满足：
 

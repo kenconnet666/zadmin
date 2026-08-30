@@ -9,6 +9,8 @@ import { portal } from '../src/runtime/layer/portal.js';
 import { lockScroll } from '../src/runtime/layer/scroll-lock.js';
 import { listenForFormReset, listenToFormReset } from '../src/runtime/form/form-control.svelte.js';
 
+const settleReset = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
+
 describe('ZUI layer runtime', () => {
 	it('flushes uncancelled form resets after native default behavior and cancels cleanup', async () => {
 		const form = document.createElement('form');
@@ -17,16 +19,16 @@ describe('ZUI layer runtime', () => {
 		form.addEventListener('reset', prevent);
 		const stop = listenToFormReset(form, reset);
 		form.dispatchEvent(new Event('reset', { cancelable: true }));
-		await Promise.resolve();
+		await settleReset();
 		expect(reset).not.toHaveBeenCalled();
 
 		form.removeEventListener('reset', prevent);
 		form.dispatchEvent(new Event('reset', { cancelable: true }));
-		await Promise.resolve();
+		await settleReset();
 		expect(reset).toHaveBeenCalledOnce();
 		stop();
 		form.dispatchEvent(new Event('reset', { cancelable: true }));
-		await Promise.resolve();
+		await settleReset();
 		expect(reset).toHaveBeenCalledOnce();
 	});
 
@@ -40,20 +42,37 @@ describe('ZUI layer runtime', () => {
 		const unrelated = document.createElement('form');
 		document.body.append(unrelated);
 		unrelated.reset();
-		await Promise.resolve();
+		await settleReset();
 		expect(reset).not.toHaveBeenCalled();
 
 		const form = document.createElement('form');
 		form.id = 'late-form';
 		document.body.append(form);
 		form.reset();
-		await Promise.resolve();
+		await settleReset();
 		expect(reset).toHaveBeenCalledOnce();
 
 		stop();
 		input.remove();
 		form.remove();
 		unrelated.remove();
+	});
+
+	it('coalesces repeated reset events and cancels pending work on cleanup', async () => {
+		const form = document.createElement('form');
+		document.body.append(form);
+		const reset = vi.fn();
+		const stop = listenToFormReset(form, reset);
+		form.dispatchEvent(new Event('reset'));
+		form.dispatchEvent(new Event('reset'));
+		await settleReset();
+		expect(reset).toHaveBeenCalledOnce();
+
+		form.dispatchEvent(new Event('reset'));
+		stop();
+		await settleReset();
+		expect(reset).toHaveBeenCalledOnce();
+		form.remove();
 	});
 
 	it('falls back to DOM containment when an engine does not expose control.form', async () => {
@@ -66,7 +85,7 @@ describe('ZUI layer runtime', () => {
 		const stop = listenForFormReset(input, reset);
 
 		form.reset();
-		await Promise.resolve();
+		await settleReset();
 		expect(reset).toHaveBeenCalledOnce();
 
 		stop();

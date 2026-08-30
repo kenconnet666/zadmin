@@ -85,6 +85,17 @@ function dispatchPaste(target: HTMLElement | null | undefined, text: string): vo
 	target.dispatchEvent(event);
 }
 
+async function settleFormReset(): Promise<void> {
+	await new Promise<void>((resolve) => setTimeout(resolve, 0));
+	await new Promise<void>((resolve) => setTimeout(resolve, 0));
+	await tick();
+}
+
+async function resetForm(form: HTMLFormElement | null | undefined): Promise<void> {
+	form?.reset();
+	await settleFormReset();
+}
+
 describe('compiled ICSS browser updates', () => {
 	it('updates Provider theme recipes through their visual transition', async () => {
 		render(ThemeSwitchFixture);
@@ -858,9 +869,7 @@ describe('compiled ICSS browser updates', () => {
 		expect(document.querySelector('[data-testid="select-content"]')).not.toBeNull();
 		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
 		await new Promise((resolve) => setTimeout(resolve, 140));
-		form?.reset();
-		await Promise.resolve();
-		await tick();
+		await resetForm(form);
 		expect(trigger?.textContent?.trim()).toBe('Beta');
 		expect(output?.textContent).toBe('b:1:false');
 	});
@@ -894,9 +903,7 @@ describe('compiled ICSS browser updates', () => {
 		expect(output?.textContent).toBe('d:Delta:1:false');
 		expect(document.activeElement).toBe(input);
 
-		form?.reset();
-		await Promise.resolve();
-		await tick();
+		await resetForm(form);
 		expect(input?.value).toBe('Beta');
 		expect(output?.textContent).toBe('b:Beta:1:false');
 		if (input) {
@@ -945,9 +952,7 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(trigger?.textContent).toContain('Beta');
 		expect(document.activeElement).toBe(trigger);
-		form?.reset();
-		await Promise.resolve();
-		await tick();
+		await resetForm(form);
 		expect(new FormData(form!).getAll('choice')).toEqual(['a', 'c']);
 		expect(output?.textContent).toBe('a,c:1:false');
 	});
@@ -967,9 +972,7 @@ describe('compiled ICSS browser updates', () => {
 		expect(delta?.getAttribute('aria-checked')).toBe('true');
 		expect(new FormData(form!).get('period')).toBe('d');
 		expect(output?.textContent).toBe('d:1');
-		form?.reset();
-		await Promise.resolve();
-		await tick();
+		await resetForm(form);
 		expect(new FormData(form!).get('period')).toBe('b');
 		expect(output?.textContent).toBe('b:1');
 	});
@@ -1004,9 +1007,7 @@ describe('compiled ICSS browser updates', () => {
 		document.querySelector<HTMLButtonElement>('[aria-label="Remove alpha"]')?.click();
 		await tick();
 		expect(output?.textContent).toBe('beta,gamma:4:');
-		form?.reset();
-		await Promise.resolve();
-		await tick();
+		await resetForm(form);
 		expect(output?.textContent).toBe('alpha:4:');
 	});
 
@@ -1044,9 +1045,7 @@ describe('compiled ICSS browser updates', () => {
 			new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowRight' })
 		);
 		expect(document.activeElement).toBe(web);
-		form?.reset();
-		await Promise.resolve();
-		await tick();
+		await resetForm(form);
 		expect(new FormData(form!).get('node')).toBe('web');
 		expect(output?.textContent).toBe('app:web:1');
 	});
@@ -1088,9 +1087,7 @@ describe('compiled ICSS browser updates', () => {
 		expect(document.activeElement).toBe(trigger);
 		expect(new FormData(form!).get('node')).toBe('beta');
 		expect(output?.textContent).toBe('beta');
-		form?.reset();
-		await Promise.resolve();
-		await tick();
+		await resetForm(form);
 		expect(trigger?.textContent?.trim()).toBe('Alpha');
 	});
 
@@ -1133,9 +1130,7 @@ describe('compiled ICSS browser updates', () => {
 		expect(document.activeElement).toBe(trigger);
 		expect(new FormData(form!).get('path')).toBe('root/worker');
 		expect(output?.textContent).toBe('root/worker');
-		form?.reset();
-		await Promise.resolve();
-		await tick();
+		await resetForm(form);
 		expect(trigger?.textContent?.trim()).toBe('Root / Alpha / Leaf');
 	});
 
@@ -1163,9 +1158,7 @@ describe('compiled ICSS browser updates', () => {
 		}
 		await tick();
 		expect(source?.querySelectorAll('[role="option"]')).toHaveLength(1);
-		form?.reset();
-		await Promise.resolve();
-		await tick();
+		await resetForm(form);
 		expect(output?.textContent).toBe('staging');
 		expect(source?.querySelectorAll('[role="option"]')).toHaveLength(3);
 		const sourceProduction = [
@@ -1215,9 +1208,7 @@ describe('compiled ICSS browser updates', () => {
 		expect(document.activeElement).toBe(editor);
 		expect(new FormData(form!).get('message')).toBe('Notify @alice ');
 		expect(output?.textContent).toBe('Notify @alice ');
-		form?.reset();
-		await Promise.resolve();
-		await tick();
+		await resetForm(form);
 		expect(editor?.value).toBe('Notify ');
 		if (editor) {
 			editor.value = 'Notify @zz';
@@ -1249,9 +1240,7 @@ describe('compiled ICSS browser updates', () => {
 		input?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
 		await tick();
 		expect(output?.textContent).toBe('dep:preview:0');
-		form?.reset();
-		await Promise.resolve();
-		await tick();
+		await resetForm(form);
 		expect(input?.value).toBe('');
 		if (input) {
 			input.value = 'nothing';
@@ -1325,9 +1314,7 @@ describe('compiled ICSS browser updates', () => {
 			'Line one\nLine two\nLine three\nLine four'
 		);
 		expect(output?.textContent?.startsWith('Line one\nLine two')).toBe(true);
-		form?.reset();
-		await Promise.resolve();
-		await tick();
+		await resetForm(form);
 		expect(textarea?.value).toBe('Seed');
 		expect(output?.textContent?.startsWith('Seed:')).toBe(true);
 	});
@@ -1353,9 +1340,7 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(new FormData(form!).get('host')).toBe('gateway');
 		expect(output?.textContent).toBe('gateway');
-		form?.reset();
-		await Promise.resolve();
-		await tick();
+		await resetForm(form);
 		expect(input?.value).toBe('api');
 	});
 
@@ -1387,9 +1372,7 @@ describe('compiled ICSS browser updates', () => {
 		input?.blur();
 		await tick();
 		expect(input?.value).toBe('0,5');
-		form?.reset();
-		await Promise.resolve();
-		await tick();
+		await resetForm(form);
 		expect(input?.value).toBe('1,5');
 		expect(output?.textContent).toBe('1.5');
 	});
@@ -1430,9 +1413,7 @@ describe('compiled ICSS browser updates', () => {
 		inputs[3]?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Backspace' }));
 		await tick();
 		expect(output?.textContent).toBe('12:2');
-		form?.reset();
-		await Promise.resolve();
-		await tick();
+		await resetForm(form);
 		expect(output?.textContent).toBe('12:2');
 		expect(inputs.map((input) => input.value)).toEqual(['1', '2', '', '']);
 	});
@@ -1470,9 +1451,7 @@ describe('compiled ICSS browser updates', () => {
 		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
 		await new Promise((resolve) => setTimeout(resolve, 140));
 		expect(document.activeElement).toBe(trigger);
-		form?.reset();
-		await Promise.resolve();
-		await tick();
+		await resetForm(form);
 		expect(output?.textContent).toBe('#33669980');
 	});
 
@@ -1505,9 +1484,7 @@ describe('compiled ICSS browser updates', () => {
 		document.querySelector<HTMLButtonElement>('[aria-label="Remove a.json"]')?.click();
 		await tick();
 		expect(output?.textContent).toBe('b.yaml:1');
-		form?.reset();
-		await new Promise((resolve) => setTimeout(resolve, 0));
-		await tick();
+		await resetForm(form);
 		expect(output?.textContent).toBe('none:1');
 		expect(input?.files).toHaveLength(0);
 		expect((new FormData(form!).get('asset') as File).name).toBe('');
@@ -1567,9 +1544,7 @@ describe('compiled ICSS browser updates', () => {
 		await new Promise((resolve) => setTimeout(resolve, 10));
 		await tick();
 		expect(output?.textContent).toBe('true:false:0:alice');
-		form?.reset();
-		await Promise.resolve();
-		await tick();
+		await resetForm(form);
 		expect(output?.textContent).toBe('false:false:0:alice');
 		expect(form?.querySelector('[data-dirty="true"]')).toBeNull();
 	});
@@ -1609,9 +1584,7 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		await Promise.resolve();
 		expect(output?.textContent).toContain(':2:1:0:0');
-		throwing?.reset();
-		await new Promise((resolve) => setTimeout(resolve, 0));
-		await tick();
+		await resetForm(throwing);
 		expect(output?.textContent).toContain(':2:1:1:0');
 		prevented?.requestSubmit();
 		await tick();
@@ -1641,9 +1614,7 @@ describe('compiled ICSS browser updates', () => {
 		expect(new FormData(form!).get('date')).toBe('2026-09-18');
 		expect(new FormData(form!).get('time')).toBe('09:31:15');
 		expect(output?.textContent).toContain('2026-08-19:2026-09-18:09:31:15');
-		form?.reset();
-		await Promise.resolve();
-		await tick();
+		await resetForm(form);
 		expect(new FormData(form!).get('calendar')).toBe('2026-08-18');
 		expect(new FormData(form!).get('date')).toBe('2026-08-18');
 	});
@@ -1993,10 +1964,7 @@ describe('compiled ICSS browser updates', () => {
 		expect(new FormData(form!).get('threshold')).toBe('40');
 		expect(output?.textContent).toBe('40:1');
 
-		form?.reset();
-		await new Promise<void>((resolve) => setTimeout(resolve, 0));
-		await tick();
-		await tick();
+		await resetForm(form);
 		expect(control?.valueAsNumber).toBe(35);
 		await expect.poll(() => output?.textContent).toBe('35:1');
 	});
@@ -2071,10 +2039,7 @@ describe('compiled ICSS browser updates', () => {
 		expect(new FormData(form!).get('choice')).toBe('d');
 		expect(output?.textContent).toBe('d:1');
 
-		form?.reset();
-		await new Promise<void>((resolve) => setTimeout(resolve, 0));
-		await tick();
-		await tick();
+		await resetForm(form);
 		expect(beta?.checked).toBe(true);
 		await expect.poll(() => output?.textContent).toBe('b:1');
 	});
@@ -2094,10 +2059,7 @@ describe('compiled ICSS browser updates', () => {
 		expect(new FormData(form!).get('alerts')).toBe('enabled');
 		expect(output?.textContent).toBe('true:1');
 
-		form?.reset();
-		await new Promise<void>((resolve) => setTimeout(resolve, 0));
-		await tick();
-		await tick();
+		await resetForm(form);
 		expect(control?.checked).toBe(false);
 		await expect.poll(() => output?.textContent).toBe('false:1');
 	});
@@ -2118,10 +2080,7 @@ describe('compiled ICSS browser updates', () => {
 		expect(new FormData(form!).get('choice')).toBe('selected');
 		expect(output?.textContent).toBe('true:1');
 
-		form?.reset();
-		await new Promise<void>((resolve) => setTimeout(resolve, 0));
-		await tick();
-		await tick();
+		await resetForm(form);
 		expect(checkbox?.indeterminate).toBe(true);
 		expect(checkbox?.getAttribute('aria-checked')).toBe('mixed');
 		await expect.poll(() => output?.textContent).toBe('indeterminate:1');
@@ -2421,9 +2380,7 @@ describe('compiled ICSS browser updates', () => {
 
 		input.form?.reset();
 		expect(resetEvents).toBe(1);
-		await new Promise((resolve) => setTimeout(resolve, 0));
-		await tick();
-		await tick();
+		await settleFormReset();
 		expect(input.value).toBe('seed');
 		expect(output?.textContent).toBe('seed:1');
 	});
