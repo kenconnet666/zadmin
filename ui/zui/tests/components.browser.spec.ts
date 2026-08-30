@@ -95,7 +95,11 @@ async function settleFormReset(): Promise<void> {
 }
 
 async function resetForm(form: HTMLFormElement | null | undefined): Promise<void> {
-	form?.reset();
+	const control = form?.querySelector<HTMLButtonElement | HTMLInputElement>(
+		'button[type="reset"], input[type="reset"]'
+	);
+	if (control) await userEvent.click(control);
+	else form?.reset();
 	await settleFormReset();
 }
 
@@ -2565,9 +2569,8 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(output?.textContent).toBe('alice:1:0');
 
-		input.form?.reset();
+		await resetForm(input.form);
 		expect(resetEvents).toBe(1);
-		await settleFormReset();
 		expect(input.value).toBe('seed');
 		expect(input.dataset.resetCallback).toBe('true');
 		expect(output?.textContent).toBe('seed:1:1');
@@ -2581,8 +2584,7 @@ describe('compiled ICSS browser updates', () => {
 			external.dispatchEvent(new InputEvent('input', { bubbles: true }));
 		}
 		await tick();
-		externalForm?.reset();
-		await settleFormReset();
+		await resetForm(externalForm);
 		expect(external?.value).toBe('external-seed');
 		expect(externalOutput?.textContent).toBe('external-seed');
 		expect([...new FormData(externalForm!).entries()]).toEqual([['external', 'external-seed']]);
@@ -2600,8 +2602,7 @@ describe('compiled ICSS browser updates', () => {
 			external.dispatchEvent(new InputEvent('input', { bubbles: true }));
 		}
 		await tick();
-		externalNextForm?.reset();
-		await settleFormReset();
+		await resetForm(externalNextForm);
 		expect(external?.value).toBe('external-seed');
 		expect(externalOutput?.textContent).toBe('external-seed');
 		expect([...new FormData(externalNextForm!).entries()]).toEqual([['external', 'external-seed']]);
@@ -2609,6 +2610,10 @@ describe('compiled ICSS browser updates', () => {
 		const replacementForm = document.createElement('form');
 		replacementForm.id = 'external-input-next-form';
 		replacementForm.dataset.testid = 'external-input-replacement-form';
+		const replacementReset = document.createElement('button');
+		replacementReset.type = 'reset';
+		replacementReset.textContent = 'Reset replacement';
+		replacementForm.append(replacementReset);
 		externalNextForm?.replaceWith(replacementForm);
 		await new Promise<void>((resolve) => queueMicrotask(() => queueMicrotask(resolve)));
 		expect(external?.form).toBe(replacementForm);
@@ -2620,8 +2625,7 @@ describe('compiled ICSS browser updates', () => {
 			external.dispatchEvent(new InputEvent('input', { bubbles: true }));
 		}
 		await tick();
-		replacementForm.reset();
-		await settleFormReset();
+		await resetForm(replacementForm);
 		expect(external?.value).toBe('external-seed');
 		expect(externalOutput?.textContent).toBe('external-seed');
 		expect([...new FormData(replacementForm).entries()]).toEqual([['external', 'external-seed']]);
@@ -2631,8 +2635,7 @@ describe('compiled ICSS browser updates', () => {
 			delegated.dispatchEvent(new InputEvent('input', { bubbles: true }));
 		}
 		await tick();
-		delegatedForm?.reset();
-		await settleFormReset();
+		await resetForm(delegatedForm);
 		expect(delegated?.value).toBe('delegated-seed');
 		expect(delegatedOutput?.textContent).toBe('delegated-seed:1');
 	});

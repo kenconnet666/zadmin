@@ -156,7 +156,7 @@
 - action挂载后把input从第一张form移到第二张form并更新参数时，旧表单listener被释放、新表单获得直接listener，只有当前归属的reset回调一次。
 - reset捕获在事件完成后的微任务检查取消状态；多个监听目标以generation合并，destroy使迟到回调失效，不强制全局flush。
 - 其余24个action已分类为9个直接控件与15个proxy；事件桥试点未减少WebKit失败，因此不扩散复杂度，全部继续禁止绕过共享路径直调listener。
-- 组件矩阵新增Vitest Browser userEvent对照：由Playwright驱动真实输入与reset按钮，和页面内`form.reset()`并存，用于隔离WebKit测试调用栈。
+- 组件行为矩阵的reset helper优先用Vitest Browser userEvent驱动真实按钮；无按钮和layer低层合同仍调用`form.reset()`，不删除程序化覆盖。
 - 专用signal在真实Chrome中始终为form直接子节点且不进入FormData；连续reset后ZForm回到`submitted=false`、ZInput恢复默认值且控制台干净。
 - ZInput第三个Demo把control放在form DOM外，可切换主/备用表单并重建同id备用owner；signal持续重归属，只有当前owner reset有效。
 - ZButton第三个Demo覆盖start/end、Lucide图标、自定义ZSpinner loadingIndicator与fullWidth；真实Chrome确认busy/disabled语义、按钮宽度和控制台均正确。
