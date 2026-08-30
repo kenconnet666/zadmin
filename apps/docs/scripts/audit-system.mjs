@@ -298,7 +298,9 @@ if (
 	!formControlSource.includes('scheduleAssociationRefresh();\n\t\t}') ||
 	!formControlSource.includes('const ticket = (generation += 1)') ||
 	!formControlSource.includes('ticket === generation') ||
-	!formControlSource.includes('queueMicrotask(() =>')
+	!formControlSource.includes('queueMicrotask(() =>') ||
+	formControlSource.includes('flushSync') ||
+	formControlSource.includes('pendingReset')
 ) {
 	fail('The form reset action must preserve its association and cancelable microtask contracts.');
 }
