@@ -48,6 +48,7 @@
 | Firefox合成paste缺少payload       | 构造参数中的`clipboardData`没有跨引擎落到只读事件属性           | 测试助手显式定义ClipboardEvent payload；真实用户剪贴板逻辑保持不变           |
 | 文档站缺少生产使用指南            | 只有组件页与Theme Lab，安装、SSR、HMR、WebView和发布边界分散    | 共享指南注册表与GuidePage补齐七份指南，直接使用ZUI Card/List/Code/Link       |
 | 发布包缺少消费者入口说明          | npm tarball没有就地安装、entrypoint与稳定性说明                 | 增加随包README、AST API快照、publish dry-run和仓库外tarball验收              |
+| 发布规划没有release PR自动化      | 只有Changesets CLI脚本，没有成功CI后的版本与Changelog PR        | Changesets v2从成功CI的SHA创建PR；仓库允许Actions建PR，默认token仍保持只读   |
 
 ## 4. 交互与可访问性审计
 

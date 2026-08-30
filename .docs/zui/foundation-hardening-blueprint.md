@@ -265,7 +265,7 @@ runtime/
 - 建立临时目录/frozen lockfile仓库外安装fixture；
 - 验证根入口、core、runtime、compiler、testing、internal和code子入口；
 - 验证optional Shiki peer的有/无两条路径；
-- CI生成release PR和Changelog，实际npm publish仍需要明确发布授权与token；
+- master push CI完整成功后，`changesets/action/version@v2`从已验证SHA生成或更新release PR与Changelog；仓库已启用Actions创建PR能力但保持默认token只读；实际npm publish仍需要明确发布授权与token；
 - 不在源码、Actions或文档写入凭据。
 
 ### F4：测试、性能与开发体验
