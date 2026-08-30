@@ -174,6 +174,32 @@ test('switches and persists all coordinated production themes', async ({ page })
 	expect(results.violations).toEqual([]);
 });
 
+test('restores the current preferences trigger after nested direction updates', async ({
+	page
+}) => {
+	const messages: string[] = [];
+	page.on('console', (message) => {
+		if (message.type() === 'error' || message.type() === 'warning') messages.push(message.text());
+	});
+	await page.goto('/#/');
+	const preferences = page.getByRole('button', { name: '调整显示偏好' });
+	await preferences.click();
+	await page.getByRole('button', { name: '方向' }).click();
+	await page.getByRole('option', { name: '从右到左' }).click();
+	await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+	await page.keyboard.press('Escape');
+	await expect(preferences).toBeFocused();
+	await expect(preferences).toHaveAttribute('aria-expanded', 'false');
+
+	await preferences.click();
+	await page.getByRole('button', { name: '方向' }).click();
+	await page.getByRole('option', { name: '从左到右' }).click();
+	await page.keyboard.press('Escape');
+	await expect(page.locator('html')).toHaveAttribute('dir', 'ltr');
+	await expect(preferences).toBeFocused();
+	expect(messages).toEqual([]);
+});
+
 test('keeps input binding and field validation interactive', async ({ page }) => {
 	await page.goto('/#/components/input');
 	const input = page.getByTestId('input-binding');
