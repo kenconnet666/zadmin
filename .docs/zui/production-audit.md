@@ -18,7 +18,7 @@
 | ------------------------ | ---: | -------------------------------------------------------------------------------------------- |
 | Svelte组件文件           |  135 | 133个拥有唯一metadata id；`ZMentionEditor`与`ZTextareaAutosize`是非公开内部实现              |
 | 公开组件文档页           |   78 | 每页至少2个不同Demo                                                                          |
-| 实际Demo                 |  162 | 少于2个、重复id或空源码会在`defineComponentDoc`中直接失败                                    |
+| 实际Demo                 |  163 | 少于2个、重复id或空源码会在`defineComponentDoc`中直接失败                                    |
 | 生产指南                 |    8 | Getting Started、ICSS、Theme Lab、Accessibility、SSR/CSP、HMR、WebView和Package              |
 | 公开API合同              |  133 | TypeScript AST快照覆盖全部metadata组件与10个package entrypoint；变化必须显式更新             |
 | 官方主题                 |    6 | `@zadmin/zui/themes`统一导出，文档站真实切换并持久化                                         |
@@ -41,7 +41,7 @@
 | 长event.key if链         |    0 | 组件内3段以上互斥按键判断必须改用switch或共享navigation intent；两段简单判断仍允许           |
 | reset mount重绑合同      |    1 | action以mount微任务和短期Observer等待最终root/form，并且只在关联变化时重绑                   |
 | reset update重绑合同     |    1 | action更新时重新检查动态`form`归属，旧表单解绑且新表单直接监听                               |
-| reset微任务合同          |    1 | 事件完成后以generation去重并在统一flushSync边界提交受控状态，destroy可取消迟到回调           |
+| reset任务合同            |    1 | 事件完成后的新任务以generation去重并在flushSync边界提交状态，destroy可取消迟到回调           |
 | 默认稳定id组件           |    7 | 六个基础原生控件与DataTable内部选择框必须保留SSR稳定作用域id                                 |
 | 正tabindex/隐藏Tab点     |  0/0 | ZUI和Docs禁止正tabindex；aria-hidden交互元素必须显式`tabindex=-1`                            |
 | 隐式submit/无名图标按钮  |  0/0 | 内部原生button必须显式type；图标按钮必须有aria-label或aria-labelledby                        |
@@ -101,12 +101,14 @@
 | 文档页只展示一个场景                  | 首轮文档以实现证明为主，没有形成特性矩阵                           | 78页全部补为基础+状态/边界/组合Demo，复杂组件覆盖键盘、焦点、表单或生命周期        |
 | 文档站自建原生控件                    | 站点框架早于相关ZUI组件                                            | Header、API表、首页、Sidebar、TOC和Theme Lab改为真实ZUI消费者                      |
 | ZStack Demo遗留原生Select             | 旧Demo在ZSelect完成前直接使用平台控件                              | 改用ZStack、ZText与ZSelect组合，并把dogfood门禁从views扩到全部Docs Svelte          |
+| Docs开发站加载陈旧ZUI预构建           | Vite把五个workspace入口纳入依赖优化，源码修改后冷启动仍复用旧缓存  | 显式exclude根/code/compiler/metadata/themes入口并加入静态门禁                      |
 | 批量覆盖污染多浏览器状态              | 覆盖率专用的Docs汇总挂载也在Firefox/WebKit运行                     | 汇总限定到Chromium且显式mount/unmount；三浏览器继续跑独立组件行为套件              |
 | 高对比主题进入Theme Lab后白屏         | 预设色板按颜色值作为key，`canvas`与`surface`可同为`#ffffff`        | 改用语义token名作为稳定key；全新Chrome标签页重载后六主题全部恢复                   |
 | ZCode embedded仍有外框                | embedded清零边框的slot分支早于block/inline分支，组合后被重新覆盖   | 把embedded放到最终variant覆盖位；三浏览器锁定border-width/radius均为0              |
+| ZTree多选hidden默认值缺失             | keyed载体只写current value，原生reset阶段的默认值仍为空            | 同步defaultValue与身份值；Fixture和可见Demo固定getAll与reset                       |
 | 组件大小门禁与完整交互职责冲突        | 3.25 KiB阈值把DataTable、Tour、DatePicker等误当成视觉原子          | CI继续构建并记录gzip、检查依赖边界；仅在产物明显异常时人工分析，不设字节门禁       |
 | WebKit表单reset批量失效               | 原控件action与Svelte原生binding signal在WebKit组件路径都未同步状态 | ZInput/ZForm改用直接归属form的无状态专用signal承载统一action                       |
-| WebKit reset状态未提交                | data-reset-callback证明listener已命中，但同回调的rune输出仍为旧值  | 统一runtime在取消检查后的微任务内用flushSync原子提交组件状态、父binding与DOM       |
+| WebKit reset状态未提交                | listener与回调命中；微任务内flushSync后rune输出仍为旧值            | 提交移到事件结束后的新任务，再原子刷新组件状态、父binding与DOM                     |
 | 复合组件reset双重所有权               | 父状态机恢复受控值后，内部Input/Textarea又按叶子default再次覆盖    | resetOnForm关闭叶子自管；Combobox同步原生default，回调仍通知父owner                |
 | Firefox合成paste缺少payload           | 构造参数中的`clipboardData`没有跨引擎落到只读事件属性              | 测试助手显式定义ClipboardEvent payload；真实用户剪贴板逻辑保持不变                 |
 | 文档站缺少生产使用指南                | 只有组件页与Theme Lab，安装、SSR、HMR、WebView和发布边界分散       | 共享指南注册表与GuidePage补齐七份指南，直接使用ZUI Card/List/Code/Link             |
@@ -128,7 +130,7 @@
 
 ## 5. 文档站真实浏览器证据
 
-- 78/78组件路由均能渲染，且每页DOM中至少有2个不同Demo；Provider、Code、Button、Input、Form与Avatar增加第三个生产边界场景。
+- 78/78组件路由均能渲染，且每页DOM中至少有2个不同Demo；Provider、Code、Button、Input、Form、Avatar与Tree增加第三个生产边界场景。
 - 七份新增生产指南在真实Chrome中7/7渲染，均有唯一active导航、3–4个ZUI Card章节和正确页面标题。
 - ZStack方向Demo通过ZSelect键盘切换后，Trigger文本、实际`flex-direction`和焦点恢复一致；Docs全站原生交互标签为0。
 - RTL下ZTable caption/cell和组件TOC computed对齐为start，ZCode行号为end；验收后恢复LTR并由静态门禁拒绝物理textAlign。
@@ -146,13 +148,14 @@
 - 首批`formReset`节点action在真实Chrome中让ZSelect从开发恢复生产、Checkbox从true恢复mixed；action更新回调后分别命中1次，destroy后不再触发。
 - input仍detached且首个mount微任务已结束时，action通过短期Observer在后续挂入form后重绑；真实Chrome reset回调为1且destroy后不增加。
 - action挂载后把input从第一张form移到第二张form并更新参数时，旧表单listener被释放、新表单获得直接listener，只有当前归属的reset回调一次。
-- reset捕获在事件完成后的微任务检查取消状态；多个监听目标以generation合并，再由共享`flushSync`边界原子提交组件状态、父binding与DOM，同任务destroy不会执行迟到回调。
+- reset捕获在事件完成后的新任务检查取消状态；多个监听目标以generation合并，再由共享`flushSync`边界原子提交组件状态、父binding与DOM，destroy会清理迟到任务。
 - 当前RadioGroup、Mention/Textarea和Transfer等24个组件保留原控件action；ZInput/ZForm改走专用signal action，全部组件继续禁止绕过统一路径直调listener。
 - 专用signal在真实Chrome中始终为form直接子节点且不进入FormData；连续reset后ZForm回到`submitted=false`、ZInput恢复默认值且控制台干净。
 - ZInput第三个Demo把control放在form DOM外，可切换主/备用表单并重建同id备用owner；signal持续重归属，只有当前owner reset有效。
 - ZButton第三个Demo覆盖start/end、Lucide图标、自定义ZSpinner loadingIndicator与fullWidth；真实Chrome确认busy/disabled语义、按钮宽度和控制台均正确。
 - ZProvider第三个Demo用真实ZBox作为Popover portalContainer，并以provider-demo前缀生成复合控件ID；内容归属与焦点恢复由Chrome直接验收。
 - ZCode第三个Demo显式展示light/dark scheme、theme对象与ZCard embedded组合，Chrome确认两种scheme均高亮且边框/圆角为0；ZAvatar第三个Demo覆盖成功img和ZIcon fallback Snippet，并保持48px稳定尺寸。
+- ZTree第三个Demo覆盖bare外观、多选aria/FormData和原生reset；DataTable现有两页已覆盖虚拟尺寸、排序、多选与紧凑单选，不制造重复Demo。
 - 首页和组件深链完整reload后首个Tab均为“跳到主要内容”；Enter保持当前hash路由与标题/H1，并把焦点送到`main#zui-main-content`
   ，无404或控制台异常。
 - skip-link使用逻辑`inset-inline-start`；真实Chrome切换RTL并reload后出现在右侧起始边，恢复LTR后控制台保持干净。
@@ -187,11 +190,11 @@
 
 ## 6. CI结论
 
-最后一次按约回看的门禁：[CI run 33316243419](https://github.com/kenconnet666/zadmin/actions/runs/33316243419)。
+最后一次按约回看的门禁：[CI run 33317482556](https://github.com/kenconnet666/zadmin/actions/runs/33317482556)。
 
 - Coverage/packages、发布dry-run、仓库外SSR验收与Windows C# WebView2 desktop完整成功；Workspace类型/Svelte、Prettier、ESLint和静态源码审计成功；
-- 全测试只在WebKit失败20项reset状态同步；Field的`data-reset-callback=true`而输出仍为`alice:1:0`，证明专用signal与listener已经命中，失败位于同回调的Svelte状态提交；
-- 当前批次保留cancel检查与generation去重，在共享runtime微任务内使用`flushSync`一次提交组件状态、父binding与DOM；真实Chrome已复验外部owner切换/重建及Combobox委托reset，控制台干净；
+- Chromium与Firefox的完整组件测试成功，包含全部Docs真实Demo；全测试仍只在WebKit失败同一20项reset状态同步；
+- `data-reset-callback=true`但Field输出仍为`alice:1:0`，且微任务内`flushSync`没有减少失败，证明必须退出原事件批次；当前批次改为下一任务提交并显式清理timer；
 - Docs E2E、全构建与生成文件检查因全测试失败被跳过；Release PR按预期跳过，尚不能扩散到其余24个组件。
 
 最终通过后必须同时满足：

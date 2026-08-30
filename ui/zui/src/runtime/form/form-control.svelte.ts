@@ -141,17 +141,21 @@ function listenToResetEvents(
 	];
 	let active = true;
 	let generation = 0;
+	let pendingReset: ReturnType<typeof setTimeout> | undefined;
 	const handleReset = (event: Event) => {
 		if (!accepts(event)) return;
 		const ticket = (generation += 1);
-		queueMicrotask(() => {
+		if (pendingReset !== undefined) clearTimeout(pendingReset);
+		pendingReset = setTimeout(() => {
+			pendingReset = undefined;
 			if (active && ticket === generation && !event.defaultPrevented) flushSync(reset);
-		});
+		}, 0);
 	};
 	for (const target of activeTargets) target.addEventListener('reset', handleReset, true);
 	return () => {
 		active = false;
 		generation += 1;
+		if (pendingReset !== undefined) clearTimeout(pendingReset);
 		for (const target of activeTargets) target.removeEventListener('reset', handleReset, true);
 	};
 }

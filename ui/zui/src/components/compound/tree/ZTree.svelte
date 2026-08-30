@@ -512,5 +512,6 @@
 			type="hidden"
 			{form}
 			{name}
-			{value}
+			defaultValue={String(value)}
+			value={String(value)}
 		/>{/each}{/if}

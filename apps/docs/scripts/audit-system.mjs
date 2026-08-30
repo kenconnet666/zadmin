@@ -294,9 +294,11 @@ if (
 	!formControlSource.includes('scheduleAssociationRefresh();\n\t\t}') ||
 	!formControlSource.includes('const ticket = (generation += 1)') ||
 	!formControlSource.includes('ticket === generation') ||
+	!formControlSource.includes('pendingReset = setTimeout') ||
+	!formControlSource.includes('clearTimeout(pendingReset)') ||
 	!formControlSource.includes('flushSync(reset)')
 ) {
-	fail('The form reset action must preserve its association and reset microtask contracts.');
+	fail('The form reset action must preserve its association and post-event task contracts.');
 }
 if (
 	!formResetSignalSource.includes('const action = formReset(control, () => current.reset())') ||
@@ -424,6 +426,21 @@ if (
 }
 
 const docsSvelteFiles = await filesUnder(docsSourceRoot, ['.svelte']);
+const docsViteSource = await readFile(resolve(docsRoot, 'vite.config.ts'), 'utf8');
+const workspaceZuiEntrypoints = [
+	'@zadmin/zui',
+	'@zadmin/zui/code',
+	'@zadmin/zui/compiler',
+	'@zadmin/zui/metadata',
+	'@zadmin/zui/themes'
+];
+const optimizeExclude =
+	docsViteSource.match(
+		/optimizeDeps:\s*\{[\s\S]*?exclude:\s*\[([\s\S]*?)\][\s\S]*?include:/u
+	)?.[1] ?? '';
+if (!workspaceZuiEntrypoints.every((entrypoint) => optimizeExclude.includes(`'${entrypoint}'`))) {
+	fail('Docs Vite must exclude every workspace ZUI entrypoint from dependency optimization.');
+}
 const rawInteractive =
 	/<(?:a|button|code|details|input|kbd|meter|progress|select|summary|table|textarea)\b/u;
 const forbiddenGlyph = /[×‹›✓←→↑↓↕✕✖]/u;
@@ -528,7 +545,8 @@ const productionBoundaryDemos = [
 	'avatar-image-fallback',
 	'button-composition',
 	'code-scheme-embedded',
-	'provider-portal-boundary'
+	'provider-portal-boundary',
+	'tree-multiple-bare'
 ];
 for (const id of productionBoundaryDemos) {
 	if (!demoIds.includes(id)) fail(`Documentation must preserve the ${id} production demo.`);
@@ -556,6 +574,7 @@ console.log(
 		inlineSvgFiles: inlineSvg.length,
 		brandGradientFiles: gradientFiles.length,
 		docsRawInteractiveElements: 0,
+		docsWorkspaceOptimizeExclusions: workspaceZuiEntrypoints.length,
 		positiveTabindexElements: 0,
 		ariaHiddenTabStops: 0,
 		implicitSubmitButtons: 0,
@@ -573,7 +592,7 @@ console.log(
 		nativeBusyContracts: 2,
 		formResetMountRebindContracts: 1,
 		formResetUpdateRebindContracts: 1,
-		formResetMicrotaskContracts: 1,
+		formResetPostEventTaskContracts: 1,
 		currentFocusRestoreContracts: 2,
 		currentFocusFallbackContracts: 1,
 		tooltipRuntimeGuardContracts: 1,

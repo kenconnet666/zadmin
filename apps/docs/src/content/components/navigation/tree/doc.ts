@@ -3,6 +3,8 @@ import InteractiveDemo from './InteractiveDemo.svelte';
 import source from './InteractiveDemo.svelte?raw';
 import LargeDemo from './LargeDemo.svelte';
 import largeSource from './LargeDemo.svelte?raw';
+import MultipleDemo from './MultipleDemo.svelte';
+import multipleSource from './MultipleDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 export const treeDoc = defineComponentDoc(treeMetadata, {
 	demos: [
@@ -20,6 +22,13 @@ export const treeDoc = defineComponentDoc(treeMetadata, {
 			id: 'tree-virtual',
 			source: largeSource,
 			title: '大数据Tree'
+		},
+		{
+			component: MultipleDemo,
+			description: 'bare外观保留完整tree语义，多选状态同步FormData并在原生reset后恢复默认集合。',
+			id: 'tree-multiple-bare',
+			source: multipleSource,
+			title: '裸样式多选与表单'
 		}
 	],
 	accessibility: [

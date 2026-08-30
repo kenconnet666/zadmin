@@ -5,6 +5,13 @@ export default defineConfig({
 	base: './',
 	publicDir: 'static',
 	optimizeDeps: {
+		exclude: [
+			'@zadmin/zui',
+			'@zadmin/zui/code',
+			'@zadmin/zui/compiler',
+			'@zadmin/zui/metadata',
+			'@zadmin/zui/themes'
+		],
 		include: [
 			'shiki/core',
 			'shiki/engine/javascript',

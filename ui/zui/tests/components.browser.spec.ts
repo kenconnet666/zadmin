@@ -1079,6 +1079,25 @@ describe('compiled ICSS browser updates', () => {
 		await resetForm(form);
 		expect(new FormData(form!).get('node')).toBe('web');
 		expect(output?.textContent).toBe('app:web:1');
+
+		const multiple = document.querySelector<HTMLElement>('[aria-label="Fixture multiple tree"]');
+		const multipleForm = document.querySelector<HTMLFormElement>(
+			'[data-testid="tree-multiple-form"]'
+		);
+		const multipleOutput = document.querySelector<HTMLOutputElement>(
+			'[data-testid="tree-multiple-output"]'
+		);
+		const multipleWorker = multiple?.querySelector<HTMLElement>('[data-key="worker"]');
+		expect(multiple?.getAttribute('aria-multiselectable')).toBe('true');
+		expect(getComputedStyle(multiple as Element).borderWidth).toBe('0px');
+		expect(new FormData(multipleForm!).getAll('nodes')).toEqual(['web']);
+		multipleWorker?.click();
+		await tick();
+		expect(new FormData(multipleForm!).getAll('nodes')).toEqual(['web', 'worker']);
+		expect(multipleOutput?.textContent).toBe('web,worker');
+		await resetForm(multipleForm);
+		expect(new FormData(multipleForm!).getAll('nodes')).toEqual(['web']);
+		expect(multipleOutput?.textContent).toBe('web');
 	});
 
 	it('keeps virtual Tree DOM bounded and scrolls keyboard focus to distant nodes', async () => {

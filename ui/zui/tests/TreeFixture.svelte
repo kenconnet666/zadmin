@@ -11,6 +11,7 @@
 	let expandedKeys = $state<readonly (string | number)[]>(['app']);
 	let selectedKeys = $state<readonly (string | number)[]>(['web']);
 	let changes = $state(0);
+	let multipleSelectedKeys = $state<readonly (string | number)[]>(['web']);
 </script>
 
 <form data-testid="tree-form">
@@ -28,4 +29,19 @@
 	<output data-testid="tree-output"
 		>{expandedKeys.join(',')}:{selectedKeys.join(',')}:{changes}</output
 	>
+</form>
+
+<form data-testid="tree-multiple-form">
+	<ZTree
+		appearance="bare"
+		aria-label="Fixture multiple tree"
+		bind:selectedKeys={multipleSelectedKeys}
+		defaultExpandedKeys={['app']}
+		defaultSelectedKeys={['web']}
+		name="nodes"
+		{nodes}
+		selectionMode="multiple"
+	/>
+	<button type="reset">Reset multiple</button>
+	<output data-testid="tree-multiple-output">{multipleSelectedKeys.join(',')}</output>
 </form>
