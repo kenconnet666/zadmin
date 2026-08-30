@@ -35,7 +35,12 @@ const components = [
 	},
 	{ id: 'skeleton', name: 'ZSkeleton', path: 'data-display/ZSkeleton.svelte' },
 	{ id: 'statistic', name: 'ZStatistic', path: 'data-display/ZStatistic.svelte' },
-	{ id: 'timeline', name: 'ZTimeline', path: 'data-display/ZTimeline.svelte' },
+	{
+		id: 'timeline',
+		maxIncrementalGzip: 3.375 * 1024,
+		name: 'ZTimeline',
+		path: 'data-display/ZTimeline.svelte'
+	},
 	{ id: 'table', name: 'ZTable', path: 'data-display/ZTable.svelte' },
 	{ id: 'virtual-list', name: 'ZVirtualList', path: 'data-display/ZVirtualList.svelte' },
 	{ id: 'data-table', name: 'ZDataTable', path: 'data-display/ZDataTable.svelte' },
