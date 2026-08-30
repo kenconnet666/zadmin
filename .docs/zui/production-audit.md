@@ -53,6 +53,7 @@
 | 可见原生输入焦点依赖浏览器默认        | ColorPicker、TagsInput和DataTable没有统一Theme focus ring       | 抽取内部focus helper并覆盖color/hex/range、编辑框和表格选择框                |
 | 表单reset注册存在effect/action双轨    | 组件普遍依赖`bind:this + $effect`，节点生命周期不够直接         | 26个表单组件统一节点action；Textarea提供`onFormReset`供Mention组合复用       |
 | 文档站没有skip-link                   | Hash路由壳层只提供Header、Sidebar与main landmark                | 使用ZLink提供首个Tab入口；阻止hash导航并显式focus/scroll稳定main目标         |
+| Demo可见表单字段缺少id/name           | Textarea状态示例只依赖aria-label，触发Chrome表单字段issue       | 四个示例补稳定id；78页远程Axe循环同时门禁全部可见input/textarea/select       |
 | 关闭/导航图标不一致                   | 多处使用`×/‹/›/+/-/✓`字符                                       | 统一使用按需Lucide；完整操作复用ZButton，微型内部按钮复用无状态focus样式合同 |
 | Transfer、DataTable与主页残留箭头字符 | 早期实现只补了可访问名称，字符范围没有纳入全树图标审计          | 统一使用按需Lucide/ZIcon；Transfer按LTR/RTL交换方向，DataTable复用ZButton    |
 | WebView窗口控制仍用字符图标           | WindowControls早于ZIcon manifest扩展                            | 扩展受控manifest并改用`ZIcon`                                                |
@@ -92,6 +93,7 @@
 - skip-link使用逻辑`inset-inline-start`；真实Chrome切换RTL并reload后出现在右侧起始边，恢复LTR后控制台保持干净。
 - skip-link在reduced-motion下Chrome计算过渡为`1e-05s`（浏览器对0ms的极小钳制，约0.01ms），焦点出现即时；验收后恢复跟随系统。
 - 远程Docs Playwright固定组件深链首个Tab、skip-link可见/聚焦、Enter后URL不变、main聚焦与H1不变五项合同。
+- Textarea状态页补id后可见字段缺失清单为0且Chrome issue清零；远程78页循环会输出任何缺失字段的tag/type/label/placeholder。
 - 六主题最终surface分别为极光`rgb(238, 244, 255)`、纸张`rgb(245, 237, 225)`、霓虹`rgb(5, 9, 20)`、午夜`rgb(11, 18, 32)`、高对比亮色`rgb(255, 255, 255)`、高对比暗色`rgb(0, 0, 0)`。
 - 390×844视口无水平溢出，搜索和主题选择保持可用，组件导航使用横向滚动；验收后已恢复默认1920×936视口。
 - 10,000项VirtualList、1,000行DataTable与5,000节点Tree均保持有界DOM；选择、排序和End键定位在虚拟化后仍稳定。

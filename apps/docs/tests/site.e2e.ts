@@ -1189,6 +1189,19 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/tour'
 	]) {
 		await page.goto(`/${route}`);
+		const unnamedFields = await page
+			.locator('main input:not([type="hidden"]), main textarea, main select')
+			.evaluateAll((elements) =>
+				elements
+					.filter((element) => !element.id && !element.getAttribute('name'))
+					.map((element) => ({
+						ariaLabel: element.getAttribute('aria-label'),
+						placeholder: element.getAttribute('placeholder'),
+						tag: element.tagName,
+						type: element.getAttribute('type')
+					}))
+			);
+		expect(unnamedFields, `${route} has form fields without id or name`).toEqual([]);
 		const results = await new AxeBuilder({ page }).analyze();
 		expect(results.violations, route).toEqual([]);
 	}
