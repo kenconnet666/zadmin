@@ -133,7 +133,6 @@
 		id={accordion.contentId(item.value)}
 		role="region"
 		inert={!open}
-		aria-hidden={!open}
 		aria-labelledby={accordion.triggerId(item.value)}
 		data-presence={presenceState}
 		data-state={open ? 'open' : 'closed'}

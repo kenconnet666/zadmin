@@ -70,6 +70,12 @@ function auditSvelte5(source, filename) {
 	) {
 		fail(`${filename} contains a dangerous dynamic DOM sink.`);
 	}
+	if (/\.textAlign\.(?:left|right)\b/u.test(source)) {
+		fail(`${filename} uses physical text alignment instead of start or end.`);
+	}
+	if (/inert=\{![^}]+\}[\s\S]{0,200}aria-hidden=\{!/u.test(source)) {
+		fail(`${filename} combines inert with eager aria-hidden during exit.`);
+	}
 }
 
 function auditResourceLifecycle(source, filename) {
@@ -301,6 +307,8 @@ console.log(
 		unnamedIconButtons: 0,
 		legacySvelteEvents: 0,
 		legacyDynamicComponents: 0,
+		physicalTextAlignments: 0,
+		redundantInertAriaHidden: 0,
 		typescriptEscapeHatches: 0,
 		zuiSourceFiles: zuiSourceFiles.length,
 		resourceLifecycleViolations: 0,

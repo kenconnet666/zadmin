@@ -185,7 +185,11 @@
 				if (!dismissOnPointerOutside) event.preventDefault();
 			}
 		});
-		const focusScope = new FocusScope(content, { restoreFocus: true, trap: true });
+		const focusScope = new FocusScope(content, {
+			restoreFocus: true,
+			restoreTarget: () => dialog.trigger,
+			trap: true
+		});
 		const releaseScroll = lockScroll(content.ownerDocument);
 		const restoreOthers = inertOthers(content, dialog.overlay ? [dialog.overlay] : []);
 		return () => {
@@ -213,7 +217,6 @@
 		tabindex={-1}
 		inert={!dialog.open}
 		aria-modal="true"
-		aria-hidden={!dialog.open}
 		aria-labelledby={dialog.titleId}
 		aria-describedby={dialog.descriptionId}
 		data-presence={presenceState}

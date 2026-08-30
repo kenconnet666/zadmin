@@ -185,7 +185,12 @@
 		});
 		const removeTriggerBranch = dismissable.registerBranch(trigger);
 		const focusScope = manageFocus
-			? new FocusScope(content, { initialFocus, restoreFocus: true, trap: popover.modal })
+			? new FocusScope(content, {
+					initialFocus,
+					restoreFocus: true,
+					restoreTarget: () => popover.trigger,
+					trap: popover.modal
+				})
 			: undefined;
 		const releaseScroll = popover.modal ? lockScroll(content.ownerDocument) : undefined;
 		const restoreOthers = popover.modal ? inertOthers(content) : undefined;
@@ -215,7 +220,6 @@
 		{role}
 		tabindex={-1}
 		inert={!popover.open}
-		aria-hidden={!popover.open}
 		aria-labelledby={ariaLabelledBy === null ? undefined : (ariaLabelledBy ?? popover.triggerId)}
 		aria-describedby={ariaDescribedBy}
 		data-presence={presenceState}

@@ -3,6 +3,7 @@ import { tabbable } from 'tabbable';
 export interface FocusScopeOptions {
 	readonly initialFocus?: () => HTMLElement | null;
 	readonly restoreFocus?: boolean;
+	readonly restoreTarget?: () => HTMLElement | null;
 	readonly trap?: boolean;
 }
 
@@ -48,8 +49,9 @@ export class FocusScope {
 		const stack = stackFor(this.#document);
 		const index = stack.indexOf(this);
 		if (index >= 0) stack.splice(index, 1);
-		if (this.#options.restoreFocus !== false && this.#previousFocus?.isConnected) {
-			this.#previousFocus.focus({ preventScroll: true });
+		const restoreTarget = this.#options.restoreTarget?.() ?? this.#previousFocus;
+		if (this.#options.restoreFocus !== false && restoreTarget?.isConnected) {
+			restoreTarget.focus({ preventScroll: true });
 		}
 	}
 

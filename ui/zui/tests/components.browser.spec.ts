@@ -1760,6 +1760,9 @@ describe('compiled ICSS browser updates', () => {
 
 		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
 		await tick();
+		expect(content?.inert).toBe(true);
+		expect(content?.hasAttribute('aria-hidden')).toBe(false);
+		expect(document.activeElement).toBe(trigger);
 		await new Promise((resolve) => setTimeout(resolve, 220));
 		await tick();
 		expect(document.querySelector('[data-testid="dialog-content"]')).toBeNull();
@@ -1851,6 +1854,9 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(trigger?.getAttribute('aria-expanded')).toBe('false');
 		expect(content?.dataset.presence).toBe('exiting');
+		expect(content?.inert).toBe(true);
+		expect(content?.hasAttribute('aria-hidden')).toBe(false);
+		expect(document.activeElement).toBe(trigger);
 		await new Promise((resolve) => setTimeout(resolve, 140));
 		await tick();
 		expect(document.querySelector('[data-testid="popover-content"]')).toBeNull();

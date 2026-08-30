@@ -167,6 +167,23 @@ describe('ZUI layer runtime', () => {
 		form.remove();
 	});
 
+	it('rebinds the node reset action after a detached control enters its form tree', async () => {
+		const form = document.createElement('form');
+		const input = document.createElement('input');
+		const reset = vi.fn();
+		const action = formReset(input, reset);
+		form.append(input);
+		document.body.append(form);
+		await Promise.resolve();
+
+		form.reset();
+		await settleReset();
+		expect(reset).toHaveBeenCalledOnce();
+
+		action.destroy();
+		form.remove();
+	});
+
 	it('updates and destroys the direct form reset action', async () => {
 		const form = document.createElement('form');
 		document.body.append(form);
@@ -410,6 +427,29 @@ describe('ZUI layer runtime', () => {
 		scope.destroy();
 		expect(document.activeElement).toBe(outside);
 		outside.remove();
+		container.remove();
+	});
+
+	it('restores a replacement trigger resolved at cleanup time', async () => {
+		const original = document.createElement('button');
+		const replacement = document.createElement('button');
+		const container = document.createElement('div');
+		const inside = document.createElement('button');
+		container.append(inside);
+		document.body.append(original, replacement, container);
+		original.focus();
+		let restoreTarget: HTMLElement | null = original;
+		const scope = new FocusScope(container, {
+			restoreFocus: true,
+			restoreTarget: () => restoreTarget
+		});
+		await Promise.resolve();
+		expect(document.activeElement).toBe(inside);
+		restoreTarget = replacement;
+		original.remove();
+		scope.destroy();
+		expect(document.activeElement).toBe(replacement);
+		replacement.remove();
 		container.remove();
 	});
 

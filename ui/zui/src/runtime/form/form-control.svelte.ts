@@ -26,8 +26,7 @@ export function listenForFormReset(
 	control: HTMLElement & { readonly form: HTMLFormElement | null },
 	reset: () => void
 ): () => void {
-	const root = control.getRootNode();
-	const associatedForm = control.form ?? control.closest('form');
+	const { associatedForm, root } = readFormAssociation(control);
 	return listenToResetEvents(
 		[control.ownerDocument, root, associatedForm],
 		(event) => {
@@ -44,6 +43,13 @@ export function listenForFormReset(
 	);
 }
 
+function readFormAssociation(control: HTMLElement & { readonly form: HTMLFormElement | null }) {
+	return {
+		associatedForm: control.form ?? control.closest('form'),
+		root: control.getRootNode()
+	};
+}
+
 function isFormElement(
 	target: EventTarget | null,
 	ownerDocument: Document
@@ -58,9 +64,23 @@ export function formReset(
 	reset: () => void
 ): { destroy(): void; update(reset: () => void): void } {
 	let currentReset = reset;
-	const destroy = listenForFormReset(control, () => currentReset());
+	let active = true;
+	let association = readFormAssociation(control);
+	let disconnect = listenForFormReset(control, () => currentReset());
+	queueMicrotask(() => {
+		if (!active) return;
+		const next = readFormAssociation(control);
+		if (next.associatedForm === association.associatedForm && next.root === association.root)
+			return;
+		disconnect();
+		association = next;
+		disconnect = listenForFormReset(control, () => currentReset());
+	});
 	return {
-		destroy,
+		destroy() {
+			active = false;
+			disconnect();
+		},
 		update(nextReset) {
 			currentReset = nextReset;
 		}
