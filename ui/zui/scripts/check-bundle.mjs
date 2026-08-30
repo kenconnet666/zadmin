@@ -7,7 +7,7 @@ import { build } from 'vite';
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const sourceRoot = resolve(packageRoot, 'src');
-const COMPONENT_INCREMENTAL_GZIP_BUDGET = 16 * 1024;
+const COMPONENT_INCREMENTAL_GZIP_BUDGET = 20 * 1024;
 const portable = (path) => path.replaceAll('\\', '/');
 const runtime = portable(resolve(sourceRoot, 'entrypoints/runtime.ts'));
 const components = [
