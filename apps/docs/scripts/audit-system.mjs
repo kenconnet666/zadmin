@@ -524,6 +524,10 @@ for (const path of docFiles) {
 }
 if (new Set(demoIds).size !== demoIds.length)
 	fail('Documentation demo ids must be globally unique.');
+const productionBoundaryDemos = ['button-composition', 'provider-portal-boundary'];
+for (const id of productionBoundaryDemos) {
+	if (!demoIds.includes(id)) fail(`Documentation must preserve the ${id} production demo.`);
+}
 
 console.log(
 	JSON.stringify({
@@ -531,6 +535,7 @@ console.log(
 		metadataIds: metadata.length,
 		docPages: docFiles.length,
 		demoIds: demoIds.length,
+		productionBoundaryDemos: productionBoundaryDemos.length,
 		transitionFiles: transitionFiles.length,
 		rawButtonComponentFiles: rawButtonFiles.length,
 		rawControlComponentFiles: rawControlFiles.length,

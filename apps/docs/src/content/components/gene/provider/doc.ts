@@ -1,4 +1,6 @@
 import { providerMetadata } from '@zadmin/zui/metadata';
+import PortalDemo from './PortalDemo.svelte';
+import portalSource from './PortalDemo.svelte?raw';
 import ThemeDemo from './ThemeDemo.svelte';
 import themeSource from './ThemeDemo.svelte?raw';
 import PreferencesDemo from './PreferencesDemo.svelte';
@@ -20,6 +22,13 @@ export const providerDoc = defineComponentDoc(providerMetadata, {
 			id: 'provider-preferences',
 			source: preferencesSource,
 			title: '显示与区域偏好'
+		},
+		{
+			component: PortalDemo,
+			description: 'portalContainer隔离浮层挂载边界，idPrefix为复合组件生成稳定命名空间。',
+			id: 'provider-portal-boundary',
+			source: portalSource,
+			title: 'Portal与ID边界'
 		}
 	],
 	accessibility: ['不创建无语义wrapper。', '不会改变子组件的原生语义与焦点顺序。']
