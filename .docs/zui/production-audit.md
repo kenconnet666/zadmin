@@ -18,7 +18,7 @@
 | ------------------------ | ---: | -------------------------------------------------------------------------------------------- |
 | Svelte组件文件           |  135 | 133个拥有唯一metadata id；`ZMentionEditor`与`ZTextareaAutosize`是非公开内部实现              |
 | 公开组件文档页           |   78 | 每页至少2个不同Demo                                                                          |
-| 实际Demo                 |  160 | 少于2个、重复id或空源码会在`defineComponentDoc`中直接失败                                    |
+| 实际Demo                 |  162 | 少于2个、重复id或空源码会在`defineComponentDoc`中直接失败                                    |
 | 生产指南                 |    8 | Getting Started、ICSS、Theme Lab、Accessibility、SSR/CSP、HMR、WebView和Package              |
 | 公开API合同              |  133 | TypeScript AST快照覆盖全部metadata组件与10个package entrypoint；变化必须显式更新             |
 | 官方主题                 |    6 | `@zadmin/zui/themes`统一导出，文档站真实切换并持久化                                         |
@@ -103,6 +103,7 @@
 | ZStack Demo遗留原生Select             | 旧Demo在ZSelect完成前直接使用平台控件                              | 改用ZStack、ZText与ZSelect组合，并把dogfood门禁从views扩到全部Docs Svelte          |
 | 批量覆盖污染多浏览器状态              | 覆盖率专用的Docs汇总挂载也在Firefox/WebKit运行                     | 汇总限定到Chromium且显式mount/unmount；三浏览器继续跑独立组件行为套件              |
 | 高对比主题进入Theme Lab后白屏         | 预设色板按颜色值作为key，`canvas`与`surface`可同为`#ffffff`        | 改用语义token名作为稳定key；全新Chrome标签页重载后六主题全部恢复                   |
+| ZCode embedded仍有外框                | embedded清零边框的slot分支早于block/inline分支，组合后被重新覆盖   | 把embedded放到最终variant覆盖位；三浏览器锁定border-width/radius均为0              |
 | 组件大小门禁与完整交互职责冲突        | 3.25 KiB阈值把DataTable、Tour、DatePicker等误当成视觉原子          | CI继续构建并记录gzip、检查依赖边界；仅在产物明显异常时人工分析，不设字节门禁       |
 | WebKit表单reset批量失效               | 原控件action与Svelte原生binding signal在WebKit组件路径都未同步状态 | ZInput/ZForm改用直接归属form的无状态专用signal承载统一action                       |
 | WebKit reset状态未提交                | data-reset-callback证明listener已命中，但同回调的rune输出仍为旧值  | 统一runtime在取消检查后的微任务内用flushSync原子提交组件状态、父binding与DOM       |
@@ -127,7 +128,7 @@
 
 ## 5. 文档站真实浏览器证据
 
-- 78/78组件路由均能渲染，且每页DOM中至少有2个不同Demo；ZProvider、ZButton、ZForm与ZInput各增加第三个生产边界场景。
+- 78/78组件路由均能渲染，且每页DOM中至少有2个不同Demo；Provider、Code、Button、Input、Form与Avatar增加第三个生产边界场景。
 - 七份新增生产指南在真实Chrome中7/7渲染，均有唯一active导航、3–4个ZUI Card章节和正确页面标题。
 - ZStack方向Demo通过ZSelect键盘切换后，Trigger文本、实际`flex-direction`和焦点恢复一致；Docs全站原生交互标签为0。
 - RTL下ZTable caption/cell和组件TOC computed对齐为start，ZCode行号为end；验收后恢复LTR并由静态门禁拒绝物理textAlign。
@@ -151,6 +152,7 @@
 - ZInput第三个Demo把control放在form DOM外，可切换主/备用表单并重建同id备用owner；signal持续重归属，只有当前owner reset有效。
 - ZButton第三个Demo覆盖start/end、Lucide图标、自定义ZSpinner loadingIndicator与fullWidth；真实Chrome确认busy/disabled语义、按钮宽度和控制台均正确。
 - ZProvider第三个Demo用真实ZBox作为Popover portalContainer，并以provider-demo前缀生成复合控件ID；内容归属与焦点恢复由Chrome直接验收。
+- ZCode第三个Demo显式展示light/dark scheme、theme对象与ZCard embedded组合，Chrome确认两种scheme均高亮且边框/圆角为0；ZAvatar第三个Demo覆盖成功img和ZIcon fallback Snippet，并保持48px稳定尺寸。
 - 首页和组件深链完整reload后首个Tab均为“跳到主要内容”；Enter保持当前hash路由与标题/H1，并把焦点送到`main#zui-main-content`
   ，无404或控制台异常。
 - skip-link使用逻辑`inset-inline-start`；真实Chrome切换RTL并reload后出现在右侧起始边，恢复LTR后控制台保持干净。

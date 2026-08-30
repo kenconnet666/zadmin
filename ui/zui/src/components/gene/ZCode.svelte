@@ -194,15 +194,6 @@
 			token: () => undefined
 		},
 		variants: {
-			embedded: {
-				false: {},
-				true: {
-					root: (s) => {
-						s.borderRadius.px(0);
-						s.borderWidth.px(0);
-					}
-				}
-			},
 			highlighted: {
 				false: {},
 				true: { line: (s) => s.boxShadow._codeHighlight }
@@ -253,6 +244,15 @@
 			wrap: {
 				false: { root: (s) => s.whiteSpace.pre },
 				true: { root: (s) => s.whiteSpace.preWrap }
+			},
+			embedded: {
+				false: {},
+				true: {
+					root: (s) => {
+						s.borderRadius.px(0);
+						s.borderWidth.px(0);
+					}
+				}
 			}
 		},
 		defaultVariants: {

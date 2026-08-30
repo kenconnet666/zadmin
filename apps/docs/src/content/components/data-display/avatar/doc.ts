@@ -1,6 +1,8 @@
 import { avatarMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import ImageDemo from './ImageDemo.svelte';
+import imageSource from './ImageDemo.svelte?raw';
 import StatesDemo from './StatesDemo.svelte';
 import statesSource from './StatesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
@@ -19,6 +21,13 @@ export const avatarDoc = defineComponentDoc(avatarMetadata, {
 			id: 'avatar-states',
 			source: statesSource,
 			title: '尺寸与形状'
+		},
+		{
+			component: ImageDemo,
+			description: '成功图片路径与自定义fallback Snippet共享稳定根尺寸和可访问名称。',
+			id: 'avatar-image-fallback',
+			source: imageSource,
+			title: '图片与自定义Fallback'
 		}
 	],
 	accessibility: [

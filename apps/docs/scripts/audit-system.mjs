@@ -524,7 +524,12 @@ for (const path of docFiles) {
 }
 if (new Set(demoIds).size !== demoIds.length)
 	fail('Documentation demo ids must be globally unique.');
-const productionBoundaryDemos = ['button-composition', 'provider-portal-boundary'];
+const productionBoundaryDemos = [
+	'avatar-image-fallback',
+	'button-composition',
+	'code-scheme-embedded',
+	'provider-portal-boundary'
+];
 for (const id of productionBoundaryDemos) {
 	if (!demoIds.includes(id)) fail(`Documentation must preserve the ${id} production demo.`);
 }

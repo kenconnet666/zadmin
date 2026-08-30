@@ -2295,6 +2295,11 @@ describe('compiled ICSS browser updates', () => {
 		expect(root?.dataset.colorScheme).toBe('dark');
 		expect(getComputedStyle(root as Element).backgroundColor).toBe('rgb(13, 17, 23)');
 		expect(getComputedStyle(root as Element).fontSize).toBe('14px');
+
+		render(ZCode, { ariaLabel: 'embedded-code', code: 'embedded', embedded: true });
+		const embedded = document.querySelector<HTMLElement>('[aria-label="embedded-code"]');
+		expect(getComputedStyle(embedded as Element).borderWidth).toBe('0px');
+		expect(getComputedStyle(embedded as Element).borderRadius).toBe('0px');
 	});
 
 	it('keeps only the latest asynchronous ZCode highlight result', async () => {
