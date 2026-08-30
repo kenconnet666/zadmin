@@ -225,6 +225,19 @@ if (
 ) {
 	fail('Layer focus scopes must restore the current compound trigger at cleanup time.');
 }
+const tooltipContentSource = await readFile(
+	resolve(workspaceRoot, 'ui/zui/src/components/compound/tooltip/ZTooltipContent.svelte'),
+	'utf8'
+);
+if (
+	!tooltipContentSource.includes("'button'") ||
+	!tooltipContentSource.includes('\'[role="button"]\'') ||
+	!tooltipContentSource.includes("'audio[controls]'") ||
+	!tooltipContentSource.includes('content.querySelector(interactiveSelector)') ||
+	!tooltipContentSource.includes('interactive or focusable content; use ZPopover')
+) {
+	fail('ZTooltipContent must preserve its final-DOM non-interactive runtime guard.');
+}
 
 const docsSvelteFiles = await filesUnder(docsSourceRoot, ['.svelte']);
 const rawInteractive =
@@ -357,6 +370,7 @@ console.log(
 		searchLiveContracts: 1,
 		formResetMountRebindContracts: 1,
 		currentFocusRestoreContracts: 2,
+		tooltipRuntimeGuardContracts: 1,
 		stableNativeIdComponents: stableNativeIdSources.length + 1,
 		interactiveTooltipDemos: 0
 	})

@@ -39,7 +39,8 @@
 | 物理文本对齐             |    0 | ZUI与Docs禁止`textAlign.left/right`，文字使用逻辑start/end；坐标定位算法不受误伤             |
 | inert与退出态aria-hidden |    0 | Presence退出容器使用inert，不在焦点恢复前叠加aria-hidden                                     |
 | 当前Trigger焦点恢复合同  |    2 | Popover/Dialog通过FocusScope restoreTarget在cleanup解析当前context Trigger                   |
-| 交互式Tooltip            |    0 | Runtime拒绝可聚焦后代并引导使用Popover；Docs同时门禁Button/Input/Link等内容                  |
+| 交互式Tooltip            |    0 | Runtime拒绝交互语义或可聚焦后代；Docs同时门禁Button/Input/Link等内容                         |
+| Tooltip Runtime守卫合同  |    1 | CI固定原生/ARIA/媒体selector、最终DOM查询与“use ZPopover”错误指引                            |
 | 资源生命周期违规         |    0 | 全部ZUI与Docs源码中event/timer/RAF/Observer创建文件必须包含对应释放路径                      |
 | 危险动态DOM/XSS sink     |    0 | ZUI与Docs禁止raw HTML、HTML字符串注入、eval/new Function、动态script和javascript URL         |
 | Hash路由安全skip-link    |    1 | CI固定ZLink、当前URL、防导航focus handler以及main稳定id/负tabindex合同                       |
