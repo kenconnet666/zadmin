@@ -59,6 +59,7 @@ import InputGroupFixture from './InputGroupFixture.svelte';
 import MenuFixture from './MenuFixture.svelte';
 import MentionFixture from './MentionFixture.svelte';
 import MultiSelectFixture from './MultiSelectFixture.svelte';
+import NativeIdentityFixture from './NativeIdentityFixture.svelte';
 import NumberFieldFixture from './NumberFieldFixture.svelte';
 import PinInputFixture from './PinInputFixture.svelte';
 import DialogFixture from './DialogFixture.svelte';
@@ -690,6 +691,17 @@ describe('ZUI foundational components', () => {
 		expect(render(ContextProbe, { props: { id: 'default-context' } }).body).toContain(
 			'data-testid="default-context">en-US:ltr:light:normal:comfortable:auto:zui:none:default-portal'
 		);
+	});
+
+	it('generates deterministic unique native control ids across independent SSR renders', () => {
+		const extractIds = (body: string) =>
+			[...body.matchAll(/\sid="([^"]+)"/gu)].map((match) => match[1]!);
+		const first = extractIds(render(NativeIdentityFixture).body);
+		const second = extractIds(render(NativeIdentityFixture).body);
+
+		expect(first).toEqual(second);
+		expect(new Set(first).size).toBe(first.length);
+		expect(first).toContain('consumer-input');
 	});
 
 	it('renders ZCode as stable escaped plain code during SSR', () => {
