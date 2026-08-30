@@ -48,7 +48,12 @@ const components = [
 		name: 'ZVirtualList',
 		path: 'data-display/ZVirtualList.svelte'
 	},
-	{ id: 'data-table', name: 'ZDataTable', path: 'data-display/ZDataTable.svelte' },
+	{
+		id: 'data-table',
+		maxIncrementalGzip: 6 * 1024,
+		name: 'ZDataTable',
+		path: 'data-display/ZDataTable.svelte'
+	},
 	{ id: 'carousel', name: 'ZCarousel', path: 'data-display/ZCarousel.svelte' },
 	{ id: 'alert', name: 'ZAlert', path: 'feedback/ZAlert.svelte' },
 	{ id: 'loading-bar', name: 'ZLoadingBar', path: 'feedback/ZLoadingBar.svelte' },
