@@ -49,7 +49,7 @@
 					s.borderWidth._medium;
 					s.color._text;
 					s.fontWeight._semibold;
-					s.left.rem(1);
+					s.insetInlineStart.rem(1);
 					s.paddingBlock._small;
 					s.paddingInline._medium;
 					s.position.fixed;
