@@ -193,6 +193,7 @@
 		ZText,
 		useZui
 	} from '@zadmin/zui';
+	import { ZCode } from '@zadmin/zui/code';
 	import { docsThemeById, docsThemes, type DocsThemeId } from '../app/theme.js';
 
 	let { themeId = $bindable('aurora-light') }: { themeId?: DocsThemeId } = $props();
@@ -255,7 +256,7 @@
 				<div class={classes.token}>
 					<div class={classes.swatch} style={`background:${value}`}></div>
 					<strong class={classes.tokenName}>{name}</strong>
-					<code class={classes.tokenValue}>{value}</code>
+					<ZCode class={classes.tokenValue} code={String(value)} inline />
 				</div>
 			{/each}
 		</div>

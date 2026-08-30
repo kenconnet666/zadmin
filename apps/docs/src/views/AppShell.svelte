@@ -81,6 +81,7 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
 	import {
+		ZLink,
 		useZui,
 		type ZuiContrast,
 		type ZuiDensity,
@@ -160,7 +161,7 @@
 				<p class={classes.eyebrow}>404</p>
 				<h1 class={classes.title}>没有这个组件。</h1>
 				<p class={classes.copy}>当前展示站只列出已经实现并通过验收的ZUI基础组件。</p>
-				<a class={classes.action} href="#/">返回组件概览</a>
+				<ZLink class={classes.action} href="#/" underline="none">返回组件概览</ZLink>
 			</section>
 		{:else}
 			<HomePage docs={componentDocs} />

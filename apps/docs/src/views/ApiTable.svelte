@@ -19,31 +19,6 @@
 					s.borderWidth._hairline;
 					s.marginTop._large;
 					s.overflowX.auto;
-					s._selector('& table', (table) => {
-						table.borderCollapse.collapse;
-						table.fontSize._small;
-						table.width._full;
-					});
-					s._selector('& th, & td', (cell) => {
-						cell.borderBottomColor._border;
-						cell.borderBottomStyle.solid;
-						cell.borderBottomWidth._hairline;
-						cell.padding._medium;
-						cell.textAlign.left;
-						cell.verticalAlign.top;
-					});
-					s._selector('& th', (header) => {
-						header.backgroundColor._surface;
-						header.color._textMuted;
-						header.fontSize._small;
-						header.letterSpacing.em(0.06);
-						header.textTransform.uppercase;
-					});
-					s._selector('& tbody tr:last-child td', (cell) => cell.borderBottomWidth.px(0));
-					s._selector('& td code', (code) => {
-						code.color._primaryHover;
-						code.whiteSpace.nowrap;
-					});
 					s._media('(max-width: 48rem)', (mobile) =>
 						mobile._selector('& th, & td', (cell) => cell.minWidth.rem(8))
 					);
@@ -61,7 +36,8 @@
 </script>
 
 <script lang="ts">
-	import { useZui } from '@zadmin/zui';
+	import { ZTable, useZui } from '@zadmin/zui';
+	import { ZCode } from '@zadmin/zui/code';
 	import type { ApiSection } from '../framework/component-doc.js';
 
 	let { section }: { section: ApiSection } = $props();
@@ -74,31 +50,27 @@
 	{#if section.description}<p class={classes.description}>{section.description}</p>{/if}
 	<!-- svelte-ignore a11y_no_noninteractive_tabindex (keyboard focus is required for horizontal scrolling) -->
 	<div class={classes.scroll} role="region" aria-label={`${section.title} API表格`} tabindex="0">
-		<table>
-			<thead>
+		<ZTable caption={`${section.title} API`} captionHidden density="compact">
+			{#snippet header()}
+				<tr
+					><th scope="col">名称</th><th scope="col">类型</th><th scope="col">默认值</th><th
+						scope="col">特性</th
+					><th scope="col">说明</th></tr
+				>
+			{/snippet}
+			{#each section.rows as row (row.name)}
 				<tr>
-					<th>名称</th>
-					<th>类型</th>
-					<th>默认值</th>
-					<th>特性</th>
-					<th>说明</th>
+					<td><ZCode code={row.name} inline /></td>
+					<td><ZCode code={row.type} inline /></td>
+					<td><ZCode code={row.default ?? '—'} inline /></td>
+					<td
+						>{[row.required ? 'required' : '', row.bindable ? 'bindable' : '', row.feature ?? '']
+							.filter(Boolean)
+							.join(' · ') || '—'}</td
+					>
+					<td>{row.description}</td>
 				</tr>
-			</thead>
-			<tbody>
-				{#each section.rows as row (row.name)}
-					<tr>
-						<td><code>{row.name}</code></td>
-						<td><code>{row.type}</code></td>
-						<td><code>{row.default ?? '—'}</code></td>
-						<td
-							>{[row.required ? 'required' : '', row.bindable ? 'bindable' : '', row.feature ?? '']
-								.filter(Boolean)
-								.join(' · ') || '—'}</td
-						>
-						<td>{row.description}</td>
-					</tr>
-				{/each}
-			</tbody>
-		</table>
+			{/each}
+		</ZTable>
 	</div>
 </section>

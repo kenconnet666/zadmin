@@ -13,7 +13,7 @@
 	const preferencesStorageKey = 'zui-docs-preferences-v1';
 	const initialPreferences = (() => {
 		if (typeof window === 'undefined') {
-			return resolveDocsPreferences(undefined, 'light');
+			return resolveDocsPreferences(undefined, 'aurora-light');
 		}
 		try {
 			const fallbackThemeId = resolveDocsThemeId(
@@ -25,7 +25,7 @@
 				fallbackThemeId
 			);
 		} catch {
-			return resolveDocsPreferences(undefined, 'light');
+			return resolveDocsPreferences(undefined, 'aurora-light');
 		}
 	})();
 	let contrast = $state<DocsPreferences['contrast']>(initialPreferences.contrast);

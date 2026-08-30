@@ -118,7 +118,7 @@
 </script>
 
 <script lang="ts">
-	import { ZIcon, useZui } from '@zadmin/zui';
+	import { ZIcon, ZLink, useZui } from '@zadmin/zui';
 	import { componentCategories, type ComponentDoc } from '../framework/catalog.js';
 	import { searchComponentDocs } from '../framework/search.js';
 
@@ -142,34 +142,37 @@
 
 <aside class={baseClasses.root}>
 	<nav class={baseClasses.nav} aria-label="组件导航">
-		<a
+		<ZLink
 			class={homeClasses.link}
 			aria-current={!currentId && !currentGuideId ? 'page' : undefined}
-			href="#/">概览</a
+			href="#/"
+			underline="none">概览</ZLink
 		>
 		<p class={baseClasses.category}>系统</p>
-		<a
+		<ZLink
 			class={themeClasses.link}
 			aria-current={currentGuideId === 'theme' ? 'page' : undefined}
 			href="#/guides/theme"
+			underline="none"
 		>
 			<span>Theme Lab</span>
 			<ZIcon class={themeClasses.icon} name="chevronDown" size={14} />
-		</a>
+		</ZLink>
 		{#each componentCategories as category (category.id)}
 			{@const categoryDocs = filtered.filter((doc) => doc.category === category.id)}
 			{#if categoryDocs.length > 0}
 				<p class={baseClasses.category}>{category.label}</p>
 				{#each categoryDocs as doc (doc.id)}
 					{@const linkClasses = zui.slots(sidebarRecipe, { active: currentId === doc.id })}
-					<a
+					<ZLink
 						class={linkClasses.link}
 						aria-current={currentId === doc.id ? 'page' : undefined}
 						href={`#/components/${doc.id}`}
+						underline="none"
 					>
 						<span>{doc.name}</span>
 						<ZIcon class={linkClasses.icon} name="chevronDown" size={14} />
-					</a>
+					</ZLink>
 				{/each}
 			{/if}
 		{/each}

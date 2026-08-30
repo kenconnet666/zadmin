@@ -198,7 +198,7 @@
 <script lang="ts">
 	import ExternalLink from '@lucide/svelte/icons/external-link';
 	import { onMount } from 'svelte';
-	import { ZStack, ZText, useZui } from '@zadmin/zui';
+	import { ZLink, ZStack, ZText, useZui } from '@zadmin/zui';
 	import { ZCode } from '@zadmin/zui/code';
 	import type { ComponentDoc } from '../framework/component-doc.js';
 	import { componentRoute } from '../framework/router.js';
@@ -257,13 +257,14 @@
 					lang="typescript"
 				/>
 			</div>
-			<a
+			<ZLink
 				class={classes.sourceLink}
 				href={`https://github.com/kenconnet666/zadmin/blob/master/${doc.source}`}
+				underline="none"
 			>
 				<ExternalLink aria-hidden="true" size={15} />
 				查看组件源码
-			</a>
+			</ZLink>
 		</header>
 
 		<section id="demos" class={[classes.section, classes.demoSection]}>
@@ -293,21 +294,30 @@
 
 	<aside class={classes.toc} aria-label="当前页目录">
 		<strong class={classes.tocTitle}>当前页面</strong>
-		<a class={tocButtonClass('demos')} href={componentRoute(doc.id, 'demos')}>实时演示</a>
+		<ZLink class={tocButtonClass('demos')} href={componentRoute(doc.id, 'demos')} underline="none"
+			>实时演示</ZLink
+		>
 		{#each doc.demos as demo (demo.id)}
-			<a class={tocButtonClass(demo.id, true)} href={componentRoute(doc.id, demo.id)}
-				>{demo.title}</a
+			<ZLink
+				class={tocButtonClass(demo.id, true)}
+				href={componentRoute(doc.id, demo.id)}
+				underline="none">{demo.title}</ZLink
 			>
 		{/each}
-		<a class={tocButtonClass('api')} href={componentRoute(doc.id, 'api')}>API</a>
+		<ZLink class={tocButtonClass('api')} href={componentRoute(doc.id, 'api')} underline="none"
+			>API</ZLink
+		>
 		{#each doc.api as section (section.id)}
-			<a
+			<ZLink
 				class={tocButtonClass(`api-${section.id}`, true)}
-				href={componentRoute(doc.id, `api-${section.id}`)}>{section.title}</a
+				href={componentRoute(doc.id, `api-${section.id}`)}
+				underline="none">{section.title}</ZLink
 			>
 		{/each}
-		<a class={tocButtonClass('accessibility')} href={componentRoute(doc.id, 'accessibility')}
-			>可访问性</a
+		<ZLink
+			class={tocButtonClass('accessibility')}
+			href={componentRoute(doc.id, 'accessibility')}
+			underline="none">可访问性</ZLink
 		>
 	</aside>
 </div>

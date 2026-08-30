@@ -207,6 +207,7 @@
 	import {
 		ZIcon,
 		ZInput,
+		ZLink,
 		ZPopover,
 		ZPopoverContent,
 		ZPopoverTrigger,
@@ -244,6 +245,16 @@
 	const contrastLabels = { auto: '跟随系统', high: '高对比', normal: '标准' } as const;
 	const motionLabels = { auto: '跟随系统', full: '完整', reduced: '减少' } as const;
 	const directionLabels = { ltr: '从左到右', rtl: '从右到左' } as const;
+	const labelFrom = (labels: Readonly<Record<string, string>>) => (value: SelectionKey) =>
+		labels[String(value)] ?? String(value);
+	const themeValueLabel = (value: SelectionKey) =>
+		typeof value === 'string' && Object.hasOwn(docsThemeById, value)
+			? docsThemeById[value as DocsThemeId].label
+			: String(value);
+	const densityValueLabel = labelFrom(densityLabels);
+	const contrastValueLabel = labelFrom(contrastLabels);
+	const motionValueLabel = labelFrom(motionLabels);
+	const directionValueLabel = labelFrom(directionLabels);
 
 	function setTheme(value: SelectionKey | undefined): void {
 		if (typeof value === 'string' && docsThemes.some((theme) => theme.id === value)) {
@@ -269,12 +280,12 @@
 </script>
 
 <header class={classes.root}>
-	<a class={classes.brand} href="#/">
+	<ZLink class={classes.brand} href="#/" underline="none">
 		<span class={classes.mark}>Z</span>
 		<span class={classes.brandText}
 			><strong>ZUI</strong><small class={classes.brandSmall}>Components</small></span
 		>
-	</a>
+	</ZLink>
 	<label class={classes.search}>
 		<ZIcon name="search" size={18} />
 		<ZInput
@@ -289,10 +300,13 @@
 		<div class={classes.themePicker}>
 			<Palette aria-hidden="true" size={16} />
 			<span class={classes.themeLabel}>主题</span>
-			<ZSelect value={themeId} onValueChange={setTheme} placement="bottom-end">
-				<ZSelectTrigger aria-label="选择文档主题" class={classes.select}
-					>{docsThemeById[themeId].label}</ZSelectTrigger
-				>
+			<ZSelect
+				value={themeId}
+				valueLabel={themeValueLabel}
+				onValueChange={setTheme}
+				placement="bottom-end"
+			>
+				<ZSelectTrigger aria-label="选择文档主题" class={classes.select} />
 				<ZSelectContent>
 					{#each docsThemes as theme (theme.id)}
 						<ZSelectItem value={theme.id}>{theme.label}</ZSelectItem>
@@ -313,10 +327,8 @@
 			<ZPopoverContent class={classes.preferencesPanel}>
 				<div class={classes.preference}>
 					<span>密度</span>
-					<ZSelect value={density} onValueChange={setDensity}>
-						<ZSelectTrigger aria-label="密度" class={classes.select}
-							>{densityLabels[density]}</ZSelectTrigger
-						>
+					<ZSelect value={density} valueLabel={densityValueLabel} onValueChange={setDensity}>
+						<ZSelectTrigger aria-label="密度" class={classes.select} />
 						<ZSelectContent>
 							<ZSelectItem value="compact">紧凑</ZSelectItem>
 							<ZSelectItem value="comfortable">舒适</ZSelectItem>
@@ -326,10 +338,8 @@
 				</div>
 				<div class={classes.preference}>
 					<span>对比度</span>
-					<ZSelect value={contrast} onValueChange={setContrast}>
-						<ZSelectTrigger aria-label="对比度" class={classes.select}
-							>{contrastLabels[contrast]}</ZSelectTrigger
-						>
+					<ZSelect value={contrast} valueLabel={contrastValueLabel} onValueChange={setContrast}>
+						<ZSelectTrigger aria-label="对比度" class={classes.select} />
 						<ZSelectContent>
 							<ZSelectItem value="normal">标准</ZSelectItem>
 							<ZSelectItem value="high">高对比</ZSelectItem>
@@ -339,10 +349,8 @@
 				</div>
 				<div class={classes.preference}>
 					<span>动画</span>
-					<ZSelect value={motion} onValueChange={setMotion}>
-						<ZSelectTrigger aria-label="动画" class={classes.select}
-							>{motionLabels[motion]}</ZSelectTrigger
-						>
+					<ZSelect value={motion} valueLabel={motionValueLabel} onValueChange={setMotion}>
+						<ZSelectTrigger aria-label="动画" class={classes.select} />
 						<ZSelectContent>
 							<ZSelectItem value="auto">跟随系统</ZSelectItem>
 							<ZSelectItem value="full">完整</ZSelectItem>
@@ -352,10 +360,8 @@
 				</div>
 				<div class={classes.preference}>
 					<span>方向</span>
-					<ZSelect value={direction} onValueChange={setDirection}>
-						<ZSelectTrigger aria-label="方向" class={classes.select}
-							>{directionLabels[direction]}</ZSelectTrigger
-						>
+					<ZSelect value={direction} valueLabel={directionValueLabel} onValueChange={setDirection}>
+						<ZSelectTrigger aria-label="方向" class={classes.select} />
 						<ZSelectContent>
 							<ZSelectItem value="ltr">从左到右</ZSelectItem>
 							<ZSelectItem value="rtl">从右到左</ZSelectItem>
@@ -364,9 +370,9 @@
 				</div>
 			</ZPopoverContent>
 		</ZPopover>
-		<a class={classes.github} href="https://github.com/kenconnet666/zadmin">
+		<ZLink class={classes.github} href="https://github.com/kenconnet666/zadmin" underline="none">
 			GitHub
 			<ExternalLink aria-hidden="true" size={14} />
-		</a>
+		</ZLink>
 	</div>
 </header>

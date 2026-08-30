@@ -33,6 +33,7 @@
 					s.borderStyle.solid;
 					s.borderWidth._hairline;
 					s.boxShadow._small;
+					s.color._text;
 					s.display.block;
 					s.padding._large;
 					s.textDecoration.none;
@@ -128,13 +129,7 @@
 					s.textDecoration.none;
 				},
 				principle: (s) => {
-					s.backgroundColor._canvas;
-					s.borderColor._border;
-					s.borderRadius._large;
-					s.borderStyle.solid;
-					s.borderWidth._hairline;
-					s.boxShadow._small;
-					s.padding._large;
+					s.height.percent(100);
 				},
 				principleCopy: (s) => {
 					s.color._textMuted;
@@ -172,19 +167,31 @@
 					s.textShadow._small;
 				}
 			},
-			variants: {}
+			variants: {
+				motion: {
+					auto: {},
+					full: {},
+					reduced: {
+						card: (s) => {
+							s.transitionDuration.ms(0);
+							s._hover((hover) => hover.transform.raw('none'));
+						}
+					}
+				}
+			},
+			defaultVariants: { motion: 'auto' }
 		},
 		import.meta
 	);
 </script>
 
 <script lang="ts">
-	import { ZBox, ZIcon, ZStack, ZText, useZui } from '@zadmin/zui';
+	import { ZBox, ZCard, ZIcon, ZLink, ZStack, ZText, useZui } from '@zadmin/zui';
 	import { componentCategories, type ComponentDoc } from '../framework/catalog.js';
 
 	let { docs }: { docs: readonly ComponentDoc[] } = $props();
 	const zui = useZui();
-	const classes = $derived(zui.slots(homeRecipe));
+	const classes = $derived(zui.slots(homeRecipe, { motion: zui.motion }));
 </script>
 
 <section class={classes.hero}>
@@ -195,30 +202,33 @@
 		5组件库。展示站直接运行工作区组件，每个示例的源码来自同一个Svelte文件。
 	</p>
 	<ZStack direction="row" gap="small" wrap>
-		<a class={classes.primaryAction} href="#/components/button">开始浏览组件</a>
-		<a
+		<ZLink class={classes.primaryAction} href="#/components/button" underline="none"
+			>开始浏览组件</ZLink
+		>
+		<ZLink
 			class={classes.secondaryAction}
-			href="https://github.com/kenconnet666/zadmin/tree/master/ui/zui">GitHub源码</a
+			href="https://github.com/kenconnet666/zadmin/tree/master/ui/zui"
+			underline="none">GitHub源码</ZLink
 		>
 	</ZStack>
 </section>
 
 <section class={classes.principles} aria-label="设计原则">
-	<article class={classes.principle}>
+	<ZCard class={classes.principle}>
 		<strong class={classes.metric}>{docs.length}</strong><span class={classes.principleLabel}
 			>公开组件</span
 		>
 		<p class={classes.principleCopy}>只展示当前已经实现并通过验收的公开组件。</p>
-	</article>
-	<article class={classes.principle}>
+	</ZCard>
+	<ZCard class={classes.principle}>
 		<strong class={classes.metric}>1:1</strong><span class={classes.principleLabel}>Demo与源码</span
 		>
 		<p class={classes.principleCopy}>页面运行的Svelte文件就是复制按钮提供的源码。</p>
-	</article>
-	<article class={classes.principle}>
+	</ZCard>
+	<ZCard class={classes.principle}>
 		<strong class={classes.metric}>Typed</strong><span class={classes.principleLabel}>API合同</span>
 		<p class={classes.principleCopy}>Props默认值来自组件单文件metadata，Docs不再维护第二份。</p>
-	</article>
+	</ZCard>
 </section>
 
 <section class={classes.catalog}>
@@ -233,7 +243,12 @@
 				<h3 class={classes.groupTitle}>{category.label}</h3>
 				<div class={classes.grid}>
 					{#each categoryDocs as doc (doc.id)}
-						<a class={classes.card} data-testid="component-card" href={`#/components/${doc.id}`}>
+						<ZLink
+							class={classes.card}
+							data-testid="component-card"
+							href={`#/components/${doc.id}`}
+							underline="none"
+						>
 							<ZBox>
 								<div class={classes.cardIcon}>
 									<ZIcon name="plus" size={18} />
@@ -242,7 +257,7 @@
 								<ZText tone="muted">{doc.summary}</ZText>
 								<span class={classes.learnMore}>查看Demo与API →</span>
 							</ZBox>
-						</a>
+						</ZLink>
 					{/each}
 				</div>
 			</div>
