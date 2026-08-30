@@ -160,6 +160,10 @@ export default {
 				paragraphs: [
 					'顶层Layer拥有Escape和outside dismiss。Modal使用FocusScope、scroll lock与inert；关闭后只恢复到仍连接的触发元素。'
 				],
+				bullets: [
+					'Presence退场期间DOM仍挂载，使用inert移出Tab序和可访问树；不要在焦点恢复前给含焦点祖先设置aria-hidden。',
+					'Provider、主题或方向更新可能替换Trigger；FocusScope在cleanup时解析当前Trigger，而不是只记住打开瞬间的旧节点。'
+				],
 				links: [
 					{ href: '#/components/dialog', label: 'ZDialog' },
 					{ href: '#/components/popover', label: 'ZPopover' },
