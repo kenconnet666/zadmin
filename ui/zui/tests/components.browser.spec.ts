@@ -18,6 +18,7 @@ import CheckboxFixture from './CheckboxFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
 import FileUploadFixture from './FileUploadFixture.svelte';
 import FormFixture from './FormFixture.svelte';
+import FormEdgeFixture from './FormEdgeFixture.svelte';
 import InputGroupFixture from './InputGroupFixture.svelte';
 import DialogFixture from './DialogFixture.svelte';
 import DateFixture from './DateFixture.svelte';
@@ -160,15 +161,33 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		dialog = document.querySelector<HTMLElement>('[role="dialog"][data-step="metrics"]');
 		expect(dialog?.textContent).toContain('Production metrics');
+		dialog?.querySelector<HTMLButtonElement>('button:nth-last-child(2)')?.click();
+		await tick();
+		expect(document.querySelector('[role="dialog"]')?.getAttribute('data-step')).toBe('summary');
+		document
+			.querySelector<HTMLElement>('[role="dialog"]')
+			?.querySelector<HTMLButtonElement>('button:last-child')
+			?.click();
+		await tick();
+		dialog = document.querySelector<HTMLElement>('[role="dialog"][data-step="metrics"]');
 		dialog?.querySelector<HTMLButtonElement>('button:last-child')?.click();
 		await tick();
 		expect(document.querySelector('[role="dialog"]')).toBeNull();
 		expect(document.activeElement).toBe(start);
-		expect(document.querySelector('[data-testid="tour-output"]')?.textContent).toBe('false:1:1');
+		expect(document.querySelector('[data-testid="tour-output"]')?.textContent).toBe(
+			'false:1:1:1:3'
+		);
 
 		start?.click();
 		await tick();
 		document.querySelector<HTMLButtonElement>('[data-slot="mask"]')?.click();
+		await tick();
+		expect(document.querySelector('[role="dialog"]')).toBeNull();
+		expect(document.activeElement).toBe(start);
+
+		start?.click();
+		await tick();
+		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
 		await tick();
 		expect(document.querySelector('[role="dialog"]')).toBeNull();
 		expect(document.activeElement).toBe(start);
@@ -1101,6 +1120,32 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(output?.textContent).toBe('false:false:0:alice');
 		expect(form?.querySelector('[data-dirty="true"]')).toBeNull();
+	});
+
+	it('covers Form schema failure, delayed change, invalid submit, reset and prevented submit', async () => {
+		render(FormEdgeFixture);
+		const input = document.querySelector<HTMLInputElement>('[data-testid="edge-input"]');
+		const throwing = document.querySelector<HTMLFormElement>('[data-testid="throwing-form"]');
+		const prevented = document.querySelector<HTMLFormElement>('[data-testid="prevented-form"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="form-edge-output"]');
+		if (input) {
+			input.value = 'changed';
+			input.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		}
+		await new Promise((resolve) => setTimeout(resolve, 20));
+		await tick();
+		expect(output?.textContent).toContain(':1:0:0:0');
+		throwing?.requestSubmit();
+		await tick();
+		await Promise.resolve();
+		expect(output?.textContent).toContain(':2:1:0:0');
+		throwing?.reset();
+		await new Promise((resolve) => setTimeout(resolve, 0));
+		await tick();
+		expect(output?.textContent).toContain(':2:1:1:0');
+		prevented?.requestSubmit();
+		await tick();
+		expect(output?.textContent).toContain(':2:1:1:1');
 	});
 
 	it('coordinates Calendar and segmented date/time fields with FormData and reset', async () => {

@@ -44,6 +44,7 @@ import AlertDialogFixture from './AlertDialogFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
 import FileUploadFixture from './FileUploadFixture.svelte';
 import FormFixture from './FormFixture.svelte';
+import FormEdgeFixture from './FormEdgeFixture.svelte';
 import InputGroupFixture from './InputGroupFixture.svelte';
 import MenuFixture from './MenuFixture.svelte';
 import MentionFixture from './MentionFixture.svelte';
@@ -488,6 +489,13 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain('name="email"');
 		expect(result).toContain('Account');
 		expect(result).toContain('Email');
+	});
+
+	it('renders native-validation and caller-prevented Form edge contracts during SSR', () => {
+		const result = render(FormEdgeFixture).body;
+		expect(result).not.toContain('novalidate');
+		expect(result).toContain('data-testid="throwing-form"');
+		expect(result).toContain('data-testid="prevented-form"');
 	});
 
 	it('renders date fields, Calendar grid and closed pickers during SSR', () => {

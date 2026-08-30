@@ -16,12 +16,22 @@
 			title: 'Production metrics'
 		}
 	];
+	const functionSteps: readonly TourStep[] = [
+		{
+			description: 'Function target without explicit placement.',
+			id: 'function-target',
+			target: () => document.querySelector('#tour-summary'),
+			title: 'Function target'
+		}
+	];
 	let open = $state(false);
 	let step = $state(0);
 	let completed = $state(0);
 	let missingOpen = $state(false);
 	let missingCount = $state(0);
 	let persistentOpen = $state(false);
+	let openChanges = $state(0);
+	let stepChanges = $state(0);
 </script>
 
 <ZButton
@@ -33,8 +43,15 @@
 >
 <button id="tour-summary" type="button">Summary target</button>
 <button id="tour-metrics" type="button">Metrics target</button>
-<ZTour {steps} bind:open bind:step onComplete={() => (completed += 1)} />
-<output data-testid="tour-output">{open}:{step}:{completed}</output>
+<ZTour
+	{steps}
+	bind:open
+	bind:step
+	onComplete={() => (completed += 1)}
+	onOpenChange={() => (openChanges += 1)}
+	onStepChange={() => (stepChanges += 1)}
+/>
+<output data-testid="tour-output">{open}:{step}:{completed}:{openChanges}:{stepChanges}</output>
 
 <button id="tour-missing-start" type="button" onclick={() => (missingOpen = true)}
 	>Start missing tour</button
@@ -50,7 +67,7 @@
 	>Start persistent tour</button
 >
 <ZTour
-	{steps}
+	steps={functionSteps}
 	bind:open={persistentOpen}
 	modal={false}
 	closeOnEscape={false}
