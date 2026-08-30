@@ -1,11 +1,12 @@
 <script module lang="ts">
 	import type { Snippet } from 'svelte';
-	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import type { CommandShortcut } from '../../runtime/command.js';
+	import type { ZDialogContentProps } from '../compound/dialog/ZDialogContent.svelte';
 	import type { CommandActionEvent, CommandItem } from './ZCommand.svelte';
 
-	export interface ZCommandPaletteProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
+	export interface ZCommandPaletteProps {
+		readonly class?: ZDialogContentProps['class'];
 		readonly closeLabel?: string;
 		readonly defaultOpen?: boolean;
 		readonly defaultQuery?: string;
@@ -25,6 +26,7 @@
 		readonly resetQueryOnClose?: boolean;
 		readonly shortcut?: CommandShortcut;
 		readonly showTrigger?: boolean;
+		readonly style?: ZDialogContentProps['style'];
 		readonly title?: string;
 		readonly trigger?: Snippet;
 		readonly triggerLabel?: string;
@@ -148,8 +150,7 @@
 		style,
 		title = 'Command palette',
 		trigger,
-		triggerLabel = 'Open command palette',
-		...rest
+		triggerLabel = 'Open command palette'
 	}: ZCommandPaletteProps = $props();
 	const openState = new ControllableState<boolean>({
 		defaultValue: () => defaultOpen,
@@ -191,7 +192,7 @@
 		</ZDialogTrigger>
 	{/if}
 	<ZDialogOverlay data-slot="overlay" />
-	<ZDialogContent {...rest} bind:ref class={className} {style} data-slot="content">
+	<ZDialogContent bind:ref class={className} {style} data-slot="content">
 		<ZDialogTitle>{title}</ZDialogTitle>
 		{#if description}<ZDialogDescription>{description}</ZDialogDescription>{/if}
 		<ZCommand

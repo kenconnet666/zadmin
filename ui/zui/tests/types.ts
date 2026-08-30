@@ -46,6 +46,7 @@ import {
 	ZDrawerOverlay,
 	ZDrawerTitle,
 	ZDrawerTrigger,
+	ZInputGroup,
 	ZMenu,
 	ZMenuGroup,
 	ZMenuItem,
@@ -135,6 +136,7 @@ import {
 	type ZDrawerProps,
 	type ZDrawerTitleProps,
 	type ZDrawerTriggerProps,
+	type ZInputGroupProps,
 	type ZMenuGroupProps,
 	type ZMenuItemProps,
 	type ZMenuLabelProps,
@@ -358,6 +360,10 @@ const textareaProps: ComponentProps<typeof ZTextarea> = {
 	defaultValue: 'Description',
 	resize: 'none'
 } satisfies ZTextareaProps;
+const inputGroupProps: ComponentProps<typeof ZInputGroup> = {
+	children: (() => undefined) as never,
+	invalid: true
+} satisfies ZInputGroupProps;
 const sliderProps: ComponentProps<typeof ZSlider> = {
 	defaultValue: 25,
 	max: 50,
@@ -463,6 +469,7 @@ void mentionProps;
 void commandProps;
 void commandPaletteProps;
 void textareaProps;
+void inputGroupProps;
 void sliderProps;
 void switchProps;
 void tabsProps;

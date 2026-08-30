@@ -281,6 +281,7 @@
 	let nextOptionId = 0;
 	let nextGroupId = 0;
 	let active = $state<SelectionKey>();
+	let didAutofocus = false;
 	const queryState = new ControllableState<string>({
 		defaultValue: () => defaultQuery,
 		onChange: () => onQueryChange,
@@ -370,6 +371,15 @@
 			active = undefined;
 		});
 	});
+	$effect(() => {
+		if (!autofocus) {
+			didAutofocus = false;
+			return;
+		}
+		if (!inputRef || disabled || didAutofocus) return;
+		didAutofocus = true;
+		queueMicrotask(() => inputRef?.focus({ preventScroll: true }));
+	});
 	function activate(item: CommandItem, originalEvent: MouseEvent | KeyboardEvent): void {
 		if (disabled || item.disabled) return;
 		const event = new CommandActionEvent(item, originalEvent);
@@ -431,7 +441,6 @@
 		type="text"
 		defaultValue={defaultQuery}
 		value={queryState.current}
-		{autofocus}
 		{disabled}
 		{placeholder}
 		role="combobox"

@@ -147,6 +147,7 @@
 	import { untrack } from 'svelte';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { useZField } from '../../runtime/form/field-context.js';
+	import { useZInputGroup } from '../../runtime/form/input-group-context.svelte.js';
 	import { listenForFormReset, mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
 	import {
 		applyIcssRootStyle,
@@ -181,7 +182,8 @@
 	}: ZTextareaProps = $props();
 	const zui = useZui();
 	const field = useZField();
-	const resolvedInvalid = $derived(invalid ?? field?.invalid ?? false);
+	const inputGroup = useZInputGroup();
+	const resolvedInvalid = $derived(invalid ?? inputGroup?.invalid ?? field?.invalid ?? false);
 	const rootClass = $derived(
 		zui.recipe(textareaRecipe, {
 			invalid: resolvedInvalid,
@@ -219,7 +221,7 @@
 	name={name ?? field?.name}
 	{defaultValue}
 	value={resolvedValue}
-	disabled={disabled || field?.disabled}
+	disabled={disabled || inputGroup?.disabled || field?.disabled}
 	readonly={readonly || field?.readonly}
 	required={required || field?.required}
 	aria-describedby={resolvedDescribedBy}

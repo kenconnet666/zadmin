@@ -39,6 +39,7 @@ import CascaderFixture from './CascaderFixture.svelte';
 import AccordionFixture from './AccordionFixture.svelte';
 import AlertDialogFixture from './AlertDialogFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
+import InputGroupFixture from './InputGroupFixture.svelte';
 import MenuFixture from './MenuFixture.svelte';
 import MentionFixture from './MentionFixture.svelte';
 import MultiSelectFixture from './MultiSelectFixture.svelte';
@@ -397,6 +398,16 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain('aria-describedby');
 		expect(result).toContain('required');
 		expect(result).toContain('Seed');
+	});
+
+	it('renders InputGroup snippets and inherited input state during SSR', () => {
+		const result = render(InputGroupFixture).body;
+		expect(result).toContain('role="group"');
+		expect(result).toContain('data-slot="prefix"');
+		expect(result).toContain('data-slot="suffix"');
+		expect(result).toContain('name="host"');
+		expect(result).toContain('data-invalid="true"');
+		expect(result).toContain('disabled');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

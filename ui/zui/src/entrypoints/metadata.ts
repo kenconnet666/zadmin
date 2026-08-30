@@ -82,6 +82,7 @@ export { zuiMetadata as checkboxMetadata } from '../components/input/ZCheckbox.s
 export { zuiMetadata as cascaderMetadata } from '../components/input/ZCascader.svelte';
 export { zuiMetadata as fieldMetadata } from '../components/input/ZField.svelte';
 export { zuiMetadata as inputMetadata } from '../components/input/ZInput.svelte';
+export { zuiMetadata as inputGroupMetadata } from '../components/input/ZInputGroup.svelte';
 export { zuiMetadata as mentionMetadata } from '../components/input/ZMention.svelte';
 export { zuiMetadata as segmentedMetadata } from '../components/input/ZSegmented.svelte';
 export { zuiMetadata as sliderMetadata } from '../components/input/ZSlider.svelte';

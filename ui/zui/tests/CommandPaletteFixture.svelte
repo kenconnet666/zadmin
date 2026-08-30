@@ -10,7 +10,7 @@
 		{ key: 'docs', keywords: ['api'], label: 'Open docs' }
 	];
 	let { defaultOpen = false }: { defaultOpen?: boolean } = $props();
-	let open = $state(false);
+	let open = $state<boolean>();
 	let action = $state('none');
 </script>
 
@@ -26,4 +26,4 @@
 	triggerLabel="Open palette"
 	{items}
 />
-<output data-testid="command-palette-output">{open}:{action}</output>
+<output data-testid="command-palette-output">{open ?? false}:{action}</output>

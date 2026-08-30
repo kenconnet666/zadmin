@@ -13,6 +13,7 @@ import AccordionFixture from './AccordionFixture.svelte';
 import AlertDialogFixture from './AlertDialogFixture.svelte';
 import CheckboxFixture from './CheckboxFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
+import InputGroupFixture from './InputGroupFixture.svelte';
 import DialogFixture from './DialogFixture.svelte';
 import DrawerFixture from './DrawerFixture.svelte';
 import DropdownMenuFixture from './DropdownMenuFixture.svelte';
@@ -522,6 +523,33 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(textarea?.value).toBe('Seed');
 		expect(output?.textContent?.startsWith('Seed:')).toBe(true);
+	});
+
+	it('coordinates InputGroup focus boundary, context state, FormData and reset', async () => {
+		render(InputGroupFixture);
+		const group = document.querySelector<HTMLElement>('[role="group"][aria-label="Endpoint"]');
+		const input = document.querySelector<HTMLInputElement>('input[aria-label="Host"]');
+		const disabledInput = document.querySelector<HTMLInputElement>(
+			'input[aria-label="Disabled host"]'
+		);
+		const form = document.querySelector<HTMLFormElement>('[data-testid="input-group-form"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="input-group-output"]');
+		expect(getComputedStyle(input!).borderStyle).toBe('none');
+		expect(disabledInput?.disabled).toBe(true);
+		expect(disabledInput?.getAttribute('aria-invalid')).toBe('true');
+		input?.focus();
+		expect(getComputedStyle(group!).outlineStyle).toBe('solid');
+		if (input) {
+			input.value = 'gateway';
+			input.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		}
+		await tick();
+		expect(new FormData(form!).get('host')).toBe('gateway');
+		expect(output?.textContent).toBe('gateway');
+		form?.reset();
+		await Promise.resolve();
+		await tick();
+		expect(input?.value).toBe('api');
 	});
 	it('keeps AlertDialog open until an explicit action is chosen', async () => {
 		render(AlertDialogFixture);

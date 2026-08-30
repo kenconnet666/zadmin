@@ -72,6 +72,26 @@ test('keeps input binding and field validation interactive', async ({ page }) =>
 	await expect(page.getByText('账号至少需要3个字符')).toHaveCount(0);
 });
 
+test('keeps InputGroup focus boundary, Field context, FormData and reset synchronized', async ({
+	page
+}) => {
+	await page.goto('/#/components/input-group');
+	const group = page.getByRole('group', { name: '服务地址组合' });
+	const input = page.getByRole('textbox', { name: '服务主机' });
+	await input.focus();
+	await expect(group).toHaveCSS('outline-style', 'solid');
+	await expect(input).toHaveCSS('border-style', 'none');
+	await input.fill('gateway');
+	await expect(page.getByText('url = https://gateway.internal')).toBeVisible();
+	await expect
+		.poll(() =>
+			page.locator('form').evaluate((form) => new FormData(form as HTMLFormElement).get('host'))
+		)
+		.toBe('gateway');
+	await page.getByRole('button', { name: '重置' }).click();
+	await expect(input).toHaveValue('api');
+});
+
 test('keeps toggle button state native, bindable and keyboard accessible', async ({ page }) => {
 	await page.goto('/#/components/toggle-button');
 	const toggle = page.getByTestId('toggle-button-controlled');
@@ -697,6 +717,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/cascader',
 		'#/components/combobox',
 		'#/components/input',
+		'#/components/input-group',
 		'#/components/mention',
 		'#/components/multi-select',
 		'#/components/field',

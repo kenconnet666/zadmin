@@ -147,7 +147,8 @@
 
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { useZField } from '../../runtime/form/field-context.js';
-	import { mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
+	import { useZInputGroup } from '../../runtime/form/input-group-context.svelte.js';
+	import { listenForFormReset, mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -179,7 +180,8 @@
 
 	const zui = useZui();
 	const field = useZField();
-	const resolvedInvalid = $derived(invalid ?? field?.invalid ?? false);
+	const inputGroup = useZInputGroup();
+	const resolvedInvalid = $derived(invalid ?? inputGroup?.invalid ?? field?.invalid ?? false);
 	const rootClass = $derived(zui.recipe(inputRecipe, { invalid: resolvedInvalid, size }));
 	const state = new ControllableState<string>({
 		defaultValue: () => defaultValue,
@@ -191,6 +193,10 @@
 	const resolvedDescribedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
+	$effect(() => {
+		if (!ref) return;
+		return listenForFormReset(ref, () => state.reset());
+	});
 
 	function handleInput(event: Event & { currentTarget: HTMLInputElement }): void {
 		state.setFromUser(event.currentTarget.value);
@@ -210,7 +216,7 @@
 	{defaultValue}
 	value={resolvedValue}
 	oninput={handleInput}
-	disabled={disabled || field?.disabled}
+	disabled={disabled || inputGroup?.disabled || field?.disabled}
 	readonly={readonly || field?.readonly}
 	required={required || field?.required}
 	aria-describedby={resolvedDescribedBy}
