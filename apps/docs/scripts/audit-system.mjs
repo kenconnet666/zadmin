@@ -68,6 +68,16 @@ for (const path of componentFiles) {
 			(filename === 'ui/zui/src/components/overlay/ZTour.svelte' &&
 				/aria-hidden=["']true["'][\s\S]*?tabindex=["']-1["']/u.test(source));
 		if (!hasFocusContract) fail(`${filename} has a raw button without a focus contract.`);
+		for (const match of source.matchAll(/<button\b[^>]*>/gu)) {
+			if (!/(?:\btype\s*=|\{type\})/u.test(match[0])) {
+				fail(`${filename} has a raw button without an explicit type.`);
+			}
+		}
+		for (const match of source.matchAll(/<button\b[^>]*>\s*<[A-Z][A-Za-z0-9]*/gu)) {
+			if (!/aria-(?:label|labelledby)\s*=/u.test(match[0])) {
+				fail(`${filename} has an icon-only raw button without an accessible name.`);
+			}
+		}
 	}
 	const hasVisibleRawControl =
 		/<(?:input|textarea)\b(?![^>]*(?:\shidden(?:\s|=|>)|\stype\s*=\s*["']hidden["']))[^>]*>/u.test(
@@ -177,6 +187,8 @@ console.log(
 		inlineSvgFiles: inlineSvg.length,
 		docsRawInteractiveElements: 0,
 		positiveTabindexElements: 0,
-		ariaHiddenTabStops: 0
+		ariaHiddenTabStops: 0,
+		implicitSubmitButtons: 0,
+		unnamedIconButtons: 0
 	})
 );

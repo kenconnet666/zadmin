@@ -14,22 +14,23 @@
 
 ## 2. 最终清单
 
-| 项目                 | 结果 | 门禁                                                                                         |
-| -------------------- | ---: | -------------------------------------------------------------------------------------------- |
-| Svelte组件文件       |  135 | 133个拥有唯一metadata id；`ZMentionEditor`与`ZTextareaAutosize`是非公开内部实现              |
-| 公开组件文档页       |   78 | 每页至少2个不同Demo                                                                          |
-| 实际Demo             |  156 | 少于2个、重复id或空源码会在`defineComponentDoc`中直接失败                                    |
-| 生产指南             |    8 | Getting Started、ICSS、Theme Lab、Accessibility、SSR/CSP、HMR、WebView和Package              |
-| 公开API合同          |  133 | TypeScript AST快照覆盖全部metadata组件与10个package entrypoint；变化必须显式更新             |
-| 官方主题             |    6 | `@zadmin/zui/themes`统一导出，文档站真实切换并持久化                                         |
-| 带CSS过渡的组件      |   13 | 13/13显式消费Provider motion，reduced时清除过渡                                              |
-| Docs全站自建交互控件 |    0 | `apps/docs/src`全部Svelte文件由ZUI表达按钮、链接、Select、Popover、Table、Code和Card         |
-| 内联SVG              |    4 | 2个ZAdmin品牌资源；`ZSpinner`与圆形`ZProgress`为组件自身的数据图形；通用UI图标全部来自Lucide |
-| 静态系统审计         |    1 | CI固化metadata唯一性、Demo数量、motion、Docs dogfood、Lucide导入和SVG白名单                  |
-| 内部原生按钮文件     |    9 | 必须复用internal action、显式focus合同，或是Tour的隐藏非Tab遮罩                              |
-| 可见原生输入文件     |   14 | 非hidden input/textarea必须复用internal focus或显式focus-visible/focus-within                |
-| 表单reset action文件 |   26 | 组件必须通过节点action绑定/更新/销毁，禁止直接调用低层listener                               |
-| 正tabindex/隐藏Tab点 |  0/0 | ZUI和Docs禁止正tabindex；aria-hidden交互元素必须显式`tabindex=-1`                            |
+| 项目                    | 结果 | 门禁                                                                                         |
+| ----------------------- | ---: | -------------------------------------------------------------------------------------------- |
+| Svelte组件文件          |  135 | 133个拥有唯一metadata id；`ZMentionEditor`与`ZTextareaAutosize`是非公开内部实现              |
+| 公开组件文档页          |   78 | 每页至少2个不同Demo                                                                          |
+| 实际Demo                |  156 | 少于2个、重复id或空源码会在`defineComponentDoc`中直接失败                                    |
+| 生产指南                |    8 | Getting Started、ICSS、Theme Lab、Accessibility、SSR/CSP、HMR、WebView和Package              |
+| 公开API合同             |  133 | TypeScript AST快照覆盖全部metadata组件与10个package entrypoint；变化必须显式更新             |
+| 官方主题                |    6 | `@zadmin/zui/themes`统一导出，文档站真实切换并持久化                                         |
+| 带CSS过渡的组件         |   13 | 13/13显式消费Provider motion，reduced时清除过渡                                              |
+| Docs全站自建交互控件    |    0 | `apps/docs/src`全部Svelte文件由ZUI表达按钮、链接、Select、Popover、Table、Code和Card         |
+| 内联SVG                 |    4 | 2个ZAdmin品牌资源；`ZSpinner`与圆形`ZProgress`为组件自身的数据图形；通用UI图标全部来自Lucide |
+| 静态系统审计            |    1 | CI固化metadata唯一性、Demo数量、motion、Docs dogfood、Lucide导入和SVG白名单                  |
+| 内部原生按钮文件        |    9 | 必须复用internal action、显式focus合同，或是Tour的隐藏非Tab遮罩                              |
+| 可见原生输入文件        |   14 | 非hidden input/textarea必须复用internal focus或显式focus-visible/focus-within                |
+| 表单reset action文件    |   26 | 组件必须通过节点action绑定/更新/销毁，禁止直接调用低层listener                               |
+| 正tabindex/隐藏Tab点    |  0/0 | ZUI和Docs禁止正tabindex；aria-hidden交互元素必须显式`tabindex=-1`                            |
+| 隐式submit/无名图标按钮 |  0/0 | 内部原生button必须显式type；图标按钮必须有aria-label或aria-labelledby                        |
 
 分类目录的16–26个直接文件属于蓝图允许的真实大分类（5–30），继续保持“分类目录直接包含简单组件文件”；没有为满足计数制造一文件目录。
 
