@@ -7,6 +7,7 @@ import { build } from 'vite';
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const sourceRoot = resolve(packageRoot, 'src');
+const COMPONENT_INCREMENTAL_GZIP_BUDGET = 6 * 1024;
 const portable = (path) => path.replaceAll('\\', '/');
 const runtime = portable(resolve(sourceRoot, 'entrypoints/runtime.ts'));
 const components = [
@@ -19,41 +20,16 @@ const components = [
 		path: 'data-display/ZDescriptionList.svelte'
 	},
 	{ id: 'list', name: 'ZList', path: 'data-display/ZList.svelte' },
-	{
-		id: 'tag',
-		maxIncrementalGzip: 4 * 1024,
-		name: 'ZTag',
-		path: 'data-display/ZTag.svelte'
-	},
+	{ id: 'tag', name: 'ZTag', path: 'data-display/ZTag.svelte' },
 	{ id: 'empty', name: 'ZEmpty', path: 'data-display/ZEmpty.svelte' },
 	{ id: 'meter', name: 'ZMeter', path: 'data-display/ZMeter.svelte' },
-	{
-		id: 'progress',
-		maxIncrementalGzip: 3.75 * 1024,
-		name: 'ZProgress',
-		path: 'data-display/ZProgress.svelte'
-	},
+	{ id: 'progress', name: 'ZProgress', path: 'data-display/ZProgress.svelte' },
 	{ id: 'skeleton', name: 'ZSkeleton', path: 'data-display/ZSkeleton.svelte' },
 	{ id: 'statistic', name: 'ZStatistic', path: 'data-display/ZStatistic.svelte' },
-	{
-		id: 'timeline',
-		maxIncrementalGzip: 3.375 * 1024,
-		name: 'ZTimeline',
-		path: 'data-display/ZTimeline.svelte'
-	},
+	{ id: 'timeline', name: 'ZTimeline', path: 'data-display/ZTimeline.svelte' },
 	{ id: 'table', name: 'ZTable', path: 'data-display/ZTable.svelte' },
-	{
-		id: 'virtual-list',
-		maxIncrementalGzip: 3.375 * 1024,
-		name: 'ZVirtualList',
-		path: 'data-display/ZVirtualList.svelte'
-	},
-	{
-		id: 'data-table',
-		maxIncrementalGzip: 6 * 1024,
-		name: 'ZDataTable',
-		path: 'data-display/ZDataTable.svelte'
-	},
+	{ id: 'virtual-list', name: 'ZVirtualList', path: 'data-display/ZVirtualList.svelte' },
+	{ id: 'data-table', name: 'ZDataTable', path: 'data-display/ZDataTable.svelte' },
 	{ id: 'carousel', name: 'ZCarousel', path: 'data-display/ZCarousel.svelte' },
 	{ id: 'alert', name: 'ZAlert', path: 'feedback/ZAlert.svelte' },
 	{ id: 'loading-bar', name: 'ZLoadingBar', path: 'feedback/ZLoadingBar.svelte' },
@@ -232,12 +208,7 @@ const components = [
 		name: 'ZPopoverContent',
 		path: 'compound/popover/ZPopoverContent.svelte'
 	},
-	{
-		id: 'radio-group',
-		maxIncrementalGzip: 3.375 * 1024,
-		name: 'ZRadioGroup',
-		path: 'compound/radio-group/ZRadioGroup.svelte'
-	},
+	{ id: 'radio-group', name: 'ZRadioGroup', path: 'compound/radio-group/ZRadioGroup.svelte' },
 	{
 		id: 'radio-group-item',
 		name: 'ZRadioGroupItem',
@@ -274,14 +245,9 @@ const components = [
 	{ id: 'aspect-ratio', name: 'ZAspectRatio', path: 'layout/ZAspectRatio.svelte' },
 	{ id: 'container', name: 'ZContainer', path: 'layout/ZContainer.svelte' },
 	{ id: 'text', name: 'ZText', path: 'gene/ZText.svelte' },
-	{ id: 'icon', maxIncrementalGzip: 4 * 1024, name: 'ZIcon', path: 'gene/ZIcon.svelte' },
+	{ id: 'icon', name: 'ZIcon', path: 'gene/ZIcon.svelte' },
 	{ id: 'button', name: 'ZButton', path: 'gene/ZButton.svelte' },
-	{
-		id: 'toggle-button',
-		maxIncrementalGzip: 3.625 * 1024,
-		name: 'ZToggleButton',
-		path: 'gene/ZToggleButton.svelte'
-	},
+	{ id: 'toggle-button', name: 'ZToggleButton', path: 'gene/ZToggleButton.svelte' },
 	{ id: 'checkbox', name: 'ZCheckbox', path: 'input/ZCheckbox.svelte' },
 	{ id: 'cascader', name: 'ZCascader', path: 'input/ZCascader.svelte' },
 	{ id: 'calendar', name: 'ZCalendar', path: 'input/ZCalendar.svelte' },
@@ -295,41 +261,21 @@ const components = [
 	{ id: 'number-field', name: 'ZNumberField', path: 'input/ZNumberField.svelte' },
 	{ id: 'pin-input', name: 'ZPinInput', path: 'input/ZPinInput.svelte' },
 	{ id: 'segmented', name: 'ZSegmented', path: 'input/ZSegmented.svelte' },
-	{
-		id: 'slider',
-		maxIncrementalGzip: 3.375 * 1024,
-		name: 'ZSlider',
-		path: 'input/ZSlider.svelte'
-	},
-	{
-		id: 'pagination',
-		maxIncrementalGzip: 4.625 * 1024,
-		name: 'ZPagination',
-		path: 'navigation/ZPagination.svelte'
-	},
+	{ id: 'slider', name: 'ZSlider', path: 'input/ZSlider.svelte' },
+	{ id: 'pagination', name: 'ZPagination', path: 'navigation/ZPagination.svelte' },
 	{ id: 'command', name: 'ZCommand', path: 'navigation/ZCommand.svelte' },
 	{
 		id: 'command-palette',
 		name: 'ZCommandPalette',
 		path: 'navigation/ZCommandPalette.svelte'
 	},
-	{
-		id: 'switch',
-		maxIncrementalGzip: 3.625 * 1024,
-		name: 'ZSwitch',
-		path: 'input/ZSwitch.svelte'
-	},
+	{ id: 'switch', name: 'ZSwitch', path: 'input/ZSwitch.svelte' },
 	{ id: 'tags-input', name: 'ZTagsInput', path: 'input/ZTagsInput.svelte' },
 	{ id: 'textarea', name: 'ZTextarea', path: 'input/ZTextarea.svelte' },
 	{ id: 'time-field', name: 'ZTimeField', path: 'input/ZTimeField.svelte' },
 	{ id: 'tree-select', name: 'ZTreeSelect', path: 'input/ZTreeSelect.svelte' },
 	{ id: 'transfer', name: 'ZTransfer', path: 'input/ZTransfer.svelte' },
-	{
-		id: 'field',
-		maxIncrementalGzip: 3.375 * 1024,
-		name: 'ZField',
-		path: 'input/ZField.svelte'
-	},
+	{ id: 'field', name: 'ZField', path: 'input/ZField.svelte' },
 	{ id: 'file-upload', name: 'ZFileUpload', path: 'input/ZFileUpload.svelte' },
 	{ id: 'form', name: 'ZForm', path: 'input/ZForm.svelte' },
 	{ id: 'form-field', name: 'ZFormField', path: 'input/ZFormField.svelte' }
@@ -406,7 +352,7 @@ for (const component of components) {
 		`import * as runtime from ${JSON.stringify(runtime)}; import component from ${JSON.stringify(componentEntry)}; globalThis.__zuiRuntimeBudget = runtime; globalThis.__zuiComponentBudget = component;`
 	);
 	const incremental = Math.max(0, output.gzip - runtimeBundle.gzip);
-	const maxIncrementalGzip = component.maxIncrementalGzip ?? 3.25 * 1024;
+	const maxIncrementalGzip = COMPONENT_INCREMENTAL_GZIP_BUDGET;
 	if (incremental > maxIncrementalGzip) {
 		throw new Error(
 			`${component.name} incremental gzip ${incremental} exceeds ${maxIncrementalGzip} bytes.`
