@@ -32,6 +32,7 @@ import DrawerFixture from './DrawerFixture.svelte';
 import DropdownMenuFixture from './DropdownMenuFixture.svelte';
 import MenuFixture from './MenuFixture.svelte';
 import MentionFixture from './MentionFixture.svelte';
+import NativeIdentityFixture from './NativeIdentityFixture.svelte';
 import MultiSelectFixture from './MultiSelectFixture.svelte';
 import NumberFieldFixture from './NumberFieldFixture.svelte';
 import PinInputFixture from './PinInputFixture.svelte';
@@ -97,6 +98,26 @@ async function resetForm(form: HTMLFormElement | null | undefined): Promise<void
 }
 
 describe('compiled ICSS browser updates', () => {
+	it('generates unique native control ids while preserving consumer and Field ownership', () => {
+		render(NativeIdentityFixture);
+		const controls = [
+			...document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
+				'input:not([type="hidden"]), textarea'
+			)
+		];
+		const ids = controls.map(({ id }) => id);
+		expect(ids.every(Boolean)).toBe(true);
+		expect(new Set(ids).size).toBe(ids.length);
+		expect(document.querySelector<HTMLInputElement>('[data-testid="identity-explicit"]')?.id).toBe(
+			'consumer-input'
+		);
+		const field = document.querySelector<HTMLInputElement>('[data-testid="identity-field"]');
+		expect(document.querySelector<HTMLLabelElement>('label')?.htmlFor).toBe(field?.id);
+		expect(document.querySelector<HTMLInputElement>('[aria-label="Select all rows"]')?.id).not.toBe(
+			''
+		);
+	});
+
 	it('updates Provider theme recipes through their visual transition', async () => {
 		render(ThemeSwitchFixture);
 		const target = document.querySelector<HTMLElement>('[data-testid="theme-switch-target"]')!;
