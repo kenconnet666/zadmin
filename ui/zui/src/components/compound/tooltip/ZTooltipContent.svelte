@@ -119,11 +119,25 @@
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 	const interactiveSelector = [
 		'a[href]',
+		'audio[controls]',
 		'button',
+		'details',
+		'embed',
+		'iframe',
 		'input:not([type="hidden"])',
+		'object',
 		'select',
 		'textarea',
+		'video[controls]',
 		'[contenteditable="true"]',
+		'[role="button"]',
+		'[role="checkbox"]',
+		'[role="combobox"]',
+		'[role="link"]',
+		'[role="radio"]',
+		'[role="slider"]',
+		'[role="spinbutton"]',
+		'[role="switch"]',
 		'[tabindex]:not([tabindex="-1"])'
 	].join(',');
 

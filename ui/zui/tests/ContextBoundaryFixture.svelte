@@ -64,7 +64,11 @@
 <svelte:boundary onerror={capture}>
 	<ZTooltip defaultOpen>
 		<ZTooltipTrigger>Invalid tooltip</ZTooltipTrigger>
-		<ZTooltipContent><button type="button" disabled>Disabled button</button></ZTooltipContent>
+		<ZTooltipContent
+			><button type="button" disabled>Disabled button</button><span role="button" tabindex="-1"
+				>ARIA button</span
+			></ZTooltipContent
+		>
 	</ZTooltip>
 </svelte:boundary>
 <svelte:boundary onerror={capture}><ZList items={duplicateItems} /></svelte:boundary>
