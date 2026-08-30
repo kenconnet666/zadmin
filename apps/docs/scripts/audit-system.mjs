@@ -50,6 +50,18 @@ function auditTabOrder(source, filename) {
 	}
 }
 
+function auditSvelte5(source, filename) {
+	if (/\son:[a-z][\w-]*\s*=/u.test(source)) {
+		fail(`${filename} uses a legacy Svelte event directive.`);
+	}
+	if (/\bcreateEventDispatcher\b/u.test(source)) {
+		fail(`${filename} uses createEventDispatcher instead of callback props.`);
+	}
+	if (/<svelte:component\b/u.test(source)) {
+		fail(`${filename} uses the legacy dynamic component element.`);
+	}
+}
+
 const componentFiles = await filesUnder(componentsRoot, ['.svelte']);
 const metadata = [];
 const internalComponents = [];
@@ -61,6 +73,7 @@ for (const path of componentFiles) {
 	const source = await readFile(path, 'utf8');
 	const filename = portable(relative(workspaceRoot, path));
 	auditTabOrder(source, filename);
+	auditSvelte5(source, filename);
 	if (/<button\b/u.test(source)) {
 		rawButtonFiles.push(filename);
 		const hasFocusContract =
@@ -127,6 +140,7 @@ for (const path of docsSvelteFiles) {
 	const source = await readFile(path, 'utf8');
 	const filename = portable(relative(workspaceRoot, path));
 	auditTabOrder(source, filename);
+	auditSvelte5(source, filename);
 	if (rawInteractive.test(source))
 		fail(`${filename} hand-builds an interactive element instead of dogfooding ZUI.`);
 	if (forbiddenGlyph.test(source))
@@ -189,6 +203,8 @@ console.log(
 		positiveTabindexElements: 0,
 		ariaHiddenTabStops: 0,
 		implicitSubmitButtons: 0,
-		unnamedIconButtons: 0
+		unnamedIconButtons: 0,
+		legacySvelteEvents: 0,
+		legacyDynamicComponents: 0
 	})
 );
