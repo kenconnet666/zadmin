@@ -274,7 +274,7 @@ const cascaderSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/components/input/ZCascader.svelte'),
 	'utf8'
 );
-const formResetSignalTag = formResetSignalSource.match(/<button\b[\s\S]*?\/>/u)?.[0] ?? '';
+const formResetSignalTag = formResetSignalSource.match(/<button\b[\s\S]*?>/u)?.[0] ?? '';
 if (
 	!buttonSource.includes("'aria-busy': ariaBusy") ||
 	!buttonSource.includes('aria-busy={loading ? true : ariaBusy}') ||
@@ -410,9 +410,12 @@ if (
 	!focusScopeSource.includes('this.#previousFocus !== restoreTarget') ||
 	!focusScopeSource.includes('this.#previousFocus.focus({ preventScroll: true })') ||
 	!popoverContentSource.includes('restoreTarget: () => popover.trigger') ||
+	!popoverContentSource.includes(
+		"aria-modal={popover.modal && role === 'dialog' ? 'true' : undefined}"
+	) ||
 	!dialogContentSource.includes('restoreTarget: () => dialog.trigger')
 ) {
-	fail('Layer focus scopes must restore the current compound trigger with a focusable fallback.');
+	fail('Layer focus scopes and modal semantics must preserve their current compound contracts.');
 }
 const tooltipContentSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/components/compound/tooltip/ZTooltipContent.svelte'),
@@ -547,11 +550,13 @@ if (new Set(demoIds).size !== demoIds.length)
 const productionBoundaryDemos = [
 	'avatar-image-fallback',
 	'button-composition',
+	'carousel-autoplay-pause',
 	'command-external-results',
 	'command-palette-external-trigger',
 	'code-scheme-embedded',
 	'date-field-bounds',
 	'file-upload-default-queue',
+	'popover-modal-match-width',
 	'provider-portal-boundary',
 	'select-controlled-label',
 	'tags-input-draft-ownership',

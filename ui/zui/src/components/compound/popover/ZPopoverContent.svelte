@@ -118,6 +118,7 @@
 		source: 'ui/zui/src/components/compound/popover/ZPopoverContent.svelte',
 		states: [
 			{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] },
+			{ description: 'modal dialog语义。', name: 'aria-modal', values: ['true'] },
 			{ description: 'Presence生命周期。', name: 'data-presence', values: ['entered', 'exiting'] }
 		],
 		status: 'experimental',
@@ -220,6 +221,7 @@
 		{role}
 		tabindex={-1}
 		inert={!popover.open}
+		aria-modal={popover.modal && role === 'dialog' ? 'true' : undefined}
 		aria-labelledby={ariaLabelledBy === null ? undefined : (ariaLabelledBy ?? popover.triggerId)}
 		aria-describedby={ariaDescribedBy}
 		data-presence={presenceState}

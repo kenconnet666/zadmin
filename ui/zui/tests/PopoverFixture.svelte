@@ -3,14 +3,25 @@
 	import ZPopoverContent from '../src/components/compound/popover/ZPopoverContent.svelte';
 	import ZPopoverTrigger from '../src/components/compound/popover/ZPopoverTrigger.svelte';
 
-	let { defaultOpen = false, prevent = false }: { defaultOpen?: boolean; prevent?: boolean } =
-		$props();
+	let {
+		defaultOpen = false,
+		matchWidth = false,
+		modal = false,
+		prevent = false
+	}: { defaultOpen?: boolean; matchWidth?: boolean; modal?: boolean; prevent?: boolean } = $props();
 	let open = $state<boolean>();
 	let changes = $state(0);
 </script>
 
 <div data-testid="popover-inline-host">
-	<ZPopover {defaultOpen} bind:open onOpenChange={() => (changes += 1)} placement="bottom-start">
+	<ZPopover
+		{defaultOpen}
+		{matchWidth}
+		{modal}
+		bind:open
+		onOpenChange={() => (changes += 1)}
+		placement="bottom-start"
+	>
 		<ZPopoverTrigger
 			data-testid="popover-trigger"
 			onclick={(event) => prevent && event.preventDefault()}>Open</ZPopoverTrigger

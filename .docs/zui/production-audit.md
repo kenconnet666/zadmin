@@ -18,7 +18,7 @@
 | ------------------------ | ---: | -------------------------------------------------------------------------------------------- |
 | Svelte组件文件           |  135 | 133个拥有唯一metadata id；`ZMentionEditor`与`ZTextareaAutosize`是非公开内部实现              |
 | 公开组件文档页           |   78 | 每页至少2个不同Demo                                                                          |
-| 实际Demo                 |  169 | 少于2个、重复id或空源码会在`defineComponentDoc`中直接失败                                    |
+| 实际Demo                 |  171 | 少于2个、重复id或空源码会在`defineComponentDoc`中直接失败                                    |
 | 生产指南                 |    8 | Getting Started、ICSS、Theme Lab、Accessibility、SSR/CSP、HMR、WebView和Package              |
 | 公开API合同              |  133 | TypeScript AST快照覆盖全部metadata组件与10个package entrypoint；变化必须显式更新             |
 | 官方主题                 |    6 | `@zadmin/zui/themes`统一导出，文档站真实切换并持久化                                         |
@@ -75,6 +75,7 @@
 | Date/Time分段导航重复且含边界魔数     | 两组件重复RTL左右分支，并以±99表达Home/End                         | 复用horizontal navigationIntent与moveIndex(loop=false)，删除魔数并共享边界语义     |
 | Cascader同列导航重复夹紧算法          | 上下/Home/End手写索引边界，左右/选择又混在同一if链                 | 复用vertical intent与非循环moveIndex；switch表达进入子列、返回父列和选择           |
 | Popover退出时阻止aria-hidden警告      | Presence先隐藏仍含焦点的Content，FocusScope随后才恢复Trigger       | Popover/Dialog/Accordion退出只用inert；Tooltip无焦点管理仍保留aria-hidden          |
+| Popover modal缺少aria-modal           | focus trap、scroll lock和inert已启用，但dialog没有暴露modal语义    | 仅modal且role=dialog时写aria-modal=true；三浏览器固定等宽、资源与焦点清理          |
 | ContextMenu关闭后焦点落到BODY         | Popover当前Trigger是坐标span，直接focus不会生效且遮蔽previousFocus | FocusScope验证当前目标确实获得焦点，否则回退到打开前的真实ContextMenu目标          |
 | 可取消事件重复实现                    | Select、MultiSelect、Combobox、Menu和Layer各自维护布尔状态         | 抽取最小`CancelableEvent`基类，保留具体事件公开类型                                |
 | 内部微型按钮视觉/焦点重复             | Calendar、NumberField与TimeField各自维护相同基础动作样式           | 统一复用`styleInternalAction`，仅保留尺寸、边框和布局差异                          |
@@ -130,7 +131,7 @@
 
 ## 5. 文档站真实浏览器证据
 
-- 78/78组件路由均能渲染，且每页DOM中至少有2个不同Demo；十三个关键组件增加第三个生产边界场景。
+- 78/78组件路由均能渲染，且每页DOM中至少有2个不同Demo；十五个关键组件增加第三个生产边界场景。
 - 七份新增生产指南在真实Chrome中7/7渲染，均有唯一active导航、3–4个ZUI Card章节和正确页面标题。
 - ZStack方向Demo通过ZSelect键盘切换后，Trigger文本、实际`flex-direction`和焦点恢复一致；Docs全站原生交互标签为0。
 - RTL下ZTable caption/cell和组件TOC computed对齐为start，ZCode行号为end；验收后恢复LTR并由静态门禁拒绝物理textAlign。
@@ -158,6 +159,7 @@
 - ZTree第三个Demo覆盖bare外观、多选aria/FormData和原生reset；DataTable现有两页已覆盖虚拟尺寸、排序、多选与紧凑单选，不制造重复Demo。
 - TagsInput第三个Demo在Chrome固定重复值自动提交与手动草稿保留；FileUpload移除后reset恢复SSR安全的defaultFiles队列；DateField方向键钳制到10/20日并reset回15日。
 - Select第三个Demo在Chrome固定prod/生产到staging/预发的受控open/valueLabel；Command外部结果从4项收敛为deploy；CommandPalette无内置Trigger且Escape恢复业务按钮。
+- Carousel第三个Demo在完整动画下自动前进，内部焦点后1.45s保持当前项；Popover modal等宽、aria-modal、焦点/scroll/inert与Escape清理均经Chrome验证，随后恢复减少动画。
 - 首页和组件深链完整reload后首个Tab均为“跳到主要内容”；Enter保持当前hash路由与标题/H1，并把焦点送到`main#zui-main-content`
   ，无404或控制台异常。
 - skip-link使用逻辑`inset-inline-start`；真实Chrome切换RTL并reload后出现在右侧起始边，恢复LTR后控制台保持干净。
@@ -192,13 +194,12 @@
 
 ## 6. CI结论
 
-最后一次按约回看的门禁：[CI run 33318431200](https://github.com/kenconnet666/zadmin/actions/runs/33318431200)。
+最后一次按约回看的门禁：[CI run 33319340139](https://github.com/kenconnet666/zadmin/actions/runs/33319340139)。
 
-- Windows C# WebView2 desktop、Workspace类型/Svelte、Prettier、ESLint和静态源码审计成功；layer reset runtime三浏览器全部成功；
-- Chromium与Firefox的完整组件测试成功，包含全部Docs真实Demo；WebKit仍为同一20项reset状态同步，证明新任务与`flushSync`都没有跨过组件更新边界；
-- Coverage的Chromium组件与Docs Demo成功，唯一额外失败是TreeFixture新增第二棵树后SSR旧断言仍期望4个treeitem；当前批次已改为2棵树/8项并固定multiple元数据；
-- 专用signal当前改为hidden type=button：action只派发不冒泡zuireset，真正reset由Svelte事件处理；Chrome确认无name/id、不可Tab、直接归属且不进入提交值；
-- Docs E2E、全构建与生成文件检查因全测试失败被跳过；Release PR按预期跳过，尚不能扩散到其余24个组件。
+- Coverage/packages完整成功：Chromium组件与全部Docs Demo、bundle、外部SSR、publish dry-run、Miniapp与WebView包验收均通过；
+- Workspace与Windows桌面只在Svelte类型阶段失败：私有`onzuireset`尚未声明且button使用自闭合写法，后续测试未运行；
+- 当前批次在runtime/form局部扩展Svelte button事件类型且不从公开entrypoint导出，并改用显式`</button>`；WebStorm确认0错误；
+- 因本轮未进入WebKit，事件桥是否减少20项reset失败仍留给下一次推送窗口确认，不以Coverage Chromium成功代替三浏览器结论。
 
 最终通过后必须同时满足：
 

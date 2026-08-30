@@ -1979,6 +1979,27 @@ describe('compiled ICSS browser updates', () => {
 		expect(trigger?.getAttribute('aria-expanded')).toBe('false');
 	});
 
+	it('coordinates modal Popover semantics, width and resource cleanup', async () => {
+		render(PopoverFixture, { matchWidth: true, modal: true });
+		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="popover-trigger"]');
+		const outside = document.querySelector<HTMLButtonElement>('[data-testid="popover-outside"]');
+		trigger?.click();
+		await tick();
+		const content = document.querySelector<HTMLElement>('[data-testid="popover-content"]');
+		expect(content?.getAttribute('aria-modal')).toBe('true');
+		expect(content?.getBoundingClientRect().width).toBe(trigger?.getBoundingClientRect().width);
+		expect(outside?.inert || outside?.closest('[inert]') !== null).toBe(true);
+		expect(document.body.style.overflow).toBe('hidden');
+
+		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+		await new Promise((resolve) => setTimeout(resolve, 140));
+		await tick();
+		expect(document.querySelector('[data-testid="popover-content"]')).toBeNull();
+		expect(document.body.style.overflow).toBe('');
+		expect(outside?.inert || outside?.closest('[inert]') !== null).toBe(false);
+		expect(document.activeElement).toBe(trigger);
+	});
+
 	it('coordinates Popconfirm focus, explicit actions and safe dismiss paths', async () => {
 		render(PopconfirmFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="popconfirm-trigger"]');

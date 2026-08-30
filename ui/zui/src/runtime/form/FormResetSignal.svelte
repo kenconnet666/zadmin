@@ -80,5 +80,5 @@
 		onzuireset={onReset}
 		use:portal={{ target: resetOwner }}
 		use:signalFormReset={{ owner: resetOwner }}
-	/>
+	></button>
 {/if}

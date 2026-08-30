@@ -7,6 +7,8 @@ import InteractiveDemo from './InteractiveDemo.svelte';
 import interactiveSource from './InteractiveDemo.svelte?raw';
 import FocusDemo from './FocusDemo.svelte';
 import focusSource from './FocusDemo.svelte?raw';
+import ModalDemo from './ModalDemo.svelte';
+import modalSource from './ModalDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const popoverDoc = defineComponentDoc(popoverMetadata, {
@@ -25,6 +27,14 @@ export const popoverDoc = defineComponentDoc(popoverMetadata, {
 			id: 'popover-focus',
 			source: focusSource,
 			title: '初始焦点策略'
+		},
+		{
+			component: ModalDemo,
+			description:
+				'modal模式启用焦点陷阱、scroll lock与外部inert，matchWidth同步Trigger和Content宽度。',
+			id: 'popover-modal-match-width',
+			source: modalSource,
+			title: '模态与等宽定位'
 		}
 	],
 	accessibility: [
