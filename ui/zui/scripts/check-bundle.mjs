@@ -232,6 +232,7 @@ const components = [
 	},
 	{ id: 'checkbox', name: 'ZCheckbox', path: 'input/ZCheckbox.svelte' },
 	{ id: 'cascader', name: 'ZCascader', path: 'input/ZCascader.svelte' },
+	{ id: 'color-picker', name: 'ZColorPicker', path: 'input/ZColorPicker.svelte' },
 	{ id: 'input', name: 'ZInput', path: 'input/ZInput.svelte' },
 	{ id: 'input-group', name: 'ZInputGroup', path: 'input/ZInputGroup.svelte' },
 	{ id: 'mention', name: 'ZMention', path: 'input/ZMention.svelte' },

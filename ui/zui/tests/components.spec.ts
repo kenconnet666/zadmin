@@ -36,6 +36,7 @@ import ComboboxFixture from './ComboboxFixture.svelte';
 import CommandFixture from './CommandFixture.svelte';
 import CommandPaletteFixture from './CommandPaletteFixture.svelte';
 import CascaderFixture from './CascaderFixture.svelte';
+import ColorPickerFixture from './ColorPickerFixture.svelte';
 import AccordionFixture from './AccordionFixture.svelte';
 import AlertDialogFixture from './AlertDialogFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
@@ -429,6 +430,17 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain('tabindex="0"');
 		expect(result).toContain('name="pin"');
 		expect(result).toContain('value="12"');
+	});
+
+	it('renders ColorPicker trigger and open color fields during SSR', () => {
+		const closed = render(ColorPickerFixture).body;
+		expect(closed).toContain('Color #33669980');
+		expect(closed).toContain('name="color"');
+		expect(closed).not.toContain('type="color"');
+		const open = render(ColorPickerFixture, { props: { defaultOpen: true } }).body;
+		expect(open).toContain('type="color"');
+		expect(open).toContain('type="range"');
+		expect(open).toContain('Hex color');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

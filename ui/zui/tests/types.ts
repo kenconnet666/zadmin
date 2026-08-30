@@ -21,6 +21,7 @@ import {
 	ZCascader,
 	ZCheckbox,
 	ZCombobox,
+	ZColorPicker,
 	ZComboboxContent,
 	ZComboboxInput,
 	ZComboboxItem,
@@ -116,6 +117,7 @@ import {
 	type ZComboboxInputProps,
 	type ZComboboxItemProps,
 	type ZComboboxProps,
+	type ZColorPickerProps,
 	type ZCommandPaletteProps,
 	type ZCommandProps,
 	type ZContextMenuContentProps,
@@ -378,6 +380,10 @@ const pinInputProps: ComponentProps<typeof ZPinInput> = {
 	mask: true,
 	value: '123456'
 } satisfies ZPinInputProps;
+const colorPickerProps: ComponentProps<typeof ZColorPicker> = {
+	allowAlpha: true,
+	value: '#33669980'
+} satisfies ZColorPickerProps;
 const sliderProps: ComponentProps<typeof ZSlider> = {
 	defaultValue: 25,
 	max: 50,
@@ -486,6 +492,7 @@ void textareaProps;
 void inputGroupProps;
 void numberFieldProps;
 void pinInputProps;
+void colorPickerProps;
 void sliderProps;
 void switchProps;
 void tabsProps;

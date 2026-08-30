@@ -161,6 +161,29 @@ test('keeps checkbox indeterminate, FormData and reset synchronized', async ({ p
 	await expect(page.getByText(/state = indeterminate · 用户变更次数 = 1/u)).toBeVisible();
 });
 
+test('keeps ColorPicker hex, alpha, Popover focus, FormData and reset synchronized', async ({
+	page
+}) => {
+	await page.goto('/#/components/color-picker');
+	const trigger = page.getByRole('button', { name: '主题强调色 #2563ebcc' });
+	await trigger.click();
+	const hex = page.getByRole('textbox', { name: 'Hex颜色' });
+	await expect(page.getByLabel('选择基础颜色')).toBeFocused();
+	await hex.fill('#ff000080');
+	await expect(page.getByText('value = #ff000080')).toBeVisible();
+	await page.getByRole('slider', { name: '透明度' }).fill('25');
+	await expect(page.getByText('value = #ff000040')).toBeVisible();
+	await expect
+		.poll(() =>
+			page.locator('form').evaluate((form) => new FormData(form as HTMLFormElement).get('accent'))
+		)
+		.toBe('#ff000040');
+	await page.keyboard.press('Escape');
+	await expect(trigger).toBeFocused();
+	await page.getByRole('button', { name: '重置' }).click();
+	await expect(page.getByText('value = #2563ebcc')).toBeVisible();
+});
+
 test('keeps switch semantics, keyboard state, FormData and reset synchronized', async ({
 	page
 }) => {
@@ -754,6 +777,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/aspect-ratio',
 		'#/components/container',
 		'#/components/checkbox',
+		'#/components/color-picker',
 		'#/components/cascader',
 		'#/components/combobox',
 		'#/components/input',

@@ -192,6 +192,8 @@ export type {
 } from '../components/input/ZCheckbox.svelte';
 export { default as ZCascader } from '../components/input/ZCascader.svelte';
 export type { ZCascaderProps } from '../components/input/ZCascader.svelte';
+export { default as ZColorPicker } from '../components/input/ZColorPicker.svelte';
+export type { ZColorPickerProps } from '../components/input/ZColorPicker.svelte';
 export { default as ZInput } from '../components/input/ZInput.svelte';
 export type { ZInputProps, ZInputSize, ZInputType } from '../components/input/ZInput.svelte';
 export { default as ZInputGroup } from '../components/input/ZInputGroup.svelte';

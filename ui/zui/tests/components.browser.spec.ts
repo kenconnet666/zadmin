@@ -8,6 +8,7 @@ import ComboboxFixture from './ComboboxFixture.svelte';
 import CommandFixture from './CommandFixture.svelte';
 import CommandPaletteFixture from './CommandPaletteFixture.svelte';
 import CascaderFixture from './CascaderFixture.svelte';
+import ColorPickerFixture from './ColorPickerFixture.svelte';
 import ContextMenuFixture from './ContextMenuFixture.svelte';
 import AccordionFixture from './AccordionFixture.svelte';
 import AlertDialogFixture from './AlertDialogFixture.svelte';
@@ -629,6 +630,45 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(output?.textContent).toBe('12:2');
 		expect(inputs.map((input) => input.value)).toEqual(['1', '2', '', '']);
+	});
+
+	it('coordinates ColorPicker RGB, alpha, invalid hex, focus, FormData and reset', async () => {
+		render(ColorPickerFixture);
+		const trigger = document.querySelector<HTMLButtonElement>('[aria-haspopup="dialog"]');
+		const form = document.querySelector<HTMLFormElement>('[data-testid="color-picker-form"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="color-picker-output"]');
+		trigger?.focus();
+		trigger?.click();
+		await tick();
+		const native = document.querySelector<HTMLInputElement>('input[type="color"]');
+		const alpha = document.querySelector<HTMLInputElement>('input[type="range"]');
+		const hex = document.querySelector<HTMLInputElement>('input[aria-label="Hex color"]');
+		if (native) {
+			native.value = '#ff0000';
+			native.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		}
+		await tick();
+		expect(output?.textContent).toBe('#ff000080');
+		if (alpha) {
+			alpha.value = '25';
+			alpha.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		}
+		await tick();
+		expect(output?.textContent).toBe('#ff000040');
+		if (hex) {
+			hex.value = 'bad';
+			hex.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		}
+		await tick();
+		expect(hex?.getAttribute('aria-invalid')).toBe('true');
+		expect(new FormData(form!).get('color')).toBe('#ff000040');
+		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+		await new Promise((resolve) => setTimeout(resolve, 140));
+		expect(document.activeElement).toBe(trigger);
+		form?.reset();
+		await Promise.resolve();
+		await tick();
+		expect(output?.textContent).toBe('#33669980');
 	});
 	it('keeps AlertDialog open until an explicit action is chosen', async () => {
 		render(AlertDialogFixture);
