@@ -219,6 +219,8 @@ const searchLiveContracts = [
 	/aria-controls=["']zui-docs-component-nav["']/u.test(appHeaderSource),
 	/aria-describedby=["']zui-docs-search-status["']/u.test(appHeaderSource),
 	/aria-keyshortcuts=["']\/["']/u.test(appHeaderSource),
+	/event\.key === ["']Escape["'] && query/u.test(appHeaderSource),
+	/event\.key !== ["']\/["'][\s\S]*?searchRef\?\.focus/u.test(appHeaderSource),
 	/<ZVisuallyHidden[\s\S]*?aria-live=["']polite["'][\s\S]*?id=["']zui-docs-search-status["']/u.test(
 		appSidebarSource
 	),
