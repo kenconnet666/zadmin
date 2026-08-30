@@ -117,12 +117,24 @@
 	);
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
+	const interactiveSelector = [
+		'a[href]',
+		'button:not([disabled])',
+		'input:not([disabled]):not([type="hidden"])',
+		'select:not([disabled])',
+		'textarea:not([disabled])',
+		'[contenteditable="true"]',
+		'[tabindex]:not([tabindex="-1"])'
+	].join(',');
 
 	$effect(() => presence.update(tooltip.open, tooltip.exitDuration));
 	$effect(() => {
 		const content = ref;
 		const trigger = tooltip.trigger;
 		if (!tooltip.open || !content || !trigger) return;
+		if (content.querySelector(interactiveSelector)) {
+			throw new TypeError('ZTooltipContent cannot contain focusable content; use ZPopover.');
+		}
 		const positioner = new FloatingPositioner();
 		const stopPositioning = positioner.start(trigger, content, {
 			gutter: tooltip.gutter,

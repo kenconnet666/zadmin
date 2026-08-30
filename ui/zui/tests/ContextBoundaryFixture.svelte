@@ -18,6 +18,8 @@
 		ZSelectTrigger,
 		ZTabsList,
 		ZTimeline,
+		ZTooltip,
+		ZTooltipContent,
 		ZTooltipTrigger,
 		ZVirtualList
 	} from '../src/entrypoints/index.js';
@@ -59,6 +61,12 @@
 <svelte:boundary onerror={capture}><ZSelectTrigger /></svelte:boundary>
 <svelte:boundary onerror={capture}><ZTabsList /></svelte:boundary>
 <svelte:boundary onerror={capture}><ZTooltipTrigger /></svelte:boundary>
+<svelte:boundary onerror={capture}>
+	<ZTooltip defaultOpen>
+		<ZTooltipTrigger>Invalid tooltip</ZTooltipTrigger>
+		<ZTooltipContent><button type="button">Focusable</button></ZTooltipContent>
+	</ZTooltip>
+</svelte:boundary>
 <svelte:boundary onerror={capture}><ZList items={duplicateItems} /></svelte:boundary>
 <svelte:boundary onerror={capture}><ZTimeline items={duplicateTimeline} /></svelte:boundary>
 <svelte:boundary onerror={capture}>

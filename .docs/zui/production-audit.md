@@ -39,7 +39,7 @@
 | 物理文本对齐             |    0 | ZUI与Docs禁止`textAlign.left/right`，文字使用逻辑start/end；坐标定位算法不受误伤             |
 | inert与退出态aria-hidden |    0 | Presence退出容器使用inert，不在焦点恢复前叠加aria-hidden                                     |
 | 当前Trigger焦点恢复合同  |    2 | Popover/Dialog通过FocusScope restoreTarget在cleanup解析当前context Trigger                   |
-| 交互式Tooltip Demo       |    0 | Tooltip只承载非交互说明；Button/Input/Link等内容必须使用Popover                              |
+| 交互式Tooltip            |    0 | Runtime拒绝可聚焦后代并引导使用Popover；Docs同时门禁Button/Input/Link等内容                  |
 | 资源生命周期违规         |    0 | 全部ZUI与Docs源码中event/timer/RAF/Observer创建文件必须包含对应释放路径                      |
 | 危险动态DOM/XSS sink     |    0 | ZUI与Docs禁止raw HTML、HTML字符串注入、eval/new Function、动态script和javascript URL         |
 | Hash路由安全skip-link    |    1 | CI固定ZLink、当前URL、防导航focus handler以及main稳定id/负tabindex合同                       |
@@ -115,6 +115,7 @@
 - Server测试对NativeIdentityFixture做两次独立SSR，要求完整id数组确定一致、内部唯一并保留`consumer-input`显式覆盖。
 - Accessibility指南明确自动id仅服务DOM/ARIA、显式id与Field优先且不可作为业务键；真实Chrome渲染4个ZUI Card章节并保持控制台干净。
 - Accessibility指南补充Presence退场inert/aria-hidden边界与cleanup解析当前Trigger合同，防止业务组合重新引入焦点隐藏警告。
+- Tooltip打开时检查可聚焦后代并明确抛出“use ZPopover”；真实Svelte boundary回归与Docs源码门禁共同固定非交互语义。
 - Accessibility指南记录文档搜索`/`、Escape和编辑上下文不劫持合同，与真实ZInput的aria-keyshortcuts保持一致。
 - 搜索框关联真实nav与live status；Chrome验证总数78、autosize唯一命中ZTextarea、无结果0和清空恢复，远程Playwright固定三态。
 - 搜索有内容时Escape清空过滤、恢复78个组件并保持输入焦点；远程Playwright固定value、focus与live状态同步。

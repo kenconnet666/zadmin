@@ -280,9 +280,10 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		await Promise.resolve();
 		const output = document.querySelector('[data-testid="context-boundary-output"]');
-		expect(output?.textContent).toMatch(/^25:/u);
+		expect(output?.textContent).toMatch(/^26:/u);
 		expect(output?.textContent).toContain('ZAccordion');
 		expect(output?.textContent).toContain('ZTooltip');
+		expect(output?.textContent).toContain('ZTooltipContent cannot contain focusable content');
 		expect(output?.textContent).toContain('Duplicate ZList');
 		expect(output?.textContent).toContain('Duplicate ZTimeline');
 		expect(output?.textContent).toContain('requires at least one item');
