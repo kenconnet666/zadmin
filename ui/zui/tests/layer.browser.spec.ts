@@ -41,6 +41,8 @@ describe('ZUI layer runtime', () => {
 		expect(node.parentNode).toBe(target);
 		action.update({ target: shadow });
 		expect(node.parentNode).toBe(shadow);
+		action.update({ target: document });
+		expect(node.parentNode).toBe(document.body);
 		action.update({ target: null });
 		expect(node.parentNode).toBe(host);
 		action.destroy();
@@ -49,6 +51,20 @@ describe('ZUI layer runtime', () => {
 		host.remove();
 		target.remove();
 		shadowHost.remove();
+	});
+
+	it('keeps null-target portals in place and tolerates detached owners', () => {
+		const host = document.createElement('div');
+		const inline = document.createElement('section');
+		host.append(inline);
+		const inlineAction = portal(inline, { target: null });
+		expect(inline.parentNode).toBe(host);
+		inlineAction.destroy();
+
+		const detached = document.createElement('section');
+		const detachedAction = portal(detached, { target: undefined });
+		expect(detached.isConnected).toBe(false);
+		detachedAction.destroy();
 	});
 
 	it('removes portal content whether its owner or the action tears down first', () => {
@@ -240,6 +256,37 @@ describe('ZUI layer runtime', () => {
 		container.remove();
 	});
 
+	it('handles pre-flush cleanup and every non-wrapping Tab direction', async () => {
+		const container = document.createElement('div');
+		container.tabIndex = -1;
+		const first = document.createElement('button');
+		const second = document.createElement('button');
+		container.append(first, second);
+		document.body.append(container);
+
+		const disposed = new FocusScope(container, { trap: true });
+		disposed.destroy();
+		const outer = new FocusScope(container, { trap: true });
+		const inner = new FocusScope(container, { trap: true });
+		await Promise.resolve();
+		expect(document.activeElement).toBe(first);
+
+		first.focus();
+		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Tab' }));
+		expect(document.activeElement).toBe(second);
+		document.dispatchEvent(
+			new KeyboardEvent('keydown', { bubbles: true, key: 'Tab', shiftKey: true })
+		);
+		expect(document.activeElement).toBe(first);
+		container.focus();
+		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Tab' }));
+		expect(document.activeElement).toBe(first);
+
+		inner.destroy();
+		outer.destroy();
+		container.remove();
+	});
+
 	it('locks scroll and restores inert siblings with nested cleanup', () => {
 		const originalOverflow = document.body.style.overflow;
 		const releaseFirst = lockScroll(document);
@@ -300,6 +347,15 @@ describe('ZUI layer runtime', () => {
 		expect(zeroWidth.style.paddingInlineEnd).toBe('');
 		releaseZeroWidth();
 		zeroWidth.remove();
+
+		const zeroPadding = document.createElement('div');
+		Object.defineProperty(zeroPadding, 'offsetWidth', { configurable: true, value: 120 });
+		Object.defineProperty(zeroPadding, 'clientWidth', { configurable: true, value: 100 });
+		document.body.append(zeroPadding);
+		const releaseZeroPadding = lockScroll(zeroPadding);
+		expect(zeroPadding.style.paddingInlineEnd).toBe('20px');
+		releaseZeroPadding();
+		zeroPadding.remove();
 
 		const detached = document.createElement('div');
 		const bodySibling = document.createElement('main');

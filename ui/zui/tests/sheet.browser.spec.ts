@@ -45,6 +45,22 @@ describe('BrowserStyleSheet', () => {
 		sheet.remove('missing');
 	});
 
+	it('ignores empty discovered nonce values', () => {
+		const root = document.implementation.createHTMLDocument('empty-nonce');
+		const ssr = root.createElement('style');
+		ssr.dataset.icss = '  ';
+		ssr.setAttribute('nonce', '');
+		const meta = root.createElement('meta');
+		meta.name = 'icss-nonce';
+		meta.content = '';
+		root.head.append(ssr, meta);
+		const sheet = new BrowserStyleSheet({ root, speedy: false });
+
+		sheet.insert(entry('c-empty-nonce'));
+		const client = [...root.querySelectorAll<HTMLStyleElement>('style[data-icss]')].at(-1);
+		expect(client?.hasAttribute('nonce')).toBe(false);
+	});
+
 	it('inserts CSSOM rules after an explicit insertion point', () => {
 		const root = document.implementation.createHTMLDocument('speedy');
 		const marker = root.createComment('icss');

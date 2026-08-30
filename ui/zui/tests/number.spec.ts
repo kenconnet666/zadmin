@@ -52,4 +52,38 @@ describe('localized number algorithms', () => {
 		});
 		spy.mockRestore();
 	});
+
+	it('normalizes custom Intl grouping, decimal, plus and minus symbols', () => {
+		const formatter = {
+			format: (value: number) => String(value),
+			formatToParts: (value: number) =>
+				value < 0
+					? [
+							{ type: 'minusSign', value: '~' },
+							{ type: 'integer', value: '12' },
+							{ type: 'group', value: '_' },
+							{ type: 'integer', value: '345' },
+							{ type: 'decimal', value: ':' },
+							{ type: 'fraction', value: '6' }
+						]
+					: [{ type: 'plusSign', value: '!' }]
+		} as unknown as Intl.NumberFormat;
+		const replacement = function NumberFormat(): Intl.NumberFormat {
+			return formatter;
+		} as unknown as typeof Intl.NumberFormat;
+		const spy = vi.spyOn(Intl, 'NumberFormat').mockImplementation(replacement);
+
+		expect(parseLocalizedNumber('!1_234:5', 'custom')).toEqual({
+			partial: false,
+			valid: true,
+			value: 1234.5
+		});
+		expect(parseLocalizedNumber('~1_234:5', 'custom')).toEqual({
+			partial: false,
+			valid: true,
+			value: -1234.5
+		});
+		expect(stepNumber(Number.NaN, 1, 1)).toBeNaN();
+		spy.mockRestore();
+	});
 });
