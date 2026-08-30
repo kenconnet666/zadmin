@@ -278,7 +278,7 @@ const cascaderSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/components/input/ZCascader.svelte'),
 	'utf8'
 );
-const formResetSignalTag = formResetSignalSource.match(/<button\b[\s\S]*?>/u)?.[0] ?? '';
+const formResetSignalTag = formResetSignalSource.match(/<input\b[\s\S]*?\/>/u)?.[0] ?? '';
 if (
 	!buttonSource.includes("'aria-busy': ariaBusy") ||
 	!buttonSource.includes('aria-busy={loading ? true : ariaBusy}') ||
@@ -298,23 +298,19 @@ if (
 	!formControlSource.includes('scheduleAssociationRefresh();\n\t\t}') ||
 	!formControlSource.includes('const ticket = (generation += 1)') ||
 	!formControlSource.includes('ticket === generation') ||
-	!formControlSource.includes('pendingReset = setTimeout') ||
-	!formControlSource.includes('clearTimeout(pendingReset)') ||
-	!formControlSource.includes('flushSync(reset)')
+	!formControlSource.includes('queueMicrotask(() =>')
 ) {
-	fail('The form reset action must preserve its association and post-event task contracts.');
+	fail('The form reset action must preserve its association and cancelable microtask contracts.');
 }
 if (
-	!formResetSignalSource.includes("control.dispatchEvent(new Event('zuireset'))") ||
-	!formResetSignalSource.includes('const action = formReset(control, forwardReset)') ||
-	!formResetSignalSource.includes('action.update(forwardReset)') ||
-	!formResetSignalTag.includes('type="button"') ||
+	!formResetSignalSource.includes('const action = formReset(control, () => current.reset())') ||
+	!formResetSignalSource.includes('action.update(() => current.reset())') ||
+	!formResetSignalTag.includes('type="hidden"') ||
 	!formResetSignalTag.includes('hidden') ||
+	!formResetSignalTag.includes('disabled') ||
 	!formResetSignalTag.includes('aria-hidden="true"') ||
 	!formResetSignalTag.includes('tabindex="-1"') ||
 	!formResetSignalTag.includes('data-zui-form-reset-signal=""') ||
-	!formResetSignalTag.includes('{...resetEventAttributes}') ||
-	!formResetSignalSource.includes('onzuireset: onReset') ||
 	!formResetSignalSource.includes('const associationKey = association') ||
 	!formResetSignalSource.includes('resetOwner = directOwner ?? associatedControl?.form ?? null') ||
 	!formResetSignalSource.includes(
@@ -325,7 +321,7 @@ if (
 	!formResetSignalSource.includes('{#if resetOwner}') ||
 	!formResetSignalSource.includes('use:portal={{ target: resetOwner }}') ||
 	/\b(?:id|name)\s*=/u.test(formResetSignalTag) ||
-	!formResetSignalSource.includes('use:signalFormReset={{ owner: resetOwner }}') ||
+	!formResetSignalSource.includes('use:signalFormReset={{ owner: resetOwner, reset: onReset }}') ||
 	!formSource.includes('<FormResetSignal onReset={resetFromForm} owner={ref}') ||
 	!inputSource.includes('<FormResetSignal association={form} control={ref} onReset={resetFromForm}')
 ) {
@@ -552,8 +548,7 @@ for (const path of svgCandidates) {
 const allowedSvg = [
 	'apps/desktop/static/zadmin-icon.svg',
 	'apps/docs/static/favicon.svg',
-	'ui/zui/src/components/data-display/ZProgress.svelte',
-	'ui/zui/src/components/feedback/ZSpinner.svelte'
+	'ui/zui/src/components/data-display/ZProgress.svelte'
 ];
 if (JSON.stringify(inlineSvg.sort()) !== JSON.stringify(allowedSvg.sort())) {
 	fail(`Inline SVG boundary changed: ${inlineSvg.join(', ') || 'none'}.`);
@@ -634,7 +629,7 @@ console.log(
 		nativeBusyContracts: 2,
 		formResetMountRebindContracts: 1,
 		formResetUpdateRebindContracts: 1,
-		formResetPostEventTaskContracts: 1,
+		formResetMicrotaskContracts: 1,
 		currentFocusRestoreContracts: 2,
 		currentFocusFallbackContracts: 1,
 		tooltipRuntimeGuardContracts: 1,

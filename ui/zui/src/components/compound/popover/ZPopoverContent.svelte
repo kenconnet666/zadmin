@@ -25,6 +25,7 @@
 			s.borderRadius._medium;
 			s.borderStyle.solid;
 			s.borderWidth._hairline;
+			s.boxSizing.borderBox;
 			s.boxShadow._medium;
 			s.color._text;
 			s.opacity._opaque;

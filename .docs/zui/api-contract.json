@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"componentCount": 133,
-	"overallSha256": "91a01409a1feb1a0507af44ae5c274d2c145bbf414dac0796c763faee5704f18",
+	"overallSha256": "9cfc81009a6c0e996bb8975b35da6e159e4799f61d33710c2b9e7e222b118b5f",
 	"components": [
 		{
 			"id": "accordion",
@@ -270,7 +270,7 @@
 		},
 		{
 			"id": "popover-content",
-			"sha256": "80a2692b33e8547b62ee77b46b0d66c3a1941e81fda01ae0275794a13710ff21",
+			"sha256": "a45032e1773f9dfea3a2a85829a0a12f303eb083f8fbc4f2ba2f3edbcb49e87c",
 			"source": "src/components/compound/popover/ZPopoverContent.svelte"
 		},
 		{
@@ -445,7 +445,7 @@
 		},
 		{
 			"id": "spinner",
-			"sha256": "8b3ba77161eadc1fce41f748cee52a5c047439b3cdc52fd7ae1571c3b5de8175",
+			"sha256": "f9bfc053c71d8529b5aaf63795ebf11e917a5cf98e004fe9af6a566f47835199",
 			"source": "src/components/feedback/ZSpinner.svelte"
 		},
 		{

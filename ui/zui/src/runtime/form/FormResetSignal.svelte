@@ -8,20 +8,16 @@
 </script>
 
 <script lang="ts">
-	import type { HTMLButtonAttributes } from 'svelte/elements';
-
 	import { portal } from '../layer/portal.js';
 	import { formReset } from './form-control.svelte.js';
 
 	interface ResetSignalActionOptions {
 		readonly owner: HTMLFormElement;
+		readonly reset: () => void;
 	}
 
 	let { association, control = null, onReset, owner = null }: FormResetSignalProps = $props();
 	let resetOwner = $state<HTMLFormElement | null>(null);
-	const resetEventAttributes = $derived({ onzuireset: onReset } as HTMLButtonAttributes & {
-		onzuireset: () => void;
-	});
 
 	$effect(() => {
 		const directOwner = owner;
@@ -55,35 +51,32 @@
 	});
 
 	function signalFormReset(
-		control: HTMLButtonElement,
+		control: HTMLInputElement,
 		options: ResetSignalActionOptions
 	): { destroy(): void; update(options: ResetSignalActionOptions): void } {
 		let current = options;
-		const forwardReset = () => {
-			if (control.form === current.owner) control.dispatchEvent(new Event('zuireset'));
-		};
-		const action = formReset(control, forwardReset);
+		const action = formReset(control, () => current.reset());
 		return {
 			destroy() {
 				action.destroy();
 			},
 			update(next) {
 				current = next;
-				action.update(forwardReset);
+				action.update(() => current.reset());
 			}
 		};
 	}
 </script>
 
 {#if resetOwner}
-	<button
-		{...resetEventAttributes}
+	<input
 		aria-hidden="true"
 		tabindex="-1"
-		type="button"
+		type="hidden"
 		hidden
+		disabled
 		data-zui-form-reset-signal=""
 		use:portal={{ target: resetOwner }}
-		use:signalFormReset={{ owner: resetOwner }}
-	></button>
+		use:signalFormReset={{ owner: resetOwner, reset: onReset }}
+	/>
 {/if}

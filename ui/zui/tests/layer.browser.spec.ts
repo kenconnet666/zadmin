@@ -29,8 +29,6 @@ describe('ZUI layer runtime', () => {
 
 		form.removeEventListener('reset', prevent);
 		form.dispatchEvent(new Event('reset', { cancelable: true }));
-		await Promise.resolve();
-		expect(reset).not.toHaveBeenCalled();
 		await settleReset();
 		expect(reset).toHaveBeenCalledOnce();
 		stop();

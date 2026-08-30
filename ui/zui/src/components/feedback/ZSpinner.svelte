@@ -14,7 +14,7 @@
 		importStatement: "import { ZSpinner } from '@zadmin/zui';",
 		name: 'ZSpinner',
 		bindings: [{ description: '真实status根引用。', name: 'ref', type: 'HTMLSpanElement | null' }],
-		dependencies: ['Web Animations API', 'reduced motion'],
+		dependencies: ['@lucide/svelte', 'Web Animations API', 'reduced motion'],
 		events: [],
 		keyboard: [],
 		parts: [{ description: '旋转弧。', name: 'indicator' }],
@@ -61,7 +61,9 @@
 </script>
 
 <script lang="ts">
+	import LoaderCircle from '@lucide/svelte/icons/loader-circle';
 	import { onMount, untrack } from 'svelte';
+	import type { Attachment } from 'svelte/attachments';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -85,6 +87,12 @@
 	const rootClass = $derived(zui.recipe(recipe, { size }));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
+	const attachIndicator: Attachment<SVGSVGElement> = (node) => {
+		indicator = node;
+		return () => {
+			if (indicator === node) indicator = null;
+		};
+	};
 	onMount(() => reducedMotion.connect());
 	$effect(() => {
 		if (!indicator || reduced) return;
@@ -106,21 +114,12 @@
 	aria-label={label}
 	data-reduced-motion={reduced || undefined}
 >
-	<svg
-		bind:this={indicator}
+	<LoaderCircle
+		{@attach attachIndicator}
 		aria-hidden="true"
-		viewBox="0 0 24 24"
-		width="100%"
-		height="100%"
+		color={zui.theme.color.primary}
 		data-slot="indicator"
-	>
-		<circle cx="12" cy="12" r="9" fill="none" stroke={zui.theme.color.border} stroke-width="3" />
-		<path
-			d="M 12 3 A 9 9 0 0 1 21 12"
-			fill="none"
-			stroke={zui.theme.color.primary}
-			stroke-width="3"
-			stroke-linecap="round"
-		/>
-	</svg>
+		size="100%"
+		strokeWidth={3}
+	/>
 </span>
