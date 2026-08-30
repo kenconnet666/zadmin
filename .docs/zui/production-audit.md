@@ -38,6 +38,7 @@
 | PinInput键盘switch合同   |    1 | RTL方向、Home/End、Backspace/Delete互斥分支显式表达，default不劫持其他文本键                 |
 | Date/Time键盘复用合同    |    2 | 左右/Home/End复用horizontal navigationIntent与非循环moveIndex；switch只处理上下循环          |
 | Cascader键盘复用合同     |    1 | 同列纵向键复用navigationIntent/moveIndex；switch仅保留跨列与选择职责                         |
+| 长event.key if链         |    0 | 组件内3段以上互斥按键判断必须改用switch或共享navigation intent；两段简单判断仍允许           |
 | reset mount重绑合同      |    1 | action以mount微任务和短期Observer等待最终root/form，并且只在关联变化时重绑                   |
 | reset update重绑合同     |    1 | action更新时重新检查动态`form`归属，旧表单解绑且新表单直接监听                               |
 | reset微任务合同          |    1 | 与Svelte原生binding使用同一微任务检查点，generation去重捕获并使destroy可取消                 |

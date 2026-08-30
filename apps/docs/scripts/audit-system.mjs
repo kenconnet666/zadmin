@@ -107,6 +107,7 @@ const transitionFiles = [];
 const rawButtonFiles = [];
 const rawControlFiles = [];
 const formResetActionFiles = [];
+const longEventKeyChains = [];
 for (const path of componentFiles) {
 	const source = await readFile(path, 'utf8');
 	const filename = portable(relative(workspaceRoot, path));
@@ -138,6 +139,8 @@ for (const path of componentFiles) {
 	if (hasVisibleRawControl && !/styleInternalFocus|_focusVisible|&:focus-within/u.test(source)) {
 		fail(`${filename} has a visible raw input without a focus contract.`);
 	}
+	const eventKeyBranches = [...source.matchAll(/(?:if|else if)\s*\(event\.key\b/gu)].length;
+	if (eventKeyBranches >= 3) longEventKeyChains.push(filename);
 	if (/use:form(?:Element)?Reset\b/u.test(source)) formResetActionFiles.push(filename);
 	if (/\blisten(?:For|To)FormReset\b/u.test(source)) {
 		fail(`${filename} bypasses the node form reset action.`);
@@ -157,6 +160,11 @@ for (const path of componentFiles) {
 			fail(`${filename} imports Lucide values from the package root instead of an icon subpath.`);
 		}
 	}
+}
+if (longEventKeyChains.length > 0) {
+	fail(
+		`Long event.key if/else chains must use a switch or shared intent: ${longEventKeyChains.join(', ')}.`
+	);
 }
 
 if (new Set(metadata.map(({ id }) => id)).size !== metadata.length) {
@@ -526,6 +534,7 @@ console.log(
 		rawButtonComponentFiles: rawButtonFiles.length,
 		rawControlComponentFiles: rawControlFiles.length,
 		formResetActionFiles: formResetActionFiles.length,
+		longEventKeyChains: 0,
 		formResetSignalComponents: 2,
 		delegatedResetOwnershipContracts: 4,
 		calendarKeyboardSwitchContracts: 1,
