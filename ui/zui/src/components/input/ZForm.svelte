@@ -128,6 +128,7 @@
 
 <script lang="ts">
 	import { onDestroy, tick, untrack } from 'svelte';
+	import FormResetSignal from '../../runtime/form/FormResetSignal.svelte';
 	import { FormRegistry } from '../../runtime/form/form-registry.svelte.js';
 	import { provideZForm } from '../../runtime/form/form-context.svelte.js';
 	import {
@@ -135,7 +136,6 @@
 		formDataToObject,
 		issuesToFormErrors
 	} from '../../runtime/form/validation.js';
-	import { formElementReset } from '../../runtime/form/form-control.svelte.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -144,6 +144,7 @@
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 
 	let {
+		'aria-busy': ariaBusy,
 		children,
 		class: className,
 		errors = $bindable({}),
@@ -287,14 +288,14 @@
 	class={className}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
-	use:formElementReset={resetFromForm}
 	novalidate={!nativeValidation}
-	aria-busy={validating || undefined}
+	aria-busy={validating ? true : ariaBusy}
 	data-validating={validating || undefined}
 	data-submitted={submitted || undefined}
 	data-invalid={invalid || undefined}
 	onsubmit={handleSubmit}
 	onreset={(event) => onReset?.(event)}
 >
+	<FormResetSignal onReset={resetFromForm} />
 	{@render children?.()}
 </form>

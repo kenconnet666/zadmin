@@ -267,6 +267,17 @@ test('keeps Form schema errors, async state, first-error focus, valid submit and
 		page.getByText('submitted = false · errors = 0 · validating = false · result = alice')
 	).toBeVisible();
 	await expect(page.locator('[data-dirty="true"]')).toHaveCount(0);
+
+	const busyForm = page.getByTestId('external-busy-form');
+	const busyButton = page.getByTestId('external-busy-button');
+	await busyButton.click();
+	await expect(busyForm).toHaveAttribute('aria-busy', 'true');
+	await expect(busyButton).toHaveAttribute('aria-busy', 'true');
+	await expect(busyButton).toBeEnabled();
+	await expect(page.getByText('外部任务进行中，表单仍可操作。')).toBeVisible();
+	await busyButton.click();
+	await expect(busyForm).not.toHaveAttribute('aria-busy');
+	await expect(busyButton).not.toHaveAttribute('aria-busy');
 });
 
 test('settles pending docs validation delays when navigating away', async ({ page }) => {

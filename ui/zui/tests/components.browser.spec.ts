@@ -57,6 +57,7 @@ import TagsInputFixture from './TagsInputFixture.svelte';
 import TextareaFixture from './TextareaFixture.svelte';
 import ThemeSwitchFixture from './ThemeSwitchFixture.svelte';
 import { createBrowserIcssRuntime } from '../src/icss/runtime.js';
+import FormResetSignal from '../src/runtime/form/FormResetSignal.svelte';
 import { defaultTheme } from '../src/theme/default.js';
 import { extendTheme } from '../src/theme/define.js';
 import { ZCode } from '../src/entrypoints/code.js';
@@ -1601,7 +1602,17 @@ describe('compiled ICSS browser updates', () => {
 		const input = document.querySelector<HTMLInputElement>('[data-testid="edge-input"]');
 		const throwing = document.querySelector<HTMLFormElement>('[data-testid="throwing-form"]');
 		const prevented = document.querySelector<HTMLFormElement>('[data-testid="prevented-form"]');
+		const preventedReset = document.querySelector<HTMLFormElement>(
+			'[data-testid="prevented-reset-form"]'
+		);
+		const preservedInput = preventedReset?.querySelector<HTMLInputElement>(
+			'input:not([type="hidden"])'
+		);
+		const preservedOutput = document.querySelector<HTMLOutputElement>(
+			'[data-testid="prevented-reset-output"]'
+		);
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="form-edge-output"]');
+		expect(prevented?.getAttribute('aria-busy')).toBe('true');
 		if (input) {
 			input.value = 'changed';
 			input.dispatchEvent(new InputEvent('input', { bubbles: true }));
@@ -1617,7 +1628,44 @@ describe('compiled ICSS browser updates', () => {
 		expect(output?.textContent).toContain(':2:1:1:0');
 		prevented?.requestSubmit();
 		await tick();
+		expect(prevented?.getAttribute('aria-busy')).toBe('true');
 		expect(output?.textContent).toContain(':2:1:1:1');
+		if (preservedInput) {
+			preservedInput.value = 'changed';
+			preservedInput.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		}
+		await tick();
+		preventedReset?.reset();
+		await settleFormReset();
+		expect(preservedInput?.value).toBe('changed');
+		expect(preservedOutput?.textContent).toBe('changed');
+	});
+
+	it('keeps the native reset signal cancelable inside a ShadowRoot', async () => {
+		const host = document.createElement('div');
+		const shadow = host.attachShadow({ mode: 'open' });
+		const form = document.createElement('form');
+		shadow.append(form);
+		document.body.append(host);
+		let resets = 0;
+		const component = mount(FormResetSignal, {
+			props: { onReset: () => (resets += 1) },
+			target: form
+		});
+		await tick();
+
+		form.reset();
+		await settleFormReset();
+		expect(resets).toBe(1);
+		const prevent = (event: Event) => event.preventDefault();
+		form.addEventListener('reset', prevent);
+		form.reset();
+		await settleFormReset();
+		expect(resets).toBe(1);
+
+		form.removeEventListener('reset', prevent);
+		await unmount(component);
+		host.remove();
 	});
 
 	it('coordinates Calendar and segmented date/time fields with FormData and reset', async () => {

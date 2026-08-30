@@ -144,7 +144,7 @@ ZButton和ZInput的focus-visible使用原始`outline: 2px solid currentColor`，
 
 ### 3.3 Docs展示站缺口
 
-以下是最初审计记录；2026-08-30已由完整组件目录、156个Demo、metadata API、ZCode、集中路由、七份生产指南、Theme Lab和全站Axe/响应式门禁统一收口。
+以下是最初审计记录；2026-08-30已由完整组件目录、157个Demo、metadata API、ZCode、集中路由、七份生产指南、Theme Lab和全站Axe/响应式门禁统一收口。
 
 - 源码仍为纯`pre/code`，没有ZCode和Shiki高亮；
 - API数据手工双写且已经漂移；

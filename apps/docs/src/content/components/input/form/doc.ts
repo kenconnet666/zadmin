@@ -1,4 +1,6 @@
 import { formFieldMetadata, formMetadata } from '@zadmin/zui/metadata';
+import BusyDemo from './BusyDemo.svelte';
+import busySource from './BusyDemo.svelte?raw';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
 import NativeDemo from './NativeDemo.svelte';
@@ -22,6 +24,13 @@ export const formDoc = defineComponentDoc(formMetadata, {
 			id: 'form-native',
 			source: nativeSource,
 			title: '原生约束验证'
+		},
+		{
+			component: BusyDemo,
+			description: '外部服务任务可以通过原生aria-busy公告状态，不必复用会禁用按钮的loading语义。',
+			id: 'form-external-busy',
+			source: busySource,
+			title: '外部Busy与可操作性'
 		}
 	],
 	accessibility: [
@@ -29,5 +38,13 @@ export const formDoc = defineComponentDoc(formMetadata, {
 		'ZFormField把schema消息交给ZField生成稳定description/error IDs，真实输入继续拥有label与aria-describedby。',
 		'无效提交等待最新异步验证完成后聚焦首个注册错误字段；reset取消旧验证并清空dirty/touched/errors。'
 	],
-	keywords: ['form', 'standard schema', 'async validation', 'first error', 'dirty', 'touched']
+	keywords: [
+		'form',
+		'standard schema',
+		'async validation',
+		'aria-busy',
+		'first error',
+		'dirty',
+		'touched'
+	]
 });

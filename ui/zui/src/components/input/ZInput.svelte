@@ -159,7 +159,8 @@
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { useZField } from '../../runtime/form/field-context.js';
 	import { useZInputGroup } from '../../runtime/form/input-group-context.svelte.js';
-	import { formReset, mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
+	import FormResetSignal from '../../runtime/form/FormResetSignal.svelte';
+	import { mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import {
 		applyIcssRootStyle,
@@ -175,6 +176,7 @@
 		class: className,
 		defaultValue = '',
 		disabled = false,
+		form,
 		id,
 		invalid,
 		name,
@@ -226,9 +228,9 @@
 	class={[rootClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
-	use:formReset={resetFromForm}
 	id={id ?? field?.controlId ?? generatedId}
 	name={name ?? field?.name}
+	{form}
 	{type}
 	{defaultValue}
 	value={resolvedValue}
@@ -240,3 +242,4 @@
 	aria-invalid={resolvedInvalid ? 'true' : ariaInvalid}
 	data-invalid={resolvedInvalid ? 'true' : undefined}
 />
+<FormResetSignal {form} onReset={resetFromForm} />

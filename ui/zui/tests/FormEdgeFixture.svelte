@@ -21,6 +21,7 @@
 	let invalidSubmits = $state(0);
 	let resets = $state(0);
 	let preventedSubmits = $state(0);
+	let preserved = $state('seed');
 </script>
 
 <ZForm
@@ -40,7 +41,13 @@
 	<button type="reset">Reset throwing</button>
 </ZForm>
 
+<ZForm data-testid="prevented-reset-form" onReset={(event) => event.preventDefault()}>
+	<ZInput bind:value={preserved} defaultValue="seed" name="preserved" />
+</ZForm>
+<output data-testid="prevented-reset-output">{preserved}</output>
+
 <ZForm
+	aria-busy="true"
 	preventDefault={false}
 	nativeValidation
 	onSubmit={(event) => {

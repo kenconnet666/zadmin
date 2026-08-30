@@ -198,15 +198,29 @@ const formControlSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/runtime/form/form-control.svelte.ts'),
 	'utf8'
 );
+const formResetSignalSource = await readFile(
+	resolve(workspaceRoot, 'ui/zui/src/runtime/form/FormResetSignal.svelte'),
+	'utf8'
+);
 const buttonSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/components/gene/ZButton.svelte'),
 	'utf8'
 );
+const formSource = await readFile(
+	resolve(workspaceRoot, 'ui/zui/src/components/input/ZForm.svelte'),
+	'utf8'
+);
+const inputSource = await readFile(
+	resolve(workspaceRoot, 'ui/zui/src/components/input/ZInput.svelte'),
+	'utf8'
+);
 if (
 	!buttonSource.includes("'aria-busy': ariaBusy") ||
-	!buttonSource.includes('aria-busy={loading ? true : ariaBusy}')
+	!buttonSource.includes('aria-busy={loading ? true : ariaBusy}') ||
+	!formSource.includes("'aria-busy': ariaBusy") ||
+	!formSource.includes('aria-busy={validating ? true : ariaBusy}')
 ) {
-	fail('ZButton must preserve native aria-busy unless loading owns the busy state.');
+	fail('ZButton and ZForm must preserve native aria-busy unless internal state owns it.');
 }
 if (
 	!formControlSource.includes('queueMicrotask(refreshAssociation)') ||
@@ -221,6 +235,18 @@ if (
 	!formControlSource.includes('ticket === generation')
 ) {
 	fail('The form reset action must preserve its association and reset microtask contracts.');
+}
+if (
+	!formResetSignalSource.includes('bind:value={() => marker, updateMarker}') ||
+	!formResetSignalSource.includes('ref.defaultValue = resetValue') ||
+	!formResetSignalSource.includes('if (next === resetValue) onReset()') ||
+	!formResetSignalSource.includes('type="text"') ||
+	!formResetSignalSource.includes('hidden') ||
+	!formResetSignalSource.includes('use:shadowFormReset={onReset}') ||
+	!formSource.includes('<FormResetSignal onReset={resetFromForm}') ||
+	!inputSource.includes('<FormResetSignal {form} onReset={resetFromForm}')
+) {
+	fail('The Svelte-native form reset signal contract changed.');
 }
 const focusScopeSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/runtime/layer/focus-scope.ts'),
@@ -370,6 +396,7 @@ console.log(
 		rawButtonComponentFiles: rawButtonFiles.length,
 		rawControlComponentFiles: rawControlFiles.length,
 		formResetActionFiles: formResetActionFiles.length,
+		formResetSignalComponents: 2,
 		inlineSvgFiles: inlineSvg.length,
 		brandGradientFiles: gradientFiles.length,
 		docsRawInteractiveElements: 0,
@@ -387,7 +414,7 @@ console.log(
 		dangerousDomSinks: 0,
 		skipLinkContracts: 1,
 		searchLiveContracts: 1,
-		buttonNativeBusyContracts: 1,
+		nativeBusyContracts: 2,
 		formResetMountRebindContracts: 1,
 		formResetUpdateRebindContracts: 1,
 		formResetMicrotaskContracts: 1,
