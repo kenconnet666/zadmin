@@ -72,6 +72,7 @@
 | Demo可见表单字段缺少id/name           | 基础原生控件无Field/调用方id时只依赖aria-label                     | Input/Textarea/Checkbox/Switch/Slider/RadioItem默认SSR稳定id；DataTable内部生成id |
 | InputGroup reset测试存在假阳性        | 只断言原生DOM defaultValue，没有断言Svelte绑定状态                 | 组件与Docs回归同时要求input=`api`且绑定输出恢复`https://api.internal`             |
 | Mention reset测试存在同类假阳性       | 只断言textarea原生值，随后新输入掩盖了旧绑定状态                   | 组件与Docs回归同时要求editor和message输出恢复默认通知前缀                         |
+| Docs结构化输入reset证据偏弱           | FileUpload/Number/Textarea/Cascader只看原生值或元素存在            | E2E同步要求files、value、height文本和完整path恢复默认逻辑状态                     |
 | ZInput外部form reset缺少组件证据      | 低层helper覆盖`form="id"`，但没有验证ZInput与signal同步关联        | 三浏览器要求可见input/signal指向同一外部form，DOM与绑定输出恢复默认值             |
 | 文档搜索没有结果数量公告              | Sidebar只视觉隐藏不匹配项，屏幕阅读器不知道过滤结果                | ZVisuallyHidden polite状态公告总数/匹配数；搜索框关联status与nav                  |
 | 搜索快捷键提示在移动端未隐藏          | media类和ZKbd基础display类作用于同一元素，注入顺序覆盖none         | 独立wrapper承载响应式display，ZKbd只负责键帽视觉；桌面/移动远程门禁               |

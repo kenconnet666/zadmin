@@ -250,6 +250,7 @@ test('keeps FileUpload validation, native FormData, removal and reset synchroniz
 	await expect
 		.poll(() => input.evaluate((element: HTMLInputElement) => element.files?.length))
 		.toBe(0);
+	await expect(page.getByText('files = none · rejected = 0')).toBeVisible();
 });
 
 test('keeps Form schema errors, async state, first-error focus, valid submit and reset synchronized', async ({
@@ -345,6 +346,7 @@ test('keeps NumberField locale parsing, spinbutton keys, FormData and reset sync
 		.toBe('13');
 	await page.getByRole('button', { name: '重置' }).click();
 	await expect(input).toHaveAttribute('aria-valuenow', '1234.5');
+	await expect(page.getByText('value = 1234.5')).toBeVisible();
 });
 
 test('keeps Calendar grid keyboard, selection, FormData and reset synchronized', async ({
@@ -929,6 +931,7 @@ test('keeps Textarea autosize, Field semantics, FormData and reset synchronized'
 		.toBe('第一行\n第二行\n第三行\n第四行\n第五行');
 	await page.getByRole('button', { name: '重置' }).click();
 	await expect(textarea).toHaveValue('生产变更说明');
+	await expect(page.getByText(/value = 生产变更说明 · height =/u)).toBeVisible();
 });
 
 test('keeps Accordion selection, roving focus and Presence synchronized', async ({ page }) => {
@@ -1015,6 +1018,7 @@ test('keeps Cascader columns, path commit, focus restoration and reset synchroni
 	await expect(page.getByText('path = platform/worker')).toBeVisible();
 	await page.getByRole('button', { name: '重置' }).click();
 	await expect(trigger).toBeVisible();
+	await expect(page.getByText('path = platform/web/docs')).toBeVisible();
 });
 
 test('keeps Transfer filter, selection, move, repeated form values and reset synchronized', async ({
