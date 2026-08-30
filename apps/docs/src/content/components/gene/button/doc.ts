@@ -1,4 +1,6 @@
 import { buttonMetadata } from '@zadmin/zui/metadata';
+import CompositionDemo from './CompositionDemo.svelte';
+import compositionSource from './CompositionDemo.svelte?raw';
 import StatesDemo from './StatesDemo.svelte';
 import statesSource from './StatesDemo.svelte?raw';
 import VariantsDemo from './VariantsDemo.svelte';
@@ -20,6 +22,13 @@ export const buttonDoc = defineComponentDoc(buttonMetadata, {
 			id: 'button-states',
 			source: statesSource,
 			title: '尺寸与状态'
+		},
+		{
+			component: CompositionDemo,
+			description: '前后内容、自定义加载指示器和全宽布局通过Snippet与ZUI组件组合。',
+			id: 'button-composition',
+			source: compositionSource,
+			title: '内容组合'
 		}
 	],
 	accessibility: [

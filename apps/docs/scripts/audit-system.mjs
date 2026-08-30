@@ -293,7 +293,8 @@ if (
 	!formControlSource.includes('next.root !== association.root') ||
 	!formControlSource.includes('scheduleAssociationRefresh();\n\t\t}') ||
 	!formControlSource.includes('const ticket = (generation += 1)') ||
-	!formControlSource.includes('ticket === generation')
+	!formControlSource.includes('ticket === generation') ||
+	!formControlSource.includes('flushSync(reset)')
 ) {
 	fail('The form reset action must preserve its association and reset microtask contracts.');
 }
