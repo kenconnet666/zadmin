@@ -30,6 +30,7 @@
 | 内部原生按钮文件         |    9 | 必须复用internal action、显式focus合同，或是Tour的隐藏非Tab遮罩                              |
 | 可见原生输入文件         |   14 | 非hidden input/textarea必须复用internal focus或显式focus-visible/focus-within                |
 | 表单reset action文件     |   26 | 组件必须通过节点action绑定/更新/销毁，禁止直接调用低层listener                               |
+| reset mount重绑合同      |    1 | action必须在mount微任务重新读取root/form，并且只在关联变化时重绑                             |
 | 默认稳定id组件           |    7 | 六个基础原生控件与DataTable内部选择框必须保留SSR稳定作用域id                                 |
 | 正tabindex/隐藏Tab点     |  0/0 | ZUI和Docs禁止正tabindex；aria-hidden交互元素必须显式`tabindex=-1`                            |
 | 隐式submit/无名图标按钮  |  0/0 | 内部原生button必须显式type；图标按钮必须有aria-label或aria-labelledby                        |
@@ -37,6 +38,7 @@
 | TypeScript危险逃生口     |    0 | ZUI与Docs禁止`@ts-ignore`、`@ts-nocheck`、显式`any`断言与注解                                |
 | 物理文本对齐             |    0 | ZUI与Docs禁止`textAlign.left/right`，文字使用逻辑start/end；坐标定位算法不受误伤             |
 | inert与退出态aria-hidden |    0 | Presence退出容器使用inert，不在焦点恢复前叠加aria-hidden                                     |
+| 当前Trigger焦点恢复合同  |    2 | Popover/Dialog通过FocusScope restoreTarget在cleanup解析当前context Trigger                   |
 | 资源生命周期违规         |    0 | 全部ZUI与Docs源码中event/timer/RAF/Observer创建文件必须包含对应释放路径                      |
 | 危险动态DOM/XSS sink     |    0 | ZUI与Docs禁止raw HTML、HTML字符串注入、eval/new Function、动态script和javascript URL         |
 | Hash路由安全skip-link    |    1 | CI固定ZLink、当前URL、防导航focus handler以及main稳定id/负tabindex合同                       |

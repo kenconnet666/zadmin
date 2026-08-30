@@ -194,6 +194,37 @@ if (
 ) {
 	fail('ZDataTable must preserve scoped ids for its native selection controls.');
 }
+const formControlSource = await readFile(
+	resolve(workspaceRoot, 'ui/zui/src/runtime/form/form-control.svelte.ts'),
+	'utf8'
+);
+if (
+	!formControlSource.includes('queueMicrotask(() => {') ||
+	!formControlSource.includes('next.associatedForm === association.associatedForm') ||
+	!formControlSource.includes('next.root === association.root')
+) {
+	fail('The form reset action must preserve its mount-time association rebind contract.');
+}
+const focusScopeSource = await readFile(
+	resolve(workspaceRoot, 'ui/zui/src/runtime/layer/focus-scope.ts'),
+	'utf8'
+);
+const popoverContentSource = await readFile(
+	resolve(workspaceRoot, 'ui/zui/src/components/compound/popover/ZPopoverContent.svelte'),
+	'utf8'
+);
+const dialogContentSource = await readFile(
+	resolve(workspaceRoot, 'ui/zui/src/components/compound/dialog/ZDialogContent.svelte'),
+	'utf8'
+);
+if (
+	!focusScopeSource.includes('restoreTarget?: () => HTMLElement | null') ||
+	!focusScopeSource.includes('this.#options.restoreTarget?.() ?? this.#previousFocus') ||
+	!popoverContentSource.includes('restoreTarget: () => popover.trigger') ||
+	!dialogContentSource.includes('restoreTarget: () => dialog.trigger')
+) {
+	fail('Layer focus scopes must restore the current compound trigger at cleanup time.');
+}
 
 const docsSvelteFiles = await filesUnder(docsSourceRoot, ['.svelte']);
 const rawInteractive =
@@ -315,6 +346,8 @@ console.log(
 		dangerousDomSinks: 0,
 		skipLinkContracts: 1,
 		searchLiveContracts: 1,
+		formResetMountRebindContracts: 1,
+		currentFocusRestoreContracts: 2,
 		stableNativeIdComponents: stableNativeIdSources.length + 1
 	})
 );
