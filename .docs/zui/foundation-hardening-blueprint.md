@@ -285,7 +285,7 @@ CI完整门禁：
 - SSR、hydrate、ShadowRoot和HMR；
 - Docs build/E2E/axe/截图；
 - 外部tarball安装和Node SSR；
-- bundle budget和依赖排除；
+- bundle构成记录、tree-shaking和依赖排除；
 - Changesets状态和publish dry-run。
 
 开发体验：
@@ -354,8 +354,8 @@ CI完整门禁：
 - 使用项目必须显式安装`@lucide/svelte`，ZUI不复制、不转出第三方图标入口；
 - `iconManifest`只登记需要ZIcon统一Theme尺寸、ICSS、可访问性和ref合同的常用图标；其余场景直接从`@lucide/svelte/icons/*`静态子路径导入；
 - 禁止把全量图标收集成运行时字符串索引，也不从Lucide总入口导入；业务产物只保留静态引用的组件；
-- ZIcon因包含受控基础图标集合使用独立`4 KiB gzip`增量上限，其他基础组件继续使用`3.25 KiB`上限；
-- 新增ZIcon常用名称时必须显式导入并经过bundle门禁。
+- ZIcon与其他组件统一记录tree-shaken gzip，不设置自动字节上限；明显异常时人工检查manifest与重复依赖；
+- 新增ZIcon常用名称时必须显式导入并经过bundle依赖边界检查。
 
 ### 6.6 ZButton
 

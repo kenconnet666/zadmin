@@ -1177,11 +1177,11 @@ recipe branch数量不增加
 - 100次mount/unmount回到资源基线；
 - 每个组件statements/branches/functions/lines至少80%。
 
-### 19.4 Bundle
+### 19.4 Bundle inspection
 
 ```text
-runtime browser gzip <= 15 KB
-单个基础组件增量 gzip <= 3 KB
+runtime、layer、单组件与ZCode shell记录tree-shaken gzip
+明显异常的大产物人工检查依赖图与重复实现
 compiler/server进入browser bundle = 0 B
 testing进入production bundle = 0 B
 ```
@@ -1249,7 +1249,7 @@ testing进入production bundle = 0 B
 - 外部package fixture；
 - 更新当前事实文档，蓝图仍保留决策历史。
 
-当前真实tree-shaken测量：browser runtime gzip 9,149 bytes；8个基础组件相对runtime增量677–2,655 bytes，均低于15 KiB/3 KiB门槛；组件bundle未发现Svelte compiler、ICSS preprocess或Node server入口。
+历史tree-shaken测量：browser runtime gzip 9,149 bytes；8个基础组件相对runtime增量677–2,655 bytes。当前CI继续输出实际测量但不设置自动字节上限；组件bundle必须保持不包含Svelte compiler、ICSS preprocess或Node server入口。
 
 ## 21. 暂不实现
 

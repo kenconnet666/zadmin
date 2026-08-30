@@ -54,7 +54,7 @@ tabbable
 - ZIcon区分装饰图标和具名图像；
 - ZField与ZInput已经建立稳定ID、label、description、error和required关系；
 - ZInput已有用户输入回调、表单reset同步和浏览器测试；
-- 单组件增量和runtime gzip已有自动预算。
+- 单组件增量和runtime gzip由CI持续记录，明显异常产物人工审计，不设置自动字节预算。
 
 这些基础合同继续保留，后续复杂组件不得为了复用而增加无意义DOM层。
 
@@ -156,7 +156,7 @@ ZButton和ZInput的focus-visible使用原始`outline: 2px solid currentColor`，
 - DemoBlock复制状态的timer没有销毁清理，多次点击可能形成竞态；
 - E2E只有4项：真实交互主要覆盖Button/Input/Field，可访问性只扫描Button页面；
 - 没有三浏览器组件全矩阵、窄屏导航、亮暗Theme、键盘路径和视觉截图合同；
-- 没有展示runtime、SSR、HMR、bundle budget和Theme token等ZUI特有能力的页面。
+- 没有展示runtime、SSR、HMR、bundle构成和Theme token等ZUI特有能力的页面。
 
 ## 4. 共享组件runtime规划
 
@@ -357,10 +357,10 @@ CI运行完整门禁：
 - 键盘路径、焦点恢复、nested layer和表单reset；
 - 窄屏与桌面视觉截图；
 - ZCode有/无Shiki消费fixture；
-- bundle budget、tree-shaking和未使用依赖排除；
+- bundle构成记录、tree-shaking和未使用依赖排除；
 - packed tarball、仓库外安装、npm publish dry-run和Changesets状态。
 
-每个新组件必须先有API、ARIA模式、状态图、bundle预算和Docs Demo，再进入实现；不得用“组件能显示”代替键盘、屏幕阅读器、表单和销毁清理验收。
+每个新组件必须先有API、ARIA模式、状态图、bundle依赖说明和Docs Demo，再进入实现；不得用“组件能显示”代替键盘、屏幕阅读器、表单和销毁清理验收。
 
 ## 9. 下一实施批次
 

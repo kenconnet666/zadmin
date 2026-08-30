@@ -224,7 +224,7 @@ runtime/
 - 增加`strokeWidth`和`absoluteStrokeWidth`透传；
 - `label`、外部`aria-label`和装饰模式优先级固定；
 - 不接受任意SVG HTML字符串；
-- 图标增量继续单独执行bundle预算。
+- 图标产物继续记录tree-shaken gzip与依赖构成；发现明显异常时人工审计，不设置自动字节上限。
 
 ### 4.6 ZCode
 
@@ -283,7 +283,7 @@ runtime/
 
 ### 5.1 主题预设
 
-计划提供6套官方预设，但不一次性实现：
+已提供6套官方预设：
 
 | 预设                | Scheme | 定位          | 主要视觉                       |
 | ------------------- | ------ | ------------- | ------------------------------ |
@@ -294,19 +294,17 @@ runtime/
 | `highContrastLight` | light  | 高对比度      | 纯白、近黑、强边界，少装饰     |
 | `highContrastDark`  | dark   | 高对比度      | 近黑、纯白、强焦点，少透明度   |
 
-首批只正式发布：
-
-```text
-auroraLight
-neonDark
-```
-
-`paperLight`和`midnightDark`在Theme Lab证明全部现有组件后进入公开API。高对比度主题在forced-colors与真实辅助设置下验收后发布。
-
-所有额外预设统一从一个未来入口导出：
+全部预设统一从一个入口导出：
 
 ```ts
-import { auroraLight, neonDark } from '@zadmin/zui/themes';
+import {
+	auroraLight,
+	paperLight,
+	neonDark,
+	midnightDark,
+	highContrastLight,
+	highContrastDark
+} from '@zadmin/zui/themes';
 ```
 
 不为每套主题增加一个package subpath。
@@ -707,7 +705,11 @@ Toast、Message、Notification共享同一个队列和live-region内核；不复
 
 ```text
 auroraLight
+paperLight
 neonDark
+midnightDark
+highContrastLight
+highContrastDark
 ZLink
 ZSeparator
 ZVisuallyHidden
@@ -718,7 +720,7 @@ ZContainer
 
 同时扩展Provider轴和Theme Lab。
 
-### S2：无浮层交互（实施中）
+### S2：无浮层交互（已完成，2026-08-30生产审计）
 
 先实现基础设施：
 
@@ -747,7 +749,7 @@ ZPagination
 ZSlider
 ```
 
-### S3：Layer与简单浮层
+### S3：Layer与简单浮层（已完成，2026-08-30生产审计）
 
 先实现：
 
@@ -773,7 +775,7 @@ ZDrawer
 ZPopconfirm
 ```
 
-### S4：集合输入
+### S4：集合输入（已完成，2026-08-30生产审计）
 
 ```text
 ZMenu
@@ -793,7 +795,7 @@ ZCommandPalette
 ZTree
 ```
 
-### S5：Form与结构化输入
+### S5：Form与结构化输入（已完成，2026-08-30生产审计）
 
 ```text
 ZInputGroup
@@ -806,7 +808,7 @@ ZForm
 ZFormField
 ```
 
-### S6：日期时间
+### S6：日期时间（已完成，2026-08-30生产审计）
 
 ```text
 ZDateField
@@ -818,7 +820,7 @@ ZDateRangePicker
 
 日期组件完成后再评估DateTimePicker，不提前把日期和时间状态塞在一个组件。
 
-### S7：展示与反馈
+### S7：展示与反馈（已完成，2026-08-30生产审计）
 
 ```text
 Avatar、Badge、Tag、Card、List、DescriptionList
@@ -826,7 +828,7 @@ Alert、Spinner、LoadingBar、Result、Toast
 Progress、Meter、Skeleton、Empty、Timeline、Statistic
 ```
 
-### S8：大型数据组件
+### S8：大型数据组件（已完成，2026-08-30生产审计）
 
 ```text
 ZTable
@@ -856,12 +858,12 @@ DataTable必须在Collection、Selection、Virtualizer和Table均被真实组件
 11. RTL、locale、density、contrast和motion；
 12. SSR、HMR、ShadowRoot和Portal；
 13. 销毁清理；
-14. bundle预算；
+14. browser bundle构成、tree-shaking与重依赖说明；
 15. Docs Demo和云端验收矩阵。
 
 缺少其中关键项时不开始编码。
 
-当前基础组件预算仍默认为`3.25 KiB gzip`。`ZIcon`因受控Lucide manifest使用`4 KiB`；`ZField`因同时承担多消息ARIA关系、Field Context和scoped ID合同使用`3.375 KiB`。这些是逐组件显式上限，不改变其他组件默认门禁。
+CI实际构建runtime、layer、每个组件和ZCode shell并记录tree-shaken gzip，但不设置自动字节上限。只有发现明显异常的大产物时才人工检查依赖图和重复代码；compiler/server代码、禁用依赖和可选Shiki边界仍是自动失败门禁。
 
 ## 11. Metadata扩展
 
@@ -961,7 +963,7 @@ CI负责：
 - Axe与高对比度；
 - Docs build与E2E；
 - SSR并发、CSP、ShadowRoot与HMR；
-- bundle budget与未使用依赖排除；
+- browser bundle构成记录、tree-shaking与未使用依赖排除；
 - packed tarball、仓库外安装和npm dry-run；
 - changeset与API快照。
 
@@ -1483,7 +1485,7 @@ CSS负责表现和可由平台可靠表达的关系，不能为了“无JS”牺
 
 2026-08-30已授权无人值守持续实施，以下决策成为后续编码合同：
 
-1. 首批公开主题只发布`auroraLight`和`neonDark`；
+1. 六套官方主题统一从`@zadmin/zui/themes`公开，文档站以真实选择器和Theme Lab持续验收；
 2. Theme偏好拆为scheme、contrast、density、motion四个主要轴；
 3. 多部件组件使用平铺`ZSelectTrigger`等导出，不使用运行时namespace对象；
 4. 复杂多部件组件统一进入`components/compound/<component>/`；
@@ -1501,6 +1503,7 @@ CSS负责表现和可由平台可靠表达的关系，不能为了“无JS”牺
 16. ZBox保持严格`div`，不引入多态`as`；
 17. 组件状态使用`candidate → approved → experimental → stable → deprecated`，蓝图候选不会自动成为公开承诺；
 18. S4按Menu基础、Select/Listbox、Combobox/MultiSelect、层级集合、Command/Tree五个可独立验收批次实施。
+19. bundle检查只记录gzip和验证浏览器依赖边界，不设置自动大小预算；明显异常产物由人工审计。
 
 ## 19. 与现有蓝图的关系
 

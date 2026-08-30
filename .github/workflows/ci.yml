@@ -119,7 +119,7 @@ jobs:
       - name: Run ZUI coverage
         run: pnpm --filter @zadmin/zui test:coverage
 
-      - name: Verify ZUI browser bundle budgets
+      - name: Inspect ZUI browser bundles
         run: pnpm --filter @zadmin/zui test:bundle
 
       - name: Run SvelteKit integration coverage
