@@ -25,7 +25,8 @@ export const inputDoc = defineComponentDoc(inputMetadata, {
 		},
 		{
 			component: ExternalFormDemo,
-			description: 'DOM外部的ZInput动态切换原生form归属，signal随owner移动并共享取消感知reset。',
+			description:
+				'DOM外部的ZInput动态切换或重建原生form owner，signal随关联移动并共享取消感知reset。',
 			id: 'input-external-form',
 			source: externalFormSource,
 			title: '外部Form关联'
@@ -35,6 +36,6 @@ export const inputDoc = defineComponentDoc(inputMetadata, {
 		'invalid映射aria-invalid。',
 		'用户aria-describedby与Field上下文合并。',
 		'原生oninput与onchange仍可使用。',
-		'form属性把DOM外部输入和内部reset signal关联到同一原生表单，并支持动态重归属。'
+		'form属性把DOM外部输入和内部reset signal关联到同一原生表单，并支持动态重归属与同id owner替换。'
 	]
 });

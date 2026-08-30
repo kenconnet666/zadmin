@@ -215,6 +215,12 @@ test('keeps input binding and field validation interactive', async ({ page }) =>
 	await expect(
 		page.getByText('owner = input-external-backup · external value = external-changed')
 	).toBeVisible();
+	await page.getByRole('button', { name: '重建备用表单' }).click();
+	await expect(externalInput).toHaveAttribute('form', 'input-external-backup');
+	await expect(page.locator('#input-external-backup')).toHaveAttribute('data-version', '1');
+	await expect(
+		page.getByText('owner = input-external-backup · external value = external-changed')
+	).toBeVisible();
 	await page.getByRole('button', { name: '重置主表单' }).click();
 	await expect(externalInput).toHaveValue('external-changed');
 	await page.getByRole('button', { name: '重置备用表单' }).click();

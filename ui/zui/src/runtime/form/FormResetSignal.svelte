@@ -23,14 +23,29 @@
 		const associatedControl = control;
 		const associationKey = association;
 		let active = true;
+		let observer: MutationObserver | undefined;
 		const updateOwner = () => {
 			if (!active || associationKey !== association) return;
 			resetOwner = directOwner ?? associatedControl?.form ?? null;
 		};
 		if (associationKey === undefined) updateOwner();
 		else queueMicrotask(updateOwner);
+		if (typeof associationKey === 'string' && associationKey.length > 0 && associatedControl) {
+			const MutationObserverConstructor =
+				associatedControl.ownerDocument.defaultView?.MutationObserver;
+			if (MutationObserverConstructor) {
+				observer = new MutationObserverConstructor(() => queueMicrotask(updateOwner));
+				observer.observe(associatedControl.ownerDocument, {
+					attributeFilter: ['id'],
+					attributes: true,
+					childList: true,
+					subtree: true
+				});
+			}
+		}
 		return () => {
 			active = false;
+			observer?.disconnect();
 		};
 	});
 

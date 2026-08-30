@@ -2535,5 +2535,25 @@ describe('compiled ICSS browser updates', () => {
 		expect(external?.value).toBe('external-seed');
 		expect(externalOutput?.textContent).toBe('external-seed');
 		expect([...new FormData(externalNextForm!).entries()]).toEqual([['external', 'external-seed']]);
+
+		const replacementForm = document.createElement('form');
+		replacementForm.id = 'external-input-next-form';
+		replacementForm.dataset.testid = 'external-input-replacement-form';
+		externalNextForm?.replaceWith(replacementForm);
+		await new Promise<void>((resolve) => queueMicrotask(() => queueMicrotask(resolve)));
+		expect(external?.form).toBe(replacementForm);
+		expect(
+			replacementForm.querySelector<HTMLInputElement>('[data-zui-form-reset-signal]')?.form
+		).toBe(replacementForm);
+		if (external) {
+			external.value = 'replacement-change';
+			external.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		}
+		await tick();
+		replacementForm.reset();
+		await settleFormReset();
+		expect(external?.value).toBe('external-seed');
+		expect(externalOutput?.textContent).toBe('external-seed');
+		expect([...new FormData(replacementForm).entries()]).toEqual([['external', 'external-seed']]);
 	});
 });

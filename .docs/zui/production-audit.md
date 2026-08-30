@@ -31,7 +31,7 @@
 | 可见原生输入文件         |   14 | 非hidden input/textarea必须复用internal focus或显式focus-visible/focus-within                |
 | 表单reset action文件     |   24 | 其余组件通过节点action绑定/更新/销毁，禁止直接调用低层listener                               |
 | Svelte原生reset signal   |    2 | 静态门禁锁定无name/id的hidden disabled signal；ShadowRoot保留作用域listener回退              |
-| reset signal表单归属     |    1 | 仅解析到owner时挂载并portal为form直接子节点；动态form更新后微任务重归属且不污染label         |
+| reset signal表单归属     |    1 | 仅解析到owner时portal为form直接子节点；动态prop和同id owner替换会重归属且不污染label         |
 | reset mount重绑合同      |    1 | action以mount微任务和短期Observer等待最终root/form，并且只在关联变化时重绑                   |
 | reset update重绑合同     |    1 | action更新时重新检查动态`form`归属，旧表单解绑且新表单直接监听                               |
 | reset微任务合同          |    1 | 与Svelte原生binding使用同一微任务检查点，generation去重捕获并使destroy可取消                 |
@@ -128,7 +128,7 @@
 - reset捕获在Svelte原生binding使用的同一微任务检查点提交；多个监听目标以generation合并，取消事件与同任务destroy不会执行迟到回调。
 - 当前RadioGroup、Mention/Textarea和Transfer等24个组件保留action；ZInput/ZForm改走原生signal，全部组件继续禁止绕过统一路径直调listener。
 - 原生signal在真实Chrome中初始current=`zui-reset-armed`、default=`zui-reset-fired`；reset后ZForm回到`submitted=false`、两个ZInput清空且控制台干净。
-- ZInput第三个Demo把control放在form DOM外，可从主表单动态切到备用表单；旧owner reset无效，新owner恢复状态且FormData只含业务字段。
+- ZInput第三个Demo把control放在form DOM外，可切换主/备用表单并重建同id备用owner；signal持续重归属，只有当前owner reset有效。
 - 首页和组件深链完整reload后首个Tab均为“跳到主要内容”；Enter保持当前hash路由与标题/H1，并把焦点送到`main#zui-main-content`
   ，无404或控制台异常。
 - skip-link使用逻辑`inset-inline-start`；真实Chrome切换RTL并reload后出现在右侧起始边，恢复LTR后控制台保持干净。

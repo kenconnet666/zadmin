@@ -247,6 +247,11 @@ if (
 	!formResetSignalTag.includes('data-zui-form-reset-signal=""') ||
 	!formResetSignalSource.includes('const associationKey = association') ||
 	!formResetSignalSource.includes('resetOwner = directOwner ?? associatedControl?.form ?? null') ||
+	!formResetSignalSource.includes(
+		'new MutationObserverConstructor(() => queueMicrotask(updateOwner))'
+	) ||
+	!formResetSignalSource.includes("attributeFilter: ['id']") ||
+	!formResetSignalSource.includes('observer?.disconnect()') ||
 	!formResetSignalSource.includes('{#if resetOwner}') ||
 	!formResetSignalSource.includes('use:portal={{ target: resetOwner }}') ||
 	/\b(?:id|name)\s*=/u.test(formResetSignalTag) ||
