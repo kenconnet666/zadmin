@@ -164,6 +164,31 @@ if (JSON.stringify(internalComponents) !== JSON.stringify(expectedInternal)) {
 	fail(`Unexpected internal component set: ${internalComponents.join(', ') || 'none'}.`);
 }
 
+const stableNativeIdSources = [
+	'ui/zui/src/components/input/ZInput.svelte',
+	'ui/zui/src/components/input/ZTextarea.svelte',
+	'ui/zui/src/components/input/ZCheckbox.svelte',
+	'ui/zui/src/components/input/ZSwitch.svelte',
+	'ui/zui/src/components/input/ZSlider.svelte',
+	'ui/zui/src/components/compound/radio-group/ZRadioGroupItem.svelte'
+];
+for (const filename of stableNativeIdSources) {
+	const source = await readFile(resolve(workspaceRoot, filename), 'utf8');
+	if (!/createZuiId/u.test(source) || !/id=\{[^}]*\?\?[^}]*generatedId\}/u.test(source)) {
+		fail(`${filename} must preserve its generated native control id fallback.`);
+	}
+}
+const dataTableSource = await readFile(
+	resolve(workspaceRoot, 'ui/zui/src/components/data-display/ZDataTable.svelte'),
+	'utf8'
+);
+if (
+	!dataTableSource.includes('id={`${selectionName}-all`}') ||
+	!dataTableSource.includes('id={`${selectionName}-row-${entry.index}`}')
+) {
+	fail('ZDataTable must preserve scoped ids for its native selection controls.');
+}
+
 const docsSvelteFiles = await filesUnder(docsSourceRoot, ['.svelte']);
 const rawInteractive =
 	/<(?:a|button|code|details|input|kbd|meter|progress|select|summary|table|textarea)\b/u;
@@ -261,6 +286,7 @@ console.log(
 		zuiSourceFiles: zuiSourceFiles.length,
 		resourceLifecycleViolations: 0,
 		dangerousDomSinks: 0,
-		skipLinkContracts: 1
+		skipLinkContracts: 1,
+		stableNativeIdComponents: stableNativeIdSources.length + 1
 	})
 );

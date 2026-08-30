@@ -30,6 +30,7 @@
 | 内部原生按钮文件        |    9 | 必须复用internal action、显式focus合同，或是Tour的隐藏非Tab遮罩                              |
 | 可见原生输入文件        |   14 | 非hidden input/textarea必须复用internal focus或显式focus-visible/focus-within                |
 | 表单reset action文件    |   26 | 组件必须通过节点action绑定/更新/销毁，禁止直接调用低层listener                               |
+| 默认稳定id组件          |    7 | 六个基础原生控件与DataTable内部选择框必须保留SSR稳定作用域id                                 |
 | 正tabindex/隐藏Tab点    |  0/0 | ZUI和Docs禁止正tabindex；aria-hidden交互元素必须显式`tabindex=-1`                            |
 | 隐式submit/无名图标按钮 |  0/0 | 内部原生button必须显式type；图标按钮必须有aria-label或aria-labelledby                        |
 | Svelte遗留事件/动态组件 |  0/0 | ZUI与Docs禁止`on:event`、`createEventDispatcher`和`<svelte:component>`                       |
