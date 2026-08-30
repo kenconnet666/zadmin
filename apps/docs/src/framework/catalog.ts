@@ -13,6 +13,7 @@ import { timelineDoc } from '../content/components/data-display/timeline/doc.js'
 import { tableDoc } from '../content/components/data-display/table/doc.js';
 import { virtualListDoc } from '../content/components/data-display/virtual-list/doc.js';
 import { dataTableDoc } from '../content/components/data-display/data-table/doc.js';
+import { carouselDoc } from '../content/components/data-display/carousel/doc.js';
 import { alertDoc } from '../content/components/feedback/alert/doc.js';
 import { loadingBarDoc } from '../content/components/feedback/loading-bar/doc.js';
 import { resultDoc } from '../content/components/feedback/result/doc.js';
@@ -74,6 +75,7 @@ import { dialogDoc } from '../content/components/overlay/dialog/doc.js';
 import { drawerDoc } from '../content/components/overlay/drawer/doc.js';
 import { popconfirmDoc } from '../content/components/overlay/popconfirm/doc.js';
 import { tooltipDoc } from '../content/components/overlay/tooltip/doc.js';
+import { tourDoc } from '../content/components/overlay/tour/doc.js';
 import type { ComponentCategory, ComponentDoc } from './component-doc.js';
 
 export const componentCategories = Object.freeze([
@@ -117,6 +119,7 @@ export const componentDocs = Object.freeze([
 	tableDoc,
 	virtualListDoc,
 	dataTableDoc,
+	carouselDoc,
 	alertDoc,
 	loadingBarDoc,
 	resultDoc,
@@ -163,7 +166,8 @@ export const componentDocs = Object.freeze([
 	drawerDoc,
 	popconfirmDoc,
 	popoverDoc,
-	tooltipDoc
+	tooltipDoc,
+	tourDoc
 ] satisfies readonly ComponentDoc[]);
 
 export const componentDocsById: ReadonlyMap<string, ComponentDoc> = new Map(

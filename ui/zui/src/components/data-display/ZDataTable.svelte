@@ -181,7 +181,7 @@
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { calculateVirtualRange } from '../../runtime/collection/virtualizer.js';
-	import { stableSortRows, type DataSortDescriptor } from '../../runtime/collection/data-table.js';
+	import { stableSortRows } from '../../runtime/collection/data-table.js';
 	import ZTable from './ZTable.svelte';
 	const unique = (keys: readonly SelectionKey[]) => Object.freeze([...new Set(keys)]);
 	let {
@@ -215,7 +215,7 @@
 	const uid = $props.id();
 	const selectionName = $derived(`${zui.idPrefix}-${uid}-data-table-selection`);
 	let scrollOffset = $state(0);
-	let viewportSize = $state(height);
+	let viewportSize = $state(untrack(() => height));
 	let selectAll = $state<HTMLInputElement | null>(null);
 	const normalizedColumns = $derived.by(() => {
 		if (columns.length === 0) throw new Error('ZDataTable requires at least one column.');

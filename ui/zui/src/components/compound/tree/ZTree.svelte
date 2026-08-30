@@ -249,7 +249,7 @@
 	let focusKey = $state<SelectionKey>();
 	let proxy = $state<HTMLInputElement | null>(null);
 	let scrollOffset = $state(0);
-	let viewportSize = $state(height);
+	let viewportSize = $state(untrack(() => height));
 	const index = $derived(createTreeIndex(nodes));
 	const expandedState = new ControllableState<readonly SelectionKey[]>({
 		defaultValue: () => unique(defaultExpandedKeys),
@@ -353,7 +353,8 @@
 			ref.scrollTop = offset;
 			scrollOffset = offset;
 		}
-		queueMicrotask(() => elements[itemIndex]?.focus({ preventScroll: true }));
+		if (virtualized) queueMicrotask(() => elements[itemIndex]?.focus({ preventScroll: true }));
+		else elements[itemIndex]?.focus({ preventScroll: true });
 	}
 	function toggleExpanded(key: SelectionKey): void {
 		if (disabled) return;

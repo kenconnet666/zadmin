@@ -132,7 +132,7 @@
 	}: ZVirtualListProps<TItem> = $props();
 	const zui = useZui();
 	let scrollOffset = $state(0);
-	let viewportSize = $state(height);
+	let viewportSize = $state(untrack(() => height));
 	const validated = $derived.by(() => {
 		const keys = new Set<number | string>();
 		items.forEach((entry, index) => {

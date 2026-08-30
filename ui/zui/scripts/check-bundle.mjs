@@ -29,6 +29,7 @@ const components = [
 	{ id: 'table', name: 'ZTable', path: 'data-display/ZTable.svelte' },
 	{ id: 'virtual-list', name: 'ZVirtualList', path: 'data-display/ZVirtualList.svelte' },
 	{ id: 'data-table', name: 'ZDataTable', path: 'data-display/ZDataTable.svelte' },
+	{ id: 'carousel', name: 'ZCarousel', path: 'data-display/ZCarousel.svelte' },
 	{ id: 'alert', name: 'ZAlert', path: 'feedback/ZAlert.svelte' },
 	{ id: 'loading-bar', name: 'ZLoadingBar', path: 'feedback/ZLoadingBar.svelte' },
 	{ id: 'result', name: 'ZResult', path: 'feedback/ZResult.svelte' },
@@ -227,6 +228,7 @@ const components = [
 	{ id: 'tabs-panel', name: 'ZTabsPanel', path: 'compound/tabs/ZTabsPanel.svelte' },
 	{ id: 'tree', name: 'ZTree', path: 'compound/tree/ZTree.svelte' },
 	{ id: 'tooltip', name: 'ZTooltip', path: 'compound/tooltip/ZTooltip.svelte' },
+	{ id: 'tour', name: 'ZTour', path: 'overlay/ZTour.svelte' },
 	{
 		id: 'tooltip-trigger',
 		name: 'ZTooltipTrigger',

@@ -36,6 +36,7 @@ import ComboboxFixture from './ComboboxFixture.svelte';
 import CommandFixture from './CommandFixture.svelte';
 import CommandPaletteFixture from './CommandPaletteFixture.svelte';
 import CascaderFixture from './CascaderFixture.svelte';
+import CarouselFixture from './CarouselFixture.svelte';
 import ColorPickerFixture from './ColorPickerFixture.svelte';
 import AccordionFixture from './AccordionFixture.svelte';
 import AlertDialogFixture from './AlertDialogFixture.svelte';
@@ -67,6 +68,7 @@ import VirtualTreeFixture from './VirtualTreeFixture.svelte';
 import TreeSelectFixture from './TreeSelectFixture.svelte';
 import TransferFixture from './TransferFixture.svelte';
 import TooltipFixture from './TooltipFixture.svelte';
+import TourFixture from './TourFixture.svelte';
 import TagsInputFixture from './TagsInputFixture.svelte';
 import TextareaFixture from './TextareaFixture.svelte';
 
@@ -218,6 +220,14 @@ describe('ZUI foundational components', () => {
 		const open = render(TooltipFixture, { props: { defaultOpen: true } }).body;
 		expect(open).toContain('aria-describedby=');
 		expect(open).toContain('role="tooltip"');
+	});
+
+	it('keeps Tour client-owned layers out of SSR while preserving target content', () => {
+		const result = render(TourFixture).body;
+		expect(result).toContain('Start tour');
+		expect(result).toContain('Summary target');
+		expect(result).not.toContain('role="dialog"');
+		expect(result).not.toContain('data-slot="mask"');
 	});
 
 	it('renders Dialog SSR with stable title and description relationships', () => {
@@ -534,6 +544,16 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain('Large deployment table');
 		expect(result).toContain('aria-rowcount="1001"');
 		expect(result).toContain('data-virtualized="true"');
+	});
+
+	it('renders Carousel region, one visible slide and explicit controls during SSR', () => {
+		const result = render(CarouselFixture).body;
+		expect(result).toContain('aria-roledescription="carousel"');
+		expect(result.match(/aria-roledescription="slide"/gu)).toHaveLength(3);
+		expect(result.match(/ hidden/gu)).toHaveLength(2);
+		expect(result).toContain('aria-label="Previous slide"');
+		expect(result).toContain('aria-label="Next slide"');
+		expect(result).toContain('aria-current="true"');
 	});
 
 	it('renders feedback live regions, progress states, Result and queued Toasts during SSR', () => {

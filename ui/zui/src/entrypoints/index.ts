@@ -1,5 +1,7 @@
 export const ZUI_PACKAGE_NAME = '@zadmin/zui';
 
+export type { Selection, SelectionKey, SelectionMode } from '../runtime/collection/selection.js';
+
 export { default as ZAccordion } from '../components/compound/accordion/ZAccordion.svelte';
 export type {
 	AccordionType,
@@ -161,6 +163,8 @@ export { default as ZTooltipContent } from '../components/compound/tooltip/ZTool
 export type { ZTooltipContentProps } from '../components/compound/tooltip/ZTooltipContent.svelte';
 export { default as ZTooltipTrigger } from '../components/compound/tooltip/ZTooltipTrigger.svelte';
 export type { ZTooltipTriggerProps } from '../components/compound/tooltip/ZTooltipTrigger.svelte';
+export { default as ZTour } from '../components/overlay/ZTour.svelte';
+export type { TourStep, ZTourProps } from '../components/overlay/ZTour.svelte';
 export { default as ZBox } from '../components/gene/ZBox.svelte';
 export type { ZBoxProps } from '../components/gene/ZBox.svelte';
 export { default as ZButton } from '../components/gene/ZButton.svelte';
@@ -231,6 +235,8 @@ export type {
 	DataTableWidth,
 	ZDataTableProps
 } from '../components/data-display/ZDataTable.svelte';
+export { default as ZCarousel } from '../components/data-display/ZCarousel.svelte';
+export type { ZCarouselProps } from '../components/data-display/ZCarousel.svelte';
 export { compareDataValues, stableSortRows } from '../runtime/collection/data-table.js';
 export type { DataSortDescriptor, DataSortDirection } from '../runtime/collection/data-table.js';
 export { calculateVirtualRange, virtualScrollOffset } from '../runtime/collection/virtualizer.js';

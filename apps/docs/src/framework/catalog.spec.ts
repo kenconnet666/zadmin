@@ -34,6 +34,7 @@ describe('ZUI component documentation catalog', () => {
 			'ZTable',
 			'ZVirtualList',
 			'ZDataTable',
+			'ZCarousel',
 			'ZAlert',
 			'ZLoadingBar',
 			'ZResult',
@@ -80,7 +81,8 @@ describe('ZUI component documentation catalog', () => {
 			'ZDrawer',
 			'ZPopconfirm',
 			'ZPopover',
-			'ZTooltip'
+			'ZTooltip',
+			'ZTour'
 		]);
 		expect(componentDocsById.size).toBe(componentDocs.length);
 		expect(componentDocs.map(({ category }) => category)).toEqual([
@@ -113,6 +115,7 @@ describe('ZUI component documentation catalog', () => {
 			'data-display',
 			'data-display',
 			'data-display',
+			'data-display',
 			'feedback',
 			'feedback',
 			'feedback',
@@ -154,6 +157,7 @@ describe('ZUI component documentation catalog', () => {
 			'navigation',
 			'navigation',
 			'navigation',
+			'overlay',
 			'overlay',
 			'overlay',
 			'overlay',

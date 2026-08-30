@@ -359,6 +359,39 @@ test('keeps DataTable sorting, stable selection and virtual row count synchroniz
 	await expect(viewport).toHaveAttribute('data-virtualized', 'true');
 });
 
+test('keeps Carousel rotation control, direct navigation and stable value synchronized', async ({
+	page
+}) => {
+	await page.goto('/#/components/carousel');
+	const carousel = page.getByRole('region', { name: '发布摘要轮播' });
+	await expect(carousel.getByRole('group', { name: /1 of 3/u })).toBeVisible();
+	await carousel.getByRole('button', { name: 'Next slide' }).click();
+	await expect(page.getByText('value = metrics')).toBeVisible();
+	await expect(carousel.getByRole('group', { name: /2 of 3/u })).toBeVisible();
+	await carousel.getByRole('button', { name: 'Pause automatic rotation' }).click();
+	await expect(carousel.getByRole('button', { name: 'Start automatic rotation' })).toBeVisible();
+	await carousel.getByRole('button', { name: /Go to slide 3/u }).click();
+	await expect(page.getByText('value = events')).toBeVisible();
+});
+
+test('keeps Tour spotlight, modal focus, step positioning and restoration synchronized', async ({
+	page
+}) => {
+	await page.goto('/#/components/tour');
+	const start = page.getByRole('button', { name: '开始导览' });
+	await start.click();
+	let dialog = page.getByRole('dialog', { name: '发布摘要' });
+	await expect(dialog).toBeVisible();
+	await expect(page.getByRole('button', { name: '关闭导览' })).toBeFocused();
+	await expect(page.locator('[data-slot="mask"]')).toHaveCount(4);
+	await dialog.getByRole('button', { name: '下一步' }).click();
+	dialog = page.getByRole('dialog', { name: '生产指标' });
+	await expect(dialog).toHaveAttribute('data-step', 'metrics');
+	await dialog.getByRole('button', { name: '完成' }).click();
+	await expect(dialog).toHaveCount(0);
+	await expect(start).toBeFocused();
+});
+
 test('keeps PinInput roving entry, completion, single FormData value and reset synchronized', async ({
 	page
 }) => {
@@ -1051,6 +1084,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/table',
 		'#/components/virtual-list',
 		'#/components/data-table',
+		'#/components/carousel',
 		'#/components/alert',
 		'#/components/loading-bar',
 		'#/components/result',
@@ -1097,7 +1131,8 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/drawer',
 		'#/components/popconfirm',
 		'#/components/popover',
-		'#/components/tooltip'
+		'#/components/tooltip',
+		'#/components/tour'
 	]) {
 		await page.goto(`/${route}`);
 		const results = await new AxeBuilder({ page }).analyze();

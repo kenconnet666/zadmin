@@ -8,6 +8,7 @@ import ComboboxFixture from './ComboboxFixture.svelte';
 import CommandFixture from './CommandFixture.svelte';
 import CommandPaletteFixture from './CommandPaletteFixture.svelte';
 import CascaderFixture from './CascaderFixture.svelte';
+import CarouselFixture from './CarouselFixture.svelte';
 import ColorPickerFixture from './ColorPickerFixture.svelte';
 import ContextMenuFixture from './ContextMenuFixture.svelte';
 import AccordionFixture from './AccordionFixture.svelte';
@@ -45,6 +46,7 @@ import VirtualTreeFixture from './VirtualTreeFixture.svelte';
 import TreeSelectFixture from './TreeSelectFixture.svelte';
 import TransferFixture from './TransferFixture.svelte';
 import TooltipFixture from './TooltipFixture.svelte';
+import TourFixture from './TourFixture.svelte';
 import TagsInputFixture from './TagsInputFixture.svelte';
 import TextareaFixture from './TextareaFixture.svelte';
 import { createBrowserIcssRuntime } from '../src/icss/runtime.js';
@@ -68,6 +70,43 @@ function insertedRuleCount(): number {
 }
 
 describe('compiled ICSS browser updates', () => {
+	it('coordinates Tour target spotlight, floating steps, completion and focus restoration', async () => {
+		render(TourFixture);
+		const start = document.querySelector<HTMLButtonElement>('#tour-start');
+		start?.focus();
+		start?.click();
+		await tick();
+		await Promise.resolve();
+		let dialog = document.querySelector<HTMLElement>('[role="dialog"][data-step="summary"]');
+		expect(dialog?.textContent).toContain('Release summary');
+		expect(document.activeElement).toBe(dialog?.querySelector('[aria-label="Close tour"]'));
+		expect(document.querySelectorAll('[data-slot="mask"]')).toHaveLength(4);
+		expect(document.querySelector('[data-slot="spotlight"]')).not.toBeNull();
+		dialog?.querySelector<HTMLButtonElement>('button:last-child')?.click();
+		await tick();
+		dialog = document.querySelector<HTMLElement>('[role="dialog"][data-step="metrics"]');
+		expect(dialog?.textContent).toContain('Production metrics');
+		dialog?.querySelector<HTMLButtonElement>('button:last-child')?.click();
+		await tick();
+		expect(document.querySelector('[role="dialog"]')).toBeNull();
+		expect(document.activeElement).toBe(start);
+		expect(document.querySelector('[data-testid="tour-output"]')?.textContent).toBe('false:1:1');
+	});
+	it('keeps Carousel slides, controls and stable value synchronized', async () => {
+		render(CarouselFixture);
+		const carousel = document.querySelector<HTMLElement>('[data-testid="carousel"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="carousel-output"]');
+		expect(carousel?.querySelectorAll('[role="group"]:not([hidden])')).toHaveLength(1);
+		carousel?.querySelector<HTMLButtonElement>('[aria-label="Next slide"]')?.click();
+		await tick();
+		expect(output?.textContent).toBe('two:1');
+		expect(carousel?.querySelector('[aria-current="true"]')?.getAttribute('aria-label')).toContain(
+			'Metrics'
+		);
+		carousel?.querySelector<HTMLButtonElement>('[aria-label^="Go to slide 3"]')?.click();
+		await tick();
+		expect(output?.textContent).toBe('three:2');
+	});
 	it('keeps Table semantics and VirtualList DOM bounded while scrolling', async () => {
 		render(DataFixture);
 		const table = document.querySelector<HTMLTableElement>('[data-testid="table"]');

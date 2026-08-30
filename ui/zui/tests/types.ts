@@ -22,6 +22,7 @@ import {
 	ZBox,
 	ZButton,
 	ZCard,
+	ZCarousel,
 	ZCascader,
 	ZCalendar,
 	ZCheckbox,
@@ -117,6 +118,7 @@ import {
 	ZTooltip,
 	ZTooltipContent,
 	ZTooltipTrigger,
+	ZTour,
 	ZTree,
 	ZTreeSelect,
 	ZTransfer,
@@ -145,6 +147,7 @@ import {
 	type ZBoxProps,
 	type ZButtonProps,
 	type ZCardProps,
+	type ZCarouselProps,
 	type ZCascaderProps,
 	type ZCalendarProps,
 	type ZCheckboxProps,
@@ -240,6 +243,7 @@ import {
 	type ZTooltipContentProps,
 	type ZTooltipProps,
 	type ZTooltipTriggerProps,
+	type ZTourProps,
 	type ZTreeProps,
 	type ZTreeSelectProps,
 	type ZTransferProps,
@@ -301,6 +305,16 @@ const dataTableProps: ComponentProps<typeof ZDataTable> = {
 	rowKey: () => 'one',
 	rows: [{ id: 'one' }]
 } satisfies ZDataTableProps;
+const carouselProps: ComponentProps<typeof ZCarousel> = {
+	ariaLabel: 'Slides',
+	item: (() => {}) as never,
+	itemKey: () => 'one',
+	itemLabel: () => 'One',
+	items: [{ id: 'one' }]
+} satisfies ZCarouselProps;
+const tourProps: ComponentProps<typeof ZTour> = {
+	steps: [{ description: 'Inspect', id: 'one', target: '#target', title: 'Target' }]
+} satisfies ZTourProps;
 const accordionProps: ComponentProps<typeof ZAccordion> = {
 	defaultValue: ['one'],
 	type: 'multiple'
@@ -578,6 +592,8 @@ void statisticProps;
 void tableProps;
 void virtualListProps;
 void dataTableProps;
+void carouselProps;
+void tourProps;
 void accordionItemProps;
 void accordionTriggerProps;
 void accordionContentProps;

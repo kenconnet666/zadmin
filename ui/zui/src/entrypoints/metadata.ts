@@ -67,6 +67,7 @@ export { zuiMetadata as treeMetadata } from '../components/compound/tree/ZTree.s
 export { zuiMetadata as tooltipMetadata } from '../components/compound/tooltip/ZTooltip.svelte';
 export { zuiMetadata as tooltipContentMetadata } from '../components/compound/tooltip/ZTooltipContent.svelte';
 export { zuiMetadata as tooltipTriggerMetadata } from '../components/compound/tooltip/ZTooltipTrigger.svelte';
+export { zuiMetadata as tourMetadata } from '../components/overlay/ZTour.svelte';
 export { zuiMetadata as boxMetadata } from '../components/gene/ZBox.svelte';
 export { zuiMetadata as buttonMetadata } from '../components/gene/ZButton.svelte';
 export { zuiMetadata as codeMetadata } from '../components/gene/ZCode.svelte';
@@ -93,6 +94,7 @@ export { zuiMetadata as timelineMetadata } from '../components/data-display/ZTim
 export { zuiMetadata as tableMetadata } from '../components/data-display/ZTable.svelte';
 export { zuiMetadata as virtualListMetadata } from '../components/data-display/ZVirtualList.svelte';
 export { zuiMetadata as dataTableMetadata } from '../components/data-display/ZDataTable.svelte';
+export { zuiMetadata as carouselMetadata } from '../components/data-display/ZCarousel.svelte';
 export { zuiMetadata as alertMetadata } from '../components/feedback/ZAlert.svelte';
 export { zuiMetadata as loadingBarMetadata } from '../components/feedback/ZLoadingBar.svelte';
 export { zuiMetadata as resultMetadata } from '../components/feedback/ZResult.svelte';
