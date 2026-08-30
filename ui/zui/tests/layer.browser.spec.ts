@@ -7,7 +7,11 @@ import { inertOthers } from '../src/runtime/layer/inert-others.js';
 import { LayerStack } from '../src/runtime/layer/layer-stack.svelte.js';
 import { portal } from '../src/runtime/layer/portal.js';
 import { lockScroll } from '../src/runtime/layer/scroll-lock.js';
-import { listenForFormReset, listenToFormReset } from '../src/runtime/form/form-control.svelte.js';
+import {
+	formReset,
+	listenForFormReset,
+	listenToFormReset
+} from '../src/runtime/form/form-control.svelte.js';
 
 const settleReset = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
 
@@ -135,6 +139,31 @@ describe('ZUI layer runtime', () => {
 
 		stop();
 		host.remove();
+	});
+
+	it('updates and destroys the node reset action without duplicate listeners', async () => {
+		const form = document.createElement('form');
+		const input = document.createElement('input');
+		form.append(input);
+		document.body.append(form);
+		const first = vi.fn();
+		const second = vi.fn();
+		const action = formReset(input, first);
+
+		form.reset();
+		await settleReset();
+		expect(first).toHaveBeenCalledOnce();
+		action.update(second);
+		form.reset();
+		await settleReset();
+		expect(first).toHaveBeenCalledOnce();
+		expect(second).toHaveBeenCalledOnce();
+
+		action.destroy();
+		form.reset();
+		await settleReset();
+		expect(second).toHaveBeenCalledOnce();
+		form.remove();
 	});
 	it('moves portal content between inline, Element and ShadowRoot targets reversibly', () => {
 		const host = document.createElement('div');

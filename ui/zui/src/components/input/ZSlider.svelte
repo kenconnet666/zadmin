@@ -168,7 +168,7 @@
 
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { useZField } from '../../runtime/form/field-context.js';
-	import { listenForFormReset, mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
+	import { formReset, mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -219,11 +219,6 @@
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 
-	$effect(() => {
-		if (!ref) return;
-		return listenForFormReset(ref, () => valueState.reset());
-	});
-
 	function handleInput(event: Event & { currentTarget: HTMLInputElement }): void {
 		valueState.setFromUser(normalizeSliderValue(event.currentTarget.valueAsNumber, min, max, step));
 		oninput?.(event);
@@ -236,6 +231,7 @@
 	class={[rootClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
+	use:formReset={() => valueState.reset()}
 	id={id ?? field?.controlId}
 	name={name ?? field?.name}
 	type="range"

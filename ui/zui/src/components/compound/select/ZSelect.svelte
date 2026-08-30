@@ -120,7 +120,7 @@
 	import { RovingFocus } from '../../../runtime/collection/roving-focus.svelte.js';
 	import { Typeahead } from '../../../runtime/collection/typeahead.js';
 	import { ControllableState } from '../../../runtime/foundation/controllable-state.svelte.js';
-	import { listenForFormReset } from '../../../runtime/form/form-control.svelte.js';
+	import { formReset } from '../../../runtime/form/form-control.svelte.js';
 	import { serializeFormValue } from '../../../runtime/form/form-value.js';
 	import { useZui } from '../../../runtime/foundation/context.js';
 	import ZPopover from '../popover/ZPopover.svelte';
@@ -223,10 +223,6 @@
 		}
 	};
 	provideZSelect(context);
-	$effect(() => {
-		if (!hidden) return;
-		return listenForFormReset(hidden, () => valueState.reset());
-	});
 	const serializedValue = $derived(
 		valueState.current === undefined ? '' : (serializeFormValue(valueState.current) ?? '')
 	);
@@ -251,6 +247,7 @@
 		{disabled}
 		{form}
 		{name}
+		use:formReset={() => valueState.reset()}
 		value={serializedValue}
 	/>
 {/if}

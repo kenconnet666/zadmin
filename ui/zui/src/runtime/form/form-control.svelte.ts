@@ -45,6 +45,20 @@ export function listenForFormReset(
 	);
 }
 
+export function formReset(
+	control: HTMLElement & { readonly form: HTMLFormElement | null },
+	reset: () => void
+): { destroy(): void; update(reset: () => void): void } {
+	let currentReset = reset;
+	const destroy = listenForFormReset(control, () => currentReset());
+	return {
+		destroy,
+		update(nextReset) {
+			currentReset = nextReset;
+		}
+	};
+}
+
 export function listenToFormReset(form: HTMLFormElement | null, reset: () => void): () => void {
 	if (!form) return () => undefined;
 	return listenToResetEvents([form], (event) => event.target === form, reset);

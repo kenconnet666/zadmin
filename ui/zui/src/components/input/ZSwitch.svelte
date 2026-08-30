@@ -221,7 +221,7 @@
 
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { useZField } from '../../runtime/form/field-context.js';
-	import { listenForFormReset, mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
+	import { formReset, mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
 	import { serializeFormValue } from '../../runtime/form/form-value.js';
 	import {
 		applyIcssRootStyle,
@@ -276,11 +276,6 @@
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 
-	$effect(() => {
-		if (!ref) return;
-		return listenForFormReset(ref, () => state.reset());
-	});
-
 	function handleChange(event: Event & { currentTarget: HTMLInputElement }): void {
 		state.setFromUser(event.currentTarget.checked);
 		onchange?.(event);
@@ -293,6 +288,7 @@
 	class={[rootClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
+	use:formReset={() => state.reset()}
 	id={id ?? field?.controlId}
 	name={name ?? field?.name}
 	type="checkbox"

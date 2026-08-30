@@ -153,7 +153,7 @@
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { useZField } from '../../runtime/form/field-context.js';
 	import { useZInputGroup } from '../../runtime/form/input-group-context.svelte.js';
-	import { listenForFormReset, mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
+	import { formReset, mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -207,10 +207,6 @@
 	const resolvedDescribedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
-	$effect(() => {
-		if (!ref) return;
-		return listenForFormReset(ref, () => state.reset());
-	});
 	function handleInput(event: Event & { currentTarget: HTMLTextAreaElement }): void {
 		state.setFromUser(event.currentTarget.value);
 		oninput?.(event);
@@ -223,6 +219,7 @@
 	class={[rootClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
+	use:formReset={() => state.reset()}
 	id={id ?? field?.controlId}
 	name={name ?? field?.name}
 	{defaultValue}
