@@ -9,6 +9,7 @@
 	let value = $state<string>();
 	let changes = $state(0);
 	let resets = $state(0);
+	let externalValue = $state('external-seed');
 </script>
 
 <form data-testid="field-form">
@@ -36,3 +37,15 @@
 	<button type="reset">Reset</button>
 	<output data-testid="field-output">{value}:{changes}:{resets}</output>
 </form>
+
+<form id="external-input-form" data-testid="external-input-form">
+	<button type="reset">Reset external input</button>
+</form>
+<ZInput
+	bind:value={externalValue}
+	data-testid="external-input"
+	defaultValue="external-seed"
+	form="external-input-form"
+	name="external"
+/>
+<output data-testid="external-input-output">{externalValue}</output>

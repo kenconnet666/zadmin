@@ -18,7 +18,7 @@
 | ------------------------ | ---: | -------------------------------------------------------------------------------------------- |
 | Svelte组件文件           |  135 | 133个拥有唯一metadata id；`ZMentionEditor`与`ZTextareaAutosize`是非公开内部实现              |
 | 公开组件文档页           |   78 | 每页至少2个不同Demo                                                                          |
-| 实际Demo                 |  157 | 少于2个、重复id或空源码会在`defineComponentDoc`中直接失败                                    |
+| 实际Demo                 |  158 | 少于2个、重复id或空源码会在`defineComponentDoc`中直接失败                                    |
 | 生产指南                 |    8 | Getting Started、ICSS、Theme Lab、Accessibility、SSR/CSP、HMR、WebView和Package              |
 | 公开API合同              |  133 | TypeScript AST快照覆盖全部metadata组件与10个package entrypoint；变化必须显式更新             |
 | 官方主题                 |    6 | `@zadmin/zui/themes`统一导出，文档站真实切换并持久化                                         |
@@ -71,6 +71,7 @@
 | Docs冷启动报告main tabindex警告       | Svelte无法静态确认表达式`tabindex={-1}`是负值                      | 改用等价字面量`tabindex="-1"`，保持程序化焦点并消除编译警告                       |
 | Demo可见表单字段缺少id/name           | 基础原生控件无Field/调用方id时只依赖aria-label                     | Input/Textarea/Checkbox/Switch/Slider/RadioItem默认SSR稳定id；DataTable内部生成id |
 | InputGroup reset测试存在假阳性        | 只断言原生DOM defaultValue，没有断言Svelte绑定状态                 | 组件与Docs回归同时要求input=`api`且绑定输出恢复`https://api.internal`             |
+| ZInput外部form reset缺少组件证据      | 低层helper覆盖`form="id"`，但没有验证ZInput与signal同步关联        | 三浏览器要求可见input/signal指向同一外部form，DOM与绑定输出恢复默认值             |
 | 文档搜索没有结果数量公告              | Sidebar只视觉隐藏不匹配项，屏幕阅读器不知道过滤结果                | ZVisuallyHidden polite状态公告总数/匹配数；搜索框关联status与nav                  |
 | 搜索快捷键提示在移动端未隐藏          | media类和ZKbd基础display类作用于同一元素，注入顺序覆盖none         | 独立wrapper承载响应式display，ZKbd只负责键帽视觉；桌面/移动远程门禁               |
 | Table/Code/TOC使用物理文本对齐        | 早期视觉只按LTR设置left/right                                      | Table caption/cell和TOC改start，Code行号改end；静态门禁拒绝物理textAlign          |
@@ -107,7 +108,7 @@
 
 ## 5. 文档站真实浏览器证据
 
-- 78/78组件路由均能渲染，且每页DOM中至少有2个不同Demo；ZForm增加第三个外部busy所有权场景。
+- 78/78组件路由均能渲染，且每页DOM中至少有2个不同Demo；ZForm与ZInput各增加第三个生产边界场景。
 - 七份新增生产指南在真实Chrome中7/7渲染，均有唯一active导航、3–4个ZUI Card章节和正确页面标题。
 - ZStack方向Demo通过ZSelect键盘切换后，Trigger文本、实际`flex-direction`和焦点恢复一致；Docs全站原生交互标签为0。
 - RTL下ZTable caption/cell和组件TOC computed对齐为start，ZCode行号为end；验收后恢复LTR并由静态门禁拒绝物理textAlign。
@@ -123,6 +124,7 @@
 - reset捕获在Svelte原生binding使用的同一微任务检查点提交；多个监听目标以generation合并，取消事件与同任务destroy不会执行迟到回调。
 - 当前RadioGroup、Mention/Textarea和Transfer等24个组件保留action；ZInput/ZForm改走原生signal，全部组件继续禁止绕过统一路径直调listener。
 - 原生signal在真实Chrome中初始current=`zui-reset-armed`、default=`zui-reset-fired`；reset后ZForm回到`submitted=false`、两个ZInput清空且控制台干净。
+- ZInput第三个Demo把control放在form DOM外，通过`form="input-external-owner"`同步关联匿名signal；reset后DOM和绑定输出都恢复`external-seed`。
 - 首页和组件深链完整reload后首个Tab均为“跳到主要内容”；Enter保持当前hash路由与标题/H1，并把焦点送到`main#zui-main-content`
   ，无404或控制台异常。
 - skip-link使用逻辑`inset-inline-start`；真实Chrome切换RTL并reload后出现在右侧起始边，恢复LTR后控制台保持干净。

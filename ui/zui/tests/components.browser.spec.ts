@@ -2441,6 +2441,13 @@ describe('compiled ICSS browser updates', () => {
 		const label = document.querySelector<HTMLLabelElement>('label');
 		const optional = document.querySelector<HTMLInputElement>('[data-testid="optional-input"]');
 		const inherited = document.querySelector<HTMLInputElement>('[data-testid="inherited-input"]');
+		const external = document.querySelector<HTMLInputElement>('[data-testid="external-input"]');
+		const externalForm = document.querySelector<HTMLFormElement>(
+			'[data-testid="external-input-form"]'
+		);
+		const externalOutput = document.querySelector<HTMLOutputElement>(
+			'[data-testid="external-input-output"]'
+		);
 		const field = label?.parentElement;
 		const messages = field?.querySelectorAll('[aria-live] p');
 		expect(input).not.toBeNull();
@@ -2474,5 +2481,21 @@ describe('compiled ICSS browser updates', () => {
 		await settleFormReset();
 		expect(input.value).toBe('seed');
 		expect(output?.textContent).toBe('seed:1:1');
+
+		expect(external?.form).toBe(externalForm);
+		expect(
+			document.querySelector<HTMLInputElement>(
+				'[data-zui-form-reset-signal][form="external-input-form"]'
+			)?.form
+		).toBe(externalForm);
+		if (external) {
+			external.value = 'external-changed';
+			external.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		}
+		await tick();
+		externalForm?.reset();
+		await settleFormReset();
+		expect(external?.value).toBe('external-seed');
+		expect(externalOutput?.textContent).toBe('external-seed');
 	});
 });
