@@ -12,6 +12,7 @@ import CascaderFixture from './CascaderFixture.svelte';
 import CarouselFixture from './CarouselFixture.svelte';
 import ColorPickerFixture from './ColorPickerFixture.svelte';
 import ContextMenuFixture from './ContextMenuFixture.svelte';
+import ContextBoundaryFixture from './ContextBoundaryFixture.svelte';
 import AccordionFixture from './AccordionFixture.svelte';
 import AlertDialogFixture from './AlertDialogFixture.svelte';
 import CheckboxFixture from './CheckboxFixture.svelte';
@@ -73,6 +74,16 @@ function insertedRuleCount(): number {
 }
 
 describe('compiled ICSS browser updates', () => {
+	it('reports every orphan compound part through a real Svelte error boundary', async () => {
+		render(ContextBoundaryFixture);
+		await tick();
+		await Promise.resolve();
+		const output = document.querySelector('[data-testid="context-boundary-output"]');
+		expect(output?.textContent).toMatch(/^12:/u);
+		expect(output?.textContent).toContain('ZAccordion');
+		expect(output?.textContent).toContain('ZTooltip');
+	});
+
 	it('pauses, resumes, times out and disposes explicit ToastQueue timers', async () => {
 		const dismissed: string[] = [];
 		const queue = createToastQueue();
