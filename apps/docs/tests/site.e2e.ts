@@ -11,8 +11,11 @@ test('renders the component catalog and real demo source', async ({ page }) => {
 	await page.goto('/#/');
 	await expect(page.getByRole('heading', { level: 1 })).toContainText('看见组件');
 	const cards = page.getByTestId('component-card');
+	const guideCards = page.getByTestId('guide-card');
 	await expect(cards.first()).toBeVisible();
 	expect(await cards.count()).toBeGreaterThanOrEqual(50);
+	await expect(guideCards).toHaveCount(7);
+	await expect(page.getByRole('heading', { level: 2, name: '生产指南' })).toBeVisible();
 	await expect(page.getByRole('heading', { level: 3 })).toHaveText([
 		'通用组件',
 		'布局组件',

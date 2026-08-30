@@ -187,7 +187,9 @@
 
 <script lang="ts">
 	import { ZBox, ZCard, ZIcon, ZLink, ZStack, ZText, useZui } from '@zadmin/zui';
+	import { guideDocs } from '../content/guides.js';
 	import { componentCategories, type ComponentDoc } from '../framework/catalog.js';
+	import { guideRoute } from '../framework/router.js';
 
 	let { docs }: { docs: readonly ComponentDoc[] } = $props();
 	const zui = useZui();
@@ -233,6 +235,28 @@
 
 <section class={classes.catalog}>
 	<header>
+		<p class={classes.eyebrow}>PRODUCTION GUIDES</p>
+		<h2 class={classes.catalogTitle}>生产指南</h2>
+	</header>
+	<div class={classes.grid}>
+		{#each guideDocs as guide (guide.id)}
+			<ZLink
+				class={classes.card}
+				data-testid="guide-card"
+				href={guideRoute(guide.id)}
+				underline="none"
+			>
+				<ZBox>
+					<div class={classes.cardIcon}><ZIcon name="chevronDown" size={18} /></div>
+					<h4 class={classes.cardTitle}>{guide.eyebrow}</h4>
+					<ZText tone="muted">{guide.summary}</ZText>
+					<span class={classes.learnMore}>阅读指南 →</span>
+				</ZBox>
+			</ZLink>
+		{/each}
+	</div>
+
+	<header class={classes.group}>
 		<p class={classes.eyebrow}>FOUNDATIONS</p>
 		<h2 class={classes.catalogTitle}>基础组件</h2>
 	</header>
