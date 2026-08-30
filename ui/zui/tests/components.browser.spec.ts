@@ -76,9 +76,13 @@ function insertedRuleCount(): number {
 
 describe('compiled ICSS browser updates', () => {
 	it('renders every documentation example against the source package', async () => {
-		render(DocsExamplesFixture);
+		const target = document.createElement('div');
+		document.body.append(target);
+		const fixture = mount(DocsExamplesFixture, { target });
 		await tick();
-		expect(document.querySelectorAll('[data-docs-example]').length).toBeGreaterThanOrEqual(156);
+		expect(target.querySelectorAll('[data-docs-example]').length).toBeGreaterThanOrEqual(156);
+		await unmount(fixture);
+		target.remove();
 	});
 
 	it('reports every orphan compound part through a real Svelte error boundary', async () => {

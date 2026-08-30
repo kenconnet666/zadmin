@@ -3,6 +3,9 @@
 	import Check from '@lucide/svelte/icons/check';
 	import ChevronDown from '@lucide/svelte/icons/chevron-down';
 	import Menu from '@lucide/svelte/icons/menu';
+	import Maximize2 from '@lucide/svelte/icons/maximize-2';
+	import Minimize2 from '@lucide/svelte/icons/minimize-2';
+	import Minus from '@lucide/svelte/icons/minus';
 	import Plus from '@lucide/svelte/icons/plus';
 	import Search from '@lucide/svelte/icons/search';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
@@ -17,7 +20,10 @@
 		chevronDown: ChevronDown,
 		close: X,
 		menu: Menu,
+		maximize: Maximize2,
+		minimize: Minus,
 		plus: Plus,
+		restore: Minimize2,
 		search: Search,
 		user: User,
 		warning: TriangleAlert

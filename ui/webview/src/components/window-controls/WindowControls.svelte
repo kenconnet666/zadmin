@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { ZButton, ZStack } from '@zadmin/zui';
+	import { ZButton, ZIcon, ZStack } from '@zadmin/zui';
 
 	import type { DesktopResult } from '../../platform/types.js';
 	import { useDesktopPlatform } from '../provider/context.js';
@@ -56,7 +56,8 @@
 		size="small"
 		aria-busy={busy || undefined}
 		aria-label="Minimize window"
-		onclick={() => run(() => desktop.window.minimize())}>—</ZButton
+		onclick={() => run(() => desktop.window.minimize())}
+		><ZIcon aria-hidden="true" name="minimize" size={15} /></ZButton
 	>
 	<ZButton
 		variant="ghost"
@@ -65,13 +66,14 @@
 		aria-label={maximized ? 'Restore window' : 'Maximize window'}
 		aria-pressed={maximized}
 		onclick={() => run(() => (maximized ? desktop.window.restore() : desktop.window.maximize()))}
-		>{maximized ? '❐' : '□'}</ZButton
+		><ZIcon aria-hidden="true" name={maximized ? 'restore' : 'maximize'} size={15} /></ZButton
 	>
 	<ZButton
 		variant="danger"
 		size="small"
 		aria-busy={busy || undefined}
 		aria-label="Close window"
-		onclick={() => run(() => desktop.window.close())}>×</ZButton
+		onclick={() => run(() => desktop.window.close())}
+		><ZIcon aria-hidden="true" name="close" size={15} /></ZButton
 	>
 </ZStack>
