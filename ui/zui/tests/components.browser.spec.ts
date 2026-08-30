@@ -103,7 +103,7 @@ describe('compiled ICSS browser updates', () => {
 		render(NativeIdentityFixture);
 		const controls = [
 			...document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
-				'input:not([type="hidden"]), textarea'
+				'input:not([type="hidden"]):not([hidden]), textarea'
 			)
 		];
 		const ids = controls.map(({ id }) => id);
@@ -1372,6 +1372,7 @@ describe('compiled ICSS browser updates', () => {
 		expect(output?.textContent).toBe('gateway');
 		await resetForm(form);
 		expect(input?.value).toBe('api');
+		expect(output?.textContent).toBe('api');
 	});
 
 	it('coordinates NumberField locale parsing, stepping, invalid draft, FormData and reset', async () => {
@@ -1606,7 +1607,7 @@ describe('compiled ICSS browser updates', () => {
 			'[data-testid="prevented-reset-form"]'
 		);
 		const preservedInput = preventedReset?.querySelector<HTMLInputElement>(
-			'input:not([type="hidden"])'
+			'input:not([type="hidden"]):not([hidden])'
 		);
 		const preservedOutput = document.querySelector<HTMLOutputElement>(
 			'[data-testid="prevented-reset-output"]'

@@ -317,6 +317,7 @@ test('keeps InputGroup focus boundary, Field context, FormData and reset synchro
 		.toBe('gateway');
 	await page.getByRole('button', { name: '重置' }).click();
 	await expect(input).toHaveValue('api');
+	await expect(page.getByText('url = https://api.internal')).toBeVisible();
 });
 
 test('keeps NumberField locale parsing, spinbutton keys, FormData and reset synchronized', async ({
@@ -1319,7 +1320,9 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		await expect(currentLink).toHaveAttribute('href', route);
 		await expect(page).toHaveTitle(route === '#/' ? 'ZUI Components' : /.+ · ZUI Components$/u);
 		const unnamedFields = await page
-			.locator('main input:not([type="hidden"]), main textarea, main select')
+			.locator(
+				'main input:not([type="hidden"]):not([hidden]), main textarea:not([hidden]), main select:not([hidden])'
+			)
 			.evaluateAll((elements) =>
 				elements
 					.filter((element) => !element.id && !element.getAttribute('name'))

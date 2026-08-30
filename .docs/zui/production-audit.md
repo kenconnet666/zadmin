@@ -70,6 +70,7 @@
 | 文档站没有skip-link                   | Hash路由壳层只提供Header、Sidebar与main landmark                   | 使用ZLink提供首个Tab入口；阻止hash导航并显式focus/scroll稳定main目标              |
 | Docs冷启动报告main tabindex警告       | Svelte无法静态确认表达式`tabindex={-1}`是负值                      | 改用等价字面量`tabindex="-1"`，保持程序化焦点并消除编译警告                       |
 | Demo可见表单字段缺少id/name           | 基础原生控件无Field/调用方id时只依赖aria-label                     | Input/Textarea/Checkbox/Switch/Slider/RadioItem默认SSR稳定id；DataTable内部生成id |
+| InputGroup reset测试存在假阳性        | 只断言原生DOM defaultValue，没有断言Svelte绑定状态                 | 组件与Docs回归同时要求input=`api`且绑定输出恢复`https://api.internal`             |
 | 文档搜索没有结果数量公告              | Sidebar只视觉隐藏不匹配项，屏幕阅读器不知道过滤结果                | ZVisuallyHidden polite状态公告总数/匹配数；搜索框关联status与nav                  |
 | 搜索快捷键提示在移动端未隐藏          | media类和ZKbd基础display类作用于同一元素，注入顺序覆盖none         | 独立wrapper承载响应式display，ZKbd只负责键帽视觉；桌面/移动远程门禁               |
 | Table/Code/TOC使用物理文本对齐        | 早期视觉只按LTR设置left/right                                      | Table caption/cell和TOC改start，Code行号改end；静态门禁拒绝物理textAlign          |
