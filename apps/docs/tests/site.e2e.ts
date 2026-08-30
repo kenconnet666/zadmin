@@ -50,8 +50,14 @@ test('announces component search totals and empty results', async ({ page }) => 
 	await page.goto('/#/');
 	const search = page.getByRole('textbox', { name: '搜索组件' });
 	const status = page.locator('#zui-docs-search-status');
+	await page.keyboard.press('/');
+	await expect(search).toBeFocused();
+	await search.press('/');
+	await expect(search).toHaveValue('/');
+	await search.clear();
 	await expect(search).toHaveAttribute('aria-controls', 'zui-docs-component-nav');
 	await expect(search).toHaveAttribute('aria-describedby', 'zui-docs-search-status');
+	await expect(search).toHaveAttribute('aria-keyshortcuts', '/');
 	await expect(status).toHaveAttribute('aria-live', 'polite');
 	await expect(status).toHaveText('共 78 个组件');
 

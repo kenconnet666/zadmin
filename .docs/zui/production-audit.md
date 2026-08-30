@@ -35,7 +35,7 @@
 | 隐式submit/无名图标按钮 |  0/0 | 内部原生button必须显式type；图标按钮必须有aria-label或aria-labelledby                        |
 | Svelte遗留事件/动态组件 |  0/0 | ZUI与Docs禁止`on:event`、`createEventDispatcher`和`<svelte:component>`                       |
 | TypeScript危险逃生口    |    0 | ZUI与Docs禁止`@ts-ignore`、`@ts-nocheck`、显式`any`断言与注解                                |
-| 资源生命周期违规        |    0 | 全部ZUI源码中event/timer/RAF/Observer创建文件必须包含对应释放路径                            |
+| 资源生命周期违规        |    0 | 全部ZUI与Docs源码中event/timer/RAF/Observer创建文件必须包含对应释放路径                      |
 | 危险动态DOM/XSS sink    |    0 | ZUI与Docs禁止raw HTML、HTML字符串注入、eval/new Function、动态script和javascript URL         |
 | Hash路由安全skip-link   |    1 | CI固定ZLink、当前URL、防导航focus handler以及main稳定id/负tabindex合同                       |
 | 搜索live关系合同        |    1 | CI固定搜索框controls/describedby、导航id、polite状态与匹配数量文本                           |
@@ -57,6 +57,7 @@
 | 文档站没有skip-link                   | Hash路由壳层只提供Header、Sidebar与main landmark                | 使用ZLink提供首个Tab入口；阻止hash导航并显式focus/scroll稳定main目标              |
 | Demo可见表单字段缺少id/name           | 基础原生控件无Field/调用方id时只依赖aria-label                  | Input/Textarea/Checkbox/Switch/Slider/RadioItem默认SSR稳定id；DataTable内部生成id |
 | 文档搜索没有结果数量公告              | Sidebar只视觉隐藏不匹配项，屏幕阅读器不知道过滤结果             | ZVisuallyHidden polite状态公告总数/匹配数；搜索框关联status与nav                  |
+| FormDemo异步校验timer未清理           | 模拟schema延迟的Promise在HMR/路由销毁后仍可能继续               | Map持有timer/resolve；onDestroy清理并resolve，由ZForm token丢弃迟到结果           |
 | 关闭/导航图标不一致                   | 多处使用`×/‹/›/+/-/✓`字符                                       | 统一使用按需Lucide；完整操作复用ZButton，微型内部按钮复用无状态focus样式合同      |
 | Transfer、DataTable与主页残留箭头字符 | 早期实现只补了可访问名称，字符范围没有纳入全树图标审计          | 统一使用按需Lucide/ZIcon；Transfer按LTR/RTL交换方向，DataTable复用ZButton         |
 | WebView窗口控制仍用字符图标           | WindowControls早于ZIcon manifest扩展                            | 扩展受控manifest并改用`ZIcon`                                                     |
@@ -102,6 +103,8 @@
 - Accessibility指南明确自动id仅服务DOM/ARIA、显式id与Field优先且不可作为业务键；真实Chrome渲染4个ZUI Card章节并保持控制台干净。
 - 搜索框关联真实nav与live status；Chrome验证总数78、autosize唯一命中ZTextarea、无结果0和清空恢复，远程Playwright固定三态。
 - 搜索有内容时Escape清空过滤、恢复78个组件并保持输入焦点；远程Playwright固定value、focus与live状态同步。
+- 非编辑上下文按`/`聚焦搜索；搜索框内`/`保留真实输入且不被全局快捷键劫持，组件声明`aria-keyshortcuts`并销毁window监听。
+- FormDemo在异步schema timer启动后立即离页，真实Chrome等待220ms仍保持首页正确状态与干净控制台；Docs资源门禁拒绝无对应释放的创建点。
 - 真实Textarea页重复id清单为0；远程78页循环按页面聚合全部`[id]`并输出任何重复值与数量。
 - 远程全路由循环同时要求main内恰好一个H1，并拒绝document级水平溢出；组件内部滚动容器不受误伤。
 - 真实87路由的main、`aria-current=page`、H1与具体页面标题问题均为0；远程循环固定当前链接href必须等于被测hash。

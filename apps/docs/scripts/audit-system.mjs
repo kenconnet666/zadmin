@@ -198,6 +198,7 @@ for (const path of docsSvelteFiles) {
 	const filename = portable(relative(workspaceRoot, path));
 	auditTabOrder(source, filename);
 	auditSvelte5(source, filename);
+	auditResourceLifecycle(source, filename);
 	if (rawInteractive.test(source))
 		fail(`${filename} hand-builds an interactive element instead of dogfooding ZUI.`);
 	if (forbiddenGlyph.test(source))
@@ -217,6 +218,7 @@ const appSidebarSource = await readFile(resolve(docsRoot, 'src/views/AppSidebar.
 const searchLiveContracts = [
 	/aria-controls=["']zui-docs-component-nav["']/u.test(appHeaderSource),
 	/aria-describedby=["']zui-docs-search-status["']/u.test(appHeaderSource),
+	/aria-keyshortcuts=["']\/["']/u.test(appHeaderSource),
 	/<ZVisuallyHidden[\s\S]*?aria-live=["']polite["'][\s\S]*?id=["']zui-docs-search-status["']/u.test(
 		appSidebarSource
 	),

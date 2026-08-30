@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onDestroy } from 'svelte';
 	import {
 		ZButton,
 		ZForm,
@@ -11,12 +12,30 @@
 		type ZFormProps
 	} from '@zadmin/zui';
 
+	const pendingDelays = new Map<ReturnType<typeof setTimeout>, () => void>();
+	function validationDelay(milliseconds: number): Promise<void> {
+		return new Promise((resolve) => {
+			const timer = setTimeout(() => {
+				pendingDelays.delete(timer);
+				resolve();
+			}, milliseconds);
+			pendingDelays.set(timer, resolve);
+		});
+	}
+	onDestroy(() => {
+		for (const [timer, resolve] of pendingDelays) {
+			clearTimeout(timer);
+			resolve();
+		}
+		pendingDelays.clear();
+	});
+
 	const schema: NonNullable<ZFormProps['schema']> = {
 		'~standard': {
 			version: 1,
 			vendor: 'zui-docs',
 			async validate(input) {
-				await new Promise((resolve) => setTimeout(resolve, 60));
+				await validationDelay(60);
 				const values = input as Record<string, FormDataEntryValue>;
 				const issues: { message: string; path: string[] }[] = [];
 				if (String(values.account ?? '').length < 3)

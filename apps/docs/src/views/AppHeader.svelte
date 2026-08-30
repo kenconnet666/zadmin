@@ -204,6 +204,7 @@
 	import ExternalLink from '@lucide/svelte/icons/external-link';
 	import Palette from '@lucide/svelte/icons/palette';
 	import SlidersHorizontal from '@lucide/svelte/icons/sliders-horizontal';
+	import { onMount } from 'svelte';
 	import {
 		ZIcon,
 		ZInput,
@@ -255,6 +256,31 @@
 	const contrastValueLabel = labelFrom(contrastLabels);
 	const motionValueLabel = labelFrom(motionLabels);
 	const directionValueLabel = labelFrom(directionLabels);
+	let searchRef = $state<HTMLInputElement | null>(null);
+
+	onMount(() => {
+		const handleShortcut = (event: KeyboardEvent) => {
+			const target = event.target;
+			const editing =
+				target instanceof HTMLInputElement ||
+				target instanceof HTMLTextAreaElement ||
+				target instanceof HTMLSelectElement ||
+				(target instanceof HTMLElement && target.isContentEditable);
+			if (
+				event.defaultPrevented ||
+				event.key !== '/' ||
+				event.altKey ||
+				event.ctrlKey ||
+				event.metaKey ||
+				editing
+			)
+				return;
+			event.preventDefault();
+			searchRef?.focus({ preventScroll: true });
+		};
+		window.addEventListener('keydown', handleShortcut);
+		return () => window.removeEventListener('keydown', handleShortcut);
+	});
 
 	function setTheme(value: SelectionKey | undefined): void {
 		if (typeof value === 'string' && docsThemes.some((theme) => theme.id === value)) {
@@ -297,8 +323,10 @@
 		<ZIcon name="search" size={18} />
 		<ZInput
 			bind:value={query}
+			bind:ref={searchRef}
 			aria-controls="zui-docs-component-nav"
 			aria-describedby="zui-docs-search-status"
+			aria-keyshortcuts="/"
 			aria-label="搜索组件"
 			id="zui-docs-component-search"
 			name="component-search"
