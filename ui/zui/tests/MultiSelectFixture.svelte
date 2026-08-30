@@ -19,6 +19,8 @@
 		defaultValues={['a', 'c']}
 		name="choice"
 		onValueChange={() => (changes += 1)}
+		valueLabel={(current) =>
+			({ a: 'Alpha', b: 'Beta', c: 'Charlie', d: 'Delta' })[String(current)]!}
 	>
 		<ZMultiSelectTrigger aria-label="Choices" data-testid="multi-select-trigger" />
 		<ZMultiSelectContent data-testid="multi-select-content">

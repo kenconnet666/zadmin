@@ -72,6 +72,7 @@
 </script>
 
 <script lang="ts">
+	import Check from '@lucide/svelte/icons/check';
 	import { untrack } from 'svelte';
 	import { defineRecipe, registerRecipeHmr } from '../../../recipes/define.js';
 	import {
@@ -170,6 +171,6 @@
 	onpointermove={handlePointerMove}
 >
 	<span data-slot="label">{@render children?.()}</span><span aria-hidden="true"
-		>{selected ? '✓' : ''}</span
+		>{#if selected}<Check size={15} />{/if}</span
 	>
 </div>

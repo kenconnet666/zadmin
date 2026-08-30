@@ -103,7 +103,9 @@
 </script>
 
 <script lang="ts">
+	import X from '@lucide/svelte/icons/x';
 	import { untrack } from 'svelte';
+	import ZButton from '../gene/ZButton.svelte';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -165,12 +167,15 @@
 		>
 			{description}
 		</div>{/if}{#if actionLabel || dismissible}<div class={actionClass} data-slot="actions">
-			{#if actionLabel}<button type="button" onclick={(event) => onAction?.(event)}
-					>{actionLabel}</button
-				>{/if}{#if dismissible}<button
-					type="button"
+			{#if actionLabel}<ZButton
+					size="small"
+					variant="secondary"
+					onclick={(event) => onAction?.(event)}>{actionLabel}</ZButton
+				>{/if}{#if dismissible}<ZButton
 					aria-label={dismissLabel}
-					onclick={(event) => onDismiss?.(event)}>×</button
+					size="small"
+					variant="ghost"
+					onclick={(event) => onDismiss?.(event)}><X aria-hidden="true" size={16} /></ZButton
 				>{/if}
 		</div>{/if}
 </article>

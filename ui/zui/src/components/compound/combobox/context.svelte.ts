@@ -5,17 +5,16 @@ import type {
 	CollectionStore
 } from '../../../runtime/collection/collection.svelte.js';
 import type { SelectionKey } from '../../../runtime/collection/selection.js';
+import { CancelableEvent } from '../../../runtime/foundation/cancelable-event.js';
 
 export type ComboboxItemRecord = CollectionItem<SelectionKey>;
 
-export class ComboboxSelectEvent {
-	defaultPrevented = false;
+export class ComboboxSelectEvent extends CancelableEvent {
 	constructor(
 		readonly originalEvent: KeyboardEvent | MouseEvent,
 		readonly value: SelectionKey
-	) {}
-	preventDefault(): void {
-		this.defaultPrevented = true;
+	) {
+		super();
 	}
 }
 

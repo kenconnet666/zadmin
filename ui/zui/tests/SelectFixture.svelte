@@ -19,6 +19,8 @@
 		defaultValue="b"
 		name="choice"
 		onValueChange={() => (changes += 1)}
+		valueLabel={(current) =>
+			({ a: 'Alpha', b: 'Beta', c: 'Charlie', d: 'Delta' })[String(current)]!}
 	>
 		<ZSelectTrigger aria-label="Choice" data-testid="select-trigger" />
 		<ZSelectContent data-testid="select-content">

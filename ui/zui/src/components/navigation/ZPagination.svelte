@@ -112,6 +112,8 @@
 </script>
 
 <script lang="ts">
+	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
+	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import { untrack } from 'svelte';
 
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
@@ -152,6 +154,8 @@
 	);
 	const classes = $derived(zui.slots(paginationRecipe));
 	const numberFormat = $derived(new Intl.NumberFormat(zui.locale));
+	const PreviousIcon = $derived(zui.direction === 'rtl' ? ChevronRight : ChevronLeft);
+	const NextIcon = $derived(zui.direction === 'rtl' ? ChevronLeft : ChevronRight);
 	const translate = (key: string, fallback: string) => zui.translations[key] ?? fallback;
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
@@ -176,7 +180,7 @@
 			disabled={disabled || currentPage === 1}
 			size="small"
 			variant="secondary"
-			onclick={() => select(currentPage - 1)}>{zui.direction === 'rtl' ? '›' : '‹'}</ZButton
+			onclick={() => select(currentPage - 1)}><PreviousIcon aria-hidden="true" size={16} /></ZButton
 		>
 		{#each items as item (item)}
 			{#if typeof item === 'number'}
@@ -200,7 +204,7 @@
 			disabled={disabled || currentPage === totalPages}
 			size="small"
 			variant="secondary"
-			onclick={() => select(currentPage + 1)}>{zui.direction === 'rtl' ? '‹' : '›'}</ZButton
+			onclick={() => select(currentPage + 1)}><NextIcon aria-hidden="true" size={16} /></ZButton
 		>
 	</div>
 </nav>

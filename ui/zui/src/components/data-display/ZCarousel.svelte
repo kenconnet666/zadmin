@@ -136,6 +136,10 @@
 
 <script lang="ts" generics="TItem">
 	/* eslint-disable svelte/prefer-svelte-reactivity -- The Set validates stable keys. */
+	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
+	import ChevronRight from '@lucide/svelte/icons/chevron-right';
+	import Pause from '@lucide/svelte/icons/pause';
+	import Play from '@lucide/svelte/icons/play';
 	import { onMount, untrack } from 'svelte';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import {
@@ -146,6 +150,7 @@
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { ReducedMotionState } from '../../runtime/foundation/motion.svelte.js';
+	import ZButton from '../gene/ZButton.svelte';
 	let {
 		ariaLabel,
 		autoplayInterval,
@@ -195,6 +200,8 @@
 		return index;
 	});
 	const reduced = $derived(reducedMotion.current);
+	const PreviousIcon = $derived(zui.direction === 'rtl' ? ChevronRight : ChevronLeft);
+	const NextIcon = $derived(zui.direction === 'rtl' ? ChevronLeft : ChevronRight);
 	const autoPaused = $derived(pausedByUser || focusWithin || (pauseOnHover && hovered) || reduced);
 	const rootClass = $derived(zui.recipe(recipe));
 	const viewportClass = $derived(zui.recipe(viewportRecipe));
@@ -246,8 +253,7 @@
 	onfocusin={() => (focusWithin = true)}
 	onfocusout={focusOut}
 >
-	{#if autoplayInterval !== undefined}<button
-			type="button"
+	{#if autoplayInterval !== undefined}<ZButton
 			aria-label={reduced
 				? 'Automatic rotation disabled by motion preference'
 				: pausedByUser
@@ -255,7 +261,13 @@
 					: pauseLabel}
 			aria-pressed={pausedByUser}
 			disabled={reduced}
-			onclick={() => (pausedByUser = !pausedByUser)}>{pausedByUser ? '▶' : 'Ⅱ'}</button
+			size="small"
+			variant="ghost"
+			onclick={() => (pausedByUser = !pausedByUser)}
+			>{#if pausedByUser}<Play aria-hidden="true" size={16} />{:else}<Pause
+					aria-hidden="true"
+					size={16}
+				/>{/if}</ZButton
 		>{/if}
 	<div
 		class={viewportClass}
@@ -275,25 +287,28 @@
 			</div>{/each}
 	</div>
 	<div class={controlsClass} data-slot="controls">
-		<button
-			type="button"
+		<ZButton
 			aria-label={previousLabel}
 			disabled={!loop && activeIndex === 0}
-			onclick={() => move(-1)}>‹</button
+			size="small"
+			variant="secondary"
+			onclick={() => move(-1)}><PreviousIcon aria-hidden="true" size={16} /></ZButton
 		>
 		<div class={indicatorsClass} data-slot="indicators" role="group" aria-label="Choose slide">
-			{#each normalized as slide, index (slide.key)}<button
-					type="button"
+			{#each normalized as slide, index (slide.key)}<ZButton
 					aria-label={`Go to slide ${index + 1}: ${slide.label}`}
 					aria-current={index === activeIndex ? 'true' : undefined}
-					onclick={() => choose(index)}>{index + 1}</button
+					size="small"
+					variant={index === activeIndex ? 'primary' : 'ghost'}
+					onclick={() => choose(index)}>{index + 1}</ZButton
 				>{/each}
 		</div>
-		<button
-			type="button"
+		<ZButton
 			aria-label={nextLabel}
 			disabled={!loop && activeIndex === normalized.length - 1}
-			onclick={() => move(1)}>›</button
+			size="small"
+			variant="secondary"
+			onclick={() => move(1)}><NextIcon aria-hidden="true" size={16} /></ZButton
 		>
 	</div>
 </section>

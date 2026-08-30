@@ -7,6 +7,7 @@ import ComponentGallery from './ComponentGallery.svelte';
 import ComboboxFixture from './ComboboxFixture.svelte';
 import CommandFixture from './CommandFixture.svelte';
 import CoverageFixture from './CoverageFixture.svelte';
+import DocsExamplesFixture from './DocsExamplesFixture.svelte';
 import CommandPaletteFixture from './CommandPaletteFixture.svelte';
 import CascaderFixture from './CascaderFixture.svelte';
 import CarouselFixture from './CarouselFixture.svelte';
@@ -74,6 +75,12 @@ function insertedRuleCount(): number {
 }
 
 describe('compiled ICSS browser updates', () => {
+	it('renders every documentation example against the source package', async () => {
+		render(DocsExamplesFixture);
+		await tick();
+		expect(document.querySelectorAll('[data-docs-example]').length).toBeGreaterThanOrEqual(156);
+	});
+
 	it('reports every orphan compound part through a real Svelte error boundary', async () => {
 		render(ContextBoundaryFixture);
 		await tick();
@@ -505,6 +512,7 @@ describe('compiled ICSS browser updates', () => {
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="select-trigger"]');
 		const form = document.querySelector<HTMLFormElement>('[data-testid="select-form"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="select-output"]');
+		expect(trigger?.textContent?.trim()).toBe('Beta');
 		trigger?.focus();
 		trigger?.click();
 		await tick();
@@ -597,6 +605,8 @@ describe('compiled ICSS browser updates', () => {
 		);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="multi-select-form"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="multi-select-output"]');
+		expect(trigger?.textContent).toContain('Alpha');
+		expect(trigger?.textContent).toContain('Charlie');
 		trigger?.focus();
 		trigger?.click();
 		await tick();

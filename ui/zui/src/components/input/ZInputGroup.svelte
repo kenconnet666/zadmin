@@ -113,9 +113,14 @@
 			invalid: {
 				false: (s) => s.borderColor._border,
 				true: (s) => s.borderColor._danger
+			},
+			motion: {
+				auto: () => undefined,
+				full: () => undefined,
+				reduced: (s) => s.transitionDuration.ms(0)
 			}
 		},
-		defaultVariants: { disabled: false, invalid: false }
+		defaultVariants: { disabled: false, invalid: false, motion: 'auto' }
 	});
 	const slotRecipe = defineRecipe({
 		base: (s) => {
@@ -165,7 +170,7 @@
 			return invalid;
 		}
 	});
-	const rootClass = $derived(zui.recipe(rootRecipe, { disabled, invalid }));
+	const rootClass = $derived(zui.recipe(rootRecipe, { disabled, invalid, motion: zui.motion }));
 	const slotClass = $derived(zui.recipe(slotRecipe));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));

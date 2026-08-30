@@ -118,6 +118,11 @@
 				false: (s) => s.borderColor._border,
 				true: (s) => s.borderColor._danger
 			},
+			motion: {
+				auto: () => undefined,
+				full: () => undefined,
+				reduced: (s) => s.transitionDuration.ms(0)
+			},
 			size: {
 				large: (s) => {
 					s.minHeight._large;
@@ -136,7 +141,7 @@
 				}
 			}
 		},
-		defaultVariants: { invalid: false, size: 'medium' }
+		defaultVariants: { invalid: false, motion: 'auto', size: 'medium' }
 	});
 
 	registerRecipeHmr(import.meta, inputRecipe);
@@ -182,7 +187,9 @@
 	const field = useZField();
 	const inputGroup = useZInputGroup();
 	const resolvedInvalid = $derived(invalid ?? inputGroup?.invalid ?? field?.invalid ?? false);
-	const rootClass = $derived(zui.recipe(inputRecipe, { invalid: resolvedInvalid, size }));
+	const rootClass = $derived(
+		zui.recipe(inputRecipe, { invalid: resolvedInvalid, motion: zui.motion, size })
+	);
 	const state = new ControllableState<string>({
 		defaultValue: () => defaultValue,
 		onChange: () => onValueChange,

@@ -52,6 +52,11 @@
 				false: () => undefined,
 				true: (s) => s.width.percent(100)
 			},
+			motion: {
+				auto: () => undefined,
+				full: () => undefined,
+				reduced: (s) => s.transitionDuration.ms(0)
+			},
 			size: {
 				large: (s) => {
 					s.minHeight._large;
@@ -108,6 +113,7 @@
 		defaultVariants: {
 			disabled: false,
 			fullWidth: false,
+			motion: 'auto',
 			size: 'medium',
 			variant: 'primary'
 		}
@@ -115,7 +121,7 @@
 
 	registerRecipeHmr(import.meta, buttonRecipe);
 
-	export type ZButtonVariants = Omit<RecipeVariants<typeof buttonRecipe>, 'disabled'>;
+	export type ZButtonVariants = Omit<RecipeVariants<typeof buttonRecipe>, 'disabled' | 'motion'>;
 
 	export type ZButtonProps = Omit<HTMLButtonAttributes, 'children' | 'disabled'> &
 		ZButtonVariants & {
@@ -240,6 +246,7 @@
 		zui.recipe(buttonRecipe, {
 			disabled: disabled || loading,
 			fullWidth,
+			motion: zui.motion,
 			size,
 			variant
 		})

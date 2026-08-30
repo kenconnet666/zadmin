@@ -1,17 +1,14 @@
 import { getLayerStack, type LayerRegistration, type LayerStack } from './layer-stack.svelte.js';
+import { CancelableEvent } from '../foundation/cancelable-event.js';
 
 export type DismissReason = 'escape' | 'focus-outside' | 'pointer-outside';
 
-export class DismissableLayerEvent<TEvent extends Event> {
-	defaultPrevented = false;
-
+export class DismissableLayerEvent<TEvent extends Event> extends CancelableEvent {
 	constructor(
 		readonly originalEvent: TEvent,
 		readonly reason: DismissReason
-	) {}
-
-	preventDefault(): void {
-		this.defaultPrevented = true;
+	) {
+		super();
 	}
 }
 

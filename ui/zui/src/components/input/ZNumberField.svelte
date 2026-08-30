@@ -169,6 +169,8 @@
 </script>
 
 <script lang="ts">
+	import Minus from '@lucide/svelte/icons/minus';
+	import Plus from '@lucide/svelte/icons/plus';
 	import { untrack } from 'svelte';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
@@ -316,27 +318,38 @@
 		draft = '';
 	}
 	function handleKeydown(event: KeyboardEvent & { currentTarget: HTMLInputElement }): void {
-		const direction =
-			event.key === 'ArrowUp' || event.key === 'PageUp'
-				? 1
-				: event.key === 'ArrowDown' || event.key === 'PageDown'
-					? -1
-					: undefined;
-		if (direction) {
-			event.preventDefault();
-			changeBy(direction, event.key.startsWith('Page') || event.shiftKey ? 10 : 1);
-			draft = new Intl.NumberFormat(resolvedLocale, {
-				maximumFractionDigits: 20,
-				useGrouping: false
-			}).format(valueState.current ?? 0);
-		} else if (event.key === 'Home' && constraints.min !== undefined) {
-			event.preventDefault();
-			commit(constraints.min);
-			draft = new Intl.NumberFormat(resolvedLocale, { useGrouping: false }).format(constraints.min);
-		} else if (event.key === 'End' && constraints.max !== undefined) {
-			event.preventDefault();
-			commit(constraints.max);
-			draft = new Intl.NumberFormat(resolvedLocale, { useGrouping: false }).format(constraints.max);
+		switch (event.key) {
+			case 'ArrowUp':
+			case 'ArrowDown':
+			case 'PageUp':
+			case 'PageDown': {
+				event.preventDefault();
+				const direction = event.key === 'ArrowUp' || event.key === 'PageUp' ? 1 : -1;
+				changeBy(direction, event.key.startsWith('Page') || event.shiftKey ? 10 : 1);
+				draft = new Intl.NumberFormat(resolvedLocale, {
+					maximumFractionDigits: 20,
+					useGrouping: false
+				}).format(valueState.current ?? 0);
+				break;
+			}
+			case 'Home':
+				if (constraints.min !== undefined) {
+					event.preventDefault();
+					commit(constraints.min);
+					draft = new Intl.NumberFormat(resolvedLocale, { useGrouping: false }).format(
+						constraints.min
+					);
+				}
+				break;
+			case 'End':
+				if (constraints.max !== undefined) {
+					event.preventDefault();
+					commit(constraints.max);
+					draft = new Intl.NumberFormat(resolvedLocale, { useGrouping: false }).format(
+						constraints.max
+					);
+				}
+				break;
 		}
 	}
 	const serialized = $derived(
@@ -363,7 +376,7 @@
 		disabled={resolvedDisabled ||
 			resolvedReadonly ||
 			(constraints.min !== undefined && (valueState.current ?? constraints.min) <= constraints.min)}
-		onclick={() => changeBy(-1)}>−</button
+		onclick={() => changeBy(-1)}><Minus aria-hidden="true" size={16} /></button
 	>
 	<input
 		bind:this={inputRef}
@@ -398,7 +411,7 @@
 		disabled={resolvedDisabled ||
 			resolvedReadonly ||
 			(constraints.max !== undefined && (valueState.current ?? constraints.max) >= constraints.max)}
-		onclick={() => changeBy(1)}>+</button
+		onclick={() => changeBy(1)}><Plus aria-hidden="true" size={16} /></button
 	>
 </div>
 <input bind:this={proxy} aria-hidden="true" tabindex={-1} type="hidden" disabled {form} />

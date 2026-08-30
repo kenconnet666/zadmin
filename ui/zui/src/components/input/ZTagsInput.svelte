@@ -125,6 +125,7 @@
 </script>
 
 <script lang="ts">
+	import X from '@lucide/svelte/icons/x';
 	import { untrack } from 'svelte';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
@@ -137,6 +138,7 @@
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
+	import ZButton from '../gene/ZButton.svelte';
 
 	const rootRecipe = defineRecipe({
 		base: (s) => {
@@ -185,6 +187,7 @@
 			s.borderStyle.none;
 			s.color._textMuted;
 			s.cursor.pointer;
+			s.minHeight.px(0);
 			s.padding.px(0);
 		},
 		variants: {},
@@ -349,13 +352,14 @@
 	{#each resolvedValues as tag, index (`${tag}-${index}`)}
 		<span class={tagClass} data-slot="tag">
 			{#if children}{@render children(tag)}{:else}{tag}{/if}
-			<button
-				type="button"
+			<ZButton
 				class={removeClass}
 				data-slot="remove"
 				aria-label={removeLabel(tag)}
 				disabled={disabled || readonly}
-				onclick={() => remove(index)}>×</button
+				size="small"
+				variant="ghost"
+				onclick={() => remove(index)}><X aria-hidden="true" size={14} /></ZButton
 			>
 		</span>
 	{/each}

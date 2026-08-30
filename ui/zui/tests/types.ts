@@ -403,7 +403,8 @@ const menuLabelProps: ComponentProps<typeof ZMenuLabel> = {} satisfies ZMenuLabe
 const menuSeparatorProps: ComponentProps<typeof ZMenuSeparator> = {} satisfies ZMenuSeparatorProps;
 const multiSelectProps: ComponentProps<typeof ZMultiSelect> = {
 	defaultValues: ['a', 2],
-	name: 'choice'
+	name: 'choice',
+	valueLabel: String
 } satisfies ZMultiSelectProps;
 const multiSelectTriggerProps: ComponentProps<typeof ZMultiSelectTrigger> =
 	{} satisfies ZMultiSelectTriggerProps;
@@ -448,7 +449,8 @@ const radioGroupItemProps: ComponentProps<typeof ZRadioGroupItem> = {
 } satisfies ZRadioGroupItemProps;
 const selectProps: ComponentProps<typeof ZSelect> = {
 	defaultValue: 'ready',
-	name: 'status'
+	name: 'status',
+	valueLabel: String
 } satisfies ZSelectProps;
 const selectTriggerProps: ComponentProps<typeof ZSelectTrigger> = {} satisfies ZSelectTriggerProps;
 const selectContentProps: ComponentProps<typeof ZSelectContent> = {} satisfies ZSelectContentProps;

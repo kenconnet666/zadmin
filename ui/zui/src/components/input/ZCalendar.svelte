@@ -239,6 +239,8 @@
 </script>
 
 <script lang="ts">
+	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
+	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import { CalendarDate, isSameDay, isSameMonth, today } from '@internationalized/date';
 	import { untrack } from 'svelte';
 	import { SvelteMap } from 'svelte/reactivity';
@@ -287,6 +289,8 @@
 		...rest
 	}: ZCalendarProps = $props();
 	const zui = useZui();
+	const PreviousIcon = $derived(zui.direction === 'rtl' ? ChevronRight : ChevronLeft);
+	const NextIcon = $derived(zui.direction === 'rtl' ? ChevronLeft : ChevronRight);
 	const resolvedLocale = $derived(locale ?? zui.locale);
 	const initialFocus = untrack(() => defaultFocusedValue ?? defaultValue ?? today(timeZone));
 	let focused = $state<CalendarDate>(initialFocus);
@@ -406,7 +410,7 @@
 			class={navClass}
 			aria-label={previousLabel}
 			{disabled}
-			onclick={() => moveMonth(-1)}>‹</button
+			onclick={() => moveMonth(-1)}><PreviousIcon aria-hidden="true" size={16} /></button
 		>
 		<strong aria-live="polite">{monthLabel}</strong>
 		<button
@@ -414,7 +418,7 @@
 			class={navClass}
 			aria-label={nextLabel}
 			{disabled}
-			onclick={() => moveMonth(1)}>›</button
+			onclick={() => moveMonth(1)}><NextIcon aria-hidden="true" size={16} /></button
 		>
 	</div>
 	<table

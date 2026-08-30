@@ -6,15 +6,14 @@ import type {
 import type { RovingFocus } from '../../../runtime/collection/roving-focus.svelte.js';
 import type { SelectionKey } from '../../../runtime/collection/selection.js';
 import type { Typeahead } from '../../../runtime/collection/typeahead.js';
+import { CancelableEvent } from '../../../runtime/foundation/cancelable-event.js';
 export type MultiSelectItemRecord = CollectionItem<SelectionKey>;
-export class MultiSelectEvent {
-	defaultPrevented = false;
+export class MultiSelectEvent extends CancelableEvent {
 	constructor(
 		readonly originalEvent: KeyboardEvent | MouseEvent,
 		readonly value: SelectionKey
-	) {}
-	preventDefault(): void {
-		this.defaultPrevented = true;
+	) {
+		super();
 	}
 }
 export interface ZMultiSelectContext {

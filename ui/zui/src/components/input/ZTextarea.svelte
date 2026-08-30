@@ -114,6 +114,11 @@
 				false: (s) => s.borderColor._border,
 				true: (s) => s.borderColor._danger
 			},
+			motion: {
+				auto: () => undefined,
+				full: () => undefined,
+				reduced: (s) => s.transitionDuration.ms(0)
+			},
 			resize: {
 				both: (s) => s.resize.both,
 				horizontal: (s) => s.resize.horizontal,
@@ -138,7 +143,7 @@
 				}
 			}
 		},
-		defaultVariants: { invalid: false, resize: 'vertical', size: 'medium' }
+		defaultVariants: { invalid: false, motion: 'auto', resize: 'vertical', size: 'medium' }
 	});
 	registerRecipeHmr(import.meta, textareaRecipe);
 </script>
@@ -187,6 +192,7 @@
 	const rootClass = $derived(
 		zui.recipe(textareaRecipe, {
 			invalid: resolvedInvalid,
+			motion: zui.motion,
 			resize: autosize ? 'none' : resize,
 			size
 		})

@@ -91,6 +91,8 @@
 </script>
 
 <script lang="ts">
+	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
+	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import { untrack } from 'svelte';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { listenForFormReset } from '../../runtime/form/form-control.svelte.js';
@@ -186,6 +188,7 @@
 		...rest
 	}: ZCascaderProps = $props();
 	const zui = useZui();
+	const BranchIcon = $derived(zui.direction === 'rtl' ? ChevronLeft : ChevronRight);
 	const tree = $derived(createTreeIndex(nodes));
 	let draft = $state<readonly SelectionKey[]>(Object.freeze([...untrack(() => defaultValue)]));
 	let proxy = $state<HTMLInputElement | null>(null);
@@ -344,7 +347,9 @@
 								onkeydown={(event) => handleKey(event, level, nodeIndex)}
 							>
 								<span>{node.label}</span><span aria-hidden="true"
-									>{(tree.children.get(node.key)?.length ?? 0) > 0 ? '›' : ''}</span
+									>{#if (tree.children.get(node.key)?.length ?? 0) > 0}<BranchIcon
+											size={15}
+										/>{/if}</span
 								>
 							</div>
 						{/each}

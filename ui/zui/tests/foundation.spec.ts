@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import { createZuiId, createZuiIdScope } from '../src/runtime/foundation/ids.js';
+import { CancelableEvent } from '../src/runtime/foundation/cancelable-event.js';
 import { CollectionStore } from '../src/runtime/collection/collection.svelte.js';
 import { createFormEntries, serializeFormValue } from '../src/runtime/form/form-value.js';
 import { moveIndex, navigationIntent } from '../src/runtime/collection/list-navigation.js';
@@ -24,6 +25,12 @@ import { Typeahead } from '../src/runtime/collection/typeahead.js';
 import { createTreeIndex } from '../src/runtime/tree.js';
 
 describe('ZUI foundation runtime', () => {
+	it('shares one cancelable event contract across interaction controllers', () => {
+		const event = new CancelableEvent();
+		expect(event.defaultPrevented).toBe(false);
+		event.preventDefault();
+		expect(event.defaultPrevented).toBe(true);
+	});
 	it('creates scoped SSR-stable ids and rejects ambiguous parts', () => {
 		expect(createZuiId('zui', 's1')).toBe('zui-s1');
 		expect(createZuiId('admin', 's1', 'control')).toBe('admin-s1-control');

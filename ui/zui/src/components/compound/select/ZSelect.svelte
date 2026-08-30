@@ -17,6 +17,7 @@
 		readonly placeholder?: string;
 		readonly placement?: PopoverPlacement;
 		readonly required?: boolean;
+		readonly valueLabel?: (value: SelectionKey) => string;
 		value?: SelectionKey;
 	}
 
@@ -97,7 +98,13 @@
 			},
 			{ default: 'false', description: '声明Trigger必填语义。', name: 'required', type: 'boolean' },
 			{ default: 'undefined', description: '隐藏表单字段名称。', name: 'name', type: 'string' },
-			{ default: 'undefined', description: '关联外部form id。', name: 'form', type: 'string' }
+			{ default: 'undefined', description: '关联外部form id。', name: 'form', type: 'string' },
+			{
+				default: 'String(value)',
+				description: 'Item尚未挂载时格式化Trigger中的受控或默认值标签。',
+				name: 'valueLabel',
+				type: '(value: SelectionKey) => string'
+			}
 		],
 		since: '0.4.0',
 		snippets: [{ description: 'Trigger、Content与Item。', name: 'children', type: 'Snippet' }],
@@ -137,6 +144,7 @@
 		placeholder = 'Select an option',
 		placement = 'bottom-start',
 		required = false,
+		valueLabel = String,
 		value = $bindable()
 	}: ZSelectProps = $props();
 	const zui = useZui();
@@ -204,7 +212,7 @@
 		get selectedText() {
 			const current = valueState.current;
 			if (current === undefined) return placeholder;
-			return collection.get(current)?.textValue ?? labels.get(current) ?? String(current);
+			return collection.get(current)?.textValue ?? labels.get(current) ?? valueLabel(current);
 		},
 		setOpen(next) {
 			if (!disabled) openState.setFromUser(next);

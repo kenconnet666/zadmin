@@ -75,6 +75,7 @@
 			s.borderStyle.none;
 			s.color._textMuted;
 			s.cursor.pointer;
+			s.minHeight.px(0);
 			s.padding.px(0);
 		},
 		variants: {},
@@ -85,7 +86,9 @@
 </script>
 
 <script lang="ts">
+	import X from '@lucide/svelte/icons/x';
 	import { untrack } from 'svelte';
+	import ZButton from '../gene/ZButton.svelte';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -119,11 +122,12 @@
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
 	data-disabled={disabled || undefined}
-	>{@render children?.()}{#if removable}<button
-			type="button"
+	>{@render children?.()}{#if removable}<ZButton
 			class={removeClass}
 			aria-label={removeLabel}
 			{disabled}
-			onclick={(event) => onRemove?.(event)}>×</button
+			size="small"
+			variant="ghost"
+			onclick={(event) => onRemove?.(event)}><X aria-hidden="true" size={14} /></ZButton
 		>{/if}</span
 >

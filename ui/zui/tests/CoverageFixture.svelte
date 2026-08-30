@@ -11,6 +11,8 @@
 		ZDateField,
 		ZEmpty,
 		ZFileUpload,
+		ZInput,
+		ZInputGroup,
 		ZList,
 		ZMention,
 		ZNumberField,
@@ -22,6 +24,7 @@
 		ZStatistic,
 		ZSwitch,
 		ZTimeline,
+		ZTextarea,
 		ZTimeField,
 		ZToast,
 		ZTransfer,
@@ -85,6 +88,13 @@
 </ZEmpty>
 
 <ZProvider motion="reduced">
+	<ZButton>Reduced button</ZButton>
+	<ZInput aria-label="Reduced input" />
+	<ZInputGroup aria-label="Reduced input group"
+		><ZInput aria-label="Grouped reduced input" /></ZInputGroup
+	>
+	<ZTextarea aria-label="Reduced textarea" />
+	<ZFileUpload disabled inputLabel="Reduced upload" />
 	<ZSkeleton shape="circle" width={40} data-testid="coverage-skeleton-circle" />
 	<ZSkeleton shape="rectangle" height="3rem" data-testid="coverage-skeleton-rectangle" />
 	<ZCarousel

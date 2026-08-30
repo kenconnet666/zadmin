@@ -182,6 +182,7 @@
 
 <script lang="ts">
 	/* eslint-disable svelte/prefer-svelte-reactivity -- The Set validates stable step ids. */
+	import X from '@lucide/svelte/icons/x';
 	import { onMount, untrack } from 'svelte';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
@@ -197,6 +198,7 @@
 	import { FloatingPositioner } from '../../runtime/layer/floating.js';
 	import { FocusScope } from '../../runtime/layer/focus-scope.js';
 	import { portal } from '../../runtime/layer/portal.js';
+	import ZButton from '../gene/ZButton.svelte';
 	interface Rect {
 		readonly bottom: number;
 		readonly height: number;
@@ -453,15 +455,17 @@
 			data-slot="content"
 			data-step={current.id}
 		>
-			<button type="button" aria-label={closeLabel} onclick={close}>×</button>
+			<ZButton aria-label={closeLabel} size="small" variant="ghost" onclick={close}
+				><X aria-hidden="true" size={16} /></ZButton
+			>
 			<div>{currentIndex + 1} / {normalized.length}</div>
 			<h2 id={titleId} class={titleClass}>{current.title}</h2>
 			<p id={descriptionId} class={descriptionClass}>{current.description}</p>
 			<div class={actionsClass} data-slot="actions">
-				<button type="button" disabled={currentIndex === 0} onclick={previous}
-					>{previousLabel}</button
-				><button type="button" onclick={next}
-					>{currentIndex === normalized.length - 1 ? finishLabel : nextLabel}</button
+				<ZButton size="small" variant="secondary" disabled={currentIndex === 0} onclick={previous}
+					>{previousLabel}</ZButton
+				><ZButton size="small" onclick={next}
+					>{currentIndex === normalized.length - 1 ? finishLabel : nextLabel}</ZButton
 				>
 			</div>
 		</div>

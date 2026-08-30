@@ -1,4 +1,5 @@
 <script module lang="ts">
+	import ChevronDown from '@lucide/svelte/icons/chevron-down';
 	import type { Snippet } from 'svelte';
 	import type { HTMLButtonAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
@@ -60,8 +61,29 @@
 		},
 		defaultVariants: { disabled: false, open: false }
 	});
+	const accordionIndicatorRecipe = defineRecipe({
+		base: (s) => {
+			s.flexShrink(0);
+			s.transitionDuration._fast;
+			s.transitionProperty.raw('transform');
+			s.transitionTimingFunction.ease;
+		},
+		variants: {
+			motion: {
+				auto: () => undefined,
+				full: () => undefined,
+				reduced: (s) => s.transitionDuration.ms(0)
+			},
+			open: {
+				false: () => undefined,
+				true: (s) => s.transform.raw('rotate(180deg)')
+			}
+		},
+		defaultVariants: { motion: 'auto', open: false }
+	});
 
 	registerRecipeHmr(import.meta, accordionTriggerRecipe);
+	registerRecipeHmr(import.meta, accordionIndicatorRecipe);
 
 	export const zuiMetadata = {
 		category: 'navigation',
@@ -138,6 +160,9 @@
 	const item = useZAccordionItem();
 	const open = $derived(accordion.isOpen(item.value));
 	const rootClass = $derived(zui.recipe(accordionTriggerRecipe, { disabled: item.disabled, open }));
+	const indicatorClass = $derived(
+		zui.recipe(accordionIndicatorRecipe, { motion: zui.motion, open })
+	);
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 
@@ -185,5 +210,5 @@
 	data-state={open ? 'open' : 'closed'}
 >
 	{@render children?.()}
-	<span aria-hidden="true">{open ? '−' : '+'}</span>
+	<ChevronDown aria-hidden="true" class={indicatorClass} size={16} />
 </button>

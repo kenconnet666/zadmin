@@ -15,6 +15,7 @@
 		open?: boolean;
 		readonly placeholder?: string;
 		readonly placement?: PopoverPlacement;
+		readonly valueLabel?: (value: SelectionKey) => string;
 		values?: readonly SelectionKey[];
 	}
 	export const zuiMetadata = {
@@ -75,6 +76,12 @@
 				description: '每个值重复使用的表单字段名。',
 				name: 'name',
 				type: 'string'
+			},
+			{
+				default: 'String(value)',
+				description: 'Item尚未挂载时格式化Trigger中的初始多选值标签。',
+				name: 'valueLabel',
+				type: '(value: SelectionKey) => string'
 			}
 		],
 		since: '0.4.0',
@@ -114,6 +121,7 @@
 		open = $bindable(),
 		placeholder = 'Select options',
 		placement = 'bottom-start',
+		valueLabel = String,
 		values = $bindable()
 	}: ZMultiSelectProps = $props();
 	const zui = useZui();
@@ -156,7 +164,7 @@
 		get labels() {
 			return resolvedValues.map(
 				(itemValue) =>
-					collection.get(itemValue)?.textValue ?? labelCache.get(itemValue) ?? String(itemValue)
+					collection.get(itemValue)?.textValue ?? labelCache.get(itemValue) ?? valueLabel(itemValue)
 			);
 		},
 		get open() {

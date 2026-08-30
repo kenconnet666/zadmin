@@ -120,9 +120,14 @@
 					s.backgroundColor._surface;
 					s.borderColor._primary;
 				}
+			},
+			motion: {
+				auto: () => undefined,
+				full: () => undefined,
+				reduced: (s) => s.transitionDuration.ms(0)
 			}
 		},
-		defaultVariants: { disabled: false, dragging: false }
+		defaultVariants: { disabled: false, dragging: false, motion: 'auto' }
 	});
 	const listRecipe = defineRecipe({
 		base: (s) => {
@@ -152,6 +157,7 @@
 			s.borderStyle.none;
 			s.color._danger;
 			s.cursor.pointer;
+			s.minHeight.px(0);
 			s.padding._small;
 		},
 		variants: {},
@@ -162,6 +168,7 @@
 </script>
 
 <script lang="ts">
+	import X from '@lucide/svelte/icons/x';
 	import { onDestroy, untrack } from 'svelte';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
@@ -223,7 +230,7 @@
 	const full = $derived(
 		resolvedFiles.length >= constraints.maxFiles || (!multiple && resolvedFiles.length >= 1)
 	);
-	const rootClass = $derived(zui.recipe(rootRecipe, { disabled, dragging }));
+	const rootClass = $derived(zui.recipe(rootRecipe, { disabled, dragging, motion: zui.motion }));
 	const listClass = $derived(zui.recipe(listRecipe));
 	const itemClass = $derived(zui.recipe(itemRecipe));
 	const removeClass = $derived(zui.recipe(removeRecipe));
@@ -321,12 +328,13 @@
 		{#each resolvedFiles as file, index (fileIdentity(file))}
 			<div class={itemClass} data-slot="item">
 				<span>{file.name} · {file.size} B</span>
-				<button
-					type="button"
+				<ZButton
 					class={removeClass}
 					aria-label={removeLabel(file)}
 					{disabled}
-					onclick={() => remove(index)}>×</button
+					size="small"
+					variant="ghost"
+					onclick={() => remove(index)}><X aria-hidden="true" size={14} /></ZButton
 				>
 			</div>
 		{/each}
