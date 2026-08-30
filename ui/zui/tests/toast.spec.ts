@@ -19,9 +19,14 @@ describe('ToastQueue', () => {
 	it('rejects invalid durations and clears persistent messages', () => {
 		const queue = createToastQueue();
 		expect(() => queue.push({ duration: 0, title: 'Invalid' })).toThrow(/positive finite/u);
+		expect(() => queue.push({ duration: Infinity, title: 'Invalid' })).toThrow(/positive finite/u);
+		queue.dismiss('missing');
 		queue.push({ duration: null, title: 'One' });
 		queue.push({ duration: null, title: 'Two' });
 		queue.clear();
 		expect(queue.items).toHaveLength(0);
+		const disconnect = queue.connectVisibility();
+		disconnect();
+		queue.dispose();
 	});
 });

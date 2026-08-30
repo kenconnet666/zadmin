@@ -79,6 +79,21 @@ describe('defineRecipe', () => {
 		expect(registry.size).toBe(6);
 	});
 
+	it('supports recipes without base rules and skips unmatched compounds', () => {
+		const recipe = defineRecipe({
+			compoundVariants: [{ style: (s) => s.opacity._disabled, when: { tone: 'danger' } }],
+			variants: { tone: { danger: (s) => s.color._danger, neutral: () => undefined } },
+			defaultVariants: { tone: 'neutral' }
+		});
+		const registry = createServerStyleRegistry();
+		const runtime = createIcssRuntime({ registry });
+		expect(runtime.recipe(defaultTheme, recipe)).toBe('');
+		expect(runtime.recipe(defaultTheme, recipe, { tone: 'danger' }).split(' ')).toHaveLength(2);
+		expect(() => runtime.recipe(defaultTheme, recipe, { missing: true } as never)).toThrow(
+			/Unknown recipe variant/u
+		);
+	});
+
 	it('rejects invalid selections and excessive definitions', () => {
 		const recipe = createFixtureRecipe();
 		const runtime = createIcssRuntime();

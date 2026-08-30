@@ -12,9 +12,11 @@ describe('@zadmin/zui/testing', () => {
 	it('creates an inspectable memory runtime and deterministic fixture', () => {
 		const harness = createTestIcssRuntime();
 		const fixture = createIcssFixture(harness, defaultTheme, (s) => s.display.flex);
+		const owned = createIcssFixture(harness, defaultTheme, (s) => s.display.grid, 'fixture-owner');
 
 		assertIcssClassName(fixture.className);
 		expect(fixture.snapshot).toMatchObject({ entries: 1, metrics: { classes: 1, rules: 1 } });
+		expect(owned.className).toMatch(/^c-/u);
 		expect(fixture.snapshot.cssText).toContain('display:flex');
 		expect(fixture.snapshot.styleTag).toContain('data-icss');
 
