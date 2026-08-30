@@ -14,6 +14,12 @@
 				'axis',
 				'axisName',
 				'axisValue',
+				'presetGrid',
+				'preset',
+				'presetColors',
+				'presetSwatch',
+				'presetName',
+				'presetMeta',
 				'tokenGrid',
 				'token',
 				'swatch',
@@ -85,6 +91,43 @@
 					s.boxShadow._small;
 					s.padding._xlarge;
 				},
+				preset: (s) => {
+					s.backgroundColor._canvas;
+					s.borderColor._border;
+					s.borderRadius._large;
+					s.borderStyle.solid;
+					s.borderWidth._hairline;
+					s.display.grid;
+					s.gap._medium;
+					s.padding._large;
+					s._selector('&[aria-current="true"]', (current) => {
+						current.borderColor._primary;
+						current.boxShadow._small;
+					});
+				},
+				presetColors: (s) => {
+					s.display.grid;
+					s.gap._xsmall;
+					s.gridTemplateColumns.raw('repeat(4, 1fr)');
+				},
+				presetGrid: (s) => {
+					s.display.grid;
+					s.gap._large;
+					s.gridTemplateColumns.raw('repeat(auto-fit, minmax(14rem, 1fr))');
+				},
+				presetMeta: (s) => {
+					s.color._textMuted;
+					s.fontFamily._mono;
+					s.fontSize._small;
+				},
+				presetName: (s) => s.fontSize._large,
+				presetSwatch: (s) => {
+					s.borderColor._border;
+					s.borderRadius._small;
+					s.borderStyle.solid;
+					s.borderWidth._hairline;
+					s.height.rem(2.5);
+				},
 				root: (s) => s.maxWidth.rem(72),
 				section: (s) => s.marginTop.rem(4),
 				sectionTitle: (s) => {
@@ -150,10 +193,14 @@
 		ZText,
 		useZui
 	} from '@zadmin/zui';
+	import { docsThemeById, docsThemes, type DocsThemeId } from '../app/theme.js';
+
+	let { themeId = $bindable('aurora-light') }: { themeId?: DocsThemeId } = $props();
 
 	const zui = useZui();
 	const classes = $derived(zui.slots(themeLabRecipe));
 	const colors = $derived(Object.entries(zui.theme.color));
+	const currentTheme = $derived(docsThemeById[themeId]);
 </script>
 
 <article class={classes.root}>
@@ -161,14 +208,38 @@
 		<p class={classes.eyebrow}>THEME LAB</p>
 		<h1 class={classes.title}>主题不是一组颜色，而是一套系统合同。</h1>
 		<p class={classes.lead}>
-			使用顶部“显示”面板切换明暗、对比度、密度、动画和RTL。本页直接读取当前ZProvider上下文和Theme语义token，所有预览均为真实ZUI组件。
+			使用顶部主题选择器切换六套官方预设，并在“显示”面板调整对比度、密度、动画和RTL。本页直接读取当前ZProvider上下文和Theme语义token，所有预览均为真实ZUI组件。
 		</p>
 	</header>
+
+	<section class={classes.section} aria-labelledby="official-presets">
+		<h2 class={classes.sectionTitle} id="official-presets">官方主题预设</h2>
+		<div class={classes.presetGrid}>
+			{#each docsThemes as preset (preset.id)}
+				<article class={classes.preset} aria-current={themeId === preset.id ? 'true' : undefined}>
+					<div class={classes.presetColors} aria-hidden="true">
+						{#each [preset.theme.color.canvas, preset.theme.color.surface, preset.theme.color.primary, preset.theme.color.accent] as color}
+							<span class={classes.presetSwatch} style={`background:${color}`}></span>
+						{/each}
+					</div>
+					<strong class={classes.presetName}>{preset.label}</strong>
+					<span class={classes.presetMeta}>{preset.id} · {preset.scheme}</span>
+					<ZButton
+						disabled={themeId === preset.id}
+						onclick={() => (themeId = preset.id)}
+						variant={themeId === preset.id ? 'secondary' : 'primary'}
+					>
+						{themeId === preset.id ? '当前主题' : `应用${preset.label}`}
+					</ZButton>
+				</article>
+			{/each}
+		</div>
+	</section>
 
 	<section class={classes.section} aria-labelledby="theme-axes">
 		<h2 class={classes.sectionTitle} id="theme-axes">当前偏好轴</h2>
 		<div class={classes.axisGrid}>
-			{#each [['Scheme', zui.colorScheme], ['Contrast', zui.contrast], ['Density', zui.density], ['Motion', zui.motion], ['Direction', zui.direction], ['Locale', zui.locale]] as axis (axis[0])}
+			{#each [['Theme', currentTheme.label], ['Scheme', zui.colorScheme], ['Contrast', zui.contrast], ['Density', zui.density], ['Motion', zui.motion], ['Direction', zui.direction], ['Locale', zui.locale]] as axis (axis[0])}
 				<div class={classes.axis}>
 					<span class={classes.axisName}>{axis[0]}</span>
 					<strong class={classes.axisValue}>{axis[1]}</strong>

@@ -43,21 +43,36 @@ test('renders the component catalog and real demo source', async ({ page }) => {
 	expect(errors).toEqual([]);
 });
 
-test('switches and persists coordinated light and cyberpunk themes', async ({ page }) => {
+test('switches and persists all coordinated production themes', async ({ page }) => {
 	await page.goto('/#/components/button');
 	const shell = page.locator('#app > div').first();
-	await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
-	await expect(shell).toHaveCSS('background-color', 'rgb(238, 244, 255)');
-	await page.getByRole('button', { name: '切换到赛博朋克暗色主题' }).click();
-	await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
-	await expect(shell).toHaveCSS('background-color', 'rgb(5, 9, 20)');
-	await expect(page.getByRole('button', { name: '切换到亮色主题' })).toBeVisible();
+	const theme = page.getByRole('button', { name: '选择文档主题' });
+	for (const [id, label, scheme, surface] of [
+		['aurora-light', '极光明亮', 'light', 'rgb(238, 244, 255)'],
+		['paper-light', '纸张暖白', 'light', 'rgb(245, 237, 225)'],
+		['neon-dark', '霓虹暗色', 'dark', 'rgb(5, 9, 20)'],
+		['midnight-dark', '午夜专业', 'dark', 'rgb(11, 18, 32)'],
+		['high-contrast-light', '高对比亮色', 'light', 'rgb(255, 255, 255)'],
+		['high-contrast-dark', '高对比暗色', 'dark', 'rgb(0, 0, 0)']
+	] as const) {
+		await theme.click();
+		await page.getByRole('option', { name: label }).click();
+		await expect(page.locator('html')).toHaveAttribute('data-theme', id);
+		await expect(page.locator('html')).toHaveAttribute('data-scheme', scheme);
+		await expect(shell).toHaveCSS('background-color', surface);
+	}
+
+	await theme.click();
+	await page.getByRole('option', { name: '霓虹暗色' }).click();
 	await page.getByRole('button', { name: '查看源码' }).first().click();
 	const darkCode = page.getByTestId('source-button-variants').locator('[data-color-scheme="dark"]');
 	await expect(darkCode).toBeVisible();
 	await expect(darkCode).toHaveCSS('background-color', 'rgb(2, 4, 12)');
+	await theme.click();
+	await page.getByRole('option', { name: '午夜专业' }).click();
 	await page.reload();
-	await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+	await expect(page.locator('html')).toHaveAttribute('data-theme', 'midnight-dark');
+	await expect(theme).toContainText('午夜专业');
 
 	const results = await new AxeBuilder({ page }).analyze();
 	expect(results.violations).toEqual([]);

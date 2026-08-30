@@ -1,20 +1,80 @@
-import {
-	extendTheme,
-	type ZuiContrast,
-	type ZuiDensity,
-	type ZuiDirection,
-	type ZuiMotion
+import type {
+	ZuiColorScheme,
+	ZuiContrast,
+	ZuiDensity,
+	ZuiDirection,
+	ZuiMotion,
+	ZuiTheme
 } from '@zadmin/zui';
-import { auroraLight, neonDark } from '@zadmin/zui/themes';
+import {
+	auroraLight,
+	highContrastDark,
+	highContrastLight,
+	midnightDark,
+	neonDark,
+	paperLight
+} from '@zadmin/zui/themes';
 
-export type DocsThemeMode = 'dark' | 'light';
+interface DocsThemeDefinition {
+	readonly highContrast: boolean;
+	readonly label: string;
+	readonly scheme: ZuiColorScheme;
+	readonly theme: ZuiTheme;
+}
+
+export const docsThemeById = {
+	'aurora-light': {
+		highContrast: false,
+		label: '极光明亮',
+		scheme: 'light',
+		theme: auroraLight
+	},
+	'paper-light': {
+		highContrast: false,
+		label: '纸张暖白',
+		scheme: 'light',
+		theme: paperLight
+	},
+	'neon-dark': {
+		highContrast: false,
+		label: '霓虹暗色',
+		scheme: 'dark',
+		theme: neonDark
+	},
+	'midnight-dark': {
+		highContrast: false,
+		label: '午夜专业',
+		scheme: 'dark',
+		theme: midnightDark
+	},
+	'high-contrast-light': {
+		highContrast: true,
+		label: '高对比亮色',
+		scheme: 'light',
+		theme: highContrastLight
+	},
+	'high-contrast-dark': {
+		highContrast: true,
+		label: '高对比暗色',
+		scheme: 'dark',
+		theme: highContrastDark
+	}
+} as const satisfies Readonly<Record<string, DocsThemeDefinition>>;
+
+export type DocsThemeId = keyof typeof docsThemeById;
+export type DocsTheme = (typeof docsThemeById)[DocsThemeId];
+
+export const docsThemes = Object.entries(docsThemeById).map(([id, definition]) => ({
+	...definition,
+	id: id as DocsThemeId
+}));
 
 export interface DocsPreferences {
 	contrast: ZuiContrast;
 	density: ZuiDensity;
 	direction: ZuiDirection;
 	motion: ZuiMotion;
-	themeMode: DocsThemeMode;
+	themeId: DocsThemeId;
 }
 
 const contrasts = new Set<ZuiContrast>(['auto', 'high', 'normal']);
@@ -24,52 +84,55 @@ const motions = new Set<ZuiMotion>(['auto', 'full', 'reduced']);
 
 export const docsLightTheme = auroraLight;
 export const docsDarkTheme = neonDark;
+export const docsHighContrastLightTheme = highContrastLight;
+export const docsHighContrastDarkTheme = highContrastDark;
 
-export const docsHighContrastLightTheme = extendTheme(docsLightTheme, {
-	color: {
-		border: '#172033',
-		codeBorder: '#f8fafc',
-		focus: '#0047ff',
-		surface: '#f1f5f9',
-		textMuted: '#344054'
-	}
-});
+export function getDocsTheme(themeId: DocsThemeId): DocsTheme {
+	return docsThemeById[themeId];
+}
 
-export const docsHighContrastDarkTheme = extendTheme(docsDarkTheme, {
-	color: {
-		border: '#f8fafc',
-		canvas: '#000000',
-		codeBorder: '#e0f2fe',
-		focus: '#fde047',
-		surface: '#020617',
-		textMuted: '#dbeafe'
-	}
-});
-
-export function resolveDocsThemeMode(
+export function resolveDocsThemeId(
 	stored: string | null | undefined,
 	prefersDark: boolean
-): DocsThemeMode {
-	if (stored === 'dark' || stored === 'light') return stored;
-	return prefersDark ? 'dark' : 'light';
+): DocsThemeId {
+	if (stored && Object.hasOwn(docsThemeById, stored)) return stored as DocsThemeId;
+	if (stored === 'dark') return 'neon-dark';
+	if (stored === 'light') return 'aurora-light';
+	return prefersDark ? 'neon-dark' : 'aurora-light';
+}
+
+export function resolveDocsTheme(themeId: DocsThemeId, highContrast: boolean): DocsTheme {
+	const selected = getDocsTheme(themeId);
+	if (!highContrast || selected.highContrast) return selected;
+	return selected.scheme === 'dark'
+		? docsThemeById['high-contrast-dark']
+		: docsThemeById['high-contrast-light'];
 }
 
 export function resolveDocsPreferences(
 	stored: string | null | undefined,
-	fallbackThemeMode: DocsThemeMode
+	fallbackThemeId: DocsThemeId
 ): DocsPreferences {
 	const fallback: DocsPreferences = {
 		contrast: 'normal',
 		density: 'comfortable',
 		direction: 'ltr',
 		motion: 'auto',
-		themeMode: fallbackThemeMode
+		themeId: fallbackThemeId
 	};
 	if (!stored) return fallback;
 
 	try {
-		const value = JSON.parse(stored) as Partial<Record<keyof DocsPreferences, unknown>>;
+		const value = JSON.parse(stored) as Partial<
+			Record<keyof DocsPreferences | 'themeMode', unknown>
+		>;
 		if (typeof value !== 'object' || value === null || Array.isArray(value)) return fallback;
+		const storedTheme =
+			typeof value.themeId === 'string'
+				? value.themeId
+				: typeof value.themeMode === 'string'
+					? value.themeMode
+					: undefined;
 		return {
 			contrast: contrasts.has(value.contrast as ZuiContrast)
 				? (value.contrast as ZuiContrast)
@@ -83,10 +146,7 @@ export function resolveDocsPreferences(
 			motion: motions.has(value.motion as ZuiMotion)
 				? (value.motion as ZuiMotion)
 				: fallback.motion,
-			themeMode:
-				value.themeMode === 'dark' || value.themeMode === 'light'
-					? value.themeMode
-					: fallback.themeMode
+			themeId: resolveDocsThemeId(storedTheme, fallbackThemeId.endsWith('-dark'))
 		};
 	} catch {
 		return fallback;

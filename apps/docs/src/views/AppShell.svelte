@@ -87,7 +87,7 @@
 		type ZuiDirection,
 		type ZuiMotion
 	} from '@zadmin/zui';
-	import type { DocsThemeMode } from '../app/theme.js';
+	import type { DocsThemeId } from '../app/theme.js';
 	import { componentDocs, componentDocsById } from '../framework/catalog.js';
 	import { parseDocsRoute } from '../framework/router.js';
 	import ComponentPage from './ComponentPage.svelte';
@@ -101,13 +101,13 @@
 		density = $bindable('comfortable'),
 		direction = $bindable('ltr'),
 		motion = $bindable('auto'),
-		themeMode = $bindable('light')
+		themeId = $bindable('aurora-light')
 	}: {
 		contrast?: ZuiContrast;
 		density?: ZuiDensity;
 		direction?: ZuiDirection;
 		motion?: ZuiMotion;
-		themeMode?: DocsThemeMode;
+		themeId?: DocsThemeId;
 	} = $props();
 
 	let route = $state(parseDocsRoute(globalThis.location?.hash ?? '#/'));
@@ -148,13 +148,13 @@
 </script>
 
 <div class={classes.shell}>
-	<AppHeader bind:contrast bind:density bind:direction bind:motion bind:query bind:themeMode />
+	<AppHeader bind:contrast bind:density bind:direction bind:motion bind:query bind:themeId />
 	<AppSidebar docs={componentDocs} {currentGuideId} {currentId} {query} />
 	<main class={classes.main}>
 		{#if currentDoc}
 			<ComponentPage doc={currentDoc} />
 		{:else if currentGuideId === 'theme'}
-			<ThemeLabPage />
+			<ThemeLabPage bind:themeId />
 		{:else if invalidRoute}
 			<section class={classes.notFound}>
 				<p class={classes.eyebrow}>404</p>

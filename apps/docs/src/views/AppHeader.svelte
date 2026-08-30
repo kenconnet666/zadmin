@@ -11,6 +11,7 @@
 				'mark',
 				'search',
 				'actions',
+				'themePicker',
 				'themeLabel',
 				'preferences',
 				'preferencesSummary',
@@ -119,12 +120,8 @@
 					s.boxShadow._medium;
 					s.display.grid;
 					s.gap._medium;
-					s.insetBlockStart.px(44);
-					s.insetInlineEnd.px(0);
 					s.minWidth.rem(15);
 					s.padding._large;
-					s.position.absolute;
-					s.zIndex(70);
 				},
 				preferencesSummary: (s) => {
 					s.alignItems.center;
@@ -189,6 +186,12 @@
 						focus.outlineWidth._medium;
 					});
 				},
+				themePicker: (s) => {
+					s.alignItems.center;
+					s.color._textMuted;
+					s.display.inlineFlex;
+					s.gap._small;
+				},
 				themeLabel: (s) => s._media('(max-width: 68rem)', (compact) => compact.display.none)
 			},
 			variants: {}
@@ -199,20 +202,26 @@
 
 <script lang="ts">
 	import ExternalLink from '@lucide/svelte/icons/external-link';
-	import Moon from '@lucide/svelte/icons/moon';
+	import Palette from '@lucide/svelte/icons/palette';
 	import SlidersHorizontal from '@lucide/svelte/icons/sliders-horizontal';
-	import Sun from '@lucide/svelte/icons/sun';
 	import {
-		ZButton,
 		ZIcon,
 		ZInput,
+		ZPopover,
+		ZPopoverContent,
+		ZPopoverTrigger,
+		ZSelect,
+		ZSelectContent,
+		ZSelectItem,
+		ZSelectTrigger,
 		useZui,
+		type SelectionKey,
 		type ZuiContrast,
 		type ZuiDensity,
 		type ZuiDirection,
 		type ZuiMotion
 	} from '@zadmin/zui';
-	import type { DocsThemeMode } from '../app/theme.js';
+	import { docsThemeById, docsThemes, type DocsThemeId } from '../app/theme.js';
 
 	let {
 		contrast = $bindable('normal'),
@@ -220,17 +229,43 @@
 		direction = $bindable('ltr'),
 		motion = $bindable('auto'),
 		query = $bindable(''),
-		themeMode = $bindable('light')
+		themeId = $bindable('aurora-light')
 	}: {
 		contrast?: ZuiContrast;
 		density?: ZuiDensity;
 		direction?: ZuiDirection;
 		motion?: ZuiMotion;
 		query?: string;
-		themeMode?: DocsThemeMode;
+		themeId?: DocsThemeId;
 	} = $props();
 	const zui = useZui();
 	const classes = $derived(zui.slots(headerRecipe));
+	const densityLabels = { compact: '紧凑', comfortable: '舒适', spacious: '宽松' } as const;
+	const contrastLabels = { auto: '跟随系统', high: '高对比', normal: '标准' } as const;
+	const motionLabels = { auto: '跟随系统', full: '完整', reduced: '减少' } as const;
+	const directionLabels = { ltr: '从左到右', rtl: '从右到左' } as const;
+
+	function setTheme(value: SelectionKey | undefined): void {
+		if (typeof value === 'string' && docsThemes.some((theme) => theme.id === value)) {
+			themeId = value as DocsThemeId;
+		}
+	}
+
+	function setDensity(value: SelectionKey | undefined): void {
+		if (value === 'compact' || value === 'comfortable' || value === 'spacious') density = value;
+	}
+
+	function setContrast(value: SelectionKey | undefined): void {
+		if (value === 'auto' || value === 'high' || value === 'normal') contrast = value;
+	}
+
+	function setMotion(value: SelectionKey | undefined): void {
+		if (value === 'auto' || value === 'full' || value === 'reduced') motion = value;
+	}
+
+	function setDirection(value: SelectionKey | undefined): void {
+		if (value === 'ltr' || value === 'rtl') direction = value;
+	}
 </script>
 
 <header class={classes.root}>
@@ -251,68 +286,84 @@
 		/>
 	</label>
 	<div class={classes.actions}>
-		<ZButton
-			aria-label={themeMode === 'dark' ? '切换到亮色主题' : '切换到赛博朋克暗色主题'}
-			size="small"
-			variant="secondary"
-			onclick={() => (themeMode = themeMode === 'dark' ? 'light' : 'dark')}
-		>
-			{#if themeMode === 'dark'}
-				<Sun aria-hidden="true" size={16} />
-			{:else}
-				<Moon aria-hidden="true" size={16} />
-			{/if}
-			<span class={classes.themeLabel}>{themeMode === 'dark' ? '亮色' : '暗色'}</span>
-		</ZButton>
-		<details class={classes.preferences}>
-			<summary class={classes.preferencesSummary} aria-label="调整显示偏好">
+		<div class={classes.themePicker}>
+			<Palette aria-hidden="true" size={16} />
+			<span class={classes.themeLabel}>主题</span>
+			<ZSelect value={themeId} onValueChange={setTheme} placement="bottom-end">
+				<ZSelectTrigger aria-label="选择文档主题" class={classes.select}
+					>{docsThemeById[themeId].label}</ZSelectTrigger
+				>
+				<ZSelectContent>
+					{#each docsThemes as theme (theme.id)}
+						<ZSelectItem value={theme.id}>{theme.label}</ZSelectItem>
+					{/each}
+				</ZSelectContent>
+			</ZSelect>
+		</div>
+		<ZPopover placement="bottom-end">
+			<ZPopoverTrigger
+				class={classes.preferencesSummary}
+				aria-label="调整显示偏好"
+				size="small"
+				variant="secondary"
+			>
 				<SlidersHorizontal aria-hidden="true" size={16} />
 				<span class={classes.preferencesLabel}>显示</span>
-			</summary>
-			<div class={classes.preferencesPanel}>
-				<label class={classes.preference}>
+			</ZPopoverTrigger>
+			<ZPopoverContent class={classes.preferencesPanel}>
+				<div class={classes.preference}>
 					<span>密度</span>
-					<select class={classes.select} bind:value={density} id="zui-docs-density" name="density">
-						<option value="compact">紧凑</option>
-						<option value="comfortable">舒适</option>
-						<option value="spacious">宽松</option>
-					</select>
-				</label>
-				<label class={classes.preference}>
+					<ZSelect value={density} onValueChange={setDensity}>
+						<ZSelectTrigger aria-label="密度" class={classes.select}
+							>{densityLabels[density]}</ZSelectTrigger
+						>
+						<ZSelectContent>
+							<ZSelectItem value="compact">紧凑</ZSelectItem>
+							<ZSelectItem value="comfortable">舒适</ZSelectItem>
+							<ZSelectItem value="spacious">宽松</ZSelectItem>
+						</ZSelectContent>
+					</ZSelect>
+				</div>
+				<div class={classes.preference}>
 					<span>对比度</span>
-					<select
-						class={classes.select}
-						bind:value={contrast}
-						id="zui-docs-contrast"
-						name="contrast"
-					>
-						<option value="normal">标准</option>
-						<option value="high">高对比</option>
-						<option value="auto">跟随系统</option>
-					</select>
-				</label>
-				<label class={classes.preference}>
+					<ZSelect value={contrast} onValueChange={setContrast}>
+						<ZSelectTrigger aria-label="对比度" class={classes.select}
+							>{contrastLabels[contrast]}</ZSelectTrigger
+						>
+						<ZSelectContent>
+							<ZSelectItem value="normal">标准</ZSelectItem>
+							<ZSelectItem value="high">高对比</ZSelectItem>
+							<ZSelectItem value="auto">跟随系统</ZSelectItem>
+						</ZSelectContent>
+					</ZSelect>
+				</div>
+				<div class={classes.preference}>
 					<span>动画</span>
-					<select class={classes.select} bind:value={motion} id="zui-docs-motion" name="motion">
-						<option value="auto">跟随系统</option>
-						<option value="full">完整</option>
-						<option value="reduced">减少</option>
-					</select>
-				</label>
-				<label class={classes.preference}>
+					<ZSelect value={motion} onValueChange={setMotion}>
+						<ZSelectTrigger aria-label="动画" class={classes.select}
+							>{motionLabels[motion]}</ZSelectTrigger
+						>
+						<ZSelectContent>
+							<ZSelectItem value="auto">跟随系统</ZSelectItem>
+							<ZSelectItem value="full">完整</ZSelectItem>
+							<ZSelectItem value="reduced">减少</ZSelectItem>
+						</ZSelectContent>
+					</ZSelect>
+				</div>
+				<div class={classes.preference}>
 					<span>方向</span>
-					<select
-						class={classes.select}
-						bind:value={direction}
-						id="zui-docs-direction"
-						name="direction"
-					>
-						<option value="ltr">从左到右</option>
-						<option value="rtl">从右到左</option>
-					</select>
-				</label>
-			</div>
-		</details>
+					<ZSelect value={direction} onValueChange={setDirection}>
+						<ZSelectTrigger aria-label="方向" class={classes.select}
+							>{directionLabels[direction]}</ZSelectTrigger
+						>
+						<ZSelectContent>
+							<ZSelectItem value="ltr">从左到右</ZSelectItem>
+							<ZSelectItem value="rtl">从右到左</ZSelectItem>
+						</ZSelectContent>
+					</ZSelect>
+				</div>
+			</ZPopoverContent>
+		</ZPopover>
 		<a class={classes.github} href="https://github.com/kenconnet666/zadmin">
 			GitHub
 			<ExternalLink aria-hidden="true" size={14} />

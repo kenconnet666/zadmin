@@ -2,12 +2,9 @@
 	import { onMount } from 'svelte';
 	import { ZProvider } from '@zadmin/zui';
 	import {
-		docsDarkTheme,
-		docsHighContrastDarkTheme,
-		docsHighContrastLightTheme,
-		docsLightTheme,
 		resolveDocsPreferences,
-		resolveDocsThemeMode,
+		resolveDocsTheme,
+		resolveDocsThemeId,
 		type DocsPreferences
 	} from './theme.js';
 	import AppShell from '../views/AppShell.svelte';
@@ -19,13 +16,13 @@
 			return resolveDocsPreferences(undefined, 'light');
 		}
 		try {
-			const fallbackThemeMode = resolveDocsThemeMode(
+			const fallbackThemeId = resolveDocsThemeId(
 				window.localStorage.getItem(legacyThemeStorageKey),
 				window.matchMedia('(prefers-color-scheme: dark)').matches
 			);
 			return resolveDocsPreferences(
 				window.localStorage.getItem(preferencesStorageKey),
-				fallbackThemeMode
+				fallbackThemeId
 			);
 		} catch {
 			return resolveDocsPreferences(undefined, 'light');
@@ -35,20 +32,12 @@
 	let density = $state<DocsPreferences['density']>(initialPreferences.density);
 	let direction = $state<DocsPreferences['direction']>(initialPreferences.direction);
 	let motion = $state<DocsPreferences['motion']>(initialPreferences.motion);
-	let themeMode = $state<DocsPreferences['themeMode']>(initialPreferences.themeMode);
+	let themeId = $state<DocsPreferences['themeId']>(initialPreferences.themeId);
 	let prefersHighContrast = $state(false);
 	const highContrast = $derived(
 		contrast === 'high' || (contrast === 'auto' && prefersHighContrast)
 	);
-	const theme = $derived(
-		themeMode === 'dark'
-			? highContrast
-				? docsHighContrastDarkTheme
-				: docsDarkTheme
-			: highContrast
-				? docsHighContrastLightTheme
-				: docsLightTheme
-	);
+	const resolvedTheme = $derived(resolveDocsTheme(themeId, highContrast));
 
 	onMount(() => {
 		const media = window.matchMedia('(prefers-contrast: more)');
@@ -60,14 +49,16 @@
 
 	$effect(() => {
 		if (typeof document === 'undefined') return;
-		document.documentElement.dataset.theme = themeMode;
+		document.documentElement.dataset.theme = themeId;
+		document.documentElement.dataset.resolvedTheme = resolvedTheme.label;
+		document.documentElement.dataset.scheme = resolvedTheme.scheme;
 		document.documentElement.dataset.contrast = contrast;
 		document.documentElement.dataset.density = density;
 		document.documentElement.dataset.motion = motion;
 		document.documentElement.dir = direction;
-		document.documentElement.style.colorScheme = themeMode;
+		document.documentElement.style.colorScheme = resolvedTheme.scheme;
 		try {
-			window.localStorage.setItem(legacyThemeStorageKey, themeMode);
+			window.localStorage.setItem(legacyThemeStorageKey, resolvedTheme.scheme);
 			window.localStorage.setItem(
 				preferencesStorageKey,
 				JSON.stringify({
@@ -75,7 +66,7 @@
 					density,
 					direction,
 					motion,
-					themeMode
+					themeId
 				} satisfies DocsPreferences)
 			);
 		} catch {
@@ -99,8 +90,8 @@
 		'pagination.page': '第{page}页',
 		'pagination.previous': '上一页'
 	}}
-	{theme}
-	colorScheme={themeMode}
+	theme={resolvedTheme.theme}
+	colorScheme={resolvedTheme.scheme}
 >
-	<AppShell bind:contrast bind:density bind:direction bind:motion bind:themeMode />
+	<AppShell bind:contrast bind:density bind:direction bind:motion bind:themeId />
 </ZProvider>

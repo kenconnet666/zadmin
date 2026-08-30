@@ -1,12 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-	docsDarkTheme,
-	docsHighContrastDarkTheme,
-	docsHighContrastLightTheme,
-	docsLightTheme,
+	docsThemeById,
+	docsThemes,
 	resolveDocsPreferences,
-	resolveDocsThemeMode
+	resolveDocsTheme,
+	resolveDocsThemeId
 } from './theme.js';
 
 function luminance(hex: string): number {
@@ -25,12 +24,7 @@ function contrast(foreground: string, background: string): number {
 }
 
 describe('docs themes', () => {
-	it.each([
-		['light', docsLightTheme],
-		['dark', docsDarkTheme],
-		['high-contrast-light', docsHighContrastLightTheme],
-		['high-contrast-dark', docsHighContrastDarkTheme]
-	] as const)('keeps %s text and code colors above WCAG AA', (_name, theme) => {
+	it.each(docsThemes)('keeps $id text and code colors above WCAG AA', ({ theme }) => {
 		expect(contrast(theme.color.text, theme.color.canvas)).toBeGreaterThanOrEqual(4.5);
 		expect(contrast(theme.color.textMuted, theme.color.canvas)).toBeGreaterThanOrEqual(4.5);
 		expect(contrast(theme.color.danger, theme.color.surface)).toBeGreaterThanOrEqual(4.5);
@@ -38,11 +32,18 @@ describe('docs themes', () => {
 		expect(contrast(theme.color.codeMuted, theme.color.codeBackground)).toBeGreaterThanOrEqual(4.5);
 	});
 
-	it('uses an explicit saved mode before the system preference', () => {
-		expect(resolveDocsThemeMode('light', true)).toBe('light');
-		expect(resolveDocsThemeMode('dark', false)).toBe('dark');
-		expect(resolveDocsThemeMode(null, true)).toBe('dark');
-		expect(resolveDocsThemeMode('invalid', false)).toBe('light');
+	it('uses a saved preset before the system preference and migrates legacy modes', () => {
+		expect(resolveDocsThemeId('paper-light', true)).toBe('paper-light');
+		expect(resolveDocsThemeId('light', true)).toBe('aurora-light');
+		expect(resolveDocsThemeId('dark', false)).toBe('neon-dark');
+		expect(resolveDocsThemeId(null, true)).toBe('neon-dark');
+		expect(resolveDocsThemeId('invalid', false)).toBe('aurora-light');
+	});
+
+	it('resolves the contrast axis without hiding explicit high-contrast presets', () => {
+		expect(resolveDocsTheme('paper-light', true)).toBe(docsThemeById['high-contrast-light']);
+		expect(resolveDocsTheme('midnight-dark', true)).toBe(docsThemeById['high-contrast-dark']);
+		expect(resolveDocsTheme('high-contrast-dark', false)).toBe(docsThemeById['high-contrast-dark']);
 	});
 
 	it('restores valid display preferences and repairs invalid fields independently', () => {
@@ -53,24 +54,26 @@ describe('docs themes', () => {
 					density: 'compact',
 					direction: 'rtl',
 					motion: 'reduced',
-					themeMode: 'dark'
+					themeId: 'midnight-dark'
 				}),
-				'light'
+				'aurora-light'
 			)
 		).toEqual({
 			contrast: 'high',
 			density: 'compact',
 			direction: 'rtl',
 			motion: 'reduced',
-			themeMode: 'dark'
+			themeId: 'midnight-dark'
 		});
-		expect(resolveDocsPreferences('{"density":"invalid","themeMode":"dark"}', 'light')).toEqual({
+		expect(
+			resolveDocsPreferences('{"density":"invalid","themeMode":"dark"}', 'aurora-light')
+		).toEqual({
 			contrast: 'normal',
 			density: 'comfortable',
 			direction: 'ltr',
 			motion: 'auto',
-			themeMode: 'dark'
+			themeId: 'neon-dark'
 		});
-		expect(resolveDocsPreferences('not-json', 'dark').themeMode).toBe('dark');
+		expect(resolveDocsPreferences('not-json', 'midnight-dark').themeId).toBe('midnight-dark');
 	});
 });
