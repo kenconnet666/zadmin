@@ -26,6 +26,7 @@
 | Docs全站自建交互控件 |    0 | `apps/docs/src`全部Svelte文件由ZUI表达按钮、链接、Select、Popover、Table、Code和Card         |
 | 内联SVG              |    4 | 2个ZAdmin品牌资源；`ZSpinner`与圆形`ZProgress`为组件自身的数据图形；通用UI图标全部来自Lucide |
 | 静态系统审计         |    1 | CI固化metadata唯一性、Demo数量、motion、Docs dogfood、Lucide导入和SVG白名单                  |
+| 内部原生按钮文件     |    9 | 必须复用internal action、显式focus合同，或是Tour的隐藏非Tab遮罩                              |
 
 分类目录的16–26个直接文件属于蓝图允许的真实大分类（5–30），继续保持“分类目录直接包含简单组件文件”；没有为满足计数制造一文件目录。
 
@@ -38,6 +39,7 @@
 | 负数NumberField步进可能错误舍入       | `decimalPlaces`正则没有接受数值符号                             | 支持正负号并覆盖负小数与负科学计数法                                         |
 | 动画合同不一致                        | 早期Button/Input/Textarea/InputGroup/FileUpload只写了transition | 全部接入Provider motion；Accordion指示器也支持reduced-motion                 |
 | 可取消事件重复实现                    | Select、MultiSelect、Combobox、Menu和Layer各自维护布尔状态      | 抽取最小`CancelableEvent`基类，保留具体事件公开类型                          |
+| 内部微型按钮视觉/焦点重复             | Calendar、NumberField与TimeField各自维护相同基础动作样式        | 统一复用`styleInternalAction`，仅保留尺寸、边框和布局差异                    |
 | 关闭/导航图标不一致                   | 多处使用`×/‹/›/+/-/✓`字符                                       | 统一使用按需Lucide；完整操作复用ZButton，微型内部按钮复用无状态focus样式合同 |
 | Transfer、DataTable与主页残留箭头字符 | 早期实现只补了可访问名称，字符范围没有纳入全树图标审计          | 统一使用按需Lucide/ZIcon；Transfer按LTR/RTL交换方向，DataTable复用ZButton    |
 | WebView窗口控制仍用字符图标           | WindowControls早于ZIcon manifest扩展                            | 扩展受控manifest并改用`ZIcon`                                                |
@@ -68,6 +70,8 @@
 - 七份新增生产指南在真实Chrome中7/7渲染，均有唯一active导航、3–4个ZUI Card章节和正确页面标题。
 - ZStack方向Demo通过ZSelect键盘切换后，Trigger文本、实际`flex-direction`和焦点恢复一致；Docs全站原生交互标签为0。
 - DataTable排序头通过ZButton获得统一focus/motion，Enter切换ascending/descending时同步Lucide与`aria-sort`；Transfer完成真实移动并在RTL交换Lucide方向。
+- Calendar月导航、NumberField步进与TimeField周期按钮统一internal action；真实Chrome用Enter验证月份、精确数值和AM/PM状态切换并保持可见焦点。
+- 移除reset路径的强制`flushSync`后，真实Chrome中ZCheckbox从true恢复indeterminate，ShadowRoot回调为1、无Window detached document回调为0，控制台保持干净。
 - 六主题最终surface分别为极光`rgb(238, 244, 255)`、纸张`rgb(245, 237, 225)`、霓虹`rgb(5, 9, 20)`、午夜`rgb(11, 18, 32)`、高对比亮色`rgb(255, 255, 255)`、高对比暗色`rgb(0, 0, 0)`。
 - 390×844视口无水平溢出，搜索和主题选择保持可用，组件导航使用横向滚动；验收后已恢复默认1920×936视口。
 - 10,000项VirtualList、1,000行DataTable与5,000节点Tree均保持有界DOM；选择、排序和End键定位在虚拟化后仍稳定。
@@ -75,13 +79,13 @@
 
 ## 6. CI结论
 
-最后一次按约回看的门禁：[CI run 33302220121](https://github.com/kenconnet666/zadmin/actions/runs/33302220121)。
+最后一次按约回看的门禁：[CI run 33302706249](https://github.com/kenconnet666/zadmin/actions/runs/33302706249)。
 
-- Windows C# WebView2 desktop与Coverage/packages两个job完整成功；
-- Changesets状态、跨平台API contract、ZUI与平台覆盖率、bundle inspection、外部SSR与包验收、publish dry-run全部成功；
+- Windows C# WebView2 desktop完整成功；
+- Changesets状态与跨平台API contract成功；ZUI coverage的274项测试全通过，但新增reset分支令全局branch为89.95%，低于90%门禁，后续包步骤被跳过；
 - Workspace类型/Svelte、Lint和静态源码审计成功；Firefox与Chromium组件矩阵成功；
-- 唯一失败类别仍是WebKit中native reset后DOM已复位但Svelte状态未提交，18个共享reset断言失败；前一版只调整task时序，没有覆盖非composed事件边界；
-- 当前批次在组件实际root、关联form与ownerDocument共用同一监听/调度器，合并重复捕获并增加ShadowRoot回归；reset状态仍在原生默认动作后的下一task提交；
+- ShadowRoot reset回归已在WebKit通过，但18个真实Svelte组件状态仍未提交，证明事件可达性不是唯一根因；
+- 当前批次保留root/form/document共用监听与默认动作后的task，只移除低层运行时强制全局`flushSync`，改由Svelte自身微任务调度状态提交；同时补齐非form和detached document分支覆盖，不降低90%阈值；
 - Docs E2E、全构建与生成文件检查因全测试失败被跳过，待下一轮验证。
 
 最终通过后必须同时满足：

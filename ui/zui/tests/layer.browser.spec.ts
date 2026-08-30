@@ -12,7 +12,7 @@ import { listenForFormReset, listenToFormReset } from '../src/runtime/form/form-
 const settleReset = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
 
 describe('ZUI layer runtime', () => {
-	it('flushes uncancelled form resets after native default behavior and cancels cleanup', async () => {
+	it('runs uncancelled form resets after native default behavior and cancels cleanup', async () => {
 		const form = document.createElement('form');
 		const reset = vi.fn();
 		const prevent = (event: Event) => event.preventDefault();
@@ -90,6 +90,32 @@ describe('ZUI layer runtime', () => {
 
 		stop();
 		form.remove();
+	});
+
+	it('ignores reset-like events without a live Window form realm', async () => {
+		const form = document.createElement('form');
+		const input = document.createElement('input');
+		form.append(input);
+		document.body.append(form);
+		const reset = vi.fn();
+		const stop = listenForFormReset(input, reset);
+		input.dispatchEvent(new Event('reset', { bubbles: true }));
+		await settleReset();
+		expect(reset).not.toHaveBeenCalled();
+		stop();
+		form.remove();
+
+		const detached = document.implementation.createHTMLDocument();
+		const detachedForm = detached.createElement('form');
+		const detachedInput = detached.createElement('input');
+		detachedForm.append(detachedInput);
+		detached.body.append(detachedForm);
+		const detachedReset = vi.fn();
+		const stopDetached = listenForFormReset(detachedInput, detachedReset);
+		detachedForm.reset();
+		await settleReset();
+		expect(detachedReset).not.toHaveBeenCalled();
+		stopDetached();
 	});
 
 	it('observes non-composed reset events inside a shadow root exactly once', async () => {

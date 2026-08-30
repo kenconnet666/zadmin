@@ -1,5 +1,3 @@
-import { flushSync } from 'svelte';
-
 export type FieldMessage = string;
 export type FieldMessages = FieldMessage | readonly FieldMessage[];
 
@@ -67,7 +65,7 @@ function listenToResetEvents(
 		if (pending !== undefined) clearTimeout(pending);
 		pending = setTimeout(() => {
 			pending = undefined;
-			if (active && !event.defaultPrevented) flushSync(reset);
+			if (active && !event.defaultPrevented) reset();
 		}, 0);
 	};
 	for (const target of activeTargets) target.addEventListener('reset', handleReset, true);
