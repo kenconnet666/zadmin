@@ -9,13 +9,14 @@
 
 <script lang="ts">
 	import { portal } from '../layer/portal.js';
-	import { listenForFormReset } from './form-control.svelte.js';
+	import { formReset } from './form-control.svelte.js';
 
-	const armedValue = 'zui-reset-armed';
-	const resetValue = 'zui-reset-fired';
+	interface ResetSignalActionOptions {
+		readonly owner: HTMLFormElement;
+		readonly reset: () => void;
+	}
+
 	let { association, control = null, onReset, owner = null }: FormResetSignalProps = $props();
-	let ref = $state<HTMLInputElement | null>(null);
-	let marker = $state(armedValue);
 	let resetOwner = $state<HTMLFormElement | null>(null);
 
 	$effect(() => {
@@ -49,41 +50,19 @@
 		};
 	});
 
-	$effect(() => {
-		if (ref) ref.defaultValue = resetValue;
-	});
-
-	function updateMarker(next: string): void {
-		if (next === resetValue) onReset();
-		else marker = next;
-	}
-
-	function shadowFormReset(
+	function signalFormReset(
 		control: HTMLInputElement,
-		reset: () => void
-	): { destroy(): void; update(reset: () => void): void } {
-		let active = true;
-		let currentReset = reset;
-		let disconnect: () => void = () => undefined;
-		let listening = false;
-		const connect = () => {
-			if (!active || listening) return;
-			const root = control.getRootNode();
-			const ShadowRootConstructor = control.ownerDocument.defaultView?.ShadowRoot;
-			if (!ShadowRootConstructor || !(root instanceof ShadowRootConstructor)) return;
-			listening = true;
-			disconnect = listenForFormReset(control, () => currentReset());
-		};
-		connect();
-		queueMicrotask(connect);
+		options: ResetSignalActionOptions
+	): { destroy(): void; update(options: ResetSignalActionOptions): void } {
+		let current = options;
+		const action = formReset(control, () => current.reset());
 		return {
 			destroy() {
-				active = false;
-				disconnect();
+				action.destroy();
 			},
-			update(nextReset) {
-				currentReset = nextReset;
-				connect();
+			update(next) {
+				current = next;
+				action.update(() => current.reset());
 			}
 		};
 	}
@@ -91,15 +70,13 @@
 
 {#if resetOwner}
 	<input
-		bind:this={ref}
 		aria-hidden="true"
 		tabindex="-1"
-		type="text"
+		type="hidden"
 		hidden
 		disabled
 		data-zui-form-reset-signal=""
 		use:portal={{ target: resetOwner }}
-		use:shadowFormReset={onReset}
-		bind:value={() => marker, updateMarker}
+		use:signalFormReset={{ owner: resetOwner, reset: onReset }}
 	/>
 {/if}

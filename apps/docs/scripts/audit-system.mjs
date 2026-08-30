@@ -214,6 +214,10 @@ const inputSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/components/input/ZInput.svelte'),
 	'utf8'
 );
+const calendarSource = await readFile(
+	resolve(workspaceRoot, 'ui/zui/src/components/input/ZCalendar.svelte'),
+	'utf8'
+);
 const formResetSignalTag = formResetSignalSource.match(/<input\b[\s\S]*?\/>/u)?.[0] ?? '';
 if (
 	!buttonSource.includes("'aria-busy': ariaBusy") ||
@@ -238,10 +242,9 @@ if (
 	fail('The form reset action must preserve its association and reset microtask contracts.');
 }
 if (
-	!formResetSignalSource.includes('bind:value={() => marker, updateMarker}') ||
-	!formResetSignalSource.includes('ref.defaultValue = resetValue') ||
-	!formResetSignalSource.includes('if (next === resetValue) onReset()') ||
-	!formResetSignalTag.includes('type="text"') ||
+	!formResetSignalSource.includes('const action = formReset(control, () => current.reset())') ||
+	!formResetSignalSource.includes('action.update(() => current.reset())') ||
+	!formResetSignalTag.includes('type="hidden"') ||
 	!formResetSignalTag.includes('hidden') ||
 	!formResetSignalTag.includes('disabled') ||
 	!formResetSignalTag.includes('data-zui-form-reset-signal=""') ||
@@ -255,11 +258,19 @@ if (
 	!formResetSignalSource.includes('{#if resetOwner}') ||
 	!formResetSignalSource.includes('use:portal={{ target: resetOwner }}') ||
 	/\b(?:id|name)\s*=/u.test(formResetSignalTag) ||
-	!formResetSignalSource.includes('use:shadowFormReset={onReset}') ||
+	!formResetSignalSource.includes('use:signalFormReset={{ owner: resetOwner, reset: onReset }}') ||
 	!formSource.includes('<FormResetSignal onReset={resetFromForm} owner={ref}') ||
 	!inputSource.includes('<FormResetSignal association={form} control={ref} onReset={resetFromForm}')
 ) {
-	fail('The Svelte-native form reset signal contract changed.');
+	fail('The dedicated form reset signal contract changed.');
+}
+if (
+	!calendarSource.includes('switch (event.key)') ||
+	!calendarSource.includes("case 'PageDown':") ||
+	!calendarSource.includes("case 'PageUp':") ||
+	!calendarSource.includes("case 'Enter':\n\t\t\tcase ' ':")
+) {
+	fail('ZCalendar must preserve its explicit keyboard state switch.');
 }
 const focusScopeSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/runtime/layer/focus-scope.ts'),
@@ -410,6 +421,7 @@ console.log(
 		rawControlComponentFiles: rawControlFiles.length,
 		formResetActionFiles: formResetActionFiles.length,
 		formResetSignalComponents: 2,
+		calendarKeyboardSwitchContracts: 1,
 		inlineSvgFiles: inlineSvg.length,
 		brandGradientFiles: gradientFiles.length,
 		docsRawInteractiveElements: 0,

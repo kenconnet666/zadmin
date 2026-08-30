@@ -1654,7 +1654,7 @@ describe('compiled ICSS browser updates', () => {
 		);
 	});
 
-	it('keeps the native reset signal cancelable inside a ShadowRoot', async () => {
+	it('keeps the dedicated reset signal cancelable inside a ShadowRoot', async () => {
 		const host = document.createElement('div');
 		const shadow = host.attachShadow({ mode: 'open' });
 		const form = document.createElement('form');
@@ -1671,8 +1671,6 @@ describe('compiled ICSS browser updates', () => {
 		expect(signal?.disabled).toBe(true);
 		expect(signal?.name).toBe('');
 		expect(signal?.id).toBe('');
-		expect(signal?.value).toBe('zui-reset-armed');
-		expect(signal?.defaultValue).toBe('zui-reset-fired');
 
 		form.reset();
 		await settleFormReset();
@@ -1727,6 +1725,13 @@ describe('compiled ICSS browser updates', () => {
 			);
 			await tick();
 		}
+		const ignored = new KeyboardEvent('keydown', {
+			bubbles: true,
+			cancelable: true,
+			key: 'Escape'
+		});
+		(document.activeElement as HTMLElement)?.dispatchEvent(ignored);
+		expect(ignored.defaultPrevented).toBe(false);
 		(document.activeElement as HTMLElement)?.dispatchEvent(
 			new KeyboardEvent('keydown', { bubbles: true, key: 'PageDown', shiftKey: true })
 		);

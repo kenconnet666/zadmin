@@ -356,28 +356,42 @@
 	}
 	function handleKeydown(event: KeyboardEvent, date: CalendarDate): void {
 		const horizontal = zui.direction === 'rtl' ? -1 : 1;
-		let next: CalendarDate | undefined;
-		if (event.key === 'ArrowRight') next = date.add({ days: horizontal });
-		else if (event.key === 'ArrowLeft') next = date.subtract({ days: horizontal });
-		else if (event.key === 'ArrowDown') next = date.add({ weeks: 1 });
-		else if (event.key === 'ArrowUp') next = date.subtract({ weeks: 1 });
-		else if (event.key === 'Home')
-			next = date.subtract({ days: weekDayIndex(date, resolvedLocale, firstDayOfWeek) });
-		else if (event.key === 'End')
-			next = date.add({ days: 6 - weekDayIndex(date, resolvedLocale, firstDayOfWeek) });
-		else if (event.key === 'PageDown')
-			next = date.add(event.shiftKey ? { years: 1 } : { months: 1 });
-		else if (event.key === 'PageUp')
-			next = date.subtract(event.shiftKey ? { years: 1 } : { months: 1 });
-		else if (event.key === 'Enter' || event.key === ' ') {
-			event.preventDefault();
-			select(date);
-			return;
+		let next: CalendarDate;
+		switch (event.key) {
+			case 'ArrowRight':
+				next = date.add({ days: horizontal });
+				break;
+			case 'ArrowLeft':
+				next = date.subtract({ days: horizontal });
+				break;
+			case 'ArrowDown':
+				next = date.add({ weeks: 1 });
+				break;
+			case 'ArrowUp':
+				next = date.subtract({ weeks: 1 });
+				break;
+			case 'Home':
+				next = date.subtract({ days: weekDayIndex(date, resolvedLocale, firstDayOfWeek) });
+				break;
+			case 'End':
+				next = date.add({ days: 6 - weekDayIndex(date, resolvedLocale, firstDayOfWeek) });
+				break;
+			case 'PageDown':
+				next = date.add(event.shiftKey ? { years: 1 } : { months: 1 });
+				break;
+			case 'PageUp':
+				next = date.subtract(event.shiftKey ? { years: 1 } : { months: 1 });
+				break;
+			case 'Enter':
+			case ' ':
+				event.preventDefault();
+				select(date);
+				return;
+			default:
+				return;
 		}
-		if (next) {
-			event.preventDefault();
-			focusDate(next);
-		}
+		event.preventDefault();
+		focusDate(next);
 	}
 	function moveMonth(amount: number): void {
 		const next = displayedMonth.add({ months: amount });
