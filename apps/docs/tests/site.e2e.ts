@@ -1189,6 +1189,11 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/tour'
 	]) {
 		await page.goto(`/${route}`);
+		await expect(page.locator('main'), `${route} must expose one main landmark`).toHaveCount(1);
+		const currentLink = page.locator('nav[aria-label="组件导航"] a[aria-current="page"]');
+		await expect(currentLink, `${route} must expose one current navigation link`).toHaveCount(1);
+		await expect(currentLink).toHaveAttribute('href', route);
+		await expect(page).toHaveTitle(route === '#/' ? 'ZUI Components' : /.+ · ZUI Components$/u);
 		const unnamedFields = await page
 			.locator('main input:not([type="hidden"]), main textarea, main select')
 			.evaluateAll((elements) =>
