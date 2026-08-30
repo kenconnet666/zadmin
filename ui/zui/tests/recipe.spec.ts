@@ -126,6 +126,9 @@ describe('defineRecipe', () => {
 			} as never)
 		).toThrow(/compoundVariants\[0\]\.style/);
 		expect(() => disposeRecipe({} as never)).toThrow(/Expected a recipe/);
+		expect(() =>
+			defineRecipe({ variants: { tone: { primary: () => undefined } } }, {} as ImportMeta)
+		).not.toThrow();
 	});
 
 	it('releases only recipe-owned rules during HMR disposal', () => {
@@ -195,6 +198,9 @@ describe('defineSlotRecipe', () => {
 		expect(() => runtime.slots(defaultTheme, recipe, { size: 'large' } as never)).toThrow(
 			/Unknown slot recipe value/
 		);
+		expect(() => runtime.slots(defaultTheme, recipe, { missing: 'value' } as never)).toThrow(
+			/Unknown slot recipe variant/
+		);
 
 		let hotDispose: (() => void) | undefined;
 		registerSlotRecipeHmr(
@@ -238,5 +244,25 @@ describe('defineSlotRecipe', () => {
 			})
 		).toThrow(/Unknown slot recipe variant/);
 		expect(() => disposeSlotRecipe({} as never)).toThrow(/Expected a recipe/);
+		expect(() =>
+			defineSlotRecipe({
+				defaultVariants: { tone: 'missing' },
+				slots: ['root'] as const,
+				variants: { tone: { primary: {} } }
+			})
+		).toThrow(/Unknown slot recipe value/u);
+		expect(() =>
+			defineSlotRecipe({
+				slots: ['root'] as const,
+				variants: {
+					value: Object.fromEntries(
+						Array.from({ length: 65 }, (_, index) => [String(index), { root: () => undefined }])
+					)
+				}
+			})
+		).toThrow(/maximum is 64/u);
+		expect(() =>
+			defineSlotRecipe({ slots: ['root'] as const, variants: {} }, {} as ImportMeta)
+		).not.toThrow();
 	});
 });

@@ -198,6 +198,18 @@ describe('ZUI layer runtime', () => {
 		root.remove();
 		sibling.remove();
 		branch.remove();
+
+		const shadowHost = document.createElement('div');
+		const shadow = shadowHost.attachShadow({ mode: 'open' });
+		const shadowRoot = document.createElement('div');
+		const shadowSibling = document.createElement('main');
+		shadow.append(shadowRoot, shadowSibling);
+		document.body.append(shadowHost);
+		const restoreShadow = inertOthers(shadowRoot);
+		expect(shadowSibling.inert).toBe(true);
+		restoreShadow();
+		expect(shadowSibling.inert).toBe(false);
+		shadowHost.remove();
 	});
 
 	it('positions floating content and releases autoUpdate resources', async () => {
@@ -220,6 +232,13 @@ describe('ZUI layer runtime', () => {
 		expect(floating.style.getPropertyValue('--zui-floating-available-height')).toMatch(/px$/u);
 		expect(positioned).toHaveBeenCalled();
 		positioner.stop();
+		positioner.stop();
+		await positioner.update();
+		const stopFixed = positioner.start(reference, floating, { strategy: 'fixed' });
+		await positioner.update();
+		expect(floating.style.position).toBe('fixed');
+		stopFixed();
+		stopFixed();
 		reference.remove();
 		floating.remove();
 	});

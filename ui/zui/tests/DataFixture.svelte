@@ -26,6 +26,7 @@
 	];
 	let selectedKeys = $state<readonly SelectionKey[]>(['row-2']);
 	let sort = $state<DataSortDescriptor>();
+	let virtualRange = $state('none');
 </script>
 
 <ZTable caption="Deployments" striped data-testid="table">
@@ -40,10 +41,13 @@
 	itemKey={(row) => row.id}
 	itemSize={40}
 	height={120}
+	initialIndex={50}
+	onRangeChange={(range) => (virtualRange = `${range.startIndex}:${range.endIndex}`)}
 	data-testid="virtual-list"
 >
 	{#snippet item(row, index)}<span>{index}: {row.label}</span>{/snippet}
 </ZVirtualList>
+<output data-testid="virtual-list-output">{virtualRange}</output>
 
 <ZDataTable
 	caption="Large deployment table"

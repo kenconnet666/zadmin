@@ -50,7 +50,7 @@
 			header: 'Name',
 			id: 'name',
 			sortable: true,
-			width: '10rem'
+			width: 160
 		}
 	];
 	const treeNodes = [

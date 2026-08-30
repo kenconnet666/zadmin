@@ -201,6 +201,8 @@ describe('compiled ICSS browser updates', () => {
 		expect(document.activeElement).toBe(dialog?.querySelector('[aria-label="Close tour"]'));
 		expect(document.querySelectorAll('[data-slot="mask"]')).toHaveLength(4);
 		expect(document.querySelector('[data-slot="spotlight"]')).not.toBeNull();
+		document.querySelector<HTMLButtonElement>('#tour-metrics')?.focus();
+		expect(document.querySelector('[role="dialog"]')).not.toBeNull();
 		dialog?.querySelector<HTMLButtonElement>('button:last-child')?.click();
 		await tick();
 		dialog = document.querySelector<HTMLElement>('[role="dialog"][data-step="metrics"]');
@@ -247,6 +249,8 @@ describe('compiled ICSS browser updates', () => {
 		persistent?.focus();
 		persistent?.click();
 		await tick();
+		document.body.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+		expect(document.querySelector('[role="dialog"]')).not.toBeNull();
 		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
 		await tick();
 		expect(document.querySelector('[role="dialog"]')).not.toBeNull();
@@ -279,9 +283,11 @@ describe('compiled ICSS browser updates', () => {
 		render(DataFixture);
 		const table = document.querySelector<HTMLTableElement>('[data-testid="table"]');
 		const viewport = document.querySelector<HTMLDivElement>('[data-testid="virtual-list"]');
+		const rangeOutput = document.querySelector('[data-testid="virtual-list-output"]');
 		expect(table?.caption?.textContent).toBe('Deployments');
 		expect(table?.tHead?.rows[0]?.cells).toHaveLength(2);
 		expect(viewport?.querySelectorAll('[role="listitem"]').length).toBeLessThan(20);
+		expect(rangeOutput?.textContent).not.toBe('none');
 		if (viewport) {
 			viewport.scrollTop = 4000;
 			viewport.dispatchEvent(new Event('scroll'));
@@ -311,6 +317,16 @@ describe('compiled ICSS browser updates', () => {
 			'row-999'
 		);
 		expect(output?.textContent).toContain('row-2,row-0');
+		sort?.click();
+		await tick();
+		expect(output?.textContent).toContain(':none');
+		const selectAll = viewport?.querySelector<HTMLInputElement>('thead input[type="checkbox"]');
+		selectAll?.click();
+		await tick();
+		expect(selectAll?.checked).toBe(true);
+		selectAll?.click();
+		await tick();
+		expect(output?.textContent?.startsWith(':')).toBe(true);
 	});
 
 	it('coordinates feedback semantics, motion cleanup, Toast action and paused timeout', async () => {
@@ -557,6 +573,21 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(input?.value).toBe('Beta');
 		expect(output?.textContent).toBe('b:Beta:1:false');
+		if (input) {
+			input.value = '';
+			input.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		}
+		await tick();
+		for (const key of ['ArrowDown', 'ArrowUp', 'Home', 'End']) {
+			input?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key }));
+		}
+		document
+			.querySelector<HTMLElement>('[data-testid="combobox-a"]')
+			?.dispatchEvent(new PointerEvent('pointermove', { bubbles: true }));
+		document.querySelector<HTMLElement>('[data-testid="combobox-c"]')?.click();
+		input?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+		await tick();
+		expect(new FormData(form!).get('choice')).toBe('b');
 	});
 
 	it('coordinates MultiSelect toggles, persistent content, labels, form values and reset', async () => {
@@ -1414,6 +1445,19 @@ describe('compiled ICSS browser updates', () => {
 		content = document.querySelector('[data-testid="tooltip-content"]');
 		expect(content).toBeNull();
 		expect(output?.textContent).toBe('false:2');
+
+		trigger?.focus();
+		await tick();
+		expect(document.querySelector('[data-testid="tooltip-content"]')).not.toBeNull();
+		trigger?.blur();
+		await tick();
+		await new Promise((resolve) => setTimeout(resolve, 140));
+		expect(document.querySelector('[data-testid="tooltip-content"]')).toBeNull();
+		trigger?.dispatchEvent(new PointerEvent('pointerenter'));
+		await tick();
+		trigger?.dispatchEvent(new PointerEvent('pointerleave'));
+		await new Promise((resolve) => setTimeout(resolve, 140));
+		expect(document.querySelector('[data-testid="tooltip-content"]')).toBeNull();
 	});
 
 	it('coordinates Popover portal, focus, dismiss and Presence cleanup', async () => {
