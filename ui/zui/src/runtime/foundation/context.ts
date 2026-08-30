@@ -68,53 +68,39 @@ export interface ZuiContextSource {
 const ZUI_CONTEXT = Symbol('zui-context');
 const EMPTY_TRANSLATIONS: ZuiTranslations = Object.freeze({});
 
-function createZuiContext(
-	read: () => Required<ZuiContextSource>,
-	track: () => void = () => undefined
-): ZuiContext {
+function createZuiContext(read: () => Required<ZuiContextSource>): ZuiContext {
 	const context: ZuiContext = {
 		get colorScheme() {
-			track();
 			return read().colorScheme;
 		},
 		get contrast() {
-			track();
 			return read().contrast;
 		},
 		get density() {
-			track();
 			return read().density;
 		},
 		get direction() {
-			track();
 			return read().direction;
 		},
 		get idPrefix() {
-			track();
 			return read().idPrefix;
 		},
 		get locale() {
-			track();
 			return read().locale;
 		},
 		get motion() {
-			track();
 			return read().motion;
 		},
 		get portalContainer() {
-			track();
 			return read().portalContainer;
 		},
 		get runtime() {
-			track();
 			return read().runtime;
 		},
 		get theme() {
-			track();
 			return read().theme;
 		},
 		get translations() {
-			track();
 			return read().translations;
 		},
 		icss(factory) {
@@ -144,7 +130,7 @@ const DEFAULT_CONTEXT = createZuiContext(() => ({
 	translations: EMPTY_TRANSLATIONS
 }));
 
-export function provideZui(read: () => ZuiContextSource, track?: () => void): ZuiContext {
+export function provideZui(read: () => ZuiContextSource): ZuiContext {
 	const parent = getContext<ZuiContext | undefined>(ZUI_CONTEXT) ?? DEFAULT_CONTEXT;
 	const context = createZuiContext(() => {
 		const source = read();
@@ -162,7 +148,7 @@ export function provideZui(read: () => ZuiContextSource, track?: () => void): Zu
 			theme: source.theme ?? parent.theme,
 			translations: source.translations ?? parent.translations
 		};
-	}, track);
+	});
 	setContext(ZUI_CONTEXT, context);
 	return context;
 }

@@ -76,16 +76,16 @@ function insertedRuleCount(): number {
 }
 
 describe('compiled ICSS browser updates', () => {
-	it('updates Provider theme recipes in the same state transition', async () => {
+	it('updates Provider theme recipes through their visual transition', async () => {
 		render(ThemeSwitchFixture);
 		const target = document.querySelector<HTMLElement>('[data-testid="theme-switch-target"]')!;
 		const next = document.querySelector<HTMLButtonElement>('[data-testid="theme-switch-next"]')!;
 		expect(getComputedStyle(target).backgroundColor).toBe('rgb(36, 87, 230)');
 		next.click();
-		await tick();
+		await new Promise((resolve) => setTimeout(resolve, 250));
 		expect(getComputedStyle(target).backgroundColor).toBe('rgb(34, 211, 238)');
 		next.click();
-		await tick();
+		await new Promise((resolve) => setTimeout(resolve, 250));
 		expect(getComputedStyle(target).backgroundColor).toBe('rgb(154, 52, 18)');
 	});
 

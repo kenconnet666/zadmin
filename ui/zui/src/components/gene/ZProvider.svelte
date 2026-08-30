@@ -113,8 +113,7 @@
 </script>
 
 <script lang="ts">
-	import { createSubscriber } from 'svelte/reactivity';
-	import { provideZui, type ZuiContextSource } from '../../runtime/foundation/context.js';
+	import { provideZui } from '../../runtime/foundation/context.js';
 
 	let {
 		children,
@@ -130,7 +129,7 @@
 		theme,
 		translations
 	}: ZProviderProps = $props();
-	const source = $state<ZuiContextSource>({
+	provideZui(() => ({
 		colorScheme,
 		contrast,
 		density,
@@ -142,31 +141,7 @@
 		runtime,
 		theme,
 		translations
-	});
-	let updateSubscribers = () => undefined;
-	const track = createSubscriber((update) => {
-		updateSubscribers = update;
-		return () => {
-			updateSubscribers = () => undefined;
-		};
-	});
-	$effect.pre(() => {
-		Object.assign(source, {
-			colorScheme,
-			contrast,
-			density,
-			direction,
-			idPrefix,
-			locale,
-			motion,
-			portalContainer,
-			runtime,
-			theme,
-			translations
-		});
-		updateSubscribers();
-	});
-	provideZui(() => source, track);
+	}));
 </script>
 
 {@render children?.()}
