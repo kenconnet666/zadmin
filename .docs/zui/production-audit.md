@@ -94,6 +94,7 @@
 | FormDemo失焦时提交点击可能丢失        | blur校验把`validating`映射为ZButton loading，默认click前按钮被禁用 | 按钮保持可提交并仅暴露`aria-busy`；状态文本显示validating，race token负责去重      |
 | Button/Form覆盖调用方`aria-busy`      | 内部loading/validating写在原生rest之后，无条件覆盖调用方传值       | 内部busy时强制true；否则保留原生`aria-busy`，Button不额外改变disabled              |
 | Accessibility指南缺少busy/form边界    | 自动id、焦点和搜索合同完整，但未解释busy所有权及外部form signal    | 明确aria-busy不等于loading；signal无name/id、disabled且不进入FormData              |
+| Docs未解释resetOnForm所有权           | 新API避免复合双重reset，但Input/Textarea/Combobox文档缺少选择规则  | 组件页与Accessibility指南明确独立自管、复合父owner唯一接管                         |
 | 关闭/导航图标不一致                   | 多处使用`×/‹/›/+/-/✓`字符                                          | 统一使用按需Lucide；完整操作复用ZButton，微型内部按钮复用无状态focus样式合同       |
 | Transfer、DataTable与主页残留箭头字符 | 早期实现只补了可访问名称，字符范围没有纳入全树图标审计             | 统一使用按需Lucide/ZIcon；Transfer按LTR/RTL交换方向，DataTable复用ZButton          |
 | WebView窗口控制仍用字符图标           | WindowControls早于ZIcon manifest扩展                               | 扩展受控manifest并改用`ZIcon`                                                      |

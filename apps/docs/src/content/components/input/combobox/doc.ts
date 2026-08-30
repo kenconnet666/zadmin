@@ -31,6 +31,7 @@ export const comboboxDoc = defineComponentDoc(comboboxMetadata, {
 	accessibility: [
 		'Input使用combobox、aria-autocomplete=list、expanded、controls和activedescendant；键盘移动不会把DOM焦点移出输入框。',
 		'Content使用listbox，Item使用option；过滤项通过hidden和Collection disabled合同同时退出视觉与active导航。',
-		'Enter选择active option并回填文本，Escape只dismiss，name提交稳定value而不是显示文本。'
+		'Enter选择active option并回填文本，Escape只dismiss，name提交稳定value而不是显示文本。',
+		'根状态机唯一拥有reset；内部ZInput关闭自重置，并把defaultInputValue写入真实DOM defaultValue。'
 	]
 });

@@ -36,6 +36,7 @@ export const inputDoc = defineComponentDoc(inputMetadata, {
 		'invalid映射aria-invalid。',
 		'用户aria-describedby与Field上下文合并。',
 		'原生oninput与onchange仍可使用。',
-		'form属性把DOM外部输入和内部reset signal关联到同一原生表单，并支持动态重归属与同id owner替换。'
+		'form属性把DOM外部输入和内部reset signal关联到同一原生表单，并支持动态重归属与同id owner替换。',
+		'独立输入保持resetOnForm=true；复合父状态机设为false，并通过onFormReset唯一恢复受控值。'
 	]
 });
