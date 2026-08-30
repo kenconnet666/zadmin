@@ -238,13 +238,19 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		await Promise.resolve();
 		const output = document.querySelector('[data-testid="context-boundary-output"]');
-		expect(output?.textContent).toMatch(/^16:/u);
+		expect(output?.textContent).toMatch(/^22:/u);
 		expect(output?.textContent).toContain('ZAccordion');
 		expect(output?.textContent).toContain('ZTooltip');
 		expect(output?.textContent).toContain('Duplicate ZList');
 		expect(output?.textContent).toContain('Duplicate ZTimeline');
 		expect(output?.textContent).toContain('requires at least one item');
 		expect(output?.textContent).toContain('Duplicate ZCarousel key');
+		expect(output?.textContent).toContain('maxFiles');
+		expect(output?.textContent).toContain('maxSize');
+		expect(output?.textContent).toContain('Virtualizer itemSize');
+		expect(output?.textContent).toContain('requires at least one column');
+		expect(output?.textContent).toContain('Duplicate or empty ZDataTable column');
+		expect(output?.textContent).toContain('Duplicate ZDataTable row key');
 	});
 
 	it('honors consumer cancellation across trigger and close controllers', async () => {
@@ -309,6 +315,25 @@ describe('compiled ICSS browser updates', () => {
 			document.querySelector<HTMLElement>('[data-testid="combobox-d"]')?.click();
 			await tick();
 			expect(target.querySelector('[data-testid="combobox-output"]')?.textContent).toMatch(/^b:/u);
+			await unmount(component);
+		}
+		{
+			const component = mount(MentionFixture, { props: { prevent: true }, target });
+			const input = target.querySelector<HTMLTextAreaElement>('[aria-label="Message"]');
+			if (input) {
+				input.value = 'Changed';
+				input.dispatchEvent(new InputEvent('input', { bubbles: true, cancelable: true }));
+				input.dispatchEvent(
+					new CompositionEvent('compositionend', { bubbles: true, cancelable: true })
+				);
+				input.dispatchEvent(
+					new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'ArrowDown' })
+				);
+			}
+			await tick();
+			expect(target.querySelector('[data-testid="mention-output"]')?.textContent).toContain(
+				'Notify '
+			);
 			await unmount(component);
 		}
 		{

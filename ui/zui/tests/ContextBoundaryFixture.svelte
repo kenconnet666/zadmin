@@ -5,6 +5,8 @@
 		ZComboboxInput,
 		ZCarousel,
 		ZDialogContent,
+		ZDataTable,
+		ZFileUpload,
 		ZList,
 		ZMenuItem,
 		ZMultiSelectTrigger,
@@ -14,7 +16,8 @@
 		ZSelectTrigger,
 		ZTabsList,
 		ZTimeline,
-		ZTooltipTrigger
+		ZTooltipTrigger,
+		ZVirtualList
 	} from '../src/entrypoints/index.js';
 
 	const duplicateItems = [
@@ -24,6 +27,14 @@
 	const duplicateTimeline = [
 		{ id: 'same', title: 'One' },
 		{ id: 'same', title: 'Two' }
+	];
+	const tableRows = [
+		{ id: 'same', name: 'One' },
+		{ id: 'same', name: 'Two' }
+	];
+	const tableColumns = [
+		{ accessor: (row: (typeof tableRows)[number]) => row.name, header: 'One', id: 'same' },
+		{ accessor: (row: (typeof tableRows)[number]) => row.name, header: 'Two', id: 'same' }
 	];
 	let errors = $state<string[]>([]);
 	function capture(error: unknown): void {
@@ -49,6 +60,31 @@
 	<ZCarousel ariaLabel="Empty" items={[]} itemKey={() => 'empty'} itemLabel={() => 'Empty'}>
 		{#snippet item()}empty{/snippet}
 	</ZCarousel>
+</svelte:boundary>
+<svelte:boundary onerror={capture}>
+	<ZFileUpload inputLabel="Invalid" maxFiles={0} />
+</svelte:boundary>
+<svelte:boundary onerror={capture}>
+	<ZFileUpload inputLabel="Invalid" maxSize={-1} />
+</svelte:boundary>
+<svelte:boundary onerror={capture}>
+	<ZVirtualList ariaLabel="Invalid" height={40} itemSize={0} items={[]} itemKey={() => 'none'}>
+		{#snippet item()}never{/snippet}
+	</ZVirtualList>
+</svelte:boundary>
+<svelte:boundary onerror={capture}>
+	<ZDataTable caption="No columns" columns={[]} rows={[]} rowKey={() => 'none'} />
+</svelte:boundary>
+<svelte:boundary onerror={capture}>
+	<ZDataTable caption="Duplicate columns" columns={tableColumns} rows={[]} rowKey={() => 'none'} />
+</svelte:boundary>
+<svelte:boundary onerror={capture}>
+	<ZDataTable
+		caption="Duplicate rows"
+		columns={tableColumns.slice(0, 1)}
+		rows={tableRows}
+		rowKey={(row) => row.id}
+	/>
 </svelte:boundary>
 <svelte:boundary onerror={capture}>
 	<ZCarousel
