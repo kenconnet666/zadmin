@@ -29,16 +29,19 @@
 		| 'tooltip';
 
 	let { kind }: { kind: MissingContextKind } = $props();
-	if (kind === 'accordion') useZAccordion();
-	else if (kind === 'accordion-item') useZAccordionItem();
-	else if (kind === 'combobox') useZCombobox();
-	else if (kind === 'dialog') useZDialog();
-	else if (kind === 'menu') useZMenu();
-	else if (kind === 'multi-select') useZMultiSelect();
-	else if (kind === 'popover') useZPopover();
-	else if (kind === 'popconfirm') useZPopconfirm();
-	else if (kind === 'radio-group') useZRadioGroup();
-	else if (kind === 'select') useZSelect();
-	else if (kind === 'tabs') useZTabs();
-	else useZTooltip();
+	let context: unknown;
+	if (kind === 'accordion') context = useZAccordion();
+	else if (kind === 'accordion-item') context = useZAccordionItem();
+	else if (kind === 'combobox') context = useZCombobox();
+	else if (kind === 'dialog') context = useZDialog();
+	else if (kind === 'menu') context = useZMenu();
+	else if (kind === 'multi-select') context = useZMultiSelect();
+	else if (kind === 'popover') context = useZPopover();
+	else if (kind === 'popconfirm') context = useZPopconfirm();
+	else if (kind === 'radio-group') context = useZRadioGroup();
+	else if (kind === 'select') context = useZSelect();
+	else if (kind === 'tabs') context = useZTabs();
+	else context = useZTooltip();
 </script>
+
+<span>{context ? 'ready' : 'missing'}</span>
