@@ -1,5 +1,5 @@
 <script module lang="ts">
-	import type { Time } from '@internationalized/date';
+	import type { Time as TimeValue } from '@internationalized/date';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
@@ -7,22 +7,22 @@
 	export type TimeGranularity = 'minute' | 'second';
 	export type TimeSegment = 'hour' | 'minute' | 'second';
 	export interface ZTimeFieldProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onchange'> {
-		readonly defaultValue?: Time;
+		readonly defaultValue?: TimeValue;
 		readonly disabled?: boolean;
 		readonly form?: string;
 		readonly granularity?: TimeGranularity;
 		readonly hourCycle?: 12 | 24;
-		readonly maxValue?: Time;
-		readonly minValue?: Time;
+		readonly maxValue?: TimeValue;
+		readonly minValue?: TimeValue;
 		readonly minuteStep?: number;
 		readonly name?: string;
-		readonly onValueChange?: (value: Time | undefined) => void;
+		readonly onValueChange?: (value: TimeValue | undefined) => void;
 		readonly readonly?: boolean;
 		ref?: HTMLDivElement | null;
 		readonly required?: boolean;
 		readonly secondStep?: number;
 		readonly segmentLabel?: (segment: TimeSegment) => string;
-		value?: Time;
+		value?: TimeValue;
 	}
 	export const zuiMetadata = {
 		category: 'input',

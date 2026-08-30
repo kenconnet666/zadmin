@@ -228,22 +228,24 @@
 	</header>
 	{#each componentCategories as category (category.id)}
 		{@const categoryDocs = docs.filter((doc) => doc.category === category.id)}
-		<div class={classes.group}>
-			<h3 class={classes.groupTitle}>{category.label}</h3>
-			<div class={classes.grid}>
-				{#each categoryDocs as doc (doc.id)}
-					<a class={classes.card} data-testid="component-card" href={`#/components/${doc.id}`}>
-						<ZBox>
-							<div class={classes.cardIcon}>
-								<ZIcon name="plus" size={18} />
-							</div>
-							<h4 class={classes.cardTitle}>{doc.name}</h4>
-							<ZText tone="muted">{doc.summary}</ZText>
-							<span class={classes.learnMore}>查看Demo与API →</span>
-						</ZBox>
-					</a>
-				{/each}
+		{#if categoryDocs.length > 0}
+			<div class={classes.group}>
+				<h3 class={classes.groupTitle}>{category.label}</h3>
+				<div class={classes.grid}>
+					{#each categoryDocs as doc (doc.id)}
+						<a class={classes.card} data-testid="component-card" href={`#/components/${doc.id}`}>
+							<ZBox>
+								<div class={classes.cardIcon}>
+									<ZIcon name="plus" size={18} />
+								</div>
+								<h4 class={classes.cardTitle}>{doc.name}</h4>
+								<ZText tone="muted">{doc.summary}</ZText>
+								<span class={classes.learnMore}>查看Demo与API →</span>
+							</ZBox>
+						</a>
+					{/each}
+				</div>
 			</div>
-		</div>
+		{/if}
 	{/each}
 </section>

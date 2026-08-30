@@ -112,7 +112,6 @@
 
 <script lang="ts">
 	import { untrack } from 'svelte';
-	import { SvelteMap, SvelteSet } from 'svelte/reactivity';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import { listenForFormReset } from '../../runtime/form/form-control.svelte.js';
@@ -277,8 +276,11 @@
 	const zui = useZui();
 	const uid = $props.id();
 	const idBase = $derived(createZuiId(zui.idPrefix, uid, 'command'));
-	const optionIds = new SvelteMap<SelectionKey, string>();
-	const groupIds = new SvelteMap<string, string>();
+	// These identity caches are mutated while rendering and must not create reactive writes.
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
+	const optionIds = new Map<SelectionKey, string>();
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
+	const groupIds = new Map<string, string>();
 	let nextOptionId = 0;
 	let nextGroupId = 0;
 	let active = $state<SelectionKey>();
@@ -290,7 +292,9 @@
 		write: (next) => (query = next)
 	});
 	const normalizedItems = $derived.by(() => {
-		const keys = new SvelteSet<SelectionKey>();
+		// This set is local validation scratch space, not reactive state.
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
+		const keys = new Set<SelectionKey>();
 		for (const item of items) {
 			if (keys.has(item.key)) throw new Error(`Duplicate ZCommand key "${String(item.key)}".`);
 			keys.add(item.key);
@@ -328,7 +332,9 @@
 		enabled.some(({ key }) => Object.is(key, active)) ? active : enabled[0]?.key
 	);
 	const groups = $derived.by(() => {
-		const grouped = new SvelteMap<string, CommandItem[]>();
+		// This map is the immutable output being assembled for this derivation.
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
+		const grouped = new Map<string, CommandItem[]>();
 		for (const item of results) {
 			const group = item.group ?? '';
 			const entries = grouped.get(group) ?? [];

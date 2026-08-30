@@ -109,7 +109,6 @@
 </script>
 
 <script lang="ts">
-	import { SvelteMap } from 'svelte/reactivity';
 	import { CollectionStore } from '../../../runtime/collection/collection.svelte.js';
 	import { RovingFocus } from '../../../runtime/collection/roving-focus.svelte.js';
 	import { Typeahead } from '../../../runtime/collection/typeahead.js';
@@ -154,7 +153,9 @@
 		write: (next) => (open = next)
 	});
 	const collection = new CollectionStore<SelectItemRecord>();
-	const labels = new SvelteMap<SelectionKey, string>();
+	// Labels are registration metadata; collection updates provide the reactive invalidation.
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
+	const labels = new Map<SelectionKey, string>();
 	let focusKey = $state<SelectionKey>();
 	let hidden = $state<HTMLInputElement | null>(null);
 	const roving = new RovingFocus({

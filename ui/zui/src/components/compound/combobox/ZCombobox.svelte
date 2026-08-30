@@ -107,7 +107,6 @@
 </script>
 
 <script lang="ts">
-	import { SvelteMap } from 'svelte/reactivity';
 	import { CollectionStore } from '../../../runtime/collection/collection.svelte.js';
 	import { moveIndex, navigationIntent } from '../../../runtime/collection/list-navigation.js';
 	import { ControllableState } from '../../../runtime/foundation/controllable-state.svelte.js';
@@ -143,7 +142,9 @@
 	const uid = $props.id();
 	const idBase = $derived(createZuiId(zui.idPrefix, uid, 'combobox'));
 	const collection = new CollectionStore<ComboboxItemRecord>();
-	const ids = new SvelteMap<SelectionKey, string>();
+	// This is an identity cache mutated while rendering options, not reactive application state.
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
+	const ids = new Map<SelectionKey, string>();
 	let nextId = 0;
 	let active = $state<SelectionKey>();
 	let hidden = $state<HTMLInputElement | null>(null);

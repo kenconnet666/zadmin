@@ -94,8 +94,8 @@
 </script>
 
 <script lang="ts">
+	/* eslint-disable svelte/prefer-svelte-reactivity -- The Set is local validation scratch space. */
 	import { untrack } from 'svelte';
-	import { SvelteSet } from 'svelte/reactivity';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { moveIndex, navigationIntent } from '../../runtime/collection/list-navigation.js';
 	import { listenForFormReset } from '../../runtime/form/form-control.svelte.js';
@@ -188,7 +188,7 @@
 	const elements = $state<(HTMLButtonElement | null)[]>([]);
 	let proxy = $state<HTMLInputElement | null>(null);
 	const normalizedItems = $derived.by(() => {
-		const keys = new SvelteSet<SelectionKey>();
+		const keys = new Set<SelectionKey>();
 		for (const item of items) {
 			if (keys.has(item.value))
 				throw new Error(`Duplicate ZSegmented value "${String(item.value)}".`);

@@ -15,7 +15,9 @@ const INITIAL_STATE = Object.freeze({
 }) satisfies FormFieldState;
 
 export class FormRegistry {
-	readonly #controls = new SvelteMap<string, () => HTMLElement | null>();
+	// Control lookup is imperative metadata; form state below is the reactive surface.
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
+	readonly #controls = new Map<string, () => HTMLElement | null>();
 	readonly #states = new SvelteMap<string, FormFieldState>();
 
 	register(name: string, control: () => HTMLElement | null): () => void {

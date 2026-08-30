@@ -1,24 +1,24 @@
 <script module lang="ts">
-	import type { CalendarDate } from '@internationalized/date';
+	import type { CalendarDate as CalendarDateValue } from '@internationalized/date';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 
 	export type DateSegment = 'day' | 'month' | 'year';
 	export interface ZDateFieldProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onchange'> {
-		readonly defaultValue?: CalendarDate;
+		readonly defaultValue?: CalendarDateValue;
 		readonly disabled?: boolean;
 		readonly form?: string;
 		readonly locale?: string;
-		readonly maxValue?: CalendarDate;
-		readonly minValue?: CalendarDate;
+		readonly maxValue?: CalendarDateValue;
+		readonly minValue?: CalendarDateValue;
 		readonly name?: string;
-		readonly onValueChange?: (value: CalendarDate | undefined) => void;
+		readonly onValueChange?: (value: CalendarDateValue | undefined) => void;
 		readonly readonly?: boolean;
 		ref?: HTMLDivElement | null;
 		readonly required?: boolean;
 		readonly segmentLabel?: (segment: DateSegment) => string;
-		value?: CalendarDate;
+		value?: CalendarDateValue;
 	}
 
 	export const zuiMetadata = {

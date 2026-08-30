@@ -102,7 +102,7 @@
 </script>
 
 <script lang="ts">
-	import { SvelteSet } from 'svelte/reactivity';
+	/* eslint-disable svelte/prefer-svelte-reactivity -- Sets are local validation values. */
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import { findMentionQuery, insertMention, type MentionQuery } from '../../runtime/mention.js';
@@ -199,14 +199,14 @@
 		write: (next) => (value = next)
 	});
 	const normalizedTriggers = $derived.by(() => {
-		const result = [...new SvelteSet(triggers)];
+		const result = [...new Set(triggers)];
 		if (result.length === 0 || result.some((trigger) => trigger.length === 0)) {
 			throw new TypeError('ZMention triggers must contain at least one non-empty value.');
 		}
 		return Object.freeze(result.sort((left, right) => right.length - left.length));
 	});
 	const normalizedItems = $derived.by(() => {
-		const keys = new SvelteSet<SelectionKey>();
+		const keys = new Set<SelectionKey>();
 		for (const item of items) {
 			if (keys.has(item.key)) throw new Error(`Duplicate ZMention key "${String(item.key)}".`);
 			keys.add(item.key);

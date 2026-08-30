@@ -1,5 +1,5 @@
 <script module lang="ts">
-	import type { CalendarDate } from '@internationalized/date';
+	import type { CalendarDate as CalendarDateValue } from '@internationalized/date';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import type { CalendarRange, Weekday } from '../../runtime/date.js';
@@ -8,25 +8,25 @@
 	export interface ZCalendarProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onchange'> {
 		readonly appearance?: 'bare' | 'calendar';
 		readonly calendarLabel?: string;
-		readonly defaultFocusedValue?: CalendarDate;
-		readonly defaultValue?: CalendarDate;
+		readonly defaultFocusedValue?: CalendarDateValue;
+		readonly defaultValue?: CalendarDateValue;
 		readonly disabled?: boolean;
 		readonly firstDayOfWeek?: Weekday;
 		readonly form?: string;
-		readonly isDateDisabled?: (date: CalendarDate) => boolean;
+		readonly isDateDisabled?: (date: CalendarDateValue) => boolean;
 		readonly locale?: string;
-		readonly maxValue?: CalendarDate;
-		readonly minValue?: CalendarDate;
+		readonly maxValue?: CalendarDateValue;
+		readonly minValue?: CalendarDateValue;
 		readonly name?: string;
 		readonly nextLabel?: string;
-		readonly onFocusedValueChange?: (value: CalendarDate) => void;
-		readonly onValueChange?: (value: CalendarDate) => void;
+		readonly onFocusedValueChange?: (value: CalendarDateValue) => void;
+		readonly onValueChange?: (value: CalendarDateValue) => void;
 		readonly previousLabel?: string;
 		readonly range?: CalendarRange;
 		ref?: HTMLDivElement | null;
 		readonly showOutsideDates?: boolean;
 		readonly timeZone?: string;
-		value?: CalendarDate;
+		value?: CalendarDateValue;
 	}
 
 	export const zuiMetadata = {

@@ -155,12 +155,15 @@
 					s._media('(max-width: 78rem)', (tablet) => tablet.display.none);
 				},
 				tocButton: (s) => {
+					s.alignItems.center;
 					s.backgroundColor.transparent;
 					s.borderWidth.px(0);
 					s.color._textMuted;
 					s.cursor.pointer;
+					s.display.flex;
 					s.fontSize._small;
 					s.borderRadius._small;
+					s.minHeight.rem(1.5);
 					s.paddingBlock._xsmall;
 					s.paddingInline._small;
 					s.textAlign.left;

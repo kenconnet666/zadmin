@@ -1,5 +1,5 @@
 import { untrack } from 'svelte';
-import { SvelteSet } from 'svelte/reactivity';
+/* eslint-disable svelte/prefer-svelte-reactivity -- The Set is local validation scratch space. */
 
 import type { SelectionKey } from './selection.js';
 
@@ -30,7 +30,7 @@ export class CollectionStore<TItem extends CollectionItem> {
 
 	get items(): readonly TItem[] {
 		const items = this.#registrations.map(({ read }) => read()).sort(compareDomOrder);
-		const keys = new SvelteSet<SelectionKey>();
+		const keys = new Set<SelectionKey>();
 		for (const item of items) {
 			if (keys.has(item.key)) throw new Error(`Duplicate collection key "${String(item.key)}".`);
 			keys.add(item.key);

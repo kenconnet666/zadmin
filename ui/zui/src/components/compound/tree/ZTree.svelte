@@ -105,8 +105,8 @@
 </script>
 
 <script lang="ts">
+	/* eslint-disable svelte/prefer-svelte-reactivity -- Sets are immutable derived snapshots. */
 	import { untrack } from 'svelte';
-	import { SvelteSet } from 'svelte/reactivity';
 	import { ControllableState } from '../../../runtime/foundation/controllable-state.svelte.js';
 	import { listenForFormReset } from '../../../runtime/form/form-control.svelte.js';
 	import { serializeFormValue } from '../../../runtime/form/form-value.js';
@@ -206,8 +206,8 @@
 		read: () => selectedKeys,
 		write: (next) => (selectedKeys = next)
 	});
-	const expanded = $derived(new SvelteSet(expandedState.current));
-	const selected = $derived(new SvelteSet(selectedState.current));
+	const expanded = $derived(new Set(expandedState.current));
+	const selected = $derived(new Set(selectedState.current));
 	const visible = $derived(index.flatten(expanded));
 	const enabled = $derived(
 		visible
@@ -238,7 +238,7 @@
 	}
 	function toggleExpanded(key: SelectionKey): void {
 		if (disabled) return;
-		const next = new SvelteSet(expanded);
+		const next = new Set(expanded);
 		if (next.has(key)) next.delete(key);
 		else next.add(key);
 		expandedState.setFromUser(Object.freeze([...next]));
