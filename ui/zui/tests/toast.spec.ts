@@ -29,4 +29,16 @@ describe('ToastQueue', () => {
 		disconnect();
 		queue.dispose();
 	});
+
+	it('keeps server timers inert while pause and resume remain idempotent', () => {
+		const queue = createToastQueue();
+		const id = queue.push({ duration: 25, priority: 'assertive', title: 'Server timer' });
+		queue.pause('missing', 'hover');
+		queue.resume('missing', 'hover');
+		queue.pause(id, 'focus');
+		queue.pause(id, 'hover');
+		queue.resume(id, 'focus');
+		expect(queue.items[0]).toMatchObject({ id, priority: 'assertive', tone: 'info' });
+		queue.dispose();
+	});
 });

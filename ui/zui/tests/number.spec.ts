@@ -25,5 +25,7 @@ describe('localized number algorithms', () => {
 		expect(clampNumber(11, 0, 10)).toBe(10);
 		expect(clampNumber(5)).toBe(5);
 		expect(stepNumber(1e-7, 1, 1e-7)).toBe(2e-7);
+		expect(stepNumber(-1.25, 1, 1)).toBe(-0.25);
+		expect(stepNumber(-1e-7, -1, 1e-7)).toBe(-2e-7);
 	});
 });

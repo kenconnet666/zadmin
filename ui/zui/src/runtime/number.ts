@@ -44,7 +44,7 @@ export function clampNumber(value: number, min?: number, max?: number): number {
 
 function decimalPlaces(value: number): number {
 	const [, fraction = '', exponent = '0'] =
-		String(value).match(/^(?:\d+)(?:\.(\d+))?(?:e([+-]?\d+))?$/iu) ?? [];
+		String(value).match(/^[+-]?(?:\d+)(?:\.(\d+))?(?:e([+-]?\d+))?$/iu) ?? [];
 	return Math.max(0, fraction.length - Number(exponent));
 }
 

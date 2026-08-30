@@ -85,6 +85,9 @@ describe('ZUI layer runtime', () => {
 		const second = stack.register({ element: () => branch, id: 'second', modal: () => true });
 		expect(stack.topmostId).toBe('second');
 		expect(stack.isPointerBlocked('first')).toBe(true);
+		expect(stack.isPointerBlocked('missing')).toBe(true);
+		expect(stack.contains('missing', root)).toBe(false);
+		expect(() => stack.registerBranch('missing', branch)).toThrow(/Unknown layer/u);
 		expect(() => stack.register({ element: () => root, id: 'first' })).toThrow(/Duplicate/u);
 		second.destroy();
 		expect(stack.isPointerBlocked('first')).toBe(false);
@@ -92,6 +95,34 @@ describe('ZUI layer runtime', () => {
 		first.destroy();
 		first.destroy();
 		expect(stack.layers).toEqual([]);
+	});
+
+	it('keeps only the top nested FocusScope active and tolerates repeated cleanup', async () => {
+		const outside = document.createElement('button');
+		const outer = document.createElement('div');
+		const outerButton = document.createElement('button');
+		const inner = document.createElement('div');
+		const innerButton = document.createElement('button');
+		inner.append(innerButton);
+		outer.append(outerButton, inner);
+		document.body.append(outside, outer);
+		outside.focus();
+		const outerScope = new FocusScope(outer, { trap: true });
+		await Promise.resolve();
+		const innerScope = new FocusScope(inner, { initialFocus: () => innerButton, trap: true });
+		await Promise.resolve();
+		expect(document.activeElement).toBe(innerButton);
+		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+		outerButton.focus();
+		expect(document.activeElement).toBe(innerButton);
+		innerScope.destroy();
+		innerScope.destroy();
+		expect(document.activeElement).toBe(outerButton);
+		outerScope.destroy();
+		outerScope.destroy();
+		expect(document.activeElement).toBe(outside);
+		outside.remove();
+		outer.remove();
 	});
 
 	it('dismisses only the top layer for outside pointer, focus and Escape', () => {

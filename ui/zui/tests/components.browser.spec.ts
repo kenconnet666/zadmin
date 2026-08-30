@@ -94,7 +94,94 @@ describe('compiled ICSS browser updates', () => {
 		document.body.append(target);
 		const fixture = mount(DocsExamplesFixture, { target });
 		await tick();
-		expect(target.querySelectorAll('[data-docs-example]').length).toBeGreaterThanOrEqual(90);
+		expect(target.querySelectorAll('[data-docs-example]').length).toBeGreaterThanOrEqual(105);
+		const example = (suffix: string) =>
+			target.querySelector<HTMLElement>(`[data-docs-example$="${suffix}"]`)!;
+		const dismissTop = async () => {
+			document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+			await new Promise((resolve) => setTimeout(resolve, 140));
+			await tick();
+		};
+
+		example('/input/color-picker/StatesDemo.svelte')
+			.querySelector<HTMLButtonElement>('button')
+			?.click();
+		await tick();
+		await dismissTop();
+
+		example('/input/select/StatesDemo.svelte').querySelector<HTMLButtonElement>('button')?.click();
+		await tick();
+		[...document.querySelectorAll<HTMLElement>('[role="option"]')]
+			.find((option) => option.textContent?.includes('维护中'))
+			?.click();
+		await dismissTop();
+
+		example('/input/multi-select/StatesDemo.svelte')
+			.querySelector<HTMLButtonElement>('button')
+			?.click();
+		await tick();
+		document.querySelector<HTMLElement>('[role="option"]')?.click();
+		await dismissTop();
+
+		for (const suffix of [
+			'/input/date-picker/ConstraintsDemo.svelte',
+			'/input/date-range-picker/StatesDemo.svelte',
+			'/input/tree-select/StatesDemo.svelte',
+			'/input/cascader/StatesDemo.svelte'
+		]) {
+			example(suffix).querySelector<HTMLButtonElement>('button:not(:disabled)')?.click();
+			await tick();
+			await dismissTop();
+		}
+
+		example('/input/number-field/StatesDemo.svelte')
+			.querySelector<HTMLButtonElement>('button:not(:disabled)')
+			?.click();
+		example('/input/segmented/VerticalDemo.svelte')
+			.querySelectorAll<HTMLButtonElement>('button')[1]
+			?.click();
+		const slider = example('/input/slider/StatesDemo.svelte').querySelector<HTMLInputElement>(
+			'input[type="range"]'
+		);
+		if (slider) {
+			slider.value = '500';
+			slider.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		}
+		await tick();
+
+		const accordion = example('/navigation/accordion/MultipleDemo.svelte');
+		accordion.querySelectorAll<HTMLButtonElement>('button')[0]?.click();
+		accordion
+			.querySelectorAll<HTMLButtonElement>('button')[2]
+			?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Home' }));
+		const commandInput = example('/navigation/command/FilterDemo.svelte').querySelector(
+			'input'
+		) as HTMLInputElement | null;
+		if (commandInput) {
+			commandInput.value = '构';
+			commandInput.dispatchEvent(new InputEvent('input', { bubbles: true }));
+			commandInput.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'End' }));
+		}
+		const manualTabs = example('/navigation/tabs/ManualDemo.svelte');
+		const manualFirst = manualTabs.querySelector<HTMLButtonElement>('[role="tab"]');
+		manualFirst?.focus();
+		manualFirst?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
+		(document.activeElement as HTMLElement | null)?.dispatchEvent(
+			new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' })
+		);
+
+		example('/navigation/dropdown-menu/StatesDemo.svelte')
+			.querySelector<HTMLButtonElement>('button')
+			?.click();
+		await tick();
+		document.querySelector<HTMLElement>('[role="menuitem"]')?.click();
+		await dismissTop();
+
+		example('/overlay/popover/FocusDemo.svelte')
+			.querySelector<HTMLButtonElement>('button')
+			?.click();
+		await tick();
+		await dismissTop();
 		await unmount(fixture);
 		target.remove();
 	});
@@ -213,6 +300,14 @@ describe('compiled ICSS browser updates', () => {
 		expect(
 			document.querySelector('[data-testid="coverage-skeleton-circle"]')?.getAnimations()
 		).toHaveLength(0);
+		const avatar = document.querySelector<HTMLElement>('[data-testid="coverage-avatar-image"]');
+		const avatarImage = avatar?.querySelector('img');
+		avatarImage?.dispatchEvent(new Event('load'));
+		await tick();
+		expect(avatarImage?.hidden).toBe(false);
+		avatarImage?.dispatchEvent(new Event('error'));
+		await tick();
+		expect(avatar?.textContent).toContain('IL');
 	});
 	it('coordinates Tour target spotlight, floating steps, completion and focus restoration', async () => {
 		render(TourFixture);

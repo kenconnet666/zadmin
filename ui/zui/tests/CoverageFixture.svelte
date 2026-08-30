@@ -73,6 +73,7 @@
 </script>
 
 <ZList items={listItems} data-testid="coverage-list" />
+<ZList items={listItems} ordered data-testid="coverage-list-ordered" />
 <ZList items={listItems} data-testid="coverage-list-custom">
 	{#snippet item(entry)}<em>Custom {entry.label}</em>{/snippet}
 </ZList>
@@ -80,6 +81,12 @@
 <ZAvatar alt="Custom fallback" shape="square" size="small">
 	{#snippet fallback()}<span>CF</span>{/snippet}
 </ZAvatar>
+<ZAvatar
+	alt="Image lifecycle"
+	fallbackText="IL"
+	src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+	data-testid="coverage-avatar-image"
+/>
 
 <ZEmpty title="Nothing here" headingLevel={4} data-testid="coverage-empty">
 	{#snippet icon()}<span>icon</span>{/snippet}
@@ -127,6 +134,7 @@
 <ZTimeline items={timelineItems} data-testid="coverage-timeline">
 	{#snippet item(entry)}<em>{entry.title}</em>{/snippet}
 </ZTimeline>
+<ZTimeline items={timelineItems} data-testid="coverage-timeline-default" />
 
 <ZAlert title="Static notice" live="off" />
 <ZAlert
@@ -169,6 +177,8 @@
 	formatValue={(value) => `${value} units`}
 />
 <ZProgress label="Indeterminate line" />
+<ZProgress label="Determinate circle" value={15} max={20} view="circle" />
+<ZProgress label="Indeterminate circle" view="circle" />
 
 <ZStatistic label="Big integer" value={1234567890123456789n} trend={0}>
 	{#snippet prefix()}<span>≈</span>{/snippet}
