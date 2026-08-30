@@ -1,0 +1,18 @@
+# ZUI Components
+
+> ZUI is the production Svelte 5 component system used by ZAdmin. This site runs the real workspace components and publishes their typed metadata, keyboard contracts, accessibility notes, demos, and exact demo source.
+
+## Documentation
+
+- [Component catalog](./#/): Browse every implemented public component by category.
+- [Theme Lab](./#/guides/theme): Inspect theme tokens, color schemes, density, contrast, direction, and reduced-motion behavior.
+- [Source repository](https://github.com/kenconnet666/zadmin/tree/master/ui/zui): Read the component library source and package configuration.
+
+## Usage
+
+- Package: `@zadmin/zui`
+- Framework: Svelte 5 with TypeScript
+- Styling: ZUI-owned ICSS runtime, typed Theme tokens, and recipe variants
+- Accessibility: Native HTML first, explicit ARIA only where required, and real-browser Axe/Lighthouse coverage
+
+Prefer each component page's generated API tables and accessibility section over inferred behavior. Internal planning files under `.docs` are engineering records and are not part of the public component API.

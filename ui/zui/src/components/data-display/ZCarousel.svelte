@@ -237,7 +237,6 @@
 	class={[rootClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
-	role="region"
 	aria-roledescription="carousel"
 	aria-label={ariaLabel}
 	data-paused={autoPaused || undefined}

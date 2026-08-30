@@ -104,6 +104,8 @@
 	const maskRecipe = defineRecipe({
 		base: (s) => {
 			s.backgroundColor._overlay;
+			s.borderStyle.none;
+			s.padding.px(0);
 			s.position.fixed;
 		},
 		variants: {
@@ -396,30 +398,42 @@
 		use:portal={{ target: portalTarget }}
 		data-slot="layer"
 	>
-		<div
+		<button
+			type="button"
 			class={maskClass}
 			data-slot="mask"
+			aria-hidden="true"
+			tabindex="-1"
 			style={`inset: 0 0 auto 0; height: ${Math.max(0, rect.top - gap)}px;`}
 			onclick={maskClick}
-		></div>
-		<div
+		></button>
+		<button
+			type="button"
 			class={maskClass}
 			data-slot="mask"
+			aria-hidden="true"
+			tabindex="-1"
 			style={`inset: ${Math.min(innerHeight, rect.bottom + gap)}px 0 0 0;`}
 			onclick={maskClick}
-		></div>
-		<div
+		></button>
+		<button
+			type="button"
 			class={maskClass}
 			data-slot="mask"
+			aria-hidden="true"
+			tabindex="-1"
 			style={`left: 0; top: ${Math.max(0, rect.top - gap)}px; width: ${Math.max(0, rect.left - gap)}px; height: ${rect.height + gap * 2}px;`}
 			onclick={maskClick}
-		></div>
-		<div
+		></button>
+		<button
+			type="button"
 			class={maskClass}
 			data-slot="mask"
+			aria-hidden="true"
+			tabindex="-1"
 			style={`right: 0; top: ${Math.max(0, rect.top - gap)}px; width: ${Math.max(0, innerWidth - rect.right - gap)}px; height: ${rect.height + gap * 2}px;`}
 			onclick={maskClick}
-		></div>
+		></button>
 		<div
 			class={spotlightClass}
 			data-slot="spotlight"

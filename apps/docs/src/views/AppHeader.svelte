@@ -234,7 +234,7 @@
 </script>
 
 <header class={classes.root}>
-	<a class={classes.brand} href="#/" aria-label="Z ZUI COMPONENTS 组件展示站首页">
+	<a class={classes.brand} href="#/">
 		<span class={classes.mark}>Z</span>
 		<span class={classes.brandText}
 			><strong>ZUI</strong><small class={classes.brandSmall}>Components</small></span

@@ -96,7 +96,9 @@ describe('compiled ICSS browser updates', () => {
 		render(CarouselFixture);
 		const carousel = document.querySelector<HTMLElement>('[data-testid="carousel"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="carousel-output"]');
-		expect(carousel?.querySelectorAll('[role="group"]:not([hidden])')).toHaveLength(1);
+		expect(
+			carousel?.querySelectorAll('[data-slot="slide"][role="group"]:not([hidden])')
+		).toHaveLength(1);
 		carousel?.querySelector<HTMLButtonElement>('[aria-label="Next slide"]')?.click();
 		await tick();
 		expect(output?.textContent).toBe('two:1');
