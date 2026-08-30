@@ -1,3 +1,9 @@
+import { avatarDoc } from '../content/components/data-display/avatar/doc.js';
+import { badgeDoc } from '../content/components/data-display/badge/doc.js';
+import { cardDoc } from '../content/components/data-display/card/doc.js';
+import { descriptionListDoc } from '../content/components/data-display/description-list/doc.js';
+import { listDoc } from '../content/components/data-display/list/doc.js';
+import { tagDoc } from '../content/components/data-display/tag/doc.js';
 import { boxDoc } from '../content/components/gene/box/doc.js';
 import { buttonDoc } from '../content/components/gene/button/doc.js';
 import { codeDoc } from '../content/components/gene/code/doc.js';
@@ -61,7 +67,10 @@ export const componentCategories = Object.freeze([
 	{ id: 'layout', label: '布局组件' },
 	{ id: 'input', label: '输入组件' },
 	{ id: 'navigation', label: '导航组件' },
-	{ id: 'overlay', label: '浮层组件' }
+	{ id: 'overlay', label: '浮层组件' },
+	{ id: 'data-display', label: '展示组件' },
+	{ id: 'feedback', label: '反馈组件' },
+	{ id: 'utility', label: '工具组件' }
 ] satisfies readonly { readonly id: ComponentCategory; readonly label: string }[]);
 
 export const componentDocs = Object.freeze([
@@ -79,6 +88,12 @@ export const componentDocs = Object.freeze([
 	kbdDoc,
 	aspectRatioDoc,
 	containerDoc,
+	avatarDoc,
+	badgeDoc,
+	cardDoc,
+	descriptionListDoc,
+	listDoc,
+	tagDoc,
 	checkboxDoc,
 	calendarDoc,
 	cascaderDoc,

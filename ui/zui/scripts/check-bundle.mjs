@@ -10,6 +10,16 @@ const sourceRoot = resolve(packageRoot, 'src');
 const portable = (path) => path.replaceAll('\\', '/');
 const runtime = portable(resolve(sourceRoot, 'entrypoints/runtime.ts'));
 const components = [
+	{ id: 'avatar', name: 'ZAvatar', path: 'data-display/ZAvatar.svelte' },
+	{ id: 'badge', name: 'ZBadge', path: 'data-display/ZBadge.svelte' },
+	{ id: 'card', name: 'ZCard', path: 'data-display/ZCard.svelte' },
+	{
+		id: 'description-list',
+		name: 'ZDescriptionList',
+		path: 'data-display/ZDescriptionList.svelte'
+	},
+	{ id: 'list', name: 'ZList', path: 'data-display/ZList.svelte' },
+	{ id: 'tag', name: 'ZTag', path: 'data-display/ZTag.svelte' },
 	{ id: 'accordion', name: 'ZAccordion', path: 'compound/accordion/ZAccordion.svelte' },
 	{
 		id: 'accordion-item',

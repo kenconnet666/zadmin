@@ -50,6 +50,7 @@ import NumberFieldFixture from './NumberFieldFixture.svelte';
 import PinInputFixture from './PinInputFixture.svelte';
 import DialogFixture from './DialogFixture.svelte';
 import DateFixture from './DateFixture.svelte';
+import DisplayFixture from './DisplayFixture.svelte';
 import DrawerFixture from './DrawerFixture.svelte';
 import DropdownMenuFixture from './DropdownMenuFixture.svelte';
 import PopoverFixture from './PopoverFixture.svelte';
@@ -476,6 +477,25 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain('name="picked"');
 		expect(result).toContain('name="range.start"');
 		expect(result).not.toContain('Picker calendar');
+	});
+
+	it('renders data-display components with native document semantics during SSR', () => {
+		const result = render(DisplayFixture).body;
+
+		expect(result).toContain('role="img"');
+		expect(result).toContain('aria-label="Alice"');
+		expect(result).toContain('<img');
+		expect(result).toContain('alt="Broken image"');
+		expect(result).toContain('data-testid="badge"');
+		expect(result).toContain('aria-label="Remove production"');
+		expect(result).toContain('<article');
+		expect(result).toContain('<header');
+		expect(result).toContain('<footer');
+		expect(result).toContain('<ol');
+		expect(result.match(/<li/gu)).toHaveLength(2);
+		expect(result).toContain('<dl');
+		expect(result.match(/<dt/gu)).toHaveLength(2);
+		expect(result.match(/<dd/gu)).toHaveLength(2);
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

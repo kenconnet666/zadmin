@@ -78,6 +78,12 @@ export { zuiMetadata as separatorMetadata } from '../components/gene/ZSeparator.
 export { zuiMetadata as textMetadata } from '../components/gene/ZText.svelte';
 export { zuiMetadata as toggleButtonMetadata } from '../components/gene/ZToggleButton.svelte';
 export { zuiMetadata as visuallyHiddenMetadata } from '../components/gene/ZVisuallyHidden.svelte';
+export { zuiMetadata as avatarMetadata } from '../components/data-display/ZAvatar.svelte';
+export { zuiMetadata as badgeMetadata } from '../components/data-display/ZBadge.svelte';
+export { zuiMetadata as cardMetadata } from '../components/data-display/ZCard.svelte';
+export { zuiMetadata as descriptionListMetadata } from '../components/data-display/ZDescriptionList.svelte';
+export { zuiMetadata as listMetadata } from '../components/data-display/ZList.svelte';
+export { zuiMetadata as tagMetadata } from '../components/data-display/ZTag.svelte';
 export { zuiMetadata as checkboxMetadata } from '../components/input/ZCheckbox.svelte';
 export { zuiMetadata as cascaderMetadata } from '../components/input/ZCascader.svelte';
 export { zuiMetadata as calendarMetadata } from '../components/input/ZCalendar.svelte';

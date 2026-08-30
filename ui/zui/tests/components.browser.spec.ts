@@ -19,6 +19,7 @@ import FormFixture from './FormFixture.svelte';
 import InputGroupFixture from './InputGroupFixture.svelte';
 import DialogFixture from './DialogFixture.svelte';
 import DateFixture from './DateFixture.svelte';
+import DisplayFixture from './DisplayFixture.svelte';
 import DrawerFixture from './DrawerFixture.svelte';
 import DropdownMenuFixture from './DropdownMenuFixture.svelte';
 import MenuFixture from './MenuFixture.svelte';
@@ -64,6 +65,33 @@ function insertedRuleCount(): number {
 }
 
 describe('compiled ICSS browser updates', () => {
+	it('keeps data-display image fallback, document semantics and removal ownership synchronized', async () => {
+		render(DisplayFixture);
+		const imageAvatar = document.querySelector<HTMLElement>('[data-testid="avatar-image"]');
+		const image = imageAvatar?.querySelector<HTMLImageElement>('img');
+
+		expect(
+			document.querySelector('[data-testid="avatar-fallback"] [role="img"]')?.textContent
+		).toBe('A');
+		expect(image?.alt).toBe('Broken image');
+		image?.dispatchEvent(new Event('error'));
+		await tick();
+		expect(imageAvatar?.dataset.fallback).toBe('true');
+		expect(imageAvatar?.querySelector('[role="img"]')?.getAttribute('aria-label')).toBe(
+			'Broken image'
+		);
+		expect(document.querySelector('[data-testid="ordered-list"]')?.tagName).toBe('OL');
+		expect(document.querySelectorAll('[data-testid="ordered-list"] > li')).toHaveLength(2);
+		expect(document.querySelector('[data-testid="description-list"]')?.tagName).toBe('DL');
+		expect(document.querySelectorAll('[data-testid="description-list"] dt')).toHaveLength(2);
+		expect(document.querySelector('article > header h2')?.textContent).toBe('Production release');
+
+		document.querySelector<HTMLButtonElement>('[aria-label="Remove production"]')?.click();
+		await tick();
+		expect(document.querySelector('[data-testid="tag"]')).toBeNull();
+		expect(document.querySelector('[data-testid="tag-output"]')?.textContent).toBe('removed');
+	});
+
 	it('coordinates Menu roving focus, disabled skipping, typeahead and cancellable action', async () => {
 		render(MenuFixture);
 		await tick();

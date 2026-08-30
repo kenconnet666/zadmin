@@ -16,8 +16,11 @@ import {
 	ZAlertDialogOverlay,
 	ZAlertDialogTitle,
 	ZAlertDialogTrigger,
+	ZAvatar,
+	ZBadge,
 	ZBox,
 	ZButton,
+	ZCard,
 	ZCascader,
 	ZCalendar,
 	ZCheckbox,
@@ -41,6 +44,7 @@ import {
 	ZDialogOverlay,
 	ZDialogTitle,
 	ZDialogTrigger,
+	ZDescriptionList,
 	ZDropdownMenu,
 	ZDropdownMenuContent,
 	ZDropdownMenuTrigger,
@@ -55,6 +59,7 @@ import {
 	ZForm,
 	ZFormField,
 	ZInputGroup,
+	ZList,
 	ZMenu,
 	ZMenuGroup,
 	ZMenuItem,
@@ -92,6 +97,7 @@ import {
 	ZTabsPanel,
 	ZTabsTrigger,
 	ZTagsInput,
+	ZTag,
 	ZTextarea,
 	ZTimeField,
 	ZTooltip,
@@ -117,8 +123,11 @@ import {
 	type ZAlertDialogProps,
 	type ZAlertDialogTitleProps,
 	type ZAlertDialogTriggerProps,
+	type ZAvatarProps,
+	type ZBadgeProps,
 	type ZBoxProps,
 	type ZButtonProps,
+	type ZCardProps,
 	type ZCascaderProps,
 	type ZCalendarProps,
 	type ZCheckboxProps,
@@ -142,6 +151,7 @@ import {
 	type ZDialogProps,
 	type ZDialogTitleProps,
 	type ZDialogTriggerProps,
+	type ZDescriptionListProps,
 	type ZDropdownMenuContentProps,
 	type ZDropdownMenuProps,
 	type ZDropdownMenuTriggerProps,
@@ -156,6 +166,7 @@ import {
 	type ZFormFieldProps,
 	type ZFormProps,
 	type ZInputGroupProps,
+	type ZListProps,
 	type ZMenuGroupProps,
 	type ZMenuItemProps,
 	type ZMenuLabelProps,
@@ -193,6 +204,7 @@ import {
 	type ZTabsProps,
 	type ZTabsTriggerProps,
 	type ZTagsInputProps,
+	type ZTagProps,
 	type ZTextareaProps,
 	type ZTimeFieldProps,
 	type ZTooltipContentProps,
@@ -205,6 +217,16 @@ import {
 } from '../src/entrypoints/index.js';
 
 const boxProps: ZBoxProps = { 'aria-label': 'Box' };
+const avatarProps: ComponentProps<typeof ZAvatar> = { alt: 'Alice' } satisfies ZAvatarProps;
+const badgeProps: ComponentProps<typeof ZBadge> = { tone: 'success' } satisfies ZBadgeProps;
+const cardProps: ComponentProps<typeof ZCard> = {} satisfies ZCardProps;
+const descriptionListProps: ComponentProps<typeof ZDescriptionList> = {
+	items: [{ description: '1', id: 'version', term: 'Version' }]
+} satisfies ZDescriptionListProps;
+const listProps: ComponentProps<typeof ZList> = {
+	items: [{ id: 'one', label: 'One' }]
+} satisfies ZListProps;
+const tagProps: ComponentProps<typeof ZTag> = { removable: true } satisfies ZTagProps;
 const accordionProps: ComponentProps<typeof ZAccordion> = {
 	defaultValue: ['one'],
 	type: 'multiple'
@@ -461,6 +483,12 @@ const toggleButtonProps: ComponentProps<typeof ZToggleButton> = {
 } satisfies ZToggleButtonProps;
 void DirectZBox;
 void accordionProps;
+void avatarProps;
+void badgeProps;
+void cardProps;
+void descriptionListProps;
+void listProps;
+void tagProps;
 void accordionItemProps;
 void accordionTriggerProps;
 void accordionContentProps;

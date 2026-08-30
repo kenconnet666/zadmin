@@ -18,7 +18,8 @@ test('renders the component catalog and real demo source', async ({ page }) => {
 		'布局组件',
 		'输入组件',
 		'导航组件',
-		'浮层组件'
+		'浮层组件',
+		'展示组件'
 	]);
 
 	await page.goto('/#/components/button');
@@ -233,6 +234,32 @@ test('keeps DateRangePicker two-step normalized selection and dual form fields s
 				])
 		)
 		.toEqual(['2026-08-22', '2026-08-25']);
+});
+
+test('keeps data-display document semantics, image alternatives and Tag ownership explicit', async ({
+	page
+}) => {
+	await page.goto('/#/components/avatar');
+	await expect(page.getByRole('img', { name: '林墨' })).toHaveText('林');
+	await expect(page.getByRole('img', { name: '部署机器人' })).toHaveText('机');
+
+	await page.goto('/#/components/card');
+	const card = page.locator('main article:has(> [data-slot="body"])');
+	await expect(card).toHaveCount(1);
+	await expect(card.locator(':scope > header')).toContainText('生产部署');
+	await expect(card.locator(':scope > footer')).toContainText('更新于刚刚');
+
+	await page.goto('/#/components/list');
+	await expect(page.locator('main ol > li')).toHaveCount(2);
+
+	await page.goto('/#/components/description-list');
+	await expect(page.locator('main dl dt')).toHaveText(['版本', '区域']);
+	await expect(page.locator('main dl dd')).toHaveText(['v2.4.0', 'cn-east-1']);
+
+	await page.goto('/#/components/tag');
+	await page.getByRole('button', { name: '移除 production' }).click();
+	await expect(page.getByText('visible = false')).toBeVisible();
+	await expect(page.getByRole('button', { name: '移除 production' })).toHaveCount(0);
 });
 
 test('keeps PinInput roving entry, completion, single FormData value and reset synchronized', async ({
@@ -898,6 +925,12 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/kbd',
 		'#/components/aspect-ratio',
 		'#/components/container',
+		'#/components/avatar',
+		'#/components/badge',
+		'#/components/card',
+		'#/components/description-list',
+		'#/components/list',
+		'#/components/tag',
 		'#/components/checkbox',
 		'#/components/calendar',
 		'#/components/color-picker',

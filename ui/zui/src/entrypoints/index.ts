@@ -181,6 +181,25 @@ export { default as ZToggleButton } from '../components/gene/ZToggleButton.svelt
 export type { ZToggleButtonProps } from '../components/gene/ZToggleButton.svelte';
 export { default as ZVisuallyHidden } from '../components/gene/ZVisuallyHidden.svelte';
 export type { ZVisuallyHiddenProps } from '../components/gene/ZVisuallyHidden.svelte';
+export { default as ZAvatar } from '../components/data-display/ZAvatar.svelte';
+export type {
+	AvatarShape,
+	AvatarSize,
+	ZAvatarProps
+} from '../components/data-display/ZAvatar.svelte';
+export { default as ZBadge } from '../components/data-display/ZBadge.svelte';
+export type { BadgeTone, ZBadgeProps } from '../components/data-display/ZBadge.svelte';
+export { default as ZCard } from '../components/data-display/ZCard.svelte';
+export type { ZCardProps } from '../components/data-display/ZCard.svelte';
+export { default as ZDescriptionList } from '../components/data-display/ZDescriptionList.svelte';
+export type {
+	DescriptionItem,
+	ZDescriptionListProps
+} from '../components/data-display/ZDescriptionList.svelte';
+export { default as ZList } from '../components/data-display/ZList.svelte';
+export type { ListItem, ZListProps } from '../components/data-display/ZList.svelte';
+export { default as ZTag } from '../components/data-display/ZTag.svelte';
+export type { ZTagProps } from '../components/data-display/ZTag.svelte';
 export { default as ZField } from '../components/input/ZField.svelte';
 export type { ZFieldProps, ZFieldSize } from '../components/input/ZField.svelte';
 export { default as ZFileUpload } from '../components/input/ZFileUpload.svelte';
