@@ -28,7 +28,7 @@ export default defineConfig({
 	plugins: [svelte()],
 	test: {
 		coverage: {
-			exclude: ['dist/**', 'tests/**'],
+			exclude: ['dist/**', 'tests/**', 'src/entrypoints/**'],
 			provider: 'v8',
 			reporter: ['text', 'json-summary'],
 			thresholds: {

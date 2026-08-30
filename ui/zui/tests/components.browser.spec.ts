@@ -6,6 +6,7 @@ import DynamicBox from './DynamicBox.svelte';
 import ComponentGallery from './ComponentGallery.svelte';
 import ComboboxFixture from './ComboboxFixture.svelte';
 import CommandFixture from './CommandFixture.svelte';
+import CoverageFixture from './CoverageFixture.svelte';
 import CommandPaletteFixture from './CommandPaletteFixture.svelte';
 import CascaderFixture from './CascaderFixture.svelte';
 import CarouselFixture from './CarouselFixture.svelte';
@@ -54,6 +55,7 @@ import { defaultTheme } from '../src/theme/default.js';
 import { extendTheme } from '../src/theme/define.js';
 import { ZCode } from '../src/entrypoints/code.js';
 import {
+	createToastQueue,
 	ZAspectRatio,
 	ZContainer,
 	ZKbd,
@@ -70,6 +72,71 @@ function insertedRuleCount(): number {
 }
 
 describe('compiled ICSS browser updates', () => {
+	it('pauses, resumes, times out and disposes explicit ToastQueue timers', async () => {
+		const dismissed: string[] = [];
+		const queue = createToastQueue();
+		const id = queue.push({
+			duration: 40,
+			onDismiss: (_id, reason) => dismissed.push(reason),
+			title: 'Timed'
+		});
+		queue.pause(id, 'hover');
+		queue.pause(id, 'hover');
+		queue.resume(id, 'focus');
+		await new Promise((resolve) => setTimeout(resolve, 60));
+		expect(queue.items).toHaveLength(1);
+		queue.resume(id, 'hover');
+		await new Promise((resolve) => setTimeout(resolve, 60));
+		expect(queue.items).toHaveLength(0);
+		expect(dismissed).toEqual(['timeout']);
+		const persistent = queue.push({ duration: null, title: 'Persistent' });
+		queue.pause(persistent, 'hover');
+		queue.resume(persistent, 'hover');
+		const disconnect = queue.connectVisibility();
+		disconnect();
+		queue.dispose();
+	});
+
+	it('covers optional display, feedback and reduced non-looping Carousel behavior', async () => {
+		render(CoverageFixture);
+		const carousel = document.querySelector<HTMLElement>('[data-testid="coverage-carousel"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="coverage-output"]');
+		const reducedCarousel = document.querySelector<HTMLElement>(
+			'[data-testid="coverage-carousel-reduced"]'
+		);
+		expect(reducedCarousel?.dataset.reducedMotion).toBe('true');
+		expect(
+			reducedCarousel?.querySelector<HTMLButtonElement>(
+				'[aria-label="Automatic rotation disabled by motion preference"]'
+			)?.disabled
+		).toBe(true);
+		expect(carousel?.querySelector<HTMLButtonElement>('[aria-label="Next slide"]')?.disabled).toBe(
+			true
+		);
+		carousel?.querySelector<HTMLButtonElement>('[aria-label="Previous slide"]')?.click();
+		await tick();
+		expect(output?.textContent).toContain('a:1');
+		expect(
+			carousel?.querySelector<HTMLButtonElement>('[aria-label="Previous slide"]')?.disabled
+		).toBe(true);
+		carousel?.querySelector<HTMLButtonElement>('[aria-label="Pause automatic rotation"]')?.click();
+		await tick();
+		expect(carousel?.querySelector('[aria-label="Start automatic rotation"]')).not.toBeNull();
+		document
+			.querySelector<HTMLButtonElement>('[data-testid="coverage-alert"] [aria-label]')
+			?.click();
+		document
+			.querySelector<HTMLButtonElement>('[data-testid="coverage-toast-action"] button')
+			?.click();
+		await tick();
+		expect(output?.textContent).toBe('a:1:1:1');
+		expect(
+			document.querySelector('[data-testid="coverage-toast-danger"]')?.getAttribute('role')
+		).toBe('alert');
+		expect(
+			document.querySelector('[data-testid="coverage-skeleton-circle"]')?.getAnimations()
+		).toHaveLength(0);
+	});
 	it('coordinates Tour target spotlight, floating steps, completion and focus restoration', async () => {
 		render(TourFixture);
 		const start = document.querySelector<HTMLButtonElement>('#tour-start');
@@ -91,6 +158,35 @@ describe('compiled ICSS browser updates', () => {
 		expect(document.querySelector('[role="dialog"]')).toBeNull();
 		expect(document.activeElement).toBe(start);
 		expect(document.querySelector('[data-testid="tour-output"]')?.textContent).toBe('false:1:1');
+
+		start?.click();
+		await tick();
+		document.querySelector<HTMLButtonElement>('[data-slot="mask"]')?.click();
+		await tick();
+		expect(document.querySelector('[role="dialog"]')).toBeNull();
+		expect(document.activeElement).toBe(start);
+
+		document.querySelector<HTMLButtonElement>('#tour-missing-start')?.click();
+		await tick();
+		await Promise.resolve();
+		expect(document.querySelector('[data-testid="tour-missing-output"]')?.textContent).toBe(
+			'false:1'
+		);
+
+		const persistent = document.querySelector<HTMLButtonElement>('#tour-persistent-start');
+		persistent?.focus();
+		persistent?.click();
+		await tick();
+		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+		await tick();
+		expect(document.querySelector('[role="dialog"]')).not.toBeNull();
+		document.querySelector<HTMLButtonElement>('[data-slot="mask"]')?.click();
+		await tick();
+		expect(document.querySelector('[role="dialog"]')).not.toBeNull();
+		document.querySelector<HTMLButtonElement>('[aria-label="Close persistent tour"]')?.click();
+		await tick();
+		expect(document.querySelector('[role="dialog"]')).toBeNull();
+		expect(document.activeElement).toBe(persistent);
 	});
 	it('keeps Carousel slides, controls and stable value synchronized', async () => {
 		render(CarouselFixture);

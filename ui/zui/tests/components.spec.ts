@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import {
 	createIcssRuntime,
 	createServerStyleRegistry,
+	createToastQueue,
 	defaultTheme,
 	extendTheme,
 	ZAspectRatio,
@@ -11,18 +12,28 @@ import {
 	ZButton,
 	ZContainer,
 	ZCheckbox,
+	ZCarousel,
+	ZDataTable,
 	ZField,
 	ZIcon,
 	ZInput,
 	ZKbd,
 	ZLink,
+	ZList,
+	ZLoadingBar,
 	ZPagination,
+	ZProgress,
 	ZSeparator,
 	ZSlider,
+	ZSkeleton,
 	ZStack,
 	ZSwitch,
+	ZStatistic,
 	ZText,
 	ZToggleButton,
+	ZTimeline,
+	ZToaster,
+	ZVirtualList,
 	ZVisuallyHidden
 } from '../src/entrypoints/index.js';
 import { ZCode } from '../src/entrypoints/code.js';
@@ -34,6 +45,7 @@ import ContextProbe from './ContextProbe.svelte';
 import ContextMenuFixture from './ContextMenuFixture.svelte';
 import ComboboxFixture from './ComboboxFixture.svelte';
 import CommandFixture from './CommandFixture.svelte';
+import CoverageFixture from './CoverageFixture.svelte';
 import CommandPaletteFixture from './CommandPaletteFixture.svelte';
 import CascaderFixture from './CascaderFixture.svelte';
 import CarouselFixture from './CarouselFixture.svelte';
@@ -526,6 +538,83 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain('No releases');
 		expect(result).toContain('<time');
 		expect(result).toContain('<data value="128430"');
+	});
+
+	it('renders optional snippets, static/urgent feedback and non-looping reduced Carousel branches', () => {
+		const result = render(CoverageFixture).body;
+		expect(result).toContain('<ul');
+		expect(result).toContain('Custom One');
+		expect(result).toContain('<h4');
+		expect(result).toContain('Recover');
+		expect(result).toContain('data-reduced-motion="true"');
+		expect(result).toContain('Automatic rotation disabled by motion preference');
+		expect(result).toContain('<em>Queued</em>');
+		expect(result).toContain('role="alert"');
+		expect(result).toContain('Danger details');
+		expect(result).toContain('<h3');
+		expect(result).toContain('role="alert"');
+		expect(result).toContain('20 units');
+	});
+
+	it('rejects invalid optional component contracts at the rendering boundary', () => {
+		expect(() =>
+			render(ZList, {
+				props: {
+					items: [
+						{ id: 'same', label: 'One' },
+						{ id: 'same', label: 'Two' }
+					]
+				}
+			})
+		).toThrow(/Duplicate ZList/u);
+		expect(() => render(ZSkeleton, { props: { width: -1 } })).toThrow(/dimensions/u);
+		expect(() => render(ZSkeleton, { props: { width: '10px;color:red' } })).toThrow(/CSS values/u);
+		expect(() => render(ZProgress, { props: { value: Number.NaN } })).toThrow(/finite/u);
+		expect(() => render(ZLoadingBar, { props: { value: Number.POSITIVE_INFINITY } })).toThrow(
+			/finite/u
+		);
+		expect(() =>
+			render(ZStatistic, { props: { label: 'Trend', trend: Infinity, value: 1 } })
+		).toThrow(/trend must be finite/u);
+		expect(() =>
+			render(ZTimeline, {
+				props: {
+					items: [
+						{ id: 'same', title: 'One' },
+						{ id: 'same', title: 'Two' }
+					]
+				}
+			})
+		).toThrow(/Duplicate ZTimeline/u);
+		expect(() =>
+			render(ZCarousel, {
+				props: {
+					ariaLabel: 'Empty',
+					item: (() => {}) as never,
+					itemKey: () => 'none',
+					itemLabel: () => 'None',
+					items: []
+				}
+			})
+		).toThrow(/requires at least one item/u);
+		expect(() => render(ZToaster, { props: { maxVisible: 0, queue: createToastQueue() } })).toThrow(
+			/positive integer/u
+		);
+		expect(() =>
+			render(ZVirtualList, {
+				props: {
+					ariaLabel: 'Duplicates',
+					item: (() => {}) as never,
+					itemKey: () => 'same',
+					items: [{}, {}]
+				}
+			})
+		).toThrow(/Duplicate ZVirtualList/u);
+		expect(() =>
+			render(ZDataTable, {
+				props: { caption: 'Invalid', columns: [], rowKey: () => 'one', rows: [{}] }
+			})
+		).toThrow(/at least one column/u);
 	});
 
 	it('renders native Table and only the initial VirtualList window during SSR', () => {

@@ -7,6 +7,10 @@ describe('data table sorting', () => {
 		expect(compareDataValues(2, 10)).toBeLessThan(0);
 		expect(compareDataValues(new Date('2026-01-01'), new Date('2025-01-01'))).toBeGreaterThan(0);
 		expect(compareDataValues('row 2', 'row 10')).toBeLessThan(0);
+		expect(compareDataValues(null, 'ready')).toBeLessThan(0);
+		expect(compareDataValues('ready', undefined)).toBeGreaterThan(0);
+		expect(compareDataValues(undefined, undefined)).toBe(0);
+		expect(compareDataValues(2n, 10n)).toBeLessThan(0);
 	});
 
 	it('keeps equal values stable in both directions', () => {
@@ -25,5 +29,12 @@ describe('data table sorting', () => {
 				({ id }) => id
 			)
 		).toEqual(['a', 'c', 'b']);
+		expect(
+			stableSortRows(rows, {
+				accessor: (row) => row.value,
+				compare: (_left, _right, left, right) => right.id.localeCompare(left.id),
+				direction: 'ascending'
+			}).map(({ id }) => id)
+		).toEqual(['c', 'b', 'a']);
 	});
 });

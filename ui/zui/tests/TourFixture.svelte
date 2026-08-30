@@ -19,6 +19,9 @@
 	let open = $state(false);
 	let step = $state(0);
 	let completed = $state(0);
+	let missingOpen = $state(false);
+	let missingCount = $state(0);
+	let persistentOpen = $state(false);
 </script>
 
 <ZButton
@@ -32,3 +35,25 @@
 <button id="tour-metrics" type="button">Metrics target</button>
 <ZTour {steps} bind:open bind:step onComplete={() => (completed += 1)} />
 <output data-testid="tour-output">{open}:{step}:{completed}</output>
+
+<button id="tour-missing-start" type="button" onclick={() => (missingOpen = true)}
+	>Start missing tour</button
+>
+<ZTour
+	steps={[{ description: 'Missing', id: 'missing', target: '#does-not-exist', title: 'Missing' }]}
+	bind:open={missingOpen}
+	onTargetMissing={() => (missingCount += 1)}
+/>
+<output data-testid="tour-missing-output">{missingOpen}:{missingCount}</output>
+
+<button id="tour-persistent-start" type="button" onclick={() => (persistentOpen = true)}
+	>Start persistent tour</button
+>
+<ZTour
+	{steps}
+	bind:open={persistentOpen}
+	modal={false}
+	closeOnEscape={false}
+	closeOnMaskClick={false}
+	closeLabel="Close persistent tour"
+/>

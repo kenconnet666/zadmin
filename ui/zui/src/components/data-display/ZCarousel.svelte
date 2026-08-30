@@ -248,8 +248,13 @@
 >
 	{#if autoplayInterval !== undefined}<button
 			type="button"
-			aria-label={pausedByUser ? playLabel : pauseLabel}
+			aria-label={reduced
+				? 'Automatic rotation disabled by motion preference'
+				: pausedByUser
+					? playLabel
+					: pauseLabel}
 			aria-pressed={pausedByUser}
+			disabled={reduced}
 			onclick={() => (pausedByUser = !pausedByUser)}>{pausedByUser ? '▶' : 'Ⅱ'}</button
 		>{/if}
 	<div
