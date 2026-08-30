@@ -12,7 +12,13 @@
 
 <ZTabs bind:value={automatic} defaultValue="b" onValueChange={() => (automaticChanges += 1)}>
 	<ZTabsList aria-label="Automatic tabs">
-		<ZTabsTrigger data-testid="tab-a" value="a">Alpha</ZTabsTrigger>
+		<ZTabsTrigger
+			data-testid="tab-a"
+			onclick={() => undefined}
+			onfocus={() => undefined}
+			onkeydown={() => undefined}
+			value="a">Alpha</ZTabsTrigger
+		>
 		<ZTabsTrigger data-testid="tab-b" value="b">Beta</ZTabsTrigger>
 		<ZTabsTrigger data-testid="tab-c" disabled value="c">Disabled</ZTabsTrigger>
 		<ZTabsTrigger data-testid="tab-d" value="d">Delta</ZTabsTrigger>

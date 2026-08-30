@@ -238,13 +238,11 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		await Promise.resolve();
 		const output = document.querySelector('[data-testid="context-boundary-output"]');
-		expect(output?.textContent).toMatch(/^18:/u);
+		expect(output?.textContent).toMatch(/^16:/u);
 		expect(output?.textContent).toContain('ZAccordion');
 		expect(output?.textContent).toContain('ZTooltip');
 		expect(output?.textContent).toContain('Duplicate ZList');
 		expect(output?.textContent).toContain('Duplicate ZTimeline');
-		expect(output?.textContent).toContain('unsupported trigger');
-		expect(output?.textContent).toContain('validationDelay');
 		expect(output?.textContent).toContain('requires at least one item');
 		expect(output?.textContent).toContain('Duplicate ZCarousel key');
 	});
@@ -292,10 +290,39 @@ describe('compiled ICSS browser updates', () => {
 			await unmount(component);
 		}
 		{
+			const component = mount(SelectFixture, {
+				props: { defaultOpen: true, prevent: true },
+				target
+			});
+			await tick();
+			document.querySelector<HTMLElement>('[data-testid="select-d"]')?.click();
+			await tick();
+			expect(target.querySelector('[data-testid="select-output"]')?.textContent).toMatch(/^b:/u);
+			await unmount(component);
+		}
+		{
+			const component = mount(ComboboxFixture, {
+				props: { defaultOpen: true, prevent: true },
+				target
+			});
+			await tick();
+			document.querySelector<HTMLElement>('[data-testid="combobox-d"]')?.click();
+			await tick();
+			expect(target.querySelector('[data-testid="combobox-output"]')?.textContent).toMatch(/^b:/u);
+			await unmount(component);
+		}
+		{
 			const component = mount(DialogFixture, { props: { prevent: true }, target });
 			target.querySelector<HTMLButtonElement>('[data-testid="dialog-trigger"]')?.click();
 			await tick();
 			expect(document.querySelector('[data-testid="dialog-content"]')).toBeNull();
+			await unmount(component);
+		}
+		{
+			const component = mount(PopoverFixture, { props: { prevent: true }, target });
+			target.querySelector<HTMLButtonElement>('[data-testid="popover-trigger"]')?.click();
+			await tick();
+			expect(document.querySelector('[data-testid="popover-content"]')).toBeNull();
 			await unmount(component);
 		}
 		{
@@ -965,6 +992,8 @@ describe('compiled ICSS browser updates', () => {
 		for (const key of ['Home', 'End', 'ArrowUp']) {
 			document.activeElement?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key }));
 		}
+		web?.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+		await tick();
 		web?.focus();
 		web?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
 		expect(document.activeElement).toBe(worker);

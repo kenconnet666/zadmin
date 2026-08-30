@@ -5,7 +5,8 @@
 		ZSelectItem,
 		ZSelectTrigger
 	} from '../src/entrypoints/index.js';
-	let { defaultOpen = false }: { defaultOpen?: boolean } = $props();
+	let { defaultOpen = false, prevent = false }: { defaultOpen?: boolean; prevent?: boolean } =
+		$props();
 	let value = $state<string | number>('b');
 	let open = $state<boolean>();
 	let changes = $state(0);
@@ -27,7 +28,11 @@
 			<ZSelectItem data-testid="select-a" value="a">Alpha</ZSelectItem>
 			<ZSelectItem data-testid="select-b" value="b">Beta</ZSelectItem>
 			<ZSelectItem data-testid="select-c" disabled value="c">Charlie</ZSelectItem>
-			<ZSelectItem data-testid="select-d" value="d">Delta</ZSelectItem>
+			<ZSelectItem
+				data-testid="select-d"
+				onSelect={(event) => prevent && event.preventDefault()}
+				value="d">Delta</ZSelectItem
+			>
 		</ZSelectContent>
 	</ZSelect>
 	<button type="reset">Reset</button>

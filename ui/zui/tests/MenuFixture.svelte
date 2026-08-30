@@ -13,7 +13,14 @@
 <ZMenu aria-label="Fixture actions" {loop} onAction={(event) => (action = String(event.value))}>
 	<ZMenuGroup aria-labelledby="fixture-menu-label">
 		<ZMenuLabel id="fixture-menu-label">Actions</ZMenuLabel>
-		<ZMenuItem data-testid="menu-alpha" value="alpha">Alpha</ZMenuItem>
+		<ZMenuItem
+			data-testid="menu-alpha"
+			onclick={() => undefined}
+			onfocus={() => undefined}
+			onkeydown={() => undefined}
+			onpointermove={() => undefined}
+			value="alpha">Alpha</ZMenuItem
+		>
 		<ZMenuItem data-testid="menu-beta" disabled value="beta">Beta</ZMenuItem>
 		<ZMenuItem data-testid="menu-charlie" value="charlie">Charlie</ZMenuItem>
 	</ZMenuGroup>

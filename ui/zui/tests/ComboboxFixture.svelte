@@ -5,7 +5,8 @@
 		ZComboboxInput,
 		ZComboboxItem
 	} from '../src/entrypoints/index.js';
-	let { defaultOpen = false }: { defaultOpen?: boolean } = $props();
+	let { defaultOpen = false, prevent = false }: { defaultOpen?: boolean; prevent?: boolean } =
+		$props();
 	let value = $state<string | number>('b');
 	let inputValue = $state('Beta');
 	let open = $state<boolean>();
@@ -30,7 +31,12 @@
 			<ZComboboxItem data-testid="combobox-c" disabled textValue="Charlie" value="c"
 				>Charlie</ZComboboxItem
 			>
-			<ZComboboxItem data-testid="combobox-d" textValue="Delta" value="d">Delta</ZComboboxItem>
+			<ZComboboxItem
+				data-testid="combobox-d"
+				onSelect={(event) => prevent && event.preventDefault()}
+				textValue="Delta"
+				value="d">Delta</ZComboboxItem
+			>
 		</ZComboboxContent>
 	</ZCombobox>
 	<button type="reset">Reset</button>

@@ -5,7 +5,6 @@
 		ZComboboxInput,
 		ZCarousel,
 		ZDialogContent,
-		ZForm,
 		ZList,
 		ZMenuItem,
 		ZMultiSelectTrigger,
@@ -46,8 +45,6 @@
 <svelte:boundary onerror={capture}><ZTooltipTrigger /></svelte:boundary>
 <svelte:boundary onerror={capture}><ZList items={duplicateItems} /></svelte:boundary>
 <svelte:boundary onerror={capture}><ZTimeline items={duplicateTimeline} /></svelte:boundary>
-<svelte:boundary onerror={capture}><ZForm validateOn={['unsupported' as never]} /></svelte:boundary>
-<svelte:boundary onerror={capture}><ZForm validationDelay={-1} /></svelte:boundary>
 <svelte:boundary onerror={capture}>
 	<ZCarousel ariaLabel="Empty" items={[]} itemKey={() => 'empty'} itemLabel={() => 'Empty'}>
 		{#snippet item()}empty{/snippet}

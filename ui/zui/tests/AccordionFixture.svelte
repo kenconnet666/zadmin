@@ -13,7 +13,12 @@
 
 <ZAccordion bind:value defaultValue="a" onValueChange={() => (changes += 1)}>
 	<ZAccordionItem value="a">
-		<ZAccordionTrigger data-testid="accordion-a">Alpha</ZAccordionTrigger>
+		<ZAccordionTrigger
+			data-testid="accordion-a"
+			onclick={() => undefined}
+			onfocus={() => undefined}
+			onkeydown={() => undefined}>Alpha</ZAccordionTrigger
+		>
 		<ZAccordionContent data-testid="accordion-content-a">Alpha content</ZAccordionContent>
 	</ZAccordionItem>
 	<ZAccordionItem disabled value="b">
