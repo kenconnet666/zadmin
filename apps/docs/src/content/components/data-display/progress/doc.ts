@@ -25,7 +25,8 @@ export const progressDoc = defineComponentDoc(progressMetadata, {
 	accessibility: [
 		'line使用原生progress；circle使用progressbar并暴露min、max、now和格式化value text。',
 		'value缺失表示不确定进度，不伪造百分比。',
-		'circle不确定动画响应reduced-motion并在卸载时取消。'
+		'circle不确定动画响应reduced-motion并在卸载时取消。',
+		'circle SVG弧表达运行时数值比例而不是通用图标，因此保留数据绘制边界；操作与状态图标仍统一使用Lucide。'
 	],
 	keywords: ['progress', 'progressbar', 'circle', 'line']
 });
