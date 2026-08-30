@@ -57,6 +57,9 @@ jobs:
       - name: Lint and format check
         run: pnpm lint
 
+      - name: Audit ZUI and Docs source contracts
+        run: pnpm --filter @zadmin/docs audit:system
+
       - name: Run full workspace tests
         run: pnpm test
 

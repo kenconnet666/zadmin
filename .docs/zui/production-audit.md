@@ -25,6 +25,7 @@
 | 带CSS过渡的组件        |   13 | 13/13显式消费Provider motion，reduced时清除过渡                                              |
 | Docs视图层自建交互控件 |    0 | 能由ZUI表达的按钮、链接、Select、Popover、Table、Code和Card均直接dogfood ZUI                 |
 | 内联SVG                |    4 | 2个ZAdmin品牌资源；`ZSpinner`与圆形`ZProgress`为组件自身的数据图形；通用UI图标全部来自Lucide |
+| 静态系统审计           |    1 | CI固化metadata唯一性、Demo数量、motion、Docs dogfood、Lucide导入和SVG白名单                  |
 
 分类目录的16–26个直接文件属于蓝图允许的真实大分类（5–30），继续保持“分类目录直接包含简单组件文件”；没有为满足计数制造一文件目录。
 

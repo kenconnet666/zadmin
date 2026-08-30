@@ -4,6 +4,7 @@
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
+		"audit:system": "node scripts/audit-system.mjs",
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
