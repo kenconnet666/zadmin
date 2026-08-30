@@ -235,6 +235,7 @@ const components = [
 	{ id: 'input', name: 'ZInput', path: 'input/ZInput.svelte' },
 	{ id: 'input-group', name: 'ZInputGroup', path: 'input/ZInputGroup.svelte' },
 	{ id: 'mention', name: 'ZMention', path: 'input/ZMention.svelte' },
+	{ id: 'number-field', name: 'ZNumberField', path: 'input/ZNumberField.svelte' },
 	{ id: 'segmented', name: 'ZSegmented', path: 'input/ZSegmented.svelte' },
 	{
 		id: 'slider',

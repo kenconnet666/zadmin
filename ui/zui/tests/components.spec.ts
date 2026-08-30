@@ -43,6 +43,7 @@ import InputGroupFixture from './InputGroupFixture.svelte';
 import MenuFixture from './MenuFixture.svelte';
 import MentionFixture from './MentionFixture.svelte';
 import MultiSelectFixture from './MultiSelectFixture.svelte';
+import NumberFieldFixture from './NumberFieldFixture.svelte';
 import DialogFixture from './DialogFixture.svelte';
 import DrawerFixture from './DrawerFixture.svelte';
 import DropdownMenuFixture from './DropdownMenuFixture.svelte';
@@ -408,6 +409,16 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain('name="host"');
 		expect(result).toContain('data-invalid="true"');
 		expect(result).toContain('disabled');
+	});
+
+	it('renders NumberField spinbutton, boundaries and hidden form value during SSR', () => {
+		const result = render(NumberFieldFixture).body;
+		expect(result).toContain('role="spinbutton"');
+		expect(result).toContain('aria-valuemin="0"');
+		expect(result).toContain('aria-valuemax="3"');
+		expect(result).toContain('aria-valuenow="1.5"');
+		expect(result).toContain('name="amount"');
+		expect(result).toContain('value="1.5"');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

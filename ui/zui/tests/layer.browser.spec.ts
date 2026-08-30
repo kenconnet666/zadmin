@@ -44,13 +44,14 @@ describe('ZUI layer runtime', () => {
 		action.update({ target: null });
 		expect(node.parentNode).toBe(host);
 		action.destroy();
-		expect(node.parentNode).toBe(host);
+		expect(node.isConnected).toBe(false);
+		expect(host.childNodes).toHaveLength(0);
 		host.remove();
 		target.remove();
 		shadowHost.remove();
 	});
 
-	it('does not resurrect content already removed by its owner during teardown', () => {
+	it('removes portal content whether its owner or the action tears down first', () => {
 		const host = document.createElement('div');
 		const target = document.createElement('div');
 		const node = document.createElement('section');

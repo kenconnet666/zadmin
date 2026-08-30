@@ -25,6 +25,7 @@ export function portal(node: HTMLElement, options: PortalOptions) {
 	move(options.target);
 	return {
 		destroy() {
+			node.remove();
 			placeholder.remove();
 		},
 		update(next: PortalOptions) {

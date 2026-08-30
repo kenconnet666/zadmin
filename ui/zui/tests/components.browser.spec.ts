@@ -20,6 +20,7 @@ import DropdownMenuFixture from './DropdownMenuFixture.svelte';
 import MenuFixture from './MenuFixture.svelte';
 import MentionFixture from './MentionFixture.svelte';
 import MultiSelectFixture from './MultiSelectFixture.svelte';
+import NumberFieldFixture from './NumberFieldFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
 import PaginationFixture from './PaginationFixture.svelte';
 import PopoverFixture from './PopoverFixture.svelte';
@@ -502,6 +503,18 @@ describe('compiled ICSS browser updates', () => {
 		expect(document.querySelector('[role="dialog"]')).toBeNull();
 	});
 
+	it('removes an open CommandPalette portal when its owner unmounts', async () => {
+		const target = document.createElement('div');
+		document.body.append(target);
+		const component = mount(CommandPaletteFixture, { props: { defaultOpen: true }, target });
+		await tick();
+		expect(document.querySelector('[role="dialog"]')).not.toBeNull();
+		await unmount(component);
+		await tick();
+		expect(document.querySelector('[role="dialog"]')).toBeNull();
+		target.remove();
+	});
+
 	it('coordinates Textarea autosize, Field semantics, FormData and reset', async () => {
 		render(TextareaFixture);
 		const textarea = document.querySelector<HTMLTextAreaElement>('textarea[name="description"]');
@@ -550,6 +563,41 @@ describe('compiled ICSS browser updates', () => {
 		await Promise.resolve();
 		await tick();
 		expect(input?.value).toBe('api');
+	});
+
+	it('coordinates NumberField locale parsing, stepping, invalid draft, FormData and reset', async () => {
+		render(NumberFieldFixture);
+		const input = document.querySelector<HTMLInputElement>('[role="spinbutton"]');
+		const form = document.querySelector<HTMLFormElement>('[data-testid="number-field-form"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="number-field-output"]');
+		input?.focus();
+		if (input) {
+			input.value = '2,75';
+			input.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		}
+		await tick();
+		expect(output?.textContent).toBe('2.75');
+		expect(new FormData(form!).get('amount')).toBe('2.75');
+		input?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowUp' }));
+		await tick();
+		expect(output?.textContent).toBe('3');
+		input?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'PageDown' }));
+		await tick();
+		expect(output?.textContent).toBe('0.5');
+		if (input) {
+			input.value = 'invalid';
+			input.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		}
+		await tick();
+		expect(input?.getAttribute('aria-invalid')).toBe('true');
+		input?.blur();
+		await tick();
+		expect(input?.value).toBe('0,5');
+		form?.reset();
+		await Promise.resolve();
+		await tick();
+		expect(input?.value).toBe('1,5');
+		expect(output?.textContent).toBe('1.5');
 	});
 	it('keeps AlertDialog open until an explicit action is chosen', async () => {
 		render(AlertDialogFixture);

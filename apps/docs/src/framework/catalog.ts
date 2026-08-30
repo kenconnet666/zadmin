@@ -17,6 +17,7 @@ import { inputDoc } from '../content/components/input/input/doc.js';
 import { inputGroupDoc } from '../content/components/input/input-group/doc.js';
 import { mentionDoc } from '../content/components/input/mention/doc.js';
 import { multiSelectDoc } from '../content/components/input/multi-select/doc.js';
+import { numberFieldDoc } from '../content/components/input/number-field/doc.js';
 import { radioGroupDoc } from '../content/components/input/radio-group/doc.js';
 import { selectDoc } from '../content/components/input/select/doc.js';
 import { segmentedDoc } from '../content/components/input/segmented/doc.js';
@@ -76,6 +77,7 @@ export const componentDocs = Object.freeze([
 	inputGroupDoc,
 	mentionDoc,
 	multiSelectDoc,
+	numberFieldDoc,
 	fieldDoc,
 	radioGroupDoc,
 	selectDoc,

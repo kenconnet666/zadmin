@@ -92,6 +92,27 @@ test('keeps InputGroup focus boundary, Field context, FormData and reset synchro
 	await expect(input).toHaveValue('api');
 });
 
+test('keeps NumberField locale parsing, spinbutton keys, FormData and reset synchronized', async ({
+	page
+}) => {
+	await page.goto('/#/components/number-field');
+	const input = page.getByRole('spinbutton', { name: '并发上限' });
+	await expect(input).toHaveAttribute('aria-valuenow', '1234.5');
+	await input.fill('12.75');
+	await page.keyboard.press('ArrowUp');
+	await expect(input).toHaveAttribute('aria-valuenow', '13');
+	await expect(page.getByText('value = 13')).toBeVisible();
+	await expect
+		.poll(() =>
+			page
+				.locator('form')
+				.evaluate((form) => new FormData(form as HTMLFormElement).get('concurrency'))
+		)
+		.toBe('13');
+	await page.getByRole('button', { name: '重置' }).click();
+	await expect(input).toHaveAttribute('aria-valuenow', '1234.5');
+});
+
 test('keeps toggle button state native, bindable and keyboard accessible', async ({ page }) => {
 	await page.goto('/#/components/toggle-button');
 	const toggle = page.getByTestId('toggle-button-controlled');
@@ -720,6 +741,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/input-group',
 		'#/components/mention',
 		'#/components/multi-select',
+		'#/components/number-field',
 		'#/components/field',
 		'#/components/radio-group',
 		'#/components/select',

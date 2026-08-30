@@ -198,6 +198,8 @@ export { default as ZInputGroup } from '../components/input/ZInputGroup.svelte';
 export type { ZInputGroupProps } from '../components/input/ZInputGroup.svelte';
 export { default as ZMention } from '../components/input/ZMention.svelte';
 export type { MentionItem, ZMentionProps } from '../components/input/ZMention.svelte';
+export { default as ZNumberField } from '../components/input/ZNumberField.svelte';
+export type { ZNumberFieldProps } from '../components/input/ZNumberField.svelte';
 export { default as ZSegmented } from '../components/input/ZSegmented.svelte';
 export type { SegmentedItem, ZSegmentedProps } from '../components/input/ZSegmented.svelte';
 export { default as ZSlider } from '../components/input/ZSlider.svelte';

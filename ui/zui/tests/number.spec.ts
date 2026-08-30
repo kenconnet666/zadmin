@@ -1,0 +1,22 @@
+import { describe, expect, it } from 'vitest';
+
+import { clampNumber, parseLocalizedNumber, stepNumber } from '../src/runtime/number.js';
+
+describe('localized number algorithms', () => {
+	it('parses locale digits, decimal marks, grouping and partial input', () => {
+		expect(parseLocalizedNumber('1.234,5', 'de-DE')).toMatchObject({ valid: true, value: 1234.5 });
+		expect(parseLocalizedNumber('1 234,5', 'fr-FR')).toMatchObject({ valid: true, value: 1234.5 });
+		expect(parseLocalizedNumber('١٬٢٣٤٫٥', 'ar-EG')).toMatchObject({ valid: true, value: 1234.5 });
+		expect(parseLocalizedNumber('-', 'en-US')).toEqual({ partial: true, valid: false });
+		expect(parseLocalizedNumber('', 'en-US')).toEqual({ partial: true, valid: true });
+		expect(parseLocalizedNumber('12x', 'en-US')).toEqual({ partial: false, valid: false });
+	});
+
+	it('steps decimals without floating point drift and respects bounds', () => {
+		expect(stepNumber(0.2, 1, 0.1)).toBe(0.3);
+		expect(stepNumber(2.75, 1, 0.25, 0, 3)).toBe(3);
+		expect(stepNumber(3, -1, 0.25, 0, 3, 10)).toBe(0.5);
+		expect(clampNumber(-1, 0, 10)).toBe(0);
+		expect(clampNumber(11, 0, 10)).toBe(10);
+	});
+});

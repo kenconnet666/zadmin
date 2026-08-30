@@ -57,6 +57,7 @@ import {
 	ZMultiSelectContent,
 	ZMultiSelectItem,
 	ZMultiSelectTrigger,
+	ZNumberField,
 	ZPagination,
 	ZPopconfirm,
 	ZPopconfirmAction,
@@ -147,6 +148,7 @@ import {
 	type ZMultiSelectItemProps,
 	type ZMultiSelectProps,
 	type ZMultiSelectTriggerProps,
+	type ZNumberFieldProps,
 	type ZPaginationProps,
 	type ZPopconfirmActionProps,
 	type ZPopconfirmCancelProps,
@@ -364,6 +366,11 @@ const inputGroupProps: ComponentProps<typeof ZInputGroup> = {
 	children: (() => undefined) as never,
 	invalid: true
 } satisfies ZInputGroupProps;
+const numberFieldProps: ComponentProps<typeof ZNumberField> = {
+	formatOptions: { maximumFractionDigits: 2 },
+	step: 0.25,
+	value: 1.5
+} satisfies ZNumberFieldProps;
 const sliderProps: ComponentProps<typeof ZSlider> = {
 	defaultValue: 25,
 	max: 50,
@@ -470,6 +477,7 @@ void commandProps;
 void commandPaletteProps;
 void textareaProps;
 void inputGroupProps;
+void numberFieldProps;
 void sliderProps;
 void switchProps;
 void tabsProps;
