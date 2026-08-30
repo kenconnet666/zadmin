@@ -1208,6 +1208,14 @@ test('has no automatically detectable accessibility violations', async ({ page }
 			return [...counts].filter(([, count]) => count > 1).map(([id, count]) => ({ count, id }));
 		});
 		expect(duplicateIds, `${route} has duplicate DOM ids`).toEqual([]);
+		await expect(
+			page.locator('main h1'),
+			`${route} must expose exactly one page heading`
+		).toHaveCount(1);
+		const hasHorizontalOverflow = await page.evaluate(
+			() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1
+		);
+		expect(hasHorizontalOverflow, `${route} overflows the document horizontally`).toBe(false);
 		const results = await new AxeBuilder({ page }).analyze();
 		expect(results.violations, route).toEqual([]);
 	}
