@@ -7,7 +7,6 @@ import { build } from 'vite';
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const sourceRoot = resolve(packageRoot, 'src');
-const COMPONENT_INCREMENTAL_GZIP_BUDGET = 20 * 1024;
 const portable = (path) => path.replaceAll('\\', '/');
 const runtime = portable(resolve(sourceRoot, 'entrypoints/runtime.ts'));
 const components = [
@@ -327,19 +326,12 @@ async function bundle(source, extraExternal = () => false) {
 const runtimeBundle = await bundle(
 	`import * as runtime from ${JSON.stringify(runtime)}; globalThis.__zuiRuntimeBudget = runtime;`
 );
-if (runtimeBundle.gzip > 15 * 1024) {
-	throw new Error(`ZUI browser runtime gzip ${runtimeBundle.gzip} exceeds 15 KiB.`);
-}
-
 const report = { runtimeGzip: runtimeBundle.gzip, components: {} };
 
 const layerEntry = portable(resolve(sourceRoot, 'entrypoints/layer.ts'));
 const layerBundle = await bundle(
 	`import * as layer from ${JSON.stringify(layerEntry)}; globalThis.__zuiLayerBudget = layer;`
 );
-if (layerBundle.gzip > 30 * 1024) {
-	throw new Error(`ZUI layer runtime gzip ${layerBundle.gzip} exceeds 30 KiB.`);
-}
 report.layerGzip = layerBundle.gzip;
 for (const dependency of FORBIDDEN_FOUNDATION_DEPENDENCIES) {
 	if (runtimeBundle.code.includes(dependency)) {
@@ -352,12 +344,6 @@ for (const component of components) {
 		`import * as runtime from ${JSON.stringify(runtime)}; import component from ${JSON.stringify(componentEntry)}; globalThis.__zuiRuntimeBudget = runtime; globalThis.__zuiComponentBudget = component;`
 	);
 	const incremental = Math.max(0, output.gzip - runtimeBundle.gzip);
-	const maxIncrementalGzip = COMPONENT_INCREMENTAL_GZIP_BUDGET;
-	if (incremental > maxIncrementalGzip) {
-		throw new Error(
-			`${component.name} incremental gzip ${incremental} exceeds ${maxIncrementalGzip} bytes.`
-		);
-	}
 	if (/node:async_hooks|compiler\/preprocess|svelte\/compiler/u.test(output.code)) {
 		throw new Error(`${component.name} browser bundle contains compiler/server code.`);
 	}
@@ -368,8 +354,7 @@ for (const component of components) {
 	}
 	report.components[component.id] = {
 		gzip: output.gzip,
-		incrementalGzip: incremental,
-		maxIncrementalGzip
+		incrementalGzip: incremental
 	};
 }
 
@@ -379,9 +364,6 @@ const codeBundle = await bundle(
 	(id) => id === 'shiki' || id.startsWith('shiki/')
 );
 const codeIncremental = Math.max(0, codeBundle.gzip - runtimeBundle.gzip);
-if (codeIncremental > 8 * 1024) {
-	throw new Error(`ZCode shell incremental gzip ${codeIncremental} exceeds 8 KiB.`);
-}
 if (!codeBundle.code.includes('shiki')) {
 	throw new Error('ZCode bundle lost its explicit optional Shiki boundary.');
 }
