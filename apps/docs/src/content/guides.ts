@@ -325,4 +325,6 @@ pnpm --filter @zadmin/zui publish --dry-run --no-git-checks`,
 	}
 ] as const satisfies readonly GuideDefinition[];
 
-export const guideDocsById = new Map(guideDocs.map((guide) => [guide.id, guide] as const));
+export const guideDocsById: ReadonlyMap<string, GuideDefinition> = new Map(
+	guideDocs.map((guide) => [guide.id, guide] as const)
+);

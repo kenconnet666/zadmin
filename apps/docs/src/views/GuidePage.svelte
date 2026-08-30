@@ -95,12 +95,13 @@
 						{/each}
 						{#if section.bullets}
 							<ZList
-								items={section.bullets.map((text, index) => ({
+								items={section.bullets.map((label, index) => ({
 									id: `${section.id}-${index}`,
-									text
+									label
 								}))}
 							>
-								{#snippet item(entry)}<ZText class={classes.listItem}>{entry.text}</ZText>{/snippet}
+								{#snippet item(entry)}<ZText class={classes.listItem}>{entry.label}</ZText
+									>{/snippet}
 							</ZList>
 						{/if}
 						{#if section.code}

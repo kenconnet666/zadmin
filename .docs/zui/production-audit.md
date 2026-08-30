@@ -71,12 +71,13 @@
 
 ## 6. CI结论
 
-最后一次按约回看的门禁：[CI run 33299825701](https://github.com/kenconnet666/zadmin/actions/runs/33299825701)。
+最后一次按约回看的门禁：[CI run 33301160228](https://github.com/kenconnet666/zadmin/actions/runs/33301160228)，检查时仍在运行，不等待完成。
 
-- Windows C# WebView2 desktop job完整成功；
-- Workspace的类型、Svelte、Prettier和ESLint成功；Firefox组件矩阵已全部成功，唯一失败类别仍是WebKit reset，当前批次增加DOM包含与显式form回退；
-- Coverage job在新的API contract门禁提前失败；expected与actual指纹相同，根因是JSON空白格式比较，当前批次改为结构化JSON语义比较、统一源码换行并保留指纹诊断；
-- 当前批次同时新增七份生产指南及其路由、Axe与真实Chrome验收；推送后不等待CI，下一次正常推送时回看结果。
+- Changesets状态与跨平台API contract门禁成功；
+- ZUI覆盖率、bundle inspection、SvelteKit coverage、仓库外ZUI/SvelteKit SSR、publish dry-run、Miniapp coverage、WebView coverage与外部包验收成功；
+- Workspace在Docs类型检查发现3个指南类型错误：ZList使用了`text`而非公共`label`，guide map key过窄；当前批次改为标准ListItem和`ReadonlyMap<string, GuideDefinition>`；
+- Windows C# core、desktop类型/测试与Release构建成功，检查时仍在执行Host smoke；Miniapp外部包验收仍运行；
+- 当前仅记录权威快照，不把运行中写成全绿；类型修复已用WebStorm和真实Chrome验证后再推送。
 
 最终通过后必须同时满足：
 
