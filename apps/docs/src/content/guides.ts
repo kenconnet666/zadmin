@@ -143,7 +143,7 @@ export default {
 					'错误、说明与标签通过稳定ID关系连接。',
 					'状态变化使用适当的status或alert，不把普通消息升级为assertive。',
 					'aria-busy只公告区域或控件正在更新；ZButton loading还会禁用交互，两者不能互换。',
-					'ZInput可用form属性关联DOM外部表单；内部reset signal没有name或id、被disabled且不进入FormData。',
+					'ZInput可用form属性关联DOM外部表单；内部reset signal是无name/id、不可Tab的隐藏type=button，不进入FormData。',
 					'独立Input/Textarea默认自管reset；复合组件用resetOnForm=false把唯一所有权交给父状态机，onFormReset仍用于通知。'
 				],
 				links: [

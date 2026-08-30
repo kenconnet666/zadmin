@@ -274,7 +274,7 @@ const cascaderSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/components/input/ZCascader.svelte'),
 	'utf8'
 );
-const formResetSignalTag = formResetSignalSource.match(/<input\b[\s\S]*?\/>/u)?.[0] ?? '';
+const formResetSignalTag = formResetSignalSource.match(/<button\b[\s\S]*?\/>/u)?.[0] ?? '';
 if (
 	!buttonSource.includes("'aria-busy': ariaBusy") ||
 	!buttonSource.includes('aria-busy={loading ? true : ariaBusy}') ||
@@ -301,12 +301,15 @@ if (
 	fail('The form reset action must preserve its association and post-event task contracts.');
 }
 if (
-	!formResetSignalSource.includes('const action = formReset(control, () => current.reset())') ||
-	!formResetSignalSource.includes('action.update(() => current.reset())') ||
-	!formResetSignalTag.includes('type="hidden"') ||
+	!formResetSignalSource.includes("control.dispatchEvent(new Event('zuireset'))") ||
+	!formResetSignalSource.includes('const action = formReset(control, forwardReset)') ||
+	!formResetSignalSource.includes('action.update(forwardReset)') ||
+	!formResetSignalTag.includes('type="button"') ||
 	!formResetSignalTag.includes('hidden') ||
-	!formResetSignalTag.includes('disabled') ||
+	!formResetSignalTag.includes('aria-hidden="true"') ||
+	!formResetSignalTag.includes('tabindex="-1"') ||
 	!formResetSignalTag.includes('data-zui-form-reset-signal=""') ||
+	!formResetSignalTag.includes('onzuireset={onReset}') ||
 	!formResetSignalSource.includes('const associationKey = association') ||
 	!formResetSignalSource.includes('resetOwner = directOwner ?? associatedControl?.form ?? null') ||
 	!formResetSignalSource.includes(
@@ -317,7 +320,7 @@ if (
 	!formResetSignalSource.includes('{#if resetOwner}') ||
 	!formResetSignalSource.includes('use:portal={{ target: resetOwner }}') ||
 	/\b(?:id|name)\s*=/u.test(formResetSignalTag) ||
-	!formResetSignalSource.includes('use:signalFormReset={{ owner: resetOwner, reset: onReset }}') ||
+	!formResetSignalSource.includes('use:signalFormReset={{ owner: resetOwner }}') ||
 	!formSource.includes('<FormResetSignal onReset={resetFromForm} owner={ref}') ||
 	!inputSource.includes('<FormResetSignal association={form} control={ref} onReset={resetFromForm}')
 ) {
@@ -545,7 +548,10 @@ const productionBoundaryDemos = [
 	'avatar-image-fallback',
 	'button-composition',
 	'code-scheme-embedded',
+	'date-field-bounds',
+	'file-upload-default-queue',
 	'provider-portal-boundary',
+	'tags-input-draft-ownership',
 	'tree-multiple-bare'
 ];
 for (const id of productionBoundaryDemos) {

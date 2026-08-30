@@ -13,7 +13,6 @@
 
 	interface ResetSignalActionOptions {
 		readonly owner: HTMLFormElement;
-		readonly reset: () => void;
 	}
 
 	let { association, control = null, onReset, owner = null }: FormResetSignalProps = $props();
@@ -51,32 +50,35 @@
 	});
 
 	function signalFormReset(
-		control: HTMLInputElement,
+		control: HTMLButtonElement,
 		options: ResetSignalActionOptions
 	): { destroy(): void; update(options: ResetSignalActionOptions): void } {
 		let current = options;
-		const action = formReset(control, () => current.reset());
+		const forwardReset = () => {
+			if (control.form === current.owner) control.dispatchEvent(new Event('zuireset'));
+		};
+		const action = formReset(control, forwardReset);
 		return {
 			destroy() {
 				action.destroy();
 			},
 			update(next) {
 				current = next;
-				action.update(() => current.reset());
+				action.update(forwardReset);
 			}
 		};
 	}
 </script>
 
 {#if resetOwner}
-	<input
+	<button
 		aria-hidden="true"
 		tabindex="-1"
-		type="hidden"
+		type="button"
 		hidden
-		disabled
 		data-zui-form-reset-signal=""
+		onzuireset={onReset}
 		use:portal={{ target: resetOwner }}
-		use:signalFormReset={{ owner: resetOwner, reset: onReset }}
+		use:signalFormReset={{ owner: resetOwner }}
 	/>
 {/if}

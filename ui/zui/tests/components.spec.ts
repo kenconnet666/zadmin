@@ -386,14 +386,16 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain('name="tag"');
 	});
 
-	it('renders Tree hierarchy metadata, expansion, selection and form value during SSR', () => {
+	it('renders single and multiple Tree hierarchy metadata and form values during SSR', () => {
 		const result = render(TreeFixture).body;
-		expect(result).toContain('role="tree"');
-		expect(result.match(/role="treeitem"/gu)).toHaveLength(4);
+		expect(result.match(/role="tree"/gu)).toHaveLength(2);
+		expect(result.match(/role="treeitem"/gu)).toHaveLength(8);
 		expect(result).toContain('aria-level="2"');
 		expect(result).toContain('aria-expanded="true"');
 		expect(result).toContain('aria-selected="true"');
+		expect(result).toContain('aria-multiselectable="true"');
 		expect(result).toContain('name="node"');
+		expect(result).toContain('name="nodes"');
 	});
 
 	it('renders only the initial virtual Tree window with global set metadata during SSR', () => {

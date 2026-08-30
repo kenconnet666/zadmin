@@ -3,6 +3,8 @@ import FormDemo from './FormDemo.svelte';
 import formSource from './FormDemo.svelte?raw';
 import ConstraintsDemo from './ConstraintsDemo.svelte';
 import constraintsSource from './ConstraintsDemo.svelte?raw';
+import DraftDemo from './DraftDemo.svelte';
+import draftSource from './DraftDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 export const tagsInputDoc = defineComponentDoc(tagsInputMetadata, {
 	demos: [
@@ -19,6 +21,13 @@ export const tagsInputDoc = defineComponentDoc(tagsInputMetadata, {
 			id: 'tags-input-constraints',
 			source: constraintsSource,
 			title: '约束与自定义Tag'
+		},
+		{
+			component: DraftDemo,
+			description: '受控草稿、重复值和commitOnBlur分别表达自动提交与保留草稿的所有权。',
+			id: 'tags-input-draft-ownership',
+			source: draftSource,
+			title: '草稿、重复值与失焦'
 		}
 	],
 	accessibility: [

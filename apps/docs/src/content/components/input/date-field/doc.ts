@@ -1,6 +1,8 @@
 import { dateFieldMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import BoundsDemo from './BoundsDemo.svelte';
+import boundsSource from './BoundsDemo.svelte?raw';
 import LocalesDemo from './LocalesDemo.svelte';
 import localesSource from './LocalesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
@@ -19,6 +21,13 @@ export const dateFieldDoc = defineComponentDoc(dateFieldMetadata, {
 			id: 'date-field-locales',
 			source: localesSource,
 			title: 'Locale与只读状态'
+		},
+		{
+			component: BoundsDemo,
+			description: 'minValue与maxValue约束segment cycle，原生reset恢复范围内默认日期。',
+			id: 'date-field-bounds',
+			source: boundsSource,
+			title: '最小与最大日期'
 		}
 	],
 	accessibility: [

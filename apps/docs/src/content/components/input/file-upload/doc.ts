@@ -1,6 +1,8 @@
 import { fileUploadMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
+import DefaultsDemo from './DefaultsDemo.svelte';
+import defaultsSource from './DefaultsDemo.svelte?raw';
 import StatesDemo from './StatesDemo.svelte';
 import statesSource from './StatesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
@@ -21,6 +23,13 @@ export const fileUploadDoc = defineComponentDoc(fileUploadMetadata, {
 			id: 'file-upload-states',
 			source: statesSource,
 			title: '单文件与禁用状态'
+		},
+		{
+			component: DefaultsDemo,
+			description: '客户端安全构造的defaultFiles形成初始队列，原生reset恢复同一文件集合。',
+			id: 'file-upload-default-queue',
+			source: defaultsSource,
+			title: '初始文件队列'
 		}
 	],
 	accessibility: [

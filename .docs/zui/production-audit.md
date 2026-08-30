@@ -18,7 +18,7 @@
 | ------------------------ | ---: | -------------------------------------------------------------------------------------------- |
 | Svelte组件文件           |  135 | 133个拥有唯一metadata id；`ZMentionEditor`与`ZTextareaAutosize`是非公开内部实现              |
 | 公开组件文档页           |   78 | 每页至少2个不同Demo                                                                          |
-| 实际Demo                 |  163 | 少于2个、重复id或空源码会在`defineComponentDoc`中直接失败                                    |
+| 实际Demo                 |  166 | 少于2个、重复id或空源码会在`defineComponentDoc`中直接失败                                    |
 | 生产指南                 |    8 | Getting Started、ICSS、Theme Lab、Accessibility、SSR/CSP、HMR、WebView和Package              |
 | 公开API合同              |  133 | TypeScript AST快照覆盖全部metadata组件与10个package entrypoint；变化必须显式更新             |
 | 官方主题                 |    6 | `@zadmin/zui/themes`统一导出，文档站真实切换并持久化                                         |
@@ -30,7 +30,7 @@
 | 内部原生按钮文件         |    9 | 必须复用internal action、显式focus合同，或是Tour的隐藏非Tab遮罩                              |
 | 可见原生输入文件         |   14 | 非hidden input/textarea必须复用internal focus或显式focus-visible/focus-within                |
 | 表单reset action文件     |   24 | 其余组件通过节点action绑定/更新/销毁，禁止直接调用低层listener                               |
-| 专用reset signal         |    2 | 无name/id的hidden disabled节点直接归属form并承载统一action；不依赖WebKit失效的binding通道    |
+| 专用reset signal         |    2 | 无name/id、不可Tab的hidden button直接归属form；action经不冒泡Svelte事件桥提交状态            |
 | 复合reset所有权合同      |    4 | Combobox、Mention与Transfer双filter关闭叶子自重置，由父状态机唯一拥有reset                   |
 | reset signal表单归属     |    1 | 仅解析到owner时portal为form直接子节点；动态prop和同id owner替换会重归属且不污染label         |
 | Calendar键盘switch合同   |    1 | 方向/Home/End/PageUp/PageDown/Enter/Space用互斥switch表达并保留RTL与Shift年跳转              |
@@ -93,7 +93,7 @@
 | FormDemo异步校验timer未清理           | 模拟schema延迟的Promise在HMR/路由销毁后仍可能继续                  | Map持有timer/resolve；onDestroy清理并resolve，由ZForm token丢弃迟到结果            |
 | FormDemo失焦时提交点击可能丢失        | blur校验把`validating`映射为ZButton loading，默认click前按钮被禁用 | 按钮保持可提交并仅暴露`aria-busy`；状态文本显示validating，race token负责去重      |
 | Button/Form覆盖调用方`aria-busy`      | 内部loading/validating写在原生rest之后，无条件覆盖调用方传值       | 内部busy时强制true；否则保留原生`aria-busy`，Button不额外改变disabled              |
-| Accessibility指南缺少busy/form边界    | 自动id、焦点和搜索合同完整，但未解释busy所有权及外部form signal    | 明确aria-busy不等于loading；signal无name/id、disabled且不进入FormData              |
+| Accessibility指南缺少busy/form边界    | 自动id、焦点和搜索合同完整，但未解释busy所有权及外部form signal    | 明确aria-busy不等于loading；signal无name/id、不可Tab且不进入FormData               |
 | Docs未解释resetOnForm所有权           | 新API避免复合双重reset，但Input/Textarea/Combobox文档缺少选择规则  | 组件页与Accessibility指南明确独立自管、复合父owner唯一接管                         |
 | 关闭/导航图标不一致                   | 多处使用`×/‹/›/+/-/✓`字符                                          | 统一使用按需Lucide；完整操作复用ZButton，微型内部按钮复用无状态focus样式合同       |
 | Transfer、DataTable与主页残留箭头字符 | 早期实现只补了可访问名称，字符范围没有纳入全树图标审计             | 统一使用按需Lucide/ZIcon；Transfer按LTR/RTL交换方向，DataTable复用ZButton          |
@@ -108,7 +108,7 @@
 | ZTree多选hidden默认值缺失             | keyed载体只写current value，原生reset阶段的默认值仍为空            | 同步defaultValue与身份值；Fixture和可见Demo固定getAll与reset                       |
 | 组件大小门禁与完整交互职责冲突        | 3.25 KiB阈值把DataTable、Tour、DatePicker等误当成视觉原子          | CI继续构建并记录gzip、检查依赖边界；仅在产物明显异常时人工分析，不设字节门禁       |
 | WebKit表单reset批量失效               | 原控件action与Svelte原生binding signal在WebKit组件路径都未同步状态 | ZInput/ZForm改用直接归属form的无状态专用signal承载统一action                       |
-| WebKit reset状态未提交                | listener与回调命中；微任务内flushSync后rune输出仍为旧值            | 提交移到事件结束后的新任务，再原子刷新组件状态、父binding与DOM                     |
+| WebKit reset状态未提交                | listener命中；微任务/新任务内flushSync后rune输出都仍为旧值         | 专用signal试点不冒泡zuireset，把状态提交送回Svelte事件边界                         |
 | 复合组件reset双重所有权               | 父状态机恢复受控值后，内部Input/Textarea又按叶子default再次覆盖    | resetOnForm关闭叶子自管；Combobox同步原生default，回调仍通知父owner                |
 | Firefox合成paste缺少payload           | 构造参数中的`clipboardData`没有跨引擎落到只读事件属性              | 测试助手显式定义ClipboardEvent payload；真实用户剪贴板逻辑保持不变                 |
 | 文档站缺少生产使用指南                | 只有组件页与Theme Lab，安装、SSR、HMR、WebView和发布边界分散       | 共享指南注册表与GuidePage补齐七份指南，直接使用ZUI Card/List/Code/Link             |
@@ -130,7 +130,7 @@
 
 ## 5. 文档站真实浏览器证据
 
-- 78/78组件路由均能渲染，且每页DOM中至少有2个不同Demo；Provider、Code、Button、Input、Form、Avatar与Tree增加第三个生产边界场景。
+- 78/78组件路由均能渲染，且每页DOM中至少有2个不同Demo；十个关键组件增加第三个生产边界场景。
 - 七份新增生产指南在真实Chrome中7/7渲染，均有唯一active导航、3–4个ZUI Card章节和正确页面标题。
 - ZStack方向Demo通过ZSelect键盘切换后，Trigger文本、实际`flex-direction`和焦点恢复一致；Docs全站原生交互标签为0。
 - RTL下ZTable caption/cell和组件TOC computed对齐为start，ZCode行号为end；验收后恢复LTR并由静态门禁拒绝物理textAlign。
@@ -156,6 +156,7 @@
 - ZProvider第三个Demo用真实ZBox作为Popover portalContainer，并以provider-demo前缀生成复合控件ID；内容归属与焦点恢复由Chrome直接验收。
 - ZCode第三个Demo显式展示light/dark scheme、theme对象与ZCard embedded组合，Chrome确认两种scheme均高亮且边框/圆角为0；ZAvatar第三个Demo覆盖成功img和ZIcon fallback Snippet，并保持48px稳定尺寸。
 - ZTree第三个Demo覆盖bare外观、多选aria/FormData和原生reset；DataTable现有两页已覆盖虚拟尺寸、排序、多选与紧凑单选，不制造重复Demo。
+- TagsInput第三个Demo在Chrome固定重复值自动提交与手动草稿保留；FileUpload移除后reset恢复SSR安全的defaultFiles队列；DateField方向键钳制到10/20日并reset回15日。
 - 首页和组件深链完整reload后首个Tab均为“跳到主要内容”；Enter保持当前hash路由与标题/H1，并把焦点送到`main#zui-main-content`
   ，无404或控制台异常。
 - skip-link使用逻辑`inset-inline-start`；真实Chrome切换RTL并reload后出现在右侧起始边，恢复LTR后控制台保持干净。
@@ -190,11 +191,12 @@
 
 ## 6. CI结论
 
-最后一次按约回看的门禁：[CI run 33317482556](https://github.com/kenconnet666/zadmin/actions/runs/33317482556)。
+最后一次按约回看的门禁：[CI run 33318431200](https://github.com/kenconnet666/zadmin/actions/runs/33318431200)。
 
-- Coverage/packages、发布dry-run、仓库外SSR验收与Windows C# WebView2 desktop完整成功；Workspace类型/Svelte、Prettier、ESLint和静态源码审计成功；
-- Chromium与Firefox的完整组件测试成功，包含全部Docs真实Demo；全测试仍只在WebKit失败同一20项reset状态同步；
-- `data-reset-callback=true`但Field输出仍为`alice:1:0`，且微任务内`flushSync`没有减少失败，证明必须退出原事件批次；当前批次改为下一任务提交并显式清理timer；
+- Windows C# WebView2 desktop、Workspace类型/Svelte、Prettier、ESLint和静态源码审计成功；layer reset runtime三浏览器全部成功；
+- Chromium与Firefox的完整组件测试成功，包含全部Docs真实Demo；WebKit仍为同一20项reset状态同步，证明新任务与`flushSync`都没有跨过组件更新边界；
+- Coverage的Chromium组件与Docs Demo成功，唯一额外失败是TreeFixture新增第二棵树后SSR旧断言仍期望4个treeitem；当前批次已改为2棵树/8项并固定multiple元数据；
+- 专用signal当前改为hidden type=button：action只派发不冒泡zuireset，真正reset由Svelte事件处理；Chrome确认无name/id、不可Tab、直接归属且不进入提交值；
 - Docs E2E、全构建与生成文件检查因全测试失败被跳过；Release PR按预期跳过，尚不能扩散到其余24个组件。
 
 最终通过后必须同时满足：
