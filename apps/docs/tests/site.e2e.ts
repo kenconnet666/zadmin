@@ -63,7 +63,10 @@ test('announces component search totals and empty results', async ({ page }) => 
 	await expect(status).toHaveText('0 个匹配组件');
 	await expect(page.getByText('没有匹配组件')).toBeVisible();
 
-	await search.clear();
+	await search.fill('autosize');
+	await search.press('Escape');
+	await expect(search).toBeFocused();
+	await expect(search).toHaveValue('');
 	await expect(status).toHaveText('共 78 个组件');
 });
 

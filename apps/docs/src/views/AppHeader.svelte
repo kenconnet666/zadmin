@@ -277,6 +277,13 @@
 	function setDirection(value: SelectionKey | undefined): void {
 		if (value === 'ltr' || value === 'rtl') direction = value;
 	}
+
+	function handleSearchKeydown(event: KeyboardEvent): void {
+		if (event.key === 'Escape' && query) {
+			event.preventDefault();
+			query = '';
+		}
+	}
 </script>
 
 <header class={classes.root}>
@@ -295,6 +302,7 @@
 			aria-label="搜索组件"
 			id="zui-docs-component-search"
 			name="component-search"
+			onkeydown={handleSearchKeydown}
 			placeholder="搜索组件…"
 		/>
 	</label>
