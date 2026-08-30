@@ -212,6 +212,20 @@ const skipLinkContracts = [
 if (!skipLinkContracts.every((contract) => contract.test(appShellSource))) {
 	fail('Docs AppShell must preserve its hash-router-safe skip link contract.');
 }
+const appHeaderSource = await readFile(resolve(docsRoot, 'src/views/AppHeader.svelte'), 'utf8');
+const appSidebarSource = await readFile(resolve(docsRoot, 'src/views/AppSidebar.svelte'), 'utf8');
+const searchLiveContracts = [
+	/aria-controls=["']zui-docs-component-nav["']/u.test(appHeaderSource),
+	/aria-describedby=["']zui-docs-search-status["']/u.test(appHeaderSource),
+	/<ZVisuallyHidden[\s\S]*?aria-live=["']polite["'][\s\S]*?id=["']zui-docs-search-status["']/u.test(
+		appSidebarSource
+	),
+	/<nav\b[^>]*id=["']zui-docs-component-nav["']/u.test(appSidebarSource),
+	appSidebarSource.includes('${filtered.length} 个匹配组件')
+];
+if (!searchLiveContracts.every(Boolean)) {
+	fail('Docs component search must preserve its navigation and live-status relationships.');
+}
 for (const path of componentFiles) {
 	const source = await readFile(path, 'utf8');
 	if (forbiddenGlyph.test(source)) {
@@ -287,6 +301,7 @@ console.log(
 		resourceLifecycleViolations: 0,
 		dangerousDomSinks: 0,
 		skipLinkContracts: 1,
+		searchLiveContracts: 1,
 		stableNativeIdComponents: stableNativeIdSources.length + 1
 	})
 );
