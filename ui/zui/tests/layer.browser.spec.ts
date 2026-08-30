@@ -133,12 +133,30 @@ describe('ZUI layer runtime', () => {
 		second.focus();
 		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Tab' }));
 		expect(document.activeElement).toBe(first);
+		document.dispatchEvent(
+			new KeyboardEvent('keydown', { bubbles: true, key: 'Tab', shiftKey: true })
+		);
+		expect(document.activeElement).toBe(second);
 		outside.focus();
 		expect(document.activeElement).toBe(first);
 		scope.destroy();
 		expect(document.activeElement).toBe(outside);
 		outside.remove();
 		container.remove();
+
+		const empty = document.createElement('div');
+		empty.tabIndex = -1;
+		document.body.append(empty);
+		const noRestore = new FocusScope(empty, {
+			initialFocus: () => empty,
+			restoreFocus: false,
+			trap: true
+		});
+		await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
+		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Tab' }));
+		expect(document.activeElement).toBe(empty);
+		noRestore.destroy();
+		empty.remove();
 	});
 
 	it('locks scroll and restores inert siblings with nested cleanup', () => {
@@ -151,18 +169,35 @@ describe('ZUI layer runtime', () => {
 		releaseSecond();
 		expect(document.body.style.overflow).toBe(originalOverflow);
 
+		const scrolling = document.createElement('div');
+		scrolling.style.paddingInlineEnd = '4px';
+		Object.defineProperty(scrolling, 'offsetWidth', { configurable: true, value: 120 });
+		Object.defineProperty(scrolling, 'clientWidth', { configurable: true, value: 100 });
+		document.body.append(scrolling);
+		const releaseElement = lockScroll(scrolling);
+		expect(scrolling.style.paddingInlineEnd).toBe('24px');
+		releaseElement();
+		releaseElement();
+		expect(scrolling.style.paddingInlineEnd).toBe('4px');
+		scrolling.remove();
+
 		const root = document.createElement('div');
 		const sibling = document.createElement('main');
-		document.body.append(root, sibling);
-		const restore = inertOthers(root);
+		sibling.inert = true;
+		sibling.setAttribute('aria-hidden', 'legacy');
+		const branch = document.createElement('aside');
+		document.body.append(root, sibling, branch);
+		const restore = inertOthers(root, [branch]);
 		expect(sibling.inert).toBe(true);
 		expect(sibling.getAttribute('aria-hidden')).toBe('true');
 		restore();
 		restore();
-		expect(sibling.inert).toBe(false);
-		expect(sibling.hasAttribute('aria-hidden')).toBe(false);
+		expect(sibling.inert).toBe(true);
+		expect(sibling.getAttribute('aria-hidden')).toBe('legacy');
+		expect(branch.inert).toBe(false);
 		root.remove();
 		sibling.remove();
+		branch.remove();
 	});
 
 	it('positions floating content and releases autoUpdate resources', async () => {

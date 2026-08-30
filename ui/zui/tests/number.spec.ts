@@ -10,6 +10,11 @@ describe('localized number algorithms', () => {
 		expect(parseLocalizedNumber('-', 'en-US')).toEqual({ partial: true, valid: false });
 		expect(parseLocalizedNumber('', 'en-US')).toEqual({ partial: true, valid: true });
 		expect(parseLocalizedNumber('12x', 'en-US')).toEqual({ partial: false, valid: false });
+		expect(parseLocalizedNumber('+12.5', 'en-US')).toMatchObject({ valid: true, value: 12.5 });
+		expect(parseLocalizedNumber('9'.repeat(400), 'en-US')).toEqual({
+			partial: false,
+			valid: false
+		});
 	});
 
 	it('steps decimals without floating point drift and respects bounds', () => {
@@ -18,5 +23,7 @@ describe('localized number algorithms', () => {
 		expect(stepNumber(3, -1, 0.25, 0, 3, 10)).toBe(0.5);
 		expect(clampNumber(-1, 0, 10)).toBe(0);
 		expect(clampNumber(11, 0, 10)).toBe(10);
+		expect(clampNumber(5)).toBe(5);
+		expect(stepNumber(1e-7, 1, 1e-7)).toBe(2e-7);
 	});
 });
