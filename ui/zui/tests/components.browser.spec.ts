@@ -1930,6 +1930,8 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(charlie?.getAttribute('aria-expanded')).toBe('true');
 		expect(alphaContent?.dataset.presence).toBe('exiting');
+		expect(alphaContent?.inert).toBe(true);
+		expect(alphaContent?.hasAttribute('aria-hidden')).toBe(false);
 		expect(output?.textContent).toBe('c:1');
 		await new Promise((resolve) => setTimeout(resolve, 220));
 		await tick();

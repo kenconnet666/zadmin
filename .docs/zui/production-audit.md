@@ -86,6 +86,7 @@
 - Modal与非modal浮层统一检查LayerStack顶层所有权、Escape、outside dismiss、FocusScope、scroll lock、inert和焦点恢复。
 - 真实Chrome已验证嵌套Dialog逐层Escape与逐层恢复、Popover初始焦点、manual Tabs焦点/选择分离、Select/MultiSelect首屏标签和Tour焦点合同。
 - Provider方向更新替换Trigger后关闭嵌套Popover，FocusScope按当前context恢复“调整显示偏好”按钮，Chrome aria-hidden焦点警告为0。
+- Accordion切换Item时旧Content在exiting阶段保持inert且无aria-hidden，动画结束后卸载；三浏览器回归固定同一Presence合同。
 - 远程Docs Playwright复现偏好Popover内方向Select切换，要求RTL/LTR、当前Trigger焦点、expanded=false和console warn/error为空。
 - 自定义视觉不替代原生语义：Table、List、DescriptionList、Timeline、Progress、Meter、Checkbox、Radio、Slider和表单控件继续使用真实平台元素。
 - 高对比度是Theme/contrast轴，不给每个组件复制一套实现；reduced-motion会停止WAAPI或把CSS过渡降为0。
