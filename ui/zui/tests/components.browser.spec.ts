@@ -12,6 +12,7 @@ import CommandPaletteFixture from './CommandPaletteFixture.svelte';
 import CascaderFixture from './CascaderFixture.svelte';
 import CarouselFixture from './CarouselFixture.svelte';
 import ColorPickerFixture from './ColorPickerFixture.svelte';
+import CodeRaceFixture from './CodeRaceFixture.svelte';
 import ContextMenuFixture from './ContextMenuFixture.svelte';
 import ContextBoundaryFixture from './ContextBoundaryFixture.svelte';
 import AccordionFixture from './AccordionFixture.svelte';
@@ -1570,6 +1571,24 @@ describe('compiled ICSS browser updates', () => {
 		expect(form?.querySelector('[data-dirty="true"]')).toBeNull();
 	});
 
+	it('lets FormField consumers cancel dirty and touched transitions', async () => {
+		const target = document.createElement('div');
+		document.body.append(target);
+		const component = mount(FormFixture, { props: { preventFieldEvents: true }, target });
+		const account = target.querySelector<HTMLInputElement>('[data-testid="form-account"]');
+		if (account) {
+			account.value = 'blocked';
+			account.dispatchEvent(new InputEvent('input', { bubbles: true, cancelable: true }));
+			account.dispatchEvent(new FocusEvent('focusout', { bubbles: true, cancelable: true }));
+		}
+		await tick();
+		expect(target.querySelector('[data-dirty="true"]')).toBeNull();
+		expect(target.querySelector('[data-touched="true"]')).toBeNull();
+
+		await unmount(component);
+		target.remove();
+	});
+
 	it('covers Form schema failure, delayed change, invalid submit, reset and prevented submit', async () => {
 		render(FormEdgeFixture);
 		const input = document.querySelector<HTMLInputElement>('[data-testid="edge-input"]');
@@ -1924,6 +1943,37 @@ describe('compiled ICSS browser updates', () => {
 		expect(multipleOutput?.textContent?.trim()).toBe('x,y');
 	});
 
+	it('covers Accordion close, non-collapsible and root-disabled state machines', async () => {
+		const target = document.createElement('div');
+		document.body.append(target);
+		let component = mount(AccordionFixture, { target });
+		target.querySelector<HTMLButtonElement>('[data-testid="accordion-a"]')?.click();
+		target.querySelector<HTMLButtonElement>('[data-testid="accordion-x"]')?.click();
+		await tick();
+		expect(target.querySelector('[data-testid="accordion-output"]')?.textContent).toBe('none:1');
+		expect(
+			target.querySelector('[data-testid="accordion-multiple-output"]')?.textContent?.trim()
+		).toBe('');
+		await unmount(component);
+
+		component = mount(AccordionFixture, { props: { collapsible: false }, target });
+		target.querySelector<HTMLButtonElement>('[data-testid="accordion-a"]')?.click();
+		await tick();
+		expect(target.querySelector('[data-testid="accordion-output"]')?.textContent).toBe('a:0');
+		await unmount(component);
+
+		component = mount(AccordionFixture, { props: { disabledRoot: true }, target });
+		const disabled = target.querySelector<HTMLButtonElement>('[data-testid="accordion-a"]');
+		disabled?.click();
+		disabled?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
+		await tick();
+		expect(disabled?.disabled).toBe(true);
+		expect(disabled?.tabIndex).toBe(-1);
+		expect(target.querySelector('[data-testid="accordion-output"]')?.textContent).toBe('a:0');
+		await unmount(component);
+		target.remove();
+	});
+
 	it('keeps native Slider input, FormData and reset synchronized', async () => {
 		render(SliderFixture);
 		const control = document.querySelector<HTMLInputElement>('[data-testid="slider"]');
@@ -2165,6 +2215,18 @@ describe('compiled ICSS browser updates', () => {
 		expect(root?.dataset.colorScheme).toBe('dark');
 		expect(getComputedStyle(root as Element).backgroundColor).toBe('rgb(13, 17, 23)');
 		expect(getComputedStyle(root as Element).fontSize).toBe('14px');
+	});
+
+	it('keeps only the latest asynchronous ZCode highlight result', async () => {
+		render(CodeRaceFixture);
+		const root = document.querySelector<HTMLElement>('[aria-label="Racing code"]');
+		expect(document.querySelector('[data-testid="code-loading"]')).not.toBeNull();
+		document.querySelector<HTMLButtonElement>('[data-testid="code-invalid"]')?.click();
+		await tick();
+		document.querySelector<HTMLButtonElement>('[data-testid="code-valid"]')?.click();
+		await expect.poll(() => root?.dataset.highlightStatus, { timeout: 10_000 }).toBe('highlighted');
+		expect(root?.textContent).toContain('const recovered = true;');
+		expect(root?.textContent).not.toContain('invalid');
 	});
 
 	it('keeps ZCode resilient for plain, oversized and invalid language inputs', async () => {

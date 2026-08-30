@@ -24,6 +24,7 @@
 			}
 		}
 	};
+	let { preventFieldEvents = false }: { preventFieldEvents?: boolean } = $props();
 	let account = $state('');
 	let email = $state('');
 	let errors = $state<FormErrors>({});
@@ -43,7 +44,13 @@
 	validateOn={['change', 'blur', 'submit']}
 	validationDelay={0}
 >
-	<ZFormField name="account" label="Account" required>
+	<ZFormField
+		name="account"
+		label="Account"
+		required
+		oninput={(event) => preventFieldEvents && event.preventDefault()}
+		onfocusout={(event) => preventFieldEvents && event.preventDefault()}
+	>
 		<ZInput autocomplete="username" bind:value={account} data-testid="form-account" />
 	</ZFormField>
 	<ZFormField name="email" label="Email" required>

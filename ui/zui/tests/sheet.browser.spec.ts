@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { BrowserStyleSheet, type StyleSheetEntry } from '../src/icss/sheet.js';
 
@@ -70,6 +70,23 @@ describe('BrowserStyleSheet', () => {
 		expect(
 			[...(style?.sheet?.cssRules ?? [])].some((rule) => rule.cssText.includes('.c-after'))
 		).toBe(true);
+	});
+
+	it('surfaces non-syntax CSSOM failures and accepts a detached insertion point', () => {
+		const root = document.implementation.createHTMLDocument('cssom-failure');
+		const marker = root.createComment('detached');
+		const original = CSSStyleSheet.prototype.insertRule;
+		const spy = vi
+			.spyOn(CSSStyleSheet.prototype, 'insertRule')
+			.mockImplementation(function (rule, index) {
+				if (rule.includes('c-failure')) throw new RangeError('CSSOM unavailable');
+				return original.call(this, rule, index);
+			});
+		const sheet = new BrowserStyleSheet({ insertionPoint: marker, root });
+
+		expect(() => sheet.insert(entry('c-failure'))).toThrow(/CSSOM unavailable/u);
+		expect(root.head.querySelector('style[data-icss]')).not.toBeNull();
+		spy.mockRestore();
 	});
 
 	it('supports isolated ShadowRoot registries', () => {

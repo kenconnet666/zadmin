@@ -6,12 +6,22 @@
 	import ZAccordionItem from '../src/components/compound/accordion/ZAccordionItem.svelte';
 	import ZAccordionTrigger from '../src/components/compound/accordion/ZAccordionTrigger.svelte';
 
+	let {
+		collapsible = true,
+		disabledRoot = false
+	}: { collapsible?: boolean; disabledRoot?: boolean } = $props();
 	let value = $state<AccordionValue | undefined>('a');
 	let changes = $state(0);
 	let multiple = $state<AccordionValue>(['x']);
 </script>
 
-<ZAccordion bind:value defaultValue="a" onValueChange={() => (changes += 1)}>
+<ZAccordion
+	bind:value
+	{collapsible}
+	defaultValue="a"
+	disabled={disabledRoot}
+	onValueChange={() => (changes += 1)}
+>
 	<ZAccordionItem value="a">
 		<ZAccordionTrigger
 			data-testid="accordion-a"

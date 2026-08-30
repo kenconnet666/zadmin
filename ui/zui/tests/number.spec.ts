@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { clampNumber, parseLocalizedNumber, stepNumber } from '../src/runtime/number.js';
 
@@ -33,5 +33,19 @@ describe('localized number algorithms', () => {
 		expect(stepNumber(1e21, -1, 1e20)).toBe(900000000000000000000);
 		expect(stepNumber(-1.25, 1, 1)).toBe(-0.25);
 		expect(stepNumber(-1e-7, -1, 1e-7)).toBe(-2e-7);
+	});
+
+	it('falls back to ASCII separators when Intl omits optional symbol parts', () => {
+		const formatter = {
+			formatToParts: () => [{ type: 'integer', value: '12345' }]
+		} as unknown as Intl.NumberFormat;
+		const spy = vi.spyOn(Intl, 'NumberFormat').mockImplementation(() => formatter);
+
+		expect(parseLocalizedNumber('1234.5', 'en-US')).toEqual({
+			partial: false,
+			valid: true,
+			value: 1234.5
+		});
+		spy.mockRestore();
 	});
 });
