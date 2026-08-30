@@ -84,6 +84,12 @@ export { zuiMetadata as cardMetadata } from '../components/data-display/ZCard.sv
 export { zuiMetadata as descriptionListMetadata } from '../components/data-display/ZDescriptionList.svelte';
 export { zuiMetadata as listMetadata } from '../components/data-display/ZList.svelte';
 export { zuiMetadata as tagMetadata } from '../components/data-display/ZTag.svelte';
+export { zuiMetadata as alertMetadata } from '../components/feedback/ZAlert.svelte';
+export { zuiMetadata as loadingBarMetadata } from '../components/feedback/ZLoadingBar.svelte';
+export { zuiMetadata as resultMetadata } from '../components/feedback/ZResult.svelte';
+export { zuiMetadata as spinnerMetadata } from '../components/feedback/ZSpinner.svelte';
+export { zuiMetadata as toastMetadata } from '../components/feedback/ZToast.svelte';
+export { zuiMetadata as toasterMetadata } from '../components/feedback/ZToaster.svelte';
 export { zuiMetadata as checkboxMetadata } from '../components/input/ZCheckbox.svelte';
 export { zuiMetadata as cascaderMetadata } from '../components/input/ZCascader.svelte';
 export { zuiMetadata as calendarMetadata } from '../components/input/ZCalendar.svelte';

@@ -1,6 +1,6 @@
 <script module lang="ts">
 	import type { Snippet } from 'svelte';
-	import type { HTMLAttributes, OlHTMLAttributes } from 'svelte/elements';
+	import type { HTMLAttributes, HTMLOlAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 	export interface ListItem {
@@ -9,7 +9,7 @@
 		readonly label: string;
 	}
 	export interface ZListProps extends Omit<
-		HTMLAttributes<HTMLUListElement> & OlHTMLAttributes,
+		HTMLAttributes<HTMLUListElement> & HTMLOlAttributes,
 		'children'
 	> {
 		readonly item?: Snippet<[ListItem]>;

@@ -4,6 +4,11 @@ import { cardDoc } from '../content/components/data-display/card/doc.js';
 import { descriptionListDoc } from '../content/components/data-display/description-list/doc.js';
 import { listDoc } from '../content/components/data-display/list/doc.js';
 import { tagDoc } from '../content/components/data-display/tag/doc.js';
+import { alertDoc } from '../content/components/feedback/alert/doc.js';
+import { loadingBarDoc } from '../content/components/feedback/loading-bar/doc.js';
+import { resultDoc } from '../content/components/feedback/result/doc.js';
+import { spinnerDoc } from '../content/components/feedback/spinner/doc.js';
+import { toastDoc } from '../content/components/feedback/toast/doc.js';
 import { boxDoc } from '../content/components/gene/box/doc.js';
 import { buttonDoc } from '../content/components/gene/button/doc.js';
 import { codeDoc } from '../content/components/gene/code/doc.js';
@@ -94,6 +99,11 @@ export const componentDocs = Object.freeze([
 	descriptionListDoc,
 	listDoc,
 	tagDoc,
+	alertDoc,
+	loadingBarDoc,
+	resultDoc,
+	spinnerDoc,
+	toastDoc,
 	checkboxDoc,
 	calendarDoc,
 	cascaderDoc,

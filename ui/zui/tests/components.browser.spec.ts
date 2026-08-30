@@ -20,6 +20,7 @@ import InputGroupFixture from './InputGroupFixture.svelte';
 import DialogFixture from './DialogFixture.svelte';
 import DateFixture from './DateFixture.svelte';
 import DisplayFixture from './DisplayFixture.svelte';
+import FeedbackFixture from './FeedbackFixture.svelte';
 import DrawerFixture from './DrawerFixture.svelte';
 import DropdownMenuFixture from './DropdownMenuFixture.svelte';
 import MenuFixture from './MenuFixture.svelte';
@@ -65,6 +66,39 @@ function insertedRuleCount(): number {
 }
 
 describe('compiled ICSS browser updates', () => {
+	it('coordinates feedback semantics, motion cleanup, Toast action and paused timeout', async () => {
+		render(FeedbackFixture);
+		const determinate = document.querySelector<HTMLElement>('[data-testid="loading-determinate"]');
+		const indeterminate = document.querySelector<HTMLElement>(
+			'[data-testid="loading-indeterminate"]'
+		);
+		expect(determinate?.getAttribute('aria-valuenow')).toBe('65');
+		expect(indeterminate?.hasAttribute('aria-valuenow')).toBe(false);
+		expect(document.querySelector('[data-testid="spinner"] svg')?.getAnimations().length).toBe(1);
+
+		document.querySelector<HTMLButtonElement>('[aria-label="Dismiss saved alert"]')?.click();
+		await tick();
+		expect(document.querySelector('[data-testid="alert-output"]')?.textContent).toBe('dismissed');
+
+		document.querySelector<HTMLButtonElement>('[data-testid="add-timed-toast"]')?.click();
+		await tick();
+		const timed = [...document.querySelectorAll<HTMLElement>('article[role="status"]')].find(
+			(element) => element.textContent?.includes('Timed notification')
+		);
+		expect(timed).toBeDefined();
+		timed?.dispatchEvent(new MouseEvent('mouseenter'));
+		await new Promise((resolve) => setTimeout(resolve, 120));
+		expect(document.body.contains(timed ?? null)).toBe(true);
+		timed?.dispatchEvent(new MouseEvent('mouseleave'));
+		await new Promise((resolve) => setTimeout(resolve, 100));
+		await tick();
+		expect(document.body.contains(timed ?? null)).toBe(false);
+
+		document.querySelector<HTMLButtonElement>('article button:not([aria-label])')?.click();
+		await tick();
+		expect(document.body.textContent).not.toContain('Release ready');
+	});
+
 	it('keeps data-display image fallback, document semantics and removal ownership synchronized', async () => {
 		render(DisplayFixture);
 		const imageAvatar = document.querySelector<HTMLElement>('[data-testid="avatar-image"]');
@@ -735,7 +769,8 @@ describe('compiled ICSS browser updates', () => {
 		await new Promise((resolve) => setTimeout(resolve, 0));
 		await tick();
 		expect(output?.textContent).toBe('none:1');
-		expect(new FormData(form!).getAll('asset')).toHaveLength(0);
+		expect(input?.files).toHaveLength(0);
+		expect((new FormData(form!).get('asset') as File).name).toBe('');
 	});
 
 	it('coordinates Form async validation races, field state, first-error focus, submit and reset', async () => {

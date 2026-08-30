@@ -19,7 +19,8 @@ test('renders the component catalog and real demo source', async ({ page }) => {
 		'输入组件',
 		'导航组件',
 		'浮层组件',
-		'展示组件'
+		'展示组件',
+		'反馈组件'
 	]);
 
 	await page.goto('/#/components/button');
@@ -260,6 +261,31 @@ test('keeps data-display document semantics, image alternatives and Tag ownershi
 	await page.getByRole('button', { name: '移除 production' }).click();
 	await expect(page.getByText('visible = false')).toBeVisible();
 	await expect(page.getByRole('button', { name: '移除 production' })).toHaveCount(0);
+});
+
+test('keeps feedback live regions, progress values and Toast queue actions explicit', async ({
+	page
+}) => {
+	await page.goto('/#/components/alert');
+	await expect(page.getByRole('status')).toContainText('配置已保存');
+	await page.getByRole('button', { name: '关闭配置保存提示' }).click();
+	await expect(page.getByText('visible = false')).toBeVisible();
+
+	await page.goto('/#/components/loading-bar');
+	const progress = page.getByRole('progressbar', { name: '发布进度' });
+	await expect(progress).toHaveAttribute('aria-valuenow', '42');
+	await page.getByRole('button', { name: '增加10%' }).click();
+	await expect(progress).toHaveAttribute('aria-valuenow', '52');
+	await expect(page.getByRole('progressbar', { name: '正在连接构建服务' })).not.toHaveAttribute(
+		'aria-valuenow'
+	);
+
+	await page.goto('/#/components/toast');
+	await page.getByRole('button', { name: '发送通知' }).click();
+	const toast = page.locator('article[role="status"]').filter({ hasText: '发布制品已就绪' });
+	await expect(toast).toBeVisible();
+	await toast.getByRole('button', { name: 'Dismiss 发布制品已就绪' }).click();
+	await expect(toast).toHaveCount(0);
 });
 
 test('keeps PinInput roving entry, completion, single FormData value and reset synchronized', async ({
@@ -931,6 +957,11 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/description-list',
 		'#/components/list',
 		'#/components/tag',
+		'#/components/alert',
+		'#/components/loading-bar',
+		'#/components/result',
+		'#/components/spinner',
+		'#/components/toast',
 		'#/components/checkbox',
 		'#/components/calendar',
 		'#/components/color-picker',

@@ -94,6 +94,7 @@ export const DEFAULT_THEME_SCHEMA = {
 		drawerSmall: 320,
 		full: '100%',
 		large: 48,
+		loadingBar: 3,
 		menu: 192,
 		medium: 32,
 		popconfirm: 320,

@@ -20,6 +20,12 @@ const components = [
 	},
 	{ id: 'list', name: 'ZList', path: 'data-display/ZList.svelte' },
 	{ id: 'tag', name: 'ZTag', path: 'data-display/ZTag.svelte' },
+	{ id: 'alert', name: 'ZAlert', path: 'feedback/ZAlert.svelte' },
+	{ id: 'loading-bar', name: 'ZLoadingBar', path: 'feedback/ZLoadingBar.svelte' },
+	{ id: 'result', name: 'ZResult', path: 'feedback/ZResult.svelte' },
+	{ id: 'spinner', name: 'ZSpinner', path: 'feedback/ZSpinner.svelte' },
+	{ id: 'toast', name: 'ZToast', path: 'feedback/ZToast.svelte' },
+	{ id: 'toaster', name: 'ZToaster', path: 'feedback/ZToaster.svelte' },
 	{ id: 'accordion', name: 'ZAccordion', path: 'compound/accordion/ZAccordion.svelte' },
 	{
 		id: 'accordion-item',

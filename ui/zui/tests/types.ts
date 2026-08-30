@@ -8,6 +8,7 @@ import {
 	ZAccordionContent,
 	ZAccordionItem,
 	ZAccordionTrigger,
+	ZAlert,
 	ZAlertDialog,
 	ZAlertDialogAction,
 	ZAlertDialogCancel,
@@ -60,6 +61,7 @@ import {
 	ZFormField,
 	ZInputGroup,
 	ZList,
+	ZLoadingBar,
 	ZMenu,
 	ZMenuGroup,
 	ZMenuItem,
@@ -85,12 +87,14 @@ import {
 	ZPopoverTrigger,
 	ZRadioGroup,
 	ZRadioGroupItem,
+	ZResult,
 	ZSelect,
 	ZSelectContent,
 	ZSelectItem,
 	ZSelectTrigger,
 	ZSegmented,
 	ZSlider,
+	ZSpinner,
 	ZSwitch,
 	ZTabs,
 	ZTabsList,
@@ -98,6 +102,8 @@ import {
 	ZTabsTrigger,
 	ZTagsInput,
 	ZTag,
+	ZToast,
+	ZToaster,
 	ZTextarea,
 	ZTimeField,
 	ZTooltip,
@@ -107,6 +113,7 @@ import {
 	ZTreeSelect,
 	ZTransfer,
 	ZToggleButton,
+	createToastQueue,
 	defineRecipe,
 	defineSlotRecipe,
 	type RecipeVariants,
@@ -115,6 +122,7 @@ import {
 	type ZAccordionItemProps,
 	type ZAccordionProps,
 	type ZAccordionTriggerProps,
+	type ZAlertProps,
 	type ZAlertDialogActionProps,
 	type ZAlertDialogCancelProps,
 	type ZAlertDialogContentProps,
@@ -167,6 +175,7 @@ import {
 	type ZFormProps,
 	type ZInputGroupProps,
 	type ZListProps,
+	type ZLoadingBarProps,
 	type ZMenuGroupProps,
 	type ZMenuItemProps,
 	type ZMenuLabelProps,
@@ -192,12 +201,14 @@ import {
 	type ZPopoverTriggerProps,
 	type ZRadioGroupItemProps,
 	type ZRadioGroupProps,
+	type ZResultProps,
 	type ZSelectContentProps,
 	type ZSelectItemProps,
 	type ZSelectProps,
 	type ZSelectTriggerProps,
 	type ZSegmentedProps,
 	type ZSliderProps,
+	type ZSpinnerProps,
 	type ZSwitchProps,
 	type ZTabsListProps,
 	type ZTabsPanelProps,
@@ -205,6 +216,8 @@ import {
 	type ZTabsTriggerProps,
 	type ZTagsInputProps,
 	type ZTagProps,
+	type ZToastProps,
+	type ZToasterProps,
 	type ZTextareaProps,
 	type ZTimeFieldProps,
 	type ZTooltipContentProps,
@@ -227,6 +240,16 @@ const listProps: ComponentProps<typeof ZList> = {
 	items: [{ id: 'one', label: 'One' }]
 } satisfies ZListProps;
 const tagProps: ComponentProps<typeof ZTag> = { removable: true } satisfies ZTagProps;
+const alertProps: ComponentProps<typeof ZAlert> = { title: 'Saved' } satisfies ZAlertProps;
+const loadingBarProps: ComponentProps<typeof ZLoadingBar> = {
+	value: 50
+} satisfies ZLoadingBarProps;
+const resultProps: ComponentProps<typeof ZResult> = { title: 'Ready' } satisfies ZResultProps;
+const spinnerProps: ComponentProps<typeof ZSpinner> = { label: 'Loading' } satisfies ZSpinnerProps;
+const toastProps: ComponentProps<typeof ZToast> = { title: 'Ready' } satisfies ZToastProps;
+const toasterProps: ComponentProps<typeof ZToaster> = {
+	queue: createToastQueue()
+} satisfies ZToasterProps;
 const accordionProps: ComponentProps<typeof ZAccordion> = {
 	defaultValue: ['one'],
 	type: 'multiple'
@@ -489,6 +512,12 @@ void cardProps;
 void descriptionListProps;
 void listProps;
 void tagProps;
+void alertProps;
+void loadingBarProps;
+void resultProps;
+void spinnerProps;
+void toastProps;
+void toasterProps;
 void accordionItemProps;
 void accordionTriggerProps;
 void accordionContentProps;

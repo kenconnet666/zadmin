@@ -200,6 +200,27 @@ export { default as ZList } from '../components/data-display/ZList.svelte';
 export type { ListItem, ZListProps } from '../components/data-display/ZList.svelte';
 export { default as ZTag } from '../components/data-display/ZTag.svelte';
 export type { ZTagProps } from '../components/data-display/ZTag.svelte';
+export { default as ZAlert } from '../components/feedback/ZAlert.svelte';
+export type { AlertLive, AlertTone, ZAlertProps } from '../components/feedback/ZAlert.svelte';
+export { default as ZLoadingBar } from '../components/feedback/ZLoadingBar.svelte';
+export type { ZLoadingBarProps } from '../components/feedback/ZLoadingBar.svelte';
+export { default as ZResult } from '../components/feedback/ZResult.svelte';
+export type { ZResultProps } from '../components/feedback/ZResult.svelte';
+export { default as ZSpinner } from '../components/feedback/ZSpinner.svelte';
+export type { SpinnerSize, ZSpinnerProps } from '../components/feedback/ZSpinner.svelte';
+export { default as ZToast } from '../components/feedback/ZToast.svelte';
+export type { ZToastProps } from '../components/feedback/ZToast.svelte';
+export { default as ZToaster } from '../components/feedback/ZToaster.svelte';
+export type { ToasterPlacement, ZToasterProps } from '../components/feedback/ZToaster.svelte';
+export { createToastQueue, ToastQueue } from '../runtime/toast.svelte.js';
+export type {
+	ToastDismissReason,
+	ToastOptions,
+	ToastPauseReason,
+	ToastPriority,
+	ToastRecord,
+	ToastTone
+} from '../runtime/toast.svelte.js';
 export { default as ZField } from '../components/input/ZField.svelte';
 export type { ZFieldProps, ZFieldSize } from '../components/input/ZField.svelte';
 export { default as ZFileUpload } from '../components/input/ZFileUpload.svelte';

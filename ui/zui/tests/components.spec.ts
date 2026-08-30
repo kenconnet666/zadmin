@@ -51,6 +51,7 @@ import PinInputFixture from './PinInputFixture.svelte';
 import DialogFixture from './DialogFixture.svelte';
 import DateFixture from './DateFixture.svelte';
 import DisplayFixture from './DisplayFixture.svelte';
+import FeedbackFixture from './FeedbackFixture.svelte';
 import DrawerFixture from './DrawerFixture.svelte';
 import DropdownMenuFixture from './DropdownMenuFixture.svelte';
 import PopoverFixture from './PopoverFixture.svelte';
@@ -496,6 +497,21 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain('<dl');
 		expect(result.match(/<dt/gu)).toHaveLength(2);
 		expect(result.match(/<dd/gu)).toHaveLength(2);
+	});
+
+	it('renders feedback live regions, progress states, Result and queued Toasts during SSR', () => {
+		const result = render(FeedbackFixture).body;
+
+		expect(result).toContain('role="status"');
+		expect(result).toContain('aria-live="polite"');
+		expect(result).toContain('aria-label="Synchronizing"');
+		expect(result).toContain('aria-label="Release progress"');
+		expect(result).toContain('aria-valuenow="65"');
+		expect(result).toContain('data-indeterminate="true"');
+		expect(result).toContain('aria-labelledby="');
+		expect(result).toContain('Release complete');
+		expect(result).toContain('aria-label="Release notifications"');
+		expect(result).toContain('Release ready');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

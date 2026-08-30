@@ -47,3 +47,12 @@ export { createTreeIndex } from '../runtime/tree.js';
 export type { TreeEntry, TreeIndex, TreeNode } from '../runtime/tree.js';
 export { Typeahead } from '../runtime/collection/typeahead.js';
 export type { TypeaheadOptions } from '../runtime/collection/typeahead.js';
+export { createToastQueue, ToastQueue } from '../runtime/toast.svelte.js';
+export type {
+	ToastDismissReason,
+	ToastOptions,
+	ToastPauseReason,
+	ToastPriority,
+	ToastRecord,
+	ToastTone
+} from '../runtime/toast.svelte.js';
