@@ -44,6 +44,7 @@ import MenuFixture from './MenuFixture.svelte';
 import MentionFixture from './MentionFixture.svelte';
 import MultiSelectFixture from './MultiSelectFixture.svelte';
 import NumberFieldFixture from './NumberFieldFixture.svelte';
+import PinInputFixture from './PinInputFixture.svelte';
 import DialogFixture from './DialogFixture.svelte';
 import DrawerFixture from './DrawerFixture.svelte';
 import DropdownMenuFixture from './DropdownMenuFixture.svelte';
@@ -419,6 +420,15 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain('aria-valuenow="1.5"');
 		expect(result).toContain('name="amount"');
 		expect(result).toContain('value="1.5"');
+	});
+
+	it('renders PinInput roving cells and one hidden form value during SSR', () => {
+		const result = render(PinInputFixture).body;
+		expect(result.match(/data-slot="input"/gu)).toHaveLength(4);
+		expect(result).toContain('aria-label="PIN 1 of 4"');
+		expect(result).toContain('tabindex="0"');
+		expect(result).toContain('name="pin"');
+		expect(result).toContain('value="12"');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

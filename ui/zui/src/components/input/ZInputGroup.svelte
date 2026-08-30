@@ -4,7 +4,10 @@
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 
-	export interface ZInputGroupProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
+	export interface ZInputGroupProps extends Omit<
+		HTMLAttributes<HTMLDivElement>,
+		'children' | 'prefix'
+	> {
 		readonly children: Snippet;
 		readonly disabled?: boolean;
 		readonly invalid?: boolean;
@@ -176,7 +179,6 @@
 	use:applyIcssRootStyle={{ style, variables }}
 	role="group"
 	aria-disabled={disabled || undefined}
-	aria-invalid={invalid || undefined}
 	data-disabled={disabled || undefined}
 	data-invalid={invalid || undefined}
 >

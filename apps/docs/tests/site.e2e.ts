@@ -113,6 +113,25 @@ test('keeps NumberField locale parsing, spinbutton keys, FormData and reset sync
 	await expect(input).toHaveAttribute('aria-valuenow', '1234.5');
 });
 
+test('keeps PinInput roving entry, completion, single FormData value and reset synchronized', async ({
+	page
+}) => {
+	await page.goto('/#/components/pin-input');
+	const first = page.getByRole('textbox', { name: '一次性验证码' });
+	await first.focus();
+	await page.keyboard.type('123456');
+	await expect(page.getByText('value = 123456 · complete = 1')).toBeVisible();
+	await expect
+		.poll(() =>
+			page.locator('form').evaluate((form) => new FormData(form as HTMLFormElement).get('otp'))
+		)
+		.toBe('123456');
+	await page.keyboard.press('Backspace');
+	await expect(page.getByText('value = 12345 · complete = 1')).toBeVisible();
+	await page.getByRole('button', { name: '重置' }).click();
+	await expect(page.getByText('value = empty · complete = 1')).toBeVisible();
+});
+
 test('keeps toggle button state native, bindable and keyboard accessible', async ({ page }) => {
 	await page.goto('/#/components/toggle-button');
 	const toggle = page.getByTestId('toggle-button-controlled');
@@ -742,6 +761,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/mention',
 		'#/components/multi-select',
 		'#/components/number-field',
+		'#/components/pin-input',
 		'#/components/field',
 		'#/components/radio-group',
 		'#/components/select',

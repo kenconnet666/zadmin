@@ -59,6 +59,7 @@ import {
 	ZMultiSelectTrigger,
 	ZNumberField,
 	ZPagination,
+	ZPinInput,
 	ZPopconfirm,
 	ZPopconfirmAction,
 	ZPopconfirmCancel,
@@ -150,6 +151,7 @@ import {
 	type ZMultiSelectTriggerProps,
 	type ZNumberFieldProps,
 	type ZPaginationProps,
+	type ZPinInputProps,
 	type ZPopconfirmActionProps,
 	type ZPopconfirmCancelProps,
 	type ZPopconfirmContentProps,
@@ -371,6 +373,11 @@ const numberFieldProps: ComponentProps<typeof ZNumberField> = {
 	step: 0.25,
 	value: 1.5
 } satisfies ZNumberFieldProps;
+const pinInputProps: ComponentProps<typeof ZPinInput> = {
+	length: 6,
+	mask: true,
+	value: '123456'
+} satisfies ZPinInputProps;
 const sliderProps: ComponentProps<typeof ZSlider> = {
 	defaultValue: 25,
 	max: 50,
@@ -478,6 +485,7 @@ void commandPaletteProps;
 void textareaProps;
 void inputGroupProps;
 void numberFieldProps;
+void pinInputProps;
 void sliderProps;
 void switchProps;
 void tabsProps;

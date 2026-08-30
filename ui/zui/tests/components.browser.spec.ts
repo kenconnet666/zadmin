@@ -21,6 +21,7 @@ import MenuFixture from './MenuFixture.svelte';
 import MentionFixture from './MentionFixture.svelte';
 import MultiSelectFixture from './MultiSelectFixture.svelte';
 import NumberFieldFixture from './NumberFieldFixture.svelte';
+import PinInputFixture from './PinInputFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
 import PaginationFixture from './PaginationFixture.svelte';
 import PopoverFixture from './PopoverFixture.svelte';
@@ -598,6 +599,36 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(input?.value).toBe('1,5');
 		expect(output?.textContent).toBe('1.5');
+	});
+
+	it('coordinates PinInput paste, roving deletion, completion, FormData and reset', async () => {
+		render(PinInputFixture);
+		const inputs = [...document.querySelectorAll<HTMLInputElement>('[data-slot="input"]')];
+		const form = document.querySelector<HTMLFormElement>('[data-testid="pin-input-form"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="pin-input-output"]');
+		const transfer = new DataTransfer();
+		transfer.setData('text', '3456');
+		inputs[2]?.dispatchEvent(
+			new ClipboardEvent('paste', { bubbles: true, clipboardData: transfer })
+		);
+		await tick();
+		expect(output?.textContent).toBe('1234:1');
+		expect(document.activeElement).toBe(inputs[3]);
+		expect(new FormData(form!).get('pin')).toBe('1234');
+		inputs[3]?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Backspace' }));
+		await tick();
+		expect(output?.textContent).toBe('123:1');
+		if (inputs[3]) {
+			inputs[3].value = '4';
+			inputs[3].dispatchEvent(new InputEvent('input', { bubbles: true }));
+		}
+		await tick();
+		expect(output?.textContent).toBe('1234:2');
+		form?.reset();
+		await Promise.resolve();
+		await tick();
+		expect(output?.textContent).toBe('12:2');
+		expect(inputs.map((input) => input.value)).toEqual(['1', '2', '', '']);
 	});
 	it('keeps AlertDialog open until an explicit action is chosen', async () => {
 		render(AlertDialogFixture);
@@ -1257,6 +1288,6 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		await tick();
 		expect(input.value).toBe('seed');
-		expect(output?.textContent).toBe('alice:1');
+		expect(output?.textContent).toBe('seed:1');
 	});
 });
