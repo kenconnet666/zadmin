@@ -31,26 +31,27 @@
 
 ## 3. 本轮发现并修复的问题
 
-| 问题                              | 根因                                                            | 修复                                                                         |
-| --------------------------------- | --------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| 多边界Pagination出现重复key       | 前后大间隙都被标记为`ellipsis-end`                              | 根据间隙相对当前页的位置生成稳定start/end身份，并加入100页回归               |
-| Select/MultiSelect首屏显示原始key | Content未挂载时没有Item标签缓存                                 | 增加`valueLabel`回退合同，保留自定义Trigger能力                              |
-| 负数NumberField步进可能错误舍入   | `decimalPlaces`正则没有接受数值符号                             | 支持正负号并覆盖负小数与负科学计数法                                         |
-| 动画合同不一致                    | 早期Button/Input/Textarea/InputGroup/FileUpload只写了transition | 全部接入Provider motion；Accordion指示器也支持reduced-motion                 |
-| 可取消事件重复实现                | Select、MultiSelect、Combobox、Menu和Layer各自维护布尔状态      | 抽取最小`CancelableEvent`基类，保留具体事件公开类型                          |
-| 关闭/导航图标不一致               | 多处使用`×/‹/›/+/-/✓`字符                                       | 统一使用按需Lucide；完整操作复用ZButton，微型内部按钮复用无状态focus样式合同 |
-| WebView窗口控制仍用字符图标       | WindowControls早于ZIcon manifest扩展                            | 扩展受控manifest并改用`ZIcon`                                                |
-| 文档页只展示一个场景              | 首轮文档以实现证明为主，没有形成特性矩阵                        | 78页全部补为基础+状态/边界/组合Demo，复杂组件覆盖键盘、焦点、表单或生命周期  |
-| 文档站自建原生控件                | 站点框架早于相关ZUI组件                                         | Header、API表、首页、Sidebar、TOC和Theme Lab改为真实ZUI消费者                |
-| ZStack Demo遗留原生Select         | 旧Demo在ZSelect完成前直接使用平台控件                           | 改用ZStack、ZText与ZSelect组合，并把dogfood门禁从views扩到全部Docs Svelte    |
-| 批量覆盖污染多浏览器状态          | 覆盖率专用的Docs汇总挂载也在Firefox/WebKit运行                  | 汇总限定到Chromium且显式mount/unmount；三浏览器继续跑独立组件行为套件        |
-| 高对比主题进入Theme Lab后白屏     | 预设色板按颜色值作为key，`canvas`与`surface`可同为`#ffffff`     | 改用语义token名作为稳定key；全新Chrome标签页重载后六主题全部恢复             |
-| 组件大小门禁与完整交互职责冲突    | 3.25 KiB阈值把DataTable、Tour、DatePicker等误当成视觉原子       | CI继续构建并记录gzip、检查依赖边界；仅在产物明显异常时人工分析，不设字节门禁 |
-| WebKit表单reset批量失效           | 引擎可能暂不暴露或包装不同的`control.form`对象                  | 共享runtime按实时form、DOM包含关系与显式`form=id`三条证据判定reset归属       |
-| Firefox合成paste缺少payload       | 构造参数中的`clipboardData`没有跨引擎落到只读事件属性           | 测试助手显式定义ClipboardEvent payload；真实用户剪贴板逻辑保持不变           |
-| 文档站缺少生产使用指南            | 只有组件页与Theme Lab，安装、SSR、HMR、WebView和发布边界分散    | 共享指南注册表与GuidePage补齐七份指南，直接使用ZUI Card/List/Code/Link       |
-| 发布包缺少消费者入口说明          | npm tarball没有就地安装、entrypoint与稳定性说明                 | 增加随包README、AST API快照、publish dry-run和仓库外tarball验收              |
-| 发布规划没有release PR自动化      | 只有Changesets CLI脚本，没有成功CI后的版本与Changelog PR        | Changesets v2从成功CI的SHA创建PR；仓库允许Actions建PR，默认token仍保持只读   |
+| 问题                                  | 根因                                                            | 修复                                                                         |
+| ------------------------------------- | --------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| 多边界Pagination出现重复key           | 前后大间隙都被标记为`ellipsis-end`                              | 根据间隙相对当前页的位置生成稳定start/end身份，并加入100页回归               |
+| Select/MultiSelect首屏显示原始key     | Content未挂载时没有Item标签缓存                                 | 增加`valueLabel`回退合同，保留自定义Trigger能力                              |
+| 负数NumberField步进可能错误舍入       | `decimalPlaces`正则没有接受数值符号                             | 支持正负号并覆盖负小数与负科学计数法                                         |
+| 动画合同不一致                        | 早期Button/Input/Textarea/InputGroup/FileUpload只写了transition | 全部接入Provider motion；Accordion指示器也支持reduced-motion                 |
+| 可取消事件重复实现                    | Select、MultiSelect、Combobox、Menu和Layer各自维护布尔状态      | 抽取最小`CancelableEvent`基类，保留具体事件公开类型                          |
+| 关闭/导航图标不一致                   | 多处使用`×/‹/›/+/-/✓`字符                                       | 统一使用按需Lucide；完整操作复用ZButton，微型内部按钮复用无状态focus样式合同 |
+| Transfer、DataTable与主页残留箭头字符 | 早期实现只补了可访问名称，字符范围没有纳入全树图标审计          | 统一使用按需Lucide/ZIcon；Transfer按LTR/RTL交换方向，DataTable复用ZButton    |
+| WebView窗口控制仍用字符图标           | WindowControls早于ZIcon manifest扩展                            | 扩展受控manifest并改用`ZIcon`                                                |
+| 文档页只展示一个场景                  | 首轮文档以实现证明为主，没有形成特性矩阵                        | 78页全部补为基础+状态/边界/组合Demo，复杂组件覆盖键盘、焦点、表单或生命周期  |
+| 文档站自建原生控件                    | 站点框架早于相关ZUI组件                                         | Header、API表、首页、Sidebar、TOC和Theme Lab改为真实ZUI消费者                |
+| ZStack Demo遗留原生Select             | 旧Demo在ZSelect完成前直接使用平台控件                           | 改用ZStack、ZText与ZSelect组合，并把dogfood门禁从views扩到全部Docs Svelte    |
+| 批量覆盖污染多浏览器状态              | 覆盖率专用的Docs汇总挂载也在Firefox/WebKit运行                  | 汇总限定到Chromium且显式mount/unmount；三浏览器继续跑独立组件行为套件        |
+| 高对比主题进入Theme Lab后白屏         | 预设色板按颜色值作为key，`canvas`与`surface`可同为`#ffffff`     | 改用语义token名作为稳定key；全新Chrome标签页重载后六主题全部恢复             |
+| 组件大小门禁与完整交互职责冲突        | 3.25 KiB阈值把DataTable、Tour、DatePicker等误当成视觉原子       | CI继续构建并记录gzip、检查依赖边界；仅在产物明显异常时人工分析，不设字节门禁 |
+| WebKit表单reset批量失效               | reset不是composed事件，document监听无法跨测试/组件ShadowRoot    | 同时监听组件root、关联form和document，实时按form/包含/id判定并合并重复捕获   |
+| Firefox合成paste缺少payload           | 构造参数中的`clipboardData`没有跨引擎落到只读事件属性           | 测试助手显式定义ClipboardEvent payload；真实用户剪贴板逻辑保持不变           |
+| 文档站缺少生产使用指南                | 只有组件页与Theme Lab，安装、SSR、HMR、WebView和发布边界分散    | 共享指南注册表与GuidePage补齐七份指南，直接使用ZUI Card/List/Code/Link       |
+| 发布包缺少消费者入口说明              | npm tarball没有就地安装、entrypoint与稳定性说明                 | 增加随包README、AST API快照、publish dry-run和仓库外tarball验收              |
+| 发布规划没有release PR自动化          | 只有Changesets CLI脚本，没有成功CI后的版本与Changelog PR        | Changesets v2从成功CI的SHA创建PR；仓库允许Actions建PR，默认token仍保持只读   |
 
 ## 4. 交互与可访问性审计
 
@@ -66,6 +67,7 @@
 - 78/78组件路由均能渲染，且每页DOM中有2个不同Demo。
 - 七份新增生产指南在真实Chrome中7/7渲染，均有唯一active导航、3–4个ZUI Card章节和正确页面标题。
 - ZStack方向Demo通过ZSelect键盘切换后，Trigger文本、实际`flex-direction`和焦点恢复一致；Docs全站原生交互标签为0。
+- DataTable排序头通过ZButton获得统一focus/motion，Enter切换ascending/descending时同步Lucide与`aria-sort`；Transfer完成真实移动并在RTL交换Lucide方向。
 - 六主题最终surface分别为极光`rgb(238, 244, 255)`、纸张`rgb(245, 237, 225)`、霓虹`rgb(5, 9, 20)`、午夜`rgb(11, 18, 32)`、高对比亮色`rgb(255, 255, 255)`、高对比暗色`rgb(0, 0, 0)`。
 - 390×844视口无水平溢出，搜索和主题选择保持可用，组件导航使用横向滚动；验收后已恢复默认1920×936视口。
 - 10,000项VirtualList、1,000行DataTable与5,000节点Tree均保持有界DOM；选择、排序和End键定位在虚拟化后仍稳定。
@@ -73,13 +75,13 @@
 
 ## 6. CI结论
 
-最后一次按约回看的门禁：[CI run 33301394023](https://github.com/kenconnet666/zadmin/actions/runs/33301394023)。
+最后一次按约回看的门禁：[CI run 33302220121](https://github.com/kenconnet666/zadmin/actions/runs/33302220121)。
 
 - Windows C# WebView2 desktop与Coverage/packages两个job完整成功；
 - Changesets状态、跨平台API contract、ZUI与平台覆盖率、bundle inspection、外部SSR与包验收、publish dry-run全部成功；
 - Workspace类型/Svelte、Lint和静态源码审计成功；Firefox与Chromium组件矩阵成功；
-- 唯一失败类别是WebKit中native reset后DOM已复位但Svelte状态仍未提交，导致18个共享reset断言失败；
-- 当前批次把reset同步移到原生默认动作完成后的下一task，合并重复事件、销毁时取消pending，并统一浏览器测试通过两task helper等待含FileUpload timer的完整合同；
+- 唯一失败类别仍是WebKit中native reset后DOM已复位但Svelte状态未提交，18个共享reset断言失败；前一版只调整task时序，没有覆盖非composed事件边界；
+- 当前批次在组件实际root、关联form与ownerDocument共用同一监听/调度器，合并重复捕获并增加ShadowRoot回归；reset状态仍在原生默认动作后的下一task提交；
 - Docs E2E、全构建与生成文件检查因全测试失败被跳过，待下一轮验证。
 
 最终通过后必须同时满足：

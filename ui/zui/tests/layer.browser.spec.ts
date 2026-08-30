@@ -91,6 +91,25 @@ describe('ZUI layer runtime', () => {
 		stop();
 		form.remove();
 	});
+
+	it('observes non-composed reset events inside a shadow root exactly once', async () => {
+		const host = document.createElement('div');
+		const shadow = host.attachShadow({ mode: 'open' });
+		const form = document.createElement('form');
+		const input = document.createElement('input');
+		form.append(input);
+		shadow.append(form);
+		document.body.append(host);
+		const reset = vi.fn();
+		const stop = listenForFormReset(input, reset);
+
+		form.reset();
+		await settleReset();
+		expect(reset).toHaveBeenCalledOnce();
+
+		stop();
+		host.remove();
+	});
 	it('moves portal content between inline, Element and ShadowRoot targets reversibly', () => {
 		const host = document.createElement('div');
 		const target = document.createElement('div');

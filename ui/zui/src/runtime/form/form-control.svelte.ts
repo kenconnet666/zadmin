@@ -28,8 +28,10 @@ export function listenForFormReset(
 	control: HTMLElement & { readonly form: HTMLFormElement | null },
 	reset: () => void
 ): () => void {
-	return listenToResetEvent(
-		control.ownerDocument,
+	const root = control.getRootNode();
+	const associatedForm = control.form ?? control.closest('form');
+	return listenToResetEvents(
+		[control.ownerDocument, root, associatedForm],
 		(event) => {
 			const form = event.target;
 			const FormElement = control.ownerDocument.defaultView?.HTMLFormElement;
@@ -47,14 +49,17 @@ export function listenForFormReset(
 
 export function listenToFormReset(form: HTMLFormElement | null, reset: () => void): () => void {
 	if (!form) return () => undefined;
-	return listenToResetEvent(form, (event) => event.target === form, reset);
+	return listenToResetEvents([form], (event) => event.target === form, reset);
 }
 
-function listenToResetEvent(
-	target: Document | HTMLFormElement,
+function listenToResetEvents(
+	targets: readonly (EventTarget | null)[],
 	accepts: (event: Event) => boolean,
 	reset: () => void
 ): () => void {
+	const activeTargets = [
+		...new Set(targets.filter((target): target is EventTarget => target !== null))
+	];
 	let active = true;
 	let pending: ReturnType<typeof setTimeout> | undefined;
 	const handleReset = (event: Event) => {
@@ -65,10 +70,10 @@ function listenToResetEvent(
 			if (active && !event.defaultPrevented) flushSync(reset);
 		}, 0);
 	};
-	target.addEventListener('reset', handleReset, true);
+	for (const target of activeTargets) target.addEventListener('reset', handleReset, true);
 	return () => {
 		active = false;
 		if (pending !== undefined) clearTimeout(pending);
-		target.removeEventListener('reset', handleReset, true);
+		for (const target of activeTargets) target.removeEventListener('reset', handleReset, true);
 	};
 }
