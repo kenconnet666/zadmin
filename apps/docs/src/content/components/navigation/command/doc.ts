@@ -3,6 +3,8 @@ import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
 import FilterDemo from './FilterDemo.svelte';
 import filterSource from './FilterDemo.svelte?raw';
+import ExternalDemo from './ExternalDemo.svelte';
+import externalSource from './ExternalDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const commandDoc = defineComponentDoc(commandMetadata, {
@@ -20,6 +22,14 @@ export const commandDoc = defineComponentDoc(commandMetadata, {
 			id: 'command-filter',
 			source: filterSource,
 			title: '过滤策略与结果上限'
+		},
+		{
+			component: ExternalDemo,
+			description:
+				'shouldFilter=false把过滤、排序与远程结果所有权交给父状态，Command只保留键盘和action。',
+			id: 'command-external-results',
+			source: externalSource,
+			title: '外部结果所有权'
 		}
 	],
 	accessibility: [

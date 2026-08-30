@@ -18,7 +18,7 @@
 | ------------------------ | ---: | -------------------------------------------------------------------------------------------- |
 | Svelte组件文件           |  135 | 133个拥有唯一metadata id；`ZMentionEditor`与`ZTextareaAutosize`是非公开内部实现              |
 | 公开组件文档页           |   78 | 每页至少2个不同Demo                                                                          |
-| 实际Demo                 |  166 | 少于2个、重复id或空源码会在`defineComponentDoc`中直接失败                                    |
+| 实际Demo                 |  169 | 少于2个、重复id或空源码会在`defineComponentDoc`中直接失败                                    |
 | 生产指南                 |    8 | Getting Started、ICSS、Theme Lab、Accessibility、SSR/CSP、HMR、WebView和Package              |
 | 公开API合同              |  133 | TypeScript AST快照覆盖全部metadata组件与10个package entrypoint；变化必须显式更新             |
 | 官方主题                 |    6 | `@zadmin/zui/themes`统一导出，文档站真实切换并持久化                                         |
@@ -130,7 +130,7 @@
 
 ## 5. 文档站真实浏览器证据
 
-- 78/78组件路由均能渲染，且每页DOM中至少有2个不同Demo；十个关键组件增加第三个生产边界场景。
+- 78/78组件路由均能渲染，且每页DOM中至少有2个不同Demo；十三个关键组件增加第三个生产边界场景。
 - 七份新增生产指南在真实Chrome中7/7渲染，均有唯一active导航、3–4个ZUI Card章节和正确页面标题。
 - ZStack方向Demo通过ZSelect键盘切换后，Trigger文本、实际`flex-direction`和焦点恢复一致；Docs全站原生交互标签为0。
 - RTL下ZTable caption/cell和组件TOC computed对齐为start，ZCode行号为end；验收后恢复LTR并由静态门禁拒绝物理textAlign。
@@ -157,6 +157,7 @@
 - ZCode第三个Demo显式展示light/dark scheme、theme对象与ZCard embedded组合，Chrome确认两种scheme均高亮且边框/圆角为0；ZAvatar第三个Demo覆盖成功img和ZIcon fallback Snippet，并保持48px稳定尺寸。
 - ZTree第三个Demo覆盖bare外观、多选aria/FormData和原生reset；DataTable现有两页已覆盖虚拟尺寸、排序、多选与紧凑单选，不制造重复Demo。
 - TagsInput第三个Demo在Chrome固定重复值自动提交与手动草稿保留；FileUpload移除后reset恢复SSR安全的defaultFiles队列；DateField方向键钳制到10/20日并reset回15日。
+- Select第三个Demo在Chrome固定prod/生产到staging/预发的受控open/valueLabel；Command外部结果从4项收敛为deploy；CommandPalette无内置Trigger且Escape恢复业务按钮。
 - 首页和组件深链完整reload后首个Tab均为“跳到主要内容”；Enter保持当前hash路由与标题/H1，并把焦点送到`main#zui-main-content`
   ，无404或控制台异常。
 - skip-link使用逻辑`inset-inline-start`；真实Chrome切换RTL并reload后出现在右侧起始边，恢复LTR后控制台保持干净。

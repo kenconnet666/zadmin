@@ -547,10 +547,13 @@ if (new Set(demoIds).size !== demoIds.length)
 const productionBoundaryDemos = [
 	'avatar-image-fallback',
 	'button-composition',
+	'command-external-results',
+	'command-palette-external-trigger',
 	'code-scheme-embedded',
 	'date-field-bounds',
 	'file-upload-default-queue',
 	'provider-portal-boundary',
+	'select-controlled-label',
 	'tags-input-draft-ownership',
 	'tree-multiple-bare'
 ];

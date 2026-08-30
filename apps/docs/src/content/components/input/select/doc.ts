@@ -6,6 +6,8 @@ import {
 } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import formSource from './FormDemo.svelte?raw';
+import ControlledDemo from './ControlledDemo.svelte';
+import controlledSource from './ControlledDemo.svelte?raw';
 import StatesDemo from './StatesDemo.svelte';
 import statesSource from './StatesDemo.svelte?raw';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
@@ -26,6 +28,13 @@ export const selectDoc = defineComponentDoc(selectMetadata, {
 			id: 'select-states',
 			source: statesSource,
 			title: '自定义Trigger与选择拦截'
+		},
+		{
+			component: ControlledDemo,
+			description: '外部状态拥有open与value，valueLabel在Content尚未注册时仍提供稳定Trigger文本。',
+			id: 'select-controlled-label',
+			source: controlledSource,
+			title: '受控打开与值标签'
 		}
 	],
 	accessibility: [
