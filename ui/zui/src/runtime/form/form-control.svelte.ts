@@ -32,8 +32,7 @@ export function listenForFormReset(
 		[control.ownerDocument, root, associatedForm],
 		(event) => {
 			const form = event.target;
-			const FormElement = control.ownerDocument.defaultView?.HTMLFormElement;
-			if (!FormElement || !(form instanceof FormElement)) return false;
+			if (!isFormElement(form, control.ownerDocument)) return false;
 			const explicitFormId = control.getAttribute('form');
 			return (
 				control.form === form ||
@@ -43,6 +42,15 @@ export function listenForFormReset(
 		},
 		reset
 	);
+}
+
+function isFormElement(
+	target: EventTarget | null,
+	ownerDocument: Document
+): target is HTMLFormElement {
+	if (target === null || typeof target !== 'object') return false;
+	const node = target as Partial<Element>;
+	return node.nodeType === 1 && node.localName === 'form' && node.ownerDocument === ownerDocument;
 }
 
 export function formReset(

@@ -97,7 +97,7 @@ describe('ZUI layer runtime', () => {
 		form.remove();
 	});
 
-	it('ignores reset-like events without a live Window form realm', async () => {
+	it('ignores reset-like non-form events and accepts detached document forms', async () => {
 		const form = document.createElement('form');
 		const input = document.createElement('input');
 		form.append(input);
@@ -117,9 +117,9 @@ describe('ZUI layer runtime', () => {
 		detached.body.append(detachedForm);
 		const detachedReset = vi.fn();
 		const stopDetached = listenForFormReset(detachedInput, detachedReset);
-		detachedForm.reset();
+		detachedForm.dispatchEvent(new Event('reset', { bubbles: true, cancelable: true }));
 		await settleReset();
-		expect(detachedReset).not.toHaveBeenCalled();
+		expect(detachedReset).toHaveBeenCalledOnce();
 		stopDetached();
 	});
 
