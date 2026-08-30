@@ -141,7 +141,14 @@ export default {
 					'基础原生控件自动生成SSR稳定ID；调用方显式id优先，ZField controlId优先于自动值。',
 					'自动ID用于DOM与ARIA连接，不作为数据库、缓存或测试业务键。',
 					'错误、说明与标签通过稳定ID关系连接。',
-					'状态变化使用适当的status或alert，不把普通消息升级为assertive。'
+					'状态变化使用适当的status或alert，不把普通消息升级为assertive。',
+					'aria-busy只公告区域或控件正在更新；ZButton loading还会禁用交互，两者不能互换。',
+					'ZInput可用form属性关联DOM外部表单；内部reset signal没有name或id、被disabled且不进入FormData。'
+				],
+				links: [
+					{ href: '#/components/button', label: 'ZButton' },
+					{ href: '#/components/input', label: 'ZInput' },
+					{ href: '#/components/form', label: 'ZForm' }
 				]
 			},
 			{
