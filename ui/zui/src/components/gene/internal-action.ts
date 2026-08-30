@@ -1,7 +1,7 @@
 import type { IcssStyle } from '../../icss/types.js';
-import type { ThemeSchema } from '../../theme/types.js';
+import type { ZuiTheme } from '../../theme/types.js';
 
-export function styleInternalAction(s: IcssStyle<ThemeSchema>): void {
+export function styleInternalAction(s: IcssStyle<ZuiTheme>): void {
 	s.alignItems.center;
 	s.appearance.none;
 	s.backgroundColor.transparent;

@@ -27,7 +27,12 @@ const components = [
 	},
 	{ id: 'empty', name: 'ZEmpty', path: 'data-display/ZEmpty.svelte' },
 	{ id: 'meter', name: 'ZMeter', path: 'data-display/ZMeter.svelte' },
-	{ id: 'progress', name: 'ZProgress', path: 'data-display/ZProgress.svelte' },
+	{
+		id: 'progress',
+		maxIncrementalGzip: 3.75 * 1024,
+		name: 'ZProgress',
+		path: 'data-display/ZProgress.svelte'
+	},
 	{ id: 'skeleton', name: 'ZSkeleton', path: 'data-display/ZSkeleton.svelte' },
 	{ id: 'statistic', name: 'ZStatistic', path: 'data-display/ZStatistic.svelte' },
 	{ id: 'timeline', name: 'ZTimeline', path: 'data-display/ZTimeline.svelte' },
