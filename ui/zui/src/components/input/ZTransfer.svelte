@@ -103,6 +103,8 @@
 
 <script lang="ts">
 	/* eslint-disable svelte/prefer-svelte-reactivity -- Sets use immutable replacement or are local derived values. */
+	import ArrowLeft from '@lucide/svelte/icons/arrow-left';
+	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import { untrack } from 'svelte';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { Typeahead } from '../../runtime/collection/typeahead.js';
@@ -324,6 +326,8 @@
 	const descriptionClass = $derived(zui.recipe(descriptionRecipe));
 	const controlsClass = $derived(zui.recipe(controlsRecipe));
 	const emptyClass = $derived(zui.recipe(emptyRecipe));
+	const MoveToTargetIcon = $derived(zui.direction === 'rtl' ? ArrowLeft : ArrowRight);
+	const MoveToSourceIcon = $derived(zui.direction === 'rtl' ? ArrowRight : ArrowLeft);
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
 	$effect(() => {
@@ -508,13 +512,13 @@
 		<ZButton
 			aria-label={moveToTargetLabel}
 			disabled={disabled || sourceCount === 0}
-			onclick={() => move('target')}>→</ZButton
+			onclick={() => move('target')}><MoveToTargetIcon aria-hidden="true" size={18} /></ZButton
 		>
 		<ZButton
 			aria-label={moveToSourceLabel}
 			disabled={disabled || targetCount === 0}
 			onclick={() => move('source')}
-			variant="secondary">←</ZButton
+			variant="secondary"><MoveToSourceIcon aria-hidden="true" size={18} /></ZButton
 		>
 	</div>
 

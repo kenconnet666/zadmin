@@ -150,27 +150,14 @@
 		},
 		defaultVariants: { virtualized: false }
 	});
-	const sortButtonRecipe = defineRecipe({
-		base: (s) => {
-			s.alignItems.center;
-			s.backgroundColor.transparent;
-			s.borderStyle.none;
-			s.color._text;
-			s.cursor.pointer;
-			s.display.inlineFlex;
-			s.fontWeight._semibold;
-			s.gap._small;
-			s.padding.px(0);
-		},
-		variants: {},
-		defaultVariants: {}
-	});
 	registerRecipeHmr(import.meta, viewportRecipe);
-	registerRecipeHmr(import.meta, sortButtonRecipe);
 </script>
 
 <script lang="ts" generics="TRow">
 	/* eslint-disable svelte/prefer-svelte-reactivity -- Sets and Maps validate and compare immutable snapshots. */
+	import ArrowDown from '@lucide/svelte/icons/arrow-down';
+	import ArrowUp from '@lucide/svelte/icons/arrow-up';
+	import ArrowUpDown from '@lucide/svelte/icons/arrow-up-down';
 	import { onMount, untrack } from 'svelte';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import {
@@ -182,6 +169,7 @@
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { calculateVirtualRange } from '../../runtime/collection/virtualizer.js';
 	import { stableSortRows } from '../../runtime/collection/data-table.js';
+	import ZButton from '../gene/ZButton.svelte';
 	import ZTable from './ZTable.svelte';
 	const unique = (keys: readonly SelectionKey[]) => Object.freeze([...new Set(keys)]);
 	let {
@@ -302,7 +290,6 @@
 	);
 	const columnCount = $derived(normalizedColumns.length + (selectionMode === 'none' ? 0 : 1));
 	const viewportClass = $derived(zui.recipe(viewportRecipe, { virtualized }));
-	const sortButtonClass = $derived(zui.recipe(sortButtonRecipe));
 	const variables = $derived({
 		...readIcssCarrier(rest),
 		'--zui-data-table-height': `${height}px`
@@ -394,17 +381,18 @@
 							? sortState.current.direction
 							: undefined}
 						style={widthStyle(column.width)}
-						>{#if column.sortable}<button
+						>{#if column.sortable}<ZButton
 								type="button"
-								class={sortButtonClass}
+								size="small"
+								variant="ghost"
 								onclick={() => toggleSort(column)}
-								>{column.header}<span aria-hidden="true"
-									>{sortState.current?.columnId === column.id
-										? sortState.current.direction === 'ascending'
-											? '↑'
-											: '↓'
-										: '↕'}</span
-								></button
+								>{column.header}{#if sortState.current?.columnId === column.id}{#if sortState.current.direction === 'ascending'}<ArrowUp
+											aria-hidden="true"
+											size={16}
+										/>{:else}<ArrowDown aria-hidden="true" size={16} />{/if}{:else}<ArrowUpDown
+										aria-hidden="true"
+										size={16}
+									/>{/if}</ZButton
 							>{:else}{column.header}{/if}</th
 					>{/each}</tr
 			>{/snippet}

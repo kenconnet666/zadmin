@@ -75,7 +75,7 @@ if (JSON.stringify(internalComponents) !== JSON.stringify(expectedInternal)) {
 const docsSvelteFiles = await filesUnder(docsSourceRoot, ['.svelte']);
 const rawInteractive =
 	/<(?:a|button|code|details|input|kbd|meter|progress|select|summary|table|textarea)\b/u;
-const forbiddenGlyph = /[×‹›✓]/u;
+const forbiddenGlyph = /[×‹›✓←→↑↓↕✕✖]/u;
 for (const path of docsSvelteFiles) {
 	const source = await readFile(path, 'utf8');
 	const filename = portable(relative(workspaceRoot, path));

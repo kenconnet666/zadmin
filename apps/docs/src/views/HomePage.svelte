@@ -106,10 +106,12 @@
 					s._media('(max-width: 48rem)', (mobile) => mobile.paddingTop.rem(1));
 				},
 				learnMore: (s) => {
+					s.alignItems.center;
 					s.color._primaryHover;
-					s.display.block;
+					s.display.inlineFlex;
 					s.fontSize._small;
 					s.fontWeight._semibold;
+					s.gap._xsmall;
 					s.marginTop._large;
 				},
 				metric: (s) => {
@@ -250,7 +252,7 @@
 					<div class={classes.cardIcon}><ZIcon name="chevronDown" size={18} /></div>
 					<h4 class={classes.cardTitle}>{guide.eyebrow}</h4>
 					<ZText tone="muted">{guide.summary}</ZText>
-					<span class={classes.learnMore}>阅读指南 →</span>
+					<span class={classes.learnMore}>阅读指南 <ZIcon name="arrowRight" size={14} /></span>
 				</ZBox>
 			</ZLink>
 		{/each}
@@ -279,7 +281,9 @@
 								</div>
 								<h4 class={classes.cardTitle}>{doc.name}</h4>
 								<ZText tone="muted">{doc.summary}</ZText>
-								<span class={classes.learnMore}>查看Demo与API →</span>
+								<span class={classes.learnMore}
+									>查看Demo与API <ZIcon name="arrowRight" size={14} /></span
+								>
 							</ZBox>
 						</ZLink>
 					{/each}

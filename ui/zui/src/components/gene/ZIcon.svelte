@@ -1,5 +1,6 @@
 <script module lang="ts">
 	import type { LucideIcon, LucideProps } from '@lucide/svelte';
+	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import Check from '@lucide/svelte/icons/check';
 	import ChevronDown from '@lucide/svelte/icons/chevron-down';
 	import Menu from '@lucide/svelte/icons/menu';
@@ -16,6 +17,7 @@
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 
 	export const iconManifest = {
+		arrowRight: ArrowRight,
 		check: Check,
 		chevronDown: ChevronDown,
 		close: X,

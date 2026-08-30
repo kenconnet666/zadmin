@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"componentCount": 133,
-	"overallSha256": "fef9e67ec6c90001df5c1cd4244b413b8cb18fdd137d9a83cbff1ecf51ec9f3a",
+	"overallSha256": "d7c70b8981945523ac69369ec32d8209fa50337a1e7d73dad7441c88aca2d034",
 	"components": [
 		{
 			"id": "accordion",
@@ -475,7 +475,7 @@
 		},
 		{
 			"id": "icon",
-			"sha256": "dfd2d753946846134b3aeff44ffb04597cf8880c97e9e3d3df64852bdc13b05c",
+			"sha256": "6b5a4ed672d970fb3f85a9e25d78e0ebe7db4e727866b995f37570dbeffae807",
 			"source": "src/components/gene/ZIcon.svelte"
 		},
 		{
