@@ -200,6 +200,28 @@ export { default as ZList } from '../components/data-display/ZList.svelte';
 export type { ListItem, ZListProps } from '../components/data-display/ZList.svelte';
 export { default as ZTag } from '../components/data-display/ZTag.svelte';
 export type { ZTagProps } from '../components/data-display/ZTag.svelte';
+export { default as ZEmpty } from '../components/data-display/ZEmpty.svelte';
+export type { ZEmptyProps } from '../components/data-display/ZEmpty.svelte';
+export { default as ZMeter } from '../components/data-display/ZMeter.svelte';
+export type { ZMeterProps } from '../components/data-display/ZMeter.svelte';
+export { default as ZProgress } from '../components/data-display/ZProgress.svelte';
+export type { ProgressView, ZProgressProps } from '../components/data-display/ZProgress.svelte';
+export { default as ZSkeleton } from '../components/data-display/ZSkeleton.svelte';
+export type {
+	SkeletonDimension,
+	SkeletonShape,
+	ZSkeletonProps
+} from '../components/data-display/ZSkeleton.svelte';
+export { default as ZStatistic } from '../components/data-display/ZStatistic.svelte';
+export type { StatisticTrend, ZStatisticProps } from '../components/data-display/ZStatistic.svelte';
+export { default as ZTimeline } from '../components/data-display/ZTimeline.svelte';
+export type {
+	TimelineItem,
+	TimelineStatus,
+	ZTimelineProps
+} from '../components/data-display/ZTimeline.svelte';
+export { meterState, normalizeMeterRange, normalizeProgressRange } from '../runtime/progress.js';
+export type { MeterRange, MeterState, ProgressRange } from '../runtime/progress.js';
 export { default as ZAlert } from '../components/feedback/ZAlert.svelte';
 export type { AlertLive, AlertTone, ZAlertProps } from '../components/feedback/ZAlert.svelte';
 export { default as ZLoadingBar } from '../components/feedback/ZLoadingBar.svelte';

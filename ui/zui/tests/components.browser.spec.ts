@@ -119,6 +119,24 @@ describe('compiled ICSS browser updates', () => {
 		expect(document.querySelector('[data-testid="description-list"]')?.tagName).toBe('DL');
 		expect(document.querySelectorAll('[data-testid="description-list"] dt')).toHaveLength(2);
 		expect(document.querySelector('article > header h2')?.textContent).toBe('Production release');
+		expect(
+			document.querySelector<HTMLProgressElement>('[data-testid="progress-line"]')?.value
+		).toBe(68);
+		expect(document.querySelector('[data-testid="progress-circle"]')?.getAttribute('role')).toBe(
+			'progressbar'
+		);
+		expect(document.querySelector('[data-testid="meter"]')?.getAttribute('data-state')).toBe(
+			'suboptimal'
+		);
+		expect(document.querySelector('[data-testid="skeleton"]')?.getAnimations()).toHaveLength(1);
+		expect(document.querySelector('[data-testid="empty"] [data-slot="title"]')?.tagName).toBe('H3');
+		expect(document.querySelectorAll('[data-testid="timeline"] > li')).toHaveLength(3);
+		expect(document.querySelector('[data-testid="timeline"] time')?.getAttribute('datetime')).toBe(
+			'2026-08-30T09:00:00Z'
+		);
+		expect(document.querySelector('[data-testid="statistic"] data')?.getAttribute('value')).toBe(
+			'128430'
+		);
 
 		document.querySelector<HTMLButtonElement>('[aria-label="Remove production"]')?.click();
 		await tick();

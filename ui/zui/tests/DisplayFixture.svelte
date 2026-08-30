@@ -4,7 +4,13 @@
 		ZBadge,
 		ZCard,
 		ZDescriptionList,
+		ZEmpty,
 		ZList,
+		ZMeter,
+		ZProgress,
+		ZSkeleton,
+		ZStatistic,
+		ZTimeline,
 		ZTag
 	} from '../src/entrypoints/index.js';
 
@@ -15,6 +21,17 @@
 	const descriptions = [
 		{ description: 'v2.4.0', id: 'version', term: 'Version' },
 		{ description: 'cn-east-1', id: 'region', term: 'Region' }
+	];
+	const timeline = [
+		{
+			datetime: '2026-08-30T09:00:00Z',
+			id: 'build',
+			status: 'done' as const,
+			time: '09:00',
+			title: 'Build'
+		},
+		{ id: 'deploy', status: 'current' as const, title: 'Deploy' },
+		{ id: 'verify', status: 'pending' as const, title: 'Verify' }
 	];
 	let tagVisible = $state(true);
 </script>
@@ -44,4 +61,12 @@
 	</ZCard>
 	<ZList ordered items={listItems} data-testid="ordered-list" />
 	<ZDescriptionList items={descriptions} data-testid="description-list" />
+	<ZProgress label="Build progress" value={68} data-testid="progress-line" />
+	<ZProgress label="Analysis progress" view="circle" data-testid="progress-circle" />
+	<ZMeter label="Capacity" value={72} low={35} high={80} optimum={20} data-testid="meter" />
+	<ZSkeleton width={120} data-testid="skeleton" />
+	<ZEmpty title="No releases" headingLevel={3} data-testid="empty">Create the first release.</ZEmpty
+	>
+	<ZTimeline items={timeline} label="Release timeline" data-testid="timeline" />
+	<ZStatistic label="Requests" value={128430} trend={12.4} data-testid="statistic" />
 </section>

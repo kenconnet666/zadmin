@@ -56,6 +56,7 @@ import {
 	ZDrawerOverlay,
 	ZDrawerTitle,
 	ZDrawerTrigger,
+	ZEmpty,
 	ZFileUpload,
 	ZForm,
 	ZFormField,
@@ -67,6 +68,7 @@ import {
 	ZMenuItem,
 	ZMenuLabel,
 	ZMenuSeparator,
+	ZMeter,
 	ZMention,
 	ZMultiSelect,
 	ZMultiSelectContent,
@@ -85,6 +87,7 @@ import {
 	ZPopover,
 	ZPopoverContent,
 	ZPopoverTrigger,
+	ZProgress,
 	ZRadioGroup,
 	ZRadioGroupItem,
 	ZResult,
@@ -94,7 +97,9 @@ import {
 	ZSelectTrigger,
 	ZSegmented,
 	ZSlider,
+	ZSkeleton,
 	ZSpinner,
+	ZStatistic,
 	ZSwitch,
 	ZTabs,
 	ZTabsList,
@@ -106,6 +111,7 @@ import {
 	ZToaster,
 	ZTextarea,
 	ZTimeField,
+	ZTimeline,
 	ZTooltip,
 	ZTooltipContent,
 	ZTooltipTrigger,
@@ -170,6 +176,7 @@ import {
 	type ZDrawerProps,
 	type ZDrawerTitleProps,
 	type ZDrawerTriggerProps,
+	type ZEmptyProps,
 	type ZFileUploadProps,
 	type ZFormFieldProps,
 	type ZFormProps,
@@ -181,6 +188,7 @@ import {
 	type ZMenuLabelProps,
 	type ZMenuProps,
 	type ZMenuSeparatorProps,
+	type ZMeterProps,
 	type ZMentionProps,
 	type ZMultiSelectContentProps,
 	type ZMultiSelectItemProps,
@@ -199,6 +207,7 @@ import {
 	type ZPopoverContentProps,
 	type ZPopoverProps,
 	type ZPopoverTriggerProps,
+	type ZProgressProps,
 	type ZRadioGroupItemProps,
 	type ZRadioGroupProps,
 	type ZResultProps,
@@ -208,7 +217,9 @@ import {
 	type ZSelectTriggerProps,
 	type ZSegmentedProps,
 	type ZSliderProps,
+	type ZSkeletonProps,
 	type ZSpinnerProps,
+	type ZStatisticProps,
 	type ZSwitchProps,
 	type ZTabsListProps,
 	type ZTabsPanelProps,
@@ -220,6 +231,7 @@ import {
 	type ZToasterProps,
 	type ZTextareaProps,
 	type ZTimeFieldProps,
+	type ZTimelineProps,
 	type ZTooltipContentProps,
 	type ZTooltipProps,
 	type ZTooltipTriggerProps,
@@ -250,6 +262,26 @@ const toastProps: ComponentProps<typeof ZToast> = { title: 'Ready' } satisfies Z
 const toasterProps: ComponentProps<typeof ZToaster> = {
 	queue: createToastQueue()
 } satisfies ZToasterProps;
+const progressProps: ComponentProps<typeof ZProgress> = {
+	label: 'Progress',
+	value: 50
+} satisfies ZProgressProps;
+const meterProps: ComponentProps<typeof ZMeter> = {
+	label: 'Capacity',
+	value: 50
+} satisfies ZMeterProps;
+const skeletonProps: ComponentProps<typeof ZSkeleton> = {
+	shape: 'line',
+	width: 120
+} satisfies ZSkeletonProps;
+const emptyProps: ComponentProps<typeof ZEmpty> = { title: 'Empty' } satisfies ZEmptyProps;
+const timelineProps: ComponentProps<typeof ZTimeline> = {
+	items: [{ id: 'one', title: 'One' }]
+} satisfies ZTimelineProps;
+const statisticProps: ComponentProps<typeof ZStatistic> = {
+	label: 'Requests',
+	value: 12
+} satisfies ZStatisticProps;
 const accordionProps: ComponentProps<typeof ZAccordion> = {
 	defaultValue: ['one'],
 	type: 'multiple'
@@ -518,6 +550,12 @@ void resultProps;
 void spinnerProps;
 void toastProps;
 void toasterProps;
+void progressProps;
+void meterProps;
+void skeletonProps;
+void emptyProps;
+void timelineProps;
+void statisticProps;
 void accordionItemProps;
 void accordionTriggerProps;
 void accordionContentProps;

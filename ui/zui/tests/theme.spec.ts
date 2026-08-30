@@ -93,6 +93,11 @@ describe('ZUI themes', () => {
 		expect(defaultTheme.color.primary).toBe('#2563eb');
 		expect(defaultTheme.size.dialogMedium).toBe(512);
 		expect(defaultTheme.size.loadingBar).toBe(3);
+		expect(defaultTheme.size.progressCircle).toBe(96);
+		expect(defaultTheme.size.progressLine).toBe(8);
+		expect(defaultTheme.size.skeletonLine).toBe(12);
+		expect(defaultTheme.size.timelineMarker).toBe(12);
+		expect(defaultTheme.borderWidth.progress).toBe(8);
 		expect(defaultTheme.indicatorSize.medium).toBe(18);
 		expect(defaultTheme.space.medium).toBe(8);
 	});

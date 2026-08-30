@@ -4,6 +4,12 @@ import { cardDoc } from '../content/components/data-display/card/doc.js';
 import { descriptionListDoc } from '../content/components/data-display/description-list/doc.js';
 import { listDoc } from '../content/components/data-display/list/doc.js';
 import { tagDoc } from '../content/components/data-display/tag/doc.js';
+import { emptyDoc } from '../content/components/data-display/empty/doc.js';
+import { meterDoc } from '../content/components/data-display/meter/doc.js';
+import { progressDoc } from '../content/components/data-display/progress/doc.js';
+import { skeletonDoc } from '../content/components/data-display/skeleton/doc.js';
+import { statisticDoc } from '../content/components/data-display/statistic/doc.js';
+import { timelineDoc } from '../content/components/data-display/timeline/doc.js';
 import { alertDoc } from '../content/components/feedback/alert/doc.js';
 import { loadingBarDoc } from '../content/components/feedback/loading-bar/doc.js';
 import { resultDoc } from '../content/components/feedback/result/doc.js';
@@ -99,6 +105,12 @@ export const componentDocs = Object.freeze([
 	descriptionListDoc,
 	listDoc,
 	tagDoc,
+	progressDoc,
+	meterDoc,
+	skeletonDoc,
+	emptyDoc,
+	timelineDoc,
+	statisticDoc,
 	alertDoc,
 	loadingBarDoc,
 	resultDoc,

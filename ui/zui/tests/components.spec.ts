@@ -493,10 +493,18 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain('<header');
 		expect(result).toContain('<footer');
 		expect(result).toContain('<ol');
-		expect(result.match(/<li/gu)).toHaveLength(2);
+		expect(result.match(/<li/gu)).toHaveLength(5);
 		expect(result).toContain('<dl');
 		expect(result.match(/<dt/gu)).toHaveLength(2);
 		expect(result.match(/<dd/gu)).toHaveLength(2);
+		expect(result).toContain('<progress');
+		expect(result).toContain('aria-label="Analysis progress"');
+		expect(result).toContain('<meter');
+		expect(result).toContain('data-state="suboptimal"');
+		expect(result).toContain('aria-hidden="true"');
+		expect(result).toContain('No releases');
+		expect(result).toContain('<time');
+		expect(result).toContain('<data value="128430"');
 	});
 
 	it('renders feedback live regions, progress states, Result and queued Toasts during SSR', () => {

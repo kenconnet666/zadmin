@@ -1,7 +1,8 @@
 export const DEFAULT_THEME_SCHEMA = {
 	borderWidth: {
 		hairline: 1,
-		medium: 2
+		medium: 2,
+		progress: 8
 	},
 	breakpoint: {
 		large: '64rem',
@@ -98,7 +99,11 @@ export const DEFAULT_THEME_SCHEMA = {
 		menu: 192,
 		medium: 32,
 		popconfirm: 320,
-		small: 24
+		progressCircle: 96,
+		progressLine: 8,
+		skeletonLine: 12,
+		small: 24,
+		timelineMarker: 12
 	},
 	space: {
 		large: 16,

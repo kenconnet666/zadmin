@@ -288,6 +288,37 @@ test('keeps feedback live regions, progress values and Toast queue actions expli
 	await expect(toast).toHaveCount(0);
 });
 
+test('keeps progress, meter, empty, timeline and statistic native semantics explicit', async ({
+	page
+}) => {
+	await page.goto('/#/components/progress');
+	const progress = page.getByRole('progressbar', { name: '部署进度' });
+	await expect(progress).toHaveAttribute('aria-valuenow', '68');
+	await page.getByRole('button', { name: '增加8%' }).click();
+	await expect(progress).toHaveAttribute('aria-valuenow', '76');
+	await expect(page.getByRole('progressbar', { name: '正在分析依赖' })).not.toHaveAttribute(
+		'aria-valuenow'
+	);
+
+	await page.goto('/#/components/meter');
+	await expect(page.locator('main meter')).toHaveAttribute('data-state', 'suboptimal');
+
+	await page.goto('/#/components/empty');
+	await expect(page.getByRole('heading', { level: 4, name: '没有发布记录' })).toBeVisible();
+
+	await page.goto('/#/components/timeline');
+	const timeline = page.getByRole('list', { name: '发布进度时间线' });
+	await expect(timeline.getByRole('listitem')).toHaveCount(3);
+	await expect(timeline.locator('time').first()).toHaveAttribute(
+		'datetime',
+		'2026-08-30T09:10:00+08:00'
+	);
+
+	await page.goto('/#/components/statistic');
+	await expect(page.locator('main data').first()).toHaveAttribute('value', '128430');
+	await expect(page.locator('main [data-trend="up"]')).toContainText('+12.4%');
+});
+
 test('keeps PinInput roving entry, completion, single FormData value and reset synchronized', async ({
 	page
 }) => {
@@ -957,6 +988,12 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/description-list',
 		'#/components/list',
 		'#/components/tag',
+		'#/components/progress',
+		'#/components/meter',
+		'#/components/skeleton',
+		'#/components/empty',
+		'#/components/timeline',
+		'#/components/statistic',
 		'#/components/alert',
 		'#/components/loading-bar',
 		'#/components/result',

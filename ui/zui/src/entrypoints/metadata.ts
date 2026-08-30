@@ -84,6 +84,12 @@ export { zuiMetadata as cardMetadata } from '../components/data-display/ZCard.sv
 export { zuiMetadata as descriptionListMetadata } from '../components/data-display/ZDescriptionList.svelte';
 export { zuiMetadata as listMetadata } from '../components/data-display/ZList.svelte';
 export { zuiMetadata as tagMetadata } from '../components/data-display/ZTag.svelte';
+export { zuiMetadata as emptyMetadata } from '../components/data-display/ZEmpty.svelte';
+export { zuiMetadata as meterMetadata } from '../components/data-display/ZMeter.svelte';
+export { zuiMetadata as progressMetadata } from '../components/data-display/ZProgress.svelte';
+export { zuiMetadata as skeletonMetadata } from '../components/data-display/ZSkeleton.svelte';
+export { zuiMetadata as statisticMetadata } from '../components/data-display/ZStatistic.svelte';
+export { zuiMetadata as timelineMetadata } from '../components/data-display/ZTimeline.svelte';
 export { zuiMetadata as alertMetadata } from '../components/feedback/ZAlert.svelte';
 export { zuiMetadata as loadingBarMetadata } from '../components/feedback/ZLoadingBar.svelte';
 export { zuiMetadata as resultMetadata } from '../components/feedback/ZResult.svelte';
