@@ -14,7 +14,7 @@ export const numberFieldDoc = defineComponentDoc(numberFieldMetadata, {
 			title: '本地数字与步进'
 		}
 	],
-	guidelines: [
+	accessibility: [
 		'解析器从Intl.NumberFormat.formatToParts推导数字、分组、小数点和正负号，不用parseFloat猜测locale。',
 		'编辑期间允许空值和正负号等不完整片段；非法文本标记data-invalid，blur恢复最近有效值。',
 		'可见输入保留spinbutton与原生required验证，隐藏字段只负责稳定FormData序列化。'

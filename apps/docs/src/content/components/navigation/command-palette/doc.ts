@@ -13,7 +13,7 @@ export const commandPaletteDoc = defineComponentDoc(commandPaletteMetadata, {
 			title: '模态快速操作'
 		}
 	],
-	guidelines: [
+	accessibility: [
 		'Palette不复制过滤或键盘逻辑：ZCommand负责结果，ZDialog负责Portal、inert、scroll lock和focus trap。',
 		'全局快捷键必须显式配置；未配置时组件不会监听document，多个Palette不会隐式争抢快捷键。',
 		'onAction调用preventDefault可保持Palette打开，适合需要二次确认或继续输入的命令。'

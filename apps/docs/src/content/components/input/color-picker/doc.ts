@@ -14,7 +14,7 @@ export const colorPickerDoc = defineComponentDoc(colorPickerMetadata, {
 			title: 'Hex与透明度'
 		}
 	],
-	guidelines: [
+	accessibility: [
 		'接受3/4/6/8位hex并规范化为小写6位或8位；非法草稿不覆盖最近有效值。',
 		'allowAlpha=false时丢弃输入alpha并提交6位hex；开启后range与native color共享同一个RGBA状态。',
 		'Popover复用Floating、DismissableLayer和FocusScope；Escape关闭并恢复Trigger焦点。'

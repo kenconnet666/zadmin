@@ -183,6 +183,9 @@ export { default as ZVisuallyHidden } from '../components/gene/ZVisuallyHidden.s
 export type { ZVisuallyHiddenProps } from '../components/gene/ZVisuallyHidden.svelte';
 export { default as ZField } from '../components/input/ZField.svelte';
 export type { ZFieldProps, ZFieldSize } from '../components/input/ZField.svelte';
+export { default as ZFileUpload } from '../components/input/ZFileUpload.svelte';
+export type { ZFileUploadProps } from '../components/input/ZFileUpload.svelte';
+export type { FileRejection, FileRejectionReason } from '../runtime/file.js';
 export { default as ZCheckbox } from '../components/input/ZCheckbox.svelte';
 export type {
 	CheckboxState,

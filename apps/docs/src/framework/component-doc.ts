@@ -36,10 +36,12 @@ export interface ComponentDoc extends ZuiComponentMetadata {
 	readonly accessibility: readonly string[];
 	readonly api: readonly ApiSection[];
 	readonly demos: readonly DemoDefinition[];
+	readonly keywords: readonly string[];
 	readonly status: ZuiComponentStatus;
 }
 
 interface ComponentDocDefinition extends Pick<ComponentDoc, 'accessibility' | 'demos'> {
+	readonly keywords?: readonly string[];
 	readonly members?: readonly ZuiComponentMetadata[];
 }
 
@@ -116,6 +118,7 @@ export function defineComponentDoc(
 	return Object.freeze({
 		...metadata,
 		...page,
-		api: Object.freeze(api)
+		api: Object.freeze(api),
+		keywords: Object.freeze(doc.keywords ?? [])
 	});
 }

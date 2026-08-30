@@ -13,7 +13,7 @@ export const commandDoc = defineComponentDoc(commandMetadata, {
 			title: '相关性命令搜索'
 		}
 	],
-	guidelines: [
+	accessibility: [
 		'输入使用combobox与aria-activedescendant，结果是分组listbox；disabled命令可见但不可active。',
 		'ArrowUp/Down按loop策略移动，Home/End定位边界，Enter发送可取消CommandActionEvent。',
 		'shouldFilter=false时ZCommand只管理键盘与action，允许服务端或业务层提供已排序结果。'

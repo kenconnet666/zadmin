@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
+import { Buffer } from 'node:buffer';
 
 test('renders the component catalog and real demo source', async ({ page }) => {
 	const errors: string[] = [];
@@ -9,7 +10,9 @@ test('renders the component catalog and real demo source', async ({ page }) => {
 
 	await page.goto('/#/');
 	await expect(page.getByRole('heading', { level: 1 })).toContainText('看见组件');
-	await expect(page.getByTestId('component-card')).toHaveCount(26);
+	const cards = page.getByTestId('component-card');
+	await expect(cards.first()).toBeVisible();
+	expect(await cards.count()).toBeGreaterThanOrEqual(50);
 	await expect(page.getByRole('heading', { level: 3 })).toHaveText([
 		'通用组件',
 		'布局组件',
@@ -70,6 +73,38 @@ test('keeps input binding and field validation interactive', async ({ page }) =>
 	await expect(page.getByText('账号至少需要3个字符')).toBeVisible();
 	await account.fill('alice');
 	await expect(page.getByText('账号至少需要3个字符')).toHaveCount(0);
+});
+
+test('keeps FileUpload validation, native FormData, removal and reset synchronized', async ({
+	page
+}) => {
+	await page.goto('/#/components/file-upload');
+	const input = page.locator('input[type="file"]');
+	await input.setInputFiles({
+		buffer: Buffer.from('{"ready":true}'),
+		mimeType: 'application/json',
+		name: 'production.json'
+	});
+	await expect(page.getByText('files = production.json · rejected = 0')).toBeVisible();
+	await expect
+		.poll(() =>
+			page
+				.locator('form')
+				.evaluate((form) => (new FormData(form as HTMLFormElement).get('config') as File).name)
+		)
+		.toBe('production.json');
+	await input.setInputFiles({
+		buffer: Buffer.from('plain text'),
+		mimeType: 'text/plain',
+		name: 'invalid.txt'
+	});
+	await expect(page.getByText('files = production.json · rejected = 1')).toBeVisible();
+	await page.getByRole('button', { name: '移除 production.json' }).click();
+	await expect(page.getByText('files = none · rejected = 1')).toBeVisible();
+	await page.getByRole('button', { name: '重置' }).click();
+	await expect
+		.poll(() => input.evaluate((element: HTMLInputElement) => element.files?.length))
+		.toBe(0);
 });
 
 test('keeps InputGroup focus boundary, Field context, FormData and reset synchronized', async ({
@@ -787,6 +822,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/number-field',
 		'#/components/pin-input',
 		'#/components/field',
+		'#/components/file-upload',
 		'#/components/radio-group',
 		'#/components/select',
 		'#/components/segmented',

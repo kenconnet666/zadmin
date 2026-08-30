@@ -272,7 +272,8 @@ const components = [
 		maxIncrementalGzip: 3.375 * 1024,
 		name: 'ZField',
 		path: 'input/ZField.svelte'
-	}
+	},
+	{ id: 'file-upload', name: 'ZFileUpload', path: 'input/ZFileUpload.svelte' }
 ];
 
 const FORBIDDEN_FOUNDATION_DEPENDENCIES = [

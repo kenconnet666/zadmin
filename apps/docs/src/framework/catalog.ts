@@ -14,6 +14,7 @@ import { cascaderDoc } from '../content/components/input/cascader/doc.js';
 import { colorPickerDoc } from '../content/components/input/color-picker/doc.js';
 import { comboboxDoc } from '../content/components/input/combobox/doc.js';
 import { fieldDoc } from '../content/components/input/field/doc.js';
+import { fileUploadDoc } from '../content/components/input/file-upload/doc.js';
 import { inputDoc } from '../content/components/input/input/doc.js';
 import { inputGroupDoc } from '../content/components/input/input-group/doc.js';
 import { mentionDoc } from '../content/components/input/mention/doc.js';
@@ -83,6 +84,7 @@ export const componentDocs = Object.freeze([
 	numberFieldDoc,
 	pinInputDoc,
 	fieldDoc,
+	fileUploadDoc,
 	radioGroupDoc,
 	selectDoc,
 	segmentedDoc,

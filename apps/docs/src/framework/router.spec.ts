@@ -30,6 +30,9 @@ describe('Docs search', () => {
 		expect(searchComponentDocs(componentDocs, 'highlightedLines').map(({ name }) => name)).toEqual([
 			'ZCode'
 		]);
+		expect(searchComponentDocs(componentDocs, 'drop zone').map(({ name }) => name)).toContain(
+			'ZFileUpload'
+		);
 		expect(searchComponentDocs(componentDocs, '  ').length).toBe(componentDocs.length);
 	});
 });

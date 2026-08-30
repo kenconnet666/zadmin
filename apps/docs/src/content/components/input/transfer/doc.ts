@@ -13,7 +13,7 @@ export const transferDoc = defineComponentDoc(transferMetadata, {
 			title: '过滤与双向转移'
 		}
 	],
-	guidelines: [
+	accessibility: [
 		'每侧是命名的aria-multiselectable listbox；方向键、Home/End和typeahead只在enabled项目间移动。',
 		'Ctrl/Meta+A只选择当前过滤结果，移动后按items顺序生成确定的目标value。',
 		'过滤只改变可见集合，不丢失已选key；表单reset同时恢复defaultValue并清空过滤与临时勾选。'

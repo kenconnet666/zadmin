@@ -6,6 +6,7 @@ function searchableText(doc: ComponentDoc): string {
 		doc.summary,
 		doc.category,
 		doc.status,
+		...doc.keywords,
 		...doc.props.flatMap((prop) => [
 			prop.name,
 			prop.type,

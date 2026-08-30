@@ -202,10 +202,11 @@
 	});
 	const resolvedValue = $derived(normalize(valueState.current));
 	const characters = $derived(Array.from(resolvedValue));
+	const defaultCharacters = $derived(Array.from(normalize(defaultValue)));
 	const complete = $derived(characters.length === resolvedLength);
 	const inputs = $state<(HTMLInputElement | null)[]>([]);
 	let activeIndex = $state(
-		Math.min(Array.from(untrack(() => normalize(defaultValue))).length, resolvedLength - 1)
+		untrack(() => Math.min(Array.from(normalize(defaultValue)).length, resolvedLength - 1))
 	);
 	let proxy = $state<HTMLInputElement | null>(null);
 	const tabIndex = $derived(Math.min(activeIndex, resolvedLength - 1));
@@ -305,6 +306,7 @@
 			type={mask ? 'password' : 'text'}
 			inputmode={mode === 'numeric' ? 'numeric' : 'text'}
 			autocomplete={index === 0 ? 'one-time-code' : 'off'}
+			defaultValue={defaultCharacters[index] ?? ''}
 			value={characters[index] ?? ''}
 			maxlength={mode === 'numeric' ? 1 : undefined}
 			disabled={resolvedDisabled}

@@ -40,6 +40,7 @@ import ColorPickerFixture from './ColorPickerFixture.svelte';
 import AccordionFixture from './AccordionFixture.svelte';
 import AlertDialogFixture from './AlertDialogFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
+import FileUploadFixture from './FileUploadFixture.svelte';
 import InputGroupFixture from './InputGroupFixture.svelte';
 import MenuFixture from './MenuFixture.svelte';
 import MentionFixture from './MentionFixture.svelte';
@@ -441,6 +442,16 @@ describe('ZUI foundational components', () => {
 		expect(open).toContain('type="color"');
 		expect(open).toContain('type="range"');
 		expect(open).toContain('Hex color');
+	});
+
+	it('renders FileUpload native input, accept rules and empty queue during SSR', () => {
+		const result = render(FileUploadFixture).body;
+		expect(result).toContain('type="file"');
+		expect(result).toContain('name="asset"');
+		expect(result).toContain('accept="application/json,.yaml"');
+		expect(result).toContain('multiple');
+		expect(result).toContain('Drop files here or choose files');
+		expect(result).not.toContain('data-slot="item"');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

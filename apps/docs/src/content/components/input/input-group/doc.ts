@@ -14,7 +14,7 @@ export const inputGroupDoc = defineComponentDoc(inputGroupMetadata, {
 			title: '前后缀输入组合'
 		}
 	],
-	guidelines: [
+	accessibility: [
 		'children直接渲染真实ZInput或ZTextarea；Group只接管组合边界，不复制输入状态。',
 		'disabled与invalid通过最近InputGroupContext传给ZInput/ZTextarea，并与ZField上下文按显式prop优先级合并。',
 		'prefix/suffix可以承载文本、图标或action；业务按钮仍应显式声明自己的disabled和可访问名称。'

@@ -14,6 +14,7 @@ import AccordionFixture from './AccordionFixture.svelte';
 import AlertDialogFixture from './AlertDialogFixture.svelte';
 import CheckboxFixture from './CheckboxFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
+import FileUploadFixture from './FileUploadFixture.svelte';
 import InputGroupFixture from './InputGroupFixture.svelte';
 import DialogFixture from './DialogFixture.svelte';
 import DrawerFixture from './DrawerFixture.svelte';
@@ -669,6 +670,42 @@ describe('compiled ICSS browser updates', () => {
 		await Promise.resolve();
 		await tick();
 		expect(output?.textContent).toBe('#33669980');
+	});
+
+	it('coordinates FileUpload validation, drop queue, native FormData, removal and reset', async () => {
+		render(FileUploadFixture);
+		const input = document.querySelector<HTMLInputElement>('input[type="file"]');
+		const form = document.querySelector<HTMLFormElement>('[data-testid="file-upload-form"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="file-upload-output"]');
+		const selected = new DataTransfer();
+		selected.items.add(new File(['{}'], 'a.json', { lastModified: 1, type: 'application/json' }));
+		selected.items.add(new File(['text'], 'bad.txt', { lastModified: 2, type: 'text/plain' }));
+		if (input) {
+			input.files = selected.files;
+			input.dispatchEvent(new Event('change', { bubbles: true }));
+		}
+		await tick();
+		expect(output?.textContent).toBe('a.json:1');
+		expect((new FormData(form!).get('asset') as File).name).toBe('a.json');
+		const dropped = new DataTransfer();
+		dropped.items.add(new File(['yaml'], 'b.yaml', { lastModified: 3, type: 'text/yaml' }));
+		document
+			.querySelector<HTMLElement>('[role="group"]')
+			?.dispatchEvent(new DragEvent('drop', { bubbles: true, dataTransfer: dropped }));
+		await tick();
+		expect(output?.textContent).toBe('a.json,b.yaml:1');
+		expect((new FormData(form!).getAll('asset') as File[]).map(({ name }) => name)).toEqual([
+			'a.json',
+			'b.yaml'
+		]);
+		document.querySelector<HTMLButtonElement>('[aria-label="Remove a.json"]')?.click();
+		await tick();
+		expect(output?.textContent).toBe('b.yaml:1');
+		form?.reset();
+		await Promise.resolve();
+		await tick();
+		expect(output?.textContent).toBe('none:1');
+		expect(new FormData(form!).getAll('asset')).toHaveLength(0);
 	});
 	it('keeps AlertDialog open until an explicit action is chosen', async () => {
 		render(AlertDialogFixture);

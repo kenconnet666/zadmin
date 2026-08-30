@@ -47,6 +47,7 @@ import {
 	ZDrawerOverlay,
 	ZDrawerTitle,
 	ZDrawerTrigger,
+	ZFileUpload,
 	ZInputGroup,
 	ZMenu,
 	ZMenuGroup,
@@ -140,6 +141,7 @@ import {
 	type ZDrawerProps,
 	type ZDrawerTitleProps,
 	type ZDrawerTriggerProps,
+	type ZFileUploadProps,
 	type ZInputGroupProps,
 	type ZMenuGroupProps,
 	type ZMenuItemProps,
@@ -384,6 +386,11 @@ const colorPickerProps: ComponentProps<typeof ZColorPicker> = {
 	allowAlpha: true,
 	value: '#33669980'
 } satisfies ZColorPickerProps;
+const fileUploadProps: ComponentProps<typeof ZFileUpload> = {
+	accept: 'image/*',
+	maxFiles: 2,
+	multiple: true
+} satisfies ZFileUploadProps;
 const sliderProps: ComponentProps<typeof ZSlider> = {
 	defaultValue: 25,
 	max: 50,
@@ -493,6 +500,7 @@ void inputGroupProps;
 void numberFieldProps;
 void pinInputProps;
 void colorPickerProps;
+void fileUploadProps;
 void sliderProps;
 void switchProps;
 void tabsProps;
