@@ -238,13 +238,15 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		await Promise.resolve();
 		const output = document.querySelector('[data-testid="context-boundary-output"]');
-		expect(output?.textContent).toMatch(/^16:/u);
+		expect(output?.textContent).toMatch(/^18:/u);
 		expect(output?.textContent).toContain('ZAccordion');
 		expect(output?.textContent).toContain('ZTooltip');
 		expect(output?.textContent).toContain('Duplicate ZList');
 		expect(output?.textContent).toContain('Duplicate ZTimeline');
 		expect(output?.textContent).toContain('unsupported trigger');
 		expect(output?.textContent).toContain('validationDelay');
+		expect(output?.textContent).toContain('requires at least one item');
+		expect(output?.textContent).toContain('Duplicate ZCarousel key');
 	});
 
 	it('pauses, resumes, times out and disposes explicit ToastQueue timers', async () => {

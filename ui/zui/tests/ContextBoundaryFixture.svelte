@@ -3,6 +3,7 @@
 		ZAccordionItem,
 		ZAccordionTrigger,
 		ZComboboxInput,
+		ZCarousel,
 		ZDialogContent,
 		ZForm,
 		ZList,
@@ -47,5 +48,20 @@
 <svelte:boundary onerror={capture}><ZTimeline items={duplicateTimeline} /></svelte:boundary>
 <svelte:boundary onerror={capture}><ZForm validateOn={['unsupported' as never]} /></svelte:boundary>
 <svelte:boundary onerror={capture}><ZForm validationDelay={-1} /></svelte:boundary>
+<svelte:boundary onerror={capture}>
+	<ZCarousel ariaLabel="Empty" items={[]} itemKey={() => 'empty'} itemLabel={() => 'Empty'}>
+		{#snippet item()}empty{/snippet}
+	</ZCarousel>
+</svelte:boundary>
+<svelte:boundary onerror={capture}>
+	<ZCarousel
+		ariaLabel="Duplicates"
+		items={['one', 'two']}
+		itemKey={() => 'same'}
+		itemLabel={(value) => value}
+	>
+		{#snippet item(value)}{value}{/snippet}
+	</ZCarousel>
+</svelte:boundary>
 
 <output data-testid="context-boundary-output">{errors.length}:{errors.join('|')}</output>

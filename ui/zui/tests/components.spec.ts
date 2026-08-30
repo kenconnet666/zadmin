@@ -7,21 +7,30 @@ import {
 	defaultTheme,
 	extendTheme,
 	ZAspectRatio,
+	ZAccordion,
 	ZBox,
 	ZButton,
 	ZContainer,
 	ZCheckbox,
+	ZCombobox,
+	ZDialog,
 	ZField,
 	ZIcon,
 	ZInput,
 	ZKbd,
 	ZLink,
+	ZMenu,
+	ZMultiSelect,
 	ZPagination,
+	ZPopover,
 	ZSeparator,
 	ZSlider,
 	ZStack,
+	ZSelect,
 	ZSwitch,
 	ZText,
+	ZTabs,
+	ZTooltip,
 	ZToggleButton,
 	ZVisuallyHidden
 } from '../src/entrypoints/index.js';
@@ -76,6 +85,26 @@ import TagsInputFixture from './TagsInputFixture.svelte';
 import TextareaFixture from './TextareaFixture.svelte';
 
 describe('ZUI foundational components', () => {
+	it('server-renders compound roots with and without optional children', () => {
+		expect(render(ZAccordion, { props: { defaultValue: 'one' } }).body).toBe('');
+		expect(render(ZDialog, { props: { defaultOpen: true } }).body).toBe('');
+		expect(render(ZPopover, { props: { defaultOpen: true, modal: true } }).body).toBe('');
+		expect(render(ZTooltip, { props: { defaultOpen: true } }).body).toBe('');
+		expect(render(ZTabs, { props: { defaultValue: 'one', disabled: true } }).body).toBe('');
+		expect(
+			render(ZSelect, { props: { defaultValue: 'one', disabled: true, name: 'choice' } }).body
+		).toContain('type="hidden"');
+		expect(
+			render(ZCombobox, {
+				props: { defaultInputValue: 'One', defaultValue: 'one', disabled: true, name: 'choice' }
+			}).body
+		).toContain('type="hidden"');
+		expect(
+			render(ZMultiSelect, { props: { defaultValues: ['one', 'two'], name: 'choice' } }).body
+		).toContain('value="one"');
+		expect(render(ZMenu, { props: { 'aria-label': 'Empty menu' } }).body).toContain('role="menu"');
+	});
+
 	it('server-renders the documentation example matrix without browser globals', () => {
 		const result = render(DocsExamplesFixture);
 		expect(result.body.match(/data-docs-example/gu)?.length).toBeGreaterThanOrEqual(105);
