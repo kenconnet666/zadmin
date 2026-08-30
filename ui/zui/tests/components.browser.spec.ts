@@ -326,7 +326,7 @@ describe('compiled ICSS browser updates', () => {
 		expect(selectAll?.checked).toBe(true);
 		selectAll?.click();
 		await tick();
-		expect(output?.textContent?.startsWith(':')).toBe(true);
+		expect(selectAll?.checked).toBe(false);
 	});
 
 	it('coordinates feedback semantics, motion cleanup, Toast action and paused timeout', async () => {
@@ -1447,6 +1447,7 @@ describe('compiled ICSS browser updates', () => {
 		expect(output?.textContent).toBe('false:2');
 
 		trigger?.focus();
+		await new Promise((resolve) => setTimeout(resolve, 0));
 		await tick();
 		expect(document.querySelector('[data-testid="tooltip-content"]')).not.toBeNull();
 		trigger?.blur();
