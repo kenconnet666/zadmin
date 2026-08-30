@@ -98,6 +98,7 @@
 | Docs未解释resetOnForm所有权           | 新API避免复合双重reset，但Input/Textarea/Combobox文档缺少选择规则  | 组件页与Accessibility指南明确独立自管、复合父owner唯一接管                         |
 | 关闭/导航图标不一致                   | 多处使用`×/‹/›/+/-/✓`字符                                          | 统一使用按需Lucide；完整操作复用ZButton，微型内部按钮复用无状态focus样式合同       |
 | Transfer、DataTable与主页残留箭头字符 | 早期实现只补了可访问名称，字符范围没有纳入全树图标审计             | 统一使用按需Lucide/ZIcon；Transfer按LTR/RTL交换方向，DataTable复用ZButton          |
+| ToggleButton Demo从Lucide根导入       | 组件源码门禁未覆盖Docs，Bold具名导入会扩大依赖并绕过子路径约定     | 改用icons/bold并抽取共享审计函数同时覆盖组件与Docs                                 |
 | WebView窗口控制仍用字符图标           | WindowControls早于ZIcon manifest扩展                               | 扩展受控manifest并改用`ZIcon`                                                      |
 | 文档页只展示一个场景                  | 首轮文档以实现证明为主，没有形成特性矩阵                           | 78页全部补为基础+状态/边界/组合Demo，复杂组件覆盖键盘、焦点、表单或生命周期        |
 | 文档站自建原生控件                    | 站点框架早于相关ZUI组件                                            | Header、API表、首页、Sidebar、TOC和Theme Lab改为真实ZUI消费者                      |

@@ -95,6 +95,14 @@ function auditResourceLifecycle(source, filename) {
 	}
 }
 
+function auditLucideImports(source, filename) {
+	for (const line of source.split(/\r?\n/u)) {
+		if (/^\s*import\s+(?!type\b).*from\s+['"]@lucide\/svelte['"]/u.test(line)) {
+			fail(`${filename} imports Lucide values from the package root instead of an icon subpath.`);
+		}
+	}
+}
+
 const zuiSourceFiles = await filesUnder(resolve(workspaceRoot, 'ui/zui/src'), ['.svelte', '.ts']);
 for (const path of zuiSourceFiles) {
 	const source = await readFile(path, 'utf8');
@@ -113,6 +121,7 @@ for (const path of componentFiles) {
 	const filename = portable(relative(workspaceRoot, path));
 	auditTabOrder(source, filename);
 	auditSvelte5(source, filename);
+	auditLucideImports(source, filename);
 	if (/<button\b/u.test(source)) {
 		rawButtonFiles.push(filename);
 		const hasFocusContract =
@@ -154,11 +163,6 @@ for (const path of componentFiles) {
 		transitionFiles.push(filename);
 		if (!/\bmotion\b/u.test(source))
 			fail(`${filename} defines a transition without a motion contract.`);
-	}
-	for (const line of source.split(/\r?\n/u)) {
-		if (/^\s*import\s+(?!type\b).*from\s+['"]@lucide\/svelte['"]/u.test(line)) {
-			fail(`${filename} imports Lucide values from the package root instead of an icon subpath.`);
-		}
 	}
 }
 if (longEventKeyChains.length > 0) {
@@ -455,6 +459,7 @@ for (const path of docsSvelteFiles) {
 	const filename = portable(relative(workspaceRoot, path));
 	auditTabOrder(source, filename);
 	auditSvelte5(source, filename);
+	auditLucideImports(source, filename);
 	auditResourceLifecycle(source, filename);
 	if (rawInteractive.test(source))
 		fail(`${filename} hand-builds an interactive element instead of dogfooding ZUI.`);

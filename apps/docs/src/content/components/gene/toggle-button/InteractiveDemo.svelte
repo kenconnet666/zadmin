@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ZStack, ZText, ZToggleButton } from '@zadmin/zui';
-	import { Bold } from '@lucide/svelte';
+	import Bold from '@lucide/svelte/icons/bold';
 
 	let pressed = $state(false);
 	let changes = $state(0);
