@@ -57,6 +57,7 @@
 | 文档站没有skip-link                   | Hash路由壳层只提供Header、Sidebar与main landmark                | 使用ZLink提供首个Tab入口；阻止hash导航并显式focus/scroll稳定main目标              |
 | Demo可见表单字段缺少id/name           | 基础原生控件无Field/调用方id时只依赖aria-label                  | Input/Textarea/Checkbox/Switch/Slider/RadioItem默认SSR稳定id；DataTable内部生成id |
 | 文档搜索没有结果数量公告              | Sidebar只视觉隐藏不匹配项，屏幕阅读器不知道过滤结果             | ZVisuallyHidden polite状态公告总数/匹配数；搜索框关联status与nav                  |
+| 搜索快捷键提示在移动端未隐藏          | media类和ZKbd基础display类作用于同一元素，注入顺序覆盖none      | 独立wrapper承载响应式display，ZKbd只负责键帽视觉；桌面/移动远程门禁               |
 | FormDemo异步校验timer未清理           | 模拟schema延迟的Promise在HMR/路由销毁后仍可能继续               | Map持有timer/resolve；onDestroy清理并resolve，由ZForm token丢弃迟到结果           |
 | 关闭/导航图标不一致                   | 多处使用`×/‹/›/+/-/✓`字符                                       | 统一使用按需Lucide；完整操作复用ZButton，微型内部按钮复用无状态focus样式合同      |
 | Transfer、DataTable与主页残留箭头字符 | 早期实现只补了可访问名称，字符范围没有纳入全树图标审计          | 统一使用按需Lucide/ZIcon；Transfer按LTR/RTL交换方向，DataTable复用ZButton         |
@@ -104,6 +105,7 @@
 - 搜索框关联真实nav与live status；Chrome验证总数78、autosize唯一命中ZTextarea、无结果0和清空恢复，远程Playwright固定三态。
 - 搜索有内容时Escape清空过滤、恢复78个组件并保持输入焦点；远程Playwright固定value、focus与live状态同步。
 - 非编辑上下文按`/`聚焦搜索；搜索框内`/`保留真实输入且不被全局快捷键劫持，组件声明`aria-keyshortcuts`并销毁window监听。
+- 搜索`/`键帽桌面可见且aria-hidden，500px视口wrapper无布局盒、无溢出，移动端仍可用`/`聚焦；验收后恢复1920×936。
 - FormDemo在异步schema timer启动后立即离页，真实Chrome等待220ms仍保持首页正确状态与干净控制台；Docs资源门禁拒绝无对应释放的创建点。
 - 真实Textarea页重复id清单为0；远程78页循环按页面聚合全部`[id]`并输出任何重复值与数量。
 - 远程全路由循环同时要求main内恰好一个H1，并拒绝document级水平溢出；组件内部滚动容器不受误伤。
@@ -116,13 +118,12 @@
 
 ## 6. CI结论
 
-最后一次按约回看的门禁：[CI run 33304840611](https://github.com/kenconnet666/zadmin/actions/runs/33304840611)。
+最后一次按约回看的门禁：[CI run 33307262128](https://github.com/kenconnet666/zadmin/actions/runs/33307262128)。
 
-- Coverage/packages与Windows C# WebView2 desktop两个job完整成功；新增action回归把branch恢复到90%门禁以上，外部SSR、publish dry-run、Miniapp与WebView验收均通过；
-- Workspace类型/Svelte、Lint和静态源码审计成功；Firefox与Chromium组件矩阵成功；
-- 全量action与`onFormReset`诊断后WebKit仍有18项，Field明确返回`alice:1:0`：组件reset回调没有执行，排除ControllableState/bindable写回；
-- 根因是realm构造器判断拒绝WebKit测试桥接的form包装对象；当前批次改为同ownerDocument、element node与`localName=form`的结构身份，并证明detached document form同样可接受；
-- Docs E2E、全构建与生成文件检查因全测试失败被跳过，待下一轮验证。
+- Coverage/packages与Windows C# WebView2 desktop两个job完整成功；90% branch、bundle、外部SSR、publish dry-run、Miniapp与WebView验收均通过；
+- Workspace类型/Svelte与Prettier成功；ESLint仅在FormDemo timer bookkeeping的原生Map报`svelte/prefer-svelte-reactivity`；
+- 当前批次为该非渲染、纯命令式Map增加单行带理由豁免，不改用会制造无用响应式失效的SvelteMap；
+- 静态源码审计、全测试、WebKit结构身份修复、Docs E2E、全构建与生成文件检查因Lint失败被跳过，仍不宣称WebKit已通过。
 
 最终通过后必须同时满足：
 

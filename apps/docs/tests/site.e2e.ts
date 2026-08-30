@@ -50,6 +50,9 @@ test('announces component search totals and empty results', async ({ page }) => 
 	await page.goto('/#/');
 	const search = page.getByRole('textbox', { name: '搜索组件' });
 	const status = page.locator('#zui-docs-search-status');
+	const shortcut = page.locator('[data-slot="search-shortcut"]');
+	await expect(shortcut).toBeVisible();
+	await expect(shortcut).toHaveAttribute('aria-hidden', 'true');
 	await page.keyboard.press('/');
 	await expect(search).toBeFocused();
 	await search.press('/');
@@ -1313,6 +1316,9 @@ test('keeps navigation usable at a narrow viewport', async ({ page }) => {
 			)
 		).toBeLessThanOrEqual(0);
 	}
+	await expect(page.locator('[data-slot="search-shortcut"]')).toBeHidden();
+	await page.keyboard.press('/');
+	await expect(page.getByRole('textbox', { name: '搜索组件' })).toBeFocused();
 });
 
 test('handles denied clipboard permission without a console error', async ({ page }) => {

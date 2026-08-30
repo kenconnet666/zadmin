@@ -12,6 +12,7 @@
 		type ZFormProps
 	} from '@zadmin/zui';
 
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Pending timer bookkeeping is imperative and never rendered.
 	const pendingDelays = new Map<ReturnType<typeof setTimeout>, () => void>();
 	function validationDelay(milliseconds: number): Promise<void> {
 		return new Promise((resolve) => {

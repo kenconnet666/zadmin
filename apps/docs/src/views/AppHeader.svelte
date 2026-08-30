@@ -10,6 +10,7 @@
 				'brandSmall',
 				'mark',
 				'search',
+				'searchShortcut',
 				'actions',
 				'themePicker',
 				'themeLabel',
@@ -169,6 +170,12 @@
 						input.paddingInlineStart.px(0);
 					});
 				},
+				searchShortcut: (s) => {
+					s.display.inlineFlex;
+					s.flexShrink(0);
+					s.marginInlineEnd._small;
+					s._media('(max-width: 48rem)', (mobile) => mobile.display.none);
+				},
 				select: (s) => {
 					s.backgroundColor._surface;
 					s.borderColor._border;
@@ -208,6 +215,7 @@
 	import {
 		ZIcon,
 		ZInput,
+		ZKbd,
 		ZLink,
 		ZPopover,
 		ZPopoverContent,
@@ -333,6 +341,9 @@
 			onkeydown={handleSearchKeydown}
 			placeholder="搜索组件…"
 		/>
+		<span aria-hidden="true" class={classes.searchShortcut} data-slot="search-shortcut"
+			><ZKbd>/</ZKbd></span
+		>
 	</label>
 	<div class={classes.actions}>
 		<div class={classes.themePicker}>
