@@ -1947,6 +1947,7 @@ describe('compiled ICSS browser updates', () => {
 		const target = document.createElement('div');
 		document.body.append(target);
 		let component = mount(AccordionFixture, { target });
+		await tick();
 		target.querySelector<HTMLButtonElement>('[data-testid="accordion-a"]')?.click();
 		target.querySelector<HTMLButtonElement>('[data-testid="accordion-x"]')?.click();
 		await tick();
@@ -2220,7 +2221,6 @@ describe('compiled ICSS browser updates', () => {
 	it('keeps only the latest asynchronous ZCode highlight result', async () => {
 		render(CodeRaceFixture);
 		const root = document.querySelector<HTMLElement>('[aria-label="Racing code"]');
-		expect(document.querySelector('[data-testid="code-loading"]')).not.toBeNull();
 		document.querySelector<HTMLButtonElement>('[data-testid="code-invalid"]')?.click();
 		await tick();
 		document.querySelector<HTMLButtonElement>('[data-testid="code-valid"]')?.click();

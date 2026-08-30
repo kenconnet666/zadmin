@@ -39,7 +39,10 @@ describe('localized number algorithms', () => {
 		const formatter = {
 			formatToParts: () => [{ type: 'integer', value: '12345' }]
 		} as unknown as Intl.NumberFormat;
-		const spy = vi.spyOn(Intl, 'NumberFormat').mockImplementation(() => formatter);
+		const replacement = function NumberFormat(): Intl.NumberFormat {
+			return formatter;
+		} as unknown as typeof Intl.NumberFormat;
+		const spy = vi.spyOn(Intl, 'NumberFormat').mockImplementation(replacement);
 
 		expect(parseLocalizedNumber('1234.5', 'en-US')).toEqual({
 			partial: false,

@@ -76,12 +76,14 @@ describe('BrowserStyleSheet', () => {
 		const root = document.implementation.createHTMLDocument('cssom-failure');
 		const marker = root.createComment('detached');
 		const original = CSSStyleSheet.prototype.insertRule;
-		const spy = vi
-			.spyOn(CSSStyleSheet.prototype, 'insertRule')
-			.mockImplementation(function (rule, index) {
-				if (rule.includes('c-failure')) throw new RangeError('CSSOM unavailable');
-				return original.call(this, rule, index);
-			});
+		const spy = vi.spyOn(CSSStyleSheet.prototype, 'insertRule').mockImplementation(function (
+			this: CSSStyleSheet,
+			rule,
+			index
+		) {
+			if (rule.includes('c-failure')) throw new RangeError('CSSOM unavailable');
+			return original.call(this, rule, index);
+		});
 		const sheet = new BrowserStyleSheet({ insertionPoint: marker, root });
 
 		expect(() => sheet.insert(entry('c-failure'))).toThrow(/CSSOM unavailable/u);
