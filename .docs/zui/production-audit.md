@@ -30,7 +30,7 @@
 | 内部原生按钮文件         |    9 | 必须复用internal action、显式focus合同，或是Tour的隐藏非Tab遮罩                              |
 | 可见原生输入文件         |   14 | 非hidden input/textarea必须复用internal focus或显式focus-visible/focus-within                |
 | 表单reset action文件     |   24 | 其余组件通过节点action绑定/更新/销毁，禁止直接调用低层listener                               |
-| Svelte原生reset signal   |    2 | ZInput/ZForm使用无name/id的hidden disabled signal；ShadowRoot保留作用域listener回退          |
+| Svelte原生reset signal   |    2 | 静态门禁锁定无name/id的hidden disabled signal；ShadowRoot保留作用域listener回退              |
 | reset mount重绑合同      |    1 | action以mount微任务和短期Observer等待最终root/form，并且只在关联变化时重绑                   |
 | reset update重绑合同     |    1 | action更新时重新检查动态`form`归属，旧表单解绑且新表单直接监听                               |
 | reset微任务合同          |    1 | 与Svelte原生binding使用同一微任务检查点，generation去重捕获并使destroy可取消                 |

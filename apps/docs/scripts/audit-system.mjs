@@ -214,6 +214,7 @@ const inputSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/components/input/ZInput.svelte'),
 	'utf8'
 );
+const formResetSignalTag = formResetSignalSource.match(/<input\b[\s\S]*?\/>/u)?.[0] ?? '';
 if (
 	!buttonSource.includes("'aria-busy': ariaBusy") ||
 	!buttonSource.includes('aria-busy={loading ? true : ariaBusy}') ||
@@ -240,9 +241,11 @@ if (
 	!formResetSignalSource.includes('bind:value={() => marker, updateMarker}') ||
 	!formResetSignalSource.includes('ref.defaultValue = resetValue') ||
 	!formResetSignalSource.includes('if (next === resetValue) onReset()') ||
-	!formResetSignalSource.includes('type="text"') ||
-	!formResetSignalSource.includes('hidden') ||
-	!formResetSignalSource.includes('data-zui-form-reset-signal=""') ||
+	!formResetSignalTag.includes('type="text"') ||
+	!formResetSignalTag.includes('hidden') ||
+	!formResetSignalTag.includes('disabled') ||
+	!formResetSignalTag.includes('data-zui-form-reset-signal=""') ||
+	/\b(?:id|name)\s*=/u.test(formResetSignalTag) ||
 	!formResetSignalSource.includes('use:shadowFormReset={onReset}') ||
 	!formSource.includes('<FormResetSignal onReset={resetFromForm}') ||
 	!inputSource.includes('<FormResetSignal {form} onReset={resetFromForm}')
