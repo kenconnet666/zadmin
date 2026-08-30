@@ -62,6 +62,7 @@ test('announces component search totals and empty results', async ({ page }) => 
 	await expect(search).toHaveAttribute('aria-describedby', 'zui-docs-search-status');
 	await expect(search).toHaveAttribute('aria-keyshortcuts', '/');
 	await expect(status).toHaveAttribute('aria-live', 'polite');
+	await expect(status).toHaveAttribute('role', 'status');
 	await expect(status).toHaveText('共 78 个组件');
 
 	await search.fill('autosize');

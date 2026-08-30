@@ -38,7 +38,7 @@
 | 资源生命周期违规        |    0 | 全部ZUI与Docs源码中event/timer/RAF/Observer创建文件必须包含对应释放路径                      |
 | 危险动态DOM/XSS sink    |    0 | ZUI与Docs禁止raw HTML、HTML字符串注入、eval/new Function、动态script和javascript URL         |
 | Hash路由安全skip-link   |    1 | CI固定ZLink、当前URL、防导航focus handler以及main稳定id/负tabindex合同                       |
-| 搜索live/键盘关系合同   |    1 | CI固定controls/describedby/keyshortcuts、Escape与`/`处理器、导航id和polite匹配状态           |
+| 搜索live/键盘关系合同   |    1 | CI固定controls/describedby/keyshortcuts、Escape与`/`处理器、导航id和polite status状态        |
 
 分类目录的16–26个直接文件属于蓝图允许的真实大分类（5–30），继续保持“分类目录直接包含简单组件文件”；没有为满足计数制造一文件目录。
 

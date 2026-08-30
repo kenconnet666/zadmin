@@ -222,7 +222,7 @@ const searchLiveContracts = [
 	/data-slot=["']search-shortcut["'][\s\S]*?<ZKbd>\/<\/ZKbd>/u.test(appHeaderSource),
 	/event\.key === ["']Escape["'] && query/u.test(appHeaderSource),
 	/event\.key !== ["']\/["'][\s\S]*?searchRef\?\.focus/u.test(appHeaderSource),
-	/<ZVisuallyHidden[\s\S]*?aria-live=["']polite["'][\s\S]*?id=["']zui-docs-search-status["']/u.test(
+	/<ZVisuallyHidden[\s\S]*?aria-live=["']polite["'][\s\S]*?id=["']zui-docs-search-status["'][\s\S]*?role=["']status["']/u.test(
 		appSidebarSource
 	),
 	/<nav\b[^>]*id=["']zui-docs-component-nav["']/u.test(appSidebarSource),

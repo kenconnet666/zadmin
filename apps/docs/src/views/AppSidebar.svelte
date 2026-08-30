@@ -143,7 +143,7 @@
 </script>
 
 <aside class={baseClasses.root}>
-	<ZVisuallyHidden aria-atomic="true" aria-live="polite" id="zui-docs-search-status">
+	<ZVisuallyHidden aria-atomic="true" aria-live="polite" id="zui-docs-search-status" role="status">
 		{query.trim() ? `${filtered.length} 个匹配组件` : `共 ${docs.length} 个组件`}
 	</ZVisuallyHidden>
 	<nav class={baseClasses.nav} aria-label="组件导航" id="zui-docs-component-nav">
