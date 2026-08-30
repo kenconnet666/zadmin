@@ -118,7 +118,7 @@
 </script>
 
 <script lang="ts">
-	import { ZIcon, ZLink, useZui } from '@zadmin/zui';
+	import { ZIcon, ZLink, ZVisuallyHidden, useZui } from '@zadmin/zui';
 	import { guideDocs } from '../content/guides.js';
 	import { componentCategories, type ComponentDoc } from '../framework/catalog.js';
 	import { guideRoute } from '../framework/router.js';
@@ -143,7 +143,10 @@
 </script>
 
 <aside class={baseClasses.root}>
-	<nav class={baseClasses.nav} aria-label="组件导航">
+	<ZVisuallyHidden aria-atomic="true" aria-live="polite" id="zui-docs-search-status">
+		{query.trim() ? `${filtered.length} 个匹配组件` : `共 ${docs.length} 个组件`}
+	</ZVisuallyHidden>
+	<nav class={baseClasses.nav} aria-label="组件导航" id="zui-docs-component-nav">
 		<ZLink
 			class={homeClasses.link}
 			aria-current={!currentId && !currentGuideId ? 'page' : undefined}

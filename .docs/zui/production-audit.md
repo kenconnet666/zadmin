@@ -55,6 +55,7 @@
 | 表单reset注册存在effect/action双轨    | 组件普遍依赖`bind:this + $effect`，节点生命周期不够直接         | 26个表单组件统一节点action；Textarea提供`onFormReset`供Mention组合复用            |
 | 文档站没有skip-link                   | Hash路由壳层只提供Header、Sidebar与main landmark                | 使用ZLink提供首个Tab入口；阻止hash导航并显式focus/scroll稳定main目标              |
 | Demo可见表单字段缺少id/name           | 基础原生控件无Field/调用方id时只依赖aria-label                  | Input/Textarea/Checkbox/Switch/Slider/RadioItem默认SSR稳定id；DataTable内部生成id |
+| 文档搜索没有结果数量公告              | Sidebar只视觉隐藏不匹配项，屏幕阅读器不知道过滤结果             | ZVisuallyHidden polite状态公告总数/匹配数；搜索框关联status与nav                  |
 | 关闭/导航图标不一致                   | 多处使用`×/‹/›/+/-/✓`字符                                       | 统一使用按需Lucide；完整操作复用ZButton，微型内部按钮复用无状态focus样式合同      |
 | Transfer、DataTable与主页残留箭头字符 | 早期实现只补了可访问名称，字符范围没有纳入全树图标审计          | 统一使用按需Lucide/ZIcon；Transfer按LTR/RTL交换方向，DataTable复用ZButton         |
 | WebView窗口控制仍用字符图标           | WindowControls早于ZIcon manifest扩展                            | 扩展受控manifest并改用`ZIcon`                                                     |
@@ -98,6 +99,7 @@
 - 组件包三浏览器Fixture固定默认id非空/唯一、调用方显式id、Field优先级、RadioGroupItem与DataTable内部选择框身份合同。
 - Server测试对NativeIdentityFixture做两次独立SSR，要求完整id数组确定一致、内部唯一并保留`consumer-input`显式覆盖。
 - Accessibility指南明确自动id仅服务DOM/ARIA、显式id与Field优先且不可作为业务键；真实Chrome渲染4个ZUI Card章节并保持控制台干净。
+- 搜索框关联真实nav与live status；Chrome验证总数78、autosize唯一命中ZTextarea、无结果0和清空恢复，远程Playwright固定三态。
 - 真实Textarea页重复id清单为0；远程78页循环按页面聚合全部`[id]`并输出任何重复值与数量。
 - 远程全路由循环同时要求main内恰好一个H1，并拒绝document级水平溢出；组件内部滚动容器不受误伤。
 - 真实87路由的main、`aria-current=page`、H1与具体页面标题问题均为0；远程循环固定当前链接href必须等于被测hash。

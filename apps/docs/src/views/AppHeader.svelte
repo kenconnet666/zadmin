@@ -290,6 +290,8 @@
 		<ZIcon name="search" size={18} />
 		<ZInput
 			bind:value={query}
+			aria-controls="zui-docs-component-nav"
+			aria-describedby="zui-docs-search-status"
 			aria-label="搜索组件"
 			id="zui-docs-component-search"
 			name="component-search"

@@ -46,6 +46,27 @@ test('renders the component catalog and real demo source', async ({ page }) => {
 	expect(errors).toEqual([]);
 });
 
+test('announces component search totals and empty results', async ({ page }) => {
+	await page.goto('/#/');
+	const search = page.getByRole('textbox', { name: '搜索组件' });
+	const status = page.locator('#zui-docs-search-status');
+	await expect(search).toHaveAttribute('aria-controls', 'zui-docs-component-nav');
+	await expect(search).toHaveAttribute('aria-describedby', 'zui-docs-search-status');
+	await expect(status).toHaveAttribute('aria-live', 'polite');
+	await expect(status).toHaveText('共 78 个组件');
+
+	await search.fill('autosize');
+	await expect(status).toHaveText('1 个匹配组件');
+	await expect(page.getByRole('link', { name: 'ZTextarea', exact: true })).toBeVisible();
+
+	await search.fill('definitely-no-component');
+	await expect(status).toHaveText('0 个匹配组件');
+	await expect(page.getByText('没有匹配组件')).toBeVisible();
+
+	await search.clear();
+	await expect(status).toHaveText('共 78 个组件');
+});
+
 test('skips repeated navigation without corrupting hash routes', async ({ page }) => {
 	await page.goto('/#/components/checkbox');
 	const route = page.url();
