@@ -1,5 +1,6 @@
 import { mount, tick, unmount } from 'svelte';
 import { describe, expect, it } from 'vitest';
+import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-svelte';
 
 import DynamicBox from './DynamicBox.svelte';
@@ -2630,5 +2631,23 @@ describe('compiled ICSS browser updates', () => {
 		await settleFormReset();
 		expect(delegated?.value).toBe('delegated-seed');
 		expect(delegatedOutput?.textContent).toBe('delegated-seed:1');
+	});
+
+	it('commits Field reset state through provider-level user interaction', async () => {
+		render(FieldFixture);
+		const form = document.querySelector<HTMLFormElement>('[data-testid="field-form"]');
+		const input = document.querySelector<HTMLInputElement>('[data-testid="field-input"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="field-output"]');
+		const reset = form?.querySelector<HTMLButtonElement>('button[type="reset"]');
+		expect(input).not.toBeNull();
+		expect(reset).not.toBeNull();
+		if (!input || !reset) return;
+
+		await userEvent.fill(input, 'driver-change');
+		expect(output?.textContent).toBe('driver-change:1:0');
+		await userEvent.click(reset);
+		await settleFormReset();
+		expect(input.value).toBe('seed');
+		expect(output?.textContent).toBe('seed:1:1');
 	});
 });
