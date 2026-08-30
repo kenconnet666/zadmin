@@ -63,6 +63,13 @@ function auditSvelte5(source, filename) {
 	if (/@ts-(?:ignore|nocheck)\b|\bas\s+any\b|:\s*any\b|<any>/u.test(source)) {
 		fail(`${filename} bypasses TypeScript with an unsafe escape hatch.`);
 	}
+	if (
+		/\{@html\}|\b(?:innerHTML|outerHTML|insertAdjacentHTML|document\.write)\b|\beval\s*\(|new\s+Function\b|createElement\(\s*["']script["']|(?:href|src)\s*=\s*["']javascript:/u.test(
+			source
+		)
+	) {
+		fail(`${filename} contains a dangerous dynamic DOM sink.`);
+	}
 }
 
 function auditResourceLifecycle(source, filename) {
@@ -233,6 +240,7 @@ console.log(
 		legacyDynamicComponents: 0,
 		typescriptEscapeHatches: 0,
 		zuiSourceFiles: zuiSourceFiles.length,
-		resourceLifecycleViolations: 0
+		resourceLifecycleViolations: 0,
+		dangerousDomSinks: 0
 	})
 );
