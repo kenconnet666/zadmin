@@ -240,6 +240,15 @@ for (const path of docsSvelteFiles) {
 		fail(`${filename} hand-builds an interactive element instead of dogfooding ZUI.`);
 	if (forbiddenGlyph.test(source))
 		fail(`${filename} contains a character UI icon instead of Lucide.`);
+	for (const tooltip of source.matchAll(/<ZTooltipContent\b[\s\S]*?<\/ZTooltipContent>/gu)) {
+		if (
+			/<Z(?:Button|Checkbox|Combobox|Input|Link|Popover|RadioGroup|Select|Slider|Switch|Textarea|ToggleButton)\b/u.test(
+				tooltip[0]
+			)
+		) {
+			fail(`${filename} places interactive content inside a tooltip.`);
+		}
+	}
 }
 const appShellSource = await readFile(resolve(docsRoot, 'src/views/AppShell.svelte'), 'utf8');
 const skipLinkContracts = [
@@ -348,6 +357,7 @@ console.log(
 		searchLiveContracts: 1,
 		formResetMountRebindContracts: 1,
 		currentFocusRestoreContracts: 2,
-		stableNativeIdComponents: stableNativeIdSources.length + 1
+		stableNativeIdComponents: stableNativeIdSources.length + 1,
+		interactiveTooltipDemos: 0
 	})
 );
