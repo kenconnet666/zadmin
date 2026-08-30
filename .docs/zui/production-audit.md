@@ -25,6 +25,7 @@
 | 带CSS过渡的组件         |   13 | 13/13显式消费Provider motion，reduced时清除过渡                                              |
 | Docs全站自建交互控件    |    0 | `apps/docs/src`全部Svelte文件由ZUI表达按钮、链接、Select、Popover、Table、Code和Card         |
 | 内联SVG                 |    4 | 2个ZAdmin品牌资源；`ZSpinner`与圆形`ZProgress`为组件自身的数据图形；通用UI图标全部来自Lucide |
+| 品牌渐变文件            |    2 | 仅desktop图标与Docs favicon允许SVG渐变；组件和文档界面不以渐变表达状态                       |
 | 静态系统审计            |    1 | CI固化metadata唯一性、Demo数量、motion、Docs dogfood、Lucide导入和SVG白名单                  |
 | 内部原生按钮文件        |    9 | 必须复用internal action、显式focus合同，或是Tour的隐藏非Tab遮罩                              |
 | 可见原生输入文件        |   14 | 非hidden input/textarea必须复用internal focus或显式focus-visible/focus-within                |

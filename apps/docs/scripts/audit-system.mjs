@@ -202,9 +202,14 @@ const svgCandidates = [
 	...(await filesUnder(resolve(workspaceRoot, 'ui'), ['.svelte', '.svg']))
 ];
 const inlineSvg = [];
+const gradientFiles = [];
 for (const path of svgCandidates) {
-	if (/<(?:path|svg)\b/u.test(await readFile(path, 'utf8'))) {
+	const source = await readFile(path, 'utf8');
+	if (/<(?:path|svg)\b/u.test(source)) {
 		inlineSvg.push(portable(relative(workspaceRoot, path)));
+	}
+	if (/(?:linear|radial|conic)-gradient\(|<(?:linear|radial)Gradient\b/u.test(source)) {
+		gradientFiles.push(portable(relative(workspaceRoot, path)));
 	}
 }
 const allowedSvg = [
@@ -215,6 +220,10 @@ const allowedSvg = [
 ];
 if (JSON.stringify(inlineSvg.sort()) !== JSON.stringify(allowedSvg.sort())) {
 	fail(`Inline SVG boundary changed: ${inlineSvg.join(', ') || 'none'}.`);
+}
+const allowedGradients = ['apps/desktop/static/zadmin-icon.svg', 'apps/docs/static/favicon.svg'];
+if (JSON.stringify(gradientFiles.sort()) !== JSON.stringify(allowedGradients.sort())) {
+	fail(`Visual gradient boundary changed: ${gradientFiles.join(', ') || 'none'}.`);
 }
 
 const docFiles = await filesUnder(docsComponentsRoot, ['doc.ts']);
@@ -240,6 +249,7 @@ console.log(
 		rawControlComponentFiles: rawControlFiles.length,
 		formResetActionFiles: formResetActionFiles.length,
 		inlineSvgFiles: inlineSvg.length,
+		brandGradientFiles: gradientFiles.length,
 		docsRawInteractiveElements: 0,
 		positiveTabindexElements: 0,
 		ariaHiddenTabStops: 0,
