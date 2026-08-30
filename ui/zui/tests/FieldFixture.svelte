@@ -8,6 +8,7 @@
 	let { error = ['A value is required', 'Try again'] }: Props = $props();
 	let value = $state<string>();
 	let changes = $state(0);
+	let resets = $state(0);
 </script>
 
 <form data-testid="field-form">
@@ -18,6 +19,9 @@
 			data-testid="field-input"
 			defaultValue="seed"
 			bind:value
+			onFormReset={() => {
+				resets += 1;
+			}}
 			onValueChange={() => {
 				changes += 1;
 			}}
@@ -30,5 +34,5 @@
 		<ZInput data-testid="inherited-input" />
 	</ZField>
 	<button type="reset">Reset</button>
-	<output data-testid="field-output">{value}:{changes}</output>
+	<output data-testid="field-output">{value}:{changes}:{resets}</output>
 </form>

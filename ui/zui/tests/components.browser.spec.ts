@@ -2376,12 +2376,12 @@ describe('compiled ICSS browser updates', () => {
 		input.value = 'alice';
 		input.dispatchEvent(new InputEvent('input', { bubbles: true }));
 		await tick();
-		expect(output?.textContent).toBe('alice:1');
+		expect(output?.textContent).toBe('alice:1:0');
 
 		input.form?.reset();
 		expect(resetEvents).toBe(1);
 		await settleFormReset();
 		expect(input.value).toBe('seed');
-		expect(output?.textContent).toBe('seed:1');
+		expect(output?.textContent).toBe('seed:1:1');
 	});
 });

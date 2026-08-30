@@ -28,6 +28,7 @@
 | 静态系统审计         |    1 | CI固化metadata唯一性、Demo数量、motion、Docs dogfood、Lucide导入和SVG白名单                  |
 | 内部原生按钮文件     |    9 | 必须复用internal action、显式focus合同，或是Tour的隐藏非Tab遮罩                              |
 | 可见原生输入文件     |   14 | 非hidden input/textarea必须复用internal focus或显式focus-visible/focus-within                |
+| 表单reset action文件 |   26 | 组件必须通过节点action绑定/更新/销毁，禁止直接调用低层listener                               |
 
 分类目录的16–26个直接文件属于蓝图允许的真实大分类（5–30），继续保持“分类目录直接包含简单组件文件”；没有为满足计数制造一文件目录。
 
@@ -42,6 +43,7 @@
 | 可取消事件重复实现                    | Select、MultiSelect、Combobox、Menu和Layer各自维护布尔状态      | 抽取最小`CancelableEvent`基类，保留具体事件公开类型                          |
 | 内部微型按钮视觉/焦点重复             | Calendar、NumberField与TimeField各自维护相同基础动作样式        | 统一复用`styleInternalAction`，仅保留尺寸、边框和布局差异                    |
 | 可见原生输入焦点依赖浏览器默认        | ColorPicker、TagsInput和DataTable没有统一Theme focus ring       | 抽取内部focus helper并覆盖color/hex/range、编辑框和表格选择框                |
+| 表单reset注册存在effect/action双轨    | 组件普遍依赖`bind:this + $effect`，节点生命周期不够直接         | 26个表单组件统一节点action；Textarea提供`onFormReset`供Mention组合复用       |
 | 关闭/导航图标不一致                   | 多处使用`×/‹/›/+/-/✓`字符                                       | 统一使用按需Lucide；完整操作复用ZButton，微型内部按钮复用无状态focus样式合同 |
 | Transfer、DataTable与主页残留箭头字符 | 早期实现只补了可访问名称，字符范围没有纳入全树图标审计          | 统一使用按需Lucide/ZIcon；Transfer按LTR/RTL交换方向，DataTable复用ZButton    |
 | WebView窗口控制仍用字符图标           | WindowControls早于ZIcon manifest扩展                            | 扩展受控manifest并改用`ZIcon`                                                |
@@ -76,6 +78,7 @@
 - 移除reset路径的强制`flushSync`后，真实Chrome中ZCheckbox从true恢复indeterminate，ShadowRoot回调为1、无Window detached document回调为0，控制台保持干净。
 - ColorPicker三类输入均有2px Theme焦点；TagsInput由容器显示focus-within且Enter提交后保持焦点；DataTable表头选择框用Space同步选中11个可用行。
 - 首批`formReset`节点action在真实Chrome中让ZSelect从开发恢复生产、Checkbox从true恢复mixed；action更新回调后分别命中1次，destroy后不再触发。
+- 全量action迁移后，RadioGroup、ZForm、Mention/Textarea和Transfer分别恢复默认选择、验证状态、建议浮层与目标集合；26个组件文件禁止绕过action直调listener。
 - 六主题最终surface分别为极光`rgb(238, 244, 255)`、纸张`rgb(245, 237, 225)`、霓虹`rgb(5, 9, 20)`、午夜`rgb(11, 18, 32)`、高对比亮色`rgb(255, 255, 255)`、高对比暗色`rgb(0, 0, 0)`。
 - 390×844视口无水平溢出，搜索和主题选择保持可用，组件导航使用横向滚动；验收后已恢复默认1920×936视口。
 - 10,000项VirtualList、1,000行DataTable与5,000节点Tree均保持有界DOM；选择、排序和End键定位在虚拟化后仍稳定。
@@ -83,13 +86,12 @@
 
 ## 6. CI结论
 
-最后一次按约回看的门禁：[CI run 33303197068](https://github.com/kenconnet666/zadmin/actions/runs/33303197068)。
+最后一次按约回看的门禁：[CI run 33303703620](https://github.com/kenconnet666/zadmin/actions/runs/33303703620)。
 
-- Windows C# WebView2 desktop完整成功；
-- Changesets状态与跨平台API contract成功；ZUI coverage的275项测试全通过，但全局branch为89.98%，仍低于90%门禁，后续包步骤被跳过；
+- Coverage/packages与Windows C# WebView2 desktop两个job完整成功；新增action回归把branch恢复到90%门禁以上，外部SSR、publish dry-run、Miniapp与WebView验收均通过；
 - Workspace类型/Svelte、Lint和静态源码审计成功；Firefox与Chromium组件矩阵成功；
-- ShadowRoot、detached document与移除`flushSync`回归均通过，但18个真实Svelte组件状态仍未提交，证明低层事件与调度本身不是根因；
-- 当前批次把首批原生控件与ZSelect从`bind:this + $effect`迁移到节点`formReset` action，并覆盖action update/destroy；这直接验证组件挂载生命周期差异，同时增加有效分支覆盖且不降低90%阈值；
+- 首批节点action迁移后WebKit仍是完全相同的18项，证明组件注册时机也不是根因；低层事件、root、task、Svelte调度和action生命周期已分别排除；
+- 当前批次完成26组件全量action一致性并为Input增加`onFormReset`诊断计数：下一轮`FieldFixture`的`alice:1:0/1`会直接区分组件回调是否执行，停止继续猜测时序；
 - Docs E2E、全构建与生成文件检查因全测试失败被跳过，待下一轮验证。
 
 最终通过后必须同时满足：
@@ -101,4 +103,4 @@
 
 ## 7. 结论
 
-S0–S8实现与真实浏览器审计已经收口；CI不阻塞后续工作，只在下一次正常推送时回看上一轮结果并修复明确失败。当前已修复上一轮唯一失败类别，但不把“已推送”写成“CI已通过”。任何门禁失败都不能用“本地可运行”替代，也不通过降低覆盖率阈值消除。
+S0–S8实现与真实浏览器审计已经收口；CI不阻塞后续工作，只在下一次正常推送时回看上一轮结果并修复明确失败。当前仍在收敛WebKit唯一失败类别，不把“已推送”写成“CI已通过”。任何门禁失败都不能用“本地可运行”替代，也不通过降低覆盖率阈值消除。
