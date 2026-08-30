@@ -198,12 +198,29 @@ const formControlSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/runtime/form/form-control.svelte.ts'),
 	'utf8'
 );
+const buttonSource = await readFile(
+	resolve(workspaceRoot, 'ui/zui/src/components/gene/ZButton.svelte'),
+	'utf8'
+);
 if (
-	!formControlSource.includes('queueMicrotask(() => {') ||
-	!formControlSource.includes('next.associatedForm === association.associatedForm') ||
-	!formControlSource.includes('next.root === association.root')
+	!buttonSource.includes("'aria-busy': ariaBusy") ||
+	!buttonSource.includes('aria-busy={loading ? true : ariaBusy}')
 ) {
-	fail('The form reset action must preserve its mount-time association rebind contract.');
+	fail('ZButton must preserve native aria-busy unless loading owns the busy state.');
+}
+if (
+	!formControlSource.includes('queueMicrotask(refreshAssociation)') ||
+	!formControlSource.includes('new MutationObserver(scheduleAssociationRefresh)') ||
+	!formControlSource.includes(
+		'mountObserver.observe(control.ownerDocument, { childList: true, subtree: true })'
+	) ||
+	!formControlSource.includes('next.associatedForm !== association.associatedForm') ||
+	!formControlSource.includes('next.root !== association.root') ||
+	!formControlSource.includes('scheduleAssociationRefresh();\n\t\t}') ||
+	!formControlSource.includes('const ticket = (generation += 1)') ||
+	!formControlSource.includes('ticket === generation')
+) {
+	fail('The form reset action must preserve its association and reset microtask contracts.');
 }
 const focusScopeSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/runtime/layer/focus-scope.ts'),
@@ -220,10 +237,12 @@ const dialogContentSource = await readFile(
 if (
 	!focusScopeSource.includes('restoreTarget?: () => HTMLElement | null') ||
 	!focusScopeSource.includes('this.#options.restoreTarget?.() ?? this.#previousFocus') ||
+	!focusScopeSource.includes('this.#previousFocus !== restoreTarget') ||
+	!focusScopeSource.includes('this.#previousFocus.focus({ preventScroll: true })') ||
 	!popoverContentSource.includes('restoreTarget: () => popover.trigger') ||
 	!dialogContentSource.includes('restoreTarget: () => dialog.trigger')
 ) {
-	fail('Layer focus scopes must restore the current compound trigger at cleanup time.');
+	fail('Layer focus scopes must restore the current compound trigger with a focusable fallback.');
 }
 const tooltipContentSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/components/compound/tooltip/ZTooltipContent.svelte'),
@@ -368,8 +387,12 @@ console.log(
 		dangerousDomSinks: 0,
 		skipLinkContracts: 1,
 		searchLiveContracts: 1,
+		buttonNativeBusyContracts: 1,
 		formResetMountRebindContracts: 1,
+		formResetUpdateRebindContracts: 1,
+		formResetMicrotaskContracts: 1,
 		currentFocusRestoreContracts: 2,
+		currentFocusFallbackContracts: 1,
 		tooltipRuntimeGuardContracts: 1,
 		stableNativeIdComponents: stableNativeIdSources.length + 1,
 		interactiveTooltipDemos: 0

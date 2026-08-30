@@ -110,6 +110,7 @@
 
 <ZProvider motion="reduced">
 	<ZButton>Reduced button</ZButton>
+	<ZButton aria-busy="true" data-testid="coverage-button-native-busy">Native busy</ZButton>
 	<ZButton loading loadingLabel="Custom loading">
 		{#snippet loadingIndicator()}<span>busy</span>{/snippet}
 		Loading action

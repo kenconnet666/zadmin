@@ -37,6 +37,16 @@ describe('ZUI layer runtime', () => {
 		expect(reset).toHaveBeenCalledOnce();
 	});
 
+	it('cancels a queued form reset when its listener is destroyed in the same task', async () => {
+		const form = document.createElement('form');
+		const reset = vi.fn();
+		const stop = listenToFormReset(form, reset);
+		form.dispatchEvent(new Event('reset', { cancelable: true }));
+		stop();
+		await Promise.resolve();
+		expect(reset).not.toHaveBeenCalled();
+	});
+
 	it('observes controls whose external form association appears after setup', async () => {
 		const input = document.createElement('input');
 		input.setAttribute('form', 'late-form');
@@ -167,21 +177,56 @@ describe('ZUI layer runtime', () => {
 		form.remove();
 	});
 
-	it('rebinds the node reset action after a detached control enters its form tree', async () => {
+	it('rebinds the node reset action when a control connects after its first mount microtask', async () => {
 		const form = document.createElement('form');
 		const input = document.createElement('input');
 		const reset = vi.fn();
+		const listen = vi.spyOn(form, 'addEventListener');
 		const action = formReset(input, reset);
+		await Promise.resolve();
+		expect(listen).not.toHaveBeenCalled();
+
 		form.append(input);
 		document.body.append(form);
-		await Promise.resolve();
+		await new Promise<void>((resolve) => queueMicrotask(() => queueMicrotask(resolve)));
+		expect(listen).toHaveBeenCalledWith('reset', expect.any(Function), true);
 
 		form.reset();
 		await settleReset();
 		expect(reset).toHaveBeenCalledOnce();
 
 		action.destroy();
+		listen.mockRestore();
 		form.remove();
+	});
+
+	it('rebinds the node reset action when its form ownership changes', async () => {
+		const firstForm = document.createElement('form');
+		const secondForm = document.createElement('form');
+		const input = document.createElement('input');
+		firstForm.append(input);
+		document.body.append(firstForm, secondForm);
+		const firstRemove = vi.spyOn(firstForm, 'removeEventListener');
+		const secondListen = vi.spyOn(secondForm, 'addEventListener');
+		const reset = vi.fn();
+		const action = formReset(input, reset);
+
+		secondForm.append(input);
+		action.update(reset);
+		await Promise.resolve();
+		expect(firstRemove).toHaveBeenCalledWith('reset', expect.any(Function), true);
+		expect(secondListen).toHaveBeenCalledWith('reset', expect.any(Function), true);
+
+		firstForm.reset();
+		secondForm.reset();
+		await settleReset();
+		expect(reset).toHaveBeenCalledOnce();
+
+		action.destroy();
+		firstRemove.mockRestore();
+		secondListen.mockRestore();
+		firstForm.remove();
+		secondForm.remove();
 	});
 
 	it('updates and destroys the direct form reset action', async () => {
@@ -450,6 +495,28 @@ describe('ZUI layer runtime', () => {
 		scope.destroy();
 		expect(document.activeElement).toBe(replacement);
 		replacement.remove();
+		container.remove();
+	});
+
+	it('falls back to the previous focus when a current restore target cannot receive focus', async () => {
+		const previous = document.createElement('button');
+		const virtualAnchor = document.createElement('span');
+		const container = document.createElement('div');
+		const inside = document.createElement('button');
+		container.append(inside);
+		document.body.append(previous, virtualAnchor, container);
+		previous.focus();
+		const scope = new FocusScope(container, {
+			restoreFocus: true,
+			restoreTarget: () => virtualAnchor
+		});
+		await Promise.resolve();
+		expect(document.activeElement).toBe(inside);
+
+		scope.destroy();
+		expect(document.activeElement).toBe(previous);
+		previous.remove();
+		virtualAnchor.remove();
 		container.remove();
 	});
 

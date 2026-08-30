@@ -80,11 +80,12 @@
 			/>
 		</ZFormField>
 		<ZStack direction="row" gap="medium">
-			<ZButton type="submit" loading={validating}>保存</ZButton>
+			<ZButton type="submit" aria-busy={validating || undefined}>保存</ZButton>
 			<ZButton type="reset" variant="secondary">重置</ZButton>
 		</ZStack>
 		<ZText tone="muted"
-			>submitted = {submitted} · errors = {Object.keys(errors).length} · result = {result}</ZText
+			>submitted = {submitted} · errors = {Object.keys(errors).length} · validating =
+			{validating} · result = {result}</ZText
 		>
 	</ZStack>
 </ZForm>

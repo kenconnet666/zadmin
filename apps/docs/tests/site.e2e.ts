@@ -259,9 +259,13 @@ test('keeps Form schema errors, async state, first-error focus, valid submit and
 	await account.fill('alice');
 	await email.fill('alice@example.com');
 	await page.getByRole('button', { name: '保存' }).click();
-	await expect(page.getByText('submitted = true · errors = 0 · result = alice')).toBeVisible();
+	await expect(
+		page.getByText('submitted = true · errors = 0 · validating = false · result = alice')
+	).toBeVisible();
 	await page.getByRole('button', { name: '重置' }).click();
-	await expect(page.getByText('submitted = false · errors = 0 · result = alice')).toBeVisible();
+	await expect(
+		page.getByText('submitted = false · errors = 0 · validating = false · result = alice')
+	).toBeVisible();
 	await expect(page.locator('[data-dirty="true"]')).toHaveCount(0);
 });
 

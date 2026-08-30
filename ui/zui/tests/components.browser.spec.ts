@@ -456,6 +456,11 @@ describe('compiled ICSS browser updates', () => {
 		const reducedCarousel = document.querySelector<HTMLElement>(
 			'[data-testid="coverage-carousel-reduced"]'
 		);
+		const nativeBusyButton = document.querySelector<HTMLButtonElement>(
+			'[data-testid="coverage-button-native-busy"]'
+		);
+		expect(nativeBusyButton?.getAttribute('aria-busy')).toBe('true');
+		expect(nativeBusyButton?.disabled).toBe(false);
 		expect(reducedCarousel?.dataset.reducedMotion).toBe('true');
 		expect(
 			reducedCarousel?.querySelector<HTMLButtonElement>(

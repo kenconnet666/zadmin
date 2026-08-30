@@ -223,6 +223,7 @@
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 
 	let {
+		'aria-busy': ariaBusy,
 		'aria-label': ariaLabel,
 		children,
 		class: className,
@@ -263,7 +264,7 @@
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
 	{type}
 	disabled={disabled || loading}
-	aria-busy={loading || undefined}
+	aria-busy={loading ? true : ariaBusy}
 	aria-label={loading && loadingLabel ? loadingLabel : ariaLabel}
 	data-loading={loading || undefined}
 >

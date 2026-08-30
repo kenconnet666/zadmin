@@ -30,15 +30,19 @@
 | 内部原生按钮文件         |    9 | 必须复用internal action、显式focus合同，或是Tour的隐藏非Tab遮罩                              |
 | 可见原生输入文件         |   14 | 非hidden input/textarea必须复用internal focus或显式focus-visible/focus-within                |
 | 表单reset action文件     |   26 | 组件必须通过节点action绑定/更新/销毁，禁止直接调用低层listener                               |
-| reset mount重绑合同      |    1 | action必须在mount微任务重新读取root/form，并且只在关联变化时重绑                             |
+| reset mount重绑合同      |    1 | action以mount微任务和短期Observer等待最终root/form，并且只在关联变化时重绑                   |
+| reset update重绑合同     |    1 | action更新时重新检查动态`form`归属，旧表单解绑且新表单直接监听                               |
+| reset微任务合同          |    1 | 与Svelte原生binding使用同一微任务检查点，generation去重捕获并使destroy可取消                 |
 | 默认稳定id组件           |    7 | 六个基础原生控件与DataTable内部选择框必须保留SSR稳定作用域id                                 |
 | 正tabindex/隐藏Tab点     |  0/0 | ZUI和Docs禁止正tabindex；aria-hidden交互元素必须显式`tabindex=-1`                            |
 | 隐式submit/无名图标按钮  |  0/0 | 内部原生button必须显式type；图标按钮必须有aria-label或aria-labelledby                        |
+| ZButton原生busy合同      |    1 | loading拥有强busy/disabled语义，否则保留调用方原生`aria-busy`                                |
 | Svelte遗留事件/动态组件  |  0/0 | ZUI与Docs禁止`on:event`、`createEventDispatcher`和`<svelte:component>`                       |
 | TypeScript危险逃生口     |    0 | ZUI与Docs禁止`@ts-ignore`、`@ts-nocheck`、显式`any`断言与注解                                |
 | 物理文本对齐             |    0 | ZUI与Docs禁止`textAlign.left/right`，文字使用逻辑start/end；坐标定位算法不受误伤             |
 | inert与退出态aria-hidden |    0 | Presence退出容器使用inert，不在焦点恢复前叠加aria-hidden                                     |
 | 当前Trigger焦点恢复合同  |    2 | Popover/Dialog通过FocusScope restoreTarget在cleanup解析当前context Trigger                   |
+| 不可聚焦Trigger回退合同  |    1 | 当前定位锚点无法接收焦点时，FocusScope回退到打开前真实焦点                                   |
 | 交互式Tooltip            |    0 | Runtime拒绝交互语义或可聚焦后代；Docs同时门禁Button/Input/Link等内容                         |
 | Tooltip Runtime守卫合同  |    1 | CI固定原生/ARIA/媒体selector、最终DOM查询与“use ZPopover”错误指引                            |
 | 资源生命周期违规         |    0 | 全部ZUI与Docs源码中event/timer/RAF/Observer创建文件必须包含对应释放路径                      |
@@ -57,6 +61,7 @@
 | 负数NumberField步进可能错误舍入       | `decimalPlaces`正则没有接受数值符号                                | 支持正负号并覆盖负小数与负科学计数法                                              |
 | 动画合同不一致                        | 早期Button/Input/Textarea/InputGroup/FileUpload只写了transition    | 全部接入Provider motion；Accordion指示器也支持reduced-motion                      |
 | Popover退出时阻止aria-hidden警告      | Presence先隐藏仍含焦点的Content，FocusScope随后才恢复Trigger       | Popover/Dialog/Accordion退出只用inert；Tooltip无焦点管理仍保留aria-hidden         |
+| ContextMenu关闭后焦点落到BODY         | Popover当前Trigger是坐标span，直接focus不会生效且遮蔽previousFocus | FocusScope验证当前目标确实获得焦点，否则回退到打开前的真实ContextMenu目标         |
 | 可取消事件重复实现                    | Select、MultiSelect、Combobox、Menu和Layer各自维护布尔状态         | 抽取最小`CancelableEvent`基类，保留具体事件公开类型                               |
 | 内部微型按钮视觉/焦点重复             | Calendar、NumberField与TimeField各自维护相同基础动作样式           | 统一复用`styleInternalAction`，仅保留尺寸、边框和布局差异                         |
 | 可见原生输入焦点依赖浏览器默认        | ColorPicker、TagsInput和DataTable没有统一Theme focus ring          | 抽取内部focus helper并覆盖color/hex/range、编辑框和表格选择框                     |
@@ -67,6 +72,8 @@
 | 搜索快捷键提示在移动端未隐藏          | media类和ZKbd基础display类作用于同一元素，注入顺序覆盖none         | 独立wrapper承载响应式display，ZKbd只负责键帽视觉；桌面/移动远程门禁               |
 | Table/Code/TOC使用物理文本对齐        | 早期视觉只按LTR设置left/right                                      | Table caption/cell和TOC改start，Code行号改end；静态门禁拒绝物理textAlign          |
 | FormDemo异步校验timer未清理           | 模拟schema延迟的Promise在HMR/路由销毁后仍可能继续                  | Map持有timer/resolve；onDestroy清理并resolve，由ZForm token丢弃迟到结果           |
+| FormDemo失焦时提交点击可能丢失        | blur校验把`validating`映射为ZButton loading，默认click前按钮被禁用 | 按钮保持可提交并仅暴露`aria-busy`；状态文本显示validating，race token负责去重     |
+| ZButton覆盖调用方`aria-busy`          | 内部loading属性写在原生rest之后，无条件覆盖调用方传值              | loading为true时强制busy；否则保留原生`aria-busy`且不改变disabled                  |
 | 关闭/导航图标不一致                   | 多处使用`×/‹/›/+/-/✓`字符                                          | 统一使用按需Lucide；完整操作复用ZButton，微型内部按钮复用无状态focus样式合同      |
 | Transfer、DataTable与主页残留箭头字符 | 早期实现只补了可访问名称，字符范围没有纳入全树图标审计             | 统一使用按需Lucide/ZIcon；Transfer按LTR/RTL交换方向，DataTable复用ZButton         |
 | WebView窗口控制仍用字符图标           | WindowControls早于ZIcon manifest扩展                               | 扩展受控manifest并改用`ZIcon`                                                     |
@@ -76,7 +83,7 @@
 | 批量覆盖污染多浏览器状态              | 覆盖率专用的Docs汇总挂载也在Firefox/WebKit运行                     | 汇总限定到Chromium且显式mount/unmount；三浏览器继续跑独立组件行为套件             |
 | 高对比主题进入Theme Lab后白屏         | 预设色板按颜色值作为key，`canvas`与`surface`可同为`#ffffff`        | 改用语义token名作为稳定key；全新Chrome标签页重载后六主题全部恢复                  |
 | 组件大小门禁与完整交互职责冲突        | 3.25 KiB阈值把DataTable、Tour、DatePicker等误当成视觉原子          | CI继续构建并记录gzip、检查依赖边界；仅在产物明显异常时人工分析，不设字节门禁      |
-| WebKit表单reset批量失效               | action初始化时节点尚未进入最终form/root，WebKit document兜底未命中 | mount微任务仅在关联变化时重绑；仍按form/包含/id判定并合并重复捕获                 |
+| WebKit表单reset批量失效               | action关联可能晚建立，timeout又晚于Svelte原生reset绑定微任务       | Observer等待最终连接；回调改为同检查点generation微任务，动态form更新时重绑        |
 | Firefox合成paste缺少payload           | 构造参数中的`clipboardData`没有跨引擎落到只读事件属性              | 测试助手显式定义ClipboardEvent payload；真实用户剪贴板逻辑保持不变                |
 | 文档站缺少生产使用指南                | 只有组件页与Theme Lab，安装、SSR、HMR、WebView和发布边界分散       | 共享指南注册表与GuidePage补齐七份指南，直接使用ZUI Card/List/Code/Link            |
 | 发布包缺少消费者入口说明              | npm tarball没有就地安装、entrypoint与稳定性说明                    | 增加随包README、AST API快照、publish dry-run和仓库外tarball验收                   |
@@ -88,6 +95,7 @@
 - Modal与非modal浮层统一检查LayerStack顶层所有权、Escape、outside dismiss、FocusScope、scroll lock、inert和焦点恢复。
 - 真实Chrome已验证嵌套Dialog逐层Escape与逐层恢复、Popover初始焦点、manual Tabs焦点/选择分离、Select/MultiSelect首屏标签和Tour焦点合同。
 - Provider方向更新替换Trigger后关闭嵌套Popover，FocusScope按当前context恢复“调整显示偏好”按钮，Chrome aria-hidden焦点警告为0。
+- ContextMenu继续使用零尺寸坐标span定位；关闭时若该虚拟锚点无法接收焦点，FocusScope回退到打开前的真实目标，而不是落到BODY。
 - Accordion切换Item时旧Content在exiting阶段保持inert且无aria-hidden，动画结束后卸载；三浏览器回归固定同一Presence合同。
 - 远程Docs Playwright复现偏好Popover内方向Select切换，要求RTL/LTR、当前Trigger焦点、expanded=false和console warn/error为空。
 - 自定义视觉不替代原生语义：Table、List、DescriptionList、Timeline、Progress、Meter、Checkbox、Radio、Slider和表单控件继续使用真实平台元素。
@@ -100,14 +108,19 @@
 - 七份新增生产指南在真实Chrome中7/7渲染，均有唯一active导航、3–4个ZUI Card章节和正确页面标题。
 - ZStack方向Demo通过ZSelect键盘切换后，Trigger文本、实际`flex-direction`和焦点恢复一致；Docs全站原生交互标签为0。
 - RTL下ZTable caption/cell和组件TOC computed对齐为start，ZCode行号为end；验收后恢复LTR并由静态门禁拒绝物理textAlign。
-- DataTable排序头通过ZButton获得统一focus/motion，Enter切换ascending/descending时同步Lucide与`aria-sort`；Transfer完成真实移动并在RTL交换Lucide方向。
+- DataTable排序头通过ZButton获得统一focus/motion，Enter切换ascending/descending时同步Lucide与`aria-sort`
+  ；Transfer完成真实移动并在RTL交换Lucide方向。
 - Calendar月导航、NumberField步进与TimeField周期按钮统一internal action；真实Chrome用Enter验证月份、精确数值和AM/PM状态切换并保持可见焦点。
-- 移除reset路径的强制`flushSync`后，真实Chrome中ZCheckbox从true恢复indeterminate，ShadowRoot回调为1；detached document的原生reset不派发事件，显式reset事件回调为1。
+- 移除reset路径的强制`flushSync`后，真实Chrome中ZCheckbox从true恢复indeterminate，ShadowRoot回调为1；detached
+  document的原生reset不派发事件，显式reset事件回调为1。
 - ColorPicker三类输入均有2px Theme焦点；TagsInput由容器显示focus-within且Enter提交后保持焦点；DataTable表头选择框用Space同步选中11个可用行。
 - 首批`formReset`节点action在真实Chrome中让ZSelect从开发恢复生产、Checkbox从true恢复mixed；action更新回调后分别命中1次，destroy后不再触发。
-- input仍detached时创建action、随后挂入form并等待mount微任务，真实Chrome reset回调为1且destroy后不增加；三浏览器回归固定同一重绑合同。
+- input仍detached且首个mount微任务已结束时，action通过短期Observer在后续挂入form后重绑；真实Chrome reset回调为1且destroy后不增加。
+- action挂载后把input从第一张form移到第二张form并更新参数时，旧表单listener被释放、新表单获得直接listener，只有当前归属的reset回调一次。
+- reset捕获在Svelte原生binding使用的同一微任务检查点提交；多个监听目标以generation合并，取消事件与同任务destroy不会执行迟到回调。
 - 全量action迁移后，RadioGroup、ZForm、Mention/Textarea和Transfer分别恢复默认选择、验证状态、建议浮层与目标集合；26个组件文件禁止绕过action直调listener。
-- 首页和组件深链完整reload后首个Tab均为“跳到主要内容”；Enter保持当前hash路由与标题/H1，并把焦点送到`main#zui-main-content`，无404或控制台异常。
+- 首页和组件深链完整reload后首个Tab均为“跳到主要内容”；Enter保持当前hash路由与标题/H1，并把焦点送到`main#zui-main-content`
+  ，无404或控制台异常。
 - skip-link使用逻辑`inset-inline-start`；真实Chrome切换RTL并reload后出现在右侧起始边，恢复LTR后控制台保持干净。
 - skip-link在reduced-motion下Chrome计算过渡为`1e-05s`（浏览器对0ms的极小钳制，约0.01ms），焦点出现即时；验收后恢复跟随系统。
 - 远程Docs Playwright固定组件深链首个Tab、skip-link可见/聚焦、Enter后URL不变、main聚焦与H1不变五项合同。
@@ -116,32 +129,37 @@
 - Server测试对NativeIdentityFixture做两次独立SSR，要求完整id数组确定一致、内部唯一并保留`consumer-input`显式覆盖。
 - Accessibility指南明确自动id仅服务DOM/ARIA、显式id与Field优先且不可作为业务键；真实Chrome渲染4个ZUI Card章节并保持控制台干净。
 - Accessibility指南补充Presence退场inert/aria-hidden边界与cleanup解析当前Trigger合同，防止业务组合重新引入焦点隐藏警告。
-- Tooltip打开时检查交互语义或可聚焦后代（含disabled控件、媒体/嵌入元素与ARIA交互role）并抛出“use ZPopover”；boundary与Docs门禁共同固定合同。
+- Tooltip打开时检查交互语义或可聚焦后代（含disabled控件、媒体/嵌入元素与ARIA交互role）并抛出“use
+  ZPopover”；boundary与Docs门禁共同固定合同。
 - Accessibility指南记录文档搜索`/`、Escape和编辑上下文不劫持合同，与真实ZInput的aria-keyshortcuts保持一致。
 - 搜索框关联真实nav与live status；Chrome验证总数78、autosize唯一命中ZTextarea、无结果0和清空恢复，远程Playwright固定三态。
 - 搜索有内容时Escape清空过滤、恢复78个组件并保持输入焦点；远程Playwright固定value、focus与live状态同步。
 - 非编辑上下文按`/`聚焦搜索；搜索框内`/`保留真实输入且不被全局快捷键劫持，组件声明`aria-keyshortcuts`并销毁window监听。
 - 搜索`/`键帽桌面可见且aria-hidden，500px视口wrapper无布局盒、无溢出，移动端仍可用`/`聚焦；验收后恢复1920×936。
 - FormDemo在异步schema timer启动后立即离页，真实Chrome等待220ms仍保持首页正确状态与干净控制台；Docs资源门禁拒绝无对应释放的创建点。
+- FormDemo从邮箱输入直接点击保存时，blur校验不再禁用提交按钮；最新submit赢得race token，成功状态为`submitted=true`、`errors=0`且`validating=false`。
 - 远程Playwright在blur验证启动90ms后离页，再覆盖160ms迟到窗口；要求首页H1恢复且console/pageerror均为空。
 - 真实Textarea页重复id清单为0；远程78页循环按页面聚合全部`[id]`并输出任何重复值与数量。
 - 远程全路由循环同时要求main内恰好一个H1，并拒绝document级水平溢出；组件内部滚动容器不受误伤。
 - 真实87路由的main、`aria-current=page`、H1与具体页面标题问题均为0；远程循环固定当前链接href必须等于被测hash。
 - 真实Chrome Back/Forward在Input与Textarea间恢复URL、标题、H1和当前导航；远程Playwright通过Sidebar真实点击固定同一历史合同。
-- 六主题最终surface分别为极光`rgb(238, 244, 255)`、纸张`rgb(245, 237, 225)`、霓虹`rgb(5, 9, 20)`、午夜`rgb(11, 18, 32)`、高对比亮色`rgb(255, 255, 255)`、高对比暗色`rgb(0, 0, 0)`。
+- 六主题最终surface分别为极光`rgb(238, 244, 255)`、纸张`rgb(245, 237, 225)`、霓虹`rgb(5, 9, 20)`、午夜`rgb(11, 18, 32)`
+  、高对比亮色`rgb(255, 255, 255)`、高对比暗色`rgb(0, 0, 0)`。
 - 390×844视口无水平溢出，搜索和主题选择保持可用，组件导航使用横向滚动；验收后已恢复默认1920×936视口。
 - 10,000项VirtualList、1,000行DataTable与5,000节点Tree均保持有界DOM；选择、排序和End键定位在虚拟化后仍稳定。
-- 修复Theme Lab重复key并重新加载后，真实Chrome新增控制台记录为0条error/warning；此前Lighthouse基线为Accessibility、Best Practices、SEO、Agentic Browsing四项100。
+- 修复Theme Lab重复key并重新加载后，真实Chrome新增控制台记录为0条error/warning；此前Lighthouse基线为Accessibility、Best
+  Practices、SEO、Agentic Browsing四项100。
 
 ## 6. CI结论
 
-最后一次按约回看的门禁：[CI run 33307746416](https://github.com/kenconnet666/zadmin/actions/runs/33307746416)。
+最后一次按约回看的门禁：[CI run 33309653018](https://github.com/kenconnet666/zadmin/actions/runs/33309653018)。
 
-- Coverage/packages与Windows C# WebView2 desktop两个job完整成功；90% branch、bundle、外部SSR、publish dry-run、Miniapp与WebView验收均通过；
-- Workspace类型/Svelte、Prettier、ESLint与静态源码审计成功；Chromium、Firefox及新增action/layer回归成功；
-- WebKit仍有相同18项，Field保持`alice:1:0`，说明组件action没有收到reset；action初始化时节点尚未进入最终form/root，记录了未关联目标；
-- 当前批次在action mount微任务重新读取root/form，仅当关联实际变化时重绑，并增加detached control随后进入form的回归；
-- Docs E2E、全构建与生成文件检查因全测试失败被跳过，仍不宣称WebKit已通过。
+- Windows C# WebView2 desktop完整成功；Workspace类型/Svelte、Prettier、ESLint与静态源码审计成功；
+- Coverage job停在ZUI测试，Workspace全测试共21项失败：ContextMenu关闭焦点在三个浏览器都落到BODY，另18项仍是WebKit reset；
+- WebKit Field保持`alice:1:0`，说明组件action没有收到reset；action初始化时节点尚未进入最终form/root，记录了未关联目标；
+- ContextMenu的当前Popover Trigger是只负责坐标定位的span，调用`focus()`不生效却遮蔽了打开前真实目标；FocusScope现验证实际焦点，失败时回退previousFocus；
+- 当前批次用mount微任务与短期Observer等待最终root/form，仅当关联实际变化时重绑；action更新同时覆盖动态form归属，并增加晚连接与换表单回归；
+- Coverage后续包验收、Docs E2E、全构建与生成文件检查因测试失败被跳过，仍不宣称WebKit或全门禁已通过；Release PR按预期跳过。
 
 最终通过后必须同时满足：
 

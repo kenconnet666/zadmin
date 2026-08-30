@@ -49,9 +49,17 @@ export class FocusScope {
 		const stack = stackFor(this.#document);
 		const index = stack.indexOf(this);
 		if (index >= 0) stack.splice(index, 1);
+		if (this.#options.restoreFocus === false) return;
 		const restoreTarget = this.#options.restoreTarget?.() ?? this.#previousFocus;
-		if (this.#options.restoreFocus !== false && restoreTarget?.isConnected) {
+		if (restoreTarget?.isConnected) {
 			restoreTarget.focus({ preventScroll: true });
+			const active = this.#document.activeElement;
+			if (active === restoreTarget || (active instanceof Node && restoreTarget.contains(active))) {
+				return;
+			}
+		}
+		if (this.#previousFocus !== restoreTarget && this.#previousFocus?.isConnected) {
+			this.#previousFocus.focus({ preventScroll: true });
 		}
 	}
 

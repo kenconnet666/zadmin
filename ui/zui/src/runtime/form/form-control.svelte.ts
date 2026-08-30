@@ -65,24 +65,47 @@ export function formReset(
 ): { destroy(): void; update(reset: () => void): void } {
 	let currentReset = reset;
 	let active = true;
+	let refreshQueued = false;
+	let mountObserver: MutationObserver | undefined;
 	let association = readFormAssociation(control);
 	let disconnect = listenForFormReset(control, () => currentReset());
-	queueMicrotask(() => {
+
+	const stopMountObserver = () => {
+		mountObserver?.disconnect();
+		mountObserver = undefined;
+	};
+	const refreshAssociation = () => {
+		refreshQueued = false;
 		if (!active) return;
 		const next = readFormAssociation(control);
-		if (next.associatedForm === association.associatedForm && next.root === association.root)
-			return;
-		disconnect();
-		association = next;
-		disconnect = listenForFormReset(control, () => currentReset());
-	});
+		if (next.associatedForm !== association.associatedForm || next.root !== association.root) {
+			disconnect();
+			association = next;
+			disconnect = listenForFormReset(control, () => currentReset());
+		}
+		if (association.associatedForm !== null || control.isConnected) stopMountObserver();
+	};
+	const scheduleAssociationRefresh = () => {
+		if (refreshQueued || !active) return;
+		refreshQueued = true;
+		queueMicrotask(refreshAssociation);
+	};
+
+	// Svelte may initialize an action before its node enters the final form tree.
+	if (!control.isConnected && typeof MutationObserver !== 'undefined') {
+		mountObserver = new MutationObserver(scheduleAssociationRefresh);
+		mountObserver.observe(control.ownerDocument, { childList: true, subtree: true });
+	}
+	scheduleAssociationRefresh();
 	return {
 		destroy() {
 			active = false;
+			stopMountObserver();
 			disconnect();
 		},
 		update(nextReset) {
 			currentReset = nextReset;
+			scheduleAssociationRefresh();
 		}
 	};
 }
@@ -115,19 +138,18 @@ function listenToResetEvents(
 		...new Set(targets.filter((target): target is EventTarget => target !== null))
 	];
 	let active = true;
-	let pending: ReturnType<typeof setTimeout> | undefined;
+	let generation = 0;
 	const handleReset = (event: Event) => {
 		if (!accepts(event)) return;
-		if (pending !== undefined) clearTimeout(pending);
-		pending = setTimeout(() => {
-			pending = undefined;
-			if (active && !event.defaultPrevented) reset();
-		}, 0);
+		const ticket = (generation += 1);
+		queueMicrotask(() => {
+			if (active && ticket === generation && !event.defaultPrevented) reset();
+		});
 	};
 	for (const target of activeTargets) target.addEventListener('reset', handleReset, true);
 	return () => {
 		active = false;
-		if (pending !== undefined) clearTimeout(pending);
+		generation += 1;
 		for (const target of activeTargets) target.removeEventListener('reset', handleReset, true);
 	};
 }
