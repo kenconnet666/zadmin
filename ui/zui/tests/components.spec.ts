@@ -35,6 +35,7 @@ import ContextMenuFixture from './ContextMenuFixture.svelte';
 import ComboboxFixture from './ComboboxFixture.svelte';
 import CommandFixture from './CommandFixture.svelte';
 import CoverageFixture from './CoverageFixture.svelte';
+import DocsExamplesFixture from './DocsExamplesFixture.svelte';
 import CommandPaletteFixture from './CommandPaletteFixture.svelte';
 import CascaderFixture from './CascaderFixture.svelte';
 import CarouselFixture from './CarouselFixture.svelte';
@@ -75,6 +76,11 @@ import TagsInputFixture from './TagsInputFixture.svelte';
 import TextareaFixture from './TextareaFixture.svelte';
 
 describe('ZUI foundational components', () => {
+	it('server-renders the documentation example matrix without browser globals', () => {
+		const result = render(DocsExamplesFixture);
+		expect(result.body.match(/data-docs-example/gu)?.length).toBeGreaterThanOrEqual(105);
+	});
+
 	it('renders Symbol-carried compiler variables on the real ZBox root', () => {
 		const result = render(ZBox, {
 			props: {

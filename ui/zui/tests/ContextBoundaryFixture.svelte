@@ -4,6 +4,7 @@
 		ZAccordionTrigger,
 		ZComboboxInput,
 		ZDialogContent,
+		ZList,
 		ZMenuItem,
 		ZMultiSelectTrigger,
 		ZPopoverTrigger,
@@ -11,9 +12,18 @@
 		ZRadioGroupItem,
 		ZSelectTrigger,
 		ZTabsList,
+		ZTimeline,
 		ZTooltipTrigger
 	} from '../src/entrypoints/index.js';
 
+	const duplicateItems = [
+		{ id: 'same', label: 'One' },
+		{ id: 'same', label: 'Two' }
+	];
+	const duplicateTimeline = [
+		{ id: 'same', title: 'One' },
+		{ id: 'same', title: 'Two' }
+	];
 	let errors = $state<string[]>([]);
 	function capture(error: unknown): void {
 		errors = [...errors, error instanceof Error ? error.message : String(error)];
@@ -32,5 +42,7 @@
 <svelte:boundary onerror={capture}><ZSelectTrigger /></svelte:boundary>
 <svelte:boundary onerror={capture}><ZTabsList /></svelte:boundary>
 <svelte:boundary onerror={capture}><ZTooltipTrigger /></svelte:boundary>
+<svelte:boundary onerror={capture}><ZList items={duplicateItems} /></svelte:boundary>
+<svelte:boundary onerror={capture}><ZTimeline items={duplicateTimeline} /></svelte:boundary>
 
 <output data-testid="context-boundary-output">{errors.length}:{errors.join('|')}</output>

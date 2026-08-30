@@ -8,7 +8,6 @@
 	const examples = Object.entries(modules)
 		.filter(
 			([path]) =>
-				!path.includes('/gene/code/') &&
 				(!path.endsWith('/FormDemo.svelte') ||
 					(!path.includes('/data-display/') && !path.includes('/feedback/')) ||
 					path.endsWith('/data-display/progress/FormDemo.svelte')) &&

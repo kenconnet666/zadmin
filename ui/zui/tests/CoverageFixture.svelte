@@ -34,10 +34,20 @@
 	} from '../src/entrypoints/index.js';
 
 	const listItems = [
-		{ id: 'one', label: 'One' },
+		{ description: 'First description', id: 'one', label: 'One' },
 		{ id: 'two', label: 'Two' }
 	];
-	const timelineItems = [{ id: 'queued', title: 'Queued' }];
+	const timelineItems = [
+		{
+			datetime: '2026-08-30T09:00:00Z',
+			description: 'Completed work',
+			id: 'done',
+			status: 'done' as const,
+			time: '09:00',
+			title: 'Done'
+		},
+		{ id: 'queued', status: 'current' as const, title: 'Queued' }
+	];
 	const slides = [
 		{ id: 'a', label: 'Alpha' },
 		{ id: 'b', label: 'Beta' }
@@ -87,6 +97,8 @@
 	src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
 	data-testid="coverage-avatar-image"
 />
+<ZAvatar alt="Fallback initial" />
+<ZAvatar alt="" />
 
 <ZEmpty title="Nothing here" headingLevel={4} data-testid="coverage-empty">
 	{#snippet icon()}<span>icon</span>{/snippet}
@@ -96,6 +108,15 @@
 
 <ZProvider motion="reduced">
 	<ZButton>Reduced button</ZButton>
+	<ZButton loading loadingLabel="Custom loading">
+		{#snippet loadingIndicator()}<span>busy</span>{/snippet}
+		Loading action
+	</ZButton>
+	<ZButton>
+		{#snippet start()}<span>start</span>{/snippet}
+		Slots
+		{#snippet end()}<span>end</span>{/snippet}
+	</ZButton>
 	<ZInput aria-label="Reduced input" />
 	<ZInputGroup aria-label="Reduced input group"
 		><ZInput aria-label="Grouped reduced input" /></ZInputGroup
@@ -160,6 +181,13 @@
 	tone="danger"
 	dismissible={false}
 	data-testid="coverage-toast-danger"
+/>
+<ZToast
+	title="Action and dismiss toast"
+	actionLabel="Act now"
+	onAction={() => undefined}
+	onDismiss={() => undefined}
+	data-testid="coverage-toast-dismiss"
 />
 <ZToast
 	title="Action toast"

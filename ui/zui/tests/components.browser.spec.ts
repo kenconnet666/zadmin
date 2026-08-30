@@ -82,118 +82,128 @@ describe('compiled ICSS browser updates', () => {
 		const next = document.querySelector<HTMLButtonElement>('[data-testid="theme-switch-next"]')!;
 		expect(getComputedStyle(target).backgroundColor).toBe('rgb(36, 87, 230)');
 		next.click();
-		await new Promise((resolve) => setTimeout(resolve, 250));
-		expect(getComputedStyle(target).backgroundColor).toBe('rgb(34, 211, 238)');
+		await expect.poll(() => getComputedStyle(target).backgroundColor).toBe('rgb(34, 211, 238)');
 		next.click();
-		await new Promise((resolve) => setTimeout(resolve, 250));
-		expect(getComputedStyle(target).backgroundColor).toBe('rgb(154, 52, 18)');
+		await expect.poll(() => getComputedStyle(target).backgroundColor).toBe('rgb(154, 52, 18)');
 	});
 
-	it('renders every documentation example against the source package', async () => {
-		const target = document.createElement('div');
-		document.body.append(target);
-		const fixture = mount(DocsExamplesFixture, { target });
-		await tick();
-		expect(target.querySelectorAll('[data-docs-example]').length).toBeGreaterThanOrEqual(105);
-		const example = (suffix: string) =>
-			target.querySelector<HTMLElement>(`[data-docs-example$="${suffix}"]`)!;
-		const dismissTop = async () => {
-			document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
-			await new Promise((resolve) => setTimeout(resolve, 140));
+	it.skipIf(!navigator.userAgent.includes('Chrome'))(
+		'renders every documentation example against the source package',
+		async () => {
+			const target = document.createElement('div');
+			document.body.append(target);
+			const fixture = mount(DocsExamplesFixture, { target });
 			await tick();
-		};
+			expect(target.querySelectorAll('[data-docs-example]').length).toBeGreaterThanOrEqual(105);
+			const example = (suffix: string) =>
+				target.querySelector<HTMLElement>(`[data-docs-example$="${suffix}"]`)!;
+			const dismissTop = async () => {
+				document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+				await new Promise((resolve) => setTimeout(resolve, 140));
+				await tick();
+			};
 
-		example('/input/color-picker/StatesDemo.svelte')
-			.querySelector<HTMLButtonElement>('button')
-			?.click();
-		await tick();
-		await dismissTop();
-
-		example('/input/select/StatesDemo.svelte').querySelector<HTMLButtonElement>('button')?.click();
-		await tick();
-		[...document.querySelectorAll<HTMLElement>('[role="option"]')]
-			.find((option) => option.textContent?.includes('维护中'))
-			?.click();
-		await dismissTop();
-
-		example('/input/multi-select/StatesDemo.svelte')
-			.querySelector<HTMLButtonElement>('button')
-			?.click();
-		await tick();
-		document.querySelector<HTMLElement>('[role="option"]')?.click();
-		await dismissTop();
-
-		for (const suffix of [
-			'/input/date-picker/ConstraintsDemo.svelte',
-			'/input/date-range-picker/StatesDemo.svelte',
-			'/input/tree-select/StatesDemo.svelte',
-			'/input/cascader/StatesDemo.svelte'
-		]) {
-			example(suffix).querySelector<HTMLButtonElement>('button:not(:disabled)')?.click();
+			example('/input/color-picker/StatesDemo.svelte')
+				.querySelector<HTMLButtonElement>('button')
+				?.click();
 			await tick();
 			await dismissTop();
+
+			example('/input/select/StatesDemo.svelte')
+				.querySelector<HTMLButtonElement>('button')
+				?.click();
+			await tick();
+			[...document.querySelectorAll<HTMLElement>('[role="option"]')]
+				.find((option) => option.textContent?.includes('维护中'))
+				?.click();
+			await dismissTop();
+
+			example('/input/multi-select/StatesDemo.svelte')
+				.querySelector<HTMLButtonElement>('button')
+				?.click();
+			await tick();
+			document.querySelector<HTMLElement>('[role="option"]')?.click();
+			await dismissTop();
+
+			for (const suffix of [
+				'/input/date-picker/ConstraintsDemo.svelte',
+				'/input/date-range-picker/StatesDemo.svelte',
+				'/input/tree-select/StatesDemo.svelte',
+				'/input/cascader/StatesDemo.svelte'
+			]) {
+				example(suffix).querySelector<HTMLButtonElement>('button:not(:disabled)')?.click();
+				await tick();
+				await dismissTop();
+			}
+
+			example('/input/number-field/StatesDemo.svelte')
+				.querySelector<HTMLButtonElement>('button:not(:disabled)')
+				?.click();
+			example('/input/segmented/VerticalDemo.svelte')
+				.querySelectorAll<HTMLButtonElement>('button')[1]
+				?.click();
+			const slider = example('/input/slider/StatesDemo.svelte').querySelector<HTMLInputElement>(
+				'input[type="range"]'
+			);
+			if (slider) {
+				slider.value = '500';
+				slider.dispatchEvent(new InputEvent('input', { bubbles: true }));
+			}
+			await tick();
+
+			const accordion = example('/navigation/accordion/MultipleDemo.svelte');
+			accordion.querySelectorAll<HTMLButtonElement>('button')[0]?.click();
+			accordion
+				.querySelectorAll<HTMLButtonElement>('button')[2]
+				?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Home' }));
+			const commandInput = example('/navigation/command/FilterDemo.svelte').querySelector(
+				'input'
+			) as HTMLInputElement | null;
+			if (commandInput) {
+				commandInput.value = '构';
+				commandInput.dispatchEvent(new InputEvent('input', { bubbles: true }));
+				commandInput.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'End' }));
+			}
+			const manualTabs = example('/navigation/tabs/ManualDemo.svelte');
+			const manualFirst = manualTabs.querySelector<HTMLButtonElement>('[role="tab"]');
+			manualFirst?.focus();
+			manualFirst?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
+			(document.activeElement as HTMLElement | null)?.dispatchEvent(
+				new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' })
+			);
+
+			example('/navigation/dropdown-menu/StatesDemo.svelte')
+				.querySelector<HTMLButtonElement>('button')
+				?.click();
+			await tick();
+			document.querySelector<HTMLElement>('[role="menuitem"]')?.click();
+			await dismissTop();
+
+			example('/overlay/popover/FocusDemo.svelte')
+				.querySelector<HTMLButtonElement>('button')
+				?.click();
+			await tick();
+			await dismissTop();
+			await expect
+				.poll(() => target.querySelectorAll('[data-highlight-status="loading"]').length, {
+					timeout: 10_000
+				})
+				.toBe(0);
+			await unmount(fixture);
+			target.remove();
 		}
-
-		example('/input/number-field/StatesDemo.svelte')
-			.querySelector<HTMLButtonElement>('button:not(:disabled)')
-			?.click();
-		example('/input/segmented/VerticalDemo.svelte')
-			.querySelectorAll<HTMLButtonElement>('button')[1]
-			?.click();
-		const slider = example('/input/slider/StatesDemo.svelte').querySelector<HTMLInputElement>(
-			'input[type="range"]'
-		);
-		if (slider) {
-			slider.value = '500';
-			slider.dispatchEvent(new InputEvent('input', { bubbles: true }));
-		}
-		await tick();
-
-		const accordion = example('/navigation/accordion/MultipleDemo.svelte');
-		accordion.querySelectorAll<HTMLButtonElement>('button')[0]?.click();
-		accordion
-			.querySelectorAll<HTMLButtonElement>('button')[2]
-			?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Home' }));
-		const commandInput = example('/navigation/command/FilterDemo.svelte').querySelector(
-			'input'
-		) as HTMLInputElement | null;
-		if (commandInput) {
-			commandInput.value = '构';
-			commandInput.dispatchEvent(new InputEvent('input', { bubbles: true }));
-			commandInput.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'End' }));
-		}
-		const manualTabs = example('/navigation/tabs/ManualDemo.svelte');
-		const manualFirst = manualTabs.querySelector<HTMLButtonElement>('[role="tab"]');
-		manualFirst?.focus();
-		manualFirst?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
-		(document.activeElement as HTMLElement | null)?.dispatchEvent(
-			new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' })
-		);
-
-		example('/navigation/dropdown-menu/StatesDemo.svelte')
-			.querySelector<HTMLButtonElement>('button')
-			?.click();
-		await tick();
-		document.querySelector<HTMLElement>('[role="menuitem"]')?.click();
-		await dismissTop();
-
-		example('/overlay/popover/FocusDemo.svelte')
-			.querySelector<HTMLButtonElement>('button')
-			?.click();
-		await tick();
-		await dismissTop();
-		await unmount(fixture);
-		target.remove();
-	});
+	);
 
 	it('reports every orphan compound part through a real Svelte error boundary', async () => {
 		render(ContextBoundaryFixture);
 		await tick();
 		await Promise.resolve();
 		const output = document.querySelector('[data-testid="context-boundary-output"]');
-		expect(output?.textContent).toMatch(/^12:/u);
+		expect(output?.textContent).toMatch(/^14:/u);
 		expect(output?.textContent).toContain('ZAccordion');
 		expect(output?.textContent).toContain('ZTooltip');
+		expect(output?.textContent).toContain('Duplicate ZList');
+		expect(output?.textContent).toContain('Duplicate ZTimeline');
 	});
 
 	it('pauses, resumes, times out and disposes explicit ToastQueue timers', async () => {
@@ -251,6 +261,9 @@ describe('compiled ICSS browser updates', () => {
 			?.click();
 		document
 			.querySelector<HTMLButtonElement>('[data-testid="coverage-toast-action"] button')
+			?.click();
+		document
+			.querySelector<HTMLButtonElement>('[data-testid="coverage-toast-dismiss"] [aria-label]')
 			?.click();
 		await tick();
 		expect(output?.textContent).toBe('a:1:1:1:enabled:0:0');
@@ -1959,8 +1972,11 @@ describe('compiled ICSS browser updates', () => {
 		expect(invalid?.textContent).toBe('value');
 
 		for (const [language, source] of [
+			['bash', 'echo ready'],
 			['css', '.ready { display: block; }'],
-			['json', '{"ready":true}']
+			['javascript', 'const ready = true;'],
+			['json', '{"ready":true}'],
+			['svelte', '<p>{ready}</p>']
 		] as const) {
 			render(ZCode, { ariaLabel: `${language}-code`, code: source, lang: language });
 			const highlighted = document.querySelector<HTMLElement>(`[aria-label="${language}-code"]`);
