@@ -694,14 +694,17 @@ describe('ZUI foundational components', () => {
 	});
 
 	it('generates deterministic unique native control ids across independent SSR renders', () => {
+		const firstBody = render(NativeIdentityFixture).body;
+		const secondBody = render(NativeIdentityFixture).body;
 		const extractIds = (body: string) =>
 			[...body.matchAll(/\sid="([^"]+)"/gu)].map((match) => match[1]!);
-		const first = extractIds(render(NativeIdentityFixture).body);
-		const second = extractIds(render(NativeIdentityFixture).body);
+		const first = extractIds(firstBody);
+		const second = extractIds(secondBody);
 
 		expect(first).toEqual(second);
 		expect(new Set(first).size).toBe(first.length);
 		expect(first).toContain('consumer-input');
+		expect(firstBody).not.toContain('data-zui-form-reset-signal');
 	});
 
 	it('renders ZCode as stable escaped plain code during SSR', () => {

@@ -117,6 +117,7 @@ describe('compiled ICSS browser updates', () => {
 		expect(document.querySelector<HTMLInputElement>('[aria-label="Select all rows"]')?.id).not.toBe(
 			''
 		);
+		expect(document.querySelectorAll('[data-zui-form-reset-signal]')).toHaveLength(0);
 	});
 
 	it('updates Provider theme recipes through their visual transition', async () => {
@@ -1613,6 +1614,11 @@ describe('compiled ICSS browser updates', () => {
 		const preservedOutput = document.querySelector<HTMLOutputElement>(
 			'[data-testid="prevented-reset-output"]'
 		);
+		const wrappedForm = document.querySelector<HTMLFormElement>(
+			'[data-testid="wrapped-label-form"]'
+		);
+		const wrappedLabel = document.querySelector<HTMLLabelElement>('[data-testid="wrapped-label"]');
+		const wrappedInput = document.querySelector<HTMLInputElement>('[data-testid="wrapped-input"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="form-edge-output"]');
 		expect(prevented?.getAttribute('aria-busy')).toBe('true');
 		if (input) {
@@ -1641,6 +1647,11 @@ describe('compiled ICSS browser updates', () => {
 		await settleFormReset();
 		expect(preservedInput?.value).toBe('changed');
 		expect(preservedOutput?.textContent).toBe('changed');
+		expect(wrappedLabel?.control).toBe(wrappedInput);
+		expect(wrappedLabel?.querySelectorAll('input')).toHaveLength(1);
+		expect(wrappedForm?.querySelector('[data-zui-form-reset-signal]')?.parentElement).toBe(
+			wrappedForm
+		);
 	});
 
 	it('keeps the native reset signal cancelable inside a ShadowRoot', async () => {
@@ -1651,7 +1662,7 @@ describe('compiled ICSS browser updates', () => {
 		document.body.append(host);
 		let resets = 0;
 		const component = mount(FormResetSignal, {
-			props: { onReset: () => (resets += 1) },
+			props: { onReset: () => (resets += 1), owner: form },
 			target: form
 		});
 		await tick();
@@ -2485,9 +2496,7 @@ describe('compiled ICSS browser updates', () => {
 
 		expect(external?.form).toBe(externalForm);
 		expect(
-			document.querySelector<HTMLInputElement>(
-				'[data-zui-form-reset-signal][form="external-input-form"]'
-			)?.form
+			externalForm?.querySelector<HTMLInputElement>('[data-zui-form-reset-signal]')?.form
 		).toBe(externalForm);
 		if (external) {
 			external.value = 'external-changed';

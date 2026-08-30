@@ -1,16 +1,17 @@
 <script module lang="ts">
 	export interface FormResetSignalProps {
-		readonly form?: string;
 		readonly onReset: () => void;
+		readonly owner?: HTMLFormElement | null;
 	}
 </script>
 
 <script lang="ts">
+	import { portal } from '../layer/portal.js';
 	import { listenForFormReset } from './form-control.svelte.js';
 
 	const armedValue = 'zui-reset-armed';
 	const resetValue = 'zui-reset-fired';
-	let { form, onReset }: FormResetSignalProps = $props();
+	let { onReset, owner = null }: FormResetSignalProps = $props();
 	let ref = $state<HTMLInputElement | null>(null);
 	let marker = $state(armedValue);
 
@@ -29,7 +30,7 @@
 	): { destroy(): void; update(reset: () => void): void } {
 		let active = true;
 		let currentReset = reset;
-		let disconnect = () => undefined;
+		let disconnect: () => void = () => undefined;
 		let listening = false;
 		const connect = () => {
 			if (!active || listening) return;
@@ -54,15 +55,17 @@
 	}
 </script>
 
-<input
-	bind:this={ref}
-	aria-hidden="true"
-	tabindex="-1"
-	type="text"
-	hidden
-	disabled
-	data-zui-form-reset-signal=""
-	{form}
-	use:shadowFormReset={onReset}
-	bind:value={() => marker, updateMarker}
-/>
+{#if owner}
+	<input
+		bind:this={ref}
+		aria-hidden="true"
+		tabindex="-1"
+		type="text"
+		hidden
+		disabled
+		data-zui-form-reset-signal=""
+		use:portal={{ target: owner }}
+		use:shadowFormReset={onReset}
+		bind:value={() => marker, updateMarker}
+	/>
+{/if}

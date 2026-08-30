@@ -41,10 +41,18 @@
 	<button type="reset">Reset throwing</button>
 </ZForm>
 
-<ZForm data-testid="prevented-reset-form" onReset={(event) => event.preventDefault()}>
+<ZForm
+	data-testid="prevented-reset-form"
+	nativeValidation
+	onReset={(event) => event.preventDefault()}
+>
 	<ZInput bind:value={preserved} defaultValue="seed" name="preserved" />
 </ZForm>
 <output data-testid="prevented-reset-output">{preserved}</output>
+
+<form data-testid="wrapped-label-form">
+	<label data-testid="wrapped-label">Wrapped <ZInput data-testid="wrapped-input" /></label>
+</form>
 
 <ZForm
 	aria-busy="true"

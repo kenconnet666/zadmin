@@ -296,6 +296,6 @@
 	onsubmit={handleSubmit}
 	onreset={(event) => onReset?.(event)}
 >
-	<FormResetSignal onReset={resetFromForm} />
+	<FormResetSignal onReset={resetFromForm} owner={ref} />
 	{@render children?.()}
 </form>

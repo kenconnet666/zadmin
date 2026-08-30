@@ -31,6 +31,7 @@
 | 可见原生输入文件         |   14 | 非hidden input/textarea必须复用internal focus或显式focus-visible/focus-within                |
 | 表单reset action文件     |   24 | 其余组件通过节点action绑定/更新/销毁，禁止直接调用低层listener                               |
 | Svelte原生reset signal   |    2 | 静态门禁锁定无name/id的hidden disabled signal；ShadowRoot保留作用域listener回退              |
+| reset signal表单归属     |    1 | 仅owner form存在时挂载并portal为form直接子节点，不污染包裹式label                            |
 | reset mount重绑合同      |    1 | action以mount微任务和短期Observer等待最终root/form，并且只在关联变化时重绑                   |
 | reset update重绑合同     |    1 | action更新时重新检查动态`form`归属，旧表单解绑且新表单直接监听                               |
 | reset微任务合同          |    1 | 与Svelte原生binding使用同一微任务检查点，generation去重捕获并使destroy可取消                 |
@@ -162,13 +163,12 @@
 
 ## 6. CI结论
 
-最后一次按约回看的门禁：[CI run 33310712040](https://github.com/kenconnet666/zadmin/actions/runs/33310712040)。
+最后一次按约回看的门禁：[CI run 33312649826](https://github.com/kenconnet666/zadmin/actions/runs/33312649826)。
 
-- Coverage/packages完整成功：ZUI覆盖率、bundle检查、SvelteKit覆盖率、外部SSR、publish dry-run、Miniapp与WebView包验收及生成文件全部通过；
-- Windows C# WebView2 desktop完整成功；Workspace类型/Svelte、Prettier、ESLint与静态源码审计成功；
-- ContextMenu焦点回退已在Chromium、Firefox和WebKit通过；全测试只剩WebKit同一18项reset，Field仍为`alice:1:0`，回调没有执行；
-- Observer、动态form重绑与同检查点generation微任务都没有消除剩余失败；当前批次先让ZInput/ZForm使用Svelte原生hidden binding signal，并用取消reset回归保护语义，等待下一推送窗口验证后再扩散；
-- Docs E2E、全构建与生成文件检查仍因全测试失败被跳过，尚不宣称WebKit或全门禁已通过；Release PR按预期跳过。
+- Workspace与Windows desktop的Svelte检查都在signal类型阶段失败：空teardown被推断为`() => undefined`，旧`form` prop不接受`null`；当前批次以显式`() => void`和owner form模型修复；
+- Coverage在同一类型问题之外还发现取消reset Fixture新增的默认`novalidate`破坏旧SSR断言；该Fixture现显式使用`nativeValidation`；
+- 因类型/SSR门禁提前失败，本轮没有运行三浏览器全测试，不能据此判断signal是否修复WebKit reset；bundle、外部SSR、Docs E2E、全构建和后续包验收均未执行；
+- Release PR按预期跳过，仍需下一推送窗口的CI证明signal行为后才能扩散到其余24个组件。
 
 最终通过后必须同时满足：
 
