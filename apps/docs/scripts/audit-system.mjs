@@ -245,12 +245,14 @@ if (
 	!formResetSignalTag.includes('hidden') ||
 	!formResetSignalTag.includes('disabled') ||
 	!formResetSignalTag.includes('data-zui-form-reset-signal=""') ||
-	!formResetSignalSource.includes('{#if owner}') ||
-	!formResetSignalSource.includes('use:portal={{ target: owner }}') ||
+	!formResetSignalSource.includes('const associationKey = association') ||
+	!formResetSignalSource.includes('resetOwner = directOwner ?? associatedControl?.form ?? null') ||
+	!formResetSignalSource.includes('{#if resetOwner}') ||
+	!formResetSignalSource.includes('use:portal={{ target: resetOwner }}') ||
 	/\b(?:id|name)\s*=/u.test(formResetSignalTag) ||
 	!formResetSignalSource.includes('use:shadowFormReset={onReset}') ||
 	!formSource.includes('<FormResetSignal onReset={resetFromForm} owner={ref}') ||
-	!inputSource.includes('<FormResetSignal onReset={resetFromForm} owner={ref?.form}')
+	!inputSource.includes('<FormResetSignal association={form} control={ref} onReset={resetFromForm}')
 ) {
 	fail('The Svelte-native form reset signal contract changed.');
 }

@@ -10,6 +10,7 @@
 	let changes = $state(0);
 	let resets = $state(0);
 	let externalValue = $state('external-seed');
+	let externalFormId = $state('external-input-form');
 </script>
 
 <form data-testid="field-form">
@@ -41,11 +42,19 @@
 <form id="external-input-form" data-testid="external-input-form">
 	<button type="reset">Reset external input</button>
 </form>
+<form id="external-input-next-form" data-testid="external-input-next-form">
+	<button type="reset">Reset reassigned input</button>
+</form>
+<button
+	type="button"
+	data-testid="external-input-reassign"
+	onclick={() => (externalFormId = 'external-input-next-form')}>Reassign external input</button
+>
 <ZInput
 	bind:value={externalValue}
 	data-testid="external-input"
 	defaultValue="external-seed"
-	form="external-input-form"
+	form={externalFormId}
 	name="external"
 />
 <output data-testid="external-input-output">{externalValue}</output>

@@ -207,17 +207,35 @@ test('keeps input binding and field validation interactive', async ({ page }) =>
 	await expect(page.getByText(/value = typed/u)).toBeVisible();
 	const externalInput = page.getByTestId('input-external-control');
 	await externalInput.fill('external-changed');
-	await expect(page.getByText('external value = external-changed')).toBeVisible();
-	await page.getByRole('button', { name: '重置外部表单' }).click();
+	await expect(
+		page.getByText('owner = input-external-owner · external value = external-changed')
+	).toBeVisible();
+	await page.getByRole('button', { name: '切换到备用表单' }).click();
+	await expect(externalInput).toHaveAttribute('form', 'input-external-backup');
+	await expect(
+		page.getByText('owner = input-external-backup · external value = external-changed')
+	).toBeVisible();
+	await page.getByRole('button', { name: '重置主表单' }).click();
+	await expect(externalInput).toHaveValue('external-changed');
+	await page.getByRole('button', { name: '重置备用表单' }).click();
 	await expect(externalInput).toHaveValue('external-seed');
-	await expect(page.getByText('external value = external-seed')).toBeVisible();
+	await expect(
+		page.getByText('owner = input-external-backup · external value = external-seed')
+	).toBeVisible();
+	await expect
+		.poll(() =>
+			page
+				.locator('#input-external-backup')
+				.evaluate((form) => [...new FormData(form as HTMLFormElement).entries()])
+		)
+		.toEqual([['external', 'external-seed']]);
 	await expect
 		.poll(() =>
 			page
 				.locator('#input-external-owner')
 				.evaluate((form) => [...new FormData(form as HTMLFormElement).entries()])
 		)
-		.toEqual([['external', 'external-seed']]);
+		.toEqual([]);
 
 	await page.goto('/#/components/field');
 	const account = page.getByTestId('field-account');

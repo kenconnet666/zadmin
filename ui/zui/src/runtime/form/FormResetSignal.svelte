@@ -1,5 +1,7 @@
 <script module lang="ts">
 	export interface FormResetSignalProps {
+		readonly association?: string | null;
+		readonly control?: (HTMLElement & { readonly form: HTMLFormElement | null }) | null;
 		readonly onReset: () => void;
 		readonly owner?: HTMLFormElement | null;
 	}
@@ -11,9 +13,26 @@
 
 	const armedValue = 'zui-reset-armed';
 	const resetValue = 'zui-reset-fired';
-	let { onReset, owner = null }: FormResetSignalProps = $props();
+	let { association, control = null, onReset, owner = null }: FormResetSignalProps = $props();
 	let ref = $state<HTMLInputElement | null>(null);
 	let marker = $state(armedValue);
+	let resetOwner = $state<HTMLFormElement | null>(null);
+
+	$effect(() => {
+		const directOwner = owner;
+		const associatedControl = control;
+		const associationKey = association;
+		let active = true;
+		const updateOwner = () => {
+			if (!active || associationKey !== association) return;
+			resetOwner = directOwner ?? associatedControl?.form ?? null;
+		};
+		if (associationKey === undefined) updateOwner();
+		else queueMicrotask(updateOwner);
+		return () => {
+			active = false;
+		};
+	});
 
 	$effect(() => {
 		if (ref) ref.defaultValue = resetValue;
@@ -55,7 +74,7 @@
 	}
 </script>
 
-{#if owner}
+{#if resetOwner}
 	<input
 		bind:this={ref}
 		aria-hidden="true"
@@ -64,7 +83,7 @@
 		hidden
 		disabled
 		data-zui-form-reset-signal=""
-		use:portal={{ target: owner }}
+		use:portal={{ target: resetOwner }}
 		use:shadowFormReset={onReset}
 		bind:value={() => marker, updateMarker}
 	/>

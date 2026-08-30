@@ -2459,6 +2459,12 @@ describe('compiled ICSS browser updates', () => {
 		const externalForm = document.querySelector<HTMLFormElement>(
 			'[data-testid="external-input-form"]'
 		);
+		const externalNextForm = document.querySelector<HTMLFormElement>(
+			'[data-testid="external-input-next-form"]'
+		);
+		const externalReassign = document.querySelector<HTMLButtonElement>(
+			'[data-testid="external-input-reassign"]'
+		);
 		const externalOutput = document.querySelector<HTMLOutputElement>(
 			'[data-testid="external-input-output"]'
 		);
@@ -2510,5 +2516,24 @@ describe('compiled ICSS browser updates', () => {
 		expect(external?.value).toBe('external-seed');
 		expect(externalOutput?.textContent).toBe('external-seed');
 		expect([...new FormData(externalForm!).entries()]).toEqual([['external', 'external-seed']]);
+
+		externalReassign?.click();
+		await tick();
+		await Promise.resolve();
+		expect(external?.form).toBe(externalNextForm);
+		expect(externalForm?.querySelector('[data-zui-form-reset-signal]')).toBeNull();
+		expect(
+			externalNextForm?.querySelector<HTMLInputElement>('[data-zui-form-reset-signal]')?.form
+		).toBe(externalNextForm);
+		if (external) {
+			external.value = 'reassigned-change';
+			external.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		}
+		await tick();
+		externalNextForm?.reset();
+		await settleFormReset();
+		expect(external?.value).toBe('external-seed');
+		expect(externalOutput?.textContent).toBe('external-seed');
+		expect([...new FormData(externalNextForm!).entries()]).toEqual([['external', 'external-seed']]);
 	});
 });

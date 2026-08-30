@@ -242,4 +242,4 @@
 	aria-invalid={resolvedInvalid ? 'true' : ariaInvalid}
 	data-invalid={resolvedInvalid ? 'true' : undefined}
 />
-<FormResetSignal onReset={resetFromForm} owner={ref?.form} />
+<FormResetSignal association={form} control={ref} onReset={resetFromForm} />
