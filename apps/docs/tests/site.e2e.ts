@@ -211,6 +211,13 @@ test('keeps input binding and field validation interactive', async ({ page }) =>
 	await page.getByRole('button', { name: '重置外部表单' }).click();
 	await expect(externalInput).toHaveValue('external-seed');
 	await expect(page.getByText('external value = external-seed')).toBeVisible();
+	await expect
+		.poll(() =>
+			page
+				.locator('#input-external-owner')
+				.evaluate((form) => [...new FormData(form as HTMLFormElement).entries()])
+		)
+		.toEqual([['external', 'external-seed']]);
 
 	await page.goto('/#/components/field');
 	const account = page.getByTestId('field-account');

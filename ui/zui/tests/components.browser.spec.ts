@@ -2507,5 +2507,6 @@ describe('compiled ICSS browser updates', () => {
 		await settleFormReset();
 		expect(external?.value).toBe('external-seed');
 		expect(externalOutput?.textContent).toBe('external-seed');
+		expect([...new FormData(externalForm!).entries()]).toEqual([['external', 'external-seed']]);
 	});
 });

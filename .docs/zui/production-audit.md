@@ -128,7 +128,7 @@
 - reset捕获在Svelte原生binding使用的同一微任务检查点提交；多个监听目标以generation合并，取消事件与同任务destroy不会执行迟到回调。
 - 当前RadioGroup、Mention/Textarea和Transfer等24个组件保留action；ZInput/ZForm改走原生signal，全部组件继续禁止绕过统一路径直调listener。
 - 原生signal在真实Chrome中初始current=`zui-reset-armed`、default=`zui-reset-fired`；reset后ZForm回到`submitted=false`、两个ZInput清空且控制台干净。
-- ZInput第三个Demo把control放在form DOM外，通过`form="input-external-owner"`同步关联匿名signal；reset后DOM和绑定输出都恢复`external-seed`。
+- ZInput第三个Demo把control放在form DOM外，通过`form="input-external-owner"`同步关联匿名signal；reset后DOM/绑定输出恢复，FormData只含`external=external-seed`。
 - 首页和组件深链完整reload后首个Tab均为“跳到主要内容”；Enter保持当前hash路由与标题/H1，并把焦点送到`main#zui-main-content`
   ，无404或控制台异常。
 - skip-link使用逻辑`inset-inline-start`；真实Chrome切换RTL并reload后出现在右侧起始边，恢复LTR后控制台保持干净。
