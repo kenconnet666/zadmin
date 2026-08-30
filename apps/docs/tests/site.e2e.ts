@@ -59,6 +59,36 @@ test('skips repeated navigation without corrupting hash routes', async ({ page }
 	await expect(page.getByRole('heading', { level: 1 })).toHaveText('ZCheckbox');
 });
 
+test('restores route identity through browser back and forward history', async ({ page }) => {
+	await page.goto('/#/components/input');
+	await page.getByRole('link', { name: 'ZTextarea', exact: true }).click();
+	await expect(page).toHaveURL(/#\/components\/textarea$/u);
+	await expect(page).toHaveTitle('ZTextarea · ZUI Components');
+	await expect(page.getByRole('heading', { level: 1 })).toHaveText('ZTextarea');
+	await expect(page.getByRole('link', { name: 'ZTextarea', exact: true })).toHaveAttribute(
+		'aria-current',
+		'page'
+	);
+
+	await page.goBack();
+	await expect(page).toHaveURL(/#\/components\/input$/u);
+	await expect(page).toHaveTitle('ZInput · ZUI Components');
+	await expect(page.getByRole('heading', { level: 1 })).toHaveText('ZInput');
+	await expect(page.getByRole('link', { name: 'ZInput', exact: true })).toHaveAttribute(
+		'aria-current',
+		'page'
+	);
+
+	await page.goForward();
+	await expect(page).toHaveURL(/#\/components\/textarea$/u);
+	await expect(page).toHaveTitle('ZTextarea · ZUI Components');
+	await expect(page.getByRole('heading', { level: 1 })).toHaveText('ZTextarea');
+	await expect(page.getByRole('link', { name: 'ZTextarea', exact: true })).toHaveAttribute(
+		'aria-current',
+		'page'
+	);
+});
+
 test('renders every production guide from the shared registry', async ({ page }) => {
 	for (const [id, heading] of [
 		['getting-started', '从真实Provider和原生语义开始。'],
