@@ -9,6 +9,7 @@
 	let value = $state<string>();
 	let changes = $state(0);
 	let resets = $state(0);
+	let fieldInput = $state<HTMLInputElement | null>(null);
 	let externalValue = $state('external-seed');
 	let externalFormId = $state('external-input-form');
 	let delegatedValue = $state('delegated-seed');
@@ -20,11 +21,13 @@
 	<ZField label="Account" description="Use your work account" {error} required>
 		<ZInput
 			aria-describedby="external-help"
+			bind:ref={fieldInput}
 			data-testid="field-input"
 			defaultValue="seed"
 			bind:value
 			onFormReset={() => {
 				resets += 1;
+				if (fieldInput) fieldInput.dataset.resetCallback = 'true';
 			}}
 			onValueChange={() => {
 				changes += 1;

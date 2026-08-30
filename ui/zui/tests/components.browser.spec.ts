@@ -2519,6 +2519,7 @@ describe('compiled ICSS browser updates', () => {
 		expect(resetEvents).toBe(1);
 		await settleFormReset();
 		expect(input.value).toBe('seed');
+		expect(input.dataset.resetCallback).toBe('true');
 		expect(output?.textContent).toBe('seed:1:1');
 
 		expect(external?.form).toBe(externalForm);

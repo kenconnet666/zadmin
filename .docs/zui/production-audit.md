@@ -101,6 +101,7 @@
 | 高对比主题进入Theme Lab后白屏         | 预设色板按颜色值作为key，`canvas`与`surface`可同为`#ffffff`        | 改用语义token名作为稳定key；全新Chrome标签页重载后六主题全部恢复                   |
 | 组件大小门禁与完整交互职责冲突        | 3.25 KiB阈值把DataTable、Tour、DatePicker等误当成视觉原子          | CI继续构建并记录gzip、检查依赖边界；仅在产物明显异常时人工分析，不设字节门禁       |
 | WebKit表单reset批量失效               | 原控件action与Svelte原生binding signal在WebKit组件路径都未回调     | ZInput/ZForm改用直接归属form的无状态专用signal承载统一action，再由CI验证           |
+| WebKit reset回调阶段缺少直接证据      | 只从Svelte output推断回调为0，无法区分listener与render调度         | Field Fixture回调直接写data-reset-callback，再独立断言DOM标记与$state输出          |
 | 复合组件reset双重所有权               | 父状态机恢复受控值后，内部Input/Textarea又按叶子default再次覆盖    | resetOnForm关闭叶子自管；Combobox同步原生default，回调仍通知父owner                |
 | Firefox合成paste缺少payload           | 构造参数中的`clipboardData`没有跨引擎落到只读事件属性              | 测试助手显式定义ClipboardEvent payload；真实用户剪贴板逻辑保持不变                 |
 | 文档站缺少生产使用指南                | 只有组件页与Theme Lab，安装、SSR、HMR、WebView和发布边界分散       | 共享指南注册表与GuidePage补齐七份指南，直接使用ZUI Card/List/Code/Link             |
