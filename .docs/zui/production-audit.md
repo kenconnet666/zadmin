@@ -94,6 +94,7 @@
 - skip-link在reduced-motion下Chrome计算过渡为`1e-05s`（浏览器对0ms的极小钳制，约0.01ms），焦点出现即时；验收后恢复跟随系统。
 - 远程Docs Playwright固定组件深链首个Tab、skip-link可见/聚焦、Enter后URL不变、main聚焦与H1不变五项合同。
 - Textarea状态页补id后可见字段缺失清单为0且Chrome issue清零；远程78页循环会输出任何缺失字段的tag/type/label/placeholder。
+- 真实Textarea页重复id清单为0；远程78页循环按页面聚合全部`[id]`并输出任何重复值与数量。
 - 六主题最终surface分别为极光`rgb(238, 244, 255)`、纸张`rgb(245, 237, 225)`、霓虹`rgb(5, 9, 20)`、午夜`rgb(11, 18, 32)`、高对比亮色`rgb(255, 255, 255)`、高对比暗色`rgb(0, 0, 0)`。
 - 390×844视口无水平溢出，搜索和主题选择保持可用，组件导航使用横向滚动；验收后已恢复默认1920×936视口。
 - 10,000项VirtualList、1,000行DataTable与5,000节点Tree均保持有界DOM；选择、排序和End键定位在虚拟化后仍稳定。

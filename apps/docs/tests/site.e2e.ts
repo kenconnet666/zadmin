@@ -1202,6 +1202,12 @@ test('has no automatically detectable accessibility violations', async ({ page }
 					}))
 			);
 		expect(unnamedFields, `${route} has form fields without id or name`).toEqual([]);
+		const duplicateIds = await page.locator('[id]').evaluateAll((elements) => {
+			const counts = new Map<string, number>();
+			for (const element of elements) counts.set(element.id, (counts.get(element.id) ?? 0) + 1);
+			return [...counts].filter(([, count]) => count > 1).map(([id, count]) => ({ count, id }));
+		});
+		expect(duplicateIds, `${route} has duplicate DOM ids`).toEqual([]);
 		const results = await new AxeBuilder({ page }).analyze();
 		expect(results.violations, route).toEqual([]);
 	}
