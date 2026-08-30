@@ -65,6 +65,28 @@ function auditSvelte5(source, filename) {
 	}
 }
 
+function auditResourceLifecycle(source, filename) {
+	const pairs = [
+		['addEventListener(', 'removeEventListener('],
+		['setTimeout(', 'clearTimeout('],
+		['setInterval(', 'clearInterval('],
+		['requestAnimationFrame(', 'cancelAnimationFrame('],
+		['new ResizeObserver', '.disconnect('],
+		['new MutationObserver', '.disconnect('],
+		['new IntersectionObserver', '.disconnect(']
+	];
+	for (const [create, cleanup] of pairs) {
+		if (source.includes(create) && !source.includes(cleanup)) {
+			fail(`${filename} creates ${create} without ${cleanup}.`);
+		}
+	}
+}
+
+const zuiSourceFiles = await filesUnder(resolve(workspaceRoot, 'ui/zui/src'), ['.svelte', '.ts']);
+for (const path of zuiSourceFiles) {
+	const source = await readFile(path, 'utf8');
+	auditResourceLifecycle(source, portable(relative(workspaceRoot, path)));
+}
 const componentFiles = await filesUnder(componentsRoot, ['.svelte']);
 const metadata = [];
 const internalComponents = [];
@@ -209,6 +231,8 @@ console.log(
 		unnamedIconButtons: 0,
 		legacySvelteEvents: 0,
 		legacyDynamicComponents: 0,
-		typescriptEscapeHatches: 0
+		typescriptEscapeHatches: 0,
+		zuiSourceFiles: zuiSourceFiles.length,
+		resourceLifecycleViolations: 0
 	})
 );

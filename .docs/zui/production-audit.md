@@ -33,6 +33,7 @@
 | 隐式submit/无名图标按钮 |  0/0 | 内部原生button必须显式type；图标按钮必须有aria-label或aria-labelledby                        |
 | Svelte遗留事件/动态组件 |  0/0 | ZUI与Docs禁止`on:event`、`createEventDispatcher`和`<svelte:component>`                       |
 | TypeScript危险逃生口    |    0 | ZUI与Docs禁止`@ts-ignore`、`@ts-nocheck`、显式`any`断言与注解                                |
+| 资源生命周期违规        |    0 | 全部ZUI源码中event/timer/RAF/Observer创建文件必须包含对应释放路径                            |
 
 分类目录的16–26个直接文件属于蓝图允许的真实大分类（5–30），继续保持“分类目录直接包含简单组件文件”；没有为满足计数制造一文件目录。
 
