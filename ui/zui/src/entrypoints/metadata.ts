@@ -80,7 +80,11 @@ export { zuiMetadata as toggleButtonMetadata } from '../components/gene/ZToggleB
 export { zuiMetadata as visuallyHiddenMetadata } from '../components/gene/ZVisuallyHidden.svelte';
 export { zuiMetadata as checkboxMetadata } from '../components/input/ZCheckbox.svelte';
 export { zuiMetadata as cascaderMetadata } from '../components/input/ZCascader.svelte';
+export { zuiMetadata as calendarMetadata } from '../components/input/ZCalendar.svelte';
 export { zuiMetadata as colorPickerMetadata } from '../components/input/ZColorPicker.svelte';
+export { zuiMetadata as dateFieldMetadata } from '../components/input/ZDateField.svelte';
+export { zuiMetadata as datePickerMetadata } from '../components/input/ZDatePicker.svelte';
+export { zuiMetadata as dateRangePickerMetadata } from '../components/input/ZDateRangePicker.svelte';
 export { zuiMetadata as fieldMetadata } from '../components/input/ZField.svelte';
 export { zuiMetadata as fileUploadMetadata } from '../components/input/ZFileUpload.svelte';
 export { zuiMetadata as formMetadata } from '../components/input/ZForm.svelte';
@@ -95,6 +99,7 @@ export { zuiMetadata as sliderMetadata } from '../components/input/ZSlider.svelt
 export { zuiMetadata as switchMetadata } from '../components/input/ZSwitch.svelte';
 export { zuiMetadata as tagsInputMetadata } from '../components/input/ZTagsInput.svelte';
 export { zuiMetadata as textareaMetadata } from '../components/input/ZTextarea.svelte';
+export { zuiMetadata as timeFieldMetadata } from '../components/input/ZTimeField.svelte';
 export { zuiMetadata as treeSelectMetadata } from '../components/input/ZTreeSelect.svelte';
 export { zuiMetadata as transferMetadata } from '../components/input/ZTransfer.svelte';
 export { zuiMetadata as paginationMetadata } from '../components/navigation/ZPagination.svelte';

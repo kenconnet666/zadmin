@@ -196,6 +196,12 @@ export { default as ZFormField } from '../components/input/ZFormField.svelte';
 export type { ZFormFieldProps } from '../components/input/ZFormField.svelte';
 export type { FormFieldState } from '../runtime/form/form-registry.svelte.js';
 export type { FormErrors } from '../runtime/form/validation.js';
+export { default as ZDateField } from '../components/input/ZDateField.svelte';
+export type { DateSegment, ZDateFieldProps } from '../components/input/ZDateField.svelte';
+export { default as ZDatePicker } from '../components/input/ZDatePicker.svelte';
+export type { ZDatePickerProps } from '../components/input/ZDatePicker.svelte';
+export { default as ZDateRangePicker } from '../components/input/ZDateRangePicker.svelte';
+export type { ZDateRangePickerProps } from '../components/input/ZDateRangePicker.svelte';
 export { default as ZCheckbox } from '../components/input/ZCheckbox.svelte';
 export type {
 	CheckboxState,
@@ -205,6 +211,8 @@ export type {
 } from '../components/input/ZCheckbox.svelte';
 export { default as ZCascader } from '../components/input/ZCascader.svelte';
 export type { ZCascaderProps } from '../components/input/ZCascader.svelte';
+export { default as ZCalendar } from '../components/input/ZCalendar.svelte';
+export type { ZCalendarProps } from '../components/input/ZCalendar.svelte';
 export { default as ZColorPicker } from '../components/input/ZColorPicker.svelte';
 export type { ZColorPickerProps } from '../components/input/ZColorPicker.svelte';
 export { default as ZInput } from '../components/input/ZInput.svelte';
@@ -235,6 +243,13 @@ export type {
 	ZTextareaResize,
 	ZTextareaSize
 } from '../components/input/ZTextarea.svelte';
+export { default as ZTimeField } from '../components/input/ZTimeField.svelte';
+export type {
+	TimeGranularity,
+	TimeSegment,
+	ZTimeFieldProps
+} from '../components/input/ZTimeField.svelte';
+export type { CalendarRange, Weekday } from '../runtime/date.js';
 export { default as ZTreeSelect } from '../components/input/ZTreeSelect.svelte';
 export type { ZTreeSelectProps } from '../components/input/ZTreeSelect.svelte';
 export { default as ZTransfer } from '../components/input/ZTransfer.svelte';

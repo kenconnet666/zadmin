@@ -10,9 +10,13 @@ import { textDoc } from '../content/components/gene/text/doc.js';
 import { toggleButtonDoc } from '../content/components/gene/toggle-button/doc.js';
 import { visuallyHiddenDoc } from '../content/components/gene/visually-hidden/doc.js';
 import { checkboxDoc } from '../content/components/input/checkbox/doc.js';
+import { calendarDoc } from '../content/components/input/calendar/doc.js';
 import { cascaderDoc } from '../content/components/input/cascader/doc.js';
 import { colorPickerDoc } from '../content/components/input/color-picker/doc.js';
 import { comboboxDoc } from '../content/components/input/combobox/doc.js';
+import { dateFieldDoc } from '../content/components/input/date-field/doc.js';
+import { datePickerDoc } from '../content/components/input/date-picker/doc.js';
+import { dateRangePickerDoc } from '../content/components/input/date-range-picker/doc.js';
 import { fieldDoc } from '../content/components/input/field/doc.js';
 import { fileUploadDoc } from '../content/components/input/file-upload/doc.js';
 import { formDoc } from '../content/components/input/form/doc.js';
@@ -29,6 +33,7 @@ import { sliderDoc } from '../content/components/input/slider/doc.js';
 import { switchDoc } from '../content/components/input/switch/doc.js';
 import { tagsInputDoc } from '../content/components/input/tags-input/doc.js';
 import { textareaDoc } from '../content/components/input/textarea/doc.js';
+import { timeFieldDoc } from '../content/components/input/time-field/doc.js';
 import { treeSelectDoc } from '../content/components/input/tree-select/doc.js';
 import { transferDoc } from '../content/components/input/transfer/doc.js';
 import { stackDoc } from '../content/components/layout/stack/doc.js';
@@ -75,9 +80,13 @@ export const componentDocs = Object.freeze([
 	aspectRatioDoc,
 	containerDoc,
 	checkboxDoc,
+	calendarDoc,
 	cascaderDoc,
 	colorPickerDoc,
 	comboboxDoc,
+	dateFieldDoc,
+	datePickerDoc,
+	dateRangePickerDoc,
 	inputDoc,
 	inputGroupDoc,
 	mentionDoc,
@@ -93,6 +102,7 @@ export const componentDocs = Object.freeze([
 	switchDoc,
 	tagsInputDoc,
 	textareaDoc,
+	timeFieldDoc,
 	treeSelectDoc,
 	transferDoc,
 	sliderDoc,

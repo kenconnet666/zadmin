@@ -12,6 +12,7 @@
 		readonly ariaDescribedBy?: string;
 		readonly ariaLabelledBy?: string | null;
 		readonly children?: Snippet;
+		readonly initialFocus?: () => HTMLElement | null;
 		readonly manageFocus?: boolean;
 		ref?: HTMLDivElement | null;
 		readonly role?: 'dialog' | 'listbox' | 'presentation';
@@ -81,6 +82,12 @@
 				type: 'boolean'
 			},
 			{
+				default: '首个tabbable元素',
+				description: '覆盖FocusScope初始焦点，例如Calendar的当前roving日期。',
+				name: 'initialFocus',
+				type: '() => HTMLElement | null'
+			},
+			{
 				default: "'dialog'",
 				description: 'Popover shell角色；Menu等复合封装使用presentation。',
 				name: 'role',
@@ -142,6 +149,7 @@
 		ariaLabelledBy,
 		children,
 		class: className,
+		initialFocus,
 		manageFocus = true,
 		ref = $bindable(null),
 		role = 'dialog',
@@ -177,7 +185,7 @@
 		});
 		const removeTriggerBranch = dismissable.registerBranch(trigger);
 		const focusScope = manageFocus
-			? new FocusScope(content, { restoreFocus: true, trap: popover.modal })
+			? new FocusScope(content, { initialFocus, restoreFocus: true, trap: popover.modal })
 			: undefined;
 		const releaseScroll = popover.modal ? lockScroll(content.ownerDocument) : undefined;
 		const restoreOthers = popover.modal ? inertOthers(content) : undefined;

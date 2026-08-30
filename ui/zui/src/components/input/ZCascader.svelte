@@ -92,6 +92,7 @@
 
 <script lang="ts">
 	import { untrack } from 'svelte';
+	import { SvelteMap } from 'svelte/reactivity';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { listenForFormReset } from '../../runtime/form/form-control.svelte.js';
 	import { createTreeIndex } from '../../runtime/tree.js';
@@ -189,7 +190,7 @@
 	const tree = $derived(createTreeIndex(nodes));
 	let draft = $state<readonly SelectionKey[]>(Object.freeze([...untrack(() => defaultValue)]));
 	let proxy = $state<HTMLInputElement | null>(null);
-	const options = new Map<string, HTMLDivElement>();
+	const options = new SvelteMap<string, HTMLDivElement>();
 	const valueState = new ControllableState<readonly SelectionKey[]>({
 		defaultValue: () => Object.freeze([...defaultValue]),
 		onChange: () => onValueChange,
@@ -325,7 +326,7 @@
 		>
 		<ZPopoverContent ariaLabelledBy={null} role="presentation">
 			<div class={columnsClass}>
-				{#each columns as column, level}
+				{#each columns as column, level (level)}
 					<div class={columnClass} role="listbox" aria-label={`Level ${level + 1}`}>
 						{#each column as node, nodeIndex (node.key)}
 							<div

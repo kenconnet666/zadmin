@@ -103,6 +103,7 @@
 
 <script lang="ts">
 	import { untrack } from 'svelte';
+	import { SvelteSet } from 'svelte/reactivity';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { Typeahead } from '../../runtime/collection/typeahead.js';
 	import { listenForFormReset } from '../../runtime/form/form-control.svelte.js';
@@ -241,7 +242,7 @@
 		registerRecipeHmr(import.meta, recipe);
 	}
 
-	const unique = (keys: readonly SelectionKey[]) => Object.freeze([...new Set(keys)]);
+	const unique = (keys: readonly SelectionKey[]) => Object.freeze([...new SvelteSet(keys)]);
 	let {
 		class: className,
 		defaultValue = [],
@@ -269,8 +270,8 @@
 	let proxy = $state<HTMLInputElement | null>(null);
 	let sourceQuery = $state('');
 	let targetQuery = $state('');
-	let sourceChecked = $state<ReadonlySet<SelectionKey>>(new Set());
-	let targetChecked = $state<ReadonlySet<SelectionKey>>(new Set());
+	let sourceChecked = $state<ReadonlySet<SelectionKey>>(new SvelteSet());
+	let targetChecked = $state<ReadonlySet<SelectionKey>>(new SvelteSet());
 	let sourceFocus = $state<SelectionKey>();
 	let targetFocus = $state<SelectionKey>();
 	const sourceElements = $state<(HTMLDivElement | null)[]>([]);
@@ -278,14 +279,14 @@
 	const sourceTypeahead = new Typeahead<SelectionKey>({ locale: zui.locale });
 	const targetTypeahead = new Typeahead<SelectionKey>({ locale: zui.locale });
 	const normalizedItems = $derived.by(() => {
-		const keys = new Set<SelectionKey>();
+		const keys = new SvelteSet<SelectionKey>();
 		for (const item of items) {
 			if (keys.has(item.key)) throw new Error(`Duplicate ZTransfer key "${String(item.key)}".`);
 			keys.add(item.key);
 		}
 		return items;
 	});
-	const itemKeys = $derived(new Set(normalizedItems.map(({ key }) => key)));
+	const itemKeys = $derived(new SvelteSet(normalizedItems.map(({ key }) => key)));
 	const valueState = new ControllableState<readonly SelectionKey[]>({
 		defaultValue: () => unique(defaultValue),
 		onChange: () => onValueChange,
@@ -293,7 +294,7 @@
 		write: (next) => (value = next)
 	});
 	const resolvedValue = $derived(unique(valueState.current).filter((key) => itemKeys.has(key)));
-	const targetKeys = $derived(new Set(resolvedValue));
+	const targetKeys = $derived(new SvelteSet(resolvedValue));
 	const sourceItems = $derived(normalizedItems.filter(({ key }) => !targetKeys.has(key)));
 	const targetItems = $derived(normalizedItems.filter(({ key }) => targetKeys.has(key)));
 	function matches(item: TransferItem, query: string): boolean {
@@ -329,17 +330,17 @@
 		if (!proxy) return;
 		return listenForFormReset(proxy, () => {
 			valueState.reset();
-			sourceChecked = new Set();
-			targetChecked = new Set();
+			sourceChecked = new SvelteSet();
+			targetChecked = new SvelteSet();
 			sourceQuery = '';
 			targetQuery = '';
 		});
 	});
 	$effect(() => {
-		const nextSource = new Set(
+		const nextSource = new SvelteSet(
 			[...sourceChecked].filter((key) => sourceItems.some((item) => Object.is(item.key, key)))
 		);
-		const nextTarget = new Set(
+		const nextTarget = new SvelteSet(
 			[...targetChecked].filter((key) => targetItems.some((item) => Object.is(item.key, key)))
 		);
 		if (nextSource.size !== sourceChecked.size) sourceChecked = nextSource;
@@ -348,7 +349,7 @@
 	function toggle(side: Side, item: TransferItem): void {
 		if (disabled || item.disabled) return;
 		const current = side === 'source' ? sourceChecked : targetChecked;
-		const next = new Set(current);
+		const next = new SvelteSet(current);
 		if (next.has(item.key)) next.delete(item.key);
 		else next.add(item.key);
 		if (side === 'source') {
@@ -361,7 +362,7 @@
 	}
 	function selectVisible(side: Side): void {
 		const enabled = side === 'source' ? sourceEnabled : targetEnabled;
-		const selected = new Set(enabled.map(({ key }) => key));
+		const selected = new SvelteSet(enabled.map(({ key }) => key));
 		if (side === 'source') sourceChecked = selected;
 		else targetChecked = selected;
 	}
@@ -422,7 +423,7 @@
 		if (disabled) return;
 		const moving = to === 'target' ? sourceChecked : targetChecked;
 		if (moving.size === 0) return;
-		const nextKeys = new Set(targetKeys);
+		const nextKeys = new SvelteSet(targetKeys);
 		for (const item of normalizedItems) {
 			if (!moving.has(item.key) || item.disabled) continue;
 			if (to === 'target') nextKeys.add(item.key);
@@ -432,8 +433,8 @@
 			normalizedItems.filter(({ key }) => nextKeys.has(key)).map(({ key }) => key)
 		);
 		valueState.setFromUser(next);
-		if (to === 'target') sourceChecked = new Set();
-		else targetChecked = new Set();
+		if (to === 'target') sourceChecked = new SvelteSet();
+		else targetChecked = new SvelteSet();
 	}
 	const sourceCount = $derived(sourceChecked.size);
 	const targetCount = $derived(targetChecked.size);
@@ -567,7 +568,7 @@
 	</section>
 </div>
 <input bind:this={proxy} aria-hidden="true" tabindex={-1} type="hidden" disabled {form} />
-{#if name && !disabled}{#each serializedValues as serialized}<input
+{#if name && !disabled}{#each serializedValues as serialized, index (`${serialized}-${index}`)}<input
 			type="hidden"
 			{form}
 			{name}

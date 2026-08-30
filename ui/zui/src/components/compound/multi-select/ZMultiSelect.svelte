@@ -87,6 +87,7 @@
 </script>
 
 <script lang="ts">
+	import { SvelteMap } from 'svelte/reactivity';
 	import { CollectionStore } from '../../../runtime/collection/collection.svelte.js';
 	import { RovingFocus } from '../../../runtime/collection/roving-focus.svelte.js';
 	import { Typeahead } from '../../../runtime/collection/typeahead.js';
@@ -118,7 +119,7 @@
 	}: ZMultiSelectProps = $props();
 	const zui = useZui();
 	const collection = new CollectionStore<MultiSelectItemRecord>();
-	const labelCache = new Map<SelectionKey, string>();
+	const labelCache = new SvelteMap<SelectionKey, string>();
 	let focusKey = $state<SelectionKey>();
 	let proxy = $state<HTMLInputElement | null>(null);
 	const valueState = new ControllableState<readonly SelectionKey[]>({
@@ -213,7 +214,7 @@
 	{placement}>{@render children?.()}</ZPopover
 >
 <input bind:this={proxy} aria-hidden="true" tabindex={-1} type="hidden" disabled {form} />
-{#if name && !disabled}{#each serializedValues as serialized}<input
+{#if name && !disabled}{#each serializedValues as serialized (serialized)}<input
 			type="hidden"
 			{form}
 			{name}

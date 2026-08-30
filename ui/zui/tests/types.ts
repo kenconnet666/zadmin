@@ -19,6 +19,7 @@ import {
 	ZBox,
 	ZButton,
 	ZCascader,
+	ZCalendar,
 	ZCheckbox,
 	ZCombobox,
 	ZColorPicker,
@@ -30,6 +31,9 @@ import {
 	ZContextMenu,
 	ZContextMenuContent,
 	ZContextMenuTrigger,
+	ZDateField,
+	ZDatePicker,
+	ZDateRangePicker,
 	ZDialog,
 	ZDialogClose,
 	ZDialogContent,
@@ -89,6 +93,7 @@ import {
 	ZTabsTrigger,
 	ZTagsInput,
 	ZTextarea,
+	ZTimeField,
 	ZTooltip,
 	ZTooltipContent,
 	ZTooltipTrigger,
@@ -115,6 +120,7 @@ import {
 	type ZBoxProps,
 	type ZButtonProps,
 	type ZCascaderProps,
+	type ZCalendarProps,
 	type ZCheckboxProps,
 	type ZComboboxContentProps,
 	type ZComboboxInputProps,
@@ -126,6 +132,9 @@ import {
 	type ZContextMenuContentProps,
 	type ZContextMenuProps,
 	type ZContextMenuTriggerProps,
+	type ZDateFieldProps,
+	type ZDatePickerProps,
+	type ZDateRangePickerProps,
 	type ZDialogCloseProps,
 	type ZDialogContentProps,
 	type ZDialogDescriptionProps,
@@ -185,6 +194,7 @@ import {
 	type ZTabsTriggerProps,
 	type ZTagsInputProps,
 	type ZTextareaProps,
+	type ZTimeFieldProps,
 	type ZTooltipContentProps,
 	type ZTooltipProps,
 	type ZTooltipTriggerProps,
@@ -395,6 +405,23 @@ const fileUploadProps: ComponentProps<typeof ZFileUpload> = {
 	maxFiles: 2,
 	multiple: true
 } satisfies ZFileUploadProps;
+const calendarProps: ComponentProps<typeof ZCalendar> = {
+	calendarLabel: 'Calendar',
+	firstDayOfWeek: 'mon'
+} satisfies ZCalendarProps;
+const dateFieldProps: ComponentProps<typeof ZDateField> = {
+	locale: 'zh-CN'
+} satisfies ZDateFieldProps;
+const datePickerProps: ComponentProps<typeof ZDatePicker> = {
+	placeholder: 'Choose date'
+} satisfies ZDatePickerProps;
+const dateRangePickerProps: ComponentProps<typeof ZDateRangePicker> = {
+	placeholder: 'Choose range'
+} satisfies ZDateRangePickerProps;
+const timeFieldProps: ComponentProps<typeof ZTimeField> = {
+	granularity: 'second',
+	hourCycle: 24
+} satisfies ZTimeFieldProps;
 const formProps: ComponentProps<typeof ZForm> = {
 	children: (() => undefined) as never,
 	validateOn: ['submit']
@@ -513,6 +540,11 @@ void numberFieldProps;
 void pinInputProps;
 void colorPickerProps;
 void fileUploadProps;
+void calendarProps;
+void dateFieldProps;
+void datePickerProps;
+void dateRangePickerProps;
+void timeFieldProps;
 void formProps;
 void formFieldProps;
 void sliderProps;

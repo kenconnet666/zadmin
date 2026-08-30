@@ -167,6 +167,74 @@ test('keeps NumberField locale parsing, spinbutton keys, FormData and reset sync
 	await expect(input).toHaveAttribute('aria-valuenow', '1234.5');
 });
 
+test('keeps Calendar grid keyboard, selection, FormData and reset synchronized', async ({
+	page
+}) => {
+	await page.goto('/#/components/calendar');
+	const selected = page.getByRole('button', { name: '2026年8月18日星期二' });
+	await selected.focus();
+	await page.keyboard.press('ArrowRight');
+	await expect(page.getByRole('button', { name: '2026年8月19日星期三' })).toBeFocused();
+	await page.keyboard.press('Enter');
+	await expect(page.getByText('value = 2026-08-19')).toBeVisible();
+	await expect
+		.poll(() =>
+			page.locator('form').evaluate((form) => new FormData(form as HTMLFormElement).get('date'))
+		)
+		.toBe('2026-08-19');
+	await page.getByRole('button', { name: '重置' }).click();
+	await expect(page.getByText('value = 2026-08-18')).toBeVisible();
+});
+
+test('keeps DateField and TimeField segment keys, values and reset synchronized', async ({
+	page
+}) => {
+	await page.goto('/#/components/date-field');
+	await page.getByRole('textbox', { name: 'Month' }).press('ArrowUp');
+	await expect(page.getByText('value = 2026-09-18')).toBeVisible();
+	await page.getByRole('button', { name: '重置' }).click();
+	await expect(page.getByText('value = 2026-08-18')).toBeVisible();
+
+	await page.goto('/#/components/time-field');
+	await page.getByRole('textbox', { name: 'Minute' }).press('ArrowUp');
+	await expect(page.getByText('value = 09:31:15')).toBeVisible();
+	await page.getByRole('button', { name: '重置' }).click();
+	await expect(page.getByText('value = 09:30:15')).toBeVisible();
+});
+
+test('keeps DatePicker Calendar selection, form value and focus restoration synchronized', async ({
+	page
+}) => {
+	await page.goto('/#/components/date-picker');
+	const trigger = page.getByRole('button', { name: /上线日期/u });
+	await trigger.click();
+	await page.getByRole('button', { name: '2026年8月20日星期四' }).click();
+	await expect(trigger).toBeFocused();
+	await expect(page.getByText('value = 2026-08-20')).toBeVisible();
+});
+
+test('keeps DateRangePicker two-step normalized selection and dual form fields synchronized', async ({
+	page
+}) => {
+	await page.goto('/#/components/date-range-picker');
+	const trigger = page.getByRole('button', { name: /2026/u });
+	await trigger.click();
+	await page.getByRole('button', { name: '2026年8月25日星期二' }).click();
+	await page.getByRole('button', { name: '2026年8月22日星期六' }).click();
+	await expect(trigger).toBeFocused();
+	await expect(page.getByText('range = 2026-08-22 / 2026-08-25')).toBeVisible();
+	await expect
+		.poll(() =>
+			page
+				.locator('form')
+				.evaluate((form) => [
+					new FormData(form as HTMLFormElement).get('window.start'),
+					new FormData(form as HTMLFormElement).get('window.end')
+				])
+		)
+		.toEqual(['2026-08-22', '2026-08-25']);
+});
+
 test('keeps PinInput roving entry, completion, single FormData value and reset synchronized', async ({
 	page
 }) => {
@@ -831,9 +899,13 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/aspect-ratio',
 		'#/components/container',
 		'#/components/checkbox',
+		'#/components/calendar',
 		'#/components/color-picker',
 		'#/components/cascader',
 		'#/components/combobox',
+		'#/components/date-field',
+		'#/components/date-picker',
+		'#/components/date-range-picker',
 		'#/components/input',
 		'#/components/input-group',
 		'#/components/mention',
@@ -848,6 +920,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/segmented',
 		'#/components/tags-input',
 		'#/components/textarea',
+		'#/components/time-field',
 		'#/components/tree-select',
 		'#/components/transfer',
 		'#/components/switch',

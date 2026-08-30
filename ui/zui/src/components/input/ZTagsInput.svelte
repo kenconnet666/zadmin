@@ -376,7 +376,7 @@
 	/>
 </div>
 <input bind:this={proxy} aria-hidden="true" tabindex={-1} type="hidden" disabled {form} />
-{#if name && !disabled}{#each resolvedValues as tag}<input
+{#if name && !disabled}{#each resolvedValues as tag, index (`${tag}-${index}`)}<input
 			type="hidden"
 			{form}
 			{name}

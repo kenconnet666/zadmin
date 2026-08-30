@@ -15,7 +15,7 @@ const INITIAL_STATE = Object.freeze({
 }) satisfies FormFieldState;
 
 export class FormRegistry {
-	readonly #controls = new Map<string, () => HTMLElement | null>();
+	readonly #controls = new SvelteMap<string, () => HTMLElement | null>();
 	readonly #states = new SvelteMap<string, FormFieldState>();
 
 	register(name: string, control: () => HTMLElement | null): () => void {

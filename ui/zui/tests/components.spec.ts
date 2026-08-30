@@ -49,6 +49,7 @@ import MultiSelectFixture from './MultiSelectFixture.svelte';
 import NumberFieldFixture from './NumberFieldFixture.svelte';
 import PinInputFixture from './PinInputFixture.svelte';
 import DialogFixture from './DialogFixture.svelte';
+import DateFixture from './DateFixture.svelte';
 import DrawerFixture from './DrawerFixture.svelte';
 import DropdownMenuFixture from './DropdownMenuFixture.svelte';
 import PopoverFixture from './PopoverFixture.svelte';
@@ -463,6 +464,18 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain('name="email"');
 		expect(result).toContain('Account');
 		expect(result).toContain('Email');
+	});
+
+	it('renders date fields, Calendar grid and closed pickers during SSR', () => {
+		const result = render(DateFixture).body;
+		expect(result).toContain('role="grid"');
+		expect(result.match(/role="gridcell"/gu)).toHaveLength(42);
+		expect(result).toContain('name="calendar"');
+		expect(result).toContain('name="date"');
+		expect(result).toContain('name="time"');
+		expect(result).toContain('name="picked"');
+		expect(result).toContain('name="range.start"');
+		expect(result).not.toContain('Picker calendar');
 	});
 
 	it('renders accessible icons, inputs and field relationships', () => {

@@ -298,7 +298,7 @@
 	data-complete={complete || undefined}
 	data-invalid={resolvedInvalid || undefined}
 >
-	{#each Array(resolvedLength) as _, index}
+	{#each Array.from({ length: resolvedLength }, (_, index) => index) as index (index)}
 		<input
 			bind:this={inputs[index]}
 			class={inputClass}

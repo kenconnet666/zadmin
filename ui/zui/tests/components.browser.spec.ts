@@ -18,6 +18,7 @@ import FileUploadFixture from './FileUploadFixture.svelte';
 import FormFixture from './FormFixture.svelte';
 import InputGroupFixture from './InputGroupFixture.svelte';
 import DialogFixture from './DialogFixture.svelte';
+import DateFixture from './DateFixture.svelte';
 import DrawerFixture from './DrawerFixture.svelte';
 import DropdownMenuFixture from './DropdownMenuFixture.svelte';
 import MenuFixture from './MenuFixture.svelte';
@@ -703,7 +704,7 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(output?.textContent).toBe('b.yaml:1');
 		form?.reset();
-		await Promise.resolve();
+		await new Promise((resolve) => setTimeout(resolve, 0));
 		await tick();
 		expect(output?.textContent).toBe('none:1');
 		expect(new FormData(form!).getAll('asset')).toHaveLength(0);
@@ -744,6 +745,70 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(output?.textContent).toBe('false:false:0:alice');
 		expect(form?.querySelector('[data-dirty="true"]')).toBeNull();
+	});
+
+	it('coordinates Calendar and segmented date/time fields with FormData and reset', async () => {
+		render(DateFixture);
+		const form = document.querySelector<HTMLFormElement>('[data-testid="date-form"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="date-output"]');
+		const selected = document.querySelector<HTMLButtonElement>(
+			'[data-slot="grid"] button[data-selected="true"]'
+		);
+		selected?.focus();
+		selected?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowRight' }));
+		await tick();
+		(document.activeElement as HTMLElement)?.dispatchEvent(
+			new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' })
+		);
+		await tick();
+		expect(new FormData(form!).get('calendar')).toBe('2026-08-19');
+		const month = document.querySelector<HTMLInputElement>('input[aria-label="Month"]');
+		month?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowUp' }));
+		const minute = document.querySelector<HTMLInputElement>('input[aria-label="Minute"]');
+		minute?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowUp' }));
+		await tick();
+		expect(new FormData(form!).get('date')).toBe('2026-09-18');
+		expect(new FormData(form!).get('time')).toBe('09:31:15');
+		expect(output?.textContent).toContain('2026-08-19:2026-09-18:09:31:15');
+		form?.reset();
+		await Promise.resolve();
+		await tick();
+		expect(new FormData(form!).get('calendar')).toBe('2026-08-18');
+		expect(new FormData(form!).get('date')).toBe('2026-08-18');
+	});
+
+	it('coordinates DatePicker and DateRangePicker popup selection and focus restoration', async () => {
+		render(DateFixture);
+		const form = document.querySelector<HTMLFormElement>('[data-testid="date-form"]');
+		const dateTrigger = [
+			...document.querySelectorAll<HTMLButtonElement>('[aria-haspopup="dialog"]')
+		].find((button) => button.getAttribute('aria-label')?.startsWith('Pick date'));
+		dateTrigger?.focus();
+		dateTrigger?.click();
+		await tick();
+		const date20 = [...document.querySelectorAll<HTMLButtonElement>('[role="dialog"] button')].find(
+			(button) => button.getAttribute('aria-label')?.includes('August 20, 2026')
+		);
+		date20?.click();
+		await new Promise((resolve) => setTimeout(resolve, 140));
+		expect(new FormData(form!).get('picked')).toBe('2026-08-20');
+		expect(document.activeElement).toBe(dateTrigger);
+		const rangeTrigger = [
+			...document.querySelectorAll<HTMLButtonElement>('[aria-haspopup="dialog"]')
+		].find((button) => button !== dateTrigger);
+		rangeTrigger?.click();
+		await tick();
+		for (const day of [25, 22]) {
+			const button = [
+				...document.querySelectorAll<HTMLButtonElement>('[role="dialog"] button')
+			].find((candidate) => candidate.getAttribute('aria-label')?.includes(`August ${day}, 2026`));
+			button?.click();
+			await tick();
+		}
+		await new Promise((resolve) => setTimeout(resolve, 140));
+		expect(new FormData(form!).get('range.start')).toBe('2026-08-22');
+		expect(new FormData(form!).get('range.end')).toBe('2026-08-25');
+		expect(document.activeElement).toBe(rangeTrigger);
 	});
 	it('keeps AlertDialog open until an explicit action is chosen', async () => {
 		render(AlertDialogFixture);

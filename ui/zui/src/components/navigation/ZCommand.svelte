@@ -112,6 +112,7 @@
 
 <script lang="ts">
 	import { untrack } from 'svelte';
+	import { SvelteMap, SvelteSet } from 'svelte/reactivity';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import { listenForFormReset } from '../../runtime/form/form-control.svelte.js';
@@ -276,8 +277,8 @@
 	const zui = useZui();
 	const uid = $props.id();
 	const idBase = $derived(createZuiId(zui.idPrefix, uid, 'command'));
-	const optionIds = new Map<SelectionKey, string>();
-	const groupIds = new Map<string, string>();
+	const optionIds = new SvelteMap<SelectionKey, string>();
+	const groupIds = new SvelteMap<string, string>();
 	let nextOptionId = 0;
 	let nextGroupId = 0;
 	let active = $state<SelectionKey>();
@@ -289,7 +290,7 @@
 		write: (next) => (query = next)
 	});
 	const normalizedItems = $derived.by(() => {
-		const keys = new Set<SelectionKey>();
+		const keys = new SvelteSet<SelectionKey>();
 		for (const item of items) {
 			if (keys.has(item.key)) throw new Error(`Duplicate ZCommand key "${String(item.key)}".`);
 			keys.add(item.key);
@@ -327,7 +328,7 @@
 		enabled.some(({ key }) => Object.is(key, active)) ? active : enabled[0]?.key
 	);
 	const groups = $derived.by(() => {
-		const grouped = new Map<string, CommandItem[]>();
+		const grouped = new SvelteMap<string, CommandItem[]>();
 		for (const item of results) {
 			const group = item.group ?? '';
 			const entries = grouped.get(group) ?? [];

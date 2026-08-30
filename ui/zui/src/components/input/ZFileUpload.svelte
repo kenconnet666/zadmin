@@ -162,7 +162,7 @@
 </script>
 
 <script lang="ts">
-	import { untrack } from 'svelte';
+	import { onDestroy, untrack } from 'svelte';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import { listenForFormReset } from '../../runtime/form/form-control.svelte.js';
@@ -219,6 +219,7 @@
 	});
 	const resolvedFiles = $derived(Object.freeze([...fileState.current]));
 	let dragging = $state(false);
+	let resetTimer: ReturnType<typeof setTimeout> | undefined;
 	const full = $derived(
 		resolvedFiles.length >= constraints.maxFiles || (!multiple && resolvedFiles.length >= 1)
 	);
@@ -240,8 +241,15 @@
 		return listenForFormReset(inputRef, () => {
 			fileState.reset();
 			dragging = false;
-			queueMicrotask(() => syncNative(defaultFiles));
+			if (resetTimer !== undefined) clearTimeout(resetTimer);
+			resetTimer = setTimeout(() => {
+				resetTimer = undefined;
+				syncNative(defaultFiles);
+			}, 0);
 		});
+	});
+	onDestroy(() => {
+		if (resetTimer !== undefined) clearTimeout(resetTimer);
 	});
 	function add(candidates: readonly File[]): void {
 		if (disabled || candidates.length === 0) return;

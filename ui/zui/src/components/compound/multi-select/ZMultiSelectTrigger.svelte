@@ -71,7 +71,7 @@
 	{variant}
 	data-placeholder={multi.values.length === 0 || undefined}
 >
-	{#if children}{@render children()}{:else if multi.labels.length === 0}{multi.placeholder}{:else}{#each multi.labels as label}<span
+	{#if children}{@render children()}{:else if multi.labels.length === 0}{multi.placeholder}{:else}{#each multi.labels as label, index (`${label}-${index}`)}<span
 				class={tagClass}
 				data-slot="tag">{label}</span
 			>{/each}{/if}
