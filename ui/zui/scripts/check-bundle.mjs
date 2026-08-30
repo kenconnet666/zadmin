@@ -19,7 +19,12 @@ const components = [
 		path: 'data-display/ZDescriptionList.svelte'
 	},
 	{ id: 'list', name: 'ZList', path: 'data-display/ZList.svelte' },
-	{ id: 'tag', name: 'ZTag', path: 'data-display/ZTag.svelte' },
+	{
+		id: 'tag',
+		maxIncrementalGzip: 4 * 1024,
+		name: 'ZTag',
+		path: 'data-display/ZTag.svelte'
+	},
 	{ id: 'empty', name: 'ZEmpty', path: 'data-display/ZEmpty.svelte' },
 	{ id: 'meter', name: 'ZMeter', path: 'data-display/ZMeter.svelte' },
 	{ id: 'progress', name: 'ZProgress', path: 'data-display/ZProgress.svelte' },
