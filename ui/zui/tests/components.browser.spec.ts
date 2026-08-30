@@ -57,11 +57,23 @@ import { extendTheme } from '../src/theme/define.js';
 import { ZCode } from '../src/entrypoints/code.js';
 import {
 	createToastQueue,
+	ZAccordionItem,
+	ZAccordionTrigger,
 	ZAspectRatio,
+	ZComboboxInput,
 	ZContainer,
+	ZDialogContent,
 	ZKbd,
 	ZLink,
+	ZMenuItem,
+	ZMultiSelectTrigger,
+	ZPopoverTrigger,
+	ZPopconfirmTrigger,
+	ZRadioGroupItem,
 	ZSeparator,
+	ZSelectTrigger,
+	ZTabsList,
+	ZTooltipTrigger,
 	ZVisuallyHidden
 } from '../src/entrypoints/index.js';
 
@@ -73,6 +85,21 @@ function insertedRuleCount(): number {
 }
 
 describe('compiled ICSS browser updates', () => {
+	it('rejects compound parts mounted outside every required client context', () => {
+		expect(() => render(ZAccordionItem, { props: { value: 'one' } })).toThrow(/inside/u);
+		expect(() => render(ZAccordionTrigger)).toThrow(/require/u);
+		expect(() => render(ZComboboxInput)).toThrow(/require/u);
+		expect(() => render(ZDialogContent)).toThrow(/inside/u);
+		expect(() => render(ZMenuItem, { props: { value: 'one' } })).toThrow(/require/u);
+		expect(() => render(ZMultiSelectTrigger)).toThrow(/require/u);
+		expect(() => render(ZPopoverTrigger)).toThrow(/require/u);
+		expect(() => render(ZPopconfirmTrigger)).toThrow(/require/u);
+		expect(() => render(ZRadioGroupItem, { props: { value: 'one' } })).toThrow(/inside/u);
+		expect(() => render(ZSelectTrigger)).toThrow(/require/u);
+		expect(() => render(ZTabsList)).toThrow(/inside/u);
+		expect(() => render(ZTooltipTrigger)).toThrow(/require/u);
+	});
+
 	it('pauses, resumes, times out and disposes explicit ToastQueue timers', async () => {
 		const dismissed: string[] = [];
 		const queue = createToastQueue();
@@ -138,6 +165,39 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(output?.textContent).toContain('a:1:1:1:other:0:0');
 		expect(document.body.textContent).toContain('Nothing to display');
+		const dateField = document.querySelector<HTMLElement>('[data-testid="coverage-date-field"]');
+		const dateInputs = dateField?.querySelectorAll<HTMLInputElement>('input') ?? [];
+		dateInputs[0]?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowUp' }));
+		for (const key of ['ArrowRight', 'ArrowLeft', 'Home', 'End']) {
+			dateInputs[0]?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key }));
+		}
+		if (dateInputs[1]) {
+			dateInputs[1].value = '99';
+			dateInputs[1].dispatchEvent(new InputEvent('input', { bubbles: true }));
+		}
+		await tick();
+		expect(dateField?.dataset.invalid).toBe('true');
+		const emptyDate = document.querySelector<HTMLElement>('[data-testid="coverage-date-empty"]');
+		emptyDate
+			?.querySelector<HTMLInputElement>('input')
+			?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
+		const timeField = document.querySelector<HTMLElement>('[data-testid="coverage-time-field"]');
+		const timeInputs = timeField?.querySelectorAll<HTMLInputElement>('input') ?? [];
+		timeInputs[1]?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowUp' }));
+		for (const key of ['ArrowRight', 'ArrowLeft', 'Home', 'End', 'ArrowDown']) {
+			timeInputs[0]?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key }));
+		}
+		timeField?.querySelector<HTMLButtonElement>('[aria-label="Toggle AM PM"]')?.click();
+		if (timeInputs[0]) {
+			timeInputs[0].value = '99';
+			timeInputs[0].dispatchEvent(new InputEvent('input', { bubbles: true }));
+		}
+		await tick();
+		expect(timeField?.dataset.invalid).toBe('true');
+		const readonlyPeriod = document.querySelector<HTMLButtonElement>(
+			'[data-testid="coverage-time-readonly"] [aria-label="Toggle AM PM"]'
+		);
+		expect(readonlyPeriod?.disabled).toBe(true);
 		expect(
 			document.querySelector('[data-testid="coverage-toast-danger"]')?.getAttribute('role')
 		).toBe('alert');
@@ -993,6 +1053,17 @@ describe('compiled ICSS browser updates', () => {
 		expect(output?.textContent).toBe('1234:1');
 		expect(document.activeElement).toBe(inputs[3]);
 		expect(new FormData(form!).get('pin')).toBe('1234');
+		for (const [key, target] of [
+			['ArrowLeft', inputs[2]],
+			['ArrowRight', inputs[3]],
+			['Home', inputs[0]],
+			['End', inputs[3]]
+		] as const) {
+			(document.activeElement as HTMLElement)?.dispatchEvent(
+				new KeyboardEvent('keydown', { bubbles: true, key })
+			);
+			expect(document.activeElement).toBe(target);
+		}
 		inputs[3]?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Backspace' }));
 		await tick();
 		expect(output?.textContent).toBe('123:1');
@@ -1002,6 +1073,12 @@ describe('compiled ICSS browser updates', () => {
 		}
 		await tick();
 		expect(output?.textContent).toBe('1234:2');
+		inputs[3]?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Delete' }));
+		await tick();
+		expect(output?.textContent).toBe('123:2');
+		inputs[3]?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Backspace' }));
+		await tick();
+		expect(output?.textContent).toBe('12:2');
 		form?.reset();
 		await Promise.resolve();
 		await tick();

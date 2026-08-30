@@ -1,10 +1,12 @@
 <script lang="ts">
+	import { CalendarDate, Time } from '@internationalized/date';
 	import {
 		ZAlert,
 		ZAvatar,
 		ZButton,
 		ZCarousel,
 		ZDataTable,
+		ZDateField,
 		ZEmpty,
 		ZList,
 		ZProgress,
@@ -13,6 +15,7 @@
 		ZSkeleton,
 		ZStatistic,
 		ZTimeline,
+		ZTimeField,
 		ZToast,
 		ZVirtualList,
 		type SelectionKey
@@ -175,6 +178,33 @@
 >
 	{#snippet item()}<span>Never rendered</span>{/snippet}
 </ZVirtualList>
+
+<ZDateField
+	aria-label="Coverage date"
+	defaultValue={new CalendarDate(2026, 8, 18)}
+	minValue={new CalendarDate(2026, 8, 1)}
+	maxValue={new CalendarDate(2026, 8, 31)}
+	locale="en-GB"
+	data-testid="coverage-date-field"
+/>
+<ZDateField aria-label="Empty coverage date" data-testid="coverage-date-empty" />
+<ZTimeField
+	aria-label="Coverage time"
+	defaultValue={new Time(13, 30)}
+	hourCycle={12}
+	granularity="minute"
+	minuteStep={7}
+	minValue={new Time(8)}
+	maxValue={new Time(18)}
+	data-testid="coverage-time-field"
+/>
+<ZTimeField
+	aria-label="Readonly coverage time"
+	defaultValue={new Time(9)}
+	readonly
+	hourCycle={12}
+	data-testid="coverage-time-readonly"
+/>
 
 <output data-testid="coverage-output"
 	>{carouselValue}:{carouselChanges}:{alertDismissed}:{toastActions}:{tableSelection.join(
