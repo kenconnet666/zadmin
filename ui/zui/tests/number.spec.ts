@@ -37,6 +37,7 @@ describe('localized number algorithms', () => {
 
 	it('falls back to ASCII separators when Intl omits optional symbol parts', () => {
 		const formatter = {
+			format: (value: number) => String(value),
 			formatToParts: () => [{ type: 'integer', value: '12345' }]
 		} as unknown as Intl.NumberFormat;
 		const replacement = function NumberFormat(): Intl.NumberFormat {
