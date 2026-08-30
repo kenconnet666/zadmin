@@ -3,6 +3,7 @@
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import type { BadgeTone } from './ZBadge.svelte';
+	import { styleInternalAction } from '../gene/internal-action.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 	export interface ZTagProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'children'> {
 		readonly children?: Snippet;
@@ -19,7 +20,7 @@
 		importStatement: "import { ZTag } from '@zadmin/zui';",
 		name: 'ZTag',
 		bindings: [{ description: '真实span引用。', name: 'ref', type: 'HTMLSpanElement | null' }],
-		dependencies: ['ZBadge tone'],
+		dependencies: ['ZBadge tone', 'internal action style'],
 		events: [
 			{
 				description: '点击移除按钮；Tag状态所有权由调用方管理。',
@@ -71,10 +72,8 @@
 	});
 	const removeRecipe = defineRecipe({
 		base: (s) => {
-			s.backgroundColor.transparent;
-			s.borderStyle.none;
+			styleInternalAction(s);
 			s.color._textMuted;
-			s.cursor.pointer;
 			s.minHeight.px(0);
 			s.padding.px(0);
 		},
@@ -88,7 +87,6 @@
 <script lang="ts">
 	import X from '@lucide/svelte/icons/x';
 	import { untrack } from 'svelte';
-	import ZButton from '../gene/ZButton.svelte';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -122,12 +120,11 @@
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
 	data-disabled={disabled || undefined}
-	>{@render children?.()}{#if removable}<ZButton
+	>{@render children?.()}{#if removable}<button
+			type="button"
 			class={removeClass}
 			aria-label={removeLabel}
 			{disabled}
-			size="small"
-			variant="ghost"
-			onclick={(event) => onRemove?.(event)}><X aria-hidden="true" size={14} /></ZButton
+			onclick={(event) => onRemove?.(event)}><X aria-hidden="true" size={14} /></button
 		>{/if}</span
 >
