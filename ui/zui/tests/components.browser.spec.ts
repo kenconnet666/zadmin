@@ -1764,10 +1764,12 @@ describe('compiled ICSS browser updates', () => {
 
 		render(ZSeparator, { orientation: 'horizontal' });
 		render(ZSeparator, { orientation: 'vertical' });
+		render(ZSeparator, { decorative: true });
 		expect(document.querySelector('hr[data-orientation="horizontal"]')).not.toBeNull();
 		expect(
 			document.querySelector('[role="separator"][aria-orientation="vertical"]')
 		).not.toBeNull();
+		expect(document.querySelector('[role="presentation"][aria-hidden="true"]')).not.toBeNull();
 
 		render(ZKbd, { 'data-testid': 'kbd' });
 		render(ZVisuallyHidden, { 'data-testid': 'visually-hidden' });

@@ -127,6 +127,19 @@ describe('ZUI foundation runtime', () => {
 		]);
 		expect(createPaginationItems(5, 1, 1, 1)).toEqual([1, 2, 'ellipsis-end', 5]);
 		expect(createPaginationItems(10, 5, 0, 0)).toEqual(['ellipsis-start', 5, 'ellipsis-end']);
+		expect(createPaginationItems(100, 50, 2, 2)).toEqual([
+			1,
+			2,
+			'ellipsis-start',
+			48,
+			49,
+			50,
+			51,
+			52,
+			'ellipsis-end',
+			99,
+			100
+		]);
 		expect(clampPage(-2, 10)).toBe(1);
 		expect(clampPage(99, 10)).toBe(10);
 		expect(clampPage(2.9, 10)).toBe(2);

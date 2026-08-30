@@ -55,7 +55,7 @@ export function createPaginationItems(
 		if (typeof previous === 'number') {
 			const gap = candidate - previous;
 			if (gap === 2) items.push(previous + 1);
-			else if (gap > 2) items.push(items.length === 1 ? 'ellipsis-start' : 'ellipsis-end');
+			else if (gap > 2) items.push(candidate <= current ? 'ellipsis-start' : 'ellipsis-end');
 		}
 		items.push(candidate);
 	}

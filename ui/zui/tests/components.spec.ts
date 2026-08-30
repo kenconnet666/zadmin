@@ -686,6 +686,9 @@ describe('ZUI foundational components', () => {
 		expect(render(ZSeparator, { props: { orientation: 'vertical' } }).body).toContain(
 			'role="separator"'
 		);
+		const decorativeSeparator = render(ZSeparator, { props: { decorative: true } }).body;
+		expect(decorativeSeparator).toContain('role="presentation"');
+		expect(decorativeSeparator).toContain('aria-hidden="true"');
 		expect(render(ZKbd).body).toContain('<kbd');
 		expect(render(ZVisuallyHidden).body).toContain('<span');
 		expect(render(ZContainer, { props: { size: 'small' } }).body).toContain('<div');

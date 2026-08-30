@@ -7,6 +7,7 @@
 	export type ZSeparatorOrientation = 'horizontal' | 'vertical';
 
 	export interface ZSeparatorProps extends HTMLAttributes<HTMLElement> {
+		readonly decorative?: boolean;
 		readonly orientation?: ZSeparatorOrientation;
 		ref?: HTMLElement | null;
 	}
@@ -22,6 +23,12 @@
 		name: 'ZSeparator',
 		parts: [],
 		props: [
+			{
+				default: 'false',
+				description: '从可访问树隐藏纯视觉分隔线。',
+				name: 'decorative',
+				type: 'boolean'
+			},
 			{
 				default: "'horizontal'",
 				description: '水平时使用原生hr，垂直时使用ARIA separator。',
@@ -87,6 +94,7 @@
 
 	let {
 		class: className,
+		decorative = false,
 		orientation = 'horizontal',
 		ref = $bindable(null),
 		style,
@@ -105,8 +113,10 @@
 		class={[rootClass, className]}
 		style={initialStyle}
 		use:applyIcssRootStyle={{ style, variables: icssVariables }}
-		aria-orientation="horizontal"
+		aria-hidden={decorative || undefined}
+		aria-orientation={decorative ? undefined : 'horizontal'}
 		data-orientation="horizontal"
+		role={decorative ? 'presentation' : undefined}
 	/>
 {:else}
 	<div
@@ -115,8 +125,9 @@
 		class={[rootClass, className]}
 		style={initialStyle}
 		use:applyIcssRootStyle={{ style, variables: icssVariables }}
-		aria-orientation="vertical"
+		aria-hidden={decorative || undefined}
+		aria-orientation={decorative ? undefined : 'vertical'}
 		data-orientation="vertical"
-		role="separator"
+		role={decorative ? 'presentation' : 'separator'}
 	></div>
 {/if}
