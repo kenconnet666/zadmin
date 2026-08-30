@@ -43,6 +43,22 @@ test('renders the component catalog and real demo source', async ({ page }) => {
 	expect(errors).toEqual([]);
 });
 
+test('renders every production guide from the shared registry', async ({ page }) => {
+	for (const [id, heading] of [
+		['getting-started', '从真实Provider和原生语义开始。'],
+		['icss', '类型安全样式，不把运行时对象塞进DOM。'],
+		['accessibility', '语义、键盘和焦点是同一个行为合同。'],
+		['ssr-csp', '每个请求拥有自己的样式Registry。'],
+		['hmr', '更新规则所有权，不重建业务状态。'],
+		['webview', '组件留在Web层，系统能力留在Host边界。'],
+		['package', '从公开entrypoint消费，而不是依赖工作区路径。']
+	] as const) {
+		await page.goto(`/#/guides/${id}`);
+		await expect(page.getByRole('heading', { level: 1 })).toHaveText(heading);
+		expect(await page.locator('main article article').count()).toBeGreaterThanOrEqual(3);
+	}
+});
+
 test('switches and persists all coordinated production themes', async ({ page }) => {
 	await page.goto('/#/components/button');
 	const shell = page.locator('#app > div').first();
@@ -1070,6 +1086,13 @@ test('has no automatically detectable accessibility violations', async ({ page }
 	for (const route of [
 		'#/',
 		'#/guides/theme',
+		'#/guides/getting-started',
+		'#/guides/icss',
+		'#/guides/accessibility',
+		'#/guides/ssr-csp',
+		'#/guides/hmr',
+		'#/guides/webview',
+		'#/guides/package',
 		'#/components/provider',
 		'#/components/box',
 		'#/components/stack',

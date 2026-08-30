@@ -119,7 +119,9 @@
 
 <script lang="ts">
 	import { ZIcon, ZLink, useZui } from '@zadmin/zui';
+	import { guideDocs } from '../content/guides.js';
 	import { componentCategories, type ComponentDoc } from '../framework/catalog.js';
+	import { guideRoute } from '../framework/router.js';
 	import { searchComponentDocs } from '../framework/search.js';
 
 	let {
@@ -148,7 +150,7 @@
 			href="#/"
 			underline="none">概览</ZLink
 		>
-		<p class={baseClasses.category}>系统</p>
+		<p class={baseClasses.category}>指南</p>
 		<ZLink
 			class={themeClasses.link}
 			aria-current={currentGuideId === 'theme' ? 'page' : undefined}
@@ -158,6 +160,18 @@
 			<span>Theme Lab</span>
 			<ZIcon class={themeClasses.icon} name="chevronDown" size={14} />
 		</ZLink>
+		{#each guideDocs as guide (guide.id)}
+			{@const guideClasses = zui.slots(sidebarRecipe, { active: currentGuideId === guide.id })}
+			<ZLink
+				class={guideClasses.link}
+				aria-current={currentGuideId === guide.id ? 'page' : undefined}
+				href={guideRoute(guide.id)}
+				underline="none"
+			>
+				<span>{guide.eyebrow}</span>
+				<ZIcon class={guideClasses.icon} name="chevronDown" size={14} />
+			</ZLink>
+		{/each}
 		{#each componentCategories as category (category.id)}
 			{@const categoryDocs = filtered.filter((doc) => doc.category === category.id)}
 			{#if categoryDocs.length > 0}

@@ -5,7 +5,14 @@
 ## Documentation
 
 - [Component catalog](./#/): Browse every implemented public component by category.
+- [Getting Started](./#/guides/getting-started): Install peers, configure ZProvider, and choose controlled or uncontrolled ownership.
+- [ICSS](./#/guides/icss): Configure preprocessing, typed declarations, semantic tokens, dynamic values, and strict CSP mode.
 - [Theme Lab](./#/guides/theme): Inspect theme tokens, color schemes, density, contrast, direction, and reduced-motion behavior.
+- [Accessibility](./#/guides/accessibility): Review native semantics, keyboard collections, focus, overlays, contrast, and motion contracts.
+- [SSR and CSP](./#/guides/ssr-csp): Install request-local style registries, critical CSS, nonce or hash policies, and hydration boundaries.
+- [HMR](./#/guides/hmr): Preserve state while replacing recipe ownership and cleaning runtime resources.
+- [WebView](./#/guides/webview): Keep Svelte UI separate from desktop host capabilities and validate WebView2 boundaries.
+- [Package](./#/guides/package): Consume public entrypoints and understand API snapshots, publish dry-runs, and external tarball acceptance.
 - [Source repository](https://github.com/kenconnet666/zadmin/tree/master/ui/zui): Read the component library source and package configuration.
 
 ## Usage

@@ -89,9 +89,11 @@
 		type ZuiMotion
 	} from '@zadmin/zui';
 	import type { DocsThemeId } from '../app/theme.js';
+	import { guideDocsById } from '../content/guides.js';
 	import { componentDocs, componentDocsById } from '../framework/catalog.js';
 	import { parseDocsRoute } from '../framework/router.js';
 	import ComponentPage from './ComponentPage.svelte';
+	import GuidePage from './GuidePage.svelte';
 	import HomePage from './HomePage.svelte';
 	import ThemeLabPage from './ThemeLabPage.svelte';
 	import AppHeader from './AppHeader.svelte';
@@ -118,11 +120,29 @@
 	const currentId = $derived(route.kind === 'component' ? route.componentId : undefined);
 	const currentGuideId = $derived(route.kind === 'guide' ? route.guideId : undefined);
 	const currentDoc = $derived(currentId ? componentDocsById.get(currentId) : undefined);
+	const currentGuide = $derived(
+		currentGuideId && currentGuideId !== 'theme' ? guideDocsById.get(currentGuideId) : undefined
+	);
 	const invalidRoute = $derived(
 		route.kind === 'not-found' ||
 			(currentId !== undefined && currentDoc === undefined) ||
-			(currentGuideId !== undefined && currentGuideId !== 'theme')
+			(currentGuideId !== undefined && currentGuideId !== 'theme' && currentGuide === undefined)
 	);
+	const pageTitle = $derived.by(() => {
+		switch (route.kind) {
+			case 'component':
+				return currentDoc ? `${currentDoc.name} · ZUI Components` : 'ZUI Components';
+			case 'guide':
+				return route.guideId === 'theme'
+					? 'Theme Lab · ZUI Components'
+					: currentGuide
+						? `${currentGuide.eyebrow} · ZUI Components`
+						: 'ZUI Components';
+			case 'home':
+			case 'not-found':
+				return 'ZUI Components';
+		}
+	});
 
 	onMount(() => {
 		const syncRoute = async () => {
@@ -140,11 +160,7 @@
 	});
 
 	$effect(() => {
-		document.title = currentDoc
-			? `${currentDoc.name} · ZUI Components`
-			: currentGuideId === 'theme'
-				? 'Theme Lab · ZUI Components'
-				: 'ZUI Components';
+		document.title = pageTitle;
 	});
 </script>
 
@@ -156,12 +172,14 @@
 			<ComponentPage doc={currentDoc} />
 		{:else if currentGuideId === 'theme'}
 			<ThemeLabPage bind:themeId />
+		{:else if currentGuide}
+			<GuidePage guide={currentGuide} />
 		{:else if invalidRoute}
 			<section class={classes.notFound}>
 				<p class={classes.eyebrow}>404</p>
-				<h1 class={classes.title}>没有这个组件。</h1>
-				<p class={classes.copy}>当前展示站只列出已经实现并通过验收的ZUI基础组件。</p>
-				<ZLink class={classes.action} href="#/" underline="none">返回组件概览</ZLink>
+				<h1 class={classes.title}>没有这个页面。</h1>
+				<p class={classes.copy}>当前展示站只列出已经实现并通过验收的ZUI组件与生产指南。</p>
+				<ZLink class={classes.action} href="#/" underline="none">返回文档概览</ZLink>
 			</section>
 		{:else}
 			<HomePage docs={componentDocs} />

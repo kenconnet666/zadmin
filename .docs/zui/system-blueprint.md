@@ -903,9 +903,9 @@ metadata仍与组件源码共置；Docs只补教学内容，不重新手写事�
 删除part/state        breaking
 ```
 
-## 12. Docs系统未来页面
+## 12. Docs系统页面（已完成，2026-08-30）
 
-新增页面按真实需求进入`content/guides`：
+指南由`content/guides.ts`单一注册表提供事实数据，通用`GuidePage`统一使用ZUI渲染；Theme Lab保留专用交互页面：
 
 ```text
 Getting Started
