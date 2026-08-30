@@ -15,6 +15,7 @@
 		readonly invalid?: boolean;
 		readonly onFormReset?: () => void;
 		readonly onValueChange?: (value: string) => void;
+		readonly resetOnForm?: boolean;
 		readonly size?: ZInputSize;
 		readonly type?: ZInputType;
 		value?: string;
@@ -75,6 +76,12 @@
 				default: '继承Field或false',
 				description: '设置invalid状态。',
 				name: 'invalid',
+				type: 'boolean'
+			},
+			{
+				default: 'true',
+				description: '是否由当前ZInput恢复defaultValue；复合父状态机可关闭并通过onFormReset接管。',
+				name: 'resetOnForm',
 				type: 'boolean'
 			},
 			{
@@ -185,6 +192,7 @@
 		onValueChange,
 		readonly = false,
 		ref = $bindable(null),
+		resetOnForm = true,
 		required = false,
 		size = 'medium',
 		style,
@@ -217,7 +225,7 @@
 		oninput?.(event);
 	}
 	function resetFromForm(): void {
-		state.reset();
+		if (resetOnForm) state.reset();
 		onFormReset?.();
 	}
 </script>
@@ -242,4 +250,6 @@
 	aria-invalid={resolvedInvalid ? 'true' : ariaInvalid}
 	data-invalid={resolvedInvalid ? 'true' : undefined}
 />
-<FormResetSignal association={form} control={ref} onReset={resetFromForm} />
+{#if resetOnForm || onFormReset}
+	<FormResetSignal association={form} control={ref} onReset={resetFromForm} />
+{/if}

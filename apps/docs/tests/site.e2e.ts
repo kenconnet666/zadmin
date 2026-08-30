@@ -407,6 +407,22 @@ test('keeps DateField and TimeField segment keys, values and reset synchronized'
 	await expect(page.getByText('value = 2026-09-18')).toBeVisible();
 	await page.getByRole('button', { name: '重置' }).click();
 	await expect(page.getByText('value = 2026-08-18')).toBeVisible();
+	const dateSegments = page
+		.getByTestId('demo-date-field-segments')
+		.locator('input:not([type="hidden"])');
+	const preferences = page.getByRole('button', { name: '调整显示偏好' });
+	await preferences.click();
+	await page.getByRole('button', { name: '方向' }).click();
+	await page.getByRole('option', { name: '从右到左' }).click();
+	await page.keyboard.press('Escape');
+	await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+	await dateSegments.nth(1).press('ArrowRight');
+	await expect(dateSegments.nth(0)).toBeFocused();
+	await preferences.click();
+	await page.getByRole('button', { name: '方向' }).click();
+	await page.getByRole('option', { name: '从左到右' }).click();
+	await page.keyboard.press('Escape');
+	await expect(page.locator('html')).toHaveAttribute('dir', 'ltr');
 
 	await page.goto('/#/components/time-field');
 	await page.getByRole('textbox', { name: 'Minute' }).press('ArrowUp');

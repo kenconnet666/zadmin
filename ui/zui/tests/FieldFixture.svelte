@@ -11,6 +11,8 @@
 	let resets = $state(0);
 	let externalValue = $state('external-seed');
 	let externalFormId = $state('external-input-form');
+	let delegatedValue = $state('delegated-seed');
+	let delegatedResets = $state(0);
 </script>
 
 <form data-testid="field-form">
@@ -58,3 +60,18 @@
 	name="external"
 />
 <output data-testid="external-input-output">{externalValue}</output>
+
+<form data-testid="delegated-input-form">
+	<ZInput
+		bind:value={delegatedValue}
+		data-testid="delegated-input"
+		defaultValue="delegated-seed"
+		resetOnForm={false}
+		onFormReset={() => {
+			delegatedResets += 1;
+			delegatedValue = 'delegated-seed';
+		}}
+	/>
+	<button type="reset">Reset delegated input</button>
+</form>
+<output data-testid="delegated-input-output">{delegatedValue}:{delegatedResets}</output>

@@ -2480,6 +2480,13 @@ describe('compiled ICSS browser updates', () => {
 		const externalOutput = document.querySelector<HTMLOutputElement>(
 			'[data-testid="external-input-output"]'
 		);
+		const delegated = document.querySelector<HTMLInputElement>('[data-testid="delegated-input"]');
+		const delegatedForm = document.querySelector<HTMLFormElement>(
+			'[data-testid="delegated-input-form"]'
+		);
+		const delegatedOutput = document.querySelector<HTMLOutputElement>(
+			'[data-testid="delegated-input-output"]'
+		);
 		const field = label?.parentElement;
 		const messages = field?.querySelectorAll('[aria-live] p');
 		expect(input).not.toBeNull();
@@ -2567,5 +2574,15 @@ describe('compiled ICSS browser updates', () => {
 		expect(external?.value).toBe('external-seed');
 		expect(externalOutput?.textContent).toBe('external-seed');
 		expect([...new FormData(replacementForm).entries()]).toEqual([['external', 'external-seed']]);
+
+		if (delegated) {
+			delegated.value = 'delegated-change';
+			delegated.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		}
+		await tick();
+		delegatedForm?.reset();
+		await settleFormReset();
+		expect(delegated?.value).toBe('delegated-seed');
+		expect(delegatedOutput?.textContent).toBe('delegated-seed:1');
 	});
 });

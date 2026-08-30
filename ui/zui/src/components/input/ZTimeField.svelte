@@ -137,6 +137,11 @@
 <script lang="ts">
 	import { Time } from '@internationalized/date';
 	import { untrack } from 'svelte';
+	import {
+		moveIndex,
+		navigationIntent,
+		type NavigationIntent
+	} from '../../runtime/collection/list-navigation.js';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import { useZField } from '../../runtime/form/field-context.js';
@@ -262,21 +267,26 @@
 		drafts = {};
 		invalid = false;
 	}
-	function move(index: number, amount: number): void {
-		const target = Math.max(0, Math.min(inputs.length - 1, index + amount));
+	function move(index: number, intent: NavigationIntent): void {
+		const target = moveIndex(inputs.length, index, intent, false);
 		inputs[target]?.focus({ preventScroll: true });
 		inputs[target]?.select();
 	}
 	function handleKey(event: KeyboardEvent, segment: TimeSegment, index: number): void {
-		if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+		const intent = navigationIntent(event.key, 'horizontal', zui.direction);
+		if (intent) {
 			event.preventDefault();
-			cycle(segment, event.key === 'ArrowUp' ? 1 : -1);
-		} else if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
-			event.preventDefault();
-			move(index, (event.key === 'ArrowRight' ? 1 : -1) * (zui.direction === 'rtl' ? -1 : 1));
-		} else if (event.key === 'Home' || event.key === 'End') {
-			event.preventDefault();
-			move(index, event.key === 'Home' ? -99 : 99);
+			move(index, intent);
+			return;
+		}
+		switch (event.key) {
+			case 'ArrowUp':
+			case 'ArrowDown':
+				event.preventDefault();
+				cycle(segment, event.key === 'ArrowUp' ? 1 : -1);
+				return;
+			default:
+				return;
 		}
 	}
 	function togglePeriod(): void {

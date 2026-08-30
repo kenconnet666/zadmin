@@ -214,6 +214,30 @@ const inputSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/components/input/ZInput.svelte'),
 	'utf8'
 );
+const textareaSource = await readFile(
+	resolve(workspaceRoot, 'ui/zui/src/components/input/ZTextarea.svelte'),
+	'utf8'
+);
+const comboboxInputSource = await readFile(
+	resolve(workspaceRoot, 'ui/zui/src/components/compound/combobox/ZComboboxInput.svelte'),
+	'utf8'
+);
+const comboboxSource = await readFile(
+	resolve(workspaceRoot, 'ui/zui/src/components/compound/combobox/ZCombobox.svelte'),
+	'utf8'
+);
+const comboboxContextSource = await readFile(
+	resolve(workspaceRoot, 'ui/zui/src/components/compound/combobox/context.svelte.ts'),
+	'utf8'
+);
+const mentionEditorSource = await readFile(
+	resolve(workspaceRoot, 'ui/zui/src/components/input/ZMentionEditor.svelte'),
+	'utf8'
+);
+const transferSource = await readFile(
+	resolve(workspaceRoot, 'ui/zui/src/components/input/ZTransfer.svelte'),
+	'utf8'
+);
 const calendarSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/components/input/ZCalendar.svelte'),
 	'utf8'
@@ -228,6 +252,14 @@ const treeSource = await readFile(
 );
 const pinInputSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/components/input/ZPinInput.svelte'),
+	'utf8'
+);
+const dateFieldSource = await readFile(
+	resolve(workspaceRoot, 'ui/zui/src/components/input/ZDateField.svelte'),
+	'utf8'
+);
+const timeFieldSource = await readFile(
+	resolve(workspaceRoot, 'ui/zui/src/components/input/ZTimeField.svelte'),
 	'utf8'
 );
 const formResetSignalTag = formResetSignalSource.match(/<input\b[\s\S]*?\/>/u)?.[0] ?? '';
@@ -277,6 +309,25 @@ if (
 	fail('The dedicated form reset signal contract changed.');
 }
 if (
+	![inputSource, textareaSource].every(
+		(source) =>
+			source.includes('readonly resetOnForm?: boolean') &&
+			source.includes('resetOnForm = true') &&
+			source.includes('if (resetOnForm) state.reset()')
+	) ||
+	!inputSource.includes('{#if resetOnForm || onFormReset}') ||
+	!comboboxInputSource.includes('defaultValue={combo.inputDefaultValue}') ||
+	!comboboxInputSource.includes('resetOnForm={false}') ||
+	!comboboxSource.includes('const readDefaultInputValue = () =>') ||
+	!comboboxContextSource.includes('readonly inputDefaultValue: string') ||
+	!mentionEditorSource.includes('resetOnForm={false}') ||
+	(transferSource.match(/resetOnForm=\{false\}/gu)?.length ?? 0) !== 2
+) {
+	fail(
+		'Compound editors must delegate form reset ownership without resetting their leaf controls twice.'
+	);
+}
+if (
 	!calendarSource.includes('switch (event.key)') ||
 	!calendarSource.includes("case 'PageDown':") ||
 	!calendarSource.includes("case 'PageUp':") ||
@@ -302,6 +353,17 @@ if (
 	!pinInputSource.includes("case 'ArrowRight':")
 ) {
 	fail('ZPinInput must preserve its explicit navigation and deletion key switch.');
+}
+if (
+	![dateFieldSource, timeFieldSource].every(
+		(source) =>
+			source.includes("const intent = navigationIntent(event.key, 'horizontal', zui.direction)") &&
+			source.includes('const target = moveIndex(') &&
+			source.includes('intent, false)') &&
+			source.includes("case 'ArrowUp':\n\t\t\tcase 'ArrowDown':")
+	)
+) {
+	fail('ZDateField and ZTimeField must share non-looping horizontal segment navigation.');
 }
 const focusScopeSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/runtime/layer/focus-scope.ts'),
@@ -452,9 +514,11 @@ console.log(
 		rawControlComponentFiles: rawControlFiles.length,
 		formResetActionFiles: formResetActionFiles.length,
 		formResetSignalComponents: 2,
+		delegatedResetOwnershipContracts: 4,
 		calendarKeyboardSwitchContracts: 1,
 		collectionKeyboardReuseContracts: 2,
 		pinInputKeyboardSwitchContracts: 1,
+		segmentFieldKeyboardReuseContracts: 2,
 		inlineSvgFiles: inlineSvg.length,
 		brandGradientFiles: gradientFiles.length,
 		docsRawInteractiveElements: 0,

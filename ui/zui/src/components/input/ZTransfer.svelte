@@ -469,6 +469,7 @@
 				size="small"
 				aria-label={`${sourceTitle}: ${searchPlaceholder}`}
 				placeholder={searchPlaceholder}
+				resetOnForm={false}
 				{disabled}
 			/>
 		{/if}
@@ -532,6 +533,7 @@
 				size="small"
 				aria-label={`${targetTitle}: ${searchPlaceholder}`}
 				placeholder={searchPlaceholder}
+				resetOnForm={false}
 				{disabled}
 			/>
 		{/if}

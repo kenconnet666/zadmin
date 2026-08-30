@@ -15,6 +15,7 @@
 		readonly onValueChange?: (value: string) => void;
 		ref?: HTMLTextAreaElement | null;
 		readonly resize?: ZTextareaResize;
+		readonly resetOnForm?: boolean;
 		readonly size?: ZTextareaSize;
 		value?: string;
 	}
@@ -79,6 +80,12 @@
 				default: 'Field context',
 				description: '无效视觉和aria-invalid。',
 				name: 'invalid',
+				type: 'boolean'
+			},
+			{
+				default: 'true',
+				description: '是否由当前ZTextarea恢复defaultValue；复合父状态机可关闭并接管reset。',
+				name: 'resetOnForm',
 				type: 'boolean'
 			}
 		],
@@ -188,6 +195,7 @@
 		ref = $bindable(null),
 		required = false,
 		resize = 'vertical',
+		resetOnForm = true,
 		size = 'medium',
 		style,
 		value = $bindable(),
@@ -222,7 +230,7 @@
 		oninput?.(event);
 	}
 	function resetFromForm(): void {
-		state.reset();
+		if (resetOnForm) state.reset();
 		onFormReset?.();
 	}
 </script>

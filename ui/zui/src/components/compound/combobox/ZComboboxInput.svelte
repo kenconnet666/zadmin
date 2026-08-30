@@ -10,6 +10,7 @@
 		| 'aria-haspopup'
 		| 'disabled'
 		| 'oninput'
+		| 'resetOnForm'
 		| 'role'
 		| 'value'
 	> & { readonly oninput?: ZInputProps['oninput'] };
@@ -110,8 +111,10 @@
 	aria-haspopup="listbox"
 	autocomplete="off"
 	bind:ref
+	defaultValue={combo.inputDefaultValue}
 	disabled={combo.disabled}
 	role="combobox"
+	resetOnForm={false}
 	value={combo.inputValue}
 	data-state={combo.open ? 'open' : 'closed'}
 	onclick={handleClick}

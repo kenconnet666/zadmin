@@ -4,7 +4,12 @@
 
 	interface ZMentionEditorProps extends Omit<
 		ZTextareaProps,
-		'aria-activedescendant' | 'aria-controls' | 'aria-expanded' | 'aria-haspopup' | 'value'
+		| 'aria-activedescendant'
+		| 'aria-controls'
+		| 'aria-expanded'
+		| 'aria-haspopup'
+		| 'resetOnForm'
+		| 'value'
 	> {
 		readonly activeId?: string;
 		readonly onEditorInput: (event: InputEvent & { currentTarget: HTMLTextAreaElement }) => void;
@@ -49,6 +54,7 @@
 	{defaultValue}
 	{value}
 	onFormReset={onEditorReset}
+	resetOnForm={false}
 	aria-activedescendant={popover.open ? activeId : undefined}
 	aria-autocomplete="list"
 	aria-controls={popover.open ? popover.contentId : undefined}

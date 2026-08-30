@@ -148,6 +148,8 @@
 	let nextId = 0;
 	let active = $state<SelectionKey>();
 	let hidden = $state<HTMLInputElement | null>(null);
+	const readDefaultInputValue = () =>
+		defaultInputValue ?? (defaultValue === undefined ? '' : String(defaultValue));
 	const valueState = new ControllableState<SelectionKey | undefined>({
 		defaultValue: () => defaultValue,
 		onChange: () => onValueChange,
@@ -155,8 +157,7 @@
 		write: (next) => (value = next)
 	});
 	const inputState = new ControllableState<string>({
-		defaultValue: () =>
-			defaultInputValue ?? (defaultValue === undefined ? '' : String(defaultValue)),
+		defaultValue: readDefaultInputValue,
 		onChange: () => onInputValueChange,
 		read: () => inputValue,
 		write: (next) => (inputValue = next)
@@ -205,6 +206,9 @@
 		},
 		get inputValue() {
 			return inputState.current;
+		},
+		get inputDefaultValue() {
+			return readDefaultInputValue();
 		},
 		matches(textValue) {
 			const query = inputState.current.trim();

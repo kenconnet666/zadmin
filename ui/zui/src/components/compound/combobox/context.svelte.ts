@@ -23,6 +23,7 @@ export interface ZComboboxContext {
 	readonly activeKey: SelectionKey | undefined;
 	readonly collection: CollectionStore<ComboboxItemRecord>;
 	readonly disabled: boolean;
+	readonly inputDefaultValue: string;
 	readonly inputValue: string;
 	readonly open: boolean;
 	readonly value: SelectionKey | undefined;

@@ -13,7 +13,10 @@
 		readonly value?: string;
 	}
 
-	export interface ZMentionProps extends Omit<ZTextareaProps, 'onValueChange' | 'value'> {
+	export interface ZMentionProps extends Omit<
+		ZTextareaProps,
+		'onValueChange' | 'resetOnForm' | 'value'
+	> {
 		readonly appendSpace?: boolean;
 		readonly defaultValue?: string;
 		readonly emptyText?: string;
