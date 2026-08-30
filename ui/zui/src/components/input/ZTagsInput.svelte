@@ -138,6 +138,7 @@
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
+	import { styleInternalFocusWithinRing } from '../gene/internal-action.js';
 	import ZButton from '../gene/ZButton.svelte';
 
 	const rootRecipe = defineRecipe({
@@ -152,6 +153,7 @@
 			s.flexWrap.wrap;
 			s.gap._small;
 			s.padding._small;
+			styleInternalFocusWithinRing(s);
 		},
 		variants: { disabled: { false: () => undefined, true: (s) => s.opacity._disabled } },
 		defaultVariants: { disabled: false }
@@ -175,6 +177,7 @@
 			s.borderStyle.none;
 			s.color._text;
 			s.minWidth._menu;
+			s.outlineStyle.none;
 			s.padding._small;
 			s.width._full;
 		},

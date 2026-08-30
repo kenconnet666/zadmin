@@ -1,6 +1,7 @@
 <script module lang="ts">
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
+	import { styleInternalFocusRing } from '../gene/internal-action.js';
 	import type { PopoverPlacement } from '../compound/popover/ZPopover.svelte';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 
@@ -108,6 +109,7 @@
 			s.height._large;
 			s.padding.px(0);
 			s.width._full;
+			styleInternalFocusRing(s);
 		},
 		variants: {},
 		defaultVariants: {}
@@ -123,11 +125,20 @@
 			s.fontFamily._mono;
 			s.minHeight._medium;
 			s.paddingInline._medium;
+			styleInternalFocusRing(s);
 		},
 		variants: { invalid: { false: () => undefined, true: (s) => s.borderColor._danger } },
 		defaultVariants: { invalid: false }
 	});
-	for (const recipe of [swatchRecipe, contentRecipe, colorRecipe, inputRecipe])
+	const rangeRecipe = defineRecipe({
+		base: (s) => {
+			s.width._full;
+			styleInternalFocusRing(s);
+		},
+		variants: {},
+		defaultVariants: {}
+	});
+	for (const recipe of [swatchRecipe, contentRecipe, colorRecipe, inputRecipe, rangeRecipe])
 		registerRecipeHmr(import.meta, recipe);
 </script>
 
@@ -200,6 +211,7 @@
 	const contentClass = $derived(zui.recipe(contentRecipe));
 	const colorClass = $derived(zui.recipe(colorRecipe));
 	const inputClass = $derived(zui.recipe(inputRecipe, { invalid: draftInvalid }));
+	const rangeClass = $derived(zui.recipe(rangeRecipe));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
 	$effect(() => {
@@ -300,6 +312,7 @@
 				/>
 				{#if allowAlpha}
 					<input
+						class={rangeClass}
 						id={`${idBase}-alpha`}
 						type="range"
 						min="0"

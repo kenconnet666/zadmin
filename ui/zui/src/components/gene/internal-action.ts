@@ -1,6 +1,21 @@
 import type { IcssStyle } from '../../icss/types.js';
 import type { ZuiTheme } from '../../theme/types.js';
 
+function styleFocusRing(s: IcssStyle<ZuiTheme>, offset: number): void {
+	s.outlineColor._focus;
+	s.outlineOffset.px(offset);
+	s.outlineStyle.solid;
+	s.outlineWidth._medium;
+}
+
+export function styleInternalFocusRing(s: IcssStyle<ZuiTheme>, offset = 2): void {
+	s._focusVisible((focus) => styleFocusRing(focus, offset));
+}
+
+export function styleInternalFocusWithinRing(s: IcssStyle<ZuiTheme>, offset = 2): void {
+	s._selector('&:focus-within', (focus) => styleFocusRing(focus, offset));
+}
+
 export function styleInternalAction(s: IcssStyle<ZuiTheme>): void {
 	s.alignItems.center;
 	s.appearance.none;
@@ -18,10 +33,5 @@ export function styleInternalAction(s: IcssStyle<ZuiTheme>): void {
 		disabled.cursor.notAllowed;
 		disabled.opacity._disabled;
 	});
-	s._focusVisible((focus) => {
-		focus.outlineColor._focus;
-		focus.outlineOffset.px(2);
-		focus.outlineStyle.solid;
-		focus.outlineWidth._medium;
-	});
+	styleInternalFocusRing(s);
 }

@@ -42,6 +42,7 @@ const metadata = [];
 const internalComponents = [];
 const transitionFiles = [];
 const rawButtonFiles = [];
+const rawControlFiles = [];
 for (const path of componentFiles) {
 	const source = await readFile(path, 'utf8');
 	const filename = portable(relative(workspaceRoot, path));
@@ -52,6 +53,14 @@ for (const path of componentFiles) {
 			(filename === 'ui/zui/src/components/overlay/ZTour.svelte' &&
 				/aria-hidden=["']true["'][\s\S]*?tabindex=["']-1["']/u.test(source));
 		if (!hasFocusContract) fail(`${filename} has a raw button without a focus contract.`);
+	}
+	const hasVisibleRawControl =
+		/<(?:input|textarea)\b(?![^>]*(?:\shidden(?:\s|=|>)|\stype\s*=\s*["']hidden["']))[^>]*>/u.test(
+			source
+		);
+	if (hasVisibleRawControl) rawControlFiles.push(filename);
+	if (hasVisibleRawControl && !/styleInternalFocus|_focusVisible|&:focus-within/u.test(source)) {
+		fail(`${filename} has a visible raw input without a focus contract.`);
 	}
 	const id = source.match(
 		/export const zuiMetadata\s*=\s*\{[\s\S]*?\bid:\s*['"]([^'"]+)['"]/u
@@ -143,6 +152,7 @@ console.log(
 		demoIds: demoIds.length,
 		transitionFiles: transitionFiles.length,
 		rawButtonComponentFiles: rawButtonFiles.length,
+		rawControlComponentFiles: rawControlFiles.length,
 		inlineSvgFiles: inlineSvg.length,
 		docsRawInteractiveElements: 0
 	})

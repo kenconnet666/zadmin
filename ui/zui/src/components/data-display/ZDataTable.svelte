@@ -2,6 +2,7 @@
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
+	import { styleInternalFocusRing } from '../gene/internal-action.js';
 	import type { SelectionKey } from '../../runtime/collection/selection.js';
 	import type { DataSortDescriptor } from '../../runtime/collection/data-table.js';
 	import type { TableDensity } from './ZTable.svelte';
@@ -150,7 +151,13 @@
 		},
 		defaultVariants: { virtualized: false }
 	});
+	const selectionRecipe = defineRecipe({
+		base: (s) => styleInternalFocusRing(s),
+		variants: {},
+		defaultVariants: {}
+	});
 	registerRecipeHmr(import.meta, viewportRecipe);
+	registerRecipeHmr(import.meta, selectionRecipe);
 </script>
 
 <script lang="ts" generics="TRow">
@@ -290,6 +297,7 @@
 	);
 	const columnCount = $derived(normalizedColumns.length + (selectionMode === 'none' ? 0 : 1));
 	const viewportClass = $derived(zui.recipe(viewportRecipe, { virtualized }));
+	const selectionClass = $derived(zui.recipe(selectionRecipe));
 	const variables = $derived({
 		...readIcssCarrier(rest),
 		'--zui-data-table-height': `${height}px`
@@ -370,6 +378,7 @@
 				>{#if selectionMode !== 'none'}<th scope="col"
 						>{#if selectionMode === 'multiple'}<input
 								bind:this={selectAll}
+								class={selectionClass}
 								type="checkbox"
 								aria-label={selectAllLabel}
 								checked={allSelected}
@@ -407,6 +416,7 @@
 				style={virtualized ? `height: ${rowHeight}px` : undefined}
 				>{#if selectionMode !== 'none'}<td
 						><input
+							class={selectionClass}
 							type={selectionMode === 'single' ? 'radio' : 'checkbox'}
 							name={selectionMode === 'single' ? selectionName : undefined}
 							aria-label={selectionLabel(entry.row, entry.index)}
