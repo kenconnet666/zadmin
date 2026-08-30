@@ -1,5 +1,7 @@
 # @zadmin/zui
 
+[![CI](https://github.com/kenconnet666/zadmin/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/kenconnet666/zadmin/actions/workflows/ci.yml)
+
 Production-oriented Svelte 5 components backed by typed ICSS, semantic themes, native HTML, explicit ARIA and keyboard contracts, real form behavior, shared overlay lifecycles, and fixed-size virtualization.
 
 ## Install
