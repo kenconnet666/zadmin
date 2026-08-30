@@ -3,7 +3,16 @@
 
 	const appRecipe = defineSlotRecipe(
 		{
-			slots: ['shell', 'main', 'notFound', 'eyebrow', 'title', 'copy', 'action'] as const,
+			slots: [
+				'shell',
+				'skipLink',
+				'main',
+				'notFound',
+				'eyebrow',
+				'title',
+				'copy',
+				'action'
+			] as const,
 			base: {
 				action: (s) => {
 					s.backgroundColor._primary;
@@ -31,6 +40,25 @@
 					s.minWidth.px(0);
 					s.padding.raw('3rem clamp(1.25rem, 3vw, 3.5rem) 6rem');
 					s._media('(max-width: 48rem)', (mobile) => mobile.padding.raw('2rem 1rem 4rem'));
+				},
+				skipLink: (s) => {
+					s.backgroundColor._canvas;
+					s.borderColor._focus;
+					s.borderRadius._medium;
+					s.borderStyle.solid;
+					s.borderWidth._medium;
+					s.color._text;
+					s.fontWeight._semibold;
+					s.left.rem(1);
+					s.paddingBlock._small;
+					s.paddingInline._medium;
+					s.position.fixed;
+					s.top.rem(1);
+					s.transform.raw('translateY(-200%)');
+					s.transitionDuration._fast;
+					s.transitionProperty.raw('transform');
+					s.zIndex._modal;
+					s._focusVisible((focus) => focus.transform.raw('translateY(0)'));
 				},
 				notFound: (s) => {
 					s.maxWidth.rem(45);
@@ -69,6 +97,7 @@
 					auto: {},
 					full: {},
 					reduced: {
+						skipLink: (s) => s.transitionDuration.ms(0),
 						shell: (s) => s.transitionDuration.ms(0)
 					}
 				}
@@ -128,6 +157,10 @@
 			(currentId !== undefined && currentDoc === undefined) ||
 			(currentGuideId !== undefined && currentGuideId !== 'theme' && currentGuide === undefined)
 	);
+	const currentHref = $derived.by(() => {
+		void route;
+		return globalThis.location?.href ?? '#/';
+	});
 	const pageTitle = $derived.by(() => {
 		switch (route.kind) {
 			case 'component':
@@ -162,12 +195,22 @@
 	$effect(() => {
 		document.title = pageTitle;
 	});
+
+	function skipToMain(event: MouseEvent): void {
+		event.preventDefault();
+		const main = document.getElementById('zui-main-content');
+		main?.focus({ preventScroll: true });
+		main?.scrollIntoView({ block: 'start' });
+	}
 </script>
 
 <div class={classes.shell}>
+	<ZLink class={classes.skipLink} href={currentHref} underline="none" onclick={skipToMain}
+		>跳到主要内容</ZLink
+	>
 	<AppHeader bind:contrast bind:density bind:direction bind:motion bind:query bind:themeId />
 	<AppSidebar docs={componentDocs} {currentGuideId} {currentId} {query} />
-	<main class={classes.main}>
+	<main class={classes.main} id="zui-main-content" tabindex={-1}>
 		{#if currentDoc}
 			<ComponentPage doc={currentDoc} />
 		{:else if currentGuideId === 'theme'}
