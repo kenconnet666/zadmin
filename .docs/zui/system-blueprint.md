@@ -1510,7 +1510,7 @@ CSS负责表现和可由平台可靠表达的关系，不能为了“无JS”牺
 - [运行时CSS与组件API](./runtime-css-blueprint.md)：ICSS、Recipe、Compiler、Runtime细节；
 - [基础设施与已有组件加固](./foundation-hardening-blueprint.md)：当前阶段的具体整改；
 - [组件与展示站改进](./component-roadmap.md)：已有审计与中期路线；
-- [文档站双主题](./docs-theme-blueprint.md)：当前Docs主题和视觉合同；
+- [文档站六主题](./docs-theme-blueprint.md)：当前Docs主题和视觉合同；
 - 本文：主题扩展、基础设施依赖图、现有整改和完整组件系统的上层总纲。
 
 旧文档与本文冲突时，待审阅通过后以本文为未来方向；已经落地的实现事实仍以源码和metadata为准。

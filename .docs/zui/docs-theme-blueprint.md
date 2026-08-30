@@ -1,13 +1,19 @@
-# ZUI 文档站双主题与展示基线
+# ZUI 文档站六主题与展示基线
 
 ## 目标
 
 文档站同时承担组件验收、API教学和真实交互演示。主题不能只是换背景色，必须让ZUI组件、代码高亮、布局层级、焦点状态和可访问性一起切换。
 
-当前提供两套主题：
+当前提供六套正式主题：
 
-- `docsLightTheme`：明亮蓝作为主操作色，紫色作为强调色，辅以青色焦点和珊瑚红危险色；背景使用白色与浅蓝分层。
-- `docsDarkTheme`：赛博朋克风格，使用近黑海军蓝背景、霓虹青主色、洋红强调、黄色焦点、绿色成功和粉红危险色。
+- `auroraLight`：默认明亮蓝紫主题，白色canvas与浅蓝surface分层；
+- `paperLight`：暖白纸张与陶土强调，适合内容和后台；
+- `neonDark`：近黑海军蓝、霓虹青和洋红的高能暗色主题；
+- `midnightDark`：深蓝灰、冷白和低饱和蓝紫的专业暗色主题；
+- `highContrastLight`：纯白、近黑、强边界和强焦点的亮色高对比主题；
+- `highContrastDark`：纯黑、纯白、强边界和强焦点的暗色高对比主题。
+
+主题值与`contrast`、`density`、`motion`、`direction`偏好轴分离。选择普通主题后启用high contrast偏好时，Docs解析到同scheme的高对比主题；不会为每个密度或动画组合复制新主题。
 
 主题状态由根`ZProvider`驱动。页面组件只能消费Theme token，不得各自判断系统颜色偏好，也不得用零散raw颜色覆盖主题。
 
@@ -41,7 +47,7 @@ codeSelection
 `ZProvider`提供显式`colorScheme: 'light' | 'dark'`，`ZCode`默认继承；`scheme`只用于局部覆盖：
 
 ```svelte
-<ZProvider {theme} colorScheme={themeMode}>
+<ZProvider {theme} colorScheme={scheme}>
 	<ZCode inline code="pnpm add @zadmin/zui" />
 	<ZCode lang="svelte" lineNumbers code={source} />
 </ZProvider>
@@ -70,7 +76,7 @@ codeSelection
 
 - 默认只展示标题、说明和实时预览；
 - 源码按需展开；
-- 展开后使用深色、嵌入式ZCode；
+- 展开后使用继承当前scheme的嵌入式ZCode；
 - 页面负责纵向滚动，代码只负责横向滚动；
 - 查看源码按钮必须暴露`aria-expanded`和`aria-controls`；
 - 展开、收起、复制和成功状态使用Lucide图标；
@@ -81,26 +87,30 @@ codeSelection
 首访时优先级：
 
 ```text
-已保存的 zui-docs-theme
+已保存的 zui-docs-preferences-v1.themeId
+旧 zui-docs-theme light/dark 迁移
 系统 prefers-color-scheme
-light fallback
+aurora-light fallback
 ```
 
 切换后同步：
 
 - 根`ZProvider.theme`；
 - `html[data-theme]`；
+- `html[data-resolved-theme]`与`html[data-scheme]`；
+- `html[data-contrast]`、`html[data-density]`、`html[data-motion]`与`dir`；
 - `html.style.colorScheme`；
-- `localStorage`。
+- 统一preferences JSON与兼容旧scheme存储。
 
 隐私模式导致Storage不可用时必须静默回退，不能影响页面渲染。
 
 ## 验收门禁
 
 - 正文、muted正文、危险文本、代码正文和代码行号达到WCAG AA；
-- Chromium下验证亮暗主题切换、刷新持久化和Axe；
-- 验证ZCode暗色背景、14px块级字号和Shiki高亮；
+- Chromium下逐套验证六主题最终surface、刷新持久化和Axe；
+- 验证高对比主题重复颜色token不会造成key冲突；
+- 验证ZCode亮暗背景、14px块级字号和Shiki高亮；
 - 验证演示源码没有内部纵向`overflow:auto`；
 - 验证390px窄屏导航、搜索和主题按钮可见；
 - ZUI和Docs类型检查为零错误；
-- ZUI bundle门禁继续通过。
+- ZUI bundle inspection继续记录gzip并阻止compiler/server或禁用依赖进入浏览器产物。
