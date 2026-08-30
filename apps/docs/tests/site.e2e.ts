@@ -46,6 +46,19 @@ test('renders the component catalog and real demo source', async ({ page }) => {
 	expect(errors).toEqual([]);
 });
 
+test('skips repeated navigation without corrupting hash routes', async ({ page }) => {
+	await page.goto('/#/components/checkbox');
+	const route = page.url();
+	await page.keyboard.press('Tab');
+	const skipLink = page.getByRole('link', { name: '跳到主要内容' });
+	await expect(skipLink).toBeVisible();
+	await expect(skipLink).toBeFocused();
+	await page.keyboard.press('Enter');
+	await expect(page).toHaveURL(route);
+	await expect(page.locator('main#zui-main-content')).toBeFocused();
+	await expect(page.getByRole('heading', { level: 1 })).toHaveText('ZCheckbox');
+});
+
 test('renders every production guide from the shared registry', async ({ page }) => {
 	for (const [id, heading] of [
 		['getting-started', '从真实Provider和原生语义开始。'],
