@@ -153,7 +153,7 @@
 - input仍detached且首个mount微任务已结束时，action通过短期Observer在后续挂入form后重绑；真实Chrome reset回调为1且destroy后不增加。
 - action挂载后把input从第一张form移到第二张form并更新参数时，旧表单listener被释放、新表单获得直接listener，只有当前归属的reset回调一次。
 - reset捕获在事件完成后的新任务检查取消状态；多个监听目标以generation合并，再由共享`flushSync`边界原子提交组件状态、父binding与DOM，destroy会清理迟到任务。
-- 当前RadioGroup、Mention/Textarea和Transfer等24个组件保留原控件action；ZInput/ZForm改走专用signal action，全部组件继续禁止绕过统一路径直调listener。
+- 其余24个action已分类为9个直接控件与15个proxy；ZInput/ZForm先走Svelte事件桥，验证后可统一迁移且继续禁止绕过共享路径直调listener。
 - 专用signal在真实Chrome中始终为form直接子节点且不进入FormData；连续reset后ZForm回到`submitted=false`、ZInput恢复默认值且控制台干净。
 - ZInput第三个Demo把control放在form DOM外，可切换主/备用表单并重建同id备用owner；signal持续重归属，只有当前owner reset有效。
 - ZButton第三个Demo覆盖start/end、Lucide图标、自定义ZSpinner loadingIndicator与fullWidth；真实Chrome确认busy/disabled语义、按钮宽度和控制台均正确。
