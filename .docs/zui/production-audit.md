@@ -193,7 +193,7 @@
 - 10,000项VirtualList、1,000行DataTable与5,000节点Tree均保持有界DOM；选择、排序和End键定位在虚拟化后仍稳定。
 - 修复Theme Lab重复key并重新加载后，真实Chrome新增控制台记录为0条error/warning；此前Lighthouse基线为Accessibility、Best
   Practices、SEO、Agentic Browsing四项100。
-- 六主题通过真实UI逐套切换；显示轴改为单一owner后，高对比亮色与午夜无需reload即可提交白/黑与深蓝/浅色recipe，Select文本、data-theme和scheme一致，最终恢复午夜。
+- 六主题通过真实UI逐套切换；单一owner后高对比亮色/午夜无需reload即可提交对应recipe，compact/high/RTL/reduced也同步根状态与控件文本；最终恢复午夜、舒适、标准、LTR、减少动画。
 
 ## 6. CI结论
 
