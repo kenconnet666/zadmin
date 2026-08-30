@@ -1,3 +1,5 @@
+import { flushSync } from 'svelte';
+
 export type FieldMessage = string;
 export type FieldMessages = FieldMessage | readonly FieldMessage[];
 
@@ -143,7 +145,7 @@ function listenToResetEvents(
 		if (!accepts(event)) return;
 		const ticket = (generation += 1);
 		queueMicrotask(() => {
-			if (active && ticket === generation && !event.defaultPrevented) reset();
+			if (active && ticket === generation && !event.defaultPrevented) flushSync(reset);
 		});
 	};
 	for (const target of activeTargets) target.addEventListener('reset', handleReset, true);
