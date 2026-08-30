@@ -132,6 +132,10 @@
 	import { formReset } from '../../../runtime/form/form-control.svelte.js';
 	import { serializeFormValue } from '../../../runtime/form/form-value.js';
 	import { createTreeIndex } from '../../../runtime/tree.js';
+	import {
+		navigationIntent,
+		type NavigationIntent
+	} from '../../../runtime/collection/list-navigation.js';
 	import { Typeahead } from '../../../runtime/collection/typeahead.js';
 	import {
 		calculateVirtualRange,
@@ -376,7 +380,7 @@
 					: [...selected, key];
 		selectedState.setFromUser(Object.freeze(next));
 	}
-	function move(intent: 'first' | 'last' | 'next' | 'previous'): void {
+	function move(intent: NavigationIntent): void {
 		const current = enabled.findIndex(({ entry }) => Object.is(entry.key, resolvedFocusKey));
 		const offset =
 			intent === 'first'
@@ -388,41 +392,46 @@
 		if (target) focus(target.entry.key);
 	}
 	function handleKeydown(event: KeyboardEvent, entry: (typeof visible)[number]): void {
-		if (event.key === 'ArrowDown') {
+		const intent = navigationIntent(event.key, 'vertical');
+		if (intent) {
 			event.preventDefault();
-			move('next');
-		} else if (event.key === 'ArrowUp') {
-			event.preventDefault();
-			move('previous');
-		} else if (event.key === 'Home') {
-			event.preventDefault();
-			move('first');
-		} else if (event.key === 'End') {
-			event.preventDefault();
-			move('last');
-		} else if (event.key === 'ArrowRight' && entry.childCount > 0) {
-			event.preventDefault();
-			if (!expanded.has(entry.key)) toggleExpanded(entry.key);
-			else {
-				const child = index.children.get(entry.key)?.find((node) => !node.disabled);
-				if (child) focus(child.key);
-			}
-		} else if (event.key === 'ArrowLeft') {
-			event.preventDefault();
-			if (expanded.has(entry.key)) toggleExpanded(entry.key);
-			else if (entry.parentKey !== undefined) focus(entry.parentKey);
-		} else if (event.key === 'Enter' || event.key === ' ') {
-			event.preventDefault();
-			select(entry.key);
-		} else {
-			const match = typeahead.search(
-				event.key,
-				visible.map((item) => ({ disabled: item.disabled, key: item.key, textValue: item.label })),
-				resolvedFocusKey
-			);
-			if (match !== undefined) {
+			move(intent);
+			return;
+		}
+		switch (event.key) {
+			case 'ArrowRight':
+				if (entry.childCount === 0) return;
 				event.preventDefault();
-				focus(match);
+				if (!expanded.has(entry.key)) toggleExpanded(entry.key);
+				else {
+					const child = index.children.get(entry.key)?.find((node) => !node.disabled);
+					if (child) focus(child.key);
+				}
+				return;
+			case 'ArrowLeft':
+				event.preventDefault();
+				if (expanded.has(entry.key)) toggleExpanded(entry.key);
+				else if (entry.parentKey !== undefined) focus(entry.parentKey);
+				return;
+			case 'Enter':
+			case ' ':
+				event.preventDefault();
+				select(entry.key);
+				return;
+			default: {
+				const match = typeahead.search(
+					event.key,
+					visible.map((item) => ({
+						disabled: item.disabled,
+						key: item.key,
+						textValue: item.label
+					})),
+					resolvedFocusKey
+				);
+				if (match !== undefined) {
+					event.preventDefault();
+					focus(match);
+				}
 			}
 		}
 	}

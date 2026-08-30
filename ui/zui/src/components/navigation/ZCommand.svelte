@@ -112,6 +112,10 @@
 
 <script lang="ts">
 	import { untrack } from 'svelte';
+	import {
+		navigationIntent,
+		type NavigationIntent
+	} from '../../runtime/collection/list-navigation.js';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import { formReset } from '../../runtime/form/form-control.svelte.js';
@@ -389,7 +393,7 @@
 		const event = new CommandActionEvent(item, originalEvent);
 		onAction?.(event);
 	}
-	function move(intent: 'first' | 'last' | 'next' | 'previous'): void {
+	function move(intent: NavigationIntent): void {
 		if (enabled.length === 0) return;
 		const current = enabled.findIndex(({ key }) => Object.is(key, activeKey));
 		let index =
@@ -408,24 +412,25 @@
 		active = undefined;
 	}
 	function handleKeydown(event: KeyboardEvent & { currentTarget: HTMLInputElement }): void {
-		if (event.key === 'ArrowDown') {
+		const intent = navigationIntent(event.key, 'vertical');
+		if (intent) {
 			event.preventDefault();
-			move('next');
-		} else if (event.key === 'ArrowUp') {
-			event.preventDefault();
-			move('previous');
-		} else if (event.key === 'Home') {
-			event.preventDefault();
-			move('first');
-		} else if (event.key === 'End') {
-			event.preventDefault();
-			move('last');
-		} else if (event.key === 'Enter' && activeKey !== undefined) {
-			event.preventDefault();
-			const item = enabled.find(({ key }) => Object.is(key, activeKey));
-			if (item) activate(item, event);
-		} else if (event.key === 'Escape') {
-			onEscape?.(event);
+			move(intent);
+			return;
+		}
+		switch (event.key) {
+			case 'Enter': {
+				if (activeKey === undefined) return;
+				event.preventDefault();
+				const item = enabled.find(({ key }) => Object.is(key, activeKey));
+				if (item) activate(item, event);
+				return;
+			}
+			case 'Escape':
+				onEscape?.(event);
+				return;
+			default:
+				return;
 		}
 	}
 </script>

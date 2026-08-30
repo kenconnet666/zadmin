@@ -218,6 +218,14 @@ const calendarSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/components/input/ZCalendar.svelte'),
 	'utf8'
 );
+const commandSource = await readFile(
+	resolve(workspaceRoot, 'ui/zui/src/components/navigation/ZCommand.svelte'),
+	'utf8'
+);
+const treeSource = await readFile(
+	resolve(workspaceRoot, 'ui/zui/src/components/compound/tree/ZTree.svelte'),
+	'utf8'
+);
 const formResetSignalTag = formResetSignalSource.match(/<input\b[\s\S]*?\/>/u)?.[0] ?? '';
 if (
 	!buttonSource.includes("'aria-busy': ariaBusy") ||
@@ -271,6 +279,16 @@ if (
 	!calendarSource.includes("case 'Enter':\n\t\t\tcase ' ':")
 ) {
 	fail('ZCalendar must preserve its explicit keyboard state switch.');
+}
+if (
+	![commandSource, treeSource].every(
+		(source) =>
+			source.includes("const intent = navigationIntent(event.key, 'vertical')") &&
+			source.includes('function move(intent: NavigationIntent)') &&
+			source.includes('switch (event.key)')
+	)
+) {
+	fail('ZCommand and ZTree must reuse vertical navigation intents before their local key switch.');
 }
 const focusScopeSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/runtime/layer/focus-scope.ts'),
@@ -422,6 +440,7 @@ console.log(
 		formResetActionFiles: formResetActionFiles.length,
 		formResetSignalComponents: 2,
 		calendarKeyboardSwitchContracts: 1,
+		collectionKeyboardReuseContracts: 2,
 		inlineSvgFiles: inlineSvg.length,
 		brandGradientFiles: gradientFiles.length,
 		docsRawInteractiveElements: 0,
