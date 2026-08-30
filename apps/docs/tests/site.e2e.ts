@@ -1193,9 +1193,21 @@ test('highlights code on demand and supports section deep links', async ({ page 
 
 test('keeps navigation usable at a narrow viewport', async ({ page }) => {
 	await page.setViewportSize({ height: 800, width: 390 });
-	await page.goto('/#/components/button');
-	await expect(page.getByRole('navigation', { name: '组件导航' })).toBeVisible();
-	await expect(page.getByRole('heading', { level: 1, name: 'ZButton' })).toBeVisible();
+	for (const [route, heading] of [
+		['#/', '看见组件，运行组件，复制真实源码。'],
+		['#/guides/getting-started', '从真实Provider和原生语义开始。'],
+		['#/guides/package', '从公开entrypoint消费，而不是依赖工作区路径。'],
+		['#/components/button', 'ZButton']
+	] as const) {
+		await page.goto(`/${route}`);
+		await expect(page.getByRole('navigation', { name: '组件导航' })).toBeVisible();
+		await expect(page.getByRole('heading', { level: 1, name: heading })).toBeVisible();
+		expect(
+			await page.evaluate(
+				() => document.documentElement.scrollWidth - document.documentElement.clientWidth
+			)
+		).toBeLessThanOrEqual(0);
+	}
 });
 
 test('handles denied clipboard permission without a console error', async ({ page }) => {
