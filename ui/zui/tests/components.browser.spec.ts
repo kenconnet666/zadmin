@@ -283,7 +283,9 @@ describe('compiled ICSS browser updates', () => {
 		expect(output?.textContent).toMatch(/^26:/u);
 		expect(output?.textContent).toContain('ZAccordion');
 		expect(output?.textContent).toContain('ZTooltip');
-		expect(output?.textContent).toContain('ZTooltipContent cannot contain focusable content');
+		expect(output?.textContent).toContain(
+			'ZTooltipContent cannot contain interactive or focusable content'
+		);
 		expect(output?.textContent).toContain('Duplicate ZList');
 		expect(output?.textContent).toContain('Duplicate ZTimeline');
 		expect(output?.textContent).toContain('requires at least one item');

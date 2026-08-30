@@ -119,10 +119,10 @@
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 	const interactiveSelector = [
 		'a[href]',
-		'button:not([disabled])',
-		'input:not([disabled]):not([type="hidden"])',
-		'select:not([disabled])',
-		'textarea:not([disabled])',
+		'button',
+		'input:not([type="hidden"])',
+		'select',
+		'textarea',
 		'[contenteditable="true"]',
 		'[tabindex]:not([tabindex="-1"])'
 	].join(',');
@@ -133,7 +133,9 @@
 		const trigger = tooltip.trigger;
 		if (!tooltip.open || !content || !trigger) return;
 		if (content.querySelector(interactiveSelector)) {
-			throw new TypeError('ZTooltipContent cannot contain focusable content; use ZPopover.');
+			throw new TypeError(
+				'ZTooltipContent cannot contain interactive or focusable content; use ZPopover.'
+			);
 		}
 		const positioner = new FloatingPositioner();
 		const stopPositioning = positioner.start(trigger, content, {
