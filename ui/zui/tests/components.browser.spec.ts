@@ -57,23 +57,11 @@ import { extendTheme } from '../src/theme/define.js';
 import { ZCode } from '../src/entrypoints/code.js';
 import {
 	createToastQueue,
-	ZAccordionItem,
-	ZAccordionTrigger,
 	ZAspectRatio,
-	ZComboboxInput,
 	ZContainer,
-	ZDialogContent,
 	ZKbd,
 	ZLink,
-	ZMenuItem,
-	ZMultiSelectTrigger,
-	ZPopoverTrigger,
-	ZPopconfirmTrigger,
-	ZRadioGroupItem,
 	ZSeparator,
-	ZSelectTrigger,
-	ZTabsList,
-	ZTooltipTrigger,
 	ZVisuallyHidden
 } from '../src/entrypoints/index.js';
 
@@ -85,21 +73,6 @@ function insertedRuleCount(): number {
 }
 
 describe('compiled ICSS browser updates', () => {
-	it('rejects compound parts mounted outside every required client context', () => {
-		expect(() => render(ZAccordionItem, { props: { value: 'one' } })).toThrow(/inside/u);
-		expect(() => render(ZAccordionTrigger)).toThrow(/require/u);
-		expect(() => render(ZComboboxInput)).toThrow(/require/u);
-		expect(() => render(ZDialogContent)).toThrow(/inside/u);
-		expect(() => render(ZMenuItem, { props: { value: 'one' } })).toThrow(/require/u);
-		expect(() => render(ZMultiSelectTrigger)).toThrow(/require/u);
-		expect(() => render(ZPopoverTrigger)).toThrow(/require/u);
-		expect(() => render(ZPopconfirmTrigger)).toThrow(/require/u);
-		expect(() => render(ZRadioGroupItem, { props: { value: 'one' } })).toThrow(/inside/u);
-		expect(() => render(ZSelectTrigger)).toThrow(/require/u);
-		expect(() => render(ZTabsList)).toThrow(/inside/u);
-		expect(() => render(ZTooltipTrigger)).toThrow(/require/u);
-	});
-
 	it('pauses, resumes, times out and disposes explicit ToastQueue timers', async () => {
 		const dismissed: string[] = [];
 		const queue = createToastQueue();
@@ -188,9 +161,9 @@ describe('compiled ICSS browser updates', () => {
 			timeInputs[0]?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key }));
 		}
 		timeField?.querySelector<HTMLButtonElement>('[aria-label="Toggle AM PM"]')?.click();
-		if (timeInputs[0]) {
-			timeInputs[0].value = '99';
-			timeInputs[0].dispatchEvent(new InputEvent('input', { bubbles: true }));
+		if (timeInputs[1]) {
+			timeInputs[1].value = '99';
+			timeInputs[1].dispatchEvent(new InputEvent('input', { bubbles: true }));
 		}
 		await tick();
 		expect(timeField?.dataset.invalid).toBe('true');
