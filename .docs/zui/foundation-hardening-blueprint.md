@@ -307,7 +307,7 @@ CI完整门禁：
 - 明确Theme和runtime的响应式更新合同；
 - 增加`locale`与`direction: 'ltr' | 'rtl'`上下文，但不把日期库类型暴露到Props；
 - locale默认值必须SSR稳定，不能在server和client分别猜测；
-- Portal容器当前只定义未来扩展位，不实现Portal；
+- 本蓝图冻结时Portal容器只定义未来扩展位；S3现已实现Portal、LayerStack、FocusScope、dismiss、inert与scroll lock；
 - 增加嵌套locale/direction、ShadowRoot和Theme切换测试；
 - 清理未公开的deprecated context别名，或明确保留周期。
 
@@ -596,9 +596,11 @@ global.css
 
 ## 10. 阶段验收
 
+本节记录H0–H5冻结时的基础范围，不是2026-08-30完整组件系统现状；当前133个metadata组件、78个根组件页与S0–S8证据见[生产审计](./production-audit.md)。
+
 ### 架构
 
-- 当前公开组件只有8个原组件加ZCode；
+- 本阶段公开组件为8个原组件加ZCode；
 - 没有新增冻结组件、空目录和占位导出；
 - components分类目录直接包含Svelte文件；
 - shared runtime只实现当前有消费者的5个文件；
@@ -607,7 +609,7 @@ global.css
 
 ### 组件
 
-- 8个组件Props、默认值、Docs和类型一致；
+- 本阶段8个组件Props、默认值、Docs和类型一致；
 - ZInput受控/非受控/reset合同完整；
 - ZField多消息和ARIA关系完整；
 - Button loading和focus无布局/语义回归；

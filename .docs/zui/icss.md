@@ -4,7 +4,7 @@
 
 ## 实现状态
 
-`@zadmin/zui@0.1.0`已经于2026-08-24完成本文范围和生产验收。当前实现包含Runtime、Compiler、SvelteKit SSR/CSP/HMR、8个基础组件和Svelte展示站；验收数据见[测试与验收](../development/testing.md)。
+`@zadmin/zui@0.1.0`已经于2026-08-24完成本文ICSS基础范围和生产验收，当时包含Runtime、Compiler、SvelteKit SSR/CSP/HMR、8个基础组件和Svelte展示站。2026-08-30的完整组件系统已扩展为133个metadata组件、78个根组件页与S0–S8；当前证据见[生产审计](./production-audit.md)，本文继续作为ICSS底层合同。
 
 ## 范围
 
