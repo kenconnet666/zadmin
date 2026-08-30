@@ -1240,6 +1240,7 @@ describe('compiled ICSS browser updates', () => {
 		expect(output?.textContent).toBe('Notify @alice ');
 		await resetForm(form);
 		expect(editor?.value).toBe('Notify ');
+		expect(output?.textContent).toBe('Notify ');
 		if (editor) {
 			editor.value = 'Notify @zz';
 			editor.setSelectionRange(10, 10);

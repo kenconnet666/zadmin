@@ -1047,6 +1047,7 @@ test('keeps Mention textarea focus, active descendant, insertion, form value and
 	await expect(page.getByText('message = 发布通知：@lilei ')).toBeVisible();
 	await page.getByRole('button', { name: '重置' }).click();
 	await expect(editor).toHaveValue('发布通知：');
+	await expect(page.getByText('message = 发布通知：')).toBeVisible();
 });
 
 test('keeps Command ranking, active descendant and action synchronized', async ({ page }) => {
