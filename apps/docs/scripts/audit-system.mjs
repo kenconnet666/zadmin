@@ -312,7 +312,7 @@ const appShellSource = await readFile(resolve(docsRoot, 'src/views/AppShell.svel
 const skipLinkContracts = [
 	/<ZLink\b[^>]*class=\{classes\.skipLink\}[^>]*href=\{currentHref\}[^>]*onclick=\{skipToMain\}/u,
 	/function skipToMain\([\s\S]*?event\.preventDefault\(\)[\s\S]*?\.focus\(/u,
-	/<main\b[^>]*id=["']zui-main-content["'][^>]*tabindex=\{-1\}/u
+	/<main\b[^>]*id=["']zui-main-content["'][^>]*tabindex=["']-1["']/u
 ];
 if (!skipLinkContracts.every((contract) => contract.test(appShellSource))) {
 	fail('Docs AppShell must preserve its hash-router-safe skip link contract.');

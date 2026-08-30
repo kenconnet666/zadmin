@@ -210,7 +210,7 @@
 	>
 	<AppHeader bind:contrast bind:density bind:direction bind:motion bind:query bind:themeId />
 	<AppSidebar docs={componentDocs} {currentGuideId} {currentId} {query} />
-	<main class={classes.main} id="zui-main-content" tabindex={-1}>
+	<main class={classes.main} id="zui-main-content" tabindex="-1">
 		{#if currentDoc}
 			<ComponentPage doc={currentDoc} />
 		{:else if currentGuideId === 'theme'}
