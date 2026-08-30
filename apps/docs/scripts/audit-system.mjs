@@ -60,6 +60,9 @@ function auditSvelte5(source, filename) {
 	if (/<svelte:component\b/u.test(source)) {
 		fail(`${filename} uses the legacy dynamic component element.`);
 	}
+	if (/@ts-(?:ignore|nocheck)\b|\bas\s+any\b|:\s*any\b|<any>/u.test(source)) {
+		fail(`${filename} bypasses TypeScript with an unsafe escape hatch.`);
+	}
 }
 
 const componentFiles = await filesUnder(componentsRoot, ['.svelte']);
@@ -205,6 +208,7 @@ console.log(
 		implicitSubmitButtons: 0,
 		unnamedIconButtons: 0,
 		legacySvelteEvents: 0,
-		legacyDynamicComponents: 0
+		legacyDynamicComponents: 0,
+		typescriptEscapeHatches: 0
 	})
 );
