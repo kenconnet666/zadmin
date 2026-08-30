@@ -95,6 +95,8 @@ async function settleFormReset(): Promise<void> {
 }
 
 async function resetForm(form: HTMLFormElement | null | undefined): Promise<void> {
+	// Component behavior leaves the page call stack through the browser provider; layer tests retain
+	// direct form.reset() coverage for the low-level programmatic contract.
 	const control = form?.querySelector<HTMLButtonElement | HTMLInputElement>(
 		'button[type="reset"], input[type="reset"]'
 	);
