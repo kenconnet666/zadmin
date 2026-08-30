@@ -136,6 +136,7 @@
 
 - 78/78组件路由均能渲染，且每页DOM中至少有2个不同Demo；十五个关键组件增加第三个生产边界场景。
 - 最终Chrome分4批重走78条Sidebar路由：H1、article、Demo>=2、桌面水平溢出全部通过，累计console warning/error为0。
+- 最终静态复扫：Lucide根值导入0、字符图标0、SVG仅2个品牌资源与ZProgress、渐变仅2个品牌SVG、TODO/未完成0。
 - 七份新增生产指南在真实Chrome中7/7渲染，均有唯一active导航、3–4个ZUI Card章节和正确页面标题。
 - ZStack方向Demo通过ZSelect键盘切换后，Trigger文本、实际`flex-direction`和焦点恢复一致；Docs全站原生交互标签为0。
 - RTL下ZTable caption/cell和组件TOC computed对齐为start，ZCode行号为end；验收后恢复LTR并由静态门禁拒绝物理textAlign。
