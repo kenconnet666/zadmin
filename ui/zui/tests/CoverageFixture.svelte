@@ -5,18 +5,27 @@
 		ZAvatar,
 		ZButton,
 		ZCarousel,
+		ZCascader,
+		ZCheckbox,
 		ZDataTable,
 		ZDateField,
 		ZEmpty,
+		ZFileUpload,
 		ZList,
+		ZMention,
+		ZNumberField,
+		ZPinInput,
 		ZProgress,
 		ZProvider,
 		ZResult,
 		ZSkeleton,
 		ZStatistic,
+		ZSwitch,
 		ZTimeline,
 		ZTimeField,
 		ZToast,
+		ZTransfer,
+		ZTreeSelect,
 		ZVirtualList,
 		type SelectionKey
 	} from '../src/entrypoints/index.js';
@@ -43,6 +52,14 @@
 			sortable: true,
 			width: '10rem'
 		}
+	];
+	const treeNodes = [
+		{ key: 'root', label: 'Root' },
+		{ disabled: true, key: 'disabled', label: 'Disabled', parentKey: 'root' }
+	];
+	const transferItems = [
+		{ key: 'one', label: 'One' },
+		{ disabled: true, key: 'two', label: 'Two' }
 	];
 	let carouselValue = $state<SelectionKey>('b');
 	let carouselChanges = $state(0);
@@ -198,6 +215,26 @@
 	maxValue={new Time(18)}
 	data-testid="coverage-time-field"
 />
+
+<ZDateField aria-label="Disabled date" disabled required />
+<ZCascader disabled nodes={treeNodes} defaultValue={['root']} name="disabled-cascader" />
+<ZFileUpload disabled multiple={false} maxFiles={1} inputLabel="Disabled upload" />
+<ZMention disabled readonly aria-label="Disabled mention" items={[]} />
+<ZNumberField disabled readonly required name="disabled-number" />
+<ZPinInput
+	readonly
+	required
+	mask
+	mode="text"
+	length={2}
+	defaultValue="A"
+	validateCharacter={(character) => /[A-Z]/u.test(character)}
+/>
+<ZPinInput disabled length={2} />
+<ZTransfer disabled filterable={false} items={transferItems} value={['one']} />
+<ZTreeSelect disabled nodes={treeNodes} defaultExpandedKeys={['root']} />
+<ZCheckbox disabled invalid size="small" defaultChecked value="disabled" />
+<ZSwitch disabled invalid size="small" defaultChecked />
 <ZTimeField
 	aria-label="Readonly coverage time"
 	defaultValue={new Time(9)}
