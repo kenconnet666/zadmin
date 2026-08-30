@@ -242,6 +242,7 @@ if (
 	!formResetSignalSource.includes('if (next === resetValue) onReset()') ||
 	!formResetSignalSource.includes('type="text"') ||
 	!formResetSignalSource.includes('hidden') ||
+	!formResetSignalSource.includes('data-zui-form-reset-signal=""') ||
 	!formResetSignalSource.includes('use:shadowFormReset={onReset}') ||
 	!formSource.includes('<FormResetSignal onReset={resetFromForm}') ||
 	!inputSource.includes('<FormResetSignal {form} onReset={resetFromForm}')

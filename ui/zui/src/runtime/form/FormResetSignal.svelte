@@ -10,7 +10,6 @@
 
 	const armedValue = 'zui-reset-armed';
 	const resetValue = 'zui-reset-fired';
-	const uid = $props.id();
 	let { form, onReset }: FormResetSignalProps = $props();
 	let ref = $state<HTMLInputElement | null>(null);
 	let marker = $state(armedValue);
@@ -57,12 +56,12 @@
 
 <input
 	bind:this={ref}
-	id={`zui-form-reset-${uid}`}
 	aria-hidden="true"
 	tabindex="-1"
 	type="text"
 	hidden
 	disabled
+	data-zui-form-reset-signal=""
 	{form}
 	use:shadowFormReset={onReset}
 	bind:value={() => marker, updateMarker}

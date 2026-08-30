@@ -1654,6 +1654,11 @@ describe('compiled ICSS browser updates', () => {
 			target: form
 		});
 		await tick();
+		const signal = form.querySelector<HTMLInputElement>('[data-zui-form-reset-signal]');
+		expect(signal?.hidden).toBe(true);
+		expect(signal?.disabled).toBe(true);
+		expect(signal?.name).toBe('');
+		expect(signal?.id).toBe('');
 
 		form.reset();
 		await settleFormReset();
