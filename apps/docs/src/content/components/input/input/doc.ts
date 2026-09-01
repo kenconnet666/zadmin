@@ -11,6 +11,7 @@ import { inputApiFacts } from '../../../../framework/component-api.generated.js'
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const inputDoc = defineComponentDoc(inputMetadata, {
+	profiles: ['form-control'],
 	sourceApi: inputApiFacts,
 	teaching: {
 		props: {
@@ -40,6 +41,7 @@ export const inputDoc = defineComponentDoc(inputMetadata, {
 	},
 	demos: [
 		{
+			covers: ['controlled', 'uncontrolled'],
 			component: BindingDemo,
 			description: '用户输入更新bind:value并调用一次onValueChange。',
 			id: 'input-binding',
@@ -47,6 +49,7 @@ export const inputDoc = defineComponentDoc(inputMetadata, {
 			title: 'Binding与回调'
 		},
 		{
+			covers: ['density', 'disabled', 'native-props', 'variants-and-states'],
 			component: TypesDemo,
 			description: '受控输入类型、尺寸与禁用态直接转发原生能力。',
 			id: 'input-types',
@@ -54,6 +57,7 @@ export const inputDoc = defineComponentDoc(inputMetadata, {
 			title: '类型与尺寸'
 		},
 		{
+			covers: ['form-data', 'form-reset'],
 			component: ExternalFormDemo,
 			description:
 				'DOM外部的ZInput动态切换或重建原生form owner，signal随关联移动并共享取消感知reset。',
@@ -62,6 +66,7 @@ export const inputDoc = defineComponentDoc(inputMetadata, {
 			title: '外部Form关联'
 		},
 		{
+			covers: ['disabled', 'focus', 'form-reset', 'invalid', 'readonly'],
 			component: FieldStatesDemo,
 			description:
 				'ZField统一投射label、description、required、readonly、disabled和invalid；reset恢复真实默认值。',

@@ -193,6 +193,17 @@ describe('ZUI component documentation catalog', () => {
 			"'column' | 'column-reverse' | 'row' | 'row-reverse'"
 		);
 		expect(stack?.props).toBe(props?.rows);
+		expect(stack?.profiles).toContain('primitive');
+	});
+
+	it('requires capability evidence for graduated component docs', () => {
+		for (const id of ['button', 'input', 'stack']) {
+			const doc = componentDocsById.get(id);
+			expect(doc?.profiles.length, id).toBeGreaterThan(0);
+			for (const demo of doc?.demos ?? []) {
+				expect(demo.covers?.length, `${id}/${demo.id}`).toBeGreaterThan(0);
+			}
+		}
 	});
 
 	it('gives every page runnable demos, real source and API metadata', () => {

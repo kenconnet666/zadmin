@@ -25,12 +25,49 @@ export interface ApiSection {
 }
 
 export interface DemoDefinition {
+	readonly covers?: readonly ComponentCapability[];
 	readonly component: Component;
 	readonly description: string;
 	readonly id: string;
 	readonly source: string;
 	readonly title: string;
 }
+
+export type ComponentProfile =
+	| 'animated'
+	| 'collection'
+	| 'data-view'
+	| 'form-control'
+	| 'layer'
+	| 'primitive'
+	| 'service'
+	| 'virtualized';
+
+export type ComponentCapability =
+	| 'accessible-name'
+	| 'basic-render'
+	| 'composition'
+	| 'controlled'
+	| 'density'
+	| 'disabled'
+	| 'external-clear'
+	| 'focus'
+	| 'form-data'
+	| 'form-reset'
+	| 'full-motion'
+	| 'invalid'
+	| 'keyboard'
+	| 'loading'
+	| 'locale'
+	| 'native-props'
+	| 'portal'
+	| 'readonly'
+	| 'reduced-motion'
+	| 'resource-cleanup'
+	| 'rtl'
+	| 'ssr'
+	| 'uncontrolled'
+	| 'variants-and-states';
 
 export type ComponentCategory = ZuiComponentCategory;
 
@@ -39,12 +76,14 @@ export interface ComponentDoc extends ZuiComponentMetadata {
 	readonly api: readonly ApiSection[];
 	readonly demos: readonly DemoDefinition[];
 	readonly keywords: readonly string[];
+	readonly profiles: readonly ComponentProfile[];
 	readonly status: ZuiComponentStatus;
 }
 
 interface ComponentDocDefinition extends Pick<ComponentDoc, 'accessibility' | 'demos'> {
 	readonly keywords?: readonly string[];
 	readonly members?: readonly ZuiComponentMetadata[];
+	readonly profiles?: readonly ComponentProfile[];
 	readonly sourceApi?: ComponentApiFacts;
 	readonly teaching?: ComponentTeachingMetadata;
 }
@@ -154,12 +193,26 @@ export function defineComponentDoc(
 	if (doc.demos.length < 2) {
 		throw new TypeError(`${metadata.name} documentation requires at least two distinct demos.`);
 	}
+	if (doc.sourceApi && (doc.profiles?.length ?? 0) === 0) {
+		throw new TypeError(
+			`${metadata.name} generated API documentation requires a component profile.`
+		);
+	}
+	if (doc.profiles && new Set(doc.profiles).size !== doc.profiles.length) {
+		throw new TypeError(`${metadata.name} documentation has duplicate component profiles.`);
+	}
 	const demoIds = new Set<string>();
 	for (const demo of doc.demos) {
 		if (demoIds.has(demo.id))
 			throw new TypeError(`${metadata.name} has duplicate demo id "${demo.id}".`);
 		if (!demo.source.trim())
 			throw new TypeError(`${metadata.name} demo "${demo.id}" has no source.`);
+		if (doc.sourceApi && (demo.covers?.length ?? 0) === 0) {
+			throw new TypeError(`${metadata.name} demo "${demo.id}" has no capability evidence.`);
+		}
+		if (demo.covers && new Set(demo.covers).size !== demo.covers.length) {
+			throw new TypeError(`${metadata.name} demo "${demo.id}" repeats capability evidence.`);
+		}
 		demoIds.add(demo.id);
 	}
 	const api: ApiSection[] = [];
@@ -183,7 +236,13 @@ export function defineComponentDoc(
 	for (const member of doc.members ?? []) {
 		appendMetadataApi(api, member, member.props, undefined, `${member.id}-`, `${member.name} `);
 	}
-	const { members: _members, sourceApi: _sourceApi, teaching: _teaching, ...page } = doc;
+	const {
+		members: _members,
+		profiles = [],
+		sourceApi: _sourceApi,
+		teaching: _teaching,
+		...page
+	} = doc;
 	void _members;
 	void _sourceApi;
 	void _teaching;
@@ -192,6 +251,7 @@ export function defineComponentDoc(
 		...resolvedMetadata,
 		...page,
 		api: Object.freeze(api),
-		keywords: Object.freeze(doc.keywords ?? [])
+		keywords: Object.freeze(doc.keywords ?? []),
+		profiles: Object.freeze(profiles)
 	});
 }

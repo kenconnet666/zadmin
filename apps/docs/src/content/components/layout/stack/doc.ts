@@ -7,6 +7,7 @@ import { stackApiFacts } from '../../../../framework/component-api.generated.js'
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const stackDoc = defineComponentDoc(stackMetadata, {
+	profiles: ['primitive'],
 	sourceApi: stackApiFacts,
 	teaching: {
 		props: {
@@ -21,6 +22,7 @@ export const stackDoc = defineComponentDoc(stackMetadata, {
 	},
 	demos: [
 		{
+			covers: ['basic-render', 'composition', 'native-props'],
 			component: LayoutDemo,
 			description: '切换direction，观察真实Flex布局与稳定gap token。',
 			id: 'stack-layout',
@@ -28,6 +30,7 @@ export const stackDoc = defineComponentDoc(stackMetadata, {
 			title: '方向与间距'
 		},
 		{
+			covers: ['variants-and-states', 'rtl'],
 			component: AlignmentDemo,
 			description: '对齐、分布和数值gap直接映射到Flex与作用域变量。',
 			id: 'stack-alignment',

@@ -15,6 +15,7 @@ import { buttonApiFacts } from '../../../../framework/component-api.generated.js
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const buttonDoc = defineComponentDoc(buttonMetadata, {
+	profiles: ['primitive', 'animated'],
 	sourceApi: buttonApiFacts,
 	teaching: {
 		props: {
@@ -42,6 +43,7 @@ export const buttonDoc = defineComponentDoc(buttonMetadata, {
 	},
 	demos: [
 		{
+			covers: ['basic-render', 'variants-and-states'],
 			component: VariantsDemo,
 			description: '每一种视觉变体都生成稳定、可复用的 recipe class。',
 			id: 'button-variants',
@@ -49,6 +51,7 @@ export const buttonDoc = defineComponentDoc(buttonMetadata, {
 			title: '视觉变体'
 		},
 		{
+			covers: ['density', 'disabled', 'loading'],
 			component: StatesDemo,
 			description: '尺寸、加载和禁用状态都保留原生 button 语义，点击事件通过 onclick 传递。',
 			id: 'button-states',
@@ -56,6 +59,7 @@ export const buttonDoc = defineComponentDoc(buttonMetadata, {
 			title: '尺寸与状态'
 		},
 		{
+			covers: ['composition', 'native-props'],
 			component: CompositionDemo,
 			description: '前后内容、自定义加载指示器和全宽布局通过Snippet与ZUI组件组合。',
 			id: 'button-composition',
@@ -63,6 +67,7 @@ export const buttonDoc = defineComponentDoc(buttonMetadata, {
 			title: '内容组合'
 		},
 		{
+			covers: ['loading', 'resource-cleanup', 'reduced-motion'],
 			component: AsyncDemo,
 			description: '异步任务由调用方持有；loading提供busy语义、阻止重复操作并允许自定义内容。',
 			id: 'button-async',
@@ -70,6 +75,7 @@ export const buttonDoc = defineComponentDoc(buttonMetadata, {
 			title: '异步操作与加载'
 		},
 		{
+			covers: ['form-data', 'form-reset', 'native-props'],
 			component: FormDemo,
 			description: 'ZButton默认type=button；只有显式type=submit/reset时才进入对应原生表单流程。',
 			id: 'button-form',
@@ -77,6 +83,7 @@ export const buttonDoc = defineComponentDoc(buttonMetadata, {
 			title: '表单按钮语义'
 		},
 		{
+			covers: ['accessible-name', 'focus', 'keyboard'],
 			component: IconDemo,
 			description: '纯图标操作继续使用真实button，并用aria-label提供稳定的可访问名称。',
 			id: 'button-icon-only',
