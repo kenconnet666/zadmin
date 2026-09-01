@@ -480,8 +480,12 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain('role="combobox"');
 		expect(result).toContain('role="listbox"');
 		expect(result.match(/role="group"/gu)).toHaveLength(2);
-		expect(result.match(/role="option"/gu)).toHaveLength(3);
-		expect(result).toContain('aria-activedescendant');
+		expect(result.match(/role="option"/gu)).toHaveLength(5);
+		const optionIds = [...result.matchAll(/id="([^"]+)"[^>]*role="option"/gu)].map(([, id]) => id);
+		expect(optionIds).toHaveLength(5);
+		expect(new Set(optionIds).size).toBe(5);
+		// SSR never emits a dangling reference before the option registry mounts in the browser.
+		expect(result).not.toContain('aria-activedescendant');
 	});
 
 	it('renders CommandPalette trigger closed and modal dialog when initially open', () => {

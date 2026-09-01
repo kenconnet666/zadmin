@@ -1357,6 +1357,19 @@ describe('compiled ICSS browser updates', () => {
 		const input = document.querySelector<HTMLInputElement>('input[aria-label="Search commands"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="command-output"]');
 		const form = document.querySelector<HTMLFormElement>('[data-testid="command-form"]');
+		const numeric = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find((option) =>
+			option.textContent?.includes('Numeric one')
+		);
+		const string = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find((option) =>
+			option.textContent?.includes('String one')
+		);
+		expect(numeric?.id).toBeTruthy();
+		expect(string?.id).toBeTruthy();
+		expect(numeric?.id).not.toBe(string?.id);
+		input?.focus();
+		numeric?.dispatchEvent(new PointerEvent('pointermove', { bubbles: true }));
+		expect(document.activeElement).toBe(input);
+		expect(input?.getAttribute('aria-activedescendant')).toBe(numeric?.id);
 		if (input) {
 			input.value = 'dep';
 			input.dispatchEvent(new InputEvent('input', { bubbles: true }));
@@ -1364,6 +1377,10 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(document.querySelectorAll('[role="option"]')).toHaveLength(2);
 		expect(input?.getAttribute('aria-activedescendant')).toBeTruthy();
+		input?.dispatchEvent(
+			new KeyboardEvent('keydown', { bubbles: true, isComposing: true, key: 'Enter' })
+		);
+		expect(output?.textContent).toBe('dep:none:0');
 		for (const key of ['ArrowDown', 'ArrowUp', 'Home', 'End']) {
 			input?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key }));
 		}
@@ -1383,6 +1400,27 @@ describe('compiled ICSS browser updates', () => {
 			'No commands found'
 		);
 		expect(output?.textContent).toBe('nothing:preview:1');
+	});
+
+	it('reconciles a dynamically removed active Command to its nearest enabled successor', async () => {
+		render(CommandFixture);
+		const input = document.querySelector<HTMLInputElement>('input[aria-label="Search commands"]');
+		input?.focus();
+		input?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
+		const preview = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find((option) =>
+			option.textContent?.includes('Deploy preview')
+		);
+		expect(input?.getAttribute('aria-activedescendant')).toBe(preview?.id);
+
+		document.querySelector<HTMLButtonElement>('[data-testid="command-remove-preview"]')?.click();
+		await tick();
+		const numeric = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find((option) =>
+			option.textContent?.includes('Numeric one')
+		);
+		expect(input?.getAttribute('aria-activedescendant')).toBe(numeric?.id);
+		expect(document.querySelectorAll('[data-active="true"], [aria-selected="true"]')).toHaveLength(
+			1
+		);
 	});
 
 	it('coordinates CommandPalette modal focus, action close, shortcut and Escape', async () => {

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { ZCommand, type CommandActionEvent, type CommandItem } from '../src/entrypoints/index.js';
 
-	const items: readonly CommandItem[] = [
+	let items = $state<readonly CommandItem[]>([
 		{
 			description: 'Open the release dashboard',
 			group: 'Navigation',
@@ -16,8 +16,10 @@
 			label: 'Deploy preview',
 			shortcut: 'D P'
 		},
-		{ disabled: true, group: 'Deploy', key: 'production', label: 'Deploy production' }
-	];
+		{ disabled: true, group: 'Deploy', key: 'production', label: 'Deploy production' },
+		{ group: 'Deploy', key: 1, label: 'Numeric one' },
+		{ group: 'Deploy', key: '1', label: 'String one' }
+	]);
 	let query = $state('');
 	let action = $state('none');
 	let escaped = $state(0);
@@ -36,3 +38,10 @@
 	<button type="reset">Reset</button>
 	<output data-testid="command-output">{query}:{action}:{escaped}</output>
 </form>
+<button
+	type="button"
+	data-testid="command-remove-preview"
+	onclick={() => (items = items.filter(({ key }) => key !== 'preview'))}
+>
+	Remove preview command
+</button>

@@ -58,7 +58,7 @@
 				type: 'HTMLInputElement | null'
 			}
 		],
-		dependencies: ['ranked filter', 'grouped collection', 'active descendant', 'Form reset'],
+		dependencies: ['LogicalCollection', 'CollectionNavigation', 'ActiveDescendant', 'Form reset'],
 		events: [
 			{ description: '查询变化。', name: 'onQueryChange', type: '(query: string) => void' },
 			{
@@ -112,10 +112,13 @@
 
 <script lang="ts">
 	import { untrack } from 'svelte';
+	import { ActiveDescendant } from '../../runtime/collection/active-descendant.svelte.js';
 	import {
-		navigationIntent,
-		type NavigationIntent
-	} from '../../runtime/collection/list-navigation.js';
+		CollectionNavigation,
+		isKeyboardComposing
+	} from '../../runtime/collection/collection-navigation.svelte.js';
+	import { LogicalCollection } from '../../runtime/collection/logical-collection.js';
+	import { MountedElements } from '../../runtime/collection/mounted-elements.svelte.js';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import FormResetSignal from '../../runtime/form/FormResetSignal.svelte';
@@ -284,14 +287,6 @@
 	const resolvedPlaceholder = $derived(placeholder ?? zui.localePack.command.placeholder);
 	const uid = $props.id();
 	const idBase = $derived(createZuiId(zui.idPrefix, uid, 'command'));
-	// These identity caches are mutated while rendering and must not create reactive writes.
-	// eslint-disable-next-line svelte/prefer-svelte-reactivity
-	const optionIds = new Map<SelectionKey, string>();
-	// eslint-disable-next-line svelte/prefer-svelte-reactivity
-	const groupIds = new Map<string, string>();
-	let nextOptionId = 0;
-	let nextGroupId = 0;
-	let active = $state<SelectionKey>();
 	let didAutofocus = false;
 	const queryState = new ControllableState<string>({
 		defaultValue: () => defaultQuery,
@@ -299,25 +294,27 @@
 		read: () => query,
 		write: (next) => (query = next)
 	});
-	const normalizedItems = $derived.by(() => {
-		// This set is local validation scratch space, not reactive state.
-		// eslint-disable-next-line svelte/prefer-svelte-reactivity
-		const keys = new Set<SelectionKey>();
-		for (const item of items) {
-			if (keys.has(item.key)) throw new Error(`Duplicate ZCommand key "${String(item.key)}".`);
-			keys.add(item.key);
-		}
-		return items;
-	});
+	const collection = $derived(
+		new LogicalCollection<SelectionKey, CommandItem>(
+			items,
+			{
+				disabled: (item) => item.disabled ?? false,
+				groupKey: (item) => item.group,
+				key: (item) => item.key,
+				textValue: (item) => item.label
+			},
+			{ name: 'ZCommand' }
+		)
+	);
 	const resolvedMaxResults = $derived.by(() => {
 		if (!Number.isInteger(maxResults) || maxResults < 1) {
 			throw new TypeError('ZCommand maxResults must be a positive integer.');
 		}
 		return maxResults;
 	});
-	const results = $derived.by(() =>
-		normalizedItems
-			.map((item, index) => {
+	const resultKeys = $derived.by(() =>
+		collection.full.items
+			.map(({ key, value: item }, index) => {
 				if (!shouldFilter) return { index, item, score: 0 };
 				const custom = filter?.(item, queryState.current);
 				const score =
@@ -333,43 +330,43 @@
 			.filter((entry): entry is NonNullable<typeof entry> => entry !== undefined)
 			.sort((left, right) => right.score - left.score || left.index - right.index)
 			.slice(0, resolvedMaxResults)
-			.map(({ item }) => item)
+			.map(({ item }) => item.key)
 	);
-	const enabled = $derived(results.filter((item) => !disabled && !item.disabled));
-	const activeKey = $derived(
-		enabled.some(({ key }) => Object.is(key, active)) ? active : enabled[0]?.key
-	);
-	const groups = $derived.by(() => {
-		// This map is the immutable output being assembled for this derivation.
-		// eslint-disable-next-line svelte/prefer-svelte-reactivity
-		const grouped = new Map<string, CommandItem[]>();
-		for (const item of results) {
-			const group = item.group ?? '';
-			const entries = grouped.get(group) ?? [];
-			entries.push(item);
-			grouped.set(group, entries);
-		}
-		return [...grouped].map(([name, groupItems]) => ({ items: groupItems, name }));
+	const resultView = $derived(collection.view({ keys: resultKeys }));
+	const mounted = new MountedElements<SelectionKey>();
+	const navigation = new CollectionNavigation<SelectionKey, CommandItem>({
+		direction: () => zui.direction,
+		disabled: () => disabled,
+		loop: () => loop,
+		orientation: () => 'vertical',
+		view: () => resultView
 	});
-	function optionId(key: SelectionKey): string {
-		let id = optionIds.get(key);
-		if (!id) {
-			nextOptionId += 1;
-			id = `${idBase}-option-${nextOptionId}`;
-			optionIds.set(key, id);
-		}
-		return id;
+	const activeDescendant = new ActiveDescendant({
+		idBase: () => idBase,
+		mounted,
+		navigation
+	});
+	activeDescendant.reconcile();
+	const activeKey = $derived(activeDescendant.activeKey);
+	const activeId = $derived(activeDescendant.activeId);
+	function mountOption(
+		element: HTMLDivElement,
+		registration: { readonly id: string; readonly key: SelectionKey }
+	) {
+		let current = registration;
+		let dispose = activeDescendant.mount(current.key, element);
+		return {
+			destroy() {
+				dispose();
+			},
+			update(next: { readonly id: string; readonly key: SelectionKey }) {
+				if (Object.is(current.key, next.key) && current.id === next.id) return;
+				dispose();
+				current = next;
+				dispose = activeDescendant.mount(current.key, element);
+			}
+		};
 	}
-	function groupId(group: string): string {
-		let id = groupIds.get(group);
-		if (!id) {
-			nextGroupId += 1;
-			id = `${idBase}-group-${nextGroupId}`;
-			groupIds.set(group, id);
-		}
-		return id;
-	}
-	const activeId = $derived(activeKey === undefined ? undefined : optionId(activeKey));
 	const rootClass = $derived(zui.recipe(rootRecipe, { disabled }));
 	const inputClass = $derived(zui.recipe(inputRecipe));
 	const listClass = $derived(zui.recipe(listRecipe));
@@ -381,8 +378,12 @@
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
 	function resetFromForm(): void {
 		queryState.reset();
-		active = undefined;
+		navigation.set(undefined, 'programmatic');
 	}
+	$effect(() => {
+		activeDescendant.prune(collection.full.keys);
+		activeDescendant.reconcile();
+	});
 	$effect(() => {
 		if (!autofocus) {
 			didAutofocus = false;
@@ -392,42 +393,23 @@
 		didAutofocus = true;
 		queueMicrotask(() => inputRef?.focus({ preventScroll: true }));
 	});
-	function activate(item: CommandItem, originalEvent: MouseEvent | KeyboardEvent): void {
-		if (disabled || item.disabled) return;
-		const event = new CommandActionEvent(item, originalEvent);
+	function activate(key: SelectionKey, originalEvent: MouseEvent | KeyboardEvent): void {
+		const item = resultView.get(key);
+		if (disabled || !item || item.disabled) return;
+		const event = new CommandActionEvent(item.value, originalEvent);
 		onAction?.(event);
-	}
-	function move(intent: NavigationIntent): void {
-		if (enabled.length === 0) return;
-		const current = enabled.findIndex(({ key }) => Object.is(key, activeKey));
-		let index =
-			intent === 'first'
-				? 0
-				: intent === 'last'
-					? enabled.length - 1
-					: current + (intent === 'next' ? 1 : -1);
-		index = loop
-			? (index + enabled.length) % enabled.length
-			: Math.max(0, Math.min(enabled.length - 1, index));
-		active = enabled[index]?.key;
 	}
 	function handleInput(event: Event & { currentTarget: HTMLInputElement }): void {
 		queryState.setFromUser(event.currentTarget.value);
-		active = undefined;
+		navigation.set(undefined, 'filter');
 	}
 	function handleKeydown(event: KeyboardEvent & { currentTarget: HTMLInputElement }): void {
-		const intent = navigationIntent(event.key, 'vertical');
-		if (intent) {
-			event.preventDefault();
-			move(intent);
-			return;
-		}
+		if (isKeyboardComposing(event) || activeDescendant.handleKey(event)) return;
 		switch (event.key) {
 			case 'Enter': {
 				if (activeKey === undefined) return;
 				event.preventDefault();
-				const item = enabled.find(({ key }) => Object.is(key, activeKey));
-				if (item) activate(item, event);
+				activate(activeKey, event);
 				return;
 			}
 			case 'Escape':
@@ -472,39 +454,42 @@
 		role="listbox"
 		aria-label={resolvedListLabel}
 	>
-		{#each groups as group (group.name)}
+		{#each resultView.groups as group, groupIndex (group.key)}
 			<div
 				data-slot="group"
 				role="group"
-				aria-label={group.name ? undefined : resolvedListLabel}
-				aria-labelledby={group.name ? groupId(group.name) : undefined}
+				aria-label={group.key ? undefined : resolvedListLabel}
+				aria-labelledby={group.key ? `${idBase}-group-${groupIndex + 1}` : undefined}
 			>
-				{#if group.name}<div class={groupLabelClass} id={groupId(group.name)}>
-						{group.name}
+				{#if group.key}<div class={groupLabelClass} id={`${idBase}-group-${groupIndex + 1}`}>
+						{group.key}
 					</div>{/if}
-				{#each group.items as item (item.key)}
+				{#each group.items as record (record.key)}
+					{@const item = record.value}
+					{@const optionId = activeDescendant.idFor(record.key)}
 					<div
-						id={optionId(item.key)}
+						use:mountOption={{ id: optionId, key: record.key }}
+						id={optionId}
 						class={zui.recipe(itemRecipe, {
-							active: Object.is(activeKey, item.key),
-							disabled: Boolean(disabled || item.disabled)
+							active: Object.is(activeKey, record.key),
+							disabled: Boolean(disabled || record.disabled)
 						})}
 						data-slot="item"
-						data-active={Object.is(activeKey, item.key) || undefined}
-						data-disabled={item.disabled || undefined}
+						data-active={Object.is(activeKey, record.key) || undefined}
+						data-disabled={record.disabled || undefined}
 						role="option"
 						tabindex={-1}
-						aria-selected={Object.is(activeKey, item.key)}
-						aria-disabled={disabled || item.disabled || undefined}
+						aria-selected={Object.is(activeKey, record.key)}
+						aria-disabled={disabled || record.disabled || undefined}
 						onpointermove={() => {
-							if (!disabled && !item.disabled) active = item.key;
+							if (!disabled && !record.disabled) activeDescendant.set(record.key, 'pointer');
 						}}
 						onpointerdown={(event) => event.preventDefault()}
-						onclick={(event) => activate(item, event)}
+						onclick={(event) => activate(record.key, event)}
 						onkeydown={(event) => {
-							if (event.key === 'Enter' || event.key === ' ') {
+							if (!isKeyboardComposing(event) && (event.key === 'Enter' || event.key === ' ')) {
 								event.preventDefault();
-								activate(item, event);
+								activate(record.key, event);
 							}
 						}}
 					>
@@ -517,7 +502,7 @@
 				{/each}
 			</div>
 		{/each}
-		{#if results.length === 0}<div class={emptyClass}>{resolvedEmptyText}</div>{/if}
+		{#if resultView.size === 0}<div class={emptyClass}>{resolvedEmptyText}</div>{/if}
 	</div>
 </div>
 <FormResetSignal control={inputRef} onReset={resetFromForm} />
