@@ -14,6 +14,7 @@
 		readonly onOpenChange?: (open: boolean) => void;
 		open?: boolean;
 		readonly placement?: PopoverPlacement;
+		readonly triggerId?: string;
 	}
 
 	export const zuiMetadata = {
@@ -77,6 +78,12 @@
 				description: '启用焦点trap、scroll lock与inert others。',
 				name: 'modal',
 				type: 'boolean'
+			},
+			{
+				default: '自动生成',
+				description: 'Trigger与Content共享的稳定Trigger id。',
+				name: 'triggerId',
+				type: 'string'
 			}
 		],
 		since: 'unreleased',
@@ -103,7 +110,8 @@
 		modal = false,
 		onOpenChange,
 		open = $bindable(),
-		placement = 'bottom'
+		placement = 'bottom',
+		triggerId
 	}: ZPopoverProps = $props();
 	const zui = useZui();
 	const uid = $props.id();
@@ -144,7 +152,7 @@
 			return trigger;
 		},
 		get triggerId() {
-			return `${idBase}-trigger`;
+			return triggerId ?? `${idBase}-trigger`;
 		},
 		setOpen(next) {
 			openState.setFromUser(next);

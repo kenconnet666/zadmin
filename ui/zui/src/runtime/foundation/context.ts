@@ -14,6 +14,13 @@ import type {
 } from '../../recipes/slots.js';
 import { defaultTheme } from '../../theme/default.js';
 import type { ZuiTheme } from '../../theme/types.js';
+import {
+	enUSLocalePack,
+	resolveZuiLocalePack,
+	type ZuiLocalePack,
+	type ZuiLocalePackOverrides,
+	type ZuiTranslations
+} from './locale.js';
 
 export type { ZuiTheme } from '../../theme/types.js';
 
@@ -23,7 +30,7 @@ export type ZuiDensity = 'compact' | 'comfortable' | 'spacious';
 export type ZuiDirection = 'ltr' | 'rtl';
 export type ZuiMotion = 'auto' | 'full' | 'reduced';
 export type ZuiPortalContainer = Document | HTMLElement | ShadowRoot | null;
-export type ZuiTranslations = Readonly<Record<string, string>>;
+export type { ZuiLocalePack, ZuiLocalePackOverrides, ZuiTranslations } from './locale.js';
 
 export interface ZuiContext {
 	readonly colorScheme: ZuiColorScheme;
@@ -32,6 +39,7 @@ export interface ZuiContext {
 	readonly direction: ZuiDirection;
 	readonly idPrefix: string;
 	readonly locale: string;
+	readonly localePack: ZuiLocalePack;
 	readonly motion: ZuiMotion;
 	readonly portalContainer: ZuiPortalContainer;
 	readonly runtime: IcssRuntime;
@@ -58,6 +66,7 @@ export interface ZuiContextSource {
 	readonly direction?: ZuiDirection;
 	readonly idPrefix?: string;
 	readonly locale?: string;
+	readonly localePack?: ZuiLocalePackOverrides;
 	readonly motion?: ZuiMotion;
 	readonly portalContainer?: ZuiPortalContainer;
 	readonly runtime?: IcssRuntime;
@@ -68,7 +77,11 @@ export interface ZuiContextSource {
 const ZUI_CONTEXT = Symbol('zui-context');
 const EMPTY_TRANSLATIONS: ZuiTranslations = Object.freeze({});
 
-function createZuiContext(read: () => Required<ZuiContextSource>): ZuiContext {
+interface ResolvedZuiContextSource extends Required<Omit<ZuiContextSource, 'localePack'>> {
+	readonly localePack: ZuiLocalePack;
+}
+
+function createZuiContext(read: () => ResolvedZuiContextSource): ZuiContext {
 	const context: ZuiContext = {
 		get colorScheme() {
 			return read().colorScheme;
@@ -87,6 +100,9 @@ function createZuiContext(read: () => Required<ZuiContextSource>): ZuiContext {
 		},
 		get locale() {
 			return read().locale;
+		},
+		get localePack() {
+			return read().localePack;
 		},
 		get motion() {
 			return read().motion;
@@ -123,6 +139,7 @@ const DEFAULT_CONTEXT = createZuiContext(() => ({
 	direction: 'ltr',
 	idPrefix: 'zui',
 	locale: 'en-US',
+	localePack: enUSLocalePack,
 	motion: 'auto',
 	portalContainer: null,
 	runtime: getDefaultIcssRuntime(),
@@ -141,6 +158,7 @@ export function provideZui(read: () => ZuiContextSource): ZuiContext {
 			direction: source.direction ?? parent.direction,
 			idPrefix: source.idPrefix ?? parent.idPrefix,
 			locale: source.locale ?? parent.locale,
+			localePack: resolveZuiLocalePack(parent.localePack, source.localePack, source.translations),
 			motion: source.motion ?? parent.motion,
 			portalContainer:
 				source.portalContainer === undefined ? parent.portalContainer : source.portalContainer,

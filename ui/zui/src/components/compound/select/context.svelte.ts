@@ -22,7 +22,10 @@ export class SelectEvent extends CancelableEvent {
 
 export interface ZSelectContext {
 	readonly collection: CollectionStore<SelectItemRecord>;
+	readonly controlId: string;
+	readonly describedBy: string | undefined;
 	readonly disabled: boolean;
+	readonly invalid: boolean;
 	readonly open: boolean;
 	readonly placeholder: string;
 	readonly required: boolean;

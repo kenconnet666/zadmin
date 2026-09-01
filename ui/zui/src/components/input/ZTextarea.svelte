@@ -2,9 +2,10 @@
 	import type { HTMLTextareaAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
+	import { resolveControlSize, type ZControlSize } from '../../runtime/foundation/control-size.js';
 
 	export type ZTextareaResize = 'both' | 'horizontal' | 'none' | 'vertical';
-	export type ZTextareaSize = 'large' | 'medium' | 'small';
+	export type ZTextareaSize = ZControlSize;
 
 	export interface ZTextareaProps extends Omit<HTMLTextareaAttributes, 'value'> {
 		readonly autosize?: boolean;
@@ -71,8 +72,8 @@
 				type: "'both' | 'horizontal' | 'none' | 'vertical'"
 			},
 			{
-				default: "'medium'",
-				description: '最小高度、字号和padding尺寸。',
+				default: "Provider density（默认 'comfortable' → 'medium'）",
+				description: '最小高度、字号和padding尺寸；显式值优先于Provider density。',
 				name: 'size',
 				type: "'small' | 'medium' | 'large'"
 			},
@@ -196,7 +197,7 @@
 		required = false,
 		resize = 'vertical',
 		resetOnForm = true,
-		size = 'medium',
+		size,
 		style,
 		value = $bindable(),
 		...rest
@@ -206,12 +207,13 @@
 	const field = useZField();
 	const inputGroup = useZInputGroup();
 	const resolvedInvalid = $derived(invalid ?? inputGroup?.invalid ?? field?.invalid ?? false);
+	const resolvedSize = $derived(resolveControlSize(size, zui.density));
 	const rootClass = $derived(
 		zui.recipe(textareaRecipe, {
 			invalid: resolvedInvalid,
 			motion: zui.motion,
 			resize: autosize ? 'none' : resize,
-			size
+			size: resolvedSize
 		})
 	);
 	const state = new ControllableState<string>({

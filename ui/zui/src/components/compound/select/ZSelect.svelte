@@ -6,10 +6,12 @@
 
 	export interface ZSelectProps {
 		readonly children?: Snippet;
+		readonly controlId?: string;
 		readonly defaultOpen?: boolean;
 		readonly defaultValue?: SelectionKey;
 		readonly disabled?: boolean;
 		readonly form?: string;
+		readonly invalid?: boolean;
 		readonly name?: string;
 		readonly onOpenChange?: (open: boolean) => void;
 		readonly onValueChange?: (value: SelectionKey | undefined) => void;
@@ -52,6 +54,12 @@
 		],
 		parts: [],
 		props: [
+			{
+				default: '继承Field或自动生成',
+				description: '真实Trigger焦点owner的id。',
+				name: 'controlId',
+				type: 'string'
+			},
 			{
 				bindable: true,
 				default: 'undefined',
@@ -96,8 +104,24 @@
 				name: 'disabled',
 				type: 'boolean'
 			},
-			{ default: 'false', description: '声明Trigger必填语义。', name: 'required', type: 'boolean' },
-			{ default: 'undefined', description: '隐藏表单字段名称。', name: 'name', type: 'string' },
+			{
+				default: '继承Field或false',
+				description: '声明Trigger与业务值无效。',
+				name: 'invalid',
+				type: 'boolean'
+			},
+			{
+				default: '继承Field或false',
+				description: '声明Trigger与业务值必填语义。',
+				name: 'required',
+				type: 'boolean'
+			},
+			{
+				default: '继承Field或undefined',
+				description: '隐藏表单字段名称。',
+				name: 'name',
+				type: 'string'
+			},
 			{ default: 'undefined', description: '关联外部form id。', name: 'form', type: 'string' },
 			{
 				default: 'String(value)',
@@ -120,7 +144,9 @@
 	import { RovingFocus } from '../../../runtime/collection/roving-focus.svelte.js';
 	import { Typeahead } from '../../../runtime/collection/typeahead.js';
 	import { ControllableState } from '../../../runtime/foundation/controllable-state.svelte.js';
-	import { formReset } from '../../../runtime/form/form-control.svelte.js';
+	import { createZuiId } from '../../../runtime/foundation/ids.js';
+	import { claimZFieldControlOwner } from '../../../runtime/form/field-context.js';
+	import FormResetSignal from '../../../runtime/form/FormResetSignal.svelte';
 	import { serializeFormValue } from '../../../runtime/form/form-value.js';
 	import { useZui } from '../../../runtime/foundation/context.js';
 	import ZPopover from '../popover/ZPopover.svelte';
@@ -133,25 +159,37 @@
 
 	let {
 		children,
+		controlId: controlIdProp,
 		defaultOpen = false,
 		defaultValue,
-		disabled = false,
+		disabled: disabledProp = false,
 		form,
-		name,
+		invalid,
+		name: nameProp,
 		onOpenChange,
 		onValueChange,
 		open = $bindable(),
 		placeholder = 'Select an option',
 		placement = 'bottom-start',
-		required = false,
+		required: requiredProp = false,
 		valueLabel = String,
 		value = $bindable()
 	}: ZSelectProps = $props();
 	const zui = useZui();
+	const field = claimZFieldControlOwner().field;
+	const uid = $props.id();
+	const idBase = $derived(createZuiId(zui.idPrefix, uid, 'select'));
+	const controlId = $derived(controlIdProp ?? field?.controlId ?? `${idBase}-trigger`);
+	const describedBy = $derived(field?.describedBy);
+	const disabled = $derived(disabledProp || (field?.disabled ?? false));
+	const resolvedInvalid = $derived(invalid ?? field?.invalid ?? false);
+	const resolvedName = $derived(nameProp ?? field?.name);
+	const required = $derived(requiredProp || (field?.required ?? false));
 	const valueState = new ControllableState<SelectionKey | undefined>({
 		defaultValue: () => defaultValue,
 		onChange: () => onValueChange,
 		read: () => value,
+		undefinedIsValue: true,
 		write: (next) => (value = next)
 	});
 	const openState = new ControllableState<boolean>({
@@ -165,7 +203,7 @@
 	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	const labels = new Map<SelectionKey, string>();
 	let focusKey = $state<SelectionKey>();
-	let hidden = $state<HTMLInputElement | null>(null);
+	let resetProxy = $state<HTMLInputElement | null>(null);
 	const roving = new RovingFocus({
 		collection,
 		direction: () => zui.direction,
@@ -189,8 +227,17 @@
 			return event;
 		},
 		collection,
+		get controlId() {
+			return controlId;
+		},
+		get describedBy() {
+			return describedBy;
+		},
 		get disabled() {
 			return disabled;
+		},
+		get invalid() {
+			return resolvedInvalid;
 		},
 		get open() {
 			return openState.current;
@@ -235,19 +282,20 @@
 	onOpenChange={(next) => openState.setFromUser(next)}
 	open={openState.current}
 	{placement}
+	triggerId={controlId}
 >
 	{@render children?.()}
 </ZPopover>
-{#if name}
+<input bind:this={resetProxy} aria-hidden="true" tabindex={-1} type="hidden" disabled {form} />
+<FormResetSignal association={form} control={resetProxy} onReset={() => valueState.reset()} />
+{#if resolvedName}
 	<input
-		bind:this={hidden}
 		aria-hidden="true"
 		tabindex={-1}
 		type="hidden"
 		{disabled}
 		{form}
-		{name}
-		use:formReset={() => valueState.reset()}
+		name={resolvedName}
 		value={serializedValue}
 	/>
 {/if}

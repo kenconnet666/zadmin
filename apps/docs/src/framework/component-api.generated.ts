@@ -1021,6 +1021,11 @@ export const multiSelectApiFacts = {
 			type: 'Snippet'
 		},
 		{
+			name: 'controlId',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'defaultOpen',
 			required: false,
 			type: 'boolean'
@@ -1039,6 +1044,11 @@ export const multiSelectApiFacts = {
 			name: 'form',
 			required: false,
 			type: 'string'
+		},
+		{
+			name: 'invalid',
+			required: false,
+			type: 'boolean'
 		},
 		{
 			name: 'name',
@@ -1071,6 +1081,11 @@ export const multiSelectApiFacts = {
 			type: 'PopoverPlacement'
 		},
 		{
+			name: 'required',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'valueLabel',
 			required: false,
 			type: '(value: SelectionKey) => string'
@@ -1082,7 +1097,7 @@ export const multiSelectApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/multi-select/ZMultiSelect.svelte',
-	undocumentedProps: ['defaultOpen', 'form', 'placement']
+	undocumentedProps: []
 } as const satisfies ComponentApiFacts;
 
 export const multiSelectContentApiFacts = {
@@ -1338,6 +1353,11 @@ export const popoverApiFacts = {
 			name: 'placement',
 			required: false,
 			type: 'PopoverPlacementValue'
+		},
+		{
+			name: 'triggerId',
+			required: false,
+			type: 'string'
 		}
 	],
 	source: 'ui/zui/src/components/compound/popover/ZPopover.svelte',
@@ -1540,6 +1560,11 @@ export const selectApiFacts = {
 			type: 'Snippet'
 		},
 		{
+			name: 'controlId',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'defaultOpen',
 			required: false,
 			type: 'boolean'
@@ -1558,6 +1583,11 @@ export const selectApiFacts = {
 			name: 'form',
 			required: false,
 			type: 'string'
+		},
+		{
+			name: 'invalid',
+			required: false,
+			type: 'boolean'
 		},
 		{
 			name: 'name',
@@ -3388,6 +3418,11 @@ export const providerApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'localePack',
+			required: false,
+			type: 'ZuiLocalePackOverrides'
+		},
+		{
 			name: 'motion',
 			required: false,
 			type: 'ZuiMotion'
@@ -4542,7 +4577,7 @@ export const inputApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'large' | 'medium' | 'small'"
+			type: 'ZControlSize'
 		},
 		{
 			name: 'type',
@@ -5256,7 +5291,7 @@ export const textareaApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'large' | 'medium' | 'small'"
+			type: 'ZControlSize'
 		},
 		{
 			name: 'value',

@@ -5,8 +5,9 @@
 
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 	import type { RecipeVariants } from '../../recipes/types.js';
+	import { resolveControlSize, type ZControlSize } from '../../runtime/foundation/control-size.js';
 
-	export type ButtonSize = 'large' | 'medium' | 'small';
+	export type ButtonSize = ZControlSize;
 	export type ButtonVariant = 'danger' | 'ghost' | 'primary' | 'secondary';
 
 	export interface ButtonDesignProps {
@@ -162,8 +163,8 @@
 				type: "'primary' | 'secondary' | 'danger' | 'ghost'"
 			},
 			{
-				default: "'medium'",
-				description: '按钮尺寸。',
+				default: "Provider density（默认 'comfortable' → 'medium'）",
+				description: '按钮尺寸；显式值优先于Provider density。',
 				name: 'size',
 				type: "'small' | 'medium' | 'large'"
 			},
@@ -234,7 +235,7 @@
 		loadingIndicator,
 		loadingLabel,
 		ref = $bindable(null),
-		size = 'medium',
+		size,
 		style,
 		start,
 		type = 'button',
@@ -243,12 +244,13 @@
 	}: ZButtonProps = $props();
 
 	const zui = useZui();
+	const resolvedSize = $derived(resolveControlSize(size, zui.density));
 	const rootClass = $derived(
 		zui.recipe(buttonRecipe, {
 			disabled: disabled || loading,
 			fullWidth,
 			motion: zui.motion,
-			size,
+			size: resolvedSize,
 			variant
 		})
 	);

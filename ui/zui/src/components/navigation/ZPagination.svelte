@@ -154,9 +154,9 @@
 	);
 	const classes = $derived(zui.slots(paginationRecipe));
 	const numberFormat = $derived(new Intl.NumberFormat(zui.locale));
+	const localePack = $derived(zui.localePack.pagination);
 	const PreviousIcon = $derived(zui.direction === 'rtl' ? ChevronRight : ChevronLeft);
 	const NextIcon = $derived(zui.direction === 'rtl' ? ChevronLeft : ChevronRight);
-	const translate = (key: string, fallback: string) => zui.translations[key] ?? fallback;
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 
@@ -171,12 +171,12 @@
 	class={[classes.root, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
-	aria-label={ariaLabel ?? translate('pagination.label', 'Pagination')}
+	aria-label={ariaLabel ?? localePack.label}
 	data-page={currentPage}
 >
 	<div class={classes.list} data-slot="list">
 		<ZButton
-			aria-label={translate('pagination.previous', 'Previous page')}
+			aria-label={localePack.previous}
 			disabled={disabled || currentPage === 1}
 			size="small"
 			variant="secondary"
@@ -186,10 +186,7 @@
 			{#if typeof item === 'number'}
 				<ZButton
 					aria-current={item === currentPage ? 'page' : undefined}
-					aria-label={translate('pagination.page', 'Page {page}').replace(
-						'{page}',
-						numberFormat.format(item)
-					)}
+					aria-label={localePack.page(numberFormat.format(item))}
 					{disabled}
 					size="small"
 					variant={item === currentPage ? 'primary' : 'secondary'}
@@ -200,7 +197,7 @@
 			{/if}
 		{/each}
 		<ZButton
-			aria-label={translate('pagination.next', 'Next page')}
+			aria-label={localePack.next}
 			disabled={disabled || currentPage === totalPages}
 			size="small"
 			variant="secondary"

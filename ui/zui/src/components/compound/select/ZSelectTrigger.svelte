@@ -4,7 +4,7 @@
 	import type { ZPopoverTriggerProps } from '../popover/ZPopoverTrigger.svelte';
 	export type ZSelectTriggerProps = Omit<
 		ZPopoverTriggerProps,
-		'aria-required' | 'children' | 'disabled' | 'popupRole'
+		'aria-required' | 'children' | 'disabled' | 'id' | 'popupRole'
 	> & { readonly children?: Snippet };
 	export const zuiMetadata = {
 		category: 'input',
@@ -42,7 +42,8 @@
 		source: 'ui/zui/src/components/compound/select/ZSelectTrigger.svelte',
 		states: [
 			{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] },
-			{ description: '是否已有值。', name: 'data-placeholder', values: ['true'] }
+			{ description: '是否已有值。', name: 'data-placeholder', values: ['true'] },
+			{ description: '业务选择值无效。', name: 'data-invalid', values: ['true'] }
 		],
 		status: 'experimental',
 		summary: '显示当前值并以aria-haspopup=listbox打开Select Content。'
@@ -50,9 +51,12 @@
 </script>
 
 <script lang="ts">
+	import { mergeAriaIds } from '../../../runtime/form/form-control.svelte.js';
+	import { useZFieldControlOwner } from '../../../runtime/form/field-context.js';
 	import ZPopoverTrigger from '../popover/ZPopoverTrigger.svelte';
 	import { useZSelect } from './context.svelte.js';
 	let {
+		'aria-describedby': ariaDescribedBy,
 		children,
 		onkeydown,
 		ref = $bindable(null),
@@ -60,6 +64,12 @@
 		...rest
 	}: ZSelectTriggerProps = $props();
 	const select = useZSelect();
+	const fieldOwner = useZFieldControlOwner();
+	$effect(() => {
+		const owner = ref;
+		if (!owner || !fieldOwner) return;
+		return fieldOwner.registerFocusOwner(() => owner.focus({ preventScroll: true }));
+	});
 	function handleKeydown(event: KeyboardEvent & { currentTarget: HTMLButtonElement }): void {
 		onkeydown?.(event);
 		if (!event.defaultPrevented && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
@@ -71,12 +81,16 @@
 
 <ZPopoverTrigger
 	{...rest}
+	aria-describedby={mergeAriaIds(ariaDescribedBy, select.describedBy)}
+	aria-invalid={select.invalid || undefined}
 	aria-required={select.required || undefined}
 	bind:ref
 	disabled={select.disabled}
+	id={select.controlId}
 	popupRole="listbox"
 	{variant}
 	onkeydown={handleKeydown}
+	data-invalid={select.invalid || undefined}
 	data-placeholder={select.value === undefined || undefined}
 >
 	{#if children}{@render children()}{:else}{select.selectedText}{/if}

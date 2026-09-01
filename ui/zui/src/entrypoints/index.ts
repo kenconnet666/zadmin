@@ -168,7 +168,7 @@ export type { TourStep, ZTourProps } from '../components/overlay/ZTour.svelte';
 export { default as ZBox } from '../components/gene/ZBox.svelte';
 export type { ZBoxProps } from '../components/gene/ZBox.svelte';
 export { default as ZButton } from '../components/gene/ZButton.svelte';
-export type { ZButtonProps, ZButtonVariants } from '../components/gene/ZButton.svelte';
+export type { ButtonSize, ZButtonProps, ZButtonVariants } from '../components/gene/ZButton.svelte';
 export { default as ZIcon, iconManifest } from '../components/gene/ZIcon.svelte';
 export type { ZIconName, ZIconProps, ZIconSize } from '../components/gene/ZIcon.svelte';
 export { default as ZKbd } from '../components/gene/ZKbd.svelte';
@@ -372,16 +372,22 @@ export type {
 	ZAspectRatioValue
 } from '../components/layout/ZAspectRatio.svelte';
 export { useZui } from '../runtime/foundation/context.js';
+export { resolveControlSize } from '../runtime/foundation/control-size.js';
+export type { ZControlSize } from '../runtime/foundation/control-size.js';
 export type {
 	ZuiColorScheme,
 	ZuiContext,
 	ZuiContrast,
 	ZuiDensity,
 	ZuiDirection,
+	ZuiLocalePack,
+	ZuiLocalePackOverrides,
 	ZuiMotion,
 	ZuiPortalContainer,
 	ZuiTranslations
 } from '../runtime/foundation/context.js';
+export { enUSLocalePack, zhCNLocalePack } from '../runtime/foundation/locale.js';
+export type { ZuiCommonLocale, ZuiPaginationLocale } from '../runtime/foundation/locale.js';
 export {
 	createBrowserIcssRuntime,
 	createIcssRuntime,

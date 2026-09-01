@@ -883,8 +883,15 @@ describe('compiled ICSS browser updates', () => {
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="select-trigger"]');
 		const form = document.querySelector<HTMLFormElement>('[data-testid="select-form"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="select-output"]');
+		const label = form?.querySelector<HTMLLabelElement>('label');
 		expect(trigger?.textContent?.trim()).toBe('Beta');
-		trigger?.focus();
+		expect(trigger?.id).toBe(label?.htmlFor);
+		expect(trigger?.getAttribute('aria-required')).toBe('true');
+		expect(trigger?.getAttribute('aria-invalid')).toBeNull();
+		expect(trigger?.getAttribute('aria-describedby')).toBeTruthy();
+		expect(new FormData(form!).getAll('choice')).toEqual(['b']);
+		label?.click();
+		expect(document.activeElement).toBe(trigger);
 		trigger?.click();
 		await tick();
 		const content = document.querySelector<HTMLElement>('[data-testid="select-content"]');
@@ -914,6 +921,12 @@ describe('compiled ICSS browser updates', () => {
 		await resetForm(form);
 		expect(trigger?.textContent?.trim()).toBe('Beta');
 		expect(output?.textContent).toBe('b:1:false');
+		document.querySelector<HTMLButtonElement>('[data-testid="select-owner-clear"]')?.click();
+		await tick();
+		expect(trigger?.textContent?.trim()).toBe('Select an option');
+		expect(trigger?.getAttribute('aria-invalid')).toBe('true');
+		expect(new FormData(form!).getAll('choice')).toEqual(['']);
+		expect(output?.textContent).toBe(':1:false');
 	});
 
 	it('coordinates Combobox filtering, active descendant, selection, form value and reset', async () => {
@@ -972,9 +985,15 @@ describe('compiled ICSS browser updates', () => {
 		);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="multi-select-form"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="multi-select-output"]');
+		const label = form?.querySelector<HTMLLabelElement>('label');
 		expect(trigger?.textContent).toContain('Alpha');
 		expect(trigger?.textContent).toContain('Charlie');
-		trigger?.focus();
+		expect(trigger?.id).toBe(label?.htmlFor);
+		expect(trigger?.getAttribute('aria-required')).toBe('true');
+		expect(trigger?.getAttribute('aria-invalid')).toBeNull();
+		expect(trigger?.getAttribute('aria-describedby')).toBeTruthy();
+		label?.click();
+		expect(document.activeElement).toBe(trigger);
 		trigger?.click();
 		await tick();
 		const alpha = document.querySelector<HTMLElement>('[data-testid="multi-a"]');
@@ -997,6 +1016,12 @@ describe('compiled ICSS browser updates', () => {
 		await resetForm(form);
 		expect(new FormData(form!).getAll('choice')).toEqual(['a', 'c']);
 		expect(output?.textContent).toBe('a,c:1:false');
+		document.querySelector<HTMLButtonElement>('[data-testid="multi-select-owner-clear"]')?.click();
+		await tick();
+		expect(trigger?.textContent?.trim()).toBe('Select options');
+		expect(trigger?.getAttribute('aria-invalid')).toBe('true');
+		expect(new FormData(form!).getAll('choice')).toEqual([]);
+		expect(output?.textContent).toBe(':1:false');
 	});
 
 	it('coordinates Segmented roving selection, disabled skipping, form value and reset', async () => {

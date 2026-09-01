@@ -8,6 +8,7 @@
 		ZuiContrast,
 		ZuiDensity,
 		ZuiDirection,
+		ZuiLocalePackOverrides,
 		ZuiMotion,
 		ZuiPortalContainer,
 		ZuiTranslations
@@ -22,6 +23,7 @@
 		direction?: ZuiDirection;
 		idPrefix?: string;
 		locale?: string;
+		localePack?: ZuiLocalePackOverrides;
 		motion?: ZuiMotion;
 		portalContainer?: ZuiPortalContainer;
 		runtime?: IcssRuntime;
@@ -78,6 +80,12 @@
 				type: 'string'
 			},
 			{
+				default: '继承父级或enUSLocalePack',
+				description: '类型安全的组件默认文案与参数化格式函数覆盖。',
+				name: 'localePack',
+				type: 'ZuiLocalePackOverrides'
+			},
+			{
 				default: "继承父级或 'auto'",
 				description: '动画偏好；auto尊重reduced-motion并保持SSR稳定。',
 				name: 'motion',
@@ -98,7 +106,7 @@
 			},
 			{
 				default: '继承父级或空字典',
-				description: '组件系统文案覆盖，不把业务翻译对象暴露给底层依赖。',
+				description: '已弃用的字符串字典兼容层；新代码使用localePack。',
 				name: 'translations',
 				type: 'Readonly<Record<string, string>>'
 			}
@@ -123,6 +131,7 @@
 		direction,
 		idPrefix,
 		locale,
+		localePack,
 		motion,
 		portalContainer,
 		runtime,
@@ -136,6 +145,7 @@
 		direction,
 		idPrefix,
 		locale,
+		localePack,
 		motion,
 		portalContainer,
 		runtime,

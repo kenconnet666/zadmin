@@ -3,9 +3,10 @@
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
+	import { resolveControlSize, type ZControlSize } from '../../runtime/foundation/control-size.js';
 
 	export type ZInputType = 'email' | 'password' | 'search' | 'tel' | 'text' | 'url';
-	export type ZInputSize = 'large' | 'medium' | 'small';
+	export type ZInputSize = ZControlSize;
 
 	export interface ZInputProps extends Omit<
 		HTMLInputAttributes,
@@ -67,8 +68,8 @@
 				type: "'text' | 'email' | 'password' | 'search' | 'tel' | 'url'"
 			},
 			{
-				default: "'medium'",
-				description: '输入框尺寸。',
+				default: "Provider density（默认 'comfortable' → 'medium'）",
+				description: '输入框尺寸；显式值优先于Provider density。',
 				name: 'size',
 				type: "'small' | 'medium' | 'large'"
 			},
@@ -194,7 +195,7 @@
 		ref = $bindable(null),
 		resetOnForm = true,
 		required = false,
-		size = 'medium',
+		size,
 		style,
 		type = 'text',
 		value = $bindable(),
@@ -206,8 +207,13 @@
 	const field = useZField();
 	const inputGroup = useZInputGroup();
 	const resolvedInvalid = $derived(invalid ?? inputGroup?.invalid ?? field?.invalid ?? false);
+	const resolvedSize = $derived(resolveControlSize(size, zui.density));
 	const rootClass = $derived(
-		zui.recipe(inputRecipe, { invalid: resolvedInvalid, motion: zui.motion, size })
+		zui.recipe(inputRecipe, {
+			invalid: resolvedInvalid,
+			motion: zui.motion,
+			size: resolvedSize
+		})
 	);
 	const state = new ControllableState<string>({
 		defaultValue: () => defaultValue,

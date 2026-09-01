@@ -1,5 +1,6 @@
 <script lang="ts">
 	import {
+		ZField,
 		ZMultiSelect,
 		ZMultiSelectContent,
 		ZMultiSelectItem,
@@ -13,28 +14,38 @@
 </script>
 
 <form data-testid="multi-select-form">
-	<ZMultiSelect
-		bind:open
-		bind:values
-		{defaultOpen}
-		defaultValues={['a', 'c']}
+	<ZField
+		description="Choose deployment targets"
+		error={values.length === 0 ? 'At least one choice is required' : undefined}
+		label="Choices"
 		name="choice"
-		onValueChange={() => (changes += 1)}
-		valueLabel={(current) =>
-			({ a: 'Alpha', b: 'Beta', c: 'Charlie', d: 'Delta' })[String(current)]!}
+		required
 	>
-		<ZMultiSelectTrigger aria-label="Choices" data-testid="multi-select-trigger" />
-		<ZMultiSelectContent data-testid="multi-select-content">
-			<ZMultiSelectItem data-testid="multi-a" value="a">Alpha</ZMultiSelectItem>
-			<ZMultiSelectItem
-				data-testid="multi-b"
-				onSelect={(event) => prevent && event.preventDefault()}
-				value="b">Beta</ZMultiSelectItem
-			>
-			<ZMultiSelectItem data-testid="multi-c" value="c">Charlie</ZMultiSelectItem>
-			<ZMultiSelectItem data-testid="multi-d" disabled value="d">Delta</ZMultiSelectItem>
-		</ZMultiSelectContent>
-	</ZMultiSelect>
+		<ZMultiSelect
+			bind:open
+			bind:values
+			{defaultOpen}
+			defaultValues={['a', 'c']}
+			onValueChange={() => (changes += 1)}
+			valueLabel={(current) =>
+				({ a: 'Alpha', b: 'Beta', c: 'Charlie', d: 'Delta' })[String(current)]!}
+		>
+			<ZMultiSelectTrigger aria-label="Choices" data-testid="multi-select-trigger" />
+			<ZMultiSelectContent data-testid="multi-select-content">
+				<ZMultiSelectItem data-testid="multi-a" value="a">Alpha</ZMultiSelectItem>
+				<ZMultiSelectItem
+					data-testid="multi-b"
+					onSelect={(event) => prevent && event.preventDefault()}
+					value="b">Beta</ZMultiSelectItem
+				>
+				<ZMultiSelectItem data-testid="multi-c" value="c">Charlie</ZMultiSelectItem>
+				<ZMultiSelectItem data-testid="multi-d" disabled value="d">Delta</ZMultiSelectItem>
+			</ZMultiSelectContent>
+		</ZMultiSelect>
+	</ZField>
+	<button data-testid="multi-select-owner-clear" type="button" onclick={() => (values = [])}
+		>Clear owner values</button
+	>
 	<button type="reset">Reset</button>
 	<output data-testid="multi-select-output">{values.join(',')}:{changes}:{open}</output>
 </form>

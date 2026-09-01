@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { createZuiId, createZuiIdScope } from '../src/runtime/foundation/ids.js';
 import { CancelableEvent } from '../src/runtime/foundation/cancelable-event.js';
+import { resolveControlSize } from '../src/runtime/foundation/control-size.js';
 import { CollectionStore } from '../src/runtime/collection/collection.svelte.js';
 import { createFormEntries, serializeFormValue } from '../src/runtime/form/form-value.js';
 import { moveIndex, navigationIntent } from '../src/runtime/collection/list-navigation.js';
@@ -25,6 +26,13 @@ import { Typeahead } from '../src/runtime/collection/typeahead.js';
 import { createTreeIndex } from '../src/runtime/tree.js';
 
 describe('ZUI foundation runtime', () => {
+	it('maps Provider density to control size without overriding an explicit size', () => {
+		expect(resolveControlSize(undefined, 'compact')).toBe('small');
+		expect(resolveControlSize(undefined, 'comfortable')).toBe('medium');
+		expect(resolveControlSize(undefined, 'spacious')).toBe('large');
+		expect(resolveControlSize('large', 'compact')).toBe('large');
+	});
+
 	it('shares one cancelable event contract across interaction controllers', () => {
 		const event = new CancelableEvent();
 		expect(event.defaultPrevented).toBe(false);

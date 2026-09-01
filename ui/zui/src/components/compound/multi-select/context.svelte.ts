@@ -18,10 +18,14 @@ export class MultiSelectEvent extends CancelableEvent {
 }
 export interface ZMultiSelectContext {
 	readonly collection: CollectionStore<MultiSelectItemRecord>;
+	readonly controlId: string;
+	readonly describedBy: string | undefined;
 	readonly disabled: boolean;
+	readonly invalid: boolean;
 	readonly labels: readonly string[];
 	readonly open: boolean;
 	readonly placeholder: string;
+	readonly required: boolean;
 	readonly roving: RovingFocus<SelectionKey, MultiSelectItemRecord>;
 	readonly typeahead: Typeahead<SelectionKey>;
 	readonly values: readonly SelectionKey[];

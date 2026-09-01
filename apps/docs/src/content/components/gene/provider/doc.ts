@@ -1,4 +1,6 @@
 import { providerMetadata } from '@zadmin/zui/metadata';
+import LocaleDemo from './LocaleDemo.svelte';
+import localeSource from './LocaleDemo.svelte?raw';
 import PortalDemo from './PortalDemo.svelte';
 import portalSource from './PortalDemo.svelte?raw';
 import ThemeDemo from './ThemeDemo.svelte';
@@ -18,7 +20,8 @@ export const providerDoc = defineComponentDoc(providerMetadata, {
 		},
 		{
 			component: PreferencesDemo,
-			description: '嵌套Provider同时覆盖对比度、密度、方向、locale和动画偏好。',
+			description:
+				'嵌套Provider同时覆盖对比度、密度、方向、locale和动画偏好；Button、Input与Textarea在未显式指定size时消费density。',
 			id: 'provider-preferences',
 			source: preferencesSource,
 			title: '显示与区域偏好'
@@ -29,6 +32,14 @@ export const providerDoc = defineComponentDoc(providerMetadata, {
 			id: 'provider-portal-boundary',
 			source: portalSource,
 			title: 'Portal与ID边界'
+		},
+		{
+			component: LocaleDemo,
+			description:
+				'locale负责Intl格式规则，localePack提供类型安全的组件文案；二者可以在嵌套Provider中动态切换。',
+			id: 'provider-locale-pack',
+			source: localeSource,
+			title: '类型安全Locale Pack'
 		}
 	],
 	accessibility: ['不创建无语义wrapper。', '不会改变子组件的原生语义与焦点顺序。']

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { ZProvider } from '@zadmin/zui';
+	import { ZProvider, zhCNLocalePack } from '@zadmin/zui';
 	import {
 		resolveDocsPreferences,
 		resolveDocsTheme,
@@ -81,15 +81,8 @@
 	{direction}
 	idPrefix="zui-docs"
 	locale="zh-CN"
+	localePack={zhCNLocalePack}
 	{motion}
-	translations={{
-		close: '关闭',
-		copy: '复制',
-		'pagination.label': '分页导航',
-		'pagination.next': '下一页',
-		'pagination.page': '第{page}页',
-		'pagination.previous': '上一页'
-	}}
 	theme={resolvedTheme.theme}
 	colorScheme={resolvedTheme.scheme}
 >
