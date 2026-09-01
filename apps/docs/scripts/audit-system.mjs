@@ -125,7 +125,7 @@ for (const path of componentFiles) {
 	if (/<button\b/u.test(source)) {
 		rawButtonFiles.push(filename);
 		const hasFocusContract =
-			/styleInternalAction|_focusVisible|&:focus-within/u.test(source) ||
+			/styleInternalAction|styleInternalFocusRing|_focusVisible|&:focus-within/u.test(source) ||
 			(filename === 'ui/zui/src/components/overlay/ZTour.svelte' &&
 				/aria-hidden=["']true["'][\s\S]*?tabindex=["']-1["']/u.test(source));
 		if (!hasFocusContract) fail(`${filename} has a raw button without a focus contract.`);
@@ -176,6 +176,7 @@ if (new Set(metadata.map(({ id }) => id)).size !== metadata.length) {
 }
 const expectedInternal = [
 	'ui/zui/src/components/feedback/QueuedToast.svelte',
+	'ui/zui/src/components/input/CascaderColumn.svelte',
 	'ui/zui/src/components/input/TransferPane.svelte',
 	'ui/zui/src/components/input/ZMentionEditor.svelte'
 ];
@@ -281,6 +282,10 @@ const timeFieldSource = await readFile(
 );
 const cascaderSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/components/input/ZCascader.svelte'),
+	'utf8'
+);
+const cascaderColumnSource = await readFile(
+	resolve(workspaceRoot, 'ui/zui/src/components/input/CascaderColumn.svelte'),
 	'utf8'
 );
 const formResetSignalTag = formResetSignalSource.match(/<input\b[\s\S]*?\/>/u)?.[0] ?? '';
@@ -405,13 +410,17 @@ if (
 	fail('ZDateField and ZTimeField must share non-looping horizontal segment navigation.');
 }
 if (
-	!cascaderSource.includes("const intent = navigationIntent(event.key, 'vertical')") ||
-	!cascaderSource.includes('siblings[moveIndex(siblings.length, current, intent, false)]') ||
-	!cascaderSource.includes('switch (event.key)') ||
-	!cascaderSource.includes("case 'ArrowRight':") ||
-	!cascaderSource.includes("case 'ArrowLeft':")
+	!cascaderSource.includes('const tree = $derived(new LogicalTree<TKey>(nodes))') ||
+	!cascaderSource.includes('<CascaderColumn') ||
+	!cascaderSource.includes('<FormValueBridge') ||
+	!cascaderColumnSource.includes('if (active.handleKey(event)) return') ||
+	!cascaderColumnSource.includes("const expandKey = zui.direction === 'rtl'") ||
+	!cascaderColumnSource.includes("const collapseKey = zui.direction === 'rtl'") ||
+	!cascaderColumnSource.includes('const typeahead = new Typeahead<TKey>')
 ) {
-	fail('ZCascader must reuse non-looping vertical navigation before its cross-column key switch.');
+	fail(
+		'ZCascader columns must delegate vertical movement to ActiveDescendant before their RTL-aware cross-column keys.'
+	);
 }
 const focusScopeSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/runtime/layer/focus-scope.ts'),
@@ -636,11 +645,13 @@ const productionBoundaryDemos = [
 	'avatar-image-fallback',
 	'button-composition',
 	'carousel-autoplay-pause',
+	'cascader-lazy-retry',
 	'command-external-results',
 	'command-palette-external-trigger',
 	'code-scheme-embedded',
 	'date-field-bounds',
 	'file-upload-default-queue',
+	'mention-async',
 	'popover-modal-match-width',
 	'provider-portal-boundary',
 	'select-controlled-label',

@@ -85,6 +85,10 @@ describe('typed locale packs', () => {
 		expect(zhCNLocalePack.command.paletteTrigger).toBe('打开命令面板');
 		expect(zhCNLocalePack.command.results('12')).toBe('找到12个命令');
 		expect(zhCNLocalePack.date.calendarLabel).toBe('日历');
+		expect(enUSLocalePack.collection.searchResults('12')).toBe('12 paths found');
+		expect(zhCNLocalePack.collection.searchResults('12')).toBe('找到12条路径');
+		expect(enUSLocalePack.date.clearDateRange).toBe('Clear date range');
+		expect(zhCNLocalePack.time.clearTime).toBe('清空时间');
 		expect(zhCNLocalePack.feedback.dismissToast('发布成功')).toBe('关闭通知：发布成功');
 		expect(zhCNLocalePack.fileUpload.removeFile('说明.pdf')).toBe('移除文件 说明.pdf');
 		expect(zhCNLocalePack.form.unexpectedValidation).toBe('验证过程中发生意外错误。');

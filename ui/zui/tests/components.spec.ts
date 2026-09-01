@@ -67,6 +67,7 @@ import NumberFieldFixture from './NumberFieldFixture.svelte';
 import PinInputFixture from './PinInputFixture.svelte';
 import DialogFixture from './DialogFixture.svelte';
 import DateFixture from './DateFixture.svelte';
+import DateProductionFixture from './DateProductionFixture.svelte';
 import DataFixture from './DataFixture.svelte';
 import DisplayFixture from './DisplayFixture.svelte';
 import FeedbackFixture from './FeedbackFixture.svelte';
@@ -628,6 +629,15 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain('name="picked"');
 		expect(result).toContain('name="range.start"');
 		expect(result).not.toContain('Picker calendar');
+	});
+
+	it('renders explicit-empty and partial-range date production contracts during SSR', () => {
+		const result = render(DateProductionFixture).body;
+		expect(result).toContain('data-testid="production-calendar"');
+		expect(result).toContain('name="window.start"');
+		expect(result).not.toContain('name="window.end"');
+		expect(result).toContain('aria-readonly="true"');
+		expect(result).toContain('data-state="closed"');
 	});
 
 	it('renders data-display components with native document semantics during SSR', () => {

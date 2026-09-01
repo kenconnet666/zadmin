@@ -1264,16 +1264,45 @@ test('keeps Cascader columns, path commit, focus restoration and reset synchroni
 	await page.goto('/#/components/cascader');
 	const cascaderDemo = demo(page, 'cascader-path');
 	const trigger = cascaderDemo.locator('button[aria-haspopup="listbox"]');
-	await expect(trigger).toHaveAccessibleName('平台 / Web应用 / 文档站');
+	await expect(trigger).toHaveAccessibleName('部署路径');
+	await expect(trigger).toContainText('平台 / Web应用 / 文档站');
 	await trigger.click();
 	await expect(page.getByRole('listbox')).toHaveCount(3);
 	await page.getByRole('option', { name: '任务执行器', exact: true }).click();
 	await expect(trigger).toBeFocused();
-	await expect(trigger).toHaveAccessibleName('平台 / 任务执行器');
+	await expect(trigger).toHaveAccessibleName('部署路径');
+	await expect(trigger).toContainText('平台 / 任务执行器');
 	await expect(cascaderDemo.getByText('path = platform/worker')).toBeVisible();
 	await cascaderDemo.getByRole('button', { name: '重置', exact: true }).click();
 	await expect(trigger).toBeVisible();
 	await expect(cascaderDemo.getByText('path = platform/web/docs')).toBeVisible();
+
+	const searchDemo = demo(page, 'cascader-loaded-search');
+	await searchDemo.locator('button[aria-haspopup="listbox"]').click();
+	await searchDemo.getByRole('textbox', { name: '筛选已加载路径', exact: true }).fill('desktop');
+	await page.getByRole('option', { name: '平台 / Native / 桌面端', exact: true }).click();
+	await expect(searchDemo.getByText('loaded search path = platform/native/desktop')).toBeVisible();
+
+	const lazyDemo = demo(page, 'cascader-lazy-retry');
+	await lazyDemo.locator('button[aria-haspopup="listbox"]').click();
+	await page.getByRole('option', { name: '远程空间', exact: true }).click();
+	await lazyDemo.getByRole('button', { name: '使加载失败', exact: true }).click();
+	await expect(lazyDemo.getByText(/error = 模拟网络失败/u)).toBeVisible();
+	await page.getByRole('option', { name: '远程空间', exact: true }).click();
+	await lazyDemo.getByRole('button', { name: '完成加载', exact: true }).click();
+	await page.getByRole('option', { name: '生产环境', exact: true }).click();
+	await expect(lazyDemo.locator('button[aria-haspopup="listbox"]')).toContainText(
+		'远程空间 / 生产环境'
+	);
+
+	const virtualDemo = demo(page, 'cascader-virtual');
+	await virtualDemo.getByRole('button', { name: '打开千项Cascader', exact: true }).click();
+	await page.getByRole('option', { name: '服务目录', exact: true }).click();
+	const virtualColumn = page.getByRole('listbox', { name: '第2级', exact: true });
+	expect(await virtualColumn.getByRole('option').count()).toBeLessThan(30);
+	await virtualColumn.press('End');
+	await virtualColumn.press('Enter');
+	await expect(virtualDemo.getByText('virtual path = services/service-999')).toBeVisible();
 });
 
 test('keeps Transfer filter, selection, move, repeated form values and reset synchronized', async ({
@@ -1311,6 +1340,25 @@ test('keeps Mention textarea focus, active descendant, insertion, form value and
 	await mentionDemo.getByRole('button', { name: '重置', exact: true }).click();
 	await expect(editor).toHaveValue('发布通知：');
 	await expect(mentionDemo.getByText('message = 发布通知：')).toBeVisible();
+
+	const asyncDemo = demo(page, 'mention-async');
+	const asyncEditor = asyncDemo.getByRole('textbox', { name: '异步成员', exact: true });
+	await asyncEditor.fill('Assign @a');
+	await expect(page.getByRole('listbox', { name: '提及建议', exact: true })).toContainText(
+		'正在加载选项'
+	);
+	await asyncDemo.getByRole('button', { name: '返回异步结果', exact: true }).click();
+	await page.getByRole('option', { name: /Alan a/u }).click();
+	await expect(asyncEditor).toHaveValue('Assign @alan ');
+
+	const virtualDemo = demo(page, 'mention-virtual');
+	const virtualEditor = virtualDemo.getByRole('textbox', { name: '千人成员目录', exact: true });
+	await virtualEditor.fill('@');
+	const virtualList = page.getByRole('listbox', { name: '提及建议', exact: true });
+	expect(await virtualList.getByRole('option').count()).toBeLessThan(30);
+	await virtualEditor.press('End');
+	await virtualEditor.press('Enter');
+	await expect(virtualEditor).toHaveValue('@user-0999 ');
 });
 
 test('keeps Command ranking, active descendant and action synchronized', async ({ page }) => {

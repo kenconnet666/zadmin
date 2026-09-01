@@ -67,10 +67,16 @@ import {
 	ZList,
 	ZLoadingBar,
 	ZMenu,
+	ZMenuCheckboxItem,
 	ZMenuGroup,
 	ZMenuItem,
 	ZMenuLabel,
+	ZMenuRadioGroup,
+	ZMenuRadioItem,
 	ZMenuSeparator,
+	ZMenuSub,
+	ZMenuSubContent,
+	ZMenuSubTrigger,
 	ZMeter,
 	ZMention,
 	ZMultiSelect,
@@ -128,6 +134,7 @@ import {
 	createToastQueue,
 	defineRecipe,
 	defineSlotRecipe,
+	type CascaderFilter,
 	type RecipeVariants,
 	type SlotRecipeSelection,
 	type ZAccordionContentProps,
@@ -194,11 +201,17 @@ import {
 	type ZInputGroupProps,
 	type ZListProps,
 	type ZLoadingBarProps,
+	type ZMenuCheckboxItemProps,
 	type ZMenuGroupProps,
 	type ZMenuItemProps,
 	type ZMenuLabelProps,
 	type ZMenuProps,
+	type ZMenuRadioGroupProps,
+	type ZMenuRadioItemProps,
 	type ZMenuSeparatorProps,
+	type ZMenuSubContentProps,
+	type ZMenuSubProps,
+	type ZMenuSubTriggerProps,
 	type ZMeterProps,
 	type ZMentionProps,
 	type ZMultiSelectContentProps,
@@ -413,8 +426,27 @@ const drawerCloseProps: ComponentProps<typeof ZDrawerClose> = {} satisfies ZDraw
 const menuProps: ComponentProps<typeof ZMenu> = { loop: false } satisfies ZMenuProps;
 const menuGroupProps: ComponentProps<typeof ZMenuGroup> = {} satisfies ZMenuGroupProps;
 const menuItemProps: ComponentProps<typeof ZMenuItem> = { value: 'open' } satisfies ZMenuItemProps;
+const menuCheckboxItemProps: ComponentProps<typeof ZMenuCheckboxItem> = {
+	defaultChecked: 'mixed',
+	value: 'grid'
+} satisfies ZMenuCheckboxItemProps;
 const menuLabelProps: ComponentProps<typeof ZMenuLabel> = {} satisfies ZMenuLabelProps;
+const menuRadioGroupProps: ComponentProps<typeof ZMenuRadioGroup> = {
+	defaultValue: 1
+} satisfies ZMenuRadioGroupProps;
+const menuRadioItemProps: ComponentProps<typeof ZMenuRadioItem> = {
+	value: 1
+} satisfies ZMenuRadioItemProps;
 const menuSeparatorProps: ComponentProps<typeof ZMenuSeparator> = {} satisfies ZMenuSeparatorProps;
+const menuSubProps: ComponentProps<typeof ZMenuSub> = {
+	defaultOpen: false
+} satisfies ZMenuSubProps;
+const menuSubTriggerProps: ComponentProps<typeof ZMenuSubTrigger> = {
+	value: 'more'
+} satisfies ZMenuSubTriggerProps;
+const menuSubContentProps: ComponentProps<typeof ZMenuSubContent> = {
+	'aria-label': 'More actions'
+} satisfies ZMenuSubContentProps;
 const multiSelectProps: ComponentProps<typeof ZMultiSelect> = {
 	defaultValue: ['a', 2],
 	maxTagCount: 2,
@@ -502,9 +534,14 @@ const treeProps: ComponentProps<typeof ZTree> = {
 const treeSelectProps: ComponentProps<typeof ZTreeSelect> = {
 	nodes: [{ key: 'root', label: 'Root' }]
 } satisfies ZTreeSelectProps;
+const cascaderFilter: CascaderFilter = (path, query) =>
+	path.some(({ label }) => label.includes(query));
 const cascaderProps: ComponentProps<typeof ZCascader> = {
+	filter: cascaderFilter,
 	nodes: [{ key: 'root', label: 'Root' }],
-	value: ['root']
+	searchable: true,
+	value: ['root'],
+	virtual: true
 } satisfies ZCascaderProps;
 const transferProps: ComponentProps<typeof ZTransfer> = {
 	items: [{ key: 'ready', label: 'Ready' }],
@@ -517,7 +554,11 @@ const transferProps: ComponentProps<typeof ZTransfer> = {
 } satisfies ZTransferProps;
 const mentionProps: ComponentProps<typeof ZMention> = {
 	items: [{ key: 'alice', label: 'Alice' }],
-	value: 'Notify @alice'
+	loading: true,
+	value: 'Notify @alice',
+	virtual: true,
+	virtualHeight: 240,
+	virtualItemSize: 52
 } satisfies ZMentionProps;
 const commandProps: ComponentProps<typeof ZCommand> = {
 	items: [{ key: 'open', label: 'Open' }]
@@ -570,8 +611,9 @@ const datePickerProps: ComponentProps<typeof ZDatePicker> = {
 	timeZone: 'Asia/Shanghai'
 } satisfies ZDatePickerProps;
 const dateRangePickerProps: ComponentProps<typeof ZDateRangePicker> = {
-	placeholder: 'Choose range',
+	endLabel: 'End',
 	readonly: true,
+	startLabel: 'Start',
 	timeZone: 'Asia/Shanghai'
 } satisfies ZDateRangePickerProps;
 const timeFieldProps: ComponentProps<typeof ZTimeField> = {
@@ -692,8 +734,14 @@ void drawerCloseProps;
 void menuProps;
 void menuGroupProps;
 void menuItemProps;
+void menuCheckboxItemProps;
 void menuLabelProps;
+void menuRadioGroupProps;
+void menuRadioItemProps;
 void menuSeparatorProps;
+void menuSubProps;
+void menuSubTriggerProps;
+void menuSubContentProps;
 void multiSelectProps;
 void multiSelectTriggerProps;
 void multiSelectContentProps;

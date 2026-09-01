@@ -4,12 +4,16 @@ import { describe, expect, it } from 'vitest';
 import {
 	calendarMonth,
 	clampDate,
+	dateFieldPattern,
 	daysInMonth,
 	formatDate,
 	formatTime,
 	isDateInRange,
 	isDateUnavailable,
 	normalizeRange,
+	normalizeRangeValue,
+	resolveHourCycle,
+	timeFieldPattern,
 	weekdayLabels
 } from '../src/runtime/date.js';
 
@@ -40,7 +44,23 @@ describe('date runtime', () => {
 		expect(isDateUnavailable(new CalendarDate(2026, 8, 21), start, end)).toBe(true);
 		expect(normalizeRange(end, start)).toEqual({ end, start });
 		expect(isDateInRange(new CalendarDate(2026, 8, 15), { end, start })).toBe(true);
+		expect(normalizeRangeValue({ end: null, start })).toEqual({ end: null, start });
+		expect(normalizeRangeValue({ end, start: null })).toEqual({ end, start: null });
+		expect(normalizeRangeValue({ end: start, start: end })).toEqual({ end, start });
 		expect(daysInMonth(new CalendarDate(2024, 2, 1))).toBe(29);
+	});
+
+	it('derives date and time segment order from locale without changing the value model', () => {
+		expect(
+			dateFieldPattern('en-US').flatMap((part) => ('segment' in part ? [part.segment] : []))
+		).toEqual(['month', 'day', 'year']);
+		expect(
+			dateFieldPattern('zh-CN').flatMap((part) => ('segment' in part ? [part.segment] : []))
+		).toEqual(['year', 'month', 'day']);
+		expect(resolveHourCycle('en-US')).toBe(12);
+		expect(resolveHourCycle('zh-CN')).toBe(24);
+		expect(timeFieldPattern('en-US', 12, 'second').some((part) => 'dayPeriod' in part)).toBe(true);
+		expect(timeFieldPattern('zh-CN', 24, 'minute').some((part) => 'dayPeriod' in part)).toBe(false);
 	});
 
 	it('formats CalendarDate values in the same explicit time zone used to create the instant', () => {

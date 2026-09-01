@@ -204,9 +204,20 @@ describe('ZUI component documentation catalog', () => {
 		const names = props?.rows.map(({ name }) => name);
 
 		expect(props?.description).toContain('ZDataTableProps');
-		expect(names).toEqual(expect.arrayContaining(['caption', 'height', 'rowHeight', 'overscan']));
+		expect(names).toEqual(
+			expect.arrayContaining([
+				'caption',
+				'columnVisibility',
+				'columnWidths',
+				'expandedRow',
+				'height',
+				'rowHeight',
+				'overscan',
+				'sortingMode'
+			])
+		);
 		expect(names).not.toContain('rowHeight / height');
-		expect(dataTable?.demos).toHaveLength(6);
+		expect(dataTable?.demos).toHaveLength(7);
 		expect(dataTable?.profiles).toEqual(['collection', 'data-view', 'virtualized']);
 	});
 

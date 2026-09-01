@@ -29,6 +29,7 @@ import InputGroupFixture from './InputGroupFixture.svelte';
 import DialogFixture from './DialogFixture.svelte';
 import DateFixture from './DateFixture.svelte';
 import DateLocaleFixture from './DateLocaleFixture.svelte';
+import DateProductionFixture from './DateProductionFixture.svelte';
 import DataFixture from './DataFixture.svelte';
 import DisplayFixture from './DisplayFixture.svelte';
 import FeedbackFixture from './FeedbackFixture.svelte';
@@ -1228,31 +1229,28 @@ describe('compiled ICSS browser updates', () => {
 		trigger?.focus();
 		trigger?.click();
 		await tick();
-		expect(document.querySelectorAll('[role="listbox"]')).toHaveLength(3);
-		const root = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find(
-			(item) => item.textContent?.trim() === 'Root'
-		);
-		const alpha = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find(
-			(item) => item.textContent?.trim() === 'Alpha'
-		);
-		const worker = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find(
+		let columns = document.querySelectorAll<HTMLElement>('[role="listbox"]');
+		expect(columns).toHaveLength(3);
+		const rootColumn = columns[0]!;
+		rootColumn.focus();
+		rootColumn.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowRight' }));
+		await tick();
+		columns = document.querySelectorAll<HTMLElement>('[role="listbox"]');
+		const childColumn = columns[1]!;
+		expect(document.activeElement).toBe(childColumn);
+		childColumn.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowRight' }));
+		await tick();
+		columns = document.querySelectorAll<HTMLElement>('[role="listbox"]');
+		const leafColumn = columns[2]!;
+		expect(document.activeElement).toBe(leafColumn);
+		leafColumn.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowLeft' }));
+		expect(document.activeElement).toBe(childColumn);
+		childColumn.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'End' }));
+		const worker = [...childColumn.querySelectorAll<HTMLElement>('[role="option"]')].find(
 			(item) => item.textContent?.trim() === 'Worker'
 		);
-		root?.focus();
-		for (const key of ['ArrowDown', 'ArrowUp', 'Home', 'End', 'ArrowRight']) {
-			root?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key }));
-		}
-		await Promise.resolve();
-		expect(document.activeElement).toBe(alpha);
-		alpha?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowRight' }));
-		await Promise.resolve();
-		document.activeElement?.dispatchEvent(
-			new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowLeft' })
-		);
-		expect(document.activeElement).toBe(alpha);
-		alpha?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'End' }));
-		expect(document.activeElement).toBe(worker);
-		worker?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+		expect(childColumn.getAttribute('aria-activedescendant')).toBe(worker?.id);
+		childColumn.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
 		await new Promise((resolve) => setTimeout(resolve, 140));
 		await tick();
 		expect(trigger?.textContent?.trim()).toBe('Root / Worker');
@@ -2045,6 +2043,57 @@ describe('compiled ICSS browser updates', () => {
 		expect(time?.querySelector('[data-slot="day-period"]')).toBeNull();
 	});
 
+	it('keeps date/time explicit-null owners, partial ranges and reset/FormData aligned', async () => {
+		render(DateProductionFixture);
+		const form = document.querySelector<HTMLFormElement>('[data-testid="date-production-form"]');
+		const output = document.querySelector<HTMLOutputElement>(
+			'[data-testid="date-production-output"]'
+		);
+		expect(new FormData(form!).get('calendar')).toBeNull();
+		expect(new FormData(form!).get('window.start')).toBe('2026-09-16');
+		expect(new FormData(form!).get('window.end')).toBeNull();
+
+		document.querySelector<HTMLButtonElement>('[data-testid="production-reverse"]')?.click();
+		await tick();
+		expect(new FormData(form!).get('window.start')).toBe('2026-09-20');
+		expect(new FormData(form!).get('window.end')).toBe('2026-09-28');
+
+		document.querySelector<HTMLButtonElement>('[data-testid="production-clear"]')?.click();
+		await tick();
+		expect([...new FormData(form!).entries()]).toEqual([]);
+		expect(output?.textContent).toContain('|null|null|null|null|null|null|');
+
+		document.querySelector<HTMLButtonElement>('[data-testid="production-open"]')?.click();
+		await tick();
+		expect(output?.textContent).toContain('|true|true');
+		await resetForm(form);
+		expect(new FormData(form!).get('window.start')).toBe('2026-09-16');
+		expect(new FormData(form!).get('window.end')).toBeNull();
+		expect(output?.textContent).toContain('|false|false');
+
+		const readonly = document.querySelector<HTMLElement>(
+			'[data-testid="production-readonly-picker"]'
+		);
+		expect(readonly?.querySelector('input')?.getAttribute('aria-readonly')).toBe('true');
+		expect(readonly?.querySelector<HTMLButtonElement>('[aria-haspopup="dialog"]')?.disabled).toBe(
+			true
+		);
+	});
+
+	it('uses RTL calendar arrows while skipping unavailable dates and publishing focusedValue', async () => {
+		render(DateProductionFixture);
+		const calendar = document.querySelector<HTMLElement>('[data-testid="production-calendar"]');
+		const focused = calendar?.querySelector<HTMLButtonElement>('[tabindex="0"]');
+		focused?.focus();
+		focused?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowRight' }));
+		await tick();
+		const output = document.querySelector<HTMLOutputElement>(
+			'[data-testid="date-production-output"]'
+		);
+		expect(output?.textContent.trim().startsWith('2026-09-11|')).toBe(true);
+		expect(document.activeElement?.getAttribute('aria-disabled')).not.toBe('true');
+	});
+
 	it('coordinates DatePicker and DateRangePicker popup selection and focus restoration', async () => {
 		render(DateFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="date-form"]');
@@ -2054,12 +2103,15 @@ describe('compiled ICSS browser updates', () => {
 		const dateLabel = [...(form?.querySelectorAll<HTMLLabelElement>('label') ?? [])].find((label) =>
 			label.textContent?.includes('Picked date')
 		);
-		expect(dateLabel?.htmlFor).toBe(dateTrigger?.id);
-		expect(dateTrigger?.getAttribute('role')).toBe('combobox');
-		expect(dateTrigger?.getAttribute('aria-required')).toBe('true');
-		expect(dateTrigger?.getAttribute('aria-describedby')).toBeTruthy();
+		const dateControl = document.getElementById(
+			dateLabel?.htmlFor ?? ''
+		) as HTMLInputElement | null;
+		expect(dateControl?.tagName).toBe('INPUT');
+		expect(dateTrigger?.getAttribute('role')).toBeNull();
+		expect(dateControl?.required).toBe(true);
+		expect(dateControl?.getAttribute('aria-describedby')).toBeTruthy();
 		dateLabel?.click();
-		expect(document.activeElement).toBe(dateTrigger);
+		expect(document.activeElement).toBe(dateControl);
 		dateTrigger?.click();
 		await tick();
 		expect(new FormData(form!).getAll('picked')).toEqual(['2026-08-18']);
@@ -2072,16 +2124,18 @@ describe('compiled ICSS browser updates', () => {
 		expect(document.activeElement).toBe(dateTrigger);
 		const rangeTrigger = [
 			...document.querySelectorAll<HTMLButtonElement>('[aria-haspopup="dialog"]')
-		].find((button) => button !== dateTrigger);
+		].find((button) => button.getAttribute('aria-label') === 'Range calendar');
 		const rangeLabel = [...(form?.querySelectorAll<HTMLLabelElement>('label') ?? [])].find(
 			(label) => label.textContent?.includes('Date range')
 		);
-		expect(rangeLabel?.htmlFor).toBe(rangeTrigger?.id);
-		expect(rangeTrigger?.getAttribute('role')).toBe('combobox');
-		expect(rangeTrigger?.getAttribute('aria-required')).toBe('true');
+		const rangeControl = document.getElementById(
+			rangeLabel?.htmlFor ?? ''
+		) as HTMLInputElement | null;
+		expect(rangeControl?.tagName).toBe('INPUT');
+		expect(rangeControl?.required).toBe(true);
 		expect(new FormData(form!).get('range')).toBeNull();
 		rangeLabel?.click();
-		expect(document.activeElement).toBe(rangeTrigger);
+		expect(document.activeElement).toBe(rangeControl);
 		rangeTrigger?.click();
 		await tick();
 		for (const day of [25, 22]) {
@@ -2091,14 +2145,20 @@ describe('compiled ICSS browser updates', () => {
 			button?.click();
 			await tick();
 		}
-		const readonlyDate = form?.querySelector<HTMLButtonElement>(
-			'[data-testid="readonly-date-picker"] button'
+		const readonlyDateRoot = form?.querySelector<HTMLElement>(
+			'[data-testid="readonly-date-picker"]'
 		);
-		const readonlyRange = form?.querySelector<HTMLButtonElement>(
-			'[data-testid="readonly-date-range-picker"] button'
+		const readonlyRangeRoot = form?.querySelector<HTMLElement>(
+			'[data-testid="readonly-date-range-picker"]'
 		);
-		expect(readonlyDate?.getAttribute('aria-readonly')).toBe('true');
-		expect(readonlyRange?.getAttribute('aria-readonly')).toBe('true');
+		const readonlyDate = readonlyDateRoot?.querySelector<HTMLButtonElement>(
+			'[aria-haspopup="dialog"]'
+		);
+		const readonlyRange = readonlyRangeRoot?.querySelector<HTMLButtonElement>(
+			'[aria-haspopup="dialog"]'
+		);
+		expect(readonlyDateRoot?.querySelector('input')?.getAttribute('aria-readonly')).toBe('true');
+		expect(readonlyRangeRoot?.querySelector('input')?.getAttribute('aria-readonly')).toBe('true');
 		readonlyDate?.click();
 		readonlyRange?.click();
 		await tick();

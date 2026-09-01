@@ -1,0 +1,61 @@
+import { tick } from 'svelte';
+import { describe, expect, it } from 'vitest';
+import { render } from 'vitest-browser-svelte';
+
+import MentionProductionFixture from './MentionProductionFixture.svelte';
+
+function input(textarea: HTMLTextAreaElement, value: string): void {
+	textarea.value = value;
+	textarea.setSelectionRange(value.length, value.length);
+	textarea.dispatchEvent(new InputEvent('input', { bubbles: true }));
+}
+
+describe('ZMention production collection contract', () => {
+	it('keeps async loading, typed keys and textarea-owned active descendant synchronized', async () => {
+		render(MentionProductionFixture, { mode: 'async' });
+		const editor = document.querySelector<HTMLTextAreaElement>(
+			'textarea[aria-label="Async mention"]'
+		)!;
+		input(editor, '@ali');
+		await tick();
+		const listbox = document.querySelector<HTMLElement>('[role="listbox"]')!;
+		expect(editor.getAttribute('aria-controls')).toBe(listbox.id);
+		expect(listbox.getAttribute('aria-busy')).toBe('true');
+		expect(listbox.textContent).toContain('Loading options');
+
+		document.querySelector<HTMLButtonElement>('[data-testid="mention-resolve"]')?.click();
+		await tick();
+		const options = [...listbox.querySelectorAll<HTMLElement>('[role="option"]')];
+		expect(options).toHaveLength(2);
+		expect(options[0]?.id).not.toBe(options[1]?.id);
+		editor.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'End' }));
+		expect(editor.getAttribute('aria-activedescendant')).toBe(options[1]?.id);
+		editor.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+		await tick();
+		expect(document.querySelector('[data-testid="mention-production-output"]')?.textContent).toBe(
+			'@string :1'
+		);
+	});
+
+	it('mounts a distant virtual option before exposing and committing it', async () => {
+		render(MentionProductionFixture, { mode: 'virtual' });
+		const editor = document.querySelector<HTMLTextAreaElement>(
+			'textarea[aria-label="Virtual mention"]'
+		)!;
+		input(editor, '@');
+		await tick();
+		const listbox = document.querySelector<HTMLElement>('[role="listbox"]')!;
+		expect(listbox.querySelectorAll('[role="option"]').length).toBeLessThan(30);
+		editor.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'End' }));
+		await tick();
+		await Promise.resolve();
+		const activeId = editor.getAttribute('aria-activedescendant');
+		expect(activeId).toBeTruthy();
+		expect(editor.ownerDocument.getElementById(activeId ?? '')?.textContent).toContain('user-0999');
+		editor.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+		await tick();
+		expect(document.querySelector('[data-testid="mention-production-output"]')?.textContent).toBe(
+			'@user-0999 :0'
+		);
+	});
+});

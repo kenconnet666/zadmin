@@ -1,6 +1,6 @@
 # ZUI与文档站生产审计
 
-状态：实现与真实浏览器审计完成；上一轮CI已把唯一失败缩小到WebKit reset后的Svelte提交边界，当前推送不等待（2026-08-30）
+状态：无人值守实施持续中；静态审计已刷新，当前真实Chrome扩展通道不可用，定向视觉验收待连接恢复；完整浏览器矩阵继续交CI且当前推送不等待（2026-09-02）
 
 ## 1. 审计范围
 
@@ -14,50 +14,50 @@
 
 ## 2. 最终清单
 
-| 项目                     | 结果 | 门禁                                                                                      |
-| ------------------------ | ---: | ----------------------------------------------------------------------------------------- |
-| Svelte组件文件           |  136 | 133个拥有唯一metadata id；`QueuedToast`、`TransferPane`与`ZMentionEditor`是非公开内部实现 |
-| 公开组件文档页           |   78 | 每页至少2个不同Demo                                                                       |
-| 实际Demo                 |  171 | 少于2个、重复id或空源码会在`defineComponentDoc`中直接失败                                 |
-| 生产指南                 |    8 | Getting Started、ICSS、Theme Lab、Accessibility、SSR/CSP、HMR、WebView和Package           |
-| 公开API合同              |  133 | TypeScript AST快照覆盖全部metadata组件与10个package entrypoint；变化必须显式更新          |
-| 官方主题                 |    6 | `@zadmin/zui/themes`统一导出，文档站真实切换并持久化                                      |
-| 带CSS过渡的组件          |   13 | 13/13显式消费Provider motion，reduced时清除过渡                                           |
-| Docs全站自建交互控件     |    0 | `apps/docs/src`全部Svelte文件由ZUI表达按钮、链接、Select、Popover、Table、Code和Card      |
-| 内联SVG                  |    3 | 2个ZAdmin品牌资源；圆形`ZProgress`按数值绘弧；Spinner与通用UI图标全部来自Lucide           |
-| 品牌渐变文件             |    2 | 仅desktop图标与Docs favicon允许SVG渐变；组件和文档界面不以渐变表达状态                    |
-| 静态系统审计             |    1 | CI固化metadata唯一性、Demo数量、motion、Docs dogfood、Lucide导入和SVG白名单               |
-| 内部原生按钮文件         |    9 | 必须复用internal action、显式focus合同，或是Tour的隐藏非Tab遮罩                           |
-| 可见原生输入文件         |   14 | 非hidden input/textarea必须复用internal focus或显式focus-visible/focus-within             |
-| 表单reset action文件     |   24 | 其余组件通过节点action绑定/更新/销毁，禁止直接调用低层listener                            |
-| 专用reset signal         |    2 | 无name/id的hidden disabled input直接归属form并承载最小cancel-aware action                 |
-| 复合reset所有权合同      |    4 | Combobox、Mention与Transfer双filter关闭叶子自重置，由父状态机唯一拥有reset                |
-| reset signal表单归属     |    1 | 仅解析到owner时portal为form直接子节点；动态prop和同id owner替换会重归属且不污染label      |
-| Calendar键盘switch合同   |    1 | 方向/Home/End/PageUp/PageDown/Enter/Space用互斥switch表达并保留RTL与Shift年跳转           |
-| Collection键盘复用合同   |    2 | Command/Tree复用vertical navigationIntent；局部switch只保留action、Escape和树父子语义     |
-| PinInput键盘switch合同   |    1 | RTL方向、Home/End、Backspace/Delete互斥分支显式表达，default不劫持其他文本键              |
-| Date/Time键盘复用合同    |    2 | 左右/Home/End复用horizontal navigationIntent与非循环moveIndex；switch只处理上下循环       |
-| Cascader键盘复用合同     |    1 | 同列纵向键复用navigationIntent/moveIndex；switch仅保留跨列与选择职责                      |
-| 长event.key if链         |    0 | 组件内3段以上互斥按键判断必须改用switch或共享navigation intent；两段简单判断仍允许        |
-| reset mount重绑合同      |    1 | action以mount微任务和短期Observer等待最终root/form，并且只在关联变化时重绑                |
-| reset update重绑合同     |    1 | action更新时重新检查动态`form`归属，旧表单解绑且新表单直接监听                            |
-| reset微任务合同          |    1 | 事件完成后的微任务以generation去重并检查取消状态，destroy可取消迟到回调                   |
-| 默认稳定id组件           |    7 | 六个基础原生控件与DataTable内部选择框必须保留SSR稳定作用域id                              |
-| 正tabindex/隐藏Tab点     |  0/0 | ZUI和Docs禁止正tabindex；aria-hidden交互元素必须显式`tabindex=-1`                         |
-| 隐式submit/无名图标按钮  |  0/0 | 内部原生button必须显式type；图标按钮必须有aria-label或aria-labelledby                     |
-| 原生busy透传合同         |    2 | Button loading/Form validating拥有内部busy时覆盖，否则保留调用方原生`aria-busy`           |
-| Svelte遗留事件/动态组件  |  0/0 | ZUI与Docs禁止`on:event`、`createEventDispatcher`和`<svelte:component>`                    |
-| TypeScript危险逃生口     |    0 | ZUI与Docs禁止`@ts-ignore`、`@ts-nocheck`、显式`any`断言与注解                             |
-| 物理文本对齐             |    0 | ZUI与Docs禁止`textAlign.left/right`，文字使用逻辑start/end；坐标定位算法不受误伤          |
-| inert与退出态aria-hidden |    0 | Presence退出容器使用inert，不在焦点恢复前叠加aria-hidden                                  |
-| 当前Trigger焦点恢复合同  |    2 | Popover/Dialog通过FocusScope restoreTarget在cleanup解析当前context Trigger                |
-| 不可聚焦Trigger回退合同  |    1 | 当前定位锚点无法接收焦点时，FocusScope回退到打开前真实焦点                                |
-| 交互式Tooltip            |    0 | Runtime拒绝交互语义或可聚焦后代；Docs同时门禁Button/Input/Link等内容                      |
-| Tooltip Runtime守卫合同  |    1 | CI固定原生/ARIA/媒体selector、最终DOM查询与“use ZPopover”错误指引                         |
-| 资源生命周期违规         |    0 | 全部ZUI与Docs源码中event/timer/RAF/Observer创建文件必须包含对应释放路径                   |
-| 危险动态DOM/XSS sink     |    0 | ZUI与Docs禁止raw HTML、HTML字符串注入、eval/new Function、动态script和javascript URL      |
-| Hash路由安全skip-link    |    1 | CI固定ZLink、当前URL、防导航focus handler以及main稳定id/负tabindex合同                    |
-| 搜索live/键盘关系合同    |    1 | CI固定controls/describedby/keyshortcuts、Escape与`/`处理器、导航id和polite status状态     |
+| 项目                     | 结果 | 门禁                                                                                                        |
+| ------------------------ | ---: | ----------------------------------------------------------------------------------------------------------- |
+| Svelte组件文件           |  143 | 139个拥有唯一metadata id；`QueuedToast`、`CascaderColumn`、`TransferPane`与`ZMentionEditor`是非公开内部实现 |
+| 公开组件文档页           |   78 | 每页至少2个不同Demo                                                                                         |
+| 实际Demo                 |  261 | 少于2个、重复id或空源码会在`defineComponentDoc`中直接失败                                                   |
+| 生产指南                 |    8 | Getting Started、ICSS、Theme Lab、Accessibility、SSR/CSP、HMR、WebView和Package                             |
+| 公开API合同              |  139 | TypeScript AST快照覆盖全部metadata组件与package entrypoint；变化必须显式更新                                |
+| 官方主题                 |    6 | `@zadmin/zui/themes`统一导出，文档站真实切换并持久化                                                        |
+| 带CSS过渡的组件          |   15 | 15/15显式消费Provider motion，reduced时清除过渡                                                             |
+| Docs全站自建交互控件     |    0 | `apps/docs/src`全部Svelte文件由ZUI表达按钮、链接、Select、Popover、Table、Code和Card                        |
+| 内联SVG                  |    3 | 2个ZAdmin品牌资源；圆形`ZProgress`按数值绘弧；Spinner与通用UI图标全部来自Lucide                             |
+| 品牌渐变文件             |    2 | 仅desktop图标与Docs favicon允许SVG渐变；组件和文档界面不以渐变表达状态                                      |
+| 静态系统审计             |    1 | CI固化metadata唯一性、Demo数量、motion、Docs dogfood、Lucide导入和SVG白名单                                 |
+| 内部原生按钮文件         |   10 | 必须复用internal action、显式focus合同，或是Tour的隐藏非Tab遮罩                                             |
+| 可见原生输入文件         |   15 | 非hidden input/textarea必须复用internal focus或显式focus-visible/focus-within                               |
+| 表单reset action文件     |    7 | 其余组件通过统一FormValueBridge/FormResetSignal或节点action绑定，禁止重复低层listener                       |
+| 专用reset signal         |    2 | 无name/id的hidden disabled input直接归属form并承载最小cancel-aware action                                   |
+| 复合reset所有权合同      |    4 | Combobox、Mention与Transfer双filter关闭叶子自重置，由父状态机唯一拥有reset                                  |
+| reset signal表单归属     |    1 | 仅解析到owner时portal为form直接子节点；动态prop和同id owner替换会重归属且不污染label                        |
+| Calendar键盘switch合同   |    1 | 方向/Home/End/PageUp/PageDown/Enter/Space用互斥switch表达并保留RTL与Shift年跳转                             |
+| Collection键盘复用合同   |    2 | Command/Tree复用vertical navigationIntent；局部switch只保留action、Escape和树父子语义                       |
+| PinInput键盘switch合同   |    1 | RTL方向、Home/End、Backspace/Delete互斥分支显式表达，default不劫持其他文本键                                |
+| Date/Time键盘复用合同    |    2 | 左右/Home/End复用horizontal navigationIntent与非循环moveIndex；switch只处理上下循环                         |
+| Cascader键盘复用合同     |    1 | 同列纵向键复用navigationIntent/moveIndex；switch仅保留跨列与选择职责                                        |
+| 长event.key if链         |    0 | 组件内3段以上互斥按键判断必须改用switch或共享navigation intent；两段简单判断仍允许                          |
+| reset mount重绑合同      |    1 | action以mount微任务和短期Observer等待最终root/form，并且只在关联变化时重绑                                  |
+| reset update重绑合同     |    1 | action更新时重新检查动态`form`归属，旧表单解绑且新表单直接监听                                              |
+| reset微任务合同          |    1 | 事件完成后的微任务以generation去重并检查取消状态，destroy可取消迟到回调                                     |
+| 默认稳定id组件           |    7 | 六个基础原生控件与DataTable内部选择框必须保留SSR稳定作用域id                                                |
+| 正tabindex/隐藏Tab点     |  0/0 | ZUI和Docs禁止正tabindex；aria-hidden交互元素必须显式`tabindex=-1`                                           |
+| 隐式submit/无名图标按钮  |  0/0 | 内部原生button必须显式type；图标按钮必须有aria-label或aria-labelledby                                       |
+| 原生busy透传合同         |    2 | Button loading/Form validating拥有内部busy时覆盖，否则保留调用方原生`aria-busy`                             |
+| Svelte遗留事件/动态组件  |  0/0 | ZUI与Docs禁止`on:event`、`createEventDispatcher`和`<svelte:component>`                                      |
+| TypeScript危险逃生口     |    0 | ZUI与Docs禁止`@ts-ignore`、`@ts-nocheck`、显式`any`断言与注解                                               |
+| 物理文本对齐             |    0 | ZUI与Docs禁止`textAlign.left/right`，文字使用逻辑start/end；坐标定位算法不受误伤                            |
+| inert与退出态aria-hidden |    0 | Presence退出容器使用inert，不在焦点恢复前叠加aria-hidden                                                    |
+| 当前Trigger焦点恢复合同  |    2 | Popover/Dialog通过FocusScope restoreTarget在cleanup解析当前context Trigger                                  |
+| 不可聚焦Trigger回退合同  |    1 | 当前定位锚点无法接收焦点时，FocusScope回退到打开前真实焦点                                                  |
+| 交互式Tooltip            |    0 | Runtime拒绝交互语义或可聚焦后代；Docs同时门禁Button/Input/Link等内容                                        |
+| Tooltip Runtime守卫合同  |    1 | CI固定原生/ARIA/媒体selector、最终DOM查询与“use ZPopover”错误指引                                           |
+| 资源生命周期违规         |    0 | 全部ZUI与Docs源码中event/timer/RAF/Observer创建文件必须包含对应释放路径                                     |
+| 危险动态DOM/XSS sink     |    0 | ZUI与Docs禁止raw HTML、HTML字符串注入、eval/new Function、动态script和javascript URL                        |
+| Hash路由安全skip-link    |    1 | CI固定ZLink、当前URL、防导航focus handler以及main稳定id/负tabindex合同                                      |
+| 搜索live/键盘关系合同    |    1 | CI固定controls/describedby/keyshortcuts、Escape与`/`处理器、导航id和polite status状态                       |
 
 分类目录的16–26个直接文件属于蓝图允许的真实大分类（5–30），继续保持“分类目录直接包含简单组件文件”；没有为满足计数制造一文件目录。
 

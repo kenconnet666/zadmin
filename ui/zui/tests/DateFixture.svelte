@@ -8,7 +8,8 @@
 		ZField,
 		ZProvider,
 		ZTimeField,
-		type CalendarRange
+		type CalendarRange,
+		type CalendarRangeValue
 	} from '../src/entrypoints/index.js';
 
 	const dateDefault = new CalendarDate(2026, 8, 18);
@@ -16,11 +17,11 @@
 		end: new CalendarDate(2026, 8, 21),
 		start: new CalendarDate(2026, 8, 18)
 	};
-	let calendar = $state(dateDefault);
-	let date = $state(dateDefault);
-	let time = $state(new Time(9, 30, 15));
-	let picked = $state(dateDefault);
-	let range = $state<CalendarRange>(rangeDefault);
+	let calendar = $state<CalendarDate | null>(dateDefault);
+	let date = $state<CalendarDate | null>(dateDefault);
+	let time = $state<Time | null>(new Time(9, 30, 15));
+	let picked = $state<CalendarDate | null>(dateDefault);
+	let range = $state<CalendarRangeValue | null>(rangeDefault);
 </script>
 
 <ZProvider timeZone="Pacific/Kiritimati"
@@ -79,7 +80,9 @@
 		/>
 		<button type="reset">Reset</button>
 		<output data-testid="date-output"
-			>{calendar.toString()}:{date.toString()}:{time.toString()}:{picked.toString()}:{range.start.toString()}:{range.end.toString()}</output
+			>{calendar?.toString() ?? 'empty'}:{date?.toString() ?? 'empty'}:{time?.toString() ??
+				'empty'}:{picked?.toString() ?? 'empty'}:{range?.start?.toString() ??
+				'empty'}:{range?.end?.toString() ?? 'empty'}</output
 		>
 	</form></ZProvider
 >
