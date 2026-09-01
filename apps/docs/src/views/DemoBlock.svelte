@@ -60,7 +60,7 @@
 	import Code2 from '@lucide/svelte/icons/code-2';
 	import Copy from '@lucide/svelte/icons/copy';
 	import { onDestroy } from 'svelte';
-	import { ZButton, ZStack, ZTag, ZText, useZui } from '@zadmin/zui';
+	import { ZButton, ZHeading, ZStack, ZTag, ZText, useZui } from '@zadmin/zui';
 	import { ZCode } from '@zadmin/zui/code';
 	import type { DemoDefinition } from '../framework/component-doc.js';
 
@@ -93,7 +93,7 @@
 <section class={classes.root} id={demo.id}>
 	<header class={classes.header}>
 		<div>
-			<h3 class={classes.title}>{demo.title}</h3>
+			<ZHeading class={classes.title} level={3} size="large">{demo.title}</ZHeading>
 			<ZText tone="muted">{demo.description}</ZText>
 			{#if demo.covers?.length}
 				<ZStack direction="row" gap="small" wrap>

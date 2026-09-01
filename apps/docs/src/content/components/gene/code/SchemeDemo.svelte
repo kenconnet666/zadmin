@@ -3,8 +3,8 @@
 	import { ZCode, type ZCodeTheme } from '@zadmin/zui/code';
 
 	const explicitTheme: ZCodeTheme = {
-		dark: 'github-dark',
-		light: 'github-light'
+		dark: 'github-dark-high-contrast',
+		light: 'github-light-high-contrast'
 	};
 	const source = 'const status: "ready" | "blocked" = "ready";';
 </script>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ZCarousel } from '@zadmin/zui';
+	import { ZCarousel, ZHeading } from '@zadmin/zui';
 
 	const items = [
 		{ id: 'first', label: '第一步', copy: '准备发布参数。' },
@@ -14,6 +14,6 @@
 	itemLabel={(item) => item.label}
 	loop={false}
 >
-	{#snippet item(item)}<h4>{item.label}</h4>
+	{#snippet item(item)}<ZHeading level={4} size="large">{item.label}</ZHeading>
 		<p>{item.copy}</p>{/snippet}
 </ZCarousel>

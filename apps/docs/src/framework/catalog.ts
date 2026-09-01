@@ -22,6 +22,7 @@ import { toastDoc } from '../content/components/feedback/toast/doc.js';
 import { boxDoc } from '../content/components/gene/box/doc.js';
 import { buttonDoc } from '../content/components/gene/button/doc.js';
 import { codeDoc } from '../content/components/gene/code/doc.js';
+import { headingDoc } from '../content/components/gene/heading/doc.js';
 import { iconDoc } from '../content/components/gene/icon/doc.js';
 import { kbdDoc } from '../content/components/gene/kbd/doc.js';
 import { linkDoc } from '../content/components/gene/link/doc.js';
@@ -94,6 +95,7 @@ export const componentDocs = Object.freeze([
 	boxDoc,
 	stackDoc,
 	textDoc,
+	headingDoc,
 	iconDoc,
 	codeDoc,
 	buttonDoc,

@@ -115,6 +115,7 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
 	import {
+		ZHeading,
 		ZLink,
 		useZui,
 		type ZuiContrast,
@@ -250,7 +251,7 @@
 		{:else if invalidRoute}
 			<section class={classes.notFound}>
 				<p class={classes.eyebrow}>404</p>
-				<h1 class={classes.title}>没有这个页面。</h1>
+				<ZHeading class={classes.title} level={1} size="xlarge">没有这个页面。</ZHeading>
 				<p class={classes.copy}>当前展示站只列出已经实现并通过验收的ZUI组件与生产指南。</p>
 				<ZLink class={classes.action} href="#/" underline="none">返回文档概览</ZLink>
 			</section>

@@ -187,7 +187,6 @@
 </script>
 
 <script lang="ts">
-	import ExternalLink from '@lucide/svelte/icons/external-link';
 	import Palette from '@lucide/svelte/icons/palette';
 	import SlidersHorizontal from '@lucide/svelte/icons/sliders-horizontal';
 	import {
@@ -366,9 +365,13 @@
 				</div>
 			</ZPopoverContent>
 		</ZPopover>
-		<ZLink class={classes.github} href="https://github.com/kenconnet666/zadmin" underline="none">
+		<ZLink
+			class={classes.github}
+			external
+			href="https://github.com/kenconnet666/zadmin"
+			underline="none"
+		>
 			GitHub
-			<ExternalLink aria-hidden="true" size={14} />
 		</ZLink>
 	</div>
 </header>

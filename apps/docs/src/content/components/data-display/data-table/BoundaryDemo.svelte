@@ -32,11 +32,11 @@
 	<ZDescriptionList aria-label="DataTable能力边界" items={boundaries} />
 	<ZText tone="muted">
 		对照：
-		<ZLink href="https://ant.design/components/table/">Ant Design Table</ZLink>、
-		<ZLink href="https://www.naiveui.com/en-US/os-theme/components/data-table"
+		<ZLink external href="https://ant.design/components/table/">Ant Design Table</ZLink>、
+		<ZLink external href="https://www.naiveui.com/en-US/os-theme/components/data-table"
 			>Naive UI DataTable</ZLink
 		>、
-		<ZLink href="https://mui.com/x/react-data-grid/">MUI X Data Grid</ZLink>。
-		<ZLink href="https://tanstack.com/table/latest/docs/overview">TanStack Table</ZLink>。
+		<ZLink external href="https://mui.com/x/react-data-grid/">MUI X Data Grid</ZLink>。
+		<ZLink external href="https://tanstack.com/table/latest/docs/overview">TanStack Table</ZLink>。
 	</ZText>
 </ZStack>

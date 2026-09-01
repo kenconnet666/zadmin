@@ -3,13 +3,16 @@
 </script>
 
 <ZStack direction="row" gap="large" wrap>
-	<ZCard><ZText>只有正文的最小Card。</ZText></ZCard>
-	<ZCard>
-		{#snippet header()}<strong>需要确认</strong>{/snippet}
-		<ZText tone="muted">删除前保留明确的上下文与操作。</ZText>
-		{#snippet footer()}<ZStack direction="row" gap="small"
-				><ZButton size="small">确认</ZButton><ZButton size="small" variant="ghost">取消</ZButton
-				></ZStack
-			>{/snippet}
+	<ZCard variant="elevated">
+		{#snippet header()}<strong>Elevated surface</strong>{/snippet}
+		<ZText>阴影Card适合从页面背景上抬起的独立内容。</ZText>
+	</ZCard>
+	<ZCard variant="outlined">
+		{#snippet header()}<strong>Outlined surface</strong>{/snippet}
+		<ZText tone="muted">边框Card适合同层级密集布局。</ZText>
+		{#snippet actions()}
+			<ZButton size="small">确认</ZButton>
+			<ZButton size="small" variant="ghost">取消</ZButton>
+		{/snippet}
 	</ZCard>
 </ZStack>

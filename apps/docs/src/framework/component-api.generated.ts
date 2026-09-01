@@ -2617,12 +2617,12 @@ export const tooltipTriggerApiFacts = {
 		{
 			name: 'onpointerenter',
 			required: false,
-			type: "ZButtonProps['onpointerenter']"
+			type: '(event: PointerEvent & { currentTarget: HTMLElement }) => void'
 		},
 		{
 			name: 'onpointerleave',
 			required: false,
-			type: "ZButtonProps['onpointerleave']"
+			type: '(event: PointerEvent & { currentTarget: HTMLElement }) => void'
 		}
 	],
 	source: 'ui/zui/src/components/compound/tooltip/ZTooltipTrigger.svelte',
@@ -2793,6 +2793,21 @@ export const avatarApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'crossorigin',
+			required: false,
+			type: "'' | 'anonymous' | 'use-credentials'"
+		},
+		{
+			name: 'decoding',
+			required: false,
+			type: "'async' | 'auto' | 'sync'"
+		},
+		{
+			name: 'draggable',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'fallback',
 			required: false,
 			type: 'Snippet'
@@ -2801,6 +2816,31 @@ export const avatarApiFacts = {
 			name: 'fallbackText',
 			required: false,
 			type: 'string'
+		},
+		{
+			name: 'imageRef',
+			required: false,
+			type: 'HTMLImageElement | null'
+		},
+		{
+			name: 'loading',
+			required: false,
+			type: "'eager' | 'lazy'"
+		},
+		{
+			name: 'onImageError',
+			required: false,
+			type: '(event: AvatarImageEvent) => void'
+		},
+		{
+			name: 'onImageLoad',
+			required: false,
+			type: '(event: AvatarImageEvent) => void'
+		},
+		{
+			name: 'referrerpolicy',
+			required: false,
+			type: 'ReferrerPolicy'
 		},
 		{
 			name: 'shape',
@@ -2813,7 +2853,17 @@ export const avatarApiFacts = {
 			type: "'large' | 'medium' | 'small'"
 		},
 		{
+			name: 'sizes',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'src',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'srcset',
 			required: false,
 			type: 'string'
 		},
@@ -2910,6 +2960,16 @@ export const cardApiFacts = {
 	name: 'ZCard',
 	props: [
 		{
+			name: 'actions',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'as',
+			required: false,
+			type: "'article' | 'div' | 'section'"
+		},
+		{
 			name: 'children',
 			required: false,
 			type: 'Snippet'
@@ -2925,9 +2985,24 @@ export const cardApiFacts = {
 			type: 'Snippet'
 		},
 		{
+			name: 'loading',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'media',
+			required: false,
+			type: 'Snippet'
+		},
+		{
 			name: 'ref',
 			required: false,
 			type: 'HTMLElement | null'
+		},
+		{
+			name: 'variant',
+			required: false,
+			type: "'elevated' | 'outlined'"
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZCard.svelte',
@@ -4286,6 +4361,52 @@ export const codeApiFacts = {
 	undocumentedProps: []
 } as const satisfies ComponentApiFacts;
 
+export const headingApiFacts = {
+	declaration: 'ZHeadingProps',
+	id: 'heading',
+	inheritedFrom: ['HTMLAttributes<HTMLHeadingElement>'],
+	name: 'ZHeading',
+	props: [
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'level',
+			required: false,
+			type: '1 | 2 | 3 | 4 | 5 | 6'
+		},
+		{
+			name: 'lineHeight',
+			required: false,
+			type: 'TypographyLineHeight'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLHeadingElement | null'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'TypographySize'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: 'TypographyTone'
+		},
+		{
+			name: 'weight',
+			required: false,
+			type: 'TypographyWeight'
+		}
+	],
+	source: 'ui/zui/src/components/gene/ZHeading.svelte',
+	undocumentedProps: []
+} as const satisfies ComponentApiFacts;
+
 export const iconApiFacts = {
 	declaration: 'ZIconProps',
 	id: 'icon',
@@ -4355,7 +4476,17 @@ export const linkApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'external',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'href',
+			required: true,
+			type: 'string'
+		},
+		{
+			name: 'newWindowLabel',
 			required: false,
 			type: 'string'
 		},
@@ -4503,14 +4634,29 @@ export const textApiFacts = {
 			type: 'Snippet'
 		},
 		{
+			name: 'lineClamp',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'lineHeight',
+			required: false,
+			type: 'TypographyLineHeight'
+		},
+		{
 			name: 'size',
 			required: false,
-			type: "keyof ZuiTheme['fontSize']"
+			type: 'TypographySize'
+		},
+		{
+			name: 'tabularNumbers',
+			required: false,
+			type: 'boolean'
 		},
 		{
 			name: 'tone',
 			required: false,
-			type: "'danger' | 'default' | 'muted' | 'primary'"
+			type: 'TypographyTone'
 		},
 		{
 			name: 'truncate',
@@ -4520,7 +4666,7 @@ export const textApiFacts = {
 		{
 			name: 'weight',
 			required: false,
-			type: "keyof ZuiTheme['fontWeight']"
+			type: 'TypographyWeight'
 		},
 		{
 			name: 'ref',

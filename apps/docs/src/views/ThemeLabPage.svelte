@@ -185,6 +185,7 @@
 		ZButton,
 		ZContainer,
 		ZField,
+		ZHeading,
 		ZInput,
 		ZKbd,
 		ZLink,
@@ -213,14 +214,18 @@
 <article class={classes.root}>
 	<header>
 		<p class={classes.eyebrow}>THEME LAB</p>
-		<h1 class={classes.title}>主题不是一组颜色，而是一套系统合同。</h1>
+		<ZHeading class={classes.title} level={1} size="xlarge"
+			>主题不是一组颜色，而是一套系统合同。</ZHeading
+		>
 		<p class={classes.lead}>
 			使用顶部主题选择器切换六套官方预设，并在“显示”面板调整对比度、密度、动画和RTL。本页直接读取当前ZProvider上下文和Theme语义token，所有预览均为真实ZUI组件。
 		</p>
 	</header>
 
 	<section class={classes.section} aria-labelledby="official-presets">
-		<h2 class={classes.sectionTitle} id="official-presets">官方主题预设</h2>
+		<ZHeading class={classes.sectionTitle} id="official-presets" level={2} size="xlarge"
+			>官方主题预设</ZHeading
+		>
 		<div class={classes.presetGrid}>
 			{#each docsThemes as preset (preset.id)}
 				<article class={classes.preset} aria-current={themeId === preset.id ? 'true' : undefined}>
@@ -244,7 +249,9 @@
 	</section>
 
 	<section class={classes.section} aria-labelledby="theme-axes">
-		<h2 class={classes.sectionTitle} id="theme-axes">当前偏好轴</h2>
+		<ZHeading class={classes.sectionTitle} id="theme-axes" level={2} size="xlarge"
+			>当前偏好轴</ZHeading
+		>
 		<div class={classes.axisGrid}>
 			{#each [['Theme', currentTheme.label], ['Scheme', zui.colorScheme], ['Contrast', zui.contrast], ['Density', zui.density], ['Motion', zui.motion], ['Direction', zui.direction], ['Locale', zui.locale]] as axis (axis[0])}
 				<div class={classes.axis}>
@@ -256,7 +263,9 @@
 	</section>
 
 	<section class={classes.section} aria-labelledby="semantic-colors" data-slot="semantic-colors">
-		<h2 class={classes.sectionTitle} id="semantic-colors">语义颜色</h2>
+		<ZHeading class={classes.sectionTitle} id="semantic-colors" level={2} size="xlarge"
+			>语义颜色</ZHeading
+		>
 		<div class={classes.tokenGrid}>
 			{#each colors as [name, value] (name)}
 				<div class={classes.token} data-slot="semantic-color">
@@ -269,7 +278,9 @@
 	</section>
 
 	<section class={classes.section} aria-labelledby="component-surfaces">
-		<h2 class={classes.sectionTitle} id="component-surfaces">真实组件表面</h2>
+		<ZHeading class={classes.sectionTitle} id="component-surfaces" level={2} size="xlarge"
+			>真实组件表面</ZHeading
+		>
 		<ZContainer class={classes.preview} gutter="large" size="medium">
 			<ZStack gap="large">
 				<ZStack direction="row" gap="medium" wrap>

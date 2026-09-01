@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ZCarousel, ZText, type SelectionKey } from '@zadmin/zui';
+	import { ZCarousel, ZHeading, ZText, type SelectionKey } from '@zadmin/zui';
 
 	const items = [
 		{ id: 'queued', label: '排队', copy: '等待可用执行器。' },
@@ -20,6 +20,6 @@
 	itemLabel={(item) => item.label}
 	pauseOnHover
 >
-	{#snippet item(item)}<h4>{item.label}</h4>
+	{#snippet item(item)}<ZHeading level={4} size="large">{item.label}</ZHeading>
 		<p>{item.copy}</p>{/snippet}
 </ZCarousel>

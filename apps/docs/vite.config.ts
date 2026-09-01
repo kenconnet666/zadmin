@@ -21,8 +21,8 @@ export default defineConfig({
 			'shiki/langs/json.mjs',
 			'shiki/langs/svelte.mjs',
 			'shiki/langs/typescript.mjs',
-			'shiki/themes/github-dark.mjs',
-			'shiki/themes/github-light.mjs'
+			'shiki/themes/github-dark-high-contrast.mjs',
+			'shiki/themes/github-light-high-contrast.mjs'
 		]
 	},
 	plugins: [svelte()],

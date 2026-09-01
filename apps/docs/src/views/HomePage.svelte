@@ -188,7 +188,7 @@
 </script>
 
 <script lang="ts">
-	import { ZBox, ZCard, ZIcon, ZLink, ZStack, ZText, useZui } from '@zadmin/zui';
+	import { ZBox, ZCard, ZHeading, ZIcon, ZLink, ZStack, ZText, useZui } from '@zadmin/zui';
 	import { guideDocs } from '../content/guides.js';
 	import { componentCategories, type ComponentDoc } from '../framework/catalog.js';
 	import { guideRoute } from '../framework/router.js';
@@ -202,7 +202,9 @@
 
 <section class={classes.hero}>
 	<p class={classes.eyebrow}>ZADMIN UI SYSTEM</p>
-	<h1 class={classes.title}>看见组件，运行组件，复制真实源码。</h1>
+	<ZHeading class={classes.title} level={1} size="xlarge"
+		>看见组件，运行组件，复制真实源码。</ZHeading
+	>
 	<p class={classes.copy}>
 		ZUI是面向浏览器与WebView的Svelte
 		5组件库。展示站直接运行工作区组件，每个示例的源码来自同一个Svelte文件；Props类型和必填性逐步由公开TypeScript
@@ -214,6 +216,7 @@
 		>
 		<ZLink
 			class={classes.secondaryAction}
+			external
 			href="https://github.com/kenconnet666/zadmin/tree/master/ui/zui"
 			underline="none">GitHub源码</ZLink
 		>
@@ -225,23 +228,30 @@
 		<strong class={classes.metric}>{docs.length}</strong><span class={classes.principleLabel}
 			>组件族</span
 		>
-		<p class={classes.principleCopy}>公开路由同时包含stable与experimental，兼容状态在每页明确显示。</p>
+		<p class={classes.principleCopy}>
+			公开路由同时包含stable与experimental，兼容状态在每页明确显示。
+		</p>
 	</ZCard>
 	<ZCard class={classes.principle}>
-		<strong class={classes.metric}>{demoCount}</strong><span class={classes.principleLabel}>真实Demo</span
+		<strong class={classes.metric}>{demoCount}</strong><span class={classes.principleLabel}
+			>真实Demo</span
 		>
 		<p class={classes.principleCopy}>页面运行的Svelte文件就是复制按钮提供的源码。</p>
 	</ZCard>
 	<ZCard class={classes.principle}>
-		<strong class={classes.metric}>{stableCount}</strong><span class={classes.principleLabel}>Stable</span>
-		<p class={classes.principleCopy}>其余组件保持experimental与unreleased，不批量修改标签冒充稳定。</p>
+		<strong class={classes.metric}>{stableCount}</strong><span class={classes.principleLabel}
+			>Stable</span
+		>
+		<p class={classes.principleCopy}>
+			其余组件保持experimental与unreleased，不批量修改标签冒充稳定。
+		</p>
 	</ZCard>
 </section>
 
 <section class={classes.catalog}>
 	<header>
 		<p class={classes.eyebrow}>PRODUCTION GUIDES</p>
-		<h2 class={classes.catalogTitle}>生产指南</h2>
+		<ZHeading class={classes.catalogTitle} level={2} size="xlarge">生产指南</ZHeading>
 	</header>
 	<div class={classes.grid}>
 		{#each guideDocs as guide (guide.id)}
@@ -253,7 +263,7 @@
 			>
 				<ZBox>
 					<div class={classes.cardIcon}><ZIcon name="chevronDown" size={18} /></div>
-					<h3 class={classes.cardTitle}>{guide.eyebrow}</h3>
+					<ZHeading class={classes.cardTitle} level={3} size="large">{guide.eyebrow}</ZHeading>
 					<ZText tone="muted">{guide.summary}</ZText>
 					<span class={classes.learnMore}>阅读指南 <ZIcon name="arrowRight" size={14} /></span>
 				</ZBox>
@@ -263,13 +273,13 @@
 
 	<header class={classes.group}>
 		<p class={classes.eyebrow}>COMPONENT CATALOG</p>
-		<h2 class={classes.catalogTitle}>组件目录</h2>
+		<ZHeading class={classes.catalogTitle} level={2} size="xlarge">组件目录</ZHeading>
 	</header>
 	{#each componentCategories as category (category.id)}
 		{@const categoryDocs = docs.filter((doc) => doc.category === category.id)}
 		{#if categoryDocs.length > 0}
 			<div class={classes.group}>
-				<h3 class={classes.groupTitle}>{category.label}</h3>
+				<ZHeading class={classes.groupTitle} level={3} size="large">{category.label}</ZHeading>
 				<div class={classes.grid}>
 					{#each categoryDocs as doc (doc.id)}
 						<ZLink
@@ -282,7 +292,7 @@
 								<div class={classes.cardIcon}>
 									<ZIcon name="plus" size={18} />
 								</div>
-								<h4 class={classes.cardTitle}>{doc.name}</h4>
+								<ZHeading class={classes.cardTitle} level={4} size="large">{doc.name}</ZHeading>
 								<ZText tone="muted">{doc.summary}</ZText>
 								<span class={classes.learnMore}
 									>查看Demo与API <ZIcon name="arrowRight" size={14} /></span

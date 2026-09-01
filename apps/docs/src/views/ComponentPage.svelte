@@ -196,9 +196,8 @@
 </script>
 
 <script lang="ts">
-	import ExternalLink from '@lucide/svelte/icons/external-link';
 	import { onMount } from 'svelte';
-	import { ZLink, ZStack, ZText, useZui } from '@zadmin/zui';
+	import { ZHeading, ZLink, ZStack, ZText, useZui } from '@zadmin/zui';
 	import { ZCode } from '@zadmin/zui/code';
 	import type { ComponentDoc } from '../framework/component-doc.js';
 	import { componentRoute } from '../framework/router.js';
@@ -239,7 +238,7 @@
 		<header class={classes.header}>
 			<p class={classes.eyebrow}>ZUI FOUNDATION</p>
 			<div class={classes.titleLine}>
-				<h1 class={classes.title}>{doc.name}</h1>
+				<ZHeading class={classes.title} level={1} size="xlarge">{doc.name}</ZHeading>
 				<span class={classes.status}>{doc.status}</span>
 			</div>
 			<ZText class={classes.lead} tone="muted">{doc.summary}</ZText>
@@ -262,16 +261,16 @@
 			</div>
 			<ZLink
 				class={classes.sourceLink}
+				external
 				href={`https://github.com/kenconnet666/zadmin/blob/master/${doc.source}`}
 				underline="none"
 			>
-				<ExternalLink aria-hidden="true" size={15} />
 				查看组件源码
 			</ZLink>
 		</header>
 
 		<section id="demos" class={[classes.section, classes.demoSection]}>
-			<h2 class={classes.sectionTitle}>实时演示</h2>
+			<ZHeading class={classes.sectionTitle} level={2} size="xlarge">实时演示</ZHeading>
 			<ZStack gap="large">
 				{#each doc.demos as demo (demo.id)}
 					<DemoBlock {demo} />
@@ -286,7 +285,7 @@
 		</section>
 
 		<section id="accessibility" class={[classes.section, classes.accessibility]}>
-			<h2 class={classes.sectionTitle}>可访问性</h2>
+			<ZHeading class={classes.sectionTitle} level={2} size="xlarge">可访问性</ZHeading>
 			<ul class={classes.accessibilityList}>
 				{#each doc.accessibility as item (item)}
 					<li>{item}</li>

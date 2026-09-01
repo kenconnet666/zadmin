@@ -36,7 +36,7 @@
 </script>
 
 <script lang="ts">
-	import { ZTable, useZui } from '@zadmin/zui';
+	import { ZHeading, ZTable, useZui } from '@zadmin/zui';
 	import { ZCode } from '@zadmin/zui/code';
 	import type { ApiSection } from '../framework/component-doc.js';
 
@@ -46,7 +46,7 @@
 </script>
 
 <section class={classes.root} id={`api-${section.id}`}>
-	<h2 class={classes.title}>{section.title}</h2>
+	<ZHeading class={classes.title} level={2} size="xlarge">{section.title}</ZHeading>
 	{#if section.description}<p class={classes.description}>{section.description}</p>{/if}
 	<!-- svelte-ignore a11y_no_noninteractive_tabindex (keyboard focus is required for horizontal scrolling) -->
 	<div class={classes.scroll} role="region" aria-label={`${section.title} API表格`} tabindex="0">

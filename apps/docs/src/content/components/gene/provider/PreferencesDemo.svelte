@@ -9,7 +9,7 @@
 
 	let colorScheme = $state<'dark' | 'light'>('light');
 	let contrast = $state<'high' | 'normal'>('normal');
-	let density = $state<'compact' | 'comfortable' | 'spacious'>('comfortable');
+	let density = $state<'compact' | 'comfortable' | 'spacious'>('compact');
 	let direction = $state<'ltr' | 'rtl'>('ltr');
 	let motion = $state<'full' | 'reduced'>('full');
 	const theme = $derived(

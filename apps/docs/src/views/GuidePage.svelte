@@ -68,7 +68,7 @@
 </script>
 
 <script lang="ts">
-	import { ZCard, ZContainer, ZLink, ZList, ZStack, ZText, useZui } from '@zadmin/zui';
+	import { ZCard, ZContainer, ZHeading, ZLink, ZList, ZStack, ZText, useZui } from '@zadmin/zui';
 	import { ZCode } from '@zadmin/zui/code';
 	import type { GuideDefinition } from '../content/guides.js';
 
@@ -81,14 +81,28 @@
 	<ZContainer gutter="small" size="medium">
 		<header class={classes.header}>
 			<p class={classes.eyebrow}>{guide.eyebrow}</p>
-			<h1 class={classes.title} id={`guide-${guide.id}`}>{guide.title}</h1>
+			<ZHeading class={classes.title} id={`guide-${guide.id}`} level={1} size="xlarge"
+				>{guide.title}</ZHeading
+			>
 			<ZText class={classes.lead} tone="muted">{guide.summary}</ZText>
 		</header>
 
 		<div class={classes.sections}>
 			{#each guide.sections as section (section.id)}
-				<ZCard class={classes.section} id={section.id}>
-					{#snippet header()}<h2 class={classes.sectionTitle}>{section.title}</h2>{/snippet}
+				<ZCard
+					as="section"
+					aria-labelledby={`${section.id}-title`}
+					class={classes.section}
+					id={section.id}
+				>
+					{#snippet header()}
+						<ZHeading
+							class={classes.sectionTitle}
+							id={`${section.id}-title`}
+							level={2}
+							size="xlarge">{section.title}</ZHeading
+						>
+					{/snippet}
 					<ZStack gap="medium">
 						{#each section.paragraphs as paragraph, index (`${section.id}-paragraph-${index}`)}
 							<ZText as="p" class={classes.copy}>{paragraph}</ZText>

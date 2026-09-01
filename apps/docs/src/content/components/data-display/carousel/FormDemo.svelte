@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ZCarousel, ZText, type SelectionKey } from '@zadmin/zui';
+	import { ZCarousel, ZHeading, ZText, type SelectionKey } from '@zadmin/zui';
 	const items = [
 		{ id: 'overview', label: '概览', copy: '生产服务全部健康。' },
 		{ id: 'metrics', label: '指标', copy: 'P95延迟为82ms。' },
@@ -18,6 +18,6 @@
 	autoplayInterval={60000}
 	data-testid="docs-carousel"
 >
-	{#snippet item(entry)}<h4>{entry.label}</h4>
+	{#snippet item(entry)}<ZHeading level={4} size="large">{entry.label}</ZHeading>
 		<p>{entry.copy}</p>{/snippet}
 </ZCarousel>
