@@ -34,8 +34,12 @@ export function normalizeMeterRange(
 		readonly optimum?: number;
 	}
 ): MeterRange {
-	const progress = normalizeProgressRange(range);
-	if (progress.value === undefined) throw new TypeError('Meter value is required.');
+	const base = normalizeProgressRange({ max: range.max, min: range.min });
+	if (range.value === undefined) throw new TypeError('Meter value is required.');
+	if (!Number.isFinite(range.value) || range.value < base.min || range.value > base.max) {
+		throw new TypeError('Meter value must be finite and satisfy min <= value <= max.');
+	}
+	const progress = Object.freeze({ ...base, value: range.value });
 	const low = range.low ?? progress.min;
 	const high = range.high ?? progress.max;
 	const optimum = range.optimum ?? (progress.min + progress.max) / 2;

@@ -528,7 +528,7 @@
 					{@render loadingIndicator()}
 				{:else}
 					<span class={classes.spinner} data-slot="spinner">
-						<ZSpinner size="small" />
+						<ZSpinner aria-hidden="true" size="small" tone="inherit" />
 					</span>
 				{/if}
 			</span>

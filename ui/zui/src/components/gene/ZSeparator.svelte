@@ -8,12 +8,19 @@
 
 	export interface ZSeparatorProps extends HTMLAttributes<HTMLElement> {
 		readonly decorative?: boolean;
+		readonly label?: string;
 		readonly orientation?: ZSeparatorOrientation;
-		ref?: HTMLElement | null;
+		ref?: HTMLDivElement | HTMLHRElement | null;
 	}
 
 	export const zuiMetadata = {
-		bindings: [{ description: '真实hr或div元素引用。', name: 'ref', type: 'HTMLElement | null' }],
+		bindings: [
+			{
+				description: '真实hr或div元素引用。',
+				name: 'ref',
+				type: 'HTMLHRElement | HTMLDivElement | null'
+			}
+		],
 		category: 'gene',
 		dependencies: [],
 		events: [],
@@ -36,11 +43,17 @@
 				type: "'horizontal' | 'vertical'"
 			},
 			{
+				default: 'undefined',
+				description: '语义分隔线的可访问名称；decorative时忽略。',
+				name: 'label',
+				type: 'string'
+			},
+			{
 				bindable: true,
 				default: 'null',
 				description: '真实hr或div元素引用。',
 				name: 'ref',
-				type: 'HTMLElement | null'
+				type: 'HTMLHRElement | HTMLDivElement | null'
 			}
 		],
 		since: 'unreleased',
@@ -54,13 +67,15 @@
 			}
 		],
 		status: 'experimental',
-		summary: '以原生hr或ARIA separator表达水平、垂直内容边界。'
+		summary: '以原生hr或ARIA separator表达具名/未具名、语义/装饰和高对比内容边界。'
 	} as const satisfies ZuiComponentMetadata;
 
 	const separatorRecipe = defineRecipe({
 		base: (s) => {
-			s.backgroundColor._border;
+			s.backgroundColor.raw('currentColor');
 			s.borderWidth.px(0);
+			s.color._border;
+			s.flexShrink(0);
 			s.margin.px(0);
 		},
 		variants: {
@@ -93,8 +108,10 @@
 	} from '../../runtime/foundation/root-style.js';
 
 	let {
+		'aria-label': ariaLabel,
 		class: className,
 		decorative = false,
+		label,
 		orientation = 'horizontal',
 		ref = $bindable(null),
 		style,
@@ -102,6 +119,7 @@
 	}: ZSeparatorProps = $props();
 	const zui = useZui();
 	const rootClass = $derived(zui.recipe(separatorRecipe, { orientation }));
+	const resolvedLabel = $derived(decorative ? undefined : (label ?? ariaLabel));
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 </script>
@@ -114,6 +132,7 @@
 		style={initialStyle}
 		use:applyIcssRootStyle={{ style, variables: icssVariables }}
 		aria-hidden={decorative || undefined}
+		aria-label={resolvedLabel}
 		aria-orientation={decorative ? undefined : 'horizontal'}
 		data-orientation="horizontal"
 		role={decorative ? 'presentation' : undefined}
@@ -126,6 +145,7 @@
 		style={initialStyle}
 		use:applyIcssRootStyle={{ style, variables: icssVariables }}
 		aria-hidden={decorative || undefined}
+		aria-label={resolvedLabel}
 		aria-orientation={decorative ? undefined : 'vertical'}
 		data-orientation="vertical"
 		role={decorative ? 'presentation' : 'separator'}

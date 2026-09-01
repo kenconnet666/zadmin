@@ -1,12 +1,13 @@
 <script module lang="ts">
 	import type { HTMLMeterAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
+	import type { MeterRange, MeterState } from '../../runtime/progress.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 	export interface ZMeterProps extends Omit<
 		HTMLMeterAttributes,
 		'high' | 'low' | 'max' | 'min' | 'optimum' | 'value'
 	> {
-		readonly formatValue?: (value: number) => string;
+		readonly formatValue?: (value: number, range: MeterRange, state: MeterState) => string;
 		readonly high?: number;
 		readonly label: string;
 		readonly low?: number;
@@ -22,7 +23,7 @@
 		importStatement: "import { ZMeter } from '@zadmin/zui';",
 		name: 'ZMeter',
 		bindings: [{ description: '真实meter引用。', name: 'ref', type: 'HTMLMeterElement | null' }],
-		dependencies: ['native meter'],
+		dependencies: ['native meter', 'strict MeterRange normalization'],
 		events: [],
 		keyboard: [],
 		parts: [],
@@ -41,6 +42,12 @@
 				description: '低、高与最佳阈值。',
 				name: 'low / high / optimum',
 				type: 'number'
+			},
+			{
+				default: 'Intl.NumberFormat(locale)',
+				description: '生成fallback文本与aria-valuetext，接收规范化range和语义state。',
+				name: 'formatValue',
+				type: '(value: number, range: MeterRange, state: MeterState) => string'
 			}
 		],
 		since: 'unreleased',
@@ -54,7 +61,7 @@
 			}
 		],
 		status: 'experimental',
-		summary: '校验阈值并保留平台最佳区间呈现的原生Meter。'
+		summary: '严格校验value与阈值、提供本地化value text并保留平台高对比与最佳区间呈现的原生Meter。'
 	} as const satisfies ZuiComponentMetadata;
 	const recipe = defineRecipe({
 		base: (s) => {
@@ -79,7 +86,7 @@
 	import { meterState, normalizeMeterRange } from '../../runtime/progress.js';
 	let {
 		class: className,
-		formatValue = (current) => String(current),
+		formatValue,
 		high,
 		label,
 		low,
@@ -94,6 +101,10 @@
 	const zui = useZui();
 	const range = $derived(normalizeMeterRange({ high, low, max, min, optimum, value }));
 	const state = $derived(meterState(range));
+	const numberFormatter = $derived(new Intl.NumberFormat(zui.locale));
+	const valueText = $derived(
+		formatValue?.(range.value, range, state) ?? numberFormatter.format(range.value)
+	);
 	const rootClass = $derived(zui.recipe(recipe));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
@@ -106,11 +117,12 @@
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
 	aria-label={label}
+	aria-valuetext={valueText}
 	min={range.min}
 	max={range.max}
 	low={range.low}
 	high={range.high}
 	optimum={range.optimum}
 	value={range.value}
-	data-state={state}>{formatValue(range.value)}</meter
+	data-state={state}>{valueText}</meter
 >

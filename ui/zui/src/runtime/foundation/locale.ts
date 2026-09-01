@@ -40,6 +40,12 @@ export interface ZuiColorPickerLocale {
 	readonly hexColor: string;
 }
 
+export interface ZuiCodeLocale {
+	readonly copied: string;
+	readonly copy: string;
+	readonly copyFailed: string;
+}
+
 export interface ZuiCommandLocale {
 	readonly empty: string;
 	readonly inputLabel: string;
@@ -165,6 +171,7 @@ export interface ZuiLocalePack {
 	readonly carousel: ZuiCarouselLocale;
 	readonly collection: ZuiCollectionLocale;
 	readonly colorPicker: ZuiColorPickerLocale;
+	readonly code: ZuiCodeLocale;
 	readonly command: ZuiCommandLocale;
 	readonly common: ZuiCommonLocale;
 	readonly date: ZuiDateLocale;
@@ -185,6 +192,7 @@ export interface ZuiLocalePackOverrides {
 	readonly carousel?: Partial<ZuiCarouselLocale>;
 	readonly collection?: Partial<ZuiCollectionLocale>;
 	readonly colorPicker?: Partial<ZuiColorPickerLocale>;
+	readonly code?: Partial<ZuiCodeLocale>;
 	readonly command?: Partial<ZuiCommandLocale>;
 	readonly common?: Partial<ZuiCommonLocale>;
 	readonly date?: Partial<ZuiDateLocale>;
@@ -239,6 +247,7 @@ export const enUSLocalePack = Object.freeze({
 		color: (value: string) => `Color ${value}`,
 		hexColor: 'Hex color'
 	}),
+	code: Object.freeze({ copied: 'Code copied', copy: 'Copy code', copyFailed: 'Copy failed' }),
 	command: Object.freeze({
 		empty: 'No commands found',
 		inputLabel: 'Search commands',
@@ -389,6 +398,7 @@ export const zhCNLocalePack = Object.freeze({
 		color: (value: string) => `颜色 ${value}`,
 		hexColor: '十六进制颜色'
 	}),
+	code: Object.freeze({ copied: '代码已复制', copy: '复制代码', copyFailed: '复制失败' }),
 	command: Object.freeze({
 		empty: '未找到命令',
 		inputLabel: '搜索命令',
@@ -565,6 +575,7 @@ export function resolveZuiLocalePack(
 		carousel: Object.freeze(mergeDefined(base.carousel, overrides?.carousel)),
 		collection: Object.freeze(mergeDefined(base.collection, overrides?.collection)),
 		colorPicker: Object.freeze(mergeDefined(base.colorPicker, overrides?.colorPicker)),
+		code: Object.freeze(mergeDefined(base.code, overrides?.code)),
 		command: Object.freeze(mergeDefined(base.command, overrides?.command)),
 		common: Object.freeze(mergeDefined(base.common, legacy.common, overrides?.common)),
 		date: Object.freeze(mergeDefined(base.date, legacy.date, overrides?.date)),

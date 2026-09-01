@@ -284,7 +284,7 @@
 	<span>{item.label}</span>
 	<span aria-hidden="true">
 		{#if item.loadState === 'loading'}
-			<ZSpinner size="small" />
+			<ZSpinner aria-hidden="true" size="small" tone="inherit" />
 		{:else if item.loadState === 'error'}
 			<RotateCcw size={15} />
 		{:else if item.hasChildren}

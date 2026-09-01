@@ -501,8 +501,9 @@
 
 	$effect(() => {
 		controller = publicController;
+		const publishedController = untrack(() => controller);
 		return () => {
-			if (controller === publicController) controller = null;
+			if (untrack(() => controller) === publishedController) controller = null;
 		};
 	});
 
@@ -884,7 +885,7 @@
 	>
 		<span class={switcherClass} data-slot="switcher" aria-hidden="true">
 			{#if loadingKeys.has(entry.key)}
-				<ZSpinner size="small" label={zui.localePack.collection.treeLoading(entry.label)} />
+				<ZSpinner aria-hidden="true" size="small" tone="inherit" />
 			{:else if errorKeys.has(entry.key)}
 				<RotateCcw size={15} />
 			{:else if entry.hasChildren}

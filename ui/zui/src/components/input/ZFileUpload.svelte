@@ -695,9 +695,10 @@
 	onMount(() => {
 		const disconnectMotion = reducedMotion.connect(ref?.ownerDocument.defaultView);
 		controller = publicController;
+		const publishedController = untrack(() => controller);
 		return () => {
 			disconnectMotion();
-			if (controller === publicController) controller = null;
+			if (untrack(() => controller) === publishedController) controller = null;
 		};
 	});
 	onDestroy(

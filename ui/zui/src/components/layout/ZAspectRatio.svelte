@@ -44,7 +44,9 @@
 		since: 'unreleased',
 		snippets: [{ description: '比例容器内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/layout/ZAspectRatio.svelte',
-		states: [],
+		states: [
+			{ description: '规范化后的CSS比例。', name: 'data-ratio', values: ['positive ratio'] }
+		],
 		status: 'experimental',
 		summary: '使用原生aspect-ratio建立稳定比例，不用padding hack或ResizeObserver。'
 	} as const satisfies ZuiComponentMetadata;
@@ -52,6 +54,8 @@
 	const aspectRatioRecipe = defineRecipe({
 		base: (s) => {
 			s.aspectRatio.raw('var(--zui-aspect-ratio)');
+			s.maxWidth.percent(100);
+			s.minWidth.px(0);
 			s.width._full;
 		},
 		variants: {}
@@ -66,10 +70,18 @@
 			return String(value);
 		}
 		const match = /^\s*(\d+(?:\.\d+)?)\s*\/\s*(\d+(?:\.\d+)?)\s*$/u.exec(value);
-		if (!match || Number(match[1]) <= 0 || Number(match[2]) <= 0) {
+		const width = Number(match?.[1]);
+		const height = Number(match?.[2]);
+		if (
+			!match ||
+			!Number.isFinite(width) ||
+			!Number.isFinite(height) ||
+			width <= 0 ||
+			height <= 0
+		) {
 			throw new TypeError('ZAspectRatio ratio must be a positive width / height pair.');
 		}
-		return `${match[1]} / ${match[2]}`;
+		return `${width} / ${height}`;
 	}
 </script>
 
@@ -95,9 +107,10 @@
 	const zui = useZui();
 	const rootClass = $derived(zui.recipe(aspectRatioRecipe));
 	untrack(() => normalizeAspectRatio(ratio));
+	const normalizedRatio = $derived(normalizeAspectRatio(ratio));
 	const icssVariables = $derived({
 		...readIcssCarrier(rest),
-		'--zui-aspect-ratio': normalizeAspectRatio(ratio)
+		'--zui-aspect-ratio': normalizedRatio
 	} satisfies IcssVariables);
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 </script>
@@ -108,6 +121,7 @@
 	class={[rootClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
+	data-ratio={normalizedRatio}
 >
 	{@render children?.()}
 </div>

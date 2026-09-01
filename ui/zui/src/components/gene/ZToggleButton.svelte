@@ -7,13 +7,7 @@
 
 	export type ZToggleButtonProps = Omit<
 		ZButtonProps,
-		| 'aria-pressed'
-		| 'children'
-		| 'loading'
-		| 'loadingIndicator'
-		| 'loadingLabel'
-		| 'onclick'
-		| 'variant'
+		'aria-pressed' | 'children' | 'loading' | 'loadingIndicator' | 'loadingLabel' | 'onclick'
 	> & {
 		readonly children?: Snippet;
 		readonly defaultPressed?: boolean;
@@ -31,7 +25,7 @@
 			{ description: '当前按下状态。', name: 'pressed', type: 'boolean' },
 			{ description: '真实button元素引用。', name: 'ref', type: 'HTMLButtonElement | null' }
 		],
-		dependencies: ['ZButton', 'ControllableState'],
+		dependencies: ['ZButton', 'ControllableState', 'Button variant/tone recipe'],
 		events: [
 			{
 				description: '用户操作改变按下状态后调用一次。',
@@ -64,10 +58,28 @@
 				type: 'boolean'
 			},
 			{
+				default: "'secondary'",
+				description: '复用Button视觉层级；pressed样式由aria-pressed与同一recipe派生。',
+				name: 'variant',
+				type: "'primary' | 'secondary' | 'ghost'"
+			},
+			{
+				default: "'default'",
+				description: '复用Button有限语义tone。',
+				name: 'tone',
+				type: "'default' | 'danger'"
+			},
+			{
 				default: "'medium'",
 				description: '按钮尺寸。',
 				name: 'size',
 				type: "'small' | 'medium' | 'large'"
+			},
+			{
+				default: "'default'",
+				description: '复用Button形状；square/circle图标按钮必须提供aria-label。',
+				name: 'shape',
+				type: "'default' | 'square' | 'circle'"
 			},
 			{ default: 'false', description: '扩展到父容器宽度。', name: 'fullWidth', type: 'boolean' },
 			{ default: 'false', description: '映射到原生disabled。', name: 'disabled', type: 'boolean' },
@@ -86,9 +98,18 @@
 			{ description: '主体内容之后的图标或内容。', name: 'end', type: 'Snippet' }
 		],
 		source: 'ui/zui/src/components/gene/ZToggleButton.svelte',
-		states: [{ description: '切换状态。', name: 'data-state', values: ['on', 'off'] }],
+		states: [
+			{ description: '切换状态。', name: 'data-state', values: ['on', 'off'] },
+			{
+				description: '视觉层级。',
+				name: 'data-variant',
+				values: ['primary', 'secondary', 'ghost']
+			},
+			{ description: '语义tone。', name: 'data-tone', values: ['default', 'danger'] }
+		],
 		status: 'experimental',
-		summary: '以原生button和aria-pressed表达的受控或非受控双态操作组件。'
+		summary:
+			'只拥有pressed状态，以原生button/aria-pressed和共享Button variant、tone、size、shape表达生产双态操作。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
 
@@ -103,6 +124,8 @@
 		onPressedChange,
 		pressed = $bindable(),
 		ref = $bindable(null),
+		tone = 'default',
+		variant = 'secondary',
 		...rest
 	}: ZToggleButtonProps = $props();
 
@@ -123,7 +146,8 @@
 <ZButton
 	{...rest}
 	bind:ref
-	variant={resolvedPressed ? 'primary' : 'secondary'}
+	{tone}
+	{variant}
 	aria-pressed={resolvedPressed}
 	data-state={resolvedPressed ? 'on' : 'off'}
 	onclick={handleClick}

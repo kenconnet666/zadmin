@@ -3,9 +3,11 @@
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
+
 	export type AvatarShape = 'circle' | 'rounded' | 'square';
 	export type AvatarSize = 'large' | 'medium' | 'small';
 	export type AvatarImageEvent = Event & { currentTarget: HTMLImageElement };
+
 	export interface ZAvatarProps extends Omit<
 		HTMLAttributes<HTMLSpanElement>,
 		'children' | 'draggable'
@@ -28,6 +30,7 @@
 		readonly srcset?: string;
 		ref?: HTMLSpanElement | null;
 	}
+
 	export const zuiMetadata = {
 		category: 'data-display',
 		id: 'avatar',
@@ -187,6 +190,7 @@
 	} from '../../runtime/foundation/root-style.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
+
 	let {
 		alt,
 		class: className,
@@ -233,15 +237,23 @@
 		failedImage = null;
 	});
 
-	function handleImageLoad(event: AvatarImageEvent): void {
-		if (event.currentTarget !== imageRef) return;
-		failedImage = null;
-		onImageLoad?.(event);
+	function currentImageEvent(event: Event): AvatarImageEvent | null {
+		if (imageRef === null || event.currentTarget !== imageRef) return null;
+		return event as AvatarImageEvent;
 	}
-	function handleImageError(event: AvatarImageEvent): void {
-		if (event.currentTarget !== imageRef) return;
-		failedImage = event.currentTarget;
-		onImageError?.(event);
+
+	function handleImageLoad(event: Event): void {
+		const imageEvent = currentImageEvent(event);
+		if (imageEvent === null) return;
+		failedImage = null;
+		onImageLoad?.(imageEvent);
+	}
+
+	function handleImageError(event: Event): void {
+		const imageEvent = currentImageEvent(event);
+		if (imageEvent === null) return;
+		failedImage = imageEvent.currentTarget;
+		onImageError?.(imageEvent);
 	}
 </script>
 

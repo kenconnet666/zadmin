@@ -753,8 +753,9 @@
 	});
 	$effect(() => {
 		controller = publicController;
+		const publishedController = untrack(() => controller);
 		return () => {
-			if (controller === publicController) controller = null;
+			if (untrack(() => controller) === publishedController) controller = null;
 		};
 	});
 	$effect(() => {
@@ -1328,8 +1329,9 @@
 				/>{/if}
 		</div>
 	{:else if loading}
-		<div class={statusClass} data-slot="status" role="status">
+		<div class={statusClass} data-slot="status" role="status" aria-label={loadingLabel}>
 			{#if loadingContent}{@render loadingContent()}{:else}<ZSpinner
+					aria-hidden="true"
 					label={loadingLabel}
 					size="small"
 				/>{/if}

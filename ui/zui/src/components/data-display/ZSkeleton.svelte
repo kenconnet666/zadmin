@@ -5,7 +5,9 @@
 	export type SkeletonDimension = number | string;
 	export type SkeletonShape = 'circle' | 'line' | 'rectangle';
 	export interface ZSkeletonProps extends HTMLAttributes<HTMLSpanElement> {
+		readonly animated?: boolean;
 		readonly height?: SkeletonDimension;
+		readonly lines?: number;
 		ref?: HTMLSpanElement | null;
 		readonly shape?: SkeletonShape;
 		readonly width?: SkeletonDimension;
@@ -38,18 +40,39 @@
 				description: '运行时占位高度。',
 				name: 'height',
 				type: 'number | string'
+			},
+			{
+				default: '1',
+				description: 'line形状的等尺寸占位行数；不生成业务结构。',
+				name: 'lines',
+				type: 'number'
+			},
+			{
+				default: 'true',
+				description: '启用Theme token驱动的pulse；reduced motion始终覆盖为静态。',
+				name: 'animated',
+				type: 'boolean'
 			}
 		],
 		since: 'unreleased',
 		snippets: [],
 		source: 'ui/zui/src/components/data-display/ZSkeleton.svelte',
-		states: [{ description: '当前减少动画。', name: 'data-reduced-motion', values: ['true'] }],
+		states: [
+			{ description: '当前减少动画。', name: 'data-reduced-motion', values: ['true'] },
+			{ description: '关闭pulse动画。', name: 'data-static', values: ['true'] },
+			{ description: 'line占位行数。', name: 'data-lines', values: ['1', 'n'] }
+		],
 		status: 'experimental',
-		summary: '尺寸稳定、从可访问树隐藏并清理pulse动画的Skeleton。'
+		summary:
+			'支持有限shape、等尺寸多行、严格尺寸、静态或Theme pulse并从可访问树隐藏的Skeleton占位原语。'
 	} as const satisfies ZuiComponentMetadata;
 	const recipe = defineRecipe({
 		base: (s) => {
 			s.backgroundColor._surface;
+			s.borderColor._border;
+			s.borderStyle.solid;
+			s.borderWidth._hairline;
+			s.boxSizing.borderBox;
 			s.display.block;
 			s.height.raw('var(--zui-skeleton-height)');
 			s.width.raw('var(--zui-skeleton-width)');
@@ -63,7 +86,17 @@
 		},
 		defaultVariants: { shape: 'line' }
 	});
+	const groupRecipe = defineRecipe({
+		base: (s) => {
+			s.display.grid;
+			s.gap._small;
+			s.width.raw('var(--zui-skeleton-width)');
+		},
+		variants: {},
+		defaultVariants: {}
+	});
 	registerRecipeHmr(import.meta, recipe);
+	registerRecipeHmr(import.meta, groupRecipe);
 </script>
 
 <script lang="ts">
@@ -79,8 +112,10 @@
 	import { ReducedMotionState } from '../../runtime/foundation/motion.svelte.js';
 	import { durationMilliseconds } from '../../runtime/foundation/presence.svelte.js';
 	let {
+		animated = true,
 		class: className,
 		height,
+		lines = 1,
 		ref = $bindable(null),
 		shape = 'line',
 		style,
@@ -89,6 +124,13 @@
 	}: ZSkeletonProps = $props();
 	const zui = useZui();
 	const reducedMotion = new ReducedMotionState(() => zui.motion);
+	const resolvedLines = $derived.by(() => {
+		if (!Number.isInteger(lines) || lines < 1)
+			throw new TypeError('Skeleton lines must be a positive integer.');
+		if (shape !== 'line' && lines !== 1)
+			throw new TypeError('Skeleton lines greater than one require shape="line".');
+		return lines;
+	});
 	const dimension = (
 		value: SkeletonDimension | undefined,
 		fallback: IcssVariableValue
@@ -120,6 +162,7 @@
 	);
 	const reduced = $derived(reducedMotion.current);
 	const rootClass = $derived(zui.recipe(recipe, { shape }));
+	const groupClass = $derived(zui.recipe(groupRecipe));
 	const variables = $derived({
 		...readIcssCarrier(rest),
 		'--zui-skeleton-height': resolvedHeight,
@@ -128,7 +171,7 @@
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
 	onMount(() => reducedMotion.connect(ref?.ownerDocument.defaultView));
 	$effect(() => {
-		if (!ref || reduced || typeof ref.animate !== 'function') return;
+		if (!ref || !animated || reduced || typeof ref.animate !== 'function') return;
 		const animation = ref.animate([{ opacity: 0.45 }, { opacity: 1 }, { opacity: 0.45 }], {
 			duration: durationMilliseconds(zui.theme.duration.skeletonPulse),
 			easing: 'ease-in-out',
@@ -138,12 +181,28 @@
 	});
 </script>
 
-<span
-	{...rest}
-	bind:this={ref}
-	class={[rootClass, className]}
-	style={initialStyle}
-	use:applyIcssRootStyle={{ style, variables }}
-	aria-hidden="true"
-	data-reduced-motion={reduced || undefined}
-></span>
+{#if resolvedLines === 1}<span
+		{...rest}
+		bind:this={ref}
+		class={[rootClass, className]}
+		style={initialStyle}
+		use:applyIcssRootStyle={{ style, variables }}
+		aria-hidden="true"
+		data-lines="1"
+		data-reduced-motion={reduced || undefined}
+		data-static={!animated || reduced || undefined}
+	></span>{:else}<span
+		{...rest}
+		bind:this={ref}
+		class={[groupClass, className]}
+		style={initialStyle}
+		use:applyIcssRootStyle={{ style, variables }}
+		aria-hidden="true"
+		data-lines={resolvedLines}
+		data-reduced-motion={reduced || undefined}
+		data-static={!animated || reduced || undefined}
+	>
+		{#each Array.from({ length: resolvedLines }) as _, index (index)}
+			<span class={rootClass} data-slot="line"></span>
+		{/each}
+	</span>{/if}

@@ -7,6 +7,7 @@
 	import { defineSlotRecipe, registerSlotRecipeHmr } from '../../recipes/slots.js';
 
 	export type ZCodeLanguage = 'bash' | 'css' | 'javascript' | 'json' | 'svelte' | 'typescript';
+	export type ZCodeCopyStatus = 'copied' | 'failed';
 	export type ZCodeScheme = 'dark' | 'light';
 	export type ZCodeThemeName = 'github-dark-high-contrast' | 'github-light-high-contrast';
 
@@ -15,15 +16,25 @@
 		readonly light: ZCodeThemeName;
 	}
 
+	export interface ZCodeCopyDetail {
+		readonly code: string;
+		readonly status: ZCodeCopyStatus;
+	}
+
 	export interface ZCodeProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
 		readonly ariaLabel?: string;
 		readonly code: string;
+		readonly copiedLabel?: string;
+		readonly copyable?: boolean;
+		readonly copyFailedLabel?: string;
+		readonly copyLabel?: string;
 		readonly embedded?: boolean;
 		readonly highlightedLines?: readonly number[];
 		readonly inline?: boolean;
 		readonly lang?: ZCodeLanguage;
 		readonly lineNumbers?: boolean;
 		readonly loading?: Snippet;
+		readonly onCopy?: (detail: ZCodeCopyDetail) => void;
 		readonly scheme?: ZCodeScheme;
 		readonly theme?: ZCodeTheme;
 		readonly wrap?: boolean;
@@ -36,16 +47,49 @@
 		importStatement: "import { ZCode } from '@zadmin/zui/code';",
 		name: 'ZCode',
 		bindings: [{ description: '真实code或pre元素引用。', name: 'ref', type: 'HTMLElement | null' }],
-		dependencies: ['shiki (optional peer)'],
-		events: [],
+		dependencies: ['shiki (optional peer)', 'ZButton', 'ZVisuallyHidden', 'typed locale'],
+		events: [
+			{
+				description: '复制尝试完成后报告安全状态，不暴露Clipboard错误细节。',
+				name: 'onCopy',
+				type: '(detail: ZCodeCopyDetail) => void'
+			}
+		],
 		keyboard: [],
-		parts: [],
+		parts: [
+			{ description: '复制按钮。', name: 'copy-action' },
+			{ description: '复制结果polite公告。', name: 'copy-status' }
+		],
 		props: [
 			{
 				default: '必填',
 				description: '要展示的纯文本源码。',
 				name: 'code',
 				required: true,
+				type: 'string'
+			},
+			{
+				default: 'false',
+				description: '为block代码增加保持焦点的复制操作；inline与copyable互斥。',
+				name: 'copyable',
+				type: 'boolean'
+			},
+			{
+				default: 'Provider localePack.code.copy',
+				description: '复制按钮初始可访问名称。',
+				name: 'copyLabel',
+				type: 'string'
+			},
+			{
+				default: 'Provider localePack.code.copied',
+				description: '复制成功后的按钮名称与polite公告。',
+				name: 'copiedLabel',
+				type: 'string'
+			},
+			{
+				default: 'Provider localePack.code.copyFailed',
+				description: '复制失败后的安全按钮名称与polite公告。',
+				name: 'copyFailedLabel',
 				type: 'string'
 			},
 			{ default: '—', description: '允许的Shiki语言。', name: 'lang', type: 'ZCodeLanguage' },
@@ -98,6 +142,11 @@
 				description: '语法高亮的异步生命周期状态。',
 				name: 'data-highlight-status',
 				values: ['plain', 'loading', 'highlighted', 'failed', 'too-large']
+			},
+			{
+				description: '最近一次复制尝试状态。',
+				name: 'data-copy-state',
+				values: ['copied', 'failed']
 			}
 		],
 		status: 'experimental',
@@ -173,8 +222,17 @@
 	}
 
 	const codeRecipe = defineSlotRecipe({
-		slots: ['root', 'line', 'lineNumber', 'token'] as const,
+		slots: ['root', 'line', 'lineNumber', 'token', 'container', 'copyButton'] as const,
 		base: {
+			container: (s) => {
+				s.minWidth.px(0);
+				s.position.relative;
+			},
+			copyButton: (s) => {
+				s.insetBlockStart._small;
+				s.insetInlineEnd._small;
+				s.position.absolute;
+			},
 			line: (s) => s.display.block,
 			lineNumber: (s) => {
 				s.display.inlineBlock;
@@ -194,6 +252,10 @@
 			token: () => undefined
 		},
 		variants: {
+			copyable: {
+				false: {},
+				true: { root: (s) => s.paddingInlineEnd.rem(3.5) }
+			},
 			highlighted: {
 				false: {},
 				true: { line: (s) => s.boxShadow._codeHighlight }
@@ -256,6 +318,7 @@
 			}
 		},
 		defaultVariants: {
+			copyable: false,
 			embedded: false,
 			highlighted: false,
 			inline: false,
@@ -268,7 +331,10 @@
 </script>
 
 <script lang="ts">
-	import { untrack } from 'svelte';
+	import Check from '@lucide/svelte/icons/check';
+	import Copy from '@lucide/svelte/icons/copy';
+	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
+	import { onDestroy, untrack } from 'svelte';
 
 	import {
 		applyIcssRootStyle,
@@ -277,17 +343,24 @@
 	} from '../../runtime/foundation/root-style.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
+	import ZButton from './ZButton.svelte';
+	import ZVisuallyHidden from './ZVisuallyHidden.svelte';
 
 	let {
 		ariaLabel,
 		class: className,
 		code,
+		copiedLabel,
+		copyable = false,
+		copyFailedLabel,
+		copyLabel,
 		embedded = false,
 		highlightedLines = [],
 		inline = false,
 		lang,
 		lineNumbers = false,
 		loading,
+		onCopy,
 		ref = $bindable(null),
 		scheme,
 		style,
@@ -297,9 +370,13 @@
 	}: ZCodeProps = $props();
 
 	const zui = useZui();
+	const resolvedCopyLabel = $derived(copyLabel ?? zui.localePack.code.copy);
+	const resolvedCopiedLabel = $derived(copiedLabel ?? zui.localePack.code.copied);
+	const resolvedCopyFailedLabel = $derived(copyFailedLabel ?? zui.localePack.code.copyFailed);
 	const resolvedScheme = $derived(scheme ?? zui.colorScheme);
 	const classes = $derived(
 		zui.slots(codeRecipe, {
+			copyable,
 			embedded,
 			highlighted: false,
 			inline,
@@ -312,13 +389,41 @@
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 	let tokens = $state<HighlightedToken[][]>();
 	let status = $state<'failed' | 'highlighted' | 'loading' | 'plain' | 'too-large'>('plain');
+	let copyStatus = $state<ZCodeCopyStatus | 'idle'>('idle');
+	let copyGeneration = 0;
+	let copyTimer: number | undefined;
+	let copyTimerWindow: Window | undefined;
 	let generation = 0;
+	const copyActionLabel = $derived.by(() => {
+		switch (copyStatus) {
+			case 'copied':
+				return resolvedCopiedLabel;
+			case 'failed':
+				return resolvedCopyFailedLabel;
+			case 'idle':
+				return resolvedCopyLabel;
+		}
+	});
+	const copyAnnouncement = $derived(copyStatus === 'idle' ? '' : copyActionLabel);
+
+	function assertCopyContract(): void {
+		if (inline && copyable)
+			throw new TypeError('ZCode inline and copyable are mutually exclusive.');
+	}
+
+	assertCopyContract();
+	$effect(assertCopyContract);
 
 	$effect(() => {
 		const source = code;
 		const language = lang;
 		const themes = { dark: theme.dark, light: theme.light };
 		const current = ++generation;
+		untrack(() => {
+			copyGeneration += 1;
+			clearCopyTimer();
+			copyStatus = 'idle';
+		});
 		tokens = undefined;
 		if (language === undefined) {
 			status = 'plain';
@@ -352,12 +457,51 @@
 		].filter(Boolean);
 		return values.length === 0 ? undefined : values.join(';');
 	}
+
+	function clearCopyTimer(): void {
+		if (copyTimer !== undefined) copyTimerWindow?.clearTimeout(copyTimer);
+		copyTimer = undefined;
+		copyTimerWindow = undefined;
+	}
+
+	async function copyCode(): Promise<void> {
+		clearCopyTimer();
+		const source = code;
+		const current = (copyGeneration += 1);
+		const ownerWindow = ref?.ownerDocument.defaultView ?? undefined;
+		let result: ZCodeCopyStatus;
+		try {
+			const clipboard = ownerWindow?.navigator.clipboard;
+			if (!clipboard?.writeText) throw new Error('Clipboard unavailable.');
+			await clipboard.writeText(source);
+			result = 'copied';
+		} catch {
+			result = 'failed';
+		}
+		if (current !== copyGeneration) return;
+		copyStatus = result;
+		onCopy?.({ code: source, status: result });
+		if (!ownerWindow) return;
+		copyTimerWindow = ownerWindow;
+		copyTimer = ownerWindow.setTimeout(() => {
+			if (current !== copyGeneration) return;
+			copyTimer = undefined;
+			copyTimerWindow = undefined;
+			copyStatus = 'idle';
+		}, 1500);
+	}
+
+	onDestroy(() => {
+		copyGeneration += 1;
+		clearCopyTimer();
+	});
 </script>
 
 {#snippet highlightedContent()}
 	{#if tokens}
 		{#each tokens as line, index (index)}
 			{@const lineClasses = zui.slots(codeRecipe, {
+				copyable,
 				embedded,
 				highlighted: highlighted.has(index + 1),
 				inline,
@@ -377,6 +521,19 @@
 	{/if}
 {/snippet}
 
+{#snippet blockContent()}
+	<pre
+		{...rest}
+		bind:this={ref}
+		class={[classes.root, className]}
+		style={initialStyle}
+		use:applyIcssRootStyle={{ style, variables: icssVariables }}
+		aria-label={ariaLabel}
+		data-color-scheme={resolvedScheme}
+		data-copy-state={copyStatus === 'idle' ? undefined : copyStatus}
+		data-highlight-status={status}><code>{@render highlightedContent()}</code></pre>
+{/snippet}
+
 {#if inline}
 	<code
 		{...rest}
@@ -390,14 +547,31 @@
 	>
 		{#if status === 'loading' && loading}{@render loading()}{:else}{@render highlightedContent()}{/if}
 	</code>
+{:else if copyable}
+	<div class={classes.container} data-slot="copy-container">
+		{@render blockContent()}
+		<ZButton
+			aria-label={copyActionLabel}
+			class={classes.copyButton}
+			data-slot="copy-action"
+			shape="square"
+			size="small"
+			title={copyActionLabel}
+			variant="ghost"
+			onclick={() => void copyCode()}
+		>
+			{#if copyStatus === 'copied'}
+				<Check aria-hidden="true" size={15} />
+			{:else if copyStatus === 'failed'}
+				<TriangleAlert aria-hidden="true" size={15} />
+			{:else}
+				<Copy aria-hidden="true" size={15} />
+			{/if}
+		</ZButton>
+		<ZVisuallyHidden aria-atomic="true" aria-live="polite" data-slot="copy-status">
+			{copyAnnouncement}
+		</ZVisuallyHidden>
+	</div>
 {:else}
-	<pre
-		{...rest}
-		bind:this={ref}
-		class={[classes.root, className]}
-		style={initialStyle}
-		use:applyIcssRootStyle={{ style, variables: icssVariables }}
-		aria-label={ariaLabel}
-		data-color-scheme={resolvedScheme}
-		data-highlight-status={status}><code>{@render highlightedContent()}</code></pre>
+	{@render blockContent()}
 {/if}

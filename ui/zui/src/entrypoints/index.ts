@@ -9,7 +9,10 @@ export type {
 	AccordionSingleValue,
 	AccordionType,
 	AccordionValue,
-	ZAccordionProps
+	AccordionValueChangeHandler,
+	ZAccordionMultipleProps,
+	ZAccordionProps,
+	ZAccordionSingleProps
 } from '../components/compound/accordion/ZAccordion.svelte';
 export { default as ZAccordionContent } from '../components/compound/accordion/ZAccordionContent.svelte';
 export type { ZAccordionContentProps } from '../components/compound/accordion/ZAccordionContent.svelte';
@@ -218,6 +221,7 @@ export { default as ZButton } from '../components/gene/ZButton.svelte';
 export type {
 	ButtonShape,
 	ButtonSize,
+	ButtonTone,
 	ButtonVariant,
 	ZButtonProps,
 	ZButtonVariants
@@ -286,7 +290,11 @@ export type { ZEmptyProps } from '../components/data-display/ZEmpty.svelte';
 export { default as ZMeter } from '../components/data-display/ZMeter.svelte';
 export type { ZMeterProps } from '../components/data-display/ZMeter.svelte';
 export { default as ZProgress } from '../components/data-display/ZProgress.svelte';
-export type { ProgressView, ZProgressProps } from '../components/data-display/ZProgress.svelte';
+export type {
+	ProgressTone,
+	ProgressView,
+	ZProgressProps
+} from '../components/data-display/ZProgress.svelte';
 export { default as ZSkeleton } from '../components/data-display/ZSkeleton.svelte';
 export type {
 	SkeletonDimension,
@@ -294,11 +302,21 @@ export type {
 	ZSkeletonProps
 } from '../components/data-display/ZSkeleton.svelte';
 export { default as ZStatistic } from '../components/data-display/ZStatistic.svelte';
-export type { StatisticTrend, ZStatisticProps } from '../components/data-display/ZStatistic.svelte';
+export type {
+	StatisticFormatter,
+	StatisticFormatterContext,
+	StatisticTone,
+	StatisticTrend,
+	StatisticTrendFormatter,
+	StatisticValue,
+	ZStatisticProps
+} from '../components/data-display/ZStatistic.svelte';
 export { default as ZTimeline } from '../components/data-display/ZTimeline.svelte';
 export type {
 	TimelineItem,
+	TimelineMode,
 	TimelineStatus,
+	TimelineTone,
 	ZTimelineProps
 } from '../components/data-display/ZTimeline.svelte';
 export { default as ZTable } from '../components/data-display/ZTable.svelte';
@@ -348,11 +366,21 @@ export type { MeterRange, MeterState, ProgressRange } from '../runtime/progress.
 export { default as ZAlert } from '../components/feedback/ZAlert.svelte';
 export type { AlertLive, AlertTone, ZAlertProps } from '../components/feedback/ZAlert.svelte';
 export { default as ZLoadingBar } from '../components/feedback/ZLoadingBar.svelte';
-export type { ZLoadingBarProps } from '../components/feedback/ZLoadingBar.svelte';
+export type {
+	LoadingBarCompletionOptions,
+	LoadingBarController,
+	LoadingBarMode,
+	LoadingBarState,
+	ZLoadingBarProps
+} from '../components/feedback/ZLoadingBar.svelte';
 export { default as ZResult } from '../components/feedback/ZResult.svelte';
 export type { ZResultProps } from '../components/feedback/ZResult.svelte';
 export { default as ZSpinner } from '../components/feedback/ZSpinner.svelte';
-export type { SpinnerSize, ZSpinnerProps } from '../components/feedback/ZSpinner.svelte';
+export type {
+	SpinnerSize,
+	SpinnerTone,
+	ZSpinnerProps
+} from '../components/feedback/ZSpinner.svelte';
 export { default as ZToast } from '../components/feedback/ZToast.svelte';
 export type { ZToastProps } from '../components/feedback/ZToast.svelte';
 export { default as ZToaster } from '../components/feedback/ZToaster.svelte';
@@ -536,6 +564,7 @@ export { enUSLocalePack, zhCNLocalePack } from '../runtime/foundation/locale.js'
 export type {
 	ZuiCollectionLocale,
 	ZuiCarouselLocale,
+	ZuiCodeLocale,
 	ZuiColorPickerLocale,
 	ZuiCommandLocale,
 	ZuiCommonLocale,

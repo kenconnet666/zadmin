@@ -17,7 +17,7 @@ incremental slots generate IDs so stringification cannot cause ARIA collisions.
 
 ## Accordion contract
 
-`type` is a public discriminant:
+`type` selects the runtime value contract:
 
 - `single`: `value/defaultValue` are `SelectionKey | null`; `null` is the explicit empty value.
 - `multiple`: `value/defaultValue` are deduplicated `readonly SelectionKey[]`; `[]` is empty.
@@ -26,6 +26,20 @@ Arrays in single mode and scalar/null values in multiple mode fail early. `activ
 from expansion. Arrow/Home/End move active focus only. Native button activation toggles expansion.
 When `collapsible=false`, an open single Trigger exposes `aria-disabled=true` and cannot close, but it
 is not native-disabled and remains reachable by collection navigation.
+
+The Svelte component itself intentionally exposes one flat `ZAccordionProps` interface. A discriminated
+intersection such as `Base & (Single | Multiple)` expands through `ComponentProps`, snippets, native DOM
+attributes and bindable props, making ordinary render helpers and dynamic Svelte owners carry a large
+distributed union. The flat component signature therefore uses `AccordionValue` and keeps the existing
+runtime checks authoritative. Applications with a statically known mode may use the exported
+`ZAccordionSingleProps` or `ZAccordionMultipleProps` helper types with `satisfies`; those helpers retain
+narrow callback/value types and reject `collapsible` in multiple mode. They are configuration evidence,
+not a second component implementation.
+
+Changing `type` dynamically requires `type` and `value` to be updated in the same Svelte batch. The runtime
+still rejects arrays in single mode, scalar/null values in multiple mode, invalid numeric keys, and an
+explicit `collapsible` prop in multiple mode. This preserves one behavior contract while avoiding public
+component-type combination growth.
 
 Each Trigger is the only button inside a `role=heading` wrapper with configurable `headingLevel`.
 Content defaults to `role=region`; nested or large multiple Accordions may set `region=false` to avoid

@@ -21,6 +21,18 @@
 		parts: [],
 		props: [
 			{
+				default: "'primary'",
+				description: '继承ZButton视觉强调层级。',
+				name: 'variant',
+				type: "'primary' | 'secondary' | 'ghost'"
+			},
+			{
+				default: "'danger'",
+				description: '默认使用危险语义，可由调用方明确覆盖。',
+				name: 'tone',
+				type: "'default' | 'danger'"
+			},
+			{
 				bindable: true,
 				default: 'null',
 				description: '真实button引用。',
@@ -40,7 +52,12 @@
 <script lang="ts">
 	import ZDialogClose from '../dialog/ZDialogClose.svelte';
 
-	let { ref = $bindable(null), variant = 'danger', ...rest }: ZAlertDialogActionProps = $props();
+	let {
+		ref = $bindable(null),
+		tone = 'danger',
+		variant = 'primary',
+		...rest
+	}: ZAlertDialogActionProps = $props();
 </script>
 
-<ZDialogClose {...rest} {variant} bind:ref />
+<ZDialogClose {...rest} {tone} {variant} bind:ref />

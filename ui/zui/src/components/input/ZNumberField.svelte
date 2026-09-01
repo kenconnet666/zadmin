@@ -421,6 +421,7 @@
 		maximumFractionDigits: constraints.precision ?? 20,
 		useGrouping: false
 	} satisfies Intl.NumberFormatOptions);
+
 	function formatNumber(next: number, editing: boolean, options: Intl.NumberFormatOptions): string {
 		const defaultFormat = (
 			formattedValue: number,
@@ -435,9 +436,11 @@
 			}) ?? defaultFormat(next)
 		);
 	}
+
 	function formatEditValue(next: number | undefined): string {
 		return next === undefined ? '' : formatNumber(next, true, editOptions);
 	}
+
 	const formatted = $derived(
 		currentValue === undefined ? '' : formatNumber(currentValue, false, presentationOptions)
 	);
@@ -528,6 +531,7 @@
 		composing = false;
 		editing = false;
 	}
+
 	function parseDraft(input: string): ZNumberFieldParseResult {
 		const defaultParse = (candidate: string): ZNumberFieldParseResult =>
 			parseLocalizedNumber(candidate, resolvedLocale);
@@ -537,9 +541,11 @@
 		}
 		return parsed;
 	}
+
 	function normalizeValue(next: number | undefined): number | undefined {
 		return next === undefined ? undefined : roundNumber(next, constraints.precision);
 	}
+
 	function commit(next: number | undefined): number | undefined {
 		const normalized = normalizeValue(next);
 		synchronizedValue = normalized;
@@ -547,12 +553,14 @@
 		draftInvalid = false;
 		return normalized;
 	}
+
 	function stepFromEmpty(direction: -1 | 1, amount: number): number {
 		const zeroInRange = clampNumber(0, constraints.min, constraints.max);
 		return zeroInRange === 0
 			? stepNumber(0, direction, amount, constraints.min, constraints.max, 1, constraints.precision)
 			: roundNumber(zeroInRange, constraints.precision);
 	}
+
 	function changeBy(direction: -1 | 1, amount = constraints.step): number | undefined {
 		if (resolvedDisabled || resolvedReadonly) return currentValue;
 		const next =
@@ -569,18 +577,23 @@
 					);
 		return commit(next);
 	}
+
 	function updateFromDraft(): void {
 		const parsed = parseDraft(draft);
 		draftInvalid = !parsed.valid && !parsed.partial;
 		if (parsed.valid) commit(parsed.value);
 	}
-	function handleInput(event: InputEvent & { currentTarget: HTMLInputElement }): void {
+
+	function handleInput(event: Event & { currentTarget: HTMLInputElement }): void {
 		draft = event.currentTarget.value;
-		if (!composing && !event.isComposing) updateFromDraft();
+		const inputEvent = event as InputEvent;
+		if (!composing && !inputEvent.isComposing) updateFromDraft();
 	}
+
 	function handleCompositionStart(): void {
 		composing = true;
 	}
+
 	function handleCompositionEnd(
 		event: CompositionEvent & { currentTarget: HTMLInputElement }
 	): void {
@@ -588,12 +601,14 @@
 		draft = event.currentTarget.value;
 		updateFromDraft();
 	}
+
 	function handleFocus(): void {
 		editing = true;
 		draft = editFormatted;
 		draftInvalid = false;
 		inputRef?.select();
 	}
+
 	function handleBlur(): void {
 		composing = false;
 		const parsed = parseDraft(draft);
@@ -612,6 +627,7 @@
 		editing = false;
 		draft = '';
 	}
+
 	function handleKeydown(event: KeyboardEvent & { currentTarget: HTMLInputElement }): void {
 		if (composing || event.isComposing) return;
 		switch (event.key) {
@@ -640,6 +656,7 @@
 				break;
 		}
 	}
+
 	function handleStepButton(direction: -1 | 1): void {
 		changeBy(direction);
 		inputRef?.focus({ preventScroll: true });

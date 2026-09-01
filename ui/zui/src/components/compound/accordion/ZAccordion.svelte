@@ -16,34 +16,46 @@
 	export type AccordionSingleValue = AccordionSingleValueType;
 	export type AccordionMultipleValue = AccordionMultipleValueType;
 
-	interface ZAccordionBaseProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
+	export type AccordionValueChangeHandler<TValue extends AccordionValue = AccordionValue> = {
+		bivarianceHack(value: TValue): void;
+	}['bivarianceHack'];
+
+	export interface ZAccordionProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
 		activeValue?: PublicSelectionKey | null;
 		readonly children?: Snippet;
+		readonly collapsible?: boolean;
 		readonly defaultActiveValue?: PublicSelectionKey | null;
+		readonly defaultValue?: AccordionValue;
 		readonly disabled?: boolean;
 		readonly loop?: boolean;
 		readonly onActiveValueChange?: (value: PublicSelectionKey | null) => void;
+		readonly onValueChange?: AccordionValueChangeHandler;
 		ref?: HTMLDivElement | null;
+		readonly type?: AccordionType;
+		value?: AccordionValue;
 	}
 
-	interface ZAccordionSingleProps {
+	export type ZAccordionSingleProps = Omit<
+		ZAccordionProps,
+		'collapsible' | 'defaultValue' | 'onValueChange' | 'type' | 'value'
+	> & {
 		readonly collapsible?: boolean;
 		readonly defaultValue?: AccordionSingleValue;
-		readonly onValueChange?: (value: AccordionSingleValue) => void;
+		readonly onValueChange?: AccordionValueChangeHandler<AccordionSingleValue>;
 		readonly type?: 'single';
 		value?: AccordionSingleValue;
-	}
+	};
 
-	interface ZAccordionMultipleProps {
+	export type ZAccordionMultipleProps = Omit<
+		ZAccordionProps,
+		'collapsible' | 'defaultValue' | 'onValueChange' | 'type' | 'value'
+	> & {
 		readonly collapsible?: never;
 		readonly defaultValue?: AccordionMultipleValue;
-		readonly onValueChange?: (value: AccordionMultipleValue) => void;
+		readonly onValueChange?: AccordionValueChangeHandler<AccordionMultipleValue>;
 		readonly type: 'multiple';
 		value?: AccordionMultipleValue;
-	}
-
-	export type ZAccordionProps = ZAccordionBaseProps &
-		(ZAccordionMultipleProps | ZAccordionSingleProps);
+	};
 
 	const accordionRecipe = defineRecipe({
 		base: (s) => s.display.block,
@@ -128,7 +140,8 @@
 			},
 			{
 				default: "'single'",
-				description: '判别single/null或multiple/array合同。',
+				description:
+					'选择single/null或multiple/array运行时合同；组件props保持扁平，严格配置对象可使用独立helper types。',
 				name: 'type',
 				type: "'single' | 'multiple'"
 			},
@@ -162,7 +175,7 @@
 		],
 		status: 'experimental',
 		summary:
-			'以LogicalCollection统一typed compound items、分离active/expanded owner，并保留nested、collapsible与Presence motion的Accordion。'
+			'以扁平组件props、可选single/multiple严格helper types、LogicalCollection和分离active/expanded owner组成的Accordion。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
 
@@ -195,7 +208,7 @@
 		activeValue = $bindable(),
 		children,
 		class: className,
-		collapsible = true,
+		collapsible,
 		defaultActiveValue = null,
 		defaultValue,
 		disabled = false,
@@ -228,6 +241,7 @@
 	let focusWithin = $state(false);
 	let initialTabStopKey: SelectionKey | undefined;
 	let alive = true;
+	const resolvedCollapsible = $derived(collapsible ?? true);
 
 	function assertKey(key: SelectionKey | null): void {
 		if (key === null || typeof key === 'string') return;
@@ -275,11 +289,14 @@
 		write: (next) => (activeValue = next)
 	});
 	const contract = $derived.by(() => {
+		if (type === 'multiple' && collapsible !== undefined) {
+			throw new TypeError('ZAccordion collapsible is only valid when type="single".');
+		}
 		normalize(defaultValue);
 		normalize(valueState.current);
 		assertKey(defaultActiveValue);
 		assertKey(activeState.current);
-		return { collapsible, disabled, loop, type };
+		return { collapsible: resolvedCollapsible, disabled, loop, type };
 	});
 	const navigation = new CollectionNavigation<SelectionKey, AccordionCollectionItem>({
 		disabled: () => disabled,
@@ -352,7 +369,7 @@
 			return normalize(valueState.current).some((key) => Object.is(key, itemValue));
 		},
 		isTriggerLocked(itemValue) {
-			return type === 'single' && !collapsible && context.isOpen(itemValue);
+			return type === 'single' && !resolvedCollapsible && context.isOpen(itemValue);
 		},
 		owner,
 		get reducedMotion() {
@@ -404,7 +421,7 @@
 			const current = normalize(valueState.current);
 			const open = current.some((key) => Object.is(key, itemValue));
 			if (type === 'single') {
-				if (open && !collapsible) return;
+				if (open && !resolvedCollapsible) return;
 				valueState.setFromUser(open ? null : itemValue);
 				return;
 			}

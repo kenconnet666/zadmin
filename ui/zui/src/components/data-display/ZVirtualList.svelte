@@ -539,9 +539,10 @@
 	});
 	$effect(() => {
 		controller = publicController;
+		const publishedController = untrack(() => controller);
 		return () => {
 			mounted = false;
-			if (controller === publicController) controller = null;
+			if (untrack(() => controller) === publishedController) controller = null;
 		};
 	});
 	$effect(() => onRangeChange?.(range));

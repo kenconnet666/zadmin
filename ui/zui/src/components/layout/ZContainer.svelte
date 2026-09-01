@@ -50,14 +50,28 @@
 		since: 'unreleased',
 		snippets: [{ description: '容器内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/layout/ZContainer.svelte',
-		states: [],
+		states: [
+			{
+				description: '最大宽度预设。',
+				name: 'data-size',
+				values: ['small', 'medium', 'large', 'full']
+			},
+			{
+				description: '逻辑内联gutter。',
+				name: 'data-gutter',
+				values: ['none', 'small', 'medium', 'large']
+			}
+		],
 		status: 'experimental',
 		summary: '提供居中最大宽度和逻辑内联留白，不与ZStack重复布局职责。'
 	} as const satisfies ZuiComponentMetadata;
 
 	const containerRecipe = defineRecipe({
 		base: (s) => {
+			s.boxSizing.borderBox;
 			s.marginInline.auto;
+			s.maxWidth.percent(100);
+			s.minWidth.px(0);
 			s.width._full;
 		},
 		variants: {
@@ -111,6 +125,8 @@
 	class={[rootClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
+	data-gutter={gutter}
+	data-size={size}
 >
 	{@render children?.()}
 </div>
