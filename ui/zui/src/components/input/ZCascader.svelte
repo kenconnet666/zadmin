@@ -179,7 +179,7 @@
 		onOpenChange,
 		onValueChange,
 		open = $bindable(),
-		placeholder = 'Select a path',
+		placeholder,
 		placement = 'bottom-start',
 		ref = $bindable(null),
 		separator = ' / ',
@@ -189,6 +189,8 @@
 		...rest
 	}: ZCascaderProps = $props();
 	const zui = useZui();
+	const resolvedPlaceholder = $derived(placeholder ?? zui.localePack.collection.selectPath);
+	const levelFormatter = $derived(new Intl.NumberFormat(zui.locale));
 	const BranchIcon = $derived(zui.direction === 'rtl' ? ChevronLeft : ChevronRight);
 	const tree = $derived(createTreeIndex(nodes));
 	let draft = $state<readonly SelectionKey[]>(Object.freeze([...untrack(() => defaultValue)]));
@@ -219,7 +221,7 @@
 	});
 	const triggerLabel = $derived(
 		valueState.current.length === 0
-			? placeholder
+			? resolvedPlaceholder
 			: valueState.current.map((key) => tree.nodes.get(key)?.label ?? String(key)).join(separator)
 	);
 	const columnsClass = $derived(zui.recipe(columnsRecipe));
@@ -327,7 +329,11 @@
 		<ZPopoverContent ariaLabelledBy={null} role="presentation">
 			<div class={columnsClass}>
 				{#each columns as column, level (level)}
-					<div class={columnClass} role="listbox" aria-label={`Level ${level + 1}`}>
+					<div
+						class={columnClass}
+						role="listbox"
+						aria-label={zui.localePack.collection.cascaderLevel(levelFormatter.format(level + 1))}
+					>
 						{#each column as node, nodeIndex (node.key)}
 							<div
 								use:registerOption={{ key: node.key, level }}

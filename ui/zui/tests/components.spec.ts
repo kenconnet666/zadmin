@@ -308,6 +308,13 @@ describe('ZUI foundational components', () => {
 		expect(open).toContain('role="dialog"');
 		expect(open).toContain('aria-modal="true"');
 		expect(open).toContain('Fixture drawer');
+		expect(rendered[2]).toContain('data-reduced-motion="true"');
+		expect(open).not.toContain('data-reduced-motion="true"');
+		expect(
+			render(DrawerFixture, {
+				props: { defaultOpen: true, placement: 'end', size: 360 }
+			}).body
+		).toContain('width:360px');
 		expect(new Set(rendered)).toHaveLength(variants.length);
 	});
 

@@ -266,6 +266,19 @@ describe('ZUI foundation runtime', () => {
 		typeahead.clear();
 		expect(typeahead.search('z', items)).toBeUndefined();
 		expect(typeahead.search('a', [])).toBeUndefined();
+
+		let locale = 'en';
+		const dynamicLocale = new Typeahead<string>({ locale: () => locale });
+		const localizedItems = [
+			{ key: 'angel', textValue: 'Ängel' },
+			{ key: 'apple', textValue: 'Apple' },
+			{ key: 'banana', textValue: 'Banana' }
+		];
+		expect(dynamicLocale.search('b', localizedItems)).toBe('banana');
+		locale = 'sv';
+		expect(dynamicLocale.search('a', localizedItems)).toBe('apple');
+		expect(dynamicLocale.buffer).toBe('a');
+
 		expect(() => new Typeahead({ timeout: 0 })).toThrow(/must be positive/);
 		expect(() => new Typeahead({ timeout: Number.POSITIVE_INFINITY })).toThrow(/must be positive/);
 	});

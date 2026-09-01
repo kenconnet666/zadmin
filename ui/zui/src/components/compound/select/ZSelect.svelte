@@ -87,8 +87,8 @@
 				type: 'boolean'
 			},
 			{
-				default: "'Select an option'",
-				description: '无值时的Trigger文本。',
+				default: 'Provider localePack.collection.selectOption',
+				description: '无值时的Trigger文本；显式值优先于Provider locale pack。',
 				name: 'placeholder',
 				type: 'string'
 			},
@@ -169,13 +169,14 @@
 		onOpenChange,
 		onValueChange,
 		open = $bindable(),
-		placeholder = 'Select an option',
+		placeholder,
 		placement = 'bottom-start',
 		required: requiredProp = false,
 		valueLabel = String,
 		value = $bindable()
 	}: ZSelectProps = $props();
 	const zui = useZui();
+	const resolvedPlaceholder = $derived(placeholder ?? zui.localePack.collection.selectOption);
 	const field = claimZFieldControlOwner().field;
 	const uid = $props.id();
 	const idBase = $derived(createZuiId(zui.idPrefix, uid, 'select'));
@@ -212,7 +213,7 @@
 		read: () => focusKey ?? valueState.current,
 		write: (key) => (focusKey = key)
 	});
-	const typeahead = new Typeahead<SelectionKey>({ locale: zui.locale });
+	const typeahead = new Typeahead<SelectionKey>({ locale: () => zui.locale });
 	const context: ZSelectContext = {
 		choose(itemValue, originalEvent, onSelect) {
 			const event = new SelectEvent(originalEvent, itemValue);
@@ -243,7 +244,7 @@
 			return openState.current;
 		},
 		get placeholder() {
-			return placeholder;
+			return resolvedPlaceholder;
 		},
 		register(read) {
 			return collection.register(() => {
@@ -258,7 +259,7 @@
 		roving,
 		get selectedText() {
 			const current = valueState.current;
-			if (current === undefined) return placeholder;
+			if (current === undefined) return resolvedPlaceholder;
 			return collection.get(current)?.textValue ?? labels.get(current) ?? valueLabel(current);
 		},
 		setOpen(next) {

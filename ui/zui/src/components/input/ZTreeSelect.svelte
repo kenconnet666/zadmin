@@ -79,8 +79,8 @@
 				type: 'readonly SelectionKey[]'
 			},
 			{
-				default: "'Select a node'",
-				description: '空值提示。',
+				default: 'Provider localePack.collection.selectNode',
+				description: '空值提示；显式值优先于Provider locale pack。',
 				name: 'placeholder',
 				type: 'string'
 			},
@@ -98,6 +98,7 @@
 
 <script lang="ts">
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
+	import { useZui } from '../../runtime/foundation/context.js';
 	import { formReset } from '../../runtime/form/form-control.svelte.js';
 	import { serializeFormValue } from '../../runtime/form/form-value.js';
 	import { createTreeIndex } from '../../runtime/tree.js';
@@ -107,7 +108,7 @@
 	import ZTree from '../compound/tree/ZTree.svelte';
 	let {
 		'aria-label': ariaLabelAttribute,
-		ariaLabel = 'Tree options',
+		ariaLabel,
 		defaultExpandedKeys = [],
 		defaultOpen = false,
 		defaultValue,
@@ -120,12 +121,15 @@
 		onOpenChange,
 		onValueChange,
 		open = $bindable(),
-		placeholder = 'Select a node',
+		placeholder,
 		placement = 'bottom-start',
 		ref = $bindable(null),
 		value = $bindable(),
 		...rest
 	}: ZTreeSelectProps = $props();
+	const zui = useZui();
+	const resolvedAriaLabel = $derived(ariaLabel ?? zui.localePack.collection.treeOptions);
+	const resolvedPlaceholder = $derived(placeholder ?? zui.localePack.collection.selectNode);
 	const tree = $derived(createTreeIndex(nodes));
 	let proxy = $state<HTMLInputElement | null>(null);
 	const valueState = new ControllableState<SelectionKey | undefined>({
@@ -148,7 +152,7 @@
 	});
 	const label = $derived(
 		valueState.current === undefined
-			? placeholder
+			? resolvedPlaceholder
 			: (tree.nodes.get(valueState.current)?.label ?? String(valueState.current))
 	);
 	const serialized = $derived(
@@ -184,7 +188,7 @@
 		<ZPopoverContent ariaLabelledBy={null} role="presentation">
 			<ZTree
 				appearance="bare"
-				aria-label={ariaLabelAttribute ?? ariaLabel}
+				aria-label={ariaLabelAttribute ?? resolvedAriaLabel}
 				{disabled}
 				expandedKeys={expandedState.current}
 				{nodes}

@@ -116,6 +116,7 @@
 
 <script lang="ts">
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
+	import { useZui } from '../../runtime/foundation/context.js';
 	import { matchesCommandShortcut } from '../../runtime/command.js';
 	import ZDialog from '../compound/dialog/ZDialog.svelte';
 	import ZDialogClose from '../compound/dialog/ZDialogClose.svelte';
@@ -128,30 +129,38 @@
 
 	let {
 		class: className,
-		closeLabel = 'Close',
+		closeLabel,
 		defaultOpen = false,
 		defaultQuery = '',
 		description,
 		disabled = false,
-		emptyText = 'No commands found',
-		inputLabel = 'Search commands',
+		emptyText,
+		inputLabel,
 		items,
-		listLabel = 'Commands',
+		listLabel,
 		onAction,
 		onOpenChange,
 		onQueryChange,
 		open = $bindable(),
-		placeholder = 'Type a command',
+		placeholder,
 		query = $bindable(),
 		ref = $bindable(null),
 		resetQueryOnClose = true,
 		shortcut,
 		showTrigger = true,
 		style,
-		title = 'Command palette',
+		title,
 		trigger,
-		triggerLabel = 'Open command palette'
+		triggerLabel
 	}: ZCommandPaletteProps = $props();
+	const zui = useZui();
+	const resolvedCloseLabel = $derived(closeLabel ?? zui.localePack.common.close);
+	const resolvedEmptyText = $derived(emptyText ?? zui.localePack.command.empty);
+	const resolvedInputLabel = $derived(inputLabel ?? zui.localePack.command.inputLabel);
+	const resolvedListLabel = $derived(listLabel ?? zui.localePack.command.listLabel);
+	const resolvedPlaceholder = $derived(placeholder ?? zui.localePack.command.placeholder);
+	const resolvedTitle = $derived(title ?? zui.localePack.command.paletteTitle);
+	const resolvedTriggerLabel = $derived(triggerLabel ?? zui.localePack.command.paletteTrigger);
 	const openState = new ControllableState<boolean>({
 		defaultValue: () => defaultOpen,
 		onChange: () => onOpenChange,
@@ -187,28 +196,28 @@
 
 <ZDialog onOpenChange={setOpen} open={openState.current}>
 	{#if showTrigger}
-		<ZDialogTrigger aria-label={triggerLabel} {disabled}>
-			{#if trigger}{@render trigger()}{:else}{triggerLabel}{/if}
+		<ZDialogTrigger aria-label={resolvedTriggerLabel} {disabled}>
+			{#if trigger}{@render trigger()}{:else}{resolvedTriggerLabel}{/if}
 		</ZDialogTrigger>
 	{/if}
 	<ZDialogOverlay data-slot="overlay" />
 	<ZDialogContent bind:ref class={className} {style} data-slot="content">
-		<ZDialogTitle>{title}</ZDialogTitle>
+		<ZDialogTitle>{resolvedTitle}</ZDialogTitle>
 		{#if description}<ZDialogDescription>{description}</ZDialogDescription>{/if}
 		<ZCommand
 			autofocus
 			data-slot="command"
 			{defaultQuery}
 			{disabled}
-			{emptyText}
-			{inputLabel}
+			emptyText={resolvedEmptyText}
+			inputLabel={resolvedInputLabel}
 			{items}
-			{listLabel}
+			listLabel={resolvedListLabel}
 			onAction={handleAction}
 			onQueryChange={(next) => queryState.setFromUser(next)}
-			{placeholder}
+			placeholder={resolvedPlaceholder}
 			query={queryState.current}
 		/>
-		<ZDialogClose variant="secondary">{closeLabel}</ZDialogClose>
+		<ZDialogClose variant="secondary">{resolvedCloseLabel}</ZDialogClose>
 	</ZDialogContent>
 </ZDialog>

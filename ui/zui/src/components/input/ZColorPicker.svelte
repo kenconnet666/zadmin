@@ -161,14 +161,14 @@
 
 	let {
 		allowAlpha = false,
-		alphaLabel = 'Alpha',
+		alphaLabel,
 		class: className,
-		colorInputLabel = 'Choose color',
+		colorInputLabel,
 		defaultOpen = false,
 		defaultValue = '#2563eb',
 		disabled = false,
 		form,
-		hexInputLabel = 'Hex color',
+		hexInputLabel,
 		name,
 		onOpenChange,
 		onValueChange,
@@ -176,11 +176,16 @@
 		placement = 'bottom-start',
 		ref = $bindable(null),
 		style,
-		triggerLabel = (current) => `Color ${current}`,
+		triggerLabel,
 		value = $bindable(),
 		...rest
 	}: ZColorPickerProps = $props();
 	const zui = useZui();
+	const resolvedAlphaLabel = $derived(alphaLabel ?? zui.localePack.colorPicker.alpha);
+	const resolvedColorInputLabel = $derived(
+		colorInputLabel ?? zui.localePack.colorPicker.chooseColor
+	);
+	const resolvedHexInputLabel = $derived(hexInputLabel ?? zui.localePack.colorPicker.hexColor);
 	const uid = $props.id();
 	const idBase = $derived(createZuiId(zui.idPrefix, uid, 'color-picker'));
 	const normalize = (source: string): string => {
@@ -243,6 +248,9 @@
 		draftInvalid = !normalized;
 		if (normalized) valueState.setFromUser(normalized);
 	}
+	function getTriggerLabel(current: string): string {
+		return triggerLabel?.(current) ?? zui.localePack.colorPicker.color(current);
+	}
 </script>
 
 <div
@@ -261,7 +269,7 @@
 		{placement}
 	>
 		<ZPopoverTrigger
-			aria-label={triggerLabel(resolvedValue)}
+			aria-label={getTriggerLabel(resolvedValue)}
 			{disabled}
 			popupRole="dialog"
 			variant="secondary"
@@ -274,7 +282,7 @@
 			<span>{resolvedValue}</span>
 		</ZPopoverTrigger>
 		<ZPopoverContent
-			aria-label={triggerLabel(resolvedValue)}
+			aria-label={getTriggerLabel(resolvedValue)}
 			ariaLabelledBy={null}
 			data-slot="content"
 		>
@@ -284,7 +292,7 @@
 					id={`${idBase}-native`}
 					type="color"
 					value={rgb}
-					aria-label={colorInputLabel}
+					aria-label={resolvedColorInputLabel}
 					{disabled}
 					oninput={handleColor}
 				/>
@@ -293,7 +301,7 @@
 					id={`${idBase}-hex`}
 					type="text"
 					value={editing ? draft : resolvedValue}
-					aria-label={hexInputLabel}
+					aria-label={resolvedHexInputLabel}
 					aria-invalid={draftInvalid || undefined}
 					{disabled}
 					onfocus={() => {
@@ -315,7 +323,7 @@
 						min="0"
 						max="100"
 						value={Math.round(parsed.alpha * 100)}
-						aria-label={alphaLabel}
+						aria-label={resolvedAlphaLabel}
 						{disabled}
 						oninput={handleAlpha}
 					/>

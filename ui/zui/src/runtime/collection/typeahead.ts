@@ -1,20 +1,22 @@
 import type { CollectionItem } from './collection.svelte.js';
 
 export interface TypeaheadOptions {
-	readonly locale?: string;
+	readonly locale?: string | (() => string);
 	readonly now?: () => number;
 	readonly timeout?: number;
 }
 
 export class Typeahead<TKey extends number | string> {
-	readonly #collator: Intl.Collator;
+	#collator: Intl.Collator | undefined;
+	#collatorLocale: string | undefined;
+	readonly #locale: () => string | undefined;
 	readonly #now: () => number;
 	readonly #timeout: number;
 	#buffer = '';
 	#lastInput = Number.NEGATIVE_INFINITY;
 
 	constructor(options: TypeaheadOptions = {}) {
-		this.#collator = new Intl.Collator(options.locale, { sensitivity: 'base', usage: 'search' });
+		this.#locale = typeof options.locale === 'function' ? options.locale : () => options.locale;
 		this.#now = options.now ?? Date.now;
 		this.#timeout = options.timeout ?? 500;
 		if (!Number.isFinite(this.#timeout) || this.#timeout <= 0) {
@@ -36,6 +38,7 @@ export class Typeahead<TKey extends number | string> {
 		items: readonly CollectionItem<TKey>[],
 		currentKey?: TKey
 	): TKey | undefined {
+		if (this.#refreshCollator()) this.clear();
 		if ([...input].length !== 1 || /\s/u.test(input)) return undefined;
 		const now = this.#now();
 		this.#buffer = now - this.#lastInput > this.#timeout ? input : this.#buffer + input;
@@ -55,10 +58,20 @@ export class Typeahead<TKey extends number | string> {
 	}
 
 	#equal(left: string, right: string): boolean {
-		return this.#collator.compare(left, right) === 0;
+		return this.#collator!.compare(left, right) === 0;
 	}
 
 	#startsWith(value: string, query: string): boolean {
 		return this.#equal(value.slice(0, query.length), query);
+	}
+
+	#refreshCollator(): boolean {
+		const locale = this.#locale();
+		const changed = this.#collator !== undefined && locale !== this.#collatorLocale;
+		if (!this.#collator || changed) {
+			this.#collator = new Intl.Collator(locale, { sensitivity: 'base', usage: 'search' });
+			this.#collatorLocale = locale;
+		}
+		return changed;
 	}
 }

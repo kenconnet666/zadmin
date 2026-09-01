@@ -185,14 +185,14 @@
 
 	let {
 		accept,
-		chooseLabel = 'Choose files',
+		chooseLabel,
 		class: className,
 		defaultFiles = [],
 		disabled = false,
-		dropLabel = 'Drop files here or choose files',
+		dropLabel,
 		files = $bindable(),
 		form,
-		inputLabel = 'Choose files',
+		inputLabel,
 		inputRef = $bindable(null),
 		maxFiles = Number.POSITIVE_INFINITY,
 		maxSize,
@@ -200,13 +200,16 @@
 		name,
 		onFilesChange,
 		onReject,
-		removeLabel = (file) => `Remove ${file.name}`,
+		removeLabel,
 		ref = $bindable(null),
 		required = false,
 		style,
 		...rest
 	}: ZFileUploadProps = $props();
 	const zui = useZui();
+	const resolvedChooseLabel = $derived(chooseLabel ?? zui.localePack.fileUpload.chooseFiles);
+	const resolvedDropLabel = $derived(dropLabel ?? zui.localePack.fileUpload.dropFiles);
+	const resolvedInputLabel = $derived(inputLabel ?? zui.localePack.fileUpload.inputLabel);
 	const uid = $props.id();
 	const inputId = $derived(createZuiId(zui.idPrefix, uid, 'file-upload'));
 	const constraints = $derived.by(() => {
@@ -275,6 +278,9 @@
 			Object.freeze(resolvedFiles.filter((_, itemIndex) => itemIndex !== index))
 		);
 	}
+	function getRemoveLabel(file: File): string {
+		return removeLabel?.(file) ?? zui.localePack.fileUpload.removeFile(file.name);
+	}
 	function handleDrop(event: DragEvent & { currentTarget: HTMLDivElement }): void {
 		event.preventDefault();
 		dragging = false;
@@ -315,12 +321,12 @@
 		use:formReset={resetFromForm}
 		onchange={handleChange}
 	/>
-	<div>{dropLabel}</div>
+	<div>{resolvedDropLabel}</div>
 	<ZButton
 		aria-controls={inputId}
-		aria-label={inputLabel}
+		aria-label={resolvedInputLabel}
 		disabled={disabled || full}
-		onclick={() => inputRef?.click()}>{chooseLabel}</ZButton
+		onclick={() => inputRef?.click()}>{resolvedChooseLabel}</ZButton
 	>
 	<div class={listClass} data-slot="list" aria-live="polite">
 		{#each resolvedFiles as file, index (fileIdentity(file))}
@@ -328,7 +334,7 @@
 				<span>{file.name} · {file.size} B</span>
 				<ZButton
 					class={removeClass}
-					aria-label={removeLabel(file)}
+					aria-label={getRemoveLabel(file)}
 					{disabled}
 					size="small"
 					variant="ghost"

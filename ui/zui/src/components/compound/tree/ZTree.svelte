@@ -285,7 +285,7 @@
 			? focusKey
 			: (enabled.find(({ entry }) => selected.has(entry.key))?.entry.key ?? enabled[0]?.entry.key)
 	);
-	const typeahead = new Typeahead<SelectionKey>({ locale: zui.locale });
+	const typeahead = new Typeahead<SelectionKey>({ locale: () => zui.locale });
 	const virtualRange = $derived.by(() =>
 		virtualized
 			? calculateVirtualRange({

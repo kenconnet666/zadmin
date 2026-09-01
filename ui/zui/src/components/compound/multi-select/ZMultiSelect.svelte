@@ -80,8 +80,8 @@
 				type: 'boolean'
 			},
 			{
-				default: "'Select options'",
-				description: '空选择提示。',
+				default: 'Provider localePack.collection.selectOptions',
+				description: '空选择提示；显式值优先于Provider locale pack。',
 				name: 'placeholder',
 				type: 'string'
 			},
@@ -157,13 +157,14 @@
 		onOpenChange,
 		onValueChange,
 		open = $bindable(),
-		placeholder = 'Select options',
+		placeholder,
 		placement = 'bottom-start',
 		required: requiredProp = false,
 		valueLabel = String,
 		values = $bindable()
 	}: ZMultiSelectProps = $props();
 	const zui = useZui();
+	const resolvedPlaceholder = $derived(placeholder ?? zui.localePack.collection.selectOptions);
 	const field = claimZFieldControlOwner().field;
 	const uid = $props.id();
 	const idBase = $derived(createZuiId(zui.idPrefix, uid, 'multi-select'));
@@ -200,7 +201,7 @@
 		read: () => focusKey ?? resolvedValues[0],
 		write: (key) => (focusKey = key)
 	});
-	const typeahead = new Typeahead<SelectionKey>({ locale: zui.locale });
+	const typeahead = new Typeahead<SelectionKey>({ locale: () => zui.locale });
 	const context: ZMultiSelectContext = {
 		collection,
 		get controlId() {
@@ -228,7 +229,7 @@
 			return openState.current;
 		},
 		get placeholder() {
-			return placeholder;
+			return resolvedPlaceholder;
 		},
 		get required() {
 			return required;

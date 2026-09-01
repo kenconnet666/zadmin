@@ -210,7 +210,7 @@
 				)
 		);
 	let {
-		addLabel = 'Add tag',
+		addLabel,
 		allowDuplicates = false,
 		children,
 		class: className,
@@ -224,16 +224,18 @@
 		name,
 		onInputValueChange,
 		onValueChange,
-		placeholder = 'Add tag',
+		placeholder,
 		readonly = false,
 		ref = $bindable(null),
-		removeLabel = (value) => `Remove ${value}`,
+		removeLabel,
 		style,
 		validate,
 		values = $bindable(),
 		...rest
 	}: ZTagsInputProps = $props();
 	const zui = useZui();
+	const resolvedAddLabel = $derived(addLabel ?? zui.localePack.tagsInput.addTag);
+	const resolvedPlaceholder = $derived(placeholder ?? zui.localePack.tagsInput.addTag);
 	const uid = $props.id();
 	const inputId = $derived(createZuiId(zui.idPrefix, uid, 'tags-input'));
 	const resolvedMaxTags = $derived.by(() => {
@@ -298,6 +300,9 @@
 			Object.freeze(resolvedValues.filter((_, itemIndex) => itemIndex !== index))
 		);
 	}
+	function getRemoveLabel(value: string): string {
+		return removeLabel?.(value) ?? zui.localePack.tagsInput.removeTag(value);
+	}
 	function handleInput(event: Event & { currentTarget: HTMLInputElement }): void {
 		draftState.setFromUser(event.currentTarget.value);
 	}
@@ -355,7 +360,7 @@
 			<ZButton
 				class={removeClass}
 				data-slot="remove"
-				aria-label={removeLabel(tag)}
+				aria-label={getRemoveLabel(tag)}
 				disabled={disabled || readonly}
 				size="small"
 				variant="ghost"
@@ -366,9 +371,9 @@
 	<input
 		class={inputClass}
 		id={inputId}
-		aria-label={addLabel}
+		aria-label={resolvedAddLabel}
 		value={draftState.current}
-		{placeholder}
+		placeholder={resolvedPlaceholder}
 		disabled={disabled || full}
 		{readonly}
 		onblur={() => {

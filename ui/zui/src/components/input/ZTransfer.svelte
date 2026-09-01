@@ -276,27 +276,39 @@
 		controlId: controlIdProp,
 		defaultValue = [],
 		disabled: disabledProp = false,
-		emptyText = 'No items',
+		emptyText,
 		filter,
 		filterable = true,
 		form,
 		id,
 		invalid,
 		items,
-		moveToSourceLabel = 'Move selected to source',
-		moveToTargetLabel = 'Move selected to target',
+		moveToSourceLabel,
+		moveToTargetLabel,
 		name: nameProp,
 		onValueChange,
 		ref = $bindable(null),
 		required = false,
-		searchPlaceholder = 'Filter items',
-		sourceTitle = 'Available',
+		searchPlaceholder,
+		sourceTitle,
 		style,
-		targetTitle = 'Selected',
+		targetTitle,
 		value = $bindable(),
 		...rest
 	}: ZTransferProps = $props();
 	const zui = useZui();
+	const resolvedEmptyText = $derived(emptyText ?? zui.localePack.transfer.empty);
+	const resolvedMoveToSourceLabel = $derived(
+		moveToSourceLabel ?? zui.localePack.transfer.moveToSource
+	);
+	const resolvedMoveToTargetLabel = $derived(
+		moveToTargetLabel ?? zui.localePack.transfer.moveToTarget
+	);
+	const resolvedSearchPlaceholder = $derived(
+		searchPlaceholder ?? zui.localePack.transfer.filterPlaceholder
+	);
+	const resolvedSourceTitle = $derived(sourceTitle ?? zui.localePack.transfer.sourceTitle);
+	const resolvedTargetTitle = $derived(targetTitle ?? zui.localePack.transfer.targetTitle);
 	const fieldOwner = claimZFieldControlOwner();
 	const field = fieldOwner.field;
 	const uid = $props.id();
@@ -320,8 +332,8 @@
 	let targetFocus = $state<SelectionKey>();
 	const sourceElements = $state<(HTMLDivElement | null)[]>([]);
 	const targetElements = $state<(HTMLDivElement | null)[]>([]);
-	const sourceTypeahead = new Typeahead<SelectionKey>({ locale: zui.locale });
-	const targetTypeahead = new Typeahead<SelectionKey>({ locale: zui.locale });
+	const sourceTypeahead = new Typeahead<SelectionKey>({ locale: () => zui.locale });
+	const targetTypeahead = new Typeahead<SelectionKey>({ locale: () => zui.locale });
 	const normalizedItems = $derived.by(() => {
 		const keys = new Set<SelectionKey>();
 		for (const item of items) {
@@ -530,7 +542,7 @@
 >
 	<section class={panelClass} data-slot="panel" aria-labelledby={`${idBase}-source-title`}>
 		<header class={headerClass}>
-			<span id={`${idBase}-source-title`}>{sourceTitle}</span><span
+			<span id={`${idBase}-source-title`}>{resolvedSourceTitle}</span><span
 				>{sourceChecked.size} / {sourceItems.length}</span
 			>
 		</header>
@@ -542,10 +554,10 @@
 				size="small"
 				aria-describedby={resolvedDescribedBy}
 				aria-invalid={resolvedInvalid || undefined}
-				aria-label={`${sourceTitle}: ${searchPlaceholder}`}
+				aria-label={`${resolvedSourceTitle}: ${resolvedSearchPlaceholder}`}
 				aria-required={resolvedRequired || undefined}
 				invalid={resolvedInvalid}
-				placeholder={searchPlaceholder}
+				placeholder={resolvedSearchPlaceholder}
 				resetOnForm={false}
 				{disabled}
 			/>
@@ -558,7 +570,7 @@
 			role="listbox"
 			aria-describedby={!filterable ? resolvedDescribedBy : undefined}
 			aria-invalid={!filterable && resolvedInvalid ? 'true' : undefined}
-			aria-label={sourceTitle}
+			aria-label={resolvedSourceTitle}
 			aria-multiselectable="true"
 			aria-required={!filterable && resolvedRequired ? 'true' : undefined}
 			tabindex={filterable ? undefined : -1}
@@ -589,21 +601,21 @@
 				</div>
 			{/each}
 			{#if visibleSource.length === 0}
-				<div class={emptyClass}>{emptyText}</div>
+				<div class={emptyClass}>{resolvedEmptyText}</div>
 			{/if}
 		</div>
 	</section>
 
 	<div class={controlsClass} data-slot="controls">
 		<ZButton
-			aria-label={moveToTargetLabel}
+			aria-label={resolvedMoveToTargetLabel}
 			disabled={disabled || sourceCount === 0}
 			onclick={() => move('target')}
 		>
 			<MoveToTargetIcon aria-hidden="true" size={18} />
 		</ZButton>
 		<ZButton
-			aria-label={moveToSourceLabel}
+			aria-label={resolvedMoveToSourceLabel}
 			disabled={disabled || targetCount === 0}
 			onclick={() => move('source')}
 			variant="secondary"
@@ -614,7 +626,7 @@
 
 	<section class={panelClass} data-slot="panel" aria-labelledby={`${idBase}-target-title`}>
 		<header class={headerClass}>
-			<span id={`${idBase}-target-title`}>{targetTitle}</span><span
+			<span id={`${idBase}-target-title`}>{resolvedTargetTitle}</span><span
 				>{targetChecked.size} / {targetItems.length}</span
 			>
 		</header>
@@ -623,8 +635,8 @@
 				bind:value={targetQuery}
 				id={`${idBase}-target-filter`}
 				size="small"
-				aria-label={`${targetTitle}: ${searchPlaceholder}`}
-				placeholder={searchPlaceholder}
+				aria-label={`${resolvedTargetTitle}: ${resolvedSearchPlaceholder}`}
+				placeholder={resolvedSearchPlaceholder}
 				resetOnForm={false}
 				{disabled}
 			/>
@@ -633,7 +645,7 @@
 			class={listClass}
 			data-slot="list"
 			role="listbox"
-			aria-label={targetTitle}
+			aria-label={resolvedTargetTitle}
 			aria-multiselectable="true"
 		>
 			{#each visibleTarget as item, index (item.key)}
@@ -661,7 +673,7 @@
 				</div>
 			{/each}
 			{#if visibleTarget.length === 0}
-				<div class={emptyClass}>{emptyText}</div>
+				<div class={emptyClass}>{resolvedEmptyText}</div>
 			{/if}
 		</div>
 	</section>

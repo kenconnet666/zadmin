@@ -130,7 +130,7 @@
 		read: () => focusKey,
 		write: (key) => (focusKey = key)
 	});
-	const typeahead = new Typeahead<SelectionKey>({ locale: zui.locale });
+	const typeahead = new Typeahead<SelectionKey>({ locale: () => zui.locale });
 	const context: ZMenuContext = {
 		activate(value, originalEvent, onSelect) {
 			const event = new MenuActionEvent(originalEvent, value);

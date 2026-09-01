@@ -259,18 +259,18 @@
 		class: className,
 		defaultQuery = '',
 		disabled = false,
-		emptyText = 'No commands found',
+		emptyText,
 		filter,
-		inputLabel = 'Search commands',
+		inputLabel,
 		inputRef = $bindable(null),
 		items,
-		listLabel = 'Commands',
+		listLabel,
 		loop = true,
 		maxResults = 50,
 		onAction,
 		onEscape,
 		onQueryChange,
-		placeholder = 'Type a command',
+		placeholder,
 		query = $bindable(),
 		ref = $bindable(null),
 		shouldFilter = true,
@@ -278,6 +278,10 @@
 		...rest
 	}: ZCommandProps = $props();
 	const zui = useZui();
+	const resolvedEmptyText = $derived(emptyText ?? zui.localePack.command.empty);
+	const resolvedInputLabel = $derived(inputLabel ?? zui.localePack.command.inputLabel);
+	const resolvedListLabel = $derived(listLabel ?? zui.localePack.command.listLabel);
+	const resolvedPlaceholder = $derived(placeholder ?? zui.localePack.command.placeholder);
 	const uid = $props.id();
 	const idBase = $derived(createZuiId(zui.idPrefix, uid, 'command'));
 	// These identity caches are mutated while rendering and must not create reactive writes.
@@ -451,9 +455,9 @@
 		defaultValue={defaultQuery}
 		value={queryState.current}
 		{disabled}
-		{placeholder}
+		placeholder={resolvedPlaceholder}
 		role="combobox"
-		aria-label={inputLabel}
+		aria-label={resolvedInputLabel}
 		aria-autocomplete="list"
 		aria-controls={`${idBase}-list`}
 		aria-expanded="true"
@@ -466,13 +470,13 @@
 		id={`${idBase}-list`}
 		data-slot="list"
 		role="listbox"
-		aria-label={listLabel}
+		aria-label={resolvedListLabel}
 	>
 		{#each groups as group (group.name)}
 			<div
 				data-slot="group"
 				role="group"
-				aria-label={group.name ? undefined : listLabel}
+				aria-label={group.name ? undefined : resolvedListLabel}
 				aria-labelledby={group.name ? groupId(group.name) : undefined}
 			>
 				{#if group.name}<div class={groupLabelClass} id={groupId(group.name)}>
@@ -513,7 +517,7 @@
 				{/each}
 			</div>
 		{/each}
-		{#if results.length === 0}<div class={emptyClass}>{emptyText}</div>{/if}
+		{#if results.length === 0}<div class={emptyClass}>{resolvedEmptyText}</div>{/if}
 	</div>
 </div>
 <FormResetSignal control={inputRef} onReset={resetFromForm} />

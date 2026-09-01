@@ -172,10 +172,10 @@
 		class: className,
 		defaultValue = '',
 		disabled = false,
-		emptyText = 'No suggestions',
+		emptyText,
 		filter,
 		items,
-		listLabel = 'Mention suggestions',
+		listLabel,
 		maxSuggestions = 8,
 		minQueryLength = 0,
 		onMention,
@@ -190,6 +190,8 @@
 		...rest
 	}: ZMentionProps = $props();
 	const zui = useZui();
+	const resolvedEmptyText = $derived(emptyText ?? zui.localePack.collection.mentionEmpty);
+	const resolvedListLabel = $derived(listLabel ?? zui.localePack.collection.mentionList);
 	const uid = $props.id();
 	const idBase = $derived(createZuiId(zui.idPrefix, uid, 'mention'));
 	let query = $state<MentionQuery>();
@@ -339,7 +341,12 @@
 		{disabled}
 		{readonly}
 	/>
-	<ZPopoverContent aria-label={listLabel} ariaLabelledBy={null} manageFocus={false} role="listbox">
+	<ZPopoverContent
+		aria-label={resolvedListLabel}
+		ariaLabelledBy={null}
+		manageFocus={false}
+		role="listbox"
+	>
 		<div class={listClass} data-slot="list">
 			{#each suggestions as item (item.key)}
 				<div
@@ -366,7 +373,7 @@
 					{#if item.description}<div class={descriptionClass}>{item.description}</div>{/if}
 				</div>
 			{/each}
-			{#if suggestions.length === 0}<div class={emptyClass}>{emptyText}</div>{/if}
+			{#if suggestions.length === 0}<div class={emptyClass}>{resolvedEmptyText}</div>{/if}
 		</div>
 	</ZPopoverContent>
 </ZPopover>

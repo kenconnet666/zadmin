@@ -392,10 +392,16 @@ export type {
 } from '../runtime/foundation/context.js';
 export { enUSLocalePack, zhCNLocalePack } from '../runtime/foundation/locale.js';
 export type {
+	ZuiCollectionLocale,
+	ZuiColorPickerLocale,
+	ZuiCommandLocale,
 	ZuiCommonLocale,
 	ZuiDateLocale,
+	ZuiFileUploadLocale,
 	ZuiPaginationLocale,
-	ZuiTimeLocale
+	ZuiTagsInputLocale,
+	ZuiTimeLocale,
+	ZuiTransferLocale
 } from '../runtime/foundation/locale.js';
 export {
 	createBrowserIcssRuntime,
