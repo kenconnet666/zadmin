@@ -124,6 +124,7 @@ import {
 	ZTimeline,
 	ZTooltip,
 	ZTooltipContent,
+	ZTooltipGroup,
 	ZTooltipTrigger,
 	ZTour,
 	ZTree,
@@ -262,6 +263,7 @@ import {
 	type ZTimeFieldProps,
 	type ZTimelineProps,
 	type ZTooltipContentProps,
+	type ZTooltipGroupProps,
 	type ZTooltipProps,
 	type ZTooltipTriggerProps,
 	type ZTourProps,
@@ -274,7 +276,14 @@ import {
 
 const boxProps: ZBoxProps = { 'aria-label': 'Box' };
 const avatarProps: ComponentProps<typeof ZAvatar> = { alt: 'Alice' } satisfies ZAvatarProps;
-const badgeProps: ComponentProps<typeof ZBadge> = { tone: 'success' } satisfies ZBadgeProps;
+const badgeProps: ComponentProps<typeof ZBadge> = {
+	count: 128,
+	dot: false,
+	max: 99,
+	overlap: 'circular',
+	placement: 'top-end',
+	tone: 'danger'
+} satisfies ZBadgeProps;
 const cardProps: ComponentProps<typeof ZCard> = {} satisfies ZCardProps;
 const descriptionListProps: ComponentProps<typeof ZDescriptionList> = {
 	items: [{ description: '1', id: 'version', term: 'Version' }]
@@ -340,13 +349,21 @@ const accordionProps: ComponentProps<typeof ZAccordion> = {
 	defaultValue: ['one'],
 	type: 'multiple'
 } satisfies ZAccordionProps;
+const accordionSingleProps: ComponentProps<typeof ZAccordion> = {
+	activeValue: 1,
+	defaultValue: null,
+	type: 'single',
+	value: 1
+} satisfies ZAccordionProps;
 const accordionItemProps: ComponentProps<typeof ZAccordionItem> = {
 	value: 'one'
 } satisfies ZAccordionItemProps;
-const accordionTriggerProps: ComponentProps<typeof ZAccordionTrigger> =
-	{} satisfies ZAccordionTriggerProps;
-const accordionContentProps: ComponentProps<typeof ZAccordionContent> =
-	{} satisfies ZAccordionContentProps;
+const accordionTriggerProps: ComponentProps<typeof ZAccordionTrigger> = {
+	headingLevel: 4
+} satisfies ZAccordionTriggerProps;
+const accordionContentProps: ComponentProps<typeof ZAccordionContent> = {
+	region: false
+} satisfies ZAccordionContentProps;
 const alertDialogProps: ComponentProps<typeof ZAlertDialog> = {
 	defaultOpen: true
 } satisfies ZAlertDialogProps;
@@ -477,6 +494,7 @@ const paginationItemCountProps: ComponentProps<typeof ZPagination> = {
 	totalItems: 93
 } satisfies ZPaginationProps;
 const popconfirmProps: ComponentProps<typeof ZPopconfirm> = {
+	onConfirm: async () => undefined,
 	placement: 'bottom-start'
 } satisfies ZPopconfirmProps;
 const popconfirmTriggerProps: ComponentProps<typeof ZPopconfirmTrigger> =
@@ -657,26 +675,35 @@ const switchProps: ComponentProps<typeof ZSwitch> = {
 } satisfies ZSwitchProps;
 const tabsProps: ComponentProps<typeof ZTabs> = {
 	activationMode: 'manual',
-	defaultValue: 'overview'
+	activeValue: 1,
+	defaultValue: null,
+	panelMount: 'lazy',
+	value: 1
 } satisfies ZTabsProps;
 const tabsListProps: ComponentProps<typeof ZTabsList> = {} satisfies ZTabsListProps;
 const tabsTriggerProps: ComponentProps<typeof ZTabsTrigger> = {
-	value: 'overview'
+	value: 1
 } satisfies ZTabsTriggerProps;
 const tabsPanelProps: ComponentProps<typeof ZTabsPanel> = {
-	value: 'overview'
+	tabindex: -1,
+	value: 1
 } satisfies ZTabsPanelProps;
 const tooltipProps: ComponentProps<typeof ZTooltip> = { delay: 200 } satisfies ZTooltipProps;
 const tooltipTriggerProps: ComponentProps<typeof ZTooltipTrigger> =
 	{} satisfies ZTooltipTriggerProps;
 const tooltipContentProps: ComponentProps<typeof ZTooltipContent> =
 	{} satisfies ZTooltipContentProps;
+const tooltipGroupProps: ComponentProps<typeof ZTooltipGroup> = {
+	delay: 400,
+	skipDelayDuration: 200
+} satisfies ZTooltipGroupProps;
 const toggleButtonProps: ComponentProps<typeof ZToggleButton> = {
 	defaultPressed: true,
 	onPressedChange: (pressed) => void pressed
 } satisfies ZToggleButtonProps;
 void DirectZBox;
 void accordionProps;
+void accordionSingleProps;
 void avatarProps;
 void badgeProps;
 void cardProps;
@@ -804,6 +831,7 @@ void tabsPanelProps;
 void tooltipProps;
 void tooltipTriggerProps;
 void tooltipContentProps;
+void tooltipGroupProps;
 void toggleButtonProps;
 
 declare const s: IcssStyle<typeof defaultTheme>;

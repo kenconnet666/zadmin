@@ -25,6 +25,18 @@
 
 <ZProvider {theme}>
 	<ZButton class={overrideClass} data-testid="button" variant="secondary">Save</ZButton>
+	<ZButton aria-label="Small square" data-testid="button-square-small" shape="square" size="small"
+		><ZIcon name="search" /></ZButton
+	>
+	<ZButton
+		aria-label="Medium square"
+		data-testid="button-square-medium"
+		shape="square"
+		size="medium"><ZIcon name="search" /></ZButton
+	>
+	<ZButton aria-label="Large square" data-testid="button-square-large" shape="square" size="large"
+		><ZIcon name="search" /></ZButton
+	>
 	<ZStack data-testid="stack" direction="row" gap="medium">
 		<ZText data-testid="text" tone="primary">Label</ZText>
 		<ZIcon data-testid="icon" label="Search" name="search" size={20} />

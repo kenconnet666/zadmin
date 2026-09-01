@@ -58,4 +58,24 @@ describe('ZMention production collection contract', () => {
 			'@user-0999 :0'
 		);
 	});
+
+	it('delegates pointer selection to the listbox while the textarea keeps focus', async () => {
+		render(MentionProductionFixture, { mode: 'async' });
+		const editor = document.querySelector<HTMLTextAreaElement>(
+			'textarea[aria-label="Async mention"]'
+		)!;
+		input(editor, '@ali');
+		await tick();
+		document.querySelector<HTMLButtonElement>('[data-testid="mention-resolve"]')?.click();
+		await tick();
+		editor.focus();
+		const option = document.querySelector<HTMLElement>('[role="option"]')!;
+		option.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true }));
+		option.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, cancelable: true }));
+		await tick();
+		expect(document.activeElement).toBe(editor);
+		expect(document.querySelector('[data-testid="mention-production-output"]')?.textContent).toBe(
+			'@numeric :1'
+		);
+	});
 });

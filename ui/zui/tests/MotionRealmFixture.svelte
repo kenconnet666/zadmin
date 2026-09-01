@@ -16,7 +16,8 @@
 	} from '../src/entrypoints/index.js';
 
 	let { motion = 'auto' }: { motion?: 'auto' | 'full' | 'reduced' } = $props();
-	let resolvedMotion = $state(motion);
+	let motionOverride = $state<'auto' | 'full' | 'reduced'>();
+	const resolvedMotion = $derived(motionOverride ?? motion);
 
 	const slides = [
 		{ id: 'one', label: 'One' },
@@ -27,7 +28,7 @@
 <button
 	data-testid="motion-force-reduced"
 	type="button"
-	onclick={() => (resolvedMotion = 'reduced')}
+	onclick={() => (motionOverride = 'reduced')}
 >
 	Reduce motion
 </button>

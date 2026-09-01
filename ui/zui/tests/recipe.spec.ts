@@ -49,6 +49,7 @@ describe('defineRecipe', () => {
 		expect(first.split(' ')).toHaveLength(2);
 		expect(second.split(' ')).toHaveLength(4);
 		expect(runtime.recipe(defaultTheme, recipe)).toBe(first);
+		expect(runtime.recipe(defaultTheme, recipe, { tone: undefined } as never)).toBe(first);
 		expect(registry.size).toBe(5);
 		expect(registry.metrics).toMatchObject({ classes: 5, recipes: 1 });
 		const selectedClasses = second.split(' ');
@@ -205,6 +206,7 @@ describe('defineSlotRecipe', () => {
 		expect(defaults.control).toBe('');
 		expect(invalid.control).not.toBe('');
 		expect(runtime.slots(defaultTheme, recipe)).toEqual(defaults);
+		expect(runtime.slots(defaultTheme, recipe, { size: undefined } as never)).toEqual(defaults);
 		expect(registry.size).toBe(5);
 		expect(registry.metrics.recipes).toBe(1);
 		const rootClasses = invalid.root.split(' ');

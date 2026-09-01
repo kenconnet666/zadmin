@@ -1,4 +1,4 @@
-import { cleanup, render } from '@testing-library/svelte';
+import { cleanup, render } from 'vitest-browser-svelte';
 import { mount, tick, unmount } from 'svelte';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
@@ -135,7 +135,7 @@ describe('ZFileUpload production queue', () => {
 		document.querySelector<HTMLButtonElement>('[data-testid="clear-files"]')?.click();
 		await tick();
 		expect(document.activeElement).toBe(dropzone);
-		expect(root?.getAttribute('aria-readonly')).toBe('true');
+		expect(root?.dataset.readonly).toBe('true');
 		expect(transport).not.toHaveBeenCalled();
 		expect((new FormData(form!).get('asset') as File).name).toBe('readonly.json');
 	});
@@ -145,8 +145,9 @@ describe('ZFileUpload production queue', () => {
 		document.body.append(frame);
 		const ownerDocument = frame.contentDocument!;
 		const ownerView = frame.contentWindow!;
+		const ownerGlobals = ownerView as Window & typeof globalThis;
 		let signal: AbortSignal | undefined;
-		const file = new ownerView.File(['{}'], 'realm.json', { type: 'application/json' });
+		const file = new ownerGlobals.File(['{}'], 'realm.json', { type: 'application/json' });
 		const component = mount(FileUploadProductionFixture, {
 			props: {
 				defaultFiles: [createFileUploadItem('realm', file)],
@@ -159,7 +160,7 @@ describe('ZFileUpload production queue', () => {
 		await tick();
 		ownerDocument.querySelector<HTMLButtonElement>('[data-testid="upload-all"]')?.click();
 		await tick();
-		expect(signal).toBeInstanceOf(ownerView.AbortSignal);
+		expect(signal).toBeInstanceOf(ownerGlobals.AbortSignal);
 		expect(
 			ownerDocument.querySelector<HTMLInputElement>('input[type="file"]')?.files?.item(0)?.name
 		).toBe('realm.json');

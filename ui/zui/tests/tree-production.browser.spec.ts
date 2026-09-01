@@ -163,13 +163,14 @@ describe('LogicalTree production contracts', () => {
 		document.body.append(frame);
 		const frameDocument = frame.contentDocument;
 		if (!frameDocument?.body) throw new Error('Missing iframe document.');
+		const ownerGlobals = frame.contentWindow as (Window & typeof globalThis) | null;
 		const component = mount(TreeProductionFixture, { target: frameDocument.body });
 		await tick();
 
 		const virtual = frameDocument.querySelector<HTMLElement>(
 			'[data-testid="tree-production-virtual"]'
 		)!;
-		const KeyboardEventConstructor = frame.contentWindow?.KeyboardEvent;
+		const KeyboardEventConstructor = ownerGlobals?.KeyboardEvent;
 		if (!KeyboardEventConstructor) throw new Error('Missing iframe KeyboardEvent.');
 		virtual.focus();
 		virtual.dispatchEvent(new KeyboardEventConstructor('keydown', { bubbles: true, key: 'End' }));

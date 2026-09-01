@@ -42,6 +42,7 @@ describe('typed locale packs', () => {
 		expect(pack.progress.label).toBe('Completion');
 		expect(pack.date).toMatchObject({ calendarLabel: 'Calendar', nextMonth: '下个月' });
 		expect(pack.feedback).toMatchObject({
+			confirmFailed: 'Confirmation failed. Try again.',
 			dismissNotification: 'Dismiss notification',
 			loading: 'Working'
 		});
@@ -91,6 +92,7 @@ describe('typed locale packs', () => {
 		expect(enUSLocalePack.date.clearDateRange).toBe('Clear date range');
 		expect(zhCNLocalePack.time.clearTime).toBe('清空时间');
 		expect(zhCNLocalePack.feedback.dismissToast('发布成功')).toBe('关闭通知：发布成功');
+		expect(zhCNLocalePack.feedback.confirmFailed).toBe('确认失败，请重试。');
 		expect(zhCNLocalePack.fileUpload.removeFile('说明.pdf')).toBe('移除文件 说明.pdf');
 		expect(zhCNLocalePack.form.unexpectedValidation).toBe('验证过程中发生意外错误。');
 		expect(zhCNLocalePack.numberField.inputLabel).toBe('数字');

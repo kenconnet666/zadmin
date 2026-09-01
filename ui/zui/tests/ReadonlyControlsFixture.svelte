@@ -57,7 +57,7 @@
 
 <ZProvider direction="rtl">
 	<form data-testid="readonly-controls-form">
-		<ZField invalid label="Readonly checkbox" readonly>
+		<ZField error="Readonly checkbox error" label="Readonly checkbox" readonly>
 			<ZCheckbox
 				bind:checked={checkbox}
 				data-testid="readonly-checkbox"
@@ -71,7 +71,7 @@
 			/>
 		</ZField>
 
-		<ZField invalid label="Readonly slider" readonly>
+		<ZField error="Readonly slider error" label="Readonly slider" readonly>
 			<ZSlider
 				bind:value={slider}
 				data-testid="readonly-slider"
@@ -87,7 +87,7 @@
 			/>
 		</ZField>
 
-		<ZField invalid label="Readonly radio" readonly>
+		<ZField error="Readonly radio error" label="Readonly radio" readonly>
 			<ZRadioGroup
 				bind:value={radio}
 				aria-label="Readonly radio"

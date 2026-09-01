@@ -44,7 +44,7 @@
 		src="data:image/png;base64,broken"
 		data-testid="avatar-image"
 	/>
-	<ZBadge tone="success" data-testid="badge">Ready</ZBadge>
+	<ZBadge count={128} max={99} tone="danger" data-testid="badge" />
 	{#if tagVisible}
 		<ZTag
 			removable

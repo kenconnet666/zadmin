@@ -1,4 +1,4 @@
-import { cleanup, render } from '@testing-library/svelte';
+import { cleanup, render } from 'vitest-browser-svelte';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it } from 'vitest';
 
@@ -6,7 +6,11 @@ import TransferProductionFixture from './TransferProductionFixture.svelte';
 
 afterEach(cleanup);
 
-function keydown(target: Element | null, key: string, init: KeyboardEventInit = {}): void {
+function keydown(
+	target: Element | null | undefined,
+	key: string,
+	init: KeyboardEventInit = {}
+): void {
 	target?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key, ...init }));
 }
 

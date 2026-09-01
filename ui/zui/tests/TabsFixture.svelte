@@ -4,9 +4,9 @@
 	import ZTabsPanel from '../src/components/compound/tabs/ZTabsPanel.svelte';
 	import ZTabsTrigger from '../src/components/compound/tabs/ZTabsTrigger.svelte';
 
-	let automatic = $state('b');
+	let automatic = $state<string | number | null>('b');
 	let automaticChanges = $state(0);
-	let manual = $state('one');
+	let manual = $state<string | number | null>('one');
 	let manualChanges = $state(0);
 </script>
 

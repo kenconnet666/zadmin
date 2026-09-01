@@ -53,6 +53,8 @@ import CascaderFixture from './CascaderFixture.svelte';
 import CarouselFixture from './CarouselFixture.svelte';
 import ColorPickerFixture from './ColorPickerFixture.svelte';
 import AccordionFixture from './AccordionFixture.svelte';
+import AccordionInvalidNestedFixture from './AccordionInvalidNestedFixture.svelte';
+import AccordionTabsProductionFixture from './AccordionTabsProductionFixture.svelte';
 import AlertDialogFixture from './AlertDialogFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
 import FileUploadFixture from './FileUploadFixture.svelte';
@@ -170,6 +172,15 @@ describe('ZUI foundational components', () => {
 		expect(result.body).not.toContain('svelte-css-wrapper');
 	});
 
+	it('renders the explicit square button shape contract', () => {
+		const result = render(ZButton, {
+			props: { 'aria-label': 'Search', shape: 'square', size: 'small' }
+		});
+
+		expect(result.body).toContain('data-shape="square"');
+		expect(result.body).toContain('aria-label="Search"');
+	});
+
 	it('renders toggle button state without changing native button semantics', () => {
 		const off = render(ZToggleButton).body;
 		const on = render(ZToggleButton, { props: { defaultPressed: true } }).body;
@@ -229,6 +240,19 @@ describe('ZUI foundational components', () => {
 		expect(controls).toBeDefined();
 		expect(labelledBy).toBeDefined();
 		expect(result).toContain(`id="${labelledBy}"`);
+		expect(result).toMatch(/<button(?=[^>]*data-testid="tab-b")(?=[^>]*tabindex="0")[^>]*>/u);
+		expect(result).toMatch(/<button(?=[^>]*data-testid="tab-a")(?=[^>]*tabindex="-1")[^>]*>/u);
+	});
+
+	it('renders typed Accordion/Tabs identities and default keep-mounted panels during SSR', () => {
+		const result = render(AccordionTabsProductionFixture).body;
+		expect(result).toContain('data-testid="production-accordion"');
+		expect(result).toContain('role="heading"');
+		expect(result).toContain('data-testid="production-tabs"');
+		expect(result.match(/role="tabpanel"/gu)?.length).toBeGreaterThanOrEqual(7);
+		expect(result).toContain('data-panel-mount="keep-mounted"');
+		expect(result).not.toContain('data-testid="lazy-panel-b"');
+		expect(result).not.toContain('data-testid="active-panel-b"');
 	});
 
 	it('renders localized pagination with aria-current and boundary controls during SSR', () => {
@@ -288,6 +312,11 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain(`id="${contentId}"`);
 		expect(result).toContain('role="region"');
 		expect(result).toContain('Alpha content');
+		expect(result).toMatch(/<button(?=[^>]*data-testid="accordion-a")(?=[^>]*tabindex="0")[^>]*>/u);
+	});
+
+	it('rejects an Accordion Trigger that inherits an Item from a different nested owner', () => {
+		expect(() => render(AccordionInvalidNestedFixture)).toThrow(/nearest ZAccordion/u);
 	});
 
 	it('renders Popover SSR closed by default and inline when initially open', () => {

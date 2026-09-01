@@ -76,6 +76,27 @@ describe('ICSS builder', () => {
 		});
 	});
 
+	it('serializes typed scroll anchoring and pointer gesture keywords', () => {
+		const program = createStyleProgram(defaultTheme, (s) => {
+			s.overflowAnchor.none;
+			s.touchAction.manipulation;
+		});
+		expect(program.block.instructions).toEqual([
+			{
+				important: false,
+				kind: 'declaration',
+				property: 'overflowAnchor',
+				values: [{ value: 'none' }]
+			},
+			{
+				important: false,
+				kind: 'declaration',
+				property: 'touchAction',
+				values: [{ value: 'manipulation' }]
+			}
+		]);
+	});
+
 	it('validates selectors, values and theme tokens', () => {
 		expect(() =>
 			createStyleProgram(defaultTheme, (s) => s._selector('.outside', () => undefined))
@@ -96,9 +117,11 @@ describe('ICSS builder', () => {
 		expectTypeOf<Style['outlineColor']['_focus']>().toEqualTypeOf<void>();
 		expectTypeOf<Style['outlineStyle']['solid']>().toEqualTypeOf<void>();
 		expectTypeOf<Style['outlineWidth']['_medium']>().toEqualTypeOf<void>();
+		expectTypeOf<Style['overflowAnchor']['none']>().toEqualTypeOf<void>();
 		expectTypeOf<Style['insetBlockStart']['_small']>().toEqualTypeOf<void>();
 		expectTypeOf<Style['insetInlineEnd']['percent']>().toBeFunction();
 		expectTypeOf<Style['padding']['px']>().toBeFunction();
+		expectTypeOf<Style['touchAction']['manipulation']>().toEqualTypeOf<void>();
 		expectTypeOf<Style['width']['fitContent']>().toEqualTypeOf<void>();
 	});
 

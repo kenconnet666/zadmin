@@ -44,7 +44,7 @@
 	let aborted = $state(0);
 	let errors = $state(0);
 
-	function loadChildren(node: TreeNode, { signal }: TreeLoadContext): Promise<void> {
+	function loadChildren(node: TreeNode, { signal }: TreeLoadContext<SelectionKey>): Promise<void> {
 		attempts += 1;
 		return new Promise((resolve, reject) => {
 			const cleanup = () => signal.removeEventListener('abort', abort);

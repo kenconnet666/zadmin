@@ -5,6 +5,7 @@ import {
 	KeyedVirtualizer,
 	virtualScrollOffset
 } from '../src/runtime/collection/virtualizer.js';
+import type { SelectionKey } from '../src/runtime/collection/selection.js';
 
 describe('fixed-size virtualizer', () => {
 	it('calculates clamped visible ranges with overscan', () => {
@@ -78,7 +79,7 @@ describe('fixed-size virtualizer', () => {
 
 describe('keyed virtualizer', () => {
 	it('keeps number and string keys distinct while exposing visible and overscan windows', () => {
-		const virtualizer = new KeyedVirtualizer({
+		const virtualizer = new KeyedVirtualizer<SelectionKey>({
 			estimateSize: 40,
 			keys: [1, '1', 'tail'],
 			overscan: 1,
@@ -99,7 +100,7 @@ describe('keyed virtualizer', () => {
 	});
 
 	it('stores dynamic measurements by key and preserves the first visible anchor', () => {
-		const virtualizer = new KeyedVirtualizer({
+		const virtualizer = new KeyedVirtualizer<SelectionKey>({
 			estimateSize: 40,
 			keys: ['a', 'b', 'c', 'd'],
 			overscan: 0,
@@ -124,7 +125,7 @@ describe('keyed virtualizer', () => {
 	});
 
 	it('restores the nearest retained anchor when the visible key is removed', () => {
-		const virtualizer = new KeyedVirtualizer({
+		const virtualizer = new KeyedVirtualizer<SelectionKey>({
 			estimateSize: 30,
 			keys: ['a', 'b', 'c', 'd'],
 			scrollOffset: 35,
@@ -146,7 +147,7 @@ describe('keyed virtualizer', () => {
 	});
 
 	it('scrolls by key or clamped index with all alignments', () => {
-		const virtualizer = new KeyedVirtualizer({
+		const virtualizer = new KeyedVirtualizer<SelectionKey>({
 			estimateSize: (key) => (key === 'large' ? 80 : 20),
 			keys: ['first', 'large', 'last'],
 			viewportSize: 60
@@ -164,7 +165,7 @@ describe('keyed virtualizer', () => {
 	});
 
 	it('produces an explicit SSR range and rejects invalid contracts', () => {
-		const virtualizer = new KeyedVirtualizer({
+		const virtualizer = new KeyedVirtualizer<SelectionKey>({
 			estimateSize: 25,
 			keys: Array.from({ length: 100 }, (_, index) => `row-${index}`),
 			overscan: 2,

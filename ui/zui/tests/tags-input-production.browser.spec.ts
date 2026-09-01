@@ -5,6 +5,20 @@ import { render } from 'vitest-browser-svelte';
 import TagsInputProductionFixture from './TagsInputProductionFixture.svelte';
 
 describe('ZTagsInput production contract', () => {
+	it('clears the native draft value when add and clear occur in one Svelte flush', async () => {
+		render(TagsInputProductionFixture);
+		const root = document.querySelector<HTMLElement>('[data-testid="tags-production-static"]')!;
+		const input = root.querySelector<HTMLInputElement>('[data-slot="input"]')!;
+		input.value = 'three';
+		input.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+		await tick();
+		expect(input.value).toBe('');
+		expect(
+			document.querySelector('[data-testid="tags-production-static-output"]')?.textContent
+		).toBe('one,two,three');
+	});
+
 	it('coordinates Field, overflow, keyboard editing, removal, FormData and reset', async () => {
 		render(TagsInputProductionFixture);
 		const root = document.querySelector<HTMLElement>('[data-testid="tags-production"]')!;

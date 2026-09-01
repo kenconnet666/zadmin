@@ -1,5 +1,5 @@
 import { tick } from 'svelte';
-import { cleanup, render } from '@testing-library/svelte';
+import { cleanup, render } from 'vitest-browser-svelte';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import ChoiceControlsCollectionFixture from './ChoiceControlsCollectionFixture.svelte';

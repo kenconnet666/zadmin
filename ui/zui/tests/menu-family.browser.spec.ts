@@ -164,11 +164,12 @@ describe('production Menu family', () => {
 		const ownerDocument = frame.contentDocument;
 		const ownerWindow = frame.contentWindow;
 		if (!ownerDocument || !ownerWindow) throw new Error('Expected a same-origin iframe realm.');
+		const ownerGlobals = ownerWindow as Window & typeof globalThis;
 		const fixture = mount(MenuFamilyProductionFixture, { target: ownerDocument.body });
 		await tick();
 		const target = ownerDocument.querySelector<HTMLElement>('[data-testid="context-trigger"]')!;
 		target.dispatchEvent(
-			new ownerWindow.KeyboardEvent('keydown', {
+			new ownerGlobals.KeyboardEvent('keydown', {
 				bubbles: true,
 				cancelable: true,
 				key: 'ContextMenu'
@@ -179,7 +180,7 @@ describe('production Menu family', () => {
 			ownerDocument.querySelector<HTMLElement>('[data-testid="context-first"]')
 		);
 		ownerDocument.dispatchEvent(
-			new ownerWindow.KeyboardEvent('keydown', { bubbles: true, key: 'Escape' })
+			new ownerGlobals.KeyboardEvent('keydown', { bubbles: true, key: 'Escape' })
 		);
 		await finishPresence();
 		expect(ownerDocument.activeElement).toBe(target);

@@ -17,6 +17,7 @@ import CodeRaceFixture from './CodeRaceFixture.svelte';
 import ContextMenuFixture from './ContextMenuFixture.svelte';
 import ContextBoundaryFixture from './ContextBoundaryFixture.svelte';
 import AccordionFixture from './AccordionFixture.svelte';
+import AccordionTabsProductionFixture from './AccordionTabsProductionFixture.svelte';
 import AlertDialogFixture from './AlertDialogFixture.svelte';
 import CheckboxFixture from './CheckboxFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
@@ -2428,7 +2429,7 @@ describe('compiled ICSS browser updates', () => {
 		expect(charlie?.getAttribute('aria-expanded')).toBe('true');
 		expect(alphaContent?.dataset.presence).toBe('exiting');
 		expect(alphaContent?.inert).toBe(true);
-		expect(alphaContent?.hasAttribute('aria-hidden')).toBe(false);
+		expect(alphaContent?.getAttribute('aria-hidden')).toBe('true');
 		expect(output?.textContent).toBe('c:1');
 		await new Promise((resolve) => setTimeout(resolve, 220));
 		await tick();
@@ -2458,9 +2459,11 @@ describe('compiled ICSS browser updates', () => {
 		await unmount(component);
 
 		component = mount(AccordionFixture, { props: { collapsible: false }, target });
-		target.querySelector<HTMLButtonElement>('[data-testid="accordion-a"]')?.click();
+		const locked = target.querySelector<HTMLButtonElement>('[data-testid="accordion-a"]');
+		locked?.click();
 		await tick();
 		expect(target.querySelector('[data-testid="accordion-output"]')?.textContent).toBe('a:0');
+		expect(locked?.getAttribute('aria-disabled')).toBe('true');
 		await unmount(component);
 
 		component = mount(AccordionFixture, { props: { disabledRoot: true }, target });
@@ -2491,6 +2494,54 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(charlie?.getAttribute('aria-expanded')).toBe('false');
 		expect(output?.textContent).toBe('none:1');
+	});
+
+	it('keeps typed Accordion active/expanded identity and restores nearest focus after removal', async () => {
+		render(AccordionTabsProductionFixture);
+		const root = document.querySelector<HTMLElement>('[data-testid="production-accordion"]');
+		const triggers = root?.querySelectorAll<HTMLButtonElement>('button[aria-expanded]');
+		const numeric = triggers?.[0];
+		const string = triggers?.[1];
+		const output = root?.querySelector<HTMLOutputElement>(
+			'[data-testid="production-accordion-output"]'
+		);
+		expect(numeric?.getAttribute('aria-expanded')).toBe('true');
+		expect(string?.getAttribute('aria-expanded')).toBe('false');
+
+		string?.focus();
+		string?.click();
+		await tick();
+		expect(output?.textContent?.trim()).toBe('string:1|string:1|1');
+		expect(numeric?.getAttribute('aria-expanded')).toBe('false');
+		expect(string?.getAttribute('aria-expanded')).toBe('true');
+
+		root?.querySelector<HTMLButtonElement>('[data-testid="remove-accordion-active"]')?.click();
+		await tick();
+		await Promise.resolve();
+		expect(output?.textContent?.trim()).toBe('null|string:last|1');
+		expect(document.activeElement?.textContent).toContain('Last');
+		const nested = [
+			...(root?.querySelectorAll<HTMLButtonElement>('button[aria-expanded]') ?? [])
+		].find((button) => button.textContent?.includes('Nested group'));
+		nested?.click();
+		await tick();
+		expect(root?.querySelector('[role="heading"][aria-level="4"]')).not.toBeNull();
+	});
+
+	it('moves focus out of Accordion content before a controlled close enters Presence exit', async () => {
+		render(AccordionTabsProductionFixture);
+		const root = document.querySelector<HTMLElement>('[data-testid="production-accordion"]')!;
+		const trigger = root.querySelector<HTMLButtonElement>('button[aria-expanded="true"]')!;
+		const input = root.querySelector<HTMLInputElement>('[data-testid="accordion-panel-input"]')!;
+		input.focus();
+		document.querySelector<HTMLButtonElement>('[data-testid="clear-accordion-value"]')?.click();
+		await tick();
+		expect(document.activeElement).toBe(trigger);
+		const content = root.querySelector<HTMLElement>(
+			'[data-state="closed"][data-presence="exiting"]'
+		);
+		expect(content?.hasAttribute('inert')).toBe(true);
+		expect(content?.hasAttribute('aria-hidden')).toBe(false);
 	});
 
 	it('keeps native Slider input, FormData and reset synchronized', async () => {
@@ -2591,6 +2642,82 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(two?.getAttribute('aria-selected')).toBe('true');
 		expect(manualOutput?.textContent).toBe('two:1');
+	});
+
+	it('keeps typed Tabs identity and recovers selection/active to the nearest enabled trigger', async () => {
+		render(AccordionTabsProductionFixture);
+		const root = document.querySelector<HTMLElement>('[data-testid="production-tabs"]');
+		const triggers = root?.querySelectorAll<HTMLButtonElement>('[role="tab"]');
+		const numeric = triggers?.[0];
+		const string = triggers?.[1];
+		const output = root?.querySelector<HTMLOutputElement>('[data-testid="production-tabs-output"]');
+		expect(output?.textContent?.trim()).toBe('number:1|number:1|0');
+		expect(root?.querySelectorAll('[role="tabpanel"]')).toHaveLength(4);
+
+		string?.focus();
+		string?.click();
+		await tick();
+		expect(output?.textContent?.trim()).toBe('string:1|string:1|1');
+		expect(numeric?.getAttribute('aria-selected')).toBe('false');
+		expect(string?.getAttribute('aria-selected')).toBe('true');
+
+		root?.querySelector<HTMLButtonElement>('[data-testid="remove-tabs-selected"]')?.click();
+		await tick();
+		await Promise.resolve();
+		expect(output?.textContent?.trim()).toBe('string:last|string:last|1');
+		expect(document.activeElement?.textContent).toContain('Last');
+	});
+
+	it('implements keep-mounted, lazy and active-only Tabs lifecycle policies explicitly', async () => {
+		render(AccordionTabsProductionFixture);
+		const lazyA = document.querySelector<HTMLButtonElement>('[data-testid="lazy-trigger-a"]')!;
+		const lazyB = document.querySelector<HTMLButtonElement>('[data-testid="lazy-trigger-b"]')!;
+		expect(document.querySelector('[data-testid="lazy-panel-a"]')).not.toBeNull();
+		expect(document.querySelector('[data-testid="lazy-panel-b"]')).toBeNull();
+		expect(lazyA.getAttribute('aria-controls')).toBeTruthy();
+		expect(lazyB.hasAttribute('aria-controls')).toBe(false);
+		document.querySelector<HTMLButtonElement>('[data-testid="lazy-select-b"]')?.click();
+		await tick();
+		expect(document.querySelector('[data-testid="lazy-panel-a"]')?.hasAttribute('hidden')).toBe(
+			true
+		);
+		expect(document.querySelector('[data-testid="lazy-panel-b"]')).not.toBeNull();
+		expect(lazyB.getAttribute('aria-controls')).toBeTruthy();
+
+		expect(document.querySelector('[data-testid="active-panel-a"]')).not.toBeNull();
+		expect(document.querySelector('[data-testid="active-panel-b"]')).toBeNull();
+		const activeA = document.querySelector<HTMLButtonElement>('[data-testid="active-trigger-a"]')!;
+		const activeB = document.querySelector<HTMLButtonElement>('[data-testid="active-trigger-b"]')!;
+		expect(activeA.getAttribute('aria-controls')).toBeTruthy();
+		expect(activeB.hasAttribute('aria-controls')).toBe(false);
+		document.querySelector<HTMLInputElement>('[data-testid="active-panel-a"] input')?.focus();
+		document.querySelector<HTMLButtonElement>('[data-testid="active-select-b"]')?.click();
+		await tick();
+		expect(document.querySelector('[data-testid="active-panel-a"]')).toBeNull();
+		expect(document.querySelector('[data-testid="active-panel-b"]')).not.toBeNull();
+		expect(activeA.hasAttribute('aria-controls')).toBe(false);
+		expect(activeB.getAttribute('aria-controls')).toBeTruthy();
+		expect(document.activeElement).toBe(activeB);
+	});
+
+	it('uses RTL logical arrows and ignores IME navigation before manual Tabs activation', async () => {
+		render(AccordionTabsProductionFixture);
+		const left = document.querySelector<HTMLButtonElement>('[data-testid="rtl-tab-left"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="rtl-tabs-output"]');
+		left?.focus();
+		left?.dispatchEvent(
+			new KeyboardEvent('keydown', { bubbles: true, isComposing: true, key: 'ArrowRight' })
+		);
+		await tick();
+		expect(output?.textContent?.trim()).toBe('string:left|string:left');
+		left?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowRight' }));
+		await tick();
+		expect(output?.textContent?.trim()).toBe('string:left|string:right');
+		(document.activeElement as HTMLElement)?.dispatchEvent(
+			new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' })
+		);
+		await tick();
+		expect(output?.textContent?.trim()).toBe('string:right|string:right');
 	});
 
 	it('keeps radio roving focus, selection, FormData and reset synchronized', async () => {
@@ -2890,6 +3017,14 @@ describe('compiled ICSS browser updates', () => {
 		expect(getComputedStyle(numericStack as Element).gap).toBe('6px');
 		expect(icon?.getAttribute('role')).toBe('img');
 		expect(getComputedStyle(icon as Element).width).toBe('20px');
+		for (const size of ['small', 'medium', 'large'] as const) {
+			const square = document.querySelector<HTMLButtonElement>(
+				`[data-testid="button-square-${size}"]`
+			);
+			const style = getComputedStyle(square as Element);
+			expect(square?.dataset.shape).toBe('square');
+			expect(style.width).toBe(style.height);
+		}
 	});
 
 	it('keeps an explicit ShadowRoot runtime isolated and supports nested themes', async () => {

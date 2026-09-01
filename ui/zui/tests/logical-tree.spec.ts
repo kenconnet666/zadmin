@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
 import { LogicalTree } from '../src/runtime/tree.js';
+import type { SelectionKey } from '../src/runtime/collection/selection.js';
 
 describe('LogicalTree', () => {
 	it('normalizes typed hierarchy independently from expansion and DOM state', () => {
-		const tree = new LogicalTree([
+		const tree = new LogicalTree<SelectionKey>([
 			{ key: 1, label: 'Numeric root' },
 			{ key: '1', label: 'String child', parentKey: 1, selectionDisabled: true },
 			{ hasChildren: true, key: 'lazy', label: 'Lazy root' }

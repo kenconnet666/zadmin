@@ -1,4 +1,4 @@
-import { cleanup, render } from '@testing-library/svelte';
+import { cleanup, render } from 'vitest-browser-svelte';
 import { tick } from 'svelte';
 import { afterEach, describe, expect, it } from 'vitest';
 
@@ -6,7 +6,11 @@ import MultiSelectCollectionFixture from './MultiSelectCollectionFixture.svelte'
 
 afterEach(cleanup);
 
-function keydown(target: Element | null, key: string, init: KeyboardEventInit = {}): void {
+function keydown(
+	target: Element | null | undefined,
+	key: string,
+	init: KeyboardEventInit = {}
+): void {
 	target?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key, ...init }));
 }
 
@@ -29,7 +33,7 @@ describe('ZMultiSelect logical collection integration', () => {
 		expect(content?.getAttribute('aria-activedescendant')).toBe(options[1]?.id);
 		keydown(content, 'Enter');
 		await tick();
-		expect(content).toBeConnected();
+		expect(content?.isConnected).toBe(true);
 		expect(options[1]?.getAttribute('aria-selected')).toBe('false');
 		expect(new FormData(form!).getAll('choice')).toEqual(['1', 'orphan']);
 		expect(document.querySelector('[data-testid="multi-collection-output"]')?.textContent).toBe(

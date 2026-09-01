@@ -1,6 +1,7 @@
 <script lang="ts">
 	import ZAccordion, {
-		type AccordionValue
+		type AccordionMultipleValue,
+		type AccordionSingleValue
 	} from '../src/components/compound/accordion/ZAccordion.svelte';
 	import ZAccordionContent from '../src/components/compound/accordion/ZAccordionContent.svelte';
 	import ZAccordionItem from '../src/components/compound/accordion/ZAccordionItem.svelte';
@@ -10,9 +11,9 @@
 		collapsible = true,
 		disabledRoot = false
 	}: { collapsible?: boolean; disabledRoot?: boolean } = $props();
-	let value = $state<AccordionValue | undefined>('a');
+	let value = $state<AccordionSingleValue>('a');
 	let changes = $state(0);
-	let multiple = $state<AccordionValue>(['x']);
+	let multiple = $state<AccordionMultipleValue>(['x']);
 </script>
 
 <ZAccordion
@@ -41,7 +42,7 @@
 	</ZAccordionItem>
 </ZAccordion>
 <output data-testid="accordion-output">{value ?? 'none'}:{changes}</output>
-<button data-testid="accordion-external-clear" type="button" onclick={() => (value = undefined)}>
+<button data-testid="accordion-external-clear" type="button" onclick={() => (value = null)}>
 	Clear externally
 </button>
 
@@ -56,5 +57,5 @@
 	</ZAccordionItem>
 </ZAccordion>
 <output data-testid="accordion-multiple-output">
-	{typeof multiple === 'string' ? multiple : multiple.join(',')}
+	{multiple.join(',')}
 </output>
