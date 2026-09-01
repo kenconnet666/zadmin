@@ -194,6 +194,8 @@
 	import { guideRoute } from '../framework/router.js';
 
 	let { docs }: { docs: readonly ComponentDoc[] } = $props();
+	const demoCount = $derived(docs.reduce((total, doc) => total + doc.demos.length, 0));
+	const stableCount = $derived(docs.filter((doc) => doc.status === 'stable').length);
 	const zui = useZui();
 	const classes = $derived(zui.slots(homeRecipe, { motion: zui.motion }));
 </script>
@@ -203,7 +205,8 @@
 	<h1 class={classes.title}>看见组件，运行组件，复制真实源码。</h1>
 	<p class={classes.copy}>
 		ZUI是面向浏览器与WebView的Svelte
-		5组件库。展示站直接运行工作区组件，每个示例的源码来自同一个Svelte文件。
+		5组件库。展示站直接运行工作区组件，每个示例的源码来自同一个Svelte文件；Props类型和必填性逐步由公开TypeScript
+		AST生成，教学说明由Docs拥有。
 	</p>
 	<ZStack direction="row" gap="small" wrap>
 		<ZLink class={classes.primaryAction} href="#/components/button" underline="none"
@@ -220,18 +223,18 @@
 <section class={classes.principles} aria-label="设计原则">
 	<ZCard class={classes.principle}>
 		<strong class={classes.metric}>{docs.length}</strong><span class={classes.principleLabel}
-			>公开组件</span
+			>组件族</span
 		>
-		<p class={classes.principleCopy}>只展示当前已经实现并通过验收的公开组件。</p>
+		<p class={classes.principleCopy}>公开路由同时包含stable与experimental，兼容状态在每页明确显示。</p>
 	</ZCard>
 	<ZCard class={classes.principle}>
-		<strong class={classes.metric}>1:1</strong><span class={classes.principleLabel}>Demo与源码</span
+		<strong class={classes.metric}>{demoCount}</strong><span class={classes.principleLabel}>真实Demo</span
 		>
 		<p class={classes.principleCopy}>页面运行的Svelte文件就是复制按钮提供的源码。</p>
 	</ZCard>
 	<ZCard class={classes.principle}>
-		<strong class={classes.metric}>Typed</strong><span class={classes.principleLabel}>API合同</span>
-		<p class={classes.principleCopy}>Props默认值来自组件单文件metadata，Docs不再维护第二份。</p>
+		<strong class={classes.metric}>{stableCount}</strong><span class={classes.principleLabel}>Stable</span>
+		<p class={classes.principleCopy}>其余组件保持experimental与unreleased，不批量修改标签冒充稳定。</p>
 	</ZCard>
 </section>
 
@@ -259,8 +262,8 @@
 	</div>
 
 	<header class={classes.group}>
-		<p class={classes.eyebrow}>FOUNDATIONS</p>
-		<h2 class={classes.catalogTitle}>基础组件</h2>
+		<p class={classes.eyebrow}>COMPONENT CATALOG</p>
+		<h2 class={classes.catalogTitle}>组件目录</h2>
 	</header>
 	{#each componentCategories as category (category.id)}
 		{@const categoryDocs = docs.filter((doc) => doc.category === category.id)}
