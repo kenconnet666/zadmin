@@ -67,7 +67,7 @@
 			{ default: 'false', description: '禁用Trigger和表单值。', name: 'disabled', type: 'boolean' },
 			{ default: 'undefined', description: '隐藏表单字段名。', name: 'name', type: 'string' }
 		],
-		since: '0.5.0',
+		since: 'unreleased',
 		snippets: [],
 		source: 'ui/zui/src/components/input/ZColorPicker.svelte',
 		states: [

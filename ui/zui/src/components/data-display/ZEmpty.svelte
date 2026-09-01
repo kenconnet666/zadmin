@@ -36,7 +36,7 @@
 			},
 			{ default: '2', description: '页面标题层级。', name: 'headingLevel', type: '2 | 3 | 4' }
 		],
-		since: '0.7.0',
+		since: 'unreleased',
 		snippets: [
 			{ description: '装饰图形。', name: 'icon', type: 'Snippet' },
 			{ description: '说明。', name: 'children', type: 'Snippet' },

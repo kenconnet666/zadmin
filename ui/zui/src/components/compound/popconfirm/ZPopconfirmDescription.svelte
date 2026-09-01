@@ -40,7 +40,7 @@
 				type: 'HTMLParagraphElement | null'
 			}
 		],
-		since: '0.3.0',
+		since: 'unreleased',
 		snippets: [{ description: '操作后果说明。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/popconfirm/ZPopconfirmDescription.svelte',
 		states: [],

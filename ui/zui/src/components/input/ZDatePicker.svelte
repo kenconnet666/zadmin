@@ -71,7 +71,7 @@
 			},
 			{ default: 'undefined', description: 'ISO日期隐藏字段名。', name: 'name', type: 'string' }
 		],
-		since: '0.6.0',
+		since: 'unreleased',
 		snippets: [],
 		source: 'ui/zui/src/components/input/ZDatePicker.svelte',
 		states: [{ description: 'Popover状态。', name: 'data-state', values: ['open', 'closed'] }],

@@ -56,7 +56,7 @@
 				type: 'boolean'
 			}
 		],
-		since: '0.5.0',
+		since: 'unreleased',
 		snippets: [{ description: '真实输入control。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/input/ZFormField.svelte',
 		states: [

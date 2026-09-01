@@ -86,7 +86,7 @@
 				type: 'string'
 			}
 		],
-		since: '0.5.0',
+		since: 'unreleased',
 		snippets: [],
 		source: 'ui/zui/src/components/input/ZFileUpload.svelte',
 		states: [

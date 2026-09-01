@@ -41,7 +41,7 @@
 				type: 'HTMLHeadingElement | null'
 			}
 		],
-		since: '0.3.0',
+		since: 'unreleased',
 		snippets: [{ description: '确认问题标题。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/popconfirm/ZPopconfirmTitle.svelte',
 		states: [],

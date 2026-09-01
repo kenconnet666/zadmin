@@ -63,7 +63,7 @@
 				type: 'boolean'
 			}
 		],
-		since: '0.5.0',
+		since: 'unreleased',
 		snippets: [
 			{ description: '直接输入control。', name: 'children', type: 'Snippet' },
 			{ description: '前置内容或action。', name: 'prefix', type: 'Snippet' },

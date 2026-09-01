@@ -58,7 +58,7 @@
 				type: 'HTMLAnchorElement | null'
 			}
 		],
-		since: '0.2.0',
+		since: 'unreleased',
 		snippets: [{ description: '链接内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/gene/ZLink.svelte',
 		states: [{ description: '链接不可导航。', name: 'data-disabled', values: ['true'] }],

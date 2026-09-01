@@ -9,7 +9,7 @@
 
 <script lang="ts">
 	import { portal } from '../layer/portal.js';
-	import { formReset } from './form-control.svelte.js';
+	import { formElementReset } from './form-control.svelte.js';
 
 	interface ResetSignalActionOptions {
 		readonly owner: HTMLFormElement;
@@ -51,18 +51,26 @@
 	});
 
 	function signalFormReset(
-		control: HTMLInputElement,
+		_control: HTMLInputElement,
 		options: ResetSignalActionOptions
 	): { destroy(): void; update(options: ResetSignalActionOptions): void } {
+		// The component has already resolved the exact owner. Listen to that form once instead of
+		// asking the generic control action to rediscover it across document/root/form targets.
 		let current = options;
-		const action = formReset(control, () => current.reset());
+		let action = formElementReset(current.owner, () => current.reset());
 		return {
 			destroy() {
 				action.destroy();
 			},
 			update(next) {
+				const ownerChanged = current.owner !== next.owner;
 				current = next;
-				action.update(() => current.reset());
+				if (ownerChanged) {
+					action.destroy();
+					action = formElementReset(current.owner, () => current.reset());
+				} else {
+					action.update(() => current.reset());
+				}
 			}
 		};
 	}

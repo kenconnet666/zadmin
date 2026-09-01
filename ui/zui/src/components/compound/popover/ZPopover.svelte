@@ -79,7 +79,7 @@
 				type: 'boolean'
 			}
 		],
-		since: '0.3.0',
+		since: 'unreleased',
 		snippets: [{ description: 'Trigger与Content组合。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/popover/ZPopover.svelte',
 		states: [],

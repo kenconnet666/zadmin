@@ -109,7 +109,7 @@
 				type: 'string'
 			}
 		],
-		since: '0.4.0',
+		since: 'unreleased',
 		snippets: [
 			{
 				description: '自定义标签内容，参数为value。',

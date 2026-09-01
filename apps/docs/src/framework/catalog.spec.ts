@@ -185,13 +185,23 @@ describe('ZUI component documentation catalog', () => {
 		expect(form?.api.map(({ title }) => title)).toContain('ZFormField Props');
 	});
 
+	it('uses generated public Props facts for incrementally migrated component docs', () => {
+		const stack = componentDocsById.get('stack');
+		const props = stack?.api.find(({ id }) => id === 'props');
+		expect(props?.description).toContain('ZStackProps');
+		expect(props?.rows.find(({ name }) => name === 'direction')?.type).toBe(
+			"'column' | 'column-reverse' | 'row' | 'row-reverse'"
+		);
+		expect(stack?.props).toBe(props?.rows);
+	});
+
 	it('gives every page runnable demos, real source and API metadata', () => {
 		for (const doc of componentDocs) {
 			expect(doc.demos.length).toBeGreaterThanOrEqual(2);
 			expect(doc.api.length).toBeGreaterThan(0);
 			expect(doc.accessibility.length).toBeGreaterThan(0);
 			expect(doc.source).toMatch(/^ui\/zui\/src\/components\//u);
-			expect(doc.since).toMatch(/^\d+\.\d+\.\d+$/u);
+			expect(doc.since).toMatch(/^(?:\d+\.\d+\.\d+|unreleased)$/u);
 			expect(Array.isArray(doc.dependencies)).toBe(true);
 			expect(doc.api[0]?.rows).toBe(doc.props);
 			expect(new Set(doc.api.map(({ id }) => id)).size).toBe(doc.api.length);

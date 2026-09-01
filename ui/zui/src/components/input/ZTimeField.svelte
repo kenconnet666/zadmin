@@ -70,7 +70,7 @@
 			{ default: '1', description: '秒键盘步长。', name: 'secondStep', type: 'number' },
 			{ default: 'undefined', description: 'ISO时间隐藏字段名。', name: 'name', type: 'string' }
 		],
-		since: '0.6.0',
+		since: 'unreleased',
 		snippets: [],
 		source: 'ui/zui/src/components/input/ZTimeField.svelte',
 		states: [{ description: '存在不完整或非法segment。', name: 'data-invalid', values: ['true'] }],

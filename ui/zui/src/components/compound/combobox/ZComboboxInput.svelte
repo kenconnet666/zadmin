@@ -1,6 +1,7 @@
 <script module lang="ts">
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
 	import type { ZInputProps } from '../../input/ZInput.svelte';
+
 	export type ZComboboxInputProps = Omit<
 		ZInputProps,
 		| 'aria-activedescendant'
@@ -9,7 +10,11 @@
 		| 'aria-expanded'
 		| 'aria-haspopup'
 		| 'disabled'
+		| 'form'
+		| 'invalid'
+		| 'name'
 		| 'oninput'
+		| 'required'
 		| 'resetOnForm'
 		| 'role'
 		| 'value'
@@ -42,7 +47,7 @@
 				type: 'HTMLInputElement | null'
 			}
 		],
-		since: '0.4.0',
+		since: 'unreleased',
 		snippets: [],
 		source: 'ui/zui/src/components/compound/combobox/ZComboboxInput.svelte',
 		states: [{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] }],
@@ -52,10 +57,15 @@
 </script>
 
 <script lang="ts">
+	import { mergeAriaIds } from '../../../runtime/form/form-control.svelte.js';
+	import { useZFieldControlOwner } from '../../../runtime/form/field-context.js';
 	import ZInput from '../../input/ZInput.svelte';
 	import { useZPopover } from '../popover/context.svelte.js';
 	import { useZCombobox } from './context.svelte.js';
+
 	let {
+		'aria-describedby': ariaDescribedBy,
+		id,
 		onclick,
 		onfocus,
 		oninput,
@@ -64,6 +74,7 @@
 		...rest
 	}: ZComboboxInputProps = $props();
 	const combo = useZCombobox();
+	const fieldOwner = useZFieldControlOwner();
 	const popover = useZPopover();
 	$effect(() => {
 		popover.setTrigger(ref);
@@ -71,18 +82,27 @@
 			if (popover.trigger === ref) popover.setTrigger(null);
 		};
 	});
+	$effect(() => {
+		const owner = ref;
+		if (!owner || !fieldOwner) return;
+		return fieldOwner.registerFocusOwner(() => owner.focus({ preventScroll: true }));
+	});
+
 	function handleInput(event: Event & { currentTarget: HTMLInputElement }): void {
 		combo.setInputValue(event.currentTarget.value);
 		oninput?.(event);
 	}
+
 	function handleFocus(event: FocusEvent & { currentTarget: HTMLInputElement }): void {
 		onfocus?.(event);
 		if (!event.defaultPrevented) combo.setOpen(true);
 	}
+
 	function handleClick(event: MouseEvent & { currentTarget: HTMLInputElement }): void {
 		onclick?.(event);
 		if (!event.defaultPrevented) combo.setOpen(true);
 	}
+
 	function handleKeydown(event: KeyboardEvent & { currentTarget: HTMLInputElement }): void {
 		onkeydown?.(event);
 		if (event.defaultPrevented) return;
@@ -107,12 +127,19 @@
 	aria-activedescendant={combo.open ? combo.activeId : undefined}
 	aria-autocomplete="list"
 	aria-controls={popover.contentId}
+	aria-describedby={mergeAriaIds(ariaDescribedBy, combo.describedBy)}
 	aria-expanded={combo.open}
 	aria-haspopup="listbox"
+	aria-invalid={combo.invalid || undefined}
+	aria-required={combo.required || undefined}
 	autocomplete="off"
 	bind:ref
 	defaultValue={combo.inputDefaultValue}
 	disabled={combo.disabled}
+	form={undefined}
+	id={id ?? combo.controlId}
+	invalid={combo.invalid}
+	name={undefined}
 	role="combobox"
 	resetOnForm={false}
 	value={combo.inputValue}

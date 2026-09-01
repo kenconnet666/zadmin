@@ -164,7 +164,7 @@
 				type: 'HTMLDivElement | null'
 			}
 		],
-		since: '0.3.0',
+		since: 'unreleased',
 		snippets: [
 			{ description: 'Title、Description、业务内容与Close。', name: 'children', type: 'Snippet' }
 		],

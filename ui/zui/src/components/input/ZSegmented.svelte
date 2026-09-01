@@ -84,7 +84,7 @@
 			},
 			{ default: 'undefined', description: '隐藏表单字段名。', name: 'name', type: 'string' }
 		],
-		since: '0.4.0',
+		since: 'unreleased',
 		snippets: [],
 		source: 'ui/zui/src/components/input/ZSegmented.svelte',
 		states: [{ description: '选择状态。', name: 'data-state', values: ['selected', 'unselected'] }],

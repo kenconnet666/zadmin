@@ -47,7 +47,7 @@
 				type: 'HTMLDivElement | null'
 			}
 		],
-		since: '0.2.0',
+		since: 'unreleased',
 		snippets: [{ description: '容器内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/layout/ZContainer.svelte',
 		states: [],

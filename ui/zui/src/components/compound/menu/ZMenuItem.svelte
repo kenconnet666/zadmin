@@ -54,7 +54,7 @@
 				type: 'HTMLDivElement | null'
 			}
 		],
-		since: '0.4.0',
+		since: 'unreleased',
 		snippets: [{ description: 'Item内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/menu/ZMenuItem.svelte',
 		states: [

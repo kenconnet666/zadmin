@@ -51,7 +51,7 @@
 				type: 'HTMLDivElement | null'
 			}
 		],
-		since: '0.4.0',
+		since: 'unreleased',
 		snippets: [
 			{ description: 'Item、Group、Label与Separator。', name: 'children', type: 'Snippet' }
 		],

@@ -42,9 +42,12 @@
 		}
 	},
 	"scripts": {
-		"api:contract:check": "node scripts/check-api-contract.mjs",
-		"api:contract:update": "node scripts/check-api-contract.mjs --write",
+		"api:contract:check": "node scripts/check-metadata-facts.mjs && node scripts/check-api-contract.mjs",
+		"api:contract:update": "node scripts/check-metadata-facts.mjs && node scripts/check-api-contract.mjs --write",
 		"prepare": "svelte-kit sync || echo ''",
+		"metadata:facts:check": "node scripts/check-metadata-facts.mjs",
+		"metadata:since:normalize": "node scripts/check-metadata-facts.mjs --write-unreleased",
+		"metadata:since:materialize": "node scripts/check-metadata-facts.mjs --materialize-unreleased",
 		"build": "svelte-package --input src",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"test": "vitest --run",

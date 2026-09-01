@@ -36,7 +36,7 @@
 				type: 'HTMLDivElement | null'
 			}
 		],
-		since: '0.3.0',
+		since: 'unreleased',
 		snippets: [
 			{ description: 'Title、Description、Cancel与Action。', name: 'children', type: 'Snippet' }
 		],

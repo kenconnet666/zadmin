@@ -136,11 +136,13 @@ export type {
 	ZuiBindingMetadata,
 	ZuiComponentCategory,
 	ZuiComponentMetadata,
+	ZuiComponentSince,
 	ZuiComponentStatus,
 	ZuiDataStateMetadata,
 	ZuiEventMetadata,
 	ZuiKeyboardMetadata,
 	ZuiPartMetadata,
 	ZuiPropMetadata,
+	ZuiReleasedVersion,
 	ZuiSnippetMetadata
 } from '../metadata/types.js';

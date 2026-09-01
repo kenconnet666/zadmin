@@ -40,7 +40,7 @@
 			},
 			{ default: "'default'", description: '语义tone。', name: 'tone', type: 'BadgeTone' }
 		],
-		since: '0.7.0',
+		since: 'unreleased',
 		snippets: [{ description: 'Tag内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/data-display/ZTag.svelte',
 		states: [{ description: '禁用移除。', name: 'data-disabled', values: ['true'] }],

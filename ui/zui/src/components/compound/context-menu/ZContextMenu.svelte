@@ -47,7 +47,7 @@
 			},
 			{ default: '2', description: '指针锚点与Content间距px。', name: 'gutter', type: 'number' }
 		],
-		since: '0.4.0',
+		since: 'unreleased',
 		snippets: [{ description: 'Trigger区域与Content。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/context-menu/ZContextMenu.svelte',
 		states: [],

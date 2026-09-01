@@ -59,7 +59,7 @@
 				type: 'HTMLDivElement | null'
 			}
 		],
-		since: '0.4.0',
+		since: 'unreleased',
 		snippets: [{ description: 'Option标签。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/combobox/ZComboboxItem.svelte',
 		states: [

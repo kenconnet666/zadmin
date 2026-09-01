@@ -69,7 +69,7 @@
 				type: 'string'
 			}
 		],
-		since: '0.6.0',
+		since: 'unreleased',
 		snippets: [],
 		source: 'ui/zui/src/components/input/ZDateRangePicker.svelte',
 		states: [{ description: '等待结束日期。', name: 'data-selecting', values: ['true'] }],

@@ -43,7 +43,7 @@
 			},
 			{ default: 'false', description: '使用ol。', name: 'ordered', type: 'boolean' }
 		],
-		since: '0.7.0',
+		since: 'unreleased',
 		snippets: [{ description: '自定义li内容。', name: 'item', type: 'Snippet<[ListItem]>' }],
 		source: 'ui/zui/src/components/data-display/ZList.svelte',
 		states: [],

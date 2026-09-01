@@ -73,7 +73,7 @@
 			{ default: 'undefined', description: '最大日期。', name: 'maxValue', type: 'CalendarDate' },
 			{ default: 'undefined', description: 'ISO日期隐藏字段名。', name: 'name', type: 'string' }
 		],
-		since: '0.6.0',
+		since: 'unreleased',
 		snippets: [],
 		source: 'ui/zui/src/components/input/ZDateField.svelte',
 		states: [{ description: '存在不完整或非法segment。', name: 'data-invalid', values: ['true'] }],

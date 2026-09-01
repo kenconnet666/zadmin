@@ -119,7 +119,7 @@
 				type: 'number'
 			}
 		],
-		since: '0.8.0',
+		since: 'unreleased',
 		snippets: [],
 		source: 'ui/zui/src/components/data-display/ZDataTable.svelte',
 		states: [

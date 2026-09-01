@@ -120,7 +120,7 @@
 				type: 'HTMLButtonElement | null'
 			}
 		],
-		since: '0.2.0',
+		since: 'unreleased',
 		snippets: [{ description: 'Trigger标签内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/accordion/ZAccordionTrigger.svelte',
 		states: [

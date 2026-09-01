@@ -24,7 +24,7 @@
 			{ description: 'footer。', name: 'footer' }
 		],
 		props: [],
-		since: '0.7.0',
+		since: 'unreleased',
 		snippets: [
 			{ description: 'Card正文。', name: 'children', type: 'Snippet' },
 			{ description: 'Header。', name: 'header', type: 'Snippet' },

@@ -41,7 +41,7 @@
 				type: 'HTMLDivElement | null'
 			}
 		],
-		since: '0.2.0',
+		since: 'unreleased',
 		snippets: [{ description: '比例容器内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/layout/ZAspectRatio.svelte',
 		states: [],

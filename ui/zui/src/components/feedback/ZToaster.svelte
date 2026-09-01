@@ -37,7 +37,7 @@
 				type: 'ToasterPlacement'
 			}
 		],
-		since: '0.7.0',
+		since: 'unreleased',
 		snippets: [],
 		source: 'ui/zui/src/components/feedback/ZToaster.svelte',
 		states: [],

@@ -81,7 +81,7 @@
 			{ default: 'false', description: '禁用。', name: 'disabled', type: 'boolean' },
 			{ default: 'undefined', description: '表单字段名。', name: 'name', type: 'string' }
 		],
-		since: '0.4.0',
+		since: 'unreleased',
 		snippets: [],
 		source: 'ui/zui/src/components/input/ZCascader.svelte',
 		states: [{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] }],

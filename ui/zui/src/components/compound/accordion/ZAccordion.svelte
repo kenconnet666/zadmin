@@ -102,7 +102,7 @@
 				type: 'HTMLDivElement | null'
 			}
 		],
-		since: '0.2.0',
+		since: 'unreleased',
 		snippets: [{ description: 'Item组合。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/accordion/ZAccordion.svelte',
 		states: [{ description: '禁用状态。', name: 'data-disabled', values: ['true'] }],
@@ -164,6 +164,7 @@
 		defaultValue: () => toPublicValue(normalize(defaultValue)),
 		onChange: () => onValueChange,
 		read: () => value,
+		undefinedIsValue: true,
 		write: (next) => (value = next)
 	});
 	const collection = new CollectionStore<AccordionCollectionItem>();

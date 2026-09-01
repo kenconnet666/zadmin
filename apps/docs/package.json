@@ -4,7 +4,9 @@
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
-		"audit:system": "node scripts/audit-system.mjs",
+		"api:source:check": "node scripts/generate-component-api.mjs",
+		"api:source:update": "node scripts/generate-component-api.mjs --write",
+		"audit:system": "node scripts/generate-component-api.mjs && node scripts/audit-system.mjs",
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",

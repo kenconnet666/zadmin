@@ -22,10 +22,14 @@ export interface ZComboboxContext {
 	readonly activeId: string | undefined;
 	readonly activeKey: SelectionKey | undefined;
 	readonly collection: CollectionStore<ComboboxItemRecord>;
+	readonly controlId: string;
+	readonly describedBy: string | undefined;
 	readonly disabled: boolean;
+	readonly invalid: boolean;
 	readonly inputDefaultValue: string;
 	readonly inputValue: string;
 	readonly open: boolean;
+	readonly required: boolean;
 	readonly value: SelectionKey | undefined;
 	choose(
 		value: SelectionKey,

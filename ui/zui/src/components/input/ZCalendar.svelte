@@ -120,7 +120,7 @@
 				type: 'boolean'
 			}
 		],
-		since: '0.6.0',
+		since: 'unreleased',
 		snippets: [],
 		source: 'ui/zui/src/components/input/ZCalendar.svelte',
 		states: [

@@ -3,8 +3,10 @@
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
 	import type { SelectionKey } from '../../../runtime/collection/selection.js';
 	import type { PopoverPlacement } from '../popover/ZPopover.svelte';
+
 	export interface ZComboboxProps {
 		readonly children?: Snippet;
+		readonly controlId?: string;
 		readonly defaultInputValue?: string;
 		readonly defaultOpen?: boolean;
 		readonly defaultValue?: SelectionKey;
@@ -12,14 +14,17 @@
 		readonly filter?: (textValue: string, query: string) => boolean;
 		readonly form?: string;
 		inputValue?: string;
+		readonly invalid?: boolean;
 		readonly name?: string;
 		readonly onInputValueChange?: (value: string) => void;
 		readonly onOpenChange?: (open: boolean) => void;
 		readonly onValueChange?: (value: SelectionKey | undefined) => void;
 		open?: boolean;
 		readonly placement?: PopoverPlacement;
+		readonly required?: boolean;
 		value?: SelectionKey;
 	}
+
 	export const zuiMetadata = {
 		category: 'input',
 		id: 'combobox',
@@ -55,6 +60,12 @@
 		],
 		parts: [],
 		props: [
+			{
+				default: '继承Field或自动生成',
+				description: '真实输入焦点owner的id。',
+				name: 'controlId',
+				type: 'string'
+			},
 			{
 				bindable: true,
 				default: 'undefined',
@@ -95,9 +106,21 @@
 				type: '(textValue: string, query: string) => boolean'
 			},
 			{ default: 'false', description: '禁用全部交互与提交。', name: 'disabled', type: 'boolean' },
+			{
+				default: '继承Field或false',
+				description: '声明无效状态。',
+				name: 'invalid',
+				type: 'boolean'
+			},
+			{
+				default: '继承Field或false',
+				description: '声明必填语义。',
+				name: 'required',
+				type: 'boolean'
+			},
 			{ default: 'undefined', description: '隐藏表单字段名。', name: 'name', type: 'string' }
 		],
-		since: '0.4.0',
+		since: 'unreleased',
 		snippets: [{ description: 'Input、Content与Item。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/combobox/ZCombobox.svelte',
 		states: [],
@@ -111,7 +134,8 @@
 	import { moveIndex, navigationIntent } from '../../../runtime/collection/list-navigation.js';
 	import { ControllableState } from '../../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../../runtime/foundation/ids.js';
-	import { formReset } from '../../../runtime/form/form-control.svelte.js';
+	import { claimZFieldControlOwner } from '../../../runtime/form/field-context.js';
+	import FormResetSignal from '../../../runtime/form/FormResetSignal.svelte';
 	import { serializeFormValue } from '../../../runtime/form/form-value.js';
 	import { useZui } from '../../../runtime/foundation/context.js';
 	import ZPopover from '../popover/ZPopover.svelte';
@@ -121,33 +145,44 @@
 		type ComboboxItemRecord,
 		type ZComboboxContext
 	} from './context.svelte.js';
+
 	let {
 		children,
+		controlId: controlIdProp,
 		defaultInputValue,
 		defaultOpen = false,
 		defaultValue,
-		disabled = false,
+		disabled: disabledProp = false,
 		filter,
 		form,
 		inputValue = $bindable(),
-		name,
+		invalid,
+		name: nameProp,
 		onInputValueChange,
 		onOpenChange,
 		onValueChange,
 		open = $bindable(),
 		placement = 'bottom-start',
+		required = false,
 		value = $bindable()
 	}: ZComboboxProps = $props();
 	const zui = useZui();
+	const field = claimZFieldControlOwner().field;
 	const uid = $props.id();
 	const idBase = $derived(createZuiId(zui.idPrefix, uid, 'combobox'));
+	const controlId = $derived(controlIdProp ?? field?.controlId ?? `${idBase}-input`);
+	const describedBy = $derived(field?.describedBy);
+	const disabled = $derived(disabledProp || (field?.disabled ?? false));
+	const resolvedInvalid = $derived(invalid ?? field?.invalid ?? false);
+	const resolvedName = $derived(nameProp ?? field?.name);
+	const resolvedRequired = $derived(required || (field?.required ?? false));
 	const collection = new CollectionStore<ComboboxItemRecord>();
 	// This is an identity cache mutated while rendering options, not reactive application state.
 	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	const ids = new Map<SelectionKey, string>();
 	let nextId = 0;
 	let active = $state<SelectionKey>();
-	let hidden = $state<HTMLInputElement | null>(null);
+	let resetProxy = $state<HTMLInputElement | null>(null);
 	const readDefaultInputValue = () =>
 		defaultInputValue ?? (defaultValue === undefined ? '' : String(defaultValue));
 	const valueState = new ControllableState<SelectionKey | undefined>({
@@ -192,8 +227,17 @@
 			}
 		},
 		collection,
+		get controlId() {
+			return controlId;
+		},
+		get describedBy() {
+			return describedBy;
+		},
 		get disabled() {
 			return disabled;
+		},
+		get invalid() {
+			return resolvedInvalid;
 		},
 		idFor(itemValue) {
 			let id = ids.get(itemValue);
@@ -226,6 +270,9 @@
 		get open() {
 			return openState.current;
 		},
+		get required() {
+			return resolvedRequired;
+		},
 		register(read) {
 			const stop = collection.register(read);
 			const item = read();
@@ -248,10 +295,12 @@
 		}
 	};
 	provideZCombobox(context);
+
 	function resetFromForm(): void {
 		valueState.reset();
 		inputState.reset();
 	}
+
 	const serializedValue = $derived(
 		valueState.current === undefined ? '' : (serializeFormValue(valueState.current) ?? '')
 	);
@@ -265,14 +314,14 @@
 	open={openState.current}
 	{placement}>{@render children?.()}</ZPopover
 >
-{#if name}<input
-		bind:this={hidden}
+<input bind:this={resetProxy} aria-hidden="true" tabindex={-1} type="hidden" disabled {form} />
+<FormResetSignal association={form} control={resetProxy} onReset={resetFromForm} />
+{#if resolvedName}<input
 		aria-hidden="true"
 		tabindex={-1}
 		type="hidden"
 		{disabled}
 		{form}
-		{name}
-		use:formReset={resetFromForm}
+		name={resolvedName}
 		value={serializedValue}
 	/>{/if}

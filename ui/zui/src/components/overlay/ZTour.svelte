@@ -81,7 +81,7 @@
 			{ default: 'true', description: '焦点trap和modal layer。', name: 'modal', type: 'boolean' },
 			{ default: 'true', description: '点击遮罩关闭。', name: 'closeOnMaskClick', type: 'boolean' }
 		],
-		since: '0.8.0',
+		since: 'unreleased',
 		snippets: [],
 		source: 'ui/zui/src/components/overlay/ZTour.svelte',
 		states: [

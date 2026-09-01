@@ -11,18 +11,21 @@
 	}
 
 	export interface ZTransferProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onchange'> {
+		readonly controlId?: string;
 		readonly defaultValue?: readonly SelectionKey[];
 		readonly disabled?: boolean;
 		readonly emptyText?: string;
 		readonly filter?: (item: TransferItem, query: string) => boolean;
 		readonly filterable?: boolean;
 		readonly form?: string;
+		readonly invalid?: boolean;
 		readonly items: readonly TransferItem[];
 		readonly moveToSourceLabel?: string;
 		readonly moveToTargetLabel?: string;
 		readonly name?: string;
 		readonly onValueChange?: (value: readonly SelectionKey[]) => void;
 		ref?: HTMLDivElement | null;
+		readonly required?: boolean;
 		readonly searchPlaceholder?: string;
 		readonly sourceTitle?: string;
 		readonly targetTitle?: string;
@@ -60,6 +63,12 @@
 		],
 		props: [
 			{
+				default: '继承Field或自动生成',
+				description: '主焦点owner的id。',
+				name: 'controlId',
+				type: 'string'
+			},
+			{
 				default: '必填',
 				description: '稳定key、标签、说明和disabled配置。',
 				name: 'items',
@@ -87,14 +96,27 @@
 				type: '(item: TransferItem, query: string) => boolean'
 			},
 			{ default: 'false', description: '禁用全部选择和移动。', name: 'disabled', type: 'boolean' },
+			{
+				default: '继承Field或false',
+				description: '声明无效状态。',
+				name: 'invalid',
+				type: 'boolean'
+			},
+			{
+				default: '继承Field或false',
+				description: '声明必填语义。',
+				name: 'required',
+				type: 'boolean'
+			},
 			{ default: 'undefined', description: '重复隐藏字段名。', name: 'name', type: 'string' }
 		],
-		since: '0.4.0',
+		since: 'unreleased',
 		snippets: [],
 		source: 'ui/zui/src/components/input/ZTransfer.svelte',
 		states: [
-			{ description: '项目是否被勾选。', name: 'data-state', values: ['selected', 'unselected'] },
-			{ description: '项目是否禁用。', name: 'data-disabled', values: ['true'] }
+			{ description: '整个Transfer或项目禁用。', name: 'data-disabled', values: ['true'] },
+			{ description: '整个Transfer无效。', name: 'data-invalid', values: ['true'] },
+			{ description: '项目是否被勾选。', name: 'data-state', values: ['selected', 'unselected'] }
 		],
 		status: 'experimental',
 		summary: '拥有双collection、多选过滤、键盘与表单合同的Transfer。'
@@ -105,10 +127,12 @@
 	/* eslint-disable svelte/prefer-svelte-reactivity -- Sets use immutable replacement or are local derived values. */
 	import ArrowLeft from '@lucide/svelte/icons/arrow-left';
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
-	import { untrack } from 'svelte';
+	import { onDestroy, untrack } from 'svelte';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { Typeahead } from '../../runtime/collection/typeahead.js';
-	import { formReset } from '../../runtime/form/form-control.svelte.js';
+	import { claimZFieldControlOwner } from '../../runtime/form/field-context.js';
+	import FormResetSignal from '../../runtime/form/FormResetSignal.svelte';
+	import { mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
 	import { serializeFormValue } from '../../runtime/form/form-value.js';
 	import {
 		applyIcssRootStyle,
@@ -246,19 +270,25 @@
 
 	const unique = (keys: readonly SelectionKey[]) => Object.freeze([...new Set(keys)]);
 	let {
+		'aria-describedby': ariaDescribedBy,
+		'aria-labelledby': ariaLabelledBy,
 		class: className,
+		controlId: controlIdProp,
 		defaultValue = [],
-		disabled = false,
+		disabled: disabledProp = false,
 		emptyText = 'No items',
 		filter,
 		filterable = true,
 		form,
+		id,
+		invalid,
 		items,
 		moveToSourceLabel = 'Move selected to source',
 		moveToTargetLabel = 'Move selected to target',
-		name,
+		name: nameProp,
 		onValueChange,
 		ref = $bindable(null),
+		required = false,
 		searchPlaceholder = 'Filter items',
 		sourceTitle = 'Available',
 		style,
@@ -267,9 +297,21 @@
 		...rest
 	}: ZTransferProps = $props();
 	const zui = useZui();
+	const fieldOwner = claimZFieldControlOwner();
+	const field = fieldOwner.field;
 	const uid = $props.id();
 	const idBase = $derived(createZuiId(zui.idPrefix, uid, 'transfer'));
+	const disabled = $derived(disabledProp || (field?.disabled ?? false));
+	const resolvedInvalid = $derived(invalid ?? field?.invalid ?? false);
+	const resolvedRequired = $derived(required || (field?.required ?? false));
+	const resolvedName = $derived(nameProp ?? field?.name);
+	const resolvedControlId = $derived(controlIdProp ?? field?.controlId ?? `${idBase}-control`);
+	const resolvedRootId = $derived(id ?? `${idBase}-root`);
+	const resolvedDescribedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
+	const resolvedLabelledBy = $derived(mergeAriaIds(ariaLabelledBy, field?.labelId));
 	let proxy = $state<HTMLInputElement | null>(null);
+	let sourceFilterRef = $state<HTMLInputElement | null>(null);
+	let sourceListRef = $state<HTMLDivElement | null>(null);
 	let sourceQuery = $state('');
 	let targetQuery = $state('');
 	let sourceChecked = $state<ReadonlySet<SelectionKey>>(new Set());
@@ -299,12 +341,14 @@
 	const targetKeys = $derived(new Set(resolvedValue));
 	const sourceItems = $derived(normalizedItems.filter(({ key }) => !targetKeys.has(key)));
 	const targetItems = $derived(normalizedItems.filter(({ key }) => targetKeys.has(key)));
+
 	function matches(item: TransferItem, query: string): boolean {
 		if (!query) return true;
 		if (filter) return filter(item, query);
 		const needle = query.toLocaleLowerCase(zui.locale);
 		return `${item.label} ${item.description ?? ''}`.toLocaleLowerCase(zui.locale).includes(needle);
 	}
+
 	const visibleSource = $derived(sourceItems.filter((item) => matches(item, sourceQuery.trim())));
 	const visibleTarget = $derived(targetItems.filter((item) => matches(item, targetQuery.trim())));
 	const sourceEnabled = $derived(visibleSource.filter((item) => !disabled && !item.disabled));
@@ -330,6 +374,7 @@
 	const MoveToSourceIcon = $derived(zui.direction === 'rtl' ? ArrowRight : ArrowLeft);
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
+
 	function resetFromForm(): void {
 		valueState.reset();
 		sourceChecked = new Set();
@@ -337,6 +382,7 @@
 		sourceQuery = '';
 		targetQuery = '';
 	}
+
 	$effect(() => {
 		const nextSource = new Set(
 			[...sourceChecked].filter((key) => sourceItems.some((item) => Object.is(item.key, key)))
@@ -347,6 +393,7 @@
 		if (nextSource.size !== sourceChecked.size) sourceChecked = nextSource;
 		if (nextTarget.size !== targetChecked.size) targetChecked = nextTarget;
 	});
+
 	function toggle(side: Side, item: TransferItem): void {
 		if (disabled || item.disabled) return;
 		const current = side === 'source' ? sourceChecked : targetChecked;
@@ -361,12 +408,14 @@
 			targetChecked = next;
 		}
 	}
+
 	function selectVisible(side: Side): void {
 		const enabled = side === 'source' ? sourceEnabled : targetEnabled;
 		const selected = new Set(enabled.map(({ key }) => key));
 		if (side === 'source') sourceChecked = selected;
 		else targetChecked = selected;
 	}
+
 	function focusItem(side: Side, key: SelectionKey): void {
 		const visible = side === 'source' ? visibleSource : visibleTarget;
 		const index = visible.findIndex((item) => Object.is(item.key, key));
@@ -379,6 +428,20 @@
 			targetElements[index]?.focus({ preventScroll: true });
 		}
 	}
+	function focusPrimaryControl(): void {
+		if (filterable) {
+			sourceFilterRef?.focus({ preventScroll: true });
+			return;
+		}
+		if (resolvedSourceFocus !== undefined) focusItem('source', resolvedSourceFocus);
+		else if (resolvedTargetFocus !== undefined) focusItem('target', resolvedTargetFocus);
+		else sourceListRef?.focus({ preventScroll: true });
+	}
+	function handleSourceListFocus(event: FocusEvent & { currentTarget: HTMLDivElement }): void {
+		if (!filterable && event.target === event.currentTarget) focusPrimaryControl();
+	}
+	onDestroy(fieldOwner.registerFocusOwner(focusPrimaryControl));
+
 	function handleKey(event: KeyboardEvent, side: Side, item: TransferItem): void {
 		const enabled = side === 'source' ? sourceEnabled : targetEnabled;
 		const currentKey = side === 'source' ? resolvedSourceFocus : resolvedTargetFocus;
@@ -420,6 +483,7 @@
 			focusItem(side, match);
 		}
 	}
+
 	function move(to: Side): void {
 		if (disabled) return;
 		const moving = to === 'target' ? sourceChecked : targetChecked;
@@ -437,6 +501,7 @@
 		if (to === 'target') sourceChecked = new Set();
 		else targetChecked = new Set();
 	}
+
 	const sourceCount = $derived(sourceChecked.size);
 	const targetCount = $derived(targetChecked.size);
 	const serializedValues = $derived(
@@ -453,8 +518,15 @@
 	class={[rootClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
+	id={resolvedRootId}
 	role="group"
 	aria-disabled={disabled || undefined}
+	aria-describedby={resolvedDescribedBy}
+	aria-invalid={resolvedInvalid || undefined}
+	aria-labelledby={resolvedLabelledBy}
+	aria-required={resolvedRequired || undefined}
+	data-disabled={disabled || undefined}
+	data-invalid={resolvedInvalid || undefined}
 >
 	<section class={panelClass} data-slot="panel" aria-labelledby={`${idBase}-source-title`}>
 		<header class={headerClass}>
@@ -464,21 +536,33 @@
 		</header>
 		{#if filterable}
 			<ZInput
+				bind:ref={sourceFilterRef}
 				bind:value={sourceQuery}
-				id={`${idBase}-source-filter`}
+				id={resolvedControlId}
 				size="small"
+				aria-describedby={resolvedDescribedBy}
+				aria-invalid={resolvedInvalid || undefined}
 				aria-label={`${sourceTitle}: ${searchPlaceholder}`}
+				aria-required={resolvedRequired || undefined}
+				invalid={resolvedInvalid}
 				placeholder={searchPlaceholder}
 				resetOnForm={false}
 				{disabled}
 			/>
 		{/if}
 		<div
+			bind:this={sourceListRef}
 			class={listClass}
 			data-slot="list"
+			id={filterable ? `${idBase}-source-list` : resolvedControlId}
 			role="listbox"
+			aria-describedby={!filterable ? resolvedDescribedBy : undefined}
+			aria-invalid={!filterable && resolvedInvalid ? 'true' : undefined}
 			aria-label={sourceTitle}
 			aria-multiselectable="true"
+			aria-required={!filterable && resolvedRequired ? 'true' : undefined}
+			tabindex={filterable ? undefined : -1}
+			onfocus={handleSourceListFocus}
 		>
 			{#each visibleSource as item, index (item.key)}
 				<div
@@ -499,10 +583,14 @@
 					onkeydown={(event) => handleKey(event, 'source', item)}
 				>
 					<div>{item.label}</div>
-					{#if item.description}<div class={descriptionClass}>{item.description}</div>{/if}
+					{#if item.description}
+						<div class={descriptionClass}>{item.description}</div>
+					{/if}
 				</div>
 			{/each}
-			{#if visibleSource.length === 0}<div class={emptyClass}>{emptyText}</div>{/if}
+			{#if visibleSource.length === 0}
+				<div class={emptyClass}>{emptyText}</div>
+			{/if}
 		</div>
 	</section>
 
@@ -510,14 +598,18 @@
 		<ZButton
 			aria-label={moveToTargetLabel}
 			disabled={disabled || sourceCount === 0}
-			onclick={() => move('target')}><MoveToTargetIcon aria-hidden="true" size={18} /></ZButton
+			onclick={() => move('target')}
 		>
+			<MoveToTargetIcon aria-hidden="true" size={18} />
+		</ZButton>
 		<ZButton
 			aria-label={moveToSourceLabel}
 			disabled={disabled || targetCount === 0}
 			onclick={() => move('source')}
-			variant="secondary"><MoveToSourceIcon aria-hidden="true" size={18} /></ZButton
+			variant="secondary"
 		>
+			<MoveToSourceIcon aria-hidden="true" size={18} />
+		</ZButton>
 	</div>
 
 	<section class={panelClass} data-slot="panel" aria-labelledby={`${idBase}-target-title`}>
@@ -563,25 +655,24 @@
 					onkeydown={(event) => handleKey(event, 'target', item)}
 				>
 					<div>{item.label}</div>
-					{#if item.description}<div class={descriptionClass}>{item.description}</div>{/if}
+					{#if item.description}
+						<div class={descriptionClass}>{item.description}</div>
+					{/if}
 				</div>
 			{/each}
-			{#if visibleTarget.length === 0}<div class={emptyClass}>{emptyText}</div>{/if}
+			{#if visibleTarget.length === 0}
+				<div class={emptyClass}>{emptyText}</div>
+			{/if}
 		</div>
 	</section>
 </div>
-<input
-	bind:this={proxy}
-	aria-hidden="true"
-	tabindex={-1}
-	type="hidden"
-	disabled
-	{form}
-	use:formReset={resetFromForm}
-/>
-{#if name && !disabled}{#each serializedValues as serialized, index (`${serialized}-${index}`)}<input
+<input bind:this={proxy} aria-hidden="true" tabindex={-1} type="hidden" disabled {form} />
+<FormResetSignal association={form} control={proxy} onReset={resetFromForm} />
+{#if resolvedName && !disabled}
+	{#each serializedValues as serialized, index (`${serialized}-${index}`)}<input
 			type="hidden"
 			{form}
-			{name}
+			name={resolvedName}
 			value={serialized}
-		/>{/each}{/if}
+		/>{/each}
+{/if}

@@ -59,7 +59,7 @@
 				type: 'number'
 			}
 		],
-		since: '0.3.0',
+		since: 'unreleased',
 		snippets: [{ description: 'Trigger、Content及显式操作。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/popconfirm/ZPopconfirm.svelte',
 		states: [],

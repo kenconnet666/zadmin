@@ -32,7 +32,7 @@
 				type: 'HTMLButtonElement | null'
 			}
 		],
-		since: '0.3.0',
+		since: 'unreleased',
 		snippets: [{ description: 'Trigger内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/dialog/ZDialogTrigger.svelte',
 		states: [{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] }],

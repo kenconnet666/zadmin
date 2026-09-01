@@ -31,7 +31,7 @@
 				type: 'HTMLDivElement | null'
 			}
 		],
-		since: '0.4.0',
+		since: 'unreleased',
 		snippets: [{ description: '过滤后的Items。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/combobox/ZComboboxContent.svelte',
 		states: [{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] }],

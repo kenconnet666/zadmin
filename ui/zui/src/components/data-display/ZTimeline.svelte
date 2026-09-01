@@ -42,7 +42,7 @@
 			},
 			{ default: "'Timeline'", description: '列表名称。', name: 'label', type: 'string' }
 		],
-		since: '0.7.0',
+		since: 'unreleased',
 		snippets: [{ description: '自定义li正文。', name: 'item', type: 'Snippet<[TimelineItem]>' }],
 		source: 'ui/zui/src/components/data-display/ZTimeline.svelte',
 		states: [

@@ -24,7 +24,7 @@
 				type: 'HTMLParagraphElement | null'
 			}
 		],
-		since: '0.3.0',
+		since: 'unreleased',
 		snippets: [{ description: '后果与恢复路径说明。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/alert-dialog/ZAlertDialogDescription.svelte',
 		states: [],

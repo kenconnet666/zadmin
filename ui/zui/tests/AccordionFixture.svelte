@@ -41,6 +41,9 @@
 	</ZAccordionItem>
 </ZAccordion>
 <output data-testid="accordion-output">{value ?? 'none'}:{changes}</output>
+<button data-testid="accordion-external-clear" type="button" onclick={() => (value = undefined)}>
+	Clear externally
+</button>
 
 <ZAccordion bind:value={multiple} defaultValue={['x']} type="multiple">
 	<ZAccordionItem value="x">

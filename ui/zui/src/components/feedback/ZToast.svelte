@@ -43,7 +43,7 @@
 				type: 'ToastPriority'
 			}
 		],
-		since: '0.7.0',
+		since: 'unreleased',
 		snippets: [],
 		source: 'ui/zui/src/components/feedback/ZToast.svelte',
 		states: [

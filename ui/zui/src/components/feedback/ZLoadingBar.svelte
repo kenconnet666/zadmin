@@ -30,7 +30,7 @@
 			{ default: 'false', description: '固定到视口顶部。', name: 'page', type: 'boolean' },
 			{ default: "'Loading'", description: '可访问名称。', name: 'label', type: 'string' }
 		],
-		since: '0.7.0',
+		since: 'unreleased',
 		snippets: [],
 		source: 'ui/zui/src/components/feedback/ZLoadingBar.svelte',
 		states: [

@@ -41,7 +41,7 @@
 			{ default: 'Provider locale', description: 'Intl locale。', name: 'locale', type: 'string' },
 			{ default: 'undefined', description: '相对趋势，正数向上。', name: 'trend', type: 'number' }
 		],
-		since: '0.7.0',
+		since: 'unreleased',
 		snippets: [
 			{ description: '值前缀。', name: 'prefix', type: 'Snippet' },
 			{ description: '值后缀。', name: 'suffix', type: 'Snippet' }

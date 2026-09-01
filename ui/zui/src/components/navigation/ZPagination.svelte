@@ -102,7 +102,7 @@
 				type: 'HTMLElement | null'
 			}
 		],
-		since: '0.2.0',
+		since: 'unreleased',
 		snippets: [],
 		source: 'ui/zui/src/components/navigation/ZPagination.svelte',
 		states: [{ description: '当前页码。', name: 'data-page', values: ['positive integer'] }],

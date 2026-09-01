@@ -24,7 +24,7 @@
 				type: 'HTMLHeadingElement | null'
 			}
 		],
-		since: '0.3.0',
+		since: 'unreleased',
 		snippets: [{ description: 'Drawer标题。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/drawer/ZDrawerTitle.svelte',
 		states: [],

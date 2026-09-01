@@ -93,7 +93,7 @@
 				type: 'HTMLDivElement | null'
 			}
 		],
-		since: '0.2.0',
+		since: 'unreleased',
 		snippets: [{ description: 'List、Trigger与Panel组合。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/tabs/ZTabs.svelte',
 		states: [

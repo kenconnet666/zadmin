@@ -30,7 +30,7 @@
 				type: 'HTMLElement | null'
 			}
 		],
-		since: '0.2.0',
+		since: 'unreleased',
 		snippets: [{ description: '键盘按键或输入序列。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/gene/ZKbd.svelte',
 		states: [],

@@ -75,7 +75,7 @@
 			{ default: 'true', description: '边界是否循环。', name: 'loop', type: 'boolean' },
 			{ default: 'true', description: 'hover期间暂停。', name: 'pauseOnHover', type: 'boolean' }
 		],
-		since: '0.8.0',
+		since: 'unreleased',
 		snippets: [{ description: 'slide内容。', name: 'item', type: 'Snippet<[TItem, number]>' }],
 		source: 'ui/zui/src/components/data-display/ZCarousel.svelte',
 		states: [

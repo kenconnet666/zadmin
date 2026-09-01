@@ -24,7 +24,7 @@
 				type: 'HTMLDivElement | null'
 			}
 		],
-		since: '0.3.0',
+		since: 'unreleased',
 		snippets: [],
 		source: 'ui/zui/src/components/compound/drawer/ZDrawerOverlay.svelte',
 		states: [{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] }],

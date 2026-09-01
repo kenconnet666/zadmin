@@ -95,7 +95,7 @@
 			},
 			{ default: 'undefined', description: '隐藏表单字段名。', name: 'name', type: 'string' }
 		],
-		since: '0.5.0',
+		since: 'unreleased',
 		snippets: [],
 		source: 'ui/zui/src/components/input/ZNumberField.svelte',
 		states: [
@@ -174,7 +174,8 @@
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import { useZField } from '../../runtime/form/field-context.js';
-	import { formReset, mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
+	import FormResetSignal from '../../runtime/form/FormResetSignal.svelte';
+	import { mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
 	import { serializeFormValue } from '../../runtime/form/form-value.js';
 	import { clampNumber, parseLocalizedNumber, stepNumber } from '../../runtime/number.js';
 	import {
@@ -239,7 +240,6 @@
 	let draft = $state('');
 	let editing = $state(false);
 	let draftInvalid = $state(false);
-	let proxy = $state<HTMLInputElement | null>(null);
 	const formatted = $derived(
 		valueState.current === undefined
 			? ''
@@ -408,15 +408,7 @@
 		onclick={() => changeBy(1)}><Plus aria-hidden="true" size={16} /></button
 	>
 </div>
-<input
-	bind:this={proxy}
-	aria-hidden="true"
-	tabindex={-1}
-	type="hidden"
-	disabled
-	{form}
-	use:formReset={resetFromForm}
-/>
+<FormResetSignal association={form} control={inputRef} onReset={resetFromForm} />
 {#if resolvedName && !resolvedDisabled && serialized !== undefined}<input
 		type="hidden"
 		{form}

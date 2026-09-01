@@ -2,8 +2,10 @@ import type { Component } from 'svelte';
 import type {
 	ZuiComponentCategory,
 	ZuiComponentMetadata,
-	ZuiComponentStatus
+	ZuiComponentStatus,
+	ZuiPropMetadata
 } from '@zadmin/zui/metadata';
+import type { ComponentApiFacts, ComponentTeachingMetadata } from './component-api.js';
 
 export interface ApiRow {
 	readonly bindable?: boolean;
@@ -43,18 +45,60 @@ export interface ComponentDoc extends ZuiComponentMetadata {
 interface ComponentDocDefinition extends Pick<ComponentDoc, 'accessibility' | 'demos'> {
 	readonly keywords?: readonly string[];
 	readonly members?: readonly ZuiComponentMetadata[];
+	readonly sourceApi?: ComponentApiFacts;
+	readonly teaching?: ComponentTeachingMetadata;
+}
+
+function sourceBackedProps(
+	metadata: ZuiComponentMetadata,
+	facts: ComponentApiFacts | undefined,
+	teaching: ComponentTeachingMetadata | undefined
+): readonly ZuiPropMetadata[] {
+	const factsByName = new Map(facts?.props.map((prop) => [prop.name, prop]) ?? []);
+	const documentedNames = new Set([
+		...metadata.bindings.map(({ name }) => name),
+		...metadata.props.map(({ name }) => name),
+		...metadata.snippets.map(({ name }) => name)
+	]);
+	const rows = metadata.props.map((prop) => {
+		const fact = factsByName.get(prop.name);
+		const supplement = teaching?.props?.[prop.name];
+		return {
+			...prop,
+			...(fact
+				? { required: fact.required || undefined, type: fact.type }
+				: { required: prop.required }),
+			...supplement
+		};
+	});
+	for (const fact of facts?.props ?? []) {
+		const supplement = teaching?.props?.[fact.name];
+		if (!supplement || documentedNames.has(fact.name)) continue;
+		rows.push({
+			default: supplement.default ?? '—',
+			description: supplement.description,
+			name: fact.name,
+			required: fact.required || undefined,
+			type: fact.type
+		});
+	}
+	return rows;
 }
 
 function appendMetadataApi(
 	api: ApiSection[],
 	metadata: ZuiComponentMetadata,
+	props: readonly ZuiPropMetadata[],
+	facts?: ComponentApiFacts,
 	prefix = '',
 	titlePrefix = ''
 ): void {
 	api.push({
-		description: '下表来自组件单文件中的公开metadata；组件同时转发适用的原生属性。',
+		description: facts
+			? `类型和必填性来自${facts.declaration}的静态AST；默认值与说明由文档教学metadata补充。组件同时转发适用的原生属性。`
+			: '下表来自组件单文件中的公开metadata；组件同时转发适用的原生属性。',
 		id: `${prefix}props`,
-		rows: metadata.props,
+		rows: props,
 		title: `${titlePrefix}Props`
 	});
 	if (metadata.bindings.length > 0) {
@@ -119,15 +163,33 @@ export function defineComponentDoc(
 		demoIds.add(demo.id);
 	}
 	const api: ApiSection[] = [];
-	appendMetadataApi(api, metadata);
-	for (const member of doc.members ?? []) {
-		appendMetadataApi(api, member, `${member.id}-`, `${member.name} `);
+	const sourceApi = doc.sourceApi;
+	if (sourceApi && (sourceApi.id !== metadata.id || sourceApi.name !== metadata.name)) {
+		throw new TypeError(
+			`${metadata.name} documentation received API facts for ${sourceApi.name} (${sourceApi.id}).`
+		);
 	}
-	const { members: _members, ...page } = doc;
+	if (sourceApi && sourceApi.undocumentedProps.length > 0) {
+		throw new TypeError(
+			`${metadata.name} cannot enable generated Props until its teaching metadata covers: ${sourceApi.undocumentedProps.join(', ')}.`
+		);
+	}
+	const resolvedMetadata = {
+		...metadata,
+		props: sourceBackedProps(metadata, sourceApi, doc.teaching),
+		summary: doc.teaching?.summary ?? metadata.summary
+	} satisfies ZuiComponentMetadata;
+	appendMetadataApi(api, resolvedMetadata, resolvedMetadata.props, sourceApi);
+	for (const member of doc.members ?? []) {
+		appendMetadataApi(api, member, member.props, undefined, `${member.id}-`, `${member.name} `);
+	}
+	const { members: _members, sourceApi: _sourceApi, teaching: _teaching, ...page } = doc;
 	void _members;
+	void _sourceApi;
+	void _teaching;
 
 	return Object.freeze({
-		...metadata,
+		...resolvedMetadata,
 		...page,
 		api: Object.freeze(api),
 		keywords: Object.freeze(doc.keywords ?? [])

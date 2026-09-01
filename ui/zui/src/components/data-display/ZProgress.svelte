@@ -54,7 +54,7 @@
 			},
 			{ default: "'Progress'", description: '可访问名称。', name: 'label', type: 'string' }
 		],
-		since: '0.7.0',
+		since: 'unreleased',
 		snippets: [],
 		source: 'ui/zui/src/components/data-display/ZProgress.svelte',
 		states: [

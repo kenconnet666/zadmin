@@ -2,6 +2,8 @@ export type ZuiComponentCategory =
 	'data-display' | 'feedback' | 'gene' | 'input' | 'layout' | 'navigation' | 'overlay' | 'utility';
 export type ZuiComponentStatus =
 	'approved' | 'candidate' | 'deprecated' | 'experimental' | 'stable';
+export type ZuiReleasedVersion = `${number}.${number}.${number}`;
+export type ZuiComponentSince = ZuiReleasedVersion | 'unreleased';
 
 export interface ZuiApiMetadata {
 	readonly description: string;
@@ -49,7 +51,7 @@ export interface ZuiComponentMetadata {
 	readonly name: `Z${string}`;
 	readonly parts: readonly ZuiPartMetadata[];
 	readonly props: readonly ZuiPropMetadata[];
-	readonly since: string;
+	readonly since: ZuiComponentSince;
 	readonly snippets: readonly ZuiSnippetMetadata[];
 	readonly source: `ui/zui/src/components/${string}.svelte`;
 	readonly states: readonly ZuiDataStateMetadata[];

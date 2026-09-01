@@ -98,7 +98,7 @@
 			{ default: 'true', description: '方向键是否循环。', name: 'loop', type: 'boolean' },
 			{ default: 'false', description: '禁用查询和动作。', name: 'disabled', type: 'boolean' }
 		],
-		since: '0.4.0',
+		since: 'unreleased',
 		snippets: [],
 		source: 'ui/zui/src/components/navigation/ZCommand.svelte',
 		states: [
@@ -118,7 +118,7 @@
 	} from '../../runtime/collection/list-navigation.js';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
-	import { formReset } from '../../runtime/form/form-control.svelte.js';
+	import FormResetSignal from '../../runtime/form/FormResetSignal.svelte';
 	import { scoreCommand } from '../../runtime/command.js';
 	import {
 		applyIcssRootStyle,
@@ -458,7 +458,6 @@
 		aria-controls={`${idBase}-list`}
 		aria-expanded="true"
 		aria-activedescendant={activeId}
-		use:formReset={resetFromForm}
 		oninput={handleInput}
 		onkeydown={handleKeydown}
 	/>
@@ -517,3 +516,4 @@
 		{#if results.length === 0}<div class={emptyClass}>{emptyText}</div>{/if}
 	</div>
 </div>
+<FormResetSignal control={inputRef} onReset={resetFromForm} />

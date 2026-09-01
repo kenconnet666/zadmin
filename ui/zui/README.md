@@ -39,7 +39,7 @@ pnpm add @zadmin/zui @lucide/svelte svelte
 | `@zadmin/zui/code`     | Optional Shiki-backed `ZCode` component                                         |
 | `@zadmin/zui/runtime`  | Browser and SSR ICSS runtimes                                                   |
 | `@zadmin/zui/compiler` | ICSS Svelte preprocessing                                                       |
-| `@zadmin/zui/metadata` | Component documentation metadata                                                |
+| `@zadmin/zui/metadata` | Component identity, release, structure, and tooling metadata                    |
 | `@zadmin/zui/testing`  | Test harnesses and contract assertions; never import into production bundles    |
 
 `internal` is an unstable package-development boundary and is not a compatibility promise.
@@ -55,6 +55,24 @@ pnpm add @zadmin/zui @lucide/svelte svelte
 - ICSS has a class-only public API. Stable visual decisions belong in semantic Theme tokens; structural and runtime values remain explicit.
 
 Every documented root component has at least two executable examples in `apps/docs`, while compound parts expose their contracts through the root component page and metadata.
+
+## Metadata and release facts
+
+Public `*Props` types are the source of truth for prop names, types, and requiredness. The documentation generator extracts those facts with the TypeScript AST; `apps/docs` owns teaching copy such as summaries, defaults, explanations, examples, and usage guidance. Components retain the legacy combined metadata shape during the incremental migration, so existing consumers do not break at once.
+
+`since` is either a real package version that has already been published or `unreleased`. Development stages and roadmap milestones are never represented as SemVer history.
+
+```sh
+pnpm --filter @zadmin/zui metadata:facts:check
+pnpm --filter @zadmin/zui metadata:since:normalize
+pnpm --filter @zadmin/docs api:source:check
+```
+
+The normalize command only converts versions newer than the current `@zadmin/zui` package version to `unreleased`. After Changesets has updated the package to the target release version, the release PR materializes pending entries explicitly:
+
+```sh
+pnpm --filter @zadmin/zui metadata:since:materialize -- 0.2.0
+```
 
 ## Package and browser support
 

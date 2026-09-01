@@ -113,7 +113,7 @@
 				type: 'boolean'
 			}
 		],
-		since: '0.5.0',
+		since: 'unreleased',
 		snippets: [{ description: '表单字段与操作。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/input/ZForm.svelte',
 		states: [

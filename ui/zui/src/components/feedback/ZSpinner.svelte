@@ -27,7 +27,7 @@
 				type: "'small' | 'medium' | 'large'"
 			}
 		],
-		since: '0.7.0',
+		since: 'unreleased',
 		snippets: [],
 		source: 'ui/zui/src/components/feedback/ZSpinner.svelte',
 		states: [{ description: '当前减少动画。', name: 'data-reduced-motion', values: ['true'] }],

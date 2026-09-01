@@ -27,7 +27,7 @@
 				type: "'default' | 'accent' | 'success' | 'warning' | 'danger'"
 			}
 		],
-		since: '0.7.0',
+		since: 'unreleased',
 		snippets: [{ description: '短状态文本。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/data-display/ZBadge.svelte',
 		states: [],

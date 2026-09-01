@@ -114,7 +114,7 @@
 				type: 'HTMLDivElement | null'
 			}
 		],
-		since: '0.3.0',
+		since: 'unreleased',
 		snippets: [{ description: 'Popover内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/popover/ZPopoverContent.svelte',
 		states: [

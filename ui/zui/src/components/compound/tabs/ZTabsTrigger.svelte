@@ -118,7 +118,7 @@
 				type: 'HTMLButtonElement | null'
 			}
 		],
-		since: '0.2.0',
+		since: 'unreleased',
 		snippets: [{ description: 'Tab标签内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/tabs/ZTabsTrigger.svelte',
 		states: [

@@ -106,7 +106,7 @@
 				type: '(value: SelectionKey) => string'
 			}
 		],
-		since: '0.4.0',
+		since: 'unreleased',
 		snippets: [{ description: 'Trigger、Content与Item。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/select/ZSelect.svelte',
 		states: [],

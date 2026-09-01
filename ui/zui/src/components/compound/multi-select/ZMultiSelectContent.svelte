@@ -28,7 +28,7 @@
 				type: 'HTMLDivElement | null'
 			}
 		],
-		since: '0.4.0',
+		since: 'unreleased',
 		snippets: [{ description: 'Items。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/multi-select/ZMultiSelectContent.svelte',
 		states: [],

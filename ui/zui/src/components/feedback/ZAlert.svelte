@@ -52,7 +52,7 @@
 			},
 			{ default: 'false', description: '显示关闭按钮。', name: 'dismissible', type: 'boolean' }
 		],
-		since: '0.7.0',
+		since: 'unreleased',
 		snippets: [
 			{ description: '反馈正文。', name: 'children', type: 'Snippet' },
 			{ description: '可选操作。', name: 'action', type: 'Snippet' }

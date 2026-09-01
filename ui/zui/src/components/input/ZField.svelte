@@ -164,20 +164,35 @@
 	const uid = $props.id();
 	const idBase = $derived(createZuiId(zui.idPrefix, uid));
 	const resolvedControlId = $derived(controlId ?? `${idBase}-control`);
+	const labelId = $derived(`${idBase}-label`);
 	const descriptionId = $derived(description ? `${idBase}-description` : undefined);
 	const messages = $derived(normalizeFieldMessages(error));
 	const invalid = $derived(messages.length > 0);
 	const errorIds = $derived(messages.map((_, index) => `${idBase}-error-${index + 1}`));
 	const describedBy = $derived(mergeAriaIds(descriptionId, errorIds.join(' ')));
 	const classes = $derived(zui.slots(fieldRecipe, { size }));
+	let focusOwner: (() => void) | undefined;
+	function registerFocusOwner(focus: () => void): () => void {
+		focusOwner = focus;
+		return () => {
+			if (focusOwner === focus) focusOwner = undefined;
+		};
+	}
+	function handleLabelClick(event: MouseEvent): void {
+		if (!focusOwner || event.defaultPrevented) return;
+		event.preventDefault();
+		focusOwner();
+	}
 	provideZField(() => ({
 		controlId: resolvedControlId,
 		describedBy,
 		disabled,
 		invalid,
+		labelId,
 		name,
 		readonly,
-		required
+		required,
+		registerFocusOwner
 	}));
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
@@ -192,7 +207,7 @@
 	data-disabled={disabled || undefined}
 	data-invalid={invalid || undefined}
 >
-	<label class={classes.label} for={resolvedControlId}>
+	<label class={classes.label} for={resolvedControlId} id={labelId} onclick={handleLabelClick}>
 		{#if typeof label === 'string'}{label}{:else}{@render label()}{/if}
 		{#if required}<span aria-hidden="true"> *</span>{/if}
 	</label>

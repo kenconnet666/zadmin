@@ -95,7 +95,7 @@
 			{ default: '8', description: '最多显示建议数。', name: 'maxSuggestions', type: 'number' },
 			{ default: 'true', description: '插入后追加空格。', name: 'appendSpace', type: 'boolean' }
 		],
-		since: '0.4.0',
+		since: 'unreleased',
 		snippets: [],
 		source: 'ui/zui/src/components/input/ZMention.svelte',
 		states: [{ description: '建议浮层状态。', name: 'data-state', values: ['open', 'closed'] }],

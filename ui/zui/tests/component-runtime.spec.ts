@@ -52,6 +52,58 @@ describe('component runtime state', () => {
 			})
 		);
 	});
+
+	it('treats null as an explicit empty value instead of an uncontrolled signal', () => {
+		let external: string | null | undefined;
+		const state = new ControllableState<string | null>({
+			defaultValue: () => 'seed',
+			read: () => external,
+			write: (value) => (external = value)
+		});
+
+		external = null;
+		expect(state.current).toBeNull();
+		external = undefined;
+		expect(state.current).toBe('seed');
+	});
+
+	it('preserves the undefined fallback by default for non-nullable state', () => {
+		let external: string | undefined = 'outside';
+		const state = new ControllableState<string>({
+			defaultValue: () => 'seed',
+			read: () => external,
+			write: (value) => (external = value)
+		});
+
+		expect(state.current).toBe('outside');
+		external = undefined;
+		expect(state.current).toBe('seed');
+	});
+
+	it('relinquishes the initial fallback after a write-through update and resets explicitly', () => {
+		let external: string | undefined;
+		const changes: string[] = [];
+		const state = new ControllableState<string | undefined>({
+			defaultValue: () => 'seed',
+			onChange: () => (value) => changes.push(value),
+			read: () => external,
+			undefinedIsValue: true,
+			write: (value) => (external = value)
+		});
+
+		expect(state.current).toBe('seed');
+		state.setFromUser('typed');
+		expect(external).toBe('typed');
+		expect(changes).toEqual(['typed']);
+
+		external = undefined;
+		expect(state.current).toBeUndefined();
+
+		state.reset();
+		expect(external).toBe('seed');
+		expect(state.current).toBe('seed');
+		expect(changes).toEqual(['typed']);
+	});
 });
 
 describe('form control helpers', () => {

@@ -3,9 +3,22 @@ import LayoutDemo from './LayoutDemo.svelte';
 import layoutSource from './LayoutDemo.svelte?raw';
 import AlignmentDemo from './AlignmentDemo.svelte';
 import alignmentSource from './AlignmentDemo.svelte?raw';
+import { stackApiFacts } from '../../../../framework/component-api.generated.js';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const stackDoc = defineComponentDoc(stackMetadata, {
+	sourceApi: stackApiFacts,
+	teaching: {
+		props: {
+			align: { description: '交叉轴对齐。', default: "'stretch'" },
+			direction: { description: 'Flex主轴方向。', default: "'column'" },
+			gap: { description: 'Theme间距token或明确px值。', default: "'none'" },
+			justify: { description: '主轴分布。', default: "'start'" },
+			ref: { description: '真实div引用。', default: 'null' },
+			wrap: { description: '是否允许Flex换行。', default: 'false' }
+		},
+		summary: '类型安全的Flex布局容器，支持方向、间距、对齐、分布和换行。'
+	},
 	demos: [
 		{
 			component: LayoutDemo,

@@ -25,7 +25,7 @@
 				type: 'HTMLButtonElement | null'
 			}
 		],
-		since: '0.4.0',
+		since: 'unreleased',
 		snippets: [
 			{ description: '自定义Trigger；省略时显示标签摘要。', name: 'children', type: 'Snippet' }
 		],

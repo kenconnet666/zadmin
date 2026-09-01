@@ -51,7 +51,7 @@
 			},
 			{ default: 'false', description: '交替tbody行背景。', name: 'striped', type: 'boolean' }
 		],
-		since: '0.8.0',
+		since: 'unreleased',
 		snippets: [
 			{ description: 'thead行。', name: 'header', type: 'Snippet' },
 			{ description: 'tbody行。', name: 'children', type: 'Snippet' },

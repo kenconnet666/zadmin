@@ -81,7 +81,7 @@
 			},
 			{ default: 'undefined', description: '单一隐藏表单字段名。', name: 'name', type: 'string' }
 		],
-		since: '0.5.0',
+		since: 'unreleased',
 		snippets: [],
 		source: 'ui/zui/src/components/input/ZPinInput.svelte',
 		states: [

@@ -50,7 +50,7 @@
 				type: "'circle' | 'rounded' | 'square'"
 			}
 		],
-		since: '0.7.0',
+		since: 'unreleased',
 		snippets: [{ description: '自定义fallback。', name: 'fallback', type: 'Snippet' }],
 		source: 'ui/zui/src/components/data-display/ZAvatar.svelte',
 		states: [{ description: '图片加载失败或缺失。', name: 'data-fallback', values: ['true'] }],

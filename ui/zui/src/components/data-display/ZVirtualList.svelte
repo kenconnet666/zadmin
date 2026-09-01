@@ -59,7 +59,7 @@
 			{ default: '320', description: 'viewport高度px。', name: 'height', type: 'number' },
 			{ default: '4', description: '上下overscan项数。', name: 'overscan', type: 'number' }
 		],
-		since: '0.8.0',
+		since: 'unreleased',
 		snippets: [{ description: '可见项正文。', name: 'item', type: 'Snippet<[TItem, number]>' }],
 		source: 'ui/zui/src/components/data-display/ZVirtualList.svelte',
 		states: [

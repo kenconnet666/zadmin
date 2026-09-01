@@ -40,7 +40,7 @@
 				type: 'HTMLParagraphElement | null'
 			}
 		],
-		since: '0.3.0',
+		since: 'unreleased',
 		snippets: [{ description: 'Dialog说明。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/dialog/ZDialogDescription.svelte',
 		states: [],

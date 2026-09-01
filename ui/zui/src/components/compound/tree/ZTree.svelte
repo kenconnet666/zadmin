@@ -108,7 +108,7 @@
 				type: 'number'
 			}
 		],
-		since: '0.4.0',
+		since: 'unreleased',
 		snippets: [],
 		source: 'ui/zui/src/components/compound/tree/ZTree.svelte',
 		states: [

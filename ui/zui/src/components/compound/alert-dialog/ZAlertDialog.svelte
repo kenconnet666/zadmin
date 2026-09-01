@@ -44,7 +44,7 @@
 				type: 'boolean'
 			}
 		],
-		since: '0.3.0',
+		since: 'unreleased',
 		snippets: [{ description: 'AlertDialog复合部件。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/alert-dialog/ZAlertDialog.svelte',
 		states: [],

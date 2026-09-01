@@ -54,7 +54,7 @@
 				type: 'HTMLDivElement | null'
 			}
 		],
-		since: '0.4.0',
+		since: 'unreleased',
 		snippets: [{ description: 'Option标签。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/multi-select/ZMultiSelectItem.svelte',
 		states: [{ description: '选择状态。', name: 'data-state', values: ['selected', 'unselected'] }],

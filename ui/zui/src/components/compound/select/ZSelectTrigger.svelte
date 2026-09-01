@@ -31,7 +31,7 @@
 				type: 'HTMLButtonElement | null'
 			}
 		],
-		since: '0.4.0',
+		since: 'unreleased',
 		snippets: [
 			{
 				description: '自定义Trigger内容；省略时显示选中项文本。',

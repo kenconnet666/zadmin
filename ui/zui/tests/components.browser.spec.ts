@@ -2117,6 +2117,24 @@ describe('compiled ICSS browser updates', () => {
 		target.remove();
 	});
 
+	it('lets an established Accordion binding clear externally without reviving its fallback', async () => {
+		render(AccordionFixture);
+		const charlie = document.querySelector<HTMLButtonElement>('[data-testid="accordion-c"]');
+		const clear = document.querySelector<HTMLButtonElement>(
+			'[data-testid="accordion-external-clear"]'
+		);
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="accordion-output"]');
+
+		charlie?.click();
+		await tick();
+		expect(output?.textContent).toBe('c:1');
+
+		clear?.click();
+		await tick();
+		expect(charlie?.getAttribute('aria-expanded')).toBe('false');
+		expect(output?.textContent).toBe('none:1');
+	});
+
 	it('keeps native Slider input, FormData and reset synchronized', async () => {
 		render(SliderFixture);
 		const control = document.querySelector<HTMLInputElement>('[data-testid="slider"]');

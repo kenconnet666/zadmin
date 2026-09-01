@@ -43,7 +43,7 @@
 				type: 'HTMLElement | null'
 			}
 		],
-		since: '0.2.0',
+		since: 'unreleased',
 		snippets: [],
 		source: 'ui/zui/src/components/gene/ZSeparator.svelte',
 		states: [

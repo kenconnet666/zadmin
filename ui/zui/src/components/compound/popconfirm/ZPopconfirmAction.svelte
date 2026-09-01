@@ -29,7 +29,7 @@
 				type: 'HTMLButtonElement | null'
 			}
 		],
-		since: '0.3.0',
+		since: 'unreleased',
 		snippets: [{ description: '确认操作内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/popconfirm/ZPopconfirmAction.svelte',
 		states: [],

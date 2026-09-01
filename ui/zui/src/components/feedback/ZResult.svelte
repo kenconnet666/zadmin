@@ -38,7 +38,7 @@
 			},
 			{ default: "'info'", description: '语义tone。', name: 'tone', type: 'AlertTone' }
 		],
-		since: '0.7.0',
+		since: 'unreleased',
 		snippets: [
 			{ description: '状态图形。', name: 'icon', type: 'Snippet' },
 			{ description: '说明。', name: 'children', type: 'Snippet' },
