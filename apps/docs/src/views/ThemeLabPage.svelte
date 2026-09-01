@@ -255,11 +255,11 @@
 		</div>
 	</section>
 
-	<section class={classes.section} aria-labelledby="semantic-colors">
+	<section class={classes.section} aria-labelledby="semantic-colors" data-slot="semantic-colors">
 		<h2 class={classes.sectionTitle} id="semantic-colors">语义颜色</h2>
 		<div class={classes.tokenGrid}>
 			{#each colors as [name, value] (name)}
-				<div class={classes.token}>
+				<div class={classes.token} data-slot="semantic-color">
 					<div class={classes.swatch} style={`background:${value}`}></div>
 					<strong class={classes.tokenName}>{name}</strong>
 					<ZCode class={classes.tokenValue} code={String(value)} inline />

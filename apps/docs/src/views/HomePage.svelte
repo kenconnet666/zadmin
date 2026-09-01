@@ -250,7 +250,7 @@
 			>
 				<ZBox>
 					<div class={classes.cardIcon}><ZIcon name="chevronDown" size={18} /></div>
-					<h4 class={classes.cardTitle}>{guide.eyebrow}</h4>
+					<h3 class={classes.cardTitle}>{guide.eyebrow}</h3>
 					<ZText tone="muted">{guide.summary}</ZText>
 					<span class={classes.learnMore}>阅读指南 <ZIcon name="arrowRight" size={14} /></span>
 				</ZBox>

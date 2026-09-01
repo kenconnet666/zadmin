@@ -5,6 +5,7 @@
 		{
 			slots: [
 				'shell',
+				'skipNavigation',
 				'skipLink',
 				'main',
 				'notFound',
@@ -75,6 +76,10 @@
 					s.transitionProperty.raw('background-color, color');
 					s.transitionTimingFunction.ease;
 					s._media('(max-width: 48rem)', (mobile) => mobile.display.block);
+				},
+				skipNavigation: (s) => {
+					s.position.fixed;
+					s.zIndex._modal;
 				},
 				title: (s) => {
 					s.fontSize.raw('clamp(2.5rem, 5vw, 4.5rem)');
@@ -215,9 +220,11 @@
 </script>
 
 <div class={classes.shell}>
-	<ZLink class={classes.skipLink} href={currentHref} underline="none" onclick={skipToMain}
-		>跳到主要内容</ZLink
-	>
+	<nav class={classes.skipNavigation} aria-label="快捷跳转">
+		<ZLink class={classes.skipLink} href={currentHref} underline="none" onclick={skipToMain}
+			>跳到主要内容</ZLink
+		>
+	</nav>
 	<AppHeader
 		{contrast}
 		{density}
