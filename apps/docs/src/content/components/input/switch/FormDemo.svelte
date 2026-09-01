@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { ZButton, ZStack, ZSwitch, ZText } from '@zadmin/zui';
+	import { ZButton, ZField, ZStack, ZSwitch, ZText } from '@zadmin/zui';
 
-	let checked = $state(false);
+	let checked = $state(true);
 	let changes = $state(0);
 	let submitted = $state('尚未提交');
 
@@ -14,21 +14,21 @@
 
 <form onreset={() => (submitted = '尚未提交')} onsubmit={submit}>
 	<ZStack gap="medium">
-		<label>
+		<ZField
+			description="关闭后原生required校验会阻止提交；reset恢复defaultChecked。"
+			error={checked ? undefined : '必须启用安全告警'}
+			label="安全告警"
+			name="alerts"
+			required
+		>
 			<ZSwitch
 				bind:checked
 				data-testid="switch-alerts"
-				name="alerts"
+				defaultChecked
 				onCheckedChange={() => (changes += 1)}
 				value="enabled"
 			/>
-			启用安全告警
-		</label>
-		<ZStack direction="row" gap="small" wrap>
-			<ZSwitch aria-label="小尺寸开关" size="small" />
-			<ZSwitch aria-label="大尺寸开关" defaultChecked size="large" />
-			<ZSwitch aria-label="禁用开关" disabled />
-		</ZStack>
+		</ZField>
 		<ZStack direction="row" gap="small" wrap>
 			<ZButton size="small" type="submit">读取FormData</ZButton>
 			<ZButton size="small" type="reset" variant="secondary">重置</ZButton>

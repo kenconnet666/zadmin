@@ -113,6 +113,11 @@ export const DEFAULT_THEME_SCHEMA = {
 		xlarge: 24,
 		xsmall: 2
 	},
+	transform: {
+		switchThumbTravelLarge: 'translateX(20px)',
+		switchThumbTravelMedium: 'translateX(16px)',
+		switchThumbTravelSmall: 'translateX(12px)'
+	},
 	zIndex: {
 		dropdown: 1000,
 		modal: 1200,

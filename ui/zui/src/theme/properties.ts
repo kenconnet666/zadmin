@@ -289,6 +289,7 @@ export const PROPERTY_DEFINITIONS = {
 	textOverflow: { keywords: { clip: 'clip', ellipsis: 'ellipsis' } },
 	textShadow: { token: 'shadow' },
 	top: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
+	transform: { token: 'transform' },
 	transitionDuration: { token: 'duration', tokenUnit: 'ms', units: ['time'] },
 	transitionTimingFunction: {
 		keywords: {

@@ -4,15 +4,13 @@
 
 <ZProvider direction="rtl" motion="reduced">
 	<ZStack gap="medium">
-		<label
-			><ZStack align="center" direction="row" gap="medium"
-				><ZSwitch defaultChecked /><ZText>RTL已开启且无过渡动画</ZText></ZStack
-			></label
-		>
-		<label
-			><ZStack align="center" direction="row" gap="medium"
-				><ZSwitch invalid /><ZText tone="danger">必须启用审计日志</ZText></ZStack
-			></label
-		>
+		<ZStack align="center" direction="row" gap="medium">
+			<ZSwitch defaultChecked id="switch-rtl-motion" />
+			<ZText as="label" for="switch-rtl-motion">RTL已开启且无过渡动画</ZText>
+		</ZStack>
+		<ZStack align="center" direction="row" gap="medium">
+			<ZSwitch id="switch-rtl-invalid" invalid />
+			<ZText as="label" for="switch-rtl-invalid" tone="danger">必须启用审计日志</ZText>
+		</ZStack>
 	</ZStack>
 </ZProvider>
