@@ -54,7 +54,7 @@
 		>
 	{/if}
 	<output data-testid="tag-output">{tagVisible ? 'visible' : 'removed'}</output>
-	<ZCard aria-labelledby="display-card-title">
+	<ZCard as="article" aria-labelledby="display-card-title">
 		{#snippet header()}<h2 id="display-card-title">Production release</h2>{/snippet}
 		<p>All release gates passed.</p>
 		{#snippet footer()}Updated now{/snippet}

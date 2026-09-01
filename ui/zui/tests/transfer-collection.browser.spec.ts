@@ -1,10 +1,8 @@
-import { cleanup, render } from 'vitest-browser-svelte';
+import { render } from 'vitest-browser-svelte';
 import { tick } from 'svelte';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import TransferProductionFixture from './TransferProductionFixture.svelte';
-
-afterEach(cleanup);
 
 function keydown(
 	target: Element | null | undefined,
@@ -17,6 +15,7 @@ function keydown(
 describe('ZTransfer logical collection integration', () => {
 	it('keeps filter drafts auxiliary, select-all view scoped and typed FormData ordered', async () => {
 		render(TransferProductionFixture);
+		await tick();
 		const root = document.querySelector<HTMLElement>('[data-testid="transfer-production"]');
 		const form = document.querySelector<HTMLFormElement>(
 			'[data-testid="transfer-production-form"]'
@@ -36,6 +35,7 @@ describe('ZTransfer logical collection integration', () => {
 		expect(source?.querySelectorAll('[role="option"]')).toHaveLength(1);
 		source?.focus();
 		keydown(source, 'a', { ctrlKey: true });
+		await tick();
 		root?.querySelector<HTMLButtonElement>('[aria-label="Move selected to target"]')?.click();
 		await tick();
 		expect(
@@ -54,6 +54,7 @@ describe('ZTransfer logical collection integration', () => {
 
 	it('preserves async orphan values and reports loading without leaking transport ownership', async () => {
 		render(TransferProductionFixture);
+		await tick();
 		const form = document.querySelector<HTMLFormElement>(
 			'[data-testid="transfer-production-form"]'
 		);
@@ -76,6 +77,7 @@ describe('ZTransfer logical collection integration', () => {
 
 	it('uses independent virtual pane owners and mounts an End target before selecting and moving it', async () => {
 		render(TransferProductionFixture);
+		await tick();
 		const root = document.querySelector<HTMLElement>('[data-testid="transfer-virtual"]');
 		const source = root?.querySelector<HTMLElement>(
 			'[role="listbox"][aria-label="Virtual available"]'
@@ -89,6 +91,7 @@ describe('ZTransfer logical collection integration', () => {
 		const active = activeId ? source?.querySelector<HTMLElement>(`#${activeId}`) : null;
 		expect(active?.textContent).toContain('Virtual node 999');
 		keydown(source, ' ');
+		await tick();
 		root?.querySelector<HTMLButtonElement>('[aria-label="Move selected to target"]')?.click();
 		await tick();
 		expect(document.querySelector('[data-testid="transfer-virtual-output"]')?.textContent).toBe(
@@ -98,12 +101,14 @@ describe('ZTransfer logical collection integration', () => {
 
 	it('keeps readonly panes navigable while preventing selection and movement', async () => {
 		render(TransferProductionFixture);
+		await tick();
 		const root = document.querySelector<HTMLElement>('[data-testid="transfer-readonly"]');
 		const source = root?.querySelector<HTMLElement>(
 			'[role="listbox"][aria-label="Readonly available"]'
 		);
 		source?.focus();
 		keydown(source, 'End');
+		await tick();
 		keydown(source, ' ');
 		await tick();
 		expect(document.activeElement).toBe(source);

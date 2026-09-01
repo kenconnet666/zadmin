@@ -102,7 +102,7 @@ test('searches every component and guide through the site CommandPalette', async
 	search = dialog.getByRole('combobox', { name: '搜索组件与指南', exact: true });
 	await expect(search).toBeFocused();
 	await search.fill('PACKAGE');
-	await expect(dialog.getByRole('option', { name: 'PACKAGE', exact: true })).toBeVisible();
+	await expect(dialog.getByRole('option', { name: /PACKAGE/u })).toBeVisible();
 	await page.keyboard.press('ArrowDown');
 	await page.keyboard.press('Home');
 	await page.keyboard.press('Enter');
@@ -314,7 +314,7 @@ test('keeps FileUpload validation, native FormData, removal and reset synchroniz
 	page
 }) => {
 	await page.goto('/#/components/file-upload');
-	const uploadDemo = demo(page, 'file-upload-queue');
+	const uploadDemo = demo(page, 'file-upload-form-queue');
 	const input = uploadDemo.locator('input[type="file"]');
 	await input.setInputFiles({
 		buffer: Buffer.from('{"ready":true}'),
@@ -427,7 +427,7 @@ test('keeps NumberField locale parsing, spinbutton keys, FormData and reset sync
 	page
 }) => {
 	await page.goto('/#/components/number-field');
-	const numberDemo = demo(page, 'number-field-locale');
+	const numberDemo = demo(page, 'number-field-locale-form');
 	const input = numberDemo.getByRole('spinbutton', { name: '并发上限', exact: true });
 	await expect(input).toHaveAttribute('aria-valuenow', '1234.5');
 	await input.fill('12.75');
@@ -450,7 +450,7 @@ test('keeps Calendar grid keyboard, selection, FormData and reset synchronized',
 	page
 }) => {
 	await page.goto('/#/components/calendar');
-	const calendarDemo = demo(page, 'calendar-grid');
+	const calendarDemo = demo(page, 'calendar-grid-form');
 	const selected = calendarDemo.getByRole('button', {
 		name: '2026年8月18日星期二',
 		exact: true
@@ -477,7 +477,7 @@ test('keeps DateField and TimeField segment keys, values and reset synchronized'
 	page
 }) => {
 	await page.goto('/#/components/date-field');
-	const dateFieldDemo = demo(page, 'date-field-segments');
+	const dateFieldDemo = demo(page, 'date-field-segments-form');
 	await dateFieldDemo.getByRole('textbox', { name: '月', exact: true }).press('ArrowUp');
 	await expect(dateFieldDemo.getByText('value = 2026-09-18')).toBeVisible();
 	await dateFieldDemo.getByRole('button', { name: '重置', exact: true }).click();
@@ -498,7 +498,7 @@ test('keeps DateField and TimeField segment keys, values and reset synchronized'
 	await expect(page.locator('html')).toHaveAttribute('dir', 'ltr');
 
 	await page.goto('/#/components/time-field');
-	const timeFieldDemo = demo(page, 'time-field-segments');
+	const timeFieldDemo = demo(page, 'time-field-segments-form');
 	await timeFieldDemo.getByRole('textbox', { name: '分钟', exact: true }).press('ArrowUp');
 	await expect(timeFieldDemo.getByText('value = 09:31:15')).toBeVisible();
 	await timeFieldDemo.getByRole('button', { name: '重置', exact: true }).click();
@@ -509,7 +509,7 @@ test('keeps DatePicker Calendar selection, form value and focus restoration sync
 	page
 }) => {
 	await page.goto('/#/components/date-picker');
-	const datePickerDemo = demo(page, 'date-picker-popover');
+	const datePickerDemo = demo(page, 'date-picker-editable-form');
 	const trigger = datePickerDemo.locator('button[aria-haspopup="dialog"]');
 	await trigger.click();
 	await page
@@ -524,7 +524,7 @@ test('keeps DateRangePicker two-step normalized selection and dual form fields s
 	page
 }) => {
 	await page.goto('/#/components/date-range-picker');
-	const rangeDemo = demo(page, 'date-range-picker-window');
+	const rangeDemo = demo(page, 'date-range-picker-normalize');
 	const trigger = rangeDemo.locator('button[aria-haspopup="dialog"]');
 	await trigger.click();
 	const calendarDialog = page.getByRole('dialog', { name: '选择发布窗口', exact: true });
@@ -551,12 +551,34 @@ test('keeps data-display document semantics, image alternatives and Tag ownershi
 	const avatarDemo = demo(page, 'avatar-fallback');
 	await expect(avatarDemo.getByRole('img', { name: '林墨', exact: true })).toHaveText('林');
 	await expect(avatarDemo.getByRole('img', { name: '部署机器人', exact: true })).toHaveText('机');
+	const nativeAvatar = demo(page, 'avatar-native-image').locator('img');
+	await expect(nativeAvatar).toHaveAttribute('loading', 'lazy');
+	await expect(nativeAvatar).toHaveAttribute('decoding', 'async');
+	await expect(nativeAvatar).toHaveAttribute('referrerpolicy', 'no-referrer');
+	await expect(
+		demo(page, 'avatar-decorative').locator('[data-slot="fallback"][role="img"]')
+	).toHaveCount(1);
 
 	await page.goto('/#/components/card');
 	const card = demo(page, 'card-anatomy').locator('article:has(> [data-slot="body"])');
 	await expect(card).toHaveCount(1);
 	await expect(card.locator(':scope > header')).toContainText('生产部署');
 	await expect(card.locator(':scope > footer')).toContainText('更新于刚刚');
+	const loadingCard = demo(page, 'card-loading').locator('[data-loading="true"]');
+	await expect(loadingCard).toHaveAttribute('aria-busy', 'true');
+	await expect(loadingCard.locator('[data-slot="loading"] > [aria-hidden="true"]')).toHaveCount(3);
+	await demo(page, 'card-loading').getByRole('button', { name: '显示正文', exact: true }).click();
+	await expect(demo(page, 'card-loading').locator('[data-slot="body"]')).toContainText(
+		'正文由调用方拥有'
+	);
+	const semanticCards = demo(page, 'card-semantic-roots');
+	await expect(semanticCards.locator(':scope [data-variant="outlined"]')).toHaveCount(3);
+	await expect(semanticCards.locator('section[aria-labelledby="card-section-title"]')).toHaveCount(
+		1
+	);
+	await expect(semanticCards.locator('article[aria-labelledby="card-article-title"]')).toHaveCount(
+		1
+	);
 
 	await page.goto('/#/components/list');
 	await expect(demo(page, 'list-ordered').locator('ol > li')).toHaveCount(2);
@@ -876,7 +898,7 @@ test('keeps Tabs ARIA relationships, disabled skipping and RTL activation synchr
 	page
 }) => {
 	await page.goto('/#/components/tabs');
-	const tabsDemo = demo(page, 'tabs-interactive');
+	const tabsDemo = demo(page, 'tabs-automatic');
 	const overview = tabsDemo.getByRole('tab', { name: '概览', exact: true });
 	const metrics = tabsDemo.getByRole('tab', { name: '指标', exact: true });
 	const legacy = tabsDemo.getByRole('tab', { name: '旧版', exact: true });
@@ -1552,15 +1574,27 @@ test('keeps S1 primitives semantic and display preferences effective', async ({ 
 	await expect(
 		semanticColors.getByRole('heading', { name: '语义颜色', exact: true })
 	).toBeVisible();
-	await expect(semanticColors.locator('[data-slot="semantic-color"]')).toHaveCount(19);
+	await expect(semanticColors.locator('[data-slot="semantic-color"]')).toHaveCount(20);
 
 	await page.goto('/#/components/link');
-	const linkDemo = demo(page, 'link-basic');
-	await expect(linkDemo.locator('a[aria-disabled="true"]')).not.toHaveAttribute('href');
-	await expect(linkDemo.locator('a[target="_blank"]')).toHaveAttribute(
-		'rel',
-		'noopener noreferrer'
-	);
+	const disabledLink = demo(page, 'link-disabled').locator('a[aria-disabled="true"]');
+	await expect(disabledLink).not.toHaveAttribute('href');
+	await expect(disabledLink).toHaveAttribute('tabindex', '-1');
+	const externalLink = demo(page, 'link-external').getByRole('link', {
+		name: /新窗口外链/u
+	});
+	await expect(externalLink).toHaveAttribute('rel', 'noopener noreferrer');
+	await expect(externalLink.locator('[data-slot="external-icon"]')).toHaveCount(1);
+	const nativeBlank = demo(page, 'link-native-attributes').getByRole('link', {
+		name: /许可证/u
+	});
+	await expect(nativeBlank).toHaveAttribute('rel', 'license nofollow noopener noreferrer');
+
+	await page.goto('/#/components/heading');
+	const headingLevels = demo(page, 'heading-levels');
+	for (const level of [1, 2, 3, 4, 5, 6] as const) {
+		await expect(headingLevels.getByRole('heading', { level })).toHaveCount(1);
+	}
 
 	await page.goto('/#/components/separator');
 	const separatorDemo = demo(page, 'separator-basic');
@@ -1597,6 +1631,7 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		'#/components/box',
 		'#/components/stack',
 		'#/components/text',
+		'#/components/heading',
 		'#/components/icon',
 		'#/components/code',
 		'#/components/button',

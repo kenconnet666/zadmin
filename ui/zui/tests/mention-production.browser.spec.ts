@@ -29,6 +29,7 @@ describe('ZMention production collection contract', () => {
 		expect(options).toHaveLength(2);
 		expect(options[0]?.id).not.toBe(options[1]?.id);
 		editor.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'End' }));
+		await tick();
 		expect(editor.getAttribute('aria-activedescendant')).toBe(options[1]?.id);
 		editor.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
 		await tick();
@@ -49,6 +50,7 @@ describe('ZMention production collection contract', () => {
 		editor.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'End' }));
 		await tick();
 		await Promise.resolve();
+		await tick();
 		const activeId = editor.getAttribute('aria-activedescendant');
 		expect(activeId).toBeTruthy();
 		expect(editor.ownerDocument.getElementById(activeId ?? '')?.textContent).toContain('user-0999');

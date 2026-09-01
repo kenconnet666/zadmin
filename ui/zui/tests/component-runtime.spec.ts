@@ -57,6 +57,23 @@ describe('component runtime state', () => {
 		);
 	});
 
+	it('preserves immutable object identity instead of mixing raw values with deep proxies', () => {
+		const initial = Object.freeze(['one', 'two'] as const);
+		let external: readonly string[] | undefined;
+		let notifications = 0;
+		const state = new ControllableState<readonly string[]>({
+			defaultValue: () => initial,
+			onChange: () => () => (notifications += 1),
+			read: () => external,
+			write: (value) => (external = value)
+		});
+
+		expect(state.current).toBe(initial);
+		state.setFromUser(initial);
+		expect(notifications).toBe(0);
+		expect(external).toBeUndefined();
+	});
+
 	it('treats null as an explicit empty value instead of an uncontrolled signal', () => {
 		let external: string | null | undefined;
 		const state = new ControllableState<string | null>({

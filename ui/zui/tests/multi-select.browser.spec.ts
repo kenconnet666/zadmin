@@ -1,10 +1,8 @@
-import { cleanup, render } from 'vitest-browser-svelte';
+import { render } from 'vitest-browser-svelte';
 import { tick } from 'svelte';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import MultiSelectCollectionFixture from './MultiSelectCollectionFixture.svelte';
-
-afterEach(cleanup);
 
 function keydown(
 	target: Element | null | undefined,

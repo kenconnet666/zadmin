@@ -17,6 +17,7 @@ describe('typed locale packs', () => {
 			feedback: { loading: 'Working' },
 			fileUpload: { removeFile: (fileName) => `Delete ${fileName}` },
 			form: { unexpectedValidation: 'Could not validate.' },
+			link: { opensInNewWindow: 'opens in another window' },
 			numberField: { increment: 'Add amount' },
 			pagination: { label: '分页导航', page: (page) => `第${page}页` },
 			progress: { label: 'Completion' },
@@ -48,6 +49,7 @@ describe('typed locale packs', () => {
 		});
 		expect(pack.fileUpload.removeFile('brief.txt')).toBe('Delete brief.txt');
 		expect(pack.form.unexpectedValidation).toBe('Could not validate.');
+		expect(pack.link.opensInNewWindow).toBe('opens in another window');
 		expect(pack.numberField.increment).toBe('Add amount');
 		expect(pack.numberField.minimum('1.5')).toBe('Value must be at least 1.5.');
 		expect(pack.tagsInput.removeTag('alpha')).toBe('Delete alpha');
@@ -95,6 +97,8 @@ describe('typed locale packs', () => {
 		expect(zhCNLocalePack.feedback.confirmFailed).toBe('确认失败，请重试。');
 		expect(zhCNLocalePack.fileUpload.removeFile('说明.pdf')).toBe('移除文件 说明.pdf');
 		expect(zhCNLocalePack.form.unexpectedValidation).toBe('验证过程中发生意外错误。');
+		expect(enUSLocalePack.link.opensInNewWindow).toBe('opens in a new window');
+		expect(zhCNLocalePack.link.opensInNewWindow).toBe('在新窗口中打开');
 		expect(zhCNLocalePack.numberField.inputLabel).toBe('数字');
 		expect(zhCNLocalePack.numberField.maximum('100')).toBe('数值不能大于 100。');
 		expect(zhCNLocalePack.pagination.page('18')).toBe('第18页');

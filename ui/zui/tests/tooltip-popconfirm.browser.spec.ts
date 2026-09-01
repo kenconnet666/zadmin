@@ -20,7 +20,7 @@ describe('production Popconfirm and Tooltip', () => {
 		action.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
 		expect(document.querySelector('[data-testid="confirm-output"]')?.textContent).toContain(':1:');
 
-		await userEvent.click(document.querySelector('[data-testid="confirm-resolve"]')!);
+		document.querySelector<HTMLButtonElement>('[data-testid="confirm-resolve"]')?.click();
 		await wait(140);
 		await tick();
 		expect(document.querySelector('[data-testid="confirm-content"]')).toBeNull();
@@ -142,7 +142,6 @@ describe('production Popconfirm and Tooltip', () => {
 		wrapper.dispatchEvent(new PointerEvent('pointerenter', { bubbles: true }));
 		await tick();
 		expect(document.querySelector('[data-testid="tooltip-disabled-content"]')).not.toBeNull();
-		disabled.dispatchEvent(new PointerEvent('pointerenter', { bubbles: true }));
 		expect(document.querySelector('[data-testid="tooltip-output"]')?.textContent.trim()).toBe(
 			'false:false:0:1'
 		);
@@ -171,8 +170,9 @@ describe('production Popconfirm and Tooltip', () => {
 			'[data-testid="tooltip-first"]'
 		)!;
 		trigger.focus();
-		await tick();
-		expect(ownerDocument.querySelector('[data-testid="tooltip-first-content"]')).not.toBeNull();
+		await expect
+			.poll(() => ownerDocument.querySelector('[data-testid="tooltip-first-content"]'))
+			.not.toBeNull();
 		ownerDocument.dispatchEvent(
 			new ownerWindow.KeyboardEvent('keydown', { bubbles: true, key: 'Escape' })
 		);

@@ -1,10 +1,8 @@
 import { tick } from 'svelte';
-import { cleanup, render } from 'vitest-browser-svelte';
-import { afterEach, describe, expect, it } from 'vitest';
+import { render } from 'vitest-browser-svelte';
+import { describe, expect, it } from 'vitest';
 
 import ChoiceControlsCollectionFixture from './ChoiceControlsCollectionFixture.svelte';
-
-afterEach(cleanup);
 
 async function settleCollection(): Promise<void> {
 	await Promise.resolve();
@@ -20,6 +18,7 @@ async function settleReset(): Promise<void> {
 describe('RadioGroup and Segmented logical collection integration', () => {
 	it('keeps native RadioGroup typed selection, RTL roving focus and external form ownership coherent', async () => {
 		render(ChoiceControlsCollectionFixture);
+		await settleCollection();
 		const group = document.querySelector<HTMLElement>('[data-testid="collection-radio-group"]')!;
 		const form = document.querySelector<HTMLFormElement>('[data-testid="collection-radio-form"]')!;
 		const output = document.querySelector<HTMLOutputElement>(
@@ -93,6 +92,7 @@ describe('RadioGroup and Segmented logical collection integration', () => {
 
 	it('keeps Segmented typed selection, nearest focus and FormValueBridge ownership coherent', async () => {
 		render(ChoiceControlsCollectionFixture);
+		await settleCollection();
 		const group = document.querySelector<HTMLElement>('[data-testid="collection-segmented"]')!;
 		const form = document.querySelector<HTMLFormElement>(
 			'[data-testid="collection-segmented-form"]'
@@ -168,8 +168,9 @@ describe('RadioGroup and Segmented logical collection integration', () => {
 		expect(new FormData(form).get('segment-choice')).toBe('1');
 	});
 
-	it('removes disabled RadioGroup and Segmented values from successful form controls', () => {
+	it('removes disabled RadioGroup and Segmented values from successful form controls', async () => {
 		render(ChoiceControlsCollectionFixture);
+		await settleCollection();
 		const form = document.querySelector<HTMLFormElement>(
 			'[data-testid="collection-disabled-form"]'
 		)!;

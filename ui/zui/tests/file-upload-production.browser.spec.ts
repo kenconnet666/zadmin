@@ -1,11 +1,9 @@
-import { cleanup, render } from 'vitest-browser-svelte';
+import { render } from 'vitest-browser-svelte';
 import { mount, tick, unmount } from 'svelte';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { createFileUploadItem, type FileUploadTransportContext } from '../src/entrypoints/index.js';
 import FileUploadProductionFixture from './FileUploadProductionFixture.svelte';
-
-afterEach(cleanup);
 
 function selectFiles(input: HTMLInputElement | null, files: readonly File[]): void {
 	const transfer = new DataTransfer();

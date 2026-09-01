@@ -42,7 +42,7 @@ describe('localized number algorithms', () => {
 		expect(stepNumber(0.33, 1, 0.1, undefined, undefined, 1, 1)).toBe(0.4);
 		expect(roundNumber(1.005, 2)).toBe(1.01);
 		expect(roundNumber(-1.005, 2)).toBe(-1.01);
-		expect(roundNumber(1.2345, 3)).toBe(1.234);
+		expect(roundNumber(1.2345, 3)).toBe(1.235);
 		expect(isNumberOutOfRange(undefined, 0, 10)).toBe(false);
 		expect(isNumberOutOfRange(-1, 0, 10)).toBe(true);
 		expect(isNumberOutOfRange(11, 0, 10)).toBe(true);

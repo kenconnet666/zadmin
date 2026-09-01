@@ -52,6 +52,8 @@ describe('ZTagsInput production contract', () => {
 		expect(document.activeElement).toBe(lastEdit);
 		lastEdit.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
 		await tick();
+		await Promise.resolve();
+		await tick();
 		const editInput = root.querySelector<HTMLInputElement>('[data-slot="edit-input"]')!;
 		expect(document.activeElement).toBe(editInput);
 		editInput.value = 'Release Candidate';

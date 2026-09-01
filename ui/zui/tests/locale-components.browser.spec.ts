@@ -109,9 +109,11 @@ describe('component locale defaults', () => {
 		await userEvent.click(byTestId('cascader-default').querySelector('button')!);
 		await tick();
 		expect(document.querySelector('[role="listbox"][aria-label="第1级"]')).not.toBeNull();
+		await userEvent.keyboard('{Escape}');
 		await userEvent.click(byTestId('tree-select-default').querySelector('button')!);
 		await tick();
 		expect(document.querySelector('[role="tree"][aria-label="树形选项"]')).not.toBeNull();
+		await userEvent.keyboard('{Escape}');
 		await userEvent.click(byTestId('color-picker-default').querySelector('button')!);
 		await tick();
 		expect(document.querySelector('input[aria-label="选择颜色"]')).not.toBeNull();

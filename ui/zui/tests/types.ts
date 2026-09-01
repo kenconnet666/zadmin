@@ -63,6 +63,7 @@ import {
 	ZFileUpload,
 	ZForm,
 	ZFormField,
+	ZHeading,
 	ZInputGroup,
 	ZList,
 	ZLoadingBar,
@@ -151,10 +152,13 @@ import {
 	type ZAlertDialogProps,
 	type ZAlertDialogTitleProps,
 	type ZAlertDialogTriggerProps,
+	type AvatarImageEvent,
 	type ZAvatarProps,
 	type ZBadgeProps,
 	type ZBoxProps,
 	type ZButtonProps,
+	type CardElement,
+	type CardVariant,
 	type ZCardProps,
 	type ZCarouselProps,
 	type ZCascaderProps,
@@ -200,6 +204,9 @@ import {
 	type FieldPath,
 	type ZFormFieldProps,
 	type ZFormProps,
+	type ZHeadingLevel,
+	type ZHeadingProps,
+	type ZHeadingSize,
 	type ZInputGroupProps,
 	type ZListProps,
 	type ZLoadingBarProps,
@@ -276,6 +283,7 @@ import {
 
 const boxProps: ZBoxProps = { 'aria-label': 'Box' };
 const avatarProps: ComponentProps<typeof ZAvatar> = { alt: 'Alice' } satisfies ZAvatarProps;
+const avatarImageEvent = null as AvatarImageEvent | null;
 const badgeProps: ComponentProps<typeof ZBadge> = {
 	count: 128,
 	dot: false,
@@ -284,7 +292,19 @@ const badgeProps: ComponentProps<typeof ZBadge> = {
 	placement: 'top-end',
 	tone: 'danger'
 } satisfies ZBadgeProps;
-const cardProps: ComponentProps<typeof ZCard> = {} satisfies ZCardProps;
+const cardElement: CardElement = 'section';
+const cardVariant: CardVariant = 'outlined';
+const cardProps: ComponentProps<typeof ZCard> = {
+	as: cardElement,
+	loading: true,
+	variant: cardVariant
+} satisfies ZCardProps;
+const headingLevel: ZHeadingLevel = 3;
+const headingSize: ZHeadingSize = 'large';
+const headingProps: ComponentProps<typeof ZHeading> = {
+	level: headingLevel,
+	size: headingSize
+} satisfies ZHeadingProps;
 const descriptionListProps: ComponentProps<typeof ZDescriptionList> = {
 	items: [{ description: '1', id: 'version', term: 'Version' }]
 } satisfies ZDescriptionListProps;
@@ -705,8 +725,14 @@ void DirectZBox;
 void accordionProps;
 void accordionSingleProps;
 void avatarProps;
+void avatarImageEvent;
 void badgeProps;
 void cardProps;
+void cardElement;
+void cardVariant;
+void headingProps;
+void headingLevel;
+void headingSize;
 void descriptionListProps;
 void listProps;
 void tagProps;

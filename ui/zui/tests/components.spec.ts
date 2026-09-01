@@ -114,7 +114,9 @@ describe('ZUI foundational components', () => {
 	});
 
 	it('server-renders compound roots with and without optional children', () => {
-		expect(render(ZAccordion, { props: { defaultValue: 'one' } }).body).toContain('<div');
+		expect(
+			render(ZAccordion, { props: { defaultValue: 'one', type: 'single' as const } }).body
+		).toContain('<div');
 		expect(typeof render(ZDialog, { props: { defaultOpen: true } }).body).toBe('string');
 		expect(typeof render(ZPopover, { props: { defaultOpen: true, modal: true } }).body).toBe(
 			'string'
@@ -486,7 +488,8 @@ describe('ZUI foundational components', () => {
 		const result = render(TagsInputFixture).body;
 		expect(result).toContain('role="group"');
 		expect(result).toContain('aria-label="Remove alpha"');
-		expect(result).toContain('aria-label="Add fixture tag"');
+		expect(result).toContain('aria-label="Fixture tags"');
+		expect(result).toContain('placeholder="Add tag"');
 		expect(result).toContain('name="tag"');
 	});
 

@@ -1,10 +1,8 @@
-import { cleanup, render } from 'vitest-browser-svelte';
+import { render } from 'vitest-browser-svelte';
 import { tick } from 'svelte';
-import { afterEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import ChoiceVirtualizationFixture from './ChoiceVirtualizationFixture.svelte';
-
-afterEach(cleanup);
 
 function keydown(target: Element | null | undefined, key: string): void {
 	target?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key }));

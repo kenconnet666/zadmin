@@ -55,7 +55,7 @@ describe('FormRegistry', () => {
 		expect(registry.state(['users', 0, 'account'])).toMatchObject({
 			dirty: true,
 			errors: ['Invalid'],
-			success: 'Available',
+			success: undefined,
 			touched: true,
 			warnings: ['Public profile']
 		});

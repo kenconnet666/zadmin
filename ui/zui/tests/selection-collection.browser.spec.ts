@@ -1,10 +1,8 @@
-import { cleanup, render } from 'vitest-browser-svelte';
-import { afterEach, describe, expect, it } from 'vitest';
+import { render } from 'vitest-browser-svelte';
+import { describe, expect, it } from 'vitest';
 import { tick } from 'svelte';
 
 import ChoiceCollectionFixture from './ChoiceCollectionFixture.svelte';
-
-afterEach(cleanup);
 
 describe('Select and Combobox logical collection integration', () => {
 	it('keeps typed keys, mounted active descendants, groups and async orphan labels distinct', async () => {
@@ -21,6 +19,7 @@ describe('Select and Combobox logical collection integration', () => {
 		expect(selectOptions[0]?.id).not.toBe(selectOptions[1]?.id);
 		expect(select?.getAttribute('aria-activedescendant')).toBe(selectOptions[0]?.id);
 		select?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'End' }));
+		await tick();
 		expect(select?.getAttribute('aria-activedescendant')).toBe(selectOptions[1]?.id);
 		select?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
 		await tick();

@@ -1,10 +1,8 @@
 import { tick } from 'svelte';
-import { cleanup, render } from 'vitest-browser-svelte';
-import { afterEach, describe, expect, it } from 'vitest';
+import { render } from 'vitest-browser-svelte';
+import { describe, expect, it } from 'vitest';
 
 import ReadonlyControlsFixture from './ReadonlyControlsFixture.svelte';
-
-afterEach(cleanup);
 
 async function settleReset(): Promise<void> {
 	await new Promise<void>((resolve) => setTimeout(resolve, 0));
