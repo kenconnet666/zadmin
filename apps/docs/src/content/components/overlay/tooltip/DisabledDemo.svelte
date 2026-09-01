@@ -4,7 +4,7 @@
 
 <ZStack gap="medium">
 	<ZTooltip delay={0}>
-		<ZTooltipTrigger disabled variant="danger">删除生产环境</ZTooltipTrigger>
+		<ZTooltipTrigger disabled tone="danger">删除生产环境</ZTooltipTrigger>
 		<ZTooltipContent>当前账号没有删除权限</ZTooltipContent>
 	</ZTooltip>
 	<ZText tone="muted">

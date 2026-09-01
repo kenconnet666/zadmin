@@ -40,7 +40,7 @@
 		</ZButton>
 	</ZStack>
 	<ZPopconfirm bind:open onConfirm={confirm}>
-		<ZPopconfirmTrigger variant="danger">受控确认</ZPopconfirmTrigger>
+		<ZPopconfirmTrigger tone="danger">受控确认</ZPopconfirmTrigger>
 		<ZPopconfirmContent>
 			<ZPopconfirmTitle>执行长任务？</ZPopconfirmTitle>
 			<ZPopconfirmDescription

@@ -29,7 +29,7 @@
 			<ZButton size="small" variant="secondary" onclick={() => controller?.focusKey('worker')}>
 				定位任务执行器
 			</ZButton>
-			<ZButton size="small" variant="danger" onclick={removeActive}>移除active节点</ZButton>
+			<ZButton size="small" tone="danger" onclick={removeActive}>移除active节点</ZButton>
 		</ZStack>
 		<ZTree aria-label="RTL动态服务树" bind:controller defaultExpandedKeys={['platform']} {nodes} />
 		<ZText tone="muted">active = {controller?.activeKey ?? 'none'}；RTL中ArrowLeft负责展开。</ZText>

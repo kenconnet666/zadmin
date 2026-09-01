@@ -16,7 +16,7 @@
 </script>
 
 <ZPopconfirm placement="top-start">
-	<ZPopconfirmTrigger variant="danger">输入确认词</ZPopconfirmTrigger>
+	<ZPopconfirmTrigger tone="danger">输入确认词</ZPopconfirmTrigger>
 	<ZPopconfirmContent>
 		<ZPopconfirmTitle>输入DELETE继续</ZPopconfirmTitle>
 		<ZPopconfirmDescription>错误输入会阻止默认关闭。</ZPopconfirmDescription>

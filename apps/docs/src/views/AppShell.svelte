@@ -113,7 +113,6 @@
 </script>
 
 <script lang="ts">
-	import { onMount, tick } from 'svelte';
 	import {
 		ZHeading,
 		ZLink,
@@ -126,7 +125,7 @@
 	import type { DocsThemeId } from '../app/theme.js';
 	import { guideDocsById } from '../content/guides.js';
 	import { componentDocs, componentDocsById } from '../framework/catalog.js';
-	import { parseDocsRoute } from '../framework/router.js';
+	import { docsRouter } from '../framework/router-runtime.svelte.js';
 	import ComponentPage from './ComponentPage.svelte';
 	import GuidePage from './GuidePage.svelte';
 	import HomePage from './HomePage.svelte';
@@ -158,7 +157,7 @@
 		readonly themeId?: DocsThemeId;
 	} = $props();
 
-	let route = $state(parseDocsRoute(globalThis.location?.hash ?? '#/'));
+	const route = $derived(docsRouter.current);
 	const zui = useZui();
 	const classes = $derived(zui.slots(appRecipe, { density, motion }));
 	const currentId = $derived(route.kind === 'component' ? route.componentId : undefined);
@@ -192,25 +191,6 @@
 		}
 	});
 
-	onMount(() => {
-		const syncRoute = async () => {
-			route = parseDocsRoute(window.location.hash);
-			await tick();
-			if (route.kind === 'component' && route.section) {
-				document.getElementById(route.section)?.scrollIntoView({ block: 'start' });
-			} else {
-				window.scrollTo({ top: 0 });
-			}
-		};
-		window.addEventListener('hashchange', syncRoute);
-		void syncRoute();
-		return () => window.removeEventListener('hashchange', syncRoute);
-	});
-
-	$effect(() => {
-		document.title = pageTitle;
-	});
-
 	function skipToMain(event: MouseEvent): void {
 		event.preventDefault();
 		const main = document.getElementById('zui-main-content');
@@ -218,6 +198,10 @@
 		main?.scrollIntoView({ block: 'start' });
 	}
 </script>
+
+<svelte:head>
+	<title>{pageTitle}</title>
+</svelte:head>
 
 <div class={classes.shell}>
 	<nav class={classes.skipNavigation} aria-label="快捷跳转">

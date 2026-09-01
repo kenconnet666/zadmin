@@ -10,11 +10,11 @@
 		<ZButton aria-label="关闭" shape="square" size="medium" title="关闭" variant="secondary">
 			<ZIcon name="close" />
 		</ZButton>
-		<ZButton aria-label="删除" shape="square" size="large" title="删除" variant="danger">
+		<ZButton aria-label="删除" shape="circle" size="large" title="删除" tone="danger">
 			<ZIcon name="warning" />
 		</ZButton>
 	</ZStack>
 	<ZText tone="muted"
-		>shape="square"让三个size保持等宽高；只有图标的按钮必须提供aria-label，title不能替代名称。</ZText
+		>square/circle让图标按钮与size保持等宽高；只有图标的按钮必须提供aria-label，title不能替代名称。</ZText
 	>
 </ZStack>

@@ -16,6 +16,8 @@ import MultipleDemo from './MultipleDemo.svelte';
 import multipleSource from './MultipleDemo.svelte?raw';
 import NestedDemo from './NestedDemo.svelte';
 import nestedSource from './NestedDemo.svelte?raw';
+import RuntimeModeDemo from './RuntimeModeDemo.svelte';
+import runtimeModeSource from './RuntimeModeDemo.svelte?raw';
 
 export const accordionDoc = defineComponentDoc(accordionMetadata, {
 	members: [accordionItemMetadata, accordionTriggerMetadata, accordionContentMetadata],
@@ -37,7 +39,8 @@ export const accordionDoc = defineComponentDoc(accordionMetadata, {
 			},
 			defaultValue: {
 				default: 'single: null；multiple: []',
-				description: '严格遵循type判别的非受控初始展开值。'
+				description:
+					'扁平组件prop接受AccordionValue；运行时严格按type校验，静态配置可用single/multiple helper收窄。'
 			},
 			disabled: { default: 'false', description: '禁用根与全部Trigger，不改变已展开内容值。' },
 			loop: { default: 'true', description: 'CollectionNavigation到边界时是否循环。' },
@@ -47,19 +50,22 @@ export const accordionDoc = defineComponentDoc(accordionMetadata, {
 			},
 			onValueChange: {
 				default: 'undefined',
-				description: '真实用户toggle后按single或multiple合同调用一次。'
+				description:
+					'真实用户toggle后按当前运行时mode调用一次；扁平组件签名避免Svelte ComponentProps分发联合。'
 			},
 			type: {
 				default: "'single'",
-				description: '判别value/defaultValue/onValueChange为nullable key或readonly key数组。'
+				description:
+					'选择single/null或multiple/array运行时合同；不再把整个Svelte组件声明为判别联合。'
 			},
 			value: {
 				default: 'single: null；multiple: []',
-				description: 'typed SelectionKey合同；number 1与string 1保持严格身份。'
+				description:
+					'扁平AccordionValue owner；number 1与string 1保持严格身份，错误shape在运行时早失败。'
 			}
 		},
 		summary:
-			'生产Accordion compound collection：LogicalCollection是顺序/disabled事实，MountedElements只管理Trigger，CollectionNavigation拥有active焦点，value按single/null或multiple/array判别，并保留nested heading、collapsible和Presence motion。'
+			'生产Accordion compound collection：组件props保持扁平以服务Svelte绑定和ComponentProps，严格single/multiple helper服务静态配置，运行时仍校验值shape并保留LogicalCollection、active焦点、nested与Presence。'
 	},
 	demos: [
 		{
@@ -106,6 +112,15 @@ export const accordionDoc = defineComponentDoc(accordionMetadata, {
 			id: 'accordion-motion',
 			source: motionSource,
 			title: 'Presence与动画偏好'
+		},
+		{
+			component: RuntimeModeDemo,
+			covers: ['controlled', 'external-clear', 'native-props', 'variants-and-states'],
+			description:
+				'一个AccordionValue owner可在同一批Svelte更新中原子切换single/multiple；组件props无需分发联合，运行时仍拒绝错误shape。',
+			id: 'accordion-runtime-mode',
+			source: runtimeModeSource,
+			title: '扁平Props与动态运行时Mode'
 		}
 	],
 	accessibility: [
@@ -114,7 +129,18 @@ export const accordionDoc = defineComponentDoc(accordionMetadata, {
 		'single collapsible=false时已展开button使用aria-disabled而非native disabled，保持箭头导航并阻止关闭。',
 		'动态删除或禁用active Trigger时，CollectionNavigation优先恢复原位置之后的enabled key，再尝试之前；若真实焦点被删除则恢复DOM焦点。',
 		'关闭Panel先把内部焦点恢复到Trigger，退出阶段只设置inert并保留DOM至结束；不叠加会隐藏当前焦点的aria-hidden，reduced motion立即完成退出。',
-		'默认region适合含结构化内容或嵌套Accordion；大量同时展开的轻量Panel可用region=false避免landmark泛滥。'
+		'默认region适合含结构化内容或嵌套Accordion；大量同时展开的轻量Panel可用region=false避免landmark泛滥。',
+		'ZAccordionProps是扁平Svelte组件合同；ZAccordionSingleProps/ZAccordionMultipleProps只用于需要编译期严格mode的配置对象，错误动态组合仍由相同运行时校验拒绝。'
 	],
-	keywords: ['accordion', 'logical collection', 'typed key', 'roving focus', 'presence', 'nested']
+	keywords: [
+		'accordion',
+		'logical collection',
+		'typed key',
+		'roving focus',
+		'presence',
+		'nested',
+		'flat props',
+		'single helper',
+		'multiple helper'
+	]
 });

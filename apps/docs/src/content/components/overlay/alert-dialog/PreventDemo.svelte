@@ -15,7 +15,7 @@
 </script>
 
 <ZAlertDialog>
-	<ZAlertDialogTrigger variant="danger">验证后删除</ZAlertDialogTrigger>
+	<ZAlertDialogTrigger tone="danger">验证后删除</ZAlertDialogTrigger>
 	<ZAlertDialogOverlay />
 	<ZAlertDialogContent>
 		<ZStack gap="large">

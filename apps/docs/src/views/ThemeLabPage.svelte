@@ -286,7 +286,7 @@
 				<ZStack direction="row" gap="medium" wrap>
 					<ZButton>主要操作</ZButton>
 					<ZButton variant="secondary">次要操作</ZButton>
-					<ZButton variant="danger">危险操作</ZButton>
+					<ZButton tone="danger">危险操作</ZButton>
 					<ZLink href="#/guides/theme">主题链接</ZLink>
 				</ZStack>
 				<ZSeparator />

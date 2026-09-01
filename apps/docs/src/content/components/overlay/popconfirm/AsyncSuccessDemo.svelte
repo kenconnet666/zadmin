@@ -30,7 +30,7 @@
 <ZProvider motion="reduced">
 	<ZStack gap="medium">
 		<ZPopconfirm onConfirm={confirm} placement="bottom-start">
-			<ZPopconfirmTrigger variant="danger">异步删除</ZPopconfirmTrigger>
+			<ZPopconfirmTrigger tone="danger">异步删除</ZPopconfirmTrigger>
 			<ZPopconfirmContent>
 				<ZPopconfirmTitle>提交删除请求？</ZPopconfirmTitle>
 				<ZPopconfirmDescription>pending期间确认按钮防重复，取消仍可用。</ZPopconfirmDescription>

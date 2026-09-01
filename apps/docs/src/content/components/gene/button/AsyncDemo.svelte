@@ -4,21 +4,25 @@
 
 	let pending = $state(false);
 	let result = $state('尚未保存');
-	let timer: ReturnType<typeof setTimeout> | undefined;
+	let button = $state<HTMLButtonElement | null>(null);
+	let timer: { id: number; view: Window } | undefined;
 
 	function save(): void {
 		if (pending) return;
 		pending = true;
 		result = '正在保存，按钮会阻止重复提交';
-		timer = setTimeout(() => {
+		const view = button?.ownerDocument.defaultView;
+		if (!view) return;
+		const id = view.setTimeout(() => {
 			pending = false;
 			result = '保存完成';
 			timer = undefined;
 		}, 900);
+		timer = { id, view };
 	}
 
 	onDestroy(() => {
-		if (timer !== undefined) clearTimeout(timer);
+		if (timer) timer.view.clearTimeout(timer.id);
 	});
 </script>
 
@@ -27,7 +31,13 @@
 {/snippet}
 
 <ZStack gap="small" align="start">
-	<ZButton loading={pending} loadingLabel="正在保存配置" start={saveIcon} onclick={save}>
+	<ZButton
+		bind:ref={button}
+		loading={pending}
+		loadingLabel="正在保存配置"
+		start={saveIcon}
+		onclick={save}
+	>
 		保存配置
 	</ZButton>
 	<ZText aria-live="polite" tone="muted">{result}</ZText>

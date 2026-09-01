@@ -4,10 +4,7 @@ import type { ComponentApiFacts } from './component-api.js';
 export const accordionApiFacts = {
 	declaration: 'ZAccordionProps',
 	id: 'accordion',
-	inheritedFrom: [
-		'HTMLAttributes<HTMLDivElement>',
-		'ZAccordionMultipleProps | ZAccordionSingleProps'
-	],
+	inheritedFrom: ['HTMLAttributes<HTMLDivElement>'],
 	name: 'ZAccordion',
 	props: [
 		{
@@ -21,9 +18,19 @@ export const accordionApiFacts = {
 			type: 'Snippet'
 		},
 		{
+			name: 'collapsible',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'defaultActiveValue',
 			required: false,
 			type: 'PublicSelectionKey | null'
+		},
+		{
+			name: 'defaultValue',
+			required: false,
+			type: 'AccordionPublicValue'
 		},
 		{
 			name: 'disabled',
@@ -41,9 +48,24 @@ export const accordionApiFacts = {
 			type: '(value: PublicSelectionKey | null) => void'
 		},
 		{
+			name: 'onValueChange',
+			required: false,
+			type: 'AccordionValueChangeHandler'
+		},
+		{
 			name: 'ref',
 			required: false,
 			type: 'HTMLDivElement | null'
+		},
+		{
+			name: 'type',
+			required: false,
+			type: 'AccordionTypeValue'
+		},
+		{
+			name: 'value',
+			required: false,
+			type: 'AccordionPublicValue'
 		}
 	],
 	source: 'ui/zui/src/components/compound/accordion/ZAccordion.svelte',
@@ -3389,18 +3411,51 @@ export const dataTableApiFacts = {
 export const descriptionListApiFacts = {
 	declaration: 'ZDescriptionListProps',
 	id: 'description-list',
-	inheritedFrom: ['HTMLAttributes<HTMLDListElement>'],
+	inheritedFrom: [
+		'HTMLAttributes<HTMLDListElement>',
+		'ZDescriptionListDataProps | ZDescriptionListManualProps'
+	],
 	name: 'ZDescriptionList',
 	props: [
 		{
-			name: 'items',
-			required: true,
-			type: 'readonly DescriptionItem[]'
+			name: 'empty',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'emptyText',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'loading',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'loadingContent',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'loadingCount',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'loadingText',
+			required: false,
+			type: 'string'
 		},
 		{
 			name: 'ref',
 			required: false,
 			type: 'HTMLDListElement | null'
+		},
+		{
+			name: 'responsive',
+			required: false,
+			type: 'boolean'
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZDescriptionList.svelte',
@@ -3424,14 +3479,19 @@ export const emptyApiFacts = {
 			type: 'Snippet'
 		},
 		{
+			name: 'description',
+			required: false,
+			type: 'Snippet'
+		},
+		{
 			name: 'headingLevel',
 			required: false,
-			type: '2 | 3 | 4'
+			type: 'ZHeadingLevel'
 		},
 		{
 			name: 'icon',
 			required: false,
-			type: 'Snippet'
+			type: 'Snippet | null'
 		},
 		{
 			name: 'ref',
@@ -3451,18 +3511,42 @@ export const emptyApiFacts = {
 export const listApiFacts = {
 	declaration: 'ZListProps',
 	id: 'list',
-	inheritedFrom: ['HTMLAttributes<HTMLUListElement>', 'HTMLOlAttributes'],
+	inheritedFrom: [
+		'HTMLAttributes<HTMLUListElement>',
+		'HTMLOlAttributes',
+		'ZListDataProps | ZListManualProps'
+	],
 	name: 'ZList',
 	props: [
 		{
-			name: 'item',
+			name: 'empty',
 			required: false,
-			type: 'Snippet<[ListItem]>'
+			type: 'Snippet'
 		},
 		{
-			name: 'items',
-			required: true,
-			type: 'readonly ListItem[]'
+			name: 'emptyText',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'loading',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'loadingContent',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'loadingCount',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'loadingText',
+			required: false,
+			type: 'string'
 		},
 		{
 			name: 'ordered',
@@ -3488,7 +3572,7 @@ export const meterApiFacts = {
 		{
 			name: 'formatValue',
 			required: false,
-			type: '(value: number) => string'
+			type: '(value: number, range: MeterRange, state: MeterState) => string'
 		},
 		{
 			name: 'high',
@@ -3532,7 +3616,7 @@ export const meterApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZMeter.svelte',
-	undocumentedProps: ['formatValue', 'high', 'low', 'max', 'min', 'optimum']
+	undocumentedProps: ['high', 'low', 'max', 'min', 'optimum']
 } as const satisfies ComponentApiFacts;
 
 export const progressApiFacts = {
@@ -3548,6 +3632,11 @@ export const progressApiFacts = {
 		},
 		{
 			name: 'label',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'indeterminateText',
 			required: false,
 			type: 'string'
 		},
@@ -3572,6 +3661,11 @@ export const progressApiFacts = {
 			type: 'number'
 		},
 		{
+			name: 'tone',
+			required: false,
+			type: "'danger' | 'primary' | 'success' | 'warning'"
+		},
+		{
 			name: 'view',
 			required: false,
 			type: "'circle' | 'line'"
@@ -3588,9 +3682,19 @@ export const skeletonApiFacts = {
 	name: 'ZSkeleton',
 	props: [
 		{
+			name: 'animated',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'height',
 			required: false,
 			type: 'number | string'
+		},
+		{
+			name: 'lines',
+			required: false,
+			type: 'number'
 		},
 		{
 			name: 'ref',
@@ -3624,14 +3728,29 @@ export const statisticApiFacts = {
 			type: 'Intl.NumberFormatOptions'
 		},
 		{
+			name: 'formatter',
+			required: false,
+			type: 'StatisticFormatter'
+		},
+		{
 			name: 'label',
 			required: true,
 			type: 'string'
 		},
 		{
+			name: 'loading',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'locale',
 			required: false,
 			type: 'string'
+		},
+		{
+			name: 'precision',
+			required: false,
+			type: 'number'
 		},
 		{
 			name: 'prefix',
@@ -3649,14 +3768,24 @@ export const statisticApiFacts = {
 			type: 'Snippet'
 		},
 		{
+			name: 'tone',
+			required: false,
+			type: "'danger' | 'default' | 'muted' | 'primary' | 'success'"
+		},
+		{
 			name: 'trend',
 			required: false,
 			type: 'number'
 		},
 		{
+			name: 'trendFormatOptions',
+			required: false,
+			type: 'Intl.NumberFormatOptions'
+		},
+		{
 			name: 'trendLabel',
 			required: false,
-			type: '(trend: number) => string'
+			type: 'StatisticTrendFormatter'
 		},
 		{
 			name: 'value',
@@ -3665,7 +3794,7 @@ export const statisticApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZStatistic.svelte',
-	undocumentedProps: ['formatOptions', 'trendLabel']
+	undocumentedProps: []
 } as const satisfies ComponentApiFacts;
 
 export const tableApiFacts = {
@@ -3777,9 +3906,19 @@ export const timelineApiFacts = {
 	name: 'ZTimeline',
 	props: [
 		{
+			name: 'content',
+			required: false,
+			type: 'Snippet<[item: TimelineItem, index: number]>'
+		},
+		{
+			name: 'icon',
+			required: false,
+			type: 'Snippet<[item: TimelineItem, index: number]>'
+		},
+		{
 			name: 'item',
 			required: false,
-			type: 'Snippet<[TimelineItem]>'
+			type: 'Snippet<[item: TimelineItem]>'
 		},
 		{
 			name: 'items',
@@ -3792,9 +3931,34 @@ export const timelineApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'mode',
+			required: false,
+			type: "'alternate' | 'start'"
+		},
+		{
+			name: 'pending',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'pendingIcon',
+			required: false,
+			type: 'Snippet'
+		},
+		{
 			name: 'ref',
 			required: false,
 			type: 'HTMLOListElement | null'
+		},
+		{
+			name: 'reverse',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'time',
+			required: false,
+			type: 'Snippet<[item: TimelineItem, index: number]>'
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZTimeline.svelte',
@@ -3974,6 +4138,11 @@ export const alertApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'icon',
+			required: false,
+			type: 'Snippet | null'
+		},
+		{
 			name: 'live',
 			required: false,
 			type: "'assertive' | 'off' | 'polite'"
@@ -4010,9 +4179,34 @@ export const loadingBarApiFacts = {
 	name: 'ZLoadingBar',
 	props: [
 		{
+			name: 'active',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'controller',
+			required: false,
+			type: 'LoadingBarController | null'
+		},
+		{
+			name: 'errorDelay',
+			required: false,
+			type: 'number | null'
+		},
+		{
+			name: 'finishDelay',
+			required: false,
+			type: 'number | null'
+		},
+		{
 			name: 'label',
 			required: false,
 			type: 'string'
+		},
+		{
+			name: 'mode',
+			required: false,
+			type: "'local' | 'page'"
 		},
 		{
 			name: 'page',
@@ -4023,6 +4217,11 @@ export const loadingBarApiFacts = {
 			name: 'ref',
 			required: false,
 			type: 'HTMLDivElement | null'
+		},
+		{
+			name: 'state',
+			required: false,
+			type: "'error' | 'idle' | 'loading' | 'success'"
 		},
 		{
 			name: 'value',
@@ -4051,14 +4250,24 @@ export const resultApiFacts = {
 			type: 'Snippet'
 		},
 		{
+			name: 'content',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'contentAlign',
+			required: false,
+			type: "'center' | 'start'"
+		},
+		{
 			name: 'headingLevel',
 			required: false,
-			type: '2 | 3 | 4'
+			type: 'ZHeadingLevel'
 		},
 		{
 			name: 'icon',
 			required: false,
-			type: 'Snippet'
+			type: 'Snippet | null'
 		},
 		{
 			name: 'ref',
@@ -4100,6 +4309,11 @@ export const spinnerApiFacts = {
 			name: 'size',
 			required: false,
 			type: "'large' | 'medium' | 'small'"
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: "'inherit' | 'muted' | 'primary'"
 		}
 	],
 	source: 'ui/zui/src/components/feedback/ZSpinner.svelte',
@@ -4307,6 +4521,26 @@ export const codeApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'copiedLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'copyable',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'copyFailedLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'copyLabel',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'embedded',
 			required: false,
 			type: 'boolean'
@@ -4335,6 +4569,11 @@ export const codeApiFacts = {
 			name: 'loading',
 			required: false,
 			type: 'Snippet'
+		},
+		{
+			name: 'onCopy',
+			required: false,
+			type: '(detail: ZCodeCopyDetail) => void'
 		},
 		{
 			name: 'scheme',
@@ -4603,6 +4842,11 @@ export const separatorApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'label',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'orientation',
 			required: false,
 			type: "'horizontal' | 'vertical'"
@@ -4610,7 +4854,7 @@ export const separatorApiFacts = {
 		{
 			name: 'ref',
 			required: false,
-			type: 'HTMLElement | null'
+			type: 'HTMLDivElement | HTMLHRElement | null'
 		}
 	],
 	source: 'ui/zui/src/components/gene/ZSeparator.svelte',

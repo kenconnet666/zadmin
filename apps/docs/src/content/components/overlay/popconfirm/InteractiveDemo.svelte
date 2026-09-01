@@ -16,7 +16,7 @@
 </script>
 
 <ZPopconfirm bind:open placement="bottom-start">
-	<ZPopconfirmTrigger data-testid="popconfirm-trigger" variant="danger"
+	<ZPopconfirmTrigger data-testid="popconfirm-trigger" tone="danger"
 		>删除发布记录</ZPopconfirmTrigger
 	>
 	<ZPopconfirmContent data-testid="popconfirm-content">

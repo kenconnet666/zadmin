@@ -9,6 +9,8 @@ import IconDemo from './IconDemo.svelte';
 import iconSource from './IconDemo.svelte?raw';
 import StatesDemo from './StatesDemo.svelte';
 import statesSource from './StatesDemo.svelte?raw';
+import ToneDemo from './ToneDemo.svelte';
+import toneSource from './ToneDemo.svelte?raw';
 import VariantsDemo from './VariantsDemo.svelte';
 import variantsSource from './VariantsDemo.svelte?raw';
 import { buttonApiFacts } from '../../../../framework/component-api.generated.js';
@@ -22,10 +24,13 @@ export const buttonDoc = defineComponentDoc(buttonMetadata, {
 			disabled: { default: 'false', description: '映射到原生disabled并阻止全部用户操作。' },
 			end: { default: '—', description: '在主体内容之后渲染的图标或辅助Snippet。' },
 			fullWidth: { default: 'false', description: '让按钮占满父容器的可用行内宽度。' },
-			loading: { default: 'false', description: '设置busy状态、显示指示器并阻止重复操作。' },
+			loading: {
+				default: 'false',
+				description: '设置aria-busy、阻止重复操作，并用绝对覆盖层保持内容固有宽度。'
+			},
 			loadingIndicator: {
-				default: '内置省略指示器',
-				description: '替换loading状态中的视觉指示器；可访问名称仍由按钮提供。'
+				default: 'ZSpinner',
+				description: '替换默认Spinner；整个指示器容器aria-hidden，busy语义只由Button拥有。'
 			},
 			loadingLabel: {
 				default: '—',
@@ -34,16 +39,21 @@ export const buttonDoc = defineComponentDoc(buttonMetadata, {
 			ref: { default: 'null', description: '真实HTMLButtonElement引用。' },
 			shape: {
 				default: "'default'",
-				description: 'square移除行内padding并让宽度与当前size的控制高度一致，适合纯图标操作。'
+				description: 'square/circle移除行内padding并让宽高跟随size，适合具名纯图标操作。'
 			},
 			size: { default: "'medium'", description: '统一控制高度、间距与文本尺寸。' },
 			start: { default: '—', description: '在主体内容之前渲染的图标或辅助Snippet。' },
+			tone: {
+				default: "'default'",
+				description: '有限语义色调；danger与所有variant正交组合。'
+			},
 			variant: {
 				default: "'primary'",
-				description: '当前视觉强调层级；tone正交化将在迁移阶段完成。'
+				description: '只表达primary、secondary或ghost视觉强调层级。'
 			}
 		},
-		summary: '保留原生button与表单语义，提供稳定尺寸、视觉层级、异步busy状态和Snippet组合能力。'
+		summary:
+			'保留原生button、type/form与callback语义，以正交variant/tone、size/shape和宽度稳定ZSpinner loading提供生产操作合同。'
 	},
 	demos: [
 		{
@@ -53,6 +63,14 @@ export const buttonDoc = defineComponentDoc(buttonMetadata, {
 			id: 'button-variants',
 			source: variantsSource,
 			title: '视觉变体'
+		},
+		{
+			covers: ['variants-and-states'],
+			component: ToneDemo,
+			description: 'danger tone与primary/secondary/ghost逐一组合，替代旧variant="danger"。',
+			id: 'button-tone',
+			source: toneSource,
+			title: '语义Tone与视觉层级'
 		},
 		{
 			covers: ['density', 'disabled', 'loading'],
@@ -97,7 +115,8 @@ export const buttonDoc = defineComponentDoc(buttonMetadata, {
 	],
 	accessibility: [
 		'默认type=button，避免在表单中意外提交。',
-		'loading设置aria-busy并禁用交互。',
+		'loading设置aria-busy并禁用交互；正常内容以透明方式保留固有宽度和可访问名称。',
+		'默认ZSpinner位于aria-hidden覆盖层，不产生嵌套status/live语义；loadingLabel可覆盖Button名称。',
 		'保留键盘、焦点和原生button事件语义。',
 		'auto按button.ownerDocument的系统偏好解析；full显式保留Theme过渡，reduced把过渡时长归零。'
 	]

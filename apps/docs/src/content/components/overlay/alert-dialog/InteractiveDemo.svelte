@@ -17,7 +17,7 @@
 </script>
 
 <ZAlertDialog bind:open>
-	<ZAlertDialogTrigger data-testid="alert-dialog-trigger" variant="danger">
+	<ZAlertDialogTrigger data-testid="alert-dialog-trigger" tone="danger">
 		删除生产部署
 	</ZAlertDialogTrigger>
 	<ZAlertDialogOverlay data-testid="alert-dialog-overlay" />

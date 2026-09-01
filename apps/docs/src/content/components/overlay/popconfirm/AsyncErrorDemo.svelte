@@ -21,7 +21,7 @@
 	}}
 	onConfirmError={() => (failures += 1)}
 >
-	<ZPopconfirmTrigger variant="danger">模拟失败</ZPopconfirmTrigger>
+	<ZPopconfirmTrigger tone="danger">模拟失败</ZPopconfirmTrigger>
 	<ZPopconfirmContent>
 		<ZPopconfirmTitle>删除生产密钥？</ZPopconfirmTitle>
 		<ZPopconfirmDescription>内部异常不会直接泄漏给用户。</ZPopconfirmDescription>

@@ -506,6 +506,7 @@ AppSidebar.svelte
 
 - 保持自研小型hash router，不引入router组件库；
 - 新建纯TypeScript route parser/formatter，支持首页、组件、section和404；
+- route state、hash listener与section滚动由main入口的单一runtime/store拥有，组件HMR只替换消费者，不销毁全站导航资源；main模块热替换时通过dispose释放旧listener与RAF；
 - route规范化、decode和无效路径必须测试；
 - section使用真实anchor和URL深链接，增加scrollspy但不劫持浏览器基本行为；
 - 搜索有结果数量、清除动作、无结果状态和键盘焦点合同；

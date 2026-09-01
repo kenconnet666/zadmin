@@ -3,19 +3,19 @@
 
 	const boundaries = [
 		{
-			id: 'core',
+			key: 'core',
 			term: 'ZDataTable核心',
 			description:
 				'原生表格语义、受控排序、行选择/展开、列可见性/调整/sticky、异步反馈与typed-key行虚拟化。'
 		},
 		{
-			id: 'owner',
+			key: 'owner',
 			term: '调用方所有权',
 			description:
 				'请求、筛选、分页、缓存和URL状态由页面或数据层组合；sortingMode=server避免当前页二次排序。'
 		},
 		{
-			id: 'x',
+			key: 'x',
 			term: '独立DataGrid/X轨道',
 			description:
 				'单元格编辑、clipboard、pivot、聚合、列虚拟化、列/行拖拽和Excel式箭头导航不塞进原生Table核心。'

@@ -110,7 +110,7 @@
 						{#if section.bullets}
 							<ZList
 								items={section.bullets.map((label, index) => ({
-									id: `${section.id}-${index}`,
+									key: `${section.id}-${index}`,
 									label
 								}))}
 							>

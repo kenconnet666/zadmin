@@ -44,8 +44,8 @@
 	<ZDescriptionList
 		aria-label={`${row.actor}事件详情`}
 		items={[
-			{ id: 'position', term: '全局位置', description: `第 ${index + 1} 条` },
-			{ id: 'detail', term: '详情', description: row.detail }
+			{ key: 'position', term: '全局位置', description: `第 ${index + 1} 条` },
+			{ key: 'detail', term: '详情', description: row.detail }
 		]}
 	/>
 {/snippet}
