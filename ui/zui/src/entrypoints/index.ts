@@ -265,7 +265,9 @@ export type {
 	ToastDismissReason,
 	ToastOptions,
 	ToastPauseReason,
+	ToastPhase,
 	ToastPriority,
+	ToastQueueOptions,
 	ToastRecord,
 	ToastTone
 } from '../runtime/toast.svelte.js';

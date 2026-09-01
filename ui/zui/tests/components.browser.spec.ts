@@ -58,6 +58,7 @@ import TourFixture from './TourFixture.svelte';
 import TagsInputFixture from './TagsInputFixture.svelte';
 import TextareaFixture from './TextareaFixture.svelte';
 import ThemeSwitchFixture from './ThemeSwitchFixture.svelte';
+import ToastLifecycleFixture from './ToastLifecycleFixture.svelte';
 import { createBrowserIcssRuntime } from '../src/icss/runtime.js';
 import FormResetSignal from '../src/runtime/form/FormResetSignal.svelte';
 import { defaultTheme } from '../src/theme/default.js';
@@ -442,6 +443,7 @@ describe('compiled ICSS browser updates', () => {
 			onDismiss: (_id, reason) => dismissed.push(reason),
 			title: 'Timed'
 		});
+		const disconnectViewport = queue.connectViewport();
 		queue.pause(id, 'hover');
 		queue.pause(id, 'hover');
 		queue.resume(id, 'focus');
@@ -449,6 +451,8 @@ describe('compiled ICSS browser updates', () => {
 		expect(queue.items).toHaveLength(1);
 		queue.resume(id, 'hover');
 		await new Promise((resolve) => setTimeout(resolve, 60));
+		expect(queue.items[0]).toMatchObject({ id, phase: 'exiting' });
+		queue.completeExit(id);
 		expect(queue.items).toHaveLength(0);
 		expect(dismissed).toEqual(['timeout']);
 		const persistent = queue.push({ duration: null, title: 'Persistent' });
@@ -456,7 +460,44 @@ describe('compiled ICSS browser updates', () => {
 		queue.resume(persistent, 'hover');
 		const disconnect = queue.connectVisibility();
 		disconnect();
+		disconnectViewport();
 		queue.dispose();
+	});
+
+	it('portals Toasts, admits FIFO work after exit and removes reduced-motion exits immediately', async () => {
+		render(ToastLifecycleFixture);
+		document.querySelector<HTMLButtonElement>('[data-testid="toast-add-pair"]')?.click();
+		await tick();
+		const target = document.querySelector<HTMLElement>('[data-testid="toast-portal-target"]');
+		const lifecycle = target?.querySelector<HTMLElement>('[aria-label="Lifecycle notifications"]');
+		const output = document.querySelector<HTMLOutputElement>(
+			'[data-testid="toast-lifecycle-output"]'
+		);
+		expect(lifecycle).not.toBeNull();
+		expect(output?.textContent).toBe('first:visible|second:queued:0');
+		expect(lifecycle?.textContent).toContain('First');
+		expect(lifecycle?.textContent).not.toContain('Second');
+
+		await new Promise((resolve) => setTimeout(resolve, 550));
+		expect(output?.textContent).toBe('first:visible|second:queued:0');
+		lifecycle?.querySelector<HTMLButtonElement>('article button:not([aria-label])')?.click();
+		await tick();
+		expect(output?.textContent).toBe('first:exiting|second:queued:1');
+		expect(lifecycle?.textContent).not.toContain('Second');
+
+		await new Promise((resolve) => setTimeout(resolve, 320));
+		await tick();
+		expect(output?.textContent).toBe('second:visible:1');
+		expect(lifecycle?.textContent).toContain('Second');
+
+		document.querySelector<HTMLButtonElement>('[data-testid="toast-add-reduced"]')?.click();
+		await tick();
+		const reduced = target?.querySelector<HTMLElement>('[aria-label="Reduced notifications"]');
+		expect(reduced?.textContent).toContain('Reduced');
+		reduced?.querySelector<HTMLButtonElement>('[aria-label="Dismiss Reduced"]')?.click();
+		await tick();
+		await Promise.resolve();
+		expect(reduced?.textContent).not.toContain('Reduced');
 	});
 
 	it('covers optional display, feedback and reduced non-looping Carousel behavior', async () => {

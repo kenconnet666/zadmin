@@ -22,10 +22,15 @@
 		importStatement: "import { ZToast, ZToaster, createToastQueue } from '@zadmin/zui';",
 		name: 'ZToast',
 		bindings: [{ description: '真实article引用。', name: 'ref', type: 'HTMLElement | null' }],
-		dependencies: ['ToastQueue', 'live region', 'visibility pause'],
+		dependencies: ['ZButton', '@lucide/svelte', 'live region'],
 		events: [
 			{ description: '操作按钮。', name: 'onAction', type: '(event: MouseEvent) => void' },
-			{ description: '关闭按钮。', name: 'onDismiss', type: '(event: MouseEvent) => void' }
+			{ description: '关闭按钮。', name: 'onDismiss', type: '(event: MouseEvent) => void' },
+			{
+				description: 'hover或focus进入、离开时通知队列暂停原因。',
+				name: 'onPauseChange',
+				type: "(reason: 'focus' | 'hover', paused: boolean) => void"
+			}
 		],
 		keyboard: [{ description: '操作与关闭按钮。', key: 'Tab / Enter / Space' }],
 		parts: [
@@ -35,12 +40,43 @@
 		],
 		props: [
 			{ default: '必填', description: '消息标题。', name: 'title', required: true, type: 'string' },
+			{
+				default: 'undefined',
+				description: '补充说明；不应重复标题。',
+				name: 'description',
+				type: 'string'
+			},
 			{ default: "'info'", description: '消息tone。', name: 'tone', type: 'ToastTone' },
 			{
 				default: "tone danger时'assertive'，否则'polite'",
 				description: '公告优先级。',
 				name: 'priority',
 				type: 'ToastPriority'
+			},
+			{
+				default: 'undefined',
+				description: '可选单一操作按钮文案。',
+				name: 'actionLabel',
+				type: 'string'
+			},
+			{
+				default: 'true',
+				description: '是否展示关闭按钮；持久消息必须可关闭或提供操作。',
+				name: 'dismissible',
+				type: 'boolean'
+			},
+			{
+				default: "'Dismiss notification'",
+				description: '关闭按钮可访问名称。',
+				name: 'dismissLabel',
+				type: 'string'
+			},
+			{
+				bindable: true,
+				default: 'null',
+				description: '真实article引用。',
+				name: 'ref',
+				type: 'HTMLElement | null'
 			}
 		],
 		since: 'unreleased',
@@ -51,6 +87,16 @@
 				description: '消息tone。',
 				name: 'data-tone',
 				values: ['info', 'success', 'warning', 'danger']
+			},
+			{
+				description: 'Toaster队列阶段。',
+				name: 'data-phase',
+				values: ['visible', 'exiting']
+			},
+			{
+				description: 'Presence动画阶段。',
+				name: 'data-presence',
+				values: ['entered', 'exiting']
 			}
 		],
 		status: 'experimental',

@@ -116,6 +116,7 @@ export const DEFAULT_THEME_SCHEMA = {
 	zIndex: {
 		dropdown: 1000,
 		modal: 1200,
-		overlay: 1100
+		overlay: 1100,
+		toast: 1300
 	}
 } as const;
