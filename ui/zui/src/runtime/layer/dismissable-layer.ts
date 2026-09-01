@@ -1,5 +1,6 @@
 import { getLayerStack, type LayerRegistration, type LayerStack } from './layer-stack.svelte.js';
 import { CancelableEvent } from '../foundation/cancelable-event.js';
+import { isDomNode } from './dom-realm.js';
 
 export type DismissReason = 'escape' | 'focus-outside' | 'pointer-outside';
 
@@ -85,6 +86,6 @@ export class DismissableLayer {
 
 	#isTopmostOutside(target: EventTarget | null): target is Node {
 		const stack = this.#options.stack ?? getLayerStack(this.#document);
-		return target instanceof Node && stack.isTopmost(this.id) && !stack.contains(this.id, target);
+		return isDomNode(target) && stack.isTopmost(this.id) && !stack.contains(this.id, target);
 	}
 }

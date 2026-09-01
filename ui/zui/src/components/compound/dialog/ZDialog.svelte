@@ -21,6 +21,7 @@
 			'LayerStack',
 			'DismissableLayer',
 			'FocusScope',
+			'ReducedMotionState',
 			'scroll lock',
 			'inert others',
 			'Presence'
@@ -54,15 +55,19 @@
 		source: 'ui/zui/src/components/compound/dialog/ZDialog.svelte',
 		states: [],
 		status: 'experimental',
-		summary: '统一管理modal Portal、Layer、focus、scroll、inert与Presence的Dialog根组件。'
+		summary:
+			'统一管理modal Portal、ownerDocument、Layer、focus、scroll、inert、motion与Presence的Dialog根组件。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
 
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { ControllableState } from '../../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../../runtime/foundation/ids.js';
+	import { ReducedMotionState } from '../../../runtime/foundation/motion.svelte.js';
 	import { durationMilliseconds } from '../../../runtime/foundation/presence.svelte.js';
 	import { useZui } from '../../../runtime/foundation/context.js';
+	import { isDomDocument, isDomShadowRoot } from '../../../runtime/layer/dom-realm.js';
 	import { provideZDialog, type ZDialogContext } from './context.svelte.js';
 
 	let { children, defaultOpen = false, onOpenChange, open = $bindable() }: ZDialogProps = $props();
@@ -75,8 +80,10 @@
 		read: () => open,
 		write: (next) => (open = next)
 	});
+	const reducedMotion = new ReducedMotionState(() => zui.motion);
 	let overlay = $state<HTMLDivElement | null>(null);
 	let trigger = $state<HTMLButtonElement | null>(null);
+	onMount(() => reducedMotion.connect());
 	const context: ZDialogContext = {
 		get contentId() {
 			return `${idBase}-content`;
@@ -85,7 +92,7 @@
 			return `${idBase}-description`;
 		},
 		get exitDuration() {
-			return zui.motion === 'reduced' ? 0 : durationMilliseconds(zui.theme.duration.normal);
+			return reducedMotion.current ? 0 : durationMilliseconds(zui.theme.duration.normal);
 		},
 		get open() {
 			return openState.current;
@@ -94,7 +101,13 @@
 			return overlay;
 		},
 		get portalTarget() {
-			return zui.portalContainer ?? (typeof document === 'undefined' ? null : document);
+			if (zui.portalContainer) return zui.portalContainer;
+			const root = trigger?.getRootNode();
+			if (isDomDocument(root) || isDomShadowRoot(root)) return root;
+			return typeof document === 'undefined' ? null : document;
+		},
+		get reducedMotion() {
+			return reducedMotion.current;
 		},
 		setOpen(next) {
 			openState.setFromUser(next);

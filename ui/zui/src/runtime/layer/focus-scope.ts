@@ -1,5 +1,7 @@
 import { tabbable } from 'tabbable';
 
+import { isDomHtmlElement, isDomNode } from './dom-realm.js';
+
 export interface FocusScopeOptions {
 	readonly initialFocus?: () => HTMLElement | null;
 	readonly restoreFocus?: boolean;
@@ -29,8 +31,9 @@ export class FocusScope {
 		this.#container = container;
 		this.#document = container.ownerDocument;
 		this.#options = options;
-		this.#previousFocus =
-			this.#document.activeElement instanceof HTMLElement ? this.#document.activeElement : null;
+		this.#previousFocus = isDomHtmlElement(this.#document.activeElement)
+			? this.#document.activeElement
+			: null;
 		stackFor(this.#document).push(this);
 		this.#document.addEventListener('keydown', this.#handleKey, true);
 		this.#document.addEventListener('focusin', this.#handleFocus, true);
@@ -54,7 +57,7 @@ export class FocusScope {
 		if (restoreTarget?.isConnected) {
 			restoreTarget.focus({ preventScroll: true });
 			const active = this.#document.activeElement;
-			if (active === restoreTarget || (active instanceof Node && restoreTarget.contains(active))) {
+			if (active === restoreTarget || (isDomNode(active) && restoreTarget.contains(active))) {
 				return;
 			}
 		}
@@ -67,7 +70,7 @@ export class FocusScope {
 		if (
 			!this.#options.trap ||
 			!this.#isTopmost() ||
-			this.#container.contains(event.target as Node)
+			(isDomNode(event.target) && this.#container.contains(event.target))
 		) {
 			return;
 		}

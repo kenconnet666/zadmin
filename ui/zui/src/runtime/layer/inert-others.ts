@@ -1,3 +1,5 @@
+import { isDomHtmlElement, isDomShadowRoot } from './dom-realm.js';
+
 interface InertSnapshot {
 	readonly ariaHidden: string | null;
 	readonly element: HTMLElement;
@@ -7,11 +9,11 @@ interface InertSnapshot {
 export function inertOthers(root: HTMLElement, branches: readonly HTMLElement[] = []): () => void {
 	const rootNode = root.getRootNode();
 	const container =
-		root.parentElement ?? (rootNode instanceof ShadowRoot ? rootNode : root.ownerDocument.body);
+		root.parentElement ?? (isDomShadowRoot(rootNode) ? rootNode : root.ownerDocument.body);
 	const allowed = [root, ...branches];
 	const snapshots: InertSnapshot[] = [];
 	for (const element of container.children) {
-		if (!(element instanceof HTMLElement)) continue;
+		if (!isDomHtmlElement(element)) continue;
 		if (allowed.some((entry) => element.contains(entry) || entry.contains(element))) continue;
 		snapshots.push({
 			ariaHidden: element.getAttribute('aria-hidden'),

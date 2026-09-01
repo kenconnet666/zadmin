@@ -8,31 +8,45 @@
 		ZDrawerTitle,
 		ZDrawerTrigger,
 		ZProvider,
-		type DrawerPlacement
+		type DrawerPlacement,
+		type DrawerSize,
+		type ZuiPortalContainer
 	} from '../src/entrypoints/index.js';
 
 	let {
 		defaultOpen = false,
 		direction = 'ltr',
+		dismissOnEscape = true,
+		dismissOnPointerOutside = true,
 		motion = 'auto',
 		placement = 'end',
+		portalContainer,
 		size = 'medium'
 	}: {
 		defaultOpen?: boolean;
 		direction?: 'ltr' | 'rtl';
+		dismissOnEscape?: boolean;
+		dismissOnPointerOutside?: boolean;
 		motion?: 'auto' | 'full' | 'reduced';
 		placement?: DrawerPlacement;
-		size?: 'full' | 'large' | 'medium' | 'small';
+		portalContainer?: ZuiPortalContainer;
+		size?: DrawerSize;
 	} = $props();
 	let open = $state<boolean>();
 </script>
 
-<ZProvider {direction} {motion}>
+<ZProvider {direction} {motion} {portalContainer}>
 	<div data-testid="drawer-inline-host">
 		<ZDrawer bind:open {defaultOpen}>
 			<ZDrawerTrigger data-testid="drawer-trigger">Open drawer</ZDrawerTrigger>
 			<ZDrawerOverlay data-testid="drawer-overlay" />
-			<ZDrawerContent data-testid="drawer-content" {placement} {size}>
+			<ZDrawerContent
+				data-testid="drawer-content"
+				{dismissOnEscape}
+				{dismissOnPointerOutside}
+				{placement}
+				{size}
+			>
 				<ZDrawerTitle>Fixture drawer</ZDrawerTitle>
 				<ZDrawerDescription>Fixture drawer description</ZDrawerDescription>
 				<input aria-label="Drawer input" name="drawer-input" />

@@ -123,7 +123,10 @@
 			{ description: 'Title、Description、业务内容与Close。', name: 'children', type: 'Snippet' }
 		],
 		source: 'ui/zui/src/components/compound/dialog/ZDialogContent.svelte',
-		states: [{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] }],
+		states: [
+			{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] },
+			{ description: '解析后的减少动画状态。', name: 'data-reduced-motion', values: ['true'] }
+		],
 		status: 'experimental',
 		summary: 'modal Portal中统一管理top layer、focus trap、scroll、inert与Presence的Dialog内容。'
 	} as const satisfies ZuiComponentMetadata;
@@ -165,7 +168,10 @@
 	const presenceState = $derived(presence.state);
 	const rootClass = $derived(
 		appearance === 'dialog'
-			? zui.recipe(contentRecipe, { motion: zui.motion, open: dialog.open })
+			? zui.recipe(contentRecipe, {
+					motion: dialog.reducedMotion ? 'reduced' : 'full',
+					open: dialog.open
+				})
 			: undefined
 	);
 	const icssVariables = $derived(readIcssCarrier(rest));
@@ -220,6 +226,7 @@
 		aria-labelledby={dialog.titleId}
 		aria-describedby={dialog.descriptionId}
 		data-presence={presenceState}
+		data-reduced-motion={dialog.reducedMotion || undefined}
 		data-state={dialog.open ? 'open' : 'closed'}
 		ontransitionend={(event) => {
 			if (event.target === event.currentTarget) presence.finishExit();

@@ -9,6 +9,7 @@ export interface ZDialogContext {
 	readonly open: boolean;
 	readonly overlay: HTMLDivElement | null;
 	readonly portalTarget: PortalTarget;
+	readonly reducedMotion: boolean;
 	readonly titleId: string;
 	readonly trigger: HTMLButtonElement | null;
 	readonly triggerId: string;

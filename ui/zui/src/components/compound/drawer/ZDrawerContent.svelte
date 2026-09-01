@@ -4,8 +4,9 @@
 	import type { ZDialogContentProps } from '../dialog/ZDialogContent.svelte';
 
 	export type DrawerPlacement = 'bottom' | 'end' | 'start' | 'top';
-	export type DrawerSize = 'full' | 'large' | 'medium' | 'small';
-	export type ZDrawerContentProps = Omit<ZDialogContentProps, 'appearance' | 'role'> & {
+	export type DrawerPresetSize = 'full' | 'large' | 'medium' | 'small';
+	export type DrawerSize = DrawerPresetSize | number | string;
+	export type ZDrawerContentProps = Omit<ZDialogContentProps, 'appearance' | 'dir' | 'role'> & {
 		readonly placement?: DrawerPlacement;
 		readonly size?: DrawerSize;
 	};
@@ -41,6 +42,7 @@
 			},
 			open: { false: () => undefined, true: (s) => s.transform.raw('translate(0, 0)') },
 			size: {
+				custom: () => undefined,
 				full: (s) => {
 					s.height._full;
 					s.width._full;
@@ -113,6 +115,22 @@
 			{
 				style: (s) => s.transform.raw('translateY(-100%)'),
 				when: { open: false, placement: 'top' }
+			},
+			{
+				style: (s) => s.maxWidth.vw(100),
+				when: { placement: 'end', size: 'full' }
+			},
+			{
+				style: (s) => s.maxWidth.vw(100),
+				when: { placement: 'start', size: 'full' }
+			},
+			{
+				style: (s) => s.maxHeight.vh(100),
+				when: { placement: 'bottom', size: 'full' }
+			},
+			{
+				style: (s) => s.maxHeight.vh(100),
+				when: { placement: 'top', size: 'full' }
 			}
 		],
 		defaultVariants: {
@@ -133,7 +151,13 @@
 		bindings: [
 			{ description: '挂载期间的真实dialog引用。', name: 'ref', type: 'HTMLDivElement | null' }
 		],
-		dependencies: ['ZDrawer', 'ZDialogContent', 'logical properties', 'Presence'],
+		dependencies: [
+			'ZDrawer',
+			'ZDialogContent',
+			'logical properties',
+			'responsive CSS sizing',
+			'Presence'
+		],
 		events: [],
 		keyboard: [
 			{ description: '关闭并恢复焦点。', key: 'Escape' },
@@ -152,9 +176,9 @@
 			},
 			{
 				default: "'medium'",
-				description: '沿滑入轴的面板尺寸。',
+				description: '沿滑入轴的预设或CSS尺寸；number按px处理，非full值仍受90vw/90vh窄屏边界约束。',
 				name: 'size',
-				type: "'small' | 'medium' | 'large' | 'full'"
+				type: "'small' | 'medium' | 'large' | 'full' | number | string"
 			},
 			{
 				bindable: true,
@@ -169,7 +193,10 @@
 			{ description: 'Title、Description、业务内容与Close。', name: 'children', type: 'Snippet' }
 		],
 		source: 'ui/zui/src/components/compound/drawer/ZDrawerContent.svelte',
-		states: [{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] }],
+		states: [
+			{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] },
+			{ description: '解析后的减少动画状态。', name: 'data-reduced-motion', values: ['true'] }
+		],
 		status: 'experimental',
 		summary: '基于逻辑方向、可配置尺寸和Presence过渡的modal侧滑内容。'
 	} as const satisfies ZuiComponentMetadata;
@@ -177,25 +204,60 @@
 
 <script lang="ts">
 	import { useZui } from '../../../runtime/foundation/context.js';
+	import { mergeStyles } from '../../../runtime/foundation/root-style.js';
 	import ZDialogContent from '../dialog/ZDialogContent.svelte';
 	import { useZDialog } from '../dialog/context.svelte.js';
+
+	function isPresetSize(size: DrawerSize): size is DrawerPresetSize {
+		switch (size) {
+			case 'full':
+			case 'large':
+			case 'medium':
+			case 'small':
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	function customSizeValue(size: DrawerSize): string | undefined {
+		if (isPresetSize(size)) return undefined;
+		if (typeof size === 'number') {
+			if (!Number.isFinite(size) || size < 0) {
+				throw new TypeError('Drawer size must be a finite non-negative number.');
+			}
+			return `${size}px`;
+		}
+		const value = size.trim();
+		if (!value) throw new TypeError('Drawer size must not be empty.');
+		return value;
+	}
 
 	let {
 		class: className,
 		placement = 'end',
 		ref = $bindable(null),
 		size = 'medium',
+		style,
 		...rest
 	}: ZDrawerContentProps = $props();
 	const zui = useZui();
 	const dialog = useZDialog();
+	const presetSize = $derived(isPresetSize(size) ? size : 'custom');
+	const customSize = $derived(customSizeValue(size));
+	const sizeStyle = $derived(
+		customSize === undefined
+			? ''
+			: `${placement === 'top' || placement === 'bottom' ? 'height' : 'width'}:${customSize}`
+	);
+	const contentStyle = $derived(mergeStyles(style, sizeStyle));
 	const rootClass = $derived(
 		zui.recipe(drawerContentRecipe, {
 			direction: zui.direction,
-			motion: zui.motion,
+			motion: dialog.reducedMotion ? 'reduced' : 'full',
 			open: dialog.open,
 			placement,
-			size
+			size: presetSize
 		})
 	);
 </script>
@@ -205,5 +267,7 @@
 	appearance="unstyled"
 	bind:ref
 	class={[rootClass, className]}
+	dir={zui.direction}
 	role="dialog"
+	style={contentStyle}
 />

@@ -1,3 +1,5 @@
+import { isDomDocument, isDomHtmlElement } from './dom-realm.js';
+
 interface ScrollLockRecord {
 	count: number;
 	overflow: string;
@@ -7,7 +9,10 @@ interface ScrollLockRecord {
 const locks = new WeakMap<HTMLElement, ScrollLockRecord>();
 
 export function lockScroll(target: Document | HTMLElement): () => void {
-	const element = target instanceof Document ? target.body : target;
+	const element = isDomDocument(target) ? target.body : target;
+	if (!isDomHtmlElement(element)) {
+		throw new TypeError('Scroll lock target must be a Document or HTMLElement.');
+	}
 	const existing = locks.get(element);
 	if (existing) {
 		existing.count += 1;
@@ -15,12 +20,10 @@ export function lockScroll(target: Document | HTMLElement): () => void {
 	}
 
 	const ownerDocument = element.ownerDocument;
+	const ownerWindow = ownerDocument.defaultView;
 	const scrollbarWidth =
-		element === ownerDocument.body
-			? Math.max(
-					0,
-					ownerDocument.defaultView!.innerWidth - ownerDocument.documentElement.clientWidth
-				)
+		element === ownerDocument.body && ownerWindow
+			? Math.max(0, ownerWindow.innerWidth - ownerDocument.documentElement.clientWidth)
 			: Math.max(0, element.offsetWidth - element.clientWidth);
 	const record: ScrollLockRecord = {
 		count: 1,
@@ -30,7 +33,10 @@ export function lockScroll(target: Document | HTMLElement): () => void {
 	locks.set(element, record);
 	element.style.overflow = 'hidden';
 	if (scrollbarWidth > 0) {
-		const current = Number.parseFloat(getComputedStyle(element).paddingInlineEnd) || 0;
+		const current =
+			Number.parseFloat(
+				ownerWindow?.getComputedStyle(element).paddingInlineEnd ?? element.style.paddingInlineEnd
+			) || 0;
 		element.style.paddingInlineEnd = `${current + scrollbarWidth}px`;
 	}
 	return release(element);

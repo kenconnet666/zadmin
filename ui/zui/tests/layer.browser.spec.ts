@@ -305,6 +305,76 @@ describe('ZUI layer runtime', () => {
 		target.remove();
 	});
 
+	it('keeps Portal, focus, dismiss, inert and scroll contracts inside an iframe realm', async () => {
+		const frame = document.createElement('iframe');
+		document.body.append(frame);
+		const ownerDocument = frame.contentDocument;
+		const ownerWindow = frame.contentWindow;
+		if (!ownerDocument || !ownerWindow) throw new Error('Expected a same-origin iframe realm.');
+
+		const inlineHost = ownerDocument.createElement('div');
+		const elementTarget = ownerDocument.createElement('div');
+		const shadowHost = ownerDocument.createElement('div');
+		const shadow = shadowHost.attachShadow({ mode: 'open' });
+		const portalNode = ownerDocument.createElement('section');
+		inlineHost.append(portalNode);
+		ownerDocument.body.append(inlineHost, elementTarget, shadowHost);
+		const portalAction = portal(portalNode, { target: ownerDocument });
+		expect(portalNode.parentNode).toBe(ownerDocument.body);
+		portalAction.update({ target: elementTarget });
+		expect(portalNode.parentNode).toBe(elementTarget);
+		portalAction.update({ target: shadow });
+		expect(portalNode.parentNode).toBe(shadow);
+		portalAction.update({ target: null });
+		expect(portalNode.parentNode).toBe(inlineHost);
+
+		const originalOverflow = ownerDocument.body.style.overflow;
+		const releaseDocumentScroll = lockScroll(ownerDocument);
+		const releaseElementScroll = lockScroll(ownerDocument.body);
+		expect(ownerDocument.body.style.overflow).toBe('hidden');
+		releaseDocumentScroll();
+		expect(ownerDocument.body.style.overflow).toBe('hidden');
+		releaseElementScroll();
+		expect(ownerDocument.body.style.overflow).toBe(originalOverflow);
+
+		const shadowRoot = ownerDocument.createElement('div');
+		const shadowSibling = ownerDocument.createElement('div');
+		shadow.append(shadowRoot, shadowSibling);
+		const restoreOthers = inertOthers(shadowRoot);
+		expect(shadowSibling.inert).toBe(true);
+		expect(shadowSibling.getAttribute('aria-hidden')).toBe('true');
+		restoreOthers();
+		expect(shadowSibling.inert).toBe(false);
+		expect(shadowSibling.hasAttribute('aria-hidden')).toBe(false);
+
+		const outside = ownerDocument.createElement('button');
+		const scopeRoot = ownerDocument.createElement('div');
+		scopeRoot.tabIndex = -1;
+		const first = ownerDocument.createElement('button');
+		const second = ownerDocument.createElement('button');
+		scopeRoot.append(first, second);
+		ownerDocument.body.append(outside, scopeRoot);
+		outside.focus();
+		const focusScope = new FocusScope(scopeRoot, { restoreFocus: true, trap: true });
+		await Promise.resolve();
+		expect(ownerDocument.activeElement).toBe(first);
+		outside.focus();
+		expect(ownerDocument.activeElement).toBe(first);
+		focusScope.destroy();
+		expect(ownerDocument.activeElement).toBe(outside);
+
+		const dismiss = vi.fn();
+		const dismissable = new DismissableLayer(scopeRoot, { onDismiss: dismiss });
+		outside.dispatchEvent(
+			new ownerWindow.PointerEvent('pointerdown', { bubbles: true, composed: true })
+		);
+		expect(dismiss).toHaveBeenCalledWith('pointer-outside');
+		dismissable.destroy();
+
+		portalAction.destroy();
+		frame.remove();
+	});
+
 	it('owns nested layer order, modal pointer blocking and branch containment', () => {
 		const stack = new LayerStack();
 		const root = document.createElement('div');

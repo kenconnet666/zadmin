@@ -1,0 +1,191 @@
+import { mount, tick, unmount } from 'svelte';
+import { describe, expect, it, vi } from 'vitest';
+
+import DrawerFixture from './DrawerFixture.svelte';
+import NestedDrawerFixture from './NestedDrawerFixture.svelte';
+
+function target(): HTMLDivElement {
+	const element = document.createElement('div');
+	document.body.append(element);
+	return element;
+}
+
+describe('ZDrawer production contracts', () => {
+	it('resolves all physical edges from four logical placements and RTL direction', async () => {
+		const host = target();
+		const cases = [
+			{ direction: 'ltr', edge: 'left', placement: 'start' },
+			{ direction: 'rtl', edge: 'right', placement: 'start' },
+			{ direction: 'ltr', edge: 'right', placement: 'end' },
+			{ direction: 'rtl', edge: 'left', placement: 'end' },
+			{ direction: 'ltr', edge: 'top', placement: 'top' },
+			{ direction: 'ltr', edge: 'bottom', placement: 'bottom' }
+		] as const;
+		for (const props of cases) {
+			const component = mount(DrawerFixture, {
+				props: { ...props, defaultOpen: true, motion: 'reduced' },
+				target: host
+			});
+			await tick();
+			const content = document.querySelector<HTMLElement>('[data-testid="drawer-content"]');
+			expect(getComputedStyle(content!).getPropertyValue(props.edge)).toBe('0px');
+			await unmount(component);
+		}
+		host.remove();
+	});
+
+	it('supports CSS sizes, an intentional full viewport mode and immediate reduced-motion cleanup', async () => {
+		const host = target();
+		const component = mount(DrawerFixture, {
+			props: {
+				defaultOpen: true,
+				motion: 'reduced',
+				size: 'min(32rem, calc(100vw - 2rem))'
+			},
+			target: host
+		});
+		await tick();
+		const content = document.querySelector<HTMLElement>('[data-testid="drawer-content"]');
+		const expectedWidth = Math.min(512, innerWidth - 32, innerWidth * 0.9);
+		expect(content?.getBoundingClientRect().width).toBeCloseTo(expectedWidth, 0);
+		expect(content?.dataset.reducedMotion).toBe('true');
+		document.querySelector<HTMLButtonElement>('[data-testid="drawer-close"]')?.click();
+		await tick();
+		expect(document.querySelector('[data-testid="drawer-content"]')).toBeNull();
+		await unmount(component);
+
+		const full = mount(DrawerFixture, {
+			props: { defaultOpen: true, motion: 'reduced', placement: 'top', size: 'full' },
+			target: host
+		});
+		await tick();
+		const fullContent = document.querySelector<HTMLElement>('[data-testid="drawer-content"]');
+		expect(fullContent?.getBoundingClientRect().height).toBeCloseTo(innerHeight, 0);
+		await unmount(full);
+		host.remove();
+	});
+
+	it('resolves auto motion once at the Dialog owner while full motion overrides system reduction', async () => {
+		const removeEventListener = vi.fn();
+		const addEventListener = vi.fn();
+		const matchMedia = vi.spyOn(window, 'matchMedia').mockReturnValue({
+			addEventListener,
+			dispatchEvent: () => true,
+			matches: true,
+			media: '(prefers-reduced-motion: reduce)',
+			onchange: null,
+			removeEventListener
+		} as MediaQueryList);
+		const host = target();
+		const automatic = mount(DrawerFixture, {
+			props: { defaultOpen: true, motion: 'auto' },
+			target: host
+		});
+		await tick();
+		expect(
+			document.querySelector<HTMLElement>('[data-testid="drawer-content"]')?.dataset.reducedMotion
+		).toBe('true');
+		await unmount(automatic);
+		expect(removeEventListener).toHaveBeenCalledOnce();
+
+		const full = mount(DrawerFixture, {
+			props: { defaultOpen: true, motion: 'full' },
+			target: host
+		});
+		await tick();
+		expect(
+			document.querySelector<HTMLElement>('[data-testid="drawer-content"]')?.dataset.reducedMotion
+		).toBeUndefined();
+		await unmount(full);
+		host.remove();
+		matchMedia.mockRestore();
+	});
+
+	it('portals into a ShadowRoot and scopes modal lifecycle to the moved content owner', async () => {
+		const originalOverflow = document.body.style.overflow;
+		const host = target();
+		const portalHost = document.createElement('div');
+		document.body.append(portalHost);
+		const shadow = portalHost.attachShadow({ mode: 'open' });
+		const component = mount(DrawerFixture, {
+			props: { defaultOpen: true, motion: 'reduced', portalContainer: shadow },
+			target: host
+		});
+		await tick();
+		const content = shadow.querySelector<HTMLElement>('[data-testid="drawer-content"]');
+		expect(content?.parentNode).toBe(shadow);
+		expect(shadow.querySelector('[data-testid="drawer-overlay"]')?.parentNode).toBe(shadow);
+		expect(document.body.style.overflow).toBe('hidden');
+		await unmount(component);
+		expect(document.body.style.overflow).toBe(originalOverflow);
+		host.remove();
+		portalHost.remove();
+	});
+
+	it('keeps only the nested top layer active and restores focus and scroll lock one layer at a time', async () => {
+		const originalOverflow = document.body.style.overflow;
+		const host = target();
+		const component = mount(NestedDrawerFixture, { target: host });
+		const outerTrigger = host.querySelector<HTMLButtonElement>('[data-testid="outer-trigger"]');
+		outerTrigger?.focus();
+		outerTrigger?.click();
+		await tick();
+		const innerTrigger = document.querySelector<HTMLButtonElement>('[data-testid="inner-trigger"]');
+		innerTrigger?.click();
+		await tick();
+		expect(document.activeElement?.getAttribute('aria-label')).toBe('Inner drawer input');
+		expect(document.body.style.overflow).toBe('hidden');
+
+		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+		await tick();
+		expect(document.querySelector('[data-testid="inner-content"]')).toBeNull();
+		expect(document.querySelector('[data-testid="outer-content"]')).not.toBeNull();
+		expect(document.activeElement).toBe(innerTrigger);
+		expect(document.body.style.overflow).toBe('hidden');
+
+		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+		await tick();
+		expect(document.querySelector('[data-testid="outer-content"]')).toBeNull();
+		expect(document.activeElement).toBe(outerTrigger);
+		expect(document.body.style.overflow).toBe(originalOverflow);
+		await unmount(component);
+		host.remove();
+	});
+
+	it('separates default outside and Escape dismiss from explicit-only workflows', async () => {
+		const host = target();
+		const standard = mount(DrawerFixture, {
+			props: { defaultOpen: true, motion: 'reduced' },
+			target: host
+		});
+		await tick();
+		document
+			.querySelector<HTMLElement>('[data-testid="drawer-overlay"]')
+			?.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+		await tick();
+		expect(document.querySelector('[data-testid="drawer-content"]')).toBeNull();
+		await unmount(standard);
+
+		const explicit = mount(DrawerFixture, {
+			props: {
+				defaultOpen: true,
+				dismissOnEscape: false,
+				dismissOnPointerOutside: false,
+				motion: 'reduced'
+			},
+			target: host
+		});
+		await tick();
+		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+		document
+			.querySelector<HTMLElement>('[data-testid="drawer-overlay"]')
+			?.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+		await tick();
+		expect(document.querySelector('[data-testid="drawer-content"]')).not.toBeNull();
+		document.querySelector<HTMLButtonElement>('[data-testid="drawer-close"]')?.click();
+		await tick();
+		expect(document.querySelector('[data-testid="drawer-content"]')).toBeNull();
+		await unmount(explicit);
+		host.remove();
+	});
+});

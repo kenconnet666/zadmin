@@ -72,6 +72,7 @@ export type { ZDrawerCloseProps } from '../components/compound/drawer/ZDrawerClo
 export { default as ZDrawerContent } from '../components/compound/drawer/ZDrawerContent.svelte';
 export type {
 	DrawerPlacement,
+	DrawerPresetSize,
 	DrawerSize,
 	ZDrawerContentProps
 } from '../components/compound/drawer/ZDrawerContent.svelte';

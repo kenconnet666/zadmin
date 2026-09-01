@@ -55,7 +55,10 @@
 		since: 'unreleased',
 		snippets: [],
 		source: 'ui/zui/src/components/compound/dialog/ZDialogOverlay.svelte',
-		states: [{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] }],
+		states: [
+			{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] },
+			{ description: '解析后的减少动画状态。', name: 'data-reduced-motion', values: ['true'] }
+		],
 		status: 'experimental',
 		summary: 'Portal挂载并与Dialog Presence同步的modal遮罩。'
 	} as const satisfies ZuiComponentMetadata;
@@ -81,7 +84,12 @@
 	const presence = createPresence(initiallyOpen);
 	const mounted = $derived(presence.mounted);
 	const presenceState = $derived(presence.state);
-	const rootClass = $derived(zui.recipe(overlayRecipe, { motion: zui.motion, open: dialog.open }));
+	const rootClass = $derived(
+		zui.recipe(overlayRecipe, {
+			motion: dialog.reducedMotion ? 'reduced' : 'full',
+			open: dialog.open
+		})
+	);
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 	$effect(() => presence.update(dialog.open, dialog.exitDuration));
@@ -104,6 +112,7 @@
 		use:portal={{ target: dialog.portalTarget }}
 		aria-hidden="true"
 		data-presence={presenceState}
+		data-reduced-motion={dialog.reducedMotion || undefined}
 		data-state={dialog.open ? 'open' : 'closed'}
 		ontransitionend={(event) => {
 			if (event.target === event.currentTarget) presence.finishExit();
