@@ -60,11 +60,30 @@ const exitCode = await new Promise((resolveExit, rejectExit) => {
 
 try {
 	if (exitCode !== 0) throw new Error(`WebView development host exited with code ${exitCode}.`);
-	/** @type {{ error?: string; page?: { bodyText?: string; errors?: string[]; hasBridge?: boolean; origin?: string; viteClient?: boolean } }} */
+	/** @type {{ bridgeRequest?: boolean; error?: string; navigation?: boolean; page?: { bodyText?: string; errors?: string[]; hasBridge?: boolean; origin?: string; viteClient?: boolean }; protocol?: number; source?: string }} */
 	const report = JSON.parse(await readReport());
 	if (report.error) throw new Error(report.error);
-	if (report.page?.origin !== 'http://127.0.0.1:5176')
-		throw new Error('Unexpected development origin.');
+	const isDevelopmentOrigin = (value) => {
+		try {
+			const url = new URL(value);
+			return (
+				url.protocol === 'http:' &&
+				url.port === '5176' &&
+				(url.hostname === '127.0.0.1' || url.hostname === 'localhost')
+			);
+		} catch {
+			return false;
+		}
+	};
+	if (!isDevelopmentOrigin(report.page?.origin)) {
+		throw new Error(`Unexpected development origin: ${JSON.stringify(report.page?.origin)}.`);
+	}
+	if (report.source !== undefined && !isDevelopmentOrigin(report.source)) {
+		throw new Error(`Unexpected development source: ${JSON.stringify(report.source)}.`);
+	}
+	if (!report.navigation || !report.bridgeRequest || report.protocol !== 1) {
+		throw new Error(`Development protocol handshake is incomplete: ${JSON.stringify(report)}.`);
+	}
 	if (!report.page?.hasBridge || !report.page?.viteClient) {
 		throw new Error(`WebView Vite/bridge injection is incomplete: ${JSON.stringify(report.page)}`);
 	}
