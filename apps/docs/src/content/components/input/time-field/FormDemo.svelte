@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Time } from '@internationalized/date';
 	import { ZButton, ZField, ZStack, ZText, ZTimeField } from '@zadmin/zui';
-	let value = $state(new Time(9, 30, 15));
+	let value = $state<Time | null>(new Time(9, 30, 15));
 </script>
 
 <form>
@@ -14,7 +14,7 @@
 				name="time"
 			/></ZField
 		><ZButton type="reset" variant="secondary">重置</ZButton><ZText tone="muted"
-			>value = {value.toString()}</ZText
+			>value = {value?.toString() ?? 'null'}</ZText
 		></ZStack
 	>
 </form>

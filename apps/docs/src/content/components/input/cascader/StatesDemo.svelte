@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ZCascader, ZStack } from '@zadmin/zui';
+	import { ZCascader, ZField, ZProvider, ZStack } from '@zadmin/zui';
 	const nodes = [
 		{ key: 'cn', label: '中国' },
 		{ key: 'east', label: '华东', parentKey: 'cn' },
@@ -8,6 +8,18 @@
 </script>
 
 <ZStack gap="medium">
-	<ZCascader {nodes} placeholder="选择区域" separator=" / " />
-	<ZCascader {nodes} disabled defaultValue={['cn', 'east', 'shanghai']} separator=" / " />
+	<ZField label="只读区域" name="readonly-region" readonly size="small">
+		<ZCascader {nodes} defaultValue={['cn', 'east', 'shanghai']} separator=" / " />
+	</ZField>
+	<ZField invalid label="加载中的区域" size="large">
+		<ZCascader {nodes} loading placeholder="正在同步区域" />
+	</ZField>
+	<ZField disabled label="禁用区域">
+		<ZCascader {nodes} defaultValue={['cn', 'east', 'shanghai']} />
+	</ZField>
+	<ZProvider direction="rtl">
+		<ZField label="RTL区域">
+			<ZCascader {nodes} defaultValue={['cn', 'east', 'shanghai']} />
+		</ZField>
+	</ZProvider>
 </ZStack>

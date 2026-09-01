@@ -12,7 +12,7 @@
 <ZContextMenu>
 	<ZContextMenuTrigger><ZText>在只读部署区域右键或按Shift+F10。</ZText></ZContextMenuTrigger>
 	<ZContextMenuContent
-		ariaLabel="只读部署菜单"
+		aria-label="只读部署菜单"
 		loop={false}
 		onAction={(event) => (action = String(event.value))}
 	>

@@ -39,6 +39,7 @@
 		columnId: 'name',
 		direction: 'ascending'
 	});
+	let selectedKeys = $state<readonly string[]>(['api']);
 	const filteredRows = $derived(
 		allRows.filter((row) =>
 			`${row.name} ${row.owner} ${row.region}`
@@ -82,18 +83,26 @@
 	<ZText aria-live="polite" tone="muted">
 		外部owner：{filteredRows.length}条结果 · 第{page}/{totalPages}页 · sort = {sort
 			? `${sort.columnId}/${sort.direction}`
-			: 'none'}
+			: 'none'} · 跨页selected = {selectedKeys.join(', ') || 'none'}
 	</ZText>
 	<ZText tone="muted">
-		示例用内存数组模拟query/cache层；filter与page不属于DataTable。受控sort同步表头状态，当前核心仍会对传入页执行同方向稳定排序。
+		示例用内存数组模拟query/cache层；filter、page、请求和URL状态属于外部owner。sortingMode="server"
+		只发出排序意图，不会把当前页错误地二次排序。
 	</ZText>
 	<ZDataTable
 		caption="服务检索结果"
 		{columns}
 		rows={pageRows}
 		rowKey={(row) => row.id}
+		rowIndexOffset={(page - 1) * pageSize}
+		totalRowCount={filteredRows.length}
 		{sort}
 		onSortChange={setSort}
+		sortingMode="server"
+		selectionMode="multiple"
+		bind:selectedKeys
+		selectAllLabel="选择当前页全部服务"
+		selectionLabel={(row) => `选择 ${row.name}`}
 		emptyLabel="没有匹配服务"
 	/>
 	<ZPagination

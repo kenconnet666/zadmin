@@ -568,6 +568,11 @@ export const contextMenuContentApiFacts = {
 	name: 'ZContextMenuContent',
 	props: [
 		{
+			name: 'aria-label',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'ariaLabel',
 			required: false,
 			type: 'string'
@@ -981,6 +986,11 @@ export const menuApiFacts = {
 			type: 'Snippet'
 		},
 		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'loop',
 			required: false,
 			type: 'boolean'
@@ -991,12 +1001,58 @@ export const menuApiFacts = {
 			type: '(event: MenuActionEventType) => void'
 		},
 		{
+			name: 'onDismissRequest',
+			required: false,
+			type: '() => void'
+		},
+		{
 			name: 'ref',
 			required: false,
 			type: 'HTMLDivElement | null'
 		}
 	],
 	source: 'ui/zui/src/components/compound/menu/ZMenu.svelte',
+	undocumentedProps: []
+} as const satisfies ComponentApiFacts;
+
+export const menuCheckboxItemApiFacts = {
+	declaration: 'ZMenuCheckboxItemProps',
+	id: 'menu-checkbox-item',
+	inheritedFrom: ['ZMenuItemProps'],
+	name: 'ZMenuCheckboxItem',
+	props: [
+		{
+			name: 'checked',
+			required: false,
+			type: "boolean | 'mixed'"
+		},
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'closeOnSelect',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'defaultChecked',
+			required: false,
+			type: "boolean | 'mixed'"
+		},
+		{
+			name: 'onCheckedChange',
+			required: false,
+			type: '(checked: boolean) => void'
+		},
+		{
+			name: 'onSelect',
+			required: false,
+			type: '(event: MenuActionEvent) => void'
+		}
+	],
+	source: 'ui/zui/src/components/compound/menu/ZMenuCheckboxItem.svelte',
 	undocumentedProps: []
 } as const satisfies ComponentApiFacts;
 
@@ -1012,6 +1068,11 @@ export const menuGroupApiFacts = {
 			type: 'Snippet'
 		},
 		{
+			name: 'value',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'ref',
 			required: false,
 			type: 'HTMLDivElement | null'
@@ -1024,18 +1085,53 @@ export const menuGroupApiFacts = {
 export const menuItemApiFacts = {
 	declaration: 'ZMenuItemProps',
 	id: 'menu-item',
-	inheritedFrom: ['HTMLAttributes<HTMLDivElement>'],
+	inheritedFrom: ['HTMLAttributes<HTMLElement>'],
 	name: 'ZMenuItem',
 	props: [
+		{
+			name: 'checked',
+			required: false,
+			type: "boolean | 'mixed'"
+		},
 		{
 			name: 'children',
 			required: false,
 			type: 'Snippet'
 		},
 		{
+			name: 'closeOnSelect',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'danger',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'disabled',
 			required: false,
 			type: 'boolean'
+		},
+		{
+			name: 'download',
+			required: false,
+			type: "HTMLAnchorAttributes['download']"
+		},
+		{
+			name: 'href',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'itemRole',
+			required: false,
+			type: 'MenuItemRole'
+		},
+		{
+			name: 'leading',
+			required: false,
+			type: 'Snippet'
 		},
 		{
 			name: 'onSelect',
@@ -1045,12 +1141,32 @@ export const menuItemApiFacts = {
 		{
 			name: 'ref',
 			required: false,
-			type: 'HTMLDivElement | null'
+			type: 'HTMLElement | null'
+		},
+		{
+			name: 'rel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'shortcut',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'target',
+			required: false,
+			type: "HTMLAnchorAttributes['target']"
 		},
 		{
 			name: 'textValue',
 			required: false,
 			type: 'string'
+		},
+		{
+			name: 'trailing',
+			required: false,
+			type: 'Snippet'
 		},
 		{
 			name: 'value',
@@ -1083,6 +1199,68 @@ export const menuLabelApiFacts = {
 	undocumentedProps: []
 } as const satisfies ComponentApiFacts;
 
+export const menuRadioGroupApiFacts = {
+	declaration: 'ZMenuRadioGroupProps',
+	id: 'menu-radio-group',
+	inheritedFrom: ['HTMLAttributes<HTMLDivElement>'],
+	name: 'ZMenuRadioGroup',
+	props: [
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'defaultValue',
+			required: false,
+			type: 'SelectionKey'
+		},
+		{
+			name: 'onValueChange',
+			required: false,
+			type: '(value: SelectionKey) => void'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null'
+		},
+		{
+			name: 'value',
+			required: false,
+			type: 'SelectionKey'
+		}
+	],
+	source: 'ui/zui/src/components/compound/menu/ZMenuRadioGroup.svelte',
+	undocumentedProps: []
+} as const satisfies ComponentApiFacts;
+
+export const menuRadioItemApiFacts = {
+	declaration: 'ZMenuRadioItemProps',
+	id: 'menu-radio-item',
+	inheritedFrom: ['ZMenuItemProps'],
+	name: 'ZMenuRadioItem',
+	props: [
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'closeOnSelect',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'onSelect',
+			required: false,
+			type: '(event: MenuActionEvent) => void'
+		}
+	],
+	source: 'ui/zui/src/components/compound/menu/ZMenuRadioItem.svelte',
+	undocumentedProps: []
+} as const satisfies ComponentApiFacts;
+
 export const menuSeparatorApiFacts = {
 	declaration: 'ZMenuSeparatorProps',
 	id: 'menu-separator',
@@ -1096,6 +1274,114 @@ export const menuSeparatorApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/menu/ZMenuSeparator.svelte',
+	undocumentedProps: []
+} as const satisfies ComponentApiFacts;
+
+export const menuSubApiFacts = {
+	declaration: 'ZMenuSubProps',
+	id: 'menu-sub',
+	inheritedFrom: [],
+	name: 'ZMenuSub',
+	props: [
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'defaultOpen',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'gutter',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'onOpenChange',
+			required: false,
+			type: '(open: boolean) => void'
+		},
+		{
+			name: 'open',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'placement',
+			required: false,
+			type: 'PopoverPlacement'
+		}
+	],
+	source: 'ui/zui/src/components/compound/menu/ZMenuSub.svelte',
+	undocumentedProps: []
+} as const satisfies ComponentApiFacts;
+
+export const menuSubContentApiFacts = {
+	declaration: 'ZMenuSubContentProps',
+	id: 'menu-sub-content',
+	inheritedFrom: ['ZPopoverContentProps'],
+	name: 'ZMenuSubContent',
+	props: [
+		{
+			name: 'aria-label',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'ariaLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'loop',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'menuRef',
+			required: false,
+			type: 'HTMLDivElement | null'
+		},
+		{
+			name: 'onAction',
+			required: false,
+			type: '(event: MenuActionEvent) => void'
+		}
+	],
+	source: 'ui/zui/src/components/compound/menu/ZMenuSubContent.svelte',
+	undocumentedProps: []
+} as const satisfies ComponentApiFacts;
+
+export const menuSubTriggerApiFacts = {
+	declaration: 'ZMenuSubTriggerProps',
+	id: 'menu-sub-trigger',
+	inheritedFrom: ['ZMenuItemProps'],
+	name: 'ZMenuSubTrigger',
+	props: [
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'onSelect',
+			required: false,
+			type: '(event: MenuActionEvent) => void'
+		},
+		{
+			name: 'openOnHover',
+			required: false,
+			type: 'boolean'
+		}
+	],
+	source: 'ui/zui/src/components/compound/menu/ZMenuSubTrigger.svelte',
 	undocumentedProps: []
 } as const satisfies ComponentApiFacts;
 
@@ -1584,6 +1870,21 @@ export const popoverContentApiFacts = {
 			name: 'manageFocus',
 			required: false,
 			type: 'boolean'
+		},
+		{
+			name: 'onEscape',
+			required: false,
+			type: '(event: PopoverEscapeEvent) => void'
+		},
+		{
+			name: 'onFocusOutside',
+			required: false,
+			type: '(event: PopoverFocusOutsideEvent) => void'
+		},
+		{
+			name: 'onPointerOutside',
+			required: false,
+			type: '(event: PopoverPointerOutsideEvent) => void'
 		},
 		{
 			name: 'ref',
@@ -2614,14 +2915,44 @@ export const dataTableApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'columnVisibility',
+			required: false,
+			type: 'Readonly<Record<string, boolean>>'
+		},
+		{
+			name: 'columnWidths',
+			required: false,
+			type: 'Readonly<Record<string, number>>'
+		},
+		{
 			name: 'columns',
 			required: true,
 			type: 'readonly DataTableColumn<TRow>[]'
 		},
 		{
+			name: 'controller',
+			required: false,
+			type: 'ZDataTableController<TRowKey> | null'
+		},
+		{
+			name: 'defaultColumnVisibility',
+			required: false,
+			type: 'Readonly<Record<string, boolean>>'
+		},
+		{
+			name: 'defaultColumnWidths',
+			required: false,
+			type: 'Readonly<Record<string, number>>'
+		},
+		{
+			name: 'defaultExpandedKeys',
+			required: false,
+			type: 'readonly TRowKey[]'
+		},
+		{
 			name: 'defaultSelectedKeys',
 			required: false,
-			type: 'readonly SelectionKey[]'
+			type: 'readonly TRowKey[]'
 		},
 		{
 			name: 'defaultSort',
@@ -2634,9 +2965,44 @@ export const dataTableApiFacts = {
 			type: 'TableDensity'
 		},
 		{
+			name: 'empty',
+			required: false,
+			type: 'Snippet'
+		},
+		{
 			name: 'emptyLabel',
 			required: false,
 			type: 'string'
+		},
+		{
+			name: 'error',
+			required: false,
+			type: 'string | null'
+		},
+		{
+			name: 'errorContent',
+			required: false,
+			type: 'Snippet<[string]>'
+		},
+		{
+			name: 'expandedKeys',
+			required: false,
+			type: 'readonly TRowKey[]'
+		},
+		{
+			name: 'expandedRow',
+			required: false,
+			type: 'Snippet<[TRow, number]>'
+		},
+		{
+			name: 'expandedRowEstimate',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'expansionLabel',
+			required: false,
+			type: '(row: TRow, expanded: boolean) => string'
 		},
 		{
 			name: 'height',
@@ -2649,9 +3015,44 @@ export const dataTableApiFacts = {
 			type: '(row: TRow) => boolean'
 		},
 		{
+			name: 'isRowExpandable',
+			required: false,
+			type: '(row: TRow) => boolean'
+		},
+		{
+			name: 'loading',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'loadingContent',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'loadingLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'onColumnVisibilityChange',
+			required: false,
+			type: '(visibility: DataTableColumnVisibility) => void'
+		},
+		{
+			name: 'onColumnWidthsChange',
+			required: false,
+			type: '(widths: DataTableColumnWidths) => void'
+		},
+		{
+			name: 'onExpandedChange',
+			required: false,
+			type: '(keys: readonly TRowKey[]) => void'
+		},
+		{
 			name: 'onSelectionChange',
 			required: false,
-			type: '(keys: readonly SelectionKey[]) => void'
+			type: '(keys: readonly TRowKey[]) => void'
 		},
 		{
 			name: 'onSortChange',
@@ -2669,14 +3070,24 @@ export const dataTableApiFacts = {
 			type: 'HTMLDivElement | null'
 		},
 		{
+			name: 'resizeLabel',
+			required: false,
+			type: '(column: DataTableColumn<TRow>) => string'
+		},
+		{
 			name: 'rowHeight',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'rowIndexOffset',
 			required: false,
 			type: 'number'
 		},
 		{
 			name: 'rowKey',
 			required: true,
-			type: '(row: TRow) => SelectionKey'
+			type: '(row: TRow) => TRowKey'
 		},
 		{
 			name: 'rows',
@@ -2701,7 +3112,27 @@ export const dataTableApiFacts = {
 		{
 			name: 'selectedKeys',
 			required: false,
-			type: 'readonly SelectionKey[]'
+			type: 'readonly TRowKey[]'
+		},
+		{
+			name: 'sortingMode',
+			required: false,
+			type: "'client' | 'server'"
+		},
+		{
+			name: 'ssrViewportSize',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'stickyHeader',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'striped',
+			required: false,
+			type: 'boolean'
 		},
 		{
 			name: 'sort',
@@ -2709,9 +3140,9 @@ export const dataTableApiFacts = {
 			type: 'DataSortDescriptor'
 		},
 		{
-			name: 'striped',
+			name: 'totalRowCount',
 			required: false,
-			type: 'boolean'
+			type: 'number'
 		},
 		{
 			name: 'virtualized',
@@ -2721,18 +3152,28 @@ export const dataTableApiFacts = {
 	],
 	source: 'ui/zui/src/components/data-display/ZDataTable.svelte',
 	undocumentedProps: [
-		'caption',
+		'defaultColumnVisibility',
+		'defaultColumnWidths',
+		'defaultExpandedKeys',
 		'defaultSelectedKeys',
 		'defaultSort',
 		'density',
 		'emptyLabel',
+		'expandedRowEstimate',
+		'expansionLabel',
 		'height',
 		'isRowDisabled',
+		'isRowExpandable',
+		'loadingLabel',
 		'overscan',
+		'resizeLabel',
 		'rowHeight',
+		'rowIndexOffset',
 		'selectAllLabel',
 		'selectionLabel',
-		'striped'
+		'ssrViewportSize',
+		'striped',
+		'totalRowCount'
 	]
 } as const satisfies ComponentApiFacts;
 
@@ -4023,7 +4464,7 @@ export const calendarApiFacts = {
 		{
 			name: 'defaultValue',
 			required: false,
-			type: 'CalendarDateValue'
+			type: 'CalendarDateValue | null'
 		},
 		{
 			name: 'disabled',
@@ -4036,12 +4477,32 @@ export const calendarApiFacts = {
 			type: 'Weekday'
 		},
 		{
+			name: 'focusedValue',
+			required: false,
+			type: 'CalendarDateValue'
+		},
+		{
 			name: 'form',
 			required: false,
 			type: 'string'
 		},
 		{
+			name: 'formParticipation',
+			required: false,
+			type: "'auto' | 'none'"
+		},
+		{
+			name: 'invalid',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'isDateDisabled',
+			required: false,
+			type: '(date: CalendarDateValue) => boolean'
+		},
+		{
+			name: 'isDateUnavailable',
 			required: false,
 			type: '(date: CalendarDateValue) => boolean'
 		},
@@ -4078,7 +4539,7 @@ export const calendarApiFacts = {
 		{
 			name: 'onValueChange',
 			required: false,
-			type: '(value: CalendarDateValue) => void'
+			type: '(value: CalendarDateValue | null) => void'
 		},
 		{
 			name: 'previousLabel',
@@ -4088,7 +4549,7 @@ export const calendarApiFacts = {
 		{
 			name: 'range',
 			required: false,
-			type: 'CalendarRange'
+			type: 'CalendarRange | CalendarRangeValue | null'
 		},
 		{
 			name: 'ref',
@@ -4096,9 +4557,24 @@ export const calendarApiFacts = {
 			type: 'HTMLDivElement | null'
 		},
 		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'required',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'showOutsideDates',
 			required: false,
 			type: 'boolean'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
 		},
 		{
 			name: 'timeZone',
@@ -4108,11 +4584,20 @@ export const calendarApiFacts = {
 		{
 			name: 'value',
 			required: false,
-			type: 'CalendarDateValue'
+			type: 'CalendarDateValue | null'
 		}
 	],
 	source: 'ui/zui/src/components/input/ZCalendar.svelte',
-	undocumentedProps: ['disabled', 'form', 'isDateDisabled', 'name', 'range']
+	undocumentedProps: [
+		'disabled',
+		'form',
+		'invalid',
+		'isDateDisabled',
+		'name',
+		'range',
+		'readonly',
+		'required'
+	]
 } as const satisfies ComponentApiFacts;
 
 export const cascaderApiFacts = {
@@ -4122,6 +4607,21 @@ export const cascaderApiFacts = {
 	name: 'ZCascader',
 	props: [
 		{
+			name: 'clearable',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'clearLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'controlId',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'defaultOpen',
 			required: false,
 			type: 'boolean'
@@ -4129,7 +4629,7 @@ export const cascaderApiFacts = {
 		{
 			name: 'defaultValue',
 			required: false,
-			type: 'readonly SelectionKey[]'
+			type: 'readonly TKey[]'
 		},
 		{
 			name: 'disabled',
@@ -4137,9 +4637,44 @@ export const cascaderApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'emptyText',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'filter',
+			required: false,
+			type: 'CascaderFilter<TKey>'
+		},
+		{
 			name: 'form',
 			required: false,
 			type: 'string'
+		},
+		{
+			name: 'gutter',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'invalid',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'loading',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'loadingText',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'matchWidth',
+			required: false,
+			type: 'boolean'
 		},
 		{
 			name: 'name',
@@ -4149,7 +4684,17 @@ export const cascaderApiFacts = {
 		{
 			name: 'nodes',
 			required: true,
-			type: 'readonly TreeNode[]'
+			type: 'readonly TreeNode<TKey>[]'
+		},
+		{
+			name: 'onLoadChildren',
+			required: false,
+			type: '( node: TreeNode<TKey>, context: TreeLoadContext<TKey> ) => Promise<void> | void'
+		},
+		{
+			name: 'onLoadError',
+			required: false,
+			type: '(key: TKey, error: unknown) => void'
 		},
 		{
 			name: 'onOpenChange',
@@ -4159,7 +4704,7 @@ export const cascaderApiFacts = {
 		{
 			name: 'onValueChange',
 			required: false,
-			type: '(path: readonly SelectionKey[]) => void'
+			type: '(path: readonly TKey[]) => void'
 		},
 		{
 			name: 'open',
@@ -4167,19 +4712,44 @@ export const cascaderApiFacts = {
 			type: 'boolean'
 		},
 		{
-			name: 'placeholder',
-			required: false,
-			type: 'string'
-		},
-		{
 			name: 'placement',
 			required: false,
 			type: 'PopoverPlacement'
 		},
 		{
+			name: 'placeholder',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'ref',
 			required: false,
 			type: 'HTMLDivElement | null'
+		},
+		{
+			name: 'required',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'searchable',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'searchLimit',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'searchPlaceholder',
+			required: false,
+			type: 'string'
 		},
 		{
 			name: 'separator',
@@ -4189,16 +4759,58 @@ export const cascaderApiFacts = {
 		{
 			name: 'serializeValue',
 			required: false,
-			type: '(path: readonly SelectionKey[]) => string'
+			type: '(path: readonly TKey[]) => string'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
 		},
 		{
 			name: 'value',
 			required: false,
-			type: 'readonly SelectionKey[]'
+			type: 'readonly TKey[]'
+		},
+		{
+			name: 'virtual',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'virtualHeight',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'virtualItemSize',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'virtualOverscan',
+			required: false,
+			type: 'number'
 		}
 	],
 	source: 'ui/zui/src/components/input/ZCascader.svelte',
-	undocumentedProps: ['defaultOpen', 'form', 'placeholder', 'placement', 'ref']
+	undocumentedProps: [
+		'clearLabel',
+		'controlId',
+		'defaultOpen',
+		'emptyText',
+		'filter',
+		'form',
+		'gutter',
+		'invalid',
+		'loadingText',
+		'matchWidth',
+		'onLoadChildren',
+		'placement',
+		'placeholder',
+		'required',
+		'searchPlaceholder',
+		'size'
+	]
 } as const satisfies ComponentApiFacts;
 
 export const checkboxApiFacts = {
@@ -4368,9 +4980,19 @@ export const dateFieldApiFacts = {
 	name: 'ZDateField',
 	props: [
 		{
+			name: 'appearance',
+			required: false,
+			type: "'bare' | 'field'"
+		},
+		{
+			name: 'controlId',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'defaultValue',
 			required: false,
-			type: 'CalendarDateValue'
+			type: 'CalendarDateValue | null'
 		},
 		{
 			name: 'disabled',
@@ -4381,6 +5003,21 @@ export const dateFieldApiFacts = {
 			name: 'form',
 			required: false,
 			type: 'string'
+		},
+		{
+			name: 'formParticipation',
+			required: false,
+			type: "'auto' | 'none'"
+		},
+		{
+			name: 'invalid',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'isDateUnavailable',
+			required: false,
+			type: '(date: CalendarDateValue) => boolean'
 		},
 		{
 			name: 'locale',
@@ -4403,9 +5040,14 @@ export const dateFieldApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'onReset',
+			required: false,
+			type: '() => void'
+		},
+		{
 			name: 'onValueChange',
 			required: false,
-			type: '(value: CalendarDateValue | undefined) => void'
+			type: '(value: CalendarDateValue | null) => void'
 		},
 		{
 			name: 'readonly',
@@ -4428,6 +5070,11 @@ export const dateFieldApiFacts = {
 			type: '(segment: DateSegment) => string'
 		},
 		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
 			name: 'timeZone',
 			required: false,
 			type: 'string'
@@ -4435,11 +5082,20 @@ export const dateFieldApiFacts = {
 		{
 			name: 'value',
 			required: false,
-			type: 'CalendarDateValue'
+			type: 'CalendarDateValue | null'
 		}
 	],
 	source: 'ui/zui/src/components/input/ZDateField.svelte',
-	undocumentedProps: ['disabled', 'form', 'readonly', 'required']
+	undocumentedProps: [
+		'controlId',
+		'disabled',
+		'form',
+		'invalid',
+		'isDateUnavailable',
+		'onReset',
+		'readonly',
+		'required'
+	]
 } as const satisfies ComponentApiFacts;
 
 export const datePickerApiFacts = {
@@ -4454,6 +5110,21 @@ export const datePickerApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'clearLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'clearable',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'closeOnSelect',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'controlId',
 			required: false,
 			type: 'string'
@@ -4466,7 +5137,7 @@ export const datePickerApiFacts = {
 		{
 			name: 'defaultValue',
 			required: false,
-			type: 'CalendarDate'
+			type: 'CalendarDate | null'
 		},
 		{
 			name: 'disabled',
@@ -4494,6 +5165,11 @@ export const datePickerApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'isDateUnavailable',
+			required: false,
+			type: '(date: CalendarDate) => boolean'
+		},
+		{
 			name: 'locale',
 			required: false,
 			type: 'string'
@@ -4521,7 +5197,7 @@ export const datePickerApiFacts = {
 		{
 			name: 'onValueChange',
 			required: false,
-			type: '(value: CalendarDate) => void'
+			type: '(value: CalendarDate | null) => void'
 		},
 		{
 			name: 'open',
@@ -4554,6 +5230,16 @@ export const datePickerApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'showOutsideDates',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
 			name: 'timeZone',
 			required: false,
 			type: 'string'
@@ -4566,19 +5252,29 @@ export const datePickerApiFacts = {
 		{
 			name: 'value',
 			required: false,
-			type: 'CalendarDate'
+			type: 'CalendarDate | null'
 		}
 	],
 	source: 'ui/zui/src/components/input/ZDatePicker.svelte',
 	undocumentedProps: [
+		'calendarLabel',
+		'clearLabel',
 		'defaultOpen',
+		'disabled',
 		'firstDayOfWeek',
 		'form',
 		'formatOptions',
+		'invalid',
+		'locale',
 		'maxValue',
 		'minValue',
+		'name',
 		'placeholder',
 		'placement',
+		'readonly',
+		'required',
+		'showOutsideDates',
+		'timeZone',
 		'triggerLabel'
 	]
 } as const satisfies ComponentApiFacts;
@@ -4595,6 +5291,21 @@ export const dateRangePickerApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'clearLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'clearable',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'closeOnSelect',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'controlId',
 			required: false,
 			type: 'string'
@@ -4607,12 +5318,17 @@ export const dateRangePickerApiFacts = {
 		{
 			name: 'defaultValue',
 			required: false,
-			type: 'CalendarRange'
+			type: 'CalendarRange | CalendarRangeValue | null'
 		},
 		{
 			name: 'disabled',
 			required: false,
 			type: 'boolean'
+		},
+		{
+			name: 'endLabel',
+			required: false,
+			type: 'string'
 		},
 		{
 			name: 'firstDayOfWeek',
@@ -4630,6 +5346,11 @@ export const dateRangePickerApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'isDateUnavailable',
+			required: false,
+			type: "(date: CalendarDate, part: 'end' | 'start') => boolean"
+		},
+		{
 			name: 'locale',
 			required: false,
 			type: 'string'
@@ -4657,17 +5378,12 @@ export const dateRangePickerApiFacts = {
 		{
 			name: 'onValueChange',
 			required: false,
-			type: '(value: CalendarRange) => void'
+			type: '(value: CalendarRangeValue | null) => void'
 		},
 		{
 			name: 'open',
 			required: false,
 			type: 'boolean'
-		},
-		{
-			name: 'placeholder',
-			required: false,
-			type: 'string'
 		},
 		{
 			name: 'placement',
@@ -4690,6 +5406,21 @@ export const dateRangePickerApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'showOutsideDates',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
+			name: 'startLabel',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'timeZone',
 			required: false,
 			type: 'string'
@@ -4697,20 +5428,31 @@ export const dateRangePickerApiFacts = {
 		{
 			name: 'value',
 			required: false,
-			type: 'CalendarRange'
+			type: 'CalendarRange | CalendarRangeValue | null'
 		}
 	],
 	source: 'ui/zui/src/components/input/ZDateRangePicker.svelte',
 	undocumentedProps: [
+		'calendarLabel',
+		'clearLabel',
+		'controlId',
 		'defaultOpen',
+		'disabled',
+		'endLabel',
 		'firstDayOfWeek',
 		'form',
+		'invalid',
+		'locale',
 		'maxValue',
 		'minValue',
-		'onOpenChange',
-		'placeholder',
+		'name',
 		'placement',
-		'ref'
+		'ref',
+		'readonly',
+		'required',
+		'showOutsideDates',
+		'startLabel',
+		'timeZone'
 	]
 } as const satisfies ComponentApiFacts;
 
@@ -5210,9 +5952,29 @@ export const mentionApiFacts = {
 			type: 'readonly MentionItem[]'
 		},
 		{
+			name: 'item',
+			required: false,
+			type: 'Snippet<[MentionItem]>'
+		},
+		{
 			name: 'listLabel',
 			required: false,
 			type: 'string'
+		},
+		{
+			name: 'loading',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'loadingText',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'loop',
+			required: false,
+			type: 'boolean'
 		},
 		{
 			name: 'maxSuggestions',
@@ -5258,10 +6020,30 @@ export const mentionApiFacts = {
 			name: 'value',
 			required: false,
 			type: 'string'
+		},
+		{
+			name: 'virtual',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'virtualHeight',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'virtualItemSize',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'virtualOverscan',
+			required: false,
+			type: 'number'
 		}
 	],
 	source: 'ui/zui/src/components/input/ZMention.svelte',
-	undocumentedProps: ['emptyText', 'filter', 'listLabel', 'placement']
+	undocumentedProps: ['emptyText', 'filter', 'listLabel', 'loadingText', 'placement']
 } as const satisfies ComponentApiFacts;
 
 export const numberFieldApiFacts = {
@@ -5943,6 +6725,16 @@ export const timeFieldApiFacts = {
 	name: 'ZTimeField',
 	props: [
 		{
+			name: 'appearance',
+			required: false,
+			type: "'bare' | 'field'"
+		},
+		{
+			name: 'controlId',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'dayPeriodLabel',
 			required: false,
 			type: '(period: TimeDayPeriod) => string'
@@ -5950,7 +6742,7 @@ export const timeFieldApiFacts = {
 		{
 			name: 'defaultValue',
 			required: false,
-			type: 'TimeValue'
+			type: 'TimeValue | null'
 		},
 		{
 			name: 'disabled',
@@ -5963,14 +6755,34 @@ export const timeFieldApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'formParticipation',
+			required: false,
+			type: "'auto' | 'none'"
+		},
+		{
 			name: 'granularity',
 			required: false,
-			type: "'minute' | 'second'"
+			type: 'TimeFieldGranularity'
 		},
 		{
 			name: 'hourCycle',
 			required: false,
 			type: '12 | 24'
+		},
+		{
+			name: 'invalid',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'isTimeUnavailable',
+			required: false,
+			type: '(value: TimeValue) => boolean'
+		},
+		{
+			name: 'locale',
+			required: false,
+			type: 'string'
 		},
 		{
 			name: 'maxValue',
@@ -5993,9 +6805,14 @@ export const timeFieldApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'onReset',
+			required: false,
+			type: '() => void'
+		},
+		{
 			name: 'onValueChange',
 			required: false,
-			type: '(value: TimeValue | undefined) => void'
+			type: '(value: TimeValue | null) => void'
 		},
 		{
 			name: 'readonly',
@@ -6023,6 +6840,11 @@ export const timeFieldApiFacts = {
 			type: '(segment: TimeSegment) => string'
 		},
 		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
 			name: 'toggleDayPeriodLabel',
 			required: false,
 			type: 'string'
@@ -6030,11 +6852,23 @@ export const timeFieldApiFacts = {
 		{
 			name: 'value',
 			required: false,
-			type: 'TimeValue'
+			type: 'TimeValue | null'
 		}
 	],
 	source: 'ui/zui/src/components/input/ZTimeField.svelte',
-	undocumentedProps: ['disabled', 'form', 'maxValue', 'minValue', 'readonly', 'required']
+	undocumentedProps: [
+		'controlId',
+		'disabled',
+		'form',
+		'invalid',
+		'isTimeUnavailable',
+		'locale',
+		'maxValue',
+		'minValue',
+		'onReset',
+		'readonly',
+		'required'
+	]
 } as const satisfies ComponentApiFacts;
 
 export const transferApiFacts = {

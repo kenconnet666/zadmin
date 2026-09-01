@@ -15,7 +15,7 @@
 		<ZText>在这个部署卡片上右键，或聚焦后按Shift+F10。</ZText>
 	</ZContextMenuTrigger>
 	<ZContextMenuContent
-		ariaLabel="部署上下文菜单"
+		aria-label="部署上下文菜单"
 		data-testid="context-menu-content"
 		onAction={(event) => (action = String(event.value))}
 	>

@@ -6,13 +6,14 @@
 		ZField,
 		ZStack,
 		ZText,
-		type CalendarRange
+		type CalendarRange,
+		type CalendarRangeValue
 	} from '@zadmin/zui';
 	const initial: CalendarRange = {
 		start: new CalendarDate(2026, 8, 18),
 		end: new CalendarDate(2026, 8, 21)
 	};
-	let value = $state<CalendarRange>(initial);
+	let value = $state<CalendarRangeValue | null>(initial);
 </script>
 
 <form>
@@ -31,6 +32,8 @@
 			/>
 		</ZField>
 		<ZButton type="reset" variant="secondary">重置</ZButton>
-		<ZText tone="muted">range = {value.start.toString()} / {value.end.toString()}</ZText>
+		<ZText tone="muted"
+			>range = {value?.start?.toString() ?? 'null'} / {value?.end?.toString() ?? 'null'}</ZText
+		>
 	</ZStack>
 </form>

@@ -40,6 +40,7 @@ export const popoverDoc = defineComponentDoc(popoverMetadata, {
 	accessibility: [
 		'Trigger使用aria-haspopup=dialog、aria-expanded与aria-controls。',
 		'Content使用dialog与aria-labelledby，打开后聚焦首个可操作元素。',
-		'Escape、外部pointer和focus只关闭LayerStack最顶层，并恢复Trigger焦点。'
+		'Escape、外部pointer和focus只关闭LayerStack最顶层，并恢复Trigger焦点。',
+		'onEscape、onPointerOutside与onFocusOutside收到typed可取消事件，nested adapter可在不复制document监听器的前提下协调父层。'
 	]
 });

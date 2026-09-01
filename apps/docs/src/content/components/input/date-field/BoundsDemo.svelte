@@ -5,7 +5,7 @@
 	const minValue = new CalendarDate(2026, 8, 10);
 	const maxValue = new CalendarDate(2026, 8, 20);
 	const defaultValue = new CalendarDate(2026, 8, 15);
-	let value = $state(defaultValue);
+	let value = $state<CalendarDate | null>(defaultValue);
 </script>
 
 <form>
@@ -22,7 +22,7 @@
 		</ZField>
 		<ZStack direction="row" gap="small" align="center" wrap>
 			<ZButton type="reset" variant="secondary">恢复中间日期</ZButton>
-			<ZText tone="muted">value = {value.toString()} · 允许 2026-08-10…2026-08-20</ZText>
+			<ZText tone="muted">value = {value?.toString() ?? 'null'} · 允许 2026-08-10…2026-08-20</ZText>
 		</ZStack>
 	</ZStack>
 </form>

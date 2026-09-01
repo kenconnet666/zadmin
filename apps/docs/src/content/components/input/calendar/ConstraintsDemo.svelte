@@ -7,7 +7,7 @@
 	<ZCalendar
 		calendarLabel="受发布日期窗口限制的日历"
 		defaultFocusedValue={new CalendarDate(2026, 8, 18)}
-		isDateDisabled={(date) => {
+		isDateUnavailable={(date) => {
 			const day = getDayOfWeek(date, 'zh-CN');
 			return day === 6 || day === 0;
 		}}

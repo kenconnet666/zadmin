@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { CalendarDate } from '@internationalized/date';
 	import { ZButton, ZDateField, ZField, ZStack, ZText } from '@zadmin/zui';
-	let value = $state(new CalendarDate(2026, 8, 18));
+	let value = $state<CalendarDate | null>(new CalendarDate(2026, 8, 18));
 </script>
 
 <form>
@@ -14,7 +14,7 @@
 				name="date"
 			/></ZField
 		><ZButton type="reset" variant="secondary">重置</ZButton><ZText tone="muted"
-			>value = {value.toString()}</ZText
+			>value = {value?.toString() ?? 'null'}</ZText
 		></ZStack
 	>
 </form>

@@ -1,12 +1,5 @@
 <script lang="ts">
-	import {
-		ZAlert,
-		ZButton,
-		ZDataTable,
-		ZSkeleton,
-		ZStack,
-		type DataTableColumn
-	} from '@zadmin/zui';
+	import { ZAlert, ZButton, ZDataTable, ZStack, type DataTableColumn } from '@zadmin/zui';
 
 	type ViewState = 'empty' | 'error' | 'loading' | 'ready';
 	interface ServiceRow {
@@ -25,12 +18,21 @@
 	] satisfies readonly DataTableColumn<ServiceRow>[];
 	const states = [
 		{ id: 'ready', label: '就绪' },
-		{ id: 'loading', label: '加载' },
+		{ id: 'loading', label: '保留旧数据加载' },
 		{ id: 'empty', label: '空数据' },
 		{ id: 'error', label: '错误' }
 	] as const;
 	let state = $state<ViewState>('ready');
 </script>
+
+{#snippet errorContent(message: string)}
+	<ZAlert live="assertive" title={message} tone="danger">
+		表格保留已成功的数据快照；请求层决定何时重试或替换rows。
+		{#snippet action()}
+			<ZButton size="small" variant="secondary" onclick={() => (state = 'loading')}>重试</ZButton>
+		{/snippet}
+	</ZAlert>
+{/snippet}
 
 <ZStack gap="medium">
 	<ZStack direction="row" gap="small" wrap>
@@ -42,27 +44,15 @@
 			>
 		{/each}
 	</ZStack>
-
-	{#if state === 'loading'}
-		<ZStack aria-busy="true" aria-label="正在加载服务列表" gap="small">
-			{#each [1, 2, 3] as row (row)}
-				<ZSkeleton height={44} shape="rectangle" />
-			{/each}
-		</ZStack>
-	{:else if state === 'error'}
-		<ZAlert live="assertive" title="服务列表加载失败" tone="danger">
-			请求状态和重试动作由页面的数据请求层持有，表格不吞掉错误。
-			{#snippet action()}
-				<ZButton size="small" variant="secondary" onclick={() => (state = 'loading')}>重试</ZButton>
-			{/snippet}
-		</ZAlert>
-	{:else}
-		<ZDataTable
-			caption="服务状态"
-			{columns}
-			emptyLabel="没有符合条件的服务"
-			rows={state === 'empty' ? [] : rows}
-			rowKey={(row) => row.id}
-		/>
-	{/if}
+	<ZDataTable
+		caption="服务状态"
+		{columns}
+		emptyLabel="没有符合条件的服务"
+		error={state === 'error' ? '服务列表加载失败' : null}
+		{errorContent}
+		loading={state === 'loading'}
+		loadingLabel="正在刷新服务列表"
+		rows={state === 'empty' ? [] : rows}
+		rowKey={(row) => row.id}
+	/>
 </ZStack>
