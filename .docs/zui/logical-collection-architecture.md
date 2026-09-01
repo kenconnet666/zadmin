@@ -288,6 +288,16 @@ owner-provided `items`, and fixed-row virtualization reuses the P2 mount handsha
 snippets render content only, so they cannot replace option semantics or keyboard ownership. Request
 debounce, cancellation and cache remain application concerns exposed through `onSearchChange`.
 
+### TagsInput text-value boundary
+
+`ZTagsInput` deliberately remains string-only because every value is created or edited as text and
+passes through delimiters, transform and validation. Typed option selection remains a MultiSelect
+responsibility. The tag array projects into a small `LogicalCollection` keyed by current order for
+keyboard navigation; these numeric keys are internal positions, not public business identity. This is
+also why duplicate textual tags can remain independently removable without inventing opaque public
+IDs. Visible tags reuse `ZTag`, while `FormValueBridge` owns repeated successful values and the draft
+input never participates in FormData.
+
 ## 11. P5 LogicalTree implementation record
 
 R4 P5 implements `LogicalTree` as an immutable hierarchy adapter over `LogicalCollection` rather

@@ -67,10 +67,20 @@ export interface ZuiDateLocale {
 }
 
 export interface ZuiFileUploadLocale {
+	readonly abortUpload: (fileName: string) => string;
 	readonly chooseFiles: string;
 	readonly dropFiles: string;
+	readonly emptyQueue: string;
+	readonly failed: (fileName: string) => string;
 	readonly inputLabel: string;
+	readonly queueLabel: string;
 	readonly removeFile: (fileName: string) => string;
+	readonly retryUpload: (fileName: string) => string;
+	readonly statusAborted: string;
+	readonly statusQueued: string;
+	readonly statusSuccess: string;
+	readonly uploadFile: (fileName: string) => string;
+	readonly uploading: (fileName: string, formattedProgress: string) => string;
 }
 
 export interface ZuiFeedbackLocale {
@@ -124,6 +134,7 @@ export interface ZuiTimeLocale {
 
 export interface ZuiTagsInputLocale {
 	readonly addTag: string;
+	readonly editTag: (value: string) => string;
 	readonly removeTag: (value: string) => string;
 }
 
@@ -254,10 +265,21 @@ export const enUSLocalePack = Object.freeze({
 		notifications: 'Notifications'
 	}),
 	fileUpload: Object.freeze({
+		abortUpload: (fileName: string) => `Abort upload for ${fileName}`,
 		chooseFiles: 'Choose files',
 		dropFiles: 'Drop files here or choose files',
+		emptyQueue: 'No files selected',
+		failed: (fileName: string) => `Upload failed for ${fileName}`,
 		inputLabel: 'Choose files',
-		removeFile: (fileName: string) => `Remove ${fileName}`
+		queueLabel: 'Selected files',
+		removeFile: (fileName: string) => `Remove ${fileName}`,
+		retryUpload: (fileName: string) => `Retry upload for ${fileName}`,
+		statusAborted: 'Upload aborted',
+		statusQueued: 'Ready to upload',
+		statusSuccess: 'Upload complete',
+		uploadFile: (fileName: string) => `Upload ${fileName}`,
+		uploading: (fileName: string, formattedProgress: string) =>
+			`Uploading ${fileName}: ${formattedProgress}`
 	}),
 	form: Object.freeze({
 		unexpectedValidation: 'Validation failed unexpectedly.'
@@ -287,6 +309,7 @@ export const enUSLocalePack = Object.freeze({
 	}),
 	tagsInput: Object.freeze({
 		addTag: 'Add tag',
+		editTag: (value: string) => `Edit ${value}`,
 		removeTag: (value: string) => `Remove ${value}`
 	}),
 	time: Object.freeze({
@@ -388,10 +411,21 @@ export const zhCNLocalePack = Object.freeze({
 		notifications: '通知'
 	}),
 	fileUpload: Object.freeze({
+		abortUpload: (fileName: string) => `中止上传 ${fileName}`,
 		chooseFiles: '选择文件',
 		dropFiles: '将文件拖放到此处或选择文件',
+		emptyQueue: '尚未选择文件',
+		failed: (fileName: string) => `上传 ${fileName} 失败`,
 		inputLabel: '选择文件',
-		removeFile: (fileName: string) => `移除文件 ${fileName}`
+		queueLabel: '已选文件',
+		removeFile: (fileName: string) => `移除文件 ${fileName}`,
+		retryUpload: (fileName: string) => `重试上传 ${fileName}`,
+		statusAborted: '上传已中止',
+		statusQueued: '等待上传',
+		statusSuccess: '上传完成',
+		uploadFile: (fileName: string) => `上传 ${fileName}`,
+		uploading: (fileName: string, formattedProgress: string) =>
+			`正在上传 ${fileName}：${formattedProgress}`
 	}),
 	form: Object.freeze({
 		unexpectedValidation: '验证过程中发生意外错误。'
@@ -421,6 +455,7 @@ export const zhCNLocalePack = Object.freeze({
 	}),
 	tagsInput: Object.freeze({
 		addTag: '添加标签',
+		editTag: (value: string) => `编辑标签 ${value}`,
 		removeTag: (value: string) => `移除标签 ${value}`
 	}),
 	time: Object.freeze({

@@ -10,6 +10,7 @@
 		readonly disabled?: boolean;
 		readonly onRemove?: (event: MouseEvent) => void;
 		readonly removeLabel?: string;
+		readonly removeTabIndex?: number;
 		ref?: HTMLSpanElement | null;
 		readonly removable?: boolean;
 		readonly tone?: BadgeTone;
@@ -37,6 +38,12 @@
 				description: '移除按钮名称。',
 				name: 'removeLabel',
 				type: 'string'
+			},
+			{
+				default: '0',
+				description: '移除按钮tabindex；复合输入可设为-1并使用方向键进入。',
+				name: 'removeTabIndex',
+				type: 'number'
 			},
 			{ default: "'default'", description: '语义tone。', name: 'tone', type: 'BadgeTone' }
 		],
@@ -102,6 +109,7 @@
 		ref = $bindable(null),
 		removable = false,
 		removeLabel = 'Remove tag',
+		removeTabIndex = 0,
 		style,
 		tone = 'default',
 		...rest
@@ -124,7 +132,9 @@
 			type="button"
 			class={removeClass}
 			aria-label={removeLabel}
+			data-slot="remove"
 			{disabled}
+			tabindex={removeTabIndex}
 			onclick={(event) => onRemove?.(event)}><X aria-hidden="true" size={14} /></button
 		>{/if}</span
 >

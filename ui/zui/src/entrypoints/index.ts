@@ -333,8 +333,20 @@ export type {
 export { default as ZField } from '../components/input/ZField.svelte';
 export type { ZFieldProps, ZFieldSize } from '../components/input/ZField.svelte';
 export { default as ZFileUpload } from '../components/input/ZFileUpload.svelte';
-export type { ZFileUploadProps } from '../components/input/ZFileUpload.svelte';
-export type { FileRejection, FileRejectionReason } from '../runtime/file.js';
+export type {
+	FileUploadTransport,
+	FileUploadTransportContext,
+	ZFileUploadController,
+	ZFileUploadProps
+} from '../components/input/ZFileUpload.svelte';
+export { createFileUploadItem } from '../runtime/file.js';
+export type {
+	CreateFileUploadItemOptions,
+	FileRejection,
+	FileRejectionReason,
+	FileUploadItem,
+	FileUploadStatus
+} from '../runtime/file.js';
 export { default as ZForm } from '../components/input/ZForm.svelte';
 export type {
 	FormInvalidDetail,
@@ -374,7 +386,7 @@ export type { CascaderFilter, ZCascaderProps } from '../components/input/ZCascad
 export { default as ZCalendar } from '../components/input/ZCalendar.svelte';
 export type { ZCalendarProps } from '../components/input/ZCalendar.svelte';
 export { default as ZColorPicker } from '../components/input/ZColorPicker.svelte';
-export type { ZColorPickerProps } from '../components/input/ZColorPicker.svelte';
+export type { ColorPickerPreset, ZColorPickerProps } from '../components/input/ZColorPicker.svelte';
 export { default as ZInput } from '../components/input/ZInput.svelte';
 export type { ZInputProps, ZInputSize, ZInputType } from '../components/input/ZInput.svelte';
 export { default as ZInputGroup } from '../components/input/ZInputGroup.svelte';
