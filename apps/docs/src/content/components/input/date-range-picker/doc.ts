@@ -15,16 +15,18 @@ export const dateRangePickerDoc = defineComponentDoc(dateRangePickerMetadata, {
 		},
 		{
 			component: StatesDemo,
-			description: '空范围placeholder与禁用完整范围使用同一双日期合同。',
+			description: '空范围、readonly提交与disabled退出提交使用同一双日期合同。',
 			id: 'date-range-picker-states',
 			source: statesSource,
-			title: '空值与禁用范围'
+			title: '空值、只读与禁用范围'
 		}
 	],
 	accessibility: [
 		'等待第二次选择时保持Calendar打开并标记data-selecting。',
 		'范围内gridcell使用aria-selected和data-selected；Escape取消pending而不改已提交range。',
-		'name生成name.start与name.end两个ISO字段，reset恢复完整默认范围。'
+		'ZField语义只由范围Trigger和name.start/name.end拥有；内部Calendar不会提交额外字段。',
+		'Trigger使用select-only combobox语义；readonly保持双字段提交但不允许开启新的选择。',
+		'显示与Calendar使用同一个显式timeZone，reset恢复完整默认范围。'
 	],
 	keywords: ['date range picker', 'calendar range', 'popover', 'form']
 });

@@ -519,20 +519,29 @@ const fileUploadProps: ComponentProps<typeof ZFileUpload> = {
 } satisfies ZFileUploadProps;
 const calendarProps: ComponentProps<typeof ZCalendar> = {
 	calendarLabel: 'Calendar',
-	firstDayOfWeek: 'mon'
+	firstDayOfWeek: 'mon',
+	timeZone: 'Asia/Shanghai'
 } satisfies ZCalendarProps;
 const dateFieldProps: ComponentProps<typeof ZDateField> = {
-	locale: 'zh-CN'
+	locale: 'zh-CN',
+	timeZone: 'Asia/Shanghai'
 } satisfies ZDateFieldProps;
 const datePickerProps: ComponentProps<typeof ZDatePicker> = {
-	placeholder: 'Choose date'
+	placeholder: 'Choose date',
+	readonly: true,
+	required: true,
+	timeZone: 'Asia/Shanghai'
 } satisfies ZDatePickerProps;
 const dateRangePickerProps: ComponentProps<typeof ZDateRangePicker> = {
-	placeholder: 'Choose range'
+	placeholder: 'Choose range',
+	readonly: true,
+	timeZone: 'Asia/Shanghai'
 } satisfies ZDateRangePickerProps;
 const timeFieldProps: ComponentProps<typeof ZTimeField> = {
+	dayPeriodLabel: (period) => period.toUpperCase(),
 	granularity: 'second',
-	hourCycle: 24
+	hourCycle: 24,
+	toggleDayPeriodLabel: 'Toggle period'
 } satisfies ZTimeFieldProps;
 const formProps: ComponentProps<typeof ZForm> = {
 	children: (() => undefined) as never,

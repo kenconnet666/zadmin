@@ -18,6 +18,7 @@
 		ref?: HTMLDivElement | null;
 		readonly required?: boolean;
 		readonly segmentLabel?: (segment: DateSegment) => string;
+		readonly timeZone?: string;
 		value?: CalendarDateValue;
 	}
 
@@ -68,6 +69,18 @@
 				description: 'segment DOM顺序和数字格式。',
 				name: 'locale',
 				type: 'string'
+			},
+			{
+				default: 'Provider timeZone或UTC',
+				description: 'today与locale segment pattern使用的SSR稳定IANA时区。',
+				name: 'timeZone',
+				type: 'string'
+			},
+			{
+				default: 'localePack.date对应segment',
+				description: '覆盖year、month、day segment可访问名称。',
+				name: 'segmentLabel',
+				type: '(segment: DateSegment) => string'
 			},
 			{ default: 'undefined', description: '最小日期。', name: 'minValue', type: 'CalendarDate' },
 			{ default: 'undefined', description: '最大日期。', name: 'maxValue', type: 'CalendarDate' },
@@ -162,8 +175,9 @@
 		readonly = false,
 		ref = $bindable(null),
 		required = false,
-		segmentLabel = (segment) => segment[0]!.toUpperCase() + segment.slice(1),
+		segmentLabel,
 		style,
+		timeZone,
 		value = $bindable(),
 		...rest
 	}: ZDateFieldProps = $props();
@@ -172,6 +186,7 @@
 	const uid = $props.id();
 	const idBase = $derived(field?.controlId ?? createZuiId(zui.idPrefix, uid, 'date-field'));
 	const resolvedLocale = $derived(locale ?? zui.locale);
+	const resolvedTimeZone = $derived(timeZone ?? zui.timeZone);
 	const resolvedDisabled = $derived(disabled || field?.disabled || false);
 	const resolvedReadonly = $derived(readonly || field?.readonly || false);
 	const resolvedRequired = $derived(required || field?.required || false);
@@ -191,10 +206,10 @@
 		new Intl.DateTimeFormat(resolvedLocale, {
 			day: 'numeric',
 			month: 'numeric',
-			timeZone: 'UTC',
+			timeZone: resolvedTimeZone,
 			year: 'numeric'
 		})
-			.formatToParts(new Date(Date.UTC(2006, 10, 22)))
+			.formatToParts(new CalendarDate(2006, 11, 22).toDate(resolvedTimeZone))
 			.filter(({ type }) => ['day', 'month', 'year', 'literal'].includes(type))
 			.map((part) =>
 				part.type === 'literal' ? { literal: part.value } : { segment: part.type as DateSegment }
@@ -240,7 +255,7 @@
 	}
 	function cycle(segment: DateSegment, amount: number): void {
 		if (resolvedDisabled || resolvedReadonly) return;
-		const base = valueState.current ?? today('UTC');
+		const base = valueState.current ?? today(resolvedTimeZone);
 		valueState.setFromUser(clampDate(base.cycle(segment, amount), minValue, maxValue));
 		drafts = {};
 		invalid = false;
@@ -299,7 +314,9 @@
 				disabled={resolvedDisabled}
 				readonly={resolvedReadonly}
 				required={resolvedRequired}
-				aria-label={index === 0 && field ? undefined : segmentLabel(part.segment)}
+				aria-label={index === 0 && field
+					? undefined
+					: (segmentLabel?.(part.segment) ?? zui.localePack.date[part.segment])}
 				aria-describedby={describedBy}
 				aria-invalid={invalid || field?.invalid ? 'true' : ariaInvalid}
 				onfocus={(event) => event.currentTarget.select()}

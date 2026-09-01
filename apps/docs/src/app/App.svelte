@@ -84,6 +84,7 @@
 	localePack={zhCNLocalePack}
 	{motion}
 	theme={resolvedTheme.theme}
+	timeZone="Asia/Shanghai"
 	colorScheme={resolvedTheme.scheme}
 >
 	<AppShell

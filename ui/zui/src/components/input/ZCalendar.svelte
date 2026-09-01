@@ -96,6 +96,30 @@
 				type: 'string'
 			},
 			{
+				default: 'Provider timeZone或UTC',
+				description: 'today、weekday和CalendarDate格式化使用的SSR稳定IANA时区。',
+				name: 'timeZone',
+				type: 'string'
+			},
+			{
+				default: 'localePack.date.calendarLabel',
+				description: 'Calendar grid可访问名称。',
+				name: 'calendarLabel',
+				type: 'string'
+			},
+			{
+				default: 'localePack.date.previousMonth',
+				description: '上一月按钮可访问名称。',
+				name: 'previousLabel',
+				type: 'string'
+			},
+			{
+				default: 'localePack.date.nextMonth',
+				description: '下一月按钮可访问名称。',
+				name: 'nextLabel',
+				type: 'string'
+			},
+			{
 				default: 'locale规则',
 				description: '显式周起始日。',
 				name: 'firstDayOfWeek',
@@ -262,7 +286,7 @@
 
 	let {
 		appearance = 'calendar',
-		calendarLabel = 'Calendar',
+		calendarLabel,
 		class: className,
 		defaultFocusedValue,
 		defaultValue,
@@ -274,15 +298,15 @@
 		maxValue,
 		minValue,
 		name,
-		nextLabel = 'Next month',
+		nextLabel,
 		onFocusedValueChange,
 		onValueChange,
-		previousLabel = 'Previous month',
+		previousLabel,
 		range,
 		ref = $bindable(null),
 		showOutsideDates = true,
 		style,
-		timeZone = 'UTC',
+		timeZone,
 		value = $bindable(),
 		...rest
 	}: ZCalendarProps = $props();
@@ -290,7 +314,13 @@
 	const PreviousIcon = $derived(zui.direction === 'rtl' ? ChevronRight : ChevronLeft);
 	const NextIcon = $derived(zui.direction === 'rtl' ? ChevronLeft : ChevronRight);
 	const resolvedLocale = $derived(locale ?? zui.locale);
-	const initialFocus = untrack(() => defaultFocusedValue ?? defaultValue ?? today(timeZone));
+	const resolvedTimeZone = $derived(timeZone ?? zui.timeZone);
+	const resolvedCalendarLabel = $derived(calendarLabel ?? zui.localePack.date.calendarLabel);
+	const resolvedNextLabel = $derived(nextLabel ?? zui.localePack.date.nextMonth);
+	const resolvedPreviousLabel = $derived(previousLabel ?? zui.localePack.date.previousMonth);
+	const initialFocus = untrack(
+		() => defaultFocusedValue ?? defaultValue ?? today(resolvedTimeZone)
+	);
 	let focused = $state<CalendarDate>(initialFocus);
 	let displayedMonth = $state<CalendarDate>(
 		new CalendarDate(initialFocus.year, initialFocus.month, 1)
@@ -306,11 +336,13 @@
 		write: (next) => (value = next)
 	});
 	const cells = $derived(calendarMonth(displayedMonth, resolvedLocale, firstDayOfWeek));
-	const weekdays = $derived(weekdayLabels(displayedMonth, resolvedLocale, firstDayOfWeek, 'short'));
-	const monthLabel = $derived(
-		formatDate(displayedMonth, resolvedLocale, { month: 'long', year: 'numeric' })
+	const weekdays = $derived(
+		weekdayLabels(displayedMonth, resolvedLocale, firstDayOfWeek, 'short', resolvedTimeZone)
 	);
-	const currentToday = $derived(today(timeZone));
+	const monthLabel = $derived(
+		formatDate(displayedMonth, resolvedLocale, { month: 'long', year: 'numeric' }, resolvedTimeZone)
+	);
+	const currentToday = $derived(today(resolvedTimeZone));
 	const rootClass = $derived(zui.recipe(rootRecipe, { appearance, disabled }));
 	const headerClass = $derived(zui.recipe(headerRecipe));
 	const navClass = $derived(zui.recipe(navRecipe));
@@ -320,7 +352,7 @@
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
 	function resetFromForm(): void {
 		valueState.reset();
-		const next = defaultFocusedValue ?? defaultValue ?? today(timeZone);
+		const next = defaultFocusedValue ?? defaultValue ?? today(resolvedTimeZone);
 		focused = next;
 		displayedMonth = new CalendarDate(next.year, next.month, 1);
 	}
@@ -417,7 +449,7 @@
 		<button
 			type="button"
 			class={navClass}
-			aria-label={previousLabel}
+			aria-label={resolvedPreviousLabel}
 			{disabled}
 			onclick={() => moveMonth(-1)}><PreviousIcon aria-hidden="true" size={16} /></button
 		>
@@ -425,7 +457,7 @@
 		<button
 			type="button"
 			class={navClass}
-			aria-label={nextLabel}
+			aria-label={resolvedNextLabel}
 			{disabled}
 			onclick={() => moveMonth(1)}><NextIcon aria-hidden="true" size={16} /></button
 		>
@@ -434,7 +466,7 @@
 		class={tableClass}
 		data-slot="grid"
 		role="grid"
-		aria-label={`${calendarLabel}: ${monthLabel}`}
+		aria-label={`${resolvedCalendarLabel}: ${monthLabel}`}
 	>
 		<thead
 			><tr
@@ -469,12 +501,17 @@
 									})}
 									disabled={unavailable(cell.date)}
 									tabindex={isSameDay(cell.date, focused) ? 0 : -1}
-									aria-label={formatDate(cell.date, resolvedLocale, {
-										day: 'numeric',
-										month: 'long',
-										weekday: 'long',
-										year: 'numeric'
-									})}
+									aria-label={formatDate(
+										cell.date,
+										resolvedLocale,
+										{
+											day: 'numeric',
+											month: 'long',
+											weekday: 'long',
+											year: 'numeric'
+										},
+										resolvedTimeZone
+									)}
 									aria-current={isSameDay(cell.date, currentToday) ? 'date' : undefined}
 									data-selected={Boolean(
 										(valueState.current && isSameDay(cell.date, valueState.current)) ||

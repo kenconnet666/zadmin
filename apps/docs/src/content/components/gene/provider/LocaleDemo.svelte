@@ -19,9 +19,11 @@
 	<ZProvider
 		locale={chinese ? 'zh-CN' : 'en-US'}
 		localePack={chinese ? zhCNLocalePack : enUSLocalePack}
+		timeZone={chinese ? 'Asia/Shanghai' : 'America/New_York'}
 	>
 		<ZStack gap="small">
 			<ZText tone="muted">locale = {chinese ? 'zh-CN' : 'en-US'}</ZText>
+			<ZText tone="muted">timeZone = {chinese ? 'Asia/Shanghai' : 'America/New_York'}</ZText>
 			<ZPagination defaultPage={3} totalPages={8} />
 		</ZStack>
 	</ZProvider>

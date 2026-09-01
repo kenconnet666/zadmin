@@ -26,6 +26,7 @@ import FormEdgeFixture from './FormEdgeFixture.svelte';
 import InputGroupFixture from './InputGroupFixture.svelte';
 import DialogFixture from './DialogFixture.svelte';
 import DateFixture from './DateFixture.svelte';
+import DateLocaleFixture from './DateLocaleFixture.svelte';
 import DataFixture from './DataFixture.svelte';
 import DisplayFixture from './DisplayFixture.svelte';
 import FeedbackFixture from './FeedbackFixture.svelte';
@@ -1766,6 +1767,10 @@ describe('compiled ICSS browser updates', () => {
 		const month = document.querySelector<HTMLInputElement>('input[aria-label="Month"]');
 		month?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowUp' }));
 		const minute = document.querySelector<HTMLInputElement>('input[aria-label="Minute"]');
+		const dayPeriod = document.querySelector<HTMLButtonElement>('[aria-label="Toggle AM/PM"]');
+		expect(document.querySelector('input[aria-label="Hour"]')).not.toBeNull();
+		expect(document.querySelector('input[aria-label="Second"]')).not.toBeNull();
+		expect(dayPeriod?.textContent).toBe('AM');
 		minute?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowUp' }));
 		await tick();
 		expect(new FormData(form!).get('date')).toBe('2026-09-18');
@@ -1807,15 +1812,41 @@ describe('compiled ICSS browser updates', () => {
 		expect(calendar?.querySelectorAll('[role="gridcell"]')).toHaveLength(42);
 	});
 
+	it('inherits typed Chinese date/time copy and hour cycle from Provider', () => {
+		render(DateLocaleFixture);
+		const calendar = document.querySelector<HTMLElement>('[data-testid="localized-calendar"]');
+		expect(calendar?.querySelector('[role="grid"]')?.getAttribute('aria-label')).toContain('日历');
+		expect(calendar?.querySelector('button[aria-label="上个月"]')).not.toBeNull();
+		expect(calendar?.querySelector('button[aria-label="下个月"]')).not.toBeNull();
+		const date = document.querySelector<HTMLElement>('[data-testid="localized-date-field"]');
+		expect(date?.querySelector('input[aria-label="年"]')).not.toBeNull();
+		expect(date?.querySelector('input[aria-label="月"]')).not.toBeNull();
+		expect(date?.querySelector('input[aria-label="日"]')).not.toBeNull();
+		const time = document.querySelector<HTMLElement>('[data-testid="localized-time-field"]');
+		expect(time?.querySelector('input[aria-label="小时"]')).not.toBeNull();
+		expect(time?.querySelector('input[aria-label="分钟"]')).not.toBeNull();
+		expect(time?.querySelector('input[aria-label="秒"]')).not.toBeNull();
+		expect(time?.querySelector('[data-slot="day-period"]')).toBeNull();
+	});
+
 	it('coordinates DatePicker and DateRangePicker popup selection and focus restoration', async () => {
 		render(DateFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="date-form"]');
 		const dateTrigger = [
 			...document.querySelectorAll<HTMLButtonElement>('[aria-haspopup="dialog"]')
 		].find((button) => button.getAttribute('aria-label')?.startsWith('Pick date'));
-		dateTrigger?.focus();
+		const dateLabel = [...(form?.querySelectorAll<HTMLLabelElement>('label') ?? [])].find((label) =>
+			label.textContent?.includes('Picked date')
+		);
+		expect(dateLabel?.htmlFor).toBe(dateTrigger?.id);
+		expect(dateTrigger?.getAttribute('role')).toBe('combobox');
+		expect(dateTrigger?.getAttribute('aria-required')).toBe('true');
+		expect(dateTrigger?.getAttribute('aria-describedby')).toBeTruthy();
+		dateLabel?.click();
+		expect(document.activeElement).toBe(dateTrigger);
 		dateTrigger?.click();
 		await tick();
+		expect(new FormData(form!).getAll('picked')).toEqual(['2026-08-18']);
 		const date20 = [...document.querySelectorAll<HTMLButtonElement>('[role="dialog"] button')].find(
 			(button) => button.getAttribute('aria-label')?.includes('August 20, 2026')
 		);
@@ -1826,6 +1857,15 @@ describe('compiled ICSS browser updates', () => {
 		const rangeTrigger = [
 			...document.querySelectorAll<HTMLButtonElement>('[aria-haspopup="dialog"]')
 		].find((button) => button !== dateTrigger);
+		const rangeLabel = [...(form?.querySelectorAll<HTMLLabelElement>('label') ?? [])].find(
+			(label) => label.textContent?.includes('Date range')
+		);
+		expect(rangeLabel?.htmlFor).toBe(rangeTrigger?.id);
+		expect(rangeTrigger?.getAttribute('role')).toBe('combobox');
+		expect(rangeTrigger?.getAttribute('aria-required')).toBe('true');
+		expect(new FormData(form!).get('range')).toBeNull();
+		rangeLabel?.click();
+		expect(document.activeElement).toBe(rangeTrigger);
 		rangeTrigger?.click();
 		await tick();
 		for (const day of [25, 22]) {
@@ -1835,6 +1875,22 @@ describe('compiled ICSS browser updates', () => {
 			button?.click();
 			await tick();
 		}
+		const readonlyDate = form?.querySelector<HTMLButtonElement>(
+			'[data-testid="readonly-date-picker"] button'
+		);
+		const readonlyRange = form?.querySelector<HTMLButtonElement>(
+			'[data-testid="readonly-date-range-picker"] button'
+		);
+		expect(readonlyDate?.getAttribute('aria-readonly')).toBe('true');
+		expect(readonlyRange?.getAttribute('aria-readonly')).toBe('true');
+		readonlyDate?.click();
+		readonlyRange?.click();
+		await tick();
+		expect(readonlyDate?.getAttribute('aria-expanded')).toBe('false');
+		expect(readonlyRange?.getAttribute('aria-expanded')).toBe('false');
+		expect(new FormData(form!).get('readonly-date')).toBe('2026-08-18');
+		expect(new FormData(form!).getAll('readonly-range.start')).toEqual(['2026-08-18']);
+		expect(new FormData(form!).getAll('readonly-range.end')).toEqual(['2026-08-21']);
 		await new Promise((resolve) => setTimeout(resolve, 140));
 		expect(new FormData(form!).get('range.start')).toBe('2026-08-22');
 		expect(new FormData(form!).get('range.end')).toBe('2026-08-25');
@@ -2546,10 +2602,10 @@ describe('compiled ICSS browser updates', () => {
 		expect(shadow.querySelectorAll('style[data-icss]')).toHaveLength(1);
 		expect(shadow.querySelectorAll('button')).toHaveLength(2);
 		expect(shadow.querySelector('[data-testid="outer-context"]')?.textContent).toBe(
-			'zh-CN:rtl:dark:high:compact:reduced:test:关闭:default-portal'
+			'zh-CN:rtl:dark:high:compact:reduced:test:关闭:Asia/Shanghai:日历:24:default-portal'
 		);
 		expect(shadow.querySelector('[data-testid="inner-context"]')?.textContent).toBe(
-			'zh-CN:rtl:dark:high:compact:reduced:test:关闭:default-portal'
+			'zh-CN:rtl:dark:high:compact:reduced:test:关闭:Asia/Shanghai:日历:24:default-portal'
 		);
 		expect(runtime.registry.cssText()).toContain('#2563eb');
 		expect(runtime.registry.cssText()).toContain('#6d28d9');

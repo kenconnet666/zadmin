@@ -6,8 +6,10 @@
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 
 	export type TimeGranularity = 'minute' | 'second';
+	export type TimeDayPeriod = 'am' | 'pm';
 	export type TimeSegment = 'hour' | 'minute' | 'second';
 	export interface ZTimeFieldProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onchange'> {
+		readonly dayPeriodLabel?: (period: TimeDayPeriod) => string;
 		readonly defaultValue?: TimeValue;
 		readonly disabled?: boolean;
 		readonly form?: string;
@@ -23,6 +25,7 @@
 		readonly required?: boolean;
 		readonly secondStep?: number;
 		readonly segmentLabel?: (segment: TimeSegment) => string;
+		readonly toggleDayPeriodLabel?: string;
 		value?: TimeValue;
 	}
 	export const zuiMetadata = {
@@ -65,7 +68,30 @@
 				name: 'granularity',
 				type: "'minute' | 'second'"
 			},
-			{ default: '24', description: '12或24小时制。', name: 'hourCycle', type: '12 | 24' },
+			{
+				default: 'localePack.time.hourCycle',
+				description: '12或24小时制；显式值优先于Provider locale pack。',
+				name: 'hourCycle',
+				type: '12 | 24'
+			},
+			{
+				default: 'localePack.time对应segment',
+				description: '覆盖hour、minute、second可访问名称。',
+				name: 'segmentLabel',
+				type: '(segment: TimeSegment) => string'
+			},
+			{
+				default: 'localePack.time.am/pm',
+				description: '覆盖12小时制的AM/PM可见文案。',
+				name: 'dayPeriodLabel',
+				type: "(period: 'am' | 'pm') => string"
+			},
+			{
+				default: 'localePack.time.toggleDayPeriod',
+				description: 'AM/PM切换按钮可访问名称。',
+				name: 'toggleDayPeriodLabel',
+				type: 'string'
+			},
 			{ default: '1', description: '分钟键盘步长。', name: 'minuteStep', type: 'number' },
 			{ default: '1', description: '秒键盘步长。', name: 'secondStep', type: 'number' },
 			{ default: 'undefined', description: 'ISO时间隐藏字段名。', name: 'name', type: 'string' }
@@ -157,11 +183,12 @@
 		'aria-describedby': ariaDescribedBy,
 		'aria-invalid': ariaInvalid,
 		class: className,
+		dayPeriodLabel,
 		defaultValue,
 		disabled = false,
 		form,
 		granularity = 'minute',
-		hourCycle = 24,
+		hourCycle: hourCycleProp,
 		maxValue,
 		minValue,
 		minuteStep = 1,
@@ -171,8 +198,9 @@
 		ref = $bindable(null),
 		required = false,
 		secondStep = 1,
-		segmentLabel = (segment) => segment[0]!.toUpperCase() + segment.slice(1),
+		segmentLabel,
 		style,
+		toggleDayPeriodLabel,
 		value = $bindable(),
 		...rest
 	}: ZTimeFieldProps = $props();
@@ -180,6 +208,7 @@
 	const field = useZField();
 	const uid = $props.id();
 	const idBase = $derived(field?.controlId ?? createZuiId(zui.idPrefix, uid, 'time-field'));
+	const hourCycle = $derived(hourCycleProp ?? zui.localePack.time.hourCycle);
 	const constraints = $derived.by(() => {
 		if (![minuteStep, secondStep].every((step) => Number.isInteger(step) && step > 0))
 			throw new TypeError('ZTimeField steps must be positive integers.');
@@ -325,7 +354,9 @@
 			disabled={resolvedDisabled}
 			readonly={resolvedReadonly}
 			required={resolvedRequired}
-			aria-label={index === 0 && field ? undefined : segmentLabel(segment)}
+			aria-label={index === 0 && field
+				? undefined
+				: (segmentLabel?.(segment) ?? zui.localePack.time[segment])}
 			aria-describedby={describedBy}
 			aria-invalid={invalid || field?.invalid ? 'true' : ariaInvalid}
 			onfocus={(event) => event.currentTarget.select()}
@@ -342,8 +373,10 @@
 			class={periodClass}
 			data-slot="day-period"
 			disabled={resolvedDisabled || resolvedReadonly}
-			aria-label="Toggle AM PM"
-			onclick={togglePeriod}>{(valueState.current?.hour ?? 0) >= 12 ? 'PM' : 'AM'}</button
+			aria-label={toggleDayPeriodLabel ?? zui.localePack.time.toggleDayPeriod}
+			onclick={togglePeriod}
+			>{dayPeriodLabel?.((valueState.current?.hour ?? 0) >= 12 ? 'pm' : 'am') ??
+				zui.localePack.time[(valueState.current?.hour ?? 0) >= 12 ? 'pm' : 'am']}</button
 		>{/if}
 </div>
 <input

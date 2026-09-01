@@ -44,6 +44,7 @@ export interface ZuiContext {
 	readonly portalContainer: ZuiPortalContainer;
 	readonly runtime: IcssRuntime;
 	readonly theme: ZuiTheme;
+	readonly timeZone: string;
 	readonly translations: ZuiTranslations;
 	icss(factory: IcssFactory<ZuiTheme>): IcssClassName;
 	recipe<const TVariants extends RecipeVariantDefinitions>(
@@ -71,6 +72,7 @@ export interface ZuiContextSource {
 	readonly portalContainer?: ZuiPortalContainer;
 	readonly runtime?: IcssRuntime;
 	readonly theme?: ZuiTheme;
+	readonly timeZone?: string;
 	readonly translations?: ZuiTranslations;
 }
 
@@ -116,6 +118,9 @@ function createZuiContext(read: () => ResolvedZuiContextSource): ZuiContext {
 		get theme() {
 			return read().theme;
 		},
+		get timeZone() {
+			return read().timeZone;
+		},
 		get translations() {
 			return read().translations;
 		},
@@ -144,6 +149,7 @@ const DEFAULT_CONTEXT = createZuiContext(() => ({
 	portalContainer: null,
 	runtime: getDefaultIcssRuntime(),
 	theme: defaultTheme,
+	timeZone: 'UTC',
 	translations: EMPTY_TRANSLATIONS
 }));
 
@@ -164,6 +170,7 @@ export function provideZui(read: () => ZuiContextSource): ZuiContext {
 				source.portalContainer === undefined ? parent.portalContainer : source.portalContainer,
 			runtime: source.runtime ?? parent.runtime,
 			theme: source.theme ?? parent.theme,
+			timeZone: source.timeZone ?? parent.timeZone,
 			translations: source.translations ?? parent.translations
 		};
 	});

@@ -333,6 +333,7 @@ export type {
 } from '../components/input/ZTextarea.svelte';
 export { default as ZTimeField } from '../components/input/ZTimeField.svelte';
 export type {
+	TimeDayPeriod,
 	TimeGranularity,
 	TimeSegment,
 	ZTimeFieldProps
@@ -387,7 +388,12 @@ export type {
 	ZuiTranslations
 } from '../runtime/foundation/context.js';
 export { enUSLocalePack, zhCNLocalePack } from '../runtime/foundation/locale.js';
-export type { ZuiCommonLocale, ZuiPaginationLocale } from '../runtime/foundation/locale.js';
+export type {
+	ZuiCommonLocale,
+	ZuiDateLocale,
+	ZuiPaginationLocale,
+	ZuiTimeLocale
+} from '../runtime/foundation/locale.js';
 export {
 	createBrowserIcssRuntime,
 	createIcssRuntime,

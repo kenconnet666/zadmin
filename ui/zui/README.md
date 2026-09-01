@@ -20,7 +20,13 @@ pnpm add @zadmin/zui @lucide/svelte svelte
 	import { auroraLight } from '@zadmin/zui/themes';
 </script>
 
-<ZProvider theme={auroraLight} colorScheme="light" locale="zh-CN" localePack={zhCNLocalePack}>
+<ZProvider
+	theme={auroraLight}
+	colorScheme="light"
+	locale="zh-CN"
+	localePack={zhCNLocalePack}
+	timeZone="Asia/Shanghai"
+>
 	<ZStack gap="medium">
 		<h1>Release console</h1>
 		<ZButton>Deploy</ZButton>
@@ -28,7 +34,7 @@ pnpm add @zadmin/zui @lucide/svelte svelte
 </ZProvider>
 ```
 
-`ZProvider` also owns direction, contrast, density, motion, typed locale packs, legacy translation compatibility, portal boundaries, and the ICSS runtime. Providers can be nested without creating DOM wrappers.
+`ZProvider` also owns direction, contrast, density, motion, typed locale packs, an explicit SSR-stable IANA time zone (UTC by default), legacy translation compatibility, portal boundaries, and the ICSS runtime. Providers can be nested without creating DOM wrappers.
 
 ## Public entrypoints
 

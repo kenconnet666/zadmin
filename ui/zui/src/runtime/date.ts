@@ -38,13 +38,14 @@ export function weekdayLabels(
 	month: CalendarDate,
 	locale: string,
 	firstDayOfWeek?: Weekday,
-	width: 'long' | 'narrow' | 'short' = 'short'
+	width: 'long' | 'narrow' | 'short' = 'short',
+	timeZone = 'UTC'
 ): readonly string[] {
 	const first = startOfWeek(startOfMonth(month), locale, firstDayOfWeek);
-	const formatter = new DateFormatter(locale, { timeZone: 'UTC', weekday: width });
+	const formatter = new DateFormatter(locale, { timeZone, weekday: width });
 	return Object.freeze(
 		Array.from({ length: 7 }, (_, index) =>
-			formatter.format(first.add({ days: index }).toDate('UTC'))
+			formatter.format(first.add({ days: index }).toDate(timeZone))
 		)
 	);
 }
@@ -52,9 +53,10 @@ export function weekdayLabels(
 export function formatDate(
 	value: CalendarDate,
 	locale: string,
-	options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' }
+	options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' },
+	timeZone = 'UTC'
 ): string {
-	return new DateFormatter(locale, { ...options, timeZone: 'UTC' }).format(value.toDate('UTC'));
+	return new DateFormatter(locale, { ...options, timeZone }).format(value.toDate(timeZone));
 }
 
 export function formatTime(

@@ -7,7 +7,8 @@
 
 <output data-testid={id}
 	>{zui.locale}:{zui.direction}:{zui.colorScheme}:{zui.contrast}:{zui.density}:{zui.motion}:{zui.idPrefix}:{zui
-		.translations.close ?? 'none'}:{zui.portalContainer === null
+		.translations.close ?? 'none'}:{zui.timeZone}:{zui.localePack.date.calendarLabel}:{zui
+		.localePack.time.hourCycle}:{zui.portalContainer === null
 		? 'default-portal'
 		: 'custom-portal'}</output
 >

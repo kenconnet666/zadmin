@@ -1,5 +1,11 @@
 <script lang="ts">
-	import { ZButton, ZProvider, type IcssRuntime, type ZuiTheme } from '../src/entrypoints/index.js';
+	import {
+		ZButton,
+		ZProvider,
+		zhCNLocalePack,
+		type IcssRuntime,
+		type ZuiTheme
+	} from '../src/entrypoints/index.js';
 	import ContextProbe from './ContextProbe.svelte';
 
 	interface Props {
@@ -18,11 +24,13 @@
 	direction="rtl"
 	idPrefix="test"
 	locale="zh-CN"
+	localePack={zhCNLocalePack}
 	motion="reduced"
 	portalContainer={null}
 	translations={{ close: '关闭' }}
 	{runtime}
 	{theme}
+	timeZone="Asia/Shanghai"
 >
 	<ZButton data-testid="outer-provider">Outer</ZButton>
 	<ContextProbe id="outer-context" />

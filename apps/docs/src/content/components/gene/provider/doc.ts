@@ -36,7 +36,7 @@ export const providerDoc = defineComponentDoc(providerMetadata, {
 		{
 			component: LocaleDemo,
 			description:
-				'locale负责Intl格式规则，localePack提供类型安全的组件文案；二者可以在嵌套Provider中动态切换。',
+				'locale负责Intl格式规则，localePack提供类型安全文案和hourCycle，显式timeZone保证SSR稳定；三者可以在嵌套Provider中动态切换。',
 			id: 'provider-locale-pack',
 			source: localeSource,
 			title: '类型安全Locale Pack'

@@ -680,10 +680,10 @@ describe('ZUI foundational components', () => {
 		expect(result.body).toContain('data-testid="outer-provider"');
 		expect(result.body).toContain('data-testid="inner-provider"');
 		expect(result.body).toContain(
-			'data-testid="outer-context">zh-CN:rtl:dark:high:compact:reduced:test:关闭:default-portal'
+			'data-testid="outer-context">zh-CN:rtl:dark:high:compact:reduced:test:关闭:Asia/Shanghai:日历:24:default-portal'
 		);
 		expect(result.body).toContain(
-			'data-testid="inner-context">zh-CN:rtl:dark:high:compact:reduced:test:关闭:default-portal'
+			'data-testid="inner-context">zh-CN:rtl:dark:high:compact:reduced:test:关闭:Asia/Shanghai:日历:24:default-portal'
 		);
 		expect(registry.cssText()).toContain('#2563eb');
 		expect(registry.cssText()).toContain('#6d28d9');
@@ -691,7 +691,7 @@ describe('ZUI foundational components', () => {
 
 	it('provides SSR-stable defaults outside an explicit provider', () => {
 		expect(render(ContextProbe, { props: { id: 'default-context' } }).body).toContain(
-			'data-testid="default-context">en-US:ltr:light:normal:comfortable:auto:zui:none:default-portal'
+			'data-testid="default-context">en-US:ltr:light:normal:comfortable:auto:zui:none:UTC:Calendar:12:default-portal'
 		);
 	});
 

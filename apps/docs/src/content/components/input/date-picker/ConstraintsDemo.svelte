@@ -11,5 +11,6 @@
 		minValue={new CalendarDate(2026, 8, 1)}
 		placeholder="选择8月日期"
 	/>
+	<ZDatePicker readonly defaultValue={new CalendarDate(2026, 8, 20)} />
 	<ZDatePicker disabled defaultValue={new CalendarDate(2026, 8, 18)} />
 </ZStack>

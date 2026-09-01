@@ -28,6 +28,7 @@
 		portalContainer?: ZuiPortalContainer;
 		runtime?: IcssRuntime;
 		theme?: ZuiTheme;
+		timeZone?: string;
 		translations?: ZuiTranslations;
 	}
 
@@ -99,6 +100,12 @@
 			},
 			{ default: 'defaultTheme', description: '严格ZUI主题。', name: 'theme', type: 'ZuiTheme' },
 			{
+				default: "继承父级或 'UTC'",
+				description: 'SSR稳定的IANA时区；日期组件不从客户端环境猜测。',
+				name: 'timeZone',
+				type: 'string'
+			},
+			{
 				default: '当前默认runtime',
 				description: 'Document、ShadowRoot或SSR runtime。',
 				name: 'runtime',
@@ -116,7 +123,8 @@
 		source: 'ui/zui/src/components/gene/ZProvider.svelte',
 		states: [],
 		status: 'stable',
-		summary: '提供Theme、偏好轴、locale、direction、Portal边界和ICSS runtime，不创建额外DOM。'
+		summary:
+			'提供Theme、偏好轴、locale pack、SSR稳定timeZone、direction、Portal边界和ICSS runtime，不创建额外DOM。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
 
@@ -136,6 +144,7 @@
 		portalContainer,
 		runtime,
 		theme,
+		timeZone,
 		translations
 	}: ZProviderProps = $props();
 	provideZui(() => ({
@@ -150,6 +159,7 @@
 		portalContainer,
 		runtime,
 		theme,
+		timeZone,
 		translations
 	}));
 </script>

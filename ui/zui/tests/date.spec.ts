@@ -42,4 +42,15 @@ describe('date runtime', () => {
 		expect(isDateInRange(new CalendarDate(2026, 8, 15), { end, start })).toBe(true);
 		expect(daysInMonth(new CalendarDate(2024, 2, 1))).toBe(29);
 	});
+
+	it('formats CalendarDate values in the same explicit time zone used to create the instant', () => {
+		const value = new CalendarDate(2026, 1, 1);
+		const options = { day: '2-digit', month: '2-digit', year: 'numeric' } as const;
+		expect(formatDate(value, 'en-CA', options, 'Pacific/Kiritimati')).toBe(
+			formatDate(value, 'en-CA', options, 'America/Los_Angeles')
+		);
+		expect(weekdayLabels(value, 'en-US', 'sun', 'short', 'Asia/Shanghai')).toEqual(
+			weekdayLabels(value, 'en-US', 'sun', 'short', 'America/New_York')
+		);
+	});
 });

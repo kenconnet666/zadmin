@@ -6,5 +6,6 @@
 
 <ZStack gap="medium">
 	<ZDateRangePicker calendarLabel="选择统计周期" placeholder="选择起止日期" />
+	<ZDateRangePicker readonly defaultValue={range} />
 	<ZDateRangePicker disabled defaultValue={range} />
 </ZStack>

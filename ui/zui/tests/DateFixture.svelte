@@ -5,6 +5,8 @@
 		ZDateField,
 		ZDatePicker,
 		ZDateRangePicker,
+		ZField,
+		ZProvider,
 		ZTimeField,
 		type CalendarRange
 	} from '../src/entrypoints/index.js';
@@ -21,47 +23,63 @@
 	let range = $state<CalendarRange>(rangeDefault);
 </script>
 
-<form data-testid="date-form">
-	<ZCalendar
-		bind:value={calendar}
-		calendarLabel="Test calendar"
-		defaultFocusedValue={dateDefault}
-		defaultValue={dateDefault}
-		firstDayOfWeek="mon"
-		locale="en-US"
-		name="calendar"
-	/>
-	<ZDateField
-		aria-label="Date segments"
-		bind:value={date}
-		defaultValue={dateDefault}
-		locale="en-US"
-		name="date"
-	/>
-	<ZTimeField
-		aria-label="Time segments"
-		bind:value={time}
-		defaultValue={new Time(9, 30, 15)}
-		granularity="second"
-		name="time"
-	/>
-	<ZDatePicker
-		bind:value={picked}
-		calendarLabel="Picker calendar"
-		defaultValue={dateDefault}
-		locale="en-US"
-		name="picked"
-		triggerLabel={(display) => `Pick date ${display}`}
-	/>
-	<ZDateRangePicker
-		bind:value={range}
-		calendarLabel="Range calendar"
-		defaultValue={rangeDefault}
-		locale="en-US"
-		name="range"
-	/>
-	<button type="reset">Reset</button>
-	<output data-testid="date-output"
-		>{calendar.toString()}:{date.toString()}:{time.toString()}:{picked.toString()}:{range.start.toString()}:{range.end.toString()}</output
-	>
-</form>
+<ZProvider timeZone="Pacific/Kiritimati"
+	><form data-testid="date-form">
+		<ZCalendar
+			bind:value={calendar}
+			calendarLabel="Test calendar"
+			defaultFocusedValue={dateDefault}
+			defaultValue={dateDefault}
+			firstDayOfWeek="mon"
+			locale="en-US"
+			name="calendar"
+		/>
+		<ZDateField
+			aria-label="Date segments"
+			bind:value={date}
+			defaultValue={dateDefault}
+			locale="en-US"
+			name="date"
+		/>
+		<ZTimeField
+			aria-label="Time segments"
+			bind:value={time}
+			defaultValue={new Time(9, 30, 15)}
+			granularity="second"
+			name="time"
+		/>
+		<ZField description="Deployment date" label="Picked date" name="picked" required>
+			<ZDatePicker
+				bind:value={picked}
+				calendarLabel="Picker calendar"
+				defaultValue={dateDefault}
+				locale="en-US"
+				triggerLabel={(display) => `Pick date ${display}`}
+			/>
+		</ZField>
+		<ZField description="Deployment window" label="Date range" name="range" required>
+			<ZDateRangePicker
+				bind:value={range}
+				calendarLabel="Range calendar"
+				defaultValue={rangeDefault}
+				locale="en-US"
+			/>
+		</ZField>
+		<ZDatePicker
+			data-testid="readonly-date-picker"
+			defaultValue={dateDefault}
+			name="readonly-date"
+			readonly
+		/>
+		<ZDateRangePicker
+			data-testid="readonly-date-range-picker"
+			defaultValue={rangeDefault}
+			name="readonly-range"
+			readonly
+		/>
+		<button type="reset">Reset</button>
+		<output data-testid="date-output"
+			>{calendar.toString()}:{date.toString()}:{time.toString()}:{picked.toString()}:{range.start.toString()}:{range.end.toString()}</output
+		>
+	</form></ZProvider
+>
