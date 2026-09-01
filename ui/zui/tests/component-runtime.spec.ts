@@ -7,7 +7,7 @@ import { mergeAriaIds, normalizeFieldMessages } from '../src/runtime/form/form-c
 describe('component runtime state', () => {
 	it('keeps user updates, external updates and reset behavior distinct', () => {
 		let external: string | undefined;
-		const changes: string[] = [];
+		const changes: (string | undefined)[] = [];
 		const state = new ControllableState({
 			defaultValue: () => 'seed',
 			onChange: () => (value) => changes.push(value),
