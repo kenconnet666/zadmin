@@ -3,31 +3,40 @@
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import { styleInternalAction } from '../gene/internal-action.js';
-	import type { CalendarRange, Weekday } from '../../runtime/date.js';
+	import type { CalendarRange, CalendarRangeValue, Weekday } from '../../runtime/date.js';
+	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 
 	export interface ZCalendarProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onchange'> {
 		readonly appearance?: 'bare' | 'calendar';
 		readonly calendarLabel?: string;
 		readonly defaultFocusedValue?: CalendarDateValue;
-		readonly defaultValue?: CalendarDateValue;
+		readonly defaultValue?: CalendarDateValue | null;
 		readonly disabled?: boolean;
 		readonly firstDayOfWeek?: Weekday;
+		focusedValue?: CalendarDateValue;
 		readonly form?: string;
+		readonly formParticipation?: 'auto' | 'none';
+		readonly invalid?: boolean;
+		/** @deprecated Use isDateUnavailable. */
 		readonly isDateDisabled?: (date: CalendarDateValue) => boolean;
+		readonly isDateUnavailable?: (date: CalendarDateValue) => boolean;
 		readonly locale?: string;
 		readonly maxValue?: CalendarDateValue;
 		readonly minValue?: CalendarDateValue;
 		readonly name?: string;
 		readonly nextLabel?: string;
 		readonly onFocusedValueChange?: (value: CalendarDateValue) => void;
-		readonly onValueChange?: (value: CalendarDateValue) => void;
+		readonly onValueChange?: (value: CalendarDateValue | null) => void;
 		readonly previousLabel?: string;
-		readonly range?: CalendarRange;
+		readonly range?: CalendarRange | CalendarRangeValue | null;
 		ref?: HTMLDivElement | null;
+		readonly readonly?: boolean;
+		readonly required?: boolean;
 		readonly showOutsideDates?: boolean;
+		readonly size?: ZControlSize;
 		readonly timeZone?: string;
-		value?: CalendarDateValue;
+		value?: CalendarDateValue | null;
 	}
 
 	export const zuiMetadata = {
@@ -36,7 +45,8 @@
 		importStatement: "import { ZCalendar } from '@zadmin/zui';",
 		name: 'ZCalendar',
 		bindings: [
-			{ description: '选择日期。', name: 'value', type: 'CalendarDate | undefined' },
+			{ description: '选择日期；null是显式空值。', name: 'value', type: 'CalendarDate | null' },
+			{ description: '键盘焦点日期。', name: 'focusedValue', type: 'CalendarDate | undefined' },
 			{ description: '真实calendar根引用。', name: 'ref', type: 'HTMLDivElement | null' }
 		],
 		dependencies: ['@internationalized/date', '6x7 calendar grid', 'roving focus', 'FormValue'],
@@ -44,7 +54,7 @@
 			{
 				description: '用户选择可用日期。',
 				name: 'onValueChange',
-				type: '(value: CalendarDate) => void'
+				type: '(value: CalendarDate | null) => void'
 			},
 			{
 				description: '键盘焦点日期变化。',
@@ -56,7 +66,8 @@
 			{ description: '按日/周移动，RTL反转左右。', key: 'Arrow keys' },
 			{ description: '移动到当前周首尾。', key: 'Home / End' },
 			{ description: '按月移动；Shift按年。', key: 'PageUp / PageDown' },
-			{ description: '选择focused日期。', key: 'Enter / Space' }
+			{ description: '选择focused日期。', key: 'Enter / Space' },
+			{ description: '非必填时清空选择。', key: 'Delete / Backspace' }
 		],
 		parts: [
 			{ description: '月份导航header。', name: 'header' },
@@ -72,15 +83,22 @@
 			},
 			{
 				bindable: true,
-				default: 'undefined',
-				description: '选择日期。',
+				default: 'null',
+				description: '选择日期；null是受控空值，undefined仅表示未提供绑定。',
 				name: 'value',
-				type: 'CalendarDate'
+				type: 'CalendarDate | null'
 			},
 			{
 				default: 'undefined',
 				description: '非受控初始日期。',
 				name: 'defaultValue',
+				type: 'CalendarDate | null'
+			},
+			{
+				bindable: true,
+				default: 'defaultFocusedValue、value或today',
+				description: '受控键盘焦点日期，并驱动显示月份。',
+				name: 'focusedValue',
 				type: 'CalendarDate'
 			},
 			{
@@ -142,6 +160,24 @@
 				description: '显示相邻月份日期。',
 				name: 'showOutsideDates',
 				type: 'boolean'
+			},
+			{
+				default: "'auto'",
+				description: '复合Picker设none，由外层唯一拥有FormValueBridge与reset。',
+				name: 'formParticipation',
+				type: "'auto' | 'none'"
+			},
+			{
+				default: 'undefined',
+				description: '禁用特定日期；同时影响指针和键盘导航。',
+				name: 'isDateUnavailable',
+				type: '(date: CalendarDate) => boolean'
+			},
+			{
+				default: 'Field size或Provider density',
+				description: '统一容器间距、导航与日期cell尺寸。',
+				name: 'size',
+				type: "'small' | 'medium' | 'large'"
 			}
 		],
 		since: 'unreleased',
@@ -149,6 +185,7 @@
 		source: 'ui/zui/src/components/input/ZCalendar.svelte',
 		states: [
 			{ description: '选择日期或range内日期。', name: 'data-selected', values: ['true'] },
+			{ description: '范围起点或终点。', name: 'data-range-edge', values: ['start', 'end'] },
 			{ description: '当前显示月外日期。', name: 'data-outside', values: ['true'] },
 			{ description: '不可选择日期。', name: 'data-disabled', values: ['true'] }
 		],
@@ -171,12 +208,21 @@
 					s.borderRadius._medium;
 					s.borderStyle.solid;
 					s.borderWidth._hairline;
-					s.padding._medium;
 				}
 			},
-			disabled: { false: () => undefined, true: (s) => s.opacity._disabled }
+			disabled: { false: () => undefined, true: (s) => s.opacity._disabled },
+			size: {
+				large: (s) => s.gap._large,
+				medium: (s) => s.gap._medium,
+				small: (s) => s.gap._small
+			}
 		},
-		defaultVariants: { appearance: 'calendar', disabled: false }
+		compoundVariants: [
+			{ style: (s) => s.padding._large, when: { appearance: 'calendar', size: 'large' } },
+			{ style: (s) => s.padding._medium, when: { appearance: 'calendar', size: 'medium' } },
+			{ style: (s) => s.padding._small, when: { appearance: 'calendar', size: 'small' } }
+		],
+		defaultVariants: { appearance: 'calendar', disabled: false, size: 'medium' }
 	});
 	const headerRecipe = defineRecipe({
 		base: (s) => {
@@ -193,11 +239,24 @@
 			s.borderColor._border;
 			s.borderRadius._small;
 			s.color._text;
-			s.height._medium;
-			s.width._medium;
 		},
-		variants: {},
-		defaultVariants: {}
+		variants: {
+			size: {
+				large: (s) => {
+					s.height._large;
+					s.width._large;
+				},
+				medium: (s) => {
+					s.height._medium;
+					s.width._medium;
+				},
+				small: (s) => {
+					s.height._small;
+					s.width._small;
+				}
+			}
+		},
+		defaultVariants: { size: 'medium' }
 	});
 	const tableRecipe = defineRecipe({
 		base: (s) => {
@@ -211,12 +270,25 @@
 			s.color._textMuted;
 			s.fontSize._small;
 			s.fontWeight._medium;
-			s.height._medium;
 			s.textAlign.center;
-			s.width._large;
 		},
-		variants: {},
-		defaultVariants: {}
+		variants: {
+			size: {
+				large: (s) => {
+					s.height._large;
+					s.width._xlarge;
+				},
+				medium: (s) => {
+					s.height._medium;
+					s.width._large;
+				},
+				small: (s) => {
+					s.height._small;
+					s.width._medium;
+				}
+			}
+		},
+		defaultVariants: { size: 'medium' }
 	});
 	const cellRecipe = defineRecipe({
 		base: (s) => {
@@ -227,8 +299,6 @@
 			s.borderWidth._hairline;
 			s.color._text;
 			s.cursor.pointer;
-			s.height._large;
-			s.width._large;
 			s._focusVisible((focus) => {
 				focus.outlineColor._focus;
 				focus.outlineOffset.px(-2);
@@ -245,9 +315,23 @@
 					s.backgroundColor._primary;
 					s.color._canvas;
 				}
+			},
+			size: {
+				large: (s) => {
+					s.height._xlarge;
+					s.width._xlarge;
+				},
+				medium: (s) => {
+					s.height._large;
+					s.width._large;
+				},
+				small: (s) => {
+					s.height._medium;
+					s.width._medium;
+				}
 			}
 		},
-		defaultVariants: { disabled: false, outside: false, selected: false }
+		defaultVariants: { disabled: false, outside: false, selected: false, size: 'medium' }
 	});
 	for (const recipe of [
 		rootRecipe,
@@ -263,16 +347,27 @@
 <script lang="ts">
 	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
-	import { CalendarDate, isSameDay, isSameMonth, today } from '@internationalized/date';
-	import { untrack } from 'svelte';
+	import {
+		CalendarDate,
+		isSameDay,
+		isSameMonth,
+		startOfMonth,
+		today
+	} from '@internationalized/date';
+	import { onDestroy, untrack } from 'svelte';
 	import { SvelteMap } from 'svelte/reactivity';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
-	import { formReset } from '../../runtime/form/form-control.svelte.js';
+	import { resolveControlSize } from '../../runtime/foundation/control-size.js';
+	import { claimZFieldControlOwner } from '../../runtime/form/field-context.js';
+	import FormValueBridge from '../../runtime/form/FormValueBridge.svelte';
+	import { mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
 	import {
 		calendarMonth,
+		clampDate,
 		formatDate,
 		isDateInRange,
-		isDateUnavailable,
+		isDateUnavailable as dateIsUnavailable,
+		normalizeRangeValue,
 		weekdayLabels,
 		weekDayIndex
 	} from '../../runtime/date.js';
@@ -285,6 +380,8 @@
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 
 	let {
+		'aria-describedby': ariaDescribedBy,
+		'aria-labelledby': ariaLabelledBy,
 		appearance = 'calendar',
 		calendarLabel,
 		class: className,
@@ -292,8 +389,12 @@
 		defaultValue,
 		disabled = false,
 		firstDayOfWeek,
+		focusedValue = $bindable(),
 		form,
+		formParticipation = 'auto',
+		invalid = false,
 		isDateDisabled,
+		isDateUnavailable,
 		locale,
 		maxValue,
 		minValue,
@@ -304,13 +405,18 @@
 		previousLabel,
 		range,
 		ref = $bindable(null),
+		readonly = false,
+		required = false,
 		showOutsideDates = true,
+		size,
 		style,
 		timeZone,
 		value = $bindable(),
 		...rest
 	}: ZCalendarProps = $props();
 	const zui = useZui();
+	const fieldOwner = claimZFieldControlOwner();
+	const field = fieldOwner.field;
 	const PreviousIcon = $derived(zui.direction === 'rtl' ? ChevronRight : ChevronLeft);
 	const NextIcon = $derived(zui.direction === 'rtl' ? ChevronLeft : ChevronRight);
 	const resolvedLocale = $derived(locale ?? zui.locale);
@@ -318,20 +424,40 @@
 	const resolvedCalendarLabel = $derived(calendarLabel ?? zui.localePack.date.calendarLabel);
 	const resolvedNextLabel = $derived(nextLabel ?? zui.localePack.date.nextMonth);
 	const resolvedPreviousLabel = $derived(previousLabel ?? zui.localePack.date.previousMonth);
-	const initialFocus = untrack(
-		() => defaultFocusedValue ?? defaultValue ?? today(resolvedTimeZone)
-	);
-	let focused = $state<CalendarDate>(initialFocus);
+	const resolvedDisabled = $derived(disabled || (field?.disabled ?? false));
+	const resolvedInvalid = $derived(invalid || (field?.invalid ?? false));
+	const resolvedReadonly = $derived(readonly || (field?.readonly ?? false));
+	const resolvedRequired = $derived(required || (field?.required ?? false));
+	const resolvedName = $derived(name ?? field?.name);
+	const resolvedSize = $derived(resolveControlSize(size ?? field?.size, zui.density));
+	const describedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
+	const labelledBy = $derived(mergeAriaIds(ariaLabelledBy, field?.labelId));
+	const constraints = $derived.by(() => {
+		if (minValue && maxValue && minValue.compare(maxValue) > 0)
+			throw new RangeError('ZCalendar minValue cannot exceed maxValue.');
+		if (isDateDisabled && isDateUnavailable)
+			throw new TypeError(
+				'ZCalendar isDateUnavailable and deprecated isDateDisabled are mutually exclusive.'
+			);
+		return { predicate: isDateUnavailable ?? isDateDisabled };
+	});
+	const initialFocus = untrack(() => {
+		const candidate = clampDate(
+			defaultFocusedValue ?? defaultValue ?? today(resolvedTimeZone),
+			minValue,
+			maxValue
+		);
+		return availableFrom(candidate, 1) ?? availableFrom(candidate, -1) ?? candidate;
+	});
+	let fallbackFocused = $state<CalendarDate>(initialFocus);
+	const focused = $derived(focusedValue ?? fallbackFocused);
 	let displayedMonth = $state<CalendarDate>(
 		new CalendarDate(initialFocus.year, initialFocus.month, 1)
 	);
-	let proxy = $state<HTMLInputElement | null>(null);
 	const buttons = new SvelteMap<string, HTMLButtonElement>();
-	const valueState = new ControllableState<CalendarDate | undefined>({
-		defaultValue: () => defaultValue,
-		onChange: () => (next) => {
-			if (next) onValueChange?.(next);
-		},
+	const valueState = new ControllableState<CalendarDate | null>({
+		defaultValue: () => defaultValue ?? null,
+		onChange: () => onValueChange,
 		read: () => value,
 		write: (next) => (value = next)
 	});
@@ -343,29 +469,63 @@
 		formatDate(displayedMonth, resolvedLocale, { month: 'long', year: 'numeric' }, resolvedTimeZone)
 	);
 	const currentToday = $derived(today(resolvedTimeZone));
-	const rootClass = $derived(zui.recipe(rootRecipe, { appearance, disabled }));
+	const normalizedRange = $derived(normalizeRangeValue(range));
+	const rootClass = $derived(
+		zui.recipe(rootRecipe, { appearance, disabled: resolvedDisabled, size: resolvedSize })
+	);
 	const headerClass = $derived(zui.recipe(headerRecipe));
-	const navClass = $derived(zui.recipe(navRecipe));
+	const navClass = $derived(zui.recipe(navRecipe, { size: resolvedSize }));
 	const tableClass = $derived(zui.recipe(tableRecipe));
-	const weekdayClass = $derived(zui.recipe(weekdayRecipe));
+	const weekdayClass = $derived(zui.recipe(weekdayRecipe, { size: resolvedSize }));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
 	function resetFromForm(): void {
 		valueState.reset();
-		const next = defaultFocusedValue ?? defaultValue ?? today(resolvedTimeZone);
-		focused = next;
+		const next = clampDate(
+			defaultFocusedValue ?? defaultValue ?? today(resolvedTimeZone),
+			minValue,
+			maxValue
+		);
+		fallbackFocused = next;
+		focusedValue = undefined;
 		displayedMonth = new CalendarDate(next.year, next.month, 1);
 	}
-	function unavailable(date: CalendarDate): boolean {
-		return disabled || isDateUnavailable(date, minValue, maxValue, isDateDisabled);
+	function unavailableDate(date: CalendarDate): boolean {
+		return dateIsUnavailable(date, minValue, maxValue, constraints.predicate);
 	}
-	function focusDate(next: CalendarDate): void {
-		if (unavailable(next)) return;
-		focused = next;
-		onFocusedValueChange?.(next);
-		if (!isSameMonth(next, displayedMonth))
-			displayedMonth = new CalendarDate(next.year, next.month, 1);
-		queueMicrotask(() => buttons.get(next.toString())?.focus({ preventScroll: true }));
+	function unavailable(date: CalendarDate): boolean {
+		return resolvedDisabled || unavailableDate(date);
+	}
+	function setFocused(next: CalendarDate, notify = true): void {
+		const changed = !isSameDay(focused, next);
+		fallbackFocused = next;
+		focusedValue = next;
+		if (notify && changed) onFocusedValueChange?.(next);
+	}
+	function availableFrom(candidate: CalendarDate, direction: -1 | 1): CalendarDate | null {
+		let next = clampDate(candidate, minValue, maxValue);
+		for (let attempts = 0; attempts < 3660; attempts += 1) {
+			if (!unavailableDate(next)) return next;
+			const stepped = next.add({ days: direction });
+			if (
+				(minValue && stepped.compare(minValue) < 0) ||
+				(maxValue && stepped.compare(maxValue) > 0)
+			)
+				return null;
+			next = stepped;
+		}
+		return null;
+	}
+	function focusDate(next: CalendarDate, direction: -1 | 1): void {
+		if (resolvedDisabled) return;
+		const available = availableFrom(next, direction);
+		if (!available) return;
+		setFocused(available);
+		if (!isSameMonth(available, displayedMonth))
+			displayedMonth = new CalendarDate(available.year, available.month, 1);
+		(ref?.ownerDocument.defaultView ?? globalThis).queueMicrotask(() =>
+			buttons.get(available.toString())?.focus({ preventScroll: true })
+		);
 	}
 	function registerButton(node: HTMLButtonElement, key: string) {
 		let current = key;
@@ -382,28 +542,33 @@
 		};
 	}
 	function select(date: CalendarDate): void {
-		if (unavailable(date)) return;
-		focused = date;
+		if (resolvedReadonly || unavailable(date)) return;
+		setFocused(date);
 		valueState.setFromUser(date);
 	}
 	function handleKeydown(event: KeyboardEvent, date: CalendarDate): void {
 		const horizontal = zui.direction === 'rtl' ? -1 : 1;
 		let next: CalendarDate;
+		let direction: -1 | 1 = 1;
 		switch (event.key) {
 			case 'ArrowRight':
 				next = date.add({ days: horizontal });
+				direction = horizontal === 1 ? 1 : -1;
 				break;
 			case 'ArrowLeft':
 				next = date.subtract({ days: horizontal });
+				direction = horizontal === 1 ? -1 : 1;
 				break;
 			case 'ArrowDown':
 				next = date.add({ weeks: 1 });
 				break;
 			case 'ArrowUp':
 				next = date.subtract({ weeks: 1 });
+				direction = -1;
 				break;
 			case 'Home':
 				next = date.subtract({ days: weekDayIndex(date, resolvedLocale, firstDayOfWeek) });
+				direction = -1;
 				break;
 			case 'End':
 				next = date.add({ days: 6 - weekDayIndex(date, resolvedLocale, firstDayOfWeek) });
@@ -413,28 +578,60 @@
 				break;
 			case 'PageUp':
 				next = date.subtract(event.shiftKey ? { years: 1 } : { months: 1 });
+				direction = -1;
 				break;
 			case 'Enter':
 			case ' ':
 				event.preventDefault();
 				select(date);
 				return;
+			case 'Backspace':
+			case 'Delete':
+				if (!resolvedReadonly && !resolvedRequired) {
+					event.preventDefault();
+					valueState.setFromUser(null);
+				}
+				return;
 			default:
 				return;
 		}
 		event.preventDefault();
-		focusDate(next);
+		focusDate(next, direction);
 	}
 	function moveMonth(amount: number): void {
+		if (resolvedDisabled) return;
 		const next = displayedMonth.add({ months: amount });
+		if (minValue && amount < 0 && next.compare(startOfMonth(minValue)) < 0) return;
+		if (maxValue && amount > 0 && next.compare(startOfMonth(maxValue)) > 0) return;
 		displayedMonth = new CalendarDate(next.year, next.month, 1);
 		const candidate = new CalendarDate(
 			next.year,
 			next.month,
 			Math.min(focused.day, next.calendar.getDaysInMonth(next))
 		);
-		if (!unavailable(candidate)) focused = candidate;
+		const available = availableFrom(candidate, amount < 0 ? -1 : 1);
+		if (available && isSameMonth(available, next)) setFocused(available);
 	}
+	const previousDisabled = $derived(
+		resolvedDisabled ||
+			Boolean(
+				minValue && displayedMonth.subtract({ months: 1 }).compare(startOfMonth(minValue)) < 0
+			)
+	);
+	const nextDisabled = $derived(
+		resolvedDisabled ||
+			Boolean(maxValue && displayedMonth.add({ months: 1 }).compare(startOfMonth(maxValue)) > 0)
+	);
+	$effect(() => {
+		const next = focused;
+		if (!isSameMonth(next, displayedMonth))
+			displayedMonth = new CalendarDate(next.year, next.month, 1);
+	});
+	onDestroy(
+		fieldOwner.registerFocusOwner(() => {
+			buttons.get(focused.toString())?.focus({ preventScroll: true });
+		})
+	);
 </script>
 
 <div
@@ -443,14 +640,22 @@
 	class={[rootClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
-	data-disabled={disabled || undefined}
+	aria-describedby={describedBy}
+	aria-invalid={resolvedInvalid || undefined}
+	aria-readonly={resolvedReadonly || undefined}
+	aria-required={resolvedRequired || undefined}
+	data-disabled={resolvedDisabled || undefined}
+	data-invalid={resolvedInvalid || undefined}
+	data-readonly={resolvedReadonly || undefined}
+	data-required={resolvedRequired || undefined}
+	data-size={resolvedSize}
 >
 	<div class={headerClass} data-slot="header">
 		<button
 			type="button"
 			class={navClass}
 			aria-label={resolvedPreviousLabel}
-			{disabled}
+			disabled={previousDisabled}
 			onclick={() => moveMonth(-1)}><PreviousIcon aria-hidden="true" size={16} /></button
 		>
 		<strong aria-live="polite">{monthLabel}</strong>
@@ -458,7 +663,7 @@
 			type="button"
 			class={navClass}
 			aria-label={resolvedNextLabel}
-			{disabled}
+			disabled={nextDisabled}
 			onclick={() => moveMonth(1)}><NextIcon aria-hidden="true" size={16} /></button
 		>
 	</div>
@@ -466,7 +671,12 @@
 		class={tableClass}
 		data-slot="grid"
 		role="grid"
-		aria-label={`${resolvedCalendarLabel}: ${monthLabel}`}
+		aria-label={labelledBy ? undefined : `${resolvedCalendarLabel}: ${monthLabel}`}
+		aria-labelledby={labelledBy}
+		aria-describedby={describedBy}
+		aria-disabled={resolvedDisabled || undefined}
+		aria-readonly={resolvedReadonly || undefined}
+		aria-multiselectable={range ? true : undefined}
 	>
 		<thead
 			><tr
@@ -484,7 +694,7 @@
 							role="gridcell"
 							aria-selected={Boolean(
 								(valueState.current && isSameDay(cell.date, valueState.current)) ||
-								isDateInRange(cell.date, range)
+								isDateInRange(cell.date, normalizedRange)
 							)}
 						>
 							{#if showOutsideDates || !cell.outsideMonth}
@@ -494,9 +704,10 @@
 									class={zui.recipe(cellRecipe, {
 										disabled: unavailable(cell.date),
 										outside: cell.outsideMonth,
+										size: resolvedSize,
 										selected: Boolean(
 											(valueState.current && isSameDay(cell.date, valueState.current)) ||
-											isDateInRange(cell.date, range)
+											isDateInRange(cell.date, normalizedRange)
 										)
 									})}
 									disabled={unavailable(cell.date)}
@@ -515,11 +726,18 @@
 									aria-current={isSameDay(cell.date, currentToday) ? 'date' : undefined}
 									data-selected={Boolean(
 										(valueState.current && isSameDay(cell.date, valueState.current)) ||
-										isDateInRange(cell.date, range)
+										isDateInRange(cell.date, normalizedRange)
 									) || undefined}
+									data-range-edge={normalizedRange?.start &&
+									isSameDay(cell.date, normalizedRange.start)
+										? 'start'
+										: normalizedRange?.end && isSameDay(cell.date, normalizedRange.end)
+											? 'end'
+											: undefined}
 									data-outside={cell.outsideMonth || undefined}
 									data-disabled={unavailable(cell.date) || undefined}
-									onfocus={() => (focused = cell.date)}
+									aria-disabled={unavailable(cell.date) || undefined}
+									onfocus={() => setFocused(cell.date)}
 									onclick={() => select(cell.date)}
 									onkeydown={(event) => handleKeydown(event, cell.date)}>{cell.date.day}</button
 								>
@@ -531,18 +749,12 @@
 		</tbody>
 	</table>
 </div>
-<input
-	bind:this={proxy}
-	aria-hidden="true"
-	tabindex={-1}
-	type="hidden"
-	disabled
-	{form}
-	use:formReset={resetFromForm}
-/>
-{#if name && !disabled}<input
-		type="hidden"
+{#if formParticipation === 'auto'}
+	<FormValueBridge
+		disabled={resolvedDisabled}
 		{form}
-		{name}
-		value={valueState.current?.toString() ?? ''}
-	/>{/if}
+		name={resolvedName}
+		onReset={resetFromForm}
+		value={valueState.current?.toString()}
+	/>
+{/if}

@@ -5,8 +5,10 @@
 	import type { ZPopoverContentProps } from '../popover/ZPopoverContent.svelte';
 	export type ZContextMenuContentProps = Omit<
 		ZPopoverContentProps,
-		'ariaLabelledBy' | 'children' | 'role'
+		'aria-label' | 'ariaLabelledBy' | 'children' | 'initialFocus' | 'manageFocus' | 'role'
 	> & {
+		readonly 'aria-label'?: string;
+		/** @deprecated Use the native `aria-label` spelling. */
 		readonly ariaLabel?: string;
 		readonly children?: Snippet;
 		readonly loop?: boolean;
@@ -39,6 +41,12 @@
 			{
 				default: "'Context menu'",
 				description: 'Menu可访问名称。',
+				name: 'aria-label',
+				type: 'string'
+			},
+			{
+				default: 'undefined',
+				description: 'deprecated兼容别名；请改用aria-label。',
 				name: 'ariaLabel',
 				type: 'string'
 			},
@@ -68,27 +76,52 @@
 </script>
 
 <script lang="ts">
+	import { useZui } from '../../../runtime/foundation/context.js';
 	import ZMenu from '../menu/ZMenu.svelte';
+	import { menuPopupContentRecipe } from '../menu/popup-style.js';
 	import ZPopoverContent from '../popover/ZPopoverContent.svelte';
 	import { useZPopover } from '../popover/context.svelte.js';
 	let {
-		ariaLabel = 'Context menu',
+		'aria-label': ariaLabelNative,
+		ariaLabel,
 		children,
+		class: className,
 		loop = true,
 		menuRef = $bindable(null),
 		onAction,
 		ref = $bindable(null),
 		...rest
 	}: ZContextMenuContentProps = $props();
+	const zui = useZui();
 	const popover = useZPopover();
+	const resolvedAriaLabel = $derived(ariaLabelNative ?? ariaLabel ?? 'Context menu');
+	const popupClass = $derived(zui.recipe(menuPopupContentRecipe));
+	function initialFocus(): HTMLElement | null {
+		return (
+			menuRef?.querySelector<HTMLElement>('[role^="menuitem"]:not([aria-disabled="true"])') ??
+			menuRef
+		);
+	}
 	function handleAction(event: MenuActionEvent): void {
 		onAction?.(event);
-		if (!event.defaultPrevented) popover.setOpen(false);
+		if (!event.defaultPrevented && event.closeOnSelect) popover.setOpen(false);
 	}
 </script>
 
-<ZPopoverContent {...rest} ariaLabelledBy={null} bind:ref role="presentation">
-	<ZMenu appearance="bare" aria-label={ariaLabel} bind:ref={menuRef} {loop} onAction={handleAction}
-		>{@render children?.()}</ZMenu
+<ZPopoverContent
+	{...rest}
+	ariaLabelledBy={null}
+	bind:ref
+	class={[popupClass, className]}
+	{initialFocus}
+	role="presentation"
+>
+	<ZMenu
+		appearance="bare"
+		aria-label={resolvedAriaLabel}
+		bind:ref={menuRef}
+		{loop}
+		onAction={handleAction}
+		onDismissRequest={() => popover.setOpen(false)}>{@render children?.()}</ZMenu
 	>
 </ZPopoverContent>

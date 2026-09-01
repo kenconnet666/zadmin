@@ -7,6 +7,7 @@
 		'children' | 'role'
 	> {
 		readonly children?: Snippet;
+		readonly value?: string;
 		ref?: HTMLDivElement | null;
 	}
 	export const zuiMetadata = {
@@ -20,6 +21,12 @@
 		keyboard: [],
 		parts: [],
 		props: [
+			{
+				default: '自动生成',
+				description: 'Item逻辑分组key；不改变完整Menu的DOM顺序。',
+				name: 'value',
+				type: 'string'
+			},
 			{
 				bindable: true,
 				default: 'null',
@@ -38,7 +45,44 @@
 </script>
 
 <script lang="ts">
-	let { children, ref = $bindable(null), ...rest }: ZMenuGroupProps = $props();
+	import { useZui } from '../../../runtime/foundation/context.js';
+	import { createZuiId } from '../../../runtime/foundation/ids.js';
+	import { provideZMenuGroup } from './context.svelte.js';
+
+	let { children, ref = $bindable(null), value, ...rest }: ZMenuGroupProps = $props();
+	const zui = useZui();
+	const uid = $props.id();
+	const generatedKey = $derived(createZuiId(zui.idPrefix, uid, 'menu-group'));
+	const key = $derived(value ?? generatedKey);
+	const labelId = $derived(`${generatedKey}-label`);
+	let registeredLabelId = $state<string>();
+	provideZMenuGroup({
+		get key() {
+			return key;
+		},
+		get labelId() {
+			return labelId;
+		},
+		registerLabel(id) {
+			if (registeredLabelId !== undefined) {
+				throw new Error('ZMenuGroup accepts at most one ZMenuLabel.');
+			}
+			registeredLabelId = id;
+			let active = true;
+			return () => {
+				if (!active) return;
+				active = false;
+				registeredLabelId = undefined;
+			};
+		}
+	});
 </script>
 
-<div {...rest} bind:this={ref} role="group">{@render children?.()}</div>
+<div
+	{...rest}
+	bind:this={ref}
+	role="group"
+	aria-labelledby={rest['aria-labelledby'] ?? registeredLabelId}
+>
+	{@render children?.()}
+</div>

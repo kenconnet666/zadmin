@@ -1,4 +1,5 @@
 <script module lang="ts">
+	import type { Snippet } from 'svelte';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import type { SelectionKey } from '../../runtime/collection/selection.js';
 	import type { PopoverPlacement } from '../compound/popover/ZPopover.svelte';
@@ -22,7 +23,11 @@
 		readonly emptyText?: string;
 		readonly filter?: (item: MentionItem, query: string) => boolean;
 		readonly items: readonly MentionItem[];
+		readonly item?: Snippet<[MentionItem]>;
 		readonly listLabel?: string;
+		readonly loading?: boolean;
+		readonly loadingText?: string;
+		readonly loop?: boolean;
 		readonly maxSuggestions?: number;
 		readonly minQueryLength?: number;
 		readonly onMention?: (item: MentionItem, trigger: string) => void;
@@ -32,6 +37,10 @@
 		ref?: HTMLTextAreaElement | null;
 		readonly triggers?: readonly string[];
 		value?: string;
+		readonly virtual?: boolean;
+		readonly virtualHeight?: number;
+		readonly virtualItemSize?: number;
+		readonly virtualOverscan?: number;
 	}
 
 	export const zuiMetadata = {
@@ -43,7 +52,15 @@
 			{ description: 'textarea完整文本。', name: 'value', type: 'string' },
 			{ description: '真实textarea引用。', name: 'ref', type: 'HTMLTextAreaElement | null' }
 		],
-		dependencies: ['native textarea', 'trigger parser', 'active descendant', 'ZPopover'],
+		dependencies: [
+			'native textarea',
+			'trigger parser',
+			'LogicalCollection',
+			'CollectionNavigation',
+			'ActiveDescendant',
+			'ZVirtualList',
+			'ZPopover'
+		],
 		events: [
 			{ description: '文本变化。', name: 'onValueChange', type: '(value: string) => void' },
 			{
@@ -93,12 +110,52 @@
 				type: 'number'
 			},
 			{ default: '8', description: '最多显示建议数。', name: 'maxSuggestions', type: 'number' },
-			{ default: 'true', description: '插入后追加空格。', name: 'appendSpace', type: 'boolean' }
+			{ default: 'true', description: '插入后追加空格。', name: 'appendSpace', type: 'boolean' },
+			{
+				default: 'true',
+				description: '方向键是否在enabled建议边界循环。',
+				name: 'loop',
+				type: 'boolean'
+			},
+			{
+				default: 'false',
+				description: '保留当前建议并投射aria-busy。',
+				name: 'loading',
+				type: 'boolean'
+			},
+			{ default: 'false', description: '启用固定行建议窗口化。', name: 'virtual', type: 'boolean' },
+			{
+				default: '256',
+				description: '虚拟建议viewport高度px。',
+				name: 'virtualHeight',
+				type: 'number'
+			},
+			{
+				default: '52',
+				description: '虚拟建议固定行高px。',
+				name: 'virtualItemSize',
+				type: 'number'
+			},
+			{
+				default: '4',
+				description: '建议窗口前后额外挂载项数。',
+				name: 'virtualOverscan',
+				type: 'number'
+			}
 		],
 		since: 'unreleased',
-		snippets: [],
+		snippets: [
+			{
+				description: '自定义建议可见正文；option角色、ID、active和键盘仍由Mention拥有。',
+				name: 'item',
+				type: 'Snippet<[MentionItem]>'
+			}
+		],
 		source: 'ui/zui/src/components/input/ZMention.svelte',
-		states: [{ description: '建议浮层状态。', name: 'data-state', values: ['open', 'closed'] }],
+		states: [
+			{ description: '建议浮层状态。', name: 'data-state', values: ['open', 'closed'] },
+			{ description: '异步建议加载中。', name: 'data-loading', values: ['true'] }
+		],
 		status: 'experimental',
 		summary: '保持textarea焦点、解析光标前trigger并以active-descendant提交建议的Mention。'
 	} as const satisfies ZuiComponentMetadata;
@@ -106,31 +163,50 @@
 
 <script lang="ts">
 	/* eslint-disable svelte/prefer-svelte-reactivity -- Sets are local validation values. */
+	import { ActiveDescendant } from '../../runtime/collection/active-descendant.svelte.js';
+	import {
+		CollectionNavigation,
+		isKeyboardComposing
+	} from '../../runtime/collection/collection-navigation.svelte.js';
+	import { LogicalCollection } from '../../runtime/collection/logical-collection.js';
+	import { MountedElements } from '../../runtime/collection/mounted-elements.svelte.js';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import { findMentionQuery, insertMention, type MentionQuery } from '../../runtime/mention.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
+	import {
+		createChoiceVirtualMountBridge,
+		type ChoiceVirtualController
+	} from '../compound/choice-virtualization.js';
 	import ZPopover from '../compound/popover/ZPopover.svelte';
 	import ZPopoverContent from '../compound/popover/ZPopoverContent.svelte';
+	import ZVirtualList from '../data-display/ZVirtualList.svelte';
 	import ZMentionEditor from './ZMentionEditor.svelte';
 
 	const listRecipe = defineRecipe({
 		base: (s) => {
-			s.display.flex;
-			s.flexDirection.column;
-			s.gap._xsmall;
-			s.maxHeight.rem(16);
 			s.minWidth._menu;
-			s.overflow.auto;
 		},
-		variants: {},
-		defaultVariants: {}
+		variants: {
+			virtual: {
+				false: (s) => {
+					s.display.flex;
+					s.flexDirection.column;
+					s.gap._xsmall;
+					s.maxHeight.rem(16);
+					s.overflow.auto;
+				},
+				true: () => undefined
+			}
+		},
+		defaultVariants: { virtual: false }
 	});
 	const itemRecipe = defineRecipe({
 		base: (s) => {
 			s.borderRadius._small;
 			s.cursor.pointer;
+			s.height.percent(100);
 			s.paddingBlock._small;
 			s.paddingInline._medium;
 			s.userSelect.none;
@@ -174,8 +250,12 @@
 		disabled = false,
 		emptyText,
 		filter,
+		item: itemSnippet,
 		items,
 		listLabel,
+		loading = false,
+		loadingText,
+		loop = true,
 		maxSuggestions = 8,
 		minQueryLength = 0,
 		onMention,
@@ -187,16 +267,22 @@
 		style,
 		triggers = ['@'],
 		value = $bindable(),
+		virtual = false,
+		virtualHeight = 256,
+		virtualItemSize = 52,
+		virtualOverscan = 4,
 		...rest
 	}: ZMentionProps = $props();
 	const zui = useZui();
 	const resolvedEmptyText = $derived(emptyText ?? zui.localePack.collection.mentionEmpty);
+	const resolvedLoadingText = $derived(loadingText ?? zui.localePack.collection.loading);
 	const resolvedListLabel = $derived(listLabel ?? zui.localePack.collection.mentionList);
 	const uid = $props.id();
 	const idBase = $derived(createZuiId(zui.idPrefix, uid, 'mention'));
+	const listId = $derived(`${idBase}-list`);
 	let query = $state<MentionQuery>();
-	let active = $state<SelectionKey>();
 	let open = $state(false);
+	let virtualController = $state<ChoiceVirtualController<SelectionKey> | null>(null);
 	const valueState = new ControllableState<string>({
 		defaultValue: () => defaultValue,
 		onChange: () => onValueChange,
@@ -210,14 +296,17 @@
 		}
 		return Object.freeze(result.sort((left, right) => right.length - left.length));
 	});
-	const normalizedItems = $derived.by(() => {
-		const keys = new Set<SelectionKey>();
-		for (const item of items) {
-			if (keys.has(item.key)) throw new Error(`Duplicate ZMention key "${String(item.key)}".`);
-			keys.add(item.key);
-		}
-		return items;
-	});
+	const collection = $derived(
+		new LogicalCollection<SelectionKey, MentionItem>(
+			items,
+			{
+				disabled: (item) => item.disabled ?? false,
+				key: (item) => item.key,
+				textValue: (item) => item.label
+			},
+			{ name: 'ZMention' }
+		)
+	);
 	const resolvedLimits = $derived.by(() => {
 		if (!Number.isInteger(minQueryLength) || minQueryLength < 0) {
 			throw new TypeError('ZMention minQueryLength must be a non-negative integer.');
@@ -227,37 +316,60 @@
 		}
 		return { maxSuggestions, minQueryLength };
 	});
-	const suggestions = $derived.by(() => {
+	const suggestionKeys = $derived.by(() => {
 		if (!query || query.query.length < resolvedLimits.minQueryLength) return [];
 		const needle = query.query.toLocaleLowerCase(zui.locale);
-		return normalizedItems
-			.filter((item) => {
+		return collection.full.items
+			.filter(({ value: item }) => {
 				if (filter) return filter(item, query!.query);
 				return [item.label, item.value ?? '', ...(item.keywords ?? [])]
 					.join(' ')
 					.toLocaleLowerCase(zui.locale)
 					.includes(needle);
 			})
-			.slice(0, resolvedLimits.maxSuggestions);
+			.slice(0, resolvedLimits.maxSuggestions)
+			.map(({ key }) => key);
 	});
-	const enabledSuggestions = $derived(suggestions.filter((item) => !disabled && !item.disabled));
-	const activeKey = $derived(
-		enabledSuggestions.some(({ key }) => Object.is(key, active))
-			? active
-			: enabledSuggestions[0]?.key
-	);
-	const activeId = $derived(
-		activeKey === undefined ? undefined : `${idBase}-option-${String(activeKey)}`
-	);
-	const listClass = $derived(zui.recipe(listRecipe));
+	const suggestionView = $derived(collection.view({ keys: suggestionKeys }));
+	const mounted = new MountedElements<SelectionKey>();
+	const virtualMount = createChoiceVirtualMountBridge(mounted);
+	const navigation = new CollectionNavigation<SelectionKey, MentionItem>({
+		direction: () => zui.direction,
+		disabled: () => disabled,
+		loop: () => loop,
+		orientation: () => 'vertical',
+		view: () => suggestionView
+	});
+	const activeDescendant = new ActiveDescendant({
+		idBase: () => idBase,
+		mounted,
+		navigation,
+		virtualizer: virtualMount
+	});
+	const activeKey = $derived(activeDescendant.activeKey);
+	const activeId = $derived(activeDescendant.activeId);
+	const suggestions = $derived(suggestionView.items.map(({ value: item }) => item));
+	const listClass = $derived(zui.recipe(listRecipe, { virtual }));
 	const descriptionClass = $derived(zui.recipe(descriptionRecipe));
 	const emptyClass = $derived(zui.recipe(emptyRecipe));
 	$effect(() => {
-		if (!open || !query || query.query.length < resolvedLimits.minQueryLength) open = false;
+		virtualMount.connect(virtual ? virtualController : null, activeKey);
+		return () => virtualMount.connect(null);
+	});
+	$effect(() => {
+		activeDescendant.prune(suggestionView.keys);
+		activeDescendant.reconcile();
+	});
+	$effect(() => {
+		if (
+			open &&
+			(!query || query.query.length < resolvedLimits.minQueryLength || disabled || readonly)
+		)
+			open = false;
 	});
 	function updateQuery(text: string, caret: number): void {
 		query = findMentionQuery(text, caret, normalizedTriggers);
-		active = undefined;
+		navigation.set(undefined, 'filter');
 		if (query) onSearchChange?.(query.query, query.trigger);
 		open = Boolean(
 			query && query.query.length >= resolvedLimits.minQueryLength && !disabled && !readonly
@@ -275,7 +387,7 @@
 		valueState.setFromUser(result.value);
 		query = undefined;
 		open = false;
-		active = undefined;
+		navigation.set(undefined, 'programmatic');
 		onMention?.(item, trigger);
 		queueMicrotask(() => {
 			ref?.focus({ preventScroll: true });
@@ -283,7 +395,7 @@
 		});
 	}
 	function handleKeydown(event: KeyboardEvent & { currentTarget: HTMLTextAreaElement }): void {
-		if (!open) return;
+		if (!open || isKeyboardComposing(event)) return;
 		if (event.key === 'Escape') {
 			event.preventDefault();
 			open = false;
@@ -291,33 +403,77 @@
 		}
 		if ((event.key === 'Enter' || event.key === 'Tab') && activeKey !== undefined) {
 			event.preventDefault();
-			const item = enabledSuggestions.find(({ key }) => Object.is(key, activeKey));
-			if (item) choose(item);
+			const activeItem = suggestionView.get(activeKey)?.value;
+			if (activeItem) choose(activeItem);
 			return;
 		}
-		const current = enabledSuggestions.findIndex(({ key }) => Object.is(key, activeKey));
-		const targetIndex =
-			event.key === 'Home'
-				? 0
-				: event.key === 'End'
-					? enabledSuggestions.length - 1
-					: event.key === 'ArrowDown'
-						? (current + 1) % enabledSuggestions.length
-						: event.key === 'ArrowUp'
-							? (current - 1 + enabledSuggestions.length) % enabledSuggestions.length
-							: -1;
-		if (targetIndex >= 0 && enabledSuggestions[targetIndex]) {
-			event.preventDefault();
-			active = enabledSuggestions[targetIndex]?.key;
-		}
+		activeDescendant.handleKey(event);
+	}
+	function mountOption(element: HTMLDivElement, key: SelectionKey) {
+		let current = key;
+		let dispose = activeDescendant.mount(current, element);
+		return {
+			destroy() {
+				dispose();
+			},
+			update(next: SelectionKey) {
+				if (Object.is(current, next)) return;
+				dispose();
+				current = next;
+				dispose = activeDescendant.mount(current, element);
+			}
+		};
+	}
+	function suggestionKey(item: MentionItem): SelectionKey {
+		return item.key;
+	}
+	function suggestionId(item: MentionItem): string {
+		return activeDescendant.idFor(item.key);
+	}
+	function suggestionDisabled(item: MentionItem): boolean {
+		return disabled || Boolean(item.disabled);
+	}
+	function suggestionSelected(item: MentionItem): boolean {
+		return Object.is(activeKey, item.key);
+	}
+	function mountVirtualOption(key: SelectionKey, element: HTMLElement): () => void {
+		return activeDescendant.mount(key, element);
+	}
+	function handlePointerMove(item: MentionItem): void {
+		if (!disabled && !item.disabled) activeDescendant.set(item.key, 'pointer');
 	}
 	function reset(): void {
 		valueState.reset();
 		query = undefined;
-		active = undefined;
+		navigation.set(undefined, 'programmatic');
 		open = false;
 	}
 </script>
+
+{#snippet suggestionContent(suggestion: MentionItem)}
+	{#if itemSnippet}
+		{@render itemSnippet(suggestion)}
+	{:else}
+		<div>{suggestion.label}</div>
+		{#if suggestion.description}<div class={descriptionClass}>{suggestion.description}</div>{/if}
+	{/if}
+{/snippet}
+
+{#snippet virtualSuggestion(suggestion: MentionItem)}
+	<div
+		class={zui.recipe(itemRecipe, {
+			active: Object.is(activeKey, suggestion.key),
+			disabled: Boolean(disabled || suggestion.disabled)
+		})}
+		data-active={Object.is(activeKey, suggestion.key) || undefined}
+		data-slot="item-content"
+		onpointerdown={(event) => event.preventDefault()}
+		onpointermove={() => handlePointerMove(suggestion)}
+		onclick={() => choose(suggestion)}
+	>
+		{@render suggestionContent(suggestion)}
+	</div>
+{/snippet}
 
 <ZPopover
 	gutter={4}
@@ -335,45 +491,80 @@
 		{style}
 		value={valueState.current}
 		{activeId}
+		{listId}
+		data-loading={loading || undefined}
 		onEditorInput={handleInput}
 		onEditorKeydown={handleKeydown}
 		onEditorReset={reset}
 		{disabled}
 		{readonly}
 	/>
-	<ZPopoverContent
-		aria-label={resolvedListLabel}
-		ariaLabelledBy={null}
-		manageFocus={false}
-		role="listbox"
-	>
-		<div class={listClass} data-slot="list">
-			{#each suggestions as item (item.key)}
-				<div
-					id={`${idBase}-option-${String(item.key)}`}
-					class={zui.recipe(itemRecipe, {
-						active: Object.is(activeKey, item.key),
-						disabled: Boolean(disabled || item.disabled)
-					})}
-					data-slot="item"
-					role="option"
-					tabindex={-1}
-					aria-selected={Object.is(activeKey, item.key)}
-					aria-disabled={disabled || item.disabled || undefined}
-					onpointerdown={(event) => event.preventDefault()}
-					onclick={() => choose(item)}
-					onkeydown={(event) => {
-						if (event.key === 'Enter' || event.key === ' ') {
-							event.preventDefault();
-							choose(item);
-						}
-					}}
-				>
-					<div>{item.label}</div>
-					{#if item.description}<div class={descriptionClass}>{item.description}</div>{/if}
-				</div>
-			{/each}
-			{#if suggestions.length === 0}<div class={emptyClass}>{resolvedEmptyText}</div>{/if}
-		</div>
+	<ZPopoverContent ariaLabelledBy={null} manageFocus={false} role="presentation">
+		{#if virtual}
+			<ZVirtualList
+				aria-activedescendant={activeId}
+				aria-label={resolvedListLabel}
+				bind:controller={virtualController}
+				class={listClass}
+				data-slot="list"
+				height={virtualHeight}
+				id={listId}
+				itemDisabled={suggestionDisabled}
+				itemId={suggestionId}
+				itemKey={suggestionKey}
+				itemRole="option"
+				itemSelected={suggestionSelected}
+				itemSize={virtualItemSize}
+				items={suggestions}
+				{loading}
+				onItemMount={mountVirtualOption}
+				overscan={virtualOverscan}
+				role="listbox"
+				tabindex={-1}
+			>
+				{#snippet item(suggestion)}{@render virtualSuggestion(suggestion)}{/snippet}
+				{#snippet empty()}<div class={emptyClass} role="status">{resolvedEmptyText}</div>{/snippet}
+				{#snippet loadingContent()}<div class={emptyClass} role="status">
+						{resolvedLoadingText}
+					</div>{/snippet}
+			</ZVirtualList>
+		{:else}
+			<div
+				aria-activedescendant={activeId}
+				aria-busy={loading || undefined}
+				aria-label={resolvedListLabel}
+				class={listClass}
+				data-slot="list"
+				id={listId}
+				role="listbox"
+			>
+				{#each suggestions as suggestion (suggestion.key)}
+					<div
+						use:mountOption={suggestion.key}
+						id={activeDescendant.idFor(suggestion.key)}
+						class={zui.recipe(itemRecipe, {
+							active: Object.is(activeKey, suggestion.key),
+							disabled: Boolean(disabled || suggestion.disabled)
+						})}
+						data-active={Object.is(activeKey, suggestion.key) || undefined}
+						data-slot="item"
+						role="option"
+						tabindex={-1}
+						aria-selected={Object.is(activeKey, suggestion.key)}
+						aria-disabled={disabled || suggestion.disabled || undefined}
+						onpointerdown={(event) => event.preventDefault()}
+						onpointermove={() => handlePointerMove(suggestion)}
+						onclick={() => choose(suggestion)}
+					>
+						{@render suggestionContent(suggestion)}
+					</div>
+				{/each}
+				{#if suggestions.length === 0}
+					<div class={emptyClass} data-slot="status" role="status">
+						{loading ? resolvedLoadingText : resolvedEmptyText}
+					</div>
+				{/if}
+			</div>
+		{/if}
 	</ZPopoverContent>
 </ZPopover>

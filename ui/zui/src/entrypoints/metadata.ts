@@ -35,10 +35,16 @@ export { zuiMetadata as drawerOverlayMetadata } from '../components/compound/dra
 export { zuiMetadata as drawerTitleMetadata } from '../components/compound/drawer/ZDrawerTitle.svelte';
 export { zuiMetadata as drawerTriggerMetadata } from '../components/compound/drawer/ZDrawerTrigger.svelte';
 export { zuiMetadata as menuMetadata } from '../components/compound/menu/ZMenu.svelte';
+export { zuiMetadata as menuCheckboxItemMetadata } from '../components/compound/menu/ZMenuCheckboxItem.svelte';
 export { zuiMetadata as menuGroupMetadata } from '../components/compound/menu/ZMenuGroup.svelte';
 export { zuiMetadata as menuItemMetadata } from '../components/compound/menu/ZMenuItem.svelte';
 export { zuiMetadata as menuLabelMetadata } from '../components/compound/menu/ZMenuLabel.svelte';
+export { zuiMetadata as menuRadioGroupMetadata } from '../components/compound/menu/ZMenuRadioGroup.svelte';
+export { zuiMetadata as menuRadioItemMetadata } from '../components/compound/menu/ZMenuRadioItem.svelte';
 export { zuiMetadata as menuSeparatorMetadata } from '../components/compound/menu/ZMenuSeparator.svelte';
+export { zuiMetadata as menuSubMetadata } from '../components/compound/menu/ZMenuSub.svelte';
+export { zuiMetadata as menuSubContentMetadata } from '../components/compound/menu/ZMenuSubContent.svelte';
+export { zuiMetadata as menuSubTriggerMetadata } from '../components/compound/menu/ZMenuSubTrigger.svelte';
 export { zuiMetadata as multiSelectMetadata } from '../components/compound/multi-select/ZMultiSelect.svelte';
 export { zuiMetadata as multiSelectContentMetadata } from '../components/compound/multi-select/ZMultiSelectContent.svelte';
 export { zuiMetadata as multiSelectItemMetadata } from '../components/compound/multi-select/ZMultiSelectItem.svelte';

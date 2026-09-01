@@ -14,6 +14,7 @@ export interface ZuiCollectionLocale {
 	readonly selectOption: string;
 	readonly selectOptions: string;
 	readonly selectPath: string;
+	readonly searchResults: (formattedCount: string) => string;
 	readonly treeLoadError: (label: string) => string;
 	readonly treeLoading: (label: string) => string;
 	readonly treeOptions: string;
@@ -51,12 +52,17 @@ export interface ZuiCommandLocale {
 
 export interface ZuiDateLocale {
 	readonly calendarLabel: string;
+	readonly clearDate: string;
+	readonly clearDateRange: string;
 	readonly chooseDate: string;
 	readonly chooseDateRange: string;
+	readonly dateFieldLabel: string;
 	readonly day: string;
+	readonly endDate: string;
 	readonly month: string;
 	readonly nextMonth: string;
 	readonly previousMonth: string;
+	readonly startDate: string;
 	readonly year: string;
 }
 
@@ -106,11 +112,13 @@ export interface ZuiProgressLocale {
 
 export interface ZuiTimeLocale {
 	readonly am: string;
+	readonly clearTime: string;
 	readonly hour: string;
 	readonly hourCycle: 12 | 24;
 	readonly minute: string;
 	readonly pm: string;
 	readonly second: string;
+	readonly timeFieldLabel: string;
 	readonly toggleDayPeriod: string;
 }
 
@@ -202,6 +210,7 @@ export const enUSLocalePack = Object.freeze({
 		selectOption: 'Select an option',
 		selectOptions: 'Select options',
 		selectPath: 'Select a path',
+		searchResults: (formattedCount: string) => `${formattedCount} paths found`,
 		treeLoadError: (label: string) => `Failed to load ${label}; activate the switcher to retry`,
 		treeLoading: (label: string) => `Loading children for ${label}`,
 		treeOptions: 'Tree options'
@@ -224,12 +233,17 @@ export const enUSLocalePack = Object.freeze({
 	common: Object.freeze({ clear: 'Clear', close: 'Close', copy: 'Copy' }),
 	date: Object.freeze({
 		calendarLabel: 'Calendar',
+		clearDate: 'Clear date',
+		clearDateRange: 'Clear date range',
 		chooseDate: 'Choose date',
 		chooseDateRange: 'Choose date range',
+		dateFieldLabel: 'Date',
 		day: 'Day',
+		endDate: 'End date',
 		month: 'Month',
 		nextMonth: 'Next month',
 		previousMonth: 'Previous month',
+		startDate: 'Start date',
 		year: 'Year'
 	}),
 	feedback: Object.freeze({
@@ -277,11 +291,13 @@ export const enUSLocalePack = Object.freeze({
 	}),
 	time: Object.freeze({
 		am: 'AM',
+		clearTime: 'Clear time',
 		hour: 'Hour',
 		hourCycle: 12,
 		minute: 'Minute',
 		pm: 'PM',
 		second: 'Second',
+		timeFieldLabel: 'Time',
 		toggleDayPeriod: 'Toggle AM/PM'
 	}),
 	tour: Object.freeze({
@@ -328,6 +344,7 @@ export const zhCNLocalePack = Object.freeze({
 		selectOption: '选择一个选项',
 		selectOptions: '选择选项',
 		selectPath: '选择路径',
+		searchResults: (formattedCount: string) => `找到${formattedCount}条路径`,
 		treeLoadError: (label: string) => `加载${label}失败；激活展开指示可重试`,
 		treeLoading: (label: string) => `正在加载${label}的子节点`,
 		treeOptions: '树形选项'
@@ -350,12 +367,17 @@ export const zhCNLocalePack = Object.freeze({
 	common: Object.freeze({ clear: '清空', close: '关闭', copy: '复制' }),
 	date: Object.freeze({
 		calendarLabel: '日历',
+		clearDate: '清空日期',
+		clearDateRange: '清空日期范围',
 		chooseDate: '选择日期',
 		chooseDateRange: '选择日期范围',
+		dateFieldLabel: '日期',
 		day: '日',
+		endDate: '结束日期',
 		month: '月',
 		nextMonth: '下个月',
 		previousMonth: '上个月',
+		startDate: '开始日期',
 		year: '年'
 	}),
 	feedback: Object.freeze({
@@ -403,11 +425,13 @@ export const zhCNLocalePack = Object.freeze({
 	}),
 	time: Object.freeze({
 		am: '上午',
+		clearTime: '清空时间',
 		hour: '小时',
 		hourCycle: 24,
 		minute: '分钟',
 		pm: '下午',
 		second: '秒',
+		timeFieldLabel: '时间',
 		toggleDayPeriod: '切换上午或下午'
 	}),
 	tour: Object.freeze({

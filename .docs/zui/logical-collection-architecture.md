@@ -279,6 +279,15 @@ SSR 规则：
 P1 新 runtime 暂不从主入口或 `@zadmin/zui/runtime` 导出；至少两个真实消费者验证后再冻结
 公共合同。
 
+### Mention suggestion projection
+
+`ZMention` keeps the native textarea as the only DOM focus owner and projects the current caret
+query into a `LogicalCollectionView`. `CollectionNavigation`, `MountedElements` and
+`ActiveDescendant` own suggestion movement and opaque typed-key IDs; async loading only replaces the
+owner-provided `items`, and fixed-row virtualization reuses the P2 mount handshake. Custom item
+snippets render content only, so they cannot replace option semantics or keyboard ownership. Request
+debounce, cancellation and cache remain application concerns exposed through `onSearchChange`.
+
 ## 11. P5 LogicalTree implementation record
 
 R4 P5 implements `LogicalTree` as an immutable hierarchy adapter over `LogicalCollection` rather
@@ -317,6 +326,22 @@ the current explicit strict checkbox contract, and production DnD requires a sep
 screen-reader interaction design, drop validation, announcements and cross-tree ownership. Neither is
 required to keep core selection, expansion, lazy loading or virtualization production-usable.
 
+### Cascader column projection
+
+`ZCascader` now consumes the same `LogicalTree` but does not reuse Tree's flattened visible view.
+Each visible column is a `childrenOf(parentKey)` projection with an independent
+`LogicalCollectionView`, `CollectionNavigation`, `MountedElements`, `ActiveDescendant` and locale
+typeahead owner. The root owns only the complete typed path, Popover, loaded-path filter, lazy request
+registry and `FormValueBridge`. This keeps number `1` distinct from string `"1"`, prevents disabled
+ancestors from being bypassed by search, and removes the former string-keyed DOM map.
+
+Fixed-row virtual columns use the same P2 handshake as Select and Transfer. Loaded-path search is
+deliberately local: it indexes complete leaves currently present in `nodes`, and async/remote search
+remains a data-owner concern. Lazy `hasChildren` requests are abortable and retryable, but the caller
+still updates and caches flat nodes. ZUI retains one leaf path rather than copying Ant's multiple
+cascade/half-check surface; MUI has no Cascader, so a generic Select is not stretched into a hidden
+hierarchical state machine.
+
 ## 12. Primary references
 
 - [WAI-ARIA APG Tree View pattern](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/)
@@ -324,6 +349,7 @@ required to keep core selection, expansion, lazy loading or virtualization produ
 - [MUI X Rich Tree View virtualization](https://mui.com/x/react-tree-view/rich-tree-view/virtualization/)
 - [MUI X Rich Tree View lazy loading](https://mui.com/x/react-tree-view/rich-tree-view/lazy-loading/)
 - [Ant Design Tree](https://ant.design/components/tree/)
+- [Ant Design Cascader](https://ant.design/components/cascader/)
 - [React Spectrum collection model](https://react-spectrum.adobe.com/v3/collections.html)
 - [React Spectrum selection model](https://react-spectrum.adobe.com/v3/selection.html)
 - [React Aria Collection interface source](https://github.com/adobe/react-spectrum/blob/main/packages/%40react-types/shared/src/collections.d.ts)

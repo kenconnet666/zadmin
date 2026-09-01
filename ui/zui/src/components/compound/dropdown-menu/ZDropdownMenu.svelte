@@ -58,6 +58,7 @@
 
 <script lang="ts">
 	import ZPopover from '../popover/ZPopover.svelte';
+	import { provideZDropdownMenu, type DropdownMenuFocusStrategy } from './context.svelte.js';
 	let {
 		children,
 		defaultOpen = false,
@@ -66,6 +67,15 @@
 		open = $bindable(),
 		placement = 'bottom-start'
 	}: ZDropdownMenuProps = $props();
+	let focusStrategy = $state<DropdownMenuFocusStrategy>('first');
+	provideZDropdownMenu({
+		get focusStrategy() {
+			return focusStrategy;
+		},
+		prepareOpen(strategy) {
+			focusStrategy = strategy;
+		}
+	});
 </script>
 
 <ZPopover bind:open {defaultOpen} {gutter} modal={false} {onOpenChange} {placement}

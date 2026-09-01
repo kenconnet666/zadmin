@@ -12,6 +12,7 @@
 		| 'value'
 	> {
 		readonly activeId?: string;
+		readonly listId: string;
 		readonly onEditorInput: (event: InputEvent & { currentTarget: HTMLTextAreaElement }) => void;
 		readonly onEditorKeydown: (
 			event: KeyboardEvent & { currentTarget: HTMLTextAreaElement }
@@ -26,6 +27,7 @@
 		class: className,
 		oncompositionend,
 		defaultValue,
+		listId,
 		onEditorInput,
 		onEditorKeydown,
 		onEditorReset,
@@ -57,7 +59,7 @@
 	resetOnForm={false}
 	aria-activedescendant={popover.open ? activeId : undefined}
 	aria-autocomplete="list"
-	aria-controls={popover.open ? popover.contentId : undefined}
+	aria-controls={popover.open ? listId : undefined}
 	aria-expanded={popover.open}
 	aria-haspopup="listbox"
 	data-state={popover.open ? 'open' : 'closed'}

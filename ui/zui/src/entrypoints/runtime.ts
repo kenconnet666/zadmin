@@ -67,7 +67,11 @@ export type {
 	VirtualRange,
 	VirtualRangeOptions
 } from '../runtime/collection/virtualizer.js';
-export { compareDataValues, stableSortRows } from '../runtime/collection/data-table.js';
+export {
+	compareDataValues,
+	nextDataSortDescriptor,
+	stableSortRows
+} from '../runtime/collection/data-table.js';
 export type { DataSortDescriptor, DataSortDirection } from '../runtime/collection/data-table.js';
 export { createToastQueue, ToastQueue } from '../runtime/toast.svelte.js';
 export type {

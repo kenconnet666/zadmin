@@ -90,14 +90,26 @@ export { default as ZDrawerTrigger } from '../components/compound/drawer/ZDrawer
 export type { ZDrawerTriggerProps } from '../components/compound/drawer/ZDrawerTrigger.svelte';
 export { default as ZMenu } from '../components/compound/menu/ZMenu.svelte';
 export type { ZMenuProps } from '../components/compound/menu/ZMenu.svelte';
+export { default as ZMenuCheckboxItem } from '../components/compound/menu/ZMenuCheckboxItem.svelte';
+export type { ZMenuCheckboxItemProps } from '../components/compound/menu/ZMenuCheckboxItem.svelte';
 export { default as ZMenuGroup } from '../components/compound/menu/ZMenuGroup.svelte';
 export type { ZMenuGroupProps } from '../components/compound/menu/ZMenuGroup.svelte';
 export { default as ZMenuItem } from '../components/compound/menu/ZMenuItem.svelte';
 export type { ZMenuItemProps } from '../components/compound/menu/ZMenuItem.svelte';
 export { default as ZMenuLabel } from '../components/compound/menu/ZMenuLabel.svelte';
 export type { ZMenuLabelProps } from '../components/compound/menu/ZMenuLabel.svelte';
+export { default as ZMenuRadioGroup } from '../components/compound/menu/ZMenuRadioGroup.svelte';
+export type { ZMenuRadioGroupProps } from '../components/compound/menu/ZMenuRadioGroup.svelte';
+export { default as ZMenuRadioItem } from '../components/compound/menu/ZMenuRadioItem.svelte';
+export type { ZMenuRadioItemProps } from '../components/compound/menu/ZMenuRadioItem.svelte';
 export { default as ZMenuSeparator } from '../components/compound/menu/ZMenuSeparator.svelte';
 export type { ZMenuSeparatorProps } from '../components/compound/menu/ZMenuSeparator.svelte';
+export { default as ZMenuSub } from '../components/compound/menu/ZMenuSub.svelte';
+export type { ZMenuSubProps } from '../components/compound/menu/ZMenuSub.svelte';
+export { default as ZMenuSubContent } from '../components/compound/menu/ZMenuSubContent.svelte';
+export type { ZMenuSubContentProps } from '../components/compound/menu/ZMenuSubContent.svelte';
+export { default as ZMenuSubTrigger } from '../components/compound/menu/ZMenuSubTrigger.svelte';
+export type { ZMenuSubTriggerProps } from '../components/compound/menu/ZMenuSubTrigger.svelte';
 export { MenuActionEvent } from '../components/compound/menu/context.svelte.js';
 export { default as ZMultiSelect } from '../components/compound/multi-select/ZMultiSelect.svelte';
 export type {
@@ -131,7 +143,12 @@ export type {
 	ZPopoverProps
 } from '../components/compound/popover/ZPopover.svelte';
 export { default as ZPopoverContent } from '../components/compound/popover/ZPopoverContent.svelte';
-export type { ZPopoverContentProps } from '../components/compound/popover/ZPopoverContent.svelte';
+export type {
+	PopoverEscapeEvent,
+	PopoverFocusOutsideEvent,
+	PopoverPointerOutsideEvent,
+	ZPopoverContentProps
+} from '../components/compound/popover/ZPopoverContent.svelte';
 export { default as ZPopoverTrigger } from '../components/compound/popover/ZPopoverTrigger.svelte';
 export type { ZPopoverTriggerProps } from '../components/compound/popover/ZPopoverTrigger.svelte';
 export { default as ZRadioGroup } from '../components/compound/radio-group/ZRadioGroup.svelte';
@@ -259,14 +276,25 @@ export type {
 } from '../components/data-display/ZVirtualList.svelte';
 export { default as ZDataTable } from '../components/data-display/ZDataTable.svelte';
 export type {
+	DataTableColumnAlign,
 	DataTableColumn,
+	DataTableColumnPin,
+	DataTableColumnVisibility,
+	DataTableColumnWidths,
+	DataTableRowFocusTarget,
 	DataTableSelectionMode,
+	DataTableSortingMode,
 	DataTableWidth,
+	ZDataTableController,
 	ZDataTableProps
 } from '../components/data-display/ZDataTable.svelte';
 export { default as ZCarousel } from '../components/data-display/ZCarousel.svelte';
 export type { ZCarouselProps } from '../components/data-display/ZCarousel.svelte';
-export { compareDataValues, stableSortRows } from '../runtime/collection/data-table.js';
+export {
+	compareDataValues,
+	nextDataSortDescriptor,
+	stableSortRows
+} from '../runtime/collection/data-table.js';
 export type { DataSortDescriptor, DataSortDirection } from '../runtime/collection/data-table.js';
 export { calculateVirtualRange, virtualScrollOffset } from '../runtime/collection/virtualizer.js';
 export type {
@@ -323,7 +351,13 @@ export { fieldPathToString } from '../runtime/form/field-path.js';
 export type { FieldPath, FieldPathInput } from '../runtime/form/field-path.js';
 export type { FormErrors } from '../runtime/form/validation.js';
 export { default as ZDateField } from '../components/input/ZDateField.svelte';
-export type { DateSegment, ZDateFieldProps } from '../components/input/ZDateField.svelte';
+export type {
+	DateFieldAppearance,
+	DateFieldFormParticipation,
+	DateFieldSize,
+	DateSegment,
+	ZDateFieldProps
+} from '../components/input/ZDateField.svelte';
 export { default as ZDatePicker } from '../components/input/ZDatePicker.svelte';
 export type { ZDatePickerProps } from '../components/input/ZDatePicker.svelte';
 export { default as ZDateRangePicker } from '../components/input/ZDateRangePicker.svelte';
@@ -336,7 +370,7 @@ export type {
 	ZCheckboxVariants
 } from '../components/input/ZCheckbox.svelte';
 export { default as ZCascader } from '../components/input/ZCascader.svelte';
-export type { ZCascaderProps } from '../components/input/ZCascader.svelte';
+export type { CascaderFilter, ZCascaderProps } from '../components/input/ZCascader.svelte';
 export { default as ZCalendar } from '../components/input/ZCalendar.svelte';
 export type { ZCalendarProps } from '../components/input/ZCalendar.svelte';
 export { default as ZColorPicker } from '../components/input/ZColorPicker.svelte';
@@ -384,12 +418,15 @@ export type {
 } from '../components/input/ZTextarea.svelte';
 export { default as ZTimeField } from '../components/input/ZTimeField.svelte';
 export type {
+	TimeFieldAppearance,
+	TimeFieldFormParticipation,
+	TimeFieldSize,
 	TimeDayPeriod,
 	TimeGranularity,
 	TimeSegment,
 	ZTimeFieldProps
 } from '../components/input/ZTimeField.svelte';
-export type { CalendarRange, Weekday } from '../runtime/date.js';
+export type { CalendarRange, CalendarRangeValue, Weekday } from '../runtime/date.js';
 export { default as ZTreeSelect } from '../components/input/ZTreeSelect.svelte';
 export type { ZTreeSelectProps } from '../components/input/ZTreeSelect.svelte';
 export { default as ZTransfer } from '../components/input/ZTransfer.svelte';

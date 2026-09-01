@@ -2,8 +2,13 @@
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
+	import type { DismissableLayerEvent } from '../../../runtime/layer/dismissable-layer.js';
 
 	import { defineRecipe, registerRecipeHmr } from '../../../recipes/define.js';
+
+	export type PopoverEscapeEvent = DismissableLayerEvent<KeyboardEvent>;
+	export type PopoverFocusOutsideEvent = DismissableLayerEvent<FocusEvent>;
+	export type PopoverPointerOutsideEvent = DismissableLayerEvent<PointerEvent>;
 
 	export interface ZPopoverContentProps extends Omit<
 		HTMLAttributes<HTMLDivElement>,
@@ -14,6 +19,9 @@
 		readonly children?: Snippet;
 		readonly initialFocus?: () => HTMLElement | null;
 		readonly manageFocus?: boolean;
+		readonly onEscape?: (event: PopoverEscapeEvent) => void;
+		readonly onFocusOutside?: (event: PopoverFocusOutsideEvent) => void;
+		readonly onPointerOutside?: (event: PopoverPointerOutsideEvent) => void;
 		ref?: HTMLDivElement | null;
 		readonly role?: 'dialog' | 'listbox' | 'presentation';
 	}
@@ -71,7 +79,23 @@
 			{ description: '挂载期间的真实dialog引用。', name: 'ref', type: 'HTMLDivElement | null' }
 		],
 		dependencies: ['ZPopover', 'Portal', 'Floating', 'DismissableLayer', 'FocusScope', 'Presence'],
-		events: [],
+		events: [
+			{
+				description: 'Escape dismiss前的可取消事件。',
+				name: 'onEscape',
+				type: '(event: PopoverEscapeEvent) => void'
+			},
+			{
+				description: '焦点离开顶层Layer前的可取消事件。',
+				name: 'onFocusOutside',
+				type: '(event: PopoverFocusOutsideEvent) => void'
+			},
+			{
+				description: 'pointer落在顶层Layer外前的可取消事件。',
+				name: 'onPointerOutside',
+				type: '(event: PopoverPointerOutsideEvent) => void'
+			}
+		],
 		keyboard: [{ description: '关闭顶层Popover。', key: 'Escape' }],
 		parts: [],
 		props: [
@@ -154,6 +178,9 @@
 		class: className,
 		initialFocus,
 		manageFocus = true,
+		onEscape,
+		onFocusOutside,
+		onPointerOutside,
 		ref = $bindable(null),
 		role = 'dialog',
 		style,
@@ -187,7 +214,10 @@
 		});
 		const dismissable = new DismissableLayer(content, {
 			modal: () => popover.modal,
-			onDismiss: () => popover.setOpen(false)
+			onDismiss: () => popover.setOpen(false),
+			onEscape,
+			onFocusOutside,
+			onPointerOutside
 		});
 		const removeTriggerBranch = dismissable.registerBranch(trigger);
 		const focusScope = manageFocus

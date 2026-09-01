@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "componentCount": 133,
-  "overallSha256": "82e58e2a6713a332fd2932cdb4025c82046b496e5d6ab485abf29d44d81725e6",
+  "componentCount": 139,
+  "overallSha256": "c66f128e21fbac12ed825e011c248fdd78be49046a8814a3fb5cf1fa0c9c722f",
   "components": [
     {
       "id": "accordion",
@@ -90,7 +90,7 @@
     },
     {
       "id": "context-menu-content",
-      "sha256": "86b7c5ecca3ce71c3fe924622851be81bc6a04462f9b144eca5020368602d1f3",
+      "sha256": "c2a2311398bc3b41393ffb316684878fc8bd007c458324ee658db0d66a35719a",
       "source": "src/components/compound/context-menu/ZContextMenuContent.svelte"
     },
     {
@@ -175,27 +175,32 @@
     },
     {
       "id": "dropdown-menu-content",
-      "sha256": "ea09d831dc12a988756976fbaf2843b1de68f0fa780d0dd06e1607daeed632d2",
+      "sha256": "825e6d4e29e8fa18e52fa32a7ad3a6804cf979ab89151b4d64220297bf866214",
       "source": "src/components/compound/dropdown-menu/ZDropdownMenuContent.svelte"
     },
     {
       "id": "dropdown-menu-trigger",
-      "sha256": "758cf02292ec7555571e3d7778978356f054f9c67174a8519e091648bc5ee364",
+      "sha256": "3467c64128b80e5249b2853fb896ef39826327e4a610839f42284a1878b20878",
       "source": "src/components/compound/dropdown-menu/ZDropdownMenuTrigger.svelte"
     },
     {
       "id": "menu",
-      "sha256": "2b5038523d8911c7f43ec8dde915ce3bba6e380a0f65f92151179c1f15fe7dfc",
+      "sha256": "9794d99c2005ffa3772837ccf338630608eecaf42eeebd0a6aa66945ec1adf45",
       "source": "src/components/compound/menu/ZMenu.svelte"
     },
     {
+      "id": "menu-checkbox-item",
+      "sha256": "7967c76be5560e965c23eaa6b9456a234006cdc80ec68a3901fbe213ca66ef5a",
+      "source": "src/components/compound/menu/ZMenuCheckboxItem.svelte"
+    },
+    {
       "id": "menu-group",
-      "sha256": "dafffea9b74d14b4a5c69c3ca4d44f163c73a098cc0a37b74396aa73952ce8f4",
+      "sha256": "d2b6fe08ef055779abce60230a7644dbad0c357088ef67ca554970a16e8f1d7e",
       "source": "src/components/compound/menu/ZMenuGroup.svelte"
     },
     {
       "id": "menu-item",
-      "sha256": "0da9abcd285dd93dfce585c287e2b962c85a852c9ff07a84fe4080cae914f4ef",
+      "sha256": "5688d678451fd7c010bab652900d24eb2ff94f03b2bea806d96358cd88798c29",
       "source": "src/components/compound/menu/ZMenuItem.svelte"
     },
     {
@@ -204,9 +209,34 @@
       "source": "src/components/compound/menu/ZMenuLabel.svelte"
     },
     {
+      "id": "menu-radio-group",
+      "sha256": "e89079014cf5d50e41983764a37a9a5fc1570185d0a273213aafdb0c67df42f2",
+      "source": "src/components/compound/menu/ZMenuRadioGroup.svelte"
+    },
+    {
+      "id": "menu-radio-item",
+      "sha256": "50221555179904cd0354f21f7c450a53df18a11c8f6e0a37f92951b59a5085b3",
+      "source": "src/components/compound/menu/ZMenuRadioItem.svelte"
+    },
+    {
       "id": "menu-separator",
       "sha256": "b21896aec0d0bb03dba3b7400c8fbd1fb57c275a8a1cba9acc417c71d44212ba",
       "source": "src/components/compound/menu/ZMenuSeparator.svelte"
+    },
+    {
+      "id": "menu-sub",
+      "sha256": "9ab9e88466c9bbeda114c12cce017e2ef6e4d09b20a5fa3a560aa32a47b5edaa",
+      "source": "src/components/compound/menu/ZMenuSub.svelte"
+    },
+    {
+      "id": "menu-sub-content",
+      "sha256": "6912ad25c10b7d6db094a1ca722767e148706167b64d0f6594a8ee4a983ea3e8",
+      "source": "src/components/compound/menu/ZMenuSubContent.svelte"
+    },
+    {
+      "id": "menu-sub-trigger",
+      "sha256": "bc9e338667e9c334139b8a6d841eae993a8b0c1b36720b38bf112a6696baa013",
+      "source": "src/components/compound/menu/ZMenuSubTrigger.svelte"
     },
     {
       "id": "multi-select",
@@ -270,7 +300,7 @@
     },
     {
       "id": "popover-content",
-      "sha256": "88223abe5b4cb080383635579a1c70134130c0c36dbe52f8685c31fcbcac8fe2",
+      "sha256": "0d1fe276086eef2b5c3c266a712a73d8722e080a31df7de39ed46c02f3d2e8cb",
       "source": "src/components/compound/popover/ZPopoverContent.svelte"
     },
     {
@@ -370,7 +400,7 @@
     },
     {
       "id": "data-table",
-      "sha256": "ea1de4f9d1be1dc575b6c7a08a958d1b12a6065df284a1b36579e6bf13c1c8f0",
+      "sha256": "fe10b75082a127d2d5748ff628f453e15089b339925f456c2f2e02a629e28c80",
       "source": "src/components/data-display/ZDataTable.svelte"
     },
     {
@@ -515,12 +545,12 @@
     },
     {
       "id": "calendar",
-      "sha256": "f0ca74ca8e49eeec76ced4bd2864eb5fcae244ac08f78fbf03ef47f5706a8a44",
+      "sha256": "f1fbfabb78a237a9ddb2010c98b8aa3333e9c649c7da8b7402734a431d71755a",
       "source": "src/components/input/ZCalendar.svelte"
     },
     {
       "id": "cascader",
-      "sha256": "6bf497b5c41674cdee875b4a9c0096dec9978a982ee4b7c6d4218fa04937d22b",
+      "sha256": "a4917dc739920d7460262cee117a80fe1366fef6691999a7299dbfb71226be34",
       "source": "src/components/input/ZCascader.svelte"
     },
     {
@@ -535,17 +565,17 @@
     },
     {
       "id": "date-field",
-      "sha256": "f9126cf5181f4db66256137b90756273d6c6f2572b4f5980172e4ddf51bed6eb",
+      "sha256": "9671070f87bae6295669dcb0212a5edb9664fa5aca18ddbf9749d34e160e57b2",
       "source": "src/components/input/ZDateField.svelte"
     },
     {
       "id": "date-picker",
-      "sha256": "ff21e69567f597a58ec27bb81d5d7ccad2dfc3db21c6ce0e34ebe32e86e92a7e",
+      "sha256": "2758ae0749ee1d1d19513c8a75fa76ba9cfb123b4a86fe01a269cc3b85724cc9",
       "source": "src/components/input/ZDatePicker.svelte"
     },
     {
       "id": "date-range-picker",
-      "sha256": "1eed77d935773e53cc617de77b2b517647d3968cf5b2ab13149f60c44e5b0a9b",
+      "sha256": "3ea3267b583300f1286bd74aa2cd04c891859c7446979a19b0c58ed6a7454285",
       "source": "src/components/input/ZDateRangePicker.svelte"
     },
     {
@@ -580,7 +610,7 @@
     },
     {
       "id": "mention",
-      "sha256": "aa0d287622b4ce2af86fb8212475198e76e5133d01516142e77e1793fa05b13b",
+      "sha256": "253f914b0a697bf23e74a1ae18d8438a4895599cc10a705d1ad1cf3f94e3dbb9",
       "source": "src/components/input/ZMention.svelte"
     },
     {
@@ -620,7 +650,7 @@
     },
     {
       "id": "time-field",
-      "sha256": "dadb0d05ae2bd4cf153bbbd48d9461e8ae3ed5358e31d429501012dd850180bc",
+      "sha256": "c4baeb90db9b6e75190fe972ce8bf6aa0646676de390c008ee9610111511782f",
       "source": "src/components/input/ZTimeField.svelte"
     },
     {
@@ -672,11 +702,11 @@
   "entrypoints": {
     "code.ts": "52db25b2f7ae15061096bbc8fdaf06e5f076706522880aabcb78af6e662ca985",
     "compiler.ts": "96fa979b36838e8b7a6d3f52bb463f23951438a4d974d52b631ad1e6d937b2e7",
-    "index.ts": "b9e7f86c074fb1d9916680a280570d52887bad0e92f2950cde5146f6d2dbd569",
+    "index.ts": "c823718b65683e4b36c3df5db0421a503da086b3a3d5c617171e5c3f4d2650ed",
     "internal.ts": "05f9ef9c8628e1cdf694dcc88b71831e5aab726a3189bd6189eef7ae645df4d7",
     "layer.ts": "72d0fc8e5b7a8ab39a12e157879951b84f1a7fc19654f4bd8b6ea92fd8aa6db8",
-    "metadata.ts": "1aebd7f1b437cea0dc5151ef3b6cecaa5cac1e5d3f9b430094d1fe0be42519d7",
-    "runtime.ts": "dee0fef8da8fc07f90715610580a112a5057c20a68223b605a9af2995ae04942",
+    "metadata.ts": "04dfb1d2a68fdd9997c687a1b843cc3ee4d3f842f23d5d6717bcc2d6f4c18253",
+    "runtime.ts": "fd0769d103ed19c896c2792c1a17f63d36ceba642031c58eb3fd0a6f2cc8079f",
     "testing.ts": "c596113f3cbcf4ce75be2728b6a10cd6a0b77c9b9101a4408ba2e18e174f15cb",
     "theme.ts": "672f4f9f183088c250e2ddc74a71b5c4a0c54017f981dfdbd810004fa21b0b24",
     "themes.ts": "058d133e2d96677143fa8b286d75d6a3aa6ec071bc6b18ad739bc09fe5a7f9c3"

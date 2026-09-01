@@ -2,24 +2,36 @@
 	import type { CalendarDate as CalendarDateValue } from '@internationalized/date';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
+	import type { DateFieldSegment } from '../../runtime/date.js';
+	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 
-	export type DateSegment = 'day' | 'month' | 'year';
+	export type DateSegment = DateFieldSegment;
+	export type DateFieldAppearance = 'bare' | 'field';
+	export type DateFieldFormParticipation = 'auto' | 'none';
+	export type DateFieldSize = ZControlSize;
 	export interface ZDateFieldProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onchange'> {
-		readonly defaultValue?: CalendarDateValue;
+		readonly appearance?: DateFieldAppearance;
+		readonly controlId?: string;
+		readonly defaultValue?: CalendarDateValue | null;
 		readonly disabled?: boolean;
 		readonly form?: string;
+		readonly formParticipation?: DateFieldFormParticipation;
+		readonly invalid?: boolean;
+		readonly isDateUnavailable?: (date: CalendarDateValue) => boolean;
 		readonly locale?: string;
 		readonly maxValue?: CalendarDateValue;
 		readonly minValue?: CalendarDateValue;
 		readonly name?: string;
-		readonly onValueChange?: (value: CalendarDateValue | undefined) => void;
+		readonly onReset?: () => void;
+		readonly onValueChange?: (value: CalendarDateValue | null) => void;
 		readonly readonly?: boolean;
 		ref?: HTMLDivElement | null;
 		readonly required?: boolean;
 		readonly segmentLabel?: (segment: DateSegment) => string;
+		readonly size?: DateFieldSize;
 		readonly timeZone?: string;
-		value?: CalendarDateValue;
+		value?: CalendarDateValue | null;
 	}
 
 	export const zuiMetadata = {
@@ -28,7 +40,11 @@
 		importStatement: "import { ZDateField } from '@zadmin/zui';",
 		name: 'ZDateField',
 		bindings: [
-			{ description: 'CalendarDate值。', name: 'value', type: 'CalendarDate | undefined' },
+			{
+				description: 'CalendarDate值；null是显式空值。',
+				name: 'value',
+				type: 'CalendarDate | null'
+			},
 			{ description: '真实group引用。', name: 'ref', type: 'HTMLDivElement | null' }
 		],
 		dependencies: [
@@ -41,7 +57,7 @@
 			{
 				description: '完整日期或清空变化。',
 				name: 'onValueChange',
-				type: '(value: CalendarDate | undefined) => void'
+				type: '(value: CalendarDate | null) => void'
 			}
 		],
 		keyboard: [
@@ -52,17 +68,23 @@
 		parts: [{ description: 'year/month/day输入。', name: 'segment' }],
 		props: [
 			{
+				default: "'field'",
+				description: '独立边框或供DatePicker/InputGroup复用的bare外观。',
+				name: 'appearance',
+				type: "'bare' | 'field'"
+			},
+			{
 				bindable: true,
-				default: 'undefined',
-				description: '日期值。',
+				default: 'null',
+				description: '日期值；null是受控空值。',
 				name: 'value',
-				type: 'CalendarDate'
+				type: 'CalendarDate | null'
 			},
 			{
 				default: 'undefined',
 				description: '非受控初始日期。',
 				name: 'defaultValue',
-				type: 'CalendarDate'
+				type: 'CalendarDate | null'
 			},
 			{
 				default: 'Provider locale',
@@ -84,7 +106,19 @@
 			},
 			{ default: 'undefined', description: '最小日期。', name: 'minValue', type: 'CalendarDate' },
 			{ default: 'undefined', description: '最大日期。', name: 'maxValue', type: 'CalendarDate' },
-			{ default: 'undefined', description: 'ISO日期隐藏字段名。', name: 'name', type: 'string' }
+			{ default: 'undefined', description: 'ISO日期隐藏字段名。', name: 'name', type: 'string' },
+			{
+				default: "'auto'",
+				description: '自定义复合组件可设none，由外层唯一拥有FormValueBridge与reset。',
+				name: 'formParticipation',
+				type: "'auto' | 'none'"
+			},
+			{
+				default: 'Field size或Provider density',
+				description: '统一group padding、segment高度与字号。',
+				name: 'size',
+				type: "'small' | 'medium' | 'large'"
+			}
 		],
 		since: 'unreleased',
 		snippets: [],
@@ -97,14 +131,8 @@
 	const rootRecipe = defineRecipe({
 		base: (s) => {
 			s.alignItems.center;
-			s.backgroundColor._canvas;
-			s.borderColor._border;
 			s.borderRadius._medium;
-			s.borderStyle.solid;
-			s.borderWidth._hairline;
 			s.display.inlineFlex;
-			s.gap._small;
-			s.paddingInline._medium;
 			s._selector('&:focus-within', (focus) => {
 				focus.outlineColor._focus;
 				focus.outlineOffset.px(2);
@@ -113,10 +141,33 @@
 			});
 		},
 		variants: {
+			appearance: {
+				bare: () => undefined,
+				field: (s) => {
+					s.backgroundColor._canvas;
+					s.borderColor._border;
+					s.borderStyle.solid;
+					s.borderWidth._hairline;
+				}
+			},
 			disabled: { false: () => undefined, true: (s) => s.opacity._disabled },
-			invalid: { false: () => undefined, true: (s) => s.borderColor._danger }
+			invalid: { false: () => undefined, true: (s) => s.borderColor._danger },
+			size: {
+				large: (s) => {
+					s.gap._medium;
+					s.paddingInline._large;
+				},
+				medium: (s) => {
+					s.gap._small;
+					s.paddingInline._medium;
+				},
+				small: (s) => {
+					s.gap._small;
+					s.paddingInline._small;
+				}
+			}
 		},
-		defaultVariants: { disabled: false, invalid: false }
+		defaultVariants: { appearance: 'field', disabled: false, invalid: false, size: 'medium' }
 	});
 	const segmentRecipe = defineRecipe({
 		base: (s) => {
@@ -125,15 +176,29 @@
 			s.borderStyle.none;
 			s.color._text;
 			s.fontFamily._mono;
-			s.fontSize._medium;
-			s.minHeight._medium;
 			s.outlineStyle.none;
 			s.padding.px(0);
 			s.textAlign.center;
 			s.width.rem(3);
 		},
-		variants: { year: { false: () => undefined, true: (s) => s.width.rem(4) } },
-		defaultVariants: { year: false }
+		variants: {
+			size: {
+				large: (s) => {
+					s.fontSize._large;
+					s.minHeight._large;
+				},
+				medium: (s) => {
+					s.fontSize._medium;
+					s.minHeight._medium;
+				},
+				small: (s) => {
+					s.fontSize._small;
+					s.minHeight._small;
+				}
+			},
+			year: { false: () => undefined, true: (s) => s.width.rem(4) }
+		},
+		defaultVariants: { size: 'medium', year: false }
 	});
 	registerRecipeHmr(import.meta, rootRecipe);
 	registerRecipeHmr(import.meta, segmentRecipe);
@@ -141,17 +206,23 @@
 
 <script lang="ts">
 	import { CalendarDate, today } from '@internationalized/date';
-	import { untrack } from 'svelte';
+	import { onDestroy, untrack } from 'svelte';
 	import {
 		moveIndex,
 		navigationIntent,
 		type NavigationIntent
 	} from '../../runtime/collection/list-navigation.js';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
+	import { resolveControlSize } from '../../runtime/foundation/control-size.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
-	import { useZField } from '../../runtime/form/field-context.js';
-	import { formReset, mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
-	import { clampDate } from '../../runtime/date.js';
+	import { claimZFieldControlOwner } from '../../runtime/form/field-context.js';
+	import FormValueBridge from '../../runtime/form/FormValueBridge.svelte';
+	import { mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
+	import {
+		clampDate,
+		dateFieldPattern,
+		isDateUnavailable as dateIsUnavailable
+	} from '../../runtime/date.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -163,28 +234,39 @@
 	let {
 		'aria-describedby': ariaDescribedBy,
 		'aria-invalid': ariaInvalid,
+		'aria-label': ariaLabel,
+		'aria-labelledby': ariaLabelledBy,
 		class: className,
+		controlId,
 		defaultValue,
 		disabled = false,
 		form,
+		formParticipation = 'auto',
+		invalid: invalidProp = false,
+		isDateUnavailable,
 		locale,
 		maxValue,
 		minValue,
 		name,
+		onReset,
 		onValueChange,
 		readonly = false,
 		ref = $bindable(null),
 		required = false,
 		segmentLabel,
+		size,
 		style,
 		timeZone,
 		value = $bindable(),
 		...rest
 	}: ZDateFieldProps = $props();
 	const zui = useZui();
-	const field = useZField();
+	const fieldOwner = claimZFieldControlOwner();
+	const field = fieldOwner.field;
 	const uid = $props.id();
-	const idBase = $derived(field?.controlId ?? createZuiId(zui.idPrefix, uid, 'date-field'));
+	const idBase = $derived(
+		controlId ?? field?.controlId ?? createZuiId(zui.idPrefix, uid, 'date-field')
+	);
 	const resolvedLocale = $derived(locale ?? zui.locale);
 	const resolvedTimeZone = $derived(timeZone ?? zui.timeZone);
 	const resolvedDisabled = $derived(disabled || field?.disabled || false);
@@ -192,36 +274,31 @@
 	const resolvedRequired = $derived(required || field?.required || false);
 	const resolvedName = $derived(name ?? field?.name);
 	const describedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
-	const valueState = new ControllableState<CalendarDate | undefined>({
-		defaultValue: () => defaultValue,
+	const resolvedSize = $derived(resolveControlSize(size ?? field?.size, zui.density));
+	const constraints = $derived.by(() => {
+		if (minValue && maxValue && minValue.compare(maxValue) > 0)
+			throw new RangeError('ZDateField minValue cannot exceed maxValue.');
+		return { maxValue, minValue };
+	});
+	const valueState = new ControllableState<CalendarDate | null>({
+		defaultValue: () => defaultValue ?? null,
 		onChange: () => onValueChange,
 		read: () => value,
 		write: (next) => (value = next)
 	});
 	let drafts = $state<Partial<Record<DateSegment, string>>>({});
-	let invalid = $state(false);
-	let proxy = $state<HTMLInputElement | null>(null);
+	let draftInvalid = $state(false);
 	const inputs = $state<(HTMLInputElement | null)[]>([]);
-	const pattern = $derived.by(() =>
-		new Intl.DateTimeFormat(resolvedLocale, {
-			day: 'numeric',
-			month: 'numeric',
-			timeZone: resolvedTimeZone,
-			year: 'numeric'
-		})
-			.formatToParts(new CalendarDate(2006, 11, 22).toDate(resolvedTimeZone))
-			.filter(({ type }) => ['day', 'month', 'year', 'literal'].includes(type))
-			.map((part) =>
-				part.type === 'literal' ? { literal: part.value } : { segment: part.type as DateSegment }
-			)
-	);
+	const pattern = $derived(dateFieldPattern(resolvedLocale, resolvedTimeZone));
 	const segmentOrder = $derived(
 		pattern.flatMap((part) => ('segment' in part ? [part.segment] : []))
 	);
 	const rootClass = $derived(
 		zui.recipe(rootRecipe, {
+			appearance,
 			disabled: resolvedDisabled,
-			invalid: invalid || field?.invalid || false
+			invalid: draftInvalid || invalidProp || field?.invalid || false,
+			size: resolvedSize
 		})
 	);
 	const variables = $derived(readIcssCarrier(rest));
@@ -235,30 +312,53 @@
 			segment === 'year' ? current.year : segment === 'month' ? current.month : current.day;
 		return String(raw).padStart(segment === 'year' ? 4 : 2, '0');
 	}
-	function commitDrafts(): void {
+	function commitDrafts(markIncomplete = true): boolean {
+		if (Object.keys(drafts).length === 0) return true;
 		const year = Number(drafts.year ?? valueState.current?.year);
 		const month = Number(drafts.month ?? valueState.current?.month);
 		const day = Number(drafts.day ?? valueState.current?.day);
 		if (![year, month, day].every(Number.isInteger)) {
-			invalid = Object.keys(drafts).length > 0;
-			return;
+			draftInvalid = markIncomplete;
+			return false;
 		}
 		try {
 			const next = new CalendarDate(year, month, day);
 			if (next.year !== year || next.month !== month || next.day !== day) throw new Error();
-			valueState.setFromUser(clampDate(next, minValue, maxValue));
+			if (dateIsUnavailable(next, constraints.minValue, constraints.maxValue, isDateUnavailable)) {
+				draftInvalid = true;
+				return false;
+			}
+			valueState.setFromUser(next);
 			drafts = {};
-			invalid = false;
+			draftInvalid = false;
+			return true;
 		} catch {
-			invalid = true;
+			draftInvalid = true;
+			return false;
 		}
+	}
+	function availableFrom(candidate: CalendarDate, direction: -1 | 1): CalendarDate | null {
+		let next = clampDate(candidate, minValue, maxValue);
+		for (let attempts = 0; attempts < 3660; attempts += 1) {
+			if (!dateIsUnavailable(next, minValue, maxValue, isDateUnavailable)) return next;
+			const stepped = next.add({ days: direction });
+			if (
+				(minValue && stepped.compare(minValue) < 0) ||
+				(maxValue && stepped.compare(maxValue) > 0)
+			)
+				return null;
+			next = stepped;
+		}
+		return null;
 	}
 	function cycle(segment: DateSegment, amount: number): void {
 		if (resolvedDisabled || resolvedReadonly) return;
 		const base = valueState.current ?? today(resolvedTimeZone);
-		valueState.setFromUser(clampDate(base.cycle(segment, amount), minValue, maxValue));
+		const next = availableFrom(base.cycle(segment, amount), amount < 0 ? -1 : 1);
+		if (!next) return;
+		valueState.setFromUser(next);
 		drafts = {};
-		invalid = false;
+		draftInvalid = false;
 	}
 	function move(index: number, intent: NavigationIntent): void {
 		const target = moveIndex(segmentOrder.length, index, intent, false);
@@ -278,6 +378,15 @@
 				event.preventDefault();
 				cycle(segment, event.key === 'ArrowUp' ? 1 : -1);
 				return;
+			case 'Enter':
+				event.preventDefault();
+				commitDrafts();
+				return;
+			case 'Escape':
+				event.preventDefault();
+				drafts = {};
+				draftInvalid = false;
+				return;
 			default:
 				return;
 		}
@@ -285,8 +394,39 @@
 	function resetFromForm(): void {
 		valueState.reset();
 		drafts = {};
-		invalid = false;
+		draftInvalid = false;
+		onReset?.();
 	}
+	function handleInput(
+		event: InputEvent & { currentTarget: HTMLInputElement },
+		segment: DateSegment,
+		index: number
+	): void {
+		const nextDraft = event.currentTarget.value.replace(/\D/gu, '');
+		drafts = { ...drafts, [segment]: nextDraft };
+		if (inputs.every((input) => !input?.value)) {
+			valueState.setFromUser(null);
+			drafts = {};
+			draftInvalid = false;
+			return;
+		}
+		const expectedLength = segment === 'year' ? 4 : 2;
+		if (nextDraft.length === expectedLength) {
+			commitDrafts(false);
+			if (index < segmentOrder.length - 1) move(index, 'next');
+		}
+	}
+	function handleFocusOut(event: FocusEvent & { currentTarget: HTMLDivElement }): void {
+		const NodeConstructor = event.currentTarget.ownerDocument.defaultView?.Node;
+		if (
+			NodeConstructor &&
+			event.relatedTarget instanceof NodeConstructor &&
+			event.currentTarget.contains(event.relatedTarget)
+		)
+			return;
+		commitDrafts();
+	}
+	onDestroy(fieldOwner.registerFocusOwner(() => inputs[0]?.focus({ preventScroll: true })));
 </script>
 
 <div
@@ -296,15 +436,27 @@
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
 	role="group"
+	aria-label={ariaLabelledBy || field
+		? undefined
+		: (ariaLabel ?? zui.localePack.date.dateFieldLabel)}
+	aria-labelledby={mergeAriaIds(ariaLabelledBy, field?.labelId)}
+	aria-describedby={describedBy}
 	aria-disabled={resolvedDisabled || undefined}
-	data-invalid={invalid || field?.invalid || undefined}
+	data-disabled={resolvedDisabled || undefined}
+	data-invalid={draftInvalid || invalidProp || field?.invalid || undefined}
+	data-readonly={resolvedReadonly || undefined}
+	data-required={resolvedRequired || undefined}
+	onfocusout={handleFocusOut}
 >
 	{#each pattern as part, partIndex (partIndex)}
 		{#if 'literal' in part}<span aria-hidden="true">{part.literal}</span>{:else}
 			{@const index = segmentOrder.indexOf(part.segment)}
 			<input
 				bind:this={inputs[index]}
-				class={zui.recipe(segmentRecipe, { year: part.segment === 'year' })}
+				class={zui.recipe(segmentRecipe, {
+					size: resolvedSize,
+					year: part.segment === 'year'
+				})}
 				id={index === 0 ? idBase : `${idBase}-${part.segment}`}
 				type="text"
 				inputmode="numeric"
@@ -317,31 +469,25 @@
 				aria-label={index === 0 && field
 					? undefined
 					: (segmentLabel?.(part.segment) ?? zui.localePack.date[part.segment])}
+				aria-labelledby={index === 0 ? mergeAriaIds(ariaLabelledBy, field?.labelId) : undefined}
 				aria-describedby={describedBy}
-				aria-invalid={invalid || field?.invalid ? 'true' : ariaInvalid}
+				aria-invalid={draftInvalid || invalidProp || field?.invalid ? 'true' : ariaInvalid}
+				aria-readonly={resolvedReadonly || undefined}
+				aria-required={resolvedRequired || undefined}
 				onfocus={(event) => event.currentTarget.select()}
-				oninput={(event) => {
-					drafts = { ...drafts, [part.segment]: event.currentTarget.value.replace(/\D/gu, '') };
-					commitDrafts();
-				}}
-				onblur={commitDrafts}
+				oninput={(event) => handleInput(event, part.segment, index)}
 				onkeydown={(event) => handleKey(event, part.segment, index)}
 			/>
 		{/if}
 	{/each}
 </div>
-<input
-	bind:this={proxy}
-	aria-hidden="true"
-	tabindex={-1}
-	type="hidden"
-	disabled
-	{form}
-	use:formReset={resetFromForm}
-/>
-{#if resolvedName && !resolvedDisabled}<input
-		type="hidden"
+{#if formParticipation === 'auto'}
+	<FormValueBridge
+		disabled={resolvedDisabled}
 		{form}
 		name={resolvedName}
-		value={valueState.current?.toString() ?? ''}
-	/>{/if}
+		onReset={resetFromForm}
+		value={valueState.current?.toString()}
+	/>
+{/if}
+appearance = 'field',

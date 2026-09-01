@@ -16,7 +16,10 @@
 				type: 'MouseEventHandler<HTMLButtonElement>'
 			}
 		],
-		keyboard: [{ description: '切换Menu。', key: 'Enter / Space' }],
+		keyboard: [
+			{ description: '切换Menu。', key: 'Enter / Space' },
+			{ description: '打开并聚焦首项或末项。', key: 'ArrowDown / ArrowUp' }
+		],
 		parts: [],
 		props: [
 			{
@@ -37,8 +40,49 @@
 </script>
 
 <script lang="ts">
+	import { isKeyboardComposing } from '../../../runtime/collection/collection-navigation.svelte.js';
 	import ZPopoverTrigger from '../popover/ZPopoverTrigger.svelte';
-	let { ref = $bindable(null), ...rest }: ZDropdownMenuTriggerProps = $props();
+	import { useZPopover } from '../popover/context.svelte.js';
+	import { useZDropdownMenu } from './context.svelte.js';
+	let {
+		disabled = false,
+		onclick,
+		onkeydown,
+		ref = $bindable(null),
+		...rest
+	}: ZDropdownMenuTriggerProps = $props();
+	const dropdown = useZDropdownMenu();
+	const popover = useZPopover();
+
+	function handleClick(event: MouseEvent & { currentTarget: HTMLButtonElement }): void {
+		if (disabled) return;
+		dropdown.prepareOpen('first');
+		onclick?.(event);
+	}
+
+	function handleKeydown(event: KeyboardEvent & { currentTarget: HTMLButtonElement }): void {
+		onkeydown?.(event);
+		if (event.defaultPrevented || isKeyboardComposing(event) || disabled) return;
+		switch (event.key) {
+			case 'ArrowDown':
+				event.preventDefault();
+				dropdown.prepareOpen('first');
+				popover.setOpen(true);
+				break;
+			case 'ArrowUp':
+				event.preventDefault();
+				dropdown.prepareOpen('last');
+				popover.setOpen(true);
+				break;
+		}
+	}
 </script>
 
-<ZPopoverTrigger {...rest} bind:ref popupRole="menu" />
+<ZPopoverTrigger
+	{...rest}
+	bind:ref
+	{disabled}
+	popupRole="menu"
+	onclick={handleClick}
+	onkeydown={handleKeydown}
+/>

@@ -44,6 +44,8 @@
 </script>
 
 <script lang="ts">
+	import { isKeyboardComposing } from '../../../runtime/collection/collection-navigation.svelte.js';
+	import { useZui } from '../../../runtime/foundation/context.js';
 	import { useZPopover } from '../popover/context.svelte.js';
 	let {
 		children,
@@ -53,6 +55,7 @@
 		tabindex = 0,
 		...rest
 	}: ZContextMenuTriggerProps = $props();
+	const zui = useZui();
 	const popover = useZPopover();
 	let anchor = $state<HTMLSpanElement | null>(null);
 	let x = $state(0);
@@ -63,26 +66,26 @@
 			if (popover.trigger === anchor) popover.setTrigger(null);
 		};
 	});
-	function openAt(clientX: number, clientY: number): void {
+	function openAt(target: HTMLDivElement, clientX: number, clientY: number): void {
 		x = clientX;
 		y = clientY;
-		ref?.focus({ preventScroll: true });
+		target.focus({ preventScroll: true });
 		popover.setOpen(true);
 	}
 	function handleContextMenu(event: MouseEvent & { currentTarget: HTMLDivElement }): void {
 		oncontextmenu?.(event);
 		if (!event.defaultPrevented) {
 			event.preventDefault();
-			openAt(event.clientX, event.clientY);
+			openAt(event.currentTarget, event.clientX, event.clientY);
 		}
 	}
 	function handleKeydown(event: KeyboardEvent & { currentTarget: HTMLDivElement }): void {
 		onkeydown?.(event);
-		if (event.defaultPrevented) return;
+		if (event.defaultPrevented || isKeyboardComposing(event)) return;
 		if (event.key === 'ContextMenu' || (event.key === 'F10' && event.shiftKey)) {
 			event.preventDefault();
 			const rect = event.currentTarget.getBoundingClientRect();
-			openAt(rect.left, rect.bottom);
+			openAt(event.currentTarget, zui.direction === 'rtl' ? rect.right : rect.left, rect.bottom);
 		}
 	}
 </script>
@@ -96,6 +99,7 @@
 	aria-controls={popover.contentId}
 	aria-expanded={popover.open}
 	aria-haspopup="menu"
+	aria-keyshortcuts={rest['aria-keyshortcuts'] ?? 'ContextMenu Shift+F10'}
 	data-state={popover.open ? 'open' : 'closed'}
 	oncontextmenu={handleContextMenu}
 	onkeydown={handleKeydown}
