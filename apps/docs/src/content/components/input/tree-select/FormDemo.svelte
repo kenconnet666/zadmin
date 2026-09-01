@@ -7,7 +7,7 @@
 		{ key: 'docs', label: '文档站', parentKey: 'web' },
 		{ key: 'worker', label: '任务执行器', parentKey: 'platform' }
 	];
-	let value = $state<string | number>('docs');
+	let value = $state<string | number | null>('docs');
 </script>
 
 <form>
@@ -15,6 +15,7 @@
 		<ZTreeSelect
 			aria-label="选择项目节点"
 			bind:value
+			clearable
 			defaultExpandedKeys={['platform', 'web']}
 			defaultValue="docs"
 			name="node"

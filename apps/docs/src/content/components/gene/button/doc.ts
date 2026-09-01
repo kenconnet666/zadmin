@@ -94,6 +94,7 @@ export const buttonDoc = defineComponentDoc(buttonMetadata, {
 	accessibility: [
 		'默认type=button，避免在表单中意外提交。',
 		'loading设置aria-busy并禁用交互。',
-		'保留键盘、焦点和原生button事件语义。'
+		'保留键盘、焦点和原生button事件语义。',
+		'auto按button.ownerDocument的系统偏好解析；full显式保留Theme过渡，reduced把过渡时长归零。'
 	]
 });

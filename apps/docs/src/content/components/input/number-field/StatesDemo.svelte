@@ -11,6 +11,6 @@
 		step={100}
 	/>
 	<ZNumberField defaultValue={50} inputLabel="只读比例" max={100} min={0} readonly />
-	<ZNumberField defaultValue={120} inputLabel="无效比例" invalid max={100} min={0} />
+	<ZNumberField allowOutOfRange defaultValue={120} inputLabel="越界比例" max={100} min={0} />
 	<ZNumberField defaultValue={4} disabled inputLabel="禁用副本数" />
 </ZStack>

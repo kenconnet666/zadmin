@@ -8,7 +8,7 @@
 </script>
 
 <ZCarousel
-	ariaLabel="不循环的发布步骤"
+	aria-label="不循环的发布步骤"
 	{items}
 	itemKey={(item) => item.id}
 	itemLabel={(item) => item.label}

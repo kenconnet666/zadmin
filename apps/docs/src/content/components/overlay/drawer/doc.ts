@@ -25,7 +25,7 @@ export const drawerDoc = defineComponentDoc(drawerMetadata, {
 	sourceApi: drawerApiFacts,
 	teaching: {
 		summary:
-			'复用Dialog的modal生命周期，提供四个逻辑方向、主题预设与CSS尺寸、窄屏边界和完整动画偏好。'
+			'复用Dialog的modal生命周期，提供四个逻辑方向、主题预设与CSS尺寸、窄屏边界和完整进出场动画。'
 	},
 	members: [
 		drawerTriggerMetadata,
@@ -82,7 +82,9 @@ export const drawerDoc = defineComponentDoc(drawerMetadata, {
 	accessibility: [
 		'Content沿用dialog与aria-modal、稳定Title/Description关系、焦点循环、scroll lock和inert。',
 		'start/end使用CSS逻辑属性并随Provider direction翻转；top/bottom不受文字方向影响。',
-		'auto跟随prefers-reduced-motion，full显式保留动画，reduced立即完成Presence退出。',
+		'auto跟随prefers-reduced-motion，full显式保留进出场，reduced不排队动画帧并立即完成Presence退出。',
+		'Content和Overlay挂载后先提供一个已绘制的关闭帧，再进入entered；data-motion-state可用于黑盒验收。',
+		'Portal到iframe或ShadowRoot时，进入帧与Presence退出计时都绑定真实内容的owner Window，销毁会取消未完成任务。',
 		'modal语义固定焦点陷阱与body scroll lock；persistent/permanent侧栏属于Layout，不混入Drawer。',
 		'触摸滑动、可拖拽尺寸与Ant式push没有跨输入设备的稳定需求，留待独立交互模型验证后加入。'
 	]

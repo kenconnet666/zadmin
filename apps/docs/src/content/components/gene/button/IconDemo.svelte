@@ -8,7 +8,7 @@
 			<ZIcon name="search" />
 		</ZButton>
 		<ZButton aria-label="关闭" title="关闭" variant="secondary">
-			<ZIcon name="x" />
+			<ZIcon name="close" />
 		</ZButton>
 		<ZButton aria-label="删除" title="删除" variant="danger">
 			<ZIcon name="warning" />

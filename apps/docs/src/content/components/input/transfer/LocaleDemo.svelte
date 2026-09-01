@@ -15,6 +15,7 @@
 		{ key: 'quality', label: 'Quality' }
 	] as const;
 	let chinese = $state(true);
+	let rtl = $state(false);
 </script>
 
 <ZStack gap="medium">
@@ -22,9 +23,13 @@
 		<ZButton variant="secondary" onclick={() => (chinese = !chinese)}>
 			切换到{chinese ? '英文' : '中文'}默认文案
 		</ZButton>
+		<ZButton variant="secondary" onclick={() => (rtl = !rtl)}>
+			切换到{rtl ? 'LTR' : 'RTL'}方向
+		</ZButton>
 		<ZText tone="muted">{chinese ? 'zh-CN' : 'en-US'}</ZText>
 	</ZStack>
 	<ZProvider
+		direction={rtl ? 'rtl' : 'ltr'}
 		locale={chinese ? 'zh-CN' : 'en-US'}
 		localePack={chinese ? zhCNLocalePack : enUSLocalePack}
 	>

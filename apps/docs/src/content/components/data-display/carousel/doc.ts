@@ -5,12 +5,54 @@ import BoundariesDemo from './BoundariesDemo.svelte';
 import boundariesSource from './BoundariesDemo.svelte?raw';
 import AutoplayDemo from './AutoplayDemo.svelte';
 import autoplaySource from './AutoplayDemo.svelte?raw';
+import { carouselApiFacts } from '../../../../framework/component-api.generated.js';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const carouselDoc = defineComponentDoc(carouselMetadata, {
+	profiles: ['collection', 'animated'],
+	sourceApi: carouselApiFacts,
+	teaching: {
+		props: {
+			'aria-label': {
+				default: '必填',
+				description: 'Carousel region的原生业务可访问名称；不应只写泛化“轮播”。'
+			},
+			ariaLabel: {
+				default: 'undefined',
+				description: 'deprecated兼容别名；新代码使用原生aria-label。'
+			},
+			defaultValue: {
+				default: '第一张slide key',
+				description: '非受控初始slide；动态items仍按稳定typed key保持身份。'
+			},
+			itemLabel: {
+				default: '必填',
+				description: '每张slide的业务名称，用于位置公告和直接跳转按钮。'
+			},
+			nextLabel: {
+				default: 'localePack.carousel.nextSlide',
+				description: '下一张控制名称；显式值优先。'
+			},
+			pauseLabel: {
+				default: 'localePack.carousel.pauseRotation',
+				description: '暂停自动轮播控制名称；显式值优先。'
+			},
+			playLabel: {
+				default: 'localePack.carousel.startRotation',
+				description: '恢复自动轮播控制名称；显式值优先。'
+			},
+			previousLabel: {
+				default: 'localePack.carousel.previousSlide',
+				description: '上一张控制名称；显式值优先。'
+			}
+		},
+		summary:
+			'稳定typed-key、完整rotation controls、owner-realm可见性/计时器、typed locale与多原因暂停共同拥有的生产Carousel。'
+	},
 	demos: [
 		{
 			component: FormDemo,
+			covers: ['controlled', 'keyboard', 'variants-and-states'],
 			description: '稳定slide key、显式rotation control和直接跳转保持同一value。',
 			id: 'carousel-controls',
 			source,
@@ -18,6 +60,7 @@ export const carouselDoc = defineComponentDoc(carouselMetadata, {
 		},
 		{
 			component: BoundariesDemo,
+			covers: ['disabled', 'uncontrolled', 'variants-and-states'],
 			description: '关闭loop后首尾控制正确禁用，且不启动自动轮播。',
 			id: 'carousel-boundaries',
 			source: boundariesSource,
@@ -25,7 +68,9 @@ export const carouselDoc = defineComponentDoc(carouselMetadata, {
 		},
 		{
 			component: AutoplayDemo,
-			description: '显式自动轮播在hover、内部焦点、用户暂停或reduced-motion下停止并保留当前value。',
+			covers: ['accessible-name', 'full-motion', 'reduced-motion', 'resource-cleanup'],
+			description:
+				'显式自动轮播在hover、内部焦点、页面隐藏、用户暂停或reduced-motion下停止并保留当前value。',
 			id: 'carousel-autoplay-pause',
 			source: autoplaySource,
 			title: '自动轮播与暂停条件'
@@ -33,9 +78,19 @@ export const carouselDoc = defineComponentDoc(carouselMetadata, {
 	],
 	accessibility: [
 		'根使用具名region与carousel roledescription，每个slide具备全局位置和名称。',
-		'自动轮播存在时必须渲染暂停/开始按钮；焦点进入、hover和reduced-motion都会暂停。',
+		'自动轮播存在时必须渲染暂停/开始按钮；焦点进入、hover、ownerDocument隐藏和reduced-motion都会暂停。',
 		'自动旋转时viewport aria-live=off，暂停后切换为polite，避免连续公告。',
-		'上一张、下一张和直接跳转均使用原生button，不劫持页面方向键。'
+		'上一张、下一张和直接跳转均使用原生button，不劫持页面方向键。',
+		'matchMedia、visibilitychange和interval都绑定到Carousel真实owner realm，卸载或暂停会同步释放。',
+		'控制、位置、直接跳转与aria-roledescription均来自typed carousel locale；显式上一张/下一张/暂停/恢复文案优先。'
 	],
-	keywords: ['carousel', 'slides', 'autoplay', 'reduced motion', 'rotation control']
+	keywords: [
+		'carousel',
+		'slides',
+		'autoplay',
+		'reduced motion',
+		'rotation control',
+		'locale',
+		'RTL'
+	]
 });

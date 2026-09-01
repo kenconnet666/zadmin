@@ -37,7 +37,19 @@ export const fieldDoc = defineComponentDoc(fieldMetadata, {
 				default: 'false',
 				description: '显示必填标记并把aria-required投射给控件。'
 			},
-			size: { default: "'medium'", description: '控制标签、控件与消息之间的间距。' }
+			size: {
+				default: 'undefined',
+				description:
+					'显式时控制字段间距并通过Field context声明control尺寸；未传时control继续采用Provider density。'
+			},
+			success: {
+				default: '—',
+				description: '一个或多个成功消息，建立稳定aria-describedby关系。'
+			},
+			warning: {
+				default: '—',
+				description: '一个或多个非阻断警告消息，不会设置aria-invalid。'
+			}
 		},
 		summary: '统一关联label、description、错误、表单状态与唯一焦点owner的无侵入字段容器。'
 	},
@@ -53,7 +65,8 @@ export const fieldDoc = defineComponentDoc(fieldMetadata, {
 		{
 			covers: ['disabled', 'invalid', 'readonly', 'variants-and-states'],
 			component: StatesDemo,
-			description: '紧凑、只读、禁用和多错误消息保持统一label与description关系。',
+			description:
+				'三种尺寸、只读、禁用以及error/warning/success消息保持统一label与description关系。',
 			id: 'field-states',
 			source: statesSource,
 			title: '尺寸与字段状态'
@@ -71,6 +84,6 @@ export const fieldDoc = defineComponentDoc(fieldMetadata, {
 	accessibility: [
 		'使用SSR稳定ID连接label和control。',
 		'description和messages共同进入aria-describedby。',
-		'消息集合使用polite live region，避免重复警报。'
+		'error、warning与success消息共享polite live region；只有error建立invalid状态。'
 	]
 });

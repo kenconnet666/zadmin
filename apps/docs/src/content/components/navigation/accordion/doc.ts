@@ -31,6 +31,7 @@ export const accordionDoc = defineComponentDoc(accordionMetadata, {
 	accessibility: [
 		'Trigger使用原生button与aria-expanded/aria-controls，Content使用region与aria-labelledby。',
 		'ArrowUp、ArrowDown、Home和End在Trigger间移动并跳过disabled。',
-		'关闭时Content进入inert退出阶段，动画结束后卸载；reduced motion立即卸载。'
+		'Accordion根是唯一Motion owner：auto读取根节点ownerDocument，Trigger与Content共享最终决策。',
+		'关闭时Content进入inert退出阶段，动画结束后卸载；退出过程中切换到reduced motion也会立即清理Presence。'
 	]
 });

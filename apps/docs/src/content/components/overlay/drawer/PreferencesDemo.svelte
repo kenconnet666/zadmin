@@ -40,11 +40,11 @@
 <ZStack gap="medium">
 	<ZSegmented
 		aria-label="文字方向"
-		items={directions}
+		options={directions}
 		onValueChange={setDirection}
 		value={direction}
 	/>
-	<ZSegmented aria-label="动画偏好" items={motions} onValueChange={setMotion} value={motion} />
+	<ZSegmented aria-label="动画偏好" options={motions} onValueChange={setMotion} value={motion} />
 	<ZProvider {direction} {motion}>
 		<ZDrawer>
 			<ZDrawerTrigger variant="secondary">打开逻辑 start Drawer</ZDrawerTrigger>

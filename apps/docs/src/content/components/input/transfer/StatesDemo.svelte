@@ -24,4 +24,12 @@
 		sourceTitle="可用权限"
 		targetTitle="已授予"
 	/>
+	<ZTransfer
+		aria-label="只读的权限转移"
+		defaultValue={['read', 'write']}
+		readonly
+		{items}
+		sourceTitle="可用权限"
+		targetTitle="只读授权"
+	/>
 </ZStack>

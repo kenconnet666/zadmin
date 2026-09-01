@@ -53,7 +53,7 @@ export const switchDoc = defineComponentDoc(switchMetadata, {
 			ref: { default: 'null', description: '真实HTMLInputElement，可调用focus和blur。' },
 			size: {
 				default: "Provider density（默认 'comfortable' → 'medium'）",
-				description: '显式small/medium/large优先于Provider density。'
+				description: '显式small/medium/large优先，其次继承Field/Form，最后使用Provider density。'
 			},
 			value: { default: "'on'", description: '开启时写入FormData的标量值。' }
 		},

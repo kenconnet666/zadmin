@@ -11,7 +11,7 @@
 
 <ZText tone="muted">value = {value} · hover或内部焦点会暂停自动轮播</ZText>
 <ZCarousel
-	ariaLabel="自动任务状态轮播"
+	aria-label="自动任务状态轮播"
 	autoplayInterval={1200}
 	bind:value
 	data-testid="carousel-autoplay"

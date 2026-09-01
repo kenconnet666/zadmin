@@ -31,7 +31,7 @@ export const inputDoc = defineComponentDoc(inputMetadata, {
 			},
 			size: {
 				default: "Provider density（默认 'comfortable' → 'medium'）",
-				description: '显式尺寸优先，否则响应最近Provider的density。'
+				description: '显式尺寸优先，其次继承Field/Form，最后响应最近Provider的density。'
 			},
 			type: { default: "'text'", description: '受支持且保留原生语义的文本输入类型。' },
 			value: { default: 'undefined', description: 'Svelte bindable文本值。' }

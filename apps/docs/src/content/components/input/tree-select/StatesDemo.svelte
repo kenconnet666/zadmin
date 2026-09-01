@@ -15,4 +15,5 @@
 		placeholder="选择服务"
 	/>
 	<ZTreeSelect aria-label="禁用的服务树选择" defaultValue="api" disabled {nodes} />
+	<ZTreeSelect aria-label="只读的服务树选择" defaultValue="api" readonly {nodes} />
 </ZStack>

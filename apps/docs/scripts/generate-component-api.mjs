@@ -120,15 +120,17 @@ function stringLiteralSet(node) {
 	);
 }
 
-function resolvedTypeText(node, sourceFile, declarations, seen = new Set()) {
+function resolvedTypeText(node, sourceFile, declarations, seen = new Set(), parentPrecedence = 0) {
 	if (ts.isParenthesizedTypeNode(node)) {
-		return resolvedTypeText(node.type, sourceFile, declarations, seen);
+		return `(${resolvedTypeText(node.type, sourceFile, declarations, seen)})`;
 	}
 	if (ts.isUnionTypeNode(node) || ts.isIntersectionTypeNode(node)) {
+		const precedence = ts.isUnionTypeNode(node) ? 1 : 2;
 		const separator = ts.isUnionTypeNode(node) ? ' | ' : ' & ';
-		return node.types
-			.map((item) => resolvedTypeText(item, sourceFile, declarations, seen))
+		const text = node.types
+			.map((item) => resolvedTypeText(item, sourceFile, declarations, seen, precedence))
 			.join(separator);
+		return parentPrecedence > precedence ? `(${text})` : text;
 	}
 	if (ts.isTypeReferenceNode(node) && ts.isIdentifier(node.typeName)) {
 		const name = node.typeName.text;
@@ -141,7 +143,13 @@ function resolvedTypeText(node, sourceFile, declarations, seen = new Set()) {
 				ts.isTypeReferenceNode(declaration.type) ||
 				ts.isParenthesizedTypeNode(declaration.type)
 			) {
-				return resolvedTypeText(declaration.type, sourceFile, declarations, nextSeen);
+				return resolvedTypeText(
+					declaration.type,
+					sourceFile,
+					declarations,
+					nextSeen,
+					parentPrecedence
+				);
 			}
 		}
 	}

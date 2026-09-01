@@ -8,6 +8,7 @@
 		ZStack,
 		ZText
 	} from '@zadmin/zui';
+
 	let value = $state<string | number>('prod');
 	let inputValue = $state('生产');
 	let changes = $state(0);
@@ -29,7 +30,7 @@
 				id="environment-combobox"
 				placeholder="输入环境名称"
 			/>
-			<ZComboboxContent ariaLabel="部署环境建议" data-testid="combobox-content">
+			<ZComboboxContent aria-label="部署环境建议" data-testid="combobox-content">
 				<ZComboboxItem textValue="开发" value="dev">开发</ZComboboxItem>
 				<ZComboboxItem textValue="预发" value="staging">预发</ZComboboxItem>
 				<ZComboboxItem textValue="生产" value="prod">生产</ZComboboxItem>

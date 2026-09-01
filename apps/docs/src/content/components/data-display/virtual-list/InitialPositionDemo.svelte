@@ -8,7 +8,7 @@
 </script>
 
 <ZVirtualList
-	ariaLabel="从第501条开始的审计记录"
+	aria-label="从第501条开始的审计记录"
 	{items}
 	height={180}
 	initialIndex={500}

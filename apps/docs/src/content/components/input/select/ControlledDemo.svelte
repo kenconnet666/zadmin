@@ -16,7 +16,7 @@
 		staging: '预发环境'
 	};
 	let open = $state(false);
-	let value = $state<SelectionKey>('prod');
+	let value = $state<SelectionKey | undefined>('prod');
 </script>
 
 <ZStack gap="medium">
@@ -24,6 +24,9 @@
 		<ZButton type="button" variant="secondary" onclick={() => (open = !open)}
 			>{open ? '由外部关闭' : '由外部打开'}</ZButton
 		>
+		<ZButton type="button" variant="secondary" onclick={() => (value = undefined)}>
+			外部清空
+		</ZButton>
 		<ZSelect bind:open bind:value valueLabel={(key) => labels[String(key)] ?? String(key)}>
 			<ZSelectTrigger aria-label="受控部署环境" />
 			<ZSelectContent>
@@ -34,6 +37,8 @@
 		</ZSelect>
 	</ZStack>
 	<ZText tone="muted"
-		>open = {open} · value = {String(value)} · label = {labels[String(value)]}</ZText
+		>open = {open} · value = {String(value)} · label = {value === undefined
+			? '—'
+			: labels[String(value)]}</ZText
 	>
 </ZStack>

@@ -5,7 +5,13 @@
 		{ key: 'services', label: '服务' },
 		{ key: 'api', label: 'API网关', parentKey: 'services' },
 		{ key: 'docs', label: '文档站', parentKey: 'services' },
-		{ key: 'worker', label: '任务执行器', parentKey: 'services' }
+		{ key: 'worker', label: '任务执行器', parentKey: 'services' },
+		{
+			key: 'audit',
+			label: '审计归档（可导航、不可选择）',
+			parentKey: 'services',
+			selectionDisabled: true
+		}
 	];
 	let formRef = $state<HTMLFormElement | null>(null);
 	let formValues = $state('未读取');
@@ -26,6 +32,7 @@
 			name="services"
 			{nodes}
 			selectionMode="multiple"
+			selectionStyle="checkbox"
 		/>
 		<ZStack direction="row" gap="small" align="center" wrap>
 			<ZButton type="button" onclick={readFormData}>读取FormData</ZButton>

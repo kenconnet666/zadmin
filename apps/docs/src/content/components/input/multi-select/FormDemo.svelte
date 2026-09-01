@@ -8,7 +8,8 @@
 		ZStack,
 		ZText
 	} from '@zadmin/zui';
-	let values = $state<readonly (string | number)[]>(['开发', '生产']);
+
+	let value = $state<readonly (string | number)[]>(['开发', '生产']);
 	let changes = $state(0);
 	let submitted = $state('尚未读取');
 </script>
@@ -16,8 +17,8 @@
 <form onsubmit={(event) => event.preventDefault()}>
 	<ZStack gap="medium">
 		<ZMultiSelect
-			bind:values
-			defaultValues={['开发', '生产']}
+			bind:value
+			defaultValue={['开发', '生产']}
 			name="environment"
 			onValueChange={() => (changes += 1)}
 		>
@@ -35,10 +36,10 @@
 				variant="secondary"
 				onclick={(event) =>
 					(submitted = new FormData(event.currentTarget.form!).getAll('environment').join(','))}
-				>读取FormData</ZButton
-			>
+				>读取FormData
+			</ZButton>
 			<ZButton type="reset" variant="secondary">重置</ZButton>
 		</ZStack>
-		<ZText tone="muted">values = {values.join(',')} · 变更 = {changes} · {submitted}</ZText>
+		<ZText tone="muted">value = {value.join(',')} · 变更 = {changes} · {submitted}</ZText>
 	</ZStack>
 </form>

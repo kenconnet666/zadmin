@@ -20,8 +20,8 @@ export const toastDoc = defineComponentDoc(toastMetadata, {
 			},
 			description: { default: 'undefined', description: '简短补充说明，不重复标题。' },
 			dismissLabel: {
-				default: "'Dismiss notification'",
-				description: '独立Toast关闭按钮的可访问名称；队列默认结合标题生成。'
+				default: 'localePack.feedback.dismissNotification',
+				description: '独立Toast关闭按钮的可访问名称；队列默认用typed locale结合标题生成。'
 			},
 			dismissible: {
 				default: 'true',

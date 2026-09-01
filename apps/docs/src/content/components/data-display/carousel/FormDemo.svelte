@@ -10,7 +10,7 @@
 
 <ZText tone="muted">value = {value}</ZText>
 <ZCarousel
-	ariaLabel="发布摘要轮播"
+	aria-label="发布摘要轮播"
 	{items}
 	itemKey={(entry) => entry.id}
 	itemLabel={(entry) => entry.label}

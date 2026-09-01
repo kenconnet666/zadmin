@@ -34,7 +34,7 @@
 	<ZText weight="semibold">逻辑方向</ZText>
 	<ZSegmented
 		aria-label="Drawer逻辑方向"
-		items={placements}
+		options={placements}
 		onValueChange={setPlacement}
 		value={placement}
 	/>

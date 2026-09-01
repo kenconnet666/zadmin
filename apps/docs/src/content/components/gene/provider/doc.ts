@@ -1,6 +1,8 @@
 import { providerMetadata } from '@zadmin/zui/metadata';
 import LocaleDemo from './LocaleDemo.svelte';
 import localeSource from './LocaleDemo.svelte?raw';
+import MotionDemo from './MotionDemo.svelte';
+import motionSource from './MotionDemo.svelte?raw';
 import PortalDemo from './PortalDemo.svelte';
 import portalSource from './PortalDemo.svelte?raw';
 import ThemeDemo from './ThemeDemo.svelte';
@@ -21,8 +23,7 @@ export const providerDoc = defineComponentDoc(providerMetadata, {
 			},
 			contrast: {
 				default: "继承父级或 'normal'",
-				description:
-					'设置对比度偏好；应用可据此选择高对比Theme，后代也可读取同一作用域值。'
+				description: '设置对比度偏好；应用可据此选择高对比Theme，后代也可读取同一作用域值。'
 			},
 			density: {
 				default: "继承父级或 'comfortable'",
@@ -46,7 +47,8 @@ export const providerDoc = defineComponentDoc(providerMetadata, {
 			},
 			motion: {
 				default: "继承父级或 'auto'",
-				description: '选择完整、减少或尊重平台偏好的动画策略。'
+				description:
+					'选择完整、减少或尊重组件ownerDocument平台偏好的动画策略；同一realm共享一个matchMedia订阅。'
 			},
 			portalContainer: {
 				default: '继承父级或null',
@@ -113,7 +115,20 @@ export const providerDoc = defineComponentDoc(providerMetadata, {
 			id: 'provider-locale-pack',
 			source: localeSource,
 			title: '类型安全Locale Pack'
+		},
+		{
+			covers: ['controlled', 'full-motion', 'reduced-motion', 'resource-cleanup'],
+			component: MotionDemo,
+			description:
+				'一条Provider策略同时驱动CSS过渡、WAAPI循环和自动任务；auto订阅组件所在Window，full覆盖系统减少偏好，reduced立即静止并清理运行资源。',
+			id: 'provider-motion-runtime',
+			source: motionSource,
+			title: '统一Motion运行时'
 		}
 	],
-	accessibility: ['不创建无语义wrapper。', '不会改变子组件的原生语义与焦点顺序。']
+	accessibility: [
+		'不创建无语义wrapper。',
+		'不会改变子组件的原生语义与焦点顺序。',
+		'auto按真实owner realm响应prefers-reduced-motion；reduced不会删除状态反馈，只停止非必要位移、循环和延迟退出。'
+	]
 });

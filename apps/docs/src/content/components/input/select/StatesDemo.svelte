@@ -11,11 +11,15 @@
 			<ZSelectItem
 				onSelect={(event) => event.preventDefault()}
 				textValue="维护中"
-				value="maintenance">维护中（阻止选择）</ZSelectItem
-			>
+				value="maintenance"
+				>维护中（阻止选择）
+			</ZSelectItem>
 		</ZSelectContent>
 	</ZSelect>
-	<ZSelect disabled defaultValue="cn-east"
-		><ZSelectTrigger aria-label="禁用的发布区域">华东</ZSelectTrigger></ZSelect
-	>
+	<ZSelect disabled defaultValue="cn-east">
+		<ZSelectTrigger aria-label="禁用的发布区域">华东</ZSelectTrigger>
+	</ZSelect>
+	<ZSelect readonly defaultValue="cn-north">
+		<ZSelectTrigger aria-label="只读的发布区域" />
+	</ZSelect>
 </ZStack>

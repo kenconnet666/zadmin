@@ -288,6 +288,11 @@ export const comboboxApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'emptyText',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'filter',
 			required: false,
 			type: '(textValue: string, query: string) => boolean'
@@ -304,6 +309,21 @@ export const comboboxApiFacts = {
 		},
 		{
 			name: 'invalid',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'loading',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'loadingText',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'loop',
 			required: false,
 			type: 'boolean'
 		},
@@ -333,14 +353,39 @@ export const comboboxApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'openOnFocus',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'options',
+			required: false,
+			type: 'readonly ZComboboxOption[]'
+		},
+		{
 			name: 'placement',
 			required: false,
 			type: 'PopoverPlacement'
 		},
 		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'required',
 			required: false,
 			type: 'boolean'
+		},
+		{
+			name: 'shouldFilter',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'valueLabel',
+			required: false,
+			type: '(value: SelectionKey) => string'
 		},
 		{
 			name: 'value',
@@ -349,7 +394,7 @@ export const comboboxApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/combobox/ZCombobox.svelte',
-	undocumentedProps: ['defaultOpen', 'form', 'placement']
+	undocumentedProps: ['controlId', 'form', 'invalid', 'name', 'placement', 'required']
 } as const satisfies ComponentApiFacts;
 
 export const comboboxContentApiFacts = {
@@ -359,6 +404,11 @@ export const comboboxContentApiFacts = {
 	name: 'ZComboboxContent',
 	props: [
 		{
+			name: 'aria-label',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'ariaLabel',
 			required: false,
 			type: 'string'
@@ -367,6 +417,46 @@ export const comboboxContentApiFacts = {
 			name: 'children',
 			required: false,
 			type: 'Snippet'
+		},
+		{
+			name: 'empty',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'groupLabel',
+			required: false,
+			type: 'Snippet<[group: string]>'
+		},
+		{
+			name: 'loading',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'option',
+			required: false,
+			type: 'Snippet<[option: ZComboboxOption]>'
+		},
+		{
+			name: 'virtual',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'virtualHeight',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'virtualItemSize',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'virtualOverscan',
+			required: false,
+			type: 'number'
 		}
 	],
 	source: 'ui/zui/src/components/compound/combobox/ZComboboxContent.svelte',
@@ -1021,6 +1111,11 @@ export const multiSelectApiFacts = {
 			type: 'Snippet'
 		},
 		{
+			name: 'clearable',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'controlId',
 			required: false,
 			type: 'string'
@@ -1029,6 +1124,11 @@ export const multiSelectApiFacts = {
 			name: 'defaultOpen',
 			required: false,
 			type: 'boolean'
+		},
+		{
+			name: 'defaultValue',
+			required: false,
+			type: 'readonly SelectionKey[]'
 		},
 		{
 			name: 'defaultValues',
@@ -1041,6 +1141,11 @@ export const multiSelectApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'emptyText',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'form',
 			required: false,
 			type: 'string'
@@ -1049,6 +1154,26 @@ export const multiSelectApiFacts = {
 			name: 'invalid',
 			required: false,
 			type: 'boolean'
+		},
+		{
+			name: 'loading',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'loadingText',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'loop',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'maxTagCount',
+			required: false,
+			type: 'number'
 		},
 		{
 			name: 'name',
@@ -1063,12 +1188,27 @@ export const multiSelectApiFacts = {
 		{
 			name: 'onValueChange',
 			required: false,
+			type: '(value: readonly SelectionKey[]) => void'
+		},
+		{
+			name: 'onValuesChange',
+			required: false,
 			type: '(values: readonly SelectionKey[]) => void'
 		},
 		{
 			name: 'open',
 			required: false,
 			type: 'boolean'
+		},
+		{
+			name: 'options',
+			required: false,
+			type: 'readonly ZMultiSelectOption[]'
+		},
+		{
+			name: 'overflowLabel',
+			required: false,
+			type: '(hiddenCount: number) => string'
 		},
 		{
 			name: 'placeholder',
@@ -1081,9 +1221,19 @@ export const multiSelectApiFacts = {
 			type: 'PopoverPlacement'
 		},
 		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'required',
 			required: false,
 			type: 'boolean'
+		},
+		{
+			name: 'value',
+			required: false,
+			type: 'readonly SelectionKey[]'
 		},
 		{
 			name: 'valueLabel',
@@ -1097,7 +1247,7 @@ export const multiSelectApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/multi-select/ZMultiSelect.svelte',
-	undocumentedProps: []
+	undocumentedProps: ['controlId', 'form', 'invalid', 'name', 'required']
 } as const satisfies ComponentApiFacts;
 
 export const multiSelectContentApiFacts = {
@@ -1110,6 +1260,46 @@ export const multiSelectContentApiFacts = {
 			name: 'children',
 			required: false,
 			type: 'Snippet'
+		},
+		{
+			name: 'empty',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'groupLabel',
+			required: false,
+			type: 'Snippet<[group: string]>'
+		},
+		{
+			name: 'loading',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'option',
+			required: false,
+			type: 'Snippet<[option: ZMultiSelectOption]>'
+		},
+		{
+			name: 'virtual',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'virtualHeight',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'virtualItemSize',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'virtualOverscan',
+			required: false,
+			type: 'number'
 		}
 	],
 	source: 'ui/zui/src/components/compound/multi-select/ZMultiSelectContent.svelte',
@@ -1445,7 +1635,7 @@ export const radioGroupApiFacts = {
 		{
 			name: 'defaultValue',
 			required: false,
-			type: 'string'
+			type: 'SelectionKey'
 		},
 		{
 			name: 'disabled',
@@ -1475,12 +1665,22 @@ export const radioGroupApiFacts = {
 		{
 			name: 'onValueChange',
 			required: false,
-			type: '(value: string) => void'
+			type: '(value: SelectionKey) => void'
+		},
+		{
+			name: 'options',
+			required: false,
+			type: 'readonly ZRadioGroupOption[]'
 		},
 		{
 			name: 'orientation',
 			required: false,
 			type: "'horizontal' | 'vertical'"
+		},
+		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean'
 		},
 		{
 			name: 'ref',
@@ -1495,7 +1695,7 @@ export const radioGroupApiFacts = {
 		{
 			name: 'value',
 			required: false,
-			type: 'string'
+			type: 'SelectionKey'
 		}
 	],
 	source: 'ui/zui/src/components/compound/radio-group/ZRadioGroup.svelte',
@@ -1517,6 +1717,11 @@ export const radioGroupItemApiFacts = {
 			name: 'onchange',
 			required: false,
 			type: "HTMLInputAttributes['onchange']"
+		},
+		{
+			name: 'onclick',
+			required: false,
+			type: "HTMLInputAttributes['onclick']"
 		},
 		{
 			name: 'onfocus',
@@ -1541,7 +1746,7 @@ export const radioGroupItemApiFacts = {
 		{
 			name: 'value',
 			required: true,
-			type: 'string'
+			type: 'SelectionKey'
 		}
 	],
 	source: 'ui/zui/src/components/compound/radio-group/ZRadioGroupItem.svelte',
@@ -1580,12 +1785,32 @@ export const selectApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'emptyText',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'form',
 			required: false,
 			type: 'string'
 		},
 		{
 			name: 'invalid',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'loading',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'loadingText',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'loop',
 			required: false,
 			type: 'boolean'
 		},
@@ -1610,6 +1835,11 @@ export const selectApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'options',
+			required: false,
+			type: 'readonly ZSelectOption[]'
+		},
+		{
 			name: 'placeholder',
 			required: false,
 			type: 'string'
@@ -1618,6 +1848,11 @@ export const selectApiFacts = {
 			name: 'placement',
 			required: false,
 			type: 'PopoverPlacement'
+		},
+		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean'
 		},
 		{
 			name: 'required',
@@ -1636,7 +1871,7 @@ export const selectApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/select/ZSelect.svelte',
-	undocumentedProps: []
+	undocumentedProps: ['controlId', 'form', 'invalid', 'name', 'required']
 } as const satisfies ComponentApiFacts;
 
 export const selectContentApiFacts = {
@@ -1649,6 +1884,46 @@ export const selectContentApiFacts = {
 			name: 'children',
 			required: false,
 			type: 'Snippet'
+		},
+		{
+			name: 'empty',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'groupLabel',
+			required: false,
+			type: 'Snippet<[group: string]>'
+		},
+		{
+			name: 'loading',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'option',
+			required: false,
+			type: 'Snippet<[option: ZSelectOption]>'
+		},
+		{
+			name: 'virtual',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'virtualHeight',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'virtualItemSize',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'virtualOverscan',
+			required: false,
+			type: 'number'
 		}
 	],
 	source: 'ui/zui/src/components/compound/select/ZSelectContent.svelte',
@@ -1981,14 +2256,19 @@ export const treeApiFacts = {
 			type: "'bare' | 'tree'"
 		},
 		{
+			name: 'controller',
+			required: false,
+			type: 'ZTreeController<TKey> | null'
+		},
+		{
 			name: 'defaultExpandedKeys',
 			required: false,
-			type: 'readonly SelectionKey[]'
+			type: 'readonly TKey[]'
 		},
 		{
 			name: 'defaultSelectedKeys',
 			required: false,
-			type: 'readonly SelectionKey[]'
+			type: 'readonly TKey[]'
 		},
 		{
 			name: 'disabled',
@@ -1996,14 +2276,44 @@ export const treeApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'disallowEmptySelection',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'empty',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'emptyText',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'expandedKeys',
 			required: false,
-			type: 'readonly SelectionKey[]'
+			type: 'readonly TKey[]'
 		},
 		{
 			name: 'form',
 			required: false,
 			type: 'string'
+		},
+		{
+			name: 'height',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'item',
+			required: false,
+			type: 'Snippet<[TreeNode<TKey>, TreeEntry<TKey>]>'
+		},
+		{
+			name: 'itemSize',
+			required: false,
+			type: 'number'
 		},
 		{
 			name: 'name',
@@ -2013,17 +2323,32 @@ export const treeApiFacts = {
 		{
 			name: 'nodes',
 			required: true,
-			type: 'readonly TreeNode[]'
+			type: 'readonly TreeNode<TKey>[]'
 		},
 		{
 			name: 'onExpandedChange',
 			required: false,
-			type: '(keys: readonly SelectionKey[]) => void'
+			type: '(keys: readonly TKey[]) => void'
+		},
+		{
+			name: 'onLoadChildren',
+			required: false,
+			type: '( node: TreeNode<TKey>, context: TreeLoadContext<TKey> ) => void | Promise<void>'
+		},
+		{
+			name: 'onLoadError',
+			required: false,
+			type: '(key: TKey, error: unknown) => void'
 		},
 		{
 			name: 'onSelectionChange',
 			required: false,
-			type: '(keys: readonly SelectionKey[]) => void'
+			type: '(keys: readonly TKey[]) => void'
+		},
+		{
+			name: 'overscan',
+			required: false,
+			type: 'number'
 		},
 		{
 			name: 'ref',
@@ -2031,27 +2356,27 @@ export const treeApiFacts = {
 			type: 'HTMLDivElement | null'
 		},
 		{
+			name: 'resetOnForm',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'selectedKeys',
 			required: false,
-			type: 'readonly SelectionKey[]'
+			type: 'readonly TKey[]'
 		},
 		{
 			name: 'selectionMode',
 			required: false,
-			type: "'multiple' | 'none' | 'single'"
+			type: 'SelectionMode'
 		},
 		{
-			name: 'height',
+			name: 'selectionStyle',
 			required: false,
-			type: 'number'
+			type: "'checkbox' | 'highlight'"
 		},
 		{
-			name: 'itemSize',
-			required: false,
-			type: 'number'
-		},
-		{
-			name: 'overscan',
+			name: 'ssrViewportSize',
 			required: false,
 			type: 'number'
 		},
@@ -2065,10 +2390,9 @@ export const treeApiFacts = {
 	undocumentedProps: [
 		'defaultExpandedKeys',
 		'defaultSelectedKeys',
+		'emptyText',
 		'form',
-		'height',
-		'itemSize',
-		'overscan'
+		'onLoadError'
 	]
 } as const satisfies ComponentApiFacts;
 
@@ -2182,8 +2506,13 @@ export const carouselApiFacts = {
 	name: 'ZCarousel',
 	props: [
 		{
+			name: 'aria-label',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'ariaLabel',
-			required: true,
+			required: false,
 			type: 'string'
 		},
 		{
@@ -2264,7 +2593,6 @@ export const carouselApiFacts = {
 	],
 	source: 'ui/zui/src/components/data-display/ZCarousel.svelte',
 	undocumentedProps: [
-		'ariaLabel',
 		'defaultValue',
 		'itemLabel',
 		'nextLabel',
@@ -2826,8 +3154,23 @@ export const virtualListApiFacts = {
 	props: [
 		{
 			name: 'ariaLabel',
-			required: true,
+			required: false,
 			type: 'string'
+		},
+		{
+			name: 'controller',
+			required: false,
+			type: 'ZVirtualListController<TKey> | null'
+		},
+		{
+			name: 'empty',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'estimateSize',
+			required: false,
+			type: 'number | ((item: TItem, index: number) => number)'
 		},
 		{
 			name: 'height',
@@ -2840,14 +3183,59 @@ export const virtualListApiFacts = {
 			type: 'number'
 		},
 		{
+			name: 'initialKey',
+			required: false,
+			type: 'TKey'
+		},
+		{
 			name: 'item',
 			required: true,
-			type: 'Snippet<[TItem, number]>'
+			type: 'Snippet<[TItem, number, VirtualListItemContext<TKey>]>'
+		},
+		{
+			name: 'itemDisabled',
+			required: false,
+			type: '(item: TItem, index: number) => boolean'
+		},
+		{
+			name: 'itemExpanded',
+			required: false,
+			type: '(item: TItem, index: number) => boolean | undefined'
+		},
+		{
+			name: 'itemId',
+			required: false,
+			type: '(item: TItem, index: number) => string | undefined'
 		},
 		{
 			name: 'itemKey',
 			required: true,
-			type: '(item: TItem, index: number) => number | string'
+			type: '(item: TItem, index: number) => TKey'
+		},
+		{
+			name: 'itemLevel',
+			required: false,
+			type: '(item: TItem, index: number) => number'
+		},
+		{
+			name: 'itemPosInSet',
+			required: false,
+			type: '(item: TItem, index: number) => number'
+		},
+		{
+			name: 'itemRole',
+			required: false,
+			type: "'listitem' | 'option' | 'presentation' | 'row' | 'treeitem'"
+		},
+		{
+			name: 'itemSelected',
+			required: false,
+			type: '(item: TItem, index: number) => boolean | undefined'
+		},
+		{
+			name: 'itemSetSize',
+			required: false,
+			type: '(item: TItem, index: number) => number'
 		},
 		{
 			name: 'itemSize',
@@ -2860,9 +3248,24 @@ export const virtualListApiFacts = {
 			type: 'readonly TItem[]'
 		},
 		{
+			name: 'loading',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'loadingContent',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'onItemMount',
+			required: false,
+			type: '(key: TKey, element: HTMLElement) => void | (() => void)'
+		},
+		{
 			name: 'onRangeChange',
 			required: false,
-			type: '(range: VirtualRange) => void'
+			type: '(range: KeyedVirtualRange<TKey>) => void'
 		},
 		{
 			name: 'overscan',
@@ -2873,10 +3276,20 @@ export const virtualListApiFacts = {
 			name: 'ref',
 			required: false,
 			type: 'HTMLDivElement | null'
+		},
+		{
+			name: 'role',
+			required: false,
+			type: "'grid' | 'list' | 'listbox' | 'tree'"
+		},
+		{
+			name: 'ssrViewportSize',
+			required: false,
+			type: 'number'
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZVirtualList.svelte',
-	undocumentedProps: ['ariaLabel', 'initialIndex']
+	undocumentedProps: []
 } as const satisfies ComponentApiFacts;
 
 export const alertApiFacts = {
@@ -2932,7 +3345,7 @@ export const alertApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/feedback/ZAlert.svelte',
-	undocumentedProps: ['dismissLabel']
+	undocumentedProps: []
 } as const satisfies ComponentApiFacts;
 
 export const loadingBarApiFacts = {
@@ -3820,9 +4233,19 @@ export const checkboxApiFacts = {
 			type: "HTMLInputAttributes['onchange']"
 		},
 		{
+			name: 'onclick',
+			required: false,
+			type: "HTMLInputAttributes['onclick']"
+		},
+		{
 			name: 'onCheckedChange',
 			required: false,
 			type: '(checked: CheckboxState) => void'
+		},
+		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean'
 		},
 		{
 			name: 'ref',
@@ -4345,7 +4768,17 @@ export const fieldApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'medium' | 'small'"
+			type: 'ZControlSize'
+		},
+		{
+			name: 'success',
+			required: false,
+			type: 'FieldMessages'
+		},
+		{
+			name: 'warning',
+			required: false,
+			type: 'FieldMessages'
 		},
 		{
 			name: 'ref',
@@ -4478,6 +4911,16 @@ export const formApiFacts = {
 			type: 'Snippet'
 		},
 		{
+			name: 'controller',
+			required: false,
+			type: 'ZFormController<StandardSchemaV1.InferOutput<TSchema>> | null'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'errors',
 			required: false,
 			type: 'FormErrors'
@@ -4503,6 +4946,16 @@ export const formApiFacts = {
 			type: '(detail: FormInvalidDetail) => void'
 		},
 		{
+			name: 'onreset',
+			required: false,
+			type: '(event: Event & { currentTarget: HTMLFormElement }) => void'
+		},
+		{
+			name: 'onsubmit',
+			required: false,
+			type: '(event: SubmitEvent & { currentTarget: HTMLFormElement }) => void'
+		},
+		{
 			name: 'onReset',
 			required: false,
 			type: '(event: Event) => void'
@@ -4515,7 +4968,7 @@ export const formApiFacts = {
 		{
 			name: 'onValidSubmit',
 			required: false,
-			type: '(detail: FormSubmitDetail) => void'
+			type: '( detail: FormSubmitDetail<StandardSchemaV1.InferOutput<TSchema>> ) => void'
 		},
 		{
 			name: 'onValidationError',
@@ -4533,9 +4986,24 @@ export const formApiFacts = {
 			type: 'HTMLFormElement | null'
 		},
 		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'schema',
 			required: false,
-			type: 'StandardSchemaV1'
+			type: 'TSchema'
+		},
+		{
+			name: 'scrollToFirstError',
+			required: false,
+			type: 'boolean | ScrollIntoViewOptions'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
 		},
 		{
 			name: 'submitted',
@@ -4553,13 +5021,18 @@ export const formApiFacts = {
 			type: 'number'
 		},
 		{
+			name: 'validationMessages',
+			required: false,
+			type: 'ZFormValidationMessages'
+		},
+		{
 			name: 'validating',
 			required: false,
 			type: 'boolean'
 		}
 	],
 	source: 'ui/zui/src/components/input/ZForm.svelte',
-	undocumentedProps: ['onReset', 'onSubmit', 'onValidationError']
+	undocumentedProps: ['onReset', 'onSubmit']
 } as const satisfies ComponentApiFacts;
 
 export const formFieldApiFacts = {
@@ -4569,19 +5042,39 @@ export const formFieldApiFacts = {
 	name: 'ZFormField',
 	props: [
 		{
+			name: 'dependencies',
+			required: false,
+			type: 'readonly FieldPathInput[]'
+		},
+		{
 			name: 'error',
 			required: false,
 			type: 'FieldMessages'
 		},
 		{
+			name: 'htmlName',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'name',
 			required: true,
-			type: 'string'
+			type: 'FieldPathInput'
 		},
 		{
 			name: 'onStateChange',
 			required: false,
 			type: '(state: FormFieldState) => void'
+		},
+		{
+			name: 'success',
+			required: false,
+			type: 'FieldMessages'
+		},
+		{
+			name: 'warning',
+			required: false,
+			type: 'FieldMessages'
 		}
 	],
 	source: 'ui/zui/src/components/input/ZFormField.svelte',
@@ -4778,6 +5271,11 @@ export const numberFieldApiFacts = {
 	name: 'ZNumberField',
 	props: [
 		{
+			name: 'allowOutOfRange',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'clampOnBlur',
 			required: false,
 			type: 'boolean'
@@ -4806,6 +5304,11 @@ export const numberFieldApiFacts = {
 			name: 'formatOptions',
 			required: false,
 			type: 'Intl.NumberFormatOptions'
+		},
+		{
+			name: 'formatter',
+			required: false,
+			type: 'ZNumberFieldFormatter'
 		},
 		{
 			name: 'incrementLabel',
@@ -4858,9 +5361,24 @@ export const numberFieldApiFacts = {
 			type: '(value: number | undefined) => void'
 		},
 		{
+			name: 'pageStep',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'parser',
+			required: false,
+			type: 'ZNumberFieldParser'
+		},
+		{
 			name: 'placeholder',
 			required: false,
 			type: 'string'
+		},
+		{
+			name: 'precision',
+			required: false,
+			type: 'number'
 		},
 		{
 			name: 'readonly',
@@ -4876,6 +5394,11 @@ export const numberFieldApiFacts = {
 			name: 'required',
 			required: false,
 			type: 'boolean'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
 		},
 		{
 			name: 'step',
@@ -5015,9 +5538,19 @@ export const segmentedApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'invalid',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'items',
-			required: true,
-			type: 'readonly SegmentedItem[]'
+			required: false,
+			type: 'readonly ZSegmentedOption[]'
+		},
+		{
+			name: 'loop',
+			required: false,
+			type: 'boolean'
 		},
 		{
 			name: 'name',
@@ -5035,14 +5568,29 @@ export const segmentedApiFacts = {
 			type: '(value: SelectionKey) => void'
 		},
 		{
+			name: 'options',
+			required: false,
+			type: 'readonly ZSegmentedOption[]'
+		},
+		{
 			name: 'orientation',
 			required: false,
 			type: "'horizontal' | 'vertical'"
 		},
 		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'ref',
 			required: false,
 			type: 'HTMLDivElement | null'
+		},
+		{
+			name: 'required',
+			required: false,
+			type: 'boolean'
 		},
 		{
 			name: 'value',
@@ -5051,7 +5599,7 @@ export const segmentedApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZSegmented.svelte',
-	undocumentedProps: ['form']
+	undocumentedProps: []
 } as const satisfies ComponentApiFacts;
 
 export const sliderApiFacts = {
@@ -5101,9 +5649,24 @@ export const sliderApiFacts = {
 			type: "HTMLInputAttributes['oninput']"
 		},
 		{
+			name: 'onkeydown',
+			required: false,
+			type: "HTMLInputAttributes['onkeydown']"
+		},
+		{
+			name: 'onpointerdown',
+			required: false,
+			type: "HTMLInputAttributes['onpointerdown']"
+		},
+		{
 			name: 'onValueChange',
 			required: false,
 			type: '(value: number) => void'
+		},
+		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean'
 		},
 		{
 			name: 'ref',
@@ -5526,6 +6089,16 @@ export const transferApiFacts = {
 			type: 'readonly TransferItem[]'
 		},
 		{
+			name: 'loading',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'loadingText',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'moveToSourceLabel',
 			required: false,
 			type: 'string'
@@ -5544,6 +6117,11 @@ export const transferApiFacts = {
 			name: 'onValueChange',
 			required: false,
 			type: '(value: readonly SelectionKey[]) => void'
+		},
+		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean'
 		},
 		{
 			name: 'ref',
@@ -5574,14 +6152,36 @@ export const transferApiFacts = {
 			name: 'value',
 			required: false,
 			type: 'readonly SelectionKey[]'
+		},
+		{
+			name: 'virtual',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'virtualHeight',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'virtualItemSize',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'virtualOverscan',
+			required: false,
+			type: 'number'
 		}
 	],
 	source: 'ui/zui/src/components/input/ZTransfer.svelte',
 	undocumentedProps: [
 		'emptyText',
 		'form',
+		'invalid',
 		'moveToSourceLabel',
 		'moveToTargetLabel',
+		'required',
 		'searchPlaceholder',
 		'sourceTitle',
 		'targetTitle'
@@ -5600,9 +6200,24 @@ export const treeSelectApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'clearable',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'clearLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'controlId',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'defaultExpandedKeys',
 			required: false,
-			type: 'readonly SelectionKey[]'
+			type: 'readonly TKey[]'
 		},
 		{
 			name: 'defaultOpen',
@@ -5612,7 +6227,7 @@ export const treeSelectApiFacts = {
 		{
 			name: 'defaultValue',
 			required: false,
-			type: 'SelectionKey'
+			type: 'TKey | null'
 		},
 		{
 			name: 'disabled',
@@ -5622,12 +6237,42 @@ export const treeSelectApiFacts = {
 		{
 			name: 'expandedKeys',
 			required: false,
-			type: 'readonly SelectionKey[]'
+			type: 'readonly TKey[]'
 		},
 		{
 			name: 'form',
 			required: false,
 			type: 'string'
+		},
+		{
+			name: 'gutter',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'height',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'invalid',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'item',
+			required: false,
+			type: 'Snippet<[TreeNode<TKey>, TreeEntry<TKey>]>'
+		},
+		{
+			name: 'itemSize',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'matchWidth',
+			required: false,
+			type: 'boolean'
 		},
 		{
 			name: 'name',
@@ -5637,12 +6282,22 @@ export const treeSelectApiFacts = {
 		{
 			name: 'nodes',
 			required: true,
-			type: 'readonly TreeNode[]'
+			type: 'readonly TreeNode<TKey>[]'
 		},
 		{
 			name: 'onExpandedChange',
 			required: false,
-			type: '(keys: readonly SelectionKey[]) => void'
+			type: '(keys: readonly TKey[]) => void'
+		},
+		{
+			name: 'onLoadChildren',
+			required: false,
+			type: '( node: TreeNode<TKey>, context: TreeLoadContext<TKey> ) => void | Promise<void>'
+		},
+		{
+			name: 'onLoadError',
+			required: false,
+			type: '(key: TKey, error: unknown) => void'
 		},
 		{
 			name: 'onOpenChange',
@@ -5652,12 +6307,17 @@ export const treeSelectApiFacts = {
 		{
 			name: 'onValueChange',
 			required: false,
-			type: '(value: SelectionKey | undefined) => void'
+			type: '(value: TKey | null) => void'
 		},
 		{
 			name: 'open',
 			required: false,
 			type: 'boolean'
+		},
+		{
+			name: 'overscan',
+			required: false,
+			type: 'number'
 		},
 		{
 			name: 'placeholder',
@@ -5670,25 +6330,62 @@ export const treeSelectApiFacts = {
 			type: 'PopoverPlacement'
 		},
 		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'ref',
 			required: false,
 			type: 'HTMLDivElement | null'
 		},
 		{
+			name: 'required',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
+			name: 'treeLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'valueLabel',
+			required: false,
+			type: '(key: TKey, node: TreeNode<TKey> | undefined) => string'
+		},
+		{
 			name: 'value',
 			required: false,
-			type: 'SelectionKey'
+			type: 'TKey | null'
+		},
+		{
+			name: 'virtualized',
+			required: false,
+			type: 'boolean'
 		}
 	],
 	source: 'ui/zui/src/components/input/ZTreeSelect.svelte',
 	undocumentedProps: [
 		'ariaLabel',
+		'clearLabel',
+		'controlId',
 		'defaultExpandedKeys',
 		'defaultOpen',
 		'defaultValue',
 		'form',
-		'placement',
-		'ref'
+		'height',
+		'itemSize',
+		'onLoadError',
+		'overscan',
+		'placeholder',
+		'treeLabel',
+		'valueLabel'
 	]
 } as const satisfies ComponentApiFacts;
 
@@ -5885,6 +6582,11 @@ export const commandApiFacts = {
 			name: 'ref',
 			required: false,
 			type: 'HTMLDivElement | null'
+		},
+		{
+			name: 'resultsLabel',
+			required: false,
+			type: '(count: number) => string'
 		},
 		{
 			name: 'shouldFilter',
@@ -6175,6 +6877,11 @@ export const tourApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'missingTargetBehavior',
+			required: false,
+			type: "'close' | 'skip' | 'wait'"
+		},
+		{
 			name: 'modal',
 			required: false,
 			type: 'boolean'
@@ -6220,6 +6927,16 @@ export const tourApiFacts = {
 			type: 'HTMLDivElement | null'
 		},
 		{
+			name: 'scrollIntoViewOptions',
+			required: false,
+			type: 'boolean | ScrollIntoViewOptions'
+		},
+		{
+			name: 'spotlightOffset',
+			required: false,
+			type: 'number'
+		},
+		{
 			name: 'step',
 			required: false,
 			type: 'number'
@@ -6228,16 +6945,24 @@ export const tourApiFacts = {
 			name: 'steps',
 			required: true,
 			type: 'readonly TourStep[]'
+		},
+		{
+			name: 'targetRoot',
+			required: false,
+			type: 'Document | Element | ShadowRoot | (() => TourTargetRoot | null)'
 		}
 	],
 	source: 'ui/zui/src/components/overlay/ZTour.svelte',
 	undocumentedProps: [
 		'closeLabel',
 		'closeOnEscape',
+		'closeOnMaskClick',
 		'defaultOpen',
 		'defaultStep',
 		'finishLabel',
 		'nextLabel',
-		'previousLabel'
+		'previousLabel',
+		'scrollIntoViewOptions',
+		'spotlightOffset'
 	]
 } as const satisfies ComponentApiFacts;

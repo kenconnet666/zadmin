@@ -15,6 +15,8 @@
 				max={10000}
 				min={0}
 				name="concurrency"
+				pageStep={10}
+				precision={2}
 				step={0.25}
 			/>
 		</ZField>

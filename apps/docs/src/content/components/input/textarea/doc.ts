@@ -38,7 +38,7 @@ export const textareaDoc = defineComponentDoc(textareaMetadata, {
 			},
 			size: {
 				default: "Provider density（默认 'comfortable' → 'medium'）",
-				description: '显式尺寸优先，否则响应最近Provider的density。'
+				description: '显式尺寸优先，其次继承Field/Form，最后响应最近Provider的density。'
 			},
 			value: { default: 'undefined', description: 'Svelte bindable文本值。' }
 		},

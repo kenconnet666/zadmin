@@ -3,9 +3,15 @@
 
 	let files = $state<readonly File[]>([]);
 	let rejected = $state<readonly FileRejection<File>[]>([]);
+
+	function resetRejections(event: Event): void {
+		queueMicrotask(() => {
+			if (!event.defaultPrevented) rejected = [];
+		});
+	}
 </script>
 
-<form>
+<form onreset={resetRejections}>
 	<ZStack gap="medium">
 		<ZFileUpload
 			accept="application/json,.yaml,.yml"

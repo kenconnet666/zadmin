@@ -34,7 +34,8 @@ export const fileUploadDoc = defineComponentDoc(fileUploadMetadata, {
 	],
 	accessibility: [
 		'组件不发送网络请求：服务端、直传、分片、重试和凭据属于应用层上传策略。',
-		'原生file input始终是FormData文件来源；DataTransfer只用于把经过验证的UI队列回写到input.files。',
+		'原生file input始终是FormData文件来源；DataTransfer取自input.ownerDocument.defaultView，只用于把经过验证的UI队列回写到input.files。',
+		'拖放边框过渡按根节点owner realm解析Motion；reset延迟任务也由同一Window创建并在卸载时清理。',
 		'拒绝原因区分type、size、duplicate和max-files；应用可以按原因本地化提示。'
 	],
 	keywords: ['file upload', 'drop zone', 'accept', 'queue', 'formdata']

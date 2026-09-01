@@ -108,7 +108,7 @@ function sourceBackedProps(
 			return {
 				...prop,
 				...(fact
-					? { required: fact.required || undefined, type: fact.type }
+					? { required: fact.required || prop.required || undefined, type: fact.type }
 					: { required: prop.required }),
 				...supplement
 			};

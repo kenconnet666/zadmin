@@ -9,7 +9,7 @@
 
 <ZText tone="muted">可见区间 = {range} / 10000</ZText>
 <ZVirtualList
-	ariaLabel="一万条部署记录"
+	aria-label="一万条部署记录"
 	{items}
 	itemKey={(item) => item.id}
 	itemSize={40}
