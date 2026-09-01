@@ -158,7 +158,6 @@
 	} = $props();
 
 	let route = $state(parseDocsRoute(globalThis.location?.hash ?? '#/'));
-	let query = $state('');
 	const zui = useZui();
 	const classes = $derived(zui.slots(appRecipe, { density, motion }));
 	const currentId = $derived(route.kind === 'component' ? route.componentId : undefined);
@@ -222,8 +221,8 @@
 <div class={classes.shell}>
 	<nav class={classes.skipNavigation} aria-label="快捷跳转">
 		<ZLink class={classes.skipLink} href={currentHref} underline="none" onclick={skipToMain}
-			>跳到主要内容</ZLink
-		>
+			>跳到主要内容
+		</ZLink>
 	</nav>
 	<AppHeader
 		{contrast}
@@ -235,10 +234,12 @@
 		{onDirectionChange}
 		{onMotionChange}
 		{onThemeChange}
-		bind:query
+		docs={componentDocs}
+		{currentGuideId}
+		{currentId}
 		{themeId}
 	/>
-	<AppSidebar docs={componentDocs} {currentGuideId} {currentId} {query} />
+	<AppSidebar docs={componentDocs} {currentGuideId} {currentId} />
 	<main class={classes.main} id="zui-main-content" tabindex="-1">
 		{#if currentDoc}
 			<ComponentPage doc={currentDoc} />

@@ -62,38 +62,49 @@ test('renders the component catalog and real demo source', async ({ page }) => {
 	expect(errors).toEqual([]);
 });
 
-test('announces component search totals and empty results', async ({ page }) => {
+test('searches every component and guide through the site CommandPalette', async ({ page }) => {
 	await page.goto('/#/');
-	const search = page.getByRole('textbox', { name: '搜索组件', exact: true });
-	const status = page.locator('#zui-docs-search-status');
-	const shortcut = page.locator('[data-slot="search-shortcut"]');
-	await expect(shortcut).toBeVisible();
-	await expect(shortcut).toHaveAttribute('aria-hidden', 'true');
+	const trigger = page.getByRole('button', { name: '搜索组件与指南', exact: true });
+	const shortcuts = page.locator('[data-slot="search-shortcuts"]');
+	await expect(shortcuts).toBeVisible();
+	await expect(shortcuts).toHaveAttribute('aria-hidden', 'true');
+	await expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
+	await expect(trigger).toHaveAttribute('aria-keyshortcuts', '/ Control+K Meta+K');
+
 	await page.keyboard.press('/');
+	let dialog = page.getByRole('dialog', { name: '搜索 ZUI 文档', exact: true });
+	let search = dialog.getByRole('combobox', { name: '搜索组件与指南', exact: true });
 	await expect(search).toBeFocused();
 	await search.press('/');
 	await expect(search).toHaveValue('/');
-	await search.clear();
-	await expect(search).toHaveAttribute('aria-controls', 'zui-docs-component-nav');
-	await expect(search).toHaveAttribute('aria-describedby', 'zui-docs-search-status');
-	await expect(search).toHaveAttribute('aria-keyshortcuts', '/');
-	await expect(status).toHaveAttribute('aria-live', 'polite');
-	await expect(status).toHaveAttribute('role', 'status');
-	await expect(status).toHaveText('共 78 个组件');
+	await search.fill('definitely-no-component-or-guide');
+	await expect(dialog.getByText('没有匹配的组件或指南', { exact: true })).toBeVisible();
+	await page.keyboard.press('Escape');
+	await expect(dialog).toHaveCount(0);
 
-	await search.fill('autosize');
-	await expect(status).toHaveText('1 个匹配组件');
-	await expect(page.getByRole('link', { name: 'ZTextarea', exact: true })).toBeVisible();
-
-	await search.fill('definitely-no-component');
-	await expect(status).toHaveText('0 个匹配组件');
-	await expect(page.getByText('没有匹配组件')).toBeVisible();
-
-	await search.fill('autosize');
-	await search.press('Escape');
-	await expect(search).toBeFocused();
+	await trigger.click();
+	dialog = page.getByRole('dialog', { name: '搜索 ZUI 文档', exact: true });
+	search = dialog.getByRole('combobox', { name: '搜索组件与指南', exact: true });
 	await expect(search).toHaveValue('');
-	await expect(status).toHaveText('共 78 个组件');
+	await search.fill('autosize');
+	await expect(dialog.getByRole('option', { name: /ZTextarea/u })).toHaveCount(1);
+	await page.keyboard.press('Enter');
+	await expect(page).toHaveURL(/#\/components\/textarea$/u);
+	await expect(dialog).toHaveCount(0);
+	await expect(trigger).toBeFocused();
+
+	await page.keyboard.press('Control+K');
+	dialog = page.getByRole('dialog', { name: '搜索 ZUI 文档', exact: true });
+	search = dialog.getByRole('combobox', { name: '搜索组件与指南', exact: true });
+	await expect(search).toBeFocused();
+	await search.fill('PACKAGE');
+	await expect(dialog.getByRole('option', { name: 'PACKAGE', exact: true })).toBeVisible();
+	await page.keyboard.press('ArrowDown');
+	await page.keyboard.press('Home');
+	await page.keyboard.press('Enter');
+	await expect(page).toHaveURL(/#\/guides\/package$/u);
+	await expect(dialog).toHaveCount(0);
+	await expect(trigger).toBeFocused();
 });
 
 test('skips repeated navigation without corrupting hash routes', async ({ page }) => {
@@ -1572,24 +1583,49 @@ test('highlights code on demand and supports section deep links', async ({ page 
 
 test('keeps navigation usable at a narrow viewport', async ({ page }) => {
 	await page.setViewportSize({ height: 800, width: 390 });
-	for (const [route, heading] of [
-		['#/', '看见组件，运行组件，复制真实源码。'],
-		['#/guides/getting-started', '从真实Provider和原生语义开始。'],
-		['#/guides/package', '从公开entrypoint消费，而不是依赖工作区路径。'],
-		['#/components/button', 'ZButton']
-	] as const) {
-		await page.goto(`/${route}`);
-		await expect(page.getByRole('navigation', { name: '组件导航' })).toBeVisible();
-		await expect(page.getByRole('heading', { level: 1, name: heading })).toBeVisible();
-		expect(
-			await page.evaluate(
-				() => document.documentElement.scrollWidth - document.documentElement.clientWidth
-			)
-		).toBeLessThanOrEqual(0);
-	}
-	await expect(page.locator('[data-slot="search-shortcut"]')).toBeHidden();
+	await page.goto('/#/');
+	const desktopNavigation = page.getByRole('navigation', { name: '组件导航', exact: true });
+	const trigger = page.getByRole('button', { name: '打开组件导航', exact: true });
+	await expect(desktopNavigation).toBeHidden();
+	await expect(trigger).toBeVisible();
+	await trigger.click();
+	let drawer = page.getByTestId('docs-mobile-navigation-drawer');
+	await expect(drawer).toHaveAccessibleName('浏览 ZUI');
+	await expect(drawer).toHaveAttribute('role', 'dialog');
+	await expect(drawer.getByRole('navigation', { name: '移动组件导航' })).toBeVisible();
+	await expect(page.locator('body')).toHaveCSS('overflow', 'hidden');
+	await drawer.getByRole('link', { name: 'PACKAGE', exact: true }).click();
+	await expect(page).toHaveURL(/#\/guides\/package$/u);
+	await expect(drawer).toHaveCount(0);
+	await expect(trigger).toBeFocused();
+	await expect(page.locator('body')).not.toHaveCSS('overflow', 'hidden');
+	await expect(
+		page.getByRole('heading', {
+			level: 1,
+			name: '从公开entrypoint消费，而不是依赖工作区路径。'
+		})
+	).toBeVisible();
+
+	await setDisplayPreference(page, '动画', '减少');
+	await setDisplayPreference(page, '方向', '从右到左');
+	await trigger.click();
+	drawer = page.getByTestId('docs-mobile-navigation-drawer');
+	await expect(drawer).toHaveAttribute('data-reduced-motion', 'true');
+	await expect(drawer).toHaveCSS('right', '0px');
+	await drawer.getByRole('link', { name: 'ZButton', exact: true }).click();
+	await expect(page).toHaveURL(/#\/components\/button$/u);
+	await expect(page.getByRole('heading', { level: 1, name: 'ZButton' })).toBeVisible();
+
+	expect(
+		await page.evaluate(
+			() => document.documentElement.scrollWidth - document.documentElement.clientWidth
+		)
+	).toBeLessThanOrEqual(0);
+	await expect(page.locator('[data-slot="search-shortcuts"]')).toBeHidden();
 	await page.keyboard.press('/');
-	await expect(page.getByRole('textbox', { name: '搜索组件' })).toBeFocused();
+	await expect(
+		page.getByRole('dialog', { name: '搜索 ZUI 文档' }).getByRole('combobox')
+	).toBeFocused();
 });
 
 test('handles denied clipboard permission without a console error', async ({ page }) => {

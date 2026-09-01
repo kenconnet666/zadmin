@@ -5,12 +5,11 @@
 		{
 			slots: [
 				'root',
+				'brandArea',
 				'brand',
 				'brandText',
 				'brandSmall',
 				'mark',
-				'search',
-				'searchShortcut',
 				'actions',
 				'themePicker',
 				'themeLabel',
@@ -36,6 +35,12 @@
 					s.gap._medium;
 					s.textDecoration.none;
 				},
+				brandArea: (s) => {
+					s.alignItems.center;
+					s.display.flex;
+					s.gap._small;
+					s.minWidth.px(0);
+				},
 				brandSmall: (s) => {
 					s.color._textMuted;
 					s.fontSize._small;
@@ -49,6 +54,7 @@
 					s.display.flex;
 					s.flexDirection.column;
 					s.lineHeight._compact;
+					s._media('(max-width: 48rem)', (mobile) => mobile.display.none);
 				},
 				github: (s) => {
 					s.alignItems.center;
@@ -148,34 +154,6 @@
 					});
 					s._selector('&::-webkit-details-marker', (marker) => marker.display.none);
 				},
-				search: (s) => {
-					s.alignItems.center;
-					s.backgroundColor._surface;
-					s.borderColor._border;
-					s.borderRadius._medium;
-					s.borderStyle.solid;
-					s.borderWidth._hairline;
-					s.color._textMuted;
-					s.display.flex;
-					s.gap._medium;
-					s.paddingInlineStart._medium;
-					s._selector('&:focus-within', (focus) => {
-						focus.borderColor._focus;
-						focus.boxShadow._small;
-					});
-					s._selector('& input', (input) => {
-						input.backgroundColor.transparent;
-						input.borderWidth.px(0);
-						input.minHeight.rem(2.35);
-						input.paddingInlineStart.px(0);
-					});
-				},
-				searchShortcut: (s) => {
-					s.display.inlineFlex;
-					s.flexShrink(0);
-					s.marginInlineEnd._small;
-					s._media('(max-width: 48rem)', (mobile) => mobile.display.none);
-				},
 				select: (s) => {
 					s.backgroundColor._surface;
 					s.borderColor._border;
@@ -198,6 +176,7 @@
 					s.color._textMuted;
 					s.display.inlineFlex;
 					s.gap._small;
+					s._media('(max-width: 48rem)', (mobile) => mobile.display.none);
 				},
 				themeLabel: (s) => s._media('(max-width: 68rem)', (compact) => compact.display.none)
 			},
@@ -211,11 +190,7 @@
 	import ExternalLink from '@lucide/svelte/icons/external-link';
 	import Palette from '@lucide/svelte/icons/palette';
 	import SlidersHorizontal from '@lucide/svelte/icons/sliders-horizontal';
-	import { onMount } from 'svelte';
 	import {
-		ZIcon,
-		ZInput,
-		ZKbd,
 		ZLink,
 		ZPopover,
 		ZPopoverContent,
@@ -232,30 +207,37 @@
 		type ZuiMotion
 	} from '@zadmin/zui';
 	import { docsThemeById, docsThemes, type DocsThemeId } from '../app/theme.js';
+	import type { ComponentDoc } from '../framework/catalog.js';
+	import AppCommandSearch from './AppCommandSearch.svelte';
+	import AppMobileNavigation from './AppMobileNavigation.svelte';
 
 	let {
 		contrast = 'normal',
+		currentGuideId,
+		currentId,
 		density = 'comfortable',
 		direction = 'ltr',
+		docs,
 		motion = 'auto',
 		onContrastChange,
 		onDensityChange,
 		onDirectionChange,
 		onMotionChange,
 		onThemeChange,
-		query = $bindable(''),
 		themeId = 'aurora-light'
 	}: {
 		readonly contrast?: ZuiContrast;
+		readonly currentGuideId?: string;
+		readonly currentId?: string;
 		readonly density?: ZuiDensity;
 		readonly direction?: ZuiDirection;
+		readonly docs: readonly ComponentDoc[];
 		readonly motion?: ZuiMotion;
 		readonly onContrastChange?: (value: ZuiContrast) => void;
 		readonly onDensityChange?: (value: ZuiDensity) => void;
 		readonly onDirectionChange?: (value: ZuiDirection) => void;
 		readonly onMotionChange?: (value: ZuiMotion) => void;
 		readonly onThemeChange?: (value: DocsThemeId) => void;
-		query?: string;
 		readonly themeId?: DocsThemeId;
 	} = $props();
 	const zui = useZui();
@@ -274,31 +256,6 @@
 	const contrastValueLabel = labelFrom(contrastLabels);
 	const motionValueLabel = labelFrom(motionLabels);
 	const directionValueLabel = labelFrom(directionLabels);
-	let searchRef = $state<HTMLInputElement | null>(null);
-
-	onMount(() => {
-		const handleShortcut = (event: KeyboardEvent) => {
-			const target = event.target;
-			const editing =
-				target instanceof HTMLInputElement ||
-				target instanceof HTMLTextAreaElement ||
-				target instanceof HTMLSelectElement ||
-				(target instanceof HTMLElement && target.isContentEditable);
-			if (
-				event.defaultPrevented ||
-				event.key !== '/' ||
-				event.altKey ||
-				event.ctrlKey ||
-				event.metaKey ||
-				editing
-			)
-				return;
-			event.preventDefault();
-			searchRef?.focus({ preventScroll: true });
-		};
-		window.addEventListener('keydown', handleShortcut);
-		return () => window.removeEventListener('keydown', handleShortcut);
-	});
 
 	function setTheme(value: SelectionKey | undefined): void {
 		if (typeof value === 'string' && docsThemes.some((theme) => theme.id === value)) {
@@ -322,40 +279,19 @@
 	function setDirection(value: SelectionKey | undefined): void {
 		if (value === 'ltr' || value === 'rtl') onDirectionChange?.(value);
 	}
-
-	function handleSearchKeydown(event: KeyboardEvent): void {
-		if (event.key === 'Escape' && query) {
-			event.preventDefault();
-			query = '';
-		}
-	}
 </script>
 
 <header class={classes.root}>
-	<ZLink class={classes.brand} href="#/" underline="none">
-		<span class={classes.mark}>Z</span>
-		<span class={classes.brandText}
-			><strong>ZUI</strong><small class={classes.brandSmall}>Components</small></span
-		>
-	</ZLink>
-	<label class={classes.search}>
-		<ZIcon name="search" size={18} />
-		<ZInput
-			bind:value={query}
-			bind:ref={searchRef}
-			aria-controls="zui-docs-component-nav"
-			aria-describedby="zui-docs-search-status"
-			aria-keyshortcuts="/"
-			aria-label="搜索组件"
-			id="zui-docs-component-search"
-			name="component-search"
-			onkeydown={handleSearchKeydown}
-			placeholder="搜索组件…"
-		/>
-		<span aria-hidden="true" class={classes.searchShortcut} data-slot="search-shortcut"
-			><ZKbd>/</ZKbd></span
-		>
-	</label>
+	<div class={classes.brandArea}>
+		<AppMobileNavigation {docs} {currentGuideId} {currentId} />
+		<ZLink class={classes.brand} href="#/" underline="none">
+			<span class={classes.mark}>Z</span>
+			<span class={classes.brandText}
+				><strong>ZUI</strong><small class={classes.brandSmall}>Components</small></span
+			>
+		</ZLink>
+	</div>
+	<AppCommandSearch {docs} />
 	<div class={classes.actions}>
 		<div class={classes.themePicker}>
 			<Palette aria-hidden="true" size={16} />

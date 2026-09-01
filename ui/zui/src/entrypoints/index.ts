@@ -355,7 +355,10 @@ export type {
 	ZCommandProps
 } from '../components/navigation/ZCommand.svelte';
 export { default as ZCommandPalette } from '../components/navigation/ZCommandPalette.svelte';
-export type { ZCommandPaletteProps } from '../components/navigation/ZCommandPalette.svelte';
+export type {
+	CommandPaletteShortcutTarget,
+	ZCommandPaletteProps
+} from '../components/navigation/ZCommandPalette.svelte';
 export type { CommandShortcut } from '../runtime/command.js';
 export { default as ZStack } from '../components/layout/ZStack.svelte';
 export type {

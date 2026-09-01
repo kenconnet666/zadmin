@@ -5,6 +5,8 @@
 	import type { ZDialogContentProps } from '../compound/dialog/ZDialogContent.svelte';
 	import type { CommandActionEvent, CommandItem } from './ZCommand.svelte';
 
+	export type CommandPaletteShortcutTarget = Document | Element | ShadowRoot;
+
 	export interface ZCommandPaletteProps {
 		readonly class?: ZDialogContentProps['class'];
 		readonly closeLabel?: string;
@@ -25,6 +27,7 @@
 		ref?: HTMLDivElement | null;
 		readonly resetQueryOnClose?: boolean;
 		readonly shortcut?: CommandShortcut;
+		readonly shortcutTarget?: CommandPaletteShortcutTarget | null;
 		readonly showTrigger?: boolean;
 		readonly style?: ZDialogContentProps['style'];
 		readonly title?: string;
@@ -53,7 +56,7 @@
 			}
 		],
 		keyboard: [
-			{ description: '可选平台感知全局快捷键打开。', key: 'Configured shortcut' },
+			{ description: '可选平台感知快捷键在所属DOM边界内打开。', key: 'Configured shortcut' },
 			{ description: '复用ZCommand导航并提交。', key: 'Arrow keys / Home / End / Enter' },
 			{ description: '关闭顶层Dialog并恢复Trigger焦点。', key: 'Escape' },
 			{ description: '在输入和关闭按钮间循环。', key: 'Tab / Shift+Tab' }
@@ -88,9 +91,16 @@
 			},
 			{
 				default: 'undefined',
-				description: '显式平台感知全局快捷键；不配置则不监听document。',
+				description: '显式平台感知快捷键；不配置则不安装监听器。',
 				name: 'shortcut',
 				type: 'CommandShortcut'
+			},
+			{
+				default: 'Trigger或Portal所在DOM root',
+				description:
+					'快捷键监听边界；显式传入Document、Element或ShadowRoot可覆盖Trigger或Portal推导结果，null禁用作用域。',
+				name: 'shortcutTarget',
+				type: 'Document | Element | ShadowRoot | null'
 			},
 			{
 				default: 'true',
@@ -110,7 +120,7 @@
 		source: 'ui/zui/src/components/navigation/ZCommandPalette.svelte',
 		states: [{ description: 'Dialog打开状态。', name: 'data-state', values: ['open', 'closed'] }],
 		status: 'experimental',
-		summary: '复用Command相关性与Dialog模态生命周期、支持显式快捷键的Command Palette。'
+		summary: '复用Command相关性与Dialog模态生命周期、支持DOM realm安全快捷键的Command Palette。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
 
@@ -118,6 +128,7 @@
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { matchesCommandShortcut } from '../../runtime/command.js';
+	import { isDomDocument, isDomElement, isDomShadowRoot } from '../../runtime/layer/dom-realm.js';
 	import ZDialog from '../compound/dialog/ZDialog.svelte';
 	import ZDialogClose from '../compound/dialog/ZDialogClose.svelte';
 	import ZDialogContent from '../compound/dialog/ZDialogContent.svelte';
@@ -147,6 +158,7 @@
 		ref = $bindable(null),
 		resetQueryOnClose = true,
 		shortcut,
+		shortcutTarget,
 		showTrigger = true,
 		style,
 		title,
@@ -173,37 +185,78 @@
 		read: () => query,
 		write: (next) => (query = next)
 	});
+	let triggerRef = $state<HTMLButtonElement | null>(null);
+
+	function inferredShortcutTarget(): Document | ShadowRoot | null {
+		for (const candidate of [triggerRef, ref]) {
+			const root = candidate?.getRootNode();
+			if (isDomDocument(root) || isDomShadowRoot(root)) return root;
+		}
+		const portalContainer = zui.portalContainer;
+		if (isDomDocument(portalContainer) || isDomShadowRoot(portalContainer)) {
+			return portalContainer;
+		}
+		if (isDomElement(portalContainer)) {
+			const root = portalContainer.getRootNode();
+			if (isDomDocument(root) || isDomShadowRoot(root)) return root;
+		}
+		return null;
+	}
+
+	function resolvedShortcutTarget(): CommandPaletteShortcutTarget | null {
+		if (shortcutTarget === null) return null;
+		if (shortcutTarget !== undefined) {
+			if (
+				!isDomDocument(shortcutTarget) &&
+				!isDomElement(shortcutTarget) &&
+				!isDomShadowRoot(shortcutTarget)
+			) {
+				throw new TypeError(
+					'CommandPalette shortcutTarget must be a Document, Element, ShadowRoot or null.'
+				);
+			}
+			return shortcutTarget;
+		}
+		return inferredShortcutTarget();
+	}
+
 	function setOpen(next: boolean): void {
 		if (disabled && next) return;
 		if (!next && resetQueryOnClose) queryState.reset();
 		openState.setFromUser(next);
 	}
+
 	function handleAction(event: CommandActionEvent): void {
 		onAction?.(event);
 		if (!event.defaultPrevented) setOpen(false);
 	}
+
 	$effect(() => {
-		if (!shortcut || disabled || typeof document === 'undefined') return;
-		const handleKeydown = (event: KeyboardEvent) => {
-			if (event.repeat || !matchesCommandShortcut(event, shortcut)) return;
-			event.preventDefault();
+		const target = resolvedShortcutTarget();
+		if (!shortcut || disabled || !target) return;
+		const handleKeydown: EventListener = (event) => {
+			const keyboardEvent = event as KeyboardEvent;
+			if (keyboardEvent.repeat || !matchesCommandShortcut(keyboardEvent, shortcut)) return;
+			keyboardEvent.preventDefault();
 			setOpen(true);
 		};
-		document.addEventListener('keydown', handleKeydown);
-		return () => document.removeEventListener('keydown', handleKeydown);
+		target.addEventListener('keydown', handleKeydown);
+		return () => target.removeEventListener('keydown', handleKeydown);
 	});
 </script>
 
 <ZDialog onOpenChange={setOpen} open={openState.current}>
 	{#if showTrigger}
-		<ZDialogTrigger aria-label={resolvedTriggerLabel} {disabled}>
+		<ZDialogTrigger bind:ref={triggerRef} aria-label={resolvedTriggerLabel} {disabled}>
 			{#if trigger}{@render trigger()}{:else}{resolvedTriggerLabel}{/if}
 		</ZDialogTrigger>
 	{/if}
 	<ZDialogOverlay data-slot="overlay" />
 	<ZDialogContent bind:ref class={className} {style} data-slot="content">
 		<ZDialogTitle>{resolvedTitle}</ZDialogTitle>
-		{#if description}<ZDialogDescription>{description}</ZDialogDescription>{/if}
+		{#if description}
+			<ZDialogDescription>{description}</ZDialogDescription>
+		{/if}
 		<ZCommand
 			autofocus
 			data-slot="command"

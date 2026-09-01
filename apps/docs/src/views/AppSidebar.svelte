@@ -3,7 +3,7 @@
 
 	const sidebarRecipe = defineSlotRecipe(
 		{
-			slots: ['root', 'nav', 'category', 'link', 'icon', 'footer', 'empty'] as const,
+			slots: ['root', 'nav', 'category', 'link', 'icon', 'footer'] as const,
 			base: {
 				category: (s) => {
 					s.color._accent;
@@ -12,14 +12,6 @@
 					s.letterSpacing.em(0.08);
 					s.margin.raw('1.4rem 0.75rem 0.45rem');
 					s.textTransform.uppercase;
-					s._media('(max-width: 48rem)', (mobile) => mobile.display.none);
-				},
-				empty: (s) => {
-					s.color._textMuted;
-					s.display.block;
-					s.fontSize._small;
-					s.padding._medium;
-					s._media('(max-width: 48rem)', (mobile) => mobile.display.none);
 				},
 				footer: (s) => {
 					s.borderTopColor._border;
@@ -31,12 +23,10 @@
 					s.fontSize._small;
 					s.gap._small;
 					s.padding.raw('1rem 0.75rem 0');
-					s._media('(max-width: 48rem)', (mobile) => mobile.display.none);
 				},
 				icon: (s) => {
 					s.color._textMuted;
 					s.transform.raw('rotate(-90deg)');
-					s._media('(max-width: 48rem)', (mobile) => mobile.display.none);
 				},
 				link: (s) => {
 					s.alignItems.center;
@@ -57,20 +47,9 @@
 						hover.backgroundColor._canvas;
 						hover.color._primaryHover;
 					});
-					s._media('(max-width: 48rem)', (mobile) => {
-						mobile.flex.raw('0 0 auto');
-						mobile.fontSize._small;
-						mobile.paddingBlock._small;
-						mobile.paddingInline._medium;
-					});
 				},
 				nav: (s) => {
 					s.overflowY.auto;
-					s._media('(max-width: 48rem)', (mobile) => {
-						mobile.display.flex;
-						mobile.gap._xsmall;
-						mobile.overflow.visible;
-					});
 				},
 				root: (s) => {
 					s.backgroundColor._surface;
@@ -84,18 +63,6 @@
 					s.padding.raw('1.5rem 0.9rem 1rem');
 					s.position.sticky;
 					s.top.rem(4.25);
-					s._media('(max-width: 48rem)', (mobile) => {
-						mobile.borderBottomColor._border;
-						mobile.borderBottomStyle.solid;
-						mobile.borderBottomWidth._hairline;
-						mobile.borderRightWidth.px(0);
-						mobile.display.block;
-						mobile.height.auto;
-						mobile.overflowX.auto;
-						mobile.padding.raw('0.55rem 0.75rem');
-						mobile.top.rem(4.25);
-						mobile.zIndex(30);
-					});
 				}
 			},
 			variants: {
@@ -109,66 +76,96 @@
 							s.boxShadow._small;
 						}
 					}
+				},
+				surface: {
+					desktop: {
+						root: (s) => s._media('(max-width: 48rem)', (mobile) => mobile.display.none)
+					},
+					drawer: {
+						root: (s) => {
+							s.backgroundColor._canvas;
+							s.borderRightWidth.px(0);
+							s.flex.raw('1 1 auto');
+							s.height.auto;
+							s.minHeight.px(0);
+							s.padding.raw('0.5rem 0 0');
+							s.position.raw('static');
+						},
+						footer: (s) => s.padding.raw('1rem 0.75rem'),
+						nav: (s) => s.paddingInline._small
+					}
 				}
 			},
-			defaultVariants: { active: false }
+			defaultVariants: { active: false, surface: 'desktop' }
 		},
 		import.meta
 	);
 </script>
 
 <script lang="ts">
-	import { ZIcon, ZLink, ZVisuallyHidden, useZui } from '@zadmin/zui';
+	import { ZIcon, ZLink, useZui } from '@zadmin/zui';
 	import { guideDocs } from '../content/guides.js';
 	import { componentCategories, type ComponentDoc } from '../framework/catalog.js';
 	import { guideRoute } from '../framework/router.js';
-	import { searchComponentDocs } from '../framework/search.js';
 
 	let {
 		docs,
 		currentGuideId,
 		currentId,
-		query
+		onNavigate,
+		surface = 'desktop'
 	}: {
 		docs: readonly ComponentDoc[];
 		currentGuideId?: string;
 		currentId?: string;
-		query: string;
+		onNavigate?: () => void;
+		surface?: 'desktop' | 'drawer';
 	} = $props();
-	const filtered = $derived(searchComponentDocs(docs, query));
 	const zui = useZui();
-	const baseClasses = $derived(zui.slots(sidebarRecipe));
-	const homeClasses = $derived(zui.slots(sidebarRecipe, { active: !currentId && !currentGuideId }));
-	const themeClasses = $derived(zui.slots(sidebarRecipe, { active: currentGuideId === 'theme' }));
+	const baseClasses = $derived(zui.slots(sidebarRecipe, { surface }));
+	const homeClasses = $derived(
+		zui.slots(sidebarRecipe, { active: !currentId && !currentGuideId, surface })
+	);
+	const themeClasses = $derived(
+		zui.slots(sidebarRecipe, { active: currentGuideId === 'theme', surface })
+	);
+	const navigationId = $derived(
+		surface === 'drawer' ? 'zui-docs-mobile-component-nav' : 'zui-docs-component-nav'
+	);
+	const navigationLabel = $derived(surface === 'drawer' ? '移动组件导航' : '组件导航');
 </script>
 
-<aside class={baseClasses.root}>
-	<ZVisuallyHidden aria-atomic="true" aria-live="polite" id="zui-docs-search-status" role="status">
-		{query.trim() ? `${filtered.length} 个匹配组件` : `共 ${docs.length} 个组件`}
-	</ZVisuallyHidden>
-	<nav class={baseClasses.nav} aria-label="组件导航" id="zui-docs-component-nav">
+<aside class={baseClasses.root} data-surface={surface}>
+	<nav class={baseClasses.nav} aria-label={navigationLabel} id={navigationId}>
 		<ZLink
 			class={homeClasses.link}
 			aria-current={!currentId && !currentGuideId ? 'page' : undefined}
 			href="#/"
-			underline="none">概览</ZLink
-		>
+			onclick={() => onNavigate?.()}
+			underline="none"
+			>概览
+		</ZLink>
 		<p class={baseClasses.category}>指南</p>
 		<ZLink
 			class={themeClasses.link}
 			aria-current={currentGuideId === 'theme' ? 'page' : undefined}
 			href="#/guides/theme"
+			onclick={() => onNavigate?.()}
 			underline="none"
 		>
 			<span>Theme Lab</span>
 			<ZIcon class={themeClasses.icon} name="chevronDown" size={14} />
 		</ZLink>
 		{#each guideDocs as guide (guide.id)}
-			{@const guideClasses = zui.slots(sidebarRecipe, { active: currentGuideId === guide.id })}
+			{@const guideClasses = zui.slots(sidebarRecipe, {
+				active: currentGuideId === guide.id,
+				surface
+			})}
 			<ZLink
 				class={guideClasses.link}
 				aria-current={currentGuideId === guide.id ? 'page' : undefined}
 				href={guideRoute(guide.id)}
+				onclick={() => onNavigate?.()}
 				underline="none"
 			>
 				<span>{guide.eyebrow}</span>
@@ -176,15 +173,19 @@
 			</ZLink>
 		{/each}
 		{#each componentCategories as category (category.id)}
-			{@const categoryDocs = filtered.filter((doc) => doc.category === category.id)}
+			{@const categoryDocs = docs.filter((doc) => doc.category === category.id)}
 			{#if categoryDocs.length > 0}
 				<p class={baseClasses.category}>{category.label}</p>
 				{#each categoryDocs as doc (doc.id)}
-					{@const linkClasses = zui.slots(sidebarRecipe, { active: currentId === doc.id })}
+					{@const linkClasses = zui.slots(sidebarRecipe, {
+						active: currentId === doc.id,
+						surface
+					})}
 					<ZLink
 						class={linkClasses.link}
 						aria-current={currentId === doc.id ? 'page' : undefined}
 						href={`#/components/${doc.id}`}
+						onclick={() => onNavigate?.()}
 						underline="none"
 					>
 						<span>{doc.name}</span>
@@ -193,7 +194,6 @@
 				{/each}
 			{/if}
 		{/each}
-		{#if filtered.length === 0}<span class={baseClasses.empty}>没有匹配组件</span>{/if}
 	</nav>
 	<footer class={baseClasses.footer}>
 		<span>Svelte 5 · TypeScript</span>
