@@ -3537,6 +3537,11 @@ export const tagApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'removeTabIndex',
+			required: false,
+			type: 'number'
+		},
+		{
 			name: 'ref',
 			required: false,
 			type: 'HTMLSpanElement | null'
@@ -4891,7 +4896,22 @@ export const colorPickerApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'clearable',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'clearLabel',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'colorInputLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'controlId',
 			required: false,
 			type: 'string'
 		},
@@ -4903,7 +4923,7 @@ export const colorPickerApiFacts = {
 		{
 			name: 'defaultValue',
 			required: false,
-			type: 'string'
+			type: 'string | null'
 		},
 		{
 			name: 'disabled',
@@ -4916,9 +4936,24 @@ export const colorPickerApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'gutter',
+			required: false,
+			type: 'number'
+		},
+		{
 			name: 'hexInputLabel',
 			required: false,
 			type: 'string'
+		},
+		{
+			name: 'invalid',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'matchWidth',
+			required: false,
+			type: 'boolean'
 		},
 		{
 			name: 'name',
@@ -4933,7 +4968,7 @@ export const colorPickerApiFacts = {
 		{
 			name: 'onValueChange',
 			required: false,
-			type: '(value: string) => void'
+			type: '(value: string | null) => void'
 		},
 		{
 			name: 'open',
@@ -4946,29 +4981,61 @@ export const colorPickerApiFacts = {
 			type: 'PopoverPlacement'
 		},
 		{
+			name: 'placeholder',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'presets',
+			required: false,
+			type: 'readonly ColorPickerPreset[]'
+		},
+		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'ref',
 			required: false,
 			type: 'HTMLDivElement | null'
 		},
 		{
+			name: 'required',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
 			name: 'triggerLabel',
 			required: false,
-			type: '(value: string) => string'
+			type: '(value: string | null) => string'
 		},
 		{
 			name: 'value',
 			required: false,
-			type: 'string'
+			type: 'string | null'
 		}
 	],
 	source: 'ui/zui/src/components/input/ZColorPicker.svelte',
 	undocumentedProps: [
 		'alphaLabel',
+		'clearLabel',
 		'colorInputLabel',
+		'controlId',
 		'defaultOpen',
 		'form',
+		'gutter',
 		'hexInputLabel',
+		'invalid',
+		'matchWidth',
 		'placement',
+		'placeholder',
+		'required',
 		'triggerLabel'
 	]
 } as const satisfies ComponentApiFacts;
@@ -5539,9 +5606,19 @@ export const fileUploadApiFacts = {
 	name: 'ZFileUpload',
 	props: [
 		{
+			name: 'abortLabel',
+			required: false,
+			type: '(item: FileUploadItem) => string'
+		},
+		{
 			name: 'accept',
 			required: false,
 			type: 'string'
+		},
+		{
+			name: 'autoUpload',
+			required: false,
+			type: 'boolean'
 		},
 		{
 			name: 'chooseLabel',
@@ -5549,9 +5626,19 @@ export const fileUploadApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'controlId',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'controller',
+			required: false,
+			type: 'ZFileUploadController | null'
+		},
+		{
 			name: 'defaultFiles',
 			required: false,
-			type: 'readonly File[]'
+			type: 'readonly FileUploadItem[]'
 		},
 		{
 			name: 'disabled',
@@ -5564,9 +5651,19 @@ export const fileUploadApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'emptyText',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'errorMessage',
+			required: false,
+			type: '(error: unknown, item: FileUploadItem) => string'
+		},
+		{
 			name: 'files',
 			required: false,
-			type: 'readonly File[]'
+			type: 'readonly FileUploadItem[]'
 		},
 		{
 			name: 'form',
@@ -5582,6 +5679,11 @@ export const fileUploadApiFacts = {
 			name: 'inputLabel',
 			required: false,
 			type: 'string'
+		},
+		{
+			name: 'invalid',
+			required: false,
+			type: 'boolean'
 		},
 		{
 			name: 'maxFiles',
@@ -5606,7 +5708,7 @@ export const fileUploadApiFacts = {
 		{
 			name: 'onFilesChange',
 			required: false,
-			type: '(files: readonly File[]) => void'
+			type: '(files: readonly FileUploadItem[]) => void'
 		},
 		{
 			name: 'onReject',
@@ -5614,9 +5716,14 @@ export const fileUploadApiFacts = {
 			type: '(rejections: readonly FileRejection<File>[]) => void'
 		},
 		{
-			name: 'removeLabel',
+			name: 'queueLabel',
 			required: false,
-			type: '(file: File) => string'
+			type: 'string'
+		},
+		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean'
 		},
 		{
 			name: 'ref',
@@ -5624,20 +5731,48 @@ export const fileUploadApiFacts = {
 			type: 'HTMLDivElement | null'
 		},
 		{
+			name: 'removeLabel',
+			required: false,
+			type: '(item: FileUploadItem) => string'
+		},
+		{
 			name: 'required',
 			required: false,
 			type: 'boolean'
+		},
+		{
+			name: 'retryLabel',
+			required: false,
+			type: '(item: FileUploadItem) => string'
+		},
+		{
+			name: 'transport',
+			required: false,
+			type: 'FileUploadTransport'
+		},
+		{
+			name: 'uploadLabel',
+			required: false,
+			type: '(item: FileUploadItem) => string'
 		}
 	],
 	source: 'ui/zui/src/components/input/ZFileUpload.svelte',
 	undocumentedProps: [
+		'abortLabel',
 		'chooseLabel',
+		'controlId',
 		'disabled',
 		'dropLabel',
+		'emptyText',
+		'errorMessage',
 		'form',
 		'inputLabel',
+		'invalid',
+		'queueLabel',
 		'removeLabel',
-		'required'
+		'required',
+		'retryLabel',
+		'uploadLabel'
 	]
 } as const satisfies ComponentApiFacts;
 
@@ -6573,6 +6708,11 @@ export const tagsInputApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'controlId',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'defaultValues',
 			required: false,
 			type: 'readonly string[]'
@@ -6588,9 +6728,24 @@ export const tagsInputApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'editable',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'editLabel',
+			required: false,
+			type: '(value: string) => string'
+		},
+		{
 			name: 'form',
 			required: false,
 			type: 'string'
+		},
+		{
+			name: 'inputRef',
+			required: false,
+			type: 'HTMLInputElement | null'
 		},
 		{
 			name: 'inputValue',
@@ -6598,7 +6753,17 @@ export const tagsInputApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'invalid',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'maxTags',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'maxVisibleTags',
 			required: false,
 			type: 'number'
 		},
@@ -6616,6 +6781,11 @@ export const tagsInputApiFacts = {
 			name: 'onValueChange',
 			required: false,
 			type: '(values: readonly string[]) => void'
+		},
+		{
+			name: 'overflowLabel',
+			required: false,
+			type: '(omitted: readonly string[]) => string'
 		},
 		{
 			name: 'placeholder',
@@ -6638,6 +6808,21 @@ export const tagsInputApiFacts = {
 			type: '(value: string) => string'
 		},
 		{
+			name: 'required',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
+			name: 'transform',
+			required: false,
+			type: '(value: string) => string'
+		},
+		{
 			name: 'validate',
 			required: false,
 			type: '(value: string) => boolean'
@@ -6649,7 +6834,18 @@ export const tagsInputApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZTagsInput.svelte',
-	undocumentedProps: ['addLabel', 'disabled', 'form', 'placeholder', 'readonly', 'removeLabel']
+	undocumentedProps: [
+		'addLabel',
+		'controlId',
+		'editLabel',
+		'form',
+		'invalid',
+		'overflowLabel',
+		'placeholder',
+		'removeLabel',
+		'required',
+		'size'
+	]
 } as const satisfies ComponentApiFacts;
 
 export const textareaApiFacts = {

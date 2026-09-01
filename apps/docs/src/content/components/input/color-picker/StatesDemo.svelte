@@ -9,5 +9,7 @@
 		defaultValue="#dc262680"
 		triggerLabel={(value) => `半透明危险色 ${value}`}
 	/>
+	<ZColorPicker clearable defaultValue={null} placeholder="允许空颜色" />
+	<ZColorPicker readonly defaultValue="#7c3aed" triggerLabel={(value) => `只读颜色 ${value}`} />
 	<ZColorPicker disabled defaultValue="#64748b" triggerLabel={(value) => `锁定颜色 ${value}`} />
 </ZStack>
