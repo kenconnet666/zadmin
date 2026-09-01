@@ -135,7 +135,13 @@ public sealed class WebViewHost : IAsyncDisposable
             !StringComparer.Ordinal.Equals(uri.GetLeftPart(UriPartial.Authority), _options.TrustedOrigin))
         {
             args.Cancel = true;
+            return;
         }
+
+        // Vite can replace the first document after dependency optimization. Mark the old smoke
+        // handler stale as soon as navigation starts instead of waiting for the replacement DOM.
+        if (_options.SmokeReportPath is not null)
+            Interlocked.Increment(ref _smokeNavigationGeneration);
     }
 
     private static void OnNewWindowRequested(CoreWebView2 sender, CoreWebView2NewWindowRequestedEventArgs args) =>
@@ -155,7 +161,7 @@ public sealed class WebViewHost : IAsyncDisposable
     private async void OnDomContentLoaded(CoreWebView2 sender, CoreWebView2DOMContentLoadedEventArgs args)
     {
         if (_options.SmokeReportPath is null) return;
-        var generation = Interlocked.Increment(ref _smokeNavigationGeneration);
+        var generation = Volatile.Read(ref _smokeNavigationGeneration);
         // Vite may reload once after its first dependency optimization. Only the last quiet navigation
         // owns the smoke report so overlapping DOMContentLoaded handlers never race on the same file.
         await Task.Delay(750);
@@ -169,7 +175,11 @@ public sealed class WebViewHost : IAsyncDisposable
             var hydrated = false;
             for (var attempt = 0; attempt < 300; attempt++)
             {
-                if (generation != Volatile.Read(ref _smokeNavigationGeneration)) return;
+                if (generation != Volatile.Read(ref _smokeNavigationGeneration))
+                {
+                    closeWindow = false;
+                    return;
+                }
                 if (await sender.ExecuteScriptAsync(
                         "document.querySelector('[data-zadmin-webview-ready=\"true\"]')!==null") == "true")
                 {
@@ -179,7 +189,11 @@ public sealed class WebViewHost : IAsyncDisposable
                 await Task.Delay(100);
             }
             if (!hydrated) throw new TimeoutException("Development page did not reach its hydrated marker.");
-            if (generation != Volatile.Read(ref _smokeNavigationGeneration)) return;
+            if (generation != Volatile.Read(ref _smokeNavigationGeneration))
+            {
+                closeWindow = false;
+                return;
+            }
             var pageValue = await sender.ExecuteScriptAsync(
                 "JSON.stringify({origin:location.origin,title:document.title,bodyText:document.body?.innerText?.slice(0,1000)??'',hasBridge:Boolean(globalThis.chrome?.webview),viteClient:[...document.scripts].some(script=>script.src.includes('/@vite/client'))||performance.getEntriesByType('resource').some(entry=>entry.name.includes('/@vite/client')),errors:globalThis.__ZADMIN_WEBVIEW_ERRORS__??[]})");
             var pageJson = JsonSerializer.Deserialize<string>(pageValue) ?? "{}";
