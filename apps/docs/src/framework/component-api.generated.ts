@@ -745,7 +745,7 @@ export const drawerContentApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'full' | 'large' | 'medium' | 'small'"
+			type: "'full' | 'large' | 'medium' | 'small' | number | string"
 		}
 	],
 	source: 'ui/zui/src/components/compound/drawer/ZDrawerContent.svelte',
@@ -3101,7 +3101,7 @@ export const toastApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/feedback/ZToast.svelte',
-	undocumentedProps: ['actionLabel', 'description', 'dismissLabel', 'dismissible', 'onPauseChange']
+	undocumentedProps: []
 } as const satisfies ComponentApiFacts;
 
 export const toasterApiFacts = {
@@ -3137,7 +3137,7 @@ export const toasterApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/feedback/ZToaster.svelte',
-	undocumentedProps: ['label']
+	undocumentedProps: []
 } as const satisfies ComponentApiFacts;
 
 export const boxApiFacts = {
@@ -3443,6 +3443,11 @@ export const providerApiFacts = {
 			type: 'ZuiTheme'
 		},
 		{
+			name: 'timeZone',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'translations',
 			required: false,
 			type: 'ZuiTranslations'
@@ -3694,17 +3699,7 @@ export const calendarApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZCalendar.svelte',
-	undocumentedProps: [
-		'calendarLabel',
-		'disabled',
-		'form',
-		'isDateDisabled',
-		'name',
-		'nextLabel',
-		'previousLabel',
-		'range',
-		'timeZone'
-	]
+	undocumentedProps: ['disabled', 'form', 'isDateDisabled', 'name', 'range']
 } as const satisfies ComponentApiFacts;
 
 export const cascaderApiFacts = {
@@ -4010,13 +4005,18 @@ export const dateFieldApiFacts = {
 			type: '(segment: DateSegment) => string'
 		},
 		{
+			name: 'timeZone',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'value',
 			required: false,
 			type: 'CalendarDateValue'
 		}
 	],
 	source: 'ui/zui/src/components/input/ZDateField.svelte',
-	undocumentedProps: ['disabled', 'form', 'readonly', 'required', 'segmentLabel']
+	undocumentedProps: ['disabled', 'form', 'readonly', 'required']
 } as const satisfies ComponentApiFacts;
 
 export const datePickerApiFacts = {
@@ -4027,6 +4027,11 @@ export const datePickerApiFacts = {
 	props: [
 		{
 			name: 'calendarLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'controlId',
 			required: false,
 			type: 'string'
 		},
@@ -4059,6 +4064,11 @@ export const datePickerApiFacts = {
 			name: 'formatOptions',
 			required: false,
 			type: 'Intl.DateTimeFormatOptions'
+		},
+		{
+			name: 'invalid',
+			required: false,
+			type: 'boolean'
 		},
 		{
 			name: 'locale',
@@ -4111,6 +4121,21 @@ export const datePickerApiFacts = {
 			type: 'HTMLDivElement | null'
 		},
 		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'required',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'timeZone',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'triggerLabel',
 			required: false,
 			type: '(display: string) => string'
@@ -4123,9 +4148,7 @@ export const datePickerApiFacts = {
 	],
 	source: 'ui/zui/src/components/input/ZDatePicker.svelte',
 	undocumentedProps: [
-		'calendarLabel',
 		'defaultOpen',
-		'disabled',
 		'firstDayOfWeek',
 		'form',
 		'formatOptions',
@@ -4145,6 +4168,11 @@ export const dateRangePickerApiFacts = {
 	props: [
 		{
 			name: 'calendarLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'controlId',
 			required: false,
 			type: 'string'
 		},
@@ -4172,6 +4200,11 @@ export const dateRangePickerApiFacts = {
 			name: 'form',
 			required: false,
 			type: 'string'
+		},
+		{
+			name: 'invalid',
+			required: false,
+			type: 'boolean'
 		},
 		{
 			name: 'locale',
@@ -4224,6 +4257,21 @@ export const dateRangePickerApiFacts = {
 			type: 'HTMLDivElement | null'
 		},
 		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'required',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'timeZone',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'value',
 			required: false,
 			type: 'CalendarRange'
@@ -4231,12 +4279,9 @@ export const dateRangePickerApiFacts = {
 	],
 	source: 'ui/zui/src/components/input/ZDateRangePicker.svelte',
 	undocumentedProps: [
-		'calendarLabel',
 		'defaultOpen',
-		'disabled',
 		'firstDayOfWeek',
 		'form',
-		'locale',
 		'maxValue',
 		'minValue',
 		'onOpenChange',
@@ -5083,7 +5128,7 @@ export const sliderApiFacts = {
 export const switchApiFacts = {
 	declaration: 'ZSwitchProps',
 	id: 'switch',
-	inheritedFrom: ['HTMLInputAttributes', 'RecipeVariants<typeof switchRecipe>'],
+	inheritedFrom: ['HTMLInputAttributes', 'SlotRecipeSelection<typeof switchRecipe>'],
 	name: 'ZSwitch',
 	props: [
 		{
@@ -5102,9 +5147,24 @@ export const switchApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'indicator',
+			required: false,
+			type: 'Snippet<[checked: boolean]>'
+		},
+		{
 			name: 'invalid',
 			required: false,
 			type: 'boolean'
+		},
+		{
+			name: 'loading',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'loadingIndicator',
+			required: false,
+			type: 'Snippet'
 		},
 		{
 			name: 'onchange',
@@ -5112,9 +5172,19 @@ export const switchApiFacts = {
 			type: "HTMLInputAttributes['onchange']"
 		},
 		{
+			name: 'onclick',
+			required: false,
+			type: "HTMLInputAttributes['onclick']"
+		},
+		{
 			name: 'onCheckedChange',
 			required: false,
 			type: '(checked: boolean) => void'
+		},
+		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean'
 		},
 		{
 			name: 'ref',
@@ -5246,7 +5316,7 @@ export const textareaApiFacts = {
 		{
 			name: 'autosize',
 			required: false,
-			type: 'boolean'
+			type: 'boolean | ZTextareaAutosizeOptions'
 		},
 		{
 			name: 'defaultValue',
@@ -5309,6 +5379,11 @@ export const timeFieldApiFacts = {
 	inheritedFrom: ['HTMLAttributes<HTMLDivElement>'],
 	name: 'ZTimeField',
 	props: [
+		{
+			name: 'dayPeriodLabel',
+			required: false,
+			type: '(period: TimeDayPeriod) => string'
+		},
 		{
 			name: 'defaultValue',
 			required: false,
@@ -5385,21 +5460,18 @@ export const timeFieldApiFacts = {
 			type: '(segment: TimeSegment) => string'
 		},
 		{
+			name: 'toggleDayPeriodLabel',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'value',
 			required: false,
 			type: 'TimeValue'
 		}
 	],
 	source: 'ui/zui/src/components/input/ZTimeField.svelte',
-	undocumentedProps: [
-		'disabled',
-		'form',
-		'maxValue',
-		'minValue',
-		'readonly',
-		'required',
-		'segmentLabel'
-	]
+	undocumentedProps: ['disabled', 'form', 'maxValue', 'minValue', 'readonly', 'required']
 } as const satisfies ComponentApiFacts;
 
 export const transferApiFacts = {
@@ -5934,6 +6006,11 @@ export const commandPaletteApiFacts = {
 			type: 'CommandShortcut'
 		},
 		{
+			name: 'shortcutTarget',
+			required: false,
+			type: 'Document | Element | ShadowRoot | null'
+		},
+		{
 			name: 'showTrigger',
 			required: false,
 			type: 'boolean'
@@ -5992,9 +6069,24 @@ export const paginationApiFacts = {
 			type: 'number'
 		},
 		{
+			name: 'defaultPageSize',
+			required: false,
+			type: 'number'
+		},
+		{
 			name: 'disabled',
 			required: false,
 			type: 'boolean'
+		},
+		{
+			name: 'dir',
+			required: false,
+			type: "'ltr' | 'rtl'"
+		},
+		{
+			name: 'mode',
+			required: false,
+			type: "'compact' | 'default' | 'simple'"
 		},
 		{
 			name: 'onPageChange',
@@ -6002,9 +6094,24 @@ export const paginationApiFacts = {
 			type: '(page: number) => void'
 		},
 		{
+			name: 'onPageSizeChange',
+			required: false,
+			type: '(pageSize: number) => void'
+		},
+		{
 			name: 'page',
 			required: false,
 			type: 'number'
+		},
+		{
+			name: 'pageSize',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'pageSizeOptions',
+			required: false,
+			type: 'readonly number[]'
 		},
 		{
 			name: 'ref',
@@ -6017,8 +6124,13 @@ export const paginationApiFacts = {
 			type: 'number'
 		},
 		{
+			name: 'totalItems',
+			required: false,
+			type: 'number'
+		},
+		{
 			name: 'totalPages',
-			required: true,
+			required: false,
 			type: 'number'
 		}
 	],
