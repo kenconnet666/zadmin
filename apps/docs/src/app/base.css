@@ -8,6 +8,7 @@
 
 html {
 	scroll-behavior: smooth;
+	scrollbar-width: thin;
 }
 
 html[data-motion='reduced'] {

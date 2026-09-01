@@ -8,6 +8,7 @@
 	import type { SlotRecipeSelection } from '../../recipes/slots.js';
 
 	export type SwitchValue = Exclude<PrimitiveFormValue, boolean>;
+	// The native checkbox remains the only focus/form owner; every visual slot is decorative.
 	const interactiveHoverSelector =
 		'&:not([data-disabled="true"]):not([data-loading="true"]):not([data-readonly="true"]):hover';
 

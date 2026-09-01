@@ -133,8 +133,10 @@
 		}
 		return maxVisible;
 	});
-	queue.setMaxVisible(untrack(() => limit));
-	const visible = $derived(queue.presentedItems);
+	const presented = $derived(queue.presentedItems);
+	// Cap the SSR/first-render view before the mounted effect synchronizes Queue phases.
+	const visible = $derived(presented.slice(0, limit));
+	const queuedCount = $derived(queue.queuedCount + presented.length - visible.length);
 	const rootClass = $derived(zui.recipe(recipe, { placement }));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
@@ -172,7 +174,7 @@
 	aria-label={label}
 	data-slot="viewport"
 	data-placement={placement}
-	data-queued={queue.queuedCount}
+	data-queued={queuedCount}
 >
 	{#each visible as item (item.id)}<QueuedToast {item} {queue} />{/each}
 </section>

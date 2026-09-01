@@ -526,9 +526,7 @@
 	role="group"
 	aria-disabled={disabled || undefined}
 	aria-describedby={resolvedDescribedBy}
-	aria-invalid={resolvedInvalid || undefined}
 	aria-labelledby={resolvedLabelledBy}
-	aria-required={resolvedRequired || undefined}
 	data-disabled={disabled || undefined}
 	data-invalid={resolvedInvalid || undefined}
 >

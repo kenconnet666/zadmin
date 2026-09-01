@@ -50,6 +50,8 @@
 				},
 				nav: (s) => {
 					s.overflowY.auto;
+					s.set('scrollbar-gutter', 'stable');
+					s.set('scrollbar-width', 'thin');
 				},
 				root: (s) => {
 					s.backgroundColor._surface;

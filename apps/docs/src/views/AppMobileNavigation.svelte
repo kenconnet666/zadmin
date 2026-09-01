@@ -64,9 +64,11 @@
 </script>
 
 <ZDrawer bind:open>
-	<ZDrawerTrigger aria-label="打开组件导航" class={classes.trigger} size="small" variant="ghost">
-		<ZIcon name="menu" size={20} />
-	</ZDrawerTrigger>
+	<span class={classes.trigger} data-slot="mobile-navigation-trigger">
+		<ZDrawerTrigger aria-label="打开组件导航" size="small" variant="ghost">
+			<ZIcon name="menu" size={20} />
+		</ZDrawerTrigger>
+	</span>
 	<ZDrawerOverlay data-testid="docs-mobile-navigation-overlay" />
 	<ZDrawerContent
 		class={classes.content}
@@ -77,7 +79,7 @@
 		<div class={classes.header}>
 			<ZStack gap="xsmall">
 				<ZDrawerTitle>浏览 ZUI</ZDrawerTitle>
-				<ZDrawerDescription>选择生产指南或组件文档；导航后抽屉会自动关闭。</ZDrawerDescription>
+				<ZDrawerDescription>选择指南或组件；导航后自动关闭。</ZDrawerDescription>
 			</ZStack>
 			<ZDrawerClose aria-label="关闭组件导航" size="small" variant="ghost">
 				<ZIcon name="close" size={18} />

@@ -53,6 +53,7 @@ function createMeasurement(ownerDocument: Document): HTMLTextAreaElement | undef
 	if (!parent) return undefined;
 	const element = ownerDocument.createElement('textarea');
 	element.disabled = true;
+	element.name = 'zui-textarea-measurement';
 	element.tabIndex = -1;
 	element.setAttribute('aria-hidden', 'true');
 	element.dataset.zuiTextareaMeasurement = '';

@@ -131,6 +131,7 @@
 
 <script lang="ts">
 	import { untrack } from 'svelte';
+	import type { Attachment } from 'svelte/attachments';
 
 	import { provideZField } from '../../runtime/form/field-context.js';
 	import { mergeAriaIds, normalizeFieldMessages } from '../../runtime/form/form-control.svelte.js';
@@ -178,11 +179,17 @@
 			if (focusOwner === focus) focusOwner = undefined;
 		};
 	}
-	function handleLabelClick(event: MouseEvent): void {
+	function handleLabelClick(event: Event): void {
 		if (!focusOwner || event.defaultPrevented) return;
 		event.preventDefault();
 		focusOwner();
 	}
+	// Native `for` handles labelable controls; compound owners intercept only to focus,
+	// avoiding the label's synthetic click from also opening or toggling the control.
+	const attachLabel: Attachment<HTMLLabelElement> = (node) => {
+		node.addEventListener('click', handleLabelClick);
+		return () => node.removeEventListener('click', handleLabelClick);
+	};
 	provideZField(() => ({
 		controlId: resolvedControlId,
 		describedBy,
@@ -207,7 +214,7 @@
 	data-disabled={disabled || undefined}
 	data-invalid={invalid || undefined}
 >
-	<label class={classes.label} for={resolvedControlId} id={labelId} onclick={handleLabelClick}>
+	<label class={classes.label} for={resolvedControlId} id={labelId} {@attach attachLabel}>
 		{#if typeof label === 'string'}{label}{:else}{@render label()}{/if}
 		{#if required}<span aria-hidden="true"> *</span>{/if}
 	</label>

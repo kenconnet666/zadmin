@@ -265,6 +265,7 @@
 	import { untrack } from 'svelte';
 
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
+	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import { isDomHtmlElement, isDomNode } from '../../runtime/layer/dom-realm.js';
 	import {
 		clampPage,
@@ -306,6 +307,8 @@
 		...rest
 	}: ZPaginationProps = $props();
 	const zui = useZui();
+	const uid = $props.id();
+	const idBase = $derived(createZuiId(zui.idPrefix, uid, 'pagination'));
 	const pageSizeState = new ControllableState<number>({
 		defaultValue: () => defaultPageSize ?? 10,
 		onChange: () => onPageSizeChange,
@@ -362,7 +365,7 @@
 	);
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
-	let pageInputRef: HTMLInputElement | null = null;
+	let pageInputRef = $state<HTMLInputElement | null>(null);
 	let pageInputDraft = $state('');
 	let pageInputEditing = $state(false);
 	let lastFocusedControl: HTMLElement | null = null;
@@ -549,6 +552,7 @@
 				bind:this={pageInputRef}
 				class={classes.pageInput}
 				data-slot="page-input"
+				id={`${idBase}-page-input`}
 				type="number"
 				inputmode="numeric"
 				min={1}
@@ -594,6 +598,7 @@
 					<select
 						class={classes.sizeSelect}
 						data-slot="size-select"
+						id={`${idBase}-page-size`}
 						{disabled}
 						value={model.pageSize}
 						onchange={changePageSize}
