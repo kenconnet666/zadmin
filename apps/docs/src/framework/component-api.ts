@@ -20,6 +20,7 @@ export interface ComponentPropTeaching {
 }
 
 export interface ComponentTeachingMetadata {
+	readonly omitMetadataProps?: readonly string[];
 	readonly props?: Readonly<Record<string, ComponentPropTeaching>>;
 	readonly summary?: string;
 }

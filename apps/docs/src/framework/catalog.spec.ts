@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
+import { dataTableMetadata } from '@zadmin/zui/metadata';
 
 import { componentDocs, componentDocsById } from './catalog.js';
+import { dataTableApiFacts } from './component-api.generated.js';
 import { defineComponentDoc } from './component-doc.js';
 
 describe('ZUI component documentation catalog', () => {
@@ -196,8 +198,48 @@ describe('ZUI component documentation catalog', () => {
 		expect(stack?.profiles).toContain('primitive');
 	});
 
+	it('merges DataTable AST facts with Docs teaching without legacy pseudo props', () => {
+		const dataTable = componentDocsById.get('data-table');
+		const props = dataTable?.api.find(({ id }) => id === 'props');
+		const names = props?.rows.map(({ name }) => name);
+
+		expect(props?.description).toContain('ZDataTableProps');
+		expect(names).toEqual(expect.arrayContaining(['caption', 'height', 'rowHeight', 'overscan']));
+		expect(names).not.toContain('rowHeight / height');
+		expect(dataTable?.demos).toHaveLength(6);
+		expect(dataTable?.profiles).toEqual(['collection', 'data-view', 'virtualized']);
+	});
+
+	it('rejects misspelled teaching and legacy metadata omissions', () => {
+		const dataTable = componentDocsById.get('data-table');
+		const teachingProps = Object.fromEntries(
+			dataTableApiFacts.undocumentedProps.map((name) => [name, { description: name }])
+		);
+		const definition = {
+			accessibility: ['test'],
+			demos: dataTable?.demos.slice(0, 2) ?? [],
+			profiles: ['data-view'] as const,
+			sourceApi: dataTableApiFacts
+		};
+
+		expect(() =>
+			defineComponentDoc(dataTableMetadata, {
+				...definition,
+				teaching: { omitMetadataProps: ['missing'], props: teachingProps }
+			})
+		).toThrow(/cannot omit unknown metadata props/u);
+		expect(() =>
+			defineComponentDoc(dataTableMetadata, {
+				...definition,
+				teaching: {
+					props: { ...teachingProps, misspelled: { description: 'invalid' } }
+				}
+			})
+		).toThrow(/unknown public props/u);
+	});
+
 	it('requires capability evidence for graduated component docs', () => {
-		for (const id of ['button', 'input', 'stack']) {
+		for (const id of ['button', 'data-table', 'input', 'stack']) {
 			const doc = componentDocsById.get(id);
 			expect(doc?.profiles.length, id).toBeGreaterThan(0);
 			for (const demo of doc?.demos ?? []) {

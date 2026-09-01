@@ -99,17 +99,20 @@ function sourceBackedProps(
 		...metadata.props.map(({ name }) => name),
 		...metadata.snippets.map(({ name }) => name)
 	]);
-	const rows = metadata.props.map((prop) => {
-		const fact = factsByName.get(prop.name);
-		const supplement = teaching?.props?.[prop.name];
-		return {
-			...prop,
-			...(fact
-				? { required: fact.required || undefined, type: fact.type }
-				: { required: prop.required }),
-			...supplement
-		};
-	});
+	const omittedMetadataProps = new Set(teaching?.omitMetadataProps ?? []);
+	const rows = metadata.props
+		.filter(({ name }) => !omittedMetadataProps.has(name))
+		.map((prop) => {
+			const fact = factsByName.get(prop.name);
+			const supplement = teaching?.props?.[prop.name];
+			return {
+				...prop,
+				...(fact
+					? { required: fact.required || undefined, type: fact.type }
+					: { required: prop.required }),
+				...supplement
+			};
+		});
 	for (const fact of facts?.props ?? []) {
 		const supplement = teaching?.props?.[fact.name];
 		if (!supplement || documentedNames.has(fact.name)) continue;
@@ -222,9 +225,40 @@ export function defineComponentDoc(
 			`${metadata.name} documentation received API facts for ${sourceApi.name} (${sourceApi.id}).`
 		);
 	}
-	if (sourceApi && sourceApi.undocumentedProps.length > 0) {
+	const metadataPropNames = new Set(metadata.props.map(({ name }) => name));
+	const omittedMetadataProps = doc.teaching?.omitMetadataProps ?? [];
+	if (new Set(omittedMetadataProps).size !== omittedMetadataProps.length) {
+		throw new TypeError(`${metadata.name} teaching repeats omitted metadata props.`);
+	}
+	const unknownOmittedProps = omittedMetadataProps.filter((name) => !metadataPropNames.has(name));
+	if (unknownOmittedProps.length > 0) {
 		throw new TypeError(
-			`${metadata.name} cannot enable generated Props until its teaching metadata covers: ${sourceApi.undocumentedProps.join(', ')}.`
+			`${metadata.name} teaching cannot omit unknown metadata props: ${unknownOmittedProps.join(', ')}.`
+		);
+	}
+	if (sourceApi && doc.teaching?.props) {
+		const knownTeachingProps = new Set([
+			...sourceApi.props.map(({ name }) => name),
+			...metadata.bindings.map(({ name }) => name),
+			...metadata.events.map(({ name }) => name),
+			...metadata.props.map(({ name }) => name),
+			...metadata.snippets.map(({ name }) => name)
+		]);
+		const unknownTeachingProps = Object.keys(doc.teaching.props).filter(
+			(name) => !knownTeachingProps.has(name)
+		);
+		if (unknownTeachingProps.length > 0) {
+			throw new TypeError(
+				`${metadata.name} teaching contains unknown public props: ${unknownTeachingProps.join(', ')}.`
+			);
+		}
+	}
+	const uncoveredProps = sourceApi?.undocumentedProps.filter(
+		(name) => doc.teaching?.props?.[name] === undefined
+	);
+	if (sourceApi && uncoveredProps && uncoveredProps.length > 0) {
+		throw new TypeError(
+			`${metadata.name} cannot enable generated Props until its teaching metadata covers: ${uncoveredProps.join(', ')}.`
 		);
 	}
 	const resolvedMetadata = {
