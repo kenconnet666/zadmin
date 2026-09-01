@@ -31,19 +31,19 @@ ZUI 已经具备真实组件库的工程地基，不是只有外观的样品：�
 
 ### 2.1 代码与文档规模
 
-| 指标 | 当前值 | 解释 |
-| --- | ---: | --- |
-| Svelte 组件文件 | 135 | 包含根组件与 compound member |
-| 公开 metadata | 133 | API 快照记录的公开组件单元 |
-| 文档组件族页面 | 78 | compound member 合并到组件族页面 |
-| 真实同源 Demo | 171 | Demo 与复制源码来自同一 Svelte 文件 |
-| Stable metadata | 8 | ZProvider、ZBox、ZText、ZIcon、ZButton、ZInput、ZField、ZStack |
-| Experimental metadata | 125 | 占 94.0%，不能批量改标签掩盖缺口 |
-| 2 个 Demo 的页面 | 63 | 当前门禁的最低值 |
-| 3 个 Demo 的页面 | 15 | 当前最高值，没有页面超过 3 个 |
-| 官方主题 | 6 | 两套亮色、两套暗色、两套高对比 |
-| Form value 组件文件 | 24 | 只有 10 个消费 ZField context |
-| API metadata 漂移 | 32 组件 / 约 180 props | 排除 class/style 与小写原生事件后的公开 Props 缺项 |
+| 指标                  |                 当前值 | 解释                                                           |
+| --------------------- | ---------------------: | -------------------------------------------------------------- |
+| Svelte 组件文件       |                    135 | 包含根组件与 compound member                                   |
+| 公开 metadata         |                    133 | API 快照记录的公开组件单元                                     |
+| 文档组件族页面        |                     78 | compound member 合并到组件族页面                               |
+| 真实同源 Demo         |                    171 | Demo 与复制源码来自同一 Svelte 文件                            |
+| Stable metadata       |                      8 | ZProvider、ZBox、ZText、ZIcon、ZButton、ZInput、ZField、ZStack |
+| Experimental metadata |                    125 | 占 94.0%，不能批量改标签掩盖缺口                               |
+| 2 个 Demo 的页面      |                     63 | 当前门禁的最低值                                               |
+| 3 个 Demo 的页面      |                     15 | 当前最高值，没有页面超过 3 个                                  |
+| 官方主题              |                      6 | 两套亮色、两套暗色、两套高对比                                 |
+| Form value 组件文件   |                     24 | 只有 10 个消费 ZField context                                  |
+| API metadata 漂移     | 32 组件 / 约 180 props | 排除 class/style 与小写原生事件后的公开 Props 缺项             |
 
 `defineComponentDoc` 只要求 `demos.length >= 2`、ID 唯一和源码非空，见 `apps/docs/src/framework/component-doc.ts`。它没有描述 Demo 覆盖了哪些状态、API 或交互。
 
@@ -52,15 +52,15 @@ ZUI 已经具备真实组件库的工程地基，不是只有外观的样品：�
 `ui/zui/package.json` 当前为 `0.1.0`，metadata 的 `since` 分布为：
 
 | since | 数量 |
-| --- | ---: |
-| 0.1.0 | 9 |
-| 0.2.0 | 21 |
-| 0.3.0 | 35 |
-| 0.4.0 | 32 |
-| 0.5.0 | 8 |
-| 0.6.0 | 5 |
-| 0.7.0 | 18 |
-| 0.8.0 | 5 |
+| ----- | ---: |
+| 0.1.0 |    9 |
+| 0.2.0 |   21 |
+| 0.3.0 |   35 |
+| 0.4.0 |   32 |
+| 0.5.0 |    8 |
+| 0.6.0 |    5 |
+| 0.7.0 |   18 |
+| 0.8.0 |    5 |
 
 当前 15 份 ZUI Changeset 全是 `minor`。从 `0.1.0` 合并发布时只会产生一次最高级别 bump，而不会依次制造 `0.2.0`—`0.8.0` 的历史。因此 metadata 把开发阶段编号误当成了真实 SemVer。
 
@@ -95,13 +95,13 @@ ZUI 已经具备真实组件库的工程地基，不是只有外观的样品：�
 
 ### 3.1 参考多个成熟库，但不求 API 并集
 
-| 参考 | 采用的思想 | 不采用的部分 |
-| --- | --- | --- |
-| [Ant Design](https://ant.design/components/overview/) | 企业后台组件谱系、ConfigProvider、Form/Table/Date/Overlay 的场景覆盖、When To Use、Semantic DOM、Design Token、Changelog/Migration | React API、全局静态 service、全部语法糖、为目录对齐而加组件 |
-| [Naive UI](https://github.com/tusen-ai/naive-ui) | 类型安全主题覆盖、Provider 服务、90+ 组件的 Demo 密度、数据组件的虚拟列表意识 | Vue emits/slots 形态、内部实现和依赖选择、无差别复制所有组件 |
-| [MUI](https://mui.com/material-ui/customization/overriding-component-structure/) | 一致的结构扩展思想、Core/X 能力边界、版本与弃用治理、明确说明“不支持所有组件” | `sx`、Emotion、任意 `slotProps`、React ownerState 和过大的 theme component override |
-| WAI-ARIA APG / React Aria | 角色、状态、键盘、焦点、逻辑 Collection 与 Selection 模型 | 直接依赖 React runtime 或照抄 React hook API |
-| 旧 ZUI | 一个组件多个示例、中文后台使用场景和可读文档密度 | 旧 API、旧视觉、旧依赖和历史实现债务 |
+| 参考                                                                             | 采用的思想                                                                                                                         | 不采用的部分                                                                        |
+| -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| [Ant Design](https://ant.design/components/overview/)                            | 企业后台组件谱系、ConfigProvider、Form/Table/Date/Overlay 的场景覆盖、When To Use、Semantic DOM、Design Token、Changelog/Migration | React API、全局静态 service、全部语法糖、为目录对齐而加组件                         |
+| [Naive UI](https://github.com/tusen-ai/naive-ui)                                 | 类型安全主题覆盖、Provider 服务、90+ 组件的 Demo 密度、数据组件的虚拟列表意识                                                      | Vue emits/slots 形态、内部实现和依赖选择、无差别复制所有组件                        |
+| [MUI](https://mui.com/material-ui/customization/overriding-component-structure/) | 一致的结构扩展思想、Core/X 能力边界、版本与弃用治理、明确说明“不支持所有组件”                                                      | `sx`、Emotion、任意 `slotProps`、React ownerState 和过大的 theme component override |
+| WAI-ARIA APG / React Aria                                                        | 角色、状态、键盘、焦点、逻辑 Collection 与 Selection 模型                                                                          | 直接依赖 React runtime 或照抄 React hook API                                        |
+| 旧 ZUI                                                                           | 一个组件多个示例、中文后台使用场景和可读文档密度                                                                                   | 旧 API、旧视觉、旧依赖和历史实现债务                                                |
 
 ### 3.2 固定原则
 
@@ -469,14 +469,14 @@ Ant Button 当前约 15 个示例主题，[Naive UI Button](https://github.com/t
 
 建议最低场景模板：
 
-| Profile | 必须证明的 Demo 维度 |
-| --- | --- |
-| primitive | 基础、变体/尺寸、语义与原生属性、主题/高对比 |
+| Profile      | 必须证明的 Demo 维度                                                                               |
+| ------------ | -------------------------------------------------------------------------------------------------- |
+| primitive    | 基础、变体/尺寸、语义与原生属性、主题/高对比                                                       |
 | form-control | controlled/uncontrolled、clear、disabled/readonly/invalid、FormData、reset、validation、locale/RTL |
-| collection | 键盘、typeahead、disabled 跳过、动态/空/异步、大数据或明确上限 |
-| layer | controlled open、placement、Portal、nested、outside/Escape、焦点进入/恢复、scroll、RTL |
-| animated | full/reduced、enter/exit、快速切换/卸载 cleanup |
-| data-view | loading/empty/error、长文本、响应式、server ownership、large data |
+| collection   | 键盘、typeahead、disabled 跳过、动态/空/异步、大数据或明确上限                                     |
+| layer        | controlled open、placement、Portal、nested、outside/Escape、焦点进入/恢复、scroll、RTL             |
+| animated     | full/reduced、enter/exit、快速切换/卸载 cleanup                                                    |
+| data-view    | loading/empty/error、长文本、响应式、server ownership、large data                                  |
 
 ### 6.6 Theme Lab 变成完整 token 工作台
 
@@ -511,111 +511,111 @@ Header 显示当前版本。Demo 增加 reset、编辑/反馈链接、最小复�
 
 ### 7.1 Gene 与 Layout（14）
 
-| # | 组件 | 优先级 | API / 架构决策 | 文档和 Demo 必须覆盖 |
-| ---: | --- | --- | --- | --- |
-| 1 | ZProvider | P0 | typed locale pack、timeZone；density/contrast 真正生效；ownerDocument/portal；保留小型全局 defaults | 嵌套 Provider、动态 locale/RTL/density/contrast/motion、SSR/ShadowRoot、6 主题 |
-| 2 | ZBox | Keep | 保持真实 div 与 ICSS carrier；不增加 `sx` 和无限多态 | 原生属性、class/style/ICSS、嵌套 theme、SSR、布局组合 |
-| 3 | ZText | P0 | 修复 README `as="h1"` 漂移；推荐保持 body/inline 语义，新增独立 ZHeading 候选而非退化类型 | 元素映射、size/weight/tone、截断、长文本、可访问标题取舍 |
-| 4 | ZIcon | Keep | 保持 Lucide 子路径与装饰/具名语义；自动治理 manifest | decorative/named、尺寸、颜色继承、RTL 是否镜像、非法 icon 审计 |
-| 5 | ZCode | P1 | Shiki 保持可选 peer 和独立入口；明确 async highlighter、fallback、copy API | inline/block、语言、无 Shiki、SSR/CSP、错误 fallback、长代码与复制 |
-| 6 | ZButton | P1 | `variant + tone + size + shape` 正交；danger 不再占 variant；默认 loading 使用 ZSpinner；保留原生 button | 基础、全部变体/尺寸、loading 延迟/图标、start/end、full width、form type、disabled、键盘、reduced motion |
-| 7 | ZToggleButton | P1 | 统一 pressed/defaultPressed/onPressedChange 与 ControlledState；明确与 Segmented/Toolbar 的边界 | 受控/非受控、pressed/disabled、图标按钮、ARIA pressed、键盘、动态 owner |
-| 8 | ZLink | P1 | 保持原生 anchor；统一 tone/underline/external/disabled 策略，target 安全提示 | 内外链、下载、当前页、键盘焦点、长链接、图标、disabled 取舍 |
-| 9 | ZSeparator | Keep | 保持语义/装饰模式，不增加视觉语法糖 | horizontal/vertical、decorative、具名 separator、高对比 |
-| 10 | ZVisuallyHidden | Keep | 保持单一职责；验证 focusable 模式是否真实需要 | screen reader 文本、跳转链接、可聚焦内容、打印/高对比 |
-| 11 | ZKbd | Keep | 保持展示语义；可增加组合 snippet，不猜平台按键 | 单键、组合键、平台替代文本、与 Command shortcut 组合 |
-| 12 | ZStack | Keep | 继续统一 Flex/Space；如需响应值采用类型化 breakpoint，不新增重复 ZFlex/ZSpace | direction/align/justify/wrap/gap、数字 gap、RTL、嵌套布局 |
-| 13 | ZAspectRatio | Keep | 保持原生比例容器；校验正有限 ratio | 图片/视频/自定义内容、响应式、非法 ratio、无内容 |
-| 14 | ZContainer | P2 | 明确 max-width/gutter token 与嵌套行为；响应式值只按真实需求加入 | 尺寸、gutter、全宽、嵌套、窄屏、长内容 |
+|   # | 组件            | 优先级 | API / 架构决策                                                                                           | 文档和 Demo 必须覆盖                                                                                     |
+| --: | --------------- | ------ | -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+|   1 | ZProvider       | P0     | typed locale pack、timeZone；density/contrast 真正生效；ownerDocument/portal；保留小型全局 defaults      | 嵌套 Provider、动态 locale/RTL/density/contrast/motion、SSR/ShadowRoot、6 主题                           |
+|   2 | ZBox            | Keep   | 保持真实 div 与 ICSS carrier；不增加 `sx` 和无限多态                                                     | 原生属性、class/style/ICSS、嵌套 theme、SSR、布局组合                                                    |
+|   3 | ZText           | P0     | 修复 README `as="h1"` 漂移；推荐保持 body/inline 语义，新增独立 ZHeading 候选而非退化类型                | 元素映射、size/weight/tone、截断、长文本、可访问标题取舍                                                 |
+|   4 | ZIcon           | Keep   | 保持 Lucide 子路径与装饰/具名语义；自动治理 manifest                                                     | decorative/named、尺寸、颜色继承、RTL 是否镜像、非法 icon 审计                                           |
+|   5 | ZCode           | P1     | Shiki 保持可选 peer 和独立入口；明确 async highlighter、fallback、copy API                               | inline/block、语言、无 Shiki、SSR/CSP、错误 fallback、长代码与复制                                       |
+|   6 | ZButton         | P1     | `variant + tone + size + shape` 正交；danger 不再占 variant；默认 loading 使用 ZSpinner；保留原生 button | 基础、全部变体/尺寸、loading 延迟/图标、start/end、full width、form type、disabled、键盘、reduced motion |
+|   7 | ZToggleButton   | P1     | 统一 pressed/defaultPressed/onPressedChange 与 ControlledState；明确与 Segmented/Toolbar 的边界          | 受控/非受控、pressed/disabled、图标按钮、ARIA pressed、键盘、动态 owner                                  |
+|   8 | ZLink           | P1     | 保持原生 anchor；统一 tone/underline/external/disabled 策略，target 安全提示                             | 内外链、下载、当前页、键盘焦点、长链接、图标、disabled 取舍                                              |
+|   9 | ZSeparator      | Keep   | 保持语义/装饰模式，不增加视觉语法糖                                                                      | horizontal/vertical、decorative、具名 separator、高对比                                                  |
+|  10 | ZVisuallyHidden | Keep   | 保持单一职责；验证 focusable 模式是否真实需要                                                            | screen reader 文本、跳转链接、可聚焦内容、打印/高对比                                                    |
+|  11 | ZKbd            | Keep   | 保持展示语义；可增加组合 snippet，不猜平台按键                                                           | 单键、组合键、平台替代文本、与 Command shortcut 组合                                                     |
+|  12 | ZStack          | Keep   | 继续统一 Flex/Space；如需响应值采用类型化 breakpoint，不新增重复 ZFlex/ZSpace                            | direction/align/justify/wrap/gap、数字 gap、RTL、嵌套布局                                                |
+|  13 | ZAspectRatio    | Keep   | 保持原生比例容器；校验正有限 ratio                                                                       | 图片/视频/自定义内容、响应式、非法 ratio、无内容                                                         |
+|  14 | ZContainer      | P2     | 明确 max-width/gutter token 与嵌套行为；响应式值只按真实需求加入                                         | 尺寸、gutter、全宽、嵌套、窄屏、长内容                                                                   |
 
 ### 7.2 Input 与 Form（27）
 
-| # | 组件 | 优先级 | API / 架构决策 | 文档和 Demo 必须覆盖 |
-| ---: | --- | --- | --- | --- |
-| 15 | ZCalendar | P0 | 修 ControlledState 空值；Provider timeZone/locale；统一日期禁用与 focusedValue；range 与 picker 协作 | controlled/clear、min/max/disabled、键盘矩阵、locale/RTL/timeZone、outside dates、range、FormData |
-| 16 | ZCascader | P1 | 接入 LogicalCollection/Selection/Virtualizer；补 clear、异步/lazy 节点和完整 disabled path | 基础/多级、受控清空、搜索、lazy/loading/error、大数据、键盘、FormData/reset |
-| 17 | ZCheckbox | P1 | 统一 checked/defaultChecked/indeterminate；FormValueBridge；新增 ZCheckboxGroup 候选 | 单值/数组、indeterminate、invalid/disabled、group、reset、native change、键盘 |
-| 18 | ZColorPicker | P1 | 明确颜色值规范与 alpha；统一 Popover/clear/FormValue；文案进 locale pack | hex/alpha、受控、非法草稿、键盘原生控件、FormData、locale、outside/Escape |
-| 19 | ZCombobox | P0 | LogicalCollection、async、virtual、clear、readonly、group；保持输入值与选择值双状态 | input/value/open 三受控轴、freeform 取舍、IME、async、empty/loading、键盘、FormData、large data |
-| 20 | ZDateField | P0 | 修空值；timeZone/locale；明确 granularity、placeholderValue 和 segment contract | 手输/方向键、clear、readonly/disabled/invalid、locale/hour cycle、reset、边界日期 |
-| 21 | ZDatePicker | P0 | 复用 DateField + Calendar；支持 clear/readOnly/timeZone；统一 open/value owner | 选择/手输、clear、min/max、locale/RTL/timeZone、outside/Escape、FormData/reset |
-| 22 | ZDateRangePicker | P0 | partial range、clear、timeZone；统一 start/end validation；多月仅后续按需求 | 起止选择、反向规范化、部分值、受控、禁用范围、locale/RTL、FormData/reset |
-| 23 | ZField | P0 | stable 组件仍需对接新 FieldPath；messages 支持 error/warning/success 与 snippets；label placement 可选 | label/description/messages、required/optional、多个消息、动态验证、首错聚焦、嵌套字段 |
-| 24 | ZFileUpload | P1 | 明确 FilePicker/Upload 产品命名；如保留 Upload，建立 file status、progress、abort/retry 和 transport adapter | click/drop、type/size/count/duplicate、受控队列、上传中/失败/重试、键盘、FormData/reset |
-| 25 | ZForm | P0 | FieldPath/动态数组/同名字段、增量验证、typed output、controller、FormValueBridge | submit/change/blur、异步竞态、动态字段、依赖、reset、server errors、首错 focus/scroll、原生提交 |
-| 26 | ZInput | P0 | 作为 stable 基线迁移到新 ControlledState/FormValueBridge；统一 native/custom callback 文档 | value/defaultValue、外部清空、IME、readonly/disabled/invalid、prefix/suffix 取舍、FormData/reset |
-| 27 | ZInputGroup | P1 | 定义 add-on/control 的唯一 Field owner、焦点环和 invalid 合并；防止不合法嵌套 | 前后 add-on、多个控件、disabled/invalid、键盘焦点、响应式、Field 集成 |
-| 28 | ZMention | P1 | 复用 ActiveDescendant/Collection；async suggestions、virtual、大文本与 IME | trigger、多关键词、async/loading/empty、键盘、IME、受控、textarea 集成、large data |
-| 29 | ZMultiSelect | P0 | LogicalCollection/virtual；clear、readonly、group、maxTagCount/overflow；统一 values 命名 | controlled/clear、搜索、tag overflow、disabled item、async、keyboard、FormData 多值/reset |
-| 30 | ZNumberField | P0 | 先修当前 locale/reset CI；ControlledState 空值；明确 precision、clamp/allowOutOfRange、parser/formatter | locale 小数、focus/edit/display、step/Page 键、货币、空值、readonly/invalid、FormData/reset |
-| 31 | ZPinInput | P1 | 统一 length/paste/OTP autocomplete、readonly、mask、安全说明；FormValueBridge | 粘贴、删除、方向键、移动端 OTP、受控/clear、invalid/disabled/readonly、reset |
-| 32 | ZRadioGroup | P0 | ControlledState 空值；逻辑 Collection；options shorthand 可作为便利层；统一 required/FormValue | 单选、受控清空、orientation/RTL、disabled item、keyboard、invalid、FormData/reset |
-| 33 | ZSegmented | P0 | ControlledState 空值；item model、disabled/icon、明确是否允许无选择；接 FormValue | options、受控、图标/文本、disabled、keyboard/RTL、FormData/reset、窄屏 |
-| 34 | ZSelect | P0 | LogicalCollection/virtual；clear/readonly/group/separator/loading；typed trigger attachment 只在必要时 | controlled/clear/open、groups、async/loading/empty、typeahead、keyboard、FormData/reset、large data |
-| 35 | ZSlider | P1 | 保持原生单值 range；marks/vertical 按需求；范围选择新增 ZRangeSlider，不扭曲单值 API | min/max/step、RTL、键盘、invalid/disabled、FormData/reset、格式化值、触摸 |
-| 36 | ZSwitch | P1 | 统一 checked/defaultChecked、loading 是否真实需要；locale 化 label 由 Field 提供 | controlled、disabled/invalid、label、keyboard、FormData/reset、RTL、reduced motion |
-| 37 | ZTagsInput | P1 | 复用 Collection/Press；duplicate/max/validate/transform；明确 draft 受控语义 | add/remove/edit、paste、多分隔符、IME、invalid/readonly/disabled、FormData/reset、大量 tags |
-| 38 | ZTextarea | P1 | autosize 使用 ownerDocument，不再猜 global body；统一 minRows/maxRows 与 ControlledState | value/default、IME、autosize、readonly/invalid/disabled、长文本、FormData/reset、ShadowRoot |
-| 39 | ZTimeField | P0 | 修空值；locale/hourCycle/granularity；time 本身无 zone，但与 Provider locale 明确协作 | 12/24h、seconds、clear、readonly/invalid、方向键、FormData/reset、locale/RTL |
-| 40 | ZTransfer | P0 | 先阻止内部搜索 ZInput 继承 Field name 并污染 FormData；再复用 Selection/Virtualizer，定义 async 边界 | 基础、多选、搜索不提交、select all、disabled、受控、large data、FormData/reset、locale |
-| 41 | ZTreeSelect | P0 | LogicalCollection/Tree model/virtual；clear、async children、selection/expanded 双状态收口 | controlled clear、expand/select、lazy/loading/error、keyboard/typeahead、FormData/reset、large tree |
+|   # | 组件             | 优先级 | API / 架构决策                                                                                               | 文档和 Demo 必须覆盖                                                                                |
+| --: | ---------------- | ------ | ------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
+|  15 | ZCalendar        | P0     | 修 ControlledState 空值；Provider timeZone/locale；统一日期禁用与 focusedValue；range 与 picker 协作         | controlled/clear、min/max/disabled、键盘矩阵、locale/RTL/timeZone、outside dates、range、FormData   |
+|  16 | ZCascader        | P1     | 接入 LogicalCollection/Selection/Virtualizer；补 clear、异步/lazy 节点和完整 disabled path                   | 基础/多级、受控清空、搜索、lazy/loading/error、大数据、键盘、FormData/reset                         |
+|  17 | ZCheckbox        | P1     | 统一 checked/defaultChecked/indeterminate；FormValueBridge；新增 ZCheckboxGroup 候选                         | 单值/数组、indeterminate、invalid/disabled、group、reset、native change、键盘                       |
+|  18 | ZColorPicker     | P1     | 明确颜色值规范与 alpha；统一 Popover/clear/FormValue；文案进 locale pack                                     | hex/alpha、受控、非法草稿、键盘原生控件、FormData、locale、outside/Escape                           |
+|  19 | ZCombobox        | P0     | LogicalCollection、async、virtual、clear、readonly、group；保持输入值与选择值双状态                          | input/value/open 三受控轴、freeform 取舍、IME、async、empty/loading、键盘、FormData、large data     |
+|  20 | ZDateField       | P0     | 修空值；timeZone/locale；明确 granularity、placeholderValue 和 segment contract                              | 手输/方向键、clear、readonly/disabled/invalid、locale/hour cycle、reset、边界日期                   |
+|  21 | ZDatePicker      | P0     | 复用 DateField + Calendar；支持 clear/readOnly/timeZone；统一 open/value owner                               | 选择/手输、clear、min/max、locale/RTL/timeZone、outside/Escape、FormData/reset                      |
+|  22 | ZDateRangePicker | P0     | partial range、clear、timeZone；统一 start/end validation；多月仅后续按需求                                  | 起止选择、反向规范化、部分值、受控、禁用范围、locale/RTL、FormData/reset                            |
+|  23 | ZField           | P0     | stable 组件仍需对接新 FieldPath；messages 支持 error/warning/success 与 snippets；label placement 可选       | label/description/messages、required/optional、多个消息、动态验证、首错聚焦、嵌套字段               |
+|  24 | ZFileUpload      | P1     | 明确 FilePicker/Upload 产品命名；如保留 Upload，建立 file status、progress、abort/retry 和 transport adapter | click/drop、type/size/count/duplicate、受控队列、上传中/失败/重试、键盘、FormData/reset             |
+|  25 | ZForm            | P0     | FieldPath/动态数组/同名字段、增量验证、typed output、controller、FormValueBridge                             | submit/change/blur、异步竞态、动态字段、依赖、reset、server errors、首错 focus/scroll、原生提交     |
+|  26 | ZInput           | P0     | 作为 stable 基线迁移到新 ControlledState/FormValueBridge；统一 native/custom callback 文档                   | value/defaultValue、外部清空、IME、readonly/disabled/invalid、prefix/suffix 取舍、FormData/reset    |
+|  27 | ZInputGroup      | P1     | 定义 add-on/control 的唯一 Field owner、焦点环和 invalid 合并；防止不合法嵌套                                | 前后 add-on、多个控件、disabled/invalid、键盘焦点、响应式、Field 集成                               |
+|  28 | ZMention         | P1     | 复用 ActiveDescendant/Collection；async suggestions、virtual、大文本与 IME                                   | trigger、多关键词、async/loading/empty、键盘、IME、受控、textarea 集成、large data                  |
+|  29 | ZMultiSelect     | P0     | LogicalCollection/virtual；clear、readonly、group、maxTagCount/overflow；统一 values 命名                    | controlled/clear、搜索、tag overflow、disabled item、async、keyboard、FormData 多值/reset           |
+|  30 | ZNumberField     | P0     | 先修当前 locale/reset CI；ControlledState 空值；明确 precision、clamp/allowOutOfRange、parser/formatter      | locale 小数、focus/edit/display、step/Page 键、货币、空值、readonly/invalid、FormData/reset         |
+|  31 | ZPinInput        | P1     | 统一 length/paste/OTP autocomplete、readonly、mask、安全说明；FormValueBridge                                | 粘贴、删除、方向键、移动端 OTP、受控/clear、invalid/disabled/readonly、reset                        |
+|  32 | ZRadioGroup      | P0     | ControlledState 空值；逻辑 Collection；options shorthand 可作为便利层；统一 required/FormValue               | 单选、受控清空、orientation/RTL、disabled item、keyboard、invalid、FormData/reset                   |
+|  33 | ZSegmented       | P0     | ControlledState 空值；item model、disabled/icon、明确是否允许无选择；接 FormValue                            | options、受控、图标/文本、disabled、keyboard/RTL、FormData/reset、窄屏                              |
+|  34 | ZSelect          | P0     | LogicalCollection/virtual；clear/readonly/group/separator/loading；typed trigger attachment 只在必要时       | controlled/clear/open、groups、async/loading/empty、typeahead、keyboard、FormData/reset、large data |
+|  35 | ZSlider          | P1     | 保持原生单值 range；marks/vertical 按需求；范围选择新增 ZRangeSlider，不扭曲单值 API                         | min/max/step、RTL、键盘、invalid/disabled、FormData/reset、格式化值、触摸                           |
+|  36 | ZSwitch          | P1     | 统一 checked/defaultChecked、loading 是否真实需要；locale 化 label 由 Field 提供                             | controlled、disabled/invalid、label、keyboard、FormData/reset、RTL、reduced motion                  |
+|  37 | ZTagsInput       | P1     | 复用 Collection/Press；duplicate/max/validate/transform；明确 draft 受控语义                                 | add/remove/edit、paste、多分隔符、IME、invalid/readonly/disabled、FormData/reset、大量 tags         |
+|  38 | ZTextarea        | P1     | autosize 使用 ownerDocument，不再猜 global body；统一 minRows/maxRows 与 ControlledState                     | value/default、IME、autosize、readonly/invalid/disabled、长文本、FormData/reset、ShadowRoot         |
+|  39 | ZTimeField       | P0     | 修空值；locale/hourCycle/granularity；time 本身无 zone，但与 Provider locale 明确协作                        | 12/24h、seconds、clear、readonly/invalid、方向键、FormData/reset、locale/RTL                        |
+|  40 | ZTransfer        | P0     | 先阻止内部搜索 ZInput 继承 Field name 并污染 FormData；再复用 Selection/Virtualizer，定义 async 边界         | 基础、多选、搜索不提交、select all、disabled、受控、large data、FormData/reset、locale              |
+|  41 | ZTreeSelect      | P0     | LogicalCollection/Tree model/virtual；clear、async children、selection/expanded 双状态收口                   | controlled clear、expand/select、lazy/loading/error、keyboard/typeahead、FormData/reset、large tree |
 
 ### 7.3 Navigation（9）
 
-| # | 组件 | 优先级 | API / 架构决策 | 文档和 Demo 必须覆盖 |
-| ---: | --- | --- | --- | --- |
-| 42 | ZAccordion | P0 | 修 ControlledState 空值；统一 single/multiple/collapsible；Presence 使用共享生命周期 | single/multiple、controlled clear、disabled item、dynamic item、keyboard、nested、full/reduced motion |
-| 43 | ZCommand | P1 | 接入 LogicalCollection/ActiveDescendant/Virtualizer；typed item snippet；async 结果由调用方拥有 | filter/ranking、groups、keyboard、async/loading/empty、custom item、large data、locale |
-| 44 | ZCommandPalette | P1 | ownerDocument 快捷键；复用新 Dialog/Command；避免 global document；异步与触发器 API 收口 | Ctrl/Cmd+K、受控 open/query、禁用、route action、async、focus restore、ShadowRoot |
-| 45 | ZContextMenu | P1 | 基于统一 Menu；补 submenu、checkbox/radio/link item；touch long-press 仅按真实需求 | pointer/keyboard 打开、viewport collision、submenu、selection item、disabled、nested layer、RTL |
-| 46 | ZDropdownMenu | P1 | 与 Menu/Popover 统一状态和 item 类型；typed trigger attachment；避免重复 open owner | click/keyboard、submenu、checkbox/radio/link、controlled open、outside/Escape、focus restore |
-| 47 | ZMenu | P1 | LogicalCollection、PressController、locale-reactive typeahead；补 submenu 与选择 item | roving、Home/End、typeahead、groups/separator、submenu、disabled、dynamic/virtual、RTL |
-| 48 | ZPagination | P1 | 补 pageSize/total/onPageSizeChange、simple/compact；server state 不发请求；全面 locale pack | controlled page、边界页、page size、total、disabled、RTL、keyboard、与 DataTable 组合 |
-| 49 | ZTabs | P0 | 修 ControlledState 空值；明确 automatic/manual activation、orientation、动态删除后的选中策略 | controlled clear、horizontal/vertical、keyboard、disabled、dynamic tabs、lazy panel、RTL |
-| 50 | ZTree | P1 | 迁移 LogicalCollection/Selection/Virtualizer；补 lazy、checkbox/half-check、typed node content；DnD 后置 | expand/select、multi/check、lazy/loading/error、keyboard/typeahead、virtual、large tree、RTL |
+|   # | 组件            | 优先级 | API / 架构决策                                                                                           | 文档和 Demo 必须覆盖                                                                                  |
+| --: | --------------- | ------ | -------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+|  42 | ZAccordion      | P0     | 修 ControlledState 空值；统一 single/multiple/collapsible；Presence 使用共享生命周期                     | single/multiple、controlled clear、disabled item、dynamic item、keyboard、nested、full/reduced motion |
+|  43 | ZCommand        | P1     | 接入 LogicalCollection/ActiveDescendant/Virtualizer；typed item snippet；async 结果由调用方拥有          | filter/ranking、groups、keyboard、async/loading/empty、custom item、large data、locale                |
+|  44 | ZCommandPalette | P1     | ownerDocument 快捷键；复用新 Dialog/Command；避免 global document；异步与触发器 API 收口                 | Ctrl/Cmd+K、受控 open/query、禁用、route action、async、focus restore、ShadowRoot                     |
+|  45 | ZContextMenu    | P1     | 基于统一 Menu；补 submenu、checkbox/radio/link item；touch long-press 仅按真实需求                       | pointer/keyboard 打开、viewport collision、submenu、selection item、disabled、nested layer、RTL       |
+|  46 | ZDropdownMenu   | P1     | 与 Menu/Popover 统一状态和 item 类型；typed trigger attachment；避免重复 open owner                      | click/keyboard、submenu、checkbox/radio/link、controlled open、outside/Escape、focus restore          |
+|  47 | ZMenu           | P1     | LogicalCollection、PressController、locale-reactive typeahead；补 submenu 与选择 item                    | roving、Home/End、typeahead、groups/separator、submenu、disabled、dynamic/virtual、RTL                |
+|  48 | ZPagination     | P1     | 补 pageSize/total/onPageSizeChange、simple/compact；server state 不发请求；全面 locale pack              | controlled page、边界页、page size、total、disabled、RTL、keyboard、与 DataTable 组合                 |
+|  49 | ZTabs           | P0     | 修 ControlledState 空值；明确 automatic/manual activation、orientation、动态删除后的选中策略             | controlled clear、horizontal/vertical、keyboard、disabled、dynamic tabs、lazy panel、RTL              |
+|  50 | ZTree           | P1     | 迁移 LogicalCollection/Selection/Virtualizer；补 lazy、checkbox/half-check、typed node content；DnD 后置 | expand/select、multi/check、lazy/loading/error、keyboard/typeahead、virtual、large tree、RTL          |
 
 ### 7.4 Overlay（7）
 
-| # | 组件 | 优先级 | API / 架构决策 | 文档和 Demo 必须覆盖 |
-| ---: | --- | --- | --- | --- |
-| 51 | ZAlertDialog | P1 | 复用新 LayerManager/Dialog；强制 modal 与描述语义；action/cancel 不隐藏业务 async | destructive confirm、async action、Escape/overlay 取舍、focus trap/restore、nested、RTL |
-| 52 | ZDialog | P0 | LayerGraph、跨 realm、typed trigger attachment、Portal/Presence；compound member metadata 完整保留 | controlled open、modal/non-modal、nested、outside/Escape、initial/final focus、scroll lock、SSR/ShadowRoot |
-| 53 | ZDrawer | P1 | 复用 Dialog 内核；逻辑 side、size、responsive 与 body scroll；不复制独立 layer | 四方向、尺寸、controlled、nested、focus/scroll、RTL、full/reduced motion、窄屏 |
-| 54 | ZPopconfirm | P1 | 复用 Popover/AlertDialog；action 支持 pending/resolve/reject owner，避免重复提交 | controlled、async confirm、cancel、placement、outside/Escape、focus restore、danger 文案 |
-| 55 | ZPopover | P0 | 先修当前 `matchWidth` CI；LayerGraph、typed trigger、anchor/update/portal、nested branch | placement/collision、matchWidth、controlled、nested、scroll/resize、outside/Escape、focus restore、RTL |
-| 56 | ZTooltip | P1 | TooltipGroup/delay hysteresis；disabled trigger 包装策略；非交互内容边界；ownerDocument | hover/focus、delay group、disabled control、multiple tooltips、Escape、RTL、reduced motion、touch 取舍 |
-| 57 | ZTour | P1 | 移除 global document/window；root-scoped target、wait/skip missing target、Portal/Presence 与 locale | step/open 受控、target missing、scroll into view、mask、keyboard、resize、ShadowRoot、RTL/reduced motion |
+|   # | 组件         | 优先级 | API / 架构决策                                                                                       | 文档和 Demo 必须覆盖                                                                                       |
+| --: | ------------ | ------ | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+|  51 | ZAlertDialog | P1     | 复用新 LayerManager/Dialog；强制 modal 与描述语义；action/cancel 不隐藏业务 async                    | destructive confirm、async action、Escape/overlay 取舍、focus trap/restore、nested、RTL                    |
+|  52 | ZDialog      | P0     | LayerGraph、跨 realm、typed trigger attachment、Portal/Presence；compound member metadata 完整保留   | controlled open、modal/non-modal、nested、outside/Escape、initial/final focus、scroll lock、SSR/ShadowRoot |
+|  53 | ZDrawer      | P1     | 复用 Dialog 内核；逻辑 side、size、responsive 与 body scroll；不复制独立 layer                       | 四方向、尺寸、controlled、nested、focus/scroll、RTL、full/reduced motion、窄屏                             |
+|  54 | ZPopconfirm  | P1     | 复用 Popover/AlertDialog；action 支持 pending/resolve/reject owner，避免重复提交                     | controlled、async confirm、cancel、placement、outside/Escape、focus restore、danger 文案                   |
+|  55 | ZPopover     | P0     | 先修当前 `matchWidth` CI；LayerGraph、typed trigger、anchor/update/portal、nested branch             | placement/collision、matchWidth、controlled、nested、scroll/resize、outside/Escape、focus restore、RTL     |
+|  56 | ZTooltip     | P1     | TooltipGroup/delay hysteresis；disabled trigger 包装策略；非交互内容边界；ownerDocument              | hover/focus、delay group、disabled control、multiple tooltips、Escape、RTL、reduced motion、touch 取舍     |
+|  57 | ZTour        | P1     | 移除 global document/window；root-scoped target、wait/skip missing target、Portal/Presence 与 locale | step/open 受控、target missing、scroll into view、mask、keyboard、resize、ShadowRoot、RTL/reduced motion   |
 
 ### 7.5 Data Display（16）
 
-| # | 组件 | 优先级 | API / 架构决策 | 文档和 Demo 必须覆盖 |
-| ---: | --- | --- | --- | --- |
-| 58 | ZAvatar | P1 | typed image props：loading/decoding/crossorigin/referrerPolicy/srcset/sizes；新增 ZAvatarGroup 候选 | image/fallback/error、shape/size、initials、a11y alt、lazy image、group/overflow |
-| 59 | ZBadge | P0 | 当前只是 inline pill。推荐将 ZBadge 改为 count/dot/max/anchor/overlap；短状态文本迁移到 ZTag/新 ZStatus | count/dot/showZero/max、anchor positioning、status、a11y label、RTL、动画/reduced、迁移例 |
-| 60 | ZCard | P1 | 明确 header/body/footer/media/action snippets 和可点击 Card 语义；不把整卡默认变 button | 基础、分区、media/actions、loading、可点击/链接、嵌套交互、响应式、主题 |
-| 61 | ZCarousel | P1 | locale pack、autoplay state、lazy mount 可选；触摸滑动按真实需求；共享 Presence | controlled、autoplay/pause、keyboard、indicators、dynamic slides、RTL、reduced motion、可见性 |
-| 62 | ZDataTable | P0 | 先修 sort 受控空值；补 filter/pagination/server/loading/column state/expand/sticky；明确 DataGrid 边界 | sort/filter/page、selection、loading/empty/error、column visibility/resize、virtual、long text、server ownership |
-| 63 | ZDescriptionList | P1 | term/description 改为 typed snippets；响应列/span/bordered 只按真实需求；保持 dl 语义 | text/rich content、responsive columns、long value、empty value、RTL、copy/action 组合 |
-| 64 | ZEmpty | P2 | 统一 icon/illustration/action slots；默认使用 Lucide 或 CSS，不内嵌随意 SVG | no data/no result/error 区分、custom icon/action、紧凑/大尺寸、a11y、主题 |
-| 65 | ZList | P1 | 明确 semantic list 与 data-driven convenience 边界；typed item key/snippet；不复制 DataTable | ul/ol、rich item、actions、empty/loading、large list 与 VirtualList 组合、nested list |
-| 66 | ZMeter | Keep | 保持原生 meter；规范 min/max/low/high/optimum 与 formatter；不做通用 progress | optimal/suboptimal/critical、边界值、custom label、a11y、主题/高对比 |
-| 67 | ZProgress | P1 | 保持原生 linear + 语义 circular SVG；统一 duration/token、label/formatter；SVG allowlist | determinate/indeterminate、linear/circular、min/max、status tone、reduced motion、高对比 |
-| 68 | ZSkeleton | P1 | 共享 motion token；支持组合 shape/lines，避免业务结构 DSL | text/avatar/card 组合、尺寸、loading 切换、reduced motion、主题/高对比、SSR |
-| 69 | ZStatistic | P1 | locale/format/precision/prefix/suffix；Countdown/NumberAnimation 独立候选，不塞入同一状态机 | number/date/percent/currency、locale、trend/tone、loading、large value、SSR 一致性 |
-| 70 | ZTable | Keep | 保持原生 table 视觉壳；caption/responsive wrapper/density；不与 DataTable 合并 | caption/headers、striped/density、wide table scroll、sticky 取舍、RTL、a11y |
-| 71 | ZTag | P1 | 作为状态/分类 pill 与可移除 tag；统一 disabled/removeLabel locale；承接旧 Badge 文本迁移 | tone、removable、disabled、keyboard remove、长文本、tag collection、迁移示例 |
-| 72 | ZTimeline | P1 | typed item content/icon/time；保持 ol 语义；pending/reverse/alternate 按真实需求 | 基础、rich content、status/icon、pending、long timeline、RTL、responsive |
-| 73 | ZVirtualList | P1 | 公开 scrollToIndex/key controller；动态尺寸/estimate、scroll anchoring；接 LogicalCollection | 10k items、initial/imperative scroll、dynamic data、resize、keyboard consumer、SSR、cleanup |
+|   # | 组件             | 优先级 | API / 架构决策                                                                                          | 文档和 Demo 必须覆盖                                                                                             |
+| --: | ---------------- | ------ | ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+|  58 | ZAvatar          | P1     | typed image props：loading/decoding/crossorigin/referrerPolicy/srcset/sizes；新增 ZAvatarGroup 候选     | image/fallback/error、shape/size、initials、a11y alt、lazy image、group/overflow                                 |
+|  59 | ZBadge           | P0     | 当前只是 inline pill。推荐将 ZBadge 改为 count/dot/max/anchor/overlap；短状态文本迁移到 ZTag/新 ZStatus | count/dot/showZero/max、anchor positioning、status、a11y label、RTL、动画/reduced、迁移例                        |
+|  60 | ZCard            | P1     | 明确 header/body/footer/media/action snippets 和可点击 Card 语义；不把整卡默认变 button                 | 基础、分区、media/actions、loading、可点击/链接、嵌套交互、响应式、主题                                          |
+|  61 | ZCarousel        | P1     | locale pack、autoplay state、lazy mount 可选；触摸滑动按真实需求；共享 Presence                         | controlled、autoplay/pause、keyboard、indicators、dynamic slides、RTL、reduced motion、可见性                    |
+|  62 | ZDataTable       | P0     | 先修 sort 受控空值；补 filter/pagination/server/loading/column state/expand/sticky；明确 DataGrid 边界  | sort/filter/page、selection、loading/empty/error、column visibility/resize、virtual、long text、server ownership |
+|  63 | ZDescriptionList | P1     | term/description 改为 typed snippets；响应列/span/bordered 只按真实需求；保持 dl 语义                   | text/rich content、responsive columns、long value、empty value、RTL、copy/action 组合                            |
+|  64 | ZEmpty           | P2     | 统一 icon/illustration/action slots；默认使用 Lucide 或 CSS，不内嵌随意 SVG                             | no data/no result/error 区分、custom icon/action、紧凑/大尺寸、a11y、主题                                        |
+|  65 | ZList            | P1     | 明确 semantic list 与 data-driven convenience 边界；typed item key/snippet；不复制 DataTable            | ul/ol、rich item、actions、empty/loading、large list 与 VirtualList 组合、nested list                            |
+|  66 | ZMeter           | Keep   | 保持原生 meter；规范 min/max/low/high/optimum 与 formatter；不做通用 progress                           | optimal/suboptimal/critical、边界值、custom label、a11y、主题/高对比                                             |
+|  67 | ZProgress        | P1     | 保持原生 linear + 语义 circular SVG；统一 duration/token、label/formatter；SVG allowlist                | determinate/indeterminate、linear/circular、min/max、status tone、reduced motion、高对比                         |
+|  68 | ZSkeleton        | P1     | 共享 motion token；支持组合 shape/lines，避免业务结构 DSL                                               | text/avatar/card 组合、尺寸、loading 切换、reduced motion、主题/高对比、SSR                                      |
+|  69 | ZStatistic       | P1     | locale/format/precision/prefix/suffix；Countdown/NumberAnimation 独立候选，不塞入同一状态机             | number/date/percent/currency、locale、trend/tone、loading、large value、SSR 一致性                               |
+|  70 | ZTable           | Keep   | 保持原生 table 视觉壳；caption/responsive wrapper/density；不与 DataTable 合并                          | caption/headers、striped/density、wide table scroll、sticky 取舍、RTL、a11y                                      |
+|  71 | ZTag             | P1     | 作为状态/分类 pill 与可移除 tag；统一 disabled/removeLabel locale；承接旧 Badge 文本迁移                | tone、removable、disabled、keyboard remove、长文本、tag collection、迁移示例                                     |
+|  72 | ZTimeline        | P1     | typed item content/icon/time；保持 ol 语义；pending/reverse/alternate 按真实需求                        | 基础、rich content、status/icon、pending、long timeline、RTL、responsive                                         |
+|  73 | ZVirtualList     | P1     | 公开 scrollToIndex/key controller；动态尺寸/estimate、scroll anchoring；接 LogicalCollection            | 10k items、initial/imperative scroll、dynamic data、resize、keyboard consumer、SSR、cleanup                      |
 
 ### 7.6 Feedback（5）
 
-| # | 组件 | 优先级 | API / 架构决策 | 文档和 Demo 必须覆盖 |
-| ---: | --- | --- | --- | --- |
-| 74 | ZAlert | P1 | tone/live/dismiss/action 一致；默认文案 locale 化；区分 inline alert 与 toast | tone、title/body/action、dismiss、polite/assertive、keyboard、高对比、动态插入 |
-| 75 | ZLoadingBar | P1 | WAAPI token、ownerDocument、page/local 两模式；任务 controller 与进度更新 | determinate/indeterminate、page/local、start/update/finish/error、visibility、reduced motion、cleanup |
-| 76 | ZResult | P1 | icon/actions/content snippets；tone 与 Alert 统一；空状态不与 ZEmpty 重叠 | success/error/warning/info、custom icon/action、long content、responsive、a11y heading |
-| 77 | ZSpinner | P1 | 统一 size/label/tone；WAAPI duration token；inline/overlay 不由 Spinner 单体承担 | named/hidden label、sizes、Button 内、区域 loading、reduced motion、高对比 |
-| 78 | ZToast / ZToaster | P0 | queued/visible/exiting、Portal/Presence、真正 maxVisible、update/promise、locale；Notification 共享内核 | queue overflow、pause/resume、action、async task、assertive 节流、placement/RTL、reduced motion、cleanup |
+|   # | 组件              | 优先级 | API / 架构决策                                                                                          | 文档和 Demo 必须覆盖                                                                                     |
+| --: | ----------------- | ------ | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+|  74 | ZAlert            | P1     | tone/live/dismiss/action 一致；默认文案 locale 化；区分 inline alert 与 toast                           | tone、title/body/action、dismiss、polite/assertive、keyboard、高对比、动态插入                           |
+|  75 | ZLoadingBar       | P1     | WAAPI token、ownerDocument、page/local 两模式；任务 controller 与进度更新                               | determinate/indeterminate、page/local、start/update/finish/error、visibility、reduced motion、cleanup    |
+|  76 | ZResult           | P1     | icon/actions/content snippets；tone 与 Alert 统一；空状态不与 ZEmpty 重叠                               | success/error/warning/info、custom icon/action、long content、responsive、a11y heading                   |
+|  77 | ZSpinner          | P1     | 统一 size/label/tone；WAAPI duration token；inline/overlay 不由 Spinner 单体承担                        | named/hidden label、sizes、Button 内、区域 loading、reduced motion、高对比                               |
+|  78 | ZToast / ZToaster | P0     | queued/visible/exiting、Portal/Presence、真正 maxVisible、update/promise、locale；Notification 共享内核 | queue overflow、pause/resume、action、async task、assertive 节流、placement/RTL、reduced motion、cleanup |
 
 ## 8. 新组件候选与明确不做项
 
@@ -623,16 +623,16 @@ Header 显示当前版本。Demo 增加 reset、编辑/反馈链接、最小复�
 
 ### 8.1 第一候选批次
 
-| 候选 | 理由 | 推荐边界 |
-| --- | --- | --- |
-| ZHeading | 修复标题语义缺口，不让 ZText 无限多态 | h1—h6、level/size 解耦、原生 heading props |
-| ZGrid | 后台响应式网格是高频基础设施 | CSS Grid、columns/minmax/gap，不做页面布局框架 |
-| ZScrollArea | Select/Tree/Docs/Panel 都需要一致滚动边界 | 原生滚动优先、可选 viewport/scrollbar part，不自绘滚动物理 |
-| ZCheckboxGroup | 表单数组值与选择组选项高频 | 复用 Collection/Selection/FormValueBridge |
-| ZBreadcrumb | 文档站和后台信息层级高频 | 原生 nav/ol、当前项、collapse，可与路由解耦 |
-| ZSteps | 表单流程和向导高频 | current/status/orientation，不内置路由/业务流程 |
-| ZImage | 图片 fallback、preview 和 lazy loading 高频 | 原生 img 为核心，preview 复用 Dialog |
-| ZNotification | 长时反馈、标题/正文/操作与 Toast 有不同产品语义 | 共享 queue，独立 viewport/生命周期策略 |
+| 候选           | 理由                                            | 推荐边界                                                   |
+| -------------- | ----------------------------------------------- | ---------------------------------------------------------- |
+| ZHeading       | 修复标题语义缺口，不让 ZText 无限多态           | h1—h6、level/size 解耦、原生 heading props                 |
+| ZGrid          | 后台响应式网格是高频基础设施                    | CSS Grid、columns/minmax/gap，不做页面布局框架             |
+| ZScrollArea    | Select/Tree/Docs/Panel 都需要一致滚动边界       | 原生滚动优先、可选 viewport/scrollbar part，不自绘滚动物理 |
+| ZCheckboxGroup | 表单数组值与选择组选项高频                      | 复用 Collection/Selection/FormValueBridge                  |
+| ZBreadcrumb    | 文档站和后台信息层级高频                        | 原生 nav/ol、当前项、collapse，可与路由解耦                |
+| ZSteps         | 表单流程和向导高频                              | current/status/orientation，不内置路由/业务流程            |
+| ZImage         | 图片 fallback、preview 和 lazy loading 高频     | 原生 img 为核心，preview 复用 Dialog                       |
+| ZNotification  | 长时反馈、标题/正文/操作与 Toast 有不同产品语义 | 共享 queue，独立 viewport/生命周期策略                     |
 
 ### 8.2 第二候选批次
 
@@ -652,16 +652,16 @@ Header 显示当前版本。Demo 增加 reset、编辑/反馈链接、最小复�
 
 ### 9.1 状态命名
 
-| 责任 | 统一 API | 说明 |
-| --- | --- | --- |
-| 主值 | `value / defaultValue / onValueChange` | 标量和数组都使用 value；MultiSelect 当前 `values/defaultValues` 需迁移 |
-| 开关 | `checked / defaultChecked / onCheckedChange` | Checkbox、Switch |
-| Toggle | `pressed / defaultPressed / onPressedChange` | ToggleButton |
-| 浮层 | `open / defaultOpen / onOpenChange` | Dialog、Popover、Select 等 |
-| 查询 | `query / defaultQuery / onQueryChange` | Command；可编辑选择的原始文本用 inputValue |
-| 选择模型 | `selectedKeys / defaultSelectedKeys / onSelectionChange` | Tree、DataTable 等非单一表单 value 的选择集合 |
-| 展开模型 | `expandedKeys / defaultExpandedKeys / onExpandedChange` | Tree/TreeSelect |
-| 分页 | `page / defaultPage / onPageChange` | pageSize 同样遵循三元组 |
+| 责任     | 统一 API                                                 | 说明                                                                   |
+| -------- | -------------------------------------------------------- | ---------------------------------------------------------------------- |
+| 主值     | `value / defaultValue / onValueChange`                   | 标量和数组都使用 value；MultiSelect 当前 `values/defaultValues` 需迁移 |
+| 开关     | `checked / defaultChecked / onCheckedChange`             | Checkbox、Switch                                                       |
+| Toggle   | `pressed / defaultPressed / onPressedChange`             | ToggleButton                                                           |
+| 浮层     | `open / defaultOpen / onOpenChange`                      | Dialog、Popover、Select 等                                             |
+| 查询     | `query / defaultQuery / onQueryChange`                   | Command；可编辑选择的原始文本用 inputValue                             |
+| 选择模型 | `selectedKeys / defaultSelectedKeys / onSelectionChange` | Tree、DataTable 等非单一表单 value 的选择集合                          |
+| 展开模型 | `expandedKeys / defaultExpandedKeys / onExpandedChange`  | Tree/TreeSelect                                                        |
+| 分页     | `page / defaultPage / onPageChange`                      | pageSize 同样遵循三元组                                                |
 
 空值必须在全库只有一种语义。推荐标量可清空状态使用 `null`，`undefined` 只代表 prop 未提供；数组空值使用冻结空数组。最终决策在 ControlledState 迁移前形成 ADR。
 
@@ -721,13 +721,13 @@ direction   ltr、rtl，仅表示书写方向
 
 不能给所有组件机械添加同一批 prop，但同一族必须一致：
 
-| 族 | 必须统一的状态 |
-| --- | --- |
-| 文本/数字/日期 segment | size、disabled、readonly、required、invalid、name、form |
-| Select/Multi/Combobox/Cascader/TreeSelect | size、disabled、readonly、required、invalid、open、value、name、form |
-| Upload/Transfer/Tags | size、disabled、readonly、required、invalid、loading、empty、name、form |
-| Table/DataTable | density、loading、empty、error、striped、virtualization |
-| Button/action | size、variant、tone、loading、disabled、fullWidth |
+| 族                                        | 必须统一的状态                                                          |
+| ----------------------------------------- | ----------------------------------------------------------------------- |
+| 文本/数字/日期 segment                    | size、disabled、readonly、required、invalid、name、form                 |
+| Select/Multi/Combobox/Cascader/TreeSelect | size、disabled、readonly、required、invalid、open、value、name、form    |
+| Upload/Transfer/Tags                      | size、disabled、readonly、required、invalid、loading、empty、name、form |
+| Table/DataTable                           | density、loading、empty、error、striped、virtualization                 |
+| Button/action                             | size、variant、tone、loading、disabled、fullWidth                       |
 
 优先级固定：组件显式 prop > ZField/FormField > ZProvider > 组件默认值。建立公共 `ZControlSize` 与 `ZSurfaceDensity`；特殊组件只有真实语义不同时才新增取值。
 
@@ -754,8 +754,13 @@ interface ZLayerStateProps {
 	onOpenChange?: (
 		open: boolean,
 		detail: ZuiChangeDetail<
-			'trigger' | 'escape' | 'pointer-outside' | 'focus-outside' |
-			'action' | 'cancel' | 'programmatic'
+			| 'trigger'
+			| 'escape'
+			| 'pointer-outside'
+			| 'focus-outside'
+			| 'action'
+			| 'cancel'
+			| 'programmatic'
 		>
 	) => void;
 }
@@ -1035,34 +1040,34 @@ dogfood/reuse/duplicate implementation
 
 ## 13. 风险与防退化机制
 
-| 风险 | 防线 |
-| --- | --- |
-| 为对标而堆 API | 每项必须关联真实 consumer、profile capability 和不采用说明 |
-| 78 组件同时重写失控 | 先共享 primitive，再按组件族迁移；每阶段小提交 |
-| metadata 再次漂移 | AST 生成事实 + 语义 API diff + Docs 单一消费源 |
-| Demo 数量膨胀但重复 | `covers` 与 API/测试互链，不设固定数量 KPI |
-| experimental 批量改 stable | stable 严格 evidence 门禁；状态变更需单独审阅 |
-| Docs 迁移期间双路由 | manifest 先行，旧 hash 到真实 pathname 有显式兼容期 |
+| 风险                        | 防线                                                       |
+| --------------------------- | ---------------------------------------------------------- |
+| 为对标而堆 API              | 每项必须关联真实 consumer、profile capability 和不采用说明 |
+| 78 组件同时重写失控         | 先共享 primitive，再按组件族迁移；每阶段小提交             |
+| metadata 再次漂移           | AST 生成事实 + 语义 API diff + Docs 单一消费源             |
+| Demo 数量膨胀但重复         | `covers` 与 API/测试互链，不设固定数量 KPI                 |
+| experimental 批量改 stable  | stable 严格 evidence 门禁；状态变更需单独审阅              |
+| Docs 迁移期间双路由         | manifest 先行，旧 hash 到真实 pathname 有显式兼容期        |
 | Layer/Form 重构破坏现有组件 | adapter 过渡、行为 fixture、按族迁移，不一次删除旧 runtime |
-| CI 太慢导致本地偷跑全量验证 | 本地仍只 WebStorm + Chrome；CI 并行拆分且不等待 |
-| bundle 过大争议 | 记录构成/delta、人工看明显异常，不设自动字节预算 |
-| 外部发布权限阻塞 | 代码流水线与授权边界分离，权限只在最终 publish 前确认 |
+| CI 太慢导致本地偷跑全量验证 | 本地仍只 WebStorm + Chrome；CI 并行拆分且不等待            |
+| bundle 过大争议             | 记录构成/delta、人工看明显异常，不设自动字节预算           |
+| 外部发布权限阻塞            | 代码流水线与授权边界分离，权限只在最终 publish 前确认      |
 
 ## 14. 需要审阅的架构决策
 
 下列为本文推荐值，审阅后再进入实现：
 
-| 决策 | 推荐 | 备选与代价 |
-| --- | --- | --- |
-| 空值语义 | 标量可清空状态使用 `null`，`undefined` 表示 prop 未提供 | 内部 UNSET + 对外 undefined 可兼容更多旧 API，但类型与 owner 检测更复杂 |
-| 根入口 | 只承诺 stable；experimental 使用显式入口 | 单入口保留到 1.0，迁移少但 94% 实验面继续污染公共 ABI |
-| Badge | ZBadge 改为 count/dot/overlay；文本状态迁移到 ZTag/ZStatus | 保留现状并新建 ZCountBadge，兼容好但命名长期含混 |
-| Typography | ZText 保持 body/inline，新增 ZHeading | 扩大 ZText `as`，API 少但元素属性类型更复杂 |
-| Docs 路由 | SvelteKit prerender + 真实 pathname | 继续 Vite SPA，可实现懒加载但版本化/SEO/LLM 能力较弱 |
-| DataGrid | ZDataTable 保持后台 table；高级 grid 独立实验/X 轨道 | 单组件持续扩张，短期入口少但长期复杂度高 |
-| FileUpload | 保留 ZFileUpload，UI 管文件状态，transport 由 adapter 注入 | 重命名 FilePicker 更精确，但迁移成本与用户认知变化大 |
-| 新组件首批 | Heading、Grid、ScrollArea、CheckboxGroup、Breadcrumb、Steps、Image、Notification | 全部 27 候选并行会再次制造大量 experimental 半成品 |
-| 发布 | npm trusted publishing + tag + versioned Docs 同流水线 | 手工 token/publish 更快但不可审计且易发布错误产物 |
+| 决策       | 推荐                                                                             | 备选与代价                                                              |
+| ---------- | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| 空值语义   | 标量可清空状态使用 `null`，`undefined` 表示 prop 未提供                          | 内部 UNSET + 对外 undefined 可兼容更多旧 API，但类型与 owner 检测更复杂 |
+| 根入口     | 只承诺 stable；experimental 使用显式入口                                         | 单入口保留到 1.0，迁移少但 94% 实验面继续污染公共 ABI                   |
+| Badge      | ZBadge 改为 count/dot/overlay；文本状态迁移到 ZTag/ZStatus                       | 保留现状并新建 ZCountBadge，兼容好但命名长期含混                        |
+| Typography | ZText 保持 body/inline，新增 ZHeading                                            | 扩大 ZText `as`，API 少但元素属性类型更复杂                             |
+| Docs 路由  | SvelteKit prerender + 真实 pathname                                              | 继续 Vite SPA，可实现懒加载但版本化/SEO/LLM 能力较弱                    |
+| DataGrid   | ZDataTable 保持后台 table；高级 grid 独立实验/X 轨道                             | 单组件持续扩张，短期入口少但长期复杂度高                                |
+| FileUpload | 保留 ZFileUpload，UI 管文件状态，transport 由 adapter 注入                       | 重命名 FilePicker 更精确，但迁移成本与用户认知变化大                    |
+| 新组件首批 | Heading、Grid、ScrollArea、CheckboxGroup、Breadcrumb、Steps、Image、Notification | 全部 27 候选并行会再次制造大量 experimental 半成品                      |
+| 发布       | npm trusted publishing + tag + versioned Docs 同流水线                           | 手工 token/publish 更快但不可审计且易发布错误产物                       |
 
 ## 15. 审阅后第一批动作
 

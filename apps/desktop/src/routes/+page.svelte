@@ -15,6 +15,7 @@
 	import { resultMessage } from '$lib/runtime.js';
 
 	const desktop = useDesktopPlatform();
+	let hydrated = $state(false);
 	let status = $state('Ready. Choose a capability probe.');
 	let selectedPath = $state<string>();
 	const pageClass = icss(defaultTheme, (s) => {
@@ -101,6 +102,7 @@
 	}
 
 	onMount(() => {
+		hydrated = true;
 		let active = true;
 		let dispose = () => Promise.resolve();
 		void desktop.window
@@ -113,6 +115,7 @@
 			});
 		return () => {
 			active = false;
+			hydrated = false;
 			void dispose();
 		};
 	});
@@ -122,7 +125,7 @@
 	title="ZAdmin WebView capability lab"
 	onerror={(error) => setResult('Window', { error, ok: false }, String)}
 >
-	<ZStack class={pageClass} gap="large">
+	<ZStack class={pageClass} gap="large" data-zadmin-webview-ready={hydrated || undefined}>
 		<ZStack gap="small">
 			<ZText as="strong" size="xlarge">Windows WebView2 capability lab</ZText>
 			<ZText tone="muted">

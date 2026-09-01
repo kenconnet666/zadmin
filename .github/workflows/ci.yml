@@ -21,10 +21,10 @@ env:
   PNPM_VERSION: '11.22.0'
 
 jobs:
-  workspace:
-    name: Workspace, browsers, and builds
+  static:
+    name: Static contracts
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -32,24 +32,11 @@ jobs:
       - name: Ignore Linux-only file mode changes
         run: git config core.fileMode false
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v6
-        with:
-          version: ${{ env.PNPM_VERSION }}
-          run_install: false
-
-      - name: Install Node.js
-        uses: actions/setup-node@v7
+      - name: Setup workspace
+        uses: ./.github/actions/setup-workspace
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: pnpm
-          cache-dependency-path: pnpm-lock.yaml
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Install Playwright browsers
-        run: pnpm --filter @zadmin/docs exec playwright install --with-deps chromium firefox webkit
+          pnpm-version: ${{ env.PNPM_VERSION }}
 
       - name: Check types and Svelte contracts
         run: pnpm check
@@ -60,11 +47,99 @@ jobs:
       - name: Audit ZUI and Docs source contracts
         run: pnpm --filter @zadmin/docs audit:system
 
+      - name: Validate Changesets release metadata
+        run: pnpm release:status
+
+      - name: Verify ZUI public API contract
+        run: pnpm --filter @zadmin/zui api:contract:check
+
+      - name: Verify generated tracked files are unchanged
+        run: git diff --exit-code
+
+  workspace-tests:
+    name: Workspace component tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Ignore Linux-only file mode changes
+        run: git config core.fileMode false
+
+      - name: Setup workspace
+        uses: ./.github/actions/setup-workspace
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          pnpm-version: ${{ env.PNPM_VERSION }}
+
+      - name: Install Playwright browsers
+        run: pnpm --filter @zadmin/docs exec playwright install --with-deps chromium firefox webkit
+
       - name: Run full workspace tests
         run: pnpm test
 
+      - name: Upload browser test diagnostics
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: workspace-test-diagnostics-${{ github.sha }}
+          retention-days: 7
+          if-no-files-found: ignore
+          path: |
+            **/test-results/**
+            **/.vitest-reports/**
+
+  docs-e2e:
+    name: Docs end-to-end
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Ignore Linux-only file mode changes
+        run: git config core.fileMode false
+
+      - name: Setup workspace
+        uses: ./.github/actions/setup-workspace
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          pnpm-version: ${{ env.PNPM_VERSION }}
+
+      - name: Install Playwright browsers
+        run: pnpm --filter @zadmin/docs exec playwright install --with-deps chromium firefox webkit
+
       - name: Run Docs end-to-end tests
         run: pnpm --filter @zadmin/docs test:e2e
+
+      - name: Upload Docs Playwright diagnostics
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: docs-playwright-${{ github.sha }}
+          retention-days: 7
+          if-no-files-found: ignore
+          path: |
+            apps/docs/playwright-report/**
+            apps/docs/test-results/**
+
+  build:
+    name: Workspace builds
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Ignore Linux-only file mode changes
+        run: git config core.fileMode false
+
+      - name: Setup workspace
+        uses: ./.github/actions/setup-workspace
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          pnpm-version: ${{ env.PNPM_VERSION }}
 
       - name: Build all packages, apps, plugins, and WeChat output
         run: pnpm build
@@ -86,8 +161,8 @@ jobs:
             plugins/*/dist
             ui/*/dist
 
-  acceptance:
-    name: Coverage and packages
+  coverage:
+    name: Coverage suites
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -97,59 +172,86 @@ jobs:
       - name: Ignore Linux-only file mode changes
         run: git config core.fileMode false
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v6
-        with:
-          version: ${{ env.PNPM_VERSION }}
-          run_install: false
-
-      - name: Install Node.js
-        uses: actions/setup-node@v7
+      - name: Setup workspace
+        id: workspace
+        uses: ./.github/actions/setup-workspace
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: pnpm
-          cache-dependency-path: pnpm-lock.yaml
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Validate Changesets release metadata
-        run: pnpm release:status
-
-      - name: Verify ZUI public API contract
-        run: pnpm --filter @zadmin/zui api:contract:check
+          pnpm-version: ${{ env.PNPM_VERSION }}
 
       - name: Install Chromium for coverage suites
+        id: chromium
         run: pnpm --filter @zadmin/docs exec playwright install --with-deps chromium
 
       - name: Run ZUI coverage
+        if: always() && steps.workspace.outcome == 'success' && steps.chromium.outcome == 'success'
         run: pnpm --filter @zadmin/zui test:coverage
 
-      - name: Inspect ZUI browser bundles
-        run: pnpm --filter @zadmin/zui test:bundle
-
       - name: Run SvelteKit integration coverage
+        if: always() && steps.workspace.outcome == 'success' && steps.chromium.outcome == 'success'
         run: pnpm --filter @zadmin/sveltekit test:coverage
 
-      - name: Run external ZUI and SvelteKit SSR acceptance
-        run: pnpm --filter @zadmin/sveltekit test:zui-package
-
-      - name: Dry-run ZUI package publish
-        run: pnpm --filter @zadmin/zui publish --dry-run --no-git-checks
-
       - name: Run Miniapp coverage
+        if: always() && steps.workspace.outcome == 'success'
         run: pnpm --filter @zadmin/miniapp test:coverage
 
       - name: Run WebView facade coverage
+        if: always() && steps.workspace.outcome == 'success'
         run: pnpm --filter @zadmin/webview test:coverage
 
+      - name: Upload coverage evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage-${{ github.sha }}
+          retention-days: 7
+          if-no-files-found: ignore
+          path: |
+            packages/*/coverage/**
+            ui/*/coverage/**
+
+  packages:
+    name: Bundles and external packages
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Ignore Linux-only file mode changes
+        run: git config core.fileMode false
+
+      - name: Setup workspace
+        id: workspace
+        uses: ./.github/actions/setup-workspace
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          pnpm-version: ${{ env.PNPM_VERSION }}
+
+      - name: Inspect ZUI browser bundles
+        if: always() && steps.workspace.outcome == 'success'
+        run: pnpm --filter @zadmin/zui test:bundle
+
+      - name: Run external ZUI and SvelteKit SSR acceptance
+        if: always() && steps.workspace.outcome == 'success'
+        run: pnpm --filter @zadmin/sveltekit test:zui-package
+
+      - name: Build and dry-run ZUI package publish
+        if: always() && steps.workspace.outcome == 'success'
+        run: |
+          pnpm --filter @zadmin/zui build
+          pnpm --filter @zadmin/zui publish --dry-run --no-git-checks
+
       - name: Run WebView external package acceptance
+        if: always() && steps.workspace.outcome == 'success'
         run: pnpm --filter @zadmin/webview test:package
 
       - name: Run Miniapp external package acceptance
+        if: always() && steps.workspace.outcome == 'success'
         run: pnpm --filter @zadmin/miniapp test:package
 
       - name: Verify reports and generated tracked files are unchanged
+        if: always() && steps.workspace.outcome == 'success'
         run: >-
           git diff --exit-code -- .
           ':(exclude).docs/miniapp/wechat-package-acceptance.json'
@@ -163,26 +265,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v6
-        with:
-          version: ${{ env.PNPM_VERSION }}
-          run_install: false
-
-      - name: Install Node.js
-        uses: actions/setup-node@v7
+      - name: Setup workspace
+        uses: ./.github/actions/setup-workspace
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: pnpm
-          cache-dependency-path: pnpm-lock.yaml
+          pnpm-version: ${{ env.PNPM_VERSION }}
 
       - name: Install .NET 10 SDK
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 10.0.x
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
 
       - name: Build and test C# WebView core
         run: |
@@ -215,3 +307,45 @@ jobs:
           retention-days: 14
           if-no-files-found: error
           path: apps/desktop/dist/desktop/**
+
+  required:
+    name: Required aggregate
+    if: always()
+    needs:
+      - static
+      - workspace-tests
+      - docs-e2e
+      - build
+      - coverage
+      - packages
+      - desktop-windows
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Require every independent gate
+        env:
+          STATIC_RESULT: ${{ needs.static.result }}
+          WORKSPACE_TESTS_RESULT: ${{ needs.workspace-tests.result }}
+          DOCS_E2E_RESULT: ${{ needs.docs-e2e.result }}
+          BUILD_RESULT: ${{ needs.build.result }}
+          COVERAGE_RESULT: ${{ needs.coverage.result }}
+          PACKAGES_RESULT: ${{ needs.packages.result }}
+          DESKTOP_WINDOWS_RESULT: ${{ needs.desktop-windows.result }}
+        run: |
+          failed=0
+          for result in \
+            "$STATIC_RESULT" \
+            "$WORKSPACE_TESTS_RESULT" \
+            "$DOCS_E2E_RESULT" \
+            "$BUILD_RESULT" \
+            "$COVERAGE_RESULT" \
+            "$PACKAGES_RESULT" \
+            "$DESKTOP_WINDOWS_RESULT"; do
+            if [ "$result" != 'success' ]; then
+              failed=1
+            fi
+          done
+          if [ "$failed" -ne 0 ]; then
+            echo 'One or more required CI gates did not succeed.'
+            exit 1
+          fi

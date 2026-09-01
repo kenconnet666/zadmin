@@ -164,12 +164,22 @@ public sealed class WebViewHost : IAsyncDisposable
         try
         {
             _smokeRequest = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
-			// Cold CI runs may spend several seconds optimizing newly added Vite dependencies.
-			for (var attempt = 0; attempt < 150; attempt++)
+            // A non-empty body can still be Vite's transient pre-optimization document. Wait for
+            // an explicit marker set from Svelte onMount, and let a replacement navigation own the report.
+            var hydrated = false;
+            for (var attempt = 0; attempt < 300; attempt++)
             {
-                if (await sender.ExecuteScriptAsync("document.body?.innerText?.length??0") != "0") break;
+                if (generation != Volatile.Read(ref _smokeNavigationGeneration)) return;
+                if (await sender.ExecuteScriptAsync(
+                        "document.querySelector('[data-zadmin-webview-ready=\"true\"]')!==null") == "true")
+                {
+                    hydrated = true;
+                    break;
+                }
                 await Task.Delay(100);
             }
+            if (!hydrated) throw new TimeoutException("Development page did not reach its hydrated marker.");
+            if (generation != Volatile.Read(ref _smokeNavigationGeneration)) return;
             var pageValue = await sender.ExecuteScriptAsync(
                 "JSON.stringify({origin:location.origin,title:document.title,bodyText:document.body?.innerText?.slice(0,1000)??'',hasBridge:Boolean(globalThis.chrome?.webview),viteClient:[...document.scripts].some(script=>script.src.includes('/@vite/client'))||performance.getEntriesByType('resource').some(entry=>entry.name.includes('/@vite/client')),errors:globalThis.__ZADMIN_WEBVIEW_ERRORS__??[]})");
             var pageJson = JsonSerializer.Deserialize<string>(pageValue) ?? "{}";
