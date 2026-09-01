@@ -1,5 +1,7 @@
 import { getContext, setContext } from 'svelte';
 
+import type { ZControlSize } from '../foundation/control-size.js';
+
 export interface ZFieldContext {
 	readonly controlId: string;
 	readonly describedBy?: string;
@@ -9,6 +11,7 @@ export interface ZFieldContext {
 	readonly name?: string;
 	readonly readonly: boolean;
 	readonly required: boolean;
+	readonly size?: ZControlSize;
 	registerFocusOwner(focus: () => void): () => void;
 }
 
@@ -52,6 +55,9 @@ export function provideZField(read: () => ZFieldContext): ZFieldContext {
 		},
 		get required() {
 			return read().required;
+		},
+		get size() {
+			return read().size;
 		},
 		registerFocusOwner(focus) {
 			return read().registerFocusOwner(focus);

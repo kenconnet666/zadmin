@@ -6,9 +6,11 @@
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 	export interface ZCarouselProps<TItem = unknown> extends Omit<
 		HTMLAttributes<HTMLElement>,
-		'children'
+		'aria-label' | 'children'
 	> {
-		readonly ariaLabel: string;
+		readonly 'aria-label'?: string;
+		/** @deprecated Use the native `aria-label` spelling. */
+		readonly ariaLabel?: string;
 		readonly autoplayInterval?: number;
 		readonly defaultValue?: SelectionKey;
 		readonly item: Snippet<[TItem, number]>;
@@ -34,7 +36,13 @@
 			{ description: '当前稳定slide key。', name: 'value', type: 'SelectionKey' },
 			{ description: '真实region引用。', name: 'ref', type: 'HTMLElement | null' }
 		],
-		dependencies: ['ControllableState', 'reduced motion', 'owned autoplay timer'],
+		dependencies: [
+			'ControllableState',
+			'typed locale pack',
+			'owner realm reduced motion',
+			'owner realm visibility',
+			'owned autoplay timer'
+		],
 		events: [
 			{
 				description: '用户、控制或自动轮播切换。',
@@ -52,6 +60,19 @@
 			{ description: '直接跳转按钮。', name: 'indicators' }
 		],
 		props: [
+			{
+				default: '必填',
+				description: 'Carousel region的原生可访问名称。',
+				name: 'aria-label',
+				required: true,
+				type: 'string'
+			},
+			{
+				default: 'undefined',
+				description: 'deprecated兼容别名；新代码使用aria-label。',
+				name: 'ariaLabel',
+				type: 'string'
+			},
 			{
 				default: '必填',
 				description: 'slides数据。',
@@ -150,8 +171,10 @@
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { ReducedMotionState } from '../../runtime/foundation/motion.svelte.js';
+	import { isDomNode } from '../../runtime/layer/dom-realm.js';
 	import ZButton from '../gene/ZButton.svelte';
 	let {
+		'aria-label': ariaLabelNative,
 		ariaLabel,
 		autoplayInterval,
 		class: className,
@@ -161,12 +184,12 @@
 		itemLabel,
 		items,
 		loop = true,
-		nextLabel = 'Next slide',
+		nextLabel,
 		onValueChange,
-		pauseLabel = 'Pause automatic rotation',
+		pauseLabel,
 		pauseOnHover = true,
-		playLabel = 'Start automatic rotation',
-		previousLabel = 'Previous slide',
+		playLabel,
+		previousLabel,
 		ref = $bindable(null),
 		style,
 		value = $bindable(),
@@ -177,6 +200,7 @@
 	let pausedByUser = $state(false);
 	let hovered = $state(false);
 	let focusWithin = $state(false);
+	let documentHidden = $state(false);
 	const normalized = $derived.by(() => {
 		if (items.length === 0) throw new Error('ZCarousel requires at least one item.');
 		const keys = new Set<SelectionKey>();
@@ -200,9 +224,21 @@
 		return index;
 	});
 	const reduced = $derived(reducedMotion.current);
+	const resolvedAriaLabel = $derived.by(() => {
+		const label = ariaLabelNative ?? ariaLabel;
+		if (!label) throw new TypeError('ZCarousel requires aria-label.');
+		return label;
+	});
+	const numberFormatter = $derived(new Intl.NumberFormat(zui.locale));
+	const resolvedNextLabel = $derived(nextLabel ?? zui.localePack.carousel.nextSlide);
+	const resolvedPauseLabel = $derived(pauseLabel ?? zui.localePack.carousel.pauseRotation);
+	const resolvedPlayLabel = $derived(playLabel ?? zui.localePack.carousel.startRotation);
+	const resolvedPreviousLabel = $derived(previousLabel ?? zui.localePack.carousel.previousSlide);
 	const PreviousIcon = $derived(zui.direction === 'rtl' ? ChevronRight : ChevronLeft);
 	const NextIcon = $derived(zui.direction === 'rtl' ? ChevronLeft : ChevronRight);
-	const autoPaused = $derived(pausedByUser || focusWithin || (pauseOnHover && hovered) || reduced);
+	const autoPaused = $derived(
+		pausedByUser || focusWithin || documentHidden || (pauseOnHover && hovered) || reduced
+	);
 	const rootClass = $derived(zui.recipe(recipe));
 	const viewportClass = $derived(zui.recipe(viewportRecipe));
 	const slideClass = $derived(zui.recipe(slideRecipe));
@@ -210,14 +246,29 @@
 	const indicatorsClass = $derived(zui.recipe(indicatorsRecipe));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
-	onMount(() => reducedMotion.connect());
+	onMount(() => {
+		const ownerDocument = ref?.ownerDocument;
+		const disconnectMotion = reducedMotion.connect(ownerDocument?.defaultView);
+		if (!ownerDocument) return disconnectMotion;
+		const updateVisibility = (): void => {
+			documentHidden = ownerDocument.visibilityState === 'hidden';
+		};
+		updateVisibility();
+		ownerDocument.addEventListener('visibilitychange', updateVisibility);
+		return () => {
+			disconnectMotion();
+			ownerDocument.removeEventListener('visibilitychange', updateVisibility);
+		};
+	});
 	$effect(() => {
 		if (autoplayInterval === undefined) return;
 		if (!Number.isFinite(autoplayInterval) || autoplayInterval < 1000)
 			throw new TypeError('ZCarousel autoplayInterval must be at least 1000ms.');
 		if (autoPaused || normalized.length < 2) return;
-		const timer = setInterval(() => move(1), autoplayInterval);
-		return () => clearInterval(timer);
+		const view = ref?.ownerDocument.defaultView;
+		if (!view) return;
+		const timer = view.setInterval(() => move(1), autoplayInterval);
+		return () => view.clearInterval(timer);
 	});
 	function move(delta: -1 | 1): void {
 		const target = activeIndex + delta;
@@ -228,12 +279,8 @@
 	function choose(index: number): void {
 		valueState.setFromUser(normalized[index]!.key);
 	}
-	function focusOut(event: FocusEvent): void {
-		if (
-			!(event.currentTarget instanceof HTMLElement) ||
-			event.currentTarget.contains(event.relatedTarget as Node | null)
-		)
-			return;
+	function focusOut(event: FocusEvent & { currentTarget: HTMLElement }): void {
+		if (isDomNode(event.relatedTarget) && event.currentTarget.contains(event.relatedTarget)) return;
 		focusWithin = false;
 	}
 </script>
@@ -244,8 +291,8 @@
 	class={[rootClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
-	aria-roledescription="carousel"
-	aria-label={ariaLabel}
+	aria-roledescription={zui.localePack.carousel.carouselRole}
+	aria-label={resolvedAriaLabel}
 	data-paused={autoPaused || undefined}
 	data-reduced-motion={reduced || undefined}
 	onmouseenter={() => (hovered = true)}
@@ -255,10 +302,10 @@
 >
 	{#if autoplayInterval !== undefined}<ZButton
 			aria-label={reduced
-				? 'Automatic rotation disabled by motion preference'
+				? zui.localePack.carousel.automaticRotationDisabled
 				: pausedByUser
-					? playLabel
-					: pauseLabel}
+					? resolvedPlayLabel
+					: resolvedPauseLabel}
 			aria-pressed={pausedByUser}
 			disabled={reduced}
 			size="small"
@@ -278,8 +325,12 @@
 				class={slideClass}
 				data-slot="slide"
 				role="group"
-				aria-roledescription="slide"
-				aria-label={`${index + 1} of ${normalized.length}: ${slide.label}`}
+				aria-roledescription={zui.localePack.carousel.slideRole}
+				aria-label={zui.localePack.carousel.slidePosition(
+					numberFormatter.format(index + 1),
+					numberFormatter.format(normalized.length),
+					slide.label
+				)}
 				data-active={index === activeIndex || undefined}
 				hidden={index !== activeIndex}
 			>
@@ -288,15 +339,23 @@
 	</div>
 	<div class={controlsClass} data-slot="controls">
 		<ZButton
-			aria-label={previousLabel}
+			aria-label={resolvedPreviousLabel}
 			disabled={!loop && activeIndex === 0}
 			size="small"
 			variant="secondary"
 			onclick={() => move(-1)}><PreviousIcon aria-hidden="true" size={16} /></ZButton
 		>
-		<div class={indicatorsClass} data-slot="indicators" role="group" aria-label="Choose slide">
+		<div
+			class={indicatorsClass}
+			data-slot="indicators"
+			role="group"
+			aria-label={zui.localePack.carousel.chooseSlide}
+		>
 			{#each normalized as slide, index (slide.key)}<ZButton
-					aria-label={`Go to slide ${index + 1}: ${slide.label}`}
+					aria-label={zui.localePack.carousel.goToSlide(
+						numberFormatter.format(index + 1),
+						slide.label
+					)}
 					aria-current={index === activeIndex ? 'true' : undefined}
 					size="small"
 					variant={index === activeIndex ? 'primary' : 'ghost'}
@@ -304,7 +363,7 @@
 				>{/each}
 		</div>
 		<ZButton
-			aria-label={nextLabel}
+			aria-label={resolvedNextLabel}
 			disabled={!loop && activeIndex === normalized.length - 1}
 			size="small"
 			variant="secondary"

@@ -38,7 +38,13 @@
 			{ description: '真实根节点引用。', name: 'ref', type: 'HTMLDivElement | null' },
 			{ description: '真实file input引用。', name: 'inputRef', type: 'HTMLInputElement | null' }
 		],
-		dependencies: ['native file input', 'drop zone', 'queue validation', 'DataTransfer'],
+		dependencies: [
+			'native file input',
+			'drop zone',
+			'queue validation',
+			'owner realm DataTransfer',
+			'ReducedMotionState'
+		],
 		events: [
 			{
 				description: '队列变化。',
@@ -91,7 +97,8 @@
 		source: 'ui/zui/src/components/input/ZFileUpload.svelte',
 		states: [
 			{ description: '拖拽文件位于drop zone。', name: 'data-dragging', values: ['true'] },
-			{ description: '达到maxFiles。', name: 'data-full', values: ['true'] }
+			{ description: '达到maxFiles。', name: 'data-full', values: ['true'] },
+			{ description: '当前已解析为减少动画。', name: 'data-reduced-motion', values: ['true'] }
 		],
 		status: 'experimental',
 		summary: '原生文件输入、拖放校验、可移除队列与真实FormData同步的File Upload。'
@@ -169,7 +176,7 @@
 
 <script lang="ts">
 	import X from '@lucide/svelte/icons/x';
-	import { onDestroy, untrack } from 'svelte';
+	import { onDestroy, onMount, untrack } from 'svelte';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import { formReset } from '../../runtime/form/form-control.svelte.js';
@@ -181,6 +188,8 @@
 	} from '../../runtime/foundation/root-style.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
+	import { ReducedMotionState } from '../../runtime/foundation/motion.svelte.js';
+	import { isDomNode } from '../../runtime/layer/dom-realm.js';
 	import ZButton from '../gene/ZButton.svelte';
 
 	let {
@@ -207,6 +216,7 @@
 		...rest
 	}: ZFileUploadProps = $props();
 	const zui = useZui();
+	const reducedMotion = new ReducedMotionState(() => zui.motion);
 	const resolvedChooseLabel = $derived(chooseLabel ?? zui.localePack.fileUpload.chooseFiles);
 	const resolvedDropLabel = $derived(dropLabel ?? zui.localePack.fileUpload.dropFiles);
 	const resolvedInputLabel = $derived(inputLabel ?? zui.localePack.fileUpload.inputLabel);
@@ -229,35 +239,49 @@
 	});
 	const resolvedFiles = $derived(Object.freeze([...fileState.current]));
 	let dragging = $state(false);
-	let resetTimer: ReturnType<typeof setTimeout> | undefined;
+	let resetTimer: { readonly id: number; readonly view: Window } | undefined;
 	const full = $derived(
 		resolvedFiles.length >= constraints.maxFiles || (!multiple && resolvedFiles.length >= 1)
 	);
-	const rootClass = $derived(zui.recipe(rootRecipe, { disabled, dragging, motion: zui.motion }));
+	const reduced = $derived(reducedMotion.current);
+	const rootClass = $derived(
+		zui.recipe(rootRecipe, { disabled, dragging, motion: reduced ? 'reduced' : 'full' })
+	);
 	const listClass = $derived(zui.recipe(listRecipe));
 	const itemClass = $derived(zui.recipe(itemRecipe));
 	const removeClass = $derived(zui.recipe(removeRecipe));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
 	function syncNative(next: readonly File[]): void {
-		if (!inputRef || typeof DataTransfer === 'undefined') return;
-		const transfer = new DataTransfer();
+		const DataTransferConstructor = inputRef?.ownerDocument.defaultView?.DataTransfer;
+		if (!inputRef || !DataTransferConstructor) return;
+		const transfer = new DataTransferConstructor();
 		for (const file of next) transfer.items.add(file);
 		inputRef.files = transfer.files;
 	}
 	$effect(() => syncNative(resolvedFiles));
+	function clearResetTimer(): void {
+		if (!resetTimer) return;
+		resetTimer.view.clearTimeout(resetTimer.id);
+		resetTimer = undefined;
+	}
 	function resetFromForm(): void {
 		fileState.reset();
 		dragging = false;
-		if (resetTimer !== undefined) clearTimeout(resetTimer);
-		resetTimer = setTimeout(() => {
+		clearResetTimer();
+		const view = inputRef?.ownerDocument.defaultView;
+		if (!view) {
+			syncNative(defaultFiles);
+			return;
+		}
+		const id = view.setTimeout(() => {
 			resetTimer = undefined;
 			syncNative(defaultFiles);
 		}, 0);
+		resetTimer = { id, view };
 	}
-	onDestroy(() => {
-		if (resetTimer !== undefined) clearTimeout(resetTimer);
-	});
+	onMount(() => reducedMotion.connect(ref?.ownerDocument.defaultView));
+	onDestroy(clearResetTimer);
 	function add(candidates: readonly File[]): void {
 		if (disabled || candidates.length === 0) return;
 		const result = validateFileQueue(resolvedFiles, candidates, {
@@ -298,12 +322,14 @@
 	aria-disabled={disabled || undefined}
 	data-dragging={dragging || undefined}
 	data-full={full || undefined}
+	data-reduced-motion={reduced || undefined}
 	ondragover={(event) => {
 		event.preventDefault();
 		if (!disabled) dragging = true;
 	}}
 	ondragleave={(event) => {
-		if (!event.currentTarget.contains(event.relatedTarget as Node | null)) dragging = false;
+		if (!isDomNode(event.relatedTarget) || !event.currentTarget.contains(event.relatedTarget))
+			dragging = false;
 	}}
 	ondrop={handleDrop}
 >

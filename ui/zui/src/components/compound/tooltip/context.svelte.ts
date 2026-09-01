@@ -10,6 +10,7 @@ export interface ZTooltipContext {
 	readonly open: boolean;
 	readonly placement: PopoverPlacement;
 	readonly portalTarget: PortalTarget;
+	readonly reducedMotion: boolean;
 	readonly trigger: HTMLButtonElement | null;
 	cancelClose(): void;
 	close(immediate?: boolean): void;

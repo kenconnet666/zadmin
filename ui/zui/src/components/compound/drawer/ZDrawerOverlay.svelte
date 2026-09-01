@@ -27,16 +27,35 @@
 		since: 'unreleased',
 		snippets: [],
 		source: 'ui/zui/src/components/compound/drawer/ZDrawerOverlay.svelte',
-		states: [{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] }],
+		states: [
+			{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] },
+			{
+				description: '进入与退出的可视动画阶段。',
+				name: 'data-motion-state',
+				values: ['entering', 'entered', 'exiting']
+			}
+		],
 		status: 'experimental',
 		summary: '与Drawer Presence同步的modal遮罩。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
 
 <script lang="ts">
+	import { onDestroy, untrack } from 'svelte';
+	import { mergeStyles } from '../../../runtime/foundation/root-style.js';
 	import ZDialogOverlay from '../dialog/ZDialogOverlay.svelte';
+	import { useZDialog } from '../dialog/context.svelte.js';
+	import { DrawerEntryMotion } from './entry-motion.svelte.js';
 
-	let { ref = $bindable(null), ...rest }: ZDrawerOverlayProps = $props();
+	let { ref = $bindable(null), style, ...rest }: ZDrawerOverlayProps = $props();
+	const dialog = useZDialog();
+	const entryMotion = new DrawerEntryMotion(untrack(() => dialog.open));
+	const motionState = $derived(
+		dialog.open ? (entryMotion.entered ? 'entered' : 'entering') : 'exiting'
+	);
+	const overlayStyle = $derived(mergeStyles(style, entryMotion.entered ? '' : 'opacity:0'));
+	$effect(() => entryMotion.update(dialog.open, dialog.reducedMotion, ref));
+	onDestroy(() => entryMotion.destroy());
 </script>
 
-<ZDialogOverlay {...rest} bind:ref />
+<ZDialogOverlay {...rest} bind:ref data-motion-state={motionState} style={overlayStyle} />

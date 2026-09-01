@@ -50,7 +50,13 @@
 				name: 'live',
 				type: "'off' | 'polite' | 'assertive'"
 			},
-			{ default: 'false', description: '显示关闭按钮。', name: 'dismissible', type: 'boolean' }
+			{ default: 'false', description: '显示关闭按钮。', name: 'dismissible', type: 'boolean' },
+			{
+				default: 'localePack.feedback.dismissAlert',
+				description: '关闭按钮可访问名称；显式值优先于Provider locale。',
+				name: 'dismissLabel',
+				type: 'string'
+			}
 		],
 		since: 'unreleased',
 		snippets: [
@@ -123,7 +129,7 @@
 		children,
 		class: className,
 		dismissible = false,
-		dismissLabel = 'Dismiss alert',
+		dismissLabel,
 		live = 'polite',
 		onDismiss,
 		ref = $bindable(null),
@@ -133,6 +139,7 @@
 		...rest
 	}: ZAlertProps = $props();
 	const zui = useZui();
+	const resolvedDismissLabel = $derived(dismissLabel ?? zui.localePack.feedback.dismissAlert);
 	const rootClass = $derived(zui.recipe(recipe, { tone }));
 	const titleClass = $derived(zui.recipe(titleRecipe));
 	const actionsClass = $derived(zui.recipe(actionsRecipe));
@@ -156,7 +163,7 @@
 	{#if children}<div data-slot="content">{@render children()}</div>{/if}
 	{#if action || dismissible}<div class={actionsClass} data-slot="action">
 			{@render action?.()}{#if dismissible}<ZButton
-					aria-label={dismissLabel}
+					aria-label={resolvedDismissLabel}
 					size="small"
 					variant="ghost"
 					onclick={(event) => onDismiss?.(event)}><X aria-hidden="true" size={16} /></ZButton

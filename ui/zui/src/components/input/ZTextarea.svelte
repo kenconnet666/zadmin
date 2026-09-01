@@ -38,6 +38,7 @@
 		dependencies: [
 			'ControllableState',
 			'FieldContext',
+			'ReducedMotionState',
 			'native form reset',
 			'ownerDocument measurement pool',
 			'ResizeObserver',
@@ -79,7 +80,7 @@
 				type: "'both' | 'horizontal' | 'none' | 'vertical'"
 			},
 			{
-				default: "Provider density（默认 'comfortable' → 'medium'）",
+				default: "Provider density（默认把 'comfortable' 映射为 'medium'）",
 				description: '最小高度、字号和padding尺寸；显式值优先于Provider density。',
 				name: 'size',
 				type: "'small' | 'medium' | 'large'"
@@ -102,9 +103,15 @@
 		source: 'ui/zui/src/components/input/ZTextarea.svelte',
 		states: [
 			{ description: '无效状态。', name: 'data-invalid', values: ['true'] },
+			{
+				description: '解析后的control尺寸。',
+				name: 'data-size',
+				values: ['small', 'medium', 'large']
+			},
 			{ description: 'autosize启用。', name: 'data-autosize', values: ['true'] },
 			{ description: '禁用状态。', name: 'data-disabled', values: ['true'] },
-			{ description: '只读状态。', name: 'data-readonly', values: ['true'] }
+			{ description: '只读状态。', name: 'data-readonly', values: ['true'] },
+			{ description: '当前已解析为减少动画。', name: 'data-reduced-motion', values: ['true'] }
 		],
 		status: 'experimental',
 		summary: '保留原生textarea编辑、IME与表单语义，并提供有界、跨document且可销毁的autosize。'
@@ -191,7 +198,7 @@
 </script>
 
 <script lang="ts">
-	import { untrack } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { useZField } from '../../runtime/form/field-context.js';
 	import { useZInputGroup } from '../../runtime/form/input-group-context.svelte.js';
@@ -205,6 +212,7 @@
 	} from '../../runtime/foundation/root-style.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
+	import { ReducedMotionState } from '../../runtime/foundation/motion.svelte.js';
 	import { textareaAutosize } from '../../runtime/textarea-autosize.js';
 
 	let {
@@ -233,19 +241,21 @@
 		...rest
 	}: ZTextareaProps = $props();
 	const zui = useZui();
+	const reducedMotion = new ReducedMotionState(() => zui.motion);
 	const uid = $props.id();
 	const field = useZField();
 	const inputGroup = useZInputGroup();
 	const resolvedDisabled = $derived(disabled || inputGroup?.disabled || field?.disabled || false);
 	const resolvedInvalid = $derived(invalid ?? inputGroup?.invalid ?? field?.invalid ?? false);
 	const resolvedReadonly = $derived(readonly || field?.readonly || false);
-	const resolvedSize = $derived(resolveControlSize(size, zui.density));
+	const resolvedSize = $derived(resolveControlSize(size ?? field?.size, zui.density));
 	const autosizeEnabled = $derived(autosize === true || typeof autosize === 'object');
+	const reduced = $derived(reducedMotion.current);
 	const rootClass = $derived(
 		zui.recipe(textareaRecipe, {
 			disabled: resolvedDisabled,
 			invalid: resolvedInvalid,
-			motion: zui.motion,
+			motion: reduced ? 'reduced' : 'full',
 			readonly: resolvedReadonly,
 			resize: autosizeEnabled ? 'none' : resize,
 			size: resolvedSize
@@ -262,6 +272,7 @@
 	const resolvedDescribedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
+	onMount(() => reducedMotion.connect(ref?.ownerDocument.defaultView));
 
 	function handleInput(event: Event & { currentTarget: HTMLTextAreaElement }): void {
 		state.setFromUser(event.currentTarget.value);
@@ -298,9 +309,11 @@
 	aria-describedby={resolvedDescribedBy}
 	aria-invalid={resolvedInvalid ? 'true' : ariaInvalid}
 	data-invalid={resolvedInvalid ? 'true' : undefined}
+	data-size={resolvedSize}
 	data-autosize={autosizeEnabled || undefined}
 	data-disabled={resolvedDisabled || undefined}
 	data-readonly={resolvedReadonly || undefined}
+	data-reduced-motion={reduced || undefined}
 	oninput={handleInput}></textarea>
 {#if resetOnForm || onFormReset}
 	<FormResetSignal association={form} control={ref} onReset={resetFromForm} />

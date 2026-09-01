@@ -17,7 +17,7 @@
 	const reduced = $derived(reducedMotion.current);
 	const motionDuration = $derived(durationMilliseconds(zui.theme.duration.normal));
 
-	onMount(() => reducedMotion.connect());
+	onMount(() => reducedMotion.connect(ref?.ownerDocument.defaultView));
 	onDestroy(() => animation?.cancel());
 
 	$effect(() => {
@@ -47,9 +47,7 @@
 		);
 		animation = next;
 		if (currentPhase === 'exiting') {
-			void next.finished
-				.then(() => queue.completeExit(currentId))
-				.catch(() => undefined);
+			void next.finished.then(() => queue.completeExit(currentId)).catch(() => undefined);
 		}
 		return () => {
 			if (animation !== next) return;
@@ -75,7 +73,7 @@
 	priority={item.priority}
 	actionLabel={item.actionLabel}
 	dismissible={item.dismissible}
-	dismissLabel={item.dismissLabel ?? `Dismiss ${item.title}`}
+	dismissLabel={item.dismissLabel ?? zui.localePack.feedback.dismissToast(item.title)}
 	inert={item.phase === 'exiting' || undefined}
 	data-phase={item.phase}
 	data-presence={item.phase === 'exiting' ? 'exiting' : 'entered'}

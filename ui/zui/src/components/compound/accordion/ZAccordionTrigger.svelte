@@ -125,7 +125,12 @@
 		source: 'ui/zui/src/components/compound/accordion/ZAccordionTrigger.svelte',
 		states: [
 			{ description: '展开状态。', name: 'data-state', values: ['open', 'closed'] },
-			{ description: '禁用状态。', name: 'data-disabled', values: ['true'] }
+			{ description: '禁用状态。', name: 'data-disabled', values: ['true'] },
+			{
+				description: 'Accordion根已解析为减少动画。',
+				name: 'data-reduced-motion',
+				values: ['true']
+			}
 		],
 		status: 'experimental',
 		summary: '拥有aria-expanded、roving focus和原生button激活语义的Accordion Trigger。'
@@ -161,7 +166,10 @@
 	const open = $derived(accordion.isOpen(item.value));
 	const rootClass = $derived(zui.recipe(accordionTriggerRecipe, { disabled: item.disabled, open }));
 	const indicatorClass = $derived(
-		zui.recipe(accordionIndicatorRecipe, { motion: zui.motion, open })
+		zui.recipe(accordionIndicatorRecipe, {
+			motion: accordion.reducedMotion ? 'reduced' : 'full',
+			open
+		})
 	);
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
@@ -208,6 +216,7 @@
 	aria-expanded={open}
 	data-disabled={item.disabled || undefined}
 	data-state={open ? 'open' : 'closed'}
+	data-reduced-motion={accordion.reducedMotion || undefined}
 >
 	{@render children?.()}
 	<ChevronDown aria-hidden="true" class={indicatorClass} size={16} />

@@ -43,8 +43,8 @@
 				type: 'ToasterPlacement'
 			},
 			{
-				default: "'Notifications'",
-				description: '通知viewport的可访问名称。',
+				default: 'localePack.feedback.notifications',
+				description: '通知viewport的可访问名称；显式值优先于Provider locale。',
 				name: 'label',
 				type: 'string'
 			},
@@ -113,11 +113,11 @@
 	} from '../../runtime/foundation/root-style.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
-	import { portal } from '../../runtime/layer/portal.js';
+	import { portal, resolvePortalTarget } from '../../runtime/layer/portal.js';
 	import QueuedToast from './QueuedToast.svelte';
 	let {
 		class: className,
-		label = 'Notifications',
+		label,
 		maxVisible = 3,
 		placement = 'top-end',
 		queue,
@@ -126,7 +126,9 @@
 		...rest
 	}: ZToasterProps = $props();
 	const zui = useZui();
+	const resolvedLabel = $derived(label ?? zui.localePack.feedback.notifications);
 	let mounted = $state(false);
+	let portalAnchor = $state<HTMLElement | null>(null);
 	const limit = $derived.by(() => {
 		if (!Number.isInteger(maxVisible) || maxVisible < 1) {
 			throw new TypeError('ZToaster maxVisible must be a positive integer.');
@@ -140,9 +142,7 @@
 	const rootClass = $derived(zui.recipe(recipe, { placement }));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
-	const portalTarget = $derived(
-		zui.portalContainer ?? (typeof document === 'undefined' ? null : document)
-	);
+	const portalTarget = $derived(resolvePortalTarget(portalAnchor, zui.portalContainer));
 	onMount(() => {
 		mounted = true;
 		return () => {
@@ -164,6 +164,7 @@
 	});
 </script>
 
+<span bind:this={portalAnchor} hidden aria-hidden="true" data-zui-portal-anchor></span>
 <section
 	{...rest}
 	bind:this={ref}
@@ -171,7 +172,7 @@
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
 	use:portal={{ target: portalTarget }}
-	aria-label={label}
+	aria-label={resolvedLabel}
 	data-slot="viewport"
 	data-placement={placement}
 	data-queued={queuedCount}

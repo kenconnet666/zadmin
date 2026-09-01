@@ -56,10 +56,10 @@ export type { RovingFocusOptions } from '../runtime/collection/roving-focus.svel
 export { normalizeSliderValue } from '../runtime/slider.js';
 export { meterState, normalizeMeterRange, normalizeProgressRange } from '../runtime/progress.js';
 export type { MeterRange, MeterState, ProgressRange } from '../runtime/progress.js';
-export { createTreeIndex } from '../runtime/tree.js';
-export type { TreeEntry, TreeIndex, TreeNode } from '../runtime/tree.js';
+export { createTreeIndex, LogicalTree } from '../runtime/tree.js';
+export type { LogicalTreeView, TreeEntry, TreeIndex, TreeNode } from '../runtime/tree.js';
 export { Typeahead } from '../runtime/collection/typeahead.js';
-export type { TypeaheadOptions } from '../runtime/collection/typeahead.js';
+export type { TypeaheadItem, TypeaheadOptions } from '../runtime/collection/typeahead.js';
 export { calculateVirtualRange, virtualScrollOffset } from '../runtime/collection/virtualizer.js';
 export type {
 	VirtualAlign,

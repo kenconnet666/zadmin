@@ -52,7 +52,8 @@
 			'ZAccordionContent',
 			'CollectionStore',
 			'RovingFocus',
-			'Presence'
+			'Presence',
+			'ReducedMotionState'
 		],
 		events: [
 			{
@@ -105,14 +106,17 @@
 		since: 'unreleased',
 		snippets: [{ description: 'Item组合。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/accordion/ZAccordion.svelte',
-		states: [{ description: '禁用状态。', name: 'data-disabled', values: ['true'] }],
+		states: [
+			{ description: '禁用状态。', name: 'data-disabled', values: ['true'] },
+			{ description: '当前已解析为减少动画。', name: 'data-reduced-motion', values: ['true'] }
+		],
 		status: 'experimental',
 		summary: '支持single/multiple、受控状态、roving focus与退出Presence的Accordion根组件。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
 
 <script lang="ts">
-	import { untrack } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 
 	import { hashString } from '../../../icss/hash.js';
 	import { CollectionStore } from '../../../runtime/collection/collection.svelte.js';
@@ -127,6 +131,7 @@
 	import { RovingFocus } from '../../../runtime/collection/roving-focus.svelte.js';
 	import { useZui } from '../../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../../runtime/foundation/compiler-bridge.js';
+	import { ReducedMotionState } from '../../../runtime/foundation/motion.svelte.js';
 	import {
 		provideZAccordion,
 		type AccordionCollectionItem,
@@ -148,6 +153,8 @@
 		...rest
 	}: ZAccordionProps = $props();
 	const zui = useZui();
+	const reducedMotion = new ReducedMotionState(() => zui.motion);
+	const reduced = $derived(reducedMotion.current);
 	const uid = $props.id();
 	const idBase = $derived(createZuiId(zui.idPrefix, uid, 'accordion'));
 	const rootClass = $derived(zui.recipe(accordionRecipe));
@@ -184,7 +191,10 @@
 			return disabled;
 		},
 		get exitDuration() {
-			return zui.motion === 'reduced' ? 0 : durationMilliseconds(zui.theme.duration.normal);
+			return reduced ? 0 : durationMilliseconds(zui.theme.duration.normal);
+		},
+		get reducedMotion() {
+			return reduced;
 		},
 		contentId(itemValue) {
 			return itemId(itemValue, 'content');
@@ -227,6 +237,7 @@
 	provideZAccordion(context);
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
+	onMount(() => reducedMotion.connect(ref?.ownerDocument.defaultView));
 </script>
 
 <div
@@ -236,6 +247,7 @@
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
 	data-disabled={disabled || undefined}
+	data-reduced-motion={reduced || undefined}
 >
 	{@render children?.()}
 </div>

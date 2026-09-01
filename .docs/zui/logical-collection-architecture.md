@@ -143,7 +143,8 @@ class CollectionNavigation<TKey, TValue> {
 焦点策略：
 
 - Command、Combobox、Mention 与虚拟 listbox/tree 使用容器 DOM focus + ActiveDescendant；
-- Menu、Tabs、RadioGroup 等非虚拟 composite 使用后续的 roving adapter；
+- RadioGroup、Segmented 等非虚拟 composite 组合 CollectionNavigation 与 MountedElements，
+  由真实 native radio/button 承担 roving DOM focus；Menu、Tabs 后续迁移到同一适配方式；
 - pointer move 只改 active，不选择且不夺取输入焦点；press 才触发 selection/action。
 
 ## 6. ActiveDescendant
@@ -265,21 +266,64 @@ SSR 规则：
 
 1. P1：新增五个内部 runtime，迁移 ZCommand，保持公共 props 和行为；
 2. P2：KeyedVirtualizer + ZVirtualList；
-3. P3：Combobox、Select、MultiSelect、Menu；
+3. P3：Combobox、Select、MultiSelect、RadioGroup、Segmented、Menu；
 4. P4：Mention、Transfer；
 5. P5：LogicalTree、Tree、TreeSelect、Cascader；
 6. P6：DataTable；
 7. 全部消费者迁移后删除旧 CollectionStore/RovingFocus/createTreeIndex 实现。
 
-保留 `list-navigation.ts` 的纯方向/index helper 给 DateField、TimeField、Segmented。Typeahead
+保留 `list-navigation.ts` 的纯方向/index helper 给 DateField、TimeField。Typeahead
 继续独立，但最终只消费纯 logical item。现有 fixed virtual range 函数保留为 fixed layout，
 不与 keyed controller 混在一个状态所有者中。
 
 P1 新 runtime 暂不从主入口或 `@zadmin/zui/runtime` 导出；至少两个真实消费者验证后再冻结
 公共合同。
 
-## 11. Primary references
+## 11. P5 LogicalTree implementation record
 
+R4 P5 implements `LogicalTree` as an immutable hierarchy adapter over `LogicalCollection` rather
+than a parallel collection runtime. The public flat `nodes + parentKey` input remains because it is
+stable for databases, async patches and WebView IPC; the normalized model owns typed-key validation,
+parent/children lookup, source order, cycle detection, paths and visible flattening. Each visible
+entry carries `level`, `posInSet`, `setSize`, actual `childCount` and `hasChildren` for unloaded
+branches.
+
+The production focus contract is one container tab stop plus `aria-activedescendant` in both regular
+and virtual trees. `MountedElements` only records current `treeitem` wrappers. Virtual mode delegates
+windowing, keyed measurement and `ensureKey` to P2 `ZVirtualList`; a target ID is exposed only after
+that wrapper mounts. Collapse moves an active descendant back to the collapsed branch, while ordinary
+node deletion uses `CollectionNavigation.reconcile()` successor-then-predecessor nearest recovery.
+
+Expansion, selection, loading and rendering remain separate owners:
+
+- expansion is a controlled/uncontrolled key array;
+- `SelectionModel` provides none/single/multiple, strict checkbox visuals, range and select-all while
+  respecting `disabled` and `selectionDisabled`;
+- lazy `hasChildren` requests are deduplicated per key, receive an `AbortSignal`, abort on node removal
+  or destroy, retain focusability during loading/error and retry from the switcher or logical expand
+  key; callers remain responsible for updating `nodes` and caching data;
+- typed item snippets render content only and cannot replace the `treeitem`, ID, hierarchy ARIA or
+  focus owner;
+- `ZTreeSelect` composes `ZPopover + ZTree + FormValueBridge`; it owns only value/open/Field/form
+  integration and does not create another tree traversal, navigation or selection state machine.
+
+This stage deliberately adopts APG keyboard semantics, React Aria's focus/selection separation and
+async collection ownership, MUI X's flat virtual tree structure, Ant's typed-key/lazy/scroll-to-key
+product surface and Naive UI's explicit loading-key behavior. It does not adopt framework-specific
+hooks, cache stores or component machines.
+
+Half-check propagation and drag-and-drop are deferred. A fake indeterminate state would be worse than
+the current explicit strict checkbox contract, and production DnD requires a separate keyboard and
+screen-reader interaction design, drop validation, announcements and cross-tree ownership. Neither is
+required to keep core selection, expansion, lazy loading or virtualization production-usable.
+
+## 12. Primary references
+
+- [WAI-ARIA APG Tree View pattern](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/)
+- [React Spectrum TreeView](https://react-spectrum.adobe.com/TreeView)
+- [MUI X Rich Tree View virtualization](https://mui.com/x/react-tree-view/rich-tree-view/virtualization/)
+- [MUI X Rich Tree View lazy loading](https://mui.com/x/react-tree-view/rich-tree-view/lazy-loading/)
+- [Ant Design Tree](https://ant.design/components/tree/)
 - [React Spectrum collection model](https://react-spectrum.adobe.com/v3/collections.html)
 - [React Spectrum selection model](https://react-spectrum.adobe.com/v3/selection.html)
 - [React Aria Collection interface source](https://github.com/adobe/react-spectrum/blob/main/packages/%40react-types/shared/src/collections.d.ts)

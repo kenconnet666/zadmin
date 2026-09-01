@@ -144,7 +144,7 @@
 		bindings: [
 			{ description: '真实button元素引用。', name: 'ref', type: 'HTMLButtonElement | null' }
 		],
-		dependencies: [],
+		dependencies: ['ReducedMotionState'],
 		events: [],
 		keyboard: [
 			{ description: '在按钮获得焦点时触发原生click。', key: 'Enter' },
@@ -163,7 +163,7 @@
 				type: "'primary' | 'secondary' | 'danger' | 'ghost'"
 			},
 			{
-				default: "Provider density（默认 'comfortable' → 'medium'）",
+				default: "Provider density（默认把 'comfortable' 映射为 'medium'）",
 				description: '按钮尺寸；显式值优先于Provider density。',
 				name: 'size',
 				type: "'small' | 'medium' | 'large'"
@@ -206,14 +206,17 @@
 			{ description: '替换内置加载指示器。', name: 'loadingIndicator', type: 'Snippet' }
 		],
 		source: 'ui/zui/src/components/gene/ZButton.svelte',
-		states: [{ description: '按钮正在执行异步操作。', name: 'data-loading', values: ['true'] }],
+		states: [
+			{ description: '按钮正在执行异步操作。', name: 'data-loading', values: ['true'] },
+			{ description: '当前已解析为减少动画。', name: 'data-reduced-motion', values: ['true'] }
+		],
 		status: 'stable',
 		summary: '原生button语义、稳定recipe变体和Svelte 5 callback props的操作组件。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
 
 <script lang="ts">
-	import { untrack } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 
 	import {
 		applyIcssRootStyle,
@@ -222,6 +225,7 @@
 	} from '../../runtime/foundation/root-style.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
+	import { ReducedMotionState } from '../../runtime/foundation/motion.svelte.js';
 
 	let {
 		'aria-busy': ariaBusy,
@@ -244,18 +248,21 @@
 	}: ZButtonProps = $props();
 
 	const zui = useZui();
+	const reducedMotion = new ReducedMotionState(() => zui.motion);
+	const reduced = $derived(reducedMotion.current);
 	const resolvedSize = $derived(resolveControlSize(size, zui.density));
 	const rootClass = $derived(
 		zui.recipe(buttonRecipe, {
 			disabled: disabled || loading,
 			fullWidth,
-			motion: zui.motion,
+			motion: reduced ? 'reduced' : 'full',
 			size: resolvedSize,
 			variant
 		})
 	);
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
+	onMount(() => reducedMotion.connect(ref?.ownerDocument.defaultView));
 </script>
 
 <button
@@ -269,6 +276,7 @@
 	aria-busy={loading ? true : ariaBusy}
 	aria-label={loading && loadingLabel ? loadingLabel : ariaLabel}
 	data-loading={loading || undefined}
+	data-reduced-motion={reduced || undefined}
 >
 	{#if start}<span data-slot="start">{@render start()}</span>{/if}
 	{#if loading}

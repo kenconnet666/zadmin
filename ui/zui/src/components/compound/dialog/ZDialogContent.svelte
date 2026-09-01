@@ -176,7 +176,7 @@
 	);
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
-	$effect(() => presence.update(dialog.open, dialog.exitDuration));
+	$effect(() => presence.update(dialog.open, dialog.exitDuration, ref?.ownerDocument.defaultView));
 	$effect(() => {
 		const content = ref;
 		if (!dialog.open || !content) return;

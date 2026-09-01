@@ -4,9 +4,10 @@
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
 	import type { SelectionKey } from '../../../runtime/collection/selection.js';
 	import type { MultiSelectEvent } from './context.svelte.js';
+
 	export interface ZMultiSelectItemProps extends Omit<
 		HTMLAttributes<HTMLDivElement>,
-		'children' | 'role'
+		'children' | 'id' | 'role'
 	> {
 		readonly children?: Snippet;
 		readonly disabled?: boolean;
@@ -15,13 +16,14 @@
 		readonly textValue?: string;
 		readonly value: SelectionKey;
 	}
+
 	export const zuiMetadata = {
 		category: 'input',
 		id: 'multi-select-item',
 		importStatement: "import { ZMultiSelectItem } from '@zadmin/zui';",
 		name: 'ZMultiSelectItem',
 		bindings: [{ description: '真实option引用。', name: 'ref', type: 'HTMLDivElement | null' }],
-		dependencies: ['ZMultiSelect', 'Collection'],
+		dependencies: ['ZMultiSelect', 'LogicalCollection', 'MountedElements', 'ActiveDescendant'],
 		events: [
 			{
 				description: 'toggle前收到可取消事件。',
@@ -29,23 +31,33 @@
 				type: '(event: MultiSelectEvent) => void'
 			}
 		],
-		keyboard: [{ description: 'toggle且保持listbox打开。', key: 'Enter / Space' }],
-		parts: [],
+		keyboard: [
+			{
+				description: 'Content拥有焦点时由active key toggle；直接聚焦时仍支持toggle。',
+				key: 'Enter / Space'
+			}
+		],
+		parts: [{ description: '用于textValue回退的可见标签。', name: 'label' }],
 		props: [
 			{
 				default: '必填',
-				description: '稳定选择值。',
+				description: 'string与number严格区分的稳定业务key。',
 				name: 'value',
 				required: true,
-				type: 'string | number'
+				type: 'SelectionKey'
 			},
 			{
 				default: 'textContent',
-				description: '标签与typeahead文本。',
+				description: 'tag标签与locale-reactive typeahead文本。',
 				name: 'textValue',
 				type: 'string'
 			},
-			{ default: 'false', description: '禁用。', name: 'disabled', type: 'boolean' },
+			{
+				default: 'false',
+				description: '禁用并跳过active导航与选择。',
+				name: 'disabled',
+				type: 'boolean'
+			},
 			{
 				bindable: true,
 				default: 'null',
@@ -57,9 +69,13 @@
 		since: 'unreleased',
 		snippets: [{ description: 'Option标签。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/multi-select/ZMultiSelectItem.svelte',
-		states: [{ description: '选择状态。', name: 'data-state', values: ['selected', 'unselected'] }],
+		states: [
+			{ description: '选择状态。', name: 'data-state', values: ['selected', 'unselected'] },
+			{ description: 'active-descendant项。', name: 'data-highlighted', values: ['true'] },
+			{ description: '禁用状态。', name: 'data-disabled', values: ['true'] }
+		],
 		status: 'experimental',
-		summary: 'toggle多选值并保持Content打开的option。'
+		summary: '只登记逻辑metadata与真实挂载节点、toggle后保持Content打开的多选option。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
 
@@ -67,20 +83,22 @@
 	import Check from '@lucide/svelte/icons/check';
 	import { untrack } from 'svelte';
 	import { defineRecipe, registerRecipeHmr } from '../../../recipes/define.js';
+	import { useZui } from '../../../runtime/foundation/context.js';
+	import { readIcssCarrier } from '../../../runtime/foundation/compiler-bridge.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
 		serializeIcssVariables
 	} from '../../../runtime/foundation/root-style.js';
-	import { useZui } from '../../../runtime/foundation/context.js';
-	import { readIcssCarrier } from '../../../runtime/foundation/compiler-bridge.js';
 	import { useZMultiSelect } from './context.svelte.js';
+
 	const recipe = defineRecipe({
 		base: (s) => {
 			s.alignItems.center;
 			s.borderRadius._small;
 			s.cursor.pointer;
 			s.display.flex;
+			s.gap._medium;
 			s.justifyContent.spaceBetween;
 			s.paddingBlock._small;
 			s.paddingInline._medium;
@@ -100,6 +118,7 @@
 		defaultVariants: { disabled: false, highlighted: false, selected: false }
 	});
 	registerRecipeHmr(import.meta, recipe);
+
 	let {
 		children,
 		class: className,
@@ -107,6 +126,7 @@
 		onclick,
 		onfocus,
 		onkeydown,
+		onpointerdown,
 		onpointermove,
 		onSelect,
 		ref = $bindable(null),
@@ -117,34 +137,43 @@
 	}: ZMultiSelectItemProps = $props();
 	const zui = useZui();
 	const multi = useZMultiSelect();
+	const label = $derived(
+		textValue ?? ref?.querySelector('[data-slot="label"]')?.textContent?.trim() ?? String(value)
+	);
 	const resolvedDisabled = $derived(disabled || multi.disabled);
 	const selected = $derived(multi.isSelected(value));
-	const highlighted = $derived(Object.is(multi.roving.currentKey, value));
+	const highlighted = $derived(Object.is(multi.activeKey, value));
 	const rootClass = $derived(
 		zui.recipe(recipe, { disabled: resolvedDisabled, highlighted, selected })
 	);
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
+
 	$effect(() =>
 		multi.register(() => ({
 			disabled: resolvedDisabled,
 			element: ref,
 			key: value,
-			textValue:
-				textValue ?? ref?.querySelector('[data-slot="label"]')?.textContent?.trim() ?? String(value)
+			onSelect,
+			selectionDisabled: false,
+			textValue: label
 		}))
 	);
+
 	function activate(event: MouseEvent | KeyboardEvent): void {
-		if (!resolvedDisabled) multi.toggle(value, event, onSelect);
+		if (!resolvedDisabled) multi.toggle(value, event);
 	}
+
 	function handleClick(event: MouseEvent & { currentTarget: HTMLDivElement }): void {
 		onclick?.(event);
 		if (!event.defaultPrevented) activate(event);
 	}
+
 	function handleFocus(event: FocusEvent & { currentTarget: HTMLDivElement }): void {
-		multi.roving.set(value);
+		multi.setActive(value);
 		onfocus?.(event);
 	}
+
 	function handleKeydown(event: KeyboardEvent & { currentTarget: HTMLDivElement }): void {
 		onkeydown?.(event);
 		if (!event.defaultPrevented && (event.key === 'Enter' || event.key === ' ')) {
@@ -152,9 +181,15 @@
 			activate(event);
 		}
 	}
+
+	function handlePointerDown(event: PointerEvent & { currentTarget: HTMLDivElement }): void {
+		onpointerdown?.(event);
+		if (!event.defaultPrevented) event.preventDefault();
+	}
+
 	function handlePointerMove(event: PointerEvent & { currentTarget: HTMLDivElement }): void {
 		onpointermove?.(event);
-		if (!event.defaultPrevented && !resolvedDisabled) multi.roving.set(value, true);
+		if (!event.defaultPrevented && !resolvedDisabled) multi.setActive(value);
 	}
 </script>
 
@@ -164,15 +199,18 @@
 	class={[rootClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
+	id={multi.idFor(value)}
 	role="option"
 	aria-disabled={resolvedDisabled || undefined}
 	aria-selected={selected}
-	tabindex={resolvedDisabled ? -1 : multi.roving.tabIndex(value)}
+	tabindex={-1}
+	data-disabled={resolvedDisabled || undefined}
 	data-highlighted={highlighted || undefined}
 	data-state={selected ? 'selected' : 'unselected'}
 	onclick={handleClick}
 	onfocus={handleFocus}
 	onkeydown={handleKeydown}
+	onpointerdown={handlePointerDown}
 	onpointermove={handlePointerMove}
 >
 	<span data-slot="label">{@render children?.()}</span><span aria-hidden="true"

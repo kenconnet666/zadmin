@@ -4,9 +4,10 @@
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
 	import type { SelectionKey } from '../../../runtime/collection/selection.js';
 	import type { SelectEvent } from './context.svelte.js';
+
 	export interface ZSelectItemProps extends Omit<
 		HTMLAttributes<HTMLDivElement>,
-		'children' | 'role'
+		'children' | 'id' | 'role'
 	> {
 		readonly children?: Snippet;
 		readonly disabled?: boolean;
@@ -15,13 +16,14 @@
 		readonly textValue?: string;
 		readonly value: SelectionKey;
 	}
+
 	export const zuiMetadata = {
 		category: 'input',
 		id: 'select-item',
 		importStatement: "import { ZSelectItem } from '@zadmin/zui';",
 		name: 'ZSelectItem',
 		bindings: [{ description: '真实option引用。', name: 'ref', type: 'HTMLDivElement | null' }],
-		dependencies: ['ZSelect', 'Collection', 'RovingFocus'],
+		dependencies: ['ZSelect', 'LogicalCollection', 'MountedElements', 'ActiveDescendant'],
 		events: [
 			{
 				description: '选择前收到可取消事件。',
@@ -29,23 +31,33 @@
 				type: '(event: SelectEvent) => void'
 			}
 		],
-		keyboard: [{ description: '选择并关闭listbox。', key: 'Enter / Space' }],
-		parts: [],
+		keyboard: [
+			{
+				description: 'Content拥有焦点时由active key选择；直接聚焦时仍支持选择。',
+				key: 'Enter / Space'
+			}
+		],
+		parts: [{ description: '用于textValue回退的可见标签。', name: 'label' }],
 		props: [
 			{
 				default: '必填',
-				description: '稳定选择值。',
+				description: 'string与number严格区分的稳定业务key。',
 				name: 'value',
 				required: true,
-				type: 'string | number'
+				type: 'SelectionKey'
 			},
 			{
 				default: 'textContent',
-				description: 'Trigger标签和typeahead文本。',
+				description: 'Trigger标签与locale-reactive typeahead文本。',
 				name: 'textValue',
 				type: 'string'
 			},
-			{ default: 'false', description: '禁用并跳过导航。', name: 'disabled', type: 'boolean' },
+			{
+				default: 'false',
+				description: '禁用并跳过active导航与选择。',
+				name: 'disabled',
+				type: 'boolean'
+			},
 			{
 				bindable: true,
 				default: 'null',
@@ -59,11 +71,11 @@
 		source: 'ui/zui/src/components/compound/select/ZSelectItem.svelte',
 		states: [
 			{ description: '选择状态。', name: 'data-state', values: ['selected', 'unselected'] },
-			{ description: 'roving焦点项。', name: 'data-highlighted', values: ['true'] },
+			{ description: 'active-descendant项。', name: 'data-highlighted', values: ['true'] },
 			{ description: '禁用状态。', name: 'data-disabled', values: ['true'] }
 		],
 		status: 'experimental',
-		summary: '注册稳定值、option语义、roving focus与可取消选择的Select Item。'
+		summary: '只登记逻辑metadata与真实挂载节点、不会反向拥有集合顺序的Select option。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
 
@@ -71,14 +83,15 @@
 	import Check from '@lucide/svelte/icons/check';
 	import { untrack } from 'svelte';
 	import { defineRecipe, registerRecipeHmr } from '../../../recipes/define.js';
+	import { useZui } from '../../../runtime/foundation/context.js';
+	import { readIcssCarrier } from '../../../runtime/foundation/compiler-bridge.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
 		serializeIcssVariables
 	} from '../../../runtime/foundation/root-style.js';
-	import { useZui } from '../../../runtime/foundation/context.js';
-	import { readIcssCarrier } from '../../../runtime/foundation/compiler-bridge.js';
 	import { useZSelect } from './context.svelte.js';
+
 	const recipe = defineRecipe({
 		base: (s) => {
 			s.alignItems.center;
@@ -90,12 +103,6 @@
 			s.paddingBlock._small;
 			s.paddingInline._medium;
 			s.userSelect.none;
-			s._focusVisible((focus) => {
-				focus.outlineColor._focus;
-				focus.outlineOffset.px(-2);
-				focus.outlineStyle.solid;
-				focus.outlineWidth._medium;
-			});
 		},
 		variants: {
 			disabled: {
@@ -111,13 +118,14 @@
 		defaultVariants: { disabled: false, highlighted: false, selected: false }
 	});
 	registerRecipeHmr(import.meta, recipe);
+
 	let {
 		children,
 		class: className,
 		disabled = false,
 		onclick,
-		onfocus,
 		onkeydown,
+		onpointerdown,
 		onpointermove,
 		onSelect,
 		ref = $bindable(null),
@@ -128,34 +136,38 @@
 	}: ZSelectItemProps = $props();
 	const zui = useZui();
 	const select = useZSelect();
-	const selected = $derived(Object.is(select.value, value));
-	const highlighted = $derived(Object.is(select.roving.currentKey, value));
+	const label = $derived(
+		textValue ?? ref?.querySelector('[data-slot="label"]')?.textContent?.trim() ?? String(value)
+	);
+	const resolvedDisabled = $derived(disabled || select.disabled);
+	const selected = $derived(select.isSelected(value));
+	const highlighted = $derived(Object.is(select.activeKey, value));
 	const rootClass = $derived(
-		zui.recipe(recipe, { disabled: disabled || select.disabled, highlighted, selected })
+		zui.recipe(recipe, { disabled: resolvedDisabled, highlighted, selected })
 	);
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
-	const resolvedDisabled = $derived(disabled || select.disabled);
+
 	$effect(() =>
 		select.register(() => ({
 			disabled: resolvedDisabled,
 			element: ref,
 			key: value,
-			textValue:
-				textValue ?? ref?.querySelector('[data-slot="label"]')?.textContent?.trim() ?? String(value)
+			onSelect,
+			selectionDisabled: false,
+			textValue: label
 		}))
 	);
+
 	function activate(event: MouseEvent | KeyboardEvent): void {
-		if (!resolvedDisabled) select.choose(value, event, onSelect);
+		if (!resolvedDisabled) select.choose(value, event);
 	}
+
 	function handleClick(event: MouseEvent & { currentTarget: HTMLDivElement }): void {
 		onclick?.(event);
 		if (!event.defaultPrevented) activate(event);
 	}
-	function handleFocus(event: FocusEvent & { currentTarget: HTMLDivElement }): void {
-		select.roving.set(value);
-		onfocus?.(event);
-	}
+
 	function handleKeydown(event: KeyboardEvent & { currentTarget: HTMLDivElement }): void {
 		onkeydown?.(event);
 		if (!event.defaultPrevented && (event.key === 'Enter' || event.key === ' ')) {
@@ -163,9 +175,15 @@
 			activate(event);
 		}
 	}
+
+	function handlePointerDown(event: PointerEvent & { currentTarget: HTMLDivElement }): void {
+		onpointerdown?.(event);
+		if (!event.defaultPrevented) event.preventDefault();
+	}
+
 	function handlePointerMove(event: PointerEvent & { currentTarget: HTMLDivElement }): void {
 		onpointermove?.(event);
-		if (!event.defaultPrevented && !resolvedDisabled) select.roving.set(value, true);
+		if (!event.defaultPrevented && !resolvedDisabled) select.setActive(value);
 	}
 </script>
 
@@ -175,16 +193,17 @@
 	class={[rootClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
+	id={select.idFor(value)}
 	role="option"
 	aria-disabled={resolvedDisabled || undefined}
 	aria-selected={selected}
-	tabindex={resolvedDisabled ? -1 : select.roving.tabIndex(value)}
+	tabindex={-1}
 	data-disabled={resolvedDisabled || undefined}
 	data-highlighted={highlighted || undefined}
 	data-state={selected ? 'selected' : 'unselected'}
 	onclick={handleClick}
-	onfocus={handleFocus}
 	onkeydown={handleKeydown}
+	onpointerdown={handlePointerDown}
 	onpointermove={handlePointerMove}
 >
 	<span data-slot="label">{@render children?.()}</span><span aria-hidden="true"

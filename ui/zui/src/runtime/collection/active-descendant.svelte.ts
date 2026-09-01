@@ -37,7 +37,7 @@ export class ActiveDescendant<TKey extends SelectionKey, TValue> {
 
 	get activeId(): string | undefined {
 		const key = this.activeKey;
-		return key === undefined ? undefined : this.#options.mounted.get(key)?.id;
+		return key === undefined || !this.#options.mounted.has(key) ? undefined : this.idFor(key);
 	}
 
 	idFor(key: TKey): string {

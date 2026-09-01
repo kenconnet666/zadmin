@@ -3,6 +3,8 @@ import { tabbable } from 'tabbable';
 import { isDomHtmlElement, isDomNode } from './dom-realm.js';
 
 export interface FocusScopeOptions {
+	/** Interactive branches that belong to the scope without being DOM descendants of its container. */
+	readonly branches?: () => readonly HTMLElement[];
 	readonly initialFocus?: () => HTMLElement | null;
 	readonly restoreFocus?: boolean;
 	readonly restoreTarget?: () => HTMLElement | null;
@@ -70,7 +72,7 @@ export class FocusScope {
 		if (
 			!this.#options.trap ||
 			!this.#isTopmost() ||
-			(isDomNode(event.target) && this.#container.contains(event.target))
+			(isDomNode(event.target) && this.#contains(event.target))
 		) {
 			return;
 		}
@@ -95,8 +97,24 @@ export class FocusScope {
 		next?.focus({ preventScroll: true });
 	};
 
-	#candidates(): ReturnType<typeof tabbable> {
-		return tabbable(this.#container);
+	#candidates(): HTMLElement[] {
+		const candidates = [...tabbable(this.#container)];
+		for (const branch of this.#options.branches?.() ?? []) {
+			if (branch.ownerDocument !== this.#document || !branch.isConnected) continue;
+			for (const candidate of tabbable(branch, { includeContainer: true })) {
+				if (!candidates.includes(candidate)) candidates.push(candidate);
+			}
+		}
+		return candidates;
+	}
+
+	#contains(target: Node): boolean {
+		return (
+			this.#container.contains(target) ||
+			(this.#options.branches?.() ?? []).some(
+				(branch) => branch.ownerDocument === this.#document && branch.contains(target)
+			)
+		);
 	}
 
 	#isTopmost(): boolean {

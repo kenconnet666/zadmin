@@ -30,7 +30,12 @@
 				type: 'HTMLProgressElement | HTMLDivElement | null'
 			}
 		],
-		dependencies: ['native progress', 'SVG circle', 'reduced motion'],
+		dependencies: [
+			'native progress',
+			'SVG circle',
+			'owner realm reduced motion',
+			'Web Animations API'
+		],
 		events: [],
 		keyboard: [],
 		parts: [
@@ -52,7 +57,12 @@
 				name: 'view',
 				type: "'line' | 'circle'"
 			},
-			{ default: "'Progress'", description: '可访问名称。', name: 'label', type: 'string' }
+			{
+				default: 'localePack.progress.label',
+				description: '可访问名称；显式业务名称优先于Provider locale。',
+				name: 'label',
+				type: 'string'
+			}
 		],
 		since: 'unreleased',
 		snippets: [],
@@ -109,12 +119,13 @@
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { ReducedMotionState } from '../../runtime/foundation/motion.svelte.js';
+	import { durationMilliseconds } from '../../runtime/foundation/presence.svelte.js';
 	import { normalizeProgressRange } from '../../runtime/progress.js';
 	let {
 		class: className,
 		formatValue = (current, range) =>
 			`${Math.round(((current - range.min) / (range.max - range.min)) * 100)}%`,
-		label = 'Progress',
+		label,
 		max = 100,
 		min = 0,
 		ref = $bindable(null),
@@ -124,6 +135,7 @@
 		...rest
 	}: ZProgressProps = $props();
 	const zui = useZui();
+	const resolvedLabel = $derived(label ?? zui.localePack.progress.label);
 	const reducedMotion = new ReducedMotionState(() => zui.motion);
 	let indicator = $state<SVGSVGElement | null>(null);
 	const range = $derived(normalizeProgressRange({ max, min, value }));
@@ -132,19 +144,26 @@
 	);
 	const nativeMax = $derived(range.max - range.min);
 	const nativeValue = $derived(range.value === undefined ? undefined : range.value - range.min);
-	const valueText = $derived(range.value === undefined ? label : formatValue(range.value, range));
+	const valueText = $derived(
+		range.value === undefined ? resolvedLabel : formatValue(range.value, range)
+	);
 	const reduced = $derived(reducedMotion.current);
 	const lineClass = $derived(zui.recipe(lineRecipe));
 	const circleClass = $derived(zui.recipe(circleRecipe));
 	const valueClass = $derived(zui.recipe(labelRecipe));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
-	onMount(() => reducedMotion.connect());
+	onMount(() => reducedMotion.connect(ref?.ownerDocument.defaultView));
 	$effect(() => {
-		if (!indicator || ratio !== undefined || reduced) return;
+		if (!indicator || ratio !== undefined || reduced || typeof indicator.animate !== 'function')
+			return;
 		const animation = indicator.animate(
 			[{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }],
-			{ duration: 1000, easing: 'linear', iterations: Infinity }
+			{
+				duration: durationMilliseconds(zui.theme.duration.progressIndeterminate),
+				easing: 'linear',
+				iterations: Infinity
+			}
 		);
 		return () => animation.cancel();
 	});
@@ -156,14 +175,15 @@
 		class={[lineClass, className]}
 		style={initialStyle}
 		use:applyIcssRootStyle={{ style, variables }}
-		aria-label={label}
+		aria-label={resolvedLabel}
 		aria-valuemin={range.min}
 		aria-valuemax={range.max}
 		aria-valuenow={range.value}
 		aria-valuetext={valueText}
 		max={nativeMax}
 		value={nativeValue}
-		data-indeterminate={range.value === undefined || undefined}>{valueText}</progress
+		data-indeterminate={range.value === undefined || undefined}
+		data-reduced-motion={reduced || undefined}>{valueText}</progress
 	>{:else}<div
 		{...rest}
 		bind:this={ref}
@@ -171,7 +191,7 @@
 		style={initialStyle}
 		use:applyIcssRootStyle={{ style, variables }}
 		role="progressbar"
-		aria-label={label}
+		aria-label={resolvedLabel}
 		aria-valuemin={range.min}
 		aria-valuemax={range.max}
 		aria-valuenow={range.value}

@@ -6,6 +6,17 @@ export interface PortalOptions {
 	readonly target: PortalTarget;
 }
 
+/** Resolve the nearest DOM realm without consulting ambient global document state. */
+export function resolvePortalTarget(
+	anchor: Node | null | undefined,
+	configured?: PortalTarget
+): PortalTarget {
+	if (configured !== null && configured !== undefined) return configured;
+	const root = anchor?.getRootNode();
+	if (isDomDocument(root) || isDomShadowRoot(root)) return root;
+	return anchor?.ownerDocument ?? null;
+}
+
 function resolveTarget(target: PortalTarget): Element | ShadowRoot | null {
 	if (target === null || target === undefined) return null;
 	if (isDomDocument(target)) return target.body;

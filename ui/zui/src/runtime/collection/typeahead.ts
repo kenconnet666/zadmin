@@ -1,9 +1,13 @@
-import type { CollectionItem } from './collection.svelte.js';
-
 export interface TypeaheadOptions {
 	readonly locale?: string | (() => string);
 	readonly now?: () => number;
 	readonly timeout?: number;
+}
+
+export interface TypeaheadItem<TKey extends number | string> {
+	readonly disabled?: boolean;
+	readonly key: TKey;
+	readonly textValue?: string;
 }
 
 export class Typeahead<TKey extends number | string> {
@@ -16,7 +20,8 @@ export class Typeahead<TKey extends number | string> {
 	#lastInput = Number.NEGATIVE_INFINITY;
 
 	constructor(options: TypeaheadOptions = {}) {
-		this.#locale = typeof options.locale === 'function' ? options.locale : () => options.locale;
+		const locale = options.locale;
+		this.#locale = typeof locale === 'function' ? locale : () => locale;
 		this.#now = options.now ?? Date.now;
 		this.#timeout = options.timeout ?? 500;
 		if (!Number.isFinite(this.#timeout) || this.#timeout <= 0) {
@@ -35,7 +40,7 @@ export class Typeahead<TKey extends number | string> {
 
 	search(
 		input: string,
-		items: readonly CollectionItem<TKey>[],
+		items: readonly TypeaheadItem<TKey>[],
 		currentKey?: TKey
 	): TKey | undefined {
 		if (this.#refreshCollator()) this.clear();

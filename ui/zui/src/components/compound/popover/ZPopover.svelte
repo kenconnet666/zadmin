@@ -96,10 +96,13 @@
 </script>
 
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { ControllableState } from '../../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../../runtime/foundation/ids.js';
+	import { ReducedMotionState } from '../../../runtime/foundation/motion.svelte.js';
 	import { durationMilliseconds } from '../../../runtime/foundation/presence.svelte.js';
 	import { useZui } from '../../../runtime/foundation/context.js';
+	import { resolvePortalTarget } from '../../../runtime/layer/portal.js';
 	import { provideZPopover, type ZPopoverContext } from './context.svelte.js';
 
 	let {
@@ -122,13 +125,15 @@
 		read: () => open,
 		write: (next) => (open = next)
 	});
+	const reducedMotion = new ReducedMotionState(() => zui.motion);
+	let portalAnchor = $state<HTMLElement | null>(null);
 	let trigger = $state<HTMLElement | null>(null);
 	const context: ZPopoverContext = {
 		get contentId() {
 			return `${idBase}-content`;
 		},
 		get exitDuration() {
-			return zui.motion === 'reduced' ? 0 : durationMilliseconds(zui.theme.duration.fast);
+			return reducedMotion.current ? 0 : durationMilliseconds(zui.theme.duration.fast);
 		},
 		get gutter() {
 			return gutter;
@@ -146,7 +151,10 @@
 			return placement;
 		},
 		get portalTarget() {
-			return zui.portalContainer ?? (typeof document === 'undefined' ? null : document);
+			return resolvePortalTarget(trigger ?? portalAnchor, zui.portalContainer);
+		},
+		get reducedMotion() {
+			return reducedMotion.current;
 		},
 		get trigger() {
 			return trigger;
@@ -162,6 +170,8 @@
 		}
 	};
 	provideZPopover(context);
+	onMount(() => reducedMotion.connect(portalAnchor?.ownerDocument.defaultView));
 </script>
 
+<span bind:this={portalAnchor} hidden aria-hidden="true" data-zui-portal-anchor></span>
 {@render children?.()}

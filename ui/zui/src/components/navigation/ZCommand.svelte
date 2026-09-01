@@ -41,6 +41,7 @@
 		readonly placeholder?: string;
 		query?: string;
 		ref?: HTMLDivElement | null;
+		readonly resultsLabel?: (count: number) => string;
 		readonly shouldFilter?: boolean;
 	}
 
@@ -76,6 +77,7 @@
 		parts: [
 			{ description: 'active-descendant输入。', name: 'input' },
 			{ description: '结果listbox。', name: 'list' },
+			{ description: 'polite结果数量公告。', name: 'status' },
 			{ description: '命令分组。', name: 'group' },
 			{ description: '命令option。', name: 'item' }
 		],
@@ -95,6 +97,12 @@
 				type: 'boolean'
 			},
 			{ default: '50', description: '最多渲染结果数。', name: 'maxResults', type: 'number' },
+			{
+				default: 'localePack.command.results',
+				description: '把当前结果数转换为polite live status；显式格式化优先。',
+				name: 'resultsLabel',
+				type: '(count: number) => string'
+			},
 			{ default: 'true', description: '方向键是否循环。', name: 'loop', type: 'boolean' },
 			{ default: 'false', description: '禁用查询和动作。', name: 'disabled', type: 'boolean' }
 		],
@@ -130,6 +138,7 @@
 	} from '../../runtime/foundation/root-style.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
+	import ZVisuallyHidden from '../gene/ZVisuallyHidden.svelte';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 
 	const rootRecipe = defineRecipe({
@@ -276,6 +285,7 @@
 		placeholder,
 		query = $bindable(),
 		ref = $bindable(null),
+		resultsLabel,
 		shouldFilter = true,
 		style,
 		...rest
@@ -333,6 +343,11 @@
 			.map(({ item }) => item.key)
 	);
 	const resultView = $derived(collection.view({ keys: resultKeys }));
+	const resultNumberFormatter = $derived(new Intl.NumberFormat(zui.locale));
+	const resultStatus = $derived(
+		resultsLabel?.(resultView.size) ??
+			zui.localePack.command.results(resultNumberFormatter.format(resultView.size))
+	);
 	const mounted = new MountedElements<SelectionKey>();
 	const navigation = new CollectionNavigation<SelectionKey, CommandItem>({
 		direction: () => zui.direction,
@@ -442,11 +457,21 @@
 		aria-label={resolvedInputLabel}
 		aria-autocomplete="list"
 		aria-controls={`${idBase}-list`}
+		aria-describedby={`${idBase}-status`}
 		aria-expanded="true"
 		aria-activedescendant={activeId}
 		oninput={handleInput}
 		onkeydown={handleKeydown}
 	/>
+	<ZVisuallyHidden
+		id={`${idBase}-status`}
+		aria-atomic="true"
+		aria-live="polite"
+		data-slot="status"
+		role="status"
+	>
+		{resultStatus}
+	</ZVisuallyHidden>
 	<div
 		class={listClass}
 		id={`${idBase}-list`}

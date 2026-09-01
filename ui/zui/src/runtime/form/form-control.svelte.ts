@@ -10,6 +10,12 @@ export function normalizeFieldMessages(
 	);
 }
 
+export function mergeFieldMessages(
+	...values: readonly (FieldMessages | null | undefined)[]
+): readonly string[] {
+	return Object.freeze([...new Set(values.flatMap(normalizeFieldMessages))]);
+}
+
 export function mergeAriaIds(
 	...values: readonly (string | null | undefined)[]
 ): string | undefined {
@@ -92,8 +98,9 @@ export function formReset(
 	};
 
 	// Svelte may initialize an action before its node enters the final form tree.
-	if (!control.isConnected && typeof MutationObserver !== 'undefined') {
-		mountObserver = new MutationObserver(scheduleAssociationRefresh);
+	const MutationObserverConstructor = control.ownerDocument.defaultView?.MutationObserver;
+	if (!control.isConnected && MutationObserverConstructor) {
+		mountObserver = new MutationObserverConstructor(scheduleAssociationRefresh);
 		mountObserver.observe(control.ownerDocument, { childList: true, subtree: true });
 	}
 	scheduleAssociationRefresh();

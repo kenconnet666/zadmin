@@ -33,7 +33,11 @@ export const DEFAULT_THEME_SCHEMA = {
 	},
 	duration: {
 		fast: 120,
+		loadingBarIndeterminate: 1200,
 		normal: 200,
+		progressIndeterminate: 1000,
+		skeletonPulse: 1400,
+		spinnerSpin: 800,
 		slow: 320
 	},
 	fontFamily: {

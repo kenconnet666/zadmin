@@ -1,15 +1,16 @@
 import { getContext, setContext } from 'svelte';
 
-import type {
-	CollectionItem,
-	CollectionStore
-} from '../../../runtime/collection/collection.svelte.js';
-import type { RovingFocus } from '../../../runtime/collection/roving-focus.svelte.js';
+import type { CompoundLogicalCollectionItem } from '../../../runtime/collection/compound-logical-collection.svelte.js';
+import type { LogicalCollectionView } from '../../../runtime/collection/logical-collection.js';
 import type { SelectionKey } from '../../../runtime/collection/selection.js';
-import type { Typeahead } from '../../../runtime/collection/typeahead.js';
 import { CancelableEvent } from '../../../runtime/foundation/cancelable-event.js';
+import type { ChoiceVirtualController } from '../choice-virtualization.js';
+import type { ZSelectOption } from './ZSelect.svelte';
 
-export type SelectItemRecord = CollectionItem<SelectionKey>;
+export interface SelectItemRecord extends CompoundLogicalCollectionItem<SelectionKey> {
+	readonly onSelect?: (event: SelectEvent) => void;
+	readonly option?: ZSelectOption;
+}
 
 export class SelectEvent extends CancelableEvent {
 	constructor(
@@ -20,26 +21,36 @@ export class SelectEvent extends CancelableEvent {
 	}
 }
 
+export type SelectOpenFocusStrategy = 'first' | 'last' | 'selected';
+
 export interface ZSelectContext {
-	readonly collection: CollectionStore<SelectItemRecord>;
+	readonly activeId: string | undefined;
+	readonly activeKey: SelectionKey | undefined;
 	readonly controlId: string;
+	readonly dataMode: boolean;
 	readonly describedBy: string | undefined;
 	readonly disabled: boolean;
+	readonly emptyText: string;
+	readonly grouped: boolean;
 	readonly invalid: boolean;
+	readonly loading: boolean;
+	readonly loadingText: string;
 	readonly open: boolean;
 	readonly placeholder: string;
+	readonly readonly: boolean;
 	readonly required: boolean;
-	readonly roving: RovingFocus<SelectionKey, SelectItemRecord>;
 	readonly selectedText: string;
-	readonly typeahead: Typeahead<SelectionKey>;
 	readonly value: SelectionKey | undefined;
-	choose(
-		value: SelectionKey,
-		originalEvent: KeyboardEvent | MouseEvent,
-		onSelect?: (event: SelectEvent) => void
-	): SelectEvent;
-	register(read: () => SelectItemRecord): () => void;
-	setOpen(open: boolean): void;
+	readonly view: LogicalCollectionView<SelectionKey, SelectItemRecord>;
+	choose(value: SelectionKey, originalEvent: KeyboardEvent | MouseEvent): SelectEvent;
+	handleKey(event: KeyboardEvent): boolean;
+	idFor(value: SelectionKey): string;
+	isSelected(value: SelectionKey): boolean;
+	register(read: () => SelectItemRecord & { readonly element: HTMLDivElement | null }): () => void;
+	search(key: string): SelectionKey | undefined;
+	setActive(value: SelectionKey): void;
+	setOpen(open: boolean, strategy?: SelectOpenFocusStrategy): void;
+	setVirtualizer(controller: ChoiceVirtualController<SelectionKey> | null): void;
 }
 
 const SELECT_CONTEXT = Symbol('zui-select-context');

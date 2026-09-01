@@ -42,6 +42,24 @@ export function clampNumber(value: number, min?: number, max?: number): number {
 	);
 }
 
+export function isNumberOutOfRange(value: number | undefined, min?: number, max?: number): boolean {
+	if (value === undefined) return false;
+	return (min !== undefined && value < min) || (max !== undefined && value > max);
+}
+
+function shiftDecimal(value: number, exponent: number): number {
+	const [coefficient, currentExponent = '0'] = String(value).split('e');
+	return Number(`${coefficient}e${Number(currentExponent) + exponent}`);
+}
+
+export function roundNumber(value: number, precision?: number): number {
+	if (precision === undefined) return value;
+	const shifted = shiftDecimal(value, precision);
+	if (!Number.isFinite(shifted)) return value;
+	const rounded = Math.sign(shifted) * Math.round(Math.abs(shifted));
+	return shiftDecimal(rounded, -precision);
+}
+
 function decimalPlaces(value: number): number {
 	const [, fraction = '', exponent = '0'] =
 		String(value).match(/^[+-]?(?:\d+)(?:\.(\d+))?(?:e([+-]?\d+))?$/iu) ?? [];
@@ -54,10 +72,14 @@ export function stepNumber(
 	step: number,
 	min?: number,
 	max?: number,
-	multiplier = 1
+	multiplier = 1,
+	precision?: number
 ): number {
-	const precision = Math.min(12, Math.max(decimalPlaces(value), decimalPlaces(step)));
+	const resolvedPrecision = Math.min(
+		20,
+		precision ?? Math.max(decimalPlaces(value), decimalPlaces(step), decimalPlaces(multiplier))
+	);
 	const next = value + direction * step * multiplier;
-	const normalized = Number(next.toFixed(precision));
+	const normalized = roundNumber(next, resolvedPrecision);
 	return clampNumber(normalized, min, max);
 }

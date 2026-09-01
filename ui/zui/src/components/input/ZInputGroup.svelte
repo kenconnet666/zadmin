@@ -22,7 +22,12 @@
 		importStatement: "import { ZInputGroup } from '@zadmin/zui';",
 		name: 'ZInputGroup',
 		bindings: [{ description: '真实group引用。', name: 'ref', type: 'HTMLDivElement | null' }],
-		dependencies: ['InputGroupContext', 'ICSS child selectors', 'focus-within'],
+		dependencies: [
+			'InputGroupContext',
+			'ICSS child selectors',
+			'ReducedMotionState',
+			'focus-within'
+		],
 		events: [],
 		keyboard: [{ description: '不拦截control与action的原生键盘行为。', key: 'Native child keys' }],
 		parts: [
@@ -72,7 +77,8 @@
 		source: 'ui/zui/src/components/input/ZInputGroup.svelte',
 		states: [
 			{ description: '禁用状态。', name: 'data-disabled', values: ['true'] },
-			{ description: '无效状态。', name: 'data-invalid', values: ['true'] }
+			{ description: '无效状态。', name: 'data-invalid', values: ['true'] },
+			{ description: '当前已解析为减少动画。', name: 'data-reduced-motion', values: ['true'] }
 		],
 		status: 'experimental',
 		summary: '以单一focus-within边界组合prefix、真实输入control、suffix与action的Input Group。'
@@ -140,7 +146,7 @@
 </script>
 
 <script lang="ts">
-	import { untrack } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 	import { provideZInputGroup } from '../../runtime/form/input-group-context.svelte.js';
 	import {
 		applyIcssRootStyle,
@@ -149,6 +155,7 @@
 	} from '../../runtime/foundation/root-style.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
+	import { ReducedMotionState } from '../../runtime/foundation/motion.svelte.js';
 
 	let {
 		children,
@@ -162,6 +169,7 @@
 		...rest
 	}: ZInputGroupProps = $props();
 	const zui = useZui();
+	const reducedMotion = new ReducedMotionState(() => zui.motion);
 	provideZInputGroup({
 		get disabled() {
 			return disabled;
@@ -170,10 +178,14 @@
 			return invalid;
 		}
 	});
-	const rootClass = $derived(zui.recipe(rootRecipe, { disabled, invalid, motion: zui.motion }));
+	const reduced = $derived(reducedMotion.current);
+	const rootClass = $derived(
+		zui.recipe(rootRecipe, { disabled, invalid, motion: reduced ? 'reduced' : 'full' })
+	);
 	const slotClass = $derived(zui.recipe(slotRecipe));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
+	onMount(() => reducedMotion.connect(ref?.ownerDocument.defaultView));
 </script>
 
 <div
@@ -186,6 +198,7 @@
 	aria-disabled={disabled || undefined}
 	data-disabled={disabled || undefined}
 	data-invalid={invalid || undefined}
+	data-reduced-motion={reduced || undefined}
 >
 	{#if prefix}<span class={slotClass} data-slot="prefix">{@render prefix()}</span>{/if}
 	{@render children()}

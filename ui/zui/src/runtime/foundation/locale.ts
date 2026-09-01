@@ -1,17 +1,35 @@
 export interface ZuiCommonLocale {
+	readonly clear: string;
 	readonly close: string;
 	readonly copy: string;
 }
 
 export interface ZuiCollectionLocale {
 	readonly cascaderLevel: (formattedLevel: string) => string;
+	readonly empty: string;
+	readonly loading: string;
 	readonly mentionEmpty: string;
 	readonly mentionList: string;
 	readonly selectNode: string;
 	readonly selectOption: string;
 	readonly selectOptions: string;
 	readonly selectPath: string;
+	readonly treeLoadError: (label: string) => string;
+	readonly treeLoading: (label: string) => string;
 	readonly treeOptions: string;
+}
+
+export interface ZuiCarouselLocale {
+	readonly automaticRotationDisabled: string;
+	readonly carouselRole: string;
+	readonly chooseSlide: string;
+	readonly goToSlide: (formattedIndex: string, label: string) => string;
+	readonly nextSlide: string;
+	readonly pauseRotation: string;
+	readonly previousSlide: string;
+	readonly slidePosition: (formattedIndex: string, formattedTotal: string, label: string) => string;
+	readonly slideRole: string;
+	readonly startRotation: string;
 }
 
 export interface ZuiColorPickerLocale {
@@ -28,6 +46,7 @@ export interface ZuiCommandLocale {
 	readonly paletteTitle: string;
 	readonly paletteTrigger: string;
 	readonly placeholder: string;
+	readonly results: (formattedCount: string) => string;
 }
 
 export interface ZuiDateLocale {
@@ -48,6 +67,27 @@ export interface ZuiFileUploadLocale {
 	readonly removeFile: (fileName: string) => string;
 }
 
+export interface ZuiFeedbackLocale {
+	readonly dismissAlert: string;
+	readonly dismissNotification: string;
+	readonly dismissToast: (title: string) => string;
+	readonly loading: string;
+	readonly notifications: string;
+}
+
+export interface ZuiFormLocale {
+	readonly unexpectedValidation: string;
+}
+
+export interface ZuiNumberFieldLocale {
+	readonly decrement: string;
+	readonly increment: string;
+	readonly inputLabel: string;
+	readonly invalidValue: string;
+	readonly maximum: (formattedMaximum: string) => string;
+	readonly minimum: (formattedMinimum: string) => string;
+}
+
 export interface ZuiPaginationLocale {
 	readonly currentPage: (formattedPage: string) => string;
 	readonly itemsPerPage: string;
@@ -58,6 +98,10 @@ export interface ZuiPaginationLocale {
 	readonly pageStatus: (formattedPage: string, formattedTotalPages: string) => string;
 	readonly previous: string;
 	readonly totalItems: (formattedTotal: string) => string;
+}
+
+export interface ZuiProgressLocale {
+	readonly label: string;
 }
 
 export interface ZuiTimeLocale {
@@ -80,33 +124,54 @@ export interface ZuiTransferLocale {
 	readonly filterPlaceholder: string;
 	readonly moveToSource: string;
 	readonly moveToTarget: string;
+	readonly selectedNotLoaded: (formattedCount: string, count: number) => string;
 	readonly sourceTitle: string;
 	readonly targetTitle: string;
 }
 
+export interface ZuiTourLocale {
+	readonly close: string;
+	readonly finish: string;
+	readonly next: string;
+	readonly previous: string;
+	readonly progress: (formattedCurrent: string, formattedTotal: string) => string;
+}
+
 export interface ZuiLocalePack {
+	readonly carousel: ZuiCarouselLocale;
 	readonly collection: ZuiCollectionLocale;
 	readonly colorPicker: ZuiColorPickerLocale;
 	readonly command: ZuiCommandLocale;
 	readonly common: ZuiCommonLocale;
 	readonly date: ZuiDateLocale;
+	readonly feedback: ZuiFeedbackLocale;
 	readonly fileUpload: ZuiFileUploadLocale;
+	readonly form: ZuiFormLocale;
+	readonly numberField: ZuiNumberFieldLocale;
 	readonly pagination: ZuiPaginationLocale;
+	readonly progress: ZuiProgressLocale;
 	readonly tagsInput: ZuiTagsInputLocale;
 	readonly time: ZuiTimeLocale;
+	readonly tour: ZuiTourLocale;
 	readonly transfer: ZuiTransferLocale;
 }
 
 export interface ZuiLocalePackOverrides {
+	readonly carousel?: Partial<ZuiCarouselLocale>;
 	readonly collection?: Partial<ZuiCollectionLocale>;
 	readonly colorPicker?: Partial<ZuiColorPickerLocale>;
 	readonly command?: Partial<ZuiCommandLocale>;
 	readonly common?: Partial<ZuiCommonLocale>;
 	readonly date?: Partial<ZuiDateLocale>;
+	readonly feedback?: Partial<ZuiFeedbackLocale>;
 	readonly fileUpload?: Partial<ZuiFileUploadLocale>;
+	readonly form?: Partial<ZuiFormLocale>;
+	readonly numberField?: Partial<ZuiNumberFieldLocale>;
 	readonly pagination?: Partial<ZuiPaginationLocale>;
+	readonly progress?: Partial<ZuiProgressLocale>;
 	readonly tagsInput?: Partial<ZuiTagsInputLocale>;
 	readonly time?: Partial<ZuiTimeLocale>;
+	readonly tour?: Partial<ZuiTourLocale>;
 	readonly transfer?: Partial<ZuiTransferLocale>;
 }
 
@@ -114,14 +179,31 @@ export interface ZuiLocalePackOverrides {
 export type ZuiTranslations = Readonly<Record<string, string>>;
 
 export const enUSLocalePack = Object.freeze({
+	carousel: Object.freeze({
+		automaticRotationDisabled: 'Automatic rotation disabled by motion preference',
+		carouselRole: 'carousel',
+		chooseSlide: 'Choose slide',
+		goToSlide: (formattedIndex: string, label: string) => `Go to slide ${formattedIndex}: ${label}`,
+		nextSlide: 'Next slide',
+		pauseRotation: 'Pause automatic rotation',
+		previousSlide: 'Previous slide',
+		slidePosition: (formattedIndex: string, formattedTotal: string, label: string) =>
+			`${formattedIndex} of ${formattedTotal}: ${label}`,
+		slideRole: 'slide',
+		startRotation: 'Start automatic rotation'
+	}),
 	collection: Object.freeze({
 		cascaderLevel: (formattedLevel: string) => `Level ${formattedLevel}`,
+		empty: 'No options',
+		loading: 'Loading options',
 		mentionEmpty: 'No suggestions',
 		mentionList: 'Mention suggestions',
 		selectNode: 'Select a node',
 		selectOption: 'Select an option',
 		selectOptions: 'Select options',
 		selectPath: 'Select a path',
+		treeLoadError: (label: string) => `Failed to load ${label}; activate the switcher to retry`,
+		treeLoading: (label: string) => `Loading children for ${label}`,
 		treeOptions: 'Tree options'
 	}),
 	colorPicker: Object.freeze({
@@ -136,9 +218,10 @@ export const enUSLocalePack = Object.freeze({
 		listLabel: 'Commands',
 		paletteTitle: 'Command palette',
 		paletteTrigger: 'Open command palette',
-		placeholder: 'Type a command'
+		placeholder: 'Type a command',
+		results: (formattedCount: string) => `${formattedCount} commands found`
 	}),
-	common: Object.freeze({ close: 'Close', copy: 'Copy' }),
+	common: Object.freeze({ clear: 'Clear', close: 'Close', copy: 'Copy' }),
 	date: Object.freeze({
 		calendarLabel: 'Calendar',
 		chooseDate: 'Choose date',
@@ -149,11 +232,29 @@ export const enUSLocalePack = Object.freeze({
 		previousMonth: 'Previous month',
 		year: 'Year'
 	}),
+	feedback: Object.freeze({
+		dismissAlert: 'Dismiss alert',
+		dismissNotification: 'Dismiss notification',
+		dismissToast: (title: string) => `Dismiss ${title}`,
+		loading: 'Loading',
+		notifications: 'Notifications'
+	}),
 	fileUpload: Object.freeze({
 		chooseFiles: 'Choose files',
 		dropFiles: 'Drop files here or choose files',
 		inputLabel: 'Choose files',
 		removeFile: (fileName: string) => `Remove ${fileName}`
+	}),
+	form: Object.freeze({
+		unexpectedValidation: 'Validation failed unexpectedly.'
+	}),
+	numberField: Object.freeze({
+		decrement: 'Decrease value',
+		increment: 'Increase value',
+		inputLabel: 'Number',
+		invalidValue: 'Enter a valid number.',
+		maximum: (formattedMaximum: string) => `Value must be at most ${formattedMaximum}.`,
+		minimum: (formattedMinimum: string) => `Value must be at least ${formattedMinimum}.`
 	}),
 	pagination: Object.freeze({
 		currentPage: (formattedPage: string) => `Page ${formattedPage}, current page`,
@@ -166,6 +267,9 @@ export const enUSLocalePack = Object.freeze({
 			`Page ${formattedPage} of ${formattedTotalPages}`,
 		previous: 'Previous page',
 		totalItems: (formattedTotal: string) => `${formattedTotal} items`
+	}),
+	progress: Object.freeze({
+		label: 'Progress'
 	}),
 	tagsInput: Object.freeze({
 		addTag: 'Add tag',
@@ -180,25 +284,52 @@ export const enUSLocalePack = Object.freeze({
 		second: 'Second',
 		toggleDayPeriod: 'Toggle AM/PM'
 	}),
+	tour: Object.freeze({
+		close: 'Close tour',
+		finish: 'Finish',
+		next: 'Next',
+		previous: 'Previous',
+		progress: (formattedCurrent: string, formattedTotal: string) =>
+			`Step ${formattedCurrent} of ${formattedTotal}`
+	}),
 	transfer: Object.freeze({
 		empty: 'No items',
 		filterPlaceholder: 'Filter items',
 		moveToSource: 'Move selected to source',
 		moveToTarget: 'Move selected to target',
+		selectedNotLoaded: (formattedCount: string, count: number) =>
+			`${formattedCount} selected ${count === 1 ? 'item is' : 'items are'} not loaded`,
 		sourceTitle: 'Available',
 		targetTitle: 'Selected'
 	})
 }) satisfies ZuiLocalePack;
 
 export const zhCNLocalePack = Object.freeze({
+	carousel: Object.freeze({
+		automaticRotationDisabled: '已按动画偏好停用自动轮播',
+		carouselRole: '轮播',
+		chooseSlide: '选择幻灯片',
+		goToSlide: (formattedIndex: string, label: string) => `转到第${formattedIndex}张：${label}`,
+		nextSlide: '下一张',
+		pauseRotation: '暂停自动轮播',
+		previousSlide: '上一张',
+		slidePosition: (formattedIndex: string, formattedTotal: string, label: string) =>
+			`第${formattedIndex}张，共${formattedTotal}张：${label}`,
+		slideRole: '幻灯片',
+		startRotation: '开始自动轮播'
+	}),
 	collection: Object.freeze({
 		cascaderLevel: (formattedLevel: string) => `第${formattedLevel}级`,
+		empty: '暂无选项',
+		loading: '正在加载选项',
 		mentionEmpty: '暂无建议',
 		mentionList: '提及建议',
 		selectNode: '选择节点',
 		selectOption: '选择一个选项',
 		selectOptions: '选择选项',
 		selectPath: '选择路径',
+		treeLoadError: (label: string) => `加载${label}失败；激活展开指示可重试`,
+		treeLoading: (label: string) => `正在加载${label}的子节点`,
 		treeOptions: '树形选项'
 	}),
 	colorPicker: Object.freeze({
@@ -213,9 +344,10 @@ export const zhCNLocalePack = Object.freeze({
 		listLabel: '命令',
 		paletteTitle: '命令面板',
 		paletteTrigger: '打开命令面板',
-		placeholder: '输入命令'
+		placeholder: '输入命令',
+		results: (formattedCount: string) => `找到${formattedCount}个命令`
 	}),
-	common: Object.freeze({ close: '关闭', copy: '复制' }),
+	common: Object.freeze({ clear: '清空', close: '关闭', copy: '复制' }),
 	date: Object.freeze({
 		calendarLabel: '日历',
 		chooseDate: '选择日期',
@@ -226,11 +358,29 @@ export const zhCNLocalePack = Object.freeze({
 		previousMonth: '上个月',
 		year: '年'
 	}),
+	feedback: Object.freeze({
+		dismissAlert: '关闭提示',
+		dismissNotification: '关闭通知',
+		dismissToast: (title: string) => `关闭通知：${title}`,
+		loading: '加载中',
+		notifications: '通知'
+	}),
 	fileUpload: Object.freeze({
 		chooseFiles: '选择文件',
 		dropFiles: '将文件拖放到此处或选择文件',
 		inputLabel: '选择文件',
 		removeFile: (fileName: string) => `移除文件 ${fileName}`
+	}),
+	form: Object.freeze({
+		unexpectedValidation: '验证过程中发生意外错误。'
+	}),
+	numberField: Object.freeze({
+		decrement: '减小数值',
+		increment: '增大数值',
+		inputLabel: '数字',
+		invalidValue: '请输入有效数字。',
+		maximum: (formattedMaximum: string) => `数值不能大于 ${formattedMaximum}。`,
+		minimum: (formattedMinimum: string) => `数值不能小于 ${formattedMinimum}。`
 	}),
 	pagination: Object.freeze({
 		currentPage: (formattedPage: string) => `第${formattedPage}页，当前页`,
@@ -243,6 +393,9 @@ export const zhCNLocalePack = Object.freeze({
 			`第${formattedPage}页，共${formattedTotalPages}页`,
 		previous: '上一页',
 		totalItems: (formattedTotal: string) => `共${formattedTotal}条`
+	}),
+	progress: Object.freeze({
+		label: '进度'
 	}),
 	tagsInput: Object.freeze({
 		addTag: '添加标签',
@@ -257,11 +410,20 @@ export const zhCNLocalePack = Object.freeze({
 		second: '秒',
 		toggleDayPeriod: '切换上午或下午'
 	}),
+	tour: Object.freeze({
+		close: '关闭导览',
+		finish: '完成',
+		next: '下一步',
+		previous: '上一步',
+		progress: (formattedCurrent: string, formattedTotal: string) =>
+			`第${formattedCurrent}步，共${formattedTotal}步`
+	}),
 	transfer: Object.freeze({
 		empty: '暂无项目',
 		filterPlaceholder: '筛选项目',
 		moveToSource: '将所选项目移至来源列表',
 		moveToTarget: '将所选项目移至目标列表',
+		selectedNotLoaded: (formattedCount: string) => `${formattedCount} 个已选项目尚未加载`,
 		sourceTitle: '可选项目',
 		targetTitle: '已选项目'
 	})
@@ -272,6 +434,7 @@ function legacyOverrides(translations: ZuiTranslations | undefined): ZuiLocalePa
 	const page = translations['pagination.page'];
 	return {
 		common: {
+			clear: translations.clear,
 			close: translations.close,
 			copy: translations.copy
 		},
@@ -324,17 +487,23 @@ export function resolveZuiLocalePack(
 ): ZuiLocalePack {
 	const legacy = legacyOverrides(translations);
 	return Object.freeze({
+		carousel: Object.freeze(mergeDefined(base.carousel, overrides?.carousel)),
 		collection: Object.freeze(mergeDefined(base.collection, overrides?.collection)),
 		colorPicker: Object.freeze(mergeDefined(base.colorPicker, overrides?.colorPicker)),
 		command: Object.freeze(mergeDefined(base.command, overrides?.command)),
 		common: Object.freeze(mergeDefined(base.common, legacy.common, overrides?.common)),
 		date: Object.freeze(mergeDefined(base.date, legacy.date, overrides?.date)),
+		feedback: Object.freeze(mergeDefined(base.feedback, overrides?.feedback)),
 		fileUpload: Object.freeze(mergeDefined(base.fileUpload, overrides?.fileUpload)),
+		form: Object.freeze(mergeDefined(base.form, overrides?.form)),
+		numberField: Object.freeze(mergeDefined(base.numberField, overrides?.numberField)),
 		pagination: Object.freeze(
 			mergeDefined(base.pagination, legacy.pagination, overrides?.pagination)
 		),
+		progress: Object.freeze(mergeDefined(base.progress, overrides?.progress)),
 		tagsInput: Object.freeze(mergeDefined(base.tagsInput, overrides?.tagsInput)),
 		time: Object.freeze(mergeDefined(base.time, legacy.time, overrides?.time)),
+		tour: Object.freeze(mergeDefined(base.tour, overrides?.tour)),
 		transfer: Object.freeze(mergeDefined(base.transfer, overrides?.transfer))
 	});
 }

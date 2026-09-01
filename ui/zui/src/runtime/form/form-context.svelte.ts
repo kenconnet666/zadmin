@@ -1,13 +1,17 @@
 import { getContext, setContext } from 'svelte';
 
+import type { ZControlSize } from '../foundation/control-size.js';
 import type { FormRegistry } from './form-registry.svelte.js';
 
 export type FormValidationTrigger = 'blur' | 'change' | 'submit';
 
 export interface ZFormContext {
+	readonly disabled: boolean;
+	readonly readonly: boolean;
 	readonly registry: FormRegistry;
+	readonly size?: ZControlSize;
 	readonly submitted: boolean;
-	fieldEvent(name: string, trigger: Exclude<FormValidationTrigger, 'submit'>): void;
+	fieldEvent(instanceId: string, trigger: Exclude<FormValidationTrigger, 'submit'>): void;
 }
 
 const FORM_CONTEXT = Symbol('zui-form-context');

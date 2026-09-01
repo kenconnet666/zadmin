@@ -66,8 +66,8 @@
 				type: 'boolean'
 			},
 			{
-				default: "'Dismiss notification'",
-				description: '关闭按钮可访问名称。',
+				default: 'localePack.feedback.dismissNotification',
+				description: '关闭按钮可访问名称；显式值优先于Provider locale。',
 				name: 'dismissLabel',
 				type: 'string'
 			},
@@ -159,12 +159,13 @@
 	} from '../../runtime/foundation/root-style.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
+	import { isDomHtmlElement, isDomNode } from '../../runtime/layer/dom-realm.js';
 	let {
 		actionLabel,
 		class: className,
 		description,
 		dismissible = true,
-		dismissLabel = 'Dismiss notification',
+		dismissLabel,
 		onAction,
 		onDismiss,
 		onPauseChange,
@@ -176,6 +177,9 @@
 		...rest
 	}: ZToastProps = $props();
 	const zui = useZui();
+	const resolvedDismissLabel = $derived(
+		dismissLabel ?? zui.localePack.feedback.dismissNotification
+	);
 	const rootClass = $derived(zui.recipe(recipe, { tone }));
 	const titleClass = $derived(zui.recipe(titleRecipe));
 	const descriptionClass = $derived(zui.recipe(descriptionRecipe));
@@ -185,8 +189,8 @@
 	const resolvedPriority = $derived(priority ?? (tone === 'danger' ? 'assertive' : 'polite'));
 	function focusOut(event: FocusEvent): void {
 		if (
-			!(event.currentTarget instanceof HTMLElement) ||
-			event.currentTarget.contains(event.relatedTarget as Node | null)
+			!isDomHtmlElement(event.currentTarget) ||
+			(isDomNode(event.relatedTarget) && event.currentTarget.contains(event.relatedTarget))
 		)
 			return;
 		onPauseChange?.('focus', false);
@@ -218,7 +222,7 @@
 					variant="secondary"
 					onclick={(event) => onAction?.(event)}>{actionLabel}</ZButton
 				>{/if}{#if dismissible}<ZButton
-					aria-label={dismissLabel}
+					aria-label={resolvedDismissLabel}
 					size="small"
 					variant="ghost"
 					onclick={(event) => onDismiss?.(event)}><X aria-hidden="true" size={16} /></ZButton

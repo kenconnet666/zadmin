@@ -10,7 +10,16 @@ export interface PresenceController {
 	readonly state: PresenceState;
 	destroy(): void;
 	finishExit(): void;
-	update(present: boolean, exitDuration?: number): void;
+	update(present: boolean, exitDuration?: number, ownerWindow?: Window | null): void;
+}
+
+function scheduleTimeout(callback: () => void, duration: number, ownerWindow?: Window | null) {
+	if (ownerWindow) {
+		const timer = ownerWindow.setTimeout(callback, duration);
+		return () => ownerWindow.clearTimeout(timer);
+	}
+	const timer = setTimeout(callback, duration);
+	return () => clearTimeout(timer);
 }
 
 export function durationMilliseconds(value: number | string): number {
@@ -30,7 +39,7 @@ export class Presence {
 	readonly #onChange?: (snapshot: PresenceSnapshot) => void;
 	#present: boolean;
 	#state: PresenceState = 'exited';
-	#timer: ReturnType<typeof setTimeout> | undefined;
+	#cancelTimer: (() => void) | undefined;
 
 	constructor(initiallyPresent = false, onChange?: (snapshot: PresenceSnapshot) => void) {
 		this.#onChange = onChange;
@@ -47,7 +56,7 @@ export class Presence {
 		return this.#state;
 	}
 
-	update(present: boolean, exitDuration = 0): void {
+	update(present: boolean, exitDuration = 0, ownerWindow?: Window | null): void {
 		if (present === this.#present) return;
 		this.#present = present;
 		this.#clearTimer();
@@ -65,7 +74,7 @@ export class Presence {
 		}
 		this.#state = 'exiting';
 		this.#emit();
-		this.#timer = setTimeout(() => this.#exit(), duration);
+		this.#cancelTimer = scheduleTimeout(() => this.#exit(), duration, ownerWindow);
 	}
 
 	destroy(): void {
@@ -79,12 +88,12 @@ export class Presence {
 	}
 
 	#clearTimer(): void {
-		if (this.#timer !== undefined) clearTimeout(this.#timer);
-		this.#timer = undefined;
+		this.#cancelTimer?.();
+		this.#cancelTimer = undefined;
 	}
 
 	#exit(): void {
-		this.#timer = undefined;
+		this.#cancelTimer = undefined;
 		this.#mounted = false;
 		this.#state = 'exited';
 		this.#emit();
@@ -99,13 +108,13 @@ export function createPresence(initiallyPresent = false): PresenceController {
 	let mounted = $state(initiallyPresent);
 	let state = $state<PresenceState>(initiallyPresent ? 'entered' : 'exited');
 	let present = initiallyPresent;
-	let timer: ReturnType<typeof setTimeout> | undefined;
+	let cancelTimer: (() => void) | undefined;
 	const clearTimer = () => {
-		if (timer !== undefined) clearTimeout(timer);
-		timer = undefined;
+		cancelTimer?.();
+		cancelTimer = undefined;
 	};
 	const exit = () => {
-		timer = undefined;
+		cancelTimer = undefined;
 		mounted = false;
 		state = 'exited';
 	};
@@ -122,7 +131,7 @@ export function createPresence(initiallyPresent = false): PresenceController {
 		get state() {
 			return state;
 		},
-		update(next, exitDuration = 0) {
+		update(next, exitDuration = 0, ownerWindow) {
 			if (next === present) return;
 			present = next;
 			clearTimer();
@@ -136,7 +145,7 @@ export function createPresence(initiallyPresent = false): PresenceController {
 			if (duration === 0) exit();
 			else {
 				state = 'exiting';
-				timer = setTimeout(exit, duration);
+				cancelTimer = scheduleTimeout(exit, duration, ownerWindow);
 			}
 		}
 	};

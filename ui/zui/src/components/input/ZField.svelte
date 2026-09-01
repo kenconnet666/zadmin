@@ -3,10 +3,11 @@
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 
+	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
 	import type { FieldMessages } from '../../runtime/form/form-control.svelte.js';
 	import { defineSlotRecipe, registerSlotRecipeHmr } from '../../recipes/slots.js';
 
-	export type ZFieldSize = 'medium' | 'small';
+	export type ZFieldSize = ZControlSize;
 
 	export interface ZFieldProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
 		readonly children?: Snippet;
@@ -19,6 +20,8 @@
 		readonly readonly?: boolean;
 		readonly required?: boolean;
 		readonly size?: ZFieldSize;
+		readonly success?: FieldMessages;
+		readonly warning?: FieldMessages;
 		ref?: HTMLDivElement | null;
 	}
 
@@ -73,10 +76,22 @@
 				type: 'string'
 			},
 			{
-				default: "'medium'",
-				description: '间距尺寸。',
+				default: 'undefined',
+				description: '显式覆盖字段间距和control继承尺寸；未传时control继续采用Provider density。',
 				name: 'size',
-				type: "'small' | 'medium'"
+				type: "'small' | 'medium' | 'large'"
+			},
+			{
+				default: '—',
+				description: '一个或多个警告消息。',
+				name: 'warning',
+				type: 'string | readonly string[]'
+			},
+			{
+				default: '—',
+				description: '一个或多个成功消息。',
+				name: 'success',
+				type: 'string | readonly string[]'
 			},
 			{
 				bindable: true,
@@ -99,14 +114,16 @@
 		source: 'ui/zui/src/components/input/ZField.svelte',
 		states: [
 			{ description: '禁用。', name: 'data-disabled', values: ['true'] },
-			{ description: '包含错误。', name: 'data-invalid', values: ['true'] }
+			{ description: '包含错误。', name: 'data-invalid', values: ['true'] },
+			{ description: '包含警告。', name: 'data-warning', values: ['true'] },
+			{ description: '包含成功消息。', name: 'data-success', values: ['true'] }
 		],
 		status: 'stable',
 		summary: '关联label、说明、错误与control ARIA。'
 	} as const satisfies ZuiComponentMetadata;
 
 	const fieldRecipe = defineSlotRecipe({
-		slots: ['root', 'label', 'description', 'messages', 'error'] as const,
+		slots: ['root', 'label', 'description', 'messages', 'error', 'warning', 'success'] as const,
 		base: {
 			description: (s) => s.color._textMuted,
 			error: (s) => s.color._danger,
@@ -115,10 +132,13 @@
 				s.display.grid;
 				s.gap._xsmall;
 			},
+			success: (s) => s.color._success,
+			warning: (s) => s.color._warning,
 			root: (s) => s.display.grid
 		},
 		variants: {
 			size: {
+				large: { root: (s) => s.gap._medium },
 				medium: { root: (s) => s.gap._small },
 				small: { root: (s) => s.gap._xsmall }
 			}
@@ -156,8 +176,10 @@
 		readonly = false,
 		ref = $bindable(null),
 		required = false,
-		size = 'medium',
+		size,
 		style,
+		success,
+		warning,
 		...rest
 	}: ZFieldProps = $props();
 
@@ -168,22 +190,31 @@
 	const labelId = $derived(`${idBase}-label`);
 	const descriptionId = $derived(description ? `${idBase}-description` : undefined);
 	const messages = $derived(normalizeFieldMessages(error));
+	const warningMessages = $derived(normalizeFieldMessages(warning));
+	const successMessages = $derived(normalizeFieldMessages(success));
 	const invalid = $derived(messages.length > 0);
 	const errorIds = $derived(messages.map((_, index) => `${idBase}-error-${index + 1}`));
-	const describedBy = $derived(mergeAriaIds(descriptionId, errorIds.join(' ')));
+	const warningIds = $derived(warningMessages.map((_, index) => `${idBase}-warning-${index + 1}`));
+	const successIds = $derived(successMessages.map((_, index) => `${idBase}-success-${index + 1}`));
+	const describedBy = $derived(
+		mergeAriaIds(descriptionId, errorIds.join(' '), warningIds.join(' '), successIds.join(' '))
+	);
 	const classes = $derived(zui.slots(fieldRecipe, { size }));
 	let focusOwner: (() => void) | undefined;
+
 	function registerFocusOwner(focus: () => void): () => void {
 		focusOwner = focus;
 		return () => {
 			if (focusOwner === focus) focusOwner = undefined;
 		};
 	}
+
 	function handleLabelClick(event: Event): void {
 		if (!focusOwner || event.defaultPrevented) return;
 		event.preventDefault();
 		focusOwner();
 	}
+
 	// Native `for` handles labelable controls; compound owners intercept only to focus,
 	// avoiding the label's synthetic click from also opening or toggling the control.
 	const attachLabel: Attachment<HTMLLabelElement> = (node) => {
@@ -199,6 +230,7 @@
 		name,
 		readonly,
 		required,
+		size,
 		registerFocusOwner
 	}));
 	const icssVariables = $derived(readIcssCarrier(rest));
@@ -213,6 +245,8 @@
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
 	data-disabled={disabled || undefined}
 	data-invalid={invalid || undefined}
+	data-success={successMessages.length > 0 || undefined}
+	data-warning={warningMessages.length > 0 || undefined}
 >
 	<label class={classes.label} for={resolvedControlId} id={labelId} {@attach attachLabel}>
 		{#if typeof label === 'string'}{label}{:else}{@render label()}{/if}
@@ -224,10 +258,16 @@
 			{#if typeof description === 'string'}{description}{:else}{@render description()}{/if}
 		</div>
 	{/if}
-	{#if invalid}
+	{#if invalid || warningMessages.length > 0 || successMessages.length > 0}
 		<div class={classes.messages} aria-live="polite" aria-atomic="true">
 			{#each messages as message, index (errorIds[index])}
 				<p class={classes.error} id={errorIds[index]}>{message}</p>
+			{/each}
+			{#each warningMessages as message, index (warningIds[index])}
+				<p class={classes.warning} id={warningIds[index]}>{message}</p>
+			{/each}
+			{#each successMessages as message, index (successIds[index])}
+				<p class={classes.success} id={successIds[index]}>{message}</p>
 			{/each}
 		</div>
 	{/if}

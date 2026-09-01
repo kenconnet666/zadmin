@@ -67,7 +67,7 @@
 	import { ReducedMotionState } from '../../../runtime/foundation/motion.svelte.js';
 	import { durationMilliseconds } from '../../../runtime/foundation/presence.svelte.js';
 	import { useZui } from '../../../runtime/foundation/context.js';
-	import { isDomDocument, isDomShadowRoot } from '../../../runtime/layer/dom-realm.js';
+	import { resolvePortalTarget } from '../../../runtime/layer/portal.js';
 	import { provideZDialog, type ZDialogContext } from './context.svelte.js';
 
 	let { children, defaultOpen = false, onOpenChange, open = $bindable() }: ZDialogProps = $props();
@@ -82,8 +82,9 @@
 	});
 	const reducedMotion = new ReducedMotionState(() => zui.motion);
 	let overlay = $state<HTMLDivElement | null>(null);
+	let portalAnchor = $state<HTMLElement | null>(null);
 	let trigger = $state<HTMLButtonElement | null>(null);
-	onMount(() => reducedMotion.connect());
+	onMount(() => reducedMotion.connect(portalAnchor?.ownerDocument.defaultView));
 	const context: ZDialogContext = {
 		get contentId() {
 			return `${idBase}-content`;
@@ -101,10 +102,7 @@
 			return overlay;
 		},
 		get portalTarget() {
-			if (zui.portalContainer) return zui.portalContainer;
-			const root = trigger?.getRootNode();
-			if (isDomDocument(root) || isDomShadowRoot(root)) return root;
-			return typeof document === 'undefined' ? null : document;
+			return resolvePortalTarget(trigger ?? portalAnchor, zui.portalContainer);
 		},
 		get reducedMotion() {
 			return reducedMotion.current;
@@ -131,4 +129,5 @@
 	provideZDialog(context);
 </script>
 
+<span bind:this={portalAnchor} hidden aria-hidden="true" data-zui-portal-anchor></span>
 {@render children?.()}

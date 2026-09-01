@@ -2,6 +2,7 @@
 	import type { Snippet } from 'svelte';
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
 	import type { ZPopoverTriggerProps } from '../popover/ZPopoverTrigger.svelte';
+
 	export type ZSelectTriggerProps = Omit<
 		ZPopoverTriggerProps,
 		'aria-required' | 'children' | 'disabled' | 'id' | 'popupRole'
@@ -12,7 +13,7 @@
 		importStatement: "import { ZSelectTrigger } from '@zadmin/zui';",
 		name: 'ZSelectTrigger',
 		bindings: [{ description: '真实button引用。', name: 'ref', type: 'HTMLButtonElement | null' }],
-		dependencies: ['ZSelect', 'ZPopoverTrigger'],
+		dependencies: ['ZSelect', 'ZPopoverTrigger', 'ActiveDescendant'],
 		events: [
 			{
 				description: 'preventDefault可取消切换。',
@@ -43,7 +44,8 @@
 		states: [
 			{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] },
 			{ description: '是否已有值。', name: 'data-placeholder', values: ['true'] },
-			{ description: '业务选择值无效。', name: 'data-invalid', values: ['true'] }
+			{ description: '业务选择值无效。', name: 'data-invalid', values: ['true'] },
+			{ description: '保持可聚焦但不可打开或修改。', name: 'data-readonly', values: ['true'] }
 		],
 		status: 'experimental',
 		summary: '显示当前值并以aria-haspopup=listbox打开Select Content。'
@@ -55,9 +57,11 @@
 	import { useZFieldControlOwner } from '../../../runtime/form/field-context.js';
 	import ZPopoverTrigger from '../popover/ZPopoverTrigger.svelte';
 	import { useZSelect } from './context.svelte.js';
+
 	let {
 		'aria-describedby': ariaDescribedBy,
 		children,
+		onclick,
 		onkeydown,
 		ref = $bindable(null),
 		variant = 'secondary',
@@ -70,18 +74,25 @@
 		if (!owner || !fieldOwner) return;
 		return fieldOwner.registerFocusOwner(() => owner.focus({ preventScroll: true }));
 	});
+
 	function handleKeydown(event: KeyboardEvent & { currentTarget: HTMLButtonElement }): void {
 		onkeydown?.(event);
 		if (!event.defaultPrevented && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
 			event.preventDefault();
-			select.setOpen(true);
+			select.setOpen(true, event.key === 'ArrowUp' ? 'last' : 'first');
 		}
+	}
+
+	function handleClick(event: MouseEvent & { currentTarget: HTMLButtonElement }): void {
+		onclick?.(event);
+		if (select.readonly) event.preventDefault();
 	}
 </script>
 
 <ZPopoverTrigger
 	{...rest}
 	aria-describedby={mergeAriaIds(ariaDescribedBy, select.describedBy)}
+	aria-disabled={select.readonly || undefined}
 	aria-invalid={select.invalid || undefined}
 	aria-required={select.required || undefined}
 	bind:ref
@@ -92,6 +103,8 @@
 	onkeydown={handleKeydown}
 	data-invalid={select.invalid || undefined}
 	data-placeholder={select.value === undefined || undefined}
+	data-readonly={select.readonly || undefined}
+	onclick={handleClick}
 >
 	{#if children}{@render children()}{:else}{select.selectedText}{/if}
 </ZPopoverTrigger>

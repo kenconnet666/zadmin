@@ -308,7 +308,12 @@
 	});
 	onMount(() => {
 		if (!ref || !virtualized) return;
-		const observer = new ResizeObserver(() => {
+		const ResizeObserverConstructor = ref.ownerDocument.defaultView?.ResizeObserver;
+		if (!ResizeObserverConstructor) {
+			viewportSize = ref.clientHeight;
+			return;
+		}
+		const observer = new ResizeObserverConstructor(() => {
 			if (ref) viewportSize = ref.clientHeight;
 		});
 		observer.observe(ref);

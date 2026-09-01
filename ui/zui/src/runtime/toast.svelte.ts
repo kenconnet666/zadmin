@@ -184,7 +184,9 @@ export class ToastQueue {
 		}
 	}
 
-	connectVisibility(ownerDocument = typeof document === 'undefined' ? undefined : document): () => void {
+	connectVisibility(
+		ownerDocument = typeof document === 'undefined' ? undefined : document
+	): () => void {
 		if (!ownerDocument) return () => {};
 		const update = (): void => {
 			if (ownerDocument.visibilityState === 'hidden') this.pauseAll('visibility');
@@ -278,7 +280,6 @@ export class ToastQueue {
 			timer.paused.size > 0
 		)
 			return;
-		if (typeof window === 'undefined') return;
 		if (timer.remaining <= 0) {
 			this.dismiss(id, 'timeout');
 			return;
@@ -292,9 +293,7 @@ export class ToastQueue {
 
 	#setPhase(id: string, phase: ToastPhase): void {
 		this.#items = Object.freeze(
-			this.#items.map((item) =>
-				item.id === id ? Object.freeze({ ...item, phase }) : item
-			)
+			this.#items.map((item) => (item.id === id ? Object.freeze({ ...item, phase }) : item))
 		);
 	}
 
@@ -316,4 +315,5 @@ export class ToastQueue {
 	}
 }
 
-export const createToastQueue = (options?: ToastQueueOptions): ToastQueue => new ToastQueue(options);
+export const createToastQueue = (options?: ToastQueueOptions): ToastQueue =>
+	new ToastQueue(options);

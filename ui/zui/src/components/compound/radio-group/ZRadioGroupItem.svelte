@@ -1,6 +1,7 @@
 <script module lang="ts">
 	import type { HTMLInputAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
+	import type { SelectionKey } from '../../../runtime/collection/selection.js';
 
 	import { defineRecipe, registerRecipeHmr } from '../../../recipes/define.js';
 	import type { RecipeVariants } from '../../../recipes/types.js';
@@ -22,6 +23,10 @@
 			});
 		},
 		variants: {
+			readonly: {
+				false: () => undefined,
+				true: (s) => s.cursor.default
+			},
 			disabled: {
 				false: () => undefined,
 				true: (s) => {
@@ -45,14 +50,14 @@
 				}
 			}
 		},
-		defaultVariants: { disabled: false, invalid: false, size: 'medium' }
+		defaultVariants: { disabled: false, invalid: false, readonly: false, size: 'medium' }
 	});
 
 	registerRecipeHmr(import.meta, radioItemRecipe);
 
 	export type ZRadioGroupItemVariants = Omit<
 		RecipeVariants<typeof radioItemRecipe>,
-		'disabled' | 'invalid'
+		'disabled' | 'invalid' | 'readonly'
 	>;
 
 	export type ZRadioGroupItemProps = Omit<
@@ -64,6 +69,7 @@
 		| 'form'
 		| 'name'
 		| 'onchange'
+		| 'onclick'
 		| 'onfocus'
 		| 'onkeydown'
 		| 'required'
@@ -74,11 +80,12 @@
 		ZRadioGroupItemVariants & {
 			readonly disabled?: boolean;
 			readonly onchange?: HTMLInputAttributes['onchange'];
+			readonly onclick?: HTMLInputAttributes['onclick'];
 			readonly onfocus?: HTMLInputAttributes['onfocus'];
 			readonly onkeydown?: HTMLInputAttributes['onkeydown'];
 			ref?: HTMLInputElement | null;
 			readonly textValue?: string;
-			readonly value: string;
+			readonly value: SelectionKey;
 		};
 
 	export const zuiMetadata = {
@@ -92,20 +99,25 @@
 		dependencies: ['ZRadioGroup'],
 		events: [
 			{
-				description: '原生change回调。',
+				description: '仅可编辑状态转发原生change。',
 				name: 'onchange',
 				type: 'ChangeEventHandler<HTMLInputElement>'
+			},
+			{
+				description: '仅可编辑状态转发原生click。',
+				name: 'onclick',
+				type: 'MouseEventHandler<HTMLInputElement>'
 			}
 		],
-		keyboard: [{ description: '选择当前Item。', key: 'Space' }],
+		keyboard: [{ description: '可编辑时选择当前Item；只读时保持焦点和值。', key: 'Space' }],
 		parts: [],
 		props: [
 			{
 				default: '必填',
-				description: '稳定的单选值与Collection key。',
+				description: '稳定的string/number单选值与LogicalCollection key。',
 				name: 'value',
 				required: true,
-				type: 'string'
+				type: 'SelectionKey'
 			},
 			{
 				default: 'value',
@@ -133,10 +145,11 @@
 		source: 'ui/zui/src/components/compound/radio-group/ZRadioGroupItem.svelte',
 		states: [
 			{ description: '选择状态。', name: 'data-state', values: ['checked', 'unchecked'] },
-			{ description: '禁用状态。', name: 'data-disabled', values: ['true'] }
+			{ description: '禁用状态。', name: 'data-disabled', values: ['true'] },
+			{ description: '继承组级只读状态。', name: 'data-readonly', values: ['true'] }
 		],
 		status: 'experimental',
-		summary: '注册到ZRadioGroup并保留原生radio表单语义的单选Item。'
+		summary: '注册到ZRadioGroup LogicalCollection并保留原生radio表单语义的typed单选Item。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
 
@@ -150,6 +163,7 @@
 	} from '../../../runtime/foundation/root-style.js';
 	import { useZui } from '../../../runtime/foundation/context.js';
 	import { createZuiId } from '../../../runtime/foundation/ids.js';
+	import { serializeFormValue } from '../../../runtime/form/form-value.js';
 	import { readIcssCarrier } from '../../../runtime/foundation/compiler-bridge.js';
 	import { useZRadioGroup } from './context.svelte.js';
 
@@ -158,6 +172,7 @@
 		disabled = false,
 		id,
 		onchange,
+		onclick,
 		onfocus,
 		onkeydown,
 		ref = $bindable(null),
@@ -173,11 +188,14 @@
 	const group = useZRadioGroup();
 	const generatedId = $derived(createZuiId(zui.idPrefix, uid, 'radio-item'));
 	const resolvedDisabled = $derived(disabled || group.disabled);
+	const resolvedReadonly = $derived(group.readonly);
 	const selected = $derived(group.isSelected(value));
+	const serializedValue = $derived(serializeFormValue(value) ?? '');
 	const rootClass = $derived(
 		zui.recipe(radioItemRecipe, {
 			disabled: resolvedDisabled,
 			invalid: group.invalid,
+			readonly: resolvedReadonly,
 			size
 		})
 	);
@@ -188,14 +206,29 @@
 		group.register(() => ({
 			disabled: resolvedDisabled,
 			element: ref,
+			id: id ?? generatedId,
 			key: value,
-			textValue: textValue ?? value
+			selectionDisabled: false,
+			textValue: textValue ?? String(value)
 		}))
 	);
 
 	function handleChange(event: Event & { currentTarget: HTMLInputElement }): void {
+		if (resolvedReadonly) {
+			group.restoreNativeSelection();
+			return;
+		}
 		if (event.currentTarget.checked) group.select(value);
 		onchange?.(event);
+	}
+
+	function handleClick(event: MouseEvent & { currentTarget: HTMLInputElement }): void {
+		if (resolvedReadonly) {
+			event.preventDefault();
+			group.restoreNativeSelection();
+			return;
+		}
+		onclick?.(event);
 	}
 
 	function handleFocus(event: FocusEvent & { currentTarget: HTMLInputElement }): void {
@@ -204,6 +237,10 @@
 	}
 
 	function handleKeydown(event: KeyboardEvent & { currentTarget: HTMLInputElement }): void {
+		if (resolvedReadonly) {
+			group.handleKey(event);
+			return;
+		}
 		onkeydown?.(event);
 		if (!event.defaultPrevented) group.handleKey(event);
 	}
@@ -219,16 +256,18 @@
 	type="radio"
 	form={group.form}
 	name={group.name}
-	{value}
-	defaultChecked={group.defaultValue === value}
+	value={serializedValue}
+	defaultChecked={Object.is(group.defaultValue, value)}
 	checked={selected}
 	disabled={resolvedDisabled}
 	required={group.required}
 	tabindex={resolvedDisabled ? -1 : group.tabIndex(value)}
 	onchange={handleChange}
+	onclick={handleClick}
 	onfocus={handleFocus}
 	onkeydown={handleKeydown}
 	aria-checked={selected}
 	data-disabled={resolvedDisabled || undefined}
+	data-readonly={resolvedReadonly || undefined}
 	data-state={selected ? 'checked' : 'unchecked'}
 />

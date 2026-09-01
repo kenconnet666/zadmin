@@ -16,6 +16,7 @@ export interface ZAccordionContext {
 	readonly collection: CollectionStore<AccordionCollectionItem>;
 	readonly disabled: boolean;
 	readonly exitDuration: number;
+	readonly reducedMotion: boolean;
 	contentId(value: string): string;
 	focus(value: string): void;
 	handleKey(event: KeyboardEvent): void;

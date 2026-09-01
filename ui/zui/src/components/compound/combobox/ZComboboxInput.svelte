@@ -25,7 +25,7 @@
 		importStatement: "import { ZComboboxInput } from '@zadmin/zui';",
 		name: 'ZComboboxInput',
 		bindings: [{ description: '真实input引用。', name: 'ref', type: 'HTMLInputElement | null' }],
-		dependencies: ['ZCombobox', 'ZInput', 'active-descendant'],
+		dependencies: ['ZCombobox', 'ZInput', 'LogicalCollection', 'ActiveDescendant'],
 		events: [
 			{
 				description: '原生input回调。',
@@ -57,6 +57,7 @@
 </script>
 
 <script lang="ts">
+	import { isKeyboardComposing } from '../../../runtime/collection/collection-navigation.svelte.js';
 	import { mergeAriaIds } from '../../../runtime/form/form-control.svelte.js';
 	import { useZFieldControlOwner } from '../../../runtime/form/field-context.js';
 	import ZInput from '../../input/ZInput.svelte';
@@ -95,7 +96,7 @@
 
 	function handleFocus(event: FocusEvent & { currentTarget: HTMLInputElement }): void {
 		onfocus?.(event);
-		if (!event.defaultPrevented) combo.setOpen(true);
+		if (!event.defaultPrevented && combo.openOnFocus) combo.setOpen(true, 'selected');
 	}
 
 	function handleClick(event: MouseEvent & { currentTarget: HTMLInputElement }): void {
@@ -105,19 +106,34 @@
 
 	function handleKeydown(event: KeyboardEvent & { currentTarget: HTMLInputElement }): void {
 		onkeydown?.(event);
-		if (event.defaultPrevented) return;
-		if (
-			event.key === 'ArrowDown' ||
-			event.key === 'ArrowUp' ||
-			event.key === 'Home' ||
-			event.key === 'End'
-		) {
-			event.preventDefault();
-			combo.setOpen(true);
-			combo.move(event.key);
-		} else if (event.key === 'Enter' && combo.open && combo.activeKey !== undefined) {
-			event.preventDefault();
-			combo.choose(combo.activeKey, event);
+		if (event.defaultPrevented || combo.readonly || isKeyboardComposing(event)) return;
+		switch (event.key) {
+			case 'ArrowDown':
+			case 'ArrowUp':
+				event.preventDefault();
+				if (!combo.open) {
+					combo.setOpen(true, event.key === 'ArrowUp' ? 'last' : 'first');
+				} else {
+					combo.handleKey(event);
+				}
+				return;
+			case 'Home':
+			case 'End':
+				if (combo.open) combo.handleKey(event);
+				return;
+			case 'Enter':
+				if (!combo.open || combo.activeKey === undefined) return;
+				event.preventDefault();
+				combo.choose(combo.activeKey, event);
+				return;
+			case 'Escape':
+				if (combo.open) {
+					event.preventDefault();
+					combo.setOpen(false);
+				}
+				return;
+			default:
+				return;
 		}
 	}
 </script>
@@ -126,6 +142,7 @@
 	{...rest}
 	aria-activedescendant={combo.open ? combo.activeId : undefined}
 	aria-autocomplete="list"
+	aria-busy={combo.loading || undefined}
 	aria-controls={popover.contentId}
 	aria-describedby={mergeAriaIds(ariaDescribedBy, combo.describedBy)}
 	aria-expanded={combo.open}
@@ -140,6 +157,7 @@
 	id={id ?? combo.controlId}
 	invalid={combo.invalid}
 	name={undefined}
+	readonly={combo.readonly}
 	role="combobox"
 	resetOnForm={false}
 	value={combo.inputValue}

@@ -80,7 +80,12 @@
 		source: 'ui/zui/src/components/compound/accordion/ZAccordionContent.svelte',
 		states: [
 			{ description: '展开或退出动画状态。', name: 'data-state', values: ['open', 'closed'] },
-			{ description: 'Presence生命周期。', name: 'data-presence', values: ['entered', 'exiting'] }
+			{ description: 'Presence生命周期。', name: 'data-presence', values: ['entered', 'exiting'] },
+			{
+				description: 'Accordion根已解析为减少动画。',
+				name: 'data-reduced-motion',
+				values: ['true']
+			}
 		],
 		status: 'experimental',
 		summary: '在退出动画期间保留DOM并在结束后清理的Accordion region。'
@@ -115,11 +120,19 @@
 	const presence = createPresence(initiallyOpen);
 	const mounted = $derived(presence.mounted);
 	const presenceState = $derived(presence.state);
-	const classes = $derived(zui.slots(accordionContentRecipe, { motion: zui.motion, open }));
+	const classes = $derived(
+		zui.slots(accordionContentRecipe, {
+			motion: accordion.reducedMotion ? 'reduced' : 'full',
+			open
+		})
+	);
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 
-	$effect(() => presence.update(open, accordion.exitDuration));
+	$effect(() => {
+		presence.update(open, accordion.exitDuration);
+		if (!open && accordion.reducedMotion) presence.finishExit();
+	});
 	onDestroy(() => presence.destroy());
 </script>
 
@@ -136,6 +149,7 @@
 		aria-labelledby={accordion.triggerId(item.value)}
 		data-presence={presenceState}
 		data-state={open ? 'open' : 'closed'}
+		data-reduced-motion={accordion.reducedMotion || undefined}
 		ontransitionend={(event) => {
 			if (event.target === event.currentTarget) presence.finishExit();
 		}}

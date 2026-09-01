@@ -76,6 +76,7 @@
 		source: 'ui/zui/src/components/compound/tooltip/ZTooltipContent.svelte',
 		states: [
 			{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] },
+			{ description: '解析后的减少动画状态。', name: 'data-reduced-motion', values: ['true'] },
 			{ description: 'Presence生命周期。', name: 'data-presence', values: ['entered', 'exiting'] }
 		],
 		status: 'experimental',
@@ -113,7 +114,10 @@
 	const mounted = $derived(presence.mounted);
 	const presenceState = $derived(presence.state);
 	const rootClass = $derived(
-		zui.recipe(tooltipContentRecipe, { motion: zui.motion, open: tooltip.open })
+		zui.recipe(tooltipContentRecipe, {
+			motion: tooltip.reducedMotion ? 'reduced' : 'full',
+			open: tooltip.open
+		})
 	);
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
@@ -181,6 +185,7 @@
 		role="tooltip"
 		aria-hidden={!tooltip.open}
 		data-presence={presenceState}
+		data-reduced-motion={tooltip.reducedMotion || undefined}
 		data-state={tooltip.open ? 'open' : 'closed'}
 		ontransitionend={(event) => {
 			if (event.target === event.currentTarget) presence.finishExit();

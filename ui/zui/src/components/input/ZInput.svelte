@@ -32,7 +32,7 @@
 			{ description: '受控或非受控文本值。', name: 'value', type: 'string' },
 			{ description: '真实input元素引用。', name: 'ref', type: 'HTMLInputElement | null' }
 		],
-		dependencies: [],
+		dependencies: ['ControllableState', 'FieldContext', 'ReducedMotionState', 'native form reset'],
 		events: [
 			{
 				description: '仅在用户输入改变值时调用一次；外部更新不触发。',
@@ -68,7 +68,7 @@
 				type: "'text' | 'email' | 'password' | 'search' | 'tel' | 'url'"
 			},
 			{
-				default: "Provider density（默认 'comfortable' → 'medium'）",
+				default: "Provider density（默认把 'comfortable' 映射为 'medium'）",
 				description: '输入框尺寸；显式值优先于Provider density。',
 				name: 'size',
 				type: "'small' | 'medium' | 'large'"
@@ -102,7 +102,15 @@
 		since: '0.1.0',
 		snippets: [],
 		source: 'ui/zui/src/components/input/ZInput.svelte',
-		states: [{ description: '输入值或Field上下文无效。', name: 'data-invalid', values: ['true'] }],
+		states: [
+			{ description: '输入值或Field上下文无效。', name: 'data-invalid', values: ['true'] },
+			{
+				description: '解析后的control尺寸。',
+				name: 'data-size',
+				values: ['small', 'medium', 'large']
+			},
+			{ description: '当前已解析为减少动画。', name: 'data-reduced-motion', values: ['true'] }
+		],
 		status: 'stable',
 		summary: '保留原生input能力，并提供受控/非受控值、binding和Field语义关联。'
 	} as const satisfies ZuiComponentMetadata;
@@ -162,7 +170,7 @@
 </script>
 
 <script lang="ts">
-	import { untrack } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { useZField } from '../../runtime/form/field-context.js';
@@ -177,6 +185,7 @@
 	} from '../../runtime/foundation/root-style.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
+	import { ReducedMotionState } from '../../runtime/foundation/motion.svelte.js';
 
 	let {
 		'aria-describedby': ariaDescribedBy,
@@ -203,15 +212,17 @@
 	}: ZInputProps = $props();
 
 	const zui = useZui();
+	const reducedMotion = new ReducedMotionState(() => zui.motion);
 	const uid = $props.id();
 	const field = useZField();
 	const inputGroup = useZInputGroup();
 	const resolvedInvalid = $derived(invalid ?? inputGroup?.invalid ?? field?.invalid ?? false);
-	const resolvedSize = $derived(resolveControlSize(size, zui.density));
+	const resolvedSize = $derived(resolveControlSize(size ?? field?.size, zui.density));
+	const reduced = $derived(reducedMotion.current);
 	const rootClass = $derived(
 		zui.recipe(inputRecipe, {
 			invalid: resolvedInvalid,
-			motion: zui.motion,
+			motion: reduced ? 'reduced' : 'full',
 			size: resolvedSize
 		})
 	);
@@ -226,6 +237,7 @@
 	const resolvedDescribedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
+	onMount(() => reducedMotion.connect(ref?.ownerDocument.defaultView));
 	function handleInput(event: Event & { currentTarget: HTMLInputElement }): void {
 		state.setFromUser(event.currentTarget.value);
 		oninput?.(event);
@@ -255,6 +267,8 @@
 	aria-describedby={resolvedDescribedBy}
 	aria-invalid={resolvedInvalid ? 'true' : ariaInvalid}
 	data-invalid={resolvedInvalid ? 'true' : undefined}
+	data-size={resolvedSize}
+	data-reduced-motion={reduced || undefined}
 />
 {#if resetOnForm || onFormReset}
 	<FormResetSignal association={form} control={ref} onReset={resetFromForm} />

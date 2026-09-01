@@ -16,7 +16,7 @@
 		bindings: [
 			{ description: '真实progressbar根引用。', name: 'ref', type: 'HTMLDivElement | null' }
 		],
-		dependencies: ['Web Animations API', 'reduced motion'],
+		dependencies: ['Web Animations API', 'owner realm reduced motion', 'Theme duration token'],
 		events: [],
 		keyboard: [],
 		parts: [{ description: '进度条。', name: 'indicator' }],
@@ -28,7 +28,12 @@
 				type: 'number'
 			},
 			{ default: 'false', description: '固定到视口顶部。', name: 'page', type: 'boolean' },
-			{ default: "'Loading'", description: '可访问名称。', name: 'label', type: 'string' }
+			{
+				default: 'localePack.feedback.loading',
+				description: '可访问名称；显式值优先于Provider locale。',
+				name: 'label',
+				type: 'string'
+			}
 		],
 		since: 'unreleased',
 		snippets: [],
@@ -89,9 +94,10 @@
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { ReducedMotionState } from '../../runtime/foundation/motion.svelte.js';
+	import { durationMilliseconds } from '../../runtime/foundation/presence.svelte.js';
 	let {
 		class: className,
-		label = 'Loading',
+		label,
 		page = false,
 		ref = $bindable(null),
 		style,
@@ -107,17 +113,24 @@
 		return Math.min(100, Math.max(0, value));
 	});
 	const reduced = $derived(reducedMotion.current);
+	const resolvedLabel = $derived(label ?? zui.localePack.feedback.loading);
 	const rootClass = $derived(zui.recipe(recipe, { page }));
 	const indicatorClass = $derived(zui.recipe(indicatorRecipe));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
-	onMount(() => reducedMotion.connect());
+	onMount(() => reducedMotion.connect(ref?.ownerDocument.defaultView));
 	$effect(() => {
-		if (!indicator || normalized !== undefined || reduced) return;
+		if (
+			!indicator ||
+			normalized !== undefined ||
+			reduced ||
+			typeof indicator.animate !== 'function'
+		)
+			return;
 		const from = zui.direction === 'rtl' ? 'translateX(100%)' : 'translateX(-100%)';
 		const to = zui.direction === 'rtl' ? 'translateX(-400%)' : 'translateX(400%)';
 		const animation = indicator.animate([{ transform: from }, { transform: to }], {
-			duration: 1200,
+			duration: durationMilliseconds(zui.theme.duration.loadingBarIndeterminate),
 			easing: 'ease-in-out',
 			iterations: Infinity
 		});
@@ -132,11 +145,11 @@
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
 	role="progressbar"
-	aria-label={label}
+	aria-label={resolvedLabel}
 	aria-valuemin="0"
 	aria-valuemax="100"
 	aria-valuenow={normalized}
-	aria-valuetext={normalized === undefined ? label : undefined}
+	aria-valuetext={normalized === undefined ? resolvedLabel : undefined}
 	data-indeterminate={normalized === undefined || undefined}
 	data-reduced-motion={reduced || undefined}
 >

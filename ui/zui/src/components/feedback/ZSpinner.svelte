@@ -14,12 +14,22 @@
 		importStatement: "import { ZSpinner } from '@zadmin/zui';",
 		name: 'ZSpinner',
 		bindings: [{ description: '真实status根引用。', name: 'ref', type: 'HTMLSpanElement | null' }],
-		dependencies: ['@lucide/svelte', 'Web Animations API', 'reduced motion'],
+		dependencies: [
+			'@lucide/svelte',
+			'Web Animations API',
+			'owner realm reduced motion',
+			'Theme duration token'
+		],
 		events: [],
 		keyboard: [],
 		parts: [{ description: '旋转弧。', name: 'indicator' }],
 		props: [
-			{ default: "'Loading'", description: '可访问加载名称。', name: 'label', type: 'string' },
+			{
+				default: 'localePack.feedback.loading',
+				description: '可访问加载名称；显式值优先于Provider locale。',
+				name: 'label',
+				type: 'string'
+			},
 			{
 				default: "'medium'",
 				description: '视觉尺寸。',
@@ -72,9 +82,10 @@
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { ReducedMotionState } from '../../runtime/foundation/motion.svelte.js';
+	import { durationMilliseconds } from '../../runtime/foundation/presence.svelte.js';
 	let {
 		class: className,
-		label = 'Loading',
+		label,
 		ref = $bindable(null),
 		size = 'medium',
 		style,
@@ -84,6 +95,7 @@
 	const reducedMotion = new ReducedMotionState(() => zui.motion);
 	let indicator = $state<SVGSVGElement | null>(null);
 	const reduced = $derived(reducedMotion.current);
+	const resolvedLabel = $derived(label ?? zui.localePack.feedback.loading);
 	const rootClass = $derived(zui.recipe(recipe, { size }));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
@@ -93,12 +105,16 @@
 			if (indicator === node) indicator = null;
 		};
 	};
-	onMount(() => reducedMotion.connect());
+	onMount(() => reducedMotion.connect(ref?.ownerDocument.defaultView));
 	$effect(() => {
-		if (!indicator || reduced) return;
+		if (!indicator || reduced || typeof indicator.animate !== 'function') return;
 		const animation = indicator.animate(
 			[{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }],
-			{ duration: 800, easing: 'linear', iterations: Infinity }
+			{
+				duration: durationMilliseconds(zui.theme.duration.spinnerSpin),
+				easing: 'linear',
+				iterations: Infinity
+			}
 		);
 		return () => animation.cancel();
 	});
@@ -111,7 +127,7 @@
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
 	role="status"
-	aria-label={label}
+	aria-label={resolvedLabel}
 	data-reduced-motion={reduced || undefined}
 >
 	<LoaderCircle

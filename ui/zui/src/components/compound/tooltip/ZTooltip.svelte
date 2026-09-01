@@ -71,12 +71,14 @@
 </script>
 
 <script lang="ts">
-	import { onDestroy } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 
 	import { ControllableState } from '../../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../../runtime/foundation/ids.js';
+	import { ReducedMotionState } from '../../../runtime/foundation/motion.svelte.js';
 	import { durationMilliseconds } from '../../../runtime/foundation/presence.svelte.js';
 	import { useZui } from '../../../runtime/foundation/context.js';
+	import { resolvePortalTarget } from '../../../runtime/layer/portal.js';
 	import { provideZTooltip, type ZTooltipContext } from './context.svelte.js';
 
 	let {
@@ -98,16 +100,27 @@
 		read: () => open,
 		write: (next) => (open = next)
 	});
+	const reducedMotion = new ReducedMotionState(() => zui.motion);
+	let portalAnchor = $state<HTMLElement | null>(null);
 	let trigger = $state<HTMLButtonElement | null>(null);
-	let timer: ReturnType<typeof setTimeout> | undefined;
+	let timer: { readonly id: number; readonly view: Window } | undefined;
 	const clearTimer = () => {
-		if (timer !== undefined) clearTimeout(timer);
+		if (timer) timer.view.clearTimeout(timer.id);
 		timer = undefined;
 	};
 	const assertDelay = (value: number) => {
 		if (!Number.isFinite(value) || value < 0)
 			throw new TypeError('Tooltip delays must be non-negative.');
 		return value;
+	};
+	const schedule = (callback: () => void, timeout: number): void => {
+		const view = (trigger ?? portalAnchor)?.ownerDocument.defaultView;
+		if (!view) return;
+		const id = view.setTimeout(() => {
+			timer = undefined;
+			callback();
+		}, timeout);
+		timer = { id, view };
 	};
 	const context: ZTooltipContext = {
 		cancelClose() {
@@ -116,13 +129,13 @@
 		close(immediate = false) {
 			clearTimer();
 			if (immediate) openState.setFromUser(false);
-			else timer = setTimeout(() => openState.setFromUser(false), assertDelay(closeDelay));
+			else schedule(() => openState.setFromUser(false), assertDelay(closeDelay));
 		},
 		get contentId() {
 			return `${idBase}-content`;
 		},
 		get exitDuration() {
-			return zui.motion === 'reduced' ? 0 : durationMilliseconds(zui.theme.duration.fast);
+			return reducedMotion.current ? 0 : durationMilliseconds(zui.theme.duration.fast);
 		},
 		get gutter() {
 			return gutter;
@@ -132,13 +145,16 @@
 		},
 		openAfterDelay() {
 			clearTimer();
-			timer = setTimeout(() => openState.setFromUser(true), assertDelay(delay));
+			schedule(() => openState.setFromUser(true), assertDelay(delay));
 		},
 		get placement() {
 			return placement;
 		},
 		get portalTarget() {
-			return zui.portalContainer ?? (typeof document === 'undefined' ? null : document);
+			return resolvePortalTarget(trigger ?? portalAnchor, zui.portalContainer);
+		},
+		get reducedMotion() {
+			return reducedMotion.current;
 		},
 		setOpen(next) {
 			clearTimer();
@@ -152,7 +168,9 @@
 		}
 	};
 	provideZTooltip(context);
+	onMount(() => reducedMotion.connect(portalAnchor?.ownerDocument.defaultView));
 	onDestroy(clearTimer);
 </script>
 
+<span bind:this={portalAnchor} hidden aria-hidden="true" data-zui-portal-anchor></span>
 {@render children?.()}

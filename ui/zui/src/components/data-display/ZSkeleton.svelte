@@ -16,7 +16,7 @@
 		importStatement: "import { ZSkeleton } from '@zadmin/zui';",
 		name: 'ZSkeleton',
 		bindings: [{ description: '真实装饰span引用。', name: 'ref', type: 'HTMLSpanElement | null' }],
-		dependencies: ['Web Animations API', 'reduced motion'],
+		dependencies: ['Web Animations API', 'owner realm reduced motion', 'Theme duration token'],
 		events: [],
 		keyboard: [],
 		parts: [],
@@ -77,6 +77,7 @@
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { ReducedMotionState } from '../../runtime/foundation/motion.svelte.js';
+	import { durationMilliseconds } from '../../runtime/foundation/presence.svelte.js';
 	let {
 		class: className,
 		height,
@@ -125,11 +126,11 @@
 		'--zui-skeleton-width': resolvedWidth
 	} as const);
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
-	onMount(() => reducedMotion.connect());
+	onMount(() => reducedMotion.connect(ref?.ownerDocument.defaultView));
 	$effect(() => {
-		if (!ref || reduced) return;
+		if (!ref || reduced || typeof ref.animate !== 'function') return;
 		const animation = ref.animate([{ opacity: 0.45 }, { opacity: 1 }, { opacity: 0.45 }], {
-			duration: 1400,
+			duration: durationMilliseconds(zui.theme.duration.skeletonPulse),
 			easing: 'ease-in-out',
 			iterations: Infinity
 		});

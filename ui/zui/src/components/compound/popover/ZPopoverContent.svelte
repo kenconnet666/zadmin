@@ -120,6 +120,7 @@
 		states: [
 			{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] },
 			{ description: 'modal dialog语义。', name: 'aria-modal', values: ['true'] },
+			{ description: '解析后的减少动画状态。', name: 'data-reduced-motion', values: ['true'] },
 			{ description: 'Presence生命周期。', name: 'data-presence', values: ['entered', 'exiting'] }
 		],
 		status: 'experimental',
@@ -165,7 +166,10 @@
 	const mounted = $derived(presence.mounted);
 	const presenceState = $derived(presence.state);
 	const rootClass = $derived(
-		zui.recipe(popoverContentRecipe, { motion: zui.motion, open: popover.open })
+		zui.recipe(popoverContentRecipe, {
+			motion: popover.reducedMotion ? 'reduced' : 'full',
+			open: popover.open
+		})
 	);
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
@@ -226,6 +230,7 @@
 		aria-labelledby={ariaLabelledBy === null ? undefined : (ariaLabelledBy ?? popover.triggerId)}
 		aria-describedby={ariaDescribedBy}
 		data-presence={presenceState}
+		data-reduced-motion={popover.reducedMotion || undefined}
 		data-state={popover.open ? 'open' : 'closed'}
 		ontransitionend={(event) => {
 			if (event.target === event.currentTarget) presence.finishExit();

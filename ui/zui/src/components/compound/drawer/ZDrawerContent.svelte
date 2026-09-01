@@ -17,6 +17,7 @@
 			s.borderColor._border;
 			s.borderStyle.solid;
 			s.borderWidth._hairline;
+			s.boxSizing.borderBox;
 			s.boxShadow._medium;
 			s.color._text;
 			s.overflow.auto;
@@ -195,6 +196,21 @@
 		source: 'ui/zui/src/components/compound/drawer/ZDrawerContent.svelte',
 		states: [
 			{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] },
+			{
+				description: '进入与退出的可视动画阶段。',
+				name: 'data-motion-state',
+				values: ['entering', 'entered', 'exiting']
+			},
+			{
+				description: '解析后的逻辑位置。',
+				name: 'data-placement',
+				values: ['top', 'bottom', 'start', 'end']
+			},
+			{
+				description: '解析后的尺寸预设；number和CSS值统一为custom。',
+				name: 'data-size',
+				values: ['small', 'medium', 'large', 'full', 'custom']
+			},
 			{ description: '解析后的减少动画状态。', name: 'data-reduced-motion', values: ['true'] }
 		],
 		status: 'experimental',
@@ -203,10 +219,12 @@
 </script>
 
 <script lang="ts">
+	import { onDestroy, untrack } from 'svelte';
 	import { useZui } from '../../../runtime/foundation/context.js';
 	import { mergeStyles } from '../../../runtime/foundation/root-style.js';
 	import ZDialogContent from '../dialog/ZDialogContent.svelte';
 	import { useZDialog } from '../dialog/context.svelte.js';
+	import { DrawerEntryMotion } from './entry-motion.svelte.js';
 
 	function isPresetSize(size: DrawerSize): size is DrawerPresetSize {
 		switch (size) {
@@ -230,6 +248,9 @@
 		}
 		const value = size.trim();
 		if (!value) throw new TypeError('Drawer size must not be empty.');
+		if (/[;{}]/u.test(value)) {
+			throw new TypeError('Drawer size must be a single CSS value, not a declaration list.');
+		}
 		return value;
 	}
 
@@ -243,6 +264,7 @@
 	}: ZDrawerContentProps = $props();
 	const zui = useZui();
 	const dialog = useZDialog();
+	const entryMotion = new DrawerEntryMotion(untrack(() => dialog.open));
 	const presetSize = $derived(isPresetSize(size) ? size : 'custom');
 	const customSize = $derived(customSizeValue(size));
 	const sizeStyle = $derived(
@@ -251,15 +273,20 @@
 			: `${placement === 'top' || placement === 'bottom' ? 'height' : 'width'}:${customSize}`
 	);
 	const contentStyle = $derived(mergeStyles(style, sizeStyle));
+	const motionState = $derived(
+		dialog.open ? (entryMotion.entered ? 'entered' : 'entering') : 'exiting'
+	);
 	const rootClass = $derived(
 		zui.recipe(drawerContentRecipe, {
 			direction: zui.direction,
 			motion: dialog.reducedMotion ? 'reduced' : 'full',
-			open: dialog.open,
+			open: entryMotion.entered,
 			placement,
 			size: presetSize
 		})
 	);
+	$effect(() => entryMotion.update(dialog.open, dialog.reducedMotion, ref));
+	onDestroy(() => entryMotion.destroy());
 </script>
 
 <ZDialogContent
@@ -267,6 +294,9 @@
 	appearance="unstyled"
 	bind:ref
 	class={[rootClass, className]}
+	data-motion-state={motionState}
+	data-placement={placement}
+	data-size={presetSize}
 	dir={zui.direction}
 	role="dialog"
 	style={contentStyle}

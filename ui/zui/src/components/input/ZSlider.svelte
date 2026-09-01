@@ -21,6 +21,10 @@
 			});
 		},
 		variants: {
+			readonly: {
+				false: () => undefined,
+				true: (s) => s.cursor.default
+			},
 			disabled: {
 				false: () => undefined,
 				true: (s) => {
@@ -38,15 +42,19 @@
 				small: (s) => s.blockSize._small
 			}
 		},
-		defaultVariants: { disabled: false, invalid: false, size: 'medium' }
+		defaultVariants: { disabled: false, invalid: false, readonly: false, size: 'medium' }
 	});
 
 	registerRecipeHmr(import.meta, sliderRecipe);
 
-	export type ZSliderVariants = Omit<RecipeVariants<typeof sliderRecipe>, 'disabled' | 'invalid'>;
+	export type ZSliderVariants = Omit<
+		RecipeVariants<typeof sliderRecipe>,
+		'disabled' | 'invalid' | 'readonly'
+	>;
 
 	export type ZSliderProps = Omit<
 		HTMLInputAttributes,
+		| 'aria-readonly'
 		| 'defaultValue'
 		| 'disabled'
 		| 'dir'
@@ -54,6 +62,9 @@
 		| 'min'
 		| 'onchange'
 		| 'oninput'
+		| 'onkeydown'
+		| 'onpointerdown'
+		| 'readonly'
 		| 'size'
 		| 'step'
 		| 'type'
@@ -68,7 +79,10 @@
 			readonly min?: number;
 			readonly onchange?: HTMLInputAttributes['onchange'];
 			readonly oninput?: HTMLInputAttributes['oninput'];
+			readonly onkeydown?: HTMLInputAttributes['onkeydown'];
+			readonly onpointerdown?: HTMLInputAttributes['onpointerdown'];
 			readonly onValueChange?: (value: number) => void;
+			readonly readonly?: boolean;
 			ref?: HTMLInputElement | null;
 			readonly step?: number;
 			value?: number;
@@ -86,7 +100,7 @@
 		dependencies: ['ControllableState', 'form-control', 'slider model'],
 		events: [
 			{
-				description: '用户拖动或键盘步进后调用一次。',
+				description: '可编辑状态下，用户拖动或键盘步进后调用一次。',
 				name: 'onValueChange',
 				type: '(value: number) => void'
 			},
@@ -125,8 +139,8 @@
 			{ default: '100', description: '最大值。', name: 'max', type: 'number' },
 			{ default: '1', description: '正数步长。', name: 'step', type: 'number' },
 			{
-				default: "'medium'",
-				description: '控件高度。',
+				default: 'Field size，其次为 Provider density',
+				description: '显式值优先，其次继承Field，最后由Provider density解析控件高度。',
 				name: 'size',
 				type: "'small' | 'medium' | 'large'"
 			},
@@ -137,6 +151,12 @@
 				type: '(value: number) => string'
 			},
 			{ default: 'false', description: '禁用原生控件。', name: 'disabled', type: 'boolean' },
+			{
+				default: '自身或Field/Form任一readonly',
+				description: '保持可聚焦和FormData，阻止pointer与键盘改值并设置aria-readonly。',
+				name: 'readonly',
+				type: 'boolean'
+			},
 			{
 				default: 'false',
 				description: '设置无效状态并继承Field合同。',
@@ -156,7 +176,13 @@
 		source: 'ui/zui/src/components/input/ZSlider.svelte',
 		states: [
 			{ description: '当前数值。', name: 'data-value', values: ['finite number'] },
-			{ description: '无效状态。', name: 'data-invalid', values: ['true'] }
+			{ description: '无效状态。', name: 'data-invalid', values: ['true'] },
+			{ description: '只读状态。', name: 'data-readonly', values: ['true'] },
+			{
+				description: '解析后的control尺寸。',
+				name: 'data-size',
+				values: ['small', 'medium', 'large']
+			}
 		],
 		status: 'experimental',
 		summary: '使用原生range提供pointer、键盘、触摸、RTL和FormData合同的单值Slider。'
@@ -170,6 +196,7 @@
 	import { useZField } from '../../runtime/form/field-context.js';
 	import { formReset, mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
+	import { resolveControlSize } from '../../runtime/foundation/control-size.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -193,10 +220,13 @@
 		name,
 		onchange,
 		oninput,
+		onkeydown,
+		onpointerdown,
 		onValueChange,
+		readonly,
 		ref = $bindable(null),
 		required = false,
-		size = 'medium',
+		size,
 		step = 1,
 		style,
 		value = $bindable(),
@@ -207,8 +237,15 @@
 	const field = useZField();
 	const resolvedDisabled = $derived(disabled || field?.disabled || false);
 	const resolvedInvalid = $derived(invalid ?? field?.invalid ?? false);
+	const resolvedReadonly = $derived(readonly || field?.readonly || false);
+	const resolvedSize = $derived(resolveControlSize(size ?? field?.size, zui.density));
 	const rootClass = $derived(
-		zui.recipe(sliderRecipe, { disabled: resolvedDisabled, invalid: resolvedInvalid, size })
+		zui.recipe(sliderRecipe, {
+			disabled: resolvedDisabled,
+			invalid: resolvedInvalid,
+			readonly: resolvedReadonly,
+			size: resolvedSize
+		})
 	);
 	const valueState = new ControllableState<number>({
 		defaultValue: () => normalizeSliderValue(defaultValue, min, max, step),
@@ -223,8 +260,49 @@
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 
 	function handleInput(event: Event & { currentTarget: HTMLInputElement }): void {
+		if (resolvedReadonly) {
+			event.currentTarget.value = String(resolvedValue);
+			return;
+		}
 		valueState.setFromUser(normalizeSliderValue(event.currentTarget.valueAsNumber, min, max, step));
 		oninput?.(event);
+	}
+
+	function handleChange(event: Event & { currentTarget: HTMLInputElement }): void {
+		if (resolvedReadonly) {
+			event.currentTarget.value = String(resolvedValue);
+			return;
+		}
+		onchange?.(event);
+	}
+
+	function handleKeydown(event: KeyboardEvent & { currentTarget: HTMLInputElement }): void {
+		if (resolvedReadonly) {
+			switch (event.key) {
+				case 'ArrowDown':
+				case 'ArrowLeft':
+				case 'ArrowRight':
+				case 'ArrowUp':
+				case 'End':
+				case 'Home':
+				case 'PageDown':
+				case 'PageUp':
+					event.preventDefault();
+					return;
+				default:
+					break;
+			}
+		}
+		onkeydown?.(event);
+	}
+
+	function handlePointerdown(event: PointerEvent & { currentTarget: HTMLInputElement }): void {
+		if (resolvedReadonly) {
+			event.currentTarget.focus({ preventScroll: true });
+			event.preventDefault();
+			return;
+		}
+		onpointerdown?.(event);
 	}
 </script>
 
@@ -247,10 +325,15 @@
 	disabled={resolvedDisabled}
 	required={required || field?.required}
 	oninput={handleInput}
-	{onchange}
+	onchange={handleChange}
+	onkeydown={handleKeydown}
+	onpointerdown={handlePointerdown}
 	aria-valuetext={formatValue?.(resolvedValue)}
 	aria-describedby={resolvedDescribedBy}
 	aria-invalid={resolvedInvalid ? 'true' : ariaInvalid}
+	aria-readonly={resolvedReadonly || undefined}
 	data-invalid={resolvedInvalid ? 'true' : undefined}
+	data-readonly={resolvedReadonly || undefined}
+	data-size={resolvedSize}
 	data-value={resolvedValue}
 />

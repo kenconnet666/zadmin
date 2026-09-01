@@ -305,7 +305,7 @@
 				type: 'string'
 			},
 			{
-				default: "Provider density（默认 'comfortable' → 'medium'）",
+				default: "Provider density（默认把 'comfortable' 映射为 'medium'）",
 				description: '显式尺寸优先，否则响应最近Provider的density。',
 				name: 'size',
 				type: "'small' | 'medium' | 'large'"
@@ -365,6 +365,11 @@
 			{ description: '只读状态。', name: 'data-readonly', values: ['true'] },
 			{ description: '异步busy状态。', name: 'data-loading', values: ['true'] },
 			{ description: '无效状态。', name: 'data-invalid', values: ['true'] },
+			{
+				description: '解析后的control尺寸。',
+				name: 'data-size',
+				values: ['small', 'medium', 'large']
+			},
 			{ description: '系统或Provider减少动画。', name: 'data-reduced-motion', values: ['true'] }
 		],
 		status: 'experimental',
@@ -426,7 +431,7 @@
 	const resolvedInvalid = $derived(invalid ?? field?.invalid ?? false);
 	const resolvedReadonly = $derived(readonly || field?.readonly || false);
 	const resolvedRequired = $derived(required || field?.required || false);
-	const resolvedSize = $derived(resolveControlSize(size, zui.density));
+	const resolvedSize = $derived(resolveControlSize(size ?? field?.size, zui.density));
 	const state = new ControllableState<boolean>({
 		defaultValue: () => defaultChecked,
 		onChange: () => onCheckedChange,
@@ -454,7 +459,7 @@
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 
-	onMount(() => reducedMotion.connect());
+	onMount(() => reducedMotion.connect(ref?.ownerDocument.defaultView));
 
 	function handleClick(event: MouseEvent & { currentTarget: HTMLInputElement }): void {
 		if (loading || resolvedReadonly) {
@@ -483,6 +488,7 @@
 	data-loading={loading || undefined}
 	data-readonly={resolvedReadonly || undefined}
 	data-reduced-motion={reduced || undefined}
+	data-size={resolvedSize}
 	data-slot="root"
 	data-state={resolvedChecked ? 'checked' : 'unchecked'}
 >
@@ -522,7 +528,7 @@
 					{@render loadingIndicator()}
 				{:else}
 					<span class={classes.spinner} data-slot="spinner">
-						<ZSpinner label="Loading" size="small" />
+						<ZSpinner size="small" />
 					</span>
 				{/if}
 			</span>

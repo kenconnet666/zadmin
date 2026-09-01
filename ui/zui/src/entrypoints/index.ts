@@ -1,6 +1,7 @@
 export const ZUI_PACKAGE_NAME = '@zadmin/zui';
 
 export type { Selection, SelectionKey, SelectionMode } from '../runtime/collection/selection.js';
+export type { ZCollectionOption } from '../components/compound/choice-option.js';
 
 export { default as ZAccordion } from '../components/compound/accordion/ZAccordion.svelte';
 export type {
@@ -21,7 +22,10 @@ export type { ZContextMenuContentProps } from '../components/compound/context-me
 export { default as ZContextMenuTrigger } from '../components/compound/context-menu/ZContextMenuTrigger.svelte';
 export type { ZContextMenuTriggerProps } from '../components/compound/context-menu/ZContextMenuTrigger.svelte';
 export { default as ZCombobox } from '../components/compound/combobox/ZCombobox.svelte';
-export type { ZComboboxProps } from '../components/compound/combobox/ZCombobox.svelte';
+export type {
+	ZComboboxOption,
+	ZComboboxProps
+} from '../components/compound/combobox/ZCombobox.svelte';
 export { default as ZComboboxContent } from '../components/compound/combobox/ZComboboxContent.svelte';
 export type { ZComboboxContentProps } from '../components/compound/combobox/ZComboboxContent.svelte';
 export { default as ZComboboxInput } from '../components/compound/combobox/ZComboboxInput.svelte';
@@ -96,7 +100,10 @@ export { default as ZMenuSeparator } from '../components/compound/menu/ZMenuSepa
 export type { ZMenuSeparatorProps } from '../components/compound/menu/ZMenuSeparator.svelte';
 export { MenuActionEvent } from '../components/compound/menu/context.svelte.js';
 export { default as ZMultiSelect } from '../components/compound/multi-select/ZMultiSelect.svelte';
-export type { ZMultiSelectProps } from '../components/compound/multi-select/ZMultiSelect.svelte';
+export type {
+	ZMultiSelectOption,
+	ZMultiSelectProps
+} from '../components/compound/multi-select/ZMultiSelect.svelte';
 export { default as ZMultiSelectContent } from '../components/compound/multi-select/ZMultiSelectContent.svelte';
 export type { ZMultiSelectContentProps } from '../components/compound/multi-select/ZMultiSelectContent.svelte';
 export { default as ZMultiSelectItem } from '../components/compound/multi-select/ZMultiSelectItem.svelte';
@@ -130,6 +137,7 @@ export type { ZPopoverTriggerProps } from '../components/compound/popover/ZPopov
 export { default as ZRadioGroup } from '../components/compound/radio-group/ZRadioGroup.svelte';
 export type {
 	RadioGroupOrientation,
+	ZRadioGroupOption,
 	ZRadioGroupProps
 } from '../components/compound/radio-group/ZRadioGroup.svelte';
 export { default as ZRadioGroupItem } from '../components/compound/radio-group/ZRadioGroupItem.svelte';
@@ -138,7 +146,7 @@ export type {
 	ZRadioGroupItemVariants
 } from '../components/compound/radio-group/ZRadioGroupItem.svelte';
 export { default as ZSelect } from '../components/compound/select/ZSelect.svelte';
-export type { ZSelectProps } from '../components/compound/select/ZSelect.svelte';
+export type { ZSelectOption, ZSelectProps } from '../components/compound/select/ZSelect.svelte';
 export { default as ZSelectContent } from '../components/compound/select/ZSelectContent.svelte';
 export type { ZSelectContentProps } from '../components/compound/select/ZSelectContent.svelte';
 export { default as ZSelectItem } from '../components/compound/select/ZSelectItem.svelte';
@@ -155,8 +163,15 @@ export type { ZTabsPanelProps } from '../components/compound/tabs/ZTabsPanel.sve
 export { default as ZTabsTrigger } from '../components/compound/tabs/ZTabsTrigger.svelte';
 export type { ZTabsTriggerProps } from '../components/compound/tabs/ZTabsTrigger.svelte';
 export { default as ZTree } from '../components/compound/tree/ZTree.svelte';
-export type { TreeSelectionMode, ZTreeProps } from '../components/compound/tree/ZTree.svelte';
-export type { TreeEntry, TreeIndex, TreeNode } from '../runtime/tree.js';
+export type {
+	TreeLoadContext,
+	TreeSelectionMode,
+	TreeSelectionStyle,
+	ZTreeController,
+	ZTreeProps
+} from '../components/compound/tree/ZTree.svelte';
+export { LogicalTree } from '../runtime/tree.js';
+export type { LogicalTreeView, TreeEntry, TreeIndex, TreeNode } from '../runtime/tree.js';
 export type { TabsActivationMode } from '../components/compound/tabs/context.svelte.js';
 export { default as ZTooltip } from '../components/compound/tooltip/ZTooltip.svelte';
 export type { ZTooltipProps } from '../components/compound/tooltip/ZTooltip.svelte';
@@ -165,7 +180,13 @@ export type { ZTooltipContentProps } from '../components/compound/tooltip/ZToolt
 export { default as ZTooltipTrigger } from '../components/compound/tooltip/ZTooltipTrigger.svelte';
 export type { ZTooltipTriggerProps } from '../components/compound/tooltip/ZTooltipTrigger.svelte';
 export { default as ZTour } from '../components/overlay/ZTour.svelte';
-export type { TourStep, ZTourProps } from '../components/overlay/ZTour.svelte';
+export type {
+	TourMissingTargetBehavior,
+	TourStep,
+	TourStepContent,
+	TourTargetRoot,
+	ZTourProps
+} from '../components/overlay/ZTour.svelte';
 export { default as ZBox } from '../components/gene/ZBox.svelte';
 export type { ZBoxProps } from '../components/gene/ZBox.svelte';
 export { default as ZButton } from '../components/gene/ZButton.svelte';
@@ -228,7 +249,14 @@ export type {
 export { default as ZTable } from '../components/data-display/ZTable.svelte';
 export type { TableDensity, ZTableProps } from '../components/data-display/ZTable.svelte';
 export { default as ZVirtualList } from '../components/data-display/ZVirtualList.svelte';
-export type { ZVirtualListProps } from '../components/data-display/ZVirtualList.svelte';
+export type {
+	VirtualListItemContext,
+	VirtualListItemRole,
+	VirtualListRole,
+	VirtualListScrollBehavior,
+	ZVirtualListController,
+	ZVirtualListProps
+} from '../components/data-display/ZVirtualList.svelte';
 export { default as ZDataTable } from '../components/data-display/ZDataTable.svelte';
 export type {
 	DataTableColumn,
@@ -242,6 +270,8 @@ export { compareDataValues, stableSortRows } from '../runtime/collection/data-ta
 export type { DataSortDescriptor, DataSortDirection } from '../runtime/collection/data-table.js';
 export { calculateVirtualRange, virtualScrollOffset } from '../runtime/collection/virtualizer.js';
 export type {
+	KeyedVirtualItem,
+	KeyedVirtualRange,
 	VirtualAlign,
 	VirtualItem,
 	VirtualRange,
@@ -281,11 +311,16 @@ export { default as ZForm } from '../components/input/ZForm.svelte';
 export type {
 	FormInvalidDetail,
 	FormSubmitDetail,
-	ZFormProps
+	FormValidationResult,
+	ZFormController,
+	ZFormProps,
+	ZFormValidationMessages
 } from '../components/input/ZForm.svelte';
 export { default as ZFormField } from '../components/input/ZFormField.svelte';
 export type { ZFormFieldProps } from '../components/input/ZFormField.svelte';
-export type { FormFieldState } from '../runtime/form/form-registry.svelte.js';
+export type { FormFieldState, FormFieldStatePatch } from '../runtime/form/form-registry.svelte.js';
+export { fieldPathToString } from '../runtime/form/field-path.js';
+export type { FieldPath, FieldPathInput } from '../runtime/form/field-path.js';
 export type { FormErrors } from '../runtime/form/validation.js';
 export { default as ZDateField } from '../components/input/ZDateField.svelte';
 export type { DateSegment, ZDateFieldProps } from '../components/input/ZDateField.svelte';
@@ -313,11 +348,23 @@ export type { ZInputGroupProps } from '../components/input/ZInputGroup.svelte';
 export { default as ZMention } from '../components/input/ZMention.svelte';
 export type { MentionItem, ZMentionProps } from '../components/input/ZMention.svelte';
 export { default as ZNumberField } from '../components/input/ZNumberField.svelte';
-export type { ZNumberFieldProps } from '../components/input/ZNumberField.svelte';
+export type {
+	ZNumberFieldFormatter,
+	ZNumberFieldFormatterContext,
+	ZNumberFieldParser,
+	ZNumberFieldParserContext,
+	ZNumberFieldParseResult,
+	ZNumberFieldProps,
+	ZNumberFieldSize
+} from '../components/input/ZNumberField.svelte';
 export { default as ZPinInput } from '../components/input/ZPinInput.svelte';
 export type { PinInputMode, ZPinInputProps } from '../components/input/ZPinInput.svelte';
 export { default as ZSegmented } from '../components/input/ZSegmented.svelte';
-export type { SegmentedItem, ZSegmentedProps } from '../components/input/ZSegmented.svelte';
+export type {
+	SegmentedItem,
+	ZSegmentedOption,
+	ZSegmentedProps
+} from '../components/input/ZSegmented.svelte';
 export { default as ZSlider } from '../components/input/ZSlider.svelte';
 export type { ZSliderProps, ZSliderVariants } from '../components/input/ZSlider.svelte';
 export { default as ZSwitch } from '../components/input/ZSwitch.svelte';
@@ -397,14 +444,20 @@ export type {
 export { enUSLocalePack, zhCNLocalePack } from '../runtime/foundation/locale.js';
 export type {
 	ZuiCollectionLocale,
+	ZuiCarouselLocale,
 	ZuiColorPickerLocale,
 	ZuiCommandLocale,
 	ZuiCommonLocale,
 	ZuiDateLocale,
+	ZuiFeedbackLocale,
 	ZuiFileUploadLocale,
+	ZuiFormLocale,
+	ZuiNumberFieldLocale,
 	ZuiPaginationLocale,
+	ZuiProgressLocale,
 	ZuiTagsInputLocale,
 	ZuiTimeLocale,
+	ZuiTourLocale,
 	ZuiTransferLocale
 } from '../runtime/foundation/locale.js';
 export {

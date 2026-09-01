@@ -1,30 +1,32 @@
 import { getContext, setContext } from 'svelte';
 
-import type {
-	CollectionItem,
-	CollectionStore
-} from '../../../runtime/collection/collection.svelte.js';
-import type { NavigationOrientation } from '../../../runtime/collection/list-navigation.js';
+import type { CompoundLogicalCollectionItem } from '../../../runtime/collection/compound-logical-collection.svelte.js';
+import type { SelectionKey } from '../../../runtime/collection/selection.js';
 
-export interface RadioGroupCollectionItem extends CollectionItem<string> {
-	readonly textValue: string;
+export interface RadioGroupLogicalItem extends CompoundLogicalCollectionItem<SelectionKey> {
+	readonly label?: string;
+}
+
+export interface RadioGroupCollectionItem extends RadioGroupLogicalItem {
+	readonly element: HTMLInputElement | null;
+	readonly id: string;
 }
 
 export interface ZRadioGroupContext {
-	readonly collection: CollectionStore<RadioGroupCollectionItem>;
-	readonly defaultValue?: string;
+	readonly defaultValue?: SelectionKey;
 	readonly disabled: boolean;
 	readonly form?: string;
 	readonly invalid: boolean;
 	readonly name?: string;
-	readonly orientation: NavigationOrientation;
+	readonly readonly: boolean;
 	readonly required: boolean;
-	focus(value: string): void;
-	handleKey(event: KeyboardEvent): void;
-	isSelected(value: string): boolean;
+	focus(value: SelectionKey): void;
+	handleKey(event: KeyboardEvent): boolean;
+	isSelected(value: SelectionKey): boolean;
 	register(read: () => RadioGroupCollectionItem): () => void;
-	select(value: string): void;
-	tabIndex(value: string): 0 | -1;
+	restoreNativeSelection(): void;
+	select(value: SelectionKey): boolean;
+	tabIndex(value: SelectionKey): 0 | -1;
 }
 
 const RADIO_GROUP_CONTEXT = Symbol('zui-radio-group-context');
