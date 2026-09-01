@@ -43,6 +43,7 @@ test('renders the component catalog and real demo source', async ({ page }) => {
 	}
 
 	await page.goto('/#/components/button');
+	await expect(page).toHaveTitle('ZButton · ZUI Components');
 	await expect(page.getByRole('heading', { level: 1 })).toHaveText('ZButton');
 	await expect(page.getByRole('link', { name: /查看组件源码/u })).toHaveAttribute(
 		'href',
@@ -321,7 +322,9 @@ test('keeps FileUpload validation, native FormData, removal and reset synchroniz
 		mimeType: 'application/json',
 		name: 'production.json'
 	});
-	await expect(uploadDemo.getByText('files = production.json · rejected = 0')).toBeVisible();
+	await expect(
+		uploadDemo.getByText(/queue = production\.json:queued · rejected = 0/u)
+	).toBeVisible();
 	await expect
 		.poll(() =>
 			uploadDemo
@@ -334,14 +337,16 @@ test('keeps FileUpload validation, native FormData, removal and reset synchroniz
 		mimeType: 'text/plain',
 		name: 'invalid.txt'
 	});
-	await expect(uploadDemo.getByText('files = production.json · rejected = 1')).toBeVisible();
+	await expect(
+		uploadDemo.getByText(/queue = production\.json:queued · rejected = 1/u)
+	).toBeVisible();
 	await uploadDemo.getByRole('button', { name: '移除 production.json', exact: true }).click();
-	await expect(uploadDemo.getByText('files = none · rejected = 1')).toBeVisible();
+	await expect(uploadDemo.getByText(/queue = none · rejected = 1/u)).toBeVisible();
 	await uploadDemo.getByRole('button', { name: '重置', exact: true }).click();
 	await expect
 		.poll(() => input.evaluate((element: HTMLInputElement) => element.files?.length))
 		.toBe(0);
-	await expect(uploadDemo.getByText('files = none · rejected = 0')).toBeVisible();
+	await expect(uploadDemo.getByText(/queue = none · rejected = 0/u)).toBeVisible();
 });
 
 test('keeps Form schema errors, async state, first-error focus, valid submit and reset synchronized', async ({
@@ -524,7 +529,7 @@ test('keeps DateRangePicker two-step normalized selection and dual form fields s
 	page
 }) => {
 	await page.goto('/#/components/date-range-picker');
-	const rangeDemo = demo(page, 'date-range-picker-normalize');
+	const rangeDemo = demo(page, 'date-range-picker-form');
 	const trigger = rangeDemo.locator('button[aria-haspopup="dialog"]');
 	await trigger.click();
 	const calendarDialog = page.getByRole('dialog', { name: '选择发布窗口', exact: true });
@@ -581,7 +586,7 @@ test('keeps data-display document semantics, image alternatives and Tag ownershi
 	);
 
 	await page.goto('/#/components/list');
-	await expect(demo(page, 'list-ordered').locator('ol > li')).toHaveCount(2);
+	await expect(demo(page, 'list-ordered-data').locator('ol > li')).toHaveCount(2);
 
 	await page.goto('/#/components/description-list');
 	const descriptionDemo = demo(page, 'description-list-basic');
@@ -605,6 +610,14 @@ test('keeps feedback live regions, progress values and Toast queue actions expli
 	await expect(alertDemo.getByRole('status')).toContainText('配置已保存');
 	await alertDemo.getByRole('button', { name: '关闭配置保存提示', exact: true }).click();
 	await expect(alertDemo.getByText('visible = false')).toBeVisible();
+	const dynamicAlertDemo = demo(page, 'alert-dynamic-insertion');
+	const politeTrigger = dynamicAlertDemo.getByRole('button', {
+		name: '插入普通状态',
+		exact: true
+	});
+	await politeTrigger.click();
+	await expect(politeTrigger).toBeFocused();
+	await expect(dynamicAlertDemo.getByRole('status')).toContainText('后台检查已完成');
 
 	await page.goto('/#/components/loading-bar');
 	const loadingDemo = demo(page, 'loading-bar-values');
@@ -615,16 +628,46 @@ test('keeps feedback live regions, progress values and Toast queue actions expli
 	await expect(
 		loadingDemo.getByRole('progressbar', { name: '正在连接构建服务', exact: true })
 	).not.toHaveAttribute('aria-valuenow');
+	const controllerDemo = demo(page, 'loading-bar-controller');
+	const controlledProgress = controllerDemo.getByRole('progressbar', {
+		name: '受控发布生命周期',
+		exact: true
+	});
+	await controllerDemo.getByRole('button', { name: 'start不确定任务', exact: true }).click();
+	await expect(controlledProgress).toBeVisible();
+	await expect(controlledProgress).not.toHaveAttribute('aria-valuenow');
+	await controllerDemo.getByRole('button', { name: 'update到48%', exact: true }).click();
+	await expect(controlledProgress).toHaveAttribute('aria-valuenow', '48');
+	await controllerDemo.getByRole('button', { name: 'error持久化', exact: true }).click();
+	await expect(controlledProgress).toHaveAttribute('data-state', 'error');
+	await controllerDemo.getByRole('button', { name: 'reset', exact: true }).click();
+	await expect(controlledProgress).toBeHidden();
+
+	await page.goto('/#/components/spinner');
+	const spinnerTones = demo(page, 'spinner-tones');
+	await expect(spinnerTones.locator('[role="status"][data-tone="primary"]')).toHaveCount(1);
+	await expect(spinnerTones.locator('[role="status"][data-tone="muted"]')).toHaveCount(1);
+	await expect(spinnerTones.locator('[role="status"][data-tone="inherit"]')).toHaveCount(1);
+
+	await page.goto('/#/components/result');
+	const result = demo(page, 'result-success').locator('section[aria-labelledby]');
+	await expect(
+		result.getByRole('heading', { level: 4, name: '发布完成', exact: true })
+	).toBeVisible();
+	await expect(result.locator('[data-slot="icon"]')).toHaveAttribute('aria-hidden', 'true');
+	await expect(result).not.toHaveAttribute('role', 'status');
 
 	await page.goto('/#/components/toast');
 	await demo(page, 'toast-queue').getByRole('button', { name: '发送通知', exact: true }).click();
-	const toast = page.locator('article[role="status"]').filter({ hasText: '发布制品已就绪' });
+	const toaster = page.locator('[data-slot="viewport"][aria-label="发布通知"]');
+	await expect(toaster.locator('[data-slot="polite-announcer"]')).toContainText('发布制品已就绪');
+	const toast = toaster.locator('article').filter({ hasText: '发布制品已就绪' });
 	await expect(toast).toBeVisible();
 	await toast.getByRole('button', { name: '关闭通知：发布制品已就绪', exact: true }).click();
 	await expect(toast).toHaveCount(0);
 });
 
-test('keeps progress, meter, empty, timeline and statistic native semantics explicit', async ({
+test('keeps progress, meter, skeleton, empty, timeline and statistic semantics explicit', async ({
 	page
 }) => {
 	await page.goto('/#/components/progress');
@@ -636,11 +679,25 @@ test('keeps progress, meter, empty, timeline and statistic native semantics expl
 	await expect(
 		progressDemo.getByRole('progressbar', { name: '正在分析依赖', exact: true })
 	).not.toHaveAttribute('aria-valuenow');
+	const progressTones = demo(page, 'progress-tones');
+	await expect(
+		progressTones.getByRole('progressbar', { name: '失败任务', exact: true })
+	).toHaveAttribute('data-tone', 'danger');
+	await expect(
+		progressTones.getByRole('progressbar', { name: '圆形成功任务', exact: true })
+	).toHaveAttribute('data-tone', 'success');
 
 	await page.goto('/#/components/meter');
 	await expect(
 		demo(page, 'meter-thresholds').getByRole('meter', { name: 'CPU容量', exact: true })
 	).toHaveAttribute('data-state', 'suboptimal');
+	await expect(
+		demo(page, 'meter-custom-range').getByRole('meter', { name: '存储容量', exact: true })
+	).toHaveAttribute('aria-valuetext', '88 GiB / 128 GiB，警戒');
+
+	await page.goto('/#/components/skeleton');
+	await expect(demo(page, 'skeleton-lines').locator('[data-slot="line"]')).toHaveCount(3);
+	await expect(demo(page, 'skeleton-motion').locator('[data-static="true"]')).toHaveCount(2);
 
 	await page.goto('/#/components/empty');
 	await expect(
@@ -658,12 +715,27 @@ test('keeps progress, meter, empty, timeline and statistic native semantics expl
 	});
 	await expect(timeline.getByRole('listitem')).toHaveCount(3);
 	await expect(timeline.locator('time[datetime="2026-08-30T09:10:00+08:00"]')).toHaveCount(1);
+	const pendingTimelineDemo = demo(page, 'timeline-pending-reverse');
+	const pendingTimeline = pendingTimelineDemo.getByRole('list', {
+		name: '带未完成尾项的计算时间线',
+		exact: true
+	});
+	await expect(pendingTimeline).toHaveAttribute('aria-busy', 'true');
+	await expect(pendingTimeline.locator('li').last()).toHaveAttribute('data-slot', 'pending');
+	await pendingTimelineDemo.getByRole('button', { name: '查看倒序', exact: true }).click();
+	await expect(pendingTimeline.locator('li').first()).toHaveAttribute('data-slot', 'pending');
+	await expect(demo(page, 'timeline-typed-keys').getByRole('listitem')).toHaveCount(2);
 
 	await page.goto('/#/components/statistic');
 	const statisticDemo = demo(page, 'statistic-format');
 	const requestStatistic = statisticDemo.locator('dl').filter({ hasText: '请求总数' });
 	await expect(requestStatistic.locator('data')).toHaveAttribute('value', '128430');
 	await expect(requestStatistic.locator('[data-trend="up"]')).toContainText('+12.4%');
+	const bigintStatistic = demo(page, 'statistic-formatter').locator('dl').filter({
+		hasText: '精确事件序号'
+	});
+	await expect(bigintStatistic.locator('data')).toHaveAttribute('value', '12345678901234567890');
+	await expect(bigintStatistic.locator('data')).toContainText('#12,345,678,901,234,567,890');
 });
 
 test('keeps native Table structure and VirtualList DOM bounded across large scroll offsets', async ({
@@ -844,26 +916,27 @@ test('keeps switch semantics, keyboard state, FormData and reset synchronized', 
 	const switchDemo = demo(page, 'switch-form');
 	const control = switchDemo.getByTestId('switch-alerts');
 	await expect(control).toHaveRole('switch');
-	await expect(control).toHaveAttribute('aria-checked', 'false');
+	await expect(control).toHaveAttribute('aria-checked', 'true');
 	await setDisplayPreference(page, '动画', '减少');
 	await setDisplayPreference(page, '方向', '从右到左');
 	await expect(control).toHaveCSS('transition-duration', '0s');
 	await expect
 		.poll(() => control.evaluate((element) => getComputedStyle(element, '::before').transform))
-		.toBe('matrix(1, 0, 0, 1, 18, 0)');
+		.toBe('matrix(1, 0, 0, 1, 0, 0)');
 	await control.press('Space');
-	await expect(control).toHaveAttribute('aria-checked', 'true');
+	await expect(control).toHaveAttribute('aria-checked', 'false');
 	await expect
 		.poll(() => control.evaluate((element) => getComputedStyle(element, '::before').transform))
-		.toBe('matrix(1, 0, 0, 1, 0, 0)');
-	await expect(switchDemo.getByText(/checked = true · 用户变更次数 = 1/u)).toBeVisible();
+		.toBe('matrix(1, 0, 0, 1, 18, 0)');
+	await expect(switchDemo.getByText(/checked = false · 用户变更次数 = 1/u)).toBeVisible();
+	await control.press('Space');
+	await expect(control).toHaveAttribute('aria-checked', 'true');
+	await expect(switchDemo.getByText(/checked = true · 用户变更次数 = 2/u)).toBeVisible();
 	await switchDemo.getByRole('button', { name: '读取FormData', exact: true }).click();
 	await expect(switchDemo.getByText(/enabled/u)).toBeVisible();
 	await switchDemo.getByRole('button', { name: '重置', exact: true }).click();
-	await expect(control).toHaveAttribute('aria-checked', 'false');
-	await expect(
-		switchDemo.getByText(/checked = false · 用户变更次数 = 1 · 尚未提交/u)
-	).toBeVisible();
+	await expect(control).toHaveAttribute('aria-checked', 'true');
+	await expect(switchDemo.getByText(/checked = true · 用户变更次数 = 2 · 尚未提交/u)).toBeVisible();
 });
 
 test('keeps radio group roving focus, selection, RTL and FormData synchronized', async ({
@@ -1006,17 +1079,29 @@ test('anchors ContextMenu to pointer coordinates and supports the keyboard entry
 	const trigger = demo(page, 'context-menu-coordinate-anchor').getByTestId('context-menu-trigger');
 	const box = await trigger.boundingBox();
 	expect(box).not.toBeNull();
+	const clickX = (box?.x ?? 0) + 80;
+	const clickY = (box?.y ?? 0) + 20;
 	await trigger.dispatchEvent('contextmenu', {
 		bubbles: true,
 		button: 2,
-		clientX: (box?.x ?? 0) + 80,
-		clientY: (box?.y ?? 0) + 20
+		clientX: clickX,
+		clientY: clickY
 	});
+	const coordinateAnchor = trigger.locator('span[aria-hidden="true"]');
+	const [anchorX, anchorY] = await coordinateAnchor.evaluate((element) => [
+		Number.parseFloat((element as HTMLElement).style.left),
+		Number.parseFloat((element as HTMLElement).style.top)
+	]);
+	expect(anchorX).toBeCloseTo(clickX, 3);
+	expect(anchorY).toBeCloseTo(clickY, 3);
 	const menu = page.getByRole('menu', { name: '部署上下文菜单', exact: true });
 	await expect(menu).toBeVisible();
 	const menuBox = await menu.boundingBox();
-	expect(menuBox?.x).toBeCloseTo((box?.x ?? 0) + 80, 0);
-	expect(menuBox?.y).toBeCloseTo((box?.y ?? 0) + 22, 0);
+	expect(menuBox).not.toBeNull();
+	expect(menuBox!.x).toBeGreaterThanOrEqual(0);
+	expect(menuBox!.y).toBeGreaterThanOrEqual(0);
+	expect(menuBox!.x + menuBox!.width).toBeLessThanOrEqual(page.viewportSize()!.width + 1);
+	expect(menuBox!.y + menuBox!.height).toBeLessThanOrEqual(page.viewportSize()!.height + 1);
 	await page.keyboard.press('Escape');
 	await expect(trigger).toBeFocused();
 	await page.keyboard.press('Shift+F10');
@@ -1249,7 +1334,7 @@ test('keeps Accordion selection, roving focus and Presence synchronized', async 
 	await expect(accordionDemo.getByText('类型、浏览器、bundle与外部安装在CI中验收。')).toHaveCount(
 		0
 	);
-	await expect(accordionDemo.getByText(/value = none · 用户变更次数 = 2/u)).toBeVisible();
+	await expect(accordionDemo.getByText(/value = null · 用户变更次数 = 2/u)).toBeVisible();
 });
 
 test('keeps Tree hierarchy, visible keyboard navigation, selection and reset synchronized', async ({
@@ -1260,15 +1345,19 @@ test('keeps Tree hierarchy, visible keyboard navigation, selection and reset syn
 	const tree = treeDemo.getByRole('tree', { name: '项目结构', exact: true });
 	const docs = tree.getByRole('treeitem', { name: '文档站', exact: true });
 	await expect(docs).toHaveAttribute('aria-selected', 'true');
-	await docs.focus();
+	await tree.focus();
+	await expect(tree).toBeFocused();
+	await expect(tree).toHaveAttribute('aria-activedescendant', (await docs.getAttribute('id'))!);
 	await page.keyboard.press('ArrowDown');
 	const worker = tree.getByRole('treeitem', { name: '任务执行器', exact: true });
-	await expect(worker).toBeFocused();
+	await expect(tree).toHaveAttribute('aria-activedescendant', (await worker.getAttribute('id'))!);
+	await expect(tree).toBeFocused();
 	await page.keyboard.press('Enter');
 	await expect(worker).toHaveAttribute('aria-selected', 'true');
 	await expect(treeDemo.getByText(/selected = worker/u)).toBeVisible();
 	await page.keyboard.press('ArrowLeft');
-	await expect(tree.getByRole('treeitem', { name: '平台', exact: true })).toBeFocused();
+	const platform = tree.getByRole('treeitem', { name: '平台', exact: true });
+	await expect(tree).toHaveAttribute('aria-activedescendant', (await platform.getAttribute('id'))!);
 	await treeDemo.getByRole('button', { name: '重置', exact: true }).click();
 	await expect(docs).toHaveAttribute('aria-selected', 'true');
 });
@@ -1280,9 +1369,14 @@ test('keeps virtual Tree DOM bounded while keyboard focus reaches the global fin
 	const virtualTreeDemo = demo(page, 'tree-virtual');
 	const tree = virtualTreeDemo.getByRole('tree', { name: '五千节点树', exact: true });
 	await expect(tree.getByRole('treeitem')).toHaveCount(11);
-	await tree.getByRole('treeitem', { name: '节点 1', exact: true }).focus();
+	await tree.focus();
 	await page.keyboard.press('End');
-	await expect(tree.getByRole('treeitem', { name: '节点 5000', exact: true })).toBeFocused();
+	const finalNode = tree.getByRole('treeitem', { name: '节点 5000', exact: true });
+	await expect(tree).toHaveAttribute(
+		'aria-activedescendant',
+		(await finalNode.getAttribute('id'))!
+	);
+	await expect(tree).toBeFocused();
 	await expect(tree.getByRole('treeitem')).toHaveCount(11);
 	await page.keyboard.press('Enter');
 	await expect(virtualTreeDemo.getByText('selected = node-4999')).toBeVisible();
@@ -1602,9 +1696,34 @@ test('keeps S1 primitives semantic and display preferences effective', async ({ 
 	await expect(
 		separatorDemo.locator('[role="separator"][aria-orientation="vertical"]')
 	).toHaveCount(1);
+	await expect(
+		demo(page, 'separator-named').getByRole('separator', {
+			name: '构建与发布配置的边界',
+			exact: true
+		})
+	).toBeVisible();
 
 	await page.goto('/#/components/visually-hidden');
 	await expect(page.getByRole('button', { name: '搜索文档', exact: true })).toBeVisible();
+	const hiddenLiveDemo = demo(page, 'visually-hidden-live-region');
+	await hiddenLiveDemo.getByRole('button', { name: '增加任务', exact: true }).click();
+	await expect(hiddenLiveDemo.getByRole('status')).toHaveText('当前有1个待处理任务');
+
+	await page.goto('/#/components/kbd');
+	await expect(demo(page, 'kbd-nested').locator('kbd > kbd')).toHaveCount(3);
+
+	await page.goto('/#/components/aspect-ratio');
+	const ratio = demo(page, 'aspect-ratio-responsive').locator('[data-ratio-owner="custom"]');
+	await expect(ratio).toHaveAttribute('data-ratio', '21 / 9');
+	await expect(ratio).toHaveCSS('aspect-ratio', '21 / 9');
+
+	await page.goto('/#/components/container');
+	const responsiveContainers = demo(page, 'container-responsive').locator('[data-size]');
+	await expect(responsiveContainers).toHaveCount(2);
+	await expect(responsiveContainers.first()).toHaveCSS('box-sizing', 'border-box');
+	await expect
+		.poll(() => page.evaluate(() => document.documentElement.scrollWidth - innerWidth))
+		.toBeLessThanOrEqual(0);
 
 	await setDisplayPreference(page, '密度', '紧凑');
 	await setDisplayPreference(page, '对比度', '高对比');
@@ -1617,96 +1736,21 @@ test('keeps S1 primitives semantic and display preferences effective', async ({ 
 });
 
 test('has no automatically detectable accessibility violations', async ({ page }) => {
-	for (const route of [
-		'#/',
-		'#/guides/theme',
-		'#/guides/getting-started',
-		'#/guides/icss',
-		'#/guides/accessibility',
-		'#/guides/ssr-csp',
-		'#/guides/hmr',
-		'#/guides/webview',
-		'#/guides/package',
-		'#/components/provider',
-		'#/components/box',
-		'#/components/stack',
-		'#/components/text',
-		'#/components/heading',
-		'#/components/icon',
-		'#/components/code',
-		'#/components/button',
-		'#/components/toggle-button',
-		'#/components/link',
-		'#/components/separator',
-		'#/components/visually-hidden',
-		'#/components/kbd',
-		'#/components/aspect-ratio',
-		'#/components/container',
-		'#/components/avatar',
-		'#/components/badge',
-		'#/components/card',
-		'#/components/description-list',
-		'#/components/list',
-		'#/components/tag',
-		'#/components/progress',
-		'#/components/meter',
-		'#/components/skeleton',
-		'#/components/empty',
-		'#/components/timeline',
-		'#/components/statistic',
-		'#/components/table',
-		'#/components/virtual-list',
-		'#/components/data-table',
-		'#/components/carousel',
-		'#/components/alert',
-		'#/components/loading-bar',
-		'#/components/result',
-		'#/components/spinner',
-		'#/components/toast',
-		'#/components/checkbox',
-		'#/components/calendar',
-		'#/components/color-picker',
-		'#/components/cascader',
-		'#/components/combobox',
-		'#/components/date-field',
-		'#/components/date-picker',
-		'#/components/date-range-picker',
-		'#/components/input',
-		'#/components/input-group',
-		'#/components/mention',
-		'#/components/multi-select',
-		'#/components/number-field',
-		'#/components/pin-input',
-		'#/components/field',
-		'#/components/file-upload',
-		'#/components/form',
-		'#/components/radio-group',
-		'#/components/select',
-		'#/components/segmented',
-		'#/components/tags-input',
-		'#/components/textarea',
-		'#/components/time-field',
-		'#/components/tree-select',
-		'#/components/transfer',
-		'#/components/switch',
-		'#/components/slider',
-		'#/components/accordion',
-		'#/components/command',
-		'#/components/command-palette',
-		'#/components/context-menu',
-		'#/components/dropdown-menu',
-		'#/components/menu',
-		'#/components/pagination',
-		'#/components/tabs',
-		'#/components/tree',
-		'#/components/alert-dialog',
-		'#/components/dialog',
-		'#/components/drawer',
-		'#/components/popconfirm',
-		'#/components/popover',
-		'#/components/tooltip',
-		'#/components/tour'
-	]) {
+	await page.goto('/#/');
+	const routes = await page
+		.locator('nav[aria-label="组件导航"] a[href^="#/"]')
+		.evaluateAll((links) => [
+			...new Set(
+				links
+					.map((link) => link.getAttribute('href'))
+					.filter((href): href is string => href !== null)
+			)
+		]);
+	expect(
+		routes.length,
+		'the accessibility sweep must discover routes from the canonical navigation'
+	).toBeGreaterThan(1);
+	for (const route of routes) {
 		await page.goto(`/${route}`);
 		await expect(page.locator('main'), `${route} must expose one main landmark`).toHaveCount(1);
 		const currentLink = page.locator('nav[aria-label="组件导航"] a[aria-current="page"]');
@@ -1752,6 +1796,12 @@ test('highlights code on demand and supports section deep links', async ({ page 
 	const code = page.getByLabel('Svelte按钮示例');
 	await expect(code).toHaveAttribute('data-highlight-status', 'highlighted');
 	await expect(code.locator('[data-highlighted="true"]')).toHaveCount(2);
+	const copyDemo = demo(page, 'code-copy');
+	await expect(copyDemo.getByRole('button', { name: '复制代码', exact: true })).toBeVisible();
+	await expect(copyDemo.locator('[data-slot="copy-status"]')).toHaveAttribute(
+		'aria-live',
+		'polite'
+	);
 
 	await page.goto('/#/components/button/api');
 	await expect(page.getByRole('heading', { level: 2, name: 'Props' })).toBeInViewport();

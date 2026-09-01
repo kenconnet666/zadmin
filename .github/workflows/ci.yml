@@ -47,6 +47,9 @@ jobs:
       - name: Audit ZUI and Docs source contracts
         run: pnpm --filter @zadmin/docs audit:system
 
+      - name: Audit ZUI browser lifecycle ownership
+        run: pnpm --filter @zadmin/zui test:browser-lifecycle
+
       - name: Validate Changesets release metadata
         run: pnpm release:status
 

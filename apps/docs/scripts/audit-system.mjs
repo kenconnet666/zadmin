@@ -7,6 +7,7 @@ const workspaceRoot = resolve(docsRoot, '../..');
 const componentsRoot = resolve(workspaceRoot, 'ui/zui/src/components');
 const docsComponentsRoot = resolve(docsRoot, 'src/content/components');
 const docsSourceRoot = resolve(docsRoot, 'src');
+const zuiTestsRoot = resolve(workspaceRoot, 'ui/zui/tests');
 const portable = (path) => path.replaceAll('\\', '/');
 const ignoredDirectories = new Set([
 	'.svelte-kit',
@@ -95,6 +96,23 @@ function auditResourceLifecycle(source, filename) {
 	}
 }
 
+function auditBindableControllerIdentity(source, filename) {
+	if (/\bcontroller\s*===\s*publicController\b/u.test(source)) {
+		fail(
+			`${filename} compares a bindable controller proxy with its raw public object; capture the published binding identity instead.`
+		);
+	}
+	if (
+		source.includes('controller = publicController') &&
+		(!source.includes('const publishedController = untrack(() => controller)') ||
+			!source.includes('if (untrack(() => controller) === publishedController)'))
+	) {
+		fail(
+			`${filename} must capture and compare bindable controller identities outside reactive tracking.`
+		);
+	}
+}
+
 function auditLucideImports(source, filename) {
 	for (const line of source.split(/\r?\n/u)) {
 		if (/^\s*import\s+(?!type\b).*from\s+['"]@lucide\/svelte['"]/u.test(line)) {
@@ -106,7 +124,9 @@ function auditLucideImports(source, filename) {
 const zuiSourceFiles = await filesUnder(resolve(workspaceRoot, 'ui/zui/src'), ['.svelte', '.ts']);
 for (const path of zuiSourceFiles) {
 	const source = await readFile(path, 'utf8');
-	auditResourceLifecycle(source, portable(relative(workspaceRoot, path)));
+	const filename = portable(relative(workspaceRoot, path));
+	auditResourceLifecycle(source, filename);
+	auditBindableControllerIdentity(source, filename);
 }
 const componentFiles = await filesUnder(componentsRoot, ['.svelte']);
 const metadata = [];
@@ -491,6 +511,11 @@ for (const path of docsSvelteFiles) {
 		fail(`${filename} hand-builds an interactive element instead of dogfooding ZUI.`);
 	if (forbiddenGlyph.test(source))
 		fail(`${filename} contains a character UI icon instead of Lucide.`);
+	if (/<h[1-6]\b/u.test(source))
+		fail(`${filename} hand-builds a heading instead of dogfooding ZHeading.`);
+	for (const link of source.matchAll(/<ZLink\b[\s\S]*?>/gu)) {
+		if (!/\bhref\s*=/u.test(link[0])) fail(`${filename} renders ZLink without its required href.`);
+	}
 	for (const tooltip of source.matchAll(/<ZTooltipContent\b[\s\S]*?<\/ZTooltipContent>/gu)) {
 		if (
 			/<Z(?:Button|Checkbox|Combobox|Input|Link|Popover|RadioGroup|Select|Slider|Switch|Textarea|ToggleButton)\b/u.test(
@@ -503,6 +528,11 @@ for (const path of docsSvelteFiles) {
 }
 const appShellSource = await readFile(resolve(docsRoot, 'src/views/AppShell.svelte'), 'utf8');
 const appSource = await readFile(resolve(docsRoot, 'src/app/App.svelte'), 'utf8');
+const mainSource = await readFile(resolve(docsRoot, 'src/main.ts'), 'utf8');
+const routerRuntimeSource = await readFile(
+	resolve(docsRoot, 'src/framework/router-runtime.svelte.ts'),
+	'utf8'
+);
 const themeLabSource = await readFile(resolve(docsRoot, 'src/views/ThemeLabPage.svelte'), 'utf8');
 const skipLinkContracts = [
 	/<ZLink\b[^>]*class=\{classes\.skipLink\}[^>]*href=\{currentHref\}[^>]*onclick=\{skipToMain\}/u,
@@ -511,6 +541,16 @@ const skipLinkContracts = [
 ];
 if (!skipLinkContracts.every((contract) => contract.test(appShellSource))) {
 	fail('Docs AppShell must preserve its hash-router-safe skip link contract.');
+}
+if (
+	!mainSource.includes('startDocsRouter(window)') ||
+	!mainSource.includes('import.meta.hot?.dispose(stopRouter)') ||
+	!appShellSource.includes('const route = $derived(docsRouter.current)') ||
+	!routerRuntimeSource.includes("view.addEventListener('hashchange', sync)") ||
+	!routerRuntimeSource.includes("view.removeEventListener('hashchange', sync)") ||
+	!routerRuntimeSource.includes('view.cancelAnimationFrame(frame)')
+) {
+	fail('Docs hash routing must keep one main-entry runtime owner that survives component HMR.');
 }
 const appHeaderSource = await readFile(resolve(docsRoot, 'src/views/AppHeader.svelte'), 'utf8');
 const preferenceSources = [appSource, appShellSource, appHeaderSource, themeLabSource];
@@ -641,22 +681,86 @@ for (const path of docFiles) {
 }
 if (new Set(demoIds).size !== demoIds.length)
 	fail('Documentation demo ids must be globally unique.');
+const siteE2eSource = await readFile(resolve(docsRoot, 'tests/site.e2e.ts'), 'utf8');
+const referencedDemoIds = [
+	...siteE2eSource.matchAll(/demo\(\s*page\s*,\s*['"]([^'"]+)['"]\s*\)/gu)
+].map((match) => match[1]);
+const missingReferencedDemoIds = [...new Set(referencedDemoIds)].filter(
+	(id) => !demoIds.includes(id)
+);
+if (missingReferencedDemoIds.length > 0) {
+	fail(`Docs E2E references missing demo ids: ${missingReferencedDemoIds.join(', ')}.`);
+}
+const zuiViteSource = await readFile(resolve(workspaceRoot, 'ui/zui/vite.config.ts'), 'utf8');
+const browserSetupSource = await readFile(resolve(zuiTestsRoot, 'browser.setup.ts'), 'utf8');
+if (
+	!zuiViteSource.includes("setupFiles: ['./tests/browser.setup.ts']") ||
+	!browserSetupSource.includes('cleanupDirectMounts') ||
+	!browserSetupSource.includes('await cleanup()') ||
+	!browserSetupSource.includes('vi.restoreAllMocks()')
+) {
+	fail(
+		'ZUI browser tests must preserve one global cleanup owner for tracked direct mounts, rendered components, DOM state and mocks.'
+	);
+}
+const browserSpecFiles = await filesUnder(zuiTestsRoot, ['.browser.spec.ts']);
+for (const path of browserSpecFiles) {
+	const source = await readFile(path, 'utf8');
+	if (
+		/\bafterEach\(cleanup\)|import\s*\{[^}]*\bcleanup\b[^}]*\}\s*from\s*['"]vitest-browser-svelte/u.test(
+			source
+		)
+	) {
+		fail(`${portable(relative(workspaceRoot, path))} duplicates the global browser cleanup owner.`);
+	}
+}
+const codeSource = await readFile(
+	resolve(workspaceRoot, 'ui/zui/src/components/gene/ZCode.svelte'),
+	'utf8'
+);
+if (
+	!codeSource.includes("import('shiki/themes/github-dark-high-contrast.mjs')") ||
+	!codeSource.includes("import('shiki/themes/github-light-high-contrast.mjs')") ||
+	codeSource.includes("import('shiki/themes/github-dark.mjs')") ||
+	codeSource.includes("import('shiki/themes/github-light.mjs')")
+) {
+	fail('ZCode must preserve its audited high-contrast Shiki theme boundary.');
+}
 const productionBoundaryDemos = [
+	'accordion-runtime-mode',
+	'alert-dynamic-insertion',
+	'aspect-ratio-responsive',
 	'avatar-image-fallback',
 	'button-composition',
+	'button-tone',
 	'carousel-autoplay-pause',
 	'cascader-lazy-retry',
 	'command-external-results',
 	'command-palette-external-trigger',
+	'container-responsive',
 	'code-scheme-embedded',
+	'code-copy',
 	'date-field-bounds',
 	'file-upload-default-queue',
+	'description-list-responsive-rtl',
+	'empty-long-description',
+	'list-virtual-boundary',
+	'loading-bar-controller',
+	'meter-custom-range',
 	'mention-async',
 	'popover-modal-match-width',
+	'progress-motion',
 	'provider-portal-boundary',
 	'select-controlled-label',
+	'skeleton-motion',
+	'spinner-owner-boundary',
+	'statistic-formatter',
 	'tags-input-draft-ownership',
-	'tree-multiple-checkbox'
+	'result-heading-responsive',
+	'timeline-pending-reverse',
+	'toggle-button-owner',
+	'tree-multiple-checkbox',
+	'visually-hidden-live-region'
 ];
 for (const id of productionBoundaryDemos) {
 	if (!demoIds.includes(id)) fail(`Documentation must preserve the ${id} production demo.`);
@@ -668,6 +772,7 @@ console.log(
 		metadataIds: metadata.length,
 		docPages: docFiles.length,
 		demoIds: demoIds.length,
+		docsE2eDemoReferences: new Set(referencedDemoIds).size,
 		productionBoundaryDemos: productionBoundaryDemos.length,
 		transitionFiles: transitionFiles.length,
 		rawButtonComponentFiles: rawButtonFiles.length,
@@ -698,6 +803,8 @@ console.log(
 		zuiSourceFiles: zuiSourceFiles.length,
 		resourceLifecycleViolations: 0,
 		dangerousDomSinks: 0,
+		bindableControllerIdentityContracts: 5,
+		docsHashRouterOwners: 1,
 		skipLinkContracts: 1,
 		searchLiveContracts: 1,
 		nativeBusyContracts: 2,

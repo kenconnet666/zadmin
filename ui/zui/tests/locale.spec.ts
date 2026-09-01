@@ -10,6 +10,7 @@ describe('typed locale packs', () => {
 	it('merges typed namespaces while preserving parameterized defaults', () => {
 		const pack = resolveZuiLocalePack(enUSLocalePack, {
 			carousel: { nextSlide: 'Continue slides' },
+			code: { copied: 'Copied source' },
 			collection: { selectOption: 'Pick one' },
 			command: { placeholder: 'Run a command' },
 			common: { close: '关闭' },
@@ -30,6 +31,11 @@ describe('typed locale packs', () => {
 		expect(pack.common).toEqual({ clear: 'Clear', close: '关闭', copy: 'Copy' });
 		expect(pack.carousel.nextSlide).toBe('Continue slides');
 		expect(pack.carousel.slidePosition('2', '5', 'Release')).toBe('2 of 5: Release');
+		expect(pack.code).toEqual({
+			copied: 'Copied source',
+			copy: 'Copy code',
+			copyFailed: 'Copy failed'
+		});
 		expect(pack.collection).toMatchObject({
 			selectNode: 'Select a node',
 			selectOption: 'Pick one'
@@ -86,6 +92,11 @@ describe('typed locale packs', () => {
 		expect(zhCNLocalePack.collection.selectOption).toBe('选择一个选项');
 		expect(zhCNLocalePack.collection.treeLoadError('报表')).toContain('加载报表失败');
 		expect(zhCNLocalePack.colorPicker.color('#2563eb')).toBe('颜色 #2563eb');
+		expect(zhCNLocalePack.code).toEqual({
+			copied: '代码已复制',
+			copy: '复制代码',
+			copyFailed: '复制失败'
+		});
 		expect(zhCNLocalePack.command.paletteTrigger).toBe('打开命令面板');
 		expect(zhCNLocalePack.command.results('12')).toBe('找到12个命令');
 		expect(zhCNLocalePack.date.calendarLabel).toBe('日历');

@@ -1,6 +1,7 @@
 import { render } from 'vitest-browser-svelte';
-import { mount, tick, unmount } from 'svelte';
+import { tick } from 'svelte';
 import { describe, expect, it, vi } from 'vitest';
+import { mount, unmount } from './browser-lifecycle.js';
 
 import { createFileUploadItem, type FileUploadTransportContext } from '../src/entrypoints/index.js';
 import FileUploadProductionFixture from './FileUploadProductionFixture.svelte';

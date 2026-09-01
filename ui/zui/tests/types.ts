@@ -156,6 +156,7 @@ import {
 	type ZAvatarProps,
 	type ZBadgeProps,
 	type ZBoxProps,
+	type ButtonTone,
 	type ZButtonProps,
 	type CardElement,
 	type CardVariant,
@@ -209,6 +210,8 @@ import {
 	type ZHeadingSize,
 	type ZInputGroupProps,
 	type ZListProps,
+	type LoadingBarMode,
+	type LoadingBarState,
 	type ZLoadingBarProps,
 	type ZMenuCheckboxItemProps,
 	type ZMenuGroupProps,
@@ -240,6 +243,7 @@ import {
 	type ZPopoverContentProps,
 	type ZPopoverProps,
 	type ZPopoverTriggerProps,
+	type ProgressTone,
 	type ZProgressProps,
 	type ZRadioGroupOption,
 	type ZRadioGroupItemProps,
@@ -254,7 +258,9 @@ import {
 	type ZSegmentedProps,
 	type ZSliderProps,
 	type ZSkeletonProps,
+	type SpinnerTone,
 	type ZSpinnerProps,
+	type StatisticTone,
 	type ZStatisticProps,
 	type ZSwitchProps,
 	type ZTabsListProps,
@@ -268,6 +274,7 @@ import {
 	type ZToasterProps,
 	type ZTextareaProps,
 	type ZTimeFieldProps,
+	type TimelineMode,
 	type ZTimelineProps,
 	type ZTooltipContentProps,
 	type ZTooltipGroupProps,
@@ -314,16 +321,24 @@ const listProps: ComponentProps<typeof ZList> = {
 const tagProps: ComponentProps<typeof ZTag> = { removable: true } satisfies ZTagProps;
 const alertProps: ComponentProps<typeof ZAlert> = { title: 'Saved' } satisfies ZAlertProps;
 const loadingBarProps: ComponentProps<typeof ZLoadingBar> = {
+	active: true,
+	label: 'Release progress',
+	mode: 'local' satisfies LoadingBarMode,
+	state: 'loading' satisfies LoadingBarState,
 	value: 50
 } satisfies ZLoadingBarProps;
 const resultProps: ComponentProps<typeof ZResult> = { title: 'Ready' } satisfies ZResultProps;
-const spinnerProps: ComponentProps<typeof ZSpinner> = { label: 'Loading' } satisfies ZSpinnerProps;
+const spinnerProps: ComponentProps<typeof ZSpinner> = {
+	label: 'Loading',
+	tone: 'primary' satisfies SpinnerTone
+} satisfies ZSpinnerProps;
 const toastProps: ComponentProps<typeof ZToast> = { title: 'Ready' } satisfies ZToastProps;
 const toasterProps: ComponentProps<typeof ZToaster> = {
 	queue: createToastQueue()
 } satisfies ZToasterProps;
 const progressProps: ComponentProps<typeof ZProgress> = {
 	label: 'Progress',
+	tone: 'success' satisfies ProgressTone,
 	value: 50
 } satisfies ZProgressProps;
 const meterProps: ComponentProps<typeof ZMeter> = {
@@ -336,10 +351,13 @@ const skeletonProps: ComponentProps<typeof ZSkeleton> = {
 } satisfies ZSkeletonProps;
 const emptyProps: ComponentProps<typeof ZEmpty> = { title: 'Empty' } satisfies ZEmptyProps;
 const timelineProps: ComponentProps<typeof ZTimeline> = {
-	items: [{ id: 'one', title: 'One' }]
+	items: [{ key: 'one', title: 'One', tone: 'success' }],
+	mode: 'alternate' satisfies TimelineMode
 } satisfies ZTimelineProps;
 const statisticProps: ComponentProps<typeof ZStatistic> = {
 	label: 'Requests',
+	precision: 2,
+	tone: 'primary' satisfies StatisticTone,
 	value: 12
 } satisfies ZStatisticProps;
 const tableProps: ComponentProps<typeof ZTable> = { caption: 'Rows' } satisfies ZTableProps;
@@ -403,7 +421,12 @@ const alertDialogActionProps: ComponentProps<typeof ZAlertDialogAction> =
 	{} satisfies ZAlertDialogActionProps;
 const inferredBoxProps: ComponentProps<typeof ZBox> = boxProps;
 const directBoxProps: DirectZBoxProps = inferredBoxProps;
-const buttonProps: ComponentProps<typeof ZButton> = { variant: 'primary' } satisfies ZButtonProps;
+const buttonTone: ButtonTone = 'danger';
+const buttonProps: ComponentProps<typeof ZButton> = {
+	shape: 'circle',
+	tone: buttonTone,
+	variant: 'primary'
+} satisfies ZButtonProps;
 const checkboxProps: ComponentProps<typeof ZCheckbox> = {
 	defaultChecked: 'indeterminate',
 	value: 42n
@@ -765,6 +788,7 @@ void alertDialogDescriptionProps;
 void alertDialogCancelProps;
 void alertDialogActionProps;
 void directBoxProps;
+void buttonTone;
 void buttonProps;
 void checkboxProps;
 void comboboxProps;

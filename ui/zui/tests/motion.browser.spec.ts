@@ -1,5 +1,7 @@
-import { mount, tick, unmount } from 'svelte';
+import { tick } from 'svelte';
 import { describe, expect, it, vi } from 'vitest';
+
+import { mount, unmount } from './browser-lifecycle.js';
 
 import MotionRealmFixture from './MotionRealmFixture.svelte';
 

@@ -1,6 +1,7 @@
 import { render } from 'vitest-browser-svelte';
 import { describe, expect, it } from 'vitest';
-import { mount, tick, unmount } from 'svelte';
+import { tick } from 'svelte';
+import { mount, unmount } from './browser-lifecycle.js';
 
 import DataTableProductionFixture from './DataTableProductionFixture.svelte';
 import DataTableBoundaryFixture from './DataTableBoundaryFixture.svelte';

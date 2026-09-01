@@ -5,9 +5,22 @@
 	let disabledActivations = $state(0);
 	let enabledActivations = $state(0);
 	let parentClicks = $state(0);
+
+	function countOwnerClicks(node: HTMLDivElement): { destroy(): void } {
+		function handleClick(): void {
+			parentClicks += 1;
+		}
+
+		node.addEventListener('click', handleClick);
+		return {
+			destroy(): void {
+				node.removeEventListener('click', handleClick);
+			}
+		};
+	}
 </script>
 
-<div data-testid="link-click-owner" onclick={() => (parentClicks += 1)}>
+<div data-testid="link-click-owner" use:countOwnerClicks>
 	<ZLink
 		data-testid="link-external-blank"
 		external

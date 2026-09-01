@@ -47,7 +47,7 @@
 	onConfirm={confirm}
 	onConfirmError={() => (confirmErrors += 1)}
 >
-	<ZPopconfirmTrigger data-testid="confirm-trigger" variant="danger">Delete</ZPopconfirmTrigger>
+	<ZPopconfirmTrigger data-testid="confirm-trigger" tone="danger">Delete</ZPopconfirmTrigger>
 	<ZPopconfirmContent data-testid="confirm-content">
 		<ZPopconfirmTitle>Delete deployment?</ZPopconfirmTitle>
 		<ZPopconfirmDescription>This action is short and contextual.</ZPopconfirmDescription>

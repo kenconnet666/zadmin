@@ -1,7 +1,8 @@
-import { mount, tick, unmount } from 'svelte';
+import { tick } from 'svelte';
 import { describe, expect, it } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-svelte';
+import { mount, unmount } from './browser-lifecycle.js';
 
 import TooltipPopconfirmProductionFixture from './TooltipPopconfirmProductionFixture.svelte';
 
