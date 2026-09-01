@@ -23,6 +23,7 @@ import FieldFixture from './FieldFixture.svelte';
 import FileUploadFixture from './FileUploadFixture.svelte';
 import FormFixture from './FormFixture.svelte';
 import FormEdgeFixture from './FormEdgeFixture.svelte';
+import FormValueBridgeFixture from './FormValueBridgeFixture.svelte';
 import InputGroupFixture from './InputGroupFixture.svelte';
 import DialogFixture from './DialogFixture.svelte';
 import DateFixture from './DateFixture.svelte';
@@ -967,7 +968,7 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(trigger?.textContent?.trim()).toBe('Select an option');
 		expect(trigger?.getAttribute('aria-invalid')).toBe('true');
-		expect(new FormData(form!).getAll('choice')).toEqual(['']);
+		expect(new FormData(form!).getAll('choice')).toEqual([]);
 		expect(output?.textContent).toBe(':1:false');
 	});
 
@@ -1788,6 +1789,87 @@ describe('compiled ICSS browser updates', () => {
 		form.removeEventListener('reset', prevent);
 		await unmount(component);
 		host.remove();
+	});
+
+	it('bridges dynamic external form values and one reset lifecycle without proxy FormData fields', async () => {
+		render(FormValueBridgeFixture);
+		await tick();
+		await Promise.resolve();
+		const first = document.querySelector<HTMLFormElement>('[data-testid="form-value-owner-a"]');
+		const second = document.querySelector<HTMLFormElement>('[data-testid="form-value-owner-b"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="form-value-output"]');
+		expect(first).not.toBeNull();
+		expect(second).not.toBeNull();
+		if (!first || !second) return;
+
+		expect([...new FormData(first).entries()]).toEqual([
+			['tag', 'alpha'],
+			['tag', 'alpha'],
+			['tag', '2'],
+			['range.start', '2026-09-01'],
+			['range.end', '2026-09-03']
+		]);
+		const signal = document.querySelector<HTMLInputElement>('[data-zui-form-reset-signal]');
+		expect(signal?.form).toBe(first);
+		expect(document.querySelectorAll('[data-zui-form-reset-signal]')).toHaveLength(1);
+		expect(document.querySelectorAll('input[data-zui-form-value]')).toHaveLength(5);
+		expect(document.querySelectorAll('input[data-zui-form-value-bridge]')).toHaveLength(1);
+		expect(document.querySelectorAll('input[name]')).toHaveLength(5);
+
+		document.querySelector<HTMLButtonElement>('[data-testid="form-value-update"]')?.click();
+		await tick();
+		expect(new FormData(first).getAll('tag')).toEqual(['beta', 'beta', '3', 'on']);
+		expect(new FormData(first).get('range.start')).toBe('2026-10-10');
+
+		document
+			.querySelector<HTMLButtonElement>('[data-testid="form-value-toggle-disabled"]')
+			?.click();
+		await tick();
+		expect([...new FormData(first).entries()]).toEqual([]);
+		await resetForm(first);
+		expect(output?.textContent).toBe('form-value-owner-a:1');
+		expect([...new FormData(first).entries()]).toEqual([]);
+		document
+			.querySelector<HTMLButtonElement>('[data-testid="form-value-toggle-disabled"]')
+			?.click();
+		await tick();
+		expect(new FormData(first).getAll('tag')).toEqual(['alpha', 'alpha', '2']);
+		document.querySelector<HTMLButtonElement>('[data-testid="form-value-clear"]')?.click();
+		await tick();
+		expect([...new FormData(first).entries()]).toEqual([]);
+		expect(document.querySelectorAll('input[data-zui-form-value]')).toHaveLength(0);
+
+		document.querySelector<HTMLButtonElement>('[data-testid="form-value-update"]')?.click();
+		document.querySelector<HTMLButtonElement>('[data-testid="form-value-rename-owner"]')?.click();
+		await tick();
+		await new Promise<void>((resolve) => queueMicrotask(() => queueMicrotask(resolve)));
+		expect(signal?.form).toBeNull();
+		expect(document.querySelectorAll('[data-zui-form-reset-signal]')).toHaveLength(1);
+		expect([...new FormData(first).entries()]).toEqual([]);
+
+		document.querySelector<HTMLButtonElement>('[data-testid="form-value-follow-renamed"]')?.click();
+		await tick();
+		await Promise.resolve();
+		expect(signal?.form).toBe(first);
+		expect(new FormData(first).getAll('tag')).toEqual(['beta', 'beta', '3', 'on']);
+
+		document.querySelector<HTMLButtonElement>('[data-testid="form-value-move-owner"]')?.click();
+		await tick();
+		await Promise.resolve();
+		expect(signal?.form).toBe(second);
+		expect(document.querySelectorAll('[data-zui-form-reset-signal]')).toHaveLength(1);
+		expect(new FormData(second).getAll('tag')).toEqual(['beta', 'beta', '3', 'on']);
+
+		await resetForm(second);
+		expect(output?.textContent).toBe('form-value-owner-b:2');
+		expect(new FormData(second).getAll('tag')).toEqual(['alpha', 'alpha', '2']);
+		expect(new FormData(second).get('range.end')).toBe('2026-09-03');
+
+		document.querySelector<HTMLButtonElement>('[data-testid="form-value-unmount"]')?.click();
+		await tick();
+		expect(document.querySelector('[data-zui-form-reset-signal]')).toBeNull();
+		expect(document.querySelector('[data-zui-form-value-bridge]')).toBeNull();
+		expect([...new FormData(second).entries()]).toEqual([]);
 	});
 
 	it('coordinates Calendar and segmented date/time fields with FormData and reset', async () => {

@@ -131,9 +131,8 @@
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { Typeahead } from '../../runtime/collection/typeahead.js';
 	import { claimZFieldControlOwner } from '../../runtime/form/field-context.js';
-	import FormResetSignal from '../../runtime/form/FormResetSignal.svelte';
+	import FormValueBridge from '../../runtime/form/FormValueBridge.svelte';
 	import { mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
-	import { serializeFormValue } from '../../runtime/form/form-value.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -321,7 +320,6 @@
 	const resolvedRootId = $derived(id ?? `${idBase}-root`);
 	const resolvedDescribedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
 	const resolvedLabelledBy = $derived(mergeAriaIds(ariaLabelledBy, field?.labelId));
-	let proxy = $state<HTMLInputElement | null>(null);
 	let sourceFilterRef = $state<HTMLInputElement | null>(null);
 	let sourceListRef = $state<HTMLDivElement | null>(null);
 	let sourceQuery = $state('');
@@ -516,12 +514,6 @@
 
 	const sourceCount = $derived(sourceChecked.size);
 	const targetCount = $derived(targetChecked.size);
-	const serializedValues = $derived(
-		resolvedValue.flatMap((key) => {
-			const serialized = serializeFormValue(key);
-			return serialized === undefined ? [] : [serialized];
-		})
-	);
 </script>
 
 <div
@@ -678,13 +670,10 @@
 		</div>
 	</section>
 </div>
-<input bind:this={proxy} aria-hidden="true" tabindex={-1} type="hidden" disabled {form} />
-<FormResetSignal association={form} control={proxy} onReset={resetFromForm} />
-{#if resolvedName && !disabled}
-	{#each serializedValues as serialized, index (`${serialized}-${index}`)}<input
-			type="hidden"
-			{form}
-			name={resolvedName}
-			value={serialized}
-		/>{/each}
-{/if}
+<FormValueBridge
+	{disabled}
+	{form}
+	name={resolvedName}
+	onReset={resetFromForm}
+	value={resolvedValue}
+/>

@@ -135,8 +135,7 @@
 	import { ControllableState } from '../../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../../runtime/foundation/ids.js';
 	import { claimZFieldControlOwner } from '../../../runtime/form/field-context.js';
-	import FormResetSignal from '../../../runtime/form/FormResetSignal.svelte';
-	import { serializeFormValue } from '../../../runtime/form/form-value.js';
+	import FormValueBridge from '../../../runtime/form/FormValueBridge.svelte';
 	import { useZui } from '../../../runtime/foundation/context.js';
 	import ZPopover from '../popover/ZPopover.svelte';
 	import {
@@ -182,7 +181,6 @@
 	const ids = new Map<SelectionKey, string>();
 	let nextId = 0;
 	let active = $state<SelectionKey>();
-	let resetProxy = $state<HTMLInputElement | null>(null);
 	const readDefaultInputValue = () =>
 		defaultInputValue ?? (defaultValue === undefined ? '' : String(defaultValue));
 	const valueState = new ControllableState<SelectionKey | undefined>({
@@ -300,10 +298,6 @@
 		valueState.reset();
 		inputState.reset();
 	}
-
-	const serializedValue = $derived(
-		valueState.current === undefined ? '' : (serializeFormValue(valueState.current) ?? '')
-	);
 </script>
 
 <ZPopover
@@ -314,14 +308,10 @@
 	open={openState.current}
 	{placement}>{@render children?.()}</ZPopover
 >
-<input bind:this={resetProxy} aria-hidden="true" tabindex={-1} type="hidden" disabled {form} />
-<FormResetSignal association={form} control={resetProxy} onReset={resetFromForm} />
-{#if resolvedName}<input
-		aria-hidden="true"
-		tabindex={-1}
-		type="hidden"
-		{disabled}
-		{form}
-		name={resolvedName}
-		value={serializedValue}
-	/>{/if}
+<FormValueBridge
+	{disabled}
+	{form}
+	name={resolvedName}
+	onReset={resetFromForm}
+	value={valueState.current}
+/>

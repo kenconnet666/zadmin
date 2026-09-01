@@ -140,7 +140,8 @@
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import { claimZFieldControlOwner } from '../../runtime/form/field-context.js';
-	import FormResetSignal from '../../runtime/form/FormResetSignal.svelte';
+	import FormValueBridge from '../../runtime/form/FormValueBridge.svelte';
+	import type { FormValueEntry } from '../../runtime/form/form-value.js';
 	import { mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
 	import { formatDate, normalizeRange } from '../../runtime/date.js';
 	import { useZui } from '../../runtime/foundation/context.js';
@@ -192,7 +193,6 @@
 	const resolvedName = $derived(nameProp ?? field?.name);
 	const describedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
 	let pending = $state<CalendarDate>();
-	let proxy = $state<HTMLInputElement | null>(null);
 	let calendarRef = $state<HTMLDivElement | null>(null);
 	let triggerRef = $state<HTMLButtonElement | null>(null);
 	const valueState = new ControllableState<CalendarRange | undefined>({
@@ -242,6 +242,14 @@
 		pending = undefined;
 		openState.setFromUser(false);
 	}
+	const formEntries = $derived<readonly FormValueEntry[]>(
+		resolvedName
+			? [
+					[`${resolvedName}.start`, valueState.current?.start.toString()],
+					[`${resolvedName}.end`, valueState.current?.end.toString()]
+				]
+			: []
+	);
 </script>
 
 <div
@@ -297,16 +305,4 @@
 		</ZPopoverContent>
 	</ZPopover>
 </div>
-<input bind:this={proxy} aria-hidden="true" tabindex={-1} type="hidden" disabled {form} />
-<FormResetSignal association={form} control={proxy} onReset={resetFromForm} />
-{#if resolvedName && !resolvedDisabled && valueState.current}<input
-		type="hidden"
-		{form}
-		name={`${resolvedName}.start`}
-		value={valueState.current.start.toString()}
-	/><input
-		type="hidden"
-		{form}
-		name={`${resolvedName}.end`}
-		value={valueState.current.end.toString()}
-	/>{/if}
+<FormValueBridge disabled={resolvedDisabled} entries={formEntries} {form} onReset={resetFromForm} />

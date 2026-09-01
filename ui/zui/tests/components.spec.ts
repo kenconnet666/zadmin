@@ -39,6 +39,9 @@ import Camera from '@lucide/svelte/icons/camera';
 import { normalizeAspectRatio } from '../src/components/layout/ZAspectRatio.svelte';
 import { getIconComponent, iconManifest } from '../src/components/gene/ZIcon.svelte';
 import { __icssCarrier } from '../src/runtime/foundation/compiler-bridge.js';
+import FormValueBridge, {
+	type FormValueBridgeProps
+} from '../src/runtime/form/FormValueBridge.svelte';
 import ContextProbe from './ContextProbe.svelte';
 import ContextMenuFixture from './ContextMenuFixture.svelte';
 import ComboboxFixture from './ComboboxFixture.svelte';
@@ -86,6 +89,27 @@ import TagsInputFixture from './TagsInputFixture.svelte';
 import TextareaFixture from './TextareaFixture.svelte';
 
 describe('ZUI foundational components', () => {
+	it('server-renders deterministic explicit entries with one inert reset signal', () => {
+		const props = {
+			entries: [
+				['tag', ['alpha', 'alpha', 2, false]],
+				['range.start', '2026-09-01'],
+				['range.end', undefined]
+			],
+			onReset: () => undefined
+		} as const satisfies FormValueBridgeProps;
+		const first = render(FormValueBridge, { props }).body;
+		const second = render(FormValueBridge, { props }).body;
+
+		expect(first).toBe(second);
+		expect(first.match(/data-zui-form-value=""/gu)).toHaveLength(4);
+		expect(first.match(/name="tag" value="alpha"/gu)).toHaveLength(2);
+		expect(first).toContain('name="tag" value="2"');
+		expect(first).toContain('name="range.start" value="2026-09-01"');
+		expect(first).not.toContain('name="range.end"');
+		expect(first.match(/data-zui-form-reset-signal=""/gu)).toHaveLength(1);
+	});
+
 	it('server-renders compound roots with and without optional children', () => {
 		expect(render(ZAccordion, { props: { defaultValue: 'one' } }).body).toContain('<div');
 		expect(typeof render(ZDialog, { props: { defaultOpen: true } }).body).toBe('string');

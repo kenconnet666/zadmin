@@ -1,5 +1,7 @@
 export type PrimitiveFormValue = bigint | boolean | number | string;
 export type FormValue = PrimitiveFormValue | null | readonly PrimitiveFormValue[] | undefined;
+export type FormEntry = readonly [name: string, value: string];
+export type FormValueEntry = readonly [name: string, value: FormValue];
 
 export function serializeFormValue(value: PrimitiveFormValue): string | undefined {
 	if (value === false) return undefined;
@@ -10,10 +12,7 @@ export function serializeFormValue(value: PrimitiveFormValue): string | undefine
 	return String(value);
 }
 
-export function createFormEntries(
-	name: string,
-	value: FormValue
-): readonly (readonly [string, string])[] {
+export function createFormEntries(name: string, value: FormValue): readonly FormEntry[] {
 	if (name.length === 0) throw new TypeError('Form field name must not be empty.');
 	if (value === null || value === undefined) return [];
 	const values = Array.isArray(value) ? value : [value];
@@ -23,4 +22,10 @@ export function createFormEntries(
 			return serialized === undefined ? [] : ([[name, serialized]] as const);
 		})
 	);
+}
+
+export function createExplicitFormEntries(
+	entries: readonly FormValueEntry[]
+): readonly FormEntry[] {
+	return Object.freeze(entries.flatMap(([name, value]) => createFormEntries(name, value)));
 }

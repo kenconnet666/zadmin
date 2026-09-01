@@ -4,7 +4,11 @@ import { createZuiId, createZuiIdScope } from '../src/runtime/foundation/ids.js'
 import { CancelableEvent } from '../src/runtime/foundation/cancelable-event.js';
 import { resolveControlSize } from '../src/runtime/foundation/control-size.js';
 import { CollectionStore } from '../src/runtime/collection/collection.svelte.js';
-import { createFormEntries, serializeFormValue } from '../src/runtime/form/form-value.js';
+import {
+	createExplicitFormEntries,
+	createFormEntries,
+	serializeFormValue
+} from '../src/runtime/form/form-value.js';
 import { moveIndex, navigationIntent } from '../src/runtime/collection/list-navigation.js';
 import { clampPage, createPaginationItems } from '../src/runtime/pagination.js';
 import {
@@ -293,6 +297,17 @@ describe('ZUI foundation runtime', () => {
 		expect(serializeFormValue(12n)).toBe('12');
 		expect(() => serializeFormValue(Number.NaN)).toThrow(/must be finite/);
 		expect(() => createFormEntries('', 'value')).toThrow(/must not be empty/);
+		expect(
+			createExplicitFormEntries([
+				['tag', ['a', 2, false]],
+				['range.start', '2026-09-01'],
+				['range.end', undefined]
+			])
+		).toEqual([
+			['tag', 'a'],
+			['tag', '2'],
+			['range.start', '2026-09-01']
+		]);
 	});
 
 	it('owns one roving tab stop without coupling focus to selection', () => {

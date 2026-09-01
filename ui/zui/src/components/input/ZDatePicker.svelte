@@ -141,7 +141,7 @@
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import { claimZFieldControlOwner } from '../../runtime/form/field-context.js';
-	import FormResetSignal from '../../runtime/form/FormResetSignal.svelte';
+	import FormValueBridge from '../../runtime/form/FormValueBridge.svelte';
 	import { mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
 	import { formatDate } from '../../runtime/date.js';
 	import { useZui } from '../../runtime/foundation/context.js';
@@ -194,7 +194,6 @@
 	const resolvedRequired = $derived(requiredProp || (field?.required ?? false));
 	const resolvedName = $derived(nameProp ?? field?.name);
 	const describedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
-	let proxy = $state<HTMLInputElement | null>(null);
 	let calendarRef = $state<HTMLDivElement | null>(null);
 	let triggerRef = $state<HTMLButtonElement | null>(null);
 	const valueState = new ControllableState<CalendarDate | undefined>({
@@ -288,11 +287,10 @@
 		</ZPopoverContent>
 	</ZPopover>
 </div>
-<input bind:this={proxy} aria-hidden="true" tabindex={-1} type="hidden" disabled {form} />
-<FormResetSignal association={form} control={proxy} onReset={resetFromForm} />
-{#if resolvedName && !resolvedDisabled}<input
-		type="hidden"
-		{form}
-		name={resolvedName}
-		value={valueState.current?.toString() ?? ''}
-	/>{/if}
+<FormValueBridge
+	disabled={resolvedDisabled}
+	{form}
+	name={resolvedName}
+	onReset={resetFromForm}
+	value={valueState.current?.toString()}
+/>
