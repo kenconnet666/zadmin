@@ -574,7 +574,7 @@
 		draftInvalid = !parsed.valid && !parsed.partial;
 		if (parsed.valid) commit(parsed.value);
 	}
-	function handleInput(event: InputEvent & { currentTarget: HTMLInputElement }): void {
+	function handleInput(event: Event & { currentTarget: HTMLInputElement }): void {
 		draft = event.currentTarget.value;
 		if (!composing && !event.isComposing) updateFromDraft();
 	}

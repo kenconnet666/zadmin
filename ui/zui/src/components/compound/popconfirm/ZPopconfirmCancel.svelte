@@ -40,17 +40,17 @@
 
 <script lang="ts">
 	import ZButton from '../../gene/ZButton.svelte';
-	import { useZPopover } from '../popover/context.svelte.js';
+	import { useZPopconfirm } from './context.svelte.js';
 	let {
 		onclick,
 		ref = $bindable(null),
 		variant = 'secondary',
 		...rest
 	}: ZPopconfirmCancelProps = $props();
-	const popover = useZPopover();
+	const popconfirm = useZPopconfirm();
 	function handleClick(event: MouseEvent & { currentTarget: HTMLButtonElement }): void {
 		onclick?.(event);
-		if (!event.defaultPrevented) popover.setOpen(false);
+		if (!event.defaultPrevented) popconfirm.cancel();
 	}
 </script>
 

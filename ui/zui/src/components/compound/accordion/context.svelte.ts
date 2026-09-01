@@ -1,35 +1,40 @@
 import { getContext, setContext } from 'svelte';
 
-import type {
-	CollectionItem,
-	CollectionStore
-} from '../../../runtime/collection/collection.svelte.js';
+import type { CompoundLogicalCollectionItem } from '../../../runtime/collection/compound-logical-collection.svelte.js';
+import type { SelectionKey } from '../../../runtime/collection/selection.js';
 
 export type AccordionType = 'multiple' | 'single';
-export type AccordionValue = string | readonly string[];
+export type AccordionSingleValue = SelectionKey | null;
+export type AccordionMultipleValue = readonly SelectionKey[];
+export type AccordionValue = AccordionMultipleValue | AccordionSingleValue;
 
-export interface AccordionCollectionItem extends CollectionItem<string> {
-	readonly textValue: string;
+export interface AccordionCollectionItem extends CompoundLogicalCollectionItem<SelectionKey> {
+	readonly element: HTMLButtonElement | null;
+	readonly id: string;
 }
 
 export interface ZAccordionContext {
-	readonly collection: CollectionStore<AccordionCollectionItem>;
 	readonly disabled: boolean;
 	readonly exitDuration: number;
+	readonly owner: symbol;
 	readonly reducedMotion: boolean;
-	contentId(value: string): string;
-	focus(value: string): void;
-	handleKey(event: KeyboardEvent): void;
-	isOpen(value: string): boolean;
+	contentId(value: SelectionKey): string;
+	focus(value: SelectionKey): void;
+	handleKey(event: KeyboardEvent): boolean;
+	isActive(value: SelectionKey): boolean;
+	isOpen(value: SelectionKey): boolean;
+	isTriggerLocked(value: SelectionKey): boolean;
 	register(read: () => AccordionCollectionItem): () => void;
-	tabIndex(value: string): 0 | -1;
-	toggle(value: string): void;
-	triggerId(value: string): string;
+	restoreFocus(value: SelectionKey): void;
+	tabIndex(value: SelectionKey): 0 | -1;
+	toggle(value: SelectionKey): void;
+	triggerId(value: SelectionKey): string;
 }
 
 export interface ZAccordionItemContext {
 	readonly disabled: boolean;
-	readonly value: string;
+	readonly owner: symbol;
+	readonly value: SelectionKey;
 }
 
 const ACCORDION_CONTEXT = Symbol('zui-accordion-context');
@@ -52,8 +57,13 @@ export function provideZAccordionItem(context: ZAccordionItemContext): ZAccordio
 	return context;
 }
 
-export function useZAccordionItem(): ZAccordionItemContext {
+export function useZAccordionItem(owner?: symbol): ZAccordionItemContext {
 	const context = getContext<ZAccordionItemContext | undefined>(ACCORDION_ITEM_CONTEXT);
 	if (!context) throw new Error('ZAccordionTrigger and ZAccordionContent require ZAccordionItem.');
+	if (owner !== undefined && context.owner !== owner) {
+		throw new Error(
+			'ZAccordionTrigger and ZAccordionContent require an Item owned by the nearest ZAccordion.'
+		);
+	}
 	return context;
 }

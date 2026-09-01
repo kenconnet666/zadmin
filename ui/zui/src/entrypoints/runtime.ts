@@ -82,5 +82,9 @@ export type {
 	ToastPriority,
 	ToastQueueOptions,
 	ToastRecord,
-	ToastTone
+	ToastTaskMessage,
+	ToastTaskOptions,
+	ToastTaskResult,
+	ToastTone,
+	ToastUpdate
 } from '../runtime/toast.svelte.js';

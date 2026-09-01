@@ -749,7 +749,6 @@
 		aria-controls={`${idBase}-list`}
 		aria-describedby={resolvedDescribedBy}
 		aria-disabled={readonly || full || undefined}
-		aria-invalid={resolvedInvalid || undefined}
 		aria-labelledby={resolvedLabelledBy}
 		data-slot="dropzone"
 		{disabled}

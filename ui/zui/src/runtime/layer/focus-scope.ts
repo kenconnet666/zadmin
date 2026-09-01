@@ -97,7 +97,7 @@ export class FocusScope {
 		next?.focus({ preventScroll: true });
 	};
 
-	#candidates(): HTMLElement[] {
+	#candidates(): ReturnType<typeof tabbable> {
 		const candidates = [...tabbable(this.#container)];
 		for (const branch of this.#options.branches?.() ?? []) {
 			if (branch.ownerDocument !== this.#document || !branch.isConnected) continue;

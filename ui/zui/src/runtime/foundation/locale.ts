@@ -84,6 +84,7 @@ export interface ZuiFileUploadLocale {
 }
 
 export interface ZuiFeedbackLocale {
+	readonly confirmFailed: string;
 	readonly dismissAlert: string;
 	readonly dismissNotification: string;
 	readonly dismissToast: (title: string) => string;
@@ -258,6 +259,7 @@ export const enUSLocalePack = Object.freeze({
 		year: 'Year'
 	}),
 	feedback: Object.freeze({
+		confirmFailed: 'Confirmation failed. Try again.',
 		dismissAlert: 'Dismiss alert',
 		dismissNotification: 'Dismiss notification',
 		dismissToast: (title: string) => `Dismiss ${title}`,
@@ -404,6 +406,7 @@ export const zhCNLocalePack = Object.freeze({
 		year: '年'
 	}),
 	feedback: Object.freeze({
+		confirmFailed: '确认失败，请重试。',
 		dismissAlert: '关闭提示',
 		dismissNotification: '关闭通知',
 		dismissToast: (title: string) => `关闭通知：${title}`,
@@ -482,7 +485,8 @@ export const zhCNLocalePack = Object.freeze({
 		filterPlaceholder: '筛选项目',
 		moveToSource: '将所选项目移至来源列表',
 		moveToTarget: '将所选项目移至目标列表',
-		selectedNotLoaded: (formattedCount: string) => `${formattedCount} 个已选项目尚未加载`,
+		selectedNotLoaded: (formattedCount: string, _count: number) =>
+			`${formattedCount} 个已选项目尚未加载`,
 		sourceTitle: '可选项目',
 		targetTitle: '已选项目'
 	})

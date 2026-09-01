@@ -554,9 +554,9 @@
 			(lastScrolledTarget === element && lastScrolledStepId === entry.id)
 		)
 			return;
-		const options =
+		const options: ScrollIntoViewOptions =
 			scrollIntoViewOptions === true
-				? { block: 'center', inline: 'nearest' as const }
+				? { block: 'center', inline: 'nearest' }
 				: scrollIntoViewOptions;
 		element.scrollIntoView({
 			...options,

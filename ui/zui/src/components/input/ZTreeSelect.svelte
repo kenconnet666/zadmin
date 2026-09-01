@@ -6,7 +6,7 @@
 	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
 	import type { TreeEntry, TreeNode } from '../../runtime/tree.js';
 	import type { PopoverPlacement } from '../compound/popover/ZPopover.svelte';
-	import type { TreeLoadContext } from '../compound/tree/ZTree.svelte';
+	import type { TreeLoadContext as PublicTreeLoadContext } from '../compound/tree/ZTree.svelte';
 
 	export interface ZTreeSelectProps<TKey extends SelectionKey = SelectionKey> extends Omit<
 		HTMLAttributes<HTMLDivElement>,
@@ -34,7 +34,7 @@
 		readonly onExpandedChange?: (keys: readonly TKey[]) => void;
 		readonly onLoadChildren?: (
 			node: TreeNode<TKey>,
-			context: TreeLoadContext<TKey>
+			context: PublicTreeLoadContext<TKey>
 		) => void | Promise<void>;
 		readonly onLoadError?: (key: TKey, error: unknown) => void;
 		readonly onOpenChange?: (open: boolean) => void;

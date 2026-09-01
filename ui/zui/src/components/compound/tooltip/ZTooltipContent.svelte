@@ -24,7 +24,6 @@
 			s.opacity._opaque;
 			s.paddingBlock._small;
 			s.paddingInline._medium;
-			s.pointerEvents.none;
 			s.position.absolute;
 			s.transitionDuration._fast;
 			s.transitionProperty.raw('opacity, transform');
@@ -32,6 +31,10 @@
 			s.zIndex._dropdown;
 		},
 		variants: {
+			hoverable: {
+				false: (s) => s.pointerEvents.none,
+				true: (s) => s.pointerEvents.auto
+			},
 			motion: {
 				auto: () => undefined,
 				full: () => undefined,
@@ -45,7 +48,7 @@
 				true: (s) => s.transform.raw('scale(1)')
 			}
 		},
-		defaultVariants: { motion: 'auto', open: false }
+		defaultVariants: { hoverable: true, motion: 'auto', open: false }
 	});
 
 	registerRecipeHmr(import.meta, tooltipContentRecipe);
@@ -103,6 +106,8 @@
 	let {
 		children,
 		class: className,
+		onpointerenter,
+		onpointerleave,
 		ref = $bindable(null),
 		style,
 		...rest
@@ -115,6 +120,7 @@
 	const presenceState = $derived(presence.state);
 	const rootClass = $derived(
 		zui.recipe(tooltipContentRecipe, {
+			hoverable: tooltip.hoverable && tooltip.open,
 			motion: tooltip.reducedMotion ? 'reduced' : 'full',
 			open: tooltip.open
 		})
@@ -144,17 +150,30 @@
 		'[role="switch"]',
 		'[tabindex]:not([tabindex="-1"])'
 	].join(',');
+	const assertNonInteractive = (content: HTMLDivElement): void => {
+		if (content.querySelector(interactiveSelector)) {
+			throw new TypeError(
+				'ZTooltipContent cannot contain interactive or focusable content; use ZPopover.'
+			);
+		}
+	};
 
 	$effect(() => presence.update(tooltip.open, tooltip.exitDuration));
 	$effect(() => {
 		const content = ref;
 		const trigger = tooltip.trigger;
 		if (!tooltip.open || !content || !trigger) return;
-		if (content.querySelector(interactiveSelector)) {
-			throw new TypeError(
-				'ZTooltipContent cannot contain interactive or focusable content; use ZPopover.'
-			);
-		}
+		assertNonInteractive(content);
+		const MutationObserverConstructor = content.ownerDocument.defaultView?.MutationObserver;
+		const observer = MutationObserverConstructor
+			? new MutationObserverConstructor(() => assertNonInteractive(content))
+			: undefined;
+		observer?.observe(content, {
+			attributeFilter: ['contenteditable', 'controls', 'href', 'role', 'tabindex', 'type'],
+			attributes: true,
+			childList: true,
+			subtree: true
+		});
 		const positioner = new FloatingPositioner();
 		const stopPositioning = positioner.start(trigger, content, {
 			gutter: tooltip.gutter,
@@ -165,12 +184,23 @@
 		});
 		const removeTriggerBranch = dismissable.registerBranch(trigger);
 		return () => {
+			observer?.disconnect();
 			removeTriggerBranch();
 			dismissable.destroy();
 			stopPositioning();
 		};
 	});
 	onDestroy(() => presence.destroy());
+
+	function handlePointerEnter(event: PointerEvent & { currentTarget: HTMLDivElement }): void {
+		onpointerenter?.(event);
+		if (!event.defaultPrevented && tooltip.hoverable) tooltip.cancelClose();
+	}
+
+	function handlePointerLeave(event: PointerEvent & { currentTarget: HTMLDivElement }): void {
+		onpointerleave?.(event);
+		if (!event.defaultPrevented && tooltip.hoverable && !tooltip.triggerFocused) tooltip.close();
+	}
 </script>
 
 {#if mounted}
@@ -187,6 +217,8 @@
 		data-presence={presenceState}
 		data-reduced-motion={tooltip.reducedMotion || undefined}
 		data-state={tooltip.open ? 'open' : 'closed'}
+		onpointerenter={handlePointerEnter}
+		onpointerleave={handlePointerLeave}
 		ontransitionend={(event) => {
 			if (event.target === event.currentTarget) presence.finishExit();
 		}}

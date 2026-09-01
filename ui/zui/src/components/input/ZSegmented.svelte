@@ -1,12 +1,12 @@
 <script module lang="ts">
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
-	import type { SelectionKey } from '../../runtime/collection/selection.js';
+	import type { SelectionKey as SegmentedSelectionKey } from '../../runtime/collection/selection.js';
 
 	export interface ZSegmentedOption {
 		readonly disabled?: boolean;
 		readonly label: string;
-		readonly value: SelectionKey;
+		readonly value: SegmentedSelectionKey;
 	}
 
 	/** @deprecated Use ZSegmentedOption and the options prop. */
@@ -22,7 +22,7 @@
 		| 'readonly'
 		| 'role'
 	> {
-		readonly defaultValue?: SelectionKey;
+		readonly defaultValue?: SegmentedSelectionKey;
 		readonly disabled?: boolean;
 		readonly form?: string;
 		readonly invalid?: boolean;
@@ -31,13 +31,13 @@
 		readonly loop?: boolean;
 		readonly name?: string;
 		readonly onchange?: (event: Event) => void;
-		readonly onValueChange?: (value: SelectionKey) => void;
+		readonly onValueChange?: (value: SegmentedSelectionKey) => void;
 		readonly options?: readonly ZSegmentedOption[];
 		readonly orientation?: 'horizontal' | 'vertical';
 		readonly readonly?: boolean;
 		ref?: HTMLDivElement | null;
 		readonly required?: boolean;
-		value?: SelectionKey;
+		value?: SegmentedSelectionKey;
 	}
 
 	export const zuiMetadata = {

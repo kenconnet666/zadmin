@@ -26,19 +26,31 @@ export interface ToastOptions {
 export interface ToastRecord extends ToastOptions {
 	readonly duration: number | null;
 	readonly id: string;
+	/** Stable for same-id updates and renewed only after a record is fully removed. */
+	readonly instance: number;
 	readonly phase: ToastPhase;
 	readonly priority: ToastPriority;
 	readonly tone: ToastTone;
 }
 
+export type ToastUpdate = Partial<Omit<ToastOptions, 'id'>>;
+export type ToastTaskMessage = Omit<ToastOptions, 'id'> | string;
+export type ToastTaskResult<TValue> = ToastTaskMessage | ((value: TValue) => ToastTaskMessage);
+
+export interface ToastTaskOptions<TResult, TError = unknown> {
+	readonly error: ToastTaskResult<TError>;
+	readonly id?: string;
+	readonly loading: ToastTaskMessage;
+	readonly success: ToastTaskResult<TResult>;
+}
+
 interface ToastTimer {
-	handle?: ReturnType<typeof setTimeout>;
+	handle?: number;
+	host?: Window;
 	paused: Set<ToastPauseReason>;
 	remaining: number;
 	startedAt: number;
 }
-
-const now = (): number => (typeof performance === 'undefined' ? Date.now() : performance.now());
 
 function normalizeMaxVisible(value: number): number {
 	if (!Number.isInteger(value) || value < 1) {
@@ -53,6 +65,10 @@ export class ToastQueue {
 	#items = $state<readonly ToastRecord[]>([]);
 	#maxVisible: number;
 	#nextId = 0;
+	#nextInstance = 0;
+	#nextTaskGeneration = 0;
+	#ownerWindow: Window | undefined;
+	readonly #taskGenerations = new Map<string, number>();
 	// Timer and pause bookkeeping is imperative lifecycle state, not a rendered collection.
 	readonly #timers = new Map<string, ToastTimer>();
 
@@ -73,18 +89,43 @@ export class ToastQueue {
 	}
 
 	push(options: ToastOptions): string {
-		const duration = options.duration === undefined ? 5000 : options.duration;
-		if (duration !== null && (!Number.isFinite(duration) || duration <= 0)) {
-			throw new TypeError('Toast duration must be null or a positive finite number.');
-		}
-		if (options.id !== undefined && options.id.length === 0) {
-			throw new TypeError('Toast id must not be empty.');
-		}
-		let id = options.id;
-		if (id === undefined) {
-			do id = `toast-${++this.#nextId}`;
-			while (this.#items.some((item) => item.id === id));
-		}
+		const id = this.#resolveId(options.id);
+		this.#invalidateTask(id);
+		this.#push(options, id);
+		return id;
+	}
+
+	/** Partially updates an existing record. Omitted fields and its elapsed timer are preserved. */
+	update(id: string, update: ToastUpdate): boolean {
+		const index = this.#items.findIndex((item) => item.id === id);
+		if (index === -1) return false;
+		return this.#update(index, update);
+	}
+
+	/**
+	 * Tracks a caller-owned task without wrapping its cancellation or retry lifecycle.
+	 * The returned value is only the Toast id; callers keep and await their original Promise.
+	 */
+	task<TResult, TError = unknown>(
+		promise: PromiseLike<TResult>,
+		options: ToastTaskOptions<TResult, TError>
+	): string {
+		const id = this.#resolveId(options.id);
+		const generation = this.#registerTask(id);
+		this.#push(this.#taskMessage(options.loading, 'info', 'polite', null), id);
+		void Promise.resolve(promise).then(
+			(value) => {
+				this.#settleTask(id, generation, options.success, value, 'success', 'polite');
+			},
+			(error: TError) => {
+				this.#settleTask(id, generation, options.error, error, 'danger', 'assertive');
+			}
+		);
+		return id;
+	}
+
+	#push(options: ToastOptions, id: string): void {
+		const duration = this.#normalizeDuration(options.duration, 5000);
 		const index = this.#items.findIndex((item) => item.id === id);
 		const previous = index === -1 ? undefined : this.#items[index];
 		const previousPauses = this.#timers.get(id)?.paused;
@@ -93,6 +134,7 @@ export class ToastQueue {
 			...options,
 			duration,
 			id,
+			instance: previous?.instance ?? ++this.#nextInstance,
 			phase,
 			priority: options.priority ?? (options.tone === 'danger' ? 'assertive' : 'polite'),
 			tone: options.tone ?? 'info'
@@ -105,12 +147,12 @@ export class ToastQueue {
 		this.#deleteTimer(id);
 		if (phase === 'visible') this.#startTimer(record, previousPauses);
 		this.#promote();
-		return id;
 	}
 
 	dismiss(id: string, reason: ToastDismissReason = 'programmatic'): void {
 		const item = this.#items.find((candidate) => candidate.id === id);
 		if (!item || item.phase === 'exiting') return;
+		this.#invalidateTask(id);
 		this.#deleteTimer(id);
 		if (item.phase === 'visible' && this.#connections > 0) {
 			this.#setPhase(id, 'exiting');
@@ -134,12 +176,16 @@ export class ToastQueue {
 		this.#promote();
 	}
 
-	connectViewport(maxVisible = this.#maxVisible): () => void {
+	connectViewport(
+		maxVisible = this.#maxVisible,
+		ownerWindow = typeof window === 'undefined' ? undefined : window
+	): () => void {
 		if (this.#connections > 0) {
 			throw new Error('ToastQueue can only be connected to one ZToaster viewport.');
 		}
 		this.setMaxVisible(maxVisible);
 		this.#connections = 1;
+		this.#ownerWindow = ownerWindow;
 		for (const item of this.#items) {
 			if (item.phase === 'visible') this.#ensureTimer(item);
 		}
@@ -149,6 +195,7 @@ export class ToastQueue {
 			connected = false;
 			this.#connections = 0;
 			for (const timer of this.#timers.values()) this.#stopTimer(timer);
+			this.#ownerWindow = undefined;
 		};
 	}
 
@@ -156,9 +203,10 @@ export class ToastQueue {
 		const timer = this.#timers.get(id);
 		if (!timer || timer.paused.has(reason)) return;
 		if (timer.handle !== undefined) {
-			clearTimeout(timer.handle);
+			timer.host?.clearTimeout(timer.handle);
 			timer.handle = undefined;
-			timer.remaining = Math.max(0, timer.remaining - (now() - timer.startedAt));
+			timer.remaining = Math.max(0, timer.remaining - (this.#now(timer.host) - timer.startedAt));
+			timer.host = undefined;
 		}
 		timer.paused.add(reason);
 	}
@@ -207,6 +255,8 @@ export class ToastQueue {
 		this.#globalPauses.clear();
 		this.#items = Object.freeze([]);
 		this.#connections = 0;
+		this.#ownerWindow = undefined;
+		this.#taskGenerations.clear();
 	}
 
 	#demoteOverflow(): void {
@@ -236,7 +286,7 @@ export class ToastQueue {
 
 	#deleteTimer(id: string): void {
 		const timer = this.#timers.get(id);
-		if (timer?.handle !== undefined) clearTimeout(timer.handle);
+		if (timer?.handle !== undefined) timer.host?.clearTimeout(timer.handle);
 		this.#timers.delete(id);
 	}
 
@@ -272,8 +322,10 @@ export class ToastQueue {
 	#schedule(id: string): void {
 		const timer = this.#timers.get(id);
 		const item = this.#items.find((candidate) => candidate.id === id);
+		const ownerWindow = this.#ownerWindow;
 		if (
 			!timer ||
+			!ownerWindow ||
 			item?.phase !== 'visible' ||
 			this.#connections === 0 ||
 			timer.handle !== undefined ||
@@ -284,9 +336,11 @@ export class ToastQueue {
 			this.dismiss(id, 'timeout');
 			return;
 		}
-		timer.startedAt = now();
-		timer.handle = setTimeout(() => {
+		timer.startedAt = this.#now(ownerWindow);
+		timer.host = ownerWindow;
+		timer.handle = ownerWindow.setTimeout(() => {
 			timer.handle = undefined;
+			timer.host = undefined;
 			this.dismiss(id, 'timeout');
 		}, timer.remaining);
 	}
@@ -302,16 +356,119 @@ export class ToastQueue {
 		this.#timers.set(record.id, {
 			paused: new Set(pauses ?? this.#globalPauses),
 			remaining: record.duration,
-			startedAt: now()
+			startedAt: this.#now()
 		});
 		this.#schedule(record.id);
 	}
 
 	#stopTimer(timer: ToastTimer): void {
 		if (timer.handle === undefined) return;
-		clearTimeout(timer.handle);
+		timer.host?.clearTimeout(timer.handle);
 		timer.handle = undefined;
-		timer.remaining = Math.max(0, timer.remaining - (now() - timer.startedAt));
+		timer.remaining = Math.max(0, timer.remaining - (this.#now(timer.host) - timer.startedAt));
+		timer.host = undefined;
+	}
+
+	#invalidateTask(id: string): void {
+		this.#taskGenerations.delete(id);
+	}
+
+	#registerTask(id: string): number {
+		const generation = ++this.#nextTaskGeneration;
+		this.#taskGenerations.set(id, generation);
+		return generation;
+	}
+
+	#normalizeDuration(value: number | null | undefined, fallback: number | null): number | null {
+		const duration = value === undefined ? fallback : value;
+		if (duration !== null && (!Number.isFinite(duration) || duration <= 0)) {
+			throw new TypeError('Toast duration must be null or a positive finite number.');
+		}
+		return duration;
+	}
+
+	#now(ownerWindow = this.#ownerWindow): number {
+		return ownerWindow?.performance.now() ?? Date.now();
+	}
+
+	#resolveId(candidate: string | undefined): string {
+		if (candidate !== undefined && candidate.trim().length === 0) {
+			throw new TypeError('Toast id must not be empty.');
+		}
+		if (candidate !== undefined) return candidate;
+		let id: string;
+		do id = `toast-${++this.#nextId}`;
+		while (this.#items.some((item) => item.id === id));
+		return id;
+	}
+
+	#settleTask<TValue>(
+		id: string,
+		generation: number,
+		result: ToastTaskResult<TValue>,
+		value: TValue,
+		tone: ToastTone,
+		priority: ToastPriority
+	): void {
+		if (this.#taskGenerations.get(id) !== generation) return;
+		this.#taskGenerations.delete(id);
+		const index = this.#items.findIndex((item) => item.id === id);
+		if (index === -1) return;
+		let message: ToastTaskMessage;
+		try {
+			message = this.#taskResult(result, value);
+			this.#update(index, this.#taskMessage(message, tone, priority, 5000));
+		} catch {
+			this.dismiss(id, 'programmatic');
+		}
+	}
+
+	#taskMessage(
+		message: ToastTaskMessage,
+		tone: ToastTone,
+		priority: ToastPriority,
+		duration: number | null
+	): ToastOptions {
+		const options = typeof message === 'string' ? { title: message } : message;
+		return {
+			...options,
+			duration: options.duration === undefined ? duration : options.duration,
+			priority: options.priority ?? priority,
+			tone: options.tone ?? tone
+		};
+	}
+
+	#taskResult<TValue>(result: ToastTaskResult<TValue>, value: TValue): ToastTaskMessage {
+		return typeof result === 'function' ? result(value) : result;
+	}
+
+	#update(index: number, update: ToastUpdate): boolean {
+		const previous = this.#items[index];
+		if (!previous) return false;
+		const previousPauses = this.#timers.get(previous.id)?.paused;
+		const durationChanged = Object.hasOwn(update, 'duration') && update.duration !== undefined;
+		const phase = previous.phase === 'exiting' ? 'visible' : previous.phase;
+		const record = Object.freeze({
+			...previous,
+			...update,
+			duration: durationChanged
+				? this.#normalizeDuration(update.duration, previous.duration)
+				: previous.duration,
+			id: previous.id,
+			phase,
+			priority: update.priority ?? previous.priority,
+			title: update.title ?? previous.title,
+			tone: update.tone ?? previous.tone
+		}) satisfies ToastRecord;
+		this.#items = Object.freeze(
+			this.#items.map((item, itemIndex) => (itemIndex === index ? record : item))
+		);
+		if (previous.phase === 'exiting' || durationChanged) {
+			this.#deleteTimer(record.id);
+			if (phase === 'visible') this.#startTimer(record, previousPauses);
+		}
+		this.#promote();
+		return true;
 	}
 }
 

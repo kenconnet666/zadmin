@@ -18,12 +18,20 @@
 		| 'type'
 	> & {
 		readonly children?: Snippet;
+		readonly headingLevel?: 2 | 3 | 4 | 5 | 6;
 		readonly onclick?: HTMLButtonAttributes['onclick'];
 		readonly onfocus?: HTMLButtonAttributes['onfocus'];
 		readonly onkeydown?: HTMLButtonAttributes['onkeydown'];
 		ref?: HTMLButtonElement | null;
 		readonly textValue?: string;
 	};
+	const accordionHeadingRecipe = defineRecipe({
+		base: (s) => {
+			s.margin.px(0);
+		},
+		variants: {},
+		defaultVariants: {}
+	});
 
 	const accordionTriggerRecipe = defineRecipe({
 		base: (s) => {
@@ -84,6 +92,7 @@
 
 	registerRecipeHmr(import.meta, accordionTriggerRecipe);
 	registerRecipeHmr(import.meta, accordionIndicatorRecipe);
+	registerRecipeHmr(import.meta, accordionHeadingRecipe);
 
 	export const zuiMetadata = {
 		category: 'navigation',
@@ -106,6 +115,12 @@
 		],
 		parts: [],
 		props: [
+			{
+				default: '3',
+				description: 'ARIA heading层级；nested Accordion应按页面信息架构递增。',
+				name: 'headingLevel',
+				type: '2 | 3 | 4 | 5 | 6'
+			},
 			{
 				default: 'Item value',
 				description: 'Collection文本值。',
@@ -152,6 +167,7 @@
 	let {
 		children,
 		class: className,
+		headingLevel = 3,
 		onclick,
 		onfocus,
 		onkeydown,
@@ -162,8 +178,11 @@
 	}: ZAccordionTriggerProps = $props();
 	const zui = useZui();
 	const accordion = useZAccordion();
-	const item = useZAccordionItem();
+	const item = useZAccordionItem(accordion.owner);
 	const open = $derived(accordion.isOpen(item.value));
+	const active = $derived(accordion.isActive(item.value));
+	const locked = $derived(accordion.isTriggerLocked(item.value));
+	const headingClass = $derived(zui.recipe(accordionHeadingRecipe));
 	const rootClass = $derived(zui.recipe(accordionTriggerRecipe, { disabled: item.disabled, open }));
 	const indicatorClass = $derived(
 		zui.recipe(accordionIndicatorRecipe, {
@@ -178,8 +197,10 @@
 		accordion.register(() => ({
 			disabled: item.disabled,
 			element: ref,
+			id: accordion.triggerId(item.value),
 			key: item.value,
-			textValue: textValue ?? item.value
+			selectionDisabled: false,
+			textValue: textValue ?? String(item.value)
 		}))
 	);
 
@@ -199,25 +220,29 @@
 	}
 </script>
 
-<button
-	{...rest}
-	bind:this={ref}
-	class={[rootClass, className]}
-	style={initialStyle}
-	use:applyIcssRootStyle={{ style, variables: icssVariables }}
-	id={accordion.triggerId(item.value)}
-	type="button"
-	disabled={item.disabled}
-	tabindex={item.disabled ? -1 : accordion.tabIndex(item.value)}
-	onclick={handleClick}
-	onfocus={handleFocus}
-	onkeydown={handleKeydown}
-	aria-controls={accordion.contentId(item.value)}
-	aria-expanded={open}
-	data-disabled={item.disabled || undefined}
-	data-state={open ? 'open' : 'closed'}
-	data-reduced-motion={accordion.reducedMotion || undefined}
->
-	{@render children?.()}
-	<ChevronDown aria-hidden="true" class={indicatorClass} size={16} />
-</button>
+<div class={headingClass} role="heading" aria-level={headingLevel} data-slot="heading">
+	<button
+		{...rest}
+		bind:this={ref}
+		class={[rootClass, className]}
+		style={initialStyle}
+		use:applyIcssRootStyle={{ style, variables: icssVariables }}
+		id={accordion.triggerId(item.value)}
+		type="button"
+		disabled={item.disabled}
+		tabindex={item.disabled ? -1 : accordion.tabIndex(item.value)}
+		onclick={handleClick}
+		onfocus={handleFocus}
+		onkeydown={handleKeydown}
+		aria-controls={accordion.contentId(item.value)}
+		aria-disabled={locked || undefined}
+		aria-expanded={open}
+		data-active={active || undefined}
+		data-disabled={item.disabled || undefined}
+		data-state={open ? 'open' : 'closed'}
+		data-reduced-motion={accordion.reducedMotion || undefined}
+	>
+		{@render children?.()}
+		<ChevronDown aria-hidden="true" class={indicatorClass} size={16} />
+	</button>
+</div>

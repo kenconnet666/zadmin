@@ -5,6 +5,8 @@ export type { ZCollectionOption } from '../components/compound/choice-option.js'
 
 export { default as ZAccordion } from '../components/compound/accordion/ZAccordion.svelte';
 export type {
+	AccordionMultipleValue,
+	AccordionSingleValue,
 	AccordionType,
 	AccordionValue,
 	ZAccordionProps
@@ -172,7 +174,12 @@ export { default as ZSelectTrigger } from '../components/compound/select/ZSelect
 export type { ZSelectTriggerProps } from '../components/compound/select/ZSelectTrigger.svelte';
 export { SelectEvent } from '../components/compound/select/context.svelte.js';
 export { default as ZTabs } from '../components/compound/tabs/ZTabs.svelte';
-export type { TabsOrientation, ZTabsProps } from '../components/compound/tabs/ZTabs.svelte';
+export type {
+	TabsActivationMode,
+	TabsOrientation,
+	TabsPanelMount,
+	ZTabsProps
+} from '../components/compound/tabs/ZTabs.svelte';
 export { default as ZTabsList } from '../components/compound/tabs/ZTabsList.svelte';
 export type { ZTabsListProps } from '../components/compound/tabs/ZTabsList.svelte';
 export { default as ZTabsPanel } from '../components/compound/tabs/ZTabsPanel.svelte';
@@ -194,6 +201,8 @@ export { default as ZTooltip } from '../components/compound/tooltip/ZTooltip.sve
 export type { ZTooltipProps } from '../components/compound/tooltip/ZTooltip.svelte';
 export { default as ZTooltipContent } from '../components/compound/tooltip/ZTooltipContent.svelte';
 export type { ZTooltipContentProps } from '../components/compound/tooltip/ZTooltipContent.svelte';
+export { default as ZTooltipGroup } from '../components/compound/tooltip/ZTooltipGroup.svelte';
+export type { ZTooltipGroupProps } from '../components/compound/tooltip/ZTooltipGroup.svelte';
 export { default as ZTooltipTrigger } from '../components/compound/tooltip/ZTooltipTrigger.svelte';
 export type { ZTooltipTriggerProps } from '../components/compound/tooltip/ZTooltipTrigger.svelte';
 export { default as ZTour } from '../components/overlay/ZTour.svelte';
@@ -207,7 +216,13 @@ export type {
 export { default as ZBox } from '../components/gene/ZBox.svelte';
 export type { ZBoxProps } from '../components/gene/ZBox.svelte';
 export { default as ZButton } from '../components/gene/ZButton.svelte';
-export type { ButtonSize, ZButtonProps, ZButtonVariants } from '../components/gene/ZButton.svelte';
+export type {
+	ButtonShape,
+	ButtonSize,
+	ButtonVariant,
+	ZButtonProps,
+	ZButtonVariants
+} from '../components/gene/ZButton.svelte';
 export { default as ZIcon, iconManifest } from '../components/gene/ZIcon.svelte';
 export type { ZIconName, ZIconProps, ZIconSize } from '../components/gene/ZIcon.svelte';
 export { default as ZKbd } from '../components/gene/ZKbd.svelte';
@@ -231,7 +246,14 @@ export type {
 	ZAvatarProps
 } from '../components/data-display/ZAvatar.svelte';
 export { default as ZBadge } from '../components/data-display/ZBadge.svelte';
-export type { BadgeTone, ZBadgeProps } from '../components/data-display/ZBadge.svelte';
+export type {
+	BadgeOffset,
+	BadgeOverlap,
+	BadgePlacement,
+	BadgeSize,
+	BadgeTone,
+	ZBadgeProps
+} from '../components/data-display/ZBadge.svelte';
 export { default as ZCard } from '../components/data-display/ZCard.svelte';
 export type { ZCardProps } from '../components/data-display/ZCard.svelte';
 export { default as ZDescriptionList } from '../components/data-display/ZDescriptionList.svelte';
@@ -242,7 +264,7 @@ export type {
 export { default as ZList } from '../components/data-display/ZList.svelte';
 export type { ListItem, ZListProps } from '../components/data-display/ZList.svelte';
 export { default as ZTag } from '../components/data-display/ZTag.svelte';
-export type { ZTagProps } from '../components/data-display/ZTag.svelte';
+export type { TagTone, ZTagProps } from '../components/data-display/ZTag.svelte';
 export { default as ZEmpty } from '../components/data-display/ZEmpty.svelte';
 export type { ZEmptyProps } from '../components/data-display/ZEmpty.svelte';
 export { default as ZMeter } from '../components/data-display/ZMeter.svelte';
@@ -328,7 +350,11 @@ export type {
 	ToastPriority,
 	ToastQueueOptions,
 	ToastRecord,
-	ToastTone
+	ToastTaskMessage,
+	ToastTaskOptions,
+	ToastTaskResult,
+	ToastTone,
+	ToastUpdate
 } from '../runtime/toast.svelte.js';
 export { default as ZField } from '../components/input/ZField.svelte';
 export type { ZFieldProps, ZFieldSize } from '../components/input/ZField.svelte';

@@ -96,9 +96,14 @@ export function createRecipeExecutor(registry: StyleRegistry): RecipeExecutor {
 				themed.set(theme, compiled);
 			}
 
+			const provided = Object.fromEntries(
+				Object.entries(selected as Readonly<Record<string, unknown>>).filter(
+					([, value]) => value !== undefined
+				)
+			);
 			const selection = {
 				...(recipe.defaultVariants as Readonly<Record<string, unknown>> | undefined),
-				...(selected as Readonly<Record<string, unknown>>)
+				...provided
 			};
 			const classes = [compiled.base];
 			for (const [variantName, value] of Object.entries(selection)) {

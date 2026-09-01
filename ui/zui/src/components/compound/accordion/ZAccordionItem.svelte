@@ -2,6 +2,7 @@
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
+	import type { SelectionKey } from '../../../runtime/collection/selection.js';
 
 	import { defineRecipe, registerRecipeHmr } from '../../../recipes/define.js';
 
@@ -9,7 +10,7 @@
 		readonly children?: Snippet;
 		readonly disabled?: boolean;
 		ref?: HTMLDivElement | null;
-		readonly value: string;
+		readonly value: SelectionKey;
 	}
 
 	const accordionItemRecipe = defineRecipe({
@@ -40,7 +41,7 @@
 				description: '稳定Item值与Collection key。',
 				name: 'value',
 				required: true,
-				type: 'string'
+				type: 'SelectionKey'
 			},
 			{ default: 'false', description: '禁用当前Item。', name: 'disabled', type: 'boolean' },
 			{
@@ -59,7 +60,7 @@
 			{ description: '禁用状态。', name: 'data-disabled', values: ['true'] }
 		],
 		status: 'experimental',
-		summary: '为Trigger和Content提供稳定value与disabled边界的Accordion Item。'
+		summary: '为Trigger和Content提供稳定typed value与disabled边界的Accordion Item。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
 
@@ -92,6 +93,7 @@
 		get disabled() {
 			return resolvedDisabled;
 		},
+		owner: accordion.owner,
 		get value() {
 			return value;
 		}

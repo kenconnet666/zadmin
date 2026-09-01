@@ -66,6 +66,7 @@
 </script>
 
 <ZToast
+	announce={false}
 	bind:ref
 	title={item.title}
 	description={item.description}
@@ -80,6 +81,7 @@
 	data-reduced-motion={reduced || undefined}
 	onAction={runAction}
 	onDismiss={() => queue.dismiss(item.id, 'close')}
+	onEscapeKeyDown={() => queue.dismiss(item.id, 'close')}
 	onPauseChange={(reason, paused) =>
 		paused ? queue.pause(item.id, reason) : queue.resume(item.id, reason)}
 />

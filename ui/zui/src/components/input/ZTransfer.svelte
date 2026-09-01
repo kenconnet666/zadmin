@@ -632,7 +632,6 @@
 	aria-disabled={disabled || undefined}
 	aria-describedby={resolvedDescribedBy}
 	aria-labelledby={resolvedLabelledBy}
-	aria-readonly={readonly || undefined}
 	data-disabled={disabled || undefined}
 	data-invalid={resolvedInvalid || undefined}
 	data-loading={loading || undefined}

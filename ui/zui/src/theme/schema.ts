@@ -93,6 +93,7 @@ export const DEFAULT_THEME_SCHEMA = {
 		small: '0 1px 2px rgb(0 0 0 / 0.08)'
 	},
 	size: {
+		calendarCellLarge: 56,
 		dialogMedium: 512,
 		drawerLarge: 560,
 		drawerMedium: 400,

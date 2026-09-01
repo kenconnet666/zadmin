@@ -10,7 +10,7 @@
 		importStatement: "import { ZPopconfirmAction } from '@zadmin/zui';",
 		name: 'ZPopconfirmAction',
 		bindings: [{ description: '真实button引用。', name: 'ref', type: 'HTMLButtonElement | null' }],
-		dependencies: ['ZPopconfirm', 'ZButton'],
+		dependencies: ['ZPopconfirm', 'ZButton', 'async generation'],
 		events: [
 			{
 				description: '先执行操作；preventDefault可保持Popconfirm打开。',
@@ -32,7 +32,7 @@
 		since: 'unreleased',
 		snippets: [{ description: '确认操作内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/popconfirm/ZPopconfirmAction.svelte',
-		states: [],
+		states: [{ description: '确认Promise尚未settle。', name: 'data-pending', values: ['true'] }],
 		status: 'experimental',
 		summary: '默认danger视觉并显式确认Popconfirm。'
 	} as const satisfies ZuiComponentMetadata;
@@ -40,18 +40,39 @@
 
 <script lang="ts">
 	import ZButton from '../../gene/ZButton.svelte';
-	import { useZPopover } from '../popover/context.svelte.js';
+	import { useZPopconfirm } from './context.svelte.js';
 	let {
+		'aria-describedby': ariaDescribedBy,
+		disabled = false,
+		loading = false,
 		onclick,
 		ref = $bindable(null),
 		variant = 'danger',
 		...rest
 	}: ZPopconfirmActionProps = $props();
-	const popover = useZPopover();
+	const popconfirm = useZPopconfirm();
+	const resolvedDescribedBy = $derived(
+		[ariaDescribedBy, popconfirm.errorMessage ? popconfirm.errorId : undefined]
+			.filter(Boolean)
+			.join(' ') || undefined
+	);
+	$effect(() => {
+		popconfirm.setAction(ref);
+		return () => popconfirm.setAction(null);
+	});
 	function handleClick(event: MouseEvent & { currentTarget: HTMLButtonElement }): void {
 		onclick?.(event);
-		if (!event.defaultPrevented) popover.setOpen(false);
+		if (!event.defaultPrevented && !popconfirm.pending) popconfirm.confirm(event);
 	}
 </script>
 
-<ZButton {...rest} bind:ref {variant} onclick={handleClick} />
+<ZButton
+	{...rest}
+	bind:ref
+	disabled={disabled || popconfirm.pending}
+	loading={loading || popconfirm.pending}
+	{variant}
+	aria-describedby={resolvedDescribedBy}
+	data-pending={popconfirm.pending || undefined}
+	onclick={handleClick}
+/>

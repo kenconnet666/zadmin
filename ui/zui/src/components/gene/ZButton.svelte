@@ -8,11 +8,13 @@
 	import { resolveControlSize, type ZControlSize } from '../../runtime/foundation/control-size.js';
 
 	export type ButtonSize = ZControlSize;
+	export type ButtonShape = 'default' | 'square';
 	export type ButtonVariant = 'danger' | 'ghost' | 'primary' | 'secondary';
 
 	export interface ButtonDesignProps {
 		disabled?: boolean;
 		loading?: boolean;
+		shape?: ButtonShape;
 		size?: ButtonSize;
 		variant?: ButtonVariant;
 	}
@@ -78,6 +80,13 @@
 					s.fontSize._small;
 				}
 			},
+			shape: {
+				default: () => undefined,
+				square: (s) => {
+					s.flexShrink(0);
+					s.paddingInline.px(0);
+				}
+			},
 			variant: {
 				danger: (s) => {
 					s.backgroundColor._danger;
@@ -109,12 +118,16 @@
 			{
 				style: (s) => s.backgroundColor._surface,
 				when: { disabled: true, variant: 'ghost' }
-			}
+			},
+			{ style: (s) => s.width._small, when: { shape: 'square', size: 'small' } },
+			{ style: (s) => s.width._medium, when: { shape: 'square', size: 'medium' } },
+			{ style: (s) => s.width._large, when: { shape: 'square', size: 'large' } }
 		],
 		defaultVariants: {
 			disabled: false,
 			fullWidth: false,
 			motion: 'auto',
+			shape: 'default',
 			size: 'medium',
 			variant: 'primary'
 		}
@@ -168,6 +181,12 @@
 				name: 'size',
 				type: "'small' | 'medium' | 'large'"
 			},
+			{
+				default: "'default'",
+				description: '默认内容宽度或与size一致的方形图标按钮。',
+				name: 'shape',
+				type: "'default' | 'square'"
+			},
 			{ default: 'false', description: '扩展到父容器宽度。', name: 'fullWidth', type: 'boolean' },
 			{
 				default: 'false',
@@ -208,6 +227,7 @@
 		source: 'ui/zui/src/components/gene/ZButton.svelte',
 		states: [
 			{ description: '按钮正在执行异步操作。', name: 'data-loading', values: ['true'] },
+			{ description: '方形图标按钮。', name: 'data-shape', values: ['square'] },
 			{ description: '当前已解析为减少动画。', name: 'data-reduced-motion', values: ['true'] }
 		],
 		status: 'stable',
@@ -239,6 +259,7 @@
 		loadingIndicator,
 		loadingLabel,
 		ref = $bindable(null),
+		shape = 'default',
 		size,
 		style,
 		start,
@@ -256,6 +277,7 @@
 			disabled: disabled || loading,
 			fullWidth,
 			motion: reduced ? 'reduced' : 'full',
+			shape,
 			size: resolvedSize,
 			variant
 		})
@@ -277,6 +299,7 @@
 	aria-label={loading && loadingLabel ? loadingLabel : ariaLabel}
 	data-loading={loading || undefined}
 	data-reduced-motion={reduced || undefined}
+	data-shape={shape === 'square' ? 'square' : undefined}
 >
 	{#if start}<span data-slot="start">{@render start()}</span>{/if}
 	{#if loading}

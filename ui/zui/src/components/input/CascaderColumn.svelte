@@ -1,10 +1,9 @@
 <script module lang="ts">
-	import type { SelectionKey } from '../../runtime/collection/selection.js';
-	import type { ChoiceVirtualController } from '../compound/choice-virtualization.js';
+	import type { SelectionKey as PublicSelectionKey } from '../../runtime/collection/selection.js';
 
 	export type CascaderLoadState = 'error' | 'loading';
 
-	export interface CascaderColumnItem<TKey extends SelectionKey = SelectionKey> {
+	export interface CascaderColumnItem<TKey extends PublicSelectionKey = PublicSelectionKey> {
 		readonly disabled: boolean;
 		readonly hasChildren: boolean;
 		readonly key: TKey;
@@ -13,12 +12,12 @@
 		readonly textValue: string;
 	}
 
-	export interface CascaderColumnController<TKey extends SelectionKey = SelectionKey> {
+	export interface CascaderColumnController<TKey extends PublicSelectionKey = PublicSelectionKey> {
 		readonly activeKey: TKey | undefined;
 		focus(key?: TKey): boolean;
 	}
 
-	export interface CascaderColumnProps<TKey extends SelectionKey = SelectionKey> {
+	export interface CascaderColumnProps<TKey extends PublicSelectionKey = PublicSelectionKey> {
 		readonly busy: boolean;
 		readonly columnId: string;
 		readonly disabled: boolean;

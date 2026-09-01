@@ -203,7 +203,7 @@ export class FormRegistry {
 	}
 
 	setFieldState(path: FieldPathInput, patch: FormFieldStatePatch): void {
-		const normalized: Partial<FormFieldState> = {};
+		const normalized: { -readonly [TKey in keyof FormFieldState]?: FormFieldState[TKey] } = {};
 		if (patch.errors !== undefined) normalized.errors = Object.freeze([...patch.errors]);
 		if (patch.warnings !== undefined) normalized.warnings = Object.freeze([...patch.warnings]);
 		if ('success' in patch) normalized.success = patch.success;

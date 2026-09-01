@@ -1,8 +1,12 @@
 <script module lang="ts">
-	import type { CalendarDate } from '@internationalized/date';
+	import type { CalendarDate as PublicCalendarDate } from '@internationalized/date';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
-	import type { CalendarRange, CalendarRangeValue, Weekday } from '../../runtime/date.js';
+	import type {
+		CalendarRange as PublicCalendarRange,
+		CalendarRangeValue as PublicCalendarRangeValue,
+		Weekday
+	} from '../../runtime/date.js';
 	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
 	import type { PopoverPlacement } from '../compound/popover/ZPopover.svelte';
 
@@ -13,19 +17,19 @@
 		readonly closeOnSelect?: boolean;
 		readonly controlId?: string;
 		readonly defaultOpen?: boolean;
-		readonly defaultValue?: CalendarRange | CalendarRangeValue | null;
+		readonly defaultValue?: PublicCalendarRange | PublicCalendarRangeValue | null;
 		readonly disabled?: boolean;
 		readonly endLabel?: string;
 		readonly firstDayOfWeek?: Weekday;
 		readonly form?: string;
 		readonly invalid?: boolean;
-		readonly isDateUnavailable?: (date: CalendarDate, part: 'end' | 'start') => boolean;
+		readonly isDateUnavailable?: (date: PublicCalendarDate, part: 'end' | 'start') => boolean;
 		readonly locale?: string;
-		readonly maxValue?: CalendarDate;
-		readonly minValue?: CalendarDate;
+		readonly maxValue?: PublicCalendarDate;
+		readonly minValue?: PublicCalendarDate;
 		readonly name?: string;
 		readonly onOpenChange?: (open: boolean) => void;
-		readonly onValueChange?: (value: CalendarRangeValue | null) => void;
+		readonly onValueChange?: (value: PublicCalendarRangeValue | null) => void;
 		open?: boolean;
 		readonly placement?: PopoverPlacement;
 		ref?: HTMLDivElement | null;
@@ -35,7 +39,7 @@
 		readonly size?: ZControlSize;
 		readonly startLabel?: string;
 		readonly timeZone?: string;
-		value?: CalendarRange | CalendarRangeValue | null;
+		value?: PublicCalendarRange | PublicCalendarRangeValue | null;
 	}
 
 	export const zuiMetadata = {

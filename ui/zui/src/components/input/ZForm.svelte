@@ -1,15 +1,15 @@
 <script module lang="ts">
-	import type { StandardSchemaV1 } from '@standard-schema/spec';
+	import type { StandardSchemaV1 as PublicStandardSchemaV1 } from '@standard-schema/spec';
 	import type { Snippet } from 'svelte';
 	import type { HTMLFormAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
 	import type {
-		FormFieldState,
-		FormFieldStatePatch
+		FormFieldState as PublicFormFieldState,
+		FormFieldStatePatch as PublicFormFieldStatePatch
 	} from '../../runtime/form/form-registry.svelte.js';
-	import type { FieldPathInput } from '../../runtime/form/field-path.js';
-	import type { FormErrors } from '../../runtime/form/validation.js';
+	import type { FieldPathInput as PublicFieldPathInput } from '../../runtime/form/field-path.js';
+	import type { FormErrors as PublicFormErrors } from '../../runtime/form/validation.js';
 	import type { FormValidationTrigger } from '../../runtime/form/form-context.svelte.js';
 
 	export interface FormSubmitDetail<TData = unknown> {
@@ -19,14 +19,14 @@
 	}
 
 	export interface FormInvalidDetail {
-		readonly errors: FormErrors;
+		readonly errors: PublicFormErrors;
 		readonly formData: FormData;
 		readonly originalEvent: SubmitEvent;
 	}
 
 	export interface FormValidationResult<TData = unknown> {
 		readonly data?: TData;
-		readonly errors: FormErrors;
+		readonly errors: PublicFormErrors;
 		readonly outdated: boolean;
 		readonly valid: boolean;
 	}
@@ -36,34 +36,33 @@
 	}
 
 	export interface ZFormController<TData = unknown> {
-		focusField(path: FieldPathInput, options?: FocusOptions): boolean;
+		focusField(path: PublicFieldPathInput, options?: FocusOptions): boolean;
 
-		getFieldState(path: FieldPathInput): FormFieldState;
+		getFieldState(path: PublicFieldPathInput): PublicFormFieldState;
 
 		reset(): void;
 
-		scrollToField(path: FieldPathInput, options?: ScrollIntoViewOptions): boolean;
+		scrollToField(path: PublicFieldPathInput, options?: ScrollIntoViewOptions): boolean;
 
-		setErrors(errors: FormErrors): void;
+		setErrors(errors: PublicFormErrors): void;
 
-		setFieldState(path: FieldPathInput, state: FormFieldStatePatch): void;
+		setFieldState(path: PublicFieldPathInput, state: PublicFormFieldStatePatch): void;
 
 		validate(): Promise<FormValidationResult<TData>>;
 
-		validateField(path: FieldPathInput): Promise<FormValidationResult<TData>>;
+		validateField(path: PublicFieldPathInput): Promise<FormValidationResult<TData>>;
 	}
 
-	export interface ZFormProps<TSchema extends StandardSchemaV1 = StandardSchemaV1> extends Omit<
-		HTMLFormAttributes,
-		'children' | 'onreset' | 'onsubmit'
-	> {
+	export interface ZFormProps<
+		TSchema extends PublicStandardSchemaV1 = PublicStandardSchemaV1
+	> extends Omit<HTMLFormAttributes, 'children' | 'onreset' | 'onsubmit'> {
 		readonly children?: Snippet;
-		controller?: ZFormController<StandardSchemaV1.InferOutput<TSchema>> | null;
+		controller?: ZFormController<PublicStandardSchemaV1.InferOutput<TSchema>> | null;
 		readonly disabled?: boolean;
-		errors?: FormErrors;
+		errors?: PublicFormErrors;
 		readonly focusFirstError?: boolean;
 		readonly nativeValidation?: boolean;
-		readonly onErrorsChange?: (errors: FormErrors) => void;
+		readonly onErrorsChange?: (errors: PublicFormErrors) => void;
 		readonly onInvalidSubmit?: (detail: FormInvalidDetail) => void;
 		readonly onreset?: (event: Event & { currentTarget: HTMLFormElement }) => void;
 		readonly onsubmit?: (event: SubmitEvent & { currentTarget: HTMLFormElement }) => void;
@@ -72,7 +71,7 @@
 		/** @deprecated Use the native lowercase `onsubmit` callback. */
 		readonly onSubmit?: (event: SubmitEvent) => void;
 		readonly onValidSubmit?: (
-			detail: FormSubmitDetail<StandardSchemaV1.InferOutput<TSchema>>
+			detail: FormSubmitDetail<PublicStandardSchemaV1.InferOutput<TSchema>>
 		) => void;
 		readonly onValidationError?: (error: unknown) => void;
 		readonly preventDefault?: boolean;

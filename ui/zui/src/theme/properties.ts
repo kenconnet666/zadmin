@@ -225,6 +225,7 @@ export const PROPERTY_DEFINITIONS = {
 	},
 	outlineWidth: { token: 'borderWidth', tokenUnit: 'px', units: ['length'] },
 	overflow: { keywords: OVERFLOW },
+	overflowAnchor: { keywords: { auto: 'auto', none: 'none' } },
 	overflowX: { keywords: OVERFLOW },
 	overflowY: { keywords: OVERFLOW },
 	padding: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
@@ -282,6 +283,16 @@ export const PROPERTY_DEFINITIONS = {
 			lowercase: 'lowercase',
 			none: 'none',
 			uppercase: 'uppercase'
+		}
+	},
+	touchAction: {
+		keywords: {
+			auto: 'auto',
+			manipulation: 'manipulation',
+			none: 'none',
+			panX: 'pan-x',
+			panY: 'pan-y',
+			pinchZoom: 'pinch-zoom'
 		}
 	},
 	tabSize: {},

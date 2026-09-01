@@ -11,6 +11,7 @@
 	> {
 		readonly children?: Snippet;
 		ref?: HTMLDivElement | null;
+		readonly region?: boolean;
 	}
 
 	const accordionContentRecipe = defineSlotRecipe({
@@ -68,6 +69,12 @@
 		parts: [{ description: '包裹内容并参与grid折叠。', name: 'inner' }],
 		props: [
 			{
+				default: 'true',
+				description: '设置role=region；大量同时展开的轻量面板可关闭以避免landmark泛滥。',
+				name: 'region',
+				type: 'boolean'
+			},
+			{
 				bindable: true,
 				default: 'null',
 				description: '挂载期间的真实region引用。',
@@ -109,12 +116,13 @@
 		children,
 		class: className,
 		ref = $bindable(null),
+		region = true,
 		style,
 		...rest
 	}: ZAccordionContentProps = $props();
 	const zui = useZui();
 	const accordion = useZAccordion();
-	const item = useZAccordionItem();
+	const item = useZAccordionItem(accordion.owner);
 	const open = $derived(accordion.isOpen(item.value));
 	const initiallyOpen = untrack(() => open);
 	const presence = createPresence(initiallyOpen);
@@ -129,8 +137,14 @@
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 
+	$effect.pre(() => {
+		const element = ref;
+		if (!open && element?.contains(element.ownerDocument.activeElement)) {
+			accordion.restoreFocus(item.value);
+		}
+	});
 	$effect(() => {
-		presence.update(open, accordion.exitDuration);
+		presence.update(open, accordion.exitDuration, ref?.ownerDocument.defaultView);
 		if (!open && accordion.reducedMotion) presence.finishExit();
 	});
 	onDestroy(() => presence.destroy());
@@ -144,7 +158,7 @@
 		style={initialStyle}
 		use:applyIcssRootStyle={{ style, variables: icssVariables }}
 		id={accordion.contentId(item.value)}
-		role="region"
+		role={region ? 'region' : undefined}
 		inert={!open}
 		aria-labelledby={accordion.triggerId(item.value)}
 		data-presence={presenceState}

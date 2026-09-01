@@ -249,9 +249,14 @@ export function createSlotRecipeExecutor(registry: StyleRegistry): SlotRecipeExe
 				compiled = compile(recipe, theme);
 				themed.set(theme, compiled);
 			}
+			const provided = Object.fromEntries(
+				Object.entries(selected as Readonly<Record<string, unknown>>).filter(
+					([, value]) => value !== undefined
+				)
+			);
 			const selection = {
 				...(recipe.defaultVariants ?? {}),
-				...(selected as Readonly<Record<string, unknown>>)
+				...provided
 			};
 			const classes = Object.fromEntries(
 				recipe.slots.map((slot) => [slot, [compiled.base.get(slot) ?? '']])

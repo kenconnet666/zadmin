@@ -199,7 +199,9 @@
 	const describedBy = $derived(
 		mergeAriaIds(descriptionId, errorIds.join(' '), warningIds.join(' '), successIds.join(' '))
 	);
-	const classes = $derived(zui.slots(fieldRecipe, { size }));
+	const classes = $derived(
+		size === undefined ? zui.slots(fieldRecipe) : zui.slots(fieldRecipe, { size })
+	);
 	let focusOwner: (() => void) | undefined;
 
 	function registerFocusOwner(focus: () => void): () => void {

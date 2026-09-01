@@ -248,8 +248,8 @@
 		base: (s) => {
 			s.height.raw('var(--zui-virtual-list-height)');
 			s.overflow.auto;
+			s.overflowAnchor.none;
 			s.position.relative;
-			s.property.raw('overflow-anchor', 'none');
 		},
 		variants: {},
 		defaultVariants: {}
@@ -269,15 +269,15 @@
 			s.insetInlineStart.px(0);
 			s.position.absolute;
 			s.width.percent(100);
-			s.property.raw('overflow-anchor', 'none');
+			s.overflowAnchor.none;
 		},
 		variants: {},
 		defaultVariants: {}
 	});
 	const stateRecipe = defineRecipe({
 		base: (s) => {
-			s.padding.block._large;
-			s.padding.inline._large;
+			s.paddingBlock._large;
+			s.paddingInline._large;
 		},
 		variants: {},
 		defaultVariants: {}
@@ -647,7 +647,7 @@
 		};
 	}
 
-	function handleScroll(event: Event & { currentTarget: HTMLDivElement }): void {
+	function handleScroll(event: UIEvent & { currentTarget: EventTarget & HTMLDivElement }): void {
 		onscroll?.(event);
 		virtualizer.setScrollOffset(event.currentTarget.scrollTop);
 		publishRange(virtualizer.range);

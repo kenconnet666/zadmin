@@ -1,30 +1,32 @@
 import { getContext, setContext } from 'svelte';
 
-import type {
-	CollectionItem,
-	CollectionStore
-} from '../../../runtime/collection/collection.svelte.js';
+import type { CompoundLogicalCollectionItem } from '../../../runtime/collection/compound-logical-collection.svelte.js';
+import type { SelectionKey } from '../../../runtime/collection/selection.js';
 
 export type TabsActivationMode = 'automatic' | 'manual';
 export type TabsOrientation = 'horizontal' | 'vertical';
+export type TabsPanelMount = 'active-only' | 'keep-mounted' | 'lazy';
 
-export interface TabsCollectionItem extends CollectionItem<string> {
-	readonly textValue: string;
+export interface TabsCollectionItem extends CompoundLogicalCollectionItem<SelectionKey> {
+	readonly element: HTMLButtonElement | null;
+	readonly id: string;
 }
 
 export interface ZTabsContext {
 	readonly activationMode: TabsActivationMode;
-	readonly collection: CollectionStore<TabsCollectionItem>;
 	readonly disabled: boolean;
 	readonly orientation: TabsOrientation;
-	focus(value: string): void;
-	handleKey(event: KeyboardEvent): void;
-	isSelected(value: string): boolean;
-	panelId(value: string): string;
+	focus(value: SelectionKey): void;
+	handleKey(event: KeyboardEvent): boolean;
+	isActive(value: SelectionKey): boolean;
+	isSelected(value: SelectionKey): boolean;
+	panelId(value: SelectionKey): string;
 	register(read: () => TabsCollectionItem): () => void;
-	select(value: string): void;
-	tabIndex(value: string): 0 | -1;
-	triggerId(value: string): string;
+	restoreFocusFromPanel(): void;
+	select(value: SelectionKey): void;
+	shouldMountPanel(value: SelectionKey): boolean;
+	tabIndex(value: SelectionKey): 0 | -1;
+	triggerId(value: SelectionKey): string;
 }
 
 const TABS_CONTEXT = Symbol('zui-tabs-context');

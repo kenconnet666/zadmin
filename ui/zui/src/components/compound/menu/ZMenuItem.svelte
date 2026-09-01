@@ -33,7 +33,9 @@
 		id: 'menu-item',
 		importStatement: "import { ZMenuItem } from '@zadmin/zui';",
 		name: 'ZMenuItem',
-		bindings: [{ description: '真实div或anchor引用。', name: 'ref', type: 'HTMLElement | null' }],
+		bindings: [
+			{ description: '真实button或anchor引用。', name: 'ref', type: 'HTMLElement | null' }
+		],
 		dependencies: ['ZMenu', 'LogicalCollection', 'MountedElements', 'CollectionNavigation', 'ZKbd'],
 		events: [
 			{
@@ -156,16 +158,23 @@
 	const itemRecipe = defineRecipe({
 		base: (s) => {
 			s.alignItems.center;
+			s.backgroundColor.transparent;
+			s.borderStyle.none;
 			s.borderRadius._small;
+			s.boxSizing.borderBox;
 			s.color._text;
 			s.cursor.pointer;
 			s.display.flex;
+			s.fontFamily._sans;
+			s.fontSize._medium;
 			s.gap._medium;
 			s.justifyContent.spaceBetween;
 			s.paddingBlock._small;
 			s.paddingInline._medium;
+			s.textAlign.start;
 			s.textDecoration.none;
 			s.userSelect.none;
+			s.width._full;
 			s._focusVisible((focus) => {
 				focus.outlineColor._focus;
 				focus.outlineOffset.px(-2);
@@ -370,13 +379,14 @@
 		{@render content()}
 	</a>
 {:else}
-	<div
+	<button
 		{...rest}
 		bind:this={ref}
 		class={[rootClass, className]}
 		style={initialStyle}
 		use:applyIcssRootStyle={{ style, variables }}
 		id={resolvedId}
+		type="button"
 		role={itemRole}
 		aria-checked={itemRole === 'menuitem' ? undefined : checked}
 		aria-disabled={resolvedDisabled || undefined}
@@ -390,5 +400,5 @@
 		onpointermove={handlePointerMove}
 	>
 		{@render content()}
-	</div>
+	</button>
 {/if}

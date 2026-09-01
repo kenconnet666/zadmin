@@ -236,6 +236,7 @@
 		'aria-invalid': ariaInvalid,
 		'aria-label': ariaLabel,
 		'aria-labelledby': ariaLabelledBy,
+		appearance = 'field',
 		class: className,
 		controlId,
 		defaultValue,
@@ -398,7 +399,7 @@
 		onReset?.();
 	}
 	function handleInput(
-		event: InputEvent & { currentTarget: HTMLInputElement },
+		event: Event & { currentTarget: HTMLInputElement },
 		segment: DateSegment,
 		index: number
 	): void {
@@ -490,4 +491,3 @@
 		value={valueState.current?.toString()}
 	/>
 {/if}
-appearance = 'field',

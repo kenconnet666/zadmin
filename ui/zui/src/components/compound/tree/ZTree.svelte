@@ -4,13 +4,16 @@
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
 	import type { SelectionKey, SelectionMode } from '../../../runtime/collection/selection.js';
 	import type { VirtualAlign } from '../../../runtime/collection/virtualizer.js';
-	import type { TreeEntry, TreeNode } from '../../../runtime/tree.js';
+	import type {
+		TreeEntry as PublicTreeEntry,
+		TreeNode as PublicTreeNode
+	} from '../../../runtime/tree.js';
 	import type { ZVirtualListController } from '../../data-display/ZVirtualList.svelte';
 
 	export type TreeSelectionMode = SelectionMode;
 	export type TreeSelectionStyle = 'checkbox' | 'highlight';
 
-	export interface TreeLoadContext<TKey extends SelectionKey> {
+	export interface TreeLoadContext<TKey extends SelectionKey = SelectionKey> {
 		readonly key: TKey;
 		readonly signal: AbortSignal;
 	}
@@ -22,7 +25,7 @@
 
 		focusKey(key: TKey, options?: { readonly expandAncestors?: boolean }): boolean;
 
-		getNode(key: TKey): TreeNode<TKey> | undefined;
+		getNode(key: TKey): PublicTreeNode<TKey> | undefined;
 
 		retryLoad(key: TKey): boolean;
 
@@ -44,13 +47,13 @@
 		expandedKeys?: readonly TKey[];
 		readonly form?: string;
 		readonly height?: number;
-		readonly item?: Snippet<[TreeNode<TKey>, TreeEntry<TKey>]>;
+		readonly item?: Snippet<[PublicTreeNode<TKey>, PublicTreeEntry<TKey>]>;
 		readonly itemSize?: number;
 		readonly name?: string;
-		readonly nodes: readonly TreeNode<TKey>[];
+		readonly nodes: readonly PublicTreeNode<TKey>[];
 		readonly onExpandedChange?: (keys: readonly TKey[]) => void;
 		readonly onLoadChildren?: (
-			node: TreeNode<TKey>,
+			node: PublicTreeNode<TKey>,
 			context: TreeLoadContext<TKey>
 		) => void | Promise<void>;
 		readonly onLoadError?: (key: TKey, error: unknown) => void;
@@ -717,8 +720,8 @@
 		};
 	}
 
-	function mountTreeItem(element: HTMLElement, key: TKey): () => void {
-		return mountItem(key, element);
+	function mountTreeItem(element: HTMLElement, key: TKey): { destroy(): void } {
+		return { destroy: mountItem(key, element) };
 	}
 
 	function eventEntry(

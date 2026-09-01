@@ -5,11 +5,13 @@
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 	export interface ZToastProps extends Omit<HTMLAttributes<HTMLElement>, 'title'> {
 		readonly actionLabel?: string;
+		readonly announce?: boolean;
 		readonly description?: string;
 		readonly dismissLabel?: string;
 		readonly dismissible?: boolean;
 		readonly onAction?: (event: MouseEvent) => void;
 		readonly onDismiss?: (event: MouseEvent) => void;
+		readonly onEscapeKeyDown?: (event: KeyboardEvent) => void;
 		readonly onPauseChange?: (reason: 'focus' | 'hover', paused: boolean) => void;
 		readonly priority?: ToastPriority;
 		ref?: HTMLElement | null;
@@ -22,17 +24,29 @@
 		importStatement: "import { ZToast, ZToaster, createToastQueue } from '@zadmin/zui';",
 		name: 'ZToast',
 		bindings: [{ description: '真实article引用。', name: 'ref', type: 'HTMLElement | null' }],
-		dependencies: ['ZButton', '@lucide/svelte', 'live region'],
+		dependencies: ['ZButton', '@lucide/svelte', 'scoped live region'],
 		events: [
 			{ description: '操作按钮。', name: 'onAction', type: '(event: MouseEvent) => void' },
-			{ description: '关闭按钮。', name: 'onDismiss', type: '(event: MouseEvent) => void' },
+			{
+				description: '关闭按钮请求。',
+				name: 'onDismiss',
+				type: '(event: MouseEvent) => void'
+			},
+			{
+				description: '焦点位于Toast内时的Escape请求。',
+				name: 'onEscapeKeyDown',
+				type: '(event: KeyboardEvent) => void'
+			},
 			{
 				description: 'hover或focus进入、离开时通知队列暂停原因。',
 				name: 'onPauseChange',
 				type: "(reason: 'focus' | 'hover', paused: boolean) => void"
 			}
 		],
-		keyboard: [{ description: '操作与关闭按钮。', key: 'Tab / Enter / Space' }],
+		keyboard: [
+			{ description: '操作与关闭按钮。', key: 'Tab / Enter / Space' },
+			{ description: '焦点位于Toast内时请求关闭。', key: 'Escape' }
+		],
 		parts: [
 			{ description: '标题。', name: 'title' },
 			{ description: '说明。', name: 'description' },
@@ -40,6 +54,12 @@
 		],
 		props: [
 			{ default: '必填', description: '消息标题。', name: 'title', required: true, type: 'string' },
+			{
+				default: 'true',
+				description: '是否由独立Toast创建live语义；Toaster使用集中公告器时关闭。',
+				name: 'announce',
+				type: 'boolean'
+			},
 			{
 				default: 'undefined',
 				description: '补充说明；不应重复标题。',
@@ -162,12 +182,15 @@
 	import { isDomHtmlElement, isDomNode } from '../../runtime/layer/dom-realm.js';
 	let {
 		actionLabel,
+		announce = true,
 		class: className,
 		description,
 		dismissible = true,
 		dismissLabel,
 		onAction,
 		onDismiss,
+		onEscapeKeyDown,
+		onkeydown,
 		onPauseChange,
 		priority,
 		ref = $bindable(null),
@@ -195,6 +218,19 @@
 			return;
 		onPauseChange?.('focus', false);
 	}
+	function handleKeydown(event: KeyboardEvent & { currentTarget: HTMLElement }): void {
+		onkeydown?.(event);
+		if (
+			event.defaultPrevented ||
+			event.key !== 'Escape' ||
+			!dismissible ||
+			onEscapeKeyDown === undefined
+		)
+			return;
+		event.preventDefault();
+		event.stopPropagation();
+		onEscapeKeyDown?.(event);
+	}
 </script>
 
 <article
@@ -203,13 +239,16 @@
 	class={[rootClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
-	role={resolvedPriority === 'assertive' ? 'alert' : 'status'}
-	aria-atomic="true"
+	role={announce ? (resolvedPriority === 'assertive' ? 'alert' : 'status') : undefined}
+	aria-live={announce ? resolvedPriority : undefined}
+	aria-atomic={announce ? 'true' : undefined}
 	data-tone={tone}
+	data-priority={resolvedPriority}
 	onmouseenter={() => onPauseChange?.('hover', true)}
 	onmouseleave={() => onPauseChange?.('hover', false)}
 	onfocusin={() => onPauseChange?.('focus', true)}
 	onfocusout={focusOut}
+	onkeydown={handleKeydown}
 >
 	<strong class={titleClass} data-slot="title">{title}</strong>{#if description}<div
 			class={descriptionClass}

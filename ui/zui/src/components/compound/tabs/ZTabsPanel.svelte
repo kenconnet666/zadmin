@@ -2,6 +2,7 @@
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
+	import type { SelectionKey } from '../../../runtime/collection/selection.js';
 
 	import { defineRecipe, registerRecipeHmr } from '../../../recipes/define.js';
 
@@ -11,7 +12,7 @@
 	> {
 		readonly children?: Snippet;
 		ref?: HTMLDivElement | null;
-		readonly value: string;
+		readonly value: SelectionKey;
 	}
 
 	const tabsPanelRecipe = defineRecipe({
@@ -48,7 +49,7 @@
 				description: '与Trigger配对的稳定值。',
 				name: 'value',
 				required: true,
-				type: 'string'
+				type: 'SelectionKey'
 			},
 			{
 				bindable: true,
@@ -63,7 +64,7 @@
 		source: 'ui/zui/src/components/compound/tabs/ZTabsPanel.svelte',
 		states: [{ description: '激活状态。', name: 'data-state', values: ['active', 'inactive'] }],
 		status: 'experimental',
-		summary: '与Trigger建立稳定ARIA关联并使用hidden控制可见性的tabpanel。'
+		summary: '与typed Trigger稳定关联，并按Tabs的keep-mounted、lazy或active-only策略管理tabpanel。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
 
@@ -84,29 +85,39 @@
 		class: className,
 		ref = $bindable(null),
 		style,
+		tabindex = 0,
 		value,
 		...rest
 	}: ZTabsPanelProps = $props();
 	const zui = useZui();
 	const tabs = useZTabs();
 	const selected = $derived(tabs.isSelected(value));
+	const mounted = $derived(tabs.shouldMountPanel(value));
 	const rootClass = $derived(zui.recipe(tabsPanelRecipe));
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
+	$effect.pre(() => {
+		const element = ref;
+		if (!selected && element?.contains(element.ownerDocument.activeElement)) {
+			tabs.restoreFocusFromPanel();
+		}
+	});
 </script>
 
-<div
-	{...rest}
-	bind:this={ref}
-	class={[rootClass, className]}
-	style={initialStyle}
-	use:applyIcssRootStyle={{ style, variables: icssVariables }}
-	id={tabs.panelId(value)}
-	role="tabpanel"
-	tabindex={0}
-	hidden={!selected}
-	aria-labelledby={tabs.triggerId(value)}
-	data-state={selected ? 'active' : 'inactive'}
->
-	{@render children?.()}
-</div>
+{#if mounted}
+	<div
+		{...rest}
+		bind:this={ref}
+		class={[rootClass, className]}
+		style={initialStyle}
+		use:applyIcssRootStyle={{ style, variables: icssVariables }}
+		id={tabs.panelId(value)}
+		role="tabpanel"
+		{tabindex}
+		hidden={!selected}
+		aria-labelledby={tabs.triggerId(value)}
+		data-state={selected ? 'active' : 'inactive'}
+	>
+		{@render children?.()}
+	</div>
+{/if}

@@ -470,8 +470,12 @@
 		draftInvalid = false;
 		return true;
 	}
+	function clearDraft(): void {
+		draftState.setFromUser('');
+		if (inputRef) inputRef.value = '';
+	}
 	function commitDraft(): void {
-		if (add(draftState.current)) draftState.setFromUser('');
+		if (add(draftState.current)) clearDraft();
 	}
 	function remove(index: number, restoreFocus = false): void {
 		if (resolvedDisabled || resolvedReadonly || index < 0 || index >= resolvedValues.length) return;
@@ -629,7 +633,7 @@
 		}
 		if (next.length > resolvedValues.length) {
 			valueState.setFromUser(Object.freeze(next));
-			draftState.setFromUser('');
+			clearDraft();
 			draftInvalid = false;
 		}
 	}
@@ -648,6 +652,7 @@
 	function resetFromForm(): void {
 		valueState.reset();
 		draftState.reset();
+		if (inputRef) inputRef.value = '';
 		navigation.set(undefined, 'programmatic');
 		editingIndex = undefined;
 		editingSnapshot = undefined;

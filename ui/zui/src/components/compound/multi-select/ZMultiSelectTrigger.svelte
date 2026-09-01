@@ -78,7 +78,7 @@
 			s.display.inlineFlex;
 			s.justifyContent.center;
 			s.marginInlineStart._xsmall;
-			s.property.raw('touch-action', 'manipulation');
+			s.touchAction.manipulation;
 		},
 		variants: {},
 		defaultVariants: {}

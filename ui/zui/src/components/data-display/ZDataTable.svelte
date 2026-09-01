@@ -1109,7 +1109,7 @@
 		focusedTarget = target === 'selection' || target === 'expand' ? target : 'auto';
 	}
 
-	function handleScroll(event: Event & { currentTarget: HTMLDivElement }): void {
+	function handleScroll(event: UIEvent & { currentTarget: EventTarget & HTMLDivElement }): void {
 		onscroll?.(event);
 		if (!virtualized) return;
 		virtualizer.setScrollOffset(event.currentTarget.scrollTop);
@@ -1123,7 +1123,7 @@
 	}
 
 	function beginResize(
-		event: PointerEvent & { currentTarget: HTMLButtonElement },
+		event: PointerEvent & { currentTarget: HTMLElement },
 		column: DataTableColumn<TRow>
 	): void {
 		if (event.button !== 0) return;
@@ -1155,7 +1155,10 @@
 		ownerDocument.addEventListener('pointercancel', end, { once: true });
 	}
 
-	function resizeWithKeyboard(event: KeyboardEvent, column: DataTableColumn<TRow>): void {
+	function resizeWithKeyboard(
+		event: KeyboardEvent & { currentTarget: HTMLElement },
+		column: DataTableColumn<TRow>
+	): void {
 		const resolved = effectiveWidth(column);
 		const width = typeof resolved === 'number' ? resolved : DEFAULT_RESIZABLE_WIDTH;
 		const step = event.shiftKey ? 24 : 8;
@@ -1394,11 +1397,13 @@
 							</ZButton>
 						{:else}{layout.column.header}{/if}
 						{#if layout.column.resizable}
-							<button
+							<!-- svelte-ignore a11y_no_noninteractive_tabindex (ARIA separator is a focusable value widget) -->
+							<!-- svelte-ignore a11y_no_noninteractive_element_interactions (pointer and keyboard resize the separator value) -->
+							<div
 								class={resizerClass}
 								data-slot="column-resizer"
-								type="button"
 								role="separator"
+								tabindex="0"
 								aria-label={resizeLabel(layout.column)}
 								aria-orientation="vertical"
 								aria-valuemin={minimumWidth(layout.column)}
@@ -1408,8 +1413,9 @@
 									: DEFAULT_RESIZABLE_WIDTH}
 								onpointerdown={(event) => beginResize(event, layout.column)}
 								onkeydown={(event) => resizeWithKeyboard(event, layout.column)}
-								><span class={resizerLineClass} aria-hidden="true"></span></button
 							>
+								<span class={resizerLineClass} aria-hidden="true"></span>
+							</div>
 						{/if}
 					</th>
 				{/each}
@@ -1493,12 +1499,8 @@
 				{/each}
 			</tr>
 			{#if rowExpanded}
-				<tr
-					class={expandedClass}
-					data-slot="expanded-row"
-					role="presentation"
-					use:mountRow={{ key: entry.key }}
-					><td colspan={columnCount} role="presentation"
+				<tr class={expandedClass} data-slot="expanded-row" use:mountRow={{ key: entry.key }}
+					><td colspan={columnCount}
 						><div
 							id={`${selectionName}-details-${entry.index}`}
 							role="region"
@@ -1515,8 +1517,8 @@
 				></td></tr
 			>{/if}
 		{#if keyedRows.length === 0 && !loading && !errorMessage}
-			<tr data-slot="empty" role="presentation"
-				><td colspan={columnCount} role="presentation"
+			<tr data-slot="empty"
+				><td colspan={columnCount}
 					>{#if empty}{@render empty()}{:else}<ZEmpty
 							title={emptyLabel}
 							headingLevel={3}

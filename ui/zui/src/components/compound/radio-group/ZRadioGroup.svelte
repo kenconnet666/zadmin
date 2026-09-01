@@ -2,7 +2,7 @@
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
-	import type { SelectionKey } from '../../../runtime/collection/selection.js';
+	import type { SelectionKey as RadioSelectionKey } from '../../../runtime/collection/selection.js';
 
 	import { defineRecipe, registerRecipeHmr } from '../../../recipes/define.js';
 
@@ -12,7 +12,7 @@
 		readonly disabled?: boolean;
 		readonly label: string;
 		readonly textValue?: string;
-		readonly value: SelectionKey;
+		readonly value: RadioSelectionKey;
 	}
 
 	export interface ZRadioGroupProps extends Omit<
@@ -20,19 +20,19 @@
 		'aria-disabled' | 'aria-invalid' | 'aria-readonly' | 'aria-required' | 'children' | 'role'
 	> {
 		readonly children?: Snippet;
-		readonly defaultValue?: SelectionKey;
+		readonly defaultValue?: RadioSelectionKey;
 		readonly disabled?: boolean;
 		readonly form?: string;
 		readonly invalid?: boolean;
 		readonly loop?: boolean;
 		readonly name?: string;
-		readonly onValueChange?: (value: SelectionKey) => void;
+		readonly onValueChange?: (value: RadioSelectionKey) => void;
 		readonly options?: readonly ZRadioGroupOption[];
 		readonly orientation?: RadioGroupOrientation;
 		readonly readonly?: boolean;
 		ref?: HTMLDivElement | null;
 		readonly required?: boolean;
-		value?: SelectionKey;
+		value?: RadioSelectionKey;
 	}
 
 	const radioGroupRecipe = defineRecipe({

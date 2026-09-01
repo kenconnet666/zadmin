@@ -1,5 +1,5 @@
 <script module lang="ts">
-	import type { CalendarDate } from '@internationalized/date';
+	import type { CalendarDate as PublicCalendarDate } from '@internationalized/date';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import type { Weekday } from '../../runtime/date.js';
@@ -13,19 +13,19 @@
 		readonly closeOnSelect?: boolean;
 		readonly controlId?: string;
 		readonly defaultOpen?: boolean;
-		readonly defaultValue?: CalendarDate | null;
+		readonly defaultValue?: PublicCalendarDate | null;
 		readonly disabled?: boolean;
 		readonly firstDayOfWeek?: Weekday;
 		readonly form?: string;
 		readonly formatOptions?: Intl.DateTimeFormatOptions;
 		readonly invalid?: boolean;
-		readonly isDateUnavailable?: (date: CalendarDate) => boolean;
+		readonly isDateUnavailable?: (date: PublicCalendarDate) => boolean;
 		readonly locale?: string;
-		readonly maxValue?: CalendarDate;
-		readonly minValue?: CalendarDate;
+		readonly maxValue?: PublicCalendarDate;
+		readonly minValue?: PublicCalendarDate;
 		readonly name?: string;
 		readonly onOpenChange?: (open: boolean) => void;
-		readonly onValueChange?: (value: CalendarDate | null) => void;
+		readonly onValueChange?: (value: PublicCalendarDate | null) => void;
 		open?: boolean;
 		readonly placeholder?: string;
 		readonly placement?: PopoverPlacement;
@@ -36,7 +36,7 @@
 		readonly size?: ZControlSize;
 		readonly timeZone?: string;
 		readonly triggerLabel?: (display: string) => string;
-		value?: CalendarDate | null;
+		value?: PublicCalendarDate | null;
 	}
 
 	export const zuiMetadata = {

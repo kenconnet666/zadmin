@@ -45,6 +45,7 @@
 </script>
 
 <script lang="ts">
+	import { untrack } from 'svelte';
 	import { useZui } from '../../../runtime/foundation/context.js';
 	import { createZuiId } from '../../../runtime/foundation/ids.js';
 	import { provideZMenuGroup } from './context.svelte.js';
@@ -64,16 +65,18 @@
 			return labelId;
 		},
 		registerLabel(id) {
-			if (registeredLabelId !== undefined) {
-				throw new Error('ZMenuGroup accepts at most one ZMenuLabel.');
-			}
-			registeredLabelId = id;
-			let active = true;
-			return () => {
-				if (!active) return;
-				active = false;
-				registeredLabelId = undefined;
-			};
+			return untrack(() => {
+				if (registeredLabelId !== undefined) {
+					throw new Error('ZMenuGroup accepts at most one ZMenuLabel.');
+				}
+				registeredLabelId = id;
+				let active = true;
+				return () => {
+					if (!active) return;
+					active = false;
+					registeredLabelId = undefined;
+				};
+			});
 		}
 	});
 </script>

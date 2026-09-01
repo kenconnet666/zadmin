@@ -1,21 +1,20 @@
 <script module lang="ts">
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
-	import type { SelectionKey } from '../../runtime/collection/selection.js';
+	import type { SelectionKey as PublicSelectionKey } from '../../runtime/collection/selection.js';
 	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
-	import type { TreeNode } from '../../runtime/tree.js';
+	import type { TreeNode as PublicTreeNode } from '../../runtime/tree.js';
 	import type { PopoverPlacement } from '../compound/popover/ZPopover.svelte';
 	import type { TreeLoadContext } from '../compound/tree/ZTree.svelte';
 
-	export type CascaderFilter<TKey extends SelectionKey = SelectionKey> = (
-		path: readonly TreeNode<TKey>[],
+	export type CascaderFilter<TKey extends PublicSelectionKey = PublicSelectionKey> = (
+		path: readonly PublicTreeNode<TKey>[],
 		query: string
 	) => boolean;
 
-	export interface ZCascaderProps<TKey extends SelectionKey = SelectionKey> extends Omit<
-		HTMLAttributes<HTMLDivElement>,
-		'onchange'
-	> {
+	export interface ZCascaderProps<
+		TKey extends PublicSelectionKey = PublicSelectionKey
+	> extends Omit<HTMLAttributes<HTMLDivElement>, 'onchange'> {
 		readonly clearable?: boolean;
 		readonly clearLabel?: string;
 		readonly controlId?: string;
@@ -31,9 +30,9 @@
 		readonly loadingText?: string;
 		readonly matchWidth?: boolean;
 		readonly name?: string;
-		readonly nodes: readonly TreeNode<TKey>[];
+		readonly nodes: readonly PublicTreeNode<TKey>[];
 		readonly onLoadChildren?: (
-			node: TreeNode<TKey>,
+			node: PublicTreeNode<TKey>,
 			context: TreeLoadContext<TKey>
 		) => Promise<void> | void;
 		readonly onLoadError?: (key: TKey, error: unknown) => void;

@@ -72,6 +72,7 @@ export { zuiMetadata as tabsTriggerMetadata } from '../components/compound/tabs/
 export { zuiMetadata as treeMetadata } from '../components/compound/tree/ZTree.svelte';
 export { zuiMetadata as tooltipMetadata } from '../components/compound/tooltip/ZTooltip.svelte';
 export { zuiMetadata as tooltipContentMetadata } from '../components/compound/tooltip/ZTooltipContent.svelte';
+export { zuiMetadata as tooltipGroupMetadata } from '../components/compound/tooltip/ZTooltipGroup.svelte';
 export { zuiMetadata as tooltipTriggerMetadata } from '../components/compound/tooltip/ZTooltipTrigger.svelte';
 export { zuiMetadata as tourMetadata } from '../components/overlay/ZTour.svelte';
 export { zuiMetadata as boxMetadata } from '../components/gene/ZBox.svelte';

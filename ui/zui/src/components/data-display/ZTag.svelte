@@ -2,9 +2,9 @@
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
-	import type { BadgeTone } from './ZBadge.svelte';
 	import { styleInternalAction } from '../gene/internal-action.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
+	export type TagTone = 'accent' | 'danger' | 'default' | 'success' | 'warning';
 	export interface ZTagProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'children'> {
 		readonly children?: Snippet;
 		readonly disabled?: boolean;
@@ -13,7 +13,7 @@
 		readonly removeTabIndex?: number;
 		ref?: HTMLSpanElement | null;
 		readonly removable?: boolean;
-		readonly tone?: BadgeTone;
+		readonly tone?: TagTone;
 	}
 	export const zuiMetadata = {
 		category: 'data-display',
@@ -21,7 +21,7 @@
 		importStatement: "import { ZTag } from '@zadmin/zui';",
 		name: 'ZTag',
 		bindings: [{ description: '真实span引用。', name: 'ref', type: 'HTMLSpanElement | null' }],
-		dependencies: ['ZBadge tone', 'internal action style'],
+		dependencies: ['semantic Theme tones', 'internal action style'],
 		events: [
 			{
 				description: '点击移除按钮；Tag状态所有权由调用方管理。',
@@ -45,7 +45,7 @@
 				name: 'removeTabIndex',
 				type: 'number'
 			},
-			{ default: "'default'", description: '语义tone。', name: 'tone', type: 'BadgeTone' }
+			{ default: "'default'", description: '语义tone。', name: 'tone', type: 'TagTone' }
 		],
 		since: 'unreleased',
 		snippets: [{ description: 'Tag内容。', name: 'children', type: 'Snippet' }],

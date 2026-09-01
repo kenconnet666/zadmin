@@ -2,7 +2,13 @@ import { getContext, setContext } from 'svelte';
 
 export interface ZPopconfirmContext {
 	readonly descriptionId: string;
+	readonly errorId: string;
+	readonly errorMessage: string | undefined;
+	readonly pending: boolean;
 	readonly titleId: string;
+	cancel(): void;
+	confirm(event: MouseEvent): void;
+	setAction(action: HTMLButtonElement | null): void;
 }
 
 const POPCONFIRM_CONTEXT = Symbol('zui-popconfirm-context');

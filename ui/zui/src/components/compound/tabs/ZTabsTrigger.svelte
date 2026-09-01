@@ -2,6 +2,7 @@
 	import type { Snippet } from 'svelte';
 	import type { HTMLButtonAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
+	import type { SelectionKey } from '../../../runtime/collection/selection.js';
 
 	import { defineRecipe, registerRecipeHmr } from '../../../recipes/define.js';
 
@@ -25,7 +26,7 @@
 		readonly onkeydown?: HTMLButtonAttributes['onkeydown'];
 		ref?: HTMLButtonElement | null;
 		readonly textValue?: string;
-		readonly value: string;
+		readonly value: SelectionKey;
 	};
 
 	const tabsTriggerRecipe = defineRecipe({
@@ -106,7 +107,7 @@
 				description: '稳定的Tab值与Collection key。',
 				name: 'value',
 				required: true,
-				type: 'string'
+				type: 'SelectionKey'
 			},
 			{ default: 'value', description: 'Collection文本值。', name: 'textValue', type: 'string' },
 			{ default: 'false', description: '禁用当前Tab。', name: 'disabled', type: 'boolean' },
@@ -127,7 +128,8 @@
 			{ description: '布局方向。', name: 'data-orientation', values: ['horizontal', 'vertical'] }
 		],
 		status: 'experimental',
-		summary: '注册到Tabs Collection并拥有roving tabindex与激活语义的原生button。'
+		summary:
+			'注册typed key到LogicalCollection并拥有独立active、roving tabindex与激活语义的原生button。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
 
@@ -160,6 +162,7 @@
 	const tabs = useZTabs();
 	const resolvedDisabled = $derived(disabled || tabs.disabled);
 	const selected = $derived(tabs.isSelected(value));
+	const active = $derived(tabs.isActive(value));
 	const rootClass = $derived(
 		zui.recipe(tabsTriggerRecipe, {
 			disabled: resolvedDisabled,
@@ -174,8 +177,10 @@
 		tabs.register(() => ({
 			disabled: resolvedDisabled,
 			element: ref,
+			id: tabs.triggerId(value),
 			key: value,
-			textValue: textValue ?? value
+			selectionDisabled: false,
+			textValue: textValue ?? String(value)
 		}))
 	);
 
@@ -209,9 +214,10 @@
 	onclick={handleClick}
 	onfocus={handleFocus}
 	onkeydown={handleKeydown}
-	aria-controls={tabs.panelId(value)}
+	aria-controls={tabs.shouldMountPanel(value) ? tabs.panelId(value) : undefined}
 	aria-selected={selected}
 	data-disabled={resolvedDisabled || undefined}
+	data-active={active || undefined}
 	data-orientation={tabs.orientation}
 	data-state={selected ? 'active' : 'inactive'}
 >

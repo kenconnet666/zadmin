@@ -44,6 +44,13 @@ function hasOwn(target: object, key: string | number): boolean {
 	return Object.prototype.hasOwnProperty.call(target, key);
 }
 
+function readValue(
+	target: Record<PropertyKey, unknown> | unknown[],
+	key: string | number
+): unknown {
+	return (target as Record<PropertyKey, unknown>)[key];
+}
+
 function assignPath(
 	root: Record<PropertyKey, unknown> | unknown[],
 	path: FieldPath,
@@ -54,7 +61,8 @@ function assignPath(
 		const segment = path[index];
 		if (index === path.length - 1) {
 			if (hasOwn(cursor, segment)) {
-				const current = cursor[segment] as FormDataEntryValue | readonly FormDataEntryValue[];
+				const current = readValue(cursor, segment) as
+					FormDataEntryValue | readonly FormDataEntryValue[];
 				defineValue(
 					cursor,
 					segment,
@@ -70,7 +78,7 @@ function assignPath(
 		}
 		const nextIsArray = typeof path[index + 1] === 'number';
 		if (!hasOwn(cursor, segment)) defineValue(cursor, segment, nextIsArray ? [] : {});
-		const next = cursor[segment];
+		const next = readValue(cursor, segment);
 		if (
 			next === null ||
 			typeof next !== 'object' ||

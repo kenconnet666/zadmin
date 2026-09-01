@@ -172,6 +172,7 @@
 	import { MountedElements } from '../../runtime/collection/mounted-elements.svelte.js';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
+	import { isDomElement } from '../../runtime/layer/dom-realm.js';
 	import { findMentionQuery, insertMention, type MentionQuery } from '../../runtime/mention.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
@@ -335,7 +336,7 @@
 	const virtualMount = createChoiceVirtualMountBridge(mounted);
 	const navigation = new CollectionNavigation<SelectionKey, MentionItem>({
 		direction: () => zui.direction,
-		disabled: () => disabled,
+		disabled: () => Boolean(disabled),
 		loop: () => loop,
 		orientation: () => 'vertical',
 		view: () => suggestionView
@@ -439,6 +440,27 @@
 	function mountVirtualOption(key: SelectionKey, element: HTMLElement): () => void {
 		return activeDescendant.mount(key, element);
 	}
+	function suggestionFromPointer(
+		event: PointerEvent & { currentTarget: HTMLElement }
+	): MentionItem | undefined {
+		if (!isDomElement(event.target)) return undefined;
+		const item = event.target.closest<HTMLElement>('[data-mention-index]');
+		if (!item || !event.currentTarget.contains(item)) return undefined;
+		const index = Number(item.dataset.mentionIndex);
+		return Number.isInteger(index) ? suggestions[index] : undefined;
+	}
+	function handleListPointerDown(event: PointerEvent & { currentTarget: HTMLElement }): void {
+		if (event.button === 0 && suggestionFromPointer(event)) event.preventDefault();
+	}
+	function handleListPointerMove(event: PointerEvent & { currentTarget: HTMLElement }): void {
+		const item = suggestionFromPointer(event);
+		if (item) handlePointerMove(item);
+	}
+	function handleListPointerUp(event: PointerEvent & { currentTarget: HTMLElement }): void {
+		if (event.button !== 0) return;
+		const item = suggestionFromPointer(event);
+		if (item) choose(item);
+	}
 	function handlePointerMove(item: MentionItem): void {
 		if (!disabled && !item.disabled) activeDescendant.set(item.key, 'pointer');
 	}
@@ -459,17 +481,15 @@
 	{/if}
 {/snippet}
 
-{#snippet virtualSuggestion(suggestion: MentionItem)}
+{#snippet virtualSuggestion(suggestion: MentionItem, index: number)}
 	<div
 		class={zui.recipe(itemRecipe, {
 			active: Object.is(activeKey, suggestion.key),
 			disabled: Boolean(disabled || suggestion.disabled)
 		})}
 		data-active={Object.is(activeKey, suggestion.key) || undefined}
+		data-mention-index={index}
 		data-slot="item-content"
-		onpointerdown={(event) => event.preventDefault()}
-		onpointermove={() => handlePointerMove(suggestion)}
-		onclick={() => choose(suggestion)}
 	>
 		{@render suggestionContent(suggestion)}
 	</div>
@@ -502,7 +522,6 @@
 	<ZPopoverContent ariaLabelledBy={null} manageFocus={false} role="presentation">
 		{#if virtual}
 			<ZVirtualList
-				aria-activedescendant={activeId}
 				aria-label={resolvedListLabel}
 				bind:controller={virtualController}
 				class={listClass}
@@ -518,11 +537,14 @@
 				items={suggestions}
 				{loading}
 				onItemMount={mountVirtualOption}
+				onpointerdown={handleListPointerDown}
+				onpointermove={handleListPointerMove}
+				onpointerup={handleListPointerUp}
 				overscan={virtualOverscan}
 				role="listbox"
-				tabindex={-1}
+				tabindex="-1"
 			>
-				{#snippet item(suggestion)}{@render virtualSuggestion(suggestion)}{/snippet}
+				{#snippet item(suggestion, index)}{@render virtualSuggestion(suggestion, index)}{/snippet}
 				{#snippet empty()}<div class={emptyClass} role="status">{resolvedEmptyText}</div>{/snippet}
 				{#snippet loadingContent()}<div class={emptyClass} role="status">
 						{resolvedLoadingText}
@@ -530,15 +552,18 @@
 			</ZVirtualList>
 		{:else}
 			<div
-				aria-activedescendant={activeId}
 				aria-busy={loading || undefined}
 				aria-label={resolvedListLabel}
 				class={listClass}
 				data-slot="list"
 				id={listId}
+				onpointerdown={handleListPointerDown}
+				onpointermove={handleListPointerMove}
+				onpointerup={handleListPointerUp}
 				role="listbox"
+				tabindex={-1}
 			>
-				{#each suggestions as suggestion (suggestion.key)}
+				{#each suggestions as suggestion, index (suggestion.key)}
 					<div
 						use:mountOption={suggestion.key}
 						id={activeDescendant.idFor(suggestion.key)}
@@ -547,14 +572,12 @@
 							disabled: Boolean(disabled || suggestion.disabled)
 						})}
 						data-active={Object.is(activeKey, suggestion.key) || undefined}
+						data-mention-index={index}
 						data-slot="item"
 						role="option"
 						tabindex={-1}
 						aria-selected={Object.is(activeKey, suggestion.key)}
 						aria-disabled={disabled || suggestion.disabled || undefined}
-						onpointerdown={(event) => event.preventDefault()}
-						onpointermove={() => handlePointerMove(suggestion)}
-						onclick={() => choose(suggestion)}
 					>
 						{@render suggestionContent(suggestion)}
 					</div>

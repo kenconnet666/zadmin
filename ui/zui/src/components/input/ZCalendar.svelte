@@ -276,7 +276,7 @@
 			size: {
 				large: (s) => {
 					s.height._large;
-					s.width._xlarge;
+					s.width._calendarCellLarge;
 				},
 				medium: (s) => {
 					s.height._medium;
@@ -318,8 +318,8 @@
 			},
 			size: {
 				large: (s) => {
-					s.height._xlarge;
-					s.width._xlarge;
+					s.height._calendarCellLarge;
+					s.width._calendarCellLarge;
 				},
 				medium: (s) => {
 					s.height._large;
