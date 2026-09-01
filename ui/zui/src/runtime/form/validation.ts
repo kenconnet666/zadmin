@@ -92,9 +92,7 @@ function assignPath(
 
 function freezeFormValue(value: unknown): unknown {
 	if (Array.isArray(value)) {
-		for (let index = 0; index < value.length; index += 1)
-			value[index] = freezeFormValue(value[index]);
-		return Object.freeze(value);
+		return Object.freeze(value.map((entry) => freezeFormValue(entry)));
 	}
 	const objectTag = value !== null && typeof value === 'object' ? objectToString(value) : undefined;
 	if (

@@ -185,6 +185,7 @@
 	import { readIcssCarrier } from '../../../runtime/foundation/compiler-bridge.js';
 	import {
 		provideZAccordion,
+		provideZAccordionItemBoundary,
 		type AccordionCollectionItem,
 		type AccordionValue as AccordionRuntimeValue,
 		type ZAccordionContext
@@ -236,9 +237,9 @@
 
 	function normalize(source: AccordionRuntimeValue | undefined): readonly SelectionKey[] {
 		if (type === 'single') {
-			if (Array.isArray(source))
-				throw new TypeError('ZAccordion type="single" requires a SelectionKey or null value.');
 			if (source === undefined || source === null) return [];
+			if (typeof source !== 'string' && typeof source !== 'number')
+				throw new TypeError('ZAccordion type="single" requires a SelectionKey or null value.');
 			assertKey(source);
 			return [source];
 		}
@@ -418,6 +419,7 @@
 		}
 	};
 	provideZAccordion(context);
+	provideZAccordionItemBoundary(owner);
 
 	$effect(() => {
 		const currentView = view;

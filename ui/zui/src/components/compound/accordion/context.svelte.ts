@@ -33,8 +33,14 @@ export interface ZAccordionContext {
 
 export interface ZAccordionItemContext {
 	readonly disabled: boolean;
+	readonly kind: 'item';
 	readonly owner: symbol;
 	readonly value: SelectionKey;
+}
+
+interface ZAccordionItemBoundary {
+	readonly kind: 'root';
+	readonly owner: symbol;
 }
 
 const ACCORDION_CONTEXT = Symbol('zui-accordion-context');
@@ -57,9 +63,19 @@ export function provideZAccordionItem(context: ZAccordionItemContext): ZAccordio
 	return context;
 }
 
+export function provideZAccordionItemBoundary(owner: symbol): void {
+	setContext<ZAccordionItemBoundary>(ACCORDION_ITEM_CONTEXT, { kind: 'root', owner });
+}
+
 export function useZAccordionItem(owner?: symbol): ZAccordionItemContext {
-	const context = getContext<ZAccordionItemContext | undefined>(ACCORDION_ITEM_CONTEXT);
-	if (!context) throw new Error('ZAccordionTrigger and ZAccordionContent require ZAccordionItem.');
+	const context = getContext<ZAccordionItemBoundary | ZAccordionItemContext | undefined>(
+		ACCORDION_ITEM_CONTEXT
+	);
+	if (!context || context.kind !== 'item') {
+		throw new Error(
+			'ZAccordionTrigger and ZAccordionContent require ZAccordionItem owned by the nearest ZAccordion.'
+		);
+	}
 	if (owner !== undefined && context.owner !== owner) {
 		throw new Error(
 			'ZAccordionTrigger and ZAccordionContent require an Item owned by the nearest ZAccordion.'

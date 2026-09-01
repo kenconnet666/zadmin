@@ -37,7 +37,7 @@ export class ControllableState<TValue> {
 
 	constructor(options: ControllableStateOptions<TValue>) {
 		this.#options = options;
-		this.#fallback = $state(options.defaultValue());
+		this.#fallback = $state.raw(options.defaultValue());
 		this.#undefinedIsValue = options.undefinedIsValue === true;
 	}
 

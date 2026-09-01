@@ -8,7 +8,7 @@
 
 	export type ZCodeLanguage = 'bash' | 'css' | 'javascript' | 'json' | 'svelte' | 'typescript';
 	export type ZCodeScheme = 'dark' | 'light';
-	export type ZCodeThemeName = 'github-dark' | 'github-light';
+	export type ZCodeThemeName = 'github-dark-high-contrast' | 'github-light-high-contrast';
 
 	export interface ZCodeTheme {
 		readonly dark: ZCodeThemeName;
@@ -50,8 +50,8 @@
 			},
 			{ default: '—', description: '允许的Shiki语言。', name: 'lang', type: 'ZCodeLanguage' },
 			{
-				default: 'github-light / github-dark',
-				description: '亮暗Shiki主题。',
+				default: 'github-light-high-contrast / github-dark-high-contrast',
+				description: '通过WCAG代码token审计的亮暗Shiki高对比主题。',
 				name: 'theme',
 				type: 'ZCodeTheme'
 			},
@@ -114,8 +114,8 @@
 	}
 
 	const DEFAULT_THEME: ZCodeTheme = Object.freeze({
-		dark: 'github-dark',
-		light: 'github-light'
+		dark: 'github-dark-high-contrast',
+		light: 'github-light-high-contrast'
 	});
 	const MAX_HIGHLIGHT_CHARACTERS = 100_000;
 	const NEWLINE = '\n';
@@ -137,8 +137,8 @@
 		highlighter ??= Promise.all([
 			import('shiki/core'),
 			import('shiki/engine/javascript'),
-			import('shiki/themes/github-dark.mjs'),
-			import('shiki/themes/github-light.mjs')
+			import('shiki/themes/github-dark-high-contrast.mjs'),
+			import('shiki/themes/github-light-high-contrast.mjs')
 		]).then(([{ createHighlighterCore }, { createJavaScriptRegexEngine }, dark, light]) =>
 			createHighlighterCore({
 				engine: createJavaScriptRegexEngine(),

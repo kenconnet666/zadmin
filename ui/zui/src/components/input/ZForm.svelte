@@ -365,12 +365,14 @@
 		try {
 			const input = formDataToObject(formData, registry.formDataPaths());
 			const result = schema ? await schema['~standard'].validate(input) : { value: input };
-			const next = result.issues ? issuesToFormErrors(result.issues) : Object.freeze({});
+			const next: FormErrors = result.issues
+				? issuesToFormErrors(result.issues)
+				: Object.freeze({});
 			const accepted = registry.finishValidation(ticket, next);
 			const outdated = epoch !== validationEpoch || accepted.length !== ticket.entries.length;
 			if (full && !outdated) publishErrors(next);
 			else if (accepted.length > 0) publishErrors(mergeErrorsForPaths(errors, next, accepted));
-			const scopedErrors = full ? next : errorsForPaths(next, paths);
+			const scopedErrors: FormErrors = full ? next : errorsForPaths(next, paths);
 			return {
 				data: result.issues ? undefined : (result.value as StandardSchemaV1.InferOutput<TSchema>),
 				errors: scopedErrors,

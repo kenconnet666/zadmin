@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "componentCount": 140,
-  "overallSha256": "528bebcbd9f462d66d46090b6f3840a47fd1c7c1b4580af68501151b26fce482",
+  "componentCount": 141,
+  "overallSha256": "fdada4005e3c7ae10070ebfd1ad1896b92146d024f1349e6d776cafeb079a72e",
   "components": [
     {
       "id": "accordion",
@@ -375,7 +375,7 @@
     },
     {
       "id": "tooltip-trigger",
-      "sha256": "8d76db1414c4857b3cb5f0738ee422c1c2f0575dde41ece86bb859cbed0f2596",
+      "sha256": "774663ba5abb3d051c209f604d1e2e3cfdeddc0da476e0ba02614fc3f62f4414",
       "source": "src/components/compound/tooltip/ZTooltipTrigger.svelte"
     },
     {
@@ -385,7 +385,7 @@
     },
     {
       "id": "avatar",
-      "sha256": "60d12b6b2875ee1b317b05d7ef134631e898c9426c428b26f58c0c3236d4bf67",
+      "sha256": "3463eeb84ed818fe93986b0ebc8b05ebe1aa8fbade9cf3106a5426d9e4abea70",
       "source": "src/components/data-display/ZAvatar.svelte"
     },
     {
@@ -395,7 +395,7 @@
     },
     {
       "id": "card",
-      "sha256": "5939738e1d213a7bcbd8d528eab0106589cf92998ec24485f26f35986101a75b",
+      "sha256": "43f5940f1695e0209c127fe56c523366bd3cf1160e1053cdc5220c609965baa5",
       "source": "src/components/data-display/ZCard.svelte"
     },
     {
@@ -505,8 +505,13 @@
     },
     {
       "id": "code",
-      "sha256": "d62ea23b893dc84dc910dfe3eecf5d9521d4391c7fcaa311fe6ce70fdb97acd5",
+      "sha256": "f11a67063c3853efb3f3c6e7683b3da8abeec9d32874a77ef35a9e8e5e5c3b7e",
       "source": "src/components/gene/ZCode.svelte"
+    },
+    {
+      "id": "heading",
+      "sha256": "b56847365ec861e7a0cc9395b8af15e0c5f1179d6d0f6a1eff8a078dbd150257",
+      "source": "src/components/gene/ZHeading.svelte"
     },
     {
       "id": "icon",
@@ -520,7 +525,7 @@
     },
     {
       "id": "link",
-      "sha256": "15e6499e78c3024b3888d0f0c026de165c5a42fb5fe1efe5729cafbdc7a35317",
+      "sha256": "a0a576ec2d312bb7e12dae7e5928be92bcd1accdf3aa68a7f312e6fac48b5f50",
       "source": "src/components/gene/ZLink.svelte"
     },
     {
@@ -535,7 +540,7 @@
     },
     {
       "id": "text",
-      "sha256": "67e7d52aed307e86158bd9cd1d6309cea7c1a3b7a1b5cb3441b68567c24f1fa4",
+      "sha256": "0a1f4cfb7e672e78b6c5b5a85bb699fbab8da6c9622b985698aa87a70ccc68c7",
       "source": "src/components/gene/ZText.svelte"
     },
     {
@@ -707,10 +712,10 @@
   "entrypoints": {
     "code.ts": "52db25b2f7ae15061096bbc8fdaf06e5f076706522880aabcb78af6e662ca985",
     "compiler.ts": "96fa979b36838e8b7a6d3f52bb463f23951438a4d974d52b631ad1e6d937b2e7",
-    "index.ts": "da1647ed53f9552e3b28af95f41cb5a251a6b07c12c3a4fd334803a6ab0dfef2",
+    "index.ts": "23bc0d602f00030f019dec843615f24df193981bf68d9a9efb60e467d6bd2f95",
     "internal.ts": "05f9ef9c8628e1cdf694dcc88b71831e5aab726a3189bd6189eef7ae645df4d7",
     "layer.ts": "72d0fc8e5b7a8ab39a12e157879951b84f1a7fc19654f4bd8b6ea92fd8aa6db8",
-    "metadata.ts": "9cc02c1e4aa93a60d9834a70f88d2cd907bb62f430cc95332deb9946e25d2133",
+    "metadata.ts": "836feeea890ac257332d73219c12ef3a4fb1ab4987d01c35a247071f558a7200",
     "runtime.ts": "d73ad8cb851b6180283c40ac3d9c1ece6a6fd8bcf1dd5ef9302236dad43484ec",
     "testing.ts": "c596113f3cbcf4ce75be2728b6a10cd6a0b77c9b9101a4408ba2e18e174f15cb",
     "theme.ts": "672f4f9f183088c250e2ddc74a71b5c4a0c54017f981dfdbd810004fa21b0b24",

@@ -196,7 +196,6 @@ export type {
 } from '../components/compound/tree/ZTree.svelte';
 export { LogicalTree } from '../runtime/tree.js';
 export type { LogicalTreeView, TreeEntry, TreeIndex, TreeNode } from '../runtime/tree.js';
-export type { TabsActivationMode } from '../components/compound/tabs/context.svelte.js';
 export { default as ZTooltip } from '../components/compound/tooltip/ZTooltip.svelte';
 export type { ZTooltipProps } from '../components/compound/tooltip/ZTooltip.svelte';
 export { default as ZTooltipContent } from '../components/compound/tooltip/ZTooltipContent.svelte';
@@ -223,6 +222,15 @@ export type {
 	ZButtonProps,
 	ZButtonVariants
 } from '../components/gene/ZButton.svelte';
+export { default as ZHeading } from '../components/gene/ZHeading.svelte';
+export type {
+	ZHeadingLevel,
+	ZHeadingLineHeight,
+	ZHeadingProps,
+	ZHeadingSize,
+	ZHeadingTone,
+	ZHeadingWeight
+} from '../components/gene/ZHeading.svelte';
 export { default as ZIcon, iconManifest } from '../components/gene/ZIcon.svelte';
 export type { ZIconName, ZIconProps, ZIconSize } from '../components/gene/ZIcon.svelte';
 export { default as ZKbd } from '../components/gene/ZKbd.svelte';
@@ -234,13 +242,21 @@ export type { ZProviderProps } from '../components/gene/ZProvider.svelte';
 export { default as ZSeparator } from '../components/gene/ZSeparator.svelte';
 export type { ZSeparatorOrientation, ZSeparatorProps } from '../components/gene/ZSeparator.svelte';
 export { default as ZText } from '../components/gene/ZText.svelte';
-export type { ZTextElement, ZTextProps, ZTextTone } from '../components/gene/ZText.svelte';
+export type {
+	ZTextElement,
+	ZTextLineHeight,
+	ZTextProps,
+	ZTextSize,
+	ZTextTone,
+	ZTextWeight
+} from '../components/gene/ZText.svelte';
 export { default as ZToggleButton } from '../components/gene/ZToggleButton.svelte';
 export type { ZToggleButtonProps } from '../components/gene/ZToggleButton.svelte';
 export { default as ZVisuallyHidden } from '../components/gene/ZVisuallyHidden.svelte';
 export type { ZVisuallyHiddenProps } from '../components/gene/ZVisuallyHidden.svelte';
 export { default as ZAvatar } from '../components/data-display/ZAvatar.svelte';
 export type {
+	AvatarImageEvent,
 	AvatarShape,
 	AvatarSize,
 	ZAvatarProps
@@ -255,7 +271,7 @@ export type {
 	ZBadgeProps
 } from '../components/data-display/ZBadge.svelte';
 export { default as ZCard } from '../components/data-display/ZCard.svelte';
-export type { ZCardProps } from '../components/data-display/ZCard.svelte';
+export type { CardElement, CardVariant, ZCardProps } from '../components/data-display/ZCard.svelte';
 export { default as ZDescriptionList } from '../components/data-display/ZDescriptionList.svelte';
 export type {
 	DescriptionItem,
@@ -527,6 +543,7 @@ export type {
 	ZuiFeedbackLocale,
 	ZuiFileUploadLocale,
 	ZuiFormLocale,
+	ZuiLinkLocale,
 	ZuiNumberFieldLocale,
 	ZuiPaginationLocale,
 	ZuiProgressLocale,

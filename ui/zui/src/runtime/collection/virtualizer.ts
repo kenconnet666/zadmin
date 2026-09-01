@@ -390,18 +390,22 @@ export class KeyedVirtualizer<TKey extends SelectionKey> {
 		const resolvedIndex = Math.min(count - 1, Math.max(0, index));
 		const item = this.#getLayout().items[resolvedIndex]!;
 		const maximum = this.#maximumScrollOffset();
+		const viewportEnd = this.#scrollOffset + this.#viewportSize;
+		const startTarget = item.start;
+		const endTarget = item.end - this.#viewportSize;
 		const target =
 			align === 'start'
-				? item.start
+				? startTarget
 				: align === 'end'
-					? item.end - this.#viewportSize
+					? endTarget
 					: align === 'center'
 						? item.start - (this.#viewportSize - item.size) / 2
-						: item.start < this.#scrollOffset
-							? item.start
-							: item.end > this.#scrollOffset + this.#viewportSize
-								? item.end - this.#viewportSize
-								: this.#scrollOffset;
+						: item.start >= this.#scrollOffset && item.end <= viewportEnd
+							? this.#scrollOffset
+							: Math.abs(startTarget - this.#scrollOffset) <
+								  Math.abs(endTarget - this.#scrollOffset)
+								? startTarget
+								: endTarget;
 		this.#scrollOffset = Math.min(maximum, Math.max(0, target));
 		return this.#scrollOffset;
 	}

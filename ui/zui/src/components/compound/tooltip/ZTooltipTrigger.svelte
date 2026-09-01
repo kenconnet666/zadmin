@@ -10,8 +10,8 @@
 		readonly onblur?: ZButtonProps['onblur'];
 		readonly onclick?: ZButtonProps['onclick'];
 		readonly onfocus?: ZButtonProps['onfocus'];
-		readonly onpointerenter?: ZButtonProps['onpointerenter'];
-		readonly onpointerleave?: ZButtonProps['onpointerleave'];
+		readonly onpointerenter?: (event: PointerEvent & { currentTarget: HTMLElement }) => void;
+		readonly onpointerleave?: (event: PointerEvent & { currentTarget: HTMLElement }) => void;
 	};
 	const wrapperRecipe = defineRecipe({
 		base: (s) => s.display.inlineFlex,
@@ -99,7 +99,7 @@
 		};
 	});
 
-	function pointerEnter(event: PointerEvent & { currentTarget: HTMLButtonElement }): void {
+	function pointerEnter(event: PointerEvent & { currentTarget: HTMLElement }): void {
 		onpointerenter?.(event);
 		if (!event.defaultPrevented) {
 			hovered = true;
@@ -107,7 +107,7 @@
 		}
 	}
 
-	function pointerLeave(event: PointerEvent & { currentTarget: HTMLButtonElement }): void {
+	function pointerLeave(event: PointerEvent & { currentTarget: HTMLElement }): void {
 		onpointerleave?.(event);
 		if (!event.defaultPrevented) {
 			hovered = false;
@@ -139,8 +139,10 @@
 	}
 
 	function disabledTrigger(node: HTMLSpanElement): { destroy(): void } {
-		const enter = (): void => tooltip.openAfterDelay();
-		const leave = (): void => tooltip.close();
+		const enter = (event: PointerEvent): void =>
+			pointerEnter(event as PointerEvent & { currentTarget: HTMLElement });
+		const leave = (event: PointerEvent): void =>
+			pointerLeave(event as PointerEvent & { currentTarget: HTMLElement });
 		node.addEventListener('pointerenter', enter);
 		node.addEventListener('pointerleave', leave);
 		return {
@@ -149,14 +151,6 @@
 				node.removeEventListener('pointerleave', leave);
 			}
 		};
-	}
-
-	function disabledPointerEnter(event: PointerEvent & { currentTarget: HTMLButtonElement }): void {
-		onpointerenter?.(event);
-	}
-
-	function disabledPointerLeave(event: PointerEvent & { currentTarget: HTMLButtonElement }): void {
-		onpointerleave?.(event);
 	}
 </script>
 
@@ -174,8 +168,6 @@
 			{disabled}
 			aria-describedby={tooltip.open ? tooltip.contentId : undefined}
 			data-state={tooltip.open ? 'open' : 'closed'}
-			onpointerenter={disabledPointerEnter}
-			onpointerleave={disabledPointerLeave}
 		/>
 	</span>
 {:else}

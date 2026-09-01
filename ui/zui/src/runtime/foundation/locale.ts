@@ -96,6 +96,10 @@ export interface ZuiFormLocale {
 	readonly unexpectedValidation: string;
 }
 
+export interface ZuiLinkLocale {
+	readonly opensInNewWindow: string;
+}
+
 export interface ZuiNumberFieldLocale {
 	readonly decrement: string;
 	readonly increment: string;
@@ -167,6 +171,7 @@ export interface ZuiLocalePack {
 	readonly feedback: ZuiFeedbackLocale;
 	readonly fileUpload: ZuiFileUploadLocale;
 	readonly form: ZuiFormLocale;
+	readonly link: ZuiLinkLocale;
 	readonly numberField: ZuiNumberFieldLocale;
 	readonly pagination: ZuiPaginationLocale;
 	readonly progress: ZuiProgressLocale;
@@ -186,6 +191,7 @@ export interface ZuiLocalePackOverrides {
 	readonly feedback?: Partial<ZuiFeedbackLocale>;
 	readonly fileUpload?: Partial<ZuiFileUploadLocale>;
 	readonly form?: Partial<ZuiFormLocale>;
+	readonly link?: Partial<ZuiLinkLocale>;
 	readonly numberField?: Partial<ZuiNumberFieldLocale>;
 	readonly pagination?: Partial<ZuiPaginationLocale>;
 	readonly progress?: Partial<ZuiProgressLocale>;
@@ -285,6 +291,9 @@ export const enUSLocalePack = Object.freeze({
 	}),
 	form: Object.freeze({
 		unexpectedValidation: 'Validation failed unexpectedly.'
+	}),
+	link: Object.freeze({
+		opensInNewWindow: 'opens in a new window'
 	}),
 	numberField: Object.freeze({
 		decrement: 'Decrease value',
@@ -433,6 +442,9 @@ export const zhCNLocalePack = Object.freeze({
 	form: Object.freeze({
 		unexpectedValidation: '验证过程中发生意外错误。'
 	}),
+	link: Object.freeze({
+		opensInNewWindow: '在新窗口中打开'
+	}),
 	numberField: Object.freeze({
 		decrement: '减小数值',
 		increment: '增大数值',
@@ -559,6 +571,7 @@ export function resolveZuiLocalePack(
 		feedback: Object.freeze(mergeDefined(base.feedback, overrides?.feedback)),
 		fileUpload: Object.freeze(mergeDefined(base.fileUpload, overrides?.fileUpload)),
 		form: Object.freeze(mergeDefined(base.form, overrides?.form)),
+		link: Object.freeze(mergeDefined(base.link, overrides?.link)),
 		numberField: Object.freeze(mergeDefined(base.numberField, overrides?.numberField)),
 		pagination: Object.freeze(
 			mergeDefined(base.pagination, legacy.pagination, overrides?.pagination)

@@ -249,7 +249,7 @@
 		if (!mounted) return;
 		const ownerDocument = ref?.ownerDocument;
 		const disconnectViewport = untrack(() =>
-			currentQueue.connectViewport(currentLimit, ownerDocument?.defaultView)
+			currentQueue.connectViewport(currentLimit, ownerDocument?.defaultView ?? undefined)
 		);
 		const disconnectVisibility = untrack(() => currentQueue.connectVisibility(ownerDocument));
 		return () => {
@@ -286,7 +286,7 @@
 		untrack(drainAssertive);
 	});
 	$effect(() => {
-		const ownerWindow = ref?.ownerDocument.defaultView;
+		const ownerWindow = ref?.ownerDocument.defaultView ?? undefined;
 		if (announcerWindow !== ownerWindow) {
 			clearAssertiveTimer();
 			announcerWindow = ownerWindow;

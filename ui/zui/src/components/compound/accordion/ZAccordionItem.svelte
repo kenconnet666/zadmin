@@ -93,6 +93,7 @@
 		get disabled() {
 			return resolvedDisabled;
 		},
+		kind: 'item',
 		owner: accordion.owner,
 		get value() {
 			return value;

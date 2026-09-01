@@ -542,7 +542,7 @@
 				onpointerup={handleListPointerUp}
 				overscan={virtualOverscan}
 				role="listbox"
-				tabindex="-1"
+				tabindex={-1}
 			>
 				{#snippet item(suggestion, index)}{@render virtualSuggestion(suggestion, index)}{/snippet}
 				{#snippet empty()}<div class={emptyClass} role="status">{resolvedEmptyText}</div>{/snippet}

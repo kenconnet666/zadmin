@@ -465,6 +465,7 @@
 		onOpenChange={setOpen}
 		open={resolvedOpen}
 		{placement}
+		triggerId={resolvedControlId}
 	>
 		<ZPopoverTrigger
 			bind:ref={triggerRef}

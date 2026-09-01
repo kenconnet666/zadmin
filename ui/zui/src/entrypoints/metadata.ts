@@ -78,6 +78,7 @@ export { zuiMetadata as tourMetadata } from '../components/overlay/ZTour.svelte'
 export { zuiMetadata as boxMetadata } from '../components/gene/ZBox.svelte';
 export { zuiMetadata as buttonMetadata } from '../components/gene/ZButton.svelte';
 export { zuiMetadata as codeMetadata } from '../components/gene/ZCode.svelte';
+export { zuiMetadata as headingMetadata } from '../components/gene/ZHeading.svelte';
 export { zuiMetadata as iconMetadata } from '../components/gene/ZIcon.svelte';
 export { zuiMetadata as kbdMetadata } from '../components/gene/ZKbd.svelte';
 export { zuiMetadata as linkMetadata } from '../components/gene/ZLink.svelte';

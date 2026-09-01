@@ -313,7 +313,8 @@
 		}
 	}
 
-	untrack(assertPublicContract);
+	assertPublicContract();
+	$effect(assertPublicContract);
 	const zui = useZui();
 	const field = claimZFieldControlOwner().field;
 	const uid = $props.id();

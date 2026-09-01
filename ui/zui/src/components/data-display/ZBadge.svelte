@@ -350,6 +350,12 @@
 		const overlapPercent = overlap === 'circular' ? 35 : 50;
 		return `translate(calc(${inlineSign * overlapPercent}% + ${inlineSign * normalizedOffset[0]}px), calc(${blockSign * overlapPercent}% + ${blockSign * normalizedOffset[1]}px))`;
 	});
+	untrack(() => {
+		void normalizedCount;
+		void normalizedMax;
+		void normalizedOffset;
+		void resolvedLabel;
+	});
 	const indicatorStyle = $derived(anchored ? `transform: ${indicatorTransform};` : undefined);
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));

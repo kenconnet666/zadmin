@@ -4,18 +4,29 @@
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
-	import type { ZuiTheme } from '../../theme/types.js';
+	import type {
+		TypographyLineHeight,
+		TypographySize,
+		TypographyTone,
+		TypographyWeight
+	} from './typography.js';
 
 	export type ZTextElement = 'label' | 'p' | 'small' | 'span' | 'strong';
-	export type ZTextTone = 'danger' | 'default' | 'muted' | 'primary';
+	export type ZTextLineHeight = TypographyLineHeight;
+	export type ZTextSize = TypographySize;
+	export type ZTextTone = TypographyTone;
+	export type ZTextWeight = TypographyWeight;
 
 	export interface ZTextProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
 		readonly as?: ZTextElement;
 		readonly children?: Snippet;
-		readonly size?: keyof ZuiTheme['fontSize'];
+		readonly lineClamp?: number;
+		readonly lineHeight?: ZTextLineHeight;
+		readonly size?: ZTextSize;
+		readonly tabularNumbers?: boolean;
 		readonly tone?: ZTextTone;
 		readonly truncate?: boolean;
-		readonly weight?: keyof ZuiTheme['fontWeight'];
+		readonly weight?: ZTextWeight;
 		ref?: HTMLElement | null;
 	}
 
@@ -44,6 +55,12 @@
 			},
 			{
 				default: "'normal'",
+				description: 'Theme行高token。',
+				name: 'lineHeight',
+				type: "keyof ZuiTheme['lineHeight']"
+			},
+			{
+				default: "'normal'",
 				description: 'Theme字重token。',
 				name: 'weight',
 				type: "keyof ZuiTheme['fontWeight']"
@@ -55,6 +72,18 @@
 				type: "'default' | 'muted' | 'primary' | 'danger'"
 			},
 			{ default: 'false', description: '单行省略显示。', name: 'truncate', type: 'boolean' },
+			{
+				default: 'undefined',
+				description: '多行省略的正整数行数；与truncate互斥。',
+				name: 'lineClamp',
+				type: 'number'
+			},
+			{
+				default: 'false',
+				description: '启用tabular-nums，适合指标、金额和时间列。',
+				name: 'tabularNumbers',
+				type: 'boolean'
+			},
 			{
 				bindable: true,
 				default: 'null',
@@ -68,11 +97,16 @@
 		source: 'ui/zui/src/components/gene/ZText.svelte',
 		states: [],
 		status: 'stable',
-		summary: '在有限语义元素上应用字号、字重、tone和截断。'
+		summary: '在有限正文语义元素上组合Theme字号、行高、字重、tone、单/多行省略与表格数字。'
 	} as const satisfies ZuiComponentMetadata;
 
 	const textRecipe = defineRecipe({
 		variants: {
+			lineHeight: {
+				compact: (s) => s.lineHeight._compact,
+				normal: (s) => s.lineHeight._normal,
+				relaxed: (s) => s.lineHeight._relaxed
+			},
 			size: {
 				large: (s) => s.fontSize._large,
 				medium: (s) => s.fontSize._medium,
@@ -101,6 +135,7 @@
 			}
 		},
 		defaultVariants: {
+			lineHeight: 'normal',
 			size: 'medium',
 			tone: 'default',
 			truncate: false,
@@ -121,14 +156,18 @@
 	} from '../../runtime/foundation/root-style.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
+	import { resolveTypographyOverflow } from './typography.js';
 
 	let {
 		as = 'span',
 		children,
 		class: className,
+		lineClamp,
+		lineHeight = 'normal',
 		ref = $bindable(null),
 		size = 'medium',
 		style,
+		tabularNumbers = false,
 		tone = 'default',
 		truncate = false,
 		weight = 'normal',
@@ -136,9 +175,15 @@
 	}: ZTextProps = $props();
 
 	const zui = useZui();
-	const rootClass = $derived(zui.recipe(textRecipe, { size, tone, truncate, weight }));
+	const overflow = $derived(resolveTypographyOverflow({ lineClamp, tabularNumbers, truncate }));
+	const rootClass = $derived(
+		zui.recipe(textRecipe, { lineHeight, size, tone, truncate: overflow.truncate, weight })
+	);
 	const icssVariables = $derived(readIcssCarrier(rest));
-	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
+	const authoredStyle = $derived(mergeStyles(style, overflow.inlineStyle));
+	const initialStyle = untrack(() =>
+		mergeStyles(authoredStyle, serializeIcssVariables(icssVariables))
+	);
 </script>
 
 <svelte:element
@@ -147,7 +192,9 @@
 	bind:this={ref}
 	class={[rootClass, className]}
 	style={initialStyle}
-	use:applyIcssRootStyle={{ style, variables: icssVariables }}
+	use:applyIcssRootStyle={{ style: authoredStyle, variables: icssVariables }}
+	data-line-clamp={overflow.lineClamp}
+	data-tabular-numbers={tabularNumbers || undefined}
 >
 	{@render children?.()}
 </svelte:element>
