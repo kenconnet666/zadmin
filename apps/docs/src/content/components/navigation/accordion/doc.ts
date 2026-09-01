@@ -4,34 +4,117 @@ import {
 	accordionMetadata,
 	accordionTriggerMetadata
 } from '@zadmin/zui/metadata';
+import { accordionApiFacts } from '../../../../framework/component-api.generated.js';
+import { defineComponentDoc } from '../../../../framework/component-doc.js';
+import ControlledDynamicDemo from './ControlledDynamicDemo.svelte';
+import controlledDynamicSource from './ControlledDynamicDemo.svelte?raw';
 import InteractiveDemo from './InteractiveDemo.svelte';
 import interactiveSource from './InteractiveDemo.svelte?raw';
+import MotionDemo from './MotionDemo.svelte';
+import motionSource from './MotionDemo.svelte?raw';
 import MultipleDemo from './MultipleDemo.svelte';
 import multipleSource from './MultipleDemo.svelte?raw';
-import { defineComponentDoc } from '../../../../framework/component-doc.js';
+import NestedDemo from './NestedDemo.svelte';
+import nestedSource from './NestedDemo.svelte?raw';
 
 export const accordionDoc = defineComponentDoc(accordionMetadata, {
 	members: [accordionItemMetadata, accordionTriggerMetadata, accordionContentMetadata],
+	profiles: ['collection', 'animated'],
+	sourceApi: accordionApiFacts,
+	teaching: {
+		props: {
+			activeValue: {
+				default: 'selected key或第一enabled key',
+				description: '与展开selection分离的roving焦点owner；动态恢复不触发用户回调。'
+			},
+			collapsible: {
+				default: 'true（仅single）',
+				description: 'false时已展开Trigger使用aria-disabled并拒绝关闭，但仍能参与焦点导航。'
+			},
+			defaultActiveValue: {
+				default: 'null',
+				description: '非受控初始active typed key。'
+			},
+			defaultValue: {
+				default: 'single: null；multiple: []',
+				description: '严格遵循type判别的非受控初始展开值。'
+			},
+			disabled: { default: 'false', description: '禁用根与全部Trigger，不改变已展开内容值。' },
+			loop: { default: 'true', description: 'CollectionNavigation到边界时是否循环。' },
+			onActiveValueChange: {
+				default: 'undefined',
+				description: '真实用户/键盘active变化时调用；collection恢复不调用。'
+			},
+			onValueChange: {
+				default: 'undefined',
+				description: '真实用户toggle后按single或multiple合同调用一次。'
+			},
+			type: {
+				default: "'single'",
+				description: '判别value/defaultValue/onValueChange为nullable key或readonly key数组。'
+			},
+			value: {
+				default: 'single: null；multiple: []',
+				description: 'typed SelectionKey合同；number 1与string 1保持严格身份。'
+			}
+		},
+		summary:
+			'生产Accordion compound collection：LogicalCollection是顺序/disabled事实，MountedElements只管理Trigger，CollectionNavigation拥有active焦点，value按single/null或multiple/array判别，并保留nested heading、collapsible和Presence motion。'
+	},
 	demos: [
 		{
 			component: InteractiveDemo,
-			description: 'single状态、roving focus、disabled跳过与退出Presence共享同一Item合同。',
+			covers: ['basic-render', 'controlled', 'focus', 'keyboard', 'variants-and-states'],
+			description:
+				'single nullable状态、enabled roving焦点、disabled跳过和Content Presence共享一份typed Item合同。',
 			id: 'accordion-interactive',
 			source: interactiveSource,
-			title: '展开与生命周期'
+			title: 'Single展开、焦点与生命周期'
 		},
 		{
 			component: MultipleDemo,
-			description: 'multiple模式允许独立展开；loop=false夹紧Trigger焦点。',
+			covers: ['controlled', 'keyboard', 'uncontrolled'],
+			description:
+				'multiple只接受去重readonly typed-key数组；各Panel独立展开，loop=false夹紧active焦点。',
 			id: 'accordion-multiple',
 			source: multipleSource,
-			title: '多项展开与导航边界'
+			title: 'Multiple展开与导航边界'
+		},
+		{
+			component: ControlledDynamicDemo,
+			covers: ['controlled', 'external-clear', 'focus', 'resource-cleanup'],
+			description:
+				'number 1/string 1、独立active owner、外部null、动态删除和重排验证nearest enabled恢复。',
+			id: 'accordion-controlled-dynamic',
+			source: controlledDynamicSource,
+			title: 'Typed key与动态集合恢复'
+		},
+		{
+			component: NestedDemo,
+			covers: ['accessible-name', 'composition', 'native-props', 'rtl'],
+			description:
+				'nested Accordion拥有独立Context，headingLevel递增；轻量内部Panel可关闭region避免landmark泛滥。',
+			id: 'accordion-nested',
+			source: nestedSource,
+			title: '嵌套、Heading与Region策略'
+		},
+		{
+			component: MotionDemo,
+			covers: ['full-motion', 'reduced-motion', 'resource-cleanup'],
+			description:
+				'full motion保留退出DOM至transitionend；reduced motion立即完成并释放Presence资源。',
+			id: 'accordion-motion',
+			source: motionSource,
+			title: 'Presence与动画偏好'
 		}
 	],
 	accessibility: [
-		'Trigger使用原生button与aria-expanded/aria-controls，Content使用region与aria-labelledby。',
-		'ArrowUp、ArrowDown、Home和End在Trigger间移动并跳过disabled。',
-		'Accordion根是唯一Motion owner：auto读取根节点ownerDocument，Trigger与Content共享最终决策。',
-		'关闭时Content进入inert退出阶段，动画结束后卸载；退出过程中切换到reduced motion也会立即清理Presence。'
-	]
+		'Trigger是heading中唯一的原生button，headingLevel由页面信息架构决定；button和Panel通过aria-controls/labelledby关联。',
+		'ArrowUp/Down、Home/End只移动active焦点，不改变展开selection；IME composing和keyCode 229不接管导航。',
+		'single collapsible=false时已展开button使用aria-disabled而非native disabled，保持箭头导航并阻止关闭。',
+		'动态删除或禁用active Trigger时，CollectionNavigation优先恢复原位置之后的enabled key，再尝试之前；若真实焦点被删除则恢复DOM焦点。',
+		'关闭Panel先把内部焦点恢复到Trigger，退出阶段只设置inert并保留DOM至结束；不叠加会隐藏当前焦点的aria-hidden，reduced motion立即完成退出。',
+		'默认region适合含结构化内容或嵌套Accordion；大量同时展开的轻量Panel可用region=false避免landmark泛滥。'
+	],
+	keywords: ['accordion', 'logical collection', 'typed key', 'roving focus', 'presence', 'nested']
 });

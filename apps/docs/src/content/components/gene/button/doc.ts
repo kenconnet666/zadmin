@@ -32,6 +32,10 @@ export const buttonDoc = defineComponentDoc(buttonMetadata, {
 				description: 'loading期间覆盖按钮的可访问名称，例如“正在保存设置”。'
 			},
 			ref: { default: 'null', description: '真实HTMLButtonElement引用。' },
+			shape: {
+				default: "'default'",
+				description: 'square移除行内padding并让宽度与当前size的控制高度一致，适合纯图标操作。'
+			},
 			size: { default: "'medium'", description: '统一控制高度、间距与文本尺寸。' },
 			start: { default: '—', description: '在主体内容之前渲染的图标或辅助Snippet。' },
 			variant: {
@@ -83,9 +87,9 @@ export const buttonDoc = defineComponentDoc(buttonMetadata, {
 			title: '表单按钮语义'
 		},
 		{
-			covers: ['accessible-name', 'focus', 'keyboard'],
+			covers: ['accessible-name', 'density', 'focus', 'keyboard'],
 			component: IconDemo,
-			description: '纯图标操作继续使用真实button，并用aria-label提供稳定的可访问名称。',
+			description: '纯图标操作用square把各size收敛为等宽高真实button，并用aria-label提供稳定名称。',
 			id: 'button-icon-only',
 			source: iconSource,
 			title: '只有图标的按钮'

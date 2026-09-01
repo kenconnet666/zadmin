@@ -4,23 +4,26 @@ import type { ComponentApiFacts } from './component-api.js';
 export const accordionApiFacts = {
 	declaration: 'ZAccordionProps',
 	id: 'accordion',
-	inheritedFrom: ['HTMLAttributes<HTMLDivElement>'],
+	inheritedFrom: [
+		'HTMLAttributes<HTMLDivElement>',
+		'ZAccordionMultipleProps | ZAccordionSingleProps'
+	],
 	name: 'ZAccordion',
 	props: [
+		{
+			name: 'activeValue',
+			required: false,
+			type: 'PublicSelectionKey | null'
+		},
 		{
 			name: 'children',
 			required: false,
 			type: 'Snippet'
 		},
 		{
-			name: 'collapsible',
+			name: 'defaultActiveValue',
 			required: false,
-			type: 'boolean'
-		},
-		{
-			name: 'defaultValue',
-			required: false,
-			type: 'AccordionPublicValue'
+			type: 'PublicSelectionKey | null'
 		},
 		{
 			name: 'disabled',
@@ -33,24 +36,14 @@ export const accordionApiFacts = {
 			type: 'boolean'
 		},
 		{
-			name: 'onValueChange',
+			name: 'onActiveValueChange',
 			required: false,
-			type: '(value: AccordionValue | undefined) => void'
+			type: '(value: PublicSelectionKey | null) => void'
 		},
 		{
 			name: 'ref',
 			required: false,
 			type: 'HTMLDivElement | null'
-		},
-		{
-			name: 'type',
-			required: false,
-			type: 'AccordionTypeValue'
-		},
-		{
-			name: 'value',
-			required: false,
-			type: 'AccordionPublicValue'
 		}
 	],
 	source: 'ui/zui/src/components/compound/accordion/ZAccordion.svelte',
@@ -72,6 +65,11 @@ export const accordionContentApiFacts = {
 			name: 'ref',
 			required: false,
 			type: 'HTMLDivElement | null'
+		},
+		{
+			name: 'region',
+			required: false,
+			type: 'boolean'
 		}
 	],
 	source: 'ui/zui/src/components/compound/accordion/ZAccordionContent.svelte',
@@ -102,7 +100,7 @@ export const accordionItemApiFacts = {
 		{
 			name: 'value',
 			required: true,
-			type: 'string'
+			type: 'SelectionKey'
 		}
 	],
 	source: 'ui/zui/src/components/compound/accordion/ZAccordionItem.svelte',
@@ -119,6 +117,11 @@ export const accordionTriggerApiFacts = {
 			name: 'children',
 			required: false,
 			type: 'Snippet'
+		},
+		{
+			name: 'headingLevel',
+			required: false,
+			type: '2 | 3 | 4 | 5 | 6'
 		},
 		{
 			name: 'onclick',
@@ -1666,9 +1669,24 @@ export const popconfirmApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'formatConfirmError',
+			required: false,
+			type: '(error: unknown) => string'
+		},
+		{
 			name: 'gutter',
 			required: false,
 			type: 'number'
+		},
+		{
+			name: 'onConfirm',
+			required: false,
+			type: '(event: MouseEvent) => Promise<void> | void'
+		},
+		{
+			name: 'onConfirmError',
+			required: false,
+			type: '(error: unknown) => void'
 		},
 		{
 			name: 'onOpenChange',
@@ -1936,7 +1954,7 @@ export const radioGroupApiFacts = {
 		{
 			name: 'defaultValue',
 			required: false,
-			type: 'SelectionKey'
+			type: 'RadioSelectionKey'
 		},
 		{
 			name: 'disabled',
@@ -1966,7 +1984,7 @@ export const radioGroupApiFacts = {
 		{
 			name: 'onValueChange',
 			required: false,
-			type: '(value: SelectionKey) => void'
+			type: '(value: RadioSelectionKey) => void'
 		},
 		{
 			name: 'options',
@@ -1996,7 +2014,7 @@ export const radioGroupApiFacts = {
 		{
 			name: 'value',
 			required: false,
-			type: 'SelectionKey'
+			type: 'RadioSelectionKey'
 		}
 	],
 	source: 'ui/zui/src/components/compound/radio-group/ZRadioGroup.svelte',
@@ -2297,7 +2315,12 @@ export const tabsApiFacts = {
 		{
 			name: 'activationMode',
 			required: false,
-			type: 'TabsActivationMode'
+			type: 'TabsActivationModeValue'
+		},
+		{
+			name: 'activeValue',
+			required: false,
+			type: 'PublicSelectionKey | null'
 		},
 		{
 			name: 'children',
@@ -2305,9 +2328,14 @@ export const tabsApiFacts = {
 			type: 'Snippet'
 		},
 		{
+			name: 'defaultActiveValue',
+			required: false,
+			type: 'PublicSelectionKey | null'
+		},
+		{
 			name: 'defaultValue',
 			required: false,
-			type: 'string'
+			type: 'PublicSelectionKey | null'
 		},
 		{
 			name: 'disabled',
@@ -2320,14 +2348,24 @@ export const tabsApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'onActiveValueChange',
+			required: false,
+			type: '(value: PublicSelectionKey | null) => void'
+		},
+		{
 			name: 'onValueChange',
 			required: false,
-			type: '(value: string) => void'
+			type: '(value: PublicSelectionKey) => void'
 		},
 		{
 			name: 'orientation',
 			required: false,
 			type: 'TabsOrientationValue'
+		},
+		{
+			name: 'panelMount',
+			required: false,
+			type: 'TabsPanelMountValue'
 		},
 		{
 			name: 'ref',
@@ -2337,7 +2375,7 @@ export const tabsApiFacts = {
 		{
 			name: 'value',
 			required: false,
-			type: 'string'
+			type: 'PublicSelectionKey | null'
 		}
 	],
 	source: 'ui/zui/src/components/compound/tabs/ZTabs.svelte',
@@ -2384,7 +2422,7 @@ export const tabsPanelApiFacts = {
 		{
 			name: 'value',
 			required: true,
-			type: 'string'
+			type: 'SelectionKey'
 		}
 	],
 	source: 'ui/zui/src/components/compound/tabs/ZTabsPanel.svelte',
@@ -2435,7 +2473,7 @@ export const tabsTriggerApiFacts = {
 		{
 			name: 'value',
 			required: true,
-			type: 'string'
+			type: 'SelectionKey'
 		}
 	],
 	source: 'ui/zui/src/components/compound/tabs/ZTabsTrigger.svelte',
@@ -2469,9 +2507,19 @@ export const tooltipApiFacts = {
 			type: 'number'
 		},
 		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'gutter',
 			required: false,
 			type: 'number'
+		},
+		{
+			name: 'hoverable',
+			required: false,
+			type: 'boolean'
 		},
 		{
 			name: 'onOpenChange',
@@ -2514,6 +2562,37 @@ export const tooltipContentApiFacts = {
 	undocumentedProps: []
 } as const satisfies ComponentApiFacts;
 
+export const tooltipGroupApiFacts = {
+	declaration: 'ZTooltipGroupProps',
+	id: 'tooltip-group',
+	inheritedFrom: [],
+	name: 'ZTooltipGroup',
+	props: [
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'closeDelay',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'delay',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'skipDelayDuration',
+			required: false,
+			type: 'number'
+		}
+	],
+	source: 'ui/zui/src/components/compound/tooltip/ZTooltipGroup.svelte',
+	undocumentedProps: []
+} as const satisfies ComponentApiFacts;
+
 export const tooltipTriggerApiFacts = {
 	declaration: 'ZTooltipTriggerProps',
 	id: 'tooltip-trigger',
@@ -2524,6 +2603,11 @@ export const tooltipTriggerApiFacts = {
 			name: 'onblur',
 			required: false,
 			type: "ZButtonProps['onblur']"
+		},
+		{
+			name: 'onclick',
+			required: false,
+			type: "ZButtonProps['onclick']"
 		},
 		{
 			name: 'onfocus',
@@ -2609,7 +2693,7 @@ export const treeApiFacts = {
 		{
 			name: 'item',
 			required: false,
-			type: 'Snippet<[TreeNode<TKey>, TreeEntry<TKey>]>'
+			type: 'Snippet<[PublicTreeNode<TKey>, PublicTreeEntry<TKey>]>'
 		},
 		{
 			name: 'itemSize',
@@ -2624,7 +2708,7 @@ export const treeApiFacts = {
 		{
 			name: 'nodes',
 			required: true,
-			type: 'readonly TreeNode<TKey>[]'
+			type: 'readonly PublicTreeNode<TKey>[]'
 		},
 		{
 			name: 'onExpandedChange',
@@ -2634,7 +2718,7 @@ export const treeApiFacts = {
 		{
 			name: 'onLoadChildren',
 			required: false,
-			type: '( node: TreeNode<TKey>, context: TreeLoadContext<TKey> ) => void | Promise<void>'
+			type: '( node: PublicTreeNode<TKey>, context: TreeLoadContext<TKey> ) => void | Promise<void>'
 		},
 		{
 			name: 'onLoadError',
@@ -2755,14 +2839,64 @@ export const badgeApiFacts = {
 			type: 'Snippet'
 		},
 		{
-			name: 'tone',
+			name: 'count',
 			required: false,
-			type: "'accent' | 'danger' | 'default' | 'success' | 'warning'"
+			type: 'number | null'
+		},
+		{
+			name: 'dot',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'invisible',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'label',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'max',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'offset',
+			required: false,
+			type: 'BadgeOffset'
+		},
+		{
+			name: 'overlap',
+			required: false,
+			type: "'circular' | 'rectangular'"
+		},
+		{
+			name: 'placement',
+			required: false,
+			type: "'bottom-end' | 'bottom-start' | 'top-end' | 'top-start'"
 		},
 		{
 			name: 'ref',
 			required: false,
 			type: 'HTMLSpanElement | null'
+		},
+		{
+			name: 'showZero',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: "'medium' | 'small'"
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: "'accent' | 'danger' | 'default' | 'success' | 'warning'"
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZBadge.svelte',
@@ -3554,7 +3688,7 @@ export const tagApiFacts = {
 		{
 			name: 'tone',
 			required: false,
-			type: 'BadgeTone'
+			type: "'accent' | 'danger' | 'default' | 'success' | 'warning'"
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZTag.svelte',
@@ -3909,6 +4043,11 @@ export const toastApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'announce',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'description',
 			required: false,
 			type: 'string'
@@ -3932,6 +4071,11 @@ export const toastApiFacts = {
 			name: 'onDismiss',
 			required: false,
 			type: '(event: MouseEvent) => void'
+		},
+		{
+			name: 'onEscapeKeyDown',
+			required: false,
+			type: '(event: KeyboardEvent) => void'
 		},
 		{
 			name: 'onPauseChange',
@@ -4689,12 +4833,12 @@ export const cascaderApiFacts = {
 		{
 			name: 'nodes',
 			required: true,
-			type: 'readonly TreeNode<TKey>[]'
+			type: 'readonly PublicTreeNode<TKey>[]'
 		},
 		{
 			name: 'onLoadChildren',
 			required: false,
-			type: '( node: TreeNode<TKey>, context: TreeLoadContext<TKey> ) => Promise<void> | void'
+			type: '( node: PublicTreeNode<TKey>, context: TreeLoadContext<TKey> ) => Promise<void> | void'
 		},
 		{
 			name: 'onLoadError',
@@ -5204,7 +5348,7 @@ export const datePickerApiFacts = {
 		{
 			name: 'defaultValue',
 			required: false,
-			type: 'CalendarDate | null'
+			type: 'PublicCalendarDate | null'
 		},
 		{
 			name: 'disabled',
@@ -5234,7 +5378,7 @@ export const datePickerApiFacts = {
 		{
 			name: 'isDateUnavailable',
 			required: false,
-			type: '(date: CalendarDate) => boolean'
+			type: '(date: PublicCalendarDate) => boolean'
 		},
 		{
 			name: 'locale',
@@ -5244,12 +5388,12 @@ export const datePickerApiFacts = {
 		{
 			name: 'maxValue',
 			required: false,
-			type: 'CalendarDate'
+			type: 'PublicCalendarDate'
 		},
 		{
 			name: 'minValue',
 			required: false,
-			type: 'CalendarDate'
+			type: 'PublicCalendarDate'
 		},
 		{
 			name: 'name',
@@ -5264,7 +5408,7 @@ export const datePickerApiFacts = {
 		{
 			name: 'onValueChange',
 			required: false,
-			type: '(value: CalendarDate | null) => void'
+			type: '(value: PublicCalendarDate | null) => void'
 		},
 		{
 			name: 'open',
@@ -5319,7 +5463,7 @@ export const datePickerApiFacts = {
 		{
 			name: 'value',
 			required: false,
-			type: 'CalendarDate | null'
+			type: 'PublicCalendarDate | null'
 		}
 	],
 	source: 'ui/zui/src/components/input/ZDatePicker.svelte',
@@ -5385,7 +5529,7 @@ export const dateRangePickerApiFacts = {
 		{
 			name: 'defaultValue',
 			required: false,
-			type: 'CalendarRange | CalendarRangeValue | null'
+			type: 'PublicCalendarRange | PublicCalendarRangeValue | null'
 		},
 		{
 			name: 'disabled',
@@ -5415,7 +5559,7 @@ export const dateRangePickerApiFacts = {
 		{
 			name: 'isDateUnavailable',
 			required: false,
-			type: "(date: CalendarDate, part: 'end' | 'start') => boolean"
+			type: "(date: PublicCalendarDate, part: 'end' | 'start') => boolean"
 		},
 		{
 			name: 'locale',
@@ -5425,12 +5569,12 @@ export const dateRangePickerApiFacts = {
 		{
 			name: 'maxValue',
 			required: false,
-			type: 'CalendarDate'
+			type: 'PublicCalendarDate'
 		},
 		{
 			name: 'minValue',
 			required: false,
-			type: 'CalendarDate'
+			type: 'PublicCalendarDate'
 		},
 		{
 			name: 'name',
@@ -5445,7 +5589,7 @@ export const dateRangePickerApiFacts = {
 		{
 			name: 'onValueChange',
 			required: false,
-			type: '(value: CalendarRangeValue | null) => void'
+			type: '(value: PublicCalendarRangeValue | null) => void'
 		},
 		{
 			name: 'open',
@@ -5495,7 +5639,7 @@ export const dateRangePickerApiFacts = {
 		{
 			name: 'value',
 			required: false,
-			type: 'CalendarRange | CalendarRangeValue | null'
+			type: 'PublicCalendarRange | PublicCalendarRangeValue | null'
 		}
 	],
 	source: 'ui/zui/src/components/input/ZDateRangePicker.svelte',
@@ -5790,7 +5934,7 @@ export const formApiFacts = {
 		{
 			name: 'controller',
 			required: false,
-			type: 'ZFormController<StandardSchemaV1.InferOutput<TSchema>> | null'
+			type: 'ZFormController<PublicStandardSchemaV1.InferOutput<TSchema>> | null'
 		},
 		{
 			name: 'disabled',
@@ -5800,7 +5944,7 @@ export const formApiFacts = {
 		{
 			name: 'errors',
 			required: false,
-			type: 'FormErrors'
+			type: 'PublicFormErrors'
 		},
 		{
 			name: 'focusFirstError',
@@ -5815,7 +5959,7 @@ export const formApiFacts = {
 		{
 			name: 'onErrorsChange',
 			required: false,
-			type: '(errors: FormErrors) => void'
+			type: '(errors: PublicFormErrors) => void'
 		},
 		{
 			name: 'onInvalidSubmit',
@@ -5845,7 +5989,7 @@ export const formApiFacts = {
 		{
 			name: 'onValidSubmit',
 			required: false,
-			type: '( detail: FormSubmitDetail<StandardSchemaV1.InferOutput<TSchema>> ) => void'
+			type: '( detail: FormSubmitDetail<PublicStandardSchemaV1.InferOutput<TSchema>> ) => void'
 		},
 		{
 			name: 'onValidationError',
@@ -6442,7 +6586,7 @@ export const segmentedApiFacts = {
 		{
 			name: 'defaultValue',
 			required: false,
-			type: 'SelectionKey'
+			type: 'SegmentedSelectionKey'
 		},
 		{
 			name: 'disabled',
@@ -6482,7 +6626,7 @@ export const segmentedApiFacts = {
 		{
 			name: 'onValueChange',
 			required: false,
-			type: '(value: SelectionKey) => void'
+			type: '(value: SegmentedSelectionKey) => void'
 		},
 		{
 			name: 'options',
@@ -6512,7 +6656,7 @@ export const segmentedApiFacts = {
 		{
 			name: 'value',
 			required: false,
-			type: 'SelectionKey'
+			type: 'SegmentedSelectionKey'
 		}
 	],
 	source: 'ui/zui/src/components/input/ZSegmented.svelte',
@@ -7322,7 +7466,7 @@ export const treeSelectApiFacts = {
 		{
 			name: 'onLoadChildren',
 			required: false,
-			type: '( node: TreeNode<TKey>, context: TreeLoadContext<TKey> ) => void | Promise<void>'
+			type: '( node: TreeNode<TKey>, context: PublicTreeLoadContext<TKey> ) => void | Promise<void>'
 		},
 		{
 			name: 'onLoadError',

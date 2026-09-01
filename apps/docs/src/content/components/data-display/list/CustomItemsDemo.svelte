@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ZBadge, ZList, ZStack, ZText } from '@zadmin/zui';
+	import { ZList, ZStack, ZTag, ZText } from '@zadmin/zui';
 
 	const items = [
 		{ id: 'primary', label: '主数据库', description: '健康' },
@@ -11,7 +11,7 @@
 	{#snippet item(entry)}
 		<ZStack align="center" direction="row" gap="medium">
 			<ZText weight="semibold">{entry.label}</ZText>
-			<ZBadge tone={entry.id === 'primary' ? 'success' : 'warning'}>{entry.description}</ZBadge>
+			<ZTag tone={entry.id === 'primary' ? 'success' : 'warning'}>{entry.description}</ZTag>
 		</ZStack>
 	{/snippet}
 </ZList>

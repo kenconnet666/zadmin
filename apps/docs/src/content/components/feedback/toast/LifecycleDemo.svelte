@@ -24,12 +24,18 @@
 
 	function updateStableToast(): void {
 		updates += 1;
-		queue.push({
-			description: `稳定 id 原位更新了 ${updates} 次，不会重复占用队列。`,
-			duration: null,
-			id: 'deployment-progress',
-			title: updates === 1 ? '正在部署' : '部署进度已更新',
-			tone: updates > 1 ? 'success' : 'info'
+		if (updates === 1) {
+			queue.push({
+				description: '后续只更新标题与tone，未提供的字段和计时状态保持不变。',
+				duration: null,
+				id: 'deployment-progress',
+				title: '正在部署'
+			});
+			return;
+		}
+		queue.update('deployment-progress', {
+			title: `部署进度已更新 ${updates - 1} 次`,
+			tone: 'success'
 		});
 	}
 

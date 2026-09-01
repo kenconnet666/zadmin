@@ -257,6 +257,7 @@
 					code={doc.importStatement}
 					inline
 					lang="typescript"
+					wrap
 				/>
 			</div>
 			<ZLink

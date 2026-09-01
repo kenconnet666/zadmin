@@ -57,7 +57,8 @@ export const fileUploadDoc = defineComponentDoc(fileUploadMetadata, {
 			},
 			invalid: {
 				default: '继承Field或false',
-				description: '投射到根data-state与drop zone的aria-invalid。'
+				description:
+					'投射到根data-invalid，并通过Field错误/说明关系命名真实button；不向button写入不支持的aria-invalid。'
 			},
 			queueLabel: {
 				default: 'localePack.fileUpload.queueLabel',
@@ -69,7 +70,7 @@ export const fileUploadDoc = defineComponentDoc(fileUploadMetadata, {
 			},
 			required: {
 				default: '继承Field或false',
-				description: '投射到真实焦点owner；业务校验由Field/Form schema拥有。'
+				description: '投射到根data-required；业务必填阻断由Field/Form schema拥有。'
 			},
 			retryLabel: {
 				default: 'localePack.fileUpload.retryUpload(item.file.name)',

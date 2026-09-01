@@ -5,15 +5,72 @@ import LifecycleDemo from './LifecycleDemo.svelte';
 import lifecycleSource from './LifecycleDemo.svelte?raw';
 import TonesDemo from './TonesDemo.svelte';
 import tonesSource from './TonesDemo.svelte?raw';
+import UpdateDemo from './UpdateDemo.svelte';
+import updateSource from './UpdateDemo.svelte?raw';
+import TaskDemo from './TaskDemo.svelte';
+import taskSource from './TaskDemo.svelte?raw';
+import AnnouncementsDemo from './AnnouncementsDemo.svelte';
+import announcementsSource from './AnnouncementsDemo.svelte?raw';
 import { toastApiFacts } from '../../../../framework/component-api.generated.js';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const toastDoc = defineComponentDoc(toastMetadata, {
+	additionalApi: [
+		{
+			description:
+				'ToastQueue由应用显式创建和持有；下列方法是调用方服务面，视口连接、暂停和Presence收尾由ZToaster内部协调。',
+			id: 'toast-queue-service',
+			rows: [
+				{
+					description: '创建或按同id完整替换Toast，并返回稳定id。',
+					feature: 'service',
+					name: 'push',
+					type: '(options: ToastOptions) => string'
+				},
+				{
+					description: '仅更新已有记录的显式字段；不存在时返回false且不创建消息。',
+					feature: 'service',
+					name: 'update',
+					type: '(id: string, update: ToastUpdate) => boolean'
+				},
+				{
+					description: '观察调用方Promise并以同一id迁移状态；返回Toast id，不包装原Promise。',
+					feature: 'service',
+					name: 'task',
+					type: '<TResult, TError = unknown>(promise: PromiseLike<TResult>, options: ToastTaskOptions<TResult, TError>) => string'
+				},
+				{
+					description: '按原因关闭单条记录；不存在或已经退出时为空操作。',
+					feature: 'service',
+					name: 'dismiss',
+					type: '(id: string, reason?: ToastDismissReason) => void'
+				},
+				{
+					description: '关闭并清空当前队列中的全部记录。',
+					feature: 'service',
+					name: 'clear',
+					type: '() => void'
+				},
+				{
+					description: '终止计时器、任务generation和连接资源；Queue生命周期结束时调用。',
+					feature: 'service',
+					name: 'dispose',
+					type: '() => void'
+				}
+			],
+			title: 'ToastQueue Service'
+		}
+	],
 	members: [toasterMetadata],
 	profiles: ['animated', 'layer', 'service'],
 	sourceApi: toastApiFacts,
 	teaching: {
 		props: {
+			announce: {
+				default: 'true',
+				description:
+					'独立ZToast自行建立live语义；Queue内Toast由ZToaster集中公告，避免视觉更新重复朗读。'
+			},
 			actionLabel: {
 				default: 'undefined',
 				description: '可选单一操作文案；复杂操作集合应改用Dialog或页面内反馈。'
@@ -32,7 +89,7 @@ export const toastDoc = defineComponentDoc(toastMetadata, {
 			}
 		},
 		summary:
-			'提供独立live-region消息与显式Queue/Toaster服务，在Provider边界内完成公平入场、暂停、操作和Presence退出。'
+			'提供独立Toast与显式Queue/Toaster服务，在Provider边界内完成公平入场、局部更新、task generation、集中公告、暂停和Presence退出。'
 	},
 	demos: [
 		{
@@ -58,6 +115,33 @@ export const toastDoc = defineComponentDoc(toastMetadata, {
 			id: 'toast-lifecycle',
 			source: lifecycleSource,
 			title: '生产生命周期与公平排队'
+		},
+		{
+			component: UpdateDemo,
+			covers: ['controlled', 'portal', 'resource-cleanup', 'variants-and-states'],
+			description:
+				'update(id, partial)只修改显式字段；description、回调、阶段和已消耗的剩余计时不会被无关更新重置。',
+			id: 'toast-partial-update',
+			source: updateSource,
+			title: '显式局部更新'
+		},
+		{
+			component: TaskDemo,
+			covers: ['controlled', 'loading', 'portal', 'resource-cleanup'],
+			description:
+				'task只观察调用方Promise并用同一id迁移loading/success/error；generation阻止旧任务迟到覆盖新任务。',
+			id: 'toast-task',
+			source: taskSource,
+			title: '调用方拥有的异步Task'
+		},
+		{
+			component: AnnouncementsDemo,
+			covers: ['accessible-name', 'portal', 'resource-cleanup', 'variants-and-states'],
+			description:
+				'视觉列表和live region解耦：同实例更新不重复公告，连续assertive按序节流，普通success保持polite。',
+			id: 'toast-announcements',
+			source: announcementsSource,
+			title: '公告去重与Assertive节流'
 		}
 	],
 	accessibility: [
@@ -66,7 +150,20 @@ export const toastDoc = defineComponentDoc(toastMetadata, {
 		'maxVisible控制实际入场容量；排队消息没有计时器，前一条完成Presence退出后才按FIFO进入，动态缩容会把最新的超额消息重新排队而不是dismiss。',
 		'ZToaster默认Portal到当前Document，并继承ZProvider portalContainer以支持ShadowRoot或局部挂载边界。',
 		'ZToaster不创建全局单例；一个Queue对应一个Toaster，应用显式持有Queue并在所属生命周期结束时dispose。',
-		'持久Toast必须提供关闭按钮，操作完成后队列按action原因移除；同一id再次push会原位更新。'
+		'update只接受已有id并保留未提供字段与剩余计时；push负责创建或完整替换，避免“局部还是全量”依赖猜测。',
+		'task返回Toast id但不替代原Promise；AbortController、catch、重试和业务结果继续由调用方拥有，generation只防止旧结果覆盖新状态。',
+		'Queue内视觉Toast不直接承担live role；Toaster用独立polite/assertive区域公告新实例，同id更新不重复，连续assertive至少间隔一秒。',
+		'持久Toast必须提供关闭按钮，操作完成后队列按action原因移除；普通success默认polite，只有danger/error默认assertive。',
+		'参考取舍：采用React Aria的队列所有权与pause原则、Radix的前景/背景敏感度、Sonner与Ant的同id更新/task体验、MUI的连续消息克制；拒绝静态全局单例和隐藏Promise控制权。'
 	],
-	keywords: ['toast', 'toaster', 'notification', 'live region', 'queue']
+	keywords: [
+		'toast',
+		'toaster',
+		'notification',
+		'live region',
+		'queue',
+		'partial update',
+		'promise task',
+		'assertive throttle'
+	]
 });

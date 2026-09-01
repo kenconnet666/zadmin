@@ -4,10 +4,11 @@
 		ZAccordionContent,
 		ZAccordionItem,
 		ZAccordionTrigger,
-		ZText
+		ZText,
+		type AccordionSingleValue
 	} from '@zadmin/zui';
 
-	let value = $state<string | readonly string[] | undefined>('runtime');
+	let value = $state<AccordionSingleValue>('runtime');
 	let changes = $state(0);
 </script>
 
@@ -26,6 +27,5 @@
 	</ZAccordionItem>
 </ZAccordion>
 <ZText tone="muted">
-	value = {value === undefined ? 'none' : typeof value === 'string' ? value : value.join(',')} · 用户变更次数
-	= {changes}
+	value = {value ?? 'null'} · 用户变更次数 = {changes}
 </ZText>

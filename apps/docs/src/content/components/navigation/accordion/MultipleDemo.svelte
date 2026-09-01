@@ -4,9 +4,10 @@
 		ZAccordionContent,
 		ZAccordionItem,
 		ZAccordionTrigger,
-		ZText
+		ZText,
+		type AccordionMultipleValue
 	} from '@zadmin/zui';
-	let value = $state<string | readonly string[] | undefined>(['build', 'deploy']);
+	let value = $state<AccordionMultipleValue>(['build', 'deploy']);
 </script>
 
 <ZAccordion bind:value defaultValue={['build', 'deploy']} loop={false} type="multiple">
@@ -26,4 +27,4 @@
 		></ZAccordionItem
 	>
 </ZAccordion>
-<ZText tone="muted">open = {Array.isArray(value) ? value.join(',') : (value ?? 'none')}</ZText>
+<ZText tone="muted">open = {value.join(',') || '[]'}</ZText>

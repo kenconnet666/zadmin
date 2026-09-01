@@ -1,10 +1,10 @@
 <script lang="ts">
 	import {
-		ZBadge,
 		ZMultiSelect,
 		ZMultiSelectContent,
 		ZMultiSelectTrigger,
 		ZStack,
+		ZTag,
 		ZText,
 		type SelectionKey,
 		type ZMultiSelectOption
@@ -31,7 +31,7 @@
 			{#snippet option(option)}
 				<ZStack direction="row" gap="small">
 					<span>{option.label}</span>
-					<ZBadge>{typeof option.value}</ZBadge>
+					<ZTag>{typeof option.value}</ZTag>
 				</ZStack>
 			{/snippet}
 		</ZMultiSelectContent>

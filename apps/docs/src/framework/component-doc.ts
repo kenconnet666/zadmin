@@ -81,6 +81,7 @@ export interface ComponentDoc extends ZuiComponentMetadata {
 }
 
 interface ComponentDocDefinition extends Pick<ComponentDoc, 'accessibility' | 'demos'> {
+	readonly additionalApi?: readonly ApiSection[];
 	readonly keywords?: readonly string[];
 	readonly members?: readonly ZuiComponentMetadata[];
 	readonly profiles?: readonly ComponentProfile[];
@@ -270,13 +271,30 @@ export function defineComponentDoc(
 	for (const member of doc.members ?? []) {
 		appendMetadataApi(api, member, member.props, undefined, `${member.id}-`, `${member.name} `);
 	}
+	const apiIds = new Set(api.map(({ id }) => id));
+	for (const section of doc.additionalApi ?? []) {
+		if (!section.id.trim() || !section.title.trim() || section.rows.length === 0) {
+			throw new TypeError(`${metadata.name} additional API sections require id, title and rows.`);
+		}
+		if (apiIds.has(section.id)) {
+			throw new TypeError(`${metadata.name} repeats API section id "${section.id}".`);
+		}
+		const rowNames = section.rows.map(({ name }) => name);
+		if (new Set(rowNames).size !== rowNames.length) {
+			throw new TypeError(`${metadata.name} ${section.title} repeats API row names.`);
+		}
+		apiIds.add(section.id);
+		api.push(section);
+	}
 	const {
+		additionalApi: _additionalApi,
 		members: _members,
 		profiles = [],
 		sourceApi: _sourceApi,
 		teaching: _teaching,
 		...page
 	} = doc;
+	void _additionalApi;
 	void _members;
 	void _sourceApi;
 	void _teaching;

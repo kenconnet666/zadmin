@@ -11,7 +11,7 @@
 	<ZField label="只读区域" name="readonly-region" readonly size="small">
 		<ZCascader {nodes} defaultValue={['cn', 'east', 'shanghai']} separator=" / " />
 	</ZField>
-	<ZField invalid label="加载中的区域" size="large">
+	<ZField error="区域同步尚未完成。" label="加载中的区域" size="large">
 		<ZCascader {nodes} loading placeholder="正在同步区域" />
 	</ZField>
 	<ZField disabled label="禁用区域">

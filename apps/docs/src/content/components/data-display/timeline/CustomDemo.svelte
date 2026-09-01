@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ZBadge, ZStack, ZText, ZTimeline } from '@zadmin/zui';
+	import { ZStack, ZTag, ZText, ZTimeline } from '@zadmin/zui';
 
 	const items = [
 		{ id: 'review', title: '代码审查', status: 'done' as const, time: '10:20' },
@@ -11,7 +11,7 @@
 	{#snippet item(entry)}
 		<ZStack direction="row" gap="medium" align="center">
 			<ZText weight="semibold">{entry.title}</ZText>
-			<ZBadge tone={entry.status === 'done' ? 'success' : 'accent'}>{entry.time}</ZBadge>
+			<ZTag tone={entry.status === 'done' ? 'success' : 'accent'}>{entry.time}</ZTag>
 		</ZStack>
 	{/snippet}
 </ZTimeline>

@@ -1,7 +1,14 @@
 <script lang="ts">
-	import { ZTabs, ZTabsList, ZTabsPanel, ZTabsTrigger, ZText } from '@zadmin/zui';
+	import {
+		ZTabs,
+		ZTabsList,
+		ZTabsPanel,
+		ZTabsTrigger,
+		ZText,
+		type SelectionKey
+	} from '@zadmin/zui';
 
-	let value = $state('overview');
+	let value = $state<SelectionKey | null>('overview');
 	let changes = $state(0);
 </script>
 
@@ -17,4 +24,4 @@
 	<ZTabsPanel value="legacy">不可访问的旧版内容。</ZTabsPanel>
 	<ZTabsPanel value="events">最近24小时记录了18个部署事件。</ZTabsPanel>
 </ZTabs>
-<ZText tone="muted">value = {value} · 用户变更次数 = {changes}</ZText>
+<ZText tone="muted">value = {value ?? 'null'} · 用户变更次数 = {changes}</ZText>

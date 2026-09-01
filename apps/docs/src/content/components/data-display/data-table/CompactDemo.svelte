@@ -1,11 +1,11 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import {
-		ZBadge,
 		ZButton,
 		ZCheckbox,
 		ZDataTable,
 		ZStack,
+		ZTag,
 		ZText,
 		type DataTableColumn,
 		type DataTableColumnVisibility,
@@ -92,7 +92,7 @@
 </script>
 
 {#snippet statusCell(row: ServiceRow, _value: unknown, _index: number)}
-	<ZBadge tone={row.status === '在线' ? 'success' : 'warning'}>{row.status}</ZBadge>
+	<ZTag tone={row.status === '在线' ? 'success' : 'warning'}>{row.status}</ZTag>
 {/snippet}
 
 <ZStack gap="medium">
