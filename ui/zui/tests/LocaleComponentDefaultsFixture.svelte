@@ -15,6 +15,7 @@
 		ZTagsInput,
 		ZTransfer,
 		ZTreeSelect,
+		createFileUploadItem,
 		enUSLocalePack,
 		zhCNLocalePack
 	} from '../src/entrypoints/index.js';
@@ -55,7 +56,10 @@
 		</div>
 		<ZMention data-testid="mention-default" items={[]} placeholder="Mention someone" />
 		<ZTransfer data-testid="transfer-default" items={transferItems} />
-		<ZFileUpload data-testid="file-upload-default" defaultFiles={[file]} />
+		<ZFileUpload
+			data-testid="file-upload-default"
+			defaultFiles={[createFileUploadItem('brief', file)]}
+		/>
 		<ZTagsInput data-testid="tags-input-default" defaultValues={['alpha']} />
 		<ZColorPicker allowAlpha data-testid="color-picker-default" />
 	</div>

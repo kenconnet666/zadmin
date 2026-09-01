@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
-import { fileIdentity, matchesFileAccept, validateFileQueue } from '../src/runtime/file.js';
+import {
+	createFileUploadItem,
+	fileIdentity,
+	matchesFileAccept,
+	normalizeFileUploadItems,
+	normalizeFileUploadProgress,
+	validateFileQueue
+} from '../src/runtime/file.js';
 
 const file = (name: string, type: string, size = 4, lastModified = 1) => ({
 	lastModified,
@@ -38,5 +45,26 @@ describe('file queue algorithms', () => {
 			'max-files'
 		]);
 		expect(fileIdentity(first)).toContain('a.json');
+	});
+
+	it('normalizes typed upload states without hiding invalid contracts', () => {
+		const browserFile = file('a.json', 'application/json') as File;
+		expect(createFileUploadItem('a', browserFile)).toMatchObject({
+			id: 'a',
+			progress: 0,
+			status: 'queued'
+		});
+		expect(
+			createFileUploadItem('complete', browserFile, { progress: 100, status: 'success' })
+		).toMatchObject({ progress: 100, status: 'success' });
+		expect(normalizeFileUploadProgress(120)).toBe(100);
+		expect(normalizeFileUploadProgress(-1)).toBe(0);
+		expect(() => normalizeFileUploadProgress(Number.NaN)).toThrow('must be finite');
+		expect(() =>
+			normalizeFileUploadItems([
+				createFileUploadItem('duplicate', browserFile),
+				createFileUploadItem('duplicate', browserFile)
+			])
+		).toThrow('unique ids');
 	});
 });

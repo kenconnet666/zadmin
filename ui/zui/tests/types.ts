@@ -159,6 +159,7 @@ import {
 	type ZCascaderProps,
 	type ZCalendarProps,
 	type ZCheckboxProps,
+	type ColorPickerPreset,
 	type ZComboboxContentProps,
 	type ZComboboxInputProps,
 	type ZComboboxItemProps,
@@ -526,7 +527,11 @@ const segmentedProps: ComponentProps<typeof ZSegmented> = {
 } satisfies ZSegmentedProps;
 const tagsInputProps: ComponentProps<typeof ZTagsInput> = {
 	defaultValues: ['alpha'],
-	delimiters: [',', ';']
+	delimiters: [',', ';'],
+	editable: true,
+	maxVisibleTags: 3,
+	size: 'small',
+	transform: (value) => value.toLocaleLowerCase()
 } satisfies ZTagsInputProps;
 const treeProps: ComponentProps<typeof ZTree> = {
 	nodes: [{ key: 'root', label: 'Root' }]
@@ -588,6 +593,8 @@ const pinInputProps: ComponentProps<typeof ZPinInput> = {
 } satisfies ZPinInputProps;
 const colorPickerProps: ComponentProps<typeof ZColorPicker> = {
 	allowAlpha: true,
+	clearable: true,
+	presets: [{ label: 'Brand', value: '#336699' }] satisfies readonly ColorPickerPreset[],
 	value: '#33669980'
 } satisfies ZColorPickerProps;
 const fileUploadProps: ComponentProps<typeof ZFileUpload> = {

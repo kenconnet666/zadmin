@@ -800,6 +800,19 @@ test('keeps ColorPicker hex, alpha, Popover focus, FormData and reset synchroniz
 	await expect(trigger).toBeFocused();
 	await colorDemo.getByRole('button', { name: '重置', exact: true }).click();
 	await expect(colorDemo.getByText('value = #2563ebcc')).toBeVisible();
+
+	const controlledDemo = demo(page, 'color-picker-controlled');
+	await controlledDemo.getByRole('button', { name: '外部清空', exact: true }).click();
+	await expect(
+		controlledDemo.getByText(/value = null · open = false · 用户变更 = 0/u)
+	).toBeVisible();
+	await controlledDemo.getByRole('button', { name: '外部设置蓝色', exact: true }).click();
+	await expect(controlledDemo.getByText(/value = #0ea5e9/u)).toBeVisible();
+
+	const presetsDemo = demo(page, 'color-picker-presets');
+	await presetsDemo.locator('button[aria-haspopup="dialog"]').click();
+	await page.getByRole('button', { name: '警告半透明', exact: true }).click();
+	await expect(presetsDemo.getByText('preset value = #d9770680')).toBeVisible();
 });
 
 test('keeps switch semantics, keyboard state, FormData and reset synchronized', async ({
@@ -1145,6 +1158,19 @@ test('keeps TagsInput commits, removals, repeated form values and reset synchron
 	await expect(
 		tagsDemo.getByRole('button', { name: '移除标签 production', exact: true })
 	).toBeVisible();
+
+	const editingDemo = demo(page, 'tags-input-editing');
+	await editingDemo.getByRole('button', { name: '编辑标签 staging', exact: true }).click();
+	const editInput = editingDemo.getByRole('textbox', { name: '编辑标签 staging', exact: true });
+	await editInput.fill('Release Candidate');
+	await editInput.press('Enter');
+	await expect(editingDemo.getByText(/values = production,release-candidate/u)).toBeVisible();
+
+	const overflowDemo = demo(page, 'tags-input-overflow');
+	await expect(overflowDemo.locator('[data-slot="tag"]')).toHaveCount(3);
+	await expect(overflowDemo.getByText('还有 9 个标签', { exact: true })).toBeVisible();
+	await overflowDemo.getByRole('textbox', { name: '大量发布标签', exact: true }).focus();
+	await expect(overflowDemo.locator('[data-slot="tag"]')).toHaveCount(12);
 });
 
 test('keeps Textarea autosize, Field semantics, FormData and reset synchronized', async ({

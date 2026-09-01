@@ -595,7 +595,7 @@ describe('ZUI foundational components', () => {
 	it('renders FileUpload native input, accept rules and empty queue during SSR', () => {
 		const result = render(FileUploadFixture).body;
 		expect(result).toContain('type="file"');
-		expect(result).toContain('name="asset"');
+		expect(result).toContain('data-zui-file-form-value');
 		expect(result).toContain('accept="application/json,.yaml"');
 		expect(result).toContain('multiple');
 		expect(result).toContain('Drop files here or choose files');

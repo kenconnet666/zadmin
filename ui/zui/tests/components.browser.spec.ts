@@ -1652,7 +1652,7 @@ describe('compiled ICSS browser updates', () => {
 		const dropped = new DataTransfer();
 		dropped.items.add(new File(['yaml'], 'b.yaml', { lastModified: 3, type: 'text/yaml' }));
 		document
-			.querySelector<HTMLElement>('[role="group"]')
+			.querySelector<HTMLElement>('[data-slot="dropzone"]')
 			?.dispatchEvent(new DragEvent('drop', { bubbles: true, dataTransfer: dropped }));
 		await tick();
 		expect(output?.textContent).toBe('a.json,b.yaml:1');
@@ -1666,7 +1666,7 @@ describe('compiled ICSS browser updates', () => {
 		await resetForm(form);
 		expect(output?.textContent).toBe('none:1');
 		expect(input?.files).toHaveLength(0);
-		expect((new FormData(form!).get('asset') as File).name).toBe('');
+		expect(new FormData(form!).get('asset')).toBeNull();
 	});
 
 	it('keeps disabled FileUpload inert across drag, drop, change and remove paths', async () => {
@@ -1674,12 +1674,13 @@ describe('compiled ICSS browser updates', () => {
 		document.body.append(target);
 		const component = mount(FileUploadFixture, { props: { disabled: true }, target });
 		const root = target.querySelector<HTMLElement>('[role="group"]');
+		const dropzone = target.querySelector<HTMLElement>('[data-slot="dropzone"]');
 		const input = target.querySelector<HTMLInputElement>('input[type="file"]');
 		const transfer = new DataTransfer();
 		transfer.items.add(new File(['{}'], 'disabled.json', { type: 'application/json' }));
 
-		root?.dispatchEvent(new DragEvent('dragover', { bubbles: true, dataTransfer: transfer }));
-		root?.dispatchEvent(new DragEvent('drop', { bubbles: true, dataTransfer: transfer }));
+		dropzone?.dispatchEvent(new DragEvent('dragover', { bubbles: true, dataTransfer: transfer }));
+		dropzone?.dispatchEvent(new DragEvent('drop', { bubbles: true, dataTransfer: transfer }));
 		if (input) {
 			input.files = transfer.files;
 			input.dispatchEvent(new Event('change', { bubbles: true }));

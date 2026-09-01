@@ -50,6 +50,7 @@ describe('typed locale packs', () => {
 		expect(pack.numberField.increment).toBe('Add amount');
 		expect(pack.numberField.minimum('1.5')).toBe('Value must be at least 1.5.');
 		expect(pack.tagsInput.removeTag('alpha')).toBe('Delete alpha');
+		expect(pack.tagsInput.editTag('alpha')).toBe('Edit alpha');
 		expect(pack.time).toMatchObject({ hour: 'Hour', hourCycle: 24, minute: '分钟' });
 		expect(pack.tour).toMatchObject({ finish: 'Finish', next: 'Continue' });
 		expect(pack.tour.progress('2', '5')).toBe('Step 2 of 5');
@@ -99,6 +100,7 @@ describe('typed locale packs', () => {
 		expect(zhCNLocalePack.pagination.totalItems('96')).toBe('共96条');
 		expect(zhCNLocalePack.progress.label).toBe('进度');
 		expect(zhCNLocalePack.tagsInput.removeTag('生产')).toBe('移除标签 生产');
+		expect(zhCNLocalePack.tagsInput.editTag('生产')).toBe('编辑标签 生产');
 		expect(zhCNLocalePack.time.hourCycle).toBe(24);
 		expect(zhCNLocalePack.time.pm).toBe('下午');
 		expect(zhCNLocalePack.tour.progress('2', '4')).toBe('第2步，共4步');

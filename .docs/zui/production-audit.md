@@ -18,7 +18,7 @@
 | ------------------------ | ---: | ----------------------------------------------------------------------------------------------------------- |
 | Svelte组件文件           |  143 | 139个拥有唯一metadata id；`QueuedToast`、`CascaderColumn`、`TransferPane`与`ZMentionEditor`是非公开内部实现 |
 | 公开组件文档页           |   78 | 每页至少2个不同Demo                                                                                         |
-| 实际Demo                 |  261 | 少于2个、重复id或空源码会在`defineComponentDoc`中直接失败                                                   |
+| 实际Demo                 |  270 | 少于2个、重复id或空源码会在`defineComponentDoc`中直接失败                                                   |
 | 生产指南                 |    8 | Getting Started、ICSS、Theme Lab、Accessibility、SSR/CSP、HMR、WebView和Package                             |
 | 公开API合同              |  139 | TypeScript AST快照覆盖全部metadata组件与package entrypoint；变化必须显式更新                                |
 | 官方主题                 |    6 | `@zadmin/zui/themes`统一导出，文档站真实切换并持久化                                                        |
@@ -27,9 +27,9 @@
 | 内联SVG                  |    3 | 2个ZAdmin品牌资源；圆形`ZProgress`按数值绘弧；Spinner与通用UI图标全部来自Lucide                             |
 | 品牌渐变文件             |    2 | 仅desktop图标与Docs favicon允许SVG渐变；组件和文档界面不以渐变表达状态                                      |
 | 静态系统审计             |    1 | CI固化metadata唯一性、Demo数量、motion、Docs dogfood、Lucide导入和SVG白名单                                 |
-| 内部原生按钮文件         |   10 | 必须复用internal action、显式focus合同，或是Tour的隐藏非Tab遮罩                                             |
+| 内部原生按钮文件         |   11 | 必须复用internal action、显式focus合同，或是Tour的隐藏非Tab遮罩                                             |
 | 可见原生输入文件         |   15 | 非hidden input/textarea必须复用internal focus或显式focus-visible/focus-within                               |
-| 表单reset action文件     |    7 | 其余组件通过统一FormValueBridge/FormResetSignal或节点action绑定，禁止重复低层listener                       |
+| 表单reset action文件     |    4 | 其余组件通过统一FormValueBridge/FormResetSignal或节点action绑定，禁止重复低层listener                       |
 | 专用reset signal         |    2 | 无name/id的hidden disabled input直接归属form并承载最小cancel-aware action                                   |
 | 复合reset所有权合同      |    4 | Combobox、Mention与Transfer双filter关闭叶子自重置，由父状态机唯一拥有reset                                  |
 | reset signal表单归属     |    1 | 仅解析到owner时portal为form直接子节点；动态prop和同id owner替换会重归属且不污染label                        |
@@ -118,6 +118,9 @@
 | 文档站缺少生产使用指南                | 只有组件页与Theme Lab，安装、SSR、HMR、WebView和发布边界分散        | 共享指南注册表与GuidePage补齐七份指南，直接使用ZUI Card/List/Code/Link             |
 | 发布包缺少消费者入口说明              | npm tarball没有就地安装、entrypoint与稳定性说明                     | 增加随包README、AST API快照、publish dry-run和仓库外tarball验收                    |
 | 发布规划没有release PR自动化          | 只有Changesets CLI脚本，没有成功CI后的版本与Changelog PR            | Changesets v2从成功CI的SHA创建PR；仓库允许Actions建PR，默认token仍保持只读         |
+| FileUpload只是File数组拖放框          | 没有上传状态、取消/重试、transport所有权或可靠FormData边界          | 改为typed不可变队列、owner-realm AbortSignal、调用方transport与FileFormValueBridge |
+| TagsInput缺少集合与编辑合同           | 早期实现没有逻辑键盘集合、受控草稿、overflow和标签编辑              | 复用LogicalCollection、ZTag、Field/Form并补批量粘贴、编辑和焦点恢复                |
+| ColorPicker无法表达空值和生产表单状态 | 单值面板缺少null、清空、预设、受控open、Field/reset与alpha策略      | 统一6/8位hex合同，增加null、presets、alpha、Popover和FormValueBridge               |
 
 ## 4. 交互与可访问性审计
 

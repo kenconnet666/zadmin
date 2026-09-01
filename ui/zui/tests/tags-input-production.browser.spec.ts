@@ -1,0 +1,82 @@
+import { tick } from 'svelte';
+import { describe, expect, it } from 'vitest';
+import { render } from 'vitest-browser-svelte';
+
+import TagsInputProductionFixture from './TagsInputProductionFixture.svelte';
+
+describe('ZTagsInput production contract', () => {
+	it('coordinates Field, overflow, keyboard editing, removal, FormData and reset', async () => {
+		render(TagsInputProductionFixture);
+		const root = document.querySelector<HTMLElement>('[data-testid="tags-production"]')!;
+		const form = document.querySelector<HTMLFormElement>('[data-testid="tags-production-form"]')!;
+		const input = root.querySelector<HTMLInputElement>('[data-slot="input"]')!;
+		const label = document.querySelector<HTMLLabelElement>('label[for]')!;
+		const output = document.querySelector<HTMLOutputElement>(
+			'[data-testid="tags-production-output"]'
+		)!;
+		const staticRoot = document.querySelector<HTMLElement>(
+			'[data-testid="tags-production-static"]'
+		)!;
+		const staticInput = staticRoot.querySelector<HTMLInputElement>('[data-slot="input"]')!;
+		const staticOutput = document.querySelector<HTMLOutputElement>(
+			'[data-testid="tags-production-static-output"]'
+		)!;
+
+		expect(input.id).toBe(label.htmlFor);
+		expect(root.dataset.invalid).toBe('true');
+		expect(input.getAttribute('aria-invalid')).toBe('true');
+		expect(input.getAttribute('aria-describedby')).toBeTruthy();
+		expect(root.querySelectorAll('[data-slot="tag"]')).toHaveLength(2);
+		expect(root.querySelector('[data-slot="overflow"]')?.textContent).toBe('+1');
+		expect(new FormData(form).getAll('tag')).toEqual(['alpha', 'beta', 'gamma']);
+
+		input.focus();
+		await tick();
+		expect(root.querySelectorAll('[data-slot="tag"]')).toHaveLength(3);
+		input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowLeft' }));
+		const lastEdit = root.querySelectorAll<HTMLButtonElement>('[data-slot="edit"]')[2]!;
+		expect(document.activeElement).toBe(lastEdit);
+		lastEdit.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+		await tick();
+		const editInput = root.querySelector<HTMLInputElement>('[data-slot="edit-input"]')!;
+		expect(document.activeElement).toBe(editInput);
+		editInput.value = 'Release Candidate';
+		editInput.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		editInput.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+		await tick();
+		expect(output.textContent).toBe('alpha,beta,release-candidate:1:');
+		expect(new FormData(form).getAll('tag')).toEqual(['alpha', 'beta', 'release-candidate']);
+
+		input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowLeft' }));
+		(document.activeElement as HTMLElement)?.dispatchEvent(
+			new KeyboardEvent('keydown', { bubbles: true, key: 'Delete' })
+		);
+		await tick();
+		expect(output.textContent).toBe('alpha,beta:2:');
+
+		staticInput.focus();
+		staticInput.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowLeft' }));
+		const staticRemove = staticRoot.querySelectorAll<HTMLButtonElement>('[data-slot="remove"]')[1]!;
+		expect(document.activeElement).toBe(staticRemove);
+		staticRemove.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Delete' }));
+		await tick();
+		expect(staticOutput.textContent).toBe('one');
+
+		input.focus();
+		input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowLeft' }));
+		root.querySelectorAll<HTMLButtonElement>('[data-slot="edit"]')[1]?.click();
+		await tick();
+		document.querySelector<HTMLButtonElement>('[data-testid="tags-owner-prepend"]')?.click();
+		await tick();
+		expect(root.querySelector('[data-slot="edit-input"]')).toBeNull();
+		expect(output.textContent).toBe('owner,alpha,beta:2:');
+
+		document.querySelector<HTMLButtonElement>('[data-testid="tags-owner-clear"]')?.click();
+		await tick();
+		expect(output.textContent).toBe(':2:');
+		form.reset();
+		await Promise.resolve();
+		await tick();
+		expect(output.textContent).toBe('alpha,beta,gamma:2:');
+	});
+});
