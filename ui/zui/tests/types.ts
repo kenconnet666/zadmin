@@ -417,6 +417,13 @@ const paginationProps: ComponentProps<typeof ZPagination> = {
 	defaultPage: 2,
 	totalPages: 20
 } satisfies ZPaginationProps;
+const paginationItemCountProps: ComponentProps<typeof ZPagination> = {
+	defaultPage: 2,
+	defaultPageSize: 20,
+	mode: 'simple',
+	pageSizeOptions: [10, 20, 50],
+	totalItems: 93
+} satisfies ZPaginationProps;
 const popconfirmProps: ComponentProps<typeof ZPopconfirm> = {
 	placement: 'bottom-start'
 } satisfies ZPopconfirmProps;
@@ -653,6 +660,7 @@ void multiSelectTriggerProps;
 void multiSelectContentProps;
 void multiSelectItemProps;
 void paginationProps;
+void paginationItemCountProps;
 void popconfirmProps;
 void popconfirmTriggerProps;
 void popconfirmContentProps;

@@ -10,7 +10,12 @@ import {
 	serializeFormValue
 } from '../src/runtime/form/form-value.js';
 import { moveIndex, navigationIntent } from '../src/runtime/collection/list-navigation.js';
-import { clampPage, createPaginationItems } from '../src/runtime/pagination.js';
+import {
+	clampPage,
+	createPaginationItems,
+	normalizePageSizeOptions,
+	resolvePaginationModel
+} from '../src/runtime/pagination.js';
 import {
 	createPresence,
 	durationMilliseconds,
@@ -165,6 +170,29 @@ describe('ZUI foundation runtime', () => {
 		expect(() => createPaginationItems(0, 1)).toThrow(/positive integer/u);
 		expect(() => createPaginationItems(10, 1, -1)).toThrow(/non-negative integer/u);
 		expect(() => clampPage(Number.NaN, 10)).toThrow(/finite/u);
+	});
+
+	it('resolves pagination count precedence and validates page-size choices', () => {
+		expect(resolvePaginationModel({})).toEqual({ totalPages: 1 });
+		expect(resolvePaginationModel({ totalPages: 7 })).toEqual({ totalPages: 7 });
+		expect(resolvePaginationModel({ pageSize: 20, totalItems: 41 })).toEqual({
+			pageSize: 20,
+			totalItems: 41,
+			totalPages: 3
+		});
+		expect(resolvePaginationModel({ totalItems: 0 })).toEqual({
+			pageSize: 10,
+			totalItems: 0,
+			totalPages: 1
+		});
+		expect(normalizePageSizeOptions([10, 20, 50], 20)).toEqual([10, 20, 50]);
+		expect(normalizePageSizeOptions([10, 20, 50], 25)).toEqual([25, 10, 20, 50]);
+		expect(() => resolvePaginationModel({ totalItems: 20, totalPages: 2 })).toThrow(/cannot use/u);
+		expect(() => resolvePaginationModel({ pageSize: 0, totalItems: 20 })).toThrow(
+			/positive integer/u
+		);
+		expect(() => resolvePaginationModel({ totalItems: -1 })).toThrow(/non-negative integer/u);
+		expect(() => normalizePageSizeOptions([10, 10], 10)).toThrow(/duplicates/u);
 	});
 
 	it('normalizes slider values across bounds, steps and decimal precision', () => {

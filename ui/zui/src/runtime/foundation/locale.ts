@@ -49,10 +49,15 @@ export interface ZuiFileUploadLocale {
 }
 
 export interface ZuiPaginationLocale {
+	readonly currentPage: (formattedPage: string) => string;
+	readonly itemsPerPage: string;
 	readonly label: string;
 	readonly next: string;
 	readonly page: (formattedPage: string) => string;
+	readonly pageInput: string;
+	readonly pageStatus: (formattedPage: string, formattedTotalPages: string) => string;
 	readonly previous: string;
+	readonly totalItems: (formattedTotal: string) => string;
 }
 
 export interface ZuiTimeLocale {
@@ -151,10 +156,16 @@ export const enUSLocalePack = Object.freeze({
 		removeFile: (fileName: string) => `Remove ${fileName}`
 	}),
 	pagination: Object.freeze({
+		currentPage: (formattedPage: string) => `Page ${formattedPage}, current page`,
+		itemsPerPage: 'Items per page',
 		label: 'Pagination',
 		next: 'Next page',
 		page: (formattedPage: string) => `Page ${formattedPage}`,
-		previous: 'Previous page'
+		pageInput: 'Page',
+		pageStatus: (formattedPage: string, formattedTotalPages: string) =>
+			`Page ${formattedPage} of ${formattedTotalPages}`,
+		previous: 'Previous page',
+		totalItems: (formattedTotal: string) => `${formattedTotal} items`
 	}),
 	tagsInput: Object.freeze({
 		addTag: 'Add tag',
@@ -222,10 +233,16 @@ export const zhCNLocalePack = Object.freeze({
 		removeFile: (fileName: string) => `移除文件 ${fileName}`
 	}),
 	pagination: Object.freeze({
+		currentPage: (formattedPage: string) => `第${formattedPage}页，当前页`,
+		itemsPerPage: '每页条数',
 		label: '分页导航',
 		next: '下一页',
 		page: (formattedPage: string) => `第${formattedPage}页`,
-		previous: '上一页'
+		pageInput: '页码',
+		pageStatus: (formattedPage: string, formattedTotalPages: string) =>
+			`第${formattedPage}页，共${formattedTotalPages}页`,
+		previous: '上一页',
+		totalItems: (formattedTotal: string) => `共${formattedTotal}条`
 	}),
 	tagsInput: Object.freeze({
 		addTag: '添加标签',

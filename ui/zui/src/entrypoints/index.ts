@@ -348,7 +348,7 @@ export type { ZTreeSelectProps } from '../components/input/ZTreeSelect.svelte';
 export { default as ZTransfer } from '../components/input/ZTransfer.svelte';
 export type { TransferItem, ZTransferProps } from '../components/input/ZTransfer.svelte';
 export { default as ZPagination } from '../components/navigation/ZPagination.svelte';
-export type { ZPaginationProps } from '../components/navigation/ZPagination.svelte';
+export type { PaginationMode, ZPaginationProps } from '../components/navigation/ZPagination.svelte';
 export { default as ZCommand } from '../components/navigation/ZCommand.svelte';
 export type {
 	CommandActionEvent,

@@ -28,6 +28,7 @@ describe('typed locale packs', () => {
 		expect(pack.command).toMatchObject({ listLabel: 'Commands', placeholder: 'Run a command' });
 		expect(pack.pagination.next).toBe('Next page');
 		expect(pack.pagination.page('12')).toBe('第12页');
+		expect(pack.pagination.pageStatus('3', '9')).toBe('Page 3 of 9');
 		expect(pack.date).toMatchObject({ calendarLabel: 'Calendar', nextMonth: '下个月' });
 		expect(pack.fileUpload.removeFile('brief.txt')).toBe('Delete brief.txt');
 		expect(pack.tagsInput.removeTag('alpha')).toBe('Delete alpha');
@@ -62,6 +63,8 @@ describe('typed locale packs', () => {
 		expect(zhCNLocalePack.date.calendarLabel).toBe('日历');
 		expect(zhCNLocalePack.fileUpload.removeFile('说明.pdf')).toBe('移除文件 说明.pdf');
 		expect(zhCNLocalePack.pagination.page('18')).toBe('第18页');
+		expect(zhCNLocalePack.pagination.currentPage('18')).toBe('第18页，当前页');
+		expect(zhCNLocalePack.pagination.totalItems('96')).toBe('共96条');
 		expect(zhCNLocalePack.tagsInput.removeTag('生产')).toBe('移除标签 生产');
 		expect(zhCNLocalePack.time.hourCycle).toBe(24);
 		expect(zhCNLocalePack.time.pm).toBe('下午');

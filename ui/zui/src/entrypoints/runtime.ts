@@ -21,8 +21,17 @@ export type {
 	NavigationIntent,
 	NavigationOrientation
 } from '../runtime/collection/list-navigation.js';
-export { clampPage, createPaginationItems } from '../runtime/pagination.js';
-export type { PaginationItem } from '../runtime/pagination.js';
+export {
+	clampPage,
+	createPaginationItems,
+	normalizePageSizeOptions,
+	resolvePaginationModel
+} from '../runtime/pagination.js';
+export type {
+	PaginationItem,
+	PaginationModel,
+	PaginationModelOptions
+} from '../runtime/pagination.js';
 export {
 	createPresence,
 	durationMilliseconds,

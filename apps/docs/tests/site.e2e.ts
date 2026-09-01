@@ -887,19 +887,40 @@ test('keeps pagination locale labels, current page and window synchronized', asy
 	await page.goto('/#/components/pagination');
 	const paginationDemo = demo(page, 'pagination-interactive');
 	const navigation = paginationDemo.getByRole('navigation', { name: '分页导航', exact: true });
-	await expect(navigation.getByRole('button', { name: '第6页', exact: true })).toHaveAttribute(
-		'aria-current',
-		'page'
-	);
+	await expect(
+		navigation.getByRole('button', { name: '第6页，当前页', exact: true })
+	).toHaveAttribute('aria-current', 'page');
 	await navigation.getByRole('button', { name: '第7页', exact: true }).click();
-	await expect(navigation.getByRole('button', { name: '第7页', exact: true })).toHaveAttribute(
-		'aria-current',
-		'page'
-	);
-	await expect(paginationDemo.getByText('page = 7 · 用户变更次数 = 1')).toBeVisible();
+	await expect(
+		navigation.getByRole('button', { name: '第7页，当前页', exact: true })
+	).toHaveAttribute('aria-current', 'page');
+	await expect(paginationDemo.getByText('page = 7 / 42 · 用户变更次数 = 1')).toBeVisible();
 	await navigation.getByRole('button', { name: '下一页', exact: true }).click();
-	await expect(paginationDemo.getByText('page = 8 · 用户变更次数 = 2')).toBeVisible();
+	await expect(paginationDemo.getByText('page = 8 / 42 · 用户变更次数 = 2')).toBeVisible();
 	await expect(navigation.locator('[data-slot="ellipsis"]')).toHaveCount(2);
+});
+
+test('keeps pagination item totals, page size and compact owners synchronized', async ({
+	page
+}) => {
+	await page.goto('/#/components/pagination');
+	const sizeDemo = demo(page, 'pagination-page-size');
+	const sizePicker = sizeDemo.getByRole('combobox', { name: '每页条数', exact: true });
+	await expect(sizeDemo.getByText('共96条', { exact: true })).toBeVisible();
+	await sizePicker.selectOption('50');
+	await expect(
+		sizeDemo.getByText(/page = 2 · pageSize = 50 · 页码回调1次 · 页尺寸回调1次/u)
+	).toBeVisible();
+
+	const modesDemo = demo(page, 'pagination-modes');
+	const pageInput = modesDemo.getByRole('spinbutton', { name: '页码', exact: true });
+	await pageInput.fill('27');
+	await pageInput.press('Enter');
+	await expect(modesDemo.getByText('三个视图共享外部owner：page = 27')).toBeVisible();
+	await expect(modesDemo.getByRole('navigation', { name: 'RTL分页', exact: true })).toHaveAttribute(
+		'dir',
+		'rtl'
+	);
 });
 
 test('keeps Menu roving focus, disabled skipping, typeahead and actions synchronized', async ({

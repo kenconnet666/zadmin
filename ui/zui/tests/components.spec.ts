@@ -232,12 +232,37 @@ describe('ZUI foundational components', () => {
 
 	it('renders localized pagination with aria-current and boundary controls during SSR', () => {
 		const result = render(ZPagination, { props: { defaultPage: 3, totalPages: 10 } }).body;
+		const compatibilityDefault = render(ZPagination).body;
 
 		expect(result).toContain('<nav');
 		expect(result).toContain('aria-label="Pagination"');
 		expect(result).toContain('aria-current="page"');
 		expect(result).toContain('aria-label="Previous page"');
 		expect(result).toContain('aria-label="Next page"');
+		expect(compatibilityDefault).toContain('data-total-pages="1"');
+		expect(compatibilityDefault).toMatch(/aria-label="Next page"[^>]*disabled/u);
+	});
+
+	it('server-renders item-count, page-size and compact pagination contracts', () => {
+		const itemCount = render(ZPagination, {
+			props: {
+				defaultPage: 3,
+				defaultPageSize: 20,
+				pageSizeOptions: [10, 20, 50],
+				totalItems: 41
+			}
+		}).body;
+		const compact = render(ZPagination, {
+			props: { defaultPage: 2, mode: 'compact', totalPages: 4 }
+		}).body;
+
+		expect(itemCount).toContain('data-page-size="20"');
+		expect(itemCount).toContain('data-total-pages="3"');
+		expect(itemCount).toContain('41 items');
+		expect(itemCount).toContain('<select');
+		expect(compact).toContain('data-mode="compact"');
+		expect(compact).toContain('Page 2 of 4');
+		expect(compact).not.toContain('data-page-number=');
 	});
 
 	it('renders native range Slider with normalized value and form semantics during SSR', () => {

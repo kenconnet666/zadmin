@@ -2410,6 +2410,36 @@ describe('compiled ICSS browser updates', () => {
 		expect(navigation?.dataset.page).toBe('7');
 		expect(output?.textContent).toBe('7:1');
 		expect(pageSeven?.getAttribute('aria-current')).toBe('page');
+
+		pageSeven?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowRight' }));
+		await tick();
+		expect(document.activeElement).toBe(
+			navigation?.querySelector<HTMLButtonElement>('[aria-label="Page 8"]')
+		);
+
+		const dynamic = document.querySelector<HTMLElement>('[aria-label="Dynamic pagination"]');
+		const dynamicCurrent = dynamic?.querySelector<HTMLButtonElement>('[data-page-number="6"]');
+		dynamicCurrent?.focus();
+		document.querySelector<HTMLButtonElement>('[data-testid="pagination-shrink"]')?.click();
+		await tick();
+		expect(dynamic?.dataset.page).toBe('2');
+		expect(document.querySelector('[data-testid="pagination-focus-output"]')?.textContent).toBe(
+			'2:12'
+		);
+		await expect.poll(() => document.activeElement?.getAttribute('data-page-number')).toBe('2');
+
+		const sized = document.querySelector<HTMLElement>('[aria-label="Sized pagination"]');
+		const sizeSelect = sized?.querySelector<HTMLSelectElement>('[data-slot="size-select"]');
+		if (sizeSelect) {
+			sizeSelect.value = '50';
+			sizeSelect.dispatchEvent(new Event('change', { bubbles: true }));
+		}
+		await tick();
+		expect(sized?.dataset.page).toBe('2');
+		expect(sized?.dataset.pageSize).toBe('50');
+		expect(document.querySelector('[data-testid="pagination-size-output"]')?.textContent).toBe(
+			'2:50:1:1'
+		);
 	});
 
 	it('separates Tabs focus from automatic and manual activation', async () => {
