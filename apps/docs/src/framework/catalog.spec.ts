@@ -210,6 +210,13 @@ describe('ZUI component documentation catalog', () => {
 		expect(dataTable?.profiles).toEqual(['collection', 'data-view', 'virtualized']);
 	});
 
+	it('lets runtime metadata strengthen conditional requirements over optional source aliases', () => {
+		const carousel = componentDocsById.get('carousel');
+		const props = carousel?.api.find(({ id }) => id === 'props');
+		expect(props?.rows.find(({ name }) => name === 'aria-label')?.required).toBe(true);
+		expect(props?.rows.find(({ name }) => name === 'ariaLabel')?.required).not.toBe(true);
+	});
+
 	it('rejects misspelled teaching and legacy metadata omissions', () => {
 		const dataTable = componentDocsById.get('data-table');
 		const teachingProps = Object.fromEntries(

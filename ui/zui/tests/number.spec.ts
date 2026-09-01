@@ -1,6 +1,12 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { clampNumber, parseLocalizedNumber, stepNumber } from '../src/runtime/number.js';
+import {
+	clampNumber,
+	isNumberOutOfRange,
+	parseLocalizedNumber,
+	roundNumber,
+	stepNumber
+} from '../src/runtime/number.js';
 
 describe('localized number algorithms', () => {
 	it('parses locale digits, decimal marks, grouping and partial input', () => {
@@ -33,6 +39,14 @@ describe('localized number algorithms', () => {
 		expect(stepNumber(1e21, -1, 1e20)).toBe(900000000000000000000);
 		expect(stepNumber(-1.25, 1, 1)).toBe(-0.25);
 		expect(stepNumber(-1e-7, -1, 1e-7)).toBe(-2e-7);
+		expect(stepNumber(0.33, 1, 0.1, undefined, undefined, 1, 1)).toBe(0.4);
+		expect(roundNumber(1.005, 2)).toBe(1.01);
+		expect(roundNumber(-1.005, 2)).toBe(-1.01);
+		expect(roundNumber(1.2345, 3)).toBe(1.234);
+		expect(isNumberOutOfRange(undefined, 0, 10)).toBe(false);
+		expect(isNumberOutOfRange(-1, 0, 10)).toBe(true);
+		expect(isNumberOutOfRange(11, 0, 10)).toBe(true);
+		expect(isNumberOutOfRange(5, 0, 10)).toBe(false);
 	});
 
 	it('falls back to ASCII separators when Intl omits optional symbol parts', () => {

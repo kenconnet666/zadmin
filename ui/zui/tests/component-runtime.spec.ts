@@ -2,7 +2,11 @@ import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 
 import { ControllableState } from '../src/runtime/foundation/controllable-state.svelte.js';
-import { mergeAriaIds, normalizeFieldMessages } from '../src/runtime/form/form-control.svelte.js';
+import {
+	mergeAriaIds,
+	mergeFieldMessages,
+	normalizeFieldMessages
+} from '../src/runtime/form/form-control.svelte.js';
 
 describe('component runtime state', () => {
 	it('keeps user updates, external updates and reset behavior distinct', () => {
@@ -82,7 +86,7 @@ describe('component runtime state', () => {
 
 	it('relinquishes the initial fallback after a write-through update and resets explicitly', () => {
 		let external: string | undefined;
-		const changes: string[] = [];
+		const changes: (string | undefined)[] = [];
 		const state = new ControllableState<string | undefined>({
 			defaultValue: () => 'seed',
 			onChange: () => (value) => changes.push(value),
@@ -111,6 +115,10 @@ describe('form control helpers', () => {
 		expect(normalizeFieldMessages(undefined)).toEqual([]);
 		expect(normalizeFieldMessages('Required')).toEqual(['Required']);
 		expect(normalizeFieldMessages(['First', '', 'Second'])).toEqual(['First', 'Second']);
+		expect(mergeFieldMessages('Required', ['Required', 'Try again'])).toEqual([
+			'Required',
+			'Try again'
+		]);
 		expect(mergeAriaIds('help error', 'error extra', undefined)).toBe('help error extra');
 	});
 });

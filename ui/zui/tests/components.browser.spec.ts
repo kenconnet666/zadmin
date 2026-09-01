@@ -23,6 +23,7 @@ import FieldFixture from './FieldFixture.svelte';
 import FileUploadFixture from './FileUploadFixture.svelte';
 import FormFixture from './FormFixture.svelte';
 import FormEdgeFixture from './FormEdgeFixture.svelte';
+import FormGraphFixture from './FormGraphFixture.svelte';
 import FormValueBridgeFixture from './FormValueBridgeFixture.svelte';
 import InputGroupFixture from './InputGroupFixture.svelte';
 import DialogFixture from './DialogFixture.svelte';
@@ -943,11 +944,13 @@ describe('compiled ICSS browser updates', () => {
 		const delta = document.querySelector<HTMLElement>('[data-testid="select-d"]');
 		expect(content?.parentNode).toBe(document.body);
 		expect(content?.getAttribute('role')).toBe('listbox');
-		expect(document.activeElement).toBe(beta);
+		expect(document.activeElement).toBe(content);
+		expect(content?.getAttribute('aria-activedescendant')).toBe(beta?.id);
 		expect(disabled?.getAttribute('aria-disabled')).toBe('true');
-		beta?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
-		expect(document.activeElement).toBe(delta);
-		delta?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+		content?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
+		expect(document.activeElement).toBe(content);
+		expect(content?.getAttribute('aria-activedescendant')).toBe(delta?.id);
+		content?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
 		await new Promise((resolve) => setTimeout(resolve, 140));
 		await tick();
 		expect(document.querySelector('[data-testid="select-content"]')).toBeNull();
@@ -1039,13 +1042,15 @@ describe('compiled ICSS browser updates', () => {
 		expect(document.activeElement).toBe(trigger);
 		trigger?.click();
 		await tick();
+		const content = document.querySelector<HTMLElement>('[data-testid="multi-select-content"]');
 		const alpha = document.querySelector<HTMLElement>('[data-testid="multi-a"]');
 		const beta = document.querySelector<HTMLElement>('[data-testid="multi-b"]');
-		expect(document.activeElement).toBe(alpha);
+		expect(document.activeElement).toBe(content);
+		expect(content?.getAttribute('aria-activedescendant')).toBe(alpha?.id);
 		expect(alpha?.getAttribute('aria-selected')).toBe('true');
-		alpha?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
-		expect(document.activeElement).toBe(beta);
-		beta?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+		content?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
+		expect(content?.getAttribute('aria-activedescendant')).toBe(beta?.id);
+		content?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
 		await tick();
 		expect(document.querySelector('[data-testid="multi-select-content"]')).not.toBeNull();
 		expect(beta?.getAttribute('aria-selected')).toBe('true');
@@ -1124,37 +1129,34 @@ describe('compiled ICSS browser updates', () => {
 	it('coordinates Tree visible navigation, expansion, selection, form value and reset', async () => {
 		render(TreeFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="tree-form"]');
-		const web = document.querySelector<HTMLElement>('[role="treeitem"][data-key="web"]');
+		const tree = document.querySelector<HTMLElement>('[aria-label="Fixture tree"]');
 		const worker = document.querySelector<HTMLElement>('[role="treeitem"][data-key="worker"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="tree-output"]');
-		web?.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+		tree?.focus();
+		tree?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowRight' }));
 		await tick();
-		web?.focus();
-		web?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowRight' }));
-		expect(document.activeElement?.getAttribute('data-key')).toBe('admin');
-		document.activeElement?.dispatchEvent(
-			new KeyboardEvent('keydown', { bubbles: true, key: 'd' })
-		);
-		expect(document.activeElement?.getAttribute('data-key')).toBe('docs');
+		tree?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowRight' }));
+		expect(tree?.dataset.activeKey).toBe('admin');
+		tree?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'd' }));
+		expect(tree?.dataset.activeKey).toBe('docs');
 		for (const key of ['Home', 'End', 'ArrowUp']) {
-			document.activeElement?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key }));
+			tree?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key }));
 		}
-		web?.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+		tree?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowLeft' }));
+		tree?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowLeft' }));
 		await tick();
-		web?.focus();
-		web?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
-		expect(document.activeElement).toBe(worker);
-		worker?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+		tree?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
+		expect(tree?.dataset.activeKey).toBe('worker');
+		tree?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
 		await tick();
 		expect(worker?.getAttribute('aria-selected')).toBe('true');
 		expect(new FormData(form!).get('node')).toBe('worker');
 		expect(output?.textContent).toBe('app:worker:1');
-		worker?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowLeft' }));
-		expect(document.activeElement?.getAttribute('data-key')).toBe('app');
-		document.activeElement?.dispatchEvent(
-			new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowRight' })
-		);
-		expect(document.activeElement).toBe(web);
+		tree?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowLeft' }));
+		expect(tree?.dataset.activeKey).toBe('app');
+		tree?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowRight' }));
+		expect(tree?.dataset.activeKey).toBe('web');
+		expect(document.activeElement).toBe(tree);
 		await resetForm(form);
 		expect(new FormData(form!).get('node')).toBe('web');
 		expect(output?.textContent).toBe('app:web:1');
@@ -1182,18 +1184,16 @@ describe('compiled ICSS browser updates', () => {
 	it('keeps virtual Tree DOM bounded and scrolls keyboard focus to distant nodes', async () => {
 		render(VirtualTreeFixture);
 		const tree = document.querySelector<HTMLElement>('[data-testid="virtual-tree"]');
-		const first = tree?.querySelector<HTMLElement>('[role="treeitem"]');
 		expect(tree?.querySelectorAll('[role="treeitem"]').length).toBeLessThan(20);
-		first?.focus();
-		first?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'End' }));
+		tree?.focus();
+		tree?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'End' }));
 		await tick();
 		await Promise.resolve();
-		expect((document.activeElement as HTMLElement)?.dataset.key).toBe('node-4999');
+		expect(tree?.dataset.activeKey).toBe('node-4999');
+		expect(document.activeElement).toBe(tree);
 		expect(tree?.scrollTop).toBeGreaterThan(170000);
 		expect(tree?.querySelectorAll('[role="treeitem"]').length).toBeLessThan(20);
-		(document.activeElement as HTMLElement)?.dispatchEvent(
-			new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' })
-		);
+		tree?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
 		await tick();
 		expect(document.querySelector('[data-testid="virtual-tree-output"]')?.textContent).toBe(
 			'node-4999'
@@ -1355,8 +1355,13 @@ describe('compiled ICSS browser updates', () => {
 	it('coordinates Command ranking, active descendant action and form reset', async () => {
 		render(CommandFixture);
 		const input = document.querySelector<HTMLInputElement>('input[aria-label="Search commands"]');
+		const status = document.querySelector<HTMLElement>('[data-slot="status"][role="status"]');
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="command-output"]');
 		const form = document.querySelector<HTMLFormElement>('[data-testid="command-form"]');
+		expect(input?.getAttribute('aria-describedby')).toBe(status?.id);
+		expect(status?.getAttribute('aria-live')).toBe('polite');
+		expect(status?.getAttribute('aria-atomic')).toBe('true');
+		expect(status?.textContent).toContain('commands found');
 		const numeric = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find((option) =>
 			option.textContent?.includes('Numeric one')
 		);
@@ -1795,6 +1800,56 @@ describe('compiled ICSS browser updates', () => {
 		expect(wrappedForm?.querySelector('[data-zui-form-reset-signal]')?.parentElement).toBe(
 			wrappedForm
 		);
+	});
+
+	it('maps typed FieldPaths, dependencies, controller state and dynamic unmounts', async () => {
+		render(FormGraphFixture);
+		const form = document.querySelector<HTMLFormElement>('[data-testid="form-graph"]');
+		const email = document.querySelector<HTMLInputElement>('[data-testid="graph-email"]');
+		const password = document.querySelector<HTMLInputElement>('[data-testid="graph-password"]');
+		const confirm = document.querySelector<HTMLInputElement>('[data-testid="graph-confirm"]');
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="graph-output"]');
+		expect(email?.name).toBe('users[0].email');
+
+		if (password) {
+			password.value = 'secret';
+			password.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		}
+		await tick();
+		await Promise.resolve();
+		expect(confirm?.getAttribute('aria-invalid')).toBe('true');
+		if (confirm) {
+			confirm.value = 'secret';
+			confirm.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		}
+		if (email) {
+			email.value = ' Alice@Example.COM ';
+			email.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		}
+		await tick();
+		await Promise.resolve();
+		form?.requestSubmit();
+		await tick();
+		await Promise.resolve();
+		expect(output?.textContent).toContain('alice@example.com');
+
+		document.querySelector<HTMLButtonElement>('[data-testid="graph-server-error"]')?.click();
+		await tick();
+		expect(document.activeElement).toBe(email);
+		expect(email?.getAttribute('aria-invalid')).toBe('true');
+		document.querySelector<HTMLButtonElement>('[data-testid="graph-status"]')?.click();
+		await tick();
+		const emailField = email?.closest<HTMLElement>('[data-success], [data-warning]');
+		expect(emailField?.getAttribute('data-success')).toBe('true');
+		expect(emailField?.getAttribute('data-warning')).toBe('true');
+
+		document.querySelector<HTMLButtonElement>('[data-testid="graph-toggle"]')?.click();
+		await tick();
+		expect(document.querySelector('[data-testid="graph-confirm"]')).toBeNull();
+		await resetForm(form);
+		expect(email?.getAttribute('aria-invalid')).not.toBe('true');
+		expect(emailField?.hasAttribute('data-success')).toBe(false);
+		expect(emailField?.hasAttribute('data-warning')).toBe(false);
 	});
 
 	it('keeps the dedicated reset signal cancelable inside a ShadowRoot', async () => {

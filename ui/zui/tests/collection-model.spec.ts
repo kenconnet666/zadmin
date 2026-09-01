@@ -139,7 +139,8 @@ describe('collection navigation and active descendant', () => {
 		]);
 		const navigation = new CollectionNavigation({ view: () => source.full });
 		const mounted = new MountedElements<SelectionKey>();
-		const active = new ActiveDescendant({ idBase: () => 'fixture', mounted, navigation });
+		let idBase = 'fixture';
+		const active = new ActiveDescendant({ idBase: () => idBase, mounted, navigation });
 		active.reconcile();
 		expect(active.activeKey).toBe(1);
 		const numericId = active.idFor(1);
@@ -152,6 +153,8 @@ describe('collection navigation and active descendant', () => {
 		} as unknown as HTMLElement;
 		const unmount = active.mount(1, element);
 		expect(active.activeId).toBe(numericId);
+		idBase = 'nested';
+		expect(active.activeId).toBe('nested-option-1');
 		unmount();
 		expect(active.activeId).toBeUndefined();
 

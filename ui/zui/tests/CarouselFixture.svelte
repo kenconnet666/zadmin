@@ -10,7 +10,7 @@
 </script>
 
 <ZCarousel
-	ariaLabel="Release carousel"
+	aria-label="Release carousel"
 	{items}
 	itemKey={(entry) => entry.id}
 	itemLabel={(entry) => entry.label}

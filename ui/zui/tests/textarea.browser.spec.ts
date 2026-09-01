@@ -15,9 +15,9 @@ describe('ZTextarea production contract', () => {
 	it('rejects invalid autosize row bounds before allocating a measurement node', () => {
 		const textarea = document.createElement('textarea');
 		document.body.append(textarea);
-		expect(() =>
-			textareaAutosize(textarea, { enabled: true, minRows: 0, value: '' })
-		).toThrow(/minRows must be a positive integer/u);
+		expect(() => textareaAutosize(textarea, { enabled: true, minRows: 0, value: '' })).toThrow(
+			/minRows must be a positive integer/u
+		);
 		expect(() =>
 			textareaAutosize(textarea, { enabled: true, maxRows: 2, minRows: 3, value: '' })
 		).toThrow(/maxRows must be greater than or equal to minRows/u);
@@ -109,9 +109,11 @@ describe('ZTextarea production contract', () => {
 
 		expect(document.querySelectorAll('[data-zui-textarea-measurement]')).toHaveLength(1);
 		expect(frameDocument.querySelectorAll('[data-zui-textarea-measurement]')).toHaveLength(1);
-		expect(shadow.querySelector('textarea')?.style.height).not.toBe('');
+		expect(shadow.querySelector<HTMLTextAreaElement>('textarea')?.style.height).not.toBe('');
 		expect(
-			frameDocument.querySelector('textarea:not([data-zui-textarea-measurement])')?.style.height
+			frameDocument.querySelector<HTMLTextAreaElement>(
+				'textarea:not([data-zui-textarea-measurement])'
+			)?.style.height
 		).not.toBe('');
 
 		await unmount(frameComponent);

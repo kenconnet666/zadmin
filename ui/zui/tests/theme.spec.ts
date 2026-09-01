@@ -83,7 +83,9 @@ describe('ZUI themes', () => {
 	});
 
 	it('provides the complete semantic default theme', () => {
-		expect(Object.keys(defaultTheme)).toHaveLength(15);
+		expect(Object.keys(defaultTheme)).toHaveLength(16);
+		expect(defaultTheme.duration.loadingBarIndeterminate).toBe(1200);
+		expect(defaultTheme.duration.spinnerSpin).toBe(800);
 		expect(defaultTheme.fontFamily.mono).toContain('ui-monospace');
 		expect(defaultTheme.shadow.codeHighlight).toContain('inset');
 		expect(defaultTheme.color.accent).toBe('#7c3aed');

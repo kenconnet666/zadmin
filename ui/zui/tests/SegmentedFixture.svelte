@@ -2,7 +2,7 @@
 	import { ZSegmented } from '../src/entrypoints/index.js';
 	let value = $state<string | number>('b');
 	let changes = $state(0);
-	const items = [
+	const options = [
 		{ label: 'Alpha', value: 'a' },
 		{ label: 'Beta', value: 'b' },
 		{ disabled: true, label: 'Charlie', value: 'c' },
@@ -15,7 +15,7 @@
 		aria-label="Periods"
 		bind:value
 		defaultValue="b"
-		{items}
+		{options}
 		name="period"
 		onValueChange={() => (changes += 1)}
 	/>

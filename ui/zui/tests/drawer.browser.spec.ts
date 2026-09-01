@@ -11,6 +11,38 @@ function target(): HTMLDivElement {
 }
 
 describe('ZDrawer production contracts', () => {
+	it('paints a closed frame before entering and exposes semantic styling states', async () => {
+		const host = target();
+		const component = mount(DrawerFixture, {
+			props: { motion: 'full', placement: 'start', size: 'small' },
+			target: host
+		});
+		host.querySelector<HTMLButtonElement>('[data-testid="drawer-trigger"]')?.click();
+		await tick();
+		const content = document.querySelector<HTMLElement>('[data-testid="drawer-content"]');
+		const overlay = document.querySelector<HTMLElement>('[data-testid="drawer-overlay"]');
+		expect(content?.dataset.motionState).toBe('entering');
+		expect(content?.dataset.placement).toBe('start');
+		expect(content?.dataset.size).toBe('small');
+		expect(overlay?.dataset.motionState).toBe('entering');
+		await new Promise<void>((resolve) => {
+			requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+		});
+		await tick();
+		expect(content?.dataset.motionState).toBe('entered');
+		expect(overlay?.dataset.motionState).toBe('entered');
+		const labelledBy = content?.getAttribute('aria-labelledby');
+		const describedBy = content?.getAttribute('aria-describedby');
+		expect(content?.ownerDocument.getElementById(labelledBy ?? '')?.textContent).toBe(
+			'Fixture drawer'
+		);
+		expect(content?.ownerDocument.getElementById(describedBy ?? '')?.textContent).toBe(
+			'Fixture drawer description'
+		);
+		await unmount(component);
+		host.remove();
+	});
+
 	it('resolves all physical edges from four logical placements and RTL direction', async () => {
 		const host = target();
 		const cases = [
@@ -70,11 +102,13 @@ describe('ZDrawer production contracts', () => {
 		const addEventListener = vi.fn();
 		const matchMedia = vi.spyOn(window, 'matchMedia').mockReturnValue({
 			addEventListener,
+			addListener: vi.fn(),
 			dispatchEvent: () => true,
 			matches: true,
 			media: '(prefers-reduced-motion: reduce)',
 			onchange: null,
-			removeEventListener
+			removeEventListener,
+			removeListener: vi.fn()
 		} as MediaQueryList);
 		const host = target();
 		const automatic = mount(DrawerFixture, {
@@ -120,6 +154,42 @@ describe('ZDrawer production contracts', () => {
 		expect(document.body.style.overflow).toBe(originalOverflow);
 		host.remove();
 		portalHost.remove();
+	});
+
+	it('schedules and cancels exit Presence in the portalled owner Window', async () => {
+		const frame = document.createElement('iframe');
+		document.body.append(frame);
+		const ownerWindow = frame.contentWindow;
+		const ownerDocument = frame.contentDocument;
+		if (!ownerWindow || !ownerDocument)
+			throw new Error('Fixture iframe did not expose a DOM realm.');
+		const host = ownerDocument.createElement('div');
+		ownerDocument.body.append(host);
+		const setTimeout = vi.spyOn(ownerWindow, 'setTimeout');
+		const clearTimeout = vi.spyOn(ownerWindow, 'clearTimeout');
+		const component = mount(DrawerFixture, {
+			props: {
+				defaultOpen: true,
+				motion: 'full',
+				portalContainer: ownerDocument
+			},
+			target: host
+		});
+		let mounted = true;
+		try {
+			await tick();
+			ownerDocument.querySelector<HTMLButtonElement>('[data-testid="drawer-close"]')?.click();
+			await tick();
+			expect(setTimeout.mock.calls.filter(([, duration]) => duration === 200)).toHaveLength(2);
+			await unmount(component);
+			mounted = false;
+			expect(clearTimeout).toHaveBeenCalledTimes(2);
+		} finally {
+			if (mounted) await unmount(component);
+			setTimeout.mockRestore();
+			clearTimeout.mockRestore();
+			frame.remove();
+		}
 	});
 
 	it('keeps only the nested top layer active and restores focus and scroll lock one layer at a time', async () => {

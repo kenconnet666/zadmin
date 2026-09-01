@@ -175,8 +175,9 @@ if (new Set(metadata.map(({ id }) => id)).size !== metadata.length) {
 	fail('ZUI component metadata ids must be globally unique.');
 }
 const expectedInternal = [
-	'ui/zui/src/components/input/ZMentionEditor.svelte',
-	'ui/zui/src/components/input/ZTextareaAutosize.svelte'
+	'ui/zui/src/components/feedback/QueuedToast.svelte',
+	'ui/zui/src/components/input/TransferPane.svelte',
+	'ui/zui/src/components/input/ZMentionEditor.svelte'
 ];
 if (JSON.stringify(internalComponents) !== JSON.stringify(expectedInternal)) {
 	fail(`Unexpected internal component set: ${internalComponents.join(', ') || 'none'}.`);
@@ -250,6 +251,10 @@ const transferSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/components/input/ZTransfer.svelte'),
 	'utf8'
 );
+const transferPaneSource = await readFile(
+	resolve(workspaceRoot, 'ui/zui/src/components/input/TransferPane.svelte'),
+	'utf8'
+);
 const calendarSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/components/input/ZCalendar.svelte'),
 	'utf8'
@@ -289,7 +294,10 @@ if (
 }
 if (
 	!formControlSource.includes('queueMicrotask(refreshAssociation)') ||
-	!formControlSource.includes('new MutationObserver(scheduleAssociationRefresh)') ||
+	!formControlSource.includes(
+		'const MutationObserverConstructor = control.ownerDocument.defaultView?.MutationObserver'
+	) ||
+	!formControlSource.includes('new MutationObserverConstructor(scheduleAssociationRefresh)') ||
 	!formControlSource.includes(
 		'mountObserver.observe(control.ownerDocument, { childList: true, subtree: true })'
 	) ||
@@ -305,7 +313,13 @@ if (
 	fail('The form reset action must preserve its association and cancelable microtask contracts.');
 }
 if (
-	!formResetSignalSource.includes('const action = formReset(control, () => current.reset())') ||
+	!formResetSignalSource.includes(
+		'let action = formElementReset(current.owner, () => current.reset())'
+	) ||
+	!formResetSignalSource.includes('const ownerChanged = current.owner !== next.owner') ||
+	!formResetSignalSource.includes(
+		'action = formElementReset(current.owner, () => current.reset())'
+	) ||
 	!formResetSignalSource.includes('action.update(() => current.reset())') ||
 	!formResetSignalTag.includes('type="hidden"') ||
 	!formResetSignalTag.includes('hidden') ||
@@ -342,7 +356,10 @@ if (
 	!comboboxSource.includes('const readDefaultInputValue = () =>') ||
 	!comboboxContextSource.includes('readonly inputDefaultValue: string') ||
 	!mentionEditorSource.includes('resetOnForm={false}') ||
-	(transferSource.match(/resetOnForm=\{false\}/gu)?.length ?? 0) !== 2
+	(transferSource.match(/<TransferPane\b/gu)?.length ?? 0) !== 2 ||
+	(transferPaneSource.match(/resetOnForm=\{false\}/gu)?.length ?? 0) !== 1 ||
+	!transferSource.includes('<FormValueBridge') ||
+	!transferSource.includes('onReset={resetFromForm}')
 ) {
 	fail(
 		'Compound editors must delegate form reset ownership without resetting their leaf controls twice.'
@@ -357,14 +374,15 @@ if (
 	fail('ZCalendar must preserve its explicit keyboard state switch.');
 }
 if (
-	![commandSource, treeSource].every(
-		(source) =>
-			source.includes("const intent = navigationIntent(event.key, 'vertical')") &&
-			source.includes('function move(intent: NavigationIntent)') &&
-			source.includes('switch (event.key)')
-	)
+	!commandSource.includes('activeDescendant.handleKey(event)') ||
+	!commandSource.includes('switch (event.key)') ||
+	!treeSource.includes("const intent = navigationIntent(event.key, 'vertical')") ||
+	!treeSource.includes('function move(intent: NavigationIntent') ||
+	!treeSource.includes('switch (event.key)')
 ) {
-	fail('ZCommand and ZTree must reuse vertical navigation intents before their local key switch.');
+	fail(
+		'ZCommand and ZTree must delegate vertical movement to ActiveDescendant or shared navigation intents before their local key switch.'
+	);
 }
 if (
 	!pinInputSource.includes('switch (event.key)') ||
@@ -506,21 +524,64 @@ if (
 	fail('Docs display preferences must keep one App owner and explicit change callbacks.');
 }
 const appSidebarSource = await readFile(resolve(docsRoot, 'src/views/AppSidebar.svelte'), 'utf8');
+const appCommandSearchSource = await readFile(
+	resolve(docsRoot, 'src/views/AppCommandSearch.svelte'),
+	'utf8'
+);
 const searchLiveContracts = [
-	/aria-controls=["']zui-docs-component-nav["']/u.test(appHeaderSource),
-	/aria-describedby=["']zui-docs-search-status["']/u.test(appHeaderSource),
-	/aria-keyshortcuts=["']\/["']/u.test(appHeaderSource),
-	/data-slot=["']search-shortcut["'][\s\S]*?<ZKbd>\/<\/ZKbd>/u.test(appHeaderSource),
-	/event\.key === ["']Escape["'] && query/u.test(appHeaderSource),
-	/event\.key !== ["']\/["'][\s\S]*?searchRef\?\.focus/u.test(appHeaderSource),
-	/<ZVisuallyHidden[\s\S]*?aria-live=["']polite["'][\s\S]*?id=["']zui-docs-search-status["'][\s\S]*?role=["']status["']/u.test(
-		appSidebarSource
-	),
-	/<nav\b[^>]*id=["']zui-docs-component-nav["']/u.test(appSidebarSource),
-	appSidebarSource.includes('${filtered.length} 个匹配组件')
+	['header composition', /<AppCommandSearch \{docs\} \/>/u.test(appHeaderSource)],
+	[
+		'keyboard shortcut disclosure',
+		/aria-keyshortcuts=["']\/ Control\+K Meta\+K["']/u.test(appCommandSearchSource)
+	],
+	[
+		'visible shortcut hints',
+		/data-slot=["']search-shortcuts["'][\s\S]*?<ZKbd>\/<\/ZKbd>[\s\S]*?<ZKbd>Ctrl\/⌘ K<\/ZKbd>/u.test(
+			appCommandSearchSource
+		)
+	],
+	[
+		'owner-document slash listener cleanup',
+		/ownerDocument\.addEventListener\(["']keydown["'], handleSlash\)[\s\S]*?ownerDocument\.removeEventListener\(["']keydown["'], handleSlash\)/u.test(
+			appCommandSearchSource
+		)
+	],
+	[
+		'slash opens palette',
+		/event\.key !== ["']\/["'][\s\S]*?open = true/u.test(appCommandSearchSource)
+	],
+	['shared search model', /createDocsCommandItems\(/u.test(appCommandSearchSource)],
+	['hash navigation', /view\.location\.hash = item\.href/u.test(appCommandSearchSource)],
+	[
+		'command palette ownership',
+		/<ZCommandPalette[\s\S]*?bind:open[\s\S]*?bind:query[\s\S]*?\{items\}[\s\S]*?listLabel=["']文档搜索结果["'][\s\S]*?onAction=\{navigate\}[\s\S]*?shortcutTarget=\{triggerRef\?\.ownerDocument\}[\s\S]*?showTrigger=\{false\}/u.test(
+			appCommandSearchSource
+		)
+	],
+	[
+		'command status relationship',
+		/aria-describedby=\{`\$\{idBase\}-status`\}/u.test(commandSource)
+	],
+	[
+		'command polite status',
+		/<ZVisuallyHidden[\s\S]*?aria-live=["']polite["'][\s\S]*?data-slot=["']status["'][\s\S]*?role=["']status["']/u.test(
+			commandSource
+		)
+	],
+	[
+		'component navigation landmark',
+		appSidebarSource.includes(
+			"surface === 'drawer' ? 'zui-docs-mobile-component-nav' : 'zui-docs-component-nav'"
+		) && /<nav\b[^>]*id=\{navigationId\}/u.test(appSidebarSource)
+	]
 ];
-if (!searchLiveContracts.every(Boolean)) {
-	fail('Docs component search must preserve its navigation and live-status relationships.');
+const missingSearchContracts = searchLiveContracts
+	.filter(([, valid]) => !valid)
+	.map(([name]) => name);
+if (missingSearchContracts.length > 0) {
+	fail(
+		`Docs component search must preserve its navigation and live-status relationships: ${missingSearchContracts.join(', ')}.`
+	);
 }
 for (const path of componentFiles) {
 	const source = await readFile(path, 'utf8');
@@ -584,7 +645,7 @@ const productionBoundaryDemos = [
 	'provider-portal-boundary',
 	'select-controlled-label',
 	'tags-input-draft-ownership',
-	'tree-multiple-bare'
+	'tree-multiple-checkbox'
 ];
 for (const id of productionBoundaryDemos) {
 	if (!demoIds.includes(id)) fail(`Documentation must preserve the ${id} production demo.`);

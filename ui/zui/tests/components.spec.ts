@@ -129,7 +129,7 @@ describe('ZUI foundational components', () => {
 			}).body
 		).toContain('type="hidden"');
 		expect(
-			render(ZMultiSelect, { props: { defaultValues: ['one', 'two'], name: 'choice' } }).body
+			render(ZMultiSelect, { props: { defaultValue: ['one', 'two'], name: 'choice' } }).body
 		).toContain('value="one"');
 		expect(render(ZMenu, { props: { 'aria-label': 'Empty menu' } }).body).toContain('role="menu"');
 	});
@@ -240,7 +240,9 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain('aria-label="Previous page"');
 		expect(result).toContain('aria-label="Next page"');
 		expect(compatibilityDefault).toContain('data-total-pages="1"');
-		expect(compatibilityDefault).toMatch(/aria-label="Next page"[^>]*disabled/u);
+		expect(compatibilityDefault).toMatch(
+			/<button(?=[^>]*aria-label="Next page")(?=[^>]*disabled)[^>]*>/u
+		);
 	});
 
 	it('server-renders item-count, page-size and compact pagination contracts', () => {
@@ -424,6 +426,22 @@ describe('ZUI foundational components', () => {
 		const open = render(MultiSelectFixture, { props: { defaultOpen: true } }).body;
 		expect(open).toContain('aria-multiselectable="true"');
 		expect(open.match(/aria-selected="true"/gu)).toHaveLength(2);
+	});
+
+	it('rejects mixed MultiSelect value aliases instead of creating dual ownership', () => {
+		expect(() => render(ZMultiSelect, { props: { value: ['one'], values: ['two'] } })).toThrow(
+			/value and deprecated values are mutually exclusive/u
+		);
+		expect(() =>
+			render(ZMultiSelect, {
+				props: { defaultValue: ['one'], defaultValues: ['two'] }
+			})
+		).toThrow(/defaultValue and deprecated defaultValues are mutually exclusive/u);
+		expect(() =>
+			render(ZMultiSelect, {
+				props: { onValueChange: () => undefined, onValuesChange: () => undefined }
+			})
+		).toThrow(/onValueChange and deprecated onValuesChange are mutually exclusive/u);
 	});
 
 	it('renders Segmented radiogroup, checked state and form value during SSR', () => {

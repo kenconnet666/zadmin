@@ -1,4 +1,5 @@
 import type { ComponentProps } from 'svelte';
+import type { StandardSchemaV1 } from '@standard-schema/spec';
 
 import { defaultTheme, type IcssStyle } from '../src/entrypoints/index.js';
 import DirectZBox from '../src/components/gene/ZBox.svelte';
@@ -154,8 +155,10 @@ import {
 	type ZComboboxContentProps,
 	type ZComboboxInputProps,
 	type ZComboboxItemProps,
+	type ZComboboxOption,
 	type ZComboboxProps,
 	type ZColorPickerProps,
+	type ZCollectionOption,
 	type ZCommandPaletteProps,
 	type ZCommandProps,
 	type ZContextMenuContentProps,
@@ -185,6 +188,7 @@ import {
 	type ZDrawerTriggerProps,
 	type ZEmptyProps,
 	type ZFileUploadProps,
+	type FieldPath,
 	type ZFormFieldProps,
 	type ZFormProps,
 	type ZInputGroupProps,
@@ -215,13 +219,16 @@ import {
 	type ZPopoverProps,
 	type ZPopoverTriggerProps,
 	type ZProgressProps,
+	type ZRadioGroupOption,
 	type ZRadioGroupItemProps,
 	type ZRadioGroupProps,
 	type ZResultProps,
 	type ZSelectContentProps,
 	type ZSelectItemProps,
+	type ZSelectOption,
 	type ZSelectProps,
 	type ZSelectTriggerProps,
+	type ZSegmentedOption,
 	type ZSegmentedProps,
 	type ZSliderProps,
 	type ZSkeletonProps,
@@ -306,7 +313,7 @@ const dataTableProps: ComponentProps<typeof ZDataTable> = {
 	rows: [{ id: 'one' }]
 } satisfies ZDataTableProps;
 const carouselProps: ComponentProps<typeof ZCarousel> = {
-	ariaLabel: 'Slides',
+	'aria-label': 'Slides',
 	item: (() => {}) as never,
 	itemKey: () => 'one',
 	itemLabel: () => 'One',
@@ -350,13 +357,20 @@ const checkboxProps: ComponentProps<typeof ZCheckbox> = {
 	defaultChecked: 'indeterminate',
 	value: 42n
 } satisfies ZCheckboxProps;
+const collectionOptions = [
+	{ label: 'Ready', value: 'ready' }
+] satisfies readonly ZCollectionOption[];
 const comboboxProps: ComponentProps<typeof ZCombobox> = {
 	defaultInputValue: 'Ready',
-	defaultValue: 'ready'
+	defaultValue: 'ready',
+	options: collectionOptions satisfies readonly ZComboboxOption[]
 } satisfies ZComboboxProps;
 const comboboxInputProps: ComponentProps<typeof ZComboboxInput> = {} satisfies ZComboboxInputProps;
 const comboboxContentProps: ComponentProps<typeof ZComboboxContent> = {
-	ariaLabel: 'Suggestions'
+	ariaLabel: 'Suggestions',
+	virtual: true,
+	virtualHeight: 240,
+	virtualItemSize: 40
 } satisfies ZComboboxContentProps;
 const comboboxItemProps: ComponentProps<typeof ZComboboxItem> = {
 	textValue: 'Ready',
@@ -402,14 +416,19 @@ const menuItemProps: ComponentProps<typeof ZMenuItem> = { value: 'open' } satisf
 const menuLabelProps: ComponentProps<typeof ZMenuLabel> = {} satisfies ZMenuLabelProps;
 const menuSeparatorProps: ComponentProps<typeof ZMenuSeparator> = {} satisfies ZMenuSeparatorProps;
 const multiSelectProps: ComponentProps<typeof ZMultiSelect> = {
-	defaultValues: ['a', 2],
+	defaultValue: ['a', 2],
+	maxTagCount: 2,
 	name: 'choice',
+	options: [{ label: 'A', value: 'a' }],
 	valueLabel: String
 } satisfies ZMultiSelectProps;
 const multiSelectTriggerProps: ComponentProps<typeof ZMultiSelectTrigger> =
 	{} satisfies ZMultiSelectTriggerProps;
-const multiSelectContentProps: ComponentProps<typeof ZMultiSelectContent> =
-	{} satisfies ZMultiSelectContentProps;
+const multiSelectContentProps: ComponentProps<typeof ZMultiSelectContent> = {
+	virtual: true,
+	virtualHeight: 240,
+	virtualItemSize: 40
+} satisfies ZMultiSelectContentProps;
 const multiSelectItemProps: ComponentProps<typeof ZMultiSelectItem> = {
 	value: 'a'
 } satisfies ZMultiSelectItemProps;
@@ -448,24 +467,30 @@ const popoverTriggerProps: ComponentProps<typeof ZPopoverTrigger> = {
 const popoverContentProps: ComponentProps<typeof ZPopoverContent> =
 	{} satisfies ZPopoverContentProps;
 const radioGroupProps: ComponentProps<typeof ZRadioGroup> = {
-	defaultValue: 'ready',
+	defaultValue: 1,
+	options: [{ label: 'Ready', value: 1 }] satisfies readonly ZRadioGroupOption[],
 	orientation: 'horizontal'
 } satisfies ZRadioGroupProps;
 const radioGroupItemProps: ComponentProps<typeof ZRadioGroupItem> = {
-	value: 'ready'
+	value: 1
 } satisfies ZRadioGroupItemProps;
 const selectProps: ComponentProps<typeof ZSelect> = {
 	defaultValue: 'ready',
 	name: 'status',
+	options: collectionOptions satisfies readonly ZSelectOption[],
 	valueLabel: String
 } satisfies ZSelectProps;
 const selectTriggerProps: ComponentProps<typeof ZSelectTrigger> = {} satisfies ZSelectTriggerProps;
-const selectContentProps: ComponentProps<typeof ZSelectContent> = {} satisfies ZSelectContentProps;
+const selectContentProps: ComponentProps<typeof ZSelectContent> = {
+	virtual: true,
+	virtualHeight: 240,
+	virtualItemSize: 40
+} satisfies ZSelectContentProps;
 const selectItemProps: ComponentProps<typeof ZSelectItem> = {
 	value: 'ready'
 } satisfies ZSelectItemProps;
 const segmentedProps: ComponentProps<typeof ZSegmented> = {
-	items: [{ label: 'Ready', value: 'ready' }]
+	options: [{ label: 'Ready', value: 1 }] satisfies readonly ZSegmentedOption[]
 } satisfies ZSegmentedProps;
 const tagsInputProps: ComponentProps<typeof ZTagsInput> = {
 	defaultValues: ['alpha'],
@@ -483,7 +508,12 @@ const cascaderProps: ComponentProps<typeof ZCascader> = {
 } satisfies ZCascaderProps;
 const transferProps: ComponentProps<typeof ZTransfer> = {
 	items: [{ key: 'ready', label: 'Ready' }],
-	value: ['ready']
+	loading: true,
+	readonly: true,
+	value: ['ready'],
+	virtual: true,
+	virtualHeight: 260,
+	virtualItemSize: 52
 } satisfies ZTransferProps;
 const mentionProps: ComponentProps<typeof ZMention> = {
 	items: [{ key: 'alice', label: 'Alice' }],
@@ -556,8 +586,17 @@ const formProps: ComponentProps<typeof ZForm> = {
 } satisfies ZFormProps;
 const formFieldProps: ComponentProps<typeof ZFormField> = {
 	label: 'Account',
-	name: 'account'
+	name: ['users', 0, 'account']
 } satisfies ZFormFieldProps;
+declare const typedFormSchema: StandardSchemaV1<{ account: string }, { accountId: number }>;
+const typedFormProps = {
+	schema: typedFormSchema,
+	onValidSubmit(detail) {
+		const accountId: number = detail.data.accountId;
+		void accountId;
+	}
+} satisfies ZFormProps<typeof typedFormSchema>;
+const nestedFieldPath = ['users', 0, 'account'] as const satisfies FieldPath;
 const sliderProps: ComponentProps<typeof ZSlider> = {
 	defaultValue: 25,
 	max: 50,
@@ -699,6 +738,8 @@ void dateRangePickerProps;
 void timeFieldProps;
 void formProps;
 void formFieldProps;
+void typedFormProps;
+void nestedFieldPath;
 void sliderProps;
 void switchProps;
 void tabsProps;

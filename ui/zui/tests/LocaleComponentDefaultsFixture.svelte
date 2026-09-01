@@ -8,6 +8,7 @@
 		ZMention,
 		ZMultiSelect,
 		ZMultiSelectTrigger,
+		ZNumberField,
 		ZProvider,
 		ZSelect,
 		ZSelectTrigger,
@@ -48,6 +49,7 @@
 			items={[]}
 			placeholder="Fixed command placeholder"
 		/>
+		<ZNumberField data-testid="number-field-default" defaultValue={2} />
 		<div data-testid="palette-default">
 			<ZCommandPalette items={[]} />
 		</div>

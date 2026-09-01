@@ -74,7 +74,7 @@
 <svelte:boundary onerror={capture}><ZList items={duplicateItems} /></svelte:boundary>
 <svelte:boundary onerror={capture}><ZTimeline items={duplicateTimeline} /></svelte:boundary>
 <svelte:boundary onerror={capture}>
-	<ZCarousel ariaLabel="Empty" items={[]} itemKey={() => 'empty'} itemLabel={() => 'Empty'}>
+	<ZCarousel aria-label="Empty" items={[]} itemKey={() => 'empty'} itemLabel={() => 'Empty'}>
 		{#snippet item()}empty{/snippet}
 	</ZCarousel>
 </svelte:boundary>

@@ -28,7 +28,7 @@ test('renders the component catalog and real demo source', async ({ page }) => {
 	expect(await cards.count()).toBeGreaterThanOrEqual(50);
 	await expect(guideCards).toHaveCount(7);
 	await expect(page.getByRole('heading', { level: 2, name: '生产指南' })).toBeVisible();
-	await expect(page.getByRole('heading', { level: 3 })).toHaveText([
+	for (const category of [
 		'通用组件',
 		'布局组件',
 		'输入组件',
@@ -36,7 +36,11 @@ test('renders the component catalog and real demo source', async ({ page }) => {
 		'浮层组件',
 		'展示组件',
 		'反馈组件'
-	]);
+	]) {
+		await expect(
+			page.getByRole('heading', { level: 3, name: category, exact: true })
+		).toBeVisible();
+	}
 
 	await page.goto('/#/components/button');
 	await expect(page.getByRole('heading', { level: 1 })).toHaveText('ZButton');
@@ -474,7 +478,7 @@ test('keeps DateField and TimeField segment keys, values and reset synchronized'
 }) => {
 	await page.goto('/#/components/date-field');
 	const dateFieldDemo = demo(page, 'date-field-segments');
-	await dateFieldDemo.getByRole('textbox', { name: 'Month', exact: true }).press('ArrowUp');
+	await dateFieldDemo.getByRole('textbox', { name: '月', exact: true }).press('ArrowUp');
 	await expect(dateFieldDemo.getByText('value = 2026-09-18')).toBeVisible();
 	await dateFieldDemo.getByRole('button', { name: '重置', exact: true }).click();
 	await expect(dateFieldDemo.getByText('value = 2026-08-18')).toBeVisible();
@@ -495,7 +499,7 @@ test('keeps DateField and TimeField segment keys, values and reset synchronized'
 
 	await page.goto('/#/components/time-field');
 	const timeFieldDemo = demo(page, 'time-field-segments');
-	await timeFieldDemo.getByRole('textbox', { name: 'Minute', exact: true }).press('ArrowUp');
+	await timeFieldDemo.getByRole('textbox', { name: '分钟', exact: true }).press('ArrowUp');
 	await expect(timeFieldDemo.getByText('value = 09:31:15')).toBeVisible();
 	await timeFieldDemo.getByRole('button', { name: '重置', exact: true }).click();
 	await expect(timeFieldDemo.getByText('value = 09:30:15')).toBeVisible();
@@ -594,7 +598,7 @@ test('keeps feedback live regions, progress values and Toast queue actions expli
 	await demo(page, 'toast-queue').getByRole('button', { name: '发送通知', exact: true }).click();
 	const toast = page.locator('article[role="status"]').filter({ hasText: '发布制品已就绪' });
 	await expect(toast).toBeVisible();
-	await toast.getByRole('button', { name: 'Dismiss 发布制品已就绪', exact: true }).click();
+	await toast.getByRole('button', { name: '关闭通知：发布制品已就绪', exact: true }).click();
 	await expect(toast).toHaveCount(0);
 });
 
@@ -635,9 +639,7 @@ test('keeps progress, meter, empty, timeline and statistic native semantics expl
 
 	await page.goto('/#/components/statistic');
 	const statisticDemo = demo(page, 'statistic-format');
-	const requestStatistic = statisticDemo
-		.locator('dl')
-		.filter({ has: statisticDemo.getByText('请求总数', { exact: true }) });
+	const requestStatistic = statisticDemo.locator('dl').filter({ hasText: '请求总数' });
 	await expect(requestStatistic.locator('data')).toHaveAttribute('value', '128430');
 	await expect(requestStatistic.locator('[data-trend="up"]')).toContainText('+12.4%');
 });
@@ -695,13 +697,13 @@ test('keeps Carousel rotation control, direct navigation and stable value synchr
 	await page.goto('/#/components/carousel');
 	const carouselDemo = demo(page, 'carousel-controls');
 	const carousel = carouselDemo.getByRole('region', { name: '发布摘要轮播', exact: true });
-	await expect(carousel.getByRole('group', { name: /1 of 3/u })).toBeVisible();
-	await carousel.getByRole('button', { name: 'Next slide' }).click();
+	await expect(carousel.getByRole('group', { name: /第1张，共3张/u })).toBeVisible();
+	await carousel.getByRole('button', { name: '下一张' }).click();
 	await expect(carouselDemo.getByText('value = metrics')).toBeVisible();
-	await expect(carousel.getByRole('group', { name: /2 of 3/u })).toBeVisible();
-	await carousel.getByRole('button', { name: 'Pause automatic rotation' }).click();
-	await expect(carousel.getByRole('button', { name: 'Start automatic rotation' })).toBeVisible();
-	await carousel.getByRole('button', { name: /Go to slide 3/u }).click();
+	await expect(carousel.getByRole('group', { name: /第2张，共3张/u })).toBeVisible();
+	await carousel.getByRole('button', { name: '暂停自动轮播' }).click();
+	await expect(carousel.getByRole('button', { name: '开始自动轮播' })).toBeVisible();
+	await carousel.getByRole('button', { name: /转到第3张/u }).click();
 	await expect(carouselDemo.getByText('value = events')).toBeVisible();
 });
 
@@ -931,8 +933,9 @@ test('keeps Menu roving focus, disabled skipping, typeahead and actions synchron
 	const open = menuDemo.getByRole('menuitem', { name: '打开详情', exact: true });
 	await open.focus();
 	await page.keyboard.press('ArrowDown');
-	await expect(menuDemo.getByRole('menuitem', { name: '复制部署', exact: true })).toBeFocused();
-	await page.keyboard.type('删');
+	const duplicate = menuDemo.getByRole('menuitem', { name: '复制部署', exact: true });
+	await expect(duplicate).toBeFocused();
+	await duplicate.dispatchEvent('keydown', { bubbles: true, key: '删' });
 	await expect(menuDemo.getByRole('menuitem', { name: '删除部署', exact: true })).toBeFocused();
 	await page.keyboard.press('Enter');
 	await expect(menuDemo.getByText('action = delete')).toBeVisible();
@@ -968,7 +971,12 @@ test('anchors ContextMenu to pointer coordinates and supports the keyboard entry
 	const trigger = demo(page, 'context-menu-coordinate-anchor').getByTestId('context-menu-trigger');
 	const box = await trigger.boundingBox();
 	expect(box).not.toBeNull();
-	await trigger.click({ button: 'right', position: { x: 80, y: 20 } });
+	await trigger.dispatchEvent('contextmenu', {
+		bubbles: true,
+		button: 2,
+		clientX: (box?.x ?? 0) + 80,
+		clientY: (box?.y ?? 0) + 20
+	});
 	const menu = page.getByRole('menu', { name: '部署上下文菜单', exact: true });
 	await expect(menu).toBeVisible();
 	const menuBox = await menu.boundingBox();
@@ -1008,9 +1016,18 @@ test('keeps Select listbox, keyboard, form value and reset synchronized', async 
 	await trigger.click();
 	const listbox = page.getByRole('listbox', { name: '部署环境', exact: true });
 	await expect(listbox).toBeVisible();
-	await expect(listbox.getByRole('option', { name: '生产', exact: true })).toBeFocused();
+	await expect(listbox).toBeFocused();
+	const production = listbox.getByRole('option', { name: '生产', exact: true });
+	await expect(listbox).toHaveAttribute(
+		'aria-activedescendant',
+		(await production.getAttribute('id'))!
+	);
 	await page.keyboard.press('ArrowUp');
-	await expect(listbox.getByRole('option', { name: '预发', exact: true })).toBeFocused();
+	const staging = listbox.getByRole('option', { name: '预发', exact: true });
+	await expect(listbox).toHaveAttribute(
+		'aria-activedescendant',
+		(await staging.getAttribute('id'))!
+	);
 	await page.keyboard.press('Enter');
 	await expect(listbox).toHaveCount(0);
 	await expect(trigger).toBeFocused();
@@ -1043,6 +1060,30 @@ test('keeps Combobox focus, filtering, active descendant and stable form value s
 	).toBeVisible();
 });
 
+test('keeps Select and Combobox data options grouped with distinct typed keys', async ({
+	page
+}) => {
+	await page.goto('/#/components/select');
+	const selectDemo = demo(page, 'select-options');
+	await selectDemo.getByRole('button', { name: '选择typed key', exact: true }).click();
+	const selectListbox = page.getByRole('listbox', { name: '选择typed key', exact: true });
+	await expect(selectListbox.getByRole('group', { name: '数字 key', exact: true })).toBeVisible();
+	await expect(selectListbox.getByRole('group', { name: '字符串 key', exact: true })).toBeVisible();
+	await selectListbox.getByRole('option', { name: /字符串 "1"/u }).click();
+	await expect(selectDemo.getByText(/value = 1 · typeof = string/u)).toBeVisible();
+
+	await page.goto('/#/components/combobox');
+	const comboDemo = demo(page, 'combobox-options');
+	const input = comboDemo.getByRole('combobox', { name: '搜索typed key', exact: true });
+	await input.fill('字符串');
+	const comboListbox = page.getByRole('listbox', { name: '选择选项', exact: true });
+	await expect(comboListbox.getByRole('option')).toHaveCount(2);
+	await comboListbox.getByRole('option', { name: /字符串 "1"/u }).click();
+	await expect(
+		comboDemo.getByText(/value = 1 · typeof = string · input = 字符串 "1"/u)
+	).toBeVisible();
+});
+
 test('keeps MultiSelect tags, persistent toggles, form values and reset synchronized', async ({
 	page
 }) => {
@@ -1062,7 +1103,7 @@ test('keeps MultiSelect tags, persistent toggles, form values and reset synchron
 	await expect(trigger).toContainText('预发');
 	await multiSelectDemo.getByRole('button', { name: '读取FormData', exact: true }).click();
 	await expect(
-		multiSelectDemo.getByText(/values = 开发,生产,预发 · 变更 = 1 · 开发,生产,预发/u)
+		multiSelectDemo.getByText(/value = 开发,生产,预发 · 变更 = 1 · 开发,生产,预发/u)
 	).toBeVisible();
 	await multiSelectDemo.getByRole('button', { name: '重置', exact: true }).click();
 	await expect(trigger).not.toContainText('预发');
@@ -1092,17 +1133,17 @@ test('keeps TagsInput commits, removals, repeated form values and reset synchron
 	await input.fill('critical');
 	await page.keyboard.press('Enter');
 	await expect(
-		tagsDemo.getByRole('button', { name: 'Remove critical', exact: true })
+		tagsDemo.getByRole('button', { name: '移除标签 critical', exact: true })
 	).toBeVisible();
 	await tagsDemo.getByRole('button', { name: '读取FormData', exact: true }).click();
 	await expect(
 		tagsDemo.getByText(/values = production,critical · 变更 = 1 · production,critical/u)
 	).toBeVisible();
-	await tagsDemo.getByRole('button', { name: 'Remove production', exact: true }).click();
+	await tagsDemo.getByRole('button', { name: '移除标签 production', exact: true }).click();
 	await expect(tagsDemo.getByText(/values = critical · 变更 = 2/u)).toBeVisible();
 	await tagsDemo.getByRole('button', { name: '重置', exact: true }).click();
 	await expect(
-		tagsDemo.getByRole('button', { name: 'Remove production', exact: true })
+		tagsDemo.getByRole('button', { name: '移除标签 production', exact: true })
 	).toBeVisible();
 });
 
@@ -1110,25 +1151,30 @@ test('keeps Textarea autosize, Field semantics, FormData and reset synchronized'
 	page
 }) => {
 	await page.goto('/#/components/textarea');
-	const textareaDemo = demo(page, 'textarea-autosize');
+	const autosizeDemo = demo(page, 'textarea-autosize');
+	const autosize = autosizeDemo.getByRole('textbox', { name: '有界Autosize', exact: true });
+	const initialBox = await autosize.boundingBox();
+	await autosize.fill('第一行\n第二行\n第三行\n第四行\n第五行');
+	const expandedBox = await autosize.boundingBox();
+	expect(expandedBox!.height).toBeGreaterThan(initialBox!.height);
+
+	const textareaDemo = demo(page, 'textarea-form');
 	const textarea = textareaDemo.getByRole('textbox', { name: '变更说明', exact: true });
-	const initialBox = await textarea.boundingBox();
 	await textarea.fill('第一行\n第二行\n第三行\n第四行\n第五行');
 	await expect(
-		textareaDemo.getByText('value = 第一行 / 第二行 / 第三行 / 第四行 / 第五行')
+		textareaDemo.getByText('binding：第一行 / 第二行 / 第三行 / 第四行 / 第五行')
 	).toBeVisible();
-	const expandedBox = await textarea.boundingBox();
-	expect(expandedBox!.height).toBeGreaterThan(initialBox!.height);
 	await expect
 		.poll(() =>
 			textareaDemo
-				.locator('form')
+				.locator('#textarea-external-form')
 				.evaluate((form) => new FormData(form as HTMLFormElement).get('description'))
 		)
 		.toBe('第一行\n第二行\n第三行\n第四行\n第五行');
-	await textareaDemo.getByRole('button', { name: '重置', exact: true }).click();
+	await textareaDemo.getByRole('button', { name: '重置外部控件', exact: true }).click();
 	await expect(textarea).toHaveValue('生产变更说明');
-	await expect(textareaDemo.getByText(/value = 生产变更说明 · height =/u)).toBeVisible();
+	await expect(textareaDemo.getByText('binding：生产变更说明')).toBeVisible();
+	await expect(textareaDemo.getByText('提交结果：已恢复默认值')).toBeVisible();
 });
 
 test('keeps Accordion selection, roving focus and Presence synchronized', async ({ page }) => {

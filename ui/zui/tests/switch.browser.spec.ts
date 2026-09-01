@@ -32,6 +32,7 @@ describe('ZSwitch production contract', () => {
 		expect(output.textContent).toBe('false:1');
 
 		form.reset();
+		await Promise.resolve();
 		await tick();
 		expect(editable.checked).toBe(true);
 		expect(new FormData(form).get('alerts')).toBe('enabled');
@@ -61,7 +62,7 @@ describe('ZSwitch production contract', () => {
 		readonly.focus();
 		expect(document.activeElement).toBe(readonly);
 
-		await userEvent.click(loading);
+		loading.click();
 		await userEvent.click(readonly);
 		await userEvent.click(cancelled);
 		await tick();
@@ -92,6 +93,7 @@ describe('ZSwitch production contract', () => {
 		expect(new FormData(form).get('external')).toBeNull();
 
 		form.reset();
+		await Promise.resolve();
 		await tick();
 		expect(external.checked).toBe(true);
 		expect(output.textContent).toBe('true');

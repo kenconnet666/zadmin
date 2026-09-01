@@ -5,7 +5,7 @@ import { FloatingPositioner } from '../src/runtime/layer/floating.js';
 import { FocusScope } from '../src/runtime/layer/focus-scope.js';
 import { inertOthers } from '../src/runtime/layer/inert-others.js';
 import { LayerStack } from '../src/runtime/layer/layer-stack.svelte.js';
-import { portal } from '../src/runtime/layer/portal.js';
+import { portal, resolvePortalTarget } from '../src/runtime/layer/portal.js';
 import { lockScroll } from '../src/runtime/layer/scroll-lock.js';
 import {
 	formReset,
@@ -287,6 +287,23 @@ describe('ZUI layer runtime', () => {
 		detachedAction.destroy();
 	});
 
+	it('resolves portal defaults from the anchor realm while preserving an explicit target', () => {
+		const host = document.createElement('div');
+		const explicit = document.createElement('div');
+		document.body.append(host, explicit);
+		const shadow = host.attachShadow({ mode: 'open' });
+		const anchor = document.createElement('span');
+		shadow.append(anchor);
+
+		expect(resolvePortalTarget(anchor, null)).toBe(shadow);
+		expect(resolvePortalTarget(anchor, explicit)).toBe(explicit);
+		const detached = document.createElement('span');
+		expect(resolvePortalTarget(detached, undefined)).toBe(document);
+
+		host.remove();
+		explicit.remove();
+	});
+
 	it('removes portal content whether its owner or the action tears down first', () => {
 		const host = document.createElement('div');
 		const target = document.createElement('div');
@@ -365,9 +382,10 @@ describe('ZUI layer runtime', () => {
 
 		const dismiss = vi.fn();
 		const dismissable = new DismissableLayer(scopeRoot, { onDismiss: dismiss });
-		outside.dispatchEvent(
-			new ownerWindow.PointerEvent('pointerdown', { bubbles: true, composed: true })
-		);
+		const OwnerPointerEvent = (
+			ownerWindow as Window & { readonly PointerEvent: typeof PointerEvent }
+		).PointerEvent;
+		outside.dispatchEvent(new OwnerPointerEvent('pointerdown', { bubbles: true, composed: true }));
 		expect(dismiss).toHaveBeenCalledWith('pointer-outside');
 		dismissable.destroy();
 
@@ -429,6 +447,38 @@ describe('ZUI layer runtime', () => {
 		expect(document.activeElement).toBe(outside);
 		outside.remove();
 		outer.remove();
+	});
+
+	it('treats external focus branches as members of one trapped scope', async () => {
+		const opener = document.createElement('button');
+		const container = document.createElement('div');
+		const inside = document.createElement('button');
+		const branch = document.createElement('button');
+		const outside = document.createElement('button');
+		container.append(inside);
+		document.body.append(opener, container, branch, outside);
+		opener.focus();
+		const scope = new FocusScope(container, {
+			branches: () => [branch],
+			restoreFocus: true,
+			trap: true
+		});
+		await Promise.resolve();
+		expect(document.activeElement).toBe(inside);
+
+		branch.focus();
+		expect(document.activeElement).toBe(branch);
+		outside.focus();
+		expect(document.activeElement).toBe(inside);
+		inside.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Tab' }));
+		expect(document.activeElement).toBe(branch);
+
+		scope.destroy();
+		expect(document.activeElement).toBe(opener);
+		opener.remove();
+		container.remove();
+		branch.remove();
+		outside.remove();
 	});
 
 	it('dismisses only the top layer for outside pointer, focus and Escape', () => {

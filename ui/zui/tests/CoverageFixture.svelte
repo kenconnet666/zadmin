@@ -129,7 +129,7 @@
 	<ZSkeleton shape="circle" width={40} data-testid="coverage-skeleton-circle" />
 	<ZSkeleton shape="rectangle" height="3rem" data-testid="coverage-skeleton-rectangle" />
 	<ZCarousel
-		ariaLabel="Reduced carousel"
+		aria-label="Reduced carousel"
 		items={slides}
 		itemKey={(entry) => entry.id}
 		itemLabel={(entry) => entry.label}
@@ -141,7 +141,7 @@
 </ZProvider>
 
 <ZCarousel
-	ariaLabel="Coverage carousel"
+	aria-label="Coverage carousel"
 	items={slides}
 	itemKey={(entry) => entry.id}
 	itemLabel={(entry) => entry.label}

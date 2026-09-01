@@ -23,6 +23,14 @@ describe('component locale defaults', () => {
 			'Type a command'
 		);
 		expect(byTestId('command-default').textContent).toContain('No commands found');
+		expect(
+			byTestId('number-field-default')
+				.querySelector<HTMLInputElement>('[role="spinbutton"]')
+				?.getAttribute('aria-label')
+		).toBe('Number');
+		expect(
+			byTestId('number-field-default').querySelector('button[aria-label="Increase value"]')
+		).not.toBeNull();
 		expect(byTestId('palette-default').querySelector('button')?.textContent?.trim()).toBe(
 			'Open command palette'
 		);
@@ -46,7 +54,7 @@ describe('component locale defaults', () => {
 		).not.toBeNull();
 		expect(
 			byTestId('color-picker-default').querySelector('button')?.getAttribute('aria-label')
-		).toBe('Color #2563eb');
+		).toBe('Color #2563ebff');
 
 		await userEvent.click(byTestId('toggle-locale'));
 		await tick();
@@ -64,6 +72,14 @@ describe('component locale defaults', () => {
 				?.getAttribute('aria-label')
 		).toBe('搜索命令');
 		expect(byTestId('command-default').textContent).toContain('未找到命令');
+		expect(
+			byTestId('number-field-default')
+				.querySelector<HTMLInputElement>('[role="spinbutton"]')
+				?.getAttribute('aria-label')
+		).toBe('数字');
+		expect(
+			byTestId('number-field-default').querySelector('button[aria-label="增大数值"]')
+		).not.toBeNull();
 		expect(byTestId('palette-default').querySelector('button')?.textContent?.trim()).toBe(
 			'打开命令面板'
 		);
@@ -88,7 +104,7 @@ describe('component locale defaults', () => {
 		).not.toBeNull();
 		expect(
 			byTestId('color-picker-default').querySelector('button')?.getAttribute('aria-label')
-		).toBe('颜色 #2563eb');
+		).toBe('颜色 #2563ebff');
 
 		await userEvent.click(byTestId('cascader-default').querySelector('button')!);
 		await tick();
