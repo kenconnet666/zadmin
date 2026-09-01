@@ -7,8 +7,13 @@
 	export type ZTextareaResize = 'both' | 'horizontal' | 'none' | 'vertical';
 	export type ZTextareaSize = ZControlSize;
 
+	export interface ZTextareaAutosizeOptions {
+		readonly maxRows?: number;
+		readonly minRows?: number;
+	}
+
 	export interface ZTextareaProps extends Omit<HTMLTextareaAttributes, 'value'> {
-		readonly autosize?: boolean;
+		readonly autosize?: boolean | ZTextareaAutosizeOptions;
 		readonly defaultValue?: string;
 		readonly invalid?: boolean;
 		readonly onFormReset?: () => void;
@@ -34,7 +39,9 @@
 			'ControllableState',
 			'FieldContext',
 			'native form reset',
-			'Runed TextareaAutosize'
+			'ownerDocument measurement pool',
+			'ResizeObserver',
+			'document.fonts'
 		],
 		events: [
 			{
@@ -61,9 +68,9 @@
 			},
 			{
 				default: 'false',
-				description: '按内容和宽度自动调整高度。',
+				description: '按内容、宽度和字体自动调整高度；对象形式限制最少与最多行数。',
 				name: 'autosize',
-				type: 'boolean'
+				type: 'boolean | { minRows?: number; maxRows?: number }'
 			},
 			{
 				default: "'vertical'",
@@ -95,16 +102,19 @@
 		source: 'ui/zui/src/components/input/ZTextarea.svelte',
 		states: [
 			{ description: '无效状态。', name: 'data-invalid', values: ['true'] },
-			{ description: 'autosize启用。', name: 'data-autosize', values: ['true'] }
+			{ description: 'autosize启用。', name: 'data-autosize', values: ['true'] },
+			{ description: '禁用状态。', name: 'data-disabled', values: ['true'] },
+			{ description: '只读状态。', name: 'data-readonly', values: ['true'] }
 		],
 		status: 'experimental',
-		summary: '保留原生textarea编辑与表单语义，并增加共享状态、Field关系和可销毁autosize。'
+		summary: '保留原生textarea编辑、IME与表单语义，并提供有界、跨document且可销毁的autosize。'
 	} as const satisfies ZuiComponentMetadata;
 
 	const textareaRecipe = defineRecipe({
 		base: (s) => {
 			s.appearance.none;
 			s.backgroundColor._canvas;
+			s.boxSizing.borderBox;
 			s.borderRadius._medium;
 			s.borderStyle.solid;
 			s.borderWidth._hairline;
@@ -124,6 +134,13 @@
 			});
 		},
 		variants: {
+			disabled: {
+				false: () => undefined,
+				true: (s) => {
+					s.cursor.notAllowed;
+					s.opacity._disabled;
+				}
+			},
 			invalid: {
 				false: (s) => s.borderColor._border,
 				true: (s) => s.borderColor._danger
@@ -138,6 +155,10 @@
 				horizontal: (s) => s.resize.horizontal,
 				none: (s) => s.resize.none,
 				vertical: (s) => s.resize.vertical
+			},
+			readonly: {
+				false: () => undefined,
+				true: (s) => s.backgroundColor._surface
 			},
 			size: {
 				large: (s) => {
@@ -157,7 +178,14 @@
 				}
 			}
 		},
-		defaultVariants: { invalid: false, motion: 'auto', resize: 'vertical', size: 'medium' }
+		defaultVariants: {
+			disabled: false,
+			invalid: false,
+			motion: 'auto',
+			readonly: false,
+			resize: 'vertical',
+			size: 'medium'
+		}
 	});
 	registerRecipeHmr(import.meta, textareaRecipe);
 </script>
@@ -167,7 +195,8 @@
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { useZField } from '../../runtime/form/field-context.js';
 	import { useZInputGroup } from '../../runtime/form/input-group-context.svelte.js';
-	import { formReset, mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
+	import FormResetSignal from '../../runtime/form/FormResetSignal.svelte';
+	import { mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import {
 		applyIcssRootStyle,
@@ -176,7 +205,7 @@
 	} from '../../runtime/foundation/root-style.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
-	import ZTextareaAutosize from './ZTextareaAutosize.svelte';
+	import { textareaAutosize } from '../../runtime/textarea-autosize.js';
 
 	let {
 		'aria-describedby': ariaDescribedBy,
@@ -185,6 +214,7 @@
 		class: className,
 		defaultValue = '',
 		disabled = false,
+		form,
 		id,
 		invalid,
 		name,
@@ -206,13 +236,18 @@
 	const uid = $props.id();
 	const field = useZField();
 	const inputGroup = useZInputGroup();
+	const resolvedDisabled = $derived(disabled || inputGroup?.disabled || field?.disabled || false);
 	const resolvedInvalid = $derived(invalid ?? inputGroup?.invalid ?? field?.invalid ?? false);
+	const resolvedReadonly = $derived(readonly || field?.readonly || false);
 	const resolvedSize = $derived(resolveControlSize(size, zui.density));
+	const autosizeEnabled = $derived(autosize === true || typeof autosize === 'object');
 	const rootClass = $derived(
 		zui.recipe(textareaRecipe, {
+			disabled: resolvedDisabled,
 			invalid: resolvedInvalid,
 			motion: zui.motion,
-			resize: autosize ? 'none' : resize,
+			readonly: resolvedReadonly,
+			resize: autosizeEnabled ? 'none' : resize,
 			size: resolvedSize
 		})
 	);
@@ -227,10 +262,12 @@
 	const resolvedDescribedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
+
 	function handleInput(event: Event & { currentTarget: HTMLTextAreaElement }): void {
 		state.setFromUser(event.currentTarget.value);
 		oninput?.(event);
 	}
+
 	function resetFromForm(): void {
 		if (resetOnForm) state.reset();
 		onFormReset?.();
@@ -243,17 +280,28 @@
 	class={[rootClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
-	use:formReset={resetFromForm}
+	use:textareaAutosize={{
+		enabled: autosizeEnabled,
+		maxRows: typeof autosize === 'object' ? autosize.maxRows : undefined,
+		minRows: typeof autosize === 'object' ? autosize.minRows : undefined,
+		onResize,
+		value: resolvedValue
+	}}
 	id={id ?? field?.controlId ?? generatedId}
 	name={name ?? field?.name}
+	{form}
 	{defaultValue}
 	value={resolvedValue}
-	disabled={disabled || inputGroup?.disabled || field?.disabled}
-	readonly={readonly || field?.readonly}
+	disabled={resolvedDisabled}
+	readonly={resolvedReadonly}
 	required={required || field?.required}
 	aria-describedby={resolvedDescribedBy}
 	aria-invalid={resolvedInvalid ? 'true' : ariaInvalid}
 	data-invalid={resolvedInvalid ? 'true' : undefined}
-	data-autosize={autosize || undefined}
+	data-autosize={autosizeEnabled || undefined}
+	data-disabled={resolvedDisabled || undefined}
+	data-readonly={resolvedReadonly || undefined}
 	oninput={handleInput}></textarea>
-{#if autosize}<ZTextareaAutosize element={ref} input={resolvedValue} {onResize} />{/if}
+{#if resetOnForm || onFormReset}
+	<FormResetSignal association={form} control={ref} onReset={resetFromForm} />
+{/if}

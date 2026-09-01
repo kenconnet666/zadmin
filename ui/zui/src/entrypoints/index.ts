@@ -330,6 +330,7 @@ export { default as ZTagsInput } from '../components/input/ZTagsInput.svelte';
 export type { ZTagsInputProps } from '../components/input/ZTagsInput.svelte';
 export { default as ZTextarea } from '../components/input/ZTextarea.svelte';
 export type {
+	ZTextareaAutosizeOptions,
 	ZTextareaProps,
 	ZTextareaResize,
 	ZTextareaSize
