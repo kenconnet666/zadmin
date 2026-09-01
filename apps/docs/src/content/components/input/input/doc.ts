@@ -3,11 +3,41 @@ import BindingDemo from './BindingDemo.svelte';
 import bindingSource from './BindingDemo.svelte?raw';
 import ExternalFormDemo from './ExternalFormDemo.svelte';
 import externalFormSource from './ExternalFormDemo.svelte?raw';
+import FieldStatesDemo from './FieldStatesDemo.svelte';
+import fieldStatesSource from './FieldStatesDemo.svelte?raw';
 import TypesDemo from './TypesDemo.svelte';
 import typesSource from './TypesDemo.svelte?raw';
+import { inputApiFacts } from '../../../../framework/component-api.generated.js';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const inputDoc = defineComponentDoc(inputMetadata, {
+	sourceApi: inputApiFacts,
+	teaching: {
+		props: {
+			defaultValue: {
+				default: "''",
+				description: '初始文本与原生form reset目标；外部owner可用binding同步。'
+			},
+			invalid: { default: '继承Field或false', description: '同步无效视觉与aria-invalid。' },
+			onValueChange: {
+				default: '—',
+				description: '仅在用户输入改变值时调用；外部同步与reset不调用。'
+			},
+			ref: { default: 'null', description: '真实HTMLInputElement引用。' },
+			resetOnForm: {
+				default: 'true',
+				description: '独立输入恢复defaultValue；复合控件可关闭并由唯一root接管reset。'
+			},
+			size: {
+				default: "Provider density（默认 'comfortable' → 'medium'）",
+				description: '显式尺寸优先，否则响应最近Provider的density。'
+			},
+			type: { default: "'text'", description: '受支持且保留原生语义的文本输入类型。' },
+			value: { default: 'undefined', description: 'Svelte bindable文本值。' }
+		},
+		summary:
+			'原生input语义、Svelte bindable值、Field状态、外部form关联和唯一owner reset的稳定文本控件。'
+	},
 	demos: [
 		{
 			component: BindingDemo,
@@ -30,6 +60,14 @@ export const inputDoc = defineComponentDoc(inputMetadata, {
 			id: 'input-external-form',
 			source: externalFormSource,
 			title: '外部Form关联'
+		},
+		{
+			component: FieldStatesDemo,
+			description:
+				'ZField统一投射label、description、required、readonly、disabled和invalid；reset恢复真实默认值。',
+			id: 'input-field-states',
+			source: fieldStatesSource,
+			title: 'Field与表单状态'
 		}
 	],
 	accessibility: [

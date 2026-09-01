@@ -244,7 +244,9 @@
 			</div>
 			<ZText class={classes.lead} tone="muted">{doc.summary}</ZText>
 			<div class={classes.meta} aria-label="组件发布信息">
-				<span class={classes.metaItem}>Since {doc.since}</span>
+				<span class={classes.metaItem}
+					>{doc.since === 'unreleased' ? 'Unreleased' : `Since ${doc.since}`}</span
+				>
 				<span class={classes.metaItem}>
 					{doc.dependencies.length > 0 ? `依赖：${doc.dependencies.join('、')}` : '无额外组件依赖'}
 				</span>
