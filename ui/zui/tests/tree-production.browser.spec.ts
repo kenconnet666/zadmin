@@ -1,5 +1,6 @@
 import { tick } from 'svelte';
 import { describe, expect, it } from 'vitest';
+import { render } from 'vitest-browser-svelte';
 
 import { mount, unmount } from './browser-lifecycle.js';
 
@@ -15,7 +16,22 @@ async function settle(): Promise<void> {
 	await tick();
 }
 
-describe('LogicalTree production contracts', () => {
+describe('ZTree production contracts', () => {
+	it('renders typed and virtual ZTree roots for production evidence', async () => {
+		render(TreeProductionFixture);
+		await tick();
+
+		const lazyTree = document.querySelector<HTMLElement>('[data-testid="tree-production-lazy"]');
+		const virtualTree = document.querySelector<HTMLElement>(
+			'[data-testid="tree-production-virtual"]'
+		);
+
+		expect(lazyTree?.getAttribute('role')).toBe('tree');
+		expect(lazyTree?.querySelector('[role="treeitem"][data-key="workspace"]')).not.toBeNull();
+		expect(virtualTree?.getAttribute('role')).toBe('tree');
+		expect(virtualTree?.querySelector('[role="treeitem"][data-key="virtual-0"]')).not.toBeNull();
+	});
+
 	it('owns active descendant, lazy retry, strict checkbox selection and nearest recovery', async () => {
 		const host = document.createElement('div');
 		document.body.append(host);

@@ -12,8 +12,8 @@ function target(): HTMLDivElement {
 	return element;
 }
 
-describe('ZDrawer production contracts', () => {
-	it('paints a closed frame before entering and exposes semantic styling states', async () => {
+describe('ZDrawer compound production contracts', () => {
+	it('ZDrawerContent, ZDrawerOverlay, ZDrawerTitle and ZDrawerDescription paint and register semantic states', async () => {
 		const host = target();
 		const component = mount(DrawerFixture, {
 			props: { motion: 'full', placement: 'start', size: 'small' },
@@ -21,12 +21,20 @@ describe('ZDrawer production contracts', () => {
 		});
 		host.querySelector<HTMLButtonElement>('[data-testid="drawer-trigger"]')?.click();
 		await tick();
+		expect(
+			host
+				.querySelector<HTMLButtonElement>('[data-testid="drawer-trigger"]')
+				?.getAttribute('aria-expanded')
+		).toBe('true');
 		const content = document.querySelector<HTMLElement>('[data-testid="drawer-content"]');
 		const overlay = document.querySelector<HTMLElement>('[data-testid="drawer-overlay"]');
 		expect(content?.dataset.motionState).toBe('entering');
+		expect(content?.getAttribute('role')).toBe('dialog');
+		expect(content?.getAttribute('aria-modal')).toBe('true');
 		expect(content?.dataset.placement).toBe('start');
 		expect(content?.dataset.size).toBe('small');
 		expect(overlay?.dataset.motionState).toBe('entering');
+		expect(overlay).not.toBeNull();
 		await new Promise<void>((resolve) => {
 			requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
 		});
@@ -45,7 +53,7 @@ describe('ZDrawer production contracts', () => {
 		host.remove();
 	});
 
-	it('resolves all physical edges from four logical placements and RTL direction', async () => {
+	it('ZDrawerContent resolves all physical edges from logical placements and RTL direction', async () => {
 		const host = target();
 		const cases = [
 			{ direction: 'ltr', edge: 'left', placement: 'start' },
@@ -68,7 +76,7 @@ describe('ZDrawer production contracts', () => {
 		host.remove();
 	});
 
-	it('supports CSS sizes, an intentional full viewport mode and immediate reduced-motion cleanup', async () => {
+	it('ZDrawerContent supports custom CSS sizes, full viewport mode and reduced-motion cleanup', async () => {
 		const host = target();
 		const component = mount(DrawerFixture, {
 			props: {
@@ -99,7 +107,7 @@ describe('ZDrawer production contracts', () => {
 		host.remove();
 	});
 
-	it('resolves auto motion once at the Dialog owner while full motion overrides system reduction', async () => {
+	it('ZDrawer resolves auto motion at the owner while full motion overrides system reduction', async () => {
 		const removeEventListener = vi.fn();
 		const addEventListener = vi.fn();
 		const matchMedia = vi.spyOn(window, 'matchMedia').mockReturnValue({
@@ -137,7 +145,7 @@ describe('ZDrawer production contracts', () => {
 		matchMedia.mockRestore();
 	});
 
-	it('portals into a ShadowRoot and scopes modal lifecycle to the moved content owner', async () => {
+	it('ZDrawerContent and ZDrawerOverlay portal into a ShadowRoot and scope modal lifecycle to the owner', async () => {
 		const originalOverflow = document.body.style.overflow;
 		const host = target();
 		const portalHost = document.createElement('div');
@@ -158,7 +166,7 @@ describe('ZDrawer production contracts', () => {
 		portalHost.remove();
 	});
 
-	it('schedules and cancels exit Presence in the portalled owner Window', async () => {
+	it('ZDrawerClose cancels ZDrawerContent Presence exit in the portalled owner Window', async () => {
 		const frame = document.createElement('iframe');
 		document.body.append(frame);
 		const ownerWindow = frame.contentWindow;
@@ -192,7 +200,7 @@ describe('ZDrawer production contracts', () => {
 		}
 	});
 
-	it('keeps only the nested top layer active and restores focus and scroll lock one layer at a time', async () => {
+	it('ZDrawerTrigger and ZDrawerClose restore focus and scroll lock one nested layer at a time', async () => {
 		const originalOverflow = document.body.style.overflow;
 		const host = target();
 		const component = mount(NestedDrawerFixture, { target: host });
@@ -222,7 +230,7 @@ describe('ZDrawer production contracts', () => {
 		host.remove();
 	});
 
-	it('separates default outside and Escape dismiss from explicit-only workflows', async () => {
+	it('ZDrawerOverlay and ZDrawerClose separate default outside/Escape dismiss from explicit-only workflows', async () => {
 		const host = target();
 		const standard = mount(DrawerFixture, {
 			props: { defaultOpen: true, motion: 'reduced' },
