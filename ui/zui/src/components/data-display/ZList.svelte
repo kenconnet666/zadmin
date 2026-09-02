@@ -18,7 +18,7 @@
 		readonly label: string;
 	};
 
-	interface ZListBaseProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
+	interface ZListBaseProps extends HTMLAttributes<HTMLElement> {
 		readonly empty?: Snippet;
 		readonly emptyText?: string;
 		readonly loading?: boolean;

@@ -99,7 +99,7 @@ async function createSnapshot() {
 }
 
 const actual = await createSnapshot();
-const serialized = `${JSON.stringify(actual, null, 2)}\n`;
+const serialized = `${JSON.stringify(actual, null, '\t')}\n`;
 
 if (write) {
 	await writeFile(snapshotPath, serialized);

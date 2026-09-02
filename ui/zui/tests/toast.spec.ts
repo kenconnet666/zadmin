@@ -25,7 +25,9 @@ describe('ToastQueue', () => {
 		const queue = createToastQueue();
 		expect(() => queue.push({ duration: 0, title: 'Invalid' })).toThrow(/positive finite/u);
 		expect(() => queue.push({ duration: Infinity, title: 'Invalid' })).toThrow(/positive finite/u);
-		expect(() => queue.push({ duration: null, id: '', title: 'Invalid' })).toThrow(/must not be empty/u);
+		expect(() => queue.push({ duration: null, id: '', title: 'Invalid' })).toThrow(
+			/must not be empty/u
+		);
 		expect(() => queue.setMaxVisible(0)).toThrow(/positive integer/u);
 		queue.dismiss('missing');
 		queue.push({ duration: null, title: 'One' });

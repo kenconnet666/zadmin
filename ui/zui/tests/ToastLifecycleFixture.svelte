@@ -1,11 +1,6 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
-	import {
-		createToastQueue,
-		ZButton,
-		ZProvider,
-		ZToaster
-	} from '../src/entrypoints/index.js';
+	import { createToastQueue, ZButton, ZProvider, ZToaster } from '../src/entrypoints/index.js';
 
 	const queue = createToastQueue({ maxVisible: 1 });
 	const reducedQueue = createToastQueue({ maxVisible: 1 });
