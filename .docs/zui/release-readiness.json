@@ -119,6 +119,7 @@
 		"singlePackChecksumReuse": true,
 		"releaseArtifactRevisionBound": true,
 		"releaseCandidateContract": true,
+		"releaseHandoffPlan": true,
 		"releasePublishTarballReuse": false,
 		"npmOidcProvenance": false,
 		"automatedTagAndGithubRelease": false,

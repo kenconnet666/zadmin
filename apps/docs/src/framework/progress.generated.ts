@@ -16,9 +16,9 @@ export const zuiProgress = {
 		Authorable: 141,
 		ContractVerified: 141,
 		RuntimeImplemented: 141,
-		VisuallyVerified: 113,
+		VisuallyVerified: 128,
 		DesktopVerified: 0,
-		ProductionVerified: 100,
+		ProductionVerified: 117,
 		statuses: {
 			experimental: 67,
 			stable: 74
@@ -27,7 +27,7 @@ export const zuiProgress = {
 	stability: {
 		stableCompliant: 74,
 		stableViolations: 0,
-		promotionEligibleExperimental: 26
+		promotionEligibleExperimental: 43
 	},
 	docs: {
 		routes: {
@@ -47,8 +47,8 @@ export const zuiProgress = {
 	},
 	release: {
 		status: 'blocked',
-		passedChecks: 12,
-		totalChecks: 18,
+		passedChecks: 13,
+		totalChecks: 19,
 		blocked: [
 			'releasePublishTarballReuse',
 			'npmOidcProvenance',
@@ -61,17 +61,17 @@ export const zuiProgress = {
 	nextPriorities: [
 		{
 			id: 'production-evidence',
-			remaining: 41,
+			remaining: 24,
 			description: '为尚未ProductionVerified的组件补真实production browser/SSR合同。'
 		},
 		{
 			id: 'visual-evidence',
-			remaining: 28,
+			remaining: 13,
 			description: '补齐组件级浏览器渲染与交互证据，不以fixture存在冒充验证。'
 		},
 		{
 			id: 'stable-promotion',
-			remaining: 26,
+			remaining: 43,
 			description: '逐项审查已满足门禁的experimental组件；禁止自动批量晋级。'
 		},
 		{
