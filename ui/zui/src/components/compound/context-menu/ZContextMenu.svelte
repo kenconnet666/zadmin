@@ -51,7 +51,7 @@
 		snippets: [{ description: 'Trigger区域与Content。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/context-menu/ZContextMenu.svelte',
 		states: [],
-		status: 'experimental',
+		status: 'stable',
 		summary: '以真实指针坐标或键盘目标边界为锚点的Context Menu根组件。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

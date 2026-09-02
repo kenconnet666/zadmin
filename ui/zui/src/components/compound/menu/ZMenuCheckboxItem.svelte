@@ -70,7 +70,7 @@
 				values: ['true', 'false', 'mixed']
 			}
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '保持Menu打开并支持受控、非受控和mixed状态的menuitemcheckbox。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

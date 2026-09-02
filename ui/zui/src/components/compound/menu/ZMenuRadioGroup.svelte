@@ -59,7 +59,7 @@
 		snippets: [{ description: 'ZMenuRadioItem集合。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/menu/ZMenuRadioGroup.svelte',
 		states: [],
-		status: 'experimental',
+		status: 'stable',
 		summary: '在同一Menu内提供string/number严格区分的受控或非受控radio选择域。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

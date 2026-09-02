@@ -70,7 +70,7 @@
 		snippets: [{ description: 'ZMenuItem等Menu部件。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/context-menu/ZContextMenuContent.svelte',
 		states: [{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] }],
-		status: 'experimental',
+		status: 'stable',
 		summary: '在坐标锚点定位bare ZMenu并管理action dismiss。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

@@ -82,7 +82,7 @@
 		states: [
 			{ description: '打开与退出Presence状态。', name: 'data-state', values: ['open', 'closed'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '以独立ZMenu承载嵌套集合、共享父action链与顶层Layer顺序的Submenu Content。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

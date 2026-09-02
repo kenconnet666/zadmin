@@ -39,7 +39,7 @@
 		snippets: [{ description: 'Label和Items。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/menu/ZMenuGroup.svelte',
 		states: [],
-		status: 'experimental',
+		status: 'stable',
 		summary: '使用原生ARIA group组织相关Menu Item。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

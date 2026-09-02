@@ -2,7 +2,7 @@
 
 本文件由 `scripts/check-stability-policy.mjs` 生成；不会修改组件 status。compound member 可继承同 family root 的 Docs 页面。
 
-stableCompliant：37；stableViolations：0；promotionEligibleExperimental：63。
+stableCompliant：74；stableViolations：0；promotionEligibleExperimental：26。
 
 | Component               | Status       | Classification                | Blockers                                   | Docs                                                                           | SSR |
 | ----------------------- | ------------ | ----------------------------- | ------------------------------------------ | ------------------------------------------------------------------------------ | --: |
@@ -10,21 +10,21 @@ stableCompliant：37；stableViolations：0；promotionEligibleExperimental：63
 | ZAccordionContent       | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/navigation/accordion/doc.ts (family root)     |   1 |
 | ZAccordionItem          | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/navigation/accordion/doc.ts (family root)     |   1 |
 | ZAccordionTrigger       | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/navigation/accordion/doc.ts (family root)     |   1 |
-| ZAlertDialog            | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/overlay/alert-dialog/doc.ts                   |   2 |
-| ZAlertDialogAction      | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/overlay/alert-dialog/doc.ts (family root)     |   2 |
-| ZAlertDialogCancel      | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/overlay/alert-dialog/doc.ts (family root)     |   2 |
-| ZAlertDialogContent     | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/overlay/alert-dialog/doc.ts (family root)     |   2 |
-| ZAlertDialogDescription | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/overlay/alert-dialog/doc.ts (family root)     |   2 |
-| ZAlertDialogOverlay     | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/overlay/alert-dialog/doc.ts (family root)     |   2 |
-| ZAlertDialogTitle       | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/overlay/alert-dialog/doc.ts (family root)     |   2 |
-| ZAlertDialogTrigger     | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/overlay/alert-dialog/doc.ts (family root)     |   1 |
-| ZCombobox               | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/input/combobox/doc.ts                         |   1 |
-| ZComboboxContent        | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/input/combobox/doc.ts (family root)           |   1 |
-| ZComboboxInput          | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/input/combobox/doc.ts (family root)           |   1 |
-| ZComboboxItem           | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/input/combobox/doc.ts (family root)           |   1 |
-| ZContextMenu            | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/navigation/context-menu/doc.ts                |   2 |
-| ZContextMenuContent     | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/navigation/context-menu/doc.ts (family root)  |   2 |
-| ZContextMenuTrigger     | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/navigation/context-menu/doc.ts (family root)  |   2 |
+| ZAlertDialog            | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/overlay/alert-dialog/doc.ts                   |   2 |
+| ZAlertDialogAction      | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/overlay/alert-dialog/doc.ts (family root)     |   2 |
+| ZAlertDialogCancel      | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/overlay/alert-dialog/doc.ts (family root)     |   2 |
+| ZAlertDialogContent     | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/overlay/alert-dialog/doc.ts (family root)     |   2 |
+| ZAlertDialogDescription | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/overlay/alert-dialog/doc.ts (family root)     |   2 |
+| ZAlertDialogOverlay     | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/overlay/alert-dialog/doc.ts (family root)     |   2 |
+| ZAlertDialogTitle       | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/overlay/alert-dialog/doc.ts (family root)     |   2 |
+| ZAlertDialogTrigger     | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/overlay/alert-dialog/doc.ts (family root)     |   1 |
+| ZCombobox               | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/input/combobox/doc.ts                         |   1 |
+| ZComboboxContent        | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/input/combobox/doc.ts (family root)           |   1 |
+| ZComboboxInput          | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/input/combobox/doc.ts (family root)           |   1 |
+| ZComboboxItem           | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/input/combobox/doc.ts (family root)           |   1 |
+| ZContextMenu            | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/navigation/context-menu/doc.ts                |   2 |
+| ZContextMenuContent     | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/navigation/context-menu/doc.ts (family root)  |   2 |
+| ZContextMenuTrigger     | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/navigation/context-menu/doc.ts (family root)  |   2 |
 | ZDialog                 | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/overlay/dialog/doc.ts                         |   2 |
 | ZDialogClose            | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/overlay/dialog/doc.ts (family root)           |   1 |
 | ZDialogContent          | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/overlay/dialog/doc.ts (family root)           |   2 |
@@ -39,24 +39,24 @@ stableCompliant：37；stableViolations：0；promotionEligibleExperimental：63
 | ZDrawerOverlay          | experimental | experimental                  | VisuallyVerified, ProductionVerified       | apps/docs/src/content/components/overlay/drawer/doc.ts (family root)           |   1 |
 | ZDrawerTitle            | experimental | experimental                  | VisuallyVerified, ProductionVerified       | apps/docs/src/content/components/overlay/drawer/doc.ts (family root)           |   1 |
 | ZDrawerTrigger          | experimental | experimental                  | VisuallyVerified, ProductionVerified       | apps/docs/src/content/components/overlay/drawer/doc.ts (family root)           |   1 |
-| ZDropdownMenu           | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/navigation/dropdown-menu/doc.ts               |   2 |
-| ZDropdownMenuContent    | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/navigation/dropdown-menu/doc.ts (family root) |   2 |
-| ZDropdownMenuTrigger    | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/navigation/dropdown-menu/doc.ts (family root) |   2 |
-| ZMenu                   | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/navigation/menu/doc.ts                        |   2 |
-| ZMenuCheckboxItem       | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/navigation/menu/doc.ts (family root)          |   1 |
-| ZMenuGroup              | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/navigation/menu/doc.ts (family root)          |   2 |
-| ZMenuItem               | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/navigation/menu/doc.ts (family root)          |   2 |
-| ZMenuLabel              | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/navigation/menu/doc.ts (family root)          |   2 |
-| ZMenuRadioGroup         | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/navigation/menu/doc.ts (family root)          |   1 |
-| ZMenuRadioItem          | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/navigation/menu/doc.ts (family root)          |   1 |
-| ZMenuSeparator          | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/navigation/menu/doc.ts (family root)          |   2 |
-| ZMenuSub                | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/navigation/menu/doc.ts (family root)          |   1 |
-| ZMenuSubContent         | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/navigation/menu/doc.ts (family root)          |   1 |
-| ZMenuSubTrigger         | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/navigation/menu/doc.ts (family root)          |   1 |
-| ZMultiSelect            | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/input/multi-select/doc.ts                     |   1 |
-| ZMultiSelectContent     | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/input/multi-select/doc.ts (family root)       |   1 |
-| ZMultiSelectItem        | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/input/multi-select/doc.ts (family root)       |   1 |
-| ZMultiSelectTrigger     | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/input/multi-select/doc.ts (family root)       |   1 |
+| ZDropdownMenu           | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/navigation/dropdown-menu/doc.ts               |   2 |
+| ZDropdownMenuContent    | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/navigation/dropdown-menu/doc.ts (family root) |   2 |
+| ZDropdownMenuTrigger    | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/navigation/dropdown-menu/doc.ts (family root) |   2 |
+| ZMenu                   | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/navigation/menu/doc.ts                        |   2 |
+| ZMenuCheckboxItem       | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/navigation/menu/doc.ts (family root)          |   1 |
+| ZMenuGroup              | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/navigation/menu/doc.ts (family root)          |   2 |
+| ZMenuItem               | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/navigation/menu/doc.ts (family root)          |   2 |
+| ZMenuLabel              | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/navigation/menu/doc.ts (family root)          |   2 |
+| ZMenuRadioGroup         | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/navigation/menu/doc.ts (family root)          |   1 |
+| ZMenuRadioItem          | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/navigation/menu/doc.ts (family root)          |   1 |
+| ZMenuSeparator          | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/navigation/menu/doc.ts (family root)          |   2 |
+| ZMenuSub                | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/navigation/menu/doc.ts (family root)          |   1 |
+| ZMenuSubContent         | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/navigation/menu/doc.ts (family root)          |   1 |
+| ZMenuSubTrigger         | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/navigation/menu/doc.ts (family root)          |   1 |
+| ZMultiSelect            | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/input/multi-select/doc.ts                     |   1 |
+| ZMultiSelectContent     | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/input/multi-select/doc.ts (family root)       |   1 |
+| ZMultiSelectItem        | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/input/multi-select/doc.ts (family root)       |   1 |
+| ZMultiSelectTrigger     | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/input/multi-select/doc.ts (family root)       |   1 |
 | ZPopconfirm             | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/overlay/popconfirm/doc.ts                     |   2 |
 | ZPopconfirmAction       | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/overlay/popconfirm/doc.ts (family root)       |   2 |
 | ZPopconfirmCancel       | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/overlay/popconfirm/doc.ts (family root)       |   2 |
@@ -69,10 +69,10 @@ stableCompliant：37；stableViolations：0；promotionEligibleExperimental：63
 | ZPopoverTrigger         | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/overlay/popover/doc.ts (family root)          |   2 |
 | ZRadioGroup             | experimental | experimental                  | VisuallyVerified, ProductionVerified       | apps/docs/src/content/components/input/radio-group/doc.ts                      |   1 |
 | ZRadioGroupItem         | experimental | experimental                  | VisuallyVerified, ProductionVerified       | apps/docs/src/content/components/input/radio-group/doc.ts (family root)        |   1 |
-| ZSelect                 | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/input/select/doc.ts                           |   1 |
-| ZSelectContent          | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/input/select/doc.ts (family root)             |   1 |
-| ZSelectItem             | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/input/select/doc.ts (family root)             |   1 |
-| ZSelectTrigger          | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/input/select/doc.ts (family root)             |   1 |
+| ZSelect                 | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/input/select/doc.ts                           |   1 |
+| ZSelectContent          | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/input/select/doc.ts (family root)             |   1 |
+| ZSelectItem             | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/input/select/doc.ts (family root)             |   1 |
+| ZSelectTrigger          | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/input/select/doc.ts (family root)             |   1 |
 | ZTabs                   | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/navigation/tabs/doc.ts                        |   1 |
 | ZTabsList               | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/navigation/tabs/doc.ts (family root)          |   1 |
 | ZTabsPanel              | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/navigation/tabs/doc.ts (family root)          |   1 |

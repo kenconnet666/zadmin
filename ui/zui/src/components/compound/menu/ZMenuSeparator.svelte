@@ -27,7 +27,7 @@
 		snippets: [],
 		source: 'ui/zui/src/components/compound/menu/ZMenuSeparator.svelte',
 		states: [],
-		status: 'experimental',
+		status: 'stable',
 		summary: '使用separator语义分隔Menu分组。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

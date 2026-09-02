@@ -52,7 +52,7 @@
 		snippets: [{ description: 'SubTrigger与SubContent。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/menu/ZMenuSub.svelte',
 		states: [],
-		status: 'experimental',
+		status: 'stable',
 		summary: '复用Popover层、由父Menu协调同级唯一打开状态并支持RTL键盘方向的Submenu。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

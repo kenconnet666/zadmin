@@ -53,7 +53,7 @@
 			{ description: '业务选择值无效。', name: 'data-invalid', values: ['true'] },
 			{ description: '保持可聚焦但不可修改。', name: 'data-readonly', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '复用ZTag显示多值，以单一button焦点owner提供溢出、移除与打开合同。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

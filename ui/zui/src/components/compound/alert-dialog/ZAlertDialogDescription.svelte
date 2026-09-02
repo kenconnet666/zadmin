@@ -28,7 +28,7 @@
 		snippets: [{ description: '后果与恢复路径说明。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/alert-dialog/ZAlertDialogDescription.svelte',
 		states: [],
-		status: 'experimental',
+		status: 'stable',
 		summary: '提供AlertDialog稳定可访问说明与操作后果。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

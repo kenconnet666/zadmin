@@ -51,7 +51,7 @@
 		snippets: [],
 		source: 'ui/zui/src/components/compound/combobox/ZComboboxInput.svelte',
 		states: [{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] }],
-		status: 'experimental',
+		status: 'stable',
 		summary: '保持DOM焦点并通过aria-activedescendant驱动filtered listbox。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

@@ -69,7 +69,7 @@
 			{ description: 'active-descendant状态。', name: 'data-highlighted', values: ['true'] },
 			{ description: '禁用状态。', name: 'data-disabled', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'逻辑metadata持续存在；数据模式按view挂载，compound兼容模式用hidden保留文本发现的Combobox option。'
 	} as const satisfies ZuiComponentMetadata;

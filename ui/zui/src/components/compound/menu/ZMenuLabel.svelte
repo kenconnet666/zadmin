@@ -29,7 +29,7 @@
 		snippets: [{ description: '分组标签。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/menu/ZMenuLabel.svelte',
 		states: [],
-		status: 'experimental',
+		status: 'stable',
 		summary: '为Menu分组提供不可聚焦的视觉标签。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

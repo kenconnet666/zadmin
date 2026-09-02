@@ -55,7 +55,7 @@
 		snippets: [{ description: 'ZMenuItem等Menu部件。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/dropdown-menu/ZDropdownMenuContent.svelte',
 		states: [{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] }],
-		status: 'experimental',
+		status: 'stable',
 		summary: 'Portal/Floating shell内承载bare ZMenu并在未取消action后dismiss。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

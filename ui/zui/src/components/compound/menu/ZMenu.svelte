@@ -74,7 +74,7 @@
 		],
 		source: 'ui/zui/src/components/compound/menu/ZMenu.svelte',
 		states: [{ description: '整个Menu禁用。', name: 'data-disabled', values: ['true'] }],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'以LogicalCollection为唯一顺序事实、MountedElements只管理真实节点，并统一action、selection与submenu冒泡的Menu。'
 	} as const satisfies ZuiComponentMetadata;

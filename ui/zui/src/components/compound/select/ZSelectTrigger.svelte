@@ -47,7 +47,7 @@
 			{ description: '业务选择值无效。', name: 'data-invalid', values: ['true'] },
 			{ description: '保持可聚焦但不可打开或修改。', name: 'data-readonly', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '显示当前值并以aria-haspopup=listbox打开Select Content。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

@@ -46,7 +46,7 @@
 		snippets: [{ description: '确认操作内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/alert-dialog/ZAlertDialogAction.svelte',
 		states: [{ description: '异步Action未settle。', name: 'data-pending', values: ['true'] }],
-		status: 'experimental',
+		status: 'stable',
 		summary: '默认danger视觉并显式确认AlertDialog；业务回调可阻止关闭。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

@@ -51,7 +51,7 @@
 		snippets: [{ description: 'Trigger与Content。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/dropdown-menu/ZDropdownMenu.svelte',
 		states: [],
-		status: 'experimental',
+		status: 'stable',
 		summary: '组合Popover定位/dismiss与Menu集合键盘模型的Dropdown Menu根组件。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

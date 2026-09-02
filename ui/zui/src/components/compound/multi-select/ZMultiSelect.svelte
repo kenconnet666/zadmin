@@ -234,7 +234,7 @@
 		snippets: [{ description: 'Trigger与Content组合。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/multi-select/ZMultiSelect.svelte',
 		states: [],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'以LogicalCollection为唯一顺序事实、以SelectionModel拥有多选并支持标签摘要、异步孤儿、多值FormData与可选虚拟化的MultiSelect。'
 	} as const satisfies ZuiComponentMetadata;

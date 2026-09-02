@@ -210,7 +210,7 @@
 		snippets: [{ description: 'Input与Content组合。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/combobox/ZCombobox.svelte',
 		states: [],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'把输入、选择与打开状态分离，并以完整LogicalCollection驱动过滤和真实active-descendant的单选Combobox。'
 	} as const satisfies ZuiComponentMetadata;

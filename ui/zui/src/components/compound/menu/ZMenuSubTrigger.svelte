@@ -41,7 +41,7 @@
 		snippets: [{ description: '父Item标签。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/menu/ZMenuSubTrigger.svelte',
 		states: [{ description: 'submenu状态。', name: 'data-state', values: ['open', 'closed'] }],
-		status: 'experimental',
+		status: 'stable',
 		summary: '复用ZMenuItem集合与焦点合同、公开完整ARIA关系的Submenu Trigger。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

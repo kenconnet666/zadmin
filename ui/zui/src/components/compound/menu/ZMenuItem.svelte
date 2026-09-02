@@ -135,7 +135,7 @@
 			{ description: '禁用状态。', name: 'data-disabled', values: ['true'] },
 			{ description: '危险动作状态。', name: 'data-danger', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '注册typed key、支持真实link、快捷键提示与可取消action的Menu Item。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

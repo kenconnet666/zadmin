@@ -28,7 +28,7 @@
 		snippets: [],
 		source: 'ui/zui/src/components/compound/alert-dialog/ZAlertDialogOverlay.svelte',
 		states: [{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] }],
-		status: 'experimental',
+		status: 'stable',
 		summary: '复用Dialog modal遮罩，但不会通过outside pointer隐式关闭AlertDialog。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

@@ -101,7 +101,7 @@
 		],
 		source: 'ui/zui/src/components/compound/select/ZSelectContent.svelte',
 		states: [{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] }],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'以listbox本身保持DOM焦点、只暴露真实挂载option id，并为无分组options提供可选固定行虚拟窗口的Select Content。'
 	} as const satisfies ZuiComponentMetadata;

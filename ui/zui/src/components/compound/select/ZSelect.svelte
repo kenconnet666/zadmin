@@ -185,7 +185,7 @@
 		snippets: [{ description: 'Trigger与Content组合。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/select/ZSelect.svelte',
 		states: [],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'以LogicalCollection为唯一顺序事实、以ActiveDescendant承载焦点并保留异步孤儿值的单选Select。'
 	} as const satisfies ZuiComponentMetadata;

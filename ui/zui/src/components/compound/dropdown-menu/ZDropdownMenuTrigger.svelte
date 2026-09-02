@@ -34,7 +34,7 @@
 		snippets: [{ description: 'Trigger内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/dropdown-menu/ZDropdownMenuTrigger.svelte',
 		states: [{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] }],
-		status: 'experimental',
+		status: 'stable',
 		summary: '使用aria-haspopup=menu切换Dropdown Menu。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

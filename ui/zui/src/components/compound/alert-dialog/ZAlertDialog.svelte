@@ -66,7 +66,7 @@
 		snippets: [{ description: 'AlertDialog复合部件。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/alert-dialog/ZAlertDialog.svelte',
 		states: [],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'建立默认Cancel焦点、强制显式决策和generation-safe caller-owned async Action的modal alertdialog根。'
 	} as const satisfies ZuiComponentMetadata;

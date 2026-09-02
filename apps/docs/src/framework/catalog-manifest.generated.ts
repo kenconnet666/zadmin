@@ -1009,7 +1009,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'input',
 		summary:
 			'生产单选Combobox：inputValue、value和open三轴独立，完整LogicalCollection在过滤与DOM挂载之外拥有顺序，ActiveDescendant只引用当前真实option。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'combobox',
 			'autocomplete',
@@ -1240,7 +1240,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'input',
 		summary:
 			'生产多选集合：value统一数组主值命名，LogicalCollection拥有完整typed-key顺序，SelectionModel拥有toggle，ActiveDescendant拥有容器焦点，ZTag、Popover、VirtualList与FormValueBridge分别承接摘要、浮层、大数据窗口和提交。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'multi select',
 			'listbox',
@@ -1472,7 +1472,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'input',
 		summary:
 			'生产单选集合：options模式在未挂载时仍拥有完整typed-key顺序，compound模式保持兼容；SelectionModel、ActiveDescendant、Popover与FormValueBridge分别拥有选择、焦点、浮层和提交。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'select',
 			'listbox',
@@ -1834,7 +1834,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'navigation',
 		summary:
 			'真实pointer client坐标与键盘目标logical start只负责更新零尺寸锚点，Popup生命周期继续由Popover唯一拥有，内容完整复用ZMenu。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: ['context menu', 'right click', 'Shift F10', 'pointer coordinates', 'submenu', 'RTL'],
 		profiles: ['collection', 'layer', 'animated'],
 		capabilities: [
@@ -1859,7 +1859,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'navigation',
 		summary:
 			'Popover唯一拥有controlled open、Portal、Floating、dismiss、Presence与焦点恢复；Content只接入共享ZMenu及未取消action后的关闭策略。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'dropdown menu',
 			'menu button',
@@ -1892,7 +1892,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'navigation',
 		summary:
 			'LogicalCollection拥有typed顺序、禁用与typeahead文本，MountedElements仅把当前挂载节点接到roving focus；action、selection与nested submenu共用同一事件链。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'menu',
 			'submenu',
@@ -2028,7 +2028,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'overlay',
 		summary:
 			'强制显式决策的modal alertdialog：默认Cancel焦点，pending统一锁定Action/Cancel/dismiss，caller拥有Promise与错误展示。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [],
 		profiles: ['layer', 'animated'],
 		capabilities: [

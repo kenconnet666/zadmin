@@ -93,7 +93,7 @@
 		],
 		source: 'ui/zui/src/components/compound/multi-select/ZMultiSelectContent.svelte',
 		states: [{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] }],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'以listbox容器保持DOM焦点、用active-descendant导航完整多选集合，并为无分组options提供可选虚拟窗口。'
 	} as const satisfies ZuiComponentMetadata;

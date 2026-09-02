@@ -74,7 +74,7 @@
 			{ description: 'active-descendant项。', name: 'data-highlighted', values: ['true'] },
 			{ description: '禁用状态。', name: 'data-disabled', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '只登记逻辑metadata与真实挂载节点、不会反向拥有集合顺序的Select option。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

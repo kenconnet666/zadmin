@@ -38,7 +38,7 @@
 		snippets: [{ description: '可右键或键盘打开的目标内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/context-menu/ZContextMenuTrigger.svelte',
 		states: [{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] }],
-		status: 'experimental',
+		status: 'stable',
 		summary: '捕获contextmenu与键盘手势并更新真实坐标锚点。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

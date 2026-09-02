@@ -43,7 +43,7 @@
 		states: [
 			{ description: 'ARIA checked状态。', name: 'aria-checked', values: ['true', 'false'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '由ZMenuRadioGroup拥有typed值、默认保持Menu打开的menuitemradio。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

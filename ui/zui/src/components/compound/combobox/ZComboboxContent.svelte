@@ -107,7 +107,7 @@
 		],
 		source: 'ui/zui/src/components/compound/combobox/ZComboboxContent.svelte',
 		states: [{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] }],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'不移动输入DOM焦点、按真实过滤view挂载option，并为无分组options提供可选固定行虚拟窗口的listbox。'
 	} as const satisfies ZuiComponentMetadata;

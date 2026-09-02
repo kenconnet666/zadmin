@@ -51,7 +51,7 @@
 			{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] },
 			{ description: 'Action尚未settle。', name: 'data-pending', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '固定alertdialog角色并禁用Escape和outside pointer隐式关闭。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
