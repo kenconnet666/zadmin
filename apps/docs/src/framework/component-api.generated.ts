@@ -69,7 +69,7 @@ export const accordionApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/accordion/ZAccordion.svelte',
-	undocumentedProps: [],
+	metadataGapProps: [],
 	members: () => [accordionContentApiFacts, accordionItemApiFacts, accordionTriggerApiFacts]
 } as const satisfies ComponentApiFacts;
 
@@ -96,7 +96,7 @@ export const accordionContentApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/accordion/ZAccordionContent.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const accordionItemApiFacts = {
@@ -127,7 +127,7 @@ export const accordionItemApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/accordion/ZAccordionItem.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const accordionTriggerApiFacts = {
@@ -173,7 +173,7 @@ export const accordionTriggerApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/accordion/ZAccordionTrigger.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const alertDialogApiFacts = {
@@ -214,7 +214,7 @@ export const alertDialogApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/alert-dialog/ZAlertDialog.svelte',
-	undocumentedProps: [],
+	metadataGapProps: [],
 	members: () => [
 		alertDialogActionApiFacts,
 		alertDialogCancelApiFacts,
@@ -239,7 +239,7 @@ export const alertDialogActionApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/alert-dialog/ZAlertDialogAction.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const alertDialogCancelApiFacts = {
@@ -255,7 +255,7 @@ export const alertDialogCancelApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/alert-dialog/ZAlertDialogCancel.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const alertDialogContentApiFacts = {
@@ -265,7 +265,7 @@ export const alertDialogContentApiFacts = {
 	name: 'ZAlertDialogContent',
 	props: [],
 	source: 'ui/zui/src/components/compound/alert-dialog/ZAlertDialogContent.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const alertDialogDescriptionApiFacts = {
@@ -275,7 +275,7 @@ export const alertDialogDescriptionApiFacts = {
 	name: 'ZAlertDialogDescription',
 	props: [],
 	source: 'ui/zui/src/components/compound/alert-dialog/ZAlertDialogDescription.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const alertDialogOverlayApiFacts = {
@@ -285,7 +285,7 @@ export const alertDialogOverlayApiFacts = {
 	name: 'ZAlertDialogOverlay',
 	props: [],
 	source: 'ui/zui/src/components/compound/alert-dialog/ZAlertDialogOverlay.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const alertDialogTitleApiFacts = {
@@ -295,7 +295,7 @@ export const alertDialogTitleApiFacts = {
 	name: 'ZAlertDialogTitle',
 	props: [],
 	source: 'ui/zui/src/components/compound/alert-dialog/ZAlertDialogTitle.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const alertDialogTriggerApiFacts = {
@@ -305,7 +305,7 @@ export const alertDialogTriggerApiFacts = {
 	name: 'ZAlertDialogTrigger',
 	props: [],
 	source: 'ui/zui/src/components/compound/alert-dialog/ZAlertDialogTrigger.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const comboboxApiFacts = {
@@ -451,7 +451,7 @@ export const comboboxApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/combobox/ZCombobox.svelte',
-	undocumentedProps: ['controlId', 'form', 'invalid', 'name', 'placement', 'required'],
+	metadataGapProps: ['controlId', 'form', 'invalid', 'name', 'placement', 'required'],
 	members: () => [comboboxContentApiFacts, comboboxInputApiFacts, comboboxItemApiFacts]
 } as const satisfies ComponentApiFacts;
 
@@ -518,7 +518,7 @@ export const comboboxContentApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/combobox/ZComboboxContent.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const comboboxInputApiFacts = {
@@ -534,7 +534,7 @@ export const comboboxInputApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/combobox/ZComboboxInput.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const comboboxItemApiFacts = {
@@ -575,7 +575,7 @@ export const comboboxItemApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/combobox/ZComboboxItem.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const contextMenuApiFacts = {
@@ -616,7 +616,7 @@ export const contextMenuApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/context-menu/ZContextMenu.svelte',
-	undocumentedProps: [],
+	metadataGapProps: [],
 	members: () => [contextMenuContentApiFacts, contextMenuTriggerApiFacts]
 } as const satisfies ComponentApiFacts;
 
@@ -658,7 +658,7 @@ export const contextMenuContentApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/context-menu/ZContextMenuContent.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const contextMenuTriggerApiFacts = {
@@ -679,7 +679,7 @@ export const contextMenuTriggerApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/context-menu/ZContextMenuTrigger.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const dialogApiFacts = {
@@ -710,7 +710,7 @@ export const dialogApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/dialog/ZDialog.svelte',
-	undocumentedProps: [],
+	metadataGapProps: [],
 	members: () => [
 		dialogCloseApiFacts,
 		dialogContentApiFacts,
@@ -734,7 +734,7 @@ export const dialogCloseApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/dialog/ZDialogClose.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const dialogContentApiFacts = {
@@ -820,7 +820,7 @@ export const dialogContentApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/dialog/ZDialogContent.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const dialogDescriptionApiFacts = {
@@ -841,7 +841,7 @@ export const dialogDescriptionApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/dialog/ZDialogDescription.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const dialogOverlayApiFacts = {
@@ -857,7 +857,7 @@ export const dialogOverlayApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/dialog/ZDialogOverlay.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const dialogTitleApiFacts = {
@@ -878,7 +878,7 @@ export const dialogTitleApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/dialog/ZDialogTitle.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const dialogTriggerApiFacts = {
@@ -894,7 +894,7 @@ export const dialogTriggerApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/dialog/ZDialogTrigger.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const drawerApiFacts = {
@@ -925,7 +925,7 @@ export const drawerApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/drawer/ZDrawer.svelte',
-	undocumentedProps: [],
+	metadataGapProps: [],
 	members: () => [
 		drawerCloseApiFacts,
 		drawerContentApiFacts,
@@ -943,7 +943,7 @@ export const drawerCloseApiFacts = {
 	name: 'ZDrawerClose',
 	props: [],
 	source: 'ui/zui/src/components/compound/drawer/ZDrawerClose.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const drawerContentApiFacts = {
@@ -964,7 +964,7 @@ export const drawerContentApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/drawer/ZDrawerContent.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const drawerDescriptionApiFacts = {
@@ -974,7 +974,7 @@ export const drawerDescriptionApiFacts = {
 	name: 'ZDrawerDescription',
 	props: [],
 	source: 'ui/zui/src/components/compound/drawer/ZDrawerDescription.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const drawerOverlayApiFacts = {
@@ -984,7 +984,7 @@ export const drawerOverlayApiFacts = {
 	name: 'ZDrawerOverlay',
 	props: [],
 	source: 'ui/zui/src/components/compound/drawer/ZDrawerOverlay.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const drawerTitleApiFacts = {
@@ -994,7 +994,7 @@ export const drawerTitleApiFacts = {
 	name: 'ZDrawerTitle',
 	props: [],
 	source: 'ui/zui/src/components/compound/drawer/ZDrawerTitle.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const drawerTriggerApiFacts = {
@@ -1004,7 +1004,7 @@ export const drawerTriggerApiFacts = {
 	name: 'ZDrawerTrigger',
 	props: [],
 	source: 'ui/zui/src/components/compound/drawer/ZDrawerTrigger.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const dropdownMenuApiFacts = {
@@ -1045,7 +1045,7 @@ export const dropdownMenuApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/dropdown-menu/ZDropdownMenu.svelte',
-	undocumentedProps: [],
+	metadataGapProps: [],
 	members: () => [dropdownMenuContentApiFacts, dropdownMenuTriggerApiFacts]
 } as const satisfies ComponentApiFacts;
 
@@ -1077,7 +1077,7 @@ export const dropdownMenuContentApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/dropdown-menu/ZDropdownMenuContent.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const dropdownMenuTriggerApiFacts = {
@@ -1087,7 +1087,7 @@ export const dropdownMenuTriggerApiFacts = {
 	name: 'ZDropdownMenuTrigger',
 	props: [],
 	source: 'ui/zui/src/components/compound/dropdown-menu/ZDropdownMenuTrigger.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const menuApiFacts = {
@@ -1133,7 +1133,7 @@ export const menuApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/menu/ZMenu.svelte',
-	undocumentedProps: [],
+	metadataGapProps: [],
 	members: () => [
 		menuCheckboxItemApiFacts,
 		menuGroupApiFacts,
@@ -1186,7 +1186,7 @@ export const menuCheckboxItemApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/menu/ZMenuCheckboxItem.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const menuGroupApiFacts = {
@@ -1212,7 +1212,7 @@ export const menuGroupApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/menu/ZMenuGroup.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const menuItemApiFacts = {
@@ -1308,7 +1308,7 @@ export const menuItemApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/menu/ZMenuItem.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const menuLabelApiFacts = {
@@ -1329,7 +1329,7 @@ export const menuLabelApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/menu/ZMenuLabel.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const menuRadioGroupApiFacts = {
@@ -1365,7 +1365,7 @@ export const menuRadioGroupApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/menu/ZMenuRadioGroup.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const menuRadioItemApiFacts = {
@@ -1391,7 +1391,7 @@ export const menuRadioItemApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/menu/ZMenuRadioItem.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const menuSeparatorApiFacts = {
@@ -1407,7 +1407,7 @@ export const menuSeparatorApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/menu/ZMenuSeparator.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const menuSubApiFacts = {
@@ -1448,7 +1448,7 @@ export const menuSubApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/menu/ZMenuSub.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const menuSubContentApiFacts = {
@@ -1489,7 +1489,7 @@ export const menuSubContentApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/menu/ZMenuSubContent.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const menuSubTriggerApiFacts = {
@@ -1515,7 +1515,7 @@ export const menuSubTriggerApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/menu/ZMenuSubTrigger.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const multiSelectApiFacts = {
@@ -1666,7 +1666,7 @@ export const multiSelectApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/multi-select/ZMultiSelect.svelte',
-	undocumentedProps: ['controlId', 'form', 'invalid', 'name', 'required'],
+	metadataGapProps: ['controlId', 'form', 'invalid', 'name', 'required'],
 	members: () => [multiSelectContentApiFacts, multiSelectItemApiFacts, multiSelectTriggerApiFacts]
 } as const satisfies ComponentApiFacts;
 
@@ -1723,7 +1723,7 @@ export const multiSelectContentApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/multi-select/ZMultiSelectContent.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const multiSelectItemApiFacts = {
@@ -1764,7 +1764,7 @@ export const multiSelectItemApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/multi-select/ZMultiSelectItem.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const multiSelectTriggerApiFacts = {
@@ -1780,7 +1780,7 @@ export const multiSelectTriggerApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/multi-select/ZMultiSelectTrigger.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const popconfirmApiFacts = {
@@ -1836,7 +1836,7 @@ export const popconfirmApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/popconfirm/ZPopconfirm.svelte',
-	undocumentedProps: [],
+	metadataGapProps: [],
 	members: () => [
 		popconfirmActionApiFacts,
 		popconfirmCancelApiFacts,
@@ -1860,7 +1860,7 @@ export const popconfirmActionApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/popconfirm/ZPopconfirmAction.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const popconfirmCancelApiFacts = {
@@ -1876,7 +1876,7 @@ export const popconfirmCancelApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/popconfirm/ZPopconfirmCancel.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const popconfirmContentApiFacts = {
@@ -1886,7 +1886,7 @@ export const popconfirmContentApiFacts = {
 	name: 'ZPopconfirmContent',
 	props: [],
 	source: 'ui/zui/src/components/compound/popconfirm/ZPopconfirmContent.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const popconfirmDescriptionApiFacts = {
@@ -1907,7 +1907,7 @@ export const popconfirmDescriptionApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/popconfirm/ZPopconfirmDescription.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const popconfirmTitleApiFacts = {
@@ -1928,7 +1928,7 @@ export const popconfirmTitleApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/popconfirm/ZPopconfirmTitle.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const popconfirmTriggerApiFacts = {
@@ -1938,7 +1938,7 @@ export const popconfirmTriggerApiFacts = {
 	name: 'ZPopconfirmTrigger',
 	props: [],
 	source: 'ui/zui/src/components/compound/popconfirm/ZPopconfirmTrigger.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const popoverApiFacts = {
@@ -1994,7 +1994,7 @@ export const popoverApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/popover/ZPopover.svelte',
-	undocumentedProps: [],
+	metadataGapProps: [],
 	members: () => [popoverContentApiFacts, popoverTriggerApiFacts]
 } as const satisfies ComponentApiFacts;
 
@@ -2066,7 +2066,7 @@ export const popoverContentApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/popover/ZPopoverContent.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const popoverTriggerApiFacts = {
@@ -2087,7 +2087,7 @@ export const popoverTriggerApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/popover/ZPopoverTrigger.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const radioGroupApiFacts = {
@@ -2168,7 +2168,7 @@ export const radioGroupApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/radio-group/ZRadioGroup.svelte',
-	undocumentedProps: [],
+	metadataGapProps: [],
 	members: () => [radioGroupItemApiFacts]
 } as const satisfies ComponentApiFacts;
 
@@ -2220,7 +2220,7 @@ export const radioGroupItemApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/radio-group/ZRadioGroupItem.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const selectApiFacts = {
@@ -2341,7 +2341,7 @@ export const selectApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/select/ZSelect.svelte',
-	undocumentedProps: ['controlId', 'form', 'invalid', 'name', 'required'],
+	metadataGapProps: ['controlId', 'form', 'invalid', 'name', 'required'],
 	members: () => [selectContentApiFacts, selectItemApiFacts, selectTriggerApiFacts]
 } as const satisfies ComponentApiFacts;
 
@@ -2398,7 +2398,7 @@ export const selectContentApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/select/ZSelectContent.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const selectItemApiFacts = {
@@ -2439,7 +2439,7 @@ export const selectItemApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/select/ZSelectItem.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const selectTriggerApiFacts = {
@@ -2455,7 +2455,7 @@ export const selectTriggerApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/select/ZSelectTrigger.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const tabsApiFacts = {
@@ -2531,7 +2531,7 @@ export const tabsApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/tabs/ZTabs.svelte',
-	undocumentedProps: [],
+	metadataGapProps: [],
 	members: () => [tabsListApiFacts, tabsPanelApiFacts, tabsTriggerApiFacts]
 } as const satisfies ComponentApiFacts;
 
@@ -2553,7 +2553,7 @@ export const tabsListApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/tabs/ZTabsList.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const tabsPanelApiFacts = {
@@ -2579,7 +2579,7 @@ export const tabsPanelApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/tabs/ZTabsPanel.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const tabsTriggerApiFacts = {
@@ -2630,7 +2630,7 @@ export const tabsTriggerApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/tabs/ZTabsTrigger.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const tooltipApiFacts = {
@@ -2691,7 +2691,7 @@ export const tooltipApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/tooltip/ZTooltip.svelte',
-	undocumentedProps: [],
+	metadataGapProps: [],
 	members: () => [tooltipContentApiFacts, tooltipGroupApiFacts, tooltipTriggerApiFacts]
 } as const satisfies ComponentApiFacts;
 
@@ -2713,7 +2713,7 @@ export const tooltipContentApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/tooltip/ZTooltipContent.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const tooltipGroupApiFacts = {
@@ -2744,7 +2744,7 @@ export const tooltipGroupApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/tooltip/ZTooltipGroup.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const tooltipTriggerApiFacts = {
@@ -2780,7 +2780,7 @@ export const tooltipTriggerApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/tooltip/ZTooltipTrigger.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const treeApiFacts = {
@@ -2926,7 +2926,7 @@ export const treeApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/tree/ZTree.svelte',
-	undocumentedProps: [
+	metadataGapProps: [
 		'defaultExpandedKeys',
 		'defaultSelectedKeys',
 		'emptyText',
@@ -3028,7 +3028,7 @@ export const avatarApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZAvatar.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const badgeApiFacts = {
@@ -3104,7 +3104,7 @@ export const badgeApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZBadge.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const cardApiFacts = {
@@ -3160,7 +3160,7 @@ export const cardApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZCard.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const carouselApiFacts = {
@@ -3256,7 +3256,7 @@ export const carouselApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZCarousel.svelte',
-	undocumentedProps: [
+	metadataGapProps: [
 		'defaultValue',
 		'itemLabel',
 		'nextLabel',
@@ -3514,7 +3514,7 @@ export const dataTableApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZDataTable.svelte',
-	undocumentedProps: [
+	metadataGapProps: [
 		'defaultColumnVisibility',
 		'defaultColumnWidths',
 		'defaultExpandedKeys',
@@ -3591,7 +3591,7 @@ export const descriptionListApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZDescriptionList.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const emptyApiFacts = {
@@ -3637,7 +3637,7 @@ export const emptyApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZEmpty.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const listApiFacts = {
@@ -3703,7 +3703,7 @@ export const listApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZList.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const meterApiFacts = {
@@ -3759,7 +3759,7 @@ export const meterApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZMeter.svelte',
-	undocumentedProps: ['high', 'low', 'max', 'min', 'optimum']
+	metadataGapProps: ['high', 'low', 'max', 'min', 'optimum']
 } as const satisfies ComponentApiFacts;
 
 export const progressApiFacts = {
@@ -3815,7 +3815,7 @@ export const progressApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZProgress.svelte',
-	undocumentedProps: ['formatValue']
+	metadataGapProps: ['formatValue']
 } as const satisfies ComponentApiFacts;
 
 export const skeletonApiFacts = {
@@ -3856,7 +3856,7 @@ export const skeletonApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZSkeleton.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const statisticApiFacts = {
@@ -3937,7 +3937,7 @@ export const statisticApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZStatistic.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const tableApiFacts = {
@@ -4003,7 +4003,7 @@ export const tableApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZTable.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const tagApiFacts = {
@@ -4064,7 +4064,7 @@ export const tagApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZTag.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const timelineApiFacts = {
@@ -4130,7 +4130,7 @@ export const timelineApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZTimeline.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const virtualListApiFacts = {
@@ -4276,7 +4276,7 @@ export const virtualListApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZVirtualList.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const alertApiFacts = {
@@ -4337,7 +4337,7 @@ export const alertApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/feedback/ZAlert.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const loadingBarApiFacts = {
@@ -4398,7 +4398,7 @@ export const loadingBarApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/feedback/ZLoadingBar.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const resultApiFacts = {
@@ -4454,7 +4454,7 @@ export const resultApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/feedback/ZResult.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const spinnerApiFacts = {
@@ -4485,7 +4485,7 @@ export const spinnerApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/feedback/ZSpinner.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const toastApiFacts = {
@@ -4561,7 +4561,7 @@ export const toastApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/feedback/ZToast.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const toasterApiFacts = {
@@ -4597,7 +4597,7 @@ export const toasterApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/feedback/ZToaster.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const boxApiFacts = {
@@ -4618,7 +4618,7 @@ export const boxApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/gene/ZBox.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const buttonApiFacts = {
@@ -4669,7 +4669,7 @@ export const buttonApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/gene/ZButton.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const codeApiFacts = {
@@ -4765,7 +4765,7 @@ export const codeApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/gene/ZCode.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const headingApiFacts = {
@@ -4811,7 +4811,7 @@ export const headingApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/gene/ZHeading.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const iconApiFacts = {
@@ -4842,7 +4842,7 @@ export const iconApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/gene/ZIcon.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const kbdApiFacts = {
@@ -4863,7 +4863,7 @@ export const kbdApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/gene/ZKbd.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const linkApiFacts = {
@@ -4914,7 +4914,7 @@ export const linkApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/gene/ZLink.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const providerApiFacts = {
@@ -4995,7 +4995,7 @@ export const providerApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/gene/ZProvider.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const separatorApiFacts = {
@@ -5026,7 +5026,7 @@ export const separatorApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/gene/ZSeparator.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const textApiFacts = {
@@ -5092,7 +5092,7 @@ export const textApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/gene/ZText.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const toggleButtonApiFacts = {
@@ -5128,7 +5128,7 @@ export const toggleButtonApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/gene/ZToggleButton.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const visuallyHiddenApiFacts = {
@@ -5149,7 +5149,7 @@ export const visuallyHiddenApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/gene/ZVisuallyHidden.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const calendarApiFacts = {
@@ -5300,7 +5300,7 @@ export const calendarApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZCalendar.svelte',
-	undocumentedProps: [
+	metadataGapProps: [
 		'disabled',
 		'form',
 		'invalid',
@@ -5505,7 +5505,7 @@ export const cascaderApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZCascader.svelte',
-	undocumentedProps: [
+	metadataGapProps: [
 		'clearLabel',
 		'controlId',
 		'defaultOpen',
@@ -5583,7 +5583,7 @@ export const checkboxApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZCheckbox.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const colorPickerApiFacts = {
@@ -5729,7 +5729,7 @@ export const colorPickerApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZColorPicker.svelte',
-	undocumentedProps: [
+	metadataGapProps: [
 		'alphaLabel',
 		'clearLabel',
 		'colorInputLabel',
@@ -5860,7 +5860,7 @@ export const dateFieldApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZDateField.svelte',
-	undocumentedProps: [
+	metadataGapProps: [
 		'controlId',
 		'disabled',
 		'form',
@@ -6030,7 +6030,7 @@ export const datePickerApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZDatePicker.svelte',
-	undocumentedProps: [
+	metadataGapProps: [
 		'calendarLabel',
 		'clearLabel',
 		'defaultOpen',
@@ -6206,7 +6206,7 @@ export const dateRangePickerApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZDateRangePicker.svelte',
-	undocumentedProps: [
+	metadataGapProps: [
 		'calendarLabel',
 		'clearLabel',
 		'controlId',
@@ -6303,7 +6303,7 @@ export const fieldApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZField.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const fileUploadApiFacts = {
@@ -6464,7 +6464,7 @@ export const fileUploadApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZFileUpload.svelte',
-	undocumentedProps: [
+	metadataGapProps: [
 		'abortLabel',
 		'chooseLabel',
 		'controlId',
@@ -6616,7 +6616,7 @@ export const formApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZForm.svelte',
-	undocumentedProps: ['onReset', 'onSubmit']
+	metadataGapProps: ['onReset', 'onSubmit']
 } as const satisfies ComponentApiFacts;
 
 export const formFieldApiFacts = {
@@ -6662,7 +6662,7 @@ export const formFieldApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZFormField.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const inputApiFacts = {
@@ -6718,7 +6718,7 @@ export const inputApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZInput.svelte',
-	undocumentedProps: [],
+	metadataGapProps: [],
 	members: () => [
 		calendarApiFacts,
 		cascaderApiFacts,
@@ -6809,7 +6809,7 @@ export const inputGroupApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZInputGroup.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const mentionApiFacts = {
@@ -6935,7 +6935,7 @@ export const mentionApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZMention.svelte',
-	undocumentedProps: ['emptyText', 'filter', 'listLabel', 'loadingText', 'placement']
+	metadataGapProps: ['emptyText', 'filter', 'listLabel', 'loadingText', 'placement']
 } as const satisfies ComponentApiFacts;
 
 export const numberFieldApiFacts = {
@@ -7086,7 +7086,7 @@ export const numberFieldApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZNumberField.svelte',
-	undocumentedProps: [
+	metadataGapProps: [
 		'decrementLabel',
 		'disabled',
 		'form',
@@ -7197,7 +7197,7 @@ export const pinInputApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZPinInput.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const segmentedApiFacts = {
@@ -7283,7 +7283,7 @@ export const segmentedApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZSegmented.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const sliderApiFacts = {
@@ -7369,7 +7369,7 @@ export const sliderApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZSlider.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const switchApiFacts = {
@@ -7445,7 +7445,7 @@ export const switchApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZSwitch.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const tagsInputApiFacts = {
@@ -7601,7 +7601,7 @@ export const tagsInputApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZTagsInput.svelte',
-	undocumentedProps: [
+	metadataGapProps: [
 		'addLabel',
 		'controlId',
 		'editLabel',
@@ -7678,7 +7678,7 @@ export const textareaApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZTextarea.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const timeFieldApiFacts = {
@@ -7819,7 +7819,7 @@ export const timeFieldApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZTimeField.svelte',
-	undocumentedProps: [
+	metadataGapProps: [
 		'controlId',
 		'disabled',
 		'form',
@@ -7972,7 +7972,7 @@ export const transferApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZTransfer.svelte',
-	undocumentedProps: [
+	metadataGapProps: [
 		'emptyText',
 		'form',
 		'invalid',
@@ -8168,7 +8168,7 @@ export const treeSelectApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZTreeSelect.svelte',
-	undocumentedProps: [
+	metadataGapProps: [
 		'ariaLabel',
 		'clearLabel',
 		'controlId',
@@ -8209,7 +8209,7 @@ export const aspectRatioApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/layout/ZAspectRatio.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const containerApiFacts = {
@@ -8240,7 +8240,7 @@ export const containerApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/layout/ZContainer.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const stackApiFacts = {
@@ -8286,7 +8286,7 @@ export const stackApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/layout/ZStack.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const commandApiFacts = {
@@ -8392,7 +8392,7 @@ export const commandApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/navigation/ZCommand.svelte',
-	undocumentedProps: [
+	metadataGapProps: [
 		'autofocus',
 		'defaultQuery',
 		'emptyText',
@@ -8536,7 +8536,7 @@ export const commandPaletteApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/navigation/ZCommandPalette.svelte',
-	undocumentedProps: [
+	metadataGapProps: [
 		'closeLabel',
 		'defaultOpen',
 		'defaultQuery',
@@ -8634,7 +8634,7 @@ export const paginationApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/navigation/ZPagination.svelte',
-	undocumentedProps: []
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const tourApiFacts = {
@@ -8750,7 +8750,7 @@ export const tourApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/overlay/ZTour.svelte',
-	undocumentedProps: [
+	metadataGapProps: [
 		'closeLabel',
 		'closeOnEscape',
 		'closeOnMaskClick',

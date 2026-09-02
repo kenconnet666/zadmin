@@ -241,7 +241,7 @@ describe('ZUI component documentation catalog', () => {
 	it('rejects misspelled teaching and legacy metadata omissions', () => {
 		const dataTable = componentDocsById.get('data-table');
 		const teachingProps = Object.fromEntries(
-			dataTableApiFacts.undocumentedProps.map((name) => [name, { description: name }])
+			dataTableApiFacts.metadataGapProps.map((name) => [name, { description: name }])
 		);
 		const definition = {
 			accessibility: ['test'],

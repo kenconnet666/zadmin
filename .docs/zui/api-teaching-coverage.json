@@ -6,6 +6,8 @@
 			"source": "ui/zui/src/components/compound/accordion/ZAccordion.svelte",
 			"family": "accordion",
 			"declaredPropCount": 12,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -15,6 +17,8 @@
 			"source": "ui/zui/src/components/compound/accordion/ZAccordionContent.svelte",
 			"family": "accordion",
 			"declaredPropCount": 3,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -24,6 +28,8 @@
 			"source": "ui/zui/src/components/compound/accordion/ZAccordionItem.svelte",
 			"family": "accordion",
 			"declaredPropCount": 4,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -33,6 +39,8 @@
 			"source": "ui/zui/src/components/compound/accordion/ZAccordionTrigger.svelte",
 			"family": "accordion",
 			"declaredPropCount": 7,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -42,6 +50,8 @@
 			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialog.svelte",
 			"family": "alert-dialog",
 			"declaredPropCount": 6,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -51,6 +61,8 @@
 			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialogAction.svelte",
 			"family": "alert-dialog",
 			"declaredPropCount": 1,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -60,6 +72,8 @@
 			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialogCancel.svelte",
 			"family": "alert-dialog",
 			"declaredPropCount": 1,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -69,6 +83,8 @@
 			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialogContent.svelte",
 			"family": "alert-dialog",
 			"declaredPropCount": 0,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -78,6 +94,8 @@
 			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialogDescription.svelte",
 			"family": "alert-dialog",
 			"declaredPropCount": 0,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -87,6 +105,8 @@
 			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialogOverlay.svelte",
 			"family": "alert-dialog",
 			"declaredPropCount": 0,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -96,6 +116,8 @@
 			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialogTitle.svelte",
 			"family": "alert-dialog",
 			"declaredPropCount": 0,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -105,6 +127,8 @@
 			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialogTrigger.svelte",
 			"family": "alert-dialog",
 			"declaredPropCount": 0,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -114,8 +138,10 @@
 			"source": "ui/zui/src/components/compound/combobox/ZCombobox.svelte",
 			"family": "combobox",
 			"declaredPropCount": 27,
-			"fallbackPropCount": 6,
-			"fallbackPropNames": ["controlId", "form", "invalid", "name", "placement", "required"]
+			"metadataGapPropCount": 6,
+			"metadataGapPropNames": ["controlId", "form", "invalid", "name", "placement", "required"],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
 		},
 		{
 			"id": "combobox-content",
@@ -123,6 +149,8 @@
 			"source": "ui/zui/src/components/compound/combobox/ZComboboxContent.svelte",
 			"family": "combobox",
 			"declaredPropCount": 11,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -132,6 +160,8 @@
 			"source": "ui/zui/src/components/compound/combobox/ZComboboxInput.svelte",
 			"family": "combobox",
 			"declaredPropCount": 1,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -141,6 +171,8 @@
 			"source": "ui/zui/src/components/compound/combobox/ZComboboxItem.svelte",
 			"family": "combobox",
 			"declaredPropCount": 6,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -150,6 +182,8 @@
 			"source": "ui/zui/src/components/compound/context-menu/ZContextMenu.svelte",
 			"family": "context-menu",
 			"declaredPropCount": 6,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -159,6 +193,8 @@
 			"source": "ui/zui/src/components/compound/context-menu/ZContextMenuContent.svelte",
 			"family": "context-menu",
 			"declaredPropCount": 6,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -168,6 +204,8 @@
 			"source": "ui/zui/src/components/compound/context-menu/ZContextMenuTrigger.svelte",
 			"family": "context-menu",
 			"declaredPropCount": 2,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -177,6 +215,8 @@
 			"source": "ui/zui/src/components/compound/dialog/ZDialog.svelte",
 			"family": "dialog",
 			"declaredPropCount": 4,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -186,6 +226,8 @@
 			"source": "ui/zui/src/components/compound/dialog/ZDialogClose.svelte",
 			"family": "dialog",
 			"declaredPropCount": 1,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -195,6 +237,8 @@
 			"source": "ui/zui/src/components/compound/dialog/ZDialogContent.svelte",
 			"family": "dialog",
 			"declaredPropCount": 15,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -204,6 +248,8 @@
 			"source": "ui/zui/src/components/compound/dialog/ZDialogDescription.svelte",
 			"family": "dialog",
 			"declaredPropCount": 2,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -213,6 +259,8 @@
 			"source": "ui/zui/src/components/compound/dialog/ZDialogOverlay.svelte",
 			"family": "dialog",
 			"declaredPropCount": 1,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -222,6 +270,8 @@
 			"source": "ui/zui/src/components/compound/dialog/ZDialogTitle.svelte",
 			"family": "dialog",
 			"declaredPropCount": 2,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -231,6 +281,8 @@
 			"source": "ui/zui/src/components/compound/dialog/ZDialogTrigger.svelte",
 			"family": "dialog",
 			"declaredPropCount": 1,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -240,6 +292,8 @@
 			"source": "ui/zui/src/components/compound/drawer/ZDrawer.svelte",
 			"family": "drawer",
 			"declaredPropCount": 4,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -249,6 +303,8 @@
 			"source": "ui/zui/src/components/compound/drawer/ZDrawerClose.svelte",
 			"family": "drawer",
 			"declaredPropCount": 0,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -258,6 +314,8 @@
 			"source": "ui/zui/src/components/compound/drawer/ZDrawerContent.svelte",
 			"family": "drawer",
 			"declaredPropCount": 2,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -267,6 +325,8 @@
 			"source": "ui/zui/src/components/compound/drawer/ZDrawerDescription.svelte",
 			"family": "drawer",
 			"declaredPropCount": 0,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -276,6 +336,8 @@
 			"source": "ui/zui/src/components/compound/drawer/ZDrawerOverlay.svelte",
 			"family": "drawer",
 			"declaredPropCount": 0,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -285,6 +347,8 @@
 			"source": "ui/zui/src/components/compound/drawer/ZDrawerTitle.svelte",
 			"family": "drawer",
 			"declaredPropCount": 0,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -294,6 +358,8 @@
 			"source": "ui/zui/src/components/compound/drawer/ZDrawerTrigger.svelte",
 			"family": "drawer",
 			"declaredPropCount": 0,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -303,6 +369,8 @@
 			"source": "ui/zui/src/components/compound/dropdown-menu/ZDropdownMenu.svelte",
 			"family": "dropdown-menu",
 			"declaredPropCount": 6,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -312,6 +380,8 @@
 			"source": "ui/zui/src/components/compound/dropdown-menu/ZDropdownMenuContent.svelte",
 			"family": "dropdown-menu",
 			"declaredPropCount": 4,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -321,6 +391,8 @@
 			"source": "ui/zui/src/components/compound/dropdown-menu/ZDropdownMenuTrigger.svelte",
 			"family": "dropdown-menu",
 			"declaredPropCount": 0,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -330,6 +402,8 @@
 			"source": "ui/zui/src/components/compound/menu/ZMenu.svelte",
 			"family": "menu",
 			"declaredPropCount": 7,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -339,6 +413,8 @@
 			"source": "ui/zui/src/components/compound/menu/ZMenuCheckboxItem.svelte",
 			"family": "menu",
 			"declaredPropCount": 6,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -348,6 +424,8 @@
 			"source": "ui/zui/src/components/compound/menu/ZMenuGroup.svelte",
 			"family": "menu",
 			"declaredPropCount": 3,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -357,6 +435,8 @@
 			"source": "ui/zui/src/components/compound/menu/ZMenuItem.svelte",
 			"family": "menu",
 			"declaredPropCount": 17,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -366,6 +446,8 @@
 			"source": "ui/zui/src/components/compound/menu/ZMenuLabel.svelte",
 			"family": "menu",
 			"declaredPropCount": 2,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -375,6 +457,8 @@
 			"source": "ui/zui/src/components/compound/menu/ZMenuRadioGroup.svelte",
 			"family": "menu",
 			"declaredPropCount": 5,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -384,6 +468,8 @@
 			"source": "ui/zui/src/components/compound/menu/ZMenuRadioItem.svelte",
 			"family": "menu",
 			"declaredPropCount": 3,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -393,6 +479,8 @@
 			"source": "ui/zui/src/components/compound/menu/ZMenuSeparator.svelte",
 			"family": "menu",
 			"declaredPropCount": 1,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -402,6 +490,8 @@
 			"source": "ui/zui/src/components/compound/menu/ZMenuSub.svelte",
 			"family": "menu",
 			"declaredPropCount": 6,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -411,6 +501,8 @@
 			"source": "ui/zui/src/components/compound/menu/ZMenuSubContent.svelte",
 			"family": "menu",
 			"declaredPropCount": 6,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -420,6 +512,8 @@
 			"source": "ui/zui/src/components/compound/menu/ZMenuSubTrigger.svelte",
 			"family": "menu",
 			"declaredPropCount": 3,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -429,8 +523,10 @@
 			"source": "ui/zui/src/components/compound/multi-select/ZMultiSelect.svelte",
 			"family": "multi-select",
 			"declaredPropCount": 28,
-			"fallbackPropCount": 5,
-			"fallbackPropNames": ["controlId", "form", "invalid", "name", "required"]
+			"metadataGapPropCount": 5,
+			"metadataGapPropNames": ["controlId", "form", "invalid", "name", "required"],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
 		},
 		{
 			"id": "multi-select-content",
@@ -438,6 +534,8 @@
 			"source": "ui/zui/src/components/compound/multi-select/ZMultiSelectContent.svelte",
 			"family": "multi-select",
 			"declaredPropCount": 9,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -447,6 +545,8 @@
 			"source": "ui/zui/src/components/compound/multi-select/ZMultiSelectItem.svelte",
 			"family": "multi-select",
 			"declaredPropCount": 6,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -456,6 +556,8 @@
 			"source": "ui/zui/src/components/compound/multi-select/ZMultiSelectTrigger.svelte",
 			"family": "multi-select",
 			"declaredPropCount": 1,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -465,6 +567,8 @@
 			"source": "ui/zui/src/components/compound/popconfirm/ZPopconfirm.svelte",
 			"family": "popconfirm",
 			"declaredPropCount": 9,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -474,6 +578,8 @@
 			"source": "ui/zui/src/components/compound/popconfirm/ZPopconfirmAction.svelte",
 			"family": "popconfirm",
 			"declaredPropCount": 1,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -483,6 +589,8 @@
 			"source": "ui/zui/src/components/compound/popconfirm/ZPopconfirmCancel.svelte",
 			"family": "popconfirm",
 			"declaredPropCount": 1,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -492,6 +600,8 @@
 			"source": "ui/zui/src/components/compound/popconfirm/ZPopconfirmContent.svelte",
 			"family": "popconfirm",
 			"declaredPropCount": 0,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -501,6 +611,8 @@
 			"source": "ui/zui/src/components/compound/popconfirm/ZPopconfirmDescription.svelte",
 			"family": "popconfirm",
 			"declaredPropCount": 2,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -510,6 +622,8 @@
 			"source": "ui/zui/src/components/compound/popconfirm/ZPopconfirmTitle.svelte",
 			"family": "popconfirm",
 			"declaredPropCount": 2,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -519,6 +633,8 @@
 			"source": "ui/zui/src/components/compound/popconfirm/ZPopconfirmTrigger.svelte",
 			"family": "popconfirm",
 			"declaredPropCount": 0,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -528,6 +644,8 @@
 			"source": "ui/zui/src/components/compound/popover/ZPopover.svelte",
 			"family": "popover",
 			"declaredPropCount": 9,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -537,6 +655,8 @@
 			"source": "ui/zui/src/components/compound/popover/ZPopoverContent.svelte",
 			"family": "popover",
 			"declaredPropCount": 12,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -546,6 +666,8 @@
 			"source": "ui/zui/src/components/compound/popover/ZPopoverTrigger.svelte",
 			"family": "popover",
 			"declaredPropCount": 2,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -555,6 +677,8 @@
 			"source": "ui/zui/src/components/compound/radio-group/ZRadioGroup.svelte",
 			"family": "radio-group",
 			"declaredPropCount": 14,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -564,6 +688,8 @@
 			"source": "ui/zui/src/components/compound/radio-group/ZRadioGroupItem.svelte",
 			"family": "radio-group",
 			"declaredPropCount": 8,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -573,8 +699,10 @@
 			"source": "ui/zui/src/components/compound/select/ZSelect.svelte",
 			"family": "select",
 			"declaredPropCount": 22,
-			"fallbackPropCount": 5,
-			"fallbackPropNames": ["controlId", "form", "invalid", "name", "required"]
+			"metadataGapPropCount": 5,
+			"metadataGapPropNames": ["controlId", "form", "invalid", "name", "required"],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
 		},
 		{
 			"id": "select-content",
@@ -582,6 +710,8 @@
 			"source": "ui/zui/src/components/compound/select/ZSelectContent.svelte",
 			"family": "select",
 			"declaredPropCount": 9,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -591,6 +721,8 @@
 			"source": "ui/zui/src/components/compound/select/ZSelectItem.svelte",
 			"family": "select",
 			"declaredPropCount": 6,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -600,6 +732,8 @@
 			"source": "ui/zui/src/components/compound/select/ZSelectTrigger.svelte",
 			"family": "select",
 			"declaredPropCount": 1,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -609,6 +743,8 @@
 			"source": "ui/zui/src/components/compound/tabs/ZTabs.svelte",
 			"family": "tabs",
 			"declaredPropCount": 13,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -618,6 +754,8 @@
 			"source": "ui/zui/src/components/compound/tabs/ZTabsList.svelte",
 			"family": "tabs",
 			"declaredPropCount": 2,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -627,6 +765,8 @@
 			"source": "ui/zui/src/components/compound/tabs/ZTabsPanel.svelte",
 			"family": "tabs",
 			"declaredPropCount": 3,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -636,6 +776,8 @@
 			"source": "ui/zui/src/components/compound/tabs/ZTabsTrigger.svelte",
 			"family": "tabs",
 			"declaredPropCount": 8,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -645,6 +787,8 @@
 			"source": "ui/zui/src/components/compound/tooltip/ZTooltip.svelte",
 			"family": "tooltip",
 			"declaredPropCount": 10,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -654,6 +798,8 @@
 			"source": "ui/zui/src/components/compound/tooltip/ZTooltipContent.svelte",
 			"family": "tooltip",
 			"declaredPropCount": 2,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -663,6 +809,8 @@
 			"source": "ui/zui/src/components/compound/tooltip/ZTooltipGroup.svelte",
 			"family": "tooltip",
 			"declaredPropCount": 4,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -672,6 +820,8 @@
 			"source": "ui/zui/src/components/compound/tooltip/ZTooltipTrigger.svelte",
 			"family": "tooltip",
 			"declaredPropCount": 5,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -681,20 +831,24 @@
 			"source": "ui/zui/src/components/compound/tree/ZTree.svelte",
 			"family": "tree",
 			"declaredPropCount": 27,
-			"fallbackPropCount": 5,
-			"fallbackPropNames": [
+			"metadataGapPropCount": 5,
+			"metadataGapPropNames": [
 				"defaultExpandedKeys",
 				"defaultSelectedKeys",
 				"emptyText",
 				"form",
 				"onLoadError"
-			]
+			],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
 		},
 		{
 			"id": "avatar",
 			"name": "ZAvatar",
 			"source": "ui/zui/src/components/data-display/ZAvatar.svelte",
 			"declaredPropCount": 17,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -703,6 +857,8 @@
 			"name": "ZBadge",
 			"source": "ui/zui/src/components/data-display/ZBadge.svelte",
 			"declaredPropCount": 13,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -711,6 +867,8 @@
 			"name": "ZCard",
 			"source": "ui/zui/src/components/data-display/ZCard.svelte",
 			"declaredPropCount": 9,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -719,23 +877,25 @@
 			"name": "ZCarousel",
 			"source": "ui/zui/src/components/data-display/ZCarousel.svelte",
 			"declaredPropCount": 17,
-			"fallbackPropCount": 6,
-			"fallbackPropNames": [
+			"metadataGapPropCount": 6,
+			"metadataGapPropNames": [
 				"defaultValue",
 				"itemLabel",
 				"nextLabel",
 				"pauseLabel",
 				"playLabel",
 				"previousLabel"
-			]
+			],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
 		},
 		{
 			"id": "data-table",
 			"name": "ZDataTable",
 			"source": "ui/zui/src/components/data-display/ZDataTable.svelte",
 			"declaredPropCount": 48,
-			"fallbackPropCount": 22,
-			"fallbackPropNames": [
+			"metadataGapPropCount": 22,
+			"metadataGapPropNames": [
 				"defaultColumnVisibility",
 				"defaultColumnWidths",
 				"defaultExpandedKeys",
@@ -758,13 +918,17 @@
 				"ssrViewportSize",
 				"striped",
 				"totalRowCount"
-			]
+			],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
 		},
 		{
 			"id": "description-list",
 			"name": "ZDescriptionList",
 			"source": "ui/zui/src/components/data-display/ZDescriptionList.svelte",
 			"declaredPropCount": 8,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -773,6 +937,8 @@
 			"name": "ZEmpty",
 			"source": "ui/zui/src/components/data-display/ZEmpty.svelte",
 			"declaredPropCount": 7,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -781,6 +947,8 @@
 			"name": "ZList",
 			"source": "ui/zui/src/components/data-display/ZList.svelte",
 			"declaredPropCount": 11,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -789,22 +957,28 @@
 			"name": "ZMeter",
 			"source": "ui/zui/src/components/data-display/ZMeter.svelte",
 			"declaredPropCount": 9,
-			"fallbackPropCount": 5,
-			"fallbackPropNames": ["high", "low", "max", "min", "optimum"]
+			"metadataGapPropCount": 5,
+			"metadataGapPropNames": ["high", "low", "max", "min", "optimum"],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
 		},
 		{
 			"id": "progress",
 			"name": "ZProgress",
 			"source": "ui/zui/src/components/data-display/ZProgress.svelte",
 			"declaredPropCount": 9,
-			"fallbackPropCount": 1,
-			"fallbackPropNames": ["formatValue"]
+			"metadataGapPropCount": 1,
+			"metadataGapPropNames": ["formatValue"],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
 		},
 		{
 			"id": "skeleton",
 			"name": "ZSkeleton",
 			"source": "ui/zui/src/components/data-display/ZSkeleton.svelte",
 			"declaredPropCount": 6,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -813,6 +987,8 @@
 			"name": "ZStatistic",
 			"source": "ui/zui/src/components/data-display/ZStatistic.svelte",
 			"declaredPropCount": 14,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -821,6 +997,8 @@
 			"name": "ZTable",
 			"source": "ui/zui/src/components/data-display/ZTable.svelte",
 			"declaredPropCount": 11,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -829,6 +1007,8 @@
 			"name": "ZTag",
 			"source": "ui/zui/src/components/data-display/ZTag.svelte",
 			"declaredPropCount": 10,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -837,6 +1017,8 @@
 			"name": "ZTimeline",
 			"source": "ui/zui/src/components/data-display/ZTimeline.svelte",
 			"declaredPropCount": 11,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -845,6 +1027,8 @@
 			"name": "ZVirtualList",
 			"source": "ui/zui/src/components/data-display/ZVirtualList.svelte",
 			"declaredPropCount": 27,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -853,6 +1037,8 @@
 			"name": "ZAlert",
 			"source": "ui/zui/src/components/feedback/ZAlert.svelte",
 			"declaredPropCount": 10,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -861,6 +1047,8 @@
 			"name": "ZLoadingBar",
 			"source": "ui/zui/src/components/feedback/ZLoadingBar.svelte",
 			"declaredPropCount": 10,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -869,6 +1057,8 @@
 			"name": "ZResult",
 			"source": "ui/zui/src/components/feedback/ZResult.svelte",
 			"declaredPropCount": 9,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -877,6 +1067,8 @@
 			"name": "ZSpinner",
 			"source": "ui/zui/src/components/feedback/ZSpinner.svelte",
 			"declaredPropCount": 4,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -885,6 +1077,8 @@
 			"name": "ZToast",
 			"source": "ui/zui/src/components/feedback/ZToast.svelte",
 			"declaredPropCount": 13,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -893,6 +1087,8 @@
 			"name": "ZToaster",
 			"source": "ui/zui/src/components/feedback/ZToaster.svelte",
 			"declaredPropCount": 5,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -901,6 +1097,8 @@
 			"name": "ZBox",
 			"source": "ui/zui/src/components/gene/ZBox.svelte",
 			"declaredPropCount": 2,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -909,6 +1107,8 @@
 			"name": "ZButton",
 			"source": "ui/zui/src/components/gene/ZButton.svelte",
 			"declaredPropCount": 8,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -917,6 +1117,8 @@
 			"name": "ZCode",
 			"source": "ui/zui/src/components/gene/ZCode.svelte",
 			"declaredPropCount": 17,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -925,6 +1127,8 @@
 			"name": "ZHeading",
 			"source": "ui/zui/src/components/gene/ZHeading.svelte",
 			"declaredPropCount": 7,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -933,6 +1137,8 @@
 			"name": "ZIcon",
 			"source": "ui/zui/src/components/gene/ZIcon.svelte",
 			"declaredPropCount": 4,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -941,6 +1147,8 @@
 			"name": "ZKbd",
 			"source": "ui/zui/src/components/gene/ZKbd.svelte",
 			"declaredPropCount": 2,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -949,6 +1157,8 @@
 			"name": "ZLink",
 			"source": "ui/zui/src/components/gene/ZLink.svelte",
 			"declaredPropCount": 8,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -957,6 +1167,8 @@
 			"name": "ZProvider",
 			"source": "ui/zui/src/components/gene/ZProvider.svelte",
 			"declaredPropCount": 14,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -965,6 +1177,8 @@
 			"name": "ZSeparator",
 			"source": "ui/zui/src/components/gene/ZSeparator.svelte",
 			"declaredPropCount": 4,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -973,6 +1187,8 @@
 			"name": "ZText",
 			"source": "ui/zui/src/components/gene/ZText.svelte",
 			"declaredPropCount": 11,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -981,6 +1197,8 @@
 			"name": "ZToggleButton",
 			"source": "ui/zui/src/components/gene/ZToggleButton.svelte",
 			"declaredPropCount": 5,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -989,6 +1207,8 @@
 			"name": "ZVisuallyHidden",
 			"source": "ui/zui/src/components/gene/ZVisuallyHidden.svelte",
 			"declaredPropCount": 2,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -997,8 +1217,8 @@
 			"name": "ZCalendar",
 			"source": "ui/zui/src/components/input/ZCalendar.svelte",
 			"declaredPropCount": 28,
-			"fallbackPropCount": 8,
-			"fallbackPropNames": [
+			"metadataGapPropCount": 8,
+			"metadataGapPropNames": [
 				"disabled",
 				"form",
 				"invalid",
@@ -1007,15 +1227,17 @@
 				"range",
 				"readonly",
 				"required"
-			]
+			],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
 		},
 		{
 			"id": "cascader",
 			"name": "ZCascader",
 			"source": "ui/zui/src/components/input/ZCascader.svelte",
 			"declaredPropCount": 37,
-			"fallbackPropCount": 16,
-			"fallbackPropNames": [
+			"metadataGapPropCount": 16,
+			"metadataGapPropNames": [
 				"clearLabel",
 				"controlId",
 				"defaultOpen",
@@ -1032,13 +1254,17 @@
 				"required",
 				"searchPlaceholder",
 				"size"
-			]
+			],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
 		},
 		{
 			"id": "checkbox",
 			"name": "ZCheckbox",
 			"source": "ui/zui/src/components/input/ZCheckbox.svelte",
 			"declaredPropCount": 10,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -1047,8 +1273,8 @@
 			"name": "ZColorPicker",
 			"source": "ui/zui/src/components/input/ZColorPicker.svelte",
 			"declaredPropCount": 27,
-			"fallbackPropCount": 14,
-			"fallbackPropNames": [
+			"metadataGapPropCount": 14,
+			"metadataGapPropNames": [
 				"alphaLabel",
 				"clearLabel",
 				"colorInputLabel",
@@ -1063,15 +1289,17 @@
 				"placeholder",
 				"required",
 				"triggerLabel"
-			]
+			],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
 		},
 		{
 			"id": "date-field",
 			"name": "ZDateField",
 			"source": "ui/zui/src/components/input/ZDateField.svelte",
 			"declaredPropCount": 21,
-			"fallbackPropCount": 8,
-			"fallbackPropNames": [
+			"metadataGapPropCount": 8,
+			"metadataGapPropNames": [
 				"controlId",
 				"disabled",
 				"form",
@@ -1080,15 +1308,17 @@
 				"onReset",
 				"readonly",
 				"required"
-			]
+			],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
 		},
 		{
 			"id": "date-picker",
 			"name": "ZDatePicker",
 			"source": "ui/zui/src/components/input/ZDatePicker.svelte",
 			"declaredPropCount": 30,
-			"fallbackPropCount": 19,
-			"fallbackPropNames": [
+			"metadataGapPropCount": 19,
+			"metadataGapPropNames": [
 				"calendarLabel",
 				"clearLabel",
 				"defaultOpen",
@@ -1108,15 +1338,17 @@
 				"showOutsideDates",
 				"timeZone",
 				"triggerLabel"
-			]
+			],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
 		},
 		{
 			"id": "date-range-picker",
 			"name": "ZDateRangePicker",
 			"source": "ui/zui/src/components/input/ZDateRangePicker.svelte",
 			"declaredPropCount": 29,
-			"fallbackPropCount": 20,
-			"fallbackPropNames": [
+			"metadataGapPropCount": 20,
+			"metadataGapPropNames": [
 				"calendarLabel",
 				"clearLabel",
 				"controlId",
@@ -1137,13 +1369,17 @@
 				"showOutsideDates",
 				"startLabel",
 				"timeZone"
-			]
+			],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
 		},
 		{
 			"id": "field",
 			"name": "ZField",
 			"source": "ui/zui/src/components/input/ZField.svelte",
 			"declaredPropCount": 13,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -1152,8 +1388,8 @@
 			"name": "ZFileUpload",
 			"source": "ui/zui/src/components/input/ZFileUpload.svelte",
 			"declaredPropCount": 30,
-			"fallbackPropCount": 15,
-			"fallbackPropNames": [
+			"metadataGapPropCount": 15,
+			"metadataGapPropNames": [
 				"abortLabel",
 				"chooseLabel",
 				"controlId",
@@ -1169,21 +1405,27 @@
 				"required",
 				"retryLabel",
 				"uploadLabel"
-			]
+			],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
 		},
 		{
 			"id": "form",
 			"name": "ZForm",
 			"source": "ui/zui/src/components/input/ZForm.svelte",
 			"declaredPropCount": 25,
-			"fallbackPropCount": 2,
-			"fallbackPropNames": ["onReset", "onSubmit"]
+			"metadataGapPropCount": 2,
+			"metadataGapPropNames": ["onReset", "onSubmit"],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
 		},
 		{
 			"id": "form-field",
 			"name": "ZFormField",
 			"source": "ui/zui/src/components/input/ZFormField.svelte",
 			"declaredPropCount": 7,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -1192,6 +1434,8 @@
 			"name": "ZInput",
 			"source": "ui/zui/src/components/input/ZInput.svelte",
 			"declaredPropCount": 9,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -1200,6 +1444,8 @@
 			"name": "ZInputGroup",
 			"source": "ui/zui/src/components/input/ZInputGroup.svelte",
 			"declaredPropCount": 11,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -1208,16 +1454,18 @@
 			"name": "ZMention",
 			"source": "ui/zui/src/components/input/ZMention.svelte",
 			"declaredPropCount": 23,
-			"fallbackPropCount": 5,
-			"fallbackPropNames": ["emptyText", "filter", "listLabel", "loadingText", "placement"]
+			"metadataGapPropCount": 5,
+			"metadataGapPropNames": ["emptyText", "filter", "listLabel", "loadingText", "placement"],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
 		},
 		{
 			"id": "number-field",
 			"name": "ZNumberField",
 			"source": "ui/zui/src/components/input/ZNumberField.svelte",
 			"declaredPropCount": 28,
-			"fallbackPropCount": 9,
-			"fallbackPropNames": [
+			"metadataGapPropCount": 9,
+			"metadataGapPropNames": [
 				"decrementLabel",
 				"disabled",
 				"form",
@@ -1227,13 +1475,17 @@
 				"placeholder",
 				"readonly",
 				"required"
-			]
+			],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
 		},
 		{
 			"id": "pin-input",
 			"name": "ZPinInput",
 			"source": "ui/zui/src/components/input/ZPinInput.svelte",
 			"declaredPropCount": 18,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -1242,6 +1494,8 @@
 			"name": "ZSegmented",
 			"source": "ui/zui/src/components/input/ZSegmented.svelte",
 			"declaredPropCount": 15,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -1250,6 +1504,8 @@
 			"name": "ZSlider",
 			"source": "ui/zui/src/components/input/ZSlider.svelte",
 			"declaredPropCount": 15,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -1258,6 +1514,8 @@
 			"name": "ZSwitch",
 			"source": "ui/zui/src/components/input/ZSwitch.svelte",
 			"declaredPropCount": 13,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -1266,8 +1524,8 @@
 			"name": "ZTagsInput",
 			"source": "ui/zui/src/components/input/ZTagsInput.svelte",
 			"declaredPropCount": 29,
-			"fallbackPropCount": 10,
-			"fallbackPropNames": [
+			"metadataGapPropCount": 10,
+			"metadataGapPropNames": [
 				"addLabel",
 				"controlId",
 				"editLabel",
@@ -1278,13 +1536,17 @@
 				"removeLabel",
 				"required",
 				"size"
-			]
+			],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
 		},
 		{
 			"id": "textarea",
 			"name": "ZTextarea",
 			"source": "ui/zui/src/components/input/ZTextarea.svelte",
 			"declaredPropCount": 11,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -1293,8 +1555,8 @@
 			"name": "ZTimeField",
 			"source": "ui/zui/src/components/input/ZTimeField.svelte",
 			"declaredPropCount": 26,
-			"fallbackPropCount": 11,
-			"fallbackPropNames": [
+			"metadataGapPropCount": 11,
+			"metadataGapPropNames": [
 				"controlId",
 				"disabled",
 				"form",
@@ -1306,15 +1568,17 @@
 				"onReset",
 				"readonly",
 				"required"
-			]
+			],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
 		},
 		{
 			"id": "transfer",
 			"name": "ZTransfer",
 			"source": "ui/zui/src/components/input/ZTransfer.svelte",
 			"declaredPropCount": 26,
-			"fallbackPropCount": 9,
-			"fallbackPropNames": [
+			"metadataGapPropCount": 9,
+			"metadataGapPropNames": [
 				"emptyText",
 				"form",
 				"invalid",
@@ -1324,15 +1588,17 @@
 				"searchPlaceholder",
 				"sourceTitle",
 				"targetTitle"
-			]
+			],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
 		},
 		{
 			"id": "tree-select",
 			"name": "ZTreeSelect",
 			"source": "ui/zui/src/components/input/ZTreeSelect.svelte",
 			"declaredPropCount": 35,
-			"fallbackPropCount": 14,
-			"fallbackPropNames": [
+			"metadataGapPropCount": 14,
+			"metadataGapPropNames": [
 				"ariaLabel",
 				"clearLabel",
 				"controlId",
@@ -1347,13 +1613,17 @@
 				"placeholder",
 				"treeLabel",
 				"valueLabel"
-			]
+			],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
 		},
 		{
 			"id": "aspect-ratio",
 			"name": "ZAspectRatio",
 			"source": "ui/zui/src/components/layout/ZAspectRatio.svelte",
 			"declaredPropCount": 3,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -1362,6 +1632,8 @@
 			"name": "ZContainer",
 			"source": "ui/zui/src/components/layout/ZContainer.svelte",
 			"declaredPropCount": 4,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -1370,6 +1642,8 @@
 			"name": "ZStack",
 			"source": "ui/zui/src/components/layout/ZStack.svelte",
 			"declaredPropCount": 7,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -1378,8 +1652,8 @@
 			"name": "ZCommand",
 			"source": "ui/zui/src/components/navigation/ZCommand.svelte",
 			"declaredPropCount": 19,
-			"fallbackPropCount": 7,
-			"fallbackPropNames": [
+			"metadataGapPropCount": 7,
+			"metadataGapPropNames": [
 				"autofocus",
 				"defaultQuery",
 				"emptyText",
@@ -1387,15 +1661,17 @@
 				"inputLabel",
 				"listLabel",
 				"placeholder"
-			]
+			],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
 		},
 		{
 			"id": "command-palette",
 			"name": "ZCommandPalette",
 			"source": "ui/zui/src/components/navigation/ZCommandPalette.svelte",
 			"declaredPropCount": 25,
-			"fallbackPropCount": 11,
-			"fallbackPropNames": [
+			"metadataGapPropCount": 11,
+			"metadataGapPropNames": [
 				"closeLabel",
 				"defaultOpen",
 				"defaultQuery",
@@ -1407,13 +1683,17 @@
 				"placeholder",
 				"title",
 				"triggerLabel"
-			]
+			],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
 		},
 		{
 			"id": "pagination",
 			"name": "ZPagination",
 			"source": "ui/zui/src/components/navigation/ZPagination.svelte",
 			"declaredPropCount": 15,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -1422,8 +1702,8 @@
 			"name": "ZTour",
 			"source": "ui/zui/src/components/overlay/ZTour.svelte",
 			"declaredPropCount": 21,
-			"fallbackPropCount": 10,
-			"fallbackPropNames": [
+			"metadataGapPropCount": 10,
+			"metadataGapPropNames": [
 				"closeLabel",
 				"closeOnEscape",
 				"closeOnMaskClick",
@@ -1434,12 +1714,15 @@
 				"previousLabel",
 				"scrollIntoViewOptions",
 				"spotlightOffset"
-			]
+			],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
 		}
 	],
 	"totals": {
 		"components": 141,
 		"declaredProps": 1382,
-		"fallbackProps": 243
+		"metadataGapProps": 243,
+		"fallbackProps": 0
 	}
 }

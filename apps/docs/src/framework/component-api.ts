@@ -11,7 +11,7 @@ export interface ComponentApiFacts {
 	readonly name: `Z${string}`;
 	readonly props: readonly ComponentApiPropFact[];
 	readonly source: `ui/zui/src/components/${string}.svelte`;
-	readonly undocumentedProps: readonly string[];
+	readonly metadataGapProps: readonly string[];
 	readonly members?: () => readonly ComponentApiFacts[];
 }
 

@@ -267,7 +267,7 @@ function componentFacts(source, filename) {
 			metadataItemNames(metadata, section)
 		)
 	);
-	const undocumentedProps = [...context.props.keys()].filter(
+	const metadataGapProps = [...context.props.keys()].filter(
 		(name) =>
 			!documentedProps.has(name) && name !== 'class' && name !== 'style' && !/^on[a-z]/u.test(name)
 	);
@@ -278,7 +278,7 @@ function componentFacts(source, filename) {
 		name,
 		props: [...context.props.values()],
 		source: sourcePath,
-		undocumentedProps
+		metadataGapProps
 	};
 }
 
@@ -295,19 +295,103 @@ for (const path of await filesUnder(componentsRoot, '.svelte')) {
 	if (facts[component.id]) throw new Error(`Duplicate component API id ${component.id}.`);
 	facts[component.id] = component;
 }
-
+function parseDocTeaching(source, filename) {
+	const file = ts.createSourceFile(filename, source, ts.ScriptTarget.Latest, true);
+	let result;
+	function visit(node) {
+		if (
+			ts.isCallExpression(node) &&
+			ts.isIdentifier(node.expression) &&
+			node.expression.text === 'defineComponentDoc' &&
+			node.arguments.length >= 2 &&
+			ts.isObjectLiteralExpression(node.arguments[1])
+		) {
+			const properties = node.arguments[1].properties;
+			const sourceApi = properties.find(
+				(property) =>
+					ts.isPropertyAssignment(property) &&
+					ts.isIdentifier(property.name) &&
+					property.name.text === 'sourceApi'
+			);
+			const teaching = properties.find(
+				(property) =>
+					ts.isPropertyAssignment(property) &&
+					ts.isIdentifier(property.name) &&
+					property.name.text === 'teaching'
+			);
+			const teachingProps = [];
+			if (teaching && ts.isObjectLiteralExpression(teaching.initializer)) {
+				const props = teaching.initializer.properties.find(
+					(property) =>
+						ts.isPropertyAssignment(property) &&
+						ts.isIdentifier(property.name) &&
+						property.name.text === 'props'
+				);
+				if (props && ts.isObjectLiteralExpression(props.initializer)) {
+					for (const property of props.initializer.properties) {
+						if (ts.isPropertyAssignment(property) && property.name) {
+							teachingProps.push(property.name.getText(file).replace(/^['"]|['"]$/gu, ''));
+						}
+					}
+				}
+			}
+			result = {
+				sourceApi:
+					sourceApi && ts.isIdentifier(sourceApi.initializer)
+						? sourceApi.initializer.text
+						: undefined,
+				teachingProps
+			};
+		}
+		ts.forEachChild(node, visit);
+	}
+	visit(file);
+	return result;
+}
+const docsFiles = await filesUnder(resolve(docsRoot, 'src/content/components'), '.ts');
+const teachingByFact = new Map();
+for (const path of docsFiles) {
+	const parsed = parseDocTeaching(
+		await readFile(path, 'utf8'),
+		portable(relative(workspaceRoot, path))
+	);
+	if (!parsed?.sourceApi) continue;
+	const id = Object.keys(facts).find((candidate) => factExportName(candidate) === parsed.sourceApi);
+	if (id) teachingByFact.set(id, new Set(parsed.teachingProps));
+}
+if (process.argv.includes('--self-test')) {
+	const dataTableTeaching = teachingByFact.get('data-table');
+	if (!dataTableTeaching || dataTableTeaching.size < 22)
+		throw new Error('Teaching AST self-test expected DataTable teaching props.');
+	const dataTableFact = facts['data-table'];
+	if (dataTableFact?.metadataGapProps.length !== 22)
+		throw new Error('Teaching AST self-test expected DataTable metadata gap count 22.');
+	const nested = parseDocTeaching(
+		`defineComponentDoc(meta, { demos: [{ teaching: { props: { fake: {} } } }] })`,
+		'nested.ts'
+	);
+	if (nested?.teachingProps.length !== 0)
+		throw new Error('Teaching AST self-test misread nested demo props.');
+	console.log('Teaching AST self-test passed.');
+	process.exit(0);
+}
 const teachingCoverage = Object.values(facts).map((fact) => {
 	const sourceDirectory = fact.source.slice(0, fact.source.lastIndexOf('/'));
 	const directoryName = sourceDirectory.slice(sourceDirectory.lastIndexOf('/') + 1);
 	const family = sourceDirectory.includes('/components/compound/') ? directoryName : undefined;
+	const metadataGapPropNames = fact.metadataGapProps;
+	const teachingProps = teachingByFact.get(fact.id) ?? new Set();
+	const fallbackPropNames = metadataGapPropNames.filter((name) => !teachingProps.has(name));
 	return {
 		id: fact.id,
 		name: fact.name,
 		source: fact.source,
 		family,
 		declaredPropCount: fact.props.length,
-		fallbackPropCount: fact.undocumentedProps.length,
-		fallbackPropNames: fact.undocumentedProps
+		metadataGapPropCount: metadataGapPropNames.length,
+		metadataGapPropNames,
+		fallbackPropCount: fallbackPropNames.length,
+		fallbackPropNames
 	};
 });
 const teachingCoverageOutput = {
@@ -315,6 +399,7 @@ const teachingCoverageOutput = {
 	totals: {
 		components: teachingCoverage.length,
 		declaredProps: teachingCoverage.reduce((sum, item) => sum + item.declaredPropCount, 0),
+		metadataGapProps: teachingCoverage.reduce((sum, item) => sum + item.metadataGapPropCount, 0),
 		fallbackProps: teachingCoverage.reduce((sum, item) => sum + item.fallbackPropCount, 0)
 	}
 };
@@ -322,19 +407,21 @@ const teachingCoverageJson = JSON.stringify(teachingCoverageOutput, null, '\t');
 const topFallback = [...teachingCoverage]
 	.sort(
 		(left, right) =>
-			right.fallbackPropCount - left.fallbackPropCount || left.id.localeCompare(right.id)
+			right.fallbackPropCount - left.fallbackPropCount ||
+			right.metadataGapPropCount - left.metadataGapPropCount ||
+			left.id.localeCompare(right.id)
 	)
 	.slice(0, 20);
 const teachingCoverageMarkdownSource = [
 	'# API teaching coverage',
 	'',
-	`Generated from ${teachingCoverageOutput.totals.components} components and ${teachingCoverageOutput.totals.declaredProps} declared props. ${teachingCoverageOutput.totals.fallbackProps} props use generated fallback documentation until teaching metadata overrides them.`,
+	`Generated from ${teachingCoverageOutput.totals.components} components and ${teachingCoverageOutput.totals.declaredProps} declared props. ${teachingCoverageOutput.totals.metadataGapProps} metadata gaps remain; ${teachingCoverageOutput.totals.fallbackProps} remain true fallbacks after teaching overrides.`,
 	'',
-	'| Component | Family | Declared props | Fallback props | Fallback names | Source |',
-	'|---|---|---:|---:|---|---|',
+	'| Component | Family | Declared props | Metadata gaps | True fallback props | Fallback names | Source |',
+	'|---|---|---:|---:|---:|---|---|',
 	...topFallback.map(
 		(item) =>
-			`| ${item.name} | ${item.family ?? '—'} | ${item.declaredPropCount} | ${item.fallbackPropCount} | ${item.fallbackPropNames.join(', ') || '—'} | ${item.source} |`
+			`| ${item.name} | ${item.family ?? '—'} | ${item.declaredPropCount} | ${item.metadataGapPropCount} | ${item.fallbackPropCount} | ${item.fallbackPropNames.join(', ') || '—'} | ${item.source} |`
 	),
 	''
 ].join('\n');
@@ -401,11 +488,11 @@ if (write) {
 			`API teaching coverage artifacts are missing or stale: ${staleCoverage.join(', ')}. Run pnpm --filter @zadmin/docs api:source:update.`
 		);
 	}
-	const undocumentedProps = Object.values(facts).reduce(
-		(total, fact) => total + fact.undocumentedProps.length,
+	const metadataGapProps = Object.values(facts).reduce(
+		(total, fact) => total + fact.metadataGapProps.length,
 		0
 	);
 	console.log(
-		`Component API facts verified (${Object.keys(facts).length} components; ${undocumentedProps} declared props use generated fallback documentation until teaching metadata overrides them).`
+		`Component API facts verified (${Object.keys(facts).length} components; ${metadataGapProps} metadata gaps; ${teachingCoverageOutput.totals.fallbackProps} true fallbacks after teaching overrides).`
 	);
 }
