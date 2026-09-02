@@ -2,6 +2,8 @@
 
 状态：P0–P2已由[ZUI基础设施、已有组件与Docs加固蓝图](./foundation-hardening-blueprint.md)H0–H5吸收完成；P3–P8保留为中期候选映射。自2026-08-30起，实际实施阶段统一以[完整组件系统总蓝图](./system-blueprint.md)S0–S8为准。
 
+当前完成度与下一优先级不在本蓝图手工计数，统一读取[生成式生产进展](./progress.md)、[组件成熟度矩阵](./component-maturity.md)和[稳定性候选](./stability-candidates.md)。
+
 ## 1. 范围与决策
 
 本蓝图承接已经完成的8个ZUI基础组件和ICSS runtime/compiler。下一阶段继续由ZUI自行拥有DOM、状态机、键盘、ARIA、Portal、表单桥接、集合、选择和虚拟化，不包装第三方组件、headless组件或表格引擎。

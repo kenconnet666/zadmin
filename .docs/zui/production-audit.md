@@ -1,6 +1,6 @@
 # ZUI与文档站生产审计
 
-状态：无人值守实施换机交接点；141项API合同、400个Demo、106个E2E引用与系统审计已刷新；上一批Chrome定向验收完成，最新Dialog/AlertDialog/Popover、PinInput/InputGroup、Tag/Table与补充文档只完成WebStorm/静态合同，真实浏览器和完整矩阵留给新电脑与CI（2026-09-02）
+状态：本文件保留生产审计方法、历史发现和架构决策；会变化的组件数量、stable状态、成熟度、Docs路由、浏览器支持与发布blocker统一以[生成式生产进展](./progress.md)为准，不再在本文件手工维护快照数字。
 
 ## 1. 审计范围
 
