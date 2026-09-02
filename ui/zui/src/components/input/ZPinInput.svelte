@@ -175,7 +175,7 @@
 			{ description: '遮罩显示。', name: 'data-mask', values: ['true'] },
 			{ description: '解析尺寸。', name: 'data-size', values: ['small', 'medium', 'large'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'以单一nullable字符串和FormValueBridge拥有OTP/PIN值，支持Unicode grapheme、IME、粘贴/autofill、动态length、Field焦点与受控清空。'
 	} as const satisfies ZuiComponentMetadata;

@@ -137,7 +137,7 @@
 			},
 			{ description: '加载状态。', name: 'data-loading', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'以dl/data提供SSR稳定、locale/precision/formatter可控、支持affix、tone、文字趋势和Skeleton loading的静态指标。'
 	} as const satisfies ZuiComponentMetadata;

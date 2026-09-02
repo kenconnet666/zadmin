@@ -2,7 +2,7 @@
 
 本文件由 `scripts/check-stability-policy.mjs` 生成；不会修改组件 status。compound member 可继承同 family root 的 Docs 页面。
 
-stableCompliant：25；stableViolations：0；promotionEligibleExperimental：3。
+stableCompliant：27；stableViolations：0；promotionEligibleExperimental：4。
 
 | Component               | Status       | Classification                | Blockers                                   | Docs                                                                           | SSR |
 | ----------------------- | ------------ | ----------------------------- | ------------------------------------------ | ------------------------------------------------------------------------------ | --: |
@@ -93,7 +93,7 @@ stableCompliant：25；stableViolations：0；promotionEligibleExperimental：3�
 | ZMeter                  | experimental | experimental                  | VisuallyVerified, ProductionVerified       | apps/docs/src/content/components/data-display/meter/doc.ts                     |   2 |
 | ZProgress               | experimental | experimental                  | VisuallyVerified, ProductionVerified       | apps/docs/src/content/components/data-display/progress/doc.ts                  |   2 |
 | ZSkeleton               | experimental | experimental                  | VisuallyVerified, ProductionVerified       | apps/docs/src/content/components/data-display/skeleton/doc.ts                  |   2 |
-| ZStatistic              | experimental | experimental                  | VisuallyVerified                           | apps/docs/src/content/components/data-display/statistic/doc.ts                 |   2 |
+| ZStatistic              | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/data-display/statistic/doc.ts                 |   2 |
 | ZTable                  | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/data-display/table/doc.ts                     |   2 |
 | ZTag                    | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/data-display/tag/doc.ts                       |   2 |
 | ZTimeline               | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/data-display/timeline/doc.ts                  |   2 |
@@ -128,10 +128,10 @@ stableCompliant：25；stableViolations：0；promotionEligibleExperimental：3�
 | ZForm                   | experimental | experimental                  | ProductionVerified                         | apps/docs/src/content/components/input/form/doc.ts                             |   1 |
 | ZFormField              | experimental | experimental                  | ProductionVerified, Docs                   | —                                                                              |   1 |
 | ZInput                  | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/input/input/doc.ts                            |   2 |
-| ZInputGroup             | experimental | experimental                  | VisuallyVerified, ProductionVerified       | apps/docs/src/content/components/input/input-group/doc.ts                      |   2 |
+| ZInputGroup             | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/input/input-group/doc.ts                      |   2 |
 | ZMention                | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/input/mention/doc.ts                          |   1 |
 | ZNumberField            | experimental | experimental                  | VisuallyVerified, ProductionVerified       | apps/docs/src/content/components/input/number-field/doc.ts                     |   1 |
-| ZPinInput               | experimental | experimental                  | VisuallyVerified                           | apps/docs/src/content/components/input/pin-input/doc.ts                        |   2 |
+| ZPinInput               | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/input/pin-input/doc.ts                        |   2 |
 | ZSegmented              | experimental | experimental                  | VisuallyVerified, ProductionVerified       | apps/docs/src/content/components/input/segmented/doc.ts                        |   1 |
 | ZSlider                 | experimental | experimental                  | VisuallyVerified, ProductionVerified       | apps/docs/src/content/components/input/slider/doc.ts                           |   1 |
 | ZSwitch                 | experimental | experimental                  | ProductionVerified                         | apps/docs/src/content/components/input/switch/doc.ts                           |   2 |

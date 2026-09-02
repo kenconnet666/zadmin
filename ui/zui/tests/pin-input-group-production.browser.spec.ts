@@ -6,7 +6,7 @@ import InputGroupMultipleFixture from './InputGroupMultipleFixture.svelte';
 import InputGroupNestedFixture from './InputGroupNestedFixture.svelte';
 import PinInputGroupProductionFixture from './PinInputGroupProductionFixture.svelte';
 
-describe('PinInput and InputGroup production browser contracts', () => {
+describe('ZPinInput and ZInputGroup production browser contracts', () => {
 	it('projects Field ownership to exactly one grouped control and keeps actions independent', async () => {
 		render(PinInputGroupProductionFixture);
 		const group = document.querySelector<HTMLElement>('[data-testid="input-group-owner"]')!;

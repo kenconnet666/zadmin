@@ -591,7 +591,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'data-display',
 		summary:
 			'SSR稳定的静态指标：原生dl/data、Intl locale/precision、纯formatter、Snippet affix、有限tone、文字趋势与ZSkeleton loading。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'statistic',
 			'intl',
@@ -1318,7 +1318,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'input',
 		summary:
 			'单一nullable字符串、Field owner和FormValueBridge驱动的OTP/PIN输入，覆盖grapheme/IME、整段粘贴/autofill、动态length、受控清空与外部form。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'pin input',
 			'otp',

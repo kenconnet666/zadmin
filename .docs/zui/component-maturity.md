@@ -10,9 +10,9 @@ Generation is evidence-based. A test filename alone never grants `VisuallyVerifi
 | Authorable         |   141 |
 | ContractVerified   |   141 |
 | RuntimeImplemented |   141 |
-| VisuallyVerified   |    46 |
+| VisuallyVerified   |    49 |
 | DesktopVerified    |     0 |
-| ProductionVerified |    30 |
+| ProductionVerified |    31 |
 
 | Component               | Category     | Declared | Authorable | Contract | Runtime | Visual | Desktop | Production | Docs                                                                  |
 | ----------------------- | ------------ | -------: | ---------: | -------: | ------: | -----: | ------: | ---------: | --------------------------------------------------------------------- |
@@ -103,7 +103,7 @@ Generation is evidence-based. A test filename alone never grants `VisuallyVerifi
 | ZMeter                  | data-display |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/data-display/meter/doc.ts            |
 | ZProgress               | data-display |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/data-display/progress/doc.ts         |
 | ZSkeleton               | data-display |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/data-display/skeleton/doc.ts         |
-| ZStatistic              | data-display |        Y |          Y |        Y |       Y |      — |       — |          Y | apps/docs/src/content/components/data-display/statistic/doc.ts        |
+| ZStatistic              | data-display |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/statistic/doc.ts        |
 | ZTable                  | data-display |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/table/doc.ts            |
 | ZTag                    | data-display |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/tag/doc.ts              |
 | ZTimeline               | data-display |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/timeline/doc.ts         |
@@ -138,10 +138,10 @@ Generation is evidence-based. A test filename alone never grants `VisuallyVerifi
 | ZForm                   | input        |        Y |          Y |        Y |       Y |      Y |       — |          — | apps/docs/src/content/components/input/form/doc.ts                    |
 | ZFormField              | input        |        Y |          Y |        Y |       Y |      Y |       — |          — | —                                                                     |
 | ZInput                  | input        |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/input/doc.ts                   |
-| ZInputGroup             | input        |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/input/input-group/doc.ts             |
+| ZInputGroup             | input        |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/input-group/doc.ts             |
 | ZMention                | input        |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/mention/doc.ts                 |
 | ZNumberField            | input        |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/input/number-field/doc.ts            |
-| ZPinInput               | input        |        Y |          Y |        Y |       Y |      — |       — |          Y | apps/docs/src/content/components/input/pin-input/doc.ts               |
+| ZPinInput               | input        |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/pin-input/doc.ts               |
 | ZSegmented              | input        |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/input/segmented/doc.ts               |
 | ZSlider                 | input        |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/input/slider/doc.ts                  |
 | ZSwitch                 | input        |        Y |          Y |        Y |       Y |      Y |       — |          — | apps/docs/src/content/components/input/switch/doc.ts                  |

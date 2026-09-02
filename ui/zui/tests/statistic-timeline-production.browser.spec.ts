@@ -3,7 +3,7 @@ import { render } from 'vitest-browser-svelte';
 
 import StatisticTimelineProductionFixture from './StatisticTimelineProductionFixture.svelte';
 
-describe('Statistic and Timeline production browser contracts', () => {
+describe('ZStatistic and ZTimeline production browser contracts', () => {
 	it('formats static statistics with deterministic locale, precision and formatter ownership', () => {
 		render(StatisticTimelineProductionFixture);
 		const statistic = document.querySelector<HTMLElement>('[data-testid="statistic-intl"]')!;

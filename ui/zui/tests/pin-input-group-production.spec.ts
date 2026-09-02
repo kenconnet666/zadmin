@@ -6,7 +6,7 @@ import InputGroupMultipleFixture from './InputGroupMultipleFixture.svelte';
 import InputGroupNestedFixture from './InputGroupNestedFixture.svelte';
 import PinInputGroupProductionFixture from './PinInputGroupProductionFixture.svelte';
 
-describe('PinInput and InputGroup production SSR contracts', () => {
+describe('ZPinInput and ZInputGroup production SSR contracts', () => {
 	it('renders canonical PIN slots, one bridge value and native grouped controls without browser globals', () => {
 		const body = render(PinInputGroupProductionFixture).body;
 		expect(body).toContain('data-testid="pin-production"');

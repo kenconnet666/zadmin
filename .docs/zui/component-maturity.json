@@ -19,9 +19,9 @@
 		"Authorable": 141,
 		"ContractVerified": 141,
 		"RuntimeImplemented": 141,
-		"VisuallyVerified": 46,
+		"VisuallyVerified": 49,
 		"DesktopVerified": 0,
-		"ProductionVerified": 30
+		"ProductionVerified": 31
 	},
 	"components": [
 		{
@@ -5421,7 +5421,7 @@
 			"name": "ZStatistic",
 			"category": "data-display",
 			"family": null,
-			"status": "experimental",
+			"status": "stable",
 			"source": "ui/zui/src/components/data-display/ZStatistic.svelte",
 			"apiDocumentation": {
 				"metadataGapPropCount": 0,
@@ -5432,7 +5432,7 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -5452,7 +5452,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "d7c5d1d2b7784ee5f5c952740497663afe3890c84fabcb55f4600cb55b965b93 API snapshot entry"
+						"detail": "696bcb7e85643809fec221c5c9f9a094d086de475799210e491d7d7a1c3f2e56 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -5461,11 +5461,28 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/statistic-timeline-production.browser.spec.ts",
+						"detail": "ZStatistic browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/StatisticTimelineProductionFixture.svelte",
+						"detail": "ZStatistic explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
 						"path": "ui/zui/tests/statistic-timeline-production.spec.ts",
+						"detail": "ZStatistic production assertions"
+					},
+					{
+						"path": "ui/zui/tests/StatisticTimelineProductionFixture.svelte",
+						"detail": "ZStatistic explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/statistic-timeline-production.browser.spec.ts",
 						"detail": "ZStatistic production assertions"
 					},
 					{
@@ -5730,12 +5747,28 @@
 					{
 						"path": "ui/zui/tests/DisplayFixture.svelte",
 						"detail": "ZTimeline explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/statistic-timeline-production.browser.spec.ts",
+						"detail": "ZTimeline browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/StatisticTimelineProductionFixture.svelte",
+						"detail": "ZTimeline explicit rendered fixture usage"
 					}
 				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
 						"path": "ui/zui/tests/statistic-timeline-production.spec.ts",
+						"detail": "ZTimeline production assertions"
+					},
+					{
+						"path": "ui/zui/tests/StatisticTimelineProductionFixture.svelte",
+						"detail": "ZTimeline explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/statistic-timeline-production.browser.spec.ts",
 						"detail": "ZTimeline production assertions"
 					},
 					{
@@ -8174,9 +8207,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -8203,9 +8236,59 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/pin-input-group-production.browser.spec.ts",
+						"detail": "ZInputGroup browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/InputGroupMultipleFixture.svelte",
+						"detail": "ZInputGroup explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/InputGroupNestedFixture.svelte",
+						"detail": "ZInputGroup explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/PinInputGroupProductionFixture.svelte",
+						"detail": "ZInputGroup explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/pin-input-group-production.browser.spec.ts",
+						"detail": "ZInputGroup production assertions"
+					},
+					{
+						"path": "ui/zui/tests/InputGroupMultipleFixture.svelte",
+						"detail": "ZInputGroup explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/InputGroupNestedFixture.svelte",
+						"detail": "ZInputGroup explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/PinInputGroupProductionFixture.svelte",
+						"detail": "ZInputGroup explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/pin-input-group-production.spec.ts",
+						"detail": "ZInputGroup production assertions"
+					},
+					{
+						"path": "ui/zui/tests/InputGroupMultipleFixture.svelte",
+						"detail": "ZInputGroup explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/InputGroupNestedFixture.svelte",
+						"detail": "ZInputGroup explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/PinInputGroupProductionFixture.svelte",
+						"detail": "ZInputGroup explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": {
 				"path": "apps/docs/src/content/components/input/input-group/doc.ts",
@@ -8373,7 +8456,7 @@
 			"name": "ZPinInput",
 			"category": "input",
 			"family": null,
-			"status": "experimental",
+			"status": "stable",
 			"source": "ui/zui/src/components/input/ZPinInput.svelte",
 			"apiDocumentation": {
 				"metadataGapPropCount": 0,
@@ -8384,7 +8467,7 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -8404,7 +8487,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "fea9ffe54036e0b470781556b310ed71fd26098c88b0fc54b3729596e8d3383e API snapshot entry"
+						"detail": "983ca1d4ba651a466c8b90bf474ae7fe7ec62feb7b98f8fa950036501c60cb95 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -8413,11 +8496,28 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/pin-input-group-production.browser.spec.ts",
+						"detail": "ZPinInput browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/PinInputGroupProductionFixture.svelte",
+						"detail": "ZPinInput explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
 						"path": "ui/zui/tests/pin-input-group-production.spec.ts",
+						"detail": "ZPinInput production assertions"
+					},
+					{
+						"path": "ui/zui/tests/PinInputGroupProductionFixture.svelte",
+						"detail": "ZPinInput explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/pin-input-group-production.browser.spec.ts",
 						"detail": "ZPinInput production assertions"
 					},
 					{

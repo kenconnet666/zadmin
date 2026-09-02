@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"componentCount": 141,
-	"overallSha256": "af0c4078d98693910c61a8372c828147895a6574728bd9da9ab6f59ace7d5c5a",
+	"overallSha256": "983e51b947907452bd852ff97cc4798c3f553771cc70902e91cf23c39fcabadb",
 	"components": [
 		{
 			"id": "accordion",
@@ -440,7 +440,7 @@
 		},
 		{
 			"id": "statistic",
-			"sha256": "d7c5d1d2b7784ee5f5c952740497663afe3890c84fabcb55f4600cb55b965b93",
+			"sha256": "696bcb7e85643809fec221c5c9f9a094d086de475799210e491d7d7a1c3f2e56",
 			"source": "src/components/data-display/ZStatistic.svelte"
 		},
 		{
@@ -630,7 +630,7 @@
 		},
 		{
 			"id": "pin-input",
-			"sha256": "fea9ffe54036e0b470781556b310ed71fd26098c88b0fc54b3729596e8d3383e",
+			"sha256": "983ca1d4ba651a466c8b90bf474ae7fe7ec62feb7b98f8fa950036501c60cb95",
 			"source": "src/components/input/ZPinInput.svelte"
 		},
 		{
