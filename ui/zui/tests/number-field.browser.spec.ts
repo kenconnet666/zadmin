@@ -40,6 +40,7 @@ describe('NumberField production contracts', () => {
 		expect(field.dataset.size).toBe('small');
 		expect(control.value).toBe('1,50');
 		control.focus();
+		expect(control.value).toBe('1,5');
 		await tick();
 		expect(control.value).toBe('1,5');
 

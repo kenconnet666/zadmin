@@ -962,7 +962,8 @@ describe('compiled ICSS browser updates', () => {
 		const label = form?.querySelector<HTMLLabelElement>('label');
 		expect(trigger?.textContent?.trim()).toBe('Beta');
 		expect(trigger?.id).toBe(label?.htmlFor);
-		expect(trigger?.getAttribute('aria-required')).toBe('true');
+		expect(trigger?.getAttribute('aria-required')).toBeNull();
+		expect(label?.textContent).toContain('*');
 		expect(trigger?.getAttribute('aria-invalid')).toBeNull();
 		expect(trigger?.getAttribute('aria-describedby')).toBeTruthy();
 		expect(new FormData(form!).getAll('choice')).toEqual(['b']);
@@ -1376,7 +1377,8 @@ describe('compiled ICSS browser updates', () => {
 			editor.dispatchEvent(new InputEvent('input', { bubbles: true }));
 		}
 		await tick();
-		expect(editor?.getAttribute('aria-expanded')).toBe('true');
+		expect(editor?.dataset.state).toBe('open');
+		expect(editor?.getAttribute('aria-controls')).toBeTruthy();
 		expect(editor?.getAttribute('aria-activedescendant')).toBeTruthy();
 		for (const key of ['End', 'Home', 'ArrowDown', 'ArrowUp']) {
 			editor?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key }));
@@ -1399,7 +1401,8 @@ describe('compiled ICSS browser updates', () => {
 		expect(document.querySelector('[role="listbox"]')?.textContent).toContain('No suggestions');
 		editor?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
 		await tick();
-		expect(editor?.getAttribute('aria-expanded')).toBe('false');
+		expect(editor?.dataset.state).toBe('closed');
+		expect(editor?.getAttribute('aria-controls')).toBeNull();
 	});
 
 	it('coordinates Command ranking, active descendant action and form reset', async () => {

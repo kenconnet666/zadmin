@@ -119,12 +119,14 @@ describe('ZMention production collection contract', () => {
 		editor.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true }));
 		editor.dispatchEvent(new InputEvent('input', { bubbles: true, isComposing: true }));
 		await tick();
-		expect(editor.getAttribute('aria-expanded')).toBe('false');
+		expect(editor.dataset.state).toBe('closed');
+		expect(editor.getAttribute('aria-controls')).toBeNull();
 		editor.value = 'Notify #al';
 		editor.setSelectionRange(editor.value.length, editor.value.length);
 		editor.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true }));
 		await tick();
-		expect(editor.getAttribute('aria-expanded')).toBe('true');
+		expect(editor.dataset.state).toBe('open');
+		expect(editor.getAttribute('aria-controls')).toBeTruthy();
 		expect(document.querySelector('[role="listbox"]')?.textContent).toContain('Alice');
 	});
 });

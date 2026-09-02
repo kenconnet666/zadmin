@@ -610,11 +610,15 @@
 		updateFromDraft();
 	}
 
-	function handleFocus(): void {
+	function handleFocus(event: FocusEvent & { currentTarget: HTMLInputElement }): void {
+		const nextDraft = editFormatted;
 		editing = true;
-		draft = editFormatted;
+		draft = nextDraft;
 		draftInvalid = false;
-		inputRef?.select();
+		// Synchronize the edit presentation before an immediate native fill/type action.
+		// Waiting for the reactive value attribute can append to the formatted display.
+		event.currentTarget.value = nextDraft;
+		event.currentTarget.select();
 	}
 
 	function handleBlur(): void {

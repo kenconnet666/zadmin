@@ -111,7 +111,12 @@
 		bind:this={anchor}
 		aria-hidden="true"
 		data-zui-context-menu-anchor={popover.contentId}
-		style={`position: fixed; left: ${x}px; top: ${y}px; width: 0; height: 0; pointer-events: none;`}
+		style:height="0"
+		style:left={`${x}px`}
+		style:pointer-events="none"
+		style:position="fixed"
+		style:top={`${y}px`}
+		style:width="0"
 		use:portal={{ target: popover.portalTarget }}
 	></span>
 </div>

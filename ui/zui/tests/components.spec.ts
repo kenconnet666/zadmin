@@ -548,7 +548,8 @@ describe('ZUI foundational components', () => {
 		const result = render(MentionFixture).body;
 		expect(result).toContain('<textarea');
 		expect(result).toContain('aria-autocomplete="list"');
-		expect(result).toContain('aria-expanded="false"');
+		expect(result).toContain('data-state="closed"');
+		expect(result).not.toContain('aria-expanded');
 		expect(result).toContain('name="message"');
 		expect(result).not.toContain('role="listbox"');
 	});
