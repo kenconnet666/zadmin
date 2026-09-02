@@ -1199,7 +1199,10 @@ test('anchors ContextMenu to pointer coordinates and supports the keyboard entry
 	expect(surfaceBox).not.toBeNull();
 	expect(surfaceBox!.x).toBeCloseTo(clickX, 0);
 	expect(
-		Math.min(Math.abs(surfaceBox!.y - clickY), Math.abs(surfaceBox!.y + surfaceBox!.height - clickY))
+		Math.min(
+			Math.abs(surfaceBox!.y - clickY),
+			Math.abs(surfaceBox!.y + surfaceBox!.height - clickY)
+		)
 	).toBeLessThanOrEqual(4);
 	expect(surfaceBox!.x).toBeGreaterThanOrEqual(0);
 	expect(surfaceBox!.y).toBeGreaterThanOrEqual(0);

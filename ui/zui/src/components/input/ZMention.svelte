@@ -312,7 +312,6 @@
 	const listId = $derived(`${idBase}-list`);
 	let query = $state<MentionQuery>();
 	let open = $state(false);
-	let lastPointerPosition = $state<{ x: number; y: number }>();
 	let keyboardNavigation = $state(false);
 	let virtualController = $state<ChoiceVirtualController<SelectionKey> | null>(null);
 	const valueState = new ControllableState<string>({
@@ -472,8 +471,8 @@
 	function mountVirtualOption(key: SelectionKey, element: HTMLElement): () => void {
 		return activeDescendant.mount(key, element);
 	}
-	function suggestionFromPointer(
-		event: PointerEvent & { currentTarget: HTMLElement }
+	function suggestionFromEvent(
+		event: Event & { currentTarget: HTMLElement }
 	): MentionItem | undefined {
 		if (!isDomElement(event.target)) return undefined;
 		const item = event.target.closest<HTMLElement>('[data-mention-index]');
@@ -482,35 +481,21 @@
 		return Number.isInteger(index) ? suggestions[index] : undefined;
 	}
 	function handleListPointerDown(event: PointerEvent & { currentTarget: HTMLElement }): void {
-		if (event.button === 0 && suggestionFromPointer(event)) event.preventDefault();
+		if (event.button === 0 && suggestionFromEvent(event)) event.preventDefault();
 	}
 	function handleListPointerMove(event: PointerEvent & { currentTarget: HTMLElement }): void {
 		// Virtual scrolling can dispatch a stationary pointermove for newly
 		// mounted rows. It must not steal the active descendant selected by the
 		// keyboard unless the pointer actually moved.
-		const position = { x: event.clientX, y: event.clientY };
-		if (
-			keyboardNavigation &&
-			event.movementX === 0 &&
-			event.movementY === 0 &&
-			(!lastPointerPosition ||
-				(lastPointerPosition.x === position.x && lastPointerPosition.y === position.y))
-		)
-			return;
-		if (
-			lastPointerPosition &&
-			lastPointerPosition.x === position.x &&
-			lastPointerPosition.y === position.y
-		)
-			return;
+		const stationary = event.movementX === 0 && event.movementY === 0;
+		if (keyboardNavigation && stationary) return;
 		keyboardNavigation = false;
-		lastPointerPosition = position;
-		const item = suggestionFromPointer(event);
+		const item = suggestionFromEvent(event);
 		if (item) handlePointerMove(item);
 	}
-	function handleListPointerUp(event: PointerEvent & { currentTarget: HTMLElement }): void {
+	function handleListClick(event: MouseEvent & { currentTarget: HTMLElement }): void {
 		if (event.button !== 0) return;
-		const item = suggestionFromPointer(event);
+		const item = suggestionFromEvent(event);
 		if (item) choose(item);
 	}
 	function handlePointerMove(item: MentionItem): void {
@@ -589,9 +574,9 @@
 				items={suggestions}
 				{loading}
 				onItemMount={mountVirtualOption}
+				onclick={handleListClick}
 				onpointerdown={handleListPointerDown}
 				onpointermove={handleListPointerMove}
-				onpointerup={handleListPointerUp}
 				overscan={virtualOverscan}
 				role="listbox"
 				tabindex={-1}
@@ -603,15 +588,17 @@
 					</div>{/snippet}
 			</ZVirtualList>
 		{:else}
+			<!-- Keyboard selection remains on the textarea through aria-activedescendant. -->
+			<!-- svelte-ignore a11y_click_events_have_key_events -->
 			<div
 				aria-busy={loading || undefined}
 				aria-label={resolvedListLabel}
 				class={listClass}
 				data-slot="list"
 				id={listId}
+				onclick={handleListClick}
 				onpointerdown={handleListPointerDown}
 				onpointermove={handleListPointerMove}
-				onpointerup={handleListPointerUp}
 				role="listbox"
 				tabindex={-1}
 			>

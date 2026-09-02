@@ -56,7 +56,9 @@ describe('ZMention production collection contract', () => {
 		expect(activeId).toBeTruthy();
 		expect(editor.ownerDocument.getElementById(activeId ?? '')?.textContent).toContain('user-0999');
 		const stationaryRow = listbox.querySelector<HTMLElement>('[role="option"]');
-		stationaryRow?.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, clientX: 0, clientY: 0 }));
+		stationaryRow?.dispatchEvent(
+			new PointerEvent('pointermove', { bubbles: true, clientX: 0, clientY: 0 })
+		);
 		await tick();
 		expect(editor.getAttribute('aria-activedescendant')).toBe(activeId);
 		editor.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
@@ -77,11 +79,13 @@ describe('ZMention production collection contract', () => {
 		await tick();
 		editor.focus();
 		const option = document.querySelector<HTMLElement>('[role="option"]')!;
-		option.dispatchEvent(new PointerEvent('pointermove', { bubbles: true }));
+		option.dispatchEvent(
+			new PointerEvent('pointermove', { bubbles: true, clientX: 1, movementX: 1 })
+		);
 		await tick();
 		expect(document.querySelector<HTMLElement>('[role="option"]')).toBe(option);
 		option.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true }));
-		option.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, cancelable: true }));
+		option.click();
 		await tick();
 		expect(document.activeElement).toBe(editor);
 		expect(document.querySelector('[data-testid="mention-production-output"]')?.textContent).toBe(
