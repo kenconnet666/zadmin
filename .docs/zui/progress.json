@@ -1,0 +1,87 @@
+{
+	"schemaVersion": 1,
+	"package": {
+		"name": "@zadmin/zui",
+		"version": "0.1.0"
+	},
+	"api": {
+		"components": 141,
+		"declaredProps": 1385,
+		"metadataGapProps": 0,
+		"fallbackProps": 0
+	},
+	"maturity": {
+		"Declared": 141,
+		"Authorable": 141,
+		"ContractVerified": 141,
+		"RuntimeImplemented": 141,
+		"VisuallyVerified": 72,
+		"DesktopVerified": 0,
+		"ProductionVerified": 55,
+		"statuses": {
+			"experimental": 107,
+			"stable": 34
+		}
+	},
+	"stability": {
+		"stableCompliant": 34,
+		"stableViolations": 0,
+		"promotionEligibleExperimental": 3
+	},
+	"docs": {
+		"routes": {
+			"componentCount": 79,
+			"guideCount": 8,
+			"totalCount": 88
+		},
+		"deployed": false
+	},
+	"support": {
+		"node": "24",
+		"pnpm": "11.22.0",
+		"browsers": ["chromium", "firefox", "webkit"],
+		"ssrCsp": true,
+		"webview": true,
+		"miniapp": true
+	},
+	"release": {
+		"status": "blocked",
+		"passedChecks": 12,
+		"totalChecks": 18,
+		"blocked": [
+			"releasePublishTarballReuse",
+			"npmOidcProvenance",
+			"automatedTagAndGithubRelease",
+			"registrySmoke",
+			"versionedDocs",
+			"releaseBoundSupportMatrix"
+		]
+	},
+	"nextPriorities": [
+		{
+			"id": "production-evidence",
+			"remaining": 86,
+			"description": "为尚未ProductionVerified的组件补真实production browser/SSR合同。"
+		},
+		{
+			"id": "visual-evidence",
+			"remaining": 69,
+			"description": "补齐组件级浏览器渲染与交互证据，不以fixture存在冒充验证。"
+		},
+		{
+			"id": "stable-promotion",
+			"remaining": 3,
+			"description": "逐项审查已满足门禁的experimental组件；禁止自动批量晋级。"
+		},
+		{
+			"id": "desktop-evidence",
+			"remaining": 141,
+			"description": "建立组件级WebView2/Desktop证据后再提升DesktopVerified。"
+		},
+		{
+			"id": "release-boundary",
+			"remaining": 6,
+			"description": "完成真实publish/OIDC/tag/registry smoke与版本化Docs部署边界。"
+		}
+	]
+}

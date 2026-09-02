@@ -8,6 +8,7 @@ const matrix = JSON.parse(
 	await readFile(resolve(root, '.docs/zui/component-maturity.json'), 'utf8')
 );
 const outputPath = resolve(root, '.docs/zui/stability-candidates.md');
+const jsonOutputPath = resolve(root, '.docs/zui/stability-candidates.json');
 const docsById = new Map(
 	matrix.components.filter(({ docs }) => docs).map(({ id, docs }) => [id, docs])
 );
@@ -65,6 +66,32 @@ const stableCompliant = rows.filter(
 const promotionEligibleExperimental = rows.filter(
 	({ status, blockers }) => status === 'experimental' && blockers.length === 0
 );
+const classification = ({ status, blockers }) =>
+	status === 'stable'
+		? blockers.length
+			? 'stableViolations'
+			: 'stableCompliant'
+		: blockers.length
+			? 'experimental'
+			: 'promotionEligibleExperimental';
+const jsonOutput = {
+	schemaVersion: 1,
+	summary: {
+		stableCompliant: stableCompliant.length,
+		stableViolations: stableViolations.length,
+		promotionEligibleExperimental: promotionEligibleExperimental.length
+	},
+	components: rows.map((row) => ({
+		id: row.id,
+		name: row.name,
+		family: row.family,
+		status: row.status,
+		classification: classification(row),
+		blockers: row.blockers,
+		docs: row.resolvedDocs?.path ?? null,
+		ssrEvidenceCount: row.ssrEvidence.length
+	}))
+};
 const lines = [
 	'# ZUI stability policy candidates',
 	'',
@@ -76,7 +103,7 @@ const lines = [
 	'|---|---|---|---|---|---:|',
 	...rows.map(
 		({ name, status, blockers, resolvedDocs, usesFamilyDocs, ssrEvidence }) =>
-			`| ${name} | ${status} | ${status === 'stable' ? (blockers.length ? 'stableViolations' : 'stableCompliant') : blockers.length ? 'experimental' : 'promotionEligibleExperimental'} | ${blockers.length ? blockers.join(', ') : '—'} | ${resolvedDocs ? `${resolvedDocs.path}${usesFamilyDocs ? ' (family root)' : ''}` : '—'} | ${ssrEvidence.length} |`
+			`| ${name} | ${status} | ${classification({ status, blockers })} | ${blockers.length ? blockers.join(', ') : '—'} | ${resolvedDocs ? `${resolvedDocs.path}${usesFamilyDocs ? ' (family root)' : ''}` : '—'} | ${ssrEvidence.length} |`
 	),
 	'',
 	'## 晋级规则',
@@ -90,12 +117,26 @@ const formatted = await prettier.format(`${lines.join('\n')}\n`, {
 	...((await prettier.resolveConfig(outputPath)) ?? {}),
 	filepath: outputPath
 });
-if (process.argv.includes('--write')) await writeFile(outputPath, formatted, 'utf8');
-else if ((await readFile(outputPath, 'utf8').catch(() => '')) !== formatted)
-	throw new Error('Stability candidates are stale. Run stability:update.');
+const formattedJson = await prettier.format(`${JSON.stringify(jsonOutput, null, '\t')}\n`, {
+	...((await prettier.resolveConfig(jsonOutputPath)) ?? {}),
+	filepath: jsonOutputPath
+});
+if (process.argv.includes('--write')) {
+	await Promise.all([
+		writeFile(outputPath, formatted, 'utf8'),
+		writeFile(jsonOutputPath, formattedJson, 'utf8')
+	]);
+} else {
+	const [currentMarkdown, currentJson] = await Promise.all([
+		readFile(outputPath, 'utf8').catch(() => ''),
+		readFile(jsonOutputPath, 'utf8').catch(() => '')
+	]);
+	if (currentMarkdown !== formatted || currentJson !== formattedJson)
+		throw new Error('Stability candidate artifacts are stale. Run stability:update.');
+}
 console.log(
 	JSON.stringify({
-		output: '.docs/zui/stability-candidates.md',
+		outputs: ['.docs/zui/stability-candidates.json', '.docs/zui/stability-candidates.md'],
 		stableCompliant: stableCompliant.length,
 		stableViolations: stableViolations.length,
 		promotionEligibleExperimental: promotionEligibleExperimental.length
