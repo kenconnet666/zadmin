@@ -95,7 +95,7 @@
 				placeholder="Textarea与Input共享尺寸解析"
 				rows={2}
 			/>
-			<ZPagination defaultPage={2} totalPages={5} />
+			<ZPagination aria-label="Provider偏好分页" defaultPage={2} totalPages={5} />
 		</ZStack>
 	</ZProvider>
 </ZStack>

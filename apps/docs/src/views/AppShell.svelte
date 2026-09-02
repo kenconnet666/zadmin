@@ -199,6 +199,16 @@
 			});
 	});
 	const currentDoc = $derived(loadedDoc);
+	$effect(() => {
+		const section = route.kind === 'component' ? route.section : undefined;
+		if (!section || !currentDoc) return;
+		const view = globalThis.window;
+		if (!view) return;
+		const frame = view.requestAnimationFrame(() => {
+			view.document.getElementById(section)?.scrollIntoView({ block: 'start' });
+		});
+		return () => view.cancelAnimationFrame(frame);
+	});
 	const currentGuide = $derived(
 		currentGuideId && currentGuideId !== 'theme' ? guideDocsById.get(currentGuideId) : undefined
 	);

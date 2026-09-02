@@ -26,6 +26,14 @@ async function setDisplayPreference(
 	await page.getByRole('button', { name: '调整显示偏好', exact: true }).click();
 	await page.getByRole('button', { name: preference, exact: true }).click();
 	await page.getByRole('option', { name: option, exact: true }).click();
+	const preferenceAttribute = {
+		动画: ['data-motion', option === '减少' ? 'reduced' : 'full'],
+		对比度: ['data-contrast', option === '高对比' ? 'high' : 'normal'],
+		方向: ['dir', option === '从右到左' ? 'rtl' : 'ltr'],
+		密度: ['data-density', option === '紧凑' ? 'compact' : 'comfortable']
+	} as const;
+	const [attribute, expected] = preferenceAttribute[preference];
+	await expect(page.locator('html')).toHaveAttribute(attribute, expected);
 	await page.keyboard.press('Escape');
 }
 
@@ -946,7 +954,12 @@ test('keeps switch semantics, keyboard state, FormData and reset synchronized', 
 		)
 		.toBeLessThanOrEqual(0.00001);
 	await expect
-		.poll(() => control.evaluate((element) => getComputedStyle(element, '::before').transform))
+		.poll(() =>
+			control.evaluate((element) => {
+				const transform = getComputedStyle(element, '::before').transform;
+				return transform === 'none' ? 'matrix(1, 0, 0, 1, 0, 0)' : transform;
+			})
+		)
 		.toBe('matrix(1, 0, 0, 1, 0, 0)');
 	await control.press('Space');
 	await expect(control).toHaveAttribute('aria-checked', 'false');
@@ -1113,6 +1126,15 @@ test('anchors ContextMenu to pointer coordinates and supports the keyboard entry
 		clientY: clickY
 	});
 	const coordinateAnchor = trigger.locator('span[aria-hidden="true"]');
+	await expect
+		.poll(() =>
+			coordinateAnchor.evaluate((element) => {
+				const left = Number.parseFloat((element as HTMLElement).style.left);
+				const top = Number.parseFloat((element as HTMLElement).style.top);
+				return Number.isFinite(left) && Number.isFinite(top) ? [left, top] : null;
+			})
+		)
+		.not.toBeNull();
 	const [anchorX, anchorY] = await coordinateAnchor.evaluate((element) => [
 		Number.parseFloat((element as HTMLElement).style.left),
 		Number.parseFloat((element as HTMLElement).style.top)
@@ -1121,14 +1143,6 @@ test('anchors ContextMenu to pointer coordinates and supports the keyboard entry
 	expect(anchorY).toBeCloseTo(clickY, 3);
 	const menu = page.getByRole('menu', { name: '部署上下文菜单', exact: true });
 	await expect(menu).toBeVisible();
-	await expect
-		.poll(() =>
-			coordinateAnchor.evaluate((element) => {
-				const style = getComputedStyle(element as HTMLElement);
-				return [Number.parseFloat(style.left), Number.parseFloat(style.top)];
-			})
-		)
-		.toSatisfy(([x, y]) => Number.isFinite(x) && Number.isFinite(y));
 	const menuBox = await menu.boundingBox();
 	expect(menuBox).not.toBeNull();
 	expect(menuBox!.x).toBeGreaterThanOrEqual(0);
@@ -1790,6 +1804,13 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		await expect(currentLink, `${route} must expose one current navigation link`).toHaveCount(1);
 		await expect(currentLink).toHaveAttribute('href', route);
 		await expect(page).toHaveTitle(route === '#/' ? 'ZUI Components' : /.+ · ZUI Components$/u);
+		if (route.startsWith('#/components/')) {
+			const id = route.slice('#/components/'.length);
+			await expect(page.locator(`main [data-doc-route="component:${id}"]`)).toBeVisible();
+		} else if (route.startsWith('#/guides/')) {
+			const id = route.slice('#/guides/'.length);
+			await expect(page.locator(`main [data-doc-route="guide:${id}"]`)).toBeVisible();
+		}
 		const unnamedFields = await page
 			.locator(
 				'main input:not([type="hidden"]):not([hidden]), main textarea:not([hidden]), main select:not([hidden])'
