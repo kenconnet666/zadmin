@@ -118,6 +118,7 @@
 		"ciRunsPackageAcceptance": true,
 		"singlePackChecksumReuse": true,
 		"releaseArtifactRevisionBound": true,
+		"releaseCandidateContract": true,
 		"releasePublishTarballReuse": false,
 		"npmOidcProvenance": false,
 		"automatedTagAndGithubRelease": false,

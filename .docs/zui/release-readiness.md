@@ -14,6 +14,7 @@
 - `ciRunsPackageAcceptance`
 - `singlePackChecksumReuse`
 - `releaseArtifactRevisionBound`
+- `releaseCandidateContract`
 - `versionedDocsArtifactContract`
 - `supportMatrixDocumented`
 
@@ -46,4 +47,4 @@
 
 ## Release boundary
 
-CI now proves that one checksummed pack is reused by external consumers and the npm publish dry-run. The real registry publish still does not consume a release-bound copy of that artifact, and npm OIDC/provenance, automated tags/GitHub Releases, registry post-publish smoke, versioned Docs deployment, and a release-bound support matrix remain unproven.
+CI now proves that one checksummed pack is reused by external consumers and the npm publish dry-run. The release candidate contract additionally cross-checks the schema v2 manifest against the exact workspace package set and versions, binds it to the CI commit, and supports version-tag checks without publishing. The real registry publish still does not consume a release-bound copy of that artifact, and npm OIDC/provenance, automated tags/GitHub Releases, registry post-publish smoke, versioned Docs deployment, and a release-bound support matrix remain unproven.

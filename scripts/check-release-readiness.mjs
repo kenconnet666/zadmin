@@ -47,6 +47,10 @@ const workflow = await readFile(resolve(root, '.github/workflows/release.yml'), 
 const ci = await readFile(resolve(root, '.github/workflows/ci.yml'), 'utf8');
 const packProducer = await readFile(resolve(root, 'scripts/pack-release-artifacts.mjs'), 'utf8');
 const artifactReader = await readFile(resolve(root, 'scripts/read-release-artifact.mjs'), 'utf8');
+const releaseCandidate = await readFile(
+	resolve(root, 'scripts/check-release-candidate.mjs'),
+	'utf8'
+);
 const releaseCoherence = await readFile(
 	resolve(root, 'scripts/check-release-coherence.mjs'),
 	'utf8'
@@ -141,6 +145,20 @@ const checks = {
 		/--revision="\$ZADMIN_RELEASE_ARTIFACTS_REVISION"/u.test(ci) &&
 		/ZADMIN_RELEASE_ARTIFACTS_REVISION=\$\{\{ github\.sha \}\}/u.test(ci) &&
 		/evaluateReleaseCoherence/u.test(releaseCoherence),
+	releaseCandidateContract:
+		rootPackage.scripts?.['release:candidate:check'] ===
+			'node scripts/check-release-candidate.mjs' &&
+		rootPackage.scripts?.['release:candidate:self-test'] ===
+			'node scripts/check-release-candidate.mjs --self-test' &&
+		/validateArtifactManifest\(manifest\)/u.test(releaseCandidate) &&
+		/workspacePackages/u.test(releaseCandidate) &&
+		/releasePackageNames/u.test(releaseCandidate) &&
+		/expectedRevision/u.test(releaseCandidate) &&
+		/--tag=/u.test(releaseCandidate) &&
+		/pnpm release:candidate:self-test/u.test(ci) &&
+		/node scripts\/check-release-candidate\.mjs --directory=\.release-artifacts --revision=/u.test(
+			ci
+		),
 	releasePublishTarballReuse: false,
 	npmOidcProvenance:
 		/id-token:\s*write/iu.test(workflow) && /provenance|trusted publishing/iu.test(workflow),
@@ -218,7 +236,7 @@ const report = {
 const passed = Object.entries(checks)
 	.filter(([, value]) => value)
 	.map(([key]) => key);
-const markdownSource = `# Release Readiness\n\n- Status: **${report.status}**\n- Scope: non-publishing fact report; this command never publishes packages or changes release permissions.\n\n## Passed facts\n\n${passed.map((key) => `- \`${key}\``).join('\n') || '- None'}\n\n## Blocked facts\n\n${blocked.map((key) => `- \`${key}\``).join('\n') || '- None'}\n\n## Public packages\n\n| Package | Version | Changeset target | Package check | External acceptance |\n| --- | --- | --- | --- | --- |\n${packages.map((item) => `| ${item.name} | ${item.version} | ${item.changeset ? 'yes' : 'no'} | ${item.packageCheck ? 'yes' : 'no'} | ${item.name === '@zadmin/zui' && zuiAcceptance.includes("'@zadmin/zui'") ? 'yes (via SvelteKit)' : item.acceptance ? 'yes' : 'no'} |`).join('\n')}\n\n## Release boundary\n\nCI now proves that one checksummed pack is reused by external consumers and the npm publish dry-run. The real registry publish still does not consume a release-bound copy of that artifact, and npm OIDC/provenance, automated tags/GitHub Releases, registry post-publish smoke, versioned Docs deployment, and a release-bound support matrix remain unproven.\n`;
+const markdownSource = `# Release Readiness\n\n- Status: **${report.status}**\n- Scope: non-publishing fact report; this command never publishes packages or changes release permissions.\n\n## Passed facts\n\n${passed.map((key) => `- \`${key}\``).join('\n') || '- None'}\n\n## Blocked facts\n\n${blocked.map((key) => `- \`${key}\``).join('\n') || '- None'}\n\n## Public packages\n\n| Package | Version | Changeset target | Package check | External acceptance |\n| --- | --- | --- | --- | --- |\n${packages.map((item) => `| ${item.name} | ${item.version} | ${item.changeset ? 'yes' : 'no'} | ${item.packageCheck ? 'yes' : 'no'} | ${item.name === '@zadmin/zui' && zuiAcceptance.includes("'@zadmin/zui'") ? 'yes (via SvelteKit)' : item.acceptance ? 'yes' : 'no'} |`).join('\n')}\n\n## Release boundary\n\nCI now proves that one checksummed pack is reused by external consumers and the npm publish dry-run. The release candidate contract additionally cross-checks the schema v2 manifest against the exact workspace package set and versions, binds it to the CI commit, and supports version-tag checks without publishing. The real registry publish still does not consume a release-bound copy of that artifact, and npm OIDC/provenance, automated tags/GitHub Releases, registry post-publish smoke, versioned Docs deployment, and a release-bound support matrix remain unproven.\n`;
 const prettierConfig = (await prettier.resolveConfig(jsonPath)) ?? {};
 const markdown = await prettier.format(markdownSource, {
 	...prettierConfig,

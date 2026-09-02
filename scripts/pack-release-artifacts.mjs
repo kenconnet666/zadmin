@@ -4,21 +4,15 @@ import { resolve } from 'node:path';
 import { execFileSync, spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { validateArtifactManifest } from './read-release-artifact.mjs';
+import { releasePackageNames } from './release-package-set.mjs';
 
 const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
-const defaultPackages = [
-	'@zadmin/core',
-	'@zadmin/zui',
-	'@zadmin/sveltekit',
-	'@zadmin/webview',
-	'@zadmin/miniapp'
-];
 const output = resolve(
 	root,
 	process.argv.find((arg) => arg.startsWith('--out='))?.slice(6) ?? '.release-artifacts'
 );
 const requested = process.argv.filter((arg) => arg.startsWith('@'));
-const packageNames = requested.length > 0 ? requested : defaultPackages;
+const packageNames = requested.length > 0 ? requested : releasePackageNames;
 if (process.argv.includes('--help')) {
 	console.log(
 		'Usage: pnpm release:pack:artifacts [--out=.release-artifacts] [@zadmin/package ...]'

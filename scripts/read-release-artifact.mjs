@@ -6,6 +6,9 @@ import { pathToFileURL } from 'node:url';
 
 const artifactProducer = 'scripts/pack-release-artifacts.mjs';
 const sourceRevisionPattern = /^(?:[a-f0-9]{40}|[a-f0-9]{64})$/u;
+const isMain = process.argv[1]
+	? pathToFileURL(resolve(process.argv[1])).href === import.meta.url
+	: false;
 
 export function validateArtifactManifest(manifest) {
 	if (
@@ -84,7 +87,7 @@ export function readReleaseArtifact(directory, packageName, expectedRevision) {
 	return pathToFileURL(path).href;
 }
 
-if (process.argv.includes('--self-test')) {
+if (isMain && process.argv.includes('--self-test')) {
 	const directory = mkdtempSync(resolve(tmpdir(), 'zadmin-release-artifact-self-test-'));
 	const valid = {
 		schemaVersion: 2,
@@ -157,19 +160,21 @@ if (process.argv.includes('--self-test')) {
 	console.log(JSON.stringify({ cases, status: 'passed' }));
 }
 
-const directoryArgument = process.argv.find((argument) => argument.startsWith('--directory='));
-const packageArgument = process.argv.find((argument) => argument.startsWith('--package='));
-const revisionArgument = process.argv.find((argument) => argument.startsWith('--revision='));
-if (Boolean(directoryArgument) !== Boolean(packageArgument))
-	throw new Error('Both --directory and --package are required when selecting an artifact.');
-if (revisionArgument && !directoryArgument)
-	throw new Error('--revision requires --directory and --package.');
-if (directoryArgument && packageArgument) {
-	console.log(
-		readReleaseArtifact(
-			directoryArgument.slice('--directory='.length),
-			packageArgument.slice('--package='.length),
-			revisionArgument?.slice('--revision='.length)
-		)
-	);
+if (isMain) {
+	const directoryArgument = process.argv.find((argument) => argument.startsWith('--directory='));
+	const packageArgument = process.argv.find((argument) => argument.startsWith('--package='));
+	const revisionArgument = process.argv.find((argument) => argument.startsWith('--revision='));
+	if (Boolean(directoryArgument) !== Boolean(packageArgument))
+		throw new Error('Both --directory and --package are required when selecting an artifact.');
+	if (revisionArgument && !directoryArgument)
+		throw new Error('--revision requires --directory and --package.');
+	if (directoryArgument && packageArgument) {
+		console.log(
+			readReleaseArtifact(
+				directoryArgument.slice('--directory='.length),
+				packageArgument.slice('--package='.length),
+				revisionArgument?.slice('--revision='.length)
+			)
+		);
+	}
 }

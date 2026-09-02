@@ -48,7 +48,9 @@ jobs:
         run: pnpm --filter @zadmin/docs audit:system
 
       - name: Verify release coherence dry-run contract
-        run: pnpm release:coherence
+        run: |
+          pnpm release:coherence
+          pnpm release:candidate:self-test
 
       - name: Audit ZUI browser lifecycle ownership
         run: pnpm --filter @zadmin/zui test:browser-lifecycle
@@ -253,6 +255,7 @@ jobs:
           pnpm --filter @zadmin/webview build
           pnpm --filter @zadmin/miniapp build
           pnpm release:pack:artifacts --out=.release-artifacts
+          node scripts/check-release-candidate.mjs --directory=.release-artifacts --revision="${{ github.sha }}"
 
       - name: Upload release consumer artifacts
         if: steps.release_artifacts.outcome == 'success'
