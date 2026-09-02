@@ -26,7 +26,12 @@
 					s.alignItems.center;
 					s.display.flex;
 					s.gap._medium;
+					s.minWidth.px(0);
 					s.justifySelf.end;
+					s.whiteSpace.nowrap;
+					s._media('(max-width: 80rem)', (compact) => {
+						compact.gap._small;
+					});
 				},
 				brand: (s) => {
 					s.alignItems.center;
@@ -70,6 +75,8 @@
 					s.paddingBlock._small;
 					s.paddingInline._medium;
 					s.textDecoration.none;
+					s.whiteSpace.nowrap;
+					s._media('(max-width: 80rem)', (compact) => compact.paddingInline._small);
 					s._hover((hover) => {
 						hover.borderColor._accent;
 						hover.color._accent;
@@ -103,6 +110,11 @@
 					s.position.sticky;
 					s.top.px(0);
 					s.zIndex(50);
+					s._media('(max-width: 80rem) and (min-width: 48.01rem)', (compact) => {
+						compact.gap._medium;
+						compact.gridTemplateColumns.raw('14rem minmax(0, 1fr) auto');
+						compact.paddingInline._large;
+					});
 					s._media('(max-width: 48rem)', (mobile) => {
 						mobile.gap._medium;
 						mobile.gridTemplateColumns.raw('auto minmax(0, 1fr) auto');
@@ -117,7 +129,7 @@
 					s.gridTemplateColumns.raw('4.5rem minmax(8rem, 1fr)');
 				},
 				preferences: (s) => s.position.relative,
-				preferencesLabel: (s) => s._media('(max-width: 68rem)', (compact) => compact.display.none),
+				preferencesLabel: (s) => s._media('(max-width: 80rem)', (compact) => compact.display.none),
 				preferencesPanel: (s) => {
 					s.backgroundColor._canvas;
 					s.borderColor._border;
@@ -145,6 +157,8 @@
 					s.gap._small;
 					s.minHeight.rem(2.35);
 					s.paddingInline._medium;
+					s.whiteSpace.nowrap;
+					s._media('(max-width: 80rem)', (compact) => compact.paddingInline._small);
 					s._hover((hover) => hover.borderColor._accent);
 					s._focusVisible((focus) => {
 						focus.outlineColor._focus;
@@ -164,6 +178,7 @@
 					s.fontFamily._sans;
 					s.minHeight.rem(2.25);
 					s.paddingInline._small;
+					s.whiteSpace.nowrap;
 					s._focusVisible((focus) => {
 						focus.outlineColor._focus;
 						focus.outlineOffset.px(2);
@@ -176,9 +191,10 @@
 					s.color._textMuted;
 					s.display.inlineFlex;
 					s.gap._small;
+					s.whiteSpace.nowrap;
 					s._media('(max-width: 48rem)', (mobile) => mobile.display.none);
 				},
-				themeLabel: (s) => s._media('(max-width: 68rem)', (compact) => compact.display.none)
+				themeLabel: (s) => s._media('(max-width: 80rem)', (compact) => compact.display.none)
 			},
 			variants: {}
 		},

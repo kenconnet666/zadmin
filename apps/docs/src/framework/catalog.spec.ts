@@ -2,11 +2,74 @@ import { describe, expect, it } from 'vitest';
 import { dataTableMetadata } from '@zadmin/zui/metadata';
 
 import { componentDocs, componentDocsById } from './catalog.js';
+import { componentCatalogManifest } from './catalog-manifest.generated.js';
 import { dataTableApiFacts, radioGroupItemApiFacts } from './component-api.generated.js';
+import * as generatedApiFacts from './component-api.generated.js';
+import type { ComponentApiFacts } from './component-api.js';
 import { defineComponentDoc } from './component-doc.js';
 import { componentRoute } from './router.js';
 
 describe('ZUI component documentation catalog', () => {
+	it('keeps all owner pages, generated API facts, demos and routes integrity-aligned', () => {
+		const facts = (Object.values(generatedApiFacts) as unknown[]).filter(
+			(value): value is ComponentApiFacts =>
+				value !== null &&
+				typeof value === 'object' &&
+				'id' in value &&
+				'name' in value &&
+				'props' in value &&
+				'source' in value
+		);
+		const factsByName = new Map(facts.map((fact) => [fact.name, fact]));
+		const manifestById = new Map(componentCatalogManifest.map((entry) => [entry.id, entry]));
+		const ownerNames = new Set(componentDocs.map(({ name }) => name));
+
+		expect(componentDocs).toHaveLength(79);
+		expect(componentCatalogManifest).toHaveLength(79);
+		expect(facts).toHaveLength(141);
+		for (const doc of componentDocs) {
+			const manifest = manifestById.get(doc.id);
+			const fact = factsByName.get(doc.name);
+			expect(manifest, `${doc.name} catalog manifest entry`).toBeDefined();
+			expect(manifest?.name).toBe(doc.name);
+			expect(manifest?.demoCount).toBe(doc.demos.length);
+			expect(fact, `${doc.name} generated API fact`).toBeDefined();
+			expect(doc.source).toBe(fact?.source);
+			expect(doc.importStatement).toContain(doc.name);
+			expect(componentRoute(doc.id)).toBe(`#/components/${doc.id}`);
+			expect(new Set(doc.api.map(({ id }) => id)).size).toBe(doc.api.length);
+			expect(new Set(doc.demos.map(({ id }) => id)).size).toBe(doc.demos.length);
+			const mainProps = doc.api.find(({ id }) => id === 'props');
+			expect(mainProps, `${doc.name} main Props section`).toBeDefined();
+			for (const generated of fact?.props ?? []) {
+				expect(
+					doc.api.some((section) => section.rows.some(({ name }) => name === generated.name)),
+					`${doc.name}.${generated.name}`
+				).toBe(true);
+			}
+			for (const section of doc.api) {
+				expect(new Set(section.rows.map(({ name }) => name)).size).toBe(section.rows.length);
+			}
+		}
+
+		for (const fact of facts) {
+			if (ownerNames.has(fact.name)) continue;
+			const owners = componentDocs.filter((doc) =>
+				doc.api.some((section) => section.title === `${fact.name} Props`)
+			);
+			expect(owners, `${fact.name} owning page`).toHaveLength(1);
+			for (const generated of fact.props)
+				expect(
+					owners[0]?.api.some(
+						(candidate) =>
+							candidate.title.startsWith(`${fact.name} `) &&
+							candidate.rows.some(({ name }) => name === generated.name)
+					),
+					`${fact.name}.${generated.name}`
+				).toBe(true);
+		}
+	});
+
 	it('covers the approved component catalog exactly once', () => {
 		expect(componentDocs.map(({ name }) => name)).toEqual([
 			'ZProvider',

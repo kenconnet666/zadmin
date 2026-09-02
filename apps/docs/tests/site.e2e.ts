@@ -1910,6 +1910,62 @@ test('highlights code on demand and supports section deep links', async ({ page 
 	).toBeInViewport();
 });
 
+test('renders data-driven not-found routes with one recoverable 404 surface', async ({ page }) => {
+	const invalidRoutes = [
+		'#/components/unknown-component',
+		'#/guides/unknown-guide',
+		'#/components/unknown-component/api',
+		'#/components/%E0%A4%A'
+	] as const;
+	const consoleErrors: string[] = [];
+	const pageErrors: string[] = [];
+	page.on('console', (message) => {
+		if (message.type() === 'error') consoleErrors.push(message.text());
+	});
+	page.on('pageerror', (error) => pageErrors.push(error.message));
+
+	for (const hash of invalidRoutes) {
+		await page.goto(`/${hash}`);
+		await expect(page).toHaveURL(new RegExp(`${hash.replaceAll('/', '\\/')}$`, 'u'));
+		await expect(page.locator('main')).toHaveCount(1);
+		await expect(page.locator('main [data-doc-page-title]')).toHaveCount(0);
+		await expect(
+			page.getByRole('heading', { level: 1, name: '没有这个页面。', exact: true })
+		).toHaveCount(1);
+		await expect(
+			page.getByText('当前展示站只列出已经实现并通过验收的ZUI组件与生产指南。', { exact: true })
+		).toBeVisible();
+		await expect(page.getByRole('link', { name: '返回文档概览', exact: true })).toHaveAttribute(
+			'href',
+			'#/'
+		);
+		const currentLinks = page.locator('nav[aria-label="组件导航"] a[aria-current="page"]');
+		expect(await currentLinks.count()).toBeLessThanOrEqual(1);
+		if ((await currentLinks.count()) === 1)
+			await expect(currentLinks).not.toHaveAttribute('href', hash);
+		if (hash.includes('/api')) {
+			await page.reload();
+			await expect(
+				page.getByRole('heading', { level: 1, name: '没有这个页面。', exact: true })
+			).toHaveCount(1);
+		}
+	}
+
+	expect(consoleErrors).toEqual([]);
+	expect(pageErrors).toEqual([]);
+});
+
+test('keeps the not-found route accessible and returns to the Docs overview', async ({ page }) => {
+	await page.goto('/#/components/unknown-component');
+	await expect(
+		page.getByRole('heading', { level: 1, name: '没有这个页面。', exact: true })
+	).toBeVisible();
+	await expect(new AxeBuilder({ page }).analyze()).resolves.toMatchObject({ violations: [] });
+	await page.getByRole('link', { name: '返回文档概览', exact: true }).click();
+	await expect(page).toHaveURL(/#\/$/u);
+	await expect(page.getByRole('heading', { level: 1 })).toContainText('看见组件');
+});
+
 test('keeps navigation usable at a narrow viewport', async ({ page }) => {
 	await page.setViewportSize({ height: 800, width: 390 });
 	await page.goto('/#/');
