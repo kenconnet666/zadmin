@@ -4,6 +4,7 @@ import { render } from 'vitest-browser-svelte';
 
 import { ZRadioGroup, ZSegmented } from '../src/entrypoints/index.js';
 import ChoiceControlsCollectionFixture from './ChoiceControlsCollectionFixture.svelte';
+import RadioGroupFixture from './RadioGroupFixture.svelte';
 
 async function settle(): Promise<void> {
 	await Promise.resolve();
@@ -11,6 +12,27 @@ async function settle(): Promise<void> {
 }
 
 describe('ZRadioGroup, ZRadioGroupItem and ZSegmented production contracts', () => {
+	it('keeps composed ZRadioGroupItem native selection, disabled state and reset ownership real', async () => {
+		render(RadioGroupFixture);
+		const form = document.querySelector<HTMLFormElement>('[data-testid="radio-form"]')!;
+		const alpha = form.querySelector<HTMLInputElement>('[data-testid="radio-a"]')!;
+		const beta = form.querySelector<HTMLInputElement>('[data-testid="radio-b"]')!;
+		const disabled = form.querySelector<HTMLInputElement>('[data-testid="radio-c"]')!;
+		const delta = form.querySelector<HTMLInputElement>('[data-testid="radio-d"]')!;
+
+		expect(beta.checked).toBe(true);
+		expect(disabled.disabled).toBe(true);
+		expect(new FormData(form).get('choice')).toBe('b');
+		delta.click();
+		await settle();
+		expect(delta.checked).toBe(true);
+		expect(new FormData(form).get('choice')).toBe('d');
+		form.reset();
+		await expect.poll(() => beta.checked).toBe(true);
+		expect(alpha.checked).toBe(false);
+		expect(new FormData(form).get('choice')).toBe('b');
+	});
+
 	it('preserves typed identity, native FormData, required/invalid and RTL roving focus', async () => {
 		render(ChoiceControlsCollectionFixture);
 		await settle();

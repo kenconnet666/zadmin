@@ -2,9 +2,26 @@ import { tick } from 'svelte';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
+import CoverageFixture from './CoverageFixture.svelte';
 import ToastProductionFixture from './ToastProductionFixture.svelte';
 
 describe('ZToast and ZToaster production browser contract', () => {
+	it('ZToast keeps standalone announcement, tone, action and dismiss boundaries real', async () => {
+		render(CoverageFixture);
+		const danger = document.querySelector<HTMLElement>('[data-testid="coverage-toast-danger"]')!;
+		const action = document.querySelector<HTMLElement>('[data-testid="coverage-toast-action"]')!;
+
+		expect(danger.tagName).toBe('ARTICLE');
+		expect(danger.dataset.tone).toBe('danger');
+		expect(danger.querySelector('[data-slot="announcement"]')?.getAttribute('role')).toBe('alert');
+		expect(danger.querySelector('[data-slot="actions"]')).toBeNull();
+		action.querySelector<HTMLButtonElement>('button')!.click();
+		await tick();
+		expect(
+			document.querySelector('[data-testid="coverage-output"]')?.textContent?.split(':')[3]
+		).toBe('1');
+	});
+
 	it('ZToast keeps one visual instance for content, action, update and Presence', async () => {
 		render(ToastProductionFixture);
 		document.querySelector<HTMLButtonElement>('[data-testid="toast-add-update"]')?.click();
