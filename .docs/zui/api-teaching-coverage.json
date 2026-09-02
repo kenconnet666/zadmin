@@ -1,0 +1,1445 @@
+{
+	"components": [
+		{
+			"id": "accordion",
+			"name": "ZAccordion",
+			"source": "ui/zui/src/components/compound/accordion/ZAccordion.svelte",
+			"family": "accordion",
+			"declaredPropCount": 12,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "accordion-content",
+			"name": "ZAccordionContent",
+			"source": "ui/zui/src/components/compound/accordion/ZAccordionContent.svelte",
+			"family": "accordion",
+			"declaredPropCount": 3,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "accordion-item",
+			"name": "ZAccordionItem",
+			"source": "ui/zui/src/components/compound/accordion/ZAccordionItem.svelte",
+			"family": "accordion",
+			"declaredPropCount": 4,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "accordion-trigger",
+			"name": "ZAccordionTrigger",
+			"source": "ui/zui/src/components/compound/accordion/ZAccordionTrigger.svelte",
+			"family": "accordion",
+			"declaredPropCount": 7,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "alert-dialog",
+			"name": "ZAlertDialog",
+			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialog.svelte",
+			"family": "alert-dialog",
+			"declaredPropCount": 6,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "alert-dialog-action",
+			"name": "ZAlertDialogAction",
+			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialogAction.svelte",
+			"family": "alert-dialog",
+			"declaredPropCount": 1,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "alert-dialog-cancel",
+			"name": "ZAlertDialogCancel",
+			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialogCancel.svelte",
+			"family": "alert-dialog",
+			"declaredPropCount": 1,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "alert-dialog-content",
+			"name": "ZAlertDialogContent",
+			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialogContent.svelte",
+			"family": "alert-dialog",
+			"declaredPropCount": 0,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "alert-dialog-description",
+			"name": "ZAlertDialogDescription",
+			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialogDescription.svelte",
+			"family": "alert-dialog",
+			"declaredPropCount": 0,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "alert-dialog-overlay",
+			"name": "ZAlertDialogOverlay",
+			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialogOverlay.svelte",
+			"family": "alert-dialog",
+			"declaredPropCount": 0,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "alert-dialog-title",
+			"name": "ZAlertDialogTitle",
+			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialogTitle.svelte",
+			"family": "alert-dialog",
+			"declaredPropCount": 0,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "alert-dialog-trigger",
+			"name": "ZAlertDialogTrigger",
+			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialogTrigger.svelte",
+			"family": "alert-dialog",
+			"declaredPropCount": 0,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "combobox",
+			"name": "ZCombobox",
+			"source": "ui/zui/src/components/compound/combobox/ZCombobox.svelte",
+			"family": "combobox",
+			"declaredPropCount": 27,
+			"fallbackPropCount": 6,
+			"fallbackPropNames": ["controlId", "form", "invalid", "name", "placement", "required"]
+		},
+		{
+			"id": "combobox-content",
+			"name": "ZComboboxContent",
+			"source": "ui/zui/src/components/compound/combobox/ZComboboxContent.svelte",
+			"family": "combobox",
+			"declaredPropCount": 11,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "combobox-input",
+			"name": "ZComboboxInput",
+			"source": "ui/zui/src/components/compound/combobox/ZComboboxInput.svelte",
+			"family": "combobox",
+			"declaredPropCount": 1,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "combobox-item",
+			"name": "ZComboboxItem",
+			"source": "ui/zui/src/components/compound/combobox/ZComboboxItem.svelte",
+			"family": "combobox",
+			"declaredPropCount": 6,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "context-menu",
+			"name": "ZContextMenu",
+			"source": "ui/zui/src/components/compound/context-menu/ZContextMenu.svelte",
+			"family": "context-menu",
+			"declaredPropCount": 6,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "context-menu-content",
+			"name": "ZContextMenuContent",
+			"source": "ui/zui/src/components/compound/context-menu/ZContextMenuContent.svelte",
+			"family": "context-menu",
+			"declaredPropCount": 6,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "context-menu-trigger",
+			"name": "ZContextMenuTrigger",
+			"source": "ui/zui/src/components/compound/context-menu/ZContextMenuTrigger.svelte",
+			"family": "context-menu",
+			"declaredPropCount": 2,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "dialog",
+			"name": "ZDialog",
+			"source": "ui/zui/src/components/compound/dialog/ZDialog.svelte",
+			"family": "dialog",
+			"declaredPropCount": 4,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "dialog-close",
+			"name": "ZDialogClose",
+			"source": "ui/zui/src/components/compound/dialog/ZDialogClose.svelte",
+			"family": "dialog",
+			"declaredPropCount": 1,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "dialog-content",
+			"name": "ZDialogContent",
+			"source": "ui/zui/src/components/compound/dialog/ZDialogContent.svelte",
+			"family": "dialog",
+			"declaredPropCount": 15,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "dialog-description",
+			"name": "ZDialogDescription",
+			"source": "ui/zui/src/components/compound/dialog/ZDialogDescription.svelte",
+			"family": "dialog",
+			"declaredPropCount": 2,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "dialog-overlay",
+			"name": "ZDialogOverlay",
+			"source": "ui/zui/src/components/compound/dialog/ZDialogOverlay.svelte",
+			"family": "dialog",
+			"declaredPropCount": 1,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "dialog-title",
+			"name": "ZDialogTitle",
+			"source": "ui/zui/src/components/compound/dialog/ZDialogTitle.svelte",
+			"family": "dialog",
+			"declaredPropCount": 2,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "dialog-trigger",
+			"name": "ZDialogTrigger",
+			"source": "ui/zui/src/components/compound/dialog/ZDialogTrigger.svelte",
+			"family": "dialog",
+			"declaredPropCount": 1,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "drawer",
+			"name": "ZDrawer",
+			"source": "ui/zui/src/components/compound/drawer/ZDrawer.svelte",
+			"family": "drawer",
+			"declaredPropCount": 4,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "drawer-close",
+			"name": "ZDrawerClose",
+			"source": "ui/zui/src/components/compound/drawer/ZDrawerClose.svelte",
+			"family": "drawer",
+			"declaredPropCount": 0,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "drawer-content",
+			"name": "ZDrawerContent",
+			"source": "ui/zui/src/components/compound/drawer/ZDrawerContent.svelte",
+			"family": "drawer",
+			"declaredPropCount": 2,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "drawer-description",
+			"name": "ZDrawerDescription",
+			"source": "ui/zui/src/components/compound/drawer/ZDrawerDescription.svelte",
+			"family": "drawer",
+			"declaredPropCount": 0,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "drawer-overlay",
+			"name": "ZDrawerOverlay",
+			"source": "ui/zui/src/components/compound/drawer/ZDrawerOverlay.svelte",
+			"family": "drawer",
+			"declaredPropCount": 0,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "drawer-title",
+			"name": "ZDrawerTitle",
+			"source": "ui/zui/src/components/compound/drawer/ZDrawerTitle.svelte",
+			"family": "drawer",
+			"declaredPropCount": 0,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "drawer-trigger",
+			"name": "ZDrawerTrigger",
+			"source": "ui/zui/src/components/compound/drawer/ZDrawerTrigger.svelte",
+			"family": "drawer",
+			"declaredPropCount": 0,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "dropdown-menu",
+			"name": "ZDropdownMenu",
+			"source": "ui/zui/src/components/compound/dropdown-menu/ZDropdownMenu.svelte",
+			"family": "dropdown-menu",
+			"declaredPropCount": 6,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "dropdown-menu-content",
+			"name": "ZDropdownMenuContent",
+			"source": "ui/zui/src/components/compound/dropdown-menu/ZDropdownMenuContent.svelte",
+			"family": "dropdown-menu",
+			"declaredPropCount": 4,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "dropdown-menu-trigger",
+			"name": "ZDropdownMenuTrigger",
+			"source": "ui/zui/src/components/compound/dropdown-menu/ZDropdownMenuTrigger.svelte",
+			"family": "dropdown-menu",
+			"declaredPropCount": 0,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "menu",
+			"name": "ZMenu",
+			"source": "ui/zui/src/components/compound/menu/ZMenu.svelte",
+			"family": "menu",
+			"declaredPropCount": 7,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "menu-checkbox-item",
+			"name": "ZMenuCheckboxItem",
+			"source": "ui/zui/src/components/compound/menu/ZMenuCheckboxItem.svelte",
+			"family": "menu",
+			"declaredPropCount": 6,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "menu-group",
+			"name": "ZMenuGroup",
+			"source": "ui/zui/src/components/compound/menu/ZMenuGroup.svelte",
+			"family": "menu",
+			"declaredPropCount": 3,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "menu-item",
+			"name": "ZMenuItem",
+			"source": "ui/zui/src/components/compound/menu/ZMenuItem.svelte",
+			"family": "menu",
+			"declaredPropCount": 17,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "menu-label",
+			"name": "ZMenuLabel",
+			"source": "ui/zui/src/components/compound/menu/ZMenuLabel.svelte",
+			"family": "menu",
+			"declaredPropCount": 2,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "menu-radio-group",
+			"name": "ZMenuRadioGroup",
+			"source": "ui/zui/src/components/compound/menu/ZMenuRadioGroup.svelte",
+			"family": "menu",
+			"declaredPropCount": 5,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "menu-radio-item",
+			"name": "ZMenuRadioItem",
+			"source": "ui/zui/src/components/compound/menu/ZMenuRadioItem.svelte",
+			"family": "menu",
+			"declaredPropCount": 3,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "menu-separator",
+			"name": "ZMenuSeparator",
+			"source": "ui/zui/src/components/compound/menu/ZMenuSeparator.svelte",
+			"family": "menu",
+			"declaredPropCount": 1,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "menu-sub",
+			"name": "ZMenuSub",
+			"source": "ui/zui/src/components/compound/menu/ZMenuSub.svelte",
+			"family": "menu",
+			"declaredPropCount": 6,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "menu-sub-content",
+			"name": "ZMenuSubContent",
+			"source": "ui/zui/src/components/compound/menu/ZMenuSubContent.svelte",
+			"family": "menu",
+			"declaredPropCount": 6,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "menu-sub-trigger",
+			"name": "ZMenuSubTrigger",
+			"source": "ui/zui/src/components/compound/menu/ZMenuSubTrigger.svelte",
+			"family": "menu",
+			"declaredPropCount": 3,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "multi-select",
+			"name": "ZMultiSelect",
+			"source": "ui/zui/src/components/compound/multi-select/ZMultiSelect.svelte",
+			"family": "multi-select",
+			"declaredPropCount": 28,
+			"fallbackPropCount": 5,
+			"fallbackPropNames": ["controlId", "form", "invalid", "name", "required"]
+		},
+		{
+			"id": "multi-select-content",
+			"name": "ZMultiSelectContent",
+			"source": "ui/zui/src/components/compound/multi-select/ZMultiSelectContent.svelte",
+			"family": "multi-select",
+			"declaredPropCount": 9,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "multi-select-item",
+			"name": "ZMultiSelectItem",
+			"source": "ui/zui/src/components/compound/multi-select/ZMultiSelectItem.svelte",
+			"family": "multi-select",
+			"declaredPropCount": 6,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "multi-select-trigger",
+			"name": "ZMultiSelectTrigger",
+			"source": "ui/zui/src/components/compound/multi-select/ZMultiSelectTrigger.svelte",
+			"family": "multi-select",
+			"declaredPropCount": 1,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "popconfirm",
+			"name": "ZPopconfirm",
+			"source": "ui/zui/src/components/compound/popconfirm/ZPopconfirm.svelte",
+			"family": "popconfirm",
+			"declaredPropCount": 9,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "popconfirm-action",
+			"name": "ZPopconfirmAction",
+			"source": "ui/zui/src/components/compound/popconfirm/ZPopconfirmAction.svelte",
+			"family": "popconfirm",
+			"declaredPropCount": 1,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "popconfirm-cancel",
+			"name": "ZPopconfirmCancel",
+			"source": "ui/zui/src/components/compound/popconfirm/ZPopconfirmCancel.svelte",
+			"family": "popconfirm",
+			"declaredPropCount": 1,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "popconfirm-content",
+			"name": "ZPopconfirmContent",
+			"source": "ui/zui/src/components/compound/popconfirm/ZPopconfirmContent.svelte",
+			"family": "popconfirm",
+			"declaredPropCount": 0,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "popconfirm-description",
+			"name": "ZPopconfirmDescription",
+			"source": "ui/zui/src/components/compound/popconfirm/ZPopconfirmDescription.svelte",
+			"family": "popconfirm",
+			"declaredPropCount": 2,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "popconfirm-title",
+			"name": "ZPopconfirmTitle",
+			"source": "ui/zui/src/components/compound/popconfirm/ZPopconfirmTitle.svelte",
+			"family": "popconfirm",
+			"declaredPropCount": 2,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "popconfirm-trigger",
+			"name": "ZPopconfirmTrigger",
+			"source": "ui/zui/src/components/compound/popconfirm/ZPopconfirmTrigger.svelte",
+			"family": "popconfirm",
+			"declaredPropCount": 0,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "popover",
+			"name": "ZPopover",
+			"source": "ui/zui/src/components/compound/popover/ZPopover.svelte",
+			"family": "popover",
+			"declaredPropCount": 9,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "popover-content",
+			"name": "ZPopoverContent",
+			"source": "ui/zui/src/components/compound/popover/ZPopoverContent.svelte",
+			"family": "popover",
+			"declaredPropCount": 12,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "popover-trigger",
+			"name": "ZPopoverTrigger",
+			"source": "ui/zui/src/components/compound/popover/ZPopoverTrigger.svelte",
+			"family": "popover",
+			"declaredPropCount": 2,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "radio-group",
+			"name": "ZRadioGroup",
+			"source": "ui/zui/src/components/compound/radio-group/ZRadioGroup.svelte",
+			"family": "radio-group",
+			"declaredPropCount": 14,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "radio-group-item",
+			"name": "ZRadioGroupItem",
+			"source": "ui/zui/src/components/compound/radio-group/ZRadioGroupItem.svelte",
+			"family": "radio-group",
+			"declaredPropCount": 8,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "select",
+			"name": "ZSelect",
+			"source": "ui/zui/src/components/compound/select/ZSelect.svelte",
+			"family": "select",
+			"declaredPropCount": 22,
+			"fallbackPropCount": 5,
+			"fallbackPropNames": ["controlId", "form", "invalid", "name", "required"]
+		},
+		{
+			"id": "select-content",
+			"name": "ZSelectContent",
+			"source": "ui/zui/src/components/compound/select/ZSelectContent.svelte",
+			"family": "select",
+			"declaredPropCount": 9,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "select-item",
+			"name": "ZSelectItem",
+			"source": "ui/zui/src/components/compound/select/ZSelectItem.svelte",
+			"family": "select",
+			"declaredPropCount": 6,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "select-trigger",
+			"name": "ZSelectTrigger",
+			"source": "ui/zui/src/components/compound/select/ZSelectTrigger.svelte",
+			"family": "select",
+			"declaredPropCount": 1,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "tabs",
+			"name": "ZTabs",
+			"source": "ui/zui/src/components/compound/tabs/ZTabs.svelte",
+			"family": "tabs",
+			"declaredPropCount": 13,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "tabs-list",
+			"name": "ZTabsList",
+			"source": "ui/zui/src/components/compound/tabs/ZTabsList.svelte",
+			"family": "tabs",
+			"declaredPropCount": 2,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "tabs-panel",
+			"name": "ZTabsPanel",
+			"source": "ui/zui/src/components/compound/tabs/ZTabsPanel.svelte",
+			"family": "tabs",
+			"declaredPropCount": 3,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "tabs-trigger",
+			"name": "ZTabsTrigger",
+			"source": "ui/zui/src/components/compound/tabs/ZTabsTrigger.svelte",
+			"family": "tabs",
+			"declaredPropCount": 8,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "tooltip",
+			"name": "ZTooltip",
+			"source": "ui/zui/src/components/compound/tooltip/ZTooltip.svelte",
+			"family": "tooltip",
+			"declaredPropCount": 10,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "tooltip-content",
+			"name": "ZTooltipContent",
+			"source": "ui/zui/src/components/compound/tooltip/ZTooltipContent.svelte",
+			"family": "tooltip",
+			"declaredPropCount": 2,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "tooltip-group",
+			"name": "ZTooltipGroup",
+			"source": "ui/zui/src/components/compound/tooltip/ZTooltipGroup.svelte",
+			"family": "tooltip",
+			"declaredPropCount": 4,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "tooltip-trigger",
+			"name": "ZTooltipTrigger",
+			"source": "ui/zui/src/components/compound/tooltip/ZTooltipTrigger.svelte",
+			"family": "tooltip",
+			"declaredPropCount": 5,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "tree",
+			"name": "ZTree",
+			"source": "ui/zui/src/components/compound/tree/ZTree.svelte",
+			"family": "tree",
+			"declaredPropCount": 27,
+			"fallbackPropCount": 5,
+			"fallbackPropNames": [
+				"defaultExpandedKeys",
+				"defaultSelectedKeys",
+				"emptyText",
+				"form",
+				"onLoadError"
+			]
+		},
+		{
+			"id": "avatar",
+			"name": "ZAvatar",
+			"source": "ui/zui/src/components/data-display/ZAvatar.svelte",
+			"declaredPropCount": 17,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "badge",
+			"name": "ZBadge",
+			"source": "ui/zui/src/components/data-display/ZBadge.svelte",
+			"declaredPropCount": 13,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "card",
+			"name": "ZCard",
+			"source": "ui/zui/src/components/data-display/ZCard.svelte",
+			"declaredPropCount": 9,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "carousel",
+			"name": "ZCarousel",
+			"source": "ui/zui/src/components/data-display/ZCarousel.svelte",
+			"declaredPropCount": 17,
+			"fallbackPropCount": 6,
+			"fallbackPropNames": [
+				"defaultValue",
+				"itemLabel",
+				"nextLabel",
+				"pauseLabel",
+				"playLabel",
+				"previousLabel"
+			]
+		},
+		{
+			"id": "data-table",
+			"name": "ZDataTable",
+			"source": "ui/zui/src/components/data-display/ZDataTable.svelte",
+			"declaredPropCount": 48,
+			"fallbackPropCount": 22,
+			"fallbackPropNames": [
+				"defaultColumnVisibility",
+				"defaultColumnWidths",
+				"defaultExpandedKeys",
+				"defaultSelectedKeys",
+				"defaultSort",
+				"density",
+				"emptyLabel",
+				"expandedRowEstimate",
+				"expansionLabel",
+				"height",
+				"isRowDisabled",
+				"isRowExpandable",
+				"loadingLabel",
+				"overscan",
+				"resizeLabel",
+				"rowHeight",
+				"rowIndexOffset",
+				"selectAllLabel",
+				"selectionLabel",
+				"ssrViewportSize",
+				"striped",
+				"totalRowCount"
+			]
+		},
+		{
+			"id": "description-list",
+			"name": "ZDescriptionList",
+			"source": "ui/zui/src/components/data-display/ZDescriptionList.svelte",
+			"declaredPropCount": 8,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "empty",
+			"name": "ZEmpty",
+			"source": "ui/zui/src/components/data-display/ZEmpty.svelte",
+			"declaredPropCount": 7,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "list",
+			"name": "ZList",
+			"source": "ui/zui/src/components/data-display/ZList.svelte",
+			"declaredPropCount": 11,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "meter",
+			"name": "ZMeter",
+			"source": "ui/zui/src/components/data-display/ZMeter.svelte",
+			"declaredPropCount": 9,
+			"fallbackPropCount": 5,
+			"fallbackPropNames": ["high", "low", "max", "min", "optimum"]
+		},
+		{
+			"id": "progress",
+			"name": "ZProgress",
+			"source": "ui/zui/src/components/data-display/ZProgress.svelte",
+			"declaredPropCount": 9,
+			"fallbackPropCount": 1,
+			"fallbackPropNames": ["formatValue"]
+		},
+		{
+			"id": "skeleton",
+			"name": "ZSkeleton",
+			"source": "ui/zui/src/components/data-display/ZSkeleton.svelte",
+			"declaredPropCount": 6,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "statistic",
+			"name": "ZStatistic",
+			"source": "ui/zui/src/components/data-display/ZStatistic.svelte",
+			"declaredPropCount": 14,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "table",
+			"name": "ZTable",
+			"source": "ui/zui/src/components/data-display/ZTable.svelte",
+			"declaredPropCount": 11,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "tag",
+			"name": "ZTag",
+			"source": "ui/zui/src/components/data-display/ZTag.svelte",
+			"declaredPropCount": 10,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "timeline",
+			"name": "ZTimeline",
+			"source": "ui/zui/src/components/data-display/ZTimeline.svelte",
+			"declaredPropCount": 11,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "virtual-list",
+			"name": "ZVirtualList",
+			"source": "ui/zui/src/components/data-display/ZVirtualList.svelte",
+			"declaredPropCount": 27,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "alert",
+			"name": "ZAlert",
+			"source": "ui/zui/src/components/feedback/ZAlert.svelte",
+			"declaredPropCount": 10,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "loading-bar",
+			"name": "ZLoadingBar",
+			"source": "ui/zui/src/components/feedback/ZLoadingBar.svelte",
+			"declaredPropCount": 10,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "result",
+			"name": "ZResult",
+			"source": "ui/zui/src/components/feedback/ZResult.svelte",
+			"declaredPropCount": 9,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "spinner",
+			"name": "ZSpinner",
+			"source": "ui/zui/src/components/feedback/ZSpinner.svelte",
+			"declaredPropCount": 4,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "toast",
+			"name": "ZToast",
+			"source": "ui/zui/src/components/feedback/ZToast.svelte",
+			"declaredPropCount": 13,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "toaster",
+			"name": "ZToaster",
+			"source": "ui/zui/src/components/feedback/ZToaster.svelte",
+			"declaredPropCount": 5,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "box",
+			"name": "ZBox",
+			"source": "ui/zui/src/components/gene/ZBox.svelte",
+			"declaredPropCount": 2,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "button",
+			"name": "ZButton",
+			"source": "ui/zui/src/components/gene/ZButton.svelte",
+			"declaredPropCount": 8,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "code",
+			"name": "ZCode",
+			"source": "ui/zui/src/components/gene/ZCode.svelte",
+			"declaredPropCount": 17,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "heading",
+			"name": "ZHeading",
+			"source": "ui/zui/src/components/gene/ZHeading.svelte",
+			"declaredPropCount": 7,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "icon",
+			"name": "ZIcon",
+			"source": "ui/zui/src/components/gene/ZIcon.svelte",
+			"declaredPropCount": 4,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "kbd",
+			"name": "ZKbd",
+			"source": "ui/zui/src/components/gene/ZKbd.svelte",
+			"declaredPropCount": 2,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "link",
+			"name": "ZLink",
+			"source": "ui/zui/src/components/gene/ZLink.svelte",
+			"declaredPropCount": 8,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "provider",
+			"name": "ZProvider",
+			"source": "ui/zui/src/components/gene/ZProvider.svelte",
+			"declaredPropCount": 14,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "separator",
+			"name": "ZSeparator",
+			"source": "ui/zui/src/components/gene/ZSeparator.svelte",
+			"declaredPropCount": 4,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "text",
+			"name": "ZText",
+			"source": "ui/zui/src/components/gene/ZText.svelte",
+			"declaredPropCount": 11,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "toggle-button",
+			"name": "ZToggleButton",
+			"source": "ui/zui/src/components/gene/ZToggleButton.svelte",
+			"declaredPropCount": 5,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "visually-hidden",
+			"name": "ZVisuallyHidden",
+			"source": "ui/zui/src/components/gene/ZVisuallyHidden.svelte",
+			"declaredPropCount": 2,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "calendar",
+			"name": "ZCalendar",
+			"source": "ui/zui/src/components/input/ZCalendar.svelte",
+			"declaredPropCount": 28,
+			"fallbackPropCount": 8,
+			"fallbackPropNames": [
+				"disabled",
+				"form",
+				"invalid",
+				"isDateDisabled",
+				"name",
+				"range",
+				"readonly",
+				"required"
+			]
+		},
+		{
+			"id": "cascader",
+			"name": "ZCascader",
+			"source": "ui/zui/src/components/input/ZCascader.svelte",
+			"declaredPropCount": 37,
+			"fallbackPropCount": 16,
+			"fallbackPropNames": [
+				"clearLabel",
+				"controlId",
+				"defaultOpen",
+				"emptyText",
+				"filter",
+				"form",
+				"gutter",
+				"invalid",
+				"loadingText",
+				"matchWidth",
+				"onLoadChildren",
+				"placement",
+				"placeholder",
+				"required",
+				"searchPlaceholder",
+				"size"
+			]
+		},
+		{
+			"id": "checkbox",
+			"name": "ZCheckbox",
+			"source": "ui/zui/src/components/input/ZCheckbox.svelte",
+			"declaredPropCount": 10,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "color-picker",
+			"name": "ZColorPicker",
+			"source": "ui/zui/src/components/input/ZColorPicker.svelte",
+			"declaredPropCount": 27,
+			"fallbackPropCount": 14,
+			"fallbackPropNames": [
+				"alphaLabel",
+				"clearLabel",
+				"colorInputLabel",
+				"controlId",
+				"defaultOpen",
+				"form",
+				"gutter",
+				"hexInputLabel",
+				"invalid",
+				"matchWidth",
+				"placement",
+				"placeholder",
+				"required",
+				"triggerLabel"
+			]
+		},
+		{
+			"id": "date-field",
+			"name": "ZDateField",
+			"source": "ui/zui/src/components/input/ZDateField.svelte",
+			"declaredPropCount": 21,
+			"fallbackPropCount": 8,
+			"fallbackPropNames": [
+				"controlId",
+				"disabled",
+				"form",
+				"invalid",
+				"isDateUnavailable",
+				"onReset",
+				"readonly",
+				"required"
+			]
+		},
+		{
+			"id": "date-picker",
+			"name": "ZDatePicker",
+			"source": "ui/zui/src/components/input/ZDatePicker.svelte",
+			"declaredPropCount": 30,
+			"fallbackPropCount": 19,
+			"fallbackPropNames": [
+				"calendarLabel",
+				"clearLabel",
+				"defaultOpen",
+				"disabled",
+				"firstDayOfWeek",
+				"form",
+				"formatOptions",
+				"invalid",
+				"locale",
+				"maxValue",
+				"minValue",
+				"name",
+				"placeholder",
+				"placement",
+				"readonly",
+				"required",
+				"showOutsideDates",
+				"timeZone",
+				"triggerLabel"
+			]
+		},
+		{
+			"id": "date-range-picker",
+			"name": "ZDateRangePicker",
+			"source": "ui/zui/src/components/input/ZDateRangePicker.svelte",
+			"declaredPropCount": 29,
+			"fallbackPropCount": 20,
+			"fallbackPropNames": [
+				"calendarLabel",
+				"clearLabel",
+				"controlId",
+				"defaultOpen",
+				"disabled",
+				"endLabel",
+				"firstDayOfWeek",
+				"form",
+				"invalid",
+				"locale",
+				"maxValue",
+				"minValue",
+				"name",
+				"placement",
+				"ref",
+				"readonly",
+				"required",
+				"showOutsideDates",
+				"startLabel",
+				"timeZone"
+			]
+		},
+		{
+			"id": "field",
+			"name": "ZField",
+			"source": "ui/zui/src/components/input/ZField.svelte",
+			"declaredPropCount": 13,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "file-upload",
+			"name": "ZFileUpload",
+			"source": "ui/zui/src/components/input/ZFileUpload.svelte",
+			"declaredPropCount": 30,
+			"fallbackPropCount": 15,
+			"fallbackPropNames": [
+				"abortLabel",
+				"chooseLabel",
+				"controlId",
+				"disabled",
+				"dropLabel",
+				"emptyText",
+				"errorMessage",
+				"form",
+				"inputLabel",
+				"invalid",
+				"queueLabel",
+				"removeLabel",
+				"required",
+				"retryLabel",
+				"uploadLabel"
+			]
+		},
+		{
+			"id": "form",
+			"name": "ZForm",
+			"source": "ui/zui/src/components/input/ZForm.svelte",
+			"declaredPropCount": 25,
+			"fallbackPropCount": 2,
+			"fallbackPropNames": ["onReset", "onSubmit"]
+		},
+		{
+			"id": "form-field",
+			"name": "ZFormField",
+			"source": "ui/zui/src/components/input/ZFormField.svelte",
+			"declaredPropCount": 7,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "input",
+			"name": "ZInput",
+			"source": "ui/zui/src/components/input/ZInput.svelte",
+			"declaredPropCount": 9,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "input-group",
+			"name": "ZInputGroup",
+			"source": "ui/zui/src/components/input/ZInputGroup.svelte",
+			"declaredPropCount": 11,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "mention",
+			"name": "ZMention",
+			"source": "ui/zui/src/components/input/ZMention.svelte",
+			"declaredPropCount": 23,
+			"fallbackPropCount": 5,
+			"fallbackPropNames": ["emptyText", "filter", "listLabel", "loadingText", "placement"]
+		},
+		{
+			"id": "number-field",
+			"name": "ZNumberField",
+			"source": "ui/zui/src/components/input/ZNumberField.svelte",
+			"declaredPropCount": 28,
+			"fallbackPropCount": 9,
+			"fallbackPropNames": [
+				"decrementLabel",
+				"disabled",
+				"form",
+				"incrementLabel",
+				"inputId",
+				"inputLabel",
+				"placeholder",
+				"readonly",
+				"required"
+			]
+		},
+		{
+			"id": "pin-input",
+			"name": "ZPinInput",
+			"source": "ui/zui/src/components/input/ZPinInput.svelte",
+			"declaredPropCount": 18,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "segmented",
+			"name": "ZSegmented",
+			"source": "ui/zui/src/components/input/ZSegmented.svelte",
+			"declaredPropCount": 15,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "slider",
+			"name": "ZSlider",
+			"source": "ui/zui/src/components/input/ZSlider.svelte",
+			"declaredPropCount": 15,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "switch",
+			"name": "ZSwitch",
+			"source": "ui/zui/src/components/input/ZSwitch.svelte",
+			"declaredPropCount": 13,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "tags-input",
+			"name": "ZTagsInput",
+			"source": "ui/zui/src/components/input/ZTagsInput.svelte",
+			"declaredPropCount": 29,
+			"fallbackPropCount": 10,
+			"fallbackPropNames": [
+				"addLabel",
+				"controlId",
+				"editLabel",
+				"form",
+				"invalid",
+				"overflowLabel",
+				"placeholder",
+				"removeLabel",
+				"required",
+				"size"
+			]
+		},
+		{
+			"id": "textarea",
+			"name": "ZTextarea",
+			"source": "ui/zui/src/components/input/ZTextarea.svelte",
+			"declaredPropCount": 11,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "time-field",
+			"name": "ZTimeField",
+			"source": "ui/zui/src/components/input/ZTimeField.svelte",
+			"declaredPropCount": 26,
+			"fallbackPropCount": 11,
+			"fallbackPropNames": [
+				"controlId",
+				"disabled",
+				"form",
+				"invalid",
+				"isTimeUnavailable",
+				"locale",
+				"maxValue",
+				"minValue",
+				"onReset",
+				"readonly",
+				"required"
+			]
+		},
+		{
+			"id": "transfer",
+			"name": "ZTransfer",
+			"source": "ui/zui/src/components/input/ZTransfer.svelte",
+			"declaredPropCount": 26,
+			"fallbackPropCount": 9,
+			"fallbackPropNames": [
+				"emptyText",
+				"form",
+				"invalid",
+				"moveToSourceLabel",
+				"moveToTargetLabel",
+				"required",
+				"searchPlaceholder",
+				"sourceTitle",
+				"targetTitle"
+			]
+		},
+		{
+			"id": "tree-select",
+			"name": "ZTreeSelect",
+			"source": "ui/zui/src/components/input/ZTreeSelect.svelte",
+			"declaredPropCount": 35,
+			"fallbackPropCount": 14,
+			"fallbackPropNames": [
+				"ariaLabel",
+				"clearLabel",
+				"controlId",
+				"defaultExpandedKeys",
+				"defaultOpen",
+				"defaultValue",
+				"form",
+				"height",
+				"itemSize",
+				"onLoadError",
+				"overscan",
+				"placeholder",
+				"treeLabel",
+				"valueLabel"
+			]
+		},
+		{
+			"id": "aspect-ratio",
+			"name": "ZAspectRatio",
+			"source": "ui/zui/src/components/layout/ZAspectRatio.svelte",
+			"declaredPropCount": 3,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "container",
+			"name": "ZContainer",
+			"source": "ui/zui/src/components/layout/ZContainer.svelte",
+			"declaredPropCount": 4,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "stack",
+			"name": "ZStack",
+			"source": "ui/zui/src/components/layout/ZStack.svelte",
+			"declaredPropCount": 7,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "command",
+			"name": "ZCommand",
+			"source": "ui/zui/src/components/navigation/ZCommand.svelte",
+			"declaredPropCount": 19,
+			"fallbackPropCount": 7,
+			"fallbackPropNames": [
+				"autofocus",
+				"defaultQuery",
+				"emptyText",
+				"filter",
+				"inputLabel",
+				"listLabel",
+				"placeholder"
+			]
+		},
+		{
+			"id": "command-palette",
+			"name": "ZCommandPalette",
+			"source": "ui/zui/src/components/navigation/ZCommandPalette.svelte",
+			"declaredPropCount": 25,
+			"fallbackPropCount": 11,
+			"fallbackPropNames": [
+				"closeLabel",
+				"defaultOpen",
+				"defaultQuery",
+				"description",
+				"disabled",
+				"emptyText",
+				"inputLabel",
+				"listLabel",
+				"placeholder",
+				"title",
+				"triggerLabel"
+			]
+		},
+		{
+			"id": "pagination",
+			"name": "ZPagination",
+			"source": "ui/zui/src/components/navigation/ZPagination.svelte",
+			"declaredPropCount": 15,
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "tour",
+			"name": "ZTour",
+			"source": "ui/zui/src/components/overlay/ZTour.svelte",
+			"declaredPropCount": 21,
+			"fallbackPropCount": 10,
+			"fallbackPropNames": [
+				"closeLabel",
+				"closeOnEscape",
+				"closeOnMaskClick",
+				"defaultOpen",
+				"defaultStep",
+				"finishLabel",
+				"nextLabel",
+				"previousLabel",
+				"scrollIntoViewOptions",
+				"spotlightOffset"
+			]
+		}
+	],
+	"totals": {
+		"components": 141,
+		"declaredProps": 1382,
+		"fallbackProps": 243
+	}
+}
