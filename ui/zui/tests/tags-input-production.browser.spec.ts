@@ -191,7 +191,10 @@ describe('ZTagsInput production contract', () => {
 			.querySelector<HTMLButtonElement>('[data-testid="tags-identity-controlled-replace"]')!
 			.click();
 		await tick();
-		const replacementTags = [...root.querySelectorAll('[data-slot="tag"]')].slice(0, 2);
+		const replacementTags = [...root.querySelectorAll<HTMLElement>('[data-slot="tag"]')].slice(
+			0,
+			2
+		);
 		expect(replacementTags.map((tag) => initial.indexOf(tag))).toEqual([0, 1]);
 	});
 
