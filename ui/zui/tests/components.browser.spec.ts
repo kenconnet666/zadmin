@@ -3066,7 +3066,7 @@ describe('compiled ICSS browser updates', () => {
 		const icon = document.querySelector<SVGSVGElement>('[data-testid="icon"]');
 
 		expect(button?.type).toBe('button');
-		expect(getComputedStyle(button as Element).backgroundColor).toBe('rgb(220, 38, 38)');
+		expect(getComputedStyle(button as Element).backgroundColor).toBe('rgb(180, 35, 24)');
 		expect(getComputedStyle(text as Element).color).toBe('rgb(124, 58, 237)');
 		expect(getComputedStyle(text as Element).fontSize).toBe('16px');
 		expect(getComputedStyle(stack as Element).gap).toBe('8px');
