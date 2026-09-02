@@ -3,7 +3,7 @@
 		"metadataComponents": 141,
 		"documentationPages": 79,
 		"contractComponents": 141,
-		"testFiles": 122
+		"testFiles": 123
 	},
 	"stageNames": [
 		"Declared",
@@ -11058,6 +11058,10 @@
 						"detail": "ZForm explicit rendered fixture usage"
 					},
 					{
+						"path": "ui/zui/tests/FormSubmitEpochFixture.svelte",
+						"detail": "ZForm explicit rendered fixture usage"
+					},
+					{
 						"path": "ui/zui/tests/FormEdgeFixture.svelte",
 						"detail": "ZForm explicit rendered fixture usage"
 					},
@@ -11136,6 +11140,10 @@
 					},
 					{
 						"path": "ui/zui/tests/FormFixture.svelte",
+						"detail": "ZFormField explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/FormSubmitEpochFixture.svelte",
 						"detail": "ZFormField explicit rendered fixture usage"
 					},
 					{
@@ -11218,6 +11226,10 @@
 					},
 					{
 						"path": "ui/zui/tests/FormFixture.svelte",
+						"detail": "ZInput explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/FormSubmitEpochFixture.svelte",
 						"detail": "ZInput explicit rendered fixture usage"
 					},
 					{
