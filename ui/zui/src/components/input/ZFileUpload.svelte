@@ -256,7 +256,7 @@
 			{ description: 'Field或显式required。', name: 'data-required', values: ['true'] },
 			{ description: '当前已解析为减少动画。', name: 'data-reduced-motion', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '选择/拖放、typed队列状态机、调用方transport命令和真实FormData边界。'
 	} as const satisfies ZuiComponentMetadata;
 

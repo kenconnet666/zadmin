@@ -7873,7 +7873,7 @@
 			"name": "ZFileUpload",
 			"category": "input",
 			"family": null,
-			"status": "experimental",
+			"status": "stable",
 			"source": "ui/zui/src/components/input/ZFileUpload.svelte",
 			"apiDocumentation": {
 				"metadataGapPropCount": 0,
@@ -7904,7 +7904,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "a77404559141cf8f3a4e06df1a6111283c2ffdfa5c46050c193b224af9ebd84a API snapshot entry"
+						"detail": "eab3a19949928059251cd37784a794b8afdb66f88196086b611caab311d2f30d API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [

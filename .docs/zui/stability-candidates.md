@@ -2,7 +2,7 @@
 
 本文件由 `scripts/check-stability-policy.mjs` 生成；不会修改组件 status。compound member 可继承同 family root 的 Docs 页面。
 
-stableCompliant：29；stableViolations：0；promotionEligibleExperimental：2。
+stableCompliant：30；stableViolations：0；promotionEligibleExperimental：1。
 
 | Component               | Status       | Classification                | Blockers                                   | Docs                                                                           | SSR |
 | ----------------------- | ------------ | ----------------------------- | ------------------------------------------ | ------------------------------------------------------------------------------ | --: |
@@ -124,7 +124,7 @@ stableCompliant：29；stableViolations：0；promotionEligibleExperimental：2�
 | ZDatePicker             | experimental | experimental                  | VisuallyVerified, ProductionVerified       | apps/docs/src/content/components/input/date-picker/doc.ts                      |   1 |
 | ZDateRangePicker        | experimental | experimental                  | VisuallyVerified, ProductionVerified       | apps/docs/src/content/components/input/date-range-picker/doc.ts                |   1 |
 | ZField                  | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/input/field/doc.ts                            |   3 |
-| ZFileUpload             | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/input/file-upload/doc.ts                      |   1 |
+| ZFileUpload             | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/input/file-upload/doc.ts                      |   1 |
 | ZForm                   | experimental | experimental                  | ProductionVerified                         | apps/docs/src/content/components/input/form/doc.ts                             |   1 |
 | ZFormField              | experimental | experimental                  | ProductionVerified, Docs                   | —                                                                              |   1 |
 | ZInput                  | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/input/input/doc.ts                            |   2 |

@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"componentCount": 141,
-	"overallSha256": "80837e796415d234a7c9abd02b758ff4001e91cb483297b9b6fe7827541ba0dd",
+	"overallSha256": "8ef02fad0eb3c4c967f6c8a4512fb672494b39fc2cb934b1823328c67f6de899",
 	"components": [
 		{
 			"id": "accordion",
@@ -595,7 +595,7 @@
 		},
 		{
 			"id": "file-upload",
-			"sha256": "a77404559141cf8f3a4e06df1a6111283c2ffdfa5c46050c193b224af9ebd84a",
+			"sha256": "eab3a19949928059251cd37784a794b8afdb66f88196086b611caab311d2f30d",
 			"source": "src/components/input/ZFileUpload.svelte"
 		},
 		{

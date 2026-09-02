@@ -1374,7 +1374,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'input',
 		summary:
 			'生产FilePicker/queue边界：原生选择与拖放只创建typed队列，组件管理可控状态、进度、AbortSignal、重试和FormData；transport由调用方注入，默认手动且不拥有URL、fetch、凭据、响应、缓存或分片策略。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'file picker',
 			'file upload',
