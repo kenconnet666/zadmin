@@ -24,6 +24,7 @@ import CheckboxFixture from './CheckboxFixture.svelte';
 import FieldFixture from './FieldFixture.svelte';
 import FileUploadFixture from './FileUploadFixture.svelte';
 import FormFixture from './FormFixture.svelte';
+import FormSubmitEpochFixture from './FormSubmitEpochFixture.svelte';
 import FormEdgeFixture from './FormEdgeFixture.svelte';
 import FormGraphFixture from './FormGraphFixture.svelte';
 import FormValueBridgeFixture from './FormValueBridgeFixture.svelte';
@@ -1768,6 +1769,24 @@ describe('compiled ICSS browser updates', () => {
 		await resetForm(form);
 		expect(output?.textContent).toBe('false:false:0:alice');
 		expect(form?.querySelector('[data-dirty="true"]')).toBeNull();
+	});
+
+	it('makes submit the only accepted result when change validation is still pending', async () => {
+		render(FormSubmitEpochFixture);
+		const form = document.querySelector<HTMLFormElement>('[data-testid="submit-epoch-form"]')!;
+		const input = document.querySelector<HTMLInputElement>('[data-testid="submit-epoch-input"]')!;
+		const output = document.querySelector<HTMLOutputElement>(
+			'[data-testid="submit-epoch-output"]'
+		)!;
+		input.value = 'ready';
+		input.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		await tick();
+		form.requestSubmit();
+		await expect.poll(() => output.textContent).toContain('2:true:true:0:0');
+		document.querySelector<HTMLButtonElement>('[data-testid="resolve-submit"]')!.click();
+		await expect.poll(() => output.textContent).toContain('2:true:true:0:1');
+		document.querySelector<HTMLButtonElement>('[data-testid="resolve-old"]')!.click();
+		await expect.poll(() => output.textContent).toBe('2:true:false:0:1');
 	});
 
 	it('lets FormField consumers cancel dirty and touched transitions', async () => {

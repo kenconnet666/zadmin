@@ -498,6 +498,9 @@
 		if (event.defaultPrevented) return;
 		if (preventDefault || schema) event.preventDefault();
 		clearValidationTimers();
+		// A submit is a new validation epoch: pending change/blur promises may finish later,
+		// but their results must never be allowed to compete with this full-form submission.
+		validationEpoch += 1;
 		submitted = true;
 		registry.markAllTouched();
 		const formData = readFormData(event.submitter);
