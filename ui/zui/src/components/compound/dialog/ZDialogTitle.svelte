@@ -51,7 +51,7 @@
 </script>
 
 <script lang="ts">
-	import { untrack } from 'svelte';
+	import { onDestroy, untrack } from 'svelte';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -69,9 +69,17 @@
 	}: ZDialogTitleProps = $props();
 	const zui = useZui();
 	const dialog = useZDialog();
+	const unregisterTitle = dialog.registerTitle();
+	onDestroy(unregisterTitle);
 	const rootClass = $derived(zui.recipe(recipe));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
+	$effect(() => {
+		dialog.setTitle(ref);
+		return () => {
+			if (dialog.title === ref) dialog.setTitle(null);
+		};
+	});
 </script>
 
 <h2

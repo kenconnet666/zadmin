@@ -3,6 +3,10 @@ import GalleryDemo from './GalleryDemo.svelte';
 import gallerySource from './GalleryDemo.svelte?raw';
 import SemanticsDemo from './SemanticsDemo.svelte';
 import semanticsSource from './SemanticsDemo.svelte?raw';
+import ActionDemo from './ActionDemo.svelte';
+import actionSource from './ActionDemo.svelte?raw';
+import RtlDemo from './RtlDemo.svelte';
+import rtlSource from './RtlDemo.svelte?raw';
 import { iconApiFacts } from '../../../../framework/component-api.generated.js';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
@@ -41,7 +45,28 @@ export const iconDoc = defineComponentDoc(iconMetadata, {
 			id: 'icon-semantics',
 			source: semanticsSource,
 			title: '尺寸与可访问语义'
+		},
+		{
+			covers: ['accessible-name', 'composition', 'keyboard'],
+			component: ActionDemo,
+			description: '文字Button与icon-only Button分别由Button内容或aria-label命名，图标保持装饰性。',
+			id: 'icon-action-composition',
+			source: actionSource,
+			title: '操作控件中的图标'
+		},
+		{
+			covers: ['composition', 'rtl'],
+			component: RtlDemo,
+			description: 'currentColor自然继承，但方向图标不会仅因RTL自动镜像。',
+			id: 'icon-rtl-direction',
+			source: rtlSource,
+			title: 'RTL与方向所有权'
 		}
 	],
-	accessibility: ['没有可访问名称时设置aria-hidden。', '具名图标使用role=img。']
+	accessibility: [
+		'没有可访问名称时设置aria-hidden；相邻文字或父Button拥有名称。',
+		'具名图标使用role=img，label优先于原生aria-label且必须表达图像用途。',
+		'图标永远focusable=false；交互、Tab、disabled和pressed语义属于Button、Link等父控件。',
+		'方向图标不自动随RTL镜像，避免把“前进”“返回”“传输”等不同业务语义混为纯视觉方向。'
+	]
 });

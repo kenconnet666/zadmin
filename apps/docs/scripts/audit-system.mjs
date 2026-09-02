@@ -459,11 +459,13 @@ if (
 	!focusScopeSource.includes('this.#options.restoreTarget?.() ?? this.#previousFocus') ||
 	!focusScopeSource.includes('this.#previousFocus !== restoreTarget') ||
 	!focusScopeSource.includes('this.#previousFocus.focus({ preventScroll: true })') ||
-	!popoverContentSource.includes('restoreTarget: () => popover.trigger') ||
+	!popoverContentSource.includes('restoreTarget: restoreTarget ?? (() => popover.trigger)') ||
+	!popoverContentSource.includes('restoreFocus,') ||
 	!popoverContentSource.includes(
 		"aria-modal={popover.modal && role === 'dialog' ? 'true' : undefined}"
 	) ||
-	!dialogContentSource.includes('restoreTarget: () => dialog.trigger')
+	!dialogContentSource.includes('restoreTarget: restoreTarget ?? (() => dialog.trigger)') ||
+	!dialogContentSource.includes('restoreFocus,')
 ) {
 	fail('Layer focus scopes and modal semantics must preserve their current compound contracts.');
 }

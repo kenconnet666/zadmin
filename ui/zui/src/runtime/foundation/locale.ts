@@ -99,6 +99,7 @@ export interface ZuiFeedbackLocale {
 }
 
 export interface ZuiFormLocale {
+	readonly pinInputPosition: (formattedIndex: string, formattedLength: string) => string;
 	readonly unexpectedValidation: string;
 }
 
@@ -129,6 +130,10 @@ export interface ZuiPaginationLocale {
 
 export interface ZuiProgressLocale {
 	readonly label: string;
+}
+
+export interface ZuiTagLocale {
+	readonly removeTag: (textValue?: string) => string;
 }
 
 export interface ZuiTimeLocale {
@@ -182,6 +187,7 @@ export interface ZuiLocalePack {
 	readonly numberField: ZuiNumberFieldLocale;
 	readonly pagination: ZuiPaginationLocale;
 	readonly progress: ZuiProgressLocale;
+	readonly tag: ZuiTagLocale;
 	readonly tagsInput: ZuiTagsInputLocale;
 	readonly time: ZuiTimeLocale;
 	readonly tour: ZuiTourLocale;
@@ -203,6 +209,7 @@ export interface ZuiLocalePackOverrides {
 	readonly numberField?: Partial<ZuiNumberFieldLocale>;
 	readonly pagination?: Partial<ZuiPaginationLocale>;
 	readonly progress?: Partial<ZuiProgressLocale>;
+	readonly tag?: Partial<ZuiTagLocale>;
 	readonly tagsInput?: Partial<ZuiTagsInputLocale>;
 	readonly time?: Partial<ZuiTimeLocale>;
 	readonly tour?: Partial<ZuiTourLocale>;
@@ -299,6 +306,8 @@ export const enUSLocalePack = Object.freeze({
 			`Uploading ${fileName}: ${formattedProgress}`
 	}),
 	form: Object.freeze({
+		pinInputPosition: (formattedIndex: string, formattedLength: string) =>
+			`Digit ${formattedIndex} of ${formattedLength}`,
 		unexpectedValidation: 'Validation failed unexpectedly.'
 	}),
 	link: Object.freeze({
@@ -326,6 +335,9 @@ export const enUSLocalePack = Object.freeze({
 	}),
 	progress: Object.freeze({
 		label: 'Progress'
+	}),
+	tag: Object.freeze({
+		removeTag: (textValue?: string) => (textValue ? `Remove ${textValue}` : 'Remove tag')
 	}),
 	tagsInput: Object.freeze({
 		addTag: 'Add tag',
@@ -450,6 +462,8 @@ export const zhCNLocalePack = Object.freeze({
 			`正在上传 ${fileName}：${formattedProgress}`
 	}),
 	form: Object.freeze({
+		pinInputPosition: (formattedIndex: string, formattedLength: string) =>
+			`第${formattedIndex}位，共${formattedLength}位`,
 		unexpectedValidation: '验证过程中发生意外错误。'
 	}),
 	link: Object.freeze({
@@ -477,6 +491,9 @@ export const zhCNLocalePack = Object.freeze({
 	}),
 	progress: Object.freeze({
 		label: '进度'
+	}),
+	tag: Object.freeze({
+		removeTag: (textValue?: string) => (textValue ? `移除标签 ${textValue}` : '移除标签')
 	}),
 	tagsInput: Object.freeze({
 		addTag: '添加标签',
@@ -588,6 +605,7 @@ export function resolveZuiLocalePack(
 			mergeDefined(base.pagination, legacy.pagination, overrides?.pagination)
 		),
 		progress: Object.freeze(mergeDefined(base.progress, overrides?.progress)),
+		tag: Object.freeze(mergeDefined(base.tag, overrides?.tag)),
 		tagsInput: Object.freeze(mergeDefined(base.tagsInput, overrides?.tagsInput)),
 		time: Object.freeze(mergeDefined(base.time, legacy.time, overrides?.time)),
 		tour: Object.freeze(mergeDefined(base.tour, overrides?.tour)),

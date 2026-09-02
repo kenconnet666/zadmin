@@ -170,7 +170,7 @@
 </script>
 
 <script lang="ts">
-	import { onMount, untrack } from 'svelte';
+	import { onDestroy, onMount, untrack } from 'svelte';
 
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { useZField } from '../../runtime/form/field-context.js';
@@ -216,8 +216,13 @@
 	const uid = $props.id();
 	const field = useZField();
 	const inputGroup = useZInputGroup();
+	const resolvedDisabled = $derived(disabled || inputGroup?.disabled || field?.disabled || false);
 	const resolvedInvalid = $derived(invalid ?? inputGroup?.invalid ?? field?.invalid ?? false);
-	const resolvedSize = $derived(resolveControlSize(size ?? field?.size, zui.density));
+	const resolvedReadonly = $derived(readonly || inputGroup?.readonly || field?.readonly || false);
+	const resolvedRequired = $derived(required || inputGroup?.required || field?.required || false);
+	const resolvedSize = $derived(
+		resolveControlSize(size ?? inputGroup?.size ?? field?.size, zui.density)
+	);
 	const reduced = $derived(reducedMotion.current);
 	const rootClass = $derived(
 		zui.recipe(inputRecipe, {
@@ -234,10 +239,25 @@
 	});
 	const resolvedValue = $derived(state.current);
 	const generatedId = $derived(createZuiId(zui.idPrefix, uid, 'input'));
-	const resolvedDescribedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
+	const resolvedName = $derived(name ?? inputGroup?.name ?? field?.name);
+	const resolvedDescribedBy = $derived(
+		mergeAriaIds(ariaDescribedBy, inputGroup?.describedBy, field?.describedBy)
+	);
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
-	onMount(() => reducedMotion.connect(ref?.ownerDocument.defaultView));
+	const unregisterInputGroupControl = inputGroup?.registerControl({
+		focus() {
+			ref?.focus({ preventScroll: true });
+		}
+	});
+	let browserMounted = false;
+	onMount(() => {
+		browserMounted = true;
+		return reducedMotion.connect(ref?.ownerDocument.defaultView);
+	});
+	onDestroy(() => {
+		if (browserMounted) unregisterInputGroupControl?.();
+	});
 	function handleInput(event: Event & { currentTarget: HTMLInputElement }): void {
 		state.setFromUser(event.currentTarget.value);
 		oninput?.(event);
@@ -254,19 +274,20 @@
 	class={[rootClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
-	id={id ?? field?.controlId ?? generatedId}
-	name={name ?? field?.name}
+	id={id ?? inputGroup?.controlId ?? field?.controlId ?? generatedId}
+	name={resolvedName}
 	{form}
 	{type}
 	{defaultValue}
 	value={resolvedValue}
 	oninput={handleInput}
-	disabled={disabled || inputGroup?.disabled || field?.disabled}
-	readonly={readonly || field?.readonly}
-	required={required || field?.required}
+	disabled={resolvedDisabled}
+	readonly={resolvedReadonly}
+	required={resolvedRequired}
 	aria-describedby={resolvedDescribedBy}
 	aria-invalid={resolvedInvalid ? 'true' : ariaInvalid}
 	data-invalid={resolvedInvalid ? 'true' : undefined}
+	data-zui-input-group-control={inputGroup ? '' : undefined}
 	data-size={resolvedSize}
 	data-reduced-motion={reduced || undefined}
 />

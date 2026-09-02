@@ -3,7 +3,8 @@
 	import type { HTMLTableAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
-	export type TableDensity = 'compact' | 'comfortable';
+	export type TableDensity = 'compact' | 'comfortable' | 'spacious';
+	export type TableScroll = 'auto' | 'none';
 	export interface ZTableProps extends Omit<HTMLTableAttributes, 'children'> {
 		readonly caption: string;
 		readonly captionHidden?: boolean;
@@ -12,18 +13,29 @@
 		readonly header?: Snippet;
 		readonly density?: TableDensity;
 		ref?: HTMLTableElement | null;
+		readonly scroll?: TableScroll;
+		readonly scrollLabel?: string;
 		readonly striped?: boolean;
+		wrapperRef?: HTMLDivElement | null;
 	}
 	export const zuiMetadata = {
 		category: 'data-display',
 		id: 'table',
 		importStatement: "import { ZTable } from '@zadmin/zui';",
 		name: 'ZTable',
-		bindings: [{ description: '真实table引用。', name: 'ref', type: 'HTMLTableElement | null' }],
-		dependencies: ['native table semantics'],
+		bindings: [
+			{ description: '真实table引用。', name: 'ref', type: 'HTMLTableElement | null' },
+			{
+				description: '稳定响应式滚动容器引用。',
+				name: 'wrapperRef',
+				type: 'HTMLDivElement | null'
+			}
+		],
+		dependencies: ['native table semantics', 'ZVisuallyHidden', 'owner Window ResizeObserver'],
 		events: [],
 		keyboard: [],
 		parts: [
+			{ description: '仅在真实横向溢出时可聚焦并命名的滚动owner。', name: 'wrapper' },
 			{ description: 'caption。', name: 'caption' },
 			{ description: 'thead。', name: 'header' },
 			{ description: 'tbody。', name: 'body' },
@@ -44,10 +56,22 @@
 				type: 'boolean'
 			},
 			{
-				default: "'comfortable'",
-				description: '单元格密度。',
+				default: 'Provider density',
+				description: '显式值优先，否则继承compact/comfortable/spacious Provider density。',
 				name: 'density',
-				type: "'compact' | 'comfortable'"
+				type: "'compact' | 'comfortable' | 'spacious'"
+			},
+			{
+				default: "'auto'",
+				description: 'auto允许横向滚动并仅在真实溢出时建立可聚焦region；none不拥有滚动。',
+				name: 'scroll',
+				type: "'auto' | 'none'"
+			},
+			{
+				default: 'caption',
+				description: '真实溢出时滚动region的名称。',
+				name: 'scrollLabel',
+				type: 'string'
 			},
 			{ default: 'false', description: '交替tbody行背景。', name: 'striped', type: 'boolean' }
 		],
@@ -58,19 +82,36 @@
 			{ description: 'tfoot行。', name: 'footer', type: 'Snippet' }
 		],
 		source: 'ui/zui/src/components/data-display/ZTable.svelte',
-		states: [],
+		states: [
+			{
+				description: '解析后的单元格密度。',
+				name: 'data-density',
+				values: ['compact', 'comfortable', 'spacious']
+			},
+			{ description: '真实横向溢出。', name: 'data-overflowing', values: ['true'] },
+			{ description: '滚动owner策略。', name: 'data-scroll', values: ['auto', 'none'] }
+		],
 		status: 'experimental',
-		summary: '只负责原生table结构、caption和视觉密度，不拥有数据状态的Table。'
+		summary:
+			'保持真实table/caption/thead/tbody/tfoot与native cell语义，并提供Provider density和只在真实溢出时可聚焦的有限横向scroll owner；不拥有数据状态。'
 	} as const satisfies ZuiComponentMetadata;
+	const wrapperRecipe = defineRecipe({
+		base: (s) => {
+			s.maxWidth.percent(100);
+			s.width.percent(100);
+		},
+		variants: {
+			scroll: {
+				auto: (s) => s.overflowX.auto,
+				none: (s) => s.overflowX.visible
+			}
+		},
+		defaultVariants: { scroll: 'auto' }
+	});
 	const recipe = defineRecipe({
 		base: (s) => {
 			s.borderCollapse.collapse;
 			s.width.percent(100);
-			s._selector('& caption', (caption) => {
-				caption.fontWeight._semibold;
-				caption.paddingBlock._medium;
-				caption.textAlign.start;
-			});
 			s._selector('& th, & td', (cell) => {
 				cell.borderBottomColor._border;
 				cell.borderBottomStyle.solid;
@@ -94,6 +135,11 @@
 					s._selector('& th, & td', (cell) => {
 						cell.paddingBlock._small;
 						cell.paddingInline._medium;
+					}),
+				spacious: (s) =>
+					s._selector('& th, & td', (cell) => {
+						cell.paddingBlock._large;
+						cell.paddingInline._xlarge;
 					})
 			},
 			striped: {
@@ -104,25 +150,27 @@
 		},
 		defaultVariants: { density: 'comfortable', striped: false }
 	});
-	const hiddenRecipe = defineRecipe({
+	const captionRecipe = defineRecipe({
 		base: (s) => {
-			s.clip.raw('rect(0 0 0 0)');
-			s.clipPath.raw('inset(50%)');
-			s.height.px(1);
-			s.overflow.hidden;
-			s.position.absolute;
-			s.whiteSpace.nowrap;
-			s.width.px(1);
+			s.fontWeight._semibold;
+			s.textAlign.start;
 		},
-		variants: {},
-		defaultVariants: {}
+		variants: {
+			hidden: {
+				false: (s) => s.paddingBlock._medium,
+				true: (s) => s.padding.px(0)
+			}
+		},
+		defaultVariants: { hidden: false }
 	});
+	registerRecipeHmr(import.meta, wrapperRecipe);
 	registerRecipeHmr(import.meta, recipe);
-	registerRecipeHmr(import.meta, hiddenRecipe);
+	registerRecipeHmr(import.meta, captionRecipe);
 </script>
 
 <script lang="ts">
-	import { untrack } from 'svelte';
+	import { onMount, untrack } from 'svelte';
+	import ZVisuallyHidden from '../gene/ZVisuallyHidden.svelte';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -135,31 +183,121 @@
 		captionHidden = false,
 		children,
 		class: className,
-		density = 'comfortable',
+		density,
+		dir,
 		footer,
 		header,
 		ref = $bindable(null),
+		scroll = 'auto',
+		scrollLabel,
 		striped = false,
 		style,
+		wrapperRef = $bindable(null),
 		...rest
 	}: ZTableProps = $props();
 	const zui = useZui();
-	const rootClass = $derived(zui.recipe(recipe, { density, striped }));
-	const captionClass = $derived(captionHidden ? zui.recipe(hiddenRecipe) : undefined);
+	let overflowing = $state(false);
+	const resolvedDirection = $derived(dir ?? zui.direction);
+	const resolvedCaptionHidden = $derived.by(() => {
+		if (typeof captionHidden !== 'boolean') {
+			throw new TypeError('ZTable captionHidden must be boolean.');
+		}
+		return captionHidden;
+	});
+	const resolvedStriped = $derived.by(() => {
+		if (typeof striped !== 'boolean') throw new TypeError('ZTable striped must be boolean.');
+		return striped;
+	});
+	const resolvedCaption = $derived.by(() => {
+		if (typeof caption !== 'string' || caption.trim().length === 0) {
+			throw new TypeError('ZTable caption must be a non-empty string.');
+		}
+		return caption;
+	});
+	const resolvedDensity = $derived.by(() => {
+		const next = density ?? zui.density;
+		if (!['compact', 'comfortable', 'spacious'].includes(next)) {
+			throw new TypeError('ZTable density must be compact, comfortable or spacious.');
+		}
+		return next;
+	});
+	const resolvedScroll = $derived.by(() => {
+		if (!['auto', 'none'].includes(scroll)) {
+			throw new TypeError('ZTable scroll must be auto or none.');
+		}
+		return scroll;
+	});
+	const resolvedScrollLabel = $derived.by(() => {
+		const next = scrollLabel ?? resolvedCaption;
+		if (next.trim().length === 0) throw new TypeError('ZTable scrollLabel must be non-empty.');
+		return next;
+	});
+	const wrapperClass = $derived(zui.recipe(wrapperRecipe, { scroll: resolvedScroll }));
+	const rootClass = $derived(
+		zui.recipe(recipe, { density: resolvedDensity, striped: resolvedStriped })
+	);
+	const captionClass = $derived(zui.recipe(captionRecipe, { hidden: resolvedCaptionHidden }));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
+
+	function updateOverflow(): void {
+		const wrapper = wrapperRef;
+		overflowing =
+			resolvedScroll === 'auto' && !!wrapper && wrapper.scrollWidth > wrapper.clientWidth + 1;
+	}
+
+	$effect(() => {
+		resolvedScroll;
+		if (resolvedScroll === 'none') {
+			overflowing = false;
+			return;
+		}
+		updateOverflow();
+	});
+
+	onMount(() => {
+		const wrapper = wrapperRef;
+		const ownerWindow = wrapper?.ownerDocument.defaultView;
+		if (!wrapper || !ownerWindow) return;
+		const ResizeObserverConstructor = ownerWindow.ResizeObserver;
+		const observer = ResizeObserverConstructor
+			? new ResizeObserverConstructor(updateOverflow)
+			: undefined;
+		observer?.observe(wrapper);
+		if (ref) observer?.observe(ref);
+		ownerWindow.addEventListener('resize', updateOverflow);
+		updateOverflow();
+		return () => {
+			observer?.disconnect();
+			ownerWindow.removeEventListener('resize', updateOverflow);
+		};
+	});
 </script>
 
-<table
-	{...rest}
-	bind:this={ref}
-	class={[rootClass, className]}
-	style={initialStyle}
-	use:applyIcssRootStyle={{ style, variables }}
+<div
+	bind:this={wrapperRef}
+	class={wrapperClass}
+	dir={resolvedDirection}
+	role={overflowing ? 'region' : undefined}
+	aria-label={overflowing ? resolvedScrollLabel : undefined}
+	data-overflowing={overflowing || undefined}
+	data-scroll={resolvedScroll}
+	data-slot="wrapper"
+	tabindex={overflowing ? 0 : undefined}
 >
-	<caption class={captionClass} data-slot="caption">{caption}</caption>{#if header}<thead
-			data-slot="header">{@render header()}</thead
-		>{/if}<tbody data-slot="body">{@render children?.()}</tbody>{#if footer}<tfoot
-			data-slot="footer">{@render footer()}</tfoot
-		>{/if}
-</table>
+	<table
+		{...rest}
+		bind:this={ref}
+		class={[rootClass, className]}
+		style={initialStyle}
+		use:applyIcssRootStyle={{ style, variables }}
+		data-density={resolvedDensity}
+	>
+		<caption class={captionClass} data-slot="caption">
+			{#if resolvedCaptionHidden}<ZVisuallyHidden>{resolvedCaption}</ZVisuallyHidden
+				>{:else}{resolvedCaption}{/if}
+		</caption>{#if header}<thead data-slot="header">{@render header()}</thead>{/if}<tbody
+			data-slot="body">{@render children?.()}</tbody
+		>{#if footer}<tfoot data-slot="footer">{@render footer()}</tfoot>{/if}
+	</table>
+</div>

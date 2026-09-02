@@ -10,7 +10,7 @@
 {/snippet}
 
 <ZStack gap="small">
-	<ZInputGroup suffix={actions}>
+	<ZInputGroup suffixAction={actions}>
 		<ZDateField
 			appearance="bare"
 			formParticipation="none"

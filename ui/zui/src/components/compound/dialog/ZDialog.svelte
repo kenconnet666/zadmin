@@ -82,7 +82,11 @@
 	});
 	const reducedMotion = new ReducedMotionState(() => zui.motion);
 	let overlay = $state<HTMLDivElement | null>(null);
+	let description = $state<HTMLParagraphElement | null>(null);
+	let descriptionCount = $state(0);
 	let portalAnchor = $state<HTMLElement | null>(null);
+	let title = $state<HTMLHeadingElement | null>(null);
+	let titleCount = $state(0);
 	let trigger = $state<HTMLButtonElement | null>(null);
 	onMount(() => reducedMotion.connect(portalAnchor?.ownerDocument.defaultView));
 	const context: ZDialogContext = {
@@ -91,6 +95,15 @@
 		},
 		get descriptionId() {
 			return `${idBase}-description`;
+		},
+		get description() {
+			return description;
+		},
+		get hasDescription() {
+			return descriptionCount > 0;
+		},
+		get hasTitle() {
+			return titleCount > 0;
 		},
 		get exitDuration() {
 			return reducedMotion.current ? 0 : durationMilliseconds(zui.theme.duration.normal);
@@ -110,14 +123,31 @@
 		setOpen(next) {
 			openState.setFromUser(next);
 		},
+		registerDescription() {
+			descriptionCount += 1;
+			return () => (descriptionCount = Math.max(0, descriptionCount - 1));
+		},
+		registerTitle() {
+			titleCount += 1;
+			return () => (titleCount = Math.max(0, titleCount - 1));
+		},
 		setOverlay(next) {
 			overlay = next;
+		},
+		setDescription(next) {
+			description = next;
+		},
+		setTitle(next) {
+			title = next;
 		},
 		setTrigger(next) {
 			trigger = next;
 		},
 		get titleId() {
 			return `${idBase}-title`;
+		},
+		get title() {
+			return title;
 		},
 		get trigger() {
 			return trigger;

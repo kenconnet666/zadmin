@@ -119,6 +119,11 @@
 	const zui = useZui();
 	const uid = $props.id();
 	const idBase = $derived(createZuiId(zui.idPrefix, uid, 'popover'));
+	const resolvedGutter = $derived.by(() => {
+		if (!Number.isFinite(gutter) || gutter < 0)
+			throw new TypeError('ZPopover gutter must be a non-negative finite number.');
+		return gutter;
+	});
 	const openState = new ControllableState<boolean>({
 		defaultValue: () => defaultOpen,
 		onChange: () => onOpenChange,
@@ -136,7 +141,7 @@
 			return reducedMotion.current ? 0 : durationMilliseconds(zui.theme.duration.fast);
 		},
 		get gutter() {
-			return gutter;
+			return resolvedGutter;
 		},
 		get matchWidth() {
 			return matchWidth;

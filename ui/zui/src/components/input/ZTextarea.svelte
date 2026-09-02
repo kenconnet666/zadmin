@@ -198,7 +198,7 @@
 </script>
 
 <script lang="ts">
-	import { onMount, untrack } from 'svelte';
+	import { onDestroy, onMount, untrack } from 'svelte';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { useZField } from '../../runtime/form/field-context.js';
 	import { useZInputGroup } from '../../runtime/form/input-group-context.svelte.js';
@@ -247,8 +247,11 @@
 	const inputGroup = useZInputGroup();
 	const resolvedDisabled = $derived(disabled || inputGroup?.disabled || field?.disabled || false);
 	const resolvedInvalid = $derived(invalid ?? inputGroup?.invalid ?? field?.invalid ?? false);
-	const resolvedReadonly = $derived(readonly || field?.readonly || false);
-	const resolvedSize = $derived(resolveControlSize(size ?? field?.size, zui.density));
+	const resolvedReadonly = $derived(readonly || inputGroup?.readonly || field?.readonly || false);
+	const resolvedRequired = $derived(required || inputGroup?.required || field?.required || false);
+	const resolvedSize = $derived(
+		resolveControlSize(size ?? inputGroup?.size ?? field?.size, zui.density)
+	);
 	const autosizeEnabled = $derived(autosize === true || typeof autosize === 'object');
 	const reduced = $derived(reducedMotion.current);
 	const rootClass = $derived(
@@ -269,10 +272,25 @@
 	});
 	const resolvedValue = $derived(state.current);
 	const generatedId = $derived(createZuiId(zui.idPrefix, uid, 'textarea'));
-	const resolvedDescribedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
+	const resolvedName = $derived(name ?? inputGroup?.name ?? field?.name);
+	const resolvedDescribedBy = $derived(
+		mergeAriaIds(ariaDescribedBy, inputGroup?.describedBy, field?.describedBy)
+	);
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
-	onMount(() => reducedMotion.connect(ref?.ownerDocument.defaultView));
+	const unregisterInputGroupControl = inputGroup?.registerControl({
+		focus() {
+			ref?.focus({ preventScroll: true });
+		}
+	});
+	let browserMounted = false;
+	onMount(() => {
+		browserMounted = true;
+		return reducedMotion.connect(ref?.ownerDocument.defaultView);
+	});
+	onDestroy(() => {
+		if (browserMounted) unregisterInputGroupControl?.();
+	});
 
 	function handleInput(event: Event & { currentTarget: HTMLTextAreaElement }): void {
 		state.setFromUser(event.currentTarget.value);
@@ -298,17 +316,18 @@
 		onResize,
 		value: resolvedValue
 	}}
-	id={id ?? field?.controlId ?? generatedId}
-	name={name ?? field?.name}
+	id={id ?? inputGroup?.controlId ?? field?.controlId ?? generatedId}
+	name={resolvedName}
 	{form}
 	{defaultValue}
 	value={resolvedValue}
 	disabled={resolvedDisabled}
 	readonly={resolvedReadonly}
-	required={required || field?.required}
+	required={resolvedRequired}
 	aria-describedby={resolvedDescribedBy}
 	aria-invalid={resolvedInvalid ? 'true' : ariaInvalid}
 	data-invalid={resolvedInvalid ? 'true' : undefined}
+	data-zui-input-group-control={inputGroup ? '' : undefined}
 	data-size={resolvedSize}
 	data-autosize={autosizeEnabled || undefined}
 	data-disabled={resolvedDisabled || undefined}

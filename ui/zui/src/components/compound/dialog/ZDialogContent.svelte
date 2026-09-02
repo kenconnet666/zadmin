@@ -2,17 +2,31 @@
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
+	import type { DismissableLayerEvent } from '../../../runtime/layer/dismissable-layer.js';
 	import { defineRecipe, registerRecipeHmr } from '../../../recipes/define.js';
+
+	export type DialogEscapeEvent = DismissableLayerEvent<KeyboardEvent>;
+	export type DialogFocusOutsideEvent = DismissableLayerEvent<FocusEvent>;
+	export type DialogPointerOutsideEvent = DismissableLayerEvent<PointerEvent>;
 
 	export interface ZDialogContentProps extends Omit<
 		HTMLAttributes<HTMLDivElement>,
-		'aria-describedby' | 'aria-labelledby' | 'children' | 'id' | 'role'
+		'aria-describedby' | 'aria-label' | 'aria-labelledby' | 'children' | 'id' | 'role'
 	> {
 		readonly appearance?: 'dialog' | 'unstyled';
+		readonly ariaDescribedBy?: string | null;
+		readonly ariaLabel?: string;
+		readonly ariaLabelledBy?: string | null;
 		readonly children?: Snippet;
 		readonly dismissOnEscape?: boolean;
 		readonly dismissOnPointerOutside?: boolean;
+		readonly initialFocus?: () => HTMLElement | null;
+		readonly onEscape?: (event: DialogEscapeEvent) => void;
+		readonly onFocusOutside?: (event: DialogFocusOutsideEvent) => void;
+		readonly onPointerOutside?: (event: DialogPointerOutsideEvent) => void;
 		ref?: HTMLDivElement | null;
+		readonly restoreFocus?: boolean;
+		readonly restoreTarget?: () => HTMLElement | null;
 		readonly role?: 'alertdialog' | 'dialog';
 	}
 
@@ -79,7 +93,23 @@
 			'inert others',
 			'Presence'
 		],
-		events: [],
+		events: [
+			{
+				description: 'Escape dismiss前的可取消事件。',
+				name: 'onEscape',
+				type: '(event: DialogEscapeEvent) => void'
+			},
+			{
+				description: '焦点尝试离开modal时的可取消事件。',
+				name: 'onFocusOutside',
+				type: '(event: DialogFocusOutsideEvent) => void'
+			},
+			{
+				description: 'pointer落在Content外部前的可取消事件。',
+				name: 'onPointerOutside',
+				type: '(event: DialogPointerOutsideEvent) => void'
+			}
+		],
 		keyboard: [
 			{ description: '关闭最顶层Dialog。', key: 'Escape' },
 			{ description: '在Dialog内循环焦点。', key: 'Tab / Shift+Tab' }
@@ -111,6 +141,42 @@
 				type: "'dialog' | 'alertdialog'"
 			},
 			{
+				default: '首个tabbable元素',
+				description: '显式初始焦点目标。',
+				name: 'initialFocus',
+				type: '() => HTMLElement | null'
+			},
+			{
+				default: 'true',
+				description: '关闭时是否恢复焦点。',
+				name: 'restoreFocus',
+				type: 'boolean'
+			},
+			{
+				default: 'Trigger',
+				description: '覆盖关闭后的焦点目标。',
+				name: 'restoreTarget',
+				type: '() => HTMLElement | null'
+			},
+			{
+				default: '已挂载Title id',
+				description: '显式名称来源；null移除aria-labelledby。',
+				name: 'ariaLabelledBy',
+				type: 'string | null'
+			},
+			{
+				default: '已挂载Description id',
+				description: '显式说明来源；null移除aria-describedby。',
+				name: 'ariaDescribedBy',
+				type: 'string | null'
+			},
+			{
+				default: 'undefined',
+				description: '无Title时提供直接可访问名称。',
+				name: 'ariaLabel',
+				type: 'string'
+			},
+			{
 				bindable: true,
 				default: 'null',
 				description: '挂载期间的真实dialog引用。',
@@ -128,7 +194,8 @@
 			{ description: '解析后的减少动画状态。', name: 'data-reduced-motion', values: ['true'] }
 		],
 		status: 'experimental',
-		summary: 'modal Portal中统一管理top layer、focus trap、scroll、inert与Presence的Dialog内容。'
+		summary:
+			'modal Portal中统一管理top layer、真实ARIA引用、可取消outside事件、焦点策略、scroll、inert与Presence的Dialog内容。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
 
@@ -151,11 +218,20 @@
 
 	let {
 		appearance = 'dialog',
+		ariaDescribedBy,
+		ariaLabel,
+		ariaLabelledBy,
 		children,
 		class: className,
 		dismissOnEscape = true,
 		dismissOnPointerOutside = true,
+		initialFocus,
+		onEscape,
+		onFocusOutside,
+		onPointerOutside,
 		ref = $bindable(null),
+		restoreFocus = true,
+		restoreTarget,
 		role = 'dialog',
 		style,
 		...rest
@@ -176,7 +252,25 @@
 	);
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
+	const explicitLabel = $derived(ariaLabel?.trim() || undefined);
+	const explicitLabelledBy = $derived(ariaLabelledBy?.trim() || undefined);
+	const resolvedLabelledBy = $derived(
+		ariaLabelledBy === null
+			? undefined
+			: (explicitLabelledBy ?? (explicitLabel ? undefined : dialog.titleId))
+	);
+	const resolvedDescribedBy = $derived(
+		ariaDescribedBy === null
+			? undefined
+			: ariaDescribedBy?.trim() || (dialog.hasDescription ? dialog.descriptionId : undefined)
+	);
 	$effect(() => presence.update(dialog.open, dialog.exitDuration, ref?.ownerDocument.defaultView));
+	$effect(() => {
+		const namedByTitle = ariaLabelledBy === undefined && !explicitLabel && dialog.hasTitle;
+		if (dialog.open && ref && !explicitLabelledBy && !explicitLabel && !namedByTitle) {
+			throw new TypeError('ZDialogContent requires ZDialogTitle, ariaLabel, or ariaLabelledBy.');
+		}
+	});
 	$effect(() => {
 		const content = ref;
 		if (!dialog.open || !content) return;
@@ -184,16 +278,22 @@
 			modal: () => true,
 			onDismiss: () => dialog.setOpen(false),
 			onEscape: (event) => {
+				onEscape?.(event);
 				if (!dismissOnEscape) event.preventDefault();
 			},
-			onFocusOutside: (event) => event.preventDefault(),
+			onFocusOutside: (event) => {
+				onFocusOutside?.(event);
+				event.preventDefault();
+			},
 			onPointerOutside: (event) => {
+				onPointerOutside?.(event);
 				if (!dismissOnPointerOutside) event.preventDefault();
 			}
 		});
 		const focusScope = new FocusScope(content, {
-			restoreFocus: true,
-			restoreTarget: () => dialog.trigger,
+			initialFocus,
+			restoreFocus,
+			restoreTarget: restoreTarget ?? (() => dialog.trigger),
 			trap: true
 		});
 		const releaseScroll = lockScroll(content.ownerDocument);
@@ -223,8 +323,9 @@
 		tabindex={-1}
 		inert={!dialog.open}
 		aria-modal="true"
-		aria-labelledby={dialog.titleId}
-		aria-describedby={dialog.descriptionId}
+		aria-label={resolvedLabelledBy ? undefined : explicitLabel}
+		aria-labelledby={resolvedLabelledBy}
+		aria-describedby={resolvedDescribedBy}
 		data-presence={presenceState}
 		data-reduced-motion={dialog.reducedMotion || undefined}
 		data-state={dialog.open ? 'open' : 'closed'}

@@ -59,7 +59,12 @@ export type { ZDialogProps } from '../components/compound/dialog/ZDialog.svelte'
 export { default as ZDialogClose } from '../components/compound/dialog/ZDialogClose.svelte';
 export type { ZDialogCloseProps } from '../components/compound/dialog/ZDialogClose.svelte';
 export { default as ZDialogContent } from '../components/compound/dialog/ZDialogContent.svelte';
-export type { ZDialogContentProps } from '../components/compound/dialog/ZDialogContent.svelte';
+export type {
+	DialogEscapeEvent,
+	DialogFocusOutsideEvent,
+	DialogPointerOutsideEvent,
+	ZDialogContentProps
+} from '../components/compound/dialog/ZDialogContent.svelte';
 export { default as ZDialogDescription } from '../components/compound/dialog/ZDialogDescription.svelte';
 export type { ZDialogDescriptionProps } from '../components/compound/dialog/ZDialogDescription.svelte';
 export { default as ZDialogOverlay } from '../components/compound/dialog/ZDialogOverlay.svelte';
@@ -284,7 +289,7 @@ export type {
 export { default as ZList } from '../components/data-display/ZList.svelte';
 export type { ListItem, ZListProps } from '../components/data-display/ZList.svelte';
 export { default as ZTag } from '../components/data-display/ZTag.svelte';
-export type { TagTone, ZTagProps } from '../components/data-display/ZTag.svelte';
+export type { TagSize, TagTone, ZTagProps } from '../components/data-display/ZTag.svelte';
 export { default as ZEmpty } from '../components/data-display/ZEmpty.svelte';
 export type { ZEmptyProps } from '../components/data-display/ZEmpty.svelte';
 export { default as ZMeter } from '../components/data-display/ZMeter.svelte';
@@ -320,7 +325,11 @@ export type {
 	ZTimelineProps
 } from '../components/data-display/ZTimeline.svelte';
 export { default as ZTable } from '../components/data-display/ZTable.svelte';
-export type { TableDensity, ZTableProps } from '../components/data-display/ZTable.svelte';
+export type {
+	TableDensity,
+	TableScroll,
+	ZTableProps
+} from '../components/data-display/ZTable.svelte';
 export { default as ZVirtualList } from '../components/data-display/ZVirtualList.svelte';
 export type {
 	VirtualListItemContext,
@@ -460,7 +469,7 @@ export type { ColorPickerPreset, ZColorPickerProps } from '../components/input/Z
 export { default as ZInput } from '../components/input/ZInput.svelte';
 export type { ZInputProps, ZInputSize, ZInputType } from '../components/input/ZInput.svelte';
 export { default as ZInputGroup } from '../components/input/ZInputGroup.svelte';
-export type { ZInputGroupProps } from '../components/input/ZInputGroup.svelte';
+export type { InputGroupSize, ZInputGroupProps } from '../components/input/ZInputGroup.svelte';
 export { default as ZMention } from '../components/input/ZMention.svelte';
 export type { MentionItem, ZMentionProps } from '../components/input/ZMention.svelte';
 export { default as ZNumberField } from '../components/input/ZNumberField.svelte';
@@ -474,7 +483,13 @@ export type {
 	ZNumberFieldSize
 } from '../components/input/ZNumberField.svelte';
 export { default as ZPinInput } from '../components/input/ZPinInput.svelte';
-export type { PinInputMode, ZPinInputProps } from '../components/input/ZPinInput.svelte';
+export type {
+	PinInputAutocomplete,
+	PinInputLabelFormatter,
+	PinInputMode,
+	PinInputSize,
+	ZPinInputProps
+} from '../components/input/ZPinInput.svelte';
 export { default as ZSegmented } from '../components/input/ZSegmented.svelte';
 export type {
 	SegmentedItem,
@@ -576,6 +591,7 @@ export type {
 	ZuiNumberFieldLocale,
 	ZuiPaginationLocale,
 	ZuiProgressLocale,
+	ZuiTagLocale,
 	ZuiTagsInputLocale,
 	ZuiTimeLocale,
 	ZuiTourLocale,

@@ -50,7 +50,7 @@
 </script>
 
 <script lang="ts">
-	import { untrack } from 'svelte';
+	import { onDestroy, untrack } from 'svelte';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -68,9 +68,17 @@
 	}: ZDialogDescriptionProps = $props();
 	const zui = useZui();
 	const dialog = useZDialog();
+	const unregisterDescription = dialog.registerDescription();
+	onDestroy(unregisterDescription);
 	const rootClass = $derived(zui.recipe(recipe));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
+	$effect(() => {
+		dialog.setDescription(ref);
+		return () => {
+			if (dialog.description === ref) dialog.setDescription(null);
+		};
+	});
 </script>
 
 <p

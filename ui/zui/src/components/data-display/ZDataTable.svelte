@@ -1345,6 +1345,7 @@
 		aria-rowcount={rootAriaRowCount}
 		class="zui-data-table"
 		data-slot="table"
+		scroll="none"
 		style={tableStyle}
 	>
 		{#snippet header()}

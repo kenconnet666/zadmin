@@ -50,7 +50,7 @@
 	{#if section.description}<p class={classes.description}>{section.description}</p>{/if}
 	<!-- svelte-ignore a11y_no_noninteractive_tabindex (keyboard focus is required for horizontal scrolling) -->
 	<div class={classes.scroll} role="region" aria-label={`${section.title} API表格`} tabindex="0">
-		<ZTable caption={`${section.title} API`} captionHidden density="compact">
+		<ZTable caption={`${section.title} API`} captionHidden density="compact" scroll="none">
 			{#snippet header()}
 				<tr
 					><th scope="col">名称</th><th scope="col">类型</th><th scope="col">默认值</th><th

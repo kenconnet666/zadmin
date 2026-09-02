@@ -192,6 +192,16 @@ export const alertDialogApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'onAction',
+			required: false,
+			type: '(event: MouseEvent) => Promise<void> | void'
+		},
+		{
+			name: 'onActionError',
+			required: false,
+			type: '(error: unknown) => void'
+		},
+		{
 			name: 'onOpenChange',
 			required: false,
 			type: '(open: boolean) => void'
@@ -209,9 +219,15 @@ export const alertDialogApiFacts = {
 export const alertDialogActionApiFacts = {
 	declaration: 'ZAlertDialogActionProps',
 	id: 'alert-dialog-action',
-	inheritedFrom: ['ZDialogCloseProps'],
+	inheritedFrom: ['ZButtonProps'],
 	name: 'ZAlertDialogAction',
-	props: [],
+	props: [
+		{
+			name: 'onclick',
+			required: false,
+			type: "ZButtonProps['onclick']"
+		}
+	],
 	source: 'ui/zui/src/components/compound/alert-dialog/ZAlertDialogAction.svelte',
 	undocumentedProps: []
 } as const satisfies ComponentApiFacts;
@@ -219,9 +235,15 @@ export const alertDialogActionApiFacts = {
 export const alertDialogCancelApiFacts = {
 	declaration: 'ZAlertDialogCancelProps',
 	id: 'alert-dialog-cancel',
-	inheritedFrom: ['ZDialogCloseProps'],
+	inheritedFrom: ['ZButtonProps'],
 	name: 'ZAlertDialogCancel',
-	props: [],
+	props: [
+		{
+			name: 'onclick',
+			required: false,
+			type: "ZButtonProps['onclick']"
+		}
+	],
 	source: 'ui/zui/src/components/compound/alert-dialog/ZAlertDialogCancel.svelte',
 	undocumentedProps: []
 } as const satisfies ComponentApiFacts;
@@ -707,6 +729,21 @@ export const dialogContentApiFacts = {
 			type: "'dialog' | 'unstyled'"
 		},
 		{
+			name: 'ariaDescribedBy',
+			required: false,
+			type: 'string | null'
+		},
+		{
+			name: 'ariaLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'ariaLabelledBy',
+			required: false,
+			type: 'string | null'
+		},
+		{
 			name: 'children',
 			required: false,
 			type: 'Snippet'
@@ -722,9 +759,39 @@ export const dialogContentApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'initialFocus',
+			required: false,
+			type: '() => HTMLElement | null'
+		},
+		{
+			name: 'onEscape',
+			required: false,
+			type: '(event: DialogEscapeEvent) => void'
+		},
+		{
+			name: 'onFocusOutside',
+			required: false,
+			type: '(event: DialogFocusOutsideEvent) => void'
+		},
+		{
+			name: 'onPointerOutside',
+			required: false,
+			type: '(event: DialogPointerOutsideEvent) => void'
+		},
+		{
 			name: 'ref',
 			required: false,
 			type: 'HTMLDivElement | null'
+		},
+		{
+			name: 'restoreFocus',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'restoreTarget',
+			required: false,
+			type: '() => HTMLElement | null'
 		},
 		{
 			name: 'role',
@@ -1930,6 +1997,16 @@ export const popoverContentApiFacts = {
 			name: 'ref',
 			required: false,
 			type: 'HTMLDivElement | null'
+		},
+		{
+			name: 'restoreFocus',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'restoreTarget',
+			required: false,
+			type: '() => HTMLElement | null'
 		},
 		{
 			name: 'role',
@@ -3831,7 +3908,7 @@ export const tableApiFacts = {
 		{
 			name: 'density',
 			required: false,
-			type: "'compact' | 'comfortable'"
+			type: "'compact' | 'comfortable' | 'spacious'"
 		},
 		{
 			name: 'ref',
@@ -3839,9 +3916,24 @@ export const tableApiFacts = {
 			type: 'HTMLTableElement | null'
 		},
 		{
+			name: 'scroll',
+			required: false,
+			type: "'auto' | 'none'"
+		},
+		{
+			name: 'scrollLabel',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'striped',
 			required: false,
 			type: 'boolean'
+		},
+		{
+			name: 'wrapperRef',
+			required: false,
+			type: 'HTMLDivElement | null'
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZTable.svelte',
@@ -3877,7 +3969,7 @@ export const tagApiFacts = {
 		{
 			name: 'removeTabIndex',
 			required: false,
-			type: 'number'
+			type: '-1 | 0'
 		},
 		{
 			name: 'ref',
@@ -3890,13 +3982,23 @@ export const tagApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'size',
+			required: false,
+			type: "'medium' | 'small'"
+		},
+		{
+			name: 'textValue',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'tone',
 			required: false,
 			type: "'accent' | 'danger' | 'default' | 'success' | 'warning'"
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZTag.svelte',
-	undocumentedProps: ['disabled']
+	undocumentedProps: []
 } as const satisfies ComponentApiFacts;
 
 export const timelineApiFacts = {
@@ -6575,12 +6677,37 @@ export const inputGroupApiFacts = {
 			type: 'Snippet'
 		},
 		{
+			name: 'prefixAction',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'ref',
 			required: false,
 			type: 'HTMLDivElement | null'
 		},
 		{
+			name: 'required',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
 			name: 'suffix',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'suffixAction',
 			required: false,
 			type: 'Snippet'
 		}
@@ -6883,6 +7010,11 @@ export const pinInputApiFacts = {
 	name: 'ZPinInput',
 	props: [
 		{
+			name: 'autocomplete',
+			required: false,
+			type: "'off' | 'one-time-code'"
+		},
+		{
 			name: 'defaultValue',
 			required: false,
 			type: 'string'
@@ -6900,7 +7032,7 @@ export const pinInputApiFacts = {
 		{
 			name: 'inputLabel',
 			required: false,
-			type: '(index: number, length: number) => string'
+			type: 'PinInputLabelFormatter'
 		},
 		{
 			name: 'invalid',
@@ -6953,6 +7085,11 @@ export const pinInputApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
 			name: 'validateCharacter',
 			required: false,
 			type: '(character: string) => boolean'
@@ -6960,11 +7097,11 @@ export const pinInputApiFacts = {
 		{
 			name: 'value',
 			required: false,
-			type: 'string'
+			type: 'string | null'
 		}
 	],
 	source: 'ui/zui/src/components/input/ZPinInput.svelte',
-	undocumentedProps: ['disabled', 'form', 'inputLabel', 'readonly', 'required']
+	undocumentedProps: []
 } as const satisfies ComponentApiFacts;
 
 export const segmentedApiFacts = {

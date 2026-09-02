@@ -5,6 +5,10 @@ import BoundariesDemo from './BoundariesDemo.svelte';
 import boundariesSource from './BoundariesDemo.svelte?raw';
 import AutoplayDemo from './AutoplayDemo.svelte';
 import autoplaySource from './AutoplayDemo.svelte?raw';
+import ControlledDemo from './ControlledDemo.svelte';
+import controlledSource from './ControlledDemo.svelte?raw';
+import LongRtlDemo from './LongRtlDemo.svelte';
+import longRtlSource from './LongRtlDemo.svelte?raw';
 import { carouselApiFacts } from '../../../../framework/component-api.generated.js';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
@@ -74,6 +78,23 @@ export const carouselDoc = defineComponentDoc(carouselMetadata, {
 			id: 'carousel-autoplay-pause',
 			source: autoplaySource,
 			title: '自动轮播与暂停条件'
+		},
+		{
+			component: ControlledDemo,
+			covers: ['controlled', 'external-clear', 'keyboard', 'variants-and-states'],
+			description:
+				'number/string typed key与外部value写入保持身份；只有真实Carousel控制触发onValueChange。',
+			id: 'carousel-controlled-typed-key',
+			source: controlledSource,
+			title: '受控Value与Typed Key'
+		},
+		{
+			component: LongRtlDemo,
+			covers: ['accessible-name', 'rtl', 'variants-and-states'],
+			description: '长CJK/英文标识在窄RTL容器安全换行，逻辑前后控制随方向选择Lucide。',
+			id: 'carousel-long-rtl',
+			source: longRtlSource,
+			title: '长内容、窄容器与RTL'
 		}
 	],
 	accessibility: [
@@ -82,7 +103,8 @@ export const carouselDoc = defineComponentDoc(carouselMetadata, {
 		'自动旋转时viewport aria-live=off，暂停后切换为polite，避免连续公告。',
 		'上一张、下一张和直接跳转均使用原生button，不劫持页面方向键。',
 		'matchMedia、visibilitychange和interval都绑定到Carousel真实owner realm，卸载或暂停会同步释放。',
-		'控制、位置、直接跳转与aria-roledescription均来自typed carousel locale；显式上一张/下一张/暂停/恢复文案优先。'
+		'控制、位置、直接跳转与aria-roledescription均来自typed carousel locale；显式上一张/下一张/暂停/恢复文案优先。',
+		'外部value必须始终引用当前items中的typed key；组件对未知受控key早失败，不静默选择另一张。'
 	],
 	keywords: [
 		'carousel',

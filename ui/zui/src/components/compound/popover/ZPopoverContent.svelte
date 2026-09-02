@@ -23,6 +23,8 @@
 		readonly onFocusOutside?: (event: PopoverFocusOutsideEvent) => void;
 		readonly onPointerOutside?: (event: PopoverPointerOutsideEvent) => void;
 		ref?: HTMLDivElement | null;
+		readonly restoreFocus?: boolean;
+		readonly restoreTarget?: () => HTMLElement | null;
 		readonly role?: 'dialog' | 'listbox' | 'presentation';
 	}
 
@@ -131,6 +133,18 @@
 				type: 'string'
 			},
 			{
+				default: 'true',
+				description: '关闭时是否恢复焦点。',
+				name: 'restoreFocus',
+				type: 'boolean'
+			},
+			{
+				default: '当前Trigger',
+				description: '覆盖关闭后的焦点目标。',
+				name: 'restoreTarget',
+				type: '() => HTMLElement | null'
+			},
+			{
 				bindable: true,
 				default: 'null',
 				description: '挂载期间的真实dialog引用。',
@@ -182,6 +196,8 @@
 		onFocusOutside,
 		onPointerOutside,
 		ref = $bindable(null),
+		restoreFocus = true,
+		restoreTarget,
 		role = 'dialog',
 		style,
 		...rest
@@ -201,7 +217,9 @@
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 
-	$effect(() => presence.update(popover.open, popover.exitDuration));
+	$effect(() =>
+		presence.update(popover.open, popover.exitDuration, ref?.ownerDocument.defaultView)
+	);
 	$effect(() => {
 		const content = ref;
 		const trigger = popover.trigger;
@@ -223,8 +241,8 @@
 		const focusScope = manageFocus
 			? new FocusScope(content, {
 					initialFocus,
-					restoreFocus: true,
-					restoreTarget: () => popover.trigger,
+					restoreFocus,
+					restoreTarget: restoreTarget ?? (() => popover.trigger),
 					trap: popover.modal
 				})
 			: undefined;

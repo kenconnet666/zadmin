@@ -17,11 +17,15 @@ describe('typed locale packs', () => {
 			date: { nextMonth: '下个月' },
 			feedback: { loading: 'Working' },
 			fileUpload: { removeFile: (fileName) => `Delete ${fileName}` },
-			form: { unexpectedValidation: 'Could not validate.' },
+			form: {
+				pinInputPosition: (index, length) => `Position ${index}/${length}`,
+				unexpectedValidation: 'Could not validate.'
+			},
 			link: { opensInNewWindow: 'opens in another window' },
 			numberField: { increment: 'Add amount' },
 			pagination: { label: '分页导航', page: (page) => `第${page}页` },
 			progress: { label: 'Completion' },
+			tag: { removeTag: (value) => (value ? `Delete tag ${value}` : 'Delete tag') },
 			tagsInput: { removeTag: (value) => `Delete ${value}` },
 			time: { hourCycle: 24, minute: '分钟' },
 			tour: { next: 'Continue' },
@@ -47,6 +51,8 @@ describe('typed locale packs', () => {
 		expect(pack.pagination.page('12')).toBe('第12页');
 		expect(pack.pagination.pageStatus('3', '9')).toBe('Page 3 of 9');
 		expect(pack.progress.label).toBe('Completion');
+		expect(pack.tag.removeTag()).toBe('Delete tag');
+		expect(pack.tag.removeTag('alpha')).toBe('Delete tag alpha');
 		expect(pack.date).toMatchObject({ calendarLabel: 'Calendar', nextMonth: '下个月' });
 		expect(pack.feedback).toMatchObject({
 			confirmFailed: 'Confirmation failed. Try again.',
@@ -55,6 +61,7 @@ describe('typed locale packs', () => {
 		});
 		expect(pack.fileUpload.removeFile('brief.txt')).toBe('Delete brief.txt');
 		expect(pack.form.unexpectedValidation).toBe('Could not validate.');
+		expect(pack.form.pinInputPosition('2', '6')).toBe('Position 2/6');
 		expect(pack.link.opensInNewWindow).toBe('opens in another window');
 		expect(pack.numberField.increment).toBe('Add amount');
 		expect(pack.numberField.minimum('1.5')).toBe('Value must be at least 1.5.');
@@ -108,6 +115,8 @@ describe('typed locale packs', () => {
 		expect(zhCNLocalePack.feedback.confirmFailed).toBe('确认失败，请重试。');
 		expect(zhCNLocalePack.fileUpload.removeFile('说明.pdf')).toBe('移除文件 说明.pdf');
 		expect(zhCNLocalePack.form.unexpectedValidation).toBe('验证过程中发生意外错误。');
+		expect(enUSLocalePack.form.pinInputPosition('2', '6')).toBe('Digit 2 of 6');
+		expect(zhCNLocalePack.form.pinInputPosition('2', '6')).toBe('第2位，共6位');
 		expect(enUSLocalePack.link.opensInNewWindow).toBe('opens in a new window');
 		expect(zhCNLocalePack.link.opensInNewWindow).toBe('在新窗口中打开');
 		expect(zhCNLocalePack.numberField.inputLabel).toBe('数字');
@@ -116,6 +125,10 @@ describe('typed locale packs', () => {
 		expect(zhCNLocalePack.pagination.currentPage('18')).toBe('第18页，当前页');
 		expect(zhCNLocalePack.pagination.totalItems('96')).toBe('共96条');
 		expect(zhCNLocalePack.progress.label).toBe('进度');
+		expect(enUSLocalePack.tag.removeTag()).toBe('Remove tag');
+		expect(enUSLocalePack.tag.removeTag('production')).toBe('Remove production');
+		expect(zhCNLocalePack.tag.removeTag()).toBe('移除标签');
+		expect(zhCNLocalePack.tag.removeTag('生产')).toBe('移除标签 生产');
 		expect(zhCNLocalePack.tagsInput.removeTag('生产')).toBe('移除标签 生产');
 		expect(zhCNLocalePack.tagsInput.editTag('生产')).toBe('编辑标签 生产');
 		expect(zhCNLocalePack.time.hourCycle).toBe(24);

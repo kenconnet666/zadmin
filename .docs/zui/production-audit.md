@@ -1,6 +1,6 @@
 # ZUI与文档站生产审计
 
-状态：无人值守实施持续中；141项API合同、366个Demo、106个E2E引用与系统审计已刷新；Chrome DevTools MCP已接管现有本地文档标签并完成本批定向验收，完整三浏览器/类型/测试/构建矩阵继续交CI且当前推送不等待（2026-09-02）
+状态：无人值守实施换机交接点；141项API合同、400个Demo、106个E2E引用与系统审计已刷新；上一批Chrome定向验收完成，最新Dialog/AlertDialog/Popover、PinInput/InputGroup、Tag/Table与补充文档只完成WebStorm/静态合同，真实浏览器和完整矩阵留给新电脑与CI（2026-09-02）
 
 ## 1. 审计范围
 
@@ -18,7 +18,7 @@
 | --------------------------- | ---: | ----------------------------------------------------------------------------------------------------------- |
 | Svelte组件文件              |  145 | 141个拥有唯一metadata id；`QueuedToast`、`CascaderColumn`、`TransferPane`与`ZMentionEditor`是非公开内部实现 |
 | 公开组件文档页              |   79 | 每页至少2个不同Demo                                                                                         |
-| 实际Demo                    |  366 | 少于2个、重复id或空源码会在`defineComponentDoc`中直接失败                                                   |
+| 实际Demo                    |  400 | 少于2个、重复id或空源码会在`defineComponentDoc`中直接失败                                                   |
 | 生产边界Demo                |   34 | 静态清单固定复杂生命周期、正交API、长内容、RTL、虚拟化和响应式代表场景                                      |
 | Docs E2E Demo引用           |  106 | site.e2e中的literal Demo id必须存在，组件重构不能留下等待不存在元素的旧引用                                 |
 | 生产指南                    |    8 | Getting Started、ICSS、Theme Lab、Accessibility、SSR/CSP、HMR、WebView和Package                             |
@@ -165,6 +165,7 @@
 
 ## 5. 文档站真实浏览器证据
 
+- 换机前最后一批新增Dialog/AlertDialog/Popover、PinInput/InputGroup、Tag/Table、CommandPalette、Box/Icon/Stack与Carousel文档；统一API/静态审计已通过，但按“快速交接”要求没有再做新一轮真实Chrome或慢验证，不能把上一批浏览器证据外推到这些新增合同。
 - 本批统一生成API后，WebStorm对207个变更/新增Svelte、TypeScript、MJS、JSON与Workflow文件逐一执行error级检查，0 finding、0 timeout；API generator、141项contract、system audit、browser lifecycle audit与actionlint均通过。项目说明要求的Svelte MCP/autofixer未在本会话暴露，因此没有伪称调用。
 - Chrome DevTools MCP接管现有localhost标签后，Button、ToggleButton、Code、Accordion、List/DescriptionList、Progress、Meter、Skeleton、Statistic、Timeline、Alert、Spinner、LoadingBar、Separator、Kbd、AspectRatio、Container、Empty与Result共20页均在同文档hash导航中更新title/H1，Demo为4–7个且桌面水平溢出为0；500 CSS px窄视口抽查Timeline、Container、List与LoadingBar同样无水平溢出并正确隐藏桌面Sidebar。
 - 真实交互固定：Code复制后polite状态为“代码已复制”且Button保持焦点；LoadingBar controller依次得到indeterminate、48、error与hidden idle；Timeline倒序后pending成为首个li且aria-busy=true；Accordion动态切换multiple后build/verify两个Panel同时展开。全程新增console error/warning/issue为0。
@@ -249,14 +250,14 @@
 
 ## 6. CI结论
 
-最后一次按约回看的门禁：[CI run 33566056733](https://github.com/kenconnet666/zadmin/actions/runs/33566056733)，对应`83a541a`；本批推送后不等待新CI，也不再次查询该运行。
+最后一次按约回看的门禁：[CI run 33572547759](https://github.com/kenconnet666/zadmin/actions/runs/33572547759)，对应`fa69e33`；换机交接推送后不等待新CI，也不再次查询该运行。
 
-- Workspace builds成功；Static contracts、Workspace tests、Docs E2E、Coverage、Packages与Windows Desktop仍失败，不能把可构建替代完整门禁；
-- Static已进一步收敛为4 error/2 warning：Avatar图片handler和NumberField input handler参数窄于Svelte原生事件合同、Accordion交叉判别联合让SSR render推断过深、Link测试用静态div直接持有click。当前分别改为原生宽事件入口后再收窄、扁平组件props加严格single/multiple helper、以及带明确cleanup的测试action；WebStorm error级复核为0；
-- Workspace tests仍出现首个Drawer通过而后续同文件及大量后续spec失败。根因不是`setupFiles`缺失，而是直接从Svelte `mount()`的实例不属于`vitest-browser-svelte.cleanup()` registry；当前所有imperative browser specs统一经过tracked adapter，全局owner逆序unmount、清理Portal/iframe/body属性并恢复mock，CI另有静态生命周期门禁；
-- 真实Docs路由卸载又暴露VirtualList bindable controller代理与原始对象比较的`state_proxy_equality_mismatch`及effect自订阅；Tree、DataTable、FileUpload、LoadingBar存在同构路径。五者现在以`untrack`捕获实际发布身份作为cleanup令牌，系统审计拒绝raw比较与effect自依赖；
-- Docs E2E仍有55项失败，集中在guide、Provider density、FileUpload/Number/DateRange、Feedback、Switch、ContextMenu、Select/Combobox/Tags、Accordion、Tree/VirtualTree/TreeSelect/Cascader/Mention与Axe。当前按真实实现迁移queue、reset、centralized announcer、active-descendant、floating collision与null文案断言，Axe路由改从canonical Sidebar动态发现；106个literal Demo引用继续由静态交叉门禁保证存在；
-- Packages仍有一处Accordion公共声明推断失败；组件签名现已从`Base & (Single | Multiple)`扁平为`ZAccordionProps`，需要静态严格模式时使用`ZAccordionSingleProps`/`ZAccordionMultipleProps`，运行时仍验证mode/value/collapsible组合。Coverage复用同一ZUI测试失败，并非阈值下调；全部覆盖阈值保持不变，等待下一轮远程矩阵确认。
+- Workspace builds完整成功，生成文件在该job中保持干净；
+- Static contracts在`Check types and Svelte contracts`失败，后续lint、系统审计、browser lifecycle、Changesets与API合同步骤因此被跳过；最新本地工作树已完成WebStorm error级与上述快速静态门禁，但不能据此宣称远程类型门禁修复；
+- Workspace component tests、Docs E2E与ZUI coverage仍失败；SvelteKit、Miniapp、WebView facade coverage成功，诊断附件已上传；
+- Bundles/external packages中browser bundle检查、ZUI publish dry-run、WebView与Miniapp外部包验收成功，ZUI/SvelteKit SSR外部验收失败；
+- Windows job的C# WebView core build/test成功，desktop TypeScript/Svelte检查失败，后续desktop前端与Release步骤被跳过；
+- 本次交接新增Overlay、PinInput/InputGroup、Tag/Table与文档证据，只完成本地快速静态收口，远程结果必须在新电脑下一次推送前查看，不能用降低覆盖率、跳过浏览器或放宽门禁替代修复。
 
 最终通过后必须同时满足：
 

@@ -335,7 +335,7 @@
 	data-required={resolvedRequired || undefined}
 	data-state={openState.current ? 'open' : 'closed'}
 >
-	<ZInputGroup disabled={resolvedDisabled} invalid={resolvedInvalid} suffix={actions}>
+	<ZInputGroup disabled={resolvedDisabled} invalid={resolvedInvalid} suffixAction={actions}>
 		<ZDateField
 			aria-describedby={describedBy}
 			aria-label={ariaLabel}

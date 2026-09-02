@@ -5,16 +5,24 @@ import type { PortalTarget } from '../../../runtime/layer/portal.js';
 export interface ZDialogContext {
 	readonly contentId: string;
 	readonly descriptionId: string;
+	readonly description: HTMLParagraphElement | null;
+	readonly hasDescription: boolean;
+	readonly hasTitle: boolean;
 	readonly exitDuration: number;
 	readonly open: boolean;
 	readonly overlay: HTMLDivElement | null;
 	readonly portalTarget: PortalTarget;
 	readonly reducedMotion: boolean;
 	readonly titleId: string;
+	readonly title: HTMLHeadingElement | null;
 	readonly trigger: HTMLButtonElement | null;
 	readonly triggerId: string;
 	setOpen(open: boolean): void;
+	registerDescription(): () => void;
+	registerTitle(): () => void;
 	setOverlay(overlay: HTMLDivElement | null): void;
+	setDescription(description: HTMLParagraphElement | null): void;
+	setTitle(title: HTMLHeadingElement | null): void;
 	setTrigger(trigger: HTMLButtonElement | null): void;
 }
 
