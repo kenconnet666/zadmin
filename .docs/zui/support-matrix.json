@@ -1,0 +1,42 @@
+{
+	"package": {
+		"name": "@zadmin/zui",
+		"engines": {
+			"node": ">=22.0.0"
+		},
+		"peerDependencies": {
+			"@lucide/svelte": "^1.37.0",
+			"shiki": "^4.4.3",
+			"svelte": ">=5.56.0 <6"
+		},
+		"peerDependenciesMeta": {
+			"shiki": {
+				"optional": true
+			}
+		},
+		"contract": "engines/peerDependencies 是承诺声明，不等于全环境已测试；Shiki 是 ZCode 按需高亮使用的 optional peer。"
+	},
+	"ci": {
+		"node": "24",
+		"pnpm": "11.22.0",
+		"browsers": ["chromium", "firefox", "webkit"],
+		"evidence": "浏览器列表来自 playwright.config.ts，并与 CI install/E2E steps 交叉校验。"
+	},
+	"acceptance": {
+		"ssrCsp": {
+			"tested": true,
+			"evidence": ["ui/sveltekit/scripts/accept-zui-package.mjs", ".github/workflows/ci.yml"],
+			"promise": "已测试 external SSR/critical CSS/CSP；未承诺任意 SvelteKit 版本。"
+		},
+		"webview": {
+			"tested": true,
+			"evidence": ["ui/webview/scripts/accept-package.mjs", ".github/workflows/ci.yml"],
+			"promise": "已测试 WebView2 facade/package；不扩展为所有 Windows/WebView2 版本。"
+		},
+		"miniapp": {
+			"tested": true,
+			"evidence": ["ui/miniapp/scripts/accept-package.mjs", ".github/workflows/ci.yml"],
+			"promise": "已测试 Miniapp package；真机/授权/支付/硬件需单独验收。"
+		}
+	}
+}
