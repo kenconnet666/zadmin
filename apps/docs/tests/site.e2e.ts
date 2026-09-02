@@ -1,6 +1,8 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 import { Buffer } from 'node:buffer';
+import { guideDocs } from '../src/content/guides.js';
+import { componentCatalogManifest } from '../src/framework/catalog-manifest.generated.js';
 
 const demo = (page: Page, id: string) => page.locator(`[data-testid="demo-${id}"]:visible`);
 
@@ -35,6 +37,73 @@ async function setDisplayPreference(
 	const [attribute, expected] = preferenceAttribute[preference];
 	await expect(page.locator('html')).toHaveAttribute(attribute, expected);
 	await page.keyboard.press('Escape');
+}
+
+type AccessibilityRoute =
+	| { readonly hash: '#/'; readonly kind: 'home' }
+	| { readonly hash: string; readonly id: string; readonly kind: 'component' | 'guide' };
+
+const accessibilityRoutes: readonly AccessibilityRoute[] = [
+	{ hash: '#/', kind: 'home' },
+	...componentCatalogManifest.map(({ id }) => ({
+		hash: `#/components/${id}`,
+		id,
+		kind: 'component' as const
+	})),
+	{ hash: '#/guides/theme', id: 'theme', kind: 'guide' },
+	...guideDocs.map(({ id }) => ({ hash: `#/guides/${id}`, id, kind: 'guide' as const }))
+];
+
+async function assertAccessibilityRoute(page: Page, route: AccessibilityRoute): Promise<void> {
+	await page.goto(`/${route.hash}`);
+	await expect(page).toHaveURL(new RegExp(`${route.hash.replaceAll('/', '\\/')}$`, 'u'));
+	await expect(page.locator('main'), `${route.hash} must expose one main landmark`).toHaveCount(1);
+	if (route.kind !== 'home') {
+		const currentLink = page.locator('nav[aria-label="组件导航"] a[aria-current="page"]');
+		await expect(currentLink, `${route.hash} must expose one current navigation link`).toHaveCount(
+			1
+		);
+		await expect(currentLink).toHaveAttribute('href', route.hash);
+		await expect(page).toHaveTitle(/.+ · ZUI Components$/u);
+		await expect(
+			page.locator(
+				`main [data-doc-route="${route.kind === 'component' ? 'component' : 'guide'}:${route.id}"]`
+			)
+		).toBeVisible();
+	} else {
+		await expect(page).toHaveTitle('ZUI Components');
+	}
+	const unnamedFields = await page
+		.locator(
+			'main input:not([type="hidden"]):not([hidden]), main textarea:not([hidden]), main select:not([hidden])'
+		)
+		.evaluateAll((elements) =>
+			elements
+				.filter((element) => !element.id && !element.getAttribute('name'))
+				.map((element) => ({
+					ariaLabel: element.getAttribute('aria-label'),
+					placeholder: element.getAttribute('placeholder'),
+					tag: element.tagName,
+					type: element.getAttribute('type')
+				}))
+		);
+	expect(unnamedFields, `${route.hash} has form fields without id or name`).toEqual([]);
+	const duplicateIds = await page.locator('[id]').evaluateAll((elements) => {
+		const counts = new Map<string, number>();
+		for (const element of elements) counts.set(element.id, (counts.get(element.id) ?? 0) + 1);
+		return [...counts].filter(([, count]) => count > 1).map(([id, count]) => ({ count, id }));
+	});
+	expect(duplicateIds, `${route.hash} has duplicate DOM ids`).toEqual([]);
+	await expect(
+		page.locator('main [data-doc-page-title]'),
+		`${route.hash} must expose exactly one page title`
+	).toHaveCount(1);
+	const hasHorizontalOverflow = await page.evaluate(
+		() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1
+	);
+	expect(hasHorizontalOverflow, `${route.hash} overflows the document horizontally`).toBe(false);
+	const results = await new AxeBuilder({ page }).analyze();
+	expect(results.violations, route.hash).toEqual([]);
 }
 
 test('renders the component catalog and real demo source', async ({ page }) => {
@@ -1128,29 +1197,13 @@ test('anchors ContextMenu to pointer coordinates and supports the keyboard entry
 		clientX: clickX,
 		clientY: clickY
 	});
-	const coordinateAnchor = trigger.locator(
-		':scope > span[aria-hidden="true"][style*="position: fixed"]'
-	);
-	await expect
-		.poll(() =>
-			coordinateAnchor.evaluate((element) => {
-				const style = getComputedStyle(element as HTMLElement);
-				const left = Number.parseFloat(style.left);
-				const top = Number.parseFloat(style.top);
-				return Number.isFinite(left) && Number.isFinite(top) ? [left, top] : null;
-			})
-		)
-		.not.toBeNull();
-	const [anchorX, anchorY] = await coordinateAnchor.evaluate((element) => [
-		Number.parseFloat(getComputedStyle(element as HTMLElement).left),
-		Number.parseFloat(getComputedStyle(element as HTMLElement).top)
-	]);
-	expect(anchorX).toBeCloseTo(clickX, 3);
-	expect(anchorY).toBeCloseTo(clickY, 3);
 	const menu = page.getByRole('menu', { name: '部署上下文菜单', exact: true });
 	await expect(menu).toBeVisible();
 	const menuBox = await menu.boundingBox();
 	expect(menuBox).not.toBeNull();
+	expect(menuBox!.x).toBeCloseTo(clickX, 0);
+	expect(menuBox!.y).toBeGreaterThanOrEqual(clickY);
+	expect(menuBox!.y).toBeLessThanOrEqual(clickY + 8);
 	expect(menuBox!.x).toBeGreaterThanOrEqual(0);
 	expect(menuBox!.y).toBeGreaterThanOrEqual(0);
 	expect(menuBox!.x + menuBox!.width).toBeLessThanOrEqual(page.viewportSize()!.width + 1);
@@ -1308,6 +1361,13 @@ test('keeps TagsInput commits, removals, repeated form values and reset synchron
 	await expect(
 		tagsDemo.getByRole('button', { name: '移除标签 critical', exact: true })
 	).toBeVisible();
+	await expect
+		.poll(() =>
+			tagsDemo
+				.locator('form')
+				.evaluate((form) => new FormData(form as HTMLFormElement).getAll('tag'))
+		)
+		.toEqual(['production', 'critical']);
 	await tagsDemo.getByRole('button', { name: '读取FormData', exact: true }).click();
 	await expect(
 		tagsDemo.getByText(/values = production,critical · 变更 = 1 · production,critical/u)
@@ -1486,9 +1546,16 @@ test('keeps Cascader columns, path commit, focus restoration and reset synchroni
 	await page.getByRole('option', { name: '远程空间', exact: true }).click();
 	await lazyDemo.getByRole('button', { name: '使加载失败', exact: true }).click();
 	await expect(lazyDemo.getByText(/error = 模拟网络失败/u)).toBeVisible();
-	await page.getByRole('option', { name: '远程空间', exact: true }).dispatchEvent('click');
-	await lazyDemo.getByRole('button', { name: '完成加载', exact: true }).click();
-	await page.getByRole('option', { name: '生产环境', exact: true }).click();
+	const retryOption = page.getByRole('option', { name: '远程空间', exact: true });
+	await expect(retryOption).toHaveAttribute('data-load-state', 'error');
+	await retryOption.click();
+	await expect(lazyDemo.getByText(/pending = true/u)).toBeVisible();
+	const completeLoad = lazyDemo.getByRole('button', { name: '完成加载', exact: true });
+	await expect(completeLoad).toBeEnabled();
+	await completeLoad.click();
+	const productionOption = page.getByRole('option', { name: '生产环境', exact: true });
+	await expect(productionOption).toBeVisible();
+	await productionOption.click();
 	await expect(lazyDemo.locator('button[aria-haspopup="listbox"]')).toContainText(
 		'远程空间 / 生产环境'
 	);
@@ -1548,8 +1615,9 @@ test('keeps Mention textarea focus, active descendant, insertion, form value and
 	await asyncDemo.getByRole('button', { name: '返回异步结果', exact: true }).click();
 	const asyncOption = page.getByRole('option', { name: /Alan a/u });
 	await expect(asyncOption).toBeVisible();
-	await asyncOption.dispatchEvent('pointerdown', { bubbles: true, button: 0 });
-	await asyncOption.dispatchEvent('pointerup', { bubbles: true, button: 0 });
+	await asyncOption.evaluate((element) =>
+		element.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, button: 0 }))
+	);
 	await expect(asyncEditor).toHaveValue('Assign @alan ');
 
 	const virtualDemo = demo(page, 'mention-virtual');
@@ -1794,66 +1862,14 @@ test('keeps S1 primitives semantic and display preferences effective', async ({ 
 	await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
 });
 
-test('has no automatically detectable accessibility violations', async ({ page }) => {
-	await page.goto('/#/');
-	const routes = await page
-		.locator('nav[aria-label="组件导航"] a[href^="#/"]')
-		.evaluateAll((links) => [
-			...new Set(
-				links
-					.map((link) => link.getAttribute('href'))
-					.filter((href): href is string => href !== null)
-			)
-		]);
-	expect(
-		routes.length,
-		'the accessibility sweep must discover routes from the canonical navigation'
-	).toBeGreaterThan(1);
-	for (const route of routes) {
-		await page.goto(`/${route}`);
-		await expect(page.locator('main'), `${route} must expose one main landmark`).toHaveCount(1);
-		const currentLink = page.locator('nav[aria-label="组件导航"] a[aria-current="page"]');
-		await expect(currentLink, `${route} must expose one current navigation link`).toHaveCount(1);
-		await expect(currentLink).toHaveAttribute('href', route);
-		await expect(page).toHaveTitle(route === '#/' ? 'ZUI Components' : /.+ · ZUI Components$/u);
-		if (route.startsWith('#/components/')) {
-			const id = route.slice('#/components/'.length);
-			await expect(page.locator(`main [data-doc-route="component:${id}"]`)).toBeVisible();
-		} else if (route.startsWith('#/guides/')) {
-			const id = route.slice('#/guides/'.length);
-			await expect(page.locator(`main [data-doc-route="guide:${id}"]`)).toBeVisible();
-		}
-		const unnamedFields = await page
-			.locator(
-				'main input:not([type="hidden"]):not([hidden]), main textarea:not([hidden]), main select:not([hidden])'
-			)
-			.evaluateAll((elements) =>
-				elements
-					.filter((element) => !element.id && !element.getAttribute('name'))
-					.map((element) => ({
-						ariaLabel: element.getAttribute('aria-label'),
-						placeholder: element.getAttribute('placeholder'),
-						tag: element.tagName,
-						type: element.getAttribute('type')
-					}))
-			);
-		expect(unnamedFields, `${route} has form fields without id or name`).toEqual([]);
-		const duplicateIds = await page.locator('[id]').evaluateAll((elements) => {
-			const counts = new Map<string, number>();
-			for (const element of elements) counts.set(element.id, (counts.get(element.id) ?? 0) + 1);
-			return [...counts].filter(([, count]) => count > 1).map(([id, count]) => ({ count, id }));
+test.describe('accessibility route sweep', () => {
+	test.describe.configure({ mode: 'parallel' });
+	for (const route of accessibilityRoutes) {
+		test(`${route.hash} has no automatically detectable accessibility violations`, async ({
+			page
+		}) => {
+			await assertAccessibilityRoute(page, route);
 		});
-		expect(duplicateIds, `${route} has duplicate DOM ids`).toEqual([]);
-		await expect(
-			page.locator('main [data-doc-page-title]'),
-			`${route} must expose exactly one page title`
-		).toHaveCount(1);
-		const hasHorizontalOverflow = await page.evaluate(
-			() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1
-		);
-		expect(hasHorizontalOverflow, `${route} overflows the document horizontally`).toBe(false);
-		const results = await new AxeBuilder({ page }).analyze();
-		expect(results.violations, route).toEqual([]);
 	}
 });
 
