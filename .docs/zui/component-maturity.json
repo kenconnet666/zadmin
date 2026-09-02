@@ -8843,7 +8843,7 @@
 			"name": "ZCode",
 			"category": "gene",
 			"family": null,
-			"status": "experimental",
+			"status": "stable",
 			"source": "ui/zui/src/components/gene/ZCode.svelte",
 			"apiDocumentation": {
 				"metadataGapPropCount": 0,
@@ -8874,7 +8874,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "8a5d02e647aa21040d2d59dcbcc024300d38105112b83b5cab19fc37c56ae854 API snapshot entry"
+						"detail": "073c373d385dcb772c9f562066a30c8912c7ad30bddf29681c317a00b23b86dc API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [

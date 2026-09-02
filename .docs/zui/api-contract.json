@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"componentCount": 141,
-	"overallSha256": "45e28b2400beabd436a03bab5a938113540e66fdf3b54a1f3ac95b8fe056bdb8",
+	"overallSha256": "c483f87c90d88caec361ba9b13fa4c88616a9529c367cfdf9cbfe668ce474b8a",
 	"components": [
 		{
 			"id": "accordion",
@@ -505,7 +505,7 @@
 		},
 		{
 			"id": "code",
-			"sha256": "8a5d02e647aa21040d2d59dcbcc024300d38105112b83b5cab19fc37c56ae854",
+			"sha256": "073c373d385dcb772c9f562066a30c8912c7ad30bddf29681c317a00b23b86dc",
 			"source": "src/components/gene/ZCode.svelte"
 		},
 		{

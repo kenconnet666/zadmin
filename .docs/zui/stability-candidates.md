@@ -2,7 +2,7 @@
 
 本文件由 `scripts/check-stability-policy.mjs` 生成；不会修改组件 status。compound member 可继承同 family root 的 Docs 页面。
 
-stableCompliant：13；stableViolations：0；promotionEligibleExperimental：33。
+stableCompliant：14；stableViolations：0；promotionEligibleExperimental：32。
 
 | Component               | Status       | Classification                | Blockers                              | Docs                                                                           | SSR |
 | ----------------------- | ------------ | ----------------------------- | ------------------------------------- | ------------------------------------------------------------------------------ | --: |
@@ -106,7 +106,7 @@ stableCompliant：13；stableViolations：0；promotionEligibleExperimental：33
 | ZToaster                | experimental | experimental                  | Docs                                  | —                                                                              |   2 |
 | ZBox                    | stable       | stableCompliant               | —                                     | apps/docs/src/content/components/gene/box/doc.ts                               |   1 |
 | ZButton                 | stable       | stableCompliant               | —                                     | apps/docs/src/content/components/gene/button/doc.ts                            |   6 |
-| ZCode                   | experimental | promotionEligibleExperimental | —                                     | apps/docs/src/content/components/gene/code/doc.ts                              |   2 |
+| ZCode                   | stable       | stableCompliant               | —                                     | apps/docs/src/content/components/gene/code/doc.ts                              |   2 |
 | ZHeading                | experimental | experimental                  | ProductionVerified                    | apps/docs/src/content/components/gene/heading/doc.ts                           |   1 |
 | ZIcon                   | stable       | stableCompliant               | —                                     | apps/docs/src/content/components/gene/icon/doc.ts                              |   1 |
 | ZKbd                    | experimental | experimental                  | ProductionVerified                    | apps/docs/src/content/components/gene/kbd/doc.ts                               |   2 |

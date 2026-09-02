@@ -149,7 +149,7 @@
 				values: ['copied', 'failed']
 			}
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: 'SSR安全的代码展示组件，按需使用Shiki进行客户端语法高亮。'
 	} as const satisfies ZuiComponentMetadata;
 
