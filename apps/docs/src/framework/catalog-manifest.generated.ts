@@ -937,7 +937,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'input',
 		summary:
 			'生产级单路径Cascader：LogicalTree只拥有层级，每列各自拥有Collection导航与DOM active，根统一管理路径、loaded search、lazy请求、Popover和FormValue。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'cascader',
 			'logical tree',

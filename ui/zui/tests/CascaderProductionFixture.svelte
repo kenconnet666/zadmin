@@ -17,6 +17,7 @@
 		{ key: 'root', label: 'Root' },
 		{ key: 1, label: 'Numeric one', parentKey: 'root' },
 		{ key: '1', label: 'String one', parentKey: 'root' },
+		{ key: 'locked', label: 'Selection locked', parentKey: 'root', selectionDisabled: true },
 		{ disabled: true, key: 'disabled', label: 'Disabled leaf', parentKey: 'root' }
 	];
 	const virtualNodes: readonly TreeNode[] = [
@@ -97,13 +98,16 @@
 			{value.join('/')}:{value.length ? typeof value.at(-1) : 'empty'}:{changes}
 		</output>
 	{:else if mode === 'lazy'}
-		<ZCascader
-			data-testid="cascader-lazy"
-			defaultOpen
-			nodes={lazyNodes}
-			onLoadChildren={loadChildren}
-			onLoadError={() => (errors += 1)}
-		/>
+		<form data-testid="cascader-lazy-form">
+			<ZCascader
+				data-testid="cascader-lazy"
+				defaultOpen
+				nodes={lazyNodes}
+				onLoadChildren={loadChildren}
+				onLoadError={() => (errors += 1)}
+			/>
+			<ZButton data-testid="cascader-lazy-reset" type="reset">Reset</ZButton>
+		</form>
 		<ZButton
 			data-testid="cascader-lazy-complete"
 			disabled={!pending}
@@ -122,6 +126,13 @@
 				))}
 		>
 			Remove
+		</ZButton>
+		<ZButton
+			data-testid="cascader-lazy-replace"
+			onclick={() =>
+				(lazyNodes = [{ hasChildren: true, key: 'remote', label: 'Remote replacement' }])}
+		>
+			Replace same key
 		</ZButton>
 		<output data-testid="cascader-lazy-output"
 			>{attempts}:{aborted}:{errors}:{Boolean(pending)}</output

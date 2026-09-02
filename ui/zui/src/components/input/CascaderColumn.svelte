@@ -9,6 +9,8 @@
 		readonly key: TKey;
 		readonly label: string;
 		readonly loadState?: CascaderLoadState;
+		/** Remains navigable, but cannot commit a leaf selection. */
+		readonly selectionDisabled?: boolean;
 		readonly textValue: string;
 	}
 
@@ -304,6 +306,7 @@
 		data-slot="item-content"
 		data-active={Object.is(active.activeKey, item.key) || undefined}
 		data-load-state={item.loadState}
+		data-selection-disabled={item.selectionDisabled || undefined}
 		data-selected={itemSelected(item) || undefined}
 	>
 		{@render itemContent(item)}
@@ -366,6 +369,7 @@
 				data-load-state={item.loadState}
 				data-selected={itemSelected(item) || undefined}
 				data-slot="item-content"
+				data-selection-disabled={item.selectionDisabled || undefined}
 				id={active.idFor(item.key)}
 				role="option"
 				aria-disabled={disabled || item.disabled || undefined}

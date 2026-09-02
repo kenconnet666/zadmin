@@ -7383,7 +7383,7 @@
 			"name": "ZCascader",
 			"category": "input",
 			"family": null,
-			"status": "experimental",
+			"status": "stable",
 			"source": "ui/zui/src/components/input/ZCascader.svelte",
 			"apiDocumentation": {
 				"metadataGapPropCount": 0,
@@ -7414,7 +7414,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "a053b099a87a677d4a759c595473a57b9cedb07bf8e562ba8e63bc487dff31c3 API snapshot entry"
+						"detail": "f5915a58d3127bba1b83a6e7e1e940a974407703507b89b60763cef66d436e47 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [

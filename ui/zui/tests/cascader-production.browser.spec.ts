@@ -46,6 +46,30 @@ describe('ZCascader production collection contract', () => {
 		expect(new FormData(form).get('path')).toBe('root/1');
 	});
 
+	it('does not commit a selectionDisabled leaf', async () => {
+		render(CascaderProductionFixture, { mode: 'main' });
+		const root = document.querySelector<HTMLElement>('[data-testid="cascader-production"]')!;
+		const trigger = root.querySelector<HTMLButtonElement>('[aria-haspopup="listbox"]')!;
+		trigger.click();
+		await tick();
+		const locked = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find((option) =>
+			option.textContent?.includes('Selection locked')
+		)!;
+		expect(locked).toHaveAttribute('data-selection-disabled', 'true');
+		expect(locked).not.toHaveAttribute('aria-disabled');
+		locked.click();
+		await tick();
+		locked.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true }));
+		await tick();
+		const listbox = locked.closest<HTMLElement>('[role="listbox"]')!;
+		expect(listbox).toHaveAttribute('aria-activedescendant', locked.id);
+		listbox.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+		await tick();
+		expect(document.querySelector('[data-testid="cascader-production-output"]')?.textContent).toBe(
+			'root/1:number:0'
+		);
+	});
+
 	it('deduplicates lazy loads, exposes retry and aborts when the branch disappears', async () => {
 		render(CascaderProductionFixture, { mode: 'lazy' });
 		const branch = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find((option) =>
@@ -71,6 +95,40 @@ describe('ZCascader production collection contract', () => {
 		expect(document.querySelector('[data-testid="cascader-lazy-output"]')?.textContent).toBe(
 			'2:1:1:false'
 		);
+	});
+
+	it('aborts pending lazy work and clears status on form reset', async () => {
+		render(CascaderProductionFixture, { mode: 'lazy' });
+		const branch = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find((option) =>
+			option.textContent?.includes('Remote')
+		)!;
+		branch.click();
+		await tick();
+		document.querySelector<HTMLButtonElement>('[data-testid="cascader-lazy-reset"]')?.click();
+		await Promise.resolve();
+		await tick();
+		expect(document.querySelector('[data-testid="cascader-lazy-output"]')?.textContent).toBe(
+			'1:1:0:false'
+		);
+	});
+
+	it('invalidates pending lazy work when the source node identity changes under the same key', async () => {
+		render(CascaderProductionFixture, { mode: 'lazy' });
+		const branch = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find((option) =>
+			option.textContent?.includes('Remote')
+		)!;
+		branch.click();
+		await tick();
+		document.querySelector<HTMLButtonElement>('[data-testid="cascader-lazy-replace"]')?.click();
+		await Promise.resolve();
+		await tick();
+		expect(document.querySelector('[data-testid="cascader-lazy-output"]')?.textContent).toBe(
+			'1:1:0:false'
+		);
+		const replacement = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find(
+			(option) => option.textContent?.includes('Remote replacement')
+		)!;
+		expect(replacement).not.toHaveAttribute('data-load-state');
 	});
 
 	it('uses logical expand and collapse keys in RTL', async () => {

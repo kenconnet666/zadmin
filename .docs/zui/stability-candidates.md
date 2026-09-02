@@ -2,7 +2,7 @@
 
 本文件由 `scripts/check-stability-policy.mjs` 生成；不会修改组件 status。compound member 可继承同 family root 的 Docs 页面。
 
-stableCompliant：28；stableViolations：0；promotionEligibleExperimental：3。
+stableCompliant：29；stableViolations：0；promotionEligibleExperimental：2。
 
 | Component               | Status       | Classification                | Blockers                                   | Docs                                                                           | SSR |
 | ----------------------- | ------------ | ----------------------------- | ------------------------------------------ | ------------------------------------------------------------------------------ | --: |
@@ -117,7 +117,7 @@ stableCompliant：28；stableViolations：0；promotionEligibleExperimental：3�
 | ZToggleButton           | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/gene/toggle-button/doc.ts                     |   2 |
 | ZVisuallyHidden         | experimental | experimental                  | ProductionVerified                         | apps/docs/src/content/components/gene/visually-hidden/doc.ts                   |   2 |
 | ZCalendar               | experimental | experimental                  | VisuallyVerified, ProductionVerified       | apps/docs/src/content/components/input/calendar/doc.ts                         |   1 |
-| ZCascader               | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/input/cascader/doc.ts                         |   1 |
+| ZCascader               | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/input/cascader/doc.ts                         |   1 |
 | ZCheckbox               | experimental | experimental                  | VisuallyVerified, ProductionVerified       | apps/docs/src/content/components/input/checkbox/doc.ts                         |   1 |
 | ZColorPicker            | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/input/color-picker/doc.ts                     |   1 |
 | ZDateField              | experimental | experimental                  | VisuallyVerified, ProductionVerified       | apps/docs/src/content/components/input/date-field/doc.ts                       |   1 |

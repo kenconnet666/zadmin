@@ -308,7 +308,7 @@
 			{ description: '路径无效。', name: 'data-invalid', values: ['true'] },
 			{ description: '当前解析尺寸。', name: 'data-size', values: ['small', 'medium', 'large'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'按列推进的typed单路径Cascader，复用LogicalTree、每列Collection导航、lazy owner、loaded-path搜索、固定行虚拟化和统一表单合同。'
 	} as const satisfies ZuiComponentMetadata;
@@ -509,10 +509,17 @@
 	let loadGeneration = 0;
 	let loadStatus = $state('');
 	const loadingKeys = new SvelteSet<TKey>();
-	const errorKeys = new SvelteMap<TKey, unknown>();
+	const errorKeys = new SvelteMap<
+		TKey,
+		{ readonly error: unknown; readonly sourceNode: TreeNode<TKey> }
+	>();
 	const requests = new Map<
 		TKey,
-		{ readonly controller: AbortController; readonly generation: number }
+		{
+			readonly controller: AbortController;
+			readonly generation: number;
+			readonly sourceNode: TreeNode<TKey>;
+		}
 	>();
 	const columnControllers = new Map<number, CascaderColumnController<TKey>>();
 	const rootClass = $derived(zui.recipe(rootRecipe, { disabled: resolvedDisabled }));
@@ -532,13 +539,22 @@
 		if (resolvedOpen) draft = canonicalLoadedPath(resolvedValue);
 	});
 	$effect(() => {
-		const retained = new Set(tree.nodes.keys());
 		for (const [key, request] of requests) {
-			if (retained.has(key) && !resolvedDisabled && !resolvedReadonly && onLoadChildren) continue;
+			if (
+				tree.nodes.get(key) === request.sourceNode &&
+				!resolvedDisabled &&
+				!resolvedReadonly &&
+				onLoadChildren
+			)
+				continue;
 			request.controller.abort();
 			requests.delete(key);
 			loadingKeys.delete(key);
 		}
+		for (const [key, state] of errorKeys) {
+			if (tree.nodes.get(key) !== state.sourceNode) errorKeys.delete(key);
+		}
+		if (loadingKeys.size === 0 && errorKeys.size === 0) loadStatus = '';
 	});
 
 	function canonicalLoadedPath(source: readonly TKey[]): readonly TKey[] {
@@ -587,6 +603,7 @@
 				hasChildren: false,
 				key: node.key,
 				label: path.map(({ label }) => label).join(separator),
+				selectionDisabled: path.at(-1)?.selectionDisabled,
 				textValue: path.map((entry) => entry.textValue ?? entry.label).join(' ')
 			});
 			if (result.length >= searchLimit) break;
@@ -604,9 +621,10 @@
 				label: node.label,
 				loadState: loadingKeys.has(node.key)
 					? ('loading' as const)
-					: errorKeys.has(node.key)
+					: errorKeys.get(node.key)?.sourceNode === node
 						? ('error' as const)
 						: undefined,
+				selectionDisabled: node.selectionDisabled,
 				textValue: node.textValue ?? node.label
 			}))
 		);
@@ -654,17 +672,35 @@
 		if (!AbortControllerConstructor) return;
 		const controller = new AbortControllerConstructor();
 		const generation = (loadGeneration += 1);
-		requests.set(node.key, { controller, generation });
+		const sourceNode = tree.nodes.get(node.key);
+		if (sourceNode !== node) return;
+		requests.set(node.key, { controller, generation, sourceNode });
 		loadingKeys.add(node.key);
 		errorKeys.delete(node.key);
 		loadStatus = zui.localePack.collection.treeLoading(node.label);
 		try {
 			await onLoadChildren(node, { key: node.key, signal: controller.signal });
-			if (requests.get(node.key)?.generation !== generation || controller.signal.aborted) return;
+			const request = requests.get(node.key);
+			const currentNode = tree.nodes.get(node.key);
+			if (
+				request?.generation !== generation ||
+				request.sourceNode !== sourceNode ||
+				currentNode !== sourceNode ||
+				controller.signal.aborted
+			)
+				return;
 			loadStatus = '';
 		} catch (error) {
-			if (requests.get(node.key)?.generation !== generation || controller.signal.aborted) return;
-			errorKeys.set(node.key, error);
+			const request = requests.get(node.key);
+			const currentNode = tree.nodes.get(node.key);
+			if (
+				request?.generation !== generation ||
+				request.sourceNode !== sourceNode ||
+				currentNode !== sourceNode ||
+				controller.signal.aborted
+			)
+				return;
+			errorKeys.set(node.key, { error, sourceNode });
 			loadStatus = zui.localePack.collection.treeLoadError(node.label);
 			onLoadError?.(node.key, error);
 		} finally {
@@ -675,7 +711,14 @@
 		}
 	}
 	function choose(item: CascaderColumnItem<TKey>, level: number): void {
-		if (resolvedDisabled || resolvedReadonly || loading || item.disabled) return;
+		if (
+			resolvedDisabled ||
+			resolvedReadonly ||
+			loading ||
+			item.disabled ||
+			(item.selectionDisabled && !item.hasChildren)
+		)
+			return;
 		const node = tree.nodes.get(item.key);
 		if (!node) return;
 		const path = tree.pathTo(node.key);
@@ -717,6 +760,9 @@
 		triggerRef?.focus({ preventScroll: true });
 	}
 	function resetFromForm(): void {
+		loadGeneration += 1;
+		abortRequests();
+		errorKeys.clear();
 		valueState.reset();
 		openState.reset();
 		draft = canonicalLoadedPath(normalizePath(defaultValue, 'ZCascader defaultValue'));

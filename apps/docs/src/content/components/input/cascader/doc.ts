@@ -62,7 +62,7 @@ export const cascaderDoc = defineComponentDoc(cascaderMetadata, {
 			onLoadChildren: {
 				default: '—',
 				description:
-					'hasChildren branch的lazy请求；signal在节点删除、禁用、只读或卸载时abort，owner负责更新nodes。'
+					'hasChildren branch的lazy请求；signal在节点删除、同key identity替换、form reset、禁用、只读或卸载时abort，owner负责更新nodes。'
 			},
 			placeholder: {
 				default: 'localePack.collection.selectPath',
@@ -75,7 +75,7 @@ export const cascaderDoc = defineComponentDoc(cascaderMetadata, {
 			required: {
 				default: 'Field context或false',
 				description:
-					'投射aria-required；业务提交阻断由ZForm schema拥有，隐藏FormValue不冒充原生Constraint控件。'
+					'由Field标签与根data-required呈现；业务提交阻断由ZForm schema拥有，隐藏FormValue不冒充原生Constraint控件。'
 			},
 			searchPlaceholder: {
 				default: 'placeholder',
@@ -150,7 +150,8 @@ export const cascaderDoc = defineComponentDoc(cascaderMetadata, {
 		'Up/Down/Home/End在当前列移动，逻辑展开/返回键在RTL翻转；Enter/Space推进branch、重试失败或提交叶节点。',
 		'Trigger是唯一Field focus owner；Delete/Backspace和独立Lucide清空按钮只在可编辑且非空时出现。',
 		'loaded-path搜索输入是辅助filter，不是第二个业务值控件；Arrow键可进入结果listbox，结果数由polite status公告。',
-		'lazy loading/error继续保留branch可聚焦性；请求错误使用本地化status，AbortSignal避免迟到结果污染已删除节点。',
+		'selectionDisabled branch仍可展开，叶子仍可聚焦和导航但不会提交，并以data-selection-disabled暴露状态而不伪装aria-disabled。',
+		'lazy loading/error继续保留branch可聚焦性；请求错误使用本地化status，AbortSignal和source identity避免reset、删除或同key替换后的迟到结果污染当前节点。',
 		'ZUI保持单路径叶子提交，没有复制Ant多选级联、半选传播或任意semantic slotProps；这些需要独立选择和FormData设计。',
 		'MUI没有Cascader，因此ZUI不会把普通Select伪装成多级树；扁平TreeNode继续适合数据库、IPC和增量异步更新。'
 	],
