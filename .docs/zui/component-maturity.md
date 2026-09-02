@@ -1,6 +1,6 @@
 # ZUI component maturity matrix
 
-Generated from 141 metadata components, 79 documentation modules, 141 API contract entries, and 133 test files.
+Generated from 141 metadata components, 79 documentation modules, 141 API contract entries, and 144 test files.
 
 Generation is evidence-based. A test filename alone never grants `VisuallyVerified` or `ProductionVerified`; the test source must contain the component name, `render(`, and `expect(`. `DesktopVerified` remains false until a component-level desktop evidence source is added.
 
@@ -10,9 +10,9 @@ Generation is evidence-based. A test filename alone never grants `VisuallyVerifi
 | Authorable         |   141 |
 | ContractVerified   |   141 |
 | RuntimeImplemented |   141 |
-| VisuallyVerified   |   128 |
+| VisuallyVerified   |   141 |
 | DesktopVerified    |     0 |
-| ProductionVerified |   117 |
+| ProductionVerified |   141 |
 
 | Component               | Category     | Declared | Authorable | Contract | Runtime | Visual | Desktop | Production | Docs                                                                  |
 | ----------------------- | ------------ | -------: | ---------: | -------: | ------: | -----: | ------: | ---------: | --------------------------------------------------------------------- |
@@ -77,8 +77,8 @@ Generation is evidence-based. A test filename alone never grants `VisuallyVerifi
 | ZPopover                | overlay      |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/overlay/popover/doc.ts               |
 | ZPopoverContent         | overlay      |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/overlay/popover/doc.ts               |
 | ZPopoverTrigger         | overlay      |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/overlay/popover/doc.ts               |
-| ZRadioGroup             | input        |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/input/radio-group/doc.ts             |
-| ZRadioGroupItem         | input        |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/input/radio-group/doc.ts             |
+| ZRadioGroup             | input        |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/radio-group/doc.ts             |
+| ZRadioGroupItem         | input        |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/radio-group/doc.ts             |
 | ZSelect                 | input        |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/select/doc.ts                  |
 | ZSelectContent          | input        |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/select/doc.ts                  |
 | ZSelectItem             | input        |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/select/doc.ts                  |
@@ -95,25 +95,25 @@ Generation is evidence-based. A test filename alone never grants `VisuallyVerifi
 | ZAvatar                 | data-display |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/avatar/doc.ts           |
 | ZBadge                  | data-display |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/badge/doc.ts            |
 | ZCard                   | data-display |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/card/doc.ts             |
-| ZCarousel               | data-display |        Y |          Y |        Y |       Y |      Y |       — |          — | apps/docs/src/content/components/data-display/carousel/doc.ts         |
+| ZCarousel               | data-display |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/carousel/doc.ts         |
 | ZDataTable              | data-display |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/data-table/doc.ts       |
-| ZDescriptionList        | data-display |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/data-display/description-list/doc.ts |
+| ZDescriptionList        | data-display |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/description-list/doc.ts |
 | ZEmpty                  | data-display |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/empty/doc.ts            |
-| ZList                   | data-display |        Y |          Y |        Y |       Y |      Y |       — |          — | apps/docs/src/content/components/data-display/list/doc.ts             |
-| ZMeter                  | data-display |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/data-display/meter/doc.ts            |
-| ZProgress               | data-display |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/data-display/progress/doc.ts         |
-| ZSkeleton               | data-display |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/data-display/skeleton/doc.ts         |
+| ZList                   | data-display |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/list/doc.ts             |
+| ZMeter                  | data-display |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/meter/doc.ts            |
+| ZProgress               | data-display |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/progress/doc.ts         |
+| ZSkeleton               | data-display |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/skeleton/doc.ts         |
 | ZStatistic              | data-display |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/statistic/doc.ts        |
 | ZTable                  | data-display |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/table/doc.ts            |
 | ZTag                    | data-display |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/tag/doc.ts              |
 | ZTimeline               | data-display |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/timeline/doc.ts         |
-| ZVirtualList            | data-display |        Y |          Y |        Y |       Y |      Y |       — |          — | apps/docs/src/content/components/data-display/virtual-list/doc.ts     |
+| ZVirtualList            | data-display |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/virtual-list/doc.ts     |
 | ZAlert                  | feedback     |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/feedback/alert/doc.ts                |
 | ZLoadingBar             | feedback     |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/feedback/loading-bar/doc.ts          |
 | ZResult                 | feedback     |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/feedback/result/doc.ts               |
 | ZSpinner                | feedback     |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/feedback/spinner/doc.ts              |
-| ZToast                  | feedback     |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/feedback/toast/doc.ts                |
-| ZToaster                | feedback     |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/feedback/toast/doc.ts                |
+| ZToast                  | feedback     |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/feedback/toast/doc.ts                |
+| ZToaster                | feedback     |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/feedback/toast/doc.ts                |
 | ZBox                    | gene         |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/gene/box/doc.ts                      |
 | ZButton                 | gene         |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/gene/button/doc.ts                   |
 | ZCode                   | gene         |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/gene/code/doc.ts                     |
@@ -122,10 +122,10 @@ Generation is evidence-based. A test filename alone never grants `VisuallyVerifi
 | ZKbd                    | gene         |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/gene/kbd/doc.ts                      |
 | ZLink                   | gene         |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/gene/link/doc.ts                     |
 | ZProvider               | gene         |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/gene/provider/doc.ts                 |
-| ZSeparator              | gene         |        Y |          Y |        Y |       Y |      Y |       — |          — | apps/docs/src/content/components/gene/separator/doc.ts                |
+| ZSeparator              | gene         |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/gene/separator/doc.ts                |
 | ZText                   | gene         |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/gene/text/doc.ts                     |
 | ZToggleButton           | gene         |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/gene/toggle-button/doc.ts            |
-| ZVisuallyHidden         | gene         |        Y |          Y |        Y |       Y |      Y |       — |          — | apps/docs/src/content/components/gene/visually-hidden/doc.ts          |
+| ZVisuallyHidden         | gene         |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/gene/visually-hidden/doc.ts          |
 | ZCalendar               | input        |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/calendar/doc.ts                |
 | ZCascader               | input        |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/cascader/doc.ts                |
 | ZCheckbox               | input        |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/checkbox/doc.ts                |
@@ -135,25 +135,25 @@ Generation is evidence-based. A test filename alone never grants `VisuallyVerifi
 | ZDateRangePicker        | input        |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/date-range-picker/doc.ts       |
 | ZField                  | input        |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/field/doc.ts                   |
 | ZFileUpload             | input        |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/file-upload/doc.ts             |
-| ZForm                   | input        |        Y |          Y |        Y |       Y |      Y |       — |          — | apps/docs/src/content/components/input/form/doc.ts                    |
-| ZFormField              | input        |        Y |          Y |        Y |       Y |      Y |       — |          — | apps/docs/src/content/components/input/form/doc.ts                    |
+| ZForm                   | input        |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/form/doc.ts                    |
+| ZFormField              | input        |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/form/doc.ts                    |
 | ZInput                  | input        |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/input/doc.ts                   |
 | ZInputGroup             | input        |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/input-group/doc.ts             |
 | ZMention                | input        |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/mention/doc.ts                 |
 | ZNumberField            | input        |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/number-field/doc.ts            |
 | ZPinInput               | input        |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/pin-input/doc.ts               |
-| ZSegmented              | input        |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/input/segmented/doc.ts               |
+| ZSegmented              | input        |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/segmented/doc.ts               |
 | ZSlider                 | input        |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/slider/doc.ts                  |
 | ZSwitch                 | input        |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/switch/doc.ts                  |
 | ZTagsInput              | input        |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/tags-input/doc.ts              |
 | ZTextarea               | input        |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/textarea/doc.ts                |
 | ZTimeField              | input        |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/time-field/doc.ts              |
-| ZTransfer               | input        |        Y |          Y |        Y |       Y |      Y |       — |          — | apps/docs/src/content/components/input/transfer/doc.ts                |
-| ZTreeSelect             | input        |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/input/tree-select/doc.ts             |
-| ZAspectRatio            | layout       |        Y |          Y |        Y |       Y |      Y |       — |          — | apps/docs/src/content/components/layout/aspect-ratio/doc.ts           |
-| ZContainer              | layout       |        Y |          Y |        Y |       Y |      Y |       — |          — | apps/docs/src/content/components/layout/container/doc.ts              |
+| ZTransfer               | input        |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/transfer/doc.ts                |
+| ZTreeSelect             | input        |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/tree-select/doc.ts             |
+| ZAspectRatio            | layout       |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/layout/aspect-ratio/doc.ts           |
+| ZContainer              | layout       |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/layout/container/doc.ts              |
 | ZStack                  | layout       |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/layout/stack/doc.ts                  |
-| ZCommand                | navigation   |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/navigation/command/doc.ts            |
-| ZCommandPalette         | navigation   |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/navigation/command-palette/doc.ts    |
-| ZPagination             | navigation   |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/navigation/pagination/doc.ts         |
-| ZTour                   | overlay      |        Y |          Y |        Y |       Y |      Y |       — |          — | apps/docs/src/content/components/overlay/tour/doc.ts                  |
+| ZCommand                | navigation   |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/command/doc.ts            |
+| ZCommandPalette         | navigation   |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/command-palette/doc.ts    |
+| ZPagination             | navigation   |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/pagination/doc.ts         |
+| ZTour                   | overlay      |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/overlay/tour/doc.ts                  |
