@@ -2,7 +2,7 @@
 
 本文件由 `scripts/check-stability-policy.mjs` 生成；不会修改组件 status。compound member 可继承同 family root 的 Docs 页面。
 
-stableCompliant：14；stableViolations：0；promotionEligibleExperimental：32。
+stableCompliant：15；stableViolations：0；promotionEligibleExperimental：31。
 
 | Component               | Status       | Classification                | Blockers                              | Docs                                                                           | SSR |
 | ----------------------- | ------------ | ----------------------------- | ------------------------------------- | ------------------------------------------------------------------------------ | --: |
@@ -136,7 +136,7 @@ stableCompliant：14；stableViolations：0；promotionEligibleExperimental：32
 | ZSlider                 | experimental | experimental                  | ProductionVerified                    | apps/docs/src/content/components/input/slider/doc.ts                           |   1 |
 | ZSwitch                 | experimental | experimental                  | ProductionVerified                    | apps/docs/src/content/components/input/switch/doc.ts                           |   2 |
 | ZTagsInput              | experimental | promotionEligibleExperimental | —                                     | apps/docs/src/content/components/input/tags-input/doc.ts                       |   1 |
-| ZTextarea               | experimental | promotionEligibleExperimental | —                                     | apps/docs/src/content/components/input/textarea/doc.ts                         |   2 |
+| ZTextarea               | stable       | stableCompliant               | —                                     | apps/docs/src/content/components/input/textarea/doc.ts                         |   2 |
 | ZTimeField              | experimental | experimental                  | ProductionVerified                    | apps/docs/src/content/components/input/time-field/doc.ts                       |   1 |
 | ZTransfer               | experimental | experimental                  | ProductionVerified                    | apps/docs/src/content/components/input/transfer/doc.ts                         |   1 |
 | ZTreeSelect             | experimental | promotionEligibleExperimental | —                                     | apps/docs/src/content/components/input/tree-select/doc.ts                      |   2 |

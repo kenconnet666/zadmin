@@ -113,7 +113,7 @@
 			{ description: '只读状态。', name: 'data-readonly', values: ['true'] },
 			{ description: '当前已解析为减少动画。', name: 'data-reduced-motion', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '保留原生textarea编辑、IME与表单语义，并提供有界、跨document且可销毁的autosize。'
 	} as const satisfies ZuiComponentMetadata;
 

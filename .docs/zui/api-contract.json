@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"componentCount": 141,
-	"overallSha256": "c483f87c90d88caec361ba9b13fa4c88616a9529c367cfdf9cbfe668ce474b8a",
+	"overallSha256": "f617513f60e9f67e8f9974c59c0cf326f0e3ac91064b9a14432adf5721fa8112",
 	"components": [
 		{
 			"id": "accordion",
@@ -655,7 +655,7 @@
 		},
 		{
 			"id": "textarea",
-			"sha256": "5204879bb76dea4fef0a6b16f33d69c1a050b027987a72fc5f9d8cc8fc1d300a",
+			"sha256": "7d4ab6d154f90ab769158b0002537c3ce3942979325fb4442af786cfa8050f46",
 			"source": "src/components/input/ZTextarea.svelte"
 		},
 		{

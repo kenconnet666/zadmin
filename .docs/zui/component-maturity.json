@@ -12141,7 +12141,7 @@
 			"name": "ZTextarea",
 			"category": "input",
 			"family": null,
-			"status": "experimental",
+			"status": "stable",
 			"source": "ui/zui/src/components/input/ZTextarea.svelte",
 			"apiDocumentation": {
 				"metadataGapPropCount": 0,
@@ -12172,7 +12172,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "5204879bb76dea4fef0a6b16f33d69c1a050b027987a72fc5f9d8cc8fc1d300a API snapshot entry"
+						"detail": "7d4ab6d154f90ab769158b0002537c3ce3942979325fb4442af786cfa8050f46 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
