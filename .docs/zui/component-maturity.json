@@ -3,7 +3,7 @@
 		"metadataComponents": 141,
 		"documentationPages": 79,
 		"contractComponents": 141,
-		"testFiles": 121
+		"testFiles": 122
 	},
 	"stageNames": [
 		"Declared",
@@ -21,13 +21,14 @@
 		"RuntimeImplemented": 141,
 		"VisuallyVerified": 141,
 		"DesktopVerified": 0,
-		"ProductionVerified": 51
+		"ProductionVerified": 53
 	},
 	"components": [
 		{
 			"id": "accordion",
 			"name": "ZAccordion",
 			"category": "navigation",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/accordion/ZAccordion.svelte",
 			"stages": {
 				"Declared": true,
@@ -112,6 +113,7 @@
 			"id": "accordion-content",
 			"name": "ZAccordionContent",
 			"category": "navigation",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/accordion/ZAccordionContent.svelte",
 			"stages": {
 				"Declared": true,
@@ -193,6 +195,7 @@
 			"id": "accordion-item",
 			"name": "ZAccordionItem",
 			"category": "navigation",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/accordion/ZAccordionItem.svelte",
 			"stages": {
 				"Declared": true,
@@ -278,6 +281,7 @@
 			"id": "accordion-trigger",
 			"name": "ZAccordionTrigger",
 			"category": "navigation",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/accordion/ZAccordionTrigger.svelte",
 			"stages": {
 				"Declared": true,
@@ -363,6 +367,7 @@
 			"id": "alert-dialog",
 			"name": "ZAlertDialog",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialog.svelte",
 			"stages": {
 				"Declared": true,
@@ -456,6 +461,7 @@
 			"id": "alert-dialog-action",
 			"name": "ZAlertDialogAction",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialogAction.svelte",
 			"stages": {
 				"Declared": true,
@@ -546,6 +552,7 @@
 			"id": "alert-dialog-cancel",
 			"name": "ZAlertDialogCancel",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialogCancel.svelte",
 			"stages": {
 				"Declared": true,
@@ -636,6 +643,7 @@
 			"id": "alert-dialog-content",
 			"name": "ZAlertDialogContent",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialogContent.svelte",
 			"stages": {
 				"Declared": true,
@@ -726,6 +734,7 @@
 			"id": "alert-dialog-description",
 			"name": "ZAlertDialogDescription",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialogDescription.svelte",
 			"stages": {
 				"Declared": true,
@@ -816,6 +825,7 @@
 			"id": "alert-dialog-overlay",
 			"name": "ZAlertDialogOverlay",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialogOverlay.svelte",
 			"stages": {
 				"Declared": true,
@@ -906,6 +916,7 @@
 			"id": "alert-dialog-title",
 			"name": "ZAlertDialogTitle",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialogTitle.svelte",
 			"stages": {
 				"Declared": true,
@@ -996,6 +1007,7 @@
 			"id": "alert-dialog-trigger",
 			"name": "ZAlertDialogTrigger",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialogTrigger.svelte",
 			"stages": {
 				"Declared": true,
@@ -1074,6 +1086,7 @@
 			"id": "combobox",
 			"name": "ZCombobox",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/combobox/ZCombobox.svelte",
 			"stages": {
 				"Declared": true,
@@ -1154,6 +1167,7 @@
 			"id": "combobox-content",
 			"name": "ZComboboxContent",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/combobox/ZComboboxContent.svelte",
 			"stages": {
 				"Declared": true,
@@ -1231,6 +1245,7 @@
 			"id": "combobox-input",
 			"name": "ZComboboxInput",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/combobox/ZComboboxInput.svelte",
 			"stages": {
 				"Declared": true,
@@ -1312,6 +1327,7 @@
 			"id": "combobox-item",
 			"name": "ZComboboxItem",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/combobox/ZComboboxItem.svelte",
 			"stages": {
 				"Declared": true,
@@ -1373,6 +1389,7 @@
 			"id": "context-menu",
 			"name": "ZContextMenu",
 			"category": "navigation",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/context-menu/ZContextMenu.svelte",
 			"stages": {
 				"Declared": true,
@@ -1445,6 +1462,7 @@
 			"id": "context-menu-content",
 			"name": "ZContextMenuContent",
 			"category": "navigation",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/context-menu/ZContextMenuContent.svelte",
 			"stages": {
 				"Declared": true,
@@ -1514,6 +1532,7 @@
 			"id": "context-menu-trigger",
 			"name": "ZContextMenuTrigger",
 			"category": "navigation",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/context-menu/ZContextMenuTrigger.svelte",
 			"stages": {
 				"Declared": true,
@@ -1583,6 +1602,7 @@
 			"id": "dialog",
 			"name": "ZDialog",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/dialog/ZDialog.svelte",
 			"stages": {
 				"Declared": true,
@@ -1676,6 +1696,7 @@
 			"id": "dialog-close",
 			"name": "ZDialogClose",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/dialog/ZDialogClose.svelte",
 			"stages": {
 				"Declared": true,
@@ -1754,6 +1775,7 @@
 			"id": "dialog-content",
 			"name": "ZDialogContent",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/dialog/ZDialogContent.svelte",
 			"stages": {
 				"Declared": true,
@@ -1848,6 +1870,7 @@
 			"id": "dialog-description",
 			"name": "ZDialogDescription",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/dialog/ZDialogDescription.svelte",
 			"stages": {
 				"Declared": true,
@@ -1909,6 +1932,7 @@
 			"id": "dialog-overlay",
 			"name": "ZDialogOverlay",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/dialog/ZDialogOverlay.svelte",
 			"stages": {
 				"Declared": true,
@@ -1987,6 +2011,7 @@
 			"id": "dialog-title",
 			"name": "ZDialogTitle",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/dialog/ZDialogTitle.svelte",
 			"stages": {
 				"Declared": true,
@@ -2077,6 +2102,7 @@
 			"id": "dialog-trigger",
 			"name": "ZDialogTrigger",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/dialog/ZDialogTrigger.svelte",
 			"stages": {
 				"Declared": true,
@@ -2155,6 +2181,7 @@
 			"id": "drawer",
 			"name": "ZDrawer",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/drawer/ZDrawer.svelte",
 			"stages": {
 				"Declared": true,
@@ -2231,6 +2258,7 @@
 			"id": "drawer-close",
 			"name": "ZDrawerClose",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/drawer/ZDrawerClose.svelte",
 			"stages": {
 				"Declared": true,
@@ -2304,6 +2332,7 @@
 			"id": "drawer-content",
 			"name": "ZDrawerContent",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/drawer/ZDrawerContent.svelte",
 			"stages": {
 				"Declared": true,
@@ -2377,6 +2406,7 @@
 			"id": "drawer-description",
 			"name": "ZDrawerDescription",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/drawer/ZDrawerDescription.svelte",
 			"stages": {
 				"Declared": true,
@@ -2450,6 +2480,7 @@
 			"id": "drawer-overlay",
 			"name": "ZDrawerOverlay",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/drawer/ZDrawerOverlay.svelte",
 			"stages": {
 				"Declared": true,
@@ -2523,6 +2554,7 @@
 			"id": "drawer-title",
 			"name": "ZDrawerTitle",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/drawer/ZDrawerTitle.svelte",
 			"stages": {
 				"Declared": true,
@@ -2596,6 +2628,7 @@
 			"id": "drawer-trigger",
 			"name": "ZDrawerTrigger",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/drawer/ZDrawerTrigger.svelte",
 			"stages": {
 				"Declared": true,
@@ -2669,6 +2702,7 @@
 			"id": "dropdown-menu",
 			"name": "ZDropdownMenu",
 			"category": "navigation",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/dropdown-menu/ZDropdownMenu.svelte",
 			"stages": {
 				"Declared": true,
@@ -2741,6 +2775,7 @@
 			"id": "dropdown-menu-content",
 			"name": "ZDropdownMenuContent",
 			"category": "navigation",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/dropdown-menu/ZDropdownMenuContent.svelte",
 			"stages": {
 				"Declared": true,
@@ -2810,6 +2845,7 @@
 			"id": "dropdown-menu-trigger",
 			"name": "ZDropdownMenuTrigger",
 			"category": "navigation",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/dropdown-menu/ZDropdownMenuTrigger.svelte",
 			"stages": {
 				"Declared": true,
@@ -2879,6 +2915,7 @@
 			"id": "menu",
 			"name": "ZMenu",
 			"category": "navigation",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/menu/ZMenu.svelte",
 			"stages": {
 				"Declared": true,
@@ -2951,6 +2988,7 @@
 			"id": "menu-checkbox-item",
 			"name": "ZMenuCheckboxItem",
 			"category": "navigation",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/menu/ZMenuCheckboxItem.svelte",
 			"stages": {
 				"Declared": true,
@@ -3007,6 +3045,7 @@
 			"id": "menu-group",
 			"name": "ZMenuGroup",
 			"category": "navigation",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/menu/ZMenuGroup.svelte",
 			"stages": {
 				"Declared": true,
@@ -3076,6 +3115,7 @@
 			"id": "menu-item",
 			"name": "ZMenuItem",
 			"category": "navigation",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/menu/ZMenuItem.svelte",
 			"stages": {
 				"Declared": true,
@@ -3157,6 +3197,7 @@
 			"id": "menu-label",
 			"name": "ZMenuLabel",
 			"category": "navigation",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/menu/ZMenuLabel.svelte",
 			"stages": {
 				"Declared": true,
@@ -3226,6 +3267,7 @@
 			"id": "menu-radio-group",
 			"name": "ZMenuRadioGroup",
 			"category": "navigation",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/menu/ZMenuRadioGroup.svelte",
 			"stages": {
 				"Declared": true,
@@ -3282,6 +3324,7 @@
 			"id": "menu-radio-item",
 			"name": "ZMenuRadioItem",
 			"category": "navigation",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/menu/ZMenuRadioItem.svelte",
 			"stages": {
 				"Declared": true,
@@ -3338,6 +3381,7 @@
 			"id": "menu-separator",
 			"name": "ZMenuSeparator",
 			"category": "navigation",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/menu/ZMenuSeparator.svelte",
 			"stages": {
 				"Declared": true,
@@ -3407,6 +3451,7 @@
 			"id": "menu-sub",
 			"name": "ZMenuSub",
 			"category": "navigation",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/menu/ZMenuSub.svelte",
 			"stages": {
 				"Declared": true,
@@ -3463,6 +3508,7 @@
 			"id": "menu-sub-content",
 			"name": "ZMenuSubContent",
 			"category": "navigation",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/menu/ZMenuSubContent.svelte",
 			"stages": {
 				"Declared": true,
@@ -3519,6 +3565,7 @@
 			"id": "menu-sub-trigger",
 			"name": "ZMenuSubTrigger",
 			"category": "navigation",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/menu/ZMenuSubTrigger.svelte",
 			"stages": {
 				"Declared": true,
@@ -3575,6 +3622,7 @@
 			"id": "multi-select",
 			"name": "ZMultiSelect",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/multi-select/ZMultiSelect.svelte",
 			"stages": {
 				"Declared": true,
@@ -3655,6 +3703,7 @@
 			"id": "multi-select-content",
 			"name": "ZMultiSelectContent",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/multi-select/ZMultiSelectContent.svelte",
 			"stages": {
 				"Declared": true,
@@ -3724,6 +3773,7 @@
 			"id": "multi-select-item",
 			"name": "ZMultiSelectItem",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/multi-select/ZMultiSelectItem.svelte",
 			"stages": {
 				"Declared": true,
@@ -3785,6 +3835,7 @@
 			"id": "multi-select-trigger",
 			"name": "ZMultiSelectTrigger",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/multi-select/ZMultiSelectTrigger.svelte",
 			"stages": {
 				"Declared": true,
@@ -3866,6 +3917,7 @@
 			"id": "popconfirm",
 			"name": "ZPopconfirm",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/popconfirm/ZPopconfirm.svelte",
 			"stages": {
 				"Declared": true,
@@ -3942,6 +3994,7 @@
 			"id": "popconfirm-action",
 			"name": "ZPopconfirmAction",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/popconfirm/ZPopconfirmAction.svelte",
 			"stages": {
 				"Declared": true,
@@ -4015,6 +4068,7 @@
 			"id": "popconfirm-cancel",
 			"name": "ZPopconfirmCancel",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/popconfirm/ZPopconfirmCancel.svelte",
 			"stages": {
 				"Declared": true,
@@ -4088,6 +4142,7 @@
 			"id": "popconfirm-content",
 			"name": "ZPopconfirmContent",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/popconfirm/ZPopconfirmContent.svelte",
 			"stages": {
 				"Declared": true,
@@ -4161,6 +4216,7 @@
 			"id": "popconfirm-description",
 			"name": "ZPopconfirmDescription",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/popconfirm/ZPopconfirmDescription.svelte",
 			"stages": {
 				"Declared": true,
@@ -4234,6 +4290,7 @@
 			"id": "popconfirm-title",
 			"name": "ZPopconfirmTitle",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/popconfirm/ZPopconfirmTitle.svelte",
 			"stages": {
 				"Declared": true,
@@ -4311,6 +4368,7 @@
 			"id": "popconfirm-trigger",
 			"name": "ZPopconfirmTrigger",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/popconfirm/ZPopconfirmTrigger.svelte",
 			"stages": {
 				"Declared": true,
@@ -4388,6 +4446,7 @@
 			"id": "popover",
 			"name": "ZPopover",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/popover/ZPopover.svelte",
 			"stages": {
 				"Declared": true,
@@ -4481,6 +4540,7 @@
 			"id": "popover-content",
 			"name": "ZPopoverContent",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/popover/ZPopoverContent.svelte",
 			"stages": {
 				"Declared": true,
@@ -4571,6 +4631,7 @@
 			"id": "popover-trigger",
 			"name": "ZPopoverTrigger",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/popover/ZPopoverTrigger.svelte",
 			"stages": {
 				"Declared": true,
@@ -4665,6 +4726,7 @@
 			"id": "radio-group",
 			"name": "ZRadioGroup",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/radio-group/ZRadioGroup.svelte",
 			"stages": {
 				"Declared": true,
@@ -4749,6 +4811,7 @@
 			"id": "radio-group-item",
 			"name": "ZRadioGroupItem",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/radio-group/ZRadioGroupItem.svelte",
 			"stages": {
 				"Declared": true,
@@ -4826,6 +4889,7 @@
 			"id": "select",
 			"name": "ZSelect",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/select/ZSelect.svelte",
 			"stages": {
 				"Declared": true,
@@ -4914,6 +4978,7 @@
 			"id": "select-content",
 			"name": "ZSelectContent",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/select/ZSelectContent.svelte",
 			"stages": {
 				"Declared": true,
@@ -4991,6 +5056,7 @@
 			"id": "select-item",
 			"name": "ZSelectItem",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/select/ZSelectItem.svelte",
 			"stages": {
 				"Declared": true,
@@ -5052,6 +5118,7 @@
 			"id": "select-trigger",
 			"name": "ZSelectTrigger",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/select/ZSelectTrigger.svelte",
 			"stages": {
 				"Declared": true,
@@ -5141,6 +5208,7 @@
 			"id": "tabs",
 			"name": "ZTabs",
 			"category": "navigation",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/tabs/ZTabs.svelte",
 			"stages": {
 				"Declared": true,
@@ -5209,6 +5277,7 @@
 			"id": "tabs-list",
 			"name": "ZTabsList",
 			"category": "navigation",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/tabs/ZTabsList.svelte",
 			"stages": {
 				"Declared": true,
@@ -5278,6 +5347,7 @@
 			"id": "tabs-panel",
 			"name": "ZTabsPanel",
 			"category": "navigation",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/tabs/ZTabsPanel.svelte",
 			"stages": {
 				"Declared": true,
@@ -5343,6 +5413,7 @@
 			"id": "tabs-trigger",
 			"name": "ZTabsTrigger",
 			"category": "navigation",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/tabs/ZTabsTrigger.svelte",
 			"stages": {
 				"Declared": true,
@@ -5408,6 +5479,7 @@
 			"id": "tooltip",
 			"name": "ZTooltip",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/tooltip/ZTooltip.svelte",
 			"stages": {
 				"Declared": true,
@@ -5488,6 +5560,7 @@
 			"id": "tooltip-content",
 			"name": "ZTooltipContent",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/tooltip/ZTooltipContent.svelte",
 			"stages": {
 				"Declared": true,
@@ -5565,6 +5638,7 @@
 			"id": "tooltip-group",
 			"name": "ZTooltipGroup",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/tooltip/ZTooltipGroup.svelte",
 			"stages": {
 				"Declared": true,
@@ -5626,6 +5700,7 @@
 			"id": "tooltip-trigger",
 			"name": "ZTooltipTrigger",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/tooltip/ZTooltipTrigger.svelte",
 			"stages": {
 				"Declared": true,
@@ -5703,6 +5778,7 @@
 			"id": "tree",
 			"name": "ZTree",
 			"category": "navigation",
+			"status": "experimental",
 			"source": "ui/zui/src/components/compound/tree/ZTree.svelte",
 			"stages": {
 				"Declared": true,
@@ -5804,6 +5880,7 @@
 			"id": "avatar",
 			"name": "ZAvatar",
 			"category": "data-display",
+			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZAvatar.svelte",
 			"stages": {
 				"Declared": true,
@@ -5917,6 +5994,7 @@
 			"id": "badge",
 			"name": "ZBadge",
 			"category": "data-display",
+			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZBadge.svelte",
 			"stages": {
 				"Declared": true,
@@ -6002,6 +6080,7 @@
 			"id": "card",
 			"name": "ZCard",
 			"category": "data-display",
+			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZCard.svelte",
 			"stages": {
 				"Declared": true,
@@ -6095,6 +6174,7 @@
 			"id": "carousel",
 			"name": "ZCarousel",
 			"category": "data-display",
+			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZCarousel.svelte",
 			"stages": {
 				"Declared": true,
@@ -6175,6 +6255,7 @@
 			"id": "data-table",
 			"name": "ZDataTable",
 			"category": "data-display",
+			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZDataTable.svelte",
 			"stages": {
 				"Declared": true,
@@ -6276,6 +6357,7 @@
 			"id": "description-list",
 			"name": "ZDescriptionList",
 			"category": "data-display",
+			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZDescriptionList.svelte",
 			"stages": {
 				"Declared": true,
@@ -6369,6 +6451,7 @@
 			"id": "empty",
 			"name": "ZEmpty",
 			"category": "data-display",
+			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZEmpty.svelte",
 			"stages": {
 				"Declared": true,
@@ -6466,6 +6549,7 @@
 			"id": "list",
 			"name": "ZList",
 			"category": "data-display",
+			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZList.svelte",
 			"stages": {
 				"Declared": true,
@@ -6546,6 +6630,7 @@
 			"id": "meter",
 			"name": "ZMeter",
 			"category": "data-display",
+			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZMeter.svelte",
 			"stages": {
 				"Declared": true,
@@ -6622,6 +6707,7 @@
 			"id": "progress",
 			"name": "ZProgress",
 			"category": "data-display",
+			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZProgress.svelte",
 			"stages": {
 				"Declared": true,
@@ -6710,6 +6796,7 @@
 			"id": "skeleton",
 			"name": "ZSkeleton",
 			"category": "data-display",
+			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZSkeleton.svelte",
 			"stages": {
 				"Declared": true,
@@ -6798,6 +6885,7 @@
 			"id": "statistic",
 			"name": "ZStatistic",
 			"category": "data-display",
+			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZStatistic.svelte",
 			"stages": {
 				"Declared": true,
@@ -6895,6 +6983,7 @@
 			"id": "table",
 			"name": "ZTable",
 			"category": "data-display",
+			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZTable.svelte",
 			"stages": {
 				"Declared": true,
@@ -6988,6 +7077,7 @@
 			"id": "tag",
 			"name": "ZTag",
 			"category": "data-display",
+			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZTag.svelte",
 			"stages": {
 				"Declared": true,
@@ -7089,6 +7179,7 @@
 			"id": "timeline",
 			"name": "ZTimeline",
 			"category": "data-display",
+			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZTimeline.svelte",
 			"stages": {
 				"Declared": true,
@@ -7190,6 +7281,7 @@
 			"id": "virtual-list",
 			"name": "ZVirtualList",
 			"category": "data-display",
+			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZVirtualList.svelte",
 			"stages": {
 				"Declared": true,
@@ -7278,6 +7370,7 @@
 			"id": "alert",
 			"name": "ZAlert",
 			"category": "feedback",
+			"status": "experimental",
 			"source": "ui/zui/src/components/feedback/ZAlert.svelte",
 			"stages": {
 				"Declared": true,
@@ -7375,6 +7468,7 @@
 			"id": "loading-bar",
 			"name": "ZLoadingBar",
 			"category": "feedback",
+			"status": "experimental",
 			"source": "ui/zui/src/components/feedback/ZLoadingBar.svelte",
 			"stages": {
 				"Declared": true,
@@ -7468,6 +7562,7 @@
 			"id": "result",
 			"name": "ZResult",
 			"category": "feedback",
+			"status": "experimental",
 			"source": "ui/zui/src/components/feedback/ZResult.svelte",
 			"stages": {
 				"Declared": true,
@@ -7565,6 +7660,7 @@
 			"id": "spinner",
 			"name": "ZSpinner",
 			"category": "feedback",
+			"status": "experimental",
 			"source": "ui/zui/src/components/feedback/ZSpinner.svelte",
 			"stages": {
 				"Declared": true,
@@ -7658,6 +7754,7 @@
 			"id": "toast",
 			"name": "ZToast",
 			"category": "feedback",
+			"status": "experimental",
 			"source": "ui/zui/src/components/feedback/ZToast.svelte",
 			"stages": {
 				"Declared": true,
@@ -7722,6 +7819,7 @@
 			"id": "toaster",
 			"name": "ZToaster",
 			"category": "feedback",
+			"status": "experimental",
 			"source": "ui/zui/src/components/feedback/ZToaster.svelte",
 			"stages": {
 				"Declared": true,
@@ -7816,6 +7914,7 @@
 			"id": "box",
 			"name": "ZBox",
 			"category": "gene",
+			"status": "stable",
 			"source": "ui/zui/src/components/gene/ZBox.svelte",
 			"stages": {
 				"Declared": true,
@@ -7824,7 +7923,7 @@
 				"RuntimeImplemented": true,
 				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -7852,6 +7951,10 @@
 					}
 				],
 				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/foundation-stable-production.browser.spec.ts",
+						"detail": "ZBox browser assertions"
+					},
 					{
 						"path": "ui/zui/tests/components.browser.spec.ts",
 						"detail": "ZBox browser assertions"
@@ -7882,7 +7985,12 @@
 					}
 				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/foundation-stable-production.browser.spec.ts",
+						"detail": "ZBox production assertions"
+					}
+				]
 			},
 			"docs": {
 				"path": "apps/docs/src/content/components/gene/box/doc.ts",
@@ -7900,6 +8008,7 @@
 			"id": "button",
 			"name": "ZButton",
 			"category": "gene",
+			"status": "stable",
 			"source": "ui/zui/src/components/gene/ZButton.svelte",
 			"stages": {
 				"Declared": true,
@@ -8333,6 +8442,7 @@
 			"id": "code",
 			"name": "ZCode",
 			"category": "gene",
+			"status": "experimental",
 			"source": "ui/zui/src/components/gene/ZCode.svelte",
 			"stages": {
 				"Declared": true,
@@ -8426,6 +8536,7 @@
 			"id": "heading",
 			"name": "ZHeading",
 			"category": "gene",
+			"status": "experimental",
 			"source": "ui/zui/src/components/gene/ZHeading.svelte",
 			"stages": {
 				"Declared": true,
@@ -8490,6 +8601,7 @@
 			"id": "icon",
 			"name": "ZIcon",
 			"category": "gene",
+			"status": "stable",
 			"source": "ui/zui/src/components/gene/ZIcon.svelte",
 			"stages": {
 				"Declared": true,
@@ -8498,7 +8610,7 @@
 				"RuntimeImplemented": true,
 				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -8527,6 +8639,10 @@
 				],
 				"VisuallyVerified": [
 					{
+						"path": "ui/zui/tests/foundation-stable-production.browser.spec.ts",
+						"detail": "ZIcon browser assertions"
+					},
+					{
 						"path": "ui/zui/tests/components.browser.spec.ts",
 						"detail": "ZIcon browser assertions"
 					},
@@ -8536,7 +8652,12 @@
 					}
 				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/foundation-stable-production.browser.spec.ts",
+						"detail": "ZIcon production assertions"
+					}
+				]
 			},
 			"docs": {
 				"path": "apps/docs/src/content/components/gene/icon/doc.ts",
@@ -8554,6 +8675,7 @@
 			"id": "kbd",
 			"name": "ZKbd",
 			"category": "gene",
+			"status": "experimental",
 			"source": "ui/zui/src/components/gene/ZKbd.svelte",
 			"stages": {
 				"Declared": true,
@@ -8626,6 +8748,7 @@
 			"id": "link",
 			"name": "ZLink",
 			"category": "gene",
+			"status": "experimental",
 			"source": "ui/zui/src/components/gene/ZLink.svelte",
 			"stages": {
 				"Declared": true,
@@ -8719,6 +8842,7 @@
 			"id": "provider",
 			"name": "ZProvider",
 			"category": "gene",
+			"status": "stable",
 			"source": "ui/zui/src/components/gene/ZProvider.svelte",
 			"stages": {
 				"Declared": true,
@@ -9108,6 +9232,7 @@
 			"id": "separator",
 			"name": "ZSeparator",
 			"category": "gene",
+			"status": "experimental",
 			"source": "ui/zui/src/components/gene/ZSeparator.svelte",
 			"stages": {
 				"Declared": true,
@@ -9180,6 +9305,7 @@
 			"id": "text",
 			"name": "ZText",
 			"category": "gene",
+			"status": "stable",
 			"source": "ui/zui/src/components/gene/ZText.svelte",
 			"stages": {
 				"Declared": true,
@@ -9321,6 +9447,7 @@
 			"id": "toggle-button",
 			"name": "ZToggleButton",
 			"category": "gene",
+			"status": "experimental",
 			"source": "ui/zui/src/components/gene/ZToggleButton.svelte",
 			"stages": {
 				"Declared": true,
@@ -9414,6 +9541,7 @@
 			"id": "visually-hidden",
 			"name": "ZVisuallyHidden",
 			"category": "gene",
+			"status": "experimental",
 			"source": "ui/zui/src/components/gene/ZVisuallyHidden.svelte",
 			"stages": {
 				"Declared": true,
@@ -9486,6 +9614,7 @@
 			"id": "calendar",
 			"name": "ZCalendar",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZCalendar.svelte",
 			"stages": {
 				"Declared": true,
@@ -9558,6 +9687,7 @@
 			"id": "cascader",
 			"name": "ZCascader",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZCascader.svelte",
 			"stages": {
 				"Declared": true,
@@ -9651,6 +9781,7 @@
 			"id": "checkbox",
 			"name": "ZCheckbox",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZCheckbox.svelte",
 			"stages": {
 				"Declared": true,
@@ -9739,6 +9870,7 @@
 			"id": "color-picker",
 			"name": "ZColorPicker",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZColorPicker.svelte",
 			"stages": {
 				"Declared": true,
@@ -9828,6 +9960,7 @@
 			"id": "date-field",
 			"name": "ZDateField",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZDateField.svelte",
 			"stages": {
 				"Declared": true,
@@ -9904,6 +10037,7 @@
 			"id": "date-picker",
 			"name": "ZDatePicker",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZDatePicker.svelte",
 			"stages": {
 				"Declared": true,
@@ -9972,6 +10106,7 @@
 			"id": "date-range-picker",
 			"name": "ZDateRangePicker",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZDateRangePicker.svelte",
 			"stages": {
 				"Declared": true,
@@ -10040,6 +10175,7 @@
 			"id": "field",
 			"name": "ZField",
 			"category": "input",
+			"status": "stable",
 			"source": "ui/zui/src/components/input/ZField.svelte",
 			"stages": {
 				"Declared": true,
@@ -10289,6 +10425,7 @@
 			"id": "file-upload",
 			"name": "ZFileUpload",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZFileUpload.svelte",
 			"stages": {
 				"Declared": true,
@@ -10394,6 +10531,7 @@
 			"id": "form",
 			"name": "ZForm",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZForm.svelte",
 			"stages": {
 				"Declared": true,
@@ -10466,6 +10604,7 @@
 			"id": "form-field",
 			"name": "ZFormField",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZFormField.svelte",
 			"stages": {
 				"Declared": true,
@@ -10539,6 +10678,7 @@
 			"id": "input",
 			"name": "ZInput",
 			"category": "input",
+			"status": "stable",
 			"source": "ui/zui/src/components/input/ZInput.svelte",
 			"stages": {
 				"Declared": true,
@@ -10712,6 +10852,7 @@
 			"id": "input-group",
 			"name": "ZInputGroup",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZInputGroup.svelte",
 			"stages": {
 				"Declared": true,
@@ -10841,6 +10982,7 @@
 			"id": "mention",
 			"name": "ZMention",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZMention.svelte",
 			"stages": {
 				"Declared": true,
@@ -10934,6 +11076,7 @@
 			"id": "number-field",
 			"name": "ZNumberField",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZNumberField.svelte",
 			"stages": {
 				"Declared": true,
@@ -11018,6 +11161,7 @@
 			"id": "pin-input",
 			"name": "ZPinInput",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZPinInput.svelte",
 			"stages": {
 				"Declared": true,
@@ -11115,6 +11259,7 @@
 			"id": "segmented",
 			"name": "ZSegmented",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZSegmented.svelte",
 			"stages": {
 				"Declared": true,
@@ -11195,6 +11340,7 @@
 			"id": "slider",
 			"name": "ZSlider",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZSlider.svelte",
 			"stages": {
 				"Declared": true,
@@ -11279,6 +11425,7 @@
 			"id": "switch",
 			"name": "ZSwitch",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZSwitch.svelte",
 			"stages": {
 				"Declared": true,
@@ -11371,6 +11518,7 @@
 			"id": "tags-input",
 			"name": "ZTagsInput",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZTagsInput.svelte",
 			"stages": {
 				"Declared": true,
@@ -11460,6 +11608,7 @@
 			"id": "textarea",
 			"name": "ZTextarea",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZTextarea.svelte",
 			"stages": {
 				"Declared": true,
@@ -11585,6 +11734,7 @@
 			"id": "time-field",
 			"name": "ZTimeField",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZTimeField.svelte",
 			"stages": {
 				"Declared": true,
@@ -11661,6 +11811,7 @@
 			"id": "transfer",
 			"name": "ZTransfer",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZTransfer.svelte",
 			"stages": {
 				"Declared": true,
@@ -11745,6 +11896,7 @@
 			"id": "tree-select",
 			"name": "ZTreeSelect",
 			"category": "input",
+			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZTreeSelect.svelte",
 			"stages": {
 				"Declared": true,
@@ -11850,6 +12002,7 @@
 			"id": "aspect-ratio",
 			"name": "ZAspectRatio",
 			"category": "layout",
+			"status": "experimental",
 			"source": "ui/zui/src/components/layout/ZAspectRatio.svelte",
 			"stages": {
 				"Declared": true,
@@ -11922,6 +12075,7 @@
 			"id": "container",
 			"name": "ZContainer",
 			"category": "layout",
+			"status": "experimental",
 			"source": "ui/zui/src/components/layout/ZContainer.svelte",
 			"stages": {
 				"Declared": true,
@@ -11994,6 +12148,7 @@
 			"id": "stack",
 			"name": "ZStack",
 			"category": "layout",
+			"status": "stable",
 			"source": "ui/zui/src/components/layout/ZStack.svelte",
 			"stages": {
 				"Declared": true,
@@ -12135,6 +12290,7 @@
 			"id": "command",
 			"name": "ZCommand",
 			"category": "navigation",
+			"status": "experimental",
 			"source": "ui/zui/src/components/navigation/ZCommand.svelte",
 			"stages": {
 				"Declared": true,
@@ -12207,6 +12363,7 @@
 			"id": "command-palette",
 			"name": "ZCommandPalette",
 			"category": "navigation",
+			"status": "experimental",
 			"source": "ui/zui/src/components/navigation/ZCommandPalette.svelte",
 			"stages": {
 				"Declared": true,
@@ -12279,6 +12436,7 @@
 			"id": "pagination",
 			"name": "ZPagination",
 			"category": "navigation",
+			"status": "experimental",
 			"source": "ui/zui/src/components/navigation/ZPagination.svelte",
 			"stages": {
 				"Declared": true,
@@ -12343,6 +12501,7 @@
 			"id": "tour",
 			"name": "ZTour",
 			"category": "overlay",
+			"status": "experimental",
 			"source": "ui/zui/src/components/overlay/ZTour.svelte",
 			"stages": {
 				"Declared": true,

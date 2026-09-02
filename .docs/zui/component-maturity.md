@@ -1,6 +1,6 @@
 # ZUI component maturity matrix
 
-Generated from 141 metadata components, 79 documentation modules, 141 API contract entries, and 121 test files.
+Generated from 141 metadata components, 79 documentation modules, 141 API contract entries, and 122 test files.
 
 Generation is evidence-based. A test filename alone never grants `VisuallyVerified` or `ProductionVerified`; the test source must contain the component name, `render(`, and `expect(`. `DesktopVerified` remains false until a component-level desktop evidence source is added.
 
@@ -12,7 +12,7 @@ Generation is evidence-based. A test filename alone never grants `VisuallyVerifi
 | RuntimeImplemented |   141 |
 | VisuallyVerified   |   141 |
 | DesktopVerified    |     0 |
-| ProductionVerified |    51 |
+| ProductionVerified |    53 |
 
 | Component               | Category     | Declared | Authorable | Contract | Runtime | Visual | Desktop | Production | Docs                                                                  |
 | ----------------------- | ------------ | -------: | ---------: | -------: | ------: | -----: | ------: | ---------: | --------------------------------------------------------------------- |
@@ -114,11 +114,11 @@ Generation is evidence-based. A test filename alone never grants `VisuallyVerifi
 | ZSpinner                | feedback     |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/feedback/spinner/doc.ts              |
 | ZToast                  | feedback     |        Y |          Y |        Y |       Y |      Y |       — |          — | apps/docs/src/content/components/feedback/toast/doc.ts                |
 | ZToaster                | feedback     |        Y |          Y |        Y |       Y |      Y |       — |          Y | —                                                                     |
-| ZBox                    | gene         |        Y |          Y |        Y |       Y |      Y |       — |          — | apps/docs/src/content/components/gene/box/doc.ts                      |
+| ZBox                    | gene         |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/gene/box/doc.ts                      |
 | ZButton                 | gene         |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/gene/button/doc.ts                   |
 | ZCode                   | gene         |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/gene/code/doc.ts                     |
 | ZHeading                | gene         |        Y |          Y |        Y |       Y |      Y |       — |          — | apps/docs/src/content/components/gene/heading/doc.ts                  |
-| ZIcon                   | gene         |        Y |          Y |        Y |       Y |      Y |       — |          — | apps/docs/src/content/components/gene/icon/doc.ts                     |
+| ZIcon                   | gene         |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/gene/icon/doc.ts                     |
 | ZKbd                    | gene         |        Y |          Y |        Y |       Y |      Y |       — |          — | apps/docs/src/content/components/gene/kbd/doc.ts                      |
 | ZLink                   | gene         |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/gene/link/doc.ts                     |
 | ZProvider               | gene         |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/gene/provider/doc.ts                 |

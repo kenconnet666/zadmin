@@ -43,8 +43,9 @@ for (const path of sourceFiles) {
 	const id = pick('id');
 	const name = pick('name');
 	const category = pick('category');
-	if (!id || !name || !category) throw new Error(`Incomplete metadata: ${path}`);
-	componentFiles.push({ id, name, category, path, source });
+	const status = pick('status');
+	if (!id || !name || !category || !status) throw new Error(`Incomplete metadata: ${path}`);
+	componentFiles.push({ id, name, category, status, path, source });
 }
 
 const entrypointFiles = await filesUnder(resolve(workspaceRoot, 'ui/zui/src/entrypoints'), '.ts');
@@ -118,7 +119,7 @@ if (process.argv.includes('--self-test')) {
 	process.exit(0);
 }
 
-const rows = componentFiles.map(({ id, name, category, path, source }) => {
+const rows = componentFiles.map(({ id, name, category, status, path, source }) => {
 	const sourcePath = portable(relative(workspaceRoot, path));
 	const contractFact = contractBySource.get(sourcePath);
 	const docs = docsSources.find(([docPath]) =>
@@ -161,6 +162,7 @@ const rows = componentFiles.map(({ id, name, category, path, source }) => {
 		id,
 		name,
 		category,
+		status,
 		source: sourcePath,
 		stages: {
 			Declared: true,
