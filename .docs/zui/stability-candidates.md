@@ -2,7 +2,7 @@
 
 本文件由 `scripts/check-stability-policy.mjs` 生成；不会修改组件 status。compound member 可继承同 family root 的 Docs 页面。
 
-stableCompliant：8；stableViolations：0；promotionEligibleExperimental：38。
+stableCompliant：10；stableViolations：0；promotionEligibleExperimental：36。
 
 | Component               | Status       | Classification                | Blockers                              | Docs                                                                           | SSR |
 | ----------------------- | ------------ | ----------------------------- | ------------------------------------- | ------------------------------------------------------------------------------ | --: |
@@ -110,11 +110,11 @@ stableCompliant：8；stableViolations：0；promotionEligibleExperimental：38�
 | ZHeading                | experimental | experimental                  | ProductionVerified                    | apps/docs/src/content/components/gene/heading/doc.ts                           |   1 |
 | ZIcon                   | stable       | stableCompliant               | —                                     | apps/docs/src/content/components/gene/icon/doc.ts                              |   1 |
 | ZKbd                    | experimental | experimental                  | ProductionVerified                    | apps/docs/src/content/components/gene/kbd/doc.ts                               |   2 |
-| ZLink                   | experimental | promotionEligibleExperimental | —                                     | apps/docs/src/content/components/gene/link/doc.ts                              |   2 |
+| ZLink                   | stable       | stableCompliant               | —                                     | apps/docs/src/content/components/gene/link/doc.ts                              |   2 |
 | ZProvider               | stable       | stableCompliant               | —                                     | apps/docs/src/content/components/gene/provider/doc.ts                          |   6 |
 | ZSeparator              | experimental | experimental                  | ProductionVerified                    | apps/docs/src/content/components/gene/separator/doc.ts                         |   2 |
 | ZText                   | stable       | stableCompliant               | —                                     | apps/docs/src/content/components/gene/text/doc.ts                              |   4 |
-| ZToggleButton           | experimental | promotionEligibleExperimental | —                                     | apps/docs/src/content/components/gene/toggle-button/doc.ts                     |   2 |
+| ZToggleButton           | stable       | stableCompliant               | —                                     | apps/docs/src/content/components/gene/toggle-button/doc.ts                     |   2 |
 | ZVisuallyHidden         | experimental | experimental                  | ProductionVerified                    | apps/docs/src/content/components/gene/visually-hidden/doc.ts                   |   2 |
 | ZCalendar               | experimental | experimental                  | ProductionVerified                    | apps/docs/src/content/components/input/calendar/doc.ts                         |   1 |
 | ZCascader               | experimental | promotionEligibleExperimental | —                                     | apps/docs/src/content/components/input/cascader/doc.ts                         |   1 |

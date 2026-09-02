@@ -107,7 +107,7 @@
 			},
 			{ description: '语义tone。', name: 'data-tone', values: ['default', 'danger'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'只拥有pressed状态，以原生button/aria-pressed和共享Button variant、tone、size、shape表达生产双态操作。'
 	} as const satisfies ZuiComponentMetadata;

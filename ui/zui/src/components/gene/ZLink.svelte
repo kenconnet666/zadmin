@@ -93,7 +93,7 @@
 			{ description: '显式外链视觉。', name: 'data-external', values: ['true'] },
 			{ description: '在新浏览上下文打开。', name: 'data-new-window', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'保持必填href和真实anchor语义，显式区分外链视觉、新窗口安全提示与不可导航disabled状态。'
 	} as const satisfies ZuiComponentMetadata;

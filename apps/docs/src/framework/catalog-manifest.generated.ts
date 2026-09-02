@@ -179,7 +179,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'gene',
 		summary:
 			'只拥有pressed/defaultPressed/onPressedChange状态，复用Button原生语义与variant、tone、size、shape视觉合同的独立双态操作。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [],
 		profiles: ['primitive', 'animated'],
 		capabilities: [
@@ -202,7 +202,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'gene',
 		summary:
 			'以必填href和真实anchor为唯一导航语义，显式分离外链图标、新窗口行为、安全rel、disabled与视觉tone/underline。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'link',
 			'anchor',

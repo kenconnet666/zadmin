@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"componentCount": 141,
-	"overallSha256": "042afe61254414fff49515b642bf2e30f92c10cae5f94026f3cc1a46db6db903",
+	"overallSha256": "53f2babf3a13f7407676d4467b1e74fa4953ab4633e8fba985b94ec8c7105dc3",
 	"components": [
 		{
 			"id": "accordion",
@@ -525,7 +525,7 @@
 		},
 		{
 			"id": "link",
-			"sha256": "a0a576ec2d312bb7e12dae7e5928be92bcd1accdf3aa68a7f312e6fac48b5f50",
+			"sha256": "6f20520b99c3e098bc20e04f649f044a6a5a1b68ef1d1ebba7484a5f69bfaebb",
 			"source": "src/components/gene/ZLink.svelte"
 		},
 		{
@@ -545,7 +545,7 @@
 		},
 		{
 			"id": "toggle-button",
-			"sha256": "87cecac4e092052aeb8b9b546e22a589c3187ce1d71309e3185f1caa422b6a56",
+			"sha256": "dad637dc1e21b6817e091cd925d74831e1937c79763ed14fd7d0f0b87abbcf6e",
 			"source": "src/components/gene/ZToggleButton.svelte"
 		},
 		{

@@ -9165,7 +9165,7 @@
 			"name": "ZLink",
 			"category": "gene",
 			"family": null,
-			"status": "experimental",
+			"status": "stable",
 			"source": "ui/zui/src/components/gene/ZLink.svelte",
 			"apiDocumentation": {
 				"metadataGapPropCount": 0,
@@ -9196,7 +9196,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "a0a576ec2d312bb7e12dae7e5928be92bcd1accdf3aa68a7f312e6fac48b5f50 API snapshot entry"
+						"detail": "6f20520b99c3e098bc20e04f649f044a6a5a1b68ef1d1ebba7484a5f69bfaebb API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -9880,7 +9880,7 @@
 			"name": "ZToggleButton",
 			"category": "gene",
 			"family": null,
-			"status": "experimental",
+			"status": "stable",
 			"source": "ui/zui/src/components/gene/ZToggleButton.svelte",
 			"apiDocumentation": {
 				"metadataGapPropCount": 0,
@@ -9911,7 +9911,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "87cecac4e092052aeb8b9b546e22a589c3187ce1d71309e3185f1caa422b6a56 API snapshot entry"
+						"detail": "dad637dc1e21b6817e091cd925d74831e1937c79763ed14fd7d0f0b87abbcf6e API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
