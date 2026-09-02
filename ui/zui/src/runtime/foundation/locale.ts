@@ -524,7 +524,11 @@ export const zhCNLocalePack = Object.freeze({
 		filterPlaceholder: '筛选项目',
 		moveToSource: '将所选项目移至来源列表',
 		moveToTarget: '将所选项目移至目标列表',
-		selectedNotLoaded: (formattedCount: string) => `${formattedCount} 个已选项目尚未加载`,
+		selectedNotLoaded: (formattedCount: string, count: number) => {
+			// Keep the shared pluralization signature even though Chinese does not branch on count.
+			void count;
+			return `${formattedCount} 个已选项目尚未加载`;
+		},
 		sourceTitle: '可选项目',
 		targetTitle: '已选项目'
 	})
