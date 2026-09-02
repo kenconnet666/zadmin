@@ -206,7 +206,6 @@
 	import ZRadioGroupItem from './ZRadioGroupItem.svelte';
 	import {
 		provideZRadioGroup,
-		type RadioGroupCollectionItem,
 		type RadioGroupLogicalItem,
 		type ZRadioGroupContext
 	} from './context.svelte.js';
@@ -336,13 +335,6 @@
 		if (key === undefined) return;
 		navigation.set(key, 'programmatic');
 		mounted.focus(key);
-	}
-
-	function restoreNearestFocus(): void {
-		queueMicrotask(() => {
-			const key = navigation.reconcile();
-			if (key !== undefined) mounted.focus(key);
-		});
 	}
 
 	const context: ZRadioGroupContext = {

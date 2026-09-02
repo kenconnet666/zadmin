@@ -8,7 +8,6 @@
 		ZPinInput,
 		ZProvider,
 		ZStack,
-		ZText,
 		ZTextarea
 	} from '../src/entrypoints/index.js';
 

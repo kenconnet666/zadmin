@@ -217,7 +217,7 @@
 	import ZPopover from '../compound/popover/ZPopover.svelte';
 	import ZPopoverContent from '../compound/popover/ZPopoverContent.svelte';
 	import ZPopoverTrigger from '../compound/popover/ZPopoverTrigger.svelte';
-	import ZTree, { type TreeLoadContext } from '../compound/tree/ZTree.svelte';
+	import ZTree from '../compound/tree/ZTree.svelte';
 
 	const rootRecipe = defineRecipe({
 		base: (s) => {

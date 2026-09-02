@@ -324,7 +324,7 @@
 	});
 	const resultKeys = $derived.by(() =>
 		collection.full.items
-			.map(({ key, value: item }, index) => {
+			.map(({ value: item }, index) => {
 				if (!shouldFilter) return { index, item, score: 0 };
 				const custom = filter?.(item, queryState.current);
 				const score =

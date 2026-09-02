@@ -30,8 +30,8 @@ const content = {
 	restoreTarget: () => null
 } satisfies ComponentProps<typeof ZDialogContent> satisfies ZDialogContentProps;
 const alert = {
-	onAction: async (_event: MouseEvent) => undefined,
-	onActionError: (_error: unknown) => undefined
+	onAction: async () => undefined,
+	onActionError: () => undefined
 } satisfies ComponentProps<typeof ZAlertDialog> satisfies ZAlertDialogProps;
 const alertContent = {
 	initialFocus: () => null,

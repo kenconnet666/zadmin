@@ -353,6 +353,7 @@
 {/snippet}
 
 {#if href !== undefined}
+	<!-- eslint-disable svelte/no-navigation-without-resolve -- external/native menu links do not belong to a SvelteKit router boundary. -->
 	<a
 		{...rest}
 		bind:this={ref}
@@ -378,6 +379,7 @@
 	>
 		{@render content()}
 	</a>
+	<!-- eslint-enable svelte/no-navigation-without-resolve -->
 {:else}
 	<button
 		{...rest}

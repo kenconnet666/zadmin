@@ -251,7 +251,6 @@
 
 	let {
 		'aria-describedby': ariaDescribedBy,
-		'aria-invalid': ariaInvalid,
 		'aria-label': ariaLabel,
 		'aria-labelledby': ariaLabelledBy,
 		children,

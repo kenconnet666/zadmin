@@ -80,10 +80,10 @@
 	let virtualSelected = $state<readonly string[]>([]);
 </script>
 
-{#snippet expandedRow(row: Row, _index: number)}
+{#snippet expandedRow(row: Row, index: number)}
 	<ZDescriptionList
 		aria-label={`${row.name} details`}
-		items={[{ description: row.detail, id: 'detail', term: 'Detail' }]}
+		items={[{ description: row.detail, id: `detail-${index}`, term: 'Detail' }]}
 	/>
 {/snippet}
 

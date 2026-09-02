@@ -820,7 +820,7 @@
 				event.preventDefault();
 				expandSiblings(entry);
 				return;
-			default:
+			default: {
 				if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'a') {
 					if (selectionMode === 'multiple') {
 						event.preventDefault();
@@ -841,6 +841,7 @@
 					event.preventDefault();
 					activeDescendant.set(match, 'keyboard');
 				}
+			}
 		}
 	}
 

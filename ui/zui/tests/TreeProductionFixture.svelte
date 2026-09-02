@@ -1,6 +1,5 @@
 <script lang="ts">
 	import {
-		ZButton,
 		ZField,
 		ZProvider,
 		ZTree,
