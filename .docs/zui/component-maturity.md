@@ -10,9 +10,9 @@ Generation is evidence-based. A test filename alone never grants `VisuallyVerifi
 | Authorable         |   141 |
 | ContractVerified   |   141 |
 | RuntimeImplemented |   141 |
-| VisuallyVerified   |    52 |
+| VisuallyVerified   |    60 |
 | DesktopVerified    |     0 |
-| ProductionVerified |    34 |
+| ProductionVerified |    37 |
 
 | Component               | Category     | Declared | Authorable | Contract | Runtime | Visual | Desktop | Production | Docs                                                                  |
 | ----------------------- | ------------ | -------: | ---------: | -------: | ------: | -----: | ------: | ---------: | --------------------------------------------------------------------- |
@@ -20,7 +20,7 @@ Generation is evidence-based. A test filename alone never grants `VisuallyVerifi
 | ZAccordionContent       | navigation   |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
 | ZAccordionItem          | navigation   |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
 | ZAccordionTrigger       | navigation   |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
-| ZAlertDialog            | overlay      |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/overlay/alert-dialog/doc.ts          |
+| ZAlertDialog            | overlay      |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/overlay/alert-dialog/doc.ts          |
 | ZAlertDialogAction      | overlay      |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
 | ZAlertDialogCancel      | overlay      |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
 | ZAlertDialogContent     | overlay      |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
@@ -28,14 +28,14 @@ Generation is evidence-based. A test filename alone never grants `VisuallyVerifi
 | ZAlertDialogOverlay     | overlay      |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
 | ZAlertDialogTitle       | overlay      |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
 | ZAlertDialogTrigger     | overlay      |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
-| ZCombobox               | input        |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/input/combobox/doc.ts                |
+| ZCombobox               | input        |        Y |          Y |        Y |       Y |      Y |       — |          — | apps/docs/src/content/components/input/combobox/doc.ts                |
 | ZComboboxContent        | input        |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
 | ZComboboxInput          | input        |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
 | ZComboboxItem           | input        |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
-| ZContextMenu            | navigation   |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/navigation/context-menu/doc.ts       |
+| ZContextMenu            | navigation   |        Y |          Y |        Y |       Y |      Y |       — |          — | apps/docs/src/content/components/navigation/context-menu/doc.ts       |
 | ZContextMenuContent     | navigation   |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
 | ZContextMenuTrigger     | navigation   |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
-| ZDialog                 | overlay      |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/overlay/dialog/doc.ts                |
+| ZDialog                 | overlay      |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/overlay/dialog/doc.ts                |
 | ZDialogClose            | overlay      |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
 | ZDialogContent          | overlay      |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
 | ZDialogDescription      | overlay      |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
@@ -49,10 +49,10 @@ Generation is evidence-based. A test filename alone never grants `VisuallyVerifi
 | ZDrawerOverlay          | overlay      |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
 | ZDrawerTitle            | overlay      |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
 | ZDrawerTrigger          | overlay      |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
-| ZDropdownMenu           | navigation   |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/navigation/dropdown-menu/doc.ts      |
+| ZDropdownMenu           | navigation   |        Y |          Y |        Y |       Y |      Y |       — |          — | apps/docs/src/content/components/navigation/dropdown-menu/doc.ts      |
 | ZDropdownMenuContent    | navigation   |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
 | ZDropdownMenuTrigger    | navigation   |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
-| ZMenu                   | navigation   |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/navigation/menu/doc.ts               |
+| ZMenu                   | navigation   |        Y |          Y |        Y |       Y |      Y |       — |          — | apps/docs/src/content/components/navigation/menu/doc.ts               |
 | ZMenuCheckboxItem       | navigation   |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
 | ZMenuGroup              | navigation   |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
 | ZMenuItem               | navigation   |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
@@ -74,12 +74,12 @@ Generation is evidence-based. A test filename alone never grants `VisuallyVerifi
 | ZPopconfirmDescription  | overlay      |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
 | ZPopconfirmTitle        | overlay      |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
 | ZPopconfirmTrigger      | overlay      |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
-| ZPopover                | overlay      |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/overlay/popover/doc.ts               |
+| ZPopover                | overlay      |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/overlay/popover/doc.ts               |
 | ZPopoverContent         | overlay      |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
 | ZPopoverTrigger         | overlay      |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
 | ZRadioGroup             | input        |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/input/radio-group/doc.ts             |
 | ZRadioGroupItem         | input        |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
-| ZSelect                 | input        |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/input/select/doc.ts                  |
+| ZSelect                 | input        |        Y |          Y |        Y |       Y |      Y |       — |          — | apps/docs/src/content/components/input/select/doc.ts                  |
 | ZSelectContent          | input        |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
 | ZSelectItem             | input        |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
 | ZSelectTrigger          | input        |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |

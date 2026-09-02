@@ -19,9 +19,9 @@
 		"Authorable": 141,
 		"ContractVerified": 141,
 		"RuntimeImplemented": 141,
-		"VisuallyVerified": 52,
+		"VisuallyVerified": 60,
 		"DesktopVerified": 0,
-		"ProductionVerified": 34
+		"ProductionVerified": 37
 	},
 	"components": [
 		{
@@ -292,9 +292,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -321,9 +321,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/overlay-production.browser.spec.ts",
+						"detail": "ZAlertDialog browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
+						"detail": "ZAlertDialog explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/overlay-production.browser.spec.ts",
+						"detail": "ZAlertDialog production assertions"
+					},
+					{
+						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
+						"detail": "ZAlertDialog explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": {
 				"path": "apps/docs/src/content/components/overlay/alert-dialog/doc.ts",
@@ -779,7 +797,7 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": false
 			},
@@ -808,7 +826,16 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/selection-collection.browser.spec.ts",
+						"detail": "ZCombobox browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/ChoiceCollectionFixture.svelte",
+						"detail": "ZCombobox explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": []
 			},
@@ -1010,7 +1037,7 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": false
 			},
@@ -1039,7 +1066,16 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/menu-family.browser.spec.ts",
+						"detail": "ZContextMenu browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
+						"detail": "ZContextMenu explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": []
 			},
@@ -1184,9 +1220,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -1213,9 +1249,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/overlay-production.browser.spec.ts",
+						"detail": "ZDialog browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
+						"detail": "ZDialog explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/overlay-production.browser.spec.ts",
+						"detail": "ZDialog production assertions"
+					},
+					{
+						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
+						"detail": "ZDialog explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": {
 				"path": "apps/docs/src/content/components/overlay/dialog/doc.ts",
@@ -2013,7 +2067,7 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": false
 			},
@@ -2042,7 +2096,16 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/menu-family.browser.spec.ts",
+						"detail": "ZDropdownMenu browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
+						"detail": "ZDropdownMenu explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": []
 			},
@@ -2187,7 +2250,7 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": false
 			},
@@ -2216,7 +2279,16 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/menu-family.browser.spec.ts",
+						"detail": "ZMenu browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
+						"detail": "ZMenu explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": []
 			},
@@ -3466,9 +3538,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -3495,9 +3567,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/overlay-production.browser.spec.ts",
+						"detail": "ZPopover browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
+						"detail": "ZPopover explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/overlay-production.browser.spec.ts",
+						"detail": "ZPopover production assertions"
+					},
+					{
+						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
+						"detail": "ZPopover explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": {
 				"path": "apps/docs/src/content/components/overlay/popover/doc.ts",
@@ -3769,7 +3859,7 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": false
 			},
@@ -3798,7 +3888,16 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/selection-collection.browser.spec.ts",
+						"detail": "ZSelect browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/ChoiceCollectionFixture.svelte",
+						"detail": "ZSelect explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": []
 			},

@@ -4,7 +4,7 @@ import { tick } from 'svelte';
 
 import ChoiceCollectionFixture from './ChoiceCollectionFixture.svelte';
 
-describe('Select and Combobox logical collection integration', () => {
+describe('ZSelect and ZCombobox logical collection integration', () => {
 	it('keeps typed keys, mounted active descendants, groups and async orphan labels distinct', async () => {
 		render(ChoiceCollectionFixture);
 		const trigger = document.querySelector<HTMLButtonElement>(

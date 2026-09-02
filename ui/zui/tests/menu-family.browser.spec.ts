@@ -11,8 +11,8 @@ async function finishPresence(): Promise<void> {
 	await tick();
 }
 
-describe('production Menu family', () => {
-	it('uses logical order for roving focus, locale typeahead and dynamic nearest recovery', async () => {
+describe('production ZMenu / ZDropdownMenu / ZContextMenu family', () => {
+	it('ZMenu uses logical order for roving focus, locale typeahead and dynamic nearest recovery', async () => {
 		render(MenuFamilyProductionFixture);
 		const first = document.querySelector<HTMLElement>('[data-testid="menu-first"]')!;
 		const middle = document.querySelector<HTMLElement>('[data-testid="menu-middle"]')!;
@@ -33,7 +33,7 @@ describe('production Menu family', () => {
 		expect(document.activeElement).toBe(first);
 	});
 
-	it('projects checkbox, mixed, typed radio, real link and cancellable action contracts', async () => {
+	it('ZMenu projects checkbox, mixed, typed radio, real link and cancellable action contracts', async () => {
 		render(MenuFamilyProductionFixture);
 		const checkbox = document.querySelector<HTMLElement>('[data-testid="menu-check"]')!;
 		expect(checkbox.getAttribute('role')).toBe('menuitemcheckbox');
@@ -60,7 +60,7 @@ describe('production Menu family', () => {
 		expect(document.querySelector('[data-slot="shortcut"]')?.tagName).toBe('KBD');
 	});
 
-	it('opens Dropdown from both arrow edges and preserves close-on-select policy', async () => {
+	it('ZDropdownMenu opens from both arrow edges and preserves close-on-select policy', async () => {
 		render(MenuFamilyProductionFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="dropdown-trigger"]')!;
 		trigger.focus();
@@ -82,7 +82,7 @@ describe('production Menu family', () => {
 		expect(document.activeElement).toBe(trigger);
 	});
 
-	it('coordinates nested layers, RTL submenu keys, action bubbling and trigger focus restore', async () => {
+	it('ZDropdownMenu coordinates nested layers, RTL submenu keys, action bubbling and trigger focus restore', async () => {
 		render(MenuFamilyProductionFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="dropdown-trigger"]')!;
 		await userEvent.click(trigger);
@@ -120,7 +120,7 @@ describe('production Menu family', () => {
 		);
 	});
 
-	it('anchors Context Menu at pointer and RTL keyboard logical start while exposing shortcuts', async () => {
+	it('ZContextMenu anchors at pointer and RTL keyboard logical start while exposing shortcuts', async () => {
 		render(MenuFamilyProductionFixture);
 		const target = document.querySelector<HTMLElement>('[data-testid="context-trigger"]')!;
 		expect(target.getAttribute('aria-keyshortcuts')).toBe('ContextMenu Shift+F10');
@@ -164,7 +164,7 @@ describe('production Menu family', () => {
 		).toBe(`${rect.right}px`);
 	});
 
-	it('keeps keyboard, Portal, dismiss and focus ownership in an iframe owner realm', async () => {
+	it('ZContextMenu keeps keyboard, Portal, dismiss and focus ownership in an iframe owner realm', async () => {
 		const frame = document.createElement('iframe');
 		document.body.append(frame);
 		const ownerDocument = frame.contentDocument;

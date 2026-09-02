@@ -4,7 +4,7 @@ import { render } from 'vitest-browser-svelte';
 
 import OverlayProductionFixture from './OverlayProductionFixture.svelte';
 
-describe('Dialog AlertDialog and Popover production contracts', () => {
+describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 	it('uses real ARIA registration and explicit initial/restore focus for Dialog', async () => {
 		render(OverlayProductionFixture);
 		document.querySelector<HTMLButtonElement>('[data-testid="dialog-production-trigger"]')?.click();
