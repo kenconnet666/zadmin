@@ -73,11 +73,20 @@ describe('production Accordion and Tabs compound family', () => {
 		expect(document.activeElement).toBe(string);
 		expect(output.textContent?.trim()).toBe('string:1|string:1|1');
 
-		root.querySelector<HTMLButtonElement>('[data-testid="remove-tabs-selected"]')!.click();
+		const remove = root.querySelector<HTMLButtonElement>('[data-testid="remove-tabs-selected"]')!;
+		remove.click();
 		await tick();
 		await Promise.resolve();
 		expect(output.textContent?.trim()).toBe('string:last|string:last|1');
 		expect(document.activeElement).toBe(last);
+
+		remove.focus();
+		expect(document.activeElement).toBe(remove);
+		remove.click();
+		await tick();
+		await Promise.resolve();
+		expect(output.textContent?.trim()).toBe('number:1|number:1|1');
+		expect(document.activeElement).toBe(remove);
 	});
 
 	it('ZTabs activationMode, RTL logical navigation and lazy/active-only panel presence remain distinct', async () => {

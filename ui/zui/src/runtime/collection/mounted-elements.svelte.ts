@@ -123,7 +123,18 @@ export class MountedElements<
 
 	/** True when this key most recently owned focus, including the removal blur gap. */
 	ownsFocus(key: TKey): boolean {
-		return Object.is(this.#focusedKey, key);
+		if (!Object.is(this.#focusedKey, key)) return false;
+		const record = this.#records.get(key);
+		if (!record) return true;
+		const ownerDocument = record.element.ownerDocument;
+		const activeElement = ownerDocument.activeElement;
+		if (
+			activeElement !== null &&
+			activeElement !== ownerDocument.body &&
+			activeElement !== ownerDocument.documentElement
+		)
+			return activeElement === record.element || record.element.contains(activeElement);
+		return true;
 	}
 
 	order(keys: readonly TKey[]): readonly TKey[] {

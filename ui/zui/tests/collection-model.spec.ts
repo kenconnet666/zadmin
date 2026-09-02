@@ -214,6 +214,9 @@ describe('mounted elements', () => {
 					listeners.set(type, bucket);
 				},
 				compareDocumentPosition: vi.fn(() => position),
+				contains(target: EventTarget) {
+					return target === element;
+				},
 				focus: vi.fn((options?: FocusOptions) => {
 					focus(options);
 					activeElement = element as unknown as HTMLElement;
@@ -240,6 +243,9 @@ describe('mounted elements', () => {
 		expect(mounted.focus('before')).toBe(true);
 		expect(focus).toHaveBeenCalledWith({ preventScroll: true });
 		expect(mounted.ownsFocus('before')).toBe(true);
+		activeElement = {} as HTMLElement;
+		expect(mounted.ownsFocus('before')).toBe(false);
+		expect(mounted.focus('before')).toBe(true);
 		expect(mounted.scheduleFocus('after')).toBe(true);
 		expect(mounted.focus('before')).toBe(true);
 		await Promise.resolve();

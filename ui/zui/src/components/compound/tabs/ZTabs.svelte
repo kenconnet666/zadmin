@@ -397,14 +397,17 @@
 				? mounted.mount(current.key, current.element, current.id)
 				: () => undefined;
 			return () => {
+				const before = view;
+				const rootOwnsFocus = ref?.contains(ref.ownerDocument.activeElement) ?? focusWithin;
 				const restoreFocus =
 					mounted.ownsFocus(current.key) ||
-					(focusWithin && Object.is(navigation.currentKey, current.key));
+					(rootOwnsFocus && Object.is(navigation.currentKey, current.key));
 				stopMount();
 				stopLogical();
 				scheduleReconcile();
 				if (restoreFocus)
 					ownerMicrotask(current.element, () => {
+						reconcileCollection(before, view);
 						const next = navigation.currentKey;
 						if (next !== undefined) mounted.focus(next);
 					});
