@@ -56,7 +56,7 @@
 			{ description: '确认Promise尚未settle。', name: 'data-pending', values: ['true'] },
 			{ description: '当前generation确认失败。', name: 'data-error', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '建立稳定名称与说明关系并聚焦显式操作的定位确认浮层。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

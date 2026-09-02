@@ -193,7 +193,7 @@
 			{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] },
 			{ description: '解析后的减少动画状态。', name: 'data-reduced-motion', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'modal Portal中统一管理top layer、真实ARIA引用、可取消outside事件、焦点策略、scroll、inert与Presence的Dialog内容。'
 	} as const satisfies ZuiComponentMetadata;

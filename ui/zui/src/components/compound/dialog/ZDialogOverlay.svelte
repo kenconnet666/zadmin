@@ -59,7 +59,7 @@
 			{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] },
 			{ description: '解析后的减少动画状态。', name: 'data-reduced-motion', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: 'Portal挂载并与Dialog Presence同步的modal遮罩。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

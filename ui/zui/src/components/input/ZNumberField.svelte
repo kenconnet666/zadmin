@@ -257,7 +257,7 @@
 			},
 			{ description: '当前已解析为减少动画。', name: 'data-reduced-motion', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '本地化解析与显示、精确步进、可选越界策略和原生表单语义完整闭合的Number Field。'
 	} as const satisfies ZuiComponentMetadata;
 

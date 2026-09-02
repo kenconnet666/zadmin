@@ -28,7 +28,7 @@
 		snippets: [{ description: 'Drawer说明。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/drawer/ZDrawerDescription.svelte',
 		states: [],
-		status: 'experimental',
+		status: 'stable',
 		summary: '提供Drawer稳定可访问说明的段落。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

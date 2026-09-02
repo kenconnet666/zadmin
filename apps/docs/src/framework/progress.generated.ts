@@ -20,14 +20,14 @@ export const zuiProgress = {
 		DesktopVerified: 0,
 		ProductionVerified: 141,
 		statuses: {
-			experimental: 67,
-			stable: 74
+			experimental: 24,
+			stable: 117
 		}
 	},
 	stability: {
-		stableCompliant: 74,
+		stableCompliant: 117,
 		stableViolations: 0,
-		promotionEligibleExperimental: 67
+		promotionEligibleExperimental: 24
 	},
 	docs: {
 		routes: {
@@ -71,7 +71,7 @@ export const zuiProgress = {
 		},
 		{
 			id: 'stable-promotion',
-			remaining: 67,
+			remaining: 24,
 			description: '逐项审查已满足门禁的experimental组件；禁止自动批量晋级。'
 		},
 		{

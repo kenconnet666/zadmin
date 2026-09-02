@@ -45,7 +45,7 @@
 		snippets: [{ description: '确认操作内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/popconfirm/ZPopconfirmAction.svelte',
 		states: [{ description: '确认Promise尚未settle。', name: 'data-pending', values: ['true'] }],
-		status: 'experimental',
+		status: 'stable',
 		summary: '默认danger视觉并显式确认Popconfirm。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

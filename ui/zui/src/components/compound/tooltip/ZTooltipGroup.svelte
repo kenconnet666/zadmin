@@ -46,7 +46,7 @@
 		],
 		source: 'ui/zui/src/components/compound/tooltip/ZTooltipGroup.svelte',
 		states: [],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'以作用域coordinator保证组内唯一active、首次warmup与短期即时切换，并把cooldown timer归属到真实owner Window。'
 	} as const satisfies ZuiComponentMetadata;

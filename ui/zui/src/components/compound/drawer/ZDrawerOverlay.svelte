@@ -35,7 +35,7 @@
 				values: ['entering', 'entered', 'exiting']
 			}
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '与Drawer Presence同步的modal遮罩。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

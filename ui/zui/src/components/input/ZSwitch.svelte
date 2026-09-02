@@ -372,7 +372,7 @@
 			},
 			{ description: '系统或Provider减少动画。', name: 'data-reduced-motion', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '以真实checkbox、稳定受控合同和可访问busy/readonly语义表达的双态设置开关。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

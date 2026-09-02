@@ -85,7 +85,7 @@
 			{ description: '确认Promise尚未settle。', name: 'data-pending', values: ['true'] },
 			{ description: '当前generation确认失败。', name: 'data-error', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'基于非modal Popover、以generation隔离异步确认并在reject后保留可访问错误的就地确认组件。'
 	} as const satisfies ZuiComponentMetadata;

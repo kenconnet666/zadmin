@@ -178,7 +178,7 @@
 		snippets: [],
 		source: 'ui/zui/src/components/input/ZDateField.svelte',
 		states: [{ description: '存在不完整或非法segment。', name: 'data-invalid', values: ['true'] }],
-		status: 'experimental',
+		status: 'stable',
 		summary: '按locale排列year/month/day、使用CalendarDate约束并桥接表单的Date Field。'
 	} as const satisfies ZuiComponentMetadata;
 

@@ -248,7 +248,7 @@
 			{ description: 'Field或显式无效状态。', name: 'data-invalid', values: ['true'] },
 			{ description: 'Field或显式只读状态。', name: 'data-readonly', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'组合可编辑DateField、Calendar Popover、双受控owner与唯一FormValueBridge的Date Picker。'
 	} as const satisfies ZuiComponentMetadata;

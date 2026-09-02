@@ -33,7 +33,7 @@
 		snippets: [{ description: '取消操作内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/popconfirm/ZPopconfirmCancel.svelte',
 		states: [],
-		status: 'experimental',
+		status: 'stable',
 		summary: '默认secondary视觉并显式取消Popconfirm。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

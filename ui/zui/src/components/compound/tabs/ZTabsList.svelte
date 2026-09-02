@@ -67,7 +67,7 @@
 		states: [
 			{ description: '布局方向。', name: 'data-orientation', values: ['horizontal', 'vertical'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '提供tablist角色、方向轴和Trigger布局的Tabs列表。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

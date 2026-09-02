@@ -213,7 +213,7 @@
 			},
 			{ description: '解析后的减少动画状态。', name: 'data-reduced-motion', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '基于逻辑方向、可配置尺寸和Presence过渡的modal侧滑内容。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

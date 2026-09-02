@@ -269,7 +269,7 @@
 			{ description: 'lazy branch状态。', name: 'data-load-state', values: ['loading', 'error'] },
 			{ description: 'ZVirtualList大数据模式。', name: 'data-virtualized', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'在LogicalCollection之上提供typed层级、容器焦点、选择、lazy请求与ZVirtualList握手的ARIA Tree。'
 	} as const satisfies ZuiComponentMetadata;

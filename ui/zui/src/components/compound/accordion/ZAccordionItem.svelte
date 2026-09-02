@@ -59,7 +59,7 @@
 			{ description: '展开状态。', name: 'data-state', values: ['open', 'closed'] },
 			{ description: '禁用状态。', name: 'data-disabled', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '为Trigger和Content提供稳定typed value与disabled边界的Accordion Item。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

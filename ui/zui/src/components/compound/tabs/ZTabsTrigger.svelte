@@ -127,7 +127,7 @@
 			{ description: '禁用状态。', name: 'data-disabled', values: ['true'] },
 			{ description: '布局方向。', name: 'data-orientation', values: ['horizontal', 'vertical'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'注册typed key到LogicalCollection并拥有独立active、roving tabindex与激活语义的原生button。'
 	} as const satisfies ZuiComponentMetadata;

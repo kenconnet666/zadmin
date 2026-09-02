@@ -173,7 +173,7 @@
 			{ description: '禁用状态。', name: 'data-disabled', values: ['true'] },
 			{ description: '当前已解析为减少动画。', name: 'data-reduced-motion', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'以扁平组件props、可选single/multiple严格helper types、LogicalCollection和分离active/expanded owner组成的Accordion。'
 	} as const satisfies ZuiComponentMetadata;

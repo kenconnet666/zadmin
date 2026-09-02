@@ -28,7 +28,7 @@
 		snippets: [{ description: 'Drawer标题。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/drawer/ZDrawerTitle.svelte',
 		states: [],
-		status: 'experimental',
+		status: 'stable',
 		summary: '提供Drawer稳定可访问名称的标题。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

@@ -61,7 +61,7 @@
 		snippets: [{ description: 'Trigger内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/tooltip/ZTooltipTrigger.svelte',
 		states: [{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] }],
-		status: 'experimental',
+		status: 'stable',
 		summary: '合并hover与focus触发并关联aria-describedby的Tooltip按钮。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

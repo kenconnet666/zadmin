@@ -36,7 +36,7 @@
 		snippets: [{ description: 'Trigger内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/dialog/ZDialogTrigger.svelte',
 		states: [{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] }],
-		status: 'experimental',
+		status: 'stable',
 		summary: '复用ZButton并建立Dialog aria关系的Trigger。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

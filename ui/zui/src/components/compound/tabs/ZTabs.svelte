@@ -155,7 +155,7 @@
 			},
 			{ description: '禁用状态。', name: 'data-disabled', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'以LogicalCollection统一typed triggers、分离active/selection，并提供automatic/manual与显式panel生命周期策略的Tabs。'
 	} as const satisfies ZuiComponentMetadata;

@@ -32,7 +32,7 @@
 		snippets: [{ description: 'Close内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/drawer/ZDrawerClose.svelte',
 		states: [],
-		status: 'experimental',
+		status: 'stable',
 		summary: '显式关闭Drawer并恢复Trigger焦点。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

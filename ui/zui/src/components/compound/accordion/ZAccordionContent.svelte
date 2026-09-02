@@ -94,7 +94,7 @@
 				values: ['true']
 			}
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '在退出动画期间保留DOM并在结束后清理的Accordion region。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

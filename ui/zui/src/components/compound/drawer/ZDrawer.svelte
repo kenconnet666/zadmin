@@ -48,7 +48,7 @@
 		snippets: [{ description: 'Drawer复合部件。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/drawer/ZDrawer.svelte',
 		states: [],
-		status: 'experimental',
+		status: 'stable',
 		summary: '复用Dialog modal合同并提供四向逻辑placement的侧滑面板根组件。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

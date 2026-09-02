@@ -183,7 +183,7 @@
 				values: ['small', 'medium', 'large']
 			}
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '支持混合值、Field继承和原生FormData/reset的checkbox控件。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

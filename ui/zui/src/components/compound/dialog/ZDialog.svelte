@@ -54,7 +54,7 @@
 		snippets: [{ description: 'Dialog复合部件。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/dialog/ZDialog.svelte',
 		states: [],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'统一管理modal Portal、ownerDocument、Layer、focus、scroll、inert、motion与Presence的Dialog根组件。'
 	} as const satisfies ZuiComponentMetadata;

@@ -44,7 +44,7 @@
 		snippets: [{ description: 'Dialog说明。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/dialog/ZDialogDescription.svelte',
 		states: [],
-		status: 'experimental',
+		status: 'stable',
 		summary: '注册aria-describedby并提供说明语义的Dialog paragraph。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

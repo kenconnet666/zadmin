@@ -45,7 +45,7 @@
 		snippets: [{ description: '确认问题标题。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/popconfirm/ZPopconfirmTitle.svelte',
 		states: [],
-		status: 'experimental',
+		status: 'stable',
 		summary: '提供Popconfirm稳定可访问名称的标题。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

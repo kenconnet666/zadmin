@@ -883,7 +883,7 @@ export const componentCatalogManifest = Object.freeze([
 		name: 'ZCheckbox',
 		category: 'input',
 		summary: '保留原生checkbox、mixed状态、Field继承、readonly与FormData/reset合同的选择控件。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [],
 		profiles: ['form-control'],
 		capabilities: [
@@ -908,7 +908,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'input',
 		summary:
 			'生产单月Calendar：显式nullable选择、独立focusedValue、固定6周grid、可跳过不可用日期的完整RTL键盘、partial range呈现、typed locale/timeZone与唯一表单owner。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: ['calendar', 'grid', 'focused value', 'calendar date', 'range', 'rtl'],
 		profiles: ['form-control', 'collection'],
 		capabilities: [
@@ -1050,7 +1050,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'input',
 		summary:
 			'本地化CalendarDate分段字段：locale驱动DOM顺序、nullable owner、完整/非法草稿分离、边界与不可用日期、Field焦点、FormValueBridge/reset及可复用bare外观。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: ['date field', 'segments', 'calendar date', 'locale', 'form', 'nullable'],
 		profiles: ['form-control'],
 		capabilities: [
@@ -1080,7 +1080,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'input',
 		summary:
 			'可编辑Date Picker：复用bare ZDateField、ZInputGroup、Lucide actions和owner-realm ZPopover/ZCalendar；value/open双owner、显式null、约束、clear/readonly/Field与唯一FormValueBridge。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: ['date picker', 'date field', 'calendar', 'popover', 'controlled', 'form'],
 		profiles: ['form-control', 'layer'],
 		capabilities: [
@@ -1113,7 +1113,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'input',
 		summary:
 			'生产Date Range Picker：两个可编辑DateField、partial start/end、完整反向规范化、按端可用性、Calendar range preview、value/open双owner、typed locale/RTL和唯一双字段FormValueBridge。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: ['date range picker', 'partial range', 'calendar range', 'popover', 'rtl', 'form'],
 		profiles: ['form-control', 'layer'],
 		capabilities: [
@@ -1280,7 +1280,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'input',
 		summary:
 			'面向本地化后台表单的text spinbutton：区分编辑草稿与数值状态，支持精度、步进、越界策略、可逆格式化与完整Field/FormValueBridge合同。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'number field',
 			'spinbutton',
@@ -1537,7 +1537,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'input',
 		summary:
 			'真实checkbox驱动的双态设置开关，覆盖受控与非受控状态、Field、原生表单、异步busy和方向/动画偏好。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [],
 		profiles: ['form-control', 'animated'],
 		capabilities: [
@@ -1629,7 +1629,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'input',
 		summary:
 			'本地化Time分段字段：Intl顺序、12/24小时、minute/second granularity与step、nullable owner、不可用值、Field/FormValueBridge/reset和复合bare外观。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: ['time field', 'segments', 'hour cycle', 'granularity', 'step', 'nullable'],
 		profiles: ['form-control'],
 		capabilities: [
@@ -1729,7 +1729,7 @@ export const componentCatalogManifest = Object.freeze([
 		name: 'ZSlider',
 		category: 'input',
 		summary: '真实range驱动、支持Field/RTL/readonly、受控状态和原生表单的单值Slider。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [],
 		profiles: ['form-control'],
 		capabilities: [
@@ -1754,7 +1754,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'navigation',
 		summary:
 			'生产Accordion compound collection：组件props保持扁平以服务Svelte绑定和ComponentProps，严格single/multiple helper服务静态配置，运行时仍校验值shape并保留LogicalCollection、active焦点、nested与Presence。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'accordion',
 			'logical collection',
@@ -1960,7 +1960,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'navigation',
 		summary:
 			'生产Tabs compound collection：LogicalCollection/MountedElements/CollectionNavigation分离逻辑顺序、DOM和active焦点；nullable typed selection支持automatic/manual、动态nearest恢复、RTL/IME和明确Panel挂载策略。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'tabs',
 			'logical collection',
@@ -1994,7 +1994,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'navigation',
 		summary:
 			'LogicalTree只规范完整typed层级；SelectionModel、CollectionNavigation、ActiveDescendant、lazy coordinator和ZVirtualList分别拥有选择、active、DOM、请求与窗口。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'tree',
 			'logical tree',
@@ -2051,7 +2051,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'overlay',
 		summary:
 			'modal-only Dialog根，统一Portal/Layer/Presence；Content拥有真实ARIA引用、typed outside事件与initial/restore焦点策略。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [],
 		profiles: ['layer', 'animated'],
 		capabilities: [
@@ -2075,7 +2075,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'overlay',
 		summary:
 			'复用Dialog的modal生命周期，提供四个逻辑方向、主题预设与CSS尺寸、窄屏边界和完整进出场动画。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [],
 		profiles: ['layer', 'animated'],
 		capabilities: [
@@ -2101,7 +2101,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'overlay',
 		summary:
 			'Popover继续唯一拥有定位、dismiss与焦点恢复；Popconfirm只增加最小Promise generation、pending防重复和安全可访问错误，不接管transport或业务重试。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'popconfirm',
 			'confirmation',
@@ -2154,7 +2154,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'overlay',
 		summary:
 			'focus即时打开；pointer hover通过作用域Group共享warmup/cooldown并保持唯一active；Content可停留但持续拒绝任何可聚焦或交互后代。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'tooltip',
 			'tooltip group',

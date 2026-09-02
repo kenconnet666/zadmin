@@ -206,7 +206,7 @@
 		snippets: [],
 		source: 'ui/zui/src/components/input/ZTimeField.svelte',
 		states: [{ description: '存在不完整或非法segment。', name: 'data-invalid', values: ['true'] }],
-		status: 'experimental',
+		status: 'stable',
 		summary: 'Time值、分钟/秒step、12/24小时segment与表单桥接的Time Field。'
 	} as const satisfies ZuiComponentMetadata;
 	const rootRecipe = defineRecipe({

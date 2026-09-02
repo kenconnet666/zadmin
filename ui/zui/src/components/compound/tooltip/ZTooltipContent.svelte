@@ -82,7 +82,7 @@
 			{ description: '解析后的减少动画状态。', name: 'data-reduced-motion', values: ['true'] },
 			{ description: 'Presence生命周期。', name: 'data-presence', values: ['entered', 'exiting'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '非交互、Portal定位并由顶层Layer拥有Escape的Tooltip内容。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

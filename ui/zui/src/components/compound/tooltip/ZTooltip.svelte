@@ -90,7 +90,7 @@
 		snippets: [{ description: 'Trigger与Content组合。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/tooltip/ZTooltip.svelte',
 		states: [],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'统一管理focus即时打开、group hover warmup/cooldown、Portal定位和严格非交互语义的Tooltip根组件。'
 	} as const satisfies ZuiComponentMetadata;

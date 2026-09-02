@@ -147,7 +147,7 @@
 				values: ['true']
 			}
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '拥有aria-expanded、roving focus和原生button激活语义的Accordion Trigger。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

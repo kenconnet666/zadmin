@@ -237,7 +237,7 @@
 			{ description: '当前显示月外日期。', name: 'data-outside', values: ['true'] },
 			{ description: '不可选择日期。', name: 'data-disabled', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '固定6周grid、locale周序、完整键盘、范围呈现与CalendarDate表单值的Calendar。'
 	} as const satisfies ZuiComponentMetadata;
 

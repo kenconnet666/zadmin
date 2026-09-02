@@ -33,7 +33,7 @@
 		snippets: [{ description: 'Close内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/dialog/ZDialogClose.svelte',
 		states: [],
-		status: 'experimental',
+		status: 'stable',
 		summary: '复用ZButton并关闭所属Dialog的显式操作。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

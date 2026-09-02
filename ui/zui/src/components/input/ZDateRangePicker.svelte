@@ -254,7 +254,7 @@
 			{ description: 'Field或显式无效状态。', name: 'data-invalid', values: ['true'] },
 			{ description: 'Field或显式只读状态。', name: 'data-readonly', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'双DateField、可提交partial range、反向规范化、Calendar preview与唯一表单owner的Range Picker。'
 	} as const satisfies ZuiComponentMetadata;

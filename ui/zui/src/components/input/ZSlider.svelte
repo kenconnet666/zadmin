@@ -184,7 +184,7 @@
 				values: ['small', 'medium', 'large']
 			}
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '使用原生range提供pointer、键盘、触摸、RTL和FormData合同的单值Slider。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

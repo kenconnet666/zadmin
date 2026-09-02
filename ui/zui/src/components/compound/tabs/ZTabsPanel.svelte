@@ -63,7 +63,7 @@
 		snippets: [{ description: 'Panel内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/tabs/ZTabsPanel.svelte',
 		states: [{ description: '激活状态。', name: 'data-state', values: ['active', 'inactive'] }],
-		status: 'experimental',
+		status: 'stable',
 		summary: '与typed Trigger稳定关联，并按Tabs的keep-mounted、lazy或active-only策略管理tabpanel。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

@@ -45,7 +45,7 @@
 		snippets: [{ description: 'Dialog标题。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/dialog/ZDialogTitle.svelte',
 		states: [],
-		status: 'experimental',
+		status: 'stable',
 		summary: '注册aria-labelledby并提供标题语义的Dialog heading。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
