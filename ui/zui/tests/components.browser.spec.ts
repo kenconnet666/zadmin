@@ -1078,7 +1078,8 @@ describe('compiled ICSS browser updates', () => {
 		expect(trigger?.textContent).toContain('Alpha');
 		expect(trigger?.textContent).toContain('Charlie');
 		expect(trigger?.id).toBe(label?.htmlFor);
-		expect(trigger?.getAttribute('aria-required')).toBe('true');
+		expect(trigger?.getAttribute('aria-required')).toBeNull();
+		expect(trigger?.getAttribute('data-required')).toBe('true');
 		expect(trigger?.getAttribute('aria-invalid')).toBeNull();
 		expect(trigger?.getAttribute('aria-describedby')).toBeTruthy();
 		label?.click();

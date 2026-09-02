@@ -111,7 +111,7 @@ describe('ZMention production collection contract', () => {
 		expect(latest.textContent).toContain('Latest al');
 		latest.dispatchEvent(new PointerEvent('pointermove', { bubbles: true }));
 		latest.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true }));
-		latest.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, cancelable: true }));
+		latest.click();
 		await tick();
 		expect(document.querySelector('[data-testid="mention-production-output"]')?.textContent).toBe(
 			'@latest :2'
