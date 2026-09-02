@@ -118,7 +118,7 @@ jobs:
         run: pnpm --filter @zadmin/docs exec playwright install --with-deps ${{ matrix.browser }}
 
       - name: Run Docs end-to-end tests
-        run: pnpm --filter @zadmin/docs test:e2e -- --project=${{ matrix.browser }}
+        run: pnpm --filter @zadmin/docs test:e2e --project=${{ matrix.browser }}
 
       - name: Upload Docs Playwright diagnostics
         if: always()

@@ -1187,27 +1187,23 @@ test('anchors ContextMenu to pointer coordinates and supports the keyboard entry
 }) => {
 	await gotoComponent(page, 'context-menu');
 	const trigger = demo(page, 'context-menu-coordinate-anchor').getByTestId('context-menu-trigger');
+	await trigger.scrollIntoViewIfNeeded();
 	const box = await trigger.boundingBox();
 	expect(box).not.toBeNull();
 	const clickX = (box?.x ?? 0) + 80;
 	const clickY = (box?.y ?? 0) + 20;
-	await trigger.dispatchEvent('contextmenu', {
-		bubbles: true,
-		button: 2,
-		clientX: clickX,
-		clientY: clickY
-	});
+	await page.mouse.click(clickX, clickY, { button: 'right' });
 	const menu = page.getByRole('menu', { name: '部署上下文菜单', exact: true });
 	await expect(menu).toBeVisible();
-	const menuBox = await menu.boundingBox();
-	expect(menuBox).not.toBeNull();
-	expect(menuBox!.x).toBeCloseTo(clickX, 0);
-	expect(menuBox!.y).toBeGreaterThanOrEqual(clickY);
-	expect(menuBox!.y).toBeLessThanOrEqual(clickY + 8);
-	expect(menuBox!.x).toBeGreaterThanOrEqual(0);
-	expect(menuBox!.y).toBeGreaterThanOrEqual(0);
-	expect(menuBox!.x + menuBox!.width).toBeLessThanOrEqual(page.viewportSize()!.width + 1);
-	expect(menuBox!.y + menuBox!.height).toBeLessThanOrEqual(page.viewportSize()!.height + 1);
+	const surfaceBox = await page.getByTestId('context-menu-content').boundingBox();
+	expect(surfaceBox).not.toBeNull();
+	expect(surfaceBox!.x).toBeCloseTo(clickX, 0);
+	expect(surfaceBox!.y).toBeGreaterThanOrEqual(clickY);
+	expect(surfaceBox!.y).toBeLessThanOrEqual(clickY + 4);
+	expect(surfaceBox!.x).toBeGreaterThanOrEqual(0);
+	expect(surfaceBox!.y).toBeGreaterThanOrEqual(0);
+	expect(surfaceBox!.x + surfaceBox!.width).toBeLessThanOrEqual(page.viewportSize()!.width + 1);
+	expect(surfaceBox!.y + surfaceBox!.height).toBeLessThanOrEqual(page.viewportSize()!.height + 1);
 	await page.keyboard.press('Escape');
 	await expect(trigger).toBeFocused();
 	await page.keyboard.press('Shift+F10');
@@ -1546,19 +1542,25 @@ test('keeps Cascader columns, path commit, focus restoration and reset synchroni
 	await expect(searchDemo.getByText('loaded search path = platform/native/desktop')).toBeVisible();
 
 	const lazyDemo = demo(page, 'cascader-lazy-retry');
-	await lazyDemo.locator('button[aria-haspopup="listbox"]').click();
+	const lazyTrigger = lazyDemo.locator('button[aria-haspopup="listbox"]');
+	await lazyTrigger.click();
 	await page.getByRole('option', { name: '远程空间', exact: true }).click();
 	await lazyDemo.getByRole('button', { name: '使加载失败', exact: true }).click();
 	await expect(lazyDemo.getByText(/error = 模拟网络失败/u)).toBeVisible();
+	await expect(page.getByRole('listbox')).toHaveCount(0);
+	await lazyTrigger.click();
 	const retryOption = page
 		.locator('[role="option"][data-load-state="error"]')
 		.filter({ hasText: '远程空间' });
 	await expect(retryOption).toHaveAttribute('data-load-state', 'error');
-	await retryOption.evaluate((element) => (element as HTMLElement).click());
+	await retryOption.click();
 	await expect(lazyDemo.getByText(/pending = true/u)).toBeVisible();
 	const completeLoad = lazyDemo.getByRole('button', { name: '完成加载', exact: true });
 	await expect(completeLoad).toBeEnabled();
 	await completeLoad.click();
+	await expect(page.getByRole('listbox')).toHaveCount(0);
+	await lazyTrigger.click();
+	await page.getByRole('option', { name: '远程空间', exact: true }).click();
 	const productionOption = page.getByRole('option', { name: '生产环境', exact: true });
 	await expect(productionOption).toBeVisible();
 	await productionOption.click();
@@ -1618,7 +1620,9 @@ test('keeps Mention textarea focus, active descendant, insertion, form value and
 	await expect(page.getByRole('listbox', { name: '提及建议', exact: true })).toContainText(
 		'正在加载选项'
 	);
-	await asyncDemo.getByRole('button', { name: '返回异步结果', exact: true }).click();
+	await asyncDemo
+		.getByRole('button', { name: '返回异步结果', exact: true })
+		.evaluate((element) => (element as HTMLButtonElement).click());
 	const asyncOption = page.getByRole('option', { name: /Alan a/u });
 	await expect(asyncOption).toBeVisible();
 	const asyncOptionBox = await asyncOption.boundingBox();
@@ -1872,7 +1876,6 @@ test('keeps S1 primitives semantic and display preferences effective', async ({ 
 });
 
 test.describe('accessibility route sweep', () => {
-	test.describe.configure({ mode: 'parallel' });
 	for (const route of accessibilityRoutes) {
 		test(`${route.hash} has no automatically detectable accessibility violations`, async ({
 			page

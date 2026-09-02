@@ -37,7 +37,7 @@ const browsers = configuredBrowserProjects(pw);
 const installedBrowsers = installedPlaywrightBrowsers(ci);
 const docsE2eBrowsers = docsE2eBrowserMatrix(ci);
 const docsE2eStep = ci.includes(
-	'pnpm --filter @zadmin/docs test:e2e -- --project=${{ matrix.browser }}'
+	'pnpm --filter @zadmin/docs test:e2e --project=${{ matrix.browser }}'
 );
 const exists = async (p) => Boolean(await read(p).catch(() => null));
 if (process.argv.includes('--self-test')) {
