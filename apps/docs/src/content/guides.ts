@@ -304,7 +304,7 @@ zuiHandle({ csp: { hash: true } });`,
 		id: 'package',
 		title: '从公开entrypoint消费，而不是依赖工作区路径。',
 		summary:
-			'发布合同由publishConfig、Changesets、AST API快照、tree-shaken bundle inspection、publish dry-run和仓库外tarball安装共同证明。',
+			'发布合同由Changesets、API与成熟度事实、bundle预算、单次pack校验复用、仓库外验收和版本绑定Docs制品共同证明。',
 		sections: [
 			{
 				id: 'entrypoints',
@@ -322,19 +322,30 @@ zuiHandle({ csp: { hash: true } });`,
 				id: 'release',
 				title: '发布门禁',
 				paragraphs: [
-					'公开API变化先审阅.docs/zui/api-contract.json，再更新Changeset。CI不自动按字节失败，但持续记录gzip并检查浏览器依赖边界。'
+					'公开API变化先审阅API快照、source metadata gap、稳定性策略和Changeset。CI对入口raw/gzip预算、动态Docs chunks、公开exports与浏览器依赖边界直接失败。'
 				],
-				code: `pnpm --filter @zadmin/zui api:contract:check
-pnpm --filter @zadmin/zui publish --dry-run --no-git-checks`,
+				code: `pnpm --filter @zadmin/docs audit:system
+pnpm release:readiness
+pnpm release:pack:artifacts --out=.release-artifacts`,
 				language: 'bash'
 			},
 			{
 				id: 'external',
 				title: '仓库外验收',
 				paragraphs: [
-					'Core、ZUI和SvelteKit先pack为tarball，再安装到临时项目执行frozen reinstall、check、build、Node SSR、critical CSS、CSP和client边界。'
+					'Core、ZUI、SvelteKit、WebView和Miniapp只pack一次并写入SHA-256 manifest；CI上传再下载同一批tarball，供外部临时项目、package check和npm publish dry-run共同消费。'
 				],
 				links: [{ href: '#/guides/ssr-csp', label: 'SSR与CSP指南' }]
+			},
+			{
+				id: 'versioned-docs',
+				title: '版本绑定Docs制品',
+				paragraphs: [
+					'Docs build会生成包含包版本、完整Git revision、88条路由、逐文件SHA-256、整体bundle摘要和支持矩阵摘要的zui-artifact。该制品随CI上传，但deployed=false仍表示尚未完成外部版本化部署。'
+				],
+				code: `pnpm --filter @zadmin/docs docs:versioned:check
+pnpm --filter @zadmin/docs docs:versioned:emit`,
+				language: 'bash'
 			}
 		]
 	}

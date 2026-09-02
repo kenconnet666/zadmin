@@ -27,6 +27,7 @@
 		>
 	</ZStack>
 	<ZInput
+		aria-label="外部值"
 		bind:value
 		data-testid="input-external-control"
 		defaultValue="external-seed"

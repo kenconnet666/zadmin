@@ -8,7 +8,7 @@
 	</ZResult>
 	<ZResult
 		data-result-context="panel"
-		headingLevel={5}
+		headingLevel={2}
 		title="这是一个用于验证窄容器、连续英文标识 release-candidate-with-an-intentionally-long-name 与中文长标题自动换行的面板结果"
 		tone="warning"
 	>

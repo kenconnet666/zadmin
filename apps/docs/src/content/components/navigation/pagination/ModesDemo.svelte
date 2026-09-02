@@ -7,11 +7,11 @@
 <ZStack gap="large">
 	<ZStack gap="small">
 		<ZText weight="semibold">Simple：可直接输入页码</ZText>
-		<ZPagination bind:page mode="simple" totalPages={28} />
+		<ZPagination aria-label="简单模式分页" bind:page mode="simple" totalPages={28} />
 	</ZStack>
 	<ZStack gap="small">
 		<ZText weight="semibold">Compact：移动端与窄工具栏只保留状态</ZText>
-		<ZPagination bind:page mode="compact" totalPages={28} />
+		<ZPagination aria-label="紧凑模式分页" bind:page mode="compact" totalPages={28} />
 	</ZStack>
 	<ZProvider direction="rtl" locale="zh-CN" localePack={zhCNLocalePack}>
 		<ZStack gap="small">

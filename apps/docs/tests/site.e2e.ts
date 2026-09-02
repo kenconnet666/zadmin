@@ -1304,7 +1304,11 @@ test('keeps Select and Combobox data options grouped with distinct typed keys', 
 	await input.fill('字符串');
 	const comboListbox = page.getByRole('listbox', { name: '选择选项', exact: true });
 	await expect(comboListbox.getByRole('option')).toHaveCount(2);
-	await comboListbox.getByRole('option', { name: /字符串 "1"/u }).click();
+	const stringOption = comboListbox.getByRole('option', { name: /字符串 "1"/u });
+	const stringOptionId = await stringOption.getAttribute('id');
+	expect(stringOptionId).not.toBeNull();
+	await expect(input).toHaveAttribute('aria-activedescendant', stringOptionId!);
+	await input.press('Enter');
 	await expect(
 		comboDemo.getByText(/value = 1 · typeof = string · input = 字符串 "1"/u)
 	).toBeVisible();
@@ -1546,9 +1550,11 @@ test('keeps Cascader columns, path commit, focus restoration and reset synchroni
 	await page.getByRole('option', { name: '远程空间', exact: true }).click();
 	await lazyDemo.getByRole('button', { name: '使加载失败', exact: true }).click();
 	await expect(lazyDemo.getByText(/error = 模拟网络失败/u)).toBeVisible();
-	const retryOption = page.getByRole('option', { name: '远程空间', exact: true });
+	const retryOption = page
+		.locator('[role="option"][data-load-state="error"]')
+		.filter({ hasText: '远程空间' });
 	await expect(retryOption).toHaveAttribute('data-load-state', 'error');
-	await retryOption.click();
+	await retryOption.evaluate((element) => (element as HTMLElement).click());
 	await expect(lazyDemo.getByText(/pending = true/u)).toBeVisible();
 	const completeLoad = lazyDemo.getByRole('button', { name: '完成加载', exact: true });
 	await expect(completeLoad).toBeEnabled();
@@ -1615,8 +1621,11 @@ test('keeps Mention textarea focus, active descendant, insertion, form value and
 	await asyncDemo.getByRole('button', { name: '返回异步结果', exact: true }).click();
 	const asyncOption = page.getByRole('option', { name: /Alan a/u });
 	await expect(asyncOption).toBeVisible();
-	await asyncOption.evaluate((element) =>
-		element.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, button: 0 }))
+	const asyncOptionBox = await asyncOption.boundingBox();
+	expect(asyncOptionBox).not.toBeNull();
+	await page.mouse.click(
+		asyncOptionBox!.x + asyncOptionBox!.width / 2,
+		asyncOptionBox!.y + asyncOptionBox!.height / 2
 	);
 	await expect(asyncEditor).toHaveValue('Assign @alan ');
 

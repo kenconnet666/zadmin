@@ -76,7 +76,7 @@ export const resultDoc = defineComponentDoc(resultMetadata, {
 		{
 			component: HeadingDemo,
 			covers: ['native-props', 'ssr', 'variants-and-states'],
-			description: '页面h1与嵌套h5都是真实ZHeading；长中英文标识与操作区在窄容器中安全换行。',
+			description: '页面h1与嵌套h2都是真实ZHeading；长中英文标识与操作区在窄容器中安全换行。',
 			id: 'result-heading-responsive',
 			source: headingSource,
 			title: '标题层级、原生属性与长内容'
