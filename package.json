@@ -27,6 +27,8 @@
 		"release:coherence": "node scripts/check-release-coherence.mjs",
 		"release:coherence:self-test": "node scripts/check-release-coherence.mjs --self-test",
 		"release:pack:artifacts": "node scripts/pack-release-artifacts.mjs",
+		"release:handoff:check": "node scripts/prepare-release-handoff.mjs",
+		"release:handoff:self-test": "node scripts/prepare-release-handoff.mjs --self-test",
 		"release:candidate:check": "node scripts/check-release-candidate.mjs",
 		"release:candidate:self-test": "node scripts/check-release-candidate.mjs --self-test",
 		"release:status": "changeset status",

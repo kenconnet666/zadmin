@@ -350,7 +350,7 @@ pnpm release:pack:artifacts --out=.release-artifacts`,
 				id: 'external',
 				title: '仓库外验收',
 				paragraphs: [
-					'Core、ZUI、SvelteKit、WebView和Miniapp只pack一次并写入SHA-256 manifest；CI上传再下载同一批tarball，供外部临时项目、package check和npm publish dry-run共同消费。'
+					'Core、ZUI、SvelteKit、WebView和Miniapp只pack一次并写入SHA-256 manifest；CI把路径可移植的validated-plan与同一批tarball上传再下载，重新校验后才供外部临时项目、package check和npm publish dry-run共同消费。计划中的executedConsumers保持为空，因此不会把artifact handoff冒充真实发布。'
 				],
 				links: [{ href: '#/guides/ssr-csp', label: 'SSR与CSP指南' }]
 			},

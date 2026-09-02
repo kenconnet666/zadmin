@@ -8,4 +8,6 @@ single-pack producer 只接受没有 tracked 或 untracked 变化的干净 check
 
 Static CI 先运行 `pnpm release:candidate:self-test` 的正负例；single-pack 完成后再以真实 manifest、workspace 和 `github.sha` 运行 `scripts/check-release-candidate.mjs`。它复用 schema v2 manifest，不创建第二份清单：校验公开 release package 集合没有缺漏或多余项、每个版本与当前 workspace `package.json` 完全一致、`sourceRevision` 等于 CI commit，并在传入 Changesets 独立包 tag（例如 `--tag=@zadmin/zui@0.1.0`）时只验证该包与对应 artifact/version 的映射。该合同只读且离线，不执行 publish、tag、GitHub Release 或 OIDC 写入。
 
+`scripts/prepare-release-handoff.mjs` 在同一 manifest 上生成路径可移植的 `validated-plan`：只保存 tarball 文件名、版本、bytes 和 SHA-256，不保存 runner 绝对路径；`executedConsumers` 必须为空。CI 上传并重新下载后用 `--verify-plan` 再校验 candidate、每个 tarball 和 handoff schema，只有验证成功，外部消费与 npm dry-run 才继续。`plannedConsumers` 只是未来 npm OIDC publish、registry smoke、GitHub Release 和版本化 Docs 的输入要求，不代表这些外部动作已经执行。
+
 该命令不会创建 tag、GitHub Release、发布 npm 包或修改任何发布权限。真实 release workflow 仍以 `workflow_run.head_sha` checkout 已验证提交；真实部署和 registry publish 不由此命令宣称完成。

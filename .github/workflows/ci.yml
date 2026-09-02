@@ -51,6 +51,7 @@ jobs:
         run: |
           pnpm release:coherence
           pnpm release:candidate:self-test
+          pnpm release:handoff:self-test
 
       - name: Audit ZUI browser lifecycle ownership
         run: pnpm --filter @zadmin/zui test:browser-lifecycle
@@ -256,6 +257,7 @@ jobs:
           pnpm --filter @zadmin/miniapp build
           pnpm release:pack:artifacts --out=.release-artifacts
           node scripts/check-release-candidate.mjs --directory=.release-artifacts --revision="${{ github.sha }}"
+          node scripts/prepare-release-handoff.mjs --directory=.release-artifacts --revision="${{ github.sha }}" --out=.release-artifacts/release-handoff.json
 
       - name: Upload release consumer artifacts
         if: steps.release_artifacts.outcome == 'success'
@@ -278,30 +280,41 @@ jobs:
         if: steps.release_artifacts_download.outcome == 'success'
         id: release_artifacts_select
         run: |
+          test -s "${{ github.workspace }}/.release-artifacts-consumer/manifest.json"
+          test -s "${{ github.workspace }}/.release-artifacts-consumer/release-handoff.json"
           echo "ZADMIN_RELEASE_ARTIFACTS_DIR=${{ github.workspace }}/.release-artifacts-consumer" >> "$GITHUB_ENV"
           echo "ZADMIN_RELEASE_ARTIFACTS_REVISION=${{ github.sha }}" >> "$GITHUB_ENV"
 
+      - name: Verify downloaded release handoff plan
+        if: steps.release_artifacts_download.outcome == 'success'
+        id: release_handoff_verify
+        run: >-
+          node scripts/prepare-release-handoff.mjs
+          --directory=.release-artifacts-consumer
+          --revision="${{ github.sha }}"
+          --verify-plan=.release-artifacts-consumer/release-handoff.json
+
       - name: Inspect ZUI browser bundles
-        if: always() && steps.workspace.outcome == 'success' && steps.release_artifacts_select.outcome == 'success'
+        if: always() && steps.workspace.outcome == 'success' && steps.release_artifacts_select.outcome == 'success' && steps.release_handoff_verify.outcome == 'success'
         run: pnpm --filter @zadmin/zui test:bundle
 
       - name: Run external ZUI and SvelteKit SSR acceptance
-        if: always() && steps.workspace.outcome == 'success' && steps.release_artifacts_select.outcome == 'success'
+        if: always() && steps.workspace.outcome == 'success' && steps.release_artifacts_select.outcome == 'success' && steps.release_handoff_verify.outcome == 'success'
         run: pnpm --filter @zadmin/sveltekit test:zui-package
 
       - name: Build and dry-run ZUI package publish
-        if: always() && steps.workspace.outcome == 'success' && steps.release_artifacts_select.outcome == 'success'
+        if: always() && steps.workspace.outcome == 'success' && steps.release_artifacts_select.outcome == 'success' && steps.release_handoff_verify.outcome == 'success'
         run: |
           pnpm --filter @zadmin/zui package:check
           ZUI_TARBALL="$(node scripts/read-release-artifact.mjs --directory="$ZADMIN_RELEASE_ARTIFACTS_DIR" --package=@zadmin/zui --revision="$ZADMIN_RELEASE_ARTIFACTS_REVISION")"
           npm publish "$ZUI_TARBALL" --dry-run --ignore-scripts
 
       - name: Run WebView external package acceptance
-        if: always() && steps.workspace.outcome == 'success' && steps.release_artifacts_select.outcome == 'success'
+        if: always() && steps.workspace.outcome == 'success' && steps.release_artifacts_select.outcome == 'success' && steps.release_handoff_verify.outcome == 'success'
         run: pnpm --filter @zadmin/webview test:package
 
       - name: Run Miniapp external package acceptance
-        if: always() && steps.workspace.outcome == 'success' && steps.release_artifacts_select.outcome == 'success'
+        if: always() && steps.workspace.outcome == 'success' && steps.release_artifacts_select.outcome == 'success' && steps.release_handoff_verify.outcome == 'success'
         run: pnpm --filter @zadmin/miniapp test:package
 
       - name: Verify reports and generated tracked files are unchanged

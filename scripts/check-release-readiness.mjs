@@ -51,6 +51,7 @@ const releaseCandidate = await readFile(
 	resolve(root, 'scripts/check-release-candidate.mjs'),
 	'utf8'
 );
+const releaseHandoff = await readFile(resolve(root, 'scripts/prepare-release-handoff.mjs'), 'utf8');
 const releaseCoherence = await readFile(
 	resolve(root, 'scripts/check-release-coherence.mjs'),
 	'utf8'
@@ -159,6 +160,16 @@ const checks = {
 		/node scripts\/check-release-candidate\.mjs --directory=\.release-artifacts --revision=/u.test(
 			ci
 		),
+	releaseHandoffPlan:
+		rootPackage.scripts?.['release:handoff:check'] === 'node scripts/prepare-release-handoff.mjs' &&
+		rootPackage.scripts?.['release:handoff:self-test'] ===
+			'node scripts/prepare-release-handoff.mjs --self-test' &&
+		/status:\s*'validated-plan'/u.test(releaseHandoff) &&
+		/executedConsumers:\s*\[\]/u.test(releaseHandoff) &&
+		/verifyReleaseHandoff/u.test(releaseHandoff) &&
+		/pnpm release:handoff:self-test/u.test(ci) &&
+		/--verify-plan=\.release-artifacts-consumer\/release-handoff\.json/u.test(ci) &&
+		/steps\.release_handoff_verify\.outcome == 'success'/u.test(ci),
 	releasePublishTarballReuse: false,
 	npmOidcProvenance:
 		/id-token:\s*write/iu.test(workflow) && /provenance|trusted publishing/iu.test(workflow),
@@ -236,7 +247,7 @@ const report = {
 const passed = Object.entries(checks)
 	.filter(([, value]) => value)
 	.map(([key]) => key);
-const markdownSource = `# Release Readiness\n\n- Status: **${report.status}**\n- Scope: non-publishing fact report; this command never publishes packages or changes release permissions.\n\n## Passed facts\n\n${passed.map((key) => `- \`${key}\``).join('\n') || '- None'}\n\n## Blocked facts\n\n${blocked.map((key) => `- \`${key}\``).join('\n') || '- None'}\n\n## Public packages\n\n| Package | Version | Changeset target | Package check | External acceptance |\n| --- | --- | --- | --- | --- |\n${packages.map((item) => `| ${item.name} | ${item.version} | ${item.changeset ? 'yes' : 'no'} | ${item.packageCheck ? 'yes' : 'no'} | ${item.name === '@zadmin/zui' && zuiAcceptance.includes("'@zadmin/zui'") ? 'yes (via SvelteKit)' : item.acceptance ? 'yes' : 'no'} |`).join('\n')}\n\n## Release boundary\n\nCI now proves that one checksummed pack is reused by external consumers and the npm publish dry-run. The release candidate contract additionally cross-checks the schema v2 manifest against the exact workspace package set and versions, binds it to the CI commit, and supports version-tag checks without publishing. The real registry publish still does not consume a release-bound copy of that artifact, and npm OIDC/provenance, automated tags/GitHub Releases, registry post-publish smoke, versioned Docs deployment, and a release-bound support matrix remain unproven.\n`;
+const markdownSource = `# Release Readiness\n\n- Status: **${report.status}**\n- Scope: non-publishing fact report; this command never publishes packages or changes release permissions.\n\n## Passed facts\n\n${passed.map((key) => `- \`${key}\``).join('\n') || '- None'}\n\n## Blocked facts\n\n${blocked.map((key) => `- \`${key}\``).join('\n') || '- None'}\n\n## Public packages\n\n| Package | Version | Changeset target | Package check | External acceptance |\n| --- | --- | --- | --- | --- |\n${packages.map((item) => `| ${item.name} | ${item.version} | ${item.changeset ? 'yes' : 'no'} | ${item.packageCheck ? 'yes' : 'no'} | ${item.name === '@zadmin/zui' && zuiAcceptance.includes("'@zadmin/zui'") ? 'yes (via SvelteKit)' : item.acceptance ? 'yes' : 'no'} |`).join('\n')}\n\n## Release boundary\n\nCI now proves that one checksummed pack is reused by external consumers and the npm publish dry-run. The release candidate contract cross-checks the schema v2 manifest against the exact workspace package set, versions, and CI commit. A portable validated handoff plan is uploaded with those tarballs, verified again after download, and explicitly keeps executedConsumers empty; it is an input contract, not publish evidence. The real registry publish still does not consume a release-bound copy of that artifact, and npm OIDC/provenance, automated tags/GitHub Releases, registry post-publish smoke, versioned Docs deployment, and a release-bound support matrix remain unproven.\n`;
 const prettierConfig = (await prettier.resolveConfig(jsonPath)) ?? {};
 const markdown = await prettier.format(markdownSource, {
 	...prettierConfig,
