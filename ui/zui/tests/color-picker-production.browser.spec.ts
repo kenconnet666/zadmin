@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
 import ColorPickerProductionFixture from './ColorPickerProductionFixture.svelte';
+import ColorPickerAllowAlphaFixture from './ColorPickerAllowAlphaFixture.svelte';
 
 describe('ZColorPicker production contract', () => {
 	it('coordinates Field, hex drafts, presets, clear, FormData and reset', async () => {
@@ -51,5 +52,29 @@ describe('ZColorPicker production contract', () => {
 		await tick();
 		expect(output.textContent).toBe('#2563ebcc:2');
 		expect(new FormData(form).get('brand')).toBe('#2563ebcc');
+	});
+
+	it('keeps allowAlpha variants and invalid drafts out of the committed value', async () => {
+		render(ColorPickerAllowAlphaFixture);
+		const form = document.querySelector<HTMLFormElement>('[data-testid="color-alpha-form"]')!;
+		const opaque = document.querySelector<HTMLElement>('[data-testid="color-opaque"]')!;
+		const alpha = document.querySelector<HTMLElement>('[data-testid="color-alpha"]')!;
+		const output = document.querySelector<HTMLOutputElement>('[data-testid="color-alpha-output"]')!;
+		expect(output.textContent).toBe('#336699:#33669980');
+		opaque.querySelector<HTMLButtonElement>('[aria-haspopup="dialog"]')!.click();
+		await tick();
+		const opaqueHex = document.querySelector<HTMLInputElement>('input[aria-label="Hex color"]')!;
+		opaqueHex.value = '#zzzzzz';
+		opaqueHex.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		await tick();
+		opaqueHex.blur();
+		await tick();
+		expect(output.textContent).toBe('#336699:#33669980');
+		form.reset();
+		await tick();
+		expect(output.textContent).toBe('#336699:#33669980');
+		alpha.querySelector<HTMLButtonElement>('[aria-haspopup="dialog"]')!.click();
+		await tick();
+		expect(document.querySelector('input[type="range"]')).not.toBeNull();
 	});
 });

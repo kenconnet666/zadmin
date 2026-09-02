@@ -3529,30 +3529,7 @@ export const dataTableApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZDataTable.svelte',
-	metadataGapProps: [
-		'defaultColumnVisibility',
-		'defaultColumnWidths',
-		'defaultExpandedKeys',
-		'defaultSelectedKeys',
-		'defaultSort',
-		'density',
-		'emptyLabel',
-		'expandedRowEstimate',
-		'expansionLabel',
-		'height',
-		'isRowDisabled',
-		'isRowExpandable',
-		'loadingLabel',
-		'overscan',
-		'resizeLabel',
-		'rowHeight',
-		'rowIndexOffset',
-		'selectAllLabel',
-		'selectionLabel',
-		'ssrViewportSize',
-		'striped',
-		'totalRowCount'
-	]
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const descriptionListApiFacts = {
@@ -5520,24 +5497,7 @@ export const cascaderApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZCascader.svelte',
-	metadataGapProps: [
-		'clearLabel',
-		'controlId',
-		'defaultOpen',
-		'emptyText',
-		'filter',
-		'form',
-		'gutter',
-		'invalid',
-		'loadingText',
-		'matchWidth',
-		'onLoadChildren',
-		'placement',
-		'placeholder',
-		'required',
-		'searchPlaceholder',
-		'size'
-	]
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const checkboxApiFacts = {
@@ -5744,22 +5704,7 @@ export const colorPickerApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZColorPicker.svelte',
-	metadataGapProps: [
-		'alphaLabel',
-		'clearLabel',
-		'colorInputLabel',
-		'controlId',
-		'defaultOpen',
-		'form',
-		'gutter',
-		'hexInputLabel',
-		'invalid',
-		'matchWidth',
-		'placement',
-		'placeholder',
-		'required',
-		'triggerLabel'
-	]
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const dateFieldApiFacts = {
@@ -7616,18 +7561,7 @@ export const tagsInputApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZTagsInput.svelte',
-	metadataGapProps: [
-		'addLabel',
-		'controlId',
-		'editLabel',
-		'form',
-		'invalid',
-		'overflowLabel',
-		'placeholder',
-		'removeLabel',
-		'required',
-		'size'
-	]
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const textareaApiFacts = {

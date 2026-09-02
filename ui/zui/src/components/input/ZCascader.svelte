@@ -140,6 +140,97 @@
 				type: 'boolean'
 			},
 			{
+				default: 'Provider localePack.cascader.clear',
+				description: '清空路径按钮文案。',
+				name: 'clearLabel',
+				type: 'string'
+			},
+			{
+				default: 'Field controlId',
+				description: '覆盖Field生成的控件ID。',
+				name: 'controlId',
+				type: 'string'
+			},
+			{
+				default: 'false',
+				description: '非受控初始打开状态。',
+				name: 'defaultOpen',
+				type: 'boolean'
+			},
+			{
+				default: 'Provider localePack.cascader.empty',
+				description: '当前列无可用选项时的文案。',
+				name: 'emptyText',
+				type: 'string'
+			},
+			{
+				default: 'undefined',
+				description: '加载路径的过滤函数。',
+				name: 'filter',
+				type: 'CascaderFilter'
+			},
+			{ default: 'undefined', description: '关联外部form的id。', name: 'form', type: 'string' },
+			{
+				default: '4',
+				description: 'Popover与触发器之间的像素间距。',
+				name: 'gutter',
+				type: 'number'
+			},
+			{
+				default: 'Field invalid',
+				description: '无效视觉与aria-invalid状态。',
+				name: 'invalid',
+				type: 'boolean'
+			},
+			{
+				default: 'Provider localePack.cascader.loading',
+				description: 'lazy/loading状态文案。',
+				name: 'loadingText',
+				type: 'string'
+			},
+			{
+				default: 'false',
+				description: 'Popover宽度是否匹配触发器。',
+				name: 'matchWidth',
+				type: 'boolean'
+			},
+			{
+				default: 'undefined',
+				description: 'lazy节点加载回调。',
+				name: 'onLoadChildren',
+				type: '(node: TreeNode, context: TreeLoadContext) => void | Promise<void>'
+			},
+			{
+				default: "'bottom-start'",
+				description: 'Popover定位方向。',
+				name: 'placement',
+				type: 'PopoverPlacement'
+			},
+			{
+				default: 'Provider localePack.cascader.placeholder',
+				description: '未选择路径时的占位文案。',
+				name: 'placeholder',
+				type: 'string'
+			},
+			{
+				default: 'false',
+				description: '是否参与原生required校验。',
+				name: 'required',
+				type: 'boolean'
+			},
+			{
+				default: 'Provider localePack.cascader.searchPlaceholder',
+				description: 'loaded路径搜索输入占位文案。',
+				name: 'searchPlaceholder',
+				type: 'string'
+			},
+			{
+				default: 'Provider density',
+				description: '显式尺寸，未提供时继承Provider/Field。',
+				name: 'size',
+				type: 'ZControlSize'
+			},
+			{
 				default: 'false',
 				description: '筛选当前已经加载的完整叶子路径。',
 				name: 'searchable',

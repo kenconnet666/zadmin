@@ -106,10 +106,70 @@
 				type: 'boolean'
 			},
 			{
+				default: 'Provider localePack.colorPicker.alpha',
+				description: '原生alpha range输入的可访问名称。',
+				name: 'alphaLabel',
+				type: 'string'
+			},
+			{
+				default: 'Provider localePack.common.clear',
+				description: '清空按钮的可访问名称和title。',
+				name: 'clearLabel',
+				type: 'string'
+			},
+			{
+				default: 'Provider localePack.colorPicker.chooseColor',
+				description: '原生color input的可访问名称。',
+				name: 'colorInputLabel',
+				type: 'string'
+			},
+			{
+				default: 'Field controlId或生成ID',
+				description: '真实Trigger ID，也是Field label的focus owner。',
+				name: 'controlId',
+				type: 'string'
+			},
+			{
+				default: 'false',
+				description: 'Popover非受控初始打开状态。',
+				name: 'defaultOpen',
+				type: 'boolean'
+			},
+			{
 				default: '[]',
 				description: '经过相同hex规范化的具名预设颜色。',
 				name: 'presets',
 				type: 'readonly ColorPickerPreset[]'
+			},
+			{
+				default: '最近祖先form',
+				description: 'FormValueBridge关联的外部form ID。',
+				name: 'form',
+				type: 'string'
+			},
+			{
+				default: '4',
+				description: 'Trigger与Popover面板之间的Floating间距，单位px。',
+				name: 'gutter',
+				type: 'number'
+			},
+			{
+				default: 'Provider localePack.colorPicker.hexColor',
+				description: 'hex草稿输入的可访问名称。',
+				name: 'hexInputLabel',
+				type: 'string'
+			},
+			{
+				default: 'Field context或false',
+				description: '与非法hex草稿合并并投射到根状态和Trigger aria-invalid。',
+				name: 'invalid',
+				type: 'boolean'
+			},
+			{
+				default: 'false',
+				description: '颜色面板是否至少匹配Trigger宽度。',
+				name: 'matchWidth',
+				type: 'boolean'
 			},
 			{
 				default: 'false',
@@ -128,6 +188,30 @@
 				description: 'FormValueBridge字段名。',
 				name: 'name',
 				type: 'string'
+			},
+			{
+				default: "'bottom-start'",
+				description: 'Popover首选逻辑方位；碰撞与RTL由共享层处理。',
+				name: 'placement',
+				type: 'PopoverPlacement'
+			},
+			{
+				default: 'Provider localePack.colorPicker.chooseColor',
+				description: 'null颜色值时Trigger显示的占位文案。',
+				name: 'placeholder',
+				type: 'string'
+			},
+			{
+				default: 'Field context或false',
+				description: '投射到hex输入和data-required；提交阻断由Form/schema owner负责。',
+				name: 'required',
+				type: 'boolean'
+			},
+			{
+				default: 'Provider localePack.colorPicker.color(value)',
+				description: '自定义颜色Trigger/面板名称生成器，接收string或null。',
+				name: 'triggerLabel',
+				type: '(value: string | null) => string'
 			},
 			{
 				default: 'Field size，其次为Provider density',

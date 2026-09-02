@@ -95,4 +95,62 @@ describe('ZTagsInput production contract', () => {
 		await tick();
 		expect(output.textContent).toBe('alpha,beta,gamma:2:');
 	});
+
+	it('keeps duplicate-tag navigation and edit focus valid after removing a preceding tag', async () => {
+		render(TagsInputProductionFixture);
+		const root = document.querySelector<HTMLElement>('[data-testid="tags-production-identity"]')!;
+		const tags = root.querySelectorAll<HTMLElement>('[data-slot="tag"]');
+		expect(tags).toHaveLength(3);
+		const firstRemove = tags[0]!.querySelector<HTMLButtonElement>('[data-slot="remove"]')!;
+		firstRemove.focus();
+		firstRemove.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Delete' }));
+		await tick();
+		expect(root.querySelectorAll('[data-slot="tag"]')).toHaveLength(2);
+		expect(document.activeElement?.closest('[data-slot="tag"]')?.textContent).toContain('same');
+		const edit = root.querySelectorAll<HTMLButtonElement>('[data-slot="edit"]')[0]!;
+		edit.click();
+		await tick();
+		const editInput = root.querySelector<HTMLInputElement>('[data-slot="edit-input"]')!;
+		expect(document.activeElement).toBe(editInput);
+		editInput.value = 'renamed';
+		editInput.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		editInput.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+		await tick();
+		expect(
+			document.querySelector('[data-testid="tags-production-identity-output"]')?.textContent
+		).toBe('renamed,third');
+	});
+
+	it('does not commit during real composition and honors commitOnBlur and readonly boundaries', async () => {
+		render(TagsInputProductionFixture);
+		const staticRoot = document.querySelector<HTMLElement>(
+			'[data-testid="tags-production-static"]'
+		)!;
+		const staticInput = staticRoot.querySelector<HTMLInputElement>('[data-slot="input"]')!;
+		staticInput.focus();
+		staticInput.value = 'composing';
+		staticInput.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true }));
+		staticInput.dispatchEvent(new InputEvent('input', { bubbles: true, isComposing: true }));
+		staticInput.dispatchEvent(
+			new KeyboardEvent('keydown', { bubbles: true, isComposing: true, key: 'Enter' })
+		);
+		await tick();
+		expect(
+			document.querySelector('[data-testid="tags-production-static-output"]')?.textContent
+		).toBe('one,two');
+		staticInput.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true }));
+		staticInput.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		staticInput.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+		await tick();
+		expect(
+			document.querySelector('[data-testid="tags-production-static-output"]')?.textContent
+		).toBe('one,two,composing');
+		const readonlyRoot = document.querySelector<HTMLElement>(
+			'[data-testid="tags-production-readonly"]'
+		)!;
+		const readonlyInput = readonlyRoot.querySelector<HTMLInputElement>('[data-slot="input"]')!;
+		expect(readonlyInput.readOnly).toBe(true);
+		readonlyInput.dispatchEvent(new FocusEvent('blur', { bubbles: true }));
+		expect(readonlyRoot.querySelectorAll('[data-slot="tag"]')).toHaveLength(1);
+	});
 });

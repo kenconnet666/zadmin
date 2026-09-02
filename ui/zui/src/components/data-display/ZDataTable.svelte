@@ -203,16 +203,70 @@
 				type: 'readonly DataTableColumn<TRow>[]'
 			},
 			{
+				default: '{}',
+				description: '非受控列可见性的初始稀疏映射与reset目标。',
+				name: 'defaultColumnVisibility',
+				type: 'DataTableColumnVisibility'
+			},
+			{
+				default: '{}',
+				description: '非受控列宽的初始像素映射与reset目标。',
+				name: 'defaultColumnWidths',
+				type: 'DataTableColumnWidths'
+			},
+			{
+				default: '[]',
+				description: '非受控展开行的初始typed keys与reset目标。',
+				name: 'defaultExpandedKeys',
+				type: 'readonly TRowKey[]'
+			},
+			{
+				default: '[]',
+				description: '非受控选择的初始typed keys与reset目标。',
+				name: 'defaultSelectedKeys',
+				type: 'readonly TRowKey[]'
+			},
+			{
+				default: 'undefined',
+				description: '非受控排序的初始描述与reset目标。',
+				name: 'defaultSort',
+				type: 'DataSortDescriptor | undefined'
+			},
+			{
 				default: "'Expand row details'",
 				description: '展开控制列的可访问列标题；仅在提供expandedRow时显示。',
 				name: 'expansionColumnLabel',
 				type: 'string'
 			},
 			{
+				default: 'expanded ? Collapse row details : Expand row details',
+				description: '逐行展开控制的可访问名称。',
+				name: 'expansionLabel',
+				type: '(row: TRow, expanded: boolean) => string'
+			},
+			{
+				default: '96',
+				description: '展开详情用于虚拟测量的初始像素估算。',
+				name: 'expandedRowEstimate',
+				type: 'number'
+			},
+			{
 				default: "'Select row'",
 				description: '选择控制列的可访问列标题；与selectAllLabel和逐行selectionLabel独立。',
 				name: 'selectionColumnLabel',
 				type: 'string'
+			},
+			{
+				default: "'Select all rows'",
+				description: '多选表头全选控件的可访问名称。',
+				name: 'selectAllLabel',
+				type: 'string'
+			},
+			{
+				default: 'Select row ${index + 1}',
+				description: '逐行选择控件的可访问名称。',
+				name: 'selectionLabel',
+				type: '(row: TRow, index: number) => string'
 			},
 			{
 				default: '必填',
@@ -229,6 +283,18 @@
 				type: '(row: TRow) => TRowKey'
 			},
 			{
+				default: '() => false',
+				description: '按业务行禁用选择、展开与行内交互。',
+				name: 'isRowDisabled',
+				type: '(row: TRow) => boolean'
+			},
+			{
+				default: '() => true',
+				description: '决定提供expandedRow时哪些业务行允许展开。',
+				name: 'isRowExpandable',
+				type: '(row: TRow) => boolean'
+			},
+			{
 				default: "'client'",
 				description: '本地稳定排序或只发出服务端排序意图。',
 				name: 'sortingMode',
@@ -241,15 +307,57 @@
 				type: "'none' | 'single' | 'multiple'"
 			},
 			{
+				default: "'comfortable'",
+				description: '底层ZTable密度。',
+				name: 'density',
+				type: 'TableDensity'
+			},
+			{
+				default: 'false',
+				description: '使用底层ZTable的交替行表面。',
+				name: 'striped',
+				type: 'boolean'
+			},
+			{
 				default: 'false',
 				description: '启用typed-key动态测量行窗口化。',
 				name: 'virtualized',
 				type: 'boolean'
 			},
 			{
-				default: '44 / 320',
-				description: '虚拟行估算高度与viewport高度。',
-				name: 'rowHeight / height',
+				default: '44',
+				description: '虚拟行的初始像素估算高度。',
+				name: 'rowHeight',
+				type: 'number'
+			},
+			{
+				default: '320',
+				description: '虚拟viewport的像素高度。',
+				name: 'height',
+				type: 'number'
+			},
+			{
+				default: '4',
+				description: '虚拟窗口两端额外渲染的行数。',
+				name: 'overscan',
+				type: 'number'
+			},
+			{
+				default: 'undefined',
+				description: 'SSR虚拟模式预渲染的行数；省略时使用可见窗口估算。',
+				name: 'ssrViewportSize',
+				type: 'number'
+			},
+			{
+				default: '0',
+				description: '服务端分页时aria-rowindex使用的零基偏移。',
+				name: 'rowIndexOffset',
+				type: 'number'
+			},
+			{
+				default: 'rows.length',
+				description: '服务端分页或虚拟全集的总行数，用于aria-rowcount。',
+				name: 'totalRowCount',
 				type: 'number'
 			},
 			{
@@ -259,10 +367,28 @@
 				type: 'boolean'
 			},
 			{
+				default: "'Loading rows'",
+				description: '加载状态的可访问文案。',
+				name: 'loadingLabel',
+				type: 'string'
+			},
+			{
 				default: 'null',
 				description: '显示组件内错误反馈并保留已有rows。',
 				name: 'error',
 				type: 'string | null'
+			},
+			{
+				default: "'No rows'",
+				description: '无数据状态的可访问文案。',
+				name: 'emptyLabel',
+				type: 'string'
+			},
+			{
+				default: 'Resize ${column.header} column',
+				description: '列宽分隔线的可访问名称。',
+				name: 'resizeLabel',
+				type: '(column: DataTableColumn<TRow>) => string'
 			},
 			{
 				default: 'virtualized',

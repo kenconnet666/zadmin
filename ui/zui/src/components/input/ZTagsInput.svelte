@@ -88,6 +88,66 @@
 		],
 		props: [
 			{
+				default: 'localePack.tagsInput.addTag',
+				description: '新增标签输入的可访问名称。',
+				name: 'addLabel',
+				type: 'string'
+			},
+			{
+				default: 'Field controlId或生成ID',
+				description: '真实草稿input的稳定id。',
+				name: 'controlId',
+				type: 'string'
+			},
+			{
+				default: 'localePack.tagsInput.editTag(value)',
+				description: '标签编辑操作的可访问名称。',
+				name: 'editLabel',
+				type: '(value: string) => string'
+			},
+			{
+				default: '最近祖先form',
+				description: '关联原生form；未显式提供时使用最近祖先form。',
+				name: 'form',
+				type: 'string'
+			},
+			{
+				default: 'Field context或false',
+				description: 'Field invalid或显式invalid共同投射到根和草稿input。',
+				name: 'invalid',
+				type: 'boolean'
+			},
+			{
+				default: 'omitted => `+${omitted.length}`',
+				description: '折叠标签的可访问摘要文案。',
+				name: 'overflowLabel',
+				type: '(omitted: readonly string[]) => string'
+			},
+			{
+				default: 'localePack.tagsInput.addTag',
+				description: '草稿input的placeholder；不改变FormData。',
+				name: 'placeholder',
+				type: 'string'
+			},
+			{
+				default: 'localePack.tagsInput.removeTag(value)',
+				description: '标签删除操作的可访问名称。',
+				name: 'removeLabel',
+				type: '(value: string) => string'
+			},
+			{
+				default: 'Field context或false',
+				description: 'Field required或显式required投射到草稿input。',
+				name: 'required',
+				type: 'boolean'
+			},
+			{
+				default: 'Field size，其次为Provider density',
+				description: '解析后的small/medium/large控制尺寸。',
+				name: 'size',
+				type: 'ZControlSize'
+			},
+			{
 				bindable: true,
 				default: '[]',
 				description: '有序文本标签集合；string-only是文本创建/编辑的明确边界。',

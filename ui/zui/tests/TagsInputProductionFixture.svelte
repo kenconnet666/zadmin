@@ -5,6 +5,7 @@
 	let draft = $state('');
 	let changes = $state(0);
 	let staticValues = $state<readonly string[]>(['one', 'two']);
+	let identityValues = $state<readonly string[]>(['same', 'same', 'third']);
 </script>
 
 <form id="tags-production-form" data-testid="tags-production-form">
@@ -37,3 +38,12 @@
 <output data-testid="tags-production-output">{values.join(',')}:{changes}:{draft}</output>
 <ZTagsInput bind:values={staticValues} data-testid="tags-production-static" />
 <output data-testid="tags-production-static-output">{staticValues.join(',')}</output>
+<ZTagsInput
+	allowDuplicates
+	bind:values={identityValues}
+	data-testid="tags-production-identity"
+	defaultValues={['same', 'same', 'third']}
+	editable
+/>
+<output data-testid="tags-production-identity-output">{identityValues.join(',')}</output>
+<ZTagsInput data-testid="tags-production-readonly" defaultValues={['locked']} readonly />

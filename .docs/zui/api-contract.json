@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"componentCount": 141,
-	"overallSha256": "f0e548ce00ffe4d798bcc715d830dfa5d0630ba496873c257f637de6b218707a",
+	"overallSha256": "cd4a877ce6e8521c5807d015501123b0e072ccbb282b741b7462bf13e3e26071",
 	"components": [
 		{
 			"id": "accordion",
@@ -405,7 +405,7 @@
 		},
 		{
 			"id": "data-table",
-			"sha256": "ac2301d82290656ac86474176a60db6bcdd66cfee293345f51e5e3a2052153b0",
+			"sha256": "aab02ba54b93b02c0b2e7407486933bf3550444e0b99ba1f45bb17cab7b5cd20",
 			"source": "src/components/data-display/ZDataTable.svelte"
 		},
 		{
@@ -560,7 +560,7 @@
 		},
 		{
 			"id": "cascader",
-			"sha256": "e5d4a8dff79ad345eeec727e38f70f4e680f2e8f9915334dfe83f0cec7e7b432",
+			"sha256": "a053b099a87a677d4a759c595473a57b9cedb07bf8e562ba8e63bc487dff31c3",
 			"source": "src/components/input/ZCascader.svelte"
 		},
 		{
@@ -570,7 +570,7 @@
 		},
 		{
 			"id": "color-picker",
-			"sha256": "ee2fe950184086ea0d0f4305d639fad8b89cd8916535e1ac1b580864d5b3b5de",
+			"sha256": "99b64011c41e7784114b90991a97dc94b717dae72e359d21920cf4ac2159e045",
 			"source": "src/components/input/ZColorPicker.svelte"
 		},
 		{
@@ -650,7 +650,7 @@
 		},
 		{
 			"id": "tags-input",
-			"sha256": "05ab85671694ddfe841fd335279772f5387e2a5fa033f330fe532f4b6a856955",
+			"sha256": "1a129caee4a74f040e62a15ce9edd85c4aeccc51ed4636b53332288864276fcb",
 			"source": "src/components/input/ZTagsInput.svelte"
 		},
 		{
