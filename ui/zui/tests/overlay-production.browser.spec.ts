@@ -8,17 +8,70 @@ import PopoverOwnerRealmFixture from './PopoverOwnerRealmFixture.svelte';
 describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 	it('uses real ARIA registration and explicit initial/restore focus for Dialog', async () => {
 		render(OverlayProductionFixture);
-		document.querySelector<HTMLButtonElement>('[data-testid="dialog-production-trigger"]')?.click();
+		const trigger = document.querySelector<HTMLButtonElement>(
+			'[data-testid="dialog-production-trigger"]'
+		)!;
+		const overlay = document.querySelector<HTMLElement>(
+			'[data-testid="dialog-production-overlay"]'
+		)!;
+		expect(trigger.getAttribute('aria-haspopup')).toBe('dialog');
+		expect(trigger.getAttribute('aria-expanded')).toBe('false');
+		trigger.click();
 		await tick();
 		const content = document.querySelector<HTMLElement>(
 			'[data-testid="dialog-production-content"]'
 		)!;
+		const title = document.querySelector<HTMLElement>('[data-testid="dialog-production-title"]')!;
+		expect(trigger.getAttribute('aria-expanded')).toBe('true');
+		expect(trigger.getAttribute('aria-controls')).toBe(content.id);
+		expect(content.parentNode).toBe(document.body);
+		expect(overlay.parentNode).toBe(document.body);
+		expect(overlay.getAttribute('aria-hidden')).toBe('true');
+		expect(overlay.getAttribute('data-state')).toBe('open');
+		expect(content.getAttribute('role')).toBe('dialog');
+		expect(content.getAttribute('aria-modal')).toBe('true');
+		expect(content.getAttribute('aria-labelledby')).toBe(title.id);
 		expect(document.activeElement?.getAttribute('aria-label')).toBe('Dialog input');
 		expect(content.hasAttribute('aria-labelledby')).toBe(true);
 		expect(content.hasAttribute('aria-describedby')).toBe(false);
 		document.querySelector<HTMLButtonElement>('[data-testid="dialog-production-close"]')?.click();
 		await tick();
+		expect(trigger.getAttribute('aria-expanded')).toBe('false');
+		expect(overlay.getAttribute('data-state')).toBe('closed');
 		expect(document.activeElement?.getAttribute('data-testid')).toBe('dialog-production-restore');
+	});
+
+	it('Dialog escape and outside dismissal close the real ZDialog family and restore focus', async () => {
+		render(OverlayProductionFixture);
+		const trigger = document.querySelector<HTMLButtonElement>(
+			'[data-testid="dialog-production-trigger"]'
+		)!;
+		trigger.focus();
+		trigger.click();
+		await tick();
+		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+		await tick();
+		expect(
+			document
+				.querySelector('[data-testid="dialog-production-content"]')
+				?.getAttribute('data-state')
+		).toBe('closed');
+		await new Promise((resolve) => setTimeout(resolve, 250));
+		expect(document.querySelector('[data-testid="dialog-production-content"]')).toBeNull();
+		expect(document.activeElement).toBe(trigger);
+		trigger.click();
+		await tick();
+		document
+			.querySelector<HTMLElement>('[data-testid="dialog-production-overlay"]')
+			?.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+		await tick();
+		expect(
+			document
+				.querySelector('[data-testid="dialog-production-content"]')
+				?.getAttribute('data-state')
+		).toBe('closed');
+		await new Promise((resolve) => setTimeout(resolve, 250));
+		expect(document.activeElement).toBe(trigger);
 	});
 
 	it('defaults AlertDialog focus to Cancel and locks every decision while pending', async () => {
@@ -31,22 +84,38 @@ describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 		const action = document.querySelector<HTMLButtonElement>(
 			'[data-testid="alert-production-action"]'
 		)!;
+		const content = document.querySelector<HTMLElement>(
+			'[data-testid="alert-production-content"]'
+		)!;
+		const title = document.querySelector<HTMLElement>('[data-testid="alert-production-title"]')!;
+		const description = document.querySelector<HTMLElement>(
+			'[data-testid="alert-production-description"]'
+		)!;
+		const overlay = document.querySelector<HTMLElement>(
+			'[data-testid="alert-production-overlay"]'
+		)!;
+		expect(content.parentNode).toBe(document.body);
+		expect(overlay.parentNode).toBe(document.body);
+		expect(content.getAttribute('role')).toBe('alertdialog');
+		expect(content.getAttribute('aria-labelledby')).toBe(title.id);
+		expect(content.getAttribute('aria-describedby')).toBe(description.id);
+		expect(overlay.getAttribute('aria-hidden')).toBe('true');
+		expect(overlay.getAttribute('data-state')).toBe('open');
 		expect(document.activeElement).toBe(cancel);
 		action.click();
 		await tick();
 		expect(action.disabled).toBe(true);
 		expect(cancel.disabled).toBe(true);
-		expect(
-			document
-				.querySelector('[data-testid="alert-production-content"]')
-				?.getAttribute('data-pending')
-		).toBe('true');
+		expect(content?.getAttribute('data-pending')).toBe('true');
 		document.querySelector<HTMLButtonElement>('[data-testid="alert-production-resolve"]')?.click();
 		await Promise.resolve();
 		await tick();
+		expect(content.getAttribute('data-state')).toBe('closed');
 		expect(
-			document.querySelector('[data-testid="alert-production-content"]')?.getAttribute('data-state')
-		).toBe('closed');
+			document
+				.querySelector('[data-testid="alert-production-trigger"]')
+				?.getAttribute('aria-expanded')
+		).toBe('false');
 	});
 
 	it('keeps AlertDialog open and restores Action focus when the current action rejects', async () => {
@@ -66,6 +135,31 @@ describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 			'true:1'
 		);
 		expect(document.activeElement).toBe(action);
+	});
+
+	it('AlertDialog escape and overlay never dismiss without ZAlertDialogCancel or Action', async () => {
+		render(OverlayProductionFixture);
+		const trigger = document.querySelector<HTMLButtonElement>(
+			'[data-testid="alert-production-trigger"]'
+		)!;
+		trigger.focus();
+		trigger.click();
+		await tick();
+		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+		await tick();
+		expect(document.querySelector('[data-testid="alert-production-content"]')).not.toBeNull();
+		document
+			.querySelector<HTMLElement>('[data-testid="alert-production-overlay"]')
+			?.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+		await tick();
+		expect(document.querySelector('[data-testid="alert-production-content"]')).not.toBeNull();
+		document.querySelector<HTMLButtonElement>('[data-testid="alert-production-cancel"]')?.click();
+		await tick();
+		expect(
+			document.querySelector('[data-testid="alert-production-content"]')?.getAttribute('data-state')
+		).toBe('closed');
+		await new Promise((resolve) => setTimeout(resolve, 250));
+		expect(document.activeElement).toBe(trigger);
 	});
 
 	it('ZPopover owns controlled open state and collision-aware placement', async () => {
@@ -128,7 +222,7 @@ describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 	it('ZPopover family keeps Portal, dismiss, Presence and focus resources in the iframe owner realm', async () => {
 		const frame = document.createElement('iframe');
 		document.body.append(frame);
-		const ownerWindow = frame.contentWindow;
+		const ownerWindow = frame.contentWindow as (Window & typeof globalThis) | null;
 		const ownerDocument = frame.contentDocument;
 		if (!ownerWindow || !ownerDocument) throw new Error('Expected a same-origin iframe realm.');
 		const host = ownerDocument.createElement('div');
