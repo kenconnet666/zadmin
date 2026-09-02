@@ -123,6 +123,78 @@ describe('ZTagsInput production contract', () => {
 		).toBe('renamed,third');
 	});
 
+	it('preserves duplicate identities when removing the second duplicate', async () => {
+		render(TagsInputProductionFixture);
+		const root = document.querySelector<HTMLElement>('[data-testid="tags-production-identity"]')!;
+		const initial = [...root.querySelectorAll<HTMLElement>('[data-slot="tag"]')];
+		const remove = initial[1]!.querySelector<HTMLButtonElement>('[data-slot="remove"]')!;
+		remove.focus();
+		remove.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Delete' }));
+		await tick();
+		expect(root.querySelectorAll<HTMLElement>('[data-slot="tag"]')[0]).toBe(initial[0]);
+		expect(root.querySelectorAll<HTMLElement>('[data-slot="tag"]')[1]).toBe(initial[2]);
+	});
+
+	it('preserves duplicate identities when removing the first duplicate', async () => {
+		render(TagsInputProductionFixture);
+		const root = document.querySelector<HTMLElement>('[data-testid="tags-production-identity"]')!;
+		const initial = [...root.querySelectorAll<HTMLElement>('[data-slot="tag"]')];
+		const remove = initial[0]!.querySelector<HTMLButtonElement>('[data-slot="remove"]')!;
+		remove.focus();
+		remove.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Delete' }));
+		await tick();
+		expect(root.querySelectorAll<HTMLElement>('[data-slot="tag"]')[0]).toBe(initial[1]);
+		expect(root.querySelectorAll<HTMLElement>('[data-slot="tag"]')[1]).toBe(initial[2]);
+	});
+
+	it('preserves identities while editing a duplicate and appending or pasting tags', async () => {
+		render(TagsInputProductionFixture);
+		const root = document.querySelector<HTMLElement>('[data-testid="tags-production-identity"]')!;
+		const initial = [...root.querySelectorAll<HTMLElement>('[data-slot="tag"]')];
+		initial[0]!.querySelector<HTMLButtonElement>('[data-slot="edit"]')!.click();
+		await tick();
+		const editInput = root.querySelector<HTMLInputElement>('[data-slot="edit-input"]')!;
+		expect(document.activeElement).toBe(editInput);
+		editInput.value = 'renamed';
+		editInput.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		editInput.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+		await tick();
+		expect(root.querySelectorAll('[data-slot="tag"]')[1]).toBe(initial[1]);
+		expect(root.querySelectorAll('[data-slot="tag"]')[2]).toBe(initial[2]);
+		const input = root.querySelector<HTMLInputElement>('[data-slot="input"]')!;
+		input.value = 'fourth';
+		input.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+		await tick();
+		expect(root.querySelectorAll('[data-slot="tag"]')[1]).toBe(initial[1]);
+		expect(root.querySelectorAll('[data-slot="tag"]')[2]).toBe(initial[2]);
+		const paste = new DataTransfer();
+		paste.setData('text', 'fifth,sixth');
+		input.dispatchEvent(new ClipboardEvent('paste', { bubbles: true, clipboardData: paste }));
+		await tick();
+		expect(root.querySelectorAll('[data-slot="tag"]')[1]).toBe(initial[1]);
+		expect(root.querySelectorAll('[data-slot="tag"]')[2]).toBe(initial[2]);
+	});
+
+	it('reconciles controlled prepend and duplicate replacement in occurrence order', async () => {
+		render(TagsInputProductionFixture);
+		const root = document.querySelector<HTMLElement>('[data-testid="tags-production-identity"]')!;
+		const initial = [...root.querySelectorAll<HTMLElement>('[data-slot="tag"]')];
+		document
+			.querySelector<HTMLButtonElement>('[data-testid="tags-identity-controlled-prepend"]')!
+			.click();
+		await tick();
+		expect(root.querySelectorAll('[data-slot="tag"]')[1]).toBe(initial[0]);
+		expect(root.querySelectorAll('[data-slot="tag"]')[2]).toBe(initial[1]);
+		expect(root.querySelectorAll('[data-slot="tag"]')[3]).toBe(initial[2]);
+		document
+			.querySelector<HTMLButtonElement>('[data-testid="tags-identity-controlled-replace"]')!
+			.click();
+		await tick();
+		const replacementTags = [...root.querySelectorAll('[data-slot="tag"]')].slice(0, 2);
+		expect(replacementTags.map((tag) => initial.indexOf(tag))).toEqual([0, 1]);
+	});
+
 	it('does not commit during real composition and honors commitOnBlur and readonly boundaries', async () => {
 		render(TagsInputProductionFixture);
 		const staticRoot = document.querySelector<HTMLElement>(

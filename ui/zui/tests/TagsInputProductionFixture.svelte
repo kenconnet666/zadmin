@@ -46,4 +46,12 @@
 	editable
 />
 <output data-testid="tags-production-identity-output">{identityValues.join(',')}</output>
+<ZButton
+	data-testid="tags-identity-controlled-prepend"
+	onclick={() => (identityValues = ['owner', ...identityValues])}>Identity prepend</ZButton
+>
+<ZButton
+	data-testid="tags-identity-controlled-replace"
+	onclick={() => (identityValues = ['same', 'same'])}>Identity replace</ZButton
+>
 <ZTagsInput data-testid="tags-production-readonly" defaultValues={['locked']} readonly />

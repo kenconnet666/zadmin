@@ -462,34 +462,55 @@
 		normalizeValues(valueState.current, allowDuplicates, resolvedMaxTags)
 	);
 	let identityValues: readonly string[] = [];
-	let identityKeys = $state<readonly number[]>([]);
+	let identityKeys: readonly number[] = [];
 	let nextIdentityKey = 0;
-	$effect(() => {
+	let pendingIdentity: { values: readonly string[]; keys: readonly number[] } | undefined;
+	const identityRecords = $derived.by(() => {
 		const nextValues = resolvedValues;
-		const previousValues = untrack(() => identityValues);
-		const previousKeys = untrack(() => identityKeys);
-		const used = new Set<number>();
-		const nextKeys = nextValues.map((value, index) => {
-			for (let previousIndex = previousValues.length - 1; previousIndex >= 0; previousIndex -= 1) {
-				const key = previousKeys[previousIndex];
-				if (
-					!used.has(previousIndex) &&
-					key !== undefined &&
-					previousValues[previousIndex] === value
-				) {
-					used.add(previousIndex);
-					return key;
-				}
-			}
-			return nextIdentityKey++;
-		});
-		identityValues = nextValues;
+		const previousValues = identityValues;
+		const previousKeys = identityKeys;
+		const operation = pendingIdentity;
+		let nextKeys: readonly number[];
 		if (
-			nextKeys.some((key, index) => key !== previousKeys[index]) ||
-			nextKeys.length !== previousKeys.length
-		)
-			identityKeys = Object.freeze(nextKeys);
+			operation &&
+			operation.values.length === nextValues.length &&
+			operation.values.every((value, index) => value === nextValues[index])
+		) {
+			nextKeys = operation.keys;
+			pendingIdentity = undefined;
+		} else {
+			const used = previousValues.map(() => false);
+			const computedKeys = nextValues.map((value) => {
+				for (let previousIndex = 0; previousIndex < previousValues.length; previousIndex += 1) {
+					const key = previousKeys[previousIndex];
+					if (
+						!used[previousIndex] &&
+						key !== undefined &&
+						previousValues[previousIndex] === value
+					) {
+						used[previousIndex] = true;
+						return key;
+					}
+				}
+				return nextIdentityKey++;
+			});
+			nextKeys = computedKeys;
+			pendingIdentity = undefined;
+		}
+		identityValues = nextValues;
+		identityKeys = Object.freeze([...nextKeys]);
+		return Object.freeze(
+			nextValues.map((value, index) => Object.freeze({ key: nextKeys[index]!, value }))
+		);
 	});
+	function queueIdentity(nextValues: readonly string[], nextKeys: readonly number[]): void {
+		const frozenKeys = Object.freeze([...nextKeys]);
+		// Publish the operation-aware mapping before the controlled write so the
+		// synchronous derived reconciliation cannot render a transient key set.
+		identityValues = nextValues;
+		identityKeys = frozenKeys;
+		pendingIdentity = { values: nextValues, keys: frozenKeys };
+	}
 	const records = $derived(
 		Object.freeze(resolvedValues.map((value, key) => Object.freeze({ key, value })))
 	);
@@ -510,11 +531,7 @@
 	const full = $derived(resolvedValues.length >= resolvedMaxTags);
 	let focusWithin = $state(false);
 	const visibleLimit = $derived(focusWithin ? Number.POSITIVE_INFINITY : resolvedMaxVisibleTags);
-	const visibleValues = $derived(
-		resolvedValues
-			.slice(0, visibleLimit)
-			.map((value, index) => ({ key: identityKeys[index] ?? index, value }))
-	);
+	const visibleValues = $derived(identityRecords.slice(0, visibleLimit));
 	const omittedValues = $derived(resolvedValues.slice(visibleLimit));
 	let editingIndex = $state<number>();
 	let editingSnapshot = $state<readonly string[]>();
@@ -559,7 +576,9 @@
 			draftInvalid = candidate.length > 0;
 			return false;
 		}
-		valueState.setFromUser(Object.freeze([...resolvedValues, candidate]));
+		const next = Object.freeze([...resolvedValues, candidate]);
+		queueIdentity(next, [...identityKeys, nextIdentityKey++]);
+		valueState.setFromUser(next);
 		draftInvalid = false;
 		return true;
 	}
@@ -573,6 +592,10 @@
 	function remove(index: number, restoreFocus = false): void {
 		if (resolvedDisabled || resolvedReadonly || index < 0 || index >= resolvedValues.length) return;
 		const next = Object.freeze(resolvedValues.filter((_, itemIndex) => itemIndex !== index));
+		queueIdentity(
+			next,
+			identityKeys.filter((_, itemIndex) => itemIndex !== index)
+		);
 		valueState.setFromUser(next);
 		navigation.set(undefined, 'programmatic');
 		if (editingIndex === index) cancelEdit();
@@ -625,6 +648,7 @@
 		if (candidate !== resolvedValues[index]) {
 			const next = [...resolvedValues];
 			next[index] = candidate;
+			queueIdentity(next, identityKeys);
 			valueState.setFromUser(Object.freeze(next));
 		}
 		editingIndex = undefined;
@@ -722,6 +746,10 @@
 			next.push(candidate);
 		}
 		if (next.length > resolvedValues.length) {
+			queueIdentity(next, [
+				...identityKeys,
+				...next.slice(resolvedValues.length).map(() => nextIdentityKey++)
+			]);
 			valueState.setFromUser(Object.freeze(next));
 			clearDraft();
 			draftInvalid = false;
