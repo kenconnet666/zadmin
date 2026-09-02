@@ -211,7 +211,7 @@
 	const currentTheme = $derived(docsThemeById[themeId]);
 </script>
 
-<article class={classes.root}>
+<article class={classes.root} data-doc-route="guide:theme">
 	<header>
 		<p class={classes.eyebrow}>THEME LAB</p>
 		<ZHeading class={classes.title} level={1} size="xlarge"

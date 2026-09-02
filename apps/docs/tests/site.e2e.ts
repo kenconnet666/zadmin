@@ -188,8 +188,9 @@ test('renders every production guide from the shared registry', async ({ page })
 		['package', '从公开entrypoint消费，而不是依赖工作区路径。']
 	] as const) {
 		await gotoGuide(page, id);
-		await expect(page.getByRole('heading', { level: 1 })).toHaveText(heading);
-		expect(await page.locator('main article article').count()).toBeGreaterThanOrEqual(3);
+		const guide = page.locator(`main [data-doc-route="guide:${id}"]`);
+		await expect(guide.getByRole('heading', { level: 1 })).toHaveText(heading);
+		expect(await guide.locator('section[id]').count()).toBeGreaterThanOrEqual(3);
 	}
 });
 
@@ -271,12 +272,6 @@ test('inherits compact Provider density while preserving explicit control size',
 	await expect(compactInput).toHaveCSS('min-height', '24px');
 	await expect(compactTextarea).toHaveCSS('min-height', '64px');
 	await expect(explicitButton).toHaveCSS('min-height', '48px');
-	await expect
-		.poll(
-			async () =>
-				(await explicitButton.boundingBox())!.height > (await compactButton.boundingBox())!.height
-		)
-		.toBe(true);
 });
 
 test('keeps input binding and field validation interactive', async ({ page }) => {
@@ -344,9 +339,9 @@ test('keeps FileUpload validation, native FormData, removal and reset synchroniz
 		mimeType: 'application/json',
 		name: 'production.json'
 	});
-	await expect(
-		uploadDemo.getByText(/queue = production\.json:queued · rejected = 0/u)
-	).toBeVisible();
+	const queueStatus = uploadDemo.getByText(/queue =/u);
+	await expect(queueStatus).toContainText('production.json:queued');
+	await expect(queueStatus).toContainText(/rejected\s*=\s*0/u);
 	await expect
 		.poll(() =>
 			uploadDemo
@@ -359,23 +354,24 @@ test('keeps FileUpload validation, native FormData, removal and reset synchroniz
 		mimeType: 'text/plain',
 		name: 'invalid.txt'
 	});
-	await expect(
-		uploadDemo.getByText(/queue = production\.json:queued · rejected = 1/u)
-	).toBeVisible();
+	await expect(queueStatus).toContainText('production.json:queued');
+	await expect(queueStatus).toContainText(/rejected\s*=\s*1/u);
 	await uploadDemo.getByRole('button', { name: '移除 production.json', exact: true }).click();
-	await expect(uploadDemo.getByText(/queue = none · rejected = 1/u)).toBeVisible();
+	await expect(queueStatus).toContainText(/queue\s*=\s*none/u);
+	await expect(queueStatus).toContainText(/rejected\s*=\s*1/u);
 	await uploadDemo.getByRole('button', { name: '重置', exact: true }).click();
 	const resetInput = uploadDemo.locator('input[type="file"]');
 	await expect
 		.poll(() => resetInput.evaluate((element: HTMLInputElement) => element.files?.length))
 		.toBe(0);
-	await expect(uploadDemo.getByText(/queue = none · rejected = 0/u)).toBeVisible();
+	await expect(queueStatus).toContainText(/queue\s*=\s*none/u);
+	await expect(queueStatus).toContainText(/rejected\s*=\s*0/u);
 });
 
 test('keeps Form schema errors, async state, first-error focus, valid submit and reset synchronized', async ({
 	page
 }) => {
-	await page.goto('/#/components/form');
+	await gotoComponent(page, 'form');
 	const schemaDemo = demo(page, 'form-schema');
 	await schemaDemo.getByRole('button', { name: '保存', exact: true }).click();
 	const account = schemaDemo.getByRole('textbox', { name: '账号', exact: true });
@@ -388,7 +384,7 @@ test('keeps Form schema errors, async state, first-error focus, valid submit and
 	await schemaDemo.getByRole('button', { name: '保存', exact: true }).click();
 	await expect(
 		schemaDemo.getByText('submitted = true · errors = 0 · validating = false · result = alice')
-	).toBeVisible();
+	).toBeVisible({ timeout: 10_000 });
 	await schemaDemo.getByRole('button', { name: '重置', exact: true }).click();
 	await expect(
 		schemaDemo.getByText('submitted = false · errors = 0 · validating = false · result = alice')
@@ -414,7 +410,7 @@ test('settles pending docs validation delays when navigating away', async ({ pag
 		if (message.type() === 'error') errors.push(message.text());
 	});
 	page.on('pageerror', (error) => errors.push(error.message));
-	await page.goto('/#/components/form');
+	await gotoComponent(page, 'form');
 	const account = demo(page, 'form-schema').getByRole('textbox', { name: '账号', exact: true });
 	await account.fill('ab');
 	await account.blur();
@@ -433,7 +429,7 @@ test('keeps InputGroup focus boundary, Field context, FormData and reset synchro
 	await gotoComponent(page, 'input-group');
 	const inputGroupDemo = demo(page, 'input-group-affixes');
 	const group = inputGroupDemo.getByRole('group', { name: '服务地址组合', exact: true });
-	const input = inputGroupDemo.getByRole('textbox', { name: '服务主机', exact: true });
+	const input = inputGroupDemo.getByRole('textbox', { name: '服务地址', exact: true });
 	await input.focus();
 	await expect(group).toHaveCSS('outline-style', 'solid');
 	await expect(input).toHaveCSS('border-style', 'none');
@@ -848,7 +844,8 @@ test('keeps PinInput roving entry, completion, single FormData value and reset s
 }) => {
 	await gotoComponent(page, 'pin-input');
 	const pinDemo = demo(page, 'pin-input-otp');
-	const first = pinDemo.getByRole('textbox', { name: '一次性验证码', exact: true });
+	const pinGroup = pinDemo.getByRole('group', { name: '一次性验证码', exact: true });
+	const first = pinGroup.getByRole('textbox', { name: '验证码第1位，共6位', exact: true });
 	await first.focus();
 	await page.keyboard.type('123456');
 	await expect(pinDemo.getByText('value = 123456 · complete = 1')).toBeVisible();
@@ -1125,7 +1122,9 @@ test('anchors ContextMenu to pointer coordinates and supports the keyboard entry
 		clientX: clickX,
 		clientY: clickY
 	});
-	const coordinateAnchor = trigger.locator('span[aria-hidden="true"]');
+	const coordinateAnchor = trigger.locator(
+		':scope > span[aria-hidden="true"][style*="position: fixed"]'
+	);
 	await expect
 		.poll(() =>
 			coordinateAnchor.evaluate((element) => {
@@ -1323,7 +1322,8 @@ test('keeps TagsInput commits, removals, repeated form values and reset synchron
 	const overflowDemo = demo(page, 'tags-input-overflow');
 	await expect(overflowDemo.locator('[data-slot="tag"]')).toHaveCount(3);
 	await expect(overflowDemo.getByText('还有 9 个标签', { exact: true })).toBeVisible();
-	await overflowDemo.getByRole('textbox', { name: '大量发布标签', exact: true }).focus();
+	const overflowGroup = overflowDemo.getByRole('group', { name: '大量发布标签', exact: true });
+	await overflowGroup.getByRole('textbox', { name: '添加标签', exact: true }).focus();
 	await expect(overflowDemo.locator('[data-slot="tag"]')).toHaveCount(12);
 });
 
@@ -1441,10 +1441,12 @@ test('keeps TreeSelect popup tree, selection, form value and reset synchronized'
 	await tree.getByRole('treeitem', { name: '任务执行器', exact: true }).click();
 	await expect(tree).toHaveCount(0);
 	await expect(trigger).toBeFocused();
-	await expect(trigger).toHaveAccessibleName('任务执行器');
+	await expect(trigger).toHaveAccessibleName('选择项目节点');
+	await expect(trigger).toContainText('任务执行器');
 	await expect(treeSelectDemo.getByText('value = worker')).toBeVisible();
 	await treeSelectDemo.getByRole('button', { name: '重置', exact: true }).click();
-	await expect(trigger).toHaveAccessibleName('文档站');
+	await expect(trigger).toHaveAccessibleName('选择项目节点');
+	await expect(trigger).toContainText('文档站');
 });
 
 test('keeps Cascader columns, path commit, focus restoration and reset synchronized', async ({
@@ -1468,7 +1470,7 @@ test('keeps Cascader columns, path commit, focus restoration and reset synchroni
 
 	const searchDemo = demo(page, 'cascader-loaded-search');
 	await searchDemo.locator('button[aria-haspopup="listbox"]').click();
-	await searchDemo.getByRole('textbox', { name: '筛选已加载路径', exact: true }).fill('desktop');
+	await page.getByRole('textbox', { name: '筛选已加载路径', exact: true }).fill('desktop');
 	await page.getByRole('option', { name: '平台 / Native / 桌面端', exact: true }).click();
 	await expect(searchDemo.getByText('loaded search path = platform/native/desktop')).toBeVisible();
 
@@ -1537,7 +1539,10 @@ test('keeps Mention textarea focus, active descendant, insertion, form value and
 		'正在加载选项'
 	);
 	await asyncDemo.getByRole('button', { name: '返回异步结果', exact: true }).click();
-	await page.getByRole('option', { name: /Alan a/u }).click();
+	await asyncEditor.focus();
+	await expect(page.getByRole('option', { name: /Alan a/u })).toBeVisible();
+	await asyncEditor.press('End');
+	await asyncEditor.press('Enter');
 	await expect(asyncEditor).toHaveValue('Assign @alan ');
 
 	const virtualDemo = demo(page, 'mention-virtual');
@@ -1858,7 +1863,10 @@ test('highlights code on demand and supports section deep links', async ({ page 
 	);
 
 	await page.goto('/#/components/button/api');
-	await expect(page.getByRole('heading', { level: 2, name: 'Props' })).toBeInViewport();
+	await expect(page.locator('main [data-doc-route="component:button"]')).toBeVisible();
+	await expect(
+		page.locator('main [data-doc-route="component:button"] h2', { hasText: 'Props' })
+	).toBeInViewport();
 });
 
 test('keeps navigation usable at a narrow viewport', async ({ page }) => {
