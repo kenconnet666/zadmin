@@ -19,6 +19,13 @@ function installedPlaywrightBrowsers(source) {
 		);
 }
 
+function docsE2eBrowserMatrix(source) {
+	const job = /\n {2}docs-e2e:\n(?<body>[\s\S]*?)(?=\n {2}[a-z][a-z0-9-]*:\n)/u.exec(source)?.groups
+		?.body;
+	const values = job?.match(/\n\s+browser:\s*\[([^\]]+)\]/u)?.[1];
+	return values?.split(',').map((value) => value.trim()) ?? [];
+}
+
 function sameValues(left, right) {
 	return JSON.stringify([...new Set(left)].sort()) === JSON.stringify([...new Set(right)].sort());
 }
@@ -28,7 +35,10 @@ const ci = await read('.github/workflows/ci.yml');
 const pw = await read('apps/docs/playwright.config.ts');
 const browsers = configuredBrowserProjects(pw);
 const installedBrowsers = installedPlaywrightBrowsers(ci);
-const docsE2eStep = ci.includes('pnpm --filter @zadmin/docs test:e2e');
+const docsE2eBrowsers = docsE2eBrowserMatrix(ci);
+const docsE2eStep = ci.includes(
+	'pnpm --filter @zadmin/docs test:e2e -- --project=${{ matrix.browser }}'
+);
 const exists = async (p) => Boolean(await read(p).catch(() => null));
 if (process.argv.includes('--self-test')) {
 	const fixtureProjects = configuredBrowserProjects(
@@ -37,10 +47,15 @@ if (process.argv.includes('--self-test')) {
 	const fixtureInstall = installedPlaywrightBrowsers(
 		'run: pnpm exec playwright install --with-deps chromium firefox webkit'
 	);
+	const fixtureMatrix = docsE2eBrowserMatrix(
+		'\n  docs-e2e:\n    strategy:\n      matrix:\n        browser: [chromium, firefox, webkit]\n  build:\n'
+	);
 	if (
 		!sameValues(fixtureProjects, supportedBrowserNames) ||
 		!sameValues(fixtureInstall, supportedBrowserNames) ||
+		!sameValues(fixtureMatrix, supportedBrowserNames) ||
 		!sameValues(browsers, installedBrowsers) ||
+		!sameValues(browsers, docsE2eBrowsers) ||
 		!docsE2eStep ||
 		pkg.peerDependenciesMeta?.shiki?.optional !== true
 	)
@@ -48,7 +63,11 @@ if (process.argv.includes('--self-test')) {
 	console.log('Support matrix self-test passed.');
 	process.exit(0);
 }
-if (!sameValues(installedBrowsers, browsers) || !docsE2eStep)
+if (
+	!sameValues(installedBrowsers, browsers) ||
+	!sameValues(docsE2eBrowsers, browsers) ||
+	!docsE2eStep
+)
 	throw new Error(
 		'CI Playwright install projects and docs E2E step do not match configured projects.'
 	);
@@ -90,7 +109,9 @@ const matrix = {
 		node: ci.match(/NODE_VERSION:\s*'([^']+)'/u)?.[1] ?? null,
 		pnpm: ci.match(/PNPM_VERSION:\s*'([^']+)'/u)?.[1] ?? null,
 		browsers,
-		evidence: '浏览器列表来自 playwright.config.ts，并与 CI install/E2E steps 交叉校验。'
+		docsE2eBrowsers,
+		evidence:
+			'浏览器列表来自 playwright.config.ts，并与 CI install、Docs matrix 和按项目 E2E 命令交叉校验。'
 	},
 	acceptance
 };

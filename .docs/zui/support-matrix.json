@@ -20,7 +20,8 @@
 		"node": "24",
 		"pnpm": "11.22.0",
 		"browsers": ["chromium", "firefox", "webkit"],
-		"evidence": "浏览器列表来自 playwright.config.ts，并与 CI install/E2E steps 交叉校验。"
+		"docsE2eBrowsers": ["chromium", "firefox", "webkit"],
+		"evidence": "浏览器列表来自 playwright.config.ts，并与 CI install、Docs matrix 和按项目 E2E 命令交叉校验。"
 	},
 	"acceptance": {
 		"ssrCsp": {

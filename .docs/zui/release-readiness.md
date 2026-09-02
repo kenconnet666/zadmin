@@ -13,6 +13,7 @@
 - `externalAcceptancePresent`
 - `ciRunsPackageAcceptance`
 - `singlePackChecksumReuse`
+- `versionedDocsArtifactContract`
 - `supportMatrixDocumented`
 
 ## Blocked facts

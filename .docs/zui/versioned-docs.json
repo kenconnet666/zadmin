@@ -1,0 +1,18 @@
+{
+	"schemaVersion": 1,
+	"package": { "name": "@zadmin/zui", "version": "0.1.0" },
+	"revision": "SOURCE_REVISION",
+	"routeManifest": { "componentCount": 79, "guideCount": 8, "totalCount": 88 },
+	"build": { "bundleSha256": "BUILD_SHA256", "fileCount": "BUILD_FILE_COUNT", "files": [] },
+	"supportMatrix": {
+		"sourcePath": ".docs/zui/support-matrix.json",
+		"artifactPath": "zui-artifact/support-matrix.json",
+		"sha256": "b73e6cb6e24b1d48f8c42f18220b730124cdc7c84e7f248c94899a540fb6ab2e",
+		"browsers": ["chromium", "firefox", "webkit"]
+	},
+	"deployment": {
+		"deployed": false,
+		"provider": null,
+		"note": "Versioned build artifact only; no external deployment is claimed."
+	}
+}

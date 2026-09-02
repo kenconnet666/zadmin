@@ -10,7 +10,7 @@
 	},
 	"changesets": {
 		"config": ".changeset/config.json",
-		"count": 78,
+		"count": 79,
 		"packages": ["@zadmin/zui"],
 		"publicAccess": true,
 		"baseBranch": "master"
@@ -121,6 +121,7 @@
 		"npmOidcProvenance": false,
 		"automatedTagAndGithubRelease": false,
 		"registrySmoke": false,
+		"versionedDocsArtifactContract": true,
 		"versionedDocs": false,
 		"supportMatrixDocumented": true,
 		"releaseBoundSupportMatrix": false

@@ -48,6 +48,17 @@ const ci = await readFile(resolve(root, '.github/workflows/ci.yml'), 'utf8');
 const packProducer = await readFile(resolve(root, 'scripts/pack-release-artifacts.mjs'), 'utf8');
 const artifactReader = await readFile(resolve(root, 'scripts/read-release-artifact.mjs'), 'utf8');
 const docsPackage = JSON.parse(await readFile(resolve(root, 'apps/docs/package.json'), 'utf8'));
+const versionedDocsScript = await readFile(
+	resolve(root, 'apps/docs/scripts/check-versioned-docs.mjs'),
+	'utf8'
+).catch(() => '');
+const versionedDocsContractSource = await readFile(
+	resolve(root, '.docs/zui/versioned-docs.json'),
+	'utf8'
+).catch(() => '');
+const versionedDocsContract = versionedDocsContractSource
+	? JSON.parse(versionedDocsContractSource)
+	: null;
 const zuiAcceptance = await readFile(
 	resolve(root, 'ui/sveltekit/scripts/accept-zui-package.mjs'),
 	'utf8'
@@ -118,7 +129,30 @@ const checks = {
 	automatedTagAndGithubRelease:
 		/git tag/iu.test(workflow) && /gh release|GitHub Release|create-release/iu.test(workflow),
 	registrySmoke: /npm (view|install|pack)\s+@/u.test(workflow),
-	versionedDocs: /versioned docs|versioned Docs|docs version/iu.test(workflow),
+	versionedDocsArtifactContract:
+		versionedDocsContract?.revision === 'SOURCE_REVISION' &&
+		Number.isInteger(versionedDocsContract?.routeManifest?.componentCount) &&
+		versionedDocsContract.routeManifest.componentCount > 0 &&
+		Number.isInteger(versionedDocsContract?.routeManifest?.guideCount) &&
+		versionedDocsContract.routeManifest.guideCount > 0 &&
+		versionedDocsContract?.routeManifest?.totalCount ===
+			versionedDocsContract.routeManifest.componentCount +
+				versionedDocsContract.routeManifest.guideCount +
+				1 &&
+		versionedDocsContract?.deployment?.deployed === false &&
+		(await access(resolve(root, '.docs/zui/versioned-docs.md')).then(
+			() => true,
+			() => false
+		)) &&
+		docsPackage.scripts?.['docs:versioned:check'] === 'node scripts/check-versioned-docs.mjs' &&
+		docsPackage.scripts?.['docs:versioned:emit'] ===
+			'node scripts/check-versioned-docs.mjs --emit' &&
+		docsPackage.scripts?.['audit:system']?.includes('check-versioned-docs.mjs') === true &&
+		ci.includes('pnpm --filter @zadmin/docs docs:versioned:emit') &&
+		ci.includes('apps/*/dist') &&
+		versionedDocsScript.includes('bundleSha256') &&
+		versionedDocsScript.includes("resolve(emittedRoot, 'support-matrix.json')"),
+	versionedDocs: false,
 	supportMatrixDocumented:
 		(
 			await Promise.all(
@@ -136,8 +170,7 @@ const checks = {
 		).every(Boolean) &&
 		docsPackage.scripts?.['audit:system']?.includes('check-support-matrix.mjs') === true &&
 		/pnpm --filter @zadmin\/docs audit:system/u.test(ci),
-	releaseBoundSupportMatrix:
-		/support matrix|supported browsers/iu.test(workflow) && /version/iu.test(workflow)
+	releaseBoundSupportMatrix: false
 };
 const blocked = Object.entries(checks)
 	.filter(([, value]) => !value)
