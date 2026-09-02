@@ -800,9 +800,7 @@
 		role="list"
 		aria-label={resolvedQueueLabel}
 	>
-		{#if resolvedFiles.length === 0}
-			<span data-slot="empty">{resolvedEmptyText}</span>
-		{:else}
+		{#if resolvedFiles.length > 0}
 			{#each resolvedFiles as item (item.id)}
 				<div
 					class={itemClass}
@@ -874,6 +872,9 @@
 			{/each}
 		{/if}
 	</div>
+	{#if resolvedFiles.length === 0}
+		<div data-slot="empty" role="status">{resolvedEmptyText}</div>
+	{/if}
 </div>
 <FileFormValueBridge
 	{disabled}

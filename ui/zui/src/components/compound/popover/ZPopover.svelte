@@ -1,9 +1,13 @@
 <script module lang="ts">
 	import type { Snippet } from 'svelte';
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
-	import type { PopoverPlacement as PopoverPlacementValue } from './context.svelte.js';
+	import type {
+		PopoverPlacement as PopoverPlacementValue,
+		PopoverStrategy as PopoverStrategyValue
+	} from './context.svelte.js';
 
 	export type PopoverPlacement = PopoverPlacementValue;
+	export type PopoverStrategy = PopoverStrategyValue;
 
 	export interface ZPopoverProps {
 		readonly children?: Snippet;
@@ -14,6 +18,7 @@
 		readonly onOpenChange?: (open: boolean) => void;
 		open?: boolean;
 		readonly placement?: PopoverPlacement;
+		readonly strategy?: PopoverStrategy;
 		readonly triggerId?: string;
 	}
 
@@ -80,6 +85,12 @@
 				type: 'boolean'
 			},
 			{
+				default: "'absolute'",
+				description: 'Floating定位策略；视口坐标锚点使用fixed。',
+				name: 'strategy',
+				type: "'absolute' | 'fixed'"
+			},
+			{
 				default: '自动生成',
 				description: 'Trigger与Content共享的稳定Trigger id。',
 				name: 'triggerId',
@@ -114,6 +125,7 @@
 		onOpenChange,
 		open = $bindable(),
 		placement = 'bottom',
+		strategy = 'absolute',
 		triggerId
 	}: ZPopoverProps = $props();
 	const zui = useZui();
@@ -164,6 +176,9 @@
 		},
 		get restoreTarget() {
 			return restoreTarget ?? trigger;
+		},
+		get strategy() {
+			return strategy;
 		},
 		get trigger() {
 			return trigger;

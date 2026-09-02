@@ -48,6 +48,7 @@
 			{ description: '焦点位于Toast内时请求关闭。', key: 'Escape' }
 		],
 		parts: [
+			{ description: '独立Toast的合法status/alert公告容器。', name: 'announcement' },
 			{ description: '标题。', name: 'title' },
 			{ description: '说明。', name: 'description' },
 			{ description: '操作区。', name: 'actions' }
@@ -239,9 +240,6 @@
 	class={[rootClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
-	role={announce ? (resolvedPriority === 'assertive' ? 'alert' : 'status') : undefined}
-	aria-live={announce ? resolvedPriority : undefined}
-	aria-atomic={announce ? 'true' : undefined}
 	data-tone={tone}
 	data-priority={resolvedPriority}
 	onmouseenter={() => onPauseChange?.('hover', true)}
@@ -250,12 +248,20 @@
 	onfocusout={focusOut}
 	onkeydown={handleKeydown}
 >
-	<strong class={titleClass} data-slot="title">{title}</strong>{#if description}<div
-			class={descriptionClass}
-			data-slot="description"
-		>
-			{description}
-		</div>{/if}{#if actionLabel || dismissible}<div class={actionClass} data-slot="actions">
+	<div
+		data-slot="announcement"
+		role={announce ? (resolvedPriority === 'assertive' ? 'alert' : 'status') : undefined}
+		aria-live={announce ? resolvedPriority : undefined}
+		aria-atomic={announce ? 'true' : undefined}
+	>
+		<strong class={titleClass} data-slot="title">{title}</strong>{#if description}<div
+				class={descriptionClass}
+				data-slot="description"
+			>
+				{description}
+			</div>{/if}
+	</div>
+	{#if actionLabel || dismissible}<div class={actionClass} data-slot="actions">
 			{#if actionLabel}<ZButton
 					size="small"
 					variant="secondary"

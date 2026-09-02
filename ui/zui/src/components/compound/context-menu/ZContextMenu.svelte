@@ -68,6 +68,6 @@
 	}: ZContextMenuProps = $props();
 </script>
 
-<ZPopover bind:open {defaultOpen} {gutter} modal={false} {onOpenChange} {placement}
+<ZPopover bind:open {defaultOpen} {gutter} modal={false} {onOpenChange} {placement} strategy="fixed"
 	>{@render children?.()}</ZPopover
 >

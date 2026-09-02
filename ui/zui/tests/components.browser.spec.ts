@@ -594,9 +594,13 @@ describe('compiled ICSS browser updates', () => {
 			'[data-testid="coverage-time-readonly"] [aria-label="Toggle AM/PM"]'
 		);
 		expect(readonlyPeriod?.disabled).toBe(true);
-		expect(
-			document.querySelector('[data-testid="coverage-toast-danger"]')?.getAttribute('role')
-		).toBe('alert');
+		const dangerToast = document.querySelector<HTMLElement>(
+			'[data-testid="coverage-toast-danger"]'
+		);
+		expect(dangerToast?.getAttribute('role')).toBeNull();
+		expect(dangerToast?.querySelector('[data-slot="announcement"]')?.getAttribute('role')).toBe(
+			'alert'
+		);
 		expect(
 			document.querySelector('[data-testid="coverage-skeleton-circle"]')?.getAnimations()
 		).toHaveLength(0);
@@ -931,6 +935,7 @@ describe('compiled ICSS browser updates', () => {
 		expect(anchor?.getBoundingClientRect().left).toBeCloseTo(120, 0);
 		expect(anchor?.getBoundingClientRect().top).toBeCloseTo(80, 0);
 		expect(content?.parentNode).toBe(document.body);
+		expect(content?.style.position).toBe('fixed');
 		expect(content?.getBoundingClientRect().left).toBeCloseTo(120, 0);
 		expect(content?.getBoundingClientRect().top).toBeCloseTo(82, 0);
 		expect(document.activeElement).toBe(inspect);
@@ -1448,7 +1453,7 @@ describe('compiled ICSS browser updates', () => {
 			input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
 		}
 		await expect
-			.poll(() => document.querySelector('[data-slot="list"]')?.textContent)
+			.poll(() => document.querySelector('[data-slot="empty"]')?.textContent)
 			.toContain('No commands found');
 		await expect
 			.poll(() => document.querySelector('[data-testid="command-output"]')?.textContent)

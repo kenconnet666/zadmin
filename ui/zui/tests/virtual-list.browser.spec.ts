@@ -87,12 +87,12 @@ describe('ZVirtualList', () => {
 		render(VirtualListFixture);
 		const viewport = document.querySelector<HTMLDivElement>('[data-testid="virtual-state"]');
 		expect(viewport?.getAttribute('aria-busy')).toBe('true');
-		expect(viewport?.querySelector('[data-slot="loading"]')?.textContent).toContain('Loading');
+		expect(document.querySelector('[data-slot="loading"]')?.textContent).toContain('Loading');
 		expect(viewport?.querySelectorAll('[role="listitem"]')).toHaveLength(0);
 		document.querySelector<HTMLButtonElement>('[data-testid="virtual-state-toggle"]')?.click();
 		await tick();
 		expect(viewport?.hasAttribute('aria-busy')).toBe(false);
-		expect(viewport?.querySelector('[data-slot="empty"]')?.textContent).toContain('No deployment');
+		expect(document.querySelector('[data-slot="empty"]')?.textContent).toContain('No deployment');
 	});
 
 	it('binds observers and mounted ids to the target iframe realm', async () => {

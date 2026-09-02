@@ -15,6 +15,7 @@ export type PopoverPlacement =
 	| 'top'
 	| 'top-end'
 	| 'top-start';
+export type PopoverStrategy = 'absolute' | 'fixed';
 
 export interface ZPopoverContext {
 	readonly contentId: string;
@@ -27,6 +28,7 @@ export interface ZPopoverContext {
 	readonly portalTarget: PortalTarget;
 	readonly reducedMotion: boolean;
 	readonly restoreTarget: HTMLElement | null;
+	readonly strategy: PopoverStrategy;
 	readonly trigger: HTMLElement | null;
 	readonly triggerId: string;
 	setOpen(open: boolean): void;

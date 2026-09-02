@@ -643,7 +643,7 @@
 			"name": "ZPopover",
 			"source": "ui/zui/src/components/compound/popover/ZPopover.svelte",
 			"family": "popover",
-			"declaredPropCount": 9,
+			"declaredPropCount": 10,
 			"metadataGapPropCount": 0,
 			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
@@ -893,7 +893,7 @@
 			"id": "data-table",
 			"name": "ZDataTable",
 			"source": "ui/zui/src/components/data-display/ZDataTable.svelte",
-			"declaredPropCount": 48,
+			"declaredPropCount": 50,
 			"metadataGapPropCount": 22,
 			"metadataGapPropNames": [
 				"defaultColumnVisibility",
@@ -1454,8 +1454,8 @@
 			"name": "ZMention",
 			"source": "ui/zui/src/components/input/ZMention.svelte",
 			"declaredPropCount": 23,
-			"metadataGapPropCount": 5,
-			"metadataGapPropNames": ["emptyText", "filter", "listLabel", "loadingText", "placement"],
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -1721,8 +1721,8 @@
 	],
 	"totals": {
 		"components": 141,
-		"declaredProps": 1382,
-		"metadataGapProps": 243,
+		"declaredProps": 1385,
+		"metadataGapProps": 238,
 		"fallbackProps": 0
 	}
 }

@@ -1988,6 +1988,11 @@ export const popoverApiFacts = {
 			type: 'PopoverPlacementValue'
 		},
 		{
+			name: 'strategy',
+			required: false,
+			type: 'PopoverStrategyValue'
+		},
+		{
 			name: 'triggerId',
 			required: false,
 			type: 'string'
@@ -3363,6 +3368,11 @@ export const dataTableApiFacts = {
 			type: 'number'
 		},
 		{
+			name: 'expansionColumnLabel',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'expansionLabel',
 			required: false,
 			type: '(row: TRow, expanded: boolean) => string'
@@ -3459,6 +3469,11 @@ export const dataTableApiFacts = {
 		},
 		{
 			name: 'selectAllLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'selectionColumnLabel',
 			required: false,
 			type: 'string'
 		},
@@ -6935,7 +6950,7 @@ export const mentionApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZMention.svelte',
-	metadataGapProps: ['emptyText', 'filter', 'listLabel', 'loadingText', 'placement']
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const numberFieldApiFacts = {

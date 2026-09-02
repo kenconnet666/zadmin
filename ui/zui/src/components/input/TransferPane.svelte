@@ -246,7 +246,7 @@
 	}
 </script>
 
-<section class={panelClass} data-slot="panel" aria-labelledby={labelId}>
+<div class={panelClass} data-slot="panel" role="group" aria-labelledby={labelId}>
 	<header class={headerClass}>
 		<span id={labelId}>{label}</span><span>{checked.size} / {totalCount}</span>
 	</header>
@@ -371,15 +371,15 @@
 					{/if}
 				</div>
 			{/each}
-			{#if view.size === 0}
-				<div class={stateClass} data-slot="status" role="status">
-					{loading ? loadingText : (orphanText ?? emptyText)}
-				</div>
-			{:else if loading || orphanText}
-				<div class={stateClass} data-slot="status" role="status">
-					{loading ? loadingText : orphanText}
-				</div>
-			{/if}
 		</div>
+		{#if view.size === 0}
+			<div class={stateClass} data-slot="status" role="status">
+				{loading ? loadingText : (orphanText ?? emptyText)}
+			</div>
+		{:else if loading || orphanText}
+			<div class={stateClass} data-slot="status" role="status">
+				{loading ? loadingText : orphanText}
+			</div>
+		{/if}
 	{/if}
-</section>
+</div>

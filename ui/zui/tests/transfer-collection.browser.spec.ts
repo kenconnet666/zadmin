@@ -122,7 +122,7 @@ describe('ZTransfer logical collection integration', () => {
 		keydown(source, ' ');
 		await tick();
 		expect(document.activeElement).toBe(source);
-		expect(root?.getAttribute('aria-readonly')).toBe('true');
+		expect(root?.querySelector('[role="listbox"][aria-readonly="true"]')).not.toBeNull();
 		expect(root?.querySelectorAll('[role="option"][aria-selected="true"]')).toHaveLength(0);
 		expect(
 			root?.querySelector<HTMLButtonElement>('[aria-label="Move selected to target"]')?.disabled

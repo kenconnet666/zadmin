@@ -527,7 +527,9 @@
 				{/each}
 			</div>
 		{/each}
-		{#if resultView.size === 0}<div class={emptyClass}>{resolvedEmptyText}</div>{/if}
 	</div>
+	{#if resultView.size === 0}<div class={emptyClass} data-slot="empty" role="status">
+			{resolvedEmptyText}
+		</div>{/if}
 </div>
 <FormResetSignal control={inputRef} onReset={resetFromForm} />

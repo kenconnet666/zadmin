@@ -95,6 +95,30 @@
 				required: true,
 				type: 'readonly MentionItem[]'
 			},
+			{
+				default: 'localePack.collection.mentionEmpty',
+				description: '无匹配建议时显示的状态文案。',
+				name: 'emptyText',
+				type: 'string'
+			},
+			{
+				default: 'label/value/keywords contains',
+				description: '自定义建议筛选；未提供时按label、value和keywords包含查询文本。',
+				name: 'filter',
+				type: '(item: MentionItem, query: string) => boolean'
+			},
+			{
+				default: 'localePack.collection.mentionList',
+				description: '建议listbox的可访问名称。',
+				name: 'listLabel',
+				type: 'string'
+			},
+			{
+				default: 'localePack.collection.loading',
+				description: 'loading为true时建议区域显示的状态文案。',
+				name: 'loadingText',
+				type: 'string'
+			},
 			{ bindable: true, default: "''", description: '完整文本。', name: 'value', type: 'string' },
 			{ default: "''", description: '非受控初始文本。', name: 'defaultValue', type: 'string' },
 			{
@@ -141,6 +165,12 @@
 				description: '建议窗口前后额外挂载项数。',
 				name: 'virtualOverscan',
 				type: 'number'
+			},
+			{
+				default: "'bottom-start'",
+				description: '建议Popover相对textarea的定位。',
+				name: 'placement',
+				type: 'PopoverPlacement'
 			}
 		],
 		since: 'unreleased',

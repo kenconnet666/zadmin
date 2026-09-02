@@ -228,7 +228,8 @@
 		const stopPositioning = positioner.start(trigger, content, {
 			gutter: popover.gutter,
 			matchWidth: popover.matchWidth,
-			placement: popover.placement
+			placement: popover.placement,
+			strategy: popover.strategy
 		});
 		const dismissable = new DismissableLayer(content, {
 			modal: () => popover.modal,

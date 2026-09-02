@@ -91,7 +91,7 @@
 			{ description: '真实横向溢出。', name: 'data-overflowing', values: ['true'] },
 			{ description: '滚动owner策略。', name: 'data-scroll', values: ['auto', 'none'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'保持真实table/caption/thead/tbody/tfoot与native cell语义，并提供Provider density和只在真实溢出时可聚焦的有限横向scroll owner；不拥有数据状态。'
 	} as const satisfies ZuiComponentMetadata;

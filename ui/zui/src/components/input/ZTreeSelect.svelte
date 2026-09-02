@@ -418,8 +418,6 @@
 			aria-invalid={resolvedInvalid || undefined}
 			aria-label={ariaLabelAttribute ?? ariaLabel}
 			aria-labelledby={field?.labelId}
-			aria-readonly={readonly || undefined}
-			aria-required={required || undefined}
 			bind:ref={triggerRef}
 			{disabled}
 			fullWidth
@@ -428,6 +426,7 @@
 			popupRole="tree"
 			size={resolvedSize}
 			variant="secondary"
+			data-required={required || undefined}
 			data-slot="trigger">{label}</ZPopoverTrigger
 		>
 		<ZPopoverContent ariaLabelledBy={null} initialFocus={() => treeRef} role="presentation">

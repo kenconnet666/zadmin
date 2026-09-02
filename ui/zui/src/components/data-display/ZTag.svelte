@@ -84,7 +84,7 @@
 				values: ['default', 'accent', 'success', 'warning', 'danger']
 			}
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'以有限size、语义tone表面、长内容安全换行和typed locale移除动作表达静态分类；独立Tag与复合集合拥有明确Tab、焦点和冒泡边界。'
 	} as const satisfies ZuiComponentMetadata;

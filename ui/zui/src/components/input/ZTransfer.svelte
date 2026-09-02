@@ -620,7 +620,6 @@
 	});
 </script>
 
-<!-- svelte-ignore a11y_role_supports_aria_props (group owns the composite readonly state) -->
 <div
 	{...rest}
 	bind:this={ref}
@@ -631,7 +630,6 @@
 	role="group"
 	aria-busy={loading || undefined}
 	aria-disabled={disabled || undefined}
-	aria-readonly={readonly || undefined}
 	aria-describedby={resolvedDescribedBy}
 	aria-labelledby={resolvedLabelledBy}
 	data-disabled={disabled || undefined}

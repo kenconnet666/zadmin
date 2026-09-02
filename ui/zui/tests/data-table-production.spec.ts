@@ -13,5 +13,7 @@ describe('ZDataTable production SSR contracts', () => {
 		expect(body).toContain('aria-rowcount="301"');
 		expect(body).toContain('Virtual 0');
 		expect(body).not.toContain('Virtual 299');
+		expect(body).toContain('Expand row details');
+		expect(body).toContain('Select row');
 	});
 });

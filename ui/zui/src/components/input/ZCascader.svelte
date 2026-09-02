@@ -687,9 +687,8 @@
 			aria-invalid={resolvedInvalid ? 'true' : ariaInvalid}
 			aria-label={resolvedLabelledBy ? undefined : ariaLabel}
 			aria-labelledby={resolvedLabelledBy}
-			aria-readonly={resolvedReadonly || undefined}
-			aria-required={resolvedRequired || undefined}
 			data-slot="trigger"
+			data-required={resolvedRequired || undefined}
 			disabled={resolvedDisabled}
 			id={resolvedControlId}
 			onkeydown={handleTriggerKeydown}

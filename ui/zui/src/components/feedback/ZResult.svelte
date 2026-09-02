@@ -68,7 +68,7 @@
 				values: ['info', 'success', 'warning', 'danger']
 			}
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'以真实ZHeading、四种反馈tone、默认或自定义装饰图标、详细正文和后续操作组成的操作Result。'
 	} as const satisfies ZuiComponentMetadata;

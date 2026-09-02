@@ -59,6 +59,7 @@
 	resetOnForm={false}
 	aria-activedescendant={popover.open ? activeId : undefined}
 	aria-autocomplete="list"
+	role="combobox"
 	aria-controls={popover.open ? listId : undefined}
 	aria-expanded={popover.open}
 	aria-haspopup="listbox"

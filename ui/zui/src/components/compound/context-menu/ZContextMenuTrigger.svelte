@@ -100,7 +100,6 @@
 	bind:this={ref}
 	{tabindex}
 	aria-controls={popover.contentId}
-	aria-expanded={popover.open}
 	aria-haspopup="menu"
 	aria-keyshortcuts={rest['aria-keyshortcuts'] ?? 'ContextMenu Shift+F10'}
 	data-state={popover.open ? 'open' : 'closed'}

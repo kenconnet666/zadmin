@@ -641,9 +641,6 @@
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
 	aria-describedby={describedBy}
-	aria-invalid={resolvedInvalid || undefined}
-	aria-readonly={resolvedReadonly || undefined}
-	aria-required={resolvedRequired || undefined}
 	data-disabled={resolvedDisabled || undefined}
 	data-invalid={resolvedInvalid || undefined}
 	data-readonly={resolvedReadonly || undefined}

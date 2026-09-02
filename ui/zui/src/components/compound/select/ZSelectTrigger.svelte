@@ -94,7 +94,6 @@
 	aria-describedby={mergeAriaIds(ariaDescribedBy, select.describedBy)}
 	aria-disabled={select.readonly || undefined}
 	aria-invalid={select.invalid || undefined}
-	aria-required={select.required || undefined}
 	bind:ref
 	disabled={select.disabled}
 	id={select.controlId}

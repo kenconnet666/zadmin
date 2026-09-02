@@ -150,6 +150,7 @@ export type { ZPopconfirmTriggerProps } from '../components/compound/popconfirm/
 export { default as ZPopover } from '../components/compound/popover/ZPopover.svelte';
 export type {
 	PopoverPlacement,
+	PopoverStrategy,
 	ZPopoverProps
 } from '../components/compound/popover/ZPopover.svelte';
 export { default as ZPopoverContent } from '../components/compound/popover/ZPopoverContent.svelte';

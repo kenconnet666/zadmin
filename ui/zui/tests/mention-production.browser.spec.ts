@@ -2,6 +2,7 @@ import { tick } from 'svelte';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
+import MentionFixture from './MentionFixture.svelte';
 import MentionProductionFixture from './MentionProductionFixture.svelte';
 
 function input(textarea: HTMLTextAreaElement, value: string): void {
@@ -82,5 +83,48 @@ describe('ZMention production collection contract', () => {
 		expect(document.querySelector('[data-testid="mention-production-output"]')?.textContent).toBe(
 			'@numeric :1'
 		);
+	});
+
+	it('lets the async owner discard stale responses before Mention can expose or commit them', async () => {
+		render(MentionProductionFixture, { mode: 'generation' });
+		const editor = document.querySelector<HTMLTextAreaElement>(
+			'textarea[aria-label="Async mention"]'
+		)!;
+		input(editor, '@a');
+		await tick();
+		input(editor, '@al');
+		await tick();
+		document.querySelector<HTMLButtonElement>('[data-testid="mention-resolve-old"]')?.click();
+		await tick();
+		expect(document.querySelector('[role="option"]')).toBeNull();
+		document.querySelector<HTMLButtonElement>('[data-testid="mention-resolve-latest"]')?.click();
+		await tick();
+		const latest = document.querySelector<HTMLElement>('[role="option"]')!;
+		expect(latest.textContent).toContain('Latest al');
+		latest.dispatchEvent(new PointerEvent('pointermove', { bubbles: true }));
+		latest.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true }));
+		latest.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, cancelable: true }));
+		await tick();
+		expect(document.querySelector('[data-testid="mention-production-output"]')?.textContent).toBe(
+			'@latest :2'
+		);
+	});
+
+	it('defers query parsing during real composition and supports multiple triggers', async () => {
+		render(MentionFixture);
+		const editor = document.querySelector<HTMLTextAreaElement>('textarea[aria-label="Message"]')!;
+		editor.focus();
+		editor.value = 'Notify @al';
+		editor.setSelectionRange(editor.value.length, editor.value.length);
+		editor.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true }));
+		editor.dispatchEvent(new InputEvent('input', { bubbles: true, isComposing: true }));
+		await tick();
+		expect(editor.getAttribute('aria-expanded')).toBe('false');
+		editor.value = 'Notify #al';
+		editor.setSelectionRange(editor.value.length, editor.value.length);
+		editor.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true }));
+		await tick();
+		expect(editor.getAttribute('aria-expanded')).toBe('true');
+		expect(document.querySelector('[role="listbox"]')?.textContent).toContain('Alice');
 	});
 });

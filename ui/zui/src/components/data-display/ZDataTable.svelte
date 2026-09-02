@@ -66,6 +66,7 @@
 		expandedKeys?: readonly TRowKey[];
 		readonly expandedRow?: Snippet<[TRow, number]>;
 		readonly expandedRowEstimate?: number;
+		readonly expansionColumnLabel?: string;
 		readonly expansionLabel?: (row: TRow, expanded: boolean) => string;
 		readonly height?: number;
 		readonly isRowDisabled?: (row: TRow) => boolean;
@@ -86,6 +87,7 @@
 		readonly rowKey: (row: TRow) => TRowKey;
 		readonly rows: readonly TRow[];
 		readonly selectAllLabel?: string;
+		readonly selectionColumnLabel?: string;
 		readonly selectionLabel?: (row: TRow, index: number) => string;
 		readonly selectionMode?: DataTableSelectionMode;
 		selectedKeys?: readonly TRowKey[];
@@ -199,6 +201,18 @@
 				name: 'columns',
 				required: true,
 				type: 'readonly DataTableColumn<TRow>[]'
+			},
+			{
+				default: "'Expand row details'",
+				description: '展开控制列的可访问列标题；仅在提供expandedRow时显示。',
+				name: 'expansionColumnLabel',
+				type: 'string'
+			},
+			{
+				default: "'Select row'",
+				description: '选择控制列的可访问列标题；与selectAllLabel和逐行selectionLabel独立。',
+				name: 'selectionColumnLabel',
+				type: 'string'
 			},
 			{
 				default: '必填',
@@ -473,6 +487,7 @@
 		expandedKeys = $bindable(),
 		expandedRow,
 		expandedRowEstimate = 96,
+		expansionColumnLabel = 'Expand row details',
 		expansionLabel = (_row, expanded) => (expanded ? 'Collapse row details' : 'Expand row details'),
 		height = 320,
 		isRowDisabled = () => false,
@@ -494,6 +509,7 @@
 		rowKey,
 		rows,
 		selectAllLabel = 'Select all rows',
+		selectionColumnLabel = 'Select row',
 		selectionLabel = (_row, index) => `Select row ${index + 1}`,
 		selectionMode = 'none',
 		selectedKeys = $bindable(),
@@ -1380,7 +1396,7 @@
 			<tr>
 				{#if expansionColumn}
 					<th class={stickyClass(undefined)} scope="col" style={controlStyle(0, true)}
-						><span aria-hidden="true"></span></th
+						><ZVisuallyHidden>{expansionColumnLabel}</ZVisuallyHidden></th
 					>
 				{/if}
 				{#if selectionMode !== 'none'}
@@ -1389,6 +1405,7 @@
 						scope="col"
 						style={controlStyle(expansionColumn ? 1 : 0, true)}
 					>
+						<ZVisuallyHidden>{selectionColumnLabel}</ZVisuallyHidden>
 						{#if selectionMode === 'multiple'}<input
 								bind:this={selectAll}
 								class={selectionClass}

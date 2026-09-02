@@ -338,6 +338,7 @@
 		role = 'list',
 		ssrViewportSize,
 		style,
+		tabindex,
 		...rest
 	}: ZVirtualListProps<TItem, TKey> = $props();
 
@@ -736,6 +737,7 @@
 	});
 </script>
 
+<!-- svelte-ignore a11y_no_noninteractive_tabindex (role=list is a keyboard-scrollable viewport) -->
 <div
 	{...rest}
 	bind:this={ref}
@@ -743,6 +745,7 @@
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
 	{role}
+	tabindex={tabindex ?? (role === 'list' ? 0 : undefined)}
 	aria-label={resolvedAriaLabel}
 	aria-labelledby={ariaLabelledBy}
 	aria-busy={loading ? 'true' : ariaBusy}
@@ -799,9 +802,9 @@
 			{/if}
 		{/each}
 	</div>
-	{#if normalized.length === 0 && loading && loadingContent}
-		<div class={stateClass} data-slot="loading" role="status">{@render loadingContent()}</div>
-	{:else if normalized.length === 0 && empty}
-		<div class={stateClass} data-slot="empty" role="status">{@render empty()}</div>
-	{/if}
 </div>
+{#if normalized.length === 0 && loading && loadingContent}
+	<div class={stateClass} data-slot="loading" role="status">{@render loadingContent()}</div>
+{:else if normalized.length === 0 && empty}
+	<div class={stateClass} data-slot="empty" role="status">{@render empty()}</div>
+{/if}

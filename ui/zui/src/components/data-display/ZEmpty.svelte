@@ -62,7 +62,7 @@
 		],
 		source: 'ui/zui/src/components/data-display/ZEmpty.svelte',
 		states: [],
-		status: 'experimental',
+		status: 'stable',
 		summary: '以真实ZHeading、中性默认或自定义装饰图标、原因说明和恢复操作组成的集合Empty。'
 	} as const satisfies ZuiComponentMetadata;
 	const recipe = defineRecipe({

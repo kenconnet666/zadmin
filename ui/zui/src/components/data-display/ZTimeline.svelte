@@ -129,7 +129,7 @@
 			{ description: '布局模式。', name: 'data-mode', values: ['start', 'alternate'] },
 			{ description: '视觉倒序。', name: 'data-reverse', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'以真实ol/li、typed key、独立content/icon/time snippets、状态tone、pending与RTL响应式alternate呈现历史事件，不复制Steps导航。'
 	} as const satisfies ZuiComponentMetadata;

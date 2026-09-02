@@ -17,6 +17,7 @@
 		defaultValue="Notify "
 		name="message"
 		{items}
+		triggers={['@', '#']}
 		oninput={(event) => prevent && event.preventDefault()}
 		onkeydown={(event) => prevent && event.preventDefault()}
 		oncompositionend={(event) => prevent && event.preventDefault()}

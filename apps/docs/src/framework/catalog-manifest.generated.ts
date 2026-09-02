@@ -454,7 +454,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'data-display',
 		summary:
 			'Tag是静态分类标签与可选remove动作；集合编辑、方向键和删除后焦点属于TagsInput，count/dot overlay属于Badge。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: ['tag', 'remove', 'label', 'locale', 'chip', 'long content', 'focus owner'],
 		profiles: ['data-view'],
 		capabilities: [
@@ -539,7 +539,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'data-display',
 		summary:
 			'面向集合无数据、筛选无结果或初次创建的中性Empty：真实ZHeading、装饰图标、原因说明与可选恢复操作。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: ['empty', 'no data', 'no results', 'first use', 'recovery', 'collection state'],
 		profiles: ['data-view'],
 		capabilities: [
@@ -559,7 +559,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'data-display',
 		summary:
 			'只呈现历史事件的真实ol/li集合：typed key、独立content/icon/time、状态tone、pending、reverse及RTL响应式alternate，不承担Steps导航。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'timeline',
 			'ol',
@@ -621,7 +621,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'data-display',
 		summary:
 			'Table只拥有原生结构、caption、密度和有限横向scroll owner；数据模型、排序、选择、分页、请求和虚拟化属于ZDataTable或调用方。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'table',
 			'caption',
@@ -814,7 +814,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'feedback',
 		summary:
 			'用于重要操作处理结果的具名section：真实ZHeading、Alert同构tone、装饰图标、详细正文与后续操作保持独立。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: ['result', 'status page', 'success', 'operation outcome', 'heading', 'actions'],
 		profiles: ['data-view'],
 		capabilities: [

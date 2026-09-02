@@ -3486,7 +3486,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "b8d90a3c1e8385896aafb42cdf66096ba07c9a8cf8d18d3c0a2cf0f73b58aee9 API snapshot entry"
+						"detail": "f5be400b5010ca313ad42045bbe802dfa45ce842c7badc9fbe1111c3cd090c9f API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -4923,7 +4923,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "fe10b75082a127d2d5748ff628f453e15089b339925f456c2f2e02a629e28c80 API snapshot entry"
+						"detail": "ac2301d82290656ac86474176a60db6bcdd66cfee293345f51e5e3a2052153b0 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -5062,7 +5062,7 @@
 			"name": "ZEmpty",
 			"category": "data-display",
 			"family": null,
-			"status": "experimental",
+			"status": "stable",
 			"source": "ui/zui/src/components/data-display/ZEmpty.svelte",
 			"apiDocumentation": {
 				"metadataGapPropCount": 0,
@@ -5093,7 +5093,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "f8aa3d0e048923c60898c0a735d8e92179ea2cb379361eca59c2aa024fc1c675 API snapshot entry"
+						"detail": "8c25a041eaf80f773f12c49b709d84bff12045230e006ca16876386acab46e94 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -5494,7 +5494,7 @@
 			"name": "ZTable",
 			"category": "data-display",
 			"family": null,
-			"status": "experimental",
+			"status": "stable",
 			"source": "ui/zui/src/components/data-display/ZTable.svelte",
 			"apiDocumentation": {
 				"metadataGapPropCount": 0,
@@ -5525,7 +5525,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "a81556dd66357fcd58860c434ebbe36022e56f0fe61ba01ab3a4fa1f19dba59d API snapshot entry"
+						"detail": "6fd6f4b8b66291403f6fb7c546ace41ddeb3610d8c43e9d2cd3eee106df11097 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -5584,7 +5584,7 @@
 			"name": "ZTag",
 			"category": "data-display",
 			"family": null,
-			"status": "experimental",
+			"status": "stable",
 			"source": "ui/zui/src/components/data-display/ZTag.svelte",
 			"apiDocumentation": {
 				"metadataGapPropCount": 0,
@@ -5615,7 +5615,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "b33811d37701391a114b8b4126335cac8019936f189d03cc3d64ebaa430c1878 API snapshot entry"
+						"detail": "ff6682afd772f1b5fd2df127f4a0751b7477279cd6652b3e88843fa451b8ef4f API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -5674,7 +5674,7 @@
 			"name": "ZTimeline",
 			"category": "data-display",
 			"family": null,
-			"status": "experimental",
+			"status": "stable",
 			"source": "ui/zui/src/components/data-display/ZTimeline.svelte",
 			"apiDocumentation": {
 				"metadataGapPropCount": 0,
@@ -5705,7 +5705,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "e29ca08b1ab6e9e505b837b54195e6fd5925d8282e297566d37e5e48bd4c82dc API snapshot entry"
+						"detail": "e14a3eb2ddc545af2fac0195c863cabfde14173d2ad9d6e24675b0e836d16264 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -5985,7 +5985,7 @@
 			"name": "ZResult",
 			"category": "feedback",
 			"family": null,
-			"status": "experimental",
+			"status": "stable",
 			"source": "ui/zui/src/components/feedback/ZResult.svelte",
 			"apiDocumentation": {
 				"metadataGapPropCount": 0,
@@ -6016,7 +6016,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "48d0e926c256489e641b55e141abcabf4c6dfe7c1b02f28db4fdd87757ea59eb API snapshot entry"
+						"detail": "6e905079371b73e7ea3ab7fea2ea5741bbe40fdb90d0f644da5f56984567c914 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -6170,7 +6170,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "ef73ec7eb9bd218193324f04ac6bc571fd69005210f13bd227fc6dad8dc17bc3 API snapshot entry"
+						"detail": "9d404c464cb4ce9f60ab113554d23fac807c62310236d67832eb9b89c78ed31f API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -8222,7 +8222,7 @@
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZMention.svelte",
 			"apiDocumentation": {
-				"metadataGapPropCount": 5,
+				"metadataGapPropCount": 0,
 				"teachingFallbackPropCount": 0
 			},
 			"stages": {
@@ -8250,7 +8250,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "253f914b0a697bf23e74a1ae18d8438a4895599cc10a705d1ad1cf3f94e3dbb9 API snapshot entry"
+						"detail": "5022eaac68433e31a199ebc31b17a21078b005e94fe2b9dfd8564cd706690c29 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -8265,6 +8265,10 @@
 						"detail": "ZMention browser assertions"
 					},
 					{
+						"path": "ui/zui/tests/MentionFixture.svelte",
+						"detail": "ZMention explicit rendered fixture usage"
+					},
+					{
 						"path": "ui/zui/tests/MentionProductionFixture.svelte",
 						"detail": "ZMention explicit rendered fixture usage"
 					}
@@ -8274,6 +8278,10 @@
 					{
 						"path": "ui/zui/tests/mention-production.browser.spec.ts",
 						"detail": "ZMention production assertions"
+					},
+					{
+						"path": "ui/zui/tests/MentionFixture.svelte",
+						"detail": "ZMention explicit rendered fixture usage"
 					},
 					{
 						"path": "ui/zui/tests/MentionProductionFixture.svelte",
