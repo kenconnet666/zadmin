@@ -1,14 +1,47 @@
 import { tick } from 'svelte';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
+import { mount, unmount } from './browser-lifecycle.js';
 import FeedbackStatusProductionFixture from './FeedbackStatusProductionFixture.svelte';
 
 const wait = (duration: number): Promise<void> =>
 	new Promise((resolve) => window.setTimeout(resolve, duration));
 
+function mediaQuery(matches: boolean): {
+	readonly addEventListener: ReturnType<typeof vi.fn>;
+	readonly query: MediaQueryList;
+	readonly removeEventListener: ReturnType<typeof vi.fn>;
+	set(next: boolean): void;
+} {
+	let listener: ((event: MediaQueryListEvent) => void) | undefined;
+	const addEventListener = vi.fn(
+		(_type: string, next: EventListenerOrEventListenerObject): void => {
+			listener = next as (event: MediaQueryListEvent) => void;
+		}
+	);
+	const removeEventListener = vi.fn();
+	const query = {
+		addEventListener,
+		dispatchEvent: () => true,
+		matches,
+		media: '(prefers-reduced-motion: reduce)',
+		onchange: null,
+		removeEventListener
+	} as unknown as MediaQueryList;
+	return {
+		addEventListener,
+		query,
+		removeEventListener,
+		set(next) {
+			Object.defineProperty(query, 'matches', { configurable: true, value: next });
+			listener?.({ matches: next } as MediaQueryListEvent);
+		}
+	};
+}
+
 describe('Alert, Spinner and LoadingBar production browser contracts', () => {
-	it('keeps Alert live priority, semantic icons, actions and dismiss ownership explicit', async () => {
+	it('ZAlert keeps live priority, semantic icons, actions and dismiss ownership explicit', async () => {
 		render(FeedbackStatusProductionFixture);
 		const off = document.querySelector<HTMLElement>('[data-testid="alert-off"]')!;
 		const polite = document.querySelector<HTMLElement>('[data-testid="alert-polite"]')!;
@@ -29,7 +62,7 @@ describe('Alert, Spinner and LoadingBar production browser contracts', () => {
 		expect(document.querySelector('[data-testid="alert-output"]')?.textContent).toBe('dismissed');
 	});
 
-	it('uses finite Spinner tones, suppresses nested status semantics and cleans reduced motion', () => {
+	it('ZSpinner uses finite tones, suppresses nested status semantics and cleans reduced motion', () => {
 		render(FeedbackStatusProductionFixture);
 		const primary = document.querySelector<HTMLElement>('[data-testid="spinner-primary"]')!;
 		const hidden = document.querySelector<HTMLElement>('[data-testid="spinner-hidden"]')!;
@@ -46,7 +79,7 @@ describe('Alert, Spinner and LoadingBar production browser contracts', () => {
 		expect(reduced.querySelector<SVGSVGElement>('svg')?.getAnimations()).toHaveLength(0);
 	});
 
-	it('keeps LoadingBar determinate, indeterminate, page, error and reduced states distinct', () => {
+	it('ZLoadingBar keeps determinate, indeterminate, page, error and reduced states distinct', () => {
 		render(FeedbackStatusProductionFixture);
 		const determinate = document.querySelector<HTMLElement>('[data-testid="loading-determinate"]')!;
 		const indeterminate = document.querySelector<HTMLElement>(
@@ -70,7 +103,7 @@ describe('Alert, Spinner and LoadingBar production browser contracts', () => {
 		).toHaveLength(0);
 	});
 
-	it('runs a scoped controller lifecycle and clears the owner Window finish timer', async () => {
+	it('ZLoadingBar runs a scoped controller lifecycle and clears the owner Window finish timer', async () => {
 		render(FeedbackStatusProductionFixture);
 		const bar = document.querySelector<HTMLElement>('[data-testid="loading-controller"]')!;
 		document.querySelector<HTMLButtonElement>('[data-testid="loading-start"]')?.click();
@@ -101,5 +134,75 @@ describe('Alert, Spinner and LoadingBar production browser contracts', () => {
 		expect(document.querySelector('[data-testid="loading-output"]')?.textContent).toBe(
 			'false:success:100'
 		);
+	});
+
+	it('ZSpinner follows owner-realm system reduced motion and rebuilds WAAPI after restoration', async () => {
+		const frame = document.createElement('iframe');
+		document.body.append(frame);
+		const ownerDocument = frame.contentDocument!;
+		const ownerView = frame.contentWindow!;
+		const preference = mediaQuery(false);
+		const matchMedia = vi.spyOn(ownerView, 'matchMedia').mockReturnValue(preference.query);
+		const component = mount(FeedbackStatusProductionFixture, { target: ownerDocument.body });
+		await tick();
+
+		const spinner = ownerDocument.querySelector<HTMLElement>('[data-testid="spinner-primary"]')!;
+		const indicator = spinner.querySelector<SVGSVGElement>('svg')!;
+		expect(matchMedia).toHaveBeenCalledOnce();
+		expect(indicator.getAnimations()).toHaveLength(1);
+
+		preference.set(true);
+		await tick();
+		expect(spinner.dataset.reducedMotion).toBe('true');
+		expect(indicator.getAnimations()).toHaveLength(0);
+
+		preference.set(false);
+		await tick();
+		expect(spinner.dataset.reducedMotion).toBeUndefined();
+		expect(indicator.getAnimations()).toHaveLength(1);
+
+		await unmount(component);
+		expect(preference.removeEventListener).toHaveBeenCalledOnce();
+		frame.remove();
+	});
+
+	it('ZLoadingBar pauses owner-document indeterminate WAAPI while hidden and resumes when visible', async () => {
+		const frame = document.createElement('iframe');
+		document.body.append(frame);
+		const ownerDocument = frame.contentDocument!;
+		const preference = mediaQuery(false);
+		const matchMedia = vi
+			.spyOn(frame.contentWindow!, 'matchMedia')
+			.mockReturnValue(preference.query);
+		const component = mount(FeedbackStatusProductionFixture, { target: ownerDocument.body });
+		await tick();
+
+		const bar = ownerDocument.querySelector<HTMLElement>('[data-testid="loading-indeterminate"]')!;
+		const indicator = bar.querySelector<HTMLElement>('[data-slot="indicator"]')!;
+		expect(matchMedia).toHaveBeenCalled();
+		expect(bar.dataset.documentVisible).toBe('true');
+		expect(indicator.getAnimations()).toHaveLength(1);
+
+		Object.defineProperty(ownerDocument, 'visibilityState', {
+			configurable: true,
+			value: 'hidden'
+		});
+		ownerDocument.dispatchEvent(new Event('visibilitychange'));
+		await tick();
+		expect(bar.dataset.documentVisible).toBe('false');
+		expect(indicator.getAnimations()).toHaveLength(0);
+
+		Object.defineProperty(ownerDocument, 'visibilityState', {
+			configurable: true,
+			value: 'visible'
+		});
+		ownerDocument.dispatchEvent(new Event('visibilitychange'));
+		await tick();
+		expect(bar.dataset.documentVisible).toBe('true');
+		expect(indicator.getAnimations()).toHaveLength(1);
+
+		await unmount(component);
+		expect(ownerDocument.body.childElementCount).toBe(0);
+		frame.remove();
 	});
 });

@@ -10,9 +10,9 @@ Generation is evidence-based. A test filename alone never grants `VisuallyVerifi
 | Authorable         |   141 |
 | ContractVerified   |   141 |
 | RuntimeImplemented |   141 |
-| VisuallyVerified   |    49 |
+| VisuallyVerified   |    52 |
 | DesktopVerified    |     0 |
-| ProductionVerified |    31 |
+| ProductionVerified |    34 |
 
 | Component               | Category     | Declared | Authorable | Contract | Runtime | Visual | Desktop | Production | Docs                                                                  |
 | ----------------------- | ------------ | -------: | ---------: | -------: | ------: | -----: | ------: | ---------: | --------------------------------------------------------------------- |
@@ -108,10 +108,10 @@ Generation is evidence-based. A test filename alone never grants `VisuallyVerifi
 | ZTag                    | data-display |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/tag/doc.ts              |
 | ZTimeline               | data-display |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/timeline/doc.ts         |
 | ZVirtualList            | data-display |        Y |          Y |        Y |       Y |      Y |       — |          — | apps/docs/src/content/components/data-display/virtual-list/doc.ts     |
-| ZAlert                  | feedback     |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/feedback/alert/doc.ts                |
-| ZLoadingBar             | feedback     |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/feedback/loading-bar/doc.ts          |
+| ZAlert                  | feedback     |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/feedback/alert/doc.ts                |
+| ZLoadingBar             | feedback     |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/feedback/loading-bar/doc.ts          |
 | ZResult                 | feedback     |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/feedback/result/doc.ts               |
-| ZSpinner                | feedback     |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/feedback/spinner/doc.ts              |
+| ZSpinner                | feedback     |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/feedback/spinner/doc.ts              |
 | ZToast                  | feedback     |        Y |          Y |        Y |       Y |      — |       — |          — | apps/docs/src/content/components/feedback/toast/doc.ts                |
 | ZToaster                | feedback     |        Y |          Y |        Y |       Y |      — |       — |          — | —                                                                     |
 | ZBox                    | gene         |        Y |          Y |        Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/gene/box/doc.ts                      |

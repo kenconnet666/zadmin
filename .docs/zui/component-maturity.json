@@ -19,9 +19,9 @@
 		"Authorable": 141,
 		"ContractVerified": 141,
 		"RuntimeImplemented": 141,
-		"VisuallyVerified": 49,
+		"VisuallyVerified": 52,
 		"DesktopVerified": 0,
-		"ProductionVerified": 31
+		"ProductionVerified": 34
 	},
 	"components": [
 		{
@@ -5901,9 +5901,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -5930,9 +5930,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/feedback-status-production.browser.spec.ts",
+						"detail": "ZAlert browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/FeedbackStatusProductionFixture.svelte",
+						"detail": "ZAlert explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/feedback-status-production.browser.spec.ts",
+						"detail": "ZAlert production assertions"
+					},
+					{
+						"path": "ui/zui/tests/FeedbackStatusProductionFixture.svelte",
+						"detail": "ZAlert explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": {
 				"path": "apps/docs/src/content/components/feedback/alert/doc.ts",
@@ -5965,9 +5983,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -5994,9 +6012,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/feedback-status-production.browser.spec.ts",
+						"detail": "ZLoadingBar browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/FeedbackStatusProductionFixture.svelte",
+						"detail": "ZLoadingBar explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/feedback-status-production.browser.spec.ts",
+						"detail": "ZLoadingBar production assertions"
+					},
+					{
+						"path": "ui/zui/tests/FeedbackStatusProductionFixture.svelte",
+						"detail": "ZLoadingBar explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": {
 				"path": "apps/docs/src/content/components/feedback/loading-bar/doc.ts",
@@ -6119,9 +6155,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -6148,9 +6184,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/feedback-status-production.browser.spec.ts",
+						"detail": "ZSpinner browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/FeedbackStatusProductionFixture.svelte",
+						"detail": "ZSpinner explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/feedback-status-production.browser.spec.ts",
+						"detail": "ZSpinner production assertions"
+					},
+					{
+						"path": "ui/zui/tests/FeedbackStatusProductionFixture.svelte",
+						"detail": "ZSpinner explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": {
 				"path": "apps/docs/src/content/components/feedback/spinner/doc.ts",
