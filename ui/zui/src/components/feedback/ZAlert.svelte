@@ -81,7 +81,7 @@
 			},
 			{ description: 'live优先级。', name: 'data-live', values: ['off', 'polite', 'assertive'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'用统一tone图标、title/body/action/dismiss分区和显式live优先级表达持久行内反馈；调用方拥有插入、关闭与业务状态。'
 	} as const satisfies ZuiComponentMetadata;

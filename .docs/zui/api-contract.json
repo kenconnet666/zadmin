@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"componentCount": 141,
-	"overallSha256": "c80379eeeba2065cc168c3bc5c9ad8a66c3c4aec4043cd327789c21ddc6fff95",
+	"overallSha256": "3ce46260b8d8a997c7a823de8b6e6163274d7e1f6b2ee5580c7b0de4830f215f",
 	"components": [
 		{
 			"id": "accordion",
@@ -465,12 +465,12 @@
 		},
 		{
 			"id": "alert",
-			"sha256": "176e465c32cd8c0fe38a2f2ffd56896a419ecc30a788323a7e8fc225f2167dad",
+			"sha256": "1b10ff83be01fc8a2e2d75555180a934189118f3d56a31b02f6a94f07277ac97",
 			"source": "src/components/feedback/ZAlert.svelte"
 		},
 		{
 			"id": "loading-bar",
-			"sha256": "5ac49a99f60dc212b9b25561c9dcd5da58e85506ab2e6c9fb224db614eb406e4",
+			"sha256": "fdcc9e71d70158a5770466f440bb8027a52a4b9c9e0d7a5c7d6bd75b42e36275",
 			"source": "src/components/feedback/ZLoadingBar.svelte"
 		},
 		{
@@ -480,7 +480,7 @@
 		},
 		{
 			"id": "spinner",
-			"sha256": "cc65add6f6dd0123365d29aceb7a969c1ead411a2895b236633e6b53c8c4d589",
+			"sha256": "9236ad3d13aaaba05e881fbea3c8fdc856082c220cadac59ac6553d1e84acc3c",
 			"source": "src/components/feedback/ZSpinner.svelte"
 		},
 		{

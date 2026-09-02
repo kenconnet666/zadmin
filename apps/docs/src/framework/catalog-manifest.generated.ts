@@ -764,7 +764,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'feedback',
 		summary:
 			'Alert是页面内持久、非阻塞反馈：统一tone、title/body/action/dismiss和显式live；Toast负责短暂队列通知，AlertDialog负责中断式确认。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: ['alert', 'status', 'live region', 'feedback', 'dismiss', 'high contrast'],
 		profiles: ['primitive'],
 		capabilities: [
@@ -785,7 +785,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'feedback',
 		summary:
 			'LoadingBar是轻量线性任务反馈：local/page布局、确定/不确定进度、bindable状态和作用域controller；请求、Promise、重试、路由和全局单例继续属于应用。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'loading bar',
 			'progressbar',
@@ -834,7 +834,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'feedback',
 		summary:
 			'Spinner只表达不确定等待：Lucide LoaderCircle、三个尺寸、有限tone、owner Window WAAPI和reduced-motion清理；容器、overlay、aria-busy与任务由消费者拥有。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: ['spinner', 'loading', 'reduced motion', 'WAAPI', 'owner Window'],
 		profiles: ['animated'],
 		capabilities: [

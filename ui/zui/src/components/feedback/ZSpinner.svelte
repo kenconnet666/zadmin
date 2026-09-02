@@ -52,7 +52,7 @@
 			{ description: '当前减少动画。', name: 'data-reduced-motion', values: ['true'] },
 			{ description: '视觉tone。', name: 'data-tone', values: ['primary', 'muted', 'inherit'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'使用Lucide LoaderCircle与owner Window Web Animations，在Provider或系统要求时停止动画的具名行内Spinner；不拥有overlay或业务任务。'
 	} as const satisfies ZuiComponentMetadata;

@@ -140,7 +140,7 @@
 				values: ['true', 'false']
 			}
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'在local/page两种布局中表达确定或不确定任务进度，并通过组件作用域controller协调start/update/finish/error、owner realm计时、可见性与清理；不拥有请求或复制ZProgress。'
 	} as const satisfies ZuiComponentMetadata;

@@ -5989,7 +5989,7 @@
 			"name": "ZAlert",
 			"category": "feedback",
 			"family": null,
-			"status": "experimental",
+			"status": "stable",
 			"source": "ui/zui/src/components/feedback/ZAlert.svelte",
 			"apiDocumentation": {
 				"metadataGapPropCount": 0,
@@ -6020,7 +6020,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "176e465c32cd8c0fe38a2f2ffd56896a419ecc30a788323a7e8fc225f2167dad API snapshot entry"
+						"detail": "1b10ff83be01fc8a2e2d75555180a934189118f3d56a31b02f6a94f07277ac97 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -6071,7 +6071,7 @@
 			"name": "ZLoadingBar",
 			"category": "feedback",
 			"family": null,
-			"status": "experimental",
+			"status": "stable",
 			"source": "ui/zui/src/components/feedback/ZLoadingBar.svelte",
 			"apiDocumentation": {
 				"metadataGapPropCount": 0,
@@ -6102,7 +6102,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "5ac49a99f60dc212b9b25561c9dcd5da58e85506ab2e6c9fb224db614eb406e4 API snapshot entry"
+						"detail": "fdcc9e71d70158a5770466f440bb8027a52a4b9c9e0d7a5c7d6bd75b42e36275 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -6243,7 +6243,7 @@
 			"name": "ZSpinner",
 			"category": "feedback",
 			"family": null,
-			"status": "experimental",
+			"status": "stable",
 			"source": "ui/zui/src/components/feedback/ZSpinner.svelte",
 			"apiDocumentation": {
 				"metadataGapPropCount": 0,
@@ -6274,7 +6274,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "cc65add6f6dd0123365d29aceb7a969c1ead411a2895b236633e6b53c8c4d589 API snapshot entry"
+						"detail": "9236ad3d13aaaba05e881fbea3c8fdc856082c220cadac59ac6553d1e84acc3c API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
