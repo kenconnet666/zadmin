@@ -243,6 +243,7 @@ jobs:
         if: always() && steps.workspace.outcome == 'success'
         run: |
           pnpm --filter @zadmin/zui build
+          pnpm --filter @zadmin/zui package:check
           pnpm --filter @zadmin/zui publish --dry-run --no-git-checks
 
       - name: Run WebView external package acceptance

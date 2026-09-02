@@ -49,6 +49,7 @@
 		"metadata:since:normalize": "node scripts/check-metadata-facts.mjs --write-unreleased",
 		"metadata:since:materialize": "node scripts/check-metadata-facts.mjs --materialize-unreleased",
 		"build": "svelte-package --input src",
+		"package:check": "node scripts/check-package.mjs",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"test": "vitest --run",
 		"test:browser-lifecycle": "node scripts/check-browser-lifecycle.mjs",
