@@ -214,7 +214,7 @@
 <article class={classes.root} data-doc-route="guide:theme">
 	<header>
 		<p class={classes.eyebrow}>THEME LAB</p>
-		<ZHeading class={classes.title} level={1} size="xlarge"
+		<ZHeading class={classes.title} data-doc-page-title="true" level={1} size="xlarge"
 			>主题不是一组颜色，而是一套系统合同。</ZHeading
 		>
 		<p class={classes.lead}>

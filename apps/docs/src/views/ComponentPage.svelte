@@ -238,7 +238,9 @@
 		<header class={classes.header}>
 			<p class={classes.eyebrow}>ZUI FOUNDATION</p>
 			<div class={classes.titleLine}>
-				<ZHeading class={classes.title} level={1} size="xlarge">{doc.name}</ZHeading>
+				<ZHeading class={classes.title} data-doc-page-title="true" level={1} size="xlarge">
+					{doc.name}
+				</ZHeading>
 				<span class={classes.status}>{doc.status}</span>
 			</div>
 			<ZText class={classes.lead} tone="muted">{doc.summary}</ZText>

@@ -85,8 +85,12 @@
 	<ZContainer gutter="small" size="medium">
 		<header class={classes.header}>
 			<p class={classes.eyebrow}>{guide.eyebrow}</p>
-			<ZHeading class={classes.title} id={`guide-${guide.id}`} level={1} size="xlarge"
-				>{guide.title}</ZHeading
+			<ZHeading
+				class={classes.title}
+				data-doc-page-title="true"
+				id={`guide-${guide.id}`}
+				level={1}
+				size="xlarge">{guide.title}</ZHeading
 			>
 			<ZText class={classes.lead} tone="muted">{guide.summary}</ZText>
 		</header>

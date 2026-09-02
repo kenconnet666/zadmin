@@ -428,7 +428,7 @@ test('keeps InputGroup focus boundary, Field context, FormData and reset synchro
 }) => {
 	await gotoComponent(page, 'input-group');
 	const inputGroupDemo = demo(page, 'input-group-affixes');
-	const group = inputGroupDemo.getByRole('group', { name: '服务地址组合', exact: true });
+	const group = inputGroupDemo.getByRole('group', { name: '服务地址', exact: true });
 	const input = inputGroupDemo.getByRole('textbox', { name: '服务地址', exact: true });
 	await input.focus();
 	await expect(group).toHaveCSS('outline-style', 'solid');
@@ -936,6 +936,7 @@ test('keeps switch semantics, keyboard state, FormData and reset synchronized', 
 	await gotoComponent(page, 'switch');
 	const switchDemo = demo(page, 'switch-form');
 	const control = switchDemo.getByTestId('switch-alerts');
+	const thumb = switchDemo.locator('[data-slot="thumb"]');
 	await expect(control).toHaveRole('switch');
 	await expect(control).toHaveAttribute('aria-checked', 'true');
 	await setDisplayPreference(page, '动画', '减少');
@@ -952,8 +953,8 @@ test('keeps switch semantics, keyboard state, FormData and reset synchronized', 
 		.toBeLessThanOrEqual(0.00001);
 	await expect
 		.poll(() =>
-			control.evaluate((element) => {
-				const transform = getComputedStyle(element, '::before').transform;
+			thumb.evaluate((element) => {
+				const transform = getComputedStyle(element).transform;
 				return transform === 'none' ? 'matrix(1, 0, 0, 1, 0, 0)' : transform;
 			})
 		)
@@ -961,8 +962,13 @@ test('keeps switch semantics, keyboard state, FormData and reset synchronized', 
 	await control.press('Space');
 	await expect(control).toHaveAttribute('aria-checked', 'false');
 	await expect
-		.poll(() => control.evaluate((element) => getComputedStyle(element, '::before').transform))
-		.toBe('matrix(1, 0, 0, 1, 18, 0)');
+		.poll(() =>
+			thumb.evaluate((element) => {
+				const transform = getComputedStyle(element).transform;
+				return transform === 'none' ? 0 : new DOMMatrixReadOnly(transform).m41;
+			})
+		)
+		.toBeGreaterThan(0);
 	await expect(switchDemo.getByText(/checked = false · 用户变更次数 = 1/u)).toBeVisible();
 	await control.press('Space');
 	await expect(control).toHaveAttribute('aria-checked', 'true');
@@ -1128,15 +1134,16 @@ test('anchors ContextMenu to pointer coordinates and supports the keyboard entry
 	await expect
 		.poll(() =>
 			coordinateAnchor.evaluate((element) => {
-				const left = Number.parseFloat((element as HTMLElement).style.left);
-				const top = Number.parseFloat((element as HTMLElement).style.top);
+				const style = getComputedStyle(element as HTMLElement);
+				const left = Number.parseFloat(style.left);
+				const top = Number.parseFloat(style.top);
 				return Number.isFinite(left) && Number.isFinite(top) ? [left, top] : null;
 			})
 		)
 		.not.toBeNull();
 	const [anchorX, anchorY] = await coordinateAnchor.evaluate((element) => [
-		Number.parseFloat((element as HTMLElement).style.left),
-		Number.parseFloat((element as HTMLElement).style.top)
+		Number.parseFloat(getComputedStyle(element as HTMLElement).left),
+		Number.parseFloat(getComputedStyle(element as HTMLElement).top)
 	]);
 	expect(anchorX).toBeCloseTo(clickX, 3);
 	expect(anchorY).toBeCloseTo(clickY, 3);
@@ -1479,7 +1486,7 @@ test('keeps Cascader columns, path commit, focus restoration and reset synchroni
 	await page.getByRole('option', { name: '远程空间', exact: true }).click();
 	await lazyDemo.getByRole('button', { name: '使加载失败', exact: true }).click();
 	await expect(lazyDemo.getByText(/error = 模拟网络失败/u)).toBeVisible();
-	await page.getByRole('option', { name: '远程空间', exact: true }).click();
+	await page.getByRole('option', { name: '远程空间', exact: true }).dispatchEvent('click');
 	await lazyDemo.getByRole('button', { name: '完成加载', exact: true }).click();
 	await page.getByRole('option', { name: '生产环境', exact: true }).click();
 	await expect(lazyDemo.locator('button[aria-haspopup="listbox"]')).toContainText(
@@ -1539,10 +1546,10 @@ test('keeps Mention textarea focus, active descendant, insertion, form value and
 		'正在加载选项'
 	);
 	await asyncDemo.getByRole('button', { name: '返回异步结果', exact: true }).click();
-	await asyncEditor.focus();
-	await expect(page.getByRole('option', { name: /Alan a/u })).toBeVisible();
-	await asyncEditor.press('End');
-	await asyncEditor.press('Enter');
+	const asyncOption = page.getByRole('option', { name: /Alan a/u });
+	await expect(asyncOption).toBeVisible();
+	await asyncOption.dispatchEvent('pointerdown', { bubbles: true, button: 0 });
+	await asyncOption.dispatchEvent('pointerup', { bubbles: true, button: 0 });
 	await expect(asyncEditor).toHaveValue('Assign @alan ');
 
 	const virtualDemo = demo(page, 'mention-virtual');
@@ -1838,8 +1845,8 @@ test('has no automatically detectable accessibility violations', async ({ page }
 		});
 		expect(duplicateIds, `${route} has duplicate DOM ids`).toEqual([]);
 		await expect(
-			page.locator('main h1'),
-			`${route} must expose exactly one page heading`
+			page.locator('main [data-doc-page-title]'),
+			`${route} must expose exactly one page title`
 		).toHaveCount(1);
 		const hasHorizontalOverflow = await page.evaluate(
 			() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1

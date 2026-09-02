@@ -205,7 +205,7 @@
 
 <section class={classes.hero}>
 	<p class={classes.eyebrow}>ZADMIN UI SYSTEM</p>
-	<ZHeading class={classes.title} level={1} size="xlarge"
+	<ZHeading class={classes.title} data-doc-page-title="true" level={1} size="xlarge"
 		>看见组件，运行组件，复制真实源码。</ZHeading
 	>
 	<p class={classes.copy}>
