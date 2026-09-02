@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os';
 import { dirname, resolve } from 'node:path';
 import { performance } from 'node:perf_hooks';
 import { fileURLToPath } from 'node:url';
+import { readReleaseArtifact } from '../../../scripts/read-release-artifact.mjs';
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const workspaceRoot = resolve(packageRoot, '../..');
@@ -46,14 +47,21 @@ let succeeded = false;
 const started = performance.now();
 try {
 	await mkdir(tarballRoot, { recursive: true });
-	await runPnpm(['--filter', '@zadmin/miniapp', 'build'], workspaceRoot);
-	await runPnpm(
-		['--filter', '@zadmin/miniapp', 'pack', '--pack-destination', tarballRoot],
-		workspaceRoot
-	);
-	const tarballName = (await readdir(tarballRoot)).find((name) => name.includes('zadmin-miniapp'));
-	if (!tarballName) throw new Error('Missing @zadmin/miniapp tarball.');
-	const tarball = `file:${resolve(tarballRoot, tarballName).replaceAll('\\', '/')}`;
+	const artifactDirectory = process.env.ZADMIN_RELEASE_ARTIFACTS_DIR;
+	let tarball;
+	if (artifactDirectory) tarball = await readReleaseArtifact(artifactDirectory, '@zadmin/miniapp');
+	else {
+		await runPnpm(['--filter', '@zadmin/miniapp', 'build'], workspaceRoot);
+		await runPnpm(
+			['--filter', '@zadmin/miniapp', 'pack', '--pack-destination', tarballRoot],
+			workspaceRoot
+		);
+		const tarballName = (await readdir(tarballRoot)).find((name) =>
+			name.includes('zadmin-miniapp')
+		);
+		if (!tarballName) throw new Error('Missing @zadmin/miniapp tarball.');
+		tarball = `file:${resolve(tarballRoot, tarballName).replaceAll('\\', '/')}`;
+	}
 
 	await write(
 		resolve(fixtureRoot, 'package.json'),

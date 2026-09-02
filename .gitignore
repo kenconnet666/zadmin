@@ -46,3 +46,5 @@ project.inlang/cache/
 /apps/wechat/.wechat/
 **/.swc/
 /.idea/
+/.release-artifacts/
+/.release-artifacts-consumer/

@@ -1,0 +1,136 @@
+{
+	"schemaVersion": 1,
+	"status": "blocked",
+	"rootPackageManager": "pnpm@11.22.0",
+	"ci": {
+		"releaseWorkflow": ".github/workflows/release.yml",
+		"ciWorkflow": ".github/workflows/ci.yml",
+		"exactSha": true,
+		"requiresCiSuccess": true
+	},
+	"changesets": {
+		"config": ".changeset/config.json",
+		"count": 78,
+		"packages": ["@zadmin/zui"],
+		"publicAccess": true,
+		"baseBranch": "master"
+	},
+	"packages": [
+		{
+			"name": "@zadmin/approval",
+			"version": "0.0.0",
+			"changeset": false,
+			"packageCheck": false,
+			"acceptance": false
+		},
+		{
+			"name": "@zadmin/auth",
+			"version": "0.0.0",
+			"changeset": false,
+			"packageCheck": false,
+			"acceptance": false
+		},
+		{
+			"name": "@zadmin/core",
+			"version": "0.0.0",
+			"changeset": false,
+			"packageCheck": false,
+			"acceptance": false
+		},
+		{
+			"name": "@zadmin/crm",
+			"version": "0.0.0",
+			"changeset": false,
+			"packageCheck": false,
+			"acceptance": false
+		},
+		{
+			"name": "@zadmin/drizzle",
+			"version": "0.0.0",
+			"changeset": false,
+			"packageCheck": false,
+			"acceptance": false
+		},
+		{
+			"name": "@zadmin/erp",
+			"version": "0.0.0",
+			"changeset": false,
+			"packageCheck": false,
+			"acceptance": false
+		},
+		{
+			"name": "@zadmin/miniapp",
+			"version": "0.1.0",
+			"changeset": false,
+			"packageCheck": false,
+			"acceptance": true
+		},
+		{
+			"name": "@zadmin/oss",
+			"version": "0.0.0",
+			"changeset": false,
+			"packageCheck": false,
+			"acceptance": false
+		},
+		{
+			"name": "@zadmin/postgres",
+			"version": "0.0.0",
+			"changeset": false,
+			"packageCheck": false,
+			"acceptance": false
+		},
+		{
+			"name": "@zadmin/redis",
+			"version": "0.0.0",
+			"changeset": false,
+			"packageCheck": false,
+			"acceptance": false
+		},
+		{
+			"name": "@zadmin/sveltekit",
+			"version": "0.0.0",
+			"changeset": false,
+			"packageCheck": false,
+			"acceptance": true
+		},
+		{
+			"name": "@zadmin/webview",
+			"version": "0.1.0",
+			"changeset": false,
+			"packageCheck": false,
+			"acceptance": true
+		},
+		{
+			"name": "@zadmin/zui",
+			"version": "0.1.0",
+			"changeset": true,
+			"packageCheck": true,
+			"acceptance": true
+		}
+	],
+	"checks": {
+		"workflowChecksExactSha": true,
+		"workflowRequiresCiSuccess": true,
+		"changesetsConfigured": true,
+		"changesetTargetsKnown": true,
+		"packageCheckPresent": true,
+		"externalAcceptancePresent": true,
+		"ciRunsPackageAcceptance": true,
+		"singlePackChecksumReuse": true,
+		"releasePublishTarballReuse": false,
+		"npmOidcProvenance": false,
+		"automatedTagAndGithubRelease": false,
+		"registrySmoke": false,
+		"versionedDocs": false,
+		"supportMatrixDocumented": true,
+		"releaseBoundSupportMatrix": false
+	},
+	"blocked": [
+		"releasePublishTarballReuse",
+		"npmOidcProvenance",
+		"automatedTagAndGithubRelease",
+		"registrySmoke",
+		"versionedDocs",
+		"releaseBoundSupportMatrix"
+	]
+}

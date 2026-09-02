@@ -3,6 +3,7 @@ import { mkdtemp, mkdir, readFile, readdir, realpath, rm, writeFile } from 'node
 import { tmpdir } from 'node:os';
 import { basename, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { readReleaseArtifact } from '../../../scripts/read-release-artifact.mjs';
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const workspaceRoot = resolve(packageRoot, '../..');
@@ -64,15 +65,21 @@ let succeeded = false;
 let server;
 try {
 	await mkdir(tarballRoot, { recursive: true });
-	for (const packageName of ['@zadmin/core', '@zadmin/zui', '@zadmin/sveltekit']) {
-		await runPnpm(['--filter', packageName, 'build'], workspaceRoot);
-		await runPnpm(
-			['--filter', packageName, 'pack', '--pack-destination', tarballRoot],
-			workspaceRoot
-		);
+	const artifactDirectory = process.env.ZADMIN_RELEASE_ARTIFACTS_DIR;
+	if (!artifactDirectory) {
+		for (const packageName of ['@zadmin/core', '@zadmin/zui', '@zadmin/sveltekit']) {
+			await runPnpm(['--filter', packageName, 'build'], workspaceRoot);
+			await runPnpm(
+				['--filter', packageName, 'pack', '--pack-destination', tarballRoot],
+				workspaceRoot
+			);
+		}
 	}
-	const tarballs = (await readdir(tarballRoot)).map((name) => resolve(tarballRoot, name));
+	const tarballs = artifactDirectory
+		? []
+		: (await readdir(tarballRoot)).map((name) => resolve(tarballRoot, name));
 	const tarball = (name) => {
+		if (artifactDirectory) return readReleaseArtifact(artifactDirectory, name);
 		const marker = name.replace('@zadmin/', 'zadmin-');
 		const match = tarballs.find((path) => basename(path).includes(marker));
 		if (!match) throw new Error(`Missing tarball for ${name}.`);
