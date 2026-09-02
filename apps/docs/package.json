@@ -22,6 +22,7 @@
 		"shiki": "catalog:"
 	},
 	"devDependencies": {
+		"@standard-schema/spec": "catalog:",
 		"@axe-core/playwright": "catalog:",
 		"@playwright/test": "catalog:",
 		"@sveltejs/vite-plugin-svelte": "catalog:",

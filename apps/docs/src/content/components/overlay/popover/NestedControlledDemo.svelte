@@ -19,7 +19,7 @@
 		{/if}
 		<ZPopoverContent>
 			<ZText>父层内容</ZText>
-			<ZPopover placement="end-start">
+			<ZPopover placement="right-start">
 				<ZPopoverTrigger>打开子Popover</ZPopoverTrigger>
 				<ZPopoverContent><ZText>子层是独立branch，Escape逐层关闭。</ZText></ZPopoverContent>
 			</ZPopover>

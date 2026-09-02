@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { ZButton, ZLoadingBar, ZStack, ZText, type ZLoadingBarProps } from '@zadmin/zui';
 
-	type State = NonNullable<ZLoadingBarProps['state']>;
+	type LoadingBarState = NonNullable<ZLoadingBarProps['state']>;
 	let active = $state(false);
 	let controller = $state<ZLoadingBarProps['controller']>(null);
-	let state = $state<State>('idle');
+	let barState = $state<LoadingBarState>('idle');
 	let value = $state<number | undefined>();
 </script>
 
@@ -12,7 +12,7 @@
 	<ZLoadingBar
 		bind:active
 		bind:controller
-		bind:state
+		bind:state={barState}
 		bind:value
 		finishDelay={800}
 		label="受控发布生命周期"
@@ -27,6 +27,6 @@
 		<ZButton size="small" variant="ghost" onclick={() => controller?.reset()}>reset</ZButton>
 	</ZStack>
 	<ZText tone="muted">
-		active = {active} · state = {state} · value = {value ?? 'indeterminate'}
+		active = {active} · state = {barState} · value = {value ?? 'indeterminate'}
 	</ZText>
 </ZStack>

@@ -15,11 +15,11 @@
 <ZProvider direction="rtl" motion="reduced">
 	<ZStack gap="medium">
 		<ZButton variant="secondary" onclick={() => (open = false)}>从外部关闭</ZButton>
-		<ZContextMenu bind:open>
+		<ZContextMenu bind:open placement="bottom-end">
 			<ZContextMenuTrigger
 				><ZText>RTL目标：右键、ContextMenu键或Shift+F10。</ZText></ZContextMenuTrigger
 			>
-			<ZContextMenuContent aria-label="RTL上下文菜单" placement="bottom-end">
+			<ZContextMenuContent aria-label="RTL上下文菜单">
 				<ZMenuItem value="inspect">查看详情</ZMenuItem>
 				<ZMenuItem danger value="delete">删除</ZMenuItem>
 			</ZContextMenuContent>

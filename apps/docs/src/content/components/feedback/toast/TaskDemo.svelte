@@ -25,8 +25,7 @@
 				signal.removeEventListener('abort', abort);
 				settle();
 			};
-			const abort = (): void =>
-				finish(() => reject(new ownerWindow.DOMException('任务已取消', 'AbortError')));
+			const abort = (): void => finish(() => reject(new DOMException('任务已取消', 'AbortError')));
 			const handle = ownerWindow.setTimeout(
 				() => finish(() => (fail ? reject(new Error(`${label}失败`)) : resolve(label))),
 				delay
@@ -42,7 +41,7 @@
 
 	function track(ownerWindow: Window, label: string, delay: number, fail = false): void {
 		runs += 1;
-		const activeController = new ownerWindow.AbortController();
+		const activeController = new AbortController();
 		controller = activeController;
 		controllers.add(activeController);
 		const promise = delayedResult(ownerWindow, label, delay, activeController.signal, fail);
