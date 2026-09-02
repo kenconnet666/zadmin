@@ -234,7 +234,7 @@
 </script>
 
 <div class={classes.layout}>
-	<article class={classes.article}>
+	<article class={classes.article} data-doc-route={`component:${doc.id}`}>
 		<header class={classes.header}>
 			<p class={classes.eyebrow}>ZUI FOUNDATION</p>
 			<div class={classes.titleLine}>

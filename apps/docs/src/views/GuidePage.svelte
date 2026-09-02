@@ -77,7 +77,11 @@
 	const classes = $derived(zui.slots(guideRecipe));
 </script>
 
-<article class={classes.root} aria-labelledby={`guide-${guide.id}`}>
+<article
+	class={classes.root}
+	aria-labelledby={`guide-${guide.id}`}
+	data-doc-route={`guide:${guide.id}`}
+>
 	<ZContainer gutter="small" size="medium">
 		<header class={classes.header}>
 			<p class={classes.eyebrow}>{guide.eyebrow}</p>
