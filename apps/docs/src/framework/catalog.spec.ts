@@ -207,16 +207,10 @@ describe('ZUI component documentation catalog', () => {
 
 		expect(props?.description).toContain('ZDataTableProps');
 		expect(names).toEqual(
-			expect.arrayContaining([
-				'caption',
-				'columnVisibility',
-				'columnWidths',
-				'expandedRow',
-				'height',
-				'rowHeight',
-				'overscan',
-				'sortingMode'
-			])
+			expect.arrayContaining(['caption', 'height', 'rowHeight', 'overscan', 'sortingMode'])
+		);
+		expect(names).not.toEqual(
+			expect.arrayContaining(['columnVisibility', 'columnWidths', 'expandedRow'])
 		);
 		expect(names).not.toContain('rowHeight / height');
 		expect(dataTable?.demos).toHaveLength(7);

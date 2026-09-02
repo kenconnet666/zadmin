@@ -44,12 +44,22 @@ describe('ZTransfer logical collection integration', () => {
 		expect(new FormData(form!).getAll('channel')).toEqual(['1', 'alpha', 'orphan']);
 
 		form?.reset();
-		await tick();
-		expect(filter?.value).toBe('');
-		expect(source?.querySelectorAll('[role="option"]')).toHaveLength(3);
+		await expect
+			.poll(
+				() =>
+					root
+						?.querySelector<HTMLElement>('[role="listbox"][aria-label="Available"]')
+						?.querySelectorAll('[role="option"]').length
+			)
+			.toBe(3);
 		expect(
-			document.querySelector('[data-testid="transfer-production-output"]')?.textContent?.trim()
-		).toBe('string:1|string:orphan:1');
+			root?.querySelector<HTMLInputElement>('input[aria-label="Available: Filter items"]')?.value
+		).toBe('');
+		await expect
+			.poll(() =>
+				document.querySelector('[data-testid="transfer-production-output"]')?.textContent?.trim()
+			)
+			.toBe('string:1|string:orphan:1');
 	});
 
 	it('preserves async orphan values and reports loading without leaking transport ownership', async () => {

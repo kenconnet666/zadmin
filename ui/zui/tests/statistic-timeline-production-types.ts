@@ -10,8 +10,8 @@ import ZTimeline, {
 	type ZTimelineProps
 } from '../src/components/data-display/ZTimeline.svelte';
 
-const prefix = (() => undefined) as Snippet;
-const content = (() => undefined) as Snippet<[item: TimelineItem, index: number]>;
+const prefix = (() => undefined) as unknown as Snippet;
+const content = (() => undefined) as unknown as Snippet<[item: TimelineItem, index: number]>;
 const formatter: StatisticFormatter = (value, { locale, options }) =>
 	new Intl.NumberFormat(locale, options).format(value);
 

@@ -487,7 +487,7 @@
 			maxValue
 		);
 		fallbackFocused = next;
-		focusedValue = undefined;
+		focusedValue = next;
 		displayedMonth = new CalendarDate(next.year, next.month, 1);
 	}
 	function unavailableDate(date: CalendarDate): boolean {

@@ -578,7 +578,7 @@
 			const item = collection.get(selected);
 			if (item) labels.set(selected, item.textValue);
 		}
-		if (options !== undefined || resolvedOpen) activeDescendant.prune(collection.full.keys);
+		if (options !== undefined) activeDescendant.prune(collection.full.keys);
 		if (!resolvedOpen) {
 			navigation.set(undefined, 'programmatic');
 			return;

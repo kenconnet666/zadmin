@@ -1,11 +1,13 @@
+import { tick } from 'svelte';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
 import FieldSizeFixture from './FieldSizeFixture.svelte';
 
 describe('Field control size inheritance', () => {
-	it('resolves explicit control, Field and Provider density in priority order', () => {
+	it('resolves explicit control, Field and Provider density in priority order', async () => {
 		render(FieldSizeFixture);
+		await tick();
 		expect(
 			document.querySelector('[data-testid="field-size-provider"]')?.getAttribute('data-size')
 		).toBe('small');

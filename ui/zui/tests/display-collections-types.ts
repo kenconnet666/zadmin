@@ -17,7 +17,7 @@ const descriptions = [
 
 const dataList = { items: listItems } satisfies ComponentProps<typeof ZList> satisfies ZListProps;
 const manualList = {
-	children: (() => undefined) as Snippet
+	children: (() => undefined) as unknown as Snippet
 } satisfies ComponentProps<typeof ZList> satisfies ZListProps;
 const dataDescriptions = {
 	items: descriptions
@@ -30,9 +30,10 @@ void dataDescriptions;
 const missingListSource = {} satisfies ComponentProps<typeof ZList>;
 void missingListSource;
 
-// @ts-expect-error data and manual composition modes are mutually exclusive.
-const ambiguousDescriptions = {
-	children: (() => undefined) as Snippet,
+const ambiguousDescriptionSource = {
+	children: (() => undefined) as unknown as Snippet,
 	items: descriptions
-} satisfies ComponentProps<typeof ZDescriptionList>;
+};
+// @ts-expect-error data and manual composition modes are mutually exclusive.
+const ambiguousDescriptions: ComponentProps<typeof ZDescriptionList> = ambiguousDescriptionSource;
 void ambiguousDescriptions;

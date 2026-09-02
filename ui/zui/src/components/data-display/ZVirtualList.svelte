@@ -753,42 +753,45 @@
 >
 	<div class={spacerClass} data-slot="spacer">
 		{#each range.items as virtual (virtual.key)}
-			{@const current = normalized[virtual.index]!}
-			{@const disabled = itemDisabled?.(current.entry, virtual.index) ?? false}
-			{@const expanded = itemExpanded?.(current.entry, virtual.index)}
-			{@const level = ariaInteger(itemLevel?.(current.entry, virtual.index), 'itemLevel')}
-			{@const posInSet = ariaInteger(itemPosInSet?.(current.entry, virtual.index), 'itemPosInSet')}
-			{@const selected = itemSelected?.(current.entry, virtual.index)}
-			{@const setSize = ariaInteger(itemSetSize?.(current.entry, virtual.index), 'itemSetSize')}
-			<div
-				class={itemClass}
-				data-slot="item"
-				data-virtual-index={virtual.index}
-				data-measured={virtual.measured || undefined}
-				data-disabled={disabled || undefined}
-				data-key={String(virtual.key)}
-				id={current.id}
-				role={resolvedItemRole}
-				aria-disabled={resolvedItemRole === 'presentation' ? undefined : disabled || undefined}
-				aria-expanded={resolvedItemRole === 'treeitem' ? expanded : undefined}
-				aria-level={resolvedItemRole === 'treeitem' ? level : undefined}
-				aria-selected={resolvedItemRole === 'option'
-					? (selected ?? false)
-					: resolvedItemRole === 'treeitem'
-						? selected
-						: undefined}
-				aria-posinset={resolvedItemRole === 'presentation' || resolvedItemRole === 'row'
-					? undefined
-					: (posInSet ?? virtual.index + 1)}
-				aria-setsize={resolvedItemRole === 'presentation' || resolvedItemRole === 'row'
-					? undefined
-					: (setSize ?? normalized.length)}
-				aria-rowindex={resolvedItemRole === 'row' ? virtual.index + 1 : undefined}
-				style={`${dynamic ? '' : `height: ${virtual.size}px; `}transform: translateY(${virtual.start}px);`}
-				use:mountVirtualItem={{ key: virtual.key, mount: onItemMount }}
-			>
-				{@render item(current.entry, virtual.index, virtual)}
-			</div>
+			{@const currentIndex = normalized.findIndex(({ key }) => Object.is(key, virtual.key))}
+			{@const current = currentIndex >= 0 ? normalized[currentIndex] : undefined}
+			{#if current}
+				{@const disabled = itemDisabled?.(current.entry, currentIndex) ?? false}
+				{@const expanded = itemExpanded?.(current.entry, currentIndex)}
+				{@const level = ariaInteger(itemLevel?.(current.entry, currentIndex), 'itemLevel')}
+				{@const posInSet = ariaInteger(itemPosInSet?.(current.entry, currentIndex), 'itemPosInSet')}
+				{@const selected = itemSelected?.(current.entry, currentIndex)}
+				{@const setSize = ariaInteger(itemSetSize?.(current.entry, currentIndex), 'itemSetSize')}
+				<div
+					class={itemClass}
+					data-slot="item"
+					data-virtual-index={currentIndex}
+					data-measured={virtual.measured || undefined}
+					data-disabled={disabled || undefined}
+					data-key={String(virtual.key)}
+					id={current.id}
+					role={resolvedItemRole}
+					aria-disabled={resolvedItemRole === 'presentation' ? undefined : disabled || undefined}
+					aria-expanded={resolvedItemRole === 'treeitem' ? expanded : undefined}
+					aria-level={resolvedItemRole === 'treeitem' ? level : undefined}
+					aria-selected={resolvedItemRole === 'option'
+						? (selected ?? false)
+						: resolvedItemRole === 'treeitem'
+							? selected
+							: undefined}
+					aria-posinset={resolvedItemRole === 'presentation' || resolvedItemRole === 'row'
+						? undefined
+						: (posInSet ?? currentIndex + 1)}
+					aria-setsize={resolvedItemRole === 'presentation' || resolvedItemRole === 'row'
+						? undefined
+						: (setSize ?? normalized.length)}
+					aria-rowindex={resolvedItemRole === 'row' ? currentIndex + 1 : undefined}
+					style={`${dynamic ? '' : `height: ${virtual.size}px; `}transform: translateY(${virtual.start}px);`}
+					use:mountVirtualItem={{ key: virtual.key, mount: onItemMount }}
+				>
+					{@render item(current.entry, currentIndex, virtual)}
+				</div>
+			{/if}
 		{/each}
 	</div>
 	{#if normalized.length === 0 && loading && loadingContent}

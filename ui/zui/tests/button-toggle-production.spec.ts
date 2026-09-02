@@ -17,13 +17,13 @@ describe('Button and ToggleButton production server contract', () => {
 		expect(result).toContain('data-shape="circle"');
 	});
 
-	it('renders one hidden Spinner status beneath the Button-owned busy state', () => {
+	it('renders one hidden Spinner beneath the Button-owned busy state', () => {
 		const result = render(ZButton, { props: { loading: true, loadingLabel: 'Saving' } }).body;
 		expect(result).toContain('aria-busy="true"');
 		expect(result).toContain('aria-label="Saving"');
 		expect(result).toContain('data-slot="loading"');
 		expect(result).toContain('aria-hidden="true"');
-		expect(result).toContain('role="status"');
+		expect(result).not.toContain('role="status"');
 	});
 
 	it('renders ToggleButton pressed state with the shared Button visual contract', () => {

@@ -480,8 +480,9 @@
 	};
 	$effect(() => {
 		controller = formController;
+		const publishedController = untrack(() => controller);
 		return () => {
-			if (controller === formController) controller = null;
+			if (untrack(() => controller) === publishedController) controller = null;
 		};
 	});
 

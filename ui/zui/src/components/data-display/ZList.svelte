@@ -255,7 +255,7 @@
 	const resolvedEmptyText = $derived(emptyText ?? zui.localePack.collection.empty);
 	const resolvedLoadingText = $derived(loadingText ?? zui.localePack.collection.loading);
 	const dataMode = $derived(items !== undefined);
-	const emptyState = $derived(dataMode && !loading && items.length === 0);
+	const emptyState = $derived(items !== undefined && !loading && items.length === 0);
 	const describedBy = $derived(
 		[ariaDescribedBy, loading || emptyState ? statusId : undefined].filter(Boolean).join(' ') ||
 			undefined

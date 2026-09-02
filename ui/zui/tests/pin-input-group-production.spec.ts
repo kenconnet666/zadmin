@@ -33,15 +33,15 @@ describe('PinInput and InputGroup production SSR contracts', () => {
 		expect(unicode).toContain('value="👨‍👩‍👧‍👦"');
 		expect(unicode).toContain('value="你"');
 		expect(unicode).not.toContain('value="A"');
-		expect(() => render(ZPinInput, { props: { inputLabel: () => 'Invalid', length: 0 } })).toThrow(
-			/length must be an integer from 1 through 32/u
-		);
+		expect(
+			() => render(ZPinInput, { props: { inputLabel: () => 'Invalid', length: 0 } }).body
+		).toThrow(/length must be an integer from 1 through 32/u);
 	});
 
 	it('rejects multiple value owners and nested groups during SSR too', () => {
-		expect(() => render(InputGroupMultipleFixture)).toThrow(
+		expect(() => render(InputGroupMultipleFixture).body).toThrow(
 			/exactly one registered business value control/u
 		);
-		expect(() => render(InputGroupNestedFixture)).toThrow(/cannot be nested/u);
+		expect(() => render(InputGroupNestedFixture).body).toThrow(/cannot be nested/u);
 	});
 });

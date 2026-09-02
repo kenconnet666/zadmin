@@ -4,11 +4,21 @@ import { defineConfig } from 'vitest/config';
 
 const collectingCoverage = process.argv.includes('--coverage');
 const focusedBrowser = process.env.ZUI_BROWSER;
+const configuredBrowserPort = Number(process.env.ZUI_BROWSER_PORT ?? 63315);
+if (
+	!Number.isInteger(configuredBrowserPort) ||
+	configuredBrowserPort < 1 ||
+	configuredBrowserPort > 65535
+) {
+	throw new TypeError('ZUI_BROWSER_PORT must be an integer from 1 through 65535.');
+}
 const browserInstances: { browser: 'chromium' | 'firefox' | 'webkit' }[] = collectingCoverage
 	? [{ browser: 'chromium' as const }]
 	: focusedBrowser === 'chromium' || focusedBrowser === 'firefox' || focusedBrowser === 'webkit'
 		? [{ browser: focusedBrowser }]
 		: [{ browser: 'chromium' }, { browser: 'firefox' }, { browser: 'webkit' }];
+const requiresSerialBrowserFiles =
+	process.platform === 'win32' && browserInstances.some(({ browser }) => browser === 'firefox');
 
 export default defineConfig({
 	optimizeDeps: {
@@ -68,10 +78,12 @@ export default defineConfig({
 			{
 				extends: true,
 				test: {
+					fileParallelism: !requiresSerialBrowserFiles,
+					maxWorkers: requiresSerialBrowserFiles ? 1 : undefined,
 					browser: {
 						api: {
 							host: '127.0.0.1',
-							port: 63315,
+							port: configuredBrowserPort,
 							strictPort: true
 						},
 						enabled: true,

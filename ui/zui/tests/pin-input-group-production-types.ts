@@ -7,7 +7,7 @@ import ZPinInput, {
 } from '../src/components/input/ZPinInput.svelte';
 
 const inputLabel: PinInputLabelFormatter = (index, length) => `${index + 1} of ${length}`;
-const snippet = (() => undefined) as Snippet;
+const snippet = (() => undefined) as unknown as Snippet;
 
 const pin = {
 	autocomplete: 'one-time-code',

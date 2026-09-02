@@ -4972,12 +4972,17 @@ export const textApiFacts = {
 		{
 			name: 'as',
 			required: false,
-			type: "'label' | 'p' | 'small' | 'span' | 'strong'"
+			type: "'div' | 'label' | 'p' | 'small' | 'span' | 'strong'"
 		},
 		{
 			name: 'children',
 			required: false,
 			type: 'Snippet'
+		},
+		{
+			name: 'for',
+			required: false,
+			type: 'string'
 		},
 		{
 			name: 'lineClamp',

@@ -1,3 +1,4 @@
+import { tick } from 'svelte';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
@@ -25,10 +26,11 @@ describe('ZLink production contract', () => {
 		expect(sameWindow.querySelector('[data-slot="new-window-hint"]')).toBeNull();
 	});
 
-	it('removes disabled navigation and prevents consumer and delegated click handlers', () => {
+	it('removes disabled navigation and prevents consumer and delegated click handlers', async () => {
 		render(LinkProductionFixture);
 		const disabled = document.querySelector<HTMLAnchorElement>('[data-testid="link-disabled"]')!;
 		disabled.click();
+		await tick();
 		expect(disabled.hasAttribute('href')).toBe(false);
 		expect(disabled.hasAttribute('target')).toBe(false);
 		expect(disabled.hasAttribute('rel')).toBe(false);
@@ -39,6 +41,7 @@ describe('ZLink production contract', () => {
 		);
 
 		document.querySelector<HTMLAnchorElement>('[data-testid="link-enabled"]')?.click();
+		await tick();
 		expect(document.querySelector('[data-testid="link-output"]')?.textContent?.trim()).toBe(
 			'0:1:1:A'
 		);

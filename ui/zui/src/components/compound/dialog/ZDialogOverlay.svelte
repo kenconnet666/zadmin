@@ -92,7 +92,13 @@
 	);
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
-	$effect(() => presence.update(dialog.open, dialog.exitDuration, ref?.ownerDocument.defaultView));
+	$effect(() =>
+		presence.update(
+			dialog.open,
+			dialog.exitDuration,
+			dialog.ownerWindow ?? ref?.ownerDocument.defaultView
+		)
+	);
 	$effect(() => {
 		dialog.setOverlay(ref);
 		return () => {

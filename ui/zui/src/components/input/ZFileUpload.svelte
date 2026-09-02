@@ -354,6 +354,7 @@
 
 	interface ActiveRequest {
 		readonly controller: AbortController;
+		readonly generation: number;
 	}
 
 	let {
@@ -437,6 +438,7 @@
 	let dragging = $state(false);
 	let dragDepth = 0;
 	let itemSequence = 0;
+	let requestGeneration = 0;
 	const activeRequests = new Map<string, ActiveRequest>();
 	let dropzoneRef = $state<HTMLButtonElement | null>(null);
 	const full = $derived(
@@ -537,7 +539,10 @@
 			throw new TypeError('ZFileUpload requires its owner Window before starting transport.');
 		}
 		cancelRequest(id, false);
-		const request: ActiveRequest = { controller: new AbortControllerConstructor() };
+		const request: ActiveRequest = {
+			controller: new AbortControllerConstructor(),
+			generation: (requestGeneration += 1)
+		};
 		activeRequests.set(id, request);
 		const uploadingItem = replaceItem(id, 'uploading', retry ? 0 : item.progress);
 		if (!uploadingItem) return;
@@ -545,20 +550,29 @@
 			await transport({
 				item: uploadingItem,
 				reportProgress(progress) {
-					if (activeRequests.get(id) !== request || request.controller.signal.aborted) return;
+					const currentRequest = activeRequests.get(id);
+					if (
+						currentRequest?.generation !== request.generation ||
+						request.controller.signal.aborted
+					)
+						return;
 					replaceItem(id, 'uploading', normalizeFileUploadProgress(progress));
 				},
 				signal: request.controller.signal
 			});
-			if (activeRequests.get(id) !== request || request.controller.signal.aborted) return;
+			if (
+				activeRequests.get(id)?.generation !== request.generation ||
+				request.controller.signal.aborted
+			)
+				return;
 			replaceItem(id, 'success', 100);
 		} catch (error) {
-			if (activeRequests.get(id) !== request) return;
+			if (activeRequests.get(id)?.generation !== request.generation) return;
 			const current = resolvedFiles.find((candidate) => candidate.id === id) ?? uploadingItem;
 			if (request.controller.signal.aborted) replaceItem(id, 'aborted', current.progress);
 			else replaceItem(id, 'error', current.progress, getErrorMessage(error, current));
 		} finally {
-			if (activeRequests.get(id) === request) activeRequests.delete(id);
+			if (activeRequests.get(id)?.generation === request.generation) activeRequests.delete(id);
 		}
 	}
 	async function upload(id?: string): Promise<void> {

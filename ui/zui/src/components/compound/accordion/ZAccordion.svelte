@@ -383,7 +383,7 @@
 				: () => undefined;
 			return () => {
 				const restoreFocus =
-					current.element?.ownerDocument.activeElement === current.element ||
+					mounted.ownsFocus(current.key) ||
 					(focusWithin && Object.is(navigation.currentKey, current.key));
 				stopMount();
 				stopLogical();
@@ -445,7 +445,7 @@
 			const previous = activeState.current;
 			const next = navigation.reconcile();
 			if (focusWithin && !Object.is(previous, next) && next !== undefined)
-				ownerMicrotask(ref, () => mounted.focus(next));
+				mounted.scheduleFocus(next);
 		});
 		void currentView;
 		void currentContract;

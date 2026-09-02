@@ -36,7 +36,7 @@ describe('Button and ToggleButton production browser contract', () => {
 		expect(button.getBoundingClientRect().width).toBe(initialWidth);
 		const loading = button.querySelector<HTMLElement>('[data-slot="loading"]')!;
 		expect(loading.getAttribute('aria-hidden')).toBe('true');
-		expect(loading.querySelector('[role="status"]')).not.toBeNull();
+		expect(loading.querySelector('[role="status"]')).toBeNull();
 		button.click();
 		expect(document.querySelector('[data-testid="button-output"]')?.textContent).toBe('true:0:0');
 	});

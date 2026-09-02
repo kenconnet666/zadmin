@@ -502,7 +502,7 @@ describe('compiled ICSS browser updates', () => {
 		reduced?.querySelector<HTMLButtonElement>('[aria-label="Dismiss Reduced"]')?.click();
 		await tick();
 		await Promise.resolve();
-		expect(reduced?.textContent).not.toContain('Reduced');
+		expect(reduced?.querySelector('article')).toBeNull();
 	});
 
 	it('covers optional display, feedback and reduced non-looping Carousel behavior', async () => {
@@ -592,7 +592,7 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(timeField?.dataset.invalid).toBe('true');
 		const readonlyPeriod = document.querySelector<HTMLButtonElement>(
-			'[data-testid="coverage-time-readonly"] [aria-label="Toggle AM PM"]'
+			'[data-testid="coverage-time-readonly"] [aria-label="Toggle AM/PM"]'
 		);
 		expect(readonlyPeriod?.disabled).toBe(true);
 		expect(
@@ -624,23 +624,30 @@ describe('compiled ICSS browser updates', () => {
 		expect(document.querySelector('[data-slot="spotlight"]')).not.toBeNull();
 		document.querySelector<HTMLButtonElement>('#tour-metrics')?.focus();
 		expect(document.querySelector('[role="dialog"]')).not.toBeNull();
-		dialog?.querySelector<HTMLButtonElement>('button:last-child')?.click();
-		await tick();
+		dialog?.querySelector<HTMLButtonElement>('[data-slot="actions"] button:last-child')?.click();
+		await expect
+			.poll(
+				() =>
+					document.querySelector<HTMLElement>('[role="dialog"][data-step="metrics"]')
+						?.textContent ?? ''
+			)
+			.toContain('Production metrics');
 		dialog = document.querySelector<HTMLElement>('[role="dialog"][data-step="metrics"]');
 		expect(dialog?.textContent).toContain('Production metrics');
-		dialog?.querySelector<HTMLButtonElement>('button:nth-last-child(2)')?.click();
+		dialog
+			?.querySelector<HTMLButtonElement>('[data-slot="actions"] button:nth-last-child(2)')
+			?.click();
 		await tick();
 		expect(document.querySelector('[role="dialog"]')?.getAttribute('data-step')).toBe('summary');
 		document
 			.querySelector<HTMLElement>('[role="dialog"]')
-			?.querySelector<HTMLButtonElement>('button:last-child')
+			?.querySelector<HTMLButtonElement>('[data-slot="actions"] button:last-child')
 			?.click();
 		await tick();
 		dialog = document.querySelector<HTMLElement>('[role="dialog"][data-step="metrics"]');
-		dialog?.querySelector<HTMLButtonElement>('button:last-child')?.click();
-		await tick();
-		expect(document.querySelector('[role="dialog"]')).toBeNull();
-		expect(document.activeElement).toBe(start);
+		dialog?.querySelector<HTMLButtonElement>('[data-slot="actions"] button:last-child')?.click();
+		await expect.poll(() => document.querySelector('[role="dialog"]')).toBeNull();
+		await expect.poll(() => document.activeElement).toBe(start);
 		expect(document.querySelector('[data-testid="tour-output"]')?.textContent).toBe(
 			'false:1:1:1:3'
 		);
@@ -648,15 +655,14 @@ describe('compiled ICSS browser updates', () => {
 		start?.click();
 		await tick();
 		document.querySelector<HTMLButtonElement>('[data-slot="mask"]')?.click();
-		await tick();
-		expect(document.querySelector('[role="dialog"]')).toBeNull();
-		expect(document.activeElement).toBe(start);
+		await expect.poll(() => document.querySelector('[role="dialog"]')).toBeNull();
+		await expect.poll(() => document.activeElement).toBe(start);
 
 		start?.click();
 		await tick();
 		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
 		await tick();
-		expect(document.querySelector('[role="dialog"]')).toBeNull();
+		await expect.poll(() => document.querySelector('[role="dialog"]')).toBeNull();
 		expect(document.activeElement).toBe(start);
 
 		document.querySelector<HTMLButtonElement>('#tour-missing-start')?.click();
@@ -679,9 +685,8 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(document.querySelector('[role="dialog"]')).not.toBeNull();
 		document.querySelector<HTMLButtonElement>('[aria-label="Close persistent tour"]')?.click();
-		await tick();
-		expect(document.querySelector('[role="dialog"]')).toBeNull();
-		expect(document.activeElement).toBe(persistent);
+		await expect.poll(() => document.querySelector('[role="dialog"]')).toBeNull();
+		await expect.poll(() => document.activeElement).toBe(persistent);
 	});
 	it('keeps Carousel slides, controls and stable value synchronized', async () => {
 		render(CarouselFixture);
@@ -767,24 +772,36 @@ describe('compiled ICSS browser updates', () => {
 		document.querySelector<HTMLButtonElement>('[aria-label="Dismiss saved alert"]')?.click();
 		await tick();
 		expect(document.querySelector('[data-testid="alert-output"]')?.textContent).toBe('dismissed');
+		document.querySelector<HTMLButtonElement>('article button:not([aria-label])')?.click();
+		await expect
+			.poll(() =>
+				[...document.querySelectorAll<HTMLElement>('article')].some((element) =>
+					element.textContent?.includes('Release ready')
+				)
+			)
+			.toBe(false);
 
 		document.querySelector<HTMLButtonElement>('[data-testid="add-timed-toast"]')?.click();
-		await tick();
-		const timed = [...document.querySelectorAll<HTMLElement>('article[role="status"]')].find(
-			(element) => element.textContent?.includes('Timed notification')
-		);
-		expect(timed).toBeDefined();
+		await expect
+			.poll(() =>
+				[
+					...(document
+						.querySelector<HTMLElement>('[data-slot="viewport"]')
+						?.querySelectorAll<HTMLElement>('article') ?? [])
+				].find((element) => element.textContent?.includes('Timed notification'))
+			)
+			.toBeDefined();
+		const timed = [
+			...(document
+				.querySelector<HTMLElement>('[data-slot="viewport"]')
+				?.querySelectorAll<HTMLElement>('article') ?? [])
+		].find((element) => element.textContent?.includes('Timed notification'))!;
 		timed?.dispatchEvent(new MouseEvent('mouseenter'));
-		await new Promise((resolve) => setTimeout(resolve, 120));
+		// Stay hovered beyond the declared duration to prove the user-visible timer is paused.
+		await new Promise((resolve) => setTimeout(resolve, 550));
 		expect(document.body.contains(timed ?? null)).toBe(true);
 		timed?.dispatchEvent(new MouseEvent('mouseleave'));
-		await new Promise((resolve) => setTimeout(resolve, 100));
-		await tick();
-		expect(document.body.contains(timed ?? null)).toBe(false);
-
-		document.querySelector<HTMLButtonElement>('article button:not([aria-label])')?.click();
-		await tick();
-		expect(document.body.textContent).not.toContain('Release ready');
+		await expect.poll(() => document.body.contains(timed ?? null)).toBe(false);
 	});
 
 	it('keeps data-display image fallback, document semantics and removal ownership synchronized', async () => {
@@ -948,11 +965,11 @@ describe('compiled ICSS browser updates', () => {
 		expect(content?.parentNode).toBe(document.body);
 		expect(content?.getAttribute('role')).toBe('listbox');
 		expect(document.activeElement).toBe(content);
-		expect(content?.getAttribute('aria-activedescendant')).toBe(beta?.id);
+		await expect.poll(() => content?.getAttribute('aria-activedescendant')).toBe(beta?.id);
 		expect(disabled?.getAttribute('aria-disabled')).toBe('true');
 		content?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
 		expect(document.activeElement).toBe(content);
-		expect(content?.getAttribute('aria-activedescendant')).toBe(delta?.id);
+		await expect.poll(() => content?.getAttribute('aria-activedescendant')).toBe(delta?.id);
 		content?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
 		await new Promise((resolve) => setTimeout(resolve, 140));
 		await tick();
@@ -968,14 +985,18 @@ describe('compiled ICSS browser updates', () => {
 		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
 		await new Promise((resolve) => setTimeout(resolve, 140));
 		await resetForm(form);
-		expect(trigger?.textContent?.trim()).toBe('Beta');
-		expect(output?.textContent).toBe('b:1:false');
-		document.querySelector<HTMLButtonElement>('[data-testid="select-owner-clear"]')?.click();
-		await tick();
+		await expect.poll(() => trigger?.textContent?.trim()).toBe('Beta');
+		await expect
+			.poll(() => document.querySelector('[data-testid="select-output"]')?.textContent)
+			.toBe('b:1:false');
+		const clearOwner = document.querySelector<HTMLButtonElement>(
+			'[data-testid="select-owner-clear"]'
+		);
+		if (clearOwner) await userEvent.click(clearOwner);
 		expect(trigger?.textContent?.trim()).toBe('Select an option');
 		expect(trigger?.getAttribute('aria-invalid')).toBe('true');
 		expect(new FormData(form!).getAll('choice')).toEqual([]);
-		expect(output?.textContent).toBe(':1:false');
+		expect(document.querySelector('[data-testid="select-output"]')?.textContent).toBe(':1:false');
 	});
 
 	it('coordinates Combobox filtering, active descendant, selection, form value and reset', async () => {
@@ -996,7 +1017,7 @@ describe('compiled ICSS browser updates', () => {
 		const alpha = document.querySelector<HTMLElement>('[data-testid="combobox-a"]');
 		expect(alpha?.hidden).toBe(true);
 		expect(delta?.hidden).toBe(false);
-		expect(input?.getAttribute('aria-activedescendant')).toBe(delta?.id);
+		await expect.poll(() => input?.getAttribute('aria-activedescendant')).toBe(delta?.id);
 		expect(document.activeElement).toBe(input);
 
 		input?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
@@ -1049,10 +1070,10 @@ describe('compiled ICSS browser updates', () => {
 		const alpha = document.querySelector<HTMLElement>('[data-testid="multi-a"]');
 		const beta = document.querySelector<HTMLElement>('[data-testid="multi-b"]');
 		expect(document.activeElement).toBe(content);
-		expect(content?.getAttribute('aria-activedescendant')).toBe(alpha?.id);
+		await expect.poll(() => content?.getAttribute('aria-activedescendant')).toBe(alpha?.id);
 		expect(alpha?.getAttribute('aria-selected')).toBe('true');
 		content?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
-		expect(content?.getAttribute('aria-activedescendant')).toBe(beta?.id);
+		await expect.poll(() => content?.getAttribute('aria-activedescendant')).toBe(beta?.id);
 		content?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
 		await tick();
 		expect(document.querySelector('[data-testid="multi-select-content"]')).not.toBeNull();
@@ -1066,13 +1087,17 @@ describe('compiled ICSS browser updates', () => {
 		expect(document.activeElement).toBe(trigger);
 		await resetForm(form);
 		expect(new FormData(form!).getAll('choice')).toEqual(['a', 'c']);
-		expect(output?.textContent).toBe('a,c:1:false');
+		await expect
+			.poll(() => document.querySelector('[data-testid="multi-select-output"]')?.textContent)
+			.toBe('a,c:1:false');
 		document.querySelector<HTMLButtonElement>('[data-testid="multi-select-owner-clear"]')?.click();
 		await tick();
 		expect(trigger?.textContent?.trim()).toBe('Select options');
 		expect(trigger?.getAttribute('aria-invalid')).toBe('true');
 		expect(new FormData(form!).getAll('choice')).toEqual([]);
-		expect(output?.textContent).toBe(':1:false');
+		expect(document.querySelector('[data-testid="multi-select-output"]')?.textContent).toBe(
+			':1:false'
+		);
 	});
 
 	it('coordinates Segmented roving selection, disabled skipping, form value and reset', async () => {
@@ -1105,8 +1130,7 @@ describe('compiled ICSS browser updates', () => {
 			input.dispatchEvent(new InputEvent('input', { bubbles: true }));
 			input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
 		}
-		await tick();
-		expect(new FormData(form!).getAll('tag')).toEqual(['alpha', 'beta']);
+		await expect.poll(() => new FormData(form!).getAll('tag')).toEqual(['alpha', 'beta']);
 		expect(output?.textContent).toBe('alpha,beta:1:');
 		if (input) {
 			input.value = 'beta';
@@ -1139,26 +1163,28 @@ describe('compiled ICSS browser updates', () => {
 		tree?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowRight' }));
 		await tick();
 		tree?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowRight' }));
-		expect(tree?.dataset.activeKey).toBe('admin');
+		await expect.poll(() => tree?.dataset.activeKey).toBe('admin');
 		tree?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'd' }));
-		expect(tree?.dataset.activeKey).toBe('docs');
+		await expect.poll(() => tree?.dataset.activeKey).toBe('docs');
 		for (const key of ['Home', 'End', 'ArrowUp']) {
 			tree?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key }));
+			await tick();
 		}
 		tree?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowLeft' }));
+		await tick();
 		tree?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowLeft' }));
 		await tick();
 		tree?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
-		expect(tree?.dataset.activeKey).toBe('worker');
+		await expect.poll(() => tree?.dataset.activeKey).toBe('worker');
 		tree?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
 		await tick();
 		expect(worker?.getAttribute('aria-selected')).toBe('true');
 		expect(new FormData(form!).get('node')).toBe('worker');
 		expect(output?.textContent).toBe('app:worker:1');
 		tree?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowLeft' }));
-		expect(tree?.dataset.activeKey).toBe('app');
+		await expect.poll(() => tree?.dataset.activeKey).toBe('app');
 		tree?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowRight' }));
-		expect(tree?.dataset.activeKey).toBe('web');
+		await expect.poll(() => tree?.dataset.activeKey).toBe('web');
 		expect(document.activeElement).toBe(tree);
 		await resetForm(form);
 		expect(new FormData(form!).get('node')).toBe('web');
@@ -1246,17 +1272,16 @@ describe('compiled ICSS browser updates', () => {
 		const leafColumn = columns[2]!;
 		expect(document.activeElement).toBe(leafColumn);
 		leafColumn.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowLeft' }));
-		expect(document.activeElement).toBe(childColumn);
+		await expect.poll(() => document.activeElement).toBe(childColumn);
+		await tick();
 		childColumn.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'End' }));
 		const worker = [...childColumn.querySelectorAll<HTMLElement>('[role="option"]')].find(
 			(item) => item.textContent?.trim() === 'Worker'
 		);
-		expect(childColumn.getAttribute('aria-activedescendant')).toBe(worker?.id);
+		await expect.poll(() => childColumn.getAttribute('aria-activedescendant')).toBe(worker?.id);
 		childColumn.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
-		await new Promise((resolve) => setTimeout(resolve, 140));
-		await tick();
-		expect(trigger?.textContent?.trim()).toBe('Root / Worker');
-		expect(document.activeElement).toBe(trigger);
+		await expect.poll(() => trigger?.textContent?.trim()).toBe('Root / Worker');
+		await expect.poll(() => document.activeElement).toBe(trigger);
 		expect(new FormData(form!).get('path')).toBe('root/worker');
 		expect(output?.textContent).toBe('root/worker');
 		await resetForm(form);
@@ -1288,10 +1313,15 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(source?.querySelectorAll('[role="option"]')).toHaveLength(1);
 		await resetForm(form);
-		expect(output?.textContent).toBe('staging');
-		expect(source?.querySelectorAll('[role="option"]')).toHaveLength(3);
+		await expect
+			.poll(() => document.querySelector('[data-testid="transfer-output"]')?.textContent)
+			.toBe('staging');
+		const resetSource = document.querySelector<HTMLElement>(
+			'[role="listbox"][aria-label="Available"]'
+		);
+		await expect.poll(() => resetSource?.querySelectorAll('[role="option"]').length).toBe(3);
 		const sourceProduction = [
-			...(source?.querySelectorAll<HTMLElement>('[role="option"]') ?? [])
+			...(resetSource?.querySelectorAll<HTMLElement>('[role="option"]') ?? [])
 		].find((item) => item.textContent?.trim() === 'Production');
 		sourceProduction?.focus();
 		for (const key of ['End', 'ArrowUp', 'Home', 'ArrowDown']) {
@@ -1303,7 +1333,9 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		document.querySelector<HTMLButtonElement>('[aria-label="Move to selected"]')?.click();
 		await tick();
-		expect(output?.textContent).toBe('production,staging,preview');
+		expect(document.querySelector('[data-testid="transfer-output"]')?.textContent).toBe(
+			'production,staging,preview'
+		);
 		const target = document.querySelector<HTMLElement>('[role="listbox"][aria-label="Selected"]');
 		const targetProduction = target?.querySelector<HTMLElement>('[role="option"]');
 		targetProduction?.dispatchEvent(
@@ -1312,7 +1344,7 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		document.querySelector<HTMLButtonElement>('[aria-label="Move to available"]')?.click();
 		await tick();
-		expect(output?.textContent).toBe('');
+		expect(document.querySelector('[data-testid="transfer-output"]')?.textContent).toBe('');
 	});
 
 	it('coordinates Mention caret parsing, active descendant insertion, form value and reset', async () => {
@@ -1374,7 +1406,7 @@ describe('compiled ICSS browser updates', () => {
 		input?.focus();
 		numeric?.dispatchEvent(new PointerEvent('pointermove', { bubbles: true }));
 		expect(document.activeElement).toBe(input);
-		expect(input?.getAttribute('aria-activedescendant')).toBe(numeric?.id);
+		await expect.poll(() => input?.getAttribute('aria-activedescendant')).toBe(numeric?.id);
 		if (input) {
 			input.value = 'dep';
 			input.dispatchEvent(new InputEvent('input', { bubbles: true }));
@@ -1388,6 +1420,7 @@ describe('compiled ICSS browser updates', () => {
 		expect(output?.textContent).toBe('dep:none:0');
 		for (const key of ['ArrowDown', 'ArrowUp', 'Home', 'End']) {
 			input?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key }));
+			await tick();
 		}
 		input?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
 		await tick();
@@ -1397,14 +1430,16 @@ describe('compiled ICSS browser updates', () => {
 		if (input) {
 			input.value = 'nothing';
 			input.dispatchEvent(new InputEvent('input', { bubbles: true }));
+			await tick();
 			input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
 			input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
 		}
-		await tick();
-		expect(document.querySelector('[data-slot="list"]')?.textContent).toContain(
-			'No commands found'
-		);
-		expect(output?.textContent).toBe('nothing:preview:1');
+		await expect
+			.poll(() => document.querySelector('[data-slot="list"]')?.textContent)
+			.toContain('No commands found');
+		await expect
+			.poll(() => document.querySelector('[data-testid="command-output"]')?.textContent)
+			.toBe('nothing:preview:1');
 	});
 
 	it('reconciles a dynamically removed active Command to its nearest enabled successor', async () => {
@@ -1415,14 +1450,14 @@ describe('compiled ICSS browser updates', () => {
 		const preview = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find((option) =>
 			option.textContent?.includes('Deploy preview')
 		);
-		expect(input?.getAttribute('aria-activedescendant')).toBe(preview?.id);
+		await expect.poll(() => input?.getAttribute('aria-activedescendant')).toBe(preview?.id);
 
 		document.querySelector<HTMLButtonElement>('[data-testid="command-remove-preview"]')?.click();
 		await tick();
 		const numeric = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find((option) =>
 			option.textContent?.includes('Numeric one')
 		);
-		expect(input?.getAttribute('aria-activedescendant')).toBe(numeric?.id);
+		await expect.poll(() => input?.getAttribute('aria-activedescendant')).toBe(numeric?.id);
 		expect(document.querySelectorAll('[data-active="true"], [aria-selected="true"]')).toHaveLength(
 			1
 		);
@@ -1440,11 +1475,10 @@ describe('compiled ICSS browser updates', () => {
 		if (input) {
 			input.value = 'dark';
 			input.dispatchEvent(new InputEvent('input', { bubbles: true }));
+			await tick();
 			input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
 		}
-		await new Promise((resolve) => setTimeout(resolve, 220));
-		await tick();
-		expect(document.querySelector('[role="dialog"]')).toBeNull();
+		await expect.poll(() => document.querySelector('[role="dialog"]')).toBeNull();
 		expect(document.activeElement).toBe(trigger);
 		expect(document.querySelector('[data-testid="command-palette-output"]')?.textContent).toBe(
 			'false:theme'
@@ -1455,8 +1489,7 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		expect(document.querySelector('[role="dialog"]')).not.toBeNull();
 		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
-		await new Promise((resolve) => setTimeout(resolve, 220));
-		expect(document.querySelector('[role="dialog"]')).toBeNull();
+		await expect.poll(() => document.querySelector('[role="dialog"]')).toBeNull();
 	});
 
 	it('removes an open CommandPalette portal when its owner unmounts', async () => {
@@ -1816,9 +1849,7 @@ describe('compiled ICSS browser updates', () => {
 			password.value = 'secret';
 			password.dispatchEvent(new InputEvent('input', { bubbles: true }));
 		}
-		await tick();
-		await Promise.resolve();
-		expect(confirm?.getAttribute('aria-invalid')).toBe('true');
+		await expect.poll(() => confirm?.getAttribute('aria-invalid')).toBe('true');
 		if (confirm) {
 			confirm.value = 'secret';
 			confirm.dispatchEvent(new InputEvent('input', { bubbles: true }));
@@ -1830,9 +1861,7 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		await Promise.resolve();
 		form?.requestSubmit();
-		await tick();
-		await Promise.resolve();
-		expect(output?.textContent).toContain('alice@example.com');
+		await expect.poll(() => output?.textContent).toContain('alice@example.com');
 
 		document.querySelector<HTMLButtonElement>('[data-testid="graph-server-error"]')?.click();
 		await tick();
@@ -2291,25 +2320,20 @@ describe('compiled ICSS browser updates', () => {
 		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
 		await tick();
 		expect(trigger?.getAttribute('aria-describedby')).toBeNull();
-		await new Promise((resolve) => setTimeout(resolve, 140));
-		await tick();
-		content = document.querySelector('[data-testid="tooltip-content"]');
-		expect(content).toBeNull();
+		await expect.poll(() => document.querySelector('[data-testid="tooltip-content"]')).toBeNull();
 		expect(output?.textContent).toBe('false:2');
 
 		trigger?.focus();
 		await new Promise((resolve) => setTimeout(resolve, 0));
 		await tick();
 		expect(document.querySelector('[data-testid="tooltip-content"]')).not.toBeNull();
+		trigger?.dispatchEvent(new PointerEvent('pointerleave'));
 		trigger?.blur();
-		await tick();
-		await new Promise((resolve) => setTimeout(resolve, 140));
-		expect(document.querySelector('[data-testid="tooltip-content"]')).toBeNull();
+		await expect.poll(() => document.querySelector('[data-testid="tooltip-content"]')).toBeNull();
 		trigger?.dispatchEvent(new PointerEvent('pointerenter'));
 		await tick();
 		trigger?.dispatchEvent(new PointerEvent('pointerleave'));
-		await new Promise((resolve) => setTimeout(resolve, 140));
-		expect(document.querySelector('[data-testid="tooltip-content"]')).toBeNull();
+		await expect.poll(() => document.querySelector('[data-testid="tooltip-content"]')).toBeNull();
 	});
 
 	it('coordinates Popover portal, focus, dismiss and Presence cleanup', async () => {
@@ -2430,7 +2454,7 @@ describe('compiled ICSS browser updates', () => {
 		expect(charlie?.getAttribute('aria-expanded')).toBe('true');
 		expect(alphaContent?.dataset.presence).toBe('exiting');
 		expect(alphaContent?.inert).toBe(true);
-		expect(alphaContent?.getAttribute('aria-hidden')).toBe('true');
+		expect(alphaContent?.hasAttribute('aria-hidden')).toBe(false);
 		expect(output?.textContent).toBe('c:1');
 		await new Promise((resolve) => setTimeout(resolve, 220));
 		await tick();

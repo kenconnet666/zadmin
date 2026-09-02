@@ -38,9 +38,9 @@ describe('ZDataTable production contracts', () => {
 		);
 		numericSelection?.focus();
 		document.querySelector<HTMLButtonElement>('[data-testid="data-table-remove-focused"]')?.click();
-		await tick();
-		await tick();
-		expect(document.activeElement?.getAttribute('aria-label')).toBe('Select string:1');
+		await expect
+			.poll(() => document.activeElement?.getAttribute('aria-label'))
+			.toBe('Select string:1');
 
 		const sortButton = [...(table?.querySelectorAll<HTMLButtonElement>('th button') ?? [])].find(
 			(button) => button.textContent?.includes('Name')

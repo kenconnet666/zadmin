@@ -500,7 +500,7 @@
 
 	$effect(() => {
 		for (const item of collection.full) labels.set(item.key, item.textValue);
-		if (options !== undefined || resolvedOpen) activeDescendant.prune(collection.full.keys);
+		if (options !== undefined) activeDescendant.prune(collection.full.keys);
 		if (!resolvedOpen) {
 			navigation.set(undefined, 'programmatic');
 			return;

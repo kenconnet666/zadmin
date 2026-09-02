@@ -5,6 +5,8 @@ export interface ControllableStateOptions<TValue> {
 	readonly onChange?: () => ((value: TValue) => void) | undefined;
 	/** Reads the Svelte prop/local binding value. */
 	readonly read: () => TValue | undefined;
+	/** Uses an already-provided controlled value as the form-reset baseline. */
+	readonly resetToInitialValue?: boolean;
 	/**
 	 * Lets a later external `undefined` clear an established value. This opt-in is
 	 * type-available only when `TValue` itself includes `undefined`.
@@ -12,6 +14,43 @@ export interface ControllableStateOptions<TValue> {
 	readonly undefinedIsValue?: undefined extends TValue ? boolean : never;
 	/** Always writes through so `$bindable` can synchronize with its consumer. */
 	readonly write: (value: TValue) => void;
+}
+
+function sameStateValue(
+	left: unknown,
+	right: unknown,
+	seen = new WeakMap<object, object>()
+): boolean {
+	if (Object.is(left, right)) return true;
+	if (Array.isArray(left) && Array.isArray(right)) {
+		if (left.length !== right.length) return false;
+		if (seen.get(left) === right) return true;
+		seen.set(left, right);
+		return left.every((value, index) => sameStateValue(value, right[index], seen));
+	}
+	if (left === null || right === null || typeof left !== 'object' || typeof right !== 'object') {
+		return false;
+	}
+	if (
+		Object.getPrototypeOf(left) !== Object.prototype ||
+		Object.getPrototypeOf(right) !== Object.prototype
+	) {
+		return false;
+	}
+	if (seen.get(left) === right) return true;
+	seen.set(left, right);
+	const leftKeys = Object.keys(left);
+	const rightKeys = Object.keys(right);
+	if (leftKeys.length !== rightKeys.length) return false;
+	return leftKeys.every(
+		(key) =>
+			Object.prototype.hasOwnProperty.call(right, key) &&
+			sameStateValue(
+				(left as Record<string, unknown>)[key],
+				(right as Record<string, unknown>)[key],
+				seen
+			)
+	);
 }
 
 /**
@@ -32,12 +71,18 @@ export interface ControllableStateOptions<TValue> {
 export class ControllableState<TValue> {
 	readonly #options: ControllableStateOptions<TValue>;
 	#fallback: TValue;
+	readonly #resetValue: TValue;
 	#fallbackActive = true;
 	readonly #undefinedIsValue: boolean;
 
 	constructor(options: ControllableStateOptions<TValue>) {
 		this.#options = options;
-		this.#fallback = $state.raw(options.defaultValue());
+		const initial = options.read();
+		this.#resetValue =
+			options.resetToInitialValue === true && initial !== undefined
+				? initial
+				: options.defaultValue();
+		this.#fallback = $state.raw(this.#resetValue);
 		this.#undefinedIsValue = options.undefinedIsValue === true;
 	}
 
@@ -51,7 +96,7 @@ export class ControllableState<TValue> {
 	}
 
 	setFromUser(value: TValue): void {
-		if (Object.is(this.current, value)) return;
+		if (sameStateValue(this.current, value)) return;
 		this.#fallback = value;
 		if (this.#undefinedIsValue) this.#fallbackActive = false;
 		this.#options.write(value);
@@ -59,7 +104,7 @@ export class ControllableState<TValue> {
 	}
 
 	reset(): void {
-		const value = this.#options.defaultValue();
+		const value = this.#resetValue;
 		this.#fallback = value;
 		if (this.#undefinedIsValue) this.#fallbackActive = false;
 		this.#options.write(value);

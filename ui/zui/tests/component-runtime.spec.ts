@@ -33,6 +33,24 @@ describe('component runtime state', () => {
 		expect(changes).toEqual(['typed']);
 	});
 
+	it('writes through without masking an external owner that rejects the update', () => {
+		let external = 'before';
+		let written: string | undefined;
+		const state = new ControllableState({
+			defaultValue: () => 'seed',
+			read: () => external,
+			write: (value: string) => (written = value)
+		});
+
+		state.setFromUser('next');
+		expect(written).toBe('next');
+		expect(state.current).toBe('before');
+
+		state.setFromUser('accepted');
+		external = 'accepted';
+		expect(state.current).toBe('accepted');
+	});
+
 	it('notifies exactly once for each distinct generated user value', () => {
 		fc.assert(
 			fc.property(fc.array(fc.string(), { maxLength: 100 }), (values) => {
@@ -72,6 +90,31 @@ describe('component runtime state', () => {
 		state.setFromUser(initial);
 		expect(notifications).toBe(0);
 		expect(external).toBeUndefined();
+	});
+
+	it('treats equivalent proxy-shaped arrays and records as the same public value', () => {
+		let external: readonly string[] | undefined;
+		let notifications = 0;
+		const state = new ControllableState({
+			defaultValue: () => ['one', 'two'] as const,
+			onChange: () => () => (notifications += 1),
+			read: () => external,
+			write: (value: readonly string[]) => (external = value)
+		});
+
+		state.setFromUser(['one', 'two']);
+		state.setFromUser(['one', 'two']);
+		expect(notifications).toBe(0);
+
+		let record: { value: string; nested: { enabled: boolean } } | undefined;
+		const recordState = new ControllableState({
+			defaultValue: () => ({ value: 'ready', nested: { enabled: true } }),
+			onChange: () => () => (notifications += 1),
+			read: () => record,
+			write: (value: { value: string; nested: { enabled: boolean } }) => (record = value)
+		});
+		recordState.setFromUser({ value: 'ready', nested: { enabled: true } });
+		expect(notifications).toBe(0);
 	});
 
 	it('treats null as an explicit empty value instead of an uncontrolled signal', () => {

@@ -242,6 +242,7 @@
 	const presence = createPresence(initiallyOpen);
 	const mounted = $derived(presence.mounted);
 	const presenceState = $derived(presence.state);
+	let presenceOwnerWindow = $state<Window | null>(null);
 	const rootClass = $derived(
 		appearance === 'dialog'
 			? zui.recipe(contentRecipe, {
@@ -260,11 +261,13 @@
 			: (explicitLabelledBy ?? (explicitLabel ? undefined : dialog.titleId))
 	);
 	const resolvedDescribedBy = $derived(
-		ariaDescribedBy === null
-			? undefined
-			: ariaDescribedBy?.trim() || (dialog.hasDescription ? dialog.descriptionId : undefined)
+		ariaDescribedBy === null ? undefined : ariaDescribedBy?.trim() || dialog.descriptionId
 	);
-	$effect(() => presence.update(dialog.open, dialog.exitDuration, ref?.ownerDocument.defaultView));
+	$effect(() => {
+		const ownerWindow = dialog.ownerWindow ?? ref?.ownerDocument.defaultView;
+		if (ownerWindow) presenceOwnerWindow = ownerWindow;
+	});
+	$effect(() => presence.update(dialog.open, dialog.exitDuration, presenceOwnerWindow));
 	$effect(() => {
 		const namedByTitle = ariaLabelledBy === undefined && !explicitLabel && dialog.hasTitle;
 		if (dialog.open && ref && !explicitLabelledBy && !explicitLabel && !namedByTitle) {

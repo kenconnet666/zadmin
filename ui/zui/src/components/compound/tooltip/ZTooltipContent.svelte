@@ -158,7 +158,9 @@
 		}
 	};
 
-	$effect(() => presence.update(tooltip.open, tooltip.exitDuration));
+	$effect(() =>
+		presence.update(tooltip.open, tooltip.exitDuration, ref?.ownerDocument.defaultView)
+	);
 	$effect(() => {
 		const content = ref;
 		const trigger = tooltip.trigger;

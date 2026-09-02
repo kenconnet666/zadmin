@@ -22,10 +22,16 @@ describe('ZBadge server contract', () => {
 	});
 
 	it('rejects values that cannot represent notification counts', () => {
-		expect(() => render(ZBadge, { props: { count: -1 } })).toThrow(/non-negative safe integer/u);
-		expect(() => render(ZBadge, { props: { count: 1.5 } })).toThrow(/non-negative safe integer/u);
-		expect(() => render(ZBadge, { props: { count: 1, max: 0 } })).toThrow(/positive safe integer/u);
-		expect(() => render(ZBadge, { props: { count: 1, offset: [0, Number.NaN] } })).toThrow(
+		expect(() => render(ZBadge, { props: { count: -1 } }).body).toThrow(
+			/non-negative safe integer/u
+		);
+		expect(() => render(ZBadge, { props: { count: 1.5 } }).body).toThrow(
+			/non-negative safe integer/u
+		);
+		expect(() => render(ZBadge, { props: { count: 1, max: 0 } }).body).toThrow(
+			/positive safe integer/u
+		);
+		expect(() => render(ZBadge, { props: { count: 1, offset: [0, Number.NaN] } }).body).toThrow(
 			/two finite numbers/u
 		);
 	});

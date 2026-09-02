@@ -229,6 +229,7 @@
 	let previewFocus = $state<CalendarDate | null>(null);
 	const valueState = new ControllableState<CalendarRange | CalendarRangeValue | null>({
 		defaultValue: () => normalizeRangeValue(defaultValue),
+		resetToInitialValue: true,
 		onChange: () => (next) => onValueChange?.(normalizeRangeValue(next)),
 		read: () => value,
 		write: (next) => (value = next)

@@ -64,8 +64,10 @@
 
 	$effect(() => {
 		popover.setTrigger(ref);
+		popover.setRestoreTarget(ref);
 		return () => {
 			if (popover.trigger === ref) popover.setTrigger(null);
+			if (popover.restoreTarget === ref) popover.setRestoreTarget(null);
 		};
 	});
 

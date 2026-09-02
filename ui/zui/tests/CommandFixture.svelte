@@ -36,8 +36,8 @@
 		{items}
 	/>
 	<button type="reset">Reset</button>
-	<output data-testid="command-output">{query}:{action}:{escaped}</output>
 </form>
+<output data-testid="command-output">{query}:{action}:{escaped}</output>
 <button
 	type="button"
 	data-testid="command-remove-preview"

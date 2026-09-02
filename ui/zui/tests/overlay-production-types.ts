@@ -47,9 +47,9 @@ const popoverContent = {
 } satisfies ComponentProps<typeof ZPopoverContent> satisfies ZPopoverContentProps;
 
 // @ts-expect-error Dialog is intentionally modal-only
-const invalidDialog = { modal: false } satisfies ZDialogProps;
-// @ts-expect-error AlertDialog always derives its accessible name from required Title and Description
+const invalidDialog = { modal: false } satisfies ComponentProps<typeof ZDialog>;
 const invalidAlertContent = {
+	// @ts-expect-error AlertDialog always derives its accessible name from required Title and Description
 	ariaLabel: 'Bypass required title'
 } satisfies ZAlertDialogContentProps;
 

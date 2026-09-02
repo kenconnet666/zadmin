@@ -47,5 +47,5 @@
 		>Clear owner value</button
 	>
 	<button type="reset">Reset</button>
-	<output data-testid="select-output">{value}:{changes}:{open}</output>
 </form>
+<output data-testid="select-output">{value}:{changes}:{open}</output>

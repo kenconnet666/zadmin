@@ -50,5 +50,5 @@
 		>Clear owner values
 	</button>
 	<button type="reset">Reset</button>
-	<output data-testid="multi-select-output">{value.join(',')}:{changes}:{open}</output>
 </form>
+<output data-testid="multi-select-output">{value.join(',')}:{changes}:{open}</output>

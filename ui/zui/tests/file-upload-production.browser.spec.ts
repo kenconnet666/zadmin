@@ -87,8 +87,9 @@ describe('ZFileUpload production queue', () => {
 		await tick();
 		expect(transport).toHaveBeenCalledTimes(2);
 		completions[1]();
-		await tick();
-		expect(document.body.textContent).toContain('manual:manual.json:success:100:none');
+		await expect
+			.poll(() => document.body.textContent)
+			.toContain('manual:manual.json:success:100:none');
 	});
 
 	it('maps transport failure to a typed error and recovers on retry', async () => {
@@ -104,15 +105,15 @@ describe('ZFileUpload production queue', () => {
 		});
 
 		document.querySelector<HTMLButtonElement>('[aria-label="Upload retry.json"]')?.click();
-		await tick();
-		expect(document.body.textContent).toContain(
-			'retry:retry.json:error:0:Upload failed for retry.json'
-		);
+		await expect
+			.poll(() => document.body.textContent)
+			.toContain('retry:retry.json:error:0:Upload failed for retry.json');
 		document
 			.querySelector<HTMLButtonElement>('[aria-label="Retry upload for retry.json"]')
 			?.click();
-		await tick();
-		expect(document.body.textContent).toContain('retry:retry.json:success:100:none');
+		await expect
+			.poll(() => document.body.textContent)
+			.toContain('retry:retry.json:success:100:none');
 	});
 
 	it('keeps readonly focus and FormData while blocking all queue writes', async () => {

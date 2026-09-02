@@ -1,3 +1,4 @@
+import { untrack } from 'svelte';
 import type { LogicalCollectionItem, LogicalCollectionView } from './logical-collection.js';
 import {
 	navigationIntent,
@@ -51,13 +52,14 @@ export class CollectionNavigation<TKey extends SelectionKey, TValue> {
 	}
 
 	set(key: TKey | undefined, reason: CollectionNavigationReason): boolean {
+		const current = untrack(() => this.#readActive());
 		if (key === undefined) {
-			if (this.#readActive() === undefined) return false;
+			if (current === undefined) return false;
 			this.#writeActive(undefined, reason);
 			return true;
 		}
 		if (this.#options.disabled?.() || !navigable(this.#options.view().get(key))) return false;
-		if (Object.is(this.#readActive(), key)) return false;
+		if (Object.is(current, key)) return false;
 		this.#writeActive(key, reason);
 		return true;
 	}
@@ -65,7 +67,7 @@ export class CollectionNavigation<TKey extends SelectionKey, TValue> {
 	move(intent: NavigationIntent): TKey | undefined {
 		if (this.#options.disabled?.()) return undefined;
 		const view = this.#options.view();
-		const current = this.currentKey;
+		const current = untrack(() => this.currentKey);
 		const options = { loop: this.#options.loop?.() ?? true };
 		const target =
 			intent === 'first'
@@ -98,7 +100,7 @@ export class CollectionNavigation<TKey extends SelectionKey, TValue> {
 			this.#previousView = view;
 			return undefined;
 		}
-		const current = this.#readActive();
+		const current = untrack(() => this.#readActive());
 		if (current !== undefined && navigable(view.get(current))) {
 			this.#previousView = view;
 			return current;
@@ -128,6 +130,54 @@ export class CollectionNavigation<TKey extends SelectionKey, TValue> {
 		}
 		target ??= view.first();
 		if (!Object.is(current, target)) this.#writeActive(target, 'collection-change');
+		this.#previousView = view;
+		return target;
+	}
+
+	/**
+	 * Reconciles after a focused logical item is removed.
+	 *
+	 * Compound children can transiently unregister and register siblings during one
+	 * Svelte update. The caller supplies the stable pre-removal view so a temporary
+	 * empty view cannot erase the nearest-position contract.
+	 */
+	reconcileRemoved(
+		previousView: LogicalCollectionView<TKey, TValue>,
+		removedKey: TKey
+	): TKey | undefined {
+		const view = this.#options.view();
+		if (this.#options.disabled?.()) {
+			this.#previousView = view;
+			return undefined;
+		}
+		const previousIndex = previousView.indexOf(removedKey);
+		let target: TKey | undefined;
+		if (previousIndex >= 0) {
+			for (let index = previousIndex + 1; index < previousView.size; index += 1) {
+				const key = previousView.keys[index];
+				if (key !== undefined && navigable(view.get(key))) {
+					target = key;
+					break;
+				}
+			}
+			if (target === undefined) {
+				for (let index = previousIndex - 1; index >= 0; index -= 1) {
+					const key = previousView.keys[index];
+					if (key !== undefined && navigable(view.get(key))) {
+						target = key;
+						break;
+					}
+				}
+			}
+		}
+		target ??= view.first();
+		if (
+			!Object.is(
+				untrack(() => this.#readActive()),
+				target
+			)
+		)
+			this.#writeActive(target, 'collection-change');
 		this.#previousView = view;
 		return target;
 	}

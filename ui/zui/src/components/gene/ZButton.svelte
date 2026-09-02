@@ -66,19 +66,16 @@
 				large: (s) => {
 					s.minHeight._large;
 					s.paddingBlock.px(0);
-					s.paddingInline._xlarge;
 					s.fontSize._large;
 				},
 				medium: (s) => {
 					s.minHeight._medium;
 					s.paddingBlock.px(0);
-					s.paddingInline._large;
 					s.fontSize._medium;
 				},
 				small: (s) => {
 					s.minHeight._small;
 					s.paddingBlock.px(0);
-					s.paddingInline._medium;
 					s.fontSize._small;
 				}
 			},
@@ -189,12 +186,60 @@
 				},
 				when: { pressed: true, tone: 'danger', variant: 'ghost' }
 			},
-			{ style: (s) => s.width._small, when: { shape: 'square', size: 'small' } },
-			{ style: (s) => s.width._medium, when: { shape: 'square', size: 'medium' } },
-			{ style: (s) => s.width._large, when: { shape: 'square', size: 'large' } },
-			{ style: (s) => s.width._small, when: { shape: 'circle', size: 'small' } },
-			{ style: (s) => s.width._medium, when: { shape: 'circle', size: 'medium' } },
-			{ style: (s) => s.width._large, when: { shape: 'circle', size: 'large' } }
+			{
+				style: (s) => s.paddingInline._medium,
+				when: { shape: 'default', size: 'small' }
+			},
+			{
+				style: (s) => s.paddingInline._large,
+				when: { shape: 'default', size: 'medium' }
+			},
+			{
+				style: (s) => s.paddingInline._xlarge,
+				when: { shape: 'default', size: 'large' }
+			},
+			{
+				style: (s) => {
+					s.height._small;
+					s.width._small;
+				},
+				when: { shape: 'square', size: 'small' }
+			},
+			{
+				style: (s) => {
+					s.height._medium;
+					s.width._medium;
+				},
+				when: { shape: 'square', size: 'medium' }
+			},
+			{
+				style: (s) => {
+					s.height._large;
+					s.width._large;
+				},
+				when: { shape: 'square', size: 'large' }
+			},
+			{
+				style: (s) => {
+					s.height._small;
+					s.width._small;
+				},
+				when: { shape: 'circle', size: 'small' }
+			},
+			{
+				style: (s) => {
+					s.height._medium;
+					s.width._medium;
+				},
+				when: { shape: 'circle', size: 'medium' }
+			},
+			{
+				style: (s) => {
+					s.height._large;
+					s.width._large;
+				},
+				when: { shape: 'circle', size: 'large' }
+			}
 		],
 		defaultVariants: {
 			disabled: false,

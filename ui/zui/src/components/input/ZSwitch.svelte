@@ -518,6 +518,7 @@
 		data-invalid={resolvedInvalid || undefined}
 		data-loading={loading || undefined}
 		data-readonly={resolvedReadonly || undefined}
+		data-size={resolvedSize}
 		data-slot="control"
 		data-state={resolvedChecked ? 'checked' : 'unchecked'}
 	/>

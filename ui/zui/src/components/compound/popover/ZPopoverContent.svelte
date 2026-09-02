@@ -242,7 +242,7 @@
 			? new FocusScope(content, {
 					initialFocus,
 					restoreFocus,
-					restoreTarget: restoreTarget ?? (() => popover.trigger),
+					restoreTarget: restoreTarget ?? (() => popover.restoreTarget),
 					trap: popover.modal
 				})
 			: undefined;

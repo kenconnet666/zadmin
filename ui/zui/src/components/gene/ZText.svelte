@@ -11,7 +11,7 @@
 		TypographyWeight
 	} from './typography.js';
 
-	export type ZTextElement = 'label' | 'p' | 'small' | 'span' | 'strong';
+	export type ZTextElement = 'div' | 'label' | 'p' | 'small' | 'span' | 'strong';
 	export type ZTextLineHeight = TypographyLineHeight;
 	export type ZTextSize = TypographySize;
 	export type ZTextTone = TypographyTone;
@@ -20,6 +20,7 @@
 	export interface ZTextProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
 		readonly as?: ZTextElement;
 		readonly children?: Snippet;
+		readonly for?: string;
 		readonly lineClamp?: number;
 		readonly lineHeight?: ZTextLineHeight;
 		readonly size?: ZTextSize;
@@ -45,7 +46,13 @@
 				default: "'span'",
 				description: '有限的真实语义元素。',
 				name: 'as',
-				type: "'label' | 'p' | 'small' | 'span' | 'strong'"
+				type: "'div' | 'label' | 'p' | 'small' | 'span' | 'strong'"
+			},
+			{
+				default: 'undefined',
+				description: 'as=label时关联原生表单control。',
+				name: 'for',
+				type: 'string'
 			},
 			{
 				default: "'medium'",

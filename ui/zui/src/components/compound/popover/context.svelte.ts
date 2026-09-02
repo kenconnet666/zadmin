@@ -26,9 +26,11 @@ export interface ZPopoverContext {
 	readonly placement: PopoverPlacement;
 	readonly portalTarget: PortalTarget;
 	readonly reducedMotion: boolean;
+	readonly restoreTarget: HTMLElement | null;
 	readonly trigger: HTMLElement | null;
 	readonly triggerId: string;
 	setOpen(open: boolean): void;
+	setRestoreTarget(target: HTMLElement | null): void;
 	setTrigger(trigger: HTMLElement | null): void;
 }
 

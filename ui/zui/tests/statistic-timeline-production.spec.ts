@@ -28,43 +28,52 @@ describe('Statistic and Timeline production SSR contracts', () => {
 	});
 
 	it('rejects invalid static values and precision before emitting misleading markup', () => {
-		expect(() => render(ZStatistic, { props: { label: 'Invalid', value: Number.NaN } })).toThrow(
-			/value must be finite/u
-		);
-		expect(() =>
-			render(ZStatistic, { props: { label: 'Invalid', precision: 101, value: 1 } })
+		expect(
+			() => render(ZStatistic, { props: { label: 'Invalid', value: Number.NaN } }).body
+		).toThrow(/value must be finite/u);
+		expect(
+			() => render(ZStatistic, { props: { label: 'Invalid', precision: 101, value: 1 } }).body
 		).toThrow(/precision must be an integer/u);
-		expect(() =>
-			render(ZStatistic, { props: { label: 'Invalid', trend: Number.POSITIVE_INFINITY, value: 1 } })
+		expect(
+			() =>
+				render(ZStatistic, {
+					props: { label: 'Invalid', trend: Number.POSITIVE_INFINITY, value: 1 }
+				}).body
 		).toThrow(/trend must be finite/u);
 	});
 
 	it('rejects duplicate, non-finite and ambiguous Timeline identities', () => {
-		expect(() =>
-			render(ZTimeline, {
-				props: {
-					items: [
-						{ key: 'same', title: 'A' },
-						{ key: 'same', title: 'B' }
-					]
-				}
-			})
+		expect(
+			() =>
+				render(ZTimeline, {
+					props: {
+						items: [
+							{ key: 'same', title: 'A' },
+							{ key: 'same', title: 'B' }
+						]
+					}
+				}).body
 		).toThrow(/Duplicate ZTimeline key/u);
-		expect(() =>
-			render(ZTimeline, {
-				props: { items: [{ key: Number.NaN, title: 'Invalid' }] }
-			})
+		expect(
+			() =>
+				render(ZTimeline, {
+					props: { items: [{ key: Number.NaN, title: 'Invalid' }] }
+				}).body
 		).toThrow(/numeric keys must be finite/u);
-		expect(() =>
-			render(ZTimeline, {
-				props: { items: [{ id: 'legacy', key: 'current', title: 'Ambiguous' }] } as never
-			})
+		expect(
+			() =>
+				render(ZTimeline, {
+					props: { items: [{ id: 'legacy', key: 'current', title: 'Ambiguous' }] } as never
+				}).body
 		).toThrow(/cannot provide both key and deprecated id/u);
-		const snippet = (() => undefined) as Snippet;
-		expect(() =>
-			render(ZTimeline, { props: { content: snippet as never, item: snippet as never, items: [] } })
+		const snippet = (() => undefined) as unknown as Snippet;
+		expect(
+			() =>
+				render(ZTimeline, {
+					props: { content: snippet as never, item: snippet as never, items: [] }
+				}).body
 		).toThrow(/either content or deprecated item/u);
-		expect(() => render(ZTimeline, { props: { items: [], pendingIcon: snippet } })).toThrow(
+		expect(() => render(ZTimeline, { props: { items: [], pendingIcon: snippet } }).body).toThrow(
 			/pendingIcon requires a pending snippet/u
 		);
 	});

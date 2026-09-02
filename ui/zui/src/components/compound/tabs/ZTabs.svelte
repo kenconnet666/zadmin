@@ -396,7 +396,7 @@
 				: () => undefined;
 			return () => {
 				const restoreFocus =
-					current.element?.ownerDocument.activeElement === current.element ||
+					mounted.ownsFocus(current.key) ||
 					(focusWithin && Object.is(navigation.currentKey, current.key));
 				stopMount();
 				stopLogical();

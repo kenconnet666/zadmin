@@ -20,11 +20,12 @@ describe('production Menu family', () => {
 		first.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
 		expect(document.activeElement).toBe(middle);
 
-		await userEvent.click(document.querySelector('[data-testid="menu-remove"]')!);
-		await tick();
-		expect(document.activeElement).toBe(
-			document.querySelector<HTMLElement>('[data-testid="menu-last"]')
-		);
+		document
+			.querySelector<HTMLButtonElement>('[data-testid="menu-remove"]')!
+			.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+		await expect
+			.poll(() => document.activeElement)
+			.toBe(document.querySelector<HTMLElement>('[data-testid="menu-last"]'));
 
 		(document.activeElement as HTMLElement).dispatchEvent(
 			new KeyboardEvent('keydown', { bubbles: true, key: 'a' })

@@ -316,16 +316,25 @@
 				);
 		};
 		assertBoundary();
+		const handlePointerDown = (event: PointerEvent) => event.preventDefault();
+		const handleClick = () => focusControl();
+		node.addEventListener('pointerdown', handlePointerDown);
+		node.addEventListener('click', handleClick);
 		const MutationObserverConstructor = node.ownerDocument.defaultView?.MutationObserver;
-		if (!MutationObserverConstructor) return;
-		const observer = new MutationObserverConstructor(assertBoundary);
-		observer.observe(node, {
+		const observer = MutationObserverConstructor
+			? new MutationObserverConstructor(assertBoundary)
+			: undefined;
+		observer?.observe(node, {
 			attributeFilter: ['contenteditable', 'href', 'tabindex'],
 			attributes: true,
 			childList: true,
 			subtree: true
 		});
-		return () => observer.disconnect();
+		return () => {
+			observer?.disconnect();
+			node.removeEventListener('pointerdown', handlePointerDown);
+			node.removeEventListener('click', handleClick);
+		};
 	};
 
 	provideZInputGroup({
@@ -389,7 +398,7 @@
 	aria-labelledby={resolvedLabelledBy}
 	aria-describedby={resolvedDescribedBy}
 	aria-disabled={resolvedDisabled || undefined}
-	aria-invalid={resolvedInvalid ? 'true' : ariaInvalid}
+	dir={rest.dir ?? zui.direction}
 	data-disabled={resolvedDisabled || undefined}
 	data-invalid={resolvedInvalid || undefined}
 	data-readonly={resolvedReadonly || undefined}
@@ -398,26 +407,14 @@
 	data-reduced-motion={reduced || undefined}
 >
 	{#if prefix}
-		<span
-			class={affixClass}
-			data-slot="prefix"
-			{@attach attachAffix}
-			onpointerdown={(event) => event.preventDefault()}
-			onclick={focusControl}>{@render prefix()}</span
-		>
+		<span class={affixClass} data-slot="prefix" {@attach attachAffix}>{@render prefix()}</span>
 	{/if}
 	{#if prefixAction}<span class={actionClass} data-slot="prefix-action"
 			>{@render prefixAction()}</span
 		>{/if}
 	{@render children()}
 	{#if suffix}
-		<span
-			class={affixClass}
-			data-slot="suffix"
-			{@attach attachAffix}
-			onpointerdown={(event) => event.preventDefault()}
-			onclick={focusControl}>{@render suffix()}</span
-		>
+		<span class={affixClass} data-slot="suffix" {@attach attachAffix}>{@render suffix()}</span>
 	{/if}
 	{#if suffixAction}<span class={actionClass} data-slot="suffix-action"
 			>{@render suffixAction()}</span

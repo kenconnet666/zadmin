@@ -28,7 +28,7 @@ describe('ZMultiSelect logical collection integration', () => {
 		expect(options[0]?.id).not.toBe(options[1]?.id);
 		expect(content?.getAttribute('aria-activedescendant')).toBe(options[0]?.id);
 		keydown(content, 'ArrowDown');
-		expect(content?.getAttribute('aria-activedescendant')).toBe(options[1]?.id);
+		await expect.poll(() => content?.getAttribute('aria-activedescendant')).toBe(options[1]?.id);
 		keydown(content, 'Enter');
 		await tick();
 		expect(content?.isConnected).toBe(true);
@@ -58,8 +58,7 @@ describe('ZMultiSelect logical collection integration', () => {
 		await tick();
 		expect(new FormData(form!).getAll('choice')).toEqual([]);
 		form?.reset();
-		await tick();
-		expect(new FormData(form!).getAll('choice')).toEqual(['1', '1', 'orphan']);
+		await expect.poll(() => new FormData(form!).getAll('choice')).toEqual(['1', '1', 'orphan']);
 		expect(
 			document.querySelector('[data-testid="multi-collection-output"]')?.textContent
 		).toContain(':2');

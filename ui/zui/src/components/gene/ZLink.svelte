@@ -151,6 +151,7 @@
 <script lang="ts">
 	import ExternalLink from '@lucide/svelte/icons/external-link';
 	import { untrack } from 'svelte';
+	import { captureClick } from '../../runtime/foundation/capture-click.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
@@ -217,6 +218,11 @@
 		}
 		onclick?.(event);
 	}
+	function interceptDisabledClick(event: MouseEvent): void {
+		if (!disabled) return;
+		event.preventDefault();
+		event.stopPropagation();
+	}
 </script>
 
 <!-- eslint-disable svelte/no-navigation-without-resolve -- library links preserve caller-owned native and external hrefs -->
@@ -226,6 +232,7 @@
 	class={[rootClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
+	use:captureClick={interceptDisabledClick}
 	aria-describedby={resolvedDescribedBy}
 	aria-disabled={disabled ? 'true' : undefined}
 	aria-label={ariaLabel}

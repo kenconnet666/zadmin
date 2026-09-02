@@ -1,5 +1,7 @@
 import type { UnitFamilyName, UnitName } from './units.js';
 
+const AUTO = { auto: 'auto' } as const;
+
 const DISPLAY = {
 	block: 'block',
 	contents: 'contents',
@@ -182,22 +184,62 @@ export const PROPERTY_DEFINITIONS = {
 	left: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
 	letterSpacing: { units: ['length'] },
 	lineHeight: { token: 'lineHeight', units: ['length', 'percent'] },
-	margin: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
-	marginBlock: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
-	marginBlockEnd: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
-	marginBlockStart: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
-	marginBottom: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
-	marginInline: {
-		keywords: { auto: 'auto' },
+	margin: { keywords: AUTO, token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
+	marginBlock: { keywords: AUTO, token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
+	marginBlockEnd: {
+		keywords: AUTO,
 		token: 'space',
 		tokenUnit: 'px',
 		units: ['length', 'percent']
 	},
-	marginInlineEnd: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
-	marginInlineStart: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
-	marginLeft: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
-	marginRight: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
-	marginTop: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
+	marginBlockStart: {
+		keywords: AUTO,
+		token: 'space',
+		tokenUnit: 'px',
+		units: ['length', 'percent']
+	},
+	marginBottom: {
+		keywords: AUTO,
+		token: 'space',
+		tokenUnit: 'px',
+		units: ['length', 'percent']
+	},
+	marginInline: {
+		keywords: AUTO,
+		token: 'space',
+		tokenUnit: 'px',
+		units: ['length', 'percent']
+	},
+	marginInlineEnd: {
+		keywords: AUTO,
+		token: 'space',
+		tokenUnit: 'px',
+		units: ['length', 'percent']
+	},
+	marginInlineStart: {
+		keywords: AUTO,
+		token: 'space',
+		tokenUnit: 'px',
+		units: ['length', 'percent']
+	},
+	marginLeft: {
+		keywords: AUTO,
+		token: 'space',
+		tokenUnit: 'px',
+		units: ['length', 'percent']
+	},
+	marginRight: {
+		keywords: AUTO,
+		token: 'space',
+		tokenUnit: 'px',
+		units: ['length', 'percent']
+	},
+	marginTop: {
+		keywords: AUTO,
+		token: 'space',
+		tokenUnit: 'px',
+		units: ['length', 'percent']
+	},
 	maxHeight: { token: 'size', tokenUnit: 'px', units: ['length', 'percent'] },
 	maxWidth: { token: 'size', tokenUnit: 'px', units: ['length', 'percent'] },
 	minHeight: { token: 'size', tokenUnit: 'px', units: ['length', 'percent'] },
@@ -257,6 +299,8 @@ export const PROPERTY_DEFINITIONS = {
 	},
 	right: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
 	scrollMarginTop: { token: 'space', tokenUnit: 'px', units: ['length'] },
+	scrollbarGutter: { keywords: { auto: 'auto', stable: 'stable' } },
+	scrollbarWidth: { keywords: { auto: 'auto', none: 'none', thin: 'thin' } },
 	rowGap: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
 	stroke: { token: 'color' },
 	textAlign: {

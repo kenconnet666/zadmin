@@ -41,6 +41,7 @@
 	<ZDialogOverlay />
 	<ZDialogContent
 		data-testid="dialog-production-content"
+		ariaDescribedBy={null}
 		initialFocus={() => inputRef}
 		restoreTarget={() => restoreRef}
 	>

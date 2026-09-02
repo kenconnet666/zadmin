@@ -1,3 +1,4 @@
+import { untrack } from 'svelte';
 import { SvelteMap } from 'svelte/reactivity';
 
 import type { SelectionKey } from './selection.js';
@@ -15,6 +16,7 @@ interface MountedElementRegistration<
 	TKey extends SelectionKey,
 	TElement extends HTMLElement
 > extends MountedElementRecord<TKey, TElement> {
+	readonly detachFocusTracking: () => void;
 	readonly token: symbol;
 }
 
@@ -33,6 +35,8 @@ export class MountedElements<
 	TElement extends HTMLElement = HTMLElement
 > {
 	readonly #records = new SvelteMap<TKey, MountedElementRegistration<TKey, TElement>>();
+	#focusedKey: TKey | undefined;
+	#focusGeneration = 0;
 
 	get size(): number {
 		return this.#records.size;
@@ -40,11 +44,41 @@ export class MountedElements<
 
 	mount(key: TKey, element: TElement, id: string): () => void {
 		const token = Symbol('zui-mounted-element');
-		this.#records.set(key, { element, id, key, token });
+		const previous = untrack(() => this.#records.get(key));
+		previous?.detachFocusTracking();
+		const handleFocus = () => {
+			this.#focusedKey = key;
+		};
+		const handleBlur = (event: FocusEvent) => {
+			const relatedTarget = event.relatedTarget;
+			if (relatedTarget !== null) {
+				const next = this.#keyForTarget(relatedTarget);
+				this.#focusedKey = next;
+				return;
+			}
+			element.ownerDocument.defaultView?.queueMicrotask(() => {
+				if (
+					this.#records.get(key)?.token === token &&
+					element.isConnected &&
+					element.ownerDocument.activeElement !== element
+				) {
+					this.#focusedKey = undefined;
+				}
+			});
+		};
+		element.addEventListener('focus', handleFocus);
+		element.addEventListener('blur', handleBlur);
+		const detachFocusTracking = () => {
+			element.removeEventListener('focus', handleFocus);
+			element.removeEventListener('blur', handleBlur);
+		};
+		this.#records.set(key, { detachFocusTracking, element, id, key, token });
+		if (element.ownerDocument.activeElement === element) this.#focusedKey = key;
 		let active = true;
 		return () => {
 			if (!active) return;
 			active = false;
+			detachFocusTracking();
 			if (this.#records.get(key)?.token === token) this.#records.delete(key);
 		};
 	}
@@ -58,10 +92,38 @@ export class MountedElements<
 	}
 
 	focus(key: TKey, options: FocusOptions = { preventScroll: true }): boolean {
-		const element = this.#records.get(key)?.element;
-		if (!element) return false;
-		element.focus(options);
+		this.#focusGeneration += 1;
+		const record = this.#records.get(key);
+		return record ? this.#focusRecord(record, options) : false;
+	}
+
+	/** Schedules focus while invalidating every older queued request and replaced element token. */
+	scheduleFocus(key: TKey, options: FocusOptions = { preventScroll: true }): boolean {
+		const record = this.#records.get(key);
+		if (!record) return false;
+		const generation = (this.#focusGeneration += 1);
+		const run = () => {
+			if (generation !== this.#focusGeneration || this.#records.get(key)?.token !== record.token)
+				return;
+			this.#focusRecord(record, options);
+		};
+		const ownerWindow = record.element.ownerDocument.defaultView;
+		if (ownerWindow) ownerWindow.queueMicrotask(run);
+		else queueMicrotask(run);
 		return true;
+	}
+
+	#focusRecord(record: MountedElementRegistration<TKey, TElement>, options: FocusOptions): boolean {
+		const { element, key } = record;
+		element.focus(options);
+		const focused = element.ownerDocument.activeElement === element;
+		if (focused) this.#focusedKey = key;
+		return focused;
+	}
+
+	/** True when this key most recently owned focus, including the removal blur gap. */
+	ownsFocus(key: TKey): boolean {
+		return Object.is(this.#focusedKey, key);
 	}
 
 	order(keys: readonly TKey[]): readonly TKey[] {
@@ -79,6 +141,16 @@ export class MountedElements<
 	}
 
 	clear(): void {
+		this.#focusGeneration += 1;
+		for (const record of this.#records.values()) record.detachFocusTracking();
 		this.#records.clear();
+		this.#focusedKey = undefined;
+	}
+
+	#keyForTarget(target: EventTarget): TKey | undefined {
+		for (const [key, { element }] of this.#records) {
+			if (target === element) return key;
+		}
+		return undefined;
 	}
 }

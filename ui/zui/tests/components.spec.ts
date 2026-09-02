@@ -318,7 +318,7 @@ describe('ZUI foundational components', () => {
 	});
 
 	it('rejects an Accordion Trigger that inherits an Item from a different nested owner', () => {
-		expect(() => render(AccordionInvalidNestedFixture)).toThrow(/nearest ZAccordion/u);
+		expect(() => render(AccordionInvalidNestedFixture).body).toThrow(/nearest ZAccordion/u);
 	});
 
 	it('renders Popover SSR closed by default and inline when initially open', () => {
@@ -461,18 +461,20 @@ describe('ZUI foundational components', () => {
 	});
 
 	it('rejects mixed MultiSelect value aliases instead of creating dual ownership', () => {
-		expect(() => render(ZMultiSelect, { props: { value: ['one'], values: ['two'] } })).toThrow(
+		expect(() => render(ZMultiSelect, { props: { value: ['one'], values: ['two'] } }).body).toThrow(
 			/value and deprecated values are mutually exclusive/u
 		);
-		expect(() =>
-			render(ZMultiSelect, {
-				props: { defaultValue: ['one'], defaultValues: ['two'] }
-			})
+		expect(
+			() =>
+				render(ZMultiSelect, {
+					props: { defaultValue: ['one'], defaultValues: ['two'] }
+				}).body
 		).toThrow(/defaultValue and deprecated defaultValues are mutually exclusive/u);
-		expect(() =>
-			render(ZMultiSelect, {
-				props: { onValueChange: () => undefined, onValuesChange: () => undefined }
-			})
+		expect(
+			() =>
+				render(ZMultiSelect, {
+					props: { onValueChange: () => undefined, onValuesChange: () => undefined }
+				}).body
 		).toThrow(/onValueChange and deprecated onValuesChange are mutually exclusive/u);
 	});
 
@@ -696,7 +698,7 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain('aria-hidden="true"');
 		expect(result).toContain('No releases');
 		expect(result).toContain('<time');
-		expect(result).toContain('<data value="128430"');
+		expect(result).toMatch(/<data\b[^>]*value="128430"/u);
 	});
 
 	it('renders optional snippets, static/urgent feedback and non-looping reduced Carousel branches', () => {

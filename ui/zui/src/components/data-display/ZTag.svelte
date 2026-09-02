@@ -168,6 +168,7 @@
 <script lang="ts">
 	import X from '@lucide/svelte/icons/x';
 	import { untrack } from 'svelte';
+	import { captureClick } from '../../runtime/foundation/capture-click.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -256,9 +257,9 @@
 			class={removeClass}
 			aria-label={resolvedRemoveLabel}
 			data-slot="remove"
+			use:captureClick={handleRemove}
 			disabled={resolvedDisabled}
 			tabindex={resolvedRemoveTabIndex}
-			onclick={handleRemove}
 			><X aria-hidden="true" size={resolvedSize === 'small' ? 12 : 14} /></button
 		>{/if}</span
 >

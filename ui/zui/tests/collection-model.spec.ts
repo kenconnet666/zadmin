@@ -132,6 +132,26 @@ describe('collection navigation and active descendant', () => {
 		expect(active).toBe('d');
 	});
 
+	it('restores removal focus from the stable pre-removal view after transient active churn', () => {
+		const previous = collection([
+			{ key: 'a', label: 'A' },
+			{ key: 'b', label: 'B' },
+			{ key: 'c', label: 'C' }
+		]).full;
+		const current = collection([
+			{ key: 'a', label: 'A' },
+			{ key: 'c', label: 'C' }
+		]).full;
+		let active: SelectionKey | undefined = 'a';
+		const navigation = new CollectionNavigation({
+			readActive: () => active,
+			view: () => current,
+			writeActive: (key) => (active = key)
+		});
+		expect(navigation.reconcileRemoved(previous, 'b')).toBe('c');
+		expect(active).toBe('c');
+	});
+
 	it('does not intercept composition and gives number/string keys distinct DOM ids', () => {
 		const source = collection([
 			{ key: 1, label: 'Numeric' },
@@ -147,9 +167,12 @@ describe('collection navigation and active descendant', () => {
 		expect(numericId).not.toBe(active.idFor('1'));
 		expect(active.activeId).toBeUndefined();
 		const element = {
+			addEventListener: vi.fn(),
 			compareDocumentPosition: vi.fn(() => 0),
 			focus: vi.fn(),
-			ownerDocument: {} as Document
+			isConnected: true,
+			ownerDocument: {} as Document,
+			removeEventListener: vi.fn()
 		} as unknown as HTMLElement;
 		const unmount = active.mount(1, element);
 		expect(active.activeId).toBe(numericId);
@@ -173,30 +196,57 @@ describe('collection navigation and active descendant', () => {
 });
 
 describe('mounted elements', () => {
-	it('keeps replacement registrations safe from stale cleanup and sorts connected DOM only', () => {
-		const ownerDocument = {} as Document;
+	it('keeps replacement registrations, focus requests and connected DOM order race-safe', async () => {
+		let activeElement: HTMLElement | null = null;
+		const ownerDocument = {
+			get activeElement() {
+				return activeElement;
+			},
+			defaultView: { queueMicrotask },
+			body: {}
+		} as unknown as Document;
+		const createElement = (position: number, focus = vi.fn()) => {
+			const listeners = new Map<string, Set<EventListener>>();
+			const element = {
+				addEventListener(type: string, listener: EventListener) {
+					const bucket = listeners.get(type) ?? new Set<EventListener>();
+					bucket.add(listener);
+					listeners.set(type, bucket);
+				},
+				compareDocumentPosition: vi.fn(() => position),
+				focus: vi.fn((options?: FocusOptions) => {
+					focus(options);
+					activeElement = element as unknown as HTMLElement;
+					for (const listener of listeners.get('focus') ?? []) {
+						listener.call(element, new Event('focus'));
+					}
+				}),
+				isConnected: true,
+				ownerDocument,
+				removeEventListener(type: string, listener: EventListener) {
+					listeners.get(type)?.delete(listener);
+				}
+			} as unknown as HTMLElement;
+			return element;
+		};
 		const focus = vi.fn();
-		const before = {
-			compareDocumentPosition: vi.fn(() => 4),
-			focus,
-			ownerDocument
-		} as unknown as HTMLElement;
-		const after = {
-			compareDocumentPosition: vi.fn(() => 2),
-			focus: vi.fn(),
-			ownerDocument
-		} as unknown as HTMLElement;
-		const replacement = {
-			compareDocumentPosition: vi.fn(() => 0),
-			focus: vi.fn(),
-			ownerDocument
-		} as unknown as HTMLElement;
+		const before = createElement(4, focus);
+		const after = createElement(2);
+		const replacement = createElement(0);
 		const mounted = new MountedElements<SelectionKey>();
 		const removeAfter = mounted.mount('after', after, 'after-id');
 		const removeBefore = mounted.mount('before', before, 'before-id');
 		expect(mounted.order(['after', 'before'])).toEqual(['before', 'after']);
 		expect(mounted.focus('before')).toBe(true);
 		expect(focus).toHaveBeenCalledWith({ preventScroll: true });
+		expect(mounted.ownsFocus('before')).toBe(true);
+		expect(mounted.scheduleFocus('after')).toBe(true);
+		expect(mounted.focus('before')).toBe(true);
+		await Promise.resolve();
+		expect(activeElement).toBe(before);
+		expect(mounted.scheduleFocus('after')).toBe(true);
+		await Promise.resolve();
+		expect(activeElement).toBe(after);
 
 		const stale = mounted.mount('replace', before, 'old-id');
 		const current = mounted.mount('replace', replacement, 'new-id');
@@ -206,6 +256,7 @@ describe('mounted elements', () => {
 		expect(mounted.has('replace')).toBe(false);
 		removeAfter();
 		removeBefore();
+		mounted.clear();
 	});
 });
 

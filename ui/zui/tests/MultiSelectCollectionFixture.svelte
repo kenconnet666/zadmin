@@ -23,6 +23,9 @@
 	let changes = $state(0);
 	let legacyValues = $state<readonly SelectionKey[]>(['stable']);
 	let legacyChanges = $state(0);
+	const collectionOutput = $derived(
+		`${value.map((key) => `${typeof key}:${key}`).join('|')}:${changes}`
+	);
 </script>
 
 <form data-testid="multi-collection-form">
@@ -50,10 +53,7 @@
 		Restore options
 	</button>
 	<button type="reset">Reset</button>
-	<output data-testid="multi-collection-output"
-		>{value.map((key) => `${typeof key}:${key}`).join('|')}
-		:{changes}</output
-	>
+	<output data-testid="multi-collection-output">{collectionOutput}</output>
 </form>
 
 <ZMultiSelect readonly defaultValue={['stable']} options={groupedOptions}>

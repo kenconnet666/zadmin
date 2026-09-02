@@ -39,7 +39,7 @@
 <ZResult title="Release complete" tone="success">Version 2.4.0 is live.</ZResult>
 <ZButton
 	onclick={() =>
-		queue.push({ duration: 80, id: 'timed', title: 'Timed notification', tone: 'info' })}
+		queue.push({ duration: 500, id: 'timed', title: 'Timed notification', tone: 'info' })}
 	data-testid="add-timed-toast">Add timed toast</ZButton
 >
 <ZToaster {queue} label="Release notifications" />

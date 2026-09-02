@@ -15,7 +15,7 @@
 </script>
 
 <ZDialog defaultOpen>
-	<ZDialogContent><ZDialogTitle>SSR dialog</ZDialogTitle></ZDialogContent>
+	<ZDialogContent ariaDescribedBy={null}><ZDialogTitle>SSR dialog</ZDialogTitle></ZDialogContent>
 </ZDialog>
 <ZAlertDialog defaultOpen>
 	<ZAlertDialogOverlay />

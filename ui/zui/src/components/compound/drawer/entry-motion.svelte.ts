@@ -37,6 +37,7 @@ export class DrawerEntryMotion {
 		this.#entered = false;
 		const view = element?.ownerDocument.defaultView ?? undefined;
 		if (!view || typeof view.requestAnimationFrame !== 'function') {
+			if (!element) return;
 			this.#entered = true;
 			this.#wasOpen = true;
 			return;

@@ -402,13 +402,19 @@
 		let dispose = mounted.mount(current.key, element, current.id);
 		return {
 			destroy() {
-				const restoreFocus = element.ownerDocument.activeElement === element;
+				const previousView = view;
+				const restoreFocus = mounted.ownsFocus(current.key);
 				dispose();
-				if (restoreFocus) restoreNearestFocus();
+				if (restoreFocus) {
+					const removed = current.key;
+					queueMicrotask(() => {
+						const key = navigation.reconcileRemoved(previousView, removed);
+						if (key !== undefined) mounted.focus(key);
+					});
+				}
 			},
 			update(next: SegmentMountRegistration) {
-				const restoreFocus =
-					element.ownerDocument.activeElement === element && !current.disabled && next.disabled;
+				const restoreFocus = mounted.ownsFocus(current.key) && !current.disabled && next.disabled;
 				if (!Object.is(current.key, next.key) || current.id !== next.id) {
 					dispose();
 					dispose = mounted.mount(next.key, element, next.id);
@@ -457,7 +463,7 @@
 			}
 			const target = activeKey;
 			if (focusWithin && !Object.is(previous, target) && target !== undefined) {
-				queueMicrotask(() => mounted.focus(target));
+				mounted.scheduleFocus(target);
 			}
 		});
 	});

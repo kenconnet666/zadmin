@@ -57,10 +57,9 @@ describe('NumberField production contracts', () => {
 		await tick();
 		expect(control.value).toBe('3,75');
 		form.reset();
-		await tick();
-		expect(control.value).toBe('1,50');
-		expect(fixture('locale-value').textContent).toBe('1.5');
-		expect(new FormData(form).get('amount')).toBe('1.5');
+		await expect.poll(() => control.value).toBe('1,50');
+		await expect.poll(() => fixture('locale-value').textContent).toBe('1.5');
+		await expect.poll(() => new FormData(form).get('amount')).toBe('1.5');
 	});
 
 	it('synchronizes an external undefined clear even while editing', async () => {

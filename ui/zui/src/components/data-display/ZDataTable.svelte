@@ -433,6 +433,7 @@
 	import ZAlert from '../feedback/ZAlert.svelte';
 	import ZSpinner from '../feedback/ZSpinner.svelte';
 	import ZButton from '../gene/ZButton.svelte';
+	import ZVisuallyHidden from '../gene/ZVisuallyHidden.svelte';
 	import ZEmpty from './ZEmpty.svelte';
 	import ZTable from './ZTable.svelte';
 
@@ -518,6 +519,8 @@
 	let focusedKey: TRowKey | undefined;
 	let focusedTarget: DataTableRowFocusTarget = 'auto';
 	let previousKeys: readonly TRowKey[] = [];
+	let previousSortColumnId: string | undefined;
+	let previousSortDirection: DataSortDescriptor['direction'] | undefined;
 	let stopColumnResize: (() => void) | undefined;
 	const rowElements = new Map<TRowKey, Set<HTMLTableRowElement>>();
 
@@ -666,7 +669,11 @@
 
 	const renderedRows = $derived.by(() => {
 		if (!virtualized || !range) return keyedRows.map((entry) => ({ entry, virtual: undefined }));
-		return range.items.map((virtual) => ({ entry: keyedRows[virtual.index]!, virtual }));
+		return range.items.flatMap((virtual) => {
+			const index = keyedRows.findIndex(({ key }) => Object.is(key, virtual.key));
+			const entry = index >= 0 ? keyedRows[index] : undefined;
+			return entry ? [{ entry: { ...entry, index }, virtual }] : [];
+		});
 	});
 	const topSpace = $derived(virtualized && range?.items[0] ? range.items[0].start : 0);
 	const bottomSpace = $derived.by(() => {
@@ -759,12 +766,33 @@
 		};
 	});
 	$effect(() => {
+		const sortColumnId = resolvedSort?.descriptor.columnId;
+		const sortDirection = resolvedSort?.descriptor.direction;
+		const resetForSort =
+			sortColumnId !== previousSortColumnId || sortDirection !== previousSortDirection;
+		previousSortColumnId = sortColumnId;
+		previousSortDirection = sortDirection;
+		// Programmatic focus/measurement updates can move the viewport without
+		// dispatching a scroll event. Capture the real DOM offset before the keyed
+		// update so anchor restoration preserves the visible key and its offset.
+		const domOffset = ref?.scrollTop;
+		if (
+			!resetForSort &&
+			domOffset !== undefined &&
+			Math.abs(domOffset - virtualizer.scrollOffset) > 0.5
+		) {
+			virtualizer.setScrollOffset(domOffset);
+		}
 		const previousOffset = virtualizer.scrollOffset;
 		virtualizer.update({
 			estimateSize: (key) => estimateRow(key),
 			keys: keyedRows.map(({ key }) => key),
 			overscan
 		});
+		if (resetForSort) {
+			virtualizer.setScrollOffset(0);
+			if (ref) ref.scrollTop = 0;
+		}
 		if (resizeObserver) {
 			for (const elements of rowElements.values()) {
 				for (const element of elements) {
@@ -1334,7 +1362,7 @@
 					aria-hidden="true"
 					label={loadingLabel}
 					size="small"
-				/>{/if}
+				/><ZVisuallyHidden>{loadingLabel}</ZVisuallyHidden>{/if}
 		</div>
 	{/if}
 	<ZTable

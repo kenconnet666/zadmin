@@ -343,7 +343,7 @@
 
 	const valueState = new ControllableState<string | null>({
 		defaultValue: normalizedDefaultValue,
-		onChange: () => onValueChange,
+		onChange: () => (next) => onValueChange?.(next ?? ''),
 		read: () => value,
 		write: (next) => (value = next)
 	});
@@ -391,6 +391,11 @@
 		valueState.reset();
 		activeIndex = 0;
 		composingIndex = null;
+		const resetCharacters = splitCharacters(resolvedValue);
+		for (let index = 0; index < inputs.length; index += 1) {
+			const input = inputs[index];
+			if (input) input.value = resetCharacters[index] ?? '';
+		}
 	}
 
 	function focus(index: number): void {
@@ -452,12 +457,9 @@
 		commit(next.join(''), character ? Math.min(target + 1, resolvedLength - 1) : target);
 	}
 
-	function handleInput(
-		event: InputEvent & { currentTarget: HTMLInputElement },
-		index: number
-	): void {
+	function handleInput(event: Event & { currentTarget: HTMLInputElement }, index: number): void {
 		if (resolvedDisabled || resolvedReadonly) return;
-		if (event.isComposing || composingIndex === index) return;
+		if (('isComposing' in event && event.isComposing === true) || composingIndex === index) return;
 		distribute(event.currentTarget.value, index);
 	}
 
@@ -526,6 +528,16 @@
 		if (!focusWithin && preferred !== activeIndex) activeIndex = preferred;
 	});
 
+	$effect.pre(() => {
+		const nextLength = resolvedLength;
+		if (activeIndex < nextLength) return;
+		const nextIndex = nextLength - 1;
+		const activeElement = ref?.ownerDocument.activeElement;
+		const restoreFocus = Boolean(activeElement && ref?.contains(activeElement));
+		activeIndex = nextIndex;
+		if (restoreFocus) queueOwnerMicrotask(() => focus(nextIndex));
+	});
+
 	$effect(() => {
 		const source = valueState.current;
 		if (source === null) return;
@@ -576,6 +588,7 @@
 			inputmode={resolvedMode === 'numeric' ? 'numeric' : 'text'}
 			autocomplete={index === 0 ? resolvedAutocomplete : 'off'}
 			{form}
+			defaultValue={splitCharacters(normalizedDefaultValue())[index] ?? ''}
 			value={characters[index] ?? ''}
 			disabled={resolvedDisabled}
 			readonly={resolvedReadonly}

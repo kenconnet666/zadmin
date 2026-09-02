@@ -57,9 +57,9 @@
 		External off
 	</ZButton>
 	<ZButton type="reset">Reset</ZButton>
-	<output data-testid="switch-production-output">{checked}:{changes}</output>
-	<output data-testid="switch-production-blocked-clicks">{blockedClicks}</output>
 </form>
+<output data-testid="switch-production-output">{checked}:{changes}</output>
+<output data-testid="switch-production-blocked-clicks">{blockedClicks}</output>
 
 <form id="switch-production-external-form" data-testid="switch-production-external-form">
 	<ZButton type="reset">Reset external owner</ZButton>

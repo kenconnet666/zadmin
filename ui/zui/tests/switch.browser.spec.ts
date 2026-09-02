@@ -32,11 +32,11 @@ describe('ZSwitch production contract', () => {
 		expect(output.textContent).toBe('false:1');
 
 		form.reset();
-		await Promise.resolve();
-		await tick();
-		expect(editable.checked).toBe(true);
-		expect(new FormData(form).get('alerts')).toBe('enabled');
-		expect(output.textContent).toBe('true:1');
+		await expect.poll(() => editable.checked).toBe(true);
+		await expect.poll(() => new FormData(form).get('alerts')).toBe('enabled');
+		await expect
+			.poll(() => document.querySelector('[data-testid="switch-production-output"]')?.textContent)
+			.toBe('true:1');
 	});
 
 	it('blocks busy, readonly and cancelled changes without dropping their submitted values', async () => {

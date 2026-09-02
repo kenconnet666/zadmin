@@ -18,11 +18,14 @@ describe('ZCard server contract', () => {
 
 	it('renders the complete semantic anatomy in deterministic order', () => {
 		const body = render(CardProductionFixture).body;
-		const media = body.indexOf('data-slot="media"');
-		const header = body.indexOf('data-slot="header"');
-		const cardBody = body.indexOf('data-slot="body"');
-		const footer = body.indexOf('data-slot="footer"');
-		const actions = body.indexOf('data-slot="actions"');
+		const articleStart = body.indexOf('<article');
+		const articleEnd = body.indexOf('</article>', articleStart);
+		const article = body.slice(articleStart, articleEnd);
+		const media = article.indexOf('data-slot="media"');
+		const header = article.indexOf('data-slot="header"');
+		const cardBody = article.indexOf('data-slot="body"');
+		const footer = article.indexOf('data-slot="footer"');
+		const actions = article.indexOf('data-slot="actions"');
 
 		expect(body).toMatch(/<article(?=[^>]*aria-labelledby="card-production-title")[^>]*>/u);
 		expect(media).toBeGreaterThan(-1);

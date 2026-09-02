@@ -62,8 +62,10 @@
 	let y = $state(0);
 	$effect(() => {
 		popover.setTrigger(anchor);
+		popover.setRestoreTarget(ref);
 		return () => {
 			if (popover.trigger === anchor) popover.setTrigger(null);
+			if (popover.restoreTarget === ref) popover.setRestoreTarget(null);
 		};
 	});
 	function openAt(target: HTMLDivElement, clientX: number, clientY: number): void {

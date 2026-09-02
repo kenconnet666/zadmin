@@ -14,7 +14,8 @@ describe('PinInput and InputGroup production browser contracts', () => {
 			'[data-testid="input-group-control"]'
 		)!;
 		const label = document.querySelector<HTMLLabelElement>(`label[for="${control.id}"]`)!;
-		expect(group.getAttribute('aria-invalid')).toBe('true');
+		expect(group.dataset.invalid).toBe('true');
+		expect(control.getAttribute('aria-invalid')).toBe('true');
 		expect(control.name).toBe('endpoint');
 		expect(control.required).toBe(true);
 		expect(control.dataset.size).toBe('small');
@@ -49,8 +50,10 @@ describe('PinInput and InputGroup production browser contracts', () => {
 		const pin = document.querySelector<HTMLElement>('[data-testid="pin-production"]')!;
 		const inputs = [...pin.querySelectorAll<HTMLInputElement>('input')];
 		expect(inputs).toHaveLength(6);
-		expect(inputs[0]?.autocomplete).toBe('one-time-code');
-		expect(inputs.slice(1).every((input) => input.autocomplete === 'off')).toBe(true);
+		expect(inputs[0]?.getAttribute('autocomplete')).toBe('one-time-code');
+		expect(inputs.slice(1).every((input) => input.getAttribute('autocomplete') === 'off')).toBe(
+			true
+		);
 		expect(inputs.every((input) => input.name === '')).toBe(true);
 		expect(inputs.map((input) => input.value).join('')).toBe('123456');
 		expect(
@@ -63,9 +66,9 @@ describe('PinInput and InputGroup production browser contracts', () => {
 		expect(inputs.map((input) => input.value).join('')).toBe('987654');
 		inputs[5]?.focus();
 		document.querySelector<HTMLButtonElement>('[data-testid="pin-length"]')!.click();
-		await Promise.resolve();
-		expect(pin.querySelectorAll('input')).toHaveLength(4);
-		expect(document.activeElement).toBe(pin.querySelectorAll('input')[3]);
+		await expect.poll(() => pin.querySelectorAll('input').length).toBe(4);
+		const finalInput = pin.querySelectorAll<HTMLInputElement>('input')[3]!;
+		await expect.poll(() => document.activeElement).toBe(finalInput);
 		expect(
 			document.querySelector<HTMLInputElement>('[data-zui-form-value][name="otp"]')?.value
 		).toBe('9876');
@@ -103,11 +106,13 @@ describe('PinInput and InputGroup production browser contracts', () => {
 		]);
 	});
 
-	it('rejects multiple business controls and nested InputGroups at component initialization', () => {
-		expect(() => render(InputGroupMultipleFixture)).toThrow(
+	it('rejects multiple business controls and nested InputGroups at component initialization', async () => {
+		await expect(Promise.resolve().then(() => render(InputGroupMultipleFixture))).rejects.toThrow(
 			/exactly one registered business value control/u
 		);
-		expect(() => render(InputGroupNestedFixture)).toThrow(/cannot be nested/u);
+		await expect(Promise.resolve().then(() => render(InputGroupNestedFixture))).rejects.toThrow(
+			/cannot be nested/u
+		);
 	});
 
 	it('keeps RTL and long affixes within the narrow owner width', () => {

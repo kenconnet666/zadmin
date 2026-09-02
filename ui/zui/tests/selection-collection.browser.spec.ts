@@ -41,7 +41,7 @@ describe('Select and Combobox logical collection integration', () => {
 		const combo = document.querySelector<HTMLElement>('[data-testid="typed-combobox-content"]');
 		const comboOption = combo?.querySelector<HTMLElement>('[role="option"]');
 		expect(document.activeElement).toBe(input);
-		expect(combo?.getAttribute('aria-activedescendant')).toBe(comboOption?.id);
+		await expect.poll(() => input?.getAttribute('aria-activedescendant')).toBe(comboOption?.id);
 		input?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
 		await tick();
 		expect(

@@ -13,9 +13,11 @@ const ignoredDirectories = new Set([
 	'.svelte-kit',
 	'.vite',
 	'build',
+	'bin',
 	'coverage',
 	'dist',
 	'node_modules',
+	'obj',
 	'playwright-report',
 	'test-results'
 ]);
@@ -328,7 +330,7 @@ if (
 	) ||
 	!formControlSource.includes('next.associatedForm !== association.associatedForm') ||
 	!formControlSource.includes('next.root !== association.root') ||
-	!formControlSource.includes('scheduleAssociationRefresh();\n\t\t}') ||
+	!/scheduleAssociationRefresh\(\);\s*\}/u.test(formControlSource) ||
 	!formControlSource.includes('const ticket = (generation += 1)') ||
 	!formControlSource.includes('ticket === generation') ||
 	!formControlSource.includes('queueMicrotask(() =>') ||
@@ -394,7 +396,7 @@ if (
 	!calendarSource.includes('switch (event.key)') ||
 	!calendarSource.includes("case 'PageDown':") ||
 	!calendarSource.includes("case 'PageUp':") ||
-	!calendarSource.includes("case 'Enter':\n\t\t\tcase ' ':")
+	!/case 'Enter':\s*case ' '/u.test(calendarSource)
 ) {
 	fail('ZCalendar must preserve its explicit keyboard state switch.');
 }
@@ -419,13 +421,17 @@ if (
 	fail('ZPinInput must preserve its explicit navigation and deletion key switch.');
 }
 if (
-	![dateFieldSource, timeFieldSource].every(
-		(source) =>
-			source.includes("const intent = navigationIntent(event.key, 'horizontal', zui.direction)") &&
-			source.includes('const target = moveIndex(') &&
-			source.includes('intent, false)') &&
-			source.includes("case 'ArrowUp':\n\t\t\tcase 'ArrowDown':")
-	)
+	![dateFieldSource, timeFieldSource].every((source) => {
+		const normalized = source.replace(/\r\n?/gu, '\n');
+		return (
+			normalized.includes(
+				"const intent = navigationIntent(event.key, 'horizontal', zui.direction)"
+			) &&
+			normalized.includes('const target = moveIndex(') &&
+			normalized.includes('intent, false)') &&
+			normalized.includes("case 'ArrowUp':\n\t\t\tcase 'ArrowDown':")
+		);
+	})
 ) {
 	fail('ZDateField and ZTimeField must share non-looping horizontal segment navigation.');
 }
@@ -450,6 +456,18 @@ const popoverContentSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/components/compound/popover/ZPopoverContent.svelte'),
 	'utf8'
 );
+const popoverContextSource = await readFile(
+	resolve(workspaceRoot, 'ui/zui/src/components/compound/popover/context.svelte.ts'),
+	'utf8'
+);
+const popoverTriggerSource = await readFile(
+	resolve(workspaceRoot, 'ui/zui/src/components/compound/popover/ZPopoverTrigger.svelte'),
+	'utf8'
+);
+const contextMenuTriggerSource = await readFile(
+	resolve(workspaceRoot, 'ui/zui/src/components/compound/context-menu/ZContextMenuTrigger.svelte'),
+	'utf8'
+);
 const dialogContentSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/components/compound/dialog/ZDialogContent.svelte'),
 	'utf8'
@@ -459,7 +477,13 @@ if (
 	!focusScopeSource.includes('this.#options.restoreTarget?.() ?? this.#previousFocus') ||
 	!focusScopeSource.includes('this.#previousFocus !== restoreTarget') ||
 	!focusScopeSource.includes('this.#previousFocus.focus({ preventScroll: true })') ||
-	!popoverContentSource.includes('restoreTarget: restoreTarget ?? (() => popover.trigger)') ||
+	!popoverContextSource.includes('readonly restoreTarget: HTMLElement | null') ||
+	!popoverContextSource.includes('setRestoreTarget(target: HTMLElement | null): void') ||
+	!popoverTriggerSource.includes('popover.setTrigger(ref)') ||
+	!popoverTriggerSource.includes('popover.setRestoreTarget(ref)') ||
+	!contextMenuTriggerSource.includes('popover.setTrigger(anchor)') ||
+	!contextMenuTriggerSource.includes('popover.setRestoreTarget(ref)') ||
+	!popoverContentSource.includes('restoreTarget: restoreTarget ?? (() => popover.restoreTarget)') ||
 	!popoverContentSource.includes('restoreFocus,') ||
 	!popoverContentSource.includes(
 		"aria-modal={popover.modal && role === 'dialog' ? 'true' : undefined}"

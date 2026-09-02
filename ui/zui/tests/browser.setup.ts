@@ -21,6 +21,18 @@ beforeEach(() => {
 	bodyChildren = new Set(document.body.childNodes);
 	bodyAttributes = attributes(document.body);
 	documentAttributes = attributes(document.documentElement);
+	const warn = console.warn.bind(console);
+	vi.spyOn(console, 'warn').mockImplementation((...arguments_) => {
+		if (
+			arguments_.some((value) => {
+				const message = String(value);
+				return message.includes('[svelte]') || message.includes('https://svelte.dev/e/');
+			})
+		) {
+			throw new Error(`Unexpected Svelte runtime warning: ${arguments_.map(String).join(' ')}`);
+		}
+		warn(...arguments_);
+	});
 });
 
 afterEach(async () => {

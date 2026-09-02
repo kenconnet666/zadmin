@@ -33,12 +33,13 @@ export function listenForFormReset(
 	reset: () => void
 ): () => void {
 	const { associatedForm, root } = readFormAssociation(control);
+	const explicitFormId = control.getAttribute('form');
+	const eventOwner = associatedForm ?? (explicitFormId === null ? root : control.ownerDocument);
 	return listenToResetEvents(
-		[control.ownerDocument, root, associatedForm],
+		[eventOwner],
 		(event) => {
 			const form = event.target;
 			if (!isFormElement(form, control.ownerDocument)) return false;
-			const explicitFormId = control.getAttribute('form');
 			return (
 				control.form === form ||
 				form.contains(control) ||
@@ -150,7 +151,9 @@ function listenToResetEvents(
 		if (!accepts(event)) return;
 		const ticket = (generation += 1);
 		queueMicrotask(() => {
-			if (active && ticket === generation && !event.defaultPrevented) reset();
+			queueMicrotask(() => {
+				if (active && ticket === generation && !event.defaultPrevented) reset();
+			});
 		});
 	};
 	for (const target of activeTargets) target.addEventListener('reset', handleReset, true);

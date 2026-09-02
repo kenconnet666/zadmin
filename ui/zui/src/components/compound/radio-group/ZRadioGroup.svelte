@@ -402,10 +402,16 @@
 				? mounted.mount(current.key, current.element, current.id)
 				: () => undefined;
 			return () => {
-				const restoreFocus = current.element?.ownerDocument.activeElement === current.element;
+				const previousView = view;
+				const restoreFocus = mounted.ownsFocus(current.key);
 				stopMount();
 				stopLogical();
-				if (restoreFocus) restoreNearestFocus();
+				if (restoreFocus) {
+					queueMicrotask(() => {
+						const key = navigation.reconcileRemoved(previousView, current.key);
+						if (key !== undefined) mounted.focus(key);
+					});
+				}
 			};
 		},
 		get required() {
@@ -446,7 +452,7 @@
 			}
 			const target = activeKey;
 			if (focusWithin && !Object.is(previous, target) && target !== undefined) {
-				queueMicrotask(() => mounted.focus(target));
+				mounted.scheduleFocus(target);
 			}
 		});
 	});

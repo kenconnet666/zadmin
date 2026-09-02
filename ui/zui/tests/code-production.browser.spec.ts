@@ -12,7 +12,7 @@ function installClipboard(writeText: (text: string) => Promise<void>): () => voi
 	});
 	return () => {
 		if (descriptor) Object.defineProperty(navigator, 'clipboard', descriptor);
-		else delete (navigator as Navigator & { clipboard?: Clipboard }).clipboard;
+		else Reflect.deleteProperty(navigator, 'clipboard');
 	};
 }
 

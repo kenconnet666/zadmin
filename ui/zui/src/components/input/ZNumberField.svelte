@@ -525,11 +525,15 @@
 
 	function resetFromForm(): void {
 		valueState.reset();
-		synchronizedValue = defaultValue;
+		const resetValue = valueState.current;
+		synchronizedValue = resetValue;
 		draft = '';
 		draftInvalid = false;
 		composing = false;
 		editing = false;
+		if (inputRef)
+			inputRef.value =
+				resetValue === undefined ? '' : formatNumber(resetValue, false, presentationOptions);
 	}
 
 	function parseDraft(input: string): ZNumberFieldParseResult {
@@ -586,8 +590,8 @@
 
 	function handleInput(event: Event & { currentTarget: HTMLInputElement }): void {
 		draft = event.currentTarget.value;
-		const inputEvent = event as InputEvent;
-		if (!composing && !inputEvent.isComposing) updateFromDraft();
+		const isComposing = 'isComposing' in event && event.isComposing === true;
+		if (!composing && !isComposing) updateFromDraft();
 	}
 
 	function handleCompositionStart(): void {
@@ -701,6 +705,9 @@
 		id={resolvedInputId}
 		type="text"
 		inputmode="decimal"
+		defaultValue={defaultValue === undefined
+			? ''
+			: formatNumber(defaultValue, false, presentationOptions)}
 		value={displayed}
 		{form}
 		{placeholder}

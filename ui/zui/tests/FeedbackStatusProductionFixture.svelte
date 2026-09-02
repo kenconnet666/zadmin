@@ -8,7 +8,7 @@
 	let alertVisible = $state(true);
 	let active = $state(false);
 	let controller = $state<LoadingBarController | null>(null);
-	let state = $state<LoadingBarState>('idle');
+	let loadingState = $state<LoadingBarState>('idle');
 	let value = $state<number | undefined>();
 </script>
 
@@ -45,7 +45,7 @@
 <ZLoadingBar
 	bind:active
 	bind:controller
-	bind:state
+	bind:state={loadingState}
 	bind:value
 	data-testid="loading-controller"
 	finishDelay={20}
@@ -56,7 +56,7 @@
 <ZButton data-testid="loading-finish" onclick={() => controller?.finish()}>Finish</ZButton>
 <ZButton data-testid="loading-error-action" onclick={() => controller?.error()}>Error</ZButton>
 <ZButton data-testid="loading-reset" onclick={() => controller?.reset()}>Reset</ZButton>
-<output data-testid="loading-output">{active}:{state}:{value ?? 'indeterminate'}</output>
+<output data-testid="loading-output">{active}:{loadingState}:{value ?? 'indeterminate'}</output>
 
 <ZProvider direction="rtl" motion="reduced">
 	<ZSpinner data-testid="spinner-reduced" label="Reduced spinner" />

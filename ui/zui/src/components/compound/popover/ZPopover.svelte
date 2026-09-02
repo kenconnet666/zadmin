@@ -132,6 +132,7 @@
 	});
 	const reducedMotion = new ReducedMotionState(() => zui.motion);
 	let portalAnchor = $state<HTMLElement | null>(null);
+	let restoreTarget = $state<HTMLElement | null>(null);
 	let trigger = $state<HTMLElement | null>(null);
 	const context: ZPopoverContext = {
 		get contentId() {
@@ -161,6 +162,9 @@
 		get reducedMotion() {
 			return reducedMotion.current;
 		},
+		get restoreTarget() {
+			return restoreTarget ?? trigger;
+		},
 		get trigger() {
 			return trigger;
 		},
@@ -169,6 +173,9 @@
 		},
 		setOpen(next) {
 			openState.setFromUser(next);
+		},
+		setRestoreTarget(next) {
+			restoreTarget = next;
 		},
 		setTrigger(next) {
 			trigger = next;

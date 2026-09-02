@@ -54,7 +54,7 @@ describe('Statistic and Timeline production browser contracts', () => {
 		const pending = document.querySelector<HTMLElement>('[data-testid="timeline-pending"]')!;
 		const alternate = document.querySelector<HTMLElement>('[data-testid="timeline-alternate"]')!;
 		expect(pending.getAttribute('aria-busy')).toBe('true');
-		expect(pending.querySelector(':scope > li')?.dataset.pending).toBe('true');
+		expect(pending.querySelector<HTMLElement>(':scope > li')?.dataset.pending).toBe('true');
 		expect(pending.querySelector(':scope > li')?.textContent).toContain('Still processing');
 		expect(pending.querySelectorAll(':scope > li')[1]?.textContent).toContain('String key');
 		expect(pending.querySelectorAll('time')).toHaveLength(2);

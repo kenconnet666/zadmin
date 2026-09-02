@@ -8,6 +8,7 @@
 	let imageRef = $state<HTMLImageElement | null>(null);
 	let loads = $state(0);
 	let errors = $state(0);
+	const responsiveSrcset = $derived(src ? `${src} 32w, ${src} 64w` : undefined);
 </script>
 
 <ZAvatar alt="Named fallback" data-testid="avatar-named" fallbackText="NF" />
@@ -28,7 +29,7 @@
 	size="large"
 	sizes="48px"
 	{src}
-	srcset={`${src} 32w, ${src} 64w`}
+	srcset={responsiveSrcset}
 />
 <ZButton data-testid="avatar-use-first" onclick={() => (src = firstSource)}>Use first</ZButton>
 <ZButton data-testid="avatar-use-second" onclick={() => (src = secondSource)}>Use second</ZButton>

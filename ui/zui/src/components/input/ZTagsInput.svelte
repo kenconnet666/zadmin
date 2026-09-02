@@ -474,8 +474,8 @@
 		draftState.setFromUser('');
 		if (inputRef) inputRef.value = '';
 	}
-	function commitDraft(): void {
-		if (add(draftState.current)) clearDraft();
+	function commitDraft(raw = draftState.current): void {
+		if (add(raw)) clearDraft();
 	}
 	function remove(index: number, restoreFocus = false): void {
 		if (resolvedDisabled || resolvedReadonly || index < 0 || index >= resolvedValues.length) return;
@@ -513,10 +513,6 @@
 		editingIndex = index;
 		editDraft = resolvedValues[index] ?? '';
 		editInvalid = false;
-		queueMicrotask(() => {
-			editInputRef?.focus({ preventScroll: true });
-			editInputRef?.select();
-		});
 	}
 	function cancelEdit(): void {
 		editingIndex = undefined;
@@ -547,22 +543,23 @@
 	}
 	function handleInput(event: Event & { currentTarget: HTMLInputElement }): void {
 		draftInvalid = false;
-		draftState.setFromUser(event.currentTarget.value);
+		const next = event.currentTarget.value;
+		draftState.setFromUser(next);
 	}
 	function handleInputKeydown(event: KeyboardEvent & { currentTarget: HTMLInputElement }): void {
 		if (isKeyboardComposing(event)) return;
 		switch (event.key) {
 			case 'Enter':
 				event.preventDefault();
-				commitDraft();
+				commitDraft(event.currentTarget.value);
 				return;
 			case 'Backspace':
 				if (resolvedDelimiters.includes(event.key)) {
 					event.preventDefault();
-					commitDraft();
+					commitDraft(event.currentTarget.value);
 					return;
 				}
-				if (draftState.current.length === 0 && resolvedValues.length > 0) {
+				if (event.currentTarget.value.length === 0 && resolvedValues.length > 0) {
 					event.preventDefault();
 					remove(resolvedValues.length - 1);
 					return;
@@ -571,14 +568,14 @@
 			default:
 				if (resolvedDelimiters.includes(event.key)) {
 					event.preventDefault();
-					commitDraft();
+					commitDraft(event.currentTarget.value);
 					return;
 				}
 		}
 		const intent = navigationIntent(event.key, 'horizontal', zui.direction);
 		if (
 			intent === 'previous' &&
-			draftState.current.length === 0 &&
+			event.currentTarget.value.length === 0 &&
 			event.currentTarget.selectionStart === 0 &&
 			resolvedValues.length > 0
 		) {
@@ -639,7 +636,7 @@
 	}
 	function handleInputBlur(event: FocusEvent & { currentTarget: HTMLInputElement }): void {
 		if (commitOnBlur && (!isDomNode(event.relatedTarget) || !ref?.contains(event.relatedTarget)))
-			commitDraft();
+			commitDraft(event.currentTarget.value);
 	}
 	function handleFocusIn(): void {
 		focusWithin = true;
@@ -663,6 +660,11 @@
 
 	onMount(() => fieldOwner.registerFocusOwner(focusInput));
 	$effect(() => {
+		if (editingIndex === undefined || !editInputRef) return;
+		editInputRef.focus({ preventScroll: true });
+		editInputRef.select();
+	});
+	$effect(() => {
 		const snapshot = editingSnapshot;
 		if (
 			editingIndex !== undefined &&
@@ -683,7 +685,7 @@
 	use:applyIcssRootStyle={{ style, variables }}
 	role="group"
 	aria-disabled={resolvedDisabled || undefined}
-	aria-label={resolvedLabelledBy ? undefined : (ariaLabel ?? resolvedAddLabel)}
+	aria-label={resolvedLabelledBy ? undefined : ariaLabel}
 	aria-labelledby={resolvedLabelledBy}
 	data-disabled={resolvedDisabled || undefined}
 	data-editing={editingIndex !== undefined || undefined}
@@ -765,8 +767,7 @@
 		type="text"
 		aria-describedby={resolvedDescribedBy}
 		aria-invalid={resolvedInvalid ? 'true' : ariaInvalid}
-		aria-label={resolvedLabelledBy ? undefined : (ariaLabel ?? resolvedAddLabel)}
-		aria-labelledby={resolvedLabelledBy}
+		aria-label={resolvedAddLabel}
 		aria-required={resolvedRequired || undefined}
 		data-slot="input"
 		value={draftState.current}

@@ -6,10 +6,16 @@
 	let standaloneVisible = $state(true);
 	let tableRef = $state<HTMLTableElement | null>(null);
 	let wrapperRef = $state<HTMLDivElement | null>(null);
+
+	function trackParentClicks(node: HTMLElement): { destroy(): void } {
+		const handleClick = () => (parentClicks += 1);
+		node.addEventListener('click', handleClick);
+		return { destroy: () => node.removeEventListener('click', handleClick) };
+	}
 </script>
 
 <ZProvider density="compact" locale="zh-CN" localePack={zhCNLocalePack}>
-	<div onclick={() => (parentClicks += 1)} data-testid="tag-parent">
+	<div use:trackParentClicks data-testid="tag-parent">
 		{#if standaloneVisible}
 			<ZTag
 				data-testid="tag-localized"

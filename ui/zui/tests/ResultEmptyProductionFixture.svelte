@@ -7,9 +7,10 @@
 
 	let resultActions = $state(0);
 	let emptyActions = $state(0);
+	const resultTones = ['info', 'success', 'warning', 'danger'] as const;
 </script>
 
-{#each ['info', 'success', 'warning', 'danger'] as tone (tone)}
+{#each resultTones as tone (tone)}
 	<ZResult
 		data-testid={`result-${tone}`}
 		headingLevel={tone === 'info' ? 1 : 4}

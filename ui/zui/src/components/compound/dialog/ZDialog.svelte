@@ -111,6 +111,12 @@
 		get open() {
 			return openState.current;
 		},
+		get ownerWindow() {
+			const target = resolvePortalTarget(trigger ?? portalAnchor, zui.portalContainer);
+			return target && 'defaultView' in target
+				? target.defaultView
+				: (trigger?.ownerDocument.defaultView ?? portalAnchor?.ownerDocument.defaultView ?? null);
+		},
 		get overlay() {
 			return overlay;
 		},

@@ -16,8 +16,8 @@ describe('ZCode production server contract', () => {
 	});
 
 	it('rejects an inline interactive copy control', () => {
-		expect(() =>
-			render(ZCode, { props: { code: 'inline', copyable: true, inline: true } })
+		expect(
+			() => render(ZCode, { props: { code: 'inline', copyable: true, inline: true } }).body
 		).toThrow(/inline and copyable are mutually exclusive/u);
 	});
 });

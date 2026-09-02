@@ -237,12 +237,15 @@
 				? mounted.mount(current.key, current.element, current.id)
 				: () => undefined;
 			return () => {
-				const restoreFocus = current.element?.ownerDocument.activeElement === current.element;
+				const previousView = view;
+				const menuRoot = ref;
+				const restoreFocus = mounted.ownsFocus(current.key);
 				stopMount();
 				stopLogical();
 				if (restoreFocus) {
 					queueMicrotask(() => {
-						const nearest = navigation.reconcile();
+						if (!menuRoot?.isConnected) return;
+						const nearest = navigation.reconcileRemoved(previousView, current.key);
 						if (nearest !== undefined) mounted.focus(nearest);
 					});
 				}
@@ -272,7 +275,7 @@
 			}
 			const next = activeKey;
 			if (focusWithin && next !== undefined && !Object.is(previous, next)) {
-				queueMicrotask(() => mounted.focus(next));
+				mounted.scheduleFocus(next);
 			}
 		});
 	});

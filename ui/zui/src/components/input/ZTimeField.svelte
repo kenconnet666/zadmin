@@ -582,7 +582,7 @@
 				type="button"
 				class={periodClass}
 				data-slot="day-period"
-				disabled={resolvedDisabled}
+				disabled={resolvedDisabled || resolvedReadonly}
 				aria-disabled={resolvedReadonly || undefined}
 				aria-label={toggleDayPeriodLabel ?? zui.localePack.time.toggleDayPeriod}
 				onclick={togglePeriod}

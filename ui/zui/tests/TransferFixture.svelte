@@ -20,5 +20,5 @@
 		moveToTargetLabel="Move to selected"
 	/>
 	<button type="reset">Reset</button>
-	<output data-testid="transfer-output">{value.join(',')}</output>
 </form>
+<output data-testid="transfer-output">{value.join(',')}</output>

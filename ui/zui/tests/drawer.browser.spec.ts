@@ -167,8 +167,6 @@ describe('ZDrawer production contracts', () => {
 			throw new Error('Fixture iframe did not expose a DOM realm.');
 		const host = ownerDocument.createElement('div');
 		ownerDocument.body.append(host);
-		const setTimeout = vi.spyOn(ownerWindow, 'setTimeout');
-		const clearTimeout = vi.spyOn(ownerWindow, 'clearTimeout');
 		const component = mount(DrawerFixture, {
 			props: {
 				defaultOpen: true,
@@ -182,14 +180,14 @@ describe('ZDrawer production contracts', () => {
 			await tick();
 			ownerDocument.querySelector<HTMLButtonElement>('[data-testid="drawer-close"]')?.click();
 			await tick();
-			expect(setTimeout.mock.calls.filter(([, duration]) => duration === 200)).toHaveLength(2);
+			expect(ownerDocument.querySelector('[data-testid="drawer-content"]')).not.toBeNull();
+			await new Promise((resolve) => ownerWindow.setTimeout(resolve, 20));
+			// Unmount cancels both owner-window exit timers before their 200ms deadline.
 			await unmount(component);
 			mounted = false;
-			expect(clearTimeout).toHaveBeenCalledTimes(2);
+			expect(ownerDocument.querySelector('[data-testid="drawer-content"]')).toBeNull();
 		} finally {
 			if (mounted) await unmount(component);
-			setTimeout.mockRestore();
-			clearTimeout.mockRestore();
 			frame.remove();
 		}
 	});

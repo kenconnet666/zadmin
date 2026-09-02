@@ -54,10 +54,10 @@
 		Toggle loading
 	</button>
 	<button type="reset">Reset</button>
-	<output data-testid="transfer-production-output">
-		{value.map((key) => `${typeof key}:${key}`).join('|')}:{changes}
-	</output>
 </form>
+<output data-testid="transfer-production-output">
+	{value.map((key) => `${typeof key}:${key}`).join('|')}:{changes}
+</output>
 
 <ZTransfer
 	data-testid="transfer-readonly"
