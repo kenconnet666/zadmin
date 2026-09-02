@@ -10,6 +10,9 @@ describe('generated component catalog manifest', () => {
 		expect(Object.keys(componentDocLoaders).sort()).toEqual([...manifestIds].sort());
 		expect(manifestIds).toHaveLength(79);
 		expect(manifestIds).toContain('tour');
+		expect(componentCatalogManifest.every(({ name }) => /^Z[A-Z]/u.test(name))).toBe(true);
+		expect(componentCatalogManifest.find(({ id }) => id === 'link')?.name).toBe('ZLink');
+		expect(componentCatalogManifest.find(({ id }) => id === 'separator')?.name).toBe('ZSeparator');
 		const provider = componentCatalogManifest.find(({ id }) => id === 'provider');
 		expect(provider?.status).toBe('stable');
 		expect(provider?.summary).not.toBe('');

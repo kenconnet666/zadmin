@@ -2,6 +2,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import prettier from 'prettier';
+import ts from 'typescript';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const catalogPath = resolve(root, 'src/framework/catalog.ts');
@@ -33,6 +34,56 @@ const paths = new Map(imports.map(([, name, path]) => [name.replace(/Doc$/u, '')
 const literal = (text, key) =>
 	text.match(new RegExp(`\\b${key}:\\s*['"]([^'"]+)['"]`, 'u'))?.[1] ?? '';
 const kebab = (value) => value.replace(/([a-z0-9])([A-Z])/gu, '$1-$2').toLowerCase();
+
+function unwrapExpression(node) {
+	let current = node;
+	while (
+		ts.isAsExpression(current) ||
+		ts.isParenthesizedExpression(current) ||
+		ts.isSatisfiesExpression(current)
+	)
+		current = current.expression;
+	return current;
+}
+
+function readMetadataLiterals(text, sourcePath) {
+	const moduleScript = text.match(
+		/<script\s+module(?:\s+lang=['"]ts['"])?>([\s\S]*?)<\/script>/u
+	)?.[1];
+	if (!moduleScript) throw new Error(`Unable to read module metadata script from ${sourcePath}.`);
+	const source = ts.createSourceFile(
+		sourcePath,
+		moduleScript,
+		ts.ScriptTarget.Latest,
+		true,
+		ts.ScriptKind.TS
+	);
+	let metadata;
+	for (const statement of source.statements) {
+		if (!ts.isVariableStatement(statement)) continue;
+		for (const declaration of statement.declarationList.declarations) {
+			if (!ts.isIdentifier(declaration.name) || declaration.name.text !== 'zuiMetadata') continue;
+			if (!declaration.initializer) continue;
+			const initializer = unwrapExpression(declaration.initializer);
+			if (ts.isObjectLiteralExpression(initializer)) metadata = initializer;
+		}
+	}
+	if (!metadata) throw new Error(`Unable to find zuiMetadata object in ${sourcePath}.`);
+	const values = new Map();
+	for (const property of metadata.properties) {
+		if (!ts.isPropertyAssignment(property)) continue;
+		const key = ts.isIdentifier(property.name)
+			? property.name.text
+			: ts.isStringLiteral(property.name)
+				? property.name.text
+				: undefined;
+		const value = unwrapExpression(property.initializer);
+		if (key && (ts.isStringLiteral(value) || ts.isNoSubstitutionTemplateLiteral(value)))
+			values.set(key, value.text);
+	}
+	return values;
+}
+
 const docs = await Promise.all(
 	names.map(async (name) => {
 		const path = paths.get(name);
@@ -41,9 +92,12 @@ const docs = await Promise.all(
 		const docText = await readFile(resolve(root, `src/${path.slice(3)}.ts`), 'utf8');
 		const metadataName = docText.match(/defineComponentDoc\((\w+)Metadata/u)?.[1] ?? name;
 		const metadataPath = metadataPaths.get(metadataName);
-		const metadataText = metadataPath
-			? await readFile(resolve(root, `../../ui/zui/src/${metadataPath.slice(3)}`), 'utf8')
-			: '';
+		const sourcePath = metadataPath
+			? resolve(root, `../../ui/zui/src/${metadataPath.slice(3)}`)
+			: undefined;
+		const metadata = sourcePath
+			? readMetadataLiterals(await readFile(sourcePath, 'utf8'), sourcePath)
+			: new Map();
 		const covers = [...docText.matchAll(/covers:\s*\[([^\]]*)\]/gu)].flatMap(([, value]) =>
 			[...value.matchAll(/['"]([^'"]+)['"]/gu)].map(([, item]) => item)
 		);
@@ -54,11 +108,11 @@ const docs = await Promise.all(
 			[...value.matchAll(/['"]([^'"]+)['"]/gu)].map(([, item]) => item)
 		);
 		return {
-			id: literal(metadataText, 'id') || kebab(name),
-			name: literal(metadataText, 'name') || `Z${name[0].toUpperCase()}${name.slice(1)}`,
-			category: literal(metadataText, 'category') || category,
-			summary: literal(docText, 'summary') || literal(metadataText, 'summary'),
-			status: literal(metadataText, 'status'),
+			id: metadata.get('id') || kebab(name),
+			name: metadata.get('name') || `Z${name[0].toUpperCase()}${name.slice(1)}`,
+			category: metadata.get('category') || category,
+			summary: literal(docText, 'summary') || metadata.get('summary') || '',
+			status: metadata.get('status') || '',
 			keywords: [...new Set(keywords)],
 			profiles,
 			capabilities: [...new Set(covers)],

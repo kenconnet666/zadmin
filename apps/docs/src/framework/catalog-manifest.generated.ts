@@ -198,7 +198,7 @@ export const componentCatalogManifest = Object.freeze([
 	},
 	{
 		id: 'link',
-		name: 'ref',
+		name: 'ZLink',
 		category: 'gene',
 		summary:
 			'以必填href和真实anchor为唯一导航语义，显式分离外链图标、新窗口行为、安全rel、disabled与视觉tone/underline。',
@@ -228,7 +228,7 @@ export const componentCatalogManifest = Object.freeze([
 	},
 	{
 		id: 'separator',
-		name: 'ref',
+		name: 'ZSeparator',
 		category: 'gene',
 		summary: '保留原生/ARIA语义、装饰模式、名称、逻辑方向和currentColor高对比的最小Separator。',
 		status: 'experimental',
@@ -246,7 +246,7 @@ export const componentCatalogManifest = Object.freeze([
 	},
 	{
 		id: 'visually-hidden',
-		name: 'ref',
+		name: 'ZVisuallyHidden',
 		category: 'gene',
 		summary: '只负责视觉裁切且保留辅助技术内容的span原语；不提供focusable或asChild模式。',
 		status: 'experimental',
@@ -265,7 +265,7 @@ export const componentCatalogManifest = Object.freeze([
 	},
 	{
 		id: 'kbd',
-		name: 'ref',
+		name: 'ZKbd',
 		category: 'gene',
 		summary: '只表达用户输入文本的原生kbd；组合、嵌套和平台替代文本由调用方显式组织。',
 		status: 'experimental',
@@ -276,7 +276,7 @@ export const componentCatalogManifest = Object.freeze([
 	},
 	{
 		id: 'aspect-ratio',
-		name: 'ref',
+		name: 'ZAspectRatio',
 		category: 'layout',
 		summary: '用原生CSS aspect-ratio、严格正有限比例和父级宽度约束承载图片、视频、自定义或空内容。',
 		status: 'experimental',
@@ -294,7 +294,7 @@ export const componentCatalogManifest = Object.freeze([
 	},
 	{
 		id: 'container',
-		name: 'ref',
+		name: 'ZContainer',
 		category: 'layout',
 		summary:
 			'用box-sizing安全的居中typed max-width和逻辑gutter建立内容边界，不承担Stack/Grid职责。',
