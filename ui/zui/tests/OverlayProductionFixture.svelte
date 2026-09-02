@@ -10,6 +10,7 @@
 	import ZDialog from '../src/components/compound/dialog/ZDialog.svelte';
 	import ZDialogClose from '../src/components/compound/dialog/ZDialogClose.svelte';
 	import ZDialogContent from '../src/components/compound/dialog/ZDialogContent.svelte';
+	import ZDialogDescription from '../src/components/compound/dialog/ZDialogDescription.svelte';
 	import ZDialogOverlay from '../src/components/compound/dialog/ZDialogOverlay.svelte';
 	import ZDialogTitle from '../src/components/compound/dialog/ZDialogTitle.svelte';
 	import ZDialogTrigger from '../src/components/compound/dialog/ZDialogTrigger.svelte';
@@ -41,11 +42,13 @@
 	<ZDialogOverlay data-testid="dialog-production-overlay" />
 	<ZDialogContent
 		data-testid="dialog-production-content"
-		ariaDescribedBy={null}
 		initialFocus={() => inputRef}
 		restoreTarget={() => restoreRef}
 	>
 		<ZDialogTitle data-testid="dialog-production-title">Dialog title</ZDialogTitle>
+		<ZDialogDescription data-testid="dialog-production-description"
+			>Dialog consequence.</ZDialogDescription
+		>
 		<ZInput aria-label="Dialog input" bind:ref={inputRef} />
 		<ZDialogClose data-testid="dialog-production-close">Close</ZDialogClose>
 	</ZDialogContent>

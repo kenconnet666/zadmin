@@ -3,7 +3,7 @@
 		"metadataComponents": 141,
 		"documentationPages": 79,
 		"contractComponents": 141,
-		"testFiles": 128
+		"testFiles": 129
 	},
 	"stageNames": [
 		"Declared",
@@ -19,9 +19,9 @@
 		"Authorable": 141,
 		"ContractVerified": 141,
 		"RuntimeImplemented": 141,
-		"VisuallyVerified": 97,
+		"VisuallyVerified": 113,
 		"DesktopVerified": 0,
-		"ProductionVerified": 82
+		"ProductionVerified": 100
 	},
 	"components": [
 		{
@@ -42,7 +42,7 @@
 				"RuntimeImplemented": true,
 				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -79,6 +79,14 @@
 						"detail": "ZAccordion explicit rendered fixture usage"
 					},
 					{
+						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
+						"detail": "ZAccordion browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
+						"detail": "ZAccordion explicit rendered fixture usage"
+					},
+					{
 						"path": "ui/zui/tests/components.browser.spec.ts",
 						"detail": "ZAccordion browser assertions"
 					},
@@ -92,7 +100,16 @@
 					}
 				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
+						"detail": "ZAccordion production assertions"
+					},
+					{
+						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
+						"detail": "ZAccordion explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": {
 				"path": "apps/docs/src/content/components/navigation/accordion/doc.ts",
@@ -121,9 +138,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -150,9 +167,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
+						"detail": "ZAccordionContent browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
+						"detail": "ZAccordionContent explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
+						"detail": "ZAccordionContent production assertions"
+					},
+					{
+						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
+						"detail": "ZAccordionContent explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": null,
 			"ssrEvidence": [
@@ -178,9 +213,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -207,9 +242,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
+						"detail": "ZAccordionItem browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
+						"detail": "ZAccordionItem explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
+						"detail": "ZAccordionItem production assertions"
+					},
+					{
+						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
+						"detail": "ZAccordionItem explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": null,
 			"ssrEvidence": [
@@ -235,9 +288,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -264,9 +317,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
+						"detail": "ZAccordionTrigger browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
+						"detail": "ZAccordionTrigger explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
+						"detail": "ZAccordionTrigger production assertions"
+					},
+					{
+						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
+						"detail": "ZAccordionTrigger explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": null,
 			"ssrEvidence": [
@@ -1734,9 +1805,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -1763,9 +1834,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/overlay-production.browser.spec.ts",
+						"detail": "ZDialogDescription browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
+						"detail": "ZDialogDescription explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/overlay-production.browser.spec.ts",
+						"detail": "ZDialogDescription production assertions"
+					},
+					{
+						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
+						"detail": "ZDialogDescription explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": null,
 			"ssrEvidence": [
@@ -3948,9 +4037,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -3977,9 +4066,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/tooltip-popconfirm-production.browser.spec.ts",
+						"detail": "ZPopconfirmAction browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/TooltipPopconfirmProductionFixture.svelte",
+						"detail": "ZPopconfirmAction explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/tooltip-popconfirm-production.browser.spec.ts",
+						"detail": "ZPopconfirmAction production assertions"
+					},
+					{
+						"path": "ui/zui/tests/TooltipPopconfirmProductionFixture.svelte",
+						"detail": "ZPopconfirmAction explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": null,
 			"ssrEvidence": [
@@ -4009,9 +4116,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -4038,9 +4145,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/tooltip-popconfirm-production.browser.spec.ts",
+						"detail": "ZPopconfirmCancel browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/TooltipPopconfirmProductionFixture.svelte",
+						"detail": "ZPopconfirmCancel explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/tooltip-popconfirm-production.browser.spec.ts",
+						"detail": "ZPopconfirmCancel production assertions"
+					},
+					{
+						"path": "ui/zui/tests/TooltipPopconfirmProductionFixture.svelte",
+						"detail": "ZPopconfirmCancel explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": null,
 			"ssrEvidence": [
@@ -4070,9 +4195,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -4099,9 +4224,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/tooltip-popconfirm-production.browser.spec.ts",
+						"detail": "ZPopconfirmContent browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/TooltipPopconfirmProductionFixture.svelte",
+						"detail": "ZPopconfirmContent explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/tooltip-popconfirm-production.browser.spec.ts",
+						"detail": "ZPopconfirmContent production assertions"
+					},
+					{
+						"path": "ui/zui/tests/TooltipPopconfirmProductionFixture.svelte",
+						"detail": "ZPopconfirmContent explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": null,
 			"ssrEvidence": [
@@ -4131,9 +4274,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -4160,9 +4303,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/tooltip-popconfirm-production.browser.spec.ts",
+						"detail": "ZPopconfirmDescription browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/TooltipPopconfirmProductionFixture.svelte",
+						"detail": "ZPopconfirmDescription explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/tooltip-popconfirm-production.browser.spec.ts",
+						"detail": "ZPopconfirmDescription production assertions"
+					},
+					{
+						"path": "ui/zui/tests/TooltipPopconfirmProductionFixture.svelte",
+						"detail": "ZPopconfirmDescription explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": null,
 			"ssrEvidence": [
@@ -4192,9 +4353,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -4221,9 +4382,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/tooltip-popconfirm-production.browser.spec.ts",
+						"detail": "ZPopconfirmTitle browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/TooltipPopconfirmProductionFixture.svelte",
+						"detail": "ZPopconfirmTitle explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/tooltip-popconfirm-production.browser.spec.ts",
+						"detail": "ZPopconfirmTitle production assertions"
+					},
+					{
+						"path": "ui/zui/tests/TooltipPopconfirmProductionFixture.svelte",
+						"detail": "ZPopconfirmTitle explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": null,
 			"ssrEvidence": [
@@ -4253,9 +4432,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -4282,9 +4461,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/tooltip-popconfirm-production.browser.spec.ts",
+						"detail": "ZPopconfirmTrigger browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/TooltipPopconfirmProductionFixture.svelte",
+						"detail": "ZPopconfirmTrigger explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/tooltip-popconfirm-production.browser.spec.ts",
+						"detail": "ZPopconfirmTrigger production assertions"
+					},
+					{
+						"path": "ui/zui/tests/TooltipPopconfirmProductionFixture.svelte",
+						"detail": "ZPopconfirmTrigger explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": null,
 			"ssrEvidence": [
@@ -5006,9 +5203,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -5035,9 +5232,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
+						"detail": "ZTabs browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
+						"detail": "ZTabs explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
+						"detail": "ZTabs production assertions"
+					},
+					{
+						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
+						"detail": "ZTabs explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": {
 				"path": "apps/docs/src/content/components/navigation/tabs/doc.ts",
@@ -5066,9 +5281,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -5095,9 +5310,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
+						"detail": "ZTabsList browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
+						"detail": "ZTabsList explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
+						"detail": "ZTabsList production assertions"
+					},
+					{
+						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
+						"detail": "ZTabsList explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": null,
 			"ssrEvidence": [
@@ -5123,9 +5356,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -5152,9 +5385,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
+						"detail": "ZTabsPanel browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
+						"detail": "ZTabsPanel explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
+						"detail": "ZTabsPanel production assertions"
+					},
+					{
+						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
+						"detail": "ZTabsPanel explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": null,
 			"ssrEvidence": [
@@ -5180,9 +5431,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -5209,9 +5460,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
+						"detail": "ZTabsTrigger browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
+						"detail": "ZTabsTrigger explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
+						"detail": "ZTabsTrigger production assertions"
+					},
+					{
+						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
+						"detail": "ZTabsTrigger explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": null,
 			"ssrEvidence": [
@@ -5333,7 +5602,7 @@
 				"RuntimeImplemented": true,
 				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -5372,10 +5641,27 @@
 					{
 						"path": "ui/zui/tests/TooltipFixture.svelte",
 						"detail": "ZTooltipContent explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/tooltip-popconfirm-production.browser.spec.ts",
+						"detail": "ZTooltipContent browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/TooltipPopconfirmProductionFixture.svelte",
+						"detail": "ZTooltipContent explicit rendered fixture usage"
 					}
 				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/tooltip-popconfirm-production.browser.spec.ts",
+						"detail": "ZTooltipContent production assertions"
+					},
+					{
+						"path": "ui/zui/tests/TooltipPopconfirmProductionFixture.svelte",
+						"detail": "ZTooltipContent explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": null,
 			"ssrEvidence": [
@@ -5405,9 +5691,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -5434,9 +5720,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/tooltip-popconfirm-production.browser.spec.ts",
+						"detail": "ZTooltipGroup browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/TooltipPopconfirmProductionFixture.svelte",
+						"detail": "ZTooltipGroup explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/tooltip-popconfirm-production.browser.spec.ts",
+						"detail": "ZTooltipGroup production assertions"
+					},
+					{
+						"path": "ui/zui/tests/TooltipPopconfirmProductionFixture.svelte",
+						"detail": "ZTooltipGroup explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": null,
 			"ssrEvidence": [
@@ -5462,9 +5766,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -5491,9 +5795,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/tooltip-popconfirm-production.browser.spec.ts",
+						"detail": "ZTooltipTrigger browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/TooltipPopconfirmProductionFixture.svelte",
+						"detail": "ZTooltipTrigger explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/tooltip-popconfirm-production.browser.spec.ts",
+						"detail": "ZTooltipTrigger production assertions"
+					},
+					{
+						"path": "ui/zui/tests/TooltipPopconfirmProductionFixture.svelte",
+						"detail": "ZTooltipTrigger explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": null,
 			"ssrEvidence": [

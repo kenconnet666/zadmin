@@ -3,7 +3,7 @@
 	"summary": {
 		"stableCompliant": 37,
 		"stableViolations": 0,
-		"promotionEligibleExperimental": 37
+		"promotionEligibleExperimental": 63
 	},
 	"components": [
 		{
@@ -11,8 +11,8 @@
 			"name": "ZAccordion",
 			"family": "accordion",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["ProductionVerified"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/accordion/doc.ts",
 			"ssrEvidenceCount": 1
 		},
@@ -21,8 +21,8 @@
 			"name": "ZAccordionContent",
 			"family": "accordion",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["VisuallyVerified", "ProductionVerified"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/accordion/doc.ts",
 			"ssrEvidenceCount": 1
 		},
@@ -31,8 +31,8 @@
 			"name": "ZAccordionItem",
 			"family": "accordion",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["VisuallyVerified", "ProductionVerified"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/accordion/doc.ts",
 			"ssrEvidenceCount": 1
 		},
@@ -41,8 +41,8 @@
 			"name": "ZAccordionTrigger",
 			"family": "accordion",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["VisuallyVerified", "ProductionVerified"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/accordion/doc.ts",
 			"ssrEvidenceCount": 1
 		},
@@ -201,8 +201,8 @@
 			"name": "ZDialog",
 			"family": "dialog",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["Family readiness (ZDialogDescription)"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/dialog/doc.ts",
 			"ssrEvidenceCount": 2
 		},
@@ -211,8 +211,8 @@
 			"name": "ZDialogClose",
 			"family": "dialog",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["Family readiness (ZDialogDescription)"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/dialog/doc.ts",
 			"ssrEvidenceCount": 1
 		},
@@ -221,8 +221,8 @@
 			"name": "ZDialogContent",
 			"family": "dialog",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["Family readiness (ZDialogDescription)"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/dialog/doc.ts",
 			"ssrEvidenceCount": 2
 		},
@@ -231,8 +231,8 @@
 			"name": "ZDialogDescription",
 			"family": "dialog",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["VisuallyVerified", "ProductionVerified"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/dialog/doc.ts",
 			"ssrEvidenceCount": 1
 		},
@@ -241,8 +241,8 @@
 			"name": "ZDialogOverlay",
 			"family": "dialog",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["Family readiness (ZDialogDescription)"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/dialog/doc.ts",
 			"ssrEvidenceCount": 1
 		},
@@ -251,8 +251,8 @@
 			"name": "ZDialogTitle",
 			"family": "dialog",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["Family readiness (ZDialogDescription)"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/dialog/doc.ts",
 			"ssrEvidenceCount": 2
 		},
@@ -261,8 +261,8 @@
 			"name": "ZDialogTrigger",
 			"family": "dialog",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["Family readiness (ZDialogDescription)"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/dialog/doc.ts",
 			"ssrEvidenceCount": 1
 		},
@@ -521,10 +521,8 @@
 			"name": "ZPopconfirm",
 			"family": "popconfirm",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": [
-				"Family readiness (ZPopconfirmAction, ZPopconfirmCancel, ZPopconfirmContent, ZPopconfirmDescription, ZPopconfirmTitle, ZPopconfirmTrigger)"
-			],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/popconfirm/doc.ts",
 			"ssrEvidenceCount": 2
 		},
@@ -533,8 +531,8 @@
 			"name": "ZPopconfirmAction",
 			"family": "popconfirm",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["VisuallyVerified", "ProductionVerified"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/popconfirm/doc.ts",
 			"ssrEvidenceCount": 2
 		},
@@ -543,8 +541,8 @@
 			"name": "ZPopconfirmCancel",
 			"family": "popconfirm",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["VisuallyVerified", "ProductionVerified"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/popconfirm/doc.ts",
 			"ssrEvidenceCount": 2
 		},
@@ -553,8 +551,8 @@
 			"name": "ZPopconfirmContent",
 			"family": "popconfirm",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["VisuallyVerified", "ProductionVerified"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/popconfirm/doc.ts",
 			"ssrEvidenceCount": 2
 		},
@@ -563,8 +561,8 @@
 			"name": "ZPopconfirmDescription",
 			"family": "popconfirm",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["VisuallyVerified", "ProductionVerified"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/popconfirm/doc.ts",
 			"ssrEvidenceCount": 2
 		},
@@ -573,8 +571,8 @@
 			"name": "ZPopconfirmTitle",
 			"family": "popconfirm",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["VisuallyVerified", "ProductionVerified"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/popconfirm/doc.ts",
 			"ssrEvidenceCount": 2
 		},
@@ -583,8 +581,8 @@
 			"name": "ZPopconfirmTrigger",
 			"family": "popconfirm",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["VisuallyVerified", "ProductionVerified"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/popconfirm/doc.ts",
 			"ssrEvidenceCount": 2
 		},
@@ -683,8 +681,8 @@
 			"name": "ZTabs",
 			"family": "tabs",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["VisuallyVerified", "ProductionVerified"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/tabs/doc.ts",
 			"ssrEvidenceCount": 1
 		},
@@ -693,8 +691,8 @@
 			"name": "ZTabsList",
 			"family": "tabs",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["VisuallyVerified", "ProductionVerified"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/tabs/doc.ts",
 			"ssrEvidenceCount": 1
 		},
@@ -703,8 +701,8 @@
 			"name": "ZTabsPanel",
 			"family": "tabs",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["VisuallyVerified", "ProductionVerified"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/tabs/doc.ts",
 			"ssrEvidenceCount": 1
 		},
@@ -713,8 +711,8 @@
 			"name": "ZTabsTrigger",
 			"family": "tabs",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["VisuallyVerified", "ProductionVerified"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/tabs/doc.ts",
 			"ssrEvidenceCount": 1
 		},
@@ -723,8 +721,8 @@
 			"name": "ZTooltip",
 			"family": "tooltip",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["Family readiness (ZTooltipContent, ZTooltipGroup, ZTooltipTrigger)"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/tooltip/doc.ts",
 			"ssrEvidenceCount": 2
 		},
@@ -733,8 +731,8 @@
 			"name": "ZTooltipContent",
 			"family": "tooltip",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["ProductionVerified"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/tooltip/doc.ts",
 			"ssrEvidenceCount": 2
 		},
@@ -743,8 +741,8 @@
 			"name": "ZTooltipGroup",
 			"family": "tooltip",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["VisuallyVerified", "ProductionVerified"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/tooltip/doc.ts",
 			"ssrEvidenceCount": 1
 		},
@@ -753,8 +751,8 @@
 			"name": "ZTooltipTrigger",
 			"family": "tooltip",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["VisuallyVerified", "ProductionVerified"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/tooltip/doc.ts",
 			"ssrEvidenceCount": 2
 		},

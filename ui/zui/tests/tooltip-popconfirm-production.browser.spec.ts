@@ -10,10 +10,23 @@ const wait = (duration: number): Promise<void> =>
 	new Promise((resolve) => setTimeout(resolve, duration));
 
 describe.sequential('ZPopconfirm and ZTooltip production contracts', () => {
-	it('owns pending, blocks duplicate confirmation, resolves and restores trigger focus', async () => {
+	it('ZPopconfirmTrigger and ZPopconfirmAction own pending, duplicate blocking, resolve and focus restoration', async () => {
 		render(TooltipPopconfirmProductionFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="confirm-trigger"]')!;
 		await userEvent.click(trigger);
+		const content = document.querySelector<HTMLElement>('[data-testid="confirm-content"]')!;
+		expect(trigger.getAttribute('aria-expanded')).toBe('true');
+		expect(content.getAttribute('role')).toBe('dialog');
+		const titleId = content.getAttribute('aria-labelledby');
+		const descriptionId = content.getAttribute('aria-describedby');
+		expect(titleId).toBeTruthy();
+		expect(descriptionId).toBeTruthy();
+		expect(content.ownerDocument.getElementById(titleId ?? '')?.textContent).toBe(
+			'Delete deployment?'
+		);
+		expect(content.textContent).toContain('This action is short and contextual.');
+		expect(content.querySelector('[data-testid="confirm-action"]')).not.toBeNull();
+		expect(content.querySelector('[data-testid="confirm-cancel"]')).not.toBeNull();
 		const action = document.querySelector<HTMLButtonElement>('[data-testid="confirm-action"]')!;
 		await userEvent.click(action);
 		expect(action.disabled).toBe(true);
@@ -30,7 +43,7 @@ describe.sequential('ZPopconfirm and ZTooltip production contracts', () => {
 		await expect.poll(() => document.activeElement, { timeout: 10_000 }).toBe(trigger);
 	});
 
-	it('keeps reject open and announces a safe formatted error', async () => {
+	it('ZPopconfirmContent, ZPopconfirmTitle and ZPopconfirmDescription keep reject open with a safe announcement', async () => {
 		render(TooltipPopconfirmProductionFixture, { mode: 'reject' });
 		await userEvent.click(document.querySelector('[data-testid="confirm-trigger"]')!);
 		await userEvent.click(document.querySelector('[data-testid="confirm-action"]')!);
@@ -38,6 +51,14 @@ describe.sequential('ZPopconfirm and ZTooltip production contracts', () => {
 			.poll(() => document.querySelector<HTMLElement>('[data-slot="error"]')?.textContent)
 			.toBe('Safe confirmation error');
 		const error = document.querySelector<HTMLElement>('[data-slot="error"]')!;
+		const content = document.querySelector<HTMLElement>('[data-testid="confirm-content"]')!;
+		const titleId = content.getAttribute('aria-labelledby');
+		const descriptionId = content.getAttribute('aria-describedby');
+		expect(content.ownerDocument.getElementById(titleId ?? '')?.textContent).toBe(
+			'Delete deployment?'
+		);
+		expect(content.textContent).toContain('This action is short and contextual.');
+		expect(descriptionId).toBeTruthy();
 		expect(error.getAttribute('role')).toBe('status');
 		expect(error.textContent).toBe('Safe confirmation error');
 		expect(document.querySelector('[data-testid="confirm-content"]')).not.toBeNull();
@@ -50,7 +71,7 @@ describe.sequential('ZPopconfirm and ZTooltip production contracts', () => {
 		expect(document.querySelector('[data-testid="confirm-output"]')?.textContent).toContain(':1:1');
 	});
 
-	it('invalidates a pending generation when Cancel closes the popover', async () => {
+	it('ZPopconfirmCancel invalidates pending work when Cancel closes the Popconfirm', async () => {
 		render(TooltipPopconfirmProductionFixture);
 		await userEvent.click(document.querySelector('[data-testid="confirm-trigger"]')!);
 		await userEvent.click(document.querySelector('[data-testid="confirm-action"]')!);
@@ -65,7 +86,7 @@ describe.sequential('ZPopconfirm and ZTooltip production contracts', () => {
 		);
 	});
 
-	it('invalidates pending work on Escape and dismisses an idle confirm on outside pointer', async () => {
+	it('ZPopconfirm dismisses pending work on Escape and idle content on outside pointer', async () => {
 		render(TooltipPopconfirmProductionFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="confirm-trigger"]')!;
 		await userEvent.click(trigger);
@@ -84,7 +105,7 @@ describe.sequential('ZPopconfirm and ZTooltip production contracts', () => {
 		expect(document.activeElement).toBe(trigger);
 	});
 
-	it('opens focus immediately and applies group warmup/cooldown with one active tooltip', async () => {
+	it('ZTooltipGroup applies warmup/cooldown while ZTooltip keeps one active tooltip', async () => {
 		render(TooltipPopconfirmProductionFixture);
 		const first = document.querySelector<HTMLButtonElement>('[data-testid="tooltip-first"]')!;
 		const second = document.querySelector<HTMLButtonElement>('[data-testid="tooltip-second"]')!;
@@ -102,7 +123,7 @@ describe.sequential('ZPopconfirm and ZTooltip production contracts', () => {
 		expect(document.querySelector('[data-testid="tooltip-first-content"]')).toBeNull();
 	});
 
-	it('restores a focus-owned tooltip after a competing pointer tooltip closes', async () => {
+	it('ZTooltipTrigger restores focus ownership after a competing pointer tooltip closes', async () => {
 		render(TooltipPopconfirmProductionFixture);
 		const first = document.querySelector<HTMLButtonElement>('[data-testid="tooltip-first"]')!;
 		const second = document.querySelector<HTMLButtonElement>('[data-testid="tooltip-second"]')!;
@@ -138,7 +159,7 @@ describe.sequential('ZPopconfirm and ZTooltip production contracts', () => {
 		await expect.poll(() => document.activeElement, { timeout: 10_000 }).toBe(first);
 	});
 
-	it('invalidates a pending hover timer when disabled changes', async () => {
+	it('ZTooltipTrigger invalidates its pending hover timer when disabled changes', async () => {
 		render(TooltipPopconfirmProductionFixture);
 		const delayed = document.querySelector<HTMLButtonElement>('[data-testid="tooltip-delayed"]')!;
 		delayed.dispatchEvent(new PointerEvent('pointerenter', { bubbles: true }));
@@ -151,7 +172,7 @@ describe.sequential('ZPopconfirm and ZTooltip production contracts', () => {
 		);
 	});
 
-	it('uses a non-Tab disabled wrapper and lets pointer remain over non-interactive content', async () => {
+	it('ZTooltipContent stays non-interactive while ZTooltipTrigger supports disabled and hoverable paths', async () => {
 		render(TooltipPopconfirmProductionFixture);
 		const disabled = document.querySelector<HTMLButtonElement>('[data-testid="tooltip-disabled"]')!;
 		const wrapper = disabled.closest<HTMLElement>('[data-slot="disabled-trigger"]')!;
@@ -170,13 +191,15 @@ describe.sequential('ZPopconfirm and ZTooltip production contracts', () => {
 		const content = document.querySelector<HTMLElement>(
 			'[data-testid="tooltip-hoverable-content"]'
 		)!;
+		expect(content.getAttribute('role')).toBe('tooltip');
+		expect(trigger.getAttribute('aria-describedby')).toBe(content.id);
 		trigger.dispatchEvent(new PointerEvent('pointerleave', { bubbles: true }));
 		content.dispatchEvent(new PointerEvent('pointerenter', { bubbles: true }));
 		await wait(50);
 		expect(document.querySelector('[data-testid="tooltip-hoverable-content"]')).toBe(content);
 	});
 
-	it('keeps focus, timers and Portal in an iframe owner realm', async () => {
+	it('ZTooltip, ZTooltipTrigger and ZTooltipContent keep focus, timers and Portal in an iframe owner realm', async () => {
 		const frame = document.createElement('iframe');
 		document.body.append(frame);
 		const ownerDocument = frame.contentDocument;

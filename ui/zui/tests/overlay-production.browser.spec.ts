@@ -1,12 +1,13 @@
-import { mount, tick, unmount } from 'svelte';
+import { tick } from 'svelte';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
+import { mount, unmount } from './browser-lifecycle.js';
 import OverlayProductionFixture from './OverlayProductionFixture.svelte';
 import PopoverOwnerRealmFixture from './PopoverOwnerRealmFixture.svelte';
 
 describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
-	it('ZDialog + ZDialogTrigger + ZDialogOverlay + ZDialogContent + ZDialogTitle + ZDialogClose expose real ARIA and focus contracts', async () => {
+	it('ZDialog + ZDialogTrigger + ZDialogOverlay + ZDialogContent + ZDialogTitle + ZDialogDescription + ZDialogClose expose real ARIA and focus contracts', async () => {
 		render(OverlayProductionFixture);
 		const trigger = document.querySelector<HTMLButtonElement>(
 			'[data-testid="dialog-production-trigger"]'
@@ -20,6 +21,9 @@ describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 			'[data-testid="dialog-production-content"]'
 		)!;
 		const title = document.querySelector<HTMLElement>('[data-testid="dialog-production-title"]')!;
+		const description = document.querySelector<HTMLElement>(
+			'[data-testid="dialog-production-description"]'
+		)!;
 		const overlay = document.querySelector<HTMLElement>(
 			'[data-testid="dialog-production-overlay"]'
 		)!;
@@ -32,9 +36,12 @@ describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 		expect(content.getAttribute('role'), 'ZDialogContent role').toBe('dialog');
 		expect(content.getAttribute('aria-modal')).toBe('true');
 		expect(content.getAttribute('aria-labelledby'), 'ZDialogTitle registration').toBe(title.id);
+		expect(content.getAttribute('aria-describedby'), 'ZDialogDescription registration').toBe(
+			description.id
+		);
 		expect(document.activeElement?.getAttribute('aria-label')).toBe('Dialog input');
 		expect(content.hasAttribute('aria-labelledby')).toBe(true);
-		expect(content.hasAttribute('aria-describedby')).toBe(false);
+		expect(content.hasAttribute('aria-describedby'), 'ZDialogDescription is registered').toBe(true);
 		const close = document.querySelector<HTMLButtonElement>(
 			'[data-testid="dialog-production-close"]'
 		);

@@ -16,9 +16,9 @@ export const zuiProgress = {
 		Authorable: 141,
 		ContractVerified: 141,
 		RuntimeImplemented: 141,
-		VisuallyVerified: 97,
+		VisuallyVerified: 113,
 		DesktopVerified: 0,
-		ProductionVerified: 82,
+		ProductionVerified: 100,
 		statuses: {
 			experimental: 104,
 			stable: 37
@@ -27,7 +27,7 @@ export const zuiProgress = {
 	stability: {
 		stableCompliant: 37,
 		stableViolations: 0,
-		promotionEligibleExperimental: 37
+		promotionEligibleExperimental: 63
 	},
 	docs: {
 		routes: {
@@ -61,17 +61,17 @@ export const zuiProgress = {
 	nextPriorities: [
 		{
 			id: 'production-evidence',
-			remaining: 59,
+			remaining: 41,
 			description: '为尚未ProductionVerified的组件补真实production browser/SSR合同。'
 		},
 		{
 			id: 'visual-evidence',
-			remaining: 44,
+			remaining: 28,
 			description: '补齐组件级浏览器渲染与交互证据，不以fixture存在冒充验证。'
 		},
 		{
 			id: 'stable-promotion',
-			remaining: 37,
+			remaining: 63,
 			description: '逐项审查已满足门禁的experimental组件；禁止自动批量晋级。'
 		},
 		{
