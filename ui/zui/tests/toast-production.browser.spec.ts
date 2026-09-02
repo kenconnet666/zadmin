@@ -4,13 +4,20 @@ import { render } from 'vitest-browser-svelte';
 
 import ToastProductionFixture from './ToastProductionFixture.svelte';
 
-describe('Toast production browser contract', () => {
-	it('keeps partial updates and task generations on one visual instance', async () => {
+describe('ZToast and ZToaster production browser contract', () => {
+	it('ZToast keeps one visual instance for content, action, update and Presence', async () => {
 		render(ToastProductionFixture);
 		document.querySelector<HTMLButtonElement>('[data-testid="toast-add-update"]')?.click();
 		await tick();
 		const portal = document.querySelector<HTMLElement>('[data-testid="toast-production-portal"]')!;
 		const original = portal.querySelector<HTMLElement>('article');
+		expect(original?.dataset.phase).toBe('visible');
+		expect(original?.dataset.presence).toBe('entered');
+		expect(
+			[...original!.querySelectorAll<HTMLButtonElement>('button')].some(
+				(button) => button.textContent?.trim() === 'Review'
+			)
+		).toBe(true);
 		document.querySelector<HTMLButtonElement>('[data-testid="toast-update"]')?.click();
 		await tick();
 		expect(portal.querySelector<HTMLElement>('article')).toBe(original);
@@ -30,7 +37,28 @@ describe('Toast production browser contract', () => {
 		).toContain('task-target:Task ready new:success:polite:visible');
 	});
 
-	it('deduplicates same-instance updates and throttles assertive announcements', async () => {
+	it('ZToaster connects the caller queue to viewport, FIFO visibility and live regions', async () => {
+		render(ToastProductionFixture);
+		const viewport = document.querySelector<HTMLElement>('[data-slot="viewport"]')!;
+		expect(viewport.getAttribute('aria-label')).toBe('Production notifications');
+		expect(viewport.dataset.queued).toBe('0');
+		expect(document.querySelector('[data-slot="polite-announcer"]')).not.toBeNull();
+		expect(document.querySelector('[data-slot="assertive-announcer"]')).not.toBeNull();
+		document.querySelector<HTMLButtonElement>('[data-testid="toast-add-overflow"]')?.click();
+		await tick();
+		const visible = [...viewport.querySelectorAll<HTMLElement>('article')];
+		expect(visible).toHaveLength(4);
+		expect(visible.map((toast) => toast.textContent)).toEqual([
+			expect.stringContaining('FIFO 1'),
+			expect.stringContaining('FIFO 2'),
+			expect.stringContaining('FIFO 3'),
+			expect.stringContaining('FIFO 4')
+		]);
+		expect(viewport.textContent).not.toContain('FIFO 5');
+		expect(viewport.dataset.queued).toBe('1');
+	});
+
+	it('ZToaster deduplicates same-id updates, pauses/resumes and throttles assertive announcements', async () => {
 		render(ToastProductionFixture);
 		document.querySelector<HTMLButtonElement>('[data-testid="toast-add-alert"]')?.click();
 		await tick();
@@ -48,6 +76,17 @@ describe('Toast production browser contract', () => {
 		await new Promise((resolve) => window.setTimeout(resolve, 1050));
 		await tick();
 		expect(assertive.textContent).toContain('Critical two');
+
+		document.querySelector<HTMLButtonElement>('[data-testid="toast-add-timed"]')?.click();
+		await tick();
+		const timed = [...document.querySelectorAll<HTMLElement>('article')].find((toast) =>
+			toast.textContent?.includes('Timed notification')
+		)!;
+		timed.dispatchEvent(new MouseEvent('mouseenter'));
+		await new Promise((resolve) => window.setTimeout(resolve, 150));
+		expect(document.body.contains(timed)).toBe(true);
+		timed.dispatchEvent(new MouseEvent('mouseleave'));
+		await expect.poll(() => document.body.contains(timed)).toBe(false);
 
 		const updated = document
 			.querySelector<HTMLElement>('[data-testid="toast-production-portal"]')

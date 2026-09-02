@@ -14,11 +14,20 @@
 
 	function addUpdateTarget(): void {
 		queue.push({
+			actionLabel: 'Review',
 			description: 'Preserve this description',
 			duration: null,
 			id: 'update-target',
 			title: 'Initial title'
 		});
+	}
+	function addOverflow(): void {
+		for (let index = 1; index <= 5; index += 1) {
+			queue.push({ duration: null, id: `fifo-${index}`, title: `FIFO ${index}` });
+		}
+	}
+	function addTimed(): void {
+		queue.push({ duration: 100, id: 'timed', title: 'Timed notification' });
 	}
 	function startTasks(): void {
 		const oldTask = new Promise<string>((resolve) => (resolveOld = resolve));
@@ -37,6 +46,8 @@
 </script>
 
 <ZButton data-testid="toast-add-update" onclick={addUpdateTarget}>Add update target</ZButton>
+<ZButton data-testid="toast-add-overflow" onclick={addOverflow}>Add FIFO overflow</ZButton>
+<ZButton data-testid="toast-add-timed" onclick={addTimed}>Add timed notification</ZButton>
 <ZButton
 	data-testid="toast-update"
 	onclick={() => queue.update('update-target', { title: 'Updated title', tone: 'success' })}
