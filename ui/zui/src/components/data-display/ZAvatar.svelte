@@ -129,7 +129,7 @@
 			{ description: '图片加载失败或缺失。', name: 'data-fallback', values: ['true'] },
 			{ description: '当前视觉来源。', name: 'data-state', values: ['image', 'fallback'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '原生响应式img属性、图片引用和事件、竞态隔离、稳定尺寸与可访问fallback组成的Avatar。'
 	} as const satisfies ZuiComponentMetadata;
 	const rootRecipe = defineRecipe({

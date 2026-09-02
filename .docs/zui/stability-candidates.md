@@ -2,7 +2,7 @@
 
 本文件由 `scripts/check-stability-policy.mjs` 生成；不会修改组件 status。compound member 可继承同 family root 的 Docs 页面。
 
-stableCompliant：10；stableViolations：0；promotionEligibleExperimental：36。
+stableCompliant：13；stableViolations：0；promotionEligibleExperimental：33。
 
 | Component               | Status       | Classification                | Blockers                              | Docs                                                                           | SSR |
 | ----------------------- | ------------ | ----------------------------- | ------------------------------------- | ------------------------------------------------------------------------------ | --: |
@@ -82,9 +82,9 @@ stableCompliant：10；stableViolations：0；promotionEligibleExperimental：36
 | ZTooltipGroup           | experimental | experimental                  | ProductionVerified                    | apps/docs/src/content/components/overlay/tooltip/doc.ts (family root)          |   1 |
 | ZTooltipTrigger         | experimental | experimental                  | ProductionVerified                    | apps/docs/src/content/components/overlay/tooltip/doc.ts (family root)          |   2 |
 | ZTree                   | experimental | promotionEligibleExperimental | —                                     | apps/docs/src/content/components/navigation/tree/doc.ts                        |   2 |
-| ZAvatar                 | experimental | promotionEligibleExperimental | —                                     | apps/docs/src/content/components/data-display/avatar/doc.ts                    |   2 |
-| ZBadge                  | experimental | promotionEligibleExperimental | —                                     | apps/docs/src/content/components/data-display/badge/doc.ts                     |   2 |
-| ZCard                   | experimental | promotionEligibleExperimental | —                                     | apps/docs/src/content/components/data-display/card/doc.ts                      |   2 |
+| ZAvatar                 | stable       | stableCompliant               | —                                     | apps/docs/src/content/components/data-display/avatar/doc.ts                    |   2 |
+| ZBadge                  | stable       | stableCompliant               | —                                     | apps/docs/src/content/components/data-display/badge/doc.ts                     |   2 |
+| ZCard                   | stable       | stableCompliant               | —                                     | apps/docs/src/content/components/data-display/card/doc.ts                      |   2 |
 | ZCarousel               | experimental | experimental                  | ProductionVerified                    | apps/docs/src/content/components/data-display/carousel/doc.ts                  |   1 |
 | ZDataTable              | experimental | promotionEligibleExperimental | —                                     | apps/docs/src/content/components/data-display/data-table/doc.ts                |   2 |
 | ZDescriptionList        | experimental | promotionEligibleExperimental | —                                     | apps/docs/src/content/components/data-display/description-list/doc.ts          |   2 |

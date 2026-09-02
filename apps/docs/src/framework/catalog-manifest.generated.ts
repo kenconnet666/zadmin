@@ -318,7 +318,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'data-display',
 		summary:
 			'以原生响应式img属性、竞态隔离的图片尝试、显式imageRef/load/error和稳定可访问fallback组成的Avatar。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'avatar',
 			'image',
@@ -348,7 +348,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'data-display',
 		summary:
 			'Badge只表达附着于对象的通知数量或紧凑圆点；可读状态文本属于ZTag，不再让两个语义共享一套含混API。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: ['badge', 'count', 'dot', 'max', 'show zero', 'anchor', 'overlap', 'notification'],
 		profiles: ['data-view', 'animated'],
 		capabilities: [
@@ -371,7 +371,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'data-display',
 		summary:
 			'以默认中性div避免article泛滥，按固定media→header→body→footer→actions顺序组合语义内容面。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: ['card', 'surface', 'article', 'section', 'media', 'actions', 'loading'],
 		profiles: ['data-view'],
 		capabilities: [

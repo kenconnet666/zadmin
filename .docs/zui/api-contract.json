@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"componentCount": 141,
-	"overallSha256": "53f2babf3a13f7407676d4467b1e74fa4953ab4633e8fba985b94ec8c7105dc3",
+	"overallSha256": "45e28b2400beabd436a03bab5a938113540e66fdf3b54a1f3ac95b8fe056bdb8",
 	"components": [
 		{
 			"id": "accordion",
@@ -385,17 +385,17 @@
 		},
 		{
 			"id": "avatar",
-			"sha256": "3463eeb84ed818fe93986b0ebc8b05ebe1aa8fbade9cf3106a5426d9e4abea70",
+			"sha256": "eab7392bb5780a44c0d02e3836c498eb5017abe1ad5f44b817378de28ba82b10",
 			"source": "src/components/data-display/ZAvatar.svelte"
 		},
 		{
 			"id": "badge",
-			"sha256": "e5ed5afa5362e6db988cb432f3b4984a1d0cac2ff8b9625334ca90261bc4b624",
+			"sha256": "447a3a66372e83d0a2356cf3f9ecb2f82478cdd4989eaee69379b129cd4aaeb8",
 			"source": "src/components/data-display/ZBadge.svelte"
 		},
 		{
 			"id": "card",
-			"sha256": "43f5940f1695e0209c127fe56c523366bd3cf1160e1053cdc5220c609965baa5",
+			"sha256": "a6076d016c8400db607525867f04c502636b4a5abffc05a4877f99e636a01364",
 			"source": "src/components/data-display/ZCard.svelte"
 		},
 		{

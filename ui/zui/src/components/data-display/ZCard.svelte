@@ -68,7 +68,7 @@
 			{ description: '当前视觉surface。', name: 'data-variant', values: ['elevated', 'outlined'] },
 			{ description: '正文正在加载。', name: 'data-loading', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '默认中性div surface，可显式选择语义根并组合media、header、body、footer与actions。'
 	} as const satisfies ZuiComponentMetadata;
 

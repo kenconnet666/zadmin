@@ -132,7 +132,7 @@
 				values: ['top-start', 'top-end', 'bottom-start', 'bottom-end']
 			}
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'以非负计数、max/showZero、dot、逻辑角落、anchor overlap和完整可访问数量组成的通知Badge。'
 	} as const satisfies ZuiComponentMetadata;

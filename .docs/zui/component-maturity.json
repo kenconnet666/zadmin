@@ -6185,7 +6185,7 @@
 			"name": "ZAvatar",
 			"category": "data-display",
 			"family": null,
-			"status": "experimental",
+			"status": "stable",
 			"source": "ui/zui/src/components/data-display/ZAvatar.svelte",
 			"apiDocumentation": {
 				"metadataGapPropCount": 0,
@@ -6216,7 +6216,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "3463eeb84ed818fe93986b0ebc8b05ebe1aa8fbade9cf3106a5426d9e4abea70 API snapshot entry"
+						"detail": "eab7392bb5780a44c0d02e3836c498eb5017abe1ad5f44b817378de28ba82b10 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -6303,7 +6303,7 @@
 			"name": "ZBadge",
 			"category": "data-display",
 			"family": null,
-			"status": "experimental",
+			"status": "stable",
 			"source": "ui/zui/src/components/data-display/ZBadge.svelte",
 			"apiDocumentation": {
 				"metadataGapPropCount": 0,
@@ -6334,7 +6334,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "e5ed5afa5362e6db988cb432f3b4984a1d0cac2ff8b9625334ca90261bc4b624 API snapshot entry"
+						"detail": "447a3a66372e83d0a2356cf3f9ecb2f82478cdd4989eaee69379b129cd4aaeb8 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -6393,7 +6393,7 @@
 			"name": "ZCard",
 			"category": "data-display",
 			"family": null,
-			"status": "experimental",
+			"status": "stable",
 			"source": "ui/zui/src/components/data-display/ZCard.svelte",
 			"apiDocumentation": {
 				"metadataGapPropCount": 0,
@@ -6424,7 +6424,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "43f5940f1695e0209c127fe56c523366bd3cf1160e1053cdc5220c609965baa5 API snapshot entry"
+						"detail": "a6076d016c8400db607525867f04c502636b4a5abffc05a4877f99e636a01364 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
