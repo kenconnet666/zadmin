@@ -72,6 +72,9 @@ describe('ZMention production collection contract', () => {
 		await tick();
 		editor.focus();
 		const option = document.querySelector<HTMLElement>('[role="option"]')!;
+		option.dispatchEvent(new PointerEvent('pointermove', { bubbles: true }));
+		await tick();
+		expect(document.querySelector<HTMLElement>('[role="option"]')).toBe(option);
 		option.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true }));
 		option.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, cancelable: true }));
 		await tick();
