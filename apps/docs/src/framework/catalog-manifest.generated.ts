@@ -130,7 +130,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'gene',
 		summary:
 			'SSR先输出纯文本，客户端generation-safe按需加载Shiki高对比tokens，并可组合安全、可本地化的复制操作。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: ['code', 'shiki', 'syntax highlight', 'copy', 'clipboard', 'SSR', 'CSP'],
 		profiles: ['primitive'],
 		capabilities: [
@@ -1603,7 +1603,7 @@ export const componentCatalogManifest = Object.freeze([
 		name: 'ZTextarea',
 		category: 'input',
 		summary: '原生textarea、Field/Form合同与跨document共享测量器组成的有界多行文本控件。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: ['textarea', 'autosize', 'minRows', 'maxRows', 'form', 'field', 'IME', 'resize'],
 		profiles: ['form-control'],
 		capabilities: [
