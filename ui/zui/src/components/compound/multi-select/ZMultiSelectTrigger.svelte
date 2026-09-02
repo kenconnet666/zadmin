@@ -177,7 +177,6 @@
 	aria-keyshortcuts={multi.values.length > 0
 		? 'Backspace Delete Control+Backspace Meta+Backspace'
 		: undefined}
-	aria-required={multi.required || undefined}
 	bind:ref
 	class={[triggerClass, className]}
 	disabled={multi.disabled}
@@ -188,6 +187,7 @@
 	data-invalid={multi.invalid || undefined}
 	data-placeholder={multi.values.length === 0 || undefined}
 	data-readonly={multi.readonly || undefined}
+	data-required={multi.required || undefined}
 	onclick={handleClick}
 >
 	{#if children}
