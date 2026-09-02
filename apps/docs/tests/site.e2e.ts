@@ -6,14 +6,14 @@ const demo = (page: Page, id: string) => page.locator(`[data-testid="demo-${id}"
 
 async function gotoComponent(page: Page, id: string): Promise<void> {
 	await page.goto(`/#/components/${id}`);
-	await expect(page).toHaveURL(new RegExp(`#\/components\/${id}$`, 'u'));
+	await expect(page).toHaveURL(new RegExp(`#/components/${id}$`, 'u'));
 	await expect(page.locator('main article').first()).toBeVisible();
 	await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
 }
 
 async function gotoGuide(page: Page, id: string): Promise<void> {
 	await page.goto(`/#/guides/${id}`);
-	await expect(page).toHaveURL(new RegExp(`#\/guides\/${id}$`, 'u'));
+	await expect(page).toHaveURL(new RegExp(`#/guides/${id}$`, 'u'));
 	await expect(page.locator('main article').first()).toBeVisible();
 }
 

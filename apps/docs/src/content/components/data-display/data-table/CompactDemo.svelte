@@ -91,7 +91,7 @@
 	let controller = $state<ZDataTableController<string> | null>(null);
 </script>
 
-{#snippet statusCell(row: ServiceRow, _value: unknown, _index: number)}
+{#snippet statusCell(row: ServiceRow)}
 	<ZTag tone={row.status === '在线' ? 'success' : 'warning'}>{row.status}</ZTag>
 {/snippet}
 

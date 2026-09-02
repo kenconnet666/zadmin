@@ -43,9 +43,9 @@
 		items={entries}
 		overscan={3}
 	>
-		{#snippet item(entry, _index, virtual)}
+		{#snippet item(entry, index, virtual)}
 			<ZBox style="box-sizing: border-box; padding: 10px 12px;">
-				<ZText weight="semibold">{entry.title}</ZText>
+				<ZText weight="semibold">{index + 1}. {entry.title}</ZText>
 				<ZText tone="muted" size="small">{entry.detail}</ZText>
 				<ZText tone="muted" size="small"
 					>{virtual.measured ? '已按真实高度校准' : '使用估算高度'}</ZText

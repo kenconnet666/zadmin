@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { createToastQueue, ZButton, ZStack, ZText, ZToaster } from '@zadmin/zui';
 	import { onDestroy } from 'svelte';
+	import { SvelteSet } from 'svelte/reactivity';
 
 	const queue = createToastQueue();
 	const taskId = 'release-task';
 	let controller: AbortController | undefined;
-	const controllers = new Set<AbortController>();
+	const controllers = new SvelteSet<AbortController>();
 	let runs = $state(0);
 	const current = $derived(queue.items.find((item) => item.id === taskId));
 

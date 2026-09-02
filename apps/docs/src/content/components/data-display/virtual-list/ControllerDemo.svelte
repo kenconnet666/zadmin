@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { tick } from 'svelte';
+	import { SvelteMap } from 'svelte/reactivity';
 	import {
 		ZButton,
 		ZInput,
@@ -15,10 +16,10 @@
 		id: index,
 		label: `环境 ${index + 1}`
 	}));
-	const optionIds = new Map(
+	const optionIds = new SvelteMap(
 		options.map((option, index) => [option.id, `environment-option-${index + 1}`])
 	);
-	const mountedOptions = new Map<number, { element: HTMLElement; token: symbol }>();
+	const mountedOptions = new SvelteMap<number, { element: HTMLElement; token: symbol }>();
 	let controller = $state<ZVirtualListController<number> | null>(null);
 	let activeKey = $state<number>();
 	let activeId = $state<string>();

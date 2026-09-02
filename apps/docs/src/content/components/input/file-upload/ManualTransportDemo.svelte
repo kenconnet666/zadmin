@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { SvelteMap } from 'svelte/reactivity';
 	import {
 		ZFileUpload,
 		ZSpinner,
@@ -12,7 +13,7 @@
 
 	let defaultFiles = $state<readonly FileUploadItem[]>();
 	let files = $state<readonly FileUploadItem[]>();
-	const attempts = new Map<string, number>();
+	const attempts = new SvelteMap<string, number>();
 
 	onMount(() => {
 		defaultFiles = [
