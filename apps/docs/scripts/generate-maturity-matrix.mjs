@@ -12,6 +12,8 @@ const jsonPath = resolve(workspaceRoot, '.docs/zui/component-maturity.json');
 const markdownPath = resolve(workspaceRoot, '.docs/zui/component-maturity.md');
 const write = process.argv.includes('--write');
 const portable = (value) => value.replaceAll('\\', '/');
+const directRenderPattern = (name) => new RegExp(`\\b(?:render|mount)\\(\\s*${name}\\b`, 'u');
+const executesComponentRender = (source) => /\b(?:render|mount)\(/u.test(source);
 
 async function filesUnder(root, extension) {
 	const entries = await readdir(root, { withFileTypes: true });
@@ -61,6 +63,60 @@ const testFiles = await filesUnder(testsRoot, '.ts');
 const tests = await Promise.all(
 	testFiles.map(async (path) => [path, await readFile(path, 'utf8')])
 );
+const fixtureFiles = await filesUnder(testsRoot, '.svelte');
+const fixtureSources = new Map(
+	await Promise.all(fixtureFiles.map(async (path) => [path, await readFile(path, 'utf8')]))
+);
+function fixtureEvidenceFor(testPath, testSource, componentName, sources = fixtureSources) {
+	return [...testSource.matchAll(/from ['"](\.\/[^'"]+\.svelte)['"]/gu)].flatMap(
+		([, importPath]) => {
+			const fixturePath = resolve(dirname(testPath), importPath);
+			const fixtureSource = sources.get(fixturePath);
+			const fixtureName = importPath
+				.split('/')
+				.pop()
+				?.replace(/\.svelte$/u, '');
+			if (
+				!fixtureSource ||
+				!fixtureName ||
+				!new RegExp(`(?:render|mount)\\(\\s*${fixtureName}\\b`, 'u').test(testSource)
+			)
+				return [];
+			const markup = fixtureSource.replace(/<!--[\s\S]*?-->|\/\*[\s\S]*?\*\/|\/\/[^\n]*/gu, '');
+			return new RegExp(`<${componentName}\\b`, 'u').test(markup)
+				? [evidence(fixturePath, `${componentName} explicit rendered fixture usage`)]
+				: [];
+		}
+	);
+}
+if (process.argv.includes('--self-test')) {
+	const fixturePath = resolve('C:/tests', 'Fixture.svelte');
+	const fixture = new Map([[fixturePath, '<ZButton />']]);
+	if (!directRenderPattern('ZButton').test('render(ZButton)'))
+		throw new Error('direct render self-test failed');
+	if (directRenderPattern('ZButton').test('import ZButton from "x"; expect(true)'))
+		throw new Error('import-only self-test failed');
+	if (
+		fixtureEvidenceFor(
+			resolve('C:/tests', 'example.spec.ts'),
+			"import Fixture from './Fixture.svelte'; render(Fixture); expect(true);",
+			'ZButton',
+			fixture
+		).length === 0
+	)
+		throw new Error('fixture self-test failed');
+	if (
+		fixtureEvidenceFor(
+			resolve('C:/tests', 'example.spec.ts'),
+			"import Fixture from './Fixture.svelte'; render(Fixture); expect(true);",
+			'ZButton',
+			new Map([[fixturePath, '<!-- <ZButton /> -->\n/* <ZButton /> */\n// <ZButton />']])
+		).length > 0
+	)
+		throw new Error('comment-only self-test failed');
+	console.log('Maturity evidence self-test passed.');
+	process.exit(0);
+}
 
 const rows = componentFiles.map(({ id, name, category, path, source }) => {
 	const sourcePath = portable(relative(workspaceRoot, path));
@@ -70,27 +126,37 @@ const rows = componentFiles.map(({ id, name, category, path, source }) => {
 			`/${id}/doc.ts`
 		)
 	);
-	const relatedTests = tests.filter(([, content]) => content.includes(name));
+	const componentReference = directRenderPattern(name);
+	const directTests = tests.filter(([, content]) => componentReference.test(content));
+	const fixtureTests = tests.filter(
+		([testPath, content]) => fixtureEvidenceFor(testPath, content, name).length > 0
+	);
+	const relatedTests = [
+		...new Map(
+			[...directTests, ...fixtureTests].map(([testPath, content]) => [testPath, content])
+		).entries()
+	];
 	const browserTests = relatedTests.filter(
 		([testPath, content]) =>
 			testPath.endsWith('.browser.spec.ts') &&
 			content.includes('expect(') &&
-			content.includes('render(')
+			executesComponentRender(content)
 	);
 	const productionTests = relatedTests.filter(
 		([testPath, content]) =>
-			testPath.includes('production') && content.includes('expect(') && content.includes('render(')
+			testPath.includes('production') &&
+			content.includes('expect(') &&
+			executesComponentRender(content)
 	);
 	const ssrTests = relatedTests.filter(
-		([testPath, content]) =>
+		([, content]) =>
 			content.includes("from 'svelte/server'") &&
 			content.includes('expect(') &&
 			content.includes('render(')
 	);
 	const runtimeImplemented = source.includes('<script lang=') && /<\/script>[\s\S]*</u.test(source);
-	const authorable = entrypointSources.some(([, entrypoint]) =>
-		new RegExp(`(?:default as )?\\b${name}\\b`).test(entrypoint)
-	);
+	const exportPattern = new RegExp(`\\bdefault as ${name}\\b`, 'u');
+	const authorable = entrypointSources.some(([, entrypoint]) => exportPattern.test(entrypoint));
 	const row = {
 		id,
 		name,
@@ -109,7 +175,7 @@ const rows = componentFiles.map(({ id, name, category, path, source }) => {
 			Declared: [evidence(path, 'zuiMetadata declaration')],
 			Authorable: authorable
 				? entrypointSources
-						.filter(([, entrypoint]) => new RegExp(`\\b${name}\\b`).test(entrypoint))
+						.filter(([, entrypoint]) => exportPattern.test(entrypoint))
 						.map(([entrypoint]) => evidence(entrypoint, `public entrypoint export ${name}`))
 				: [],
 			ContractVerified: contractFact
@@ -118,13 +184,15 @@ const rows = componentFiles.map(({ id, name, category, path, source }) => {
 			RuntimeImplemented: runtimeImplemented
 				? [evidence(path, 'component markup and instance script')]
 				: [],
-			VisuallyVerified: browserTests.map(([testPath]) =>
-				evidence(testPath, `${name} browser assertions`)
-			),
+			VisuallyVerified: browserTests.flatMap(([testPath, content]) => [
+				evidence(testPath, `${name} browser assertions`),
+				...fixtureEvidenceFor(testPath, content, name)
+			]),
 			DesktopVerified: [],
-			ProductionVerified: productionTests.map(([testPath]) =>
-				evidence(testPath, `${name} production assertions`)
-			)
+			ProductionVerified: productionTests.flatMap(([testPath, content]) => [
+				evidence(testPath, `${name} production assertions`),
+				...fixtureEvidenceFor(testPath, content, name)
+			])
 		},
 		docs: docs ? evidence(docs[0], 'catalog component documentation module') : null,
 		ssrEvidence: ssrTests.map(([testPath]) => evidence(testPath, `${name} SSR assertions`)),
