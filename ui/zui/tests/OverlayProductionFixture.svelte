@@ -38,14 +38,14 @@
 
 <ZDialog bind:open={dialogOpen}>
 	<ZDialogTrigger data-testid="dialog-production-trigger">Dialog</ZDialogTrigger>
-	<ZDialogOverlay />
+	<ZDialogOverlay data-testid="dialog-production-overlay" />
 	<ZDialogContent
 		data-testid="dialog-production-content"
 		ariaDescribedBy={null}
 		initialFocus={() => inputRef}
 		restoreTarget={() => restoreRef}
 	>
-		<ZDialogTitle>Dialog title</ZDialogTitle>
+		<ZDialogTitle data-testid="dialog-production-title">Dialog title</ZDialogTitle>
 		<ZInput aria-label="Dialog input" bind:ref={inputRef} />
 		<ZDialogClose data-testid="dialog-production-close">Close</ZDialogClose>
 	</ZDialogContent>
@@ -54,10 +54,12 @@
 
 <ZAlertDialog bind:open={alertOpen} onAction={action} onActionError={() => (actionErrors += 1)}>
 	<ZAlertDialogTrigger data-testid="alert-production-trigger">Alert</ZAlertDialogTrigger>
-	<ZAlertDialogOverlay />
+	<ZAlertDialogOverlay data-testid="alert-production-overlay" />
 	<ZAlertDialogContent data-testid="alert-production-content">
-		<ZAlertDialogTitle>Delete?</ZAlertDialogTitle>
-		<ZAlertDialogDescription>Permanent consequence.</ZAlertDialogDescription>
+		<ZAlertDialogTitle data-testid="alert-production-title">Delete?</ZAlertDialogTitle>
+		<ZAlertDialogDescription data-testid="alert-production-description"
+			>Permanent consequence.</ZAlertDialogDescription
+		>
 		<ZAlertDialogCancel data-testid="alert-production-cancel">Cancel</ZAlertDialogCancel>
 		<ZAlertDialogAction data-testid="alert-production-action">Delete</ZAlertDialogAction>
 		<button data-testid="alert-production-resolve" onclick={() => resolveAction?.()}>Resolve</button

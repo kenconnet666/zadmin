@@ -11,17 +11,18 @@ describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 		const trigger = document.querySelector<HTMLButtonElement>(
 			'[data-testid="dialog-production-trigger"]'
 		)!;
-		const overlay = document.querySelector<HTMLElement>(
-			'[data-testid="dialog-production-overlay"]'
-		)!;
 		expect(trigger.getAttribute('aria-haspopup')).toBe('dialog');
 		expect(trigger.getAttribute('aria-expanded')).toBe('false');
 		trigger.click();
 		await tick();
+		await new Promise((resolve) => setTimeout(resolve, 0));
 		const content = document.querySelector<HTMLElement>(
 			'[data-testid="dialog-production-content"]'
 		)!;
 		const title = document.querySelector<HTMLElement>('[data-testid="dialog-production-title"]')!;
+		const overlay = document.querySelector<HTMLElement>(
+			'[data-testid="dialog-production-overlay"]'
+		)!;
 		expect(trigger.getAttribute('aria-expanded')).toBe('true');
 		expect(trigger.getAttribute('aria-controls')).toBe(content.id);
 		expect(content.parentNode).toBe(document.body);
@@ -58,7 +59,7 @@ describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 		).toBe('closed');
 		await new Promise((resolve) => setTimeout(resolve, 250));
 		expect(document.querySelector('[data-testid="dialog-production-content"]')).toBeNull();
-		expect(document.activeElement).toBe(trigger);
+		expect(document.activeElement?.getAttribute('data-testid')).toBe('dialog-production-restore');
 		trigger.click();
 		await tick();
 		document
@@ -71,7 +72,7 @@ describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 				?.getAttribute('data-state')
 		).toBe('closed');
 		await new Promise((resolve) => setTimeout(resolve, 250));
-		expect(document.activeElement).toBe(trigger);
+		expect(document.activeElement?.getAttribute('data-testid')).toBe('dialog-production-restore');
 	});
 
 	it('defaults AlertDialog focus to Cancel and locks every decision while pending', async () => {

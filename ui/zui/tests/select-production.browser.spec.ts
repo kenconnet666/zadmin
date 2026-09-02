@@ -24,4 +24,32 @@ describe('ZSelect production contract', () => {
 		form.reset();
 		await expect.poll(() => new FormData(form).get('choice')).toBe('b');
 	});
+
+	it('keeps ZSelectTrigger, ZSelectContent and ZSelectItem ARIA, keyboard and Field boundaries real', async () => {
+		render(SelectFixture, { defaultOpen: true });
+		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="select-trigger"]')!;
+		const content = document.querySelector<HTMLElement>('[data-testid="select-content"]')!;
+		const items = [...content.querySelectorAll<HTMLElement>('[role="option"]')];
+		expect(trigger.getAttribute('aria-haspopup')).toBe('listbox');
+		expect(trigger.getAttribute('aria-controls')).toBe(content.id);
+		expect(trigger.getAttribute('aria-expanded')).toBe('true');
+		expect(content.getAttribute('role')).toBe('listbox');
+		expect(content.getAttribute('aria-labelledby')).toBeTruthy();
+		expect(items).toHaveLength(4);
+		expect(items[1]?.getAttribute('aria-selected')).toBe('true');
+		expect(items[2]?.getAttribute('aria-disabled')).toBe('true');
+		expect(document.querySelector<HTMLLabelElement>('label[for]')?.htmlFor).toBe(trigger.id);
+
+		trigger.focus();
+		trigger.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
+		await tick();
+		expect(document.activeElement).toBe(content);
+		content.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'End' }));
+		await tick();
+		expect(content.getAttribute('aria-activedescendant')).toBe(items[3]?.id);
+		content.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+		await tick();
+		expect(document.activeElement).toBe(trigger);
+		expect(trigger.getAttribute('aria-expanded')).toBe('false');
+	});
 });

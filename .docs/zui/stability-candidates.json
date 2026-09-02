@@ -3,7 +3,7 @@
 	"summary": {
 		"stableCompliant": 34,
 		"stableViolations": 0,
-		"promotionEligibleExperimental": 3
+		"promotionEligibleExperimental": 32
 	},
 	"components": [
 		{
@@ -53,7 +53,7 @@
 			"status": "experimental",
 			"classification": "experimental",
 			"blockers": [
-				"Family readiness (ZAlertDialogAction, ZAlertDialogCancel, ZAlertDialogContent, ZAlertDialogDescription, ZAlertDialogOverlay, ZAlertDialogTitle, ZAlertDialogTrigger)"
+				"Family readiness (ZAlertDialogAction, ZAlertDialogContent, ZAlertDialogDescription, ZAlertDialogOverlay, ZAlertDialogTitle, ZAlertDialogTrigger)"
 			],
 			"docs": "apps/docs/src/content/components/overlay/alert-dialog/doc.ts",
 			"ssrEvidenceCount": 2
@@ -74,7 +74,9 @@
 			"family": "alert-dialog",
 			"status": "experimental",
 			"classification": "experimental",
-			"blockers": ["VisuallyVerified", "ProductionVerified"],
+			"blockers": [
+				"Family readiness (ZAlertDialogAction, ZAlertDialogContent, ZAlertDialogDescription, ZAlertDialogOverlay, ZAlertDialogTitle, ZAlertDialogTrigger)"
+			],
 			"docs": "apps/docs/src/content/components/overlay/alert-dialog/doc.ts",
 			"ssrEvidenceCount": 2
 		},
@@ -133,8 +135,8 @@
 			"name": "ZCombobox",
 			"family": "combobox",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["Family readiness (ZComboboxContent, ZComboboxInput, ZComboboxItem)"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/combobox/doc.ts",
 			"ssrEvidenceCount": 1
 		},
@@ -143,8 +145,8 @@
 			"name": "ZComboboxContent",
 			"family": "combobox",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["VisuallyVerified", "ProductionVerified"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/combobox/doc.ts",
 			"ssrEvidenceCount": 1
 		},
@@ -153,8 +155,8 @@
 			"name": "ZComboboxInput",
 			"family": "combobox",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["VisuallyVerified", "ProductionVerified"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/combobox/doc.ts",
 			"ssrEvidenceCount": 1
 		},
@@ -163,8 +165,8 @@
 			"name": "ZComboboxItem",
 			"family": "combobox",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["VisuallyVerified", "ProductionVerified"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/combobox/doc.ts",
 			"ssrEvidenceCount": 1
 		},
@@ -173,30 +175,30 @@
 			"name": "ZContextMenu",
 			"family": "context-menu",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["Family readiness (ZContextMenuContent, ZContextMenuTrigger)"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/context-menu/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrEvidenceCount": 2
 		},
 		{
 			"id": "context-menu-content",
 			"name": "ZContextMenuContent",
 			"family": "context-menu",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["VisuallyVerified", "ProductionVerified"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/context-menu/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrEvidenceCount": 2
 		},
 		{
 			"id": "context-menu-trigger",
 			"name": "ZContextMenuTrigger",
 			"family": "context-menu",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["VisuallyVerified", "ProductionVerified"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/context-menu/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrEvidenceCount": 2
 		},
 		{
 			"id": "dialog",
@@ -345,158 +347,148 @@
 			"name": "ZDropdownMenu",
 			"family": "dropdown-menu",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["Family readiness (ZDropdownMenuContent, ZDropdownMenuTrigger)"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/dropdown-menu/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrEvidenceCount": 2
 		},
 		{
 			"id": "dropdown-menu-content",
 			"name": "ZDropdownMenuContent",
 			"family": "dropdown-menu",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["VisuallyVerified", "ProductionVerified"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/dropdown-menu/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrEvidenceCount": 2
 		},
 		{
 			"id": "dropdown-menu-trigger",
 			"name": "ZDropdownMenuTrigger",
 			"family": "dropdown-menu",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["VisuallyVerified", "ProductionVerified"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/dropdown-menu/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrEvidenceCount": 2
 		},
 		{
 			"id": "menu",
 			"name": "ZMenu",
 			"family": "menu",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": [
-				"Family readiness (ZMenuCheckboxItem, ZMenuRadioGroup, ZMenuRadioItem, ZMenuSub, ZMenuSubContent, ZMenuSubTrigger)"
-			],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/menu/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrEvidenceCount": 2
 		},
 		{
 			"id": "menu-checkbox-item",
 			"name": "ZMenuCheckboxItem",
 			"family": "menu",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["SSR"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/menu/doc.ts",
-			"ssrEvidenceCount": 0
+			"ssrEvidenceCount": 1
 		},
 		{
 			"id": "menu-group",
 			"name": "ZMenuGroup",
 			"family": "menu",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": [
-				"Family readiness (ZMenuCheckboxItem, ZMenuRadioGroup, ZMenuRadioItem, ZMenuSub, ZMenuSubContent, ZMenuSubTrigger)"
-			],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/menu/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrEvidenceCount": 2
 		},
 		{
 			"id": "menu-item",
 			"name": "ZMenuItem",
 			"family": "menu",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": [
-				"Family readiness (ZMenuCheckboxItem, ZMenuRadioGroup, ZMenuRadioItem, ZMenuSub, ZMenuSubContent, ZMenuSubTrigger)"
-			],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/menu/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrEvidenceCount": 2
 		},
 		{
 			"id": "menu-label",
 			"name": "ZMenuLabel",
 			"family": "menu",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": [
-				"Family readiness (ZMenuCheckboxItem, ZMenuRadioGroup, ZMenuRadioItem, ZMenuSub, ZMenuSubContent, ZMenuSubTrigger)"
-			],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/menu/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrEvidenceCount": 2
 		},
 		{
 			"id": "menu-radio-group",
 			"name": "ZMenuRadioGroup",
 			"family": "menu",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["SSR"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/menu/doc.ts",
-			"ssrEvidenceCount": 0
+			"ssrEvidenceCount": 1
 		},
 		{
 			"id": "menu-radio-item",
 			"name": "ZMenuRadioItem",
 			"family": "menu",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["SSR"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/menu/doc.ts",
-			"ssrEvidenceCount": 0
+			"ssrEvidenceCount": 1
 		},
 		{
 			"id": "menu-separator",
 			"name": "ZMenuSeparator",
 			"family": "menu",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": [
-				"Family readiness (ZMenuCheckboxItem, ZMenuRadioGroup, ZMenuRadioItem, ZMenuSub, ZMenuSubContent, ZMenuSubTrigger)"
-			],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/menu/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrEvidenceCount": 2
 		},
 		{
 			"id": "menu-sub",
 			"name": "ZMenuSub",
 			"family": "menu",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["SSR"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/menu/doc.ts",
-			"ssrEvidenceCount": 0
+			"ssrEvidenceCount": 1
 		},
 		{
 			"id": "menu-sub-content",
 			"name": "ZMenuSubContent",
 			"family": "menu",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["SSR"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/menu/doc.ts",
-			"ssrEvidenceCount": 0
+			"ssrEvidenceCount": 1
 		},
 		{
 			"id": "menu-sub-trigger",
 			"name": "ZMenuSubTrigger",
 			"family": "menu",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["SSR"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/menu/doc.ts",
-			"ssrEvidenceCount": 0
+			"ssrEvidenceCount": 1
 		},
 		{
 			"id": "multi-select",
 			"name": "ZMultiSelect",
 			"family": "multi-select",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["Family readiness (ZMultiSelectContent, ZMultiSelectItem, ZMultiSelectTrigger)"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/multi-select/doc.ts",
 			"ssrEvidenceCount": 1
 		},
@@ -505,8 +497,8 @@
 			"name": "ZMultiSelectContent",
 			"family": "multi-select",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["VisuallyVerified", "ProductionVerified"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/multi-select/doc.ts",
 			"ssrEvidenceCount": 1
 		},
@@ -515,8 +507,8 @@
 			"name": "ZMultiSelectItem",
 			"family": "multi-select",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["VisuallyVerified", "ProductionVerified"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/multi-select/doc.ts",
 			"ssrEvidenceCount": 1
 		},
@@ -525,8 +517,8 @@
 			"name": "ZMultiSelectTrigger",
 			"family": "multi-select",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["VisuallyVerified", "ProductionVerified"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/multi-select/doc.ts",
 			"ssrEvidenceCount": 1
 		},
@@ -655,8 +647,8 @@
 			"name": "ZSelect",
 			"family": "select",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["Family readiness (ZSelectContent, ZSelectItem, ZSelectTrigger)"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/select/doc.ts",
 			"ssrEvidenceCount": 1
 		},
@@ -665,8 +657,8 @@
 			"name": "ZSelectContent",
 			"family": "select",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["VisuallyVerified", "ProductionVerified"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/select/doc.ts",
 			"ssrEvidenceCount": 1
 		},
@@ -675,8 +667,8 @@
 			"name": "ZSelectItem",
 			"family": "select",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["VisuallyVerified", "ProductionVerified"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/select/doc.ts",
 			"ssrEvidenceCount": 1
 		},
@@ -685,8 +677,8 @@
 			"name": "ZSelectTrigger",
 			"family": "select",
 			"status": "experimental",
-			"classification": "experimental",
-			"blockers": ["VisuallyVerified", "ProductionVerified"],
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/select/doc.ts",
 			"ssrEvidenceCount": 1
 		},
@@ -1018,7 +1010,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/gene/button/doc.ts",
-			"ssrEvidenceCount": 6
+			"ssrEvidenceCount": 7
 		},
 		{
 			"id": "code",
@@ -1078,7 +1070,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/gene/provider/doc.ts",
-			"ssrEvidenceCount": 6
+			"ssrEvidenceCount": 7
 		},
 		{
 			"id": "separator",

@@ -119,6 +119,63 @@ describe('production ZMenu / ZDropdownMenu / ZContextMenu family', () => {
 		expect(document.activeElement).toBe(trigger);
 	});
 
+	it('ZDropdownMenuTrigger/ZDropdownMenuContent and ZContextMenuTrigger/ZContextMenuContent expose named layer contracts', async () => {
+		render(MenuFamilyProductionFixture);
+
+		const dropdownTrigger = document.querySelector<HTMLButtonElement>(
+			'[data-testid="dropdown-trigger"]'
+		)!;
+		const dropdownId = dropdownTrigger.getAttribute('aria-controls');
+		expect(dropdownId).toMatch(/^zui-/u);
+		expect(dropdownTrigger.getAttribute('aria-haspopup')).toBe('menu');
+		expect(dropdownTrigger.getAttribute('aria-expanded')).toBe('false');
+		expect(dropdownTrigger.getAttribute('data-state')).toBe('closed');
+		await userEvent.click(dropdownTrigger);
+		await tick();
+		const dropdownContent = document.querySelector<HTMLElement>(
+			'[data-testid="dropdown-content"]'
+		)!;
+		expect(dropdownContent.id).toBe(dropdownId);
+		expect(dropdownContent.getAttribute('role')).toBe('presentation');
+		expect(dropdownContent.getAttribute('data-state')).toBe('open');
+		const dropdownMenu = dropdownContent.querySelector<HTMLElement>('[role="menu"]')!;
+		expect(dropdownMenu.getAttribute('aria-labelledby')).toBe(dropdownTrigger.id);
+		expect(dropdownMenu.querySelector('[data-testid="dropdown-first"]')).not.toBeNull();
+		expect(document.body.contains(dropdownContent)).toBe(true);
+		expect(document.querySelector('[data-zui-portal-anchor]')).not.toBeNull();
+		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+		await finishPresence();
+		expect(document.querySelector('[data-testid="dropdown-content"]')).toBeNull();
+		expect(dropdownTrigger.getAttribute('aria-expanded')).toBe('false');
+
+		const contextTrigger = document.querySelector<HTMLElement>('[data-testid="context-trigger"]')!;
+		const contextId = contextTrigger.getAttribute('aria-controls');
+		expect(contextId).toMatch(/^zui-/u);
+		expect(contextTrigger.getAttribute('aria-haspopup')).toBe('menu');
+		expect(contextTrigger.getAttribute('data-state')).toBe('closed');
+		contextTrigger.dispatchEvent(
+			new MouseEvent('contextmenu', { bubbles: true, cancelable: true, clientX: 42, clientY: 64 })
+		);
+		await tick();
+		const contextContent = document.querySelector<HTMLElement>('[data-testid="context-content"]')!;
+		expect(contextContent.id).toBe(contextId);
+		expect(contextContent.getAttribute('role')).toBe('presentation');
+		expect(contextContent.getAttribute('data-state')).toBe('open');
+		const contextMenu = contextContent.querySelector<HTMLElement>('[role="menu"]')!;
+		expect(contextMenu.getAttribute('aria-label')).toBe('Production context');
+		expect(contextMenu.querySelector('[data-testid="context-first"]')).not.toBeNull();
+		const anchor = document.querySelector<HTMLElement>(
+			`[data-zui-context-menu-anchor="${contextId}"]`
+		)!;
+		expect(anchor.style.left).toBe('42px');
+		expect(anchor.style.top).toBe('64px');
+		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+		await finishPresence();
+		expect(document.querySelector('[data-testid="context-content"]')).toBeNull();
+		expect(contextTrigger.getAttribute('data-state')).toBe('closed');
+		expect(document.activeElement).toBe(contextTrigger);
+	});
+
 	it('ZDropdownMenu coordinates nested layers, RTL submenu keys, action bubbling and trigger focus restore', async () => {
 		render(MenuFamilyProductionFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="dropdown-trigger"]')!;
