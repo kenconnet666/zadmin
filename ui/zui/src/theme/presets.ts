@@ -3,7 +3,7 @@ import { extendTheme } from './define.js';
 
 export const auroraLight = extendTheme(defaultTheme, {
 	color: {
-		accent: '#7c3aed',
+		accent: '#7431e8',
 		accentHover: '#5b21b6',
 		border: '#c9d7ec',
 		canvas: '#ffffff',
@@ -12,17 +12,17 @@ export const auroraLight = extendTheme(defaultTheme, {
 		codeMuted: '#94a3c4',
 		codeSelection: '#5b21b6',
 		codeText: '#f4f7ff',
-		danger: '#d51a49',
+		danger: '#bd1742',
 		dangerHover: '#b81740',
 		focus: '#0891b2',
 		overlay: '#17203380',
 		primary: '#2457e6',
 		primaryHover: '#173fb5',
-		success: '#078f63',
+		success: '#006b4f',
 		surface: '#eef4ff',
 		text: '#172033',
 		textMuted: '#52627a',
-		warning: '#b45309'
+		warning: '#9a4709'
 	},
 	fontFamily: {
 		mono: "'Fira Mono', ui-monospace, SFMono-Regular, Consolas, monospace",
@@ -52,7 +52,7 @@ export const paperLight = extendTheme(defaultTheme, {
 		overlay: '#2d261fb3',
 		primary: '#9a3412',
 		primaryHover: '#7c2d12',
-		success: '#287b46',
+		success: '#206b3a',
 		surface: '#f5ede1',
 		text: '#2d261f',
 		textMuted: '#66584a',

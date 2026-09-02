@@ -19,17 +19,17 @@ export const DEFAULT_THEME_SCHEMA = {
 		codeMuted: '#8b949e',
 		codeSelection: '#1d4ed8',
 		codeText: '#e6edf3',
-		danger: '#dc2626',
-		dangerHover: '#b91c1c',
+		danger: '#b42318',
+		dangerHover: '#8f1d14',
 		focus: '#60a5fa',
 		overlay: '#0f172a99',
 		primary: '#2563eb',
 		primaryHover: '#1d4ed8',
-		success: '#16a34a',
+		success: '#166534',
 		surface: '#f8fafc',
 		text: '#0f172a',
 		textMuted: '#64748b',
-		warning: '#d97706'
+		warning: '#92400e'
 	},
 	duration: {
 		fast: 120,

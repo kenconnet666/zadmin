@@ -11,6 +11,69 @@ import {
 } from '../src/entrypoints/themes.js';
 
 describe('ZUI themes', () => {
+	type Rgb = readonly [number, number, number];
+
+	function rgb(hex: string): Rgb {
+		return [
+			parseInt(hex.slice(1, 3), 16),
+			parseInt(hex.slice(3, 5), 16),
+			parseInt(hex.slice(5, 7), 16)
+		];
+	}
+
+	function blend(foreground: string, background: string, opacity: number): Rgb {
+		const foregroundChannels = rgb(foreground);
+		const backgroundChannels = rgb(background);
+		return [
+			foregroundChannels[0] * opacity + backgroundChannels[0] * (1 - opacity),
+			foregroundChannels[1] * opacity + backgroundChannels[1] * (1 - opacity),
+			foregroundChannels[2] * opacity + backgroundChannels[2] * (1 - opacity)
+		];
+	}
+
+	function contrastRatio(foreground: string | Rgb, background: string | Rgb): number {
+		const luminance = (color: string | Rgb): number => {
+			const channels = (typeof color === 'string' ? rgb(color) : color).map(
+				(channel) => channel / 255
+			);
+			const linear = channels.map((channel) =>
+				channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4
+			);
+			return 0.2126 * linear[0]! + 0.7152 * linear[1]! + 0.0722 * linear[2]!;
+		};
+		const foregroundLuminance = luminance(foreground);
+		const backgroundLuminance = luminance(background);
+		return (
+			(Math.max(foregroundLuminance, backgroundLuminance) + 0.05) /
+			(Math.min(foregroundLuminance, backgroundLuminance) + 0.05)
+		);
+	}
+
+	it('keeps every semantic Tag tone readable on its mixed canvas and surface backgrounds', () => {
+		const themes = [
+			['defaultTheme', defaultTheme],
+			['auroraLight', auroraLight],
+			['paperLight', paperLight],
+			['neonDark', neonDark],
+			['midnightDark', midnightDark],
+			['highContrastLight', highContrastLight],
+			['highContrastDark', highContrastDark]
+		] as const;
+		const failures: Array<{ readonly contract: string; readonly ratio: number }> = [];
+		for (const [name, theme] of themes) {
+			for (const tone of ['accent', 'danger', 'success', 'warning'] as const) {
+				for (const surface of ['canvas', 'surface'] as const) {
+					const foreground = theme.color[tone];
+					const mixedBackground = blend(foreground, theme.color[surface], 0.1);
+					const ratio = contrastRatio(foreground, mixedBackground);
+					if (ratio < 4.5)
+						failures.push({ contract: `${name}.${tone} on mixed ${surface}`, ratio });
+				}
+			}
+		}
+		expect(failures).toEqual([]);
+	});
+
 	it('copies and deeply freezes the strict theme contract', () => {
 		const source = {
 			...defaultTheme,
@@ -91,7 +154,7 @@ describe('ZUI themes', () => {
 		expect(defaultTheme.color.accent).toBe('#7c3aed');
 		expect(defaultTheme.color.codeBackground).toBe('#0d1117');
 		expect(defaultTheme.color.codeText).toBe('#e6edf3');
-		expect(defaultTheme.color.dangerHover).toBe('#b91c1c');
+		expect(defaultTheme.color.dangerHover).toBe('#8f1d14');
 		expect(defaultTheme.color.focus).toBe('#60a5fa');
 		expect(defaultTheme.color.overlay).toBe('#0f172a99');
 		expect(defaultTheme.size.drawerSmall).toBe(320);

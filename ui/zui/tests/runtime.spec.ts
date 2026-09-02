@@ -82,7 +82,7 @@ describe('ICSS runtime', () => {
 		const css = registry.cssText();
 
 		expect(utility).not.toBe(component);
-		expect(css).toContain(`@layer zui.components{.${component}{color:#dc2626;}}`);
+		expect(css).toContain(`@layer zui.components{.${component}{color:#b42318;}}`);
 		expect(css).toContain(`@layer zui.utilities{.${utility}{color:#2563eb;}}`);
 	});
 
