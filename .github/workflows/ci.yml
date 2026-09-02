@@ -147,6 +147,9 @@ jobs:
       - name: Build all packages, apps, plugins, and WeChat output
         run: pnpm build
 
+      - name: Verify Docs lazy catalog chunks
+        run: node apps/docs/scripts/check-build-chunks.mjs
+
       - name: Verify generated tracked files are unchanged
         run: git diff --exit-code
 
