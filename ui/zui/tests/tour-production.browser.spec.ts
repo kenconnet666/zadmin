@@ -26,7 +26,7 @@ describe('ZTour production overlay contract', () => {
 			.querySelector<HTMLButtonElement>('[data-slot="actions"] button:nth-last-child(2)')!
 			.click();
 		await tick();
-		expect(document.querySelector('[role="dialog"]')?.dataset.step).toBe('summary');
+		expect(document.querySelector<HTMLElement>('[role="dialog"]')?.dataset.step).toBe('summary');
 		document
 			.querySelector<HTMLElement>('[role="dialog"] [data-slot="actions"] button:last-child')!
 			.click();
