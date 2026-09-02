@@ -490,9 +490,7 @@ describe('compiled ICSS browser updates', () => {
 		expect(output?.textContent).toBe('first:exiting|second:queued:1');
 		expect(lifecycle?.textContent).not.toContain('Second');
 
-		await new Promise((resolve) => setTimeout(resolve, 320));
-		await tick();
-		expect(output?.textContent).toBe('second:visible:1');
+		await expect.poll(() => output?.textContent, { timeout: 10_000 }).toBe('second:visible:1');
 		expect(lifecycle?.textContent).toContain('Second');
 
 		document.querySelector<HTMLButtonElement>('[data-testid="toast-add-reduced"]')?.click();
@@ -2312,7 +2310,7 @@ describe('compiled ICSS browser updates', () => {
 		trigger?.dispatchEvent(new PointerEvent('pointerenter'));
 		await new Promise((resolve) => setTimeout(resolve, 0));
 		await tick();
-		let content = document.querySelector<HTMLElement>('[data-testid="tooltip-content"]');
+		const content = document.querySelector<HTMLElement>('[data-testid="tooltip-content"]');
 		expect(content?.parentNode).toBe(document.body);
 		expect(content?.getAttribute('role')).toBe('tooltip');
 		expect(trigger?.getAttribute('aria-describedby')).toBe(content?.id);

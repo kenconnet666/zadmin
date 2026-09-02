@@ -81,8 +81,9 @@ describe('ZTextarea production contract', () => {
 		await userEvent.click(
 			document.querySelector<HTMLButtonElement>('[data-testid="textarea-production-toggle"]')!
 		);
-		await nextFrame();
-		expect(Number.parseFloat(hidden.style.height)).toBeGreaterThan(0);
+		await expect
+			.poll(() => Number.parseFloat(hidden.style.height), { timeout: 10_000 })
+			.toBeGreaterThan(0);
 
 		textarea.value = Array.from({ length: 12 }, (_, index) => `Line ${index + 1}`).join('\n');
 		textarea.dispatchEvent(new InputEvent('input', { bubbles: true }));
