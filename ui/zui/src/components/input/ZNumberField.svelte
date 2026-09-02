@@ -565,13 +565,17 @@
 			: roundNumber(zeroInRange, constraints.precision);
 	}
 
-	function changeBy(direction: -1 | 1, amount = constraints.step): number | undefined {
+	function changeBy(
+		direction: -1 | 1,
+		amount = constraints.step,
+		baseValue = currentValue
+	): number | undefined {
 		if (resolvedDisabled || resolvedReadonly) return currentValue;
 		const next =
-			currentValue === undefined
+			baseValue === undefined
 				? stepFromEmpty(direction, amount)
 				: stepNumber(
-						currentValue,
+						baseValue,
 						direction,
 						amount,
 						constraints.min,
@@ -643,7 +647,9 @@
 				const direction = event.key === 'ArrowUp' || event.key === 'PageUp' ? 1 : -1;
 				const amount =
 					event.key.startsWith('Page') || event.shiftKey ? constraints.pageStep : constraints.step;
-				draft = formatEditValue(changeBy(direction, amount));
+				const parsedDraft = parseDraft(draft);
+				const baseValue = parsedDraft.valid ? parsedDraft.value : undefined;
+				draft = formatEditValue(changeBy(direction, amount, baseValue));
 				break;
 			}
 			case 'Home':

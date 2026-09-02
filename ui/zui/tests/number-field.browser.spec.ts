@@ -82,6 +82,15 @@ describe('NumberField production contracts', () => {
 		expect(fixture('controlled-value').textContent).toBe('7.25');
 	});
 
+	it('steps from a valid locale draft after a user fill', async () => {
+		render(NumberFieldProductionFixture);
+		const control = spinbutton('controlled-number');
+		control.focus();
+		await userEvent.fill(control, '12.75');
+		await userEvent.keyboard('{ArrowUp}');
+		await expect.poll(() => fixture('controlled-value').textContent).toBe('13');
+	});
+
 	it('defers IME parsing and supports paired parser and formatter contracts', async () => {
 		render(NumberFieldProductionFixture);
 		const localeControl = spinbutton('locale-number');

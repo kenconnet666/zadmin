@@ -277,6 +277,15 @@
 	}
 
 	function handleKeydown(event: KeyboardEvent & { currentTarget: HTMLInputElement }): void {
+		if (!resolvedReadonly && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) {
+			event.preventDefault();
+			const increase =
+				zui.direction === 'rtl' ? event.key === 'ArrowLeft' : event.key === 'ArrowRight';
+			const next = normalizeSliderValue(resolvedValue + (increase ? step : -step), min, max, step);
+			valueState.setFromUser(next);
+			onkeydown?.(event);
+			return;
+		}
 		if (resolvedReadonly) {
 			switch (event.key) {
 				case 'ArrowDown':

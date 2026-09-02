@@ -27,6 +27,7 @@
 			bind:value={controlledValue}
 			name="controlled"
 			inputLabel="Controlled amount"
+			step={0.25}
 			data-testid="controlled-number"
 		/>
 		<div>
