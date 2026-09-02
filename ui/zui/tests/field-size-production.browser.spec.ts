@@ -4,7 +4,7 @@ import { render } from 'vitest-browser-svelte';
 
 import FieldSizeFixture from './FieldSizeFixture.svelte';
 
-describe('Field control size inheritance', () => {
+describe('ZProvider, ZField, ZInput and ZTextarea production size contract', () => {
 	it('resolves explicit control, Field and Provider density in priority order', async () => {
 		render(FieldSizeFixture);
 		await tick();

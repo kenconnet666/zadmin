@@ -5,7 +5,7 @@ import { render } from 'vitest-browser-svelte';
 
 import ButtonToggleProductionFixture from './ButtonToggleProductionFixture.svelte';
 
-describe('Button and ToggleButton production browser contract', () => {
+describe('ZButton and ZToggleButton production browser contract', () => {
 	it('keeps variant, tone, shape and native form semantics orthogonal', async () => {
 		render(ButtonToggleProductionFixture);
 		const primary = document.querySelector<HTMLButtonElement>('[data-testid="button-default"]')!;

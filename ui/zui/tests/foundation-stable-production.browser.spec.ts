@@ -1,9 +1,9 @@
 import { render } from 'vitest-browser-svelte';
 import { describe, expect, it } from 'vitest';
 
-import { ZBox, ZIcon } from '../src/entrypoints/index.js';
+import { ZBox, ZIcon, ZStack } from '../src/entrypoints/index.js';
 
-describe('stable foundation production contracts: ZBox and ZIcon', () => {
+describe('stable foundation production contracts: ZBox, ZIcon and ZStack', () => {
 	it('keeps ZBox as a real div while forwarding native attributes and style', () => {
 		render(ZBox, {
 			'aria-label': 'Stable surface',
@@ -34,5 +34,22 @@ describe('stable foundation production contracts: ZBox and ZIcon', () => {
 		expect(icon.getAttribute('role')).toBe('img');
 		expect(icon.getAttribute('aria-label')).toBe('Success');
 		expect(icon.getAttribute('aria-hidden')).toBeNull();
+	});
+
+	it('keeps ZStack as a native flex owner with explicit logical layout tokens', () => {
+		render(ZStack, {
+			'aria-label': 'Stable actions',
+			class: 'consumer-stack',
+			direction: 'row',
+			gap: 6,
+			wrap: true
+		});
+		const stack = document.querySelector<HTMLDivElement>('.consumer-stack')!;
+		expect(stack.tagName).toBe('DIV');
+		expect(stack.getAttribute('aria-label')).toBe('Stable actions');
+		expect(getComputedStyle(stack).display).toBe('flex');
+		expect(getComputedStyle(stack).flexDirection).toBe('row');
+		expect(getComputedStyle(stack).flexWrap).toBe('wrap');
+		expect(getComputedStyle(stack).gap).toBe('6px');
 	});
 });

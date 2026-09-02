@@ -34,7 +34,7 @@
 		snippets: [{ description: '键盘按键或输入序列。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/gene/ZKbd.svelte',
 		states: [],
-		status: 'experimental',
+		status: 'stable',
 		summary: '使用原生kbd语义展示快捷键、按键和需要用户输入的键盘序列。'
 	} as const satisfies ZuiComponentMetadata;
 

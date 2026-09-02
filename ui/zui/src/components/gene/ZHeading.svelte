@@ -88,7 +88,7 @@
 				values: ['small', 'medium', 'large', 'xlarge']
 			}
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '始终渲染真实h1–h6，并把文档层级与Theme视觉字号、行高、字重和tone解耦。'
 	} as const satisfies ZuiComponentMetadata;
 

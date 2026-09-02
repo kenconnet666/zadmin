@@ -4,7 +4,7 @@ import { render } from 'vitest-browser-svelte';
 
 import TypographyFixture from './TypographyFixture.svelte';
 
-describe('typography browser semantics', () => {
+describe('ZHeading and ZText production browser semantics', () => {
 	it('binds real heading/text elements and applies overflow contracts', async () => {
 		render(TypographyFixture);
 		await tick();

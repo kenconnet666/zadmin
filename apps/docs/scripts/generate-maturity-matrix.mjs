@@ -14,7 +14,10 @@ const markdownPath = resolve(workspaceRoot, '.docs/zui/component-maturity.md');
 const write = process.argv.includes('--write');
 const portable = (value) => value.replaceAll('\\', '/');
 const directRenderPattern = (name) => new RegExp(`\\b(?:render|mount)\\(\\s*${name}\\b`, 'u');
+const explicitComponentPattern = (name) => new RegExp(`\\b${name}\\b`, 'u');
 const executesComponentRender = (source) => /\b(?:render|mount)\(/u.test(source);
+const withoutComments = (source) =>
+	source.replace(/<!--[\s\S]*?-->|\/\*[\s\S]*?\*\/|\/\/[^\n]*/gu, '');
 
 async function filesUnder(root, extension) {
 	const entries = await readdir(root, { withFileTypes: true });
@@ -86,7 +89,7 @@ function fixtureEvidenceFor(testPath, testSource, componentName, sources = fixtu
 				!new RegExp(`(?:render|mount)\\(\\s*${fixtureName}\\b`, 'u').test(testSource)
 			)
 				return [];
-			const markup = fixtureSource.replace(/<!--[\s\S]*?-->|\/\*[\s\S]*?\*\/|\/\/[^\n]*/gu, '');
+			const markup = withoutComments(fixtureSource);
 			return new RegExp(`<${componentName}\\b`, 'u').test(markup)
 				? [evidence(fixturePath, `${componentName} explicit rendered fixture usage`)]
 				: [];
@@ -100,6 +103,12 @@ if (process.argv.includes('--self-test')) {
 		throw new Error('direct render self-test failed');
 	if (directRenderPattern('ZButton').test('import ZButton from "x"; expect(true)'))
 		throw new Error('import-only self-test failed');
+	if (!explicitComponentPattern('ZButton').test("describe('ZButton contract', () => {})"))
+		throw new Error('explicit component self-test failed');
+	if (explicitComponentPattern('ZButton').test("describe('button contract', () => {})"))
+		throw new Error('implicit component self-test failed');
+	if (explicitComponentPattern('ZButton').test(withoutComments('// ZButton\nexpect(true)')))
+		throw new Error('comment-only component self-test failed');
 	if (
 		fixtureEvidenceFor(
 			resolve('C:/tests', 'example.spec.ts'),
@@ -133,6 +142,7 @@ const rows = componentFiles.map(({ id, name, category, status, path, source }) =
 		)
 	);
 	const componentReference = directRenderPattern(name);
+	const explicitComponentReference = explicitComponentPattern(name);
 	const directTests = tests.filter(([, content]) => componentReference.test(content));
 	const fixtureTests = tests.filter(
 		([testPath, content]) => fixtureEvidenceFor(testPath, content, name).length > 0
@@ -146,12 +156,14 @@ const rows = componentFiles.map(({ id, name, category, status, path, source }) =
 		([testPath, content]) =>
 			testPath.endsWith('.browser.spec.ts') &&
 			content.includes('expect(') &&
+			explicitComponentReference.test(withoutComments(content)) &&
 			executesComponentRender(content)
 	);
 	const productionTests = relatedTests.filter(
 		([testPath, content]) =>
 			testPath.includes('production') &&
 			content.includes('expect(') &&
+			explicitComponentReference.test(withoutComments(content)) &&
 			executesComponentRender(content)
 	);
 	const ssrTests = relatedTests.filter(

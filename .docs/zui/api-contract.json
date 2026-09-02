@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"componentCount": 141,
-	"overallSha256": "f617513f60e9f67e8f9974c59c0cf326f0e3ac91064b9a14432adf5721fa8112",
+	"overallSha256": "1dfe4eed48b92786c5b78325e1cfaa7bd6fcfdd2e7e7ac5a2fa996542520cbb9",
 	"components": [
 		{
 			"id": "accordion",
@@ -510,7 +510,7 @@
 		},
 		{
 			"id": "heading",
-			"sha256": "b56847365ec861e7a0cc9395b8af15e0c5f1179d6d0f6a1eff8a078dbd150257",
+			"sha256": "a14c9b123750438a9becd215d803e3df9ec0370c4580f9d8183b7b720c332c1f",
 			"source": "src/components/gene/ZHeading.svelte"
 		},
 		{
@@ -520,7 +520,7 @@
 		},
 		{
 			"id": "kbd",
-			"sha256": "c694ec2e873ca523b4990dde2f4906a3b85a0f70786a94cf539f64838b5c9294",
+			"sha256": "33c7615948fded9795155f3c702545e52e1fa4e0d68ef98b8f866b838f557321",
 			"source": "src/components/gene/ZKbd.svelte"
 		},
 		{

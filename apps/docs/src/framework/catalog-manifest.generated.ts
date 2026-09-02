@@ -93,7 +93,7 @@ export const componentCatalogManifest = Object.freeze([
 		name: 'ZHeading',
 		category: 'gene',
 		summary: '始终输出真实h1–h6，并明确分离文档层级与视觉字号、行高、字重、tone。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: ['heading', 'h1', 'h2', 'document outline', 'typography', 'semantic html'],
 		profiles: ['primitive'],
 		capabilities: [
@@ -268,7 +268,7 @@ export const componentCatalogManifest = Object.freeze([
 		name: 'ZKbd',
 		category: 'gene',
 		summary: '只表达用户输入文本的原生kbd；组合、嵌套和平台替代文本由调用方显式组织。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [],
 		profiles: ['primitive'],
 		capabilities: ['basic-render', 'composition', 'native-props', 'accessible-name', 'ssr'],
