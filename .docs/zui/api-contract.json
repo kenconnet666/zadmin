@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"componentCount": 141,
-	"overallSha256": "1dfe4eed48b92786c5b78325e1cfaa7bd6fcfdd2e7e7ac5a2fa996542520cbb9",
+	"overallSha256": "7401818739e8d9f39426cb8776e59ecc064fc22678c91c5e967482b81bae2ed4",
 	"components": [
 		{
 			"id": "accordion",
@@ -95,7 +95,7 @@
 		},
 		{
 			"id": "context-menu-trigger",
-			"sha256": "95f411dcba5565b3ae5fec8835377cfffe2e7b5949ca1619ed9c7e3999ce2ebb",
+			"sha256": "00ffd5183c250a093401cec5ded5a62e8036b499272e63507efd6e3a31824b2f",
 			"source": "src/components/compound/context-menu/ZContextMenuTrigger.svelte"
 		},
 		{

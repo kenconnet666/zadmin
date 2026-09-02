@@ -15,7 +15,7 @@
 		importStatement: "import { ZContextMenuTrigger } from '@zadmin/zui';",
 		name: 'ZContextMenuTrigger',
 		bindings: [{ description: '真实目标区域引用。', name: 'ref', type: 'HTMLDivElement | null' }],
-		dependencies: ['ZContextMenu'],
+		dependencies: ['ZContextMenu', 'Portal'],
 		events: [
 			{
 				description: '原生contextmenu；preventDefault可取消打开。',
@@ -46,6 +46,7 @@
 <script lang="ts">
 	import { isKeyboardComposing } from '../../../runtime/collection/collection-navigation.svelte.js';
 	import { useZui } from '../../../runtime/foundation/context.js';
+	import { portal } from '../../../runtime/layer/portal.js';
 	import { useZPopover } from '../popover/context.svelte.js';
 	let {
 		children,
@@ -110,6 +111,8 @@
 	<span
 		bind:this={anchor}
 		aria-hidden="true"
+		data-zui-context-menu-anchor={popover.contentId}
 		style={`position: fixed; left: ${x}px; top: ${y}px; width: 0; height: 0; pointer-events: none;`}
+		use:portal={{ target: popover.portalTarget }}
 	></span>
 </div>

@@ -923,7 +923,13 @@ describe('compiled ICSS browser updates', () => {
 		await new Promise((resolve) => setTimeout(resolve, 0));
 		await tick();
 		let content = document.querySelector<HTMLElement>('[data-testid="context-content"]');
+		const anchor = document.querySelector<HTMLElement>(
+			`[data-zui-context-menu-anchor="${trigger?.getAttribute('aria-controls')}"]`
+		);
 		const inspect = document.querySelector<HTMLElement>('[data-testid="context-inspect"]');
+		expect(anchor?.parentNode).toBe(document.body);
+		expect(anchor?.getBoundingClientRect().left).toBeCloseTo(120, 0);
+		expect(anchor?.getBoundingClientRect().top).toBeCloseTo(80, 0);
 		expect(content?.parentNode).toBe(document.body);
 		expect(content?.getBoundingClientRect().left).toBeCloseTo(120, 0);
 		expect(content?.getBoundingClientRect().top).toBeCloseTo(82, 0);

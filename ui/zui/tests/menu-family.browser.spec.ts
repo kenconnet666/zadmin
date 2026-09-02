@@ -133,7 +133,9 @@ describe('production Menu family', () => {
 			})
 		);
 		await tick();
-		const anchor = target.querySelector<HTMLElement>('span[aria-hidden="true"]')!;
+		const anchor = document.querySelector<HTMLElement>(
+			`[data-zui-context-menu-anchor="${target.getAttribute('aria-controls')}"]`
+		)!;
 		expect(anchor.style.left).toBe('34px');
 		expect(anchor.style.top).toBe('56px');
 		expect(document.activeElement).toBe(
@@ -155,9 +157,11 @@ describe('production Menu family', () => {
 			})
 		);
 		await tick();
-		expect(rtl.querySelector<HTMLElement>('span[aria-hidden="true"]')?.style.left).toBe(
-			`${rect.right}px`
-		);
+		expect(
+			document.querySelector<HTMLElement>(
+				`[data-zui-context-menu-anchor="${rtl.getAttribute('aria-controls')}"]`
+			)?.style.left
+		).toBe(`${rect.right}px`);
 	});
 
 	it('keeps keyboard, Portal, dismiss and focus ownership in an iframe owner realm', async () => {
