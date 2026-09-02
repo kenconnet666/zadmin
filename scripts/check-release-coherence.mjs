@@ -14,8 +14,11 @@ export function evaluateReleaseCoherence({
 	ci,
 	manifestProducer,
 	manifestReader,
+	miniappAcceptance,
 	packageJson,
-	release
+	release,
+	sveltekitAcceptance,
+	webviewAcceptance
 }) {
 	const publishLines = [...ci.matchAll(/^\s*[^#\n]*npm publish[^\n]*$/gmu)].map(([line]) =>
 		line.trim()
@@ -39,8 +42,18 @@ export function evaluateReleaseCoherence({
 			/readReleaseArtifact/u.test(manifestReader) &&
 			/sha256 !== artifact\.sha256/u.test(manifestReader),
 		revisionBoundConsumer: ci.includes(
-			'node scripts/read-release-artifact.mjs --directory="$ZADMIN_RELEASE_ARTIFACTS_DIR" --package=@zadmin/zui --revision=${{ github.sha }}'
+			'node scripts/read-release-artifact.mjs --directory="$ZADMIN_RELEASE_ARTIFACTS_DIR" --package=@zadmin/zui --revision="$ZADMIN_RELEASE_ARTIFACTS_REVISION"'
 		),
+		externalConsumersRevisionBound:
+			[sveltekitAcceptance, webviewAcceptance, miniappAcceptance].every(
+				(source) =>
+					/ZADMIN_RELEASE_ARTIFACTS_DIR/u.test(source) &&
+					/ZADMIN_RELEASE_ARTIFACTS_REVISION/u.test(source) &&
+					/readReleaseArtifact\([^\n]*artifactRevision\)/u.test(source)
+			) && /ZADMIN_RELEASE_ARTIFACTS_REVISION=\$\{\{ github\.sha \}\}/u.test(ci),
+		ciRevisionEnvironment:
+			/ZADMIN_RELEASE_ARTIFACTS_DIR=.*release-artifacts-consumer/u.test(ci) &&
+			/ZADMIN_RELEASE_ARTIFACTS_REVISION=\$\{\{ github\.sha \}\}/u.test(ci),
 		dryRunOnly:
 			publishLines.length === 1 &&
 			publishLines[0]?.includes('--dry-run') === true &&
@@ -61,7 +74,10 @@ const sources = {
 	packageJson: JSON.parse(await read('ui/zui/package.json')),
 	changesetConfig: JSON.parse(await read('.changeset/config.json')),
 	manifestProducer: await read('scripts/pack-release-artifacts.mjs'),
-	manifestReader: await read('scripts/read-release-artifact.mjs')
+	manifestReader: await read('scripts/read-release-artifact.mjs'),
+	sveltekitAcceptance: await read('ui/sveltekit/scripts/accept-zui-package.mjs'),
+	webviewAcceptance: await read('ui/webview/scripts/accept-package.mjs'),
+	miniappAcceptance: await read('ui/miniapp/scripts/accept-package.mjs')
 };
 const checks = evaluateReleaseCoherence(sources);
 const failed = Object.entries(checks)
@@ -73,7 +89,19 @@ if (process.argv.includes('--self-test')) {
 	const negativeCases = [
 		{
 			check: 'revisionBoundConsumer',
-			input: { ci: sources.ci.replace(' --revision=${{ github.sha }}', '') }
+			input: {
+				ci: sources.ci.replace(' --revision="$ZADMIN_RELEASE_ARTIFACTS_REVISION"', '')
+			}
+		},
+		{
+			check: 'externalConsumersRevisionBound',
+			input: {
+				webviewAcceptance: sources.webviewAcceptance.replace(', artifactRevision', '')
+			}
+		},
+		{
+			check: 'ciRevisionEnvironment',
+			input: { ci: sources.ci.replace('ZADMIN_RELEASE_ARTIFACTS_REVISION=${{ github.sha }}', '') }
 		},
 		{
 			check: 'releaseUsesWorkflowSha',

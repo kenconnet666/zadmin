@@ -274,7 +274,9 @@ jobs:
       - name: Select downloaded release artifacts for acceptance
         if: steps.release_artifacts_download.outcome == 'success'
         id: release_artifacts_select
-        run: echo "ZADMIN_RELEASE_ARTIFACTS_DIR=${{ github.workspace }}/.release-artifacts-consumer" >> "$GITHUB_ENV"
+        run: |
+          echo "ZADMIN_RELEASE_ARTIFACTS_DIR=${{ github.workspace }}/.release-artifacts-consumer" >> "$GITHUB_ENV"
+          echo "ZADMIN_RELEASE_ARTIFACTS_REVISION=${{ github.sha }}" >> "$GITHUB_ENV"
 
       - name: Inspect ZUI browser bundles
         if: always() && steps.workspace.outcome == 'success' && steps.release_artifacts_select.outcome == 'success'
@@ -288,7 +290,7 @@ jobs:
         if: always() && steps.workspace.outcome == 'success' && steps.release_artifacts_select.outcome == 'success'
         run: |
           pnpm --filter @zadmin/zui package:check
-          ZUI_TARBALL="$(node scripts/read-release-artifact.mjs --directory="$ZADMIN_RELEASE_ARTIFACTS_DIR" --package=@zadmin/zui --revision=${{ github.sha }})"
+          ZUI_TARBALL="$(node scripts/read-release-artifact.mjs --directory="$ZADMIN_RELEASE_ARTIFACTS_DIR" --package=@zadmin/zui --revision="$ZADMIN_RELEASE_ARTIFACTS_REVISION")"
           npm publish "$ZUI_TARBALL" --dry-run --ignore-scripts
 
       - name: Run WebView external package acceptance

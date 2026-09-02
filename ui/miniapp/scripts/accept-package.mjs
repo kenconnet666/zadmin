@@ -48,8 +48,12 @@ const started = performance.now();
 try {
 	await mkdir(tarballRoot, { recursive: true });
 	const artifactDirectory = process.env.ZADMIN_RELEASE_ARTIFACTS_DIR;
+	const artifactRevision = process.env.ZADMIN_RELEASE_ARTIFACTS_REVISION;
+	if (artifactDirectory && !artifactRevision)
+		throw new Error('ZADMIN_RELEASE_ARTIFACTS_REVISION is required with release artifacts.');
 	let tarball;
-	if (artifactDirectory) tarball = await readReleaseArtifact(artifactDirectory, '@zadmin/miniapp');
+	if (artifactDirectory)
+		tarball = await readReleaseArtifact(artifactDirectory, '@zadmin/miniapp', artifactRevision);
 	else {
 		await runPnpm(['--filter', '@zadmin/miniapp', 'build'], workspaceRoot);
 		await runPnpm(

@@ -123,6 +123,9 @@ const checks = {
 		/ZADMIN_RELEASE_ARTIFACTS_DIR/u.test(zuiAcceptance) &&
 		/ZADMIN_RELEASE_ARTIFACTS_DIR/u.test(webviewAcceptance) &&
 		/ZADMIN_RELEASE_ARTIFACTS_DIR/u.test(miniappAcceptance) &&
+		/ZADMIN_RELEASE_ARTIFACTS_REVISION/u.test(zuiAcceptance) &&
+		/ZADMIN_RELEASE_ARTIFACTS_REVISION/u.test(webviewAcceptance) &&
+		/ZADMIN_RELEASE_ARTIFACTS_REVISION/u.test(miniappAcceptance) &&
 		ci.includes(
 			'node scripts/read-release-artifact.mjs --directory="$ZADMIN_RELEASE_ARTIFACTS_DIR" --package=@zadmin/zui'
 		) &&
@@ -135,7 +138,8 @@ const checks = {
 		/--porcelain=v1/u.test(packProducer) &&
 		/manifest\?\.schemaVersion !== 2/u.test(artifactReader) &&
 		/expectedRevision !== undefined/u.test(artifactReader) &&
-		/--revision=\$\{\{ github\.sha \}\}/u.test(ci) &&
+		/--revision="\$ZADMIN_RELEASE_ARTIFACTS_REVISION"/u.test(ci) &&
+		/ZADMIN_RELEASE_ARTIFACTS_REVISION=\$\{\{ github\.sha \}\}/u.test(ci) &&
 		/evaluateReleaseCoherence/u.test(releaseCoherence),
 	releasePublishTarballReuse: false,
 	npmOidcProvenance:

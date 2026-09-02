@@ -47,6 +47,9 @@ let succeeded = false;
 try {
 	await mkdir(tarballRoot, { recursive: true });
 	const artifactDirectory = process.env.ZADMIN_RELEASE_ARTIFACTS_DIR;
+	const artifactRevision = process.env.ZADMIN_RELEASE_ARTIFACTS_REVISION;
+	if (artifactDirectory && !artifactRevision)
+		throw new Error('ZADMIN_RELEASE_ARTIFACTS_REVISION is required with release artifacts.');
 	if (!artifactDirectory) {
 		for (const packageName of ['@zadmin/zui', '@zadmin/webview']) {
 			await runPnpm(['--filter', packageName, 'build'], workspaceRoot);
@@ -60,7 +63,7 @@ try {
 		? []
 		: (await readdir(tarballRoot)).map((name) => resolve(tarballRoot, name));
 	const tarball = (name) => {
-		if (artifactDirectory) return readReleaseArtifact(artifactDirectory, name);
+		if (artifactDirectory) return readReleaseArtifact(artifactDirectory, name, artifactRevision);
 		const marker = name.replace('@zadmin/', 'zadmin-');
 		const match = tarballs.find((path) => basename(path).includes(marker));
 		if (!match) throw new Error(`Missing tarball for ${name}.`);
