@@ -7,11 +7,7 @@ const root = fileURLToPath(new URL('../../..', import.meta.url));
 const matrix = JSON.parse(
 	await readFile(resolve(root, '.docs/zui/component-maturity.json'), 'utf8')
 );
-const teaching = JSON.parse(
-	await readFile(resolve(root, '.docs/zui/api-teaching-coverage.json'), 'utf8')
-);
 const outputPath = resolve(root, '.docs/zui/stability-candidates.md');
-const teachingById = new Map(teaching.components.map((item) => [item.id, item]));
 const docsById = new Map(
 	matrix.components.filter(({ docs }) => docs).map(({ id, docs }) => [id, docs])
 );
@@ -22,19 +18,17 @@ const required = [
 	'ProductionVerified'
 ];
 const baseRows = matrix.components.map((component) => {
-	const teachingFact = teachingById.get(component.id);
 	const blockers = required.filter((stage) => !component.stages[stage]);
-	const familyDocs = teachingFact?.family ? docsById.get(teachingFact.family) : undefined;
+	const familyDocs = component.family ? docsById.get(component.family) : undefined;
 	const resolvedDocs = component.docs ?? familyDocs;
 	if (!resolvedDocs) blockers.push('Docs');
 	if (component.stages.ContractVerified && component.ssrEvidence.length === 0) blockers.push('SSR');
-	if (!teachingFact) blockers.push('Teaching coverage missing');
-	else if (teachingFact.fallbackPropCount > 0)
-		blockers.push(`Teaching fallback (${teachingFact.fallbackPropCount})`);
+	if (!component.apiDocumentation) blockers.push('Teaching coverage missing');
+	else if (component.apiDocumentation.teachingFallbackPropCount > 0)
+		blockers.push(`Teaching fallback (${component.apiDocumentation.teachingFallbackPropCount})`);
 	return {
 		...component,
 		blockers,
-		family: teachingFact?.family,
 		resolvedDocs,
 		usesFamilyDocs: !component.docs && Boolean(familyDocs)
 	};

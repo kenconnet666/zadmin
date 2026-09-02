@@ -28,8 +28,13 @@
 			"id": "accordion",
 			"name": "ZAccordion",
 			"category": "navigation",
+			"family": "accordion",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/accordion/ZAccordion.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -106,15 +111,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZAccordion SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "accordion-content",
 			"name": "ZAccordionContent",
 			"category": "navigation",
+			"family": "accordion",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/accordion/ZAccordionContent.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -188,15 +197,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZAccordionContent SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "accordion-item",
 			"name": "ZAccordionItem",
 			"category": "navigation",
+			"family": "accordion",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/accordion/ZAccordionItem.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -274,15 +287,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZAccordionItem SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "accordion-trigger",
 			"name": "ZAccordionTrigger",
 			"category": "navigation",
+			"family": "accordion",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/accordion/ZAccordionTrigger.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -360,15 +377,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZAccordionTrigger SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "alert-dialog",
 			"name": "ZAlertDialog",
 			"category": "overlay",
+			"family": "alert-dialog",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialog.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -454,15 +475,19 @@
 					"path": "ui/zui/tests/overlay-production-ssr.spec.ts",
 					"detail": "ZAlertDialog SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "alert-dialog-action",
 			"name": "ZAlertDialogAction",
 			"category": "overlay",
+			"family": "alert-dialog",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialogAction.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -545,15 +570,19 @@
 					"path": "ui/zui/tests/overlay-production-ssr.spec.ts",
 					"detail": "ZAlertDialogAction SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "alert-dialog-cancel",
 			"name": "ZAlertDialogCancel",
 			"category": "overlay",
+			"family": "alert-dialog",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialogCancel.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -636,15 +665,19 @@
 					"path": "ui/zui/tests/overlay-production-ssr.spec.ts",
 					"detail": "ZAlertDialogCancel SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "alert-dialog-content",
 			"name": "ZAlertDialogContent",
 			"category": "overlay",
+			"family": "alert-dialog",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialogContent.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -727,15 +760,19 @@
 					"path": "ui/zui/tests/overlay-production-ssr.spec.ts",
 					"detail": "ZAlertDialogContent SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "alert-dialog-description",
 			"name": "ZAlertDialogDescription",
 			"category": "overlay",
+			"family": "alert-dialog",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialogDescription.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -818,15 +855,19 @@
 					"path": "ui/zui/tests/overlay-production-ssr.spec.ts",
 					"detail": "ZAlertDialogDescription SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "alert-dialog-overlay",
 			"name": "ZAlertDialogOverlay",
 			"category": "overlay",
+			"family": "alert-dialog",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialogOverlay.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -909,15 +950,19 @@
 					"path": "ui/zui/tests/overlay-production-ssr.spec.ts",
 					"detail": "ZAlertDialogOverlay SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "alert-dialog-title",
 			"name": "ZAlertDialogTitle",
 			"category": "overlay",
+			"family": "alert-dialog",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialogTitle.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -1000,15 +1045,19 @@
 					"path": "ui/zui/tests/overlay-production-ssr.spec.ts",
 					"detail": "ZAlertDialogTitle SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "alert-dialog-trigger",
 			"name": "ZAlertDialogTrigger",
 			"category": "overlay",
+			"family": "alert-dialog",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/alert-dialog/ZAlertDialogTrigger.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -1079,15 +1128,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZAlertDialogTrigger SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "combobox",
 			"name": "ZCombobox",
 			"category": "input",
+			"family": "combobox",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/combobox/ZCombobox.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 6,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -1160,15 +1213,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZCombobox SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "combobox-content",
 			"name": "ZComboboxContent",
 			"category": "input",
+			"family": "combobox",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/combobox/ZComboboxContent.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -1238,15 +1295,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZComboboxContent SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "combobox-input",
 			"name": "ZComboboxInput",
 			"category": "input",
+			"family": "combobox",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/combobox/ZComboboxInput.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -1320,15 +1381,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZComboboxInput SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "combobox-item",
 			"name": "ZComboboxItem",
 			"category": "input",
+			"family": "combobox",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/combobox/ZComboboxItem.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -1382,15 +1447,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZComboboxItem SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "context-menu",
 			"name": "ZContextMenu",
 			"category": "navigation",
+			"family": "context-menu",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/context-menu/ZContextMenu.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -1455,15 +1524,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZContextMenu SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "context-menu-content",
 			"name": "ZContextMenuContent",
 			"category": "navigation",
+			"family": "context-menu",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/context-menu/ZContextMenuContent.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -1525,15 +1598,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZContextMenuContent SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "context-menu-trigger",
 			"name": "ZContextMenuTrigger",
 			"category": "navigation",
+			"family": "context-menu",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/context-menu/ZContextMenuTrigger.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -1595,15 +1672,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZContextMenuTrigger SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "dialog",
 			"name": "ZDialog",
 			"category": "overlay",
+			"family": "dialog",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/dialog/ZDialog.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -1689,15 +1770,19 @@
 					"path": "ui/zui/tests/overlay-production-ssr.spec.ts",
 					"detail": "ZDialog SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "dialog-close",
 			"name": "ZDialogClose",
 			"category": "overlay",
+			"family": "dialog",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/dialog/ZDialogClose.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -1768,15 +1853,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZDialogClose SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "dialog-content",
 			"name": "ZDialogContent",
 			"category": "overlay",
+			"family": "dialog",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/dialog/ZDialogContent.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -1863,15 +1952,19 @@
 					"path": "ui/zui/tests/overlay-production-ssr.spec.ts",
 					"detail": "ZDialogContent SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "dialog-description",
 			"name": "ZDialogDescription",
 			"category": "overlay",
+			"family": "dialog",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/dialog/ZDialogDescription.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -1925,15 +2018,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZDialogDescription SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "dialog-overlay",
 			"name": "ZDialogOverlay",
 			"category": "overlay",
+			"family": "dialog",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/dialog/ZDialogOverlay.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -2004,15 +2101,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZDialogOverlay SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "dialog-title",
 			"name": "ZDialogTitle",
 			"category": "overlay",
+			"family": "dialog",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/dialog/ZDialogTitle.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -2095,15 +2196,19 @@
 					"path": "ui/zui/tests/overlay-production-ssr.spec.ts",
 					"detail": "ZDialogTitle SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "dialog-trigger",
 			"name": "ZDialogTrigger",
 			"category": "overlay",
+			"family": "dialog",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/dialog/ZDialogTrigger.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -2174,15 +2279,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZDialogTrigger SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "drawer",
 			"name": "ZDrawer",
 			"category": "overlay",
+			"family": "drawer",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/drawer/ZDrawer.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -2251,15 +2360,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZDrawer SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "drawer-close",
 			"name": "ZDrawerClose",
 			"category": "overlay",
+			"family": "drawer",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/drawer/ZDrawerClose.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -2325,15 +2438,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZDrawerClose SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "drawer-content",
 			"name": "ZDrawerContent",
 			"category": "overlay",
+			"family": "drawer",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/drawer/ZDrawerContent.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -2399,15 +2516,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZDrawerContent SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "drawer-description",
 			"name": "ZDrawerDescription",
 			"category": "overlay",
+			"family": "drawer",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/drawer/ZDrawerDescription.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -2473,15 +2594,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZDrawerDescription SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "drawer-overlay",
 			"name": "ZDrawerOverlay",
 			"category": "overlay",
+			"family": "drawer",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/drawer/ZDrawerOverlay.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -2547,15 +2672,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZDrawerOverlay SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "drawer-title",
 			"name": "ZDrawerTitle",
 			"category": "overlay",
+			"family": "drawer",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/drawer/ZDrawerTitle.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -2621,15 +2750,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZDrawerTitle SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "drawer-trigger",
 			"name": "ZDrawerTrigger",
 			"category": "overlay",
+			"family": "drawer",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/drawer/ZDrawerTrigger.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -2695,15 +2828,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZDrawerTrigger SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "dropdown-menu",
 			"name": "ZDropdownMenu",
 			"category": "navigation",
+			"family": "dropdown-menu",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/dropdown-menu/ZDropdownMenu.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -2768,15 +2905,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZDropdownMenu SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "dropdown-menu-content",
 			"name": "ZDropdownMenuContent",
 			"category": "navigation",
+			"family": "dropdown-menu",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/dropdown-menu/ZDropdownMenuContent.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -2838,15 +2979,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZDropdownMenuContent SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "dropdown-menu-trigger",
 			"name": "ZDropdownMenuTrigger",
 			"category": "navigation",
+			"family": "dropdown-menu",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/dropdown-menu/ZDropdownMenuTrigger.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -2908,15 +3053,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZDropdownMenuTrigger SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "menu",
 			"name": "ZMenu",
 			"category": "navigation",
+			"family": "menu",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/menu/ZMenu.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -2981,15 +3130,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZMenu SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "menu-checkbox-item",
 			"name": "ZMenuCheckboxItem",
 			"category": "navigation",
+			"family": "menu",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/menu/ZMenuCheckboxItem.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -3038,15 +3191,19 @@
 				"ProductionVerified": []
 			},
 			"docs": null,
-			"ssrEvidence": [],
-			"legacyUndocumentedProps": null
+			"ssrEvidence": []
 		},
 		{
 			"id": "menu-group",
 			"name": "ZMenuGroup",
 			"category": "navigation",
+			"family": "menu",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/menu/ZMenuGroup.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -3108,15 +3265,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZMenuGroup SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "menu-item",
 			"name": "ZMenuItem",
 			"category": "navigation",
+			"family": "menu",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/menu/ZMenuItem.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -3190,15 +3351,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZMenuItem SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "menu-label",
 			"name": "ZMenuLabel",
 			"category": "navigation",
+			"family": "menu",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/menu/ZMenuLabel.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -3260,15 +3425,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZMenuLabel SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "menu-radio-group",
 			"name": "ZMenuRadioGroup",
 			"category": "navigation",
+			"family": "menu",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/menu/ZMenuRadioGroup.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -3317,15 +3486,19 @@
 				"ProductionVerified": []
 			},
 			"docs": null,
-			"ssrEvidence": [],
-			"legacyUndocumentedProps": null
+			"ssrEvidence": []
 		},
 		{
 			"id": "menu-radio-item",
 			"name": "ZMenuRadioItem",
 			"category": "navigation",
+			"family": "menu",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/menu/ZMenuRadioItem.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -3374,15 +3547,19 @@
 				"ProductionVerified": []
 			},
 			"docs": null,
-			"ssrEvidence": [],
-			"legacyUndocumentedProps": null
+			"ssrEvidence": []
 		},
 		{
 			"id": "menu-separator",
 			"name": "ZMenuSeparator",
 			"category": "navigation",
+			"family": "menu",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/menu/ZMenuSeparator.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -3444,15 +3621,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZMenuSeparator SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "menu-sub",
 			"name": "ZMenuSub",
 			"category": "navigation",
+			"family": "menu",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/menu/ZMenuSub.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -3501,15 +3682,19 @@
 				"ProductionVerified": []
 			},
 			"docs": null,
-			"ssrEvidence": [],
-			"legacyUndocumentedProps": null
+			"ssrEvidence": []
 		},
 		{
 			"id": "menu-sub-content",
 			"name": "ZMenuSubContent",
 			"category": "navigation",
+			"family": "menu",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/menu/ZMenuSubContent.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -3558,15 +3743,19 @@
 				"ProductionVerified": []
 			},
 			"docs": null,
-			"ssrEvidence": [],
-			"legacyUndocumentedProps": null
+			"ssrEvidence": []
 		},
 		{
 			"id": "menu-sub-trigger",
 			"name": "ZMenuSubTrigger",
 			"category": "navigation",
+			"family": "menu",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/menu/ZMenuSubTrigger.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -3615,15 +3804,19 @@
 				"ProductionVerified": []
 			},
 			"docs": null,
-			"ssrEvidence": [],
-			"legacyUndocumentedProps": null
+			"ssrEvidence": []
 		},
 		{
 			"id": "multi-select",
 			"name": "ZMultiSelect",
 			"category": "input",
+			"family": "multi-select",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/multi-select/ZMultiSelect.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 5,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -3696,15 +3889,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZMultiSelect SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "multi-select-content",
 			"name": "ZMultiSelectContent",
 			"category": "input",
+			"family": "multi-select",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/multi-select/ZMultiSelectContent.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -3766,15 +3963,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZMultiSelectContent SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "multi-select-item",
 			"name": "ZMultiSelectItem",
 			"category": "input",
+			"family": "multi-select",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/multi-select/ZMultiSelectItem.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -3828,15 +4029,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZMultiSelectItem SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "multi-select-trigger",
 			"name": "ZMultiSelectTrigger",
 			"category": "input",
+			"family": "multi-select",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/multi-select/ZMultiSelectTrigger.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -3910,15 +4115,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZMultiSelectTrigger SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "popconfirm",
 			"name": "ZPopconfirm",
 			"category": "overlay",
+			"family": "popconfirm",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/popconfirm/ZPopconfirm.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -3987,15 +4196,19 @@
 					"path": "ui/zui/tests/tooltip-popconfirm.spec.ts",
 					"detail": "ZPopconfirm SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "popconfirm-action",
 			"name": "ZPopconfirmAction",
 			"category": "overlay",
+			"family": "popconfirm",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/popconfirm/ZPopconfirmAction.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -4061,15 +4274,19 @@
 					"path": "ui/zui/tests/tooltip-popconfirm.spec.ts",
 					"detail": "ZPopconfirmAction SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "popconfirm-cancel",
 			"name": "ZPopconfirmCancel",
 			"category": "overlay",
+			"family": "popconfirm",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/popconfirm/ZPopconfirmCancel.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -4135,15 +4352,19 @@
 					"path": "ui/zui/tests/tooltip-popconfirm.spec.ts",
 					"detail": "ZPopconfirmCancel SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "popconfirm-content",
 			"name": "ZPopconfirmContent",
 			"category": "overlay",
+			"family": "popconfirm",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/popconfirm/ZPopconfirmContent.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -4209,15 +4430,19 @@
 					"path": "ui/zui/tests/tooltip-popconfirm.spec.ts",
 					"detail": "ZPopconfirmContent SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "popconfirm-description",
 			"name": "ZPopconfirmDescription",
 			"category": "overlay",
+			"family": "popconfirm",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/popconfirm/ZPopconfirmDescription.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -4283,15 +4508,19 @@
 					"path": "ui/zui/tests/tooltip-popconfirm.spec.ts",
 					"detail": "ZPopconfirmDescription SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "popconfirm-title",
 			"name": "ZPopconfirmTitle",
 			"category": "overlay",
+			"family": "popconfirm",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/popconfirm/ZPopconfirmTitle.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -4361,15 +4590,19 @@
 					"path": "ui/zui/tests/tooltip-popconfirm.spec.ts",
 					"detail": "ZPopconfirmTitle SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "popconfirm-trigger",
 			"name": "ZPopconfirmTrigger",
 			"category": "overlay",
+			"family": "popconfirm",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/popconfirm/ZPopconfirmTrigger.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -4439,15 +4672,19 @@
 					"path": "ui/zui/tests/tooltip-popconfirm.spec.ts",
 					"detail": "ZPopconfirmTrigger SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "popover",
 			"name": "ZPopover",
 			"category": "overlay",
+			"family": "popover",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/popover/ZPopover.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -4533,15 +4770,19 @@
 					"path": "ui/zui/tests/overlay-production-ssr.spec.ts",
 					"detail": "ZPopover SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "popover-content",
 			"name": "ZPopoverContent",
 			"category": "overlay",
+			"family": "popover",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/popover/ZPopoverContent.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -4624,15 +4865,19 @@
 					"path": "ui/zui/tests/overlay-production-ssr.spec.ts",
 					"detail": "ZPopoverContent SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "popover-trigger",
 			"name": "ZPopoverTrigger",
 			"category": "overlay",
+			"family": "popover",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/popover/ZPopoverTrigger.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -4719,15 +4964,19 @@
 					"path": "ui/zui/tests/overlay-production-ssr.spec.ts",
 					"detail": "ZPopoverTrigger SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "radio-group",
 			"name": "ZRadioGroup",
 			"category": "input",
+			"family": "radio-group",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/radio-group/ZRadioGroup.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -4804,15 +5053,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZRadioGroup SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "radio-group-item",
 			"name": "ZRadioGroupItem",
 			"category": "input",
+			"family": "radio-group",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/radio-group/ZRadioGroupItem.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -4882,15 +5135,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZRadioGroupItem SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "select",
 			"name": "ZSelect",
 			"category": "input",
+			"family": "select",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/select/ZSelect.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 5,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -4971,15 +5228,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZSelect SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "select-content",
 			"name": "ZSelectContent",
 			"category": "input",
+			"family": "select",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/select/ZSelectContent.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -5049,15 +5310,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZSelectContent SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "select-item",
 			"name": "ZSelectItem",
 			"category": "input",
+			"family": "select",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/select/ZSelectItem.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -5111,15 +5376,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZSelectItem SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "select-trigger",
 			"name": "ZSelectTrigger",
 			"category": "input",
+			"family": "select",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/select/ZSelectTrigger.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -5201,15 +5470,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZSelectTrigger SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "tabs",
 			"name": "ZTabs",
 			"category": "navigation",
+			"family": "tabs",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/tabs/ZTabs.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -5270,15 +5543,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZTabs SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "tabs-list",
 			"name": "ZTabsList",
 			"category": "navigation",
+			"family": "tabs",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/tabs/ZTabsList.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -5340,15 +5617,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZTabsList SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "tabs-panel",
 			"name": "ZTabsPanel",
 			"category": "navigation",
+			"family": "tabs",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/tabs/ZTabsPanel.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -5406,15 +5687,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZTabsPanel SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "tabs-trigger",
 			"name": "ZTabsTrigger",
 			"category": "navigation",
+			"family": "tabs",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/tabs/ZTabsTrigger.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -5472,15 +5757,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZTabsTrigger SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "tooltip",
 			"name": "ZTooltip",
 			"category": "overlay",
+			"family": "tooltip",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/tooltip/ZTooltip.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -5553,15 +5842,19 @@
 					"path": "ui/zui/tests/tooltip-popconfirm.spec.ts",
 					"detail": "ZTooltip SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "tooltip-content",
 			"name": "ZTooltipContent",
 			"category": "overlay",
+			"family": "tooltip",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/tooltip/ZTooltipContent.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -5631,15 +5924,19 @@
 					"path": "ui/zui/tests/tooltip-popconfirm.spec.ts",
 					"detail": "ZTooltipContent SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "tooltip-group",
 			"name": "ZTooltipGroup",
 			"category": "overlay",
+			"family": "tooltip",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/tooltip/ZTooltipGroup.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -5693,15 +5990,19 @@
 					"path": "ui/zui/tests/tooltip-popconfirm.spec.ts",
 					"detail": "ZTooltipGroup SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "tooltip-trigger",
 			"name": "ZTooltipTrigger",
 			"category": "overlay",
+			"family": "tooltip",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/tooltip/ZTooltipTrigger.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -5771,15 +6072,19 @@
 					"path": "ui/zui/tests/tooltip-popconfirm.spec.ts",
 					"detail": "ZTooltipTrigger SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "tree",
 			"name": "ZTree",
 			"category": "navigation",
+			"family": "tree",
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/tree/ZTree.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 5,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -5873,15 +6178,19 @@
 					"path": "ui/zui/tests/tree-production.spec.ts",
 					"detail": "ZTree SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "avatar",
 			"name": "ZAvatar",
 			"category": "data-display",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZAvatar.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -5987,15 +6296,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZAvatar SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "badge",
 			"name": "ZBadge",
 			"category": "data-display",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZBadge.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -6073,15 +6386,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZBadge SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "card",
 			"name": "ZCard",
 			"category": "data-display",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZCard.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -6167,15 +6484,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZCard SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "carousel",
 			"name": "ZCarousel",
 			"category": "data-display",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZCarousel.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 6,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -6248,15 +6569,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZCarousel SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "data-table",
 			"name": "ZDataTable",
 			"category": "data-display",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZDataTable.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 22,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -6350,15 +6675,19 @@
 					"path": "ui/zui/tests/data-table-production.spec.ts",
 					"detail": "ZDataTable SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "description-list",
 			"name": "ZDescriptionList",
 			"category": "data-display",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZDescriptionList.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -6444,15 +6773,19 @@
 					"path": "ui/zui/tests/data-table-production.spec.ts",
 					"detail": "ZDescriptionList SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "empty",
 			"name": "ZEmpty",
 			"category": "data-display",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZEmpty.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -6542,15 +6875,19 @@
 					"path": "ui/zui/tests/result-empty-production-ssr.spec.ts",
 					"detail": "ZEmpty SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "list",
 			"name": "ZList",
 			"category": "data-display",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZList.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -6623,15 +6960,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZList SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "meter",
 			"name": "ZMeter",
 			"category": "data-display",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZMeter.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 5,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -6700,15 +7041,19 @@
 					"path": "ui/zui/tests/progress-meter-skeleton-ssr.spec.ts",
 					"detail": "ZMeter SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "progress",
 			"name": "ZProgress",
 			"category": "data-display",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZProgress.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 1,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -6789,15 +7134,19 @@
 					"path": "ui/zui/tests/progress-meter-skeleton-ssr.spec.ts",
 					"detail": "ZProgress SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "skeleton",
 			"name": "ZSkeleton",
 			"category": "data-display",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZSkeleton.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -6878,15 +7227,19 @@
 					"path": "ui/zui/tests/progress-meter-skeleton-ssr.spec.ts",
 					"detail": "ZSkeleton SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "statistic",
 			"name": "ZStatistic",
 			"category": "data-display",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZStatistic.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -6976,15 +7329,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZStatistic SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "table",
 			"name": "ZTable",
 			"category": "data-display",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZTable.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -7070,15 +7427,19 @@
 					"path": "ui/zui/tests/tag-table-production-ssr.spec.ts",
 					"detail": "ZTable SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "tag",
 			"name": "ZTag",
 			"category": "data-display",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZTag.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -7172,15 +7533,19 @@
 					"path": "ui/zui/tests/tag-table-production-ssr.spec.ts",
 					"detail": "ZTag SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "timeline",
 			"name": "ZTimeline",
 			"category": "data-display",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZTimeline.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -7274,15 +7639,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZTimeline SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "virtual-list",
 			"name": "ZVirtualList",
 			"category": "data-display",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZVirtualList.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -7363,15 +7732,19 @@
 					"path": "ui/zui/tests/virtual-list.spec.ts",
 					"detail": "ZVirtualList SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "alert",
 			"name": "ZAlert",
 			"category": "feedback",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/feedback/ZAlert.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -7461,15 +7834,19 @@
 					"path": "ui/zui/tests/feedback-status-production-ssr.spec.ts",
 					"detail": "ZAlert SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "loading-bar",
 			"name": "ZLoadingBar",
 			"category": "feedback",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/feedback/ZLoadingBar.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -7555,15 +7932,19 @@
 					"path": "ui/zui/tests/feedback-status-production-ssr.spec.ts",
 					"detail": "ZLoadingBar SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "result",
 			"name": "ZResult",
 			"category": "feedback",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/feedback/ZResult.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -7653,15 +8034,19 @@
 					"path": "ui/zui/tests/result-empty-production-ssr.spec.ts",
 					"detail": "ZResult SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "spinner",
 			"name": "ZSpinner",
 			"category": "feedback",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/feedback/ZSpinner.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -7747,15 +8132,19 @@
 					"path": "ui/zui/tests/feedback-status-production-ssr.spec.ts",
 					"detail": "ZSpinner SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "toast",
 			"name": "ZToast",
 			"category": "feedback",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/feedback/ZToast.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -7812,15 +8201,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZToast SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "toaster",
 			"name": "ZToaster",
 			"category": "feedback",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/feedback/ZToaster.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -7907,15 +8300,19 @@
 					"path": "ui/zui/tests/toast-production-ssr.spec.ts",
 					"detail": "ZToaster SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "box",
 			"name": "ZBox",
 			"category": "gene",
+			"family": null,
 			"status": "stable",
 			"source": "ui/zui/src/components/gene/ZBox.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -8001,15 +8398,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZBox SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "button",
 			"name": "ZButton",
 			"category": "gene",
+			"family": null,
 			"status": "stable",
 			"source": "ui/zui/src/components/gene/ZButton.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -8435,15 +8836,19 @@
 					"path": "ui/zui/tests/tooltip-popconfirm.spec.ts",
 					"detail": "ZButton SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "code",
 			"name": "ZCode",
 			"category": "gene",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/gene/ZCode.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -8529,15 +8934,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZCode SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "heading",
 			"name": "ZHeading",
 			"category": "gene",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/gene/ZHeading.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -8594,15 +9003,19 @@
 					"path": "ui/zui/tests/typography.spec.ts",
 					"detail": "ZHeading SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "icon",
 			"name": "ZIcon",
 			"category": "gene",
+			"family": null,
 			"status": "stable",
 			"source": "ui/zui/src/components/gene/ZIcon.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -8668,15 +9081,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZIcon SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "kbd",
 			"name": "ZKbd",
 			"category": "gene",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/gene/ZKbd.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -8741,15 +9158,19 @@
 					"path": "ui/zui/tests/foundation-primitives-ssr.spec.ts",
 					"detail": "ZKbd SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "link",
 			"name": "ZLink",
 			"category": "gene",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/gene/ZLink.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -8835,15 +9256,19 @@
 					"path": "ui/zui/tests/link-production.spec.ts",
 					"detail": "ZLink SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "provider",
 			"name": "ZProvider",
 			"category": "gene",
+			"family": null,
 			"status": "stable",
 			"source": "ui/zui/src/components/gene/ZProvider.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -9225,15 +9650,19 @@
 					"path": "ui/zui/tests/virtual-list.spec.ts",
 					"detail": "ZProvider SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "separator",
 			"name": "ZSeparator",
 			"category": "gene",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/gene/ZSeparator.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -9298,15 +9727,19 @@
 					"path": "ui/zui/tests/foundation-primitives-ssr.spec.ts",
 					"detail": "ZSeparator SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "text",
 			"name": "ZText",
 			"category": "gene",
+			"family": null,
 			"status": "stable",
 			"source": "ui/zui/src/components/gene/ZText.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -9440,15 +9873,19 @@
 					"path": "ui/zui/tests/statistic-timeline-production.spec.ts",
 					"detail": "ZText SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "toggle-button",
 			"name": "ZToggleButton",
 			"category": "gene",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/gene/ZToggleButton.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -9534,15 +9971,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZToggleButton SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "visually-hidden",
 			"name": "ZVisuallyHidden",
 			"category": "gene",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/gene/ZVisuallyHidden.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -9607,15 +10048,19 @@
 					"path": "ui/zui/tests/foundation-primitives-ssr.spec.ts",
 					"detail": "ZVisuallyHidden SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "calendar",
 			"name": "ZCalendar",
 			"category": "input",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZCalendar.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 8,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -9680,15 +10125,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZCalendar SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "cascader",
 			"name": "ZCascader",
 			"category": "input",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZCascader.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 16,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -9774,15 +10223,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZCascader SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "checkbox",
 			"name": "ZCheckbox",
 			"category": "input",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZCheckbox.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -9863,15 +10316,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZCheckbox SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "color-picker",
 			"name": "ZColorPicker",
 			"category": "input",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZColorPicker.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 14,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -9953,15 +10410,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZColorPicker SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "date-field",
 			"name": "ZDateField",
 			"category": "input",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZDateField.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 8,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -10030,15 +10491,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZDateField SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "date-picker",
 			"name": "ZDatePicker",
 			"category": "input",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZDatePicker.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 19,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -10099,15 +10564,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZDatePicker SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "date-range-picker",
 			"name": "ZDateRangePicker",
 			"category": "input",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZDateRangePicker.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 20,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -10168,15 +10637,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZDateRangePicker SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "field",
 			"name": "ZField",
 			"category": "input",
+			"family": null,
 			"status": "stable",
 			"source": "ui/zui/src/components/input/ZField.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -10418,15 +10891,19 @@
 					"path": "ui/zui/tests/tree-production.spec.ts",
 					"detail": "ZField SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "file-upload",
 			"name": "ZFileUpload",
 			"category": "input",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZFileUpload.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 15,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -10524,15 +11001,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZFileUpload SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "form",
 			"name": "ZForm",
 			"category": "input",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZForm.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 2,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -10597,15 +11078,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZForm SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "form-field",
 			"name": "ZFormField",
 			"category": "input",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZFormField.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -10671,15 +11156,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZFormField SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "input",
 			"name": "ZInput",
 			"category": "input",
+			"family": null,
 			"status": "stable",
 			"source": "ui/zui/src/components/input/ZInput.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -10845,15 +11334,19 @@
 					"path": "ui/zui/tests/pin-input-group-production.spec.ts",
 					"detail": "ZInput SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "input-group",
 			"name": "ZInputGroup",
 			"category": "input",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZInputGroup.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -10975,15 +11468,19 @@
 					"path": "ui/zui/tests/pin-input-group-production.spec.ts",
 					"detail": "ZInputGroup SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "mention",
 			"name": "ZMention",
 			"category": "input",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZMention.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 5,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -11069,15 +11566,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZMention SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "number-field",
 			"name": "ZNumberField",
 			"category": "input",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZNumberField.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 9,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -11154,15 +11655,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZNumberField SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "pin-input",
 			"name": "ZPinInput",
 			"category": "input",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZPinInput.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -11252,15 +11757,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZPinInput SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "segmented",
 			"name": "ZSegmented",
 			"category": "input",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZSegmented.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -11333,15 +11842,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZSegmented SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "slider",
 			"name": "ZSlider",
 			"category": "input",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZSlider.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -11418,15 +11931,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZSlider SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "switch",
 			"name": "ZSwitch",
 			"category": "input",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZSwitch.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -11511,15 +12028,19 @@
 					"path": "ui/zui/tests/switch.spec.ts",
 					"detail": "ZSwitch SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "tags-input",
 			"name": "ZTagsInput",
 			"category": "input",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZTagsInput.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 10,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -11601,15 +12122,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZTagsInput SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "textarea",
 			"name": "ZTextarea",
 			"category": "input",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZTextarea.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -11727,15 +12252,19 @@
 					"path": "ui/zui/tests/pin-input-group-production.spec.ts",
 					"detail": "ZTextarea SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "time-field",
 			"name": "ZTimeField",
 			"category": "input",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZTimeField.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 11,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -11804,15 +12333,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZTimeField SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "transfer",
 			"name": "ZTransfer",
 			"category": "input",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZTransfer.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 9,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -11889,15 +12422,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZTransfer SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "tree-select",
 			"name": "ZTreeSelect",
 			"category": "input",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZTreeSelect.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 14,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -11995,15 +12532,19 @@
 					"path": "ui/zui/tests/tree-production.spec.ts",
 					"detail": "ZTreeSelect SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "aspect-ratio",
 			"name": "ZAspectRatio",
 			"category": "layout",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/layout/ZAspectRatio.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -12068,15 +12609,19 @@
 					"path": "ui/zui/tests/foundation-primitives-ssr.spec.ts",
 					"detail": "ZAspectRatio SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "container",
 			"name": "ZContainer",
 			"category": "layout",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/layout/ZContainer.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -12141,15 +12686,19 @@
 					"path": "ui/zui/tests/foundation-primitives-ssr.spec.ts",
 					"detail": "ZContainer SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "stack",
 			"name": "ZStack",
 			"category": "layout",
+			"family": null,
 			"status": "stable",
 			"source": "ui/zui/src/components/layout/ZStack.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -12283,15 +12832,19 @@
 					"path": "ui/zui/tests/tooltip-popconfirm.spec.ts",
 					"detail": "ZStack SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "command",
 			"name": "ZCommand",
 			"category": "navigation",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/navigation/ZCommand.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 7,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -12356,15 +12909,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZCommand SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "command-palette",
 			"name": "ZCommandPalette",
 			"category": "navigation",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/navigation/ZCommandPalette.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 11,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -12429,15 +12986,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZCommandPalette SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "pagination",
 			"name": "ZPagination",
 			"category": "navigation",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/navigation/ZPagination.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -12494,15 +13055,19 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZPagination SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		},
 		{
 			"id": "tour",
 			"name": "ZTour",
 			"category": "overlay",
+			"family": null,
 			"status": "experimental",
 			"source": "ui/zui/src/components/overlay/ZTour.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 10,
+				"teachingFallbackPropCount": 0
+			},
 			"stages": {
 				"Declared": true,
 				"Authorable": true,
@@ -12563,8 +13128,7 @@
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZTour SSR assertions"
 				}
-			],
-			"legacyUndocumentedProps": null
+			]
 		}
 	]
 }

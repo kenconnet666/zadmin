@@ -8,6 +8,7 @@ const workspaceRoot = resolve(docsRoot, '../..');
 const componentsRoot = resolve(workspaceRoot, 'ui/zui/src/components');
 const testsRoot = resolve(workspaceRoot, 'ui/zui/tests');
 const contractPath = resolve(workspaceRoot, '.docs/zui/api-contract.json');
+const teachingCoveragePath = resolve(workspaceRoot, '.docs/zui/api-teaching-coverage.json');
 const jsonPath = resolve(workspaceRoot, '.docs/zui/component-maturity.json');
 const markdownPath = resolve(workspaceRoot, '.docs/zui/component-maturity.md');
 const write = process.argv.includes('--write');
@@ -56,6 +57,8 @@ const contract = JSON.parse(await readFile(contractPath, 'utf8'));
 const contractBySource = new Map(
 	contract.components.map((item) => [`ui/zui/${item.source}`, item])
 );
+const teachingCoverage = JSON.parse(await readFile(teachingCoveragePath, 'utf8'));
+const teachingById = new Map(teachingCoverage.components.map((item) => [item.id, item]));
 const docsFiles = await filesUnder(resolve(docsRoot, 'src/content/components'), 'doc.ts');
 const docsSources = await Promise.all(
 	docsFiles.map(async (path) => [path, await readFile(path, 'utf8')])
@@ -122,6 +125,8 @@ if (process.argv.includes('--self-test')) {
 const rows = componentFiles.map(({ id, name, category, status, path, source }) => {
 	const sourcePath = portable(relative(workspaceRoot, path));
 	const contractFact = contractBySource.get(sourcePath);
+	const apiDocumentation = teachingById.get(id);
+	if (!apiDocumentation) throw new Error(`Missing API teaching coverage for ${id}.`);
 	const docs = docsSources.find(([docPath]) =>
 		portable(relative(resolve(docsRoot, 'src/content/components'), docPath)).endsWith(
 			`/${id}/doc.ts`
@@ -162,8 +167,13 @@ const rows = componentFiles.map(({ id, name, category, status, path, source }) =
 		id,
 		name,
 		category,
+		family: apiDocumentation.family ?? null,
 		status,
 		source: sourcePath,
+		apiDocumentation: {
+			metadataGapPropCount: apiDocumentation.metadataGapPropCount,
+			teachingFallbackPropCount: apiDocumentation.fallbackPropCount
+		},
 		stages: {
 			Declared: true,
 			Authorable: authorable,
@@ -197,8 +207,7 @@ const rows = componentFiles.map(({ id, name, category, status, path, source }) =
 			])
 		},
 		docs: docs ? evidence(docs[0], 'catalog component documentation module') : null,
-		ssrEvidence: ssrTests.map(([testPath]) => evidence(testPath, `${name} SSR assertions`)),
-		legacyUndocumentedProps: contractFact?.undocumentedProps?.length ?? null
+		ssrEvidence: ssrTests.map(([testPath]) => evidence(testPath, `${name} SSR assertions`))
 	};
 	return row;
 });
