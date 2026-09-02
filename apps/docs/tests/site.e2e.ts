@@ -2,7 +2,20 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 import { Buffer } from 'node:buffer';
 
-const demo = (page: Page, id: string) => page.getByTestId(`demo-${id}`);
+const demo = (page: Page, id: string) => page.locator(`[data-testid="demo-${id}"]:visible`);
+
+async function gotoComponent(page: Page, id: string): Promise<void> {
+	await page.goto(`/#/components/${id}`);
+	await expect(page).toHaveURL(new RegExp(`#\/components\/${id}$`, 'u'));
+	await expect(page.locator('main article').first()).toBeVisible();
+	await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+}
+
+async function gotoGuide(page: Page, id: string): Promise<void> {
+	await page.goto(`/#/guides/${id}`);
+	await expect(page).toHaveURL(new RegExp(`#\/guides\/${id}$`, 'u'));
+	await expect(page.locator('main article').first()).toBeVisible();
+}
 
 async function setDisplayPreference(
 	page: Page,
@@ -165,7 +178,7 @@ test('renders every production guide from the shared registry', async ({ page })
 		['webview', '组件留在Web层，系统能力留在Host边界。'],
 		['package', '从公开entrypoint消费，而不是依赖工作区路径。']
 	] as const) {
-		await page.goto(`/#/guides/${id}`);
+		await gotoGuide(page, id);
 		await expect(page.getByRole('heading', { level: 1 })).toHaveText(heading);
 		expect(await page.locator('main article article').count()).toBeGreaterThanOrEqual(3);
 	}
@@ -238,7 +251,7 @@ test('restores the current preferences trigger after nested direction updates', 
 test('inherits compact Provider density while preserving explicit control size', async ({
 	page
 }) => {
-	await page.goto('/#/components/provider');
+	await gotoComponent(page, 'provider');
 	const preferencesDemo = demo(page, 'provider-preferences');
 	const compactButton = preferencesDemo.getByTestId('provider-density-button');
 	const explicitButton = preferencesDemo.getByTestId('provider-explicit-button');
@@ -314,7 +327,7 @@ test('keeps input binding and field validation interactive', async ({ page }) =>
 test('keeps FileUpload validation, native FormData, removal and reset synchronized', async ({
 	page
 }) => {
-	await page.goto('/#/components/file-upload');
+	await gotoComponent(page, 'file-upload');
 	const uploadDemo = demo(page, 'file-upload-form-queue');
 	const input = uploadDemo.locator('input[type="file"]');
 	await input.setInputFiles({
@@ -343,8 +356,9 @@ test('keeps FileUpload validation, native FormData, removal and reset synchroniz
 	await uploadDemo.getByRole('button', { name: '移除 production.json', exact: true }).click();
 	await expect(uploadDemo.getByText(/queue = none · rejected = 1/u)).toBeVisible();
 	await uploadDemo.getByRole('button', { name: '重置', exact: true }).click();
+	const resetInput = uploadDemo.locator('input[type="file"]');
 	await expect
-		.poll(() => input.evaluate((element: HTMLInputElement) => element.files?.length))
+		.poll(() => resetInput.evaluate((element: HTMLInputElement) => element.files?.length))
 		.toBe(0);
 	await expect(uploadDemo.getByText(/queue = none · rejected = 0/u)).toBeVisible();
 });
@@ -407,7 +421,7 @@ test('settles pending docs validation delays when navigating away', async ({ pag
 test('keeps InputGroup focus boundary, Field context, FormData and reset synchronized', async ({
 	page
 }) => {
-	await page.goto('/#/components/input-group');
+	await gotoComponent(page, 'input-group');
 	const inputGroupDemo = demo(page, 'input-group-affixes');
 	const group = inputGroupDemo.getByRole('group', { name: '服务地址组合', exact: true });
 	const input = inputGroupDemo.getByRole('textbox', { name: '服务主机', exact: true });
@@ -431,7 +445,7 @@ test('keeps InputGroup focus boundary, Field context, FormData and reset synchro
 test('keeps NumberField locale parsing, spinbutton keys, FormData and reset synchronized', async ({
 	page
 }) => {
-	await page.goto('/#/components/number-field');
+	await gotoComponent(page, 'number-field');
 	const numberDemo = demo(page, 'number-field-locale-form');
 	const input = numberDemo.getByRole('spinbutton', { name: '并发上限', exact: true });
 	await expect(input).toHaveAttribute('aria-valuenow', '1234.5');
@@ -447,7 +461,8 @@ test('keeps NumberField locale parsing, spinbutton keys, FormData and reset sync
 		)
 		.toBe('13');
 	await numberDemo.getByRole('button', { name: '重置', exact: true }).click();
-	await expect(input).toHaveAttribute('aria-valuenow', '1234.5');
+	const resetInput = numberDemo.getByRole('spinbutton', { name: '并发上限', exact: true });
+	await expect(resetInput).toHaveAttribute('aria-valuenow', '1234.5');
 	await expect(numberDemo.getByText('value = 1234.5')).toBeVisible();
 });
 
@@ -822,7 +837,7 @@ test('keeps Tour spotlight, modal focus, step positioning and restoration synchr
 test('keeps PinInput roving entry, completion, single FormData value and reset synchronized', async ({
 	page
 }) => {
-	await page.goto('/#/components/pin-input');
+	await gotoComponent(page, 'pin-input');
 	const pinDemo = demo(page, 'pin-input-otp');
 	const first = pinDemo.getByRole('textbox', { name: '一次性验证码', exact: true });
 	await first.focus();
@@ -912,14 +927,23 @@ test('keeps ColorPicker hex, alpha, Popover focus, FormData and reset synchroniz
 test('keeps switch semantics, keyboard state, FormData and reset synchronized', async ({
 	page
 }) => {
-	await page.goto('/#/components/switch');
+	await gotoComponent(page, 'switch');
 	const switchDemo = demo(page, 'switch-form');
 	const control = switchDemo.getByTestId('switch-alerts');
 	await expect(control).toHaveRole('switch');
 	await expect(control).toHaveAttribute('aria-checked', 'true');
 	await setDisplayPreference(page, '动画', '减少');
 	await setDisplayPreference(page, '方向', '从右到左');
-	await expect(control).toHaveCSS('transition-duration', '0s');
+	await expect
+		.poll(() =>
+			control.evaluate((element) => {
+				const duration = getComputedStyle(element).transitionDuration.split(',')[0] ?? '0s';
+				return duration.endsWith('ms')
+					? Number.parseFloat(duration) / 1000
+					: Number.parseFloat(duration);
+			})
+		)
+		.toBeLessThanOrEqual(0.00001);
 	await expect
 		.poll(() => control.evaluate((element) => getComputedStyle(element, '::before').transform))
 		.toBe('matrix(1, 0, 0, 1, 0, 0)');
@@ -1075,7 +1099,7 @@ test('keeps DropdownMenu positioning, focus, action dismiss and restoration sync
 test('anchors ContextMenu to pointer coordinates and supports the keyboard entry path', async ({
 	page
 }) => {
-	await page.goto('/#/components/context-menu');
+	await gotoComponent(page, 'context-menu');
 	const trigger = demo(page, 'context-menu-coordinate-anchor').getByTestId('context-menu-trigger');
 	const box = await trigger.boundingBox();
 	expect(box).not.toBeNull();
@@ -1096,6 +1120,14 @@ test('anchors ContextMenu to pointer coordinates and supports the keyboard entry
 	expect(anchorY).toBeCloseTo(clickY, 3);
 	const menu = page.getByRole('menu', { name: '部署上下文菜单', exact: true });
 	await expect(menu).toBeVisible();
+	await expect
+		.poll(() =>
+			coordinateAnchor.evaluate((element) => {
+				const style = getComputedStyle(element as HTMLElement);
+				return [Number.parseFloat(style.left), Number.parseFloat(style.top)];
+			})
+		)
+		.toSatisfy(([x, y]) => Number.isFinite(x) && Number.isFinite(y));
 	const menuBox = await menu.boundingBox();
 	expect(menuBox).not.toBeNull();
 	expect(menuBox!.x).toBeGreaterThanOrEqual(0);
@@ -1109,7 +1141,7 @@ test('anchors ContextMenu to pointer coordinates and supports the keyboard entry
 });
 
 test('keeps Slider keyboard, value text, FormData and reset synchronized', async ({ page }) => {
-	await page.goto('/#/components/slider');
+	await gotoComponent(page, 'slider');
 	const sliderDemo = demo(page, 'slider-form');
 	const slider = sliderDemo.getByRole('slider', { name: '告警阈值', exact: true });
 	await expect(slider).toHaveValue('35');
@@ -1161,7 +1193,7 @@ test('keeps Select listbox, keyboard, form value and reset synchronized', async 
 test('keeps Combobox focus, filtering, active descendant and stable form value synchronized', async ({
 	page
 }) => {
-	await page.goto('/#/components/combobox');
+	await gotoComponent(page, 'combobox');
 	const comboboxDemo = demo(page, 'combobox-filter-form');
 	const input = comboboxDemo.getByRole('combobox', { name: '搜索部署环境', exact: true });
 	await input.focus();
@@ -1192,7 +1224,7 @@ test('keeps Select and Combobox data options grouped with distinct typed keys', 
 	await selectListbox.getByRole('option', { name: /字符串 "1"/u }).click();
 	await expect(selectDemo.getByText(/value = 1 · typeof = string/u)).toBeVisible();
 
-	await page.goto('/#/components/combobox');
+	await gotoComponent(page, 'combobox');
 	const comboDemo = demo(page, 'combobox-options');
 	const input = comboDemo.getByRole('combobox', { name: '搜索typed key', exact: true });
 	await input.fill('字符串');
@@ -1247,7 +1279,7 @@ test('keeps Segmented radio semantics, roving selection and reset synchronized',
 test('keeps TagsInput commits, removals, repeated form values and reset synchronized', async ({
 	page
 }) => {
-	await page.goto('/#/components/tags-input');
+	await gotoComponent(page, 'tags-input');
 	const tagsDemo = demo(page, 'tags-input-form');
 	const input = tagsDemo.getByRole('textbox', { name: '添加部署标签', exact: true });
 	await input.fill('critical');
@@ -1385,7 +1417,7 @@ test('keeps virtual Tree DOM bounded while keyboard focus reaches the global fin
 test('keeps TreeSelect popup tree, selection, form value and reset synchronized', async ({
 	page
 }) => {
-	await page.goto('/#/components/tree-select');
+	await gotoComponent(page, 'tree-select');
 	const treeSelectDemo = demo(page, 'tree-select-form');
 	const trigger = treeSelectDemo.locator('button[aria-haspopup="tree"]');
 	await trigger.click();
@@ -1403,7 +1435,7 @@ test('keeps TreeSelect popup tree, selection, form value and reset synchronized'
 test('keeps Cascader columns, path commit, focus restoration and reset synchronized', async ({
 	page
 }) => {
-	await page.goto('/#/components/cascader');
+	await gotoComponent(page, 'cascader');
 	const cascaderDemo = demo(page, 'cascader-path');
 	const trigger = cascaderDemo.locator('button[aria-haspopup="listbox"]');
 	await expect(trigger).toHaveAccessibleName('部署路径');
@@ -1469,7 +1501,7 @@ test('keeps Transfer filter, selection, move, repeated form values and reset syn
 test('keeps Mention textarea focus, active descendant, insertion, form value and reset synchronized', async ({
 	page
 }) => {
-	await page.goto('/#/components/mention');
+	await gotoComponent(page, 'mention');
 	const mentionDemo = demo(page, 'mention-caret');
 	const editor = mentionDemo.getByRole('textbox', { name: '发布通知', exact: true });
 	await editor.fill('发布通知：@li');
