@@ -55,6 +55,10 @@ describe('ZMention production collection contract', () => {
 		const activeId = editor.getAttribute('aria-activedescendant');
 		expect(activeId).toBeTruthy();
 		expect(editor.ownerDocument.getElementById(activeId ?? '')?.textContent).toContain('user-0999');
+		const stationaryRow = listbox.querySelector<HTMLElement>('[role="option"]');
+		stationaryRow?.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, clientX: 0, clientY: 0 }));
+		await tick();
+		expect(editor.getAttribute('aria-activedescendant')).toBe(activeId);
 		editor.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
 		await tick();
 		expect(document.querySelector('[data-testid="mention-production-output"]')?.textContent).toBe(

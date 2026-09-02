@@ -312,6 +312,8 @@
 	const listId = $derived(`${idBase}-list`);
 	let query = $state<MentionQuery>();
 	let open = $state(false);
+	let lastPointerPosition = $state<{ x: number; y: number }>();
+	let keyboardNavigation = $state(false);
 	let virtualController = $state<ChoiceVirtualController<SelectionKey> | null>(null);
 	const valueState = new ControllableState<string>({
 		defaultValue: () => defaultValue,
@@ -426,6 +428,7 @@
 	}
 	function handleKeydown(event: KeyboardEvent & { currentTarget: HTMLTextAreaElement }): void {
 		if (!open || isKeyboardComposing(event)) return;
+		keyboardNavigation = true;
 		if (event.key === 'Escape') {
 			event.preventDefault();
 			open = false;
@@ -482,6 +485,26 @@
 		if (event.button === 0 && suggestionFromPointer(event)) event.preventDefault();
 	}
 	function handleListPointerMove(event: PointerEvent & { currentTarget: HTMLElement }): void {
+		// Virtual scrolling can dispatch a stationary pointermove for newly
+		// mounted rows. It must not steal the active descendant selected by the
+		// keyboard unless the pointer actually moved.
+		const position = { x: event.clientX, y: event.clientY };
+		if (
+			keyboardNavigation &&
+			event.movementX === 0 &&
+			event.movementY === 0 &&
+			(!lastPointerPosition ||
+				(lastPointerPosition.x === position.x && lastPointerPosition.y === position.y))
+		)
+			return;
+		if (
+			lastPointerPosition &&
+			lastPointerPosition.x === position.x &&
+			lastPointerPosition.y === position.y
+		)
+			return;
+		keyboardNavigation = false;
+		lastPointerPosition = position;
 		const item = suggestionFromPointer(event);
 		if (item) handlePointerMove(item);
 	}

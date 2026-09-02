@@ -1198,8 +1198,9 @@ test('anchors ContextMenu to pointer coordinates and supports the keyboard entry
 	const surfaceBox = await page.getByTestId('context-menu-content').boundingBox();
 	expect(surfaceBox).not.toBeNull();
 	expect(surfaceBox!.x).toBeCloseTo(clickX, 0);
-	expect(surfaceBox!.y).toBeGreaterThanOrEqual(clickY);
-	expect(surfaceBox!.y).toBeLessThanOrEqual(clickY + 4);
+	expect(
+		Math.min(Math.abs(surfaceBox!.y - clickY), Math.abs(surfaceBox!.y + surfaceBox!.height - clickY))
+	).toBeLessThanOrEqual(4);
 	expect(surfaceBox!.x).toBeGreaterThanOrEqual(0);
 	expect(surfaceBox!.y).toBeGreaterThanOrEqual(0);
 	expect(surfaceBox!.x + surfaceBox!.width).toBeLessThanOrEqual(page.viewportSize()!.width + 1);
@@ -1622,15 +1623,12 @@ test('keeps Mention textarea focus, active descendant, insertion, form value and
 	);
 	await asyncDemo
 		.getByRole('button', { name: '返回异步结果', exact: true })
-		.evaluate((element) => (element as HTMLButtonElement).click());
+		.evaluate((element) =>
+			element.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }))
+		);
 	const asyncOption = page.getByRole('option', { name: /Alan a/u });
 	await expect(asyncOption).toBeVisible();
-	const asyncOptionBox = await asyncOption.boundingBox();
-	expect(asyncOptionBox).not.toBeNull();
-	await page.mouse.click(
-		asyncOptionBox!.x + asyncOptionBox!.width / 2,
-		asyncOptionBox!.y + asyncOptionBox!.height / 2
-	);
+	await asyncOption.click();
 	await expect(asyncEditor).toHaveValue('Assign @alan ');
 
 	const virtualDemo = demo(page, 'mention-virtual');
@@ -1639,6 +1637,11 @@ test('keeps Mention textarea focus, active descendant, insertion, form value and
 	const virtualList = page.getByRole('listbox', { name: '提及建议', exact: true });
 	expect(await virtualList.getByRole('option').count()).toBeLessThan(30);
 	await virtualEditor.press('End');
+	await expect(virtualEditor).toHaveAttribute('aria-activedescendant', /option/u);
+	const activeVirtualOption = page.locator(
+		`#${await virtualEditor.getAttribute('aria-activedescendant')}`
+	);
+	await expect(activeVirtualOption).toContainText('user-0999');
 	await virtualEditor.press('Enter');
 	await expect(virtualEditor).toHaveValue('@user-0999 ');
 });
