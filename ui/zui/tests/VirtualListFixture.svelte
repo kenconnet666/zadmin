@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { tick } from 'svelte';
-	import { SvelteMap } from 'svelte/reactivity';
 	import {
 		ZProvider,
 		ZVirtualList,
@@ -28,8 +27,12 @@
 	let activeKey = $state<RowKey>();
 	let activeId = $state<string>();
 	let loading = $state(true);
-	const optionIds = new SvelteMap<RowKey, string>();
-	const mountedOptions = new SvelteMap<RowKey, { element: HTMLElement; token: symbol }>();
+	// Stable ids are allocated while ZVirtualList derives normalized items; this cache must stay non-reactive.
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
+	const optionIds = new Map<RowKey, string>();
+	// Mounted DOM ownership is imperative test bookkeeping, not rendered state.
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
+	const mountedOptions = new Map<RowKey, { element: HTMLElement; token: symbol }>();
 	let nextOptionSlot = 0;
 
 	function optionId(key: RowKey): string {
