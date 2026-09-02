@@ -107,7 +107,10 @@
 <script lang="ts">
 	import { ZIcon, ZLink, useZui } from '@zadmin/zui';
 	import { guideDocs } from '../content/guides.js';
-	import { componentCategories, type ComponentDoc } from '../framework/catalog.js';
+	import {
+		componentCategories,
+		type ComponentCatalogManifestEntry
+	} from '../framework/catalog-manifest.generated.js';
 	import { guideRoute } from '../framework/router.js';
 
 	let {
@@ -117,7 +120,7 @@
 		onNavigate,
 		surface = 'desktop'
 	}: {
-		docs: readonly ComponentDoc[];
+		docs: readonly ComponentCatalogManifestEntry[];
 		currentGuideId?: string;
 		currentId?: string;
 		onNavigate?: () => void;

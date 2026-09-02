@@ -8,7 +8,19 @@ export interface ComponentCatalogManifestEntry {
 	readonly keywords: readonly string[];
 	readonly profiles: readonly string[];
 	readonly capabilities: readonly string[];
+	readonly demoCount: number;
 }
+
+export const componentCategories = Object.freeze([
+	{ id: 'gene', label: '通用组件' },
+	{ id: 'layout', label: '布局组件' },
+	{ id: 'input', label: '输入组件' },
+	{ id: 'navigation', label: '导航组件' },
+	{ id: 'overlay', label: '浮层组件' },
+	{ id: 'data-display', label: '展示组件' },
+	{ id: 'feedback', label: '反馈组件' },
+	{ id: 'utility', label: '工具组件' }
+] as const);
 
 export const componentCatalogManifest = Object.freeze([
 	{
@@ -33,7 +45,8 @@ export const componentCatalogManifest = Object.freeze([
 			'ssr',
 			'locale',
 			'resource-cleanup'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'box',
@@ -43,7 +56,8 @@ export const componentCatalogManifest = Object.freeze([
 		status: 'stable',
 		keywords: [],
 		profiles: ['primitive'],
-		capabilities: ['basic-render', 'composition', 'focus', 'native-props', 'variants-and-states']
+		capabilities: ['basic-render', 'composition', 'focus', 'native-props', 'variants-and-states'],
+		demoCount: 4
 	},
 	{
 		id: 'stack',
@@ -60,7 +74,8 @@ export const componentCatalogManifest = Object.freeze([
 			'variants-and-states',
 			'rtl',
 			'keyboard'
-		]
+		],
+		demoCount: 4
 	},
 	{
 		id: 'text',
@@ -70,7 +85,8 @@ export const componentCatalogManifest = Object.freeze([
 		status: 'stable',
 		keywords: [],
 		profiles: ['primitive'],
-		capabilities: ['basic-render', 'native-props', 'variants-and-states', 'composition']
+		capabilities: ['basic-render', 'native-props', 'variants-and-states', 'composition'],
+		demoCount: 5
 	},
 	{
 		id: 'heading',
@@ -86,7 +102,8 @@ export const componentCatalogManifest = Object.freeze([
 			'native-props',
 			'variants-and-states',
 			'composition'
-		]
+		],
+		demoCount: 4
 	},
 	{
 		id: 'icon',
@@ -104,7 +121,8 @@ export const componentCatalogManifest = Object.freeze([
 			'variants-and-states',
 			'keyboard',
 			'rtl'
-		]
+		],
+		demoCount: 4
 	},
 	{
 		id: 'code',
@@ -125,7 +143,8 @@ export const componentCatalogManifest = Object.freeze([
 			'accessible-name',
 			'keyboard',
 			'locale'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'button',
@@ -151,7 +170,8 @@ export const componentCatalogManifest = Object.freeze([
 			'accessible-name',
 			'focus',
 			'keyboard'
-		]
+		],
+		demoCount: 7
 	},
 	{
 		id: 'toggle-button',
@@ -173,7 +193,8 @@ export const componentCatalogManifest = Object.freeze([
 			'accessible-name',
 			'focus',
 			'external-clear'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'link',
@@ -202,7 +223,8 @@ export const componentCatalogManifest = Object.freeze([
 			'locale',
 			'disabled',
 			'keyboard'
-		]
+		],
+		demoCount: 6
 	},
 	{
 		id: 'separator',
@@ -219,7 +241,8 @@ export const componentCatalogManifest = Object.freeze([
 			'accessible-name',
 			'composition',
 			'rtl'
-		]
+		],
+		demoCount: 4
 	},
 	{
 		id: 'visually-hidden',
@@ -237,7 +260,8 @@ export const componentCatalogManifest = Object.freeze([
 			'variants-and-states',
 			'native-props',
 			'ssr'
-		]
+		],
+		demoCount: 4
 	},
 	{
 		id: 'kbd',
@@ -247,7 +271,8 @@ export const componentCatalogManifest = Object.freeze([
 		status: 'experimental',
 		keywords: [],
 		profiles: ['primitive'],
-		capabilities: ['basic-render', 'composition', 'native-props', 'accessible-name', 'ssr']
+		capabilities: ['basic-render', 'composition', 'native-props', 'accessible-name', 'ssr'],
+		demoCount: 4
 	},
 	{
 		id: 'aspect-ratio',
@@ -264,7 +289,8 @@ export const componentCatalogManifest = Object.freeze([
 			'composition',
 			'accessible-name',
 			'ssr'
-		]
+		],
+		demoCount: 4
 	},
 	{
 		id: 'container',
@@ -283,7 +309,8 @@ export const componentCatalogManifest = Object.freeze([
 			'variants-and-states',
 			'composition',
 			'ssr'
-		]
+		],
+		demoCount: 4
 	},
 	{
 		id: 'avatar',
@@ -312,7 +339,8 @@ export const componentCatalogManifest = Object.freeze([
 			'native-props',
 			'controlled',
 			'external-clear'
-		]
+		],
+		demoCount: 6
 	},
 	{
 		id: 'badge',
@@ -334,7 +362,8 @@ export const componentCatalogManifest = Object.freeze([
 			'controlled',
 			'reduced-motion',
 			'resource-cleanup'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'card',
@@ -352,7 +381,8 @@ export const componentCatalogManifest = Object.freeze([
 			'composition',
 			'native-props',
 			'loading'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'description-list',
@@ -383,7 +413,8 @@ export const componentCatalogManifest = Object.freeze([
 			'loading',
 			'locale',
 			'rtl'
-		]
+		],
+		demoCount: 6
 	},
 	{
 		id: 'list',
@@ -414,7 +445,8 @@ export const componentCatalogManifest = Object.freeze([
 			'variants-and-states',
 			'rtl',
 			'resource-cleanup'
-		]
+		],
+		demoCount: 6
 	},
 	{
 		id: 'tag',
@@ -436,7 +468,8 @@ export const componentCatalogManifest = Object.freeze([
 			'rtl',
 			'focus',
 			'locale'
-		]
+		],
+		demoCount: 6
 	},
 	{
 		id: 'progress',
@@ -464,7 +497,8 @@ export const componentCatalogManifest = Object.freeze([
 			'resource-cleanup',
 			'full-motion',
 			'ssr'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'meter',
@@ -475,7 +509,8 @@ export const componentCatalogManifest = Object.freeze([
 		status: 'experimental',
 		keywords: ['meter', 'gauge', 'threshold', 'capacity', 'optimum', 'native meter'],
 		profiles: ['data-view'],
-		capabilities: ['accessible-name', 'basic-render', 'variants-and-states', 'native-props', 'ssr']
+		capabilities: ['accessible-name', 'basic-render', 'variants-and-states', 'native-props', 'ssr'],
+		demoCount: 5
 	},
 	{
 		id: 'skeleton',
@@ -495,7 +530,8 @@ export const componentCatalogManifest = Object.freeze([
 			'full-motion',
 			'native-props',
 			'ssr'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'empty',
@@ -514,7 +550,8 @@ export const componentCatalogManifest = Object.freeze([
 			'variants-and-states',
 			'native-props',
 			'ssr'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'timeline',
@@ -545,7 +582,8 @@ export const componentCatalogManifest = Object.freeze([
 			'variants-and-states',
 			'loading',
 			'rtl'
-		]
+		],
+		demoCount: 7
 	},
 	{
 		id: 'statistic',
@@ -574,7 +612,8 @@ export const componentCatalogManifest = Object.freeze([
 			'composition',
 			'native-props',
 			'loading'
-		]
+		],
+		demoCount: 6
 	},
 	{
 		id: 'table',
@@ -605,7 +644,8 @@ export const componentCatalogManifest = Object.freeze([
 			'composition',
 			'keyboard',
 			'rtl'
-		]
+		],
+		demoCount: 6
 	},
 	{
 		id: 'virtual-list',
@@ -640,7 +680,8 @@ export const componentCatalogManifest = Object.freeze([
 			'ssr',
 			'accessible-name',
 			'loading'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'data-table',
@@ -682,7 +723,8 @@ export const componentCatalogManifest = Object.freeze([
 			'locale',
 			'density',
 			'disabled'
-		]
+		],
+		demoCount: 7
 	},
 	{
 		id: 'carousel',
@@ -713,7 +755,8 @@ export const componentCatalogManifest = Object.freeze([
 			'resource-cleanup',
 			'external-clear',
 			'rtl'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'alert',
@@ -733,7 +776,8 @@ export const componentCatalogManifest = Object.freeze([
 			'focus',
 			'composition',
 			'rtl'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'loading-bar',
@@ -761,7 +805,8 @@ export const componentCatalogManifest = Object.freeze([
 			'controlled',
 			'external-clear',
 			'rtl'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'result',
@@ -780,7 +825,8 @@ export const componentCatalogManifest = Object.freeze([
 			'variants-and-states',
 			'native-props',
 			'ssr'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'spinner',
@@ -799,7 +845,8 @@ export const componentCatalogManifest = Object.freeze([
 			'resource-cleanup',
 			'controlled',
 			'keyboard'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'toast',
@@ -828,7 +875,8 @@ export const componentCatalogManifest = Object.freeze([
 			'full-motion',
 			'controlled',
 			'loading'
-		]
+		],
+		demoCount: 6
 	},
 	{
 		id: 'checkbox',
@@ -851,7 +899,8 @@ export const componentCatalogManifest = Object.freeze([
 			'focus',
 			'keyboard',
 			'readonly'
-		]
+		],
+		demoCount: 3
 	},
 	{
 		id: 'calendar',
@@ -879,7 +928,8 @@ export const componentCatalogManifest = Object.freeze([
 			'external-clear',
 			'composition',
 			'readonly'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'cascader',
@@ -916,7 +966,8 @@ export const componentCatalogManifest = Object.freeze([
 			'invalid',
 			'readonly',
 			'rtl'
-		]
+		],
+		demoCount: 6
 	},
 	{
 		id: 'color-picker',
@@ -949,7 +1000,8 @@ export const componentCatalogManifest = Object.freeze([
 			'invalid',
 			'readonly',
 			'native-props'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'combobox',
@@ -989,7 +1041,8 @@ export const componentCatalogManifest = Object.freeze([
 			'readonly',
 			'accessible-name',
 			'rtl'
-		]
+		],
+		demoCount: 7
 	},
 	{
 		id: 'date-field',
@@ -1018,7 +1071,8 @@ export const componentCatalogManifest = Object.freeze([
 			'external-clear',
 			'composition',
 			'native-props'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'date-picker',
@@ -1050,7 +1104,8 @@ export const componentCatalogManifest = Object.freeze([
 			'composition',
 			'focus',
 			'native-props'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'date-range-picker',
@@ -1082,7 +1137,8 @@ export const componentCatalogManifest = Object.freeze([
 			'resource-cleanup',
 			'rtl',
 			'ssr'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'input',
@@ -1105,7 +1161,8 @@ export const componentCatalogManifest = Object.freeze([
 			'focus',
 			'invalid',
 			'readonly'
-		]
+		],
+		demoCount: 4
 	},
 	{
 		id: 'input-group',
@@ -1138,7 +1195,8 @@ export const componentCatalogManifest = Object.freeze([
 			'invalid',
 			'rtl',
 			'readonly'
-		]
+		],
+		demoCount: 6
 	},
 	{
 		id: 'mention',
@@ -1173,7 +1231,8 @@ export const componentCatalogManifest = Object.freeze([
 			'loading',
 			'resource-cleanup',
 			'ssr'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'multi-select',
@@ -1212,7 +1271,8 @@ export const componentCatalogManifest = Object.freeze([
 			'resource-cleanup',
 			'accessible-name',
 			'readonly'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'number-field',
@@ -1249,7 +1309,8 @@ export const componentCatalogManifest = Object.freeze([
 			'external-clear',
 			'density',
 			'native-props'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'pin-input',
@@ -1283,7 +1344,8 @@ export const componentCatalogManifest = Object.freeze([
 			'composition',
 			'readonly',
 			'rtl'
-		]
+		],
+		demoCount: 6
 	},
 	{
 		id: 'field',
@@ -1303,7 +1365,8 @@ export const componentCatalogManifest = Object.freeze([
 			'accessible-name',
 			'focus',
 			'keyboard'
-		]
+		],
+		demoCount: 3
 	},
 	{
 		id: 'file-upload',
@@ -1340,7 +1403,8 @@ export const componentCatalogManifest = Object.freeze([
 			'focus',
 			'readonly',
 			'locale'
-		]
+		],
+		demoCount: 6
 	},
 	{
 		id: 'form',
@@ -1373,7 +1437,8 @@ export const componentCatalogManifest = Object.freeze([
 			'loading',
 			'disabled',
 			'form-reset'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'radio-group',
@@ -1398,7 +1463,8 @@ export const componentCatalogManifest = Object.freeze([
 			'rtl',
 			'variants-and-states',
 			'readonly'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'select',
@@ -1437,7 +1503,8 @@ export const componentCatalogManifest = Object.freeze([
 			'readonly',
 			'accessible-name',
 			'rtl'
-		]
+		],
+		demoCount: 7
 	},
 	{
 		id: 'segmented',
@@ -1461,7 +1528,8 @@ export const componentCatalogManifest = Object.freeze([
 			'rtl',
 			'variants-and-states',
 			'readonly'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'switch',
@@ -1491,7 +1559,8 @@ export const componentCatalogManifest = Object.freeze([
 			'keyboard',
 			'reduced-motion',
 			'rtl'
-		]
+		],
+		demoCount: 4
 	},
 	{
 		id: 'tags-input',
@@ -1526,7 +1595,8 @@ export const componentCatalogManifest = Object.freeze([
 			'resource-cleanup',
 			'ssr',
 			'native-props'
-		]
+		],
+		demoCount: 6
 	},
 	{
 		id: 'textarea',
@@ -1550,7 +1620,8 @@ export const componentCatalogManifest = Object.freeze([
 			'form-data',
 			'form-reset',
 			'uncontrolled'
-		]
+		],
+		demoCount: 4
 	},
 	{
 		id: 'time-field',
@@ -1578,7 +1649,8 @@ export const componentCatalogManifest = Object.freeze([
 			'focus',
 			'invalid',
 			'native-props'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'tree-select',
@@ -1611,7 +1683,8 @@ export const componentCatalogManifest = Object.freeze([
 			'portal',
 			'resource-cleanup',
 			'ssr'
-		]
+		],
+		demoCount: 4
 	},
 	{
 		id: 'transfer',
@@ -1648,7 +1721,8 @@ export const componentCatalogManifest = Object.freeze([
 			'loading',
 			'focus',
 			'resource-cleanup'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'slider',
@@ -1671,7 +1745,8 @@ export const componentCatalogManifest = Object.freeze([
 			'variants-and-states',
 			'focus',
 			'readonly'
-		]
+		],
+		demoCount: 3
 	},
 	{
 		id: 'accordion',
@@ -1707,7 +1782,8 @@ export const componentCatalogManifest = Object.freeze([
 			'rtl',
 			'full-motion',
 			'reduced-motion'
-		]
+		],
+		demoCount: 6
 	},
 	{
 		id: 'command',
@@ -1727,7 +1803,8 @@ export const componentCatalogManifest = Object.freeze([
 			'variants-and-states',
 			'loading',
 			'resource-cleanup'
-		]
+		],
+		demoCount: 3
 	},
 	{
 		id: 'command-palette',
@@ -1748,7 +1825,8 @@ export const componentCatalogManifest = Object.freeze([
 			'external-clear',
 			'variants-and-states',
 			'resource-cleanup'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'context-menu',
@@ -1772,7 +1850,8 @@ export const componentCatalogManifest = Object.freeze([
 			'resource-cleanup',
 			'reduced-motion',
 			'rtl'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'dropdown-menu',
@@ -1804,7 +1883,8 @@ export const componentCatalogManifest = Object.freeze([
 			'rtl',
 			'native-props',
 			'reduced-motion'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'menu',
@@ -1837,7 +1917,8 @@ export const componentCatalogManifest = Object.freeze([
 			'rtl',
 			'composition',
 			'native-props'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'pagination',
@@ -1870,7 +1951,8 @@ export const componentCatalogManifest = Object.freeze([
 			'composition',
 			'disabled',
 			'uncontrolled'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'tabs',
@@ -1903,7 +1985,8 @@ export const componentCatalogManifest = Object.freeze([
 			'accessible-name',
 			'locale',
 			'rtl'
-		]
+		],
+		demoCount: 6
 	},
 	{
 		id: 'tree',
@@ -1936,7 +2019,8 @@ export const componentCatalogManifest = Object.freeze([
 			'locale',
 			'resource-cleanup',
 			'ssr'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'alert-dialog',
@@ -1958,7 +2042,8 @@ export const componentCatalogManifest = Object.freeze([
 			'resource-cleanup',
 			'invalid',
 			'ssr'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'dialog',
@@ -1981,7 +2066,8 @@ export const componentCatalogManifest = Object.freeze([
 			'accessible-name',
 			'ssr',
 			'variants-and-states'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'drawer',
@@ -2006,7 +2092,8 @@ export const componentCatalogManifest = Object.freeze([
 			'full-motion',
 			'reduced-motion',
 			'rtl'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'popconfirm',
@@ -2035,7 +2122,8 @@ export const componentCatalogManifest = Object.freeze([
 			'reduced-motion',
 			'resource-cleanup',
 			'accessible-name'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'popover',
@@ -2057,7 +2145,8 @@ export const componentCatalogManifest = Object.freeze([
 			'controlled',
 			'external-clear',
 			'accessible-name'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'tooltip',
@@ -2089,7 +2178,8 @@ export const componentCatalogManifest = Object.freeze([
 			'native-props',
 			'reduced-motion',
 			'rtl'
-		]
+		],
+		demoCount: 5
 	},
 	{
 		id: 'tour',
@@ -2121,7 +2211,8 @@ export const componentCatalogManifest = Object.freeze([
 			'locale',
 			'rtl',
 			'reduced-motion'
-		]
+		],
+		demoCount: 4
 	}
 ] as readonly ComponentCatalogManifestEntry[]);
 export const componentCatalogManifestById = new Map(

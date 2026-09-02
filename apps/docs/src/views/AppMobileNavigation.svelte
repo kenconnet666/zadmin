@@ -46,7 +46,7 @@
 		ZStack,
 		useZui
 	} from '@zadmin/zui';
-	import type { ComponentDoc } from '../framework/catalog.js';
+	import type { ComponentCatalogManifestEntry } from '../framework/catalog-manifest.generated.js';
 	import AppSidebar from './AppSidebar.svelte';
 
 	let {
@@ -54,7 +54,7 @@
 		currentGuideId,
 		currentId
 	}: {
-		readonly docs: readonly ComponentDoc[];
+		readonly docs: readonly ComponentCatalogManifestEntry[];
 		readonly currentGuideId?: string;
 		readonly currentId?: string;
 	} = $props();

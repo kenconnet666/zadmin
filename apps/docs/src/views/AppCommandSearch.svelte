@@ -44,17 +44,20 @@
 		type CommandActionEvent
 	} from '@zadmin/zui';
 	import { guideDocs } from '../content/guides.js';
-	import { componentCategories, type ComponentDoc } from '../framework/catalog.js';
+	import {
+		componentCategories,
+		type ComponentCatalogManifestEntry
+	} from '../framework/catalog-manifest.generated.js';
 	import {
 		createDocsCommandItems,
 		type DocsCommandItem,
 		type DocsSearchGuide
 	} from '../framework/search.js';
 
-	let { docs }: { readonly docs: readonly ComponentDoc[] } = $props();
+	let { docs }: { readonly docs: readonly ComponentCatalogManifestEntry[] } = $props();
 	const zui = useZui();
 	const classes = $derived(zui.slots(searchRecipe));
-	const categoryLabels = new Map(
+	const categoryLabels = new Map<string, string>(
 		componentCategories.map((category) => [category.id, category.label] as const)
 	);
 	const themeGuide = {

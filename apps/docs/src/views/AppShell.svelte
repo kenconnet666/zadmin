@@ -124,7 +124,12 @@
 	} from '@zadmin/zui';
 	import type { DocsThemeId } from '../app/theme.js';
 	import { guideDocsById } from '../content/guides.js';
-	import { componentDocs, componentDocsById } from '../framework/catalog.js';
+	import {
+		componentCatalogManifest,
+		componentCatalogManifestById
+	} from '../framework/catalog-manifest.generated.js';
+	import { componentDocLoaders } from '../framework/component-doc-loaders.generated.js';
+	import type { ComponentDoc } from '../framework/component-doc.js';
 	import { docsRouter } from '../framework/router-runtime.svelte.js';
 	import ComponentPage from './ComponentPage.svelte';
 	import GuidePage from './GuidePage.svelte';
@@ -162,13 +167,44 @@
 	const classes = $derived(zui.slots(appRecipe, { density, motion }));
 	const currentId = $derived(route.kind === 'component' ? route.componentId : undefined);
 	const currentGuideId = $derived(route.kind === 'guide' ? route.guideId : undefined);
-	const currentDoc = $derived(currentId ? componentDocsById.get(currentId) : undefined);
+	let loadedDoc = $state<ComponentDoc | null>(null);
+	let loadingDoc = $state(false);
+	let docError = $state<string | null>(null);
+	let loadGeneration = 0;
+	$effect(() => {
+		const id = currentId;
+		const generation = ++loadGeneration;
+		loadedDoc = null;
+		docError = null;
+		if (!id) {
+			loadingDoc = false;
+			return;
+		}
+		const loader = componentDocLoaders[id as keyof typeof componentDocLoaders];
+		if (!loader) {
+			loadingDoc = false;
+			return;
+		}
+		loadingDoc = true;
+		void loader()
+			.then((doc) => {
+				if (generation === loadGeneration) loadedDoc = doc;
+			})
+			.catch((error: unknown) => {
+				if (generation === loadGeneration)
+					docError = error instanceof Error ? error.message : '文档加载失败。';
+			})
+			.finally(() => {
+				if (generation === loadGeneration) loadingDoc = false;
+			});
+	});
+	const currentDoc = $derived(loadedDoc);
 	const currentGuide = $derived(
 		currentGuideId && currentGuideId !== 'theme' ? guideDocsById.get(currentGuideId) : undefined
 	);
 	const invalidRoute = $derived(
 		route.kind === 'not-found' ||
-			(currentId !== undefined && currentDoc === undefined) ||
+			(currentId !== undefined && !componentCatalogManifestById.has(currentId)) ||
 			(currentGuideId !== undefined && currentGuideId !== 'theme' && currentGuide === undefined)
 	);
 	const currentHref = $derived.by(() => {
@@ -219,14 +255,18 @@
 		{onDirectionChange}
 		{onMotionChange}
 		{onThemeChange}
-		docs={componentDocs}
+		docs={componentCatalogManifest}
 		{currentGuideId}
 		{currentId}
 		{themeId}
 	/>
-	<AppSidebar docs={componentDocs} {currentGuideId} {currentId} />
+	<AppSidebar docs={componentCatalogManifest} {currentGuideId} {currentId} />
 	<main class={classes.main} id="zui-main-content" tabindex="-1">
-		{#if currentDoc}
+		{#if currentId && loadingDoc}
+			<p>正在加载组件文档…</p>
+		{:else if currentId && docError}
+			<p>组件文档加载失败：{docError}</p>
+		{:else if currentDoc}
 			<ComponentPage doc={currentDoc} />
 		{:else if currentGuideId === 'theme'}
 			<ThemeLabPage {onThemeChange} {themeId} />
@@ -240,7 +280,7 @@
 				<ZLink class={classes.action} href="#/" underline="none">返回文档概览</ZLink>
 			</section>
 		{:else}
-			<HomePage docs={componentDocs} />
+			<HomePage docs={componentCatalogManifest} />
 		{/if}
 	</main>
 </div>

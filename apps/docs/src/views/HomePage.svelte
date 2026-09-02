@@ -190,11 +190,14 @@
 <script lang="ts">
 	import { ZBox, ZCard, ZHeading, ZIcon, ZLink, ZStack, ZText, useZui } from '@zadmin/zui';
 	import { guideDocs } from '../content/guides.js';
-	import { componentCategories, type ComponentDoc } from '../framework/catalog.js';
+	import {
+		componentCategories,
+		type ComponentCatalogManifestEntry
+	} from '../framework/catalog-manifest.generated.js';
 	import { guideRoute } from '../framework/router.js';
 
-	let { docs }: { docs: readonly ComponentDoc[] } = $props();
-	const demoCount = $derived(docs.reduce((total, doc) => total + doc.demos.length, 0));
+	let { docs }: { docs: readonly ComponentCatalogManifestEntry[] } = $props();
+	const demoCount = $derived(docs.reduce((total, doc) => total + doc.demoCount, 0));
 	const stableCount = $derived(docs.filter((doc) => doc.status === 'stable').length);
 	const zui = useZui();
 	const classes = $derived(zui.slots(homeRecipe, { motion: zui.motion }));

@@ -206,7 +206,7 @@
 		type ZuiMotion
 	} from '@zadmin/zui';
 	import { docsThemeById, docsThemes, type DocsThemeId } from '../app/theme.js';
-	import type { ComponentDoc } from '../framework/catalog.js';
+	import type { ComponentCatalogManifestEntry } from '../framework/catalog-manifest.generated.js';
 	import AppCommandSearch from './AppCommandSearch.svelte';
 	import AppMobileNavigation from './AppMobileNavigation.svelte';
 
@@ -230,7 +230,7 @@
 		readonly currentId?: string;
 		readonly density?: ZuiDensity;
 		readonly direction?: ZuiDirection;
-		readonly docs: readonly ComponentDoc[];
+		readonly docs: readonly ComponentCatalogManifestEntry[];
 		readonly motion?: ZuiMotion;
 		readonly onContrastChange?: (value: ZuiContrast) => void;
 		readonly onDensityChange?: (value: ZuiDensity) => void;
