@@ -2131,7 +2131,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'overlay',
 		summary:
 			'元素Trigger上的modal/nonmodal浮层：Floating、nested branch、typed dismiss、显式ARIA和owner-realm Presence共享一个open owner。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [],
 		profiles: ['layer', 'animated'],
 		capabilities: [

@@ -1,9 +1,9 @@
 {
 	"schemaVersion": 1,
 	"summary": {
-		"stableCompliant": 34,
+		"stableCompliant": 37,
 		"stableViolations": 0,
-		"promotionEligibleExperimental": 32
+		"promotionEligibleExperimental": 29
 	},
 	"components": [
 		{
@@ -596,8 +596,8 @@
 			"id": "popover",
 			"name": "ZPopover",
 			"family": "popover",
-			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
+			"status": "stable",
+			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/popover/doc.ts",
 			"ssrEvidenceCount": 2
@@ -606,8 +606,8 @@
 			"id": "popover-content",
 			"name": "ZPopoverContent",
 			"family": "popover",
-			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
+			"status": "stable",
+			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/popover/doc.ts",
 			"ssrEvidenceCount": 2
@@ -616,8 +616,8 @@
 			"id": "popover-trigger",
 			"name": "ZPopoverTrigger",
 			"family": "popover",
-			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
+			"status": "stable",
+			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/popover/doc.ts",
 			"ssrEvidenceCount": 2

@@ -161,7 +161,7 @@
 			{ description: '解析后的减少动画状态。', name: 'data-reduced-motion', values: ['true'] },
 			{ description: 'Presence生命周期。', name: 'data-presence', values: ['entered', 'exiting'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: 'Portal定位并统一管理outside dismiss、focus与退出Presence的Popover dialog。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

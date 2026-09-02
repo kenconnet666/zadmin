@@ -101,7 +101,7 @@
 		snippets: [{ description: 'Trigger与Content组合。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/popover/ZPopover.svelte',
 		states: [],
-		status: 'experimental',
+		status: 'stable',
 		summary: '组合受控状态、浮层定位、Portal、dismiss与focus生命周期的Popover根组件。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
