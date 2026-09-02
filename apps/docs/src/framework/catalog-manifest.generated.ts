@@ -689,7 +689,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'data-display',
 		summary:
 			'面向后台数据浏览的原生语义DataTable，负责稳定排序、行选择、自定义cell和可选固定行高虚拟化；请求、筛选、分页与异步状态由调用方组合。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'data table',
 			'sort',

@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"componentCount": 141,
-	"overallSha256": "983e51b947907452bd852ff97cc4798c3f553771cc70902e91cf23c39fcabadb",
+	"overallSha256": "114a129820160043951adf04371e69447afa6cb134f33eb55d4daaf4882874bf",
 	"components": [
 		{
 			"id": "accordion",
@@ -405,7 +405,7 @@
 		},
 		{
 			"id": "data-table",
-			"sha256": "aab02ba54b93b02c0b2e7407486933bf3550444e0b99ba1f45bb17cab7b5cd20",
+			"sha256": "0224e2cc9bcf866e6536161d75b83d3a55ff6d91fe648c9007ab3d3e0737e628",
 			"source": "src/components/data-display/ZDataTable.svelte"
 		},
 		{

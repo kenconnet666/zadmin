@@ -2,7 +2,7 @@
 
 本文件由 `scripts/check-stability-policy.mjs` 生成；不会修改组件 status。compound member 可继承同 family root 的 Docs 页面。
 
-stableCompliant：27；stableViolations：0；promotionEligibleExperimental：4。
+stableCompliant：28；stableViolations：0；promotionEligibleExperimental：3。
 
 | Component               | Status       | Classification                | Blockers                                   | Docs                                                                           | SSR |
 | ----------------------- | ------------ | ----------------------------- | ------------------------------------------ | ------------------------------------------------------------------------------ | --: |
@@ -86,7 +86,7 @@ stableCompliant：27；stableViolations：0；promotionEligibleExperimental：4�
 | ZBadge                  | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/data-display/badge/doc.ts                     |   2 |
 | ZCard                   | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/data-display/card/doc.ts                      |   2 |
 | ZCarousel               | experimental | experimental                  | ProductionVerified                         | apps/docs/src/content/components/data-display/carousel/doc.ts                  |   1 |
-| ZDataTable              | experimental | promotionEligibleExperimental | —                                          | apps/docs/src/content/components/data-display/data-table/doc.ts                |   2 |
+| ZDataTable              | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/data-display/data-table/doc.ts                |   2 |
 | ZDescriptionList        | experimental | experimental                  | VisuallyVerified, ProductionVerified       | apps/docs/src/content/components/data-display/description-list/doc.ts          |   2 |
 | ZEmpty                  | stable       | stableCompliant               | —                                          | apps/docs/src/content/components/data-display/empty/doc.ts                     |   2 |
 | ZList                   | experimental | experimental                  | ProductionVerified                         | apps/docs/src/content/components/data-display/list/doc.ts                      |   1 |

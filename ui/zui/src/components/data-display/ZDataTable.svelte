@@ -411,7 +411,7 @@
 			{ description: '虚拟模式。', name: 'data-virtualized', values: ['true'] },
 			{ description: '异步请求进行中。', name: 'aria-busy', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'保留原生table语义并组合受控排序、typed-key选择/展开、列状态、sticky与行虚拟化的DataTable。'
 	} as const satisfies ZuiComponentMetadata;

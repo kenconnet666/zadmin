@@ -4892,7 +4892,7 @@
 			"name": "ZDataTable",
 			"category": "data-display",
 			"family": null,
-			"status": "experimental",
+			"status": "stable",
 			"source": "ui/zui/src/components/data-display/ZDataTable.svelte",
 			"apiDocumentation": {
 				"metadataGapPropCount": 0,
@@ -4923,7 +4923,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "aab02ba54b93b02c0b2e7407486933bf3550444e0b99ba1f45bb17cab7b5cd20 API snapshot entry"
+						"detail": "0224e2cc9bcf866e6536161d75b83d3a55ff6d91fe648c9007ab3d3e0737e628 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
