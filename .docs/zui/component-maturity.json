@@ -3,7 +3,7 @@
 		"metadataComponents": 141,
 		"documentationPages": 79,
 		"contractComponents": 141,
-		"testFiles": 124
+		"testFiles": 127
 	},
 	"stageNames": [
 		"Declared",
@@ -19,9 +19,9 @@
 		"Authorable": 141,
 		"ContractVerified": 141,
 		"RuntimeImplemented": 141,
-		"VisuallyVerified": 60,
+		"VisuallyVerified": 72,
 		"DesktopVerified": 0,
-		"ProductionVerified": 37
+		"ProductionVerified": 55
 	},
 	"components": [
 		{
@@ -799,7 +799,7 @@
 				"RuntimeImplemented": true,
 				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -828,6 +828,14 @@
 				],
 				"VisuallyVerified": [
 					{
+						"path": "ui/zui/tests/combobox-production.browser.spec.ts",
+						"detail": "ZCombobox browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/ChoiceCollectionFixture.svelte",
+						"detail": "ZCombobox explicit rendered fixture usage"
+					},
+					{
 						"path": "ui/zui/tests/selection-collection.browser.spec.ts",
 						"detail": "ZCombobox browser assertions"
 					},
@@ -837,7 +845,16 @@
 					}
 				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/combobox-production.browser.spec.ts",
+						"detail": "ZCombobox production assertions"
+					},
+					{
+						"path": "ui/zui/tests/ChoiceCollectionFixture.svelte",
+						"detail": "ZCombobox explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": {
 				"path": "apps/docs/src/content/components/input/combobox/doc.ts",
@@ -1039,7 +1056,7 @@
 				"RuntimeImplemented": true,
 				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -1068,7 +1085,7 @@
 				],
 				"VisuallyVerified": [
 					{
-						"path": "ui/zui/tests/menu-family.browser.spec.ts",
+						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
 						"detail": "ZContextMenu browser assertions"
 					},
 					{
@@ -1077,7 +1094,16 @@
 					}
 				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
+						"detail": "ZContextMenu production assertions"
+					},
+					{
+						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
+						"detail": "ZContextMenu explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": {
 				"path": "apps/docs/src/content/components/navigation/context-menu/doc.ts",
@@ -2069,7 +2095,7 @@
 				"RuntimeImplemented": true,
 				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -2098,7 +2124,7 @@
 				],
 				"VisuallyVerified": [
 					{
-						"path": "ui/zui/tests/menu-family.browser.spec.ts",
+						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
 						"detail": "ZDropdownMenu browser assertions"
 					},
 					{
@@ -2107,7 +2133,16 @@
 					}
 				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
+						"detail": "ZDropdownMenu production assertions"
+					},
+					{
+						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
+						"detail": "ZDropdownMenu explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": {
 				"path": "apps/docs/src/content/components/navigation/dropdown-menu/doc.ts",
@@ -2252,7 +2287,7 @@
 				"RuntimeImplemented": true,
 				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -2281,7 +2316,7 @@
 				],
 				"VisuallyVerified": [
 					{
-						"path": "ui/zui/tests/menu-family.browser.spec.ts",
+						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
 						"detail": "ZMenu browser assertions"
 					},
 					{
@@ -2290,7 +2325,16 @@
 					}
 				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
+						"detail": "ZMenu production assertions"
+					},
+					{
+						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
+						"detail": "ZMenu explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": {
 				"path": "apps/docs/src/content/components/navigation/menu/doc.ts",
@@ -2319,9 +2363,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -2348,9 +2392,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
+						"detail": "ZMenuCheckboxItem browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
+						"detail": "ZMenuCheckboxItem explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
+						"detail": "ZMenuCheckboxItem production assertions"
+					},
+					{
+						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
+						"detail": "ZMenuCheckboxItem explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": null,
 			"ssrEvidence": []
@@ -2371,9 +2433,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -2400,9 +2462,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
+						"detail": "ZMenuGroup browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
+						"detail": "ZMenuGroup explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
+						"detail": "ZMenuGroup production assertions"
+					},
+					{
+						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
+						"detail": "ZMenuGroup explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": null,
 			"ssrEvidence": [
@@ -2428,9 +2508,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -2457,9 +2537,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
+						"detail": "ZMenuItem browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
+						"detail": "ZMenuItem explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
+						"detail": "ZMenuItem production assertions"
+					},
+					{
+						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
+						"detail": "ZMenuItem explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": null,
 			"ssrEvidence": [
@@ -2485,9 +2583,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -2514,9 +2612,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
+						"detail": "ZMenuLabel browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
+						"detail": "ZMenuLabel explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
+						"detail": "ZMenuLabel production assertions"
+					},
+					{
+						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
+						"detail": "ZMenuLabel explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": null,
 			"ssrEvidence": [
@@ -2542,9 +2658,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -2571,9 +2687,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
+						"detail": "ZMenuRadioGroup browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
+						"detail": "ZMenuRadioGroup explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
+						"detail": "ZMenuRadioGroup production assertions"
+					},
+					{
+						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
+						"detail": "ZMenuRadioGroup explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": null,
 			"ssrEvidence": []
@@ -2594,9 +2728,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -2623,9 +2757,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
+						"detail": "ZMenuRadioItem browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
+						"detail": "ZMenuRadioItem explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
+						"detail": "ZMenuRadioItem production assertions"
+					},
+					{
+						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
+						"detail": "ZMenuRadioItem explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": null,
 			"ssrEvidence": []
@@ -2646,9 +2798,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -2675,9 +2827,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
+						"detail": "ZMenuSeparator browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
+						"detail": "ZMenuSeparator explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
+						"detail": "ZMenuSeparator production assertions"
+					},
+					{
+						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
+						"detail": "ZMenuSeparator explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": null,
 			"ssrEvidence": [
@@ -2703,9 +2873,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -2732,9 +2902,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
+						"detail": "ZMenuSub browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
+						"detail": "ZMenuSub explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
+						"detail": "ZMenuSub production assertions"
+					},
+					{
+						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
+						"detail": "ZMenuSub explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": null,
 			"ssrEvidence": []
@@ -2755,9 +2943,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -2784,9 +2972,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
+						"detail": "ZMenuSubContent browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
+						"detail": "ZMenuSubContent explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
+						"detail": "ZMenuSubContent production assertions"
+					},
+					{
+						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
+						"detail": "ZMenuSubContent explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": null,
 			"ssrEvidence": []
@@ -2807,9 +3013,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -2836,9 +3042,27 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
+						"detail": "ZMenuSubTrigger browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
+						"detail": "ZMenuSubTrigger explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
+						"detail": "ZMenuSubTrigger production assertions"
+					},
+					{
+						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
+						"detail": "ZMenuSubTrigger explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": null,
 			"ssrEvidence": []
@@ -2861,7 +3085,7 @@
 				"RuntimeImplemented": true,
 				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -2890,6 +3114,14 @@
 				],
 				"VisuallyVerified": [
 					{
+						"path": "ui/zui/tests/multi-select-production.browser.spec.ts",
+						"detail": "ZMultiSelect browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/MultiSelectCollectionFixture.svelte",
+						"detail": "ZMultiSelect explicit rendered fixture usage"
+					},
+					{
 						"path": "ui/zui/tests/multi-select.browser.spec.ts",
 						"detail": "ZMultiSelect browser assertions"
 					},
@@ -2899,7 +3131,16 @@
 					}
 				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/multi-select-production.browser.spec.ts",
+						"detail": "ZMultiSelect production assertions"
+					},
+					{
+						"path": "ui/zui/tests/MultiSelectCollectionFixture.svelte",
+						"detail": "ZMultiSelect explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": {
 				"path": "apps/docs/src/content/components/input/multi-select/doc.ts",
@@ -3575,6 +3816,10 @@
 					{
 						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
 						"detail": "ZPopover explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/PopoverOwnerRealmFixture.svelte",
+						"detail": "ZPopover explicit rendered fixture usage"
 					}
 				],
 				"DesktopVerified": [],
@@ -3585,6 +3830,10 @@
 					},
 					{
 						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
+						"detail": "ZPopover explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/PopoverOwnerRealmFixture.svelte",
 						"detail": "ZPopover explicit rendered fixture usage"
 					}
 				]
@@ -3620,9 +3869,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -3649,9 +3898,35 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/overlay-production.browser.spec.ts",
+						"detail": "ZPopoverContent browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
+						"detail": "ZPopoverContent explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/PopoverOwnerRealmFixture.svelte",
+						"detail": "ZPopoverContent explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/overlay-production.browser.spec.ts",
+						"detail": "ZPopoverContent production assertions"
+					},
+					{
+						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
+						"detail": "ZPopoverContent explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/PopoverOwnerRealmFixture.svelte",
+						"detail": "ZPopoverContent explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": null,
 			"ssrEvidence": [
@@ -3681,9 +3956,9 @@
 				"Authorable": true,
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -3710,9 +3985,35 @@
 						"detail": "component markup and instance script"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/overlay-production.browser.spec.ts",
+						"detail": "ZPopoverTrigger browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
+						"detail": "ZPopoverTrigger explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/PopoverOwnerRealmFixture.svelte",
+						"detail": "ZPopoverTrigger explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/overlay-production.browser.spec.ts",
+						"detail": "ZPopoverTrigger production assertions"
+					},
+					{
+						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
+						"detail": "ZPopoverTrigger explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/PopoverOwnerRealmFixture.svelte",
+						"detail": "ZPopoverTrigger explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": null,
 			"ssrEvidence": [
@@ -3861,7 +4162,7 @@
 				"RuntimeImplemented": true,
 				"VisuallyVerified": true,
 				"DesktopVerified": false,
-				"ProductionVerified": false
+				"ProductionVerified": true
 			},
 			"evidence": {
 				"Declared": [
@@ -3890,6 +4191,14 @@
 				],
 				"VisuallyVerified": [
 					{
+						"path": "ui/zui/tests/select-production.browser.spec.ts",
+						"detail": "ZSelect browser assertions"
+					},
+					{
+						"path": "ui/zui/tests/SelectFixture.svelte",
+						"detail": "ZSelect explicit rendered fixture usage"
+					},
+					{
 						"path": "ui/zui/tests/selection-collection.browser.spec.ts",
 						"detail": "ZSelect browser assertions"
 					},
@@ -3899,7 +4208,16 @@
 					}
 				],
 				"DesktopVerified": [],
-				"ProductionVerified": []
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/select-production.browser.spec.ts",
+						"detail": "ZSelect production assertions"
+					},
+					{
+						"path": "ui/zui/tests/SelectFixture.svelte",
+						"detail": "ZSelect explicit rendered fixture usage"
+					}
+				]
 			},
 			"docs": {
 				"path": "apps/docs/src/content/components/input/select/doc.ts",

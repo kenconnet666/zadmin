@@ -60,6 +60,43 @@ describe('production ZMenu / ZDropdownMenu / ZContextMenu family', () => {
 		expect(document.querySelector('[data-slot="shortcut"]')?.tagName).toBe('KBD');
 	});
 
+	it('ZMenu ZMenuGroup ZMenuLabel ZMenuItem ZMenuCheckboxItem ZMenuRadioGroup ZMenuRadioItem ZMenuSeparator ZMenuSub ZMenuSubTrigger ZMenuSubContent compound members expose their semantic contracts', async () => {
+		render(MenuFamilyProductionFixture);
+
+		const menu = document.querySelector<HTMLElement>('[role="menu"][aria-label="Production menu"]');
+		expect(menu).not.toBeNull();
+
+		const group = document.querySelector<HTMLElement>('[role="group"][aria-labelledby]');
+		expect(group?.querySelector('[data-testid="menu-first"]')).not.toBeNull();
+		const label = group?.querySelector<HTMLElement>('[id$="-label"]');
+		expect(label?.textContent).toBe('Primary');
+		expect(document.querySelector('[role="separator"]')).not.toBeNull();
+
+		const item = document.querySelector<HTMLElement>('[data-testid="menu-first"]');
+		expect(item?.getAttribute('role')).toBe('menuitem');
+		const checkboxItem = document.querySelector<HTMLElement>('[data-testid="menu-check"]');
+		expect(checkboxItem?.getAttribute('role')).toBe('menuitemcheckbox');
+		const radioGroup = document.querySelector<HTMLElement>(
+			'[role="group"] [role="menuitemradio"]'
+		)?.parentElement;
+		expect(radioGroup?.getAttribute('role')).toBe('group');
+		expect(document.querySelectorAll('[role="menuitemradio"]').length).toBe(2);
+
+		await userEvent.click(document.querySelector('[data-testid="dropdown-trigger"]')!);
+		await tick();
+		const subTrigger = document.querySelector<HTMLElement>('[data-testid="dropdown-sub-trigger"]');
+		expect(subTrigger?.getAttribute('role')).toBe('menuitem');
+		expect(subTrigger?.getAttribute('aria-haspopup')).toBe('menu');
+		expect(subTrigger?.getAttribute('data-state')).toBe('closed');
+		expect(document.querySelector('[data-testid="dropdown-sub-content"]')).toBeNull();
+		subTrigger?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowRight' }));
+		await tick();
+		expect(document.querySelector('[data-testid="dropdown-sub-content"]')).not.toBeNull();
+		expect(document.querySelector('[data-testid="dropdown-sub-item"]')?.getAttribute('role')).toBe(
+			'menuitem'
+		);
+	});
+
 	it('ZDropdownMenu opens from both arrow edges and preserves close-on-select policy', async () => {
 		render(MenuFamilyProductionFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="dropdown-trigger"]')!;
