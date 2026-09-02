@@ -284,29 +284,44 @@ if (process.argv.includes('--self-test')) {
 	);
 	if (owned.get('form')?.path !== ownerDocPath || owned.get('form-field')?.path !== ownerDocPath)
 		throw new Error('family documentation ownership self-test failed');
-	const expectOwnershipFailure = (label, components, docs) => {
+	const expectOwnershipFailure = (label, expectedPattern, components, docs) => {
 		try {
 			docsEvidenceByComponentId(components, docs, docsFixtureRoot);
-		} catch {
-			return;
+		} catch (error) {
+			if (expectedPattern.test(String(error))) return;
+			throw new Error(`${label} self-test received an unexpected error: ${error}`, {
+				cause: error
+			});
 		}
-		throw new Error(`${label} self-test failed`);
+		throw new Error(`${label} self-test accepted invalid ownership.`);
 	};
-	expectOwnershipFailure('unknown member metadata', docsComponents, [
-		[ownerDocPath, 'defineComponentDoc(formMetadata, { members: [unknownMetadata] });']
-	]);
-	expectOwnershipFailure('unknown documentation owner', docsComponents, [
-		[resolve(docsFixtureRoot, 'input/unknown/doc.ts'), 'defineComponentDoc(formMetadata, {});']
-	]);
+	expectOwnershipFailure(
+		'unknown member metadata',
+		/Unknown member metadata unknownMetadata/u,
+		docsComponents,
+		[[ownerDocPath, 'defineComponentDoc(formMetadata, { members: [unknownMetadata] });']]
+	);
+	expectOwnershipFailure(
+		'unknown documentation owner',
+		/Unknown component documentation owner unknown/u,
+		docsComponents,
+		[[resolve(docsFixtureRoot, 'input/unknown/doc.ts'), 'defineComponentDoc(formMetadata, {});']]
+	);
 	expectOwnershipFailure(
 		'duplicate metadata identifier',
+		/Duplicate metadata identifier formMetadata/u,
 		[...docsComponents, { id: 'form-copy', name: 'ZForm', path: 'ZFormCopy.svelte' }],
 		[]
 	);
-	expectOwnershipFailure('duplicate documentation owner', docsComponents, [
-		[ownerDocPath, 'defineComponentDoc(formMetadata, {});'],
-		[resolve(docsFixtureRoot, 'other/form/doc.ts'), 'defineComponentDoc(formMetadata, {});']
-	]);
+	expectOwnershipFailure(
+		'duplicate documentation owner',
+		/Duplicate documentation ownership for form/u,
+		docsComponents,
+		[
+			[ownerDocPath, 'defineComponentDoc(formMetadata, {});'],
+			[resolve(docsFixtureRoot, 'other/form/doc.ts'), 'defineComponentDoc(formMetadata, {});']
+		]
+	);
 	console.log('Maturity evidence self-test passed.');
 	process.exit(0);
 }
