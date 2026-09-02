@@ -3489,7 +3489,7 @@ export const descriptionListApiFacts = {
 	declaration: 'ZDescriptionListProps',
 	id: 'description-list',
 	inheritedFrom: [
-		'HTMLAttributes<HTMLDListElement>',
+		'HTMLAttributes<HTMLElement>',
 		'ZDescriptionListDataProps | ZDescriptionListManualProps'
 	],
 	name: 'ZDescriptionList',
@@ -3588,11 +3588,7 @@ export const emptyApiFacts = {
 export const listApiFacts = {
 	declaration: 'ZListProps',
 	id: 'list',
-	inheritedFrom: [
-		'HTMLAttributes<HTMLUListElement>',
-		'HTMLOlAttributes',
-		'ZListDataProps | ZListManualProps'
-	],
+	inheritedFrom: ['HTMLAttributes<HTMLElement>', 'ZListDataProps | ZListManualProps'],
 	name: 'ZList',
 	props: [
 		{
@@ -3634,6 +3630,21 @@ export const listApiFacts = {
 			name: 'ref',
 			required: false,
 			type: 'HTMLOListElement | HTMLUListElement | null'
+		},
+		{
+			name: 'reversed',
+			required: false,
+			type: 'boolean | null'
+		},
+		{
+			name: 'start',
+			required: false,
+			type: 'number | null'
+		},
+		{
+			name: 'type',
+			required: false,
+			type: "'1' | 'A' | 'I' | 'a' | 'i' | null"
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZList.svelte',

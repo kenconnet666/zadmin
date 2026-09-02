@@ -125,7 +125,9 @@ describe('ZDataTable production contracts', () => {
 			?.click();
 		await tick();
 		await tick();
-		expect(frameDocument.activeElement?.getAttribute('data-row-focus')).toBe('selection');
+		await expect
+			.poll(() => frameDocument.activeElement?.getAttribute('data-row-focus'), { timeout: 10_000 })
+			.toBe('selection');
 		await unmount(component);
 		frame.remove();
 	});

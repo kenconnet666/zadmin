@@ -69,7 +69,7 @@
 		><ZIcon aria-hidden="true" name={maximized ? 'restore' : 'maximize'} size={15} /></ZButton
 	>
 	<ZButton
-		variant="danger"
+		tone="danger"
 		size="small"
 		aria-busy={busy || undefined}
 		aria-label="Close window"

@@ -12,7 +12,11 @@ describe('production display collections', () => {
 		expect(list.querySelectorAll(':scope > li')).toHaveLength(2);
 		expect(list.textContent).toContain('number');
 		expect(list.textContent).toContain('string');
-		expect(document.querySelector('[data-testid="display-ordered"]')?.tagName).toBe('OL');
+		const ordered = document.querySelector<HTMLOListElement>('[data-testid="display-ordered"]')!;
+		expect(ordered.tagName).toBe('OL');
+		expect(ordered.reversed).toBe(true);
+		expect(ordered.start).toBe(7);
+		expect(ordered.type).toBe('I');
 		await userEvent.click(list.querySelector<HTMLButtonElement>('button')!);
 		expect(
 			document.querySelector('[data-testid="display-collections-output"]')?.textContent?.trim()

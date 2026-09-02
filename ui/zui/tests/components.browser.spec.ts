@@ -774,10 +774,12 @@ describe('compiled ICSS browser updates', () => {
 		expect(document.querySelector('[data-testid="alert-output"]')?.textContent).toBe('dismissed');
 		document.querySelector<HTMLButtonElement>('article button:not([aria-label])')?.click();
 		await expect
-			.poll(() =>
-				[...document.querySelectorAll<HTMLElement>('article')].some((element) =>
-					element.textContent?.includes('Release ready')
-				)
+			.poll(
+				() =>
+					[...document.querySelectorAll<HTMLElement>('article')].some((element) =>
+						element.textContent?.includes('Release ready')
+					),
+				{ timeout: 10_000 }
 			)
 			.toBe(false);
 

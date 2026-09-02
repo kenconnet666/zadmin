@@ -1,6 +1,6 @@
 <script module lang="ts">
 	import type { Snippet } from 'svelte';
-	import type { HTMLAttributes, HTMLOlAttributes } from 'svelte/elements';
+	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import type { SelectionKey } from '../../runtime/collection/selection.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
@@ -18,10 +18,7 @@
 		readonly label: string;
 	};
 
-	interface ZListBaseProps extends Omit<
-		HTMLAttributes<HTMLUListElement> & HTMLOlAttributes,
-		'children'
-	> {
+	interface ZListBaseProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
 		readonly empty?: Snippet;
 		readonly emptyText?: string;
 		readonly loading?: boolean;
@@ -30,6 +27,9 @@
 		readonly loadingText?: string;
 		readonly ordered?: boolean;
 		ref?: HTMLOListElement | HTMLUListElement | null;
+		readonly reversed?: boolean | null;
+		readonly start?: number | null;
+		readonly type?: '1' | 'A' | 'I' | 'a' | 'i' | null;
 	}
 
 	interface ZListDataProps {
@@ -81,6 +81,24 @@
 				description: '使用真实ol；否则使用真实ul。',
 				name: 'ordered',
 				type: 'boolean'
+			},
+			{
+				default: 'false',
+				description: 'ordered时转发原生ol reversed属性。',
+				name: 'reversed',
+				type: 'boolean | null'
+			},
+			{
+				default: 'undefined',
+				description: 'ordered时转发原生ol起始序号。',
+				name: 'start',
+				type: 'number | null'
+			},
+			{
+				default: 'undefined',
+				description: 'ordered时转发原生ol编号样式。',
+				name: 'type',
+				type: "'1' | 'a' | 'A' | 'i' | 'I' | null"
 			},
 			{
 				default: 'false',

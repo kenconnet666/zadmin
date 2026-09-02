@@ -29,7 +29,7 @@
 	{#snippet action()}<ZButton size="small" onclick={() => (actions += 1)}>Action</ZButton>{/snippet}
 </ZList>
 
-<ZList data-testid="display-ordered" items={listItems} ordered />
+<ZList data-testid="display-ordered" items={listItems} ordered reversed start={7} type="I" />
 
 <ZList aria-label="Manual nested list" data-testid="display-manual-list">
 	<li>

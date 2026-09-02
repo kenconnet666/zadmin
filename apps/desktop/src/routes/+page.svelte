@@ -182,8 +182,8 @@
 		<ZStack class={panelClass} gap="small">
 			<ZText as="strong" tone="danger">Destructive process actions</ZText>
 			<ZStack direction="row" gap="small">
-				<ZButton variant="danger" onclick={() => requestExit(false)}>Exit</ZButton>
-				<ZButton variant="danger" onclick={() => requestExit(true)}>Relaunch</ZButton>
+				<ZButton tone="danger" onclick={() => requestExit(false)}>Exit</ZButton>
+				<ZButton tone="danger" onclick={() => requestExit(true)}>Relaunch</ZButton>
 			</ZStack>
 		</ZStack>
 

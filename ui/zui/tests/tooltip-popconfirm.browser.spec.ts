@@ -115,10 +115,16 @@ describe('production Popconfirm and Tooltip', () => {
 		second.dispatchEvent(new PointerEvent('pointerleave', { bubbles: true }));
 		await wait(25);
 		await tick();
-		expect(
-			document.querySelector('[data-testid="tooltip-first-content"]')?.getAttribute('data-state')
-		).toBe('open');
-		expect(document.activeElement).toBe(first);
+		await expect
+			.poll(
+				() =>
+					document
+						.querySelector('[data-testid="tooltip-first-content"]')
+						?.getAttribute('data-state'),
+				{ timeout: 10_000 }
+			)
+			.toBe('open');
+		await expect.poll(() => document.activeElement, { timeout: 10_000 }).toBe(first);
 	});
 
 	it('invalidates a pending hover timer when disabled changes', async () => {

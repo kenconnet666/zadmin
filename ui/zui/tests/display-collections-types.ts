@@ -15,7 +15,13 @@ const descriptions = [
 	{ key: '1', term: 'String', description: 'One' }
 ] satisfies readonly DescriptionItem[];
 
-const dataList = { items: listItems } satisfies ComponentProps<typeof ZList> satisfies ZListProps;
+const dataList = {
+	items: listItems,
+	ordered: true,
+	reversed: true,
+	start: 7,
+	type: 'I'
+} satisfies ComponentProps<typeof ZList> satisfies ZListProps;
 const manualList = {
 	children: (() => undefined) as unknown as Snippet
 } satisfies ComponentProps<typeof ZList> satisfies ZListProps;
