@@ -29,7 +29,7 @@ export const formDoc = defineComponentDoc(formMetadata, {
 			}
 		},
 		summary:
-			'以原生FormData为值事实、Standard Schema为typed输出边界，并用FieldPath图拥有依赖验证、消息状态、竞态和首错导航的生产表单。'
+			'ZForm拥有提交、reset和验证生命周期；ZFormField只拥有字段路径注册与状态投射，真实control仍由调用方放入Field。以原生FormData为值事实、Standard Schema为typed输出边界，并用FieldPath图拥有依赖验证、消息状态、竞态和首错导航。'
 	},
 	demos: [
 		{

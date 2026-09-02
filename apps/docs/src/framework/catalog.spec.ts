@@ -4,6 +4,7 @@ import { dataTableMetadata } from '@zadmin/zui/metadata';
 import { componentDocs, componentDocsById } from './catalog.js';
 import { dataTableApiFacts, radioGroupItemApiFacts } from './component-api.generated.js';
 import { defineComponentDoc } from './component-doc.js';
+import { componentRoute } from './router.js';
 
 describe('ZUI component documentation catalog', () => {
 	it('covers the approved component catalog exactly once', () => {
@@ -191,6 +192,18 @@ describe('ZUI component documentation catalog', () => {
 	it('includes FormField state metadata on the Form page', () => {
 		const form = componentDocsById.get('form');
 		expect(form?.api.map(({ title }) => title)).toContain('ZFormField Props');
+	});
+
+	it('keeps service and field members on their owning component routes', () => {
+		const form = componentDocsById.get('form');
+		const toast = componentDocsById.get('toast');
+
+		expect(componentDocsById.has('form-field')).toBe(false);
+		expect(componentDocsById.has('toaster')).toBe(false);
+		expect(form?.api.map(({ title }) => title)).toContain('ZFormField Props');
+		expect(toast?.api.map(({ title }) => title)).toContain('ZToaster Props');
+		expect(componentRoute('form')).toBe('#/components/form');
+		expect(componentRoute('toast')).toBe('#/components/toast');
 	});
 
 	it('uses generated public Props facts for incrementally migrated component docs', () => {

@@ -89,7 +89,7 @@ export const toastDoc = defineComponentDoc(toastMetadata, {
 			}
 		},
 		summary:
-			'提供独立Toast与显式Queue/Toaster服务，在Provider边界内完成公平入场、局部更新、task generation、集中公告、暂停和Presence退出。'
+			'ZToast负责单条通知内容与操作；ZToaster负责把调用方拥有的ToastQueue连接到viewport、live region和Presence。需要跨页面通知时由服务层持有Queue，需要局部反馈时直接渲染ZToast；组件不创建全局单例。'
 	},
 	demos: [
 		{

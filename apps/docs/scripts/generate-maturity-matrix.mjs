@@ -2,6 +2,7 @@ import { readFile, readdir, writeFile } from 'node:fs/promises';
 import { dirname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import prettier from 'prettier';
+import ts from 'typescript';
 
 const docsRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const workspaceRoot = resolve(docsRoot, '../..');
@@ -32,6 +33,137 @@ async function filesUnder(root, extension) {
 
 function evidence(path, detail) {
 	return { path: portable(relative(workspaceRoot, path)), detail };
+}
+
+function metadataIdentifierForComponent(name) {
+	if (!/^Z[A-Z]/u.test(name)) throw new Error(`Unsupported component metadata name: ${name}`);
+	return `${name.slice(1).replace(/^./u, (letter) => letter.toLowerCase())}Metadata`;
+}
+
+function componentMetadataIndex(components) {
+	const byId = new Map();
+	const byIdentifier = new Map();
+	for (const component of components) {
+		const duplicateId = byId.get(component.id);
+		if (duplicateId)
+			throw new Error(
+				`Duplicate component id ${component.id}: ${duplicateId.path} and ${component.path}`
+			);
+		byId.set(component.id, component);
+		const identifier = metadataIdentifierForComponent(component.name);
+		const duplicateIdentifier = byIdentifier.get(identifier);
+		if (duplicateIdentifier)
+			throw new Error(
+				`Duplicate metadata identifier ${identifier}: ${duplicateIdentifier.path} and ${component.path}`
+			);
+		byIdentifier.set(identifier, component);
+	}
+	return { byId, byIdentifier };
+}
+
+function unwrapExpression(expression) {
+	let current = expression;
+	while (
+		ts.isParenthesizedExpression(current) ||
+		ts.isAsExpression(current) ||
+		ts.isSatisfiesExpression(current) ||
+		ts.isTypeAssertionExpression(current)
+	)
+		current = current.expression;
+	return current;
+}
+
+function docDefinition(source, path) {
+	const sourceFile = ts.createSourceFile(
+		path,
+		source,
+		ts.ScriptTarget.Latest,
+		true,
+		ts.ScriptKind.TS
+	);
+	const calls = [];
+	const visit = (node) => {
+		if (
+			ts.isCallExpression(node) &&
+			ts.isIdentifier(node.expression) &&
+			node.expression.text === 'defineComponentDoc'
+		)
+			calls.push(node);
+		ts.forEachChild(node, visit);
+	};
+	visit(sourceFile);
+	if (calls.length !== 1)
+		throw new Error(
+			`Expected exactly one defineComponentDoc call in ${path}; found ${calls.length}.`
+		);
+	const [metadataExpression, optionsExpression] = calls[0].arguments;
+	if (!metadataExpression || !ts.isIdentifier(unwrapExpression(metadataExpression)))
+		throw new Error(`defineComponentDoc owner metadata must be an identifier in ${path}.`);
+	const options = optionsExpression ? unwrapExpression(optionsExpression) : undefined;
+	if (!options || !ts.isObjectLiteralExpression(options))
+		throw new Error(`defineComponentDoc options must be an object literal in ${path}.`);
+	const memberProperties = options.properties.filter((property) => {
+		if (!property.name) return false;
+		return (
+			(ts.isIdentifier(property.name) || ts.isStringLiteral(property.name)) &&
+			property.name.text === 'members'
+		);
+	});
+	if (memberProperties.length > 1) throw new Error(`Duplicate members property in ${path}.`);
+	const memberProperty = memberProperties[0];
+	if (!memberProperty)
+		return { memberIdentifiers: [], ownerIdentifier: unwrapExpression(metadataExpression).text };
+	if (!ts.isPropertyAssignment(memberProperty))
+		throw new Error(`members must be a property assignment in ${path}.`);
+	const members = unwrapExpression(memberProperty.initializer);
+	if (!ts.isArrayLiteralExpression(members))
+		throw new Error(`members must be an identifier array in ${path}.`);
+	const memberIdentifiers = members.elements.map((element) => {
+		const member = unwrapExpression(element);
+		if (!ts.isIdentifier(member))
+			throw new Error(`members entries must be metadata identifiers in ${path}.`);
+		return member.text;
+	});
+	return {
+		memberIdentifiers,
+		ownerIdentifier: unwrapExpression(metadataExpression).text
+	};
+}
+
+function docsEvidenceByComponentId(components, docs, contentRoot) {
+	const { byId, byIdentifier } = componentMetadataIndex(components);
+	const ownership = new Map();
+	for (const [docPath, docSource] of docs) {
+		const relativeDocPath = portable(relative(contentRoot, docPath));
+		const ownerId = relativeDocPath.split('/').at(-2);
+		const owner = ownerId ? byId.get(ownerId) : undefined;
+		if (!owner)
+			throw new Error(`Unknown component documentation owner ${ownerId ?? '<none>'}: ${docPath}`);
+		const { memberIdentifiers, ownerIdentifier } = docDefinition(docSource, docPath);
+		const declaredOwner = byIdentifier.get(ownerIdentifier);
+		if (!declaredOwner) throw new Error(`Unknown owner metadata ${ownerIdentifier} in ${docPath}.`);
+		if (declaredOwner.id !== ownerId)
+			throw new Error(
+				`Documentation owner mismatch in ${docPath}: route ${ownerId}, metadata ${declaredOwner.id}.`
+			);
+		if (ownership.has(ownerId))
+			throw new Error(`Duplicate documentation ownership for ${ownerId}: ${docPath}`);
+		ownership.set(ownerId, {
+			detail: 'catalog component documentation module',
+			path: docPath
+		});
+		for (const metadataIdentifier of memberIdentifiers) {
+			const member = byIdentifier.get(metadataIdentifier);
+			if (!member) throw new Error(`Unknown member metadata ${metadataIdentifier} in ${docPath}.`);
+			if (ownership.has(member.id))
+				throw new Error(`Duplicate documentation ownership for ${member.id}: ${docPath}`);
+			ownership.set(member.id, {
+				detail: `family-owned documentation module (${ownerId})`,
+				path: docPath
+			});
+		}
+	}
+	return ownership;
 }
 
 const sourceFiles = await filesUnder(componentsRoot, '.svelte');
@@ -65,6 +197,11 @@ const teachingById = new Map(teachingCoverage.components.map((item) => [item.id,
 const docsFiles = await filesUnder(resolve(docsRoot, 'src/content/components'), 'doc.ts');
 const docsSources = await Promise.all(
 	docsFiles.map(async (path) => [path, await readFile(path, 'utf8')])
+);
+const docsByComponentId = docsEvidenceByComponentId(
+	componentFiles,
+	docsSources,
+	resolve(docsRoot, 'src/content/components')
 );
 const testFiles = await filesUnder(testsRoot, '.ts');
 const tests = await Promise.all(
@@ -127,6 +264,49 @@ if (process.argv.includes('--self-test')) {
 		).length > 0
 	)
 		throw new Error('comment-only self-test failed');
+	const docsFixtureRoot = resolve('C:/docs/components');
+	const docsComponents = [
+		{ id: 'form', name: 'ZForm', path: 'ZForm.svelte' },
+		{ id: 'form-field', name: 'ZFormField', path: 'ZFormField.svelte' }
+	];
+	const ownerDocPath = resolve(docsFixtureRoot, 'input/form/doc.ts');
+	const owned = docsEvidenceByComponentId(
+		docsComponents,
+		[
+			[
+				ownerDocPath,
+				`const example = "members: [fakeMetadata]";
+				// members: [commentMetadata]
+				export const doc = defineComponentDoc(formMetadata, { members: [formFieldMetadata] });`
+			]
+		],
+		docsFixtureRoot
+	);
+	if (owned.get('form')?.path !== ownerDocPath || owned.get('form-field')?.path !== ownerDocPath)
+		throw new Error('family documentation ownership self-test failed');
+	const expectOwnershipFailure = (label, components, docs) => {
+		try {
+			docsEvidenceByComponentId(components, docs, docsFixtureRoot);
+		} catch {
+			return;
+		}
+		throw new Error(`${label} self-test failed`);
+	};
+	expectOwnershipFailure('unknown member metadata', docsComponents, [
+		[ownerDocPath, 'defineComponentDoc(formMetadata, { members: [unknownMetadata] });']
+	]);
+	expectOwnershipFailure('unknown documentation owner', docsComponents, [
+		[resolve(docsFixtureRoot, 'input/unknown/doc.ts'), 'defineComponentDoc(formMetadata, {});']
+	]);
+	expectOwnershipFailure(
+		'duplicate metadata identifier',
+		[...docsComponents, { id: 'form-copy', name: 'ZForm', path: 'ZFormCopy.svelte' }],
+		[]
+	);
+	expectOwnershipFailure('duplicate documentation owner', docsComponents, [
+		[ownerDocPath, 'defineComponentDoc(formMetadata, {});'],
+		[resolve(docsFixtureRoot, 'other/form/doc.ts'), 'defineComponentDoc(formMetadata, {});']
+	]);
 	console.log('Maturity evidence self-test passed.');
 	process.exit(0);
 }
@@ -136,11 +316,7 @@ const rows = componentFiles.map(({ id, name, category, status, path, source }) =
 	const contractFact = contractBySource.get(sourcePath);
 	const apiDocumentation = teachingById.get(id);
 	if (!apiDocumentation) throw new Error(`Missing API teaching coverage for ${id}.`);
-	const docs = docsSources.find(([docPath]) =>
-		portable(relative(resolve(docsRoot, 'src/content/components'), docPath)).endsWith(
-			`/${id}/doc.ts`
-		)
-	);
+	const docs = docsByComponentId.get(id);
 	const componentReference = directRenderPattern(name);
 	const explicitComponentReference = explicitComponentPattern(name);
 	const directTests = tests.filter(([, content]) => componentReference.test(content));
@@ -218,7 +394,7 @@ const rows = componentFiles.map(({ id, name, category, status, path, source }) =
 				...fixtureEvidenceFor(testPath, content, name)
 			])
 		},
-		docs: docs ? evidence(docs[0], 'catalog component documentation module') : null,
+		docs: docs ? evidence(docs.path, docs.detail) : null,
 		ssrEvidence: ssrTests.map(([testPath]) => evidence(testPath, `${name} SSR assertions`))
 	};
 	return row;
