@@ -5292,16 +5292,7 @@ export const calendarApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZCalendar.svelte',
-	metadataGapProps: [
-		'disabled',
-		'form',
-		'invalid',
-		'isDateDisabled',
-		'name',
-		'range',
-		'readonly',
-		'required'
-	]
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const cascaderApiFacts = {
@@ -5820,16 +5811,7 @@ export const dateFieldApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZDateField.svelte',
-	metadataGapProps: [
-		'controlId',
-		'disabled',
-		'form',
-		'invalid',
-		'isDateUnavailable',
-		'onReset',
-		'readonly',
-		'required'
-	]
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const datePickerApiFacts = {
@@ -6989,17 +6971,7 @@ export const numberFieldApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZNumberField.svelte',
-	metadataGapProps: [
-		'decrementLabel',
-		'disabled',
-		'form',
-		'incrementLabel',
-		'inputId',
-		'inputLabel',
-		'placeholder',
-		'readonly',
-		'required'
-	]
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const pinInputApiFacts = {
@@ -7852,17 +7824,7 @@ export const transferApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZTransfer.svelte',
-	metadataGapProps: [
-		'emptyText',
-		'form',
-		'invalid',
-		'moveToSourceLabel',
-		'moveToTargetLabel',
-		'required',
-		'searchPlaceholder',
-		'sourceTitle',
-		'targetTitle'
-	]
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const treeSelectApiFacts = {
@@ -8603,16 +8565,5 @@ export const tourApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/overlay/ZTour.svelte',
-	metadataGapProps: [
-		'closeLabel',
-		'closeOnEscape',
-		'closeOnMaskClick',
-		'defaultOpen',
-		'defaultStep',
-		'finishLabel',
-		'nextLabel',
-		'previousLabel',
-		'scrollIntoViewOptions',
-		'spotlightOffset'
-	]
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;

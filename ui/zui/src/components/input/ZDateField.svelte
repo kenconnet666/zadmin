@@ -58,12 +58,19 @@
 				description: '完整日期或清空变化。',
 				name: 'onValueChange',
 				type: '(value: CalendarDate | null) => void'
+			},
+			{
+				description: '所属form reset恢复defaultValue并清理segment草稿后调用。',
+				name: 'onReset',
+				type: '() => void'
 			}
 		],
 		keyboard: [
 			{ description: '增减当前segment。', key: 'ArrowUp / ArrowDown' },
 			{ description: '按locale顺序移动segment。', key: 'ArrowLeft / ArrowRight' },
-			{ description: '移动到首尾segment。', key: 'Home / End' }
+			{ description: '移动到首尾segment。', key: 'Home / End' },
+			{ description: '提交完整segment草稿。', key: 'Enter' },
+			{ description: '放弃未提交草稿并恢复当前值。', key: 'Escape' }
 		],
 		parts: [{ description: 'year/month/day输入。', name: 'segment' }],
 		props: [
@@ -87,6 +94,42 @@
 				type: 'CalendarDate | null'
 			},
 			{
+				default: 'Field controlId或自动生成',
+				description: '第一个locale日期segment的DOM id，其余segment派生独立id。',
+				name: 'controlId',
+				type: 'string'
+			},
+			{
+				default: 'Field context或false',
+				description: '禁用所有原生segment输入并退出FormData。',
+				name: 'disabled',
+				type: 'boolean'
+			},
+			{
+				default: 'Field context或false',
+				description: '与不完整/非法草稿合并后投射到根和每个segment。',
+				name: 'invalid',
+				type: 'boolean'
+			},
+			{
+				default: 'Field context或false',
+				description: '保留原生segment焦点和值提交，但阻止编辑与步进。',
+				name: 'readonly',
+				type: 'boolean'
+			},
+			{
+				default: 'Field context或false',
+				description: '投射到每个可编辑日期segment的原生required语义。',
+				name: 'required',
+				type: 'boolean'
+			},
+			{
+				default: 'undefined',
+				description: '额外日期可用性谓词，同时约束完整草稿提交与键盘步进。',
+				name: 'isDateUnavailable',
+				type: '(date: CalendarDate) => boolean'
+			},
+			{
 				default: 'Provider locale',
 				description: 'segment DOM顺序和数字格式。',
 				name: 'locale',
@@ -106,7 +149,18 @@
 			},
 			{ default: 'undefined', description: '最小日期。', name: 'minValue', type: 'CalendarDate' },
 			{ default: 'undefined', description: '最大日期。', name: 'maxValue', type: 'CalendarDate' },
-			{ default: 'undefined', description: 'ISO日期隐藏字段名。', name: 'name', type: 'string' },
+			{
+				default: 'Field context或undefined',
+				description: 'formParticipation为auto时提交ISO日期的隐藏字段名。',
+				name: 'name',
+				type: 'string'
+			},
+			{
+				default: '最近祖先form',
+				description: 'formParticipation为auto时关联唯一FormValueBridge。',
+				name: 'form',
+				type: 'string'
+			},
 			{
 				default: "'auto'",
 				description: '自定义复合组件可设none，由外层唯一拥有FormValueBridge与reset。',

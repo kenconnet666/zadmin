@@ -95,6 +95,42 @@
 		],
 		props: [
 			{
+				default: 'localePack.tour.close',
+				description: '关闭操作的可访问名称；显式值优先于Provider typed locale pack。',
+				name: 'closeLabel',
+				type: 'string'
+			},
+			{
+				default: 'true',
+				description: '是否允许最顶层Layer处理Escape关闭当前Tour。',
+				name: 'closeOnEscape',
+				type: 'boolean'
+			},
+			{
+				default: 'true',
+				description: 'modal遮罩是否允许点击关闭；高亮目标仍属于Layer branch。',
+				name: 'closeOnMaskClick',
+				type: 'boolean'
+			},
+			{
+				default: 'false',
+				description: '非受控打开状态的初始值；真实目标解析发生在浏览器挂载后。',
+				name: 'defaultOpen',
+				type: 'boolean'
+			},
+			{
+				default: '0',
+				description: '非受控零起始步骤初值；必须指向steps中的合法索引。',
+				name: 'defaultStep',
+				type: 'number'
+			},
+			{
+				default: 'localePack.tour.finish',
+				description: '最后一步完成操作的文案；显式值优先于Provider typed locale pack。',
+				name: 'finishLabel',
+				type: 'string'
+			},
+			{
 				default: '必填',
 				description: '稳定id、可选目标、富标题、富说明和位置。',
 				name: 'steps',
@@ -104,6 +140,12 @@
 			{ default: 'false', description: '打开状态。', name: 'open', type: 'boolean' },
 			{ default: '0', description: '零起始当前步骤。', name: 'step', type: 'number' },
 			{ default: 'true', description: '焦点trap和modal遮罩。', name: 'modal', type: 'boolean' },
+			{
+				default: 'localePack.tour.next',
+				description: '下一步操作的文案；显式值优先于Provider typed locale pack。',
+				name: 'nextLabel',
+				type: 'string'
+			},
 			{
 				default: "'close'",
 				description: '目标缺失时关闭、向后跳过，或保留居中card等待DOM出现。',
@@ -115,6 +157,24 @@
 				description: 'selector查询和MutationObserver的Document、Element或ShadowRoot作用域。',
 				name: 'targetRoot',
 				type: 'TourTargetRoot | (() => TourTargetRoot | null)'
+			},
+			{
+				default: 'localePack.tour.previous',
+				description: '上一步操作的文案；显式值优先于Provider typed locale pack。',
+				name: 'previousLabel',
+				type: 'string'
+			},
+			{
+				default: 'true',
+				description: 'false关闭自动滚动；对象透传原生选项，reduced motion强制behavior为auto。',
+				name: 'scrollIntoViewOptions',
+				type: 'boolean | ScrollIntoViewOptions'
+			},
+			{
+				default: '8',
+				description: '目标四周非负有限像素留白；遮罩与spotlight共享裁剪几何。',
+				name: 'spotlightOffset',
+				type: 'number'
 			}
 		],
 		since: 'unreleased',

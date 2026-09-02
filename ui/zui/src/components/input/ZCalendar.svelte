@@ -174,6 +174,54 @@
 				type: '(date: CalendarDate) => boolean'
 			},
 			{
+				default: 'undefined',
+				description: '已弃用的日期禁用别名；不得与isDateUnavailable同时传入。',
+				name: 'isDateDisabled',
+				type: '(date: CalendarDate) => boolean'
+			},
+			{
+				default: 'Field context或false',
+				description: '禁用月份导航、日期焦点/选择并退出FormData。',
+				name: 'disabled',
+				type: 'boolean'
+			},
+			{
+				default: 'Field context或false',
+				description: '投射根data-invalid；业务错误关系由Field拥有。',
+				name: 'invalid',
+				type: 'boolean'
+			},
+			{
+				default: 'Field context或false',
+				description: '保留月份/日期焦点导航与FormData，但阻止选择和清空。',
+				name: 'readonly',
+				type: 'boolean'
+			},
+			{
+				default: 'Field context或false',
+				description: '阻止Delete/Backspace清空并投射根必填状态。',
+				name: 'required',
+				type: 'boolean'
+			},
+			{
+				default: '最近祖先form',
+				description: 'formParticipation为auto时关联唯一FormValueBridge。',
+				name: 'form',
+				type: 'string'
+			},
+			{
+				default: 'Field context或undefined',
+				description: 'formParticipation为auto时提交ISO CalendarDate的字段名。',
+				name: 'name',
+				type: 'string'
+			},
+			{
+				default: 'null',
+				description: '仅投射范围高亮与grid多选语义，不改变单值选择owner。',
+				name: 'range',
+				type: 'CalendarRange | CalendarRangeValue | null'
+			},
+			{
 				default: 'Field size或Provider density',
 				description: '统一容器间距、导航与日期cell尺寸。',
 				name: 'size',

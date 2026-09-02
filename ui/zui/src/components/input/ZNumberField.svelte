@@ -147,6 +147,24 @@
 				type: 'boolean'
 			},
 			{
+				default: '本地化默认文案',
+				description: '减少按钮的可访问名称与title；未提供时使用当前locale文案。',
+				name: 'decrementLabel',
+				type: 'string'
+			},
+			{
+				default: 'false（继承Field）',
+				description: '禁用输入和步进按钮，并通过原生disabled及data-disabled表达。',
+				name: 'disabled',
+				type: 'boolean'
+			},
+			{
+				default: 'undefined',
+				description: '把内部原生input关联到外部form元素；FormValueBridge也使用该form归属。',
+				name: 'form',
+				type: 'string'
+			},
+			{
 				default: 'Provider locale',
 				description: '默认解析、编辑文本和显示格式使用的locale。',
 				name: 'locale',
@@ -171,6 +189,24 @@
 				type: 'ZNumberFieldFormatter'
 			},
 			{
+				default: '本地化默认文案',
+				description: '增加按钮的可访问名称与title；未提供时使用当前locale文案。',
+				name: 'incrementLabel',
+				type: 'string'
+			},
+			{
+				default: '自动生成或Field controlId',
+				description: '内部spinbutton的id，并供步进按钮aria-controls引用。',
+				name: 'inputId',
+				type: 'string'
+			},
+			{
+				default: '本地化默认文案',
+				description: 'spinbutton的可访问名称；存在Field label关联时由Field label优先。',
+				name: 'inputLabel',
+				type: 'string'
+			},
+			{
 				default: "Provider density（默认把 'comfortable' 映射为 'medium'）",
 				description: '显式值优先于Field和Provider density。',
 				name: 'size',
@@ -187,6 +223,24 @@
 				description: 'FormValueBridge字段名。',
 				name: 'name',
 				type: 'string'
+			},
+			{
+				default: 'undefined',
+				description: '空值编辑态的原生input占位提示。',
+				name: 'placeholder',
+				type: 'string'
+			},
+			{
+				default: 'false（继承Field）',
+				description: '禁止编辑和步进交互，并通过原生readonly及data-readonly表达。',
+				name: 'readonly',
+				type: 'boolean'
+			},
+			{
+				default: 'false（继承Field）',
+				description: '将字段标记为必填并设置原生required；Field required会一并生效。',
+				name: 'required',
+				type: 'boolean'
 			}
 		],
 		since: 'unreleased',

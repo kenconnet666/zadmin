@@ -7293,7 +7293,7 @@
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZCalendar.svelte",
 			"apiDocumentation": {
-				"metadataGapPropCount": 8,
+				"metadataGapPropCount": 0,
 				"teachingFallbackPropCount": 0
 			},
 			"stages": {
@@ -7321,7 +7321,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "f1fbfabb78a237a9ddb2010c98b8aa3333e9c649c7da8b7402734a431d71755a API snapshot entry"
+						"detail": "1a31f7d1ba64e886f4722fc82319e618ea9a63b1e5b4dd05509c82b57389f561 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -7577,7 +7577,7 @@
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZDateField.svelte",
 			"apiDocumentation": {
-				"metadataGapPropCount": 8,
+				"metadataGapPropCount": 0,
 				"teachingFallbackPropCount": 0
 			},
 			"stages": {
@@ -7605,7 +7605,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "9671070f87bae6295669dcb0212a5edb9664fa5aca18ddbf9749d34e160e57b2 API snapshot entry"
+						"detail": "315cc2f52faaa04c3fb14903cb8c123af37d39ee7e3f3df3290c1e980a17497c API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -8316,7 +8316,7 @@
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZNumberField.svelte",
 			"apiDocumentation": {
-				"metadataGapPropCount": 9,
+				"metadataGapPropCount": 0,
 				"teachingFallbackPropCount": 0
 			},
 			"stages": {
@@ -8344,7 +8344,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "3a9927b8052094fd2531501bd436bf87ab9a48f0345386da7b0fce9732fa98c5 API snapshot entry"
+						"detail": "c623efe1d6eaeea6ed17a312e5517952d58d22b42938a3ec542ca7a08cc1f22b API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -8878,7 +8878,7 @@
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZTransfer.svelte",
 			"apiDocumentation": {
-				"metadataGapPropCount": 9,
+				"metadataGapPropCount": 0,
 				"teachingFallbackPropCount": 0
 			},
 			"stages": {
@@ -8906,7 +8906,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "f71c6c263f9e87471a6ea67fa092ece25f35ae9269a1c5cd5589cfa223ac8cf1 API snapshot entry"
+						"detail": "c9dc60aef7de30ae66bb66feb9d160caca327f42a2a3b4056b99f627f8e1949b API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -9407,7 +9407,7 @@
 			"status": "experimental",
 			"source": "ui/zui/src/components/overlay/ZTour.svelte",
 			"apiDocumentation": {
-				"metadataGapPropCount": 10,
+				"metadataGapPropCount": 0,
 				"teachingFallbackPropCount": 0
 			},
 			"stages": {
@@ -9435,7 +9435,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "9af6b6c2f53fed37d06c2e55c0d15397d3033c6ad65651cf7dc92974ba03a41d API snapshot entry"
+						"detail": "003c391ee710f67603afb2886e66a26b85b82ee2ea6eb95af01e34dafbf383bf API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [

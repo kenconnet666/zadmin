@@ -1194,17 +1194,8 @@
 			"name": "ZCalendar",
 			"source": "ui/zui/src/components/input/ZCalendar.svelte",
 			"declaredPropCount": 28,
-			"metadataGapPropCount": 8,
-			"metadataGapPropNames": [
-				"disabled",
-				"form",
-				"invalid",
-				"isDateDisabled",
-				"name",
-				"range",
-				"readonly",
-				"required"
-			],
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -1243,17 +1234,8 @@
 			"name": "ZDateField",
 			"source": "ui/zui/src/components/input/ZDateField.svelte",
 			"declaredPropCount": 21,
-			"metadataGapPropCount": 8,
-			"metadataGapPropNames": [
-				"controlId",
-				"disabled",
-				"form",
-				"invalid",
-				"isDateUnavailable",
-				"onReset",
-				"readonly",
-				"required"
-			],
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -1352,18 +1334,8 @@
 			"name": "ZNumberField",
 			"source": "ui/zui/src/components/input/ZNumberField.svelte",
 			"declaredPropCount": 28,
-			"metadataGapPropCount": 9,
-			"metadataGapPropNames": [
-				"decrementLabel",
-				"disabled",
-				"form",
-				"incrementLabel",
-				"inputId",
-				"inputLabel",
-				"placeholder",
-				"readonly",
-				"required"
-			],
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -1442,18 +1414,8 @@
 			"name": "ZTransfer",
 			"source": "ui/zui/src/components/input/ZTransfer.svelte",
 			"declaredPropCount": 26,
-			"metadataGapPropCount": 9,
-			"metadataGapPropNames": [
-				"emptyText",
-				"form",
-				"invalid",
-				"moveToSourceLabel",
-				"moveToTargetLabel",
-				"required",
-				"searchPlaceholder",
-				"sourceTitle",
-				"targetTitle"
-			],
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -1540,19 +1502,8 @@
 			"name": "ZTour",
 			"source": "ui/zui/src/components/overlay/ZTour.svelte",
 			"declaredPropCount": 21,
-			"metadataGapPropCount": 10,
-			"metadataGapPropNames": [
-				"closeLabel",
-				"closeOnEscape",
-				"closeOnMaskClick",
-				"defaultOpen",
-				"defaultStep",
-				"finishLabel",
-				"nextLabel",
-				"previousLabel",
-				"scrollIntoViewOptions",
-				"spotlightOffset"
-			],
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		}
@@ -1560,7 +1511,7 @@
 	"totals": {
 		"components": 141,
 		"declaredProps": 1385,
-		"metadataGapProps": 86,
+		"metadataGapProps": 42,
 		"fallbackProps": 0
 	}
 }

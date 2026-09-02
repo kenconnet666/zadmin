@@ -109,6 +109,18 @@
 				type: 'readonly SelectionKey[]'
 			},
 			{
+				default: 'Provider localePack.transfer.empty',
+				description: 'pane view为空且不在loading时的状态文本；异步孤儿使用独立locale状态。',
+				name: 'emptyText',
+				type: 'string'
+			},
+			{
+				default: '最近祖先form',
+				description: '把最终value的重复同名entries关联到DOM外部form；两侧筛选草稿不会参与。',
+				name: 'form',
+				type: 'string'
+			},
+			{
 				default: 'true',
 				description: '显示两侧辅助过滤输入。',
 				name: 'filterable',
@@ -133,10 +145,28 @@
 				type: 'string'
 			},
 			{
+				default: '继承Field或false',
+				description: '投射到根和来源业务listbox，不把筛选输入伪装成业务值owner。',
+				name: 'invalid',
+				type: 'boolean'
+			},
+			{
 				default: 'false',
 				description: '禁用焦点、勾选、移动与FormData。',
 				name: 'disabled',
 				type: 'boolean'
+			},
+			{
+				default: 'Provider localePack.transfer.moveToSource',
+				description: '返回来源pane按钮的可访问名称。',
+				name: 'moveToSourceLabel',
+				type: 'string'
+			},
+			{
+				default: 'Provider localePack.transfer.moveToTarget',
+				description: '移入目标pane按钮的可访问名称。',
+				name: 'moveToTargetLabel',
+				type: 'string'
 			},
 			{
 				default: 'false',
@@ -167,6 +197,30 @@
 				description: '每栏虚拟窗口上下额外项数。',
 				name: 'virtualOverscan',
 				type: 'number'
+			},
+			{
+				default: '继承Field或false',
+				description: '投射到来源业务listbox；最终value校验仍由Field/Form schema拥有。',
+				name: 'required',
+				type: 'boolean'
+			},
+			{
+				default: 'Provider localePack.transfer.filterPlaceholder',
+				description: '两侧辅助筛选输入的placeholder；查询不是表单字段。',
+				name: 'searchPlaceholder',
+				type: 'string'
+			},
+			{
+				default: 'Provider localePack.transfer.sourceTitle',
+				description: '来源pane标题和listbox可访问名称。',
+				name: 'sourceTitle',
+				type: 'string'
+			},
+			{
+				default: 'Provider localePack.transfer.targetTitle',
+				description: '目标pane标题和listbox可访问名称。',
+				name: 'targetTitle',
+				type: 'string'
 			},
 			{
 				default: '继承Field或undefined',
