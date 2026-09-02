@@ -24,6 +24,8 @@
 		"release:publish": "changeset publish",
 		"release:readiness": "node scripts/check-release-readiness.mjs",
 		"release:readiness:update": "node scripts/check-release-readiness.mjs --write",
+		"release:coherence": "node scripts/check-release-coherence.mjs",
+		"release:coherence:self-test": "node scripts/check-release-coherence.mjs --self-test",
 		"release:pack:artifacts": "node scripts/pack-release-artifacts.mjs",
 		"release:status": "changeset status",
 		"release:version": "changeset version",

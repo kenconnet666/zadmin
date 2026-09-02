@@ -47,6 +47,9 @@ jobs:
       - name: Audit ZUI and Docs source contracts
         run: pnpm --filter @zadmin/docs audit:system
 
+      - name: Verify release coherence dry-run contract
+        run: pnpm release:coherence
+
       - name: Audit ZUI browser lifecycle ownership
         run: pnpm --filter @zadmin/zui test:browser-lifecycle
 
@@ -285,7 +288,7 @@ jobs:
         if: always() && steps.workspace.outcome == 'success' && steps.release_artifacts_select.outcome == 'success'
         run: |
           pnpm --filter @zadmin/zui package:check
-          ZUI_TARBALL="$(node scripts/read-release-artifact.mjs --directory="$ZADMIN_RELEASE_ARTIFACTS_DIR" --package=@zadmin/zui)"
+          ZUI_TARBALL="$(node scripts/read-release-artifact.mjs --directory="$ZADMIN_RELEASE_ARTIFACTS_DIR" --package=@zadmin/zui --revision=${{ github.sha }})"
           npm publish "$ZUI_TARBALL" --dry-run --ignore-scripts
 
       - name: Run WebView external package acceptance

@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import { spawn } from 'node:child_process';
+import { execFileSync, spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { validateArtifactManifest } from './read-release-artifact.mjs';
 
@@ -25,6 +25,20 @@ if (process.argv.includes('--help')) {
 	);
 	process.exit(0);
 }
+const sourceRevision = execFileSync('git', ['rev-parse', 'HEAD'], {
+	cwd: root,
+	encoding: 'utf8'
+}).trim();
+if (!/^(?:[a-f0-9]{40}|[a-f0-9]{64})$/u.test(sourceRevision))
+	throw new Error(`Invalid source revision: ${sourceRevision}`);
+const sourceChanges = execFileSync('git', ['status', '--porcelain=v1', '--untracked-files=all'], {
+	cwd: root,
+	encoding: 'utf8'
+}).trim();
+if (sourceChanges)
+	throw new Error(
+		`Release artifacts require a clean source checkout; found ${sourceChanges.split(/\r?\n/u).length} changed path(s).`
+	);
 
 function runPnpm(args) {
 	return new Promise((resolveRun, rejectRun) => {
@@ -93,8 +107,9 @@ for (const name of packageNames) {
 	});
 }
 const manifest = {
-	schemaVersion: 1,
+	schemaVersion: 2,
 	producer: 'scripts/pack-release-artifacts.mjs',
+	sourceRevision,
 	artifacts,
 	status: 'passed'
 };

@@ -47,6 +47,10 @@ const workflow = await readFile(resolve(root, '.github/workflows/release.yml'), 
 const ci = await readFile(resolve(root, '.github/workflows/ci.yml'), 'utf8');
 const packProducer = await readFile(resolve(root, 'scripts/pack-release-artifacts.mjs'), 'utf8');
 const artifactReader = await readFile(resolve(root, 'scripts/read-release-artifact.mjs'), 'utf8');
+const releaseCoherence = await readFile(
+	resolve(root, 'scripts/check-release-coherence.mjs'),
+	'utf8'
+);
 const docsPackage = JSON.parse(await readFile(resolve(root, 'apps/docs/package.json'), 'utf8'));
 const versionedDocsScript = await readFile(
 	resolve(root, 'apps/docs/scripts/check-versioned-docs.mjs'),
@@ -123,6 +127,16 @@ const checks = {
 			'node scripts/read-release-artifact.mjs --directory="$ZADMIN_RELEASE_ARTIFACTS_DIR" --package=@zadmin/zui'
 		) &&
 		ci.includes('npm publish "$ZUI_TARBALL" --dry-run --ignore-scripts'),
+	releaseArtifactRevisionBound:
+		rootPackage.scripts?.['release:coherence'] === 'node scripts/check-release-coherence.mjs' &&
+		ci.includes('pnpm release:coherence') &&
+		/schemaVersion:\s*2/u.test(packProducer) &&
+		/sourceRevision/u.test(packProducer) &&
+		/--porcelain=v1/u.test(packProducer) &&
+		/manifest\?\.schemaVersion !== 2/u.test(artifactReader) &&
+		/expectedRevision !== undefined/u.test(artifactReader) &&
+		/--revision=\$\{\{ github\.sha \}\}/u.test(ci) &&
+		/evaluateReleaseCoherence/u.test(releaseCoherence),
 	releasePublishTarballReuse: false,
 	npmOidcProvenance:
 		/id-token:\s*write/iu.test(workflow) && /provenance|trusted publishing/iu.test(workflow),

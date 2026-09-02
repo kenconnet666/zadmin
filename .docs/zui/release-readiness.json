@@ -117,6 +117,7 @@
 		"externalAcceptancePresent": true,
 		"ciRunsPackageAcceptance": true,
 		"singlePackChecksumReuse": true,
+		"releaseArtifactRevisionBound": true,
 		"releasePublishTarballReuse": false,
 		"npmOidcProvenance": false,
 		"automatedTagAndGithubRelease": false,

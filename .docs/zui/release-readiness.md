@@ -13,6 +13,7 @@
 - `externalAcceptancePresent`
 - `ciRunsPackageAcceptance`
 - `singlePackChecksumReuse`
+- `releaseArtifactRevisionBound`
 - `versionedDocsArtifactContract`
 - `supportMatrixDocumented`
 

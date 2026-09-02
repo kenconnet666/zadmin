@@ -5,16 +5,19 @@ import { isAbsolute, relative, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 const artifactProducer = 'scripts/pack-release-artifacts.mjs';
+const sourceRevisionPattern = /^(?:[a-f0-9]{40}|[a-f0-9]{64})$/u;
 
 export function validateArtifactManifest(manifest) {
 	if (
-		manifest?.schemaVersion !== 1 ||
+		manifest?.schemaVersion !== 2 ||
 		manifest.producer !== artifactProducer ||
 		manifest.status !== 'passed' ||
 		!Array.isArray(manifest.artifacts) ||
 		manifest.artifacts.length === 0
 	)
 		throw new Error('Invalid release artifact manifest schema or status.');
+	if (!sourceRevisionPattern.test(manifest.sourceRevision ?? ''))
+		throw new Error('Release artifact manifest sourceRevision is invalid.');
 	const names = new Set();
 	for (const artifact of manifest.artifacts) {
 		if (
@@ -48,9 +51,17 @@ export function validateArtifactManifest(manifest) {
 	}
 }
 
-export function readReleaseArtifact(directory, packageName) {
+export function readReleaseArtifact(directory, packageName, expectedRevision) {
 	const manifest = JSON.parse(readFileSync(resolve(directory, 'manifest.json'), 'utf8'));
 	validateArtifactManifest(manifest);
+	if (expectedRevision !== undefined) {
+		if (!sourceRevisionPattern.test(expectedRevision))
+			throw new Error(`Requested release artifact revision is invalid: ${expectedRevision}.`);
+		if (manifest.sourceRevision !== expectedRevision)
+			throw new Error(
+				`Release artifact source revision mismatch: ${manifest.sourceRevision} != ${expectedRevision}.`
+			);
+	}
 	const artifact = manifest.artifacts?.find((entry) => entry.name === packageName);
 	if (!artifact) throw new Error(`Release artifact manifest has no ${packageName}.`);
 	const path = resolve(directory, artifact.filename);
@@ -76,8 +87,9 @@ export function readReleaseArtifact(directory, packageName) {
 if (process.argv.includes('--self-test')) {
 	const directory = mkdtempSync(resolve(tmpdir(), 'zadmin-release-artifact-self-test-'));
 	const valid = {
-		schemaVersion: 1,
+		schemaVersion: 2,
 		producer: artifactProducer,
+		sourceRevision: 'a'.repeat(40),
 		status: 'passed',
 		artifacts: [
 			{
@@ -95,6 +107,16 @@ if (process.argv.includes('--self-test')) {
 		bytes: bytes.byteLength,
 		sha256: createHash('sha256').update(bytes).digest('hex')
 	};
+	let cases = 0;
+	function expectFailure(callback, label) {
+		try {
+			callback();
+			throw new Error(`Release artifact self-test accepted ${label}.`);
+		} catch (error) {
+			if (String(error).includes('self-test')) throw error;
+			cases += 1;
+		}
+	}
 	try {
 		writeFileSync(
 			resolve(directory, 'manifest.json'),
@@ -102,6 +124,9 @@ if (process.argv.includes('--self-test')) {
 		);
 		writeFileSync(resolve(directory, 'zui.tgz'), bytes);
 		readReleaseArtifact(directory, '@zadmin/zui');
+		cases += 1;
+		readReleaseArtifact(directory, '@zadmin/zui', valid.sourceRevision);
+		cases += 1;
 		for (const invalid of [
 			{ ...artifact, filename: '../escape.tgz' },
 			{ ...artifact, bytes: artifact.bytes + 1 },
@@ -111,28 +136,40 @@ if (process.argv.includes('--self-test')) {
 				resolve(directory, 'manifest.json'),
 				JSON.stringify({ ...valid, artifacts: [invalid] })
 			);
-			try {
-				readReleaseArtifact(directory, '@zadmin/zui');
-				throw new Error('Release artifact self-test accepted invalid artifact.');
-			} catch (error) {
-				if (String(error).includes('self-test')) throw error;
-			}
+			expectFailure(() => readReleaseArtifact(directory, '@zadmin/zui'), 'an invalid artifact');
 		}
+		writeFileSync(
+			resolve(directory, 'manifest.json'),
+			JSON.stringify({ ...valid, sourceRevision: 'invalid', artifacts: [artifact] })
+		);
+		expectFailure(() => readReleaseArtifact(directory, '@zadmin/zui'), 'an invalid revision');
+		writeFileSync(
+			resolve(directory, 'manifest.json'),
+			JSON.stringify({ ...valid, artifacts: [artifact] })
+		);
+		expectFailure(
+			() => readReleaseArtifact(directory, '@zadmin/zui', 'b'.repeat(40)),
+			'a mismatched revision'
+		);
 	} finally {
 		rmSync(directory, { force: true, recursive: true });
 	}
-	console.log(JSON.stringify({ cases: 4, status: 'passed' }));
+	console.log(JSON.stringify({ cases, status: 'passed' }));
 }
 
 const directoryArgument = process.argv.find((argument) => argument.startsWith('--directory='));
 const packageArgument = process.argv.find((argument) => argument.startsWith('--package='));
+const revisionArgument = process.argv.find((argument) => argument.startsWith('--revision='));
 if (Boolean(directoryArgument) !== Boolean(packageArgument))
 	throw new Error('Both --directory and --package are required when selecting an artifact.');
+if (revisionArgument && !directoryArgument)
+	throw new Error('--revision requires --directory and --package.');
 if (directoryArgument && packageArgument) {
 	console.log(
 		readReleaseArtifact(
 			directoryArgument.slice('--directory='.length),
-			packageArgument.slice('--package='.length)
+			packageArgument.slice('--package='.length),
+			revisionArgument?.slice('--revision='.length)
 		)
 	);
 }
