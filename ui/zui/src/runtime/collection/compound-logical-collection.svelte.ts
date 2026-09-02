@@ -49,6 +49,8 @@ export class CompoundLogicalCollectionRegistry<
 			},
 			{ name: 'Compound logical collection' }
 		);
+		// Sort order is a getter-local snapshot, not a persistent reactive collection.
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const order = new Map(this.#mounted.order(source.full.keys).map((key, index) => [key, index]));
 		return new LogicalCollection<TKey, TItem>(
 			[...values].sort((left, right) => order.get(left.key)! - order.get(right.key)!),

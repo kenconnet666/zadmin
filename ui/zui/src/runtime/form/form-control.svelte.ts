@@ -13,7 +13,10 @@ export function normalizeFieldMessages(
 export function mergeFieldMessages(
 	...values: readonly (FieldMessages | null | undefined)[]
 ): readonly string[] {
-	return Object.freeze([...new Set(values.flatMap(normalizeFieldMessages))]);
+	const messages = values.flatMap(normalizeFieldMessages);
+	// This function returns an immutable snapshot; the temporary set is not rendered state.
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
+	return Object.freeze([...new Set(messages)]);
 }
 
 export function mergeAriaIds(

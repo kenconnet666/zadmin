@@ -1,5 +1,4 @@
 import type { SelectionKey } from '../../runtime/collection/selection.js';
-/* eslint-disable svelte/prefer-svelte-reactivity -- The Set is local validation scratch space. */
 
 /** Shared data-source contract for flat choice collections. */
 export interface ZCollectionOption {

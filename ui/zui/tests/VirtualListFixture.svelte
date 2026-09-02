@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { tick } from 'svelte';
+	import { SvelteMap } from 'svelte/reactivity';
 	import {
 		ZProvider,
 		ZVirtualList,
@@ -27,8 +28,8 @@
 	let activeKey = $state<RowKey>();
 	let activeId = $state<string>();
 	let loading = $state(true);
-	const optionIds = new Map<RowKey, string>();
-	const mountedOptions = new Map<RowKey, { element: HTMLElement; token: symbol }>();
+	const optionIds = new SvelteMap<RowKey, string>();
+	const mountedOptions = new SvelteMap<RowKey, { element: HTMLElement; token: symbol }>();
 	let nextOptionSlot = 0;
 
 	function optionId(key: RowKey): string {
@@ -98,6 +99,7 @@
 		data-testid="virtual-dynamic"
 		id="virtual-options"
 	>
+		<!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -- the positional index is required to receive the virtual item argument. -->
 		{#snippet item(row, _index, virtual)}
 			<div
 				style={`box-sizing: border-box; height: ${row.height}px; padding: 6px;`}

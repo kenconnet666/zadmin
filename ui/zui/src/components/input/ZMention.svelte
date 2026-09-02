@@ -162,7 +162,6 @@
 </script>
 
 <script lang="ts">
-	/* eslint-disable svelte/prefer-svelte-reactivity -- Sets are local validation values. */
 	import { ActiveDescendant } from '../../runtime/collection/active-descendant.svelte.js';
 	import {
 		CollectionNavigation,

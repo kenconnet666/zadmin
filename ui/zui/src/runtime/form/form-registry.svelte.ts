@@ -109,9 +109,12 @@ export class FormRegistry {
 				);
 			}
 		}
+		// Field dependencies are registration metadata; #states publishes reactive changes.
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
+		const dependencyKeys = new Set((registration.dependencies ?? []).map(fieldPathKey));
 		const field = {
 			control: registration.control,
-			dependencyKeys: new Set((registration.dependencies ?? []).map(fieldPathKey)),
+			dependencyKeys,
 			htmlName: registration.htmlName,
 			instanceId: registration.instanceId,
 			key,
@@ -120,6 +123,8 @@ export class FormRegistry {
 		} satisfies RegisteredField;
 		this.#fields.set(field.instanceId, field);
 		this.#paths.set(key, path);
+		// Instance membership is imperative registration bookkeeping.
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const instances = this.#pathInstances.get(key) ?? new Set<string>();
 		this.#unmountVersions.set(key, (this.#unmountVersions.get(key) ?? 0) + 1);
 		instances.add(field.instanceId);
@@ -167,6 +172,8 @@ export class FormRegistry {
 	}
 
 	formDataPaths(): ReadonlyMap<string, FieldPath> {
+		// Callers receive a fresh read-only snapshot, not a reactive registry.
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const result = new Map<string, FieldPath>();
 		for (const field of this.#fields.values()) result.set(field.htmlName, field.path);
 		return result;
@@ -175,6 +182,8 @@ export class FormRegistry {
 	affectedPaths(instanceId: string): readonly FieldPath[] {
 		const source = this.#fields.get(instanceId);
 		if (!source) return [];
+		// Graph traversal membership is local to this query.
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const affected = new Set([source.key]);
 		const pending = [source.key];
 		while (pending.length > 0) {

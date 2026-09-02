@@ -24,6 +24,8 @@ export interface ActiveDescendantOptions<TKey extends SelectionKey, TValue> {
 /** Container-focus adapter over CollectionNavigation with opaque, typed-key DOM ids. */
 export class ActiveDescendant<TKey extends SelectionKey, TValue> {
 	readonly #options: ActiveDescendantOptions<TKey, TValue>;
+	// Stable opaque-id slots are an imperative cache; collection/navigation state owns reactivity.
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	readonly #slots = new Map<TKey, number>();
 	#nextSlot = 0;
 
@@ -54,6 +56,8 @@ export class ActiveDescendant<TKey extends SelectionKey, TValue> {
 	}
 
 	prune(keys: readonly TKey[]): void {
+		// Validation-local membership does not escape this reconciliation pass.
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const retained = new Set(keys);
 		for (const key of this.#slots.keys()) if (!retained.has(key)) this.#slots.delete(key);
 	}
