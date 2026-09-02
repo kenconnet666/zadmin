@@ -1,11 +1,9 @@
 # API teaching coverage
 
-Generated from 141 components and 1385 declared props. 108 metadata gaps remain; 0 remain true fallbacks after teaching overrides.
+Generated from 141 components and 1385 declared props. 86 metadata gaps remain; 0 remain true fallbacks after teaching overrides.
 
 | Component         | Family       | Declared props | Metadata gaps | True fallback props | Fallback names | Source                                                            |
 | ----------------- | ------------ | -------------: | ------------: | ------------------: | -------------- | ----------------------------------------------------------------- |
-| ZCommandPalette   | —            |             25 |            11 |                   0 | —              | ui/zui/src/components/navigation/ZCommandPalette.svelte           |
-| ZTimeField        | —            |             26 |            11 |                   0 | —              | ui/zui/src/components/input/ZTimeField.svelte                     |
 | ZTour             | —            |             21 |            10 |                   0 | —              | ui/zui/src/components/overlay/ZTour.svelte                        |
 | ZNumberField      | —            |             28 |             9 |                   0 | —              | ui/zui/src/components/input/ZNumberField.svelte                   |
 | ZTransfer         | —            |             26 |             9 |                   0 | —              | ui/zui/src/components/input/ZTransfer.svelte                      |
@@ -24,3 +22,5 @@ Generated from 141 components and 1385 declared props. 108 metadata gaps remain;
 | ZAccordionContent | accordion    |              3 |             0 |                   0 | —              | ui/zui/src/components/compound/accordion/ZAccordionContent.svelte |
 | ZAccordionItem    | accordion    |              4 |             0 |                   0 | —              | ui/zui/src/components/compound/accordion/ZAccordionItem.svelte    |
 | ZAccordionTrigger | accordion    |              7 |             0 |                   0 | —              | ui/zui/src/components/compound/accordion/ZAccordionTrigger.svelte |
+| ZAlert            | —            |             10 |             0 |                   0 | —              | ui/zui/src/components/feedback/ZAlert.svelte                      |
+| ZAlertDialog      | alert-dialog |              6 |             0 |                   0 | —              | ui/zui/src/components/compound/alert-dialog/ZAlertDialog.svelte   |

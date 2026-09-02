@@ -78,6 +78,12 @@
 				type: "'bare' | 'field'"
 			},
 			{
+				default: '自动生成（或Field/controlId）',
+				description: '覆盖首个时间segment的DOM id；Field会优先提供controlId。',
+				name: 'controlId',
+				type: 'string'
+			},
+			{
 				bindable: true,
 				default: 'undefined',
 				description: '时间值；null是受控空值。',
@@ -91,6 +97,12 @@
 				type: 'Time | null'
 			},
 			{
+				default: 'false（或继承Field）',
+				description: '禁用全部时间segment和AM/PM操作，并同步禁用表单值桥。',
+				name: 'disabled',
+				type: 'boolean'
+			},
+			{
 				default: "'minute'",
 				description: '是否显示秒。',
 				name: 'granularity',
@@ -101,6 +113,12 @@
 				description: '12或24小时制；显式值优先于locale推断。',
 				name: 'hourCycle',
 				type: '12 | 24'
+			},
+			{
+				default: 'undefined（继承Provider locale）',
+				description: '用于解析和渲染时间segment顺序、数字格式与hour cycle的locale。',
+				name: 'locale',
+				type: 'string'
 			},
 			{
 				default: 'localePack.time对应segment',
@@ -122,12 +140,60 @@
 			},
 			{ default: '1', description: '分钟键盘步长。', name: 'minuteStep', type: 'number' },
 			{ default: '1', description: '秒键盘步长。', name: 'secondStep', type: 'number' },
+			{
+				default: 'undefined',
+				description: '允许的最晚时间；超出范围的输入和步进不会提交。',
+				name: 'maxValue',
+				type: 'Time'
+			},
+			{
+				default: 'undefined',
+				description: '允许的最早时间；超出范围的输入和步进不会提交。',
+				name: 'minValue',
+				type: 'Time'
+			},
+			{
+				default: 'undefined',
+				description: '额外判定不可用时间；返回true时输入和步进均保持非法状态。',
+				name: 'isTimeUnavailable',
+				type: '(value: Time) => boolean'
+			},
 			{ default: 'undefined', description: 'ISO时间隐藏字段名。', name: 'name', type: 'string' },
+			{
+				default: 'undefined',
+				description: '关联原生form；formParticipation为auto时由FormValueBridge写入时间值。',
+				name: 'form',
+				type: 'string'
+			},
 			{
 				default: "'auto'",
 				description: '自定义复合组件可设none，由外层唯一拥有FormValueBridge与reset。',
 				name: 'formParticipation',
 				type: "'auto' | 'none'"
+			},
+			{
+				default: 'undefined',
+				description: '表单reset后回到defaultValue，并在重置完成后调用。',
+				name: 'onReset',
+				type: '() => void'
+			},
+			{
+				default: 'false（或继承Field）',
+				description: '只读时间segment；禁止编辑、步进和AM/PM切换，但仍可提交表单值。',
+				name: 'readonly',
+				type: 'boolean'
+			},
+			{
+				default: 'false（或继承Field）',
+				description: '要求非空时间；同步原生segment required和data-required语义。',
+				name: 'required',
+				type: 'boolean'
+			},
+			{
+				default: 'false',
+				description: '标记外部校验失败；与不完整segment或Field.invalid共同呈现invalid状态。',
+				name: 'invalid',
+				type: 'boolean'
 			},
 			{
 				default: 'Field size或Provider density',

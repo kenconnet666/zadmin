@@ -76,6 +76,24 @@
 				type: 'readonly CommandItem[]'
 			},
 			{
+				default: 'Provider localePack.common.close',
+				description: 'Dialog内显式关闭按钮文本。',
+				name: 'closeLabel',
+				type: 'string'
+			},
+			{
+				default: 'Provider localePack.command.paletteTitle',
+				description: 'Dialog的可访问标题与可见标题。',
+				name: 'title',
+				type: 'string'
+			},
+			{
+				default: 'undefined',
+				description: '可选Dialog描述；缺省时不渲染description节点。',
+				name: 'description',
+				type: 'string'
+			},
+			{
 				bindable: true,
 				default: 'false',
 				description: '模态打开状态。',
@@ -83,10 +101,58 @@
 				type: 'boolean'
 			},
 			{
+				default: 'false',
+				description: '非受控初始Dialog状态。',
+				name: 'defaultOpen',
+				type: 'boolean'
+			},
+			{
 				bindable: true,
 				default: "''",
 				description: 'Command查询。',
 				name: 'query',
+				type: 'string'
+			},
+			{
+				default: "''",
+				description: '非受控初始查询，也是resetQueryOnClose的恢复值。',
+				name: 'defaultQuery',
+				type: 'string'
+			},
+			{
+				default: 'false',
+				description: '阻止Trigger与shortcut打开，并禁用内部Command。',
+				name: 'disabled',
+				type: 'boolean'
+			},
+			{
+				default: 'Provider localePack.command.empty',
+				description: '内部Command没有匹配项时的状态文本。',
+				name: 'emptyText',
+				type: 'string'
+			},
+			{
+				default: 'Provider localePack.command.inputLabel',
+				description: '内部Command查询输入的可访问名称。',
+				name: 'inputLabel',
+				type: 'string'
+			},
+			{
+				default: 'Provider localePack.command.listLabel',
+				description: '内部Command listbox的可访问名称。',
+				name: 'listLabel',
+				type: 'string'
+			},
+			{
+				default: 'Provider localePack.command.placeholder',
+				description: '内部Command查询输入提示。',
+				name: 'placeholder',
+				type: 'string'
+			},
+			{
+				default: 'Provider localePack.command.paletteTrigger',
+				description: '内置Dialog Trigger的可访问名称与默认文本。',
+				name: 'triggerLabel',
 				type: 'string'
 			},
 			{

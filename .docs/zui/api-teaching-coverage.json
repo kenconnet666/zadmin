@@ -1432,20 +1432,8 @@
 			"name": "ZTimeField",
 			"source": "ui/zui/src/components/input/ZTimeField.svelte",
 			"declaredPropCount": 26,
-			"metadataGapPropCount": 11,
-			"metadataGapPropNames": [
-				"controlId",
-				"disabled",
-				"form",
-				"invalid",
-				"isTimeUnavailable",
-				"locale",
-				"maxValue",
-				"minValue",
-				"onReset",
-				"readonly",
-				"required"
-			],
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -1532,20 +1520,8 @@
 			"name": "ZCommandPalette",
 			"source": "ui/zui/src/components/navigation/ZCommandPalette.svelte",
 			"declaredPropCount": 25,
-			"metadataGapPropCount": 11,
-			"metadataGapPropNames": [
-				"closeLabel",
-				"defaultOpen",
-				"defaultQuery",
-				"description",
-				"disabled",
-				"emptyText",
-				"inputLabel",
-				"listLabel",
-				"placeholder",
-				"title",
-				"triggerLabel"
-			],
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -1584,7 +1560,7 @@
 	"totals": {
 		"components": 141,
 		"declaredProps": 1385,
-		"metadataGapProps": 108,
+		"metadataGapProps": 86,
 		"fallbackProps": 0
 	}
 }

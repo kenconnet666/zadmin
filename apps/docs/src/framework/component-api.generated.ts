@@ -7711,19 +7711,7 @@ export const timeFieldApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZTimeField.svelte',
-	metadataGapProps: [
-		'controlId',
-		'disabled',
-		'form',
-		'invalid',
-		'isTimeUnavailable',
-		'locale',
-		'maxValue',
-		'minValue',
-		'onReset',
-		'readonly',
-		'required'
-	]
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const transferApiFacts = {
@@ -8413,19 +8401,7 @@ export const commandPaletteApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/navigation/ZCommandPalette.svelte',
-	metadataGapProps: [
-		'closeLabel',
-		'defaultOpen',
-		'defaultQuery',
-		'description',
-		'disabled',
-		'emptyText',
-		'inputLabel',
-		'listLabel',
-		'placeholder',
-		'title',
-		'triggerLabel'
-	]
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const paginationApiFacts = {

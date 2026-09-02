@@ -8818,7 +8818,7 @@
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZTimeField.svelte",
 			"apiDocumentation": {
-				"metadataGapPropCount": 11,
+				"metadataGapPropCount": 0,
 				"teachingFallbackPropCount": 0
 			},
 			"stages": {
@@ -8846,7 +8846,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "c4baeb90db9b6e75190fe972ce8bf6aa0646676de390c008ee9610111511782f API snapshot entry"
+						"detail": "6df9f5d66c44b573053651e0428362f42f92df33b8c1e57704666dc2b09601c8 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -9287,7 +9287,7 @@
 			"status": "experimental",
 			"source": "ui/zui/src/components/navigation/ZCommandPalette.svelte",
 			"apiDocumentation": {
-				"metadataGapPropCount": 11,
+				"metadataGapPropCount": 0,
 				"teachingFallbackPropCount": 0
 			},
 			"stages": {
@@ -9315,7 +9315,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "098db0bf6dfe6691a662bd593138572adccc1ebf9119584144186e45d79bbeaf API snapshot entry"
+						"detail": "49fac73f8356360784c9e4f0f7793e50b9bf80b0b9969ae1d1ed717ccdd93e4e API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
