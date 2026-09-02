@@ -20,7 +20,6 @@ export const dataTableDoc = defineComponentDoc(dataTableMetadata, {
 	sourceApi: dataTableApiFacts,
 	profiles: ['collection', 'data-view', 'virtualized'],
 	teaching: {
-		omitMetadataProps: ['rowHeight / height'],
 		props: {
 			caption: {
 				default: '必填',
