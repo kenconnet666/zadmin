@@ -82,12 +82,13 @@ describe('NumberField production contracts', () => {
 		expect(fixture('controlled-value').textContent).toBe('7.25');
 	});
 
-	it('steps from a valid locale draft after a user fill', async () => {
+	it('steps from a valid live draft before controlled formatting flushes', async () => {
 		render(NumberFieldProductionFixture);
 		const control = spinbutton('controlled-number');
 		control.focus();
-		await userEvent.fill(control, '12.75');
-		await userEvent.keyboard('{ArrowUp}');
+		control.value = '12.75';
+		control.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		control.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowUp' }));
 		await expect.poll(() => fixture('controlled-value').textContent).toBe('13');
 	});
 
