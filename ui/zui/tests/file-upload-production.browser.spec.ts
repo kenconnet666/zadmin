@@ -116,6 +116,37 @@ describe('ZFileUpload production queue', () => {
 			.toContain('retry:retry.json:success:100:none');
 	});
 
+	it('cancels stale requests when a controlled queue replaces the same id with a new File', async () => {
+		let resolveOld: (() => void) | undefined;
+		const transport = vi.fn(
+			() =>
+				new Promise<void>((resolve) => {
+					resolveOld = resolve;
+				})
+		);
+		const oldFile = new File(['old'], 'old.json', { type: 'application/json' });
+		const replacement = createFileUploadItem(
+			'same-id',
+			new File(['replacement'], 'replacement.json', { type: 'application/json' })
+		);
+		render(FileUploadProductionFixture, {
+			defaultFiles: [createFileUploadItem('same-id', oldFile)],
+			replacementFiles: [replacement],
+			transport
+		});
+
+		document.querySelector<HTMLButtonElement>('[data-testid="upload-all"]')?.click();
+		await tick();
+		expect(transport).toHaveBeenCalledOnce();
+		document.querySelector<HTMLButtonElement>('[data-testid="external-replace"]')?.click();
+		await tick();
+		expect(document.body.textContent).toContain('same-id:replacement.json:queued:0:none');
+		resolveOld?.();
+		await tick();
+		expect(document.body.textContent).toContain('same-id:replacement.json:queued:0:none');
+		expect(document.body.textContent).not.toContain('same-id:replacement.json:success:100:none');
+	});
+
 	it('keeps readonly focus and FormData while blocking all queue writes', async () => {
 		const file = new File(['{}'], 'readonly.json', { type: 'application/json' });
 		const transport = vi.fn();

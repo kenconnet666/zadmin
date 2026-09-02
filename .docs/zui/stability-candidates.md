@@ -2,7 +2,7 @@
 
 本文件由 `scripts/check-stability-policy.mjs` 生成；不会修改组件 status。compound member 可继承同 family root 的 Docs 页面。
 
-stableCompliant：22；stableViolations：0；promotionEligibleExperimental：1。
+stableCompliant：25；stableViolations：0；promotionEligibleExperimental：3。
 
 | Component               | Status       | Classification                | Blockers                                                 | Docs                                                                           | SSR |
 | ----------------------- | ------------ | ----------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------ | --: |
@@ -86,7 +86,7 @@ stableCompliant：22；stableViolations：0；promotionEligibleExperimental：1�
 | ZBadge                  | stable       | stableCompliant               | —                                                        | apps/docs/src/content/components/data-display/badge/doc.ts                     |   2 |
 | ZCard                   | stable       | stableCompliant               | —                                                        | apps/docs/src/content/components/data-display/card/doc.ts                      |   2 |
 | ZCarousel               | experimental | experimental                  | ProductionVerified, Metadata gaps (6)                    | apps/docs/src/content/components/data-display/carousel/doc.ts                  |   1 |
-| ZDataTable              | experimental | experimental                  | Metadata gaps (22)                                       | apps/docs/src/content/components/data-display/data-table/doc.ts                |   2 |
+| ZDataTable              | experimental | promotionEligibleExperimental | —                                                        | apps/docs/src/content/components/data-display/data-table/doc.ts                |   2 |
 | ZDescriptionList        | experimental | experimental                  | VisuallyVerified, ProductionVerified                     | apps/docs/src/content/components/data-display/description-list/doc.ts          |   2 |
 | ZEmpty                  | stable       | stableCompliant               | —                                                        | apps/docs/src/content/components/data-display/empty/doc.ts                     |   2 |
 | ZList                   | experimental | experimental                  | ProductionVerified                                       | apps/docs/src/content/components/data-display/list/doc.ts                      |   1 |
@@ -117,29 +117,29 @@ stableCompliant：22；stableViolations：0；promotionEligibleExperimental：1�
 | ZToggleButton           | stable       | stableCompliant               | —                                                        | apps/docs/src/content/components/gene/toggle-button/doc.ts                     |   2 |
 | ZVisuallyHidden         | experimental | experimental                  | ProductionVerified                                       | apps/docs/src/content/components/gene/visually-hidden/doc.ts                   |   2 |
 | ZCalendar               | experimental | experimental                  | VisuallyVerified, ProductionVerified, Metadata gaps (8)  | apps/docs/src/content/components/input/calendar/doc.ts                         |   1 |
-| ZCascader               | experimental | experimental                  | Metadata gaps (16)                                       | apps/docs/src/content/components/input/cascader/doc.ts                         |   1 |
+| ZCascader               | experimental | promotionEligibleExperimental | —                                                        | apps/docs/src/content/components/input/cascader/doc.ts                         |   1 |
 | ZCheckbox               | experimental | experimental                  | VisuallyVerified, ProductionVerified                     | apps/docs/src/content/components/input/checkbox/doc.ts                         |   1 |
-| ZColorPicker            | experimental | experimental                  | Metadata gaps (14)                                       | apps/docs/src/content/components/input/color-picker/doc.ts                     |   1 |
+| ZColorPicker            | stable       | stableCompliant               | —                                                        | apps/docs/src/content/components/input/color-picker/doc.ts                     |   1 |
 | ZDateField              | experimental | experimental                  | VisuallyVerified, ProductionVerified, Metadata gaps (8)  | apps/docs/src/content/components/input/date-field/doc.ts                       |   1 |
-| ZDatePicker             | experimental | experimental                  | VisuallyVerified, ProductionVerified, Metadata gaps (19) | apps/docs/src/content/components/input/date-picker/doc.ts                      |   1 |
-| ZDateRangePicker        | experimental | experimental                  | VisuallyVerified, ProductionVerified, Metadata gaps (20) | apps/docs/src/content/components/input/date-range-picker/doc.ts                |   1 |
+| ZDatePicker             | experimental | experimental                  | VisuallyVerified, ProductionVerified                     | apps/docs/src/content/components/input/date-picker/doc.ts                      |   1 |
+| ZDateRangePicker        | experimental | experimental                  | VisuallyVerified, ProductionVerified                     | apps/docs/src/content/components/input/date-range-picker/doc.ts                |   1 |
 | ZField                  | stable       | stableCompliant               | —                                                        | apps/docs/src/content/components/input/field/doc.ts                            |   3 |
-| ZFileUpload             | experimental | experimental                  | Metadata gaps (15)                                       | apps/docs/src/content/components/input/file-upload/doc.ts                      |   1 |
+| ZFileUpload             | experimental | promotionEligibleExperimental | —                                                        | apps/docs/src/content/components/input/file-upload/doc.ts                      |   1 |
 | ZForm                   | experimental | experimental                  | ProductionVerified, Metadata gaps (2)                    | apps/docs/src/content/components/input/form/doc.ts                             |   1 |
 | ZFormField              | experimental | experimental                  | ProductionVerified, Docs                                 | —                                                                              |   1 |
 | ZInput                  | stable       | stableCompliant               | —                                                        | apps/docs/src/content/components/input/input/doc.ts                            |   2 |
 | ZInputGroup             | experimental | experimental                  | VisuallyVerified, ProductionVerified                     | apps/docs/src/content/components/input/input-group/doc.ts                      |   2 |
-| ZMention                | experimental | promotionEligibleExperimental | —                                                        | apps/docs/src/content/components/input/mention/doc.ts                          |   1 |
+| ZMention                | stable       | stableCompliant               | —                                                        | apps/docs/src/content/components/input/mention/doc.ts                          |   1 |
 | ZNumberField            | experimental | experimental                  | VisuallyVerified, ProductionVerified, Metadata gaps (9)  | apps/docs/src/content/components/input/number-field/doc.ts                     |   1 |
 | ZPinInput               | experimental | experimental                  | VisuallyVerified                                         | apps/docs/src/content/components/input/pin-input/doc.ts                        |   2 |
 | ZSegmented              | experimental | experimental                  | VisuallyVerified, ProductionVerified                     | apps/docs/src/content/components/input/segmented/doc.ts                        |   1 |
 | ZSlider                 | experimental | experimental                  | VisuallyVerified, ProductionVerified                     | apps/docs/src/content/components/input/slider/doc.ts                           |   1 |
 | ZSwitch                 | experimental | experimental                  | ProductionVerified                                       | apps/docs/src/content/components/input/switch/doc.ts                           |   2 |
-| ZTagsInput              | experimental | experimental                  | Metadata gaps (10)                                       | apps/docs/src/content/components/input/tags-input/doc.ts                       |   1 |
+| ZTagsInput              | stable       | stableCompliant               | —                                                        | apps/docs/src/content/components/input/tags-input/doc.ts                       |   1 |
 | ZTextarea               | stable       | stableCompliant               | —                                                        | apps/docs/src/content/components/input/textarea/doc.ts                         |   2 |
 | ZTimeField              | experimental | experimental                  | VisuallyVerified, ProductionVerified, Metadata gaps (11) | apps/docs/src/content/components/input/time-field/doc.ts                       |   1 |
 | ZTransfer               | experimental | experimental                  | ProductionVerified, Metadata gaps (9)                    | apps/docs/src/content/components/input/transfer/doc.ts                         |   1 |
-| ZTreeSelect             | experimental | experimental                  | VisuallyVerified, ProductionVerified, Metadata gaps (14) | apps/docs/src/content/components/input/tree-select/doc.ts                      |   2 |
+| ZTreeSelect             | experimental | experimental                  | VisuallyVerified, ProductionVerified                     | apps/docs/src/content/components/input/tree-select/doc.ts                      |   2 |
 | ZAspectRatio            | experimental | experimental                  | ProductionVerified                                       | apps/docs/src/content/components/layout/aspect-ratio/doc.ts                    |   2 |
 | ZContainer              | experimental | experimental                  | ProductionVerified                                       | apps/docs/src/content/components/layout/container/doc.ts                       |   2 |
 | ZStack                  | stable       | stableCompliant               | —                                                        | apps/docs/src/content/components/layout/stack/doc.ts                           |   3 |

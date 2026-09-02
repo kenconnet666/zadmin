@@ -109,6 +109,96 @@
 		],
 		props: [
 			{
+				default: 'Provider localePack.fileUpload.abortUpload(item.file.name)',
+				description: 'uploading项的中止命令名称。',
+				name: 'abortLabel',
+				type: '(item: FileUploadItem) => string'
+			},
+			{
+				default: 'Provider localePack.fileUpload.chooseFiles',
+				description: 'drop zone主操作文本。',
+				name: 'chooseLabel',
+				type: 'string'
+			},
+			{
+				default: 'Field controlId或自动ID',
+				description: 'drop zone按钮ID及Field focus owner。',
+				name: 'controlId',
+				type: 'string'
+			},
+			{
+				default: '继承Field或false',
+				description: '退出选择、拖放、命令和FormData。',
+				name: 'disabled',
+				type: 'boolean'
+			},
+			{
+				default: 'Provider localePack.fileUpload.dropFiles',
+				description: '选择按钮内的拖放说明。',
+				name: 'dropLabel',
+				type: 'string'
+			},
+			{
+				default: 'Provider localePack.fileUpload.emptyQueue',
+				description: '命名文件列表为空时的本地化状态。',
+				name: 'emptyText',
+				type: 'string'
+			},
+			{
+				default: 'Provider localePack.fileUpload.failed(item.file.name)',
+				description: '将未知transport错误映射为安全呈现字符串。',
+				name: 'errorMessage',
+				type: '(error: unknown, item: FileUploadItem) => string'
+			},
+			{
+				default: '最近祖先form',
+				description: 'FileFormValueBridge关联的外部form。',
+				name: 'form',
+				type: 'string'
+			},
+			{
+				default: 'Provider localePack.fileUpload.inputLabel',
+				description: '不可见原生file picker的可访问名称。',
+				name: 'inputLabel',
+				type: 'string'
+			},
+			{
+				default: '继承Field或false',
+				description: '投射到根data-invalid并通过Field关系命名真实button。',
+				name: 'invalid',
+				type: 'boolean'
+			},
+			{
+				default: 'Provider localePack.fileUpload.queueLabel',
+				description: 'typed文件list的可访问名称。',
+				name: 'queueLabel',
+				type: 'string'
+			},
+			{
+				default: 'Provider localePack.fileUpload.removeFile(item.file.name)',
+				description: '单项移除命令名称；uploading项会先中止对应世代。',
+				name: 'removeLabel',
+				type: '(item: FileUploadItem) => string'
+			},
+			{
+				default: '继承Field或false',
+				description: '投射到根data-required；业务阻断由Field/Form schema拥有。',
+				name: 'required',
+				type: 'boolean'
+			},
+			{
+				default: 'Provider localePack.fileUpload.retryUpload(item.file.name)',
+				description: 'error或aborted项的重试命令名称。',
+				name: 'retryLabel',
+				type: '(item: FileUploadItem) => string'
+			},
+			{
+				default: 'Provider localePack.fileUpload.uploadFile(item.file.name)',
+				description: '手动queued项的上传命令名称。',
+				name: 'uploadLabel',
+				type: '(item: FileUploadItem) => string'
+			},
+			{
 				bindable: true,
 				default: '[]',
 				description: '含id、File、status、progress和error的受控队列。',
@@ -354,6 +444,7 @@
 
 	interface ActiveRequest {
 		readonly controller: AbortController;
+		readonly file: File;
 		readonly generation: number;
 	}
 
@@ -543,6 +634,7 @@
 		cancelRequest(id, false);
 		const request: ActiveRequest = {
 			controller: new AbortControllerConstructor(),
+			file: item.file,
 			generation: (requestGeneration += 1)
 		};
 		activeRequests.set(id, request);
@@ -555,6 +647,7 @@
 					const currentRequest = activeRequests.get(id);
 					if (
 						currentRequest?.generation !== request.generation ||
+						currentRequest.file !== request.file ||
 						request.controller.signal.aborted
 					)
 						return;
@@ -564,12 +657,17 @@
 			});
 			if (
 				activeRequests.get(id)?.generation !== request.generation ||
+				activeRequests.get(id)?.file !== request.file ||
 				request.controller.signal.aborted
 			)
 				return;
 			replaceItem(id, 'success', 100);
 		} catch (error) {
-			if (activeRequests.get(id)?.generation !== request.generation) return;
+			if (
+				activeRequests.get(id)?.generation !== request.generation ||
+				activeRequests.get(id)?.file !== request.file
+			)
+				return;
 			const current = resolvedFiles.find((candidate) => candidate.id === id) ?? uploadingItem;
 			if (request.controller.signal.aborted) replaceItem(id, 'aborted', current.progress);
 			else replaceItem(id, 'error', current.progress, getErrorMessage(error, current));
@@ -725,9 +823,12 @@
 	onDestroy(() => cancelAll(false));
 	$effect(() => syncNative(resolvedFiles));
 	$effect(() => {
-		const statuses = new Map(resolvedFiles.map((item) => [item.id, item.status]));
+		const currentItems = new Map(resolvedFiles.map((item) => [item.id, item]));
 		for (const id of [...activeRequests.keys()]) {
-			if (statuses.get(id) !== 'uploading') cancelRequest(id, false);
+			const current = currentItems.get(id);
+			const request = activeRequests.get(id);
+			if (current?.status !== 'uploading' || current.file !== request?.file)
+				cancelRequest(id, false);
 		}
 	});
 	$effect(() => {

@@ -254,7 +254,7 @@
 				values: ['small', 'medium', 'large']
 			}
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'以string-only文本标签、独立草稿、ZTag复用、键盘标签导航、批量粘贴、可选编辑、overflow和统一表单合同组成的TagsInput。'
 	} as const satisfies ZuiComponentMetadata;
@@ -461,6 +461,35 @@
 	const resolvedValues = $derived(
 		normalizeValues(valueState.current, allowDuplicates, resolvedMaxTags)
 	);
+	let identityValues: readonly string[] = [];
+	let identityKeys = $state<readonly number[]>([]);
+	let nextIdentityKey = 0;
+	$effect(() => {
+		const nextValues = resolvedValues;
+		const previousValues = untrack(() => identityValues);
+		const previousKeys = untrack(() => identityKeys);
+		const used = new Set<number>();
+		const nextKeys = nextValues.map((value, index) => {
+			for (let previousIndex = previousValues.length - 1; previousIndex >= 0; previousIndex -= 1) {
+				const key = previousKeys[previousIndex];
+				if (
+					!used.has(previousIndex) &&
+					key !== undefined &&
+					previousValues[previousIndex] === value
+				) {
+					used.add(previousIndex);
+					return key;
+				}
+			}
+			return nextIdentityKey++;
+		});
+		identityValues = nextValues;
+		if (
+			nextKeys.some((key, index) => key !== previousKeys[index]) ||
+			nextKeys.length !== previousKeys.length
+		)
+			identityKeys = Object.freeze(nextKeys);
+	});
 	const records = $derived(
 		Object.freeze(resolvedValues.map((value, key) => Object.freeze({ key, value })))
 	);
@@ -481,7 +510,11 @@
 	const full = $derived(resolvedValues.length >= resolvedMaxTags);
 	let focusWithin = $state(false);
 	const visibleLimit = $derived(focusWithin ? Number.POSITIVE_INFINITY : resolvedMaxVisibleTags);
-	const visibleValues = $derived(resolvedValues.slice(0, visibleLimit));
+	const visibleValues = $derived(
+		resolvedValues
+			.slice(0, visibleLimit)
+			.map((value, index) => ({ key: identityKeys[index] ?? index, value }))
+	);
 	const omittedValues = $derived(resolvedValues.slice(visibleLimit));
 	let editingIndex = $state<number>();
 	let editingSnapshot = $state<readonly string[]>();
@@ -758,7 +791,8 @@
 	onfocusout={handleFocusOut}
 	onkeydown={handleRootKeydown}
 >
-	{#each visibleValues as tag, index (`${tag}-${index}`)}
+	{#each visibleValues as record, index (record.key)}
+		{@const tag = record.value}
 		{#if editingIndex === index}
 			<ZTag data-slot="tag" data-tag-index={index} tone={editInvalid ? 'danger' : 'default'}>
 				<ZInput

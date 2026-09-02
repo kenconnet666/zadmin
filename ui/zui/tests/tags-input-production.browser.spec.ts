@@ -101,11 +101,13 @@ describe('ZTagsInput production contract', () => {
 		const root = document.querySelector<HTMLElement>('[data-testid="tags-production-identity"]')!;
 		const tags = root.querySelectorAll<HTMLElement>('[data-slot="tag"]');
 		expect(tags).toHaveLength(3);
+		const retainedDuplicate = tags[1]!;
 		const firstRemove = tags[0]!.querySelector<HTMLButtonElement>('[data-slot="remove"]')!;
 		firstRemove.focus();
 		firstRemove.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Delete' }));
 		await tick();
 		expect(root.querySelectorAll('[data-slot="tag"]')).toHaveLength(2);
+		expect(root.querySelector('[data-tag-index="0"]')).toBe(retainedDuplicate);
 		expect(document.activeElement?.closest('[data-slot="tag"]')?.textContent).toContain('same');
 		const edit = root.querySelectorAll<HTMLButtonElement>('[data-slot="edit"]')[0]!;
 		edit.click();

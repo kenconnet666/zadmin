@@ -76,6 +76,18 @@
 		],
 		props: [
 			{
+				default: 'Provider localePack.date.chooseDate',
+				description: 'Calendar dialog与trigger的后备可访问名称。',
+				name: 'calendarLabel',
+				type: 'string'
+			},
+			{
+				default: 'Provider localePack.date.clearDate',
+				description: '有值时清空按钮的可访问名称。',
+				name: 'clearLabel',
+				type: 'string'
+			},
+			{
 				default: '继承Field或自动生成',
 				description: '真实DateField焦点owner的id。',
 				name: 'controlId',
@@ -93,6 +105,66 @@
 				description: '非受控初始日期。',
 				name: 'defaultValue',
 				type: 'CalendarDate | null'
+			},
+			{
+				default: 'false',
+				description: '非受控初始Popover状态；reset时关闭。',
+				name: 'defaultOpen',
+				type: 'boolean'
+			},
+			{
+				default: 'Field context或false',
+				description: '禁用DateField、actions、Calendar并退出FormData。',
+				name: 'disabled',
+				type: 'boolean'
+			},
+			{
+				default: 'locale规则',
+				description: '显式Calendar周起始日。',
+				name: 'firstDayOfWeek',
+				type: 'Weekday'
+			},
+			{
+				default: '最近祖先form',
+				description: '外层唯一FormValueBridge关联的form id。',
+				name: 'form',
+				type: 'string'
+			},
+			{
+				default: 'long date',
+				description: 'triggerLabel使用的本地化日期格式选项。',
+				name: 'formatOptions',
+				type: 'Intl.DateTimeFormatOptions'
+			},
+			{
+				default: 'Field context或false',
+				description: '同步InputGroup、DateField与ARIA无效状态。',
+				name: 'invalid',
+				type: 'boolean'
+			},
+			{
+				default: 'Provider locale',
+				description: 'DateField与Calendar使用的BCP 47 locale。',
+				name: 'locale',
+				type: 'string'
+			},
+			{
+				default: 'undefined',
+				description: 'DateField与Calendar共享最大日期。',
+				name: 'maxValue',
+				type: 'CalendarDate'
+			},
+			{
+				default: 'undefined',
+				description: 'DateField与Calendar共享最小日期。',
+				name: 'minValue',
+				type: 'CalendarDate'
+			},
+			{
+				default: 'Field context或undefined',
+				description: '唯一ISO CalendarDate FormData字段名。',
+				name: 'name',
+				type: 'string'
 			},
 			{
 				bindable: true,
@@ -124,6 +196,48 @@
 				description: '统一DateField和Lucide actions尺寸。',
 				name: 'size',
 				type: "'small' | 'medium' | 'large'"
+			},
+			{
+				default: 'localePack.date.chooseDate',
+				description: '空值时传给triggerLabel的display提示。',
+				name: 'placeholder',
+				type: 'string'
+			},
+			{
+				default: "'bottom-start'",
+				description: 'Popover逻辑首选方位；RTL由Floating解析。',
+				name: 'placement',
+				type: 'PopoverPlacement'
+			},
+			{
+				default: 'Field context或false',
+				description: 'DateField保持可聚焦和值提交，Calendar/clear停用。',
+				name: 'readonly',
+				type: 'boolean'
+			},
+			{
+				default: 'Field context或false',
+				description: '投射到可编辑DateField的必填语义。',
+				name: 'required',
+				type: 'boolean'
+			},
+			{
+				default: 'true',
+				description: 'Calendar是否渲染相邻月份日期按钮。',
+				name: 'showOutsideDates',
+				type: 'boolean'
+			},
+			{
+				default: 'Provider timeZone',
+				description: 'DateField、Calendar today与trigger使用的IANA时区。',
+				name: 'timeZone',
+				type: 'string'
+			},
+			{
+				default: 'calendarLabel',
+				description: '根据本地化display生成trigger可访问名称。',
+				name: 'triggerLabel',
+				type: '(display: string) => string'
 			}
 		],
 		since: 'unreleased',

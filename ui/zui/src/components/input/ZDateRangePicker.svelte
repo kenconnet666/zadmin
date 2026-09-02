@@ -53,7 +53,8 @@
 				name: 'value',
 				type: 'CalendarRangeValue | null'
 			},
-			{ description: 'Popover状态。', name: 'open', type: 'boolean' }
+			{ description: 'Popover状态。', name: 'open', type: 'boolean' },
+			{ description: '真实根节点引用。', name: 'ref', type: 'HTMLDivElement | null' }
 		],
 		dependencies: ['ZDateField', 'ZCalendar', 'ZInputGroup', 'ZPopover', 'FormValueBridge'],
 		events: [
@@ -79,6 +80,24 @@
 		],
 		props: [
 			{
+				default: 'Provider localePack.date.chooseDateRange',
+				description: '范围group、Calendar dialog与trigger的后备可访问名称。',
+				name: 'calendarLabel',
+				type: 'string'
+			},
+			{
+				default: 'Provider localePack.date.clearDateRange',
+				description: '有任一端值时清空按钮的可访问名称。',
+				name: 'clearLabel',
+				type: 'string'
+			},
+			{
+				default: '继承Field或自动生成',
+				description: '起始DateField焦点owner的id；结束字段派生独立id。',
+				name: 'controlId',
+				type: 'string'
+			},
+			{
 				bindable: true,
 				default: 'null',
 				description: '允许start/end任一暂缺；两端齐全时保持start <= end。',
@@ -90,6 +109,66 @@
 				description: '非受控初始范围；反向完整值在消费时规范化。',
 				name: 'defaultValue',
 				type: 'CalendarRangeValue | CalendarRange | null'
+			},
+			{
+				default: 'false',
+				description: '非受控初始Popover状态；form reset时关闭。',
+				name: 'defaultOpen',
+				type: 'boolean'
+			},
+			{
+				default: 'Field context或false',
+				description: '禁用两个DateField、actions、Calendar并退出FormData。',
+				name: 'disabled',
+				type: 'boolean'
+			},
+			{
+				default: 'Provider localePack.date.endDate',
+				description: '结束DateField的可访问名称。',
+				name: 'endLabel',
+				type: 'string'
+			},
+			{
+				default: 'locale规则',
+				description: 'Calendar显式周起始日。',
+				name: 'firstDayOfWeek',
+				type: 'Weekday'
+			},
+			{
+				default: '最近祖先form',
+				description: '外层唯一FormValueBridge关联的form id。',
+				name: 'form',
+				type: 'string'
+			},
+			{
+				default: 'Field context或false',
+				description: '同步InputGroup、两个DateField与根状态的无效语义。',
+				name: 'invalid',
+				type: 'boolean'
+			},
+			{
+				default: 'Provider locale',
+				description: '两个DateField与Calendar使用的BCP 47 locale。',
+				name: 'locale',
+				type: 'string'
+			},
+			{
+				default: 'undefined',
+				description: '两个DateField与Calendar共享最大日期。',
+				name: 'maxValue',
+				type: 'CalendarDate'
+			},
+			{
+				default: 'undefined',
+				description: '两个DateField与Calendar共享最小日期。',
+				name: 'minValue',
+				type: 'CalendarDate'
+			},
+			{
+				default: 'Field context或undefined',
+				description: '以name.start与name.end分别提交ISO CalendarDate，允许partial range。',
+				name: 'name',
+				type: 'string'
 			},
 			{
 				bindable: true,
@@ -117,10 +196,53 @@
 				type: "(date: CalendarDate, part: 'start' | 'end') => boolean"
 			},
 			{
+				default: "'bottom-start'",
+				description: 'Popover逻辑首选方位；RTL由Floating解析。',
+				name: 'placement',
+				type: 'PopoverPlacement'
+			},
+			{
+				bindable: true,
+				default: 'null',
+				description: '真实范围group根节点引用。',
+				name: 'ref',
+				type: 'HTMLDivElement | null'
+			},
+			{
+				default: 'Field context或false',
+				description: '两个DateField保持可聚焦和值提交，Calendar与clear停用。',
+				name: 'readonly',
+				type: 'boolean'
+			},
+			{
+				default: 'Field context或false',
+				description: '投射到两个可编辑DateField的必填语义。',
+				name: 'required',
+				type: 'boolean'
+			},
+			{
+				default: 'true',
+				description: 'Calendar是否渲染相邻月份日期按钮。',
+				name: 'showOutsideDates',
+				type: 'boolean'
+			},
+			{
 				default: 'Field size或Provider density',
 				description: '统一两个DateField和Lucide actions尺寸。',
 				name: 'size',
 				type: "'small' | 'medium' | 'large'"
+			},
+			{
+				default: 'Provider localePack.date.startDate',
+				description: '起始DateField的可访问名称。',
+				name: 'startLabel',
+				type: 'string'
+			},
+			{
+				default: 'Provider timeZone',
+				description: '两个DateField与Calendar today使用的IANA时区。',
+				name: 'timeZone',
+				type: 'string'
 			}
 		],
 		since: 'unreleased',

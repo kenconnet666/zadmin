@@ -231,7 +231,7 @@
 			{ description: '必填状态。', name: 'data-required', values: ['true'] },
 			{ description: '解析后的尺寸。', name: 'data-size', values: ['small', 'medium', 'large'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'以规范化hex/null单值、原生color/range输入、alpha、预设、清空、Popover和统一Field/FormValue合同组成的ColorPicker。'
 	} as const satisfies ZuiComponentMetadata;

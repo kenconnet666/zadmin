@@ -4895,7 +4895,7 @@
 			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZDataTable.svelte",
 			"apiDocumentation": {
-				"metadataGapPropCount": 22,
+				"metadataGapPropCount": 0,
 				"teachingFallbackPropCount": 0
 			},
 			"stages": {
@@ -4923,7 +4923,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "ac2301d82290656ac86474176a60db6bcdd66cfee293345f51e5e3a2052153b0 API snapshot entry"
+						"detail": "aab02ba54b93b02c0b2e7407486933bf3550444e0b99ba1f45bb17cab7b5cd20 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -7353,7 +7353,7 @@
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZCascader.svelte",
 			"apiDocumentation": {
-				"metadataGapPropCount": 16,
+				"metadataGapPropCount": 0,
 				"teachingFallbackPropCount": 0
 			},
 			"stages": {
@@ -7381,7 +7381,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "e5d4a8dff79ad345eeec727e38f70f4e680f2e8f9915334dfe83f0cec7e7b432 API snapshot entry"
+						"detail": "a053b099a87a677d4a759c595473a57b9cedb07bf8e562ba8e63bc487dff31c3 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -7488,10 +7488,10 @@
 			"name": "ZColorPicker",
 			"category": "input",
 			"family": null,
-			"status": "experimental",
+			"status": "stable",
 			"source": "ui/zui/src/components/input/ZColorPicker.svelte",
 			"apiDocumentation": {
-				"metadataGapPropCount": 14,
+				"metadataGapPropCount": 0,
 				"teachingFallbackPropCount": 0
 			},
 			"stages": {
@@ -7519,7 +7519,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "ee2fe950184086ea0d0f4305d639fad8b89cd8916535e1ac1b580864d5b3b5de API snapshot entry"
+						"detail": "73ab6447e108772528e3ae6e795da037d6303b4db14aafe703429d2f4fdaa623 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -7536,6 +7536,10 @@
 					{
 						"path": "ui/zui/tests/ColorPickerProductionFixture.svelte",
 						"detail": "ZColorPicker explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/ColorPickerAllowAlphaFixture.svelte",
+						"detail": "ZColorPicker explicit rendered fixture usage"
 					}
 				],
 				"DesktopVerified": [],
@@ -7546,6 +7550,10 @@
 					},
 					{
 						"path": "ui/zui/tests/ColorPickerProductionFixture.svelte",
+						"detail": "ZColorPicker explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/ColorPickerAllowAlphaFixture.svelte",
 						"detail": "ZColorPicker explicit rendered fixture usage"
 					}
 				]
@@ -7629,7 +7637,7 @@
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZDatePicker.svelte",
 			"apiDocumentation": {
-				"metadataGapPropCount": 19,
+				"metadataGapPropCount": 0,
 				"teachingFallbackPropCount": 0
 			},
 			"stages": {
@@ -7657,7 +7665,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "e717af407c3b31212447d37f5ed140e05e2b7bfb460f927e9a0396cc6d0e2089 API snapshot entry"
+						"detail": "30f6fa54a2087060b9a16a5d60927c5963e7bdffd884b41125251941c3f398f2 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -7689,7 +7697,7 @@
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZDateRangePicker.svelte",
 			"apiDocumentation": {
-				"metadataGapPropCount": 20,
+				"metadataGapPropCount": 0,
 				"teachingFallbackPropCount": 0
 			},
 			"stages": {
@@ -7717,7 +7725,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "224e1b081a99d1ac8f69389ebc536ee682bf6649f1ccddfb4c2558db78495a88 API snapshot entry"
+						"detail": "483bec8bd273898f3ec864fb77a216aef232218f9c8584b5bc39a70aa9d5c418 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -7835,7 +7843,7 @@
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZFileUpload.svelte",
 			"apiDocumentation": {
-				"metadataGapPropCount": 15,
+				"metadataGapPropCount": 0,
 				"teachingFallbackPropCount": 0
 			},
 			"stages": {
@@ -7863,7 +7871,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "d3fe893741ff610529186d91ebb16aade4479066378912da8f03b94141510c9d API snapshot entry"
+						"detail": "a77404559141cf8f3a4e06df1a6111283c2ffdfa5c46050c193b224af9ebd84a API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -8219,7 +8227,7 @@
 			"name": "ZMention",
 			"category": "input",
 			"family": null,
-			"status": "experimental",
+			"status": "stable",
 			"source": "ui/zui/src/components/input/ZMention.svelte",
 			"apiDocumentation": {
 				"metadataGapPropCount": 0,
@@ -8250,7 +8258,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "5022eaac68433e31a199ebc31b17a21078b005e94fe2b9dfd8564cd706690c29 API snapshot entry"
+						"detail": "347c01ed8698c3b67359ed3c6926a723e8892c183b4021a1ada4b82e37ce401f API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -8631,10 +8639,10 @@
 			"name": "ZTagsInput",
 			"category": "input",
 			"family": null,
-			"status": "experimental",
+			"status": "stable",
 			"source": "ui/zui/src/components/input/ZTagsInput.svelte",
 			"apiDocumentation": {
-				"metadataGapPropCount": 10,
+				"metadataGapPropCount": 0,
 				"teachingFallbackPropCount": 0
 			},
 			"stages": {
@@ -8662,7 +8670,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "05ab85671694ddfe841fd335279772f5387e2a5fa033f330fe532f4b6a856955 API snapshot entry"
+						"detail": "b79aca8c0952fec4a80f8f71cb3c91e812f4d26d5427228f115d2ced4b7c3722 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -8939,7 +8947,7 @@
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZTreeSelect.svelte",
 			"apiDocumentation": {
-				"metadataGapPropCount": 14,
+				"metadataGapPropCount": 0,
 				"teachingFallbackPropCount": 0
 			},
 			"stages": {
@@ -8967,7 +8975,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "f99774bafe95f391ef59e1ddd43e3934a80443b7aec8d889465aba9c87030d23 API snapshot entry"
+						"detail": "fd0f45eccd4f19a36b07d4c488d1126f9c101f2d6be57cf7f48b75a923e14c6e API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [

@@ -13,6 +13,7 @@
 		disabled = false,
 		invalid = false,
 		readonly = false,
+		replacementFiles,
 		transport
 	}: {
 		autoUpload?: boolean;
@@ -20,6 +21,7 @@
 		disabled?: boolean;
 		invalid?: boolean;
 		readonly?: boolean;
+		replacementFiles?: readonly FileUploadItem[];
 		transport?: FileUploadTransport;
 	} = $props();
 
@@ -57,6 +59,11 @@
 	<button type="button" data-testid="external-clear" onclick={() => (files = [])}>
 		External clear
 	</button>
+	{#if replacementFiles}
+		<button type="button" data-testid="external-replace" onclick={() => (files = replacementFiles)}>
+			External replace
+		</button>
+	{/if}
 	<button type="reset">Reset</button>
 	<output data-testid="file-upload-production-output">
 		{(files ?? defaultFiles)

@@ -5990,27 +5990,7 @@ export const datePickerApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZDatePicker.svelte',
-	metadataGapProps: [
-		'calendarLabel',
-		'clearLabel',
-		'defaultOpen',
-		'disabled',
-		'firstDayOfWeek',
-		'form',
-		'formatOptions',
-		'invalid',
-		'locale',
-		'maxValue',
-		'minValue',
-		'name',
-		'placeholder',
-		'placement',
-		'readonly',
-		'required',
-		'showOutsideDates',
-		'timeZone',
-		'triggerLabel'
-	]
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const dateRangePickerApiFacts = {
@@ -6166,28 +6146,7 @@ export const dateRangePickerApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZDateRangePicker.svelte',
-	metadataGapProps: [
-		'calendarLabel',
-		'clearLabel',
-		'controlId',
-		'defaultOpen',
-		'disabled',
-		'endLabel',
-		'firstDayOfWeek',
-		'form',
-		'invalid',
-		'locale',
-		'maxValue',
-		'minValue',
-		'name',
-		'placement',
-		'ref',
-		'readonly',
-		'required',
-		'showOutsideDates',
-		'startLabel',
-		'timeZone'
-	]
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const fieldApiFacts = {
@@ -6424,23 +6383,7 @@ export const fileUploadApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZFileUpload.svelte',
-	metadataGapProps: [
-		'abortLabel',
-		'chooseLabel',
-		'controlId',
-		'disabled',
-		'dropLabel',
-		'emptyText',
-		'errorMessage',
-		'form',
-		'inputLabel',
-		'invalid',
-		'queueLabel',
-		'removeLabel',
-		'required',
-		'retryLabel',
-		'uploadLabel'
-	]
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const formApiFacts = {
@@ -8117,22 +8060,7 @@ export const treeSelectApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZTreeSelect.svelte',
-	metadataGapProps: [
-		'ariaLabel',
-		'clearLabel',
-		'controlId',
-		'defaultExpandedKeys',
-		'defaultOpen',
-		'defaultValue',
-		'form',
-		'height',
-		'itemSize',
-		'onLoadError',
-		'overscan',
-		'placeholder',
-		'treeLabel',
-		'valueLabel'
-	]
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const aspectRatioApiFacts = {

@@ -186,7 +186,7 @@
 			{ description: '建议浮层状态。', name: 'data-state', values: ['open', 'closed'] },
 			{ description: '异步建议加载中。', name: 'data-loading', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '保持textarea焦点、解析光标前trigger并以active-descendant提交建议的Mention。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

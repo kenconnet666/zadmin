@@ -81,6 +81,11 @@
 				description: '复用ZTree lazy children请求合同。',
 				name: 'onLoadChildren',
 				type: '(node: TreeNode<TKey>, context: TreeLoadContext<TKey>) => void | Promise<void>'
+			},
+			{
+				description: 'lazy branch加载失败；保留ZTree可重试状态并报告原始错误。',
+				name: 'onLoadError',
+				type: '(key: TKey, error: unknown) => void'
 			}
 		],
 		keyboard: [
@@ -97,6 +102,12 @@
 		],
 		props: [
 			{
+				default: 'native aria-label或Provider treeOptions',
+				description: '已弃用；兼容旧调用的Trigger与Tree可访问名称别名，请使用原生aria-label。',
+				name: 'ariaLabel',
+				type: 'string'
+			},
+			{
 				default: '必填',
 				description: '与ZTree相同的typed扁平节点数据。',
 				name: 'nodes',
@@ -111,10 +122,22 @@
 				type: 'TKey | null'
 			},
 			{
+				default: 'null',
+				description: '非受控初始选择；finite key规则与value一致。',
+				name: 'defaultValue',
+				type: 'TKey | null'
+			},
+			{
 				bindable: true,
 				default: 'false',
 				description: '受控或非受控Popover状态。',
 				name: 'open',
+				type: 'boolean'
+			},
+			{
+				default: 'false',
+				description: '非受控初始Popover状态。',
+				name: 'defaultOpen',
 				type: 'boolean'
 			},
 			{
@@ -125,32 +148,50 @@
 				type: 'readonly TKey[]'
 			},
 			{
+				default: '[]',
+				description: '非受控初始展开keys；去重后冻结，form reset恢复此集合。',
+				name: 'defaultExpandedKeys',
+				type: 'readonly TKey[]'
+			},
+			{
 				default: 'false',
 				description: '显示独立清空操作并支持Delete/Backspace。',
 				name: 'clearable',
 				type: 'boolean'
 			},
 			{
-				default: 'false',
+				default: 'Provider localePack.common.clear',
+				description: '独立清空按钮的可访问名称。',
+				name: 'clearLabel',
+				type: 'string'
+			},
+			{
+				default: '继承Field或自动生成',
+				description: '唯一Field焦点owner与Popover trigger id。',
+				name: 'controlId',
+				type: 'string'
+			},
+			{
+				default: 'Field context或false',
 				description: '禁用焦点、浮层、清空和表单值。',
 				name: 'disabled',
 				type: 'boolean'
 			},
 			{
-				default: 'false',
+				default: 'Field context或false',
 				description: '保持Trigger可聚焦但阻止打开、清空和选择。',
 				name: 'readonly',
 				type: 'boolean'
 			},
 			{
-				default: 'Field状态',
+				default: 'Field context或false',
 				description: '投射根与Trigger aria-invalid。',
 				name: 'invalid',
 				type: 'boolean'
 			},
 			{
-				default: 'Field状态',
-				description: '投射Trigger aria-required。',
+				default: 'Field context或false',
+				description: '投射Trigger data-required并由Field标签呈现必填语义。',
 				name: 'required',
 				type: 'boolean'
 			},
@@ -179,7 +220,54 @@
 				name: 'virtualized',
 				type: 'boolean'
 			},
-			{ default: '—', description: '真实表单字段名。', name: 'name', type: 'string' }
+			{
+				default: '320',
+				description: 'virtualized模式的ZTree viewport高度px。',
+				name: 'height',
+				type: 'number'
+			},
+			{
+				default: '36',
+				description: 'virtualized模式的固定树项高度px。',
+				name: 'itemSize',
+				type: 'number'
+			},
+			{
+				default: '4',
+				description: 'virtualized模式在可见区前后额外挂载项数。',
+				name: 'overscan',
+				type: 'number'
+			},
+			{
+				default: '最近祖先form',
+				description: '唯一FormValueBridge关联的外部form id。',
+				name: 'form',
+				type: 'string'
+			},
+			{
+				default: 'Field context或undefined',
+				description: '选择key的真实FormData字段名。',
+				name: 'name',
+				type: 'string'
+			},
+			{
+				default: 'Provider localePack.collection.selectNode',
+				description: 'null值时Trigger显示文本。',
+				name: 'placeholder',
+				type: 'string'
+			},
+			{
+				default: 'aria-label、兼容ariaLabel或Provider treeOptions',
+				description: 'Popover内真实tree的可访问名称。',
+				name: 'treeLabel',
+				type: 'string'
+			},
+			{
+				default: 'node.label ?? String(key)',
+				description: '根据typed key与当前顶层节点生成Trigger显示文本。',
+				name: 'valueLabel',
+				type: '(key: TKey, node: TreeNode<TKey> | undefined) => string'
+			}
 		],
 		since: 'unreleased',
 		snippets: [

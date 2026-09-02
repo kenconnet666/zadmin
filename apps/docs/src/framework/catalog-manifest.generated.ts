@@ -975,7 +975,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'input',
 		summary:
 			'生产级单值ColorPicker：规范化hex/null、原生color/range、alpha、预设、清空、Field/FormValueBridge和Popover各自拥有清晰边界。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'color picker',
 			'hex',
@@ -1204,7 +1204,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'input',
 		summary:
 			'光标感知的原生textarea Mention：LogicalCollection和ActiveDescendant拥有typed建议，外部owner可异步更新结果，固定行窗口支持大型目录。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'mention',
 			'textarea',
@@ -1568,7 +1568,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'input',
 		summary:
 			'生产级string-only TagsInput：独立values/draft owner、ZTag复用、方向键标签焦点、批量粘贴、可选编辑、视觉overflow与多值FormValueBridge保持正交。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'tags input',
 			'tag group',
