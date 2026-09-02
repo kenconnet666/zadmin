@@ -1016,6 +1016,8 @@ describe('compiled ICSS browser updates', () => {
 		const delta = document.querySelector<HTMLElement>('[data-testid="combobox-d"]');
 		const alpha = document.querySelector<HTMLElement>('[data-testid="combobox-a"]');
 		expect(alpha?.hidden).toBe(true);
+		expect(getComputedStyle(alpha!).display).toBe('none');
+		expect(alpha?.checkVisibility()).toBe(false);
 		expect(delta?.hidden).toBe(false);
 		await expect.poll(() => input?.getAttribute('aria-activedescendant')).toBe(delta?.id);
 		expect(document.activeElement).toBe(input);
@@ -1036,6 +1038,10 @@ describe('compiled ICSS browser updates', () => {
 			input.dispatchEvent(new InputEvent('input', { bubbles: true }));
 		}
 		await tick();
+		const restoredAlpha = document.querySelector<HTMLElement>('[data-testid="combobox-a"]');
+		expect(restoredAlpha?.id).toBe(alpha?.id);
+		expect(restoredAlpha?.hidden).toBe(false);
+		expect(getComputedStyle(restoredAlpha!).display).not.toBe('none');
 		for (const key of ['ArrowDown', 'ArrowUp', 'Home', 'End']) {
 			input?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key }));
 		}

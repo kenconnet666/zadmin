@@ -100,6 +100,10 @@
 			s.userSelect.none;
 		},
 		variants: {
+			visible: {
+				false: (s) => s.display.none,
+				true: () => undefined
+			},
 			disabled: {
 				false: () => undefined,
 				true: (s) => {
@@ -110,7 +114,7 @@
 			highlighted: { false: () => undefined, true: (s) => s.backgroundColor._surface },
 			selected: { false: () => undefined, true: (s) => s.color._primary }
 		},
-		defaultVariants: { disabled: false, highlighted: false, selected: false }
+		defaultVariants: { disabled: false, highlighted: false, selected: false, visible: true }
 	});
 	registerRecipeHmr(import.meta, recipe);
 
@@ -138,7 +142,7 @@
 	const selected = $derived(combo.isSelected(value));
 	const highlighted = $derived(Object.is(combo.activeKey, value));
 	const rootClass = $derived(
-		zui.recipe(recipe, { disabled: resolvedDisabled, highlighted, selected })
+		zui.recipe(recipe, { disabled: resolvedDisabled, highlighted, selected, visible })
 	);
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
