@@ -17,8 +17,12 @@ const browserInstances: { browser: 'chromium' | 'firefox' | 'webkit' }[] = colle
 	: focusedBrowser === 'chromium' || focusedBrowser === 'firefox' || focusedBrowser === 'webkit'
 		? [{ browser: focusedBrowser }]
 		: [{ browser: 'chromium' }, { browser: 'firefox' }, { browser: 'webkit' }];
-const requiresSerialBrowserFiles =
-	process.platform === 'win32' && browserInstances.some(({ browser }) => browser === 'firefox');
+// Firefox's Playwright provider is not reliable when Vitest creates pages for
+// multiple browser files concurrently. On Windows it can fail inside
+// browserContext.newPage; under the Linux multi-browser gate it can starve
+// iframe focus/Portal work until the assertion timeout. Keep focused Chromium
+// and WebKit runs parallel, but serialize every run that includes Firefox.
+const requiresSerialBrowserFiles = browserInstances.some(({ browser }) => browser === 'firefox');
 
 export default defineConfig({
 	optimizeDeps: {

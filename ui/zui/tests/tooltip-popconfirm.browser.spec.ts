@@ -24,8 +24,10 @@ describe('production Popconfirm and Tooltip', () => {
 		document.querySelector<HTMLButtonElement>('[data-testid="confirm-resolve"]')?.click();
 		await wait(140);
 		await tick();
-		expect(document.querySelector('[data-testid="confirm-content"]')).toBeNull();
-		expect(document.activeElement).toBe(trigger);
+		await expect
+			.poll(() => document.querySelector('[data-testid="confirm-content"]'), { timeout: 10_000 })
+			.toBeNull();
+		await expect.poll(() => document.activeElement, { timeout: 10_000 }).toBe(trigger);
 	});
 
 	it('keeps reject open and announces a safe formatted error', async () => {
