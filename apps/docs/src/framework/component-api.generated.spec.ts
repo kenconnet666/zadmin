@@ -20,4 +20,19 @@ describe('generated component API facts', () => {
 			}
 		}
 	});
+
+	it('attaches acyclic member facts only to compound family roots', () => {
+		for (const fact of Object.values(generatedFacts) as ComponentApiFacts[]) {
+			const members = fact.members?.() ?? [];
+			if (members.length === 0) continue;
+			const directory = fact.source.slice(0, fact.source.lastIndexOf('/'));
+			expect(fact.id).toBe(directory.slice(directory.lastIndexOf('/') + 1));
+			expect(new Set(members.map(({ id }) => id)).size).toBe(members.length);
+			for (const member of members) {
+				expect(member.id).not.toBe(fact.id);
+				expect(member.source.slice(0, member.source.lastIndexOf('/'))).toBe(directory);
+				expect(member.members).toBeUndefined();
+			}
+		}
+	});
 });

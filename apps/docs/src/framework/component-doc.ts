@@ -95,12 +95,16 @@ function sourceBackedProps(
 	teaching: ComponentTeachingMetadata | undefined
 ): readonly ZuiPropMetadata[] {
 	const factsByName = new Map(facts?.props.map((prop) => [prop.name, prop]) ?? []);
-	const documentedNames = new Set([
-		...metadata.bindings.map(({ name }) => name),
-		...metadata.props.map(({ name }) => name),
-		...metadata.snippets.map(({ name }) => name)
-	]);
 	const omittedMetadataProps = new Set(teaching?.omitMetadataProps ?? []);
+	const documentedNames = new Set([
+		...metadata.bindings
+			.filter(({ name }) => !omittedMetadataProps.has(name))
+			.map(({ name }) => name),
+		...metadata.props.filter(({ name }) => !omittedMetadataProps.has(name)).map(({ name }) => name),
+		...metadata.snippets
+			.filter(({ name }) => !omittedMetadataProps.has(name))
+			.map(({ name }) => name)
+	]);
 	const rows = metadata.props
 		.filter(({ name }) => !omittedMetadataProps.has(name))
 		.map((prop) => {
@@ -116,10 +120,11 @@ function sourceBackedProps(
 		});
 	for (const fact of facts?.props ?? []) {
 		const supplement = teaching?.props?.[fact.name];
-		if (!supplement || documentedNames.has(fact.name)) continue;
+		if (documentedNames.has(fact.name)) continue;
 		rows.push({
-			default: supplement.default ?? '—',
-			description: supplement.description,
+			default: supplement?.default ?? '—',
+			description:
+				supplement?.description ?? `公开属性，类型和必填性来自${facts.declaration}的静态AST。`,
 			name: fact.name,
 			required: fact.required || undefined,
 			type: fact.type
@@ -254,14 +259,6 @@ export function defineComponentDoc(
 			);
 		}
 	}
-	const uncoveredProps = sourceApi?.undocumentedProps.filter(
-		(name) => doc.teaching?.props?.[name] === undefined
-	);
-	if (sourceApi && uncoveredProps && uncoveredProps.length > 0) {
-		throw new TypeError(
-			`${metadata.name} cannot enable generated Props until its teaching metadata covers: ${uncoveredProps.join(', ')}.`
-		);
-	}
 	const resolvedMetadata = {
 		...metadata,
 		props: sourceBackedProps(metadata, sourceApi, doc.teaching),
@@ -269,7 +266,15 @@ export function defineComponentDoc(
 	} satisfies ZuiComponentMetadata;
 	appendMetadataApi(api, resolvedMetadata, resolvedMetadata.props, sourceApi);
 	for (const member of doc.members ?? []) {
-		appendMetadataApi(api, member, member.props, undefined, `${member.id}-`, `${member.name} `);
+		const memberFacts = sourceApi?.members?.().find(({ id }) => id === member.id);
+		appendMetadataApi(
+			api,
+			member,
+			sourceBackedProps(member, memberFacts, undefined),
+			memberFacts,
+			`${member.id}-`,
+			`${member.name} `
+		);
 	}
 	const apiIds = new Set(api.map(({ id }) => id));
 	for (const section of doc.additionalApi ?? []) {

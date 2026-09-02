@@ -69,7 +69,8 @@ export const accordionApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/accordion/ZAccordion.svelte',
-	undocumentedProps: []
+	undocumentedProps: [],
+	members: () => [accordionContentApiFacts, accordionItemApiFacts, accordionTriggerApiFacts]
 } as const satisfies ComponentApiFacts;
 
 export const accordionContentApiFacts = {
@@ -213,7 +214,16 @@ export const alertDialogApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/alert-dialog/ZAlertDialog.svelte',
-	undocumentedProps: []
+	undocumentedProps: [],
+	members: () => [
+		alertDialogActionApiFacts,
+		alertDialogCancelApiFacts,
+		alertDialogContentApiFacts,
+		alertDialogDescriptionApiFacts,
+		alertDialogOverlayApiFacts,
+		alertDialogTitleApiFacts,
+		alertDialogTriggerApiFacts
+	]
 } as const satisfies ComponentApiFacts;
 
 export const alertDialogActionApiFacts = {
@@ -441,7 +451,8 @@ export const comboboxApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/combobox/ZCombobox.svelte',
-	undocumentedProps: ['controlId', 'form', 'invalid', 'name', 'placement', 'required']
+	undocumentedProps: ['controlId', 'form', 'invalid', 'name', 'placement', 'required'],
+	members: () => [comboboxContentApiFacts, comboboxInputApiFacts, comboboxItemApiFacts]
 } as const satisfies ComponentApiFacts;
 
 export const comboboxContentApiFacts = {
@@ -605,7 +616,8 @@ export const contextMenuApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/context-menu/ZContextMenu.svelte',
-	undocumentedProps: []
+	undocumentedProps: [],
+	members: () => [contextMenuContentApiFacts, contextMenuTriggerApiFacts]
 } as const satisfies ComponentApiFacts;
 
 export const contextMenuContentApiFacts = {
@@ -698,7 +710,15 @@ export const dialogApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/dialog/ZDialog.svelte',
-	undocumentedProps: []
+	undocumentedProps: [],
+	members: () => [
+		dialogCloseApiFacts,
+		dialogContentApiFacts,
+		dialogDescriptionApiFacts,
+		dialogOverlayApiFacts,
+		dialogTitleApiFacts,
+		dialogTriggerApiFacts
+	]
 } as const satisfies ComponentApiFacts;
 
 export const dialogCloseApiFacts = {
@@ -905,7 +925,15 @@ export const drawerApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/drawer/ZDrawer.svelte',
-	undocumentedProps: []
+	undocumentedProps: [],
+	members: () => [
+		drawerCloseApiFacts,
+		drawerContentApiFacts,
+		drawerDescriptionApiFacts,
+		drawerOverlayApiFacts,
+		drawerTitleApiFacts,
+		drawerTriggerApiFacts
+	]
 } as const satisfies ComponentApiFacts;
 
 export const drawerCloseApiFacts = {
@@ -1017,7 +1045,8 @@ export const dropdownMenuApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/dropdown-menu/ZDropdownMenu.svelte',
-	undocumentedProps: []
+	undocumentedProps: [],
+	members: () => [dropdownMenuContentApiFacts, dropdownMenuTriggerApiFacts]
 } as const satisfies ComponentApiFacts;
 
 export const dropdownMenuContentApiFacts = {
@@ -1104,7 +1133,19 @@ export const menuApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/menu/ZMenu.svelte',
-	undocumentedProps: []
+	undocumentedProps: [],
+	members: () => [
+		menuCheckboxItemApiFacts,
+		menuGroupApiFacts,
+		menuItemApiFacts,
+		menuLabelApiFacts,
+		menuRadioGroupApiFacts,
+		menuRadioItemApiFacts,
+		menuSeparatorApiFacts,
+		menuSubApiFacts,
+		menuSubContentApiFacts,
+		menuSubTriggerApiFacts
+	]
 } as const satisfies ComponentApiFacts;
 
 export const menuCheckboxItemApiFacts = {
@@ -1625,7 +1666,8 @@ export const multiSelectApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/multi-select/ZMultiSelect.svelte',
-	undocumentedProps: ['controlId', 'form', 'invalid', 'name', 'required']
+	undocumentedProps: ['controlId', 'form', 'invalid', 'name', 'required'],
+	members: () => [multiSelectContentApiFacts, multiSelectItemApiFacts, multiSelectTriggerApiFacts]
 } as const satisfies ComponentApiFacts;
 
 export const multiSelectContentApiFacts = {
@@ -1794,7 +1836,15 @@ export const popconfirmApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/popconfirm/ZPopconfirm.svelte',
-	undocumentedProps: []
+	undocumentedProps: [],
+	members: () => [
+		popconfirmActionApiFacts,
+		popconfirmCancelApiFacts,
+		popconfirmContentApiFacts,
+		popconfirmDescriptionApiFacts,
+		popconfirmTitleApiFacts,
+		popconfirmTriggerApiFacts
+	]
 } as const satisfies ComponentApiFacts;
 
 export const popconfirmActionApiFacts = {
@@ -1944,7 +1994,8 @@ export const popoverApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/popover/ZPopover.svelte',
-	undocumentedProps: []
+	undocumentedProps: [],
+	members: () => [popoverContentApiFacts, popoverTriggerApiFacts]
 } as const satisfies ComponentApiFacts;
 
 export const popoverContentApiFacts = {
@@ -2117,7 +2168,8 @@ export const radioGroupApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/radio-group/ZRadioGroup.svelte',
-	undocumentedProps: []
+	undocumentedProps: [],
+	members: () => [radioGroupItemApiFacts]
 } as const satisfies ComponentApiFacts;
 
 export const radioGroupItemApiFacts = {
@@ -2289,7 +2341,8 @@ export const selectApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/select/ZSelect.svelte',
-	undocumentedProps: ['controlId', 'form', 'invalid', 'name', 'required']
+	undocumentedProps: ['controlId', 'form', 'invalid', 'name', 'required'],
+	members: () => [selectContentApiFacts, selectItemApiFacts, selectTriggerApiFacts]
 } as const satisfies ComponentApiFacts;
 
 export const selectContentApiFacts = {
@@ -2478,7 +2531,8 @@ export const tabsApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/tabs/ZTabs.svelte',
-	undocumentedProps: []
+	undocumentedProps: [],
+	members: () => [tabsListApiFacts, tabsPanelApiFacts, tabsTriggerApiFacts]
 } as const satisfies ComponentApiFacts;
 
 export const tabsListApiFacts = {
@@ -2637,7 +2691,8 @@ export const tooltipApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/tooltip/ZTooltip.svelte',
-	undocumentedProps: []
+	undocumentedProps: [],
+	members: () => [tooltipContentApiFacts, tooltipGroupApiFacts, tooltipTriggerApiFacts]
 } as const satisfies ComponentApiFacts;
 
 export const tooltipContentApiFacts = {
@@ -6663,7 +6718,32 @@ export const inputApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZInput.svelte',
-	undocumentedProps: []
+	undocumentedProps: [],
+	members: () => [
+		calendarApiFacts,
+		cascaderApiFacts,
+		checkboxApiFacts,
+		colorPickerApiFacts,
+		dateFieldApiFacts,
+		datePickerApiFacts,
+		dateRangePickerApiFacts,
+		fieldApiFacts,
+		fileUploadApiFacts,
+		formApiFacts,
+		formFieldApiFacts,
+		inputGroupApiFacts,
+		mentionApiFacts,
+		numberFieldApiFacts,
+		pinInputApiFacts,
+		segmentedApiFacts,
+		sliderApiFacts,
+		switchApiFacts,
+		tagsInputApiFacts,
+		textareaApiFacts,
+		timeFieldApiFacts,
+		transferApiFacts,
+		treeSelectApiFacts
+	]
 } as const satisfies ComponentApiFacts;
 
 export const inputGroupApiFacts = {

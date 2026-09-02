@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { dataTableMetadata } from '@zadmin/zui/metadata';
 
 import { componentDocs, componentDocsById } from './catalog.js';
-import { dataTableApiFacts } from './component-api.generated.js';
+import { dataTableApiFacts, radioGroupItemApiFacts } from './component-api.generated.js';
 import { defineComponentDoc } from './component-doc.js';
 
 describe('ZUI component documentation catalog', () => {
@@ -181,7 +181,11 @@ describe('ZUI component documentation catalog', () => {
 	it('includes compound member metadata on the owning component page', () => {
 		const radio = componentDocsById.get('radio-group');
 		expect(radio?.api.map(({ title }) => title)).toContain('ZRadioGroupItem Props');
-		expect(radio?.api.find(({ id }) => id === 'radio-group-item-props')?.rows).toHaveLength(5);
+		const itemRows = radio?.api.find(({ id }) => id === 'radio-group-item-props')?.rows ?? [];
+		const itemRowNames = new Set(itemRows.map(({ name }) => name));
+		for (const fact of radioGroupItemApiFacts.props) {
+			expect(itemRowNames, fact.name).toContain(fact.name);
+		}
 	});
 
 	it('includes FormField state metadata on the Form page', () => {
@@ -215,6 +219,16 @@ describe('ZUI component documentation catalog', () => {
 		expect(names).not.toContain('rowHeight / height');
 		expect(dataTable?.demos).toHaveLength(7);
 		expect(dataTable?.profiles).toEqual(['collection', 'data-view', 'virtualized']);
+	});
+
+	it('renders every AST-declared public prop even without hand-written teaching copy', () => {
+		const dataTable = componentDocsById.get('data-table');
+		const renderedNames = new Set(
+			dataTable?.api.flatMap(({ rows }) => rows.map(({ name }) => name))
+		);
+		for (const fact of dataTableApiFacts.props) {
+			expect(renderedNames, fact.name).toContain(fact.name);
+		}
 	});
 
 	it('lets runtime metadata strengthen conditional requirements over optional source aliases', () => {
