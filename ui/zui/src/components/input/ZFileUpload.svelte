@@ -439,6 +439,8 @@
 	let dragDepth = 0;
 	let itemSequence = 0;
 	let requestGeneration = 0;
+	// Request registry is an imperative lifecycle cache, not rendered state.
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	const activeRequests = new Map<string, ActiveRequest>();
 	let dropzoneRef = $state<HTMLButtonElement | null>(null);
 	const full = $derived(

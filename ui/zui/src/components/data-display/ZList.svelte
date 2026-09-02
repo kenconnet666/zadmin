@@ -300,6 +300,8 @@
 			throw new TypeError('ZList loadingCount must be a positive integer.');
 		}
 		if (items === undefined) return [];
+		// Validation-local set is not rendered state.
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const keys = new Set<SelectionKey>();
 		for (const entry of items) {
 			if (entry.key !== undefined && entry.id !== undefined) {
@@ -380,7 +382,7 @@
 		{#if loadingContent}
 			{@render loadingContent()}
 		{:else}
-			{#each Array.from({ length: loadingCount }) as _, index (`skeleton-${index}`)}
+			{#each Array.from({ length: loadingCount }, (_, index) => index) as index (`skeleton-${index}`)}
 				<ZSkeleton height="2.25rem" />
 			{/each}
 		{/if}

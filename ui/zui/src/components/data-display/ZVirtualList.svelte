@@ -346,9 +346,14 @@
 	let mounted = false;
 	let resizeObserver: ResizeObserver | undefined;
 	let viewportWidth = -1;
+	// DOM registry is mutated by attachments and read by imperative lifecycle code.
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	const itemElements = new Map<HTMLElement, TKey>();
 	const normalized = $derived.by(() => {
+		// Normalization-local sets are not rendered state.
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const keys = new Set<TKey>();
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const ids = new Set<string>();
 		return items.map((entry, index) => {
 			const key = itemKey(entry, index);

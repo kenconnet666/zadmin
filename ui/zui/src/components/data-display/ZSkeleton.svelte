@@ -202,7 +202,7 @@
 		data-reduced-motion={reduced || undefined}
 		data-static={!animated || reduced || undefined}
 	>
-		{#each Array.from({ length: resolvedLines }) as _, index (index)}
+		{#each Array.from({ length: resolvedLines }, (_, index) => index) as index (index)}
 			<span class={rootClass} data-slot="line"></span>
 		{/each}
 	</span>{/if}

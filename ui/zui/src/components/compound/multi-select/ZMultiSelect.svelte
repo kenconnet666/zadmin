@@ -242,6 +242,8 @@
 	} from './context.svelte.js';
 
 	function normalizeValues(source: readonly SelectionKey[], name: string): readonly SelectionKey[] {
+		// Normalization-local set is not rendered state.
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const unique = new Set<SelectionKey>();
 		for (const key of source) {
 			if (typeof key !== 'string' && typeof key !== 'number') {

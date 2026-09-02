@@ -211,6 +211,8 @@
 	const compound = new CompoundLogicalCollectionRegistry<SelectionKey, TabsCollectionItem>(mounted);
 	const collection = $derived(compound.collection);
 	const view = $derived(collection.full);
+	// Opaque key slots are a stable-id cache; collection state owns UI reactivity.
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	const slots = new Map<SelectionKey, number>();
 	let nextSlot = 0;
 	let focusWithin = $state(false);

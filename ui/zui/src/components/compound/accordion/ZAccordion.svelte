@@ -236,6 +236,8 @@
 	const owner = Symbol('zui-accordion-owner');
 	const collection = $derived(compound.collection);
 	const view = $derived(collection.full);
+	// Opaque key slots are a stable-id cache; collection state owns UI reactivity.
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	const slots = new Map<SelectionKey, number>();
 	let nextSlot = 0;
 	let focusWithin = $state(false);
@@ -261,6 +263,8 @@
 		if (!Array.isArray(source))
 			throw new TypeError('ZAccordion type="multiple" requires a readonly SelectionKey[] value.');
 		const values: SelectionKey[] = [];
+		// Validation-local set is not rendered state.
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const seen = new Set<SelectionKey>();
 		for (const key of source) {
 			assertKey(key);

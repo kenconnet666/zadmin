@@ -346,6 +346,8 @@
 	const rgb = $derived(parsed ? formatHexColor(parsed, false) : '#000000');
 	const resolvedOpen = $derived(openState.current && !resolvedDisabled && !resolvedReadonly);
 	const normalizedPresets = $derived.by(() => {
+		// Preset validation-local set is not rendered state.
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const values = new Set<string>();
 		return Object.freeze(
 			presets.map((preset) => {

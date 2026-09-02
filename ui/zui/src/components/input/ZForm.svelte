@@ -299,11 +299,13 @@
 	// Timers and running validation IDs are lifecycle bookkeeping, not rendered collections.
 	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	const validationTimers = new Map<string, { readonly id: number; readonly view: Window }>();
+	// Validation run ids are lifecycle bookkeeping, not rendered state.
 	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	const validationRuns = new Set<number>();
 	let validationEpoch = 0;
 	let validationRunId = 0;
 	const triggers = $derived.by(() => {
+		// Validation trigger normalization is pure derived input.
 		const result = new Set(validateOn);
 		if ([...result].some((trigger) => !['blur', 'change', 'submit'].includes(trigger))) {
 			throw new TypeError('ZForm validateOn contains an unsupported trigger.');
@@ -339,6 +341,8 @@
 	}
 
 	function uniquePaths(paths: readonly FieldPathInput[]): readonly FieldPath[] {
+		// Deduplication-local set is not rendered state.
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const seen = new Set<string>();
 		const result: FieldPath[] = [];
 		for (const pathInput of paths) {
