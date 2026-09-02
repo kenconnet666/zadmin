@@ -647,10 +647,11 @@
 				const direction = event.key === 'ArrowUp' || event.key === 'PageUp' ? 1 : -1;
 				const amount =
 					event.key.startsWith('Page') || event.shiftKey ? constraints.pageStep : constraints.step;
-				// Keyboard steps must use the live DOM draft. Controlled formatting can lag a
-				// browser `fill()` event by one reactive flush even though the draft is valid.
-				const parsedDraft = parseDraft(event.currentTarget.value);
-				const baseValue = parsedDraft.valid ? parsedDraft.value : undefined;
+				// Keyboard steps prefer the latest valid reactive draft. A controlled render can
+				// overwrite the DOM value for one flush after a browser `fill()` event.
+				const parsedDraft = parseDraft(draft);
+				const liveDraft = parsedDraft.valid ? parsedDraft : parseDraft(event.currentTarget.value);
+				const baseValue = liveDraft.valid ? liveDraft.value : undefined;
 				draft = formatEditValue(changeBy(direction, amount, baseValue));
 				break;
 			}
