@@ -86,7 +86,7 @@ function buildReleaseHandoffPlan({ manifest, sourceRevision, tag = null }) {
 				releaseTag === null ? null : { sourceRevision, status: 'not-executed', tag: releaseTag },
 			versionedDocs: {
 				artifactName: 'workspace-build-artifacts',
-				manifest: 'zui-artifact/versioned-docs.json',
+				manifest: 'zui-artifact/version-manifest.json',
 				package: '@zadmin/zui',
 				status: 'requires-separate-artifact-validation',
 				supportMatrix: 'zui-artifact/support-matrix.json',
@@ -131,6 +131,11 @@ export function validateReleaseHandoffPlan(plan, manifest) {
 		plan.plannedConsumers?.npmPublish?.sha256 !== zui.sha256
 	)
 		throw new Error('Release handoff npm publish input is not the validated ZUI tarball.');
+	if (
+		plan.plannedConsumers?.versionedDocs?.manifest !== 'zui-artifact/version-manifest.json' ||
+		plan.plannedConsumers?.versionedDocs?.supportMatrix !== 'zui-artifact/support-matrix.json'
+	)
+		throw new Error('Release handoff versioned Docs inputs are invalid.');
 	const expectedTag = `@zadmin/zui@${zui.version}`;
 	if (plan.releaseTag !== null && plan.releaseTag !== expectedTag)
 		throw new Error(`Release handoff plan tag must be ${expectedTag}.`);
@@ -263,6 +268,11 @@ function selfTest() {
 			'a mismatched revision',
 			/plan revision does not match its manifest/u,
 			(value) => (value.sourceRevision = 'b'.repeat(40))
+		],
+		[
+			'an invalid versioned Docs manifest',
+			/versioned Docs inputs are invalid/u,
+			(value) => (value.plannedConsumers.versionedDocs.manifest = 'zui-artifact/wrong.json')
 		]
 	]) {
 		const invalid = structuredClone(plan);
