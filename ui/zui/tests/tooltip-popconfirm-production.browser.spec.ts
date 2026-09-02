@@ -9,7 +9,7 @@ import TooltipPopconfirmProductionFixture from './TooltipPopconfirmProductionFix
 const wait = (duration: number): Promise<void> =>
 	new Promise((resolve) => setTimeout(resolve, duration));
 
-describe('production Popconfirm and Tooltip', () => {
+describe.sequential('ZPopconfirm and ZTooltip production contracts', () => {
 	it('owns pending, blocks duplicate confirmation, resolves and restores trigger focus', async () => {
 		render(TooltipPopconfirmProductionFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="confirm-trigger"]')!;
@@ -108,6 +108,15 @@ describe('production Popconfirm and Tooltip', () => {
 		const second = document.querySelector<HTMLButtonElement>('[data-testid="tooltip-second"]')!;
 		first.focus();
 		await tick();
+		await expect
+			.poll(
+				() =>
+					document
+						.querySelector('[data-testid="tooltip-first-content"]')
+						?.getAttribute('data-state'),
+				{ timeout: 2_000 }
+			)
+			.toBe('open');
 		second.dispatchEvent(new PointerEvent('pointerenter', { bubbles: true }));
 		await wait(45);
 		await tick();
