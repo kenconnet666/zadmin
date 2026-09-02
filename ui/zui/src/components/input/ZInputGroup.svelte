@@ -132,7 +132,7 @@
 			{ description: '解析尺寸。', name: 'data-size', values: ['small', 'medium', 'large'] },
 			{ description: '当前已解析为减少动画。', name: 'data-reduced-motion', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'声明唯一业务control并桥接Field焦点、标签、说明、状态、name与size，将非交互affix和真实action分区的响应式Input Group。'
 	} as const satisfies ZuiComponentMetadata;

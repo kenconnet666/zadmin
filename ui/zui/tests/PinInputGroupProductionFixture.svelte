@@ -18,6 +18,8 @@
 	let pinChanges = $state(0);
 	let pinCompletes = $state(0);
 	let unicodeValue = $state<string | null>('A🙂');
+	let stateValue = $state('readonly');
+	let stateActions = $state(0);
 </script>
 
 <form data-testid="input-group-production-form">
@@ -47,6 +49,32 @@
 	</ZField>
 	<button type="reset">Reset grouped input</button>
 </form>
+
+<form data-testid="input-group-state-form">
+	<ZField label="State owner" error="Ignored Field error" name="state-owner" size="small">
+		<ZInputGroup data-testid="input-group-state" invalid={false} readonly size="large">
+			<ZInput bind:value={stateValue} data-testid="input-group-state-control" />
+			{#snippet suffixAction()}
+				<ZButton
+					aria-label="Enabled state action"
+					type="button"
+					onclick={() => (stateActions += 1)}
+				>
+					Enabled
+				</ZButton>
+				<ZButton aria-label="Disabled state action" disabled type="button">Disabled</ZButton>
+			{/snippet}
+		</ZInputGroup>
+	</ZField>
+</form>
+
+<ZInputGroup aria-label="Disabled state group" data-testid="input-group-disabled" disabled>
+	<ZInput data-testid="input-group-disabled-control" />
+</ZInputGroup>
+
+<ZInputGroup aria-label="Explicit invalid group" data-testid="input-group-explicit-invalid" invalid>
+	<ZInput data-testid="input-group-explicit-invalid-control" />
+</ZInputGroup>
 
 <ZField label="External OTP" description="One bridge value" name="otp" required>
 	<ZPinInput
@@ -106,5 +134,6 @@
 
 <output data-testid="pin-group-output">
 	{groupValue}:{groupActions}:{pinValue ??
-		'null'}:{pinLength}:{pinChanges}:{pinCompletes}:{unicodeValue ?? 'null'}
+		'null'}:{pinLength}:{pinChanges}:{pinCompletes}:{unicodeValue ??
+		'null'}:{stateValue}:{stateActions}
 </output>

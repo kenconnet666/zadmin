@@ -8196,7 +8196,7 @@
 			"name": "ZInputGroup",
 			"category": "input",
 			"family": null,
-			"status": "experimental",
+			"status": "stable",
 			"source": "ui/zui/src/components/input/ZInputGroup.svelte",
 			"apiDocumentation": {
 				"metadataGapPropCount": 0,
@@ -8227,7 +8227,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "513fa1e318988e78b92202fc65f0591ba2494210f04ca48438d7587904bc3935 API snapshot entry"
+						"detail": "ae80e8113ea00857a712981d93b727579a1b3a57bf860c81f6ca746f22fbbaa0 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [

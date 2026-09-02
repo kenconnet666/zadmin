@@ -124,4 +124,66 @@ describe('ZPinInput and ZInputGroup production browser contracts', () => {
 			group.querySelector<HTMLInputElement>('input')!.getBoundingClientRect().width
 		).toBeGreaterThan(0);
 	});
+
+	it('projects disabled and readonly state, preserves readonly FormData and keeps actions explicit', async () => {
+		render(PinInputGroupProductionFixture);
+		const stateGroup = document.querySelector<HTMLElement>('[data-testid="input-group-state"]')!;
+		const stateControl = document.querySelector<HTMLInputElement>(
+			'[data-testid="input-group-state-control"]'
+		)!;
+		const stateForm = stateGroup.closest('form');
+		const enabledAction = stateGroup.querySelector<HTMLButtonElement>(
+			'button[aria-label="Enabled state action"]'
+		)!;
+		const disabledAction = stateGroup.querySelector<HTMLButtonElement>(
+			'button[aria-label="Disabled state action"]'
+		)!;
+		const disabledGroup = document.querySelector<HTMLElement>(
+			'[data-testid="input-group-disabled"]'
+		)!;
+		const disabledControl = document.querySelector<HTMLInputElement>(
+			'[data-testid="input-group-disabled-control"]'
+		)!;
+
+		expect(stateGroup.dataset.readonly).toBe('true');
+		expect(stateGroup).not.toHaveAttribute('data-invalid');
+		expect(stateGroup.dataset.size).toBe('large');
+		expect(stateControl.readOnly).toBe(true);
+		expect(stateControl.disabled).toBe(false);
+		expect(stateControl.dataset.size).toBe('large');
+		expect(stateControl.getAttribute('aria-invalid')).toBeNull();
+		stateControl.focus();
+		expect(document.activeElement).toBe(stateControl);
+		expect(new FormData(stateForm!).get('state-owner')).toBe('readonly');
+		expect(enabledAction.disabled).toBe(false);
+		expect(disabledAction.disabled).toBe(true);
+		await userEvent.click(enabledAction);
+		expect(document.querySelector('[data-testid="pin-group-output"]')?.textContent).toContain(
+			':readonly:1'
+		);
+
+		expect(disabledGroup.dataset.disabled).toBe('true');
+		expect(disabledControl.disabled).toBe(true);
+		disabledControl.focus();
+		expect(document.activeElement).not.toBe(disabledControl);
+	});
+
+	it('keeps explicit Group invalid and Field invalid=false override distinct', () => {
+		render(PinInputGroupProductionFixture);
+		const explicitGroup = document.querySelector<HTMLElement>(
+			'[data-testid="input-group-explicit-invalid"]'
+		)!;
+		const explicitControl = document.querySelector<HTMLInputElement>(
+			'[data-testid="input-group-explicit-invalid-control"]'
+		)!;
+		const stateGroup = document.querySelector<HTMLElement>('[data-testid="input-group-state"]')!;
+		const stateControl = document.querySelector<HTMLInputElement>(
+			'[data-testid="input-group-state-control"]'
+		)!;
+
+		expect(explicitGroup).toHaveAttribute('data-invalid', 'true');
+		expect(explicitControl).toHaveAttribute('aria-invalid', 'true');
+		expect(stateGroup).not.toHaveAttribute('data-invalid');
+		expect(stateControl).not.toHaveAttribute('aria-invalid');
+	});
 });

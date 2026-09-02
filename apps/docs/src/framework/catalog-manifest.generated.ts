@@ -1170,7 +1170,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'input',
 		summary:
 			'拥有一个业务control注册位并桥接Field label/focus/id/name/description/state/size的Input Group，严格区分非交互affix与真实action。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'input group',
 			'input adornment',

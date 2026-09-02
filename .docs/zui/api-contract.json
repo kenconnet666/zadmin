@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"componentCount": 141,
-	"overallSha256": "8ef02fad0eb3c4c967f6c8a4512fb672494b39fc2cb934b1823328c67f6de899",
+	"overallSha256": "c80379eeeba2065cc168c3bc5c9ad8a66c3c4aec4043cd327789c21ddc6fff95",
 	"components": [
 		{
 			"id": "accordion",
@@ -615,7 +615,7 @@
 		},
 		{
 			"id": "input-group",
-			"sha256": "513fa1e318988e78b92202fc65f0591ba2494210f04ca48438d7587904bc3935",
+			"sha256": "ae80e8113ea00857a712981d93b727579a1b3a57bf860c81f6ca746f22fbbaa0",
 			"source": "src/components/input/ZInputGroup.svelte"
 		},
 		{
