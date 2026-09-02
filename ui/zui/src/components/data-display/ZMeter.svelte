@@ -36,11 +36,34 @@
 				required: true,
 				type: 'string'
 			},
-			{ default: '0 / 100', description: '范围。', name: 'min / max', type: 'number' },
 			{
-				default: 'min / max / 中点',
-				description: '低、高与最佳阈值。',
-				name: 'low / high / optimum',
+				default: '0',
+				description: '规范化范围的下界。',
+				name: 'min',
+				type: 'number'
+			},
+			{
+				default: '100',
+				description: '规范化范围的上界。',
+				name: 'max',
+				type: 'number'
+			},
+			{
+				default: 'min',
+				description: '较低阈值；缺失时使用min。',
+				name: 'low',
+				type: 'number'
+			},
+			{
+				default: 'max',
+				description: '较高阈值；缺失时使用max。',
+				name: 'high',
+				type: 'number'
+			},
+			{
+				default: '(min + max) / 2',
+				description: '最佳值；缺失时使用范围中点。',
+				name: 'optimum',
 				type: 'number'
 			},
 			{

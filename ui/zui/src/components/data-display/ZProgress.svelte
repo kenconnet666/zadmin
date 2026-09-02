@@ -78,6 +78,12 @@
 				description: '有限语义颜色，不改变进度数值。',
 				name: 'tone',
 				type: "'primary' | 'success' | 'warning' | 'danger'"
+			},
+			{
+				default: 'undefined',
+				description: '确定值的可访问文本；缺失时使用本地化百分比。',
+				name: 'formatValue',
+				type: '(value: number, range: { readonly max: number; readonly min: number }) => string'
 			}
 		],
 		since: 'unreleased',

@@ -771,7 +771,7 @@
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/combobox/ZCombobox.svelte",
 			"apiDocumentation": {
-				"metadataGapPropCount": 6,
+				"metadataGapPropCount": 0,
 				"teachingFallbackPropCount": 0
 			},
 			"stages": {
@@ -799,7 +799,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "4bc8c2cd7ebe1c2b0f3ee6616db3a8d6fccd6a052556a3c4f8c09352d94ac9fe API snapshot entry"
+						"detail": "f909c0a0586a40906d75592d8f94acd7bb84e4942f1277a1dad5955bf301869d API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -2779,7 +2779,7 @@
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/multi-select/ZMultiSelect.svelte",
 			"apiDocumentation": {
-				"metadataGapPropCount": 5,
+				"metadataGapPropCount": 0,
 				"teachingFallbackPropCount": 0
 			},
 			"stages": {
@@ -2807,7 +2807,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "8acdf31fef6df690901063b22fa3c6dcd2c1f878b86af440a7508942bd38f81a API snapshot entry"
+						"detail": "cd655776ea456d1fbad427c4012717972fe104fb462ee50eb3148e88e2cc9797 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -3761,7 +3761,7 @@
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/select/ZSelect.svelte",
 			"apiDocumentation": {
-				"metadataGapPropCount": 5,
+				"metadataGapPropCount": 0,
 				"teachingFallbackPropCount": 0
 			},
 			"stages": {
@@ -3789,7 +3789,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "15d197227cdcde72221ce19083fba8ccd4f92a2598dab933e57d2df68216004a API snapshot entry"
+						"detail": "fe8fce75c7a7041634ab7639606ac8c07ac46c7366774517b3ded4180a294ae6 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -4492,7 +4492,7 @@
 			"status": "experimental",
 			"source": "ui/zui/src/components/compound/tree/ZTree.svelte",
 			"apiDocumentation": {
-				"metadataGapPropCount": 5,
+				"metadataGapPropCount": 0,
 				"teachingFallbackPropCount": 0
 			},
 			"stages": {
@@ -4520,7 +4520,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "df0c69459a9c714fa3bd234f09e60dcb59a7e5113fc4da92a5f8dca22aeac537 API snapshot entry"
+						"detail": "aa99696cd77ec3faee79e2a06625e63d193f4246d2432db983c05aa0bf29b22b API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -4818,7 +4818,7 @@
 			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZCarousel.svelte",
 			"apiDocumentation": {
-				"metadataGapPropCount": 6,
+				"metadataGapPropCount": 0,
 				"teachingFallbackPropCount": 0
 			},
 			"stages": {
@@ -4846,7 +4846,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "8a6e755eecd81b82ffcae3d1c7a50ca79bed04e35bf9e4df5b8a659ffbf77a56 API snapshot entry"
+						"detail": "50f3e93f22188f7b6bab35d6ed0312eb214c1c1c9f4ab354fa1a66ef16167d0d API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -5232,7 +5232,7 @@
 			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZMeter.svelte",
 			"apiDocumentation": {
-				"metadataGapPropCount": 5,
+				"metadataGapPropCount": 0,
 				"teachingFallbackPropCount": 0
 			},
 			"stages": {
@@ -5260,7 +5260,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "bab820deec87ce19133e102432b2761280451a639bf1d5c68e5f724ad3be4086 API snapshot entry"
+						"detail": "8eb17cf3a781b023acd3f9b00ccc29b6321dd62c3c67b6a5795f7bbcfc626975 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -5296,7 +5296,7 @@
 			"status": "experimental",
 			"source": "ui/zui/src/components/data-display/ZProgress.svelte",
 			"apiDocumentation": {
-				"metadataGapPropCount": 1,
+				"metadataGapPropCount": 0,
 				"teachingFallbackPropCount": 0
 			},
 			"stages": {
@@ -5324,7 +5324,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "0474841a4a974068284f2edd9afe9af135ae228bf66629011d28494c1f20c623 API snapshot entry"
+						"detail": "f30714744105c1abddca2fcb2ddcd447527d46e3e35ba816d45e75e20c3ef44d API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -7921,7 +7921,7 @@
 			"status": "experimental",
 			"source": "ui/zui/src/components/input/ZForm.svelte",
 			"apiDocumentation": {
-				"metadataGapPropCount": 2,
+				"metadataGapPropCount": 0,
 				"teachingFallbackPropCount": 0
 			},
 			"stages": {
@@ -7949,7 +7949,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "f6ea5a0cafade62e07c4e83238d0f19f53d83c9489a2a51e7bf7d234d566831a API snapshot entry"
+						"detail": "1507e2c1d7d44b44db7475ca2aefb141d7db3519331fc8a42d02f55a23001349 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -9227,7 +9227,7 @@
 			"status": "experimental",
 			"source": "ui/zui/src/components/navigation/ZCommand.svelte",
 			"apiDocumentation": {
-				"metadataGapPropCount": 7,
+				"metadataGapPropCount": 0,
 				"teachingFallbackPropCount": 0
 			},
 			"stages": {
@@ -9255,7 +9255,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "e297fa238821d5043d5eed7fa754924668ddec134f0cc9f2206d83c59f6f3907 API snapshot entry"
+						"detail": "c6cd6cb93d34666584773a55b9a18be5d72d8bed56d94fa42a7ed1be40657515 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [

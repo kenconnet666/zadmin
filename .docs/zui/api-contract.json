@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"componentCount": 141,
-	"overallSha256": "29de279ff351c97ff5f95734c9c54a016a4ab98dfc36cce678aafc12e831852a",
+	"overallSha256": "af0c4078d98693910c61a8372c828147895a6574728bd9da9ab6f59ace7d5c5a",
 	"components": [
 		{
 			"id": "accordion",
@@ -65,7 +65,7 @@
 		},
 		{
 			"id": "combobox",
-			"sha256": "4bc8c2cd7ebe1c2b0f3ee6616db3a8d6fccd6a052556a3c4f8c09352d94ac9fe",
+			"sha256": "f909c0a0586a40906d75592d8f94acd7bb84e4942f1277a1dad5955bf301869d",
 			"source": "src/components/compound/combobox/ZCombobox.svelte"
 		},
 		{
@@ -240,7 +240,7 @@
 		},
 		{
 			"id": "multi-select",
-			"sha256": "8acdf31fef6df690901063b22fa3c6dcd2c1f878b86af440a7508942bd38f81a",
+			"sha256": "cd655776ea456d1fbad427c4012717972fe104fb462ee50eb3148e88e2cc9797",
 			"source": "src/components/compound/multi-select/ZMultiSelect.svelte"
 		},
 		{
@@ -320,7 +320,7 @@
 		},
 		{
 			"id": "select",
-			"sha256": "15d197227cdcde72221ce19083fba8ccd4f92a2598dab933e57d2df68216004a",
+			"sha256": "fe8fce75c7a7041634ab7639606ac8c07ac46c7366774517b3ded4180a294ae6",
 			"source": "src/components/compound/select/ZSelect.svelte"
 		},
 		{
@@ -380,7 +380,7 @@
 		},
 		{
 			"id": "tree",
-			"sha256": "df0c69459a9c714fa3bd234f09e60dcb59a7e5113fc4da92a5f8dca22aeac537",
+			"sha256": "aa99696cd77ec3faee79e2a06625e63d193f4246d2432db983c05aa0bf29b22b",
 			"source": "src/components/compound/tree/ZTree.svelte"
 		},
 		{
@@ -400,7 +400,7 @@
 		},
 		{
 			"id": "carousel",
-			"sha256": "8a6e755eecd81b82ffcae3d1c7a50ca79bed04e35bf9e4df5b8a659ffbf77a56",
+			"sha256": "50f3e93f22188f7b6bab35d6ed0312eb214c1c1c9f4ab354fa1a66ef16167d0d",
 			"source": "src/components/data-display/ZCarousel.svelte"
 		},
 		{
@@ -425,12 +425,12 @@
 		},
 		{
 			"id": "meter",
-			"sha256": "bab820deec87ce19133e102432b2761280451a639bf1d5c68e5f724ad3be4086",
+			"sha256": "8eb17cf3a781b023acd3f9b00ccc29b6321dd62c3c67b6a5795f7bbcfc626975",
 			"source": "src/components/data-display/ZMeter.svelte"
 		},
 		{
 			"id": "progress",
-			"sha256": "0474841a4a974068284f2edd9afe9af135ae228bf66629011d28494c1f20c623",
+			"sha256": "f30714744105c1abddca2fcb2ddcd447527d46e3e35ba816d45e75e20c3ef44d",
 			"source": "src/components/data-display/ZProgress.svelte"
 		},
 		{
@@ -600,7 +600,7 @@
 		},
 		{
 			"id": "form",
-			"sha256": "f6ea5a0cafade62e07c4e83238d0f19f53d83c9489a2a51e7bf7d234d566831a",
+			"sha256": "1507e2c1d7d44b44db7475ca2aefb141d7db3519331fc8a42d02f55a23001349",
 			"source": "src/components/input/ZForm.svelte"
 		},
 		{
@@ -690,7 +690,7 @@
 		},
 		{
 			"id": "command",
-			"sha256": "e297fa238821d5043d5eed7fa754924668ddec134f0cc9f2206d83c59f6f3907",
+			"sha256": "c6cd6cb93d34666584773a55b9a18be5d72d8bed56d94fa42a7ed1be40657515",
 			"source": "src/components/navigation/ZCommand.svelte"
 		},
 		{

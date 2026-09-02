@@ -83,11 +83,53 @@
 		],
 		props: [
 			{
+				default: 'false',
+				description: '挂载后将焦点交给查询输入框；调用方仍可通过inputRef接管焦点。',
+				name: 'autofocus',
+				type: 'boolean'
+			},
+			{
+				default: "''",
+				description: '非受控模式下的初始查询；受控模式请使用query。',
+				name: 'defaultQuery',
+				type: 'string'
+			},
+			{
 				default: '必填',
 				description: '稳定key、标签、分组、关键词与shortcut。',
 				name: 'items',
 				required: true,
 				type: 'readonly CommandItem[]'
+			},
+			{
+				default: 'localePack.command.empty',
+				description: '无匹配结果时显示的文本；显式值优先于locale。',
+				name: 'emptyText',
+				type: 'string'
+			},
+			{
+				default: 'scoreCommand',
+				description: '自定义过滤器；返回false排除，返回数字按相关性排序。',
+				name: 'filter',
+				type: '(item: CommandItem, query: string) => boolean | number'
+			},
+			{
+				default: 'localePack.command.inputLabel',
+				description: '查询输入框的可访问名称；显式值优先于locale。',
+				name: 'inputLabel',
+				type: 'string'
+			},
+			{
+				default: 'localePack.command.listLabel',
+				description: '结果listbox的可访问名称；显式值优先于locale。',
+				name: 'listLabel',
+				type: 'string'
+			},
+			{
+				default: 'localePack.command.placeholder',
+				description: '查询输入框占位提示；显式值优先于locale。',
+				name: 'placeholder',
+				type: 'string'
 			},
 			{ bindable: true, default: "''", description: '过滤查询。', name: 'query', type: 'string' },
 			{

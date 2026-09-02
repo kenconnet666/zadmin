@@ -74,6 +74,12 @@
 				type: 'string'
 			},
 			{
+				default: 'undefined',
+				description: '初始slide key；缺失时使用items的第一个key。',
+				name: 'defaultValue',
+				type: 'SelectionKey'
+			},
+			{
 				default: '必填',
 				description: 'slides数据。',
 				name: 'items',
@@ -88,13 +94,44 @@
 				type: '(item: TItem, index: number) => SelectionKey'
 			},
 			{
+				default: '必填',
+				description: '生成每张slide的可访问位置名称。',
+				name: 'itemLabel',
+				required: true,
+				type: '(item: TItem, index: number) => string'
+			},
+			{
 				default: 'undefined',
 				description: '至少1000ms；缺失不自动轮播。',
 				name: 'autoplayInterval',
 				type: 'number'
 			},
+			{
+				default: 'localePack.carousel.nextSlide',
+				description: '下一张控制的可访问名称。',
+				name: 'nextLabel',
+				type: 'string'
+			},
 			{ default: 'true', description: '边界是否循环。', name: 'loop', type: 'boolean' },
-			{ default: 'true', description: 'hover期间暂停。', name: 'pauseOnHover', type: 'boolean' }
+			{
+				default: 'localePack.carousel.pauseRotation',
+				description: '暂停自动轮播控制的可访问名称。',
+				name: 'pauseLabel',
+				type: 'string'
+			},
+			{ default: 'true', description: 'hover期间暂停。', name: 'pauseOnHover', type: 'boolean' },
+			{
+				default: 'localePack.carousel.startRotation',
+				description: '恢复自动轮播控制的可访问名称。',
+				name: 'playLabel',
+				type: 'string'
+			},
+			{
+				default: 'localePack.carousel.previousSlide',
+				description: '上一张控制的可访问名称。',
+				name: 'previousLabel',
+				type: 'string'
+			}
 		],
 		since: 'unreleased',
 		snippets: [{ description: 'slide内容。', name: 'item', type: 'Snippet<[TItem, number]>' }],

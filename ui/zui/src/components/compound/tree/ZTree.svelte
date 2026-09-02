@@ -107,6 +107,11 @@
 				description: '首次展开未加载branch时调用；调用方负责更新nodes。',
 				name: 'onLoadChildren',
 				type: '(node: TreeNode<TKey>, context: { key: TKey; signal: AbortSignal }) => void | Promise<void>'
+			},
+			{
+				description: '懒加载失败后的诊断回调；调用方可通过controller.retryLoad重试。',
+				name: 'onLoadError',
+				type: '(key: TKey, error: unknown) => void'
 			}
 		],
 		keyboard: [
@@ -129,11 +134,29 @@
 		],
 		props: [
 			{
+				default: '[]',
+				description: '非受控模式下的初始展开key集合。',
+				name: 'defaultExpandedKeys',
+				type: 'readonly TKey[]'
+			},
+			{
+				default: '[]',
+				description: '非受控模式下的初始选择key集合。',
+				name: 'defaultSelectedKeys',
+				type: 'readonly TKey[]'
+			},
+			{
 				default: '必填',
 				description: '完整扁平业务节点；parentKey建立层级，hasChildren声明未加载branch。',
 				name: 'nodes',
 				required: true,
 				type: 'readonly TreeNode<TKey>[]'
+			},
+			{
+				default: 'Provider localePack.collection.empty',
+				description: 'nodes为空且未提供empty snippet时的空树文本。',
+				name: 'emptyText',
+				type: 'string'
 			},
 			{
 				bindable: true,
@@ -209,7 +232,18 @@
 				name: 'ssrViewportSize',
 				type: 'number'
 			},
-			{ default: '—', description: '重复提交每个selected key。', name: 'name', type: 'string' },
+			{
+				default: '最近祖先form',
+				description: '关联原生form的id；与name一起提交选中的key。',
+				name: 'form',
+				type: 'string'
+			},
+			{
+				default: 'undefined',
+				description: '重复提交每个selected key。',
+				name: 'name',
+				type: 'string'
+			},
 			{
 				default: 'true',
 				description: '是否响应原生form reset。',

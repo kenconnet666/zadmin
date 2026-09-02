@@ -364,8 +364,8 @@ if (process.argv.includes('--self-test')) {
 	if (!dataTableTeaching || dataTableTeaching.size < 22)
 		throw new Error('Teaching AST self-test expected DataTable teaching props.');
 	const dataTableFact = facts['data-table'];
-	if (dataTableFact?.metadataGapProps.length !== 22)
-		throw new Error('Teaching AST self-test expected DataTable metadata gap count 22.');
+	if (dataTableFact?.metadataGapProps.length !== 0)
+		throw new Error('Teaching AST self-test expected complete DataTable metadata.');
 	const nested = parseDocTeaching(
 		`defineComponentDoc(meta, { demos: [{ teaching: { props: { fake: {} } } }] })`,
 		'nested.ts'
@@ -396,6 +396,10 @@ const teachingCoverage = Object.values(facts).map((fact) => {
 });
 const teachingCoverageOutput = {
 	components: teachingCoverage,
+	policy: {
+		maxFallbackProps: 0,
+		maxMetadataGapProps: 0
+	},
 	totals: {
 		components: teachingCoverage.length,
 		declaredProps: teachingCoverage.reduce((sum, item) => sum + item.declaredPropCount, 0),
@@ -403,6 +407,19 @@ const teachingCoverageOutput = {
 		fallbackProps: teachingCoverage.reduce((sum, item) => sum + item.fallbackPropCount, 0)
 	}
 };
+const incompleteMetadata = teachingCoverage.filter(
+	(item) => item.metadataGapPropCount > 0 || item.fallbackPropCount > 0
+);
+if (incompleteMetadata.length > 0) {
+	throw new Error(
+		`Every public component prop requires owned API metadata. Incomplete components: ${incompleteMetadata
+			.map(
+				(item) =>
+					`${item.name} (${item.metadataGapPropNames.join(', ') || 'no metadata gaps'}; fallback: ${item.fallbackPropNames.join(', ') || 'none'})`
+			)
+			.join('; ')}.`
+	);
+}
 const teachingCoverageJson = JSON.stringify(teachingCoverageOutput, null, '\t');
 const topFallback = [...teachingCoverage]
 	.sort(
@@ -416,6 +433,8 @@ const teachingCoverageMarkdownSource = [
 	'# API teaching coverage',
 	'',
 	`Generated from ${teachingCoverageOutput.totals.components} components and ${teachingCoverageOutput.totals.declaredProps} declared props. ${teachingCoverageOutput.totals.metadataGapProps} metadata gaps remain; ${teachingCoverageOutput.totals.fallbackProps} remain true fallbacks after teaching overrides.`,
+	'',
+	'Policy: every declared public prop must have owned component metadata, binding, event or snippet evidence; both totals are enforced at zero.',
 	'',
 	'| Component | Family | Declared props | Metadata gaps | True fallback props | Fallback names | Source |',
 	'|---|---|---:|---:|---:|---|---|',

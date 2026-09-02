@@ -451,7 +451,7 @@ export const comboboxApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/combobox/ZCombobox.svelte',
-	metadataGapProps: ['controlId', 'form', 'invalid', 'name', 'placement', 'required'],
+	metadataGapProps: [],
 	members: () => [comboboxContentApiFacts, comboboxInputApiFacts, comboboxItemApiFacts]
 } as const satisfies ComponentApiFacts;
 
@@ -1666,7 +1666,7 @@ export const multiSelectApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/multi-select/ZMultiSelect.svelte',
-	metadataGapProps: ['controlId', 'form', 'invalid', 'name', 'required'],
+	metadataGapProps: [],
 	members: () => [multiSelectContentApiFacts, multiSelectItemApiFacts, multiSelectTriggerApiFacts]
 } as const satisfies ComponentApiFacts;
 
@@ -2346,7 +2346,7 @@ export const selectApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/select/ZSelect.svelte',
-	metadataGapProps: ['controlId', 'form', 'invalid', 'name', 'required'],
+	metadataGapProps: [],
 	members: () => [selectContentApiFacts, selectItemApiFacts, selectTriggerApiFacts]
 } as const satisfies ComponentApiFacts;
 
@@ -2931,13 +2931,7 @@ export const treeApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/compound/tree/ZTree.svelte',
-	metadataGapProps: [
-		'defaultExpandedKeys',
-		'defaultSelectedKeys',
-		'emptyText',
-		'form',
-		'onLoadError'
-	]
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const avatarApiFacts = {
@@ -3261,14 +3255,7 @@ export const carouselApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZCarousel.svelte',
-	metadataGapProps: [
-		'defaultValue',
-		'itemLabel',
-		'nextLabel',
-		'pauseLabel',
-		'playLabel',
-		'previousLabel'
-	]
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const dataTableApiFacts = {
@@ -3751,7 +3738,7 @@ export const meterApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZMeter.svelte',
-	metadataGapProps: ['high', 'low', 'max', 'min', 'optimum']
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const progressApiFacts = {
@@ -3807,7 +3794,7 @@ export const progressApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZProgress.svelte',
-	metadataGapProps: ['formatValue']
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const skeletonApiFacts = {
@@ -6501,7 +6488,7 @@ export const formApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZForm.svelte',
-	metadataGapProps: ['onReset', 'onSubmit']
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const formFieldApiFacts = {
@@ -8219,15 +8206,7 @@ export const commandApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/navigation/ZCommand.svelte',
-	metadataGapProps: [
-		'autofocus',
-		'defaultQuery',
-		'emptyText',
-		'filter',
-		'inputLabel',
-		'listLabel',
-		'placeholder'
-	]
+	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
 export const commandPaletteApiFacts = {

@@ -80,6 +80,12 @@
 		parts: [],
 		props: [
 			{
+				default: 'Field controlId或自动生成的input ID',
+				description: '覆盖Field生成并用于关联输入框与表单错误描述的控件ID。',
+				name: 'controlId',
+				type: 'string'
+			},
+			{
 				default: 'undefined（compound模式）',
 				description: '权威typed-key数据源，支持分组与异步结果替换。',
 				name: 'options',
@@ -166,6 +172,31 @@
 				default: 'false',
 				description: '保留可聚焦和可复制文本，但禁止输入、打开和选择。',
 				name: 'readonly',
+				type: 'boolean'
+			},
+			{ default: '最近祖先form', description: '关联外部form的id。', name: 'form', type: 'string' },
+			{
+				default: 'Field context或false',
+				description: '设置输入控件及其Field语义的无效状态。',
+				name: 'invalid',
+				type: 'boolean'
+			},
+			{
+				default: 'Field context或undefined',
+				description: '原生FormData提交使用的字段名；未传时继承Field。',
+				name: 'name',
+				type: 'string'
+			},
+			{
+				default: "'bottom-start'",
+				description: 'Content首选位置。',
+				name: 'placement',
+				type: 'PopoverPlacement'
+			},
+			{
+				default: 'Field context或false',
+				description: '投射到Combobox输入的可访问必填语义；业务阻断由Form schema拥有。',
+				name: 'required',
 				type: 'boolean'
 			},
 			{

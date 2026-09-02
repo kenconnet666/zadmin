@@ -138,8 +138,8 @@
 			"source": "ui/zui/src/components/compound/combobox/ZCombobox.svelte",
 			"family": "combobox",
 			"declaredPropCount": 27,
-			"metadataGapPropCount": 6,
-			"metadataGapPropNames": ["controlId", "form", "invalid", "name", "placement", "required"],
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -523,8 +523,8 @@
 			"source": "ui/zui/src/components/compound/multi-select/ZMultiSelect.svelte",
 			"family": "multi-select",
 			"declaredPropCount": 28,
-			"metadataGapPropCount": 5,
-			"metadataGapPropNames": ["controlId", "form", "invalid", "name", "required"],
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -699,8 +699,8 @@
 			"source": "ui/zui/src/components/compound/select/ZSelect.svelte",
 			"family": "select",
 			"declaredPropCount": 22,
-			"metadataGapPropCount": 5,
-			"metadataGapPropNames": ["controlId", "form", "invalid", "name", "required"],
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -831,14 +831,8 @@
 			"source": "ui/zui/src/components/compound/tree/ZTree.svelte",
 			"family": "tree",
 			"declaredPropCount": 27,
-			"metadataGapPropCount": 5,
-			"metadataGapPropNames": [
-				"defaultExpandedKeys",
-				"defaultSelectedKeys",
-				"emptyText",
-				"form",
-				"onLoadError"
-			],
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -877,15 +871,8 @@
 			"name": "ZCarousel",
 			"source": "ui/zui/src/components/data-display/ZCarousel.svelte",
 			"declaredPropCount": 17,
-			"metadataGapPropCount": 6,
-			"metadataGapPropNames": [
-				"defaultValue",
-				"itemLabel",
-				"nextLabel",
-				"pauseLabel",
-				"playLabel",
-				"previousLabel"
-			],
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -934,8 +921,8 @@
 			"name": "ZMeter",
 			"source": "ui/zui/src/components/data-display/ZMeter.svelte",
 			"declaredPropCount": 9,
-			"metadataGapPropCount": 5,
-			"metadataGapPropNames": ["high", "low", "max", "min", "optimum"],
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -944,8 +931,8 @@
 			"name": "ZProgress",
 			"source": "ui/zui/src/components/data-display/ZProgress.svelte",
 			"declaredPropCount": 9,
-			"metadataGapPropCount": 1,
-			"metadataGapPropNames": ["formatValue"],
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -1284,8 +1271,8 @@
 			"name": "ZForm",
 			"source": "ui/zui/src/components/input/ZForm.svelte",
 			"declaredPropCount": 25,
-			"metadataGapPropCount": 2,
-			"metadataGapPropNames": ["onReset", "onSubmit"],
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -1464,16 +1451,8 @@
 			"name": "ZCommand",
 			"source": "ui/zui/src/components/navigation/ZCommand.svelte",
 			"declaredPropCount": 19,
-			"metadataGapPropCount": 7,
-			"metadataGapPropNames": [
-				"autofocus",
-				"defaultQuery",
-				"emptyText",
-				"filter",
-				"inputLabel",
-				"listLabel",
-				"placeholder"
-			],
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
 			"fallbackPropNames": []
 		},
@@ -1508,10 +1487,14 @@
 			"fallbackPropNames": []
 		}
 	],
+	"policy": {
+		"maxFallbackProps": 0,
+		"maxMetadataGapProps": 0
+	},
 	"totals": {
 		"components": 141,
 		"declaredProps": 1385,
-		"metadataGapProps": 42,
+		"metadataGapProps": 0,
 		"fallbackProps": 0
 	}
 }

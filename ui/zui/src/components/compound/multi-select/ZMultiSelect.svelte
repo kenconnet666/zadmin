@@ -93,6 +93,12 @@
 		parts: [],
 		props: [
 			{
+				default: 'Field controlId或自动生成的trigger ID',
+				description: '覆盖Field生成并用于关联Trigger与表单错误描述的控件ID。',
+				name: 'controlId',
+				type: 'string'
+			},
+			{
 				default: 'undefined（compound模式）',
 				description: '权威数据源；提供后Content从完整typed-key集合渲染、分组并支持异步替换。',
 				name: 'options',
@@ -192,11 +198,30 @@
 				name: 'readonly',
 				type: 'boolean'
 			},
+			{ default: '最近祖先form', description: '关联外部form的id。', name: 'form', type: 'string' },
+			{
+				default: 'Field context或false',
+				description: '设置多选控件及其Field语义的无效状态。',
+				name: 'invalid',
+				type: 'boolean'
+			},
+			{
+				default: 'Field context或undefined',
+				description: '原生FormData提交使用的字段名；未传时继承Field。',
+				name: 'name',
+				type: 'string'
+			},
 			{
 				default: "'bottom-start'",
 				description: 'Content首选位置。',
 				name: 'placement',
 				type: 'PopoverPlacement'
+			},
+			{
+				default: 'Field context或false',
+				description: '向Field与自定义Trigger公开至少一项的必填状态；业务阻断由Form schema拥有。',
+				name: 'required',
+				type: 'boolean'
 			},
 			{
 				default: 'String(value)',
