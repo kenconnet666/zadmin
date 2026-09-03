@@ -9,7 +9,7 @@ import {
 describe('component defaults foundation', () => {
 	it('merges shallowly, supports null stops, and freezes snapshots', () => {
 		const parent = resolveComponentDefaults(undefined, {
-			button: { size: 'large', variant: 'primary' },
+			button: { size: 'large', variant: 'primary' }
 		});
 		const child = resolveComponentDefaults(parent, {
 			button: { size: 'small' },

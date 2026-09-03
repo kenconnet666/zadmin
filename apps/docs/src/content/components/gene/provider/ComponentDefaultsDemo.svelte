@@ -1,12 +1,5 @@
 <script lang="ts">
-	import {
-		ZButton,
-		ZDataTable,
-		ZProvider,
-		ZStack,
-		ZText,
-		type DataTableColumn
-	} from '@zadmin/zui';
+	import { ZButton, ZDataTable, ZProvider, ZStack, ZText, type DataTableColumn } from '@zadmin/zui';
 
 	interface ServiceRow {
 		id: string;
