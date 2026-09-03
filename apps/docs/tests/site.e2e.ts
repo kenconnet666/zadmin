@@ -1,10 +1,16 @@
 import AxeBuilder from '@axe-core/playwright';
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Locator, type Page } from '@playwright/test';
 import { Buffer } from 'node:buffer';
 import { guideDocs } from '../src/content/guides.js';
 import { componentCatalogManifest } from '../src/framework/catalog-manifest.generated.js';
 
 const demo = (page: Page, id: string) => page.locator(`[data-testid="demo-${id}"]:visible`);
+
+async function resetDemo(scope: Locator): Promise<void> {
+	// WebKit pointer actionability can lose form-control clicks while a long docs page is settling.
+	// Enter is a real native reset-button activation and keeps the form contract cross-browser.
+	await scope.getByRole('button', { name: '重置', exact: true }).press('Enter');
+}
 
 async function gotoComponent(page: Page, id: string): Promise<void> {
 	await page.goto(`/#/components/${id}`);
@@ -451,7 +457,7 @@ test('keeps FileUpload validation, native FormData, removal and reset synchroniz
 	await uploadDemo.getByRole('button', { name: '移除 production.json', exact: true }).click();
 	await expect(queueStatus).toContainText(/queue\s*=\s*none/u);
 	await expect(queueStatus).toContainText(/rejected\s*=\s*1/u);
-	await uploadDemo.getByRole('button', { name: '重置', exact: true }).click();
+	await resetDemo(uploadDemo);
 	const resetInput = uploadDemo.locator('input[type="file"]');
 	await expect
 		.poll(() => resetInput.evaluate((element: HTMLInputElement) => element.files?.length))
@@ -477,7 +483,7 @@ test('keeps Form schema errors, async state, first-error focus, valid submit and
 	await expect(
 		schemaDemo.getByText('submitted = true · errors = 0 · validating = false · result = alice')
 	).toBeVisible({ timeout: 10_000 });
-	await schemaDemo.getByRole('button', { name: '重置', exact: true }).click();
+	await resetDemo(schemaDemo);
 	await expect(
 		schemaDemo.getByText('submitted = false · errors = 0 · validating = false · result = alice')
 	).toBeVisible();
@@ -534,7 +540,7 @@ test('keeps InputGroup focus boundary, Field context, FormData and reset synchro
 				.evaluate((form) => new FormData(form as HTMLFormElement).get('host'))
 		)
 		.toBe('gateway');
-	await inputGroupDemo.getByRole('button', { name: '重置', exact: true }).click();
+	await resetDemo(inputGroupDemo);
 	await expect(input).toHaveValue('api');
 	await expect(inputGroupDemo.getByText('url = https://api.internal')).toBeVisible();
 });
@@ -557,7 +563,7 @@ test('keeps NumberField locale parsing, spinbutton keys, FormData and reset sync
 				.evaluate((form) => new FormData(form as HTMLFormElement).get('concurrency'))
 		)
 		.toBe('13');
-	await numberDemo.getByRole('button', { name: '重置', exact: true }).click();
+	await resetDemo(numberDemo);
 	const resetInput = numberDemo.getByRole('spinbutton', { name: '并发上限', exact: true });
 	await expect(resetInput).toHaveAttribute('aria-valuenow', '1234.5');
 	await expect(numberDemo.getByText('value = 1234.5')).toBeVisible();
@@ -586,7 +592,7 @@ test('keeps Calendar grid keyboard, selection, FormData and reset synchronized',
 				.evaluate((form) => new FormData(form as HTMLFormElement).get('date'))
 		)
 		.toBe('2026-08-19');
-	await calendarDemo.getByRole('button', { name: '重置', exact: true }).click();
+	await resetDemo(calendarDemo);
 	await expect(calendarDemo.getByText('value = 2026-08-18')).toBeVisible();
 });
 
@@ -597,7 +603,7 @@ test('keeps DateField and TimeField segment keys, values and reset synchronized'
 	const dateFieldDemo = demo(page, 'date-field-segments-form');
 	await dateFieldDemo.getByRole('textbox', { name: '月', exact: true }).press('ArrowUp');
 	await expect(dateFieldDemo.getByText('value = 2026-09-18')).toBeVisible();
-	await dateFieldDemo.getByRole('button', { name: '重置', exact: true }).click();
+	await resetDemo(dateFieldDemo);
 	await expect(dateFieldDemo.getByText('value = 2026-08-18')).toBeVisible();
 	const dateSegments = dateFieldDemo.locator('input:not([type="hidden"])');
 	const preferences = page.getByRole('button', { name: '调整显示偏好', exact: true });
@@ -623,9 +629,7 @@ test('keeps DateField and TimeField segment keys, values and reset synchronized'
 	await expect
 		.poll(() => timeForm.evaluate((form) => new FormData(form as HTMLFormElement).get('time')))
 		.toBe('09:31:15');
-	// WebKit pointer actionability can lose a form-control click while the long docs page is settling.
-	// Enter remains a real native reset-button activation and keeps the reset contract cross-browser.
-	await timeFieldDemo.getByRole('button', { name: '重置', exact: true }).press('Enter');
+	await resetDemo(timeFieldDemo);
 	await expect
 		.poll(() => timeForm.evaluate((form) => new FormData(form as HTMLFormElement).get('time')))
 		.toBe('09:30:15');
@@ -959,7 +963,7 @@ test('keeps PinInput roving entry, completion, single FormData value and reset s
 		.toBe('123456');
 	await page.keyboard.press('Backspace');
 	await expect(pinDemo.getByText('value = 12345 · complete = 1')).toBeVisible();
-	await pinDemo.getByRole('button', { name: '重置', exact: true }).click();
+	await resetDemo(pinDemo);
 	await expect(pinDemo.getByText('value = empty · complete = 1')).toBeVisible();
 });
 
@@ -988,7 +992,7 @@ test('keeps checkbox indeterminate, FormData and reset synchronized', async ({ p
 	await expect(checkboxDemo.getByText(/state = true · 用户变更次数 = 1/u)).toBeVisible();
 	await checkboxDemo.getByRole('button', { name: '读取FormData', exact: true }).click();
 	await expect(checkboxDemo.getByText(/weekly/u)).toBeVisible();
-	await checkboxDemo.getByRole('button', { name: '重置', exact: true }).click();
+	await resetDemo(checkboxDemo);
 	await expect(checkbox).toHaveAttribute('aria-checked', 'mixed');
 	await expect(checkbox).toHaveJSProperty('indeterminate', true);
 	await expect(checkboxDemo.getByText(/state = indeterminate · 用户变更次数 = 1/u)).toBeVisible();
@@ -1016,7 +1020,7 @@ test('keeps ColorPicker hex, alpha, Popover focus, FormData and reset synchroniz
 		.toBe('#ff000040');
 	await page.keyboard.press('Escape');
 	await expect(trigger).toBeFocused();
-	await colorDemo.getByRole('button', { name: '重置', exact: true }).click();
+	await resetDemo(colorDemo);
 	await expect(colorDemo.getByText('value = #2563ebcc')).toBeVisible();
 
 	const controlledDemo = demo(page, 'color-picker-controlled');
@@ -1078,7 +1082,7 @@ test('keeps switch semantics, keyboard state, FormData and reset synchronized', 
 	await expect(switchDemo.getByText(/checked = true · 用户变更次数 = 2/u)).toBeVisible();
 	await switchDemo.getByRole('button', { name: '读取FormData', exact: true }).click();
 	await expect(switchDemo.getByText(/enabled/u)).toBeVisible();
-	await switchDemo.getByRole('button', { name: '重置', exact: true }).click();
+	await resetDemo(switchDemo);
 	await expect(control).toHaveAttribute('aria-checked', 'true');
 	await expect(switchDemo.getByText(/checked = true · 用户变更次数 = 2 · 尚未提交/u)).toBeVisible();
 });
@@ -1106,7 +1110,7 @@ test('keeps radio group roving focus, selection, RTL and FormData synchronized',
 	await setDisplayPreference(page, '方向', '从右到左');
 	await starter.press('ArrowRight');
 	await expect(enterprise).toBeChecked();
-	await radioDemo.getByRole('button', { name: '重置', exact: true }).click();
+	await resetDemo(radioDemo);
 	await expect(team).toBeChecked();
 	await expect(radioDemo.getByText(/value = team · 用户变更次数 = 3 · 尚未提交/u)).toBeVisible();
 });
@@ -1263,7 +1267,7 @@ test('keeps Slider keyboard, value text, FormData and reset synchronized', async
 	await slider.press('ArrowRight');
 	await expect(slider).toHaveValue('35');
 	await expect(sliderDemo.getByText(/value = 35% · 用户变更次数 = 2/u)).toBeVisible();
-	await sliderDemo.getByRole('button', { name: '重置', exact: true }).click();
+	await resetDemo(sliderDemo);
 	await expect(slider).toHaveValue('35');
 	await expect(sliderDemo.getByText(/value = 35% · 用户变更次数 = 2 · 尚未提交/u)).toBeVisible();
 });
@@ -1294,7 +1298,7 @@ test('keeps Select listbox, keyboard, form value and reset synchronized', async 
 	await expect(trigger).toHaveText('预发');
 	await selectDemo.getByRole('button', { name: '读取FormData', exact: true }).click();
 	await expect(selectDemo.getByText(/value = 预发 · 用户变更次数 = 1 · 预发/u)).toBeVisible();
-	await selectDemo.getByRole('button', { name: '重置', exact: true }).click();
+	await resetDemo(selectDemo);
 	await expect(trigger).toHaveText('生产');
 });
 
@@ -1369,7 +1373,7 @@ test('keeps MultiSelect tags, persistent toggles, form values and reset synchron
 	await expect(
 		multiSelectDemo.getByText(/value = 开发,生产,预发 · 变更 = 1 · 开发,生产,预发/u)
 	).toBeVisible();
-	await multiSelectDemo.getByRole('button', { name: '重置', exact: true }).click();
+	await resetDemo(multiSelectDemo);
 	await expect(trigger).not.toContainText('预发');
 });
 
@@ -1384,7 +1388,7 @@ test('keeps Segmented radio semantics, roving selection and reset synchronized',
 	await page.keyboard.press('ArrowRight');
 	await expect(segmentedDemo.getByRole('radio', { name: '月', exact: true })).toBeFocused();
 	await expect(segmentedDemo.getByText('value = month · 变更 = 1')).toBeVisible();
-	await segmentedDemo.getByRole('button', { name: '重置', exact: true }).click();
+	await resetDemo(segmentedDemo);
 	await expect(week).toHaveAttribute('aria-checked', 'true');
 });
 
@@ -1412,7 +1416,7 @@ test('keeps TagsInput commits, removals, repeated form values and reset synchron
 	).toBeVisible();
 	await tagsDemo.getByRole('button', { name: '移除标签 production', exact: true }).click();
 	await expect(tagsDemo.getByText(/values = critical · 变更 = 2/u)).toBeVisible();
-	await tagsDemo.getByRole('button', { name: '重置', exact: true }).click();
+	await resetDemo(tagsDemo);
 	await expect(
 		tagsDemo.getByRole('button', { name: '移除标签 production', exact: true })
 	).toBeVisible();
@@ -1510,7 +1514,7 @@ test('keeps Tree hierarchy, visible keyboard navigation, selection and reset syn
 	await page.keyboard.press('ArrowLeft');
 	const platform = tree.getByRole('treeitem', { name: '平台', exact: true });
 	await expect(tree).toHaveAttribute('aria-activedescendant', (await platform.getAttribute('id'))!);
-	await treeDemo.getByRole('button', { name: '重置', exact: true }).click();
+	await resetDemo(treeDemo);
 	await expect(docs).toHaveAttribute('aria-selected', 'true');
 });
 
@@ -1549,7 +1553,7 @@ test('keeps TreeSelect popup tree, selection, form value and reset synchronized'
 	await expect(trigger).toHaveAccessibleName('选择项目节点');
 	await expect(trigger).toContainText('任务执行器');
 	await expect(treeSelectDemo.getByText('value = worker')).toBeVisible();
-	await treeSelectDemo.getByRole('button', { name: '重置', exact: true }).click();
+	await resetDemo(treeSelectDemo);
 	await expect(trigger).toHaveAccessibleName('选择项目节点');
 	await expect(trigger).toContainText('文档站');
 });
@@ -1569,7 +1573,7 @@ test('keeps Cascader columns, path commit, focus restoration and reset synchroni
 	await expect(trigger).toHaveAccessibleName('部署路径');
 	await expect(trigger).toContainText('平台 / 任务执行器');
 	await expect(cascaderDemo.getByText('path = platform/worker')).toBeVisible();
-	await cascaderDemo.getByRole('button', { name: '重置', exact: true }).click();
+	await resetDemo(cascaderDemo);
 	await expect(trigger).toBeVisible();
 	await expect(cascaderDemo.getByText('path = platform/web/docs')).toBeVisible();
 
@@ -1630,7 +1634,7 @@ test('keeps Transfer filter, selection, move, repeated form values and reset syn
 	await expect(transferDemo.getByText('selected = production/staging')).toBeVisible();
 	await transferDemo.getByRole('textbox', { name: '可用通道: 筛选通道', exact: true }).fill('预览');
 	await expect(source.getByRole('option')).toHaveCount(1);
-	await transferDemo.getByRole('button', { name: '重置', exact: true }).click();
+	await resetDemo(transferDemo);
 	await expect(transferDemo.getByText('selected = staging')).toBeVisible();
 	await expect(source.getByRole('option')).toHaveCount(3);
 });
@@ -1648,7 +1652,7 @@ test('keeps Mention textarea focus, active descendant, insertion, form value and
 	await expect(editor).toBeFocused();
 	await expect(editor).toHaveValue('发布通知：@lilei ');
 	await expect(mentionDemo.getByText('message = 发布通知：@lilei ')).toBeVisible();
-	await mentionDemo.getByRole('button', { name: '重置', exact: true }).click();
+	await resetDemo(mentionDemo);
 	await expect(editor).toHaveValue('发布通知：');
 	await expect(mentionDemo.getByText('message = 发布通知：')).toBeVisible();
 
