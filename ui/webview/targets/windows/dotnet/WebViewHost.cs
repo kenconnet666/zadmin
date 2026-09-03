@@ -216,6 +216,22 @@ public sealed class WebViewHost : IAsyncDisposable
         public bool GeneralContentCleaned { get; set; }
     }
 
+    private sealed class DesktopPopoverEvidence
+    {
+        public bool Ready { get; set; }
+        public bool Expanded { get; set; }
+        public bool ControlsResolved { get; set; }
+        public string? ContentRole { get; set; }
+        public bool LabelledByResolved { get; set; }
+        public bool ContentFocused { get; set; }
+        public bool PresenceEntered { get; set; }
+        public bool ReducedMotionObserved { get; set; }
+        public bool OpenStateObserved { get; set; }
+        public bool BackgroundUnchanged { get; set; }
+        public bool FocusRestored { get; set; }
+        public bool PresenceCleaned { get; set; }
+    }
+
     private static readonly JsonSerializerOptions SerializerOptions = new(JsonSerializerDefaults.Web);
     private const string CaptureDesktopEvidenceScript = """
         (() => {
@@ -991,6 +1007,102 @@ public sealed class WebViewHost : IAsyncDisposable
           return JSON.stringify({ ...result, ready: Object.values(result).every(Boolean) });
         })()
         """;
+    private const string OpenPopoverEvidenceScript = """
+        (() => {
+          const trigger = document.querySelector('[data-desktop-evidence="ZPopoverTrigger-settings"]');
+          if (!(trigger instanceof HTMLButtonElement)) return false;
+          const background = document.querySelector('[data-desktop-evidence="ZPopover-background-sibling"]');
+          if (!globalThis.__ZADMIN_POPOVER_BASELINE__)
+            globalThis.__ZADMIN_POPOVER_BASELINE__ = {
+              inert: background?.inert ?? false,
+              inertAttr: background?.getAttribute('inert'),
+              ariaHidden: background?.getAttribute('aria-hidden'),
+              overflow: document.body?.style.overflow ?? '',
+              paddingInlineEnd: document.body?.style.paddingInlineEnd ?? '',
+              paddingRight: document.body?.style.paddingRight ?? ''
+            };
+          trigger.click();
+          return true;
+        })()
+        """;
+    private const string ReadPopoverEvidenceScript = """
+        (() => {
+          const trigger = document.querySelector('[data-desktop-evidence="ZPopoverTrigger-settings"]');
+          const controls = trigger?.getAttribute('aria-controls');
+          const content = controls ? document.getElementById(controls) : null;
+          const background = document.querySelector('[data-desktop-evidence="ZPopover-background-sibling"]');
+          const baseline = globalThis.__ZADMIN_POPOVER_BASELINE__;
+          const backgroundUnchanged = Boolean(baseline && background &&
+            background.inert === baseline.inert &&
+            background.getAttribute('inert') === baseline.inertAttr &&
+            background.getAttribute('aria-hidden') === baseline.ariaHidden &&
+            document.body?.style.overflow === baseline.overflow &&
+            document.body?.style.paddingInlineEnd === baseline.paddingInlineEnd &&
+            document.body?.style.paddingRight === baseline.paddingRight);
+          const result = {
+            expanded: trigger?.getAttribute('aria-expanded') === 'true' && trigger?.getAttribute('data-state') === 'open',
+            controlsResolved: Boolean(controls && content?.id === controls && content?.getAttribute('role') === 'dialog'),
+            contentRole: content?.getAttribute('role'),
+            labelledByResolved: Boolean(trigger?.id && content?.getAttribute('aria-labelledby')?.split(/\\s+/u).includes(trigger.id)),
+            contentFocused: document.activeElement === content,
+            presenceEntered: content?.getAttribute('data-presence') === 'entered',
+            reducedMotionObserved: content?.getAttribute('data-reduced-motion') === 'true',
+            openStateObserved: content?.getAttribute('data-state') === 'open',
+            backgroundUnchanged
+          };
+          return JSON.stringify({
+            ...result,
+            ready:
+              result.expanded &&
+              result.controlsResolved &&
+              result.contentRole === 'dialog' &&
+              result.labelledByResolved &&
+              result.contentFocused &&
+              result.presenceEntered &&
+              result.reducedMotionObserved &&
+              result.openStateObserved &&
+              result.backgroundUnchanged
+          });
+        })()
+        """;
+    private const string DismissPopoverEscapeEvidenceScript = """
+        (() => {
+          const content = document.querySelector('[data-desktop-evidence="ZPopoverContent-settings"]');
+          if (!(content instanceof HTMLElement)) return false;
+          const event = new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Escape' });
+          content.dispatchEvent(event);
+          return true;
+        })()
+        """;
+    private const string ReadPopoverClosedEvidenceScript = """
+        (() => {
+          const trigger = document.querySelector('[data-desktop-evidence="ZPopoverTrigger-settings"]');
+          const content = document.querySelector('[data-desktop-evidence="ZPopoverContent-settings"]');
+          const result = {
+            expanded: trigger?.getAttribute('aria-expanded') === 'true',
+            focusRestored: document.activeElement === trigger,
+            presenceCleaned: (() => {
+              const controls = trigger?.getAttribute('aria-controls');
+              const controlledContent = controls ? document.getElementById(controls) : null;
+              return controlledContent === null && content === null;
+            })(),
+            backgroundUnchanged: (() => {
+              const background = document.querySelector('[data-desktop-evidence="ZPopover-background-sibling"]');
+              const baseline = globalThis.__ZADMIN_POPOVER_BASELINE__;
+              return Boolean(baseline && background && background.inert === baseline.inert && background.getAttribute('inert') === baseline.inertAttr && background.getAttribute('aria-hidden') === baseline.ariaHidden && document.body?.style.overflow === baseline.overflow && document.body?.style.paddingInlineEnd === baseline.paddingInlineEnd && document.body?.style.paddingRight === baseline.paddingRight);
+            })()
+          };
+          return JSON.stringify({ ...result, ready: result.expanded === false && result.focusRestored && result.presenceCleaned && result.backgroundUnchanged });
+        })()
+        """;
+    private const string PointerOutsidePopoverEvidenceScript = """
+        (() => {
+          const background = document.querySelector('[data-desktop-evidence="ZPopover-background-sibling"]');
+          if (!(background instanceof HTMLElement)) return false;
+          background.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true, composed: true, pointerType: 'mouse' }));
+          return true;
+        })()
+        """;
     private readonly HostOptions _options;
     private readonly WebView2 _webview;
     private readonly Microsoft.UI.Xaml.Window _window;
@@ -1526,6 +1638,63 @@ public sealed class WebViewHost : IAsyncDisposable
                 accordionAdvanced.AdvancedLabelledByResolved,
                 generalContentCleanedAfterAdvanced = accordionAdvanced.GeneralContentCleaned
             };
+            smokePhase = "validating-popover-open";
+            if (await sender.ExecuteScriptAsync(OpenPopoverEvidenceScript) != "true")
+                throw new InvalidOperationException("Desktop Popover trigger is unavailable.");
+            var popoverOpen = await WaitForEvidenceAsync<DesktopPopoverEvidence>(
+                sender,
+                ReadPopoverEvidenceScript,
+                evidence => evidence.Ready,
+                "Desktop Popover did not establish its non-modal relationships and focus.");
+            evidenceBefore.DesktopEvidence = MergeDesktopEvidence(
+                evidenceBefore.DesktopEvidence,
+                await CaptureCurrentDesktopEvidenceAsync(sender));
+            smokePhase = "validating-popover-escape";
+            if (await sender.ExecuteScriptAsync(DismissPopoverEscapeEvidenceScript) != "true")
+                throw new InvalidOperationException("Desktop Popover content is unavailable for Escape dismissal.");
+            var popoverAfterEscape = await WaitForEvidenceAsync<DesktopPopoverEvidence>(
+                sender,
+                ReadPopoverClosedEvidenceScript,
+                evidence => evidence.Ready,
+                "Desktop Popover Escape did not restore focus and clean up presence.");
+            smokePhase = "validating-popover-pointer-outside";
+            if (await sender.ExecuteScriptAsync(OpenPopoverEvidenceScript) != "true")
+                throw new InvalidOperationException("Desktop Popover trigger could not reopen.");
+            var popoverReopen = await WaitForEvidenceAsync<DesktopPopoverEvidence>(
+                sender,
+                ReadPopoverEvidenceScript,
+                evidence => evidence.Ready,
+                "Desktop Popover did not reopen.");
+            if (await sender.ExecuteScriptAsync(PointerOutsidePopoverEvidenceScript) != "true")
+                throw new InvalidOperationException("Desktop Popover outside target is unavailable.");
+            var popoverAfterPointer = await WaitForEvidenceAsync<DesktopPopoverEvidence>(
+                sender,
+                ReadPopoverClosedEvidenceScript,
+                evidence => evidence.Ready,
+                "Desktop Popover pointer-outside dismissal did not restore focus and clean up presence.");
+            var popoverInteraction = new
+            {
+                ready = true,
+                expandedAfterOpen = popoverOpen.Expanded,
+                popoverOpen.ControlsResolved,
+                popoverOpen.ContentRole,
+                popoverOpen.LabelledByResolved,
+                contentFocusedAfterOpen = popoverOpen.ContentFocused,
+                presenceEnteredObserved = popoverOpen.PresenceEntered,
+                reducedMotionObserved = popoverOpen.ReducedMotionObserved,
+                openStateObserved = popoverOpen.OpenStateObserved,
+                expandedAfterEscape = popoverAfterEscape.Expanded,
+                focusAfterEscape = popoverAfterEscape.FocusRestored,
+                presenceCleanedAfterEscape = popoverAfterEscape.PresenceCleaned,
+                reopened = popoverReopen.Expanded,
+                expandedAfterPointerOutside = popoverAfterPointer.Expanded,
+                focusAfterPointerOutside = popoverAfterPointer.FocusRestored,
+                presenceCleanedAfterPointerOutside = popoverAfterPointer.PresenceCleaned,
+                backgroundUnchanged = popoverOpen.BackgroundUnchanged &&
+                    popoverAfterEscape.BackgroundUnchanged &&
+                    popoverReopen.BackgroundUnchanged &&
+                    popoverAfterPointer.BackgroundUnchanged
+            };
             var pageAfterValue = await sender.ExecuteScriptAsync(ReadStatusScript);
             smokePhase = "writing-report";
             var report = new
@@ -1544,7 +1713,8 @@ public sealed class WebViewHost : IAsyncDisposable
                 selectInteraction,
                 dialogInteraction,
                 tabsInteraction,
-                accordionInteraction
+                accordionInteraction,
+                popoverInteraction
             };
             Directory.CreateDirectory(Path.GetDirectoryName(_options.SmokeReportPath)!);
             await WriteSmokeReportAsync(

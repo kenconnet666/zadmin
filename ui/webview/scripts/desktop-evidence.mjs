@@ -1243,6 +1243,146 @@ desktopComponentContracts.push(
 				}
 			]
 		}
+	},
+	{
+		id: 'popover-trigger',
+		name: 'ZPopoverTrigger',
+		marker: 'ZPopoverTrigger-settings',
+		native: {
+			tag: 'BUTTON',
+			type: 'button',
+			ariaExpanded: 'false',
+			ariaControlsPresent: true,
+			ariaHasPopup: 'dialog',
+			dataState: 'closed'
+		},
+		interaction: {
+			id: 'open-dismiss-and-restore-focus',
+			action: 'click+Escape+pointerdown-outside',
+			target: 'root',
+			observations: [
+				{
+					id: 'expanded-after-open',
+					kind: 'aria',
+					target: 'aria-expanded',
+					expected: true,
+					read: (raw) => raw.popoverInteraction.expandedAfterOpen
+				},
+				{
+					id: 'closed-after-escape',
+					kind: 'aria',
+					target: 'aria-expanded',
+					expected: false,
+					read: (raw) => raw.popoverInteraction.expandedAfterEscape
+				},
+				{
+					id: 'focus-after-escape',
+					kind: 'focus',
+					target: 'trigger',
+					expected: true,
+					read: (raw) => raw.popoverInteraction.focusAfterEscape
+				},
+				{
+					id: 'expanded-after-pointer-outside',
+					kind: 'aria',
+					target: 'aria-expanded',
+					expected: false,
+					read: (raw) => raw.popoverInteraction.expandedAfterPointerOutside
+				},
+				{
+					id: 'focus-after-pointer-outside',
+					kind: 'focus',
+					target: 'trigger',
+					expected: true,
+					read: (raw) => raw.popoverInteraction.focusAfterPointerOutside
+				}
+			]
+		}
+	},
+	{
+		id: 'popover-content',
+		name: 'ZPopoverContent',
+		marker: 'ZPopoverContent-settings',
+		native: {
+			tag: 'DIV',
+			role: 'dialog',
+			tabIndex: -1,
+			ariaModal: null,
+			ariaLabelledByPresent: true,
+			dataPresence: 'entered',
+			dataReducedMotion: 'true',
+			dataState: 'open'
+		},
+		interaction: {
+			id: 'non-modal-relationships-and-cleanup',
+			action: 'click+Escape+reopen+pointerdown-outside',
+			target: 'aria-controls',
+			observations: [
+				{
+					id: 'controls-resolved',
+					kind: 'relationship',
+					target: 'aria-controls',
+					expected: true,
+					read: (raw) => raw.popoverInteraction.controlsResolved
+				},
+				{
+					id: 'content-role',
+					kind: 'native',
+					target: 'role',
+					expected: 'dialog',
+					read: (raw) => raw.popoverInteraction.contentRole
+				},
+				{
+					id: 'labelledby-resolved',
+					kind: 'relationship',
+					target: 'aria-labelledby',
+					expected: true,
+					read: (raw) => raw.popoverInteraction.labelledByResolved
+				},
+				{
+					id: 'content-focused-after-open',
+					kind: 'focus',
+					target: 'popover-content',
+					expected: true,
+					read: (raw) => raw.popoverInteraction.contentFocusedAfterOpen
+				},
+				{
+					id: 'presence-entered-observed',
+					kind: 'state',
+					target: 'data-presence',
+					expected: true,
+					read: (raw) => raw.popoverInteraction.presenceEnteredObserved
+				},
+				{
+					id: 'reduced-motion-observed',
+					kind: 'state',
+					target: 'data-reduced-motion',
+					expected: true,
+					read: (raw) => raw.popoverInteraction.reducedMotionObserved
+				},
+				{
+					id: 'background-unchanged',
+					kind: 'state',
+					target: 'document-owner-effects',
+					expected: true,
+					read: (raw) => raw.popoverInteraction.backgroundUnchanged
+				},
+				{
+					id: 'presence-cleaned-after-escape',
+					kind: 'cleanup',
+					target: 'presence',
+					expected: true,
+					read: (raw) => raw.popoverInteraction.presenceCleanedAfterEscape
+				},
+				{
+					id: 'presence-cleaned-after-pointer-outside',
+					kind: 'cleanup',
+					target: 'presence',
+					expected: true,
+					read: (raw) => raw.popoverInteraction.presenceCleanedAfterPointerOutside
+				}
+			]
+		}
 	}
 );
 Object.freeze(desktopComponentContracts);
@@ -1503,6 +1643,109 @@ export const desktopCompositionContracts = Object.freeze([
 					expected: true,
 					read: (raw) =>
 						raw.dialogInteraction.focusAfterEscape && raw.dialogInteraction.focusAfterClose
+				}
+			]
+		}
+	},
+	{
+		id: 'popover',
+		name: 'ZPopover',
+		children: [
+			{
+				id: 'popover-trigger',
+				name: 'ZPopoverTrigger',
+				evidenceId: 'ZPopoverTrigger-settings',
+				role: 'trigger'
+			},
+			{
+				id: 'popover-content',
+				name: 'ZPopoverContent',
+				evidenceId: 'ZPopoverContent-settings',
+				role: 'content'
+			}
+		],
+		ownerProbe: {
+			id: 'popover-runtime-owner',
+			action: 'click+Escape+reopen+pointerdown-outside',
+			observations: [
+				{
+					id: 'controls-resolved',
+					kind: 'relationship',
+					target: 'trigger[aria-controls] -> content[id]',
+					expected: true,
+					read: (raw) => raw.popoverInteraction.controlsResolved
+				},
+				{
+					id: 'open-state-observed',
+					kind: 'state',
+					target: 'popover open state',
+					expected: true,
+					read: (raw) => raw.popoverInteraction.openStateObserved
+				},
+				{
+					id: 'content-focused-after-open',
+					kind: 'focus',
+					target: 'popover-content',
+					expected: true,
+					read: (raw) => raw.popoverInteraction.contentFocusedAfterOpen
+				},
+				{
+					id: 'closed-after-escape',
+					kind: 'aria',
+					target: 'trigger[aria-expanded]',
+					expected: false,
+					read: (raw) => raw.popoverInteraction.expandedAfterEscape
+				},
+				{
+					id: 'focus-restored-after-escape',
+					kind: 'focus',
+					target: 'trigger',
+					expected: true,
+					read: (raw) => raw.popoverInteraction.focusAfterEscape
+				},
+				{
+					id: 'reopened',
+					kind: 'state',
+					target: 'popover open state',
+					expected: true,
+					read: (raw) => raw.popoverInteraction.reopened
+				},
+				{
+					id: 'expanded-after-pointer-outside',
+					kind: 'aria',
+					target: 'trigger[aria-expanded]',
+					expected: false,
+					read: (raw) => raw.popoverInteraction.expandedAfterPointerOutside
+				},
+				{
+					id: 'focus-restored-after-pointer-outside',
+					kind: 'focus',
+					target: 'trigger',
+					expected: true,
+					read: (raw) => raw.popoverInteraction.focusAfterPointerOutside
+				},
+				{
+					id: 'presence-cleaned',
+					kind: 'cleanup',
+					target: 'presence',
+					expected: true,
+					read: (raw) =>
+						raw.popoverInteraction.presenceCleanedAfterEscape &&
+						raw.popoverInteraction.presenceCleanedAfterPointerOutside
+				},
+				{
+					id: 'reduced-motion-observed',
+					kind: 'state',
+					target: 'popover[data-reduced-motion]',
+					expected: true,
+					read: (raw) => raw.popoverInteraction.reducedMotionObserved
+				},
+				{
+					id: 'background-unchanged',
+					kind: 'state',
+					target: 'document-owner-effects',
+					expected: true,
+					read: (raw) => raw.popoverInteraction.backgroundUnchanged
 				}
 			]
 		}
@@ -1889,6 +2132,7 @@ export function validateDesktopEvidence(raw, { expectedRevision } = {}) {
 	if (raw.choiceInteraction?.ready !== true) fail('choice interaction evidence is incomplete.');
 	if (raw.selectInteraction?.ready !== true) fail('Select interaction evidence is incomplete.');
 	if (raw.dialogInteraction?.ready !== true) fail('Dialog interaction evidence is incomplete.');
+	if (raw.popoverInteraction?.ready !== true) fail('Popover interaction evidence is incomplete.');
 	for (const contract of desktopComponentContracts)
 		for (const observation of contract.interaction?.observations ?? [])
 			if (observation.read(raw) !== observation.expected)
@@ -2122,6 +2366,25 @@ if (isMain && process.argv.includes('--self-test')) {
 			scrollLockReleasedAfterClose: true,
 			presenceCleanedAfterClose: true
 		},
+		popoverInteraction: {
+			ready: true,
+			expandedAfterOpen: true,
+			controlsResolved: true,
+			contentRole: 'dialog',
+			labelledByResolved: true,
+			contentFocusedAfterOpen: true,
+			presenceEnteredObserved: true,
+			reducedMotionObserved: true,
+			openStateObserved: true,
+			backgroundUnchanged: true,
+			expandedAfterEscape: false,
+			focusAfterEscape: true,
+			presenceCleanedAfterEscape: true,
+			reopened: true,
+			expandedAfterPointerOutside: false,
+			focusAfterPointerOutside: true,
+			presenceCleanedAfterPointerOutside: true
+		},
 		tabsInteraction: {
 			ready: true,
 			initialSelected: true,
@@ -2255,6 +2518,20 @@ if (isMain && process.argv.includes('--self-test')) {
 		},
 		'native ZText'
 	);
+	for (const [label, key] of [
+		['popover closed-state', 'expandedAfterEscape'],
+		['popover reopened-state', 'reopened'],
+		['popover baseline', 'backgroundUnchanged']
+	]) {
+		const changed = structuredClone(sample);
+		changed.popoverInteraction[key] = !changed.popoverInteraction[key];
+		try {
+			validateDesktopEvidence(changed, { expectedRevision: sample.revision });
+			fail(`self-test accepted ${label}.`);
+		} catch (error) {
+			if (!String(error).includes('Popover') && !String(error).includes('component')) throw error;
+		}
+	}
 	try {
 		validateDesktopEvidenceArtifact({
 			...normalized,

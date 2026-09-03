@@ -15,6 +15,9 @@
 		ZDialogOverlay,
 		ZDialogTitle,
 		ZDialogTrigger,
+		ZPopover,
+		ZPopoverContent,
+		ZPopoverTrigger,
 		ZProvider,
 		ZForm,
 		ZFormField,
@@ -186,6 +189,25 @@
 		<ZBox class={panelClass}>
 			<SystemInfo onerror={(error) => setResult('System', { error, ok: false }, String)} />
 		</ZBox>
+
+		<ZProvider motion="reduced">
+			<ZBox class={panelClass} data-desktop-evidence="ZPopover-background-sibling">
+				<ZText as="strong">Popover desktop contract</ZText>
+				<ZPopover modal={false}>
+					<ZPopoverTrigger
+						data-desktop-component="ZPopoverTrigger"
+						data-desktop-evidence="ZPopoverTrigger-settings">Open details</ZPopoverTrigger
+					>
+					<ZPopoverContent
+						data-desktop-component="ZPopoverContent"
+						data-desktop-evidence="ZPopoverContent-settings"
+					>
+						<h2>Details</h2>
+						<p>Non-modal popover content.</p>
+					</ZPopoverContent>
+				</ZPopover>
+			</ZBox>
+		</ZProvider>
 
 		<ZStack class={panelClass} gap="small">
 			<ZText as="strong">Safe automated probes</ZText>
