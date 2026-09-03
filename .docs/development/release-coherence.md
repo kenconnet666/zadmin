@@ -13,3 +13,5 @@ Static CI 先运行 `pnpm release:candidate:self-test` 的正负例；single-pac
 Release PR workflow 的 `verify-artifacts` job 使用 `workflow_run.id` 与 `workflow_run.head_sha` 从同一成功的 CI run 下载 `release-consumer-artifacts-<head_sha>`、`workspace-build-<head_sha>` 和 `desktop-windows-<head_sha>`，分别执行 handoff plan、versioned Docs verifier 与 `verify-desktop-artifact.mjs`。Desktop verifier 会再次校验 normalized evidence、WebView2 host/bridge、runtime maturity 与 checked-in base matrix 的 identity、summary、DesktopVerified count 及逐组件 evidence path/detail；除 DesktopVerified 增量外，基线不得被篡改。Changesets `version` job 依赖该 job，并只在自身 job 申请 `contents`/`pull-requests` 写权限。该绑定只验证 release 输入，不启用 npm OIDC、publish、tag、GitHub Release、Pages 或部署。
 
 该命令不会创建 tag、GitHub Release、发布 npm 包或修改任何发布权限。真实 release workflow 仍以 `workflow_run.head_sha` checkout 已验证提交；真实部署和 registry publish 不由此命令宣称完成。
+
+公开 API、Docs catalog、maturity、stability、support、versioned Docs、release readiness 和 progress 的 tracked facts 使用 `pnpm zui:artifacts:update` 按依赖顺序统一刷新；`progress` 必须在 release readiness 之后生成，避免前一步更新后立即产生陈旧摘要。

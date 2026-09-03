@@ -18,6 +18,7 @@
 		"check:wechat": "pnpm --filter @zadmin/wechat-app check",
 		"test:desktop": "pnpm --filter @zadmin/desktop test",
 		"test:wechat": "pnpm --filter @zadmin/wechat-app test",
+		"zui:artifacts:update": "pnpm --filter @zadmin/zui api:contract:update && pnpm --filter @zadmin/docs api:source:update && pnpm --filter @zadmin/docs api:catalog:update && pnpm --filter @zadmin/docs maturity:update && pnpm --filter @zadmin/docs stability:update && pnpm --filter @zadmin/docs support:update && pnpm --filter @zadmin/docs docs:versioned:update && pnpm release:readiness:update && pnpm --filter @zadmin/docs progress:update",
 		"build": "pnpm -r --if-present build",
 		"check": "pnpm -r --if-present check",
 		"lint": "prettier --check . && eslint .",
