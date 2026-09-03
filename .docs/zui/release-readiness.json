@@ -10,7 +10,7 @@
 	},
 	"changesets": {
 		"config": ".changeset/config.json",
-		"count": 82,
+		"count": 83,
 		"packages": ["@zadmin/zui"],
 		"publicAccess": true,
 		"baseBranch": "master"
@@ -112,6 +112,7 @@
 		"workflowChecksExactSha": true,
 		"workflowRequiresCiSuccess": true,
 		"releaseWorkflowArtifactBinding": true,
+		"desktopArtifactReleaseBinding": true,
 		"changesetsConfigured": true,
 		"changesetTargetsKnown": true,
 		"packageCheckPresent": true,
