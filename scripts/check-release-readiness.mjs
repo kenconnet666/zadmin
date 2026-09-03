@@ -316,7 +316,7 @@ const checks = {
 		ci.includes('pnpm release:github-release:self-test') &&
 		ci.includes('pnpm release:npm-registry:self-test') &&
 		ci.includes('pnpm release:artifact:self-test') &&
-		/^on:\n  workflow_dispatch:/mu.test(productionWorkflow) &&
+		/^on:\n {2}workflow_dispatch:/mu.test(productionWorkflow) &&
 		!/^[ ]{2}push:/mu.test(productionWorkflow) &&
 		/ci_run_id:/u.test(productionWorkflow) &&
 		/expected_sha:/u.test(productionWorkflow) &&

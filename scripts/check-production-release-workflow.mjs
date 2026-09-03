@@ -9,7 +9,7 @@ const source = await readFile(workflowPath, 'utf8');
 export function evaluateProductionReleaseWorkflow(value) {
 	const privilegedJobs = value.slice(value.indexOf('\n  publish:'));
 	return {
-		dispatchOnly: /^on:\n  workflow_dispatch:/mu.test(value) && !/^  push:/mu.test(value),
+		dispatchOnly: /^on:\n {2}workflow_dispatch:/mu.test(value) && !/^ {2}push:/mu.test(value),
 		requiredInputs: ['ci_run_id', 'expected_sha', 'zui_version', 'zui_tag'].every((input) =>
 			new RegExp(`^      ${input}:`, 'mu').test(value)
 		),
