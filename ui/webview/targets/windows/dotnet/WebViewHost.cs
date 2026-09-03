@@ -232,6 +232,20 @@ public sealed class WebViewHost : IAsyncDisposable
         public bool PresenceCleaned { get; set; }
     }
 
+    private sealed class DesktopTooltipEvidence
+    {
+        public bool Ready { get; set; }
+        public bool DescribedByResolved { get; set; }
+        public string? ContentRole { get; set; }
+        public bool PresenceEntered { get; set; }
+        public bool ReducedMotionObserved { get; set; }
+        public bool OpenStateObserved { get; set; }
+        public bool FocusOpenObserved { get; set; }
+        public string? TriggerState { get; set; }
+        public bool PresenceCleaned { get; set; }
+        public bool BackgroundUnchanged { get; set; }
+    }
+
     private static readonly JsonSerializerOptions SerializerOptions = new(JsonSerializerDefaults.Web);
     private const string CaptureDesktopEvidenceScript = """
         (() => {
@@ -1103,6 +1117,74 @@ public sealed class WebViewHost : IAsyncDisposable
           return true;
         })()
         """;
+    private const string FocusTooltipEvidenceScript = """
+        (() => {
+          const trigger = document.querySelector('[data-desktop-evidence="ZTooltipTrigger-settings"]');
+          if (!(trigger instanceof HTMLElement)) return false;
+          const sibling = document.querySelector('[data-desktop-evidence="ZTooltip-background-sibling"]');
+          if (!globalThis.__ZADMIN_TOOLTIP_BASELINE__) globalThis.__ZADMIN_TOOLTIP_BASELINE__ = {
+            inert: sibling?.inert ?? false, inertAttr: sibling?.getAttribute('inert'), ariaHidden: sibling?.getAttribute('aria-hidden'),
+            overflow: document.body?.style.overflow ?? '', paddingInlineEnd: document.body?.style.paddingInlineEnd ?? '', paddingRight: document.body?.style.paddingRight ?? ''
+          };
+          trigger.focus();
+          return true;
+        })()
+        """;
+    private const string MoveTooltipFocusOutsideScript = """
+        (() => {
+          const outside = document.querySelector('[data-desktop-evidence="ZTooltip-outside-focus"]');
+          if (!(outside instanceof HTMLElement)) return false;
+          outside.focus();
+          return document.activeElement === outside;
+        })()
+        """;
+    private const string ReadTooltipOpenEvidenceScript = """
+        (() => {
+          const trigger = document.querySelector('[data-desktop-evidence="ZTooltipTrigger-settings"]');
+          const id = trigger?.getAttribute('aria-describedby');
+          const content = id ? document.getElementById(id) : null;
+          const sibling = document.querySelector('[data-desktop-evidence="ZTooltip-background-sibling"]');
+          const b = globalThis.__ZADMIN_TOOLTIP_BASELINE__;
+          const backgroundUnchanged = Boolean(b && sibling && sibling.inert === b.inert && sibling.getAttribute('inert') === b.inertAttr && sibling.getAttribute('aria-hidden') === b.ariaHidden && document.body?.style.overflow === b.overflow && document.body?.style.paddingInlineEnd === b.paddingInlineEnd && document.body?.style.paddingRight === b.paddingRight);
+          const result = { describedByResolved: Boolean(id && content?.id === id), contentRole: content?.getAttribute('role'), presenceEntered: content?.getAttribute('data-presence') === 'entered', reducedMotionObserved: content?.getAttribute('data-reduced-motion') === 'true', openStateObserved: content?.getAttribute('data-state') === 'open', focusOpenObserved: document.activeElement === trigger, backgroundUnchanged };
+          return JSON.stringify({ ...result, ready: result.describedByResolved && result.contentRole === 'tooltip' && result.presenceEntered && result.reducedMotionObserved && result.openStateObserved && result.backgroundUnchanged });
+        })()
+        """;
+    private const string DismissTooltipEscapeEvidenceScript = """
+        (() => {
+          const trigger = document.querySelector('[data-desktop-evidence="ZTooltipTrigger-settings"]');
+          if (!(trigger instanceof HTMLElement)) return false;
+          trigger.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Escape' }));
+          return true;
+        })()
+        """;
+    private const string ReadTooltipClosedEvidenceScript = """
+        (() => {
+          const trigger = document.querySelector('[data-desktop-evidence="ZTooltipTrigger-settings"]');
+          const content = document.querySelector('[data-desktop-evidence="ZTooltipContent-settings"]');
+          const b = globalThis.__ZADMIN_TOOLTIP_BASELINE__;
+          const sibling = document.querySelector('[data-desktop-evidence="ZTooltip-background-sibling"]');
+          const backgroundUnchanged = Boolean(b && sibling && sibling.inert === b.inert && sibling.getAttribute('inert') === b.inertAttr && sibling.getAttribute('aria-hidden') === b.ariaHidden && document.body?.style.overflow === b.overflow && document.body?.style.paddingInlineEnd === b.paddingInlineEnd && document.body?.style.paddingRight === b.paddingRight);
+          const result = { triggerState: trigger?.getAttribute('data-state') ?? 'missing', presenceCleaned: content === null, backgroundUnchanged };
+          return JSON.stringify({ ...result, ready: result.triggerState === 'closed' && result.presenceCleaned && result.backgroundUnchanged });
+        })()
+        """;
+    private const string PointerEnterTooltipEvidenceScript = """
+        (() => {
+          const trigger = document.querySelector('[data-desktop-evidence="ZTooltipTrigger-settings"]');
+          if (!(trigger instanceof HTMLElement)) return false;
+          trigger.dispatchEvent(new PointerEvent('pointerenter', { bubbles: false, cancelable: true, pointerType: 'mouse' }));
+          return true;
+        })()
+        """;
+    private const string PointerLeaveTooltipEvidenceScript = """
+        (() => {
+          const trigger = document.querySelector('[data-desktop-evidence="ZTooltipTrigger-settings"]');
+          if (!(trigger instanceof HTMLElement)) return false;
+          trigger.dispatchEvent(new PointerEvent('pointerleave', { bubbles: false, cancelable: true, pointerType: 'mouse' }));
+          return true;
+        })()
+        """;
     private readonly HostOptions _options;
     private readonly WebView2 _webview;
     private readonly Microsoft.UI.Xaml.Window _window;
@@ -1695,6 +1777,55 @@ public sealed class WebViewHost : IAsyncDisposable
                     popoverReopen.BackgroundUnchanged &&
                     popoverAfterPointer.BackgroundUnchanged
             };
+            smokePhase = "validating-tooltip-focus";
+            if (await sender.ExecuteScriptAsync(FocusTooltipEvidenceScript) != "true")
+                throw new InvalidOperationException("Desktop Tooltip trigger is unavailable.");
+            var tooltipOpen = await WaitForEvidenceAsync<DesktopTooltipEvidence>(
+                sender,
+                ReadTooltipOpenEvidenceScript,
+                evidence => evidence.Ready && evidence.FocusOpenObserved,
+                "Desktop Tooltip did not establish focus, aria-describedby and non-modal effects.");
+            evidenceBefore.DesktopEvidence = MergeDesktopEvidence(evidenceBefore.DesktopEvidence, await CaptureCurrentDesktopEvidenceAsync(sender));
+            smokePhase = "validating-tooltip-escape";
+            if (await sender.ExecuteScriptAsync(DismissTooltipEscapeEvidenceScript) != "true")
+                throw new InvalidOperationException("Desktop Tooltip trigger is unavailable for Escape dismissal.");
+            var tooltipAfterEscape = await WaitForEvidenceAsync<DesktopTooltipEvidence>(sender, ReadTooltipClosedEvidenceScript, evidence => evidence.Ready, "Desktop Tooltip Escape did not clean up presence.");
+            smokePhase = "validating-tooltip-blur";
+            if (await sender.ExecuteScriptAsync(MoveTooltipFocusOutsideScript) != "true" ||
+                await sender.ExecuteScriptAsync(FocusTooltipEvidenceScript) != "true")
+                throw new InvalidOperationException("Desktop Tooltip focus/blur sequence is unavailable.");
+            var tooltipReopened = await WaitForEvidenceAsync<DesktopTooltipEvidence>(
+                sender,
+                ReadTooltipOpenEvidenceScript,
+                evidence => evidence.Ready && evidence.FocusOpenObserved,
+                "Desktop Tooltip did not reopen after focus moved away and returned.");
+            if (await sender.ExecuteScriptAsync(MoveTooltipFocusOutsideScript) != "true")
+                throw new InvalidOperationException("Desktop Tooltip outside focus target is unavailable.");
+            var tooltipAfterBlur = await WaitForEvidenceAsync<DesktopTooltipEvidence>(sender, ReadTooltipClosedEvidenceScript, evidence => evidence.Ready, "Desktop Tooltip blur did not clean up presence.");
+            smokePhase = "validating-tooltip-hover";
+            if (await sender.ExecuteScriptAsync(PointerEnterTooltipEvidenceScript) != "true")
+                throw new InvalidOperationException("Desktop Tooltip trigger is unavailable for pointerenter.");
+            var tooltipHoverOpen = await WaitForEvidenceAsync<DesktopTooltipEvidence>(sender, ReadTooltipOpenEvidenceScript, evidence => evidence.Ready, "Desktop Tooltip hover did not open.");
+            if (await sender.ExecuteScriptAsync(PointerLeaveTooltipEvidenceScript) != "true")
+                throw new InvalidOperationException("Desktop Tooltip trigger is unavailable for pointerleave.");
+            var tooltipAfterPointerLeave = await WaitForEvidenceAsync<DesktopTooltipEvidence>(sender, ReadTooltipClosedEvidenceScript, evidence => evidence.Ready, "Desktop Tooltip pointerleave did not clean up presence.");
+            var tooltipInteraction = new
+            {
+                ready = true,
+                describedByResolved = tooltipOpen.DescribedByResolved,
+                contentRole = tooltipOpen.ContentRole,
+                presenceEntered = tooltipOpen.PresenceEntered,
+                reducedMotionObserved = tooltipOpen.ReducedMotionObserved,
+                openStateObserved = tooltipOpen.OpenStateObserved,
+                focusOpenObserved = tooltipOpen.FocusOpenObserved,
+                stateAfterEscape = tooltipAfterEscape.TriggerState,
+                escapeCleaned = tooltipAfterEscape.PresenceCleaned,
+                reopened = tooltipReopened.OpenStateObserved && tooltipReopened.FocusOpenObserved,
+                hoverOpened = tooltipHoverOpen.OpenStateObserved,
+                blurCleaned = tooltipAfterBlur.PresenceCleaned,
+                pointerLeaveCleaned = tooltipAfterPointerLeave.PresenceCleaned,
+                backgroundUnchanged = tooltipOpen.BackgroundUnchanged && tooltipAfterEscape.BackgroundUnchanged && tooltipReopened.BackgroundUnchanged && tooltipAfterBlur.BackgroundUnchanged && tooltipHoverOpen.BackgroundUnchanged && tooltipAfterPointerLeave.BackgroundUnchanged
+            };
             var pageAfterValue = await sender.ExecuteScriptAsync(ReadStatusScript);
             smokePhase = "writing-report";
             var report = new
@@ -1714,7 +1845,8 @@ public sealed class WebViewHost : IAsyncDisposable
                 dialogInteraction,
                 tabsInteraction,
                 accordionInteraction,
-                popoverInteraction
+                popoverInteraction,
+                tooltipInteraction
             };
             Directory.CreateDirectory(Path.GetDirectoryName(_options.SmokeReportPath)!);
             await WriteSmokeReportAsync(

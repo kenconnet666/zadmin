@@ -34,6 +34,9 @@
 		ZTabsList,
 		ZTabsPanel,
 		ZTabsTrigger,
+		ZTooltip,
+		ZTooltipContent,
+		ZTooltipTrigger,
 		ZText,
 		defaultTheme,
 		icss
@@ -206,6 +209,24 @@
 						<p>Non-modal popover content.</p>
 					</ZPopoverContent>
 				</ZPopover>
+			</ZBox>
+		</ZProvider>
+
+		<ZProvider motion="reduced">
+			<ZBox class={panelClass} data-desktop-evidence="ZTooltip-background-sibling">
+				<ZText as="strong">Tooltip desktop contract</ZText>
+				<ZTooltip delay={0} closeDelay={0}>
+					<ZTooltipTrigger
+						data-desktop-component="ZTooltipTrigger"
+						data-desktop-evidence="ZTooltipTrigger-settings">Focus for help</ZTooltipTrigger
+					>
+					<ZTooltipContent
+						data-desktop-component="ZTooltipContent"
+						data-desktop-evidence="ZTooltipContent-settings"
+						>Desktop tooltip description</ZTooltipContent
+					>
+				</ZTooltip>
+				<ZButton data-desktop-evidence="ZTooltip-outside-focus">Outside focus</ZButton>
 			</ZBox>
 		</ZProvider>
 

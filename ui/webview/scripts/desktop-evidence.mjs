@@ -1383,6 +1383,123 @@ desktopComponentContracts.push(
 				}
 			]
 		}
+	},
+	{
+		id: 'tooltip-trigger',
+		name: 'ZTooltipTrigger',
+		marker: 'ZTooltipTrigger-settings',
+		native: { tag: 'BUTTON', type: 'button', ariaDescribedByPresent: false, dataState: 'closed' },
+		interaction: {
+			id: 'focus-hover-and-cleanup',
+			action: 'focus+Escape+refocus+outside-focus+pointerenter+pointerleave',
+			target: 'root',
+			observations: [
+				{
+					id: 'describedby-after-open',
+					kind: 'relationship',
+					target: 'aria-describedby',
+					expected: true,
+					read: (raw) => raw.tooltipInteraction.describedByResolved
+				},
+				{
+					id: 'closed-after-escape',
+					kind: 'aria',
+					target: 'data-state',
+					expected: 'closed',
+					read: (raw) => raw.tooltipInteraction.stateAfterEscape
+				},
+				{
+					id: 'reopened',
+					kind: 'state',
+					target: 'content presence',
+					expected: true,
+					read: (raw) => raw.tooltipInteraction.reopened
+				},
+				{
+					id: 'hover-opened',
+					kind: 'state',
+					target: 'content presence',
+					expected: true,
+					read: (raw) => raw.tooltipInteraction.hoverOpened
+				},
+				{
+					id: 'closed-after-blur',
+					kind: 'cleanup',
+					target: 'presence',
+					expected: true,
+					read: (raw) => raw.tooltipInteraction.blurCleaned
+				},
+				{
+					id: 'closed-after-pointerleave',
+					kind: 'cleanup',
+					target: 'presence',
+					expected: true,
+					read: (raw) => raw.tooltipInteraction.pointerLeaveCleaned
+				}
+			]
+		}
+	},
+	{
+		id: 'tooltip-content',
+		name: 'ZTooltipContent',
+		marker: 'ZTooltipContent-settings',
+		native: {
+			tag: 'DIV',
+			role: 'tooltip',
+			ariaHidden: 'false',
+			dataPresence: 'entered',
+			dataReducedMotion: 'true',
+			dataState: 'open'
+		},
+		interaction: {
+			id: 'describedby-role-and-presence',
+			action: 'focus+Escape+refocus+outside-focus+pointerenter+pointerleave',
+			target: 'trigger[aria-describedby]',
+			observations: [
+				{
+					id: 'role',
+					kind: 'native',
+					target: 'role',
+					expected: 'tooltip',
+					read: (raw) => raw.tooltipInteraction.contentRole
+				},
+				{
+					id: 'presence-entered',
+					kind: 'state',
+					target: 'data-presence',
+					expected: true,
+					read: (raw) => raw.tooltipInteraction.presenceEntered
+				},
+				{
+					id: 'reduced-motion',
+					kind: 'state',
+					target: 'data-reduced-motion',
+					expected: true,
+					read: (raw) => raw.tooltipInteraction.reducedMotionObserved
+				},
+				{
+					id: 'presence-cleaned-after-escape',
+					kind: 'cleanup',
+					target: 'presence',
+					expected: true,
+					read: (raw) => raw.tooltipInteraction.escapeCleaned
+				},
+				{
+					id: 'presence-cleaned-after-blur',
+					kind: 'cleanup',
+					target: 'presence',
+					expected: true,
+					read: (raw) => raw.tooltipInteraction.blurCleaned
+				},
+				{
+					id: 'presence-cleaned-after-pointerleave',
+					kind: 'cleanup',
+					target: 'presence',
+					expected: true,
+					read: (raw) => raw.tooltipInteraction.pointerLeaveCleaned
+				}
+			]
+		}
 	}
 );
 Object.freeze(desktopComponentContracts);
@@ -1746,6 +1863,107 @@ export const desktopCompositionContracts = Object.freeze([
 					target: 'document-owner-effects',
 					expected: true,
 					read: (raw) => raw.popoverInteraction.backgroundUnchanged
+				}
+			]
+		}
+	},
+	{
+		id: 'tooltip',
+		name: 'ZTooltip',
+		children: [
+			{
+				id: 'tooltip-trigger',
+				name: 'ZTooltipTrigger',
+				evidenceId: 'ZTooltipTrigger-settings',
+				role: 'trigger'
+			},
+			{
+				id: 'tooltip-content',
+				name: 'ZTooltipContent',
+				evidenceId: 'ZTooltipContent-settings',
+				role: 'content'
+			}
+		],
+		ownerProbe: {
+			id: 'tooltip-runtime-owner',
+			action: 'focus+Escape+refocus+outside-focus+pointerenter+pointerleave',
+			observations: [
+				{
+					id: 'describedby-resolved',
+					kind: 'relationship',
+					target: 'trigger[aria-describedby] -> content[id]',
+					expected: true,
+					read: (raw) => raw.tooltipInteraction.describedByResolved
+				},
+				{
+					id: 'role-resolved',
+					kind: 'relationship',
+					target: 'content[role=tooltip]',
+					expected: true,
+					read: (raw) => raw.tooltipInteraction.contentRole === 'tooltip'
+				},
+				{
+					id: 'focus-opened',
+					kind: 'state',
+					target: 'content presence',
+					expected: true,
+					read: (raw) => raw.tooltipInteraction.openStateObserved
+				},
+				{
+					id: 'delay-observed',
+					kind: 'state',
+					target: 'focus immediate open',
+					expected: true,
+					read: (raw) => raw.tooltipInteraction.focusOpenObserved
+				},
+				{
+					id: 'closed-escape',
+					kind: 'cleanup',
+					target: 'presence',
+					expected: true,
+					read: (raw) => raw.tooltipInteraction.escapeCleaned
+				},
+				{
+					id: 'reopened',
+					kind: 'state',
+					target: 'content presence',
+					expected: true,
+					read: (raw) => raw.tooltipInteraction.reopened
+				},
+				{
+					id: 'hover-opened',
+					kind: 'state',
+					target: 'content presence',
+					expected: true,
+					read: (raw) => raw.tooltipInteraction.hoverOpened
+				},
+				{
+					id: 'closed-blur',
+					kind: 'cleanup',
+					target: 'presence',
+					expected: true,
+					read: (raw) => raw.tooltipInteraction.blurCleaned
+				},
+				{
+					id: 'closed-pointerleave',
+					kind: 'cleanup',
+					target: 'presence',
+					expected: true,
+					read: (raw) => raw.tooltipInteraction.pointerLeaveCleaned
+				},
+				{
+					id: 'reduced-motion',
+					kind: 'state',
+					target: 'content[data-reduced-motion]',
+					expected: true,
+					read: (raw) => raw.tooltipInteraction.reducedMotionObserved
+				},
+				{
+					id: 'background-unchanged',
+					kind: 'state',
+					target: 'document-owner-effects',
+					expected: true,
+					read: (raw) => raw.tooltipInteraction.backgroundUnchanged
 				}
 			]
 		}
@@ -2133,6 +2351,7 @@ export function validateDesktopEvidence(raw, { expectedRevision } = {}) {
 	if (raw.selectInteraction?.ready !== true) fail('Select interaction evidence is incomplete.');
 	if (raw.dialogInteraction?.ready !== true) fail('Dialog interaction evidence is incomplete.');
 	if (raw.popoverInteraction?.ready !== true) fail('Popover interaction evidence is incomplete.');
+	if (raw.tooltipInteraction?.ready !== true) fail('Tooltip interaction evidence is incomplete.');
 	for (const contract of desktopComponentContracts)
 		for (const observation of contract.interaction?.observations ?? [])
 			if (observation.read(raw) !== observation.expected)
@@ -2385,6 +2604,22 @@ if (isMain && process.argv.includes('--self-test')) {
 			focusAfterPointerOutside: true,
 			presenceCleanedAfterPointerOutside: true
 		},
+		tooltipInteraction: {
+			ready: true,
+			describedByResolved: true,
+			contentRole: 'tooltip',
+			presenceEntered: true,
+			reducedMotionObserved: true,
+			openStateObserved: true,
+			focusOpenObserved: true,
+			stateAfterEscape: 'closed',
+			escapeCleaned: true,
+			reopened: true,
+			hoverOpened: true,
+			blurCleaned: true,
+			pointerLeaveCleaned: true,
+			backgroundUnchanged: true
+		},
 		tabsInteraction: {
 			ready: true,
 			initialSelected: true,
@@ -2530,6 +2765,22 @@ if (isMain && process.argv.includes('--self-test')) {
 			fail(`self-test accepted ${label}.`);
 		} catch (error) {
 			if (!String(error).includes('Popover') && !String(error).includes('component')) throw error;
+		}
+	}
+	for (const [label, key] of [
+		['tooltip reopen', 'reopened'],
+		['tooltip hover', 'hoverOpened'],
+		['tooltip blur cleanup', 'blurCleaned'],
+		['tooltip pointerleave cleanup', 'pointerLeaveCleaned'],
+		['tooltip background baseline', 'backgroundUnchanged']
+	]) {
+		const changed = structuredClone(sample);
+		changed.tooltipInteraction[key] = !changed.tooltipInteraction[key];
+		try {
+			validateDesktopEvidence(changed, { expectedRevision: sample.revision });
+			fail(`self-test accepted ${label}.`);
+		} catch (error) {
+			if (!String(error).includes('Tooltip') && !String(error).includes('component')) throw error;
 		}
 	}
 	try {
