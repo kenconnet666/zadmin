@@ -4908,6 +4908,11 @@ export const providerApiFacts = {
 			type: 'Snippet'
 		},
 		{
+			name: 'componentDefaults',
+			required: false,
+			type: 'ZuiComponentDefaults | null'
+		},
+		{
 			name: 'colorScheme',
 			required: false,
 			type: 'ZuiColorScheme'

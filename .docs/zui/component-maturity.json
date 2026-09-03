@@ -3,7 +3,7 @@
 		"metadataComponents": 141,
 		"documentationPages": 79,
 		"contractComponents": 141,
-		"testFiles": 145
+		"testFiles": 146
 	},
 	"stageNames": [
 		"Declared",
@@ -6735,6 +6735,10 @@
 						"detail": "ZDataTable explicit rendered fixture usage"
 					},
 					{
+						"path": "ui/zui/tests/ComponentDefaultsFixture.svelte",
+						"detail": "ZDataTable explicit rendered fixture usage"
+					},
+					{
 						"path": "ui/zui/tests/data-table.browser.spec.ts",
 						"detail": "ZDataTable browser assertions"
 					},
@@ -10185,6 +10189,10 @@
 				{
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZForm SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-controller-ssr.spec.ts",
+					"detail": "ZForm SSR assertions"
 				}
 			]
 		},
@@ -10303,6 +10311,10 @@
 				{
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZFormField SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-controller-ssr.spec.ts",
+					"detail": "ZFormField SSR assertions"
 				}
 			]
 		},
@@ -10380,6 +10392,10 @@
 			"ssrEvidence": [
 				{
 					"path": "ui/zui/tests/components.spec.ts",
+					"detail": "ZInput SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-controller-ssr.spec.ts",
 					"detail": "ZInput SSR assertions"
 				},
 				{

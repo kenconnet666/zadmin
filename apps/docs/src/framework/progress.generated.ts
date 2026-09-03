@@ -7,7 +7,7 @@ export const zuiProgress = {
 	},
 	api: {
 		components: 141,
-		declaredProps: 1385,
+		declaredProps: 1386,
 		metadataGapProps: 0,
 		fallbackProps: 0
 	},
@@ -46,8 +46,8 @@ export const zuiProgress = {
 	},
 	release: {
 		status: 'blocked',
-		passedChecks: 14,
-		totalChecks: 20,
+		passedChecks: 15,
+		totalChecks: 21,
 		blocked: [
 			'releasePublishTarballReuse',
 			'npmOidcProvenance',

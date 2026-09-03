@@ -7,14 +7,14 @@
 | 维度                      |                    当前值 |                           总量或边界 |
 | ------------------------- | ------------------------: | -----------------------------------: |
 | Public component metadata |                       141 |                                  141 |
-| Declared public props     |                      1385 |         metadata gaps 0; fallbacks 0 |
+| Declared public props     |                      1386 |         metadata gaps 0; fallbacks 0 |
 | Stable                    |                       141 |                         violations 0 |
 | VisuallyVerified          |                       141 |                                  141 |
 | ProductionVerified        |                       141 |                                  141 |
 | DesktopVerified           |                         0 |                                  141 |
 | Docs routes               |                        88 | components 79; guides 8; deployed no |
 | Browser matrix            | chromium, firefox, webkit |                Node 24; pnpm 11.22.0 |
-| Release checks            |                        14 |                   20; status blocked |
+| Release checks            |                        15 |                   21; status blocked |
 
 ## 下一步优先级
 

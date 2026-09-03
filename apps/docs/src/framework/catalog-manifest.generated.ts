@@ -33,20 +33,20 @@ export const componentCatalogManifest = Object.freeze([
 		keywords: [],
 		profiles: ['service'],
 		capabilities: [
-			'basic-render',
 			'composition',
 			'controlled',
 			'density',
+			'variants-and-states',
+			'basic-render',
 			'full-motion',
 			'reduced-motion',
 			'rtl',
-			'variants-and-states',
 			'portal',
 			'ssr',
 			'locale',
 			'resource-cleanup'
 		],
-		demoCount: 5
+		demoCount: 6
 	},
 	{
 		id: 'box',

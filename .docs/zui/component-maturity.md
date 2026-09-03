@@ -1,6 +1,6 @@
 # ZUI component maturity matrix
 
-Generated from 141 metadata components, 79 documentation modules, 141 API contract entries, and 145 test files.
+Generated from 141 metadata components, 79 documentation modules, 141 API contract entries, and 146 test files.
 
 Generation is evidence-based. A test filename alone never grants `VisuallyVerified` or `ProductionVerified`; the test source must contain the component name, `render(`, and `expect(`. `DesktopVerified` remains false until a component-level desktop evidence source is added.
 

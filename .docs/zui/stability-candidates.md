@@ -125,9 +125,9 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：0
 | ZDateRangePicker        | stable | stableCompliant | —        | apps/docs/src/content/components/input/date-range-picker/doc.ts       |   1 |
 | ZField                  | stable | stableCompliant | —        | apps/docs/src/content/components/input/field/doc.ts                   |   3 |
 | ZFileUpload             | stable | stableCompliant | —        | apps/docs/src/content/components/input/file-upload/doc.ts             |   1 |
-| ZForm                   | stable | stableCompliant | —        | apps/docs/src/content/components/input/form/doc.ts                    |   1 |
-| ZFormField              | stable | stableCompliant | —        | apps/docs/src/content/components/input/form/doc.ts                    |   1 |
-| ZInput                  | stable | stableCompliant | —        | apps/docs/src/content/components/input/input/doc.ts                   |   2 |
+| ZForm                   | stable | stableCompliant | —        | apps/docs/src/content/components/input/form/doc.ts                    |   2 |
+| ZFormField              | stable | stableCompliant | —        | apps/docs/src/content/components/input/form/doc.ts                    |   2 |
+| ZInput                  | stable | stableCompliant | —        | apps/docs/src/content/components/input/input/doc.ts                   |   3 |
 | ZInputGroup             | stable | stableCompliant | —        | apps/docs/src/content/components/input/input-group/doc.ts             |   2 |
 | ZMention                | stable | stableCompliant | —        | apps/docs/src/content/components/input/mention/doc.ts                 |   1 |
 | ZNumberField            | stable | stableCompliant | —        | apps/docs/src/content/components/input/number-field/doc.ts            |   1 |

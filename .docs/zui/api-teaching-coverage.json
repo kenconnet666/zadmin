@@ -1130,7 +1130,7 @@
 			"id": "provider",
 			"name": "ZProvider",
 			"source": "ui/zui/src/components/gene/ZProvider.svelte",
-			"declaredPropCount": 14,
+			"declaredPropCount": 15,
 			"metadataGapPropCount": 0,
 			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
@@ -1493,7 +1493,7 @@
 	},
 	"totals": {
 		"components": 141,
-		"declaredProps": 1385,
+		"declaredProps": 1386,
 		"metadataGapProps": 0,
 		"fallbackProps": 0
 	}
