@@ -10,7 +10,7 @@
 	},
 	"changesets": {
 		"config": ".changeset/config.json",
-		"count": 79,
+		"count": 82,
 		"packages": ["@zadmin/zui"],
 		"publicAccess": true,
 		"baseBranch": "master"

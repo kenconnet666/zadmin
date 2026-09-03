@@ -31,8 +31,8 @@ export const zuiProgress = {
 	docs: {
 		routes: {
 			componentCount: 79,
-			guideCount: 8,
-			totalCount: 88
+			guideCount: 9,
+			totalCount: 89
 		},
 		deployed: false
 	},

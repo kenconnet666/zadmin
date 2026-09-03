@@ -1004,7 +1004,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/gene/button/doc.ts",
-			"ssrEvidenceCount": 7
+			"ssrEvidenceCount": 8
 		},
 		{
 			"id": "code",

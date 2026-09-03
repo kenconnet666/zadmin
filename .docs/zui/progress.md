@@ -12,7 +12,7 @@
 | VisuallyVerified          |                       141 |                                  141 |
 | ProductionVerified        |                       141 |                                  141 |
 | DesktopVerified           |                         0 |                                  141 |
-| Docs routes               |                        88 | components 79; guides 8; deployed no |
+| Docs routes               |                        89 | components 79; guides 9; deployed no |
 | Browser matrix            | chromium, firefox, webkit |                Node 24; pnpm 11.22.0 |
 | Release checks            |                        15 |                   21; status blocked |
 

@@ -3,7 +3,7 @@
 		"metadataComponents": 141,
 		"documentationPages": 79,
 		"contractComponents": 141,
-		"testFiles": 146
+		"testFiles": 148
 	},
 	"stageNames": [
 		"Declared",
@@ -8243,6 +8243,10 @@
 					{
 						"path": "ui/zui/tests/ToastProductionFixture.svelte",
 						"detail": "ZToaster explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/ToastQueueReplacementFixture.svelte",
+						"detail": "ZToaster explicit rendered fixture usage"
 					}
 				],
 				"DesktopVerified": [],
@@ -8253,6 +8257,10 @@
 					},
 					{
 						"path": "ui/zui/tests/ToastProductionFixture.svelte",
+						"detail": "ZToaster explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/ToastQueueReplacementFixture.svelte",
 						"detail": "ZToaster explicit rendered fixture usage"
 					}
 				]
@@ -8444,6 +8452,10 @@
 				},
 				{
 					"path": "ui/zui/tests/pin-input-group-production.spec.ts",
+					"detail": "ZButton SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/toast-production-ssr.spec.ts",
 					"detail": "ZButton SSR assertions"
 				},
 				{

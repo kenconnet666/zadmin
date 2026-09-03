@@ -105,7 +105,7 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：0
 | ZToast                  | stable | stableCompliant | —        | apps/docs/src/content/components/feedback/toast/doc.ts                |   1 |
 | ZToaster                | stable | stableCompliant | —        | apps/docs/src/content/components/feedback/toast/doc.ts                |   2 |
 | ZBox                    | stable | stableCompliant | —        | apps/docs/src/content/components/gene/box/doc.ts                      |   1 |
-| ZButton                 | stable | stableCompliant | —        | apps/docs/src/content/components/gene/button/doc.ts                   |   7 |
+| ZButton                 | stable | stableCompliant | —        | apps/docs/src/content/components/gene/button/doc.ts                   |   8 |
 | ZCode                   | stable | stableCompliant | —        | apps/docs/src/content/components/gene/code/doc.ts                     |   2 |
 | ZHeading                | stable | stableCompliant | —        | apps/docs/src/content/components/gene/heading/doc.ts                  |   1 |
 | ZIcon                   | stable | stableCompliant | —        | apps/docs/src/content/components/gene/icon/doc.ts                     |   1 |
