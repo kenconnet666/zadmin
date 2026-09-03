@@ -132,7 +132,7 @@ jobs:
     if: needs.version.result == 'success' && needs.version.outputs.pr-number != ''
     needs: version
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 90
     permissions:
       actions: write
       contents: read
@@ -143,6 +143,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ needs.version.outputs.pr-number }}
         run: |
+          printf '%s' "$PR_NUMBER" | grep -Eq '^[1-9][0-9]*$'
           pr_json="$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}")"
           head_ref="$(printf '%s' "$pr_json" | jq -er '.head.ref')"
           head_sha="$(printf '%s' "$pr_json" | jq -er '.head.sha')"
@@ -150,6 +151,25 @@ jobs:
           base_ref="$(printf '%s' "$pr_json" | jq -er '.base.ref')"
           test "$head_repository" = "$GITHUB_REPOSITORY"
           test "$base_ref" = 'master'
+          git check-ref-format --branch "$head_ref"
           printf '%s' "$head_sha" | grep -Eq '^[a-f0-9]{40}$'
-          gh workflow run ci.yml --ref "$head_ref" -f expected-sha="$head_sha"
-          printf 'Dispatched CI for PR #%s at `%s` (`%s`).\n' "$PR_NUMBER" "$head_ref" "$head_sha" >> "$GITHUB_STEP_SUMMARY"
+          dispatch_json="$(
+            jq -n --arg ref "$head_ref" --arg sha "$head_sha" \
+              '{ ref: $ref, inputs: { "expected-sha": $sha }, return_run_details: true }' |
+              gh api --method POST \
+                -H 'Accept: application/vnd.github+json' \
+                -H 'X-GitHub-Api-Version: 2026-03-10' \
+                "repos/${GITHUB_REPOSITORY}/actions/workflows/ci.yml/dispatches" \
+                --input -
+          )"
+          run_id="$(printf '%s' "$dispatch_json" | jq -er '.workflow_run_id')"
+          run_url="$(printf '%s' "$dispatch_json" | jq -er '.html_url')"
+          printf '%s' "$run_id" | grep -Eq '^[1-9][0-9]*$'
+          gh run watch "$run_id" --exit-status --interval 10
+          run_json="$(gh run view "$run_id" --json event,headSha,conclusion,url)"
+          test "$(printf '%s' "$run_json" | jq -er '.event')" = 'workflow_dispatch'
+          test "$(printf '%s' "$run_json" | jq -er '.headSha')" = "$head_sha"
+          test "$(printf '%s' "$run_json" | jq -er '.conclusion')" = 'success'
+          test "$(printf '%s' "$run_json" | jq -er '.url')" = "$run_url"
+          printf 'Verified CI run [%s](%s) for PR #%s at `%s` (`%s`).\n' \
+            "$run_id" "$run_url" "$PR_NUMBER" "$head_ref" "$head_sha" >> "$GITHUB_STEP_SUMMARY"

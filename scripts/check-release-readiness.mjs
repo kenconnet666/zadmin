@@ -138,11 +138,21 @@ const checks = {
 		/head_repository=.*head\.repo\.full_name/u.test(workflow) &&
 		/test "\$head_repository" = "\$GITHUB_REPOSITORY"/u.test(workflow) &&
 		/test "\$base_ref" = 'master'/u.test(workflow) &&
-		workflow.includes('gh workflow run ci.yml --ref "$head_ref" -f expected-sha="$head_sha"') &&
+		/return_run_details:\s*true/u.test(workflow) &&
+		/X-GitHub-Api-Version:\s*2026-03-10/u.test(workflow) &&
+		/actions\/workflows\/ci\.yml\/dispatches/u.test(workflow) &&
 		/workflow_dispatch:\s*\n\s*inputs:\s*\n\s*expected-sha:/u.test(ci) &&
 		/name:\s*Dispatch revision integrity/u.test(ci) &&
 		/ACTUAL_SHA:\s*\$\{\{ github\.sha \}\}/u.test(ci) &&
 		/if \[ "\$ACTUAL_SHA" != "\$EXPECTED_SHA" \]/u.test(ci),
+	releasePrCiCompletionBound:
+		/workflow_run_id/u.test(workflow) &&
+		/gh run watch "\$run_id" --exit-status --interval 10/u.test(workflow) &&
+		/gh run view "\$run_id" --json event,headSha,conclusion,url/u.test(workflow) &&
+		/test .*\.event.* = 'workflow_dispatch'/u.test(workflow) &&
+		/test .*\.headSha.* = "\$head_sha"/u.test(workflow) &&
+		/test .*\.conclusion.* = 'success'/u.test(workflow) &&
+		/test .*\.url.* = "\$run_url"/u.test(workflow),
 	changesetsConfigured:
 		changesetConfig.access === 'public' && changesetConfig.baseBranch === 'master',
 	changesetTargetsKnown:

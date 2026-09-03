@@ -11,6 +11,7 @@
 - `desktopArtifactReleaseBinding`
 - `releaseVersionUsesGitCli`
 - `releasePrCiDispatchBound`
+- `releasePrCiCompletionBound`
 - `changesetsConfigured`
 - `changesetTargetsKnown`
 - `packageCheckPresent`

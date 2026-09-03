@@ -87,11 +87,21 @@ export function evaluateReleaseCoherence({
 			/head_repository=.*head\.repo\.full_name/u.test(release) &&
 			/test "\$head_repository" = "\$GITHUB_REPOSITORY"/u.test(release) &&
 			/test "\$base_ref" = 'master'/u.test(release) &&
-			release.includes('gh workflow run ci.yml --ref "$head_ref" -f expected-sha="$head_sha"') &&
+			/return_run_details:\s*true/u.test(release) &&
+			/X-GitHub-Api-Version:\s*2026-03-10/u.test(release) &&
+			/actions\/workflows\/ci\.yml\/dispatches/u.test(release) &&
 			/workflow_dispatch:\s*\n\s*inputs:\s*\n\s*expected-sha:/u.test(ci) &&
 			/name:\s*Dispatch revision integrity/u.test(ci) &&
 			/ACTUAL_SHA:\s*\$\{\{ github\.sha \}\}/u.test(ci) &&
-			/if \[ "\$ACTUAL_SHA" != "\$EXPECTED_SHA" \]/u.test(ci)
+			/if \[ "\$ACTUAL_SHA" != "\$EXPECTED_SHA" \]/u.test(ci),
+		releasePrCiCompletionBound:
+			/workflow_run_id/u.test(release) &&
+			/gh run watch "\$run_id" --exit-status --interval 10/u.test(release) &&
+			/gh run view "\$run_id" --json event,headSha,conclusion,url/u.test(release) &&
+			/test .*\.event.* = 'workflow_dispatch'/u.test(release) &&
+			/test .*\.headSha.* = "\$head_sha"/u.test(release) &&
+			/test .*\.conclusion.* = 'success'/u.test(release) &&
+			/test .*\.url.* = "\$run_url"/u.test(release)
 	};
 }
 
@@ -171,7 +181,13 @@ if (process.argv.includes('--self-test')) {
 		{
 			check: 'releasePrCiDispatchBound',
 			input: {
-				release: sources.release.replace(' -f expected-sha="$head_sha"', '')
+				release: sources.release.replace('return_run_details: true', 'return_run_details: false')
+			}
+		},
+		{
+			check: 'releasePrCiCompletionBound',
+			input: {
+				release: sources.release.replace('gh run watch "$run_id" --exit-status --interval 10', '')
 			}
 		}
 	];
