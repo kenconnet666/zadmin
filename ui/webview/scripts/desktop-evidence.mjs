@@ -846,7 +846,7 @@ desktopComponentContracts.push(
 		id: 'icon-labelled',
 		name: 'ZIcon',
 		marker: 'ZIcon-labelled',
-		native: { tag: 'SVG', role: 'img', ariaLabel: 'Warning' },
+		native: { tag: 'svg', role: 'img', ariaLabel: 'Warning' },
 		interaction: {
 			id: 'icon-dom',
 			action: 'inspect',
