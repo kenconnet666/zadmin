@@ -30,6 +30,23 @@ public sealed class WebViewHost : IAsyncDisposable
         public JsonElement Native { get; set; }
     }
 
+    private sealed class DesktopFormInteractionEvidence
+    {
+        public bool Ready { get; set; }
+        public string? InputValue { get; set; }
+        public bool InputLabelled { get; set; }
+        public bool InputDescriptionResolved { get; set; }
+        public bool CheckboxChecked { get; set; }
+        public string? CheckboxState { get; set; }
+        public bool CheckboxLabelled { get; set; }
+        public bool FieldDirty { get; set; }
+        public bool FieldTouched { get; set; }
+        public bool FormSubmitted { get; set; }
+        public int SubmitCount { get; set; }
+        public string? FormDataEmail { get; set; }
+        public string? FormDataEnabled { get; set; }
+    }
+
     private static readonly JsonSerializerOptions SerializerOptions = new(JsonSerializerDefaults.Web);
     private const string CaptureDesktopEvidenceScript = """
         (() => {
@@ -44,7 +61,16 @@ public sealed class WebViewHost : IAsyncDisposable
                 type: node?.getAttribute('type') ?? null,
                 disabled: node?.hasAttribute('disabled') ?? false,
                 text: node?.textContent?.trim() ?? '',
-                ariaLive: node?.getAttribute('aria-live') ?? null
+                ariaLive: node?.getAttribute('aria-live') ?? null,
+                name: node?.getAttribute('name') ?? null,
+                value: node?.value ?? null,
+                checked: node?.checked ?? false,
+                required: node?.required ?? false,
+                readOnly: node?.readOnly ?? false,
+                noValidate: node?.noValidate ?? false,
+                ariaInvalid: node?.getAttribute('aria-invalid') ?? null,
+                ariaDescribedBy: node?.getAttribute('aria-describedby') ?? null,
+                dataState: node?.getAttribute('data-state') ?? null
               }
             };
           };
@@ -66,7 +92,11 @@ public sealed class WebViewHost : IAsyncDisposable
               collect('ZBox', 'ZBox-status'),
               collect('ZStack', 'ZStack'),
               collect('ZText', 'ZText'),
-              collect('ZButton', 'ZButton-component-action')
+              collect('ZButton', 'ZButton-component-action'),
+              collect('ZForm', 'ZForm-contract'),
+              collect('ZFormField', 'ZFormField-email'),
+              collect('ZInput', 'ZInput-email'),
+              collect('ZCheckbox', 'ZCheckbox-enabled')
             ],
             statusBefore:
               document.querySelector('[data-desktop-evidence="ZBox-status"]')?.innerText ?? '',
@@ -82,6 +112,67 @@ public sealed class WebViewHost : IAsyncDisposable
         "Number(document.querySelector('[data-desktop-evidence=\"ZButton-component-action\"]')?.getAttribute('data-desktop-evidence-runs')??'0')";
     private const string ReadStatusScript =
         "JSON.stringify(document.querySelector('[data-desktop-evidence=\"ZBox-status\"]')?.innerText??'')";
+    private const string RunFormEvidenceScript = """
+        (() => {
+          const form = document.querySelector('[data-desktop-evidence="ZForm-contract"]');
+          const input = document.querySelector('[data-desktop-evidence="ZInput-email"]');
+          const checkbox = document.querySelector('[data-desktop-evidence="ZCheckbox-enabled"]');
+          if (!(form instanceof HTMLFormElement) || !(input instanceof HTMLInputElement) ||
+              !(checkbox instanceof HTMLInputElement)) return false;
+          input.focus();
+          input.value = 'desktop-value';
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+          input.blur();
+          checkbox.click();
+          form.requestSubmit();
+          return true;
+        })()
+        """;
+    private const string ReadFormEvidenceScript = """
+        (() => {
+          const form = document.querySelector('[data-desktop-evidence="ZForm-contract"]');
+          const field = document.querySelector('[data-desktop-evidence="ZFormField-email"]');
+          const input = document.querySelector('[data-desktop-evidence="ZInput-email"]');
+          const checkbox = document.querySelector('[data-desktop-evidence="ZCheckbox-enabled"]');
+          const data = form instanceof HTMLFormElement ? new FormData(form) : null;
+          const describedBy = input?.getAttribute('aria-describedby')?.split(/\s+/u).filter(Boolean) ?? [];
+          const result = {
+            inputValue: input instanceof HTMLInputElement ? input.value : null,
+            inputLabelled:
+              input instanceof HTMLInputElement &&
+              input.id.length > 0 &&
+              [...(input.labels ?? [])].some((label) => label.htmlFor === input.id),
+            inputDescriptionResolved:
+              describedBy.length > 0 && describedBy.every((id) => document.getElementById(id) !== null),
+            checkboxChecked: checkbox instanceof HTMLInputElement && checkbox.checked,
+            checkboxState: checkbox?.getAttribute('data-state') ?? null,
+            checkboxLabelled:
+              checkbox instanceof HTMLInputElement && (checkbox.labels?.length ?? 0) > 0,
+            fieldDirty: field?.getAttribute('data-dirty') === 'true',
+            fieldTouched: field?.getAttribute('data-touched') === 'true',
+            formSubmitted: form?.getAttribute('data-submitted') === 'true',
+            submitCount: Number(form?.getAttribute('data-desktop-submit-count') ?? '0'),
+            formDataEmail: data?.get('email') ?? null,
+            formDataEnabled: data?.get('enabled') ?? null
+          };
+          return JSON.stringify({
+            ...result,
+            ready:
+              result.inputValue === 'desktop-value' &&
+              result.inputLabelled &&
+              result.inputDescriptionResolved &&
+              result.checkboxChecked &&
+              result.checkboxState === 'checked' &&
+              result.checkboxLabelled &&
+              result.fieldDirty &&
+              result.fieldTouched &&
+              result.formSubmitted &&
+              result.submitCount === 1 &&
+              result.formDataEmail === 'desktop-value' &&
+              result.formDataEnabled === 'enabled'
+          });
+        })()
+        """;
     private readonly HostOptions _options;
     private readonly WebView2 _webview;
     private readonly Microsoft.UI.Xaml.Window _window;
@@ -308,7 +399,7 @@ public sealed class WebViewHost : IAsyncDisposable
                 CaptureDesktopEvidenceScript);
             var pageJson = JsonSerializer.Deserialize<string>(pageValue) ?? "{}";
             evidenceBefore = JsonSerializer.Deserialize<DesktopEvidencePage>(pageJson, SerializerOptions) ?? throw new InvalidOperationException("Desktop evidence page state is unreadable.");
-            if (evidenceBefore.DesktopEvidence is null || evidenceBefore.DesktopEvidence.Length != 4 || evidenceBefore.DesktopEvidence.Any(item => !item.Present))
+            if (evidenceBefore.DesktopEvidence is null || evidenceBefore.DesktopEvidence.Length != 8 || evidenceBefore.DesktopEvidence.Any(item => !item.Present))
                 throw new InvalidOperationException("Desktop evidence markers are incomplete or not hydrated.");
             smokePhase = "validating-bridge-round-trip";
             var bridgeRequest = JsonSerializer.Serialize(
@@ -334,6 +425,20 @@ public sealed class WebViewHost : IAsyncDisposable
             }
             if (componentActionRunsAfter != expectedComponentActionRuns)
                 throw new TimeoutException("ZButton component evidence action did not update its observable state.");
+            smokePhase = "validating-form-interaction";
+            if (await sender.ExecuteScriptAsync(RunFormEvidenceScript) != "true")
+                throw new InvalidOperationException("Desktop form evidence controls are unavailable.");
+            DesktopFormInteractionEvidence? formInteraction = null;
+            for (var attempt = 0; attempt < 100; attempt++)
+            {
+                var formValue = await sender.ExecuteScriptAsync(ReadFormEvidenceScript);
+                var formJson = JsonSerializer.Deserialize<string>(formValue) ?? "{}";
+                formInteraction = JsonSerializer.Deserialize<DesktopFormInteractionEvidence>(formJson, SerializerOptions);
+                if (formInteraction?.Ready == true) break;
+                await Task.Delay(100);
+            }
+            if (formInteraction?.Ready != true)
+                throw new TimeoutException("Desktop form components did not complete their observable interactions.");
             var pageAfterValue = await sender.ExecuteScriptAsync(ReadStatusScript);
             smokePhase = "writing-report";
             var report = new
@@ -346,7 +451,8 @@ public sealed class WebViewHost : IAsyncDisposable
                 revision = Environment.GetEnvironmentVariable("GITHUB_SHA") ?? "local",
                 target = "windows-x64",
                 host = new { runtime = "WebView2", implementation = "WebViewHost", origin = evidenceBefore.Origin, webViewVersion = _webViewVersion, protocolVersion = WebViewProtocol.Version, navigation = true, hydrated = true, bridge = evidenceBefore.HasBridge, bridgeResponseValidated, pageErrors = evidenceBefore.Errors, source = _webview.Source?.ToString() },
-                components = evidenceBefore.DesktopEvidence
+                components = evidenceBefore.DesktopEvidence,
+                formInteraction
             };
             Directory.CreateDirectory(Path.GetDirectoryName(_options.SmokeReportPath)!);
             await WriteSmokeReportAsync(

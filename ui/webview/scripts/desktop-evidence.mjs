@@ -27,7 +27,172 @@ const componentContracts = Object.freeze([
 		name: 'ZButton',
 		marker: 'ZButton-component-action',
 		native: { tag: 'BUTTON', type: 'button', disabled: false, text: 'Verify component' },
-		interaction: true
+		interaction: {
+			id: 'activate-once',
+			action: 'click',
+			target: 'root',
+			observations: [
+				{
+					id: 'runs-delta',
+					kind: 'state',
+					target: 'data-desktop-evidence-runs',
+					expected: 1,
+					read: (raw) => raw.page.componentActionDelta
+				}
+			]
+		}
+	},
+	{
+		id: 'form',
+		name: 'ZForm',
+		marker: 'ZForm-contract',
+		native: { tag: 'FORM', noValidate: true },
+		interaction: {
+			id: 'submit-valid-form',
+			action: 'submit',
+			target: 'root',
+			observations: [
+				{
+					id: 'submitted',
+					kind: 'state',
+					target: 'data-submitted',
+					expected: true,
+					read: (raw) => raw.formInteraction.formSubmitted
+				},
+				{
+					id: 'submit-count',
+					kind: 'count',
+					target: 'onValidSubmit',
+					expected: 1,
+					read: (raw) => raw.formInteraction.submitCount
+				},
+				{
+					id: 'form-data-email',
+					kind: 'form-data',
+					target: 'email',
+					expected: 'desktop-value',
+					read: (raw) => raw.formInteraction.formDataEmail
+				},
+				{
+					id: 'form-data-enabled',
+					kind: 'form-data',
+					target: 'enabled',
+					expected: 'enabled',
+					read: (raw) => raw.formInteraction.formDataEnabled
+				}
+			]
+		}
+	},
+	{
+		id: 'form-field',
+		name: 'ZFormField',
+		marker: 'ZFormField-email',
+		native: { tag: 'DIV' },
+		interaction: {
+			id: 'observe-input-state',
+			action: 'fill-and-blur',
+			target: 'descendant:ZInput',
+			observations: [
+				{
+					id: 'dirty',
+					kind: 'state',
+					target: 'data-dirty',
+					expected: true,
+					read: (raw) => raw.formInteraction.fieldDirty
+				},
+				{
+					id: 'touched',
+					kind: 'state',
+					target: 'data-touched',
+					expected: true,
+					read: (raw) => raw.formInteraction.fieldTouched
+				}
+			]
+		}
+	},
+	{
+		id: 'input',
+		name: 'ZInput',
+		marker: 'ZInput-email',
+		native: {
+			tag: 'INPUT',
+			type: 'text',
+			disabled: false,
+			name: 'email',
+			value: '',
+			required: true,
+			readOnly: false
+		},
+		interaction: {
+			id: 'fill-email',
+			action: 'fill',
+			target: 'root',
+			observations: [
+				{
+					id: 'value',
+					kind: 'state',
+					target: 'value',
+					expected: 'desktop-value',
+					read: (raw) => raw.formInteraction.inputValue
+				},
+				{
+					id: 'label-relation',
+					kind: 'relationship',
+					target: 'labels',
+					expected: true,
+					read: (raw) => raw.formInteraction.inputLabelled
+				},
+				{
+					id: 'description-relation',
+					kind: 'relationship',
+					target: 'aria-describedby',
+					expected: true,
+					read: (raw) => raw.formInteraction.inputDescriptionResolved
+				}
+			]
+		}
+	},
+	{
+		id: 'checkbox',
+		name: 'ZCheckbox',
+		marker: 'ZCheckbox-enabled',
+		native: {
+			tag: 'INPUT',
+			type: 'checkbox',
+			disabled: false,
+			name: 'enabled',
+			value: 'enabled',
+			checked: false,
+			dataState: 'unchecked'
+		},
+		interaction: {
+			id: 'check-enabled',
+			action: 'click',
+			target: 'root',
+			observations: [
+				{
+					id: 'checked',
+					kind: 'state',
+					target: 'checked',
+					expected: true,
+					read: (raw) => raw.formInteraction.checkboxChecked
+				},
+				{
+					id: 'data-state',
+					kind: 'state',
+					target: 'data-state',
+					expected: 'checked',
+					read: (raw) => raw.formInteraction.checkboxState
+				},
+				{
+					id: 'label-relation',
+					kind: 'relationship',
+					target: 'labels',
+					expected: true,
+					read: (raw) => raw.formInteraction.checkboxLabelled
+				}
+			]
+		}
 	}
 ]);
 const contractsByName = new Map(componentContracts.map((contract) => [contract.name, contract]));
@@ -74,19 +239,17 @@ function normalizeComponent(contract, item, raw) {
 	const interactions = contract.interaction
 		? [
 				{
-					id: 'activate-once',
-					action: 'click',
-					target: 'root',
-					observations: [
-						{
-							id: 'runs-delta',
-							kind: 'state',
-							target: 'data-desktop-evidence-runs',
-							expected: 1,
-							actual: raw.page.componentActionDelta,
-							passed: true
-						}
-					],
+					id: contract.interaction.id,
+					action: contract.interaction.action,
+					target: contract.interaction.target,
+					observations: contract.interaction.observations.map((observation) => ({
+						id: observation.id,
+						kind: observation.kind,
+						target: observation.target,
+						expected: observation.expected,
+						actual: observation.read(raw),
+						passed: true
+					})),
 					passed: true
 				}
 			]
@@ -182,24 +345,32 @@ function validateNormalizedComponent(component, contract) {
 		return;
 	}
 	const interaction = component.interactions[0];
-	const observation = interaction?.observations?.[0];
 	if (
 		component.interactions.length !== 1 ||
-		interaction?.id !== 'activate-once' ||
-		interaction.action !== 'click' ||
-		interaction.target !== 'root' ||
+		interaction?.id !== contract.interaction.id ||
+		interaction.action !== contract.interaction.action ||
+		interaction.target !== contract.interaction.target ||
 		interaction.passed !== true ||
 		!Array.isArray(interaction.observations) ||
-		interaction.observations.length !== 1 ||
-		!assertionMatches(observation, {
-			id: 'runs-delta',
-			kind: 'state',
-			target: 'data-desktop-evidence-runs',
-			expected: 1,
-			actual: 1
-		})
+		interaction.observations.length !== contract.interaction.observations.length
 	)
 		fail(`normalized component ${contract.name} interaction is invalid.`);
+	const observationsById = new Map(
+		interaction.observations.map((observation) => [observation?.id, observation])
+	);
+	if (observationsById.size !== interaction.observations.length)
+		fail(`normalized component ${contract.name} interaction observations are duplicated.`);
+	for (const observation of contract.interaction.observations)
+		if (
+			!assertionMatches(observationsById.get(observation.id), {
+				id: observation.id,
+				kind: observation.kind,
+				target: observation.target,
+				expected: observation.expected,
+				actual: observation.expected
+			})
+		)
+			fail(`normalized component ${contract.name} ${observation.id} observation is invalid.`);
 }
 
 export function validateDesktopEvidence(raw, { expectedRevision } = {}) {
@@ -261,6 +432,11 @@ export function validateDesktopEvidence(raw, { expectedRevision } = {}) {
 		raw.page.componentActionDelta !== 1
 	)
 		fail('component interaction did not produce exactly one observable state transition.');
+	if (raw.formInteraction?.ready !== true) fail('form interaction evidence is incomplete.');
+	for (const contract of componentContracts)
+		for (const observation of contract.interaction?.observations ?? [])
+			if (observation.read(raw) !== observation.expected)
+				fail(`component ${contract.name} ${observation.id} interaction is invalid.`);
 	if (!Array.isArray(raw.components) || raw.components.length !== componentContracts.length)
 		fail(`component set must contain exactly ${componentContracts.length} records.`);
 	const byName = new Map();
@@ -382,6 +558,21 @@ if (isMain && process.argv.includes('--self-test')) {
 			componentActionRunsAfter: 1,
 			componentActionDelta: 1
 		},
+		formInteraction: {
+			ready: true,
+			inputValue: 'desktop-value',
+			inputLabelled: true,
+			inputDescriptionResolved: true,
+			checkboxChecked: true,
+			checkboxState: 'checked',
+			checkboxLabelled: true,
+			fieldDirty: true,
+			fieldTouched: true,
+			formSubmitted: true,
+			submitCount: 1,
+			formDataEmail: 'desktop-value',
+			formDataEnabled: 'enabled'
+		},
 		components: [
 			{
 				name: 'ZBox',
@@ -401,11 +592,51 @@ if (isMain && process.argv.includes('--self-test')) {
 				marker: 'ZButton-component-action',
 				present: true,
 				native: { tag: 'BUTTON', type: 'button', disabled: false, text: 'Verify component' }
+			},
+			{
+				name: 'ZForm',
+				marker: 'ZForm-contract',
+				present: true,
+				native: { tag: 'FORM', noValidate: true }
+			},
+			{
+				name: 'ZFormField',
+				marker: 'ZFormField-email',
+				present: true,
+				native: { tag: 'DIV' }
+			},
+			{
+				name: 'ZInput',
+				marker: 'ZInput-email',
+				present: true,
+				native: {
+					tag: 'INPUT',
+					type: 'text',
+					disabled: false,
+					name: 'email',
+					value: '',
+					required: true,
+					readOnly: false
+				}
+			},
+			{
+				name: 'ZCheckbox',
+				marker: 'ZCheckbox-enabled',
+				present: true,
+				native: {
+					tag: 'INPUT',
+					type: 'checkbox',
+					disabled: false,
+					name: 'enabled',
+					value: 'enabled',
+					checked: false,
+					dataState: 'unchecked'
+				}
 			}
 		]
 	};
 	const normalized = validateDesktopEvidence(sample, { expectedRevision: sample.revision });
-	if (normalized.components.length !== 4 || normalized.status !== 'passed')
+	if (normalized.components.length !== componentContracts.length || normalized.status !== 'passed')
 		fail('self-test normalization failed.');
 	if (validateDesktopEvidence({ ...sample, revision: 'local' }).revision !== 'local')
 		fail('self-test local normalization failed.');
@@ -433,7 +664,7 @@ if (isMain && process.argv.includes('--self-test')) {
 	expectFailure(
 		'incomplete component set',
 		{ ...sample, components: sample.components.slice(0, 3) },
-		'exactly 4'
+		'exactly 8'
 	);
 	expectFailure('revision mismatch', sample, 'revision does not match expected', {
 		expectedRevision: 'b'.repeat(40)
@@ -445,7 +676,7 @@ if (isMain && process.argv.includes('--self-test')) {
 	);
 	expectFailure(
 		'duplicate component',
-		{ ...sample, components: [...sample.components.slice(0, 3), sample.components[0]] },
+		{ ...sample, components: [...sample.components.slice(0, -1), sample.components[0]] },
 		'exact and unique'
 	);
 	expectFailure(

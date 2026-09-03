@@ -1,6 +1,17 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { ZBox, ZButton, ZStack, ZText, defaultTheme, icss } from '@zadmin/zui';
+	import {
+		ZBox,
+		ZButton,
+		ZCheckbox,
+		ZForm,
+		ZFormField,
+		ZInput,
+		ZStack,
+		ZText,
+		defaultTheme,
+		icss
+	} from '@zadmin/zui';
 	import type { DesktopResult } from '@zadmin/webview/platform';
 	import {
 		ClipboardButton,
@@ -19,6 +30,7 @@
 	let status = $state('Ready. Choose a capability probe.');
 	let selectedPath = $state<string>();
 	let componentEvidenceRuns = $state(0);
+	let componentFormSubmits = $state(0);
 	const pageClass = icss(defaultTheme, (s) => {
 		s.padding._large;
 		s.maxWidth('1100px');
@@ -166,6 +178,30 @@
 				<ZButton variant="secondary" onclick={windowStateProbe}>Save window state</ZButton>
 			</ZStack>
 		</ZStack>
+
+		<ZForm
+			class={panelClass}
+			data-desktop-evidence="ZForm-contract"
+			data-desktop-submit-count={componentFormSubmits}
+			onValidSubmit={() => (componentFormSubmits += 1)}
+		>
+			<ZStack gap="small">
+				<ZText as="strong">Web component contracts</ZText>
+				<ZFormField
+					data-desktop-evidence="ZFormField-email"
+					name="email"
+					label="Desktop email"
+					description="In-memory evidence only"
+					required
+				>
+					<ZInput data-desktop-evidence="ZInput-email" />
+				</ZFormField>
+				<label>
+					<ZCheckbox data-desktop-evidence="ZCheckbox-enabled" name="enabled" value="enabled" />
+					Enable desktop evidence
+				</label>
+			</ZStack>
+		</ZForm>
 
 		<ZStack class={panelClass} gap="small">
 			<ZText as="strong">Supervised native capabilities</ZText>

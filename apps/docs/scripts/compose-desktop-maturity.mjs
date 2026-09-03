@@ -120,13 +120,85 @@ function selfTest() {
 		['box', 'ZBox', 'ZBox-status'],
 		['stack', 'ZStack', 'ZStack'],
 		['text', 'ZText', 'ZText'],
-		['button', 'ZButton', 'ZButton-component-action']
+		['button', 'ZButton', 'ZButton-component-action'],
+		['form', 'ZForm', 'ZForm-contract'],
+		['form-field', 'ZFormField', 'ZFormField-email'],
+		['input', 'ZInput', 'ZInput-email'],
+		['checkbox', 'ZCheckbox', 'ZCheckbox-enabled']
 	];
 	const nativeByName = {
 		ZBox: { tag: 'DIV', ariaLive: 'polite' },
 		ZStack: { tag: 'DIV' },
 		ZText: { tag: 'STRONG', text: 'Windows WebView2 capability lab' },
-		ZButton: { tag: 'BUTTON', type: 'button', disabled: false, text: 'Verify component' }
+		ZButton: { tag: 'BUTTON', type: 'button', disabled: false, text: 'Verify component' },
+		ZForm: { tag: 'FORM', noValidate: true },
+		ZFormField: { tag: 'DIV' },
+		ZInput: {
+			tag: 'INPUT',
+			type: 'text',
+			disabled: false,
+			name: 'email',
+			value: '',
+			required: true,
+			readOnly: false
+		},
+		ZCheckbox: {
+			tag: 'INPUT',
+			type: 'checkbox',
+			disabled: false,
+			name: 'enabled',
+			value: 'enabled',
+			checked: false,
+			dataState: 'unchecked'
+		}
+	};
+	const interactionByName = {
+		ZButton: [
+			'activate-once',
+			'click',
+			'root',
+			[['runs-delta', 'state', 'data-desktop-evidence-runs', 1]]
+		],
+		ZForm: [
+			'submit-valid-form',
+			'submit',
+			'root',
+			[
+				['submitted', 'state', 'data-submitted', true],
+				['submit-count', 'count', 'onValidSubmit', 1],
+				['form-data-email', 'form-data', 'email', 'desktop-value'],
+				['form-data-enabled', 'form-data', 'enabled', 'enabled']
+			]
+		],
+		ZFormField: [
+			'observe-input-state',
+			'fill-and-blur',
+			'descendant:ZInput',
+			[
+				['dirty', 'state', 'data-dirty', true],
+				['touched', 'state', 'data-touched', true]
+			]
+		],
+		ZInput: [
+			'fill-email',
+			'fill',
+			'root',
+			[
+				['value', 'state', 'value', 'desktop-value'],
+				['label-relation', 'relationship', 'labels', true],
+				['description-relation', 'relationship', 'aria-describedby', true]
+			]
+		],
+		ZCheckbox: [
+			'check-enabled',
+			'click',
+			'root',
+			[
+				['checked', 'state', 'checked', true],
+				['data-state', 'state', 'data-state', 'checked'],
+				['label-relation', 'relationship', 'labels', true]
+			]
+		]
 	};
 	const assertion = (id, kind, target, expected) => ({
 		id,
@@ -163,6 +235,7 @@ function selfTest() {
 		},
 		components: componentContracts.map(([id, name, evidenceId]) => {
 			const native = nativeByName[name];
+			const interaction = interactionByName[name];
 			return {
 				id,
 				name,
@@ -187,25 +260,26 @@ function selfTest() {
 						)
 					)
 				],
-				interactions:
-					name === 'ZButton'
-						? [
-								{
-									id: 'activate-once',
-									action: 'click',
-									target: 'root',
-									observations: [assertion('runs-delta', 'state', 'data-desktop-evidence-runs', 1)],
-									passed: true
-								}
-							]
-						: [],
+				interactions: interaction
+					? [
+							{
+								id: interaction[0],
+								action: interaction[1],
+								target: interaction[2],
+								observations: interaction[3].map(([id, kind, target, expected]) =>
+									assertion(id, kind, target, expected)
+								),
+								passed: true
+							}
+						]
+					: [],
 				passed: true
 			};
 		})
 	};
 	const baseMaturity = {
-		source: { metadataComponents: 5 },
-		summary: { DesktopVerified: 0, ProductionVerified: 5 },
+		source: { metadataComponents: 9 },
+		summary: { DesktopVerified: 0, ProductionVerified: 9 },
 		components: [
 			...componentContracts.map(([id, name]) => ({
 				id,
@@ -235,7 +309,7 @@ function selfTest() {
 		evidencePath: 'apps/desktop/dist/desktop/windows-x64/desktop-evidence.json'
 	});
 	if (
-		composed.summary.DesktopVerified !== 4 ||
+		composed.summary.DesktopVerified !== 8 ||
 		composed.components.find(({ id }) => id === 'dialog')?.stages.DesktopVerified !== false
 	)
 		throw new Error('Desktop maturity self-test produced the wrong verified set.');
