@@ -132,6 +132,18 @@ function mergeFacts(facts, kind) {
 	);
 }
 
+function hasForbiddenAncestor(items, path) {
+	const segments = path.split('.');
+	for (let length = segments.length - 1; length > 0; length -= 1) {
+		const ancestor = segments.slice(0, length).join('.');
+		if (
+			items.some((item) => item.path === ancestor && item.requiredness === REQUIREDNESS.forbidden)
+		)
+			return true;
+	}
+	return false;
+}
+
 /** Collects public property facts without a TypeScript checker or external package resolution. */
 export async function collectWorkspacePropertyFacts(graph, modulePath, rootName) {
 	const active = new Set();
@@ -149,16 +161,18 @@ export async function collectWorkspacePropertyFacts(graph, modulePath, rootName)
 			const allPaths = new Set(branchFacts.flatMap((items) => items.map((item) => item.path)));
 			const branches = ts.isUnionTypeNode(node)
 				? [...allPaths].flatMap((factPath) =>
-						branchFacts.map(
-							(items) =>
-								items.find((item) => item.path === factPath) ?? {
-									path: factPath,
-									requiredness: REQUIREDNESS.forbidden,
-									valueAllowsUndefined: true,
-									declaredType: 'never',
-									source: { modulePath: context.modulePath, declaration: context.declaration }
-								}
-						)
+						branchFacts
+							.filter((items) => !hasForbiddenAncestor(items, factPath))
+							.map(
+								(items) =>
+									items.find((item) => item.path === factPath) ?? {
+										path: factPath,
+										requiredness: REQUIREDNESS.forbidden,
+										valueAllowsUndefined: true,
+										declaredType: 'never',
+										source: { modulePath: context.modulePath, declaration: context.declaration }
+									}
+							)
 					)
 				: branchFacts.flat();
 			const merged = mergeFacts(branches, ts.isUnionTypeNode(node) ? 'union' : 'intersection');
@@ -245,7 +259,7 @@ export async function collectWorkspacePropertyFacts(graph, modulePath, rootName)
 		return output;
 	}
 
-	async function visitDeclaration(declaration, context, path, modifiers) {
+	async function visitDeclaration(declaration, context, path, modifiers = {}) {
 		if (ts.isTypeAliasDeclaration(declaration))
 			return visitType(declaration.type, context, path, modifiers);
 		const output = [];
@@ -302,12 +316,18 @@ if (isMain && process.argv.includes('--self-test')) {
 		await mkdir(resolve(root, 'src'), { recursive: true });
 		await writeFile(
 			resolve(root, 'src/shared.ts'),
-			`export interface Item<T> { required: T; optional?: string; forbidden?: never; }\nexport interface DefaultItem<T = number> { value: T; }\nexport type Left = { left: string };\nexport type Right = { right: string };\nexport type Alias = Item<string>;`,
+			[
+				'export interface Item<T> { required: T; optional?: string; forbidden?: never; }',
+				'export interface DefaultItem<T ' + '= number> { value: T; }',
+				'export type Left = { left: string };',
+				'export type Right = { right: string };',
+				'export type Alias = Item<string>;'
+			].join('\n'),
 			'utf8'
 		);
 		await writeFile(
 			resolve(root, 'src/props.ts'),
-			`import type { Alias, DefaultItem, Item, Left, Right } from './shared.js';\nexport type Props = { plain: string; maybe: string | undefined; union: { a: string } | { b: string }; namedUnion: Left | Right; both: { x: string } & { y?: number }; partial: Partial<Alias>; required: Required<Alias>; picked: Pick<Alias, 'required'>; inlinePicked: Pick<{ keep: string; drop: number }, 'keep'>; omitted: Omit<Alias, 'optional'>; generic: Item<boolean>; genericArray: Item<boolean[]>; defaultGeneric: DefaultItem; }`,
+			`import type { Alias, DefaultItem, Item, Left, Right } from './shared.js';\nexport type Props = { plain: string; maybe: string | undefined; union: { a: string } | { b: string }; namedUnion: Left | Right; mode: ({ items: Array<{ name: string }>; children?: never } | { items?: never; children: string }); both: { x: string } & { y?: number }; partial: Partial<Alias>; required: Required<Alias>; picked: Pick<Alias, 'required'>; inlinePicked: Pick<{ keep: string; drop: number }, 'keep'>; omitted: Omit<Alias, 'optional'>; generic: Item<boolean>; genericArray: Item<boolean[]>; defaultGeneric: DefaultItem; }`,
 			'utf8'
 		);
 		const graph = new WorkspaceTypeGraph({ workspaceRoot: root });
@@ -329,6 +349,8 @@ if (isMain && process.argv.includes('--self-test')) {
 		expectFact('maybe', 'required', 'string | undefined');
 		expectFact('union.a', 'conditional', 'string');
 		expectFact('namedUnion.left', 'conditional', 'string');
+		expectFact('mode.items', 'conditional', 'Array');
+		expectFact('mode.items.name', 'required', 'string');
 		expectFact('both.x', 'required', 'string');
 		expectFact('partial.required', 'optional', 'string');
 		expectFact('required.optional', 'required', 'string');

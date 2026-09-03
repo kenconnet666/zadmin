@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { format, resolveConfig } from 'prettier';
 import ts from 'typescript';
 
+import { collectWorkspacePropertyFacts, REQUIREDNESS } from './workspace-property-facts.mjs';
 import { WorkspaceTypeGraph } from './workspace-type-graph.mjs';
 
 const docsRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -408,6 +409,42 @@ export function validateDeprecationMetadata({
 	}
 }
 
+export function validateMemberMetadataFacts({ entries, publicFacts, filename = 'metadata' }) {
+	for (const entry of entries) {
+		const path = entry.path ?? entry.name;
+		if (!path?.includes('.')) continue;
+		const source = publicFacts.get(path);
+		if (!source)
+			throw new Error(
+				`${filename} metadata member does not exist in the public type graph: ${path}.`
+			);
+		if (entry.requiredWhen !== undefined && entry.requiredWhen.trim() === '')
+			throw new Error(`${filename} ${path}.requiredWhen must not be empty.`);
+		if (source.requiredness === REQUIREDNESS.required) {
+			if (entry.required !== true)
+				throw new Error(`${filename} ${path} must be marked required from its public type.`);
+			if (entry.requiredWhen !== undefined)
+				throw new Error(
+					`${filename} ${path} is unconditionally required and cannot use requiredWhen.`
+				);
+			continue;
+		}
+		if (source.requiredness === REQUIREDNESS.conditional) {
+			if (entry.required === true)
+				throw new Error(
+					`${filename} ${path} is conditionally required and cannot be always required.`
+				);
+			if (entry.requiredWhen === undefined)
+				throw new Error(`${filename} ${path} requires requiredWhen for its public union branches.`);
+			continue;
+		}
+		if (source.requiredness === REQUIREDNESS.optional && entry.required === true)
+			throw new Error(`${filename} ${path} is optional in its public type.`);
+		if (source.requiredness === REQUIREDNESS.forbidden)
+			throw new Error(`${filename} ${path} is forbidden in every public type branch.`);
+	}
+}
+
 if (process.argv.includes('--self-test')) {
 	const componentPath = (...segments) => resolve(componentsRoot, ...segments);
 	const listDeprecatedPaths = await scanWorkspacePropertyPaths(
@@ -496,6 +533,43 @@ if (process.argv.includes('--self-test')) {
 		throw new Error('Deprecation validator self-test accepted a nonexistent nested member.');
 	} catch (error) {
 		if (!String(error).includes('does not exist')) throw error;
+	}
+	const semanticFacts = new Map([
+		['items.required', { requiredness: REQUIREDNESS.required }],
+		['items.optional', { requiredness: REQUIREDNESS.optional }],
+		['items.conditional', { requiredness: REQUIREDNESS.conditional }],
+		['items.forbidden', { requiredness: REQUIREDNESS.forbidden }]
+	]);
+	validateMemberMetadataFacts({
+		publicFacts: semanticFacts,
+		entries: [
+			{ path: 'items.required', required: true },
+			{ path: 'items.optional' },
+			{ path: 'items.conditional', requiredWhen: 'selected branch' }
+		]
+	});
+	for (const [label, entry, pattern] of [
+		['missing required', { path: 'items.required' }, /must be marked required/u],
+		['optional required', { path: 'items.optional', required: true }, /is optional/u],
+		['conditional required', { path: 'items.conditional', required: true }, /conditionally/u],
+		['missing condition', { path: 'items.conditional' }, /requires requiredWhen/u],
+		[
+			'empty condition',
+			{ path: 'items.conditional', requiredWhen: ' ' },
+			/requiredWhen must not be empty/u
+		],
+		['forbidden member', { path: 'items.forbidden' }, /forbidden/u]
+	]) {
+		try {
+			validateMemberMetadataFacts({
+				publicFacts: semanticFacts,
+				entries: [entry],
+				filename: label
+			});
+			throw new Error(`Member fact validator self-test accepted ${label}.`);
+		} catch (error) {
+			if (!pattern.test(String(error))) throw error;
+		}
 	}
 	const external = () =>
 		validateDeprecationMetadata({
@@ -831,13 +905,19 @@ async function componentFacts(source, filename, path) {
 			];
 		});
 	const allMetadataEntries = flattenMetadataEntries(metadataEntries);
+	const nestedMetadataPaths = allMetadataEntries
+		.map(({ path }) => path)
+		.filter((path) => path?.includes('.'));
+	if (new Set(nestedMetadataPaths).size !== nestedMetadataPaths.length)
+		throw new Error(`${filename} repeats a nested metadata member path.`);
 	const metadataByName = new Map(
 		allMetadataEntries
 			.map(({ item, section, path }) => [path, { item, section, path }])
 			.filter(([path]) => path !== undefined)
 	);
 	const deprecatedPaths = await scanWorkspacePropertyPaths(workspaceTypeGraph, path, propsType);
-	const publicPaths = await scanWorkspacePropertyPaths(workspaceTypeGraph, path, propsType, true);
+	const publicFacts = await collectWorkspacePropertyFacts(workspaceTypeGraph, path, propsType);
+	const publicPaths = new Set(publicFacts.keys());
 	const missingDeprecationMetadata = [...deprecatedPaths].filter((path) => {
 		const entry = metadataByName.get(path);
 		return !entry || objectStringProperty(entry.item, 'deprecatedSince') === undefined;
@@ -859,6 +939,16 @@ async function componentFacts(source, filename, path) {
 			replacementExternal: objectBooleanProperty(item, 'replacementExternal'),
 			removeAfter: objectStringProperty(item, 'removeAfter'),
 			migration: objectStringProperty(item, 'migration')
+		})),
+		filename
+	});
+	validateMemberMetadataFacts({
+		publicFacts,
+		entries: allMetadataEntries.map(({ item, path }) => ({
+			path,
+			name: objectStringProperty(item, 'name'),
+			required: objectBooleanProperty(item, 'required'),
+			requiredWhen: objectStringProperty(item, 'requiredWhen')
 		})),
 		filename
 	});
