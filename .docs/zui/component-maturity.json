@@ -3,7 +3,7 @@
 		"metadataComponents": 141,
 		"documentationPages": 79,
 		"contractComponents": 141,
-		"testFiles": 144
+		"testFiles": 145
 	},
 	"stageNames": [
 		"Declared",
@@ -1138,7 +1138,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "9cafc0040c95fa3236ffbfa59c831fbf052d94458942f19d01097ff4ffe69bf0 API snapshot entry"
+						"detail": "70613b053dbf1e16607ab70933b10e8309ecb44e91d086d77e05861f0006353c API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -1470,7 +1470,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "32da8c72e93f7704609ffb9955b1fd097fb05522a39946bc852bc7f7cbd29d78 API snapshot entry"
+						"detail": "3e2232f4dfd986870d12ae958c6609f9c5335fc7c9f5c4d804bed3bcdfc17f89 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -3762,7 +3762,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "730e4517f3c5409a4b1842923e245bc7cb1669b39c5a5336f63c27a7274dbd19 API snapshot entry"
+						"detail": "66cddca389d2dc964ad9101b7e3a2d302fccea7963e39714d46916bc4f354fb2 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -3918,7 +3918,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "5f907ec3a8d16c6c9a5f5477d3aa49e967fb2c92937cda1752e4ac57edbec970 API snapshot entry"
+						"detail": "d1cc7b3bce12e7fc891c077392b35ee8ac9ad68b57ba6a38f5b9941ad2fb51c4 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -6602,7 +6602,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "c103e0107f564314797e2acdcca5309a9bbe45b4cf5df3ad45b8257f3ff3d47d API snapshot entry"
+						"detail": "22269d6c4f204e7271efef31bec6c32455fd56a690d539e5014e77b1c93f616c API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -7592,7 +7592,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "e14a3eb2ddc545af2fac0195c863cabfde14173d2ad9d6e24675b0e836d16264 API snapshot entry"
+						"detail": "f693d7cad1ae468a7c2ec91da29c72288a748e269c9aca2a87dc8a299f598565 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -7698,7 +7698,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "7330259dff22ffa248824c03f36ca09fb1616d92f1039e9f023ec368607e9624 API snapshot entry"
+						"detail": "3c52d9135abc285a7d5a84f33cf2a285d1efaf959851ec1ff180371dd8b8bccc API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -7890,7 +7890,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "fdcc9e71d70158a5770466f440bb8027a52a4b9c9e0d7a5c7d6bd75b42e36275 API snapshot entry"
+						"detail": "014c42da95755f21acc91ba4dca20de7787b4ae02341c19d63d5633f016f4b38 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -9376,7 +9376,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "bb32e1368c758031e413fc60f1fc11368c307f00086776597f56240294c48103 API snapshot entry"
+						"detail": "8b289d11716c4cec76d37575f72a8cd4097b6dfa0736290705def04cb1132359 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -10110,7 +10110,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "9bf12cbf91ca73b436e7a7607eae928d6761f4a849446b3132378a6aecc5a1fa API snapshot entry"
+						"detail": "c4abe351b033b2e6981bf8e1027e9c30c3506446916cfe7b4f8b9ea50c613711 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -10624,7 +10624,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "2a8f1427a4370f260b18f29f126f1599b7950fe4d2c55e9a06a796235ad71c67 API snapshot entry"
+						"detail": "4841f60fa46e35c4b6b02b0627d1bb5e3e1e86d07c9cdb4c800502da97defe22 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -10792,7 +10792,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "a695fde1776b5dd62012b849ca3b16176d225bfcf8a23609c7271904321c0bc7 API snapshot entry"
+						"detail": "b3af506a95f606688e069b6c9ce6911cfad358014f33e23970cf78e1b86dfc90 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -11378,7 +11378,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "fab420e2ba70ca4039b31f09a95355bb645833788ac8922449450affdc9904ba API snapshot entry"
+						"detail": "eee39086711f34cf404ad7f8a1c5443ea906edfcf15a130809b1f995961a430c API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
