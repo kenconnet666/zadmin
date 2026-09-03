@@ -79,6 +79,7 @@ function fact(path, member, context, requiredness, typeNode) {
 	const resolved = substitutedType(typeNode ?? member.type, context);
 	const resolvedType = resolved.node;
 	const declaredType = renderedType(typeNode ?? member.type, context);
+	const authoredType = text(typeNode ?? member.type, context.sourceFile);
 	const allowsUndefined =
 		requiredness === REQUIREDNESS.optional ||
 		requiredness === REQUIREDNESS.unknown ||
@@ -90,6 +91,7 @@ function fact(path, member, context, requiredness, typeNode) {
 		requiredness,
 		valueAllowsUndefined: allowsUndefined,
 		declaredType,
+		typeCandidates: [...new Set([declaredType, authoredType])],
 		source: { modulePath: context.modulePath, declaration: context.declaration }
 	};
 }
@@ -114,13 +116,21 @@ function mergeFacts(facts, kind) {
 	return new Map(
 		[...grouped].map(([path, items]) => {
 			const first = items[0];
-			const types = [...new Set(items.map((item) => item.declaredType))];
+			const typedItems =
+				kind === 'union' && items.some((item) => item.requiredness !== REQUIREDNESS.forbidden)
+					? items.filter((item) => item.requiredness !== REQUIREDNESS.forbidden)
+					: items;
+			const types = [...new Set(typedItems.map((item) => item.declaredType))];
+			const typeCandidates = [
+				...new Set(typedItems.flatMap((item) => item.typeCandidates ?? [item.declaredType]))
+			];
 			return [
 				path,
 				{
 					...first,
 					declaredType:
 						types.length === 1 ? types[0] : types.join(kind === 'union' ? ' | ' : ' & '),
+					typeCandidates,
 					requiredness: mergeRequiredness(
 						items.map((item) => item.requiredness),
 						kind

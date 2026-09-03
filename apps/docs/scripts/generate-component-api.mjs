@@ -334,6 +334,94 @@ function compareReleasedVersions(left, right) {
 	return 0;
 }
 
+function canonicalTypeNode(node, sourceFile) {
+	if (ts.isParenthesizedTypeNode(node)) return canonicalTypeNode(node.type, sourceFile);
+	if (ts.isUnionTypeNode(node) || ts.isIntersectionTypeNode(node)) {
+		const separator = ts.isUnionTypeNode(node) ? ' | ' : ' & ';
+		return [...new Set(node.types.map((item) => canonicalTypeNode(item, sourceFile)))]
+			.sort()
+			.join(separator);
+	}
+	if (ts.isArrayTypeNode(node)) return `array<${canonicalTypeNode(node.elementType, sourceFile)}>`;
+	if (ts.isTypeOperatorNode(node)) {
+		const operand = canonicalTypeNode(node.type, sourceFile);
+		if (node.operator === ts.SyntaxKind.ReadonlyKeyword && ts.isArrayTypeNode(node.type))
+			return `readonly-array<${canonicalTypeNode(node.type.elementType, sourceFile)}>`;
+		return `${ts.tokenToString(node.operator) ?? 'operator'}<${operand}>`;
+	}
+	if (ts.isTypeReferenceNode(node)) {
+		const name = normalizeType(node.typeName.getText(sourceFile));
+		const argumentsText = (node.typeArguments ?? []).map((argument) =>
+			canonicalTypeNode(argument, sourceFile)
+		);
+		if ((name === 'Array' || name === 'ReadonlyArray') && argumentsText.length === 1)
+			return `${name === 'Array' ? 'array' : 'readonly-array'}<${argumentsText[0]}>`;
+		if (name === 'Readonly' && argumentsText.length === 1) return `readonly<${argumentsText[0]}>`;
+		return argumentsText.length > 0 ? `${name}<${argumentsText.join(', ')}>` : name;
+	}
+	return normalizeType(node.getText(sourceFile));
+}
+
+function canonicalTypeText(value) {
+	const sourceFile = ts.createSourceFile(
+		'metadata-type.ts',
+		`type __ZuiMetadataType = ${value};`,
+		ts.ScriptTarget.Latest,
+		true
+	);
+	if (sourceFile.parseDiagnostics.length > 0) return undefined;
+	const declaration = sourceFile.statements.find(ts.isTypeAliasDeclaration);
+	return declaration ? canonicalTypeNode(declaration.type, sourceFile) : undefined;
+}
+
+function closedMetadataTypeNode(node) {
+	if (ts.isParenthesizedTypeNode(node)) return closedMetadataTypeNode(node.type);
+	if (ts.isUnionTypeNode(node) || ts.isIntersectionTypeNode(node))
+		return node.types.every(closedMetadataTypeNode);
+	if (ts.isArrayTypeNode(node)) return closedMetadataTypeNode(node.elementType);
+	if (ts.isTypeOperatorNode(node)) return closedMetadataTypeNode(node.type);
+	if (ts.isLiteralTypeNode(node)) return true;
+	if (ts.isTypeReferenceNode(node) && ts.isIdentifier(node.typeName)) {
+		if (['Array', 'Readonly', 'ReadonlyArray'].includes(node.typeName.text))
+			return (node.typeArguments ?? []).every(closedMetadataTypeNode);
+		return ['File'].includes(node.typeName.text) && (node.typeArguments?.length ?? 0) === 0;
+	}
+	return [
+		ts.SyntaxKind.AnyKeyword,
+		ts.SyntaxKind.BigIntKeyword,
+		ts.SyntaxKind.BooleanKeyword,
+		ts.SyntaxKind.NeverKeyword,
+		ts.SyntaxKind.NullKeyword,
+		ts.SyntaxKind.NumberKeyword,
+		ts.SyntaxKind.ObjectKeyword,
+		ts.SyntaxKind.StringKeyword,
+		ts.SyntaxKind.SymbolKeyword,
+		ts.SyntaxKind.UndefinedKeyword,
+		ts.SyntaxKind.UnknownKeyword,
+		ts.SyntaxKind.VoidKeyword
+	].includes(node.kind);
+}
+
+function closedMetadataTypeText(value) {
+	const sourceFile = ts.createSourceFile(
+		'metadata-closed-type.ts',
+		`type __ZuiMetadataClosedType = ${value};`,
+		ts.ScriptTarget.Latest,
+		true
+	);
+	if (sourceFile.parseDiagnostics.length > 0) return false;
+	const declaration = sourceFile.statements.find(ts.isTypeAliasDeclaration);
+	return Boolean(declaration && closedMetadataTypeNode(declaration.type));
+}
+
+function metadataTypesEquivalent(left, right) {
+	const canonicalLeft = canonicalTypeText(left);
+	const canonicalRight = canonicalTypeText(right);
+	return (
+		canonicalLeft !== undefined && canonicalRight !== undefined && canonicalLeft === canonicalRight
+	);
+}
+
 export function validateDeprecationMetadata({
 	deprecatedPaths,
 	deprecatedNames,
@@ -420,6 +508,18 @@ export function validateMemberMetadataFacts({ entries, publicFacts, filename = '
 			);
 		if (entry.requiredWhen !== undefined && entry.requiredWhen.trim() === '')
 			throw new Error(`${filename} ${path}.requiredWhen must not be empty.`);
+		const typeCandidates = source.typeCandidates ?? [source.declaredType];
+		if (
+			source.requiredness !== REQUIREDNESS.unknown &&
+			source.declaredType !== 'unknown' &&
+			typeof entry.type === 'string' &&
+			!typeCandidates.some((candidate) => metadataTypesEquivalent(entry.type, candidate)) &&
+			closedMetadataTypeText(entry.type) &&
+			closedMetadataTypeText(source.declaredType)
+		)
+			throw new Error(
+				`${filename} ${path}.type does not match its public type: ${entry.type} != ${source.declaredType}.`
+			);
 		if (source.requiredness === REQUIREDNESS.required) {
 			if (entry.required !== true)
 				throw new Error(`${filename} ${path} must be marked required from its public type.`);
@@ -535,17 +635,17 @@ if (process.argv.includes('--self-test')) {
 		if (!String(error).includes('does not exist')) throw error;
 	}
 	const semanticFacts = new Map([
-		['items.required', { requiredness: REQUIREDNESS.required }],
-		['items.optional', { requiredness: REQUIREDNESS.optional }],
-		['items.conditional', { requiredness: REQUIREDNESS.conditional }],
-		['items.forbidden', { requiredness: REQUIREDNESS.forbidden }]
+		['items.required', { requiredness: REQUIREDNESS.required, declaredType: 'string | number' }],
+		['items.optional', { requiredness: REQUIREDNESS.optional, declaredType: 'readonly string[]' }],
+		['items.conditional', { requiredness: REQUIREDNESS.conditional, declaredType: 'boolean' }],
+		['items.forbidden', { requiredness: REQUIREDNESS.forbidden, declaredType: 'never' }]
 	]);
 	validateMemberMetadataFacts({
 		publicFacts: semanticFacts,
 		entries: [
-			{ path: 'items.required', required: true },
-			{ path: 'items.optional' },
-			{ path: 'items.conditional', requiredWhen: 'selected branch' }
+			{ path: 'items.required', required: true, type: 'number | string' },
+			{ path: 'items.optional', type: 'ReadonlyArray<string>' },
+			{ path: 'items.conditional', requiredWhen: 'selected branch', type: 'boolean' }
 		]
 	});
 	for (const [label, entry, pattern] of [
@@ -558,6 +658,7 @@ if (process.argv.includes('--self-test')) {
 			{ path: 'items.conditional', requiredWhen: ' ' },
 			/requiredWhen must not be empty/u
 		],
+		['wrong type', { path: 'items.optional', type: 'readonly number[]' }, /type does not match/u],
 		['forbidden member', { path: 'items.forbidden' }, /forbidden/u]
 	]) {
 		try {
@@ -948,7 +1049,8 @@ async function componentFacts(source, filename, path) {
 			path,
 			name: objectStringProperty(item, 'name'),
 			required: objectBooleanProperty(item, 'required'),
-			requiredWhen: objectStringProperty(item, 'requiredWhen')
+			requiredWhen: objectStringProperty(item, 'requiredWhen'),
+			type: objectStringProperty(item, 'type')
 		})),
 		filename
 	});
