@@ -42,6 +42,8 @@ function requiredZuiTag(value, version) {
 }
 
 function supportMatrixFacts(bytes, sourceRevision) {
+	if (!Buffer.isBuffer(bytes))
+		throw new TypeError('Release handoff support matrix must be read as exact bytes.');
 	let matrix;
 	try {
 		matrix = JSON.parse(bytes.toString('utf8'));
@@ -222,7 +224,7 @@ export async function prepareReleaseHandoff({
 		workspaceRoot
 	});
 	const manifest = JSON.parse(await readFile(resolve(artifactDirectory, 'manifest.json'), 'utf8'));
-	const supportMatrix = await readFile(resolve(artifactDirectory, 'support-matrix.json'), 'utf8');
+	const supportMatrix = await readFile(resolve(artifactDirectory, 'support-matrix.json'));
 	for (const name of releasePackageNames)
 		await readReleaseArtifact(artifactDirectory, name, sourceRevision);
 	return buildReleaseHandoffPlan({
@@ -398,6 +400,9 @@ function selfTest() {
 	);
 	expectFailure('an escaped path', /must stay within/u, () =>
 		assertWithin(resolve('C:/workspace'), resolve('C:/outside'), 'Self-test output')
+	);
+	expectFailure('decoded support matrix text', /exact bytes/u, () =>
+		supportMatrixFacts('{"package":{}}', revision)
 	);
 	console.log(JSON.stringify({ cases, status: 'passed' }));
 }
