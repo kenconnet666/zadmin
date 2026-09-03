@@ -131,6 +131,18 @@ const checks = {
 		desktopArtifactVerifier.includes('runtime maturity baseline was modified'),
 	releaseVersionUsesGitCli:
 		/uses:\s*changesets\/action\/version@v2[\s\S]*push-with-git-cli:\s*true/u.test(workflow),
+	releasePrCiDispatchBound:
+		/actions:\s*write/u.test(workflow) &&
+		/id:\s*changesets/u.test(workflow) &&
+		/steps\.changesets\.outputs\.pr-number/u.test(workflow) &&
+		/head_repository=.*head\.repo\.full_name/u.test(workflow) &&
+		/test "\$head_repository" = "\$GITHUB_REPOSITORY"/u.test(workflow) &&
+		/test "\$base_ref" = 'master'/u.test(workflow) &&
+		workflow.includes('gh workflow run ci.yml --ref "$head_ref" -f expected-sha="$head_sha"') &&
+		/workflow_dispatch:\s*\n\s*inputs:\s*\n\s*expected-sha:/u.test(ci) &&
+		/name:\s*Dispatch revision integrity/u.test(ci) &&
+		/ACTUAL_SHA:\s*\$\{\{ github\.sha \}\}/u.test(ci) &&
+		/if \[ "\$ACTUAL_SHA" != "\$EXPECTED_SHA" \]/u.test(ci),
 	changesetsConfigured:
 		changesetConfig.access === 'public' && changesetConfig.baseBranch === 'master',
 	changesetTargetsKnown:

@@ -10,6 +10,7 @@
 - `releaseWorkflowArtifactBinding`
 - `desktopArtifactReleaseBinding`
 - `releaseVersionUsesGitCli`
+- `releasePrCiDispatchBound`
 - `changesetsConfigured`
 - `changesetTargetsKnown`
 - `packageCheckPresent`

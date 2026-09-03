@@ -79,7 +79,19 @@ export function evaluateReleaseCoherence({
 			/verify-desktop-artifact\.mjs/u.test(release) &&
 			/name:\s*desktop-windows-\$\{\{ github\.sha \}\}/u.test(ci),
 		releaseVersionUsesGitCli:
-			/uses:\s*changesets\/action\/version@v2[\s\S]*push-with-git-cli:\s*true/u.test(release)
+			/uses:\s*changesets\/action\/version@v2[\s\S]*push-with-git-cli:\s*true/u.test(release),
+		releasePrCiDispatchBound:
+			/actions:\s*write/u.test(release) &&
+			/id:\s*changesets/u.test(release) &&
+			/steps\.changesets\.outputs\.pr-number/u.test(release) &&
+			/head_repository=.*head\.repo\.full_name/u.test(release) &&
+			/test "\$head_repository" = "\$GITHUB_REPOSITORY"/u.test(release) &&
+			/test "\$base_ref" = 'master'/u.test(release) &&
+			release.includes('gh workflow run ci.yml --ref "$head_ref" -f expected-sha="$head_sha"') &&
+			/workflow_dispatch:\s*\n\s*inputs:\s*\n\s*expected-sha:/u.test(ci) &&
+			/name:\s*Dispatch revision integrity/u.test(ci) &&
+			/ACTUAL_SHA:\s*\$\{\{ github\.sha \}\}/u.test(ci) &&
+			/if \[ "\$ACTUAL_SHA" != "\$EXPECTED_SHA" \]/u.test(ci)
 	};
 }
 
@@ -154,6 +166,12 @@ if (process.argv.includes('--self-test')) {
 			check: 'releaseVersionUsesGitCli',
 			input: {
 				release: sources.release.replace('push-with-git-cli: true', 'push-with-git-cli: false')
+			}
+		},
+		{
+			check: 'releasePrCiDispatchBound',
+			input: {
+				release: sources.release.replace(' -f expected-sha="$head_sha"', '')
 			}
 		}
 	];

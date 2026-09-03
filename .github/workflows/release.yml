@@ -87,6 +87,8 @@ jobs:
       github.event.workflow_run.head_branch == 'master'
     runs-on: ubuntu-latest
     needs: verify-artifacts
+    outputs:
+      pr-number: ${{ steps.changesets.outputs.pr-number }}
     permissions:
       contents: write
       pull-requests: write
@@ -115,6 +117,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Create or update release pull request
+        id: changesets
         uses: changesets/action/version@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -123,3 +126,30 @@ jobs:
           pr-title: 'chore: version packages'
           pr-base-branch: master
           push-with-git-cli: true
+
+  dispatch-release-pr-ci:
+    name: Dispatch release PR CI
+    if: needs.version.result == 'success' && needs.version.outputs.pr-number != ''
+    needs: version
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: write
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Dispatch CI for the exact release pull request revision
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ needs.version.outputs.pr-number }}
+        run: |
+          pr_json="$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}")"
+          head_ref="$(printf '%s' "$pr_json" | jq -er '.head.ref')"
+          head_sha="$(printf '%s' "$pr_json" | jq -er '.head.sha')"
+          head_repository="$(printf '%s' "$pr_json" | jq -er '.head.repo.full_name')"
+          base_ref="$(printf '%s' "$pr_json" | jq -er '.base.ref')"
+          test "$head_repository" = "$GITHUB_REPOSITORY"
+          test "$base_ref" = 'master'
+          printf '%s' "$head_sha" | grep -Eq '^[a-f0-9]{40}$'
+          gh workflow run ci.yml --ref "$head_ref" -f expected-sha="$head_sha"
+          printf 'Dispatched CI for PR #%s at `%s` (`%s`).\n' "$PR_NUMBER" "$head_ref" "$head_sha" >> "$GITHUB_STEP_SUMMARY"

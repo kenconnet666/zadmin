@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [master]
   workflow_dispatch:
+    inputs:
+      expected-sha:
+        description: Full commit SHA that this dispatched run must verify
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -21,8 +26,32 @@ env:
   PNPM_VERSION: '11.22.0'
 
 jobs:
+  dispatch-integrity:
+    name: Dispatch revision integrity
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Bind an explicit dispatch to its requested revision
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          EXPECTED_SHA: ${{ inputs.expected-sha }}
+          ACTUAL_SHA: ${{ github.sha }}
+        run: |
+          if [ "$EVENT_NAME" != 'workflow_dispatch' ] || [ -z "$EXPECTED_SHA" ]; then
+            exit 0
+          fi
+          if ! printf '%s' "$EXPECTED_SHA" | grep -Eq '^[a-f0-9]{40}$'; then
+            echo 'expected-sha must be a full lowercase Git commit SHA.' >&2
+            exit 1
+          fi
+          if [ "$ACTUAL_SHA" != "$EXPECTED_SHA" ]; then
+            echo "Dispatched revision mismatch: expected $EXPECTED_SHA, received $ACTUAL_SHA." >&2
+            exit 1
+          fi
+
   static:
     name: Static contracts
+    needs: dispatch-integrity
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -70,6 +99,7 @@ jobs:
 
   workspace-tests:
     name: Workspace component tests
+    needs: dispatch-integrity
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -104,6 +134,7 @@ jobs:
 
   docs-e2e:
     name: Docs end-to-end (${{ matrix.browser }})
+    needs: dispatch-integrity
     runs-on: ubuntu-latest
     timeout-minutes: 60
     strategy:
@@ -142,6 +173,7 @@ jobs:
 
   build:
     name: Workspace builds
+    needs: dispatch-integrity
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -200,6 +232,7 @@ jobs:
 
   coverage:
     name: Coverage suites
+    needs: dispatch-integrity
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -249,6 +282,7 @@ jobs:
 
   packages:
     name: Bundles and external packages
+    needs: dispatch-integrity
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -344,6 +378,7 @@ jobs:
 
   desktop-windows:
     name: Windows C# WebView2 desktop
+    needs: dispatch-integrity
     runs-on: windows-latest
     timeout-minutes: 75
     steps:

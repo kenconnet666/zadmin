@@ -14,6 +14,8 @@ Release PR workflow 的 `verify-artifacts` job 使用 `workflow_run.id` 与 `wor
 
 Changesets v2 的版本 PR 使用 `push-with-git-cli: true`，以保留 shebang CLI 等 Git tree 文件语义并避开 GitHub Contents API 对 executable/symlink commit 的限制；它仍使用显式 `github-token`，且当前 workflow 只有 version PR 子 action，没有 publish 或 tag 步骤。
 
+由 `GITHUB_TOKEN` 创建或更新的版本 PR，其普通 `pull_request` CI 会进入待人工批准状态。因此 version job 只输出 Changesets 的 PR 编号，后续最小权限 `dispatch-release-pr-ci` job 再校验 head repository 与 `master` base，并用 `workflow_dispatch` 为该 PR 的精确 head SHA 主动触发 CI；CI 的 `dispatch-integrity` gate 会在任何重型 job 前校验 `github.sha === expected-sha`。这只补齐 release PR 验证，不授予 publish、tag 或部署权限，也不使用 `pull_request_target` 执行 PR 代码。
+
 该命令不会创建 tag、GitHub Release、发布 npm 包或修改任何发布权限。真实 release workflow 仍以 `workflow_run.head_sha` checkout 已验证提交；真实部署和 registry publish 不由此命令宣称完成。
 
 公开 API、Docs catalog、maturity、stability、support、versioned Docs、release readiness 和 progress 的 tracked facts 使用 `pnpm zui:artifacts:update` 按依赖顺序统一刷新；`progress` 必须在 release readiness 之后生成，避免前一步更新后立即产生陈旧摘要。

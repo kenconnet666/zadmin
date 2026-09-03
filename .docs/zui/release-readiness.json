@@ -114,6 +114,7 @@
 		"releaseWorkflowArtifactBinding": true,
 		"desktopArtifactReleaseBinding": true,
 		"releaseVersionUsesGitCli": true,
+		"releasePrCiDispatchBound": true,
 		"changesetsConfigured": true,
 		"changesetTargetsKnown": true,
 		"packageCheckPresent": true,
