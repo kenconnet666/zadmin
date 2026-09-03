@@ -53,8 +53,8 @@
 		Restore options
 	</button>
 	<button type="reset">Reset</button>
-	<output data-testid="multi-collection-output">{collectionOutput}</output>
 </form>
+<output data-testid="multi-collection-output">{collectionOutput}</output>
 
 <ZMultiSelect readonly defaultValue={['stable']} options={groupedOptions}>
 	<ZMultiSelectTrigger aria-label="Readonly choices" data-testid="multi-readonly-trigger" />

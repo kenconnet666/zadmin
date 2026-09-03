@@ -65,11 +65,11 @@
 		</button>
 	{/if}
 	<button type="reset">Reset</button>
-	<output data-testid="file-upload-production-output">
-		{(files ?? defaultFiles)
-			.map((item) =>
-				[item.id, item.file.name, item.status, item.progress, item.error ?? 'none'].join(':')
-			)
-			.join('|') || 'empty'}::{rejected.map((item) => item.reason).join(',') || 'accepted'}
-	</output>
 </form>
+<output data-testid="file-upload-production-output">
+	{(files ?? defaultFiles)
+		.map((item) =>
+			[item.id, item.file.name, item.status, item.progress, item.error ?? 'none'].join(':')
+		)
+		.join('|') || 'empty'}::{rejected.map((item) => item.reason).join(',') || 'accepted'}
+</output>

@@ -40,5 +40,6 @@
 		</ZComboboxContent>
 	</ZCombobox>
 	<button type="reset">Reset</button>
-	<output data-testid="combobox-output">{value}:{inputValue}:{changes}:{open}</output>
 </form>
+<!-- Keep diagnostics outside the reset owner; native reset may mutate output.value. -->
+<output data-testid="combobox-output">{value}:{inputValue}:{changes}:{open}</output>

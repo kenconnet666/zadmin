@@ -79,10 +79,10 @@
 			readonly
 		/>
 		<button type="reset">Reset</button>
-		<output data-testid="date-output"
-			>{calendar?.toString() ?? 'empty'}:{date?.toString() ?? 'empty'}:{time?.toString() ??
-				'empty'}:{picked?.toString() ?? 'empty'}:{range?.start?.toString() ??
-				'empty'}:{range?.end?.toString() ?? 'empty'}</output
-		>
 	</form></ZProvider
+>
+<output data-testid="date-output"
+	>{calendar?.toString() ?? 'empty'}:{date?.toString() ?? 'empty'}:{time?.toString() ??
+		'empty'}:{picked?.toString() ?? 'empty'}:{range?.start?.toString() ??
+		'empty'}:{range?.end?.toString() ?? 'empty'}</output
 >

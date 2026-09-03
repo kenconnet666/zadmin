@@ -14,5 +14,5 @@
 		value="enabled"
 	/>
 	<button type="reset">Reset</button>
-	<output data-testid="switch-output">{checked}:{changes}</output>
 </form>
+<output data-testid="switch-output">{checked}:{changes}</output>

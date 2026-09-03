@@ -18,5 +18,5 @@
 		step={0.25}
 	/>
 	<button type="reset">Reset</button>
-	<output data-testid="number-field-output">{value ?? 'empty'}</output>
 </form>
+<output data-testid="number-field-output">{value ?? 'empty'}</output>

@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
 import CascaderProductionFixture from './CascaderProductionFixture.svelte';
-import { resetForm } from './form-reset.js';
+import { activateFormReset, resetForm } from './form-reset.js';
 
 describe('ZCascader production collection contract', () => {
 	it('keeps typed paths, Field ownership, auxiliary search and reset synchronized', async () => {
@@ -98,14 +98,13 @@ describe('ZCascader production collection contract', () => {
 
 	it('aborts pending lazy work and clears status on form reset', async () => {
 		render(CascaderProductionFixture, { mode: 'lazy' });
+		const form = document.querySelector<HTMLFormElement>('[data-testid="cascader-lazy-form"]')!;
 		const branch = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find((option) =>
 			option.textContent?.includes('Remote')
 		)!;
 		branch.click();
 		await tick();
-		document.querySelector<HTMLButtonElement>('[data-testid="cascader-lazy-reset"]')?.click();
-		await Promise.resolve();
-		await tick();
+		await activateFormReset(form);
 		expect(document.querySelector('[data-testid="cascader-lazy-output"]')?.textContent).toBe(
 			'1:1:0:false'
 		);

@@ -20,5 +20,5 @@
 		onValueChange={() => (changes += 1)}
 	/>
 	<button type="reset">Reset</button>
-	<output data-testid="segmented-output">{value}:{changes}</output>
 </form>
+<output data-testid="segmented-output">{value}:{changes}</output>

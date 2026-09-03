@@ -16,5 +16,5 @@
 		step={5}
 	/>
 	<button type="reset">Reset</button>
-	<output data-testid="slider-output">{value}:{changes}</output>
 </form>
+<output data-testid="slider-output">{value}:{changes}</output>

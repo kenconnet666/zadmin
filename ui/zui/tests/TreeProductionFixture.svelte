@@ -100,11 +100,11 @@
 	<button data-testid="tree-production-remove" type="button" onclick={removeDocs}>
 		Remove docs
 	</button>
-	<output data-testid="tree-production-output">
-		{lazySelected.join(',')}:{loadAttempts}:{treeController?.activeKey ?? 'none'}
-	</output>
 	<button type="reset">Reset lazy tree</button>
 </form>
+<output data-testid="tree-production-output">
+	{lazySelected.join(',')}:{loadAttempts}:{treeController?.activeKey ?? 'none'}
+</output>
 
 <form data-testid="tree-production-single-form">
 	<ZTree
@@ -146,10 +146,10 @@
 		/>
 	</ZField>
 	<button type="reset">Reset select</button>
-	<output data-testid="tree-production-select-output">
-		{treeSelectValue ?? 'null'}:{treeSelectOpen}
-	</output>
 </form>
+<output data-testid="tree-production-select-output">
+	{treeSelectValue ?? 'null'}:{treeSelectOpen}
+</output>
 
 <ZProvider direction="rtl">
 	<ZTree aria-label="RTL production tree" nodes={selectNodes} data-testid="tree-production-rtl" />

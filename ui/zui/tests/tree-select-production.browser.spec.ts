@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
 import TreeProductionFixture from './TreeProductionFixture.svelte';
+import { activateFormReset } from './form-reset.js';
 
 describe('ZTreeSelect production contract', () => {
 	it('keeps ZTreeSelect popup ARIA, Field focus owner, selection, clear and FormData reset real', async () => {
@@ -31,7 +32,7 @@ describe('ZTreeSelect production contract', () => {
 		form.querySelector<HTMLButtonElement>('[data-slot="clear"]')!.click();
 		await tick();
 		expect(new FormData(form).get('tree-node')).toBeNull();
-		form.querySelector<HTMLButtonElement>('button[type="reset"]')!.click();
+		await activateFormReset(form);
 		await expect.poll(() => trigger.textContent?.trim()).toBe('Alpha');
 	});
 

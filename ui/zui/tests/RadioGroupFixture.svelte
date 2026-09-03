@@ -21,5 +21,5 @@
 		<label><ZRadioGroupItem data-testid="radio-d" value="d" /> Delta</label>
 	</ZRadioGroup>
 	<button type="reset">Reset</button>
-	<output data-testid="radio-output">{value}:{changes}</output>
 </form>
+<output data-testid="radio-output">{value}:{changes}</output>

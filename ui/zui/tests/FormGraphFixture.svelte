@@ -110,6 +110,6 @@
 		}}
 		>Set status
 	</button>
-	<output data-testid="graph-output">{result}|{confirmState}</output>
-	<output data-testid="graph-email-observed">{emailObserved}</output>
 </ZForm>
+<output data-testid="graph-output">{result}|{confirmState}</output>
+<output data-testid="graph-email-observed">{emailObserved}</output>

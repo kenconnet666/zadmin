@@ -68,7 +68,7 @@
 	>
 		Remove selected option
 	</button>
-	<output data-testid="choice-collection-output">
-		{String(selectValue)}:{typeof selectValue}:{String(comboValue)}:{typeof comboValue}:{comboInput}
-	</output>
 </form>
+<output data-testid="choice-collection-output">
+	{String(selectValue)}:{typeof selectValue}:{String(comboValue)}:{typeof comboValue}:{comboInput}
+</output>

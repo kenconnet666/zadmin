@@ -96,11 +96,10 @@
 			}}>Write reversed range</ZButton
 		>
 		<button type="reset">Reset</button>
-		<output data-testid="date-production-output">
-			{focused.toString()}|{calendar?.toString() ?? 'null'}|{date?.toString() ??
-				'null'}|{time?.toString() ?? 'null'}|{picked?.toString() ??
-				'null'}|{range?.start?.toString() ?? 'null'}|{range?.end?.toString() ??
-				'null'}|{pickerOpen}|{rangeOpen}
-		</output>
 	</form>
 </ZProvider>
+<output data-testid="date-production-output">
+	{focused.toString()}|{calendar?.toString() ?? 'null'}|{date?.toString() ??
+		'null'}|{time?.toString() ?? 'null'}|{picked?.toString() ?? 'null'}|{range?.start?.toString() ??
+		'null'}|{range?.end?.toString() ?? 'null'}|{pickerOpen}|{rangeOpen}
+</output>

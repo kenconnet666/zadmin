@@ -3,12 +3,7 @@ import { render } from 'vitest-browser-svelte';
 import { describe, expect, it } from 'vitest';
 
 import ReadonlyControlsFixture from './ReadonlyControlsFixture.svelte';
-
-async function settleReset(): Promise<void> {
-	await new Promise<void>((resolve) => setTimeout(resolve, 0));
-	await new Promise<void>((resolve) => setTimeout(resolve, 0));
-	await tick();
-}
+import { activateFormReset } from './form-reset.js';
 
 describe('readonly native choice and range controls', () => {
 	it('keeps controls focusable and successful while suppressing user mutations and callbacks', async () => {
@@ -125,8 +120,7 @@ describe('readonly native choice and range controls', () => {
 		]);
 		expect(events.textContent).toBe('0:0:0|0:0:0:0:0|0:0:0:0|0:0');
 
-		document.querySelector<HTMLButtonElement>('[data-testid="readonly-reset"]')?.click();
-		await settleReset();
+		await activateFormReset(form);
 		expect(values.textContent).toBe('true:35:b:b');
 		expect([...new FormData(form).entries()]).toEqual([
 			['consent', 'yes'],

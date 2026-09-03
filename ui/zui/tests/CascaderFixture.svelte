@@ -18,6 +18,6 @@
 		name="path"
 		{nodes}
 	/>
-	<button type="reset">Reset</button><output data-testid="cascader-output">{value.join('/')}</output
-	>
+	<button type="reset">Reset</button>
 </form>
+<output data-testid="cascader-output">{value.join('/')}</output>

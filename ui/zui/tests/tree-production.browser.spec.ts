@@ -5,6 +5,7 @@ import { render } from 'vitest-browser-svelte';
 import { mount, unmount } from './browser-lifecycle.js';
 
 import TreeProductionFixture from './TreeProductionFixture.svelte';
+import { activateFormReset } from './form-reset.js';
 
 function activeItem(tree: HTMLElement): HTMLElement | null {
 	const id = tree.getAttribute('aria-activedescendant');
@@ -146,12 +147,9 @@ describe('ZTree production contracts', () => {
 		expect(
 			host.querySelector('[data-testid="tree-production-select-output"]')?.textContent
 		).toContain('null:false');
-		host
-			.querySelector<HTMLButtonElement>(
-				'[data-testid="tree-production-select-form"] button[type="reset"]'
-			)!
-			.click();
-		await settle();
+		await activateFormReset(
+			host.querySelector<HTMLFormElement>('[data-testid="tree-production-select-form"]')
+		);
 		expect(trigger.textContent?.trim()).toBe('Alpha');
 
 		const rtl = host.querySelector<HTMLElement>('[data-testid="tree-production-rtl"]')!;

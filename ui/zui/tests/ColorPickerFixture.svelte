@@ -15,5 +15,5 @@
 		triggerLabel={(current) => `Color ${current}`}
 	/>
 	<button type="reset">Reset</button>
-	<output data-testid="color-picker-output">{value}</output>
 </form>
+<output data-testid="color-picker-output">{value}</output>

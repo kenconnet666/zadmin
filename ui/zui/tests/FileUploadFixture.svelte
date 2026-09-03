@@ -24,7 +24,7 @@
 		removeLabel={(item) => `Remove ${item.file.name}`}
 	/>
 	<button type="reset">Reset</button>
-	<output data-testid="file-upload-output"
-		>{files.map((item) => item.file.name).join(',') || 'none'}:{rejected.length}</output
-	>
 </form>
+<output data-testid="file-upload-output"
+	>{files.map((item) => item.file.name).join(',') || 'none'}:{rejected.length}</output
+>

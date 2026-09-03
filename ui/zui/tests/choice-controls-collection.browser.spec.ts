@@ -3,15 +3,10 @@ import { render } from 'vitest-browser-svelte';
 import { describe, expect, it } from 'vitest';
 
 import ChoiceControlsCollectionFixture from './ChoiceControlsCollectionFixture.svelte';
+import { activateFormReset } from './form-reset.js';
 
 async function settleCollection(): Promise<void> {
 	await Promise.resolve();
-	await tick();
-}
-
-async function settleReset(): Promise<void> {
-	await new Promise<void>((resolve) => setTimeout(resolve, 0));
-	await new Promise<void>((resolve) => setTimeout(resolve, 0));
 	await tick();
 }
 
@@ -82,8 +77,7 @@ describe('RadioGroup and Segmented logical collection integration', () => {
 		expect(output.textContent).toBe('undefined');
 		expect(new FormData(form).get('radio-choice')).toBeNull();
 
-		document.querySelector<HTMLButtonElement>('[data-testid="collection-radio-reset"]')?.click();
-		await settleReset();
+		await activateFormReset(form);
 		expect(output.textContent).toBe('number:1:3');
 		expect(radios[0]?.checked).toBe(true);
 		expect(new FormData(form).get('radio-choice')).toBe('1');
@@ -159,10 +153,7 @@ describe('RadioGroup and Segmented logical collection integration', () => {
 		expect(output.textContent).toBe('undefined:3:3');
 		expect(new FormData(form).get('segment-choice')).toBeNull();
 
-		document
-			.querySelector<HTMLButtonElement>('[data-testid="collection-segmented-reset"]')
-			?.click();
-		await settleReset();
+		await activateFormReset(form);
 		expect(output.textContent).toBe('number:1:3:3');
 		expect(segments[0]?.getAttribute('aria-checked')).toBe('true');
 		expect(new FormData(form).get('segment-choice')).toBe('1');

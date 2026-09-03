@@ -5,6 +5,7 @@ import { render } from 'vitest-browser-svelte';
 import InputGroupMultipleFixture from './InputGroupMultipleFixture.svelte';
 import InputGroupNestedFixture from './InputGroupNestedFixture.svelte';
 import PinInputGroupProductionFixture from './PinInputGroupProductionFixture.svelte';
+import { activateFormReset } from './form-reset.js';
 
 describe('ZPinInput and ZInputGroup production browser contracts', () => {
 	it('projects Field ownership to exactly one grouped control and keeps actions independent', async () => {
@@ -36,10 +37,8 @@ describe('ZPinInput and ZInputGroup production browser contracts', () => {
 		);
 		expect(data.getAll('endpoint')).toEqual(['api']);
 		await userEvent.fill(control, 'changed');
-		await userEvent.click(
-			document
-				.querySelector<HTMLFormElement>('[data-testid="input-group-production-form"]')!
-				.querySelector<HTMLButtonElement>('button[type="reset"]')!
+		await activateFormReset(
+			document.querySelector<HTMLFormElement>('[data-testid="input-group-production-form"]')
 		);
 		expect(control.value).toBe('api');
 	});
@@ -72,10 +71,8 @@ describe('ZPinInput and ZInputGroup production browser contracts', () => {
 		expect(
 			document.querySelector<HTMLInputElement>('[data-zui-form-value][name="otp"]')?.value
 		).toBe('9876');
-		await userEvent.click(
-			document
-				.querySelector<HTMLFormElement>('[data-testid="pin-external-production-form"]')!
-				.querySelector<HTMLButtonElement>('button[type="reset"]')!
+		await activateFormReset(
+			document.querySelector<HTMLFormElement>('[data-testid="pin-external-production-form"]')
 		);
 		expect(
 			document.querySelector<HTMLInputElement>('[data-zui-form-value][name="otp"]')?.value

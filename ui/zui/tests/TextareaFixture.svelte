@@ -17,5 +17,5 @@
 		/>
 	</ZField>
 	<button type="reset">Reset</button>
-	<output data-testid="textarea-output">{value}:{resized}</output>
 </form>
+<output data-testid="textarea-output">{value}:{resized}</output>

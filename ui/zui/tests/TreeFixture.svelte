@@ -26,10 +26,10 @@
 		onSelectionChange={() => (changes += 1)}
 	/>
 	<button type="reset">Reset</button>
-	<output data-testid="tree-output"
-		>{expandedKeys.join(',')}:{selectedKeys.join(',')}:{changes}</output
-	>
 </form>
+<output data-testid="tree-output"
+	>{expandedKeys.join(',')}:{selectedKeys.join(',')}:{changes}</output
+>
 
 <form data-testid="tree-multiple-form">
 	<ZTree
@@ -43,5 +43,5 @@
 		selectionMode="multiple"
 	/>
 	<button type="reset">Reset multiple</button>
-	<output data-testid="tree-multiple-output">{multipleSelectedKeys.join(',')}</output>
 </form>
+<output data-testid="tree-multiple-output">{multipleSelectedKeys.join(',')}</output>

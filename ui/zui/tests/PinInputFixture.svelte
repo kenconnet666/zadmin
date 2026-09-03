@@ -15,5 +15,5 @@
 		onComplete={() => (completed += 1)}
 	/>
 	<button type="reset">Reset</button>
-	<output data-testid="pin-input-output">{value}:{completed}</output>
 </form>
+<output data-testid="pin-input-output">{value}:{completed}</output>

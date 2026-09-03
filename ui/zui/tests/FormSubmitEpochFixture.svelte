@@ -56,7 +56,7 @@
 	<button type="button" data-testid="resolve-submit" onclick={resolveSubmitValidation}
 		>Resolve submit</button
 	>
-	<output data-testid="submit-epoch-output"
-		>{validationCalls}:{submitted}:{validating}:{Object.keys(errors).length}:{validSubmits}</output
-	>
 </ZForm>
+<output data-testid="submit-epoch-output"
+	>{validationCalls}:{submitted}:{validating}:{Object.keys(errors).length}:{validSubmits}</output
+>

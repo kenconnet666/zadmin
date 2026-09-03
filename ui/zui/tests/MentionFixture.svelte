@@ -23,5 +23,5 @@
 		oncompositionend={(event) => prevent && event.preventDefault()}
 	/>
 	<button type="reset">Reset</button>
-	<output data-testid="mention-output">{value}</output>
 </form>
+<output data-testid="mention-output">{value}</output>

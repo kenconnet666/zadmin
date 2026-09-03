@@ -14,5 +14,5 @@
 		<ZInput aria-label="Disabled host" />
 	</ZInputGroup>
 	<button type="reset">Reset</button>
-	<output data-testid="input-group-output">{value}</output>
 </form>
+<output data-testid="input-group-output">{value}</output>

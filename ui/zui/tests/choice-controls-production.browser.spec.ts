@@ -5,7 +5,7 @@ import { render } from 'vitest-browser-svelte';
 import { ZRadioGroup, ZSegmented } from '../src/entrypoints/index.js';
 import ChoiceControlsCollectionFixture from './ChoiceControlsCollectionFixture.svelte';
 import RadioGroupFixture from './RadioGroupFixture.svelte';
-import { resetForm } from './form-reset.js';
+import { activateFormReset, resetForm } from './form-reset.js';
 
 async function settle(): Promise<void> {
 	await Promise.resolve();
@@ -69,7 +69,7 @@ describe('ZRadioGroup, ZRadioGroupItem and ZSegmented production contracts', () 
 		expect(group.querySelectorAll('input[type="radio"]')).toHaveLength(3);
 		expect(new FormData(form).get('radio-choice')).toBeNull();
 
-		document.querySelector<HTMLButtonElement>('[data-testid="collection-radio-reset"]')?.click();
+		await activateFormReset(form);
 		await expect.poll(() => new FormData(form).get('radio-choice')).toBe('1');
 		expect(output.textContent).toBe('number:1:1');
 	});
@@ -108,9 +108,7 @@ describe('ZRadioGroup, ZRadioGroupItem and ZSegmented production contracts', () 
 			?.click();
 		await settle();
 		expect(new FormData(form).get('segment-choice')).toBeNull();
-		document
-			.querySelector<HTMLButtonElement>('[data-testid="collection-segmented-reset"]')
-			?.click();
+		await activateFormReset(form);
 		await expect.poll(() => new FormData(form).get('segment-choice')).toBe('1');
 		expect(output.textContent).toBe('number:1:1:1');
 	});

@@ -58,7 +58,7 @@
 	</ZFormField>
 	<button type="submit">Submit</button>
 	<button type="reset">Reset</button>
-	<output data-testid="form-output"
-		>{submitted}:{validating}:{Object.keys(errors).length}:{result}</output
-	>
 </ZForm>
+<output data-testid="form-output"
+	>{submitted}:{validating}:{Object.keys(errors).length}:{result}</output
+>

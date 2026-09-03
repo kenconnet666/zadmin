@@ -20,5 +20,5 @@
 		{nodes}
 	/>
 	<button type="reset">Reset</button>
-	<output data-testid="tree-select-output">{value}</output>
 </form>
+<output data-testid="tree-select-output">{value}</output>

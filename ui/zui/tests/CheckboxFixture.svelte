@@ -15,5 +15,5 @@
 		value="selected"
 	/>
 	<button type="reset">Reset</button>
-	<output data-testid="checkbox-output">{checked}:{changes}</output>
 </form>
+<output data-testid="checkbox-output">{checked}:{changes}</output>

@@ -17,5 +17,5 @@
 		onValueChange={() => (changes += 1)}
 	/>
 	<button type="reset">Reset</button>
-	<output data-testid="tags-output">{values.join(',')}:{changes}:{inputValue}</output>
 </form>
+<output data-testid="tags-output">{values.join(',')}:{changes}:{inputValue}</output>
