@@ -17,6 +17,10 @@ function portable(value) {
 	return value.replaceAll('\\', '/');
 }
 
+function comparePortable(left, right) {
+	return left < right ? -1 : left > right ? 1 : 0;
+}
+
 function digest(bytes) {
 	return createHash('sha256').update(bytes).digest('hex');
 }
@@ -105,7 +109,7 @@ function validateManifest(manifest, expectedRouteManifest) {
 		paths.add(file.path);
 	}
 	const orderedPaths = manifest.build.files.map(({ path }) => path);
-	if (orderedPaths.join('\n') !== [...orderedPaths].sort().join('\n'))
+	if (orderedPaths.join('\n') !== [...orderedPaths].sort(comparePortable).join('\n'))
 		throw new Error('Versioned Docs build file entries must use canonical path order.');
 }
 
@@ -143,14 +147,14 @@ export async function verifyVersionedDocsArtifact({
 		throw new Error('Versioned Docs support matrix checksum mismatch.');
 	const artifactFiles = (await filesUnder(resolve(distRoot, 'zui-artifact')))
 		.map((path) => portable(relative(resolve(distRoot, 'zui-artifact'), path)))
-		.sort();
+		.sort(comparePortable);
 	if (artifactFiles.join('\n') !== ['support-matrix.json', 'version-manifest.json'].join('\n'))
 		throw new Error('Versioned Docs metadata artifact set is invalid.');
 	const actualFiles = (await filesUnder(distRoot))
 		.filter((path) => !portable(relative(distRoot, path)).startsWith('zui-artifact/'))
 		.map((path) => portable(relative(distRoot, path)))
-		.sort();
-	const expectedFiles = manifest.build.files.map(({ path }) => path).sort();
+		.sort(comparePortable);
+	const expectedFiles = manifest.build.files.map(({ path }) => path).sort(comparePortable);
 	if (actualFiles.join('\n') !== expectedFiles.join('\n'))
 		throw new Error('Versioned Docs build file set does not match its manifest.');
 	const facts = [];

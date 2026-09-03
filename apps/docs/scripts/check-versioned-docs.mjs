@@ -14,6 +14,7 @@ const contractJsonPath = resolve(root, '.docs/zui/versioned-docs.json');
 const contractMarkdownPath = resolve(root, '.docs/zui/versioned-docs.md');
 const read = (path) => readFile(resolve(root, path), 'utf8');
 const portable = (path) => path.replaceAll('\\', '/');
+const comparePortable = (left, right) => (left < right ? -1 : left > right ? 1 : 0);
 const sha256 = (value) => createHash('sha256').update(value).digest('hex');
 const bundleSha256 = (facts) =>
 	sha256(facts.map(({ path, bytes, sha256: digest }) => `${path}\0${bytes}\0${digest}`).join('\n'));
@@ -80,7 +81,7 @@ async function buildFacts() {
 			);
 		})
 		.sort((left, right) =>
-			portable(relative(distRoot, left)).localeCompare(portable(relative(distRoot, right)))
+			comparePortable(portable(relative(distRoot, left)), portable(relative(distRoot, right)))
 		);
 	if (files.length === 0)
 		throw new Error('Docs dist is empty. Build Docs before emitting its artifact contract.');
