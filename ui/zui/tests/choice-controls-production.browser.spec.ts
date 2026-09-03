@@ -1,6 +1,6 @@
 import { tick } from 'svelte';
 import { describe, expect, it, vi } from 'vitest';
-import { cleanup, render } from 'vitest-browser-svelte';
+import { render } from 'vitest-browser-svelte';
 
 import { ZRadioGroup, ZSegmented } from '../src/entrypoints/index.js';
 import ChoiceControlsCollectionFixture from './ChoiceControlsCollectionFixture.svelte';
@@ -14,23 +14,23 @@ async function settle(): Promise<void> {
 
 describe('ZRadioGroup, ZRadioGroupItem and ZSegmented production contracts', () => {
 	it('does not reconcile a focused RadioGroup after its owner is unmounted', async () => {
-		render(RadioGroupFixture);
+		const { unmount: unmountRendered } = await render(RadioGroupFixture);
 		const beta = document.querySelector<HTMLInputElement>('[data-testid="radio-b"]')!;
 		beta.focus();
 		// Child action teardown queues nearest-focus recovery. Unmounting the owner
 		// in the same turn must cancel that callback before it reads derived view.
-		await cleanup();
+		await unmountRendered();
 		await settle();
 	});
 
 	it('does not reconcile a focused Segmented option after its owner is unmounted', async () => {
-		render(ChoiceControlsCollectionFixture);
+		const { unmount: unmountRendered } = await render(ChoiceControlsCollectionFixture);
 		await settle();
 		const segment = document.querySelector<HTMLButtonElement>(
 			'[data-testid="collection-segmented"] [role="radio"]'
 		)!;
 		segment.focus();
-		await cleanup();
+		await unmountRendered();
 		await settle();
 	});
 
