@@ -386,19 +386,61 @@
 					</ZDialogContent>
 				</ZDialog>
 			</ZBox>
-			<ZContainer size="small" gutter="medium" data-desktop-component="ZContainer" data-desktop-evidence="ZContainer-primitives">
-				<ZHeading level={2} data-desktop-component="ZHeading" data-desktop-evidence="ZHeading-primitives">Desktop primitives</ZHeading>
-				<ZCode data-desktop-component="ZCode" data-desktop-evidence="ZCode-primitives" code="const ready = true;" />
-				<ZIcon data-desktop-component="ZIcon" data-desktop-evidence="ZIcon-labelled" name="warning" label="Warning" />
+			<ZContainer
+				size="small"
+				gutter="medium"
+				data-desktop-component="ZContainer"
+				data-desktop-evidence="ZContainer-primitives"
+			>
+				<ZHeading
+					level={2}
+					data-desktop-component="ZHeading"
+					data-desktop-evidence="ZHeading-primitives">Desktop primitives</ZHeading
+				>
+				<ZCode
+					data-desktop-component="ZCode"
+					data-desktop-evidence="ZCode-primitives"
+					code="const ready = true;"
+				/>
+				<ZIcon
+					data-desktop-component="ZIcon"
+					data-desktop-evidence="ZIcon-labelled"
+					name="warning"
+					label="Warning"
+				/>
 				<ZKbd data-desktop-component="ZKbd" data-desktop-evidence="ZKbd-primitives">Ctrl</ZKbd>
 				<ZIcon data-desktop-evidence="ZIcon-decorative" name="check" />
-				<ZLink data-desktop-component="ZLink" data-desktop-evidence="ZLink-primitives" href="#desktop-primitives" onclick={recordPrimitiveLinkActivation}>Local fragment</ZLink>
+				<ZLink
+					data-desktop-component="ZLink"
+					data-desktop-evidence="ZLink-primitives"
+					href="#desktop-primitives"
+					onclick={recordPrimitiveLinkActivation}>Local fragment</ZLink
+				>
 				<span id="desktop-primitives">Primitive target</span>
-				<ZSeparator data-desktop-component="ZSeparator" data-desktop-evidence="ZSeparator-primitives" />
-				<ZVisuallyHidden data-desktop-component="ZVisuallyHidden" data-desktop-evidence="ZVisuallyHidden-primitives">Screen reader detail</ZVisuallyHidden>
-				<ZAspectRatio data-desktop-component="ZAspectRatio" data-desktop-evidence="ZAspectRatio-primitives" ratio="16 / 9">Aspect ratio</ZAspectRatio>
-				<ZAlert data-desktop-component="ZAlert" data-desktop-evidence="ZAlert-primitives" title="Desktop alert" live="polite">A measured alert.</ZAlert>
-				<ZSpinner data-desktop-component="ZSpinner" data-desktop-evidence="ZSpinner-primitives" label="Loading desktop primitives" />
+				<ZSeparator
+					data-desktop-component="ZSeparator"
+					data-desktop-evidence="ZSeparator-primitives"
+				/>
+				<ZVisuallyHidden
+					data-desktop-component="ZVisuallyHidden"
+					data-desktop-evidence="ZVisuallyHidden-primitives">Screen reader detail</ZVisuallyHidden
+				>
+				<ZAspectRatio
+					data-desktop-component="ZAspectRatio"
+					data-desktop-evidence="ZAspectRatio-primitives"
+					ratio="16 / 9">Aspect ratio</ZAspectRatio
+				>
+				<ZAlert
+					data-desktop-component="ZAlert"
+					data-desktop-evidence="ZAlert-primitives"
+					title="Desktop alert"
+					live="polite">A measured alert.</ZAlert
+				>
+				<ZSpinner
+					data-desktop-component="ZSpinner"
+					data-desktop-evidence="ZSpinner-primitives"
+					label="Loading desktop primitives"
+				/>
 				<span data-desktop-primitive-link-activations={primitiveLinkActivations}></span>
 			</ZContainer>
 		</ZProvider>
