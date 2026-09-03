@@ -35,8 +35,9 @@ export const cardDoc = defineComponentDoc(cardMetadata, {
 			media: { default: '—', description: '位于Card首部且不带内边距的媒体区域。' },
 			ref: { default: 'null', description: '当前真实div/article/section根引用。' },
 			variant: {
-				default: "'elevated'",
-				description: 'elevated使用Theme阴影，outlined使用Theme边框。'
+				default: "componentDefaults.card.variant或'elevated'",
+				description:
+					'显式variant优先于严格Provider组件默认；elevated使用Theme阴影，outlined使用Theme边框。'
 			}
 		},
 		summary:

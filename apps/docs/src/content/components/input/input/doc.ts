@@ -30,8 +30,10 @@ export const inputDoc = defineComponentDoc(inputMetadata, {
 				description: '独立输入恢复defaultValue；复合控件可关闭并由唯一root接管reset。'
 			},
 			size: {
-				default: "Provider density（默认 'comfortable' → 'medium'）",
-				description: '显式尺寸优先，其次继承Field/Form，最后响应最近Provider的density。'
+				default:
+					"Field/InputGroup，其次componentDefaults.input.size，最后Provider density（'comfortable' → 'medium'）",
+				description:
+					'显式尺寸优先，其次继承最近Field/InputGroup，再使用严格Provider组件默认与density。'
 			},
 			type: { default: "'text'", description: '受支持且保留原生语义的文本输入类型。' },
 			value: { default: 'undefined', description: 'Svelte bindable文本值。' }

@@ -68,8 +68,9 @@
 				type: "'text' | 'email' | 'password' | 'search' | 'tel' | 'url'"
 			},
 			{
-				default: "Provider density（默认把 'comfortable' 映射为 'medium'）",
-				description: '输入框尺寸；显式值优先于Provider density。',
+				default:
+					"Field/InputGroup，其次componentDefaults.input.size，最后Provider density（'comfortable' → 'medium'）",
+				description: '输入框尺寸；显式值和最近表单上下文优先于Provider组件默认值与density。',
 				name: 'size',
 				type: "'small' | 'medium' | 'large'"
 			},

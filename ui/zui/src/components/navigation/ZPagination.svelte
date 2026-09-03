@@ -200,8 +200,8 @@
 				type: 'readonly number[]'
 			},
 			{
-				default: "'default'",
-				description: '完整页码、可直接输入页码或只读紧凑状态。',
+				default: "componentDefaults.pagination.mode或'default'",
+				description: '完整页码、可直接输入页码或只读紧凑状态；显式值优先于Provider组件默认。',
 				name: 'mode',
 				type: "'default' | 'simple' | 'compact'"
 			},

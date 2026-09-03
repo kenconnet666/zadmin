@@ -43,8 +43,8 @@
 				type: "'div' | 'article' | 'section'"
 			},
 			{
-				default: "'elevated'",
-				description: '阴影surface或边框surface。',
+				default: "componentDefaults.card.variant或'elevated'",
+				description: '阴影surface或边框surface；显式值优先于Provider组件默认。',
 				name: 'variant',
 				type: "'elevated' | 'outlined'"
 			},

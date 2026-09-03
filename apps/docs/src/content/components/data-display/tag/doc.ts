@@ -38,9 +38,14 @@ export const tagDoc = defineComponentDoc(tagMetadata, {
 				default: 'false',
 				description: '只增加真实button；不会自动删除Tag或创建TagGroup。'
 			},
+			size: {
+				default: 'componentDefaults.tag.size或Provider density',
+				description: '显式small/medium优先；否则使用严格Provider组件默认，最后由density解析。'
+			},
 			tone: {
-				default: 'default',
-				description: '有限语义文字、边框和currentColor混合背景，高对比时仍保留边界。'
+				default: "componentDefaults.tag.tone或'default'",
+				description:
+					'显式语义tone优先于严格Provider组件默认；文字、边框和currentColor混合背景在高对比时仍保留边界。'
 			}
 		},
 		summary:

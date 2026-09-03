@@ -38,8 +38,9 @@ export const paginationDoc = defineComponentDoc(paginationMetadata, {
 				description: '显式覆盖LTR/RTL，并同步逻辑布局、图标与方向键。'
 			},
 			mode: {
-				default: "'default'",
-				description: 'default显示窗口页码；simple提供原生页码输入；compact只显示本地化页码状态。'
+				default: "componentDefaults.pagination.mode或'default'",
+				description:
+					'显式mode优先于严格Provider组件默认；default显示窗口页码，simple提供原生页码输入，compact只显示本地化页码状态。'
 			},
 			onPageChange: {
 				default: '—',

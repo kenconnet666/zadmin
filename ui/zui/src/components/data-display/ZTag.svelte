@@ -58,8 +58,9 @@
 				type: '-1 | 0'
 			},
 			{
-				default: 'Provider density',
-				description: '有限small/medium尺寸；显式值优先，compact density解析为small。',
+				default: 'componentDefaults.tag.size或Provider density',
+				description:
+					'有限small/medium尺寸；显式值优先，未配置组件默认时compact density解析为small。',
 				name: 'size',
 				type: "'small' | 'medium'"
 			},
@@ -69,7 +70,12 @@
 				name: 'textValue',
 				type: 'string'
 			},
-			{ default: "'default'", description: '语义tone。', name: 'tone', type: 'TagTone' }
+			{
+				default: "componentDefaults.tag.tone或'default'",
+				description: '有限语义tone；显式值优先于Provider组件默认。',
+				name: 'tone',
+				type: 'TagTone'
+			}
 		],
 		since: 'unreleased',
 		snippets: [{ description: 'Tag内容。', name: 'children', type: 'Snippet' }],
