@@ -21,6 +21,42 @@ describe('ToastQueue', () => {
 		expect(onDismiss).toHaveBeenCalledWith('release', 'close');
 	});
 
+	it('exposes frozen ownership diagnostics without changing queue ownership', () => {
+		const queue = createToastQueue({ debugName: ' release-console ' });
+		expect(queue.diagnostics).toEqual({
+			connected: false,
+			viewportCount: 0,
+			disposed: false,
+			debugName: 'release-console'
+		});
+		expect(Object.isFrozen(queue.diagnostics)).toBe(true);
+		const disconnect = queue.connectViewport();
+		expect(queue.diagnostics).toMatchObject({ connected: true, viewportCount: 1, disposed: false });
+		disconnect();
+		queue.dispose();
+		expect(queue.diagnostics).toMatchObject({ connected: false, viewportCount: 0, disposed: true });
+		expect(() => createToastQueue({ debugName: ' ' })).toThrow(/debugName/u);
+	});
+
+	it('treats dispose as a terminal idempotent operation', async () => {
+		const queue = createToastQueue({ debugName: 'terminal' });
+		queue.dispose();
+		queue.dispose();
+		expect(() => queue.push({ title: 'late' })).toThrow(/is disposed/u);
+		expect(() => queue.update('missing', { title: 'late' })).toThrow(/is disposed/u);
+		expect(() => queue.setMaxVisible(2)).toThrow(/is disposed/u);
+		expect(() => queue.connectViewport()).toThrow(/is disposed/u);
+		expect(() => queue.connectVisibility()).toThrow(/is disposed/u);
+		let resolve!: (value: string) => void;
+		const promise = new Promise<string>((done) => (resolve = done));
+		expect(() =>
+			queue.task(promise, { error: 'error', loading: 'loading', success: 'success' })
+		).toThrow(/is disposed/u);
+		resolve('late');
+		await promise;
+		expect(queue.items).toHaveLength(0);
+	});
+
 	it('rejects invalid durations and clears persistent messages', () => {
 		const queue = createToastQueue();
 		expect(() => queue.push({ duration: 0, title: 'Invalid' })).toThrow(/positive finite/u);

@@ -7,6 +7,14 @@ export type ToastTone = 'danger' | 'info' | 'success' | 'warning';
 
 export interface ToastQueueOptions {
 	readonly maxVisible?: number;
+	readonly debugName?: string;
+}
+
+export interface ToastQueueDiagnostics {
+	readonly connected: boolean;
+	readonly viewportCount: number;
+	readonly disposed: boolean;
+	readonly debugName?: string;
 }
 
 export interface ToastOptions {
@@ -61,6 +69,8 @@ function normalizeMaxVisible(value: number): number {
 
 export class ToastQueue {
 	#connections = 0;
+	#disposed = false;
+	readonly #debugName: string | undefined;
 	readonly #globalPauses = new Set<ToastPauseReason>();
 	#items = $state<readonly ToastRecord[]>([]);
 	#maxVisible: number;
@@ -74,6 +84,18 @@ export class ToastQueue {
 
 	constructor(options: ToastQueueOptions = {}) {
 		this.#maxVisible = normalizeMaxVisible(options.maxVisible ?? 3);
+		if (options.debugName !== undefined && options.debugName.trim().length === 0)
+			throw new TypeError('Toast debugName must not be empty.');
+		this.#debugName = options.debugName?.trim();
+	}
+
+	get diagnostics(): ToastQueueDiagnostics {
+		return Object.freeze({
+			connected: this.#connections > 0,
+			viewportCount: this.#connections,
+			disposed: this.#disposed,
+			...(this.#debugName === undefined ? {} : { debugName: this.#debugName })
+		});
 	}
 
 	get items(): readonly ToastRecord[] {
@@ -89,6 +111,7 @@ export class ToastQueue {
 	}
 
 	push(options: ToastOptions): string {
+		this.#assertActive('push');
 		const id = this.#resolveId(options.id);
 		this.#invalidateTask(id);
 		this.#push(options, id);
@@ -97,6 +120,7 @@ export class ToastQueue {
 
 	/** Partially updates an existing record. Omitted fields and its elapsed timer are preserved. */
 	update(id: string, update: ToastUpdate): boolean {
+		this.#assertActive('update');
 		const index = this.#items.findIndex((item) => item.id === id);
 		if (index === -1) return false;
 		return this.#update(index, update);
@@ -110,6 +134,7 @@ export class ToastQueue {
 		promise: PromiseLike<TResult>,
 		options: ToastTaskOptions<TResult, TError>
 	): string {
+		this.#assertActive('task');
 		const id = this.#resolveId(options.id);
 		const generation = this.#registerTask(id);
 		this.#push(this.#taskMessage(options.loading, 'info', 'polite', null), id);
@@ -171,6 +196,7 @@ export class ToastQueue {
 	}
 
 	setMaxVisible(value: number): void {
+		this.#assertActive('setMaxVisible');
 		this.#maxVisible = normalizeMaxVisible(value);
 		this.#demoteOverflow();
 		this.#promote();
@@ -180,8 +206,10 @@ export class ToastQueue {
 		maxVisible = this.#maxVisible,
 		ownerWindow = typeof window === 'undefined' ? undefined : window
 	): () => void {
+		this.#assertActive('connectViewport');
 		if (this.#connections > 0) {
-			throw new Error('ToastQueue can only be connected to one ZToaster viewport.');
+			const name = this.#debugName === undefined ? '' : ` "${this.#debugName}"`;
+			throw new Error(`ToastQueue${name} can only be connected to one ZToaster viewport.`);
 		}
 		this.setMaxVisible(maxVisible);
 		this.#connections = 1;
@@ -200,6 +228,7 @@ export class ToastQueue {
 	}
 
 	pause(id: string, reason: ToastPauseReason): void {
+		if (this.#disposed) return;
 		const timer = this.#timers.get(id);
 		if (!timer || timer.paused.has(reason)) return;
 		if (timer.handle !== undefined) {
@@ -212,6 +241,7 @@ export class ToastQueue {
 	}
 
 	resume(id: string, reason: ToastPauseReason): void {
+		if (this.#disposed) return;
 		const timer = this.#timers.get(id);
 		if (!timer) return;
 		timer.paused.delete(reason);
@@ -219,6 +249,7 @@ export class ToastQueue {
 	}
 
 	pauseAll(reason: ToastPauseReason): void {
+		if (this.#disposed) return;
 		this.#globalPauses.add(reason);
 		for (const item of this.#items) {
 			if (item.phase === 'visible') this.pause(item.id, reason);
@@ -226,6 +257,7 @@ export class ToastQueue {
 	}
 
 	resumeAll(reason: ToastPauseReason): void {
+		if (this.#disposed) return;
 		this.#globalPauses.delete(reason);
 		for (const item of this.#items) {
 			if (item.phase === 'visible') this.resume(item.id, reason);
@@ -235,6 +267,7 @@ export class ToastQueue {
 	connectVisibility(
 		ownerDocument = typeof document === 'undefined' ? undefined : document
 	): () => void {
+		this.#assertActive('connectVisibility');
 		if (!ownerDocument) return () => {};
 		const update = (): void => {
 			if (ownerDocument.visibilityState === 'hidden') this.pauseAll('visibility');
@@ -250,6 +283,8 @@ export class ToastQueue {
 	}
 
 	dispose(): void {
+		if (this.#disposed) return;
+		this.#disposed = true;
 		for (const id of this.#timers.keys()) this.#deleteTimer(id);
 		this.#timers.clear();
 		this.#globalPauses.clear();
@@ -410,6 +445,7 @@ export class ToastQueue {
 		tone: ToastTone,
 		priority: ToastPriority
 	): void {
+		if (this.#disposed) return;
 		if (this.#taskGenerations.get(id) !== generation) return;
 		this.#taskGenerations.delete(id);
 		const index = this.#items.findIndex((item) => item.id === id);
@@ -440,6 +476,13 @@ export class ToastQueue {
 
 	#taskResult<TValue>(result: ToastTaskResult<TValue>, value: TValue): ToastTaskMessage {
 		return typeof result === 'function' ? result(value) : result;
+	}
+
+	#assertActive(operation: string): void {
+		if (this.#disposed) {
+			const name = this.#debugName === undefined ? '' : ` "${this.#debugName}"`;
+			throw new Error(`ToastQueue${name} is disposed; cannot ${operation}.`);
+		}
 	}
 
 	#update(index: number, update: ToastUpdate): boolean {

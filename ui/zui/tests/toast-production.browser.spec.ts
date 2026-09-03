@@ -4,6 +4,7 @@ import { render } from 'vitest-browser-svelte';
 
 import CoverageFixture from './CoverageFixture.svelte';
 import ToastProductionFixture from './ToastProductionFixture.svelte';
+import ToastQueueReplacementFixture from './ToastQueueReplacementFixture.svelte';
 
 describe('ZToast and ZToaster production browser contract', () => {
 	it('ZToast keeps standalone announcement, tone, action and dismiss boundaries real', async () => {
@@ -113,5 +114,18 @@ describe('ZToast and ZToaster production browser contract', () => {
 		close?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
 		await tick();
 		expect(updated?.dataset.phase).toBe('exiting');
+	});
+
+	it('disconnects an old queue before connecting a replacement without disposing it', async () => {
+		render(ToastQueueReplacementFixture);
+		expect(document.querySelector('[data-slot="viewport"]')).not.toBeNull();
+		document.querySelector<HTMLButtonElement>('[data-testid="toast-replace"]')?.click();
+		await tick();
+		await Promise.resolve();
+		await tick();
+		await expect
+			.poll(() => document.querySelector('[data-testid="toast-replacement-state"]')?.textContent)
+			.toContain('false:false');
+		expect(document.querySelector('[data-slot="viewport"]')?.textContent).toContain('Replacement');
 	});
 });

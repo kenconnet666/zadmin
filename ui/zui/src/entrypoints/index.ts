@@ -403,6 +403,7 @@ export type {
 	ToastPhase,
 	ToastPriority,
 	ToastQueueOptions,
+	ToastQueueDiagnostics,
 	ToastRecord,
 	ToastTaskMessage,
 	ToastTaskOptions,

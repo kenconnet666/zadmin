@@ -113,5 +113,6 @@ export type {
 	ToastTaskOptions,
 	ToastTaskResult,
 	ToastTone,
-	ToastUpdate
+	ToastUpdate,
+	ToastQueueDiagnostics
 } from '../runtime/toast.svelte.js';

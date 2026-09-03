@@ -22,6 +22,13 @@ export const toastDoc = defineComponentDoc(toastMetadata, {
 			id: 'toast-queue-service',
 			rows: [
 				{
+					description:
+						'返回冻结的connected、viewportCount、disposed与可选debugName快照，仅用于ownership诊断。',
+					feature: 'service',
+					name: 'diagnostics',
+					type: 'Readonly<ToastQueueDiagnostics>'
+				},
+				{
 					description: '创建或按同id完整替换Toast，并返回稳定id。',
 					feature: 'service',
 					name: 'push',
@@ -52,7 +59,8 @@ export const toastDoc = defineComponentDoc(toastMetadata, {
 					type: '() => void'
 				},
 				{
-					description: '终止计时器、任务generation和连接资源；Queue生命周期结束时调用。',
+					description:
+						'终止计时器、任务generation和连接资源；终态且幂等，之后创建、更新、配置或连接操作会fail-fast。',
 					feature: 'service',
 					name: 'dispose',
 					type: '() => void'
@@ -150,6 +158,7 @@ export const toastDoc = defineComponentDoc(toastMetadata, {
 		'maxVisible控制实际入场容量；排队消息没有计时器，前一条完成Presence退出后才按FIFO进入，动态缩容会把最新的超额消息重新排队而不是dismiss。',
 		'ZToaster默认Portal到当前Document，并继承ZProvider portalContainer以支持ShadowRoot或局部挂载边界。',
 		'ZToaster不创建全局单例；一个Queue对应一个Toaster，应用显式持有Queue并在所属生命周期结束时dispose。',
+		'Queue由调用方拥有；替换时ZToaster先断开旧Queue再连接新Queue且不dispose任一实例。debugName与只读diagnostics用于诊断ownership；dispose是终态，迟到task结果不会复活记录。',
 		'update只接受已有id并保留未提供字段与剩余计时；push负责创建或完整替换，避免“局部还是全量”依赖猜测。',
 		'task返回Toast id但不替代原Promise；AbortController、catch、重试和业务结果继续由调用方拥有，generation只防止旧结果覆盖新状态。',
 		'Queue内视觉Toast不直接承担live role；Toaster用独立polite/assertive区域公告新实例，同id更新不重复，连续assertive至少间隔一秒。',

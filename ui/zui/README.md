@@ -63,6 +63,28 @@ local defaults. This API does not change native form ownership, disabled/loading
 state, DataTable selection/sort ownership, ARIA relationships, focus behavior, or virtual
 window lifecycle.
 
+### Toast queue ownership
+
+Use an explicit `ToastQueue` with `ZToaster`. The queue is caller-owned: `ZToaster` connects
+and disconnects its viewport, but never calls `dispose()` on a queue supplied by the caller.
+One queue may be connected to one viewport only; a second `ZToaster` is rejected with a
+diagnostic that can include the optional `debugName`. Call `queue.dispose()` explicitly when
+the code that created an internal queue is released. Queue replacement disconnects the old
+queue before connecting the new one and does not dispose either queue.
+`dispose()` is terminal and idempotent; after disposal, creating, updating, configuring, or
+connecting queue work fails fast, while late task settlements cannot revive records.
+
+```svelte
+<script lang="ts">
+	import { createToastQueue, ZButton, ZToaster } from '@zadmin/zui';
+
+	const queue = createToastQueue({ debugName: 'release-console' });
+</script>
+
+<ZToaster {queue} />
+<ZButton onclick={() => queue.push({ title: 'Saved', tone: 'success' })}>Save</ZButton>
+```
+
 ## Public entrypoints
 
 | Entrypoint             | Purpose                                                                         |
