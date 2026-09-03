@@ -132,6 +132,11 @@ public sealed class WebViewHost : IAsyncDisposable
     {
         public bool Ready { get; set; }
         public bool FocusTrapHeld { get; set; }
+        public bool InitiallyContained { get; set; }
+        public bool ForwardPrevented { get; set; }
+        public bool ForwardContained { get; set; }
+        public bool BackwardPrevented { get; set; }
+        public bool BackwardContained { get; set; }
     }
 
     private sealed class DesktopDialogClosedEvidence
@@ -549,7 +554,12 @@ public sealed class WebViewHost : IAsyncDisposable
           if (!(content instanceof HTMLElement) ||
               !(close instanceof HTMLButtonElement)) return JSON.stringify({
                 ready: false,
-                focusTrapHeld: false
+                focusTrapHeld: false,
+                initiallyContained: false,
+                forwardPrevented: false,
+                forwardContained: false,
+                backwardPrevented: false,
+                backwardContained: false
               });
           close.focus();
           const initiallyContained = content.contains(document.activeElement);
@@ -559,7 +569,7 @@ public sealed class WebViewHost : IAsyncDisposable
             key: 'Tab'
           });
           close.dispatchEvent(forward);
-          const forwardTrapped = forward.defaultPrevented && content.contains(document.activeElement);
+          const forwardContained = content.contains(document.activeElement);
           const backward = new KeyboardEvent('keydown', {
             bubbles: true,
             cancelable: true,
@@ -567,9 +577,19 @@ public sealed class WebViewHost : IAsyncDisposable
             shiftKey: true
           });
           document.activeElement?.dispatchEvent(backward);
-          const backwardTrapped = backward.defaultPrevented && content.contains(document.activeElement);
-          const focusTrapHeld = initiallyContained && forwardTrapped && backwardTrapped;
-          return JSON.stringify({ ready: focusTrapHeld, focusTrapHeld });
+          const backwardContained = content.contains(document.activeElement);
+          const focusTrapHeld =
+            initiallyContained && forward.defaultPrevented && forwardContained &&
+            backward.defaultPrevented && backwardContained;
+          return JSON.stringify({
+            ready: focusTrapHeld,
+            focusTrapHeld,
+            initiallyContained,
+            forwardPrevented: forward.defaultPrevented,
+            forwardContained,
+            backwardPrevented: backward.defaultPrevented,
+            backwardContained
+          });
         })()
         """;
     private const string DismissDialogEvidenceScript = """
@@ -1005,7 +1025,8 @@ public sealed class WebViewHost : IAsyncDisposable
                 sender,
                 RunDialogFocusEvidenceScript);
             if (dialogFocus is null || !dialogFocus.Ready)
-                throw new InvalidOperationException("Desktop Dialog did not retain focus for Tab and Shift+Tab.");
+                throw new InvalidOperationException(
+                    $"Desktop Dialog did not retain focus for Tab and Shift+Tab: {JsonSerializer.Serialize(dialogFocus, SerializerOptions)}");
             smokePhase = "validating-dialog-escape";
             if (await sender.ExecuteScriptAsync(DismissDialogEvidenceScript) != "true")
                 throw new InvalidOperationException("Desktop Dialog content is unavailable for Escape dismissal.");
