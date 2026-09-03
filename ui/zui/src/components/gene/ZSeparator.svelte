@@ -66,7 +66,7 @@
 				values: ['horizontal', 'vertical']
 			}
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '以原生hr或ARIA separator表达具名/未具名、语义/装饰和高对比内容边界。'
 	} as const satisfies ZuiComponentMetadata;
 

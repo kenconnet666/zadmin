@@ -62,7 +62,7 @@
 				values: ['none', 'small', 'medium', 'large']
 			}
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '提供居中最大宽度和逻辑内联留白，不与ZStack重复布局职责。'
 	} as const satisfies ZuiComponentMetadata;
 

@@ -187,7 +187,7 @@
 			{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] },
 			{ description: '解析后的减少动画状态。', name: 'data-reduced-motion', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'根作用域安全、可等待或跳过缺失目标，并复用ZUI layer/focus/floating/Presence基础设施的Tour。'
 	} as const satisfies ZuiComponentMetadata;

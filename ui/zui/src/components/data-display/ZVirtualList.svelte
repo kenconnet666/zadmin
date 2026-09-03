@@ -239,7 +239,7 @@
 			},
 			{ description: 'Provider或系统减少动画。', name: 'data-reduced-motion', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'按typed key保存动态测量与滚动锚点，提供SSR稳定窗口、跨realm观察和ActiveDescendant握手的Virtual List。'
 	} as const satisfies ZuiComponentMetadata;

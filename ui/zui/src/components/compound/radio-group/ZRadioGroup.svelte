@@ -173,7 +173,7 @@
 			{ description: '无效状态。', name: 'data-invalid', values: ['true'] },
 			{ description: '只读状态。', name: 'data-readonly', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '以LogicalCollection统一typed选项、原生radio表单语义和roving焦点的生产单选组。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

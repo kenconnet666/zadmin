@@ -34,7 +34,7 @@
 		snippets: [{ description: '仅辅助技术可读的内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/gene/ZVisuallyHidden.svelte',
 		states: [],
-		status: 'experimental',
+		status: 'stable',
 		summary: '在不移出可访问树的前提下从视觉布局中隐藏说明文本。'
 	} as const satisfies ZuiComponentMetadata;
 

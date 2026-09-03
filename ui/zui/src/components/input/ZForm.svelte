@@ -230,7 +230,7 @@
 			{ description: '表单级只读。', name: 'data-readonly', values: ['true'] },
 			{ description: '表单级尺寸。', name: 'data-size', values: ['small', 'medium', 'large'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'Standard Schema typed输出、FieldPath依赖图、字段级竞态、DOM顺序首错导航与原生FormData的Form。'
 	} as const satisfies ZuiComponentMetadata;

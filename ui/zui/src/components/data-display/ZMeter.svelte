@@ -83,7 +83,7 @@
 				values: ['optimal', 'suboptimal', 'critical']
 			}
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '严格校验value与阈值、提供本地化value text并保留平台高对比与最佳区间呈现的原生Meter。'
 	} as const satisfies ZuiComponentMetadata;
 	const recipe = defineRecipe({

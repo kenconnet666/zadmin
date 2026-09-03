@@ -121,7 +121,7 @@
 			{ description: '字段验证中。', name: 'data-validating', values: ['true'] },
 			{ description: '字段存在错误。', name: 'data-invalid', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '把FormRegistry字段状态投射到ZField视觉与ARIA、保持真实control所有权的Form Field。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

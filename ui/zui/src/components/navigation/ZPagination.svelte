@@ -254,7 +254,7 @@
 				values: ['positive integer']
 			}
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '支持互斥页数/条目总量合同、受控页尺寸、紧凑呈现、RTL与原生导航语义的分页组件。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

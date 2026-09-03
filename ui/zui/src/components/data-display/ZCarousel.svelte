@@ -141,7 +141,7 @@
 			{ description: '自动轮播暂停。', name: 'data-paused', values: ['true'] },
 			{ description: '减少动画并停用自动轮播。', name: 'data-reduced-motion', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '使用稳定collection、显式rotation control和多原因暂停策略的Carousel。'
 	} as const satisfies ZuiComponentMetadata;
 	const recipe = defineRecipe({

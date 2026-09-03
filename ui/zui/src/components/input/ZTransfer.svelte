@@ -243,7 +243,7 @@
 				values: ['selected', 'unselected']
 			}
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'以一个完整LogicalCollection派生双pane view、以独立SelectionModel管理临时勾选，并支持异步孤儿、多值FormData和固定行虚拟化的Transfer。'
 	} as const satisfies ZuiComponentMetadata;

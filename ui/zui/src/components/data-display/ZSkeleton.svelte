@@ -62,7 +62,7 @@
 			{ description: '关闭pulse动画。', name: 'data-static', values: ['true'] },
 			{ description: 'line占位行数。', name: 'data-lines', values: ['1', 'n'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'支持有限shape、等尺寸多行、严格尺寸、静态或Theme pulse并从可访问树隐藏的Skeleton占位原语。'
 	} as const satisfies ZuiComponentMetadata;

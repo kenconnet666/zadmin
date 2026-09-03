@@ -47,7 +47,7 @@
 		states: [
 			{ description: '规范化后的CSS比例。', name: 'data-ratio', values: ['positive ratio'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '使用原生aspect-ratio建立稳定比例，不用padding hack或ResizeObserver。'
 	} as const satisfies ZuiComponentMetadata;
 

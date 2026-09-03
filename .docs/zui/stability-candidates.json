@@ -1,9 +1,9 @@
 {
 	"schemaVersion": 1,
 	"summary": {
-		"stableCompliant": 117,
+		"stableCompliant": 141,
 		"stableViolations": 0,
-		"promotionEligibleExperimental": 24
+		"promotionEligibleExperimental": 0
 	},
 	"components": [
 		{
@@ -620,8 +620,8 @@
 			"id": "radio-group",
 			"name": "ZRadioGroup",
 			"family": "radio-group",
-			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
+			"status": "stable",
+			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/radio-group/doc.ts",
 			"ssrEvidenceCount": 1
@@ -630,8 +630,8 @@
 			"id": "radio-group-item",
 			"name": "ZRadioGroupItem",
 			"family": "radio-group",
-			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
+			"status": "stable",
+			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/radio-group/doc.ts",
 			"ssrEvidenceCount": 1
@@ -800,8 +800,8 @@
 			"id": "carousel",
 			"name": "ZCarousel",
 			"family": null,
-			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
+			"status": "stable",
+			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/data-display/carousel/doc.ts",
 			"ssrEvidenceCount": 1
@@ -820,8 +820,8 @@
 			"id": "description-list",
 			"name": "ZDescriptionList",
 			"family": null,
-			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
+			"status": "stable",
+			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/data-display/description-list/doc.ts",
 			"ssrEvidenceCount": 2
@@ -840,8 +840,8 @@
 			"id": "list",
 			"name": "ZList",
 			"family": null,
-			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
+			"status": "stable",
+			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/data-display/list/doc.ts",
 			"ssrEvidenceCount": 1
@@ -850,8 +850,8 @@
 			"id": "meter",
 			"name": "ZMeter",
 			"family": null,
-			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
+			"status": "stable",
+			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/data-display/meter/doc.ts",
 			"ssrEvidenceCount": 2
@@ -860,8 +860,8 @@
 			"id": "progress",
 			"name": "ZProgress",
 			"family": null,
-			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
+			"status": "stable",
+			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/data-display/progress/doc.ts",
 			"ssrEvidenceCount": 2
@@ -870,8 +870,8 @@
 			"id": "skeleton",
 			"name": "ZSkeleton",
 			"family": null,
-			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
+			"status": "stable",
+			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/data-display/skeleton/doc.ts",
 			"ssrEvidenceCount": 2
@@ -920,8 +920,8 @@
 			"id": "virtual-list",
 			"name": "ZVirtualList",
 			"family": null,
-			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
+			"status": "stable",
+			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/data-display/virtual-list/doc.ts",
 			"ssrEvidenceCount": 2
@@ -970,8 +970,8 @@
 			"id": "toast",
 			"name": "ZToast",
 			"family": null,
-			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
+			"status": "stable",
+			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/feedback/toast/doc.ts",
 			"ssrEvidenceCount": 1
@@ -980,8 +980,8 @@
 			"id": "toaster",
 			"name": "ZToaster",
 			"family": null,
-			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
+			"status": "stable",
+			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/feedback/toast/doc.ts",
 			"ssrEvidenceCount": 2
@@ -1070,8 +1070,8 @@
 			"id": "separator",
 			"name": "ZSeparator",
 			"family": null,
-			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
+			"status": "stable",
+			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/gene/separator/doc.ts",
 			"ssrEvidenceCount": 2
@@ -1100,8 +1100,8 @@
 			"id": "visually-hidden",
 			"name": "ZVisuallyHidden",
 			"family": null,
-			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
+			"status": "stable",
+			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/gene/visually-hidden/doc.ts",
 			"ssrEvidenceCount": 2
@@ -1200,8 +1200,8 @@
 			"id": "form",
 			"name": "ZForm",
 			"family": null,
-			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
+			"status": "stable",
+			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/form/doc.ts",
 			"ssrEvidenceCount": 1
@@ -1210,8 +1210,8 @@
 			"id": "form-field",
 			"name": "ZFormField",
 			"family": null,
-			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
+			"status": "stable",
+			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/form/doc.ts",
 			"ssrEvidenceCount": 1
@@ -1270,8 +1270,8 @@
 			"id": "segmented",
 			"name": "ZSegmented",
 			"family": null,
-			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
+			"status": "stable",
+			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/segmented/doc.ts",
 			"ssrEvidenceCount": 1
@@ -1330,8 +1330,8 @@
 			"id": "transfer",
 			"name": "ZTransfer",
 			"family": null,
-			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
+			"status": "stable",
+			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/transfer/doc.ts",
 			"ssrEvidenceCount": 1
@@ -1340,8 +1340,8 @@
 			"id": "tree-select",
 			"name": "ZTreeSelect",
 			"family": null,
-			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
+			"status": "stable",
+			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/tree-select/doc.ts",
 			"ssrEvidenceCount": 2
@@ -1350,8 +1350,8 @@
 			"id": "aspect-ratio",
 			"name": "ZAspectRatio",
 			"family": null,
-			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
+			"status": "stable",
+			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/layout/aspect-ratio/doc.ts",
 			"ssrEvidenceCount": 2
@@ -1360,8 +1360,8 @@
 			"id": "container",
 			"name": "ZContainer",
 			"family": null,
-			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
+			"status": "stable",
+			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/layout/container/doc.ts",
 			"ssrEvidenceCount": 2
@@ -1380,8 +1380,8 @@
 			"id": "command",
 			"name": "ZCommand",
 			"family": null,
-			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
+			"status": "stable",
+			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/command/doc.ts",
 			"ssrEvidenceCount": 1
@@ -1390,8 +1390,8 @@
 			"id": "command-palette",
 			"name": "ZCommandPalette",
 			"family": null,
-			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
+			"status": "stable",
+			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/command-palette/doc.ts",
 			"ssrEvidenceCount": 1
@@ -1400,8 +1400,8 @@
 			"id": "pagination",
 			"name": "ZPagination",
 			"family": null,
-			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
+			"status": "stable",
+			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/pagination/doc.ts",
 			"ssrEvidenceCount": 1
@@ -1410,8 +1410,8 @@
 			"id": "tour",
 			"name": "ZTour",
 			"family": null,
-			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
+			"status": "stable",
+			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/tour/doc.ts",
 			"ssrEvidenceCount": 1

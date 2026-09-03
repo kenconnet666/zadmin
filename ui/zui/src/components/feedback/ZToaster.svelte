@@ -83,7 +83,7 @@
 				values: ['polite', 'assertive']
 			}
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: 'Portal消费显式ToastQueue，以FIFO入场、Presence退出和多原因暂停管理通知生命周期。'
 	} as const satisfies ZuiComponentMetadata;
 	const recipe = defineRecipe({

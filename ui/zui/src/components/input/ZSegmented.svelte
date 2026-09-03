@@ -157,7 +157,7 @@
 			{ description: '无效状态。', name: 'data-invalid', values: ['true'] },
 			{ description: '只读状态。', name: 'data-readonly', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'以LogicalCollection统一typed options、roving焦点、SelectionModel和FormValue的Segmented。'
 	} as const satisfies ZuiComponentMetadata;

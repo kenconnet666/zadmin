@@ -155,7 +155,7 @@
 			{ description: '当前active option。', name: 'data-active', values: ['true'] },
 			{ description: '禁用option。', name: 'data-disabled', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '相关性过滤、分组collection、active-descendant与可取消action的Command。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

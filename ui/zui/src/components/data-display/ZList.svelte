@@ -155,7 +155,7 @@
 			{ description: '数据或手写结构模式。', name: 'data-mode', values: ['data', 'manual'] },
 			{ description: '列表语义。', name: 'data-ordered', values: ['true', 'false'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'保持真实ul/ol/li语义，在typed data convenience与调用方手写li之间建立互斥边界，并把empty/loading放在列表项之外。'
 	} as const satisfies ZuiComponentMetadata;

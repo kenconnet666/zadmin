@@ -120,7 +120,7 @@
 				values: ['entered', 'exiting']
 			}
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '可独立渲染并由ToastQueue驱动超时与暂停生命周期的临时消息。'
 	} as const satisfies ZuiComponentMetadata;
 	const recipe = defineRecipe({

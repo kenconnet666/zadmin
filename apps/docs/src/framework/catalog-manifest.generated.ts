@@ -231,7 +231,7 @@ export const componentCatalogManifest = Object.freeze([
 		name: 'ZSeparator',
 		category: 'gene',
 		summary: '保留原生/ARIA语义、装饰模式、名称、逻辑方向和currentColor高对比的最小Separator。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [],
 		profiles: ['primitive'],
 		capabilities: [
@@ -249,7 +249,7 @@ export const componentCatalogManifest = Object.freeze([
 		name: 'ZVisuallyHidden',
 		category: 'gene',
 		summary: '只负责视觉裁切且保留辅助技术内容的span原语；不提供focusable或asChild模式。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [],
 		profiles: ['primitive'],
 		capabilities: [
@@ -279,7 +279,7 @@ export const componentCatalogManifest = Object.freeze([
 		name: 'ZAspectRatio',
 		category: 'layout',
 		summary: '用原生CSS aspect-ratio、严格正有限比例和父级宽度约束承载图片、视频、自定义或空内容。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [],
 		profiles: ['primitive'],
 		capabilities: [
@@ -298,7 +298,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'layout',
 		summary:
 			'用box-sizing安全的居中typed max-width和逻辑gutter建立内容边界，不承担Stack/Grid职责。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [],
 		profiles: ['primitive'],
 		capabilities: [
@@ -390,7 +390,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'data-display',
 		summary:
 			'DescriptionList只拥有dl/dt/dd、typed key、有限term/description/action snippets和响应式展示；手写children保留复杂原生分组，empty/loading位于dl之外。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'description list',
 			'dl',
@@ -422,7 +422,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'data-display',
 		summary:
 			'语义List只拥有ul/ol/li、typed key和有限rich/action snippets；手写children由调用方拥有li结构，empty/loading位于列表之外，大数据改用ZVirtualList。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'list',
 			'ordered list',
@@ -477,7 +477,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'data-display',
 		summary:
 			'共享同一范围、格式化、reduced-motion和Theme duration合同的原生line与语义circular进度。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'progress',
 			'progressbar',
@@ -506,7 +506,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'data-display',
 		summary:
 			'坚持原生meter：严格范围/阈值/value、本地化value text、平台最佳区间与高对比语义，不承担任务进度。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: ['meter', 'gauge', 'threshold', 'capacity', 'optimum', 'native meter'],
 		profiles: ['data-view'],
 		capabilities: ['accessible-name', 'basic-render', 'variants-and-states', 'native-props', 'ssr'],
@@ -518,7 +518,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'data-display',
 		summary:
 			'从可访问树隐藏、支持有限shape/严格尺寸/等尺寸多行，并以Theme WAAPI pulse或静态reduced模式工作的Skeleton原语。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: ['skeleton', 'placeholder', 'loading', 'lines', 'static', 'reduced motion'],
 		profiles: ['animated'],
 		capabilities: [
@@ -653,7 +653,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'data-display',
 		summary:
 			'生产级纵向Virtual List：固定高度走低开销fast path，动态高度按typed key缓存真实测量，并用key锚定处理插入、排序和尺寸变化；controller只负责窗口与滚动，不拥有业务active或selection。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'virtual list',
 			'virtualizer',
@@ -732,7 +732,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'data-display',
 		summary:
 			'稳定typed-key、完整rotation controls、owner-realm可见性/计时器、typed locale与多原因暂停共同拥有的生产Carousel。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'carousel',
 			'slides',
@@ -854,7 +854,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'feedback',
 		summary:
 			'ZToast负责单条通知内容与操作；ZToaster负责把调用方拥有的ToastQueue连接到viewport、live region和Presence。需要跨页面通知时由服务层持有Queue，需要局部反馈时直接渲染ZToast；组件不创建全局单例。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'toast',
 			'toaster',
@@ -1412,7 +1412,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'input',
 		summary:
 			'ZForm拥有提交、reset和验证生命周期；ZFormField只拥有字段路径注册与状态投射，真实control仍由调用方放入Field。以原生FormData为值事实、Standard Schema为typed输出边界，并用FieldPath图拥有依赖验证、消息状态、竞态和首错导航。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'form',
 			'standard schema',
@@ -1446,7 +1446,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'input',
 		summary:
 			'真实radio承担FormData/required，LogicalCollection、SelectionModel与MountedElements分别承担typed选项、选择和roving焦点。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [],
 		profiles: ['form-control', 'collection'],
 		capabilities: [
@@ -1512,7 +1512,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'input',
 		summary:
 			'LogicalCollection、SelectionModel、MountedElements和FormValueBridge分别拥有typed options、选择、roving焦点与表单值的Segmented。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [],
 		profiles: ['form-control', 'collection'],
 		capabilities: [
@@ -1658,7 +1658,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'input',
 		summary:
 			'TreeSelect只拥有value/open/Field/FormValue与Popover组合；层级、expanded、active、selection、lazy和virtual全部委托同一个ZTree。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'tree select',
 			'logical tree',
@@ -1692,7 +1692,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'input',
 		summary:
 			'生产双栏Transfer：完整LogicalCollection是唯一数据顺序，来源/目标view和两套SelectionModel分别拥有过滤与临时勾选，最终value、FormData和异步孤儿由Root独立拥有；两栏可共享固定行VirtualList而不复制状态。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'transfer',
 			'dual list',
@@ -1791,7 +1791,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'navigation',
 		summary:
 			'生产Command collection：输入保持唯一DOM焦点，LogicalCollection与ActiveDescendant拥有typed结果导航，相关性排序或外部结果owner保持正交，并用本地化live status公告结果数量。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: ['command', 'ranked filter', 'active descendant', 'keyboard', 'action'],
 		profiles: ['collection'],
 		capabilities: [
@@ -1812,7 +1812,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'navigation',
 		summary:
 			'CommandPalette只组合ZCommand的筛选/active-descendant与ZDialog的模态焦点/Portal，并以显式DOM作用域快捷键协调打开；路由、异步请求和业务确认由调用方拥有。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: ['command palette', 'dialog', 'shortcut', 'focus trap', 'modal'],
 		profiles: ['collection', 'layer'],
 		capabilities: [
@@ -1926,7 +1926,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'navigation',
 		summary:
 			'生产分页导航：用互斥totalPages/totalItems合同避免双重总量事实，提供受控页尺寸、三种呈现、RTL和动态焦点恢复，但把请求、URL、筛选与DataTable状态留给调用方owner。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'pagination',
 			'page size',
@@ -2187,7 +2187,7 @@ export const componentCatalogManifest = Object.freeze([
 		category: 'overlay',
 		summary:
 			'生产导览层：受控open/step、作用域安全target、缺失目标close/skip/wait策略、显式居中步骤、typed locale、RTL、Portal/Floating、联合焦点branch和reduced-motion Presence；不复制页面路由、异步请求或业务完成状态。',
-		status: 'experimental',
+		status: 'stable',
 		keywords: [
 			'tour',
 			'spotlight',

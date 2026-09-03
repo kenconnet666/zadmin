@@ -284,7 +284,7 @@
 			{ description: 'Field或显式无效状态。', name: 'data-invalid', values: ['true'] },
 			{ description: '只读状态。', name: 'data-readonly', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'以Popover组合单一ZTree模型，支持null清空、Field/FormValue、lazy与virtual合同的Tree Select。'
 	} as const satisfies ZuiComponentMetadata;

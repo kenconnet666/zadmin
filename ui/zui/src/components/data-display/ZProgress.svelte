@@ -98,7 +98,7 @@
 				values: ['primary', 'success', 'warning', 'danger']
 			}
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'以原生progress承载line、currentColor数值SVG承载circle，并共享范围、格式化、tone和reduced-motion合同的Progress。'
 	} as const satisfies ZuiComponentMetadata;

@@ -148,7 +148,7 @@
 			{ description: '禁用状态。', name: 'data-disabled', values: ['true'] },
 			{ description: '继承组级只读状态。', name: 'data-readonly', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary: '注册到ZRadioGroup LogicalCollection并保留原生radio表单语义的typed单选Item。'
 	} as const satisfies ZuiComponentMetadata;
 </script>

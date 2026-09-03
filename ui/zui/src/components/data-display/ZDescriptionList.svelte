@@ -145,7 +145,7 @@
 			{ description: '数据或手写结构模式。', name: 'data-mode', values: ['data', 'manual'] },
 			{ description: '使用响应式auto-fit布局。', name: 'data-responsive', values: ['true'] }
 		],
-		status: 'experimental',
+		status: 'stable',
 		summary:
 			'保持真实dl/dt/dd，在typed data convenience与手写语义结构之间建立互斥边界，并提供rich snippets、响应式长内容和外置状态。'
 	} as const satisfies ZuiComponentMetadata;
