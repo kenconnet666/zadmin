@@ -46,8 +46,8 @@ export const zuiProgress = {
 	},
 	release: {
 		status: 'blocked',
-		passedChecks: 20,
-		totalChecks: 25,
+		passedChecks: 26,
+		totalChecks: 31,
 		blocked: [
 			'releasePublishTarballReuse',
 			'npmOidcProvenance',
