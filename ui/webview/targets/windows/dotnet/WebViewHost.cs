@@ -9,6 +9,35 @@ namespace ZAdmin.WebView.Windows;
 
 public sealed class WebViewHost : IAsyncDisposable
 {
+    private const int MaxDesktopEvidenceItems = 256;
+
+    private static DesktopEvidenceItem[] MergeDesktopEvidence(
+        DesktopEvidenceItem[] initial,
+        DesktopEvidenceItem[] current)
+    {
+        if (initial is null || current is null) throw new InvalidOperationException("Desktop evidence collection is null.");
+        var merged = new List<DesktopEvidenceItem>(initial.Length + current.Length);
+        var names = new Dictionary<string, string>(StringComparer.Ordinal);
+        var markers = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var item in initial.Concat(current))
+        {
+            if (item is null || string.IsNullOrWhiteSpace(item.Name) || string.IsNullOrWhiteSpace(item.Marker))
+                throw new InvalidOperationException("Desktop evidence component name/marker is empty.");
+            if (names.TryGetValue(item.Name, out var existingMarker))
+            {
+                if (!StringComparer.Ordinal.Equals(existingMarker, item.Marker))
+                    throw new InvalidOperationException($"Desktop evidence name has conflicting markers: {item.Name}.");
+                continue; // initial persistent snapshot owns a component name
+            }
+            if (!item.Present) throw new InvalidOperationException($"Desktop evidence component is not present: {item.Name}.");
+            if (!markers.Add(item.Marker)) throw new InvalidOperationException($"Desktop evidence marker is duplicated: {item.Marker}.");
+            names.Add(item.Name, item.Marker);
+            merged.Add(item);
+            if (merged.Count > MaxDesktopEvidenceItems) throw new InvalidOperationException($"Desktop evidence component count exceeds {MaxDesktopEvidenceItems}.");
+        }
+        return merged.ToArray();
+    }
+
     private sealed class DesktopEvidencePage
     {
         public string? Origin { get; set; }
@@ -95,6 +124,10 @@ public sealed class WebViewHost : IAsyncDisposable
               }
             };
           };
+          const collector = () => [...document.querySelectorAll(
+                '[data-desktop-component][data-desktop-evidence]'
+              )].map(collect);
+          globalThis.__ZADMIN_DESKTOP_COMPONENT_COLLECTOR__ = collector;
           const componentAction = document.querySelector(
             '[data-desktop-evidence="ZButton-component-action"]'
           );
@@ -109,11 +142,7 @@ public sealed class WebViewHost : IAsyncDisposable
                 .getEntriesByType('resource')
                 .some((entry) => entry.name.includes('/@vite/client')),
             errors: globalThis.__ZADMIN_WEBVIEW_ERRORS__ ?? [],
-            desktopEvidence: [
-              ...document.querySelectorAll(
-                '[data-desktop-component][data-desktop-evidence]'
-              )
-            ].map(collect),
+            desktopEvidence: collector(),
             statusBefore:
               document.querySelector('[data-desktop-evidence="ZBox-status"]')?.innerText ?? '',
             componentActionRunsBefore: Number(
@@ -122,6 +151,8 @@ public sealed class WebViewHost : IAsyncDisposable
           });
         })()
         """;
+    private const string CaptureCurrentDesktopEvidenceScript =
+        "JSON.stringify(globalThis.__ZADMIN_DESKTOP_COMPONENT_COLLECTOR__?.() ?? [])";
     private const string ClickComponentEvidenceScript =
         "document.querySelector('[data-desktop-evidence=\"ZButton-component-action\"]')?.click()";
     private const string ReadComponentEvidenceRunsScript =
@@ -471,7 +502,8 @@ public sealed class WebViewHost : IAsyncDisposable
             var pageJson = JsonSerializer.Deserialize<string>(pageValue) ?? "{}";
             evidenceBefore = JsonSerializer.Deserialize<DesktopEvidencePage>(pageJson, SerializerOptions) ?? throw new InvalidOperationException("Desktop evidence page state is unreadable.");
             if (evidenceBefore.DesktopEvidence is null ||
-                evidenceBefore.DesktopEvidence.Length is 0 or > 64 ||
+                evidenceBefore.DesktopEvidence.Length == 0 ||
+                evidenceBefore.DesktopEvidence.Length > MaxDesktopEvidenceItems ||
                 evidenceBefore.DesktopEvidence.Any(item => !item.Present ||
                     string.IsNullOrWhiteSpace(item.Name) || string.IsNullOrWhiteSpace(item.Marker)) ||
                 evidenceBefore.DesktopEvidence.Select(item => item.Name).Distinct(StringComparer.Ordinal).Count() != evidenceBefore.DesktopEvidence.Length ||
@@ -529,6 +561,10 @@ public sealed class WebViewHost : IAsyncDisposable
             }
             if (choiceInteraction?.Ready != true)
                 throw new TimeoutException("Desktop choice components did not complete their observable interactions.");
+            var currentEvidenceValue = await sender.ExecuteScriptAsync(CaptureCurrentDesktopEvidenceScript);
+            var currentEvidenceJson = JsonSerializer.Deserialize<string>(currentEvidenceValue) ?? "[]";
+            var currentEvidence = JsonSerializer.Deserialize<DesktopEvidenceItem[]>(currentEvidenceJson, SerializerOptions) ?? [];
+            evidenceBefore.DesktopEvidence = MergeDesktopEvidence(evidenceBefore.DesktopEvidence, currentEvidence);
             var pageAfterValue = await sender.ExecuteScriptAsync(ReadStatusScript);
             smokePhase = "writing-report";
             var report = new

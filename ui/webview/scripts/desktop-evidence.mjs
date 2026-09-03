@@ -341,6 +341,39 @@ export const desktopComponentContracts = Object.freeze([
 const contractsByName = new Map(
 	desktopComponentContracts.map((contract) => [contract.name, contract])
 );
+
+export function mergeDesktopEvidence(initial, current, max = 256) {
+	if (!Array.isArray(initial) || !Array.isArray(current))
+		throw new TypeError('Desktop evidence collection must be arrays.');
+	const merged = [];
+	const names = new Map();
+	const markers = new Set();
+	for (const item of [...initial, ...current]) {
+		if (
+			!item ||
+			typeof item.name !== 'string' ||
+			item.name.trim() === '' ||
+			typeof item.marker !== 'string' ||
+			item.marker.trim() === ''
+		)
+			throw new TypeError('Desktop evidence component name/marker must not be empty.');
+		if (names.has(item.name)) {
+			if (names.get(item.name) !== item.marker)
+				throw new TypeError(`Desktop evidence name has conflicting markers: ${item.name}.`);
+			continue;
+		}
+		if (markers.has(item.marker))
+			throw new TypeError(`Desktop evidence marker is duplicated: ${item.marker}.`);
+		if (item.present === false)
+			throw new TypeError(`Desktop evidence component is not present: ${item.name}.`);
+		names.set(item.name, item.marker);
+		markers.add(item.marker);
+		merged.push(item);
+		if (merged.length > max)
+			throw new RangeError('Desktop evidence component count exceeds the maximum.');
+	}
+	return merged;
+}
 const isMain = process.argv[1] ? pathToFileURL(process.argv[1]).href === import.meta.url : false;
 
 function fail(message) {
@@ -585,8 +618,16 @@ export function validateDesktopEvidence(raw, { expectedRevision } = {}) {
 				fail(`component ${contract.name} ${observation.id} interaction is invalid.`);
 	if (!Array.isArray(raw.components) || raw.components.length !== desktopComponentContracts.length)
 		fail(`component set must contain exactly ${desktopComponentContracts.length} records.`);
+	let components;
+	try {
+		components = mergeDesktopEvidence([], raw.components);
+	} catch (error) {
+		fail(error instanceof Error ? error.message : String(error));
+	}
+	if (components.length !== raw.components.length)
+		fail('component names are not exact and unique.');
 	const byName = new Map();
-	for (const item of raw.components) {
+	for (const item of components) {
 		const contract = contractsByName.get(item?.name);
 		if (!contract || byName.has(item.name)) fail('component names are not exact and unique.');
 		if (item.present !== true || typeof item.marker !== 'string' || item.marker.length === 0)
@@ -930,6 +971,40 @@ if (isMain && process.argv.includes('--self-test')) {
 		fail('self-test accepted normalized evidence with an undeclared side effect.');
 	} catch (error) {
 		if (!String(error).includes('side-effect policy')) throw error;
+	}
+	const initial = [{ name: 'ZDialog', marker: 'dialog-root' }];
+	const merged = mergeDesktopEvidence(initial, [
+		initial[0],
+		{ name: 'ZPopover', marker: 'popover-root' }
+	]);
+	if (merged.length !== 2 || merged[0] !== initial[0])
+		fail('self-test merge did not retain the initial snapshot.');
+	for (const [initialItems, currentItems, message, max] of [
+		[[{ name: 'ZDialog', marker: 'dialog-root' }], [{ name: '', marker: 'empty' }], 'empty'],
+		[
+			[{ name: 'ZDialog', marker: 'dialog-root' }],
+			[{ name: 'ZDialog', marker: 'dialog-other' }],
+			'conflicting'
+		],
+		[
+			[{ name: 'ZDialog', marker: 'dialog-root' }],
+			[{ name: 'ZOther', marker: 'dialog-root' }],
+			'duplicated'
+		],
+		[[], [{ name: 'ZDialog', marker: 'dialog-root', present: false }], 'not present'],
+		[
+			[{ name: 'ZDialog', marker: 'dialog-root' }],
+			[{ name: 'ZPopover', marker: 'popover-root' }],
+			'maximum',
+			1
+		]
+	]) {
+		try {
+			mergeDesktopEvidence(initialItems, currentItems, max);
+			fail(`self-test accepted ${message} merge.`);
+		} catch (error) {
+			if (!String(error).includes(message)) throw error;
+		}
 	}
 	console.log(JSON.stringify({ status: 'passed', components: normalized.components.length }));
 }
