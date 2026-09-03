@@ -8,7 +8,7 @@ const noSideEffects = Object.freeze({
 	network: 'none',
 	window: 'none'
 });
-const componentContracts = Object.freeze([
+export const desktopComponentContracts = Object.freeze([
 	{
 		id: 'box',
 		name: 'ZBox',
@@ -195,7 +195,9 @@ const componentContracts = Object.freeze([
 		}
 	}
 ]);
-const contractsByName = new Map(componentContracts.map((contract) => [contract.name, contract]));
+const contractsByName = new Map(
+	desktopComponentContracts.map((contract) => [contract.name, contract])
+);
 const isMain = process.argv[1] ? pathToFileURL(process.argv[1]).href === import.meta.url : false;
 
 function fail(message) {
@@ -433,12 +435,12 @@ export function validateDesktopEvidence(raw, { expectedRevision } = {}) {
 	)
 		fail('component interaction did not produce exactly one observable state transition.');
 	if (raw.formInteraction?.ready !== true) fail('form interaction evidence is incomplete.');
-	for (const contract of componentContracts)
+	for (const contract of desktopComponentContracts)
 		for (const observation of contract.interaction?.observations ?? [])
 			if (observation.read(raw) !== observation.expected)
 				fail(`component ${contract.name} ${observation.id} interaction is invalid.`);
-	if (!Array.isArray(raw.components) || raw.components.length !== componentContracts.length)
-		fail(`component set must contain exactly ${componentContracts.length} records.`);
+	if (!Array.isArray(raw.components) || raw.components.length !== desktopComponentContracts.length)
+		fail(`component set must contain exactly ${desktopComponentContracts.length} records.`);
 	const byName = new Map();
 	for (const item of raw.components) {
 		const contract = contractsByName.get(item?.name);
@@ -453,7 +455,7 @@ export function validateDesktopEvidence(raw, { expectedRevision } = {}) {
 				fail(`native ${item.name} ${property} semantics are invalid.`);
 		byName.set(item.name, item);
 	}
-	if (componentContracts.some(({ name }) => !byName.has(name)))
+	if (desktopComponentContracts.some(({ name }) => !byName.has(name)))
 		fail('component set is incomplete.');
 	return validateDesktopEvidenceArtifact(
 		{
@@ -464,7 +466,7 @@ export function validateDesktopEvidence(raw, { expectedRevision } = {}) {
 			target: raw.target,
 			host: raw.host,
 			bridgeRoundTrip: raw.bridgeRoundTrip,
-			components: componentContracts.map((contract) =>
+			components: desktopComponentContracts.map((contract) =>
 				normalizeComponent(contract, byName.get(contract.name), raw)
 			)
 		},
@@ -507,10 +509,12 @@ export function validateDesktopEvidenceArtifact(evidence, { expectedRevision } =
 		fail('normalized host is invalid.');
 	if (
 		!Array.isArray(evidence.components) ||
-		evidence.components.length !== componentContracts.length
+		evidence.components.length !== desktopComponentContracts.length
 	)
 		fail('normalized component set is invalid.');
-	const expectedByName = new Map(componentContracts.map((contract) => [contract.name, contract]));
+	const expectedByName = new Map(
+		desktopComponentContracts.map((contract) => [contract.name, contract])
+	);
 	for (const component of evidence.components) {
 		const contract = expectedByName.get(component?.name);
 		if (!contract) fail(`normalized component ${component?.name ?? '<unknown>'} is invalid.`);
@@ -636,7 +640,10 @@ if (isMain && process.argv.includes('--self-test')) {
 		]
 	};
 	const normalized = validateDesktopEvidence(sample, { expectedRevision: sample.revision });
-	if (normalized.components.length !== componentContracts.length || normalized.status !== 'passed')
+	if (
+		normalized.components.length !== desktopComponentContracts.length ||
+		normalized.status !== 'passed'
+	)
 		fail('self-test normalization failed.');
 	if (validateDesktopEvidence({ ...sample, revision: 'local' }).revision !== 'local')
 		fail('self-test local normalization failed.');

@@ -2,7 +2,10 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, isAbsolute, relative, resolve, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-import { validateDesktopEvidenceArtifact } from '../../../ui/webview/scripts/desktop-evidence.mjs';
+import {
+	desktopComponentContracts,
+	validateDesktopEvidenceArtifact
+} from '../../../ui/webview/scripts/desktop-evidence.mjs';
 
 const workspaceRoot = fileURLToPath(new URL('../../..', import.meta.url));
 const defaultMaturityPath = resolve(workspaceRoot, '.docs/zui/component-maturity.json');
@@ -116,90 +119,7 @@ export function composeDesktopMaturity({
 }
 
 function selfTest() {
-	const componentContracts = [
-		['box', 'ZBox', 'ZBox-status'],
-		['stack', 'ZStack', 'ZStack'],
-		['text', 'ZText', 'ZText'],
-		['button', 'ZButton', 'ZButton-component-action'],
-		['form', 'ZForm', 'ZForm-contract'],
-		['form-field', 'ZFormField', 'ZFormField-email'],
-		['input', 'ZInput', 'ZInput-email'],
-		['checkbox', 'ZCheckbox', 'ZCheckbox-enabled']
-	];
-	const nativeByName = {
-		ZBox: { tag: 'DIV', ariaLive: 'polite' },
-		ZStack: { tag: 'DIV' },
-		ZText: { tag: 'STRONG', text: 'Windows WebView2 capability lab' },
-		ZButton: { tag: 'BUTTON', type: 'button', disabled: false, text: 'Verify component' },
-		ZForm: { tag: 'FORM', noValidate: true },
-		ZFormField: { tag: 'DIV' },
-		ZInput: {
-			tag: 'INPUT',
-			type: 'text',
-			disabled: false,
-			name: 'email',
-			value: '',
-			required: true,
-			readOnly: false
-		},
-		ZCheckbox: {
-			tag: 'INPUT',
-			type: 'checkbox',
-			disabled: false,
-			name: 'enabled',
-			value: 'enabled',
-			checked: false,
-			dataState: 'unchecked'
-		}
-	};
-	const interactionByName = {
-		ZButton: [
-			'activate-once',
-			'click',
-			'root',
-			[['runs-delta', 'state', 'data-desktop-evidence-runs', 1]]
-		],
-		ZForm: [
-			'submit-valid-form',
-			'submit',
-			'root',
-			[
-				['submitted', 'state', 'data-submitted', true],
-				['submit-count', 'count', 'onValidSubmit', 1],
-				['form-data-email', 'form-data', 'email', 'desktop-value'],
-				['form-data-enabled', 'form-data', 'enabled', 'enabled']
-			]
-		],
-		ZFormField: [
-			'observe-input-state',
-			'fill-and-blur',
-			'descendant:ZInput',
-			[
-				['dirty', 'state', 'data-dirty', true],
-				['touched', 'state', 'data-touched', true]
-			]
-		],
-		ZInput: [
-			'fill-email',
-			'fill',
-			'root',
-			[
-				['value', 'state', 'value', 'desktop-value'],
-				['label-relation', 'relationship', 'labels', true],
-				['description-relation', 'relationship', 'aria-describedby', true]
-			]
-		],
-		ZCheckbox: [
-			'check-enabled',
-			'click',
-			'root',
-			[
-				['checked', 'state', 'checked', true],
-				['data-state', 'state', 'data-state', 'checked'],
-				['label-relation', 'relationship', 'labels', true]
-			]
-		]
-	};
+	const componentContracts = desktopComponentContracts;
 	const assertion = (id, kind, target, expected) => ({
 		id,
 		kind,
@@ -233,9 +153,7 @@ function selfTest() {
 			requestReceived: true,
 			responseValidated: true
 		},
-		components: componentContracts.map(([id, name, evidenceId]) => {
-			const native = nativeByName[name];
-			const interaction = interactionByName[name];
+		components: componentContracts.map(({ id, name, marker: evidenceId, native, interaction }) => {
 			return {
 				id,
 				name,
@@ -263,10 +181,10 @@ function selfTest() {
 				interactions: interaction
 					? [
 							{
-								id: interaction[0],
-								action: interaction[1],
-								target: interaction[2],
-								observations: interaction[3].map(([id, kind, target, expected]) =>
+								id: interaction.id,
+								action: interaction.action,
+								target: interaction.target,
+								observations: interaction.observations.map(({ id, kind, target, expected }) =>
 									assertion(id, kind, target, expected)
 								),
 								passed: true
@@ -278,10 +196,10 @@ function selfTest() {
 		})
 	};
 	const baseMaturity = {
-		source: { metadataComponents: 9 },
-		summary: { DesktopVerified: 0, ProductionVerified: 9 },
+		source: { metadataComponents: componentContracts.length + 1 },
+		summary: { DesktopVerified: 0, ProductionVerified: componentContracts.length + 1 },
 		components: [
-			...componentContracts.map(([id, name]) => ({
+			...componentContracts.map(({ id, name }) => ({
 				id,
 				name,
 				stages: {
@@ -309,7 +227,7 @@ function selfTest() {
 		evidencePath: 'apps/desktop/dist/desktop/windows-x64/desktop-evidence.json'
 	});
 	if (
-		composed.summary.DesktopVerified !== 8 ||
+		composed.summary.DesktopVerified !== componentContracts.length ||
 		composed.components.find(({ id }) => id === 'dialog')?.stages.DesktopVerified !== false
 	)
 		throw new Error('Desktop maturity self-test produced the wrong verified set.');

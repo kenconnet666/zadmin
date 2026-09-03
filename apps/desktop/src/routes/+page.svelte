@@ -147,10 +147,11 @@
 		class={pageClass}
 		gap="large"
 		data-zadmin-webview-ready={hydrated || undefined}
+		data-desktop-component="ZStack"
 		data-desktop-evidence="ZStack"
 	>
 		<ZStack gap="small">
-			<ZText as="strong" size="xlarge" data-desktop-evidence="ZText"
+			<ZText as="strong" size="xlarge" data-desktop-component="ZText" data-desktop-evidence="ZText"
 				>Windows WebView2 capability lab</ZText
 			>
 			<ZText tone="muted">
@@ -167,6 +168,7 @@
 			<ZText as="strong">Safe automated probes</ZText>
 			<ZStack direction="row" gap="small" wrap>
 				<ZButton
+					data-desktop-component="ZButton"
 					data-desktop-evidence="ZButton-component-action"
 					data-desktop-evidence-runs={componentEvidenceRuns}
 					onclick={recordComponentEvidence}>Verify component</ZButton
@@ -181,6 +183,7 @@
 
 		<ZForm
 			class={panelClass}
+			data-desktop-component="ZForm"
 			data-desktop-evidence="ZForm-contract"
 			data-desktop-submit-count={componentFormSubmits}
 			onValidSubmit={() => (componentFormSubmits += 1)}
@@ -188,16 +191,22 @@
 			<ZStack gap="small">
 				<ZText as="strong">Web component contracts</ZText>
 				<ZFormField
+					data-desktop-component="ZFormField"
 					data-desktop-evidence="ZFormField-email"
 					name="email"
 					label="Desktop email"
 					description="In-memory evidence only"
 					required
 				>
-					<ZInput data-desktop-evidence="ZInput-email" />
+					<ZInput data-desktop-component="ZInput" data-desktop-evidence="ZInput-email" />
 				</ZFormField>
 				<label>
-					<ZCheckbox data-desktop-evidence="ZCheckbox-enabled" name="enabled" value="enabled" />
+					<ZCheckbox
+						data-desktop-component="ZCheckbox"
+						data-desktop-evidence="ZCheckbox-enabled"
+						name="enabled"
+						value="enabled"
+					/>
 					Enable desktop evidence
 				</label>
 			</ZStack>
@@ -241,8 +250,11 @@
 			</ZStack>
 		</ZStack>
 
-		<ZBox class={panelClass} aria-live="polite" data-desktop-evidence="ZBox-status"
-			><ZText>{status}</ZText></ZBox
+		<ZBox
+			class={panelClass}
+			aria-live="polite"
+			data-desktop-component="ZBox"
+			data-desktop-evidence="ZBox-status"><ZText>{status}</ZText></ZBox
 		>
 	</ZStack>
 </WindowFrame>

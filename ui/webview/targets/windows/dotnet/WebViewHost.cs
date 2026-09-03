@@ -50,8 +50,9 @@ public sealed class WebViewHost : IAsyncDisposable
     private static readonly JsonSerializerOptions SerializerOptions = new(JsonSerializerDefaults.Web);
     private const string CaptureDesktopEvidenceScript = """
         (() => {
-          const collect = (name, marker) => {
-            const node = document.querySelector(`[data-desktop-evidence="${marker}"]`);
+          const collect = (node) => {
+            const name = node.getAttribute('data-desktop-component');
+            const marker = node.getAttribute('data-desktop-evidence');
             return {
               name,
               marker,
@@ -89,15 +90,10 @@ public sealed class WebViewHost : IAsyncDisposable
                 .some((entry) => entry.name.includes('/@vite/client')),
             errors: globalThis.__ZADMIN_WEBVIEW_ERRORS__ ?? [],
             desktopEvidence: [
-              collect('ZBox', 'ZBox-status'),
-              collect('ZStack', 'ZStack'),
-              collect('ZText', 'ZText'),
-              collect('ZButton', 'ZButton-component-action'),
-              collect('ZForm', 'ZForm-contract'),
-              collect('ZFormField', 'ZFormField-email'),
-              collect('ZInput', 'ZInput-email'),
-              collect('ZCheckbox', 'ZCheckbox-enabled')
-            ],
+              ...document.querySelectorAll(
+                '[data-desktop-component][data-desktop-evidence]'
+              )
+            ].map(collect),
             statusBefore:
               document.querySelector('[data-desktop-evidence="ZBox-status"]')?.innerText ?? '',
             componentActionRunsBefore: Number(
@@ -399,7 +395,12 @@ public sealed class WebViewHost : IAsyncDisposable
                 CaptureDesktopEvidenceScript);
             var pageJson = JsonSerializer.Deserialize<string>(pageValue) ?? "{}";
             evidenceBefore = JsonSerializer.Deserialize<DesktopEvidencePage>(pageJson, SerializerOptions) ?? throw new InvalidOperationException("Desktop evidence page state is unreadable.");
-            if (evidenceBefore.DesktopEvidence is null || evidenceBefore.DesktopEvidence.Length != 8 || evidenceBefore.DesktopEvidence.Any(item => !item.Present))
+            if (evidenceBefore.DesktopEvidence is null ||
+                evidenceBefore.DesktopEvidence.Length is 0 or > 64 ||
+                evidenceBefore.DesktopEvidence.Any(item => !item.Present ||
+                    string.IsNullOrWhiteSpace(item.Name) || string.IsNullOrWhiteSpace(item.Marker)) ||
+                evidenceBefore.DesktopEvidence.Select(item => item.Name).Distinct(StringComparer.Ordinal).Count() != evidenceBefore.DesktopEvidence.Length ||
+                evidenceBefore.DesktopEvidence.Select(item => item.Marker).Distinct(StringComparer.Ordinal).Count() != evidenceBefore.DesktopEvidence.Length)
                 throw new InvalidOperationException("Desktop evidence markers are incomplete or not hydrated.");
             smokePhase = "validating-bridge-round-trip";
             var bridgeRequest = JsonSerializer.Serialize(
