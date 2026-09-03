@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"componentCount": 141,
-	"overallSha256": "da2d6741bb89927a01463941ef9e49a974e1b16062e142b3a0b2684ae0a8479c",
+	"overallSha256": "2780c73fab26f4400f0e1422c376ee67c0a5516de93ec29fba36baa37d1bf230",
 	"components": [
 		{
 			"id": "accordion",
@@ -570,7 +570,7 @@
 		},
 		{
 			"id": "color-picker",
-			"sha256": "73ab6447e108772528e3ae6e795da037d6303b4db14aafe703429d2f4fdaa623",
+			"sha256": "5421be1b67e425c55201c3fbb7832b3b6fb64a4585edbba6160171a503797026",
 			"source": "src/components/input/ZColorPicker.svelte"
 		},
 		{
@@ -595,12 +595,12 @@
 		},
 		{
 			"id": "file-upload",
-			"sha256": "92965fccd7054f6e27f5d007f718ac60ae7358d2eca659fd6c4996aa38a7b0cb",
+			"sha256": "b2286cbc37e8ae8ec52850fc253fce3988666fcf646073b7363881dbce982313",
 			"source": "src/components/input/ZFileUpload.svelte"
 		},
 		{
 			"id": "form",
-			"sha256": "ea952fd69d46ca53e6ee1c71f3719f956927bdccfdc28d3af2ba9272ae4b6e3c",
+			"sha256": "1c417dc5c62d483cf829ada2f01f06c37ce92807e10645d8833f349c94864b5c",
 			"source": "src/components/input/ZForm.svelte"
 		},
 		{

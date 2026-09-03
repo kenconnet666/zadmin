@@ -231,7 +231,29 @@
 				default: '[]',
 				description: '非受控初始typed队列；form reset恢复它。',
 				name: 'defaultFiles',
-				type: 'readonly FileUploadItem[]'
+				type: 'readonly FileUploadItem[]',
+				members: [
+					{ description: '稳定文件业务身份。', name: 'id', type: 'string', required: true },
+					{
+						description: '浏览器File对象；传输响应不属于队列项。',
+						name: 'file',
+						type: 'File',
+						required: true
+					},
+					{ description: '队列状态。', name: 'status', type: 'FileUploadStatus', required: true },
+					{
+						description: '确定进度，范围0–100。',
+						name: 'progress',
+						type: 'number',
+						required: true
+					},
+					{
+						description: '错误详情，仅错误状态存在。',
+						name: 'error',
+						type: 'string',
+						requiredWhen: "status === 'error'"
+					}
+				]
 			},
 			{ default: 'undefined', description: '原生accept规则。', name: 'accept', type: 'string' },
 			{

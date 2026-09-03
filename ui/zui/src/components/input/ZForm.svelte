@@ -224,7 +224,10 @@
 				default: 'Provider localePack.form.unexpectedValidation',
 				description: 'Schema抛出异常时的可覆盖用户消息。',
 				name: 'validationMessages',
-				type: 'ZFormValidationMessages'
+				type: 'ZFormValidationMessages',
+				members: [
+					{ description: 'Schema异常时的用户可见回退消息。', name: 'unexpected', type: 'string' }
+				]
 			}
 		],
 		since: 'unreleased',

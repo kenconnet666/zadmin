@@ -139,7 +139,16 @@
 				default: '[]',
 				description: '经过相同hex规范化的具名预设颜色。',
 				name: 'presets',
-				type: 'readonly ColorPickerPreset[]'
+				type: 'readonly ColorPickerPreset[]',
+				members: [
+					{ description: '预设显示名称。', name: 'label', type: 'string', required: true },
+					{
+						description: '预设颜色值；按组件hex规范化。',
+						name: 'value',
+						type: 'string',
+						required: true
+					}
+				]
 			},
 			{
 				default: '最近祖先form',
