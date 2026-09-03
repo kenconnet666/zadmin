@@ -568,6 +568,20 @@ export const desktopComponentContracts = Object.freeze([
 			target: 'root',
 			observations: [
 				{
+					id: 'open-state-observed',
+					kind: 'state',
+					target: 'data-state',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.openStateObserved
+				},
+				{
+					id: 'presence-entered-observed',
+					kind: 'state',
+					target: 'data-presence',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.presenceEnteredObserved
+				},
+				{
 					id: 'reduced-motion-observed',
 					kind: 'state',
 					target: 'data-reduced-motion',
@@ -1243,6 +1257,8 @@ if (isMain && process.argv.includes('--self-test')) {
 			inertApplied: true,
 			scrollLockApplied: true,
 			reducedMotionObserved: true,
+			openStateObserved: true,
+			presenceEnteredObserved: true,
 			expandedAfterEscape: false,
 			focusAfterEscape: true,
 			inertReleasedAfterEscape: true,
@@ -1300,6 +1316,11 @@ if (isMain && process.argv.includes('--self-test')) {
 		'dialog interaction failure',
 		{ ...sample, dialogInteraction: { ...sample.dialogInteraction, ready: false } },
 		'Dialog interaction'
+	);
+	expectFailure(
+		'dialog focus false positive',
+		{ ...sample, dialogInteraction: { ...sample.dialogInteraction, focusTrapHeld: false } },
+		'component ZDialogContent focus-trap-held'
 	);
 	expectFailure(
 		'incomplete component set',

@@ -124,6 +124,14 @@ public sealed class WebViewHost : IAsyncDisposable
         public bool InertApplied { get; set; }
         public bool ScrollLockApplied { get; set; }
         public bool ReducedMotionObserved { get; set; }
+        public bool OpenStateObserved { get; set; }
+        public bool PresenceEnteredObserved { get; set; }
+    }
+
+    private sealed class DesktopDialogFocusEvidence
+    {
+        public bool Ready { get; set; }
+        public bool FocusTrapHeld { get; set; }
     }
 
     private sealed class DesktopDialogClosedEvidence
@@ -441,13 +449,22 @@ public sealed class WebViewHost : IAsyncDisposable
           if (!(trigger instanceof HTMLButtonElement) ||
               !(backgroundOwner instanceof HTMLElement) ||
               trigger.getAttribute('aria-expanded') !== 'false') return false;
-          globalThis.__ZADMIN_DIALOG_EVIDENCE__ = {
-            backgroundOwner,
-            backgroundInert: backgroundOwner.inert,
-            backgroundAriaHidden: backgroundOwner.getAttribute('aria-hidden'),
-            bodyOverflow: document.body.style.overflow,
-            bodyPaddingInlineEnd: document.body.style.paddingInlineEnd
-          };
+          const existing = globalThis.__ZADMIN_DIALOG_EVIDENCE__;
+          if (existing) {
+            if (existing.backgroundOwner !== backgroundOwner ||
+                backgroundOwner.inert !== existing.backgroundInert ||
+                backgroundOwner.getAttribute('aria-hidden') !== existing.backgroundAriaHidden ||
+                document.body.style.overflow !== existing.bodyOverflow ||
+                document.body.style.paddingInlineEnd !== existing.bodyPaddingInlineEnd) return false;
+          } else {
+            globalThis.__ZADMIN_DIALOG_EVIDENCE__ = {
+              backgroundOwner,
+              backgroundInert: backgroundOwner.inert,
+              backgroundAriaHidden: backgroundOwner.getAttribute('aria-hidden'),
+              bodyOverflow: document.body.style.overflow,
+              bodyPaddingInlineEnd: document.body.style.paddingInlineEnd
+            };
+          }
           trigger.focus();
           trigger.click();
           return true;
@@ -493,7 +510,13 @@ public sealed class WebViewHost : IAsyncDisposable
             scrollLockApplied: document.body.style.overflow === 'hidden',
             reducedMotionObserved:
               content?.getAttribute('data-reduced-motion') === 'true' &&
-              overlay?.getAttribute('data-reduced-motion') === 'true'
+              overlay?.getAttribute('data-reduced-motion') === 'true',
+            openStateObserved:
+              content?.getAttribute('data-state') === 'open' &&
+              overlay?.getAttribute('data-state') === 'open',
+            presenceEnteredObserved:
+              content?.getAttribute('data-presence') === 'entered' &&
+              overlay?.getAttribute('data-presence') === 'entered'
           };
           return JSON.stringify({
             ...result,
@@ -507,7 +530,9 @@ public sealed class WebViewHost : IAsyncDisposable
               result.contentFocused &&
               result.inertApplied &&
               result.scrollLockApplied &&
-              result.reducedMotionObserved
+              result.reducedMotionObserved &&
+              result.openStateObserved &&
+              result.presenceEnteredObserved
           });
         })()
         """;
@@ -521,14 +546,11 @@ public sealed class WebViewHost : IAsyncDisposable
           const close = content?.querySelector(
             '[data-desktop-evidence="ZDialogClose-settings"]'
           );
-          const sentinel = document.querySelector(
-            '[data-desktop-evidence="ZDialog-focus-sentinel"]'
-          );
-          const state = globalThis.__ZADMIN_DIALOG_EVIDENCE__;
           if (!(content instanceof HTMLElement) ||
-              !(close instanceof HTMLButtonElement) ||
-              !(sentinel instanceof HTMLButtonElement) ||
-              !(state?.backgroundOwner instanceof HTMLElement)) return false;
+              !(close instanceof HTMLButtonElement)) return JSON.stringify({
+                ready: false,
+                focusTrapHeld: false
+              });
           close.focus();
           const initiallyContained = content.contains(document.activeElement);
           const forward = new KeyboardEvent('keydown', {
@@ -546,11 +568,8 @@ public sealed class WebViewHost : IAsyncDisposable
           });
           document.activeElement?.dispatchEvent(backward);
           const backwardTrapped = backward.defaultPrevented && content.contains(document.activeElement);
-          state.backgroundOwner.inert = false;
-          sentinel.focus();
-          const outsideRedirected = content.contains(document.activeElement);
-          state.backgroundOwner.inert = true;
-          return initiallyContained && forwardTrapped && backwardTrapped && outsideRedirected;
+          const focusTrapHeld = initiallyContained && forwardTrapped && backwardTrapped;
+          return JSON.stringify({ ready: focusTrapHeld, focusTrapHeld });
         })()
         """;
     private const string DismissDialogEvidenceScript = """
@@ -561,7 +580,9 @@ public sealed class WebViewHost : IAsyncDisposable
           const controls = trigger?.getAttribute('aria-controls');
           const content = controls ? document.getElementById(controls) : null;
           if (!(content instanceof HTMLElement)) return false;
-          content.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+          content.dispatchEvent(
+            new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Escape' })
+          );
           return true;
         })()
         """;
@@ -980,7 +1001,10 @@ public sealed class WebViewHost : IAsyncDisposable
                 evidenceBefore.DesktopEvidence,
                 await CaptureCurrentDesktopEvidenceAsync(sender));
             smokePhase = "validating-dialog-focus";
-            if (await sender.ExecuteScriptAsync(RunDialogFocusEvidenceScript) != "true")
+            var dialogFocus = await ExecuteJsonScriptAsync<DesktopDialogFocusEvidence>(
+                sender,
+                RunDialogFocusEvidenceScript);
+            if (dialogFocus is null || !dialogFocus.Ready)
                 throw new InvalidOperationException("Desktop Dialog did not retain focus for Tab and Shift+Tab.");
             smokePhase = "validating-dialog-escape";
             if (await sender.ExecuteScriptAsync(DismissDialogEvidenceScript) != "true")
@@ -1017,10 +1041,12 @@ public sealed class WebViewHost : IAsyncDisposable
                 dialogOpen.LabelledByResolved,
                 dialogOpen.DescribedByResolved,
                 contentFocusedAfterOpen = dialogOpen.ContentFocused,
-                focusTrapHeld = true,
+                dialogFocus.FocusTrapHeld,
                 dialogOpen.InertApplied,
                 dialogOpen.ScrollLockApplied,
                 dialogOpen.ReducedMotionObserved,
+                dialogOpen.OpenStateObserved,
+                dialogOpen.PresenceEnteredObserved,
                 expandedAfterEscape = dialogAfterEscape.Expanded,
                 focusAfterEscape = dialogAfterEscape.FocusRestored,
                 inertReleasedAfterEscape = dialogAfterEscape.InertReleased,

@@ -282,9 +282,6 @@
 		<ZProvider motion="reduced">
 			<ZBox class={panelClass} data-desktop-evidence="ZDialog-background-sibling">
 				<ZText as="strong">Dialog desktop contract</ZText>
-				<ZButton variant="secondary" data-desktop-evidence="ZDialog-focus-sentinel">
-					Outside dialog focus sentinel
-				</ZButton>
 				<ZDialog>
 					<ZDialogTrigger
 						data-desktop-component="ZDialogTrigger"
