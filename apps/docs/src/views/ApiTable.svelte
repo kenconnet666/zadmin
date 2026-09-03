@@ -38,11 +38,22 @@
 <script lang="ts">
 	import { ZHeading, ZTable, useZui } from '@zadmin/zui';
 	import { ZCode } from '@zadmin/zui/code';
-	import type { ApiSection } from '../framework/component-doc.js';
+	import type { ApiRow, ApiSection } from '../framework/component-doc.js';
 
 	let { section }: { section: ApiSection } = $props();
 	const zui = useZui();
 	const classes = $derived(zui.slots(apiRecipe));
+	function flattenedRows(rows: readonly ApiRow[], prefix = ''): ApiRow[] {
+		return rows.flatMap((row) => {
+			const name = prefix ? `${prefix}.${row.name}` : row.name;
+			const replacement =
+				row.replacement && !row.replacementExternal && prefix
+					? `${prefix}.${row.replacement}`
+					: row.replacement;
+			return [{ ...row, name, replacement }, ...flattenedRows(row.members ?? [], name)];
+		});
+	}
+	const rows = $derived(flattenedRows(section.rows));
 </script>
 
 <section class={classes.root} id={`api-${section.id}`}>
@@ -58,7 +69,7 @@
 					><th scope="col">说明</th></tr
 				>
 			{/snippet}
-			{#each section.rows as row (row.name)}
+			{#each rows as row (row.name)}
 				<tr data-deprecated={row.deprecatedSince ? 'true' : undefined}>
 					<td><ZCode code={row.name} inline /></td>
 					<td><ZCode code={row.type} inline /></td>
@@ -66,6 +77,7 @@
 					<td
 						>{[
 							row.required ? 'required' : '',
+							row.requiredWhen ? `required when ${row.requiredWhen}` : '',
 							row.bindable ? 'bindable' : '',
 							row.feature ?? '',
 							row.deprecatedSince ? `Deprecated since ${row.deprecatedSince}` : '',

@@ -17,10 +17,12 @@ export interface ApiRow {
 	readonly name: string;
 	readonly removeAfter?: string;
 	readonly required?: boolean;
+	readonly requiredWhen?: string;
 	readonly replacement?: string;
 	readonly replacementExternal?: boolean;
 	readonly since?: string;
 	readonly type: string;
+	readonly members?: readonly ApiRow[];
 }
 
 export interface ApiSection {

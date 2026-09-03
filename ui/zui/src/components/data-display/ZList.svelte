@@ -74,7 +74,25 @@
 				default: '与children二选一',
 				description: '数据便利模式；每项使用typed key，deprecated id仅兼容迁移。',
 				name: 'items',
-				type: 'readonly ListItem[]'
+				type: 'readonly ListItem[]',
+				members: [
+					{
+						description: '与legacy id二选一；新代码必须使用key。',
+						name: 'key',
+						type: 'SelectionKey',
+						requiredWhen: '使用推荐的keyed identity分支'
+					},
+					{ description: '列表项展示标题。', name: 'label', type: 'string', required: true },
+					{ description: '列表项补充说明。', name: 'description', type: 'string', required: false },
+					{
+						description: 'pre-1.0兼容身份别名；与key二选一。',
+						name: 'id',
+						type: 'SelectionKey',
+						deprecatedSince: 'unreleased',
+						replacement: 'key',
+						requiredWhen: '迁移期间仍使用deprecated legacy identity分支'
+					}
+				]
 			},
 			{
 				default: 'false',

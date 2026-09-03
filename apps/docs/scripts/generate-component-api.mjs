@@ -127,6 +127,87 @@ function hasDeprecatedTag(member) {
 	return ts.getJSDocTags(member).some((tag) => tag.tagName.text === 'deprecated');
 }
 
+function scanDeprecatedPropertyPaths(sourceFile, declarations, rootDeclaration) {
+	const paths = new Set();
+	const seen = new Set();
+	function literalNames(node) {
+		if (!node) return new Set();
+		const types = ts.isUnionTypeNode(node) ? node.types : [node];
+		return new Set(
+			types
+				.filter(ts.isLiteralTypeNode)
+				.map(({ literal }) => (ts.isStringLiteral(literal) ? literal.text : undefined))
+				.filter((value) => value !== undefined)
+		);
+	}
+	function visitType(node, path, include, exclude = new Set()) {
+		if (!node) return;
+		if (ts.isParenthesizedTypeNode(node)) return visitType(node.type, path, include, exclude);
+		if (ts.isTypeOperatorNode(node)) return visitType(node.type, path, include, exclude);
+		if (ts.isArrayTypeNode(node)) return visitType(node.elementType, path, include, exclude);
+		if (ts.isUnionTypeNode(node) || ts.isIntersectionTypeNode(node))
+			return node.types.forEach((type) => visitType(type, path, include, exclude));
+		if (ts.isTypeLiteralNode(node))
+			return node.members.forEach((member) => visitMember(member, path, include, exclude));
+		if (ts.isExpressionWithTypeArguments(node)) {
+			if (ts.isIdentifier(node.expression)) {
+				if (
+					(node.expression.text === 'Omit' || node.expression.text === 'Pick') &&
+					node.typeArguments?.[0]
+				) {
+					const selected = literalNames(node.typeArguments[1]);
+					const nextInclude = node.expression.text === 'Pick' ? selected : include;
+					const nextExclude =
+						node.expression.text === 'Omit' ? new Set([...exclude, ...selected]) : exclude;
+					return visitType(node.typeArguments[0], path, nextInclude, nextExclude);
+				}
+				const heritage = declarations.get(node.expression.text);
+				if (heritage && ts.isInterfaceDeclaration(heritage))
+					heritage.members.forEach((member) => visitMember(member, path, include, exclude));
+			}
+			for (const argument of node.typeArguments ?? []) visitType(argument, path, include, exclude);
+			return;
+		}
+		if (ts.isTypeReferenceNode(node) && ts.isIdentifier(node.typeName)) {
+			if (
+				(node.typeName.text === 'Omit' || node.typeName.text === 'Pick') &&
+				node.typeArguments?.[0]
+			) {
+				const selected = literalNames(node.typeArguments[1]);
+				const nextInclude = node.typeName.text === 'Pick' ? selected : include;
+				const nextExclude =
+					node.typeName.text === 'Omit' ? new Set([...exclude, ...selected]) : exclude;
+				return visitType(node.typeArguments[0], path, nextInclude, nextExclude);
+			}
+			const declaration = declarations.get(node.typeName.text);
+			if (declaration && !seen.has(declaration.name.text)) {
+				seen.add(declaration.name.text);
+				if (ts.isTypeAliasDeclaration(declaration))
+					visitType(declaration.type, path, include, exclude);
+				else declaration.members.forEach((member) => visitMember(member, path, include, exclude));
+				seen.delete(declaration.name.text);
+			}
+			for (const argument of node.typeArguments ?? []) visitType(argument, path, include, exclude);
+		}
+	}
+	function visitMember(member, parentPath, include, exclude = new Set()) {
+		if (!ts.isPropertySignature(member)) return;
+		const name = propertyName(member);
+		if (!name) return;
+		if (exclude.has(name) || (include && !include.has(name))) return;
+		const path = parentPath ? `${parentPath}.${name}` : name;
+		if (hasDeprecatedTag(member)) paths.add(path);
+		visitType(member.type, path);
+	}
+	visitType(ts.isTypeAliasDeclaration(rootDeclaration) ? rootDeclaration.type : undefined, '');
+	if (ts.isInterfaceDeclaration(rootDeclaration)) {
+		rootDeclaration.members.forEach((member) => visitMember(member, ''));
+		for (const heritage of rootDeclaration.heritageClauses ?? [])
+			for (const type of heritage.types) visitType(type, '');
+	}
+	return paths;
+}
+
 const releasedVersionPattern = /^(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)$/u;
 const lifecycleVersionPattern = new RegExp(
 	`^(?:unreleased|${releasedVersionPattern.source})$`,
@@ -171,9 +252,14 @@ function compareReleasedVersions(left, right) {
 	return 0;
 }
 
-export function validateDeprecationMetadata({ deprecatedNames, entries, filename = 'metadata' }) {
-	const publicNames = new Set(entries.map(({ name }) => name).filter(Boolean));
-	const deprecated = new Set(deprecatedNames);
+export function validateDeprecationMetadata({
+	deprecatedPaths,
+	deprecatedNames,
+	entries,
+	filename = 'metadata'
+}) {
+	const paths = new Set(deprecatedPaths ?? deprecatedNames ?? []);
+	const publicPaths = new Set(entries.map(({ path, name }) => path ?? name).filter(Boolean));
 	for (const entry of entries) {
 		if (entry.since !== undefined && !lifecycleVersionPattern.test(entry.since))
 			throw new Error(
@@ -187,11 +273,12 @@ export function validateDeprecationMetadata({ deprecatedNames, entries, filename
 			'migration'
 		].some((field) => entry[field] !== undefined);
 		if (!hasLifecycle) continue;
-		const name = entry.name;
-		if (!name || !deprecated.has(name))
+		const path = entry.path ?? entry.name;
+		if (!path || !paths.has(path))
 			throw new Error(
-				`${filename} metadata lifecycle does not match a @deprecated public API: ${name ?? '<unnamed>'}.`
+				`${filename} metadata lifecycle does not match a @deprecated public API: ${path ?? '<unnamed>'}.`
 			);
+		const name = entry.name;
 		if (entry.deprecatedSince !== undefined && !lifecycleVersionPattern.test(entry.deprecatedSince))
 			throw new Error(
 				`${filename} ${name}.deprecatedSince must be unreleased or a stable x.y.z version.`
@@ -206,11 +293,13 @@ export function validateDeprecationMetadata({ deprecatedNames, entries, filename
 			throw new Error(`${filename} deprecation metadata for ${name} requires deprecatedSince.`);
 		if (typeof entry.replacement !== 'string' || entry.replacement.length === 0)
 			throw new Error(`${filename} deprecation metadata for ${name} requires replacement.`);
-		if (entry.replacement === name)
-			throw new Error(`${filename} deprecation metadata for ${name} cannot replace itself.`);
-		if (entry.replacementExternal !== true && !publicNames.has(entry.replacement))
+		const parent = path.includes('.') ? path.slice(0, path.lastIndexOf('.')) : '';
+		const replacementPath = parent ? `${parent}.${entry.replacement}` : entry.replacement;
+		if (entry.replacement === name || replacementPath === path)
+			throw new Error(`${filename} deprecation metadata for ${path} cannot replace itself.`);
+		if (entry.replacementExternal !== true && !publicPaths.has(replacementPath))
 			throw new Error(
-				`${filename} deprecation metadata for ${name} requires a resolvable replacement or replacementExternal=true.`
+				`${filename} deprecation metadata for ${path} requires a same-level resolvable replacement or replacementExternal=true.`
 			);
 		if (entry.replacementExternal !== undefined && entry.replacementExternal !== true)
 			throw new Error(`${filename} ${name}.replacementExternal must be true when specified.`);
@@ -231,6 +320,51 @@ export function validateDeprecationMetadata({ deprecatedNames, entries, filename
 }
 
 if (process.argv.includes('--self-test')) {
+	const scannerSource = ts.createSourceFile(
+		'scanner-self-test.ts',
+		`interface Meta {
+/** @deprecated Use key. */
+id: string;
+key: string;
+}
+interface Other {
+/** @deprecated Use key. */
+id: string;
+key: string;
+}
+interface Root extends Base {
+items: ReadonlyArray<Meta>;
+other: Other;
+}
+interface Base {
+inherited: ReadonlyArray<Meta>;
+
+}
+interface Omitted extends Omit<Meta, 'id'> {}
+interface Picked extends Pick<Meta, 'key'> {}
+type MetaAlias = Meta;
+type OmittedAlias = Omit<Readonly<MetaAlias>, 'id'>;
+type PickedAlias = Pick<(MetaAlias), 'key'>;`,
+		ts.ScriptTarget.Latest,
+		true
+	);
+	const scannerDeclarations = declarationMap(scannerSource);
+	const scannerPaths = scanDeprecatedPropertyPaths(
+		scannerSource,
+		scannerDeclarations,
+		scannerDeclarations.get('Root')
+	);
+	if ([...scannerPaths].sort().join(',') !== 'inherited.id,items.id,other.id')
+		throw new Error(`Deprecation scanner self-test mismatch: ${[...scannerPaths].join(',')}.`);
+	for (const name of ['Omitted', 'Picked', 'OmittedAlias', 'PickedAlias']) {
+		const paths = scanDeprecatedPropertyPaths(
+			scannerSource,
+			scannerDeclarations,
+			scannerDeclarations.get(name)
+		);
+		if (paths.size !== 0)
+			throw new Error(`Deprecation scanner self-test leaked excluded fields from ${name}.`);
+	}
 	const valid = () =>
 		validateDeprecationMetadata({
 			deprecatedNames: ['old'],
@@ -245,6 +379,14 @@ if (process.argv.includes('--self-test')) {
 			]
 		});
 	valid();
+	validateDeprecationMetadata({
+		deprecatedPaths: ['items.meta.id'],
+		entries: [
+			{ path: 'items.meta.id', name: 'id', deprecatedSince: 'unreleased', replacement: 'key' },
+			{ path: 'items.meta.key', name: 'key' },
+			{ path: 'other.id', name: 'id' }
+		]
+	});
 	const external = () =>
 		validateDeprecationMetadata({
 			deprecatedNames: ['old'],
@@ -271,6 +413,19 @@ if (process.argv.includes('--self-test')) {
 		]
 	});
 	const rejects = [
+		[
+			'nested missing member',
+			[{ path: 'items.id', name: 'id', deprecatedSince: 'unreleased', replacement: 'key' }],
+			/resolvable replacement/u
+		],
+		[
+			'same-name sibling mismatch',
+			[
+				{ path: 'other.id', name: 'id', deprecatedSince: 'unreleased', replacement: 'key' },
+				{ path: 'items.key', name: 'key' }
+			],
+			/resolvable replacement/u
+		],
 		['missing deprecatedSince', [{ name: 'old', replacement: 'new' }], /requires deprecatedSince/u],
 		[
 			'orphan metadata',
@@ -351,7 +506,13 @@ if (process.argv.includes('--self-test')) {
 	];
 	for (const [label, entries, expectedPattern] of rejects) {
 		try {
-			validateDeprecationMetadata({ deprecatedNames: ['old'], entries, filename: label });
+			validateDeprecationMetadata({
+				...(entries.some((entry) => entry.path)
+					? { deprecatedPaths: [entries[0].path] }
+					: { deprecatedNames: ['old'] }),
+				entries,
+				filename: label
+			});
 		} catch (error) {
 			if (expectedPattern.test(String(error))) continue;
 			throw new Error(`Deprecation validator self-test received an unexpected ${label} error.`, {
@@ -547,13 +708,27 @@ function componentFacts(source, filename) {
 	const metadataEntries = ['bindings', 'events', 'props', 'snippets'].flatMap((section) =>
 		metadataItems(metadata, section).map((item) => ({ item, section }))
 	);
+	const flattenMetadataEntries = (entries, parentPath = '') =>
+		entries.flatMap(({ item, section }) => {
+			const name = objectStringProperty(item, 'name');
+			const path = name ? (parentPath ? `${parentPath}.${name}` : name) : parentPath;
+			return [
+				{ item, section, path },
+				...flattenMetadataEntries(
+					metadataItems(item, 'members').map((member) => ({ item: member, section })),
+					path
+				)
+			];
+		});
+	const allMetadataEntries = flattenMetadataEntries(metadataEntries);
 	const metadataByName = new Map(
-		metadataEntries
-			.map(({ item, section }) => [objectStringProperty(item, 'name'), { item, section }])
-			.filter(([name]) => name !== undefined)
+		allMetadataEntries
+			.map(({ item, section, path }) => [path, { item, section, path }])
+			.filter(([path]) => path !== undefined)
 	);
-	const missingDeprecationMetadata = [...context.deprecatedProps].filter((name) => {
-		const entry = metadataByName.get(name);
+	const deprecatedPaths = scanDeprecatedPropertyPaths(sourceFile, declarations, declaration);
+	const missingDeprecationMetadata = [...deprecatedPaths].filter((path) => {
+		const entry = metadataByName.get(path);
 		return !entry || objectStringProperty(entry.item, 'deprecatedSince') === undefined;
 	});
 	if (missingDeprecationMetadata.length > 0) {
@@ -562,8 +737,9 @@ function componentFacts(source, filename) {
 		);
 	}
 	validateDeprecationMetadata({
-		deprecatedNames: context.deprecatedProps,
-		entries: metadataEntries.map(({ item }) => ({
+		deprecatedPaths,
+		entries: allMetadataEntries.map(({ item, path }) => ({
+			path,
 			name: objectStringProperty(item, 'name'),
 			since: objectStringProperty(item, 'since'),
 			deprecatedSince: objectStringProperty(item, 'deprecatedSince'),

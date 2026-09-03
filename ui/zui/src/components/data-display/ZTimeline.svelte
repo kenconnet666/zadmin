@@ -71,7 +71,29 @@
 				description: '以typed key标识的事件；id仅为pre-1.0迁移别名，key与id不可同时提供。',
 				name: 'items',
 				required: true,
-				type: 'readonly TimelineItem[]'
+				type: 'readonly TimelineItem[]',
+				members: [
+					{
+						description: '与legacy id二选一；新代码必须使用key。',
+						name: 'key',
+						type: 'SelectionKey',
+						requiredWhen: '使用推荐的keyed identity分支'
+					},
+					{ description: '事件标题。', name: 'title', type: 'string', required: true },
+					{ description: '事件补充说明。', name: 'description', type: 'string', required: false },
+					{ description: '显示时间。', name: 'time', type: 'string', required: false },
+					{ description: '机器可读时间。', name: 'datetime', type: 'string', required: false },
+					{ description: '事件状态。', name: 'status', type: 'TimelineStatus', required: false },
+					{ description: '事件视觉色调。', name: 'tone', type: 'TimelineTone', required: false },
+					{
+						description: 'pre-1.0兼容身份别名；与key二选一。',
+						name: 'id',
+						type: 'SelectionKey',
+						deprecatedSince: 'unreleased',
+						replacement: 'key',
+						requiredWhen: '迁移期间仍使用deprecated legacy identity分支'
+					}
+				]
 			},
 			{
 				default: "'Timeline'",

@@ -21,6 +21,15 @@ export interface ZuiApiMetadata {
 	readonly removeAfter?: ZuiReleasedVersion;
 	/** Relative migration document or external migration URL. */
 	readonly migration?: string;
+	/** Nested public members when this API accepts a structured data object. */
+	readonly members?: readonly ZuiApiMemberMetadata[];
+}
+
+export interface ZuiApiMemberMetadata extends ZuiApiMetadata {
+	readonly default?: string;
+	readonly required?: boolean;
+	/** Human-readable condition for discriminated-union members that are not always required. */
+	readonly requiredWhen?: string;
 }
 
 export type ZuiBindingMetadata = ZuiApiMetadata;
