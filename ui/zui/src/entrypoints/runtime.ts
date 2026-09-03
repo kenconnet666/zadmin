@@ -24,6 +24,14 @@ export { resolveControlSize } from '../runtime/foundation/control-size.js';
 export type { ZControlSize } from '../runtime/foundation/control-size.js';
 export { createFormEntries, serializeFormValue } from '../runtime/form/form-value.js';
 export type { FormValue, PrimitiveFormValue } from '../runtime/form/form-value.js';
+export { AsyncCollectionQuery } from '../runtime/collection/async-query.js';
+export type {
+	AsyncCollectionQueryContext,
+	AsyncCollectionQueryListener,
+	AsyncCollectionQueryLoader,
+	AsyncCollectionQueryState,
+	AsyncCollectionQueryStatus
+} from '../runtime/collection/async-query.js';
 export { CollectionStore } from '../runtime/collection/collection.svelte.js';
 export type { CollectionItem } from '../runtime/collection/collection.svelte.js';
 export { moveIndex, navigationIntent } from '../runtime/collection/list-navigation.js';

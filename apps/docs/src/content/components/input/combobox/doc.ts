@@ -27,6 +27,11 @@ export const comboboxDoc = defineComponentDoc(comboboxMetadata, {
 	sourceApi: comboboxApiFacts,
 	teaching: {
 		props: {
+			loading: {
+				default: 'false',
+				description:
+					'可与AsyncCollectionQuery组合；查询层负责AbortSignal与latest-wins，Combobox只消费显式loading/data/error状态。'
+			},
 			controlId: {
 				default: '继承Field或自动生成',
 				description: '真实输入焦点owner的id，Field label始终指向它而不是内部option。'
@@ -84,7 +89,7 @@ export const comboboxDoc = defineComponentDoc(comboboxMetadata, {
 			component: AsyncDemo,
 			covers: ['controlled', 'loading', 'locale', 'portal'],
 			description:
-				'shouldFilter=false接收服务端结果，loading/empty独立表达，远程结果缺少当前key时仍保留选择与输入。',
+				'shouldFilter=false接收服务端结果；AsyncCollectionQuery负责取消过期请求与latest-wins，Combobox只消费显式loading/empty/error，远程结果缺少当前key时仍保留选择与输入。',
 			id: 'combobox-async',
 			source: asyncSource,
 			title: '远程搜索、空状态与孤儿值'
@@ -127,7 +132,7 @@ export const comboboxDoc = defineComponentDoc(comboboxMetadata, {
 		'readonly使用真实input readonly并阻止打开和选择，但保持文本可聚焦复制；disabled另行阻止焦点与FormData。',
 		'name只由FormValueBridge提交value，内部ZInput明确没有name/form自重置，查询草稿不会污染FormData。',
 		'受控value、inputValue和open互相独立；选择option时组件同步业务key与显示文本，外部清空时owner应明确更新需要拥有的轴。',
-		'异步结果默认保留未加载的selected key与已见标签；网络请求、取消、节流和竞态世代由调用方数据层拥有。'
+		'异步结果默认保留未加载的selected key与已见标签；AsyncCollectionQuery可作为无缓存、无全局store的调用方数据层，提供AbortSignal、latest-wins、loading/error/data状态；value、open、active和渲染options仍由调用方拥有。'
 	],
 	keywords: [
 		'combobox',
