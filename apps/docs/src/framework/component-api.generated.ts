@@ -3254,6 +3254,12 @@ export const carouselApiFacts = {
 			type: 'SelectionKey'
 		}
 	],
+	opaqueProps: [
+		{
+			path: 'items',
+			kind: 'caller-generic'
+		}
+	],
 	source: 'ui/zui/src/components/data-display/ZCarousel.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
@@ -3513,6 +3519,20 @@ export const dataTableApiFacts = {
 			name: 'virtualized',
 			required: false,
 			type: 'boolean'
+		}
+	],
+	opaqueProps: [
+		{
+			path: 'columnVisibility',
+			kind: 'dynamic-record'
+		},
+		{
+			path: 'columnWidths',
+			kind: 'dynamic-record'
+		},
+		{
+			path: 'rows',
+			kind: 'caller-generic'
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZDataTable.svelte',
@@ -3915,6 +3935,12 @@ export const statisticApiFacts = {
 			type: 'bigint | number'
 		}
 	],
+	opaqueProps: [
+		{
+			path: 'formatOptions',
+			kind: 'external-descriptor'
+		}
+	],
 	source: 'ui/zui/src/components/data-display/ZStatistic.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
@@ -4252,6 +4278,12 @@ export const virtualListApiFacts = {
 			name: 'ssrViewportSize',
 			required: false,
 			type: 'number'
+		}
+	],
+	opaqueProps: [
+		{
+			path: 'items',
+			kind: 'caller-generic'
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZVirtualList.svelte',
@@ -6492,6 +6524,12 @@ export const formApiFacts = {
 			type: 'boolean'
 		}
 	],
+	opaqueProps: [
+		{
+			path: 'schema',
+			kind: 'external-protocol'
+		}
+	],
 	source: 'ui/zui/src/components/input/ZForm.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
@@ -6960,6 +6998,12 @@ export const numberFieldApiFacts = {
 			name: 'value',
 			required: false,
 			type: 'number'
+		}
+	],
+	opaqueProps: [
+		{
+			path: 'formatOptions',
+			kind: 'external-descriptor'
 		}
 	],
 	source: 'ui/zui/src/components/input/ZNumberField.svelte',

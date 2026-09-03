@@ -124,12 +124,28 @@
 			{
 				description: '列id到可见性的稀疏映射。',
 				name: 'columnVisibility',
-				type: 'DataTableColumnVisibility'
+				type: 'Readonly<Record<string, boolean>>',
+				opaque: {
+					kind: 'dynamic-record',
+					resolution: 'dynamic-key',
+					type: 'DataTableColumnVisibility',
+					reason: 'key集合由columns动态决定。',
+					owner: 'caller/column model',
+					serializable: true
+				}
 			},
 			{
 				description: '用户调整后的列像素宽度。',
 				name: 'columnWidths',
-				type: 'DataTableColumnWidths'
+				type: 'Readonly<Record<string, number>>',
+				opaque: {
+					kind: 'dynamic-record',
+					resolution: 'dynamic-key',
+					type: 'DataTableColumnWidths',
+					reason: 'key集合由columns动态决定。',
+					owner: 'caller/column model',
+					serializable: true
+				}
 			},
 			{
 				description: '滚动、聚焦和列状态控制器。',
@@ -307,7 +323,15 @@
 				description: '当前数据快照。',
 				name: 'rows',
 				required: true,
-				type: 'readonly TRow[]'
+				type: 'readonly TRow[]',
+				opaque: {
+					kind: 'caller-generic',
+					resolution: 'generic-unexpanded',
+					type: 'readonly TRow[]',
+					genericParameters: ['TRow'],
+					reason: '行结构由调用方定义；DataTable只拥有rowKey与表格状态。',
+					owner: 'caller'
+				}
 			},
 			{
 				default: '必填',

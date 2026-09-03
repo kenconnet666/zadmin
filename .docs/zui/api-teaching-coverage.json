@@ -874,7 +874,16 @@
 			"metadataGapPropCount": 0,
 			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
-			"fallbackPropNames": []
+			"fallbackPropNames": [],
+			"opaqueStructuredProps": [
+				{
+					"path": "items",
+					"kind": "caller-generic"
+				}
+			],
+			"opaqueByKind": {
+				"caller-generic": 1
+			}
 		},
 		{
 			"id": "data-table",
@@ -884,7 +893,25 @@
 			"metadataGapPropCount": 0,
 			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
-			"fallbackPropNames": []
+			"fallbackPropNames": [],
+			"opaqueStructuredProps": [
+				{
+					"path": "columnVisibility",
+					"kind": "dynamic-record"
+				},
+				{
+					"path": "columnWidths",
+					"kind": "dynamic-record"
+				},
+				{
+					"path": "rows",
+					"kind": "caller-generic"
+				}
+			],
+			"opaqueByKind": {
+				"dynamic-record": 2,
+				"caller-generic": 1
+			}
 		},
 		{
 			"id": "description-list",
@@ -954,7 +981,16 @@
 			"metadataGapPropCount": 0,
 			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
-			"fallbackPropNames": []
+			"fallbackPropNames": [],
+			"opaqueStructuredProps": [
+				{
+					"path": "formatOptions",
+					"kind": "external-descriptor"
+				}
+			],
+			"opaqueByKind": {
+				"external-descriptor": 1
+			}
 		},
 		{
 			"id": "table",
@@ -994,7 +1030,16 @@
 			"metadataGapPropCount": 0,
 			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
-			"fallbackPropNames": []
+			"fallbackPropNames": [],
+			"opaqueStructuredProps": [
+				{
+					"path": "items",
+					"kind": "caller-generic"
+				}
+			],
+			"opaqueByKind": {
+				"caller-generic": 1
+			}
 		},
 		{
 			"id": "alert",
@@ -1274,7 +1319,16 @@
 			"metadataGapPropCount": 0,
 			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
-			"fallbackPropNames": []
+			"fallbackPropNames": [],
+			"opaqueStructuredProps": [
+				{
+					"path": "schema",
+					"kind": "external-protocol"
+				}
+			],
+			"opaqueByKind": {
+				"external-protocol": 1
+			}
 		},
 		{
 			"id": "form-field",
@@ -1324,7 +1378,16 @@
 			"metadataGapPropCount": 0,
 			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
-			"fallbackPropNames": []
+			"fallbackPropNames": [],
+			"opaqueStructuredProps": [
+				{
+					"path": "formatOptions",
+					"kind": "external-descriptor"
+				}
+			],
+			"opaqueByKind": {
+				"external-descriptor": 1
+			}
 		},
 		{
 			"id": "pin-input",
@@ -1495,6 +1558,13 @@
 		"components": 141,
 		"declaredProps": 1386,
 		"metadataGapProps": 0,
-		"fallbackProps": 0
+		"fallbackProps": 0,
+		"opaqueStructuredProps": 8,
+		"opaqueByKind": {
+			"caller-generic": 3,
+			"dynamic-record": 2,
+			"external-descriptor": 2,
+			"external-protocol": 1
+		}
 	}
 }

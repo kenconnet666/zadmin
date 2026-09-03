@@ -113,7 +113,15 @@
 				description: '数据项；排序、插入和删除均由itemKey维持测量身份。',
 				name: 'items',
 				required: true,
-				type: 'readonly TItem[]'
+				type: 'readonly TItem[]',
+				opaque: {
+					kind: 'caller-generic',
+					resolution: 'generic-unexpanded',
+					type: 'readonly TItem[]',
+					genericParameters: ['TItem'],
+					reason: '虚拟列表item结构由调用方定义。',
+					owner: 'caller'
+				}
 			},
 			{
 				default: '必填',

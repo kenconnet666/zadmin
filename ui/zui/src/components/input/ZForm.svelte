@@ -164,7 +164,15 @@
 				default: 'undefined',
 				description: 'Standard Schema v1协议对象。',
 				name: 'schema',
-				type: 'StandardSchemaV1'
+				type: 'TSchema',
+				opaque: {
+					kind: 'external-protocol',
+					resolution: 'external-resolved',
+					type: 'TSchema',
+					source: '@standard-schema/spec',
+					reason: '具体schema字段与实现由外部协议/调用方拥有。',
+					owner: 'caller schema'
+				}
 			},
 			{
 				default: "['submit']",

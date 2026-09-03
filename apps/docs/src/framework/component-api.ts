@@ -1,3 +1,5 @@
+import type { ZuiOpaqueBoundaryKind } from '@zadmin/zui/metadata';
+
 export interface ComponentApiPropFact {
 	readonly name: string;
 	readonly required: boolean;
@@ -12,6 +14,7 @@ export interface ComponentApiFacts {
 	readonly props: readonly ComponentApiPropFact[];
 	readonly source: `ui/zui/src/components/${string}.svelte`;
 	readonly metadataGapProps: readonly string[];
+	readonly opaqueProps?: readonly { readonly path: string; readonly kind: ZuiOpaqueBoundaryKind }[];
 	readonly members?: () => readonly ComponentApiFacts[];
 }
 

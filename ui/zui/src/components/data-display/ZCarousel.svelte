@@ -87,7 +87,15 @@
 				description: 'slides数据。',
 				name: 'items',
 				required: true,
-				type: 'readonly TItem[]'
+				type: 'readonly TItem[]',
+				opaque: {
+					kind: 'caller-generic',
+					resolution: 'generic-unexpanded',
+					type: 'readonly TItem[]',
+					genericParameters: ['TItem'],
+					reason: 'slide item结构由调用方定义。',
+					owner: 'caller'
+				}
 			},
 			{
 				default: '必填',

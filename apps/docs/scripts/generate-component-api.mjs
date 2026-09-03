@@ -127,6 +127,26 @@ function objectBooleanProperty(object, name) {
 			: undefined;
 }
 
+function objectStringArrayProperty(object, name) {
+	const property = object.properties.find((candidate) => propertyName(candidate) === name);
+	if (!property || !ts.isPropertyAssignment(property)) return undefined;
+	const value = unwrapExpression(property.initializer);
+	if (!ts.isArrayLiteralExpression(value)) return undefined;
+	return value.elements.every((item) => ts.isStringLiteral(item))
+		? value.elements.map((item) => item.text)
+		: undefined;
+}
+
+function objectObjectProperty(object, name) {
+	const property = object.properties.find((candidate) => propertyName(candidate) === name);
+	if (!property || !ts.isPropertyAssignment(property)) return undefined;
+	const value = unwrapExpression(property.initializer);
+	return ts.isObjectLiteralExpression(value) ? value : undefined;
+}
+function objectPropertyPresent(object, name) {
+	return object.properties.some((candidate) => propertyName(candidate) === name);
+}
+
 function hasDeprecatedTag(member) {
 	return ts.getJSDocTags(member).some((tag) => tag.tagName.text === 'deprecated');
 }
@@ -545,6 +565,84 @@ export function validateMemberMetadataFacts({ entries, publicFacts, filename = '
 	}
 }
 
+export function validateOpaqueMetadataFacts({ entries, publicFacts, filename = 'metadata' }) {
+	const kinds = new Set([
+		'caller-generic',
+		'external-protocol',
+		'external-descriptor',
+		'dynamic-record'
+	]);
+	const resolutions = new Set(['generic-unexpanded', 'external-resolved', 'dynamic-key']);
+	for (const entry of entries) {
+		if (!entry.opaque) continue;
+		if (entry.members === true)
+			throw new Error(`${filename} ${entry.path} cannot declare both opaque and members.`);
+		const opaque = entry.opaque;
+		if (!kinds.has(opaque.kind) || !resolutions.has(opaque.resolution))
+			throw new Error(`${filename} ${entry.path} opaque kind/resolution is invalid.`);
+		if (!opaque.type || !opaque.reason?.trim() || !opaque.owner?.trim())
+			throw new Error(`${filename} ${entry.path} opaque type/reason/owner is required.`);
+		if (
+			(opaque.kind === 'external-protocol' || opaque.kind === 'external-descriptor') &&
+			!opaque.source?.trim()
+		)
+			throw new Error(`${filename} ${entry.path} opaque external source is required.`);
+		if (
+			opaque.kind === 'caller-generic' &&
+			(!opaque.genericParameters?.length || opaque.resolution !== 'generic-unexpanded')
+		)
+			throw new Error(
+				`${filename} ${entry.path} generic opaque metadata requires genericParameters.`
+			);
+		if (
+			(opaque.kind === 'external-protocol' || opaque.kind === 'external-descriptor') &&
+			opaque.resolution !== 'external-resolved'
+		)
+			throw new Error(
+				`${filename} ${entry.path} external opaque must use external-resolved resolution.`
+			);
+		if (opaque.kind === 'dynamic-record' && opaque.resolution !== 'dynamic-key')
+			throw new Error(`${filename} ${entry.path} dynamic-record must use dynamic-key resolution.`);
+		const source = publicFacts.get(entry.path);
+		if (!source)
+			throw new Error(
+				`${filename} ${entry.path} opaque prop does not exist in the public type graph.`
+			);
+		const typeCandidates = source.typeCandidates ?? [source.declaredType];
+		if (
+			opaque.genericParameters?.some(
+				(parameter) => !(source.genericParameters ?? []).includes(parameter)
+			)
+		)
+			throw new Error(
+				`${filename} ${entry.path} opaque genericParameters are not declared by the public API.`
+			);
+		if (
+			opaque.genericParameters?.some(
+				(parameter) => !new RegExp(`\\b${parameter}\\b`, 'u').test(opaque.type)
+			)
+		)
+			throw new Error(`${filename} ${entry.path} genericParameters do not occur in opaque type.`);
+		if (opaque.kind === 'dynamic-record' && source.dynamicKey !== true)
+			throw new Error(
+				`${filename} ${entry.path} dynamic-record is not proven by a Record or index signature.`
+			);
+		if (
+			!typeCandidates.some(
+				(candidate) =>
+					opaque.type.trim() === String(candidate).trim() ||
+					metadataTypesEquivalent(opaque.type, candidate) ||
+					(opaque.kind === 'dynamic-record' &&
+						opaque.type.includes('Record') &&
+						String(candidate).includes('Record'))
+			)
+		)
+			throw new Error(
+				`${filename} ${entry.path} opaque type does not match its public type: ${opaque.type} != ${source.declaredType}.`
+			);
+	}
+}
+
 if (process.argv.includes('--self-test')) {
 	const componentPath = (...segments) => resolve(componentsRoot, ...segments);
 	const listDeprecatedPaths = await scanWorkspacePropertyPaths(
@@ -648,6 +746,125 @@ if (process.argv.includes('--self-test')) {
 			{ path: 'items.conditional', requiredWhen: 'selected branch', type: 'boolean' }
 		]
 	});
+	validateOpaqueMetadataFacts({
+		publicFacts: new Map([
+			['rows', { declaredType: 'readonly TRow[]', genericParameters: ['TRow'] }],
+			['record', { declaredType: 'Readonly<Record<string, boolean>>', dynamicKey: true }]
+		]),
+		entries: [
+			{
+				path: 'rows',
+				opaque: {
+					kind: 'caller-generic',
+					resolution: 'generic-unexpanded',
+					type: 'readonly TRow[]',
+					genericParameters: ['TRow'],
+					reason: 'caller-owned',
+					owner: 'caller'
+				}
+			},
+			{
+				path: 'record',
+				opaque: {
+					kind: 'dynamic-record',
+					resolution: 'dynamic-key',
+					type: 'Readonly<Record<string, boolean>>',
+					reason: 'dynamic keys',
+					owner: 'caller',
+					serializable: true
+				}
+			}
+		]
+	});
+	for (const [label, entry, pattern] of [
+		[
+			'dynamic record without shape',
+			{
+				path: 'rows',
+				opaque: {
+					kind: 'dynamic-record',
+					resolution: 'dynamic-key',
+					type: '{ key: boolean }',
+					reason: 'x',
+					owner: 'x'
+				}
+			},
+			/not proven/u
+		],
+		[
+			'opaque with members',
+			{
+				path: 'rows',
+				members: true,
+				opaque: {
+					kind: 'caller-generic',
+					resolution: 'generic-unexpanded',
+					type: 'readonly TRow[]',
+					genericParameters: ['TRow'],
+					reason: 'x',
+					owner: 'x'
+				}
+			},
+			/both opaque and members/u
+		],
+		[
+			'opaque missing owner',
+			{
+				path: 'rows',
+				opaque: {
+					kind: 'caller-generic',
+					resolution: 'generic-unexpanded',
+					type: 'readonly TRow[]',
+					genericParameters: ['TRow'],
+					reason: 'x'
+				}
+			},
+			/type\/reason\/owner/u
+		],
+		[
+			'opaque undeclared generic parameter',
+			{
+				path: 'rows',
+				opaque: {
+					kind: 'caller-generic',
+					resolution: 'generic-unexpanded',
+					type: 'readonly TRow[] & TExtra',
+					genericParameters: ['TRow', 'TExtra'],
+					reason: 'x',
+					owner: 'x'
+				}
+			},
+			/not declared by the public API/u
+		],
+		[
+			'opaque wrong type',
+			{
+				path: 'rows',
+				opaque: {
+					kind: 'caller-generic',
+					resolution: 'generic-unexpanded',
+					type: 'readonly TRow[] & unknown',
+					genericParameters: ['TRow'],
+					reason: 'x',
+					owner: 'x'
+				}
+			},
+			/does not match/u
+		]
+	]) {
+		try {
+			validateOpaqueMetadataFacts({
+				publicFacts: new Map([
+					['rows', { declaredType: 'readonly TRow[]', genericParameters: ['TRow'] }]
+				]),
+				entries: [entry],
+				filename: label
+			});
+			throw new Error(`Opaque validator self-test accepted ${label}.`);
+		} catch (error) {
+			if (!pattern.test(String(error))) throw error;
+		}
+	}
 	for (const [label, entry, pattern] of [
 		['missing required', { path: 'items.required' }, /must be marked required/u],
 		['optional required', { path: 'items.optional', required: true }, /is optional/u],
@@ -1043,6 +1260,29 @@ async function componentFacts(source, filename, path) {
 		})),
 		filename
 	});
+	validateOpaqueMetadataFacts({
+		publicFacts,
+		entries: allMetadataEntries.map(({ item, path }) => {
+			const opaque = objectObjectProperty(item, 'opaque');
+			return {
+				path,
+				members: objectPropertyPresent(item, 'members'),
+				opaque: opaque
+					? {
+							kind: objectStringProperty(opaque, 'kind'),
+							resolution: objectStringProperty(opaque, 'resolution'),
+							type: objectStringProperty(opaque, 'type'),
+							genericParameters: objectStringArrayProperty(opaque, 'genericParameters'),
+							source: objectStringProperty(opaque, 'source'),
+							reason: objectStringProperty(opaque, 'reason'),
+							owner: objectStringProperty(opaque, 'owner'),
+							serializable: objectBooleanProperty(opaque, 'serializable')
+						}
+					: undefined
+			};
+		}),
+		filename
+	});
 	validateMemberMetadataFacts({
 		publicFacts,
 		entries: allMetadataEntries.map(({ item, path }) => ({
@@ -1054,12 +1294,19 @@ async function componentFacts(source, filename, path) {
 		})),
 		filename
 	});
+	const opaqueProps = allMetadataEntries
+		.filter(({ item }) => objectPropertyPresent(item, 'opaque'))
+		.map(({ item, path }) => ({
+			path,
+			kind: objectStringProperty(objectObjectProperty(item, 'opaque'), 'kind')
+		}));
 	return {
 		declaration: propsType,
 		id,
 		inheritedFrom: [...context.inheritedFrom].sort(),
 		name,
 		props: [...context.props.values()],
+		...(opaqueProps.length > 0 ? { opaqueProps } : {}),
 		source: sourcePath,
 		metadataGapProps
 	};
@@ -1174,7 +1421,18 @@ const teachingCoverage = Object.values(facts).map((fact) => {
 		metadataGapPropCount: metadataGapPropNames.length,
 		metadataGapPropNames,
 		fallbackPropCount: fallbackPropNames.length,
-		fallbackPropNames
+		fallbackPropNames,
+		...(fact.opaqueProps?.length
+			? {
+					opaqueStructuredProps: fact.opaqueProps,
+					opaqueByKind: Object.fromEntries(
+						[...new Set(fact.opaqueProps.map(({ kind }) => kind))].map((kind) => [
+							kind,
+							fact.opaqueProps.filter((item) => item.kind === kind).length
+						])
+					)
+				}
+			: {})
 	};
 });
 const teachingCoverageOutput = {
@@ -1187,7 +1445,19 @@ const teachingCoverageOutput = {
 		components: teachingCoverage.length,
 		declaredProps: teachingCoverage.reduce((sum, item) => sum + item.declaredPropCount, 0),
 		metadataGapProps: teachingCoverage.reduce((sum, item) => sum + item.metadataGapPropCount, 0),
-		fallbackProps: teachingCoverage.reduce((sum, item) => sum + item.fallbackPropCount, 0)
+		fallbackProps: teachingCoverage.reduce((sum, item) => sum + item.fallbackPropCount, 0),
+		opaqueStructuredProps: teachingCoverage.reduce(
+			(sum, item) => sum + (item.opaqueStructuredProps?.length ?? 0),
+			0
+		),
+		opaqueByKind: Object.fromEntries(
+			[...new Set(teachingCoverage.flatMap((item) => Object.keys(item.opaqueByKind ?? {})))].map(
+				(kind) => [
+					kind,
+					teachingCoverage.reduce((sum, item) => sum + (item.opaqueByKind?.[kind] ?? 0), 0)
+				]
+			)
+		)
 	}
 };
 const incompleteMetadata = teachingCoverage.filter(
@@ -1215,7 +1485,7 @@ const topFallback = [...teachingCoverage]
 const teachingCoverageMarkdownSource = [
 	'# API teaching coverage',
 	'',
-	`Generated from ${teachingCoverageOutput.totals.components} components and ${teachingCoverageOutput.totals.declaredProps} declared props. ${teachingCoverageOutput.totals.metadataGapProps} metadata gaps remain; ${teachingCoverageOutput.totals.fallbackProps} remain true fallbacks after teaching overrides.`,
+	`Generated from ${teachingCoverageOutput.totals.components} components and ${teachingCoverageOutput.totals.declaredProps} declared props. ${teachingCoverageOutput.totals.metadataGapProps} metadata gaps remain; ${teachingCoverageOutput.totals.fallbackProps} remain true fallbacks after teaching overrides; ${teachingCoverageOutput.totals.opaqueStructuredProps} structured props are explicitly opaque.`,
 	'',
 	'Policy: every declared public prop must have owned component metadata, binding, event or snippet evidence; both totals are enforced at zero.',
 	'',

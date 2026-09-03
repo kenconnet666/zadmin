@@ -3,6 +3,7 @@ import type {
 	ZuiComponentCategory,
 	ZuiComponentMetadata,
 	ZuiComponentStatus,
+	ZuiOpaqueMetadata,
 	ZuiPropMetadata
 } from '@zadmin/zui/metadata';
 import type { ComponentApiFacts, ComponentTeachingMetadata } from './component-api.js';
@@ -23,6 +24,7 @@ export interface ApiRow {
 	readonly since?: string;
 	readonly type: string;
 	readonly members?: readonly ApiRow[];
+	readonly opaque?: ZuiOpaqueMetadata;
 }
 
 export interface ApiSection {

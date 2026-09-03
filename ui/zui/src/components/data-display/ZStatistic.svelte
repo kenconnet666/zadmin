@@ -83,7 +83,15 @@
 				default: 'undefined',
 				description: 'Intl NumberFormat选项；precision最终覆盖小数位。',
 				name: 'formatOptions',
-				type: 'Intl.NumberFormatOptions'
+				type: 'Intl.NumberFormatOptions',
+				opaque: {
+					kind: 'external-descriptor',
+					resolution: 'external-resolved',
+					type: 'Intl.NumberFormatOptions',
+					source: 'ECMAScript Intl.NumberFormat',
+					reason: 'Intl descriptor由平台规范定义并由组件透传。',
+					owner: 'Intl runtime'
+				}
 			},
 			{
 				default: 'Intl.NumberFormat',

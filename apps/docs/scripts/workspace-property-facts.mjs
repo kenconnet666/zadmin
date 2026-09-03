@@ -39,6 +39,37 @@ function substitutedType(node, context) {
 		: substitutedType(binding.node, binding.context);
 }
 
+function dynamicRecordShape(node, context, seen = new Set()) {
+	if (!node) return false;
+	if (ts.isParenthesizedTypeNode(node)) return dynamicRecordShape(node.type, context, seen);
+	if (ts.isTypeOperatorNode(node))
+		return node.operator === ts.SyntaxKind.ReadonlyKeyword
+			? dynamicRecordShape(node.type, context, seen)
+			: false;
+	if (ts.isIntersectionTypeNode(node) || ts.isUnionTypeNode(node))
+		return node.types.some((type) => dynamicRecordShape(type, context, seen));
+	if (ts.isTypeLiteralNode(node))
+		return node.members.some((member) => ts.isIndexSignatureDeclaration(member));
+	if (!ts.isTypeReferenceNode(node) || !ts.isIdentifier(node.typeName)) return false;
+	const name = node.typeName.text;
+	if (name === 'Record') return true;
+	if (name === 'Readonly' && node.typeArguments?.[0])
+		return dynamicRecordShape(node.typeArguments[0], context, seen);
+	const binding = context.bindings.get(name);
+	if (binding) return dynamicRecordShape(binding.node, binding.context, seen);
+	const resolutionKey = `${context.modulePath}#${name}`;
+	if (seen.has(resolutionKey)) return false;
+	seen.add(resolutionKey);
+	const declaration = context.declarations?.get(name);
+	const result = declaration
+		? ts.isTypeAliasDeclaration(declaration)
+			? dynamicRecordShape(declaration.type, context, seen)
+			: declaration.members.some((member) => ts.isIndexSignatureDeclaration(member))
+		: false;
+	seen.delete(resolutionKey);
+	return result;
+}
+
 function renderedType(node, context, parentPrecedence = 0) {
 	if (!node) return 'unknown';
 	if (ts.isParenthesizedTypeNode(node)) return `(${renderedType(node.type, context)})`;
@@ -92,6 +123,8 @@ function fact(path, member, context, requiredness, typeNode) {
 		valueAllowsUndefined: allowsUndefined,
 		declaredType,
 		typeCandidates: [...new Set([declaredType, authoredType])],
+		dynamicKey: dynamicRecordShape(typeNode ?? member.type, context),
+		genericParameters: [...(context.genericParameters ?? [])],
 		source: { modulePath: context.modulePath, declaration: context.declaration }
 	};
 }
@@ -225,13 +258,7 @@ export async function collectWorkspacePropertyFacts(graph, modulePath, rootName)
 			return visitType(args[0], context, path, { ...modifiers, required: true });
 		if ((name === 'Pick' || name === 'Omit') && args[0]) {
 			const keys = literalKeys(args[1]);
-			if (!keys)
-				return [
-					{
-						...fact(path, { type: node }, context, REQUIREDNESS.unknown, node),
-						declaredType: text(node, context.sourceFile)
-					}
-				];
+			if (!keys) return [];
 			return visitType(args[0], context, path, {
 				...modifiers,
 				include: name === 'Pick' ? keys : modifiers.include,
@@ -244,15 +271,17 @@ export async function collectWorkspacePropertyFacts(graph, modulePath, rootName)
 		if (binding) return visitType(binding.node, binding.context, path, modifiers);
 		const resolution = await graph.resolveDeclaration(context.modulePath, name, args);
 		if (resolution.status !== 'local') {
-			return path ? [fact(path, { type: node }, context, REQUIREDNESS.unknown, node)] : [];
+			return [];
 		}
 		const identity = `${resolution.path}#${resolution.name}<${args.map((arg) => text(arg, context.sourceFile)).join(',')}>`;
 		if (active.has(identity)) {
-			return path ? [fact(path, { type: node }, context, REQUIREDNESS.unknown, node)] : [];
+			return [];
 		}
 		const bindings = new Map();
 		const next = {
 			bindings,
+			declarations: resolution.declarations,
+			genericParameters: context.genericParameters,
 			modulePath: resolution.path,
 			declaration: resolution.name,
 			sourceFile: resolution.declaration.getSourceFile()
@@ -307,6 +336,10 @@ export async function collectWorkspacePropertyFacts(graph, modulePath, rootName)
 	const rootBindings = new Map();
 	const rootContext = {
 		bindings: rootBindings,
+		declarations: root.declarations,
+		genericParameters: new Set(
+			(root.declaration.typeParameters ?? []).map((parameter) => parameter.name.text)
+		),
 		modulePath: root.path,
 		declaration: root.name,
 		sourceFile: root.declaration.getSourceFile()
@@ -337,7 +370,30 @@ if (isMain && process.argv.includes('--self-test')) {
 		);
 		await writeFile(
 			resolve(root, 'src/props.ts'),
-			`import type { Alias, DefaultItem, Item, Left, Right } from './shared.js';\nexport type Props = { plain: string; maybe: string | undefined; union: { a: string } | { b: string }; namedUnion: Left | Right; mode: ({ items: Array<{ name: string }>; children?: never } | { items?: never; children: string }); both: { x: string } & { y?: number }; partial: Partial<Alias>; required: Required<Alias>; picked: Pick<Alias, 'required'>; inlinePicked: Pick<{ keep: string; drop: number }, 'keep'>; omitted: Omit<Alias, 'optional'>; generic: Item<boolean>; genericArray: Item<boolean[]>; defaultGeneric: DefaultItem; }`,
+			// language=TypeScript
+			`import type { Alias, DefaultItem, Item, Left, Right } from './shared.js';
+type Dyn = Readonly<Record<string, boolean>>;
+export type Props<T = string> = {
+	plain: string;
+	maybe: string | undefined;
+	union: { a: string } | { b: string };
+	namedUnion: Left | Right;
+	mode:
+		| { items: Array<{ name: string }>; children?: never }
+		| { items?: never; children: string };
+	both: { x: string } & { y?: number };
+	partial: Partial<Alias>;
+	required: Required<Alias>;
+	picked: Pick<Alias, 'required'>;
+	inlinePicked: Pick<{ keep: string; drop: number }, 'keep'>;
+	omitted: Omit<Alias, 'optional'>;
+	generic: Item<boolean>;
+	genericArray: Item<boolean[]>;
+	defaultGeneric: DefaultItem;
+	dyn?: Dyn;
+	fixed?: { key: boolean };
+	genericOpaque?: T;
+};`,
 			'utf8'
 		);
 		const graph = new WorkspaceTypeGraph({ workspaceRoot: root });
@@ -371,6 +427,15 @@ if (isMain && process.argv.includes('--self-test')) {
 		expectFact('generic.required', 'required', 'boolean');
 		expectFact('genericArray.required', 'required', 'boolean[]');
 		expectFact('defaultGeneric.value', 'required', 'number');
+		expectFact('dyn', 'optional', 'Dyn');
+		if (facts.get('dyn')?.declaredType.includes(' & Record'))
+			throw new Error('dynamic record produced a duplicate root intersection fact');
+		if (facts.get('dyn')?.dynamicKey !== true)
+			throw new Error('dynamic record alias was not classified as dynamic-key');
+		if (facts.get('fixed')?.dynamicKey !== false)
+			throw new Error('fixed object was misclassified as dynamic-key');
+		if (!facts.get('genericOpaque')?.genericParameters.includes('T'))
+			throw new Error('root generic parameter evidence was not preserved');
 		console.log(JSON.stringify({ status: 'passed', facts: facts.size }));
 	} finally {
 		await rm(root, { recursive: true, force: true });

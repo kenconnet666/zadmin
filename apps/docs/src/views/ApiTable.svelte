@@ -61,6 +61,17 @@
 		});
 	}
 	const rows = $derived(flattenedRows(section.rows));
+	function opaqueFeature(opaque: ApiRow['opaque']): string {
+		if (!opaque) return '';
+		const details = [
+			`Opaque: ${opaque.kind}/${opaque.resolution} (${opaque.reason})`,
+			opaque.source ? `source ${opaque.source}` : '',
+			`owner ${opaque.owner}`,
+			opaque.genericParameters?.length ? `generic ${opaque.genericParameters.join(', ')}` : '',
+			opaque.serializable !== undefined ? `serializable=${opaque.serializable}` : ''
+		].filter(Boolean);
+		return details.join(' · ');
+	}
 	const titleId = $derived(`api-${section.id}-title`);
 	const descriptionId = $derived(`api-${section.id}-description`);
 	const depthClass = (depth: number) =>
@@ -100,6 +111,8 @@
 					data-api-deprecated={row.deprecatedSince ? 'true' : undefined}
 					data-api-required={row.required ? 'true' : undefined}
 					data-api-required-when={row.requiredWhen ?? undefined}
+					data-opaque={row.opaque ? 'true' : undefined}
+					data-opaque-kind={row.opaque?.kind}
 					data-api-replacement={row.replacement ?? undefined}
 					data-api-replacement-external={row.replacementExternal ? 'true' : undefined}
 				>
@@ -118,7 +131,8 @@
 							row.replacement ? `Replacement: ${row.replacement}` : '',
 							row.removeAfter ? `Remove after ${row.removeAfter}` : '',
 							row.migration ? `Migration: ${row.migration}` : '',
-							row.since ? `Since ${row.since}` : ''
+							row.since ? `Since ${row.since}` : '',
+							opaqueFeature(row.opaque)
 						]
 							.filter(Boolean)
 							.join(' · ') || '—'}</td

@@ -152,7 +152,8 @@ export class WorkspaceTypeGraph {
 						typeArguments[index] ?? null
 					])
 				),
-				resolvedType: type
+				resolvedType: type,
+				declarations: module.declarations
 			};
 		}
 		const alias = module.aliases.get(name);
@@ -181,10 +182,12 @@ if (isMain && process.argv.includes('--self-test')) {
 			"import { Item as Renamed } from './types.js'; export type Alias = Renamed;",
 			'utf8'
 		);
+		// language=TypeScript
+		const hostModule =
+			'import { Alias } from "./alias.js"; export interface Props { items: readonly Alias[]; }';
 		await writeFile(
 			resolve(root, 'src/host.svelte'),
-			'<script module lang="ts">import { Alias } from "./alias.js"; export inter' +
-				'face Props { items: readonly Alias[]; }</script>',
+			`<script module lang="ts">${hostModule}</script>`,
 			'utf8'
 		);
 		await writeFile(

@@ -140,6 +140,7 @@ export { zuiMetadata as stackMetadata } from '../components/layout/ZStack.svelte
 export { zuiMetadata as containerMetadata } from '../components/layout/ZContainer.svelte';
 export { zuiMetadata as aspectRatioMetadata } from '../components/layout/ZAspectRatio.svelte';
 export type {
+	ZuiApiMemberMetadata,
 	ZuiApiMetadata,
 	ZuiBindingMetadata,
 	ZuiComponentCategory,
@@ -149,6 +150,9 @@ export type {
 	ZuiDataStateMetadata,
 	ZuiEventMetadata,
 	ZuiKeyboardMetadata,
+	ZuiOpaqueBoundaryKind,
+	ZuiOpaqueMetadata,
+	ZuiOpaqueResolution,
 	ZuiPartMetadata,
 	ZuiPropMetadata,
 	ZuiReleasedVersion,

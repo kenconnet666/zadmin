@@ -4,8 +4,21 @@ export type ZuiComponentStatus =
 	'approved' | 'candidate' | 'deprecated' | 'experimental' | 'stable';
 export type ZuiReleasedVersion = `${number}.${number}.${number}`;
 export type ZuiComponentSince = ZuiReleasedVersion | 'unreleased';
+export type ZuiOpaqueBoundaryKind =
+	'caller-generic' | 'external-protocol' | 'external-descriptor' | 'dynamic-record';
+export type ZuiOpaqueResolution = 'generic-unexpanded' | 'external-resolved' | 'dynamic-key';
+export interface ZuiOpaqueMetadata {
+	readonly kind: ZuiOpaqueBoundaryKind;
+	readonly resolution: ZuiOpaqueResolution;
+	readonly type: string;
+	readonly genericParameters?: readonly string[];
+	readonly source?: string;
+	readonly reason: string;
+	readonly owner: string;
+	readonly serializable?: boolean;
+}
 
-export interface ZuiApiMetadata {
+interface ZuiApiMetadataBase {
 	readonly description: string;
 	readonly name: string;
 	readonly type: string;
@@ -21,16 +34,27 @@ export interface ZuiApiMetadata {
 	readonly removeAfter?: ZuiReleasedVersion;
 	/** Relative migration document or external migration URL. */
 	readonly migration?: string;
-	/** Nested public members when this API accepts a structured data object. */
-	readonly members?: readonly ZuiApiMemberMetadata[];
 }
 
-export interface ZuiApiMemberMetadata extends ZuiApiMetadata {
+/** A structured API is either expanded into owned members or explicitly opaque, never both. */
+export type ZuiApiMetadata = ZuiApiMetadataBase &
+	(
+		| {
+				readonly members?: readonly ZuiApiMemberMetadata[];
+				readonly opaque?: never;
+		  }
+		| {
+				readonly members?: never;
+				readonly opaque: ZuiOpaqueMetadata;
+		  }
+	);
+
+export type ZuiApiMemberMetadata = ZuiApiMetadata & {
 	readonly default?: string;
 	readonly required?: boolean;
 	/** Human-readable condition for discriminated-union members that are not always required. */
 	readonly requiredWhen?: string;
-}
+};
 
 export type ZuiBindingMetadata = ZuiApiMetadata;
 export type ZuiEventMetadata = ZuiApiMetadata;
@@ -52,11 +76,11 @@ export interface ZuiKeyboardMetadata {
 	readonly key: string;
 }
 
-export interface ZuiPropMetadata extends ZuiApiMetadata {
+export type ZuiPropMetadata = ZuiApiMetadata & {
 	readonly bindable?: boolean;
 	readonly default: string;
 	readonly required?: boolean;
-}
+};
 
 export interface ZuiComponentMetadata {
 	readonly bindings: readonly ZuiBindingMetadata[];
