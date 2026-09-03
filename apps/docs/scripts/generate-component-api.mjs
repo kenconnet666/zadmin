@@ -127,7 +127,12 @@ function hasDeprecatedTag(member) {
 	return ts.getJSDocTags(member).some((tag) => tag.tagName.text === 'deprecated');
 }
 
-function scanDeprecatedPropertyPaths(sourceFile, declarations, rootDeclaration) {
+function scanDeprecatedPropertyPaths(
+	sourceFile,
+	declarations,
+	rootDeclaration,
+	collectAll = false
+) {
 	const paths = new Set();
 	const seen = new Set();
 	function literalNames(node) {
@@ -196,7 +201,7 @@ function scanDeprecatedPropertyPaths(sourceFile, declarations, rootDeclaration) 
 		if (!name) return;
 		if (exclude.has(name) || (include && !include.has(name))) return;
 		const path = parentPath ? `${parentPath}.${name}` : name;
-		if (hasDeprecatedTag(member)) paths.add(path);
+		if (collectAll || hasDeprecatedTag(member)) paths.add(path);
 		visitType(member.type, path);
 	}
 	visitType(ts.isTypeAliasDeclaration(rootDeclaration) ? rootDeclaration.type : undefined, '');
@@ -256,11 +261,24 @@ export function validateDeprecationMetadata({
 	deprecatedPaths,
 	deprecatedNames,
 	entries,
+	publicPaths,
 	filename = 'metadata'
 }) {
 	const paths = new Set(deprecatedPaths ?? deprecatedNames ?? []);
-	const publicPaths = new Set(entries.map(({ path, name }) => path ?? name).filter(Boolean));
+	const knownPublicPaths = new Set(
+		publicPaths ?? entries.map(({ path, name }) => path ?? name).filter(Boolean)
+	);
 	for (const entry of entries) {
+		const entryPath = entry.path ?? entry.name;
+		const rootPath = entryPath?.split('.')[0];
+		const hasKnownChildren =
+			entryPath?.includes('.') &&
+			rootPath &&
+			[...knownPublicPaths].some((path) => path.startsWith(`${rootPath}.`));
+		if (publicPaths && hasKnownChildren && !knownPublicPaths.has(entryPath))
+			throw new Error(
+				`${filename} metadata member does not exist in the public type graph: ${entryPath ?? '<unnamed>'}.`
+			);
 		if (entry.since !== undefined && !lifecycleVersionPattern.test(entry.since))
 			throw new Error(
 				`${filename} ${entry.name ?? '<unnamed>'}.since must be unreleased or a stable x.y.z version.`
@@ -297,7 +315,7 @@ export function validateDeprecationMetadata({
 		const replacementPath = parent ? `${parent}.${entry.replacement}` : entry.replacement;
 		if (entry.replacement === name || replacementPath === path)
 			throw new Error(`${filename} deprecation metadata for ${path} cannot replace itself.`);
-		if (entry.replacementExternal !== true && !publicPaths.has(replacementPath))
+		if (entry.replacementExternal !== true && !knownPublicPaths.has(replacementPath))
 			throw new Error(
 				`${filename} deprecation metadata for ${path} requires a same-level resolvable replacement or replacementExternal=true.`
 			);
@@ -387,6 +405,17 @@ type PickedAlias = Pick<(MetaAlias), 'key'>;`,
 			{ path: 'other.id', name: 'id' }
 		]
 	});
+	try {
+		validateDeprecationMetadata({
+			deprecatedPaths: [],
+			publicPaths: ['items', 'items.id'],
+			entries: [{ path: 'items.meta.fake', name: 'fake' }],
+			filename: 'nested member existence'
+		});
+		throw new Error('Deprecation validator self-test accepted a nonexistent nested member.');
+	} catch (error) {
+		if (!String(error).includes('does not exist')) throw error;
+	}
 	const external = () =>
 		validateDeprecationMetadata({
 			deprecatedNames: ['old'],
@@ -727,6 +756,7 @@ function componentFacts(source, filename) {
 			.filter(([path]) => path !== undefined)
 	);
 	const deprecatedPaths = scanDeprecatedPropertyPaths(sourceFile, declarations, declaration);
+	const publicPaths = scanDeprecatedPropertyPaths(sourceFile, declarations, declaration, true);
 	const missingDeprecationMetadata = [...deprecatedPaths].filter((path) => {
 		const entry = metadataByName.get(path);
 		return !entry || objectStringProperty(entry.item, 'deprecatedSince') === undefined;
@@ -738,6 +768,7 @@ function componentFacts(source, filename) {
 	}
 	validateDeprecationMetadata({
 		deprecatedPaths,
+		publicPaths,
 		entries: allMetadataEntries.map(({ item, path }) => ({
 			path,
 			name: objectStringProperty(item, 'name'),

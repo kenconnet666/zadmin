@@ -200,7 +200,41 @@
 				description: '稳定列模型。',
 				name: 'columns',
 				required: true,
-				type: 'readonly DataTableColumn<TRow>[]'
+				type: 'readonly DataTableColumn<TRow>[]',
+				members: [
+					{
+						description: '列唯一标识；与visibility/width映射一致。',
+						name: 'id',
+						type: 'string',
+						required: true
+					},
+					{ description: '表头文本。', name: 'header', type: 'string', required: true },
+					{
+						description: '从行读取单元格值。',
+						name: 'accessor',
+						type: '(row: TRow) => unknown',
+						required: true
+					},
+					{
+						description: '自定义单元格内容。',
+						name: 'cell',
+						type: 'Snippet<[TRow, unknown, number]>'
+					},
+					{ description: '启用列排序；server模式只发出意图。', name: 'sortable', type: 'boolean' },
+					{
+						description: '可选本地排序比较器；省略时使用内建稳定值比较。',
+						name: 'compare',
+						type: '(left: unknown, right: unknown, leftRow: TRow, rightRow: TRow) => number'
+					},
+					{ description: '默认隐藏该列。', name: 'defaultHidden', type: 'boolean' },
+					{ description: '文本溢出省略。', name: 'ellipsis', type: 'boolean' },
+					{ description: '列宽下限像素。', name: 'minWidth', type: 'number' },
+					{ description: '列宽上限像素。', name: 'maxWidth', type: 'number' },
+					{ description: '初始列宽，可为安全CSS长度。', name: 'width', type: 'DataTableWidth' },
+					{ description: '允许调整列宽。', name: 'resizable', type: 'boolean' },
+					{ description: '逻辑方向固定列。', name: 'sticky', type: 'DataTableColumnPin' },
+					{ description: '列内容对齐方式。', name: 'align', type: 'DataTableColumnAlign' }
+				]
 			},
 			{
 				default: '{}',

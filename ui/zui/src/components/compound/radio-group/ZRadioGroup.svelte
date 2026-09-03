@@ -97,7 +97,18 @@
 				default: 'undefined（compound模式）',
 				description: '可选的数据化稳定value、文本与disabled配置；不能与children同时提供。',
 				name: 'options',
-				type: 'readonly ZRadioGroupOption[]'
+				type: 'readonly ZRadioGroupOption[]',
+				members: [
+					{
+						description: '单选项唯一值。',
+						name: 'value',
+						type: 'RadioSelectionKey',
+						required: true
+					},
+					{ description: '单选项显示文本。', name: 'label', type: 'string', required: true },
+					{ description: '禁用该单选项。', name: 'disabled', type: 'boolean' },
+					{ description: 'typeahead文本；省略时回退label。', name: 'textValue', type: 'string' }
+				]
 			},
 			{
 				bindable: true,
