@@ -1,8 +1,5 @@
 export { createBrowserIcssRuntime, createIcssRuntime, icss } from '../icss/runtime.js';
-export {
-	componentDefaultsFingerprint,
-	resolveComponentDefaults
-} from '../runtime/foundation/component-defaults.js';
+export { resolveComponentDefaults } from '../runtime/foundation/component-defaults.js';
 export type {
 	ButtonComponentDefaults,
 	ComponentDefaultPrimitive,

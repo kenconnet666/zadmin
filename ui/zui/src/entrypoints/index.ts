@@ -606,7 +606,6 @@ export type {
 export {
 	createBrowserIcssRuntime,
 	createIcssRuntime,
-	componentDefaultsFingerprint,
 	createServerStyleRegistry,
 	icss,
 	resolveComponentDefaults,

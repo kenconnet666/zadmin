@@ -200,18 +200,3 @@ export function resolveComponentDefaults(
 	}
 	return freezeDefaults(result);
 }
-
-function stable(value: unknown): string {
-	if (value === null) return 'null';
-	if (value === undefined) return 'undefined';
-	if (typeof value !== 'object') return JSON.stringify(value) ?? 'undefined';
-	const record = value as Record<string, unknown>;
-	return `{${Object.keys(record)
-		.sort()
-		.map((key) => `${JSON.stringify(key)}:${stable(record[key])}`)
-		.join(',')}}`;
-}
-
-export function componentDefaultsFingerprint(value: ResolvedZuiComponentDefaults): string {
-	return stable(value);
-}

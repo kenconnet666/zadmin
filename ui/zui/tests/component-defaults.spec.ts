@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-	componentDefaultsFingerprint,
 	resolveComponentDefaults,
 	type ResolvedZuiComponentDefaults
 } from '../src/runtime/foundation/component-defaults.js';
@@ -25,16 +24,6 @@ describe('component defaults foundation', () => {
 		expect(Object.getPrototypeOf(child.button)).toBeNull();
 		expect(resolveComponentDefaults(child, undefined)).toBe(child);
 		expect(resolveComponentDefaults(child, null)).toEqual({});
-	});
-
-	it('fingerprints independent of insertion order', () => {
-		const left = resolveComponentDefaults(undefined, {
-			button: { size: 'small', fullWidth: false }
-		});
-		const right = resolveComponentDefaults(undefined, {
-			button: { fullWidth: false, size: 'small' }
-		});
-		expect(componentDefaultsFingerprint(left)).toBe(componentDefaultsFingerprint(right));
 	});
 
 	it.each([
