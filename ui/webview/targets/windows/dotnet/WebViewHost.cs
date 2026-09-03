@@ -1230,9 +1230,14 @@ public sealed class WebViewHost : IAsyncDisposable
     private const string MoveTooltipFocusOutsideScript = """
         (() => {
           const outside = document.querySelector('[data-desktop-evidence="ZTooltip-outside-focus"]');
-          if (!(outside instanceof HTMLElement)) return false;
-          outside.focus();
-          return document.activeElement === outside;
+          const trigger = document.querySelector('[data-desktop-evidence="ZTooltipTrigger-settings"]');
+          if (!(outside instanceof HTMLElement) || !(trigger instanceof HTMLElement)) return false;
+          outside.focus({ preventScroll: true });
+          if (document.activeElement !== outside) return false;
+          // See FocusTooltipEvidenceScript: prove the real focus destination first,
+          // then deliver the target callback that WebView2 smoke automation can omit.
+          trigger.dispatchEvent(new FocusEvent('blur', { bubbles: false, composed: true, relatedTarget: outside }));
+          return true;
         })()
         """;
     private const string ReadTooltipOpenEvidenceScript = """
