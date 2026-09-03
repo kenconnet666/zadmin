@@ -568,13 +568,6 @@ export const desktopComponentContracts = Object.freeze([
 			target: 'root',
 			observations: [
 				{
-					id: 'open-state-observed',
-					kind: 'state',
-					target: 'data-state',
-					expected: true,
-					read: (raw) => raw.dialogInteraction.openStateObserved
-				},
-				{
 					id: 'presence-entered-observed',
 					kind: 'state',
 					target: 'data-presence',
@@ -791,6 +784,267 @@ const contractsByName = new Map(
 	desktopComponentContracts.map((contract) => [contract.name, contract])
 );
 
+export const desktopCompositionContracts = Object.freeze([
+	{
+		id: 'select',
+		name: 'ZSelect',
+		children: [
+			{
+				id: 'select-trigger',
+				name: 'ZSelectTrigger',
+				evidenceId: 'ZSelectTrigger-country',
+				role: 'trigger'
+			},
+			{
+				id: 'select-content',
+				name: 'ZSelectContent',
+				evidenceId: 'ZSelectContent-country',
+				role: 'content'
+			},
+			{ id: 'select-item', name: 'ZSelectItem', evidenceId: 'ZSelectItem-country-cn', role: 'item' }
+		],
+		ownerProbe: {
+			id: 'select-runtime-owner',
+			action: 'click+Enter+Escape',
+			observations: [
+				{
+					id: 'expanded-after-open',
+					kind: 'aria',
+					target: 'trigger[aria-expanded]',
+					expected: true,
+					read: (raw) => raw.selectInteraction.expandedAfterOpen
+				},
+				{
+					id: 'controls-resolved',
+					kind: 'relationship',
+					target: 'trigger[aria-controls] -> content[id]',
+					expected: true,
+					read: (raw) => raw.selectInteraction.controlsResolved
+				},
+				{
+					id: 'active-descendant-resolved',
+					kind: 'relationship',
+					target: 'content[aria-activedescendant] -> item[id]',
+					expected: true,
+					read: (raw) => raw.selectInteraction.activeDescendantResolved
+				},
+				{
+					id: 'disabled-skipped',
+					kind: 'state',
+					target: 'disabled-option',
+					expected: true,
+					read: (raw) => raw.selectInteraction.disabledSkipped
+				},
+				{
+					id: 'selected-value',
+					kind: 'state',
+					target: 'value',
+					expected: 'cn',
+					read: (raw) => raw.selectInteraction.selectedValue
+				},
+				{
+					id: 'form-data',
+					kind: 'form-data',
+					target: 'country',
+					expected: 'cn',
+					read: (raw) => raw.selectInteraction.formDataValue
+				},
+				{
+					id: 'focus-restored',
+					kind: 'focus',
+					target: 'trigger',
+					expected: true,
+					read: (raw) => raw.selectInteraction.focusAfterEscape
+				},
+				{
+					id: 'closed-after-selection',
+					kind: 'aria',
+					target: 'trigger[aria-expanded]',
+					expected: false,
+					read: (raw) => raw.selectInteraction.expandedAfterSelection
+				},
+				{
+					id: 'focus-after-selection',
+					kind: 'focus',
+					target: 'trigger',
+					expected: true,
+					read: (raw) => raw.selectInteraction.focusAfterSelection
+				},
+				{
+					id: 'closed-after-escape',
+					kind: 'aria',
+					target: 'trigger[aria-expanded]',
+					expected: false,
+					read: (raw) => raw.selectInteraction.expandedAfterEscape
+				}
+			]
+		}
+	},
+	{
+		id: 'dialog',
+		name: 'ZDialog',
+		children: [
+			{
+				id: 'dialog-trigger',
+				name: 'ZDialogTrigger',
+				evidenceId: 'ZDialogTrigger-settings',
+				role: 'trigger'
+			},
+			{
+				id: 'dialog-overlay',
+				name: 'ZDialogOverlay',
+				evidenceId: 'ZDialogOverlay-settings',
+				role: 'overlay'
+			},
+			{
+				id: 'dialog-content',
+				name: 'ZDialogContent',
+				evidenceId: 'ZDialogContent-settings',
+				role: 'content'
+			},
+			{
+				id: 'dialog-title',
+				name: 'ZDialogTitle',
+				evidenceId: 'ZDialogTitle-settings',
+				role: 'title'
+			},
+			{
+				id: 'dialog-description',
+				name: 'ZDialogDescription',
+				evidenceId: 'ZDialogDescription-settings',
+				role: 'description'
+			},
+			{
+				id: 'dialog-close',
+				name: 'ZDialogClose',
+				evidenceId: 'ZDialogClose-settings',
+				role: 'close'
+			}
+		],
+		ownerProbe: {
+			id: 'dialog-runtime-owner',
+			action: 'click+Tab+ShiftTab+Escape+click-close',
+			observations: [
+				{
+					id: 'controls-resolved',
+					kind: 'relationship',
+					target: 'trigger[aria-controls] -> content[id]',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.controlsResolved
+				},
+				{
+					id: 'open-state-observed',
+					kind: 'state',
+					target: 'dialog open state',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.openStateObserved
+				},
+				{
+					id: 'labelledby-resolved',
+					kind: 'relationship',
+					target: 'content[aria-labelledby] -> title[id]',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.labelledByResolved
+				},
+				{
+					id: 'closed-after-escape',
+					kind: 'aria',
+					target: 'trigger[aria-expanded]',
+					expected: false,
+					read: (raw) => raw.dialogInteraction.expandedAfterEscape
+				},
+				{
+					id: 'closed-after-close',
+					kind: 'aria',
+					target: 'trigger[aria-expanded]',
+					expected: false,
+					read: (raw) => raw.dialogInteraction.expandedAfterClose
+				},
+				{
+					id: 'describedby-resolved',
+					kind: 'relationship',
+					target: 'content[aria-describedby] -> description[id]',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.describedByResolved
+				},
+				{
+					id: 'content-focused-after-open',
+					kind: 'focus',
+					target: 'dialog-content',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.contentFocusedAfterOpen
+				},
+				{
+					id: 'focus-trap-held',
+					kind: 'focus',
+					target: 'dialog-content',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.focusTrapHeld
+				},
+				{
+					id: 'background-inert-applied',
+					kind: 'state',
+					target: 'background-owner',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.inertApplied
+				},
+				{
+					id: 'background-inert-released',
+					kind: 'cleanup',
+					target: 'background-owner',
+					expected: true,
+					read: (raw) =>
+						raw.dialogInteraction.inertReleasedAfterEscape &&
+						raw.dialogInteraction.inertReleasedAfterClose
+				},
+				{
+					id: 'scroll-lock-applied',
+					kind: 'state',
+					target: 'document-body',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.scrollLockApplied
+				},
+				{
+					id: 'presence-cleaned',
+					kind: 'cleanup',
+					target: 'presence',
+					expected: true,
+					read: (raw) =>
+						raw.dialogInteraction.presenceCleanedAfterEscape &&
+						raw.dialogInteraction.presenceCleanedAfterClose
+				},
+				{
+					id: 'scroll-lock-released',
+					kind: 'cleanup',
+					target: 'document-body',
+					expected: true,
+					read: (raw) =>
+						raw.dialogInteraction.scrollLockReleasedAfterEscape &&
+						raw.dialogInteraction.scrollLockReleasedAfterClose
+				},
+				{
+					id: 'reduced-motion-observed',
+					kind: 'state',
+					target: 'dialog[data-reduced-motion]',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.reducedMotionObserved
+				},
+				{
+					id: 'focus-restored',
+					kind: 'focus',
+					target: 'trigger',
+					expected: true,
+					read: (raw) =>
+						raw.dialogInteraction.focusAfterEscape && raw.dialogInteraction.focusAfterClose
+				}
+			]
+		}
+	}
+]);
+const compositionContractsById = new Map(
+	desktopCompositionContracts.map((contract) => [contract.id, contract])
+);
+
 export function mergeDesktopEvidence(initial, current, max = 256) {
 	if (!Array.isArray(initial) || !Array.isArray(current))
 		throw new TypeError('Desktop evidence collection must be arrays.');
@@ -900,6 +1154,38 @@ function normalizeComponent(contract, item, raw) {
 	};
 }
 
+function normalizeComposition(contract, raw) {
+	return {
+		id: contract.id,
+		name: contract.name,
+		source: componentSource,
+		evidenceMode: 'logical-composition',
+		children: contract.children.map(({ id, name, evidenceId, role }) => ({
+			id,
+			name,
+			evidenceId,
+			role
+		})),
+		ownerProbe: {
+			id: contract.ownerProbe.id,
+			action: contract.ownerProbe.action,
+			observations: contract.ownerProbe.observations.map(
+				({ id, kind, target, expected, read }) => ({
+					id,
+					kind,
+					target,
+					expected,
+					actual: read(raw),
+					passed: true
+				})
+			)
+		},
+		sideEffects: { ...noSideEffects },
+		runtimeObserved: true,
+		passed: true
+	};
+}
+
 function assertionMatches(assertion, { id, kind, target, expected, actual }) {
 	return (
 		assertion?.id === id &&
@@ -1000,6 +1286,79 @@ function validateNormalizedComponent(component, contract) {
 			fail(`normalized component ${contract.name} ${observation.id} observation is invalid.`);
 }
 
+function validateNormalizedComposition(composition, contract, leafById) {
+	if (
+		composition?.id !== contract.id ||
+		composition.name !== contract.name ||
+		composition.source !== componentSource ||
+		composition.evidenceMode !== 'logical-composition' ||
+		composition.runtimeObserved !== true ||
+		composition.passed !== true ||
+		Object.hasOwn(composition, 'marker') ||
+		Object.hasOwn(composition, 'locator') ||
+		Object.hasOwn(composition, 'rendered') ||
+		Object.hasOwn(composition, 'native')
+	)
+		fail(`normalized composition ${contract.name} identity is invalid.`);
+	if (
+		!composition.sideEffects ||
+		Object.keys(composition.sideEffects).length !== Object.keys(noSideEffects).length ||
+		Object.entries(noSideEffects).some(([key, value]) => composition.sideEffects[key] !== value)
+	)
+		fail(`normalized composition ${contract.name} side-effect policy is invalid.`);
+	if (
+		!Array.isArray(composition.children) ||
+		composition.children.length !== contract.children.length
+	)
+		fail(`normalized composition ${contract.name} children are invalid.`);
+	const childIds = new Set();
+	const childEvidenceIds = new Set();
+	for (const [index, expected] of contract.children.entries()) {
+		const child = composition.children[index];
+		if (
+			!child ||
+			child.id !== expected.id ||
+			child.name !== expected.name ||
+			child.evidenceId !== expected.evidenceId ||
+			child.role !== expected.role ||
+			childIds.has(child.id) ||
+			childEvidenceIds.has(child.evidenceId) ||
+			!leafById.has(child.id) ||
+			leafById.get(child.id)?.name !== expected.name ||
+			leafById.get(child.id)?.evidenceId !== expected.evidenceId
+		)
+			fail(`normalized composition ${contract.name} child reference is invalid.`);
+		childIds.add(child.id);
+		childEvidenceIds.add(child.evidenceId);
+	}
+	const probe = composition.ownerProbe;
+	if (
+		!probe ||
+		probe.id !== contract.ownerProbe.id ||
+		probe.action !== contract.ownerProbe.action ||
+		!Array.isArray(probe.observations) ||
+		probe.observations.length !== contract.ownerProbe.observations.length
+	)
+		fail(`normalized composition ${contract.name} owner probe is invalid.`);
+	const observations = new Map(
+		probe.observations.map((observation) => [observation?.id, observation])
+	);
+	if (observations.size !== probe.observations.length)
+		fail(`normalized composition ${contract.name} observations are duplicated.`);
+	for (const expected of contract.ownerProbe.observations) {
+		const observation = observations.get(expected.id);
+		if (
+			!observation ||
+			observation.kind !== expected.kind ||
+			observation.target !== expected.target ||
+			observation.expected !== expected.expected ||
+			observation.actual !== expected.expected ||
+			observation.passed !== true
+		)
+			fail(`normalized composition ${contract.name} ${expected.id} observation is invalid.`);
+	}
+}
+
 export function validateDesktopEvidence(raw, { expectedRevision } = {}) {
 	if (!raw || raw.navigation !== true) fail('host navigation is incomplete.');
 	if (
@@ -1093,9 +1452,12 @@ export function validateDesktopEvidence(raw, { expectedRevision } = {}) {
 	}
 	if (desktopComponentContracts.some(({ name }) => !byName.has(name)))
 		fail('component set is incomplete.');
+	const compositions = desktopCompositionContracts.map((contract) =>
+		normalizeComposition(contract, raw)
+	);
 	return validateDesktopEvidenceArtifact(
 		{
-			schemaVersion: 3,
+			schemaVersion: 4,
 			evidenceFormat: 'structured',
 			status: 'passed',
 			revision: raw.revision,
@@ -1104,7 +1466,8 @@ export function validateDesktopEvidence(raw, { expectedRevision } = {}) {
 			bridgeRoundTrip: raw.bridgeRoundTrip,
 			components: desktopComponentContracts.map((contract) =>
 				normalizeComponent(contract, byName.get(contract.name), raw)
-			)
+			),
+			compositions
 		},
 		{ expectedRevision }
 	);
@@ -1112,7 +1475,7 @@ export function validateDesktopEvidence(raw, { expectedRevision } = {}) {
 
 export function validateDesktopEvidenceArtifact(evidence, { expectedRevision } = {}) {
 	if (
-		evidence?.schemaVersion !== 3 ||
+		!(evidence?.schemaVersion === 3 || evidence?.schemaVersion === 4) ||
 		evidence.evidenceFormat !== 'structured' ||
 		evidence.status !== 'passed' ||
 		evidence.target !== 'windows-x64' ||
@@ -1158,6 +1521,27 @@ export function validateDesktopEvidenceArtifact(evidence, { expectedRevision } =
 		expectedByName.delete(component.name);
 	}
 	if (expectedByName.size !== 0) fail('normalized component identities are not exact and unique.');
+	if (evidence.schemaVersion === 3) {
+		if (Object.hasOwn(evidence, 'compositions'))
+			fail('schema v3 evidence must not contain logical compositions.');
+		return evidence;
+	}
+	if (
+		!Array.isArray(evidence.compositions) ||
+		evidence.compositions.length !== desktopCompositionContracts.length
+	)
+		fail('normalized composition set is invalid.');
+	const leafById = new Map(evidence.components.map((component) => [component.id, component]));
+	const compositionIds = new Set();
+	for (const composition of evidence.compositions) {
+		const contract = compositionContractsById.get(composition?.id);
+		if (!contract || compositionIds.has(composition.id) || leafById.has(composition.id))
+			fail(`normalized composition ${composition?.id ?? '<unknown>'} identity is invalid.`);
+		validateNormalizedComposition(composition, contract, leafById);
+		compositionIds.add(composition.id);
+	}
+	if (compositionIds.size !== desktopCompositionContracts.length)
+		fail('normalized composition identities are not exact and unique.');
 	return evidence;
 }
 
@@ -1286,6 +1670,15 @@ if (isMain && process.argv.includes('--self-test')) {
 		fail('self-test normalization failed.');
 	if (validateDesktopEvidence({ ...sample, revision: 'local' }).revision !== 'local')
 		fail('self-test local normalization failed.');
+	const { compositions: _v4Compositions, ...v3Artifact } = normalized;
+	void _v4Compositions;
+	validateDesktopEvidenceArtifact({ ...v3Artifact, schemaVersion: 3 });
+	try {
+		validateDesktopEvidenceArtifact({ ...v3Artifact, schemaVersion: 3, compositions: [] });
+		fail('self-test accepted v3 evidence with compositions.');
+	} catch (error) {
+		if (!String(error).includes('schema v3')) throw error;
+	}
 	const expectFailure = (label, value, pattern, options) => {
 		try {
 			validateDesktopEvidence(value, options);
@@ -1383,6 +1776,46 @@ if (isMain && process.argv.includes('--self-test')) {
 		fail('self-test accepted normalized evidence with an undeclared side effect.');
 	} catch (error) {
 		if (!String(error).includes('side-effect policy')) throw error;
+	}
+	for (const [label, mutate, pattern] of [
+		['composition marker', (value) => (value.compositions[0].marker = 'wrong'), /identity/u],
+		['composition locator', (value) => (value.compositions[0].locator = {}), /identity/u],
+		[
+			'composition child',
+			(value) => (value.compositions[0].children[0].evidenceId = 'wrong'),
+			/child reference/u
+		],
+		[
+			'composition cross-reference drift',
+			(value) =>
+				(value.components.find((component) => component.id === 'select-trigger').evidenceId =
+					'wrong'),
+			/identity/u
+		],
+		[
+			'composition observation',
+			(value) => (value.compositions[0].ownerProbe.observations[0].actual = false),
+			/observation/u
+		],
+		[
+			'composition runtime flag',
+			(value) => (value.compositions[0].runtimeObserved = false),
+			/identity/u
+		],
+		[
+			'composition duplicate id',
+			(value) => (value.compositions[1].id = value.compositions[0].id),
+			/identity/u
+		]
+	]) {
+		const changed = structuredClone(normalized);
+		mutate(changed);
+		try {
+			validateDesktopEvidenceArtifact(changed);
+			fail(`self-test accepted ${label}.`);
+		} catch (error) {
+			if (!pattern.test(String(error))) throw error;
+		}
 	}
 	const initial = [{ name: 'ZDialog', marker: 'dialog-root' }];
 	const merged = mergeDesktopEvidence(initial, [

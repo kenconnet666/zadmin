@@ -4,6 +4,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import {
 	desktopComponentContracts,
+	desktopCompositionContracts,
 	validateDesktopEvidenceArtifact
 } from '../../../ui/webview/scripts/desktop-evidence.mjs';
 
@@ -45,6 +46,16 @@ function componentEvidenceDetail(component) {
 	return `${assertions}; ${interactions || 'render-only'}`;
 }
 
+function compositionEvidenceDetail(composition) {
+	const children = composition.children
+		.map(({ name, evidenceId }) => `${name}=${evidenceId}`)
+		.join(', ');
+	const observations = composition.ownerProbe.observations
+		.map(({ id, actual }) => `${id}=${displayEvidenceValue(actual)}`)
+		.join(', ');
+	return `composition children(${children}); ownerProbe:${composition.ownerProbe.id}(${observations})`;
+}
+
 export function composeDesktopMaturity({
 	baseMaturity,
 	desktopEvidence,
@@ -80,6 +91,22 @@ export function composeDesktopMaturity({
 			throw new Error(`Desktop evidence component lacks base production stages: ${component.id}.`);
 		evidenceById.set(component.id, component);
 	}
+	for (const composition of evidence.compositions ?? []) {
+		const row = rowsById.get(composition.id);
+		if (!row || row.name !== composition.name)
+			throw new Error(`Desktop evidence composition is not in the base matrix: ${composition.id}.`);
+		if (
+			row.stages?.Declared !== true ||
+			row.stages?.Authorable !== true ||
+			row.stages?.ContractVerified !== true ||
+			row.stages?.RuntimeImplemented !== true ||
+			row.stages?.ProductionVerified !== true
+		)
+			throw new Error(
+				`Desktop evidence composition lacks base production stages: ${composition.id}.`
+			);
+		evidenceById.set(composition.id, composition);
+	}
 	const components = baseMaturity.components.map((row) => {
 		const component = evidenceById.get(row.id);
 		if (!component) return row;
@@ -91,17 +118,16 @@ export function composeDesktopMaturity({
 				DesktopVerified: [
 					{
 						path: portable(evidencePath),
-						detail: `Windows WebView2 ${component.evidenceId}: ${componentEvidenceDetail(component)}`
+						detail: `Windows WebView2 ${component.evidenceMode === 'logical-composition' ? `${component.name} composition` : component.evidenceId}: ${component.evidenceMode === 'logical-composition' ? compositionEvidenceDetail(component) : componentEvidenceDetail(component)}`
 					}
 				]
 			}
 		};
 	});
 	const verified = components.filter(({ stages }) => stages.DesktopVerified === true).length;
-	if (verified !== evidence.components.length)
-		throw new Error(
-			`Desktop maturity count mismatch: ${verified} != ${evidence.components.length}.`
-		);
+	const subjectCount = evidence.components.length + (evidence.compositions?.length ?? 0);
+	if (verified !== subjectCount)
+		throw new Error(`Desktop maturity count mismatch: ${verified} != ${subjectCount}.`);
 	return {
 		schemaVersion: 1,
 		status: 'passed',
@@ -130,7 +156,7 @@ function selfTest() {
 	});
 	const revision = 'a'.repeat(40);
 	const desktopEvidence = {
-		schemaVersion: 3,
+		schemaVersion: 4,
 		evidenceFormat: 'structured',
 		status: 'passed',
 		revision,
@@ -193,11 +219,36 @@ function selfTest() {
 					: [],
 				passed: true
 			};
-		})
+		}),
+		compositions: desktopCompositionContracts.map((contract) => ({
+			id: contract.id,
+			name: contract.name,
+			source: 'apps/desktop/src/routes/+page.svelte',
+			evidenceMode: 'logical-composition',
+			children: contract.children,
+			ownerProbe: {
+				id: contract.ownerProbe.id,
+				action: contract.ownerProbe.action,
+				observations: contract.ownerProbe.observations.map(({ id, kind, target, expected }) => ({
+					id,
+					kind,
+					target,
+					expected,
+					actual: expected,
+					passed: true
+				}))
+			},
+			sideEffects: { bridge: 'none', filesystem: 'none', network: 'none', window: 'none' },
+			runtimeObserved: true,
+			passed: true
+		}))
 	};
 	const baseMaturity = {
-		source: { metadataComponents: componentContracts.length + 1 },
-		summary: { DesktopVerified: 0, ProductionVerified: componentContracts.length + 1 },
+		source: { metadataComponents: componentContracts.length + desktopCompositionContracts.length },
+		summary: {
+			DesktopVerified: 0,
+			ProductionVerified: componentContracts.length + desktopCompositionContracts.length
+		},
 		components: [
 			...componentContracts.map(({ id, name }) => ({
 				id,
@@ -212,12 +263,19 @@ function selfTest() {
 				},
 				evidence: { DesktopVerified: [] }
 			})),
-			{
-				id: 'dialog',
-				name: 'ZDialog',
-				stages: { DesktopVerified: false, ProductionVerified: true },
+			...desktopCompositionContracts.map(({ id, name }) => ({
+				id,
+				name,
+				stages: {
+					Declared: true,
+					Authorable: true,
+					ContractVerified: true,
+					RuntimeImplemented: true,
+					DesktopVerified: false,
+					ProductionVerified: true
+				},
 				evidence: { DesktopVerified: [] }
-			}
+			}))
 		]
 	};
 	const composed = composeDesktopMaturity({
@@ -227,8 +285,8 @@ function selfTest() {
 		evidencePath: 'apps/desktop/dist/desktop/windows-x64/desktop-evidence.json'
 	});
 	if (
-		composed.summary.DesktopVerified !== componentContracts.length ||
-		composed.components.find(({ id }) => id === 'dialog')?.stages.DesktopVerified !== false
+		composed.summary.DesktopVerified !==
+		componentContracts.length + desktopCompositionContracts.length
 	)
 		throw new Error('Desktop maturity self-test produced the wrong verified set.');
 	try {

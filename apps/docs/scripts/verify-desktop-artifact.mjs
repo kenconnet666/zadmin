@@ -4,6 +4,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import {
 	desktopComponentContracts,
+	desktopCompositionContracts,
 	validateDesktopEvidenceArtifact
 } from '../../../ui/webview/scripts/desktop-evidence.mjs';
 
@@ -35,6 +36,7 @@ export function verifyDesktopArtifact({ evidence, maturity, baseMaturity, expect
 	if (typeof expectedRevision !== 'string' || !/^[a-f0-9]{40}$/u.test(expectedRevision))
 		fail('expected revision must be a full SHA.');
 	const normalized = validateDesktopEvidenceArtifact(evidence, { expectedRevision });
+	const compositions = normalized.compositions ?? [];
 	if (maturity?.schemaVersion !== 1 || maturity.status !== 'passed')
 		fail('runtime maturity identity is invalid.');
 	if (
@@ -72,6 +74,12 @@ export function verifyDesktopArtifact({ evidence, maturity, baseMaturity, expect
 	const evidenceIds = new Set(normalized.components.map((component) => component.id));
 	if (evidenceIds.size !== normalized.components.length)
 		fail('desktop evidence component ids are duplicated.');
+	const compositionIds = new Set(compositions.map((composition) => composition.id));
+	if (
+		compositionIds.size !== compositions.length ||
+		[...compositionIds].some((id) => evidenceIds.has(id))
+	)
+		fail('desktop evidence subject ids are duplicated.');
 	for (const row of maturity.components ?? []) {
 		const base = baseById.get(row.id);
 		if (!base || row.name !== base.name) fail(`base component identity changed: ${row.id}.`);
@@ -87,7 +95,7 @@ export function verifyDesktopArtifact({ evidence, maturity, baseMaturity, expect
 	if (maturity.components.length !== baseMaturity.components.length)
 		fail('runtime maturity component count does not match base matrix.');
 	const desktopVerified = maturity.components.filter((row) => row.stages?.DesktopVerified === true);
-	if (desktopVerified.length !== normalized.components.length)
+	if (desktopVerified.length !== normalized.components.length + compositions.length)
 		fail('DesktopVerified count does not match evidence component count.');
 	if (maturity.summary?.DesktopVerified !== desktopVerified.length)
 		fail('maturity summary DesktopVerified count is invalid.');
@@ -107,6 +115,19 @@ export function verifyDesktopArtifact({ evidence, maturity, baseMaturity, expect
 		)
 			fail(`missing DesktopVerified evidence record: ${component.id}.`);
 	}
+	for (const composition of compositions) {
+		const row = maturity.components.find((candidate) => candidate.id === composition.id);
+		if (!row || row.stages?.DesktopVerified !== true)
+			fail(`missing DesktopVerified row: ${composition.id}.`);
+		const records = row.evidence?.DesktopVerified;
+		if (
+			!Array.isArray(records) ||
+			records.length !== 1 ||
+			records[0]?.path !== 'apps/desktop/dist/desktop/windows-x64/desktop-evidence.json' ||
+			!records[0]?.detail?.includes(`${composition.name} composition`)
+		)
+			fail(`missing DesktopVerified composition evidence record: ${composition.id}.`);
+	}
 	return {
 		revision: expectedRevision,
 		target: maturity.target,
@@ -118,7 +139,7 @@ async function main(argv = process.argv.slice(2)) {
 	if (argv.includes('--self-test')) {
 		const revision = 'a'.repeat(40);
 		const evidence = {
-			schemaVersion: 3,
+			schemaVersion: 4,
 			evidenceFormat: 'structured',
 			status: 'passed',
 			revision,
@@ -185,12 +206,38 @@ async function main(argv = process.argv.slice(2)) {
 						]
 					: [],
 				passed: true
+			})),
+			compositions: desktopCompositionContracts.map((contract) => ({
+				id: contract.id,
+				name: contract.name,
+				source: 'apps/desktop/src/routes/+page.svelte',
+				evidenceMode: 'logical-composition',
+				children: contract.children,
+				ownerProbe: {
+					id: contract.ownerProbe.id,
+					action: contract.ownerProbe.action,
+					observations: contract.ownerProbe.observations.map(({ id, kind, target, expected }) => ({
+						id,
+						kind,
+						target,
+						expected,
+						actual: expected,
+						passed: true
+					}))
+				},
+				sideEffects: { bridge: 'none', filesystem: 'none', network: 'none', window: 'none' },
+				runtimeObserved: true,
+				passed: true
 			}))
 		};
+		const subjects = [
+			...desktopComponentContracts.map((contract) => ({ kind: 'component', contract })),
+			...desktopCompositionContracts.map((contract) => ({ kind: 'composition', contract }))
+		];
 		const base = {
-			source: { metadataComponents: desktopComponentContracts.length },
+			source: { metadataComponents: subjects.length },
 			path: '.docs/zui/component-maturity.json',
-			components: desktopComponentContracts.map((contract) => ({
+			components: subjects.map(({ contract }) => ({
 				id: contract.id,
 				name: contract.name,
 				stages: {
@@ -213,10 +260,10 @@ async function main(argv = process.argv.slice(2)) {
 			host: evidence.host,
 			bridgeRoundTrip: evidence.bridgeRoundTrip,
 			base: {
-				componentCount: desktopComponentContracts.length,
+				componentCount: subjects.length,
 				path: '.docs/zui/component-maturity.json'
 			},
-			summary: { DesktopVerified: desktopComponentContracts.length },
+			summary: { DesktopVerified: subjects.length },
 			components: base.components.map((row, index) => ({
 				...row,
 				stages: { ...row.stages, DesktopVerified: true },
@@ -224,13 +271,35 @@ async function main(argv = process.argv.slice(2)) {
 					DesktopVerified: [
 						{
 							path: 'apps/desktop/dist/desktop/windows-x64/desktop-evidence.json',
-							detail: `${desktopComponentContracts[index].name}: ${desktopComponentContracts[index].marker}`
+							detail:
+								subjects[index].kind === 'composition'
+									? `${subjects[index].contract.name} composition: ownerProbe`
+									: `${subjects[index].contract.name}: ${subjects[index].contract.marker}`
 						}
 					]
 				}
 			}))
 		};
 		verifyDesktopArtifact({ evidence, maturity, baseMaturity: base, expectedRevision: revision });
+		const { compositions: _v4Compositions, ...v3Evidence } = evidence;
+		void _v4Compositions;
+		const v3Base = {
+			...base,
+			source: { metadataComponents: desktopComponentContracts.length },
+			components: base.components.slice(0, desktopComponentContracts.length)
+		};
+		const v3Maturity = {
+			...maturity,
+			base: { ...maturity.base, componentCount: desktopComponentContracts.length },
+			summary: { DesktopVerified: desktopComponentContracts.length },
+			components: maturity.components.slice(0, desktopComponentContracts.length)
+		};
+		verifyDesktopArtifact({
+			evidence: { ...v3Evidence, schemaVersion: 3 },
+			maturity: v3Maturity,
+			baseMaturity: v3Base,
+			expectedRevision: revision
+		});
 		const mutations = [
 			['revision', (value) => (value.revision = 'b'.repeat(40)), /revision/u],
 			['host', (value) => (value.host.origin = 'https://tampered.invalid'), /host/u],
@@ -242,6 +311,22 @@ async function main(argv = process.argv.slice(2)) {
 				'evidence record',
 				(value) => (value.components[0].evidence.DesktopVerified[0].path = 'wrong.json'),
 				/evidence record/u
+			],
+			[
+				'composition evidence record',
+				(value) =>
+					(value.components.find(
+						(component) => component.id === 'select'
+					).evidence.DesktopVerified[0].detail = 'tampered'),
+				/composition evidence/u
+			],
+			[
+				'composition evidence count',
+				(value) =>
+					(value.components.find(
+						(component) => component.id === 'dialog'
+					).evidence.DesktopVerified = []),
+				/composition evidence/u
 			],
 			['duplicate id', (value) => (value.components.at(-1).id = value.components[0].id), /ids/u]
 		];
