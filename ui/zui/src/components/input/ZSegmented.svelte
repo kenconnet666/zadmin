@@ -87,7 +87,9 @@
 				default: 'undefined',
 				description: '兼容旧API的options别名；不能与options同时提供。',
 				name: 'items',
-				type: 'readonly ZSegmentedOption[]'
+				type: 'readonly ZSegmentedOption[]',
+				deprecatedSince: 'unreleased',
+				replacement: 'options'
 			},
 			{
 				bindable: true,

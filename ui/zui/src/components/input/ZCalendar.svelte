@@ -177,7 +177,9 @@
 				default: 'undefined',
 				description: '已弃用的日期禁用别名；不得与isDateUnavailable同时传入。',
 				name: 'isDateDisabled',
-				type: '(date: CalendarDate) => boolean'
+				type: '(date: CalendarDate) => boolean',
+				deprecatedSince: 'unreleased',
+				replacement: 'isDateUnavailable'
 			},
 			{
 				default: 'Field context或false',

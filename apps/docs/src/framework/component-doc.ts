@@ -9,11 +9,17 @@ import type { ComponentApiFacts, ComponentTeachingMetadata } from './component-a
 
 export interface ApiRow {
 	readonly bindable?: boolean;
+	readonly deprecatedSince?: string;
 	readonly default?: string;
 	readonly description: string;
 	readonly feature?: string;
+	readonly migration?: string;
 	readonly name: string;
+	readonly removeAfter?: string;
 	readonly required?: boolean;
+	readonly replacement?: string;
+	readonly replacementExternal?: boolean;
+	readonly since?: string;
 	readonly type: string;
 }
 

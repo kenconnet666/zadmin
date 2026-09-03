@@ -9,6 +9,18 @@ export interface ZuiApiMetadata {
 	readonly description: string;
 	readonly name: string;
 	readonly type: string;
+	/** Version in which this public API was introduced. */
+	readonly since?: ZuiComponentSince;
+	/** Version in which this API entered the deprecation period. */
+	readonly deprecatedSince?: ZuiComponentSince;
+	/** Public API name or external migration target. */
+	readonly replacement?: string;
+	/** Set when replacement intentionally points outside the ZUI public API. */
+	readonly replacementExternal?: boolean;
+	/** Planned removal version. Pre-1.0 removal is opt-in and must be explicit. */
+	readonly removeAfter?: ZuiReleasedVersion;
+	/** Relative migration document or external migration URL. */
+	readonly migration?: string;
 }
 
 export type ZuiBindingMetadata = ZuiApiMetadata;
@@ -31,13 +43,10 @@ export interface ZuiKeyboardMetadata {
 	readonly key: string;
 }
 
-export interface ZuiPropMetadata {
+export interface ZuiPropMetadata extends ZuiApiMetadata {
 	readonly bindable?: boolean;
 	readonly default: string;
-	readonly description: string;
-	readonly name: string;
 	readonly required?: boolean;
-	readonly type: string;
 }
 
 export interface ZuiComponentMetadata {

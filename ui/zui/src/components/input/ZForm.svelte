@@ -133,12 +133,16 @@
 			{
 				description: '已弃用的camelCase原生reset回调；请使用onreset。',
 				name: 'onReset',
-				type: '(event: Event) => void'
+				type: '(event: Event) => void',
+				deprecatedSince: 'unreleased',
+				replacement: 'onreset'
 			},
 			{
 				description: '已弃用的camelCase原生submit回调；请使用onsubmit。',
 				name: 'onSubmit',
-				type: '(event: SubmitEvent) => void'
+				type: '(event: SubmitEvent) => void',
+				deprecatedSince: 'unreleased',
+				replacement: 'onsubmit'
 			},
 			{
 				description: 'Schema执行抛错后的诊断回调；用户消息由validationMessages控制。',

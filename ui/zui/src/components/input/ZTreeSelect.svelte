@@ -105,7 +105,10 @@
 				default: 'native aria-label或Provider treeOptions',
 				description: '已弃用；兼容旧调用的Trigger与Tree可访问名称别名，请使用原生aria-label。',
 				name: 'ariaLabel',
-				type: 'string'
+				type: 'string',
+				deprecatedSince: 'unreleased',
+				replacement: 'aria-label',
+				replacementExternal: true
 			},
 			{
 				default: '必填',

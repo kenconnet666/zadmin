@@ -100,7 +100,9 @@
 				default: 'undefined',
 				description: 'deprecated兼容；true等价mode=page。',
 				name: 'page',
-				type: 'boolean'
+				type: 'boolean',
+				deprecatedSince: 'unreleased',
+				replacement: 'mode'
 			},
 			{
 				default: '200',

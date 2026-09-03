@@ -92,6 +92,277 @@ function metadataItemNames(object, name) {
 	});
 }
 
+function metadataItems(object, name) {
+	const property = object.properties.find((candidate) => propertyName(candidate) === name);
+	if (!property || !ts.isPropertyAssignment(property)) return [];
+	const value = unwrapExpression(property.initializer);
+	if (!ts.isArrayLiteralExpression(value)) return [];
+	return value.elements.flatMap((element) => {
+		const item = unwrapExpression(element);
+		return ts.isObjectLiteralExpression(item) ? [item] : [];
+	});
+}
+
+function objectStringProperty(object, name) {
+	const property = object.properties.find((candidate) => propertyName(candidate) === name);
+	if (!property || !ts.isPropertyAssignment(property)) return undefined;
+	const value = unwrapExpression(property.initializer);
+	return ts.isStringLiteral(value) || ts.isNoSubstitutionTemplateLiteral(value)
+		? value.text
+		: undefined;
+}
+
+function objectBooleanProperty(object, name) {
+	const property = object.properties.find((candidate) => propertyName(candidate) === name);
+	if (!property || !ts.isPropertyAssignment(property)) return undefined;
+	const value = unwrapExpression(property.initializer);
+	return value.kind === ts.SyntaxKind.TrueKeyword
+		? true
+		: value.kind === ts.SyntaxKind.FalseKeyword
+			? false
+			: undefined;
+}
+
+function hasDeprecatedTag(member) {
+	return ts.getJSDocTags(member).some((tag) => tag.tagName.text === 'deprecated');
+}
+
+const releasedVersionPattern = /^(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)$/u;
+const lifecycleVersionPattern = new RegExp(
+	`^(?:unreleased|${releasedVersionPattern.source})$`,
+	'u'
+);
+
+function safeMigrationTarget(value) {
+	if (typeof value !== 'string' || value.length === 0) return false;
+	try {
+		const url = new URL(value);
+		return (
+			url.protocol === 'https:' &&
+			url.hostname.length > 0 &&
+			url.username === '' &&
+			url.password === ''
+		);
+	} catch {
+		return (
+			!value.startsWith('/') &&
+			!value.includes('\\') &&
+			!value.includes(':') &&
+			!value.includes('\0') &&
+			value
+				.split('/')
+				.every(
+					(segment) =>
+						segment.length > 0 &&
+						segment !== '.' &&
+						segment !== '..' &&
+						/^[A-Za-z0-9._-]+$/u.test(segment)
+				)
+		);
+	}
+}
+
+function compareReleasedVersions(left, right) {
+	const leftParts = left.split('.').map(Number);
+	const rightParts = right.split('.').map(Number);
+	for (let index = 0; index < 3; index += 1) {
+		if (leftParts[index] !== rightParts[index]) return leftParts[index] - rightParts[index];
+	}
+	return 0;
+}
+
+export function validateDeprecationMetadata({ deprecatedNames, entries, filename = 'metadata' }) {
+	const publicNames = new Set(entries.map(({ name }) => name).filter(Boolean));
+	const deprecated = new Set(deprecatedNames);
+	for (const entry of entries) {
+		if (entry.since !== undefined && !lifecycleVersionPattern.test(entry.since))
+			throw new Error(
+				`${filename} ${entry.name ?? '<unnamed>'}.since must be unreleased or a stable x.y.z version.`
+			);
+		const hasLifecycle = [
+			'deprecatedSince',
+			'replacement',
+			'replacementExternal',
+			'removeAfter',
+			'migration'
+		].some((field) => entry[field] !== undefined);
+		if (!hasLifecycle) continue;
+		const name = entry.name;
+		if (!name || !deprecated.has(name))
+			throw new Error(
+				`${filename} metadata lifecycle does not match a @deprecated public API: ${name ?? '<unnamed>'}.`
+			);
+		if (entry.deprecatedSince !== undefined && !lifecycleVersionPattern.test(entry.deprecatedSince))
+			throw new Error(
+				`${filename} ${name}.deprecatedSince must be unreleased or a stable x.y.z version.`
+			);
+		if (entry.removeAfter !== undefined && !releasedVersionPattern.test(entry.removeAfter))
+			throw new Error(`${filename} ${name}.removeAfter must be a stable x.y.z version.`);
+		if (entry.migration !== undefined && !safeMigrationTarget(entry.migration))
+			throw new Error(
+				`${filename} ${name}.migration must be a safe repository-relative path or https URL.`
+			);
+		if (entry.deprecatedSince === undefined)
+			throw new Error(`${filename} deprecation metadata for ${name} requires deprecatedSince.`);
+		if (typeof entry.replacement !== 'string' || entry.replacement.length === 0)
+			throw new Error(`${filename} deprecation metadata for ${name} requires replacement.`);
+		if (entry.replacement === name)
+			throw new Error(`${filename} deprecation metadata for ${name} cannot replace itself.`);
+		if (entry.replacementExternal !== true && !publicNames.has(entry.replacement))
+			throw new Error(
+				`${filename} deprecation metadata for ${name} requires a resolvable replacement or replacementExternal=true.`
+			);
+		if (entry.replacementExternal !== undefined && entry.replacementExternal !== true)
+			throw new Error(`${filename} ${name}.replacementExternal must be true when specified.`);
+		if (
+			entry.since !== undefined &&
+			entry.since !== 'unreleased' &&
+			entry.deprecatedSince !== 'unreleased' &&
+			compareReleasedVersions(entry.deprecatedSince, entry.since) < 0
+		)
+			throw new Error(`${filename} ${name} cannot be deprecated before it was introduced.`);
+		if (
+			entry.removeAfter !== undefined &&
+			entry.deprecatedSince !== 'unreleased' &&
+			compareReleasedVersions(entry.removeAfter, entry.deprecatedSince) <= 0
+		)
+			throw new Error(`${filename} ${name}.removeAfter must follow deprecatedSince.`);
+	}
+}
+
+if (process.argv.includes('--self-test')) {
+	const valid = () =>
+		validateDeprecationMetadata({
+			deprecatedNames: ['old'],
+			entries: [
+				{
+					name: 'old',
+					deprecatedSince: 'unreleased',
+					replacement: 'new',
+					migration: 'docs/migrate.md'
+				},
+				{ name: 'new', since: '0.1.0' }
+			]
+		});
+	valid();
+	const external = () =>
+		validateDeprecationMetadata({
+			deprecatedNames: ['old'],
+			entries: [
+				{
+					name: 'old',
+					deprecatedSince: '0.1.0',
+					replacement: 'aria-label',
+					replacementExternal: true
+				}
+			]
+		});
+	external();
+	validateDeprecationMetadata({
+		deprecatedNames: ['old'],
+		entries: [
+			{
+				name: 'old',
+				deprecatedSince: '0.2.0',
+				replacement: 'aria-label',
+				replacementExternal: true,
+				migration: 'https://example.com/migrations/old'
+			}
+		]
+	});
+	const rejects = [
+		['missing deprecatedSince', [{ name: 'old', replacement: 'new' }], /requires deprecatedSince/u],
+		[
+			'orphan metadata',
+			[{ name: 'other', deprecatedSince: 'unreleased', replacement: 'new' }],
+			/does not match/u
+		],
+		[
+			'missing replacement',
+			[{ name: 'old', deprecatedSince: 'unreleased' }],
+			/requires replacement/u
+		],
+		[
+			'same replacement',
+			[{ name: 'old', deprecatedSince: 'unreleased', replacement: 'old' }],
+			/cannot replace itself/u
+		],
+		[
+			'unresolved replacement',
+			[{ name: 'old', deprecatedSince: 'unreleased', replacement: 'new' }],
+			/resolvable replacement/u
+		],
+		['invalid since', [{ name: 'new', since: 'next' }], /\.since must be/u],
+		[
+			'invalid deprecatedSince',
+			[{ name: 'old', deprecatedSince: 'next', replacement: 'new' }],
+			/deprecatedSince must be/u
+		],
+		[
+			'invalid removal',
+			[{ name: 'old', deprecatedSince: 'unreleased', replacement: 'new', removeAfter: '1.0' }],
+			/removeAfter must be/u
+		],
+		[
+			'unsafe migration',
+			[{ name: 'old', deprecatedSince: 'unreleased', replacement: 'new', migration: '../x.md' }],
+			/safe repository-relative/u
+		],
+		[
+			'replacementExternal false',
+			[
+				{
+					name: 'old',
+					deprecatedSince: 'unreleased',
+					replacement: 'new',
+					replacementExternal: false
+				},
+				{ name: 'new' }
+			],
+			/replacementExternal must be true/u
+		],
+		['stray lifecycle', [{ name: 'old', removeAfter: '1.0.0' }], /requires deprecatedSince/u],
+		[
+			'deprecated before introduction',
+			[
+				{
+					name: 'old',
+					since: '0.3.0',
+					deprecatedSince: '0.2.0',
+					replacement: 'new'
+				},
+				{ name: 'new' }
+			],
+			/deprecated before/u
+		],
+		[
+			'removal before deprecation',
+			[
+				{
+					name: 'old',
+					deprecatedSince: '0.2.0',
+					replacement: 'new',
+					removeAfter: '0.2.0'
+				},
+				{ name: 'new' }
+			],
+			/must follow/u
+		]
+	];
+	for (const [label, entries, expectedPattern] of rejects) {
+		try {
+			validateDeprecationMetadata({ deprecatedNames: ['old'], entries, filename: label });
+		} catch (error) {
+			if (expectedPattern.test(String(error))) continue;
+			throw new Error(`Deprecation validator self-test received an unexpected ${label} error.`, {
+				cause: error
+			});
+		}
+		throw new Error(`Deprecation validator self-test accepted ${label}.`);
+	}
+	console.log('Deprecation validator self-test passed.');
+}
+
 function declarationMap(sourceFile) {
 	const declarations = new Map();
 	for (const statement of sourceFile.statements) {
@@ -169,6 +440,7 @@ function collectProperty(member, context, include, exclude) {
 			? resolvedTypeText(member.type, context.sourceFile, context.declarations)
 			: 'unknown'
 	});
+	if (hasDeprecatedTag(member)) context.deprecatedProps.add(name);
 }
 
 function collectReference(name, typeArguments, context, include, exclude, printed) {
@@ -258,6 +530,7 @@ function componentFacts(source, filename) {
 		declarations,
 		inheritedFrom: new Set(),
 		props: new Map(),
+		deprecatedProps: new Set(),
 		seen: new Set(),
 		sourceFile
 	};
@@ -271,6 +544,36 @@ function componentFacts(source, filename) {
 		(name) =>
 			!documentedProps.has(name) && name !== 'class' && name !== 'style' && !/^on[a-z]/u.test(name)
 	);
+	const metadataEntries = ['bindings', 'events', 'props', 'snippets'].flatMap((section) =>
+		metadataItems(metadata, section).map((item) => ({ item, section }))
+	);
+	const metadataByName = new Map(
+		metadataEntries
+			.map(({ item, section }) => [objectStringProperty(item, 'name'), { item, section }])
+			.filter(([name]) => name !== undefined)
+	);
+	const missingDeprecationMetadata = [...context.deprecatedProps].filter((name) => {
+		const entry = metadataByName.get(name);
+		return !entry || objectStringProperty(entry.item, 'deprecatedSince') === undefined;
+	});
+	if (missingDeprecationMetadata.length > 0) {
+		throw new Error(
+			`${filename} has @deprecated public API without structured metadata: ${missingDeprecationMetadata.join(', ')}.`
+		);
+	}
+	validateDeprecationMetadata({
+		deprecatedNames: context.deprecatedProps,
+		entries: metadataEntries.map(({ item }) => ({
+			name: objectStringProperty(item, 'name'),
+			since: objectStringProperty(item, 'since'),
+			deprecatedSince: objectStringProperty(item, 'deprecatedSince'),
+			replacement: objectStringProperty(item, 'replacement'),
+			replacementExternal: objectBooleanProperty(item, 'replacementExternal'),
+			removeAfter: objectStringProperty(item, 'removeAfter'),
+			migration: objectStringProperty(item, 'migration')
+		})),
+		filename
+	});
 	return {
 		declaration: propsType,
 		id,

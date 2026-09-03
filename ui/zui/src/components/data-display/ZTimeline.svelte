@@ -111,7 +111,13 @@
 			},
 			{ description: '时间流尚未完成的尾项正文。', name: 'pending', type: 'Snippet' },
 			{ description: 'pending marker；默认使用ZSpinner。', name: 'pendingIcon', type: 'Snippet' },
-			{ description: '已弃用的content单参数别名。', name: 'item', type: 'Snippet<[TimelineItem]>' }
+			{
+				description: '已弃用的content单参数别名。',
+				name: 'item',
+				type: 'Snippet<[TimelineItem]>',
+				deprecatedSince: 'unreleased',
+				replacement: 'content'
+			}
 		],
 		source: 'ui/zui/src/components/data-display/ZTimeline.svelte',
 		states: [

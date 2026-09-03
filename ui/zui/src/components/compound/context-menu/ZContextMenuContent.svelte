@@ -48,7 +48,10 @@
 				default: 'undefined',
 				description: 'deprecated兼容别名；请改用aria-label。',
 				name: 'ariaLabel',
-				type: 'string'
+				type: 'string',
+				deprecatedSince: 'unreleased',
+				replacement: 'aria-label',
+				replacementExternal: true
 			},
 			{ default: 'true', description: 'Item焦点是否循环。', name: 'loop', type: 'boolean' },
 			{

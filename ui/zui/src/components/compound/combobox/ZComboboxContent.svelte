@@ -59,7 +59,10 @@
 				default: 'undefined',
 				description: 'deprecated兼容别名；请改用aria-label。',
 				name: 'ariaLabel',
-				type: 'string'
+				type: 'string',
+				deprecatedSince: 'unreleased',
+				replacement: 'aria-label',
+				replacementExternal: true
 			},
 			{
 				bindable: true,

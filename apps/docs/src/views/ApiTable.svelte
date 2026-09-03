@@ -59,12 +59,21 @@
 				>
 			{/snippet}
 			{#each section.rows as row (row.name)}
-				<tr>
+				<tr data-deprecated={row.deprecatedSince ? 'true' : undefined}>
 					<td><ZCode code={row.name} inline /></td>
 					<td><ZCode code={row.type} inline /></td>
 					<td><ZCode code={row.default ?? '—'} inline /></td>
 					<td
-						>{[row.required ? 'required' : '', row.bindable ? 'bindable' : '', row.feature ?? '']
+						>{[
+							row.required ? 'required' : '',
+							row.bindable ? 'bindable' : '',
+							row.feature ?? '',
+							row.deprecatedSince ? `Deprecated since ${row.deprecatedSince}` : '',
+							row.replacement ? `Replacement: ${row.replacement}` : '',
+							row.removeAfter ? `Remove after ${row.removeAfter}` : '',
+							row.migration ? `Migration: ${row.migration}` : '',
+							row.since ? `Since ${row.since}` : ''
+						]
 							.filter(Boolean)
 							.join(' · ') || '—'}</td
 					>

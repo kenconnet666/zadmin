@@ -10,6 +10,18 @@ import { defineComponentDoc } from './component-doc.js';
 import { componentRoute } from './router.js';
 
 describe('ZUI component documentation catalog', () => {
+	it('publishes structured deprecation versions and replacements', () => {
+		const deprecated = componentDocs.flatMap((doc) =>
+			doc.api.flatMap((section) => section.rows.filter((row) => row.deprecatedSince))
+		);
+		expect(deprecated.length).toBeGreaterThan(0);
+		for (const row of deprecated) {
+			expect(row.since ?? row.deprecatedSince).toBeTruthy();
+			expect(row.replacement).toBeTruthy();
+			expect(row.replacementExternal === true || row.replacement !== row.name).toBe(true);
+		}
+	});
+
 	it('keeps all owner pages, generated API facts, demos and routes integrity-aligned', () => {
 		const facts = (Object.values(generatedApiFacts) as unknown[]).filter(
 			(value): value is ComponentApiFacts =>

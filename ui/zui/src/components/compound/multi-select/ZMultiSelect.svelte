@@ -52,7 +52,9 @@
 			{
 				description: 'deprecated value兼容绑定别名；不得与value同时传入。',
 				name: 'values',
-				type: 'readonly SelectionKey[]'
+				type: 'readonly SelectionKey[]',
+				deprecatedSince: 'unreleased',
+				replacement: 'value'
 			},
 			{ description: '当前打开状态。', name: 'open', type: 'boolean' }
 		],
@@ -73,7 +75,9 @@
 			{
 				description: 'deprecated回调别名；不得与onValueChange同时传入。',
 				name: 'onValuesChange',
-				type: '(values: readonly SelectionKey[]) => void'
+				type: '(values: readonly SelectionKey[]) => void',
+				deprecatedSince: 'unreleased',
+				replacement: 'onValueChange'
 			},
 			{
 				description: '打开或dismiss后调用一次。',
@@ -122,13 +126,17 @@
 				default: 'undefined',
 				description: 'deprecated values兼容别名；不得与value同时传入。',
 				name: 'values',
-				type: 'readonly SelectionKey[]'
+				type: 'readonly SelectionKey[]',
+				deprecatedSince: 'unreleased',
+				replacement: 'value'
 			},
 			{
 				default: 'undefined',
 				description: 'deprecated defaultValues兼容别名；不得与defaultValue同时传入。',
 				name: 'defaultValues',
-				type: 'readonly SelectionKey[]'
+				type: 'readonly SelectionKey[]',
+				deprecatedSince: 'unreleased',
+				replacement: 'defaultValue'
 			},
 			{
 				bindable: true,

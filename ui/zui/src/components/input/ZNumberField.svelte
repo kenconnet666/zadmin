@@ -144,7 +144,9 @@
 				default: '!allowOutOfRange',
 				description: 'deprecated兼容别名；新代码使用allowOutOfRange。',
 				name: 'clampOnBlur',
-				type: 'boolean'
+				type: 'boolean',
+				deprecatedSince: 'unreleased',
+				replacement: 'allowOutOfRange'
 			},
 			{
 				default: '本地化默认文案',

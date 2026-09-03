@@ -103,7 +103,10 @@
 				default: '—',
 				description: '兼容旧版的可访问名称alias；新代码使用原生aria-label。',
 				name: 'ariaLabel',
-				type: 'string'
+				type: 'string',
+				deprecatedSince: 'unreleased',
+				replacement: 'aria-label',
+				replacementExternal: true
 			},
 			{
 				default: '必填',
