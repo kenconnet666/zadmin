@@ -88,6 +88,7 @@ export function composeDesktopMaturity({
 		revision: evidence.revision,
 		target: evidence.target,
 		host: evidence.host,
+		bridgeRoundTrip: evidence.bridgeRoundTrip,
 		base: {
 			componentCount: baseMaturity.components.length,
 			path: '.docs/zui/component-maturity.json'
@@ -102,11 +103,11 @@ function selfTest() {
 		['box', 'ZBox', 'ZBox-status'],
 		['stack', 'ZStack', 'ZStack'],
 		['text', 'ZText', 'ZText'],
-		['button', 'ZButton', 'ZButton-runtime-report']
+		['button', 'ZButton', 'ZButton-component-action']
 	];
 	const revision = 'a'.repeat(40);
 	const desktopEvidence = {
-		schemaVersion: 1,
+		schemaVersion: 2,
 		status: 'passed',
 		revision,
 		target: 'windows-x64',
@@ -119,8 +120,14 @@ function selfTest() {
 			navigation: true,
 			hydrated: true,
 			bridge: true,
+			bridgeResponseValidated: true,
 			pageErrors: [],
 			source: 'https://app.zadmin.local/'
+		},
+		bridgeRoundTrip: {
+			method: 'app.snapshot',
+			requestReceived: true,
+			responseValidated: true
 		},
 		components: componentContracts.map(([id, name, evidenceId]) => ({
 			id,
@@ -129,7 +136,8 @@ function selfTest() {
 			evidenceId,
 			rendered: true,
 			assertions: ['native=true'],
-			interactions: name === 'ZButton' ? ['click:Runtime report'] : [],
+			interactions:
+				name === 'ZButton' ? ['click:Verify component', 'state:data-desktop-evidence-runs=1'] : [],
 			passed: true
 		}))
 	};

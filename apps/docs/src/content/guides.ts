@@ -294,7 +294,12 @@ zuiHandle({ csp: { hash: true } });`,
 				id: 'validation',
 				title: '验收',
 				paragraphs: [
-					'Windows门禁构建并测试C# core、desktop Svelte、Release Host和Vite development Host。'
+					'Windows门禁构建并测试C# core、desktop Svelte、Release Host和Vite development Host。组件证据、交互证据与bridge round-trip分别记录：原生语义不能替代真实点击，收到请求也不能冒充成功响应。'
+				],
+				bullets: [
+					'组件记录精确marker、原生元素语义和可观察交互状态。',
+					'Host独立校验app.snapshot请求与成功响应，再绑定完整revision。',
+					'运行时生成的DesktopVerified矩阵不回写仓库内静态成熟度基线。'
 				],
 				links: [{ href: '#/components/provider', label: 'Provider偏好轴' }]
 			}

@@ -6,7 +6,7 @@ const expectedMarkers = Object.freeze({
 	ZBox: 'ZBox-status',
 	ZStack: 'ZStack',
 	ZText: 'ZText',
-	ZButton: 'ZButton-runtime-report'
+	ZButton: 'ZButton-component-action'
 });
 const expectedIds = Object.freeze({
 	ZBox: 'box',
@@ -15,6 +15,10 @@ const expectedIds = Object.freeze({
 	ZButton: 'button'
 });
 const isMain = process.argv[1] ? pathToFileURL(process.argv[1]).href === import.meta.url : false;
+const expectedButtonInteractions = Object.freeze([
+	'click:Verify component',
+	'state:data-desktop-evidence-runs=1'
+]);
 
 function fail(message) {
 	throw new Error(`Desktop evidence validation failed: ${message}`);
@@ -29,8 +33,13 @@ function productionSource(value) {
 }
 
 export function validateDesktopEvidence(raw, { expectedRevision } = {}) {
-	if (!raw || raw.navigation !== true || raw.bridgeRequest !== true)
-		fail('host handshake is incomplete.');
+	if (!raw || raw.navigation !== true) fail('host navigation is incomplete.');
+	if (
+		raw.bridgeRoundTrip?.method !== 'app.snapshot' ||
+		raw.bridgeRoundTrip?.requestReceived !== true ||
+		raw.bridgeRoundTrip?.responseValidated !== true
+	)
+		fail('bridge round trip is incomplete.');
 	if (
 		raw.protocol !== 1 ||
 		raw.target !== 'windows-x64' ||
@@ -64,6 +73,7 @@ export function validateDesktopEvidence(raw, { expectedRevision } = {}) {
 		raw.host.navigation !== true ||
 		raw.host.hydrated !== true ||
 		raw.host.bridge !== true ||
+		raw.host.bridgeResponseValidated !== true ||
 		!Array.isArray(raw.host.pageErrors) ||
 		raw.host.pageErrors.length !== 0 ||
 		raw.host.source !== raw.source ||
@@ -74,8 +84,8 @@ export function validateDesktopEvidence(raw, { expectedRevision } = {}) {
 		fail('production source is invalid.');
 	if (typeof raw.page.webViewVersion !== 'string' || raw.page.webViewVersion.length === 0)
 		fail('WebView2 version is missing.');
-	if (!String(raw.page.statusAfter ?? '').startsWith('Protocol '))
-		fail('runtime report status is missing.');
+	if (raw.page.componentActionRuns !== 1)
+		fail('component interaction did not produce exactly one observable state transition.');
 	if (!Array.isArray(raw.components) || raw.components.length !== expectedNames.length)
 		fail('component set must contain exactly four records.');
 	const byName = new Map();
@@ -99,18 +109,19 @@ export function validateDesktopEvidence(raw, { expectedRevision } = {}) {
 			native.tag === 'BUTTON' &&
 			native.type === 'button' &&
 			native.disabled === false &&
-			native.text === 'Runtime report'
+			native.text === 'Verify component'
 	};
 	for (const name of expectedNames)
 		if (!expectedNative[name](byName.get(name).native))
 			fail(`native ${name} semantics are invalid.`);
 	return validateDesktopEvidenceArtifact(
 		{
-			schemaVersion: 1,
+			schemaVersion: 2,
 			status: 'passed',
 			revision: raw.revision,
 			target: raw.target,
 			host: raw.host,
+			bridgeRoundTrip: raw.bridgeRoundTrip,
 			components: expectedNames.map((name) => {
 				const item = byName.get(name);
 				return {
@@ -120,10 +131,7 @@ export function validateDesktopEvidence(raw, { expectedRevision } = {}) {
 					evidenceId: item.marker,
 					rendered: item.present,
 					assertions: Object.entries(item.native).map(([key, value]) => `${key}=${String(value)}`),
-					interactions:
-						name === 'ZButton'
-							? ['click:Runtime report', 'bridge:app.snapshot', 'live-status:Protocol']
-							: [],
+					interactions: name === 'ZButton' ? [...expectedButtonInteractions] : [],
 					passed: true
 				};
 			})
@@ -134,7 +142,7 @@ export function validateDesktopEvidence(raw, { expectedRevision } = {}) {
 
 export function validateDesktopEvidenceArtifact(evidence, { expectedRevision } = {}) {
 	if (
-		evidence?.schemaVersion !== 1 ||
+		evidence?.schemaVersion !== 2 ||
 		evidence.status !== 'passed' ||
 		evidence.target !== 'windows-x64' ||
 		(!revisionPattern.test(evidence.revision ?? '') &&
@@ -143,6 +151,12 @@ export function validateDesktopEvidenceArtifact(evidence, { expectedRevision } =
 	)
 		fail('normalized identity is invalid.');
 	if (
+		evidence.bridgeRoundTrip?.method !== 'app.snapshot' ||
+		evidence.bridgeRoundTrip?.requestReceived !== true ||
+		evidence.bridgeRoundTrip?.responseValidated !== true
+	)
+		fail('normalized bridge round trip is invalid.');
+	if (
 		evidence.host?.runtime !== 'WebView2' ||
 		evidence.host?.implementation !== 'WebViewHost' ||
 		evidence.host?.origin !== 'https://app.zadmin.local' ||
@@ -150,6 +164,7 @@ export function validateDesktopEvidenceArtifact(evidence, { expectedRevision } =
 		evidence.host?.navigation !== true ||
 		evidence.host?.hydrated !== true ||
 		evidence.host?.bridge !== true ||
+		evidence.host?.bridgeResponseValidated !== true ||
 		!Array.isArray(evidence.host?.pageErrors) ||
 		evidence.host.pageErrors.length !== 0 ||
 		typeof evidence.host.webViewVersion !== 'string' ||
@@ -176,7 +191,13 @@ export function validateDesktopEvidenceArtifact(evidence, { expectedRevision } =
 	}
 	if (expectedByName.size !== 0) fail('normalized component identities are not exact and unique.');
 	const button = evidence.components.find(({ name }) => name === 'ZButton');
-	if (!button?.interactions.includes('click:Runtime report'))
+	if (
+		!button ||
+		button.interactions.length !== expectedButtonInteractions.length ||
+		expectedButtonInteractions.some(
+			(interaction, index) => button.interactions[index] !== interaction
+		)
+	)
 		fail('normalized ZButton interaction is missing.');
 	return evidence;
 }
@@ -184,7 +205,11 @@ export function validateDesktopEvidenceArtifact(evidence, { expectedRevision } =
 if (isMain && process.argv.includes('--self-test')) {
 	const sample = {
 		navigation: true,
-		bridgeRequest: true,
+		bridgeRoundTrip: {
+			method: 'app.snapshot',
+			requestReceived: true,
+			responseValidated: true
+		},
 		protocol: 1,
 		source: 'https://app.zadmin.local/',
 		revision: 'a'.repeat(40),
@@ -198,6 +223,7 @@ if (isMain && process.argv.includes('--self-test')) {
 			navigation: true,
 			hydrated: true,
 			bridge: true,
+			bridgeResponseValidated: true,
 			pageErrors: [],
 			source: 'https://app.zadmin.local/'
 		},
@@ -208,7 +234,8 @@ if (isMain && process.argv.includes('--self-test')) {
 			viteClient: false,
 			webViewVersion: '130.0.1',
 			errors: [],
-			statusAfter: 'Protocol 1 · WebView2'
+			statusAfter: 'Desktop component evidence 1: ZButton click handled.',
+			componentActionRuns: 1
 		},
 		components: [
 			{
@@ -226,9 +253,9 @@ if (isMain && process.argv.includes('--self-test')) {
 			},
 			{
 				name: 'ZButton',
-				marker: 'ZButton-runtime-report',
+				marker: 'ZButton-component-action',
 				present: true,
-				native: { tag: 'BUTTON', type: 'button', disabled: false, text: 'Runtime report' }
+				native: { tag: 'BUTTON', type: 'button', disabled: false, text: 'Verify component' }
 			}
 		]
 	};
@@ -245,6 +272,19 @@ if (isMain && process.argv.includes('--self-test')) {
 			if (!String(error).includes(pattern)) throw error;
 		}
 	};
+	expectFailure(
+		'bridge response failure',
+		{
+			...sample,
+			bridgeRoundTrip: { ...sample.bridgeRoundTrip, responseValidated: false }
+		},
+		'bridge round trip'
+	);
+	expectFailure(
+		'component interaction failure',
+		{ ...sample, page: { ...sample.page, componentActionRuns: 0 } },
+		'component interaction'
+	);
 	expectFailure(
 		'incomplete component set',
 		{ ...sample, components: sample.components.slice(0, 3) },

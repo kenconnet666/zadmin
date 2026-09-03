@@ -18,6 +18,7 @@
 	let hydrated = $state(false);
 	let status = $state('Ready. Choose a capability probe.');
 	let selectedPath = $state<string>();
+	let componentEvidenceRuns = $state(0);
 	const pageClass = icss(defaultTheme, (s) => {
 		s.padding._large;
 		s.maxWidth('1100px');
@@ -34,6 +35,11 @@
 
 	function setResult<T>(label: string, result: DesktopResult<T>, format: (value: T) => string) {
 		status = `${label}: ${resultMessage(result, format)}`;
+	}
+
+	function recordComponentEvidence(): void {
+		componentEvidenceRuns += 1;
+		status = `Desktop component evidence ${componentEvidenceRuns}: ZButton click handled.`;
 	}
 
 	async function runtimeReport(): Promise<void> {
@@ -148,9 +154,12 @@
 		<ZStack class={panelClass} gap="small">
 			<ZText as="strong">Safe automated probes</ZText>
 			<ZStack direction="row" gap="small" wrap>
-				<ZButton data-desktop-evidence="ZButton-runtime-report" onclick={runtimeReport}
-					>Runtime report</ZButton
+				<ZButton
+					data-desktop-evidence="ZButton-component-action"
+					data-desktop-evidence-runs={componentEvidenceRuns}
+					onclick={recordComponentEvidence}>Verify component</ZButton
 				>
+				<ZButton variant="secondary" onclick={runtimeReport}>Runtime report</ZButton>
 				<ZButton variant="secondary" onclick={typedErrorProbe}>Native guard error</ZButton>
 				<ZButton variant="secondary" onclick={storeProbe}>Store roundtrip</ZButton>
 				<ZButton variant="secondary" onclick={logProbe}>Write log</ZButton>

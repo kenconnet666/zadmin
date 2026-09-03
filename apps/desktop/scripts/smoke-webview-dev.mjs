@@ -60,7 +60,7 @@ const exitCode = await new Promise((resolveExit, rejectExit) => {
 
 try {
 	if (exitCode !== 0) throw new Error(`WebView development host exited with code ${exitCode}.`);
-	/** @type {{ bridgeRequest?: boolean; error?: string; navigation?: boolean; page?: { bodyText?: string; errors?: string[]; hasBridge?: boolean; origin?: string; viteClient?: boolean }; protocol?: number; source?: string }} */
+	/** @type {{ bridgeRoundTrip?: { method?: string; requestReceived?: boolean; responseValidated?: boolean }; error?: string; navigation?: boolean; page?: { bodyText?: string; errors?: string[]; hasBridge?: boolean; origin?: string; viteClient?: boolean }; protocol?: number; source?: string }} */
 	const report = JSON.parse(await readReport());
 	if (report.error) throw new Error(report.error);
 	const isDevelopmentOrigin = (value) => {
@@ -81,7 +81,13 @@ try {
 	if (report.source !== undefined && !isDevelopmentOrigin(report.source)) {
 		throw new Error(`Unexpected development source: ${JSON.stringify(report.source)}.`);
 	}
-	if (!report.navigation || !report.bridgeRequest || report.protocol !== 1) {
+	if (
+		!report.navigation ||
+		report.protocol !== 1 ||
+		report.bridgeRoundTrip?.method !== 'app.snapshot' ||
+		report.bridgeRoundTrip?.requestReceived !== true ||
+		report.bridgeRoundTrip?.responseValidated !== true
+	) {
 		throw new Error(`Development protocol handshake is incomplete: ${JSON.stringify(report)}.`);
 	}
 	if (!report.page?.hasBridge || !report.page?.viteClient) {
