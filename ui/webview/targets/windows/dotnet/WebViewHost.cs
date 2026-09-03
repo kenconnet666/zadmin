@@ -321,6 +321,7 @@ public sealed class WebViewHost : IAsyncDisposable
                 disabled: node?.hasAttribute('disabled') ?? false,
                 text: node?.textContent?.trim() ?? '',
                 href: node?.getAttribute('href') ?? null,
+                ariaLabel: node?.getAttribute('aria-label') ?? null,
                 ariaLive: node?.getAttribute('aria-live') ?? null,
                 role: node?.getAttribute('role') ?? null,
                 name: node?.getAttribute('name') ?? null,
