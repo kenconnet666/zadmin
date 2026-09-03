@@ -36,16 +36,23 @@ interface ZuiApiMetadataBase {
 	readonly migration?: string;
 }
 
-/** A structured API is either expanded into owned members or explicitly opaque, never both. */
+/** A public API is exactly one of structured, opaque, or callable. */
 export type ZuiApiMetadata = ZuiApiMetadataBase &
 	(
 		| {
 				readonly members?: readonly ZuiApiMemberMetadata[];
 				readonly opaque?: never;
+				readonly callable?: never;
 		  }
 		| {
 				readonly members?: never;
 				readonly opaque: ZuiOpaqueMetadata;
+				readonly callable?: never;
+		  }
+		| {
+				readonly members?: never;
+				readonly opaque?: never;
+				readonly callable: ZuiCallableMetadata;
 		  }
 	);
 
@@ -55,6 +62,18 @@ export type ZuiApiMemberMetadata = ZuiApiMetadata & {
 	/** Human-readable condition for discriminated-union members that are not always required. */
 	readonly requiredWhen?: string;
 };
+
+export type ZuiCallableParameterMetadata = ZuiApiMetadata & {
+	readonly required: boolean;
+	/** Marks a variadic callback parameter (`...items`). */
+	readonly rest?: boolean;
+};
+
+export interface ZuiCallableMetadata {
+	/** Parameters for a callback property declared directly by the component's root Props type. */
+	readonly parameters: readonly ZuiCallableParameterMetadata[];
+	readonly returns?: never;
+}
 
 export type ZuiBindingMetadata = ZuiApiMetadata;
 export type ZuiEventMetadata = ZuiApiMetadata;

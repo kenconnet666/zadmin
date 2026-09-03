@@ -1,11 +1,16 @@
-import { readdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
 import { dirname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { format, resolveConfig } from 'prettier';
 import ts from 'typescript';
 
-import { collectWorkspacePropertyFacts, REQUIREDNESS } from './workspace-property-facts.mjs';
+import {
+	collectWorkspacePropertyFacts,
+	collectWorkspacePropertyFactsFromType,
+	REQUIREDNESS
+} from './workspace-property-facts.mjs';
 import { WorkspaceTypeGraph } from './workspace-type-graph.mjs';
 
 const docsRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -1024,6 +1029,8 @@ if (process.argv.includes('--self-test')) {
 		throw new Error(`Deprecation validator self-test accepted ${label}.`);
 	}
 	console.log('Deprecation validator self-test passed.');
+	await callableContractSelfTest();
+	console.log('Callable contract self-test passed.');
 }
 
 function declarationMap(sourceFile) {
@@ -1177,6 +1184,428 @@ function collectDeclaration(declaration, context, include = undefined, exclude =
 	context.seen.delete(name);
 }
 
+function renderCallableType(node, context, seen = new Set()) {
+	if (!node) return 'unknown';
+	if (ts.isParenthesizedTypeNode(node)) return `(${renderCallableType(node.type, context, seen)})`;
+	if (ts.isTypeOperatorNode(node)) {
+		const operator = ts.tokenToString(node.operator) ?? node.operator.toString();
+		return `${operator} ${renderCallableType(node.type, context, seen)}`;
+	}
+	if (ts.isTypeReferenceNode(node)) {
+		const referenceName = node.typeName.getText(context.sourceFile);
+		const binding = ts.isIdentifier(node.typeName)
+			? context.bindings?.get(node.typeName.text)
+			: undefined;
+		if (binding && !seen.has(node.typeName.text)) {
+			const next = new Set(seen).add(node.typeName.text);
+			return renderCallableType(binding.node, binding.context, next);
+		}
+		const args = node.typeArguments?.map((item) => renderCallableType(item, context)).join(', ');
+		return `${referenceName}${args ? `<${args}>` : ''}`;
+	}
+	if (ts.isFunctionTypeNode(node))
+		return `(${node.parameters.map((parameter) => renderCallableParameter(parameter, context)).join(', ')}) => ${renderCallableType(node.type, context)}`;
+	if (ts.isArrayTypeNode(node)) return `${renderCallableType(node.elementType, context, seen)}[]`;
+	if (ts.isUnionTypeNode(node))
+		return node.types.map((item) => renderCallableType(item, context, seen)).join(' | ');
+	if (ts.isIntersectionTypeNode(node))
+		return node.types.map((item) => renderCallableType(item, context, seen)).join(' & ');
+	return normalizeType(node.getText(context.sourceFile));
+}
+
+function renderCallableParameter(parameter, context) {
+	const prefix = parameter.dotDotDotToken ? '...' : '';
+	const optional = parameter.questionToken ? '?' : '';
+	return `${prefix}${parameter.name?.getText(context.sourceFile) ?? 'arg'}${optional}: ${renderCallableType(parameter.type, context)}`;
+}
+
+export async function resolveCallableSignature(
+	graph,
+	modulePath,
+	typeNode,
+	seen = new Set(),
+	context
+) {
+	if (!typeNode) return undefined;
+	const current = context ?? {
+		modulePath,
+		sourceFile: typeNode.getSourceFile(),
+		declarations: (await graph.load(modulePath)).declarations,
+		bindings: new Map()
+	};
+	if (ts.isParenthesizedTypeNode(typeNode))
+		return resolveCallableSignature(graph, current.modulePath, typeNode.type, seen, current);
+	if (ts.isFunctionTypeNode(typeNode))
+		return {
+			parameters: [...typeNode.parameters].map((node) => ({
+				node,
+				sourceFile: current.sourceFile,
+				context: current
+			})),
+			returnType: typeNode.type,
+			context: current
+		};
+	if (ts.isInterfaceDeclaration(typeNode)) {
+		const signatures = typeNode.members.filter(ts.isCallSignatureDeclaration);
+		if (signatures.length !== 1)
+			throw new Error(
+				`${typeNode.name.text} callable interface must contain exactly one call signature.`
+			);
+		return {
+			parameters: [...signatures[0].parameters].map((node) => ({
+				node,
+				sourceFile: current.sourceFile,
+				context: current
+			})),
+			returnType: signatures[0].type,
+			context: current
+		};
+	}
+	if (ts.isUnionTypeNode(typeNode)) {
+		const members = typeNode.types.filter(
+			(member) =>
+				member.kind !== ts.SyntaxKind.UndefinedKeyword &&
+				!(ts.isLiteralTypeNode(member) && member.literal.kind === ts.SyntaxKind.NullKeyword)
+		);
+		const resolved = [];
+		for (const member of members) {
+			const candidate = await resolveCallableSignature(
+				graph,
+				current.modulePath,
+				member,
+				seen,
+				current
+			);
+			if (!candidate) throw new Error('Callable union contains a non-callable member.');
+			resolved.push(candidate);
+		}
+		if (resolved.length !== 1)
+			throw new Error('Callable union must contain exactly one callable member.');
+		return resolved[0];
+	}
+	if (!ts.isTypeReferenceNode(typeNode) || !ts.isIdentifier(typeNode.typeName)) return undefined;
+	const identity = `${current.modulePath}#${typeNode.typeName.text}<${typeNode.typeArguments?.map((item) => renderCallableType(item, current)).join(',') ?? ''}>`;
+	if (seen.has(identity)) return undefined;
+	seen.add(identity);
+	const resolution = await graph.resolveDeclaration(
+		current.modulePath,
+		typeNode.typeName.text,
+		typeNode.typeArguments ?? []
+	);
+	let resolved;
+	if (resolution.status === 'local') {
+		const bindings = new Map(current.bindings ?? []);
+		for (const [index, parameter] of (resolution.declaration.typeParameters ?? []).entries()) {
+			const argument = typeNode.typeArguments?.[index];
+			if (argument) bindings.set(parameter.name.text, { node: argument, context: current });
+			else if (parameter.default)
+				bindings.set(parameter.name.text, { node: parameter.default, context: current });
+		}
+		const next = {
+			modulePath: resolution.path,
+			sourceFile: resolution.declaration.getSourceFile(),
+			declarations: resolution.declarations,
+			bindings
+		};
+		const target = ts.isTypeAliasDeclaration(resolution.declaration)
+			? resolution.declaration.type
+			: ts.isInterfaceDeclaration(resolution.declaration)
+				? resolution.declaration
+				: undefined;
+		resolved = await resolveCallableSignature(graph, resolution.path, target, seen, next);
+	}
+	seen.delete(identity);
+	return resolved;
+}
+
+function callableParameterFact(parameter) {
+	const { node, sourceFile, context } = parameter;
+	return {
+		name: node.name?.getText(sourceFile),
+		type: renderCallableType(node.type, context),
+		optional: Boolean(node.questionToken),
+		rest: Boolean(node.dotDotDotToken)
+	};
+}
+
+function equivalentCallableType(left, right) {
+	const compact = (value) => normalizeType(value).replace(/\s*([(),<>|&[\]])\s*/gu, '$1');
+	return compact(left) === compact(right);
+}
+
+async function isArrayLikeCallableParameter(node, context, graph, seen = new Set()) {
+	if (!node) return false;
+	if (ts.isParenthesizedTypeNode(node))
+		return isArrayLikeCallableParameter(node.type, context, graph, seen);
+	if (ts.isUnionTypeNode(node) || ts.isIntersectionTypeNode(node)) {
+		for (const member of node.types)
+			if (await isArrayLikeCallableParameter(member, context, graph, seen)) return true;
+		return false;
+	}
+	if (ts.isArrayTypeNode(node)) return true;
+	if (ts.isTypeOperatorNode(node) && node.operator === ts.SyntaxKind.ReadonlyKeyword)
+		return isArrayLikeCallableParameter(node.type, context, graph, seen);
+	if (!ts.isTypeReferenceNode(node) || !ts.isIdentifier(node.typeName)) return false;
+	if (['Array', 'ReadonlyArray'].includes(node.typeName.text)) return true;
+	const binding = context.bindings?.get(node.typeName.text);
+	if (binding) {
+		const identity = `binding:${node.typeName.text}`;
+		if (seen.has(identity)) return false;
+		seen.add(identity);
+		const result = await isArrayLikeCallableParameter(binding.node, binding.context, graph, seen);
+		seen.delete(identity);
+		return result;
+	}
+	const resolution = await graph.resolveDeclaration(
+		context.modulePath,
+		node.typeName.text,
+		node.typeArguments ?? []
+	);
+	if (resolution.status !== 'local' || !ts.isTypeAliasDeclaration(resolution.declaration))
+		return false;
+	const identity = `${resolution.path}#${resolution.name}<${(node.typeArguments ?? []).map((item) => renderCallableType(item, context)).join(',')}>`;
+	if (seen.has(identity)) return false;
+	seen.add(identity);
+	const bindings = new Map(context.bindings ?? []);
+	for (const [index, parameter] of (resolution.declaration.typeParameters ?? []).entries()) {
+		const argument = node.typeArguments?.[index];
+		if (argument) bindings.set(parameter.name.text, { node: argument, context });
+		else if (parameter.default)
+			bindings.set(parameter.name.text, { node: parameter.default, context });
+	}
+	const result = await isArrayLikeCallableParameter(
+		resolution.declaration.type,
+		{
+			...context,
+			modulePath: resolution.path,
+			sourceFile: resolution.declaration.getSourceFile(),
+			bindings
+		},
+		graph,
+		seen
+	);
+	seen.delete(identity);
+	return result;
+}
+
+function validateCallableParameterFacts(
+	filename,
+	eventName,
+	declaredParameters,
+	metadataParameters
+) {
+	if (!declaredParameters || declaredParameters.length !== metadataParameters.length)
+		throw new Error(
+			`${filename} ${eventName}.callable parameter count does not match its public function type.`
+		);
+	for (const [index, parameter] of declaredParameters.entries()) {
+		const expected = metadataParameters[index];
+		const actual = callableParameterFact(parameter);
+		const expectedName = objectStringProperty(expected, 'name');
+		const expectedType = objectStringProperty(expected, 'type');
+		if (!expectedName || !expectedType || !parameter.node.type)
+			throw new Error(
+				`${filename} ${eventName}.callable parameter ${index} must declare a type and name.`
+			);
+		const expectedRequired = objectBooleanProperty(expected, 'required') !== false;
+		const expectedRest = objectBooleanProperty(expected, 'rest') === true;
+		if (
+			expectedName !== actual.name ||
+			expectedRequired === actual.optional ||
+			expectedRest !== actual.rest ||
+			normalizeType(expectedType) !== normalizeType(actual.type)
+		)
+			throw new Error(
+				`${filename} ${eventName}.callable parameter ${index} does not match its public function type.`
+			);
+	}
+}
+
+function validateCallableMetadataShape(filename, eventName, callable) {
+	if (!callable) throw new Error(`${filename} ${eventName}.callable must be an object.`);
+	if (objectPropertyPresent(callable, 'returns'))
+		throw new Error(
+			`${filename} ${eventName}.callable returns are not supported until return validation is implemented.`
+		);
+}
+
+async function callableContractSelfTest() {
+	const parse = (source) =>
+		ts.createSourceFile('callable-self-test.ts', source, ts.ScriptTarget.Latest, true);
+	const fnFile = parse(
+		'type Callback = (value: string, optional?: number, ...rest: boolean[]) => void;'
+	);
+	const fn = fnFile.statements[0].type;
+	const parameters = [...fn.parameters].map((node) => ({
+		node,
+		sourceFile: fnFile,
+		context: { bindings: new Map(), sourceFile: fnFile }
+	}));
+	const metadataFile = parse(`const metadata = { parameters: [
+		{ name: 'value', type: 'string', required: true },
+		{ name: 'optional', type: 'number', required: false },
+		{ name: 'rest', type: 'boolean[]', required: true, rest: true }
+	] };`);
+	const metadata = metadataFile.statements[0].declarationList.declarations[0].initializer;
+	const metadataParameters = metadata.properties.find((item) => item.name.text === 'parameters')
+		.initializer.elements;
+	validateCallableParameterFacts('self-test', 'valid', parameters, metadataParameters);
+	const rejects = [
+		['count', metadataParameters.slice(0, 2)],
+		[
+			'name',
+			metadataParameters.map((item, index) =>
+				index === 0
+					? parse(`const x = { name: 'other', type: 'string', required: true };`).statements[0]
+							.declarationList.declarations[0].initializer
+					: item
+			)
+		],
+		['order', [metadataParameters[1], metadataParameters[0], metadataParameters[2]]],
+		[
+			'type',
+			metadataParameters.map((item, index) =>
+				index === 0
+					? parse(`const x = { name: 'value', type: 'number', required: true };`).statements[0]
+							.declarationList.declarations[0].initializer
+					: item
+			)
+		],
+		[
+			'optional',
+			metadataParameters.map((item, index) =>
+				index === 1
+					? parse(`const x = { name: 'optional', type: 'number', required: true };`).statements[0]
+							.declarationList.declarations[0].initializer
+					: item
+			)
+		],
+		[
+			'rest',
+			metadataParameters.map((item, index) =>
+				index === 2
+					? parse(`const x = { name: 'rest', type: 'boolean[]', required: true, rest: false };`)
+							.statements[0].declarationList.declarations[0].initializer
+					: item
+			)
+		],
+		[
+			'missing-type',
+			metadataParameters.map((item, index) =>
+				index === 0
+					? parse(`const x = { name: 'value', required: true };`).statements[0].declarationList
+							.declarations[0].initializer
+					: item
+			)
+		]
+	];
+	for (const [label, candidate] of rejects) {
+		try {
+			validateCallableParameterFacts('self-test', label, parameters, candidate);
+		} catch {
+			continue;
+		}
+		throw new Error(`Callable contract self-test accepted ${label}.`);
+	}
+	let missingRejected = false;
+	try {
+		validateCallableParameterFacts('self-test', 'missing', undefined, metadataParameters);
+	} catch {
+		missingRejected = true;
+	}
+	if (!missingRejected) throw new Error('Callable contract self-test accepted missing signature.');
+	const returns = parse(`const x = { returns: { type: 'string' } };`).statements[0].declarationList
+		.declarations[0].initializer;
+	if (!objectPropertyPresent(returns, 'returns'))
+		throw new Error('Callable returns self-test setup failed.');
+	let returnsRejected = false;
+	try {
+		validateCallableMetadataShape('self-test', 'returns', returns);
+	} catch {
+		returnsRejected = true;
+	}
+	if (!returnsRejected) throw new Error('Callable contract self-test accepted returns metadata.');
+	const root = await mkdtemp(resolve(tmpdir(), 'zadmin-callable-self-test-'));
+	try {
+		await mkdir(resolve(root, 'src'), { recursive: true });
+		await writeFile(
+			resolve(root, 'src/types.ts'),
+			'export interface Payload { value: string; } export type Alias = (payload: Payload) => void; export type Items = readonly Payload[]; export interface InterfaceCallback { (payload: Payload): void; }',
+			'utf8'
+		);
+		await writeFile(
+			resolve(root, 'src/host.ts'),
+			"import type { Alias, InterfaceCallback, Items, Payload } from './types.js'; export type Imported = Alias; export interface Props { direct: (payload: Payload) => void; alias: Alias; imported: Imported; iface: InterfaceCallback; items: (items: Items) => void; }",
+			'utf8'
+		);
+		const graph = new WorkspaceTypeGraph({ workspaceRoot: root });
+		const host = await graph.load(resolve(root, 'src/host.ts'));
+		for (const name of ['direct', 'alias', 'imported', 'iface', 'items']) {
+			const property = host.file.statements
+				.find(ts.isInterfaceDeclaration)
+				.members.find((member) => member.name?.getText(host.file) === name);
+			const signature = await resolveCallableSignature(graph, host.path, property.type);
+			if (!signature || signature.parameters.length !== 1)
+				throw new Error(`callable self-test failed for ${name}`);
+			if (
+				name === 'items' &&
+				!(await isArrayLikeCallableParameter(
+					signature.parameters[0].node.type,
+					signature.parameters[0].context,
+					graph
+				))
+			)
+				throw new Error('alias array self-test failed');
+		}
+		for (const source of [
+			'export interface Empty {}',
+			'export interface Many { (value: string): void; (value: number): void; }'
+		]) {
+			await writeFile(resolve(root, 'src/bad.ts'), source, 'utf8');
+			const bad = await graph.load(resolve(root, 'src/bad.ts'));
+			let rejected = false;
+			try {
+				await resolveCallableSignature(graph, bad.path, bad.file.statements[0]);
+			} catch {
+				rejected = true;
+			}
+			if (!rejected)
+				throw new Error('Callable interface cardinality self-test accepted invalid interface.');
+		}
+		for (const source of [
+			'export type Ambiguous = ((value: string) => void) | ((value: number) => void);',
+			'export type Mixed = ((value: string) => void) | string;'
+		]) {
+			await writeFile(resolve(root, 'src/union.ts'), source, 'utf8');
+			const unionGraph = new WorkspaceTypeGraph({ workspaceRoot: root });
+			const union = await unionGraph.load(resolve(root, 'src/union.ts'));
+			const declaration = union.file.statements.find(ts.isTypeAliasDeclaration);
+			let rejected = false;
+			try {
+				await resolveCallableSignature(unionGraph, union.path, declaration.type);
+			} catch {
+				rejected = true;
+			}
+			if (!rejected) throw new Error('Callable union self-test accepted an ambiguous shape.');
+		}
+		await writeFile(
+			resolve(root, 'src/nullable.ts'),
+			'export type Nullable = ((value: string) => void) | null | undefined;',
+			'utf8'
+		);
+		const nullableGraph = new WorkspaceTypeGraph({ workspaceRoot: root });
+		const nullable = await nullableGraph.load(resolve(root, 'src/nullable.ts'));
+		const nullableDeclaration = nullable.file.statements.find(ts.isTypeAliasDeclaration);
+		if (
+			(await resolveCallableSignature(nullableGraph, nullable.path, nullableDeclaration.type))
+				?.parameters.length !== 1
+		)
+			throw new Error('Callable nullable-union self-test rejected its single callable member.');
+	} finally {
+		await rm(root, { recursive: true, force: true });
+	}
+}
+
 async function componentFacts(source, filename, path) {
 	const match = /<script\s+module\s+lang=["']ts["']>([\s\S]*?)<\/script>/u.exec(source);
 	if (!match) throw new Error(`${filename} is missing its TypeScript module script.`);
@@ -1214,10 +1643,17 @@ async function componentFacts(source, filename, path) {
 		entries.flatMap(({ item, section }) => {
 			const name = objectStringProperty(item, 'name');
 			const path = name ? (parentPath ? `${parentPath}.${name}` : name) : parentPath;
+			const callable = objectObjectProperty(item, 'callable');
+			const callableParameters = callable
+				? metadataItems(callable, 'parameters').map((parameter) => ({ item: parameter, section }))
+				: [];
 			return [
 				{ item, section, path },
 				...flattenMetadataEntries(
-					metadataItems(item, 'members').map((member) => ({ item: member, section })),
+					[
+						...metadataItems(item, 'members').map((member) => ({ item: member, section })),
+						...callableParameters
+					],
 					path
 				)
 			];
@@ -1235,6 +1671,70 @@ async function componentFacts(source, filename, path) {
 	);
 	const deprecatedPaths = await scanWorkspacePropertyPaths(workspaceTypeGraph, path, propsType);
 	const publicFacts = await collectWorkspacePropertyFacts(workspaceTypeGraph, path, propsType);
+	for (const event of [
+		...metadataItems(metadata, 'bindings'),
+		...metadataItems(metadata, 'events'),
+		...metadataItems(metadata, 'props'),
+		...metadataItems(metadata, 'snippets')
+	]) {
+		const eventName = objectStringProperty(event, 'name');
+		const eventType = objectStringProperty(event, 'type');
+		const signature = declaration.members?.find((member) => propertyName(member) === eventName);
+		if (!objectPropertyPresent(event, 'callable')) continue;
+		if (!eventName || !signature || !ts.isPropertySignature(signature))
+			throw new Error(
+				`${filename} callable ${eventName || '<unnamed>'} must target a property declared directly by ${propsType}.`
+			);
+		const callable = objectObjectProperty(event, 'callable');
+		validateCallableMetadataShape(filename, eventName, callable);
+		const declared = await resolveCallableSignature(workspaceTypeGraph, path, signature.type);
+		const declaredParameters = declared?.parameters ?? [];
+		const metadataParameters = metadataItems(callable, 'parameters');
+		validateCallableParameterFacts(filename, eventName, declared?.parameters, metadataParameters);
+		const publicPropertyType = signature.type?.getText(signature.getSourceFile());
+		if (
+			!eventType ||
+			!declared ||
+			!publicPropertyType ||
+			!equivalentCallableType(eventType, publicPropertyType)
+		)
+			throw new Error(
+				`${filename} ${eventName}.callable type does not match its public property type.`
+			);
+		for (const parameter of declaredParameters) {
+			const actual = callableParameterFact(parameter);
+			const parameterName = actual.name;
+			if (!parameterName)
+				throw new Error(`${filename} ${eventName}.callable parameter must have a name.`);
+			const parameterType = parameter.node.type;
+			const parameterPath = `${eventName}.${parameterName}`;
+			publicFacts.set(parameterPath, {
+				path: parameterPath,
+				requiredness: actual.optional ? REQUIREDNESS.optional : REQUIREDNESS.required,
+				declaredType: actual.type,
+				valueAllowsUndefined: actual.optional,
+				source: { modulePath: parameter.context.modulePath, declaration: propsType }
+			});
+			const payloadFacts = (await isArrayLikeCallableParameter(
+				parameterType,
+				parameter.context,
+				workspaceTypeGraph
+			))
+				? new Map()
+				: await collectWorkspacePropertyFactsFromType(
+						workspaceTypeGraph,
+						parameterType,
+						parameter.context
+					);
+			for (const [memberPath, memberFact] of payloadFacts) {
+				if (!memberPath) continue;
+				publicFacts.set(`${parameterPath}.${memberPath}`, {
+					...memberFact,
+					path: `${parameterPath}.${memberPath}`
+				});
+			}
+		}
+	}
 	const publicPaths = new Set(publicFacts.keys());
 	const missingDeprecationMetadata = [...deprecatedPaths].filter((path) => {
 		const entry = metadataByName.get(path);

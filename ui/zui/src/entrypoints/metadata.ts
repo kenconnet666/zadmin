@@ -142,6 +142,8 @@ export { zuiMetadata as aspectRatioMetadata } from '../components/layout/ZAspect
 export type {
 	ZuiApiMemberMetadata,
 	ZuiApiMetadata,
+	ZuiCallableMetadata,
+	ZuiCallableParameterMetadata,
 	ZuiBindingMetadata,
 	ZuiComponentCategory,
 	ZuiComponentMetadata,

@@ -3,6 +3,7 @@ import type {
 	ZuiComponentCategory,
 	ZuiComponentMetadata,
 	ZuiComponentStatus,
+	ZuiApiMetadata,
 	ZuiOpaqueMetadata,
 	ZuiPropMetadata
 } from '@zadmin/zui/metadata';
@@ -18,6 +19,7 @@ export interface ApiRow {
 	readonly name: string;
 	readonly removeAfter?: string;
 	readonly required?: boolean;
+	readonly rest?: boolean;
 	readonly requiredWhen?: string;
 	readonly replacement?: string;
 	readonly replacementExternal?: boolean;
@@ -153,26 +155,41 @@ function appendMetadataApi(
 	prefix = '',
 	titlePrefix = ''
 ): void {
+	const projectCallable = (
+		item: ZuiApiMetadata & Partial<Pick<ZuiPropMetadata, 'bindable' | 'default'>>
+	): ApiRow => {
+		if (!item.callable) return item;
+		const { callable, ...row } = item;
+		return {
+			...row,
+			members: callable.parameters.map((parameter) => projectCallable(parameter))
+		};
+	};
 	api.push({
 		description: facts
 			? `类型和必填性来自${facts.declaration}的静态AST；默认值与说明由文档教学metadata补充。组件同时转发适用的原生属性。`
 			: '下表来自组件单文件中的公开metadata；组件同时转发适用的原生属性。',
 		id: `${prefix}props`,
-		rows: props,
+		rows: props.map(projectCallable),
 		title: `${titlePrefix}Props`
 	});
 	if (metadata.bindings.length > 0) {
 		api.push({
 			id: `${prefix}bindings`,
-			rows: metadata.bindings.map((binding) => ({ ...binding, bindable: true })),
+			rows: metadata.bindings.map((binding) => ({ ...projectCallable(binding), bindable: true })),
 			title: `${titlePrefix}Bindings`
 		});
 	}
 	if (metadata.events.length > 0) {
-		api.push({ id: `${prefix}events`, rows: metadata.events, title: `${titlePrefix}Events` });
+		const eventRows = metadata.events.map(projectCallable);
+		api.push({ id: `${prefix}events`, rows: eventRows, title: `${titlePrefix}Events` });
 	}
 	if (metadata.snippets.length > 0) {
-		api.push({ id: `${prefix}snippets`, rows: metadata.snippets, title: `${titlePrefix}Snippets` });
+		api.push({
+			id: `${prefix}snippets`,
+			rows: metadata.snippets.map(projectCallable),
+			title: `${titlePrefix}Snippets`
+		});
 	}
 	if (metadata.parts.length > 0) {
 		api.push({

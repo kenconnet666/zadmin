@@ -91,7 +91,17 @@
 			{
 				description: '按type、size、duplicate或max-files返回拒绝项。',
 				name: 'onReject',
-				type: '(rejections: readonly FileRejection<File>[]) => void'
+				type: '(rejections: readonly FileRejection<File>[]) => void',
+				callable: {
+					parameters: [
+						{
+							name: 'rejections',
+							description: '拒绝项数组；元素结构见FileRejection。',
+							required: true,
+							type: 'readonly FileRejection<File>[]'
+						}
+					]
+				}
 			}
 		],
 		keyboard: [
@@ -268,7 +278,37 @@
 				default: 'undefined',
 				description: '调用方上传适配器；接收owner-realm AbortSignal和进度命令。',
 				name: 'transport',
-				type: 'FileUploadTransport'
+				type: 'FileUploadTransport',
+				callable: {
+					parameters: [
+						{
+							name: 'context',
+							type: 'FileUploadTransportContext',
+							required: true,
+							description: 'transport payload。',
+							members: [
+								{
+									description: '当前队列项。',
+									name: 'item',
+									required: true,
+									type: 'FileUploadItem'
+								},
+								{
+									description: '取消信号；transport必须尊重。',
+									name: 'signal',
+									required: true,
+									type: 'AbortSignal'
+								},
+								{
+									description: '报告0–100进度。',
+									name: 'reportProgress',
+									required: true,
+									type: '(progress: number) => void'
+								}
+							]
+						}
+					]
+				}
 			},
 			{
 				default: 'false',

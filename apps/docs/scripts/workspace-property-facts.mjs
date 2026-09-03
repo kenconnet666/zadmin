@@ -107,6 +107,47 @@ function literalKeys(node) {
 }
 
 function fact(path, member, context, requiredness, typeNode) {
+	if (ts.isMethodSignature(member) || ts.isMethodDeclaration(member)) {
+		const methodTypeParameters = member.typeParameters ?? [];
+		const methodBindings = new Map(context.bindings);
+		for (const parameter of methodTypeParameters) methodBindings.delete(parameter.name.text);
+		const methodContext = {
+			...context,
+			bindings: methodBindings,
+			genericParameters: new Set([
+				...(context.genericParameters ?? []),
+				...methodTypeParameters.map((parameter) => parameter.name.text)
+			])
+		};
+		const genericParameters = member.typeParameters?.length
+			? `<${member.typeParameters
+					.map((parameter) => {
+						const constraint = parameter.constraint
+							? ` extends ${renderedType(parameter.constraint, methodContext)}`
+							: '';
+						const defaultType = parameter.default
+							? ` = ${renderedType(parameter.default, methodContext)}`
+							: '';
+						return `${parameter.name.text}${constraint}${defaultType}`;
+					})
+					.join(', ')}>`
+			: '';
+		const parameterType = (parameter) => {
+			const prefix = parameter.dotDotDotToken ? '...' : '';
+			const optional = parameter.questionToken ? '?' : '';
+			return `${prefix}${text(parameter.name, context.sourceFile)}${optional}: ${renderedType(parameter.type, methodContext)}`;
+		};
+		const declaredType = `${genericParameters}(${member.parameters.map(parameterType).join(', ')}) => ${renderedType(member.type, methodContext)}`;
+		return {
+			path,
+			requiredness,
+			valueAllowsUndefined: requiredness !== REQUIREDNESS.required,
+			declaredType,
+			typeCandidates: [declaredType],
+			genericParameters: [...methodContext.genericParameters],
+			source: { modulePath: context.modulePath, declaration: context.declaration }
+		};
+	}
 	const resolved = substitutedType(typeNode ?? member.type, context);
 	const resolvedType = resolved.node;
 	const declaredType = renderedType(typeNode ?? member.type, context);
@@ -188,7 +229,7 @@ function hasForbiddenAncestor(items, path) {
 }
 
 /** Collects public property facts without a TypeScript checker or external package resolution. */
-export async function collectWorkspacePropertyFacts(graph, modulePath, rootName) {
+export async function collectWorkspacePropertyFacts(graph, modulePath, rootName, options = {}) {
 	const active = new Set();
 
 	async function visitType(node, context, path = '', modifiers = {}) {
@@ -224,7 +265,7 @@ export async function collectWorkspacePropertyFacts(graph, modulePath, rootName)
 		if (ts.isTypeLiteralNode(node)) {
 			const facts = [];
 			for (const member of node.members) {
-				if (!ts.isPropertySignature(member)) continue;
+				if (!ts.isPropertySignature(member) && !ts.isMethodSignature(member)) continue;
 				const name = nameOf(member.name);
 				if (
 					!name ||
@@ -306,7 +347,13 @@ export async function collectWorkspacePropertyFacts(graph, modulePath, rootName)
 			for (const type of heritage.types)
 				output.push(...(await visitType(type, context, path, modifiers)));
 		for (const member of declaration.members) {
-			if (!ts.isPropertySignature(member)) continue;
+			if (
+				!ts.isPropertySignature(member) &&
+				!ts.isPropertyDeclaration(member) &&
+				!ts.isMethodSignature(member) &&
+				!ts.isMethodDeclaration(member)
+			)
+				continue;
 			const name = nameOf(member.name);
 			if (
 				!name ||
@@ -331,24 +378,52 @@ export async function collectWorkspacePropertyFacts(graph, modulePath, rootName)
 		return output;
 	}
 
-	const root = await graph.resolveDeclaration(modulePath, rootName);
-	if (root.status !== 'local') throw new Error(`${modulePath} cannot resolve ${rootName}.`);
-	const rootBindings = new Map();
-	const rootContext = {
-		bindings: rootBindings,
-		declarations: root.declarations,
-		genericParameters: new Set(
-			(root.declaration.typeParameters ?? []).map((parameter) => parameter.name.text)
-		),
-		modulePath: root.path,
-		declaration: root.name,
-		sourceFile: root.declaration.getSourceFile()
-	};
-	for (const parameter of root.declaration.typeParameters ?? [])
-		if (parameter.default)
-			rootBindings.set(parameter.name.text, { node: parameter.default, context: rootContext });
-	const output = await visitDeclaration(root.declaration, rootContext, '');
+	let root;
+	let rootContext;
+	let output;
+	if (options.typeNode) {
+		const module = await graph.load(options.modulePath ?? modulePath);
+		if (module.status !== 'local')
+			throw new Error(`${modulePath} cannot load callable type source.`);
+		rootContext = options.context ?? {
+			bindings: new Map(),
+			declarations: module.declarations,
+			genericParameters: new Set(),
+			modulePath: module.path,
+			declaration: options.declaration ?? '<type>',
+			sourceFile: options.sourceFile ?? module.file
+		};
+		output = await visitType(options.typeNode, rootContext, '');
+	} else {
+		root = await graph.resolveDeclaration(modulePath, rootName);
+		if (root.status !== 'local') throw new Error(`${modulePath} cannot resolve ${rootName}.`);
+		const rootBindings = new Map();
+		rootContext = {
+			bindings: rootBindings,
+			declarations: root.declarations,
+			genericParameters: new Set(
+				(root.declaration.typeParameters ?? []).map((parameter) => parameter.name.text)
+			),
+			modulePath: root.path,
+			declaration: root.name,
+			sourceFile: root.declaration.getSourceFile()
+		};
+		for (const parameter of root.declaration.typeParameters ?? [])
+			if (parameter.default)
+				rootBindings.set(parameter.name.text, { node: parameter.default, context: rootContext });
+		output = await visitDeclaration(root.declaration, rootContext, '');
+	}
 	return mergeFacts(output, 'intersection');
+}
+
+/** Collect members from an already resolved type node, preserving its generic bindings. */
+export async function collectWorkspacePropertyFactsFromType(graph, typeNode, context) {
+	return collectWorkspacePropertyFacts(graph, context.modulePath, '<type>', {
+		typeNode,
+		modulePath: context.modulePath,
+		sourceFile: context.sourceFile,
+		context
+	});
 }
 
 if (isMain && process.argv.includes('--self-test')) {
@@ -393,6 +468,8 @@ export type Props<T = string> = {
 	dyn?: Dyn;
 	fixed?: { key: boolean };
 	genericOpaque?: T;
+	method<T extends string = string>(value: T, optional?: number, ...rest: boolean[]): T;
+	optionalMethod?(value: string): void;
 };`,
 			'utf8'
 		);
@@ -436,6 +513,14 @@ export type Props<T = string> = {
 			throw new Error('fixed object was misclassified as dynamic-key');
 		if (!facts.get('genericOpaque')?.genericParameters.includes('T'))
 			throw new Error('root generic parameter evidence was not preserved');
+		expectFact(
+			'method',
+			'required',
+			'<T extends string = string>(value: T, optional?: number, ...rest: boolean[]) => T'
+		);
+		expectFact('optionalMethod', 'optional', '(value: string) => void');
+		if (facts.get('optionalMethod')?.valueAllowsUndefined !== true)
+			throw new Error('optional method did not allow undefined');
 		console.log(JSON.stringify({ status: 'passed', facts: facts.size }));
 	} finally {
 		await rm(root, { recursive: true, force: true });

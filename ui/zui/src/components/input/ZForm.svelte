@@ -112,12 +112,72 @@
 			{
 				description: '验证成功后的typed结果与FormData。',
 				name: 'onValidSubmit',
-				type: '(detail: FormSubmitDetail) => void'
+				type: '(detail: FormSubmitDetail<PublicStandardSchemaV1.InferOutput<TSchema>>) => void',
+				callable: {
+					parameters: [
+						{
+							name: 'detail',
+							type: 'FormSubmitDetail<PublicStandardSchemaV1.InferOutput<TSchema>>',
+							required: true,
+							description: '回调payload。',
+							members: [
+								{
+									description: 'Standard Schema typed输出。',
+									name: 'data',
+									required: true,
+									type: 'PublicStandardSchemaV1.InferOutput<TSchema>'
+								},
+								{
+									description: '原生FormData快照。',
+									name: 'formData',
+									required: true,
+									type: 'FormData'
+								},
+								{
+									description: '原生提交事件。',
+									name: 'originalEvent',
+									required: true,
+									type: 'SubmitEvent'
+								}
+							]
+						}
+					]
+				}
 			},
 			{
 				description: '验证失败后的错误与FormData。',
 				name: 'onInvalidSubmit',
-				type: '(detail: FormInvalidDetail) => void'
+				type: '(detail: FormInvalidDetail) => void',
+				callable: {
+					parameters: [
+						{
+							name: 'detail',
+							type: 'FormInvalidDetail',
+							required: true,
+							description: '回调payload。',
+							members: [
+								{
+									description: '按FieldPath聚合的错误。',
+									name: 'errors',
+									required: true,
+									type: 'FormErrors'
+								},
+								{
+									description: '原生FormData快照。',
+									name: 'formData',
+									required: true,
+									type: 'FormData'
+								},
+								{
+									description: '原生提交事件。',
+									name: 'originalEvent',
+									required: true,
+									type: 'SubmitEvent'
+								}
+							]
+						}
+					]
+				}
 			},
 			{
 				description: '错误映射变化。',

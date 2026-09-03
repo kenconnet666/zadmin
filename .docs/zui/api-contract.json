@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"componentCount": 141,
-	"overallSha256": "2780c73fab26f4400f0e1422c376ee67c0a5516de93ec29fba36baa37d1bf230",
+	"overallSha256": "5e683bae9bee3d06d8158116fea42781784b7d2d47fdb3e92386a565cca8047a",
 	"components": [
 		{
 			"id": "accordion",
@@ -400,12 +400,12 @@
 		},
 		{
 			"id": "carousel",
-			"sha256": "22269d6c4f204e7271efef31bec6c32455fd56a690d539e5014e77b1c93f616c",
+			"sha256": "97f58b35387dd20aa10abc8c3aa49b2d082eaa3c61af8cf9b9fe1c0bdc8d3b74",
 			"source": "src/components/data-display/ZCarousel.svelte"
 		},
 		{
 			"id": "data-table",
-			"sha256": "88cdd475696c24e10b5ed69d76d8ebd216d67cae15b88f4d57474203b27c57c2",
+			"sha256": "78d7baac123cb041bf5d621cf218121ba5882711f4710b737660e91c4bd865a3",
 			"source": "src/components/data-display/ZDataTable.svelte"
 		},
 		{
@@ -440,7 +440,7 @@
 		},
 		{
 			"id": "statistic",
-			"sha256": "696bcb7e85643809fec221c5c9f9a094d086de475799210e491d7d7a1c3f2e56",
+			"sha256": "58825babc293d63169d6c41b22d06a31d232cf53d587d9ba5f860db92ededa93",
 			"source": "src/components/data-display/ZStatistic.svelte"
 		},
 		{
@@ -460,7 +460,7 @@
 		},
 		{
 			"id": "virtual-list",
-			"sha256": "3c52d9135abc285a7d5a84f33cf2a285d1efaf959851ec1ff180371dd8b8bccc",
+			"sha256": "aa2c7ca628b8abfb55c2e952537ead0062f5bba1759e67667aa52a2eb300885e",
 			"source": "src/components/data-display/ZVirtualList.svelte"
 		},
 		{
@@ -595,12 +595,12 @@
 		},
 		{
 			"id": "file-upload",
-			"sha256": "b2286cbc37e8ae8ec52850fc253fce3988666fcf646073b7363881dbce982313",
+			"sha256": "474321d3c75794518816c0e5ee2523d37b38d4a053f3785a2baeffc29d1a7458",
 			"source": "src/components/input/ZFileUpload.svelte"
 		},
 		{
 			"id": "form",
-			"sha256": "1c417dc5c62d483cf829ada2f01f06c37ce92807e10645d8833f349c94864b5c",
+			"sha256": "3e769d8a7c0081dd560f28167d59ca526eb9b0c775cdb8c15c61481ea5db1ba0",
 			"source": "src/components/input/ZForm.svelte"
 		},
 		{
@@ -625,7 +625,7 @@
 		},
 		{
 			"id": "number-field",
-			"sha256": "4841f60fa46e35c4b6b02b0627d1bb5e3e1e86d07c9cdb4c800502da97defe22",
+			"sha256": "aace856919973db28479c00217910f32d80917a0da4285938793c31dab04460f",
 			"source": "src/components/input/ZNumberField.svelte"
 		},
 		{
@@ -715,7 +715,7 @@
 		"index.ts": "4a23d1d1a026f930a5a59ae818e3899e9563fec9c45b750cfb4c253f4f5fa741",
 		"internal.ts": "05f9ef9c8628e1cdf694dcc88b71831e5aab726a3189bd6189eef7ae645df4d7",
 		"layer.ts": "72d0fc8e5b7a8ab39a12e157879951b84f1a7fc19654f4bd8b6ea92fd8aa6db8",
-		"metadata.ts": "836feeea890ac257332d73219c12ef3a4fb1ab4987d01c35a247071f558a7200",
+		"metadata.ts": "d17046a9f91612481a3e483da346c3edc14f008df9b2d6940d7334af30634401",
 		"runtime.ts": "afe9b43ee6618c85ad678c9c2c1f5363f7d5beb8f1fd7b2e2f92b85b5b9e08c8",
 		"testing.ts": "c596113f3cbcf4ce75be2728b6a10cd6a0b77c9b9101a4408ba2e18e174f15cb",
 		"theme.ts": "672f4f9f183088c250e2ddc74a71b5c4a0c54017f981dfdbd810004fa21b0b24",

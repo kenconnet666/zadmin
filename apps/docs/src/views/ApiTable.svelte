@@ -124,6 +124,7 @@
 					<td
 						>{[
 							row.required ? 'required' : '',
+							row.rest ? 'variadic' : '',
 							row.requiredWhen ? `required when ${row.requiredWhen}` : '',
 							row.bindable ? 'bindable' : '',
 							row.feature ?? '',
