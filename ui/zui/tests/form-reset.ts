@@ -1,7 +1,7 @@
 import { tick } from 'svelte';
 
 /** Waits for the owner Window's native reset task and Svelte's following flush. */
-export async function settleFormReset(form: HTMLFormElement | null | undefined): Promise<void> {
+export async function settleFormReset(form?: HTMLFormElement | null): Promise<void> {
 	const ownerWindow = (form ?? document.querySelector('form'))?.ownerDocument.defaultView;
 	if (ownerWindow) await new Promise<void>((resolve) => ownerWindow.setTimeout(resolve, 0));
 	else await new Promise<void>((resolve) => setTimeout(resolve, 0));
