@@ -9,6 +9,9 @@ describe('generated component catalog manifest', () => {
 		expect(new Set(manifestIds).size).toBe(manifestIds.length);
 		expect(Object.keys(componentDocLoaders).sort()).toEqual([...manifestIds].sort());
 		expect(manifestIds).toHaveLength(79);
+		expect(
+			componentCatalogManifest.reduce((total, entry) => total + entry.publicComponentCount, 0)
+		).toBe(141);
 		expect(manifestIds).toContain('tour');
 		expect(componentCatalogManifest.every(({ name }) => /^Z[A-Z]/u.test(name))).toBe(true);
 		expect(componentCatalogManifest.find(({ id }) => id === 'link')?.name).toBe('ZLink');

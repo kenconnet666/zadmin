@@ -198,6 +198,9 @@
 
 	let { docs }: { docs: readonly ComponentCatalogManifestEntry[] } = $props();
 	const demoCount = $derived(docs.reduce((total, doc) => total + doc.demoCount, 0));
+	const publicComponentCount = $derived(
+		docs.reduce((total, doc) => total + doc.publicComponentCount, 0)
+	);
 	const stableCount = $derived(docs.filter((doc) => doc.status === 'stable').length);
 	const zui = useZui();
 	const classes = $derived(zui.slots(homeRecipe, { motion: zui.motion }));
@@ -228,11 +231,11 @@
 
 <section class={classes.principles} aria-label="设计原则">
 	<ZCard class={classes.principle}>
-		<strong class={classes.metric}>{docs.length}</strong><span class={classes.principleLabel}
-			>组件族</span
+		<strong class={classes.metric}>{publicComponentCount}</strong><span
+			class={classes.principleLabel}>公开组件</span
 		>
 		<p class={classes.principleCopy}>
-			公开路由同时包含stable与experimental，兼容状态在每页明确显示。
+			组件族路由统一呈现根组件与compound members；数量由公开metadata自动核对。
 		</p>
 	</ZCard>
 	<ZCard class={classes.principle}>
@@ -243,10 +246,10 @@
 	</ZCard>
 	<ZCard class={classes.principle}>
 		<strong class={classes.metric}>{stableCount}</strong><span class={classes.principleLabel}
-			>Stable</span
+			>稳定组件族</span
 		>
 		<p class={classes.principleCopy}>
-			其余组件保持experimental与unreleased，不批量修改标签冒充稳定。
+			每个组件族均逐项通过API、运行时、视觉和production门禁，兼容状态在页面明确展示。
 		</p>
 	</ZCard>
 </section>

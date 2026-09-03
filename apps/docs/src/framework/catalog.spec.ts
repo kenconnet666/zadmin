@@ -39,12 +39,18 @@ describe('ZUI component documentation catalog', () => {
 		expect(componentDocs).toHaveLength(79);
 		expect(componentCatalogManifest).toHaveLength(79);
 		expect(facts).toHaveLength(141);
+		expect(
+			componentCatalogManifest.reduce((total, entry) => total + entry.publicComponentCount, 0)
+		).toBe(facts.length);
 		for (const doc of componentDocs) {
 			const manifest = manifestById.get(doc.id);
 			const fact = factsByName.get(doc.name);
 			expect(manifest, `${doc.name} catalog manifest entry`).toBeDefined();
 			expect(manifest?.name).toBe(doc.name);
 			expect(manifest?.demoCount).toBe(doc.demos.length);
+			expect(manifest?.publicComponentCount).toBe(
+				doc.api.filter(({ title }) => title.endsWith('Props')).length
+			);
 			expect(fact, `${doc.name} generated API fact`).toBeDefined();
 			expect(doc.source).toBe(fact?.source);
 			expect(doc.importStatement).toContain(doc.name);
@@ -288,8 +294,32 @@ describe('ZUI component documentation catalog', () => {
 		expect(props?.rows.find(({ name }) => name === 'direction')?.type).toBe(
 			"'column' | 'column-reverse' | 'row' | 'row-reverse'"
 		);
-		expect(stack?.props).toBe(props?.rows);
+		expect(stack?.props).toStrictEqual(props?.rows);
 		expect(stack?.profiles).toContain('primitive');
+	});
+
+	it('projects callable parameters and payload members into every API section', () => {
+		const form = componentDocsById.get('form');
+		const validSubmit = form?.api
+			.find(({ id }) => id === 'events')
+			?.rows.find(({ name }) => name === 'onValidSubmit');
+		expect(validSubmit?.members?.map(({ name }) => name)).toEqual(['detail']);
+		expect(validSubmit?.members?.[0]?.members?.map(({ name }) => name)).toEqual([
+			'data',
+			'formData',
+			'originalEvent'
+		]);
+
+		const fileUpload = componentDocsById.get('file-upload');
+		const transport = fileUpload?.api
+			.find(({ id }) => id === 'props')
+			?.rows.find(({ name }) => name === 'transport');
+		expect(transport?.members?.map(({ name }) => name)).toEqual(['context']);
+		expect(transport?.members?.[0]?.members?.map(({ name }) => name)).toEqual([
+			'item',
+			'signal',
+			'reportProgress'
+		]);
 	});
 
 	it('merges DataTable AST facts with Docs teaching without legacy pseudo props', () => {
@@ -372,7 +402,7 @@ describe('ZUI component documentation catalog', () => {
 			expect(doc.source).toMatch(/^ui\/zui\/src\/components\//u);
 			expect(doc.since).toMatch(/^(?:\d+\.\d+\.\d+|unreleased)$/u);
 			expect(Array.isArray(doc.dependencies)).toBe(true);
-			expect(doc.api[0]?.rows).toBe(doc.props);
+			expect(doc.api[0]?.rows.map(({ name }) => name)).toEqual(doc.props.map(({ name }) => name));
 			expect(new Set(doc.api.map(({ id }) => id)).size).toBe(doc.api.length);
 			expect(new Set(doc.demos.map(({ id }) => id)).size).toBe(doc.demos.length);
 			expect(['experimental', 'stable']).toContain(doc.status);

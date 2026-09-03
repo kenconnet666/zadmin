@@ -9,6 +9,7 @@ export interface ComponentCatalogManifestEntry {
 	readonly profiles: readonly string[];
 	readonly capabilities: readonly string[];
 	readonly demoCount: number;
+	readonly publicComponentCount: number;
 }
 
 export const componentCategories = Object.freeze([
@@ -46,7 +47,8 @@ export const componentCatalogManifest = Object.freeze([
 			'locale',
 			'resource-cleanup'
 		],
-		demoCount: 6
+		demoCount: 6,
+		publicComponentCount: 1
 	},
 	{
 		id: 'box',
@@ -57,7 +59,8 @@ export const componentCatalogManifest = Object.freeze([
 		keywords: [],
 		profiles: ['primitive'],
 		capabilities: ['basic-render', 'composition', 'focus', 'native-props', 'variants-and-states'],
-		demoCount: 4
+		demoCount: 4,
+		publicComponentCount: 1
 	},
 	{
 		id: 'stack',
@@ -75,7 +78,8 @@ export const componentCatalogManifest = Object.freeze([
 			'rtl',
 			'keyboard'
 		],
-		demoCount: 4
+		demoCount: 4,
+		publicComponentCount: 1
 	},
 	{
 		id: 'text',
@@ -86,7 +90,8 @@ export const componentCatalogManifest = Object.freeze([
 		keywords: [],
 		profiles: ['primitive'],
 		capabilities: ['basic-render', 'native-props', 'variants-and-states', 'composition'],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 1
 	},
 	{
 		id: 'heading',
@@ -103,7 +108,8 @@ export const componentCatalogManifest = Object.freeze([
 			'variants-and-states',
 			'composition'
 		],
-		demoCount: 4
+		demoCount: 4,
+		publicComponentCount: 1
 	},
 	{
 		id: 'icon',
@@ -122,7 +128,8 @@ export const componentCatalogManifest = Object.freeze([
 			'keyboard',
 			'rtl'
 		],
-		demoCount: 4
+		demoCount: 4,
+		publicComponentCount: 1
 	},
 	{
 		id: 'code',
@@ -144,7 +151,8 @@ export const componentCatalogManifest = Object.freeze([
 			'keyboard',
 			'locale'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 1
 	},
 	{
 		id: 'button',
@@ -171,7 +179,8 @@ export const componentCatalogManifest = Object.freeze([
 			'focus',
 			'keyboard'
 		],
-		demoCount: 7
+		demoCount: 7,
+		publicComponentCount: 1
 	},
 	{
 		id: 'toggle-button',
@@ -194,7 +203,8 @@ export const componentCatalogManifest = Object.freeze([
 			'focus',
 			'external-clear'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 1
 	},
 	{
 		id: 'link',
@@ -224,7 +234,8 @@ export const componentCatalogManifest = Object.freeze([
 			'disabled',
 			'keyboard'
 		],
-		demoCount: 6
+		demoCount: 6,
+		publicComponentCount: 1
 	},
 	{
 		id: 'separator',
@@ -242,7 +253,8 @@ export const componentCatalogManifest = Object.freeze([
 			'composition',
 			'rtl'
 		],
-		demoCount: 4
+		demoCount: 4,
+		publicComponentCount: 1
 	},
 	{
 		id: 'visually-hidden',
@@ -261,7 +273,8 @@ export const componentCatalogManifest = Object.freeze([
 			'native-props',
 			'ssr'
 		],
-		demoCount: 4
+		demoCount: 4,
+		publicComponentCount: 1
 	},
 	{
 		id: 'kbd',
@@ -272,7 +285,8 @@ export const componentCatalogManifest = Object.freeze([
 		keywords: [],
 		profiles: ['primitive'],
 		capabilities: ['basic-render', 'composition', 'native-props', 'accessible-name', 'ssr'],
-		demoCount: 4
+		demoCount: 4,
+		publicComponentCount: 1
 	},
 	{
 		id: 'aspect-ratio',
@@ -290,7 +304,8 @@ export const componentCatalogManifest = Object.freeze([
 			'accessible-name',
 			'ssr'
 		],
-		demoCount: 4
+		demoCount: 4,
+		publicComponentCount: 1
 	},
 	{
 		id: 'container',
@@ -310,7 +325,8 @@ export const componentCatalogManifest = Object.freeze([
 			'composition',
 			'ssr'
 		],
-		demoCount: 4
+		demoCount: 4,
+		publicComponentCount: 1
 	},
 	{
 		id: 'avatar',
@@ -340,7 +356,8 @@ export const componentCatalogManifest = Object.freeze([
 			'controlled',
 			'external-clear'
 		],
-		demoCount: 6
+		demoCount: 6,
+		publicComponentCount: 1
 	},
 	{
 		id: 'badge',
@@ -363,7 +380,8 @@ export const componentCatalogManifest = Object.freeze([
 			'reduced-motion',
 			'resource-cleanup'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 1
 	},
 	{
 		id: 'card',
@@ -382,7 +400,8 @@ export const componentCatalogManifest = Object.freeze([
 			'native-props',
 			'loading'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 1
 	},
 	{
 		id: 'description-list',
@@ -414,7 +433,8 @@ export const componentCatalogManifest = Object.freeze([
 			'locale',
 			'rtl'
 		],
-		demoCount: 6
+		demoCount: 6,
+		publicComponentCount: 1
 	},
 	{
 		id: 'list',
@@ -446,7 +466,8 @@ export const componentCatalogManifest = Object.freeze([
 			'rtl',
 			'resource-cleanup'
 		],
-		demoCount: 6
+		demoCount: 6,
+		publicComponentCount: 1
 	},
 	{
 		id: 'tag',
@@ -469,7 +490,8 @@ export const componentCatalogManifest = Object.freeze([
 			'focus',
 			'locale'
 		],
-		demoCount: 6
+		demoCount: 6,
+		publicComponentCount: 1
 	},
 	{
 		id: 'progress',
@@ -498,7 +520,8 @@ export const componentCatalogManifest = Object.freeze([
 			'full-motion',
 			'ssr'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 1
 	},
 	{
 		id: 'meter',
@@ -510,7 +533,8 @@ export const componentCatalogManifest = Object.freeze([
 		keywords: ['meter', 'gauge', 'threshold', 'capacity', 'optimum', 'native meter'],
 		profiles: ['data-view'],
 		capabilities: ['accessible-name', 'basic-render', 'variants-and-states', 'native-props', 'ssr'],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 1
 	},
 	{
 		id: 'skeleton',
@@ -531,7 +555,8 @@ export const componentCatalogManifest = Object.freeze([
 			'native-props',
 			'ssr'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 1
 	},
 	{
 		id: 'empty',
@@ -551,7 +576,8 @@ export const componentCatalogManifest = Object.freeze([
 			'native-props',
 			'ssr'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 1
 	},
 	{
 		id: 'timeline',
@@ -583,7 +609,8 @@ export const componentCatalogManifest = Object.freeze([
 			'loading',
 			'rtl'
 		],
-		demoCount: 7
+		demoCount: 7,
+		publicComponentCount: 1
 	},
 	{
 		id: 'statistic',
@@ -613,7 +640,8 @@ export const componentCatalogManifest = Object.freeze([
 			'native-props',
 			'loading'
 		],
-		demoCount: 6
+		demoCount: 6,
+		publicComponentCount: 1
 	},
 	{
 		id: 'table',
@@ -645,7 +673,8 @@ export const componentCatalogManifest = Object.freeze([
 			'keyboard',
 			'rtl'
 		],
-		demoCount: 6
+		demoCount: 6,
+		publicComponentCount: 1
 	},
 	{
 		id: 'virtual-list',
@@ -681,7 +710,8 @@ export const componentCatalogManifest = Object.freeze([
 			'accessible-name',
 			'loading'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 1
 	},
 	{
 		id: 'data-table',
@@ -724,7 +754,8 @@ export const componentCatalogManifest = Object.freeze([
 			'density',
 			'disabled'
 		],
-		demoCount: 7
+		demoCount: 7,
+		publicComponentCount: 1
 	},
 	{
 		id: 'carousel',
@@ -756,7 +787,8 @@ export const componentCatalogManifest = Object.freeze([
 			'external-clear',
 			'rtl'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 1
 	},
 	{
 		id: 'alert',
@@ -777,7 +809,8 @@ export const componentCatalogManifest = Object.freeze([
 			'composition',
 			'rtl'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 1
 	},
 	{
 		id: 'loading-bar',
@@ -806,7 +839,8 @@ export const componentCatalogManifest = Object.freeze([
 			'external-clear',
 			'rtl'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 1
 	},
 	{
 		id: 'result',
@@ -826,7 +860,8 @@ export const componentCatalogManifest = Object.freeze([
 			'native-props',
 			'ssr'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 1
 	},
 	{
 		id: 'spinner',
@@ -846,7 +881,8 @@ export const componentCatalogManifest = Object.freeze([
 			'controlled',
 			'keyboard'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 1
 	},
 	{
 		id: 'toast',
@@ -876,7 +912,8 @@ export const componentCatalogManifest = Object.freeze([
 			'controlled',
 			'loading'
 		],
-		demoCount: 6
+		demoCount: 6,
+		publicComponentCount: 2
 	},
 	{
 		id: 'checkbox',
@@ -900,7 +937,8 @@ export const componentCatalogManifest = Object.freeze([
 			'keyboard',
 			'readonly'
 		],
-		demoCount: 3
+		demoCount: 3,
+		publicComponentCount: 1
 	},
 	{
 		id: 'calendar',
@@ -929,7 +967,8 @@ export const componentCatalogManifest = Object.freeze([
 			'composition',
 			'readonly'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 1
 	},
 	{
 		id: 'cascader',
@@ -967,7 +1006,8 @@ export const componentCatalogManifest = Object.freeze([
 			'readonly',
 			'rtl'
 		],
-		demoCount: 6
+		demoCount: 6,
+		publicComponentCount: 1
 	},
 	{
 		id: 'color-picker',
@@ -1001,7 +1041,8 @@ export const componentCatalogManifest = Object.freeze([
 			'readonly',
 			'native-props'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 1
 	},
 	{
 		id: 'combobox',
@@ -1042,7 +1083,8 @@ export const componentCatalogManifest = Object.freeze([
 			'accessible-name',
 			'rtl'
 		],
-		demoCount: 7
+		demoCount: 7,
+		publicComponentCount: 4
 	},
 	{
 		id: 'date-field',
@@ -1072,7 +1114,8 @@ export const componentCatalogManifest = Object.freeze([
 			'composition',
 			'native-props'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 1
 	},
 	{
 		id: 'date-picker',
@@ -1105,7 +1148,8 @@ export const componentCatalogManifest = Object.freeze([
 			'focus',
 			'native-props'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 1
 	},
 	{
 		id: 'date-range-picker',
@@ -1138,7 +1182,8 @@ export const componentCatalogManifest = Object.freeze([
 			'rtl',
 			'ssr'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 1
 	},
 	{
 		id: 'input',
@@ -1162,7 +1207,8 @@ export const componentCatalogManifest = Object.freeze([
 			'invalid',
 			'readonly'
 		],
-		demoCount: 4
+		demoCount: 4,
+		publicComponentCount: 1
 	},
 	{
 		id: 'input-group',
@@ -1196,7 +1242,8 @@ export const componentCatalogManifest = Object.freeze([
 			'rtl',
 			'readonly'
 		],
-		demoCount: 6
+		demoCount: 6,
+		publicComponentCount: 1
 	},
 	{
 		id: 'mention',
@@ -1232,7 +1279,8 @@ export const componentCatalogManifest = Object.freeze([
 			'resource-cleanup',
 			'ssr'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 1
 	},
 	{
 		id: 'multi-select',
@@ -1272,7 +1320,8 @@ export const componentCatalogManifest = Object.freeze([
 			'accessible-name',
 			'readonly'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 4
 	},
 	{
 		id: 'number-field',
@@ -1310,7 +1359,8 @@ export const componentCatalogManifest = Object.freeze([
 			'density',
 			'native-props'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 1
 	},
 	{
 		id: 'pin-input',
@@ -1345,7 +1395,8 @@ export const componentCatalogManifest = Object.freeze([
 			'readonly',
 			'rtl'
 		],
-		demoCount: 6
+		demoCount: 6,
+		publicComponentCount: 1
 	},
 	{
 		id: 'field',
@@ -1366,7 +1417,8 @@ export const componentCatalogManifest = Object.freeze([
 			'focus',
 			'keyboard'
 		],
-		demoCount: 3
+		demoCount: 3,
+		publicComponentCount: 1
 	},
 	{
 		id: 'file-upload',
@@ -1404,7 +1456,8 @@ export const componentCatalogManifest = Object.freeze([
 			'readonly',
 			'locale'
 		],
-		demoCount: 6
+		demoCount: 6,
+		publicComponentCount: 1
 	},
 	{
 		id: 'form',
@@ -1438,7 +1491,8 @@ export const componentCatalogManifest = Object.freeze([
 			'disabled',
 			'form-reset'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 2
 	},
 	{
 		id: 'radio-group',
@@ -1464,7 +1518,8 @@ export const componentCatalogManifest = Object.freeze([
 			'variants-and-states',
 			'readonly'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 2
 	},
 	{
 		id: 'select',
@@ -1504,7 +1559,8 @@ export const componentCatalogManifest = Object.freeze([
 			'accessible-name',
 			'rtl'
 		],
-		demoCount: 7
+		demoCount: 7,
+		publicComponentCount: 4
 	},
 	{
 		id: 'segmented',
@@ -1529,7 +1585,8 @@ export const componentCatalogManifest = Object.freeze([
 			'variants-and-states',
 			'readonly'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 1
 	},
 	{
 		id: 'switch',
@@ -1560,7 +1617,8 @@ export const componentCatalogManifest = Object.freeze([
 			'reduced-motion',
 			'rtl'
 		],
-		demoCount: 4
+		demoCount: 4,
+		publicComponentCount: 1
 	},
 	{
 		id: 'tags-input',
@@ -1596,7 +1654,8 @@ export const componentCatalogManifest = Object.freeze([
 			'ssr',
 			'native-props'
 		],
-		demoCount: 6
+		demoCount: 6,
+		publicComponentCount: 1
 	},
 	{
 		id: 'textarea',
@@ -1621,7 +1680,8 @@ export const componentCatalogManifest = Object.freeze([
 			'form-reset',
 			'uncontrolled'
 		],
-		demoCount: 4
+		demoCount: 4,
+		publicComponentCount: 1
 	},
 	{
 		id: 'time-field',
@@ -1650,7 +1710,8 @@ export const componentCatalogManifest = Object.freeze([
 			'invalid',
 			'native-props'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 1
 	},
 	{
 		id: 'tree-select',
@@ -1684,7 +1745,8 @@ export const componentCatalogManifest = Object.freeze([
 			'resource-cleanup',
 			'ssr'
 		],
-		demoCount: 4
+		demoCount: 4,
+		publicComponentCount: 1
 	},
 	{
 		id: 'transfer',
@@ -1722,7 +1784,8 @@ export const componentCatalogManifest = Object.freeze([
 			'focus',
 			'resource-cleanup'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 1
 	},
 	{
 		id: 'slider',
@@ -1746,7 +1809,8 @@ export const componentCatalogManifest = Object.freeze([
 			'focus',
 			'readonly'
 		],
-		demoCount: 3
+		demoCount: 3,
+		publicComponentCount: 1
 	},
 	{
 		id: 'accordion',
@@ -1783,7 +1847,8 @@ export const componentCatalogManifest = Object.freeze([
 			'full-motion',
 			'reduced-motion'
 		],
-		demoCount: 6
+		demoCount: 6,
+		publicComponentCount: 4
 	},
 	{
 		id: 'command',
@@ -1804,7 +1869,8 @@ export const componentCatalogManifest = Object.freeze([
 			'loading',
 			'resource-cleanup'
 		],
-		demoCount: 3
+		demoCount: 3,
+		publicComponentCount: 1
 	},
 	{
 		id: 'command-palette',
@@ -1826,7 +1892,8 @@ export const componentCatalogManifest = Object.freeze([
 			'variants-and-states',
 			'resource-cleanup'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 1
 	},
 	{
 		id: 'context-menu',
@@ -1851,7 +1918,8 @@ export const componentCatalogManifest = Object.freeze([
 			'reduced-motion',
 			'rtl'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 3
 	},
 	{
 		id: 'dropdown-menu',
@@ -1884,7 +1952,8 @@ export const componentCatalogManifest = Object.freeze([
 			'native-props',
 			'reduced-motion'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 3
 	},
 	{
 		id: 'menu',
@@ -1918,7 +1987,8 @@ export const componentCatalogManifest = Object.freeze([
 			'composition',
 			'native-props'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 11
 	},
 	{
 		id: 'pagination',
@@ -1952,7 +2022,8 @@ export const componentCatalogManifest = Object.freeze([
 			'disabled',
 			'uncontrolled'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 1
 	},
 	{
 		id: 'tabs',
@@ -1986,7 +2057,8 @@ export const componentCatalogManifest = Object.freeze([
 			'locale',
 			'rtl'
 		],
-		demoCount: 6
+		demoCount: 6,
+		publicComponentCount: 4
 	},
 	{
 		id: 'tree',
@@ -2020,7 +2092,8 @@ export const componentCatalogManifest = Object.freeze([
 			'resource-cleanup',
 			'ssr'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 1
 	},
 	{
 		id: 'alert-dialog',
@@ -2043,7 +2116,8 @@ export const componentCatalogManifest = Object.freeze([
 			'invalid',
 			'ssr'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 8
 	},
 	{
 		id: 'dialog',
@@ -2067,7 +2141,8 @@ export const componentCatalogManifest = Object.freeze([
 			'ssr',
 			'variants-and-states'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 7
 	},
 	{
 		id: 'drawer',
@@ -2093,7 +2168,8 @@ export const componentCatalogManifest = Object.freeze([
 			'reduced-motion',
 			'rtl'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 7
 	},
 	{
 		id: 'popconfirm',
@@ -2123,7 +2199,8 @@ export const componentCatalogManifest = Object.freeze([
 			'resource-cleanup',
 			'accessible-name'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 7
 	},
 	{
 		id: 'popover',
@@ -2146,7 +2223,8 @@ export const componentCatalogManifest = Object.freeze([
 			'external-clear',
 			'accessible-name'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 3
 	},
 	{
 		id: 'tooltip',
@@ -2179,7 +2257,8 @@ export const componentCatalogManifest = Object.freeze([
 			'reduced-motion',
 			'rtl'
 		],
-		demoCount: 5
+		demoCount: 5,
+		publicComponentCount: 4
 	},
 	{
 		id: 'tour',
@@ -2212,7 +2291,8 @@ export const componentCatalogManifest = Object.freeze([
 			'rtl',
 			'reduced-motion'
 		],
-		demoCount: 4
+		demoCount: 4,
+		publicComponentCount: 1
 	}
 ] as readonly ComponentCatalogManifestEntry[]);
 export const componentCatalogManifestById = new Map(
