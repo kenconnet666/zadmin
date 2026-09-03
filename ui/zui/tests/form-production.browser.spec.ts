@@ -28,6 +28,9 @@ describe('ZForm and ZFormField production contracts', () => {
 			.toContain('alice@example.com');
 		document.querySelector<HTMLButtonElement>('[data-testid="graph-server-error"]')!.click();
 		await tick();
+		expect(document.querySelector('[data-testid="graph-email-observed"]')?.textContent).toMatch(
+			/:\d+$/u
+		);
 		expect(document.activeElement).toBe(email);
 		document.querySelector<HTMLButtonElement>('[data-testid="graph-toggle"]')!.click();
 		await tick();

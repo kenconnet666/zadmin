@@ -18,6 +18,11 @@ export const formDoc = defineComponentDoc(formMetadata, {
 	sourceApi: formApiFacts,
 	teaching: {
 		props: {
+			controller: {
+				default: '—',
+				description:
+					'除验证、错误与导航外，controller.subscribeField(path, listener)只观察未来字段状态变化；当前快照通过getFieldState读取，不拥有字段value。'
+			},
 			onReset: {
 				default: '—',
 				description: 'deprecated兼容回调；新代码使用原生小写onreset，二者同一函数时不会重复调用。'
@@ -67,10 +72,10 @@ export const formDoc = defineComponentDoc(formMetadata, {
 			title: '外部Busy与可操作性'
 		},
 		{
-			covers: ['disabled', 'focus', 'form-reset', 'native-props'],
+			covers: ['disabled', 'focus', 'form-reset', 'native-props', 'controlled'],
 			component: ControllerDemo,
 			description:
-				'controller注入服务端错误和字段状态，并演示表单外submit、原生小写事件、整表禁用与原生reset。',
+				'controller注入服务端错误和字段状态，并演示subscribeField状态观察、表单外submit、原生小写事件、整表禁用与原生reset。',
 			id: 'form-controller',
 			source: controllerSource,
 			title: 'Controller与外部Form owner'

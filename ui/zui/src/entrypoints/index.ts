@@ -438,7 +438,11 @@ export type {
 } from '../components/input/ZForm.svelte';
 export { default as ZFormField } from '../components/input/ZFormField.svelte';
 export type { ZFormFieldProps } from '../components/input/ZFormField.svelte';
-export type { FormFieldState, FormFieldStatePatch } from '../runtime/form/form-registry.svelte.js';
+export type {
+	FormFieldState,
+	FormFieldStateListener,
+	FormFieldStatePatch
+} from '../runtime/form/form-registry.svelte.js';
 export { fieldPathToString } from '../runtime/form/field-path.js';
 export type { FieldPath, FieldPathInput } from '../runtime/form/field-path.js';
 export type { FormErrors } from '../runtime/form/validation.js';

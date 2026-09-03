@@ -13,6 +13,16 @@
 	let disabled = $state(false);
 	let nativeSubmits = $state(0);
 	let nativeResets = $state(0);
+	let releaseSummary = $state('未观察到字段状态变化');
+
+	$effect(() => {
+		const current = controller;
+		if (!current) return;
+		releaseSummary = '已连接（等待状态变化）';
+		return current.subscribeField('release', (state) => {
+			releaseSummary = `dirty=${state.dirty}; touched=${state.touched}; validating=${state.validating}; errors=${state.errors.length}`;
+		});
+	});
 </script>
 
 <ZStack gap="medium">
@@ -66,4 +76,5 @@
 		<ZButton type="button" variant="secondary" onclick={() => controller?.reset()}>重置</ZButton>
 	</ZStack>
 	<ZText tone="muted">native submit/reset = {nativeSubmits}/{nativeResets}</ZText>
+	<ZText tone="muted">release状态订阅：{releaseSummary}</ZText>
 </ZStack>

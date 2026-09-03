@@ -6,6 +6,7 @@
 	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
 	import type {
 		FormFieldState as PublicFormFieldState,
+		FormFieldStateListener as PublicFormFieldStateListener,
 		FormFieldStatePatch as PublicFormFieldStatePatch
 	} from '../../runtime/form/form-registry.svelte.js';
 	import type { FieldPathInput as PublicFieldPathInput } from '../../runtime/form/field-path.js';
@@ -47,6 +48,9 @@
 		setErrors(errors: PublicFormErrors): void;
 
 		setFieldState(path: PublicFieldPathInput, state: PublicFormFieldStatePatch): void;
+
+		/** Subscribes to future field-state transitions; read getFieldState for the current snapshot. */
+		subscribeField(path: PublicFieldPathInput, listener: PublicFormFieldStateListener): () => void;
 
 		validate(): Promise<FormValidationResult<TData>>;
 
@@ -94,7 +98,7 @@
 		name: 'ZForm',
 		bindings: [
 			{
-				description: '验证、字段状态、聚焦、滚动与reset控制器。',
+				description: '验证、字段状态、订阅、聚焦、滚动与reset控制器；订阅不拥有字段值。',
 				name: 'controller',
 				type: 'ZFormController<TOutput> | null'
 			},
@@ -493,6 +497,7 @@
 				);
 			}
 		},
+		subscribeField: (path, listener) => registry.subscribeField(path, listener),
 		validate: () => validatePaths(registry.registeredPaths(), true),
 		validateField: (path) => validatePaths([path], false)
 	};

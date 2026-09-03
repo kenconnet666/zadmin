@@ -48,6 +48,16 @@
 	let showConfirm = $state(true);
 	let result = $state('none');
 	let confirmState = $state('none');
+	let emailObserved = $state('none');
+
+	$effect(() => {
+		const current = controller;
+		if (!current) return;
+		emailObserved = 'subscribed';
+		return current.subscribeField(['users', 0, 'email'], (state) => {
+			emailObserved = `${state.dirty ? 'dirty' : 'clean'}:${state.errors.length}`;
+		});
+	});
 </script>
 
 <ZForm
@@ -101,4 +111,5 @@
 		>Set status
 	</button>
 	<output data-testid="graph-output">{result}|{confirmState}</output>
+	<output data-testid="graph-email-observed">{emailObserved}</output>
 </ZForm>
