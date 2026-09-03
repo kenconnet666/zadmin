@@ -782,7 +782,7 @@ export const desktopComponentContracts = [
 ];
 desktopComponentContracts.push(
 	{
-		id: 'heading-primitives',
+		id: 'heading',
 		name: 'ZHeading',
 		marker: 'ZHeading-primitives',
 		native: { tag: 'H2', text: 'Desktop primitives' },
@@ -809,7 +809,7 @@ desktopComponentContracts.push(
 		}
 	},
 	{
-		id: 'code-primitives',
+		id: 'code',
 		name: 'ZCode',
 		marker: 'ZCode-primitives',
 		native: { tag: 'PRE' },
@@ -843,7 +843,7 @@ desktopComponentContracts.push(
 		}
 	},
 	{
-		id: 'icon-labelled',
+		id: 'icon',
 		name: 'ZIcon',
 		marker: 'ZIcon-labelled',
 		native: { tag: 'svg', role: 'img', ariaLabel: 'Warning' },
@@ -877,7 +877,7 @@ desktopComponentContracts.push(
 		}
 	},
 	{
-		id: 'kbd-primitives',
+		id: 'kbd',
 		name: 'ZKbd',
 		marker: 'ZKbd-primitives',
 		native: { tag: 'KBD', text: 'Ctrl' },
@@ -897,7 +897,7 @@ desktopComponentContracts.push(
 		}
 	},
 	{
-		id: 'link-primitives',
+		id: 'link',
 		name: 'ZLink',
 		marker: 'ZLink-primitives',
 		native: { tag: 'A', href: '#desktop-primitives' },
@@ -938,7 +938,7 @@ desktopComponentContracts.push(
 		}
 	},
 	{
-		id: 'separator-primitives',
+		id: 'separator',
 		name: 'ZSeparator',
 		marker: 'ZSeparator-primitives',
 		native: { tag: 'HR' },
@@ -965,7 +965,7 @@ desktopComponentContracts.push(
 		}
 	},
 	{
-		id: 'visually-hidden-primitives',
+		id: 'visually-hidden',
 		name: 'ZVisuallyHidden',
 		marker: 'ZVisuallyHidden-primitives',
 		native: { tag: 'SPAN', text: 'Screen reader detail' },
@@ -999,7 +999,7 @@ desktopComponentContracts.push(
 		}
 	},
 	{
-		id: 'aspect-ratio-primitives',
+		id: 'aspect-ratio',
 		name: 'ZAspectRatio',
 		marker: 'ZAspectRatio-primitives',
 		native: { tag: 'DIV' },
@@ -1019,7 +1019,7 @@ desktopComponentContracts.push(
 		}
 	},
 	{
-		id: 'container-primitives',
+		id: 'container',
 		name: 'ZContainer',
 		marker: 'ZContainer-primitives',
 		native: { tag: 'DIV' },
@@ -1053,7 +1053,7 @@ desktopComponentContracts.push(
 		}
 	},
 	{
-		id: 'alert-primitives',
+		id: 'alert',
 		name: 'ZAlert',
 		marker: 'ZAlert-primitives',
 		native: { tag: 'DIV', ariaLive: 'polite' },
@@ -1087,7 +1087,7 @@ desktopComponentContracts.push(
 		}
 	},
 	{
-		id: 'spinner-primitives',
+		id: 'spinner',
 		name: 'ZSpinner',
 		marker: 'ZSpinner-primitives',
 		native: { tag: 'SPAN', role: 'status' },

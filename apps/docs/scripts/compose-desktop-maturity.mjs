@@ -144,8 +144,17 @@ export function composeDesktopMaturity({
 	};
 }
 
-function selfTest() {
+async function selfTest() {
 	const componentContracts = desktopComponentContracts;
+	const checkedInMaturity = JSON.parse(await readFile(defaultMaturityPath, 'utf8'));
+	const checkedInComponents = new Map(
+		checkedInMaturity.components?.map((component) => [component.id, component.name]) ?? []
+	);
+	for (const contract of [...componentContracts, ...desktopCompositionContracts])
+		if (checkedInComponents.get(contract.id) !== contract.name)
+			throw new Error(
+				`Desktop contract ${contract.id}/${contract.name} is not in the checked-in maturity matrix.`
+			);
 	const assertion = (id, kind, target, expected) => ({
 		id,
 		kind,
@@ -317,7 +326,7 @@ async function main(argv = process.argv.slice(2)) {
 		return;
 	}
 	if (argv.includes('--self-test')) {
-		selfTest();
+		await selfTest();
 		return;
 	}
 	const evidenceInput = argument('evidence', argv);
