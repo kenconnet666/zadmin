@@ -8,12 +8,13 @@
 	],
 	"types": "./src/index.ts",
 	"bin": {
-		"miniapp": "./dist/cli.js"
+		"miniapp": "./bin/miniapp.mjs"
 	},
 	"engines": {
 		"node": ">=22.0.0"
 	},
 	"files": [
+		"bin",
 		"dist"
 	],
 	"exports": {

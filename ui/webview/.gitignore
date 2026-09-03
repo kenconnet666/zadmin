@@ -3,4 +3,6 @@ coverage/
 dist/
 node_modules/
 **/bin/
+!/bin/
+!/bin/*.mjs
 **/obj/

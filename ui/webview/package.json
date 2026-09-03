@@ -8,12 +8,13 @@
 	],
 	"types": "./src/index.ts",
 	"bin": {
-		"webview": "./dist/build/cli.js"
+		"webview": "./bin/webview.mjs"
 	},
 	"engines": {
 		"node": ">=22.0.0"
 	},
 	"files": [
+		"bin",
 		"dist",
 		"dotnet",
 		"protocol",

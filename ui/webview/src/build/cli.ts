@@ -11,11 +11,14 @@ const value = (name: string) => {
 };
 const projectRoot = resolve(value('--project') ?? process.cwd());
 const target = (value('--target') ?? 'windows-x64') as WebviewTarget | 'all';
+if (command !== 'build' && command !== 'dev') {
+	throw new Error('Usage: webview <build|dev> --target <windows-x64|windows-arm64|all>');
+}
 const config = await loadWebviewConfig(projectRoot, value('--config'));
 
 if (command === 'build') {
 	await buildWebviewTargets({ config, projectRoot, target });
-} else if (command === 'dev') {
+} else {
 	if (target === 'all') throw new Error('webview dev requires one target.');
 	await devWebviewTarget({
 		config,
@@ -23,6 +26,4 @@ if (command === 'build') {
 		smokeReportPath: value('--smoke-report'),
 		target
 	});
-} else {
-	throw new Error('Usage: webview <build|dev> --target <windows-x64|windows-arm64|all>');
 }

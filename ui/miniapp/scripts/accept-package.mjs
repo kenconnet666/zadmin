@@ -38,6 +38,16 @@ function runPnpm(args, cwd) {
 	});
 }
 
+async function expectPnpmFailure(args, cwd, expected) {
+	try {
+		await runPnpm(args, cwd);
+	} catch (error) {
+		if (!String(error?.message ?? error).includes(expected)) throw error;
+		return;
+	}
+	throw new Error(`Expected pnpm ${args.join(' ')} to fail.`);
+}
+
 async function write(path, content) {
 	await mkdir(dirname(path), { recursive: true });
 	await writeFile(path, content, 'utf8');
@@ -155,6 +165,7 @@ void [box, camera];
 
 	await runPnpm(['install', '--no-frozen-lockfile'], fixtureRoot);
 	await runPnpm(['install', '--frozen-lockfile'], fixtureRoot);
+	await expectPnpmFailure(['exec', 'miniapp', 'invalid'], fixtureRoot, 'Unknown Miniapp command');
 	await runPnpm(['run', 'check'], fixtureRoot);
 	await runPnpm(['run', 'build'], fixtureRoot);
 	const outputRoot = resolve(fixtureRoot, 'dist/wechat');
