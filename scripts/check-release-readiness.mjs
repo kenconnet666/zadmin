@@ -151,8 +151,12 @@ const checks = {
 		/if \[ "\$ACTUAL_SHA" != "\$EXPECTED_SHA" \]/u.test(ci),
 	releasePrCiCompletionBound:
 		/workflow_run_id/u.test(workflow) &&
-		/gh run watch "\$run_id" --exit-status --interval 10/u.test(workflow) &&
-		/gh run view "\$run_id" --json event,headSha,conclusion,url/u.test(workflow) &&
+		/gh run watch "\$run_id" --repo "\$GITHUB_REPOSITORY" --exit-status --interval 10/u.test(
+			workflow
+		) &&
+		/gh run view "\$run_id" --repo "\$GITHUB_REPOSITORY" --json event,headSha,conclusion,url/u.test(
+			workflow
+		) &&
 		/test .*\.event.* = 'workflow_dispatch'/u.test(workflow) &&
 		/test .*\.headSha.* = "\$head_sha"/u.test(workflow) &&
 		/test .*\.conclusion.* = 'success'/u.test(workflow) &&

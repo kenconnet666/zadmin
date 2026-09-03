@@ -165,8 +165,8 @@ jobs:
           run_id="$(printf '%s' "$dispatch_json" | jq -er '.workflow_run_id')"
           run_url="$(printf '%s' "$dispatch_json" | jq -er '.html_url')"
           printf '%s' "$run_id" | grep -Eq '^[1-9][0-9]*$'
-          gh run watch "$run_id" --exit-status --interval 10
-          run_json="$(gh run view "$run_id" --json event,headSha,conclusion,url)"
+          gh run watch "$run_id" --repo "$GITHUB_REPOSITORY" --exit-status --interval 10
+          run_json="$(gh run view "$run_id" --repo "$GITHUB_REPOSITORY" --json event,headSha,conclusion,url)"
           test "$(printf '%s' "$run_json" | jq -er '.event')" = 'workflow_dispatch'
           test "$(printf '%s' "$run_json" | jq -er '.headSha')" = "$head_sha"
           test "$(printf '%s' "$run_json" | jq -er '.conclusion')" = 'success'

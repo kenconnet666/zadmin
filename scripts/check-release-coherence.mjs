@@ -96,8 +96,12 @@ export function evaluateReleaseCoherence({
 			/if \[ "\$ACTUAL_SHA" != "\$EXPECTED_SHA" \]/u.test(ci),
 		releasePrCiCompletionBound:
 			/workflow_run_id/u.test(release) &&
-			/gh run watch "\$run_id" --exit-status --interval 10/u.test(release) &&
-			/gh run view "\$run_id" --json event,headSha,conclusion,url/u.test(release) &&
+			/gh run watch "\$run_id" --repo "\$GITHUB_REPOSITORY" --exit-status --interval 10/u.test(
+				release
+			) &&
+			/gh run view "\$run_id" --repo "\$GITHUB_REPOSITORY" --json event,headSha,conclusion,url/u.test(
+				release
+			) &&
 			/test .*\.event.* = 'workflow_dispatch'/u.test(release) &&
 			/test .*\.headSha.* = "\$head_sha"/u.test(release) &&
 			/test .*\.conclusion.* = 'success'/u.test(release) &&
@@ -187,7 +191,10 @@ if (process.argv.includes('--self-test')) {
 		{
 			check: 'releasePrCiCompletionBound',
 			input: {
-				release: sources.release.replace('gh run watch "$run_id" --exit-status --interval 10', '')
+				release: sources.release.replace(
+					'gh run watch "$run_id" --repo "$GITHUB_REPOSITORY" --exit-status --interval 10',
+					''
+				)
 			}
 		}
 	];
