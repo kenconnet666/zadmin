@@ -9,6 +9,10 @@
 		ZInput,
 		ZRadioGroup,
 		ZRadioGroupItem,
+		ZSelect,
+		ZSelectContent,
+		ZSelectItem,
+		ZSelectTrigger,
 		ZStack,
 		ZSwitch,
 		ZText,
@@ -239,6 +243,31 @@
 						Advanced
 					</label>
 				</ZRadioGroup>
+				<ZSelect name="country">
+					<ZSelectTrigger
+						data-desktop-component="ZSelectTrigger"
+						data-desktop-evidence="ZSelectTrigger-country"
+					>
+						Choose country
+					</ZSelectTrigger>
+					<ZSelectContent
+						data-desktop-component="ZSelectContent"
+						data-desktop-evidence="ZSelectContent-country"
+					>
+						<ZSelectItem data-desktop-option="disabled" value="disabled" disabled>
+							Disabled
+						</ZSelectItem>
+						<ZSelectItem
+							data-desktop-component="ZSelectItem"
+							data-desktop-evidence="ZSelectItem-country-cn"
+							data-desktop-option="cn"
+							value="cn"
+						>
+							China
+						</ZSelectItem>
+						<ZSelectItem data-desktop-option="us" value="us">United States</ZSelectItem>
+					</ZSelectContent>
+				</ZSelect>
 			</ZStack>
 		</ZForm>
 

@@ -336,6 +336,158 @@ export const desktopComponentContracts = Object.freeze([
 				}
 			]
 		}
+	},
+	{
+		id: 'select-trigger',
+		name: 'ZSelectTrigger',
+		marker: 'ZSelectTrigger-country',
+		native: {
+			tag: 'BUTTON',
+			type: 'button',
+			disabled: false,
+			text: 'Choose country',
+			ariaExpanded: 'false',
+			ariaControlsPresent: true,
+			ariaHasPopup: 'listbox',
+			dataState: 'closed'
+		},
+		interaction: {
+			id: 'open-select-and-restore-focus',
+			action: 'click+Enter+Escape',
+			target: 'root',
+			observations: [
+				{
+					id: 'expanded-before',
+					kind: 'aria',
+					target: 'aria-expanded',
+					expected: false,
+					read: (raw) => raw.selectInteraction.expandedBefore
+				},
+				{
+					id: 'expanded-after-open',
+					kind: 'aria',
+					target: 'aria-expanded',
+					expected: true,
+					read: (raw) => raw.selectInteraction.expandedAfterOpen
+				},
+				{
+					id: 'controls-resolved',
+					kind: 'relationship',
+					target: 'aria-controls',
+					expected: true,
+					read: (raw) => raw.selectInteraction.controlsResolved
+				},
+				{
+					id: 'closed-after-selection',
+					kind: 'aria',
+					target: 'aria-expanded',
+					expected: false,
+					read: (raw) => raw.selectInteraction.expandedAfterSelection
+				},
+				{
+					id: 'focus-after-selection',
+					kind: 'relationship',
+					target: 'activeElement',
+					expected: true,
+					read: (raw) => raw.selectInteraction.focusAfterSelection
+				},
+				{
+					id: 'closed-after-escape',
+					kind: 'aria',
+					target: 'aria-expanded',
+					expected: false,
+					read: (raw) => raw.selectInteraction.expandedAfterEscape
+				},
+				{
+					id: 'focus-after-escape',
+					kind: 'relationship',
+					target: 'activeElement',
+					expected: true,
+					read: (raw) => raw.selectInteraction.focusAfterEscape
+				}
+			]
+		}
+	},
+	{
+		id: 'select-content',
+		name: 'ZSelectContent',
+		marker: 'ZSelectContent-country',
+		native: {
+			tag: 'DIV',
+			role: 'listbox',
+			ariaActiveDescendantPresent: true,
+			tabIndex: -1,
+			dataState: 'open'
+		},
+		interaction: {
+			id: 'own-active-descendant',
+			action: 'focus+Enter+Escape',
+			target: 'root',
+			observations: [
+				{
+					id: 'popup-role',
+					kind: 'native',
+					target: 'role',
+					expected: 'listbox',
+					read: (raw) => raw.selectInteraction.popupRole
+				},
+				{
+					id: 'active-descendant-resolved',
+					kind: 'relationship',
+					target: 'aria-activedescendant',
+					expected: true,
+					read: (raw) => raw.selectInteraction.activeDescendantResolved
+				},
+				{
+					id: 'disabled-skipped',
+					kind: 'state',
+					target: 'disabled-option',
+					expected: true,
+					read: (raw) => raw.selectInteraction.disabledSkipped
+				},
+				{
+					id: 'popup-focused',
+					kind: 'relationship',
+					target: 'activeElement',
+					expected: true,
+					read: (raw) => raw.selectInteraction.popupFocused
+				}
+			]
+		}
+	},
+	{
+		id: 'select-item',
+		name: 'ZSelectItem',
+		marker: 'ZSelectItem-country-cn',
+		native: {
+			tag: 'DIV',
+			role: 'option',
+			ariaSelected: 'false',
+			tabIndex: -1,
+			dataState: 'unselected',
+			dataHighlighted: 'true'
+		},
+		interaction: {
+			id: 'select-active-item',
+			action: 'Enter',
+			target: 'active-descendant',
+			observations: [
+				{
+					id: 'selected-value',
+					kind: 'state',
+					target: 'value',
+					expected: 'cn',
+					read: (raw) => raw.selectInteraction.selectedValue
+				},
+				{
+					id: 'form-data',
+					kind: 'form-data',
+					target: 'country',
+					expected: 'cn',
+					read: (raw) => raw.selectInteraction.formDataValue
+				}
+			]
+		}
 	}
 ]);
 const contractsByName = new Map(
@@ -612,6 +764,7 @@ export function validateDesktopEvidence(raw, { expectedRevision } = {}) {
 		fail('component interaction did not produce exactly one observable state transition.');
 	if (raw.formInteraction?.ready !== true) fail('form interaction evidence is incomplete.');
 	if (raw.choiceInteraction?.ready !== true) fail('choice interaction evidence is incomplete.');
+	if (raw.selectInteraction?.ready !== true) fail('Select interaction evidence is incomplete.');
 	for (const contract of desktopComponentContracts)
 		for (const observation of contract.interaction?.observations ?? [])
 			if (observation.read(raw) !== observation.expected)
@@ -776,105 +929,28 @@ if (isMain && process.argv.includes('--self-test')) {
 			advancedFocused: true,
 			disabledSkipped: true
 		},
-		components: [
-			{
-				name: 'ZBox',
-				marker: 'ZBox-status',
-				present: true,
-				native: { tag: 'DIV', ariaLive: 'polite' }
-			},
-			{ name: 'ZStack', marker: 'ZStack', present: true, native: { tag: 'DIV' } },
-			{
-				name: 'ZText',
-				marker: 'ZText',
-				present: true,
-				native: { tag: 'STRONG', text: 'Windows WebView2 capability lab' }
-			},
-			{
-				name: 'ZButton',
-				marker: 'ZButton-component-action',
-				present: true,
-				native: { tag: 'BUTTON', type: 'button', disabled: false, text: 'Verify component' }
-			},
-			{
-				name: 'ZForm',
-				marker: 'ZForm-contract',
-				present: true,
-				native: { tag: 'FORM', noValidate: true }
-			},
-			{
-				name: 'ZFormField',
-				marker: 'ZFormField-email',
-				present: true,
-				native: { tag: 'DIV' }
-			},
-			{
-				name: 'ZInput',
-				marker: 'ZInput-email',
-				present: true,
-				native: {
-					tag: 'INPUT',
-					type: 'text',
-					disabled: false,
-					name: 'email',
-					value: '',
-					required: true,
-					readOnly: false
-				}
-			},
-			{
-				name: 'ZCheckbox',
-				marker: 'ZCheckbox-enabled',
-				present: true,
-				native: {
-					tag: 'INPUT',
-					type: 'checkbox',
-					disabled: false,
-					name: 'enabled',
-					value: 'enabled',
-					checked: false,
-					dataState: 'unchecked'
-				}
-			},
-			{
-				name: 'ZSwitch',
-				marker: 'ZSwitch-enabled',
-				present: true,
-				native: {
-					tag: 'INPUT',
-					type: 'checkbox',
-					role: 'switch',
-					disabled: false,
-					name: 'switchEnabled',
-					value: 'enabled',
-					checked: false,
-					ariaChecked: 'false',
-					dataState: 'unchecked'
-				}
-			},
-			{
-				name: 'ZRadioGroup',
-				marker: 'ZRadioGroup-mode',
-				present: true,
-				native: { tag: 'DIV', role: 'radiogroup', ariaOrientation: 'vertical' }
-			},
-			{
-				name: 'ZRadioGroupItem',
-				marker: 'ZRadioGroupItem-advanced',
-				present: true,
-				native: {
-					tag: 'INPUT',
-					type: 'radio',
-					disabled: false,
-					name: 'mode',
-					value: 'advanced',
-					checked: false,
-					ariaChecked: 'false',
-					tabIndex: -1,
-					dataState: 'unchecked'
-				}
-			}
-		]
+		selectInteraction: {
+			ready: true,
+			expandedBefore: false,
+			expandedAfterOpen: true,
+			controlsResolved: true,
+			popupRole: 'listbox',
+			activeDescendantResolved: true,
+			disabledSkipped: true,
+			popupFocused: true,
+			selectedValue: 'cn',
+			formDataValue: 'cn',
+			expandedAfterSelection: false,
+			focusAfterSelection: true,
+			expandedAfterEscape: false,
+			focusAfterEscape: true
+		},
+		components: desktopComponentContracts.map((contract) => ({
+			name: contract.name,
+			marker: contract.marker,
+			present: true,
+			native: contract.native
+		}))
 	};
 	const normalized = validateDesktopEvidence(sample, { expectedRevision: sample.revision });
 	if (

@@ -92,6 +92,25 @@ public sealed class WebViewHost : IAsyncDisposable
         public bool DisabledSkipped { get; set; }
     }
 
+    private sealed class DesktopSelectOpenEvidence
+    {
+        public bool Ready { get; set; }
+        public bool Expanded { get; set; }
+        public bool ControlsResolved { get; set; }
+        public string? PopupRole { get; set; }
+        public bool ActiveDescendantResolved { get; set; }
+        public bool DisabledSkipped { get; set; }
+        public bool PopupFocused { get; set; }
+    }
+
+    private sealed class DesktopSelectClosedEvidence
+    {
+        public bool Ready { get; set; }
+        public bool Expanded { get; set; }
+        public bool FocusRestored { get; set; }
+        public string? FormDataValue { get; set; }
+    }
+
     private static readonly JsonSerializerOptions SerializerOptions = new(JsonSerializerDefaults.Web);
     private const string CaptureDesktopEvidenceScript = """
         (() => {
@@ -119,8 +138,17 @@ public sealed class WebViewHost : IAsyncDisposable
                 ariaDescribedBy: node?.getAttribute('aria-describedby') ?? null,
                 ariaChecked: node?.getAttribute('aria-checked') ?? null,
                 ariaOrientation: node?.getAttribute('aria-orientation') ?? null,
+                ariaExpanded: node?.getAttribute('aria-expanded') ?? null,
+                ariaControls: node?.getAttribute('aria-controls') ?? null,
+                ariaControlsPresent: Boolean(node?.getAttribute('aria-controls')),
+                ariaHasPopup: node?.getAttribute('aria-haspopup') ?? null,
+                ariaActiveDescendant: node?.getAttribute('aria-activedescendant') ?? null,
+                ariaActiveDescendantPresent: Boolean(node?.getAttribute('aria-activedescendant')),
+                ariaSelected: node?.getAttribute('aria-selected') ?? null,
                 tabIndex: node?.tabIndex ?? null,
-                dataState: node?.getAttribute('data-state') ?? null
+                dataState: node?.getAttribute('data-state') ?? null,
+                dataHighlighted: node?.getAttribute('data-highlighted') ?? null,
+                dataDisabled: node?.getAttribute('data-disabled') ?? null
               }
             };
           };
@@ -275,6 +303,95 @@ public sealed class WebViewHost : IAsyncDisposable
           });
         })()
         """;
+    private const string OpenSelectEvidenceScript = """
+        (() => {
+          const trigger = document.querySelector(
+            '[data-desktop-evidence="ZSelectTrigger-country"]'
+          );
+          if (!(trigger instanceof HTMLButtonElement) ||
+              trigger.getAttribute('aria-expanded') !== 'false') return false;
+          trigger.click();
+          return true;
+        })()
+        """;
+    private const string ReadSelectOpenEvidenceScript = """
+        (() => {
+          const trigger = document.querySelector(
+            '[data-desktop-evidence="ZSelectTrigger-country"]'
+          );
+          const controls = trigger?.getAttribute('aria-controls');
+          const popup = controls ? document.getElementById(controls) : null;
+          const activeId = popup?.getAttribute('aria-activedescendant');
+          const active = activeId ? document.getElementById(activeId) : null;
+          const disabled = popup?.querySelector('[data-desktop-option="disabled"]');
+          const country = popup?.querySelector('[data-desktop-option="cn"]');
+          const result = {
+            expanded: trigger?.getAttribute('aria-expanded') === 'true',
+            controlsResolved: Boolean(controls && popup && popup.id === controls),
+            popupRole: popup?.getAttribute('role') ?? null,
+            activeDescendantResolved: Boolean(activeId && active === country),
+            disabledSkipped:
+              disabled?.getAttribute('data-highlighted') !== 'true' &&
+              country?.getAttribute('data-highlighted') === 'true',
+            popupFocused: document.activeElement === popup
+          };
+          return JSON.stringify({
+            ...result,
+            ready:
+              result.expanded &&
+              result.controlsResolved &&
+              result.popupRole === 'listbox' &&
+              result.activeDescendantResolved &&
+              result.disabledSkipped &&
+              result.popupFocused
+          });
+        })()
+        """;
+    private const string ChooseSelectEvidenceScript = """
+        (() => {
+          const trigger = document.querySelector(
+            '[data-desktop-evidence="ZSelectTrigger-country"]'
+          );
+          const controls = trigger?.getAttribute('aria-controls');
+          const popup = controls ? document.getElementById(controls) : null;
+          if (!(popup instanceof HTMLElement)) return false;
+          popup.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+          return true;
+        })()
+        """;
+    private const string DismissSelectEvidenceScript = """
+        (() => {
+          const trigger = document.querySelector(
+            '[data-desktop-evidence="ZSelectTrigger-country"]'
+          );
+          const controls = trigger?.getAttribute('aria-controls');
+          const popup = controls ? document.getElementById(controls) : null;
+          if (!(popup instanceof HTMLElement)) return false;
+          popup.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+          return true;
+        })()
+        """;
+    private const string ReadSelectClosedEvidenceScript = """
+        (() => {
+          const form = document.querySelector('[data-desktop-evidence="ZForm-contract"]');
+          const trigger = document.querySelector(
+            '[data-desktop-evidence="ZSelectTrigger-country"]'
+          );
+          const data = form instanceof HTMLFormElement ? new FormData(form) : null;
+          const result = {
+            expanded: trigger?.getAttribute('aria-expanded') === 'true',
+            focusRestored: document.activeElement === trigger,
+            formDataValue: data?.get('country') ?? null
+          };
+          return JSON.stringify({
+            ...result,
+            ready:
+              !result.expanded &&
+              result.focusRestored &&
+              result.formDataValue === 'cn'
+          });
+        })()
+        """;
     private readonly HostOptions _options;
     private readonly WebView2 _webview;
     private readonly Microsoft.UI.Xaml.Window _window;
@@ -426,6 +543,33 @@ public sealed class WebViewHost : IAsyncDisposable
         }
     }
 
+    private static async Task<T?> ExecuteJsonScriptAsync<T>(CoreWebView2 sender, string script)
+        where T : class
+    {
+        var value = await sender.ExecuteScriptAsync(script);
+        var json = JsonSerializer.Deserialize<string>(value) ?? "{}";
+        return JsonSerializer.Deserialize<T>(json, SerializerOptions);
+    }
+
+    private static async Task<T> WaitForEvidenceAsync<T>(
+        CoreWebView2 sender,
+        string script,
+        Func<T, bool> completed,
+        string timeoutMessage)
+        where T : class
+    {
+        for (var attempt = 0; attempt < 100; attempt++)
+        {
+            var evidence = await ExecuteJsonScriptAsync<T>(sender, script);
+            if (evidence is not null && completed(evidence)) return evidence;
+            await Task.Delay(100);
+        }
+        throw new TimeoutException(timeoutMessage);
+    }
+
+    private static async Task<DesktopEvidenceItem[]> CaptureCurrentDesktopEvidenceAsync(CoreWebView2 sender) =>
+        await ExecuteJsonScriptAsync<DesktopEvidenceItem[]>(sender, CaptureCurrentDesktopEvidenceScript) ?? [];
+
     private void OnWebResourceRequested(CoreWebView2 sender, CoreWebView2WebResourceRequestedEventArgs args) =>
         _assets?.Handle(args);
 
@@ -536,35 +680,73 @@ public sealed class WebViewHost : IAsyncDisposable
             smokePhase = "validating-form-interaction";
             if (await sender.ExecuteScriptAsync(RunFormEvidenceScript) != "true")
                 throw new InvalidOperationException("Desktop form evidence controls are unavailable.");
-            DesktopFormInteractionEvidence? formInteraction = null;
-            for (var attempt = 0; attempt < 100; attempt++)
-            {
-                var formValue = await sender.ExecuteScriptAsync(ReadFormEvidenceScript);
-                var formJson = JsonSerializer.Deserialize<string>(formValue) ?? "{}";
-                formInteraction = JsonSerializer.Deserialize<DesktopFormInteractionEvidence>(formJson, SerializerOptions);
-                if (formInteraction?.Ready == true) break;
-                await Task.Delay(100);
-            }
-            if (formInteraction?.Ready != true)
-                throw new TimeoutException("Desktop form components did not complete their observable interactions.");
+            var formInteraction = await WaitForEvidenceAsync<DesktopFormInteractionEvidence>(
+                sender,
+                ReadFormEvidenceScript,
+                evidence => evidence.Ready,
+                "Desktop form components did not complete their observable interactions.");
             smokePhase = "validating-choice-interaction";
             if (await sender.ExecuteScriptAsync(RunChoiceEvidenceScript) != "true")
                 throw new InvalidOperationException("Desktop choice evidence controls are unavailable.");
-            DesktopChoiceInteractionEvidence? choiceInteraction = null;
-            for (var attempt = 0; attempt < 100; attempt++)
+            var choiceInteraction = await WaitForEvidenceAsync<DesktopChoiceInteractionEvidence>(
+                sender,
+                ReadChoiceEvidenceScript,
+                evidence => evidence.Ready,
+                "Desktop choice components did not complete their observable interactions.");
+            smokePhase = "validating-select-open";
+            if (await sender.ExecuteScriptAsync(OpenSelectEvidenceScript) != "true")
+                throw new InvalidOperationException("Desktop Select trigger is unavailable or not closed.");
+            var selectOpen = await WaitForEvidenceAsync<DesktopSelectOpenEvidence>(
+                sender,
+                ReadSelectOpenEvidenceScript,
+                evidence => evidence.Ready,
+                "Desktop Select did not establish its listbox and active descendant.");
+            evidenceBefore.DesktopEvidence = MergeDesktopEvidence(
+                evidenceBefore.DesktopEvidence,
+                await CaptureCurrentDesktopEvidenceAsync(sender));
+            smokePhase = "validating-select-selection";
+            if (await sender.ExecuteScriptAsync(ChooseSelectEvidenceScript) != "true")
+                throw new InvalidOperationException("Desktop Select listbox is unavailable for selection.");
+            var selectAfterSelection = await WaitForEvidenceAsync<DesktopSelectClosedEvidence>(
+                sender,
+                ReadSelectClosedEvidenceScript,
+                evidence => evidence.Ready,
+                "Desktop Select did not commit FormData and restore trigger focus.");
+            smokePhase = "validating-select-dismiss";
+            if (await sender.ExecuteScriptAsync(OpenSelectEvidenceScript) != "true")
+                throw new InvalidOperationException("Desktop Select trigger could not reopen.");
+            _ = await WaitForEvidenceAsync<DesktopSelectOpenEvidence>(
+                sender,
+                ReadSelectOpenEvidenceScript,
+                evidence => evidence.Ready,
+                "Desktop Select did not reopen its listbox.");
+            if (await sender.ExecuteScriptAsync(DismissSelectEvidenceScript) != "true")
+                throw new InvalidOperationException("Desktop Select listbox is unavailable for dismissal.");
+            var selectAfterDismiss = await WaitForEvidenceAsync<DesktopSelectClosedEvidence>(
+                sender,
+                ReadSelectClosedEvidenceScript,
+                evidence => evidence.Ready,
+                "Desktop Select Escape dismissal did not restore trigger focus.");
+            var selectInteraction = new
             {
-                var choiceValue = await sender.ExecuteScriptAsync(ReadChoiceEvidenceScript);
-                var choiceJson = JsonSerializer.Deserialize<string>(choiceValue) ?? "{}";
-                choiceInteraction = JsonSerializer.Deserialize<DesktopChoiceInteractionEvidence>(choiceJson, SerializerOptions);
-                if (choiceInteraction?.Ready == true) break;
-                await Task.Delay(100);
-            }
-            if (choiceInteraction?.Ready != true)
-                throw new TimeoutException("Desktop choice components did not complete their observable interactions.");
-            var currentEvidenceValue = await sender.ExecuteScriptAsync(CaptureCurrentDesktopEvidenceScript);
-            var currentEvidenceJson = JsonSerializer.Deserialize<string>(currentEvidenceValue) ?? "[]";
-            var currentEvidence = JsonSerializer.Deserialize<DesktopEvidenceItem[]>(currentEvidenceJson, SerializerOptions) ?? [];
-            evidenceBefore.DesktopEvidence = MergeDesktopEvidence(evidenceBefore.DesktopEvidence, currentEvidence);
+                ready = true,
+                expandedBefore = false,
+                expandedAfterOpen = selectOpen.Expanded,
+                selectOpen.ControlsResolved,
+                selectOpen.PopupRole,
+                selectOpen.ActiveDescendantResolved,
+                selectOpen.DisabledSkipped,
+                selectOpen.PopupFocused,
+                selectedValue = selectAfterSelection.FormDataValue,
+                formDataValue = selectAfterSelection.FormDataValue,
+                expandedAfterSelection = selectAfterSelection.Expanded,
+                focusAfterSelection = selectAfterSelection.FocusRestored,
+                expandedAfterEscape = selectAfterDismiss.Expanded,
+                focusAfterEscape = selectAfterDismiss.FocusRestored
+            };
+            evidenceBefore.DesktopEvidence = MergeDesktopEvidence(
+                evidenceBefore.DesktopEvidence,
+                await CaptureCurrentDesktopEvidenceAsync(sender));
             var pageAfterValue = await sender.ExecuteScriptAsync(ReadStatusScript);
             smokePhase = "writing-report";
             var report = new
@@ -579,7 +761,8 @@ public sealed class WebViewHost : IAsyncDisposable
                 host = new { runtime = "WebView2", implementation = "WebViewHost", origin = evidenceBefore.Origin, webViewVersion = _webViewVersion, protocolVersion = WebViewProtocol.Version, navigation = true, hydrated = true, bridge = evidenceBefore.HasBridge, bridgeResponseValidated, pageErrors = evidenceBefore.Errors, source = _webview.Source?.ToString() },
                 components = evidenceBefore.DesktopEvidence,
                 formInteraction,
-                choiceInteraction
+                choiceInteraction,
+                selectInteraction
             };
             Directory.CreateDirectory(Path.GetDirectoryName(_options.SmokeReportPath)!);
             await WriteSmokeReportAsync(
