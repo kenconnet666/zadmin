@@ -26,12 +26,13 @@
 	const query = new AsyncCollectionQuery<string, readonly ZComboboxOption[]>(
 		async (kind, context) => {
 			if (kind === 'loading')
-				return new Promise((_, reject) => {
-					context.signal.addEventListener(
-						'abort',
-						() => reject(context.signal.reason ?? new Error('Remote query aborted.')),
-						{ once: true }
-					);
+				return new Promise<readonly ZComboboxOption[]>((_, reject) => {
+					const abort = () => {
+						context.signal.removeEventListener('abort', abort);
+						reject(context.signal.reason ?? new Error('Remote query aborted.'));
+					};
+					if (context.signal.aborted) abort();
+					else context.signal.addEventListener('abort', abort, { once: true });
 				});
 			if (kind === 'empty') return [];
 			if (kind === 'error') throw new Error('服务端暂时不可用');
