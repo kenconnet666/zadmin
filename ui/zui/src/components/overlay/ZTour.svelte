@@ -135,7 +135,28 @@
 				description: '稳定id、可选目标、富标题、富说明和位置。',
 				name: 'steps',
 				required: true,
-				type: 'readonly TourStep[]'
+				type: 'readonly TourStep[]',
+				members: [
+					{ description: '步骤稳定唯一身份。', name: 'id', type: 'string', required: true },
+					{
+						description: '步骤标题；支持字符串或Snippet。',
+						name: 'title',
+						type: 'TourStepContent',
+						required: true
+					},
+					{
+						description: '步骤说明；支持字符串或Snippet。',
+						name: 'description',
+						type: 'TourStepContent',
+						required: true
+					},
+					{
+						description: '目标selector、目标函数或null；null表示居中步骤。',
+						name: 'target',
+						type: 'string | (() => HTMLElement | null) | null'
+					},
+					{ description: '目标缺省时的浮层位置。', name: 'placement', type: 'FloatingPlacement' }
+				]
 			},
 			{ default: 'false', description: '打开状态。', name: 'open', type: 'boolean' },
 			{ default: '0', description: '零起始当前步骤。', name: 'step', type: 'number' },

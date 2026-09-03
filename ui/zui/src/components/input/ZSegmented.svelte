@@ -81,7 +81,17 @@
 				default: '必填（或兼容items）',
 				description: '权威typed value、文本与disabled配置；支持动态替换。',
 				name: 'options',
-				type: 'readonly ZSegmentedOption[]'
+				type: 'readonly ZSegmentedOption[]',
+				members: [
+					{
+						description: 'segment唯一业务值。',
+						name: 'value',
+						type: 'SegmentedSelectionKey',
+						required: true
+					},
+					{ description: 'segment显示文本。', name: 'label', type: 'string', required: true },
+					{ description: '禁止选择该segment。', name: 'disabled', type: 'boolean' }
+				]
 			},
 			{
 				default: 'undefined',

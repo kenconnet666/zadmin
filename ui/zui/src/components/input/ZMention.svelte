@@ -93,7 +93,15 @@
 				description: '稳定key、标签、插入值和过滤关键词。',
 				name: 'items',
 				required: true,
-				type: 'readonly MentionItem[]'
+				type: 'readonly MentionItem[]',
+				members: [
+					{ description: '唯一业务身份。', name: 'key', type: 'SelectionKey', required: true },
+					{ description: '候选显示文本。', name: 'label', type: 'string', required: true },
+					{ description: '插入文本；省略时回退label。', name: 'value', type: 'string' },
+					{ description: '候选补充说明。', name: 'description', type: 'string' },
+					{ description: '搜索匹配关键词。', name: 'keywords', type: 'readonly string[]' },
+					{ description: '禁止选择该候选。', name: 'disabled', type: 'boolean' }
+				]
 			},
 			{
 				default: 'localePack.collection.mentionEmpty',

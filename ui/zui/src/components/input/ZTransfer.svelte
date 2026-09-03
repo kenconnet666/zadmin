@@ -93,7 +93,18 @@
 				description: '权威完整数据源；key必须是唯一string或有限number且不能为-0。',
 				name: 'items',
 				required: true,
-				type: 'readonly TransferItem[]'
+				type: 'readonly TransferItem[]',
+				members: [
+					{
+						description: '唯一业务身份；排序、筛选和移动后保持不变。',
+						name: 'key',
+						type: 'SelectionKey',
+						required: true
+					},
+					{ description: '选项显示文本。', name: 'label', type: 'string', required: true },
+					{ description: '选项补充说明。', name: 'description', type: 'string' },
+					{ description: '禁止选择或移动该项。', name: 'disabled', type: 'boolean' }
+				]
 			},
 			{
 				bindable: true,
