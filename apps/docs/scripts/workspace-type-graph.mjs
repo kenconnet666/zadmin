@@ -1,6 +1,7 @@
 import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { dirname, extname, isAbsolute, relative, resolve, sep } from 'node:path';
 import { tmpdir } from 'node:os';
+import { pathToFileURL } from 'node:url';
 import ts from 'typescript';
 
 const STATUS = Object.freeze({
@@ -10,6 +11,9 @@ const STATUS = Object.freeze({
 	cycle: 'cycle'
 });
 const RELATIVE = /^\.\.?\//u;
+const isMain = process.argv[1]
+	? pathToFileURL(resolve(process.argv[1])).href === import.meta.url
+	: false;
 
 function within(root, target) {
 	const relation = relative(root, target);
@@ -61,7 +65,7 @@ function importAliases(file) {
 export class WorkspaceTypeGraph {
 	#root;
 	#cache = new Map();
-	#loading = new Set();
+	#pending = new Map();
 	constructor({ workspaceRoot }) {
 		this.#root = resolve(workspaceRoot);
 	}
@@ -75,8 +79,16 @@ export class WorkspaceTypeGraph {
 		const target = this.resolvePath(path);
 		if (typeof target !== 'string') return target;
 		if (this.#cache.has(target)) return this.#cache.get(target);
-		if (this.#loading.has(target)) return { status: STATUS.cycle, path: target };
-		this.#loading.add(target);
+		if (this.#pending.has(target)) return this.#pending.get(target);
+		const pending = this.#loadLocal(target);
+		this.#pending.set(target, pending);
+		try {
+			return await pending;
+		} finally {
+			this.#pending.delete(target);
+		}
+	}
+	async #loadLocal(target) {
 		try {
 			const source = moduleSource(await readFile(target, 'utf8'), target);
 			const parsed = declarations(source);
@@ -93,8 +105,6 @@ export class WorkspaceTypeGraph {
 		} catch (error) {
 			if (error?.code !== 'ENOENT') throw error;
 			return { status: STATUS.unresolved, reason: 'missing', path: target };
-		} finally {
-			this.#loading.delete(target);
 		}
 	}
 	async resolveImport(importer, specifier) {
@@ -157,7 +167,7 @@ export class WorkspaceTypeGraph {
 	}
 }
 
-if (process.argv.includes('--self-test')) {
+if (isMain && process.argv.includes('--self-test')) {
 	const root = await mkdtemp(resolve(tmpdir(), 'zadmin-type-graph-'));
 	try {
 		await mkdir(resolve(root, 'src'), { recursive: true });
@@ -173,7 +183,8 @@ if (process.argv.includes('--self-test')) {
 		);
 		await writeFile(
 			resolve(root, 'src/host.svelte'),
-			'<script module lang="ts">import { Alias } from "./alias.js"; export interface Props { items: readonly Alias[]; }</script>',
+			'<script module lang="ts">import { Alias } from "./alias.js"; export inter' +
+				'face Props { items: readonly Alias[]; }</script>',
 			'utf8'
 		);
 		await writeFile(
@@ -192,6 +203,12 @@ if (process.argv.includes('--self-test')) {
 			'utf8'
 		);
 		const graph = new WorkspaceTypeGraph({ workspaceRoot: root });
+		const [concurrentLeft, concurrentRight] = await Promise.all([
+			graph.load(resolve(root, 'src/types.ts')),
+			graph.load(resolve(root, 'src/types.ts'))
+		]);
+		if (concurrentLeft.status !== STATUS.local || concurrentLeft !== concurrentRight)
+			throw new Error('concurrent module loading did not share its cached result');
 		const host = await graph.resolveDeclaration(resolve(root, 'src/host.svelte'), 'Props');
 		if (host.status !== STATUS.local) throw new Error('local Svelte declaration failed');
 		const alias = await graph.resolveDeclaration(resolve(root, 'src/alias.ts'), 'Alias');

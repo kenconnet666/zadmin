@@ -5,12 +5,15 @@ import { fileURLToPath } from 'node:url';
 import { format, resolveConfig } from 'prettier';
 import ts from 'typescript';
 
+import { WorkspaceTypeGraph } from './workspace-type-graph.mjs';
+
 const docsRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const workspaceRoot = resolve(docsRoot, '../..');
 const componentsRoot = resolve(workspaceRoot, 'ui/zui/src/components');
 const outputPath = resolve(docsRoot, 'src/framework/component-api.generated.ts');
 const teachingCoverageJsonPath = resolve(workspaceRoot, '.docs/zui/api-teaching-coverage.json');
 const teachingCoverageMarkdownPath = resolve(workspaceRoot, '.docs/zui/api-teaching-coverage.md');
+const workspaceTypeGraph = new WorkspaceTypeGraph({ workspaceRoot });
 const write = process.argv.includes('--write');
 const portable = (path) => path.replaceAll('\\', '/');
 const normalizeType = (value) => value.replace(/\s+/gu, ' ').trim();
@@ -127,89 +130,162 @@ function hasDeprecatedTag(member) {
 	return ts.getJSDocTags(member).some((tag) => tag.tagName.text === 'deprecated');
 }
 
-function scanDeprecatedPropertyPaths(
-	sourceFile,
-	declarations,
-	rootDeclaration,
-	collectAll = false
-) {
+async function scanWorkspacePropertyPaths(graph, modulePath, rootName, collectAll = false) {
 	const paths = new Set();
 	const seen = new Set();
-	function literalNames(node) {
+	function bindingFor(node, context) {
+		if (ts.isTypeReferenceNode(node) && ts.isIdentifier(node.typeName)) {
+			const existing = context.bindings.get(node.typeName.text);
+			if (existing) return existing;
+		}
+		return { node, modulePath: context.modulePath, bindings: context.bindings };
+	}
+	function literalNames(node, context) {
 		if (!node) return new Set();
+		if (ts.isParenthesizedTypeNode(node)) return literalNames(node.type, context);
+		if (ts.isTypeReferenceNode(node) && ts.isIdentifier(node.typeName)) {
+			const binding = context.bindings.get(node.typeName.text);
+			if (binding)
+				return literalNames(binding.node, {
+					bindings: binding.bindings,
+					modulePath: binding.modulePath
+				});
+		}
 		const types = ts.isUnionTypeNode(node) ? node.types : [node];
 		return new Set(
 			types
 				.filter(ts.isLiteralTypeNode)
-				.map(({ literal }) => (ts.isStringLiteral(literal) ? literal.text : undefined))
+				.map(({ literal }) =>
+					ts.isStringLiteral(literal) || ts.isNumericLiteral(literal) ? literal.text : undefined
+				)
 				.filter((value) => value !== undefined)
 		);
 	}
-	function visitType(node, path, include, exclude = new Set()) {
+	async function visitReference(name, typeArguments, context, path, include, exclude) {
+		const binding = context.bindings.get(name);
+		if (binding) {
+			await visitType(
+				binding.node,
+				{ bindings: binding.bindings, modulePath: binding.modulePath },
+				path,
+				include,
+				exclude
+			);
+			return;
+		}
+		if ((name === 'Omit' || name === 'Pick') && typeArguments?.[0]) {
+			const selected = literalNames(typeArguments[1], context);
+			const nextInclude = name === 'Pick' ? selected : include;
+			const nextExclude = name === 'Omit' ? new Set([...exclude, ...selected]) : exclude;
+			await visitType(typeArguments[0], context, path, nextInclude, nextExclude);
+			return;
+		}
+		if (
+			['Array', 'Readonly', 'ReadonlyArray', 'Partial', 'Required'].includes(name) &&
+			typeArguments?.[0]
+		) {
+			await visitType(typeArguments[0], context, path, include, exclude);
+			return;
+		}
+		const resolution = await graph.resolveDeclaration(
+			context.modulePath,
+			name,
+			typeArguments ?? []
+		);
+		if (resolution.status !== 'local') return;
+		const identity = `${resolution.path}#${resolution.name}`;
+		if (seen.has(identity)) return;
+		const targetBindings = new Map();
+		const parameters = [...(resolution.declaration.typeParameters ?? [])];
+		for (const [index, parameter] of parameters.entries()) {
+			const argument = typeArguments?.[index];
+			if (argument) targetBindings.set(parameter.name.text, bindingFor(argument, context));
+			else if (parameter.default)
+				targetBindings.set(parameter.name.text, {
+					node: parameter.default,
+					modulePath: resolution.path,
+					bindings: targetBindings
+				});
+		}
+		seen.add(identity);
+		await visitDeclaration(
+			resolution.declaration,
+			{ bindings: targetBindings, modulePath: resolution.path },
+			path,
+			include,
+			exclude
+		);
+		seen.delete(identity);
+	}
+	async function visitType(node, context, path, include, exclude = new Set()) {
 		if (!node) return;
-		if (ts.isParenthesizedTypeNode(node)) return visitType(node.type, path, include, exclude);
-		if (ts.isTypeOperatorNode(node)) return visitType(node.type, path, include, exclude);
-		if (ts.isArrayTypeNode(node)) return visitType(node.elementType, path, include, exclude);
-		if (ts.isUnionTypeNode(node) || ts.isIntersectionTypeNode(node))
-			return node.types.forEach((type) => visitType(type, path, include, exclude));
-		if (ts.isTypeLiteralNode(node))
-			return node.members.forEach((member) => visitMember(member, path, include, exclude));
+		if (ts.isParenthesizedTypeNode(node))
+			return visitType(node.type, context, path, include, exclude);
+		if (ts.isTypeOperatorNode(node)) {
+			if (node.operator === ts.SyntaxKind.ReadonlyKeyword)
+				return visitType(node.type, context, path, include, exclude);
+			return;
+		}
+		if (ts.isArrayTypeNode(node))
+			return visitType(node.elementType, context, path, include, exclude);
+		if (ts.isUnionTypeNode(node) || ts.isIntersectionTypeNode(node)) {
+			for (const type of node.types) await visitType(type, context, path, include, exclude);
+			return;
+		}
+		if (ts.isTypeLiteralNode(node)) {
+			for (const member of node.members) await visitMember(member, context, path, include, exclude);
+			return;
+		}
 		if (ts.isExpressionWithTypeArguments(node)) {
-			if (ts.isIdentifier(node.expression)) {
-				if (
-					(node.expression.text === 'Omit' || node.expression.text === 'Pick') &&
-					node.typeArguments?.[0]
-				) {
-					const selected = literalNames(node.typeArguments[1]);
-					const nextInclude = node.expression.text === 'Pick' ? selected : include;
-					const nextExclude =
-						node.expression.text === 'Omit' ? new Set([...exclude, ...selected]) : exclude;
-					return visitType(node.typeArguments[0], path, nextInclude, nextExclude);
-				}
-				const heritage = declarations.get(node.expression.text);
-				if (heritage && ts.isInterfaceDeclaration(heritage))
-					heritage.members.forEach((member) => visitMember(member, path, include, exclude));
-			}
-			for (const argument of node.typeArguments ?? []) visitType(argument, path, include, exclude);
+			if (ts.isIdentifier(node.expression))
+				await visitReference(
+					node.expression.text,
+					node.typeArguments,
+					context,
+					path,
+					include,
+					exclude
+				);
 			return;
 		}
 		if (ts.isTypeReferenceNode(node) && ts.isIdentifier(node.typeName)) {
-			if (
-				(node.typeName.text === 'Omit' || node.typeName.text === 'Pick') &&
-				node.typeArguments?.[0]
-			) {
-				const selected = literalNames(node.typeArguments[1]);
-				const nextInclude = node.typeName.text === 'Pick' ? selected : include;
-				const nextExclude =
-					node.typeName.text === 'Omit' ? new Set([...exclude, ...selected]) : exclude;
-				return visitType(node.typeArguments[0], path, nextInclude, nextExclude);
-			}
-			const declaration = declarations.get(node.typeName.text);
-			if (declaration && !seen.has(declaration.name.text)) {
-				seen.add(declaration.name.text);
-				if (ts.isTypeAliasDeclaration(declaration))
-					visitType(declaration.type, path, include, exclude);
-				else declaration.members.forEach((member) => visitMember(member, path, include, exclude));
-				seen.delete(declaration.name.text);
-			}
-			for (const argument of node.typeArguments ?? []) visitType(argument, path, include, exclude);
+			await visitReference(node.typeName.text, node.typeArguments, context, path, include, exclude);
 		}
 	}
-	function visitMember(member, parentPath, include, exclude = new Set()) {
+	async function visitMember(member, context, parentPath, include, exclude = new Set()) {
 		if (!ts.isPropertySignature(member)) return;
 		const name = propertyName(member);
 		if (!name) return;
 		if (exclude.has(name) || (include && !include.has(name))) return;
 		const path = parentPath ? `${parentPath}.${name}` : name;
 		if (collectAll || hasDeprecatedTag(member)) paths.add(path);
-		visitType(member.type, path);
+		await visitType(member.type, context, path);
 	}
-	visitType(ts.isTypeAliasDeclaration(rootDeclaration) ? rootDeclaration.type : undefined, '');
-	if (ts.isInterfaceDeclaration(rootDeclaration)) {
-		rootDeclaration.members.forEach((member) => visitMember(member, ''));
-		for (const heritage of rootDeclaration.heritageClauses ?? [])
-			for (const type of heritage.types) visitType(type, '');
+	async function visitDeclaration(declaration, context, path, include, exclude = new Set()) {
+		if (ts.isTypeAliasDeclaration(declaration)) {
+			await visitType(declaration.type, context, path, include, exclude);
+			return;
+		}
+		for (const heritage of declaration.heritageClauses ?? [])
+			for (const type of heritage.types) await visitType(type, context, path, include, exclude);
+		for (const member of declaration.members)
+			await visitMember(member, context, path, include, exclude);
 	}
+	const root = await graph.resolveDeclaration(modulePath, rootName);
+	if (root.status !== 'local')
+		throw new Error(`${portable(relative(workspaceRoot, modulePath))} cannot resolve ${rootName}.`);
+	const identity = `${root.path}#${root.name}`;
+	seen.add(identity);
+	const rootBindings = new Map();
+	for (const parameter of root.declaration.typeParameters ?? [])
+		if (parameter.default)
+			rootBindings.set(parameter.name.text, {
+				node: parameter.default,
+				modulePath: root.path,
+				bindings: rootBindings
+			});
+	await visitDeclaration(root.declaration, { bindings: rootBindings, modulePath: root.path }, '');
+	seen.delete(identity);
 	return paths;
 }
 
@@ -270,12 +346,7 @@ export function validateDeprecationMetadata({
 	);
 	for (const entry of entries) {
 		const entryPath = entry.path ?? entry.name;
-		const rootPath = entryPath?.split('.')[0];
-		const hasKnownChildren =
-			entryPath?.includes('.') &&
-			rootPath &&
-			[...knownPublicPaths].some((path) => path.startsWith(`${rootPath}.`));
-		if (publicPaths && hasKnownChildren && !knownPublicPaths.has(entryPath))
+		if (publicPaths && entryPath?.includes('.') && !knownPublicPaths.has(entryPath))
 			throw new Error(
 				`${filename} metadata member does not exist in the public type graph: ${entryPath ?? '<unnamed>'}.`
 			);
@@ -338,51 +409,61 @@ export function validateDeprecationMetadata({
 }
 
 if (process.argv.includes('--self-test')) {
-	const scannerSource = ts.createSourceFile(
-		'scanner-self-test.ts',
-		`interface Meta {
-/** @deprecated Use key. */
-id: string;
-key: string;
-}
-interface Other {
-/** @deprecated Use key. */
-id: string;
-key: string;
-}
-interface Root extends Base {
-items: ReadonlyArray<Meta>;
-other: Other;
-}
-interface Base {
-inherited: ReadonlyArray<Meta>;
-
-}
-interface Omitted extends Omit<Meta, 'id'> {}
-interface Picked extends Pick<Meta, 'key'> {}
-type MetaAlias = Meta;
-type OmittedAlias = Omit<Readonly<MetaAlias>, 'id'>;
-type PickedAlias = Pick<(MetaAlias), 'key'>;`,
-		ts.ScriptTarget.Latest,
+	const componentPath = (...segments) => resolve(componentsRoot, ...segments);
+	const listDeprecatedPaths = await scanWorkspacePropertyPaths(
+		workspaceTypeGraph,
+		componentPath('data-display', 'ZList.svelte'),
+		'ZListProps'
+	);
+	if (![...listDeprecatedPaths].includes('items.id'))
+		throw new Error('Workspace property scanner missed nested deprecated List items.id.');
+	const importedCases = [
+		[
+			componentPath('navigation', 'ZCommandPalette.svelte'),
+			'ZCommandPaletteProps',
+			['items.key', 'items.label', 'items.keywords']
+		],
+		[
+			componentPath('input', 'ZFileUpload.svelte'),
+			'ZFileUploadProps',
+			['files.id', 'files.file', 'files.status', 'files.progress', 'files.error']
+		],
+		[
+			componentPath('input', 'ZCascader.svelte'),
+			'ZCascaderProps',
+			['nodes.key', 'nodes.label', 'nodes.parentKey', 'nodes.hasChildren']
+		],
+		[
+			componentPath('input', 'ZTreeSelect.svelte'),
+			'ZTreeSelectProps',
+			['nodes.key', 'nodes.label', 'nodes.selectionDisabled']
+		]
+	];
+	for (const [path, declarationName, expectedPaths] of importedCases) {
+		const publicPaths = await scanWorkspacePropertyPaths(
+			workspaceTypeGraph,
+			path,
+			declarationName,
+			true
+		);
+		const missing = expectedPaths.filter((expected) => !publicPaths.has(expected));
+		if (missing.length > 0)
+			throw new Error(
+				`Workspace property scanner missed ${declarationName} paths: ${missing.join(', ')}.`
+			);
+	}
+	const drawerPaths = await scanWorkspacePropertyPaths(
+		workspaceTypeGraph,
+		componentPath('compound', 'drawer', 'ZDrawerContent.svelte'),
+		'ZDrawerContentProps',
 		true
 	);
-	const scannerDeclarations = declarationMap(scannerSource);
-	const scannerPaths = scanDeprecatedPropertyPaths(
-		scannerSource,
-		scannerDeclarations,
-		scannerDeclarations.get('Root')
-	);
-	if ([...scannerPaths].sort().join(',') !== 'inherited.id,items.id,other.id')
-		throw new Error(`Deprecation scanner self-test mismatch: ${[...scannerPaths].join(',')}.`);
-	for (const name of ['Omitted', 'Picked', 'OmittedAlias', 'PickedAlias']) {
-		const paths = scanDeprecatedPropertyPaths(
-			scannerSource,
-			scannerDeclarations,
-			scannerDeclarations.get(name)
-		);
-		if (paths.size !== 0)
-			throw new Error(`Deprecation scanner self-test leaked excluded fields from ${name}.`);
-	}
+	if (
+		!drawerPaths.has('dismissOnEscape') ||
+		drawerPaths.has('appearance') ||
+		drawerPaths.has('role')
+	)
+		throw new Error('Workspace property scanner did not preserve cross-file Omit semantics.');
 	const valid = () =>
 		validateDeprecationMetadata({
 			deprecatedNames: ['old'],
@@ -704,7 +785,7 @@ function collectDeclaration(declaration, context, include = undefined, exclude =
 	context.seen.delete(name);
 }
 
-function componentFacts(source, filename) {
+async function componentFacts(source, filename, path) {
 	const match = /<script\s+module\s+lang=["']ts["']>([\s\S]*?)<\/script>/u.exec(source);
 	if (!match) throw new Error(`${filename} is missing its TypeScript module script.`);
 	const sourceFile = ts.createSourceFile(filename, match[1], ts.ScriptTarget.Latest, true);
@@ -755,8 +836,8 @@ function componentFacts(source, filename) {
 			.map(({ item, section, path }) => [path, { item, section, path }])
 			.filter(([path]) => path !== undefined)
 	);
-	const deprecatedPaths = scanDeprecatedPropertyPaths(sourceFile, declarations, declaration);
-	const publicPaths = scanDeprecatedPropertyPaths(sourceFile, declarations, declaration, true);
+	const deprecatedPaths = await scanWorkspacePropertyPaths(workspaceTypeGraph, path, propsType);
+	const publicPaths = await scanWorkspacePropertyPaths(workspaceTypeGraph, path, propsType, true);
 	const missingDeprecationMetadata = [...deprecatedPaths].filter((path) => {
 		const entry = metadataByName.get(path);
 		return !entry || objectStringProperty(entry.item, 'deprecatedSince') === undefined;
@@ -801,7 +882,7 @@ for (const path of await filesUnder(componentsRoot, '.svelte')) {
 	const source = await readFile(path, 'utf8');
 	if (!source.includes('export const zuiMetadata')) continue;
 	const filename = portable(relative(workspaceRoot, path));
-	const component = componentFacts(source, filename);
+	const component = await componentFacts(source, filename, path);
 	if (facts[component.id]) throw new Error(`Duplicate component API id ${component.id}.`);
 	facts[component.id] = component;
 }
