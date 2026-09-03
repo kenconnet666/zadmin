@@ -5,6 +5,7 @@ import { render } from 'vitest-browser-svelte';
 import { ZRadioGroup, ZSegmented } from '../src/entrypoints/index.js';
 import ChoiceControlsCollectionFixture from './ChoiceControlsCollectionFixture.svelte';
 import RadioGroupFixture from './RadioGroupFixture.svelte';
+import { resetForm } from './form-reset.js';
 
 async function settle(): Promise<void> {
 	await Promise.resolve();
@@ -27,7 +28,7 @@ describe('ZRadioGroup, ZRadioGroupItem and ZSegmented production contracts', () 
 		await settle();
 		expect(delta.checked).toBe(true);
 		expect(new FormData(form).get('choice')).toBe('d');
-		form.reset();
+		await resetForm(form);
 		await expect.poll(() => beta.checked).toBe(true);
 		expect(alpha.checked).toBe(false);
 		expect(new FormData(form).get('choice')).toBe('b');

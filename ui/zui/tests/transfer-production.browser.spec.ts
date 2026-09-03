@@ -4,6 +4,7 @@ import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-svelte';
 
 import TransferProductionFixture from './TransferProductionFixture.svelte';
+import { resetForm } from './form-reset.js';
 
 describe('ZTransfer production contract', () => {
 	it('keeps ZTransfer typed identity, filter-scoped select-all, source/target movement and FormData reset real', async () => {
@@ -31,7 +32,7 @@ describe('ZTransfer production contract', () => {
 		await tick();
 		expect(target.textContent).toContain('Alpha');
 		expect(new FormData(form).getAll('channel')).toEqual(['1', 'alpha', 'orphan']);
-		form.reset();
+		await resetForm(form);
 		await expect.poll(() => new FormData(form).getAll('channel')).toEqual(['1', 'orphan']);
 	});
 

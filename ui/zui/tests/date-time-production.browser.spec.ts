@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
 import DateFixture from './DateFixture.svelte';
+import { resetForm } from './form-reset.js';
 
 function fixture(selector: string): HTMLElement {
 	const element = document.querySelector<HTMLElement>(selector);
@@ -29,7 +30,7 @@ describe('date and time production contracts', () => {
 		);
 		expect(new FormData(form).get('date')).toBe('2026-09-18');
 		expect(document.activeElement).toBe(month);
-		form.reset();
+		await resetForm(form);
 		await expect.poll(() => new FormData(form).get('date')).toBe('2026-08-18');
 	});
 
@@ -54,7 +55,7 @@ describe('date and time production contracts', () => {
 			'09:31:15'
 		);
 		expect(new FormData(form).get('time')).toBe('09:31:15');
-		form.reset();
+		await resetForm(form);
 		await expect.poll(() => new FormData(form).get('time')).toBe('09:30:15');
 	});
 

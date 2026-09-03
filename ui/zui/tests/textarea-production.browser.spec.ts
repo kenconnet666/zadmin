@@ -7,6 +7,7 @@ import { mount, unmount } from './browser-lifecycle.js';
 import ZTextarea from '../src/components/input/ZTextarea.svelte';
 import { textareaAutosize } from '../src/runtime/textarea-autosize.js';
 import TextareaProductionFixture from './TextareaProductionFixture.svelte';
+import { resetForm } from './form-reset.js';
 
 async function nextFrame(view: Window = window): Promise<void> {
 	await new Promise<void>((resolve) => view.requestAnimationFrame(() => resolve()));
@@ -58,9 +59,7 @@ describe('ZTextarea production contract', () => {
 		await tick();
 		expect(output.textContent).toBe(':1:false');
 
-		form.reset();
-		await tick();
-		await tick();
+		await resetForm(form);
 		expect(textarea.value).toBe('Seed');
 		expect(output.textContent).toBe('Seed:1:false');
 	});

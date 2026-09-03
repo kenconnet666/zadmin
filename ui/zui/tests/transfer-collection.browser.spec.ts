@@ -3,6 +3,7 @@ import { tick } from 'svelte';
 import { describe, expect, it } from 'vitest';
 
 import TransferProductionFixture from './TransferProductionFixture.svelte';
+import { resetForm } from './form-reset.js';
 
 function keydown(
 	target: Element | null | undefined,
@@ -43,7 +44,7 @@ describe('ZTransfer logical collection integration', () => {
 		).toBe('string:1|string:alpha|string:orphan:1');
 		expect(new FormData(form!).getAll('channel')).toEqual(['1', 'alpha', 'orphan']);
 
-		form?.reset();
+		await resetForm(form);
 		await expect
 			.poll(
 				() =>

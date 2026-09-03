@@ -3,6 +3,7 @@ import { tick } from 'svelte';
 import { describe, expect, it } from 'vitest';
 
 import MultiSelectCollectionFixture from './MultiSelectCollectionFixture.svelte';
+import { resetForm } from './form-reset.js';
 
 function keydown(
 	target: Element | null | undefined,
@@ -57,7 +58,7 @@ describe('ZMultiSelect logical collection integration', () => {
 		keydown(trigger, 'Backspace', { ctrlKey: true });
 		await tick();
 		expect(new FormData(form!).getAll('choice')).toEqual([]);
-		form?.reset();
+		await resetForm(form);
 		await expect.poll(() => new FormData(form!).getAll('choice')).toEqual(['1', '1', 'orphan']);
 		expect(
 			document.querySelector('[data-testid="multi-collection-output"]')?.textContent

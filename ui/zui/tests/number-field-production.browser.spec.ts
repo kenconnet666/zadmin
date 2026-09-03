@@ -4,6 +4,7 @@ import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-svelte';
 
 import NumberFieldProductionFixture from './NumberFieldProductionFixture.svelte';
+import { resetForm } from './form-reset.js';
 
 describe('ZNumberField production contract', () => {
 	it('keeps ZNumberField draft parsing, spinbutton ARIA, precision step and Field FormData real', async () => {
@@ -23,7 +24,7 @@ describe('ZNumberField production contract', () => {
 		await tick();
 		expect(control.value).toBe('3');
 		expect(new FormData(form).get('amount')).toBe('3');
-		form.reset();
+		await resetForm(form);
 		await expect.poll(() => new FormData(form).get('amount')).toBe('1.5');
 	});
 });

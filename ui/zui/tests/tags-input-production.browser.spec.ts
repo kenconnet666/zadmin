@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
 import TagsInputProductionFixture from './TagsInputProductionFixture.svelte';
+import { resetForm } from './form-reset.js';
 
 describe('ZTagsInput production contract', () => {
 	it('clears the native draft value when add and clear occur in one Svelte flush', async () => {
@@ -90,7 +91,7 @@ describe('ZTagsInput production contract', () => {
 		document.querySelector<HTMLButtonElement>('[data-testid="tags-owner-clear"]')?.click();
 		await tick();
 		expect(output.textContent).toBe(':2:');
-		form.reset();
+		await resetForm(form);
 		await Promise.resolve();
 		await tick();
 		expect(output.textContent).toBe('alpha,beta,gamma:2:');

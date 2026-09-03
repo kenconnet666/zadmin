@@ -4,6 +4,7 @@ import { render } from 'vitest-browser-svelte';
 
 import DateFixture from './DateFixture.svelte';
 import DateProductionFixture from './DateProductionFixture.svelte';
+import { resetForm } from './form-reset.js';
 
 describe('date picker production contracts', () => {
 	it('keeps ZDatePicker trigger ARIA, dialog keyboard dismissal, Field owner and FormData real', async () => {
@@ -61,7 +62,7 @@ describe('date picker production contracts', () => {
 		await tick();
 		expect(new FormData(form).get('window.start')).toBeNull();
 		expect(new FormData(form).get('window.end')).toBeNull();
-		form.reset();
+		await resetForm(form);
 		await expect.poll(() => new FormData(form).get('window.start')).toBe('2026-09-16');
 	});
 });

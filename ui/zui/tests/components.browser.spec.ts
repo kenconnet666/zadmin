@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-svelte';
 import { mount, unmount } from './browser-lifecycle.js';
+import { activateFormReset as resetForm, settleFormReset } from './form-reset.js';
 
 import DynamicBox from './DynamicBox.svelte';
 import ComponentGallery from './ComponentGallery.svelte';
@@ -95,23 +96,6 @@ function dispatchPaste(target: HTMLElement | null | undefined, text: string): vo
 	const event = new ClipboardEvent('paste', { bubbles: true, cancelable: true });
 	Object.defineProperty(event, 'clipboardData', { configurable: true, value: transfer });
 	target.dispatchEvent(event);
-}
-
-async function settleFormReset(): Promise<void> {
-	await new Promise<void>((resolve) => setTimeout(resolve, 0));
-	await new Promise<void>((resolve) => setTimeout(resolve, 0));
-	await tick();
-}
-
-async function resetForm(form: HTMLFormElement | null | undefined): Promise<void> {
-	// Component behavior leaves the page call stack through the browser provider; layer tests retain
-	// direct form.reset() coverage for the low-level programmatic contract.
-	const control = form?.querySelector<HTMLButtonElement | HTMLInputElement>(
-		'button[type="reset"], input[type="reset"]'
-	);
-	if (control) await userEvent.click(control);
-	else form?.reset();
-	await settleFormReset();
 }
 
 describe('compiled ICSS browser updates', () => {
@@ -3301,8 +3285,7 @@ describe('compiled ICSS browser updates', () => {
 
 		await userEvent.fill(input, 'driver-change');
 		expect(output?.textContent).toBe('driver-change:1:0');
-		await userEvent.click(reset);
-		await settleFormReset();
+		await resetForm(form);
 		expect(input.value).toBe('seed');
 		expect(output?.textContent).toBe('seed:1:1');
 	});

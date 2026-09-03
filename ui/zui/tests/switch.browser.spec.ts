@@ -4,6 +4,7 @@ import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-svelte';
 
 import SwitchProductionFixture from './SwitchProductionFixture.svelte';
+import { resetForm } from './form-reset.js';
 
 function control(testId: string): HTMLInputElement {
 	return document.querySelector<HTMLInputElement>(`[data-testid="${testId}"]`)!;
@@ -31,7 +32,7 @@ describe('ZSwitch production contract', () => {
 		expect(new FormData(form).get('alerts')).toBeNull();
 		expect(output.textContent).toBe('false:1');
 
-		form.reset();
+		await resetForm(form);
 		await expect.poll(() => editable.checked).toBe(true);
 		await expect.poll(() => new FormData(form).get('alerts')).toBe('enabled');
 		await expect
@@ -92,7 +93,7 @@ describe('ZSwitch production contract', () => {
 		expect(output.textContent).toBe('false');
 		expect(new FormData(form).get('external')).toBeNull();
 
-		form.reset();
+		await resetForm(form);
 		await Promise.resolve();
 		await tick();
 		expect(external.checked).toBe(true);

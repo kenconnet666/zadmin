@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
 import CascaderProductionFixture from './CascaderProductionFixture.svelte';
+import { resetForm } from './form-reset.js';
 
 describe('ZCascader production collection contract', () => {
 	it('keeps typed paths, Field ownership, auxiliary search and reset synchronized', async () => {
@@ -39,9 +40,7 @@ describe('ZCascader production collection contract', () => {
 		await tick();
 		expect(output.textContent).toBe(':empty:1');
 		expect(new FormData(form).get('path')).toBeNull();
-		form.reset();
-		await Promise.resolve();
-		await tick();
+		await resetForm(form);
 		expect(output.textContent).toBe('root/1:number:1');
 		expect(new FormData(form).get('path')).toBe('root/1');
 	});

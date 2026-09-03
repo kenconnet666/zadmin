@@ -4,6 +4,7 @@ import { render } from 'vitest-browser-svelte';
 
 import CommandFixture from './CommandFixture.svelte';
 import CommandPaletteFixture from './CommandPaletteFixture.svelte';
+import { resetForm } from './form-reset.js';
 
 describe('ZCommand and ZCommandPalette production contracts', () => {
 	it('ZCommand preserves typed identities, disabled filtering, roving Enter and empty reset', async () => {
@@ -35,7 +36,7 @@ describe('ZCommand and ZCommandPalette production contracts', () => {
 		input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
 		await tick();
 		expect(output.textContent).toBe('dep:preview:0');
-		form.reset();
+		await resetForm(form);
 		await expect.poll(() => input.value).toBe('');
 		input.value = 'missing';
 		input.dispatchEvent(new InputEvent('input', { bubbles: true }));

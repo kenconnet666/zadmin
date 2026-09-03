@@ -332,12 +332,19 @@ if (
 	!formControlSource.includes('next.root !== association.root') ||
 	!/scheduleAssociationRefresh\(\);\s*\}/u.test(formControlSource) ||
 	!formControlSource.includes('const ticket = (generation += 1)') ||
-	!formControlSource.includes('ticket === generation') ||
-	!formControlSource.includes('queueMicrotask(() =>') ||
+	!formControlSource.includes('ticket !== generation') ||
+	!formControlSource.includes('let cancelPending: (() => void) | undefined') ||
+	!formControlSource.includes('const scheduleAfterDefault =') ||
+	!formControlSource.includes('ownerWindow.setTimeout(callback, 0)') ||
+	!formControlSource.includes('ownerWindow.clearTimeout(timer)') ||
+	!formControlSource.includes('cancelPending?.()') ||
+	!formControlSource.includes('if (active && !event.defaultPrevented) reset()') ||
 	formControlSource.includes('flushSync') ||
 	formControlSource.includes('pendingReset')
 ) {
-	fail('The form reset action must preserve its association and cancelable microtask contracts.');
+	fail(
+		'The form reset action must preserve its association and cancelable post-default task contracts.'
+	);
 }
 if (
 	!formResetSignalSource.includes(

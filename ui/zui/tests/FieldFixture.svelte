@@ -41,8 +41,9 @@
 		<ZInput data-testid="inherited-input" />
 	</ZField>
 	<button type="reset">Reset</button>
-	<output data-testid="field-output">{value}:{changes}:{resets}</output>
 </form>
+<!-- Keep diagnostics outside the form: native reset owns form-associated <output> value state. -->
+<output data-testid="field-output">{value}:{changes}:{resets}</output>
 
 <form id="external-input-form" data-testid="external-input-form">
 	<button type="reset">Reset external input</button>

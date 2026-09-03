@@ -4,6 +4,7 @@ import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-svelte';
 
 import NumberFieldProductionFixture from './NumberFieldProductionFixture.svelte';
+import { resetForm } from './form-reset.js';
 
 function fixture(id: string): HTMLElement {
 	const element = document.querySelector<HTMLElement>(`[data-testid="${id}"]`);
@@ -57,7 +58,7 @@ describe('NumberField production contracts', () => {
 		control.blur();
 		await tick();
 		expect(control.value).toBe('3,75');
-		form.reset();
+		await resetForm(form);
 		await expect.poll(() => control.value).toBe('1,50');
 		await expect.poll(() => fixture('locale-value').textContent).toBe('1.5');
 		await expect.poll(() => new FormData(form).get('amount')).toBe('1.5');

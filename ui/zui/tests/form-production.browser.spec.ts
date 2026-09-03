@@ -5,6 +5,7 @@ import { render } from 'vitest-browser-svelte';
 import FormEdgeFixture from './FormEdgeFixture.svelte';
 import FormGraphFixture from './FormGraphFixture.svelte';
 import FormSubmitEpochFixture from './FormSubmitEpochFixture.svelte';
+import { resetForm } from './form-reset.js';
 
 describe('ZForm and ZFormField production contracts', () => {
 	it('keeps ZForm and ZFormField Standard Schema output, FieldPath dependencies, first-error focus and dynamic unmounts real', async () => {
@@ -70,7 +71,7 @@ describe('ZForm and ZFormField production contracts', () => {
 		expect(document.querySelector('[data-testid="form-edge-output"]')?.textContent).toContain(
 			':2:1:0:0'
 		);
-		throwing.reset();
+		await resetForm(throwing);
 		await tick();
 		expect(document.querySelector('[data-testid="form-edge-output"]')?.textContent).toContain(
 			':2:1:1:0'

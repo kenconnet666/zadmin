@@ -6,6 +6,7 @@ import { render } from 'vitest-browser-svelte';
 import CheckboxFixture from './CheckboxFixture.svelte';
 import SliderFixture from './SliderFixture.svelte';
 import SwitchProductionFixture from './SwitchProductionFixture.svelte';
+import { resetForm } from './form-reset.js';
 
 describe('foundation controls production contracts', () => {
 	it('ZCheckbox preserves mixed state, native FormData and reset', async () => {
@@ -21,7 +22,7 @@ describe('foundation controls production contracts', () => {
 		expect(checkbox.checked).toBe(true);
 		expect(checkbox.indeterminate).toBe(false);
 		expect(new FormData(form).get('choice')).toBe('selected');
-		form.reset();
+		await resetForm(form);
 		await expect.poll(() => checkbox.indeterminate).toBe(true);
 		expect(new FormData(form).get('choice')).toBeNull();
 	});
@@ -50,7 +51,7 @@ describe('foundation controls production contracts', () => {
 		control.click();
 		await tick();
 		expect(new FormData(form).get('alerts')).toBeNull();
-		form.reset();
+		await resetForm(form);
 		await expect.poll(() => control.checked).toBe(true);
 		expect(new FormData(form).get('alerts')).toBe('enabled');
 	});
@@ -66,7 +67,7 @@ describe('foundation controls production contracts', () => {
 		await tick();
 		expect(slider.valueAsNumber).toBe(40);
 		expect(new FormData(form).get('threshold')).toBe('40');
-		form.reset();
+		await resetForm(form);
 		await expect.poll(() => slider.valueAsNumber).toBe(35);
 	});
 });

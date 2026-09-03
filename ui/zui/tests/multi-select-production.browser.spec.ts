@@ -4,6 +4,7 @@ import { tick } from 'svelte';
 
 import MultiSelectCollectionFixture from './MultiSelectCollectionFixture.svelte';
 import MultiSelectFixture from './MultiSelectFixture.svelte';
+import { resetForm } from './form-reset.js';
 
 describe('ZMultiSelect production contract', () => {
 	it('preserves typed values and orphan labels through filtering, clear/reset, readonly and virtual navigation', async () => {
@@ -16,7 +17,7 @@ describe('ZMultiSelect production contract', () => {
 		document.querySelector<HTMLButtonElement>('[data-testid="multi-empty-options"]')?.click();
 		expect(trigger.textContent).toContain('Number one');
 		expect(new FormData(form).getAll('choice')).toEqual(['1', '1', 'orphan']);
-		form.reset();
+		await resetForm(form);
 		await expect.poll(() => new FormData(form).getAll('choice')).toEqual(['1', '1', 'orphan']);
 		document.querySelector<HTMLButtonElement>('[data-testid="multi-virtual-trigger"]')?.click();
 		await tick();

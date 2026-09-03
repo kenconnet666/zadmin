@@ -4,6 +4,7 @@ import { render } from 'vitest-browser-svelte';
 
 import ColorPickerProductionFixture from './ColorPickerProductionFixture.svelte';
 import ColorPickerAllowAlphaFixture from './ColorPickerAllowAlphaFixture.svelte';
+import { resetForm } from './form-reset.js';
 
 describe('ZColorPicker production contract', () => {
 	it('coordinates Field, hex drafts, presets, clear, FormData and reset', async () => {
@@ -47,9 +48,7 @@ describe('ZColorPicker production contract', () => {
 		document.querySelector<HTMLButtonElement>('[data-testid="color-owner-clear"]')?.click();
 		await tick();
 		expect(output.textContent).toBe('null:2');
-		form.reset();
-		await Promise.resolve();
-		await tick();
+		await resetForm(form);
 		expect(output.textContent).toBe('#2563ebcc:2');
 		expect(new FormData(form).get('brand')).toBe('#2563ebcc');
 	});
@@ -70,8 +69,7 @@ describe('ZColorPicker production contract', () => {
 		opaqueHex.blur();
 		await tick();
 		expect(output.textContent).toBe('#336699:#33669980');
-		form.reset();
-		await tick();
+		await resetForm(form);
 		expect(output.textContent).toBe('#336699:#33669980');
 		alpha.querySelector<HTMLButtonElement>('[aria-haspopup="dialog"]')!.click();
 		await tick();

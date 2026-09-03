@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { tick } from 'svelte';
 
 import SelectFixture from './SelectFixture.svelte';
+import { resetForm } from './form-reset.js';
 
 describe('ZSelect production contract', () => {
 	it('supports default, controlled updates, Field/Form reset and vetoed selection', async () => {
@@ -21,7 +22,7 @@ describe('ZSelect production contract', () => {
 		document.querySelector<HTMLButtonElement>('[data-testid="select-owner-clear"]')?.click();
 		await tick();
 		expect(new FormData(form).get('choice')).toBeNull();
-		form.reset();
+		await resetForm(form);
 		await expect.poll(() => new FormData(form).get('choice')).toBe('b');
 	});
 
