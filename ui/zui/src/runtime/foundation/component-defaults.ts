@@ -14,14 +14,6 @@ export interface ButtonComponentDefaults {
 	readonly fullWidth?: boolean;
 }
 
-export interface DialogComponentDefaults {
-	readonly closeOnEscape?: boolean;
-	readonly trapFocus?: boolean;
-	readonly autoFocus?: boolean;
-	readonly modal?: boolean;
-	readonly presence?: 'if' | 'show';
-}
-
 export interface DataTableComponentDefaults {
 	readonly density?: 'compact' | 'comfortable' | 'spacious';
 	readonly selectionMode?: 'multiple' | 'none' | 'single';
@@ -34,19 +26,16 @@ export interface DataTableComponentDefaults {
 
 export interface ZuiComponentDefaults {
 	readonly button?: ButtonComponentDefaults | null;
-	readonly dialog?: DialogComponentDefaults | null;
 	readonly dataTable?: DataTableComponentDefaults | null;
 }
 
 export interface ResolvedZuiComponentDefaults {
 	readonly button?: ButtonComponentDefaults;
-	readonly dialog?: DialogComponentDefaults;
 	readonly dataTable?: DataTableComponentDefaults;
 }
 
 const COMPONENT_PROPS = {
 	button: new Set(['size', 'shape', 'tone', 'variant', 'fullWidth']),
-	dialog: new Set(['closeOnEscape', 'trapFocus', 'autoFocus', 'modal', 'presence']),
 	dataTable: new Set([
 		'density',
 		'selectionMode',
@@ -108,16 +97,7 @@ function validateProp(component: string, prop: string, value: unknown): void {
 	}
 	assertPrimitive(value, location);
 	if (
-		[
-			'fullWidth',
-			'closeOnEscape',
-			'trapFocus',
-			'autoFocus',
-			'modal',
-			'stickyHeader',
-			'striped',
-			'virtualized'
-		].includes(prop) &&
+		['fullWidth', 'stickyHeader', 'striped', 'virtualized'].includes(prop) &&
 		typeof value !== 'boolean'
 	) {
 		throw new TypeError(`${location} must be a boolean.`);
@@ -144,9 +124,6 @@ function validateProp(component: string, prop: string, value: unknown): void {
 		prop === 'variant' &&
 		!['ghost', 'primary', 'secondary'].includes(String(value))
 	) {
-		throw new TypeError(`${location} has an invalid value.`);
-	}
-	if (component === 'dialog' && prop === 'presence' && !['if', 'show'].includes(String(value))) {
 		throw new TypeError(`${location} has an invalid value.`);
 	}
 	if (

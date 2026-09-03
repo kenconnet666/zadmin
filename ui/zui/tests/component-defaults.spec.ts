@@ -10,11 +10,9 @@ describe('component defaults foundation', () => {
 	it('merges shallowly, supports null stops, and freezes snapshots', () => {
 		const parent = resolveComponentDefaults(undefined, {
 			button: { size: 'large', variant: 'primary' },
-			dialog: { trapFocus: true }
 		});
 		const child = resolveComponentDefaults(parent, {
 			button: { size: 'small' },
-			dialog: null,
 			dataTable: { overscan: 4, virtualized: true }
 		});
 		expect(child).toEqual({
@@ -42,7 +40,7 @@ describe('component defaults foundation', () => {
 	it.each([
 		['unknown component', { card: { size: 'small' } }],
 		['unknown prop', { button: { loading: true } }],
-		['controlled state', { dialog: { open: true } }],
+		['controlled state', { button: { value: 'x' } }],
 		['callback', { button: { onClick: () => undefined } }],
 		['DOM/CSS', { button: { style: 'color:red' } }],
 		['non-finite number', { dataTable: { overscan: Number.POSITIVE_INFINITY } }],

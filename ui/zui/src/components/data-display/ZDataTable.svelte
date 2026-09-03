@@ -605,7 +605,7 @@
 		defaultExpandedKeys = [],
 		defaultSelectedKeys = [],
 		defaultSort,
-		density = 'comfortable',
+		density: densityProp,
 		empty,
 		emptyLabel = 'No rows',
 		error = null,
@@ -627,30 +627,38 @@
 		onSelectionChange,
 		onSortChange,
 		onscroll,
-		overscan = 4,
+		overscan: overscanProp,
 		ref = $bindable(null),
 		resizeLabel = (column) => `Resize ${column.header} column`,
-		rowHeight = 44,
+		rowHeight: rowHeightProp,
 		rowIndexOffset = 0,
 		rowKey,
 		rows,
 		selectAllLabel = 'Select all rows',
 		selectionColumnLabel = 'Select row',
 		selectionLabel = (_row, index) => `Select row ${index + 1}`,
-		selectionMode = 'none',
+		selectionMode: selectionModeProp,
 		selectedKeys = $bindable(),
 		sortingMode = 'client',
 		ssrViewportSize,
-		stickyHeader,
-		striped = false,
+		stickyHeader: stickyHeaderProp,
+		striped: stripedProp,
 		style,
 		sort = $bindable(),
 		totalRowCount,
-		virtualized = false,
+		virtualized: virtualizedProp,
 		...rest
 	}: ZDataTableProps<TRow, TRowKey> = $props();
 
 	const zui = useZui();
+	const componentDefaults = $derived(zui.componentDefaults.dataTable);
+	const density = $derived(densityProp ?? componentDefaults?.density ?? 'comfortable');
+	const overscan = $derived(overscanProp ?? componentDefaults?.overscan ?? 4);
+	const rowHeight = $derived(rowHeightProp ?? componentDefaults?.rowHeight ?? 44);
+	const selectionMode = $derived(selectionModeProp ?? componentDefaults?.selectionMode ?? 'none');
+	const stickyHeader = $derived(stickyHeaderProp ?? componentDefaults?.stickyHeader);
+	const striped = $derived(stripedProp ?? componentDefaults?.striped ?? false);
+	const virtualized = $derived(virtualizedProp ?? componentDefaults?.virtualized ?? false);
 	const uid = $props.id();
 	const selectionName = $derived(`${zui.idPrefix}-${uid}-data-table-selection`);
 	let selectAll = $state<HTMLInputElement | null>(null);

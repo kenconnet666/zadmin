@@ -78,6 +78,7 @@ import DropdownMenuFixture from './DropdownMenuFixture.svelte';
 import PopoverFixture from './PopoverFixture.svelte';
 import PopconfirmFixture from './PopconfirmFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
+import ComponentDefaultsFixture from './ComponentDefaultsFixture.svelte';
 import RadioGroupFixture from './RadioGroupFixture.svelte';
 import SelectFixture from './SelectFixture.svelte';
 import SegmentedFixture from './SegmentedFixture.svelte';
@@ -812,6 +813,15 @@ describe('ZUI foundational components', () => {
 		);
 		expect(registry.cssText()).toContain('#2563eb');
 		expect(registry.cssText()).toContain('#6d28d9');
+	});
+
+	it('resolves component defaults with nested and explicit boundaries during SSR', () => {
+		const body = render(ComponentDefaultsFixture).body;
+		expect(body).toMatch(/data-testid="default-button"[^>]+data-size="small"/u);
+		expect(body).toMatch(/data-testid="explicit-button"[^>]+data-size="small"/u);
+		expect(body).toMatch(/data-testid="axis-null-button"[^>]+data-size="medium"/u);
+		expect(body).toMatch(/data-testid="component-null-button"[^>]+data-size="medium"/u);
+		expect(body).toMatch(/data-testid="default-table"[^>]+data-virtualized="true"/u);
 	});
 
 	it('provides SSR-stable defaults outside an explicit provider', () => {

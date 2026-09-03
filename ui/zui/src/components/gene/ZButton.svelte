@@ -403,6 +403,11 @@
 		source: 'ui/zui/src/components/gene/ZButton.svelte',
 		states: [
 			{ description: '按钮正在执行异步操作。', name: 'data-loading', values: ['true'] },
+			{
+				description: '按钮解析后的尺寸。',
+				name: 'data-size',
+				values: ['small', 'medium', 'large']
+			},
 			{ description: '按钮形状。', name: 'data-shape', values: ['default', 'square', 'circle'] },
 			{ description: '语义tone。', name: 'data-tone', values: ['default', 'danger'] },
 			{
@@ -439,42 +444,48 @@
 		class: className,
 		disabled = false,
 		end,
-		fullWidth = false,
+		fullWidth,
 		loading = false,
 		loadingIndicator,
 		loadingLabel,
 		ref = $bindable(null),
-		shape = 'default',
+		shape,
 		size,
 		style,
 		start,
-		tone = 'default',
+		tone,
 		type = 'button',
-		variant = 'primary',
+		variant,
 		...rest
 	}: ZButtonProps = $props();
 
 	const zui = useZui();
 	const reducedMotion = new ReducedMotionState(() => zui.motion);
 	const reduced = $derived(reducedMotion.current);
-	const resolvedSize = $derived(resolveControlSize(size, zui.density));
+	const resolvedSize = $derived(
+		resolveControlSize(size ?? zui.componentDefaults.button?.size, zui.density)
+	);
+	const resolvedShape = $derived(shape ?? zui.componentDefaults.button?.shape ?? 'default');
+	const resolvedTone = $derived(tone ?? zui.componentDefaults.button?.tone ?? 'default');
+	const resolvedVariant = $derived(variant ?? zui.componentDefaults.button?.variant ?? 'primary');
+	const resolvedFullWidth = $derived(fullWidth ?? zui.componentDefaults.button?.fullWidth ?? false);
 	const pressed = $derived(
 		ariaPressed === true || ariaPressed === 'true' || ariaPressed === 'mixed'
 	);
 	const spinnerSize = $derived(resolvedSize === 'large' ? 'medium' : 'small');
 	const spinnerTone = $derived(
-		variant === 'primary' ? 'canvas' : tone === 'danger' ? 'danger' : 'primary'
+		resolvedVariant === 'primary' ? 'canvas' : resolvedTone === 'danger' ? 'danger' : 'primary'
 	);
 	const rootClass = $derived(
 		zui.recipe(buttonRecipe, {
 			disabled: disabled || loading,
-			fullWidth,
+			fullWidth: resolvedFullWidth,
 			motion: reduced ? 'reduced' : 'full',
 			pressed,
-			shape,
+			shape: resolvedShape,
 			size: resolvedSize,
-			tone,
-			variant
+			tone: resolvedTone,
+			variant: resolvedVariant
 		})
 	);
 	const contentClass = $derived(zui.recipe(buttonContentRecipe, { loading }));
@@ -497,9 +508,10 @@
 	aria-pressed={ariaPressed}
 	data-loading={loading || undefined}
 	data-reduced-motion={reduced || undefined}
-	data-shape={shape}
-	data-tone={tone}
-	data-variant={variant}
+	data-size={resolvedSize}
+	data-shape={resolvedShape}
+	data-tone={resolvedTone}
+	data-variant={resolvedVariant}
 >
 	<span class={contentClass} data-slot="content">
 		{#if start}<span data-slot="start">{@render start()}</span>{/if}

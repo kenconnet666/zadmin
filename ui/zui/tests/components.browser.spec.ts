@@ -45,6 +45,7 @@ import MultiSelectFixture from './MultiSelectFixture.svelte';
 import NumberFieldFixture from './NumberFieldFixture.svelte';
 import PinInputFixture from './PinInputFixture.svelte';
 import ProviderRuntimeFixture from './ProviderRuntimeFixture.svelte';
+import ComponentDefaultsFixture from './ComponentDefaultsFixture.svelte';
 import PaginationFixture from './PaginationFixture.svelte';
 import PopoverFixture from './PopoverFixture.svelte';
 import PopconfirmFixture from './PopconfirmFixture.svelte';
@@ -3120,6 +3121,29 @@ describe('compiled ICSS browser updates', () => {
 		await unmount(component);
 		runtime.registry.clear();
 		host.remove();
+	});
+
+	it('keeps component defaults below explicit and native state ownership', async () => {
+		const component = mount(ComponentDefaultsFixture, { target: document.body });
+		await tick();
+		const defaultButton = document.querySelector<HTMLButtonElement>(
+			'[data-testid="default-button"]'
+		);
+		const explicitButton = document.querySelector<HTMLButtonElement>(
+			'[data-testid="explicit-button"]'
+		);
+		const busyButton = document.querySelector<HTMLButtonElement>('[data-testid="busy-button"]');
+		const table = document.querySelector('[data-testid="default-table"]');
+		expect(defaultButton?.dataset.size).toBe('small');
+		expect(defaultButton?.dataset.variant).toBe('secondary');
+		expect(defaultButton?.style.width).toBe('');
+		expect(explicitButton?.dataset.variant).toBe('primary');
+		expect(explicitButton?.style.width).toBe('');
+		expect(busyButton?.disabled).toBe(true);
+		expect(busyButton?.getAttribute('aria-pressed')).toBe('true');
+		expect(table?.getAttribute('data-virtualized')).toBe('true');
+		expect(table?.querySelectorAll('input[type="checkbox"]').length).toBeGreaterThan(0);
+		await unmount(component);
 	});
 
 	it('links field semantics and calls onValueChange once per user input', async () => {

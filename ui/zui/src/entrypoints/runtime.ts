@@ -1,4 +1,15 @@
 export { createBrowserIcssRuntime, createIcssRuntime, icss } from '../icss/runtime.js';
+export {
+	componentDefaultsFingerprint,
+	resolveComponentDefaults
+} from '../runtime/foundation/component-defaults.js';
+export type {
+	ButtonComponentDefaults,
+	ComponentDefaultPrimitive,
+	DataTableComponentDefaults,
+	ResolvedZuiComponentDefaults,
+	ZuiComponentDefaults
+} from '../runtime/foundation/component-defaults.js';
 export type { IcssRuntime, IcssRuntimeOptions } from '../icss/runtime.js';
 export { createServerStyleRegistry, StyleRegistry } from '../icss/registry.js';
 export type {

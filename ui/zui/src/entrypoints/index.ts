@@ -601,15 +601,22 @@ export type {
 export {
 	createBrowserIcssRuntime,
 	createIcssRuntime,
+	componentDefaultsFingerprint,
 	createServerStyleRegistry,
 	icss,
+	resolveComponentDefaults,
 	StyleRegistry
 } from './runtime.js';
 export type {
 	BrowserStyleSheetOptions,
+	ButtonComponentDefaults,
+	ComponentDefaultPrimitive,
+	DataTableComponentDefaults,
 	IcssRuntime,
 	IcssRuntimeOptions,
-	StyleRegistryMetrics
+	ResolvedZuiComponentDefaults,
+	StyleRegistryMetrics,
+	ZuiComponentDefaults
 } from './runtime.js';
 export { createStyleProgram, isDynamicSlot } from '../icss/builder.js';
 export { defaultTheme } from '../theme/default.js';

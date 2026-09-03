@@ -14,9 +14,11 @@
 		ZuiTranslations
 	} from '../../runtime/foundation/context.js';
 	import type { ZuiTheme } from '../../theme/types.js';
+	import type { ZuiComponentDefaults } from '../../runtime/foundation/component-defaults.js';
 
 	export interface ZProviderProps {
 		children?: Snippet;
+		componentDefaults?: ZuiComponentDefaults | null;
 		colorScheme?: ZuiColorScheme;
 		contrast?: ZuiContrast;
 		density?: ZuiDensity;
@@ -43,6 +45,13 @@
 		keyboard: [],
 		parts: [],
 		props: [
+			{
+				default: '继承父级或空值',
+				description:
+					'仅允许button/dataTable的白名单行为props；null停止继承；禁止受控状态、回调、DOM和CSS。',
+				name: 'componentDefaults',
+				type: 'ZuiComponentDefaults | null'
+			},
 			{ default: '—', description: 'Provider子树。', name: 'children', type: 'Snippet' },
 			{
 				default: "继承父级或 'light'",
@@ -124,7 +133,7 @@
 		states: [],
 		status: 'stable',
 		summary:
-			'提供Theme、偏好轴、locale pack、SSR稳定timeZone、direction、Portal边界和ICSS runtime，不创建额外DOM。'
+			'提供Theme、偏好轴、locale pack、componentDefaults、SSR稳定timeZone、direction、Portal边界和ICSS runtime，不创建额外DOM。componentDefaults只允许button/dataTable行为props；null停止继承，受控状态/回调/DOM/CSS被拒绝。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
 
@@ -133,6 +142,7 @@
 
 	let {
 		children,
+		componentDefaults,
 		colorScheme,
 		contrast,
 		density,
@@ -160,7 +170,8 @@
 		runtime,
 		theme,
 		timeZone,
-		translations
+		translations,
+		componentDefaults
 	}));
 </script>
 

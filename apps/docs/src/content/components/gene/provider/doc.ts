@@ -1,4 +1,6 @@
 import { providerMetadata } from '@zadmin/zui/metadata';
+import ComponentDefaultsDemo from './ComponentDefaultsDemo.svelte';
+import componentDefaultsSource from './ComponentDefaultsDemo.svelte?raw';
 import LocaleDemo from './LocaleDemo.svelte';
 import localeSource from './LocaleDemo.svelte?raw';
 import MotionDemo from './MotionDemo.svelte';
@@ -17,6 +19,11 @@ export const providerDoc = defineComponentDoc(providerMetadata, {
 	sourceApi: providerApiFacts,
 	teaching: {
 		props: {
+			componentDefaults: {
+				default: '继承父级或空值',
+				description:
+					'当前仅允许button/dataTable白名单行为props；显式组件prop优先。整个轴或单个组件设为null可停止继承，受控状态、回调、DOM与CSS会被拒绝。'
+			},
 			colorScheme: {
 				default: "继承父级或 'light'",
 				description: '为代码表面等需要配套明暗外观的后代提供显式色彩模式。'
@@ -75,6 +82,15 @@ export const providerDoc = defineComponentDoc(providerMetadata, {
 			'无额外DOM的作用域服务，统一提供Theme、显示偏好、区域设置、SSR稳定标识和Portal/ICSS边界。'
 	},
 	demos: [
+		{
+			covers: ['composition', 'controlled', 'density', 'variants-and-states'],
+			component: ComponentDefaultsDemo,
+			description:
+				'Button与DataTable只继承白名单默认值；显式prop优先，组件级null停止继承，选择等受控状态仍由调用方拥有。',
+			id: 'provider-component-defaults',
+			source: componentDefaultsSource,
+			title: '严格的组件默认值'
+		},
 		{
 			covers: ['basic-render', 'composition'],
 			component: ThemeDemo,

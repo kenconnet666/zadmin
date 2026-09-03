@@ -36,6 +36,33 @@ pnpm add @zadmin/zui @lucide/svelte svelte
 
 `ZProvider` also owns direction, contrast, density, motion, typed locale packs, an explicit SSR-stable IANA time zone (UTC by default), legacy translation compatibility, portal boundaries, and the ICSS runtime. Providers can be nested without creating DOM wrappers.
 
+### Component defaults
+
+`componentDefaults` is intentionally a small behavior-only whitelist. In the current
+release it accepts only `button` and `dataTable`; explicit component props always win.
+Controlled values (`open`, `value`, selection/sort state), callbacks, DOM references,
+`class`/`style`, and arbitrary CSS are rejected. `null` clears the whole defaults axis,
+while a component value of `null` stops inheritance for that component.
+
+```svelte
+<ZProvider
+	componentDefaults={{
+		button: { size: 'small', variant: 'secondary' },
+		dataTable: { virtualized: true, overscan: 0 }
+	}}
+>
+	<ZButton>Small secondary button</ZButton>
+	<!-- Explicit props override Provider defaults. -->
+	<ZButton variant="primary">Primary button</ZButton>
+</ZProvider>
+```
+
+Nested providers merge only the declared whitelist fields. Use `componentDefaults={null}`
+to clear all inherited component defaults, or `{ button: null }` to restore only Button's
+local defaults. This API does not change native form ownership, disabled/loading/pressed
+state, DataTable selection/sort ownership, ARIA relationships, focus behavior, or virtual
+window lifecycle.
+
 ## Public entrypoints
 
 | Entrypoint             | Purpose                                                                         |
