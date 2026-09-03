@@ -1,24 +1,37 @@
 import { pathToFileURL } from 'node:url';
 
 const revisionPattern = /^(?:[a-f0-9]{40}|[a-f0-9]{64})$/u;
-const expectedNames = Object.freeze(['ZBox', 'ZStack', 'ZText', 'ZButton']);
-const expectedMarkers = Object.freeze({
-	ZBox: 'ZBox-status',
-	ZStack: 'ZStack',
-	ZText: 'ZText',
-	ZButton: 'ZButton-component-action'
+const componentSource = 'apps/desktop/src/routes/+page.svelte';
+const noSideEffects = Object.freeze({
+	bridge: 'none',
+	filesystem: 'none',
+	network: 'none',
+	window: 'none'
 });
-const expectedIds = Object.freeze({
-	ZBox: 'box',
-	ZStack: 'stack',
-	ZText: 'text',
-	ZButton: 'button'
-});
-const isMain = process.argv[1] ? pathToFileURL(process.argv[1]).href === import.meta.url : false;
-const expectedButtonInteractions = Object.freeze([
-	'click:Verify component',
-	'state:data-desktop-evidence-runs=1'
+const componentContracts = Object.freeze([
+	{
+		id: 'box',
+		name: 'ZBox',
+		marker: 'ZBox-status',
+		native: { tag: 'DIV', ariaLive: 'polite' }
+	},
+	{ id: 'stack', name: 'ZStack', marker: 'ZStack', native: { tag: 'DIV' } },
+	{
+		id: 'text',
+		name: 'ZText',
+		marker: 'ZText',
+		native: { tag: 'STRONG', text: 'Windows WebView2 capability lab' }
+	},
+	{
+		id: 'button',
+		name: 'ZButton',
+		marker: 'ZButton-component-action',
+		native: { tag: 'BUTTON', type: 'button', disabled: false, text: 'Verify component' },
+		interaction: true
+	}
 ]);
+const contractsByName = new Map(componentContracts.map((contract) => [contract.name, contract]));
+const isMain = process.argv[1] ? pathToFileURL(process.argv[1]).href === import.meta.url : false;
 
 function fail(message) {
 	throw new Error(`Desktop evidence validation failed: ${message}`);
@@ -30,6 +43,163 @@ function productionSource(value) {
 	} catch {
 		return false;
 	}
+}
+
+function nativeKind(property) {
+	return property.startsWith('aria') ? 'aria' : 'native';
+}
+
+function normalizeComponent(contract, item, raw) {
+	const native = Object.fromEntries(
+		Object.keys(contract.native).map((property) => [property, item.native[property]])
+	);
+	const assertions = [
+		{
+			id: 'rendered',
+			kind: 'state',
+			target: 'root',
+			expected: true,
+			actual: item.present,
+			passed: true
+		},
+		...Object.entries(contract.native).map(([property, expected]) => ({
+			id: `native.${property}`,
+			kind: nativeKind(property),
+			target: property,
+			expected,
+			actual: item.native[property],
+			passed: true
+		}))
+	];
+	const interactions = contract.interaction
+		? [
+				{
+					id: 'activate-once',
+					action: 'click',
+					target: 'root',
+					observations: [
+						{
+							id: 'runs-delta',
+							kind: 'state',
+							target: 'data-desktop-evidence-runs',
+							expected: 1,
+							actual: raw.page.componentActionDelta,
+							passed: true
+						}
+					],
+					passed: true
+				}
+			]
+		: [];
+	return {
+		id: contract.id,
+		name: contract.name,
+		source: componentSource,
+		evidenceId: contract.marker,
+		locator: {
+			kind: 'data-attribute',
+			attribute: 'data-desktop-evidence',
+			value: contract.marker
+		},
+		sideEffects: { ...noSideEffects },
+		rendered: item.present,
+		native,
+		assertions,
+		interactions,
+		passed: true
+	};
+}
+
+function assertionMatches(assertion, { id, kind, target, expected, actual }) {
+	return (
+		assertion?.id === id &&
+		assertion.kind === kind &&
+		assertion.target === target &&
+		assertion.expected === expected &&
+		assertion.actual === actual &&
+		assertion.passed === true
+	);
+}
+
+function validateNormalizedComponent(component, contract) {
+	if (
+		component?.id !== contract.id ||
+		component.name !== contract.name ||
+		component.source !== componentSource ||
+		component.evidenceId !== contract.marker ||
+		component.rendered !== true ||
+		component.passed !== true ||
+		component.locator?.kind !== 'data-attribute' ||
+		component.locator.attribute !== 'data-desktop-evidence' ||
+		component.locator.value !== contract.marker
+	)
+		fail(`normalized component ${contract.name} identity is invalid.`);
+	if (
+		!component.sideEffects ||
+		Object.keys(component.sideEffects).length !== Object.keys(noSideEffects).length ||
+		Object.entries(noSideEffects).some(([key, value]) => component.sideEffects[key] !== value)
+	)
+		fail(`normalized component ${contract.name} side-effect policy is invalid.`);
+	if (
+		!component.native ||
+		Object.keys(component.native).length !== Object.keys(contract.native).length ||
+		Object.entries(contract.native).some(([key, value]) => component.native[key] !== value)
+	)
+		fail(`normalized component ${contract.name} native snapshot is invalid.`);
+	if (!Array.isArray(component.assertions))
+		fail(`normalized component ${contract.name} assertions are invalid.`);
+	const assertionsById = new Map(
+		component.assertions.map((assertion) => [assertion?.id, assertion])
+	);
+	if (
+		assertionsById.size !== component.assertions.length ||
+		component.assertions.length !== Object.keys(contract.native).length + 1 ||
+		!assertionMatches(assertionsById.get('rendered'), {
+			id: 'rendered',
+			kind: 'state',
+			target: 'root',
+			expected: true,
+			actual: true
+		})
+	)
+		fail(`normalized component ${contract.name} rendered assertion is invalid.`);
+	for (const [property, expected] of Object.entries(contract.native))
+		if (
+			!assertionMatches(assertionsById.get(`native.${property}`), {
+				id: `native.${property}`,
+				kind: nativeKind(property),
+				target: property,
+				expected,
+				actual: expected
+			})
+		)
+			fail(`normalized component ${contract.name} ${property} assertion is invalid.`);
+	if (!Array.isArray(component.interactions))
+		fail(`normalized component ${contract.name} interactions are invalid.`);
+	if (!contract.interaction) {
+		if (component.interactions.length !== 0)
+			fail(`normalized component ${contract.name} has undeclared interactions.`);
+		return;
+	}
+	const interaction = component.interactions[0];
+	const observation = interaction?.observations?.[0];
+	if (
+		component.interactions.length !== 1 ||
+		interaction?.id !== 'activate-once' ||
+		interaction.action !== 'click' ||
+		interaction.target !== 'root' ||
+		interaction.passed !== true ||
+		!Array.isArray(interaction.observations) ||
+		interaction.observations.length !== 1 ||
+		!assertionMatches(observation, {
+			id: 'runs-delta',
+			kind: 'state',
+			target: 'data-desktop-evidence-runs',
+			expected: 1,
+			actual: 1
+		})
+	)
+		fail(`normalized component ${contract.name} interaction is invalid.`);
 }
 
 export function validateDesktopEvidence(raw, { expectedRevision } = {}) {
@@ -84,57 +254,43 @@ export function validateDesktopEvidence(raw, { expectedRevision } = {}) {
 		fail('production source is invalid.');
 	if (typeof raw.page.webViewVersion !== 'string' || raw.page.webViewVersion.length === 0)
 		fail('WebView2 version is missing.');
-	if (raw.page.componentActionRuns !== 1)
+	if (
+		!Number.isInteger(raw.page.componentActionRunsBefore) ||
+		!Number.isInteger(raw.page.componentActionRunsAfter) ||
+		raw.page.componentActionRunsAfter !== raw.page.componentActionRunsBefore + 1 ||
+		raw.page.componentActionDelta !== 1
+	)
 		fail('component interaction did not produce exactly one observable state transition.');
-	if (!Array.isArray(raw.components) || raw.components.length !== expectedNames.length)
-		fail('component set must contain exactly four records.');
+	if (!Array.isArray(raw.components) || raw.components.length !== componentContracts.length)
+		fail(`component set must contain exactly ${componentContracts.length} records.`);
 	const byName = new Map();
 	for (const item of raw.components) {
-		if (!expectedNames.includes(item?.name) || byName.has(item.name))
-			fail('component names are not exact and unique.');
+		const contract = contractsByName.get(item?.name);
+		if (!contract || byName.has(item.name)) fail('component names are not exact and unique.');
 		if (item.present !== true || typeof item.marker !== 'string' || item.marker.length === 0)
 			fail(`component ${item?.name ?? '<unknown>'} is not rendered with a marker.`);
-		if (item.marker !== expectedMarkers[item.name])
-			fail(`component ${item.name} marker is invalid.`);
+		if (item.marker !== contract.marker) fail(`component ${item.name} marker is invalid.`);
 		if (!item.native || typeof item.native !== 'object')
 			fail(`component ${item.name} has no native evidence.`);
+		for (const [property, expected] of Object.entries(contract.native))
+			if (item.native[property] !== expected)
+				fail(`native ${item.name} ${property} semantics are invalid.`);
 		byName.set(item.name, item);
 	}
-	if (expectedNames.some((name) => !byName.has(name))) fail('component set is incomplete.');
-	const expectedNative = {
-		ZBox: (native) => native.tag === 'DIV' && native.ariaLive === 'polite',
-		ZStack: (native) => native.tag === 'DIV',
-		ZText: (native) => native.tag === 'STRONG' && native.text === 'Windows WebView2 capability lab',
-		ZButton: (native) =>
-			native.tag === 'BUTTON' &&
-			native.type === 'button' &&
-			native.disabled === false &&
-			native.text === 'Verify component'
-	};
-	for (const name of expectedNames)
-		if (!expectedNative[name](byName.get(name).native))
-			fail(`native ${name} semantics are invalid.`);
+	if (componentContracts.some(({ name }) => !byName.has(name)))
+		fail('component set is incomplete.');
 	return validateDesktopEvidenceArtifact(
 		{
-			schemaVersion: 2,
+			schemaVersion: 3,
+			evidenceFormat: 'structured',
 			status: 'passed',
 			revision: raw.revision,
 			target: raw.target,
 			host: raw.host,
 			bridgeRoundTrip: raw.bridgeRoundTrip,
-			components: expectedNames.map((name) => {
-				const item = byName.get(name);
-				return {
-					id: expectedIds[name],
-					name,
-					source: 'apps/desktop/src/routes/+page.svelte',
-					evidenceId: item.marker,
-					rendered: item.present,
-					assertions: Object.entries(item.native).map(([key, value]) => `${key}=${String(value)}`),
-					interactions: name === 'ZButton' ? [...expectedButtonInteractions] : [],
-					passed: true
-				};
-			})
+			components: componentContracts.map((contract) =>
+				normalizeComponent(contract, byName.get(contract.name), raw)
+			)
 		},
 		{ expectedRevision }
 	);
@@ -142,7 +298,8 @@ export function validateDesktopEvidence(raw, { expectedRevision } = {}) {
 
 export function validateDesktopEvidenceArtifact(evidence, { expectedRevision } = {}) {
 	if (
-		evidence?.schemaVersion !== 2 ||
+		evidence?.schemaVersion !== 3 ||
+		evidence.evidenceFormat !== 'structured' ||
 		evidence.status !== 'passed' ||
 		evidence.target !== 'windows-x64' ||
 		(!revisionPattern.test(evidence.revision ?? '') &&
@@ -172,33 +329,19 @@ export function validateDesktopEvidenceArtifact(evidence, { expectedRevision } =
 		!productionSource(evidence.host.source)
 	)
 		fail('normalized host is invalid.');
-	if (!Array.isArray(evidence.components) || evidence.components.length !== expectedNames.length)
+	if (
+		!Array.isArray(evidence.components) ||
+		evidence.components.length !== componentContracts.length
+	)
 		fail('normalized component set is invalid.');
-	const expectedByName = new Map(expectedNames.map((name) => [name, expectedIds[name]]));
+	const expectedByName = new Map(componentContracts.map((contract) => [contract.name, contract]));
 	for (const component of evidence.components) {
-		if (
-			expectedByName.get(component?.name) !== component?.id ||
-			component.source !== 'apps/desktop/src/routes/+page.svelte' ||
-			component.evidenceId !== expectedMarkers[component.name] ||
-			component.rendered !== true ||
-			component.passed !== true ||
-			!Array.isArray(component.assertions) ||
-			component.assertions.length === 0 ||
-			!Array.isArray(component.interactions)
-		)
-			fail(`normalized component ${component?.name ?? '<unknown>'} is invalid.`);
+		const contract = expectedByName.get(component?.name);
+		if (!contract) fail(`normalized component ${component?.name ?? '<unknown>'} is invalid.`);
+		validateNormalizedComponent(component, contract);
 		expectedByName.delete(component.name);
 	}
 	if (expectedByName.size !== 0) fail('normalized component identities are not exact and unique.');
-	const button = evidence.components.find(({ name }) => name === 'ZButton');
-	if (
-		!button ||
-		button.interactions.length !== expectedButtonInteractions.length ||
-		expectedButtonInteractions.some(
-			(interaction, index) => button.interactions[index] !== interaction
-		)
-	)
-		fail('normalized ZButton interaction is missing.');
 	return evidence;
 }
 
@@ -235,7 +378,9 @@ if (isMain && process.argv.includes('--self-test')) {
 			webViewVersion: '130.0.1',
 			errors: [],
 			statusAfter: 'Desktop component evidence 1: ZButton click handled.',
-			componentActionRuns: 1
+			componentActionRunsBefore: 0,
+			componentActionRunsAfter: 1,
+			componentActionDelta: 1
 		},
 		components: [
 			{
@@ -282,13 +427,13 @@ if (isMain && process.argv.includes('--self-test')) {
 	);
 	expectFailure(
 		'component interaction failure',
-		{ ...sample, page: { ...sample.page, componentActionRuns: 0 } },
+		{ ...sample, page: { ...sample.page, componentActionRunsAfter: 0, componentActionDelta: 0 } },
 		'component interaction'
 	);
 	expectFailure(
 		'incomplete component set',
 		{ ...sample, components: sample.components.slice(0, 3) },
-		'exactly four'
+		'exactly 4'
 	);
 	expectFailure('revision mismatch', sample, 'revision does not match expected', {
 		expectedRevision: 'b'.repeat(40)
@@ -332,7 +477,20 @@ if (isMain && process.argv.includes('--self-test')) {
 		});
 		fail('self-test accepted normalized evidence without its interaction.');
 	} catch (error) {
-		if (!String(error).includes('normalized ZButton interaction')) throw error;
+		if (!String(error).includes('normalized component ZButton interaction')) throw error;
+	}
+	try {
+		validateDesktopEvidenceArtifact({
+			...normalized,
+			components: normalized.components.map((component) =>
+				component.name === 'ZButton'
+					? { ...component, sideEffects: { ...component.sideEffects, bridge: 'read' } }
+					: component
+			)
+		});
+		fail('self-test accepted normalized evidence with an undeclared side effect.');
+	} catch (error) {
+		if (!String(error).includes('side-effect policy')) throw error;
 	}
 	console.log(JSON.stringify({ status: 'passed', components: normalized.components.length }));
 }

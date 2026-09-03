@@ -25,6 +25,23 @@ function assertInside(base, target, label) {
 	return target;
 }
 
+function displayEvidenceValue(value) {
+	return typeof value === 'string' ? value : JSON.stringify(value);
+}
+
+function componentEvidenceDetail(component) {
+	const assertions = component.assertions
+		.map(({ id, actual }) => `${id}=${displayEvidenceValue(actual)}`)
+		.join(', ');
+	const interactions = component.interactions
+		.map(
+			({ action, id, observations }) =>
+				`${action}:${id}(${observations.map(({ id: observationId, actual }) => `${observationId}=${displayEvidenceValue(actual)}`).join(', ')})`
+		)
+		.join(', ');
+	return `${assertions}; ${interactions || 'render-only'}`;
+}
+
 export function composeDesktopMaturity({
 	baseMaturity,
 	desktopEvidence,
@@ -71,7 +88,7 @@ export function composeDesktopMaturity({
 				DesktopVerified: [
 					{
 						path: portable(evidencePath),
-						detail: `Windows WebView2 ${component.evidenceId}: ${component.assertions.join(', ')}; ${component.interactions.join(', ') || 'render-only'}`
+						detail: `Windows WebView2 ${component.evidenceId}: ${componentEvidenceDetail(component)}`
 					}
 				]
 			}
@@ -105,9 +122,24 @@ function selfTest() {
 		['text', 'ZText', 'ZText'],
 		['button', 'ZButton', 'ZButton-component-action']
 	];
+	const nativeByName = {
+		ZBox: { tag: 'DIV', ariaLive: 'polite' },
+		ZStack: { tag: 'DIV' },
+		ZText: { tag: 'STRONG', text: 'Windows WebView2 capability lab' },
+		ZButton: { tag: 'BUTTON', type: 'button', disabled: false, text: 'Verify component' }
+	};
+	const assertion = (id, kind, target, expected) => ({
+		id,
+		kind,
+		target,
+		expected,
+		actual: expected,
+		passed: true
+	});
 	const revision = 'a'.repeat(40);
 	const desktopEvidence = {
-		schemaVersion: 2,
+		schemaVersion: 3,
+		evidenceFormat: 'structured',
 		status: 'passed',
 		revision,
 		target: 'windows-x64',
@@ -129,17 +161,47 @@ function selfTest() {
 			requestReceived: true,
 			responseValidated: true
 		},
-		components: componentContracts.map(([id, name, evidenceId]) => ({
-			id,
-			name,
-			source: 'apps/desktop/src/routes/+page.svelte',
-			evidenceId,
-			rendered: true,
-			assertions: ['native=true'],
-			interactions:
-				name === 'ZButton' ? ['click:Verify component', 'state:data-desktop-evidence-runs=1'] : [],
-			passed: true
-		}))
+		components: componentContracts.map(([id, name, evidenceId]) => {
+			const native = nativeByName[name];
+			return {
+				id,
+				name,
+				source: 'apps/desktop/src/routes/+page.svelte',
+				evidenceId,
+				locator: {
+					kind: 'data-attribute',
+					attribute: 'data-desktop-evidence',
+					value: evidenceId
+				},
+				sideEffects: { bridge: 'none', filesystem: 'none', network: 'none', window: 'none' },
+				rendered: true,
+				native,
+				assertions: [
+					assertion('rendered', 'state', 'root', true),
+					...Object.entries(native).map(([property, expected]) =>
+						assertion(
+							`native.${property}`,
+							property.startsWith('aria') ? 'aria' : 'native',
+							property,
+							expected
+						)
+					)
+				],
+				interactions:
+					name === 'ZButton'
+						? [
+								{
+									id: 'activate-once',
+									action: 'click',
+									target: 'root',
+									observations: [assertion('runs-delta', 'state', 'data-desktop-evidence-runs', 1)],
+									passed: true
+								}
+							]
+						: [],
+				passed: true
+			};
+		})
 	};
 	const baseMaturity = {
 		source: { metadataComponents: 5 },

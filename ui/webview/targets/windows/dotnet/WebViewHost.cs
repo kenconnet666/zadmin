@@ -19,6 +19,7 @@ public sealed class WebViewHost : IAsyncDisposable
         public string[] Errors { get; set; } = [];
         public DesktopEvidenceItem[]? DesktopEvidence { get; set; }
         public string? StatusBefore { get; set; }
+        public int ComponentActionRunsBefore { get; set; }
     }
 
     private sealed class DesktopEvidenceItem
@@ -30,6 +31,57 @@ public sealed class WebViewHost : IAsyncDisposable
     }
 
     private static readonly JsonSerializerOptions SerializerOptions = new(JsonSerializerDefaults.Web);
+    private const string CaptureDesktopEvidenceScript = """
+        (() => {
+          const collect = (name, marker) => {
+            const node = document.querySelector(`[data-desktop-evidence="${marker}"]`);
+            return {
+              name,
+              marker,
+              present: node !== null,
+              native: {
+                tag: node?.tagName ?? null,
+                type: node?.getAttribute('type') ?? null,
+                disabled: node?.hasAttribute('disabled') ?? false,
+                text: node?.textContent?.trim() ?? '',
+                ariaLive: node?.getAttribute('aria-live') ?? null
+              }
+            };
+          };
+          const componentAction = document.querySelector(
+            '[data-desktop-evidence="ZButton-component-action"]'
+          );
+          return JSON.stringify({
+            origin: location.origin,
+            title: document.title,
+            bodyText: document.body?.innerText?.slice(0, 1000) ?? '',
+            hasBridge: Boolean(globalThis.chrome?.webview),
+            viteClient:
+              [...document.scripts].some((script) => script.src.includes('/@vite/client')) ||
+              performance
+                .getEntriesByType('resource')
+                .some((entry) => entry.name.includes('/@vite/client')),
+            errors: globalThis.__ZADMIN_WEBVIEW_ERRORS__ ?? [],
+            desktopEvidence: [
+              collect('ZBox', 'ZBox-status'),
+              collect('ZStack', 'ZStack'),
+              collect('ZText', 'ZText'),
+              collect('ZButton', 'ZButton-component-action')
+            ],
+            statusBefore:
+              document.querySelector('[data-desktop-evidence="ZBox-status"]')?.innerText ?? '',
+            componentActionRunsBefore: Number(
+              componentAction?.getAttribute('data-desktop-evidence-runs') ?? '0'
+            )
+          });
+        })()
+        """;
+    private const string ClickComponentEvidenceScript =
+        "document.querySelector('[data-desktop-evidence=\"ZButton-component-action\"]')?.click()";
+    private const string ReadComponentEvidenceRunsScript =
+        "Number(document.querySelector('[data-desktop-evidence=\"ZButton-component-action\"]')?.getAttribute('data-desktop-evidence-runs')??'0')";
+    private const string ReadStatusScript =
+        "JSON.stringify(document.querySelector('[data-desktop-evidence=\"ZBox-status\"]')?.innerText??'')";
     private readonly HostOptions _options;
     private readonly WebView2 _webview;
     private readonly Microsoft.UI.Xaml.Window _window;
@@ -253,41 +305,42 @@ public sealed class WebViewHost : IAsyncDisposable
             }
             smokePhase = "capturing-components";
             var pageValue = await sender.ExecuteScriptAsync(
-                "JSON.stringify({origin:location.origin,title:document.title,bodyText:document.body?.innerText?.slice(0,1000)??'',hasBridge:Boolean(globalThis.chrome?.webview),viteClient:[...document.scripts].some(script=>script.src.includes('/@vite/client'))||performance.getEntriesByType('resource').some(entry=>entry.name.includes('/@vite/client')),errors:globalThis.__ZADMIN_WEBVIEW_ERRORS__??[],desktopEvidence:[{name:'ZBox',marker:'ZBox-status',present:Boolean(document.querySelector('[data-desktop-evidence=\\\"ZBox-status\\\"]')),native:{tag:document.querySelector('[data-desktop-evidence=\\\"ZBox-status\\\"]')?.tagName??null,ariaLive:document.querySelector('[data-desktop-evidence=\\\"ZBox-status\\\"]')?.getAttribute('aria-live')??null}},{name:'ZStack',marker:'ZStack',present:Boolean(document.querySelector('[data-desktop-evidence=\\\"ZStack\\\"]')),native:{tag:document.querySelector('[data-desktop-evidence=\\\"ZStack\\\"]')?.tagName??null}},{name:'ZText',marker:'ZText',present:Boolean(document.querySelector('[data-desktop-evidence=\\\"ZText\\\"]')),native:{tag:document.querySelector('[data-desktop-evidence=\\\"ZText\\\"]')?.tagName??null,text:document.querySelector('[data-desktop-evidence=\\\"ZText\\\"]')?.textContent?.trim()??''}},{name:'ZButton',marker:'ZButton-component-action',present:Boolean(document.querySelector('[data-desktop-evidence=\\\"ZButton-component-action\\\"]')),native:{tag:document.querySelector('[data-desktop-evidence=\\\"ZButton-component-action\\\"]')?.tagName??null,type:document.querySelector('[data-desktop-evidence=\\\"ZButton-component-action\\\"]')?.getAttribute('type')??null,disabled:(document.querySelector('[data-desktop-evidence=\\\"ZButton-component-action\\\"]'))?.hasAttribute('disabled')??false,text:document.querySelector('[data-desktop-evidence=\\\"ZButton-component-action\\\"]')?.textContent?.trim()??''}}],statusBefore:document.querySelector('[data-desktop-evidence=\\\"ZBox-status\\\"]')?.innerText??''})");
+                CaptureDesktopEvidenceScript);
             var pageJson = JsonSerializer.Deserialize<string>(pageValue) ?? "{}";
             evidenceBefore = JsonSerializer.Deserialize<DesktopEvidencePage>(pageJson, SerializerOptions) ?? throw new InvalidOperationException("Desktop evidence page state is unreadable.");
             if (evidenceBefore.DesktopEvidence is null || evidenceBefore.DesktopEvidence.Length != 4 || evidenceBefore.DesktopEvidence.Any(item => !item.Present))
                 throw new InvalidOperationException("Desktop evidence markers are incomplete or not hydrated.");
             smokePhase = "validating-bridge-round-trip";
+            var bridgeRequest = JsonSerializer.Serialize(
+                new { v = WebViewProtocol.Version, kind = "request", id = "smoke", method = WebViewProtocol.AppSnapshot, @params = new { } },
+                SerializerOptions);
             await sender.ExecuteScriptAsync(
-                "chrome.webview.postMessage(JSON.stringify({v:1,kind:'request',id:'smoke',method:'app.snapshot',params:{}}))");
+                $"chrome.webview.postMessage({JsonSerializer.Serialize(bridgeRequest)})");
             var bridgeResponseValidated = await _smokeResponse.Task.WaitAsync(TimeSpan.FromSeconds(10));
             if (!bridgeResponseValidated)
                 throw new InvalidOperationException("WebView bridge app.snapshot response was not successful.");
             smokePhase = "validating-component-interaction";
-            await sender.ExecuteScriptAsync(
-                "document.querySelector('[data-desktop-evidence=\"ZButton-component-action\"]')?.click()");
-            var componentActionRuns = 0;
+            await sender.ExecuteScriptAsync(ClickComponentEvidenceScript);
+            var componentActionRunsAfter = evidenceBefore.ComponentActionRunsBefore;
+            var expectedComponentActionRuns = evidenceBefore.ComponentActionRunsBefore + 1;
             for (var attempt = 0; attempt < 100; attempt++)
             {
-                var actionValue = await sender.ExecuteScriptAsync(
-                    "Number(document.querySelector('[data-desktop-evidence=\"ZButton-component-action\"]')?.getAttribute('data-desktop-evidence-runs')??'0')");
-                if (int.TryParse(actionValue, out componentActionRuns) && componentActionRuns == 1)
+                var actionValue = await sender.ExecuteScriptAsync(ReadComponentEvidenceRunsScript);
+                if (int.TryParse(actionValue, out componentActionRunsAfter) && componentActionRunsAfter == expectedComponentActionRuns)
                 {
                     break;
                 }
                 await Task.Delay(100);
             }
-            if (componentActionRuns != 1)
+            if (componentActionRunsAfter != expectedComponentActionRuns)
                 throw new TimeoutException("ZButton component evidence action did not update its observable state.");
-            var pageAfterValue = await sender.ExecuteScriptAsync(
-                "JSON.stringify(document.querySelector('[data-desktop-evidence=\"ZBox-status\"]')?.innerText??'')");
+            var pageAfterValue = await sender.ExecuteScriptAsync(ReadStatusScript);
             smokePhase = "writing-report";
             var report = new
             {
                 bridgeRoundTrip = new { method = WebViewProtocol.AppSnapshot, requestReceived = true, responseValidated = bridgeResponseValidated },
                 navigation = true,
-                page = new { evidenceBefore.Origin, evidenceBefore.Title, evidenceBefore.BodyText, evidenceBefore.HasBridge, evidenceBefore.ViteClient, hydrated = true, webViewVersion = _webViewVersion, evidenceBefore.Errors, statusBefore = evidenceBefore.StatusBefore, statusAfter = JsonSerializer.Deserialize<string>(pageAfterValue), componentActionRuns },
+                page = new { evidenceBefore.Origin, evidenceBefore.Title, evidenceBefore.BodyText, evidenceBefore.HasBridge, evidenceBefore.ViteClient, hydrated = true, webViewVersion = _webViewVersion, evidenceBefore.Errors, statusBefore = evidenceBefore.StatusBefore, statusAfter = JsonSerializer.Deserialize<string>(pageAfterValue), componentActionRunsBefore = evidenceBefore.ComponentActionRunsBefore, componentActionRunsAfter, componentActionDelta = componentActionRunsAfter - evidenceBefore.ComponentActionRunsBefore },
                 protocol = WebViewProtocol.Version,
                 source = _webview.Source?.ToString(),
                 revision = Environment.GetEnvironmentVariable("GITHUB_SHA") ?? "local",
