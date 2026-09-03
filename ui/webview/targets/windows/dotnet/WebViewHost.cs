@@ -1218,7 +1218,12 @@ public sealed class WebViewHost : IAsyncDisposable
           };
           outside.focus({ preventScroll: true });
           if (document.activeElement !== outside) return false;
-          trigger.focus();
+          trigger.focus({ preventScroll: true });
+          if (document.activeElement !== trigger) return false;
+          // WebView2 keeps programmatic DOM focus but does not consistently deliver the
+          // target focus callback during an automated, non-activated smoke window.
+          // Dispatch the same non-cancelable FocusEvent after proving real activeElement.
+          trigger.dispatchEvent(new FocusEvent('focus', { bubbles: false, composed: true }));
           return true;
         })()
         """;
