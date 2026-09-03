@@ -1,4 +1,5 @@
 import { execFile } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, isAbsolute, relative, resolve, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -14,6 +15,7 @@ const isMain = process.argv[1]
 	? pathToFileURL(resolve(process.argv[1])).href === import.meta.url
 	: false;
 const revisionPattern = /^(?:[a-f0-9]{40}|[a-f0-9]{64})$/u;
+const sha256Pattern = /^[a-f0-9]{64}$/u;
 
 function argument(name, argv = process.argv.slice(2)) {
 	return argv.find((value) => value.startsWith(`--${name}=`))?.slice(name.length + 3);
@@ -39,7 +41,51 @@ function requiredZuiTag(value, version) {
 	return value;
 }
 
-function buildReleaseHandoffPlan({ manifest, sourceRevision, tag = null }) {
+function supportMatrixFacts(bytes, sourceRevision) {
+	let matrix;
+	try {
+		matrix = JSON.parse(bytes.toString('utf8'));
+	} catch (error) {
+		throw new Error('Release handoff support matrix JSON is invalid.', { cause: error });
+	}
+	if (
+		matrix?.package?.name !== '@zadmin/zui' ||
+		!Array.isArray(matrix?.ci?.browsers) ||
+		matrix.ci.browsers.length === 0 ||
+		matrix.ci.browsers.some(
+			(browser) => typeof browser !== 'string' || browser.trim().length === 0
+		) ||
+		new Set(matrix.ci.browsers).size !== matrix.ci.browsers.length ||
+		typeof matrix.ci.node !== 'string' ||
+		matrix.ci.node.trim().length === 0 ||
+		typeof matrix.ci.pnpm !== 'string' ||
+		matrix.ci.pnpm.trim().length === 0
+	)
+		throw new Error('Release handoff support matrix contract is invalid.');
+	return {
+		artifactPath: 'support-matrix.json',
+		sourcePath: '.docs/zui/support-matrix.json',
+		revision: sourceRevision,
+		bytes: bytes.byteLength,
+		sha256: createHash('sha256').update(bytes).digest('hex')
+	};
+}
+
+function assertSupportMatrixFacts(expected, actual) {
+	if (
+		!expected ||
+		expected.artifactPath !== actual.artifactPath ||
+		expected.sourcePath !== actual.sourcePath ||
+		expected.revision !== actual.revision ||
+		expected.bytes !== actual.bytes ||
+		expected.sha256 !== actual.sha256
+	)
+		throw new Error(
+			'Release handoff support matrix bytes/checksum/revision do not match downloaded input.'
+		);
+}
+
+function buildReleaseHandoffPlan({ manifest, sourceRevision, tag = null, supportMatrix }) {
 	validateArtifactManifest(manifest);
 	const artifacts = Object.fromEntries(
 		manifest.artifacts
@@ -56,6 +102,8 @@ function buildReleaseHandoffPlan({ manifest, sourceRevision, tag = null }) {
 	);
 	const zui = artifacts['@zadmin/zui'];
 	if (!zui) throw new Error('Release handoff is missing @zadmin/zui.');
+	if (!supportMatrix)
+		throw new Error('Release handoff is missing the release-bound support matrix.');
 	const releaseTag = requiredZuiTag(tag ?? undefined, zui.version);
 	const plan = {
 		schemaVersion: 1,
@@ -69,6 +117,7 @@ function buildReleaseHandoffPlan({ manifest, sourceRevision, tag = null }) {
 			candidate: 'passed'
 		},
 		artifacts,
+		supportMatrix,
 		plannedConsumers: {
 			npmPublish: {
 				package: '@zadmin/zui',
@@ -126,6 +175,16 @@ export function validateReleaseHandoffPlan(plan, manifest) {
 				throw new Error(`Release handoff ${artifact.name} ${field} does not match its manifest.`);
 	}
 	const zui = plan.artifacts['@zadmin/zui'];
+	const supportMatrix = plan.supportMatrix;
+	if (
+		supportMatrix?.artifactPath !== 'support-matrix.json' ||
+		supportMatrix.sourcePath !== '.docs/zui/support-matrix.json' ||
+		supportMatrix.revision !== manifest.sourceRevision ||
+		!Number.isSafeInteger(supportMatrix.bytes) ||
+		supportMatrix.bytes < 1 ||
+		!sha256Pattern.test(supportMatrix.sha256 ?? '')
+	)
+		throw new Error('Release handoff support matrix binding is invalid.');
 	if (
 		plan.plannedConsumers?.npmPublish?.tarball !== zui.filename ||
 		plan.plannedConsumers?.npmPublish?.sha256 !== zui.sha256
@@ -163,9 +222,15 @@ export async function prepareReleaseHandoff({
 		workspaceRoot
 	});
 	const manifest = JSON.parse(await readFile(resolve(artifactDirectory, 'manifest.json'), 'utf8'));
+	const supportMatrix = await readFile(resolve(artifactDirectory, 'support-matrix.json'), 'utf8');
 	for (const name of releasePackageNames)
 		await readReleaseArtifact(artifactDirectory, name, sourceRevision);
-	return buildReleaseHandoffPlan({ manifest, sourceRevision, tag: tag ?? null });
+	return buildReleaseHandoffPlan({
+		manifest,
+		sourceRevision,
+		tag: tag ?? null,
+		supportMatrix: supportMatrixFacts(supportMatrix, sourceRevision)
+	});
 }
 
 export async function verifyReleaseHandoff({
@@ -183,6 +248,15 @@ export async function verifyReleaseHandoff({
 	const safePlanPath = assertWithin(artifactDirectory, resolve(planPath), 'Release handoff input');
 	const manifest = JSON.parse(await readFile(resolve(artifactDirectory, 'manifest.json'), 'utf8'));
 	const plan = JSON.parse(await readFile(safePlanPath, 'utf8'));
+	validateReleaseHandoffPlan(plan, manifest);
+	const supportPath = assertWithin(
+		artifactDirectory,
+		resolve(artifactDirectory, plan.supportMatrix.artifactPath),
+		'Release handoff support matrix'
+	);
+	const supportBytes = await readFile(supportPath);
+	const actualSupport = supportMatrixFacts(supportBytes, sourceRevision);
+	assertSupportMatrixFacts(plan.supportMatrix, actualSupport);
 	await checkReleaseCandidate({
 		directory: artifactDirectory,
 		expectedRevision: sourceRevision,
@@ -191,7 +265,6 @@ export async function verifyReleaseHandoff({
 	});
 	for (const name of releasePackageNames)
 		await readReleaseArtifact(artifactDirectory, name, sourceRevision);
-	validateReleaseHandoffPlan(plan, manifest);
 	return {
 		artifacts: [...releasePackageNames],
 		executedConsumers: plan.executedConsumers,
@@ -234,7 +307,13 @@ function selfTest() {
 	const plan = buildReleaseHandoffPlan({
 		manifest,
 		sourceRevision: revision,
-		tag: '@zadmin/zui@0.1.0'
+		tag: '@zadmin/zui@0.1.0',
+		supportMatrix: supportMatrixFacts(
+			Buffer.from(
+				'{"package":{"name":"@zadmin/zui"},"ci":{"browsers":["chromium"],"node":"24","pnpm":"11"}}\n'
+			),
+			revision
+		)
 	});
 	if (plan.executedConsumers.length !== 0 || plan.plannedConsumers.npmPublish.tarball !== 'zui.tgz')
 		throw new Error('Release handoff self-test produced an invalid plan.');
@@ -253,6 +332,36 @@ function selfTest() {
 		}
 		throw new Error(`Release handoff self-test accepted ${label}.`);
 	};
+	for (const [label, expectedPattern, mutate] of [
+		[
+			'a missing support matrix binding',
+			/support matrix binding is invalid/u,
+			(value) => delete value.supportMatrix
+		],
+		[
+			'a wrong support matrix checksum',
+			/bytes\/checksum\/revision do not match/u,
+			(value) => (value.supportMatrix.sha256 = 'b'.repeat(64))
+		],
+		[
+			'a wrong support matrix revision',
+			/support matrix binding is invalid/u,
+			(value) => (value.supportMatrix.revision = 'b'.repeat(40))
+		],
+		[
+			'a wrong support matrix path',
+			/support matrix binding is invalid/u,
+			(value) => (value.supportMatrix.artifactPath = 'wrong.json')
+		]
+	]) {
+		const invalid = structuredClone(plan);
+		mutate(invalid);
+		expectFailure(label, expectedPattern, () =>
+			label === 'a wrong support matrix checksum'
+				? assertSupportMatrixFacts(invalid.supportMatrix, plan.supportMatrix)
+				: validateReleaseHandoffPlan(invalid, manifest)
+		);
+	}
 	for (const [label, expectedPattern, mutate] of [
 		[
 			'an executed consumer claim',
@@ -283,7 +392,8 @@ function selfTest() {
 		buildReleaseHandoffPlan({
 			manifest,
 			sourceRevision: revision,
-			tag: '@zadmin/zui@0.2.0'
+			tag: '@zadmin/zui@0.2.0',
+			supportMatrix: plan.supportMatrix
 		})
 	);
 	expectFailure('an escaped path', /must stay within/u, () =>

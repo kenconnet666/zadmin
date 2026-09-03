@@ -308,6 +308,7 @@ jobs:
           pnpm --filter @zadmin/webview build
           pnpm --filter @zadmin/miniapp build
           pnpm release:pack:artifacts --out=.release-artifacts
+          cp .docs/zui/support-matrix.json .release-artifacts/support-matrix.json
           node scripts/check-release-candidate.mjs --directory=.release-artifacts --revision="${{ github.sha }}"
           node scripts/prepare-release-handoff.mjs --directory=.release-artifacts --revision="${{ github.sha }}" --out=.release-artifacts/release-handoff.json
 

@@ -46,15 +46,14 @@ export const zuiProgress = {
 	},
 	release: {
 		status: 'blocked',
-		passedChecks: 19,
+		passedChecks: 20,
 		totalChecks: 25,
 		blocked: [
 			'releasePublishTarballReuse',
 			'npmOidcProvenance',
 			'automatedTagAndGithubRelease',
 			'registrySmoke',
-			'versionedDocs',
-			'releaseBoundSupportMatrix'
+			'versionedDocs'
 		]
 	},
 	nextPriorities: [
@@ -80,7 +79,7 @@ export const zuiProgress = {
 		},
 		{
 			id: 'release-boundary',
-			remaining: 6,
+			remaining: 5,
 			description: '完成真实publish/OIDC/tag/registry smoke与版本化Docs部署边界。'
 		}
 	]

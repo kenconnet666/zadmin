@@ -14,7 +14,7 @@
 | DesktopVerified           |                         0 |                                  141 |
 | Docs routes               |                        89 | components 79; guides 9; deployed no |
 | Browser matrix            | chromium, firefox, webkit |                Node 24; pnpm 11.22.0 |
-| Release checks            |                        19 |                   25; status blocked |
+| Release checks            |                        20 |                   25; status blocked |
 
 ## 下一步优先级
 
@@ -22,7 +22,7 @@
 2. **visual-evidence** (0 remaining): 补齐组件级浏览器渲染与交互证据，不以fixture存在冒充验证。
 3. **stable-promotion** (0 remaining): 逐项审查已满足门禁的experimental组件；禁止自动批量晋级。
 4. **desktop-evidence** (141 remaining): 建立组件级WebView2/Desktop证据后再提升DesktopVerified。
-5. **release-boundary** (6 remaining): 完成真实publish/OIDC/tag/registry smoke与版本化Docs部署边界。
+5. **release-boundary** (5 remaining): 完成真实publish/OIDC/tag/registry smoke与版本化Docs部署边界。
 
 ## 当前外部边界
 
@@ -31,4 +31,3 @@
 - `automatedTagAndGithubRelease`
 - `registrySmoke`
 - `versionedDocs`
-- `releaseBoundSupportMatrix`

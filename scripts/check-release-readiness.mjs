@@ -282,7 +282,20 @@ const checks = {
 		).every(Boolean) &&
 		docsPackage.scripts?.['audit:system']?.includes('check-support-matrix.mjs') === true &&
 		/pnpm --filter @zadmin\/docs audit:system/u.test(ci),
-	releaseBoundSupportMatrix: false
+	releaseBoundSupportMatrix:
+		/\.docs\/zui\/support-matrix\.json\s+\.release-artifacts\/support-matrix\.json/u.test(ci) &&
+		/supportMatrixFacts/u.test(releaseHandoff) &&
+		/\n\s*supportMatrix,/u.test(releaseHandoff) &&
+		/artifactPath:\s*'support-matrix\.json'/u.test(releaseHandoff) &&
+		/bytes\/checksum\/revision/u.test(releaseHandoff) &&
+		/name:\s*release-consumer-artifacts-\$\{\{ github\.event\.workflow_run\.head_sha \}\}/u.test(
+			workflow
+		) &&
+		/prepare-release-handoff\.mjs[\s\S]*--verify-plan=/u.test(workflow) &&
+		/support matrix bytes\/checksum\/revision do not match downloaded input/u.test(
+			releaseHandoff
+		) &&
+		/sha256Pattern/u.test(releaseHandoff)
 };
 const blocked = Object.entries(checks)
 	.filter(([, value]) => !value)

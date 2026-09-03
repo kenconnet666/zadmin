@@ -10,8 +10,8 @@
 	},
 	"changesets": {
 		"config": ".changeset/config.json",
-		"count": 83,
-		"packages": ["@zadmin/zui"],
+		"count": 84,
+		"packages": ["@zadmin/miniapp", "@zadmin/webview", "@zadmin/zui"],
 		"publicAccess": true,
 		"baseBranch": "master"
 	},
@@ -61,7 +61,7 @@
 		{
 			"name": "@zadmin/miniapp",
 			"version": "0.1.0",
-			"changeset": false,
+			"changeset": true,
 			"packageCheck": false,
 			"acceptance": true
 		},
@@ -96,7 +96,7 @@
 		{
 			"name": "@zadmin/webview",
 			"version": "0.1.0",
-			"changeset": false,
+			"changeset": true,
 			"packageCheck": false,
 			"acceptance": true
 		},
@@ -133,14 +133,13 @@
 		"versionedDocsArtifactRoundTrip": true,
 		"versionedDocs": false,
 		"supportMatrixDocumented": true,
-		"releaseBoundSupportMatrix": false
+		"releaseBoundSupportMatrix": true
 	},
 	"blocked": [
 		"releasePublishTarballReuse",
 		"npmOidcProvenance",
 		"automatedTagAndGithubRelease",
 		"registrySmoke",
-		"versionedDocs",
-		"releaseBoundSupportMatrix"
+		"versionedDocs"
 	]
 }
