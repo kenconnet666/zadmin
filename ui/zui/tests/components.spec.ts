@@ -822,6 +822,12 @@ describe('ZUI foundational components', () => {
 		expect(body).toMatch(/data-testid="axis-null-button"[^>]+data-size="medium"/u);
 		expect(body).toMatch(/data-testid="component-null-button"[^>]+data-size="medium"/u);
 		expect(body).toMatch(/data-testid="default-table"[^>]+data-virtualized="true"/u);
+		expect(body).toMatch(/data-testid="default-input"[^>]+data-size="large"/u);
+		expect(body).toMatch(/data-testid="explicit-input"[^>]+data-size="small"/u);
+		expect(body).toMatch(/data-testid="local-input"[^>]+data-size="small"/u);
+		expect(body).toMatch(/data-testid="default-tag"[^>]+data-size="small"[^>]+data-tone="accent"/u);
+		expect(body).toMatch(/data-testid="default-card"[^>]+data-variant="outlined"/u);
+		expect(body).toMatch(/data-testid="default-pagination"[^>]+data-mode="simple"/u);
 	});
 
 	it('provides SSR-stable defaults outside an explicit provider', () => {

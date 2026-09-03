@@ -22,7 +22,7 @@ export const providerDoc = defineComponentDoc(providerMetadata, {
 			componentDefaults: {
 				default: '继承父级或空值',
 				description:
-					'当前仅允许button/dataTable白名单行为props；显式组件prop优先。整个轴或单个组件设为null可停止继承，受控状态、回调、DOM与CSS会被拒绝。'
+					'当前仅允许button/input/tag/card/dataTable/pagination白名单非受控props；显式组件prop和最近Field/InputGroup上下文优先。整个轴或单个组件设为null可停止继承，值/page/选择、回调、DOM与CSS会被拒绝。'
 			},
 			colorScheme: {
 				default: "继承父级或 'light'",
@@ -86,7 +86,7 @@ export const providerDoc = defineComponentDoc(providerMetadata, {
 			covers: ['composition', 'controlled', 'density', 'variants-and-states'],
 			component: ComponentDefaultsDemo,
 			description:
-				'Button与DataTable只继承白名单默认值；显式prop优先，组件级null停止继承，选择等受控状态仍由调用方拥有。',
+				'六类组件只继承白名单默认值；显式prop和局部Field上下文优先，组件级null停止继承，值/page/选择等受控状态仍由调用方拥有。',
 			id: 'provider-component-defaults',
 			source: componentDefaultsSource,
 			title: '严格的组件默认值'

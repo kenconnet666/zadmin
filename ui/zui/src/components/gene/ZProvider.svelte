@@ -48,7 +48,7 @@
 			{
 				default: '继承父级或空值',
 				description:
-					'仅允许button/dataTable的白名单行为props；null停止继承；禁止受控状态、回调、DOM和CSS。',
+					'仅允许button、input、tag、card、dataTable、pagination的白名单非受控props；null停止继承；禁止受控状态、回调、DOM和CSS。',
 				name: 'componentDefaults',
 				type: 'ZuiComponentDefaults | null'
 			},
@@ -133,7 +133,7 @@
 		states: [],
 		status: 'stable',
 		summary:
-			'提供Theme、偏好轴、locale pack、componentDefaults、SSR稳定timeZone、direction、Portal边界和ICSS runtime，不创建额外DOM。componentDefaults只允许button/dataTable行为props；null停止继承，受控状态/回调/DOM/CSS被拒绝。'
+			'提供Theme、偏好轴、locale pack、componentDefaults、SSR稳定timeZone、direction、Portal边界和ICSS runtime，不创建额外DOM。componentDefaults只允许低风险非受控props；null停止继承，受控状态/回调/DOM/CSS被拒绝。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
 

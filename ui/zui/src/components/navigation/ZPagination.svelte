@@ -290,7 +290,7 @@
 		defaultPageSize,
 		dir,
 		disabled = false,
-		mode = 'default',
+		mode,
 		onfocusin,
 		onfocusout,
 		onkeydown,
@@ -307,6 +307,8 @@
 		...rest
 	}: ZPaginationProps = $props();
 	const zui = useZui();
+	const componentDefaults = $derived(zui.componentDefaults.pagination);
+	const resolvedMode = $derived(mode ?? componentDefaults?.mode ?? 'default');
 	const uid = $props.id();
 	const idBase = $derived(createZuiId(zui.idPrefix, uid, 'pagination'));
 	const pageSizeState = new ControllableState<number>({
@@ -340,7 +342,7 @@
 	});
 	const currentPage = $derived(clampPage(pageState.current, resolvedTotalPages));
 	const items = $derived(
-		mode === 'default'
+		resolvedMode === 'default'
 			? createPaginationItems(resolvedTotalPages, currentPage, boundaryCount, siblingCount)
 			: []
 	);
@@ -487,7 +489,7 @@
 		const normalizedPage = currentPage;
 		if (!Object.is(pageState.current, normalizedPage)) page = normalizedPage;
 		void disabled;
-		void mode;
+		void resolvedMode;
 		void resolvedPageSizeOptions;
 		void resolvedTotalPages;
 		queueMicrotask(() => {
@@ -509,7 +511,7 @@
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
 	aria-label={ariaLabel ?? localePack.label}
 	dir={resolvedDirection}
-	data-mode={mode}
+	data-mode={resolvedMode}
 	data-page={currentPage}
 	data-page-size={model.pageSize}
 	data-total-pages={resolvedTotalPages}
@@ -528,7 +530,7 @@
 		>
 			<PreviousIcon aria-hidden="true" size={16} />
 		</ZButton>
-		{#if mode === 'default'}
+		{#if resolvedMode === 'default'}
 			{#each items as item (item)}
 				{#if typeof item === 'number'}
 					<ZButton
@@ -547,7 +549,7 @@
 					<span aria-hidden="true" class={classes.ellipsis} data-slot="ellipsis">…</span>
 				{/if}
 			{/each}
-		{:else if mode === 'simple'}
+		{:else if resolvedMode === 'simple'}
 			<input
 				bind:this={pageInputRef}
 				class={classes.pageInput}

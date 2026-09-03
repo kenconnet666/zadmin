@@ -39,21 +39,28 @@ pnpm add @zadmin/zui @lucide/svelte svelte
 ### Component defaults
 
 `componentDefaults` is intentionally a small behavior-only whitelist. In the current
-release it accepts only `button` and `dataTable`; explicit component props always win.
-Controlled values (`open`, `value`, selection/sort state), callbacks, DOM references,
-`class`/`style`, and arbitrary CSS are rejected. `null` clears the whole defaults axis,
-while a component value of `null` stops inheritance for that component.
+release it accepts only `button`, `input`, `tag`, `card`, `dataTable`, and `pagination`.
+Explicit component props always win; nearest Field/InputGroup context remains more local than
+a Provider default, followed by Provider density and the component's local fallback. Controlled
+values (`open`, `value`, `page`, selection/sort state), callbacks, DOM references, `class`/`style`,
+and arbitrary CSS are rejected. `null` clears the whole defaults axis, while a component value
+of `null` stops inheritance for that component.
 
 ```svelte
 <ZProvider
 	componentDefaults={{
 		button: { size: 'small', variant: 'secondary' },
-		dataTable: { virtualized: true, overscan: 0 }
+		card: { variant: 'outlined' },
+		dataTable: { virtualized: true, overscan: 0 },
+		input: { size: 'large' },
+		pagination: { mode: 'simple' },
+		tag: { size: 'small', tone: 'accent' }
 	}}
 >
 	<ZButton>Small secondary button</ZButton>
 	<!-- Explicit props override Provider defaults. -->
 	<ZButton variant="primary">Primary button</ZButton>
+	<ZInput placeholder="Large input" />
 </ZProvider>
 ```
 

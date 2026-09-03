@@ -1,5 +1,16 @@
 <script lang="ts">
-	import { ZButton, ZDataTable, ZProvider, ZStack, ZText, type DataTableColumn } from '@zadmin/zui';
+	import {
+		ZButton,
+		ZCard,
+		ZDataTable,
+		ZInput,
+		ZPagination,
+		ZProvider,
+		ZStack,
+		ZTag,
+		ZText,
+		type DataTableColumn
+	} from '@zadmin/zui';
 
 	interface ServiceRow {
 		id: string;
@@ -20,7 +31,11 @@
 <ZProvider
 	componentDefaults={{
 		button: { size: 'small', variant: 'secondary' },
-		dataTable: { density: 'compact', selectionMode: 'multiple', striped: true }
+		card: { variant: 'outlined' },
+		dataTable: { density: 'compact', selectionMode: 'multiple', striped: true },
+		input: { size: 'large' },
+		pagination: { mode: 'simple' },
+		tag: { size: 'small', tone: 'accent' }
 	}}
 >
 	<ZStack gap="medium">
@@ -31,9 +46,15 @@
 				<ZButton>停止Button继承</ZButton>
 			</ZProvider>
 		</ZStack>
+		<ZInput aria-label="Provider默认大尺寸输入框" placeholder="继承large" />
+		<ZStack direction="row" gap="small" wrap>
+			<ZTag>继承small/accent</ZTag>
+			<ZCard><ZText>继承outlined Card</ZText></ZCard>
+		</ZStack>
 		<ZDataTable caption="Provider默认值服务清单" {columns} {rows} rowKey={(row) => row.id} />
+		<ZPagination aria-label="Provider默认简单分页" page={2} totalPages={5} />
 		<ZText tone="muted">
-			默认值只覆盖白名单行为；选择状态、回调、DOM、class/style与任意CSS仍由组件调用方拥有。
+			默认值只覆盖六类组件的白名单非受控行为；值、页码、选择状态、回调、DOM、class/style与任意CSS仍由组件调用方拥有。
 		</ZText>
 	</ZStack>
 </ZProvider>

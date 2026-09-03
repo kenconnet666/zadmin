@@ -1,10 +1,14 @@
 export { createBrowserIcssRuntime, createIcssRuntime, icss } from '../icss/runtime.js';
 export { resolveComponentDefaults } from '../runtime/foundation/component-defaults.js';
 export type {
+	CardComponentDefaults,
 	ButtonComponentDefaults,
 	ComponentDefaultPrimitive,
 	DataTableComponentDefaults,
+	InputComponentDefaults,
+	PaginationComponentDefaults,
 	ResolvedZuiComponentDefaults,
+	TagComponentDefaults,
 	ZuiComponentDefaults
 } from '../runtime/foundation/component-defaults.js';
 export type { IcssRuntime, IcssRuntimeOptions } from '../icss/runtime.js';

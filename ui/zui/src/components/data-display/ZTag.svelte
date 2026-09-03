@@ -189,10 +189,11 @@
 		size,
 		style,
 		textValue,
-		tone = 'default',
+		tone,
 		...rest
 	}: ZTagProps = $props();
 	const zui = useZui();
+	const componentDefaults = $derived(zui.componentDefaults.tag);
 	const resolvedDirection = $derived(dir ?? zui.direction);
 	const resolvedDisabled = $derived.by(() => {
 		if (typeof disabled !== 'boolean') throw new TypeError('ZTag disabled must be boolean.');
@@ -203,17 +204,19 @@
 		return removable;
 	});
 	const resolvedSize = $derived.by(() => {
-		const next = size ?? (zui.density === 'compact' ? 'small' : 'medium');
+		const next =
+			size ?? componentDefaults?.size ?? (zui.density === 'compact' ? 'small' : 'medium');
 		if (!['medium', 'small'].includes(next)) {
 			throw new TypeError('ZTag size must be small or medium.');
 		}
 		return next;
 	});
 	const resolvedTone = $derived.by(() => {
-		if (!['accent', 'danger', 'default', 'success', 'warning'].includes(tone)) {
+		const next = tone ?? componentDefaults?.tone ?? 'default';
+		if (!['accent', 'danger', 'default', 'success', 'warning'].includes(next)) {
 			throw new TypeError('ZTag tone must be default, accent, success, warning or danger.');
 		}
-		return tone;
+		return next;
 	});
 	const resolvedRemoveTabIndex = $derived.by(() => {
 		if (removeTabIndex !== 0 && removeTabIndex !== -1) {

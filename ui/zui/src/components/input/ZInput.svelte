@@ -212,6 +212,7 @@
 	}: ZInputProps = $props();
 
 	const zui = useZui();
+	const componentDefaults = $derived(zui.componentDefaults.input);
 	const reducedMotion = new ReducedMotionState(() => zui.motion);
 	const uid = $props.id();
 	const field = useZField();
@@ -221,7 +222,10 @@
 	const resolvedReadonly = $derived(readonly || inputGroup?.readonly || field?.readonly || false);
 	const resolvedRequired = $derived(required || inputGroup?.required || field?.required || false);
 	const resolvedSize = $derived(
-		resolveControlSize(size ?? inputGroup?.size ?? field?.size, zui.density)
+		resolveControlSize(
+			size ?? inputGroup?.size ?? field?.size ?? componentDefaults?.size,
+			zui.density
+		)
 	);
 	const reduced = $derived(reducedMotion.current);
 	const rootClass = $derived(

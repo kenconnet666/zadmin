@@ -24,32 +24,92 @@ export interface DataTableComponentDefaults {
 	readonly rowHeight?: number;
 }
 
+export interface InputComponentDefaults {
+	readonly size?: 'small' | 'medium' | 'large';
+}
+
+export interface TagComponentDefaults {
+	readonly size?: 'small' | 'medium';
+	readonly tone?: 'accent' | 'danger' | 'default' | 'success' | 'warning';
+}
+
+export interface CardComponentDefaults {
+	readonly variant?: 'elevated' | 'outlined';
+}
+
+export interface PaginationComponentDefaults {
+	readonly mode?: 'compact' | 'default' | 'simple';
+}
+
 export interface ZuiComponentDefaults {
 	readonly button?: ButtonComponentDefaults | null;
+	readonly card?: CardComponentDefaults | null;
 	readonly dataTable?: DataTableComponentDefaults | null;
+	readonly input?: InputComponentDefaults | null;
+	readonly pagination?: PaginationComponentDefaults | null;
+	readonly tag?: TagComponentDefaults | null;
 }
 
 export interface ResolvedZuiComponentDefaults {
 	readonly button?: ButtonComponentDefaults;
+	readonly card?: CardComponentDefaults;
 	readonly dataTable?: DataTableComponentDefaults;
+	readonly input?: InputComponentDefaults;
+	readonly pagination?: PaginationComponentDefaults;
+	readonly tag?: TagComponentDefaults;
 }
 
-const COMPONENT_PROPS = {
-	button: new Set(['size', 'shape', 'tone', 'variant', 'fullWidth']),
-	dataTable: new Set([
-		'density',
-		'selectionMode',
-		'stickyHeader',
-		'striped',
-		'virtualized',
-		'overscan',
-		'rowHeight'
-	])
-} as const;
+type ComponentDefaultRule =
+	| { readonly kind: 'boolean' }
+	| { readonly kind: 'enum'; readonly values: readonly string[] }
+	| { readonly kind: 'integer'; readonly minimum: number }
+	| { readonly exclusiveMinimum: number; readonly kind: 'number' };
 
-const COMPONENTS = new Set(Object.keys(COMPONENT_PROPS));
+const COMPONENT_RULES = {
+	button: {
+		fullWidth: { kind: 'boolean' },
+		shape: { kind: 'enum', values: ['default', 'circle', 'square'] },
+		size: { kind: 'enum', values: ['small', 'medium', 'large'] },
+		tone: { kind: 'enum', values: ['default', 'danger'] },
+		variant: { kind: 'enum', values: ['ghost', 'primary', 'secondary'] }
+	},
+	card: { variant: { kind: 'enum', values: ['elevated', 'outlined'] } },
+	dataTable: {
+		density: { kind: 'enum', values: ['compact', 'comfortable', 'spacious'] },
+		overscan: { kind: 'integer', minimum: 0 },
+		rowHeight: { exclusiveMinimum: 0, kind: 'number' },
+		selectionMode: { kind: 'enum', values: ['multiple', 'none', 'single'] },
+		stickyHeader: { kind: 'boolean' },
+		striped: { kind: 'boolean' },
+		virtualized: { kind: 'boolean' }
+	},
+	input: { size: { kind: 'enum', values: ['small', 'medium', 'large'] } },
+	pagination: { mode: { kind: 'enum', values: ['compact', 'default', 'simple'] } },
+	tag: {
+		size: { kind: 'enum', values: ['small', 'medium'] },
+		tone: {
+			kind: 'enum',
+			values: ['accent', 'danger', 'default', 'success', 'warning']
+		}
+	}
+} as const satisfies Readonly<Record<string, Readonly<Record<string, ComponentDefaultRule>>>>;
+
+const COMPONENTS = new Set(Object.keys(COMPONENT_RULES));
 const CONTROLLED_OR_UNSAFE = new Set([
+	'checked',
+	'defaultOpen',
+	'defaultPage',
+	'defaultPageSize',
+	'defaultSelectedKeys',
+	'defaultValue',
+	'disabled',
+	'loading',
 	'open',
+	'page',
+	'pageSize',
+	'pressed',
+	'readonly',
+	'removable',
 	'value',
 	'selectedKeys',
 	'expandedKeys',
@@ -76,6 +136,13 @@ function assertPlainRecord(
 	if (prototype !== Object.prototype && prototype !== null) {
 		throw new TypeError(`${location} must be a plain object.`);
 	}
+	for (const key of Reflect.ownKeys(value)) {
+		if (typeof key !== 'string') throw new TypeError(`${location} must not contain symbol keys.`);
+		const descriptor = Object.getOwnPropertyDescriptor(value, key);
+		if (!descriptor?.enumerable || descriptor.get !== undefined || descriptor.set !== undefined) {
+			throw new TypeError(`${location}.${key} must be an enumerable data property.`);
+		}
+	}
 }
 
 function assertPrimitive(
@@ -92,64 +159,25 @@ function assertPrimitive(
 
 function validateProp(component: string, prop: string, value: unknown): void {
 	const location = `componentDefaults.${component}.${prop}`;
-	if (CONTROLLED_OR_UNSAFE.has(prop)) {
-		throw new TypeError(`${location} is controlled or unsafe and cannot be a component default.`);
-	}
 	assertPrimitive(value, location);
-	if (
-		['fullWidth', 'stickyHeader', 'striped', 'virtualized'].includes(prop) &&
-		typeof value !== 'boolean'
-	) {
-		throw new TypeError(`${location} must be a boolean.`);
-	}
-	if (
-		component === 'button' &&
-		prop === 'size' &&
-		!['small', 'medium', 'large'].includes(String(value))
-	) {
-		throw new TypeError(`${location} has an invalid value.`);
-	}
-	if (
-		component === 'button' &&
-		prop === 'shape' &&
-		!['default', 'circle', 'square'].includes(String(value))
-	) {
-		throw new TypeError(`${location} has an invalid value.`);
-	}
-	if (component === 'button' && prop === 'tone' && !['default', 'danger'].includes(String(value))) {
-		throw new TypeError(`${location} has an invalid value.`);
-	}
-	if (
-		component === 'button' &&
-		prop === 'variant' &&
-		!['ghost', 'primary', 'secondary'].includes(String(value))
-	) {
-		throw new TypeError(`${location} has an invalid value.`);
-	}
-	if (
-		component === 'dataTable' &&
-		prop === 'density' &&
-		!['compact', 'comfortable', 'spacious'].includes(String(value))
-	) {
-		throw new TypeError(`${location} has an invalid value.`);
-	}
-	if (
-		component === 'dataTable' &&
-		prop === 'selectionMode' &&
-		!['multiple', 'none', 'single'].includes(String(value))
-	) {
-		throw new TypeError(`${location} has an invalid value.`);
-	}
-	if (component === 'dataTable' && ['overscan', 'rowHeight'].includes(prop)) {
-		if (typeof value !== 'number' || !Number.isFinite(value)) {
-			throw new TypeError(`${location} must be a finite number.`);
-		}
-		if (prop === 'overscan' && (!Number.isInteger(value) || value < 0)) {
-			throw new TypeError(`${location} must be a non-negative integer.`);
-		}
-		if (prop === 'rowHeight' && value <= 0) {
-			throw new TypeError(`${location} must be positive.`);
-		}
+	const rules = COMPONENT_RULES[component as keyof typeof COMPONENT_RULES];
+	const rule = rules?.[prop as keyof typeof rules] as ComponentDefaultRule | undefined;
+	if (!rule) throw new TypeError(`Unknown component default "${component}.${prop}".`);
+	switch (rule.kind) {
+		case 'boolean':
+			if (typeof value !== 'boolean') throw new TypeError(`${location} must be a boolean.`);
+			return;
+		case 'enum':
+			if (typeof value !== 'string' || !rule.values.includes(value))
+				throw new TypeError(`${location} has an invalid value.`);
+			return;
+		case 'integer':
+			if (typeof value !== 'number' || !Number.isInteger(value) || value < rule.minimum)
+				throw new TypeError(`${location} must be an integer of at least ${rule.minimum}.`);
+			return;
+		case 'number':
+			if (typeof value !== 'number' || value <= rule.exclusiveMinimum)
+				throw new TypeError(`${location} must be greater than ${rule.exclusiveMinimum}.`);
 	}
 }
 
@@ -160,7 +188,16 @@ function cloneComponent(
 	assertPlainRecord(value, `componentDefaults.${component}`);
 	const result: Record<string, ComponentDefaultPrimitive> = Object.create(null);
 	for (const [prop, propValue] of Object.entries(value)) {
-		if (!COMPONENT_PROPS[component as keyof typeof COMPONENT_PROPS]?.has(prop as never)) {
+		if (
+			CONTROLLED_OR_UNSAFE.has(prop) ||
+			prop.startsWith('on') ||
+			typeof propValue === 'function'
+		) {
+			throw new TypeError(
+				`componentDefaults.${component}.${prop} is controlled or unsafe and cannot be a component default.`
+			);
+		}
+		if (!Object.hasOwn(COMPONENT_RULES[component as keyof typeof COMPONENT_RULES] ?? {}, prop)) {
 			throw new TypeError(`Unknown component default "${component}.${prop}".`);
 		}
 		if (propValue === undefined) continue;

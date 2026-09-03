@@ -172,12 +172,14 @@
 		media,
 		ref = $bindable(null),
 		style,
-		variant = 'elevated',
+		variant,
 		...rest
 	}: ZCardProps = $props();
 
 	const zui = useZui();
-	const rootClass = $derived(zui.recipe(rootRecipe, { variant }));
+	const componentDefaults = $derived(zui.componentDefaults.card);
+	const resolvedVariant = $derived(variant ?? componentDefaults?.variant ?? 'elevated');
+	const rootClass = $derived(zui.recipe(rootRecipe, { variant: resolvedVariant }));
 	const sectionClass = $derived(zui.recipe(sectionRecipe));
 	const headerClass = $derived(zui.recipe(headerRecipe));
 	const separatedClass = $derived(zui.recipe(separatedRecipe));
@@ -196,7 +198,7 @@
 	use:applyIcssRootStyle={{ style, variables }}
 	aria-busy={loading ? true : ariaBusy}
 	data-loading={loading || undefined}
-	data-variant={variant}
+	data-variant={resolvedVariant}
 >
 	{#if media}<div data-slot="media">{@render media()}</div>{/if}
 	{#if header}<header class={headerClass} data-slot="header">{@render header()}</header>{/if}

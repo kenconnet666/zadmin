@@ -3134,6 +3134,12 @@ describe('compiled ICSS browser updates', () => {
 		);
 		const busyButton = document.querySelector<HTMLButtonElement>('[data-testid="busy-button"]');
 		const table = document.querySelector('[data-testid="default-table"]');
+		const input = document.querySelector('[data-testid="default-input"]');
+		const explicitInput = document.querySelector('[data-testid="explicit-input"]');
+		const localInput = document.querySelector('[data-testid="local-input"]');
+		const tag = document.querySelector('[data-testid="default-tag"]');
+		const card = document.querySelector('[data-testid="default-card"]');
+		const pagination = document.querySelector('[data-testid="default-pagination"]');
 		expect(defaultButton?.dataset.size).toBe('small');
 		expect(defaultButton?.dataset.variant).toBe('secondary');
 		expect(defaultButton?.style.width).toBe('');
@@ -3142,6 +3148,13 @@ describe('compiled ICSS browser updates', () => {
 		expect(busyButton?.disabled).toBe(true);
 		expect(busyButton?.getAttribute('aria-pressed')).toBe('true');
 		expect(table?.getAttribute('data-virtualized')).toBe('true');
+		expect(input?.getAttribute('data-size')).toBe('large');
+		expect(explicitInput?.getAttribute('data-size')).toBe('small');
+		expect(localInput?.getAttribute('data-size')).toBe('small');
+		expect(tag?.getAttribute('data-size')).toBe('small');
+		expect(tag?.getAttribute('data-tone')).toBe('accent');
+		expect(card?.getAttribute('data-variant')).toBe('outlined');
+		expect(pagination?.getAttribute('data-mode')).toBe('simple');
 		expect(table?.querySelectorAll('input[type="checkbox"]').length).toBeGreaterThan(0);
 		await unmount(component);
 	});

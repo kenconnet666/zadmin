@@ -614,12 +614,16 @@ export {
 export type {
 	BrowserStyleSheetOptions,
 	ButtonComponentDefaults,
+	CardComponentDefaults,
 	ComponentDefaultPrimitive,
 	DataTableComponentDefaults,
 	IcssRuntime,
 	IcssRuntimeOptions,
+	InputComponentDefaults,
+	PaginationComponentDefaults,
 	ResolvedZuiComponentDefaults,
 	StyleRegistryMetrics,
+	TagComponentDefaults,
 	ZuiComponentDefaults
 } from './runtime.js';
 export { createStyleProgram, isDynamicSlot } from '../icss/builder.js';
