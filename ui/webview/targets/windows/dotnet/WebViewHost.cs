@@ -246,6 +246,11 @@ public sealed class WebViewHost : IAsyncDisposable
         public bool BackgroundUnchanged { get; set; }
     }
 
+    private sealed class DesktopTooltipFocusEvidence
+    {
+        public bool Focused { get; set; }
+    }
+
     private sealed class DesktopPrimitiveInteractionEvidence
     {
         public string? HeadingLevel { get; set; }
@@ -1205,10 +1210,14 @@ public sealed class WebViewHost : IAsyncDisposable
           const trigger = document.querySelector('[data-desktop-evidence="ZTooltipTrigger-settings"]');
           if (!(trigger instanceof HTMLElement)) return false;
           const sibling = document.querySelector('[data-desktop-evidence="ZTooltip-background-sibling"]');
+          const outside = document.querySelector('[data-desktop-evidence="ZTooltip-outside-focus"]');
+          if (!(outside instanceof HTMLElement)) return false;
           if (!globalThis.__ZADMIN_TOOLTIP_BASELINE__) globalThis.__ZADMIN_TOOLTIP_BASELINE__ = {
             inert: sibling?.inert ?? false, inertAttr: sibling?.getAttribute('inert'), ariaHidden: sibling?.getAttribute('aria-hidden'),
             overflow: document.body?.style.overflow ?? '', paddingInlineEnd: document.body?.style.paddingInlineEnd ?? '', paddingRight: document.body?.style.paddingRight ?? ''
           };
+          outside.focus({ preventScroll: true });
+          if (document.activeElement !== outside) return false;
           trigger.focus();
           return true;
         })()
@@ -1231,6 +1240,14 @@ public sealed class WebViewHost : IAsyncDisposable
           const backgroundUnchanged = Boolean(b && sibling && sibling.inert === b.inert && sibling.getAttribute('inert') === b.inertAttr && sibling.getAttribute('aria-hidden') === b.ariaHidden && document.body?.style.overflow === b.overflow && document.body?.style.paddingInlineEnd === b.paddingInlineEnd && document.body?.style.paddingRight === b.paddingRight);
           const result = { describedByResolved: Boolean(id && content?.id === id), contentRole: content?.getAttribute('role'), presenceEntered: content?.getAttribute('data-presence') === 'entered', reducedMotionObserved: content?.getAttribute('data-reduced-motion') === 'true', openStateObserved: content?.getAttribute('data-state') === 'open', focusOpenObserved: document.activeElement === trigger, backgroundUnchanged };
           return JSON.stringify({ ...result, ready: result.describedByResolved && result.contentRole === 'tooltip' && result.presenceEntered && result.reducedMotionObserved && result.openStateObserved && result.backgroundUnchanged });
+        })()
+        """;
+    private const string ReadTooltipFocusEvidenceScript = """
+        (() => {
+          const trigger = document.querySelector('[data-desktop-evidence="ZTooltipTrigger-settings"]');
+          if (!(trigger instanceof HTMLElement)) return JSON.stringify({ focused: false });
+          trigger.focus({ preventScroll: true });
+          return JSON.stringify({ focused: document.activeElement === trigger });
         })()
         """;
     private const string DismissTooltipEscapeEvidenceScript = """
@@ -1434,13 +1451,16 @@ public sealed class WebViewHost : IAsyncDisposable
         string timeoutMessage)
         where T : class
     {
+        T? lastEvidence = null;
         for (var attempt = 0; attempt < 100; attempt++)
         {
             var evidence = await ExecuteJsonScriptAsync<T>(sender, script);
+            lastEvidence = evidence;
             if (evidence is not null && completed(evidence)) return evidence;
             await Task.Delay(100);
         }
-        throw new TimeoutException(timeoutMessage);
+        throw new TimeoutException(
+            $"{timeoutMessage} Last evidence: {JsonSerializer.Serialize(lastEvidence, SerializerOptions)}");
     }
 
     private static async Task<DesktopEvidenceItem[]> CaptureCurrentDesktopEvidenceAsync(CoreWebView2 sender) =>
@@ -1863,6 +1883,11 @@ public sealed class WebViewHost : IAsyncDisposable
             smokePhase = "validating-tooltip-focus";
             if (await sender.ExecuteScriptAsync(FocusTooltipEvidenceScript) != "true")
                 throw new InvalidOperationException("Desktop Tooltip trigger is unavailable.");
+            _ = await WaitForEvidenceAsync<DesktopTooltipFocusEvidence>(
+                sender,
+                ReadTooltipFocusEvidenceScript,
+                evidence => evidence.Focused,
+                "Desktop Tooltip trigger did not become focused.");
             var tooltipOpen = await WaitForEvidenceAsync<DesktopTooltipEvidence>(
                 sender,
                 ReadTooltipOpenEvidenceScript,
