@@ -92,6 +92,14 @@ export {
 	stableSortRows
 } from '../runtime/collection/data-table.js';
 export type { DataSortDescriptor, DataSortDirection } from '../runtime/collection/data-table.js';
+export { dataQueryFingerprint, normalizeDataQuery } from '../runtime/data-query.js';
+export type {
+	DataQuery,
+	DataQueryFilter,
+	DataQueryFilterOperator,
+	DataQueryScalar,
+	DataQuerySort
+} from '../runtime/data-query.js';
 export { createToastQueue, ToastQueue } from '../runtime/toast.svelte.js';
 export type {
 	ToastDismissReason,

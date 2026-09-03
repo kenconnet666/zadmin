@@ -138,7 +138,8 @@ export const dataTableDoc = defineComponentDoc(dataTableMetadata, {
 			}
 		},
 		summary:
-			'面向后台数据浏览的原生语义DataTable，负责稳定排序、行选择、自定义cell和可选固定行高虚拟化；请求、筛选、分页与异步状态由调用方组合。'
+			'面向后台数据浏览的原生语义DataTable，负责稳定排序、行选择、自定义cell和可选固定行高虚拟化；请求、筛选、分页与异步状态由调用方组合。' +
+			'DataQuery可作为外部owner与ZPagination组合的纯序列化查询描述，不持有请求或缓存。'
 	},
 	demos: [
 		{

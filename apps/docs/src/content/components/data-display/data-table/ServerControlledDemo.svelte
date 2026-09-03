@@ -9,6 +9,7 @@
 		type DataSortDescriptor,
 		type DataTableColumn
 	} from '@zadmin/zui';
+	import { dataQueryFingerprint, normalizeDataQuery } from '@zadmin/zui/runtime';
 
 	interface ServiceRow {
 		id: string;
@@ -40,6 +41,14 @@
 		direction: 'ascending'
 	});
 	let selectedKeys = $state<readonly string[]>(['api']);
+	const query = $derived(
+		normalizeDataQuery({
+			page,
+			pageSize,
+			sort: sort ? [{ field: sort.columnId, direction: sort.direction }] : [],
+			filters: filter.trim() ? [{ field: 'name', operator: 'contains', value: filter.trim() }] : []
+		})
+	);
 	const filteredRows = $derived(
 		allRows.filter((row) =>
 			`${row.name} ${row.owner} ${row.region}`
@@ -83,10 +92,12 @@
 	<ZText aria-live="polite" tone="muted">
 		外部owner：{filteredRows.length}条结果 · 第{page}/{totalPages}页 · sort = {sort
 			? `${sort.columnId}/${sort.direction}`
-			: 'none'} · 跨页selected = {selectedKeys.join(', ') || 'none'}
+			: 'none'} · 跨页selected = {selectedKeys.join(', ') || 'none'} · query = {dataQueryFingerprint(
+			query
+		)}
 	</ZText>
 	<ZText tone="muted">
-		示例用内存数组模拟query/cache层；filter、page、请求和URL状态属于外部owner。sortingMode="server"
+		DataQuery只描述page/pageSize/sort/filters；示例用内存数组模拟query/cache层，真实请求、缓存和URL状态属于外部owner。sortingMode="server"
 		只发出排序意图，不会把当前页错误地二次排序。
 	</ZText>
 	<ZDataTable
