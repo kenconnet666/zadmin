@@ -158,6 +158,29 @@ test('renders the component catalog and real demo source', async ({ page }) => {
 	expect(errors).toEqual([]);
 });
 
+test('exposes API table hierarchy and scroll-region semantics', async ({ page }) => {
+	await gotoComponent(page, 'list');
+	const apiSection = page.locator('main section[id^="api-"]').first();
+	const heading = apiSection.getByRole('heading', { level: 2 }).first();
+	const description = apiSection.locator('p').first();
+	const region = apiSection.getByRole('region');
+	await expect(heading).toBeVisible();
+	const headingId = await heading.getAttribute('id');
+	expect(headingId).toBeTruthy();
+	await expect(region).toHaveAttribute('aria-labelledby', headingId!);
+	if (await description.count()) {
+		const descriptionId = await description.getAttribute('id');
+		expect(descriptionId).toBeTruthy();
+		await expect(region).toHaveAttribute('aria-describedby', descriptionId!);
+	}
+	await expect(region).toHaveAttribute('tabindex', '0');
+	await expect(region.locator('table caption')).toHaveCount(1);
+	await expect(region.locator('th[scope="col"]')).toHaveCount(5);
+	expect(await region.locator('[data-api-depth]').count()).toBeGreaterThan(0);
+	expect(await page.locator('[data-api-required-when]').count()).toBeGreaterThan(0);
+	expect(await page.locator('[data-api-deprecated]').count()).toBeGreaterThan(0);
+});
+
 test('searches every component and guide through the site CommandPalette', async ({ page }) => {
 	await page.goto('/#/');
 	const trigger = page.getByRole('button', { name: '搜索组件与指南', exact: true });

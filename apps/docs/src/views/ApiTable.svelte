@@ -3,8 +3,11 @@
 
 	const apiRecipe = defineSlotRecipe(
 		{
-			slots: ['root', 'title', 'description', 'scroll'] as const,
+			slots: ['root', 'title', 'description', 'scroll', 'depth1', 'depth2', 'depth3'] as const,
 			base: {
+				depth1: (s) => s.paddingInlineStart._medium,
+				depth2: (s) => s.paddingInlineStart._large,
+				depth3: (s) => s.paddingInlineStart._xlarge,
 				description: (s) => {
 					s.color._textMuted;
 					s.lineHeight._relaxed;
@@ -43,24 +46,46 @@
 	let { section }: { section: ApiSection } = $props();
 	const zui = useZui();
 	const classes = $derived(zui.slots(apiRecipe));
-	function flattenedRows(rows: readonly ApiRow[], prefix = ''): ApiRow[] {
+	type FlattenedApiRow = ApiRow & { readonly depth: number };
+	function flattenedRows(rows: readonly ApiRow[], prefix = '', depth = 0): FlattenedApiRow[] {
 		return rows.flatMap((row) => {
 			const name = prefix ? `${prefix}.${row.name}` : row.name;
 			const replacement =
 				row.replacement && !row.replacementExternal && prefix
 					? `${prefix}.${row.replacement}`
 					: row.replacement;
-			return [{ ...row, name, replacement }, ...flattenedRows(row.members ?? [], name)];
+			return [
+				{ ...row, name, replacement, depth },
+				...flattenedRows(row.members ?? [], name, depth + 1)
+			];
 		});
 	}
 	const rows = $derived(flattenedRows(section.rows));
+	const titleId = $derived(`api-${section.id}-title`);
+	const descriptionId = $derived(`api-${section.id}-description`);
+	const depthClass = (depth: number) =>
+		depth <= 0
+			? undefined
+			: depth === 1
+				? classes.depth1
+				: depth === 2
+					? classes.depth2
+					: classes.depth3;
 </script>
 
 <section class={classes.root} id={`api-${section.id}`}>
-	<ZHeading class={classes.title} level={2} size="xlarge">{section.title}</ZHeading>
-	{#if section.description}<p class={classes.description}>{section.description}</p>{/if}
+	<ZHeading class={classes.title} id={titleId} level={2} size="xlarge">{section.title}</ZHeading>
+	{#if section.description}<p class={classes.description} id={descriptionId}>
+			{section.description}
+		</p>{/if}
 	<!-- svelte-ignore a11y_no_noninteractive_tabindex (keyboard focus is required for horizontal scrolling) -->
-	<div class={classes.scroll} role="region" aria-label={`${section.title} API表格`} tabindex="0">
+	<div
+		class={classes.scroll}
+		role="region"
+		aria-labelledby={titleId}
+		aria-describedby={section.description ? descriptionId : undefined}
+		tabindex="0"
+	>
 		<ZTable caption={`${section.title} API`} captionHidden density="compact" scroll="none">
 			{#snippet header()}
 				<tr
@@ -70,8 +95,17 @@
 				>
 			{/snippet}
 			{#each rows as row (row.name)}
-				<tr data-deprecated={row.deprecatedSince ? 'true' : undefined}>
-					<td><ZCode code={row.name} inline /></td>
+				<tr
+					data-deprecated={row.deprecatedSince ? 'true' : undefined}
+					data-api-deprecated={row.deprecatedSince ? 'true' : undefined}
+					data-api-required={row.required ? 'true' : undefined}
+					data-api-required-when={row.requiredWhen ?? undefined}
+					data-api-replacement={row.replacement ?? undefined}
+					data-api-replacement-external={row.replacementExternal ? 'true' : undefined}
+				>
+					<td class={depthClass(row.depth)} data-api-depth={row.depth}>
+						<ZCode code={row.name} inline />
+					</td>
 					<td><ZCode code={row.type} inline /></td>
 					<td><ZCode code={row.default ?? '—'} inline /></td>
 					<td
