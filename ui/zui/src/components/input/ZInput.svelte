@@ -69,7 +69,7 @@
 			},
 			{
 				default:
-					"Field/InputGroup，其次componentDefaults.input.size，最后Provider density（'comfortable' → 'medium'）",
+					"Field/InputGroup，其次componentDefaults.input.size，最后Provider density（'comfortable'映射为'medium'）",
 				description: '输入框尺寸；显式值和最近表单上下文优先于Provider组件默认值与density。',
 				name: 'size',
 				type: "'small' | 'medium' | 'large'"

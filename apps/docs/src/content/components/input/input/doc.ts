@@ -31,7 +31,7 @@ export const inputDoc = defineComponentDoc(inputMetadata, {
 			},
 			size: {
 				default:
-					"Field/InputGroup，其次componentDefaults.input.size，最后Provider density（'comfortable' → 'medium'）",
+					"Field/InputGroup，其次componentDefaults.input.size，最后Provider density（'comfortable'映射为'medium'）",
 				description:
 					'显式尺寸优先，其次继承最近Field/InputGroup，再使用严格Provider组件默认与density。'
 			},
