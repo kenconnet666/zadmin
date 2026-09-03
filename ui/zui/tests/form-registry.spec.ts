@@ -123,4 +123,79 @@ describe('FormRegistry', () => {
 		expect(scrollIntoView).toHaveBeenCalledOnce();
 		expect(registry.focusField('missing')).toBe(false);
 	});
+
+	it('subscribes to real immutable state transitions without an initial emission', async () => {
+		const registry = new FormRegistry();
+		const unregisterFirst = register(registry, 'first', 'account');
+		const unregisterSecond = register(registry, 'second', 'account');
+		const listener = vi.fn();
+		const unsubscribe = registry.subscribeField('account', listener);
+
+		expect(listener).not.toHaveBeenCalled();
+		registry.markDirty('first');
+		registry.markDirty('first');
+		registry.markTouched('second');
+		const validation = registry.beginValidation([['account']]);
+		registry.finishValidation(validation, { account: ['Invalid'] });
+		registry.syncErrors({ account: ['Invalid'] });
+		registry.reset();
+
+		expect(listener).toHaveBeenCalledTimes(5);
+		for (const [state] of listener.mock.calls) {
+			expect(Object.isFrozen(state)).toBe(true);
+			expect(Object.isFrozen(state.errors)).toBe(true);
+			expect(Object.isFrozen(state.warnings)).toBe(true);
+		}
+		expect(listener.mock.calls.map(([state]) => state)).toEqual([
+			expect.objectContaining({ dirty: true }),
+			expect.objectContaining({ dirty: true, touched: true }),
+			expect.objectContaining({ validating: true }),
+			expect.objectContaining({ validating: false, errors: ['Invalid'] }),
+			expect.objectContaining({ dirty: false, touched: false, errors: [] })
+		]);
+
+		unsubscribe();
+		unsubscribe();
+		registry.markDirty('first');
+		expect(listener).toHaveBeenCalledTimes(5);
+		unregisterFirst();
+		unregisterSecond();
+		await Promise.resolve();
+		registry.markDirty('first');
+		expect(listener).toHaveBeenCalledTimes(5);
+	});
+
+	it('isolates listener exceptions and clears all listeners after the last instance unmounts', async () => {
+		const registry = new FormRegistry();
+		const unregister = register(registry, 'account', 'account');
+		const broken = vi.fn(() => {
+			throw new Error('consumer failure');
+		});
+		const healthy = vi.fn();
+		registry.subscribeField('account', broken);
+		registry.subscribeField('account', healthy);
+
+		registry.markTouched('account');
+		expect(broken).toHaveBeenCalledOnce();
+		expect(healthy).toHaveBeenCalledOnce();
+		expect(registry.state('account').touched).toBe(true);
+
+		unregister();
+		await Promise.resolve();
+		const fresh = register(registry, 'account-again', 'account');
+		registry.markDirty('account-again');
+		expect(broken).toHaveBeenCalledOnce();
+		expect(healthy).toHaveBeenCalledOnce();
+		fresh();
+	});
+
+	it('normalizes equivalent paths and rejects non-function listeners', () => {
+		const registry = new FormRegistry();
+		register(registry, 'account', ['users', 0, 'account']);
+		const listener = vi.fn();
+		registry.subscribeField(['users', 0, 'account'], listener);
+		registry.markDirty('account');
+		expect(listener).toHaveBeenCalledOnce();
+		expect(() => registry.subscribeField('account', null as never)).toThrow(/listener/u);
+	});
 });

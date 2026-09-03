@@ -21,6 +21,9 @@ export interface FormFieldState {
 
 export type FormFieldStatePatch = Partial<Pick<FormFieldState, 'errors' | 'success' | 'warnings'>>;
 
+/** Observes committed field-state transitions; it never owns or exposes field values. */
+export type FormFieldStateListener = (state: FormFieldState) => void;
+
 export interface FormFieldRegistration {
 	readonly control: () => HTMLElement | null;
 	readonly dependencies?: readonly FieldPathInput[];
@@ -64,6 +67,19 @@ function freezeState(state: FormFieldState): FormFieldState {
 	});
 }
 
+function sameFieldState(left: FormFieldState, right: FormFieldState): boolean {
+	return (
+		left.dirty === right.dirty &&
+		left.touched === right.touched &&
+		left.validating === right.validating &&
+		left.success === right.success &&
+		left.errors.length === right.errors.length &&
+		left.errors.every((error, index) => error === right.errors[index]) &&
+		left.warnings.length === right.warnings.length &&
+		left.warnings.every((warning, index) => warning === right.warnings[index])
+	);
+}
+
 function compareDocumentOrder(left: HTMLElement, right: HTMLElement): number {
 	if (left === right || left.ownerDocument !== right.ownerDocument) return 0;
 	const position = left.compareDocumentPosition(right);
@@ -84,6 +100,9 @@ export class FormRegistry {
 	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	readonly #paths = new Map<string, FieldPath>();
 	readonly #states = new SvelteMap<string, FormFieldState>();
+	// Subscribers observe immutable state snapshots; the registry remains the only state owner.
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
+	readonly #listeners = new Map<string, Set<FormFieldStateListener>>();
 	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	readonly #validationVersions = new Map<string, number>();
 	// eslint-disable-next-line svelte/prefer-svelte-reactivity
@@ -157,6 +176,7 @@ export class FormRegistry {
 				this.#pathInstances.delete(key);
 				this.#paths.delete(key);
 				this.#states.delete(key);
+				this.#listeners.delete(key);
 				this.#validationVersions.set(key, (this.#validationVersions.get(key) ?? 0) + 1);
 				this.#onPathUnmount?.(path);
 			});
@@ -165,6 +185,33 @@ export class FormRegistry {
 
 	state(path: FieldPathInput): FormFieldState {
 		return this.#states.get(fieldPathKey(path)) ?? INITIAL_STATE;
+	}
+
+	/**
+	 * Subscribes to future state transitions for a field path. There is deliberately no initial
+	 * emission: callers can synchronously read `state(path)` for the current snapshot. A listener
+	 * is removed automatically when the path has no registered instances left; no synthetic
+	 * unmounted state is emitted. The returned unsubscribe is idempotent, and listener exceptions
+	 * never abort a registry mutation or notification of other listeners.
+	 */
+	subscribeField(path: FieldPathInput, listener: FormFieldStateListener): () => void {
+		if (typeof listener !== 'function')
+			throw new TypeError('Form field listener must be a function.');
+		const key = fieldPathKey(path);
+		// Listener membership is imperative lifecycle state and never drives rendering.
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
+		const listeners = this.#listeners.get(key) ?? new Set<FormFieldStateListener>();
+		listeners.add(listener);
+		this.#listeners.set(key, listeners);
+		let active = true;
+		return () => {
+			if (!active) return;
+			active = false;
+			const current = this.#listeners.get(key);
+			if (!current) return;
+			current.delete(listener);
+			if (current.size === 0) this.#listeners.delete(key);
+		};
 	}
 
 	registeredPaths(): readonly FieldPath[] {
@@ -267,7 +314,7 @@ export class FormRegistry {
 	reset(): void {
 		this.cancelValidation();
 		this.#errors = Object.freeze({});
-		for (const key of this.#paths.keys()) this.#states.set(key, INITIAL_STATE);
+		for (const key of this.#paths.keys()) this.#setState(key, INITIAL_STATE);
 	}
 
 	focusField(path: FieldPathInput, options: FocusOptions = { preventScroll: true }): boolean {
@@ -322,6 +369,21 @@ export class FormRegistry {
 
 	#patch(key: string, patch: Partial<FormFieldState>): void {
 		const current = this.#states.get(key);
-		if (current) this.#states.set(key, freezeState({ ...current, ...patch }));
+		if (current) this.#setState(key, freezeState({ ...current, ...patch }));
+	}
+
+	#setState(key: string, next: FormFieldState): void {
+		const current = this.#states.get(key);
+		if (current && sameFieldState(current, next)) return;
+		this.#states.set(key, next);
+		const listeners = this.#listeners.get(key);
+		if (!listeners) return;
+		for (const listener of [...listeners]) {
+			try {
+				listener(next);
+			} catch {
+				// Consumer listeners must not break registry state transitions or sibling listeners.
+			}
+		}
 	}
 }
