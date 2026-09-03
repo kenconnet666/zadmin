@@ -64,7 +64,15 @@ export function evaluateReleaseCoherence({
 		releaseRequiresSuccessfulMasterPush:
 			/workflow_run\.conclusion == 'success'/u.test(release) &&
 			/workflow_run\.event == 'push'/u.test(release) &&
-			/workflow_run\.head_branch == 'master'/u.test(release)
+			/workflow_run\.head_branch == 'master'/u.test(release),
+		releaseArtifactBinding:
+			/verify-artifacts:/u.test(release) &&
+			/needs:\s*verify-artifacts/u.test(release) &&
+			/name:\s*release-consumer-artifacts-\$\{\{ github\.event\.workflow_run\.head_sha \}\}/u.test(
+				release
+			) &&
+			/name:\s*workspace-build-\$\{\{ github\.event\.workflow_run\.head_sha \}\}/u.test(release) &&
+			/run-id:\s*\$\{\{ github\.event\.workflow_run\.id \}\}/gu.test(release)
 	};
 }
 
@@ -106,7 +114,7 @@ if (process.argv.includes('--self-test')) {
 		{
 			check: 'releaseUsesWorkflowSha',
 			input: {
-				release: sources.release.replace(
+				release: sources.release.replaceAll(
 					'github.event.workflow_run.head_sha',
 					'github.event.workflow_run.head_branch'
 				)

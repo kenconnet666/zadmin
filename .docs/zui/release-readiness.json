@@ -111,6 +111,7 @@
 	"checks": {
 		"workflowChecksExactSha": true,
 		"workflowRequiresCiSuccess": true,
+		"releaseWorkflowArtifactBinding": true,
 		"changesetsConfigured": true,
 		"changesetTargetsKnown": true,
 		"packageCheckPresent": true,

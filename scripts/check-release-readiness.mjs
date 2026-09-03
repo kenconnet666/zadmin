@@ -104,6 +104,16 @@ const checks = {
 		workflow
 	),
 	workflowRequiresCiSuccess: /workflow_run\.conclusion == 'success'/u.test(workflow),
+	releaseWorkflowArtifactBinding:
+		/verify-artifacts:/u.test(workflow) &&
+		/needs:\s*verify-artifacts/u.test(workflow) &&
+		/name:\s*release-consumer-artifacts-\$\{\{ github\.event\.workflow_run\.head_sha \}\}/u.test(
+			workflow
+		) &&
+		/name:\s*workspace-build-\$\{\{ github\.event\.workflow_run\.head_sha \}\}/u.test(workflow) &&
+		/run-id:\s*\$\{\{ github\.event\.workflow_run\.id \}\}/gu.test(workflow) &&
+		/prepare-release-handoff\.mjs[\s\S]*--verify-plan=/u.test(workflow) &&
+		/verify-versioned-docs-artifact\.mjs[\s\S]*--revision=/u.test(workflow),
 	changesetsConfigured:
 		changesetConfig.access === 'public' && changesetConfig.baseBranch === 'master',
 	changesetTargetsKnown:

@@ -7,6 +7,7 @@
 
 - `workflowChecksExactSha`
 - `workflowRequiresCiSuccess`
+- `releaseWorkflowArtifactBinding`
 - `changesetsConfigured`
 - `changesetTargetsKnown`
 - `packageCheckPresent`

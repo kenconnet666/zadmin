@@ -6,8 +6,8 @@ on:
     types: [completed]
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
+  actions: read
 
 concurrency:
   group: release-pr-${{ github.event.workflow_run.head_branch }}
@@ -18,6 +18,53 @@ env:
   PNPM_VERSION: '11.22.0'
 
 jobs:
+  verify-artifacts:
+    name: Verify CI release artifacts
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - name: Checkout verified revision
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Download release consumer artifacts from CI run
+        uses: actions/download-artifact@v7
+        with:
+          name: release-consumer-artifacts-${{ github.event.workflow_run.head_sha }}
+          path: .release-artifacts-consumer
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Verify downloaded release handoff plan
+        run: >-
+          node scripts/prepare-release-handoff.mjs
+          --directory=.release-artifacts-consumer
+          --revision="${{ github.event.workflow_run.head_sha }}"
+          --verify-plan=.release-artifacts-consumer/release-handoff.json
+
+      - name: Download workspace build artifacts from CI run
+        uses: actions/download-artifact@v7
+        with:
+          name: workspace-build-${{ github.event.workflow_run.head_sha }}
+          path: .versioned-docs-consumer
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Verify downloaded versioned Docs artifact
+        run: >-
+          node apps/docs/scripts/verify-versioned-docs-artifact.mjs
+          --dist=.versioned-docs-consumer/apps/docs/dist
+          --revision="${{ github.event.workflow_run.head_sha }}"
+
   version:
     name: Create or update Changesets release PR
     if: >-
@@ -25,6 +72,10 @@ jobs:
       github.event.workflow_run.event == 'push' &&
       github.event.workflow_run.head_branch == 'master'
     runs-on: ubuntu-latest
+    needs: verify-artifacts
+    permissions:
+      contents: write
+      pull-requests: write
     timeout-minutes: 15
     steps:
       - name: Checkout verified revision
