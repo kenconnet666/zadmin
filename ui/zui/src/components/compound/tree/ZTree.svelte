@@ -150,7 +150,25 @@
 				description: '完整扁平业务节点；parentKey建立层级，hasChildren声明未加载branch。',
 				name: 'nodes',
 				required: true,
-				type: 'readonly TreeNode<TKey>[]'
+				type: 'readonly TreeNode<TKey>[]',
+				members: [
+					{
+						description: '节点唯一业务key；保留TKey类型身份。',
+						name: 'key',
+						type: 'TKey',
+						required: true
+					},
+					{ description: '显示标签。', name: 'label', type: 'string', required: true },
+					{ description: '父节点key；根节点省略。', name: 'parentKey', type: 'TKey' },
+					{ description: '声明存在尚未加载的子节点。', name: 'hasChildren', type: 'boolean' },
+					{ description: '禁用该节点。', name: 'disabled', type: 'boolean' },
+					{ description: '禁止选择但允许导航。', name: 'selectionDisabled', type: 'boolean' },
+					{
+						description: '搜索/typeahead文本；省略时回退label。',
+						name: 'textValue',
+						type: 'string'
+					}
+				]
 			},
 			{
 				default: 'Provider localePack.collection.empty',

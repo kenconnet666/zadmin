@@ -203,7 +203,29 @@
 				default: '[]',
 				description: '含id、File、status、progress和error的受控队列。',
 				name: 'files',
-				type: 'readonly FileUploadItem[]'
+				type: 'readonly FileUploadItem[]',
+				members: [
+					{ description: '稳定文件业务身份。', name: 'id', type: 'string', required: true },
+					{
+						description: '浏览器File对象；传输响应不属于队列项。',
+						name: 'file',
+						type: 'File',
+						required: true
+					},
+					{ description: '队列状态。', name: 'status', type: 'FileUploadStatus', required: true },
+					{
+						description: '确定进度，范围0–100。',
+						name: 'progress',
+						type: 'number',
+						required: true
+					},
+					{
+						description: '错误详情，仅错误状态存在。',
+						name: 'error',
+						type: 'string',
+						requiredWhen: "status === 'error'"
+					}
+				]
 			},
 			{
 				default: '[]',

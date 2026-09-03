@@ -89,7 +89,13 @@
 				default: 'undefined（compound模式）',
 				description: '权威typed-key数据源，支持分组与异步结果替换。',
 				name: 'options',
-				type: 'readonly ZComboboxOption[]'
+				type: 'readonly ZComboboxOption[]',
+				members: [
+					{ description: '选项唯一业务值。', name: 'value', type: 'SelectionKey', required: true },
+					{ description: '选项显示文本。', name: 'label', type: 'string', required: true },
+					{ description: '禁用该选项。', name: 'disabled', type: 'boolean' },
+					{ description: '连续分组标签。', name: 'group', type: 'string' }
+				]
 			},
 			{
 				bindable: true,

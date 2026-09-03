@@ -73,7 +73,16 @@
 				description: '传给ZCommand的命令集合。',
 				name: 'items',
 				required: true,
-				type: 'readonly CommandItem[]'
+				type: 'readonly CommandItem[]',
+				members: [
+					{ description: '唯一业务身份。', name: 'key', type: 'SelectionKey', required: true },
+					{ description: '命令显示文本。', name: 'label', type: 'string', required: true },
+					{ description: '命令补充说明。', name: 'description', type: 'string' },
+					{ description: '连续分组标签。', name: 'group', type: 'string' },
+					{ description: 'typeahead匹配关键词。', name: 'keywords', type: 'readonly string[]' },
+					{ description: '键盘快捷键展示文本。', name: 'shortcut', type: 'string' },
+					{ description: '禁止执行该命令。', name: 'disabled', type: 'boolean' }
+				]
 			},
 			{
 				default: 'Provider localePack.common.close',

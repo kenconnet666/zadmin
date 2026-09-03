@@ -106,7 +106,13 @@
 				default: 'undefined（compound模式）',
 				description: '权威数据源；提供后Content从完整typed-key集合渲染、分组并支持异步替换。',
 				name: 'options',
-				type: 'readonly ZMultiSelectOption[]'
+				type: 'readonly ZMultiSelectOption[]',
+				members: [
+					{ description: '选项唯一业务值。', name: 'value', type: 'SelectionKey', required: true },
+					{ description: '选项显示文本。', name: 'label', type: 'string', required: true },
+					{ description: '禁用该选项。', name: 'disabled', type: 'boolean' },
+					{ description: '连续分组标签。', name: 'group', type: 'string' }
+				]
 			},
 			{
 				bindable: true,

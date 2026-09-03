@@ -118,7 +118,25 @@
 				description: '扁平typed层级事实源；支持hasChildren声明lazy branch。',
 				name: 'nodes',
 				required: true,
-				type: 'readonly TreeNode[]'
+				type: 'readonly TreeNode[]',
+				members: [
+					{
+						description: '节点唯一业务key；保留string/number类型身份。',
+						name: 'key',
+						type: 'TKey',
+						required: true
+					},
+					{ description: '显示标签。', name: 'label', type: 'string', required: true },
+					{ description: '父节点key；根节点省略。', name: 'parentKey', type: 'TKey' },
+					{ description: '声明存在尚未加载的子节点。', name: 'hasChildren', type: 'boolean' },
+					{ description: '禁用该节点。', name: 'disabled', type: 'boolean' },
+					{ description: '禁止选择但允许导航。', name: 'selectionDisabled', type: 'boolean' },
+					{
+						description: '搜索/typeahead文本；省略时回退label。',
+						name: 'textValue',
+						type: 'string'
+					}
+				]
 			},
 			{
 				bindable: true,
