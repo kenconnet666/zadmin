@@ -113,6 +113,7 @@
 		"workflowRequiresCiSuccess": true,
 		"releaseWorkflowArtifactBinding": true,
 		"desktopArtifactReleaseBinding": true,
+		"releaseVersionUsesGitCli": true,
 		"changesetsConfigured": true,
 		"changesetTargetsKnown": true,
 		"packageCheckPresent": true,

@@ -9,6 +9,7 @@
 - `workflowRequiresCiSuccess`
 - `releaseWorkflowArtifactBinding`
 - `desktopArtifactReleaseBinding`
+- `releaseVersionUsesGitCli`
 - `changesetsConfigured`
 - `changesetTargetsKnown`
 - `packageCheckPresent`

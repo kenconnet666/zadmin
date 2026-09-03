@@ -129,6 +129,8 @@ const checks = {
 		desktopArtifactVerifier.includes("path !== '.docs/zui/component-maturity.json'") &&
 		desktopArtifactVerifier.includes('maturity summary baseline was modified') &&
 		desktopArtifactVerifier.includes('runtime maturity baseline was modified'),
+	releaseVersionUsesGitCli:
+		/uses:\s*changesets\/action\/version@v2[\s\S]*push-with-git-cli:\s*true/u.test(workflow),
 	changesetsConfigured:
 		changesetConfig.access === 'public' && changesetConfig.baseBranch === 'master',
 	changesetTargetsKnown:

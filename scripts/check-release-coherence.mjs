@@ -77,7 +77,9 @@ export function evaluateReleaseCoherence({
 			/name:\s*desktop-windows-\$\{\{ github\.event\.workflow_run\.head_sha \}\}/u.test(release) &&
 			/run-id:\s*\$\{\{ github\.event\.workflow_run\.id \}\}/u.test(release) &&
 			/verify-desktop-artifact\.mjs/u.test(release) &&
-			/name:\s*desktop-windows-\$\{\{ github\.sha \}\}/u.test(ci)
+			/name:\s*desktop-windows-\$\{\{ github\.sha \}\}/u.test(ci),
+		releaseVersionUsesGitCli:
+			/uses:\s*changesets\/action\/version@v2[\s\S]*push-with-git-cli:\s*true/u.test(release)
 	};
 }
 
@@ -146,6 +148,12 @@ if (process.argv.includes('--self-test')) {
 					'desktop-windows-${{ github.event.workflow_run.head_sha }}',
 					'desktop-windows-${{ github.event.workflow_run.head_branch }}'
 				)
+			}
+		},
+		{
+			check: 'releaseVersionUsesGitCli',
+			input: {
+				release: sources.release.replace('push-with-git-cli: true', 'push-with-git-cli: false')
 			}
 		}
 	];
