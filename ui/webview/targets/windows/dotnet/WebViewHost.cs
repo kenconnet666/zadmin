@@ -47,6 +47,22 @@ public sealed class WebViewHost : IAsyncDisposable
         public string? FormDataEnabled { get; set; }
     }
 
+    private sealed class DesktopChoiceInteractionEvidence
+    {
+        public bool Ready { get; set; }
+        public bool SwitchChecked { get; set; }
+        public string? SwitchState { get; set; }
+        public string? SwitchAriaChecked { get; set; }
+        public bool SwitchLabelled { get; set; }
+        public string? SwitchFormData { get; set; }
+        public string? RadioValue { get; set; }
+        public bool AdvancedChecked { get; set; }
+        public string? AdvancedState { get; set; }
+        public string? AdvancedAriaChecked { get; set; }
+        public bool AdvancedFocused { get; set; }
+        public bool DisabledSkipped { get; set; }
+    }
+
     private static readonly JsonSerializerOptions SerializerOptions = new(JsonSerializerDefaults.Web);
     private const string CaptureDesktopEvidenceScript = """
         (() => {
@@ -63,6 +79,7 @@ public sealed class WebViewHost : IAsyncDisposable
                 disabled: node?.hasAttribute('disabled') ?? false,
                 text: node?.textContent?.trim() ?? '',
                 ariaLive: node?.getAttribute('aria-live') ?? null,
+                role: node?.getAttribute('role') ?? null,
                 name: node?.getAttribute('name') ?? null,
                 value: node?.value ?? null,
                 checked: node?.checked ?? false,
@@ -71,6 +88,9 @@ public sealed class WebViewHost : IAsyncDisposable
                 noValidate: node?.noValidate ?? false,
                 ariaInvalid: node?.getAttribute('aria-invalid') ?? null,
                 ariaDescribedBy: node?.getAttribute('aria-describedby') ?? null,
+                ariaChecked: node?.getAttribute('aria-checked') ?? null,
+                ariaOrientation: node?.getAttribute('aria-orientation') ?? null,
+                tabIndex: node?.tabIndex ?? null,
                 dataState: node?.getAttribute('data-state') ?? null
               }
             };
@@ -166,6 +186,61 @@ public sealed class WebViewHost : IAsyncDisposable
               result.submitCount === 1 &&
               result.formDataEmail === 'desktop-value' &&
               result.formDataEnabled === 'enabled'
+          });
+        })()
+        """;
+    private const string RunChoiceEvidenceScript = """
+        (() => {
+          const switchControl = document.querySelector('[data-desktop-evidence="ZSwitch-enabled"]');
+          const group = document.querySelector('[data-desktop-evidence="ZRadioGroup-mode"]');
+          const standard = group?.querySelector('input[type="radio"][value="standard"]');
+          if (!(switchControl instanceof HTMLInputElement) ||
+              !(group instanceof HTMLElement) ||
+              !(standard instanceof HTMLInputElement)) return false;
+          switchControl.click();
+          standard.focus();
+          standard.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
+          return true;
+        })()
+        """;
+    private const string ReadChoiceEvidenceScript = """
+        (() => {
+          const form = document.querySelector('[data-desktop-evidence="ZForm-contract"]');
+          const switchControl = document.querySelector('[data-desktop-evidence="ZSwitch-enabled"]');
+          const group = document.querySelector('[data-desktop-evidence="ZRadioGroup-mode"]');
+          const disabled = group?.querySelector('input[type="radio"][value="disabled"]');
+          const advanced = document.querySelector(
+            '[data-desktop-evidence="ZRadioGroupItem-advanced"]'
+          );
+          const data = form instanceof HTMLFormElement ? new FormData(form) : null;
+          const result = {
+            switchChecked: switchControl instanceof HTMLInputElement && switchControl.checked,
+            switchState: switchControl?.getAttribute('data-state') ?? null,
+            switchAriaChecked: switchControl?.getAttribute('aria-checked') ?? null,
+            switchLabelled:
+              switchControl instanceof HTMLInputElement && (switchControl.labels?.length ?? 0) > 0,
+            switchFormData: data?.get('switchEnabled') ?? null,
+            radioValue: data?.get('mode') ?? null,
+            advancedChecked: advanced instanceof HTMLInputElement && advanced.checked,
+            advancedState: advanced?.getAttribute('data-state') ?? null,
+            advancedAriaChecked: advanced?.getAttribute('aria-checked') ?? null,
+            advancedFocused: document.activeElement === advanced,
+            disabledSkipped: disabled instanceof HTMLInputElement && !disabled.checked
+          };
+          return JSON.stringify({
+            ...result,
+            ready:
+              result.switchChecked &&
+              result.switchState === 'checked' &&
+              result.switchAriaChecked === 'true' &&
+              result.switchLabelled &&
+              result.switchFormData === 'enabled' &&
+              result.radioValue === 'advanced' &&
+              result.advancedChecked &&
+              result.advancedState === 'checked' &&
+              result.advancedAriaChecked === 'true' &&
+              result.advancedFocused &&
+              result.disabledSkipped
           });
         })()
         """;
@@ -440,6 +515,20 @@ public sealed class WebViewHost : IAsyncDisposable
             }
             if (formInteraction?.Ready != true)
                 throw new TimeoutException("Desktop form components did not complete their observable interactions.");
+            smokePhase = "validating-choice-interaction";
+            if (await sender.ExecuteScriptAsync(RunChoiceEvidenceScript) != "true")
+                throw new InvalidOperationException("Desktop choice evidence controls are unavailable.");
+            DesktopChoiceInteractionEvidence? choiceInteraction = null;
+            for (var attempt = 0; attempt < 100; attempt++)
+            {
+                var choiceValue = await sender.ExecuteScriptAsync(ReadChoiceEvidenceScript);
+                var choiceJson = JsonSerializer.Deserialize<string>(choiceValue) ?? "{}";
+                choiceInteraction = JsonSerializer.Deserialize<DesktopChoiceInteractionEvidence>(choiceJson, SerializerOptions);
+                if (choiceInteraction?.Ready == true) break;
+                await Task.Delay(100);
+            }
+            if (choiceInteraction?.Ready != true)
+                throw new TimeoutException("Desktop choice components did not complete their observable interactions.");
             var pageAfterValue = await sender.ExecuteScriptAsync(ReadStatusScript);
             smokePhase = "writing-report";
             var report = new
@@ -453,7 +542,8 @@ public sealed class WebViewHost : IAsyncDisposable
                 target = "windows-x64",
                 host = new { runtime = "WebView2", implementation = "WebViewHost", origin = evidenceBefore.Origin, webViewVersion = _webViewVersion, protocolVersion = WebViewProtocol.Version, navigation = true, hydrated = true, bridge = evidenceBefore.HasBridge, bridgeResponseValidated, pageErrors = evidenceBefore.Errors, source = _webview.Source?.ToString() },
                 components = evidenceBefore.DesktopEvidence,
-                formInteraction
+                formInteraction,
+                choiceInteraction
             };
             Directory.CreateDirectory(Path.GetDirectoryName(_options.SmokeReportPath)!);
             await WriteSmokeReportAsync(

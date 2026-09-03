@@ -193,6 +193,149 @@ export const desktopComponentContracts = Object.freeze([
 				}
 			]
 		}
+	},
+	{
+		id: 'switch',
+		name: 'ZSwitch',
+		marker: 'ZSwitch-enabled',
+		native: {
+			tag: 'INPUT',
+			type: 'checkbox',
+			role: 'switch',
+			disabled: false,
+			name: 'switchEnabled',
+			value: 'enabled',
+			checked: false,
+			ariaChecked: 'false',
+			dataState: 'unchecked'
+		},
+		interaction: {
+			id: 'toggle-switch',
+			action: 'click',
+			target: 'root',
+			observations: [
+				{
+					id: 'checked',
+					kind: 'state',
+					target: 'checked',
+					expected: true,
+					read: (raw) => raw.choiceInteraction.switchChecked
+				},
+				{
+					id: 'data-state',
+					kind: 'state',
+					target: 'data-state',
+					expected: 'checked',
+					read: (raw) => raw.choiceInteraction.switchState
+				},
+				{
+					id: 'aria-checked',
+					kind: 'aria',
+					target: 'aria-checked',
+					expected: 'true',
+					read: (raw) => raw.choiceInteraction.switchAriaChecked
+				},
+				{
+					id: 'label-relation',
+					kind: 'relationship',
+					target: 'labels',
+					expected: true,
+					read: (raw) => raw.choiceInteraction.switchLabelled
+				},
+				{
+					id: 'form-data',
+					kind: 'form-data',
+					target: 'switchEnabled',
+					expected: 'enabled',
+					read: (raw) => raw.choiceInteraction.switchFormData
+				}
+			]
+		}
+	},
+	{
+		id: 'radio-group',
+		name: 'ZRadioGroup',
+		marker: 'ZRadioGroup-mode',
+		native: { tag: 'DIV', role: 'radiogroup', ariaOrientation: 'vertical' },
+		interaction: {
+			id: 'arrow-select',
+			action: 'key:ArrowDown',
+			target: 'descendant:value=standard',
+			observations: [
+				{
+					id: 'selected-value',
+					kind: 'form-data',
+					target: 'mode',
+					expected: 'advanced',
+					read: (raw) => raw.choiceInteraction.radioValue
+				},
+				{
+					id: 'disabled-skipped',
+					kind: 'state',
+					target: 'disabled-option',
+					expected: true,
+					read: (raw) => raw.choiceInteraction.disabledSkipped
+				},
+				{
+					id: 'focus-moved',
+					kind: 'relationship',
+					target: 'activeElement',
+					expected: true,
+					read: (raw) => raw.choiceInteraction.advancedFocused
+				}
+			]
+		}
+	},
+	{
+		id: 'radio-group-item',
+		name: 'ZRadioGroupItem',
+		marker: 'ZRadioGroupItem-advanced',
+		native: {
+			tag: 'INPUT',
+			type: 'radio',
+			disabled: false,
+			name: 'mode',
+			value: 'advanced',
+			checked: false,
+			ariaChecked: 'false',
+			tabIndex: -1,
+			dataState: 'unchecked'
+		},
+		interaction: {
+			id: 'receive-group-selection',
+			action: 'keyboard-selection',
+			target: 'root',
+			observations: [
+				{
+					id: 'checked',
+					kind: 'state',
+					target: 'checked',
+					expected: true,
+					read: (raw) => raw.choiceInteraction.advancedChecked
+				},
+				{
+					id: 'data-state',
+					kind: 'state',
+					target: 'data-state',
+					expected: 'checked',
+					read: (raw) => raw.choiceInteraction.advancedState
+				},
+				{
+					id: 'aria-checked',
+					kind: 'aria',
+					target: 'aria-checked',
+					expected: 'true',
+					read: (raw) => raw.choiceInteraction.advancedAriaChecked
+				},
+				{
+					id: 'focused',
+					kind: 'relationship',
+					target: 'activeElement',
+					expected: true,
+					read: (raw) => raw.choiceInteraction.advancedFocused
+				}
+			]
+		}
 	}
 ]);
 const contractsByName = new Map(
@@ -435,6 +578,7 @@ export function validateDesktopEvidence(raw, { expectedRevision } = {}) {
 	)
 		fail('component interaction did not produce exactly one observable state transition.');
 	if (raw.formInteraction?.ready !== true) fail('form interaction evidence is incomplete.');
+	if (raw.choiceInteraction?.ready !== true) fail('choice interaction evidence is incomplete.');
 	for (const contract of desktopComponentContracts)
 		for (const observation of contract.interaction?.observations ?? [])
 			if (observation.read(raw) !== observation.expected)
@@ -577,6 +721,20 @@ if (isMain && process.argv.includes('--self-test')) {
 			formDataEmail: 'desktop-value',
 			formDataEnabled: 'enabled'
 		},
+		choiceInteraction: {
+			ready: true,
+			switchChecked: true,
+			switchState: 'checked',
+			switchAriaChecked: 'true',
+			switchLabelled: true,
+			switchFormData: 'enabled',
+			radioValue: 'advanced',
+			advancedChecked: true,
+			advancedState: 'checked',
+			advancedAriaChecked: 'true',
+			advancedFocused: true,
+			disabledSkipped: true
+		},
 		components: [
 			{
 				name: 'ZBox',
@@ -636,6 +794,44 @@ if (isMain && process.argv.includes('--self-test')) {
 					checked: false,
 					dataState: 'unchecked'
 				}
+			},
+			{
+				name: 'ZSwitch',
+				marker: 'ZSwitch-enabled',
+				present: true,
+				native: {
+					tag: 'INPUT',
+					type: 'checkbox',
+					role: 'switch',
+					disabled: false,
+					name: 'switchEnabled',
+					value: 'enabled',
+					checked: false,
+					ariaChecked: 'false',
+					dataState: 'unchecked'
+				}
+			},
+			{
+				name: 'ZRadioGroup',
+				marker: 'ZRadioGroup-mode',
+				present: true,
+				native: { tag: 'DIV', role: 'radiogroup', ariaOrientation: 'vertical' }
+			},
+			{
+				name: 'ZRadioGroupItem',
+				marker: 'ZRadioGroupItem-advanced',
+				present: true,
+				native: {
+					tag: 'INPUT',
+					type: 'radio',
+					disabled: false,
+					name: 'mode',
+					value: 'advanced',
+					checked: false,
+					ariaChecked: 'false',
+					tabIndex: -1,
+					dataState: 'unchecked'
+				}
 			}
 		]
 	};
@@ -669,9 +865,14 @@ if (isMain && process.argv.includes('--self-test')) {
 		'component interaction'
 	);
 	expectFailure(
+		'choice interaction failure',
+		{ ...sample, choiceInteraction: { ...sample.choiceInteraction, ready: false } },
+		'choice interaction'
+	);
+	expectFailure(
 		'incomplete component set',
 		{ ...sample, components: sample.components.slice(0, 3) },
-		'exactly 8'
+		`exactly ${desktopComponentContracts.length}`
 	);
 	expectFailure('revision mismatch', sample, 'revision does not match expected', {
 		expectedRevision: 'b'.repeat(40)

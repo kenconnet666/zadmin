@@ -7,7 +7,10 @@
 		ZForm,
 		ZFormField,
 		ZInput,
+		ZRadioGroup,
+		ZRadioGroupItem,
 		ZStack,
+		ZSwitch,
 		ZText,
 		defaultTheme,
 		icss
@@ -209,6 +212,33 @@
 					/>
 					Enable desktop evidence
 				</label>
+				<label>
+					<ZSwitch
+						data-desktop-component="ZSwitch"
+						data-desktop-evidence="ZSwitch-enabled"
+						name="switchEnabled"
+						value="enabled"
+					/>
+					Enable switch evidence
+				</label>
+				<ZRadioGroup
+					aria-label="Desktop mode"
+					data-desktop-component="ZRadioGroup"
+					data-desktop-evidence="ZRadioGroup-mode"
+					defaultValue="standard"
+					name="mode"
+				>
+					<label><ZRadioGroupItem value="standard" />Standard</label>
+					<label><ZRadioGroupItem value="disabled" disabled />Disabled</label>
+					<label>
+						<ZRadioGroupItem
+							data-desktop-component="ZRadioGroupItem"
+							data-desktop-evidence="ZRadioGroupItem-advanced"
+							value="advanced"
+						/>
+						Advanced
+					</label>
+				</ZRadioGroup>
 			</ZStack>
 		</ZForm>
 
