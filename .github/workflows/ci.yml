@@ -53,6 +53,7 @@ jobs:
           pnpm release:candidate:self-test
           pnpm release:handoff:self-test
           pnpm --filter @zadmin/docs docs:versioned:verify:self-test
+          pnpm --filter @zadmin/docs maturity:desktop:self-test
           pnpm --filter @zadmin/webview desktop:evidence:self-test
 
       - name: Audit ZUI browser lifecycle ownership
@@ -376,6 +377,13 @@ jobs:
 
       - name: Smoke test production WebView2 host
         run: pnpm --filter @zadmin/desktop webview:smoke
+
+      - name: Compose component DesktopVerified evidence
+        run: >-
+          node apps/docs/scripts/compose-desktop-maturity.mjs
+          --evidence=apps/desktop/dist/desktop/windows-x64/desktop-evidence.json
+          --revision="${{ github.sha }}"
+          --out=apps/desktop/dist/desktop/windows-x64/component-maturity.json
 
       - name: Smoke test Vite development host
         run: pnpm --filter @zadmin/desktop webview:dev:smoke
