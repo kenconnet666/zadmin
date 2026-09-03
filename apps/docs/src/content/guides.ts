@@ -265,6 +265,70 @@ zuiHandle({ csp: { hash: true } });`,
 		]
 	},
 	{
+		eyebrow: 'DATA OWNERSHIP',
+		id: 'data-orchestration',
+		title: '描述查询并编排请求，不让组件接管业务数据。',
+		summary:
+			'DataQuery提供严格可序列化的分页、排序与筛选描述；AsyncCollectionQuery提供可取消的latest-wins请求生命周期。二者都位于runtime入口，不持有路由、缓存或组件受控状态。',
+		sections: [
+			{
+				id: 'query-description',
+				title: '纯查询描述',
+				paragraphs: [
+					'把ZPagination页码和ZDataTable排序意图映射为DataQuery，再交给应用的数据层。normalizeDataQuery拒绝未知字段、非JSON值、稀疏数组和不匹配operator的value；dataQueryFingerprint是包含规范化值的稳定cache-key材料，不是加密摘要。'
+				],
+				code: `import { dataQueryFingerprint, normalizeDataQuery } from '@zadmin/zui/runtime';
+
+const query = normalizeDataQuery({
+	page: 2,
+	pageSize: 25,
+	sort: [{ field: 'name', direction: 'ascending' }],
+	filters: [{ field: 'status', operator: 'in', value: ['ready', 'queued'] }]
+});
+const key = dataQueryFingerprint(query);`,
+				language: 'typescript',
+				links: [{ href: '#/components/data-table', label: 'DataTable服务端组合' }]
+			},
+			{
+				id: 'async-collection',
+				title: '可取消的异步集合',
+				paragraphs: [
+					'AsyncCollectionQuery为每次load提供AbortSignal与generation；新请求取消旧请求，过期resolve/reject不能覆盖当前状态。subscribe只观察后续冻结快照，当前状态从state读取，dispose为终态。'
+				],
+				code: `import { AsyncCollectionQuery } from '@zadmin/zui/runtime';
+
+const environments = new AsyncCollectionQuery(async (term: string, { signal }) => {
+	const response = await fetch('/api/environments?q=' + encodeURIComponent(term), { signal });
+	if (!response.ok) throw new Error('Environment query failed.');
+	return response.json();
+});
+
+const stop = environments.subscribe((state) => {
+	// 将显式state.data/loading/error传给Combobox；不要转移value/open所有权。
+});
+
+// owner销毁时：
+stop();
+environments.dispose();`,
+				language: 'typescript',
+				links: [{ href: '#/components/combobox', label: 'Combobox远程结果' }]
+			},
+			{
+				id: 'ownership-boundary',
+				title: '所有权边界',
+				paragraphs: [
+					'组件只发出交互意图并渲染调用方提供的状态；请求策略属于数据层。不要为了“开箱即用”把fetch、cache、URL同步或全局store藏进DataTable、Pagination、Select或Combobox。'
+				],
+				bullets: [
+					'DataQuery不自动重置page、不修正服务端总页数，也不执行请求。',
+					'AsyncCollectionQuery不节流、不缓存，也不拥有value、open、active descendant或options。',
+					'错误可以保留上一份成功data；是否展示旧结果由调用方明确决定。',
+					'filter值会进入稳定fingerprint，不要把密钥或敏感原文当作cache key或日志。'
+				]
+			}
+		]
+	},
+	{
 		eyebrow: 'WEBVIEW',
 		id: 'webview',
 		title: '组件留在Web层，系统能力留在Host边界。',
