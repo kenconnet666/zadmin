@@ -111,6 +111,32 @@ public sealed class WebViewHost : IAsyncDisposable
         public string? FormDataValue { get; set; }
     }
 
+    private sealed class DesktopDialogOpenEvidence
+    {
+        public bool Ready { get; set; }
+        public bool Expanded { get; set; }
+        public bool ControlsResolved { get; set; }
+        public string? ContentRole { get; set; }
+        public bool Modal { get; set; }
+        public bool LabelledByResolved { get; set; }
+        public bool DescribedByResolved { get; set; }
+        public bool ContentFocused { get; set; }
+        public bool InertApplied { get; set; }
+        public bool ScrollLockApplied { get; set; }
+        public bool ReducedMotionObserved { get; set; }
+    }
+
+    private sealed class DesktopDialogClosedEvidence
+    {
+        public bool Ready { get; set; }
+        public bool Expanded { get; set; }
+        public string? TriggerState { get; set; }
+        public bool FocusRestored { get; set; }
+        public bool InertReleased { get; set; }
+        public bool ScrollLockReleased { get; set; }
+        public bool PresenceCleaned { get; set; }
+    }
+
     private static readonly JsonSerializerOptions SerializerOptions = new(JsonSerializerDefaults.Web);
     private const string CaptureDesktopEvidenceScript = """
         (() => {
@@ -142,11 +168,18 @@ public sealed class WebViewHost : IAsyncDisposable
                 ariaControls: node?.getAttribute('aria-controls') ?? null,
                 ariaControlsPresent: Boolean(node?.getAttribute('aria-controls')),
                 ariaHasPopup: node?.getAttribute('aria-haspopup') ?? null,
+                ariaHidden: node?.getAttribute('aria-hidden') ?? null,
+                ariaModal: node?.getAttribute('aria-modal') ?? null,
+                ariaLabelledByPresent: Boolean(node?.getAttribute('aria-labelledby')),
+                ariaDescribedByPresent: Boolean(node?.getAttribute('aria-describedby')),
                 ariaActiveDescendant: node?.getAttribute('aria-activedescendant') ?? null,
                 ariaActiveDescendantPresent: Boolean(node?.getAttribute('aria-activedescendant')),
                 ariaSelected: node?.getAttribute('aria-selected') ?? null,
+                idPresent: Boolean(node?.id),
                 tabIndex: node?.tabIndex ?? null,
                 dataState: node?.getAttribute('data-state') ?? null,
+                dataPresence: node?.getAttribute('data-presence') ?? null,
+                dataReducedMotion: node?.getAttribute('data-reduced-motion') ?? null,
                 dataHighlighted: node?.getAttribute('data-highlighted') ?? null,
                 dataDisabled: node?.getAttribute('data-disabled') ?? null
               }
@@ -389,6 +422,194 @@ public sealed class WebViewHost : IAsyncDisposable
               !result.expanded &&
               result.focusRestored &&
               result.formDataValue === 'cn'
+          });
+        })()
+        """;
+    private const string OpenDialogEvidenceScript = """
+        (() => {
+          const trigger = document.querySelector(
+            '[data-desktop-evidence="ZDialogTrigger-settings"]'
+          );
+          const background = document.querySelector(
+            '[data-desktop-evidence="ZDialog-background-sibling"]'
+          );
+          const backgroundOwner = background
+            ? [...document.body.children].find(
+                (element) => element instanceof HTMLElement && element.contains(background)
+              )
+            : null;
+          if (!(trigger instanceof HTMLButtonElement) ||
+              !(backgroundOwner instanceof HTMLElement) ||
+              trigger.getAttribute('aria-expanded') !== 'false') return false;
+          globalThis.__ZADMIN_DIALOG_EVIDENCE__ = {
+            backgroundOwner,
+            backgroundInert: backgroundOwner.inert,
+            backgroundAriaHidden: backgroundOwner.getAttribute('aria-hidden'),
+            bodyOverflow: document.body.style.overflow,
+            bodyPaddingInlineEnd: document.body.style.paddingInlineEnd
+          };
+          trigger.focus();
+          trigger.click();
+          return true;
+        })()
+        """;
+    private const string ReadDialogOpenEvidenceScript = """
+        (() => {
+          const state = globalThis.__ZADMIN_DIALOG_EVIDENCE__;
+          const trigger = document.querySelector(
+            '[data-desktop-evidence="ZDialogTrigger-settings"]'
+          );
+          const controls = trigger?.getAttribute('aria-controls');
+          const content = controls ? document.getElementById(controls) : null;
+          const overlay = document.querySelector(
+            '[data-desktop-evidence="ZDialogOverlay-settings"]'
+          );
+          const title = document.querySelector(
+            '[data-desktop-evidence="ZDialogTitle-settings"]'
+          );
+          const description = document.querySelector(
+            '[data-desktop-evidence="ZDialogDescription-settings"]'
+          );
+          const labelledBy = content?.getAttribute('aria-labelledby');
+          const describedBy = content?.getAttribute('aria-describedby');
+          const result = {
+            expanded: trigger?.getAttribute('aria-expanded') === 'true',
+            controlsResolved: Boolean(controls && content && content.id === controls),
+            contentRole: content?.getAttribute('role') ?? null,
+            modal: content?.getAttribute('aria-modal') === 'true',
+            labelledByResolved: Boolean(
+              labelledBy && title?.id === labelledBy && document.getElementById(labelledBy) === title
+            ),
+            describedByResolved: Boolean(
+              describedBy && description?.id === describedBy &&
+              document.getElementById(describedBy) === description
+            ),
+            contentFocused:
+              content instanceof HTMLElement && content.contains(document.activeElement),
+            inertApplied:
+              state?.backgroundOwner instanceof HTMLElement &&
+              state.backgroundOwner.inert &&
+              state.backgroundOwner.getAttribute('aria-hidden') === 'true',
+            scrollLockApplied: document.body.style.overflow === 'hidden',
+            reducedMotionObserved:
+              content?.getAttribute('data-reduced-motion') === 'true' &&
+              overlay?.getAttribute('data-reduced-motion') === 'true'
+          };
+          return JSON.stringify({
+            ...result,
+            ready:
+              result.expanded &&
+              result.controlsResolved &&
+              result.contentRole === 'dialog' &&
+              result.modal &&
+              result.labelledByResolved &&
+              result.describedByResolved &&
+              result.contentFocused &&
+              result.inertApplied &&
+              result.scrollLockApplied &&
+              result.reducedMotionObserved
+          });
+        })()
+        """;
+    private const string RunDialogFocusEvidenceScript = """
+        (() => {
+          const trigger = document.querySelector(
+            '[data-desktop-evidence="ZDialogTrigger-settings"]'
+          );
+          const controls = trigger?.getAttribute('aria-controls');
+          const content = controls ? document.getElementById(controls) : null;
+          const close = content?.querySelector(
+            '[data-desktop-evidence="ZDialogClose-settings"]'
+          );
+          const sentinel = document.querySelector(
+            '[data-desktop-evidence="ZDialog-focus-sentinel"]'
+          );
+          const state = globalThis.__ZADMIN_DIALOG_EVIDENCE__;
+          if (!(content instanceof HTMLElement) ||
+              !(close instanceof HTMLButtonElement) ||
+              !(sentinel instanceof HTMLButtonElement) ||
+              !(state?.backgroundOwner instanceof HTMLElement)) return false;
+          close.focus();
+          const initiallyContained = content.contains(document.activeElement);
+          const forward = new KeyboardEvent('keydown', {
+            bubbles: true,
+            cancelable: true,
+            key: 'Tab'
+          });
+          close.dispatchEvent(forward);
+          const forwardTrapped = forward.defaultPrevented && content.contains(document.activeElement);
+          const backward = new KeyboardEvent('keydown', {
+            bubbles: true,
+            cancelable: true,
+            key: 'Tab',
+            shiftKey: true
+          });
+          document.activeElement?.dispatchEvent(backward);
+          const backwardTrapped = backward.defaultPrevented && content.contains(document.activeElement);
+          state.backgroundOwner.inert = false;
+          sentinel.focus();
+          const outsideRedirected = content.contains(document.activeElement);
+          state.backgroundOwner.inert = true;
+          return initiallyContained && forwardTrapped && backwardTrapped && outsideRedirected;
+        })()
+        """;
+    private const string DismissDialogEvidenceScript = """
+        (() => {
+          const trigger = document.querySelector(
+            '[data-desktop-evidence="ZDialogTrigger-settings"]'
+          );
+          const controls = trigger?.getAttribute('aria-controls');
+          const content = controls ? document.getElementById(controls) : null;
+          if (!(content instanceof HTMLElement)) return false;
+          content.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+          return true;
+        })()
+        """;
+    private const string CloseDialogEvidenceScript = """
+        (() => {
+          const trigger = document.querySelector(
+            '[data-desktop-evidence="ZDialogTrigger-settings"]'
+          );
+          const controls = trigger?.getAttribute('aria-controls');
+          const content = controls ? document.getElementById(controls) : null;
+          const close = content?.querySelector(
+            '[data-desktop-evidence="ZDialogClose-settings"]'
+          );
+          if (!(close instanceof HTMLButtonElement)) return false;
+          close.click();
+          return true;
+        })()
+        """;
+    private const string ReadDialogClosedEvidenceScript = """
+        (() => {
+          const state = globalThis.__ZADMIN_DIALOG_EVIDENCE__;
+          const trigger = document.querySelector(
+            '[data-desktop-evidence="ZDialogTrigger-settings"]'
+          );
+          const result = {
+            expanded: trigger?.getAttribute('aria-expanded') === 'true',
+            triggerState: trigger?.getAttribute('data-state') ?? null,
+            focusRestored: document.activeElement === trigger,
+            inertReleased:
+              state?.backgroundOwner instanceof HTMLElement &&
+              state.backgroundOwner.inert === state.backgroundInert &&
+              state.backgroundOwner.getAttribute('aria-hidden') === state.backgroundAriaHidden,
+            scrollLockReleased:
+              document.body.style.overflow === state?.bodyOverflow &&
+              document.body.style.paddingInlineEnd === state?.bodyPaddingInlineEnd,
+            presenceCleaned:
+              document.querySelector('[data-desktop-evidence="ZDialogContent-settings"]') === null &&
+              document.querySelector('[data-desktop-evidence="ZDialogOverlay-settings"]') === null
+          };
+          return JSON.stringify({
+            ...result,
+            ready:
+              !result.expanded &&
+              result.triggerState === 'closed' &&
+              result.focusRestored &&
+              result.inertReleased &&
+              result.scrollLockReleased &&
+              result.presenceCleaned
           });
         })()
         """;
@@ -747,6 +968,71 @@ public sealed class WebViewHost : IAsyncDisposable
             evidenceBefore.DesktopEvidence = MergeDesktopEvidence(
                 evidenceBefore.DesktopEvidence,
                 await CaptureCurrentDesktopEvidenceAsync(sender));
+            smokePhase = "validating-dialog-open";
+            if (await sender.ExecuteScriptAsync(OpenDialogEvidenceScript) != "true")
+                throw new InvalidOperationException("Desktop Dialog trigger or background owner is unavailable.");
+            var dialogOpen = await WaitForEvidenceAsync<DesktopDialogOpenEvidence>(
+                sender,
+                ReadDialogOpenEvidenceScript,
+                evidence => evidence.Ready,
+                "Desktop Dialog did not establish its modal relationships and owner effects.");
+            evidenceBefore.DesktopEvidence = MergeDesktopEvidence(
+                evidenceBefore.DesktopEvidence,
+                await CaptureCurrentDesktopEvidenceAsync(sender));
+            smokePhase = "validating-dialog-focus";
+            if (await sender.ExecuteScriptAsync(RunDialogFocusEvidenceScript) != "true")
+                throw new InvalidOperationException("Desktop Dialog did not retain focus for Tab and Shift+Tab.");
+            smokePhase = "validating-dialog-escape";
+            if (await sender.ExecuteScriptAsync(DismissDialogEvidenceScript) != "true")
+                throw new InvalidOperationException("Desktop Dialog content is unavailable for Escape dismissal.");
+            var dialogAfterEscape = await WaitForEvidenceAsync<DesktopDialogClosedEvidence>(
+                sender,
+                ReadDialogClosedEvidenceScript,
+                evidence => evidence.Ready,
+                "Desktop Dialog Escape did not restore focus and release modal owner effects.");
+            smokePhase = "validating-dialog-reopen";
+            if (await sender.ExecuteScriptAsync(OpenDialogEvidenceScript) != "true")
+                throw new InvalidOperationException("Desktop Dialog trigger could not reopen.");
+            _ = await WaitForEvidenceAsync<DesktopDialogOpenEvidence>(
+                sender,
+                ReadDialogOpenEvidenceScript,
+                evidence => evidence.Ready,
+                "Desktop Dialog did not restore its modal state after reopening.");
+            smokePhase = "validating-dialog-close";
+            if (await sender.ExecuteScriptAsync(CloseDialogEvidenceScript) != "true")
+                throw new InvalidOperationException("Desktop Dialog close control is unavailable.");
+            var dialogAfterClose = await WaitForEvidenceAsync<DesktopDialogClosedEvidence>(
+                sender,
+                ReadDialogClosedEvidenceScript,
+                evidence => evidence.Ready,
+                "Desktop Dialog close control did not restore focus and release modal owner effects.");
+            var dialogInteraction = new
+            {
+                ready = true,
+                expandedBefore = false,
+                expandedAfterOpen = dialogOpen.Expanded,
+                dialogOpen.ControlsResolved,
+                dialogOpen.ContentRole,
+                dialogOpen.Modal,
+                dialogOpen.LabelledByResolved,
+                dialogOpen.DescribedByResolved,
+                contentFocusedAfterOpen = dialogOpen.ContentFocused,
+                focusTrapHeld = true,
+                dialogOpen.InertApplied,
+                dialogOpen.ScrollLockApplied,
+                dialogOpen.ReducedMotionObserved,
+                expandedAfterEscape = dialogAfterEscape.Expanded,
+                focusAfterEscape = dialogAfterEscape.FocusRestored,
+                inertReleasedAfterEscape = dialogAfterEscape.InertReleased,
+                scrollLockReleasedAfterEscape = dialogAfterEscape.ScrollLockReleased,
+                presenceCleanedAfterEscape = dialogAfterEscape.PresenceCleaned,
+                expandedAfterClose = dialogAfterClose.Expanded,
+                closeButtonClosed = !dialogAfterClose.Expanded && dialogAfterClose.TriggerState == "closed",
+                focusAfterClose = dialogAfterClose.FocusRestored,
+                inertReleasedAfterClose = dialogAfterClose.InertReleased,
+                scrollLockReleasedAfterClose = dialogAfterClose.ScrollLockReleased,
+                presenceCleanedAfterClose = dialogAfterClose.PresenceCleaned
+            };
             var pageAfterValue = await sender.ExecuteScriptAsync(ReadStatusScript);
             smokePhase = "writing-report";
             var report = new
@@ -762,7 +1048,8 @@ public sealed class WebViewHost : IAsyncDisposable
                 components = evidenceBefore.DesktopEvidence,
                 formInteraction,
                 choiceInteraction,
-                selectInteraction
+                selectInteraction,
+                dialogInteraction
             };
             Directory.CreateDirectory(Path.GetDirectoryName(_options.SmokeReportPath)!);
             await WriteSmokeReportAsync(

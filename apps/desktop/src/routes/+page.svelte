@@ -4,6 +4,14 @@
 		ZBox,
 		ZButton,
 		ZCheckbox,
+		ZDialog,
+		ZDialogClose,
+		ZDialogContent,
+		ZDialogDescription,
+		ZDialogOverlay,
+		ZDialogTitle,
+		ZDialogTrigger,
+		ZProvider,
 		ZForm,
 		ZFormField,
 		ZInput,
@@ -270,6 +278,50 @@
 				</ZSelect>
 			</ZStack>
 		</ZForm>
+
+		<ZProvider motion="reduced">
+			<ZBox class={panelClass} data-desktop-evidence="ZDialog-background-sibling">
+				<ZText as="strong">Dialog desktop contract</ZText>
+				<ZButton variant="secondary" data-desktop-evidence="ZDialog-focus-sentinel">
+					Outside dialog focus sentinel
+				</ZButton>
+				<ZDialog>
+					<ZDialogTrigger
+						data-desktop-component="ZDialogTrigger"
+						data-desktop-evidence="ZDialogTrigger-settings"
+					>
+						Open settings
+					</ZDialogTrigger>
+					<ZDialogOverlay
+						data-desktop-component="ZDialogOverlay"
+						data-desktop-evidence="ZDialogOverlay-settings"
+					/>
+					<ZDialogContent
+						data-desktop-component="ZDialogContent"
+						data-desktop-evidence="ZDialogContent-settings"
+					>
+						<ZDialogTitle
+							data-desktop-component="ZDialogTitle"
+							data-desktop-evidence="ZDialogTitle-settings"
+						>
+							Settings
+						</ZDialogTitle>
+						<ZDialogDescription
+							data-desktop-component="ZDialogDescription"
+							data-desktop-evidence="ZDialogDescription-settings"
+						>
+							In-memory desktop dialog evidence.
+						</ZDialogDescription>
+						<ZDialogClose
+							data-desktop-component="ZDialogClose"
+							data-desktop-evidence="ZDialogClose-settings"
+						>
+							Close settings
+						</ZDialogClose>
+					</ZDialogContent>
+				</ZDialog>
+			</ZBox>
+		</ZProvider>
 
 		<ZStack class={panelClass} gap="small">
 			<ZText as="strong">Supervised native capabilities</ZText>

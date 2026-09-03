@@ -488,6 +488,289 @@ export const desktopComponentContracts = Object.freeze([
 				}
 			]
 		}
+	},
+	{
+		id: 'dialog-trigger',
+		name: 'ZDialogTrigger',
+		marker: 'ZDialogTrigger-settings',
+		native: {
+			tag: 'BUTTON',
+			type: 'button',
+			ariaExpanded: 'false',
+			ariaControlsPresent: true,
+			ariaHasPopup: 'dialog',
+			dataState: 'closed'
+		},
+		interaction: {
+			id: 'open-dismiss-and-restore-focus',
+			action: 'click+Escape+click-close',
+			target: 'root',
+			observations: [
+				{
+					id: 'expanded-before',
+					kind: 'aria',
+					target: 'aria-expanded',
+					expected: false,
+					read: (raw) => raw.dialogInteraction.expandedBefore
+				},
+				{
+					id: 'expanded-after-open',
+					kind: 'aria',
+					target: 'aria-expanded',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.expandedAfterOpen
+				},
+				{
+					id: 'closed-after-escape',
+					kind: 'aria',
+					target: 'aria-expanded',
+					expected: false,
+					read: (raw) => raw.dialogInteraction.expandedAfterEscape
+				},
+				{
+					id: 'focus-after-escape',
+					kind: 'relationship',
+					target: 'activeElement',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.focusAfterEscape
+				},
+				{
+					id: 'closed-after-close-button',
+					kind: 'aria',
+					target: 'aria-expanded',
+					expected: false,
+					read: (raw) => raw.dialogInteraction.expandedAfterClose
+				},
+				{
+					id: 'focus-after-close-button',
+					kind: 'relationship',
+					target: 'activeElement',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.focusAfterClose
+				}
+			]
+		}
+	},
+	{
+		id: 'dialog-overlay',
+		name: 'ZDialogOverlay',
+		marker: 'ZDialogOverlay-settings',
+		native: {
+			tag: 'DIV',
+			ariaHidden: 'true',
+			dataPresence: 'entered',
+			dataReducedMotion: 'true',
+			dataState: 'open'
+		},
+		interaction: {
+			id: 'reduced-motion-presence-cleanup',
+			action: 'Escape+click-close',
+			target: 'root',
+			observations: [
+				{
+					id: 'reduced-motion-observed',
+					kind: 'state',
+					target: 'data-reduced-motion',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.reducedMotionObserved
+				},
+				{
+					id: 'removed-after-escape',
+					kind: 'cleanup',
+					target: 'presence',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.presenceCleanedAfterEscape
+				},
+				{
+					id: 'removed-after-close-button',
+					kind: 'cleanup',
+					target: 'presence',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.presenceCleanedAfterClose
+				}
+			]
+		}
+	},
+	{
+		id: 'dialog-content',
+		name: 'ZDialogContent',
+		marker: 'ZDialogContent-settings',
+		native: {
+			tag: 'DIV',
+			role: 'dialog',
+			tabIndex: -1,
+			ariaModal: 'true',
+			ariaLabelledByPresent: true,
+			ariaDescribedByPresent: true,
+			dataPresence: 'entered',
+			dataReducedMotion: 'true',
+			dataState: 'open'
+		},
+		interaction: {
+			id: 'modal-relationships-focus-and-cleanup',
+			action: 'click+Tab+ShiftTab+Escape+click-close',
+			target: 'aria-controls',
+			observations: [
+				{
+					id: 'controls-resolved',
+					kind: 'relationship',
+					target: 'aria-controls',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.controlsResolved
+				},
+				{
+					id: 'content-role',
+					kind: 'native',
+					target: 'role',
+					expected: 'dialog',
+					read: (raw) => raw.dialogInteraction.contentRole
+				},
+				{
+					id: 'modal',
+					kind: 'aria',
+					target: 'aria-modal',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.modal
+				},
+				{
+					id: 'labelledby-resolved',
+					kind: 'relationship',
+					target: 'aria-labelledby',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.labelledByResolved
+				},
+				{
+					id: 'describedby-resolved',
+					kind: 'relationship',
+					target: 'aria-describedby',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.describedByResolved
+				},
+				{
+					id: 'initial-focus-contained',
+					kind: 'focus',
+					target: 'dialog-content',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.contentFocusedAfterOpen
+				},
+				{
+					id: 'focus-trap-held',
+					kind: 'focus',
+					target: 'dialog-content',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.focusTrapHeld
+				},
+				{
+					id: 'background-inert-applied',
+					kind: 'state',
+					target: 'background-owner',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.inertApplied
+				},
+				{
+					id: 'background-inert-released-after-escape',
+					kind: 'cleanup',
+					target: 'background-owner',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.inertReleasedAfterEscape
+				},
+				{
+					id: 'background-inert-released-after-close',
+					kind: 'cleanup',
+					target: 'background-owner',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.inertReleasedAfterClose
+				},
+				{
+					id: 'scroll-lock-applied',
+					kind: 'state',
+					target: 'document-body',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.scrollLockApplied
+				},
+				{
+					id: 'scroll-lock-released-after-escape',
+					kind: 'cleanup',
+					target: 'document-body',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.scrollLockReleasedAfterEscape
+				},
+				{
+					id: 'scroll-lock-released-after-close',
+					kind: 'cleanup',
+					target: 'document-body',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.scrollLockReleasedAfterClose
+				}
+			]
+		}
+	},
+	{
+		id: 'dialog-title',
+		name: 'ZDialogTitle',
+		marker: 'ZDialogTitle-settings',
+		native: { tag: 'H2', idPresent: true },
+		interaction: {
+			id: 'label-dialog-content',
+			action: 'register',
+			target: 'aria-labelledby',
+			observations: [
+				{
+					id: 'labelledby-resolved',
+					kind: 'relationship',
+					target: 'aria-labelledby',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.labelledByResolved
+				}
+			]
+		}
+	},
+	{
+		id: 'dialog-description',
+		name: 'ZDialogDescription',
+		marker: 'ZDialogDescription-settings',
+		native: { tag: 'P', idPresent: true },
+		interaction: {
+			id: 'describe-dialog-content',
+			action: 'register',
+			target: 'aria-describedby',
+			observations: [
+				{
+					id: 'describedby-resolved',
+					kind: 'relationship',
+					target: 'aria-describedby',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.describedByResolved
+				}
+			]
+		}
+	},
+	{
+		id: 'dialog-close',
+		name: 'ZDialogClose',
+		marker: 'ZDialogClose-settings',
+		native: { tag: 'BUTTON', type: 'button' },
+		interaction: {
+			id: 'close-and-restore-focus',
+			action: 'click',
+			target: 'root',
+			observations: [
+				{
+					id: 'closed',
+					kind: 'state',
+					target: 'dialog',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.closeButtonClosed
+				},
+				{
+					id: 'focus-restored',
+					kind: 'focus',
+					target: 'trigger',
+					expected: true,
+					read: (raw) => raw.dialogInteraction.focusAfterClose
+				}
+			]
+		}
 	}
 ]);
 const contractsByName = new Map(
@@ -765,6 +1048,7 @@ export function validateDesktopEvidence(raw, { expectedRevision } = {}) {
 	if (raw.formInteraction?.ready !== true) fail('form interaction evidence is incomplete.');
 	if (raw.choiceInteraction?.ready !== true) fail('choice interaction evidence is incomplete.');
 	if (raw.selectInteraction?.ready !== true) fail('Select interaction evidence is incomplete.');
+	if (raw.dialogInteraction?.ready !== true) fail('Dialog interaction evidence is incomplete.');
 	for (const contract of desktopComponentContracts)
 		for (const observation of contract.interaction?.observations ?? [])
 			if (observation.read(raw) !== observation.expected)
@@ -945,6 +1229,32 @@ if (isMain && process.argv.includes('--self-test')) {
 			expandedAfterEscape: false,
 			focusAfterEscape: true
 		},
+		dialogInteraction: {
+			ready: true,
+			expandedBefore: false,
+			expandedAfterOpen: true,
+			controlsResolved: true,
+			contentRole: 'dialog',
+			modal: true,
+			labelledByResolved: true,
+			describedByResolved: true,
+			contentFocusedAfterOpen: true,
+			focusTrapHeld: true,
+			inertApplied: true,
+			scrollLockApplied: true,
+			reducedMotionObserved: true,
+			expandedAfterEscape: false,
+			focusAfterEscape: true,
+			inertReleasedAfterEscape: true,
+			scrollLockReleasedAfterEscape: true,
+			presenceCleanedAfterEscape: true,
+			expandedAfterClose: false,
+			closeButtonClosed: true,
+			focusAfterClose: true,
+			inertReleasedAfterClose: true,
+			scrollLockReleasedAfterClose: true,
+			presenceCleanedAfterClose: true
+		},
 		components: desktopComponentContracts.map((contract) => ({
 			name: contract.name,
 			marker: contract.marker,
@@ -985,6 +1295,11 @@ if (isMain && process.argv.includes('--self-test')) {
 		'choice interaction failure',
 		{ ...sample, choiceInteraction: { ...sample.choiceInteraction, ready: false } },
 		'choice interaction'
+	);
+	expectFailure(
+		'dialog interaction failure',
+		{ ...sample, dialogInteraction: { ...sample.dialogInteraction, ready: false } },
+		'Dialog interaction'
 	);
 	expectFailure(
 		'incomplete component set',
