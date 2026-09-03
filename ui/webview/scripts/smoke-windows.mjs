@@ -36,7 +36,8 @@ const exitCode = await new Promise((resolveExit, rejectExit) => {
 try {
 	if (exitCode !== 0) throw new Error(`Windows WebView2 host exited with code ${exitCode}.`);
 	const report = JSON.parse(await readFile(reportPath, 'utf8'));
-	if (report.error) throw new Error(report.error);
+	if (report.error)
+		throw new Error(`${report.error}${report.phase ? ` (phase: ${report.phase})` : ''}`);
 	const evidence = validateDesktopEvidence(report, { expectedRevision: process.env.GITHUB_SHA });
 	if (evidenceOutput) {
 		if (isAbsolute(evidenceOutput))

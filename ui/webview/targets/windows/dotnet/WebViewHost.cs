@@ -283,6 +283,28 @@ public sealed class WebViewHost : IAsyncDisposable
         public bool SpinnerMotionObserved { get; set; }
     }
 
+    private static bool IsValidPrimitiveEvidence(DesktopPrimitiveInteractionEvidence evidence) =>
+        StringComparer.Ordinal.Equals(evidence.HeadingLevel, "H2") &&
+        StringComparer.Ordinal.Equals(evidence.HeadingText, "Desktop primitives") &&
+        StringComparer.Ordinal.Equals(evidence.CodeTag, "PRE") &&
+        evidence.CodeDescendant && evidence.CodeText &&
+        StringComparer.Ordinal.Equals(evidence.IconRole, "img") &&
+        StringComparer.Ordinal.Equals(evidence.IconLabel, "Warning") &&
+        evidence.DecorativeIconHidden &&
+        StringComparer.Ordinal.Equals(evidence.KbdText, "Ctrl") &&
+        evidence.LinkTargetResolved && evidence.LinkPrevented && evidence.LinkActivations == 1 &&
+        evidence.LinkHashUnchanged &&
+        StringComparer.Ordinal.Equals(evidence.SeparatorOrientation, "horizontal") &&
+        evidence.SeparatorRole && evidence.VisuallyHiddenAccessible &&
+        evidence.VisuallyHiddenClipped && evidence.VisuallyHiddenSized &&
+        evidence.AspectRatioMeasured && evidence.ContainerMaxWidth &&
+        evidence.ContainerPadding && evidence.ContainerBounds &&
+        StringComparer.Ordinal.Equals(evidence.AlertRole, "status") &&
+        StringComparer.Ordinal.Equals(evidence.AlertLive, "polite") && evidence.AlertText &&
+        StringComparer.Ordinal.Equals(evidence.SpinnerRole, "status") &&
+        StringComparer.Ordinal.Equals(evidence.SpinnerLabel, "Loading desktop primitives") &&
+        evidence.SpinnerMotionObserved;
+
     private static readonly JsonSerializerOptions SerializerOptions = new(JsonSerializerDefaults.Web);
     private const string CaptureDesktopEvidenceScript = """
         (() => {
@@ -372,8 +394,23 @@ public sealed class WebViewHost : IAsyncDisposable
         "Number(document.querySelector('[data-desktop-evidence=\"ZButton-component-action\"]')?.getAttribute('data-desktop-evidence-runs')??'0')";
     private const string ReadStatusScript =
         "JSON.stringify(document.querySelector('[data-desktop-evidence=\"ZBox-status\"]')?.innerText??'')";
-    private const string RunPrimitiveEvidenceScript = """
-        (async () => {
+    private const string StartPrimitiveEvidenceScript = """
+        (() => {
+          const link = document.querySelector('[data-desktop-evidence="ZLink-primitives"]');
+          const counter = document.querySelector('[data-desktop-primitive-link-activations]');
+          if (!(link instanceof HTMLElement) || !(counter instanceof HTMLElement)) return false;
+          const event = new MouseEvent('click', { bubbles: true, cancelable: true, view: window });
+          globalThis.__ZADMIN_PRIMITIVE_BASELINE__ = {
+            hash: location.hash,
+            linkActivationsBefore: Number(counter.getAttribute('data-desktop-primitive-link-activations') ?? '0'),
+            linkDispatchResult: link.dispatchEvent(event),
+            linkDefaultPrevented: event.defaultPrevented
+          };
+          return true;
+        })()
+        """;
+    private const string ReadPrimitiveEvidenceScript = """
+        (() => {
           const q = (marker) => document.querySelector(`[data-desktop-evidence="${marker}"]`);
           const style = (node) => node ? getComputedStyle(node) : null;
           const heading = q('ZHeading-primitives'), code = q('ZCode-primitives');
@@ -382,11 +419,7 @@ public sealed class WebViewHost : IAsyncDisposable
           const separator = q('ZSeparator-primitives'), hidden = q('ZVisuallyHidden-primitives');
           const aspect = q('ZAspectRatio-primitives'), container = q('ZContainer-primitives');
           const alert = q('ZAlert-primitives'), spinner = q('ZSpinner-primitives');
-          const hash = location.hash;
-          const linkActivationsBefore = Number(document.querySelector('[data-desktop-primitive-link-activations]')?.getAttribute('data-desktop-primitive-link-activations') ?? '0');
-          const linkEvent = link ? new MouseEvent('click', { bubbles: true, cancelable: true, view: window }) : null;
-          const linkDispatchResult = link && linkEvent ? link.dispatchEvent(linkEvent) : false;
-          await new Promise((resolve) => requestAnimationFrame(() => resolve()));
+          const baseline = globalThis.__ZADMIN_PRIMITIVE_BASELINE__;
           const hs = style(hidden), as = style(aspect), cs = style(container), ss = style(spinner);
           const ar = aspect?.getBoundingClientRect();
           const cr = container?.getBoundingClientRect();
@@ -401,9 +434,9 @@ public sealed class WebViewHost : IAsyncDisposable
             decorativeIconHidden: decorative?.getAttribute('aria-hidden') === 'true',
             kbdText: kbd?.textContent?.trim() ?? '',
             linkTargetResolved: Boolean(link?.getAttribute('href') === '#desktop-primitives' && target),
-            linkPrevented: linkDispatchResult === false && linkEvent?.defaultPrevented === true,
-            linkActivations: Number(document.querySelector('[data-desktop-primitive-link-activations]')?.getAttribute('data-desktop-primitive-link-activations') ?? '0') - linkActivationsBefore,
-            linkHashUnchanged: location.hash === hash,
+            linkPrevented: Boolean(baseline && baseline.linkDispatchResult === false && baseline.linkDefaultPrevented === true),
+            linkActivations: Number(document.querySelector('[data-desktop-primitive-link-activations]')?.getAttribute('data-desktop-primitive-link-activations') ?? '0') - (baseline?.linkActivationsBefore ?? Number.NaN),
+            linkHashUnchanged: Boolean(baseline && location.hash === baseline.hash),
             separatorOrientation: separator?.getAttribute('data-orientation') ?? null,
             separatorRole: separator?.tagName === 'HR' && separator?.getAttribute('role') === null,
             visuallyHiddenAccessible: Boolean(hidden && !hidden.hidden && hidden.getAttribute('aria-hidden') !== 'true'),
@@ -1945,30 +1978,13 @@ public sealed class WebViewHost : IAsyncDisposable
                 backgroundUnchanged = tooltipOpen.BackgroundUnchanged && tooltipAfterEscape.BackgroundUnchanged && tooltipReopened.BackgroundUnchanged && tooltipAfterBlur.BackgroundUnchanged && tooltipHoverOpen.BackgroundUnchanged && tooltipAfterPointerLeave.BackgroundUnchanged
             };
             smokePhase = "validating-primitives";
-            var primitiveInteraction = await ExecuteJsonScriptAsync<DesktopPrimitiveInteractionEvidence>(sender, RunPrimitiveEvidenceScript)
-                ?? throw new InvalidOperationException("Desktop primitive evidence did not return an object.");
-            if (!StringComparer.Ordinal.Equals(primitiveInteraction.HeadingLevel, "H2") ||
-                !StringComparer.Ordinal.Equals(primitiveInteraction.HeadingText, "Desktop primitives") ||
-                !StringComparer.Ordinal.Equals(primitiveInteraction.CodeTag, "PRE") ||
-                !primitiveInteraction.CodeDescendant || !primitiveInteraction.CodeText ||
-                !StringComparer.Ordinal.Equals(primitiveInteraction.IconRole, "img") ||
-                !StringComparer.Ordinal.Equals(primitiveInteraction.IconLabel, "Warning") ||
-                !primitiveInteraction.DecorativeIconHidden ||
-                !StringComparer.Ordinal.Equals(primitiveInteraction.KbdText, "Ctrl") ||
-                !primitiveInteraction.LinkTargetResolved || !primitiveInteraction.LinkPrevented ||
-                primitiveInteraction.LinkActivations != 1 || !primitiveInteraction.LinkHashUnchanged ||
-                !StringComparer.Ordinal.Equals(primitiveInteraction.SeparatorOrientation, "horizontal") ||
-                !primitiveInteraction.SeparatorRole || !primitiveInteraction.VisuallyHiddenAccessible ||
-                !primitiveInteraction.VisuallyHiddenClipped || !primitiveInteraction.VisuallyHiddenSized ||
-                !primitiveInteraction.AspectRatioMeasured || !primitiveInteraction.ContainerMaxWidth ||
-                !primitiveInteraction.ContainerPadding || !primitiveInteraction.ContainerBounds ||
-                !StringComparer.Ordinal.Equals(primitiveInteraction.AlertRole, "status") ||
-                !StringComparer.Ordinal.Equals(primitiveInteraction.AlertLive, "polite") ||
-                !primitiveInteraction.AlertText ||
-                !StringComparer.Ordinal.Equals(primitiveInteraction.SpinnerRole, "status") ||
-                !StringComparer.Ordinal.Equals(primitiveInteraction.SpinnerLabel, "Loading desktop primitives") ||
-                !primitiveInteraction.SpinnerMotionObserved)
-                throw new InvalidOperationException("Desktop primitive interaction evidence failed its typed contract.");
+            if (await sender.ExecuteScriptAsync(StartPrimitiveEvidenceScript) != "true")
+                throw new InvalidOperationException("Desktop primitive interaction target is unavailable.");
+            var primitiveInteraction = await WaitForEvidenceAsync<DesktopPrimitiveInteractionEvidence>(
+                sender,
+                ReadPrimitiveEvidenceScript,
+                IsValidPrimitiveEvidence,
+                "Desktop primitive interaction evidence failed its typed contract.");
             var pageAfterValue = await sender.ExecuteScriptAsync(ReadStatusScript);
             smokePhase = "writing-report";
             var report = new
