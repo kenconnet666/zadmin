@@ -177,7 +177,7 @@
 
 <script lang="ts">
 	/* eslint-disable svelte/prefer-svelte-reactivity -- DOM id slots are a non-reactive identity cache. */
-	import { untrack } from 'svelte';
+	import { onDestroy, untrack } from 'svelte';
 
 	import { CollectionNavigation } from '../../runtime/collection/collection-navigation.svelte.js';
 	import { LogicalCollection } from '../../runtime/collection/logical-collection.js';
@@ -361,6 +361,12 @@
 		view: () => view,
 		writeActive: (next) => (activeKey = next)
 	});
+	// A child action may defer reconciliation beyond the parent teardown. Guard
+	// the callback so it never evaluates derived state from a destroyed owner.
+	let ownerActive = true;
+	onDestroy(() => {
+		ownerActive = false;
+	});
 	const selection = new SelectionModel<SelectionKey, ZSegmentedOption>({
 		collection: () => collection,
 		mode: () => 'single',
@@ -420,6 +426,7 @@
 				if (restoreFocus) {
 					const removed = current.key;
 					queueMicrotask(() => {
+						if (!ownerActive) return;
 						const key = navigation.reconcileRemoved(previousView, removed);
 						if (key !== undefined) mounted.focus(key);
 					});

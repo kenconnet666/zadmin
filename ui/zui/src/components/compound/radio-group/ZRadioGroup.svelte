@@ -190,7 +190,7 @@
 </script>
 
 <script lang="ts">
-	import { untrack } from 'svelte';
+	import { onDestroy, untrack } from 'svelte';
 
 	import { CollectionNavigation } from '../../../runtime/collection/collection-navigation.svelte.js';
 	import { CompoundLogicalCollectionRegistry } from '../../../runtime/collection/compound-logical-collection.svelte.js';
@@ -310,6 +310,13 @@
 		view: () => view,
 		writeActive: (next) => (activeKey = next)
 	});
+	// A child cleanup can queue reconciliation while the whole group is being
+	// destroyed. Do not let that deferred callback read the group's derived view
+	// after its owner effects have been torn down (notably WebKit/Svelte 5).
+	let ownerActive = true;
+	onDestroy(() => {
+		ownerActive = false;
+	});
 	const selection = new SelectionModel<SelectionKey, RadioGroupLogicalItem>({
 		collection: () => collection,
 		mode: () => 'single',
@@ -411,6 +418,7 @@
 				stopLogical();
 				if (restoreFocus) {
 					queueMicrotask(() => {
+						if (!ownerActive) return;
 						const key = navigation.reconcileRemoved(previousView, current.key);
 						if (key !== undefined) mounted.focus(key);
 					});
