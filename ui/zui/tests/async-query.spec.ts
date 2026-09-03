@@ -34,7 +34,7 @@ describe('AsyncCollectionQuery', () => {
 		const latestResult = query.load('new');
 		expect(signals[0].aborted).toBe(true);
 		second.resolve(['latest']);
-		first.resolve(['stale']);
+		first.reject(new Error('stale'));
 
 		expect(await latestResult).toEqual(['latest']);
 		expect(await oldResult).toBeUndefined();
@@ -148,8 +148,13 @@ describe('AsyncCollectionQuery', () => {
 	});
 
 	it('makes cancel without active work idempotent and rejects subscriptions after dispose', () => {
+		expect(() => new AsyncCollectionQuery(null as never)).toThrow(/loader/u);
 		const query = new AsyncCollectionQuery(() => 'value');
 		const listener = vi.fn();
+		expect(() => query.subscribe(null as never)).toThrow(/listener/u);
+		const unsubscribe = query.subscribe(listener);
+		unsubscribe();
+		unsubscribe();
 		query.cancel();
 		query.cancel();
 		expect(query.state.generation).toBe(0);

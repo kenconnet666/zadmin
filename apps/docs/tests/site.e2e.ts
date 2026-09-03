@@ -117,7 +117,7 @@ test('renders the component catalog and real demo source', async ({ page }) => {
 	const cards = page.getByTestId('component-card');
 	const guideCards = page.getByTestId('guide-card');
 	expect(await cards.count()).toBeGreaterThanOrEqual(50);
-	await expect(guideCards).toHaveCount(7);
+	await expect(guideCards).toHaveCount(guideDocs.length);
 	await expect(page.getByRole('heading', { level: 2, name: '生产指南' })).toBeVisible();
 	for (const category of [
 		'通用组件',

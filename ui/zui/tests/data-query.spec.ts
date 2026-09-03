@@ -29,7 +29,18 @@ describe('DataQuery', () => {
 
 	it('uses stable defaults and rejects malformed or non-serializable input', () => {
 		expect(normalizeDataQuery()).toEqual({ page: 1, pageSize: 10, sort: [], filters: [] });
+		expect(
+			normalizeDataQuery({
+				filters: [
+					{ field: 'deletedAt', operator: 'isNull' },
+					{ field: 'attempts', operator: 'eq', value: 2 },
+					{ field: 'score', operator: 'gte', value: 0 }
+				]
+			}).filters
+		).toHaveLength(3);
 		const sparseSort = new Array(1);
+		const customArrayPrototype: unknown[] = [];
+		Object.setPrototypeOf(customArrayPrototype, null);
 		const extraFilterProperty: unknown[] = [];
 		Object.defineProperty(extraFilterProperty, 'cache', { value: true });
 		const accessorSort: unknown[] = [];
@@ -41,11 +52,18 @@ describe('DataQuery', () => {
 		Object.defineProperty(symbolValue, Symbol('hidden'), { value: true });
 		const nonEnumerableUnknown = Object.defineProperty({}, 'cacheKey', { value: 'hidden' });
 		for (const input of [
+			null,
+			[],
 			new Date(),
 			/regexp/,
 			Object.create({ page: 2 }),
 			{ page: 0 },
 			{ pageSize: 1.5 },
+			{ sort: {} },
+			{ sort: customArrayPrototype },
+			{ sort: [{ field: '', direction: 'ascending' }] },
+			{ sort: [{ field: 1, direction: 'ascending' }] },
+			{ sort: [{ field: 'name', direction: 'sideways' }] },
 			{
 				sort: [
 					{ field: 'x', direction: 'ascending' },
@@ -53,6 +71,9 @@ describe('DataQuery', () => {
 				]
 			},
 			{ filters: [{ field: 'x', operator: 'isNull', value: null }] },
+			{ filters: [{ field: '', operator: 'eq', value: 1 }] },
+			{ filters: [{ field: 1, operator: 'eq', value: 1 }] },
+			{ filters: [{ field: 'x', operator: 'unknown', value: 1 }] },
 			{ filters: [{ field: 'x', operator: 'in', value: [] }] },
 			{ filters: [{ field: 'x', operator: 'eq', value: undefined }] },
 			{ filters: [{ field: 'x', operator: 'eq', value: { nested: true } }] },
