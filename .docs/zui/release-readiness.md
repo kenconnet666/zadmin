@@ -17,6 +17,7 @@
 - `releaseCandidateContract`
 - `releaseHandoffPlan`
 - `versionedDocsArtifactContract`
+- `versionedDocsArtifactRoundTrip`
 - `supportMatrixDocumented`
 
 ## Blocked facts
@@ -48,4 +49,4 @@
 
 ## Release boundary
 
-CI now proves that one checksummed pack is reused by external consumers and the npm publish dry-run. The release candidate contract cross-checks the schema v2 manifest against the exact workspace package set, versions, and CI commit. A portable validated handoff plan is uploaded with those tarballs, verified again after download, and explicitly keeps executedConsumers empty; it is an input contract, not publish evidence. The real registry publish still does not consume a release-bound copy of that artifact, and npm OIDC/provenance, automated tags/GitHub Releases, registry post-publish smoke, versioned Docs deployment, and a release-bound support matrix remain unproven.
+CI now proves that one checksummed pack is reused by external consumers and the npm publish dry-run. The release candidate contract cross-checks the schema v2 manifest against the exact workspace package set, versions, and CI commit. A portable validated handoff plan is uploaded with those tarballs, verified again after download, and explicitly keeps executedConsumers empty. The versioned Docs dist is likewise downloaded and independently rechecked against its per-file SHA-256, bundle digest, route manifest, package version, revision, and support matrix. These are input/artifact contracts, not publish or deployment evidence. The real registry publish still does not consume a release-bound copy of that artifact, and npm OIDC/provenance, automated tags/GitHub Releases, registry post-publish smoke, versioned Docs deployment, and a release-bound support matrix remain unproven.

@@ -52,6 +52,8 @@ jobs:
           pnpm release:coherence
           pnpm release:candidate:self-test
           pnpm release:handoff:self-test
+          pnpm --filter @zadmin/docs docs:versioned:verify:self-test
+          pnpm --filter @zadmin/webview desktop:evidence:self-test
 
       - name: Audit ZUI browser lifecycle ownership
         run: pnpm --filter @zadmin/zui test:browser-lifecycle
@@ -179,6 +181,21 @@ jobs:
             packages/*/dist
             plugins/*/dist
             ui/*/dist
+
+      - name: Download workspace build outputs for Docs artifact verification
+        if: success() && github.event_name != 'pull_request'
+        id: versioned_docs_artifact_download
+        uses: actions/download-artifact@v7
+        with:
+          name: workspace-build-${{ github.sha }}
+          path: .versioned-docs-consumer
+
+      - name: Verify downloaded versioned Docs artifact
+        if: success() && steps.versioned_docs_artifact_download.outcome == 'success'
+        run: >-
+          node apps/docs/scripts/verify-versioned-docs-artifact.mjs
+          --dist=.versioned-docs-consumer/apps/docs/dist
+          --revision="${{ github.sha }}"
 
   coverage:
     name: Coverage suites

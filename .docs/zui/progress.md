@@ -14,7 +14,7 @@
 | DesktopVerified           |                         0 |                                  141 |
 | Docs routes               |                        88 | components 79; guides 8; deployed no |
 | Browser matrix            | chromium, firefox, webkit |                Node 24; pnpm 11.22.0 |
-| Release checks            |                        13 |                   19; status blocked |
+| Release checks            |                        14 |                   20; status blocked |
 
 ## 下一步优先级
 

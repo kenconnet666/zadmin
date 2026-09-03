@@ -358,10 +358,11 @@ pnpm release:pack:artifacts --out=.release-artifacts`,
 				id: 'versioned-docs',
 				title: '版本绑定Docs制品',
 				paragraphs: [
-					`Docs build会生成包含包版本、完整Git revision、${zuiProgress.docs.routes.totalCount}条路由、逐文件SHA-256、整体bundle摘要和支持矩阵摘要的zui-artifact。该制品随CI上传，但deployed=${String(zuiProgress.docs.deployed)}仍表示尚未完成外部版本化部署。`
+					`Docs build会生成包含包版本、完整Git revision、${zuiProgress.docs.routes.totalCount}条路由、逐文件SHA-256、整体bundle摘要和支持矩阵摘要的zui-artifact。CI会上传、重新下载并逐文件复验该制品，但deployed=${String(zuiProgress.docs.deployed)}仍表示尚未完成外部版本化部署。`
 				],
 				code: `pnpm --filter @zadmin/docs docs:versioned:check
-pnpm --filter @zadmin/docs docs:versioned:emit`,
+pnpm --filter @zadmin/docs docs:versioned:emit
+pnpm --filter @zadmin/docs docs:versioned:verify:self-test`,
 				language: 'bash'
 			}
 		]

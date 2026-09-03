@@ -61,6 +61,10 @@ const versionedDocsScript = await readFile(
 	resolve(root, 'apps/docs/scripts/check-versioned-docs.mjs'),
 	'utf8'
 ).catch(() => '');
+const versionedDocsVerifier = await readFile(
+	resolve(root, 'apps/docs/scripts/verify-versioned-docs-artifact.mjs'),
+	'utf8'
+).catch(() => '');
 const versionedDocsContractSource = await readFile(
 	resolve(root, '.docs/zui/versioned-docs.json'),
 	'utf8'
@@ -199,6 +203,18 @@ const checks = {
 		ci.includes('apps/*/dist') &&
 		versionedDocsScript.includes('bundleSha256') &&
 		versionedDocsScript.includes("resolve(emittedRoot, 'support-matrix.json')"),
+	versionedDocsArtifactRoundTrip:
+		docsPackage.scripts?.['docs:versioned:verify'] ===
+			'node scripts/verify-versioned-docs-artifact.mjs' &&
+		docsPackage.scripts?.['docs:versioned:verify:self-test'] ===
+			'node scripts/verify-versioned-docs-artifact.mjs --self-test' &&
+		/verifyVersionedDocsArtifact/u.test(versionedDocsVerifier) &&
+		/bundle checksum mismatch/u.test(versionedDocsVerifier) &&
+		/build file set does not match/u.test(versionedDocsVerifier) &&
+		/pnpm --filter @zadmin\/docs docs:versioned:verify:self-test/u.test(ci) &&
+		/id:\s*versioned_docs_artifact_download/u.test(ci) &&
+		/--dist=\.versioned-docs-consumer\/apps\/docs\/dist/u.test(ci) &&
+		/--revision="\$\{\{ github\.sha \}\}"/u.test(ci),
 	versionedDocs: false,
 	supportMatrixDocumented:
 		(
@@ -247,7 +263,7 @@ const report = {
 const passed = Object.entries(checks)
 	.filter(([, value]) => value)
 	.map(([key]) => key);
-const markdownSource = `# Release Readiness\n\n- Status: **${report.status}**\n- Scope: non-publishing fact report; this command never publishes packages or changes release permissions.\n\n## Passed facts\n\n${passed.map((key) => `- \`${key}\``).join('\n') || '- None'}\n\n## Blocked facts\n\n${blocked.map((key) => `- \`${key}\``).join('\n') || '- None'}\n\n## Public packages\n\n| Package | Version | Changeset target | Package check | External acceptance |\n| --- | --- | --- | --- | --- |\n${packages.map((item) => `| ${item.name} | ${item.version} | ${item.changeset ? 'yes' : 'no'} | ${item.packageCheck ? 'yes' : 'no'} | ${item.name === '@zadmin/zui' && zuiAcceptance.includes("'@zadmin/zui'") ? 'yes (via SvelteKit)' : item.acceptance ? 'yes' : 'no'} |`).join('\n')}\n\n## Release boundary\n\nCI now proves that one checksummed pack is reused by external consumers and the npm publish dry-run. The release candidate contract cross-checks the schema v2 manifest against the exact workspace package set, versions, and CI commit. A portable validated handoff plan is uploaded with those tarballs, verified again after download, and explicitly keeps executedConsumers empty; it is an input contract, not publish evidence. The real registry publish still does not consume a release-bound copy of that artifact, and npm OIDC/provenance, automated tags/GitHub Releases, registry post-publish smoke, versioned Docs deployment, and a release-bound support matrix remain unproven.\n`;
+const markdownSource = `# Release Readiness\n\n- Status: **${report.status}**\n- Scope: non-publishing fact report; this command never publishes packages or changes release permissions.\n\n## Passed facts\n\n${passed.map((key) => `- \`${key}\``).join('\n') || '- None'}\n\n## Blocked facts\n\n${blocked.map((key) => `- \`${key}\``).join('\n') || '- None'}\n\n## Public packages\n\n| Package | Version | Changeset target | Package check | External acceptance |\n| --- | --- | --- | --- | --- |\n${packages.map((item) => `| ${item.name} | ${item.version} | ${item.changeset ? 'yes' : 'no'} | ${item.packageCheck ? 'yes' : 'no'} | ${item.name === '@zadmin/zui' && zuiAcceptance.includes("'@zadmin/zui'") ? 'yes (via SvelteKit)' : item.acceptance ? 'yes' : 'no'} |`).join('\n')}\n\n## Release boundary\n\nCI now proves that one checksummed pack is reused by external consumers and the npm publish dry-run. The release candidate contract cross-checks the schema v2 manifest against the exact workspace package set, versions, and CI commit. A portable validated handoff plan is uploaded with those tarballs, verified again after download, and explicitly keeps executedConsumers empty. The versioned Docs dist is likewise downloaded and independently rechecked against its per-file SHA-256, bundle digest, route manifest, package version, revision, and support matrix. These are input/artifact contracts, not publish or deployment evidence. The real registry publish still does not consume a release-bound copy of that artifact, and npm OIDC/provenance, automated tags/GitHub Releases, registry post-publish smoke, versioned Docs deployment, and a release-bound support matrix remain unproven.\n`;
 const prettierConfig = (await prettier.resolveConfig(jsonPath)) ?? {};
 const markdown = await prettier.format(markdownSource, {
 	...prettierConfig,

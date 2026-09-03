@@ -125,6 +125,7 @@
 		"automatedTagAndGithubRelease": false,
 		"registrySmoke": false,
 		"versionedDocsArtifactContract": true,
+		"versionedDocsArtifactRoundTrip": true,
 		"versionedDocs": false,
 		"supportMatrixDocumented": true,
 		"releaseBoundSupportMatrix": false
