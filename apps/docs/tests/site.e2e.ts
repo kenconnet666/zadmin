@@ -616,9 +616,20 @@ test('keeps DateField and TimeField segment keys, values and reset synchronized'
 
 	await page.goto('/#/components/time-field');
 	const timeFieldDemo = demo(page, 'time-field-segments-form');
-	await timeFieldDemo.getByRole('textbox', { name: '分钟', exact: true }).press('ArrowUp');
+	const timeForm = timeFieldDemo.locator('form');
+	const minute = timeFieldDemo.getByRole('textbox', { name: '分钟', exact: true });
+	await minute.press('ArrowUp');
 	await expect(timeFieldDemo.getByText('value = 09:31:15')).toBeVisible();
-	await timeFieldDemo.getByRole('button', { name: '重置', exact: true }).click();
+	await expect
+		.poll(() => timeForm.evaluate((form) => new FormData(form as HTMLFormElement).get('time')))
+		.toBe('09:31:15');
+	// WebKit pointer actionability can lose a form-control click while the long docs page is settling.
+	// Enter remains a real native reset-button activation and keeps the reset contract cross-browser.
+	await timeFieldDemo.getByRole('button', { name: '重置', exact: true }).press('Enter');
+	await expect
+		.poll(() => timeForm.evaluate((form) => new FormData(form as HTMLFormElement).get('time')))
+		.toBe('09:30:15');
+	await expect(minute).toHaveValue('30');
 	await expect(timeFieldDemo.getByText('value = 09:30:15')).toBeVisible();
 });
 

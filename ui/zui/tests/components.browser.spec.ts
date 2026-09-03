@@ -1,5 +1,5 @@
 import { tick } from 'svelte';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-svelte';
 import { mount, unmount } from './browser-lifecycle.js';
@@ -2064,8 +2064,12 @@ describe('compiled ICSS browser updates', () => {
 		expect(new FormData(form!).get('time')).toBe('09:31:15');
 		expect(output?.textContent).toContain('2026-08-19:2026-09-18:09:31:15');
 		await resetForm(form);
-		expect(new FormData(form!).get('calendar')).toBe('2026-08-18');
-		expect(new FormData(form!).get('date')).toBe('2026-08-18');
+		await vi.waitFor(() => {
+			expect(new FormData(form!).get('calendar')).toBe('2026-08-18');
+			expect(new FormData(form!).get('date')).toBe('2026-08-18');
+			expect(new FormData(form!).get('time')).toBe('09:30:15');
+			expect(minute?.value).toBe('30');
+		});
 	});
 
 	it('covers Calendar page, week-boundary and month navigation keys', async () => {

@@ -150,19 +150,40 @@ function listenToResetEvents(
 	];
 	let active = true;
 	let generation = 0;
+	let cancelPending: (() => void) | undefined;
+	const scheduleAfterDefault = (event: Event, callback: () => void): (() => void) => {
+		const target = event.currentTarget as
+			| (EventTarget & {
+					readonly defaultView?: Window | null;
+					readonly ownerDocument?: Document | null;
+			  })
+			| null;
+		const ownerWindow = target?.defaultView ?? target?.ownerDocument?.defaultView ?? null;
+		if (ownerWindow) {
+			const timer = ownerWindow.setTimeout(callback, 0);
+			return () => ownerWindow.clearTimeout(timer);
+		}
+		const timer = setTimeout(callback, 0);
+		return () => clearTimeout(timer);
+	};
 	const handleReset = (event: Event) => {
 		if (!accepts(event)) return;
 		const ticket = (generation += 1);
-		queueMicrotask(() => {
-			queueMicrotask(() => {
-				if (active && ticket === generation && !event.defaultPrevented) reset();
-			});
+		cancelPending?.();
+		// A task boundary is required: WebKit may perform the native reset default action after
+		// microtasks, which would otherwise overwrite component-controlled segment values.
+		cancelPending = scheduleAfterDefault(event, () => {
+			if (ticket !== generation) return;
+			cancelPending = undefined;
+			if (active && !event.defaultPrevented) reset();
 		});
 	};
 	for (const target of activeTargets) target.addEventListener('reset', handleReset, true);
 	return () => {
 		active = false;
 		generation += 1;
+		cancelPending?.();
+		cancelPending = undefined;
 		for (const target of activeTargets) target.removeEventListener('reset', handleReset, true);
 	};
 }

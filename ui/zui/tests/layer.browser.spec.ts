@@ -37,6 +37,28 @@ describe('ZUI layer runtime', () => {
 		expect(reset).toHaveBeenCalledOnce();
 	});
 
+	it('restores controlled values after a WebKit-like delayed native reset default', async () => {
+		const form = document.createElement('form');
+		const input = document.createElement('input');
+		input.defaultValue = '';
+		input.value = 'edited';
+		form.append(input);
+		document.body.append(form);
+		const reset = vi.fn(() => (input.value = 'restored'));
+		const stop = listenForFormReset(input, reset);
+		form.addEventListener('reset', () => {
+			queueMicrotask(() => queueMicrotask(() => (input.value = 'native-default')));
+		});
+
+		form.dispatchEvent(new Event('reset', { bubbles: true, cancelable: true }));
+		await settleReset();
+		expect(reset).toHaveBeenCalledOnce();
+		expect(input.value).toBe('restored');
+
+		stop();
+		form.remove();
+	});
+
 	it('cancels a queued form reset when its listener is destroyed in the same task', async () => {
 		const form = document.createElement('form');
 		const reset = vi.fn();
