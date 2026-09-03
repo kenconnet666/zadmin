@@ -8,7 +8,7 @@ const noSideEffects = Object.freeze({
 	network: 'none',
 	window: 'none'
 });
-export const desktopComponentContracts = Object.freeze([
+export const desktopComponentContracts = [
 	{
 		id: 'box',
 		name: 'ZBox',
@@ -779,7 +779,474 @@ export const desktopComponentContracts = Object.freeze([
 			]
 		}
 	}
-]);
+];
+desktopComponentContracts.push(
+	{
+		id: 'tabs',
+		name: 'ZTabs',
+		marker: 'ZTabs-settings',
+		native: { tag: 'DIV', dataOrientation: 'horizontal', dataPanelMount: 'keep-mounted' },
+		interaction: {
+			id: 'tabs-keyboard-selection',
+			action: 'ArrowRight+Home',
+			target: 'root',
+			observations: [
+				{
+					id: 'initial-selected',
+					kind: 'state',
+					target: 'selected',
+					expected: true,
+					read: (raw) => raw.tabsInteraction.initialSelected
+				},
+				{
+					id: 'initial-controls',
+					kind: 'relationship',
+					target: 'aria-controls',
+					expected: true,
+					read: (raw) => raw.tabsInteraction.initialControlsResolved
+				},
+				{
+					id: 'initial-labelledby',
+					kind: 'relationship',
+					target: 'aria-labelledby',
+					expected: true,
+					read: (raw) => raw.tabsInteraction.initialLabelledByResolved
+				},
+				{
+					id: 'disabled-skipped',
+					kind: 'state',
+					target: 'disabled-option',
+					expected: true,
+					read: (raw) => raw.tabsInteraction.disabledSkipped
+				},
+				{
+					id: 'arrow-handled',
+					kind: 'keyboard',
+					target: 'ArrowRight',
+					expected: true,
+					read: (raw) => raw.tabsInteraction.arrowHandled
+				},
+				{
+					id: 'advanced-focused',
+					kind: 'focus',
+					target: 'advanced',
+					expected: true,
+					read: (raw) => raw.tabsInteraction.advancedFocused
+				},
+				{
+					id: 'advanced-selected',
+					kind: 'state',
+					target: 'advanced',
+					expected: true,
+					read: (raw) => raw.tabsInteraction.advancedSelected
+				},
+				{
+					id: 'advanced-panel-active',
+					kind: 'state',
+					target: 'advanced-panel',
+					expected: true,
+					read: (raw) => raw.tabsInteraction.advancedPanelActive
+				},
+				{
+					id: 'general-hidden',
+					kind: 'state',
+					target: 'general-panel',
+					expected: true,
+					read: (raw) => raw.tabsInteraction.generalPanelHidden
+				},
+				{
+					id: 'home-handled',
+					kind: 'keyboard',
+					target: 'Home',
+					expected: true,
+					read: (raw) => raw.tabsInteraction.homeHandled
+				},
+				{
+					id: 'general-focused-after-home',
+					kind: 'focus',
+					target: 'general',
+					expected: true,
+					read: (raw) => raw.tabsInteraction.generalFocusedAfterHome
+				},
+				{
+					id: 'general-selected-after-home',
+					kind: 'state',
+					target: 'general',
+					expected: true,
+					read: (raw) => raw.tabsInteraction.generalSelectedAfterHome
+				},
+				{
+					id: 'general-panel-active-after-home',
+					kind: 'state',
+					target: 'general-panel',
+					expected: true,
+					read: (raw) => raw.tabsInteraction.generalPanelActiveAfterHome
+				}
+			]
+		}
+	},
+	{
+		id: 'tabs-list',
+		name: 'ZTabsList',
+		marker: 'ZTabsList-settings',
+		native: { tag: 'DIV', role: 'tablist', ariaOrientation: 'horizontal' },
+		interaction: {
+			id: 'navigate-enabled-tabs',
+			action: 'ArrowRight+Home',
+			target: 'tablist',
+			observations: [
+				{
+					id: 'arrow-handled',
+					kind: 'keyboard',
+					target: 'ArrowRight',
+					expected: true,
+					read: (raw) => raw.tabsInteraction.arrowHandled
+				},
+				{
+					id: 'disabled-skipped',
+					kind: 'state',
+					target: 'disabled-option',
+					expected: true,
+					read: (raw) => raw.tabsInteraction.disabledSkipped
+				},
+				{
+					id: 'home-handled',
+					kind: 'keyboard',
+					target: 'Home',
+					expected: true,
+					read: (raw) => raw.tabsInteraction.homeHandled
+				}
+			]
+		}
+	},
+	{
+		id: 'tabs-trigger',
+		name: 'ZTabsTrigger',
+		marker: 'ZTabsTrigger-general',
+		native: {
+			tag: 'BUTTON',
+			type: 'button',
+			role: 'tab',
+			ariaSelected: 'true',
+			ariaControlsPresent: true,
+			tabIndex: 0,
+			dataState: 'active'
+		},
+		interaction: {
+			id: 'synchronize-roving-selection',
+			action: 'ArrowRight+Home',
+			target: 'root',
+			observations: [
+				{
+					id: 'advanced-selected',
+					kind: 'state',
+					target: 'advanced-tab',
+					expected: true,
+					read: (raw) => raw.tabsInteraction.advancedSelected
+				},
+				{
+					id: 'general-focused-after-home',
+					kind: 'focus',
+					target: 'general-tab',
+					expected: true,
+					read: (raw) => raw.tabsInteraction.generalFocusedAfterHome
+				},
+				{
+					id: 'general-selected-after-home',
+					kind: 'state',
+					target: 'general-tab',
+					expected: true,
+					read: (raw) => raw.tabsInteraction.generalSelectedAfterHome
+				}
+			]
+		}
+	},
+	{
+		id: 'tabs-panel',
+		name: 'ZTabsPanel',
+		marker: 'ZTabsPanel-general',
+		native: {
+			tag: 'DIV',
+			role: 'tabpanel',
+			ariaLabelledByPresent: true,
+			hidden: false,
+			tabIndex: 0,
+			dataState: 'active'
+		},
+		interaction: {
+			id: 'synchronize-mounted-panels',
+			action: 'selection-change',
+			target: 'root',
+			observations: [
+				{
+					id: 'general-hidden',
+					kind: 'state',
+					target: 'hidden',
+					expected: true,
+					read: (raw) => raw.tabsInteraction.generalPanelHidden
+				},
+				{
+					id: 'general-active-after-home',
+					kind: 'state',
+					target: 'data-state',
+					expected: true,
+					read: (raw) => raw.tabsInteraction.generalPanelActiveAfterHome
+				}
+			]
+		}
+	},
+	{
+		id: 'accordion',
+		name: 'ZAccordion',
+		marker: 'ZAccordion-settings',
+		native: { tag: 'DIV', dataReducedMotion: 'true' },
+		interaction: {
+			id: 'accordion-keyboard-selection',
+			action: 'click+ArrowDown',
+			target: 'root',
+			observations: [
+				{
+					id: 'initial-expanded',
+					kind: 'state',
+					target: 'expanded',
+					expected: true,
+					read: (raw) => raw.accordionInteraction.initialExpanded
+				},
+				{
+					id: 'initial-controls',
+					kind: 'relationship',
+					target: 'aria-controls',
+					expected: true,
+					read: (raw) => raw.accordionInteraction.initialControlsResolved
+				},
+				{
+					id: 'initial-labelledby',
+					kind: 'relationship',
+					target: 'aria-labelledby',
+					expected: true,
+					read: (raw) => raw.accordionInteraction.initialLabelledByResolved
+				},
+				{
+					id: 'reduced-motion',
+					kind: 'state',
+					target: 'motion',
+					expected: true,
+					read: (raw) => raw.accordionInteraction.reducedMotionObserved
+				},
+				{
+					id: 'collapse-focused',
+					kind: 'focus',
+					target: 'general',
+					expected: true,
+					read: (raw) => raw.accordionInteraction.collapseFocused
+				},
+				{
+					id: 'collapsed',
+					kind: 'state',
+					target: 'general',
+					expected: true,
+					read: (raw) => raw.accordionInteraction.collapsed
+				},
+				{
+					id: 'content-cleaned',
+					kind: 'cleanup',
+					target: 'general-content',
+					expected: true,
+					read: (raw) => raw.accordionInteraction.generalContentCleaned
+				},
+				{
+					id: 'reopened',
+					kind: 'state',
+					target: 'general',
+					expected: true,
+					read: (raw) => raw.accordionInteraction.reopened
+				},
+				{
+					id: 'arrow-handled',
+					kind: 'keyboard',
+					target: 'ArrowDown',
+					expected: true,
+					read: (raw) => raw.accordionInteraction.arrowHandled
+				},
+				{
+					id: 'disabled-skipped',
+					kind: 'state',
+					target: 'disabled-option',
+					expected: true,
+					read: (raw) => raw.accordionInteraction.disabledSkipped
+				},
+				{
+					id: 'advanced-focused',
+					kind: 'focus',
+					target: 'advanced',
+					expected: true,
+					read: (raw) => raw.accordionInteraction.advancedFocused
+				},
+				{
+					id: 'advanced-expanded',
+					kind: 'state',
+					target: 'advanced',
+					expected: true,
+					read: (raw) => raw.accordionInteraction.advancedExpanded
+				},
+				{
+					id: 'general-collapsed',
+					kind: 'state',
+					target: 'general',
+					expected: true,
+					read: (raw) => raw.accordionInteraction.generalCollapsed
+				},
+				{
+					id: 'advanced-controls',
+					kind: 'relationship',
+					target: 'aria-controls',
+					expected: true,
+					read: (raw) => raw.accordionInteraction.advancedControlsResolved
+				},
+				{
+					id: 'advanced-labelledby',
+					kind: 'relationship',
+					target: 'aria-labelledby',
+					expected: true,
+					read: (raw) => raw.accordionInteraction.advancedLabelledByResolved
+				},
+				{
+					id: 'content-cleaned-after-advanced',
+					kind: 'cleanup',
+					target: 'general-content',
+					expected: true,
+					read: (raw) => raw.accordionInteraction.generalContentCleanedAfterAdvanced
+				}
+			]
+		}
+	},
+	{
+		id: 'accordion-item',
+		name: 'ZAccordionItem',
+		marker: 'ZAccordionItem-general',
+		native: { tag: 'DIV', dataState: 'open' },
+		interaction: {
+			id: 'synchronize-single-item-state',
+			action: 'collapse+reopen+select-advanced',
+			target: 'root',
+			observations: [
+				{
+					id: 'collapsed',
+					kind: 'state',
+					target: 'data-state',
+					expected: true,
+					read: (raw) => raw.accordionInteraction.collapsed
+				},
+				{
+					id: 'reopened',
+					kind: 'state',
+					target: 'data-state',
+					expected: true,
+					read: (raw) => raw.accordionInteraction.reopened
+				},
+				{
+					id: 'general-collapsed-after-advanced',
+					kind: 'state',
+					target: 'data-state',
+					expected: true,
+					read: (raw) => raw.accordionInteraction.generalCollapsed
+				}
+			]
+		}
+	},
+	{
+		id: 'accordion-trigger',
+		name: 'ZAccordionTrigger',
+		marker: 'ZAccordionTrigger-general',
+		native: {
+			tag: 'BUTTON',
+			type: 'button',
+			ariaExpanded: 'true',
+			ariaControlsPresent: true,
+			tabIndex: 0,
+			dataState: 'open',
+			dataReducedMotion: 'true'
+		},
+		interaction: {
+			id: 'activate-and-navigate-triggers',
+			action: 'click+ArrowDown',
+			target: 'root',
+			observations: [
+				{
+					id: 'collapse-focused',
+					kind: 'focus',
+					target: 'root',
+					expected: true,
+					read: (raw) => raw.accordionInteraction.collapseFocused
+				},
+				{
+					id: 'arrow-handled',
+					kind: 'keyboard',
+					target: 'ArrowDown',
+					expected: true,
+					read: (raw) => raw.accordionInteraction.arrowHandled
+				},
+				{
+					id: 'disabled-skipped',
+					kind: 'state',
+					target: 'disabled-trigger',
+					expected: true,
+					read: (raw) => raw.accordionInteraction.disabledSkipped
+				},
+				{
+					id: 'advanced-focused',
+					kind: 'focus',
+					target: 'advanced-trigger',
+					expected: true,
+					read: (raw) => raw.accordionInteraction.advancedFocused
+				}
+			]
+		}
+	},
+	{
+		id: 'accordion-content',
+		name: 'ZAccordionContent',
+		marker: 'ZAccordionContent-general',
+		native: {
+			tag: 'DIV',
+			role: 'region',
+			ariaLabelledByPresent: true,
+			dataPresence: 'entered',
+			dataState: 'open',
+			dataReducedMotion: 'true'
+		},
+		interaction: {
+			id: 'clean-up-collapsed-content',
+			action: 'collapse+reopen+select-advanced',
+			target: 'root',
+			observations: [
+				{
+					id: 'initial-controls',
+					kind: 'relationship',
+					target: 'aria-controls',
+					expected: true,
+					read: (raw) => raw.accordionInteraction.initialControlsResolved
+				},
+				{
+					id: 'content-cleaned',
+					kind: 'cleanup',
+					target: 'presence',
+					expected: true,
+					read: (raw) => raw.accordionInteraction.generalContentCleaned
+				},
+				{
+					id: 'content-cleaned-after-advanced',
+					kind: 'cleanup',
+					target: 'presence',
+					expected: true,
+					read: (raw) => raw.accordionInteraction.generalContentCleanedAfterAdvanced
+				}
+			]
+		}
+	}
+);
+Object.freeze(desktopComponentContracts);
+
 const contractsByName = new Map(
 	desktopComponentContracts.map((contract) => [contract.name, contract])
 );
@@ -1654,6 +2121,41 @@ if (isMain && process.argv.includes('--self-test')) {
 			inertReleasedAfterClose: true,
 			scrollLockReleasedAfterClose: true,
 			presenceCleanedAfterClose: true
+		},
+		tabsInteraction: {
+			ready: true,
+			initialSelected: true,
+			initialControlsResolved: true,
+			initialLabelledByResolved: true,
+			disabledSkipped: true,
+			arrowHandled: true,
+			advancedFocused: true,
+			advancedSelected: true,
+			advancedPanelActive: true,
+			generalPanelHidden: true,
+			homeHandled: true,
+			generalFocusedAfterHome: true,
+			generalSelectedAfterHome: true,
+			generalPanelActiveAfterHome: true
+		},
+		accordionInteraction: {
+			ready: true,
+			initialExpanded: true,
+			initialControlsResolved: true,
+			initialLabelledByResolved: true,
+			reducedMotionObserved: true,
+			collapseFocused: true,
+			collapsed: true,
+			generalContentCleaned: true,
+			reopened: true,
+			arrowHandled: true,
+			disabledSkipped: true,
+			advancedFocused: true,
+			advancedExpanded: true,
+			generalCollapsed: true,
+			advancedControlsResolved: true,
+			advancedLabelledByResolved: true,
+			generalContentCleanedAfterAdvanced: true
 		},
 		components: desktopComponentContracts.map((contract) => ({
 			name: contract.name,

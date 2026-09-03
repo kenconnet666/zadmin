@@ -3,6 +3,10 @@
 	import {
 		ZBox,
 		ZButton,
+		ZAccordion,
+		ZAccordionContent,
+		ZAccordionItem,
+		ZAccordionTrigger,
 		ZCheckbox,
 		ZDialog,
 		ZDialogClose,
@@ -23,6 +27,10 @@
 		ZSelectTrigger,
 		ZStack,
 		ZSwitch,
+		ZTabs,
+		ZTabsList,
+		ZTabsPanel,
+		ZTabsTrigger,
 		ZText,
 		defaultTheme,
 		icss
@@ -319,6 +327,77 @@
 				</ZDialog>
 			</ZBox>
 		</ZProvider>
+
+		<ZBox class={panelClass}>
+			<ZText as="strong">Collection desktop contracts</ZText>
+			<ZTabs
+				data-desktop-component="ZTabs"
+				data-desktop-evidence="ZTabs-settings"
+				activationMode="automatic"
+				defaultValue="general"
+				loop
+				orientation="horizontal"
+				panelMount="keep-mounted"
+			>
+				<ZTabsList data-desktop-component="ZTabsList" data-desktop-evidence="ZTabsList-settings">
+					<ZTabsTrigger
+						data-desktop-component="ZTabsTrigger"
+						data-desktop-evidence="ZTabsTrigger-general"
+						value="general">General</ZTabsTrigger
+					>
+					<ZTabsTrigger data-desktop-option="disabled" disabled value="disabled"
+						>Disabled</ZTabsTrigger
+					>
+					<ZTabsTrigger data-desktop-option="advanced" value="advanced">Advanced</ZTabsTrigger>
+				</ZTabsList>
+				<ZTabsPanel
+					data-desktop-component="ZTabsPanel"
+					data-desktop-evidence="ZTabsPanel-general"
+					value="general"
+				>
+					General content
+				</ZTabsPanel>
+				<ZTabsPanel data-desktop-panel="advanced" value="advanced">Advanced content</ZTabsPanel>
+			</ZTabs>
+
+			<ZProvider motion="reduced">
+				<ZAccordion
+					data-desktop-component="ZAccordion"
+					data-desktop-evidence="ZAccordion-settings"
+					type="single"
+					defaultValue="general"
+					collapsible
+					loop
+				>
+					<ZAccordionItem
+						value="general"
+						data-desktop-component="ZAccordionItem"
+						data-desktop-evidence="ZAccordionItem-general"
+					>
+						<ZAccordionTrigger
+							data-desktop-component="ZAccordionTrigger"
+							data-desktop-evidence="ZAccordionTrigger-general"
+						>
+							General section
+						</ZAccordionTrigger>
+						<ZAccordionContent
+							data-desktop-component="ZAccordionContent"
+							data-desktop-evidence="ZAccordionContent-general"
+						>
+							General details
+						</ZAccordionContent>
+					</ZAccordionItem>
+					<ZAccordionItem data-desktop-option="disabled" value="disabled" disabled>
+						<ZAccordionTrigger>Disabled section</ZAccordionTrigger>
+						<ZAccordionContent>Disabled details</ZAccordionContent>
+					</ZAccordionItem>
+					<ZAccordionItem data-desktop-option="advanced" value="advanced">
+						<ZAccordionTrigger>Advanced section</ZAccordionTrigger>
+						<ZAccordionContent>Advanced details</ZAccordionContent>
+					</ZAccordionItem>
+				</ZAccordion>
+			</ZProvider>
+		</ZBox>
 
 		<ZStack class={panelClass} gap="small">
 			<ZText as="strong">Supervised native capabilities</ZText>

@@ -150,6 +150,72 @@ public sealed class WebViewHost : IAsyncDisposable
         public bool PresenceCleaned { get; set; }
     }
 
+    private sealed class DesktopKeyboardEvidence
+    {
+        public bool Ready { get; set; }
+        public bool DefaultPrevented { get; set; }
+    }
+
+    private sealed class DesktopTabsInitialEvidence
+    {
+        public bool Ready { get; set; }
+        public bool InitialSelected { get; set; }
+        public bool InitialControlsResolved { get; set; }
+        public bool InitialLabelledByResolved { get; set; }
+    }
+
+    private sealed class DesktopTabsAdvancedEvidence
+    {
+        public bool Ready { get; set; }
+        public bool DisabledSkipped { get; set; }
+        public bool AdvancedFocused { get; set; }
+        public bool AdvancedSelected { get; set; }
+        public bool AdvancedPanelActive { get; set; }
+        public bool GeneralPanelHidden { get; set; }
+    }
+
+    private sealed class DesktopTabsHomeEvidence
+    {
+        public bool Ready { get; set; }
+        public bool GeneralFocused { get; set; }
+        public bool GeneralSelected { get; set; }
+        public bool GeneralPanelActive { get; set; }
+    }
+
+    private sealed class DesktopAccordionInitialEvidence
+    {
+        public bool Ready { get; set; }
+        public bool InitialExpanded { get; set; }
+        public bool InitialControlsResolved { get; set; }
+        public bool InitialLabelledByResolved { get; set; }
+        public bool ReducedMotionObserved { get; set; }
+    }
+
+    private sealed class DesktopAccordionCollapsedEvidence
+    {
+        public bool Ready { get; set; }
+        public bool CollapseFocused { get; set; }
+        public bool Collapsed { get; set; }
+        public bool GeneralContentCleaned { get; set; }
+    }
+
+    private sealed class DesktopAccordionNavigationEvidence
+    {
+        public bool Ready { get; set; }
+        public bool DisabledSkipped { get; set; }
+        public bool AdvancedFocused { get; set; }
+    }
+
+    private sealed class DesktopAccordionAdvancedEvidence
+    {
+        public bool Ready { get; set; }
+        public bool AdvancedExpanded { get; set; }
+        public bool GeneralCollapsed { get; set; }
+        public bool AdvancedControlsResolved { get; set; }
+        public bool AdvancedLabelledByResolved { get; set; }
+        public bool GeneralContentCleaned { get; set; }
+    }
+
     private static readonly JsonSerializerOptions SerializerOptions = new(JsonSerializerDefaults.Web);
     private const string CaptureDesktopEvidenceScript = """
         (() => {
@@ -183,16 +249,21 @@ public sealed class WebViewHost : IAsyncDisposable
                 ariaHasPopup: node?.getAttribute('aria-haspopup') ?? null,
                 ariaHidden: node?.getAttribute('aria-hidden') ?? null,
                 ariaModal: node?.getAttribute('aria-modal') ?? null,
+                ariaLabelledBy: node?.getAttribute('aria-labelledby') ?? null,
                 ariaLabelledByPresent: Boolean(node?.getAttribute('aria-labelledby')),
                 ariaDescribedByPresent: Boolean(node?.getAttribute('aria-describedby')),
                 ariaActiveDescendant: node?.getAttribute('aria-activedescendant') ?? null,
                 ariaActiveDescendantPresent: Boolean(node?.getAttribute('aria-activedescendant')),
                 ariaSelected: node?.getAttribute('aria-selected') ?? null,
                 idPresent: Boolean(node?.id),
+                hidden: node?.hidden ?? false,
                 tabIndex: node?.tabIndex ?? null,
                 dataState: node?.getAttribute('data-state') ?? null,
                 dataPresence: node?.getAttribute('data-presence') ?? null,
                 dataReducedMotion: node?.getAttribute('data-reduced-motion') ?? null,
+                dataOrientation: node?.getAttribute('data-orientation') ?? null,
+                dataPanelMount: node?.getAttribute('data-panel-mount') ?? null,
+                dataActive: node?.getAttribute('data-active') ?? null,
                 dataHighlighted: node?.getAttribute('data-highlighted') ?? null,
                 dataDisabled: node?.getAttribute('data-disabled') ?? null
               }
@@ -654,6 +725,272 @@ public sealed class WebViewHost : IAsyncDisposable
           });
         })()
         """;
+    private const string ReadTabsInitialEvidenceScript = """
+        (() => {
+          const root = document.querySelector('[data-desktop-evidence="ZTabs-settings"]');
+          const list = document.querySelector('[data-desktop-evidence="ZTabsList-settings"]');
+          const trigger = document.querySelector('[data-desktop-evidence="ZTabsTrigger-general"]');
+          const controls = trigger?.getAttribute('aria-controls');
+          const panel = controls ? document.getElementById(controls) : null;
+          const result = {
+            initialSelected:
+              trigger?.getAttribute('aria-selected') === 'true' &&
+              trigger?.getAttribute('data-state') === 'active',
+            initialControlsResolved: Boolean(
+              controls && panel?.id === controls && panel?.getAttribute('role') === 'tabpanel'
+            ),
+            initialLabelledByResolved: Boolean(
+              trigger?.id && panel?.getAttribute('aria-labelledby') === trigger.id
+            )
+          };
+          return JSON.stringify({
+            ...result,
+            ready:
+              root?.getAttribute('data-orientation') === 'horizontal' &&
+              root?.getAttribute('data-panel-mount') === 'keep-mounted' &&
+              list?.getAttribute('role') === 'tablist' &&
+              list?.getAttribute('aria-orientation') === 'horizontal' &&
+              result.initialSelected &&
+              result.initialControlsResolved &&
+              result.initialLabelledByResolved
+          });
+        })()
+        """;
+    private const string AdvanceTabsEvidenceScript = """
+        (() => {
+          const trigger = document.querySelector('[data-desktop-evidence="ZTabsTrigger-general"]');
+          if (!(trigger instanceof HTMLButtonElement)) return JSON.stringify({
+            ready: false,
+            defaultPrevented: false
+          });
+          trigger.focus();
+          const event = new KeyboardEvent('keydown', {
+            bubbles: true,
+            cancelable: true,
+            key: 'ArrowRight'
+          });
+          trigger.dispatchEvent(event);
+          return JSON.stringify({ ready: event.defaultPrevented, defaultPrevented: event.defaultPrevented });
+        })()
+        """;
+    private const string ReadTabsAdvancedEvidenceScript = """
+        (() => {
+          const list = document.querySelector('[data-desktop-evidence="ZTabsList-settings"]');
+          const general = document.querySelector('[data-desktop-evidence="ZTabsTrigger-general"]');
+          const disabled = list?.querySelector('[data-desktop-option="disabled"]');
+          const advanced = list?.querySelector('[data-desktop-option="advanced"]');
+          const generalControls = general?.getAttribute('aria-controls');
+          const generalPanel = generalControls ? document.getElementById(generalControls) : null;
+          const advancedControls = advanced?.getAttribute('aria-controls');
+          const advancedPanel = advancedControls ? document.getElementById(advancedControls) : null;
+          const result = {
+            disabledSkipped:
+              disabled instanceof HTMLButtonElement &&
+              disabled.disabled &&
+              disabled.getAttribute('aria-selected') === 'false' &&
+              document.activeElement !== disabled,
+            advancedFocused: document.activeElement === advanced,
+            advancedSelected:
+              advanced?.getAttribute('aria-selected') === 'true' &&
+              advanced?.getAttribute('data-state') === 'active' &&
+              general?.getAttribute('aria-selected') === 'false',
+            advancedPanelActive:
+              Boolean(advancedControls && advancedPanel?.id === advancedControls) &&
+              advancedPanel?.getAttribute('data-state') === 'active' &&
+              advancedPanel?.hidden === false &&
+              advancedPanel?.getAttribute('aria-labelledby') === advanced?.id,
+            generalPanelHidden:
+              generalPanel instanceof HTMLElement &&
+              generalPanel.hidden &&
+              generalPanel.getAttribute('data-state') === 'inactive'
+          };
+          return JSON.stringify({
+            ...result,
+            ready: Object.values(result).every(Boolean)
+          });
+        })()
+        """;
+    private const string ReturnTabsHomeEvidenceScript = """
+        (() => {
+          const list = document.querySelector('[data-desktop-evidence="ZTabsList-settings"]');
+          const advanced = list?.querySelector('[data-desktop-option="advanced"]');
+          if (!(advanced instanceof HTMLButtonElement)) return JSON.stringify({
+            ready: false,
+            defaultPrevented: false
+          });
+          const event = new KeyboardEvent('keydown', {
+            bubbles: true,
+            cancelable: true,
+            key: 'Home'
+          });
+          advanced.dispatchEvent(event);
+          return JSON.stringify({ ready: event.defaultPrevented, defaultPrevented: event.defaultPrevented });
+        })()
+        """;
+    private const string ReadTabsHomeEvidenceScript = """
+        (() => {
+          const list = document.querySelector('[data-desktop-evidence="ZTabsList-settings"]');
+          const general = document.querySelector('[data-desktop-evidence="ZTabsTrigger-general"]');
+          const advanced = list?.querySelector('[data-desktop-option="advanced"]');
+          const controls = general?.getAttribute('aria-controls');
+          const panel = controls ? document.getElementById(controls) : null;
+          const result = {
+            generalFocused: document.activeElement === general,
+            generalSelected:
+              general?.getAttribute('aria-selected') === 'true' &&
+              advanced?.getAttribute('aria-selected') === 'false',
+            generalPanelActive:
+              panel?.getAttribute('data-state') === 'active' && panel?.hidden === false
+          };
+          return JSON.stringify({ ...result, ready: Object.values(result).every(Boolean) });
+        })()
+        """;
+    private const string ReadAccordionInitialEvidenceScript = """
+        (() => {
+          const root = document.querySelector('[data-desktop-evidence="ZAccordion-settings"]');
+          const trigger = document.querySelector(
+            '[data-desktop-evidence="ZAccordionTrigger-general"]'
+          );
+          const controls = trigger?.getAttribute('aria-controls');
+          const content = controls ? document.getElementById(controls) : null;
+          const result = {
+            initialExpanded:
+              trigger?.getAttribute('aria-expanded') === 'true' &&
+              trigger?.getAttribute('data-state') === 'open',
+            initialControlsResolved: Boolean(
+              controls && content?.id === controls && content?.getAttribute('role') === 'region'
+            ),
+            initialLabelledByResolved: Boolean(
+              trigger?.id && content?.getAttribute('aria-labelledby') === trigger.id
+            ),
+            reducedMotionObserved:
+              root?.getAttribute('data-reduced-motion') === 'true' &&
+              trigger?.getAttribute('data-reduced-motion') === 'true' &&
+              content?.getAttribute('data-reduced-motion') === 'true'
+          };
+          return JSON.stringify({ ...result, ready: Object.values(result).every(Boolean) });
+        })()
+        """;
+    private const string CollapseAccordionEvidenceScript = """
+        (() => {
+          const trigger = document.querySelector(
+            '[data-desktop-evidence="ZAccordionTrigger-general"]'
+          );
+          if (!(trigger instanceof HTMLButtonElement) ||
+              trigger.getAttribute('aria-expanded') !== 'true') return false;
+          trigger.focus();
+          trigger.click();
+          return true;
+        })()
+        """;
+    private const string ReadAccordionCollapsedEvidenceScript = """
+        (() => {
+          const item = document.querySelector('[data-desktop-evidence="ZAccordionItem-general"]');
+          const trigger = document.querySelector(
+            '[data-desktop-evidence="ZAccordionTrigger-general"]'
+          );
+          const result = {
+            collapseFocused: document.activeElement === trigger,
+            collapsed:
+              trigger?.getAttribute('aria-expanded') === 'false' &&
+              trigger?.getAttribute('data-state') === 'closed' &&
+              item?.getAttribute('data-state') === 'closed',
+            generalContentCleaned:
+              document.querySelector('[data-desktop-evidence="ZAccordionContent-general"]') === null
+          };
+          return JSON.stringify({ ...result, ready: Object.values(result).every(Boolean) });
+        })()
+        """;
+    private const string ReopenAccordionEvidenceScript = """
+        (() => {
+          const trigger = document.querySelector(
+            '[data-desktop-evidence="ZAccordionTrigger-general"]'
+          );
+          if (!(trigger instanceof HTMLButtonElement) ||
+              trigger.getAttribute('aria-expanded') !== 'false') return false;
+          trigger.click();
+          return true;
+        })()
+        """;
+    private const string NavigateAccordionEvidenceScript = """
+        (() => {
+          const trigger = document.querySelector(
+            '[data-desktop-evidence="ZAccordionTrigger-general"]'
+          );
+          if (!(trigger instanceof HTMLButtonElement)) return JSON.stringify({
+            ready: false,
+            defaultPrevented: false
+          });
+          trigger.focus();
+          const event = new KeyboardEvent('keydown', {
+            bubbles: true,
+            cancelable: true,
+            key: 'ArrowDown'
+          });
+          trigger.dispatchEvent(event);
+          return JSON.stringify({ ready: event.defaultPrevented, defaultPrevented: event.defaultPrevented });
+        })()
+        """;
+    private const string ReadAccordionNavigationEvidenceScript = """
+        (() => {
+          const root = document.querySelector('[data-desktop-evidence="ZAccordion-settings"]');
+          const disabledItem = root?.querySelector('[data-desktop-option="disabled"]');
+          const advancedItem = root?.querySelector('[data-desktop-option="advanced"]');
+          const disabled = disabledItem?.querySelector('button');
+          const advanced = advancedItem?.querySelector('button');
+          const result = {
+            disabledSkipped:
+              disabled instanceof HTMLButtonElement &&
+              disabled.disabled &&
+              document.activeElement !== disabled,
+            advancedFocused: advanced instanceof HTMLButtonElement && document.activeElement === advanced
+          };
+          return JSON.stringify({ ...result, ready: Object.values(result).every(Boolean) });
+        })()
+        """;
+    private const string ActivateAdvancedAccordionEvidenceScript = """
+        (() => {
+          const root = document.querySelector('[data-desktop-evidence="ZAccordion-settings"]');
+          const advanced = root
+            ?.querySelector('[data-desktop-option="advanced"]')
+            ?.querySelector('button');
+          if (!(advanced instanceof HTMLButtonElement)) return false;
+          advanced.click();
+          return true;
+        })()
+        """;
+    private const string ReadAccordionAdvancedEvidenceScript = """
+        (() => {
+          const root = document.querySelector('[data-desktop-evidence="ZAccordion-settings"]');
+          const generalItem = document.querySelector('[data-desktop-evidence="ZAccordionItem-general"]');
+          const general = document.querySelector(
+            '[data-desktop-evidence="ZAccordionTrigger-general"]'
+          );
+          const advancedItem = root?.querySelector('[data-desktop-option="advanced"]');
+          const advanced = advancedItem?.querySelector('button');
+          const controls = advanced?.getAttribute('aria-controls');
+          const content = controls ? document.getElementById(controls) : null;
+          const result = {
+            advancedExpanded:
+              advanced?.getAttribute('aria-expanded') === 'true' &&
+              advanced?.getAttribute('data-state') === 'open' &&
+              advancedItem?.getAttribute('data-state') === 'open',
+            generalCollapsed:
+              general?.getAttribute('aria-expanded') === 'false' &&
+              general?.getAttribute('data-state') === 'closed' &&
+              generalItem?.getAttribute('data-state') === 'closed',
+            advancedControlsResolved: Boolean(
+              controls && content?.id === controls && content?.getAttribute('role') === 'region'
+            ),
+            advancedLabelledByResolved: Boolean(
+              advanced?.id && content?.getAttribute('aria-labelledby') === advanced.id
+            ),
+            generalContentCleaned:
+              document.querySelector('[data-desktop-evidence="ZAccordionContent-general"]') === null
+          };
+          return JSON.stringify({ ...result, ready: Object.values(result).every(Boolean) });
+        })()
+        """;
     private readonly HostOptions _options;
     private readonly WebView2 _webview;
     private readonly Microsoft.UI.Xaml.Window _window;
@@ -1080,6 +1417,115 @@ public sealed class WebViewHost : IAsyncDisposable
                 scrollLockReleasedAfterClose = dialogAfterClose.ScrollLockReleased,
                 presenceCleanedAfterClose = dialogAfterClose.PresenceCleaned
             };
+            smokePhase = "validating-tabs-initial";
+            var tabsInitial = await WaitForEvidenceAsync<DesktopTabsInitialEvidence>(
+                sender,
+                ReadTabsInitialEvidenceScript,
+                evidence => evidence.Ready,
+                "Desktop Tabs did not establish its initial selected panel relationships.");
+            smokePhase = "validating-tabs-arrow";
+            var tabsArrow = await ExecuteJsonScriptAsync<DesktopKeyboardEvidence>(
+                sender,
+                AdvanceTabsEvidenceScript);
+            if (tabsArrow is null || !tabsArrow.Ready)
+                throw new InvalidOperationException(
+                    $"Desktop Tabs did not handle ArrowRight: {JsonSerializer.Serialize(tabsArrow, SerializerOptions)}");
+            var tabsAdvanced = await WaitForEvidenceAsync<DesktopTabsAdvancedEvidence>(
+                sender,
+                ReadTabsAdvancedEvidenceScript,
+                evidence => evidence.Ready,
+                "Desktop Tabs did not skip its disabled tab and synchronize the advanced panel.");
+            smokePhase = "validating-tabs-home";
+            var tabsHomeKey = await ExecuteJsonScriptAsync<DesktopKeyboardEvidence>(
+                sender,
+                ReturnTabsHomeEvidenceScript);
+            if (tabsHomeKey is null || !tabsHomeKey.Ready)
+                throw new InvalidOperationException(
+                    $"Desktop Tabs did not handle Home: {JsonSerializer.Serialize(tabsHomeKey, SerializerOptions)}");
+            var tabsHome = await WaitForEvidenceAsync<DesktopTabsHomeEvidence>(
+                sender,
+                ReadTabsHomeEvidenceScript,
+                evidence => evidence.Ready,
+                "Desktop Tabs did not restore its first tab and panel with Home.");
+            var tabsInteraction = new
+            {
+                ready = true,
+                tabsInitial.InitialSelected,
+                tabsInitial.InitialControlsResolved,
+                tabsInitial.InitialLabelledByResolved,
+                tabsAdvanced.DisabledSkipped,
+                arrowHandled = tabsArrow.DefaultPrevented,
+                tabsAdvanced.AdvancedFocused,
+                tabsAdvanced.AdvancedSelected,
+                tabsAdvanced.AdvancedPanelActive,
+                tabsAdvanced.GeneralPanelHidden,
+                homeHandled = tabsHomeKey.DefaultPrevented,
+                generalFocusedAfterHome = tabsHome.GeneralFocused,
+                generalSelectedAfterHome = tabsHome.GeneralSelected,
+                generalPanelActiveAfterHome = tabsHome.GeneralPanelActive
+            };
+            smokePhase = "validating-accordion-initial";
+            var accordionInitial = await WaitForEvidenceAsync<DesktopAccordionInitialEvidence>(
+                sender,
+                ReadAccordionInitialEvidenceScript,
+                evidence => evidence.Ready,
+                "Desktop Accordion did not establish its initial expanded content relationships.");
+            smokePhase = "validating-accordion-collapse";
+            if (await sender.ExecuteScriptAsync(CollapseAccordionEvidenceScript) != "true")
+                throw new InvalidOperationException("Desktop Accordion general trigger could not collapse.");
+            var accordionCollapsed = await WaitForEvidenceAsync<DesktopAccordionCollapsedEvidence>(
+                sender,
+                ReadAccordionCollapsedEvidenceScript,
+                evidence => evidence.Ready,
+                "Desktop Accordion did not clean up its collapsed reduced-motion content.");
+            smokePhase = "validating-accordion-reopen";
+            if (await sender.ExecuteScriptAsync(ReopenAccordionEvidenceScript) != "true")
+                throw new InvalidOperationException("Desktop Accordion general trigger could not reopen.");
+            var accordionReopened = await WaitForEvidenceAsync<DesktopAccordionInitialEvidence>(
+                sender,
+                ReadAccordionInitialEvidenceScript,
+                evidence => evidence.Ready,
+                "Desktop Accordion did not restore its general content after reopening.");
+            smokePhase = "validating-accordion-navigation";
+            var accordionArrow = await ExecuteJsonScriptAsync<DesktopKeyboardEvidence>(
+                sender,
+                NavigateAccordionEvidenceScript);
+            if (accordionArrow is null || !accordionArrow.Ready)
+                throw new InvalidOperationException(
+                    $"Desktop Accordion did not handle ArrowDown: {JsonSerializer.Serialize(accordionArrow, SerializerOptions)}");
+            var accordionNavigation = await WaitForEvidenceAsync<DesktopAccordionNavigationEvidence>(
+                sender,
+                ReadAccordionNavigationEvidenceScript,
+                evidence => evidence.Ready,
+                "Desktop Accordion did not skip its disabled trigger during navigation.");
+            smokePhase = "validating-accordion-single-selection";
+            if (await sender.ExecuteScriptAsync(ActivateAdvancedAccordionEvidenceScript) != "true")
+                throw new InvalidOperationException("Desktop Accordion advanced trigger is unavailable.");
+            var accordionAdvanced = await WaitForEvidenceAsync<DesktopAccordionAdvancedEvidence>(
+                sender,
+                ReadAccordionAdvancedEvidenceScript,
+                evidence => evidence.Ready,
+                "Desktop Accordion did not enforce its single-selection content lifecycle.");
+            var accordionInteraction = new
+            {
+                ready = true,
+                accordionInitial.InitialExpanded,
+                accordionInitial.InitialControlsResolved,
+                accordionInitial.InitialLabelledByResolved,
+                accordionInitial.ReducedMotionObserved,
+                accordionCollapsed.CollapseFocused,
+                accordionCollapsed.Collapsed,
+                accordionCollapsed.GeneralContentCleaned,
+                reopened = accordionReopened.InitialExpanded,
+                arrowHandled = accordionArrow.DefaultPrevented,
+                accordionNavigation.DisabledSkipped,
+                accordionNavigation.AdvancedFocused,
+                accordionAdvanced.AdvancedExpanded,
+                accordionAdvanced.GeneralCollapsed,
+                accordionAdvanced.AdvancedControlsResolved,
+                accordionAdvanced.AdvancedLabelledByResolved,
+                generalContentCleanedAfterAdvanced = accordionAdvanced.GeneralContentCleaned
+            };
             var pageAfterValue = await sender.ExecuteScriptAsync(ReadStatusScript);
             smokePhase = "writing-report";
             var report = new
@@ -1096,7 +1542,9 @@ public sealed class WebViewHost : IAsyncDisposable
                 formInteraction,
                 choiceInteraction,
                 selectInteraction,
-                dialogInteraction
+                dialogInteraction,
+                tabsInteraction,
+                accordionInteraction
             };
             Directory.CreateDirectory(Path.GetDirectoryName(_options.SmokeReportPath)!);
             await WriteSmokeReportAsync(
