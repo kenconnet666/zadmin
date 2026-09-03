@@ -33,8 +33,7 @@ export function validateArtifactManifest(manifest) {
 			);
 		if (
 			typeof artifact.filename !== 'string' ||
-			artifact.filename.length <= '.tgz'.length ||
-			!artifact.filename.endsWith('.tgz') ||
+			!/^[A-Za-z0-9][A-Za-z0-9._-]*\.tgz$/u.test(artifact.filename) ||
 			isAbsolute(artifact.filename) ||
 			artifact.filename.includes(':') ||
 			artifact.filename.includes('..') ||
@@ -132,6 +131,8 @@ if (isMain && process.argv.includes('--self-test')) {
 		cases += 1;
 		for (const invalid of [
 			{ ...artifact, filename: '../escape.tgz' },
+			{ ...artifact, filename: 'zui package.tgz' },
+			{ ...artifact, filename: 'zui.tgz\nmalicious' },
 			{ ...artifact, bytes: artifact.bytes + 1 },
 			{ ...artifact, sha256: 'b'.repeat(64) }
 		]) {

@@ -1,0 +1,224 @@
+name: Production Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      ci_run_id: { description: Successful CI run id, required: true, type: string }
+      expected_sha: { description: Exact 40-character CI commit SHA, required: true, type: string }
+      zui_version: { description: Exact stable @zadmin/zui version, required: true, type: string }
+      zui_tag: { description: Exact @zadmin/zui@<version> tag, required: true, type: string }
+
+concurrency: { group: production-release, cancel-in-progress: false }
+env: { NODE_VERSION: '24' }
+
+jobs:
+  preflight:
+    name: Read-only release preflight
+    runs-on: ubuntu-latest
+    permissions: { contents: read, actions: read }
+    timeout-minutes: 30
+    outputs:
+      sha: ${{ steps.provenance.outputs.sha }}
+      run_id: ${{ steps.provenance.outputs.run_id }}
+      version: ${{ steps.provenance.outputs.version }}
+      tag: ${{ steps.provenance.outputs.tag }}
+    steps:
+      - id: provenance
+        name: Verify successful CI run and exact revision
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_ID: ${{ inputs.ci_run_id }}
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+          VERSION: ${{ inputs.zui_version }}
+          TAG: ${{ inputs.zui_tag }}
+        run: |
+          printf '%s' "$RUN_ID" | grep -Eq '^[1-9][0-9]*$'
+          printf '%s' "$EXPECTED_SHA" | grep -Eq '^[a-f0-9]{40}$'
+          printf '%s' "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'
+          test "$TAG" = "@zadmin/zui@$VERSION"
+          run_json="$(gh run view --repo "$GITHUB_REPOSITORY" "$RUN_ID" --json databaseId,event,status,conclusion,headSha,headBranch,workflowName)"
+          test "$(jq -er '.databaseId | tostring' <<<"$run_json")" = "$RUN_ID"
+          test "$(jq -er '.event' <<<"$run_json")" = push
+          test "$(jq -er '.status' <<<"$run_json")" = completed
+          test "$(jq -er '.conclusion' <<<"$run_json")" = success
+          test "$(jq -er '.headSha' <<<"$run_json")" = "$EXPECTED_SHA"
+          test "$(jq -er '.headBranch' <<<"$run_json")" = master
+          test "$(jq -er '.workflowName' <<<"$run_json")" = CI
+          echo "sha=$EXPECTED_SHA" >> "$GITHUB_OUTPUT"
+          echo "run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ steps.provenance.outputs.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+      - uses: actions/download-artifact@v7
+        with:
+          name: release-consumer-artifacts-${{ steps.provenance.outputs.sha }}
+          path: .release-artifacts
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ steps.provenance.outputs.run_id }}
+      - name: Verify release candidate package and tag
+        env:
+          EXPECTED_SHA: ${{ steps.provenance.outputs.sha }}
+          TAG: ${{ steps.provenance.outputs.tag }}
+        run: node scripts/check-release-candidate.mjs --directory=.release-artifacts --revision="$EXPECTED_SHA" --tag="$TAG"
+      - name: Verify release handoff
+        env:
+          EXPECTED_SHA: ${{ steps.provenance.outputs.sha }}
+        run: node scripts/prepare-release-handoff.mjs --directory=.release-artifacts --revision="$EXPECTED_SHA" --verify-plan=.release-artifacts/release-handoff.json
+      - uses: actions/download-artifact@v7
+        with:
+          name: workspace-build-${{ steps.provenance.outputs.sha }}
+          path: .versioned-docs
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ steps.provenance.outputs.run_id }}
+      - name: Verify versioned Docs artifact
+        env:
+          EXPECTED_SHA: ${{ steps.provenance.outputs.sha }}
+          VERSION: ${{ steps.provenance.outputs.version }}
+        run: node apps/docs/scripts/verify-versioned-docs-artifact.mjs --dist=.versioned-docs/apps/docs/dist --revision="$EXPECTED_SHA" --package-version="$VERSION"
+      - uses: actions/download-artifact@v7
+        with:
+          name: desktop-windows-${{ steps.provenance.outputs.sha }}
+          path: .desktop-artifact
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ steps.provenance.outputs.run_id }}
+      - name: Verify Desktop artifact
+        env:
+          EXPECTED_SHA: ${{ steps.provenance.outputs.sha }}
+        run: node apps/docs/scripts/verify-desktop-artifact.mjs --directory=.desktop-artifact --revision="$EXPECTED_SHA"
+
+  publish:
+    name: Publish ZUI package and create release
+    needs: preflight
+    outputs:
+      sha: ${{ needs.preflight.outputs.sha }}
+      run_id: ${{ needs.preflight.outputs.run_id }}
+      version: ${{ needs.preflight.outputs.version }}
+      tag: ${{ needs.preflight.outputs.tag }}
+    runs-on: ubuntu-latest
+    environment: production
+    permissions: { contents: write, actions: read, id-token: write }
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.preflight.outputs.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+      - name: Verify npm version for trusted publishing
+        run: |
+          npm_version="$(npm --version)"
+          NPM_VERSION="$npm_version" node -e "const [major,minor,patch] = process.env.NPM_VERSION.split('.').map(Number); if (major < 11 || (major === 11 && (minor < 5 || (minor === 5 && patch < 1)))) throw new Error('npm >= 11.5.1 is required for trusted publishing.');"
+      - uses: actions/download-artifact@v7
+        with:
+          name: release-consumer-artifacts-${{ needs.preflight.outputs.sha }}
+          path: .release-artifacts
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ needs.preflight.outputs.run_id }}
+      - name: Verify handoff and resolve manifest-selected tarball
+        env:
+          EXPECTED_SHA: ${{ needs.preflight.outputs.sha }}
+          TAG: ${{ needs.preflight.outputs.tag }}
+          VERSION: ${{ needs.preflight.outputs.version }}
+        run: |
+          node scripts/check-release-candidate.mjs --directory=.release-artifacts --revision="$EXPECTED_SHA" --tag="$TAG"
+          node scripts/prepare-release-handoff.mjs --directory=.release-artifacts --revision="$EXPECTED_SHA" --verify-plan=.release-artifacts/release-handoff.json
+          test "$(jq -er '.artifacts[] | select(.name == "@zadmin/zui") | .version' .release-artifacts/manifest.json)" = "$VERSION"
+          zui_url="$(node scripts/read-release-artifact.mjs --directory=.release-artifacts --package=@zadmin/zui --revision="$EXPECTED_SHA")"
+          node --input-type=module -e 'import { fileURLToPath } from "node:url"; console.log(fileURLToPath(process.argv[1]))' "$zui_url" > .zui-tarball-path
+      - name: Publish exact tarball only when registry lacks this version
+        env:
+          VERSION: ${{ needs.preflight.outputs.version }}
+        run: |
+          tarball="$(cat .zui-tarball-path)"
+          probe="$(node scripts/probe-npm-registry.mjs --package=@zadmin/zui --version="$VERSION" --tarball="$tarball")"
+          status="$(jq -er .status <<<"$probe")"
+          if [ "$status" = absent ]; then npm config set registry https://registry.npmjs.org; npm ping; npm publish "$tarball" --access public --provenance; else test "$status" = present; test "$(jq -er .match <<<"$probe")" = true; fi
+      - name: Verify bounded registry propagation and integrity
+        env:
+          VERSION: ${{ needs.preflight.outputs.version }}
+        run: |
+          for attempt in 1 2 3 4 5 6; do
+            probe="$(node scripts/probe-npm-registry.mjs --package=@zadmin/zui --version="$VERSION" --tarball="$(cat .zui-tarball-path)")"
+            status="$(jq -er .status <<<"$probe")"
+            if [ "$status" = present ]; then
+              test "$(jq -er .match <<<"$probe")" = true
+              exit 0
+            fi
+            test "$status" = absent
+            [ "$attempt" -lt 6 ] && sleep 10
+          done
+          exit 1
+      - name: Verify or create exact tag and release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SHA: ${{ needs.preflight.outputs.sha }}
+          TAG: ${{ needs.preflight.outputs.tag }}
+        run: |
+          set +e
+          git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null 2>&1
+          tag_status=$?
+          set -e
+          if [ "$tag_status" -eq 0 ]; then
+            git fetch --quiet origin "+refs/tags/$TAG:refs/tags/$TAG"
+            test "$(git rev-list -n 1 "$TAG^{commit}")" = "$SHA"
+          elif [ "$tag_status" -eq 2 ]; then
+            git tag --annotate "$TAG" "$SHA" --message "$TAG"
+            git push origin "$TAG"
+          else
+            echo "git ls-remote failed with infrastructure status $tag_status" >&2
+            exit "$tag_status"
+          fi
+          tarball_path="$(cat .zui-tarball-path)"
+          expected_assets="$(basename "$tarball_path"),release-handoff.json,support-matrix.json"
+          release_probe="$(node scripts/probe-github-release.mjs --repository="$GITHUB_REPOSITORY" --tag="$TAG" --assets="$expected_assets" --tarball="$tarball_path" --handoff=.release-artifacts/release-handoff.json --support=.release-artifacts/support-matrix.json)"
+          if [ "$(jq -er .status <<<"$release_probe")" = absent ]; then
+            gh release create "$TAG" --verify-tag --target "$SHA" --title "$TAG" --generate-notes -- "$(cat .zui-tarball-path)" .release-artifacts/release-handoff.json .release-artifacts/support-matrix.json
+            node scripts/probe-github-release.mjs --repository="$GITHUB_REPOSITORY" --tag="$TAG" --assets="$expected_assets" --tarball="$tarball_path" --handoff=.release-artifacts/release-handoff.json --support=.release-artifacts/support-matrix.json
+          else
+            test "$(jq -er .status <<<"$release_probe")" = present
+            test "$(jq -er .match <<<"$release_probe")" = true
+          fi
+
+  deploy:
+    name: Deploy verified versioned Docs
+    needs: publish
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions: { contents: read, actions: read, pages: write, id-token: write }
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.publish.outputs.sha }}
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+      - uses: actions/download-artifact@v7
+        with:
+          name: workspace-build-${{ needs.publish.outputs.sha }}
+          path: .versioned-docs
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ needs.publish.outputs.run_id }}
+      - name: Verify versioned Docs artifact again
+        env:
+          EXPECTED_SHA: ${{ needs.publish.outputs.sha }}
+          VERSION: ${{ needs.publish.outputs.version }}
+        run: node apps/docs/scripts/verify-versioned-docs-artifact.mjs --dist=.versioned-docs/apps/docs/dist --revision="$EXPECTED_SHA" --package-version="$VERSION"
+      - uses: actions/upload-pages-artifact@v4
+        with: { path: .versioned-docs/apps/docs/dist }
+      - id: deployment
+        uses: actions/deploy-pages@v4

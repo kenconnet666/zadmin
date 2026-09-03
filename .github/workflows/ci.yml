@@ -81,6 +81,11 @@ jobs:
           pnpm release:coherence
           pnpm release:candidate:self-test
           pnpm release:handoff:self-test
+          pnpm release:artifact:self-test
+          pnpm release:production:self-test
+          pnpm release:production:check
+          pnpm release:npm-registry:self-test
+          pnpm release:github-release:self-test
           pnpm --filter @zadmin/docs docs:versioned:verify:self-test
           pnpm --filter @zadmin/docs maturity:desktop:self-test
           pnpm --filter @zadmin/webview desktop:evidence:self-test

@@ -44,6 +44,10 @@ async function packageFacts() {
 const rootPackage = JSON.parse(await readFile(resolve(root, 'package.json'), 'utf8'));
 const changesetConfig = JSON.parse(await readFile(resolve(root, '.changeset/config.json'), 'utf8'));
 const workflow = await readFile(resolve(root, '.github/workflows/release.yml'), 'utf8');
+const productionWorkflow = await readFile(
+	resolve(root, '.github/workflows/production-release.yml'),
+	'utf8'
+);
 const ci = await readFile(resolve(root, '.github/workflows/ci.yml'), 'utf8');
 const packProducer = await readFile(resolve(root, 'scripts/pack-release-artifacts.mjs'), 'utf8');
 const artifactReader = await readFile(resolve(root, 'scripts/read-release-artifact.mjs'), 'utf8');
@@ -295,7 +299,49 @@ const checks = {
 		/support matrix bytes\/checksum\/revision do not match downloaded input/u.test(
 			releaseHandoff
 		) &&
-		/sha256Pattern/u.test(releaseHandoff)
+		/sha256Pattern/u.test(releaseHandoff),
+	productionReleaseWorkflowConfigured:
+		rootPackage.scripts?.['release:production:check'] ===
+			'node scripts/check-production-release-workflow.mjs' &&
+		rootPackage.scripts?.['release:production:self-test'] ===
+			'node scripts/check-production-release-workflow.mjs --self-test' &&
+		rootPackage.scripts?.['release:github-release:self-test'] ===
+			'node scripts/probe-github-release.mjs --self-test' &&
+		rootPackage.scripts?.['release:npm-registry:self-test'] ===
+			'node scripts/probe-npm-registry.mjs --self-test' &&
+		rootPackage.scripts?.['release:artifact:self-test'] ===
+			'node scripts/read-release-artifact.mjs --self-test' &&
+		ci.includes('pnpm release:production:self-test') &&
+		ci.includes('pnpm release:production:check') &&
+		ci.includes('pnpm release:github-release:self-test') &&
+		ci.includes('pnpm release:npm-registry:self-test') &&
+		ci.includes('pnpm release:artifact:self-test') &&
+		/^on:\n  workflow_dispatch:/mu.test(productionWorkflow) &&
+		!/^[ ]{2}push:/mu.test(productionWorkflow) &&
+		/ci_run_id:/u.test(productionWorkflow) &&
+		/expected_sha:/u.test(productionWorkflow) &&
+		/zui_version:/u.test(productionWorkflow) &&
+		/zui_tag:/u.test(productionWorkflow) &&
+		/gh run view.*databaseId,event,status,conclusion,headSha,headBranch,workflowName/u.test(
+			productionWorkflow
+		) &&
+		/npm publish "\$tarball" --access public --provenance/u.test(productionWorkflow) &&
+		/actions\/deploy-pages/u.test(productionWorkflow),
+	releasePublishTarballReuseConfigured:
+		/npm publish "\$tarball" --access public --provenance/u.test(productionWorkflow) &&
+		!/pnpm\s+.*pack/u.test(productionWorkflow),
+	npmOidcProvenanceConfigured:
+		/id-token:\s*write/u.test(productionWorkflow) &&
+		/npm publish[\s\S]*--provenance/u.test(productionWorkflow),
+	automatedTagAndGithubReleaseConfigured:
+		/git tag --annotate/u.test(productionWorkflow) && /gh release create/u.test(productionWorkflow),
+	registrySmokeConfigured:
+		/probe-npm-registry\.mjs/u.test(productionWorkflow) &&
+		/Verify bounded registry propagation/u.test(productionWorkflow) &&
+		!/\|\| true/u.test(productionWorkflow),
+	versionedDocsDeploymentConfigured:
+		/actions\/upload-pages-artifact/u.test(productionWorkflow) &&
+		/actions\/deploy-pages/u.test(productionWorkflow)
 };
 const blocked = Object.entries(checks)
 	.filter(([, value]) => !value)

@@ -25,6 +25,12 @@
 - `versionedDocsArtifactRoundTrip`
 - `supportMatrixDocumented`
 - `releaseBoundSupportMatrix`
+- `productionReleaseWorkflowConfigured`
+- `releasePublishTarballReuseConfigured`
+- `npmOidcProvenanceConfigured`
+- `automatedTagAndGithubReleaseConfigured`
+- `registrySmokeConfigured`
+- `versionedDocsDeploymentConfigured`
 
 ## Blocked facts
 
