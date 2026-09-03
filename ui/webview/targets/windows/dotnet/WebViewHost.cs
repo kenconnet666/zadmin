@@ -246,6 +246,38 @@ public sealed class WebViewHost : IAsyncDisposable
         public bool BackgroundUnchanged { get; set; }
     }
 
+    private sealed class DesktopPrimitiveInteractionEvidence
+    {
+        public string? HeadingLevel { get; set; }
+        public string? HeadingText { get; set; }
+        public string? CodeTag { get; set; }
+        public bool CodeDescendant { get; set; }
+        public bool CodeText { get; set; }
+        public string? IconRole { get; set; }
+        public string? IconLabel { get; set; }
+        public bool DecorativeIconHidden { get; set; }
+        public string? KbdText { get; set; }
+        public bool LinkTargetResolved { get; set; }
+        public bool LinkPrevented { get; set; }
+        public int LinkActivations { get; set; }
+        public bool LinkHashUnchanged { get; set; }
+        public string? SeparatorOrientation { get; set; }
+        public bool SeparatorRole { get; set; }
+        public bool VisuallyHiddenAccessible { get; set; }
+        public bool VisuallyHiddenClipped { get; set; }
+        public bool VisuallyHiddenSized { get; set; }
+        public bool AspectRatioMeasured { get; set; }
+        public bool ContainerMaxWidth { get; set; }
+        public bool ContainerPadding { get; set; }
+        public bool ContainerBounds { get; set; }
+        public string? AlertRole { get; set; }
+        public string? AlertLive { get; set; }
+        public bool AlertText { get; set; }
+        public string? SpinnerRole { get; set; }
+        public string? SpinnerLabel { get; set; }
+        public bool SpinnerMotionObserved { get; set; }
+    }
+
     private static readonly JsonSerializerOptions SerializerOptions = new(JsonSerializerDefaults.Web);
     private const string CaptureDesktopEvidenceScript = """
         (() => {
@@ -261,6 +293,7 @@ public sealed class WebViewHost : IAsyncDisposable
                 type: node?.getAttribute('type') ?? null,
                 disabled: node?.hasAttribute('disabled') ?? false,
                 text: node?.textContent?.trim() ?? '',
+                href: node?.getAttribute('href') ?? null,
                 ariaLive: node?.getAttribute('aria-live') ?? null,
                 role: node?.getAttribute('role') ?? null,
                 name: node?.getAttribute('name') ?? null,
@@ -334,6 +367,56 @@ public sealed class WebViewHost : IAsyncDisposable
         "Number(document.querySelector('[data-desktop-evidence=\"ZButton-component-action\"]')?.getAttribute('data-desktop-evidence-runs')??'0')";
     private const string ReadStatusScript =
         "JSON.stringify(document.querySelector('[data-desktop-evidence=\"ZBox-status\"]')?.innerText??'')";
+    private const string RunPrimitiveEvidenceScript = """
+        (async () => {
+          const q = (marker) => document.querySelector(`[data-desktop-evidence="${marker}"]`);
+          const style = (node) => node ? getComputedStyle(node) : null;
+          const heading = q('ZHeading-primitives'), code = q('ZCode-primitives');
+          const labelled = q('ZIcon-labelled'), decorative = q('ZIcon-decorative');
+          const kbd = q('ZKbd-primitives'), link = q('ZLink-primitives'), target = document.getElementById('desktop-primitives');
+          const separator = q('ZSeparator-primitives'), hidden = q('ZVisuallyHidden-primitives');
+          const aspect = q('ZAspectRatio-primitives'), container = q('ZContainer-primitives');
+          const alert = q('ZAlert-primitives'), spinner = q('ZSpinner-primitives');
+          const hash = location.hash;
+          const linkActivationsBefore = Number(document.querySelector('[data-desktop-primitive-link-activations]')?.getAttribute('data-desktop-primitive-link-activations') ?? '0');
+          const linkEvent = link ? new MouseEvent('click', { bubbles: true, cancelable: true, view: window }) : null;
+          const linkDispatchResult = link && linkEvent ? link.dispatchEvent(linkEvent) : false;
+          await new Promise((resolve) => requestAnimationFrame(() => resolve()));
+          const hs = style(hidden), as = style(aspect), cs = style(container), ss = style(spinner);
+          const ar = aspect?.getBoundingClientRect();
+          const cr = container?.getBoundingClientRect();
+          return JSON.stringify({
+            headingLevel: heading?.tagName ?? null,
+            headingText: heading?.textContent?.trim() ?? '',
+            codeTag: code?.tagName ?? null,
+            codeDescendant: Boolean(code?.querySelector('code')),
+            codeText: Boolean(code?.textContent?.includes('const ready = true;')),
+            iconRole: labelled?.getAttribute('role') ?? null,
+            iconLabel: labelled?.getAttribute('aria-label') ?? null,
+            decorativeIconHidden: decorative?.getAttribute('aria-hidden') === 'true',
+            kbdText: kbd?.textContent?.trim() ?? '',
+            linkTargetResolved: Boolean(link?.getAttribute('href') === '#desktop-primitives' && target),
+            linkPrevented: linkDispatchResult === false && linkEvent?.defaultPrevented === true,
+            linkActivations: Number(document.querySelector('[data-desktop-primitive-link-activations]')?.getAttribute('data-desktop-primitive-link-activations') ?? '0') - linkActivationsBefore,
+            linkHashUnchanged: location.hash === hash,
+            separatorOrientation: separator?.getAttribute('data-orientation') ?? null,
+            separatorRole: separator?.tagName === 'HR' && separator?.getAttribute('role') === null,
+            visuallyHiddenAccessible: Boolean(hidden && !hidden.hidden && hidden.getAttribute('aria-hidden') !== 'true'),
+            visuallyHiddenClipped: Boolean(hs && hs.position === 'absolute' && (hs.clipPath.includes('inset') || hs.clip.includes('rect'))),
+            visuallyHiddenSized: Boolean(hs && parseFloat(hs.width) <= 1 && parseFloat(hs.height) <= 1),
+            aspectRatioMeasured: Boolean(ar && ar.width > 0 && ar.height > 0 && Math.abs(ar.width / ar.height - 16 / 9) < 0.04),
+            containerMaxWidth: Boolean(cs && cs.maxWidth !== 'none' && cs.maxWidth !== ''),
+            containerPadding: Boolean(cs && parseFloat(cs.paddingLeft) > 0 && parseFloat(cs.paddingRight) > 0),
+            containerBounds: Boolean(cr && cr.width > 0 && cr.height > 0),
+            alertRole: alert?.getAttribute('role') ?? null,
+            alertLive: alert?.getAttribute('aria-live') ?? null,
+            alertText: Boolean(alert?.textContent?.includes('Desktop alert') && alert?.textContent?.includes('A measured alert.')),
+            spinnerRole: spinner?.getAttribute('role') ?? null,
+            spinnerLabel: spinner?.getAttribute('aria-label') ?? null,
+            spinnerMotionObserved: Boolean(ss && spinner?.getAttribute('data-reduced-motion') === 'true' && spinner?.querySelector('[data-slot="indicator"]')?.getAnimations().length === 0 && (ss.animationName === 'none' || ss.animationDuration === '0s' || ss.animationPlayState === 'paused'))
+          });
+        })()
+        """;
     private const string RunFormEvidenceScript = """
         (() => {
           const form = document.querySelector('[data-desktop-evidence="ZForm-contract"]');
@@ -1826,6 +1909,31 @@ public sealed class WebViewHost : IAsyncDisposable
                 pointerLeaveCleaned = tooltipAfterPointerLeave.PresenceCleaned,
                 backgroundUnchanged = tooltipOpen.BackgroundUnchanged && tooltipAfterEscape.BackgroundUnchanged && tooltipReopened.BackgroundUnchanged && tooltipAfterBlur.BackgroundUnchanged && tooltipHoverOpen.BackgroundUnchanged && tooltipAfterPointerLeave.BackgroundUnchanged
             };
+            smokePhase = "validating-primitives";
+            var primitiveInteraction = await ExecuteJsonScriptAsync<DesktopPrimitiveInteractionEvidence>(sender, RunPrimitiveEvidenceScript)
+                ?? throw new InvalidOperationException("Desktop primitive evidence did not return an object.");
+            if (!StringComparer.Ordinal.Equals(primitiveInteraction.HeadingLevel, "H2") ||
+                !StringComparer.Ordinal.Equals(primitiveInteraction.HeadingText, "Desktop primitives") ||
+                !StringComparer.Ordinal.Equals(primitiveInteraction.CodeTag, "PRE") ||
+                !primitiveInteraction.CodeDescendant || !primitiveInteraction.CodeText ||
+                !StringComparer.Ordinal.Equals(primitiveInteraction.IconRole, "img") ||
+                !StringComparer.Ordinal.Equals(primitiveInteraction.IconLabel, "Warning") ||
+                !primitiveInteraction.DecorativeIconHidden ||
+                !StringComparer.Ordinal.Equals(primitiveInteraction.KbdText, "Ctrl") ||
+                !primitiveInteraction.LinkTargetResolved || !primitiveInteraction.LinkPrevented ||
+                primitiveInteraction.LinkActivations != 1 || !primitiveInteraction.LinkHashUnchanged ||
+                !StringComparer.Ordinal.Equals(primitiveInteraction.SeparatorOrientation, "horizontal") ||
+                !primitiveInteraction.SeparatorRole || !primitiveInteraction.VisuallyHiddenAccessible ||
+                !primitiveInteraction.VisuallyHiddenClipped || !primitiveInteraction.VisuallyHiddenSized ||
+                !primitiveInteraction.AspectRatioMeasured || !primitiveInteraction.ContainerMaxWidth ||
+                !primitiveInteraction.ContainerPadding || !primitiveInteraction.ContainerBounds ||
+                !StringComparer.Ordinal.Equals(primitiveInteraction.AlertRole, "status") ||
+                !StringComparer.Ordinal.Equals(primitiveInteraction.AlertLive, "polite") ||
+                !primitiveInteraction.AlertText ||
+                !StringComparer.Ordinal.Equals(primitiveInteraction.SpinnerRole, "status") ||
+                !StringComparer.Ordinal.Equals(primitiveInteraction.SpinnerLabel, "Loading desktop primitives") ||
+                !primitiveInteraction.SpinnerMotionObserved)
+                throw new InvalidOperationException("Desktop primitive interaction evidence failed its typed contract.");
             var pageAfterValue = await sender.ExecuteScriptAsync(ReadStatusScript);
             smokePhase = "writing-report";
             var report = new
@@ -1846,7 +1954,8 @@ public sealed class WebViewHost : IAsyncDisposable
                 tabsInteraction,
                 accordionInteraction,
                 popoverInteraction,
-                tooltipInteraction
+                tooltipInteraction,
+                primitiveInteraction
             };
             Directory.CreateDirectory(Path.GetDirectoryName(_options.SmokeReportPath)!);
             await WriteSmokeReportAsync(

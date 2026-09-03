@@ -7,7 +7,10 @@
 		ZAccordionContent,
 		ZAccordionItem,
 		ZAccordionTrigger,
+		ZAlert,
+		ZAspectRatio,
 		ZCheckbox,
+		ZContainer,
 		ZDialog,
 		ZDialogClose,
 		ZDialogContent,
@@ -22,12 +25,17 @@
 		ZForm,
 		ZFormField,
 		ZInput,
+		ZIcon,
+		ZKbd,
+		ZLink,
 		ZRadioGroup,
 		ZRadioGroupItem,
 		ZSelect,
 		ZSelectContent,
 		ZSelectItem,
 		ZSelectTrigger,
+		ZSeparator,
+		ZSpinner,
 		ZStack,
 		ZSwitch,
 		ZTabs,
@@ -38,9 +46,12 @@
 		ZTooltipContent,
 		ZTooltipTrigger,
 		ZText,
+		ZVisuallyHidden,
+		ZHeading,
 		defaultTheme,
 		icss
 	} from '@zadmin/zui';
+	import { ZCode } from '@zadmin/zui/code';
 	import type { DesktopResult } from '@zadmin/webview/platform';
 	import {
 		ClipboardButton,
@@ -59,6 +70,7 @@
 	let status = $state('Ready. Choose a capability probe.');
 	let selectedPath = $state<string>();
 	let componentEvidenceRuns = $state(0);
+	let primitiveLinkActivations = $state(0);
 	let componentFormSubmits = $state(0);
 	const pageClass = icss(defaultTheme, (s) => {
 		s.padding._large;
@@ -81,6 +93,11 @@
 	function recordComponentEvidence(): void {
 		componentEvidenceRuns += 1;
 		status = `Desktop component evidence ${componentEvidenceRuns}: ZButton click handled.`;
+	}
+
+	function recordPrimitiveLinkActivation(event: MouseEvent): void {
+		event.preventDefault();
+		primitiveLinkActivations += 1;
 	}
 
 	async function runtimeReport(): Promise<void> {
@@ -369,6 +386,21 @@
 					</ZDialogContent>
 				</ZDialog>
 			</ZBox>
+			<ZContainer size="small" gutter="medium" data-desktop-component="ZContainer" data-desktop-evidence="ZContainer-primitives">
+				<ZHeading level={2} data-desktop-component="ZHeading" data-desktop-evidence="ZHeading-primitives">Desktop primitives</ZHeading>
+				<ZCode data-desktop-component="ZCode" data-desktop-evidence="ZCode-primitives" code="const ready = true;" />
+				<ZIcon data-desktop-component="ZIcon" data-desktop-evidence="ZIcon-labelled" name="warning" label="Warning" />
+				<ZKbd data-desktop-component="ZKbd" data-desktop-evidence="ZKbd-primitives">Ctrl</ZKbd>
+				<ZIcon data-desktop-evidence="ZIcon-decorative" name="check" />
+				<ZLink data-desktop-component="ZLink" data-desktop-evidence="ZLink-primitives" href="#desktop-primitives" onclick={recordPrimitiveLinkActivation}>Local fragment</ZLink>
+				<span id="desktop-primitives">Primitive target</span>
+				<ZSeparator data-desktop-component="ZSeparator" data-desktop-evidence="ZSeparator-primitives" />
+				<ZVisuallyHidden data-desktop-component="ZVisuallyHidden" data-desktop-evidence="ZVisuallyHidden-primitives">Screen reader detail</ZVisuallyHidden>
+				<ZAspectRatio data-desktop-component="ZAspectRatio" data-desktop-evidence="ZAspectRatio-primitives" ratio="16 / 9">Aspect ratio</ZAspectRatio>
+				<ZAlert data-desktop-component="ZAlert" data-desktop-evidence="ZAlert-primitives" title="Desktop alert" live="polite">A measured alert.</ZAlert>
+				<ZSpinner data-desktop-component="ZSpinner" data-desktop-evidence="ZSpinner-primitives" label="Loading desktop primitives" />
+				<span data-desktop-primitive-link-activations={primitiveLinkActivations}></span>
+			</ZContainer>
 		</ZProvider>
 
 		<ZBox class={panelClass}>

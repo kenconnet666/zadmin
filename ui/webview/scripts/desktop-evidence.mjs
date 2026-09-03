@@ -782,6 +782,345 @@ export const desktopComponentContracts = [
 ];
 desktopComponentContracts.push(
 	{
+		id: 'heading-primitives',
+		name: 'ZHeading',
+		marker: 'ZHeading-primitives',
+		native: { tag: 'H2', text: 'Desktop primitives' },
+		interaction: {
+			id: 'heading-dom',
+			action: 'inspect',
+			target: 'root',
+			observations: [
+				{
+					id: 'level',
+					kind: 'semantic',
+					target: 'tagName',
+					expected: 'H2',
+					read: (raw) => raw.primitiveInteraction.headingLevel
+				},
+				{
+					id: 'text',
+					kind: 'content',
+					target: 'textContent',
+					expected: 'Desktop primitives',
+					read: (raw) => raw.primitiveInteraction.headingText
+				}
+			]
+		}
+	},
+	{
+		id: 'code-primitives',
+		name: 'ZCode',
+		marker: 'ZCode-primitives',
+		native: { tag: 'PRE' },
+		interaction: {
+			id: 'code-dom',
+			action: 'inspect',
+			target: 'root',
+			observations: [
+				{
+					id: 'pre',
+					kind: 'semantic',
+					target: 'tagName',
+					expected: 'PRE',
+					read: (raw) => raw.primitiveInteraction.codeTag
+				},
+				{
+					id: 'code',
+					kind: 'semantic',
+					target: 'code descendant',
+					expected: true,
+					read: (raw) => raw.primitiveInteraction.codeDescendant
+				},
+				{
+					id: 'text',
+					kind: 'content',
+					target: 'textContent',
+					expected: true,
+					read: (raw) => raw.primitiveInteraction.codeText
+				}
+			]
+		}
+	},
+	{
+		id: 'icon-labelled',
+		name: 'ZIcon',
+		marker: 'ZIcon-labelled',
+		native: { tag: 'SVG', role: 'img', ariaLabel: 'Warning' },
+		interaction: {
+			id: 'icon-dom',
+			action: 'inspect',
+			target: 'root',
+			observations: [
+				{
+					id: 'labelled-role',
+					kind: 'aria',
+					target: 'role',
+					expected: 'img',
+					read: (raw) => raw.primitiveInteraction.iconRole
+				},
+				{
+					id: 'labelled',
+					kind: 'aria',
+					target: 'aria-label',
+					expected: 'Warning',
+					read: (raw) => raw.primitiveInteraction.iconLabel
+				},
+				{
+					id: 'decorative',
+					kind: 'aria',
+					target: 'decorative aria-hidden',
+					expected: true,
+					read: (raw) => raw.primitiveInteraction.decorativeIconHidden
+				}
+			]
+		}
+	},
+	{
+		id: 'kbd-primitives',
+		name: 'ZKbd',
+		marker: 'ZKbd-primitives',
+		native: { tag: 'KBD', text: 'Ctrl' },
+		interaction: {
+			id: 'kbd-dom',
+			action: 'inspect',
+			target: 'root',
+			observations: [
+				{
+					id: 'text',
+					kind: 'content',
+					target: 'textContent',
+					expected: 'Ctrl',
+					read: (raw) => raw.primitiveInteraction.kbdText
+				}
+			]
+		}
+	},
+	{
+		id: 'link-primitives',
+		name: 'ZLink',
+		marker: 'ZLink-primitives',
+		native: { tag: 'A', href: '#desktop-primitives' },
+		interaction: {
+			id: 'link-local',
+			action: 'click',
+			target: 'root',
+			observations: [
+				{
+					id: 'target',
+					kind: 'relationship',
+					target: 'href -> id',
+					expected: true,
+					read: (raw) => raw.primitiveInteraction.linkTargetResolved
+				},
+				{
+					id: 'prevented',
+					kind: 'event',
+					target: 'defaultPrevented',
+					expected: true,
+					read: (raw) => raw.primitiveInteraction.linkPrevented
+				},
+				{
+					id: 'activation',
+					kind: 'count',
+					target: 'local activation counter',
+					expected: 1,
+					read: (raw) => raw.primitiveInteraction.linkActivations
+				},
+				{
+					id: 'hash-unchanged',
+					kind: 'state',
+					target: 'location.hash',
+					expected: true,
+					read: (raw) => raw.primitiveInteraction.linkHashUnchanged
+				}
+			]
+		}
+	},
+	{
+		id: 'separator-primitives',
+		name: 'ZSeparator',
+		marker: 'ZSeparator-primitives',
+		native: { tag: 'HR' },
+		interaction: {
+			id: 'separator-dom',
+			action: 'inspect',
+			target: 'root',
+			observations: [
+				{
+					id: 'orientation',
+					kind: 'aria',
+					target: 'data-orientation',
+					expected: 'horizontal',
+					read: (raw) => raw.primitiveInteraction.separatorOrientation
+				},
+				{
+					id: 'role',
+					kind: 'semantic',
+					target: 'role',
+					expected: true,
+					read: (raw) => raw.primitiveInteraction.separatorRole
+				}
+			]
+		}
+	},
+	{
+		id: 'visually-hidden-primitives',
+		name: 'ZVisuallyHidden',
+		marker: 'ZVisuallyHidden-primitives',
+		native: { tag: 'SPAN', text: 'Screen reader detail' },
+		interaction: {
+			id: 'visually-hidden-dom',
+			action: 'inspect',
+			target: 'root',
+			observations: [
+				{
+					id: 'accessible',
+					kind: 'a11y',
+					target: 'hidden',
+					expected: true,
+					read: (raw) => raw.primitiveInteraction.visuallyHiddenAccessible
+				},
+				{
+					id: 'clipped',
+					kind: 'style',
+					target: 'clip/clip-path',
+					expected: true,
+					read: (raw) => raw.primitiveInteraction.visuallyHiddenClipped
+				},
+				{
+					id: 'one-pixel',
+					kind: 'geometry',
+					target: 'width/height',
+					expected: true,
+					read: (raw) => raw.primitiveInteraction.visuallyHiddenSized
+				}
+			]
+		}
+	},
+	{
+		id: 'aspect-ratio-primitives',
+		name: 'ZAspectRatio',
+		marker: 'ZAspectRatio-primitives',
+		native: { tag: 'DIV' },
+		interaction: {
+			id: 'aspect-ratio-dom',
+			action: 'inspect',
+			target: 'root',
+			observations: [
+				{
+					id: 'ratio',
+					kind: 'geometry',
+					target: 'width / height',
+					expected: true,
+					read: (raw) => raw.primitiveInteraction.aspectRatioMeasured
+				}
+			]
+		}
+	},
+	{
+		id: 'container-primitives',
+		name: 'ZContainer',
+		marker: 'ZContainer-primitives',
+		native: { tag: 'DIV' },
+		interaction: {
+			id: 'container-dom',
+			action: 'inspect',
+			target: 'root',
+			observations: [
+				{
+					id: 'max-width',
+					kind: 'style',
+					target: 'max-width',
+					expected: true,
+					read: (raw) => raw.primitiveInteraction.containerMaxWidth
+				},
+				{
+					id: 'padding',
+					kind: 'style',
+					target: 'padding-inline',
+					expected: true,
+					read: (raw) => raw.primitiveInteraction.containerPadding
+				},
+				{
+					id: 'bounds',
+					kind: 'geometry',
+					target: 'getBoundingClientRect',
+					expected: true,
+					read: (raw) => raw.primitiveInteraction.containerBounds
+				}
+			]
+		}
+	},
+	{
+		id: 'alert-primitives',
+		name: 'ZAlert',
+		marker: 'ZAlert-primitives',
+		native: { tag: 'DIV', ariaLive: 'polite' },
+		interaction: {
+			id: 'alert-dom',
+			action: 'inspect',
+			target: 'root',
+			observations: [
+				{
+					id: 'role',
+					kind: 'semantic',
+					target: 'role',
+					expected: 'status',
+					read: (raw) => raw.primitiveInteraction.alertRole
+				},
+				{
+					id: 'live',
+					kind: 'aria',
+					target: 'aria-live',
+					expected: 'polite',
+					read: (raw) => raw.primitiveInteraction.alertLive
+				},
+				{
+					id: 'text',
+					kind: 'content',
+					target: 'textContent',
+					expected: true,
+					read: (raw) => raw.primitiveInteraction.alertText
+				}
+			]
+		}
+	},
+	{
+		id: 'spinner-primitives',
+		name: 'ZSpinner',
+		marker: 'ZSpinner-primitives',
+		native: { tag: 'SPAN', role: 'status' },
+		interaction: {
+			id: 'spinner-dom',
+			action: 'inspect',
+			target: 'root',
+			observations: [
+				{
+					id: 'status',
+					kind: 'semantic',
+					target: 'role',
+					expected: 'status',
+					read: (raw) => raw.primitiveInteraction.spinnerRole
+				},
+				{
+					id: 'label',
+					kind: 'aria',
+					target: 'aria-label',
+					expected: 'Loading desktop primitives',
+					read: (raw) => raw.primitiveInteraction.spinnerLabel
+				},
+				{
+					id: 'motion',
+					kind: 'style',
+					target: 'animation state',
+					expected: true,
+					read: (raw) => raw.primitiveInteraction.spinnerMotionObserved
+				}
+			]
+		}
+	},
+	{
 		id: 'tabs',
 		name: 'ZTabs',
 		marker: 'ZTabs-settings',
@@ -2352,6 +2691,8 @@ export function validateDesktopEvidence(raw, { expectedRevision } = {}) {
 	if (raw.dialogInteraction?.ready !== true) fail('Dialog interaction evidence is incomplete.');
 	if (raw.popoverInteraction?.ready !== true) fail('Popover interaction evidence is incomplete.');
 	if (raw.tooltipInteraction?.ready !== true) fail('Tooltip interaction evidence is incomplete.');
+	if (!raw.primitiveInteraction || typeof raw.primitiveInteraction !== 'object')
+		fail('Primitive interaction evidence is incomplete.');
 	for (const contract of desktopComponentContracts)
 		for (const observation of contract.interaction?.observations ?? [])
 			if (observation.read(raw) !== observation.expected)
@@ -2367,11 +2708,13 @@ export function validateDesktopEvidence(raw, { expectedRevision } = {}) {
 	if (components.length !== raw.components.length)
 		fail('component names are not exact and unique.');
 	const byName = new Map();
+	const markers = new Set();
 	for (const item of components) {
 		const contract = contractsByName.get(item?.name);
 		if (!contract || byName.has(item.name)) fail('component names are not exact and unique.');
 		if (item.present !== true || typeof item.marker !== 'string' || item.marker.length === 0)
 			fail(`component ${item?.name ?? '<unknown>'} is not rendered with a marker.`);
+		if (markers.has(item.marker)) fail('component markers are not exact and unique.');
 		if (item.marker !== contract.marker) fail(`component ${item.name} marker is invalid.`);
 		if (!item.native || typeof item.native !== 'object')
 			fail(`component ${item.name} has no native evidence.`);
@@ -2379,6 +2722,7 @@ export function validateDesktopEvidence(raw, { expectedRevision } = {}) {
 			if (item.native[property] !== expected)
 				fail(`native ${item.name} ${property} semantics are invalid.`);
 		byName.set(item.name, item);
+		markers.add(item.marker);
 	}
 	if (desktopComponentContracts.some(({ name }) => !byName.has(name)))
 		fail('component set is incomplete.');
@@ -2620,6 +2964,36 @@ if (isMain && process.argv.includes('--self-test')) {
 			pointerLeaveCleaned: true,
 			backgroundUnchanged: true
 		},
+		primitiveInteraction: {
+			headingLevel: 'H2',
+			headingText: 'Desktop primitives',
+			codeTag: 'PRE',
+			codeDescendant: true,
+			codeText: true,
+			iconRole: 'img',
+			iconLabel: 'Warning',
+			decorativeIconHidden: true,
+			kbdText: 'Ctrl',
+			linkTargetResolved: true,
+			linkPrevented: true,
+			linkActivations: 1,
+			linkHashUnchanged: true,
+			separatorOrientation: 'horizontal',
+			separatorRole: true,
+			visuallyHiddenAccessible: true,
+			visuallyHiddenClipped: true,
+			visuallyHiddenSized: true,
+			aspectRatioMeasured: true,
+			containerMaxWidth: true,
+			containerPadding: true,
+			containerBounds: true,
+			alertRole: 'status',
+			alertLive: 'polite',
+			alertText: true,
+			spinnerRole: 'status',
+			spinnerLabel: 'Loading desktop primitives',
+			spinnerMotionObserved: true
+		},
 		tabsInteraction: {
 			ready: true,
 			initialSelected: true,
@@ -2744,6 +3118,16 @@ if (isMain && process.argv.includes('--self-test')) {
 		'marker is invalid'
 	);
 	expectFailure(
+		'duplicate marker',
+		{
+			...sample,
+			components: sample.components.map((item) =>
+				item.name === 'ZText' ? { ...item, marker: sample.components[0].marker } : item
+			)
+		},
+		'marker is duplicated'
+	);
+	expectFailure(
 		'bad native',
 		{
 			...sample,
@@ -2765,6 +3149,25 @@ if (isMain && process.argv.includes('--self-test')) {
 			fail(`self-test accepted ${label}.`);
 		} catch (error) {
 			if (!String(error).includes('Popover') && !String(error).includes('component')) throw error;
+		}
+	}
+	for (const [label, key] of [
+		['primitive heading', 'headingLevel'],
+		['primitive link prevention', 'linkPrevented'],
+		['primitive geometry', 'aspectRatioMeasured'],
+		['primitive hidden clipping', 'visuallyHiddenClipped'],
+		['primitive alert live', 'alertLive'],
+		['primitive spinner motion', 'spinnerMotionObserved']
+	]) {
+		const changed = structuredClone(sample);
+		changed.primitiveInteraction[key] =
+			typeof changed.primitiveInteraction[key] === 'boolean' ? false : 'wrong';
+		try {
+			validateDesktopEvidence(changed, { expectedRevision: sample.revision });
+			fail(`self-test accepted ${label}.`);
+		} catch (error) {
+			if (!String(error).includes('component Z') && !String(error).includes('Primitive'))
+				throw error;
 		}
 	}
 	for (const [label, key] of [
