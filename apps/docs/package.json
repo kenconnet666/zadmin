@@ -13,6 +13,7 @@
 		"maturity:matrix": "node scripts/generate-maturity-matrix.mjs",
 		"maturity:desktop:compose": "node scripts/compose-desktop-maturity.mjs",
 		"maturity:desktop:self-test": "node scripts/compose-desktop-maturity.mjs --self-test",
+		"maturity:desktop:verify": "node scripts/verify-desktop-artifact.mjs",
 		"stability:check": "node scripts/check-stability-policy.mjs",
 		"stability:update": "node scripts/check-stability-policy.mjs --write",
 		"support:check": "node scripts/check-support-matrix.mjs",

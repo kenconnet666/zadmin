@@ -72,7 +72,12 @@ export function evaluateReleaseCoherence({
 				release
 			) &&
 			/name:\s*workspace-build-\$\{\{ github\.event\.workflow_run\.head_sha \}\}/u.test(release) &&
-			/run-id:\s*\$\{\{ github\.event\.workflow_run\.id \}\}/gu.test(release)
+			/run-id:\s*\$\{\{ github\.event\.workflow_run\.id \}\}/gu.test(release),
+		desktopArtifactBinding:
+			/name:\s*desktop-windows-\$\{\{ github\.event\.workflow_run\.head_sha \}\}/u.test(release) &&
+			/run-id:\s*\$\{\{ github\.event\.workflow_run\.id \}\}/u.test(release) &&
+			/verify-desktop-artifact\.mjs/u.test(release) &&
+			/name:\s*desktop-windows-\$\{\{ github\.sha \}\}/u.test(ci)
 	};
 }
 
@@ -133,6 +138,15 @@ if (process.argv.includes('--self-test')) {
 		{
 			check: 'dryRunOnly',
 			input: { ci: sources.ci.replace(' --dry-run', '') }
+		},
+		{
+			check: 'desktopArtifactBinding',
+			input: {
+				release: sources.release.replace(
+					'desktop-windows-${{ github.event.workflow_run.head_sha }}',
+					'desktop-windows-${{ github.event.workflow_run.head_branch }}'
+				)
+			}
 		}
 	];
 	for (const { check, input } of negativeCases) {

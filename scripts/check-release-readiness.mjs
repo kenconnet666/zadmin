@@ -65,6 +65,10 @@ const versionedDocsVerifier = await readFile(
 	resolve(root, 'apps/docs/scripts/verify-versioned-docs-artifact.mjs'),
 	'utf8'
 ).catch(() => '');
+const desktopArtifactVerifier = await readFile(
+	resolve(root, 'apps/docs/scripts/verify-desktop-artifact.mjs'),
+	'utf8'
+).catch(() => '');
 const versionedDocsContractSource = await readFile(
 	resolve(root, '.docs/zui/versioned-docs.json'),
 	'utf8'
@@ -114,6 +118,17 @@ const checks = {
 		/run-id:\s*\$\{\{ github\.event\.workflow_run\.id \}\}/gu.test(workflow) &&
 		/prepare-release-handoff\.mjs[\s\S]*--verify-plan=/u.test(workflow) &&
 		/verify-versioned-docs-artifact\.mjs[\s\S]*--revision=/u.test(workflow),
+	desktopArtifactReleaseBinding:
+		docsPackage.scripts?.['maturity:desktop:verify'] ===
+			'node scripts/verify-desktop-artifact.mjs' &&
+		/name:\s*desktop-windows-\$\{\{ github\.sha \}\}/u.test(ci) &&
+		/name:\s*desktop-windows-\$\{\{ github\.event\.workflow_run\.head_sha \}\}/u.test(workflow) &&
+		workflow.includes('run-id: ${{ github.event.workflow_run.id }}') &&
+		workflow.includes('node apps/docs/scripts/verify-desktop-artifact.mjs') &&
+		desktopArtifactVerifier.includes('validateDesktopEvidenceArtifact') &&
+		desktopArtifactVerifier.includes("path !== '.docs/zui/component-maturity.json'") &&
+		desktopArtifactVerifier.includes('maturity summary baseline was modified') &&
+		desktopArtifactVerifier.includes('runtime maturity baseline was modified'),
 	changesetsConfigured:
 		changesetConfig.access === 'public' && changesetConfig.baseBranch === 'master',
 	changesetTargetsKnown:
@@ -273,7 +288,7 @@ const report = {
 const passed = Object.entries(checks)
 	.filter(([, value]) => value)
 	.map(([key]) => key);
-const markdownSource = `# Release Readiness\n\n- Status: **${report.status}**\n- Scope: non-publishing fact report; this command never publishes packages or changes release permissions.\n\n## Passed facts\n\n${passed.map((key) => `- \`${key}\``).join('\n') || '- None'}\n\n## Blocked facts\n\n${blocked.map((key) => `- \`${key}\``).join('\n') || '- None'}\n\n## Public packages\n\n| Package | Version | Changeset target | Package check | External acceptance |\n| --- | --- | --- | --- | --- |\n${packages.map((item) => `| ${item.name} | ${item.version} | ${item.changeset ? 'yes' : 'no'} | ${item.packageCheck ? 'yes' : 'no'} | ${item.name === '@zadmin/zui' && zuiAcceptance.includes("'@zadmin/zui'") ? 'yes (via SvelteKit)' : item.acceptance ? 'yes' : 'no'} |`).join('\n')}\n\n## Release boundary\n\nCI now proves that one checksummed pack is reused by external consumers and the npm publish dry-run. The release candidate contract cross-checks the schema v2 manifest against the exact workspace package set, versions, and CI commit. A portable validated handoff plan is uploaded with those tarballs, verified again after download, and explicitly keeps executedConsumers empty. The versioned Docs dist is likewise downloaded and independently rechecked against its per-file SHA-256, bundle digest, route manifest, package version, revision, and support matrix. These are input/artifact contracts, not publish or deployment evidence. The real registry publish still does not consume a release-bound copy of that artifact, and npm OIDC/provenance, automated tags/GitHub Releases, registry post-publish smoke, versioned Docs deployment, and a release-bound support matrix remain unproven.\n`;
+const markdownSource = `# Release Readiness\n\n- Status: **${report.status}**\n- Scope: non-publishing fact report; this command never publishes packages or changes release permissions.\n\n## Passed facts\n\n${passed.map((key) => `- \`${key}\``).join('\n') || '- None'}\n\n## Blocked facts\n\n${blocked.map((key) => `- \`${key}\``).join('\n') || '- None'}\n\n## Public packages\n\n| Package | Version | Changeset target | Package check | External acceptance |\n| --- | --- | --- | --- | --- |\n${packages.map((item) => `| ${item.name} | ${item.version} | ${item.changeset ? 'yes' : 'no'} | ${item.packageCheck ? 'yes' : 'no'} | ${item.name === '@zadmin/zui' && zuiAcceptance.includes("'@zadmin/zui'") ? 'yes (via SvelteKit)' : item.acceptance ? 'yes' : 'no'} |`).join('\n')}\n\n## Release boundary\n\nCI now proves that one checksummed pack is reused by external consumers and the npm publish dry-run. The release candidate contract cross-checks the schema v2 manifest against the exact workspace package set, versions, and CI commit. A portable validated handoff plan is uploaded with those tarballs, verified again after download, and explicitly keeps executedConsumers empty. The versioned Docs dist is likewise downloaded and independently rechecked against its per-file SHA-256, bundle digest, route manifest, package version, revision, and support matrix. The same release gate downloads the Windows WebView2 artifact from the identical workflow run and SHA, then revalidates its structured component evidence, bridge and host identity, runtime DesktopVerified matrix, checked-in baseline, summary, and per-component evidence binding. These are input/artifact contracts, not publish or deployment evidence. The real registry publish still does not consume a release-bound copy of that artifact, and npm OIDC/provenance, automated tags/GitHub Releases, registry post-publish smoke, versioned Docs deployment, and a release-bound support matrix remain unproven.\n`;
 const prettierConfig = (await prettier.resolveConfig(jsonPath)) ?? {};
 const markdown = await prettier.format(markdownSource, {
 	...prettierConfig,

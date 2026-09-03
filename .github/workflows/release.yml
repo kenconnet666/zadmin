@@ -65,6 +65,20 @@ jobs:
           --dist=.versioned-docs-consumer/apps/docs/dist
           --revision="${{ github.event.workflow_run.head_sha }}"
 
+      - name: Download Windows desktop artifact from the same CI run
+        uses: actions/download-artifact@v7
+        with:
+          name: desktop-windows-${{ github.event.workflow_run.head_sha }}
+          path: .desktop-artifact
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Verify Windows desktop artifact coherence
+        run: >-
+          node apps/docs/scripts/verify-desktop-artifact.mjs
+          --directory=.desktop-artifact
+          --revision="${{ github.event.workflow_run.head_sha }}"
+
   version:
     name: Create or update Changesets release PR
     if: >-
