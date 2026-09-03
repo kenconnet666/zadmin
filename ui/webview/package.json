@@ -80,7 +80,8 @@
 		"generate:check": "node scripts/generate-protocol.mjs --check",
 		"test": "pnpm generate:check && vitest --run",
 		"test:coverage": "pnpm generate:check && vitest --run --coverage",
-		"test:package": "node scripts/accept-package.mjs"
+		"test:package": "node scripts/accept-package.mjs",
+		"desktop:evidence:self-test": "node scripts/desktop-evidence.mjs --self-test"
 	},
 	"keywords": [
 		"csharp",

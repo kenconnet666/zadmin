@@ -9,11 +9,32 @@ namespace ZAdmin.WebView.Windows;
 
 public sealed class WebViewHost : IAsyncDisposable
 {
+    private sealed class DesktopEvidencePage
+    {
+        public string? Origin { get; set; }
+        public string? Title { get; set; }
+        public string? BodyText { get; set; }
+        public bool HasBridge { get; set; }
+        public bool ViteClient { get; set; }
+        public string[] Errors { get; set; } = [];
+        public DesktopEvidenceItem[]? DesktopEvidence { get; set; }
+        public string? StatusBefore { get; set; }
+    }
+
+    private sealed class DesktopEvidenceItem
+    {
+        public string? Name { get; set; }
+        public string? Marker { get; set; }
+        public bool Present { get; set; }
+        public JsonElement Native { get; set; }
+    }
+
     private static readonly JsonSerializerOptions SerializerOptions = new(JsonSerializerDefaults.Web);
     private readonly HostOptions _options;
     private readonly WebView2 _webview;
     private readonly Microsoft.UI.Xaml.Window _window;
     private CoreWebView2Environment? _environment;
+    private string? _webViewVersion;
     private StaticAssetServer? _assets;
     private WebViewDispatcher? _dispatcher;
     private WindowsCommandModule? _commands;
@@ -41,6 +62,7 @@ public sealed class WebViewHost : IAsyncDisposable
             await WriteSmokeReportAsync(smokeReport, JsonSerializer.Serialize(new { phase = "initializing" }));
         }
         var version = CoreWebView2Environment.GetAvailableBrowserVersionString();
+        _webViewVersion = version;
         await WriteSmokePhaseAsync("runtime-detected");
         var userData = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -195,18 +217,43 @@ public sealed class WebViewHost : IAsyncDisposable
                 return;
             }
             var pageValue = await sender.ExecuteScriptAsync(
-                "JSON.stringify({origin:location.origin,title:document.title,bodyText:document.body?.innerText?.slice(0,1000)??'',hasBridge:Boolean(globalThis.chrome?.webview),viteClient:[...document.scripts].some(script=>script.src.includes('/@vite/client'))||performance.getEntriesByType('resource').some(entry=>entry.name.includes('/@vite/client')),errors:globalThis.__ZADMIN_WEBVIEW_ERRORS__??[]})");
+                "JSON.stringify({origin:location.origin,title:document.title,bodyText:document.body?.innerText?.slice(0,1000)??'',hasBridge:Boolean(globalThis.chrome?.webview),viteClient:[...document.scripts].some(script=>script.src.includes('/@vite/client'))||performance.getEntriesByType('resource').some(entry=>entry.name.includes('/@vite/client')),errors:globalThis.__ZADMIN_WEBVIEW_ERRORS__??[],desktopEvidence:[{name:'ZBox',marker:'ZBox-status',present:Boolean(document.querySelector('[data-desktop-evidence=\\\"ZBox-status\\\"]')),native:{tag:document.querySelector('[data-desktop-evidence=\\\"ZBox-status\\\"]')?.tagName??null,ariaLive:document.querySelector('[data-desktop-evidence=\\\"ZBox-status\\\"]')?.getAttribute('aria-live')??null}},{name:'ZStack',marker:'ZStack',present:Boolean(document.querySelector('[data-desktop-evidence=\\\"ZStack\\\"]')),native:{tag:document.querySelector('[data-desktop-evidence=\\\"ZStack\\\"]')?.tagName??null}},{name:'ZText',marker:'ZText',present:Boolean(document.querySelector('[data-desktop-evidence=\\\"ZText\\\"]')),native:{tag:document.querySelector('[data-desktop-evidence=\\\"ZText\\\"]')?.tagName??null,text:document.querySelector('[data-desktop-evidence=\\\"ZText\\\"]')?.textContent?.trim()??''}},{name:'ZButton',marker:'ZButton-runtime-report',present:Boolean(document.querySelector('[data-desktop-evidence=\\\"ZButton-runtime-report\\\"]')),native:{tag:document.querySelector('[data-desktop-evidence=\\\"ZButton-runtime-report\\\"]')?.tagName??null,type:document.querySelector('[data-desktop-evidence=\\\"ZButton-runtime-report\\\"]')?.getAttribute('type')??null,disabled:(document.querySelector('[data-desktop-evidence=\\\"ZButton-runtime-report\\\"]'))?.hasAttribute('disabled')??false,text:document.querySelector('[data-desktop-evidence=\\\"ZButton-runtime-report\\\"]')?.textContent?.trim()??''}}],statusBefore:document.querySelector('[data-desktop-evidence=\\\"ZBox-status\\\"]')?.innerText??''})");
             var pageJson = JsonSerializer.Deserialize<string>(pageValue) ?? "{}";
+            var evidenceBefore = JsonSerializer.Deserialize<DesktopEvidencePage>(pageJson) ?? throw new InvalidOperationException("Desktop evidence page state is unreadable.");
+            if (evidenceBefore.DesktopEvidence is null || evidenceBefore.DesktopEvidence.Length != 4 || evidenceBefore.DesktopEvidence.Any(item => !item.Present))
+                throw new InvalidOperationException("Desktop evidence markers are incomplete or not hydrated.");
             await sender.ExecuteScriptAsync(
                 "chrome.webview.postMessage(JSON.stringify({v:1,kind:'request',id:'smoke',method:'app.snapshot',params:{}}))");
             await _smokeRequest.Task.WaitAsync(TimeSpan.FromSeconds(10));
+            await sender.ExecuteScriptAsync(
+                "document.querySelector('[data-desktop-evidence=\"ZButton-runtime-report\"]')?.click()");
+            var statusUpdated = false;
+            for (var attempt = 0; attempt < 100; attempt++)
+            {
+                var statusValue = await sender.ExecuteScriptAsync(
+                    "JSON.stringify(document.querySelector('[data-desktop-evidence=\"ZBox-status\"]')?.innerText??'')");
+                var statusText = JsonSerializer.Deserialize<string>(statusValue) ?? string.Empty;
+                if (statusText.StartsWith("Protocol ", StringComparison.Ordinal))
+                {
+                    statusUpdated = true;
+                    break;
+                }
+                await Task.Delay(100);
+            }
+            if (!statusUpdated) throw new TimeoutException("Runtime report did not update the live status bridge result.");
+            var pageAfterValue = await sender.ExecuteScriptAsync(
+                "JSON.stringify(document.querySelector('[data-desktop-evidence=\"ZBox-status\"]')?.innerText??'')");
             var report = new
             {
                 bridgeRequest = true,
                 navigation = true,
-                page = JsonSerializer.Deserialize<object>(pageJson),
+                page = new { evidenceBefore.Origin, evidenceBefore.Title, evidenceBefore.BodyText, evidenceBefore.HasBridge, evidenceBefore.ViteClient, hydrated = true, webViewVersion = _webViewVersion, evidenceBefore.Errors, statusBefore = evidenceBefore.StatusBefore, statusAfter = JsonSerializer.Deserialize<string>(pageAfterValue) },
                 protocol = WebViewProtocol.Version,
-                source = _webview.Source?.ToString()
+                source = _webview.Source?.ToString(),
+                revision = Environment.GetEnvironmentVariable("GITHUB_SHA") ?? "local",
+                target = "windows-x64",
+                host = new { runtime = "WebView2", implementation = "WebViewHost", origin = evidenceBefore.Origin, webViewVersion = _webViewVersion, protocolVersion = WebViewProtocol.Version, navigation = true, hydrated = true, bridge = evidenceBefore.HasBridge, pageErrors = evidenceBefore.Errors, source = _webview.Source?.ToString() },
+                components = evidenceBefore.DesktopEvidence
             };
             Directory.CreateDirectory(Path.GetDirectoryName(_options.SmokeReportPath)!);
             await WriteSmokeReportAsync(

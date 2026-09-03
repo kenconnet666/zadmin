@@ -125,9 +125,16 @@
 	title="ZAdmin WebView capability lab"
 	onerror={(error) => setResult('Window', { error, ok: false }, String)}
 >
-	<ZStack class={pageClass} gap="large" data-zadmin-webview-ready={hydrated || undefined}>
+	<ZStack
+		class={pageClass}
+		gap="large"
+		data-zadmin-webview-ready={hydrated || undefined}
+		data-desktop-evidence="ZStack"
+	>
 		<ZStack gap="small">
-			<ZText as="strong" size="xlarge">Windows WebView2 capability lab</ZText>
+			<ZText as="strong" size="xlarge" data-desktop-evidence="ZText"
+				>Windows WebView2 capability lab</ZText
+			>
 			<ZText tone="muted">
 				SvelteKit SPA + ZUI + typed C# WebView protocol. No production Node, SSR, sidecar or local
 				HTTP backend.
@@ -141,7 +148,9 @@
 		<ZStack class={panelClass} gap="small">
 			<ZText as="strong">Safe automated probes</ZText>
 			<ZStack direction="row" gap="small" wrap>
-				<ZButton onclick={runtimeReport}>Runtime report</ZButton>
+				<ZButton data-desktop-evidence="ZButton-runtime-report" onclick={runtimeReport}
+					>Runtime report</ZButton
+				>
 				<ZButton variant="secondary" onclick={typedErrorProbe}>Native guard error</ZButton>
 				<ZButton variant="secondary" onclick={storeProbe}>Store roundtrip</ZButton>
 				<ZButton variant="secondary" onclick={logProbe}>Write log</ZButton>
@@ -187,6 +196,8 @@
 			</ZStack>
 		</ZStack>
 
-		<ZBox class={panelClass} aria-live="polite"><ZText>{status}</ZText></ZBox>
+		<ZBox class={panelClass} aria-live="polite" data-desktop-evidence="ZBox-status"
+			><ZText>{status}</ZText></ZBox
+		>
 	</ZStack>
 </WindowFrame>

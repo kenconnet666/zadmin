@@ -1,8 +1,9 @@
 import { spawn } from 'node:child_process';
-import { readFile, rm } from 'node:fs/promises';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { dirname, resolve } from 'node:path';
+import { dirname, isAbsolute, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { validateDesktopEvidence } from './desktop-evidence.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const reportPath = resolve(tmpdir(), `zadmin-webview-smoke-${process.pid}.json`);
@@ -12,7 +13,9 @@ const executable = process.argv[2]
 			root,
 			'targets/windows/dotnet/bin/Release/net10.0-windows10.0.26100.0/win-x64/ZAdmin.exe'
 		);
-const expectedText = process.argv[3];
+const evidenceOutput = process.argv
+	.find((arg) => arg.startsWith('--evidence='))
+	?.slice('--evidence='.length);
 const child = spawn(executable, [], {
 	env: { ...process.env, ZADMIN_WEBVIEW_SMOKE_REPORT: reportPath },
 	stdio: 'ignore',
@@ -34,17 +37,23 @@ try {
 	if (exitCode !== 0) throw new Error(`Windows WebView2 host exited with code ${exitCode}.`);
 	const report = JSON.parse(await readFile(reportPath, 'utf8'));
 	if (report.error) throw new Error(report.error);
-	if (!report.navigation || !report.bridgeRequest)
-		throw new Error('Windows WebView2 smoke report is incomplete.');
-	if (report.page?.origin !== 'https://app.zadmin.local' || report.page?.hasBridge !== true) {
-		throw new Error(`Unexpected WebView2 page state: ${JSON.stringify(report.page)}`);
+	const evidence = validateDesktopEvidence(report, { expectedRevision: process.env.GITHUB_SHA });
+	if (evidenceOutput) {
+		if (isAbsolute(evidenceOutput))
+			throw new Error('Desktop evidence output must be relative to the working directory.');
+		const workingDirectory = resolve(process.cwd());
+		const destination = resolve(workingDirectory, evidenceOutput);
+		const relativeDestination = relative(workingDirectory, destination);
+		if (
+			relativeDestination === '..' ||
+			relativeDestination.startsWith(`..${sep}`) ||
+			isAbsolute(relativeDestination)
+		)
+			throw new Error('Desktop evidence output escapes the working directory.');
+		await mkdir(dirname(destination), { recursive: true });
+		await writeFile(destination, `${JSON.stringify(evidence, null, '\t')}\n`, 'utf8');
 	}
-	if (report.page?.errors?.length)
-		throw new Error(`WebView2 page errors: ${report.page.errors.join('; ')}`);
-	if (expectedText && !report.page?.bodyText?.includes(expectedText)) {
-		throw new Error(`WebView2 page does not contain expected text: ${expectedText}`);
-	}
-	console.log(JSON.stringify(report));
+	console.log(JSON.stringify(evidence));
 } finally {
 	await rm(reportPath, { force: true });
 }

@@ -13,7 +13,7 @@
 		"webview:build": "node ../../ui/webview/dist/build/cli.js build --project . --target windows-x64",
 		"webview:dev": "node ../../ui/webview/dist/build/cli.js dev --project . --target windows-x64",
 		"webview:dev:smoke": "node scripts/smoke-webview-dev.mjs",
-		"webview:smoke": "node ../../ui/webview/scripts/smoke-windows.mjs dist/desktop/windows-x64/ZAdmin.exe \"Windows WebView2 capability lab\"",
+		"webview:smoke": "node ../../ui/webview/scripts/smoke-windows.mjs dist/desktop/windows-x64/ZAdmin.exe --evidence=dist/desktop/windows-x64/desktop-evidence.json",
 		"test": "vitest --run"
 	},
 	"dependencies": {
