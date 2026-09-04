@@ -294,8 +294,8 @@ export async function collectWorkspacePropertyFacts(graph, modulePath, rootName,
 			}
 			return facts;
 		}
-		if (!ts.isTypeReferenceNode(node)) return [];
-		const name = refName(node.typeName);
+		if (!ts.isTypeReferenceNode(node) && !ts.isExpressionWithTypeArguments(node)) return [];
+		const name = refName(ts.isTypeReferenceNode(node) ? node.typeName : node.expression);
 		const args = node.typeArguments ?? [];
 		if (name === 'Partial' && args[0])
 			return visitType(args[0], context, path, { ...modifiers, optional: true });
@@ -493,7 +493,10 @@ export type Props<T = string> = {
 	genericOpaque?: T;
 	method<T extends string = string>(value: T, optional?: number, ...rest: boolean[]): T;
 	optionalMethod?(value: string): void;
-};`,
+};
+export interface Extended extends Omit<Alias, 'optional'> {
+	own?: number;
+}`,
 			'utf8'
 		);
 		const graph = new WorkspaceTypeGraph({ workspaceRoot: root });
@@ -544,6 +547,17 @@ export type Props<T = string> = {
 		expectFact('optionalMethod', 'optional', '(value: string) => void');
 		if (facts.get('optionalMethod')?.valueAllowsUndefined !== true)
 			throw new Error('optional method did not allow undefined');
+		const extendedFacts = await collectWorkspacePropertyFacts(
+			graph,
+			resolve(root, 'src/props.ts'),
+			'Extended'
+		);
+		if (
+			extendedFacts.get('required')?.requiredness !== REQUIREDNESS.required ||
+			extendedFacts.has('optional') ||
+			extendedFacts.get('own')?.requiredness !== REQUIREDNESS.optional
+		)
+			throw new Error('interface heritage facts were not preserved through Omit');
 		console.log(JSON.stringify({ status: 'passed', facts: facts.size }));
 	} finally {
 		await rm(root, { recursive: true, force: true });

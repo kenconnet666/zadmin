@@ -27,7 +27,7 @@
 		"docs:versioned:verify:self-test": "node scripts/verify-versioned-docs-artifact.mjs --self-test",
 		"progress:check": "node scripts/check-progress-summary.mjs",
 		"progress:update": "node scripts/check-progress-summary.mjs --write",
-		"audit:system": "node scripts/generate-component-api.mjs --self-test && node scripts/generate-component-api.mjs && node scripts/audit-api-contracts.mjs --self-test && node scripts/audit-api-contracts.mjs && node scripts/generate-catalog-manifest.mjs && node scripts/generate-maturity-matrix.mjs --self-test && node scripts/generate-maturity-matrix.mjs && node scripts/check-stability-policy.mjs && node scripts/check-support-matrix.mjs && node scripts/check-versioned-docs.mjs && node scripts/check-progress-summary.mjs && node scripts/audit-system.mjs",
+		"audit:system": "node scripts/workspace-type-graph.mjs --self-test && node scripts/workspace-property-facts.mjs --self-test && node scripts/generate-component-api.mjs --self-test && node scripts/generate-component-api.mjs && node scripts/audit-api-contracts.mjs --self-test && node scripts/audit-api-contracts.mjs && node scripts/generate-catalog-manifest.mjs && node scripts/generate-maturity-matrix.mjs --self-test && node scripts/generate-maturity-matrix.mjs && node scripts/check-stability-policy.mjs && node scripts/check-support-matrix.mjs && node scripts/check-versioned-docs.mjs && node scripts/check-progress-summary.mjs && node scripts/audit-system.mjs",
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
