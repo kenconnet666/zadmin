@@ -6,6 +6,7 @@ import CascaderProductionFixture from './CascaderProductionFixture.svelte';
 import { activateFormReset, resetForm } from './form-reset.js';
 
 describe('ZCascader production collection contract', () => {
+	// @zui-visual ZCascader bounded multi-column popup geometry
 	it('keeps typed paths, Field ownership, auxiliary search and reset synchronized', async () => {
 		render(CascaderProductionFixture, { mode: 'main' });
 		const form = document.querySelector<HTMLFormElement>(
@@ -23,6 +24,10 @@ describe('ZCascader production collection contract', () => {
 		trigger.click();
 		await tick();
 		const search = document.querySelector<HTMLInputElement>('input[aria-label="Filter paths"]')!;
+		const content = search.closest<HTMLElement>('[data-state="open"]')!;
+		expect(getComputedStyle(content).overflowY).toBe('auto');
+		expect(content.getBoundingClientRect().right).toBeLessThanOrEqual(window.innerWidth);
+		expect(content.getBoundingClientRect().bottom).toBeLessThanOrEqual(window.innerHeight);
 		expect(search.name).toBe('');
 		expect(search.form).toBeNull();
 		search.value = 'String';

@@ -356,6 +356,7 @@
 	import FormValueBridge from '../../runtime/form/FormValueBridge.svelte';
 	import ZPopover from '../compound/popover/ZPopover.svelte';
 	import ZPopoverContent from '../compound/popover/ZPopoverContent.svelte';
+	import { floatingContentSizingRecipe } from '../compound/floating-content-sizing.js';
 	import ZPopoverTrigger from '../compound/popover/ZPopoverTrigger.svelte';
 	import ZButton from '../gene/ZButton.svelte';
 
@@ -463,6 +464,9 @@
 	const rootClass = $derived(zui.recipe(rootRecipe, { disabled: resolvedDisabled }));
 	const swatchClass = $derived(zui.recipe(swatchRecipe, { empty: resolvedValue === null }));
 	const contentClass = $derived(zui.recipe(contentRecipe));
+	const sizingClass = $derived(
+		zui.recipe(floatingContentSizingRecipe, { intrinsicWidth: !matchWidth })
+	);
 	const colorClass = $derived(zui.recipe(colorRecipe));
 	const inputClass = $derived(zui.recipe(inputRecipe, { invalid: draftInvalid }));
 	const rangeClass = $derived(zui.recipe(rangeRecipe));
@@ -586,6 +590,7 @@
 			<span>{resolvedValue ?? resolvedPlaceholder}</span>
 		</ZPopoverTrigger>
 		<ZPopoverContent
+			class={sizingClass}
 			aria-label={getTriggerLabel(resolvedValue)}
 			ariaLabelledBy={null}
 			data-slot="content"

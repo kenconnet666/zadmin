@@ -7,6 +7,7 @@ import ColorPickerAllowAlphaFixture from './ColorPickerAllowAlphaFixture.svelte'
 import { resetForm } from './form-reset.js';
 
 describe('ZColorPicker production contract', () => {
+	// @zui-visual ZColorPicker bounded fixed-panel geometry
 	it('coordinates Field, hex drafts, presets, clear, FormData and reset', async () => {
 		render(ColorPickerProductionFixture);
 		const root = document.querySelector<HTMLElement>('[data-testid="color-production"]')!;
@@ -29,6 +30,11 @@ describe('ZColorPicker production contract', () => {
 		trigger.click();
 		await tick();
 		const hex = document.querySelector<HTMLInputElement>('input[aria-label="Hex color"]')!;
+		const content = hex.closest<HTMLElement>('[data-state="open"]')!;
+		expect(getComputedStyle(content).overflowY).toBe('auto');
+		expect(content.getBoundingClientRect().width).toBeGreaterThanOrEqual(192);
+		expect(content.getBoundingClientRect().right).toBeLessThanOrEqual(window.innerWidth);
+		expect(content.getBoundingClientRect().bottom).toBeLessThanOrEqual(window.innerHeight);
 		hex.value = '#zzzzzz';
 		hex.dispatchEvent(new InputEvent('input', { bubbles: true }));
 		await tick();

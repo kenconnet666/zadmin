@@ -325,6 +325,7 @@
 	import ZButton from '../gene/ZButton.svelte';
 	import ZPopover from '../compound/popover/ZPopover.svelte';
 	import ZPopoverContent from '../compound/popover/ZPopoverContent.svelte';
+	import { floatingContentSizingRecipe } from '../compound/floating-content-sizing.js';
 	import ZPopoverTrigger from '../compound/popover/ZPopoverTrigger.svelte';
 	import ZTree from '../compound/tree/ZTree.svelte';
 
@@ -442,6 +443,9 @@
 		currentValue === null ? resolvedPlaceholder : valueLabel(currentValue, selectedNode)
 	);
 	const rootClass = $derived(zui.recipe(rootRecipe, { invalid: resolvedInvalid }));
+	const sizingClass = $derived(
+		zui.recipe(floatingContentSizingRecipe, { intrinsicWidth: !matchWidth })
+	);
 
 	function setOpen(next: boolean): void {
 		if (next && (disabled || readonly)) return;
@@ -538,7 +542,12 @@
 			data-required={required || undefined}
 			data-slot="trigger">{label}</ZPopoverTrigger
 		>
-		<ZPopoverContent ariaLabelledBy={null} initialFocus={() => treeRef} role="presentation">
+		<ZPopoverContent
+			ariaLabelledBy={null}
+			class={sizingClass}
+			initialFocus={() => treeRef}
+			role="presentation"
+		>
 			<ZTree
 				appearance="bare"
 				aria-label={resolvedTreeLabel}

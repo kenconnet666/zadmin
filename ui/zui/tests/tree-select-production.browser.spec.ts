@@ -6,6 +6,7 @@ import TreeProductionFixture from './TreeProductionFixture.svelte';
 import { activateFormReset } from './form-reset.js';
 
 describe('ZTreeSelect production contract', () => {
+	// @zui-visual ZTreeSelect intrinsic popup geometry
 	it('keeps ZTreeSelect popup ARIA, Field focus owner, selection, clear and FormData reset real', async () => {
 		render(TreeProductionFixture);
 		const form = document.querySelector<HTMLFormElement>(
@@ -23,8 +24,14 @@ describe('ZTreeSelect production contract', () => {
 		const popup = document.querySelector<HTMLElement>(
 			'[role="tree"][aria-label="Choose deployment node"]'
 		)!;
+		const content = popup.parentElement!;
 		expect(trigger.getAttribute('aria-expanded')).toBe('true');
 		expect(popup.getAttribute('aria-activedescendant')).toBeTruthy();
+		expect(content.getBoundingClientRect().width).toBeGreaterThan(
+			trigger.getBoundingClientRect().width
+		);
+		expect(content.getBoundingClientRect().right).toBeLessThanOrEqual(window.innerWidth);
+		expect(getComputedStyle(content).overflowY).toBe('auto');
 		popup.querySelector<HTMLElement>('[data-key="beta"]')!.click();
 		await tick();
 		expect(trigger.textContent?.trim()).toBe('Beta');

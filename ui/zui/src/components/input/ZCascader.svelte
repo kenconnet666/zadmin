@@ -357,6 +357,7 @@
 	import ZVisuallyHidden from '../gene/ZVisuallyHidden.svelte';
 	import ZPopover from '../compound/popover/ZPopover.svelte';
 	import ZPopoverContent from '../compound/popover/ZPopoverContent.svelte';
+	import { floatingContentSizingRecipe } from '../compound/floating-content-sizing.js';
 	import ZPopoverTrigger from '../compound/popover/ZPopoverTrigger.svelte';
 	import CascaderColumn, {
 		type CascaderColumnController,
@@ -543,6 +544,9 @@
 	const rootClass = $derived(zui.recipe(rootRecipe, { disabled: resolvedDisabled }));
 	const contentClass = $derived(zui.recipe(contentRecipe));
 	const columnsClass = $derived(zui.recipe(columnsRecipe));
+	const sizingClass = $derived(
+		zui.recipe(floatingContentSizingRecipe, { intrinsicWidth: !matchWidth })
+	);
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
 	const levelFormatter = $derived(new Intl.NumberFormat(zui.locale));
@@ -853,7 +857,7 @@
 		>
 			{triggerLabel}
 		</ZPopoverTrigger>
-		<ZPopoverContent ariaLabelledBy={null} role="presentation">
+		<ZPopoverContent ariaLabelledBy={null} class={sizingClass} role="presentation">
 			<div class={contentClass} data-slot="content">
 				{#if searchable}
 					<ZInput

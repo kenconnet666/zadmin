@@ -74,7 +74,8 @@
 	const selectNodes: readonly TreeNode<string>[] = [
 		{ key: 'root', label: 'Root' },
 		{ key: 'alpha', label: 'Alpha', parentKey: 'root' },
-		{ key: 'beta', label: 'Beta', parentKey: 'root' }
+		{ key: 'beta', label: 'Beta', parentKey: 'root' },
+		{ key: 'long', label: 'High contrast professional theme', parentKey: 'root' }
 	];
 	let treeSelectValue = $state<SelectionKey | null>('alpha');
 	let treeSelectOpen = $state(false);
@@ -142,7 +143,9 @@
 			clearable
 			defaultExpandedKeys={['root']}
 			defaultValue="alpha"
+			matchWidth={false}
 			nodes={selectNodes}
+			style="inline-size: 8rem"
 		/>
 	</ZField>
 	<button type="reset">Reset select</button>
