@@ -44,8 +44,8 @@ describe.sequential('ZPopconfirm and ZTooltip production contracts', () => {
 		expect(content.querySelector('[data-testid="confirm-cancel"]')).not.toBeNull();
 		const action = document.querySelector<HTMLButtonElement>('[data-testid="confirm-action"]')!;
 		const cancel = document.querySelector<HTMLButtonElement>('[data-testid="confirm-cancel"]')!;
-		const title = content.ownerDocument.getElementById(titleId)!;
-		const description = content.ownerDocument.getElementById(descriptionId)!;
+		const title = content.ownerDocument.getElementById(titleId ?? '')!;
+		const description = content.ownerDocument.getElementById(descriptionId ?? '')!;
 		expect(
 			trigger.getBoundingClientRect().height,
 			'popconfirm trigger has button geometry'
