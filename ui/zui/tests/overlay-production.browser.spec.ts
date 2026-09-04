@@ -9,8 +9,12 @@ import PopoverOwnerRealmFixture from './PopoverOwnerRealmFixture.svelte';
 describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 	it('ZDialog + ZDialogTrigger + ZDialogOverlay + ZDialogContent + ZDialogTitle + ZDialogDescription + ZDialogClose expose real ARIA and focus contracts', async () => {
 		// @zui-visual ZDialog
+		// @zui-visual ZDialogTrigger
 		// @zui-visual ZDialogOverlay
 		// @zui-visual ZDialogContent
+		// @zui-visual ZDialogTitle
+		// @zui-visual ZDialogDescription
+		// @zui-visual ZDialogClose
 		render(OverlayProductionFixture);
 		const trigger = document.querySelector<HTMLButtonElement>(
 			'[data-testid="dialog-production-trigger"]'
@@ -37,6 +41,12 @@ describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 		expect(overlay.getAttribute('aria-hidden'), 'ZDialogOverlay aria-hidden').toBe('true');
 		expect(overlay.getAttribute('data-state')).toBe('open');
 		const overlayStyle = getComputedStyle(overlay);
+		const triggerStyle = getComputedStyle(trigger);
+		expect(
+			trigger.getBoundingClientRect().height,
+			'dialog trigger has button geometry'
+		).toBeGreaterThan(0);
+		expect(triggerStyle.display, 'dialog trigger participates in layout').not.toBe('none');
 		expect(overlayStyle.position, 'dialog overlay is viewport anchored').toBe('fixed');
 		expect(overlayStyle.inset, 'dialog overlay covers the viewport').toMatch(/0px/);
 		expect(
@@ -56,10 +66,28 @@ describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 		expect(document.activeElement?.getAttribute('aria-label')).toBe('Dialog input');
 		expect(content.hasAttribute('aria-labelledby')).toBe(true);
 		expect(content.hasAttribute('aria-describedby'), 'ZDialogDescription is registered').toBe(true);
+		expect(
+			title.getBoundingClientRect().height,
+			'dialog title has typography geometry'
+		).toBeGreaterThan(0);
+		expect(getComputedStyle(title).fontSize, 'dialog title has resolved typography').toBe('18px');
+		expect(getComputedStyle(title).fontWeight).toBe('700');
+		expect(
+			description.getBoundingClientRect().height,
+			'dialog description has typography geometry'
+		).toBeGreaterThan(0);
+		expect(getComputedStyle(description).marginBlockStart).toBe('8px');
 		const close = document.querySelector<HTMLButtonElement>(
 			'[data-testid="dialog-production-close"]'
 		);
 		expect(close, 'ZDialogClose is mounted as a real button').not.toBeNull();
+		expect(
+			close!.getBoundingClientRect().height,
+			'dialog close has button geometry'
+		).toBeGreaterThan(0);
+		expect(getComputedStyle(close!).display, 'dialog close participates in layout').not.toBe(
+			'none'
+		);
 		close?.click();
 		await tick();
 		expect(trigger.getAttribute('aria-expanded')).toBe('false');
@@ -102,8 +130,13 @@ describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 
 	it('ZAlertDialog + ZAlertDialogTrigger + ZAlertDialogOverlay + ZAlertDialogContent + ZAlertDialogTitle + ZAlertDialogDescription + ZAlertDialogCancel + ZAlertDialogAction enforce modal decision semantics', async () => {
 		// @zui-visual ZAlertDialog
+		// @zui-visual ZAlertDialogTrigger
 		// @zui-visual ZAlertDialogOverlay
 		// @zui-visual ZAlertDialogContent
+		// @zui-visual ZAlertDialogTitle
+		// @zui-visual ZAlertDialogDescription
+		// @zui-visual ZAlertDialogCancel
+		// @zui-visual ZAlertDialogAction
 		render(OverlayProductionFixture);
 		const trigger = document.querySelector<HTMLButtonElement>(
 			'[data-testid="alert-production-trigger"]'
@@ -141,6 +174,14 @@ describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 		expect(overlay.getAttribute('aria-hidden'), 'ZAlertDialogOverlay aria-hidden').toBe('true');
 		expect(overlay.getAttribute('data-state'), 'ZAlertDialogOverlay open state').toBe('open');
 		const overlayStyle = getComputedStyle(overlay);
+		expect(
+			trigger.getBoundingClientRect().height,
+			'alert dialog trigger has button geometry'
+		).toBeGreaterThan(0);
+		expect(
+			getComputedStyle(trigger).display,
+			'alert dialog trigger participates in layout'
+		).not.toBe('none');
 		expect(overlayStyle.position, 'alert dialog overlay is viewport anchored').toBe('fixed');
 		expect(overlayStyle.inset, 'alert dialog overlay covers the viewport').toMatch(/0px/);
 		expect(
@@ -152,6 +193,25 @@ describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 			'alert dialog content has rendered geometry'
 		).toBeGreaterThan(0);
 		expect(document.activeElement, 'ZAlertDialogCancel initial focus').toBe(cancel);
+		expect(
+			cancel.getBoundingClientRect().height,
+			'alert cancel has button geometry'
+		).toBeGreaterThan(0);
+		expect(
+			action.getBoundingClientRect().height,
+			'alert action has button geometry'
+		).toBeGreaterThan(0);
+		expect(getComputedStyle(cancel).fontSize, 'alert cancel has resolved typography').not.toBe('');
+		expect(
+			title.getBoundingClientRect().height,
+			'alert title has typography geometry'
+		).toBeGreaterThan(0);
+		expect(getComputedStyle(title).fontWeight).toBe('700');
+		expect(
+			description.getBoundingClientRect().height,
+			'alert description has typography geometry'
+		).toBeGreaterThan(0);
+		expect(getComputedStyle(description).marginBlockStart).toBe('8px');
 		action.click();
 		await tick();
 		expect(action.disabled, 'ZAlertDialogAction pending lock').toBe(true);
@@ -218,6 +278,8 @@ describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 
 	it('ZPopover owns controlled open state and collision-aware placement', async () => {
 		// @zui-visual ZPopover
+		// @zui-visual ZPopoverTrigger
+		// @zui-visual ZPopoverContent
 		render(OverlayProductionFixture);
 		const trigger = document.querySelector<HTMLButtonElement>(
 			'[data-testid="popover-production-trigger"]'
@@ -238,6 +300,13 @@ describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 		expect(content.style.left).not.toBe('');
 		expect(content.style.top).not.toBe('');
 		expect(content.getBoundingClientRect().width).toBeGreaterThan(0);
+		expect(
+			trigger.getBoundingClientRect().height,
+			'popover trigger has button geometry'
+		).toBeGreaterThan(0);
+		expect(getComputedStyle(trigger).display, 'popover trigger participates in layout').not.toBe(
+			'none'
+		);
 	});
 
 	it('ZPopoverTrigger and ZPopoverContent preserve ARIA identity and focus lifecycle', async () => {

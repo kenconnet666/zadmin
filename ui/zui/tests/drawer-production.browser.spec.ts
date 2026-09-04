@@ -14,6 +14,12 @@ function target(): HTMLDivElement {
 
 describe('ZDrawer compound production contracts', () => {
 	it('ZDrawerContent, ZDrawerOverlay, ZDrawerTitle and ZDrawerDescription paint and register semantic states', async () => {
+		// @zui-visual ZDrawerTrigger
+		// @zui-visual ZDrawerOverlay
+		// @zui-visual ZDrawerContent
+		// @zui-visual ZDrawerTitle
+		// @zui-visual ZDrawerDescription
+		// @zui-visual ZDrawerClose
 		const host = target();
 		const component = mount(DrawerFixture, {
 			props: { motion: 'full', placement: 'start', size: 'small' },
@@ -41,8 +47,35 @@ describe('ZDrawer compound production contracts', () => {
 		await tick();
 		expect(content?.dataset.motionState).toBe('entered');
 		expect(overlay?.dataset.motionState).toBe('entered');
+		expect(getComputedStyle(overlay!).position).toBe('fixed');
+		expect(getComputedStyle(overlay!).inset).toMatch(/0px/u);
+		expect(getComputedStyle(content!).position).toBe('fixed');
+		expect(content!.getBoundingClientRect().width).toBeGreaterThan(0);
 		const labelledBy = content?.getAttribute('aria-labelledby');
 		const describedBy = content?.getAttribute('aria-describedby');
+		const trigger = host.querySelector<HTMLButtonElement>('[data-testid="drawer-trigger"]')!;
+		const close = document.querySelector<HTMLButtonElement>('[data-testid="drawer-close"]')!;
+		const title = content?.ownerDocument.getElementById(labelledBy ?? '')!;
+		const description = content?.ownerDocument.getElementById(describedBy ?? '')!;
+		expect(
+			trigger.getBoundingClientRect().height,
+			'drawer trigger has button geometry'
+		).toBeGreaterThan(0);
+		expect(
+			close.getBoundingClientRect().height,
+			'drawer close has button geometry'
+		).toBeGreaterThan(0);
+		expect(
+			title.getBoundingClientRect().height,
+			'drawer title has typography geometry'
+		).toBeGreaterThan(0);
+		expect(getComputedStyle(title).fontSize).toBe('18px');
+		expect(getComputedStyle(title).fontWeight).toBe('700');
+		expect(
+			description.getBoundingClientRect().height,
+			'drawer description has typography geometry'
+		).toBeGreaterThan(0);
+		expect(getComputedStyle(description).marginBlockStart).toBe('8px');
 		expect(content?.ownerDocument.getElementById(labelledBy ?? '')?.textContent).toBe(
 			'Fixture drawer'
 		);

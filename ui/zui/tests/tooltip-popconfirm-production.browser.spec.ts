@@ -12,7 +12,12 @@ const wait = (duration: number): Promise<void> =>
 describe.sequential('ZPopconfirm and ZTooltip production contracts', () => {
 	it('ZPopconfirmTrigger and ZPopconfirmAction own pending, duplicate blocking, resolve and focus restoration', async () => {
 		// @zui-visual ZPopconfirm
+		// @zui-visual ZPopconfirmTrigger
 		// @zui-visual ZPopconfirmContent
+		// @zui-visual ZPopconfirmTitle
+		// @zui-visual ZPopconfirmDescription
+		// @zui-visual ZPopconfirmAction
+		// @zui-visual ZPopconfirmCancel
 		render(TooltipPopconfirmProductionFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="confirm-trigger"]')!;
 		await userEvent.click(trigger);
@@ -38,6 +43,32 @@ describe.sequential('ZPopconfirm and ZTooltip production contracts', () => {
 		expect(content.querySelector('[data-testid="confirm-action"]')).not.toBeNull();
 		expect(content.querySelector('[data-testid="confirm-cancel"]')).not.toBeNull();
 		const action = document.querySelector<HTMLButtonElement>('[data-testid="confirm-action"]')!;
+		const cancel = document.querySelector<HTMLButtonElement>('[data-testid="confirm-cancel"]')!;
+		const title = content.ownerDocument.getElementById(titleId)!;
+		const description = content.ownerDocument.getElementById(descriptionId)!;
+		expect(
+			trigger.getBoundingClientRect().height,
+			'popconfirm trigger has button geometry'
+		).toBeGreaterThan(0);
+		expect(
+			action.getBoundingClientRect().height,
+			'popconfirm action has button geometry'
+		).toBeGreaterThan(0);
+		expect(
+			cancel.getBoundingClientRect().height,
+			'popconfirm cancel has button geometry'
+		).toBeGreaterThan(0);
+		expect(
+			title.getBoundingClientRect().height,
+			'popconfirm title has typography geometry'
+		).toBeGreaterThan(0);
+		expect(getComputedStyle(title).fontSize).toBe('14px');
+		expect(getComputedStyle(title).fontWeight).toBe('700');
+		expect(
+			description.getBoundingClientRect().height,
+			'popconfirm description has typography geometry'
+		).toBeGreaterThan(0);
+		expect(getComputedStyle(description).marginBlockStart).toBe('8px');
 		await userEvent.click(action);
 		expect(action.disabled).toBe(true);
 		expect(action.getAttribute('aria-busy')).toBe('true');
@@ -117,6 +148,8 @@ describe.sequential('ZPopconfirm and ZTooltip production contracts', () => {
 
 	it('ZTooltipGroup applies warmup/cooldown while ZTooltip keeps one active tooltip', async () => {
 		// @zui-visual ZTooltip
+		// @zui-visual ZTooltipGroup coordinated visibility
+		// @zui-visual ZTooltipTrigger
 		// @zui-visual ZTooltipContent
 		render(TooltipPopconfirmProductionFixture);
 		const first = document.querySelector<HTMLButtonElement>('[data-testid="tooltip-first"]')!;
@@ -128,13 +161,23 @@ describe.sequential('ZPopconfirm and ZTooltip production contracts', () => {
 			'[data-testid="tooltip-first-content"]'
 		)!;
 		expect(
+			first.getBoundingClientRect().height,
+			'tooltip trigger has button geometry'
+		).toBeGreaterThan(0);
+		expect(getComputedStyle(first).display, 'tooltip trigger participates in layout').not.toBe(
+			'none'
+		);
+		expect(
 			firstContent.getBoundingClientRect().width,
 			'tooltip content has rendered geometry'
 		).toBeGreaterThan(0);
 		expect(getComputedStyle(firstContent).position, 'tooltip content is floating').toMatch(
 			/absolute|fixed/
 		);
+		await expect.poll(() => firstContent.style.left, { timeout: 2_000 }).not.toBe('');
+		await expect.poll(() => firstContent.style.top, { timeout: 2_000 }).not.toBe('');
 		expect(firstContent.getBoundingClientRect().height).toBeGreaterThan(0);
+		expect(first.getAttribute('aria-describedby')).toBe(firstContent.id);
 
 		first.dispatchEvent(new FocusEvent('blur', { bubbles: true }));
 		first.dispatchEvent(new PointerEvent('pointerleave', { bubbles: true }));
