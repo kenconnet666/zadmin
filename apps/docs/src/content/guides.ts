@@ -113,6 +113,27 @@ export default {
 				]
 			},
 			{
+				id: 'cascade',
+				title: '级联与Recipe优先级',
+				paragraphs: [
+					'ZUI把组件recipe放在zui.components、调用方utility放在更后的zui.utilities。Recipe内部按base、variant声明顺序、compound声明顺序编码确定性优先级；即使相同原子规则被不同组件共享，注册先后也不会改变最终视觉。'
+				],
+				code: `@layer app-reset, zui;
+
+@layer app-reset {
+	button,
+	input {
+		font-family: inherit;
+	}
+}`,
+				language: 'css',
+				bullets: [
+					'应用级reset放在zui之前的命名layer，避免全局元素选择器覆盖组件size、line-height和状态色。',
+					'应用确需覆盖组件时使用zui.utilities或明确的应用层；不要依赖style插入先后。',
+					'variant轴的声明顺序就是冲突优先级；交叉状态应使用compoundVariant表达。'
+				]
+			},
+			{
 				id: 'csp',
 				title: '严格CSP',
 				paragraphs: [
