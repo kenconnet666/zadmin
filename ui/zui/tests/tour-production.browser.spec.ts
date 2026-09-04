@@ -71,8 +71,9 @@ describe('ZTour production overlay contract', () => {
 		await tick();
 		await Promise.resolve();
 		const target = document.querySelector<HTMLElement>('#tour-summary')!;
-		const dialog = [...document.querySelectorAll<HTMLElement>('[role="dialog"][data-step="summary"]')]
-			.find((candidate) => candidate.getBoundingClientRect().width > 0)!;
+		const dialog = [
+			...document.querySelectorAll<HTMLElement>('[role="dialog"][data-step="summary"]')
+		].find((candidate) => candidate.getBoundingClientRect().width > 0)!;
 		const targetRect = target.getBoundingClientRect();
 		const dialogRect = dialog.getBoundingClientRect();
 		expect(dialogRect.width).toBeGreaterThan(0);
