@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
-import InputVisualContractsFixture from './input-visual-contracts-fixture.svelte';
+import InputVisualContractsFixture from './InputVisualContractsFixture.svelte';
 
 describe('input component visual contracts', () => {
 	// @zui-visual ZRadioGroup orientation and selection geometry
