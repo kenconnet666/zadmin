@@ -603,6 +603,12 @@ if (
 
 const docsSvelteFiles = await filesUnder(docsSourceRoot, ['.svelte']);
 const docsBaseCssSource = await readFile(resolve(docsRoot, 'src/app/base.css'), 'utf8');
+if (
+	!docsBaseCssSource.includes('@layer docs-reset, zui;') ||
+	!/@layer\s+docs-reset\s*\{/u.test(docsBaseCssSource)
+) {
+	fail('Docs global resets must stay in a cascade layer below the ZUI component layers.');
+}
 if (/(?:^|[;{\s])font\s*:/u.test(docsBaseCssSource)) {
 	fail('Docs base reset must not use the font shorthand, which can override component typography.');
 }

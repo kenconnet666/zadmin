@@ -377,6 +377,7 @@ test('switches and persists all coordinated production themes', async ({ page })
 });
 
 test('keeps the header theme listbox readable and viewport bounded', async ({ page }) => {
+	await page.setViewportSize({ height: 600, width: 769 });
 	await page.goto('/#/components/button');
 	const trigger = page.getByRole('button', { name: '选择文档主题', exact: true });
 	await trigger.click();
@@ -404,6 +405,7 @@ test('keeps the header theme listbox readable and viewport bounded', async ({ pa
 		};
 	});
 	expect(geometry.content.width).toBeGreaterThan(geometry.triggerWidth);
+	expect(geometry.content.width).toBeGreaterThan(120);
 	expect(geometry.content.right).toBeLessThanOrEqual(geometry.viewport.width);
 	expect(geometry.content.bottom).toBeLessThanOrEqual(geometry.viewport.height);
 	expect(geometry.options).toEqual(Array(6).fill('nowrap'));

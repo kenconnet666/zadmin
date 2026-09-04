@@ -1,57 +1,61 @@
 @import '@fontsource/fira-mono';
 
-*,
-*::before,
-*::after {
-	box-sizing: border-box;
-}
+@layer docs-reset, zui;
 
-html {
-	scroll-behavior: smooth;
-	scrollbar-width: thin;
-}
+@layer docs-reset {
+	*,
+	*::before,
+	*::after {
+		box-sizing: border-box;
+	}
 
-html[data-motion='reduced'] {
-	scroll-behavior: auto;
-}
+	html {
+		scroll-behavior: smooth;
+		scrollbar-width: thin;
+	}
 
-html[data-motion='reduced'] *,
-html[data-motion='reduced'] *::before,
-html[data-motion='reduced'] *::after {
-	animation-duration: 0.01ms !important;
-	animation-iteration-count: 1 !important;
-	scroll-behavior: auto !important;
-	transition-duration: 0.01ms !important;
-}
-
-@media (prefers-reduced-motion: reduce) {
-	html[data-motion='auto'] {
+	html[data-motion='reduced'] {
 		scroll-behavior: auto;
 	}
 
-	html[data-motion='auto'] *,
-	html[data-motion='auto'] *::before,
-	html[data-motion='auto'] *::after {
+	html[data-motion='reduced'] *,
+	html[data-motion='reduced'] *::before,
+	html[data-motion='reduced'] *::after {
 		animation-duration: 0.01ms !important;
 		animation-iteration-count: 1 !important;
 		scroll-behavior: auto !important;
 		transition-duration: 0.01ms !important;
 	}
-}
 
-body {
-	margin: 0;
-	min-width: 20rem;
-	min-height: 100vh;
-}
+	@media (prefers-reduced-motion: reduce) {
+		html[data-motion='auto'] {
+			scroll-behavior: auto;
+		}
 
-button,
-input,
-select {
-	/* Preserve the document font without overriding ZUI typography tokens. */
-	font-family: inherit;
-}
+		html[data-motion='auto'] *,
+		html[data-motion='auto'] *::before,
+		html[data-motion='auto'] *::after {
+			animation-duration: 0.01ms !important;
+			animation-iteration-count: 1 !important;
+			scroll-behavior: auto !important;
+			transition-duration: 0.01ms !important;
+		}
+	}
 
-#app {
-	min-height: 100vh;
+	body {
+		margin: 0;
+		min-width: 20rem;
+		min-height: 100vh;
+	}
+
+	button,
+	input,
+	select {
+		/* Preserve the document font without overriding ZUI typography tokens. */
+		font-family: inherit;
+	}
+
+	#app {
+		min-height: 100vh;
+	}
 }
