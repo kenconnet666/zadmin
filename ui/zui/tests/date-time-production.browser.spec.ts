@@ -13,10 +13,15 @@ function fixture(selector: string): HTMLElement {
 
 describe('date and time production contracts', () => {
 	it('keeps ZDateField typed segments, ARIA, keyboard, Field ownership and FormData real', async () => {
+		// @zui-visual ZDateField segment and group geometry
 		render(DateFixture);
 		const form = fixture('[data-testid="date-form"]') as HTMLFormElement;
 		const dateField = document.querySelector<HTMLElement>('[aria-label="Date segments"]')!;
 		const segments = [...dateField.querySelectorAll<HTMLInputElement>('input')];
+		expect(getComputedStyle(dateField).display).toBe('inline-flex');
+		// The group owns a one-pixel border around the 32px medium control box.
+		expect(dateField.getBoundingClientRect().height).toBe(34);
+		expect(getComputedStyle(segments[0]!).fontFamily).toContain('ui-monospace');
 		expect(segments.length).toBeGreaterThanOrEqual(3);
 		expect(segments.every((segment) => segment.getAttribute('aria-label'))).toBe(true);
 		expect(new FormData(form).get('date')).toBe('2026-08-18');
@@ -35,10 +40,14 @@ describe('date and time production contracts', () => {
 	});
 
 	it('keeps ZTimeField typed segments, granular keyboard and FormData/reset real', async () => {
+		// @zui-visual ZTimeField segment and group geometry
 		render(DateFixture);
 		const form = fixture('[data-testid="date-form"]') as HTMLFormElement;
 		const timeField = document.querySelector<HTMLElement>('[aria-label="Time segments"]')!;
 		const segments = [...timeField.querySelectorAll<HTMLInputElement>('input')];
+		expect(getComputedStyle(timeField).display).toBe('inline-flex');
+		expect(timeField.getBoundingClientRect().height).toBe(34);
+		expect(getComputedStyle(segments[0]!).fontFamily).toContain('ui-monospace');
 		expect(segments.length).toBe(3);
 		expect(segments.map((segment) => segment.getAttribute('aria-label'))).toEqual([
 			'Hour',

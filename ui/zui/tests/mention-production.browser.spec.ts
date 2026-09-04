@@ -40,6 +40,7 @@ describe('ZMention production collection contract', () => {
 	});
 
 	it('mounts a distant virtual option before exposing and committing it', async () => {
+		// @zui-visual ZMention virtual list and floating geometry
 		render(MentionProductionFixture, { mode: 'virtual' });
 		const editor = document.querySelector<HTMLTextAreaElement>(
 			'textarea[aria-label="Virtual mention"]'
@@ -47,6 +48,9 @@ describe('ZMention production collection contract', () => {
 		input(editor, '@');
 		await tick();
 		const listbox = document.querySelector<HTMLElement>('[role="listbox"]')!;
+		expect(listbox.getBoundingClientRect().height).toBe(260);
+		expect(getComputedStyle(listbox).overflowY).toBe('auto');
+		expect(getComputedStyle(listbox.parentElement!).position).toMatch(/absolute|fixed/);
 		expect(listbox.querySelectorAll('[role="option"]').length).toBeLessThan(30);
 		editor.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'End' }));
 		await tick();

@@ -6,6 +6,8 @@ import FieldSizeFixture from './FieldSizeFixture.svelte';
 
 describe('ZProvider, ZField, ZInput and ZTextarea production size contract', () => {
 	it('resolves explicit control, Field and Provider density in priority order', async () => {
+		// @zui-visual ZProvider density propagation geometry
+		// @zui-visual ZField size spacing geometry
 		render(FieldSizeFixture);
 		await tick();
 		expect(
@@ -19,5 +21,13 @@ describe('ZProvider, ZField, ZInput and ZTextarea production size contract', () 
 				document.querySelector(`[data-testid="field-size-${id}"]`)?.getAttribute('data-size')
 			).toBe('large');
 		}
+		const providerField = document.querySelector<HTMLElement>(
+			'[data-testid="field-owner-provider"]'
+		)!;
+		const largeField = document.querySelector<HTMLElement>('[data-testid="field-owner-large"]')!;
+		expect(getComputedStyle(providerField).display).toBe('grid');
+		expect(getComputedStyle(providerField).gap).toBe('4px');
+		expect(getComputedStyle(largeField).gap).toBe('8px');
+		expect(providerField.querySelector('label')!.getBoundingClientRect().width).toBeGreaterThan(0);
 	});
 });

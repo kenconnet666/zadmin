@@ -8,12 +8,15 @@ import ToastQueueReplacementFixture from './ToastQueueReplacementFixture.svelte'
 
 describe('ZToast and ZToaster production browser contract', () => {
 	it('ZToast keeps standalone announcement, tone, action and dismiss boundaries real', async () => {
+		// @zui-visual ZToast tone and action surface geometry
 		render(CoverageFixture);
 		const danger = document.querySelector<HTMLElement>('[data-testid="coverage-toast-danger"]')!;
 		const action = document.querySelector<HTMLElement>('[data-testid="coverage-toast-action"]')!;
 
 		expect(danger.tagName).toBe('ARTICLE');
 		expect(danger.dataset.tone).toBe('danger');
+		expect(getComputedStyle(danger).display).toBe('grid');
+		expect(getComputedStyle(danger).borderColor).not.toBe(getComputedStyle(action).borderColor);
 		expect(danger.querySelector('[data-slot="announcement"]')?.getAttribute('role')).toBe('alert');
 		expect(danger.querySelector('[data-slot="actions"]')).toBeNull();
 		action.querySelector<HTMLButtonElement>('button')!.click();
@@ -56,8 +59,13 @@ describe('ZToast and ZToaster production browser contract', () => {
 	});
 
 	it('ZToaster connects the caller queue to viewport, FIFO visibility and live regions', async () => {
+		// @zui-visual ZToaster fixed viewport and queue geometry
 		render(ToastProductionFixture);
 		const viewport = document.querySelector<HTMLElement>('[data-slot="viewport"]')!;
+		expect(getComputedStyle(viewport).position).toBe('fixed');
+		expect(getComputedStyle(viewport).display).toBe('grid');
+		expect(viewport.getBoundingClientRect().width).toBeLessThanOrEqual(384);
+		expect(viewport.getBoundingClientRect().right).toBeLessThanOrEqual(window.innerWidth);
 		expect(viewport.getAttribute('aria-label')).toBe('Production notifications');
 		expect(viewport.dataset.queued).toBe('0');
 		expect(document.querySelector('[data-slot="polite-announcer"]')).not.toBeNull();

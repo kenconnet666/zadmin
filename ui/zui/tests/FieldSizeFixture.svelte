@@ -11,10 +11,10 @@
 </script>
 
 <ZProvider density="compact">
-	<ZField label="Provider fallback">
+	<ZField data-testid="field-owner-provider" label="Provider fallback">
 		<ZInput data-testid="field-size-provider" />
 	</ZField>
-	<ZField label="Explicit control" size="large">
+	<ZField data-testid="field-owner-large" label="Explicit control" size="large">
 		<ZInput data-testid="field-size-explicit" size="small" />
 	</ZField>
 	<ZField label="Textarea" size="large">

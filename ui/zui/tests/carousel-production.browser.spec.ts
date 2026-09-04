@@ -7,11 +7,17 @@ import CoverageFixture from './CoverageFixture.svelte';
 
 describe('ZCarousel production contracts', () => {
 	it('keeps ZCarousel controlled typed slides, current state and navigation controls synchronized', async () => {
+		// @zui-visual ZCarousel bounded slide and control surface geometry
 		render(CarouselFixture);
 		const carousel = document.querySelector<HTMLElement>('[data-testid="carousel"]')!;
 		const output = document.querySelector<HTMLOutputElement>('[data-testid="carousel-output"]')!;
 
 		expect(carousel.getAttribute('aria-label')).toBe('Release carousel');
+		expect(getComputedStyle(carousel).borderStyle).toBe('solid');
+		expect(getComputedStyle(carousel).overflow).toBe('hidden');
+		expect(
+			getComputedStyle(carousel.querySelector<HTMLElement>('[data-slot="slide"]')!).paddingTop
+		).toBe('24px');
 		expect(
 			carousel.querySelectorAll('[data-slot="slide"][role="group"]:not([hidden])')
 		).toHaveLength(1);

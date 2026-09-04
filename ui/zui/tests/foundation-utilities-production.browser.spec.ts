@@ -5,6 +5,7 @@ import FoundationPrimitivesFixture from './FoundationPrimitivesFixture.svelte';
 
 describe('foundation utility production contracts', () => {
 	it('ZSeparator and ZVisuallyHidden preserve semantic and visual-only boundaries', () => {
+		// @zui-visual ZVisuallyHidden clipped one-pixel geometry
 		render(FoundationPrimitivesFixture);
 		const named = document.querySelector<HTMLElement>('[data-testid="separator-named"]')!;
 		const decorative = document.querySelector<HTMLElement>('[data-testid="separator-decorative"]')!;

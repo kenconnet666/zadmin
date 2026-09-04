@@ -6,6 +6,7 @@ import ResultEmptyProductionFixture from './ResultEmptyProductionFixture.svelte'
 
 describe('ZResult and ZEmpty production browser contracts', () => {
 	it('uses real headings, decorative default icons and Alert-compatible Result tones', () => {
+		// @zui-visual ZResult tone and content layout geometry
 		render(ResultEmptyProductionFixture);
 		for (const tone of ['info', 'success', 'warning', 'danger']) {
 			const root = document.querySelector<HTMLElement>(`[data-testid="result-${tone}"]`)!;
@@ -30,6 +31,15 @@ describe('ZResult and ZEmpty production browser contracts', () => {
 				)!
 			).textAlign
 		).toBe('start');
+		expect(
+			getComputedStyle(
+				document.querySelector<HTMLElement>('[data-testid="result-info"] [data-slot="icon"]')!
+			).color
+		).not.toBe(
+			getComputedStyle(
+				document.querySelector<HTMLElement>('[data-testid="result-danger"] [data-slot="icon"]')!
+			).color
+		);
 	});
 
 	it('keeps Empty neutral, named by a real heading and independently actionable', () => {

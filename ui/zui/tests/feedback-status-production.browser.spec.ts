@@ -80,22 +80,29 @@ describe('Alert, Spinner and LoadingBar production browser contracts', () => {
 	});
 
 	it('ZLoadingBar keeps determinate, indeterminate, page, error and reduced states distinct', () => {
+		// @zui-visual ZLoadingBar mode, state and indicator geometry
 		render(FeedbackStatusProductionFixture);
 		const determinate = document.querySelector<HTMLElement>('[data-testid="loading-determinate"]')!;
 		const indeterminate = document.querySelector<HTMLElement>(
 			'[data-testid="loading-indeterminate"]'
 		)!;
 		const reduced = document.querySelector<HTMLElement>('[data-testid="loading-reduced"]')!;
+		const page = document.querySelector<HTMLElement>('[data-testid="loading-page"]')!;
+		const error = document.querySelector<HTMLElement>('[data-testid="loading-error"]')!;
 		expect(determinate.getAttribute('aria-valuenow')).toBe('42');
 		expect(determinate.hasAttribute('aria-valuetext')).toBe(false);
 		expect(indeterminate.hasAttribute('aria-valuenow')).toBe(false);
 		expect(indeterminate.getAttribute('aria-valuetext')).toBe('Connecting');
-		expect(document.querySelector<HTMLElement>('[data-testid="loading-page"]')?.dataset.mode).toBe(
-			'page'
-		);
+		expect(page.dataset.mode).toBe('page');
+		expect(error.dataset.state).toBe('error');
+		expect(determinate.getBoundingClientRect().height).toBe(3);
+		expect(getComputedStyle(page).position).toBe('fixed');
 		expect(
-			document.querySelector<HTMLElement>('[data-testid="loading-error"]')?.dataset.state
-		).toBe('error');
+			getComputedStyle(error.querySelector<HTMLElement>('[data-slot="indicator"]')!).backgroundColor
+		).not.toBe(
+			getComputedStyle(determinate.querySelector<HTMLElement>('[data-slot="indicator"]')!)
+				.backgroundColor
+		);
 		expect(reduced.dataset.reducedMotion).toBe('true');
 		expect(reduced.querySelector<HTMLElement>('[data-slot="indicator"]')?.style.width).toBe('100%');
 		expect(
