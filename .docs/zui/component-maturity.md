@@ -11,16 +11,16 @@ Generation is evidence-based. `BrowserBehaviorVerified` requires an executed bro
 | ContractVerified        |   141 |
 | RuntimeImplemented      |   141 |
 | BrowserBehaviorVerified |   141 |
-| VisuallyVerified        |    36 |
+| VisuallyVerified        |    45 |
 | DesktopVerified         |     0 |
 | ProductionVerified      |   141 |
 
 | Component               | Category     | Declared | Authorable | Contract | Runtime | Browser | Visual | Desktop | Production | Docs                                                                  |
 | ----------------------- | ------------ | -------: | ---------: | -------: | ------: | ------: | -----: | ------: | ---------: | --------------------------------------------------------------------- |
-| ZAccordion              | navigation   |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/navigation/accordion/doc.ts          |
-| ZAccordionContent       | navigation   |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/navigation/accordion/doc.ts          |
-| ZAccordionItem          | navigation   |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/navigation/accordion/doc.ts          |
-| ZAccordionTrigger       | navigation   |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/navigation/accordion/doc.ts          |
+| ZAccordion              | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/accordion/doc.ts          |
+| ZAccordionContent       | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/accordion/doc.ts          |
+| ZAccordionItem          | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/accordion/doc.ts          |
+| ZAccordionTrigger       | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/accordion/doc.ts          |
 | ZAlertDialog            | overlay      |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/overlay/alert-dialog/doc.ts          |
 | ZAlertDialogAction      | overlay      |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/overlay/alert-dialog/doc.ts          |
 | ZAlertDialogCancel      | overlay      |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/overlay/alert-dialog/doc.ts          |
@@ -84,10 +84,10 @@ Generation is evidence-based. `BrowserBehaviorVerified` requires an executed bro
 | ZSelectContent          | input        |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/input/select/doc.ts                  |
 | ZSelectItem             | input        |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/input/select/doc.ts                  |
 | ZSelectTrigger          | input        |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/input/select/doc.ts                  |
-| ZTabs                   | navigation   |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/navigation/tabs/doc.ts               |
-| ZTabsList               | navigation   |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/navigation/tabs/doc.ts               |
-| ZTabsPanel              | navigation   |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/navigation/tabs/doc.ts               |
-| ZTabsTrigger            | navigation   |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/navigation/tabs/doc.ts               |
+| ZTabs                   | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/tabs/doc.ts               |
+| ZTabsList               | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/tabs/doc.ts               |
+| ZTabsPanel              | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/tabs/doc.ts               |
+| ZTabsTrigger            | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/tabs/doc.ts               |
 | ZTooltip                | overlay      |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/overlay/tooltip/doc.ts               |
 | ZTooltipContent         | overlay      |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/overlay/tooltip/doc.ts               |
 | ZTooltipGroup           | overlay      |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/overlay/tooltip/doc.ts               |
@@ -95,7 +95,7 @@ Generation is evidence-based. `BrowserBehaviorVerified` requires an executed bro
 | ZTree                   | navigation   |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/navigation/tree/doc.ts               |
 | ZAvatar                 | data-display |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/avatar/doc.ts           |
 | ZBadge                  | data-display |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/badge/doc.ts            |
-| ZCard                   | data-display |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/data-display/card/doc.ts             |
+| ZCard                   | data-display |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/card/doc.ts             |
 | ZCarousel               | data-display |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/data-display/carousel/doc.ts         |
 | ZDataTable              | data-display |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/data-display/data-table/doc.ts       |
 | ZDescriptionList        | data-display |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/description-list/doc.ts |

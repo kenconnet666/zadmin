@@ -22,7 +22,7 @@
 		"ContractVerified": 141,
 		"RuntimeImplemented": 141,
 		"BrowserBehaviorVerified": 141,
-		"VisuallyVerified": 36,
+		"VisuallyVerified": 45,
 		"DesktopVerified": 0,
 		"ProductionVerified": 141
 	},
@@ -44,7 +44,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -103,7 +103,16 @@
 						"detail": "ZAccordion explicit rendered fixture usage"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
+						"detail": "ZAccordion explicit visual contract assertions"
+					},
+					{
+						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
+						"detail": "ZAccordion explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -144,7 +153,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -183,7 +192,16 @@
 						"detail": "ZAccordionContent explicit rendered fixture usage"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
+						"detail": "ZAccordionContent explicit visual contract assertions"
+					},
+					{
+						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
+						"detail": "ZAccordionContent explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -224,7 +242,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -263,7 +281,16 @@
 						"detail": "ZAccordionItem explicit rendered fixture usage"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
+						"detail": "ZAccordionItem explicit visual contract assertions"
+					},
+					{
+						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
+						"detail": "ZAccordionItem explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -304,7 +331,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -343,7 +370,16 @@
 						"detail": "ZAccordionTrigger explicit rendered fixture usage"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
+						"detail": "ZAccordionTrigger explicit visual contract assertions"
+					},
+					{
+						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
+						"detail": "ZAccordionTrigger explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -5795,7 +5831,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -5834,7 +5870,16 @@
 						"detail": "ZTabs explicit rendered fixture usage"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
+						"detail": "ZTabs explicit visual contract assertions"
+					},
+					{
+						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
+						"detail": "ZTabs explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -5875,7 +5920,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -5914,7 +5959,16 @@
 						"detail": "ZTabsList explicit rendered fixture usage"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
+						"detail": "ZTabsList explicit visual contract assertions"
+					},
+					{
+						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
+						"detail": "ZTabsList explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -5955,7 +6009,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -5994,7 +6048,16 @@
 						"detail": "ZTabsPanel explicit rendered fixture usage"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
+						"detail": "ZTabsPanel explicit visual contract assertions"
+					},
+					{
+						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
+						"detail": "ZTabsPanel explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -6035,7 +6098,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -6074,7 +6137,16 @@
 						"detail": "ZTabsTrigger explicit rendered fixture usage"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
+						"detail": "ZTabsTrigger explicit visual contract assertions"
+					},
+					{
+						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
+						"detail": "ZTabsTrigger explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -6749,7 +6821,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -6788,7 +6860,16 @@
 						"detail": "ZCard explicit rendered fixture usage"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/card-production.browser.spec.ts",
+						"detail": "ZCard explicit visual contract assertions"
+					},
+					{
+						"path": "ui/zui/tests/CardProductionFixture.svelte",
+						"detail": "ZCard explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{

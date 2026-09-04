@@ -2165,6 +2165,78 @@ export const menuCheckboxItemApiFacts = {
 			name: 'onSelect',
 			required: false,
 			type: '(event: MenuActionEvent) => void'
+		},
+		{
+			name: 'danger',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'download',
+			required: false,
+			type: "HTMLAnchorAttributes['download']",
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'href',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'leading',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLElement | null',
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'rel',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'shortcut',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'target',
+			required: false,
+			type: "HTMLAnchorAttributes['target']",
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'textValue',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'trailing',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'value',
+			required: true,
+			type: 'SelectionKey',
+			inheritedFrom: 'ZMenuItemProps'
 		}
 	],
 	source: 'ui/zui/src/components/compound/menu/ZMenuCheckboxItem.svelte',
@@ -2370,6 +2442,78 @@ export const menuRadioItemApiFacts = {
 			name: 'onSelect',
 			required: false,
 			type: '(event: MenuActionEvent) => void'
+		},
+		{
+			name: 'danger',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'download',
+			required: false,
+			type: "HTMLAnchorAttributes['download']",
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'href',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'leading',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLElement | null',
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'rel',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'shortcut',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'target',
+			required: false,
+			type: "HTMLAnchorAttributes['target']",
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'textValue',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'trailing',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'value',
+			required: true,
+			type: 'SelectionKey',
+			inheritedFrom: 'ZMenuItemProps'
 		}
 	],
 	source: 'ui/zui/src/components/compound/menu/ZMenuRadioItem.svelte',
@@ -2536,6 +2680,72 @@ export const menuSubTriggerApiFacts = {
 			name: 'openOnHover',
 			required: false,
 			type: 'boolean'
+		},
+		{
+			name: 'danger',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'download',
+			required: false,
+			type: "HTMLAnchorAttributes['download']",
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'leading',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLElement | null',
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'rel',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'shortcut',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'target',
+			required: false,
+			type: "HTMLAnchorAttributes['target']",
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'textValue',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'trailing',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZMenuItemProps'
+		},
+		{
+			name: 'value',
+			required: true,
+			type: 'SelectionKey',
+			inheritedFrom: 'ZMenuItemProps'
 		}
 	],
 	source: 'ui/zui/src/components/compound/menu/ZMenuSubTrigger.svelte',
@@ -8467,6 +8677,60 @@ export const formFieldApiFacts = {
 			name: 'warning',
 			required: false,
 			type: 'FieldMessages'
+		},
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZFieldProps'
+		},
+		{
+			name: 'controlId',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZFieldProps'
+		},
+		{
+			name: 'description',
+			required: false,
+			type: 'Snippet | string',
+			inheritedFrom: 'ZFieldProps'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZFieldProps'
+		},
+		{
+			name: 'label',
+			required: true,
+			type: 'Snippet | string',
+			inheritedFrom: 'ZFieldProps'
+		},
+		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZFieldProps'
+		},
+		{
+			name: 'required',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZFieldProps'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZFieldSize',
+			inheritedFrom: 'ZFieldProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null',
+			inheritedFrom: 'ZFieldProps'
 		}
 	],
 	source: 'ui/zui/src/components/input/ZFormField.svelte',
@@ -8740,6 +9004,42 @@ export const mentionApiFacts = {
 			name: 'virtualOverscan',
 			required: false,
 			type: 'number'
+		},
+		{
+			name: 'autosize',
+			required: false,
+			type: 'boolean | ZTextareaAutosizeOptions',
+			inheritedFrom: 'ZTextareaProps'
+		},
+		{
+			name: 'invalid',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZTextareaProps'
+		},
+		{
+			name: 'onFormReset',
+			required: false,
+			type: '() => void',
+			inheritedFrom: 'ZTextareaProps'
+		},
+		{
+			name: 'onResize',
+			required: false,
+			type: '(height: number) => void',
+			inheritedFrom: 'ZTextareaProps'
+		},
+		{
+			name: 'resize',
+			required: false,
+			type: 'ZTextareaResize',
+			inheritedFrom: 'ZTextareaProps'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZTextareaSize',
+			inheritedFrom: 'ZTextareaProps'
 		}
 	],
 	source: 'ui/zui/src/components/input/ZMention.svelte',
