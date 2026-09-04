@@ -56,15 +56,28 @@ describe('ZSelect production contract', () => {
 
 	it('allows intrinsic content width when matchWidth is disabled', async () => {
 		// @zui-visual ZSelect
+		// @zui-visual ZSelectTrigger
+		// @zui-visual ZSelectContent
+		// @zui-visual ZSelectItem
 		render(SelectFixture, { defaultOpen: true, longLabels: true, matchWidth: false });
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="select-trigger"]')!;
 		const content = document.querySelector<HTMLElement>('[data-testid="select-content"]')!;
 		const item = document.querySelector<HTMLElement>('[data-testid="select-c"]')!;
 		await tick();
+		expect(trigger.getBoundingClientRect().width).toBeGreaterThan(0);
+		expect(trigger.getBoundingClientRect().height).toBeGreaterThan(0);
+		expect(getComputedStyle(trigger).boxSizing).toBe('border-box');
 		expect(content.getBoundingClientRect().width).toBeGreaterThanOrEqual(
 			trigger.getBoundingClientRect().width
 		);
+		expect(content.getBoundingClientRect().height).toBeGreaterThan(0);
+		expect(getComputedStyle(content).borderTopWidth).not.toBe('0px');
 		expect(getComputedStyle(content).overflowY).toBe('auto');
+		expect(item.getBoundingClientRect().height).toBeGreaterThan(0);
+		expect(
+			getComputedStyle(document.querySelector<HTMLElement>('[data-testid="select-b"]')!)
+				.backgroundColor
+		).not.toBe('rgba(0, 0, 0, 0)');
 		expect(getComputedStyle(item).whiteSpace).toBe('nowrap');
 		await expect
 			.poll(() => getComputedStyle(content).getPropertyValue('--zui-floating-reference-width'))

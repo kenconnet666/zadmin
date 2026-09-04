@@ -35,6 +35,7 @@ describe('ZRadioGroup, ZRadioGroupItem and ZSegmented production contracts', () 
 	});
 
 	it('keeps composed ZRadioGroupItem native selection, disabled state and reset ownership real', async () => {
+		// @zui-visual ZRadioGroupItem
 		render(RadioGroupFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="radio-form"]')!;
 		const alpha = form.querySelector<HTMLInputElement>('[data-testid="radio-a"]')!;
@@ -43,6 +44,10 @@ describe('ZRadioGroup, ZRadioGroupItem and ZSegmented production contracts', () 
 		const delta = form.querySelector<HTMLInputElement>('[data-testid="radio-d"]')!;
 
 		expect(beta.checked).toBe(true);
+		expect(beta.getBoundingClientRect().width).toBeGreaterThan(0);
+		expect(beta.getBoundingClientRect().height).toBeGreaterThan(0);
+		expect(getComputedStyle(beta).accentColor).not.toBe('auto');
+		expect(getComputedStyle(beta).boxSizing).toBe('border-box');
 		expect(disabled.disabled).toBe(true);
 		expect(new FormData(form).get('choice')).toBe('b');
 		delta.click();
@@ -158,6 +163,7 @@ describe('ZRadioGroup, ZRadioGroupItem and ZSegmented production contracts', () 
 	});
 
 	it('keeps readonly Segmented selection and callbacks inert', async () => {
+		// @zui-visual ZSegmented selected item and group geometry
 		const onValueChange = vi.fn();
 		render(ZSegmented, {
 			'aria-label': 'Readonly segmented',
@@ -173,6 +179,11 @@ describe('ZRadioGroup, ZRadioGroupItem and ZSegmented production contracts', () 
 		const segments = [...group.querySelectorAll<HTMLButtonElement>('[role="radio"]')];
 
 		expect(group.getAttribute('aria-readonly')).toBe('true');
+		expect(getComputedStyle(group).display).toBe('inline-flex');
+		expect(getComputedStyle(group).borderStyle).toBe('solid');
+		expect(getComputedStyle(segments[0]!).backgroundColor).not.toBe(
+			getComputedStyle(segments[1]!).backgroundColor
+		);
 		segments[1]?.click();
 		await settle();
 		expect(segments[0]?.getAttribute('aria-checked')).toBe('true');

@@ -8,17 +8,31 @@ import ComboboxFixture from './ComboboxFixture.svelte';
 describe('ZCombobox production contract', () => {
 	it('keeps long options single-line and bounds intrinsic content width', async () => {
 		// @zui-visual ZCombobox
+		// @zui-visual ZComboboxInput
+		// @zui-visual ZComboboxContent
+		// @zui-visual ZComboboxItem
 		render(ComboboxFixture, { defaultOpen: true, longLabels: true, matchWidth: false });
 		const input = document.querySelector<HTMLInputElement>('[data-testid="combobox-input"]')!;
 		const content = document.querySelector<HTMLElement>('[data-testid="combobox-content"]')!;
 		await tick();
-		const item = content.querySelector<HTMLElement>('[role="option"]')!;
+		const item = [...content.querySelectorAll<HTMLElement>('[role="option"]')].find(
+			(candidate) => candidate.getBoundingClientRect().height > 0
+		)!;
 		expect(getComputedStyle(input).boxSizing).toBe('border-box');
 		expect(input.getBoundingClientRect().width).toBeCloseTo(80, 0);
+		expect(input.getBoundingClientRect().height).toBeGreaterThan(0);
+		expect(getComputedStyle(input).borderTopWidth).not.toBe('0px');
 		expect(content.getBoundingClientRect().width).toBeGreaterThanOrEqual(
 			input.getBoundingClientRect().width
 		);
+		expect(content.getBoundingClientRect().height).toBeGreaterThan(0);
+		expect(getComputedStyle(content).borderTopWidth).not.toBe('0px');
 		expect(getComputedStyle(item).whiteSpace).toBe('nowrap');
+		expect(item.getBoundingClientRect().height).toBeGreaterThan(0);
+		expect(
+			getComputedStyle(content.querySelector<HTMLElement>('[aria-selected="true"]')!)
+				.backgroundColor
+		).not.toBe('rgba(0, 0, 0, 0)');
 		expect(getComputedStyle(content).overflowY).toBe('auto');
 	});
 	it('keeps typed keys, filtering, active descendant selection, readonly and form ownership coherent', async () => {

@@ -9,6 +9,9 @@ import { resetForm } from './form-reset.js';
 describe('ZMultiSelect production contract', () => {
 	it('keeps long options single-line and bounds intrinsic content width', async () => {
 		// @zui-visual ZMultiSelect
+		// @zui-visual ZMultiSelectTrigger
+		// @zui-visual ZMultiSelectContent
+		// @zui-visual ZMultiSelectItem
 		render(MultiSelectFixture, { defaultOpen: true, longLabels: true, matchWidth: false });
 		const trigger = document.querySelector<HTMLButtonElement>(
 			'[data-testid="multi-select-trigger"]'
@@ -16,10 +19,20 @@ describe('ZMultiSelect production contract', () => {
 		const content = document.querySelector<HTMLElement>('[data-testid="multi-select-content"]')!;
 		await tick();
 		const item = content.querySelector<HTMLElement>('[role="option"]')!;
+		expect(trigger.getBoundingClientRect().width).toBeGreaterThan(0);
+		expect(trigger.getBoundingClientRect().height).toBeGreaterThan(0);
+		expect(getComputedStyle(trigger).boxSizing).toBe('border-box');
 		expect(content.getBoundingClientRect().width).toBeGreaterThanOrEqual(
 			trigger.getBoundingClientRect().width
 		);
+		expect(content.getBoundingClientRect().height).toBeGreaterThan(0);
+		expect(getComputedStyle(content).borderTopWidth).not.toBe('0px');
 		expect(getComputedStyle(item).whiteSpace).toBe('nowrap');
+		expect(item.getBoundingClientRect().height).toBeGreaterThan(0);
+		expect(
+			getComputedStyle(content.querySelector<HTMLElement>('[aria-selected="true"]')!)
+				.backgroundColor
+		).not.toBe('rgba(0, 0, 0, 0)');
 		expect(getComputedStyle(content).overflowY).toBe('auto');
 	});
 	it('preserves typed values and orphan labels through filtering, clear/reset, readonly and virtual navigation', async () => {
