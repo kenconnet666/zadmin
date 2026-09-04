@@ -138,13 +138,14 @@ describe.sequential('ZPopconfirm and ZTooltip production contracts', () => {
 				{ timeout: 2_000 }
 			)
 			.toBe('open');
-		second.dispatchEvent(new PointerEvent('pointerenter', { bubbles: true }));
+		// Use the browser driver so WebKit updates its real hover target before the group suspends focus.
+		await userEvent.hover(second);
 		await wait(45);
 		await tick();
 		expect(
 			document.querySelector('[data-testid="tooltip-second-content"]')?.getAttribute('data-state')
 		).toBe('open');
-		second.dispatchEvent(new PointerEvent('pointerleave', { bubbles: true }));
+		await userEvent.unhover(second);
 		await wait(25);
 		await tick();
 		await expect

@@ -125,7 +125,7 @@ try {
 	);
 	await write(
 		resolve(fixtureRoot, 'pnpm-workspace.yaml'),
-		`packages:\n  - .\n\noverrides:\n  '@zadmin/core': '${tarball('@zadmin/core')}'\n  '@zadmin/sveltekit': '${tarball('@zadmin/sveltekit')}'\n  '@zadmin/zui': '${tarball('@zadmin/zui')}'\n\nallowBuilds:\n  '@parcel/watcher': true\n  esbuild: true\n`
+		`packages:\n  - .\n\noverrides:\n  '@zadmin/core': '${tarball('@zadmin/core')}'\n  '@zadmin/sveltekit': '${tarball('@zadmin/sveltekit')}'\n  '@zadmin/zui': '${tarball('@zadmin/zui')}'\n  # https://github.com/postcss/postcss/issues/2154\n  postcss: '8.5.28'\n\nallowBuilds:\n  '@parcel/watcher': true\n  esbuild: true\n`
 	);
 	await write(
 		resolve(fixtureRoot, 'svelte.config.js'),
