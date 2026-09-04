@@ -114,6 +114,21 @@ describe('ZTree production contracts', () => {
 		host.remove();
 	});
 
+	// @zui-visual ZTree virtual viewport and item geometry
+	it('keeps virtual tree viewport bounded to configured height and item size', async () => {
+		render(TreeProductionFixture);
+		await tick();
+		const tree = document.querySelector<HTMLElement>('[data-testid="tree-production-virtual"]')!;
+		const rect = tree.getBoundingClientRect();
+		const item = tree.querySelector<HTMLElement>('[role="treeitem"]')!;
+		const itemRect = item.getBoundingClientRect();
+		expect(rect.height).toBeGreaterThanOrEqual(180);
+		expect(rect.height).toBeLessThan(220);
+		expect(itemRect.height).toBeGreaterThanOrEqual(30);
+		expect(itemRect.height).toBeLessThan(42);
+		expect(tree.scrollHeight).toBeGreaterThan(tree.clientHeight);
+	});
+
 	it('reuses Tree inside Popover with Field focus, null clear, reset and RTL arrows', async () => {
 		const host = document.createElement('div');
 		document.body.append(host);

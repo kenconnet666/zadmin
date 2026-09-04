@@ -62,4 +62,27 @@ describe('ZTour production overlay contract', () => {
 		await expect.poll(() => document.querySelector('[role="dialog"]')).toBeNull();
 		await expect.poll(() => document.activeElement).toBe(persistent);
 	});
+
+	// @zui-visual ZTour placement and dialog geometry
+	it('keeps the first tour dialog visible for its resolved target', async () => {
+		render(TourFixture);
+		const start = document.querySelector<HTMLButtonElement>('#tour-start')!;
+		start.click();
+		await tick();
+		await Promise.resolve();
+		const target = document.querySelector<HTMLElement>('#tour-summary')!;
+		const dialog = [...document.querySelectorAll<HTMLElement>('[role="dialog"][data-step="summary"]')]
+			.find((candidate) => candidate.getBoundingClientRect().width > 0)!;
+		const targetRect = target.getBoundingClientRect();
+		const dialogRect = dialog.getBoundingClientRect();
+		expect(dialogRect.width).toBeGreaterThan(0);
+		expect(dialogRect.height).toBeGreaterThan(0);
+		// The implementation may clamp the panel to the viewport when the target is
+		// near an edge; placement is therefore verified by the target/step contract
+		// and the geometry is required to stay visible.
+		expect(targetRect.width).toBeGreaterThan(0);
+		expect(targetRect.height).toBeGreaterThan(0);
+		expect(dialogRect.right).toBeLessThanOrEqual(window.innerWidth + 1);
+		expect(dialogRect.bottom).toBeLessThanOrEqual(window.innerHeight + 1);
+	});
 });

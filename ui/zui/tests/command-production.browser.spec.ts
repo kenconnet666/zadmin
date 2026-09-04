@@ -46,6 +46,26 @@ describe('ZCommand and ZCommandPalette production contracts', () => {
 		);
 	});
 
+	// @zui-visual ZCommand active option and list geometry
+	it('keeps command list usable and active option visibly addressable', async () => {
+		render(CommandFixture);
+		const input = document.querySelector<HTMLInputElement>('input[aria-label="Search commands"]')!;
+		const list = document.querySelector<HTMLElement>('[role="listbox"][aria-label="Commands"]')!;
+		const inputRect = input.getBoundingClientRect();
+		const listRect = list.getBoundingClientRect();
+		expect(listRect.width).toBeGreaterThan(0);
+		expect(listRect.width).toBeLessThanOrEqual(window.innerWidth);
+		expect(listRect.height).toBeGreaterThan(0);
+		expect(inputRect.width).toBeGreaterThan(0);
+		expect(getComputedStyle(list).overflowY).toMatch(/auto|scroll/);
+		input.focus();
+		input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
+		await tick();
+		const activeId = input.getAttribute('aria-activedescendant');
+		expect(activeId).toBeTruthy();
+		expect(document.getElementById(activeId!)?.getAttribute('aria-selected')).toBe('true');
+	});
+
 	it('ZCommandPalette owns dialog portal focus, action close, shortcut reopen and Escape', async () => {
 		render(CommandPaletteFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[aria-label="Open palette"]')!;
