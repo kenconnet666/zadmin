@@ -13,7 +13,7 @@
 		{/if}
 		<ZText tone="muted">独立remove按钮保持tabindex=0。</ZText>
 	</ZStack>
-	<ZTagsInput aria-label="复合标签owner" defaultValues={['production', 'stable']} />
+	<ZTagsInput aria-label="复合标签owner" defaultValue={['production', 'stable']} />
 	<ZText tone="muted">
 		TagsInput把内部Tag removeTabIndex设为-1，并自行拥有方向键、删除后的焦点恢复和集合状态。
 	</ZText>
