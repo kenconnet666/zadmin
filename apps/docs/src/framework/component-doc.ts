@@ -352,6 +352,7 @@ export function defineComponentDoc(
 		...page
 	} = doc;
 	void _additionalApi;
+	void _memberApis;
 	void _members;
 	void _sourceApi;
 	void _teaching;

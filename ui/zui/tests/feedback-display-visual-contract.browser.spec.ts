@@ -21,7 +21,12 @@ describe('feedback and data-display visual contracts', () => {
 		const line = document.querySelector<HTMLElement>('[data-testid="progress-line"]')!;
 		const circle = document.querySelector<HTMLElement>('[data-testid="progress-circle"]')!;
 		expect(line.tagName).toBe('PROGRESS');
-		expect(line.getBoundingClientRect().height).toBe(8);
+		const nativeLineHeight = line.getBoundingClientRect().height;
+		// Native progress keeps the platform appearance, whose replaced-element box differs
+		// slightly between Chromium, Firefox and WebKit while remaining intentionally compact.
+		expect(nativeLineHeight).toBeGreaterThanOrEqual(6);
+		expect(nativeLineHeight).toBeLessThanOrEqual(10);
+		expect(getComputedStyle(line).accentColor).not.toBe('auto');
 		expect(circle.dataset.indeterminate).toBeUndefined();
 		expect(circle.getBoundingClientRect().width).toBe(96);
 		expect(circle.getBoundingClientRect().width).toBe(circle.getBoundingClientRect().height);

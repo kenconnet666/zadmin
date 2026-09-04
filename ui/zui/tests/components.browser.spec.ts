@@ -2440,26 +2440,24 @@ describe('compiled ICSS browser updates', () => {
 		);
 
 		action?.click();
-		await new Promise((resolve) => setTimeout(resolve, 140));
-		await tick();
-		expect(document.querySelector('[data-testid="popconfirm-content"]')).toBeNull();
-		expect(document.activeElement).toBe(trigger);
+		await expect
+			.poll(() => document.querySelector('[data-testid="popconfirm-content"]'), { timeout: 2_000 })
+			.toBeNull();
+		await expect.poll(() => document.activeElement, { timeout: 2_000 }).toBe(trigger);
 		expect(output?.textContent).toBe('false:action');
 
 		trigger?.click();
 		await tick();
 		document.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
-		await new Promise((resolve) => setTimeout(resolve, 140));
-		await tick();
-		expect(document.querySelector('[data-testid="popconfirm-content"]')).toBeNull();
+		await expect
+			.poll(() => document.querySelector('[data-testid="popconfirm-content"]'), { timeout: 2_000 })
+			.toBeNull();
 
 		trigger?.click();
 		await tick();
 		content = document.querySelector('[data-testid="popconfirm-content"]');
 		outside?.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
-		await new Promise((resolve) => setTimeout(resolve, 140));
-		await tick();
-		expect(content?.isConnected).toBe(false);
+		await expect.poll(() => content?.isConnected, { timeout: 2_000 }).toBe(false);
 	});
 
 	it('keeps Accordion focus, single/multiple selection and Presence synchronized', async () => {
