@@ -15,7 +15,7 @@ const docsById = new Map(
 const required = [
 	'ContractVerified',
 	'RuntimeImplemented',
-	'VisuallyVerified',
+	'BrowserBehaviorVerified',
 	'ProductionVerified'
 ];
 const baseRows = matrix.components.map((component) => {
@@ -108,7 +108,7 @@ const lines = [
 	'',
 	'## 晋级规则',
 	'',
-	'- stable 必须满足 ContractVerified、RuntimeImplemented、VisuallyVerified、ProductionVerified、Docs、适用 SSR、source metadata gap=0 和 teaching fallback=0。',
+	'- stable API 必须满足 ContractVerified、RuntimeImplemented、BrowserBehaviorVerified、ProductionVerified、Docs、适用 SSR、source metadata gap=0 和 teaching fallback=0。VisuallyVerified 作为独立的真实视觉成熟度，不再由任意 browser expect 冒充。',
 	'- compound member 不要求独立文档页；拥有同 family root 文档页即可满足 Docs。',
 	'- compound family 原子晋级：任一成员仍有 blocker，整个 family 都不是候选；stable family 不允许混合 status。',
 	'- experimental 只报告 promotionEligibleExperimental，不自动修改 status。'

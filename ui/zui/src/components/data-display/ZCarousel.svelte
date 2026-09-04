@@ -64,7 +64,7 @@
 				default: '必填',
 				description: 'Carousel region的原生可访问名称。',
 				name: 'aria-label',
-				required: true,
+				requiredWhen: '未提供deprecated ariaLabel兼容别名时',
 				type: 'string'
 			},
 			{
@@ -145,7 +145,14 @@
 			}
 		],
 		since: 'unreleased',
-		snippets: [{ description: 'slide内容。', name: 'item', type: 'Snippet<[TItem, number]>' }],
+		snippets: [
+			{
+				description: 'slide内容。',
+				name: 'item',
+				required: true,
+				type: 'Snippet<[TItem, number]>'
+			}
+		],
 		source: 'ui/zui/src/components/data-display/ZCarousel.svelte',
 		states: [
 			{ description: '当前slide。', name: 'data-active', values: ['true'] },

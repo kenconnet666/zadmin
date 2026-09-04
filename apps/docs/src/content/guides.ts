@@ -383,7 +383,7 @@ environments.dispose();`,
 					`当前${zuiProgress.api.components}个公开组件、${zuiProgress.api.declaredProps}个公开Props均已进入API合同，metadata gap与teaching fallback均为0；${zuiProgress.maturity.statuses.stable ?? 0}个组件满足stable策略，${zuiProgress.maturity.ProductionVerified}个拥有ProductionVerified证据。`
 				],
 				bullets: [
-					`VisuallyVerified ${zuiProgress.maturity.VisuallyVerified}/${zuiProgress.api.components}；DesktopVerified ${zuiProgress.maturity.DesktopVerified}/${zuiProgress.api.components}。`,
+					`BrowserBehaviorVerified ${zuiProgress.maturity.BrowserBehaviorVerified}/${zuiProgress.api.components}；VisuallyVerified ${zuiProgress.maturity.VisuallyVerified}/${zuiProgress.api.components}；DesktopVerified ${zuiProgress.maturity.DesktopVerified}/${zuiProgress.api.components}。`,
 					`当前release状态为${zuiProgress.release.status}，仍有${zuiProgress.release.blocked.length}个外部发布边界；页面不会把artifact合同冒充真实registry或Docs部署。`,
 					'experimental只在生产证据、SSR、Docs、API metadata和family原子门禁全部满足后逐项晋级。'
 				],

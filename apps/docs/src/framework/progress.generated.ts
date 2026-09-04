@@ -7,7 +7,7 @@ export const zuiProgress = {
 	},
 	api: {
 		components: 141,
-		declaredProps: 1386,
+		declaredProps: 1398,
 		metadataGapProps: 0,
 		fallbackProps: 0
 	},
@@ -16,7 +16,8 @@ export const zuiProgress = {
 		Authorable: 141,
 		ContractVerified: 141,
 		RuntimeImplemented: 141,
-		VisuallyVerified: 141,
+		BrowserBehaviorVerified: 141,
+		VisuallyVerified: 4,
 		DesktopVerified: 0,
 		ProductionVerified: 141,
 		statuses: {
@@ -64,8 +65,8 @@ export const zuiProgress = {
 		},
 		{
 			id: 'visual-evidence',
-			remaining: 0,
-			description: '补齐组件级浏览器渲染与交互证据，不以fixture存在冒充验证。'
+			remaining: 137,
+			description: '补齐组件级几何、computed style或截图证据；普通浏览器交互断言不再冒充视觉验证。'
 		},
 		{
 			id: 'stable-promotion',

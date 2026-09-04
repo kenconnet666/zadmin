@@ -69,6 +69,7 @@
 				default: '与children二选一',
 				description: '数据便利模式；每项使用typed key，deprecated id仅兼容迁移。',
 				name: 'items',
+				requiredWhen: '未提供children手写模式时',
 				type: 'readonly DescriptionItem[]',
 				members: [
 					{
@@ -132,6 +133,7 @@
 			{
 				description: '手写模式的dt/dd或div分组；不得与items同时提供。',
 				name: 'children',
+				requiredWhen: '未提供items数据模式时',
 				type: 'Snippet'
 			},
 			{

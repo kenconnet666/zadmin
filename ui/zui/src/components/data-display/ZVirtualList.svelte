@@ -231,6 +231,7 @@
 			{
 				description: '可见项正文，同时获得key、测量状态与布局信息。',
 				name: 'item',
+				required: true,
 				type: 'Snippet<[TItem, number, VirtualListItemContext<TKey>]>'
 			},
 			{ description: '空集合内容。', name: 'empty', type: 'Snippet' },

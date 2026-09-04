@@ -361,6 +361,8 @@ function compareReleasedVersions(left, right) {
 
 function canonicalTypeNode(node, sourceFile) {
 	if (ts.isParenthesizedTypeNode(node)) return canonicalTypeNode(node.type, sourceFile);
+	if (ts.isLiteralTypeNode(node) && ts.isStringLiteral(node.literal))
+		return JSON.stringify(node.literal.text);
 	if (ts.isUnionTypeNode(node) || ts.isIntersectionTypeNode(node)) {
 		const separator = ts.isUnionTypeNode(node) ? ' | ' : ' & ';
 		return [...new Set(node.types.map((item) => canonicalTypeNode(item, sourceFile)))]
@@ -525,8 +527,18 @@ export function validateDeprecationMetadata({
 export function validateMemberMetadataFacts({ entries, publicFacts, filename = 'metadata' }) {
 	for (const entry of entries) {
 		const path = entry.path ?? entry.name;
-		if (!path?.includes('.')) continue;
+		if (!path) continue;
+		const nested = path.includes('.');
+		if (!nested && entry.section === 'snippets' && entry.shadowedByProp === true) continue;
+		if (
+			!nested &&
+			entry.section !== undefined &&
+			entry.section !== 'props' &&
+			entry.section !== 'snippets'
+		)
+			continue;
 		const source = publicFacts.get(path);
+		if (!source && !nested) continue;
 		if (!source)
 			throw new Error(
 				`${filename} metadata member does not exist in the public type graph: ${path}.`
@@ -559,7 +571,7 @@ export function validateMemberMetadataFacts({ entries, publicFacts, filename = '
 				throw new Error(
 					`${filename} ${path} is conditionally required and cannot be always required.`
 				);
-			if (entry.requiredWhen === undefined)
+			if (source.requiredInSomeBranch === true && entry.requiredWhen === undefined)
 				throw new Error(`${filename} ${path} requires requiredWhen for its public union branches.`);
 			continue;
 		}
@@ -740,7 +752,22 @@ if (process.argv.includes('--self-test')) {
 	const semanticFacts = new Map([
 		['items.required', { requiredness: REQUIREDNESS.required, declaredType: 'string | number' }],
 		['items.optional', { requiredness: REQUIREDNESS.optional, declaredType: 'readonly string[]' }],
-		['items.conditional', { requiredness: REQUIREDNESS.conditional, declaredType: 'boolean' }],
+		[
+			'items.conditional',
+			{
+				requiredness: REQUIREDNESS.conditional,
+				requiredInSomeBranch: true,
+				declaredType: 'boolean'
+			}
+		],
+		[
+			'items.conditionalOptional',
+			{
+				requiredness: REQUIREDNESS.conditional,
+				requiredInSomeBranch: false,
+				declaredType: 'string'
+			}
+		],
 		['items.forbidden', { requiredness: REQUIREDNESS.forbidden, declaredType: 'never' }]
 	]);
 	validateMemberMetadataFacts({
@@ -748,7 +775,8 @@ if (process.argv.includes('--self-test')) {
 		entries: [
 			{ path: 'items.required', required: true, type: 'number | string' },
 			{ path: 'items.optional', type: 'ReadonlyArray<string>' },
-			{ path: 'items.conditional', requiredWhen: 'selected branch', type: 'boolean' }
+			{ path: 'items.conditional', requiredWhen: 'selected branch', type: 'boolean' },
+			{ path: 'items.conditionalOptional', type: 'string' }
 		]
 	});
 	validateOpaqueMetadataFacts({
@@ -1113,12 +1141,69 @@ function collectProperty(member, context, include, exclude) {
 	if (hasDeprecatedTag(member)) context.deprecatedProps.add(name);
 }
 
+function collectRecipeVariantProperties(typeArgument, context, include, exclude) {
+	if (!typeArgument || !ts.isTypeQueryNode(typeArgument) || !ts.isIdentifier(typeArgument.exprName))
+		return false;
+	const recipeName = typeArgument.exprName.text;
+	let initializer;
+	for (const statement of context.sourceFile.statements) {
+		if (!ts.isVariableStatement(statement)) continue;
+		for (const declaration of statement.declarationList.declarations) {
+			if (
+				ts.isIdentifier(declaration.name) &&
+				declaration.name.text === recipeName &&
+				declaration.initializer
+			) {
+				initializer = unwrapExpression(declaration.initializer);
+				break;
+			}
+		}
+	}
+	if (!initializer || !ts.isCallExpression(initializer)) return false;
+	const recipe = initializer.arguments[0] ? unwrapExpression(initializer.arguments[0]) : undefined;
+	if (!recipe || !ts.isObjectLiteralExpression(recipe)) return false;
+	const variantsProperty = recipe.properties.find(
+		(property) => propertyName(property) === 'variants' && ts.isPropertyAssignment(property)
+	);
+	if (!variantsProperty || !ts.isPropertyAssignment(variantsProperty)) return false;
+	const variants = unwrapExpression(variantsProperty.initializer);
+	if (!ts.isObjectLiteralExpression(variants)) return false;
+	for (const variantProperty of variants.properties) {
+		if (!ts.isPropertyAssignment(variantProperty)) continue;
+		const name = propertyName(variantProperty);
+		if (!name || exclude.has(name) || (include && !include.has(name))) continue;
+		const options = unwrapExpression(variantProperty.initializer);
+		if (!ts.isObjectLiteralExpression(options)) continue;
+		const values = options.properties.map(propertyName).filter((value) => value !== undefined);
+		if (values.length === 0) continue;
+		const booleanVariant =
+			values.length === 2 && values.includes('false') && values.includes('true');
+		context.props.set(name, {
+			name,
+			required: false,
+			type: booleanVariant
+				? 'boolean'
+				: [...new Set(values)]
+						.sort()
+						.map((value) => `'${value.replaceAll('\\', '\\\\').replaceAll("'", "\\'")}'`)
+						.join(' | ')
+		});
+	}
+	return true;
+}
+
 function collectReference(name, typeArguments, context, include, exclude, printed) {
 	if ((name === 'Omit' || name === 'Pick') && typeArguments?.[0]) {
 		const selected = stringLiteralSet(typeArguments[1]);
 		const nextInclude = name === 'Pick' ? selected : include;
 		const nextExclude = name === 'Omit' ? new Set([...exclude, ...selected]) : exclude;
 		collectType(typeArguments[0], context, nextInclude, nextExclude);
+		return;
+	}
+	if (
+		(name === 'RecipeVariants' || name === 'SlotRecipeSelection') &&
+		collectRecipeVariantProperties(typeArguments?.[0], context, include, exclude)
+	) {
 		return;
 	}
 
@@ -1627,11 +1712,19 @@ async function componentFacts(source, filename, path) {
 		sourceFile
 	};
 	collectDeclaration(declaration, context);
+	const unresolvedRecipeSelections = [...context.inheritedFrom].filter((type) =>
+		/\b(?:RecipeVariants|SlotRecipeSelection)</u.test(type)
+	);
+	if (unresolvedRecipeSelections.length > 0)
+		throw new Error(
+			`${filename} leaves recipe-backed public props unresolved: ${unresolvedRecipeSelections.join(', ')}.`
+		);
 	const documentedProps = new Set(
 		['bindings', 'events', 'props', 'snippets'].flatMap((section) =>
 			metadataItemNames(metadata, section)
 		)
 	);
+	const propMetadataNames = new Set(metadataItemNames(metadata, 'props'));
 	const metadataGapProps = [...context.props.keys()].filter(
 		(name) =>
 			!documentedProps.has(name) && name !== 'class' && name !== 'style' && !/^on[a-z]/u.test(name)
@@ -1671,6 +1764,17 @@ async function componentFacts(source, filename, path) {
 	);
 	const deprecatedPaths = await scanWorkspacePropertyPaths(workspaceTypeGraph, path, propsType);
 	const publicFacts = await collectWorkspacePropertyFacts(workspaceTypeGraph, path, propsType);
+	for (const prop of context.props.values()) {
+		if (publicFacts.has(prop.name)) continue;
+		publicFacts.set(prop.name, {
+			path: prop.name,
+			requiredness: prop.required ? REQUIREDNESS.required : REQUIREDNESS.optional,
+			requiredInSomeBranch: prop.required,
+			valueAllowsUndefined: !prop.required,
+			declaredType: prop.type,
+			source: { modulePath: path, declaration: propsType }
+		});
+	}
 	for (const event of [
 		...metadataItems(metadata, 'bindings'),
 		...metadataItems(metadata, 'events'),
@@ -1748,8 +1852,10 @@ async function componentFacts(source, filename, path) {
 	validateDeprecationMetadata({
 		deprecatedPaths,
 		publicPaths,
-		entries: allMetadataEntries.map(({ item, path }) => ({
+		entries: allMetadataEntries.map(({ item, path, section }) => ({
 			path,
+			section,
+			shadowedByProp: section === 'snippets' && propMetadataNames.has(path),
 			name: objectStringProperty(item, 'name'),
 			since: objectStringProperty(item, 'since'),
 			deprecatedSince: objectStringProperty(item, 'deprecatedSince'),
@@ -1785,8 +1891,10 @@ async function componentFacts(source, filename, path) {
 	});
 	validateMemberMetadataFacts({
 		publicFacts,
-		entries: allMetadataEntries.map(({ item, path }) => ({
+		entries: allMetadataEntries.map(({ item, path, section }) => ({
 			path,
+			section,
+			shadowedByProp: section === 'snippets' && propMetadataNames.has(path),
 			name: objectStringProperty(item, 'name'),
 			required: objectBooleanProperty(item, 'required'),
 			requiredWhen: objectStringProperty(item, 'requiredWhen'),
@@ -1896,6 +2004,19 @@ if (process.argv.includes('--self-test')) {
 	const dataTableFact = facts['data-table'];
 	if (dataTableFact?.metadataGapProps.length !== 0)
 		throw new Error('Teaching AST self-test expected complete DataTable metadata.');
+	const expectedRecipeProps = new Map([
+		['button', ['fullWidth', 'shape', 'size', 'tone', 'variant']],
+		['checkbox', ['size']],
+		['radio-group-item', ['size']],
+		['slider', ['size']],
+		['switch', ['size']]
+	]);
+	for (const [id, expected] of expectedRecipeProps) {
+		const actual = new Set(facts[id]?.props.map(({ name }) => name) ?? []);
+		const missing = expected.filter((name) => !actual.has(name));
+		if (missing.length > 0)
+			throw new Error(`Recipe API self-test missed ${id}: ${missing.join(', ')}.`);
+	}
 	const nested = parseDocTeaching(
 		`defineComponentDoc(meta, { demos: [{ teaching: { props: { fake: {} } } }] })`,
 		'nested.ts'

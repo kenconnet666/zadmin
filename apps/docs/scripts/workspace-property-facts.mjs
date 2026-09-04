@@ -141,6 +141,7 @@ function fact(path, member, context, requiredness, typeNode) {
 		return {
 			path,
 			requiredness,
+			requiredInSomeBranch: requiredness === REQUIREDNESS.required,
 			valueAllowsUndefined: requiredness !== REQUIREDNESS.required,
 			declaredType,
 			typeCandidates: [declaredType],
@@ -161,6 +162,7 @@ function fact(path, member, context, requiredness, typeNode) {
 	return {
 		path,
 		requiredness,
+		requiredInSomeBranch: requiredness === REQUIREDNESS.required,
 		valueAllowsUndefined: allowsUndefined,
 		declaredType,
 		typeCandidates: [...new Set([declaredType, authoredType])],
@@ -209,6 +211,7 @@ function mergeFacts(facts, kind) {
 						items.map((item) => item.requiredness),
 						kind
 					),
+					requiredInSomeBranch: items.some((item) => item.requiredInSomeBranch === true),
 					valueAllowsUndefined: items.some((item) => item.valueAllowsUndefined)
 				}
 			];

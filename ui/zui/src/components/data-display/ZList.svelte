@@ -74,6 +74,7 @@
 				default: '与children二选一',
 				description: '数据便利模式；每项使用typed key，deprecated id仅兼容迁移。',
 				name: 'items',
+				requiredWhen: '未提供children手写模式时',
 				type: 'readonly ListItem[]',
 				members: [
 					{
@@ -155,6 +156,7 @@
 			{
 				description: '手写模式的真实li集合；不得与items同时提供。',
 				name: 'children',
+				requiredWhen: '未提供items数据模式时',
 				type: 'Snippet'
 			},
 			{ description: '数据模式Item正文。', name: 'item', type: 'Snippet<[ListItem, number]>' },

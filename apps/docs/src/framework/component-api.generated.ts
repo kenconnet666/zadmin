@@ -385,6 +385,11 @@ export const comboboxApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'matchWidth',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'name',
 			required: false,
 			type: 'string'
@@ -1590,6 +1595,11 @@ export const multiSelectApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'matchWidth',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'maxTagCount',
 			required: false,
 			type: 'number'
@@ -2180,9 +2190,14 @@ export const radioGroupApiFacts = {
 export const radioGroupItemApiFacts = {
 	declaration: 'ZRadioGroupItemProps',
 	id: 'radio-group-item',
-	inheritedFrom: ['HTMLInputAttributes', 'RecipeVariants<typeof radioItemRecipe>'],
+	inheritedFrom: ['HTMLInputAttributes'],
 	name: 'ZRadioGroupItem',
 	props: [
+		{
+			name: 'size',
+			required: false,
+			type: "'large' | 'medium' | 'small'"
+		},
 		{
 			name: 'disabled',
 			required: false,
@@ -2286,6 +2301,11 @@ export const selectApiFacts = {
 		},
 		{
 			name: 'loop',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'matchWidth',
 			required: false,
 			type: 'boolean'
 		},
@@ -4635,9 +4655,34 @@ export const boxApiFacts = {
 export const buttonApiFacts = {
 	declaration: 'ZButtonProps',
 	id: 'button',
-	inheritedFrom: ['HTMLButtonAttributes', 'RecipeVariants<typeof buttonRecipe>'],
+	inheritedFrom: ['HTMLButtonAttributes'],
 	name: 'ZButton',
 	props: [
+		{
+			name: 'fullWidth',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: "'large' | 'medium' | 'small'"
+		},
+		{
+			name: 'shape',
+			required: false,
+			type: "'circle' | 'default' | 'square'"
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: "'danger' | 'default'"
+		},
+		{
+			name: 'variant',
+			required: false,
+			type: "'ghost' | 'primary' | 'secondary'"
+		},
 		{
 			name: 'children',
 			required: false,
@@ -5518,9 +5563,14 @@ export const cascaderApiFacts = {
 export const checkboxApiFacts = {
 	declaration: 'ZCheckboxProps',
 	id: 'checkbox',
-	inheritedFrom: ['HTMLInputAttributes', 'RecipeVariants<typeof checkboxRecipe>'],
+	inheritedFrom: ['HTMLInputAttributes'],
 	name: 'ZCheckbox',
 	props: [
+		{
+			name: 'size',
+			required: false,
+			type: "'large' | 'medium' | 'small'"
+		},
 		{
 			name: 'checked',
 			required: false,
@@ -7200,9 +7250,14 @@ export const segmentedApiFacts = {
 export const sliderApiFacts = {
 	declaration: 'ZSliderProps',
 	id: 'slider',
-	inheritedFrom: ['HTMLInputAttributes', 'RecipeVariants<typeof sliderRecipe>'],
+	inheritedFrom: ['HTMLInputAttributes'],
 	name: 'ZSlider',
 	props: [
+		{
+			name: 'size',
+			required: false,
+			type: "'large' | 'medium' | 'small'"
+		},
 		{
 			name: 'defaultValue',
 			required: false,
@@ -7286,9 +7341,14 @@ export const sliderApiFacts = {
 export const switchApiFacts = {
 	declaration: 'ZSwitchProps',
 	id: 'switch',
-	inheritedFrom: ['HTMLInputAttributes', 'SlotRecipeSelection<typeof switchRecipe>'],
+	inheritedFrom: ['HTMLInputAttributes'],
 	name: 'ZSwitch',
 	props: [
+		{
+			name: 'size',
+			required: false,
+			type: "'large' | 'medium' | 'small'"
+		},
 		{
 			name: 'checked',
 			required: false,

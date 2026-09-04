@@ -7,9 +7,10 @@
 | 维度                      |                    当前值 |                           总量或边界 |
 | ------------------------- | ------------------------: | -----------------------------------: |
 | Public component metadata |                       141 |                                  141 |
-| Declared public props     |                      1386 |         metadata gaps 0; fallbacks 0 |
+| Declared public props     |                      1398 |         metadata gaps 0; fallbacks 0 |
 | Stable                    |                       141 |                         violations 0 |
-| VisuallyVerified          |                       141 |                                  141 |
+| BrowserBehaviorVerified   |                       141 |                                  141 |
+| VisuallyVerified          |                         4 |                                  141 |
 | ProductionVerified        |                       141 |                                  141 |
 | DesktopVerified           |                         0 |                                  141 |
 | Docs routes               |                        89 | components 79; guides 9; deployed no |
@@ -19,7 +20,7 @@
 ## 下一步优先级
 
 1. **production-evidence** (0 remaining): 为尚未ProductionVerified的组件补真实production browser/SSR合同。
-2. **visual-evidence** (0 remaining): 补齐组件级浏览器渲染与交互证据，不以fixture存在冒充验证。
+2. **visual-evidence** (137 remaining): 补齐组件级几何、computed style或截图证据；普通浏览器交互断言不再冒充视觉验证。
 3. **stable-promotion** (0 remaining): 逐项审查已满足门禁的experimental组件；禁止自动批量晋级。
 4. **desktop-evidence** (141 remaining): 建立组件级WebView2/Desktop证据后再提升DesktopVerified。
 5. **release-boundary** (5 remaining): 完成真实publish/OIDC/tag/registry smoke与版本化Docs部署边界。

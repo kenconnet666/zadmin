@@ -89,7 +89,8 @@ export function createProgressSummary({
 			{
 				id: 'visual-evidence',
 				remaining: componentCount - maturity.summary.VisuallyVerified,
-				description: '补齐组件级浏览器渲染与交互证据，不以fixture存在冒充验证。'
+				description:
+					'补齐组件级几何、computed style或截图证据；普通浏览器交互断言不再冒充视觉验证。'
 			},
 			{
 				id: 'stable-promotion',
@@ -134,6 +135,7 @@ const markdownSource = `# ZUI production progress
 | Public component metadata | ${progress.api.components} | ${progress.api.components} |
 | Declared public props | ${progress.api.declaredProps} | metadata gaps ${progress.api.metadataGapProps}; fallbacks ${progress.api.fallbackProps} |
 | Stable | ${progress.maturity.statuses.stable ?? 0} | violations ${progress.stability.stableViolations} |
+| BrowserBehaviorVerified | ${progress.maturity.BrowserBehaviorVerified} | ${progress.api.components} |
 | VisuallyVerified | ${progress.maturity.VisuallyVerified} | ${progress.api.components} |
 | ProductionVerified | ${progress.maturity.ProductionVerified} | ${progress.api.components} |
 | DesktopVerified | ${progress.maturity.DesktopVerified} | ${progress.api.components} |

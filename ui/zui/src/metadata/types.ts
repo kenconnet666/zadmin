@@ -77,7 +77,11 @@ export interface ZuiCallableMetadata {
 
 export type ZuiBindingMetadata = ZuiApiMetadata;
 export type ZuiEventMetadata = ZuiApiMetadata;
-export type ZuiSnippetMetadata = ZuiApiMetadata;
+export type ZuiSnippetMetadata = ZuiApiMetadata & {
+	readonly required?: boolean;
+	/** Human-readable condition for discriminated-union snippets that are not always required. */
+	readonly requiredWhen?: string;
+};
 
 export interface ZuiPartMetadata {
 	readonly description: string;
@@ -99,6 +103,8 @@ export type ZuiPropMetadata = ZuiApiMetadata & {
 	readonly bindable?: boolean;
 	readonly default: string;
 	readonly required?: boolean;
+	/** Human-readable condition for discriminated-union props that are not always required. */
+	readonly requiredWhen?: string;
 };
 
 export interface ZuiComponentMetadata {

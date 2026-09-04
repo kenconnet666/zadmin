@@ -17,8 +17,17 @@ const portable = (value) => value.replaceAll('\\', '/');
 const directRenderPattern = (name) => new RegExp(`\\b(?:render|mount)\\(\\s*${name}\\b`, 'u');
 const explicitComponentPattern = (name) => new RegExp(`\\b${name}\\b`, 'u');
 const executesComponentRender = (source) => /\b(?:render|mount)\(/u.test(source);
+const explicitVisualEvidencePattern = (name) => new RegExp(`@zui-visual\\s+${name}(?:\\s|$)`, 'u');
+const visualAssertionPattern =
+	/\b(?:getBoundingClientRect|getComputedStyle)\s*\(|\.toHaveCSS\s*\(|\.toHaveScreenshot\s*\(/u;
 const withoutComments = (source) =>
 	source.replace(/<!--[\s\S]*?-->|\/\*[\s\S]*?\*\/|\/\/[^\n]*/gu, '');
+
+function hasExplicitVisualEvidence(source, componentName) {
+	return (
+		explicitVisualEvidencePattern(componentName).test(source) && visualAssertionPattern.test(source)
+	);
+}
 
 async function filesUnder(root, extension) {
 	const entries = await readdir(root, { withFileTypes: true });
@@ -247,6 +256,24 @@ if (process.argv.includes('--self-test')) {
 	if (explicitComponentPattern('ZButton').test(withoutComments('// ZButton\nexpect(true)')))
 		throw new Error('comment-only component self-test failed');
 	if (
+		!hasExplicitVisualEvidence(
+			'// @zui-visual ZButton geometry\\nrender(ZButton); expect(getComputedStyle(node).height);',
+			'ZButton'
+		)
+	)
+		throw new Error('explicit visual evidence self-test failed');
+	if (
+		hasExplicitVisualEvidence(
+			'// @zui-visual ZButton geometry\\nrender(ZButton); expect(node.dataset.size);',
+			'ZButton'
+		)
+	)
+		throw new Error('non-visual marker self-test failed');
+	if (
+		hasExplicitVisualEvidence('render(ZButton); expect(getBoundingClientRect().height);', 'ZButton')
+	)
+		throw new Error('unowned visual assertion self-test failed');
+	if (
 		fixtureEvidenceFor(
 			resolve('C:/tests', 'example.spec.ts'),
 			"import Fixture from './Fixture.svelte'; render(Fixture); expect(true);",
@@ -350,6 +377,9 @@ const rows = componentFiles.map(({ id, name, category, status, path, source }) =
 			explicitComponentReference.test(withoutComments(content)) &&
 			executesComponentRender(content)
 	);
+	const visualTests = browserTests.filter(([, content]) =>
+		hasExplicitVisualEvidence(content, name)
+	);
 	const productionTests = relatedTests.filter(
 		([testPath, content]) =>
 			testPath.includes('production') &&
@@ -382,7 +412,8 @@ const rows = componentFiles.map(({ id, name, category, status, path, source }) =
 			Authorable: authorable,
 			ContractVerified: Boolean(contractFact),
 			RuntimeImplemented: runtimeImplemented,
-			VisuallyVerified: browserTests.length > 0,
+			BrowserBehaviorVerified: browserTests.length > 0,
+			VisuallyVerified: visualTests.length > 0,
 			DesktopVerified: false,
 			ProductionVerified: productionTests.length > 0
 		},
@@ -399,8 +430,12 @@ const rows = componentFiles.map(({ id, name, category, status, path, source }) =
 			RuntimeImplemented: runtimeImplemented
 				? [evidence(path, 'component markup and instance script')]
 				: [],
-			VisuallyVerified: browserTests.flatMap(([testPath, content]) => [
-				evidence(testPath, `${name} browser assertions`),
+			BrowserBehaviorVerified: browserTests.flatMap(([testPath, content]) => [
+				evidence(testPath, `${name} browser behavior assertions`),
+				...fixtureEvidenceFor(testPath, content, name)
+			]),
+			VisuallyVerified: visualTests.flatMap(([testPath, content]) => [
+				evidence(testPath, `${name} explicit visual contract assertions`),
 				...fixtureEvidenceFor(testPath, content, name)
 			]),
 			DesktopVerified: [],
@@ -420,6 +455,7 @@ const stageNames = [
 	'Authorable',
 	'ContractVerified',
 	'RuntimeImplemented',
+	'BrowserBehaviorVerified',
 	'VisuallyVerified',
 	'DesktopVerified',
 	'ProductionVerified'
@@ -428,6 +464,7 @@ const summary = Object.fromEntries(
 	stageNames.map((stage) => [stage, rows.filter((row) => row.stages[stage]).length])
 );
 const output = {
+	schemaVersion: 2,
 	source: {
 		metadataComponents: rows.length,
 		documentationPages: new Set(rows.map((row) => row.docs?.path).filter(Boolean)).size,
@@ -445,17 +482,17 @@ const lines = [
 	'',
 	`Generated from ${rows.length} metadata components, ${output.source.documentationPages} documentation modules, ${contract.components.length} API contract entries, and ${testFiles.length} test files.`,
 	'',
-	'Generation is evidence-based. A test filename alone never grants `VisuallyVerified` or `ProductionVerified`; the test source must contain the component name, `render(`, and `expect(`. `DesktopVerified` remains false until a component-level desktop evidence source is added.',
+	'Generation is evidence-based. `BrowserBehaviorVerified` requires an executed browser render with component-owned assertions. `VisuallyVerified` additionally requires an explicit `@zui-visual ZComponent` ownership marker and a geometry, computed-style, CSS, or screenshot assertion; generic browser assertions never count as visual evidence. `DesktopVerified` remains false until a component-level desktop evidence source is added.',
 	'',
 	'| Stage | Count |',
 	'|---|---:|',
 	...stageNames.map((stage) => `| ${stage} | ${summary[stage]} |`),
 	'',
-	'| Component | Category | Declared | Authorable | Contract | Runtime | Visual | Desktop | Production | Docs |',
-	'|---|---|---:|---:|---:|---:|---:|---:|---:|---|',
+	'| Component | Category | Declared | Authorable | Contract | Runtime | Browser | Visual | Desktop | Production | Docs |',
+	'|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---|',
 	...rows.map(
 		(row) =>
-			`| ${row.name} | ${row.category} | ${row.stages.Declared ? 'Y' : '—'} | ${row.stages.Authorable ? 'Y' : '—'} | ${row.stages.ContractVerified ? 'Y' : '—'} | ${row.stages.RuntimeImplemented ? 'Y' : '—'} | ${row.stages.VisuallyVerified ? 'Y' : '—'} | ${row.stages.DesktopVerified ? 'Y' : '—'} | ${row.stages.ProductionVerified ? 'Y' : '—'} | ${row.docs?.path ?? '—'} |`
+			`| ${row.name} | ${row.category} | ${row.stages.Declared ? 'Y' : '—'} | ${row.stages.Authorable ? 'Y' : '—'} | ${row.stages.ContractVerified ? 'Y' : '—'} | ${row.stages.RuntimeImplemented ? 'Y' : '—'} | ${row.stages.BrowserBehaviorVerified ? 'Y' : '—'} | ${row.stages.VisuallyVerified ? 'Y' : '—'} | ${row.stages.DesktopVerified ? 'Y' : '—'} | ${row.stages.ProductionVerified ? 'Y' : '—'} | ${row.docs?.path ?? '—'} |`
 	)
 ];
 const prettierConfig = (await prettier.resolveConfig(markdownPath)) ?? {};
