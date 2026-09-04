@@ -34,17 +34,25 @@ describe('production ZMenu / ZDropdownMenu / ZContextMenu family', () => {
 	});
 
 	it('ZMenu projects checkbox, mixed, typed radio, real link and cancellable action contracts', async () => {
+		// @zui-visual ZMenuCheckboxItem checked state and indicator geometry
+		// @zui-visual ZMenuRadioItem selected state and indicator geometry
 		render(MenuFamilyProductionFixture);
 		const checkbox = document.querySelector<HTMLElement>('[data-testid="menu-check"]')!;
 		expect(checkbox.getAttribute('role')).toBe('menuitemcheckbox');
 		expect(checkbox.getAttribute('aria-checked')).toBe('mixed');
+		expect(checkbox.getBoundingClientRect().height).toBeGreaterThan(0);
+		expect(getComputedStyle(checkbox).paddingInline).not.toBe('0px');
+		expect(checkbox.querySelector('svg')?.getBoundingClientRect().width).toBeGreaterThan(0);
 		await userEvent.click(checkbox);
 		expect(checkbox.getAttribute('aria-checked')).toBe('true');
 		const blocked = document.querySelector<HTMLElement>('[data-testid="menu-check-blocked"]')!;
 		await userEvent.click(blocked);
 		expect(blocked.getAttribute('aria-checked')).toBe('false');
 
-		await userEvent.click(document.querySelector('[data-testid="menu-radio-number"]')!);
+		const radioNumber = document.querySelector<HTMLElement>('[data-testid="menu-radio-number"]')!;
+		expect(radioNumber.getBoundingClientRect().height).toBeGreaterThan(0);
+		expect(getComputedStyle(radioNumber).paddingInline).not.toBe('0px');
+		await userEvent.click(radioNumber);
 		expect(
 			document.querySelector('[data-testid="menu-radio-number"]')?.getAttribute('aria-checked')
 		).toBe('true');
@@ -61,19 +69,37 @@ describe('production ZMenu / ZDropdownMenu / ZContextMenu family', () => {
 	});
 
 	it('ZMenu ZMenuGroup ZMenuLabel ZMenuItem ZMenuCheckboxItem ZMenuRadioGroup ZMenuRadioItem ZMenuSeparator ZMenuSub ZMenuSubTrigger ZMenuSubContent compound members expose their semantic contracts', async () => {
+		// @zui-visual ZMenu
+		// @zui-visual ZMenuGroup
+		// @zui-visual ZMenuLabel
+		// @zui-visual ZMenuItem
+		// @zui-visual ZMenuRadioGroup
+		// @zui-visual ZMenuSeparator
+		// @zui-visual ZMenuSub
+		// @zui-visual ZMenuSubTrigger
+		// @zui-visual ZMenuSubContent
 		render(MenuFamilyProductionFixture);
 
 		const menu = document.querySelector<HTMLElement>('[role="menu"][aria-label="Production menu"]');
 		expect(menu).not.toBeNull();
+		expect(menu!.getBoundingClientRect().width).toBeGreaterThan(0);
+		expect(getComputedStyle(menu!).display).toMatch(/flex|grid/u);
 
 		const group = document.querySelector<HTMLElement>('[role="group"][aria-labelledby]');
 		expect(group?.querySelector('[data-testid="menu-first"]')).not.toBeNull();
+		expect(group!.getBoundingClientRect().width).toBeGreaterThan(0);
 		const label = group?.querySelector<HTMLElement>('[id$="-label"]');
 		expect(label?.textContent).toBe('Primary');
+		expect(label!.getBoundingClientRect().height).toBeGreaterThan(0);
+		expect(getComputedStyle(label!).paddingInlineStart).not.toBe('0px');
 		expect(document.querySelector('[role="separator"]')).not.toBeNull();
+		const separator = document.querySelector<HTMLElement>('[role="separator"]')!;
+		expect(separator.getBoundingClientRect().height).toBe(1);
 
 		const item = document.querySelector<HTMLElement>('[data-testid="menu-first"]');
 		expect(item?.getAttribute('role')).toBe('menuitem');
+		expect(item!.getBoundingClientRect().height).toBeGreaterThan(0);
+		expect(getComputedStyle(item!).paddingInline).not.toBe('0px');
 		const checkboxItem = document.querySelector<HTMLElement>('[data-testid="menu-check"]');
 		expect(checkboxItem?.getAttribute('role')).toBe('menuitemcheckbox');
 		const radioGroup = document.querySelector<HTMLElement>(
@@ -81,6 +107,7 @@ describe('production ZMenu / ZDropdownMenu / ZContextMenu family', () => {
 		)?.parentElement;
 		expect(radioGroup?.getAttribute('role')).toBe('group');
 		expect(document.querySelectorAll('[role="menuitemradio"]').length).toBe(2);
+		expect(radioGroup!.getBoundingClientRect().width).toBeGreaterThan(0);
 
 		await userEvent.click(document.querySelector('[data-testid="dropdown-trigger"]')!);
 		await tick();
@@ -88,10 +115,14 @@ describe('production ZMenu / ZDropdownMenu / ZContextMenu family', () => {
 		expect(subTrigger?.getAttribute('role')).toBe('menuitem');
 		expect(subTrigger?.getAttribute('aria-haspopup')).toBe('menu');
 		expect(subTrigger?.getAttribute('data-state')).toBe('closed');
+		expect(subTrigger!.getBoundingClientRect().height).toBeGreaterThan(0);
 		expect(document.querySelector('[data-testid="dropdown-sub-content"]')).toBeNull();
 		subTrigger?.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowRight' }));
 		await tick();
 		expect(document.querySelector('[data-testid="dropdown-sub-content"]')).not.toBeNull();
+		const subContent = document.querySelector<HTMLElement>('[data-testid="dropdown-sub-content"]')!;
+		expect(subContent.getBoundingClientRect().width).toBeGreaterThan(0);
+		expect(getComputedStyle(subContent).paddingInlineStart).not.toBe('0px');
 		expect(document.querySelector('[data-testid="dropdown-sub-item"]')?.getAttribute('role')).toBe(
 			'menuitem'
 		);
@@ -121,6 +152,10 @@ describe('production ZMenu / ZDropdownMenu / ZContextMenu family', () => {
 	});
 
 	it('ZDropdownMenuTrigger/ZDropdownMenuContent and ZContextMenuTrigger/ZContextMenuContent expose named layer contracts', async () => {
+		// @zui-visual ZDropdownMenuTrigger
+		// @zui-visual ZDropdownMenuContent
+		// @zui-visual ZContextMenuTrigger
+		// @zui-visual ZContextMenuContent
 		render(MenuFamilyProductionFixture);
 
 		const dropdownTrigger = document.querySelector<HTMLButtonElement>(
@@ -131,6 +166,7 @@ describe('production ZMenu / ZDropdownMenu / ZContextMenu family', () => {
 		expect(dropdownTrigger.getAttribute('aria-haspopup')).toBe('menu');
 		expect(dropdownTrigger.getAttribute('aria-expanded')).toBe('false');
 		expect(dropdownTrigger.getAttribute('data-state')).toBe('closed');
+		expect(dropdownTrigger.getBoundingClientRect().height).toBeGreaterThan(0);
 		await userEvent.click(dropdownTrigger);
 		await tick();
 		const dropdownContent = document.querySelector<HTMLElement>(
@@ -139,6 +175,8 @@ describe('production ZMenu / ZDropdownMenu / ZContextMenu family', () => {
 		expect(dropdownContent.id).toBe(dropdownId);
 		expect(dropdownContent.getAttribute('role')).toBe('presentation');
 		expect(dropdownContent.getAttribute('data-state')).toBe('open');
+		expect(dropdownContent.getBoundingClientRect().width).toBeGreaterThan(0);
+		expect(getComputedStyle(dropdownContent).paddingInline).not.toBe('0px');
 		const dropdownMenu = dropdownContent.querySelector<HTMLElement>('[role="menu"]')!;
 		expect(dropdownMenu.getAttribute('aria-labelledby')).toBe(dropdownTrigger.id);
 		expect(dropdownMenu.querySelector('[data-testid="dropdown-first"]')).not.toBeNull();
@@ -154,6 +192,7 @@ describe('production ZMenu / ZDropdownMenu / ZContextMenu family', () => {
 		expect(contextId).toMatch(/^zui-/u);
 		expect(contextTrigger.getAttribute('aria-haspopup')).toBe('menu');
 		expect(contextTrigger.getAttribute('data-state')).toBe('closed');
+		expect(contextTrigger.getBoundingClientRect().width).toBeGreaterThan(0);
 		contextTrigger.dispatchEvent(
 			new MouseEvent('contextmenu', { bubbles: true, cancelable: true, clientX: 42, clientY: 64 })
 		);
@@ -162,6 +201,8 @@ describe('production ZMenu / ZDropdownMenu / ZContextMenu family', () => {
 		expect(contextContent.id).toBe(contextId);
 		expect(contextContent.getAttribute('role')).toBe('presentation');
 		expect(contextContent.getAttribute('data-state')).toBe('open');
+		expect(contextContent.getBoundingClientRect().width).toBeGreaterThan(0);
+		expect(getComputedStyle(contextContent).paddingInline).not.toBe('0px');
 		const contextMenu = contextContent.querySelector<HTMLElement>('[role="menu"]')!;
 		expect(contextMenu.getAttribute('aria-label')).toBe('Production context');
 		expect(contextMenu.querySelector('[data-testid="context-first"]')).not.toBeNull();
