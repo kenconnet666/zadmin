@@ -502,7 +502,12 @@
 	data-selecting={selectingEnd || undefined}
 	data-state={openState.current ? 'open' : 'closed'}
 >
-	<ZInputGroup disabled={resolvedDisabled} invalid={resolvedInvalid} suffixAction={actions}>
+	<ZInputGroup
+		disabled={resolvedDisabled}
+		invalid={resolvedInvalid}
+		size={resolvedSize}
+		suffixAction={actions}
+	>
 		<ZDateField
 			aria-describedby={describedBy}
 			aria-label={resolvedStartLabel}

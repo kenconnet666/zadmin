@@ -46,7 +46,20 @@ describe('date picker production contracts', () => {
 	});
 
 	it('keeps ZDateRangePicker ordered values, partial FormData and reset owner realm real', async () => {
+		// @zui-visual ZDatePicker resolved input-group size geometry
+		// @zui-visual ZDateRangePicker resolved input-group size geometry
 		render(DateProductionFixture);
+		const dateGroup = document.querySelector<HTMLElement>(
+			'[data-testid="production-date-picker"] [role="group"][data-size]'
+		)!;
+		const rangeGroup = document.querySelector<HTMLElement>(
+			'[data-testid="production-range-picker"] [role="group"][data-size]'
+		)!;
+		expect(dateGroup.dataset.size).toBe('small');
+		expect(rangeGroup.dataset.size).toBe('large');
+		// The group owns a one-pixel border around the 24px/48px control boxes.
+		expect(dateGroup.getBoundingClientRect().height).toBe(26);
+		expect(rangeGroup.getBoundingClientRect().height).toBe(50);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="date-production-form"]')!;
 		const rangeTrigger = document.querySelector<HTMLButtonElement>(
 			'[data-testid="production-range-picker"] button[aria-haspopup="dialog"]'

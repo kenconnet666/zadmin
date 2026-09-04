@@ -57,6 +57,7 @@
 				bind:value={picked}
 				data-testid="production-date-picker"
 				isDateUnavailable={weekdayUnavailable}
+				size="small"
 			/>
 		</ZField>
 		<ZField label="Partial range" name="window">
@@ -66,6 +67,7 @@
 				data-testid="production-range-picker"
 				isDateUnavailable={(value, part) =>
 					part === 'start' ? weekdayUnavailable(value) : value.day === 30}
+				size="large"
 			/>
 		</ZField>
 		<ZDatePicker data-testid="production-readonly-picker" defaultValue={seed} readonly />
