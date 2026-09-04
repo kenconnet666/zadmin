@@ -891,24 +891,6 @@ export const comboboxInputApiFacts = {
 			type: "ZInputProps['oninput']"
 		},
 		{
-			name: 'defaultValue',
-			required: false,
-			type: 'string',
-			inheritedFrom: 'ZInputProps'
-		},
-		{
-			name: 'onFormReset',
-			required: false,
-			type: '() => void',
-			inheritedFrom: 'ZInputProps'
-		},
-		{
-			name: 'onValueChange',
-			required: false,
-			type: '(value: string) => void',
-			inheritedFrom: 'ZInputProps'
-		},
-		{
 			name: 'size',
 			required: false,
 			type: 'ZInputSize',
@@ -9312,9 +9294,19 @@ export const tagsInputApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'defaultValue',
+			required: false,
+			type: 'readonly string[]'
+		},
+		{
 			name: 'defaultValues',
 			required: false,
 			type: 'readonly string[]'
+		},
+		{
+			name: 'defaultInputValue',
+			required: false,
+			type: 'string'
 		},
 		{
 			name: 'delimiters',
@@ -9379,7 +9371,7 @@ export const tagsInputApiFacts = {
 		{
 			name: 'onValueChange',
 			required: false,
-			type: '(values: readonly string[]) => void'
+			type: '(value: readonly string[]) => void'
 		},
 		{
 			name: 'overflowLabel',
@@ -9425,6 +9417,11 @@ export const tagsInputApiFacts = {
 			name: 'validate',
 			required: false,
 			type: '(value: string) => boolean'
+		},
+		{
+			name: 'value',
+			required: false,
+			type: 'readonly string[]'
 		},
 		{
 			name: 'values',

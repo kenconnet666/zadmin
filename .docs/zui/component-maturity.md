@@ -1,6 +1,6 @@
 # ZUI component maturity matrix
 
-Generated from 141 metadata components, 79 documentation modules, 141 API contract entries, and 151 test files.
+Generated from 141 metadata components, 79 documentation modules, 141 API contract entries, and 152 test files.
 
 Generation is evidence-based. `BrowserBehaviorVerified` requires an executed browser render with component-owned assertions. `VisuallyVerified` additionally requires an explicit `@zui-visual ZComponent` ownership marker and a geometry, computed-style, CSS, or screenshot assertion; generic browser assertions never count as visual evidence. `DesktopVerified` remains false until a component-level desktop evidence source is added.
 
@@ -11,7 +11,7 @@ Generation is evidence-based. `BrowserBehaviorVerified` requires an executed bro
 | ContractVerified        |   141 |
 | RuntimeImplemented      |   141 |
 | BrowserBehaviorVerified |   141 |
-| VisuallyVerified        |    22 |
+| VisuallyVerified        |    36 |
 | DesktopVerified         |     0 |
 | ProductionVerified      |   141 |
 
@@ -33,7 +33,7 @@ Generation is evidence-based. `BrowserBehaviorVerified` requires an executed bro
 | ZComboboxContent        | input        |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/input/combobox/doc.ts                |
 | ZComboboxInput          | input        |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/input/combobox/doc.ts                |
 | ZComboboxItem           | input        |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/input/combobox/doc.ts                |
-| ZContextMenu            | navigation   |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/navigation/context-menu/doc.ts       |
+| ZContextMenu            | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/context-menu/doc.ts       |
 | ZContextMenuContent     | navigation   |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/navigation/context-menu/doc.ts       |
 | ZContextMenuTrigger     | navigation   |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/navigation/context-menu/doc.ts       |
 | ZDialog                 | overlay      |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/overlay/dialog/doc.ts                |
@@ -43,14 +43,14 @@ Generation is evidence-based. `BrowserBehaviorVerified` requires an executed bro
 | ZDialogOverlay          | overlay      |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/overlay/dialog/doc.ts                |
 | ZDialogTitle            | overlay      |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/overlay/dialog/doc.ts                |
 | ZDialogTrigger          | overlay      |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/overlay/dialog/doc.ts                |
-| ZDrawer                 | overlay      |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/overlay/drawer/doc.ts                |
+| ZDrawer                 | overlay      |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/overlay/drawer/doc.ts                |
 | ZDrawerClose            | overlay      |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/overlay/drawer/doc.ts                |
 | ZDrawerContent          | overlay      |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/overlay/drawer/doc.ts                |
 | ZDrawerDescription      | overlay      |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/overlay/drawer/doc.ts                |
 | ZDrawerOverlay          | overlay      |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/overlay/drawer/doc.ts                |
 | ZDrawerTitle            | overlay      |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/overlay/drawer/doc.ts                |
 | ZDrawerTrigger          | overlay      |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/overlay/drawer/doc.ts                |
-| ZDropdownMenu           | navigation   |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/navigation/dropdown-menu/doc.ts      |
+| ZDropdownMenu           | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/dropdown-menu/doc.ts      |
 | ZDropdownMenuContent    | navigation   |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/navigation/dropdown-menu/doc.ts      |
 | ZDropdownMenuTrigger    | navigation   |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/navigation/dropdown-menu/doc.ts      |
 | ZMenu                   | navigation   |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/navigation/menu/doc.ts               |
@@ -75,7 +75,7 @@ Generation is evidence-based. `BrowserBehaviorVerified` requires an executed bro
 | ZPopconfirmDescription  | overlay      |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/overlay/popconfirm/doc.ts            |
 | ZPopconfirmTitle        | overlay      |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/overlay/popconfirm/doc.ts            |
 | ZPopconfirmTrigger      | overlay      |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/overlay/popconfirm/doc.ts            |
-| ZPopover                | overlay      |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/overlay/popover/doc.ts               |
+| ZPopover                | overlay      |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/overlay/popover/doc.ts               |
 | ZPopoverContent         | overlay      |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/overlay/popover/doc.ts               |
 | ZPopoverTrigger         | overlay      |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/overlay/popover/doc.ts               |
 | ZRadioGroup             | input        |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/input/radio-group/doc.ts             |
@@ -98,16 +98,16 @@ Generation is evidence-based. `BrowserBehaviorVerified` requires an executed bro
 | ZCard                   | data-display |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/data-display/card/doc.ts             |
 | ZCarousel               | data-display |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/data-display/carousel/doc.ts         |
 | ZDataTable              | data-display |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/data-display/data-table/doc.ts       |
-| ZDescriptionList        | data-display |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/data-display/description-list/doc.ts |
+| ZDescriptionList        | data-display |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/description-list/doc.ts |
 | ZEmpty                  | data-display |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/data-display/empty/doc.ts            |
 | ZList                   | data-display |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/data-display/list/doc.ts             |
 | ZMeter                  | data-display |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/data-display/meter/doc.ts            |
 | ZProgress               | data-display |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/data-display/progress/doc.ts         |
 | ZSkeleton               | data-display |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/data-display/skeleton/doc.ts         |
-| ZStatistic              | data-display |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/data-display/statistic/doc.ts        |
+| ZStatistic              | data-display |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/statistic/doc.ts        |
 | ZTable                  | data-display |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/data-display/table/doc.ts            |
 | ZTag                    | data-display |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/tag/doc.ts              |
-| ZTimeline               | data-display |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/data-display/timeline/doc.ts         |
+| ZTimeline               | data-display |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/timeline/doc.ts         |
 | ZVirtualList            | data-display |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/data-display/virtual-list/doc.ts     |
 | ZAlert                  | feedback     |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/feedback/alert/doc.ts                |
 | ZLoadingBar             | feedback     |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/feedback/loading-bar/doc.ts          |
@@ -121,7 +121,7 @@ Generation is evidence-based. `BrowserBehaviorVerified` requires an executed bro
 | ZHeading                | gene         |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/gene/heading/doc.ts                  |
 | ZIcon                   | gene         |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/gene/icon/doc.ts                     |
 | ZKbd                    | gene         |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/gene/kbd/doc.ts                      |
-| ZLink                   | gene         |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/gene/link/doc.ts                     |
+| ZLink                   | gene         |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/gene/link/doc.ts                     |
 | ZProvider               | gene         |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/gene/provider/doc.ts                 |
 | ZSeparator              | gene         |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/gene/separator/doc.ts                |
 | ZText                   | gene         |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/gene/text/doc.ts                     |
@@ -132,14 +132,14 @@ Generation is evidence-based. `BrowserBehaviorVerified` requires an executed bro
 | ZCheckbox               | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/checkbox/doc.ts                |
 | ZColorPicker            | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/color-picker/doc.ts            |
 | ZDateField              | input        |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/input/date-field/doc.ts              |
-| ZDatePicker             | input        |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/input/date-picker/doc.ts             |
-| ZDateRangePicker        | input        |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/input/date-range-picker/doc.ts       |
+| ZDatePicker             | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/date-picker/doc.ts             |
+| ZDateRangePicker        | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/date-range-picker/doc.ts       |
 | ZField                  | input        |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/input/field/doc.ts                   |
 | ZFileUpload             | input        |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/input/file-upload/doc.ts             |
-| ZForm                   | input        |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/input/form/doc.ts                    |
-| ZFormField              | input        |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/input/form/doc.ts                    |
+| ZForm                   | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/form/doc.ts                    |
+| ZFormField              | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/form/doc.ts                    |
 | ZInput                  | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/input/doc.ts                   |
-| ZInputGroup             | input        |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/input/input-group/doc.ts             |
+| ZInputGroup             | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/input-group/doc.ts             |
 | ZMention                | input        |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/input/mention/doc.ts                 |
 | ZNumberField            | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/number-field/doc.ts            |
 | ZPinInput               | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/pin-input/doc.ts               |
@@ -156,5 +156,5 @@ Generation is evidence-based. `BrowserBehaviorVerified` requires an executed bro
 | ZStack                  | layout       |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/layout/stack/doc.ts                  |
 | ZCommand                | navigation   |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/navigation/command/doc.ts            |
 | ZCommandPalette         | navigation   |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/navigation/command-palette/doc.ts    |
-| ZPagination             | navigation   |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/navigation/pagination/doc.ts         |
+| ZPagination             | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/pagination/doc.ts         |
 | ZTour                   | overlay      |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/overlay/tour/doc.ts                  |
