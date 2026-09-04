@@ -312,6 +312,7 @@
 			<Palette aria-hidden="true" size={16} />
 			<span class={classes.themeLabel}>主题</span>
 			<ZSelect
+				matchWidth={false}
 				value={themeId}
 				valueLabel={themeValueLabel}
 				onValueChange={setTheme}

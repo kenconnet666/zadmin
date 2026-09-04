@@ -119,6 +119,7 @@
 	const inputRecipe = defineRecipe({
 		base: (s) => {
 			s.appearance.none;
+			s.boxSizing.borderBox;
 			s.width._full;
 			s.borderWidth._hairline;
 			s.borderStyle.solid;

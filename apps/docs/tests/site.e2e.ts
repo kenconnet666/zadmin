@@ -161,7 +161,53 @@ test('renders the component catalog and real demo source', async ({ page }) => {
 	const buttonStatesDemo = demo(page, 'button-states');
 	await buttonStatesDemo.getByTestId('button-counter').click();
 	await expect(buttonStatesDemo.getByText('count = 1')).toBeVisible();
+	for (const [label, height, fontSize] of [
+		['Small', 24, '12px'],
+		['Medium', 32, '14px'],
+		['Large', 48, '18px']
+	] as const) {
+		const button = buttonStatesDemo.getByRole('button', { name: label, exact: true });
+		await expect(button).toHaveCSS('font-size', fontSize);
+		await expect(button).toHaveCSS('font-weight', '600');
+		expect(await button.evaluate((element) => element.getBoundingClientRect().height)).toBeCloseTo(
+			height,
+			0
+		);
+	}
 	expect(errors).toEqual([]);
+});
+
+test('keeps component page section spacing outside card surfaces', async ({ page }) => {
+	await gotoComponent(page, 'button');
+	const metrics = await page.evaluate(() => {
+		const rect = (element: Element) => element.getBoundingClientRect();
+		const demos = document.querySelector<HTMLElement>('#demos')!;
+		const demoTitle = demos.querySelector('h2')!;
+		const firstDemo = document.querySelector('#button-variants')!;
+		const apiSections = [...document.querySelectorAll('#api > section')];
+		const accessibility = document.querySelector<HTMLElement>('#accessibility')!;
+		const accessibilityStyle = getComputedStyle(accessibility);
+		return {
+			accessibilityMarginTop: accessibilityStyle.marginTop,
+			accessibilityPadding: [
+				accessibilityStyle.paddingTop,
+				accessibilityStyle.paddingRight,
+				accessibilityStyle.paddingBottom,
+				accessibilityStyle.paddingLeft
+			],
+			apiGaps: apiSections
+				.slice(1)
+				.map((section, index) => Math.round(rect(section).top - rect(apiSections[index]!).bottom)),
+			demoPaddingTop: getComputedStyle(demos).paddingTop,
+			titleToFirstDemo: Math.round(rect(firstDemo).top - rect(demoTitle).bottom)
+		};
+	});
+	expect(metrics.accessibilityMarginTop).toBe('64px');
+	expect(metrics.accessibilityPadding).toEqual(['16px', '16px', '16px', '16px']);
+	expect(metrics.apiGaps.length).toBeGreaterThan(0);
+	expect([...new Set(metrics.apiGaps)]).toEqual([24]);
+	expect(metrics.demoPaddingTop).toBe('0px');
+	expect(metrics.titleToFirstDemo).toBe(16);
 });
 
 test('exposes API table hierarchy and scroll-region semantics', async ({ page }) => {
@@ -330,6 +376,40 @@ test('switches and persists all coordinated production themes', async ({ page })
 	expect(results.violations).toEqual([]);
 });
 
+test('keeps the header theme listbox readable and viewport bounded', async ({ page }) => {
+	await page.goto('/#/components/button');
+	const trigger = page.getByRole('button', { name: '选择文档主题', exact: true });
+	await trigger.click();
+	const content = page.getByRole('listbox');
+	await expect(content).toBeVisible();
+	const geometry = await page.evaluate(() => {
+		const triggerElement = document.querySelector<HTMLElement>(
+			'button[aria-label="选择文档主题"]'
+		)!;
+		const contentElement = document.querySelector<HTMLElement>('[role="listbox"]')!;
+		const triggerRect = triggerElement.getBoundingClientRect();
+		const contentRect = contentElement.getBoundingClientRect();
+		return {
+			content: {
+				bottom: contentRect.bottom,
+				right: contentRect.right,
+				width: contentRect.width
+			},
+			options: [...contentElement.querySelectorAll<HTMLElement>('[role="option"]')].map(
+				(option) => getComputedStyle(option).whiteSpace
+			),
+			overflowY: getComputedStyle(contentElement).overflowY,
+			triggerWidth: triggerRect.width,
+			viewport: { height: window.innerHeight, width: window.innerWidth }
+		};
+	});
+	expect(geometry.content.width).toBeGreaterThan(geometry.triggerWidth);
+	expect(geometry.content.right).toBeLessThanOrEqual(geometry.viewport.width);
+	expect(geometry.content.bottom).toBeLessThanOrEqual(geometry.viewport.height);
+	expect(geometry.options).toEqual(Array(6).fill('nowrap'));
+	expect(geometry.overflowY).toBe('auto');
+});
+
 test('restores the current preferences trigger after nested direction updates', async ({
 	page
 }) => {
@@ -370,6 +450,16 @@ test('inherits compact Provider density while preserving explicit control size',
 	await expect(compactInput).toHaveCSS('min-height', '24px');
 	await expect(compactTextarea).toHaveCSS('min-height', '64px');
 	await expect(explicitButton).toHaveCSS('min-height', '48px');
+	await expect(compactButton).toHaveCSS('font-size', '12px');
+	await expect(compactInput).toHaveCSS('font-size', '12px');
+	await expect(compactTextarea).toHaveCSS('font-size', '12px');
+	await expect(explicitButton).toHaveCSS('font-size', '18px');
+	expect(
+		await compactButton.evaluate((element) => element.getBoundingClientRect().height)
+	).toBeCloseTo(24, 0);
+	expect(
+		await explicitButton.evaluate((element) => element.getBoundingClientRect().height)
+	).toBeCloseTo(48, 0);
 });
 
 test('keeps input binding and field validation interactive', async ({ page }) => {

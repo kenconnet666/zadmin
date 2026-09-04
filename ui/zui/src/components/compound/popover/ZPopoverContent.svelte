@@ -40,6 +40,8 @@
 			s.color._text;
 			s.opacity._opaque;
 			s.padding._large;
+			s.maxHeight.raw('var(--zui-floating-available-height, none)');
+			s.overflowY.auto;
 			s.position.absolute;
 			s.transform.raw('translateY(0) scale(1)');
 			s.transitionDuration._fast;
@@ -122,9 +124,9 @@
 			},
 			{
 				default: 'Trigger id',
-				description: '覆盖dialog可访问名称来源，供复合封装使用。',
+				description: '覆盖dialog可访问名称来源；null显式移除aria-labelledby，供复合封装使用。',
 				name: 'ariaLabelledBy',
-				type: 'string'
+				type: 'string | null'
 			},
 			{
 				default: 'undefined',

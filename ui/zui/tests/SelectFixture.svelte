@@ -6,8 +6,17 @@
 		ZSelectItem,
 		ZSelectTrigger
 	} from '../src/entrypoints/index.js';
-	let { defaultOpen = false, prevent = false }: { defaultOpen?: boolean; prevent?: boolean } =
-		$props();
+	let {
+		defaultOpen = false,
+		matchWidth = true,
+		prevent = false,
+		longLabels = false
+	}: {
+		defaultOpen?: boolean;
+		matchWidth?: boolean;
+		prevent?: boolean;
+		longLabels?: boolean;
+	} = $props();
 	let value = $state<string | number | undefined>('b');
 	let open = $state<boolean>();
 	let changes = $state(0);
@@ -25,16 +34,27 @@
 			bind:open
 			bind:value
 			{defaultOpen}
+			{matchWidth}
 			defaultValue="b"
 			onValueChange={() => (changes += 1)}
 			valueLabel={(current) =>
 				({ a: 'Alpha', b: 'Beta', c: 'Charlie', d: 'Delta' })[String(current)]!}
 		>
-			<ZSelectTrigger aria-label="Choice" data-testid="select-trigger" />
+			<ZSelectTrigger
+				aria-label="Choice"
+				data-testid="select-trigger"
+				style={longLabels ? 'inline-size: 80px' : undefined}
+			/>
 			<ZSelectContent data-testid="select-content">
-				<ZSelectItem data-testid="select-a" value="a">Alpha</ZSelectItem>
-				<ZSelectItem data-testid="select-b" value="b">Beta</ZSelectItem>
-				<ZSelectItem data-testid="select-c" disabled value="c">Charlie</ZSelectItem>
+				<ZSelectItem data-testid="select-a" value="a"
+					>{longLabels ? '极光明亮主题' : 'Alpha'}</ZSelectItem
+				>
+				<ZSelectItem data-testid="select-b" value="b"
+					>{longLabels ? '纸张暖白主题' : 'Beta'}</ZSelectItem
+				>
+				<ZSelectItem data-testid="select-c" disabled value="c"
+					>{longLabels ? '高对比暗色主题' : 'Charlie'}</ZSelectItem
+				>
 				<ZSelectItem
 					data-testid="select-d"
 					onSelect={(event) => prevent && event.preventDefault()}

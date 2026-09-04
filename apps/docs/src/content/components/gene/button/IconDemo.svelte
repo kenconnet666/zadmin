@@ -3,7 +3,7 @@
 </script>
 
 <ZStack gap="small">
-	<ZStack direction="row" gap="small" wrap>
+	<ZStack align="center" direction="row" gap="small" wrap>
 		<ZButton aria-label="搜索" shape="square" size="small" title="搜索">
 			<ZIcon name="search" />
 		</ZButton>

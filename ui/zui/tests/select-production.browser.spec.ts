@@ -53,4 +53,21 @@ describe('ZSelect production contract', () => {
 		expect(document.activeElement).toBe(trigger);
 		expect(trigger.getAttribute('aria-expanded')).toBe('false');
 	});
+
+	it('allows intrinsic content width when matchWidth is disabled', async () => {
+		// @zui-visual ZSelect
+		render(SelectFixture, { defaultOpen: true, longLabels: true, matchWidth: false });
+		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="select-trigger"]')!;
+		const content = document.querySelector<HTMLElement>('[data-testid="select-content"]')!;
+		const item = document.querySelector<HTMLElement>('[data-testid="select-c"]')!;
+		await tick();
+		expect(content.getBoundingClientRect().width).toBeGreaterThanOrEqual(
+			trigger.getBoundingClientRect().width
+		);
+		expect(getComputedStyle(content).overflowY).toBe('auto');
+		expect(getComputedStyle(item).whiteSpace).toBe('nowrap');
+		await expect
+			.poll(() => getComputedStyle(content).getPropertyValue('--zui-floating-reference-width'))
+			.toMatch(/px$/u);
+	});
 });

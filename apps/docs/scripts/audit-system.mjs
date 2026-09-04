@@ -1,6 +1,7 @@
 import { readdir, readFile } from 'node:fs/promises';
 import { dirname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { parse } from 'svelte/compiler';
 
 const docsRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const workspaceRoot = resolve(docsRoot, '../..');
@@ -122,6 +123,87 @@ function auditLucideImports(source, filename) {
 		}
 	}
 }
+
+const sizeAwareLayoutComponents = new Set([
+	'ZButton',
+	'ZCheckbox',
+	'ZCombobox',
+	'ZDateField',
+	'ZInput',
+	'ZNumberField',
+	'ZPagination',
+	'ZRadioGroupItem',
+	'ZSelect',
+	'ZSegmented',
+	'ZSlider',
+	'ZSwitch',
+	'ZTagsInput',
+	'ZTextarea',
+	'ZTimeField',
+	'ZToggleButton'
+]);
+
+function attribute(node, name) {
+	return node.attributes?.find((item) => item.type === 'Attribute' && item.name === name);
+}
+
+function literalAttribute(node, name) {
+	const item = attribute(node, name);
+	if (!item || item.value == null) return undefined;
+	if (typeof item.value === 'string') return item.value;
+	if (item.value.length === 1 && item.value[0]?.type === 'Text') return item.value[0].raw;
+	return undefined;
+}
+
+function auditDocsLayout(source, filename) {
+	let ast;
+	try {
+		ast = parse(source, { modern: true });
+	} catch (error) {
+		fail(`${filename} cannot be parsed for layout auditing: ${error.message}`);
+	}
+	const walk = (node) => {
+		if (!node || typeof node !== 'object') return;
+		if (
+			node.type === 'Component' &&
+			node.name === 'ZStack' &&
+			literalAttribute(node, 'direction') === 'row'
+		) {
+			const controls = (node.fragment?.nodes ?? []).filter(
+				(child) => child.type === 'Component' && sizeAwareLayoutComponents.has(child.name)
+			);
+			const sizes = controls.map((control) => literalAttribute(control, 'size'));
+			const explicitSizes = sizes.filter((size) => size !== undefined);
+			const hasMixedExplicitSizes = new Set(explicitSizes).size > 1;
+			const hasExplicitAndDefault = explicitSizes.length > 0 && explicitSizes.length < sizes.length;
+			if ((hasMixedExplicitSizes || hasExplicitAndDefault) && !attribute(node, 'align')) {
+				const line = source.slice(0, node.start).split(/\r?\n/u).length;
+				fail(
+					`${filename}:${line} has a row ZStack with mixed control sizes (${sizes.join(', ')}); set an explicit align (usually align="center") to avoid stretch distortion.`
+				);
+			}
+		}
+		for (const value of Object.values(node)) {
+			if (Array.isArray(value)) value.forEach(walk);
+			else if (value && typeof value === 'object' && value.type) walk(value);
+		}
+	};
+	walk(ast.fragment);
+}
+
+try {
+	auditDocsLayout(
+		'<ZStack direction="row"><ZButton size="small"/><ZButton size="large"/></ZStack>',
+		'layout-audit-self-test.svelte'
+	);
+	fail('Docs layout audit self-test accepted an implicit mixed-size row alignment.');
+} catch (error) {
+	if (!String(error).includes('has a row ZStack with mixed control sizes')) throw error;
+}
+auditDocsLayout(
+	'<ZStack align="center" direction="row"><ZButton size="small"/><ZButton size="large"/></ZStack>',
+	'layout-audit-valid-self-test.svelte'
+);
 
 const zuiSourceFiles = await filesUnder(resolve(workspaceRoot, 'ui/zui/src'), ['.svelte', '.ts']);
 for (const path of zuiSourceFiles) {
@@ -310,6 +392,11 @@ const cascaderColumnSource = await readFile(
 	resolve(workspaceRoot, 'ui/zui/src/components/input/CascaderColumn.svelte'),
 	'utf8'
 );
+if (!inputSource.includes('s.boxSizing.borderBox')) {
+	fail(
+		'ZInput must preserve border-box sizing so width and inline-size include its padding and border.'
+	);
+}
 const formResetSignalTag = formResetSignalSource.match(/<input\b[\s\S]*?\/>/u)?.[0] ?? '';
 if (
 	!buttonSource.includes("'aria-busy': ariaBusy") ||
@@ -515,6 +602,10 @@ if (
 }
 
 const docsSvelteFiles = await filesUnder(docsSourceRoot, ['.svelte']);
+const docsBaseCssSource = await readFile(resolve(docsRoot, 'src/app/base.css'), 'utf8');
+if (/(?:^|[;{\s])font\s*:/u.test(docsBaseCssSource)) {
+	fail('Docs base reset must not use the font shorthand, which can override component typography.');
+}
 const docsViteSource = await readFile(resolve(docsRoot, 'vite.config.ts'), 'utf8');
 const workspaceZuiEntrypoints = [
 	'@zadmin/zui',
@@ -536,6 +627,7 @@ const forbiddenGlyph = /[×‹›✓←→↑↓↕✕✖]/u;
 for (const path of docsSvelteFiles) {
 	const source = await readFile(path, 'utf8');
 	const filename = portable(relative(workspaceRoot, path));
+	auditDocsLayout(source, filename);
 	auditTabOrder(source, filename);
 	auditSvelte5(source, filename);
 	auditLucideImports(source, filename);

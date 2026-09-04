@@ -103,6 +103,10 @@ export class FloatingPositioner {
 				apply: ({ availableHeight, availableWidth, rects }) => {
 					floating.style.setProperty('--zui-floating-available-height', `${availableHeight}px`);
 					floating.style.setProperty('--zui-floating-available-width', `${availableWidth}px`);
+					floating.style.setProperty(
+						'--zui-floating-reference-width',
+						`${rects.reference.width}px`
+					);
 					if (options.matchWidth) this.#setReferenceWidth(rects.reference.width);
 				}
 			})

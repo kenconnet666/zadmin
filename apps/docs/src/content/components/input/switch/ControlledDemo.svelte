@@ -10,7 +10,7 @@
 		<ZSwitch bind:checked id="switch-controlled-scan" onCheckedChange={() => (userChanges += 1)} />
 		<ZText as="label" for="switch-controlled-scan">受控安全扫描</ZText>
 	</ZStack>
-	<ZStack direction="row" gap="small" wrap>
+	<ZStack align="center" direction="row" gap="small" wrap>
 		<ZButton size="small" variant="secondary" onclick={() => (checked = true)}>外部开启</ZButton>
 		<ZButton size="small" variant="secondary" onclick={() => (checked = false)}>外部关闭</ZButton>
 		<ZSwitch aria-label="独立非受控开关" defaultChecked />

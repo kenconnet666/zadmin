@@ -6,6 +6,21 @@ import ChoiceCollectionFixture from './ChoiceCollectionFixture.svelte';
 import ComboboxFixture from './ComboboxFixture.svelte';
 
 describe('ZCombobox production contract', () => {
+	it('keeps long options single-line and bounds intrinsic content width', async () => {
+		// @zui-visual ZCombobox
+		render(ComboboxFixture, { defaultOpen: true, longLabels: true, matchWidth: false });
+		const input = document.querySelector<HTMLInputElement>('[data-testid="combobox-input"]')!;
+		const content = document.querySelector<HTMLElement>('[data-testid="combobox-content"]')!;
+		await tick();
+		const item = content.querySelector<HTMLElement>('[role="option"]')!;
+		expect(getComputedStyle(input).boxSizing).toBe('border-box');
+		expect(input.getBoundingClientRect().width).toBeCloseTo(80, 0);
+		expect(content.getBoundingClientRect().width).toBeGreaterThanOrEqual(
+			input.getBoundingClientRect().width
+		);
+		expect(getComputedStyle(item).whiteSpace).toBe('nowrap');
+		expect(getComputedStyle(content).overflowY).toBe('auto');
+	});
 	it('keeps typed keys, filtering, active descendant selection, readonly and form ownership coherent', async () => {
 		render(ChoiceCollectionFixture);
 		const input = document.querySelector<HTMLInputElement>('[data-testid="typed-combobox-input"]')!;

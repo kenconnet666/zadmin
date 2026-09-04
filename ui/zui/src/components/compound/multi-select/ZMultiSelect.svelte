@@ -22,6 +22,7 @@
 		readonly loading?: boolean;
 		readonly loadingText?: string;
 		readonly loop?: boolean;
+		readonly matchWidth?: boolean;
 		readonly maxTagCount?: number;
 		readonly name?: string;
 		readonly onOpenChange?: (open: boolean) => void;
@@ -201,6 +202,13 @@
 			},
 			{ default: 'true', description: '方向键是否首尾循环。', name: 'loop', type: 'boolean' },
 			{
+				default: 'true',
+				description:
+					'Content宽度是否精确匹配Trigger；为false时按选项内容增长并受视口可用宽度限制。',
+				name: 'matchWidth',
+				type: 'boolean'
+			},
+			{
 				default: 'false',
 				description: '禁用Trigger、选择与表单提交。',
 				name: 'disabled',
@@ -318,6 +326,7 @@
 		loading = false,
 		loadingText,
 		loop = true,
+		matchWidth = true,
 		maxTagCount,
 		name: nameProp,
 		onOpenChange,
@@ -641,7 +650,7 @@
 
 <ZPopover
 	gutter={4}
-	matchWidth
+	{matchWidth}
 	modal={false}
 	onOpenChange={(next) => setOpen(next)}
 	open={resolvedOpen}

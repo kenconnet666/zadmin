@@ -19,6 +19,7 @@
 		readonly loading?: boolean;
 		readonly loadingText?: string;
 		readonly loop?: boolean;
+		readonly matchWidth?: boolean;
 		readonly name?: string;
 		readonly onOpenChange?: (open: boolean) => void;
 		readonly onValueChange?: (value: SelectionKey | undefined) => void;
@@ -175,6 +176,13 @@
 				type: 'PopoverPlacement'
 			},
 			{
+				default: 'true',
+				description:
+					'Content宽度是否精确匹配Trigger；为false时按选项内容增长，在可用空间内不小于Trigger。',
+				name: 'matchWidth',
+				type: 'boolean'
+			},
+			{
 				default: 'Field context或false',
 				description: '向Field与自定义Trigger公开必填状态；业务阻断由Form schema拥有。',
 				name: 'required',
@@ -233,6 +241,7 @@
 		loading = false,
 		loadingText,
 		loop = true,
+		matchWidth = true,
 		name: nameProp,
 		onOpenChange,
 		onValueChange,
@@ -489,7 +498,7 @@
 
 <ZPopover
 	gutter={4}
-	matchWidth
+	{matchWidth}
 	modal={false}
 	onOpenChange={(next) => setOpen(next)}
 	open={resolvedOpen}

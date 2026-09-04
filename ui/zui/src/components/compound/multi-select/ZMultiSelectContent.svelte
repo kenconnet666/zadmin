@@ -113,6 +113,7 @@
 	import { useZPopover } from '../popover/context.svelte.js';
 	import ZMultiSelectItem from './ZMultiSelectItem.svelte';
 	import { useZMultiSelect } from './context.svelte.js';
+	import { floatingContentSizingRecipe } from '../floating-content-sizing.js';
 
 	let {
 		children,
@@ -135,6 +136,9 @@
 	const multi = useZMultiSelect();
 	const groupLabelClass = $derived(zui.recipe(choiceGroupLabelRecipe));
 	const statusClass = $derived(zui.recipe(choiceStatusRecipe));
+	const sizingClass = $derived(
+		zui.recipe(floatingContentSizingRecipe, { intrinsicWidth: !popover.matchWidth })
+	);
 	let virtualRef = $state<HTMLDivElement | null>(null);
 	let controller = $state<ChoiceVirtualController | null>(null);
 
@@ -182,7 +186,7 @@
 		{...rest}
 		ariaLabelledBy={null}
 		bind:ref
-		class={className}
+		class={[sizingClass, className]}
 		initialFocus={() => virtualRef}
 		role="presentation"
 		{style}
@@ -248,7 +252,7 @@
 		aria-multiselectable="true"
 		ariaLabelledBy={popover.triggerId}
 		bind:ref
-		class={className}
+		class={[sizingClass, className]}
 		initialFocus={() => ref}
 		role="listbox"
 		{style}

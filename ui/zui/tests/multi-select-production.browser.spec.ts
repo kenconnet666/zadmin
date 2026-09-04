@@ -7,6 +7,21 @@ import MultiSelectFixture from './MultiSelectFixture.svelte';
 import { resetForm } from './form-reset.js';
 
 describe('ZMultiSelect production contract', () => {
+	it('keeps long options single-line and bounds intrinsic content width', async () => {
+		// @zui-visual ZMultiSelect
+		render(MultiSelectFixture, { defaultOpen: true, longLabels: true, matchWidth: false });
+		const trigger = document.querySelector<HTMLButtonElement>(
+			'[data-testid="multi-select-trigger"]'
+		)!;
+		const content = document.querySelector<HTMLElement>('[data-testid="multi-select-content"]')!;
+		await tick();
+		const item = content.querySelector<HTMLElement>('[role="option"]')!;
+		expect(content.getBoundingClientRect().width).toBeGreaterThanOrEqual(
+			trigger.getBoundingClientRect().width
+		);
+		expect(getComputedStyle(item).whiteSpace).toBe('nowrap');
+		expect(getComputedStyle(content).overflowY).toBe('auto');
+	});
 	it('preserves typed values and orphan labels through filtering, clear/reset, readonly and virtual navigation', async () => {
 		render(MultiSelectCollectionFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="multi-collection-form"]')!;

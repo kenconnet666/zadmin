@@ -126,6 +126,8 @@
 		type ChoiceVirtualController
 	} from '../choice-virtualization.js';
 	import ZPopoverContent from '../popover/ZPopoverContent.svelte';
+	import { useZPopover } from '../popover/context.svelte.js';
+	import { floatingContentSizingRecipe } from '../floating-content-sizing.js';
 	import ZComboboxItem from './ZComboboxItem.svelte';
 	import { useZCombobox } from './context.svelte.js';
 
@@ -147,12 +149,16 @@
 		...rest
 	}: ZComboboxContentProps = $props();
 	const zui = useZui();
+	const popover = useZPopover();
 	const combo = useZCombobox();
 	const resolvedAriaLabel = $derived(
 		ariaLabelNative ?? ariaLabel ?? zui.localePack.collection.selectOptions
 	);
 	const groupLabelClass = $derived(zui.recipe(choiceGroupLabelRecipe));
 	const statusClass = $derived(zui.recipe(choiceStatusRecipe));
+	const sizingClass = $derived(
+		zui.recipe(floatingContentSizingRecipe, { intrinsicWidth: !popover.matchWidth })
+	);
 	let virtualRef = $state<HTMLDivElement | null>(null);
 	let controller = $state<ChoiceVirtualController | null>(null);
 
@@ -178,7 +184,7 @@
 		{...rest}
 		ariaLabelledBy={null}
 		bind:ref
-		class={className}
+		class={[sizingClass, className]}
 		manageFocus={false}
 		role="presentation"
 		{style}
@@ -240,7 +246,7 @@
 		aria-busy={combo.loading || undefined}
 		ariaLabelledBy={null}
 		bind:ref
-		class={className}
+		class={[sizingClass, className]}
 		manageFocus={false}
 		role="listbox"
 		{style}

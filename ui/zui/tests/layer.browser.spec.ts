@@ -792,6 +792,7 @@ describe('ZUI layer runtime', () => {
 		expect(floating.style.position).toBe('absolute');
 		expect(floating.style.left).toMatch(/px$/u);
 		expect(floating.style.getPropertyValue('--zui-floating-available-height')).toMatch(/px$/u);
+		expect(floating.style.getPropertyValue('--zui-floating-reference-width')).toMatch(/px$/u);
 		expect(positioned).toHaveBeenCalled();
 		positioner.stop();
 		positioner.stop();

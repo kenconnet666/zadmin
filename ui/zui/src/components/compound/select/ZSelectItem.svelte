@@ -103,6 +103,7 @@
 			s.paddingBlock._small;
 			s.paddingInline._medium;
 			s.userSelect.none;
+			s.whiteSpace.nowrap;
 		},
 		variants: {
 			disabled: {
