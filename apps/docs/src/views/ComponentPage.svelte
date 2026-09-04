@@ -16,11 +16,11 @@
 				'metaItem',
 				'importLine',
 				'sourceLink',
-				'section',
 				'demoSection',
 				'sectionTitle',
 				'accessibility',
 				'accessibilityList',
+				'api',
 				'toc',
 				'tocTitle',
 				'tocButton',
@@ -34,7 +34,9 @@
 					s.borderRadius._large;
 					s.borderStyle.solid;
 					s.borderWidth._hairline;
+					s.marginTop.rem(4);
 					s.padding._large;
+					s.scrollMarginTop.rem(5.5);
 				},
 				accessibilityList: (s) => {
 					s.color._textMuted;
@@ -50,7 +52,13 @@
 					s.margin.raw('0 0 0.8rem');
 					s.textTransform.uppercase;
 				},
-				demoSection: (s) => s.paddingTop.rem(2),
+				demoSection: (s) => {
+					s.display.flex;
+					s.flexDirection.column;
+					s.gap._large;
+					s.marginTop.rem(2);
+					s.scrollMarginTop.rem(5.5);
+				},
 				header: (s) => {
 					s.borderBottomColor._border;
 					s.borderBottomStyle.solid;
@@ -94,8 +102,11 @@
 					s.paddingBlock._xsmall;
 					s.paddingInline._medium;
 				},
-				section: (s) => {
-					s.paddingTop.rem(4);
+				api: (s) => {
+					s.display.flex;
+					s.flexDirection.column;
+					s.gap._xlarge;
+					s.marginTop.rem(4);
 					s.scrollMarginTop.rem(5.5);
 				},
 				sectionTitle: (s) => {
@@ -271,7 +282,7 @@
 			</ZLink>
 		</header>
 
-		<section id="demos" class={[classes.section, classes.demoSection]}>
+		<section id="demos" class={classes.demoSection}>
 			<ZHeading class={classes.sectionTitle} level={2} size="xlarge">实时演示</ZHeading>
 			<ZStack gap="large">
 				{#each doc.demos as demo (demo.id)}
@@ -280,13 +291,13 @@
 			</ZStack>
 		</section>
 
-		<section id="api" class={classes.section}>
+		<section id="api" class={classes.api}>
 			{#each doc.api as section (section.title)}
 				<ApiTable {section} />
 			{/each}
 		</section>
 
-		<section id="accessibility" class={[classes.section, classes.accessibility]}>
+		<section id="accessibility" class={classes.accessibility}>
 			<ZHeading class={classes.sectionTitle} level={2} size="xlarge">可访问性</ZHeading>
 			<ul class={classes.accessibilityList}>
 				{#each doc.accessibility as item (item)}

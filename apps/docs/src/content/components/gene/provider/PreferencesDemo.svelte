@@ -78,7 +78,7 @@
 			<ZText tone="muted">
 				未传size的控件继承{density}密度；显式size始终优先。Pagination箭头响应{direction}方向。
 			</ZText>
-			<ZStack direction="row" gap="small" wrap>
+			<ZStack align="center" direction="row" gap="small" wrap>
 				<ZButton data-testid="provider-density-button">继承当前密度</ZButton>
 				<ZButton data-testid="provider-explicit-button" size="large" variant="secondary"
 					>显式大按钮

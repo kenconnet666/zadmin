@@ -21,7 +21,7 @@
 		/>
 	</ZField>
 	<ZText tone="muted">精确值 = {amount ?? '空'}</ZText>
-	<ZStack direction="row" gap="small" wrap>
+	<ZStack align="center" direction="row" gap="small" wrap>
 		<ZNumberField defaultValue={2} inputLabel="小尺寸" size="small" />
 		<ZNumberField defaultValue={2} inputLabel="中尺寸" size="medium" />
 		<ZNumberField defaultValue={2} inputLabel="大尺寸" size="large" />

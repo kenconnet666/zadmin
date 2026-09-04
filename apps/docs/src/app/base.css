@@ -48,7 +48,8 @@ body {
 button,
 input,
 select {
-	font: inherit;
+	/* Preserve the document font without overriding ZUI typography tokens. */
+	font-family: inherit;
 }
 
 #app {

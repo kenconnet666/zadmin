@@ -5,7 +5,7 @@
 </script>
 
 <ZStack gap="medium">
-	<ZStack direction="row" gap="small" wrap>
+	<ZStack align="center" direction="row" gap="small" wrap>
 		<ZButton size="small">Small</ZButton>
 		<ZButton size="medium">Medium</ZButton>
 		<ZButton size="large">Large</ZButton>

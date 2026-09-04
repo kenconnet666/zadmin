@@ -6,6 +6,26 @@ import { render } from 'vitest-browser-svelte';
 import ButtonToggleProductionFixture from './ButtonToggleProductionFixture.svelte';
 
 describe('ZButton and ZToggleButton production browser contract', () => {
+	// @zui-visual ZButton size geometry and typography
+	it('renders distinct default-shape size geometry and typography', () => {
+		render(ButtonToggleProductionFixture);
+		for (const [size, expectedHeight, expectedFontSize] of [
+			['small', 24, 12],
+			['medium', 32, 14],
+			['large', 48, 18]
+		] as const) {
+			const button = document.querySelector<HTMLButtonElement>(
+				`[data-testid="button-size-${size}"]`
+			)!;
+			const style = getComputedStyle(button);
+			expect(button.dataset.size).toBe(size);
+			expect(button.getBoundingClientRect().height).toBeCloseTo(expectedHeight, 0);
+			expect(style.fontSize).toBe(`${expectedFontSize}px`);
+			expect(style.lineHeight).toBe(`${expectedFontSize}px`);
+			expect(style.fontWeight).toBe('600');
+		}
+	});
+
 	it('keeps variant, tone, shape and native form semantics orthogonal', async () => {
 		render(ButtonToggleProductionFixture);
 		const primary = document.querySelector<HTMLButtonElement>('[data-testid="button-default"]')!;

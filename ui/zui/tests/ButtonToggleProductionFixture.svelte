@@ -44,6 +44,12 @@
 >
 <output data-testid="button-output">{loading}:{buttonClicks}:{submissions}</output>
 
+<div data-testid="button-size-contract">
+	<ZButton data-testid="button-size-small" size="small">Small</ZButton>
+	<ZButton data-testid="button-size-medium" size="medium">Medium</ZButton>
+	<ZButton data-testid="button-size-large" size="large">Large</ZButton>
+</div>
+
 <ZToggleButton
 	bind:pressed
 	data-testid="toggle-controlled"
