@@ -9,11 +9,12 @@ import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
 import NativeDemo from './NativeDemo.svelte';
 import nativeSource from './NativeDemo.svelte?raw';
-import { formApiFacts } from '../../../../framework/component-api.generated.js';
+import { formApiFacts, formFieldApiFacts } from '../../../../framework/component-api.generated.js';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
 export const formDoc = defineComponentDoc(formMetadata, {
 	members: [formFieldMetadata],
+	memberApis: [formFieldApiFacts],
 	profiles: ['form-control'],
 	sourceApi: formApiFacts,
 	teaching: {

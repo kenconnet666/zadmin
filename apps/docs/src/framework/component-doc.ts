@@ -95,6 +95,7 @@ export interface ComponentDoc extends ZuiComponentMetadata {
 interface ComponentDocDefinition extends Pick<ComponentDoc, 'accessibility' | 'demos'> {
 	readonly additionalApi?: readonly ApiSection[];
 	readonly keywords?: readonly string[];
+	readonly memberApis?: readonly ComponentApiFacts[];
 	readonly members?: readonly ZuiComponentMetadata[];
 	readonly profiles?: readonly ComponentProfile[];
 	readonly sourceApi?: ComponentApiFacts;
@@ -297,8 +298,26 @@ export function defineComponentDoc(
 		summary: doc.teaching?.summary ?? metadata.summary
 	} satisfies ZuiComponentMetadata;
 	appendMetadataApi(api, resolvedMetadata, resolvedMetadata.props, sourceApi);
+	const memberIds = new Set((doc.members ?? []).map(({ id }) => id));
+	const explicitMemberApis = doc.memberApis ?? [];
+	const unknownMemberApis = explicitMemberApis
+		.map(({ id }) => id)
+		.filter((id) => !memberIds.has(id));
+	if (unknownMemberApis.length > 0) {
+		throw new TypeError(
+			`${metadata.name} documentation has API facts for unknown members: ${unknownMemberApis.join(', ')}.`
+		);
+	}
+	const memberApis = [
+		...(sourceApi?.members?.() ?? []).filter(({ id }) => memberIds.has(id)),
+		...explicitMemberApis
+	];
+	const memberApiIds = memberApis.map(({ id }) => id);
+	if (new Set(memberApiIds).size !== memberApiIds.length) {
+		throw new TypeError(`${metadata.name} documentation repeats member API facts.`);
+	}
 	for (const member of doc.members ?? []) {
-		const memberFacts = sourceApi?.members?.().find(({ id }) => id === member.id);
+		const memberFacts = memberApis.find(({ id }) => id === member.id);
 		appendMetadataApi(
 			api,
 			member,
@@ -325,6 +344,7 @@ export function defineComponentDoc(
 	}
 	const {
 		additionalApi: _additionalApi,
+		memberApis: _memberApis,
 		members: _members,
 		profiles = [],
 		sourceApi: _sourceApi,
