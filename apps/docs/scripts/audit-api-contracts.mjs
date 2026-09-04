@@ -7,6 +7,19 @@ const root = resolve(fileURLToPath(new URL('../../..', import.meta.url)));
 const componentsRoot = resolve(root, 'ui/zui/src/components');
 const generatedApiPath = resolve(root, 'apps/docs/src/framework/component-api.generated.ts');
 
+const controllablePropFamilies = [
+	['open', 'defaultOpen', 'onOpenChange'],
+	['value', 'defaultValue', 'onValueChange'],
+	['checked', 'defaultChecked', 'onCheckedChange'],
+	['pressed', 'defaultPressed', 'onPressedChange'],
+	['selectedKeys', 'defaultSelectedKeys', 'onSelectionChange'],
+	['expandedKeys', 'defaultExpandedKeys', 'onExpandedChange'],
+	['inputValue', 'defaultInputValue', 'onInputValueChange'],
+	['query', 'defaultQuery', 'onQueryChange'],
+	['page', 'defaultPage', 'onPageChange'],
+	['pageSize', 'defaultPageSize', 'onPageSizeChange']
+];
+
 // This gate proves declaration -> $props destructuring -> metadata coverage.
 // Observable runtime behavior remains owned by browser/SSR/visual evidence.
 
@@ -206,6 +219,15 @@ function normalizeMetadataDefault(fact) {
 	return undefined;
 }
 
+function incompleteControllableFamilies(props) {
+	const names = new Set(props.map(({ name }) => name));
+	return controllablePropFamilies.flatMap(([value, defaultValue, onChange]) => {
+		if (!names.has(defaultValue) && !names.has(onChange)) return [];
+		const missing = [value, defaultValue, onChange].filter((name) => !names.has(name));
+		return missing.length > 0 ? [{ family: value, missing }] : [];
+	});
+}
+
 if (process.argv.includes('--self-test')) {
 	const metadataString = { defaultValue: { kind: 'string', value: "'bottom-start'" } };
 	const metadataBoolean = { defaultValue: { kind: 'string', value: 'false' } };
@@ -213,6 +235,20 @@ if (process.argv.includes('--self-test')) {
 		throw new Error('API runtime audit string default self-test failed.');
 	if (normalizeMetadataDefault(metadataBoolean)?.value !== false)
 		throw new Error('API runtime audit boolean default self-test failed.');
+	const incompleteOpen = incompleteControllableFamilies([
+		{ name: 'defaultOpen' },
+		{ name: 'onOpenChange' }
+	]);
+	if (incompleteOpen.length !== 1 || incompleteOpen[0]?.missing.join(',') !== 'open')
+		throw new Error('API runtime audit controllable-family self-test failed.');
+	if (
+		incompleteControllableFamilies([
+			{ name: 'open' },
+			{ name: 'defaultOpen' },
+			{ name: 'onOpenChange' }
+		]).length !== 0
+	)
+		throw new Error('API runtime audit complete controllable-family self-test failed.');
 	const facts = generatedApiFacts(await readFile(generatedApiPath, 'utf8'));
 	const button = facts.get('ui/zui/src/components/gene/ZButton.svelte');
 	if (
@@ -256,6 +292,7 @@ for (const filename of allFiles) {
 	);
 	const generatedProps = generated?.props ?? [];
 	const explicit = generatedProps.map(({ name }) => name);
+	const incompleteStateContracts = incompleteControllableFamilies(generatedProps);
 	const inheritedProps = new Set(
 		generatedProps.filter(({ inheritedFrom }) => inheritedFrom).map(({ name }) => name)
 	);
@@ -294,6 +331,7 @@ for (const filename of allFiles) {
 	if (
 		missingConsumption.length ||
 		missingRestForwarding.length ||
+		incompleteStateContracts.length ||
 		missingGeneratedFacts.length ||
 		generatedIdentityMismatch.length ||
 		missingMetadata.length ||
@@ -309,6 +347,7 @@ for (const filename of allFiles) {
 			consumed: [...consumed.consumed],
 			missingConsumption,
 			missingRestForwarding,
+			incompleteStateContracts,
 			missingGeneratedFacts,
 			generatedIdentityMismatch,
 			forwardedConsumption,
@@ -323,6 +362,7 @@ const actionable = report.filter(
 	(item) =>
 		item.missingConsumption.length > 0 ||
 		item.missingRestForwarding.length > 0 ||
+		item.incompleteStateContracts.length > 0 ||
 		item.missingGeneratedFacts.length > 0 ||
 		item.generatedIdentityMismatch.length > 0 ||
 		item.missingMetadata.length > 0 ||
@@ -338,6 +378,7 @@ const summary = {
 	actionableIssues: actionable.length + unvisitedGeneratedSources.length,
 	missingConsumption: report.filter((x) => x.missingConsumption.length).length,
 	missingRestForwarding: report.filter((x) => x.missingRestForwarding.length).length,
+	incompleteStateContracts: report.filter((x) => x.incompleteStateContracts.length).length,
 	missingGeneratedFacts: report.filter((x) => x.missingGeneratedFacts.length).length,
 	generatedIdentityMismatches: report.filter((x) => x.generatedIdentityMismatch.length).length,
 	forwardedConsumption: report.filter((x) => x.forwardedConsumption.length).length,
