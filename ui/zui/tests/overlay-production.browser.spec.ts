@@ -8,6 +8,9 @@ import PopoverOwnerRealmFixture from './PopoverOwnerRealmFixture.svelte';
 
 describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 	it('ZDialog + ZDialogTrigger + ZDialogOverlay + ZDialogContent + ZDialogTitle + ZDialogDescription + ZDialogClose expose real ARIA and focus contracts', async () => {
+		// @zui-visual ZDialog
+		// @zui-visual ZDialogOverlay
+		// @zui-visual ZDialogContent
 		render(OverlayProductionFixture);
 		const trigger = document.querySelector<HTMLButtonElement>(
 			'[data-testid="dialog-production-trigger"]'
@@ -33,6 +36,17 @@ describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 		expect(overlay.parentNode).toBe(document.body);
 		expect(overlay.getAttribute('aria-hidden'), 'ZDialogOverlay aria-hidden').toBe('true');
 		expect(overlay.getAttribute('data-state')).toBe('open');
+		const overlayStyle = getComputedStyle(overlay);
+		expect(overlayStyle.position, 'dialog overlay is viewport anchored').toBe('fixed');
+		expect(overlayStyle.inset, 'dialog overlay covers the viewport').toMatch(/0px/);
+		expect(
+			content.getBoundingClientRect().width,
+			'dialog content has rendered geometry'
+		).toBeGreaterThan(0);
+		expect(
+			content.getBoundingClientRect().height,
+			'dialog content has rendered geometry'
+		).toBeGreaterThan(0);
 		expect(content.getAttribute('role'), 'ZDialogContent role').toBe('dialog');
 		expect(content.getAttribute('aria-modal')).toBe('true');
 		expect(content.getAttribute('aria-labelledby'), 'ZDialogTitle registration').toBe(title.id);
@@ -87,6 +101,9 @@ describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 	});
 
 	it('ZAlertDialog + ZAlertDialogTrigger + ZAlertDialogOverlay + ZAlertDialogContent + ZAlertDialogTitle + ZAlertDialogDescription + ZAlertDialogCancel + ZAlertDialogAction enforce modal decision semantics', async () => {
+		// @zui-visual ZAlertDialog
+		// @zui-visual ZAlertDialogOverlay
+		// @zui-visual ZAlertDialogContent
 		render(OverlayProductionFixture);
 		const trigger = document.querySelector<HTMLButtonElement>(
 			'[data-testid="alert-production-trigger"]'
@@ -123,6 +140,17 @@ describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 		);
 		expect(overlay.getAttribute('aria-hidden'), 'ZAlertDialogOverlay aria-hidden').toBe('true');
 		expect(overlay.getAttribute('data-state'), 'ZAlertDialogOverlay open state').toBe('open');
+		const overlayStyle = getComputedStyle(overlay);
+		expect(overlayStyle.position, 'alert dialog overlay is viewport anchored').toBe('fixed');
+		expect(overlayStyle.inset, 'alert dialog overlay covers the viewport').toMatch(/0px/);
+		expect(
+			content.getBoundingClientRect().width,
+			'alert dialog content has rendered geometry'
+		).toBeGreaterThan(0);
+		expect(
+			content.getBoundingClientRect().height,
+			'alert dialog content has rendered geometry'
+		).toBeGreaterThan(0);
 		expect(document.activeElement, 'ZAlertDialogCancel initial focus').toBe(cancel);
 		action.click();
 		await tick();

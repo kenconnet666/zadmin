@@ -11,6 +11,8 @@ const wait = (duration: number): Promise<void> =>
 
 describe.sequential('ZPopconfirm and ZTooltip production contracts', () => {
 	it('ZPopconfirmTrigger and ZPopconfirmAction own pending, duplicate blocking, resolve and focus restoration', async () => {
+		// @zui-visual ZPopconfirm
+		// @zui-visual ZPopconfirmContent
 		render(TooltipPopconfirmProductionFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="confirm-trigger"]')!;
 		await userEvent.click(trigger);
@@ -25,6 +27,14 @@ describe.sequential('ZPopconfirm and ZTooltip production contracts', () => {
 			'Delete deployment?'
 		);
 		expect(content.textContent).toContain('This action is short and contextual.');
+		expect(
+			content.getBoundingClientRect().width,
+			'popconfirm content has rendered geometry'
+		).toBeGreaterThan(0);
+		expect(getComputedStyle(content).position, 'popconfirm content is floating').toMatch(
+			/absolute|fixed/
+		);
+		expect(content.getBoundingClientRect().height).toBeGreaterThan(0);
 		expect(content.querySelector('[data-testid="confirm-action"]')).not.toBeNull();
 		expect(content.querySelector('[data-testid="confirm-cancel"]')).not.toBeNull();
 		const action = document.querySelector<HTMLButtonElement>('[data-testid="confirm-action"]')!;
@@ -106,12 +116,25 @@ describe.sequential('ZPopconfirm and ZTooltip production contracts', () => {
 	});
 
 	it('ZTooltipGroup applies warmup/cooldown while ZTooltip keeps one active tooltip', async () => {
+		// @zui-visual ZTooltip
+		// @zui-visual ZTooltipContent
 		render(TooltipPopconfirmProductionFixture);
 		const first = document.querySelector<HTMLButtonElement>('[data-testid="tooltip-first"]')!;
 		const second = document.querySelector<HTMLButtonElement>('[data-testid="tooltip-second"]')!;
 		first.focus();
 		await tick();
 		expect(document.querySelector('[data-testid="tooltip-first-content"]')).not.toBeNull();
+		const firstContent = document.querySelector<HTMLElement>(
+			'[data-testid="tooltip-first-content"]'
+		)!;
+		expect(
+			firstContent.getBoundingClientRect().width,
+			'tooltip content has rendered geometry'
+		).toBeGreaterThan(0);
+		expect(getComputedStyle(firstContent).position, 'tooltip content is floating').toMatch(
+			/absolute|fixed/
+		);
+		expect(firstContent.getBoundingClientRect().height).toBeGreaterThan(0);
 
 		first.dispatchEvent(new FocusEvent('blur', { bubbles: true }));
 		first.dispatchEvent(new PointerEvent('pointerleave', { bubbles: true }));
