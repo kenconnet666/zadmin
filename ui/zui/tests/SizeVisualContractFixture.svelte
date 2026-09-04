@@ -15,7 +15,10 @@
 		ZIcon,
 		ZText,
 		ZHeading,
-		ZContainer
+		ZContainer,
+		ZForm,
+		ZFormField,
+		ZInputGroup
 	} from '../src/entrypoints/index.js';
 </script>
 
@@ -79,5 +82,16 @@
 		<ZContainer data-testid="container-small" size="small">Small container</ZContainer>
 		<ZContainer data-testid="container-medium" size="medium">Medium container</ZContainer>
 		<ZContainer data-testid="container-large" size="large">Large container</ZContainer>
+	</div>
+	<div data-testid="size-form-family">
+		<ZForm data-testid="form-large" size="large">
+			<ZInput aria-label="form inherited input" data-testid="form-input" />
+			<ZFormField label="Managed input" name="managed-input">
+				<ZInput aria-label="form field inherited input" data-testid="form-field-input" />
+			</ZFormField>
+		</ZForm>
+		<ZInputGroup aria-label="group small" data-testid="group-small" size="small">
+			<ZInput aria-label="group input" data-testid="group-input" />
+		</ZInputGroup>
 	</div>
 </div>

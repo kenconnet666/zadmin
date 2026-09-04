@@ -150,4 +150,28 @@ describe('size visual contracts for foundational controls', () => {
 			expect(getComputedStyle(container).maxWidth).toBe(expected);
 		}
 	});
+
+	// @zui-visual ZForm size propagation geometry
+	// @zui-visual ZFormField inherited size geometry
+	// @zui-visual ZInputGroup size geometry
+	it('propagates form-family sizes to the owned control', () => {
+		render(SizeVisualContractFixture);
+		const form = document.querySelector<HTMLElement>('[data-testid="form-large"]')!;
+		const directInput = document.querySelector<HTMLInputElement>('[data-testid="form-input"]')!;
+		const formFieldInput = document.querySelector<HTMLInputElement>(
+			'[data-testid="form-field-input"]'
+		)!;
+		expect(form.dataset.size).toBe('large');
+		// ZForm publishes size through ZFormField. Unowned direct controls intentionally keep
+		// their own fallback instead of treating every descendant as an implicit form field.
+		expect(directInput.dataset.size).toBe('medium');
+		expect(directInput.getBoundingClientRect().height).toBe(32);
+		expect(formFieldInput.dataset.size).toBe('large');
+		expect(formFieldInput.getBoundingClientRect().height).toBe(48);
+		const group = document.querySelector<HTMLElement>('[data-testid="group-small"]')!;
+		const groupInput = document.querySelector<HTMLInputElement>('[data-testid="group-input"]')!;
+		expect(group.dataset.size).toBe('small');
+		expect(groupInput.dataset.size).toBe('small');
+		expect(groupInput.getBoundingClientRect().height).toBe(24);
+	});
 });
