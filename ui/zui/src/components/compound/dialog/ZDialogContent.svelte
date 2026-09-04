@@ -37,6 +37,7 @@
 			s.borderRadius._large;
 			s.borderStyle.solid;
 			s.borderWidth._hairline;
+			s.boxSizing.borderBox;
 			s.boxShadow._medium;
 			s.color._text;
 			s.left.percent(50);

@@ -67,6 +67,7 @@ describe('ZCommand and ZCommandPalette production contracts', () => {
 	});
 
 	it('ZCommandPalette owns dialog portal focus, action close, shortcut reopen and Escape', async () => {
+		// @zui-visual ZCommandPalette modal command surface geometry
 		render(CommandPaletteFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[aria-label="Open palette"]')!;
 		trigger.focus();
@@ -75,6 +76,9 @@ describe('ZCommand and ZCommandPalette production contracts', () => {
 		const dialog = document.querySelector<HTMLElement>('[role="dialog"]')!;
 		const input = dialog.querySelector<HTMLInputElement>('input[aria-label="Search palette"]')!;
 		expect(dialog.parentNode).toBe(document.body);
+		expect(getComputedStyle(dialog).position).toBe('fixed');
+		expect(dialog.getBoundingClientRect().width).toBeGreaterThan(0);
+		expect(dialog.getBoundingClientRect().right).toBeLessThanOrEqual(window.innerWidth + 1);
 		expect(input.getAttribute('aria-controls')).toBeTruthy();
 		expect(document.activeElement).toBe(input);
 		input.value = 'dark';
