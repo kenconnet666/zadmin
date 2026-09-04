@@ -55,8 +55,8 @@ describe('ZDrawer compound production contracts', () => {
 		const describedBy = content?.getAttribute('aria-describedby');
 		const trigger = host.querySelector<HTMLButtonElement>('[data-testid="drawer-trigger"]')!;
 		const close = document.querySelector<HTMLButtonElement>('[data-testid="drawer-close"]')!;
-		const title = content?.ownerDocument.getElementById(labelledBy ?? '')!;
-		const description = content?.ownerDocument.getElementById(describedBy ?? '')!;
+		const title = content!.ownerDocument.getElementById(labelledBy ?? '')!;
+		const description = content!.ownerDocument.getElementById(describedBy ?? '')!;
 		expect(
 			trigger.getBoundingClientRect().height,
 			'drawer trigger has button geometry'
