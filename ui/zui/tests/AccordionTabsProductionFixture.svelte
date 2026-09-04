@@ -53,10 +53,15 @@
 		<ZAccordion
 			bind:activeValue={accordionActive}
 			bind:value={accordionValue}
+			data-testid="production-accordion-root"
 			onValueChange={() => (accordionChanges += 1)}
 		>
 			{#each accordionItems as item (item.key)}
-				<ZAccordionItem disabled={item.disabled} value={item.key}>
+				<ZAccordionItem
+					data-testid={Object.is(item.key, 1) ? 'production-accordion-item-active' : undefined}
+					disabled={item.disabled}
+					value={item.key}
+				>
 					<ZAccordionTrigger headingLevel={3} textValue={item.label}>
 						{item.label}
 					</ZAccordionTrigger>
@@ -124,9 +129,10 @@
 	<ZTabs
 		bind:activeValue={tabsActive}
 		bind:value={tabsValue}
+		data-testid="production-tabs-root"
 		onValueChange={() => (tabChanges += 1)}
 	>
-		<ZTabsList aria-label="Typed dynamic tabs">
+		<ZTabsList aria-label="Typed dynamic tabs" data-testid="production-tabs-list">
 			{#each tabsItems as item (item.key)}
 				<ZTabsTrigger disabled={item.disabled} textValue={item.label} value={item.key}>
 					{item.label}

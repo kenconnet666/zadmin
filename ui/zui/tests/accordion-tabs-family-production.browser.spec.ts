@@ -6,8 +6,16 @@ import AccordionTabsProductionFixture from './AccordionTabsProductionFixture.sve
 
 describe('production Accordion and Tabs compound family', () => {
 	it('ZAccordion / ZAccordionItem / ZAccordionTrigger / ZAccordionContent preserve typed identity, collection focus and Presence recovery', async () => {
+		// @zui-visual ZAccordion trigger/panel geometry
+		// @zui-visual ZAccordionItem layout geometry
+		// @zui-visual ZAccordionTrigger computed button geometry
+		// @zui-visual ZAccordionContent bounded panel geometry
 		render(AccordionTabsProductionFixture);
 		const root = document.querySelector<HTMLElement>('[data-testid="production-accordion"]')!;
+		const accordion = root.querySelector<HTMLElement>('[data-testid="production-accordion-root"]')!;
+		const activeItem = root.querySelector<HTMLElement>(
+			'[data-testid="production-accordion-item-active"]'
+		)!;
 		const triggers = [...root.querySelectorAll<HTMLButtonElement>('button[aria-expanded]')];
 		const numeric = triggers.find((trigger) => trigger.textContent?.includes('Numeric one'))!;
 		const string = triggers.find((trigger) => trigger.textContent?.includes('String one'))!;
@@ -18,6 +26,11 @@ describe('production Accordion and Tabs compound family', () => {
 		)!;
 
 		expect(numeric.getAttribute('aria-expanded')).toBe('true');
+		expect(getComputedStyle(accordion).display).toBe('block');
+		expect(getComputedStyle(activeItem).borderBottomStyle).toBe('solid');
+		expect(getComputedStyle(activeItem).borderBottomWidth).toBe('1px');
+		expect(getComputedStyle(numeric).display).toBe('flex');
+		expect(numeric.getBoundingClientRect().height).toBeGreaterThan(24);
 		expect(numeric.getAttribute('aria-controls')).toBeTruthy();
 		expect(
 			root.querySelector(`#${numeric.getAttribute('aria-controls')}`)?.getAttribute('role')
@@ -35,6 +48,8 @@ describe('production Accordion and Tabs compound family', () => {
 		expect(output.textContent?.trim()).toBe('string:last|string:last|1');
 
 		const panel = root.querySelector<HTMLElement>(`#${last.getAttribute('aria-controls')}`)!;
+		expect(panel.getBoundingClientRect().width).toBeGreaterThan(0);
+		expect(getComputedStyle(panel).display).toBe('grid');
 		expect(panel.getAttribute('data-presence')).toBe('entered');
 		panel.querySelector('input')?.focus();
 		root.querySelector<HTMLButtonElement>('[data-testid="clear-accordion-value"]')!.click();
@@ -48,8 +63,14 @@ describe('production Accordion and Tabs compound family', () => {
 	});
 
 	it('ZTabs / ZTabsList / ZTabsTrigger / ZTabsPanel preserve ARIA, typed selection, disabled skipping and nearest recovery', async () => {
+		// @zui-visual ZTabs selected-state geometry
+		// @zui-visual ZTabsList tab-list layout geometry
+		// @zui-visual ZTabsTrigger computed tab geometry
+		// @zui-visual ZTabsPanel bounded panel geometry
 		render(AccordionTabsProductionFixture);
 		const root = document.querySelector<HTMLElement>('[data-testid="production-tabs"]')!;
+		const tabs = root.querySelector<HTMLElement>('[data-testid="production-tabs-root"]')!;
+		const list = root.querySelector<HTMLElement>('[data-testid="production-tabs-list"]')!;
 		const triggers = [...root.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
 		const numeric = triggers.find((trigger) => trigger.textContent?.includes('Numeric one'))!;
 		const string = triggers.find((trigger) => trigger.textContent?.includes('String one'))!;
@@ -58,12 +79,21 @@ describe('production Accordion and Tabs compound family', () => {
 		const output = root.querySelector<HTMLOutputElement>('[data-testid="production-tabs-output"]')!;
 
 		expect(numeric.getAttribute('aria-selected')).toBe('true');
+		expect(getComputedStyle(tabs).display).toBe('block');
+		expect(getComputedStyle(list).display).toBe('flex');
+		expect(getComputedStyle(list).borderBottomStyle).toBe('solid');
+		expect(getComputedStyle(numeric).borderBottomWidth).toBe('2px');
+		expect(numeric.getBoundingClientRect().width).toBeGreaterThan(0);
 		expect(numeric.getAttribute('aria-controls')).toBeTruthy();
 		expect(
 			root
 				.querySelector(`#${numeric.getAttribute('aria-controls')}`)
 				?.getAttribute('aria-labelledby')
 		).toBe(numeric.id);
+		const selectedPanel = root.querySelector<HTMLElement>(
+			`#${numeric.getAttribute('aria-controls')}`
+		)!;
+		expect(selectedPanel.getBoundingClientRect().height).toBeGreaterThan(0);
 		expect(disabled).toBeDisabled();
 		expect(disabled.getAttribute('tabindex')).toBe('-1');
 

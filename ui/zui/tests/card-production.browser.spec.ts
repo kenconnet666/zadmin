@@ -6,6 +6,7 @@ import CardProductionFixture from './CardProductionFixture.svelte';
 
 describe('ZCard production contract', () => {
 	it('keeps semantic roots, anatomy, actions and loading ownership synchronized', async () => {
+		// @zui-visual ZCard variant and anatomy geometry
 		render(CardProductionFixture);
 		const neutral = document.querySelector<HTMLElement>('[data-testid="card-production-default"]')!;
 		const article = document.querySelector<HTMLElement>('[data-testid="card-production-article"]')!;
@@ -15,6 +16,8 @@ describe('ZCard production contract', () => {
 		expect(article.tagName).toBe('ARTICLE');
 		expect(article.dataset.variant).toBe('outlined');
 		expect(article.getAttribute('aria-labelledby')).toBe('card-production-title');
+		expect(neutral.getBoundingClientRect().width).toBeGreaterThan(0);
+		expect(getComputedStyle(article).borderTopWidth).toBe('1px');
 		expect([...article.children].map((child) => (child as HTMLElement).dataset.slot)).toEqual([
 			'media',
 			'header',
