@@ -12,6 +12,7 @@ export interface RegisteredStyle {
 	readonly cssText: string;
 	readonly layer: IcssLayer;
 	readonly rules: readonly string[];
+	readonly specificity: number;
 }
 
 export interface StyleRegistryOptions {
@@ -37,7 +38,8 @@ const EMPTY_STYLE: RegisteredStyle = {
 	className: '' as IcssClassName,
 	cssText: '',
 	layer: 'utilities',
-	rules: []
+	rules: [],
+	specificity: 1
 };
 
 function escapeAttribute(value: string): string {
@@ -104,10 +106,20 @@ export class StyleRegistry {
 		return escapeStyleText(this.cssText());
 	}
 
-	ensure(program: StyleProgram, owner?: string, layer: IcssLayer = 'utilities'): RegisteredStyle {
+	ensure(
+		program: StyleProgram,
+		owner?: string,
+		layer: IcssLayer = 'utilities',
+		specificity = 1
+	): RegisteredStyle {
+		if (!Number.isInteger(specificity) || specificity < 1 || specificity > 64) {
+			throw new RangeError('ICSS specificity must be an integer from 1 through 64.');
+		}
 		const canonical = canonicalizeStyleProgram(program);
 		if (canonical.length === 0) return EMPTY_STYLE;
-		const layeredCanonical = `${layer}\u0000${canonical}`;
+		const specificityCanonical =
+			specificity === 1 ? canonical : `specificity:${specificity}\u0000${canonical}`;
+		const layeredCanonical = `${layer}\u0000${specificityCanonical}`;
 		const existing = this.#byCanonical.get(layeredCanonical);
 		if (existing !== undefined) {
 			this.#retain(existing.className, owner);
@@ -120,14 +132,15 @@ export class StyleRegistry {
 			throw new Error(`ICSS hash collision for class "${className}".`);
 		}
 
-		const serialized = serializeStyleProgram(program, className);
+		const serialized = serializeStyleProgram(program, className, specificity);
 		const rules = serialized.rules.map((rule) => `@layer zui.${layer}{${rule}}`);
 		const entry: RegisteredStyle = {
 			canonical: layeredCanonical,
 			className,
 			cssText: rules.join(''),
 			layer,
-			rules
+			rules,
+			specificity
 		};
 		this.#retain(className, owner);
 		this.#byCanonical.set(layeredCanonical, entry);

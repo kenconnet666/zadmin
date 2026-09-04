@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { createStyleProgram } from '../src/icss/builder.js';
 import { createIcssSlot } from '../src/icss/values.js';
 
 import {
@@ -84,6 +85,22 @@ describe('ICSS runtime', () => {
 		expect(utility).not.toBe(component);
 		expect(css).toContain(`@layer zui.components{.${component}{color:#b42318;}}`);
 		expect(css).toContain(`@layer zui.utilities{.${utility}{color:#2563eb;}}`);
+	});
+
+	it('keeps precedence-specific component classes distinct', () => {
+		const registry = createServerStyleRegistry();
+		const program = createStyleProgram(defaultTheme, (s) => s.borderColor._danger);
+		const base = registry.ensure(program, 'base', 'components', 1);
+		const variant = registry.ensure(program, 'variant', 'components', 2);
+
+		expect(base.className).not.toBe(variant.className);
+		expect(registry.cssText()).toContain(`.${base.className}{border-color:#b42318;}`);
+		expect(registry.cssText()).toContain(
+			`.${variant.className}.${variant.className}{border-color:#b42318;}`
+		);
+		expect(() => registry.ensure(program, 'invalid', 'components', 0)).toThrow(
+			/integer from 1 through 64/u
+		);
 	});
 
 	it('does not register empty style programs', () => {

@@ -95,6 +95,42 @@ describe('defineRecipe', () => {
 		);
 	});
 
+	it('gives authored variant and compound order deterministic specificity', () => {
+		const recipe = defineRecipe({
+			base: (s) => s.borderColor._border,
+			variants: {
+				dragging: {
+					false: () => undefined,
+					true: (s) => s.borderColor._primary
+				},
+				invalid: {
+					false: () => undefined,
+					true: (s) => s.borderColor._danger
+				}
+			},
+			compoundVariants: [
+				{
+					style: (s) => s.borderColor._warning,
+					when: { dragging: true, invalid: true }
+				}
+			],
+			defaultVariants: { dragging: false, invalid: false }
+		});
+		const registry = createServerStyleRegistry();
+		const classes = createIcssRuntime({ registry })
+			.recipe(defaultTheme, recipe, { dragging: true, invalid: true })
+			.split(' ');
+		const css = registry.cssText();
+
+		expect(classes).toHaveLength(4);
+		expect(css).toContain(`.${classes[0]}{border-color:#e2e8f0;}`);
+		expect(css).toContain(`.${classes[1]}.${classes[1]}{border-color:#2563eb;}`);
+		expect(css).toContain(`.${classes[2]}.${classes[2]}.${classes[2]}{border-color:#b42318;}`);
+		expect(css).toContain(
+			`.${classes[3]}.${classes[3]}.${classes[3]}.${classes[3]}{border-color:#92400e;}`
+		);
+	});
+
 	it('rejects invalid selections and excessive definitions', () => {
 		const recipe = createFixtureRecipe();
 		const runtime = createIcssRuntime();

@@ -48,9 +48,14 @@ export function canonicalizeStyleProgram(program: StyleProgram): string {
 	return serializeBlock(program.block);
 }
 
-export function serializeStyleProgram(program: StyleProgram, className: string): SerializedStyle {
+export function serializeStyleProgram(
+	program: StyleProgram,
+	className: string,
+	specificity = 1
+): SerializedStyle {
 	const rules: string[] = [];
-	const input = `.${className}{${canonicalizeStyleProgram(program)}}`;
+	const selector = Array.from({ length: specificity }, () => `.${className}`).join('');
+	const input = `${selector}{${canonicalizeStyleProgram(program)}}`;
 	const cssText = serialize(
 		compile(input),
 		middleware([

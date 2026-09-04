@@ -43,28 +43,42 @@ export function createRecipeExecutor(registry: StyleRegistry): RecipeExecutor {
 
 	function compile(recipe: RuntimeRecipeDefinition, theme: ZuiTheme): CompiledRecipe {
 		const owner = `recipe:${recipe.id}`;
-		const ensure = (branch: string, factory: RuntimeRecipeDefinition['base']): string =>
+		const ensure = (
+			branch: string,
+			factory: RuntimeRecipeDefinition['base'],
+			specificity: number
+		): string =>
 			factory === undefined
 				? ''
-				: registry.ensure(createStyleProgram(theme, factory), `${owner}:${branch}`, 'components')
-						.className;
-		const base = ensure('base', recipe.base);
+				: registry.ensure(
+						createStyleProgram(theme, factory),
+						`${owner}:${branch}`,
+						'components',
+						specificity
+					).className;
+		// Canonical styles are shared across recipes, so stylesheet insertion order cannot
+		// represent recipe precedence reliably. Encode authored base -> variants -> compounds
+		// as selector specificity instead; utilities still win through their later cascade layer.
+		const base = ensure('base', recipe.base, 1);
 		const variants = new Map<string, ReadonlyMap<string, string>>();
-		for (const [variantName, options] of Object.entries(recipe.variants)) {
+		for (const [variantIndex, [variantName, options]] of Object.entries(
+			recipe.variants
+		).entries()) {
 			variants.set(
 				variantName,
 				new Map(
 					Object.entries(options).map(([value, factory]) => [
 						value,
-						ensure(`variant:${variantName}:${value}`, factory)
+						ensure(`variant:${variantName}:${value}`, factory, variantIndex + 2)
 					])
 				)
 			);
 		}
+		const compoundSpecificity = Object.keys(recipe.variants).length + 2;
 		const compiled = {
 			base,
 			compounds: (recipe.compoundVariants ?? []).map((compound, index) =>
-				ensure(`compound:${index}`, compound.style)
+				ensure(`compound:${index}`, compound.style, compoundSpecificity + index)
 			),
 			variants
 		};

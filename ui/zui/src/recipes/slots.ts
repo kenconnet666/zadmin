@@ -191,7 +191,8 @@ export function createSlotRecipeExecutor(registry: StyleRegistry): SlotRecipeExe
 		const owner = `slot-recipe:${recipe.id}`;
 		const compileSlots = (
 			branch: string,
-			styles: Readonly<Partial<Record<string, IcssFactory<ZuiTheme>>>>
+			styles: Readonly<Partial<Record<string, IcssFactory<ZuiTheme>>>>,
+			specificity: number
 		): ReadonlyMap<string, string> =>
 			new Map(
 				Object.entries(styles).flatMap(([slot, factory]) =>
@@ -202,22 +203,27 @@ export function createSlotRecipeExecutor(registry: StyleRegistry): SlotRecipeExe
 									registry.ensure(
 										createStyleProgram(theme, factory),
 										`${owner}:${branch}:${slot}`,
-										'components'
+										'components',
+										specificity
 									).className
 								] as const
 							]
 						: []
 				)
 			);
-		const base = compileSlots('base', recipe.base ?? {});
+		// Slot branches use the same deterministic specificity ladder as ordinary recipes;
+		// shared canonical classes may have been registered by an unrelated recipe first.
+		const base = compileSlots('base', recipe.base ?? {}, 1);
 		const variants = new Map<string, ReadonlyMap<string, ReadonlyMap<string, string>>>();
-		for (const [variantName, options] of Object.entries(recipe.variants)) {
+		for (const [variantIndex, [variantName, options]] of Object.entries(
+			recipe.variants
+		).entries()) {
 			variants.set(
 				variantName,
 				new Map(
 					Object.entries(options).map(([value, styles]) => [
 						value,
-						compileSlots(`variant:${variantName}:${value}`, styles)
+						compileSlots(`variant:${variantName}:${value}`, styles, variantIndex + 2)
 					])
 				)
 			);
