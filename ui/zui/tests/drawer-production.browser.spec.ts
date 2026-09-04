@@ -54,6 +54,7 @@ describe('ZDrawer compound production contracts', () => {
 	});
 
 	it('ZDrawerContent resolves all physical edges from logical placements and RTL direction', async () => {
+		// @zui-visual ZDrawer
 		const host = target();
 		const cases = [
 			{ direction: 'ltr', edge: 'left', placement: 'start' },
@@ -77,6 +78,7 @@ describe('ZDrawer compound production contracts', () => {
 	});
 
 	it('ZDrawerContent supports custom CSS sizes, full viewport mode and reduced-motion cleanup', async () => {
+		// @zui-visual ZDrawer
 		const host = target();
 		const component = mount(DrawerFixture, {
 			props: {

@@ -98,6 +98,7 @@ describe('production ZMenu / ZDropdownMenu / ZContextMenu family', () => {
 	});
 
 	it('ZDropdownMenu opens from both arrow edges and preserves close-on-select policy', async () => {
+		// @zui-visual ZDropdownMenu
 		render(MenuFamilyProductionFixture);
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="dropdown-trigger"]')!;
 		trigger.focus();
@@ -215,6 +216,7 @@ describe('production ZMenu / ZDropdownMenu / ZContextMenu family', () => {
 	});
 
 	it('ZContextMenu anchors at pointer and RTL keyboard logical start while exposing shortcuts', async () => {
+		// @zui-visual ZContextMenu
 		render(MenuFamilyProductionFixture);
 		const target = document.querySelector<HTMLElement>('[data-testid="context-trigger"]')!;
 		expect(target.getAttribute('aria-keyshortcuts')).toBe('ContextMenu Shift+F10');

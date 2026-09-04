@@ -189,6 +189,7 @@ describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 	});
 
 	it('ZPopover owns controlled open state and collision-aware placement', async () => {
+		// @zui-visual ZPopover
 		render(OverlayProductionFixture);
 		const trigger = document.querySelector<HTMLButtonElement>(
 			'[data-testid="popover-production-trigger"]'
@@ -208,6 +209,7 @@ describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 		expect(content.style.position).toBe('absolute');
 		expect(content.style.left).not.toBe('');
 		expect(content.style.top).not.toBe('');
+		expect(content.getBoundingClientRect().width).toBeGreaterThan(0);
 	});
 
 	it('ZPopoverTrigger and ZPopoverContent preserve ARIA identity and focus lifecycle', async () => {
