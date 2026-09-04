@@ -17,7 +17,7 @@ export const zuiProgress = {
 		ContractVerified: 141,
 		RuntimeImplemented: 141,
 		BrowserBehaviorVerified: 141,
-		VisuallyVerified: 79,
+		VisuallyVerified: 141,
 		DesktopVerified: 0,
 		ProductionVerified: 141,
 		statuses: {
@@ -65,7 +65,7 @@ export const zuiProgress = {
 		},
 		{
 			id: 'visual-evidence',
-			remaining: 62,
+			remaining: 0,
 			description: '补齐组件级几何、computed style或截图证据；普通浏览器交互断言不再冒充视觉验证。'
 		},
 		{
