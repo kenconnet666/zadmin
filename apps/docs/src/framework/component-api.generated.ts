@@ -236,6 +236,78 @@ export const alertDialogActionApiFacts = {
 			name: 'onclick',
 			required: false,
 			type: "ZButtonProps['onclick']"
+		},
+		{
+			name: 'fullWidth',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: "'large' | 'medium' | 'small'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'shape',
+			required: false,
+			type: "'circle' | 'default' | 'square'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: "'danger' | 'default'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'variant',
+			required: false,
+			type: "'ghost' | 'primary' | 'secondary'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'end',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingIndicator',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingLabel',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'start',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLButtonElement | null',
+			inheritedFrom: 'ZButtonProps'
 		}
 	],
 	source: 'ui/zui/src/components/compound/alert-dialog/ZAlertDialogAction.svelte',
@@ -252,6 +324,84 @@ export const alertDialogCancelApiFacts = {
 			name: 'onclick',
 			required: false,
 			type: "ZButtonProps['onclick']"
+		},
+		{
+			name: 'fullWidth',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: "'large' | 'medium' | 'small'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'shape',
+			required: false,
+			type: "'circle' | 'default' | 'square'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: "'danger' | 'default'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'variant',
+			required: false,
+			type: "'ghost' | 'primary' | 'secondary'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'end',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loading',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingIndicator',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingLabel',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'start',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLButtonElement | null',
+			inheritedFrom: 'ZButtonProps'
 		}
 	],
 	source: 'ui/zui/src/components/compound/alert-dialog/ZAlertDialogCancel.svelte',
@@ -263,7 +413,44 @@ export const alertDialogContentApiFacts = {
 	id: 'alert-dialog-content',
 	inheritedFrom: ['ZDialogContentProps'],
 	name: 'ZAlertDialogContent',
-	props: [],
+	props: [
+		{
+			name: 'appearance',
+			required: false,
+			type: "'dialog' | 'unstyled'",
+			inheritedFrom: 'ZDialogContentProps'
+		},
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZDialogContentProps'
+		},
+		{
+			name: 'initialFocus',
+			required: false,
+			type: '() => HTMLElement | null',
+			inheritedFrom: 'ZDialogContentProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null',
+			inheritedFrom: 'ZDialogContentProps'
+		},
+		{
+			name: 'restoreFocus',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZDialogContentProps'
+		},
+		{
+			name: 'restoreTarget',
+			required: false,
+			type: '() => HTMLElement | null',
+			inheritedFrom: 'ZDialogContentProps'
+		}
+	],
 	source: 'ui/zui/src/components/compound/alert-dialog/ZAlertDialogContent.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
@@ -273,7 +460,20 @@ export const alertDialogDescriptionApiFacts = {
 	id: 'alert-dialog-description',
 	inheritedFrom: ['ZDialogDescriptionProps'],
 	name: 'ZAlertDialogDescription',
-	props: [],
+	props: [
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZDialogDescriptionProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLParagraphElement | null',
+			inheritedFrom: 'ZDialogDescriptionProps'
+		}
+	],
 	source: 'ui/zui/src/components/compound/alert-dialog/ZAlertDialogDescription.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
@@ -283,7 +483,14 @@ export const alertDialogOverlayApiFacts = {
 	id: 'alert-dialog-overlay',
 	inheritedFrom: ['ZDialogOverlayProps'],
 	name: 'ZAlertDialogOverlay',
-	props: [],
+	props: [
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null',
+			inheritedFrom: 'ZDialogOverlayProps'
+		}
+	],
 	source: 'ui/zui/src/components/compound/alert-dialog/ZAlertDialogOverlay.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
@@ -293,7 +500,20 @@ export const alertDialogTitleApiFacts = {
 	id: 'alert-dialog-title',
 	inheritedFrom: ['ZDialogTitleProps'],
 	name: 'ZAlertDialogTitle',
-	props: [],
+	props: [
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZDialogTitleProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLHeadingElement | null',
+			inheritedFrom: 'ZDialogTitleProps'
+		}
+	],
 	source: 'ui/zui/src/components/compound/alert-dialog/ZAlertDialogTitle.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
@@ -303,7 +523,92 @@ export const alertDialogTriggerApiFacts = {
 	id: 'alert-dialog-trigger',
 	inheritedFrom: ['ZDialogTriggerProps'],
 	name: 'ZAlertDialogTrigger',
-	props: [],
+	props: [
+		{
+			name: 'fullWidth',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: "'large' | 'medium' | 'small'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'shape',
+			required: false,
+			type: "'circle' | 'default' | 'square'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: "'danger' | 'default'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'variant',
+			required: false,
+			type: "'ghost' | 'primary' | 'secondary'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'end',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loading',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingIndicator',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingLabel',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'start',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLButtonElement | null',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'onclick',
+			required: false,
+			type: "ZButtonProps['onclick']",
+			inheritedFrom: 'ZDialogTriggerProps'
+		}
+	],
 	source: 'ui/zui/src/components/compound/alert-dialog/ZAlertDialogTrigger.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
@@ -520,6 +825,54 @@ export const comboboxContentApiFacts = {
 			name: 'virtualOverscan',
 			required: false,
 			type: 'number'
+		},
+		{
+			name: 'ariaDescribedBy',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'initialFocus',
+			required: false,
+			type: '() => HTMLElement | null',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'onEscape',
+			required: false,
+			type: '(event: PopoverEscapeEvent) => void',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'onFocusOutside',
+			required: false,
+			type: '(event: PopoverFocusOutsideEvent) => void',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'onPointerOutside',
+			required: false,
+			type: '(event: PopoverPointerOutsideEvent) => void',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'restoreFocus',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'restoreTarget',
+			required: false,
+			type: '() => HTMLElement | null',
+			inheritedFrom: 'ZPopoverContentProps'
 		}
 	],
 	source: 'ui/zui/src/components/compound/combobox/ZComboboxContent.svelte',
@@ -536,6 +889,42 @@ export const comboboxInputApiFacts = {
 			name: 'oninput',
 			required: false,
 			type: "ZInputProps['oninput']"
+		},
+		{
+			name: 'defaultValue',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZInputProps'
+		},
+		{
+			name: 'onFormReset',
+			required: false,
+			type: '() => void',
+			inheritedFrom: 'ZInputProps'
+		},
+		{
+			name: 'onValueChange',
+			required: false,
+			type: '(value: string) => void',
+			inheritedFrom: 'ZInputProps'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZInputSize',
+			inheritedFrom: 'ZInputProps'
+		},
+		{
+			name: 'type',
+			required: false,
+			type: 'ZInputType',
+			inheritedFrom: 'ZInputProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLInputElement | null',
+			inheritedFrom: 'ZInputProps'
 		}
 	],
 	source: 'ui/zui/src/components/compound/combobox/ZComboboxInput.svelte',
@@ -660,6 +1049,48 @@ export const contextMenuContentApiFacts = {
 			name: 'onAction',
 			required: false,
 			type: '(event: MenuActionEvent) => void'
+		},
+		{
+			name: 'ariaDescribedBy',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'onEscape',
+			required: false,
+			type: '(event: PopoverEscapeEvent) => void',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'onFocusOutside',
+			required: false,
+			type: '(event: PopoverFocusOutsideEvent) => void',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'onPointerOutside',
+			required: false,
+			type: '(event: PopoverPointerOutsideEvent) => void',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'restoreFocus',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'restoreTarget',
+			required: false,
+			type: '() => HTMLElement | null',
+			inheritedFrom: 'ZPopoverContentProps'
 		}
 	],
 	source: 'ui/zui/src/components/compound/context-menu/ZContextMenuContent.svelte',
@@ -736,6 +1167,84 @@ export const dialogCloseApiFacts = {
 			name: 'onclick',
 			required: false,
 			type: "ZButtonProps['onclick']"
+		},
+		{
+			name: 'fullWidth',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: "'large' | 'medium' | 'small'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'shape',
+			required: false,
+			type: "'circle' | 'default' | 'square'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: "'danger' | 'default'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'variant',
+			required: false,
+			type: "'ghost' | 'primary' | 'secondary'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'end',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loading',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingIndicator',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingLabel',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'start',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLButtonElement | null',
+			inheritedFrom: 'ZButtonProps'
 		}
 	],
 	source: 'ui/zui/src/components/compound/dialog/ZDialogClose.svelte',
@@ -896,6 +1405,84 @@ export const dialogTriggerApiFacts = {
 			name: 'onclick',
 			required: false,
 			type: "ZButtonProps['onclick']"
+		},
+		{
+			name: 'fullWidth',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: "'large' | 'medium' | 'small'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'shape',
+			required: false,
+			type: "'circle' | 'default' | 'square'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: "'danger' | 'default'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'variant',
+			required: false,
+			type: "'ghost' | 'primary' | 'secondary'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'end',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loading',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingIndicator',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingLabel',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'start',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLButtonElement | null',
+			inheritedFrom: 'ZButtonProps'
 		}
 	],
 	source: 'ui/zui/src/components/compound/dialog/ZDialogTrigger.svelte',
@@ -946,7 +1533,92 @@ export const drawerCloseApiFacts = {
 	id: 'drawer-close',
 	inheritedFrom: ['ZDialogCloseProps'],
 	name: 'ZDrawerClose',
-	props: [],
+	props: [
+		{
+			name: 'fullWidth',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: "'large' | 'medium' | 'small'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'shape',
+			required: false,
+			type: "'circle' | 'default' | 'square'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: "'danger' | 'default'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'variant',
+			required: false,
+			type: "'ghost' | 'primary' | 'secondary'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'end',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loading',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingIndicator',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingLabel',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'start',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLButtonElement | null',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'onclick',
+			required: false,
+			type: "ZButtonProps['onclick']",
+			inheritedFrom: 'ZDialogCloseProps'
+		}
+	],
 	source: 'ui/zui/src/components/compound/drawer/ZDrawerClose.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
@@ -966,6 +1638,84 @@ export const drawerContentApiFacts = {
 			name: 'size',
 			required: false,
 			type: "'full' | 'large' | 'medium' | 'small' | number | string"
+		},
+		{
+			name: 'ariaDescribedBy',
+			required: false,
+			type: 'string | null',
+			inheritedFrom: 'ZDialogContentProps'
+		},
+		{
+			name: 'ariaLabel',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZDialogContentProps'
+		},
+		{
+			name: 'ariaLabelledBy',
+			required: false,
+			type: 'string | null',
+			inheritedFrom: 'ZDialogContentProps'
+		},
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZDialogContentProps'
+		},
+		{
+			name: 'dismissOnEscape',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZDialogContentProps'
+		},
+		{
+			name: 'dismissOnPointerOutside',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZDialogContentProps'
+		},
+		{
+			name: 'initialFocus',
+			required: false,
+			type: '() => HTMLElement | null',
+			inheritedFrom: 'ZDialogContentProps'
+		},
+		{
+			name: 'onEscape',
+			required: false,
+			type: '(event: DialogEscapeEvent) => void',
+			inheritedFrom: 'ZDialogContentProps'
+		},
+		{
+			name: 'onFocusOutside',
+			required: false,
+			type: '(event: DialogFocusOutsideEvent) => void',
+			inheritedFrom: 'ZDialogContentProps'
+		},
+		{
+			name: 'onPointerOutside',
+			required: false,
+			type: '(event: DialogPointerOutsideEvent) => void',
+			inheritedFrom: 'ZDialogContentProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null',
+			inheritedFrom: 'ZDialogContentProps'
+		},
+		{
+			name: 'restoreFocus',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZDialogContentProps'
+		},
+		{
+			name: 'restoreTarget',
+			required: false,
+			type: '() => HTMLElement | null',
+			inheritedFrom: 'ZDialogContentProps'
 		}
 	],
 	source: 'ui/zui/src/components/compound/drawer/ZDrawerContent.svelte',
@@ -977,7 +1727,20 @@ export const drawerDescriptionApiFacts = {
 	id: 'drawer-description',
 	inheritedFrom: ['ZDialogDescriptionProps'],
 	name: 'ZDrawerDescription',
-	props: [],
+	props: [
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZDialogDescriptionProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLParagraphElement | null',
+			inheritedFrom: 'ZDialogDescriptionProps'
+		}
+	],
 	source: 'ui/zui/src/components/compound/drawer/ZDrawerDescription.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
@@ -987,7 +1750,14 @@ export const drawerOverlayApiFacts = {
 	id: 'drawer-overlay',
 	inheritedFrom: ['ZDialogOverlayProps'],
 	name: 'ZDrawerOverlay',
-	props: [],
+	props: [
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null',
+			inheritedFrom: 'ZDialogOverlayProps'
+		}
+	],
 	source: 'ui/zui/src/components/compound/drawer/ZDrawerOverlay.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
@@ -997,7 +1767,20 @@ export const drawerTitleApiFacts = {
 	id: 'drawer-title',
 	inheritedFrom: ['ZDialogTitleProps'],
 	name: 'ZDrawerTitle',
-	props: [],
+	props: [
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZDialogTitleProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLHeadingElement | null',
+			inheritedFrom: 'ZDialogTitleProps'
+		}
+	],
 	source: 'ui/zui/src/components/compound/drawer/ZDrawerTitle.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
@@ -1007,7 +1790,92 @@ export const drawerTriggerApiFacts = {
 	id: 'drawer-trigger',
 	inheritedFrom: ['ZDialogTriggerProps'],
 	name: 'ZDrawerTrigger',
-	props: [],
+	props: [
+		{
+			name: 'fullWidth',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: "'large' | 'medium' | 'small'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'shape',
+			required: false,
+			type: "'circle' | 'default' | 'square'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: "'danger' | 'default'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'variant',
+			required: false,
+			type: "'ghost' | 'primary' | 'secondary'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'end',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loading',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingIndicator',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingLabel',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'start',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLButtonElement | null',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'onclick',
+			required: false,
+			type: "ZButtonProps['onclick']",
+			inheritedFrom: 'ZDialogTriggerProps'
+		}
+	],
 	source: 'ui/zui/src/components/compound/drawer/ZDrawerTrigger.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
@@ -1079,6 +1947,48 @@ export const dropdownMenuContentApiFacts = {
 			name: 'onAction',
 			required: false,
 			type: '(event: MenuActionEvent) => void'
+		},
+		{
+			name: 'ariaDescribedBy',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'onEscape',
+			required: false,
+			type: '(event: PopoverEscapeEvent) => void',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'onFocusOutside',
+			required: false,
+			type: '(event: PopoverFocusOutsideEvent) => void',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'onPointerOutside',
+			required: false,
+			type: '(event: PopoverPointerOutsideEvent) => void',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'restoreFocus',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'restoreTarget',
+			required: false,
+			type: '() => HTMLElement | null',
+			inheritedFrom: 'ZPopoverContentProps'
 		}
 	],
 	source: 'ui/zui/src/components/compound/dropdown-menu/ZDropdownMenuContent.svelte',
@@ -1090,7 +2000,92 @@ export const dropdownMenuTriggerApiFacts = {
 	id: 'dropdown-menu-trigger',
 	inheritedFrom: ['ZPopoverTriggerProps'],
 	name: 'ZDropdownMenuTrigger',
-	props: [],
+	props: [
+		{
+			name: 'fullWidth',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: "'large' | 'medium' | 'small'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'shape',
+			required: false,
+			type: "'circle' | 'default' | 'square'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: "'danger' | 'default'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'variant',
+			required: false,
+			type: "'ghost' | 'primary' | 'secondary'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'end',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loading',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingIndicator',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingLabel',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'start',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLButtonElement | null',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'onclick',
+			required: false,
+			type: "ZButtonProps['onclick']",
+			inheritedFrom: 'ZPopoverTriggerProps'
+		}
+	],
 	source: 'ui/zui/src/components/compound/dropdown-menu/ZDropdownMenuTrigger.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
@@ -1491,6 +2486,48 @@ export const menuSubContentApiFacts = {
 			name: 'onAction',
 			required: false,
 			type: '(event: MenuActionEvent) => void'
+		},
+		{
+			name: 'ariaDescribedBy',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'onEscape',
+			required: false,
+			type: '(event: PopoverEscapeEvent) => void',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'onFocusOutside',
+			required: false,
+			type: '(event: PopoverFocusOutsideEvent) => void',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'onPointerOutside',
+			required: false,
+			type: '(event: PopoverPointerOutsideEvent) => void',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'restoreFocus',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'restoreTarget',
+			required: false,
+			type: '() => HTMLElement | null',
+			inheritedFrom: 'ZPopoverContentProps'
 		}
 	],
 	source: 'ui/zui/src/components/compound/menu/ZMenuSubContent.svelte',
@@ -1730,6 +2767,54 @@ export const multiSelectContentApiFacts = {
 			name: 'virtualOverscan',
 			required: false,
 			type: 'number'
+		},
+		{
+			name: 'ariaDescribedBy',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'manageFocus',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'onEscape',
+			required: false,
+			type: '(event: PopoverEscapeEvent) => void',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'onFocusOutside',
+			required: false,
+			type: '(event: PopoverFocusOutsideEvent) => void',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'onPointerOutside',
+			required: false,
+			type: '(event: PopoverPointerOutsideEvent) => void',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'restoreFocus',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'restoreTarget',
+			required: false,
+			type: '() => HTMLElement | null',
+			inheritedFrom: 'ZPopoverContentProps'
 		}
 	],
 	source: 'ui/zui/src/components/compound/multi-select/ZMultiSelectContent.svelte',
@@ -1787,6 +2872,84 @@ export const multiSelectTriggerApiFacts = {
 			name: 'children',
 			required: false,
 			type: 'Snippet'
+		},
+		{
+			name: 'fullWidth',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: "'large' | 'medium' | 'small'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'shape',
+			required: false,
+			type: "'circle' | 'default' | 'square'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: "'danger' | 'default'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'variant',
+			required: false,
+			type: "'ghost' | 'primary' | 'secondary'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'end',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loading',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingIndicator',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingLabel',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'start',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLButtonElement | null',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'onclick',
+			required: false,
+			type: "ZButtonProps['onclick']",
+			inheritedFrom: 'ZPopoverTriggerProps'
 		}
 	],
 	source: 'ui/zui/src/components/compound/multi-select/ZMultiSelectTrigger.svelte',
@@ -1867,6 +3030,84 @@ export const popconfirmActionApiFacts = {
 			name: 'onclick',
 			required: false,
 			type: "ZButtonProps['onclick']"
+		},
+		{
+			name: 'fullWidth',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: "'large' | 'medium' | 'small'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'shape',
+			required: false,
+			type: "'circle' | 'default' | 'square'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: "'danger' | 'default'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'variant',
+			required: false,
+			type: "'ghost' | 'primary' | 'secondary'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'end',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loading',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingIndicator',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingLabel',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'start',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLButtonElement | null',
+			inheritedFrom: 'ZButtonProps'
 		}
 	],
 	source: 'ui/zui/src/components/compound/popconfirm/ZPopconfirmAction.svelte',
@@ -1883,6 +3124,84 @@ export const popconfirmCancelApiFacts = {
 			name: 'onclick',
 			required: false,
 			type: "ZButtonProps['onclick']"
+		},
+		{
+			name: 'fullWidth',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: "'large' | 'medium' | 'small'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'shape',
+			required: false,
+			type: "'circle' | 'default' | 'square'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: "'danger' | 'default'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'variant',
+			required: false,
+			type: "'ghost' | 'primary' | 'secondary'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'end',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loading',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingIndicator',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingLabel',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'start',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLButtonElement | null',
+			inheritedFrom: 'ZButtonProps'
 		}
 	],
 	source: 'ui/zui/src/components/compound/popconfirm/ZPopconfirmCancel.svelte',
@@ -1894,7 +3213,68 @@ export const popconfirmContentApiFacts = {
 	id: 'popconfirm-content',
 	inheritedFrom: ['ZPopoverContentProps'],
 	name: 'ZPopconfirmContent',
-	props: [],
+	props: [
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'initialFocus',
+			required: false,
+			type: '() => HTMLElement | null',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'manageFocus',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'onEscape',
+			required: false,
+			type: '(event: PopoverEscapeEvent) => void',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'onFocusOutside',
+			required: false,
+			type: '(event: PopoverFocusOutsideEvent) => void',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'onPointerOutside',
+			required: false,
+			type: '(event: PopoverPointerOutsideEvent) => void',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'restoreFocus',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'restoreTarget',
+			required: false,
+			type: '() => HTMLElement | null',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'role',
+			required: false,
+			type: "'dialog' | 'listbox' | 'presentation'",
+			inheritedFrom: 'ZPopoverContentProps'
+		}
+	],
 	source: 'ui/zui/src/components/compound/popconfirm/ZPopconfirmContent.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
@@ -1946,7 +3326,98 @@ export const popconfirmTriggerApiFacts = {
 	id: 'popconfirm-trigger',
 	inheritedFrom: ['ZPopoverTriggerProps'],
 	name: 'ZPopconfirmTrigger',
-	props: [],
+	props: [
+		{
+			name: 'fullWidth',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: "'large' | 'medium' | 'small'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'shape',
+			required: false,
+			type: "'circle' | 'default' | 'square'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: "'danger' | 'default'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'variant',
+			required: false,
+			type: "'ghost' | 'primary' | 'secondary'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'end',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loading',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingIndicator',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingLabel',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'start',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLButtonElement | null',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'onclick',
+			required: false,
+			type: "ZButtonProps['onclick']",
+			inheritedFrom: 'ZPopoverTriggerProps'
+		},
+		{
+			name: 'popupRole',
+			required: false,
+			type: "'dialog' | 'listbox' | 'menu' | 'tree'",
+			inheritedFrom: 'ZPopoverTriggerProps'
+		}
+	],
 	source: 'ui/zui/src/components/compound/popconfirm/ZPopconfirmTrigger.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
@@ -2099,6 +3570,84 @@ export const popoverTriggerApiFacts = {
 			name: 'popupRole',
 			required: false,
 			type: "'dialog' | 'listbox' | 'menu' | 'tree'"
+		},
+		{
+			name: 'fullWidth',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: "'large' | 'medium' | 'small'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'shape',
+			required: false,
+			type: "'circle' | 'default' | 'square'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: "'danger' | 'default'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'variant',
+			required: false,
+			type: "'ghost' | 'primary' | 'secondary'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'end',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loading',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingIndicator',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingLabel',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'start',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLButtonElement | null',
+			inheritedFrom: 'ZButtonProps'
 		}
 	],
 	source: 'ui/zui/src/components/compound/popover/ZPopoverTrigger.svelte',
@@ -2420,6 +3969,54 @@ export const selectContentApiFacts = {
 			name: 'virtualOverscan',
 			required: false,
 			type: 'number'
+		},
+		{
+			name: 'ariaDescribedBy',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'manageFocus',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'onEscape',
+			required: false,
+			type: '(event: PopoverEscapeEvent) => void',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'onFocusOutside',
+			required: false,
+			type: '(event: PopoverFocusOutsideEvent) => void',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'onPointerOutside',
+			required: false,
+			type: '(event: PopoverPointerOutsideEvent) => void',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'restoreFocus',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'restoreTarget',
+			required: false,
+			type: '() => HTMLElement | null',
+			inheritedFrom: 'ZPopoverContentProps'
 		}
 	],
 	source: 'ui/zui/src/components/compound/select/ZSelectContent.svelte',
@@ -2477,6 +4074,84 @@ export const selectTriggerApiFacts = {
 			name: 'children',
 			required: false,
 			type: 'Snippet'
+		},
+		{
+			name: 'fullWidth',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: "'large' | 'medium' | 'small'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'shape',
+			required: false,
+			type: "'circle' | 'default' | 'square'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: "'danger' | 'default'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'variant',
+			required: false,
+			type: "'ghost' | 'primary' | 'secondary'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'end',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loading',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingIndicator',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingLabel',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'start',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLButtonElement | null',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'onclick',
+			required: false,
+			type: "ZButtonProps['onclick']",
+			inheritedFrom: 'ZPopoverTriggerProps'
 		}
 	],
 	source: 'ui/zui/src/components/compound/select/ZSelectTrigger.svelte',
@@ -2802,6 +4477,84 @@ export const tooltipTriggerApiFacts = {
 			name: 'onpointerleave',
 			required: false,
 			type: '(event: PointerEvent & { currentTarget: HTMLElement }) => void'
+		},
+		{
+			name: 'fullWidth',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: "'large' | 'medium' | 'small'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'shape',
+			required: false,
+			type: "'circle' | 'default' | 'square'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: "'danger' | 'default'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'variant',
+			required: false,
+			type: "'ghost' | 'primary' | 'secondary'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'end',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loading',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingIndicator',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingLabel',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'start',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLButtonElement | null',
+			inheritedFrom: 'ZButtonProps'
 		}
 	],
 	source: 'ui/zui/src/components/compound/tooltip/ZTooltipTrigger.svelte',
@@ -3607,6 +5360,36 @@ export const descriptionListApiFacts = {
 			name: 'responsive',
 			required: false,
 			type: 'boolean'
+		},
+		{
+			name: 'action',
+			required: false,
+			type: 'Snippet<[item: DescriptionItem, index: number]>',
+			inheritedFrom: 'ZDescriptionListDataProps'
+		},
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZDescriptionListDataProps'
+		},
+		{
+			name: 'description',
+			required: false,
+			type: 'Snippet<[item: DescriptionItem, index: number]>',
+			inheritedFrom: 'ZDescriptionListDataProps'
+		},
+		{
+			name: 'items',
+			required: false,
+			type: 'readonly DescriptionItem[]',
+			inheritedFrom: 'ZDescriptionListDataProps'
+		},
+		{
+			name: 'term',
+			required: false,
+			type: 'Snippet<[item: DescriptionItem, index: number]>',
+			inheritedFrom: 'ZDescriptionListDataProps'
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZDescriptionList.svelte',
@@ -3719,6 +5502,30 @@ export const listApiFacts = {
 			name: 'type',
 			required: false,
 			type: "'1' | 'A' | 'I' | 'a' | 'i' | null"
+		},
+		{
+			name: 'action',
+			required: false,
+			type: 'Snippet<[item: ListItem, index: number]>',
+			inheritedFrom: 'ZListDataProps'
+		},
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZListDataProps'
+		},
+		{
+			name: 'item',
+			required: false,
+			type: 'Snippet<[item: ListItem, index: number]>',
+			inheritedFrom: 'ZListDataProps'
+		},
+		{
+			name: 'items',
+			required: false,
+			type: 'readonly ListItem[]',
+			inheritedFrom: 'ZListDataProps'
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZList.svelte',
@@ -5186,6 +6993,60 @@ export const toggleButtonApiFacts = {
 			name: 'pressed',
 			required: false,
 			type: 'boolean'
+		},
+		{
+			name: 'fullWidth',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: "'large' | 'medium' | 'small'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'shape',
+			required: false,
+			type: "'circle' | 'default' | 'square'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: "'danger' | 'default'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'variant',
+			required: false,
+			type: "'ghost' | 'primary' | 'secondary'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'end',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'start',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLButtonElement | null',
+			inheritedFrom: 'ZButtonProps'
 		}
 	],
 	source: 'ui/zui/src/components/gene/ZToggleButton.svelte',

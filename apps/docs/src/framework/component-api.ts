@@ -1,6 +1,7 @@
 import type { ZuiOpaqueBoundaryKind } from '@zadmin/zui/metadata';
 
 export interface ComponentApiPropFact {
+	readonly inheritedFrom?: string;
 	readonly name: string;
 	readonly required: boolean;
 	readonly type: string;

@@ -2,6 +2,7 @@ import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import ts from 'typescript';
 
+import { recipeVariantEntries } from './recipe-variant-facts.mjs';
 import { WorkspaceTypeGraph } from './workspace-type-graph.mjs';
 
 export const REQUIREDNESS = Object.freeze({
@@ -308,6 +309,25 @@ export async function collectWorkspacePropertyFacts(graph, modulePath, rootName,
 				include: name === 'Pick' ? keys : modifiers.include,
 				exclude: name === 'Omit' ? keys : modifiers.exclude
 			});
+		}
+		if ((name === 'RecipeVariants' || name === 'SlotRecipeSelection') && args[0]) {
+			const entries = recipeVariantEntries(args[0], context.sourceFile);
+			if (entries)
+				return entries
+					.filter(
+						({ name }) =>
+							(!modifiers.include || modifiers.include.has(name)) && !modifiers.exclude?.has(name)
+					)
+					.map(({ name, type }) => ({
+						path: path ? `${path}.${name}` : name,
+						requiredness: REQUIREDNESS.optional,
+						requiredInSomeBranch: false,
+						valueAllowsUndefined: true,
+						declaredType: type,
+						typeCandidates: [type],
+						genericParameters: [...(context.genericParameters ?? [])],
+						source: { modulePath: context.modulePath, declaration: context.declaration }
+					}));
 		}
 		if (['Array', 'ReadonlyArray', 'Readonly'].includes(name) && args[0])
 			return visitType(args[0], context, path, modifiers);

@@ -1,6 +1,6 @@
 # API teaching coverage
 
-Generated from 141 components and 1398 declared props. 0 metadata gaps remain; 0 remain true fallbacks after teaching overrides; 8 structured props are explicitly opaque.
+Generated from 141 components and 1706 declared props. 0 metadata gaps remain; 0 remain true fallbacks after teaching overrides; 8 structured props are explicitly opaque.
 
 Policy: every declared public prop must have owned component metadata, binding, event or snippet evidence; both totals are enforced at zero.
 
@@ -12,13 +12,13 @@ Policy: every declared public prop must have owned component metadata, binding, 
 | ZAccordionTrigger       | accordion    |              7 |             0 |                   0 | —              | ui/zui/src/components/compound/accordion/ZAccordionTrigger.svelte          |
 | ZAlert                  | —            |             10 |             0 |                   0 | —              | ui/zui/src/components/feedback/ZAlert.svelte                               |
 | ZAlertDialog            | alert-dialog |              6 |             0 |                   0 | —              | ui/zui/src/components/compound/alert-dialog/ZAlertDialog.svelte            |
-| ZAlertDialogAction      | alert-dialog |              1 |             0 |                   0 | —              | ui/zui/src/components/compound/alert-dialog/ZAlertDialogAction.svelte      |
-| ZAlertDialogCancel      | alert-dialog |              1 |             0 |                   0 | —              | ui/zui/src/components/compound/alert-dialog/ZAlertDialogCancel.svelte      |
-| ZAlertDialogContent     | alert-dialog |              0 |             0 |                   0 | —              | ui/zui/src/components/compound/alert-dialog/ZAlertDialogContent.svelte     |
-| ZAlertDialogDescription | alert-dialog |              0 |             0 |                   0 | —              | ui/zui/src/components/compound/alert-dialog/ZAlertDialogDescription.svelte |
-| ZAlertDialogOverlay     | alert-dialog |              0 |             0 |                   0 | —              | ui/zui/src/components/compound/alert-dialog/ZAlertDialogOverlay.svelte     |
-| ZAlertDialogTitle       | alert-dialog |              0 |             0 |                   0 | —              | ui/zui/src/components/compound/alert-dialog/ZAlertDialogTitle.svelte       |
-| ZAlertDialogTrigger     | alert-dialog |              0 |             0 |                   0 | —              | ui/zui/src/components/compound/alert-dialog/ZAlertDialogTrigger.svelte     |
+| ZAlertDialogAction      | alert-dialog |             13 |             0 |                   0 | —              | ui/zui/src/components/compound/alert-dialog/ZAlertDialogAction.svelte      |
+| ZAlertDialogCancel      | alert-dialog |             14 |             0 |                   0 | —              | ui/zui/src/components/compound/alert-dialog/ZAlertDialogCancel.svelte      |
+| ZAlertDialogContent     | alert-dialog |              6 |             0 |                   0 | —              | ui/zui/src/components/compound/alert-dialog/ZAlertDialogContent.svelte     |
+| ZAlertDialogDescription | alert-dialog |              2 |             0 |                   0 | —              | ui/zui/src/components/compound/alert-dialog/ZAlertDialogDescription.svelte |
+| ZAlertDialogOverlay     | alert-dialog |              1 |             0 |                   0 | —              | ui/zui/src/components/compound/alert-dialog/ZAlertDialogOverlay.svelte     |
+| ZAlertDialogTitle       | alert-dialog |              2 |             0 |                   0 | —              | ui/zui/src/components/compound/alert-dialog/ZAlertDialogTitle.svelte       |
+| ZAlertDialogTrigger     | alert-dialog |             14 |             0 |                   0 | —              | ui/zui/src/components/compound/alert-dialog/ZAlertDialogTrigger.svelte     |
 | ZAspectRatio            | —            |              3 |             0 |                   0 | —              | ui/zui/src/components/layout/ZAspectRatio.svelte                           |
 | ZAvatar                 | —            |             17 |             0 |                   0 | —              | ui/zui/src/components/data-display/ZAvatar.svelte                          |
 | ZBadge                  | —            |             13 |             0 |                   0 | —              | ui/zui/src/components/data-display/ZBadge.svelte                           |

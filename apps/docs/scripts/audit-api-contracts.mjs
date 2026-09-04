@@ -135,7 +135,12 @@ function generatedApiFacts(source) {
 				const prop = unwrap(element);
 				if (!prop || !ts.isObjectLiteralExpression(prop)) return [];
 				const propName = literalText(objectProperty(prop, 'name')?.initializer)?.value;
-				return typeof propName === 'string' ? [propName] : [];
+				const inheritedFrom = literalText(
+					objectProperty(prop, 'inheritedFrom')?.initializer
+				)?.value;
+				return typeof propName === 'string'
+					? [{ name: propName, inheritedFrom: String(inheritedFrom ?? '') || undefined }]
+					: [];
 			});
 			if (bySource.has(sourcePath))
 				throw new Error(`Generated API repeats component source ${sourcePath}.`);
@@ -208,7 +213,10 @@ if (process.argv.includes('--self-test')) {
 		throw new Error('API runtime audit boolean default self-test failed.');
 	const facts = generatedApiFacts(await readFile(generatedApiPath, 'utf8'));
 	const button = facts.get('ui/zui/src/components/gene/ZButton.svelte');
-	if (!button?.props.includes('size') || !button.props.includes('variant'))
+	if (
+		!button?.props.some(({ name }) => name === 'size') ||
+		!button.props.some(({ name }) => name === 'variant')
+	)
 		throw new Error('API runtime audit generated RecipeVariants self-test failed.');
 	process.exit(0);
 }
@@ -244,7 +252,11 @@ for (const filename of allFiles) {
 	const consumed = collectPropsConsumption(
 		ts.createSourceFile(filename, instanceSource, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS)
 	);
-	const explicit = generated?.props ?? [];
+	const generatedProps = generated?.props ?? [];
+	const explicit = generatedProps.map(({ name }) => name);
+	const inheritedProps = new Set(
+		generatedProps.filter(({ inheritedFrom }) => inheritedFrom).map(({ name }) => name)
+	);
 	const missingConsumption = consumed.restForwarded
 		? []
 		: explicit.filter((name) => !consumed.consumed.has(name));
@@ -253,7 +265,11 @@ for (const filename of allFiles) {
 		: [];
 	const metadataExempt = new Set(['class', 'style']);
 	const missingMetadata = explicit.filter(
-		(name) => !metadataExempt.has(name) && !/^on[a-z]+$/u.test(name) && !metadata.covered.has(name)
+		(name) =>
+			!inheritedProps.has(name) &&
+			!metadataExempt.has(name) &&
+			!/^on[a-z]+$/u.test(name) &&
+			!metadata.covered.has(name)
 	);
 	const metadataOnly = [...(metadata?.covered ?? [])].filter((name) => !explicit.includes(name));
 	const missingGeneratedFacts = generated ? [] : [sourcePath];

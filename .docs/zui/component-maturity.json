@@ -4,7 +4,7 @@
 		"metadataComponents": 141,
 		"documentationPages": 79,
 		"contractComponents": 141,
-		"testFiles": 150
+		"testFiles": 151
 	},
 	"stageNames": [
 		"Declared",
@@ -22,7 +22,7 @@
 		"ContractVerified": 141,
 		"RuntimeImplemented": 141,
 		"BrowserBehaviorVerified": 141,
-		"VisuallyVerified": 4,
+		"VisuallyVerified": 22,
 		"DesktopVerified": 0,
 		"ProductionVerified": 141
 	},
@@ -6511,7 +6511,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -6550,7 +6550,16 @@
 						"detail": "ZAvatar explicit rendered fixture usage"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
+						"detail": "ZAvatar explicit visual contract assertions"
+					},
+					{
+						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
+						"detail": "ZAvatar explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -6603,7 +6612,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -6642,7 +6651,16 @@
 						"detail": "ZBadge explicit rendered fixture usage"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
+						"detail": "ZBadge explicit visual contract assertions"
+					},
+					{
+						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
+						"detail": "ZBadge explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -7703,7 +7721,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -7742,7 +7760,16 @@
 						"detail": "ZTag explicit rendered fixture usage"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
+						"detail": "ZTag explicit visual contract assertions"
+					},
+					{
+						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
+						"detail": "ZTag explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -8275,7 +8302,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -8314,7 +8341,16 @@
 						"detail": "ZSpinner explicit rendered fixture usage"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
+						"detail": "ZSpinner explicit visual contract assertions"
+					},
+					{
+						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
+						"detail": "ZSpinner explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -8650,6 +8686,14 @@
 					{
 						"path": "ui/zui/tests/ButtonToggleProductionFixture.svelte",
 						"detail": "ZButton explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
+						"detail": "ZButton explicit visual contract assertions"
+					},
+					{
+						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
+						"detail": "ZButton explicit rendered fixture usage"
 					}
 				],
 				"DesktopVerified": [],
@@ -8828,7 +8872,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -8875,7 +8919,16 @@
 						"detail": "ZHeading explicit rendered fixture usage"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
+						"detail": "ZHeading explicit visual contract assertions"
+					},
+					{
+						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
+						"detail": "ZHeading explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -8924,7 +8977,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -8959,7 +9012,16 @@
 						"detail": "ZIcon browser behavior assertions"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
+						"detail": "ZIcon explicit visual contract assertions"
+					},
+					{
+						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
+						"detail": "ZIcon explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -9368,7 +9430,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -9407,7 +9469,16 @@
 						"detail": "ZText explicit rendered fixture usage"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
+						"detail": "ZText explicit visual contract assertions"
+					},
+					{
+						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
+						"detail": "ZText explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -9720,7 +9791,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -9759,7 +9830,16 @@
 						"detail": "ZCascader explicit rendered fixture usage"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/cascader-production.browser.spec.ts",
+						"detail": "ZCascader explicit visual contract assertions"
+					},
+					{
+						"path": "ui/zui/tests/CascaderProductionFixture.svelte",
+						"detail": "ZCascader explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -9800,7 +9880,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -9839,7 +9919,16 @@
 						"detail": "ZCheckbox explicit rendered fixture usage"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
+						"detail": "ZCheckbox explicit visual contract assertions"
+					},
+					{
+						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
+						"detail": "ZCheckbox explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -9880,7 +9969,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -9923,7 +10012,20 @@
 						"detail": "ZColorPicker explicit rendered fixture usage"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/color-picker-production.browser.spec.ts",
+						"detail": "ZColorPicker explicit visual contract assertions"
+					},
+					{
+						"path": "ui/zui/tests/ColorPickerProductionFixture.svelte",
+						"detail": "ZColorPicker explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/ColorPickerAllowAlphaFixture.svelte",
+						"detail": "ZColorPicker explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -10636,7 +10738,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -10675,7 +10777,16 @@
 						"detail": "ZInput explicit rendered fixture usage"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
+						"detail": "ZInput explicit visual contract assertions"
+					},
+					{
+						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
+						"detail": "ZInput explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -10928,7 +11039,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -10967,7 +11078,16 @@
 						"detail": "ZNumberField explicit rendered fixture usage"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
+						"detail": "ZNumberField explicit visual contract assertions"
+					},
+					{
+						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
+						"detail": "ZNumberField explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -11008,7 +11128,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -11047,7 +11167,16 @@
 						"detail": "ZPinInput explicit rendered fixture usage"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
+						"detail": "ZPinInput explicit visual contract assertions"
+					},
+					{
+						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
+						"detail": "ZPinInput explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -11180,7 +11309,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -11219,7 +11348,16 @@
 						"detail": "ZSlider explicit rendered fixture usage"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
+						"detail": "ZSlider explicit visual contract assertions"
+					},
+					{
+						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
+						"detail": "ZSlider explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -11260,7 +11398,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -11307,7 +11445,16 @@
 						"detail": "ZSwitch explicit rendered fixture usage"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
+						"detail": "ZSwitch explicit visual contract assertions"
+					},
+					{
+						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
+						"detail": "ZSwitch explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -11432,7 +11579,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -11479,7 +11626,16 @@
 						"detail": "ZTextarea explicit rendered fixture usage"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
+						"detail": "ZTextarea explicit visual contract assertions"
+					},
+					{
+						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
+						"detail": "ZTextarea explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -11700,7 +11856,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -11739,7 +11895,16 @@
 						"detail": "ZTreeSelect explicit rendered fixture usage"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/tree-select-production.browser.spec.ts",
+						"detail": "ZTreeSelect explicit visual contract assertions"
+					},
+					{
+						"path": "ui/zui/tests/TreeProductionFixture.svelte",
+						"detail": "ZTreeSelect explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -11872,7 +12037,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": false,
+				"VisuallyVerified": true,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -11915,7 +12080,16 @@
 						"detail": "ZContainer explicit rendered fixture usage"
 					}
 				],
-				"VisuallyVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
+						"detail": "ZContainer explicit visual contract assertions"
+					},
+					{
+						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
+						"detail": "ZContainer explicit rendered fixture usage"
+					}
+				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{

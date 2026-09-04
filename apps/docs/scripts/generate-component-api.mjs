@@ -12,6 +12,7 @@ import {
 	REQUIREDNESS
 } from './workspace-property-facts.mjs';
 import { WorkspaceTypeGraph } from './workspace-type-graph.mjs';
+import { recipeVariantEntries } from './recipe-variant-facts.mjs';
 
 const docsRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const workspaceRoot = resolve(docsRoot, '../..');
@@ -1142,51 +1143,14 @@ function collectProperty(member, context, include, exclude) {
 }
 
 function collectRecipeVariantProperties(typeArgument, context, include, exclude) {
-	if (!typeArgument || !ts.isTypeQueryNode(typeArgument) || !ts.isIdentifier(typeArgument.exprName))
-		return false;
-	const recipeName = typeArgument.exprName.text;
-	let initializer;
-	for (const statement of context.sourceFile.statements) {
-		if (!ts.isVariableStatement(statement)) continue;
-		for (const declaration of statement.declarationList.declarations) {
-			if (
-				ts.isIdentifier(declaration.name) &&
-				declaration.name.text === recipeName &&
-				declaration.initializer
-			) {
-				initializer = unwrapExpression(declaration.initializer);
-				break;
-			}
-		}
-	}
-	if (!initializer || !ts.isCallExpression(initializer)) return false;
-	const recipe = initializer.arguments[0] ? unwrapExpression(initializer.arguments[0]) : undefined;
-	if (!recipe || !ts.isObjectLiteralExpression(recipe)) return false;
-	const variantsProperty = recipe.properties.find(
-		(property) => propertyName(property) === 'variants' && ts.isPropertyAssignment(property)
-	);
-	if (!variantsProperty || !ts.isPropertyAssignment(variantsProperty)) return false;
-	const variants = unwrapExpression(variantsProperty.initializer);
-	if (!ts.isObjectLiteralExpression(variants)) return false;
-	for (const variantProperty of variants.properties) {
-		if (!ts.isPropertyAssignment(variantProperty)) continue;
-		const name = propertyName(variantProperty);
+	const entries = recipeVariantEntries(typeArgument, context.sourceFile);
+	if (!entries) return false;
+	for (const { name, type } of entries) {
 		if (!name || exclude.has(name) || (include && !include.has(name))) continue;
-		const options = unwrapExpression(variantProperty.initializer);
-		if (!ts.isObjectLiteralExpression(options)) continue;
-		const values = options.properties.map(propertyName).filter((value) => value !== undefined);
-		if (values.length === 0) continue;
-		const booleanVariant =
-			values.length === 2 && values.includes('false') && values.includes('true');
 		context.props.set(name, {
 			name,
 			required: false,
-			type: booleanVariant
-				? 'boolean'
-				: [...new Set(values)]
-						.sort()
-						.map((value) => `'${value.replaceAll('\\', '\\\\').replaceAll("'", "\\'")}'`)
-						.join(' | ')
+			type
 		});
 	}
 	return true;
@@ -1725,10 +1689,6 @@ async function componentFacts(source, filename, path) {
 		)
 	);
 	const propMetadataNames = new Set(metadataItemNames(metadata, 'props'));
-	const metadataGapProps = [...context.props.keys()].filter(
-		(name) =>
-			!documentedProps.has(name) && name !== 'class' && name !== 'style' && !/^on[a-z]/u.test(name)
-	);
 	const metadataEntries = ['bindings', 'events', 'props', 'snippets'].flatMap((section) =>
 		metadataItems(metadata, section).map((item) => ({ item, section }))
 	);
@@ -1775,6 +1735,32 @@ async function componentFacts(source, filename, path) {
 			source: { modulePath: path, declaration: propsType }
 		});
 	}
+	for (const [factPath, fact] of publicFacts) {
+		if (
+			factPath.includes('.') ||
+			fact.requiredness === REQUIREDNESS.forbidden ||
+			context.props.has(factPath)
+		)
+			continue;
+		context.props.set(factPath, {
+			name: factPath,
+			required: fact.requiredness === REQUIREDNESS.required,
+			type: fact.declaredType,
+			...(fact.source?.declaration && fact.source.declaration !== propsType
+				? { inheritedFrom: fact.source.declaration }
+				: {})
+		});
+	}
+	const metadataGapProps = [...context.props.values()]
+		.filter(
+			(prop) =>
+				prop.inheritedFrom === undefined &&
+				!documentedProps.has(prop.name) &&
+				prop.name !== 'class' &&
+				prop.name !== 'style' &&
+				!/^on[a-z]/u.test(prop.name)
+		)
+		.map(({ name }) => name);
 	for (const event of [
 		...metadataItems(metadata, 'bindings'),
 		...metadataItems(metadata, 'events'),
@@ -2009,7 +1995,8 @@ if (process.argv.includes('--self-test')) {
 		['checkbox', ['size']],
 		['radio-group-item', ['size']],
 		['slider', ['size']],
-		['switch', ['size']]
+		['switch', ['size']],
+		['toggle-button', ['fullWidth', 'shape', 'size', 'tone', 'variant']]
 	]);
 	for (const [id, expected] of expectedRecipeProps) {
 		const actual = new Set(facts[id]?.props.map(({ name }) => name) ?? []);

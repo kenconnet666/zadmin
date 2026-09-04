@@ -377,8 +377,12 @@ const rows = componentFiles.map(({ id, name, category, status, path, source }) =
 			explicitComponentReference.test(withoutComments(content)) &&
 			executesComponentRender(content)
 	);
-	const visualTests = browserTests.filter(([, content]) =>
-		hasExplicitVisualEvidence(content, name)
+	const visualTests = relatedTests.filter(
+		([testPath, content]) =>
+			testPath.endsWith('.browser.spec.ts') &&
+			content.includes('expect(') &&
+			executesComponentRender(content) &&
+			hasExplicitVisualEvidence(content, name)
 	);
 	const productionTests = relatedTests.filter(
 		([testPath, content]) =>

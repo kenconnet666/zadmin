@@ -137,7 +137,10 @@ function sourceBackedProps(
 			rows.push({
 				default: supplement?.default ?? '—',
 				description:
-					supplement?.description ?? `公开属性，类型和必填性来自${facts.declaration}的静态AST。`,
+					supplement?.description ??
+					(fact.inheritedFrom
+						? `继承自${fact.inheritedFrom}的公开属性；类型和必填性来自静态类型图。`
+						: `公开属性，类型和必填性来自${facts.declaration}的静态AST。`),
 				name: fact.name,
 				required: fact.required || undefined,
 				type: fact.type
