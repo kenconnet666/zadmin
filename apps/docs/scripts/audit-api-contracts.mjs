@@ -10,6 +10,8 @@ const generatedApiPath = resolve(root, 'apps/docs/src/framework/component-api.ge
 const controllablePropFamilies = [
 	['open', 'defaultOpen', 'onOpenChange'],
 	['value', 'defaultValue', 'onValueChange'],
+	['activeValue', 'defaultActiveValue', 'onActiveValueChange'],
+	['focusedValue', 'defaultFocusedValue', 'onFocusedValueChange'],
 	['checked', 'defaultChecked', 'onCheckedChange'],
 	['pressed', 'defaultPressed', 'onPressedChange'],
 	['selectedKeys', 'defaultSelectedKeys', 'onSelectionChange'],
@@ -17,7 +19,12 @@ const controllablePropFamilies = [
 	['inputValue', 'defaultInputValue', 'onInputValueChange'],
 	['query', 'defaultQuery', 'onQueryChange'],
 	['page', 'defaultPage', 'onPageChange'],
-	['pageSize', 'defaultPageSize', 'onPageSizeChange']
+	['pageSize', 'defaultPageSize', 'onPageSizeChange'],
+	['files', 'defaultFiles', 'onFilesChange'],
+	['step', 'defaultStep', 'onStepChange'],
+	['sort', 'defaultSort', 'onSortChange'],
+	['columnVisibility', 'defaultColumnVisibility', 'onColumnVisibilityChange'],
+	['columnWidths', 'defaultColumnWidths', 'onColumnWidthsChange']
 ];
 
 // This gate proves declaration -> $props destructuring -> metadata coverage.
