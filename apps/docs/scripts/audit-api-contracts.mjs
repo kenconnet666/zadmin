@@ -154,6 +154,7 @@ function collectPropsConsumption(sourceFile) {
 	const consumed = new Set();
 	const defaults = new Map();
 	let restForwarded = false;
+	let restName;
 	function visit(node) {
 		if (
 			ts.isVariableDeclaration(node) &&
@@ -168,6 +169,7 @@ function collectPropsConsumption(sourceFile) {
 				for (const element of node.name.elements) {
 					if (ts.isSpreadElement(element) || element.dotDotDotToken) {
 						restForwarded = true;
+						restName = ts.isIdentifier(element.name) ? element.name.text : undefined;
 						continue;
 					}
 					if (
@@ -187,7 +189,7 @@ function collectPropsConsumption(sourceFile) {
 		ts.forEachChild(node, visit);
 	}
 	visit(sourceFile);
-	return { consumed, defaults, restForwarded };
+	return { consumed, defaults, restForwarded, restName };
 }
 
 function normalizeMetadataDefault(fact) {
@@ -263,6 +265,11 @@ for (const filename of allFiles) {
 	const forwardedConsumption = consumed.restForwarded
 		? explicit.filter((name) => !consumed.consumed.has(name))
 		: [];
+	const missingRestForwarding =
+		forwardedConsumption.length > 0 &&
+		(!consumed.restName || !source.includes(`{...${consumed.restName}}`))
+			? [consumed.restName ?? '<unnamed>']
+			: [];
 	const metadataExempt = new Set(['class', 'style']);
 	const missingMetadata = explicit.filter(
 		(name) =>
@@ -286,6 +293,7 @@ for (const filename of allFiles) {
 	}
 	if (
 		missingConsumption.length ||
+		missingRestForwarding.length ||
 		missingGeneratedFacts.length ||
 		generatedIdentityMismatch.length ||
 		missingMetadata.length ||
@@ -300,6 +308,7 @@ for (const filename of allFiles) {
 			declared: explicit,
 			consumed: [...consumed.consumed],
 			missingConsumption,
+			missingRestForwarding,
 			missingGeneratedFacts,
 			generatedIdentityMismatch,
 			forwardedConsumption,
@@ -313,6 +322,7 @@ for (const filename of allFiles) {
 const actionable = report.filter(
 	(item) =>
 		item.missingConsumption.length > 0 ||
+		item.missingRestForwarding.length > 0 ||
 		item.missingGeneratedFacts.length > 0 ||
 		item.generatedIdentityMismatch.length > 0 ||
 		item.missingMetadata.length > 0 ||
@@ -327,6 +337,7 @@ const summary = {
 	componentsWithFindings: report.length,
 	actionableIssues: actionable.length + unvisitedGeneratedSources.length,
 	missingConsumption: report.filter((x) => x.missingConsumption.length).length,
+	missingRestForwarding: report.filter((x) => x.missingRestForwarding.length).length,
 	missingGeneratedFacts: report.filter((x) => x.missingGeneratedFacts.length).length,
 	generatedIdentityMismatches: report.filter((x) => x.generatedIdentityMismatch.length).length,
 	forwardedConsumption: report.filter((x) => x.forwardedConsumption.length).length,

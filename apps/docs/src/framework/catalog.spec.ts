@@ -349,10 +349,12 @@ describe('ZUI component documentation catalog', () => {
 		}
 	});
 
-	it('lets runtime metadata strengthen conditional requirements over optional source aliases', () => {
+	it('preserves conditional metadata requirements without promoting optional source aliases', () => {
 		const carousel = componentDocsById.get('carousel');
 		const props = carousel?.api.find(({ id }) => id === 'props');
-		expect(props?.rows.find(({ name }) => name === 'aria-label')?.required).toBe(true);
+		const nativeLabel = props?.rows.find(({ name }) => name === 'aria-label');
+		expect(nativeLabel?.required).not.toBe(true);
+		expect(nativeLabel?.requiredWhen).toContain('ariaLabel');
 		expect(props?.rows.find(({ name }) => name === 'ariaLabel')?.required).not.toBe(true);
 	});
 
