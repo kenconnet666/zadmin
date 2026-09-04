@@ -60,7 +60,7 @@
 			data-testid="file-upload-default"
 			defaultFiles={[createFileUploadItem('brief', file)]}
 		/>
-		<ZTagsInput data-testid="tags-input-default" defaultValues={['alpha']} />
+		<ZTagsInput data-testid="tags-input-default" defaultValue={['alpha']} />
 		<ZColorPicker allowAlpha data-testid="color-picker-default" />
 	</div>
 </ZProvider>

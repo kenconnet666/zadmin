@@ -39,6 +39,10 @@ export const tagsInputDoc = defineComponentDoc(tagsInputMetadata, {
 				default: 'null',
 				description: '真实草稿input引用，用于聚焦、选择或宿主集成。'
 			},
+			defaultInputValue: {
+				default: "''",
+				description: '非受控初始草稿与form reset目标；受控场景使用inputValue。'
+			},
 			invalid: {
 				default: 'Field context或false',
 				description: '与新增/编辑校验失败合并到边框、input aria-invalid和data-invalid。'

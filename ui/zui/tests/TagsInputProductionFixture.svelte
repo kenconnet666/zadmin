@@ -20,9 +20,9 @@
 >
 	<ZTagsInput
 		bind:inputValue={draft}
-		bind:values
+		bind:value={values}
 		data-testid="tags-production"
-		defaultValues={['alpha', 'beta', 'gamma']}
+		defaultValue={['alpha', 'beta', 'gamma']}
 		editable
 		form="tags-production-form"
 		maxVisibleTags={2}
@@ -36,13 +36,13 @@
 	>Owner prepend</ZButton
 >
 <output data-testid="tags-production-output">{values.join(',')}:{changes}:{draft}</output>
-<ZTagsInput bind:values={staticValues} data-testid="tags-production-static" />
+<ZTagsInput bind:value={staticValues} data-testid="tags-production-static" />
 <output data-testid="tags-production-static-output">{staticValues.join(',')}</output>
 <ZTagsInput
 	allowDuplicates
-	bind:values={identityValues}
+	bind:value={identityValues}
 	data-testid="tags-production-identity"
-	defaultValues={['same', 'same', 'third']}
+	defaultValue={['same', 'same', 'third']}
 	editable
 />
 <output data-testid="tags-production-identity-output">{identityValues.join(',')}</output>
@@ -54,4 +54,4 @@
 	data-testid="tags-identity-controlled-replace"
 	onclick={() => (identityValues = ['same', 'same'])}>Identity replace</ZButton
 >
-<ZTagsInput data-testid="tags-production-readonly" defaultValues={['locked']} readonly />
+<ZTagsInput data-testid="tags-production-readonly" defaultValue={['locked']} readonly />

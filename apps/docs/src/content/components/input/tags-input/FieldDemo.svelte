@@ -27,7 +27,7 @@
 		required
 		size="large"
 	>
-		<ZTagsInput bind:values defaultValues={['stable']} form={formId} />
+		<ZTagsInput bind:value={values} defaultValue={['stable']} form={formId} />
 	</ZField>
 	<ZText tone="muted">values = {values.join(',')} · submitted = {submitted}</ZText>
 </ZStack>

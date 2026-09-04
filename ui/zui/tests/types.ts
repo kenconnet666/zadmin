@@ -440,6 +440,19 @@ const comboboxProps: ComponentProps<typeof ZCombobox> = {
 	options: collectionOptions satisfies readonly ZComboboxOption[]
 } satisfies ZComboboxProps;
 const comboboxInputProps: ComponentProps<typeof ZComboboxInput> = {} satisfies ZComboboxInputProps;
+const comboboxInputNativeProps: ComponentProps<typeof ZComboboxInput> = {
+	placeholder: 'Search options'
+} satisfies ZComboboxInputProps;
+// @ts-expect-error ZComboboxInput value is owned by ZCombobox.
+const comboboxInputValueConflict: ZComboboxInputProps = { value: 'ready' };
+// @ts-expect-error ZComboboxInput initial text is owned by ZCombobox.defaultInputValue.
+const comboboxInputDefaultValueConflict: ZComboboxInputProps = { defaultValue: 'Ready' };
+const comboboxInputValueChangeConflict: ZComboboxInputProps = {
+	// @ts-expect-error ZComboboxInput value changes are owned by ZCombobox.onInputValueChange.
+	onValueChange: () => undefined
+};
+// @ts-expect-error ZCombobox owns compound form reset behavior.
+const comboboxInputFormResetConflict: ZComboboxInputProps = { onFormReset: () => undefined };
 const comboboxContentProps: ComponentProps<typeof ZComboboxContent> = {
 	ariaLabel: 'Suggestions',
 	virtual: true,
@@ -587,13 +600,18 @@ const segmentedProps: ComponentProps<typeof ZSegmented> = {
 	options: [{ label: 'Ready', value: 1 }] satisfies readonly ZSegmentedOption[]
 } satisfies ZSegmentedProps;
 const tagsInputProps: ComponentProps<typeof ZTagsInput> = {
-	defaultValues: ['alpha'],
+	defaultValue: ['alpha'],
+	defaultInputValue: 'draft',
 	delimiters: [',', ';'],
 	editable: true,
 	maxVisibleTags: 3,
 	size: 'small',
 	transform: (value) => value.toLocaleLowerCase()
 } satisfies ZTagsInputProps;
+const tagsInputLegacyProps: ZTagsInputProps = {
+	defaultValues: ['legacy-default'],
+	values: ['legacy-value']
+};
 const treeProps: ComponentProps<typeof ZTree> = {
 	nodes: [{ key: 'root', label: 'Root' }]
 } satisfies ZTreeProps;

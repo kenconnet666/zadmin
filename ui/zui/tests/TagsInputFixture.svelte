@@ -10,8 +10,8 @@
 		addLabel="Add fixture tag"
 		aria-label="Fixture tags"
 		bind:inputValue
-		bind:values
-		defaultValues={['alpha']}
+		bind:value={values}
+		defaultValue={['alpha']}
 		maxTags={4}
 		name="tag"
 		onValueChange={() => (changes += 1)}

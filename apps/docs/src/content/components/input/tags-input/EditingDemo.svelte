@@ -7,8 +7,8 @@
 <ZStack gap="medium">
 	<ZTagsInput
 		aria-label="可编辑部署标签"
-		bind:values
-		defaultValues={['production', 'staging']}
+		bind:value={values}
+		defaultValue={['production', 'staging']}
 		editable
 		transform={(value) => value.toLocaleLowerCase().replaceAll(/\s+/gu, '-')}
 		validate={(value) => /^[a-z][a-z0-9-]*$/u.test(value)}

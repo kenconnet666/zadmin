@@ -8,8 +8,8 @@
 <ZStack gap="medium">
 	<ZTagsInput
 		aria-label="大量发布标签"
-		bind:values
-		defaultValues={initial}
+		bind:value={values}
+		defaultValue={initial}
 		maxVisibleTags={3}
 		overflowLabel={(omitted) => `还有 ${omitted.length} 个标签`}
 	/>

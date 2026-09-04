@@ -12,15 +12,15 @@
 		allowDuplicates
 		aria-label="允许重复的发布标签"
 		bind:inputValue={duplicateDraft}
-		bind:values={duplicateValues}
-		defaultValues={['release']}
+		bind:value={duplicateValues}
+		defaultValue={['release']}
 	/>
 	<ZTagsInput
 		aria-label="仅手动提交的标签"
 		bind:inputValue={manualDraft}
-		bind:values={manualValues}
+		bind:value={manualValues}
 		commitOnBlur={false}
-		defaultValues={['stable']}
+		defaultValue={['stable']}
 	/>
 	<ZButton type="button" variant="secondary">把焦点移到这里</ZButton>
 	<ZText tone="muted"

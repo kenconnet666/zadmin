@@ -29,6 +29,7 @@ import {
 	ZSelect,
 	ZSwitch,
 	ZText,
+	ZTagsInput,
 	ZTabs,
 	ZTooltip,
 	ZToggleButton,
@@ -496,6 +497,26 @@ describe('ZUI foundational components', () => {
 		expect(result).toContain('aria-label="Fixture tags"');
 		expect(result).toContain('placeholder="Add tag"');
 		expect(result).toContain('name="tag"');
+	});
+
+	it('supports an uncontrolled draft initial value for TagsInput', () => {
+		const result = render(ZTagsInput, {
+			props: { 'aria-label': 'Draft tags', defaultInputValue: 'draft-value' }
+		}).body;
+		expect(result).toContain('value="draft-value"');
+	});
+
+	it('keeps deprecated TagsInput value aliases compatible and exclusive', () => {
+		const legacy = render(ZTagsInput, { props: { defaultValues: ['legacy'] } }).body;
+		const legacyValue = render(ZTagsInput, { props: { values: ['bound-legacy'] } }).body;
+		expect(legacy).toContain('aria-label="Remove legacy"');
+		expect(legacyValue).toContain('aria-label="Remove bound-legacy"');
+		expect(() => render(ZTagsInput, { props: { value: ['one'], values: ['two'] } }).body).toThrow(
+			/value and deprecated values are mutually exclusive/u
+		);
+		expect(
+			() => render(ZTagsInput, { props: { defaultValue: ['one'], defaultValues: ['two'] } }).body
+		).toThrow(/defaultValue and deprecated defaultValues are mutually exclusive/u);
 	});
 
 	it('renders single and multiple Tree hierarchy metadata and form values during SSR', () => {

@@ -10,8 +10,8 @@
 		<ZTagsInput
 			addLabel="添加部署标签"
 			aria-label="部署标签"
-			bind:values
-			defaultValues={['production']}
+			bind:value={values}
+			defaultValue={['production']}
 			name="tag"
 			onValueChange={() => (changes += 1)}
 			placeholder="输入后按Enter，或粘贴逗号分隔文本"
