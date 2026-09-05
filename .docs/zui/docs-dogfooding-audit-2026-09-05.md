@@ -140,3 +140,13 @@ CI 暴露并继续修复的事项：
 5. **禁用状态 hover**：Button 的原生 disabled/loading，以及 Button/Link 的 aria-disabled 状态不再应用可操作 hover 视觉；不改变全局 ICSS hover 语义。真实鼠标回归覆盖 enabled/disabled 的 button、navigation、text 外观，1 项通过。
 
 第二阶段的定向 Docs 回归（新排版、浏览器前进后退、Result 可访问性、代码/节深链接、404）为 5/5 通过。完整多浏览器与覆盖率结果以修复提交对应的新 CI run 为准，不能复用第一阶段的通过项作为新提交的完整验收。
+
+## 用户授权后的剩余工作区审查
+
+用户随后要求“工作区修改都审核后提交”。对剩余项逐一核对：
+
+- Tooltip context、ZField、MenuFamilyProductionFixture 与 HEAD 的规范化文本完全一致，`git diff` 无代码差异；属于文件状态/换行规范化，不生成虚假的代码修复提交。
+- `.idea/vcs.xml` 从 `$PROJECT_DIR$` 映射改为项目根映射；XML 有效，WebStorm MCP `get_repositories` 实测仍仅返回当前项目根的 Git 仓库。
+- API contract 与 maturity JSON 只同步已审核 Button hover recipe 的导出指纹；`api:contract:check`、maturity 和 progress 检查通过。
+
+运行时代码提交 `5f400e40e660252970bd3da4862eff8030f40d78` 的 CI `33938515688` 已通过 workspace builds、组件测试、覆盖率、外部消费者以及 Chromium / Firefox 文档回归。该轮静态检查发现合同指纹未更新（此处已补齐）；Windows 编译/类型/合同测试通过，但 WebView2 启动烟测 30 秒超时，尚不能认定根因。后续合同/工作区收尾提交对应的新 CI 才是最终整轮状态依据。

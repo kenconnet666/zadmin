@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"componentCount": 141,
-	"overallSha256": "95300654e05248d5769caba73583217f9770c184ba741f4a47fd582293d5002a",
+	"overallSha256": "f2a7be878fa18e0911718e0ae4240b31790d9b70a367711b81604ac9a164e80b",
 	"components": [
 		{
 			"id": "accordion",
@@ -500,7 +500,7 @@
 		},
 		{
 			"id": "button",
-			"sha256": "c508791320c3b4b98941d5ced11826af39df7cabf85722fce163f84b4545d4aa",
+			"sha256": "ef53da7ebb65374f5796cac931c25b0033e6212eb10e79a44330cd2263749825",
 			"source": "src/components/gene/ZButton.svelte"
 		},
 		{
