@@ -257,9 +257,9 @@
 			</ZSelect>
 		</div>
 		<ZPopover placement="bottom-end">
-			<ZPopoverTrigger aria-label="调整显示偏好" size="small" variant="secondary">
+			<ZPopoverTrigger aria-label="调整显示偏好" size="medium" variant="secondary">
 				<ZIcon name="sliders" size={16} />
-				<ZText class={classes.preferencesLabel} size="small">显示</ZText>
+				<ZText class={classes.preferencesLabel}>显示</ZText>
 			</ZPopoverTrigger>
 			<ZPopoverContent class={classes.preferencesPanel}>
 				<div class={classes.preference}>
@@ -311,7 +311,7 @@
 			class={classes.github}
 			appearance="button"
 			variant="secondary"
-			size="small"
+			size="medium"
 			external
 			href="https://github.com/kenconnet666/zadmin"
 			underline="none"

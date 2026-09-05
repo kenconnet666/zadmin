@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"componentCount": 141,
-	"overallSha256": "f2a7be878fa18e0911718e0ae4240b31790d9b70a367711b81604ac9a164e80b",
+	"overallSha256": "2eb51578bd47353fe5463b01affb323b45d51c39cca73a59ea11222d2dd0299e",
 	"components": [
 		{
 			"id": "accordion",
@@ -20,7 +20,7 @@
 		},
 		{
 			"id": "accordion-trigger",
-			"sha256": "8429d6239568376121abbf92e41f8918a26b8ee247b7faaea8cfc9af7cfcb8c3",
+			"sha256": "57767b07b5cb973f02e06eac30b9f18d4d8c0e65b69703f0e1f7dcd14f6bc051",
 			"source": "src/components/compound/accordion/ZAccordionTrigger.svelte"
 		},
 		{
@@ -500,17 +500,17 @@
 		},
 		{
 			"id": "button",
-			"sha256": "ef53da7ebb65374f5796cac931c25b0033e6212eb10e79a44330cd2263749825",
+			"sha256": "07499946d47a14c0f9e6b1659a67e986f0e5a2aa66cec0f7bc8ffe3bcd731bd6",
 			"source": "src/components/gene/ZButton.svelte"
 		},
 		{
 			"id": "code",
-			"sha256": "073c373d385dcb772c9f562066a30c8912c7ad30bddf29681c317a00b23b86dc",
+			"sha256": "b674e80d1b4b04eb801922b5126136a0c75e3eb534200120084c0b132b8e4759",
 			"source": "src/components/gene/ZCode.svelte"
 		},
 		{
 			"id": "heading",
-			"sha256": "a14c9b123750438a9becd215d803e3df9ec0370c4580f9d8183b7b720c332c1f",
+			"sha256": "97ccced71334de1770cda5364f1042ca3cb9f2511eac5966dbb85b31c865f9c2",
 			"source": "src/components/gene/ZHeading.svelte"
 		},
 		{
@@ -712,13 +712,13 @@
 	"entrypoints": {
 		"code.ts": "eabb8477e4c5ef93d016ab909e5c7f85a3111df231e2d2c3c7ef5e54897b36db",
 		"compiler.ts": "96fa979b36838e8b7a6d3f52bb463f23951438a4d974d52b631ad1e6d937b2e7",
-		"index.ts": "4a23d1d1a026f930a5a59ae818e3899e9563fec9c45b750cfb4c253f4f5fa741",
+		"index.ts": "b3d86da48e5a4c91eb3bbb09abed648a803bf3853de63aff011520119aebd516",
 		"internal.ts": "05f9ef9c8628e1cdf694dcc88b71831e5aab726a3189bd6189eef7ae645df4d7",
 		"layer.ts": "72d0fc8e5b7a8ab39a12e157879951b84f1a7fc19654f4bd8b6ea92fd8aa6db8",
 		"metadata.ts": "d17046a9f91612481a3e483da346c3edc14f008df9b2d6940d7334af30634401",
 		"runtime.ts": "afe9b43ee6618c85ad678c9c2c1f5363f7d5beb8f1fd7b2e2f92b85b5b9e08c8",
 		"testing.ts": "c596113f3cbcf4ce75be2728b6a10cd6a0b77c9b9101a4408ba2e18e174f15cb",
-		"theme.ts": "672f4f9f183088c250e2ddc74a71b5c4a0c54017f981dfdbd810004fa21b0b24",
+		"theme.ts": "07d4d88122fb9f619fe8038fc46552680ea1727a2f08a60ec02a71a2d2dfc643",
 		"themes.ts": "058d133e2d96677143fa8b286d75d6a3aa6ec071bc6b18ad739bc09fe5a7f9c3"
 	}
 }

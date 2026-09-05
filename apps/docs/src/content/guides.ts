@@ -113,6 +113,32 @@ export default {
 				]
 			},
 			{
+				id: 'semantic-theme',
+				title: '共享语义颜色与排版',
+				paragraphs: [
+					'主题扩展优先使用extendTheme，避免复制整份主题。primarySubtle/primarySubtleHover分别用于选中与选中悬停，surfaceHover用于中性悬停；accent/danger/success/warningSubtle用于对应提示背景。修改源色时相关淡色会一起派生，显式覆盖始终优先。',
+					'onPrimary/onDanger决定强调色背景上的文字和loading指示器；深浅主题下都需要检查对比度。fontSize.xxlarge供页面标题使用，ZHeading与ZText读取同一主题刻度，文档不另外覆盖字号。'
+				],
+				code: `import { defaultTheme, extendTheme } from '@zadmin/zui';
+
+const theme = extendTheme(defaultTheme, {
+  color: {
+    primary: '#9a3412',
+    primaryHover: '#7c2d12',
+    onPrimary: '#fffaf3'
+  },
+  fontSize: { xxlarge: 32 },
+  duration: { fast: '120ms' }
+});`,
+				language: 'typescript',
+				bullets: [
+					'实心色的primaryHover仍是独立视觉轴；修改主色时应一起选择。',
+					'defineTheme要求完整token结构；新增颜色字段后，手写完整主题需要同步补齐。extendTheme(defaultTheme, patch)自动包含新增字段。',
+					'空间与尺寸可使用合法CSS表达式；动画duration用于JavaScript退出计时，只接受非负毫秒数或明确的ms/s时间，不能使用var/calc。',
+					'非法token类型、空字符串、非finite数值与越界数值在主题构建时抛错，不推迟到组件渲染。'
+				]
+			},
+			{
 				id: 'cascade',
 				title: '级联与Recipe优先级',
 				paragraphs: [

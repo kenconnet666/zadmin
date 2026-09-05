@@ -10,6 +10,8 @@ import ControlledDynamicDemo from './ControlledDynamicDemo.svelte';
 import controlledDynamicSource from './ControlledDynamicDemo.svelte?raw';
 import InteractiveDemo from './InteractiveDemo.svelte';
 import interactiveSource from './InteractiveDemo.svelte?raw';
+import InlineAppearanceDemo from './InlineAppearanceDemo.svelte';
+import inlineAppearanceSource from './InlineAppearanceDemo.svelte?raw';
 import MotionDemo from './MotionDemo.svelte';
 import motionSource from './MotionDemo.svelte?raw';
 import MultipleDemo from './MultipleDemo.svelte';
@@ -25,6 +27,11 @@ export const accordionDoc = defineComponentDoc(accordionMetadata, {
 	sourceApi: accordionApiFacts,
 	teaching: {
 		props: {
+			appearance: {
+				default: "'block'",
+				description:
+					'Trigger布局；inline适合卡片工具栏或行内disclosure，保留open/disabled和主题色状态。'
+			},
 			activeValue: {
 				default: 'selected key或第一enabled key',
 				description: '与展开selection分离的roving焦点owner；动态恢复不触发用户回调。'
@@ -68,6 +75,15 @@ export const accordionDoc = defineComponentDoc(accordionMetadata, {
 			'生产Accordion compound collection：组件props保持扁平以服务Svelte绑定和ComponentProps，严格single/multiple helper服务静态配置，运行时仍校验值shape并保留LogicalCollection、active焦点、nested与Presence。'
 	},
 	demos: [
+		{
+			component: InlineAppearanceDemo,
+			covers: ['basic-render', 'composition', 'variants-and-states'],
+			description:
+				'inline让Trigger适合工具栏或行内disclosure，仍由真实button和Accordion关系管理状态。',
+			id: 'accordion-inline-appearance',
+			source: inlineAppearanceSource,
+			title: 'Inline Trigger外观'
+		},
 		{
 			component: InteractiveDemo,
 			covers: ['basic-render', 'controlled', 'focus', 'keyboard', 'variants-and-states'],

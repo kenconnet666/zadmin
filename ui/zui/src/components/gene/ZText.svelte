@@ -122,7 +122,8 @@
 				large: (s) => s.fontSize._large,
 				medium: (s) => s.fontSize._medium,
 				small: (s) => s.fontSize._small,
-				xlarge: (s) => s.fontSize._xlarge
+				xlarge: (s) => s.fontSize._xlarge,
+				xxlarge: (s) => s.fontSize._xxlarge
 			},
 			tone: {
 				danger: (s) => s.color._danger,

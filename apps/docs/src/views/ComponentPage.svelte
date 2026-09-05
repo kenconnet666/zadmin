@@ -9,7 +9,6 @@
 				'article',
 				'header',
 				'eyebrow',
-				'title',
 				'lead',
 				'meta',
 				'importLine',
@@ -81,8 +80,6 @@
 					s.scrollMarginTop.rem(5.5);
 				},
 				sectionTitle: (s) => {
-					s.fontSize._xlarge;
-					s.letterSpacing.em(-0.03);
 					s.margin.px(0);
 				},
 				sourceLink: (s) => {
@@ -95,15 +92,10 @@
 					s.marginTop._large;
 					s.textDecoration.none;
 				},
-				title: (s) => {
-					s.fontSize.raw('clamp(2.4rem, 4vw, 3.75rem)');
-					s.letterSpacing.em(-0.05);
-					s.lineHeight._compact;
-					s.margin.px(0);
-					s.textShadow._small;
-				},
 				toc: (s) => {
 					s.height.fitContent;
+					s.maxHeight.raw('calc(100dvh - 8rem)');
+					s.overflowY.auto;
 					s.position.sticky;
 					s.top.rem(6);
 					s._media('(max-width: 78rem)', (tablet) => tablet.display.none);
@@ -160,7 +152,7 @@
 		<header class={classes.header}>
 			<ZText as="p" class={classes.eyebrow}>ZUI COMPONENTS</ZText>
 			<ZStack direction="row" align="center" gap="large" wrap>
-				<ZHeading class={classes.title} data-doc-page-title="true" level={1} size="xlarge">
+				<ZHeading data-doc-page-title="true" level={1} size="xxlarge">
 					{doc.name}
 				</ZHeading>
 				<ZTag size="small" tone="accent">{doc.status}</ZTag>
@@ -177,6 +169,7 @@
 					ariaLabel={`${doc.name}导入语句`}
 					code={doc.importStatement}
 					inline
+					size="medium"
 					lang="typescript"
 					wrap
 				/>
@@ -206,20 +199,24 @@
 			{/each}
 		</section>
 
-		<ZCard as="section" id="accessibility" class={classes.accessibility} variant="outlined">
-			<ZHeading class={classes.sectionTitle} level={2} size="xlarge">可访问性</ZHeading>
-			<ZList items={doc.accessibility.map((label, key) => ({ key, label }))} />
-		</ZCard>
+		<section id="accessibility" class={classes.accessibility}>
+			<ZStack gap="large">
+				<ZHeading class={classes.sectionTitle} level={2} size="xlarge">可访问性</ZHeading>
+				<ZCard variant="outlined">
+					<ZList items={doc.accessibility.map((label, key) => ({ key, label }))} />
+				</ZCard>
+			</ZStack>
+		</section>
 	</article>
 
 	<aside class={classes.toc} aria-label="当前页目录">
 		<ZCard variant="outlined">
 			<ZStack gap="small">
-				<ZText size="small" weight="semibold" tone="primary">当前页面</ZText>
+				<ZText weight="semibold" tone="muted">当前页面</ZText>
 				{#each [{ id: 'demos', label: '实时演示' }, ...doc.demos.map( (demo) => ({ id: demo.id, label: demo.title, nested: true }) ), { id: 'api', label: 'API' }, ...doc.api.map( (section) => ({ id: `api-${section.id}`, label: section.title, nested: true }) ), { id: 'accessibility', label: '可访问性' }] as entry (entry.id)}
 					<ZLink
 						appearance="navigation"
-						size="small"
+						size="medium"
 						aria-current={activeSection === entry.id ? 'location' : undefined}
 						href={componentRoute(doc.id, entry.id)}>{entry.label}</ZLink
 					>

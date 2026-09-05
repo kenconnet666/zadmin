@@ -8,7 +8,6 @@
 				'root',
 				'header',
 				'eyebrow',
-				'title',
 				'lead',
 				'sections',
 				'section',
@@ -54,12 +53,6 @@
 					s.fontSize._xlarge;
 					s.letterSpacing.em(-0.02);
 					s.margin.px(0);
-				},
-				title: (s) => {
-					s.fontSize.raw('clamp(2.35rem, 5vw, 4.5rem)');
-					s.letterSpacing.em(-0.05);
-					s.lineHeight._compact;
-					s.margin.px(0);
 				}
 			},
 			variants: {}
@@ -86,12 +79,8 @@
 	<ZContainer gutter="small" size="medium">
 		<header class={classes.header}>
 			<ZText as="p" class={classes.eyebrow}>{guide.eyebrow}</ZText>
-			<ZHeading
-				class={classes.title}
-				data-doc-page-title="true"
-				id={`guide-${guide.id}`}
-				level={1}
-				size="xlarge">{guide.title}</ZHeading
+			<ZHeading data-doc-page-title="true" id={`guide-${guide.id}`} level={1} size="xxlarge"
+				>{guide.title}</ZHeading
 			>
 			<ZText class={classes.lead} tone="muted">{guide.summary}</ZText>
 		</header>

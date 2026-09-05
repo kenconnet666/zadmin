@@ -223,7 +223,7 @@
 				},
 				danger: (s) => {
 					s.backgroundColor._danger;
-					s.color._canvas;
+					s.color._onDanger;
 				},
 				default: (s) => {
 					s.backgroundColor._surface;

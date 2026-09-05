@@ -191,8 +191,15 @@
 					s.opacity._disabled;
 				}
 			},
-			highlighted: { false: () => undefined, true: (s) => s.backgroundColor._surface }
+			highlighted: { false: () => undefined, true: (s) => s.backgroundColor._surfaceHover },
+			selected: { false: () => undefined, true: (s) => s.backgroundColor._primarySubtle }
 		},
+		compoundVariants: [
+			{
+				when: { disabled: false, highlighted: true, selected: true },
+				style: (s) => s.backgroundColor._primarySubtleHover
+			}
+		],
 		defaultVariants: { danger: false, disabled: false, highlighted: false }
 	});
 	const labelRecipe = defineRecipe({
@@ -266,11 +273,17 @@
 	const resolvedId = $derived(id ?? generatedId);
 	const resolvedDisabled = $derived(disabled || menu.disabled);
 	const highlighted = $derived(Object.is(menu.activeKey, value));
+	const selected = $derived(checked === true || checked === 'mixed');
 	const label = $derived(
 		textValue ?? ref?.querySelector('[data-slot="label"]')?.textContent?.trim() ?? String(value)
 	);
 	const rootClass = $derived(
-		zui.recipe(itemRecipe, { danger, disabled: resolvedDisabled, highlighted })
+		zui.recipe(itemRecipe, {
+			danger,
+			disabled: resolvedDisabled,
+			highlighted: highlighted && !resolvedDisabled,
+			selected
+		})
 	);
 	const labelClass = $derived(zui.recipe(labelRecipe));
 	const indicatorClass = $derived(zui.recipe(indicatorRecipe));

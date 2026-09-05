@@ -195,7 +195,7 @@
 			s.minWidth.px(0);
 			s.textDecoration.none;
 			s._selector('&:not(:disabled):not([aria-disabled="true"]):hover', (hover) => {
-				hover.backgroundColor._surface;
+				hover.backgroundColor._surfaceHover;
 				hover.color._primaryHover;
 			});
 			s._focusVisible((focus) => {
@@ -210,26 +210,33 @@
 				small: (s) => {
 					s.fontSize._small;
 					s.minHeight._small;
-					s.padding._small;
+					s.paddingInline._small;
+					s.paddingBlock._xsmall;
 				},
 				medium: (s) => {
 					s.fontSize._medium;
 					s.minHeight._medium;
-					s.padding._medium;
+					s.paddingInline._medium;
+					s.paddingBlock._small;
 				},
 				large: (s) => {
 					s.fontSize._large;
 					s.minHeight._large;
-					s.padding._large;
+					s.paddingInline._large;
+					s.paddingBlock._medium;
 				}
 			},
 			current: {
 				false: () => undefined,
 				true: (s) => {
-					s.backgroundColor._surface;
+					s.backgroundColor._primarySubtle;
 					s.borderInlineStartColor._accent;
 					s.color._primary;
 					s.fontWeight._semibold;
+					s._selector('&:not(:disabled):not([aria-disabled="true"]):hover', (hover) => {
+						hover.backgroundColor._primarySubtleHover;
+						hover.color._primaryHover;
+					});
 				}
 			},
 			disabled: {

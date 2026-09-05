@@ -102,13 +102,13 @@
 					s.color._primary;
 					s._selector(
 						'&:not(:disabled):not([aria-disabled="true"]):hover',
-						(hover) => hover.backgroundColor._surface
+						(hover) => hover.backgroundColor._surfaceHover
 					);
 				},
 				primary: (s) => {
 					s.backgroundColor._primary;
 					s.borderColor._primary;
-					s.color._canvas;
+					s.color._onPrimary;
 					s._selector(
 						'&:not(:disabled):not([aria-disabled="true"]):hover',
 						(hover) => hover.backgroundColor._primaryHover
@@ -120,7 +120,7 @@
 					s.color._text;
 					s._selector(
 						'&:not(:disabled):not([aria-disabled="true"]):hover',
-						(hover) => hover.backgroundColor._canvas
+						(hover) => hover.backgroundColor._surfaceHover
 					);
 				}
 			}
@@ -134,7 +134,7 @@
 				style: (s) => {
 					s.backgroundColor._danger;
 					s.borderColor._danger;
-					s.color._canvas;
+					s.color._onDanger;
 					s._selector(
 						'&:not(:disabled):not([aria-disabled="true"]):hover',
 						(hover) => hover.backgroundColor._dangerHover
@@ -149,7 +149,7 @@
 					s.color._danger;
 					s._selector(
 						'&:not(:disabled):not([aria-disabled="true"]):hover',
-						(hover) => hover.backgroundColor._canvas
+						(hover) => hover.backgroundColor._surfaceHover
 					);
 				},
 				when: { tone: 'danger', variant: 'secondary' }
@@ -161,7 +161,7 @@
 					s.color._danger;
 					s._selector(
 						'&:not(:disabled):not([aria-disabled="true"]):hover',
-						(hover) => hover.backgroundColor._surface
+						(hover) => hover.backgroundColor._surfaceHover
 					);
 				},
 				when: { tone: 'danger', variant: 'ghost' }
@@ -174,7 +174,7 @@
 				style: (s) => {
 					s.backgroundColor._primary;
 					s.borderColor._primary;
-					s.color._canvas;
+					s.color._onPrimary;
 				},
 				when: { pressed: true, tone: 'default', variant: 'secondary' }
 			},
@@ -194,7 +194,7 @@
 				style: (s) => {
 					s.backgroundColor._danger;
 					s.borderColor._danger;
-					s.color._canvas;
+					s.color._onDanger;
 				},
 				when: { pressed: true, tone: 'danger', variant: 'secondary' }
 			},
@@ -300,10 +300,12 @@
 		},
 		variants: {
 			indicatorTone: {
-				canvas: (s) =>
-					s._selector('& [data-slot="indicator"]', (indicator) => indicator.color._canvas),
 				danger: (s) =>
 					s._selector('& [data-slot="indicator"]', (indicator) => indicator.color._danger),
+				onDanger: (s) =>
+					s._selector('& [data-slot="indicator"]', (indicator) => indicator.color._onDanger),
+				onPrimary: (s) =>
+					s._selector('& [data-slot="indicator"]', (indicator) => indicator.color._onPrimary),
 				primary: (s) =>
 					s._selector('& [data-slot="indicator"]', (indicator) => indicator.color._primary)
 			}
@@ -494,7 +496,13 @@
 	);
 	const spinnerSize = $derived(resolvedSize === 'large' ? 'medium' : 'small');
 	const spinnerTone = $derived(
-		resolvedVariant === 'primary' ? 'canvas' : resolvedTone === 'danger' ? 'danger' : 'primary'
+		resolvedVariant === 'primary'
+			? resolvedTone === 'danger'
+				? 'onDanger'
+				: 'onPrimary'
+			: resolvedTone === 'danger'
+				? 'danger'
+				: 'primary'
 	);
 	const rootClass = $derived(
 		zui.recipe(buttonRecipe, {

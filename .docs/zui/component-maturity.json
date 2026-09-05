@@ -4,7 +4,7 @@
 		"metadataComponents": 141,
 		"documentationPages": 79,
 		"contractComponents": 141,
-		"testFiles": 162
+		"testFiles": 168
 	},
 	"stageNames": [
 		"Declared",
@@ -352,7 +352,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "8429d6239568376121abbf92e41f8918a26b8ee247b7faaea8cfc9af7cfcb8c3 API snapshot entry"
+						"detail": "57767b07b5cb973f02e06eac30b9f18d4d8c0e65b69703f0e1f7dcd14f6bc051 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -369,6 +369,14 @@
 					{
 						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
 						"detail": "ZAccordionTrigger explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/accordion-trigger-appearance.browser.spec.ts",
+						"detail": "ZAccordionTrigger browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/AccordionTriggerAppearanceFixture.svelte",
+						"detail": "ZAccordionTrigger explicit rendered fixture usage"
 					}
 				],
 				"VisuallyVerified": [
@@ -378,6 +386,14 @@
 					},
 					{
 						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
+						"detail": "ZAccordionTrigger explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/accordion-trigger-appearance.browser.spec.ts",
+						"detail": "ZAccordionTrigger authored visual contract: supports block and inline geometry, open state and disabled hover semantics (line 8); requires browser execution and page-level review"
+					},
+					{
+						"path": "ui/zui/tests/AccordionTriggerAppearanceFixture.svelte",
 						"detail": "ZAccordionTrigger explicit rendered fixture usage"
 					}
 				],
@@ -7460,6 +7476,14 @@
 					{
 						"path": "ui/zui/tests/CardProductionFixture.svelte",
 						"detail": "ZCard explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/primitive-typography.browser.spec.ts",
+						"detail": "ZCard browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/PrimitiveTypographyFixture.svelte",
+						"detail": "ZCard explicit rendered fixture usage"
 					}
 				],
 				"VisuallyVerified": [
@@ -8007,6 +8031,14 @@
 					},
 					{
 						"path": "ui/zui/tests/DisplayCollectionsProductionFixture.svelte",
+						"detail": "ZList explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/primitive-typography.browser.spec.ts",
+						"detail": "ZList browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/PrimitiveTypographyFixture.svelte",
 						"detail": "ZList explicit rendered fixture usage"
 					}
 				],
@@ -9535,7 +9567,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "ef53da7ebb65374f5796cac931c25b0033e6212eb10e79a44330cd2263749825 API snapshot entry"
+						"detail": "07499946d47a14c0f9e6b1659a67e986f0e5a2aa66cec0f7bc8ffe3bcd731bd6 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -9676,7 +9708,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "073c373d385dcb772c9f562066a30c8912c7ad30bddf29681c317a00b23b86dc API snapshot entry"
+						"detail": "b674e80d1b4b04eb801922b5126136a0c75e3eb534200120084c0b132b8e4759 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -9700,6 +9732,14 @@
 					},
 					{
 						"path": "ui/zui/tests/CodeRaceFixture.svelte",
+						"detail": "ZCode explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/code-size.browser.spec.ts",
+						"detail": "ZCode browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/CodeSizeFixture.svelte",
 						"detail": "ZCode explicit rendered fixture usage"
 					}
 				],
@@ -9785,7 +9825,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "a14c9b123750438a9becd215d803e3df9ec0370c4580f9d8183b7b720c332c1f API snapshot entry"
+						"detail": "97ccced71334de1770cda5364f1042ca3cb9f2511eac5966dbb85b31c865f9c2 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [

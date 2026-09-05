@@ -1833,21 +1833,21 @@ export const componentCatalogManifest = Object.freeze([
 		profiles: ['collection', 'animated'],
 		capabilities: [
 			'basic-render',
+			'composition',
+			'variants-and-states',
 			'controlled',
 			'focus',
 			'keyboard',
-			'variants-and-states',
 			'uncontrolled',
 			'external-clear',
 			'resource-cleanup',
 			'accessible-name',
-			'composition',
 			'native-props',
 			'rtl',
 			'full-motion',
 			'reduced-motion'
 		],
-		demoCount: 6,
+		demoCount: 7,
 		publicComponentCount: 4
 	},
 	{

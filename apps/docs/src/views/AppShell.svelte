@@ -11,7 +11,6 @@
 				'main',
 				'notFound',
 				'eyebrow',
-				'title',
 				'copy'
 			] as const,
 			base: {
@@ -73,12 +72,6 @@
 				skipNavigation: (s) => {
 					s.position.fixed;
 					s.zIndex._modal;
-				},
-				title: (s) => {
-					s.fontSize.raw('clamp(2.5rem, 5vw, 4.5rem)');
-					s.letterSpacing.em(-0.05);
-					s.lineHeight._compact;
-					s.margin.px(0);
 				}
 			},
 			variants: {
@@ -290,7 +283,7 @@
 		{:else if invalidRoute}
 			<section class={classes.notFound}>
 				<ZText as="p" class={classes.eyebrow}>404</ZText>
-				<ZHeading class={classes.title} level={1} size="xlarge">没有这个页面。</ZHeading>
+				<ZHeading level={1} size="xxlarge">没有这个页面。</ZHeading>
 				<ZText as="p" class={classes.copy}>当前展示站只列出已经实现的ZUI组件与生产指南。</ZText>
 				<ZLink appearance="button" href="#/">返回文档概览</ZLink>
 			</section>

@@ -642,6 +642,7 @@ export type { IcssClassName, IcssFactory, IcssStyle } from '../icss/types.js';
 export type {
 	DeepPartial,
 	DeepReadonly,
+	DurationTokenValue,
 	Theme,
 	ThemeSchema,
 	ThemeTokenGroup,

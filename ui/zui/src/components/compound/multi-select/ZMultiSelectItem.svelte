@@ -113,9 +113,24 @@
 					s.opacity._disabled;
 				}
 			},
-			highlighted: { false: () => undefined, true: (s) => s.backgroundColor._surface },
-			selected: { false: () => undefined, true: (s) => s.color._primary }
+			highlighted: { false: () => undefined, true: (s) => s.backgroundColor._surfaceHover },
+			selected: {
+				false: () => undefined,
+				true: (s) => {
+					s.backgroundColor._primarySubtle;
+					s.color._primary;
+				}
+			}
 		},
+		compoundVariants: [
+			{
+				when: { disabled: false, highlighted: true, selected: true },
+				style: (s) => {
+					s.backgroundColor._primarySubtleHover;
+					s.color._primaryHover;
+				}
+			}
+		],
 		defaultVariants: { disabled: false, highlighted: false, selected: false }
 	});
 	registerRecipeHmr(import.meta, recipe);
@@ -145,7 +160,11 @@
 	const selected = $derived(multi.isSelected(value));
 	const highlighted = $derived(Object.is(multi.activeKey, value));
 	const rootClass = $derived(
-		zui.recipe(recipe, { disabled: resolvedDisabled, highlighted, selected })
+		zui.recipe(recipe, {
+			disabled: resolvedDisabled,
+			highlighted: highlighted && !resolvedDisabled,
+			selected
+		})
 	);
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));

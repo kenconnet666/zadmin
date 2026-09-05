@@ -7,7 +7,7 @@
 | 维度                      |                    当前值 |                           总量或边界 |
 | ------------------------- | ------------------------: | -----------------------------------: |
 | Public component metadata |                       141 |                                  141 |
-| Declared public props     |                      1762 |         metadata gaps 0; fallbacks 0 |
+| Declared public props     |                      1764 |         metadata gaps 0; fallbacks 0 |
 | Stable                    |                       141 |                         violations 0 |
 | BrowserBehaviorVerified   |                       141 |                                  141 |
 | VisuallyVerified          |                       134 |                                  141 |

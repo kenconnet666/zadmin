@@ -6,7 +6,7 @@
 			slots: ['root', 'nav', 'category', 'footer'] as const,
 			base: {
 				root: (s) => {
-					s.backgroundColor._surface;
+					s.backgroundColor._canvas;
 					s.borderInlineEndColor._border;
 					s.borderInlineEndStyle.solid;
 					s.borderInlineEndWidth._hairline;
@@ -23,7 +23,8 @@
 					s.scrollbarWidth.thin;
 				},
 				category: (s) => {
-					s.marginBlock._xlarge;
+					s.marginBlockStart._xlarge;
+					s.marginBlockEnd._medium;
 					s.paddingInline._medium;
 				},
 				footer: (s) => {
@@ -58,7 +59,7 @@
 </script>
 
 <script lang="ts">
-	import { ZIcon, ZLink, ZStack, ZText, useZui } from '@zadmin/zui';
+	import { ZLink, ZStack, ZText, useZui } from '@zadmin/zui';
 	import { guideDocs } from '../content/guides.js';
 	import {
 		componentCategories,
@@ -95,15 +96,14 @@
 			href="#/"
 			onclick={() => onNavigate?.()}>概览</ZLink
 		>
-		<ZText as="p" class={classes.category} size="small" weight="semibold" tone="primary">指南</ZText
-		>
+		<ZText as="p" class={classes.category} size="small" weight="semibold" tone="muted">指南</ZText>
 		<ZLink
 			appearance="navigation"
 			aria-current={currentGuideId === 'theme' ? 'page' : undefined}
 			href="#/guides/theme"
 			onclick={() => onNavigate?.()}
 		>
-			Theme Lab <ZIcon name="arrowRight" size={12} />
+			Theme Lab
 		</ZLink>
 		{#each guideDocs as guide (guide.id)}
 			<ZLink
@@ -112,13 +112,13 @@
 				href={guideRoute(guide.id)}
 				onclick={() => onNavigate?.()}
 			>
-				{guide.eyebrow}<ZIcon name="arrowRight" size={12} />
+				{guide.eyebrow}
 			</ZLink>
 		{/each}
 		{#each componentCategories as category (category.id)}
 			{@const categoryDocs = docs.filter((doc) => doc.category === category.id)}
 			{#if categoryDocs.length > 0}
-				<ZText as="p" class={classes.category} size="small" weight="semibold" tone="primary"
+				<ZText as="p" class={classes.category} size="small" weight="semibold" tone="muted"
 					>{category.label}</ZText
 				>
 				{#each categoryDocs as doc (doc.id)}
@@ -128,7 +128,7 @@
 						href={`#/components/${doc.id}`}
 						onclick={() => onNavigate?.()}
 					>
-						{doc.name}<ZIcon name="arrowRight" size={12} />
+						{doc.name}
 					</ZLink>
 				{/each}
 			{/if}

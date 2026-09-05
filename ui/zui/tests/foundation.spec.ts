@@ -250,6 +250,9 @@ describe('ZUI foundation runtime', () => {
 
 		expect(durationMilliseconds('0.2s')).toBe(200);
 		expect(durationMilliseconds('120ms')).toBe(120);
+		expect(durationMilliseconds(' 120ms ')).toBe(120);
+		expect(durationMilliseconds(' 0.2s ')).toBe(200);
+		expect(() => durationMilliseconds('-1s')).toThrow(/non-negative/u);
 		expect(() => durationMilliseconds('fast')).toThrow(/ms or s/u);
 		expect(() => durationMilliseconds(-1)).toThrow(/non-negative/u);
 		expect(durationMilliseconds('.5s')).toBe(500);
@@ -273,6 +276,18 @@ describe('ZUI foundation runtime', () => {
 		controller.update(false, 0);
 		expect(controller.state).toBe('exited');
 		controller.destroy();
+	});
+
+	it('finishes an in-flight exit when the reduced-motion duration becomes zero', () => {
+		const presence = new Presence(true);
+		presence.update(false, 1000);
+		expect(presence.state).toBe('exiting');
+		expect(presence.mounted).toBe(true);
+
+		presence.update(false, 0);
+
+		expect(presence.state).toBe('exited');
+		expect(presence.mounted).toBe(false);
 	});
 
 	it('matches locale-aware typeahead with timeout, cycling and disabled filtering', () => {

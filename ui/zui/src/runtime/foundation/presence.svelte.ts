@@ -1,4 +1,6 @@
 export type PresenceState = 'entered' | 'exited' | 'exiting';
+import { durationMilliseconds } from '../../theme/units.js';
+export { durationMilliseconds } from '../../theme/units.js';
 
 export interface PresenceSnapshot {
 	readonly mounted: boolean;
@@ -20,18 +22,6 @@ function scheduleTimeout(callback: () => void, duration: number, ownerWindow?: W
 	}
 	const timer = setTimeout(callback, duration);
 	return () => clearTimeout(timer);
-}
-
-export function durationMilliseconds(value: number | string): number {
-	if (typeof value === 'number') {
-		if (!Number.isFinite(value) || value < 0) throw new TypeError('Duration must be non-negative.');
-		return value;
-	}
-	const match = /^(-?(?:\d+\.?\d*|\.\d+))(ms|s)$/u.exec(value.trim());
-	if (!match) throw new TypeError('Duration must use ms or s units.');
-	const amount = Number(match[1]);
-	if (!Number.isFinite(amount) || amount < 0) throw new TypeError('Duration must be non-negative.');
-	return match[2] === 's' ? amount * 1000 : amount;
 }
 
 export class Presence {
@@ -57,7 +47,13 @@ export class Presence {
 	}
 
 	update(present: boolean, exitDuration = 0, ownerWindow?: Window | null): void {
-		if (present === this.#present) return;
+		if (present === this.#present) {
+			if (!present && this.#state === 'exiting' && durationMilliseconds(exitDuration) === 0) {
+				this.#clearTimer();
+				this.#exit();
+			}
+			return;
+		}
 		this.#present = present;
 		this.#clearTimer();
 		if (present) {
@@ -132,7 +128,13 @@ export function createPresence(initiallyPresent = false): PresenceController {
 			return state;
 		},
 		update(next, exitDuration = 0, ownerWindow) {
-			if (next === present) return;
+			if (next === present) {
+				if (!next && state === 'exiting' && durationMilliseconds(exitDuration) === 0) {
+					clearTimer();
+					exit();
+				}
+				return;
+			}
 			present = next;
 			clearTimer();
 			if (next) {

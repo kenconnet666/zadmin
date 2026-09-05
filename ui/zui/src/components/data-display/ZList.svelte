@@ -371,7 +371,7 @@
 							{#if item}
 								{@render item(entry, index)}
 							{:else}
-								<strong>{entry.label}</strong>
+								<span>{entry.label}</span>
 								{#if entry.description}
 									<div class={descriptionClass}>{entry.description}</div>
 								{/if}

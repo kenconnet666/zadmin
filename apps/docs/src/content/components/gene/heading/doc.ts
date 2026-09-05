@@ -18,7 +18,10 @@ export const headingDoc = defineComponentDoc(headingMetadata, {
 			level: { default: '2', description: '唯一决定真实h1–h6元素；必须按文档层级选择。' },
 			lineHeight: { default: "'compact'", description: '独立Theme行高token。' },
 			ref: { default: 'null', description: '绑定真实HTMLHeadingElement。' },
-			size: { default: "'xlarge'", description: '独立于level的Theme字号token。' },
+			size: {
+				default: "'xlarge'",
+				description: '独立于level的Theme字号token；xxlarge默认32px，用于页面标题。'
+			},
 			tone: { default: "'default'", description: '语义颜色，不改变heading level。' },
 			weight: { default: "'bold'", description: 'Theme字重token。' }
 		},

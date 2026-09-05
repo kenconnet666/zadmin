@@ -85,7 +85,7 @@
 			{
 				description: '独立视觉字号。',
 				name: 'data-size',
-				values: ['small', 'medium', 'large', 'xlarge']
+				values: ['small', 'medium', 'large', 'xlarge', 'xxlarge']
 			}
 		],
 		status: 'stable',
@@ -107,7 +107,8 @@
 				large: (s) => s.fontSize._large,
 				medium: (s) => s.fontSize._medium,
 				small: (s) => s.fontSize._small,
-				xlarge: (s) => s.fontSize._xlarge
+				xlarge: (s) => s.fontSize._xlarge,
+				xxlarge: (s) => s.fontSize._xxlarge
 			},
 			tone: {
 				danger: (s) => s.color._danger,

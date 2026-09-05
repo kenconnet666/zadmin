@@ -137,6 +137,11 @@ export const accordionTriggerApiFacts = {
 	name: 'ZAccordionTrigger',
 	props: [
 		{
+			name: 'appearance',
+			required: false,
+			type: "'block' | 'inline'"
+		},
+		{
 			name: 'children',
 			required: false,
 			type: 'Snippet'
@@ -6812,6 +6817,11 @@ export const codeApiFacts = {
 			name: 'scheme',
 			required: false,
 			type: "'dark' | 'light'"
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'TypographySize'
 		},
 		{
 			name: 'theme',

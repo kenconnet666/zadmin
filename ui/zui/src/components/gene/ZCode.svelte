@@ -3,6 +3,7 @@
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { LanguageRegistration } from 'shiki/core';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
+	import type { TypographySize } from './typography.js';
 
 	import { defineSlotRecipe, registerSlotRecipeHmr } from '../../recipes/slots.js';
 
@@ -36,6 +37,7 @@
 		readonly loading?: Snippet;
 		readonly onCopy?: (detail: ZCodeCopyDetail) => void;
 		readonly scheme?: ZCodeScheme;
+		readonly size?: TypographySize;
 		readonly theme?: ZCodeTheme;
 		readonly wrap?: boolean;
 		ref?: HTMLElement | null;
@@ -112,6 +114,13 @@
 				type: 'boolean'
 			},
 			{ default: 'false', description: '渲染为inline code。', name: 'inline', type: 'boolean' },
+			{
+				default: 'inline时small，否则medium',
+				description:
+					'代码字号Theme token；显式值覆盖inline与block默认字号，不改变源码文本或换行规则。',
+				name: 'size',
+				type: "keyof ZuiTheme['fontSize']"
+			},
 			{ default: 'false', description: '允许长行换行。', name: 'wrap', type: 'boolean' },
 			{ default: 'false', description: '显示行号。', name: 'lineNumbers', type: 'boolean' },
 			{
@@ -133,6 +142,11 @@
 		snippets: [{ description: '异步高亮期间的可选占位内容。', name: 'loading', type: 'Snippet' }],
 		source: 'ui/zui/src/components/gene/ZCode.svelte',
 		states: [
+			{
+				description: '解析后的Theme字号；inline默认small，block默认medium。',
+				name: 'data-size',
+				values: ['small', 'medium', 'large', 'xlarge', 'xxlarge']
+			},
 			{
 				description: '当前代码表面的明暗模式。',
 				name: 'data-color-scheme',
@@ -280,6 +294,13 @@
 					}
 				}
 			},
+			size: {
+				large: { root: (s) => s.fontSize._large },
+				medium: { root: (s) => s.fontSize._medium },
+				small: { root: (s) => s.fontSize._small },
+				xlarge: { root: (s) => s.fontSize._xlarge },
+				xxlarge: { root: (s) => s.fontSize._xxlarge }
+			},
 			scheme: {
 				dark: {
 					lineNumber: (s) => s.color._codeMuted,
@@ -364,6 +385,7 @@
 		onCopy,
 		ref = $bindable(null),
 		scheme,
+		size,
 		style,
 		theme = DEFAULT_THEME,
 		wrap = false,
@@ -375,6 +397,7 @@
 	const resolvedCopiedLabel = $derived(copiedLabel ?? zui.localePack.code.copied);
 	const resolvedCopyFailedLabel = $derived(copyFailedLabel ?? zui.localePack.code.copyFailed);
 	const resolvedScheme = $derived(scheme ?? zui.colorScheme);
+	const resolvedSize = $derived(size ?? (inline ? 'small' : 'medium'));
 	const classes = $derived(
 		zui.slots(codeRecipe, {
 			copyable,
@@ -382,6 +405,7 @@
 			highlighted: false,
 			inline,
 			scheme: resolvedScheme,
+			size: resolvedSize,
 			wrap
 		})
 	);
@@ -507,6 +531,7 @@
 				highlighted: highlighted.has(index + 1),
 				inline,
 				scheme: resolvedScheme,
+				size: resolvedSize,
 				wrap
 			})}
 			<span class={lineClasses.line} data-highlighted={highlighted.has(index + 1) || undefined}
@@ -531,6 +556,7 @@
 		use:applyIcssRootStyle={{ style, variables: icssVariables }}
 		aria-label={ariaLabel}
 		data-color-scheme={resolvedScheme}
+		data-size={resolvedSize}
 		data-copy-state={copyStatus === 'idle' ? undefined : copyStatus}
 		data-highlight-status={status}><code>{@render highlightedContent()}</code></pre>
 {/snippet}
@@ -544,6 +570,7 @@
 		use:applyIcssRootStyle={{ style, variables: icssVariables }}
 		aria-label={ariaLabel}
 		data-color-scheme={resolvedScheme}
+		data-size={resolvedSize}
 		data-highlight-status={status}
 		>{#if status === 'loading' && loading}{@render loading()}{:else}{@render highlightedContent()}{/if}</code
 	>

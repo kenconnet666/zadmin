@@ -4,7 +4,7 @@
 	const demoRecipe = defineSlotRecipe(
 		{
 			layer: 'utilities',
-			slots: ['root', 'item', 'preview', 'trigger', 'source'] as const,
+			slots: ['root', 'item', 'preview', 'source'] as const,
 			base: {
 				root: (s) => s.scrollMarginTop.rem(5.5),
 				item: (s) => s.borderBottomWidth.px(0),
@@ -15,14 +15,6 @@
 					s.minHeight.rem(8);
 					s.padding._xlarge;
 					s._media('(max-width: 48rem)', (mobile) => mobile.padding._large);
-				},
-				trigger: (s) => {
-					s.color._primary;
-					s.fontSize._small;
-					s.fontWeight._medium;
-					s.gap._small;
-					s.paddingBlock._small;
-					s.width.auto;
 				},
 				source: (s) => {
 					s.borderTopColor._border;
@@ -71,7 +63,7 @@
 						<ZHeading level={3} size="large">{demo.title}</ZHeading>
 						<ZText as="p" tone="muted" lineHeight="relaxed">{demo.description}</ZText>
 					</ZStack>
-					<ZAccordionTrigger class={classes.trigger} headingLevel={4}>
+					<ZAccordionTrigger appearance="inline" headingLevel={4}>
 						{expanded === 'source' ? '收起源码' : '查看源码'}
 					</ZAccordionTrigger>
 				</ZStack>

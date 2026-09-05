@@ -216,13 +216,28 @@ test('keeps component page section spacing outside card surfaces', async ({ page
 test('preserves docs typography and code geometry across themes', async ({ page }) => {
 	await page.setViewportSize({ width: 1920, height: 1080 });
 	await gotoComponent(page, 'button');
-	for (const theme of ['极光明亮', '纸张暖白', '霓虹暗色']) {
+	for (const theme of [
+		'极光明亮',
+		'纸张暖白',
+		'霓虹暗色',
+		'午夜专业',
+		'高对比亮色',
+		'高对比暗色'
+	]) {
 		await page.getByRole('button', { name: '选择文档主题', exact: true }).click();
 		await page.getByRole('option', { name: theme, exact: true }).click();
 		const title = page.getByRole('heading', { level: 1 });
-		await expect(title).toHaveCSS('font-size', '60px');
+		await expect(title).toHaveCSS('font-size', '32px');
+		for (const label of ['选择文档主题', '调整显示偏好', '搜索组件与指南']) {
+			const control = page.getByRole('button', { name: label, exact: true });
+			expect(await control.evaluate((element) => element.getBoundingClientRect().height)).toBe(32);
+			await expect(control).toHaveCSS('font-size', '14px');
+		}
+		const github = page.getByRole('link', { name: 'GitHub', exact: true });
+		expect(await github.evaluate((element) => element.getBoundingClientRect().height)).toBe(32);
 		const inlineCode = page.locator('main code[data-highlight-status="highlighted"]').first();
 		await expect(inlineCode).toBeVisible();
+		await expect(inlineCode).toHaveCSS('font-size', '14px');
 		expect(await inlineCode.textContent()).toBe("import { ZButton } from '@zadmin/zui';");
 		const metrics = await page.evaluate(() => {
 			const active = document.querySelector('nav[aria-label="组件导航"] a[aria-current="page"]')!;
@@ -240,16 +255,46 @@ test('preserves docs typography and code geometry across themes', async ({ page 
 					Number.parseFloat(style.borderTopWidth) +
 					Number.parseFloat(style.borderBottomWidth),
 				activeBorderWidth: getComputedStyle(active).borderInlineStartWidth,
+				navHeight: active.getBoundingClientRect().height,
+				selectedBackground: getComputedStyle(active).backgroundColor,
+				navBackground: getComputedStyle(active.closest('aside')!).backgroundColor,
 				fontFamily: getComputedStyle(document.querySelector('#button-variants p')!).fontFamily
 			};
 		});
 		expect(metrics.active).not.toBe(metrics.inactive);
 		expect(metrics.codeHeight).toBeCloseTo(metrics.oneLineHeight, 0);
 		expect(metrics.activeBorderWidth).toBe('2px');
+		expect(metrics.navHeight).toBe(32);
+		expect(metrics.selectedBackground).not.toBe(metrics.navBackground);
 		expect(metrics.fontFamily).not.toContain('Times New Roman');
 		await expect(page.locator('#button-variants')).not.toContainText('basic-render');
 		await expect(page.locator('#button-variants')).not.toContainText('variants-and-states');
 	}
+});
+
+test('aligns reference headings and keeps explanatory lists readable', async ({ page }) => {
+	await gotoComponent(page, 'list');
+	const accessibility = page.locator('#accessibility');
+	const title = accessibility.getByRole('heading', { level: 2 });
+	await expect(title).toHaveCSS('font-size', '24px');
+	const metrics = await page.evaluate(() => {
+		const section = document.querySelector('#accessibility')!;
+		const heading = section.querySelector('h2')!.getBoundingClientRect();
+		const body = section.querySelector('[data-slot="body"]')!;
+		const card = body.parentElement!.getBoundingClientRect();
+		const apiHeading = document.querySelector('#api-states h2')!.getBoundingClientRect();
+		return {
+			x: heading.left - apiHeading.left,
+			gap: card.top - heading.bottom,
+			weights: [...section.querySelectorAll('li [data-slot="content"] > span')].map(
+				(element) => getComputedStyle(element).fontWeight
+			)
+		};
+	});
+	expect(metrics.x).toBeCloseTo(0, 0);
+	expect(metrics.gap).toBeCloseTo(16, 0);
+	expect(metrics.weights.length).toBeGreaterThan(0);
+	expect(new Set(metrics.weights)).toEqual(new Set(['400']));
 });
 
 test('exposes API table hierarchy and scroll-region semantics', async ({ page }) => {
@@ -1987,7 +2032,7 @@ test('keeps S1 primitives semantic and display preferences effective', async ({ 
 	await expect(
 		semanticColors.getByRole('heading', { name: '语义颜色', exact: true })
 	).toBeVisible();
-	await expect(semanticColors.locator('[data-slot="semantic-color"]')).toHaveCount(20);
+	await expect(semanticColors.locator('[data-slot="semantic-color"]')).toHaveCount(29);
 
 	await page.goto('/#/components/link');
 	const disabledLink = demo(page, 'link-disabled').locator('a[aria-disabled="true"]');

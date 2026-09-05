@@ -18,6 +18,7 @@
 		| 'onkeydown'
 		| 'type'
 	> & {
+		readonly appearance?: 'block' | 'inline';
 		readonly children?: Snippet;
 		readonly headingLevel?: 2 | 3 | 4 | 5 | 6;
 		readonly onclick?: HTMLButtonAttributes['onclick'];
@@ -50,7 +51,10 @@
 			s.paddingInline.px(0);
 			s.textAlign.start;
 			s.width._full;
-			s._hover((hover) => hover.color._primary);
+			s._selector(
+				'&:not(:disabled):not([aria-disabled="true"]):hover',
+				(hover) => hover.color._primary
+			);
 			s._focusVisible((focus) => {
 				focus.outlineColor._focus;
 				focus.outlineOffset.px(2);
@@ -59,6 +63,18 @@
 			});
 		},
 		variants: {
+			appearance: {
+				block: () => undefined,
+				inline: (s) => {
+					s.fontSize._medium;
+					s.fontWeight._medium;
+					s.gap._medium;
+					s.minHeight._medium;
+					s.paddingBlock._small;
+					s.paddingInline._medium;
+					s.width.auto;
+				}
+			},
 			disabled: {
 				false: () => undefined,
 				true: (s) => s.cursor.notAllowed
@@ -68,7 +84,7 @@
 				true: (s) => s.color._primary
 			}
 		},
-		defaultVariants: { disabled: false, open: false }
+		defaultVariants: { appearance: 'block', disabled: false, open: false }
 	});
 	const accordionIndicatorRecipe = defineRecipe({
 		base: (s) => {
@@ -117,6 +133,13 @@
 		parts: [],
 		props: [
 			{
+				default: "'block'",
+				description:
+					'block占满Accordion项宽度；inline适合卡片工具栏或行内disclosure，并保留open/disabled状态与主题色。',
+				name: 'appearance',
+				type: "'block' | 'inline'"
+			},
+			{
 				default: '3',
 				description: 'ARIA heading层级；nested Accordion应按页面信息架构递增。',
 				name: 'headingLevel',
@@ -140,6 +163,7 @@
 		snippets: [{ description: 'Trigger标签内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/accordion/ZAccordionTrigger.svelte',
 		states: [
+			{ description: 'Trigger布局外观。', name: 'data-appearance', values: ['block', 'inline'] },
 			{ description: '展开状态。', name: 'data-state', values: ['open', 'closed'] },
 			{ description: '禁用状态。', name: 'data-disabled', values: ['true'] },
 			{
@@ -168,6 +192,7 @@
 
 	let {
 		children,
+		appearance = 'block',
 		class: className,
 		headingLevel = 3,
 		onclick,
@@ -185,7 +210,9 @@
 	const active = $derived(accordion.isActive(item.value));
 	const locked = $derived(accordion.isTriggerLocked(item.value));
 	const headingClass = $derived(zui.recipe(accordionHeadingRecipe));
-	const rootClass = $derived(zui.recipe(accordionTriggerRecipe, { disabled: item.disabled, open }));
+	const rootClass = $derived(
+		zui.recipe(accordionTriggerRecipe, { appearance, disabled: item.disabled, open })
+	);
 	const indicatorClass = $derived(
 		zui.recipe(accordionIndicatorRecipe, {
 			motion: accordion.reducedMotion ? 'reduced' : 'full',
@@ -240,6 +267,7 @@
 		aria-disabled={locked || undefined}
 		aria-expanded={open}
 		data-active={active || undefined}
+		data-appearance={appearance}
 		data-disabled={item.disabled || undefined}
 		data-state={open ? 'open' : 'closed'}
 		data-reduced-motion={accordion.reducedMotion || undefined}

@@ -7,7 +7,6 @@
 			slots: [
 				'root',
 				'eyebrow',
-				'title',
 				'lead',
 				'section',
 				'sectionTitle',
@@ -114,12 +113,6 @@
 					s.borderWidth._hairline;
 					s.height.rem(4);
 				},
-				title: (s) => {
-					s.fontSize.raw('clamp(2.5rem, 5vw, 4.5rem)');
-					s.letterSpacing.em(-0.05);
-					s.lineHeight._compact;
-					s.margin.px(0);
-				},
 				tokenGrid: (s) => {
 					s.display.grid;
 					s.gap._medium;
@@ -147,6 +140,7 @@
 <script lang="ts">
 	import {
 		ZAspectRatio,
+		ZAlert,
 		ZButton,
 		ZCard,
 		ZContainer,
@@ -158,6 +152,7 @@
 		ZSeparator,
 		ZStack,
 		ZText,
+		ZTag,
 		useZui
 	} from '@zadmin/zui';
 	import { ZCode } from '@zadmin/zui/code';
@@ -180,7 +175,7 @@
 <article class={classes.root} data-doc-route="guide:theme">
 	<header>
 		<ZText as="p" class={classes.eyebrow}>THEME LAB</ZText>
-		<ZHeading class={classes.title} data-doc-page-title="true" level={1} size="xlarge"
+		<ZHeading data-doc-page-title="true" level={1} size="xxlarge"
 			>主题不是一组颜色，而是一套系统合同。</ZHeading
 		>
 		<ZText as="p" class={classes.lead}>
@@ -264,6 +259,17 @@
 						<ZLink href="#/guides/theme">主题链接</ZLink>
 					</ZStack>
 					<ZSeparator />
+					<ZStack gap="medium">
+						<ZText tone="muted">悬停、选中和状态背景来自共享语义 token，可在主题中统一覆盖。</ZText>
+						<ZStack direction="row" gap="medium" wrap>
+							<ZTag tone="accent">分类</ZTag><ZTag tone="success">已完成</ZTag><ZTag tone="warning"
+								>待确认</ZTag
+							><ZTag tone="danger">需处理</ZTag>
+						</ZStack>
+						<ZAlert tone="info" title="统一主题来源" live="off"
+							>提示、标签、按钮和导航共同消费主题语义颜色，不在文档页面另设一套配色。</ZAlert
+						>
+					</ZStack>
 					<ZField description="焦点、边框和错误色都来自当前Theme。" label="主题输入">
 						<ZInput placeholder="输入以检查当前表面" />
 					</ZField>

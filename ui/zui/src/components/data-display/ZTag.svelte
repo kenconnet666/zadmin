@@ -126,23 +126,23 @@
 			},
 			tone: {
 				accent: (s) => {
-					s.backgroundColor.raw('color-mix(in srgb, currentColor 10%, transparent)');
+					s.backgroundColor._accentSubtle;
 					s.borderColor._accent;
 					s.color._accent;
 				},
 				danger: (s) => {
-					s.backgroundColor.raw('color-mix(in srgb, currentColor 10%, transparent)');
+					s.backgroundColor._dangerSubtle;
 					s.borderColor._danger;
 					s.color._danger;
 				},
 				default: (s) => s.color._text,
 				success: (s) => {
-					s.backgroundColor.raw('color-mix(in srgb, currentColor 10%, transparent)');
+					s.backgroundColor._successSubtle;
 					s.borderColor._success;
 					s.color._success;
 				},
 				warning: (s) => {
-					s.backgroundColor.raw('color-mix(in srgb, currentColor 10%, transparent)');
+					s.backgroundColor._warningSubtle;
 					s.borderColor._warning;
 					s.color._warning;
 				}

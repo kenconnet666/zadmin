@@ -7,7 +7,6 @@
 			slots: [
 				'hero',
 				'eyebrow',
-				'title',
 				'copy',
 				'principles',
 				'principle',
@@ -111,13 +110,6 @@
 					s.gridTemplateColumns.raw('repeat(3, minmax(0, 1fr))');
 					s.maxWidth.rem(72);
 					s._media('(max-width: 48rem)', (mobile) => mobile.gridTemplateColumns.raw('1fr'));
-				},
-				title: (s) => {
-					s.fontSize.raw('clamp(2.55rem, 6vw, 5.2rem)');
-					s.letterSpacing.em(-0.06);
-					s.lineHeight(0.98);
-					s.margin.px(0);
-					s.textShadow._small;
 				}
 			},
 			variants: {}
@@ -147,7 +139,7 @@
 
 <section class={classes.hero}>
 	<ZText as="p" class={classes.eyebrow}>ZADMIN UI SYSTEM</ZText>
-	<ZHeading class={classes.title} data-doc-page-title="true" level={1} size="xlarge"
+	<ZHeading data-doc-page-title="true" level={1} size="xxlarge"
 		>看见组件，运行组件，复制真实源码。</ZHeading
 	>
 	<ZText as="p" class={classes.copy}>

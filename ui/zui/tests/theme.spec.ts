@@ -49,7 +49,7 @@ describe('ZUI themes', () => {
 		);
 	}
 
-	it('keeps every semantic Tag tone readable on its mixed canvas and surface backgrounds', () => {
+	it('keeps every semantic foreground readable on its derived subtle background', () => {
 		const themes = [
 			['defaultTheme', defaultTheme],
 			['auroraLight', auroraLight],
@@ -62,13 +62,24 @@ describe('ZUI themes', () => {
 		const failures: Array<{ readonly contract: string; readonly ratio: number }> = [];
 		for (const [name, theme] of themes) {
 			for (const tone of ['accent', 'danger', 'success', 'warning'] as const) {
-				for (const surface of ['canvas', 'surface'] as const) {
-					const foreground = theme.color[tone];
-					const mixedBackground = blend(foreground, theme.color[surface], 0.1);
-					const ratio = contrastRatio(foreground, mixedBackground);
-					if (ratio < 4.5)
-						failures.push({ contract: `${name}.${tone} on mixed ${surface}`, ratio });
-				}
+				const foreground = theme.color[tone];
+				expect(theme.color[`${tone}Subtle`]).toBe(
+					`color-mix(in srgb, ${foreground} 8%, ${theme.color.canvas})`
+				);
+				const ratio = contrastRatio(foreground, blend(foreground, theme.color.canvas, 0.08));
+				if (ratio < 4.5) failures.push({ contract: `${name}.${tone} on subtle`, ratio });
+			}
+			for (const [foreground, background, description] of [
+				[theme.color.onPrimary, theme.color.primary, 'primary foreground'],
+				[theme.color.onDanger, theme.color.danger, 'danger foreground'],
+				[
+					theme.color.primaryHover,
+					blend(theme.color.primary, theme.color.canvas, 0.14),
+					'selected hover'
+				]
+			] as const) {
+				const ratio = contrastRatio(foreground, background);
+				if (ratio < 4.5) failures.push({ contract: `${name}.${description}`, ratio });
 			}
 		}
 		expect(failures).toEqual([]);
@@ -120,7 +131,66 @@ describe('ZUI themes', () => {
 				...defaultTheme,
 				color: { ...defaultTheme.color, primary: true }
 			} as never)
-		).toThrow(/color\.primary.*string or number/);
+		).toThrow(/color\.primary.*non-empty string/);
+	});
+
+	it('enforces runtime token value families and numeric CSS ranges', () => {
+		expect(() =>
+			defineTheme({ ...defaultTheme, color: { ...defaultTheme.color, primary: 123 } } as never)
+		).toThrow(/color\.primary.*non-empty string/);
+		expect(() =>
+			defineTheme({ ...defaultTheme, fontFamily: { ...defaultTheme.fontFamily, sans: 7 } } as never)
+		).toThrow(/fontFamily\.sans.*non-empty string/);
+		expect(() =>
+			defineTheme({
+				...defaultTheme,
+				fontFamily: { ...defaultTheme.fontFamily, sans: '   ' }
+			} as never)
+		).toThrow(/fontFamily\.sans.*non-empty string/);
+		expect(() =>
+			defineTheme({ ...defaultTheme, opacity: { ...defaultTheme.opacity, disabled: 1.1 } } as never)
+		).toThrow(/between 0 and 1/);
+		expect(() =>
+			defineTheme({
+				...defaultTheme,
+				fontWeight: { ...defaultTheme.fontWeight, normal: 1001 }
+			} as never)
+		).toThrow(/between 1 and 1000/);
+		expect(() =>
+			defineTheme({ ...defaultTheme, radius: { ...defaultTheme.radius, small: -1 } } as never)
+		).toThrow(/non-negative/);
+		expect(() =>
+			defineTheme({ ...defaultTheme, size: { ...defaultTheme.size, medium: '  ' } } as never)
+		).toThrow(/must not be an empty string/);
+		expect(() =>
+			defineTheme({ ...defaultTheme, fontSize: { ...defaultTheme.fontSize, small: 0 } } as never)
+		).toThrow(/positive/);
+		expect(() =>
+			defineTheme({
+				...defaultTheme,
+				lineHeight: { ...defaultTheme.lineHeight, compact: -0.1 }
+			} as never)
+		).toThrow(/non-negative/);
+
+		expect(() =>
+			defineTheme({
+				...defaultTheme,
+				duration: { ...defaultTheme.duration, normal: 'calc(100ms + 20ms)' }
+			} as never)
+		).toThrow(/duration\.normal.*ms or s/);
+		expect(
+			defineTheme({
+				...defaultTheme,
+				duration: { ...defaultTheme.duration, normal: '0.2s' },
+				size: { ...defaultTheme.size, medium: 'var(--control-size)' }
+			}).duration.normal
+		).toBe('0.2s');
+		expect(
+			defineTheme({
+				...defaultTheme,
+				lineHeight: { ...defaultTheme.lineHeight, normal: 0 }
+			} as never)
+		).toBeTruthy();
 	});
 
 	it('extends themes immutably and rejects unknown patch keys', () => {
@@ -143,6 +213,50 @@ describe('ZUI themes', () => {
 		expect(() => extendTheme(defaultTheme, { missing: {} } as never)).toThrow(
 			/Unknown theme group/
 		);
+	});
+
+	it('derives semantic color surfaces from patched source colors with explicit override precedence', () => {
+		const theme = extendTheme(defaultTheme, {
+			color: {
+				accent: 'var(--accent)',
+				canvas: 'var(--canvas)',
+				primary: 'var(--primary)',
+				primaryHover: 'var(--primary-hover)',
+				danger: 'var(--danger)',
+				success: 'var(--success)',
+				warning: 'var(--warning)',
+				text: 'var(--text)'
+			}
+		});
+		expect(theme.color.primarySubtle).toBe('color-mix(in srgb, var(--primary) 8%, var(--canvas))');
+		expect(theme.color.primarySubtleHover).toBe(
+			'color-mix(in srgb, var(--primary) 14%, var(--canvas))'
+		);
+		expect(theme.color.surfaceHover).toBe('color-mix(in srgb, var(--text) 6%, var(--canvas))');
+		expect(theme.color.onPrimary).toBe('var(--canvas)');
+		expect(theme.color.onDanger).toBe('var(--canvas)');
+
+		const overridden = extendTheme(defaultTheme, {
+			color: {
+				primary: '#111111',
+				primarySubtle: '#222222',
+				onPrimary: '#ffffff'
+			}
+		});
+		expect(overridden.color.primarySubtle).toBe('#222222');
+		expect(overridden.color.onPrimary).toBe('#ffffff');
+		expect(overridden.color.primarySubtleHover).toBe('color-mix(in srgb, #111111 14%, #ffffff)');
+		const primaryOnly = extendTheme(defaultTheme, { color: { primary: '#123456' } });
+		expect(primaryOnly.color.primarySubtle).toBe('color-mix(in srgb, #123456 8%, #ffffff)');
+		expect(primaryOnly.color.primarySubtleHover).toBe('color-mix(in srgb, #123456 14%, #ffffff)');
+
+		const customBase = extendTheme(defaultTheme, {
+			color: { primarySubtle: '#custom-subtle' }
+		});
+		const unrelated = extendTheme(customBase, { radius: { medium: 6 } });
+		expect(unrelated.color.primarySubtle).toBe('#custom-subtle');
+		expect(Object.isFrozen(unrelated)).toBe(true);
+		expect(Object.isFrozen(unrelated.color)).toBe(true);
 	});
 
 	it('provides the complete semantic default theme', () => {
@@ -171,6 +285,7 @@ describe('ZUI themes', () => {
 		expect(defaultTheme.size.timelineMarker).toBe(12);
 		expect(defaultTheme.borderWidth.progress).toBe(8);
 		expect(defaultTheme.indicatorSize.medium).toBe(18);
+		expect(defaultTheme.fontSize.xxlarge).toBe(32);
 		expect(defaultTheme.space.medium).toBe(8);
 	});
 
@@ -192,5 +307,14 @@ describe('ZUI themes', () => {
 		expect(new Set(themes.map((theme) => theme.color.primary)).size).toBe(6);
 		expect(themes.every((theme) => Object.isFrozen(theme))).toBe(true);
 		expect(themes.every((theme) => Object.isFrozen(theme.color))).toBe(true);
+		expect(
+			themes.every(
+				(theme) =>
+					theme.color.primarySubtle ===
+					`color-mix(in srgb, ${theme.color.primary} 8%, ${theme.color.canvas})`
+			)
+		).toBe(true);
+		expect(themes.every((theme) => theme.color.onPrimary === theme.color.canvas)).toBe(true);
+		expect(themes.every((theme) => theme.color.onDanger === theme.color.canvas)).toBe(true);
 	});
 });

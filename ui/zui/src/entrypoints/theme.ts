@@ -3,6 +3,7 @@ export { defineTheme, extendTheme } from '../theme/define.js';
 export type {
 	DeepPartial,
 	DeepReadonly,
+	DurationTokenValue,
 	Theme,
 	ThemeSchema,
 	ThemeTokenGroup,

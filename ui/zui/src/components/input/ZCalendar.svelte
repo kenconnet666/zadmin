@@ -363,7 +363,7 @@
 				false: () => undefined,
 				true: (s) => {
 					s.backgroundColor._primary;
-					s.color._canvas;
+					s.color._onPrimary;
 				}
 			},
 			size: {

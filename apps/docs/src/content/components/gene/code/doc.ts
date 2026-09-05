@@ -44,6 +44,11 @@ export const codeDoc = defineComponentDoc(codeMetadata, {
 			onCopy: { default: '—', description: '复制完成后报告copied/failed，不传递原始异常。' },
 			ref: { default: 'null', description: '最终code或pre元素引用。' },
 			scheme: { default: 'Provider colorScheme', description: '显式选择亮暗代码表面。' },
+			size: {
+				default: "inline ? 'small' : 'medium'",
+				description:
+					'共享Theme字号；正文中的行内代码可显式medium，与正文统一，紧凑API类型保留small。'
+			},
 			theme: {
 				default: 'GitHub high contrast light/dark',
 				description: '只接受已加载且通过Docs Axe对比度门禁的高对比主题。'

@@ -27,6 +27,7 @@
 					s.justifyContent.start;
 					s.minWidth.px(0);
 					s.width._full;
+					s._selector('& > [data-slot="content"]', (content) => content.width._full);
 				}
 			},
 			variants: {}
@@ -127,9 +128,10 @@
 	class={classes.trigger}
 	onclick={() => (open = true)}
 	variant="secondary"
+	size="medium"
 >
 	<ZIcon name="search" size={18} />
-	<ZText class={classes.label} size="small" tone="muted" truncate>搜索组件与指南…</ZText>
+	<ZText class={classes.label} tone="muted" truncate>搜索组件与指南…</ZText>
 	<span aria-hidden="true" class={classes.shortcuts} data-slot="search-shortcuts">
 		<ZKbd>/</ZKbd>
 		<ZKbd>Ctrl/⌘ K</ZKbd>

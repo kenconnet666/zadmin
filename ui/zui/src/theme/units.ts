@@ -66,3 +66,17 @@ export function getUnitSuffix(unit: UnitName): string | undefined {
 export function getUnitNames(families: readonly UnitFamilyName[]): ReadonlySet<string> {
 	return new Set(families.flatMap((family) => Object.keys(UNIT_FAMILIES[family])));
 }
+
+export function durationMilliseconds(value: number | string): number {
+	if (typeof value === 'number') {
+		if (!Number.isFinite(value) || value < 0) throw new TypeError('Duration must be non-negative.');
+		return value;
+	}
+	const match = /^(-?(?:\d+\.?\d*|\.\d+))(ms|s)$/u.exec(value.trim());
+	if (!match) throw new TypeError('Duration must use ms or s units.');
+	const amount = Number(match[1]);
+	if (!Number.isFinite(amount) || amount < 0) throw new TypeError('Duration must be non-negative.');
+	const milliseconds = match[2] === 's' ? amount * 1000 : amount;
+	if (!Number.isFinite(milliseconds)) throw new TypeError('Duration must be finite.');
+	return milliseconds;
+}

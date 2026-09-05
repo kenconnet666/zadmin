@@ -88,7 +88,10 @@
 	const recipe = defineRecipe({
 		base: (s) => {
 			s.alignItems.start;
-			s.backgroundColor._canvas;
+			s.color._text;
+			s.fontFamily._sans;
+			s.fontSize._medium;
+			s.lineHeight._normal;
 			s.borderRadius._large;
 			s.borderStyle.solid;
 			s.borderWidth._hairline;
@@ -99,10 +102,22 @@
 		},
 		variants: {
 			tone: {
-				danger: (s) => s.borderColor._danger,
-				info: (s) => s.borderColor._accent,
-				success: (s) => s.borderColor._success,
-				warning: (s) => s.borderColor._warning
+				danger: (s) => {
+					s.backgroundColor._dangerSubtle;
+					s.borderColor._danger;
+				},
+				info: (s) => {
+					s.backgroundColor._accentSubtle;
+					s.borderColor._accent;
+				},
+				success: (s) => {
+					s.backgroundColor._successSubtle;
+					s.borderColor._success;
+				},
+				warning: (s) => {
+					s.backgroundColor._warningSubtle;
+					s.borderColor._warning;
+				}
 			}
 		},
 		defaultVariants: { tone: 'info' }

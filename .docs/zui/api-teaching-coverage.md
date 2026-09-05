@@ -1,6 +1,6 @@
 # API teaching coverage
 
-Generated from 141 components and 1762 declared props. 0 metadata gaps remain; 0 remain true fallbacks after teaching overrides; 8 structured props are explicitly opaque.
+Generated from 141 components and 1764 declared props. 0 metadata gaps remain; 0 remain true fallbacks after teaching overrides; 8 structured props are explicitly opaque.
 
 Policy: every declared public prop must have owned component metadata, binding, event or snippet evidence; both totals are enforced at zero.
 
@@ -9,7 +9,7 @@ Policy: every declared public prop must have owned component metadata, binding, 
 | ZAccordion              | accordion    |             12 |             0 |                   0 | —              | ui/zui/src/components/compound/accordion/ZAccordion.svelte                 |
 | ZAccordionContent       | accordion    |              3 |             0 |                   0 | —              | ui/zui/src/components/compound/accordion/ZAccordionContent.svelte          |
 | ZAccordionItem          | accordion    |              4 |             0 |                   0 | —              | ui/zui/src/components/compound/accordion/ZAccordionItem.svelte             |
-| ZAccordionTrigger       | accordion    |              7 |             0 |                   0 | —              | ui/zui/src/components/compound/accordion/ZAccordionTrigger.svelte          |
+| ZAccordionTrigger       | accordion    |              8 |             0 |                   0 | —              | ui/zui/src/components/compound/accordion/ZAccordionTrigger.svelte          |
 | ZAlert                  | —            |             10 |             0 |                   0 | —              | ui/zui/src/components/feedback/ZAlert.svelte                               |
 | ZAlertDialog            | alert-dialog |              6 |             0 |                   0 | —              | ui/zui/src/components/compound/alert-dialog/ZAlertDialog.svelte            |
 | ZAlertDialogAction      | alert-dialog |             13 |             0 |                   0 | —              | ui/zui/src/components/compound/alert-dialog/ZAlertDialogAction.svelte      |
