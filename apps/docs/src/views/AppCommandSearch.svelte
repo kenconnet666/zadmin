@@ -3,6 +3,7 @@
 
 	const searchRecipe = defineSlotRecipe(
 		{
+			layer: 'utilities',
 			slots: ['trigger', 'label', 'shortcuts', 'dialog'] as const,
 			base: {
 				dialog: (s) => {
@@ -40,6 +41,7 @@
 		ZCommandPalette,
 		ZIcon,
 		ZKbd,
+		ZText,
 		useZui,
 		type CommandActionEvent
 	} from '@zadmin/zui';
@@ -127,7 +129,7 @@
 	variant="secondary"
 >
 	<ZIcon name="search" size={18} />
-	<span class={classes.label}>搜索组件与指南…</span>
+	<ZText class={classes.label} size="small" tone="muted" truncate>搜索组件与指南…</ZText>
 	<span aria-hidden="true" class={classes.shortcuts} data-slot="search-shortcuts">
 		<ZKbd>/</ZKbd>
 		<ZKbd>Ctrl/⌘ K</ZKbd>

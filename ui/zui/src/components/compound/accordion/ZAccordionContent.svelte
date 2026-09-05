@@ -115,6 +115,7 @@
 	let {
 		children,
 		class: className,
+		ontransitionend,
 		ref = $bindable(null),
 		region = true,
 		style,
@@ -147,6 +148,10 @@
 		presence.update(open, accordion.exitDuration, ref?.ownerDocument.defaultView);
 		if (!open && accordion.reducedMotion) presence.finishExit();
 	});
+	function handleTransitionEnd(event: TransitionEvent & { currentTarget: HTMLDivElement }): void {
+		if (event.target === event.currentTarget) presence.finishExit();
+		ontransitionend?.(event);
+	}
 	onDestroy(() => presence.destroy());
 </script>
 
@@ -164,9 +169,7 @@
 		data-presence={presenceState}
 		data-state={open ? 'open' : 'closed'}
 		data-reduced-motion={accordion.reducedMotion || undefined}
-		ontransitionend={(event) => {
-			if (event.target === event.currentTarget) presence.finishExit();
-		}}
+		ontransitionend={handleTransitionEnd}
 	>
 		<div class={classes.inner} data-slot="inner">{@render children?.()}</div>
 	</div>

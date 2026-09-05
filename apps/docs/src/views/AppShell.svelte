@@ -3,6 +3,7 @@
 
 	const appRecipe = defineSlotRecipe(
 		{
+			layer: 'utilities',
 			slots: [
 				'shell',
 				'skipNavigation',
@@ -11,20 +12,9 @@
 				'notFound',
 				'eyebrow',
 				'title',
-				'copy',
-				'action'
+				'copy'
 			] as const,
 			base: {
-				action: (s) => {
-					s.backgroundColor._primary;
-					s.borderRadius._medium;
-					s.color._canvas;
-					s.display.inlineFlex;
-					s.fontWeight._semibold;
-					s.minHeight._medium;
-					s.paddingInline._large;
-					s.textDecoration.none;
-				},
 				copy: (s) => {
 					s.color._textMuted;
 					s.marginBlock.px(20, 32);
@@ -66,6 +56,9 @@
 					s.paddingTop.rem(6);
 				},
 				shell: (s) => {
+					s.fontFamily._sans;
+					s.fontSize._medium;
+					s.lineHeight._normal;
 					s.backgroundColor._surface;
 					s.color._text;
 					s.display.grid;
@@ -114,8 +107,13 @@
 
 <script lang="ts">
 	import {
+		ZAlert,
+		ZBox,
 		ZHeading,
 		ZLink,
+		ZSpinner,
+		ZStack,
+		ZText,
 		useZui,
 		type ZuiContrast,
 		type ZuiDensity,
@@ -249,7 +247,7 @@
 	<title>{pageTitle}</title>
 </svelte:head>
 
-<div class={classes.shell}>
+<ZBox class={classes.shell}>
 	<nav class={classes.skipNavigation} aria-label="快捷跳转">
 		<ZLink class={classes.skipLink} href={currentHref} underline="none" onclick={skipToMain}
 			>跳到主要内容
@@ -273,9 +271,11 @@
 	<AppSidebar docs={componentCatalogManifest} {currentGuideId} {currentId} />
 	<main class={classes.main} id="zui-main-content" tabindex="-1">
 		{#if currentId && loadingDoc}
-			<p>正在加载组件文档…</p>
+			<ZStack direction="row" align="center" gap="medium"
+				><ZSpinner label="正在加载组件文档" size="small" /><ZText>正在加载组件文档…</ZText></ZStack
+			>
 		{:else if currentId && docError}
-			<p>组件文档加载失败：{docError}</p>
+			<ZAlert tone="danger" title="组件文档加载失败">{docError}</ZAlert>
 		{:else if currentDoc}
 			<ComponentPage doc={currentDoc} />
 		{:else if currentGuideId === 'theme'}
@@ -284,13 +284,13 @@
 			<GuidePage guide={currentGuide} />
 		{:else if invalidRoute}
 			<section class={classes.notFound}>
-				<p class={classes.eyebrow}>404</p>
+				<ZText as="p" class={classes.eyebrow}>404</ZText>
 				<ZHeading class={classes.title} level={1} size="xlarge">没有这个页面。</ZHeading>
-				<p class={classes.copy}>当前展示站只列出已经实现并通过验收的ZUI组件与生产指南。</p>
-				<ZLink class={classes.action} href="#/" underline="none">返回文档概览</ZLink>
+				<ZText as="p" class={classes.copy}>当前展示站只列出已经实现的ZUI组件与生产指南。</ZText>
+				<ZLink appearance="button" href="#/">返回文档概览</ZLink>
 			</section>
 		{:else}
 			<HomePage docs={componentCatalogManifest} />
 		{/if}
 	</main>
-</div>
+</ZBox>

@@ -2,6 +2,7 @@
 	import type { Snippet } from 'svelte';
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
 	import type { SelectionKey } from '../../../runtime/collection/selection.js';
+	import type { ZControlSize } from '../../../runtime/foundation/control-size.js';
 	import { assertContiguousOptionGroups, type ZCollectionOption } from '../choice-option.js';
 	import type { PopoverPlacement } from '../popover/ZPopover.svelte';
 
@@ -29,6 +30,7 @@
 		readonly placement?: PopoverPlacement;
 		readonly readonly?: boolean;
 		readonly required?: boolean;
+		readonly size?: ZControlSize;
 		readonly valueLabel?: (value: SelectionKey) => string;
 		value?: SelectionKey;
 	}
@@ -189,6 +191,12 @@
 				type: 'boolean'
 			},
 			{
+				default: "Field size，其次为Provider density（'comfortable'映射为'medium'）",
+				description: 'Select默认Trigger尺寸；Trigger显式size优先。',
+				name: 'size',
+				type: "'small' | 'medium' | 'large'"
+			},
+			{
 				default: 'String(value)',
 				description: '异步孤儿值的Trigger回退标签。',
 				name: 'valueLabel',
@@ -215,6 +223,7 @@
 	import { singleSelection, type Selection } from '../../../runtime/collection/selection.js';
 	import { Typeahead } from '../../../runtime/collection/typeahead.js';
 	import { ControllableState } from '../../../runtime/foundation/controllable-state.svelte.js';
+	import { resolveControlSize } from '../../../runtime/foundation/control-size.js';
 	import { useZui } from '../../../runtime/foundation/context.js';
 	import { createZuiId } from '../../../runtime/foundation/ids.js';
 	import { claimZFieldControlOwner } from '../../../runtime/form/field-context.js';
@@ -251,6 +260,7 @@
 		placement = 'bottom-start',
 		readonly: readonlyProp = false,
 		required: requiredProp = false,
+		size: sizeProp,
 		valueLabel = String,
 		value = $bindable()
 	}: ZSelectProps = $props();
@@ -268,6 +278,7 @@
 	const resolvedName = $derived(nameProp ?? field?.name);
 	const resolvedPlaceholder = $derived(placeholder ?? zui.localePack.collection.selectOption);
 	const required = $derived(requiredProp || (field?.required ?? false));
+	const resolvedSize = $derived(resolveControlSize(sizeProp ?? field?.size, zui.density));
 	const valueState = new ControllableState<SelectionKey | undefined>({
 		defaultValue: () => defaultValue,
 		onChange: () => onValueChange,
@@ -447,6 +458,9 @@
 		},
 		get required() {
 			return required;
+		},
+		get size() {
+			return resolvedSize;
 		},
 		search(key) {
 			return typeahead.search(key, view.items, activeDescendant.activeKey);

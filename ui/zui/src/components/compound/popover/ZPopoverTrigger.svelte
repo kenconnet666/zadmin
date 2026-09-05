@@ -4,7 +4,7 @@
 
 	export type ZPopoverTriggerProps = Omit<
 		ZButtonProps,
-		'aria-controls' | 'aria-expanded' | 'aria-haspopup' | 'onclick'
+		'aria-controls' | 'aria-expanded' | 'aria-haspopup' | 'id' | 'onclick'
 	> & {
 		readonly onclick?: ZButtonProps['onclick'];
 		readonly popupRole?: 'dialog' | 'listbox' | 'menu' | 'tree';
@@ -46,7 +46,8 @@
 		source: 'ui/zui/src/components/compound/popover/ZPopoverTrigger.svelte',
 		states: [{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] }],
 		status: 'stable',
-		summary: '复用ZButton并建立aria-haspopup/expanded/controls关系的Popover Trigger。'
+		summary:
+			'复用ZButton并建立aria-haspopup/expanded/controls关系的Popover Trigger；关系id由Popover Root的triggerId或自动值统一生成。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
 

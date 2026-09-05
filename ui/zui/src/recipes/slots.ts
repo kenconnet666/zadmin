@@ -1,5 +1,5 @@
 import { createStyleProgram } from '../icss/builder.js';
-import type { StyleRegistry } from '../icss/registry.js';
+import type { IcssLayer, StyleRegistry } from '../icss/registry.js';
 import type { IcssClassName, IcssFactory } from '../icss/types.js';
 import type { ZuiTheme } from '../theme/types.js';
 import type { RecipeVariantValue } from './types.js';
@@ -20,6 +20,8 @@ export interface SlotRecipeInput<
 	TSlots extends readonly string[],
 	TVariants extends SlotVariantDefinitions<TSlots[number]>
 > {
+	/** Component styles by default; utilities explicitly customize an existing component. */
+	readonly layer?: IcssLayer;
 	readonly base?: SlotStyles<TSlots[number]>;
 	readonly defaultVariants?: Readonly<Record<string, string | boolean>>;
 	readonly slots: TSlots;
@@ -123,6 +125,9 @@ export function defineSlotRecipe<
 	input: SlotRecipeInput<TSlots, TVariants>,
 	meta?: ImportMeta
 ): SlotRecipeDefinition<TSlots, TVariants> {
+	if (input.layer !== undefined && input.layer !== 'components' && input.layer !== 'utilities') {
+		throw new TypeError('Slot recipe layer must be components or utilities.');
+	}
 	if (!Array.isArray(input.slots) || input.slots.length === 0) {
 		throw new TypeError('Slot recipe must define at least one slot.');
 	}
@@ -159,6 +164,7 @@ export function defineSlotRecipe<
 		defaultVariants:
 			input.defaultVariants === undefined ? undefined : Object.freeze({ ...input.defaultVariants }),
 		id: `sr${slotRecipeSequence.toString(36)}`,
+		layer: input.layer ?? 'components',
 		slots,
 		variantMap: Object.freeze(variantMap),
 		variants: Object.freeze(variants) as TVariants
@@ -203,7 +209,7 @@ export function createSlotRecipeExecutor(registry: StyleRegistry): SlotRecipeExe
 									registry.ensure(
 										createStyleProgram(theme, factory),
 										`${owner}:${branch}:${slot}`,
-										'components',
+										recipe.layer ?? 'components',
 										specificity
 									).className
 								] as const

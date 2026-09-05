@@ -126,8 +126,9 @@
 				type: 'string'
 			},
 			{
-				default: "'medium'",
-				description: 'radio指示器尺寸。',
+				default:
+					"RadioGroup size，其次为Field size与Provider density（'comfortable'映射为'medium'）",
+				description: 'radio指示器尺寸；显式Item size优先。',
 				name: 'size',
 				type: "'small' | 'medium' | 'large'"
 			},
@@ -146,7 +147,12 @@
 		states: [
 			{ description: '选择状态。', name: 'data-state', values: ['checked', 'unchecked'] },
 			{ description: '禁用状态。', name: 'data-disabled', values: ['true'] },
-			{ description: '继承组级只读状态。', name: 'data-readonly', values: ['true'] }
+			{ description: '继承组级只读状态。', name: 'data-readonly', values: ['true'] },
+			{
+				description: '解析后的radio指示器尺寸。',
+				name: 'data-size',
+				values: ['small', 'medium', 'large']
+			}
 		],
 		status: 'stable',
 		summary: '注册到ZRadioGroup LogicalCollection并保留原生radio表单语义的typed单选Item。'
@@ -176,7 +182,7 @@
 		onfocus,
 		onkeydown,
 		ref = $bindable(null),
-		size = 'medium',
+		size,
 		style,
 		textValue,
 		value,
@@ -196,7 +202,7 @@
 			disabled: resolvedDisabled,
 			invalid: group.invalid,
 			readonly: resolvedReadonly,
-			size
+			size: size ?? group.size
 		})
 	);
 	const icssVariables = $derived(readIcssCarrier(rest));
@@ -269,5 +275,6 @@
 	aria-checked={selected}
 	data-disabled={resolvedDisabled || undefined}
 	data-readonly={resolvedReadonly || undefined}
+	data-size={size ?? group.size}
 	data-state={selected ? 'checked' : 'unchecked'}
 />

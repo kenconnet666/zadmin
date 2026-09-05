@@ -6,7 +6,7 @@
 
 	export interface ZMenuSubTriggerProps extends Omit<
 		ZMenuItemProps,
-		'checked' | 'children' | 'closeOnSelect' | 'href' | 'itemRole' | 'onSelect'
+		'checked' | 'children' | 'closeOnSelect' | 'href' | 'id' | 'itemRole' | 'onSelect' | 'trailing'
 	> {
 		readonly children?: Snippet;
 		readonly onSelect?: (event: MenuActionEvent) => void;

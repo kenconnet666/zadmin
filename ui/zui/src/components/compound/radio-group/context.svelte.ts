@@ -2,6 +2,7 @@ import { getContext, setContext } from 'svelte';
 
 import type { CompoundLogicalCollectionItem } from '../../../runtime/collection/compound-logical-collection.svelte.js';
 import type { SelectionKey } from '../../../runtime/collection/selection.js';
+import type { ZControlSize } from '../../../runtime/foundation/control-size.js';
 
 export interface RadioGroupLogicalItem extends CompoundLogicalCollectionItem<SelectionKey> {
 	readonly label?: string;
@@ -20,6 +21,7 @@ export interface ZRadioGroupContext {
 	readonly name?: string;
 	readonly readonly: boolean;
 	readonly required: boolean;
+	readonly size: ZControlSize;
 	focus(value: SelectionKey): void;
 	handleKey(event: KeyboardEvent): boolean;
 	isSelected(value: SelectionKey): boolean;

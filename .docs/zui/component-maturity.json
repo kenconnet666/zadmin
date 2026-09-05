@@ -4,7 +4,7 @@
 		"metadataComponents": 141,
 		"documentationPages": 79,
 		"contractComponents": 141,
-		"testFiles": 155
+		"testFiles": 161
 	},
 	"stageNames": [
 		"Declared",
@@ -16,13 +16,14 @@
 		"DesktopVerified",
 		"ProductionVerified"
 	],
+	"evidenceScope": "Static inventory of authored test contracts, not test execution results or whole-component visual acceptance. Stage names are retained for compatibility; consult commit-matched CI and page-level review separately.",
 	"summary": {
 		"Declared": 141,
 		"Authorable": 141,
 		"ContractVerified": 141,
 		"RuntimeImplemented": 141,
 		"BrowserBehaviorVerified": 141,
-		"VisuallyVerified": 141,
+		"VisuallyVerified": 134,
 		"DesktopVerified": 0,
 		"ProductionVerified": 141
 	},
@@ -106,7 +107,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
-						"detail": "ZAccordion explicit visual contract assertions"
+						"detail": "ZAccordion authored visual contract: ZAccordion / ZAccordionItem / ZAccordionTrigger / ZAccordionContent preserve typed identity, collection focus and Presence recovery (line 8); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
@@ -195,7 +196,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
-						"detail": "ZAccordionContent explicit visual contract assertions"
+						"detail": "ZAccordionContent authored visual contract: ZAccordion / ZAccordionItem / ZAccordionTrigger / ZAccordionContent preserve typed identity, collection focus and Presence recovery (line 8); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
@@ -284,7 +285,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
-						"detail": "ZAccordionItem explicit visual contract assertions"
+						"detail": "ZAccordionItem authored visual contract: ZAccordion / ZAccordionItem / ZAccordionTrigger / ZAccordionContent preserve typed identity, collection focus and Presence recovery (line 8); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
@@ -351,7 +352,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "db23f5a856e1d0339cfd2a8b172b38e179a39d7f54f5dc8536d0e9c8187b90ac API snapshot entry"
+						"detail": "8429d6239568376121abbf92e41f8918a26b8ee247b7faaea8cfc9af7cfcb8c3 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -373,7 +374,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
-						"detail": "ZAccordionTrigger explicit visual contract assertions"
+						"detail": "ZAccordionTrigger authored visual contract: ZAccordion / ZAccordionItem / ZAccordionTrigger / ZAccordionContent preserve typed identity, collection focus and Presence recovery (line 8); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
@@ -462,7 +463,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/overlay-production.browser.spec.ts",
-						"detail": "ZAlertDialog explicit visual contract assertions"
+						"detail": "ZAlertDialog authored visual contract: ZAlertDialog + ZAlertDialogTrigger + ZAlertDialogOverlay + ZAlertDialogContent + ZAlertDialogTitle + ZAlertDialogDescription + ZAlertDialogCancel + ZAlertDialogAction enforce modal decision semantics (line 131); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
@@ -555,7 +556,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/overlay-production.browser.spec.ts",
-						"detail": "ZAlertDialogAction explicit visual contract assertions"
+						"detail": "ZAlertDialogAction authored visual contract: ZAlertDialog + ZAlertDialogTrigger + ZAlertDialogOverlay + ZAlertDialogContent + ZAlertDialogTitle + ZAlertDialogDescription + ZAlertDialogCancel + ZAlertDialogAction enforce modal decision semantics (line 131); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
@@ -648,7 +649,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/overlay-production.browser.spec.ts",
-						"detail": "ZAlertDialogCancel explicit visual contract assertions"
+						"detail": "ZAlertDialogCancel authored visual contract: ZAlertDialog + ZAlertDialogTrigger + ZAlertDialogOverlay + ZAlertDialogContent + ZAlertDialogTitle + ZAlertDialogDescription + ZAlertDialogCancel + ZAlertDialogAction enforce modal decision semantics (line 131); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
@@ -741,7 +742,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/overlay-production.browser.spec.ts",
-						"detail": "ZAlertDialogContent explicit visual contract assertions"
+						"detail": "ZAlertDialogContent authored visual contract: ZAlertDialog + ZAlertDialogTrigger + ZAlertDialogOverlay + ZAlertDialogContent + ZAlertDialogTitle + ZAlertDialogDescription + ZAlertDialogCancel + ZAlertDialogAction enforce modal decision semantics (line 131); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
@@ -834,7 +835,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/overlay-production.browser.spec.ts",
-						"detail": "ZAlertDialogDescription explicit visual contract assertions"
+						"detail": "ZAlertDialogDescription authored visual contract: ZAlertDialog + ZAlertDialogTrigger + ZAlertDialogOverlay + ZAlertDialogContent + ZAlertDialogTitle + ZAlertDialogDescription + ZAlertDialogCancel + ZAlertDialogAction enforce modal decision semantics (line 131); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
@@ -927,7 +928,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/overlay-production.browser.spec.ts",
-						"detail": "ZAlertDialogOverlay explicit visual contract assertions"
+						"detail": "ZAlertDialogOverlay authored visual contract: ZAlertDialog + ZAlertDialogTrigger + ZAlertDialogOverlay + ZAlertDialogContent + ZAlertDialogTitle + ZAlertDialogDescription + ZAlertDialogCancel + ZAlertDialogAction enforce modal decision semantics (line 131); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
@@ -1020,7 +1021,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/overlay-production.browser.spec.ts",
-						"detail": "ZAlertDialogTitle explicit visual contract assertions"
+						"detail": "ZAlertDialogTitle authored visual contract: ZAlertDialog + ZAlertDialogTrigger + ZAlertDialogOverlay + ZAlertDialogContent + ZAlertDialogTitle + ZAlertDialogDescription + ZAlertDialogCancel + ZAlertDialogAction enforce modal decision semantics (line 131); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
@@ -1113,7 +1114,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/overlay-production.browser.spec.ts",
-						"detail": "ZAlertDialogTrigger explicit visual contract assertions"
+						"detail": "ZAlertDialogTrigger authored visual contract: ZAlertDialog + ZAlertDialogTrigger + ZAlertDialogOverlay + ZAlertDialogContent + ZAlertDialogTitle + ZAlertDialogDescription + ZAlertDialogCancel + ZAlertDialogAction enforce modal decision semantics (line 131); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
@@ -1214,7 +1215,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/combobox-production.browser.spec.ts",
-						"detail": "ZCombobox explicit visual contract assertions"
+						"detail": "ZCombobox authored visual contract: keeps long options single-line and bounds intrinsic content width (line 9); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/ChoiceCollectionFixture.svelte",
@@ -1315,7 +1316,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/combobox-production.browser.spec.ts",
-						"detail": "ZComboboxContent explicit visual contract assertions"
+						"detail": "ZComboboxContent authored visual contract: keeps long options single-line and bounds intrinsic content width (line 9); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/ChoiceCollectionFixture.svelte",
@@ -1416,7 +1417,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/combobox-production.browser.spec.ts",
-						"detail": "ZComboboxInput explicit visual contract assertions"
+						"detail": "ZComboboxInput authored visual contract: keeps long options single-line and bounds intrinsic content width (line 9); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/ChoiceCollectionFixture.svelte",
@@ -1513,7 +1514,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/combobox-production.browser.spec.ts",
-						"detail": "ZComboboxItem explicit visual contract assertions"
+						"detail": "ZComboboxItem authored visual contract: keeps long options single-line and bounds intrinsic content width (line 9); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/ComboboxFixture.svelte",
@@ -1602,7 +1603,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
-						"detail": "ZContextMenu explicit visual contract assertions"
+						"detail": "ZContextMenu authored visual contract: ZContextMenu anchors at pointer and RTL keyboard logical start while exposing shortcuts (line 259); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
@@ -1695,7 +1696,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
-						"detail": "ZContextMenuContent explicit visual contract assertions"
+						"detail": "ZContextMenuContent authored visual contract: ZDropdownMenuTrigger/ZDropdownMenuContent and ZContextMenuTrigger/ZContextMenuContent expose named layer contracts (line 154); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
@@ -1788,7 +1789,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
-						"detail": "ZContextMenuTrigger explicit visual contract assertions"
+						"detail": "ZContextMenuTrigger authored visual contract: ZDropdownMenuTrigger/ZDropdownMenuContent and ZContextMenuTrigger/ZContextMenuContent expose named layer contracts (line 154); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
@@ -1881,7 +1882,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/overlay-production.browser.spec.ts",
-						"detail": "ZDialog explicit visual contract assertions"
+						"detail": "ZDialog authored visual contract: ZDialog + ZDialogTrigger + ZDialogOverlay + ZDialogContent + ZDialogTitle + ZDialogDescription + ZDialogClose expose real ARIA and focus contracts (line 10); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
@@ -1974,7 +1975,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/overlay-production.browser.spec.ts",
-						"detail": "ZDialogClose explicit visual contract assertions"
+						"detail": "ZDialogClose authored visual contract: ZDialog + ZDialogTrigger + ZDialogOverlay + ZDialogContent + ZDialogTitle + ZDialogDescription + ZDialogClose expose real ARIA and focus contracts (line 10); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
@@ -2063,7 +2064,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/overlay-production.browser.spec.ts",
-						"detail": "ZDialogContent explicit visual contract assertions"
+						"detail": "ZDialogContent authored visual contract: ZDialog + ZDialogTrigger + ZDialogOverlay + ZDialogContent + ZDialogTitle + ZDialogDescription + ZDialogClose expose real ARIA and focus contracts (line 10); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
@@ -2156,7 +2157,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/overlay-production.browser.spec.ts",
-						"detail": "ZDialogDescription explicit visual contract assertions"
+						"detail": "ZDialogDescription authored visual contract: ZDialog + ZDialogTrigger + ZDialogOverlay + ZDialogContent + ZDialogTitle + ZDialogDescription + ZDialogClose expose real ARIA and focus contracts (line 10); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
@@ -2245,7 +2246,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/overlay-production.browser.spec.ts",
-						"detail": "ZDialogOverlay explicit visual contract assertions"
+						"detail": "ZDialogOverlay authored visual contract: ZDialog + ZDialogTrigger + ZDialogOverlay + ZDialogContent + ZDialogTitle + ZDialogDescription + ZDialogClose expose real ARIA and focus contracts (line 10); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
@@ -2334,7 +2335,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/overlay-production.browser.spec.ts",
-						"detail": "ZDialogTitle explicit visual contract assertions"
+						"detail": "ZDialogTitle authored visual contract: ZDialog + ZDialogTrigger + ZDialogOverlay + ZDialogContent + ZDialogTitle + ZDialogDescription + ZDialogClose expose real ARIA and focus contracts (line 10); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
@@ -2405,7 +2406,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "1e64daab2f9c02e1d5a07c2afbb41a7c332c0bb683da25af6079aabf4559560b API snapshot entry"
+						"detail": "190aa850ecf691de77c81a276afe254765b72c4f9824a875929bfc3483ab538a API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -2427,7 +2428,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/overlay-production.browser.spec.ts",
-						"detail": "ZDialogTrigger explicit visual contract assertions"
+						"detail": "ZDialogTrigger authored visual contract: ZDialog + ZDialogTrigger + ZDialogOverlay + ZDialogContent + ZDialogTitle + ZDialogDescription + ZDialogClose expose real ARIA and focus contracts (line 10); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
@@ -2520,7 +2521,11 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/drawer-production.browser.spec.ts",
-						"detail": "ZDrawer explicit visual contract assertions"
+						"detail": "ZDrawer authored visual contract: ZDrawerContent resolves all physical edges from logical placements and RTL direction (line 89); requires browser execution and page-level review"
+					},
+					{
+						"path": "ui/zui/tests/drawer-production.browser.spec.ts",
+						"detail": "ZDrawer authored visual contract: ZDrawerContent supports custom CSS sizes, full viewport mode and reduced-motion cleanup (line 113); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/DrawerFixture.svelte",
@@ -2621,7 +2626,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/drawer-production.browser.spec.ts",
-						"detail": "ZDrawerClose explicit visual contract assertions"
+						"detail": "ZDrawerClose authored visual contract: ZDrawerContent, ZDrawerOverlay, ZDrawerTitle and ZDrawerDescription paint and register semantic states (line 16); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/DrawerFixture.svelte",
@@ -2722,7 +2727,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/drawer-production.browser.spec.ts",
-						"detail": "ZDrawerContent explicit visual contract assertions"
+						"detail": "ZDrawerContent authored visual contract: ZDrawerContent, ZDrawerOverlay, ZDrawerTitle and ZDrawerDescription paint and register semantic states (line 16); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/DrawerFixture.svelte",
@@ -2823,7 +2828,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/drawer-production.browser.spec.ts",
-						"detail": "ZDrawerDescription explicit visual contract assertions"
+						"detail": "ZDrawerDescription authored visual contract: ZDrawerContent, ZDrawerOverlay, ZDrawerTitle and ZDrawerDescription paint and register semantic states (line 16); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/DrawerFixture.svelte",
@@ -2924,7 +2929,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/drawer-production.browser.spec.ts",
-						"detail": "ZDrawerOverlay explicit visual contract assertions"
+						"detail": "ZDrawerOverlay authored visual contract: ZDrawerContent, ZDrawerOverlay, ZDrawerTitle and ZDrawerDescription paint and register semantic states (line 16); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/DrawerFixture.svelte",
@@ -3025,7 +3030,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/drawer-production.browser.spec.ts",
-						"detail": "ZDrawerTitle explicit visual contract assertions"
+						"detail": "ZDrawerTitle authored visual contract: ZDrawerContent, ZDrawerOverlay, ZDrawerTitle and ZDrawerDescription paint and register semantic states (line 16); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/DrawerFixture.svelte",
@@ -3126,7 +3131,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/drawer-production.browser.spec.ts",
-						"detail": "ZDrawerTrigger explicit visual contract assertions"
+						"detail": "ZDrawerTrigger authored visual contract: ZDrawerContent, ZDrawerOverlay, ZDrawerTitle and ZDrawerDescription paint and register semantic states (line 16); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/DrawerFixture.svelte",
@@ -3223,7 +3228,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
-						"detail": "ZDropdownMenu explicit visual contract assertions"
+						"detail": "ZDropdownMenu authored visual contract: ZDropdownMenu opens from both arrow edges and preserves close-on-select policy (line 131); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
@@ -3316,7 +3321,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
-						"detail": "ZDropdownMenuContent explicit visual contract assertions"
+						"detail": "ZDropdownMenuContent authored visual contract: ZDropdownMenuTrigger/ZDropdownMenuContent and ZContextMenuTrigger/ZContextMenuContent expose named layer contracts (line 154); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
@@ -3409,7 +3414,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
-						"detail": "ZDropdownMenuTrigger explicit visual contract assertions"
+						"detail": "ZDropdownMenuTrigger authored visual contract: ZDropdownMenuTrigger/ZDropdownMenuContent and ZContextMenuTrigger/ZContextMenuContent expose named layer contracts (line 154); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
@@ -3502,7 +3507,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
-						"detail": "ZMenu explicit visual contract assertions"
+						"detail": "ZMenu authored visual contract: ZMenu ZMenuGroup ZMenuLabel ZMenuItem ZMenuCheckboxItem ZMenuRadioGroup ZMenuRadioItem ZMenuSeparator ZMenuSub ZMenuSubTrigger ZMenuSubContent compound members expose their semantic contracts (line 71); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
@@ -3573,7 +3578,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "3c8d8180ff92580764635685630d0208bf55b7d74ee9d75d76c8cc1d7cb73db3 API snapshot entry"
+						"detail": "3a058f05b38d11be2c6e1109356ed7b03cfbbfc26d72d1953f60c4853d79443b API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -3595,7 +3600,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
-						"detail": "ZMenuCheckboxItem explicit visual contract assertions"
+						"detail": "ZMenuCheckboxItem authored visual contract: ZMenu projects checkbox, mixed, typed radio, real link and cancellable action contracts (line 36); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
@@ -3684,7 +3689,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
-						"detail": "ZMenuGroup explicit visual contract assertions"
+						"detail": "ZMenuGroup authored visual contract: ZMenu ZMenuGroup ZMenuLabel ZMenuItem ZMenuCheckboxItem ZMenuRadioGroup ZMenuRadioItem ZMenuSeparator ZMenuSub ZMenuSubTrigger ZMenuSubContent compound members expose their semantic contracts (line 71); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
@@ -3777,7 +3782,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
-						"detail": "ZMenuItem explicit visual contract assertions"
+						"detail": "ZMenuItem authored visual contract: ZMenu ZMenuGroup ZMenuLabel ZMenuItem ZMenuCheckboxItem ZMenuRadioGroup ZMenuRadioItem ZMenuSeparator ZMenuSub ZMenuSubTrigger ZMenuSubContent compound members expose their semantic contracts (line 71); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
@@ -3870,7 +3875,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
-						"detail": "ZMenuLabel explicit visual contract assertions"
+						"detail": "ZMenuLabel authored visual contract: ZMenu ZMenuGroup ZMenuLabel ZMenuItem ZMenuCheckboxItem ZMenuRadioGroup ZMenuRadioItem ZMenuSeparator ZMenuSub ZMenuSubTrigger ZMenuSubContent compound members expose their semantic contracts (line 71); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
@@ -3963,7 +3968,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
-						"detail": "ZMenuRadioGroup explicit visual contract assertions"
+						"detail": "ZMenuRadioGroup authored visual contract: ZMenu ZMenuGroup ZMenuLabel ZMenuItem ZMenuCheckboxItem ZMenuRadioGroup ZMenuRadioItem ZMenuSeparator ZMenuSub ZMenuSubTrigger ZMenuSubContent compound members expose their semantic contracts (line 71); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
@@ -4030,7 +4035,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "d18399183c23f64650cc9002c575284b688c2fbd72fa79d4cebf0009bbd6d4b6 API snapshot entry"
+						"detail": "34e06f07e8dab91827e3947b9b31db78ccc3e969c2e48d53e23758776639a11f API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -4052,7 +4057,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
-						"detail": "ZMenuRadioItem explicit visual contract assertions"
+						"detail": "ZMenuRadioItem authored visual contract: ZMenu projects checkbox, mixed, typed radio, real link and cancellable action contracts (line 36); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
@@ -4141,7 +4146,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
-						"detail": "ZMenuSeparator explicit visual contract assertions"
+						"detail": "ZMenuSeparator authored visual contract: ZMenu ZMenuGroup ZMenuLabel ZMenuItem ZMenuCheckboxItem ZMenuRadioGroup ZMenuRadioItem ZMenuSeparator ZMenuSub ZMenuSubTrigger ZMenuSubContent compound members expose their semantic contracts (line 71); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
@@ -4234,7 +4239,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
-						"detail": "ZMenuSub explicit visual contract assertions"
+						"detail": "ZMenuSub authored visual contract: ZMenu ZMenuGroup ZMenuLabel ZMenuItem ZMenuCheckboxItem ZMenuRadioGroup ZMenuRadioItem ZMenuSeparator ZMenuSub ZMenuSubTrigger ZMenuSubContent compound members expose their semantic contracts (line 71); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
@@ -4323,7 +4328,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
-						"detail": "ZMenuSubContent explicit visual contract assertions"
+						"detail": "ZMenuSubContent authored visual contract: ZMenu ZMenuGroup ZMenuLabel ZMenuItem ZMenuCheckboxItem ZMenuRadioGroup ZMenuRadioItem ZMenuSeparator ZMenuSub ZMenuSubTrigger ZMenuSubContent compound members expose their semantic contracts (line 71); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
@@ -4390,7 +4395,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "f5d1d666f983d7001ca176aebab026d0582cdac1e3460859f411ae79499d8cd0 API snapshot entry"
+						"detail": "ad9ded8c03278bc076dbdf076420c62d2ca1024846636c55990b628a625f6721 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -4412,7 +4417,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/menu-family-production.browser.spec.ts",
-						"detail": "ZMenuSubTrigger explicit visual contract assertions"
+						"detail": "ZMenuSubTrigger authored visual contract: ZMenu ZMenuGroup ZMenuLabel ZMenuItem ZMenuCheckboxItem ZMenuRadioGroup ZMenuRadioItem ZMenuSeparator ZMenuSub ZMenuSubTrigger ZMenuSubContent compound members expose their semantic contracts (line 71); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/MenuFamilyProductionFixture.svelte",
@@ -4479,7 +4484,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "0890cbb00d72e7b63d5db7f249f02eb6db5d97f1028469799640e9ea8834dc73 API snapshot entry"
+						"detail": "eade14d25daa98b9714a214bb93e86e5eda91a1be666b9bb92ea5b7de3dc1977 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -4513,7 +4518,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/multi-select-production.browser.spec.ts",
-						"detail": "ZMultiSelect explicit visual contract assertions"
+						"detail": "ZMultiSelect authored visual contract: keeps long options single-line and bounds intrinsic content width (line 10); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/MultiSelectCollectionFixture.svelte",
@@ -4614,7 +4619,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/multi-select-production.browser.spec.ts",
-						"detail": "ZMultiSelectContent explicit visual contract assertions"
+						"detail": "ZMultiSelectContent authored visual contract: keeps long options single-line and bounds intrinsic content width (line 10); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/MultiSelectCollectionFixture.svelte",
@@ -4711,7 +4716,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/multi-select-production.browser.spec.ts",
-						"detail": "ZMultiSelectItem explicit visual contract assertions"
+						"detail": "ZMultiSelectItem authored visual contract: keeps long options single-line and bounds intrinsic content width (line 10); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/MultiSelectFixture.svelte",
@@ -4778,7 +4783,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "b7730a74af270750087221a92b838b2e66be135cfe3513d5b9b4877ae15def71 API snapshot entry"
+						"detail": "95a0f21bb7596e1a75d09b2075dc8e18e15235e58b00c776a509325e69d38aa8 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -4804,7 +4809,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/multi-select-production.browser.spec.ts",
-						"detail": "ZMultiSelectTrigger explicit visual contract assertions"
+						"detail": "ZMultiSelectTrigger authored visual contract: keeps long options single-line and bounds intrinsic content width (line 10); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/MultiSelectCollectionFixture.svelte",
@@ -4909,7 +4914,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/tooltip-popconfirm-production.browser.spec.ts",
-						"detail": "ZPopconfirm explicit visual contract assertions"
+						"detail": "ZPopconfirm authored visual contract: ZPopconfirmTrigger and ZPopconfirmAction own pending, duplicate blocking, resolve and focus restoration (line 13); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/TooltipPopconfirmProductionFixture.svelte",
@@ -5002,7 +5007,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/tooltip-popconfirm-production.browser.spec.ts",
-						"detail": "ZPopconfirmAction explicit visual contract assertions"
+						"detail": "ZPopconfirmAction authored visual contract: ZPopconfirmTrigger and ZPopconfirmAction own pending, duplicate blocking, resolve and focus restoration (line 13); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/TooltipPopconfirmProductionFixture.svelte",
@@ -5095,7 +5100,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/tooltip-popconfirm-production.browser.spec.ts",
-						"detail": "ZPopconfirmCancel explicit visual contract assertions"
+						"detail": "ZPopconfirmCancel authored visual contract: ZPopconfirmTrigger and ZPopconfirmAction own pending, duplicate blocking, resolve and focus restoration (line 13); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/TooltipPopconfirmProductionFixture.svelte",
@@ -5188,7 +5193,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/tooltip-popconfirm-production.browser.spec.ts",
-						"detail": "ZPopconfirmContent explicit visual contract assertions"
+						"detail": "ZPopconfirmContent authored visual contract: ZPopconfirmTrigger and ZPopconfirmAction own pending, duplicate blocking, resolve and focus restoration (line 13); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/TooltipPopconfirmProductionFixture.svelte",
@@ -5281,7 +5286,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/tooltip-popconfirm-production.browser.spec.ts",
-						"detail": "ZPopconfirmDescription explicit visual contract assertions"
+						"detail": "ZPopconfirmDescription authored visual contract: ZPopconfirmTrigger and ZPopconfirmAction own pending, duplicate blocking, resolve and focus restoration (line 13); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/TooltipPopconfirmProductionFixture.svelte",
@@ -5374,7 +5379,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/tooltip-popconfirm-production.browser.spec.ts",
-						"detail": "ZPopconfirmTitle explicit visual contract assertions"
+						"detail": "ZPopconfirmTitle authored visual contract: ZPopconfirmTrigger and ZPopconfirmAction own pending, duplicate blocking, resolve and focus restoration (line 13); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/TooltipPopconfirmProductionFixture.svelte",
@@ -5467,7 +5472,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/tooltip-popconfirm-production.browser.spec.ts",
-						"detail": "ZPopconfirmTrigger explicit visual contract assertions"
+						"detail": "ZPopconfirmTrigger authored visual contract: ZPopconfirmTrigger and ZPopconfirmAction own pending, duplicate blocking, resolve and focus restoration (line 13); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/TooltipPopconfirmProductionFixture.svelte",
@@ -5564,7 +5569,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/overlay-production.browser.spec.ts",
-						"detail": "ZPopover explicit visual contract assertions"
+						"detail": "ZPopover authored visual contract: ZPopover owns controlled open state and collision-aware placement (line 279); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
@@ -5669,7 +5674,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/overlay-production.browser.spec.ts",
-						"detail": "ZPopoverContent explicit visual contract assertions"
+						"detail": "ZPopoverContent authored visual contract: ZPopover owns controlled open state and collision-aware placement (line 279); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
@@ -5748,7 +5753,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "e7becb73f9307167265a4bbf78b20a3328e5feb7434f3d54c4d30281fa6e724b API snapshot entry"
+						"detail": "a1c69a142ea519c9b550ae64975bdd64d338783b08ad7cfe875e35cf8399ef23 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -5774,7 +5779,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/overlay-production.browser.spec.ts",
-						"detail": "ZPopoverTrigger explicit visual contract assertions"
+						"detail": "ZPopoverTrigger authored visual contract: ZPopover owns controlled open state and collision-aware placement (line 279); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/OverlayProductionFixture.svelte",
@@ -5853,7 +5858,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "a9d704589cbe7fbc5d124b5c19d9264604265ac1f60ead20ffd5c56f1c9e82b0 API snapshot entry"
+						"detail": "0baced2f8f6862380639d34dc2beaca1d86ff35ff94aa08af075813220155366 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -5879,7 +5884,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/input-visual-contracts.browser.spec.ts",
-						"detail": "ZRadioGroup explicit visual contract assertions"
+						"detail": "ZRadioGroup authored visual contract: keeps RadioGroup orientation and item geometry observable (line 8); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/InputVisualContractsFixture.svelte",
@@ -5950,7 +5955,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "4077c1aa4d02c6699e8b066a75121d8b4a434fa1514e5381de92925582153445 API snapshot entry"
+						"detail": "e0553e5ee5646547bdadec4bb135c5aba59cf35f837cd38ab6e82058a0fe330d API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -5972,7 +5977,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/choice-controls-production.browser.spec.ts",
-						"detail": "ZRadioGroupItem explicit visual contract assertions"
+						"detail": "ZRadioGroupItem authored visual contract: keeps composed ZRadioGroupItem native selection, disabled state and reset ownership real (line 37); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/RadioGroupFixture.svelte",
@@ -6039,7 +6044,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "0e8291a13a44061ea5eae43c3231297f682bf6ce09ae9678b856952954ad0a42 API snapshot entry"
+						"detail": "76240784c92e7cf8cd9650eb930aec6713aba2142bcc6bf0341f68de27e59756 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -6069,7 +6074,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/select-production.browser.spec.ts",
-						"detail": "ZSelect explicit visual contract assertions"
+						"detail": "ZSelect authored visual contract: allows intrinsic content width when matchWidth is disabled (line 57); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/SelectFixture.svelte",
@@ -6158,7 +6163,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/select-production.browser.spec.ts",
-						"detail": "ZSelectContent explicit visual contract assertions"
+						"detail": "ZSelectContent authored visual contract: allows intrinsic content width when matchWidth is disabled (line 57); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/SelectFixture.svelte",
@@ -6247,7 +6252,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/select-production.browser.spec.ts",
-						"detail": "ZSelectItem explicit visual contract assertions"
+						"detail": "ZSelectItem authored visual contract: allows intrinsic content width when matchWidth is disabled (line 57); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/SelectFixture.svelte",
@@ -6314,7 +6319,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "4319dc77d85b6a4c3afe5904b2465973d6c70206b2471b92ad0f4dc86f1dd36f API snapshot entry"
+						"detail": "cb6b569843b3bccdd691f4c7cf4fc327cf7f31118a13d0ad09f31b354cd11935 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -6336,7 +6341,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/select-production.browser.spec.ts",
-						"detail": "ZSelectTrigger explicit visual contract assertions"
+						"detail": "ZSelectTrigger authored visual contract: allows intrinsic content width when matchWidth is disabled (line 57); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/SelectFixture.svelte",
@@ -6425,7 +6430,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
-						"detail": "ZTabs explicit visual contract assertions"
+						"detail": "ZTabs authored visual contract: ZTabs / ZTabsList / ZTabsTrigger / ZTabsPanel preserve ARIA, typed selection, disabled skipping and nearest recovery (line 65); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
@@ -6514,7 +6519,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
-						"detail": "ZTabsList explicit visual contract assertions"
+						"detail": "ZTabsList authored visual contract: ZTabs / ZTabsList / ZTabsTrigger / ZTabsPanel preserve ARIA, typed selection, disabled skipping and nearest recovery (line 65); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
@@ -6581,7 +6586,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "10bcb3a961a15a10f6e088346d539de362bb94e92faa79fbe6f6f206cf0f12ae API snapshot entry"
+						"detail": "979d964b069add2d9e0905d197d3e339915bad0c3dd5c24ea794ae5f127a3207 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -6603,7 +6608,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
-						"detail": "ZTabsPanel explicit visual contract assertions"
+						"detail": "ZTabsPanel authored visual contract: ZTabs / ZTabsList / ZTabsTrigger / ZTabsPanel preserve ARIA, typed selection, disabled skipping and nearest recovery (line 65); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
@@ -6670,7 +6675,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "1dd9d1a8aefc25b5e7d701f0550b99e5dfa2115193298e0aa4dd48142e2a2aad API snapshot entry"
+						"detail": "9f47c65f205d693a6148497aa533fac339725dfd969c39a3cdee45b135bb5962 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -6692,7 +6697,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/accordion-tabs-family-production.browser.spec.ts",
-						"detail": "ZTabsTrigger explicit visual contract assertions"
+						"detail": "ZTabsTrigger authored visual contract: ZTabs / ZTabsList / ZTabsTrigger / ZTabsPanel preserve ARIA, typed selection, disabled skipping and nearest recovery (line 65); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/AccordionTabsProductionFixture.svelte",
@@ -6793,7 +6798,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/tooltip-popconfirm-production.browser.spec.ts",
-						"detail": "ZTooltip explicit visual contract assertions"
+						"detail": "ZTooltip authored visual contract: ZTooltipGroup applies warmup/cooldown while ZTooltip keeps one active tooltip (line 149); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/TooltipPopconfirmProductionFixture.svelte",
@@ -6898,7 +6903,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/tooltip-popconfirm-production.browser.spec.ts",
-						"detail": "ZTooltipContent explicit visual contract assertions"
+						"detail": "ZTooltipContent authored visual contract: ZTooltipGroup applies warmup/cooldown while ZTooltip keeps one active tooltip (line 149); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/TooltipPopconfirmProductionFixture.svelte",
@@ -6991,7 +6996,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/tooltip-popconfirm-production.browser.spec.ts",
-						"detail": "ZTooltipGroup explicit visual contract assertions"
+						"detail": "ZTooltipGroup authored visual contract: ZTooltipGroup applies warmup/cooldown while ZTooltip keeps one active tooltip (line 149); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/TooltipPopconfirmProductionFixture.svelte",
@@ -7080,7 +7085,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/tooltip-popconfirm-production.browser.spec.ts",
-						"detail": "ZTooltipTrigger explicit visual contract assertions"
+						"detail": "ZTooltipTrigger authored visual contract: ZTooltipGroup applies warmup/cooldown while ZTooltip keeps one active tooltip (line 149); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/TooltipPopconfirmProductionFixture.svelte",
@@ -7173,7 +7178,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/tree-production.browser.spec.ts",
-						"detail": "ZTree explicit visual contract assertions"
+						"detail": "ZTree authored visual contract: keeps virtual tree viewport bounded to configured height and item size (line 118); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/TreeProductionFixture.svelte",
@@ -7266,7 +7271,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
-						"detail": "ZAvatar explicit visual contract assertions"
+						"detail": "ZAvatar authored visual contract: keeps visual primitives on the size token scale (line 111); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
@@ -7367,7 +7372,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
-						"detail": "ZBadge explicit visual contract assertions"
+						"detail": "ZBadge authored visual contract: keeps compact display sizes distinct (line 86); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
@@ -7438,7 +7443,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "e17290f204c5beab2364247816b4cd5ac328f3f3b31b1bdb8a272a000d3f9a7a API snapshot entry"
+						"detail": "07e04232d104d0b754099e2ef15e14135f4b63b7ac5ddcd02925b4272d82c10e API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -7460,7 +7465,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/card-production.browser.spec.ts",
-						"detail": "ZCard explicit visual contract assertions"
+						"detail": "ZCard authored visual contract: keeps semantic roots, anatomy, actions and loading ownership synchronized (line 8); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/CardProductionFixture.svelte",
@@ -7581,7 +7586,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/carousel-production.browser.spec.ts",
-						"detail": "ZCarousel explicit visual contract assertions"
+						"detail": "ZCarousel authored visual contract: keeps ZCarousel controlled typed slides, current state and navigation controls synchronized (line 9); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/CarouselFixture.svelte",
@@ -7636,7 +7641,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": true,
+				"VisuallyVerified": false,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -7703,16 +7708,7 @@
 						"detail": "ZDataTable explicit rendered fixture usage"
 					}
 				],
-				"VisuallyVerified": [
-					{
-						"path": "ui/zui/tests/data-display-layout-visual-contract.browser.spec.ts",
-						"detail": "ZDataTable explicit visual contract assertions"
-					},
-					{
-						"path": "ui/zui/tests/DataDisplayLayoutVisualFixture.svelte",
-						"detail": "ZDataTable explicit rendered fixture usage"
-					}
-				],
+				"VisuallyVerified": [],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -7807,7 +7803,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/visual-evidence-audit.browser.spec.ts",
-						"detail": "ZDescriptionList explicit visual contract assertions"
+						"detail": "ZDescriptionList authored visual contract: ZDescriptionList keeps RTL descriptions within the collection width (line 21); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/DisplayCollectionsProductionFixture.svelte",
@@ -7900,7 +7896,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/feedback-display-visual-contract.browser.spec.ts",
-						"detail": "ZEmpty explicit visual contract assertions"
+						"detail": "ZEmpty authored visual contract: renders Empty with the requested heading level and bounded layout (line 62); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/FeedbackDisplayVisualContractFixture.svelte",
@@ -7959,7 +7955,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": true,
+				"VisuallyVerified": false,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -8014,16 +8010,7 @@
 						"detail": "ZList explicit rendered fixture usage"
 					}
 				],
-				"VisuallyVerified": [
-					{
-						"path": "ui/zui/tests/data-display-layout-visual-contract.browser.spec.ts",
-						"detail": "ZList explicit visual contract assertions"
-					},
-					{
-						"path": "ui/zui/tests/DataDisplayLayoutVisualFixture.svelte",
-						"detail": "ZList explicit rendered fixture usage"
-					}
-				],
+				"VisuallyVerified": [],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -8106,7 +8093,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/feedback-display-visual-contract.browser.spec.ts",
-						"detail": "ZMeter explicit visual contract assertions"
+						"detail": "ZMeter authored visual contract: reflects Meter threshold state in the rendered native meter (line 37); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/FeedbackDisplayVisualContractFixture.svelte",
@@ -8199,7 +8186,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/feedback-display-visual-contract.browser.spec.ts",
-						"detail": "ZProgress explicit visual contract assertions"
+						"detail": "ZProgress authored visual contract: maps Progress view to the line and circle geometry contracts (line 19); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/FeedbackDisplayVisualContractFixture.svelte",
@@ -8292,7 +8279,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/feedback-display-visual-contract.browser.spec.ts",
-						"detail": "ZSkeleton explicit visual contract assertions"
+						"detail": "ZSkeleton authored visual contract: applies Skeleton shape and explicit dimensions to computed geometry (line 49); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/FeedbackDisplayVisualContractFixture.svelte",
@@ -8393,7 +8380,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/visual-evidence-audit.browser.spec.ts",
-						"detail": "ZStatistic explicit visual contract assertions"
+						"detail": "ZStatistic authored visual contract: ZStatistic renders a non-zero visual value region (line 44); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/StatisticTimelineProductionFixture.svelte",
@@ -8452,7 +8439,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": true,
+				"VisuallyVerified": false,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -8472,7 +8459,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "6fd6f4b8b66291403f6fb7c546ace41ddeb3610d8c43e9d2cd3eee106df11097 API snapshot entry"
+						"detail": "7df16a4e8ff3b3107f681e43939d19f16c653c6c5f5f857ee4fa4dcf733c2587 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -8491,16 +8478,7 @@
 						"detail": "ZTable explicit rendered fixture usage"
 					}
 				],
-				"VisuallyVerified": [
-					{
-						"path": "ui/zui/tests/data-display-layout-visual-contract.browser.spec.ts",
-						"detail": "ZTable explicit visual contract assertions"
-					},
-					{
-						"path": "ui/zui/tests/DataDisplayLayoutVisualFixture.svelte",
-						"detail": "ZTable explicit rendered fixture usage"
-					}
-				],
+				"VisuallyVerified": [],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -8595,7 +8573,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
-						"detail": "ZTag explicit visual contract assertions"
+						"detail": "ZTag authored visual contract: keeps compact display sizes distinct (line 86); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
@@ -8720,7 +8698,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/visual-evidence-audit.browser.spec.ts",
-						"detail": "ZTimeline explicit visual contract assertions"
+						"detail": "ZTimeline authored visual contract: ZTimeline keeps alternate items inside the RTL timeline owner (line 33); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/StatisticTimelineProductionFixture.svelte",
@@ -8779,7 +8757,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": true,
+				"VisuallyVerified": false,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -8846,16 +8824,7 @@
 						"detail": "ZVirtualList explicit rendered fixture usage"
 					}
 				],
-				"VisuallyVerified": [
-					{
-						"path": "ui/zui/tests/data-display-layout-visual-contract.browser.spec.ts",
-						"detail": "ZVirtualList explicit visual contract assertions"
-					},
-					{
-						"path": "ui/zui/tests/DataDisplayLayoutVisualFixture.svelte",
-						"detail": "ZVirtualList explicit rendered fixture usage"
-					}
-				],
+				"VisuallyVerified": [],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -8942,7 +8911,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/feedback-display-visual-contract.browser.spec.ts",
-						"detail": "ZAlert explicit visual contract assertions"
+						"detail": "ZAlert authored visual contract: maps Alert tone to distinct computed border colors (line 8); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/FeedbackDisplayVisualContractFixture.svelte",
@@ -9035,7 +9004,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/feedback-status-production.browser.spec.ts",
-						"detail": "ZLoadingBar explicit visual contract assertions"
+						"detail": "ZLoadingBar authored visual contract: ZLoadingBar keeps determinate, indeterminate, page, error and reduced states distinct (line 82); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/FeedbackStatusProductionFixture.svelte",
@@ -9128,7 +9097,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/result-empty-production.browser.spec.ts",
-						"detail": "ZResult explicit visual contract assertions"
+						"detail": "ZResult authored visual contract: uses real headings, decorative default icons and Alert-compatible Result tones (line 8); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/ResultEmptyProductionFixture.svelte",
@@ -9229,7 +9198,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
-						"detail": "ZSpinner explicit visual contract assertions"
+						"detail": "ZSpinner authored visual contract: keeps visual primitives on the size token scale (line 111); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
@@ -9322,7 +9291,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/toast-production.browser.spec.ts",
-						"detail": "ZToast explicit visual contract assertions"
+						"detail": "ZToast authored visual contract: ZToast keeps standalone announcement, tone, action and dismiss boundaries real (line 10); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/CoverageFixture.svelte",
@@ -9415,7 +9384,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/toast-production.browser.spec.ts",
-						"detail": "ZToaster explicit visual contract assertions"
+						"detail": "ZToaster authored visual contract: ZToaster connects the caller queue to viewport, FIFO visibility and live regions (line 61); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/ToastProductionFixture.svelte",
@@ -9474,7 +9443,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": true,
+				"VisuallyVerified": false,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -9509,16 +9478,7 @@
 						"detail": "ZBox browser behavior assertions"
 					}
 				],
-				"VisuallyVerified": [
-					{
-						"path": "ui/zui/tests/data-display-layout-visual-contract.browser.spec.ts",
-						"detail": "ZBox explicit visual contract assertions"
-					},
-					{
-						"path": "ui/zui/tests/DataDisplayLayoutVisualFixture.svelte",
-						"detail": "ZBox explicit rendered fixture usage"
-					}
-				],
+				"VisuallyVerified": [],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -9575,7 +9535,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "4c71623aaa7034d65e274f90d741c3260c8ff52df334ed02bfa0b20dc3391e47 API snapshot entry"
+						"detail": "c508791320c3b4b98941d5ced11826af39df7cabf85722fce163f84b4545d4aa API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -9592,12 +9552,20 @@
 					{
 						"path": "ui/zui/tests/ButtonToggleProductionFixture.svelte",
 						"detail": "ZButton explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/docs-composition-contract.browser.spec.ts",
+						"detail": "ZButton browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/DocsCompositionContractFixture.svelte",
+						"detail": "ZButton explicit rendered fixture usage"
 					}
 				],
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/button-toggle-production.browser.spec.ts",
-						"detail": "ZButton explicit visual contract assertions"
+						"detail": "ZButton authored visual contract: renders distinct default-shape size geometry and typography (line 10); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/ButtonToggleProductionFixture.svelte",
@@ -9605,7 +9573,7 @@
 					},
 					{
 						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
-						"detail": "ZButton explicit visual contract assertions"
+						"detail": "ZButton authored visual contract: keeps Button size geometry and typography distinct (line 14); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
@@ -9719,26 +9687,26 @@
 				],
 				"BrowserBehaviorVerified": [
 					{
-						"path": "ui/zui/tests/components.browser.spec.ts",
-						"detail": "ZCode browser behavior assertions"
-					},
-					{
-						"path": "ui/zui/tests/CodeRaceFixture.svelte",
-						"detail": "ZCode explicit rendered fixture usage"
-					},
-					{
 						"path": "ui/zui/tests/code-production.browser.spec.ts",
 						"detail": "ZCode browser behavior assertions"
 					},
 					{
 						"path": "ui/zui/tests/CodeProductionFixture.svelte",
 						"detail": "ZCode explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/components.browser.spec.ts",
+						"detail": "ZCode browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/CodeRaceFixture.svelte",
+						"detail": "ZCode explicit rendered fixture usage"
 					}
 				],
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/feedback-display-visual-contract.browser.spec.ts",
-						"detail": "ZCode explicit visual contract assertions"
+						"detail": "ZCode authored visual contract: keeps Code content visible with its highlighted block surface (line 110); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/FeedbackDisplayVisualContractFixture.svelte",
@@ -9748,7 +9716,7 @@
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
-						"path": "ui/zui/tests/code-production.spec.ts",
+						"path": "ui/zui/tests/code-production.browser.spec.ts",
 						"detail": "ZCode production assertions"
 					},
 					{
@@ -9756,7 +9724,7 @@
 						"detail": "ZCode explicit rendered fixture usage"
 					},
 					{
-						"path": "ui/zui/tests/code-production.browser.spec.ts",
+						"path": "ui/zui/tests/code-production.spec.ts",
 						"detail": "ZCode production assertions"
 					},
 					{
@@ -9847,7 +9815,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
-						"detail": "ZHeading explicit visual contract assertions"
+						"detail": "ZHeading authored visual contract: keeps typography size families separate from control heights (line 130); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
@@ -9922,7 +9890,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "6b5a4ed672d970fb3f85a9e25d78e0ebe7db4e727866b995f37570dbeffae807 API snapshot entry"
+						"detail": "b64434d5ec64d1a8ab6bd70a50e4b9e0dd3984fd02eb14a1b635e55fba0f4ab0 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -9940,7 +9908,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
-						"detail": "ZIcon explicit visual contract assertions"
+						"detail": "ZIcon authored visual contract: keeps visual primitives on the size token scale (line 111); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
@@ -10029,7 +9997,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/feedback-display-visual-contract.browser.spec.ts",
-						"detail": "ZKbd explicit visual contract assertions"
+						"detail": "ZKbd authored visual contract: keeps Kbd content on one line with the mono visual contract (line 100); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/FeedbackDisplayVisualContractFixture.svelte",
@@ -10100,7 +10068,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "6f20520b99c3e098bc20e04f649f044a6a5a1b68ef1d1ebba7484a5f69bfaebb API snapshot entry"
+						"detail": "16fea7aac072a1abba5e1bb888b512a0219cd1522a5dc82ca66de12d50675739 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -10137,8 +10105,16 @@
 				],
 				"VisuallyVerified": [
 					{
+						"path": "ui/zui/tests/docs-composition-contract.browser.spec.ts",
+						"detail": "ZLink authored visual contract: keeps link button geometry aligned with same-size ZButton references and navigation semantics (line 7); requires browser execution and page-level review"
+					},
+					{
+						"path": "ui/zui/tests/DocsCompositionContractFixture.svelte",
+						"detail": "ZLink explicit rendered fixture usage"
+					},
+					{
 						"path": "ui/zui/tests/visual-evidence-audit.browser.spec.ts",
-						"detail": "ZLink explicit visual contract assertions"
+						"detail": "ZLink authored visual contract: ZLink keeps long targets inside their owner geometry (line 10); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/DisplayCollectionsProductionFixture.svelte",
@@ -10239,7 +10215,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/field-size-production.browser.spec.ts",
-						"detail": "ZProvider explicit visual contract assertions"
+						"detail": "ZProvider authored visual contract: resolves explicit control, Field and Provider density in priority order (line 8); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/FieldSizeFixture.svelte",
@@ -10356,7 +10332,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/feedback-display-visual-contract.browser.spec.ts",
-						"detail": "ZSeparator explicit visual contract assertions"
+						"detail": "ZSeparator authored visual contract: maps Separator orientation to horizontal and vertical dimensions (line 89); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/FeedbackDisplayVisualContractFixture.svelte",
@@ -10449,7 +10425,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
-						"detail": "ZText explicit visual contract assertions"
+						"detail": "ZText authored visual contract: keeps typography size families separate from control heights (line 130); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
@@ -10550,7 +10526,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/feedback-display-visual-contract.browser.spec.ts",
-						"detail": "ZToggleButton explicit visual contract assertions"
+						"detail": "ZToggleButton authored visual contract: exposes ToggleButton pressed state with stable button geometry (line 76); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/FeedbackDisplayVisualContractFixture.svelte",
@@ -10655,7 +10631,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/foundation-utilities-production.browser.spec.ts",
-						"detail": "ZVisuallyHidden explicit visual contract assertions"
+						"detail": "ZVisuallyHidden authored visual contract: ZSeparator and ZVisuallyHidden preserve semantic and visual-only boundaries (line 7); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/FoundationPrimitivesFixture.svelte",
@@ -10748,7 +10724,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/input-visual-contracts.browser.spec.ts",
-						"detail": "ZCalendar explicit visual contract assertions"
+						"detail": "ZCalendar authored visual contract: keeps Calendar size and invalid state in the rendered geometry (line 23); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/InputVisualContractsFixture.svelte",
@@ -10837,7 +10813,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/cascader-production.browser.spec.ts",
-						"detail": "ZCascader explicit visual contract assertions"
+						"detail": "ZCascader authored visual contract: keeps typed paths, Field ownership, auxiliary search and reset synchronized (line 10); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/CascaderProductionFixture.svelte",
@@ -10926,7 +10902,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
-						"detail": "ZCheckbox explicit visual contract assertions"
+						"detail": "ZCheckbox authored visual contract: keeps native control visual size mappings explicit (line 45); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
@@ -11019,7 +10995,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/color-picker-production.browser.spec.ts",
-						"detail": "ZColorPicker explicit visual contract assertions"
+						"detail": "ZColorPicker authored visual contract: coordinates Field, hex drafts, presets, clear, FormData and reset (line 11); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/ColorPickerProductionFixture.svelte",
@@ -11116,7 +11092,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/date-time-production.browser.spec.ts",
-						"detail": "ZDateField explicit visual contract assertions"
+						"detail": "ZDateField authored visual contract: keeps ZDateField typed segments, ARIA, keyboard, Field ownership and FormData real (line 15); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/DateFixture.svelte",
@@ -11209,7 +11185,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/date-picker-production.browser.spec.ts",
-						"detail": "ZDatePicker explicit visual contract assertions"
+						"detail": "ZDatePicker authored visual contract: keeps ZDateRangePicker ordered values, partial FormData and reset owner realm real (line 48); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/DateFixture.svelte",
@@ -11310,7 +11286,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/date-picker-production.browser.spec.ts",
-						"detail": "ZDateRangePicker explicit visual contract assertions"
+						"detail": "ZDateRangePicker authored visual contract: keeps ZDateRangePicker ordered values, partial FormData and reset owner realm real (line 48); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/DateFixture.svelte",
@@ -11407,7 +11383,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/field-size-production.browser.spec.ts",
-						"detail": "ZField explicit visual contract assertions"
+						"detail": "ZField authored visual contract: resolves explicit control, Field and Provider density in priority order (line 8); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/FieldSizeFixture.svelte",
@@ -11504,7 +11480,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/input-visual-contracts.browser.spec.ts",
-						"detail": "ZFileUpload explicit visual contract assertions"
+						"detail": "ZFileUpload authored visual contract: exposes FileUpload invalid state on a measurable root (line 49); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/InputVisualContractsFixture.svelte",
@@ -11621,7 +11597,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
-						"detail": "ZForm explicit visual contract assertions"
+						"detail": "ZForm authored visual contract: propagates form-family sizes to the owned control (line 157); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
@@ -11754,7 +11730,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
-						"detail": "ZFormField explicit visual contract assertions"
+						"detail": "ZFormField authored visual contract: propagates form-family sizes to the owned control (line 157); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
@@ -11855,7 +11831,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
-						"detail": "ZInput explicit visual contract assertions"
+						"detail": "ZInput authored visual contract: keeps text controls border-box and size geometry (line 28); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
@@ -11960,7 +11936,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
-						"detail": "ZInputGroup explicit visual contract assertions"
+						"detail": "ZInputGroup authored visual contract: propagates form-family sizes to the owned control (line 157); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
@@ -12081,7 +12057,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/mention-production.browser.spec.ts",
-						"detail": "ZMention explicit visual contract assertions"
+						"detail": "ZMention authored visual contract: mounts a distant virtual option before exposing and committing it (line 42); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/MentionFixture.svelte",
@@ -12178,7 +12154,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
-						"detail": "ZNumberField explicit visual contract assertions"
+						"detail": "ZNumberField authored visual contract: keeps composite control size state and primary geometry (line 73); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
@@ -12267,7 +12243,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
-						"detail": "ZPinInput explicit visual contract assertions"
+						"detail": "ZPinInput authored visual contract: keeps composite control size state and primary geometry (line 73); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
@@ -12368,7 +12344,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/choice-controls-production.browser.spec.ts",
-						"detail": "ZSegmented explicit visual contract assertions"
+						"detail": "ZSegmented authored visual contract: keeps readonly Segmented selection and callbacks inert (line 165); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/ChoiceControlsCollectionFixture.svelte",
@@ -12457,7 +12433,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
-						"detail": "ZSlider explicit visual contract assertions"
+						"detail": "ZSlider authored visual contract: keeps native control visual size mappings explicit (line 45); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
@@ -12554,7 +12530,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
-						"detail": "ZSwitch explicit visual contract assertions"
+						"detail": "ZSwitch authored visual contract: keeps native control visual size mappings explicit (line 45); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
@@ -12647,7 +12623,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/input-visual-contracts.browser.spec.ts",
-						"detail": "ZTagsInput explicit visual contract assertions"
+						"detail": "ZTagsInput authored visual contract: keeps TagsInput size and invalid state geometry distinct (line 36); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/InputVisualContractsFixture.svelte",
@@ -12744,7 +12720,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
-						"detail": "ZTextarea explicit visual contract assertions"
+						"detail": "ZTextarea authored visual contract: keeps text controls border-box and size geometry (line 28); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
@@ -12845,7 +12821,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/date-time-production.browser.spec.ts",
-						"detail": "ZTimeField explicit visual contract assertions"
+						"detail": "ZTimeField authored visual contract: keeps ZTimeField typed segments, granular keyboard and FormData/reset real (line 42); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/DateFixture.svelte",
@@ -12942,7 +12918,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/input-visual-contracts.browser.spec.ts",
-						"detail": "ZTransfer explicit visual contract assertions"
+						"detail": "ZTransfer authored visual contract: exposes Transfer invalid state and pane geometry (line 64); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/InputVisualContractsFixture.svelte",
@@ -13031,7 +13007,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/tree-select-production.browser.spec.ts",
-						"detail": "ZTreeSelect explicit visual contract assertions"
+						"detail": "ZTreeSelect authored visual contract: keeps ZTreeSelect popup ARIA, Field focus owner, selection, clear and FormData reset real (line 10); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/TreeProductionFixture.svelte",
@@ -13082,7 +13058,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": true,
+				"VisuallyVerified": false,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -13125,16 +13101,7 @@
 						"detail": "ZAspectRatio explicit rendered fixture usage"
 					}
 				],
-				"VisuallyVerified": [
-					{
-						"path": "ui/zui/tests/data-display-layout-visual-contract.browser.spec.ts",
-						"detail": "ZAspectRatio explicit visual contract assertions"
-					},
-					{
-						"path": "ui/zui/tests/DataDisplayLayoutVisualFixture.svelte",
-						"detail": "ZAspectRatio explicit rendered fixture usage"
-					}
-				],
+				"VisuallyVerified": [],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -13225,7 +13192,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/size-visual-contract.browser.spec.ts",
-						"detail": "ZContainer explicit visual contract assertions"
+						"detail": "ZContainer authored visual contract: keeps surface size families mapped to max-width tokens (line 141); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/SizeVisualContractFixture.svelte",
@@ -13276,7 +13243,7 @@
 				"ContractVerified": true,
 				"RuntimeImplemented": true,
 				"BrowserBehaviorVerified": true,
-				"VisuallyVerified": true,
+				"VisuallyVerified": false,
 				"DesktopVerified": false,
 				"ProductionVerified": true
 			},
@@ -13311,16 +13278,7 @@
 						"detail": "ZStack browser behavior assertions"
 					}
 				],
-				"VisuallyVerified": [
-					{
-						"path": "ui/zui/tests/data-display-layout-visual-contract.browser.spec.ts",
-						"detail": "ZStack explicit visual contract assertions"
-					},
-					{
-						"path": "ui/zui/tests/DataDisplayLayoutVisualFixture.svelte",
-						"detail": "ZStack explicit rendered fixture usage"
-					}
-				],
+				"VisuallyVerified": [],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
@@ -13407,7 +13365,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/command-production.browser.spec.ts",
-						"detail": "ZCommand explicit visual contract assertions"
+						"detail": "ZCommand authored visual contract: keeps command list usable and active option visibly addressable (line 50); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/CommandFixture.svelte",
@@ -13496,7 +13454,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/command-production.browser.spec.ts",
-						"detail": "ZCommandPalette explicit visual contract assertions"
+						"detail": "ZCommandPalette authored visual contract: ZCommandPalette owns dialog portal focus, action close, shortcut reopen and Escape (line 69); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/CommandPaletteFixture.svelte",
@@ -13593,7 +13551,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/visual-evidence-audit.browser.spec.ts",
-						"detail": "ZPagination explicit visual contract assertions"
+						"detail": "ZPagination authored visual contract: ZPagination keeps navigation controls measurable within the nav owner (line 54); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/PaginationFixture.svelte",
@@ -13686,7 +13644,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/tour-production.browser.spec.ts",
-						"detail": "ZTour explicit visual contract assertions"
+						"detail": "ZTour authored visual contract: keeps the first tour dialog visible for its resolved target (line 67); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/TourFixture.svelte",

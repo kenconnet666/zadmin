@@ -73,6 +73,9 @@ export function defineRecipe<const TVariants extends RecipeVariantDefinitions>(
 	if (input.base !== undefined && typeof input.base !== 'function') {
 		throw new TypeError('Recipe base must be a style factory.');
 	}
+	if (input.layer !== undefined && input.layer !== 'components' && input.layer !== 'utilities') {
+		throw new TypeError('Recipe layer must be components or utilities.');
+	}
 
 	const variants = cloneVariants(input.variants);
 	const defaults = input.defaultVariants === undefined ? undefined : { ...input.defaultVariants };
@@ -104,6 +107,7 @@ export function defineRecipe<const TVariants extends RecipeVariantDefinitions>(
 		compoundVariants: Object.freeze(compounds),
 		defaultVariants: defaults === undefined ? undefined : Object.freeze(defaults),
 		id: `r${recipeSequence.toString(36)}`,
+		layer: input.layer ?? 'components',
 		variantMap: Object.freeze(variantMap),
 		variants
 	}) as RecipeDefinition<TVariants>;

@@ -6,7 +6,7 @@
 	export type ZSelectTriggerProps = Omit<
 		ZPopoverTriggerProps,
 		'aria-required' | 'children' | 'disabled' | 'id' | 'popupRole'
-	> & { readonly children?: Snippet };
+	> & { readonly children?: Snippet; readonly disabled?: boolean };
 	export const zuiMetadata = {
 		category: 'input',
 		id: 'select-trigger',
@@ -24,6 +24,12 @@
 		keyboard: [{ description: '打开listbox。', key: 'Enter / Space / ArrowUp / ArrowDown' }],
 		parts: [],
 		props: [
+			{
+				default: '继承Select；显式true可进一步禁用Trigger',
+				description: 'Trigger局部禁用状态，与Select disabled取逻辑或。',
+				name: 'disabled',
+				type: 'boolean'
+			},
 			{
 				bindable: true,
 				default: 'null',
@@ -61,9 +67,11 @@
 	let {
 		'aria-describedby': ariaDescribedBy,
 		children,
+		disabled: disabledProp = false,
 		onclick,
 		onkeydown,
 		ref = $bindable(null),
+		size,
 		variant = 'secondary',
 		...rest
 	}: ZSelectTriggerProps = $props();
@@ -95,9 +103,9 @@
 	aria-disabled={select.readonly || undefined}
 	aria-invalid={select.invalid || undefined}
 	bind:ref
-	disabled={select.disabled}
-	id={select.controlId}
+	disabled={disabledProp || select.disabled}
 	popupRole="listbox"
+	size={size ?? select.size}
 	{variant}
 	onkeydown={handleKeydown}
 	data-invalid={select.invalid || undefined}

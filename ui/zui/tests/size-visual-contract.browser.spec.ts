@@ -88,7 +88,7 @@ describe('size visual contracts for foundational controls', () => {
 		const smallTag = document.querySelector<HTMLElement>('[data-testid="tag-small"]')!;
 		const mediumTag = document.querySelector<HTMLElement>('[data-testid="tag-medium"]')!;
 		expect(getComputedStyle(smallTag).fontSize).toBe('12px');
-		expect(getComputedStyle(mediumTag).fontSize).toBe('16px');
+		expect(getComputedStyle(mediumTag).fontSize).toBe('14px');
 		expect(smallTag.getBoundingClientRect().height).toBeLessThan(
 			mediumTag.getBoundingClientRect().height
 		);

@@ -3,11 +3,16 @@
 	import type { HTMLAnchorAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
+	import { buttonRecipe, type ButtonSize, type ButtonVariant } from './ZButton.svelte';
+	import { resolveControlSize } from '../../runtime/foundation/control-size.js';
 
 	export type ZLinkTone = 'danger' | 'muted' | 'primary';
 	export type ZLinkUnderline = 'always' | 'hover' | 'none';
 
 	export interface ZLinkProps extends Omit<HTMLAnchorAttributes, 'children' | 'href'> {
+		readonly appearance?: 'text' | 'button' | 'navigation';
+		readonly size?: ButtonSize;
+		readonly variant?: ButtonVariant;
 		readonly children?: Snippet;
 		readonly disabled?: boolean;
 		readonly external?: boolean;
@@ -41,6 +46,25 @@
 		],
 		props: [
 			{
+				default: "'text'",
+				description:
+					'文本、链接按钮或导航项；始终保留anchor语义，navigation从aria-current派生当前项视觉。',
+				name: 'appearance',
+				type: "'text' | 'button' | 'navigation'"
+			},
+			{
+				default: 'Provider density',
+				description: '按钮和导航链接的控件尺寸。',
+				name: 'size',
+				type: 'ButtonSize'
+			},
+			{
+				default: "'primary'",
+				description: '链接按钮的视觉层级；仅appearance=button时使用。',
+				name: 'variant',
+				type: 'ButtonVariant'
+			},
+			{
 				default: '必填',
 				description: '真实anchor目标；禁用时暂不写入DOM，但公开合同仍要求提供。',
 				name: 'href',
@@ -67,13 +91,14 @@
 			},
 			{
 				default: "'primary'",
-				description: '用途明确的语义颜色。',
+				description:
+					'文本链接的语义颜色；button仅使用danger或默认品牌色，navigation由aria-current决定颜色。',
 				name: 'tone',
 				type: "'primary' | 'muted' | 'danger'"
 			},
 			{
 				default: "'always'",
-				description: '下划线显示策略；默认不只依赖颜色识别链接。',
+				description: '仅文本链接的下划线显示策略；默认不只依赖颜色识别链接。',
 				name: 'underline',
 				type: "'always' | 'hover' | 'none'"
 			},
@@ -143,9 +168,82 @@
 		variants: {},
 		defaultVariants: {}
 	});
+	const buttonLinkRecipe = defineRecipe({
+		base: (s) => {
+			s.textDecoration.none;
+			s.gap._medium;
+		},
+		variants: {}
+	});
+	const navigationRecipe = defineRecipe({
+		base: (s) => {
+			s.alignItems.center;
+			s.boxSizing.borderBox;
+			s.borderInlineStartColor.transparent;
+			s.borderInlineStartStyle.solid;
+			s.borderInlineStartWidth._medium;
+			s.borderRadius._medium;
+			s.color._textMuted;
+			s.display.flex;
+			s.fontFamily._sans;
+			s.lineHeight._normal;
+			s.gap._medium;
+			s.justifyContent.spaceBetween;
+			s.minWidth.px(0);
+			s.textDecoration.none;
+			s._hover((hover) => {
+				hover.backgroundColor._surface;
+				hover.color._primaryHover;
+			});
+			s._focusVisible((focus) => {
+				focus.outlineColor._focus;
+				focus.outlineStyle.solid;
+				focus.outlineWidth._medium;
+				focus.outlineOffset.px(2);
+			});
+		},
+		variants: {
+			size: {
+				small: (s) => {
+					s.fontSize._small;
+					s.minHeight._small;
+					s.padding._small;
+				},
+				medium: (s) => {
+					s.fontSize._medium;
+					s.minHeight._medium;
+					s.padding._medium;
+				},
+				large: (s) => {
+					s.fontSize._large;
+					s.minHeight._large;
+					s.padding._large;
+				}
+			},
+			current: {
+				false: () => undefined,
+				true: (s) => {
+					s.backgroundColor._surface;
+					s.borderInlineStartColor._accent;
+					s.color._primary;
+					s.fontWeight._semibold;
+				}
+			},
+			disabled: {
+				false: () => undefined,
+				true: (s) => {
+					s.opacity._disabled;
+					s.cursor.notAllowed;
+				}
+			}
+		},
+		defaultVariants: { size: 'medium', current: false, disabled: false }
+	});
 
 	registerRecipeHmr(import.meta, linkRecipe);
 	registerRecipeHmr(import.meta, externalIconRecipe);
+	registerRecipeHmr(import.meta, buttonLinkRecipe);
+	registerRecipeHmr(import.meta, navigationRecipe);
 </script>
 
 <script lang="ts">
@@ -155,6 +253,7 @@
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
+	import { ReducedMotionState } from '../../runtime/foundation/motion.svelte.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -163,10 +262,12 @@
 	import ZVisuallyHidden from './ZVisuallyHidden.svelte';
 
 	let {
+		'aria-current': ariaCurrent,
 		'aria-describedby': ariaDescribedBy,
 		'aria-label': ariaLabel,
 		'aria-labelledby': ariaLabelledBy,
 		children,
+		appearance = 'text',
 		class: className,
 		disabled = false,
 		external = false,
@@ -176,13 +277,19 @@
 		ref = $bindable(null),
 		rel,
 		style,
+		size,
 		tabindex,
 		target,
 		tone = 'primary',
 		underline = 'always',
+		variant = 'primary',
 		...rest
 	}: ZLinkProps = $props();
 	const zui = useZui();
+	const reducedMotion = new ReducedMotionState(() => zui.motion);
+	$effect(() => {
+		if (appearance === 'button' && ref) return reducedMotion.connect(ref.ownerDocument.defaultView);
+	});
 	const uid = $props.id();
 	const hintId = $derived(createZuiId(zui.idPrefix, uid, 'link-new-window'));
 	const targetBlank = $derived(target?.toLowerCase() === '_blank');
@@ -205,7 +312,27 @@
 			.filter(Boolean)
 			.join(' ') || undefined
 	);
-	const rootClass = $derived(zui.recipe(linkRecipe, { disabled, tone, underline }));
+	const resolvedSize = $derived(resolveControlSize(size, zui.density));
+	const rootClass = $derived(
+		appearance === 'button'
+			? [
+					zui.recipe(buttonRecipe, {
+						disabled,
+						size: resolvedSize,
+						variant,
+						tone: tone === 'danger' ? 'danger' : 'default',
+						motion: reducedMotion.current ? 'reduced' : 'full'
+					}),
+					zui.recipe(buttonLinkRecipe)
+				]
+			: appearance === 'navigation'
+				? zui.recipe(navigationRecipe, {
+						disabled,
+						size: resolvedSize,
+						current: Boolean(ariaCurrent && ariaCurrent !== 'false')
+					})
+				: zui.recipe(linkRecipe, { disabled, tone, underline })
+	);
 	const externalIconClass = $derived(zui.recipe(externalIconRecipe));
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
@@ -235,9 +362,12 @@
 	use:captureClick={interceptDisabledClick}
 	aria-describedby={resolvedDescribedBy}
 	aria-disabled={disabled ? 'true' : undefined}
+	aria-current={ariaCurrent}
 	aria-label={ariaLabel}
 	aria-labelledby={ariaLabelledBy}
 	data-disabled={disabled || undefined}
+	data-appearance={appearance}
+	data-size={appearance !== 'text' ? resolvedSize : undefined}
 	data-external={external || undefined}
 	data-new-window={newWindow || undefined}
 	href={disabled ? undefined : href}

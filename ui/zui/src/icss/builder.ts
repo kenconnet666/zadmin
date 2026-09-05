@@ -129,7 +129,9 @@ function createCarrier<TTheme extends ThemeSchema>(
 				appendDeclaration(block, property, [keyword]);
 				return undefined;
 			}
-			return undefined;
+			throw new TypeError(
+				`Unknown ICSS accessor "${property}.${key}". Use .raw() for valid CSS values not modeled by the token API.`
+			);
 		}
 	});
 }

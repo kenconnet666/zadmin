@@ -230,6 +230,7 @@
 		onEscape,
 		onFocusOutside,
 		onPointerOutside,
+		ontransitionend,
 		ref = $bindable(null),
 		restoreFocus = true,
 		restoreTarget,
@@ -309,6 +310,10 @@
 			dismissable.destroy();
 		};
 	});
+	function handleTransitionEnd(event: TransitionEvent & { currentTarget: HTMLDivElement }): void {
+		if (event.target === event.currentTarget) presence.finishExit();
+		ontransitionend?.(event);
+	}
 	onDestroy(() => presence.destroy());
 </script>
 
@@ -333,9 +338,7 @@
 		data-presence={presenceState}
 		data-reduced-motion={dialog.reducedMotion || undefined}
 		data-state={dialog.open ? 'open' : 'closed'}
-		ontransitionend={(event) => {
-			if (event.target === event.currentTarget) presence.finishExit();
-		}}
+		ontransitionend={handleTransitionEnd}
 	>
 		{@render children?.()}
 	</div>

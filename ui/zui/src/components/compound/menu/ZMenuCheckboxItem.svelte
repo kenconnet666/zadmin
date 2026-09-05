@@ -6,7 +6,7 @@
 
 	export interface ZMenuCheckboxItemProps extends Omit<
 		ZMenuItemProps,
-		'checked' | 'children' | 'closeOnSelect' | 'itemRole' | 'onSelect'
+		'checked' | 'children' | 'closeOnSelect' | 'itemRole' | 'leading' | 'onSelect'
 	> {
 		checked?: boolean | 'mixed';
 		readonly children?: Snippet;

@@ -574,7 +574,6 @@
 			aria-labelledby={resolvedLabelledBy}
 			data-slot="trigger"
 			disabled={resolvedDisabled}
-			id={resolvedControlId}
 			onkeydown={handleTriggerKeydown}
 			popupRole="dialog"
 			size={resolvedSize}

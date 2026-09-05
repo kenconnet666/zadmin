@@ -188,6 +188,10 @@
 		description,
 		dismissible = true,
 		dismissLabel,
+		onfocusin,
+		onfocusout,
+		onmouseenter,
+		onmouseleave,
 		onAction,
 		onDismiss,
 		onEscapeKeyDown,
@@ -211,13 +215,25 @@
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
 	const resolvedPriority = $derived(priority ?? (tone === 'danger' ? 'assertive' : 'polite'));
-	function focusOut(event: FocusEvent): void {
-		if (
+	function mouseEnter(event: MouseEvent & { currentTarget: HTMLElement }): void {
+		onPauseChange?.('hover', true);
+		onmouseenter?.(event);
+	}
+	function mouseLeave(event: MouseEvent & { currentTarget: HTMLElement }): void {
+		onPauseChange?.('hover', false);
+		onmouseleave?.(event);
+	}
+	function focusIn(event: FocusEvent & { currentTarget: HTMLElement }): void {
+		onPauseChange?.('focus', true);
+		onfocusin?.(event);
+	}
+	function focusOut(event: FocusEvent & { currentTarget: HTMLElement }): void {
+		const leaving =
 			!isDomHtmlElement(event.currentTarget) ||
-			(isDomNode(event.relatedTarget) && event.currentTarget.contains(event.relatedTarget))
-		)
-			return;
-		onPauseChange?.('focus', false);
+			!isDomNode(event.relatedTarget) ||
+			!event.currentTarget.contains(event.relatedTarget);
+		if (leaving) onPauseChange?.('focus', false);
+		onfocusout?.(event);
 	}
 	function handleKeydown(event: KeyboardEvent & { currentTarget: HTMLElement }): void {
 		onkeydown?.(event);
@@ -242,9 +258,9 @@
 	use:applyIcssRootStyle={{ style, variables }}
 	data-tone={tone}
 	data-priority={resolvedPriority}
-	onmouseenter={() => onPauseChange?.('hover', true)}
-	onmouseleave={() => onPauseChange?.('hover', false)}
-	onfocusin={() => onPauseChange?.('focus', true)}
+	onmouseenter={mouseEnter}
+	onmouseleave={mouseLeave}
+	onfocusin={focusIn}
 	onfocusout={focusOut}
 	onkeydown={handleKeydown}
 >

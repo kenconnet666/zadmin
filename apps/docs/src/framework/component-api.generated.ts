@@ -2191,12 +2191,6 @@ export const menuCheckboxItemApiFacts = {
 			inheritedFrom: 'ZMenuItemProps'
 		},
 		{
-			name: 'leading',
-			required: false,
-			type: 'Snippet',
-			inheritedFrom: 'ZMenuItemProps'
-		},
-		{
 			name: 'ref',
 			required: false,
 			type: 'HTMLElement | null',
@@ -2468,12 +2462,6 @@ export const menuRadioItemApiFacts = {
 			inheritedFrom: 'ZMenuItemProps'
 		},
 		{
-			name: 'leading',
-			required: false,
-			type: 'Snippet',
-			inheritedFrom: 'ZMenuItemProps'
-		},
-		{
 			name: 'ref',
 			required: false,
 			type: 'HTMLElement | null',
@@ -2736,12 +2724,6 @@ export const menuSubTriggerApiFacts = {
 			inheritedFrom: 'ZMenuItemProps'
 		},
 		{
-			name: 'trailing',
-			required: false,
-			type: 'Snippet',
-			inheritedFrom: 'ZMenuItemProps'
-		},
-		{
 			name: 'value',
 			required: true,
 			type: 'SelectionKey',
@@ -2887,6 +2869,11 @@ export const multiSelectApiFacts = {
 			name: 'required',
 			required: false,
 			type: 'boolean'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
 		},
 		{
 			name: 'value',
@@ -3066,6 +3053,11 @@ export const multiSelectTriggerApiFacts = {
 			type: 'Snippet'
 		},
 		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'fullWidth',
 			required: false,
 			type: 'boolean',
@@ -3094,12 +3086,6 @@ export const multiSelectTriggerApiFacts = {
 			required: false,
 			type: "'ghost' | 'primary' | 'secondary'",
 			inheritedFrom: 'ZButtonVariants'
-		},
-		{
-			name: 'disabled',
-			required: false,
-			type: 'boolean',
-			inheritedFrom: 'ZButtonProps'
 		},
 		{
 			name: 'end',
@@ -3918,6 +3904,11 @@ export const radioGroupApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
 			name: 'value',
 			required: false,
 			type: 'RadioSelectionKey'
@@ -4096,6 +4087,11 @@ export const selectApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
 			name: 'valueLabel',
 			required: false,
 			type: '(value: SelectionKey) => string'
@@ -4268,6 +4264,11 @@ export const selectTriggerApiFacts = {
 			type: 'Snippet'
 		},
 		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'fullWidth',
 			required: false,
 			type: 'boolean',
@@ -4296,12 +4297,6 @@ export const selectTriggerApiFacts = {
 			required: false,
 			type: "'ghost' | 'primary' | 'secondary'",
 			inheritedFrom: 'ZButtonVariants'
-		},
-		{
-			name: 'disabled',
-			required: false,
-			type: 'boolean',
-			inheritedFrom: 'ZButtonProps'
 		},
 		{
 			name: 'end',
@@ -5086,6 +5081,11 @@ export const cardApiFacts = {
 			name: 'as',
 			required: false,
 			type: "'article' | 'div' | 'section'"
+		},
+		{
+			name: 'bodyPadding',
+			required: false,
+			type: "keyof ZuiTheme['space']"
 		},
 		{
 			name: 'children',
@@ -6016,6 +6016,16 @@ export const tableApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'scrollLabelledBy',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'scrollDescribedBy',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'striped',
 			required: false,
 			type: 'boolean'
@@ -6927,6 +6937,21 @@ export const linkApiFacts = {
 	inheritedFrom: ['HTMLAnchorAttributes'],
 	name: 'ZLink',
 	props: [
+		{
+			name: 'appearance',
+			required: false,
+			type: "'text' | 'button' | 'navigation'"
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ButtonSize'
+		},
+		{
+			name: 'variant',
+			required: false,
+			type: 'ButtonVariant'
+		},
 		{
 			name: 'children',
 			required: false,

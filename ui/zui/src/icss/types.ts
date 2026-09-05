@@ -52,8 +52,11 @@ type DefinitionFor<TProperty extends string> = TProperty extends keyof typeof PR
 	? (typeof PROPERTY_DEFINITIONS)[TProperty]
 	: never;
 
-type TokenAccessors<TTheme extends ThemeSchema, TProperty extends string> =
-	DefinitionFor<TProperty> extends { readonly token: infer TCategory extends string }
+type TokenAccessors<TTheme extends ThemeSchema, TProperty extends string> = [
+	DefinitionFor<TProperty>
+] extends [never]
+	? object
+	: [DefinitionFor<TProperty>] extends [{ readonly token: infer TCategory extends string }]
 		? TCategory extends keyof TTheme
 			? {
 					readonly [TToken in keyof TTheme[TCategory] & string as `_${TToken}`]: void;
@@ -61,17 +64,21 @@ type TokenAccessors<TTheme extends ThemeSchema, TProperty extends string> =
 			: object
 		: object;
 
-type KeywordAccessors<TProperty extends string> =
-	DefinitionFor<TProperty> extends {
-		readonly keywords: infer TKeywords extends Readonly<Record<string, string>>;
-	}
+type KeywordAccessors<TProperty extends string> = [DefinitionFor<TProperty>] extends [never]
+	? object
+	: [DefinitionFor<TProperty>] extends [
+				{
+					readonly keywords: infer TKeywords extends Readonly<Record<string, string>>;
+				}
+		  ]
 		? { readonly [TKeyword in keyof TKeywords & string]: void }
 		: object;
 
-type UnitFamiliesFor<TProperty extends string> =
-	DefinitionFor<TProperty> extends {
-		readonly units: readonly (infer TFamily extends UnitFamilyName)[];
-	}
+type UnitFamiliesFor<TProperty extends string> = [DefinitionFor<TProperty>] extends [never]
+	? never
+	: DefinitionFor<TProperty> extends {
+				readonly units: readonly (infer TFamily extends UnitFamilyName)[];
+		  }
 		? TFamily
 		: never;
 

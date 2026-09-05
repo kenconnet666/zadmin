@@ -34,6 +34,25 @@ function createFixtureRecipe() {
 }
 
 describe('defineRecipe', () => {
+	it('places explicitly authored component customizations in the utility layer', () => {
+		const registry = createServerStyleRegistry();
+		const runtime = createIcssRuntime({ registry });
+		const component = defineRecipe({
+			variants: { tone: { primary: (s) => s.color._primary } },
+			defaultVariants: { tone: 'primary' }
+		});
+		const override = defineRecipe({
+			layer: 'utilities',
+			base: (s) => s.color._textMuted,
+			variants: {}
+		});
+		runtime.recipe(defaultTheme, component);
+		const overrideClass = runtime.recipe(defaultTheme, override);
+		expect(registry.cssText()).toContain(`@layer zui.utilities{.${overrideClass}{`);
+		expect(() => defineRecipe({ layer: 'invalid', variants: {} } as never)).toThrow(
+			/Recipe layer/u
+		);
+	});
 	it('exposes a readonly variant map and composes stable branch classes', () => {
 		const recipe = createFixtureRecipe();
 		const registry = createServerStyleRegistry();
@@ -212,6 +231,23 @@ describe('defineRecipe', () => {
 });
 
 describe('defineSlotRecipe', () => {
+	it('preserves utility ownership for component composition slots', () => {
+		const registry = createServerStyleRegistry();
+		const runtime = createIcssRuntime({ registry });
+		const recipe = defineSlotRecipe({
+			layer: 'utilities',
+			slots: ['title'] as const,
+			base: { title: (s) => s.fontSize.px(48) },
+			variants: {}
+		});
+		const classes = runtime.slots(defaultTheme, recipe);
+		expect(registry.cssText()).toContain(
+			`@layer zui.utilities{.${classes.title}{font-size:48px;}}`
+		);
+		expect(() =>
+			defineSlotRecipe({ layer: 'invalid', slots: ['root'], variants: {} } as never)
+		).toThrow(/Slot recipe layer/u);
+	});
 	it('returns stable classes for every declared real-element slot', () => {
 		const recipe = defineSlotRecipe({
 			slots: ['root', 'label', 'control'] as const,

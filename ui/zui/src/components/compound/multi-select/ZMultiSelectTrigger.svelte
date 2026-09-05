@@ -6,7 +6,7 @@
 	export type ZMultiSelectTriggerProps = Omit<
 		ZPopoverTriggerProps,
 		'aria-required' | 'children' | 'disabled' | 'id' | 'popupRole'
-	> & { readonly children?: Snippet };
+	> & { readonly children?: Snippet; readonly disabled?: boolean };
 
 	export const zuiMetadata = {
 		category: 'input',
@@ -30,6 +30,12 @@
 			{ description: 'clearable清空图标。', name: 'clear' }
 		],
 		props: [
+			{
+				default: '继承MultiSelect；显式true可进一步禁用Trigger',
+				description: 'Trigger局部禁用状态，与MultiSelect disabled取逻辑或。',
+				name: 'disabled',
+				type: 'boolean'
+			},
 			{
 				bindable: true,
 				default: 'null',
@@ -98,9 +104,11 @@
 		'aria-describedby': ariaDescribedBy,
 		children,
 		class: className,
+		disabled: disabledProp = false,
 		onclick,
 		onkeydown,
 		ref = $bindable(null),
+		size,
 		variant = 'secondary',
 		...rest
 	}: ZMultiSelectTriggerProps = $props();
@@ -179,9 +187,9 @@
 		: undefined}
 	bind:ref
 	class={[triggerClass, className]}
-	disabled={multi.disabled}
-	id={multi.controlId}
+	disabled={disabledProp || multi.disabled}
 	popupRole="listbox"
+	size={size ?? multi.size}
 	{variant}
 	onkeydown={handleKeydown}
 	data-invalid={multi.invalid || undefined}

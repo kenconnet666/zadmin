@@ -3,17 +3,14 @@
 
 	const homeRecipe = defineSlotRecipe(
 		{
+			layer: 'utilities',
 			slots: [
 				'hero',
 				'eyebrow',
 				'title',
 				'copy',
-				'primaryAction',
-				'secondaryAction',
 				'principles',
 				'principle',
-				'metric',
-				'principleLabel',
 				'principleCopy',
 				'catalog',
 				'catalogTitle',
@@ -21,29 +18,16 @@
 				'groupTitle',
 				'grid',
 				'card',
+				'cardLink',
 				'cardIcon',
 				'cardTitle',
 				'learnMore'
 			] as const,
 			base: {
-				card: (s) => {
-					s.backgroundColor._canvas;
-					s.borderColor._border;
-					s.borderRadius._large;
-					s.borderStyle.solid;
-					s.borderWidth._hairline;
-					s.boxShadow._small;
-					s.color._text;
+				card: (s) => s.height.percent(100),
+				cardLink: (s) => {
 					s.display.block;
-					s.padding._large;
 					s.textDecoration.none;
-					s.transitionDuration._fast;
-					s.transitionProperty.raw('transform, border-color, box-shadow');
-					s._hover((hover) => {
-						hover.borderColor._primary;
-						hover.boxShadow._medium;
-						hover.transform.raw('translateY(-2px)');
-					});
 				},
 				cardIcon: (s) => {
 					s.backgroundColor._surface;
@@ -114,22 +98,6 @@
 					s.gap._xsmall;
 					s.marginTop._large;
 				},
-				metric: (s) => {
-					s.color._primary;
-					s.display.block;
-					s.fontFamily._mono;
-					s.fontSize._xlarge;
-				},
-				primaryAction: (s) => {
-					s.backgroundColor._primary;
-					s.borderRadius._medium;
-					s.color._canvas;
-					s.display.inlineFlex;
-					s.fontWeight._semibold;
-					s.minHeight._medium;
-					s.paddingInline._large;
-					s.textDecoration.none;
-				},
 				principle: (s) => {
 					s.height.percent(100);
 				},
@@ -137,29 +105,12 @@
 					s.color._textMuted;
 					s.lineHeight._relaxed;
 				},
-				principleLabel: (s) => {
-					s.display.block;
-					s.fontWeight._bold;
-					s.marginTop._large;
-				},
 				principles: (s) => {
 					s.display.grid;
 					s.gap._large;
 					s.gridTemplateColumns.raw('repeat(3, minmax(0, 1fr))');
 					s.maxWidth.rem(72);
 					s._media('(max-width: 48rem)', (mobile) => mobile.gridTemplateColumns.raw('1fr'));
-				},
-				secondaryAction: (s) => {
-					s.backgroundColor._canvas;
-					s.borderColor._border;
-					s.borderRadius._medium;
-					s.borderStyle.solid;
-					s.borderWidth._hairline;
-					s.display.inlineFlex;
-					s.fontWeight._semibold;
-					s.minHeight._medium;
-					s.paddingInline._large;
-					s.textDecoration.none;
 				},
 				title: (s) => {
 					s.fontSize.raw('clamp(2.55rem, 6vw, 5.2rem)');
@@ -169,26 +120,14 @@
 					s.textShadow._small;
 				}
 			},
-			variants: {
-				motion: {
-					auto: {},
-					full: {},
-					reduced: {
-						card: (s) => {
-							s.transitionDuration.ms(0);
-							s._hover((hover) => hover.transform.raw('none'));
-						}
-					}
-				}
-			},
-			defaultVariants: { motion: 'auto' }
+			variants: {}
 		},
 		import.meta
 	);
 </script>
 
 <script lang="ts">
-	import { ZBox, ZCard, ZHeading, ZIcon, ZLink, ZStack, ZText, useZui } from '@zadmin/zui';
+	import { ZCard, ZHeading, ZIcon, ZLink, ZStack, ZStatistic, ZText, useZui } from '@zadmin/zui';
 	import { guideDocs } from '../content/guides.js';
 	import {
 		componentCategories,
@@ -203,25 +142,24 @@
 	);
 	const stableCount = $derived(docs.filter((doc) => doc.status === 'stable').length);
 	const zui = useZui();
-	const classes = $derived(zui.slots(homeRecipe, { motion: zui.motion }));
+	const classes = $derived(zui.slots(homeRecipe));
 </script>
 
 <section class={classes.hero}>
-	<p class={classes.eyebrow}>ZADMIN UI SYSTEM</p>
+	<ZText as="p" class={classes.eyebrow}>ZADMIN UI SYSTEM</ZText>
 	<ZHeading class={classes.title} data-doc-page-title="true" level={1} size="xlarge"
 		>看见组件，运行组件，复制真实源码。</ZHeading
 	>
-	<p class={classes.copy}>
+	<ZText as="p" class={classes.copy}>
 		ZUI是面向浏览器与WebView的Svelte
 		5组件库。展示站直接运行工作区组件，每个示例的源码来自同一个Svelte文件；Props类型和必填性逐步由公开TypeScript
 		AST生成，教学说明由Docs拥有。
-	</p>
+	</ZText>
 	<ZStack direction="row" gap="small" wrap>
-		<ZLink class={classes.primaryAction} href="#/components/button" underline="none"
-			>开始浏览组件</ZLink
-		>
+		<ZLink appearance="button" href="#/components/button">开始浏览组件</ZLink>
 		<ZLink
-			class={classes.secondaryAction}
+			appearance="button"
+			variant="secondary"
 			external
 			href="https://github.com/kenconnet666/zadmin/tree/master/ui/zui"
 			underline="none">GitHub源码</ZLink
@@ -231,54 +169,50 @@
 
 <section class={classes.principles} aria-label="设计原则">
 	<ZCard class={classes.principle}>
-		<strong class={classes.metric}>{publicComponentCount}</strong><span
-			class={classes.principleLabel}>公开组件</span
-		>
-		<p class={classes.principleCopy}>
+		<ZStatistic label="公开组件" tone="primary" value={publicComponentCount} />
+		<ZText as="p" class={classes.principleCopy}>
 			组件族路由统一呈现根组件与compound members；数量由公开metadata自动核对。
-		</p>
+		</ZText>
 	</ZCard>
 	<ZCard class={classes.principle}>
-		<strong class={classes.metric}>{demoCount}</strong><span class={classes.principleLabel}
-			>真实Demo</span
-		>
-		<p class={classes.principleCopy}>页面运行的Svelte文件就是复制按钮提供的源码。</p>
+		<ZStatistic label="真实Demo" tone="primary" value={demoCount} />
+		<ZText as="p" class={classes.principleCopy}>页面运行的Svelte文件就是复制按钮提供的源码。</ZText>
 	</ZCard>
 	<ZCard class={classes.principle}>
-		<strong class={classes.metric}>{stableCount}</strong><span class={classes.principleLabel}
-			>稳定组件族</span
-		>
-		<p class={classes.principleCopy}>
+		<ZStatistic label="稳定组件族" tone="primary" value={stableCount} />
+		<ZText as="p" class={classes.principleCopy}>
 			每个组件族均逐项通过API、运行时、视觉和production门禁，兼容状态在页面明确展示。
-		</p>
+		</ZText>
 	</ZCard>
 </section>
 
 <section class={classes.catalog}>
 	<header>
-		<p class={classes.eyebrow}>PRODUCTION GUIDES</p>
+		<ZText as="p" class={classes.eyebrow}>PRODUCTION GUIDES</ZText>
 		<ZHeading class={classes.catalogTitle} level={2} size="xlarge">生产指南</ZHeading>
 	</header>
 	<div class={classes.grid}>
 		{#each guideDocs as guide (guide.id)}
 			<ZLink
-				class={classes.card}
+				class={classes.cardLink}
 				data-testid="guide-card"
 				href={guideRoute(guide.id)}
 				underline="none"
 			>
-				<ZBox>
+				<ZCard class={classes.card}>
 					<div class={classes.cardIcon}><ZIcon name="chevronDown" size={18} /></div>
 					<ZHeading class={classes.cardTitle} level={3} size="large">{guide.eyebrow}</ZHeading>
 					<ZText tone="muted">{guide.summary}</ZText>
-					<span class={classes.learnMore}>阅读指南 <ZIcon name="arrowRight" size={14} /></span>
-				</ZBox>
+					<ZText as="span" class={classes.learnMore}
+						>阅读指南 <ZIcon name="arrowRight" size={14} /></ZText
+					>
+				</ZCard>
 			</ZLink>
 		{/each}
 	</div>
 
 	<header class={classes.group}>
-		<p class={classes.eyebrow}>COMPONENT CATALOG</p>
+		<ZText as="p" class={classes.eyebrow}>COMPONENT CATALOG</ZText>
 		<ZHeading class={classes.catalogTitle} level={2} size="xlarge">组件目录</ZHeading>
 	</header>
 	{#each componentCategories as category (category.id)}
@@ -289,21 +223,21 @@
 				<div class={classes.grid}>
 					{#each categoryDocs as doc (doc.id)}
 						<ZLink
-							class={classes.card}
+							class={classes.cardLink}
 							data-testid="component-card"
 							href={`#/components/${doc.id}`}
 							underline="none"
 						>
-							<ZBox>
+							<ZCard class={classes.card}>
 								<div class={classes.cardIcon}>
 									<ZIcon name="plus" size={18} />
 								</div>
 								<ZHeading class={classes.cardTitle} level={4} size="large">{doc.name}</ZHeading>
 								<ZText tone="muted">{doc.summary}</ZText>
-								<span class={classes.learnMore}
-									>查看Demo与API <ZIcon name="arrowRight" size={14} /></span
+								<ZText as="span" class={classes.learnMore}
+									>查看Demo与API <ZIcon name="arrowRight" size={14} /></ZText
 								>
-							</ZBox>
+							</ZCard>
 						</ZLink>
 					{/each}
 				</div>

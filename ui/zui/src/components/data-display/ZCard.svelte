@@ -2,6 +2,7 @@
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
+	import type { ZuiTheme } from '../../theme/types.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 
 	export type CardElement = 'article' | 'div' | 'section';
@@ -10,6 +11,7 @@
 	export interface ZCardProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
 		readonly actions?: Snippet;
 		readonly as?: CardElement;
+		readonly bodyPadding?: keyof ZuiTheme['space'];
 		readonly children?: Snippet;
 		readonly footer?: Snippet;
 		readonly header?: Snippet;
@@ -36,6 +38,12 @@
 			{ description: '与正文分离的补充操作区域。', name: 'actions' }
 		],
 		props: [
+			{
+				default: "'large'",
+				description: '正文内边距；none适合媒体、表格或代码占满内容区，header/footer保持独立间距。',
+				name: 'bodyPadding',
+				type: "keyof ZuiTheme['space']"
+			},
 			{
 				default: "'div'",
 				description: '真实根语义；只有独立主题内容才使用article或section。',
@@ -93,9 +101,17 @@
 		defaultVariants: { variant: 'elevated' }
 	});
 	const sectionRecipe = defineRecipe({
-		base: (s) => s.padding._large,
-		variants: {},
-		defaultVariants: {}
+		variants: {
+			padding: {
+				none: (s) => s.padding._none,
+				xsmall: (s) => s.padding._xsmall,
+				small: (s) => s.padding._small,
+				medium: (s) => s.padding._medium,
+				large: (s) => s.padding._large,
+				xlarge: (s) => s.padding._xlarge
+			}
+		},
+		defaultVariants: { padding: 'large' }
 	});
 	const headerRecipe = defineRecipe({
 		base: (s) => {
@@ -164,6 +180,7 @@
 		'aria-busy': ariaBusy,
 		actions,
 		as = 'div',
+		bodyPadding = 'large',
 		children,
 		class: className,
 		footer,
@@ -180,7 +197,7 @@
 	const componentDefaults = $derived(zui.componentDefaults.card);
 	const resolvedVariant = $derived(variant ?? componentDefaults?.variant ?? 'elevated');
 	const rootClass = $derived(zui.recipe(rootRecipe, { variant: resolvedVariant }));
-	const sectionClass = $derived(zui.recipe(sectionRecipe));
+	const sectionClass = $derived(zui.recipe(sectionRecipe, { padding: bodyPadding }));
 	const headerClass = $derived(zui.recipe(headerRecipe));
 	const separatedClass = $derived(zui.recipe(separatedRecipe));
 	const actionsClass = $derived(zui.recipe(actionsRecipe));

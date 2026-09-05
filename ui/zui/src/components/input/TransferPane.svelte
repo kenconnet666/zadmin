@@ -270,6 +270,7 @@
 			aria-activedescendant={active.activeId}
 			aria-busy={loading || undefined}
 			aria-describedby={describedBy}
+			aria-disabled={disabled || undefined}
 			aria-invalid={invalid || undefined}
 			aria-label={label}
 			aria-labelledby={labelledBy}

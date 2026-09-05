@@ -1,6 +1,8 @@
 import { linkMetadata } from '@zadmin/zui/metadata';
 import BasicDemo from './BasicDemo.svelte';
 import basicSource from './BasicDemo.svelte?raw';
+import AppearanceDemo from './AppearanceDemo.svelte';
+import appearanceSource from './AppearanceDemo.svelte?raw';
 import DisabledDemo from './DisabledDemo.svelte';
 import disabledSource from './DisabledDemo.svelte?raw';
 import ExternalDemo from './ExternalDemo.svelte';
@@ -19,6 +21,11 @@ export const linkDoc = defineComponentDoc(linkMetadata, {
 	sourceApi: linkApiFacts,
 	teaching: {
 		props: {
+			appearance: {
+				default: "'text'",
+				description:
+					'text保持正文链接；button复用ZButton尺寸与variant；navigation由aria-current表达当前项。'
+			},
 			disabled: {
 				default: 'false',
 				description: '保留anchor节点，但移除href/target/rel、Tab停靠与全部click导航。'
@@ -36,16 +43,29 @@ export const linkDoc = defineComponentDoc(linkMetadata, {
 				description: 'target=_blank时提供隐藏提示；显式名称存在时自动通过describedby关联。'
 			},
 			ref: { default: 'null', description: '真实HTMLAnchorElement引用。' },
+			size: {
+				default: 'Provider density',
+				description: 'appearance为button或navigation时使用的控件尺寸。'
+			},
 			tone: { default: "'primary'", description: 'Theme语义颜色，不接受任意颜色字符串。' },
 			underline: {
 				default: "'always'",
 				description: '默认不只依赖颜色识别链接；紧凑导航可显式选择hover或none。'
-			}
+			},
+			variant: { default: "'primary'", description: 'appearance为button时复用ZButton视觉variant。' }
 		},
 		summary:
 			'以必填href和真实anchor为唯一导航语义，显式分离外链图标、新窗口行为、安全rel、disabled与视觉tone/underline。'
 	},
 	demos: [
+		{
+			component: AppearanceDemo,
+			covers: ['basic-render', 'composition', 'variants-and-states'],
+			description: 'appearance区分正文、链接按钮与导航项；navigation只由aria-current派生当前状态。',
+			id: 'link-appearance',
+			source: appearanceSource,
+			title: 'Appearance与尺寸'
+		},
 		{
 			component: BasicDemo,
 			covers: ['basic-render', 'focus', 'variants-and-states'],

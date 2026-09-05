@@ -3,6 +3,7 @@
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
 	import type { SelectionKey as RadioSelectionKey } from '../../../runtime/collection/selection.js';
+	import type { ZControlSize } from '../../../runtime/foundation/control-size.js';
 
 	import { defineRecipe, registerRecipeHmr } from '../../../recipes/define.js';
 
@@ -32,6 +33,7 @@
 		readonly readonly?: boolean;
 		ref?: HTMLDivElement | null;
 		readonly required?: boolean;
+		readonly size?: ZControlSize;
 		value?: RadioSelectionKey;
 	}
 
@@ -162,6 +164,12 @@
 				type: 'boolean'
 			},
 			{
+				default: "Field size，其次为Provider density（'comfortable'映射为'medium'）",
+				description: 'RadioGroup默认Item尺寸；Item显式size优先。',
+				name: 'size',
+				type: "'small' | 'medium' | 'large'"
+			},
+			{
 				bindable: true,
 				default: 'null',
 				description: '真实radiogroup引用。',
@@ -182,7 +190,8 @@
 			{ description: '布局方向。', name: 'data-orientation', values: ['horizontal', 'vertical'] },
 			{ description: '禁用状态。', name: 'data-disabled', values: ['true'] },
 			{ description: '无效状态。', name: 'data-invalid', values: ['true'] },
-			{ description: '只读状态。', name: 'data-readonly', values: ['true'] }
+			{ description: '只读状态。', name: 'data-readonly', values: ['true'] },
+			{ description: '解析后的Item尺寸。', name: 'data-size', values: ['small', 'medium', 'large'] }
 		],
 		status: 'stable',
 		summary: '以LogicalCollection统一typed选项、原生radio表单语义和roving焦点的生产单选组。'
@@ -203,6 +212,7 @@
 		type SelectionKey
 	} from '../../../runtime/collection/selection.js';
 	import { ControllableState } from '../../../runtime/foundation/controllable-state.svelte.js';
+	import { resolveControlSize } from '../../../runtime/foundation/control-size.js';
 	import { createZuiId } from '../../../runtime/foundation/ids.js';
 	import { claimZFieldControlOwner } from '../../../runtime/form/field-context.js';
 	import { mergeAriaIds } from '../../../runtime/form/form-control.svelte.js';
@@ -242,6 +252,7 @@
 		readonly: readonlyProp = false,
 		ref = $bindable(null),
 		required: requiredProp = false,
+		size: sizeProp,
 		style,
 		value = $bindable(),
 		...rest
@@ -258,6 +269,7 @@
 	const readonly = $derived(readonlyProp || (field?.readonly ?? false));
 	const required = $derived(requiredProp || (field?.required ?? false));
 	const resolvedName = $derived(nameProp ?? field?.name);
+	const resolvedSize = $derived(resolveControlSize(sizeProp ?? field?.size, zui.density));
 	const resolvedDescribedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
 	const resolvedLabelledBy = $derived(
 		ariaLabelledBy ?? (ariaLabel === undefined ? field?.labelId : undefined)
@@ -428,6 +440,9 @@
 		get required() {
 			return required;
 		},
+		get size() {
+			return resolvedSize;
+		},
 		restoreNativeSelection() {
 			for (const key of view.keys) {
 				const element = mounted.get(key)?.element;
@@ -508,6 +523,7 @@
 	data-disabled={disabled || undefined}
 	data-invalid={resolvedInvalid || undefined}
 	data-readonly={readonly || undefined}
+	data-size={resolvedSize}
 	data-orientation={orientation}
 	onfocusin={handleFocusin}
 	onfocusout={handleFocusout}

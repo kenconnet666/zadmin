@@ -197,6 +197,7 @@
 		onEscape,
 		onFocusOutside,
 		onPointerOutside,
+		ontransitionend,
 		ref = $bindable(null),
 		restoreFocus = true,
 		restoreTarget,
@@ -260,6 +261,10 @@
 			stopPositioning();
 		};
 	});
+	function handleTransitionEnd(event: TransitionEvent & { currentTarget: HTMLDivElement }): void {
+		if (event.target === event.currentTarget) presence.finishExit();
+		ontransitionend?.(event);
+	}
 	onDestroy(() => presence.destroy());
 </script>
 
@@ -283,9 +288,7 @@
 		data-presence={presenceState}
 		data-reduced-motion={popover.reducedMotion || undefined}
 		data-state={popover.open ? 'open' : 'closed'}
-		ontransitionend={(event) => {
-			if (event.target === event.currentTarget) presence.finishExit();
-		}}
+		ontransitionend={handleTransitionEnd}
 	>
 		{@render children?.()}
 	</div>

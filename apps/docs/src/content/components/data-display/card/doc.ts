@@ -1,6 +1,8 @@
 import { cardMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import formSource from './FormDemo.svelte?raw';
+import BodyPaddingDemo from './BodyPaddingDemo.svelte';
+import bodyPaddingSource from './BodyPaddingDemo.svelte?raw';
 import LoadingDemo from './LoadingDemo.svelte';
 import loadingSource from './LoadingDemo.svelte?raw';
 import MediaActionsDemo from './MediaActionsDemo.svelte';
@@ -17,6 +19,10 @@ export const cardDoc = defineComponentDoc(cardMetadata, {
 	sourceApi: cardApiFacts,
 	teaching: {
 		props: {
+			bodyPadding: {
+				default: "'large'",
+				description: '只控制body区域内边距；none适合媒体、表格或代码占满内容区。'
+			},
 			actions: {
 				default: '—',
 				description: '与正文分离的补充操作集合；不会把整张Card伪装成button。'
@@ -44,6 +50,14 @@ export const cardDoc = defineComponentDoc(cardMetadata, {
 			'以默认中性div避免article泛滥，按固定media→header→body→footer→actions顺序组合语义内容面。'
 	},
 	demos: [
+		{
+			component: BodyPaddingDemo,
+			covers: ['basic-render', 'composition', 'variants-and-states'],
+			description: 'bodyPadding=none与large分别适合满幅媒体内容和可读正文。',
+			id: 'card-body-padding',
+			source: bodyPaddingSource,
+			title: 'Body内边距'
+		},
 		{
 			component: VariantsDemo,
 			covers: ['basic-render', 'variants-and-states'],

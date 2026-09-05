@@ -4,7 +4,7 @@
 
 	export type ZDialogTriggerProps = Omit<
 		ZButtonProps,
-		'aria-controls' | 'aria-expanded' | 'aria-haspopup' | 'onclick'
+		'aria-controls' | 'aria-expanded' | 'aria-haspopup' | 'id' | 'onclick'
 	> & { readonly onclick?: ZButtonProps['onclick'] };
 
 	export const zuiMetadata = {
@@ -37,7 +37,7 @@
 		source: 'ui/zui/src/components/compound/dialog/ZDialogTrigger.svelte',
 		states: [{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] }],
 		status: 'stable',
-		summary: '复用ZButton并建立Dialog aria关系的Trigger。'
+		summary: '复用ZButton并建立Dialog aria关系的Trigger；关系id由Dialog Root统一生成。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
 

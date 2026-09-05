@@ -12,6 +12,7 @@
 		| 'aria-expanded'
 		| 'children'
 		| 'disabled'
+		| 'id'
 		| 'onclick'
 		| 'onfocus'
 		| 'onkeydown'
@@ -148,7 +149,8 @@
 			}
 		],
 		status: 'stable',
-		summary: '拥有aria-expanded、roving focus和原生button激活语义的Accordion Trigger。'
+		summary:
+			'拥有aria-expanded、roving focus和原生button激活语义的Accordion Trigger；关系id由Accordion Root统一生成。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
 

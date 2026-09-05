@@ -8,6 +8,8 @@
 	import Minimize2 from '@lucide/svelte/icons/minimize-2';
 	import Minus from '@lucide/svelte/icons/minus';
 	import Plus from '@lucide/svelte/icons/plus';
+	import Palette from '@lucide/svelte/icons/palette';
+	import SlidersHorizontal from '@lucide/svelte/icons/sliders-horizontal';
 	import Search from '@lucide/svelte/icons/search';
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 	import User from '@lucide/svelte/icons/user';
@@ -25,6 +27,8 @@
 		maximize: Maximize2,
 		minimize: Minus,
 		plus: Plus,
+		palette: Palette,
+		sliders: SlidersHorizontal,
 		restore: Minimize2,
 		search: Search,
 		user: User,

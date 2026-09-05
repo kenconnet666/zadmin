@@ -108,6 +108,10 @@
 	} as const satisfies ZuiComponentMetadata;
 
 	const textRecipe = defineRecipe({
+		base: (s) => {
+			s.fontFamily._sans;
+			s.margin.px(0);
+		},
 		variants: {
 			lineHeight: {
 				compact: (s) => s.lineHeight._compact,

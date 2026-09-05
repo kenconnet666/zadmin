@@ -12,6 +12,7 @@
 		| 'aria-selected'
 		| 'children'
 		| 'disabled'
+		| 'id'
 		| 'onclick'
 		| 'onfocus'
 		| 'onkeydown'
@@ -129,7 +130,7 @@
 		],
 		status: 'stable',
 		summary:
-			'注册typed key到LogicalCollection并拥有独立active、roving tabindex与激活语义的原生button。'
+			'注册typed key到LogicalCollection并拥有独立active、roving tabindex与激活语义的原生button；关系id由Tabs Root统一生成。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
 

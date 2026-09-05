@@ -225,16 +225,16 @@ export const componentCatalogManifest = Object.freeze([
 		profiles: ['primitive'],
 		capabilities: [
 			'basic-render',
-			'focus',
-			'variants-and-states',
-			'accessible-name',
 			'composition',
+			'variants-and-states',
+			'focus',
+			'accessible-name',
 			'native-props',
 			'locale',
 			'disabled',
 			'keyboard'
 		],
-		demoCount: 6,
+		demoCount: 7,
 		publicComponentCount: 1
 	},
 	{
@@ -394,13 +394,13 @@ export const componentCatalogManifest = Object.freeze([
 		profiles: ['data-view'],
 		capabilities: [
 			'basic-render',
+			'composition',
 			'variants-and-states',
 			'accessible-name',
-			'composition',
 			'native-props',
 			'loading'
 		],
-		demoCount: 5,
+		demoCount: 6,
 		publicComponentCount: 1
 	},
 	{
@@ -662,18 +662,18 @@ export const componentCatalogManifest = Object.freeze([
 		],
 		profiles: ['data-view'],
 		capabilities: [
+			'accessible-name',
+			'composition',
+			'focus',
 			'basic-render',
 			'native-props',
 			'density',
 			'variants-and-states',
-			'accessible-name',
-			'focus',
 			'resource-cleanup',
-			'composition',
 			'keyboard',
 			'rtl'
 		],
-		demoCount: 6,
+		demoCount: 7,
 		publicComponentCount: 1
 	},
 	{

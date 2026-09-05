@@ -2,6 +2,7 @@ import { readFile, readdir } from 'node:fs/promises';
 import { relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
+import { parse } from 'svelte/compiler';
 
 const root = resolve(fileURLToPath(new URL('../../..', import.meta.url)));
 const componentsRoot = resolve(root, 'ui/zui/src/components');
@@ -235,7 +236,74 @@ function incompleteControllableFamilies(props) {
 	});
 }
 
+function shadowedForwardedProps(source, forwarded, restName) {
+	if (!restName || forwarded.length === 0) return [];
+	const candidates = new Set(forwarded);
+	const issues = [];
+	const ast = parse(source, { modern: true });
+	function readsForwardedValue(node, name) {
+		if (!node || typeof node !== 'object') return false;
+		if (
+			node.type === 'MemberExpression' &&
+			node.object?.type === 'Identifier' &&
+			node.object.name === restName &&
+			(node.computed ? node.property?.value : node.property?.name) === name
+		)
+			return true;
+		return Object.values(node).some((value) =>
+			Array.isArray(value)
+				? value.some((child) => readsForwardedValue(child, name))
+				: value && typeof value === 'object' && value.type && readsForwardedValue(value, name)
+		);
+	}
+	function visit(node) {
+		if (!node || typeof node !== 'object') return;
+		if (node.attributes) {
+			let forwardedHere = false;
+			for (const attribute of node.attributes) {
+				if (
+					attribute.type === 'SpreadAttribute' &&
+					attribute.expression?.type === 'Identifier' &&
+					attribute.expression.name === restName
+				)
+					forwardedHere = true;
+				if (
+					forwardedHere &&
+					attribute.type === 'Attribute' &&
+					candidates.has(attribute.name) &&
+					!readsForwardedValue(attribute, attribute.name)
+				) {
+					issues.push({
+						name: attribute.name,
+						target: node.name,
+						line: source.slice(0, attribute.start).split(/\r?\n/u).length
+					});
+				}
+			}
+		}
+		for (const value of Object.values(node)) {
+			if (Array.isArray(value)) value.forEach(visit);
+			else if (value && typeof value === 'object' && value.type) visit(value);
+		}
+	}
+	visit(ast.fragment);
+	return issues;
+}
+
 if (process.argv.includes('--self-test')) {
+	if (
+		shadowedForwardedProps('<ZButton {...rest} disabled={owner.disabled}/>', ['disabled'], 'rest')
+			.length !== 1
+	)
+		throw new Error('Forwarding audit accepted a shadowed public prop.');
+	if (
+		shadowedForwardedProps(
+			'<ZButton {...rest} disabled={owner.disabled || rest.disabled}/>',
+			['disabled'],
+			'rest'
+		).length !== 0
+	)
+		throw new Error('Forwarding audit rejected an explicitly merged public prop.');
 	const metadataString = { defaultValue: { kind: 'string', value: "'bottom-start'" } };
 	const metadataBoolean = { defaultValue: { kind: 'string', value: 'false' } };
 	if (normalizeMetadataDefault(metadataString)?.value !== 'bottom-start')
@@ -309,6 +377,7 @@ for (const filename of allFiles) {
 	const forwardedConsumption = consumed.restForwarded
 		? explicit.filter((name) => !consumed.consumed.has(name))
 		: [];
+	const shadowedProps = shadowedForwardedProps(source, forwardedConsumption, consumed.restName);
 	const missingRestForwarding =
 		forwardedConsumption.length > 0 &&
 		(!consumed.restName || !source.includes(`{...${consumed.restName}}`))
@@ -336,6 +405,7 @@ for (const filename of allFiles) {
 			defaultMismatches.push({ name, implementation, metadata: metadataDefault });
 	}
 	if (
+		shadowedProps.length ||
 		missingConsumption.length ||
 		missingRestForwarding.length ||
 		incompleteStateContracts.length ||
@@ -347,6 +417,7 @@ for (const filename of allFiles) {
 		forwardedConsumption.length
 	) {
 		report.push({
+			shadowedProps,
 			component: componentName,
 			file: sourcePath,
 			metadataId: metadata?.id,
@@ -367,6 +438,7 @@ for (const filename of allFiles) {
 
 const actionable = report.filter(
 	(item) =>
+		item.shadowedProps.length > 0 ||
 		item.missingConsumption.length > 0 ||
 		item.missingRestForwarding.length > 0 ||
 		item.incompleteStateContracts.length > 0 ||
@@ -383,6 +455,7 @@ const summary = {
 	components: publicComponents,
 	componentsWithFindings: report.length,
 	actionableIssues: actionable.length + unvisitedGeneratedSources.length,
+	shadowedProps: report.filter((x) => x.shadowedProps.length).length,
 	missingConsumption: report.filter((x) => x.missingConsumption.length).length,
 	missingRestForwarding: report.filter((x) => x.missingRestForwarding.length).length,
 	incompleteStateContracts: report.filter((x) => x.incompleteStateContracts.length).length,

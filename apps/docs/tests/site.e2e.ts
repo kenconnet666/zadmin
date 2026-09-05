@@ -187,13 +187,16 @@ test('keeps component page section spacing outside card surfaces', async ({ page
 		const apiSections = [...document.querySelectorAll('#api > section')];
 		const accessibility = document.querySelector<HTMLElement>('#accessibility')!;
 		const accessibilityStyle = getComputedStyle(accessibility);
+		const accessibilityBodyStyle = getComputedStyle(
+			accessibility.querySelector('[data-slot="body"]')!
+		);
 		return {
 			accessibilityMarginTop: accessibilityStyle.marginTop,
 			accessibilityPadding: [
-				accessibilityStyle.paddingTop,
-				accessibilityStyle.paddingRight,
-				accessibilityStyle.paddingBottom,
-				accessibilityStyle.paddingLeft
+				accessibilityBodyStyle.paddingTop,
+				accessibilityBodyStyle.paddingRight,
+				accessibilityBodyStyle.paddingBottom,
+				accessibilityBodyStyle.paddingLeft
 			],
 			apiGaps: apiSections
 				.slice(1)
@@ -210,7 +213,47 @@ test('keeps component page section spacing outside card surfaces', async ({ page
 	expect(metrics.titleToFirstDemo).toBe(16);
 });
 
+test('preserves docs typography and code geometry across themes', async ({ page }) => {
+	await page.setViewportSize({ width: 1920, height: 1080 });
+	await gotoComponent(page, 'button');
+	for (const theme of ['极光明亮', '纸张暖白', '霓虹暗色']) {
+		await page.getByRole('button', { name: '选择文档主题', exact: true }).click();
+		await page.getByRole('option', { name: theme, exact: true }).click();
+		const title = page.getByRole('heading', { level: 1 });
+		await expect(title).toHaveCSS('font-size', '60px');
+		const inlineCode = page.locator('main code[data-highlight-status="highlighted"]').first();
+		await expect(inlineCode).toBeVisible();
+		expect(await inlineCode.textContent()).toBe("import { ZButton } from '@zadmin/zui';");
+		const metrics = await page.evaluate(() => {
+			const active = document.querySelector('nav[aria-label="组件导航"] a[aria-current="page"]')!;
+			const inactive = document.querySelector('nav[aria-label="组件导航"] a:not([aria-current])')!;
+			const code = document.querySelector('main code[data-highlight-status="highlighted"]')!;
+			const style = getComputedStyle(code);
+			return {
+				active: getComputedStyle(active).color,
+				inactive: getComputedStyle(inactive).color,
+				codeHeight: code.getBoundingClientRect().height,
+				oneLineHeight:
+					Number.parseFloat(style.lineHeight) +
+					Number.parseFloat(style.paddingTop) +
+					Number.parseFloat(style.paddingBottom) +
+					Number.parseFloat(style.borderTopWidth) +
+					Number.parseFloat(style.borderBottomWidth),
+				activeBorderWidth: getComputedStyle(active).borderInlineStartWidth,
+				fontFamily: getComputedStyle(document.querySelector('#button-variants p')!).fontFamily
+			};
+		});
+		expect(metrics.active).not.toBe(metrics.inactive);
+		expect(metrics.codeHeight).toBeCloseTo(metrics.oneLineHeight, 0);
+		expect(metrics.activeBorderWidth).toBe('2px');
+		expect(metrics.fontFamily).not.toContain('Times New Roman');
+		await expect(page.locator('#button-variants')).not.toContainText('basic-render');
+		await expect(page.locator('#button-variants')).not.toContainText('variants-and-states');
+	}
+});
+
 test('exposes API table hierarchy and scroll-region semantics', async ({ page }) => {
+	await page.setViewportSize({ width: 769, height: 900 });
 	await gotoComponent(page, 'list');
 	const apiSection = page.locator('main section[id^="api-"]').first();
 	const heading = apiSection.getByRole('heading', { level: 2 }).first();
@@ -2161,7 +2204,8 @@ test('handles denied clipboard permission without a console error', async ({ pag
 
 	await page.goto('/#/components/button');
 	const variantsBlock = page.locator('#button-variants');
-	await variantsBlock.getByRole('button', { name: '复制', exact: true }).click();
+	await variantsBlock.getByRole('button', { name: '查看源码', exact: true }).click();
+	await variantsBlock.getByRole('button', { name: '复制代码', exact: true }).click();
 	await expect(variantsBlock.getByRole('button', { name: '复制失败', exact: true })).toBeVisible();
 	expect(errors).toEqual([]);
 });

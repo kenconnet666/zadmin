@@ -3,6 +3,7 @@
 
 	const guideRecipe = defineSlotRecipe(
 		{
+			layer: 'utilities',
 			slots: [
 				'root',
 				'header',
@@ -84,7 +85,7 @@
 >
 	<ZContainer gutter="small" size="medium">
 		<header class={classes.header}>
-			<p class={classes.eyebrow}>{guide.eyebrow}</p>
+			<ZText as="p" class={classes.eyebrow}>{guide.eyebrow}</ZText>
 			<ZHeading
 				class={classes.title}
 				data-doc-page-title="true"
@@ -136,11 +137,11 @@
 							/>
 						{/if}
 						{#if section.links}
-							<div class={classes.links}>
+							<ZStack class={classes.links} direction="row" gap="medium" wrap>
 								{#each section.links as link (link.href)}
 									<ZLink href={link.href}>{link.label}</ZLink>
 								{/each}
-							</div>
+							</ZStack>
 						{/if}
 					</ZStack>
 				</ZCard>

@@ -53,7 +53,7 @@ export function createRecipeExecutor(registry: StyleRegistry): RecipeExecutor {
 				: registry.ensure(
 						createStyleProgram(theme, factory),
 						`${owner}:${branch}`,
-						'components',
+						recipe.layer ?? 'components',
 						specificity
 					).className;
 		// Canonical styles are shared across recipes, so stylesheet insertion order cannot

@@ -233,7 +233,8 @@
 				s.insetInlineEnd._small;
 				s.position.absolute;
 			},
-			line: (s) => s.display.block,
+			// Preserve explicit source newlines without adding block-generated line breaks.
+			line: () => undefined,
 			lineNumber: (s) => {
 				s.display.inlineBlock;
 				s.minWidth.ch(4);
@@ -252,10 +253,6 @@
 			token: () => undefined
 		},
 		variants: {
-			copyable: {
-				false: {},
-				true: { root: (s) => s.paddingInlineEnd.rem(3.5) }
-			},
 			highlighted: {
 				false: {},
 				true: { line: (s) => s.boxShadow._codeHighlight }
@@ -315,6 +312,10 @@
 						s.borderWidth.px(0);
 					}
 				}
+			},
+			copyable: {
+				false: {},
+				true: { root: (s) => s.paddingInlineEnd.rem(3.5) }
 			}
 		},
 		defaultVariants: {
@@ -508,13 +509,13 @@
 				scheme: resolvedScheme,
 				wrap
 			})}
-			<span class={lineClasses.line} data-highlighted={highlighted.has(index + 1) || undefined}>
-				{#if lineNumbers}<span class={classes.lineNumber} aria-hidden="true">{index + 1}</span>{/if}
-				{#each line as token, tokenIndex (`${index}:${tokenIndex}`)}
-					<span class={classes.token} style={tokenVariables(token)}>{token.content}</span>
-				{/each}
-			</span>
-			{#if index < tokens.length - 1}{NEWLINE}{/if}
+			<span class={lineClasses.line} data-highlighted={highlighted.has(index + 1) || undefined}
+				>{#if lineNumbers}<span class={classes.lineNumber} aria-hidden="true">{index + 1}</span
+					>{/if}{#each line as token, tokenIndex (`${index}:${tokenIndex}`)}<span
+						class={classes.token}
+						style={tokenVariables(token)}>{token.content}</span
+					>{/each}</span
+			>{#if index < tokens.length - 1}{NEWLINE}{/if}
 		{/each}
 	{:else}
 		{code}
@@ -544,9 +545,8 @@
 		aria-label={ariaLabel}
 		data-color-scheme={resolvedScheme}
 		data-highlight-status={status}
+		>{#if status === 'loading' && loading}{@render loading()}{:else}{@render highlightedContent()}{/if}</code
 	>
-		{#if status === 'loading' && loading}{@render loading()}{:else}{@render highlightedContent()}{/if}
-	</code>
 {:else if copyable}
 	<div class={classes.container} data-slot="copy-container">
 		{@render blockContent()}

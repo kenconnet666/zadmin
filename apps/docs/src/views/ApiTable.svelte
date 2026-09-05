@@ -3,6 +3,7 @@
 
 	const apiRecipe = defineSlotRecipe(
 		{
+			layer: 'utilities',
 			slots: ['root', 'title', 'description', 'scroll', 'depth1', 'depth2', 'depth3'] as const,
 			base: {
 				depth1: (s) => s.paddingInlineStart._medium,
@@ -15,13 +16,7 @@
 				},
 				root: (s) => s.scrollMarginTop.rem(5.5),
 				scroll: (s) => {
-					s.backgroundColor._canvas;
-					s.borderColor._border;
-					s.borderRadius._medium;
-					s.borderStyle.solid;
-					s.borderWidth._hairline;
 					s.marginTop._large;
-					s.overflowX.auto;
 					s._media('(max-width: 48rem)', (mobile) =>
 						mobile._selector('& th, & td', (cell) => cell.minWidth.rem(8))
 					);
@@ -39,7 +34,7 @@
 </script>
 
 <script lang="ts">
-	import { ZHeading, ZTable, useZui } from '@zadmin/zui';
+	import { ZCard, ZHeading, ZTable, ZText, useZui } from '@zadmin/zui';
 	import { ZCode } from '@zadmin/zui/code';
 	import type { ApiRow, ApiSection } from '../framework/component-doc.js';
 
@@ -86,18 +81,17 @@
 
 <section class={classes.root} id={`api-${section.id}`}>
 	<ZHeading class={classes.title} id={titleId} level={2} size="xlarge">{section.title}</ZHeading>
-	{#if section.description}<p class={classes.description} id={descriptionId}>
+	{#if section.description}<ZText as="p" class={classes.description} id={descriptionId}>
 			{section.description}
-		</p>{/if}
-	<!-- svelte-ignore a11y_no_noninteractive_tabindex (keyboard focus is required for horizontal scrolling) -->
-	<div
-		class={classes.scroll}
-		role="region"
-		aria-labelledby={titleId}
-		aria-describedby={section.description ? descriptionId : undefined}
-		tabindex="0"
-	>
-		<ZTable caption={`${section.title} API`} captionHidden density="compact" scroll="none">
+		</ZText>{/if}
+	<ZCard bodyPadding="none" class={classes.scroll} variant="outlined">
+		<ZTable
+			caption={`${section.title} API`}
+			captionHidden
+			density="compact"
+			scrollLabelledBy={titleId}
+			scrollDescribedBy={section.description ? descriptionId : undefined}
+		>
 			{#snippet header()}
 				<tr
 					><th scope="col">名称</th><th scope="col">类型</th><th scope="col">默认值</th><th
@@ -142,5 +136,5 @@
 				</tr>
 			{/each}
 		</ZTable>
-	</div>
+	</ZCard>
 </section>

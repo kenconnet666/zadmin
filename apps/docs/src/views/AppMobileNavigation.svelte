@@ -3,6 +3,7 @@
 
 	const mobileNavigationRecipe = defineSlotRecipe(
 		{
+			layer: 'utilities',
 			slots: ['trigger', 'content', 'header'] as const,
 			base: {
 				content: (s) => {
@@ -12,13 +13,9 @@
 					s.padding.px(0);
 				},
 				header: (s) => {
-					s.alignItems.start;
 					s.borderBottomColor._border;
 					s.borderBottomStyle.solid;
 					s.borderBottomWidth._hairline;
-					s.display.flex;
-					s.gap._medium;
-					s.justifyContent.spaceBetween;
 					s.padding._large;
 				},
 				trigger: (s) => {
@@ -64,11 +61,15 @@
 </script>
 
 <ZDrawer bind:open>
-	<span class={classes.trigger} data-slot="mobile-navigation-trigger">
-		<ZDrawerTrigger aria-label="打开组件导航" size="small" variant="ghost">
-			<ZIcon name="menu" size={20} />
-		</ZDrawerTrigger>
-	</span>
+	<ZDrawerTrigger
+		class={classes.trigger}
+		data-slot="mobile-navigation-trigger"
+		aria-label="打开组件导航"
+		size="small"
+		variant="ghost"
+	>
+		<ZIcon name="menu" size={20} />
+	</ZDrawerTrigger>
 	<ZDrawerOverlay data-testid="docs-mobile-navigation-overlay" />
 	<ZDrawerContent
 		class={classes.content}
@@ -76,7 +77,7 @@
 		placement="start"
 		size="min(22rem, calc(100vw - 2.5rem))"
 	>
-		<div class={classes.header}>
+		<ZStack class={classes.header} direction="row" align="start" justify="between" gap="medium">
 			<ZStack gap="xsmall">
 				<ZDrawerTitle>浏览 ZUI</ZDrawerTitle>
 				<ZDrawerDescription>选择指南或组件；导航后自动关闭。</ZDrawerDescription>
@@ -84,7 +85,7 @@
 			<ZDrawerClose aria-label="关闭组件导航" size="small" variant="ghost">
 				<ZIcon name="close" size={18} />
 			</ZDrawerClose>
-		</div>
+		</ZStack>
 		<AppSidebar
 			{docs}
 			{currentGuideId}

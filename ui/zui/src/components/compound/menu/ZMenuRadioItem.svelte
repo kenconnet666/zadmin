@@ -6,7 +6,7 @@
 
 	export interface ZMenuRadioItemProps extends Omit<
 		ZMenuItemProps,
-		'checked' | 'children' | 'closeOnSelect' | 'itemRole' | 'onSelect'
+		'checked' | 'children' | 'closeOnSelect' | 'itemRole' | 'leading' | 'onSelect'
 	> {
 		readonly children?: Snippet;
 		readonly closeOnSelect?: boolean;

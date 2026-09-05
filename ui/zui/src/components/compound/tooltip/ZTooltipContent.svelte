@@ -108,6 +108,7 @@
 		class: className,
 		onpointerenter,
 		onpointerleave,
+		ontransitionend,
 		ref = $bindable(null),
 		style,
 		...rest
@@ -203,6 +204,10 @@
 		onpointerleave?.(event);
 		if (!event.defaultPrevented && tooltip.hoverable && !tooltip.triggerFocused) tooltip.close();
 	}
+	function handleTransitionEnd(event: TransitionEvent & { currentTarget: HTMLDivElement }): void {
+		if (event.target === event.currentTarget) presence.finishExit();
+		ontransitionend?.(event);
+	}
 </script>
 
 {#if mounted}
@@ -221,9 +226,7 @@
 		data-state={tooltip.open ? 'open' : 'closed'}
 		onpointerenter={handlePointerEnter}
 		onpointerleave={handlePointerLeave}
-		ontransitionend={(event) => {
-			if (event.target === event.currentTarget) presence.finishExit();
-		}}
+		ontransitionend={handleTransitionEnd}
 	>
 		{@render children?.()}
 	</div>

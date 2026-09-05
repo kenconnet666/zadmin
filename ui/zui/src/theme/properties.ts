@@ -96,7 +96,23 @@ export const PROPERTY_DEFINITIONS = {
 	borderInlineEndStyle: {
 		keywords: { dashed: 'dashed', dotted: 'dotted', double: 'double', none: 'none', solid: 'solid' }
 	},
+	borderInlineEndColor: { keywords: { transparent: 'transparent' }, token: 'color' },
 	borderInlineEndWidth: { token: 'borderWidth', tokenUnit: 'px', units: ['length'] },
+	borderInlineStartColor: { keywords: { transparent: 'transparent' }, token: 'color' },
+	borderInlineStartStyle: {
+		keywords: { dashed: 'dashed', dotted: 'dotted', double: 'double', none: 'none', solid: 'solid' }
+	},
+	borderInlineStartWidth: { token: 'borderWidth', tokenUnit: 'px', units: ['length'] },
+	borderBlockEndColor: { keywords: { transparent: 'transparent' }, token: 'color' },
+	borderBlockEndStyle: {
+		keywords: { dashed: 'dashed', dotted: 'dotted', double: 'double', none: 'none', solid: 'solid' }
+	},
+	borderBlockEndWidth: { token: 'borderWidth', tokenUnit: 'px', units: ['length'] },
+	borderBlockStartColor: { keywords: { transparent: 'transparent' }, token: 'color' },
+	borderBlockStartStyle: {
+		keywords: { dashed: 'dashed', dotted: 'dotted', double: 'double', none: 'none', solid: 'solid' }
+	},
+	borderBlockStartWidth: { token: 'borderWidth', tokenUnit: 'px', units: ['length'] },
 	borderRadius: { token: 'radius', tokenUnit: 'px', units: ['length', 'percent'] },
 	borderRightColor: { token: 'color' },
 	borderRightStyle: {
@@ -242,8 +258,10 @@ export const PROPERTY_DEFINITIONS = {
 	},
 	maxHeight: { token: 'size', tokenUnit: 'px', units: ['length', 'percent'] },
 	maxWidth: { token: 'size', tokenUnit: 'px', units: ['length', 'percent'] },
+	maxInlineSize: { token: 'size', tokenUnit: 'px', units: ['length', 'percent'] },
 	minHeight: { token: 'size', tokenUnit: 'px', units: ['length', 'percent'] },
 	minWidth: { token: 'size', tokenUnit: 'px', units: ['length', 'percent'] },
+	minInlineSize: { token: 'size', tokenUnit: 'px', units: ['length', 'percent'] },
 	objectFit: {
 		keywords: {
 			contain: 'contain',

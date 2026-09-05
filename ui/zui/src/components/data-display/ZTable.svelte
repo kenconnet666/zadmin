@@ -15,6 +15,8 @@
 		ref?: HTMLTableElement | null;
 		readonly scroll?: TableScroll;
 		readonly scrollLabel?: string;
+		readonly scrollLabelledBy?: string;
+		readonly scrollDescribedBy?: string;
 		readonly striped?: boolean;
 		wrapperRef?: HTMLDivElement | null;
 	}
@@ -73,7 +75,19 @@
 				name: 'scrollLabel',
 				type: 'string'
 			},
-			{ default: 'false', description: '交替tbody行背景。', name: 'striped', type: 'boolean' }
+			{ default: 'false', description: '交替tbody行背景。', name: 'striped', type: 'boolean' },
+			{
+				default: 'undefined',
+				description: '真实溢出时滚动region关联的标题ID；优先于scrollLabel。',
+				name: 'scrollLabelledBy',
+				type: 'string'
+			},
+			{
+				default: 'undefined',
+				description: '真实溢出时滚动region关联的说明ID。',
+				name: 'scrollDescribedBy',
+				type: 'string'
+			}
 		],
 		since: 'unreleased',
 		snippets: [
@@ -190,6 +204,8 @@
 		ref = $bindable(null),
 		scroll = 'auto',
 		scrollLabel,
+		scrollLabelledBy,
+		scrollDescribedBy,
 		striped = false,
 		style,
 		wrapperRef = $bindable(null),
@@ -280,7 +296,9 @@
 	class={wrapperClass}
 	dir={resolvedDirection}
 	role={overflowing ? 'region' : undefined}
-	aria-label={overflowing ? resolvedScrollLabel : undefined}
+	aria-label={overflowing && !scrollLabelledBy ? resolvedScrollLabel : undefined}
+	aria-labelledby={overflowing ? scrollLabelledBy : undefined}
+	aria-describedby={overflowing ? scrollDescribedBy : undefined}
 	data-overflowing={overflowing || undefined}
 	data-scroll={resolvedScroll}
 	data-slot="wrapper"

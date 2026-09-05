@@ -1,4 +1,5 @@
 import type { IcssClassName, IcssFactory } from '../icss/types.js';
+import type { IcssLayer } from '../icss/registry.js';
 import type { ZuiTheme } from '../theme/types.js';
 
 export type RecipeVariantOptions = Readonly<Record<string, IcssFactory<ZuiTheme>>>;
@@ -19,6 +20,8 @@ export interface RecipeCompoundVariant {
 }
 
 export interface RecipeInput<TVariants extends RecipeVariantDefinitions> {
+	/** Component styles by default; utilities explicitly customize an existing component. */
+	readonly layer?: IcssLayer;
 	readonly base?: IcssFactory<ZuiTheme>;
 	readonly compoundVariants?: readonly RecipeCompoundVariant[];
 	readonly defaultVariants?: Readonly<Record<string, string | boolean>>;

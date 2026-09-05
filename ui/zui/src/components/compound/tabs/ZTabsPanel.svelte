@@ -8,7 +8,7 @@
 
 	export interface ZTabsPanelProps extends Omit<
 		HTMLAttributes<HTMLDivElement>,
-		'aria-labelledby' | 'children' | 'hidden' | 'role'
+		'aria-labelledby' | 'children' | 'hidden' | 'id' | 'role'
 	> {
 		readonly children?: Snippet;
 		ref?: HTMLDivElement | null;
@@ -64,7 +64,8 @@
 		source: 'ui/zui/src/components/compound/tabs/ZTabsPanel.svelte',
 		states: [{ description: '激活状态。', name: 'data-state', values: ['active', 'inactive'] }],
 		status: 'stable',
-		summary: '与typed Trigger稳定关联，并按Tabs的keep-mounted、lazy或active-only策略管理tabpanel。'
+		summary:
+			'与typed Trigger稳定关联，并按Tabs的keep-mounted、lazy或active-only策略管理tabpanel；关系id由Tabs Root统一生成。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
 

@@ -77,7 +77,13 @@
 	import { portal } from '../../../runtime/layer/portal.js';
 	import { useZDialog } from './context.svelte.js';
 
-	let { class: className, ref = $bindable(null), style, ...rest }: ZDialogOverlayProps = $props();
+	let {
+		class: className,
+		ontransitionend,
+		ref = $bindable(null),
+		style,
+		...rest
+	}: ZDialogOverlayProps = $props();
 	const zui = useZui();
 	const dialog = useZDialog();
 	const initiallyOpen = untrack(() => dialog.open);
@@ -105,6 +111,10 @@
 			if (dialog.overlay === ref) dialog.setOverlay(null);
 		};
 	});
+	function handleTransitionEnd(event: TransitionEvent & { currentTarget: HTMLDivElement }): void {
+		if (event.target === event.currentTarget) presence.finishExit();
+		ontransitionend?.(event);
+	}
 	onDestroy(() => presence.destroy());
 </script>
 
@@ -120,8 +130,6 @@
 		data-presence={presenceState}
 		data-reduced-motion={dialog.reducedMotion || undefined}
 		data-state={dialog.open ? 'open' : 'closed'}
-		ontransitionend={(event) => {
-			if (event.target === event.currentTarget) presence.finishExit();
-		}}
+		ontransitionend={handleTransitionEnd}
 	></div>
 {/if}

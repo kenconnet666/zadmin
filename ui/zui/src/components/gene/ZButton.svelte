@@ -21,7 +21,8 @@
 		variant?: ButtonVariant;
 	}
 
-	const buttonRecipe = defineRecipe({
+	/** Shared visual recipe for native buttons and button-shaped links. */
+	export const buttonRecipe = defineRecipe({
 		base: (s) => {
 			s.display.inlineFlex;
 			s.alignItems.center;
@@ -30,6 +31,7 @@
 			s.borderStyle.solid;
 			s.borderRadius._medium;
 			s.fontWeight._semibold;
+			s.fontFamily._sans;
 			s.lineHeight(1);
 			s.position.relative;
 			s.cursor.pointer;

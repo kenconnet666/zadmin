@@ -427,6 +427,7 @@
 		onOpenChange,
 		onStepChange,
 		onTargetMissing,
+		ontransitionend,
 		open = $bindable(),
 		previousLabel,
 		ref = $bindable(null),
@@ -809,6 +810,11 @@
 		onComplete?.();
 		close();
 	}
+
+	function handleTransitionEnd(event: TransitionEvent & { currentTarget: HTMLDivElement }): void {
+		if (event.target === event.currentTarget) presence.finishExit();
+		ontransitionend?.(event);
+	}
 </script>
 
 <span bind:this={anchor} hidden aria-hidden="true" data-zui-tour-anchor></span>
@@ -895,9 +901,7 @@
 			data-presence={presence.state}
 			data-reduced-motion={reduced || undefined}
 			data-state={openState.current ? 'open' : 'closed'}
-			ontransitionend={(event) => {
-				if (event.target === event.currentTarget) presence.finishExit();
-			}}
+			ontransitionend={handleTransitionEnd}
 		>
 			<div class={headerClass} data-slot="header">
 				<div class={progressClass}>{progressText}</div>

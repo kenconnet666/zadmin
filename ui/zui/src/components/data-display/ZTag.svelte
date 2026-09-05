@@ -96,6 +96,8 @@
 	} as const satisfies ZuiComponentMetadata;
 	const recipe = defineRecipe({
 		base: (s) => {
+			s.fontFamily._sans;
+			s.lineHeight._normal;
 			s.alignItems.center;
 			s.backgroundColor._surface;
 			s.borderColor._border;
@@ -110,6 +112,7 @@
 		variants: {
 			size: {
 				medium: (s) => {
+					s.fontSize._medium;
 					s.gap._small;
 					s.paddingBlock._xsmall;
 					s.paddingInline._medium;

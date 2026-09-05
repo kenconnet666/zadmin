@@ -240,6 +240,10 @@
 		items,
 		loop = true,
 		nextLabel,
+		onfocusin,
+		onfocusout,
+		onmouseenter,
+		onmouseleave,
 		onValueChange,
 		pauseLabel,
 		pauseOnHover = true,
@@ -334,9 +338,23 @@
 	function choose(index: number): void {
 		valueState.setFromUser(normalized[index]!.key);
 	}
+	function mouseEnter(event: MouseEvent & { currentTarget: HTMLElement }): void {
+		hovered = true;
+		onmouseenter?.(event);
+	}
+	function mouseLeave(event: MouseEvent & { currentTarget: HTMLElement }): void {
+		hovered = false;
+		onmouseleave?.(event);
+	}
+	function focusIn(event: FocusEvent & { currentTarget: HTMLElement }): void {
+		focusWithin = true;
+		onfocusin?.(event);
+	}
 	function focusOut(event: FocusEvent & { currentTarget: HTMLElement }): void {
-		if (isDomNode(event.relatedTarget) && event.currentTarget.contains(event.relatedTarget)) return;
-		focusWithin = false;
+		if (!isDomNode(event.relatedTarget) || !event.currentTarget.contains(event.relatedTarget)) {
+			focusWithin = false;
+		}
+		onfocusout?.(event);
 	}
 </script>
 
@@ -350,9 +368,9 @@
 	aria-label={resolvedAriaLabel}
 	data-paused={autoPaused || undefined}
 	data-reduced-motion={reduced || undefined}
-	onmouseenter={() => (hovered = true)}
-	onmouseleave={() => (hovered = false)}
-	onfocusin={() => (focusWithin = true)}
+	onmouseenter={mouseEnter}
+	onmouseleave={mouseLeave}
+	onfocusin={focusIn}
 	onfocusout={focusOut}
 >
 	{#if autoplayInterval !== undefined}<ZButton

@@ -3,6 +3,8 @@ import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
 import CompactDemo from './CompactDemo.svelte';
 import compactSource from './CompactDemo.svelte?raw';
+import ScrollLabelsDemo from './ScrollLabelsDemo.svelte';
+import scrollLabelsSource from './ScrollLabelsDemo.svelte?raw';
 import InteractiveDemo from './InteractiveDemo.svelte';
 import interactiveSource from './InteractiveDemo.svelte?raw';
 import ResponsiveDemo from './ResponsiveDemo.svelte';
@@ -19,6 +21,14 @@ export const tableDoc = defineComponentDoc(tableMetadata, {
 	sourceApi: tableApiFacts,
 	teaching: {
 		props: {
+			scrollLabelledBy: {
+				default: 'undefined',
+				description: '真实溢出时为scroll region引用标题元素ID；无溢出时不会写入wrapper。'
+			},
+			scrollDescribedBy: {
+				default: 'undefined',
+				description: '真实溢出时为scroll region引用说明元素ID；无溢出时不会写入wrapper。'
+			},
 			caption: {
 				default: '必填',
 				description: '真实caption是Table名称，不能以外部Heading或aria-label替代。'
@@ -46,6 +56,14 @@ export const tableDoc = defineComponentDoc(tableMetadata, {
 			'Table只拥有原生结构、caption、密度和有限横向scroll owner；数据模型、排序、选择、分页、请求和虚拟化属于ZDataTable或调用方。'
 	},
 	demos: [
+		{
+			component: ScrollLabelsDemo,
+			covers: ['accessible-name', 'composition', 'focus'],
+			description: 'scrollLabelledBy与scrollDescribedBy仅在真实横向溢出时应用到可聚焦region。',
+			id: 'table-scroll-labels',
+			source: scrollLabelsSource,
+			title: 'Scroll区域命名'
+		},
 		{
 			component: FormDemo,
 			covers: ['basic-render', 'native-props'],

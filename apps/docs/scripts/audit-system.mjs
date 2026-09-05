@@ -630,6 +630,8 @@ if (!workspaceZuiEntrypoints.every((entrypoint) => optimizeExclude.includes(`'${
 const rawInteractive =
 	/<(?:a|button|code|details|input|kbd|meter|progress|select|summary|table|textarea)\b/u;
 const forbiddenGlyph = /[×‹›✓←→↑↓↕✕✖]/u;
+let docsRawInteractiveElements = 0;
+const docsViewComponents = new Map();
 for (const path of docsSvelteFiles) {
 	const source = await readFile(path, 'utf8');
 	const filename = portable(relative(workspaceRoot, path));
@@ -638,6 +640,15 @@ for (const path of docsSvelteFiles) {
 	auditSvelte5(source, filename);
 	auditLucideImports(source, filename);
 	auditResourceLifecycle(source, filename);
+	docsRawInteractiveElements += [...source.matchAll(new RegExp(rawInteractive.source, 'gu'))]
+		.length;
+	if (filename.startsWith('apps/docs/src/views/')) {
+		for (const [, name] of source.matchAll(/<(Z[A-Z]\w*)\b/gu)) {
+			docsViewComponents.set(name, (docsViewComponents.get(name) ?? 0) + 1);
+		}
+		if (/navigator\.clipboard|document\.execCommand|setTimeout\(/u.test(source))
+			fail(`${filename} reimplements a generic UI resource instead of using its ZUI owner.`);
+	}
 	if (rawInteractive.test(source))
 		fail(`${filename} hand-builds an interactive element instead of dogfooding ZUI.`);
 	if (forbiddenGlyph.test(source))
@@ -656,6 +667,18 @@ for (const path of docsSvelteFiles) {
 			fail(`${filename} places interactive content inside a tooltip.`);
 		}
 	}
+}
+const docsUiOwnership = [
+	['DemoBlock', ['<ZCard', '<ZAccordion', '<ZCode', 'copyable']],
+	['ApiTable', ['<ZTable', 'scrollLabelledBy', 'scrollDescribedBy']],
+	['AppSidebar', ['<ZLink', 'appearance="navigation"', 'aria-current']],
+	['HomePage', ['<ZCard', '<ZStatistic']],
+	['ThemeLabPage', ['<ZCard']]
+];
+for (const [view, contracts] of docsUiOwnership) {
+	const source = await readFile(resolve(docsRoot, `src/views/${view}.svelte`), 'utf8');
+	if (!contracts.every((contract) => source.includes(contract)))
+		fail(`Docs ${view} must retain its shared ZUI surface/interaction ownership.`);
 }
 const appShellSource = await readFile(resolve(docsRoot, 'src/views/AppShell.svelte'), 'utf8');
 const appSource = await readFile(resolve(docsRoot, 'src/app/App.svelte'), 'utf8');
@@ -919,7 +942,11 @@ console.log(
 		cascaderKeyboardReuseContracts: 1,
 		inlineSvgFiles: inlineSvg.length,
 		brandGradientFiles: gradientFiles.length,
-		docsRawInteractiveElements: 0,
+		docsRawInteractiveElements,
+		docsUiOwnershipContracts: docsUiOwnership.length,
+		docsViewComponentCalls: Object.fromEntries(
+			[...docsViewComponents].sort(([a], [b]) => a.localeCompare(b))
+		),
 		docsWorkspaceOptimizeExclusions: workspaceZuiEntrypoints.length,
 		docsPreferenceOwnerContracts: preferenceCallbacks.length,
 		positiveTabindexElements: 0,

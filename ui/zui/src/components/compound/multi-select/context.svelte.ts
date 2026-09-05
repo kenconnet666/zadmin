@@ -3,6 +3,7 @@ import { getContext, setContext } from 'svelte';
 import type { CompoundLogicalCollectionItem } from '../../../runtime/collection/compound-logical-collection.svelte.js';
 import type { LogicalCollectionView } from '../../../runtime/collection/logical-collection.js';
 import type { SelectionKey } from '../../../runtime/collection/selection.js';
+import type { ZControlSize } from '../../../runtime/foundation/control-size.js';
 import { CancelableEvent } from '../../../runtime/foundation/cancelable-event.js';
 import type { ChoiceVirtualController } from '../choice-virtualization.js';
 import type { ZMultiSelectOption } from './ZMultiSelect.svelte';
@@ -47,6 +48,7 @@ export interface ZMultiSelectContext {
 	readonly placeholder: string;
 	readonly readonly: boolean;
 	readonly required: boolean;
+	readonly size: ZControlSize;
 	readonly tags: readonly MultiSelectTagRecord[];
 	readonly values: readonly SelectionKey[];
 	readonly view: LogicalCollectionView<SelectionKey, MultiSelectItemRecord>;

@@ -3,6 +3,7 @@
 
 	const headerRecipe = defineSlotRecipe(
 		{
+			layer: 'utilities',
 			slots: [
 				'root',
 				'brandArea',
@@ -13,12 +14,9 @@
 				'actions',
 				'themePicker',
 				'themeLabel',
-				'preferences',
-				'preferencesSummary',
 				'preferencesLabel',
 				'preferencesPanel',
 				'preference',
-				'select',
 				'github'
 			] as const,
 			base: {
@@ -62,25 +60,6 @@
 					s._media('(max-width: 48rem)', (mobile) => mobile.display.none);
 				},
 				github: (s) => {
-					s.alignItems.center;
-					s.borderColor._border;
-					s.borderRadius._medium;
-					s.borderStyle.solid;
-					s.borderWidth._hairline;
-					s.color._text;
-					s.display.inlineFlex;
-					s.fontSize._small;
-					s.fontWeight._semibold;
-					s.gap._small;
-					s.paddingBlock._small;
-					s.paddingInline._medium;
-					s.textDecoration.none;
-					s.whiteSpace.nowrap;
-					s._media('(max-width: 80rem)', (compact) => compact.paddingInline._small);
-					s._hover((hover) => {
-						hover.borderColor._accent;
-						hover.color._accent;
-					});
 					s._media('(max-width: 48rem)', (mobile) => mobile.display.none);
 				},
 				mark: (s) => {
@@ -128,63 +107,11 @@
 					s.gap._medium;
 					s.gridTemplateColumns.raw('4.5rem minmax(8rem, 1fr)');
 				},
-				preferences: (s) => s.position.relative,
 				preferencesLabel: (s) => s._media('(max-width: 80rem)', (compact) => compact.display.none),
 				preferencesPanel: (s) => {
-					s.backgroundColor._canvas;
-					s.borderColor._border;
-					s.borderRadius._medium;
-					s.borderStyle.solid;
-					s.borderWidth._hairline;
-					s.boxShadow._medium;
 					s.display.grid;
 					s.gap._medium;
 					s.minWidth.rem(15);
-					s.padding._large;
-				},
-				preferencesSummary: (s) => {
-					s.alignItems.center;
-					s.backgroundColor._surface;
-					s.borderColor._border;
-					s.borderRadius._medium;
-					s.borderStyle.solid;
-					s.borderWidth._hairline;
-					s.color._text;
-					s.cursor.pointer;
-					s.display.inlineFlex;
-					s.fontSize._small;
-					s.fontWeight._semibold;
-					s.gap._small;
-					s.minHeight.rem(2.35);
-					s.paddingInline._medium;
-					s.whiteSpace.nowrap;
-					s._media('(max-width: 80rem)', (compact) => compact.paddingInline._small);
-					s._hover((hover) => hover.borderColor._accent);
-					s._focusVisible((focus) => {
-						focus.outlineColor._focus;
-						focus.outlineOffset.px(2);
-						focus.outlineStyle.solid;
-						focus.outlineWidth._medium;
-					});
-					s._selector('&::-webkit-details-marker', (marker) => marker.display.none);
-				},
-				select: (s) => {
-					s.backgroundColor._surface;
-					s.borderColor._border;
-					s.borderRadius._small;
-					s.borderStyle.solid;
-					s.borderWidth._hairline;
-					s.color._text;
-					s.fontFamily._sans;
-					s.minHeight.rem(2.25);
-					s.paddingInline._small;
-					s.whiteSpace.nowrap;
-					s._focusVisible((focus) => {
-						focus.outlineColor._focus;
-						focus.outlineOffset.px(2);
-						focus.outlineStyle.solid;
-						focus.outlineWidth._medium;
-					});
 				},
 				themePicker: (s) => {
 					s.alignItems.center;
@@ -203,9 +130,10 @@
 </script>
 
 <script lang="ts">
-	import Palette from '@lucide/svelte/icons/palette';
-	import SlidersHorizontal from '@lucide/svelte/icons/sliders-horizontal';
 	import {
+		ZIcon,
+		ZStack,
+		ZText,
 		ZLink,
 		ZPopover,
 		ZPopoverContent,
@@ -300,17 +228,19 @@
 	<div class={classes.brandArea}>
 		<AppMobileNavigation {docs} {currentGuideId} {currentId} />
 		<ZLink class={classes.brand} href="#/" underline="none">
-			<span class={classes.mark}>Z</span>
-			<span class={classes.brandText}
-				><strong>ZUI</strong><small class={classes.brandSmall}>Components</small></span
+			<ZText class={classes.mark}>Z</ZText>
+			<ZStack class={classes.brandText} gap="none"
+				><ZText as="strong" weight="bold">ZUI</ZText><ZText as="small" class={classes.brandSmall}
+					>Components</ZText
+				></ZStack
 			>
 		</ZLink>
 	</div>
 	<AppCommandSearch {docs} />
 	<div class={classes.actions}>
 		<div class={classes.themePicker}>
-			<Palette aria-hidden="true" size={16} />
-			<span class={classes.themeLabel}>主题</span>
+			<ZIcon name="palette" size={16} />
+			<ZText class={classes.themeLabel} tone="muted">主题</ZText>
 			<ZSelect
 				matchWidth={false}
 				value={themeId}
@@ -318,7 +248,7 @@
 				onValueChange={setTheme}
 				placement="bottom-end"
 			>
-				<ZSelectTrigger aria-label="选择文档主题" class={classes.select} />
+				<ZSelectTrigger aria-label="选择文档主题" size="medium" />
 				<ZSelectContent>
 					{#each docsThemes as theme (theme.id)}
 						<ZSelectItem value={theme.id}>{theme.label}</ZSelectItem>
@@ -327,20 +257,15 @@
 			</ZSelect>
 		</div>
 		<ZPopover placement="bottom-end">
-			<ZPopoverTrigger
-				class={classes.preferencesSummary}
-				aria-label="调整显示偏好"
-				size="small"
-				variant="secondary"
-			>
-				<SlidersHorizontal aria-hidden="true" size={16} />
-				<span class={classes.preferencesLabel}>显示</span>
+			<ZPopoverTrigger aria-label="调整显示偏好" size="small" variant="secondary">
+				<ZIcon name="sliders" size={16} />
+				<ZText class={classes.preferencesLabel} size="small">显示</ZText>
 			</ZPopoverTrigger>
 			<ZPopoverContent class={classes.preferencesPanel}>
 				<div class={classes.preference}>
-					<span>密度</span>
+					<ZText>密度</ZText>
 					<ZSelect value={density} valueLabel={densityValueLabel} onValueChange={setDensity}>
-						<ZSelectTrigger aria-label="密度" class={classes.select} />
+						<ZSelectTrigger aria-label="密度" />
 						<ZSelectContent>
 							<ZSelectItem value="compact">紧凑</ZSelectItem>
 							<ZSelectItem value="comfortable">舒适</ZSelectItem>
@@ -349,9 +274,9 @@
 					</ZSelect>
 				</div>
 				<div class={classes.preference}>
-					<span>对比度</span>
+					<ZText>对比度</ZText>
 					<ZSelect value={contrast} valueLabel={contrastValueLabel} onValueChange={setContrast}>
-						<ZSelectTrigger aria-label="对比度" class={classes.select} />
+						<ZSelectTrigger aria-label="对比度" />
 						<ZSelectContent>
 							<ZSelectItem value="normal">标准</ZSelectItem>
 							<ZSelectItem value="high">高对比</ZSelectItem>
@@ -360,9 +285,9 @@
 					</ZSelect>
 				</div>
 				<div class={classes.preference}>
-					<span>动画</span>
+					<ZText>动画</ZText>
 					<ZSelect value={motion} valueLabel={motionValueLabel} onValueChange={setMotion}>
-						<ZSelectTrigger aria-label="动画" class={classes.select} />
+						<ZSelectTrigger aria-label="动画" />
 						<ZSelectContent>
 							<ZSelectItem value="auto">跟随系统</ZSelectItem>
 							<ZSelectItem value="full">完整</ZSelectItem>
@@ -371,9 +296,9 @@
 					</ZSelect>
 				</div>
 				<div class={classes.preference}>
-					<span>方向</span>
+					<ZText>方向</ZText>
 					<ZSelect value={direction} valueLabel={directionValueLabel} onValueChange={setDirection}>
-						<ZSelectTrigger aria-label="方向" class={classes.select} />
+						<ZSelectTrigger aria-label="方向" />
 						<ZSelectContent>
 							<ZSelectItem value="ltr">从左到右</ZSelectItem>
 							<ZSelectItem value="rtl">从右到左</ZSelectItem>
@@ -384,6 +309,9 @@
 		</ZPopover>
 		<ZLink
 			class={classes.github}
+			appearance="button"
+			variant="secondary"
+			size="small"
 			external
 			href="https://github.com/kenconnet666/zadmin"
 			underline="none"

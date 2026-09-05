@@ -849,7 +849,6 @@
 			data-slot="trigger"
 			data-required={resolvedRequired || undefined}
 			disabled={resolvedDisabled}
-			id={resolvedControlId}
 			onkeydown={handleTriggerKeydown}
 			popupRole="listbox"
 			size={resolvedSize}

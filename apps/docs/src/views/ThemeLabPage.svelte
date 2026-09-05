@@ -3,6 +3,7 @@
 
 	const themeLabRecipe = defineSlotRecipe(
 		{
+			layer: 'utilities',
 			slots: [
 				'root',
 				'eyebrow',
@@ -11,7 +12,6 @@
 				'section',
 				'sectionTitle',
 				'axisGrid',
-				'axis',
 				'axisName',
 				'axisValue',
 				'presetGrid',
@@ -21,11 +21,9 @@
 				'presetName',
 				'presetMeta',
 				'tokenGrid',
-				'token',
 				'swatch',
 				'tokenName',
 				'tokenValue',
-				'preview',
 				'aspectPreview'
 			] as const,
 			base: {
@@ -36,14 +34,6 @@
 					s.display.grid;
 					s.maxWidth.rem(28);
 					s.placeItems.center;
-				},
-				axis: (s) => {
-					s.backgroundColor._canvas;
-					s.borderColor._border;
-					s.borderRadius._large;
-					s.borderStyle.solid;
-					s.borderWidth._hairline;
-					s.padding._large;
 				},
 				axisGrid: (s) => {
 					s.display.grid;
@@ -82,24 +72,7 @@
 					s.lineHeight._relaxed;
 					s.maxWidth.rem(58);
 				},
-				preview: (s) => {
-					s.backgroundColor._canvas;
-					s.borderColor._border;
-					s.borderRadius._large;
-					s.borderStyle.solid;
-					s.borderWidth._hairline;
-					s.boxShadow._small;
-					s.padding._xlarge;
-				},
 				preset: (s) => {
-					s.backgroundColor._canvas;
-					s.borderColor._border;
-					s.borderRadius._large;
-					s.borderStyle.solid;
-					s.borderWidth._hairline;
-					s.display.grid;
-					s.gap._medium;
-					s.padding._large;
 					s._selector('&[aria-current="true"]', (current) => {
 						current.borderColor._primary;
 						current.boxShadow._small;
@@ -147,14 +120,6 @@
 					s.lineHeight._compact;
 					s.margin.px(0);
 				},
-				token: (s) => {
-					s.backgroundColor._canvas;
-					s.borderColor._border;
-					s.borderRadius._large;
-					s.borderStyle.solid;
-					s.borderWidth._hairline;
-					s.padding._medium;
-				},
 				tokenGrid: (s) => {
 					s.display.grid;
 					s.gap._medium;
@@ -183,6 +148,7 @@
 	import {
 		ZAspectRatio,
 		ZButton,
+		ZCard,
 		ZContainer,
 		ZField,
 		ZHeading,
@@ -213,13 +179,13 @@
 
 <article class={classes.root} data-doc-route="guide:theme">
 	<header>
-		<p class={classes.eyebrow}>THEME LAB</p>
+		<ZText as="p" class={classes.eyebrow}>THEME LAB</ZText>
 		<ZHeading class={classes.title} data-doc-page-title="true" level={1} size="xlarge"
 			>主题不是一组颜色，而是一套系统合同。</ZHeading
 		>
-		<p class={classes.lead}>
+		<ZText as="p" class={classes.lead}>
 			使用顶部主题选择器切换六套官方预设，并在“显示”面板调整对比度、密度、动画和RTL。本页直接读取当前ZProvider上下文和Theme语义token，所有预览均为真实ZUI组件。
-		</p>
+		</ZText>
 	</header>
 
 	<section class={classes.section} aria-labelledby="official-presets">
@@ -228,22 +194,29 @@
 		>
 		<div class={classes.presetGrid}>
 			{#each docsThemes as preset (preset.id)}
-				<article class={classes.preset} aria-current={themeId === preset.id ? 'true' : undefined}>
-					<div class={classes.presetColors} aria-hidden="true">
-						{#each [['canvas', preset.theme.color.canvas], ['surface', preset.theme.color.surface], ['primary', preset.theme.color.primary], ['accent', preset.theme.color.accent]] as [token, color] (token)}
-							<span class={classes.presetSwatch} style={`background:${color}`}></span>
-						{/each}
-					</div>
-					<strong class={classes.presetName}>{preset.label}</strong>
-					<span class={classes.presetMeta}>{preset.id} · {preset.scheme}</span>
-					<ZButton
-						disabled={themeId === preset.id}
-						onclick={() => onThemeChange?.(preset.id)}
-						variant={themeId === preset.id ? 'secondary' : 'primary'}
-					>
-						{themeId === preset.id ? '当前主题' : `应用${preset.label}`}
-					</ZButton>
-				</article>
+				<ZCard
+					as="article"
+					class={classes.preset}
+					aria-current={themeId === preset.id ? 'true' : undefined}
+					variant="outlined"
+				>
+					<ZStack gap="medium">
+						<div class={classes.presetColors} aria-hidden="true">
+							{#each [['canvas', preset.theme.color.canvas], ['surface', preset.theme.color.surface], ['primary', preset.theme.color.primary], ['accent', preset.theme.color.accent]] as [token, color] (token)}
+								<span class={classes.presetSwatch} style={`background:${color}`}></span>
+							{/each}
+						</div>
+						<ZText as="strong" class={classes.presetName}>{preset.label}</ZText>
+						<ZText class={classes.presetMeta}>{preset.id} · {preset.scheme}</ZText>
+						<ZButton
+							disabled={themeId === preset.id}
+							onclick={() => onThemeChange?.(preset.id)}
+							variant={themeId === preset.id ? 'secondary' : 'primary'}
+						>
+							{themeId === preset.id ? '当前主题' : `应用${preset.label}`}
+						</ZButton>
+					</ZStack>
+				</ZCard>
 			{/each}
 		</div>
 	</section>
@@ -254,10 +227,10 @@
 		>
 		<div class={classes.axisGrid}>
 			{#each [['Theme', currentTheme.label], ['Scheme', zui.colorScheme], ['Contrast', zui.contrast], ['Density', zui.density], ['Motion', zui.motion], ['Direction', zui.direction], ['Locale', zui.locale]] as axis (axis[0])}
-				<div class={classes.axis}>
-					<span class={classes.axisName}>{axis[0]}</span>
-					<strong class={classes.axisValue}>{axis[1]}</strong>
-				</div>
+				<ZCard variant="outlined">
+					<ZText class={classes.axisName}>{axis[0]}</ZText>
+					<ZText as="strong" class={classes.axisValue}>{axis[1]}</ZText>
+				</ZCard>
 			{/each}
 		</div>
 	</section>
@@ -268,11 +241,11 @@
 		>
 		<div class={classes.tokenGrid}>
 			{#each colors as [name, value] (name)}
-				<div class={classes.token} data-slot="semantic-color">
+				<ZCard data-slot="semantic-color" variant="outlined">
 					<div class={classes.swatch} style={`background:${value}`}></div>
-					<strong class={classes.tokenName}>{name}</strong>
+					<ZText as="strong" class={classes.tokenName}>{name}</ZText>
 					<ZCode class={classes.tokenValue} code={String(value)} inline />
-				</div>
+				</ZCard>
 			{/each}
 		</div>
 	</section>
@@ -281,21 +254,23 @@
 		<ZHeading class={classes.sectionTitle} id="component-surfaces" level={2} size="xlarge"
 			>真实组件表面</ZHeading
 		>
-		<ZContainer class={classes.preview} gutter="large" size="medium">
-			<ZStack gap="large">
-				<ZStack direction="row" gap="medium" wrap>
-					<ZButton>主要操作</ZButton>
-					<ZButton variant="secondary">次要操作</ZButton>
-					<ZButton tone="danger">危险操作</ZButton>
-					<ZLink href="#/guides/theme">主题链接</ZLink>
+		<ZContainer gutter="large" size="medium">
+			<ZCard>
+				<ZStack gap="large">
+					<ZStack direction="row" gap="medium" wrap>
+						<ZButton>主要操作</ZButton>
+						<ZButton variant="secondary">次要操作</ZButton>
+						<ZButton tone="danger">危险操作</ZButton>
+						<ZLink href="#/guides/theme">主题链接</ZLink>
+					</ZStack>
+					<ZSeparator />
+					<ZField description="焦点、边框和错误色都来自当前Theme。" label="主题输入">
+						<ZInput placeholder="输入以检查当前表面" />
+					</ZField>
+					<ZText tone="muted">快捷键示例：<ZKbd>Ctrl</ZKbd> + <ZKbd>K</ZKbd></ZText>
+					<ZAspectRatio class={classes.aspectPreview} ratio="16 / 9">当前主色比例区域</ZAspectRatio>
 				</ZStack>
-				<ZSeparator />
-				<ZField description="焦点、边框和错误色都来自当前Theme。" label="主题输入">
-					<ZInput placeholder="输入以检查当前表面" />
-				</ZField>
-				<ZText tone="muted">快捷键示例：<ZKbd>Ctrl</ZKbd> + <ZKbd>K</ZKbd></ZText>
-				<ZAspectRatio class={classes.aspectPreview} ratio="16 / 9">当前主色比例区域</ZAspectRatio>
-			</ZStack>
+			</ZCard>
 		</ZContainer>
 	</section>
 </article>

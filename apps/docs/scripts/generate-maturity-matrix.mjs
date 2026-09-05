@@ -23,9 +23,48 @@ const visualAssertionPattern =
 const withoutComments = (source) =>
 	source.replace(/<!--[\s\S]*?-->|\/\*[\s\S]*?\*\/|\/\/[^\n]*/gu, '');
 
+const visualBlockCache = new Map();
+function visualTestBlocks(source) {
+	if (visualBlockCache.has(source)) return visualBlockCache.get(source);
+	const file = ts.createSourceFile('visual.spec.ts', source, ts.ScriptTarget.Latest, true);
+	const blocks = [];
+	function visit(node) {
+		if (
+			ts.isCallExpression(node) &&
+			/^(?:it|test)(?:\.|\(|$)/u.test(node.expression.getText(file))
+		) {
+			const callback = node.arguments.find(
+				(argument) => ts.isArrowFunction(argument) || ts.isFunctionExpression(argument)
+			);
+			if (callback?.body && ts.isBlock(callback.body)) {
+				const start = ts.isExpressionStatement(node.parent)
+					? node.parent.getFullStart()
+					: node.getFullStart();
+				blocks.push({
+					name:
+						node.arguments[0] && ts.isStringLiteral(node.arguments[0])
+							? node.arguments[0].text
+							: '<parameterized test>',
+					source: source.slice(start, node.end),
+					line: file.getLineAndCharacterOfPosition(node.getStart(file)).line + 1
+				});
+				return;
+			}
+		}
+		ts.forEachChild(node, visit);
+	}
+	visit(file);
+	visualBlockCache.set(source, blocks);
+	return blocks;
+}
+
 function hasExplicitVisualEvidence(source, componentName) {
-	return (
-		explicitVisualEvidencePattern(componentName).test(source) && visualAssertionPattern.test(source)
+	return visualTestBlocks(source).some(
+		(block) =>
+			explicitVisualEvidencePattern(componentName).test(block.source) &&
+			executesComponentRender(block.source) &&
+			block.source.includes('expect(') &&
+			visualAssertionPattern.test(block.source)
 	);
 }
 
@@ -220,7 +259,13 @@ const fixtureFiles = await filesUnder(testsRoot, '.svelte');
 const fixtureSources = new Map(
 	await Promise.all(fixtureFiles.map(async (path) => [path, await readFile(path, 'utf8')]))
 );
-function fixtureEvidenceFor(testPath, testSource, componentName, sources = fixtureSources) {
+function fixtureEvidenceFor(
+	testPath,
+	testSource,
+	componentName,
+	sources = fixtureSources,
+	renderSource = testSource
+) {
 	return [...testSource.matchAll(/from ['"](\.\/[^'"]+\.svelte)['"]/gu)].flatMap(
 		([, importPath]) => {
 			const fixturePath = resolve(dirname(testPath), importPath);
@@ -232,7 +277,7 @@ function fixtureEvidenceFor(testPath, testSource, componentName, sources = fixtu
 			if (
 				!fixtureSource ||
 				!fixtureName ||
-				!new RegExp(`(?:render|mount)\\(\\s*${fixtureName}\\b`, 'u').test(testSource)
+				!new RegExp(`(?:render|mount)\\(\\s*${fixtureName}\\b`, 'u').test(renderSource)
 			)
 				return [];
 			const markup = withoutComments(fixtureSource);
@@ -240,6 +285,15 @@ function fixtureEvidenceFor(testPath, testSource, componentName, sources = fixtu
 				? [evidence(fixturePath, `${componentName} explicit rendered fixture usage`)]
 				: [];
 		}
+	);
+}
+function ownedVisualBlocks(testPath, content, name, sources = fixtureSources) {
+	return visualTestBlocks(content).filter(
+		(block) =>
+			hasExplicitVisualEvidence(block.source, name) &&
+			(directRenderPattern(name).test(withoutComments(block.source)) ||
+				fixtureEvidenceFor(testPath, content, name, sources, withoutComments(block.source)).length >
+					0)
 	);
 }
 if (process.argv.includes('--self-test')) {
@@ -257,7 +311,7 @@ if (process.argv.includes('--self-test')) {
 		throw new Error('comment-only component self-test failed');
 	if (
 		!hasExplicitVisualEvidence(
-			'// @zui-visual ZButton geometry\\nrender(ZButton); expect(getComputedStyle(node).height);',
+			"it('button', () => { /* @zui-visual ZButton geometry */ render(ZButton); expect(getComputedStyle(node).height); });",
 			'ZButton'
 		)
 	)
@@ -273,6 +327,22 @@ if (process.argv.includes('--self-test')) {
 		hasExplicitVisualEvidence('render(ZButton); expect(getBoundingClientRect().height);', 'ZButton')
 	)
 		throw new Error('unowned visual assertion self-test failed');
+	if (
+		hasExplicitVisualEvidence(
+			"it('one', () => { /* @zui-visual ZButton */ render(ZButton); expect(true); }); it('two', () => { render(Other); expect(getComputedStyle(other).height); });",
+			'ZButton'
+		)
+	)
+		throw new Error('visual evidence incorrectly crossed test block boundaries');
+	if (
+		ownedVisualBlocks(
+			resolve('C:/tests', 'example.spec.ts'),
+			"import Fixture from './Fixture.svelte'; it('one', () => { render(Fixture); }); it('two', () => { /* @zui-visual ZButton */ render(Other); expect(getComputedStyle(other).height); });",
+			'ZButton',
+			fixture
+		).length
+	)
+		throw new Error('visual fixture ownership incorrectly crossed test block boundaries');
 	if (
 		fixtureEvidenceFor(
 			resolve('C:/tests', 'example.spec.ts'),
@@ -382,7 +452,7 @@ const rows = componentFiles.map(({ id, name, category, status, path, source }) =
 			testPath.endsWith('.browser.spec.ts') &&
 			content.includes('expect(') &&
 			executesComponentRender(content) &&
-			hasExplicitVisualEvidence(content, name)
+			ownedVisualBlocks(testPath, content, name).length > 0
 	);
 	const productionTests = relatedTests.filter(
 		([testPath, content]) =>
@@ -439,7 +509,12 @@ const rows = componentFiles.map(({ id, name, category, status, path, source }) =
 				...fixtureEvidenceFor(testPath, content, name)
 			]),
 			VisuallyVerified: visualTests.flatMap(([testPath, content]) => [
-				evidence(testPath, `${name} explicit visual contract assertions`),
+				...ownedVisualBlocks(testPath, content, name).map((block) =>
+					evidence(
+						testPath,
+						`${name} authored visual contract: ${block.name} (line ${block.line}); requires browser execution and page-level review`
+					)
+				),
 				...fixtureEvidenceFor(testPath, content, name)
 			]),
 			DesktopVerified: [],
@@ -476,6 +551,8 @@ const output = {
 		testFiles: testFiles.length
 	},
 	stageNames,
+	evidenceScope:
+		'Static inventory of authored test contracts, not test execution results or whole-component visual acceptance. Stage names are retained for compatibility; consult commit-matched CI and page-level review separately.',
 	summary,
 	components: rows
 };
@@ -486,7 +563,7 @@ const lines = [
 	'',
 	`Generated from ${rows.length} metadata components, ${output.source.documentationPages} documentation modules, ${contract.components.length} API contract entries, and ${testFiles.length} test files.`,
 	'',
-	'Generation is evidence-based. `BrowserBehaviorVerified` requires an executed browser render with component-owned assertions. `VisuallyVerified` additionally requires an explicit `@zui-visual ZComponent` ownership marker and a geometry, computed-style, CSS, or screenshot assertion; generic browser assertions never count as visual evidence. `DesktopVerified` remains false until a component-level desktop evidence source is added.',
+	'This is a static inventory of authored test contracts, not an execution report or a whole-component visual acceptance result. Historical stage names are retained for compatibility. `VisuallyVerified` requires an explicit `@zui-visual ZComponent` marker, an owned component/fixture render, and a geometry, computed-style, CSS, or screenshot assertion in the SAME test block. A positive entry only identifies a scoped test; confirm its result against commit-matched CI and inspect real pages, themes, and densities separately. `DesktopVerified` remains false until a component-level desktop evidence source is added.',
 	'',
 	'| Stage | Count |',
 	'|---|---:|',
