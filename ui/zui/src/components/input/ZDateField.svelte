@@ -174,7 +174,7 @@
 				type: "'small' | 'medium' | 'large'"
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [],
 		source: 'ui/zui/src/components/input/ZDateField.svelte',
 		states: [{ description: '存在不完整或非法segment。', name: 'data-invalid', values: ['true'] }],

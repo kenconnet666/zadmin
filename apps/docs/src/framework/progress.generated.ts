@@ -3,7 +3,7 @@ export const zuiProgress = {
 	schemaVersion: 1,
 	package: {
 		name: '@zadmin/zui',
-		version: '0.1.0'
+		version: '0.2.0'
 	},
 	api: {
 		components: 141,
@@ -47,9 +47,10 @@ export const zuiProgress = {
 	},
 	release: {
 		status: 'blocked',
-		passedChecks: 26,
+		passedChecks: 25,
 		totalChecks: 31,
 		blocked: [
+			'changesetTargetsKnown',
 			'releasePublishTarballReuse',
 			'npmOidcProvenance',
 			'automatedTagAndGithubRelease',
@@ -80,7 +81,7 @@ export const zuiProgress = {
 		},
 		{
 			id: 'release-boundary',
-			remaining: 5,
+			remaining: 6,
 			description: '完成真实publish/OIDC/tag/registry smoke与版本化Docs部署边界。'
 		}
 	]

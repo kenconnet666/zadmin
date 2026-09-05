@@ -133,7 +133,7 @@
 				type: 'string'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [
 			{
 				description: 'slide内容。',

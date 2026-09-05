@@ -25,7 +25,7 @@
 				type: 'HTMLDivElement | null'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [{ description: '分组标签。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/menu/ZMenuLabel.svelte',
 		states: [],

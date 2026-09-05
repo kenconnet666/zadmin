@@ -77,7 +77,7 @@
 				type: 'TagTone'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [{ description: 'Tag内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/data-display/ZTag.svelte',
 		states: [

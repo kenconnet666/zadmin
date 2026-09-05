@@ -130,7 +130,7 @@
 				type: 'boolean'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [
 			{ description: '格式化值前内容。', name: 'prefix', type: 'Snippet' },
 			{ description: '格式化值后内容。', name: 'suffix', type: 'Snippet' }

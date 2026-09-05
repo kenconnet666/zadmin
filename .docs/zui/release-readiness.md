@@ -13,7 +13,6 @@
 - `releasePrCiDispatchBound`
 - `releasePrCiCompletionBound`
 - `changesetsConfigured`
-- `changesetTargetsKnown`
 - `packageCheckPresent`
 - `externalAcceptancePresent`
 - `ciRunsPackageAcceptance`
@@ -34,6 +33,7 @@
 
 ## Blocked facts
 
+- `changesetTargetsKnown`
 - `releasePublishTarballReuse`
 - `npmOidcProvenance`
 - `automatedTagAndGithubRelease`
@@ -44,19 +44,19 @@
 
 | Package           | Version | Changeset target | Package check | External acceptance |
 | ----------------- | ------- | ---------------- | ------------- | ------------------- |
-| @zadmin/approval  | 0.0.0   | no               | no            | no                  |
-| @zadmin/auth      | 0.0.0   | no               | no            | no                  |
+| @zadmin/approval  | 0.0.1   | no               | no            | no                  |
+| @zadmin/auth      | 0.0.1   | no               | no            | no                  |
 | @zadmin/core      | 0.0.0   | no               | no            | no                  |
-| @zadmin/crm       | 0.0.0   | no               | no            | no                  |
+| @zadmin/crm       | 0.0.1   | no               | no            | no                  |
 | @zadmin/drizzle   | 0.0.0   | no               | no            | no                  |
-| @zadmin/erp       | 0.0.0   | no               | no            | no                  |
-| @zadmin/miniapp   | 0.1.0   | yes              | no            | yes                 |
+| @zadmin/erp       | 0.0.1   | no               | no            | no                  |
+| @zadmin/miniapp   | 0.1.1   | no               | no            | yes                 |
 | @zadmin/oss       | 0.0.0   | no               | no            | no                  |
 | @zadmin/postgres  | 0.0.0   | no               | no            | no                  |
 | @zadmin/redis     | 0.0.0   | no               | no            | no                  |
-| @zadmin/sveltekit | 0.0.0   | no               | no            | yes                 |
-| @zadmin/webview   | 0.1.0   | yes              | no            | yes                 |
-| @zadmin/zui       | 0.1.0   | yes              | yes           | yes (via SvelteKit) |
+| @zadmin/sveltekit | 0.0.1   | no               | no            | yes                 |
+| @zadmin/webview   | 0.1.1   | no               | no            | yes                 |
+| @zadmin/zui       | 0.2.0   | no               | yes           | yes (via SvelteKit) |
 
 ## Release boundary
 

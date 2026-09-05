@@ -68,7 +68,7 @@
 				type: 'HTMLDivElement | null'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [{ description: '嵌套Menu部件。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/menu/ZMenuSubContent.svelte',
 		states: [

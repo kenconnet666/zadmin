@@ -56,7 +56,7 @@
 				type: 'HTMLHRElement | HTMLDivElement | null'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [],
 		source: 'ui/zui/src/components/gene/ZSeparator.svelte',
 		states: [

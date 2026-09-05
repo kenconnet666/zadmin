@@ -349,7 +349,7 @@
 				type: 'HTMLInputElement | null'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [
 			{
 				description: '按当前checked状态渲染的thumb装饰内容。',

@@ -269,7 +269,7 @@
 				type: 'boolean'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [
 			{
 				description: '类型安全节点正文；层级、选择、加载和ARIA仍由Tree拥有。',

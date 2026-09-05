@@ -34,7 +34,7 @@
 				type: 'HTMLDivElement | null'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [{ description: '可右键或键盘打开的目标内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/context-menu/ZContextMenuTrigger.svelte',
 		states: [{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] }],

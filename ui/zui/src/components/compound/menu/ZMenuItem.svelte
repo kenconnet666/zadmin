@@ -123,7 +123,7 @@
 				type: 'HTMLElement | null'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [
 			{ description: 'Item可见标签。', name: 'children', type: 'Snippet' },
 			{ description: '固定宽度的逻辑起点图标或选择指示器。', name: 'leading', type: 'Snippet' },

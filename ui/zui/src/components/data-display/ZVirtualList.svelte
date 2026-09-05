@@ -215,7 +215,7 @@
 				type: 'boolean'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [
 			{
 				description: '可见项正文，同时获得key、测量状态与布局信息。',

@@ -72,7 +72,7 @@
 				type: 'boolean'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [
 			{ description: 'Card正文。', name: 'children', type: 'Snippet' },
 			{ description: '无内边距媒体内容。', name: 'media', type: 'Snippet' },

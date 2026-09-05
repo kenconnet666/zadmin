@@ -1,6 +1,6 @@
 {
 	"name": "@zadmin/webview",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Typed Svelte and C# host framework for secure multi-target desktop WebViews.",
 	"type": "module",
 	"sideEffects": [

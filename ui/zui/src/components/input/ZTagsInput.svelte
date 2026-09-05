@@ -241,7 +241,7 @@
 				type: 'boolean'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [
 			{
 				description: '自定义标签可见正文，参数为value；ZTag和操作语义仍由组件拥有。',

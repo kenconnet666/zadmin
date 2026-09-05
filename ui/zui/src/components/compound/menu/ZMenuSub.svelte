@@ -48,7 +48,7 @@
 			},
 			{ default: '2', description: '父Item与submenu间距px。', name: 'gutter', type: 'number' }
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [{ description: 'SubTrigger与SubContent。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/menu/ZMenuSub.svelte',
 		states: [],

@@ -108,7 +108,7 @@
 				type: 'HTMLDListElement | null'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [
 			{
 				description: '手写模式的dt/dd或div分组；不得与items同时提供。',

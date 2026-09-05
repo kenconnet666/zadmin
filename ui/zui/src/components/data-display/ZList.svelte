@@ -131,7 +131,7 @@
 				type: 'HTMLOListElement | HTMLUListElement | null'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [
 			{
 				description: '手写模式的真实li集合；不得与items同时提供。',

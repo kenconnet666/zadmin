@@ -166,7 +166,7 @@
 				type: 'HTMLDivElement | null'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [{ description: 'Item组合；支持嵌套Accordion。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/accordion/ZAccordion.svelte',
 		states: [

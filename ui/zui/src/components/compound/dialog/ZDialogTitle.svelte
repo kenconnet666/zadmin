@@ -41,7 +41,7 @@
 				type: 'HTMLHeadingElement | null'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [{ description: 'Dialog标题。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/dialog/ZDialogTitle.svelte',
 		states: [],

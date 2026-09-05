@@ -37,7 +37,7 @@
 				type: 'boolean'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [{ description: '父Item标签。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/menu/ZMenuSubTrigger.svelte',
 		states: [{ description: 'submenu状态。', name: 'data-state', values: ['open', 'closed'] }],

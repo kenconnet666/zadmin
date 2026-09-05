@@ -40,7 +40,7 @@
 				type: 'number'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [
 			{ description: '共享warmup/cooldown的Tooltip集合。', name: 'children', type: 'Snippet' }
 		],

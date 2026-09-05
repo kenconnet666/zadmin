@@ -229,7 +229,7 @@
 				type: "'small' | 'medium' | 'large'"
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [],
 		source: 'ui/zui/src/components/input/ZColorPicker.svelte',
 		states: [

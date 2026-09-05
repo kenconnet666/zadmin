@@ -181,7 +181,7 @@
 				type: 'PopoverPlacement'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [
 			{
 				description: '自定义建议可见正文；option角色、ID、active和键盘仍由Mention拥有。',

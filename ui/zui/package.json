@@ -1,6 +1,6 @@
 {
 	"name": "@zadmin/zui",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "Production Svelte 5 component system with typed ICSS, themes, accessible state, forms, overlays, and virtualized data surfaces.",
 	"author": "kenconnet666 <kenconnet@foxmail.com>",
 	"type": "module",

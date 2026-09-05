@@ -91,7 +91,7 @@
 				type: 'HTMLButtonElement | null'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [
 			{ description: '按钮主体内容。', name: 'children', type: 'Snippet' },
 			{ description: '主体内容之前的图标或内容。', name: 'start', type: 'Snippet' },

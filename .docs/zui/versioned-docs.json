@@ -1,6 +1,6 @@
 {
 	"schemaVersion": 1,
-	"package": { "name": "@zadmin/zui", "version": "0.1.0" },
+	"package": { "name": "@zadmin/zui", "version": "0.2.0" },
 	"revision": "SOURCE_REVISION",
 	"routeManifest": { "componentCount": 79, "guideCount": 9, "totalCount": 89 },
 	"build": { "bundleSha256": "BUILD_SHA256", "fileCount": "BUILD_FILE_COUNT", "files": [] },

@@ -73,7 +73,7 @@
 				type: 'HTMLDivElement | null'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [{ description: '纯文本或非交互说明内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/tooltip/ZTooltipContent.svelte',
 		states: [

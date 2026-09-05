@@ -280,7 +280,7 @@
 				]
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [{ description: '表单字段与操作。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/input/ZForm.svelte',
 		states: [

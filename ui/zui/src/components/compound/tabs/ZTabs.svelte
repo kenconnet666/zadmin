@@ -141,7 +141,7 @@
 				type: 'HTMLDivElement | null'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [
 			{ description: 'List、typed Trigger与Panel组合。', name: 'children', type: 'Snippet' }
 		],

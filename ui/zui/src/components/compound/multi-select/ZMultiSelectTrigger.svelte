@@ -44,7 +44,7 @@
 				type: 'HTMLButtonElement | null'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [
 			{
 				description: '完全替换内置tag、overflow与clear外观；键盘移除合同仍保留。',

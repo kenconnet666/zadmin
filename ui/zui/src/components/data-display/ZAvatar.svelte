@@ -127,7 +127,7 @@
 				type: "'circle' | 'rounded' | 'square'"
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [{ description: '自定义fallback。', name: 'fallback', type: 'Snippet' }],
 		source: 'ui/zui/src/components/data-display/ZAvatar.svelte',
 		states: [

@@ -30,7 +30,7 @@
 				type: 'HTMLSpanElement | null'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [{ description: '仅辅助技术可读的内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/gene/ZVisuallyHidden.svelte',
 		states: [],

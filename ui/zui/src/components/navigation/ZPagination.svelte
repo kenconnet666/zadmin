@@ -237,7 +237,7 @@
 				type: 'HTMLElement | null'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [],
 		source: 'ui/zui/src/components/navigation/ZPagination.svelte',
 		states: [

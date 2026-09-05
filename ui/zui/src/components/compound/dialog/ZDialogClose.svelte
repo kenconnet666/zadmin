@@ -29,7 +29,7 @@
 				type: 'HTMLButtonElement | null'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [{ description: 'Close内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/dialog/ZDialogClose.svelte',
 		states: [],

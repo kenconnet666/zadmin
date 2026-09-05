@@ -157,7 +157,7 @@
 			{ default: 'true', description: '方向键是否循环。', name: 'loop', type: 'boolean' },
 			{ default: 'false', description: '禁用查询和动作。', name: 'disabled', type: 'boolean' }
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [],
 		source: 'ui/zui/src/components/navigation/ZCommand.svelte',
 		states: [

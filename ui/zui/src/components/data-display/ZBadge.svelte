@@ -115,7 +115,7 @@
 				type: 'BadgeTone'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [
 			{
 				description: '可选anchor内容；缺省时Badge作为standalone计数。',

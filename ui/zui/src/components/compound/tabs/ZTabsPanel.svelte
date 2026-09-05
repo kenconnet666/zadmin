@@ -59,7 +59,7 @@
 				type: 'HTMLDivElement | null'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [{ description: 'Panel内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/tabs/ZTabsPanel.svelte',
 		states: [{ description: '激活状态。', name: 'data-state', values: ['active', 'inactive'] }],

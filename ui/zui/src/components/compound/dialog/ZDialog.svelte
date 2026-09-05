@@ -50,7 +50,7 @@
 				type: 'boolean'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [{ description: 'Dialog复合部件。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/dialog/ZDialog.svelte',
 		states: [],
