@@ -4,7 +4,7 @@
 		"metadataComponents": 141,
 		"documentationPages": 79,
 		"contractComponents": 141,
-		"testFiles": 173
+		"testFiles": 177
 	},
 	"stageNames": [
 		"Declared",
@@ -7265,7 +7265,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "eab7392bb5780a44c0d02e3836c498eb5017abe1ad5f44b817378de28ba82b10 API snapshot entry"
+						"detail": "bbb0dae5a451685a031f44c9d9e0279fa58b335df7b70d50b79b214b85732304 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -7320,6 +7320,10 @@
 			},
 			"ssrEvidence": [
 				{
+					"path": "ui/zui/tests/avatar.spec.ts",
+					"detail": "ZAvatar SSR assertions"
+				},
+				{
 					"path": "ui/zui/tests/avatar-production-ssr.spec.ts",
 					"detail": "ZAvatar SSR assertions"
 				},
@@ -7366,7 +7370,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "447a3a66372e83d0a2356cf3f9ecb2f82478cdd4989eaee69379b129cd4aaeb8 API snapshot entry"
+						"detail": "6a31561cf6aa2fa7498eda5303b8324e5b1ff1566c1c88154776effd14c76396 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -9716,7 +9720,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "b674e80d1b4b04eb801922b5126136a0c75e3eb534200120084c0b132b8e4759 API snapshot entry"
+						"detail": "d767a2e592d8e07225b1223adc790c04a6c4a9c42d4adfcd7375038e80da6e81 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -9733,6 +9737,10 @@
 					{
 						"path": "ui/zui/tests/CodeProductionFixture.svelte",
 						"detail": "ZCode explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/code-wrapping.browser.spec.ts",
+						"detail": "ZCode browser behavior assertions"
 					},
 					{
 						"path": "ui/zui/tests/components.browser.spec.ts",
@@ -9895,6 +9903,10 @@
 				"detail": "catalog component documentation module"
 			},
 			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/gene-primitives-targeted.spec.ts",
+					"detail": "ZHeading SSR assertions"
+				},
 				{
 					"path": "ui/zui/tests/typography.spec.ts",
 					"detail": "ZHeading SSR assertions"
@@ -10074,6 +10086,10 @@
 					"detail": "ZKbd SSR assertions"
 				},
 				{
+					"path": "ui/zui/tests/gene-primitives-targeted.spec.ts",
+					"detail": "ZKbd SSR assertions"
+				},
+				{
 					"path": "ui/zui/tests/foundation-primitives-ssr.spec.ts",
 					"detail": "ZKbd SSR assertions"
 				}
@@ -10196,6 +10212,10 @@
 			"ssrEvidence": [
 				{
 					"path": "ui/zui/tests/components.spec.ts",
+					"detail": "ZLink SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/gene-primitives-targeted.spec.ts",
 					"detail": "ZLink SSR assertions"
 				},
 				{
@@ -10499,6 +10519,10 @@
 			"ssrEvidence": [
 				{
 					"path": "ui/zui/tests/components.spec.ts",
+					"detail": "ZText SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/gene-primitives-targeted.spec.ts",
 					"detail": "ZText SSR assertions"
 				},
 				{
@@ -11857,7 +11881,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "8758e347b2f91eba8eac20bd3df074933708b14156c5704a243953fd7bf208de API snapshot entry"
+						"detail": "37b927013d46a1dc085048e6e66a1a4d159f4968bdfd8395fb2ce1cefd6550a3 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -11873,6 +11897,14 @@
 					},
 					{
 						"path": "ui/zui/tests/FieldSizeFixture.svelte",
+						"detail": "ZInput explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/input-foundation-production.browser.spec.ts",
+						"detail": "ZInput browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/InputFoundationProductionFixture.svelte",
 						"detail": "ZInput explicit rendered fixture usage"
 					}
 				],
@@ -11894,6 +11926,14 @@
 					},
 					{
 						"path": "ui/zui/tests/FieldSizeFixture.svelte",
+						"detail": "ZInput explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/input-foundation-production.browser.spec.ts",
+						"detail": "ZInput production assertions"
+					},
+					{
+						"path": "ui/zui/tests/InputFoundationProductionFixture.svelte",
 						"detail": "ZInput explicit rendered fixture usage"
 					}
 				]
@@ -11954,7 +11994,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "ae80e8113ea00857a712981d93b727579a1b3a57bf860c81f6ca746f22fbbaa0 API snapshot entry"
+						"detail": "1f92a8878f266fe41dfb0163864eb9c521864b642c0017de78776f665e39528c API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -11964,6 +12004,14 @@
 					}
 				],
 				"BrowserBehaviorVerified": [
+					{
+						"path": "ui/zui/tests/input-foundation-production.browser.spec.ts",
+						"detail": "ZInputGroup browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/InputFoundationProductionFixture.svelte",
+						"detail": "ZInputGroup explicit rendered fixture usage"
+					},
 					{
 						"path": "ui/zui/tests/pin-input-group-production.browser.spec.ts",
 						"detail": "ZInputGroup browser behavior assertions"
@@ -11993,6 +12041,14 @@
 				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/input-foundation-production.browser.spec.ts",
+						"detail": "ZInputGroup production assertions"
+					},
+					{
+						"path": "ui/zui/tests/InputFoundationProductionFixture.svelte",
+						"detail": "ZInputGroup explicit rendered fixture usage"
+					},
 					{
 						"path": "ui/zui/tests/pin-input-group-production.browser.spec.ts",
 						"detail": "ZInputGroup production assertions"
@@ -12738,7 +12794,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "7d4ab6d154f90ab769158b0002537c3ce3942979325fb4442af786cfa8050f46 API snapshot entry"
+						"detail": "b425d6f8eb9adeec54b3e9f8e4976868ab43d0832693c386d22434cb16ab6c99 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -12762,6 +12818,14 @@
 					},
 					{
 						"path": "ui/zui/tests/FieldSizeFixture.svelte",
+						"detail": "ZTextarea explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/input-foundation-production.browser.spec.ts",
+						"detail": "ZTextarea browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/InputFoundationProductionFixture.svelte",
 						"detail": "ZTextarea explicit rendered fixture usage"
 					}
 				],
@@ -12791,6 +12855,14 @@
 					},
 					{
 						"path": "ui/zui/tests/FieldSizeFixture.svelte",
+						"detail": "ZTextarea explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/input-foundation-production.browser.spec.ts",
+						"detail": "ZTextarea production assertions"
+					},
+					{
+						"path": "ui/zui/tests/InputFoundationProductionFixture.svelte",
 						"detail": "ZTextarea explicit rendered fixture usage"
 					}
 				]

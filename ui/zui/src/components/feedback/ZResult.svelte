@@ -99,7 +99,7 @@
 			s.color._textMuted;
 			s.lineHeight._normal;
 			s.maxWidth.rem(48);
-			s.overflowWrap.raw('anywhere');
+			s.overflowWrap.anywhere;
 			s.width.percent(100);
 		},
 		variants: {

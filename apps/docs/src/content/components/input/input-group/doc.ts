@@ -36,6 +36,10 @@ export const inputGroupDoc = defineComponentDoc(inputGroupMetadata, {
 				description: '逻辑起始非交互affix；pointer激活聚焦真实control。'
 			},
 			ref: { default: 'null', description: '真实focus-within组合边界引用。' },
+			size: {
+				default: 'Field，其次 componentDefaults.input，最后 Provider density',
+				description: '组合边界、affix与唯一control使用同一尺寸；control显式size仍优先。'
+			},
 			suffix: {
 				default: '—',
 				description: '逻辑结束非交互affix；action必须进入单独action Snippet。'
@@ -102,6 +106,7 @@ export const inputGroupDoc = defineComponentDoc(inputGroupMetadata, {
 		'Field label点击调用Group注册的focus owner并聚焦真实input/textarea；id、name、description、disabled、invalid、readonly、required与size均投射给该control。',
 		'prefix/suffix只承载非交互文本、单位或装饰Lucide；Button/Link必须进入prefixAction/suffixAction，并继续拥有自己的disabled与名称。',
 		'逻辑CSS让prefix/suffix在RTL自动镜像；40% affix上限、min-width:0和ellipsis避免窄容器挤出业务control。',
+		'Provider的componentDefaults.input.size会统一作用于未声明尺寸的Group、affix与其直接文本control。',
 		'参考MUI InputAdornment和TextField的start/end adornment、FormControl继承，但ZUI不复制slotProps/sx，也不允许一个Group拥有多个业务value。'
 	],
 	keywords: [

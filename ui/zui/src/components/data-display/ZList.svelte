@@ -188,7 +188,7 @@
 	const contentRecipe = defineRecipe({
 		base: (s) => {
 			s.minWidth.px(0);
-			s.overflowWrap.raw('anywhere');
+			s.overflowWrap.anywhere;
 		},
 		variants: {},
 		defaultVariants: {}

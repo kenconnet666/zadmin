@@ -53,7 +53,10 @@ export const codeDoc = defineComponentDoc(codeMetadata, {
 				default: 'GitHub high contrast light/dark',
 				description: '只接受已加载且通过Docs Axe对比度门禁的高对比主题。'
 			},
-			wrap: { default: 'false', description: '允许长代码换行；默认保留横向滚动。' }
+			wrap: {
+				default: 'false',
+				description: '允许长代码和无空格长 token 换行；保留源码空格和显式换行，默认保留横向滚动。'
+			}
 		},
 		summary:
 			'SSR先输出纯文本，客户端generation-safe按需加载Shiki高对比tokens，并可组合安全、可本地化的复制操作。'

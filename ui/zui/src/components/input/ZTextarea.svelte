@@ -80,8 +80,10 @@
 				type: "'both' | 'horizontal' | 'none' | 'vertical'"
 			},
 			{
-				default: "Provider density（默认把 'comfortable' 映射为 'medium'）",
-				description: '最小高度、字号和padding尺寸；显式值优先于Provider density。',
+				default:
+					"Field/InputGroup，其次componentDefaults.input.size，最后Provider density（'comfortable'映射为'medium'）",
+				description:
+					'最小高度、字号和padding尺寸；显式值、上下文与组件默认优先于Provider density。',
 				name: 'size',
 				type: "'small' | 'medium' | 'large'"
 			},
@@ -241,6 +243,7 @@
 		...rest
 	}: ZTextareaProps = $props();
 	const zui = useZui();
+	const componentDefaults = $derived(zui.componentDefaults.input);
 	const reducedMotion = new ReducedMotionState(() => zui.motion);
 	const uid = $props.id();
 	const field = useZField();
@@ -250,7 +253,10 @@
 	const resolvedReadonly = $derived(readonly || inputGroup?.readonly || field?.readonly || false);
 	const resolvedRequired = $derived(required || inputGroup?.required || field?.required || false);
 	const resolvedSize = $derived(
-		resolveControlSize(size ?? inputGroup?.size ?? field?.size, zui.density)
+		resolveControlSize(
+			size ?? inputGroup?.size ?? field?.size ?? componentDefaults?.size,
+			zui.density
+		)
 	);
 	const autosizeEnabled = $derived(autosize === true || typeof autosize === 'object');
 	const reduced = $derived(reducedMotion.current);

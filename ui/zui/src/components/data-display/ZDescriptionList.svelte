@@ -177,7 +177,7 @@
 		base: (s) => {
 			s.color._textMuted;
 			s.fontSize._small;
-			s.overflowWrap.raw('anywhere');
+			s.overflowWrap.anywhere;
 		},
 		variants: {},
 		defaultVariants: {}
@@ -186,7 +186,7 @@
 		base: (s) => {
 			s.marginInlineStart.px(0);
 			s.minWidth.px(0);
-			s.overflowWrap.raw('anywhere');
+			s.overflowWrap.anywhere;
 		},
 		variants: {},
 		defaultVariants: {}

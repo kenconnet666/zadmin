@@ -774,7 +774,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/data-display/avatar/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrEvidenceCount": 3
 		},
 		{
 			"id": "badge",
@@ -1024,7 +1024,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/gene/heading/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrEvidenceCount": 2
 		},
 		{
 			"id": "icon",
@@ -1044,7 +1044,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/gene/kbd/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrEvidenceCount": 3
 		},
 		{
 			"id": "link",
@@ -1054,7 +1054,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/gene/link/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrEvidenceCount": 3
 		},
 		{
 			"id": "provider",
@@ -1084,7 +1084,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/gene/text/doc.ts",
-			"ssrEvidenceCount": 4
+			"ssrEvidenceCount": 5
 		},
 		{
 			"id": "toggle-button",

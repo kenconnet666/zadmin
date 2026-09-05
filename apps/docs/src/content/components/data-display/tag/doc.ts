@@ -54,8 +54,8 @@ export const tagDoc = defineComponentDoc(tagMetadata, {
 	demos: [
 		{
 			component: FormDemo,
-			covers: ['accessible-name', 'controlled', 'keyboard'],
-			description: '可移除Tag把状态所有权留给调用方并提供具名按钮。',
+			covers: ['accessible-name', 'controlled', 'keyboard', 'variants-and-states'],
+			description: '可移除Tag把状态所有权留给调用方，并可操作切换有限size/tone与可见性。',
 			id: 'tag-remove',
 			source,
 			title: '可移除Tag'

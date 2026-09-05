@@ -4,8 +4,9 @@
 
 <ZStack direction="row" gap="large" align="center"
 	><ZAvatar alt="林墨" fallbackText="林" size="large" /><ZAvatar
-		alt="部署机器人"
-		fallbackText="机"
-		shape="rounded"
-	/><ZText tone="muted">图片缺失时保持名称与稳定尺寸。</ZText></ZStack
+		alt="👩‍💻 研发工程师"
+		size="large"
+	/><ZAvatar alt="部署机器人" fallbackText="机" shape="rounded" /><ZText tone="muted"
+		>图片缺失时保持名称与稳定尺寸；emoji fallback按完整grapheme显示。</ZText
+	></ZStack
 >

@@ -109,8 +109,9 @@
 				type: 'boolean'
 			},
 			{
-				default: 'Field > Provider density',
-				description: '显式Group size供control继承；control显式size仍优先。',
+				default: 'Field > componentDefaults.input > Provider density',
+				description:
+					'显式Group size供control继承；control显式size仍优先，组件默认用于未声明Group size。',
 				name: 'size',
 				type: "'small' | 'medium' | 'large'"
 			}
@@ -170,7 +171,17 @@
 			});
 		},
 		variants: {
-			disabled: { false: () => undefined, true: (s) => s.opacity._disabled },
+			disabled: {
+				false: () => undefined,
+				true: (s) => {
+					s.opacity._disabled;
+					// The group owns disabled opacity; do not multiply it on the control.
+					s._selector(
+						'& > input:disabled, & > textarea:disabled',
+						(control) => control.opacity._opaque
+					);
+				}
+			},
 			invalid: {
 				false: (s) => s.borderColor._border,
 				true: (s) => s.borderColor._danger
@@ -278,7 +289,9 @@
 	const resolvedInvalid = $derived(invalid ?? field?.invalid ?? false);
 	const resolvedReadonly = $derived(readonly || field?.readonly || false);
 	const resolvedRequired = $derived(required || field?.required || false);
-	const resolvedSize = $derived(resolveControlSize(size ?? field?.size, zui.density));
+	const resolvedSize = $derived(
+		resolveControlSize(size ?? field?.size ?? zui.componentDefaults.input?.size, zui.density)
+	);
 	const resolvedDescribedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
 	const resolvedLabelledBy = $derived(mergeAriaIds(ariaLabelledBy, field?.labelId));
 	let controlOwner: ZInputGroupControl | undefined;

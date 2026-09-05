@@ -26,8 +26,8 @@ export const avatarDoc = defineComponentDoc(avatarMetadata, {
 			decoding: { default: '浏览器默认auto', description: '原生图片解码提示。' },
 			draggable: { default: '浏览器默认', description: '控制真实img的原生拖拽行为。' },
 			fallbackText: {
-				default: 'alt首个Unicode字符或“?”',
-				description: '没有fallback Snippet时使用的稳定文本占位。'
+				default: 'alt首个Unicode grapheme或“?”',
+				description: '没有fallback Snippet时使用的稳定文本占位；组合字符和emoji不会被拆开。'
 			},
 			imageRef: {
 				default: 'null',
@@ -105,6 +105,7 @@ export const avatarDoc = defineComponentDoc(avatarMetadata, {
 	],
 	accessibility: [
 		'img使用alt；fallback使用role=img与同一名称。',
+		'没有显式fallbackText时取alt的首个Unicode grapheme；Intl.Segmenter不可用时才降级为首个code point。',
 		'alt=""时真实img与fallback均退出可访问树，不制造空名称role=img。',
 		'图片失败时img保持同一尝试引用但从视觉和可访问树隐藏，fallback不会导致根尺寸跳动。',
 		'src/srcset相关属性变化会创建新的keyed图片尝试；load/error只接受当前imageRef，旧资源迟到事件被忽略。',

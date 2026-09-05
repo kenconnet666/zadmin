@@ -22,7 +22,7 @@ export const providerDoc = defineComponentDoc(providerMetadata, {
 			componentDefaults: {
 				default: '继承父级或空值',
 				description:
-					'当前仅允许button/input/tag/card/dataTable/pagination白名单非受控props；显式组件prop和最近Field/InputGroup上下文优先。整个轴或单个组件设为null可停止继承，值/page/选择、回调、DOM与CSS会被拒绝。'
+					'当前仅允许button/input/tag/card/dataTable/pagination六个配置分组；input.size覆盖Input、InputGroup和Textarea。显式组件prop和最近Field/InputGroup上下文优先。整个轴或单个分组设为null可停止继承，值/page/选择、回调、DOM与CSS会被拒绝。'
 			},
 			colorScheme: {
 				default: "继承父级或 'light'",

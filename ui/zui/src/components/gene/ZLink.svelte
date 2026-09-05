@@ -131,7 +131,7 @@
 			s.display.inlineFlex;
 			s.gap._xsmall;
 			s.maxWidth.percent(100);
-			s.overflowWrap.raw('anywhere');
+			s.overflowWrap.anywhere;
 			s._focusVisible((focus) => {
 				focus.outlineColor._focus;
 				focus.outlineOffset._outer;

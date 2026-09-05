@@ -108,7 +108,12 @@
 				name: 'draggable',
 				type: 'boolean'
 			},
-			{ default: 'alt首字符', description: '文本fallback。', name: 'fallbackText', type: 'string' },
+			{
+				default: 'alt首个Unicode grapheme或“?”',
+				description: '文本fallback；组合字符和emoji不会被拆开。',
+				name: 'fallbackText',
+				type: 'string'
+			},
 			{
 				default: "'medium'",
 				description: '视觉尺寸。',
@@ -127,7 +132,17 @@
 		source: 'ui/zui/src/components/data-display/ZAvatar.svelte',
 		states: [
 			{ description: '图片加载失败或缺失。', name: 'data-fallback', values: ['true'] },
-			{ description: '当前视觉来源。', name: 'data-state', values: ['image', 'fallback'] }
+			{ description: '当前视觉来源。', name: 'data-state', values: ['image', 'fallback'] },
+			{
+				description: '解析后的视觉尺寸。',
+				name: 'data-size',
+				values: ['small', 'medium', 'large']
+			},
+			{
+				description: '解析后的占位形状。',
+				name: 'data-shape',
+				values: ['circle', 'rounded', 'square']
+			}
 		],
 		status: 'stable',
 		summary: '原生响应式img属性、图片引用和事件、竞态隔离、稳定尺寸与可访问fallback组成的Avatar。'
@@ -214,6 +229,28 @@
 		...rest
 	}: ZAvatarProps = $props();
 	const zui = useZui();
+	const resolvedAlt = $derived.by(() => {
+		if (typeof alt !== 'string') throw new TypeError('ZAvatar alt must be a string.');
+		return alt;
+	});
+	const resolvedShape = $derived.by(() => {
+		if (!['circle', 'rounded', 'square'].includes(shape)) {
+			throw new TypeError('ZAvatar shape must be circle, rounded or square.');
+		}
+		return shape;
+	});
+	const resolvedSize = $derived.by(() => {
+		if (!['large', 'medium', 'small'].includes(size)) {
+			throw new TypeError('ZAvatar size must be small, medium or large.');
+		}
+		return size;
+	});
+	const resolvedFallbackText = $derived.by(() => {
+		if (fallbackText !== undefined && typeof fallbackText !== 'string') {
+			throw new TypeError('ZAvatar fallbackText must be a string.');
+		}
+		return fallbackText;
+	});
 	let failedImage = $state<HTMLImageElement | null>(null);
 	const hasImageSource = $derived(Boolean(src || srcset));
 	const showFallback = $derived(
@@ -228,7 +265,7 @@
 			referrerpolicy ?? null
 		])
 	);
-	const rootClass = $derived(zui.recipe(rootRecipe, { shape, size }));
+	const rootClass = $derived(zui.recipe(rootRecipe, { shape: resolvedShape, size: resolvedSize }));
 	const imageClass = $derived(zui.recipe(imageRecipe));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
@@ -255,6 +292,14 @@
 		failedImage = imageEvent.currentTarget;
 		onImageError?.(imageEvent);
 	}
+
+	function firstGrapheme(source: string): string {
+		const ownerIntl = ref?.ownerDocument.defaultView?.Intl ?? Intl;
+		if (typeof ownerIntl.Segmenter !== 'function') return Array.from(source)[0] ?? '?';
+		const segmenter = new ownerIntl.Segmenter(undefined, { granularity: 'grapheme' });
+		for (const { segment } of segmenter.segment(source)) return segment;
+		return '?';
+	}
 </script>
 
 <span
@@ -264,16 +309,19 @@
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
 	data-fallback={showFallback || undefined}
+	data-shape={resolvedShape}
+	data-size={resolvedSize}
 	data-state={showFallback ? 'fallback' : 'image'}
 >
 	<span
 		data-slot="fallback"
-		role={alt ? 'img' : undefined}
-		aria-label={alt || undefined}
-		aria-hidden={!alt || undefined}
+		role={resolvedAlt ? 'img' : undefined}
+		aria-label={resolvedAlt || undefined}
+		aria-hidden={!resolvedAlt || undefined}
 		hidden={!showFallback}
 	>
-		{#if fallback}{@render fallback()}{:else}{fallbackText ?? Array.from(alt)[0] ?? '?'}{/if}
+		{#if fallback}{@render fallback()}{:else}{resolvedFallbackText ??
+				firstGrapheme(resolvedAlt)}{/if}
 	</span>
 	{#if hasImageSource}
 		{#key imageIdentity}<img
@@ -283,7 +331,7 @@
 				{src}
 				{srcset}
 				{sizes}
-				{alt}
+				alt={resolvedAlt}
 				{loading}
 				{decoding}
 				{crossorigin}

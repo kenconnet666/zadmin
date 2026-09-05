@@ -242,7 +242,7 @@
 				<ZCard data-slot="semantic-color" variant="outlined">
 					<div class={classes.swatch} style={`background:${value}`}></div>
 					<ZText as="strong" class={classes.tokenName}>{name}</ZText>
-					<ZCode class={classes.tokenValue} code={String(value)} inline />
+					<ZCode class={classes.tokenValue} code={String(value)} inline wrap />
 				</ZCard>
 			{/each}
 		</div>
@@ -297,7 +297,7 @@
 					<ZCard {elevation} data-slot="elevation-preview">
 						<ZStack gap="medium">
 							<ZText weight="semibold">{elevation}</ZText>
-							<ZCode code={String(zui.theme.shadow[elevation])} inline />
+							<ZCode code={String(zui.theme.shadow[elevation])} inline wrap />
 						</ZStack>
 					</ZCard>
 				{/each}

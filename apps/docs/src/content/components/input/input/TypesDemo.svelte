@@ -12,5 +12,6 @@
 		size="large"
 		type="password"
 	/>
+	<ZInput aria-label="只读版本" autocomplete="off" readonly value="release-2026-09" />
 	<ZInput aria-label="禁用输入" disabled value="不可编辑" />
 </ZStack>

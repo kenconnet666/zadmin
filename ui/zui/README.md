@@ -60,6 +60,8 @@ uses the theme color. Zeroes, percentages and runtime geometry remain explicit v
 
 `componentDefaults` is intentionally a small behavior-only whitelist. In the current
 release it accepts only `button`, `input`, `tag`, `card`, `dataTable`, and `pagination`.
+The `input.size` group applies to `ZInput`, `ZInputGroup`, and `ZTextarea` so single-line,
+composed and multiline text controls share the same application default.
 Explicit component props always win; nearest Field/InputGroup context remains more local than
 a Provider default, followed by Provider density and the component's local fallback. Controlled
 values (`open`, `value`, `page`, selection/sort state), callbacks, DOM references, `class`/`style`,
@@ -150,7 +152,9 @@ pnpm --filter @zadmin/zui metadata:since:normalize
 pnpm --filter @zadmin/docs api:source:check
 ```
 
-The normalize command only converts versions newer than the current `@zadmin/zui` package version to `unreleased`. After Changesets has updated the package to the target release version, the release PR materializes pending entries explicitly:
+The normalize command only converts versions newer than the current `@zadmin/zui` package version to `unreleased`. The release PR runs `pnpm release:version`: it updates package versions, materializes pending ZUI metadata when that package version changes, and regenerates the API, support and versioned Docs contracts in the same commit. Any failed stage aborts preparation; this command does not publish packages.
+
+For a manual metadata-only operation after the package version has already been updated:
 
 ```sh
 pnpm --filter @zadmin/zui metadata:since:materialize -- 0.2.0

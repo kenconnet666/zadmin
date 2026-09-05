@@ -80,6 +80,7 @@ export const inputDoc = defineComponentDoc(inputMetadata, {
 	accessibility: [
 		'invalid映射aria-invalid。',
 		'用户aria-describedby与Field上下文合并。',
+		'Field或显式disabled/readonly会同时投射到原生input、data-disabled/data-readonly和对应视觉状态。',
 		'原生oninput与onchange仍可使用。',
 		'form属性把DOM外部输入和内部reset signal关联到同一原生表单，并支持动态重归属与同id owner替换。',
 		'独立输入保持resetOnForm=true；复合父状态机设为false，并通过onFormReset唯一恢复受控值。'

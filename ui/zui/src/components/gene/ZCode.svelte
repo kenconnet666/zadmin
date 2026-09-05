@@ -121,7 +121,12 @@
 				name: 'size',
 				type: "keyof ZuiTheme['fontSize']"
 			},
-			{ default: 'false', description: '允许长行换行。', name: 'wrap', type: 'boolean' },
+			{
+				default: 'false',
+				description: '允许长行及无空格长 token 换行，保留源文本和显式换行。',
+				name: 'wrap',
+				type: 'boolean'
+			},
 			{ default: 'false', description: '显示行号。', name: 'lineNumbers', type: 'boolean' },
 			{
 				default: '[]',
@@ -257,6 +262,8 @@
 				s.userSelect.none;
 			},
 			root: (s) => {
+				s.boxSizing.borderBox;
+				s.maxWidth.percent(100);
 				s.fontFamily._mono;
 				s.lineHeight._normal;
 				s._selector('& ::selection', (selection) => {
@@ -289,6 +296,7 @@
 						s.borderRadius._small;
 						s.display.inlineBlock;
 						s.fontSize._small;
+						s.overflowX.auto;
 						s.paddingBlock._xsmall;
 						s.paddingInline._small;
 					}
@@ -323,7 +331,12 @@
 			},
 			wrap: {
 				false: { root: (s) => s.whiteSpace.pre },
-				true: { root: (s) => s.whiteSpace.preWrap }
+				true: {
+					root: (s) => {
+						s.whiteSpace.preWrap;
+						s.overflowWrap.anywhere;
+					}
+				}
 			},
 			embedded: {
 				false: {},

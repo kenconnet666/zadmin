@@ -152,7 +152,7 @@
 			s.display.grid;
 			s.gap._xsmall;
 			s.minWidth.px(0);
-			s.overflowWrap.raw('anywhere');
+			s.overflowWrap.anywhere;
 		},
 		variants: {},
 		defaultVariants: {}

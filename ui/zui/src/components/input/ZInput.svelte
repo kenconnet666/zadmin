@@ -105,6 +105,8 @@
 		source: 'ui/zui/src/components/input/ZInput.svelte',
 		states: [
 			{ description: '输入值或Field上下文无效。', name: 'data-invalid', values: ['true'] },
+			{ description: 'Field或显式禁用。', name: 'data-disabled', values: ['true'] },
+			{ description: 'Field或显式只读。', name: 'data-readonly', values: ['true'] },
 			{
 				description: '解析后的control尺寸。',
 				name: 'data-size',
@@ -138,6 +140,13 @@
 			});
 		},
 		variants: {
+			disabled: {
+				false: () => undefined,
+				true: (s) => {
+					s.cursor.notAllowed;
+					s.opacity._disabled;
+				}
+			},
 			invalid: {
 				false: (s) => s.borderColor._border,
 				true: (s) => s.borderColor._danger
@@ -146,6 +155,10 @@
 				auto: () => undefined,
 				full: () => undefined,
 				reduced: (s) => s.transitionDuration.ms(0)
+			},
+			readonly: {
+				false: () => undefined,
+				true: (s) => s.backgroundColor._surface
 			},
 			size: {
 				large: (s) => {
@@ -165,7 +178,13 @@
 				}
 			}
 		},
-		defaultVariants: { invalid: false, motion: 'auto', size: 'medium' }
+		defaultVariants: {
+			disabled: false,
+			invalid: false,
+			motion: 'auto',
+			readonly: false,
+			size: 'medium'
+		}
 	});
 
 	registerRecipeHmr(import.meta, inputRecipe);
@@ -232,8 +251,10 @@
 	const reduced = $derived(reducedMotion.current);
 	const rootClass = $derived(
 		zui.recipe(inputRecipe, {
+			disabled: resolvedDisabled,
 			invalid: resolvedInvalid,
 			motion: reduced ? 'reduced' : 'full',
+			readonly: resolvedReadonly,
 			size: resolvedSize
 		})
 	);
@@ -293,6 +314,8 @@
 	aria-describedby={resolvedDescribedBy}
 	aria-invalid={resolvedInvalid ? 'true' : ariaInvalid}
 	data-invalid={resolvedInvalid ? 'true' : undefined}
+	data-disabled={resolvedDisabled || undefined}
+	data-readonly={resolvedReadonly || undefined}
 	data-zui-input-group-control={inputGroup ? '' : undefined}
 	data-size={resolvedSize}
 	data-reduced-motion={reduced || undefined}

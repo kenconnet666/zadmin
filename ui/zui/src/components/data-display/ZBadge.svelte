@@ -31,7 +31,9 @@
 		id: 'badge',
 		importStatement: "import { ZBadge } from '@zadmin/zui';",
 		name: 'ZBadge',
-		bindings: [{ description: '真实anchor根span。', name: 'ref', type: 'HTMLSpanElement | null' }],
+		bindings: [
+			{ description: '真实Badge根span引用。', name: 'ref', type: 'HTMLSpanElement | null' }
+		],
 		dependencies: [
 			'Intl.NumberFormat',
 			'ReducedMotionState',
@@ -127,9 +129,20 @@
 			{ description: '圆点模式。', name: 'data-dot', values: ['true'] },
 			{ description: '指示器未渲染。', name: 'data-invisible', values: ['true'] },
 			{
+				description: '按anchor外形计算的重叠比例。',
+				name: 'data-overlap',
+				values: ['circular', 'rectangular']
+			},
+			{
 				description: '逻辑角落。',
 				name: 'data-placement',
 				values: ['top-start', 'top-end', 'bottom-start', 'bottom-end']
+			},
+			{ description: '解析后的指示器尺寸。', name: 'data-size', values: ['small', 'medium'] },
+			{
+				description: '指示器语义tone。',
+				name: 'data-tone',
+				values: ['default', 'accent', 'success', 'warning', 'danger']
 			}
 		],
 		status: 'stable',
@@ -291,6 +304,42 @@
 	const reducedMotion = new ReducedMotionState(() => zui.motion);
 	const anchored = $derived(children !== undefined);
 	const numberFormatter = $derived(new Intl.NumberFormat(zui.locale));
+	const resolvedDot = $derived.by(() => {
+		if (typeof dot !== 'boolean') throw new TypeError('ZBadge dot must be boolean.');
+		return dot;
+	});
+	const resolvedInvisible = $derived.by(() => {
+		if (typeof invisible !== 'boolean') throw new TypeError('ZBadge invisible must be boolean.');
+		return invisible;
+	});
+	const resolvedShowZero = $derived.by(() => {
+		if (typeof showZero !== 'boolean') throw new TypeError('ZBadge showZero must be boolean.');
+		return showZero;
+	});
+	const resolvedOverlap = $derived.by(() => {
+		if (!['circular', 'rectangular'].includes(overlap)) {
+			throw new TypeError('ZBadge overlap must be circular or rectangular.');
+		}
+		return overlap;
+	});
+	const resolvedPlacement = $derived.by(() => {
+		if (!['bottom-end', 'bottom-start', 'top-end', 'top-start'].includes(placement)) {
+			throw new TypeError('ZBadge placement must be a supported logical corner.');
+		}
+		return placement;
+	});
+	const resolvedSize = $derived.by(() => {
+		if (!['medium', 'small'].includes(size)) {
+			throw new TypeError('ZBadge size must be small or medium.');
+		}
+		return size;
+	});
+	const resolvedTone = $derived.by(() => {
+		if (!['accent', 'danger', 'default', 'success', 'warning'].includes(tone)) {
+			throw new TypeError('ZBadge tone must be default, accent, success, warning or danger.');
+		}
+		return tone;
+	});
 	const normalizedCount = $derived.by(() => {
 		if (count === undefined || count === null) return undefined;
 		if (!Number.isSafeInteger(count) || count < 0) {
@@ -305,13 +354,18 @@
 		return max;
 	});
 	const normalizedOffset = $derived.by(() => {
-		if (offset.length !== 2 || offset.some((value) => !Number.isFinite(value))) {
+		if (
+			!Array.isArray(offset) ||
+			offset.length !== 2 ||
+			!Number.isFinite(offset[0]) ||
+			!Number.isFinite(offset[1])
+		) {
 			throw new TypeError('ZBadge offset must contain two finite numbers.');
 		}
 		return offset;
 	});
 	const resolvedLabel = $derived.by(() => {
-		if (label !== undefined && label.trim().length === 0) {
+		if (label !== undefined && (typeof label !== 'string' || label.trim().length === 0)) {
 			throw new TypeError('ZBadge label must not be empty.');
 		}
 		return (
@@ -319,9 +373,9 @@
 		);
 	});
 	const indicatorVisible = $derived(
-		!invisible &&
-			(dot || normalizedCount !== undefined) &&
-			(normalizedCount === undefined || normalizedCount !== 0 || showZero)
+		!resolvedInvisible &&
+			(resolvedDot || normalizedCount !== undefined) &&
+			(normalizedCount === undefined || normalizedCount !== 0 || resolvedShowZero)
 	);
 	const visualCount = $derived(
 		normalizedCount === undefined
@@ -334,20 +388,20 @@
 	const indicatorClass = $derived(
 		zui.recipe(indicatorRecipe, {
 			anchored,
-			dot,
+			dot: resolvedDot,
 			motion: reducedMotion.current ? 'reduced' : 'full',
-			placement,
-			size,
-			tone
+			placement: resolvedPlacement,
+			size: resolvedSize,
+			tone: resolvedTone
 		})
 	);
 	const indicatorTransform = $derived.by(() => {
 		if (!anchored) return 'none';
-		const inlineEdge = placement.endsWith('start') ? -1 : 1;
+		const inlineEdge = resolvedPlacement.endsWith('start') ? -1 : 1;
 		const inlineDirection = zui.direction === 'rtl' ? -1 : 1;
 		const inlineSign = inlineEdge * inlineDirection;
-		const blockSign = placement.startsWith('top') ? -1 : 1;
-		const overlapPercent = overlap === 'circular' ? 35 : 50;
+		const blockSign = resolvedPlacement.startsWith('top') ? -1 : 1;
+		const overlapPercent = resolvedOverlap === 'circular' ? 35 : 50;
 		return `translate(calc(${inlineSign * overlapPercent}% + ${inlineSign * normalizedOffset[0]}px), calc(${blockSign * overlapPercent}% + ${blockSign * normalizedOffset[1]}px))`;
 	});
 	untrack(() => {
@@ -395,11 +449,12 @@
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
 	data-anchored={anchored || undefined}
-	data-dot={dot || undefined}
+	data-dot={resolvedDot || undefined}
 	data-invisible={!indicatorVisible || undefined}
-	data-overlap={overlap}
-	data-placement={placement}
-	data-size={size}
+	data-overlap={resolvedOverlap}
+	data-placement={resolvedPlacement}
+	data-size={resolvedSize}
+	data-tone={resolvedTone}
 	data-slot="root"
 >
 	{@render children?.()}
@@ -410,7 +465,7 @@
 			aria-hidden={resolvedLabel === undefined ? 'true' : undefined}
 			data-slot="indicator"
 			use:animateIndicator={{
-				key: dot
+				key: resolvedDot
 					? `dot:${resolvedLabel ?? ''}`
 					: `count:${normalizedCount ?? 'none'}:${visualCount}`,
 				reduced: reducedMotion.current
@@ -419,7 +474,7 @@
 			{#if resolvedLabel !== undefined}
 				<ZVisuallyHidden data-slot="accessible-count">{resolvedLabel}</ZVisuallyHidden>
 			{/if}
-			{#if !dot}<span aria-hidden="true" data-slot="count">{visualCount}</span>{/if}
+			{#if !resolvedDot}<span aria-hidden="true" data-slot="count">{visualCount}</span>{/if}
 		</span>
 	{/if}
 </span>

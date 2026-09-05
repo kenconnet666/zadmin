@@ -293,6 +293,7 @@ export const PROPERTY_DEFINITIONS = {
 		}
 	},
 	opacity: { token: 'opacity' },
+	overflowWrap: { keywords: { anywhere: 'anywhere', breakWord: 'break-word', normal: 'normal' } },
 	outlineColor: { keywords: COLOR_KEYWORDS, token: 'color' },
 	outlineOffset: { token: 'focusOffset', tokenUnit: 'px', units: ['length'] },
 	outlineStyle: {

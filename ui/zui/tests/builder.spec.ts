@@ -125,7 +125,22 @@ describe('ICSS builder', () => {
 		expectTypeOf<Style['width']['fitContent']>().toEqualTypeOf<void>();
 		expectTypeOf<Style['outlineOffset']['_outer']>().toEqualTypeOf<void>();
 		expectTypeOf<Style['transitionTimingFunction']['_enter']>().toEqualTypeOf<void>();
+		expectTypeOf<Style['overflowWrap']['anywhere']>().toEqualTypeOf<void>();
+		expectTypeOf<Style['overflowWrap']['breakWord']>().toEqualTypeOf<void>();
 		expectTypeOf<Style['_media']>().toBeCallableWith({ min: 'medium' }, () => undefined);
+	});
+
+	it('records standard overflow wrapping keywords without raw CSS escape hatches', () => {
+		const program = createStyleProgram(defaultTheme, (s) => {
+			s.overflowWrap.normal;
+			s.overflowWrap.breakWord;
+			s.overflowWrap.anywhere;
+		});
+		expect(program.block.instructions).toMatchObject([
+			{ property: 'overflowWrap', values: [{ value: 'normal' }] },
+			{ property: 'overflowWrap', values: [{ value: 'break-word' }] },
+			{ property: 'overflowWrap', values: [{ value: 'anywhere' }] }
+		]);
 	});
 
 	it('records a tokenized focus outline without shorthand raw values', () => {

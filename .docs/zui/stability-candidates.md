@@ -82,7 +82,7 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：0
 | ZTooltipGroup           | stable | stableCompliant | —        | apps/docs/src/content/components/overlay/tooltip/doc.ts               |   1 |
 | ZTooltipTrigger         | stable | stableCompliant | —        | apps/docs/src/content/components/overlay/tooltip/doc.ts               |   2 |
 | ZTree                   | stable | stableCompliant | —        | apps/docs/src/content/components/navigation/tree/doc.ts               |   2 |
-| ZAvatar                 | stable | stableCompliant | —        | apps/docs/src/content/components/data-display/avatar/doc.ts           |   2 |
+| ZAvatar                 | stable | stableCompliant | —        | apps/docs/src/content/components/data-display/avatar/doc.ts           |   3 |
 | ZBadge                  | stable | stableCompliant | —        | apps/docs/src/content/components/data-display/badge/doc.ts            |   2 |
 | ZCard                   | stable | stableCompliant | —        | apps/docs/src/content/components/data-display/card/doc.ts             |   2 |
 | ZCarousel               | stable | stableCompliant | —        | apps/docs/src/content/components/data-display/carousel/doc.ts         |   1 |
@@ -107,13 +107,13 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：0
 | ZBox                    | stable | stableCompliant | —        | apps/docs/src/content/components/gene/box/doc.ts                      |   1 |
 | ZButton                 | stable | stableCompliant | —        | apps/docs/src/content/components/gene/button/doc.ts                   |   8 |
 | ZCode                   | stable | stableCompliant | —        | apps/docs/src/content/components/gene/code/doc.ts                     |   2 |
-| ZHeading                | stable | stableCompliant | —        | apps/docs/src/content/components/gene/heading/doc.ts                  |   1 |
+| ZHeading                | stable | stableCompliant | —        | apps/docs/src/content/components/gene/heading/doc.ts                  |   2 |
 | ZIcon                   | stable | stableCompliant | —        | apps/docs/src/content/components/gene/icon/doc.ts                     |   1 |
-| ZKbd                    | stable | stableCompliant | —        | apps/docs/src/content/components/gene/kbd/doc.ts                      |   2 |
-| ZLink                   | stable | stableCompliant | —        | apps/docs/src/content/components/gene/link/doc.ts                     |   2 |
+| ZKbd                    | stable | stableCompliant | —        | apps/docs/src/content/components/gene/kbd/doc.ts                      |   3 |
+| ZLink                   | stable | stableCompliant | —        | apps/docs/src/content/components/gene/link/doc.ts                     |   3 |
 | ZProvider               | stable | stableCompliant | —        | apps/docs/src/content/components/gene/provider/doc.ts                 |   7 |
 | ZSeparator              | stable | stableCompliant | —        | apps/docs/src/content/components/gene/separator/doc.ts                |   2 |
-| ZText                   | stable | stableCompliant | —        | apps/docs/src/content/components/gene/text/doc.ts                     |   4 |
+| ZText                   | stable | stableCompliant | —        | apps/docs/src/content/components/gene/text/doc.ts                     |   5 |
 | ZToggleButton           | stable | stableCompliant | —        | apps/docs/src/content/components/gene/toggle-button/doc.ts            |   2 |
 | ZVisuallyHidden         | stable | stableCompliant | —        | apps/docs/src/content/components/gene/visually-hidden/doc.ts          |   2 |
 | ZCalendar               | stable | stableCompliant | —        | apps/docs/src/content/components/input/calendar/doc.ts                |   1 |

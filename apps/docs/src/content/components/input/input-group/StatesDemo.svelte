@@ -1,8 +1,16 @@
 <script lang="ts">
-	import { ZInput, ZInputGroup, ZStack } from '@zadmin/zui';
+	import { ZInput, ZInputGroup, ZProvider, ZStack, ZText } from '@zadmin/zui';
 </script>
 
 <ZStack gap="medium">
+	<ZProvider componentDefaults={{ input: { size: 'large' } }}>
+		<ZInputGroup aria-label="Provider默认尺寸组合">
+			{#snippet prefix()}https://{/snippet}
+			<ZInput aria-label="默认尺寸资源" placeholder="resource-id" />
+			{#snippet suffix()}.internal{/snippet}
+		</ZInputGroup>
+		<ZText tone="muted">Group、affix与直接文本control共享Provider的input默认尺寸。</ZText>
+	</ZProvider>
 	<ZInputGroup aria-label="小尺寸必填组合" required size="small">
 		{#snippet prefix()}ID{/snippet}
 		<ZInput aria-label="小尺寸值" />

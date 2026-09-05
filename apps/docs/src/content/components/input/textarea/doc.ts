@@ -37,8 +37,10 @@ export const textareaDoc = defineComponentDoc(textareaMetadata, {
 				description: '独立控件恢复defaultValue；复合owner可关闭并唯一接管。'
 			},
 			size: {
-				default: "Provider density（默认 'comfortable' → 'medium'）",
-				description: '显式尺寸优先，其次继承Field/Form，最后响应最近Provider的density。'
+				default:
+					"Field/InputGroup，其次 componentDefaults.input.size，最后 Provider density（'comfortable' → 'medium'）",
+				description:
+					'显式尺寸优先，其次继承Field/InputGroup与组件默认，最后响应最近Provider的density。'
 			},
 			value: { default: 'undefined', description: 'Svelte bindable文本值。' }
 		},
