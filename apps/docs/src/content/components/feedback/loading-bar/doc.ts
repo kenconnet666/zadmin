@@ -61,10 +61,6 @@ export const loadingBarDoc = defineComponentDoc(loadingBarMetadata, {
 				default: 'localePack.feedback.loading',
 				description: 'progressbar可访问名称；业务名称应说明具体任务。'
 			},
-			page: {
-				default: 'undefined',
-				description: '兼容旧API；新代码使用mode=page。'
-			},
 			value: {
 				default: 'undefined',
 				description: '有限值clamp到0–100并输出aria-valuenow；undefined省略valuenow。'
@@ -119,7 +115,7 @@ export const loadingBarDoc = defineComponentDoc(loadingBarMetadata, {
 	],
 	accessibility: [
 		'遵循WAI-ARIA range合同：确定值提供0–100 aria-valuenow；不确定值省略valuenow并保留具名progressbar。',
-		'mode=page仅改变视口定位，不创建全局单例；deprecated page只保留迁移兼容。',
+		'mode=page仅改变视口定位，不创建全局单例。',
 		'不确定动画使用Theme duration.loadingBarIndeterminate，从真实owner Window解析reduced motion，并在Document隐藏或卸载时取消。',
 		'reduced motion将不确定指示条静态铺满而不是隐藏；RTL使用逻辑起点并反转WAAPI位移。',
 		'controller只协调组件状态与owner Window收尾计时；不观察Promise、不拦截fetch、不推断路由，也不复制ZProgress的circle/label/format API。',

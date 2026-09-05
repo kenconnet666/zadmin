@@ -38,7 +38,7 @@
 			},
 			variants: {
 				surface: {
-					desktop: { root: (s) => s._media('(max-width: 48rem)', (mobile) => mobile.display.none) },
+					desktop: { root: (s) => s._media({ max: 'medium' }, (mobile) => mobile.display.none) },
 					drawer: {
 						root: (s) => {
 							s.backgroundColor._canvas;
@@ -47,7 +47,7 @@
 							s.height.auto;
 							s.minHeight.px(0);
 							s.padding._medium;
-							s.position.raw('static');
+							s.position.static;
 						}
 					}
 				}

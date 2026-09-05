@@ -95,6 +95,15 @@ type UnitAccessors<TProperty extends string> = {
 	) => void;
 };
 
+type BreakpointName<TTheme extends ThemeSchema> = TTheme extends {
+	readonly breakpoint: infer TBreakpoints extends Record<string, unknown>;
+}
+	? keyof TBreakpoints & string
+	: never;
+type MediaBreakpointQuery<TTheme extends ThemeSchema> =
+	| { readonly min: BreakpointName<TTheme>; readonly max?: BreakpointName<TTheme> }
+	| { readonly min?: BreakpointName<TTheme>; readonly max: BreakpointName<TTheme> };
+
 export type IcssPropertyCarrier<TTheme extends ThemeSchema, TProperty extends CssPropertyName> = ((
 	value: CssPropertyValue<TProperty> | IcssDynamicSlot | null | undefined
 ) => void) &
@@ -118,7 +127,10 @@ export interface IcssConditions<TTheme extends ThemeSchema> {
 	readonly _focus: (factory: IcssFactory<TTheme>) => void;
 	readonly _focusVisible: (factory: IcssFactory<TTheme>) => void;
 	readonly _hover: (factory: IcssFactory<TTheme>) => void;
-	readonly _media: (query: string, factory: IcssFactory<TTheme>) => void;
+	readonly _media: (
+		query: string | MediaBreakpointQuery<TTheme>,
+		factory: IcssFactory<TTheme>
+	) => void;
 	readonly _selector: (selector: string, factory: IcssFactory<TTheme>) => void;
 	readonly _supports: (query: string, factory: IcssFactory<TTheme>) => void;
 	readonly set: <TProperty extends CssPropertyName>(

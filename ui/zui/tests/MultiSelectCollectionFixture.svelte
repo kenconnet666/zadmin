@@ -21,8 +21,6 @@
 	let options = $state(groupedOptions);
 	let value = $state<readonly SelectionKey[]>([1, '1', 'orphan']);
 	let changes = $state(0);
-	let legacyValues = $state<readonly SelectionKey[]>(['stable']);
-	let legacyChanges = $state(0);
 	const collectionOutput = $derived(
 		`${value.map((key) => `${typeof key}:${key}`).join('|')}:${changes}`
 	);
@@ -65,14 +63,3 @@
 	<ZMultiSelectTrigger aria-label="Virtual choices" data-testid="multi-virtual-trigger" />
 	<ZMultiSelectContent data-testid="multi-virtual-content" virtual virtualHeight={160} />
 </ZMultiSelect>
-
-<ZMultiSelect
-	bind:values={legacyValues}
-	defaultValues={['stable']}
-	onValuesChange={() => (legacyChanges += 1)}
-	options={groupedOptions}
->
-	<ZMultiSelectTrigger aria-label="Legacy choices" data-testid="multi-legacy-trigger" />
-	<ZMultiSelectContent data-testid="multi-legacy-content" />
-</ZMultiSelect>
-<output data-testid="multi-legacy-output">{legacyValues.join(',')}:{legacyChanges}</output>

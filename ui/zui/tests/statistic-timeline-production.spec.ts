@@ -23,7 +23,7 @@ describe('Statistic and Timeline production SSR contracts', () => {
 		expect(first).toContain('data-key-type="string"');
 		expect(first).toContain('aria-current="true"');
 		expect(first).toContain('datetime="2026-09-02T09:10:00+08:00"');
-		expect(first).toContain('Legacy id migration');
+		expect(first).toContain('Keyed identity');
 		expect(second).toContain(expected);
 	});
 
@@ -42,7 +42,7 @@ describe('Statistic and Timeline production SSR contracts', () => {
 		).toThrow(/trend must be finite/u);
 	});
 
-	it('rejects duplicate, non-finite and ambiguous Timeline identities', () => {
+	it('rejects duplicate, non-finite and missing Timeline identities', () => {
 		expect(
 			() =>
 				render(ZTimeline, {
@@ -61,18 +61,9 @@ describe('Statistic and Timeline production SSR contracts', () => {
 				}).body
 		).toThrow(/numeric keys must be finite/u);
 		expect(
-			() =>
-				render(ZTimeline, {
-					props: { items: [{ id: 'legacy', key: 'current', title: 'Ambiguous' }] } as never
-				}).body
-		).toThrow(/cannot provide both key and deprecated id/u);
+			() => render(ZTimeline, { props: { items: [{ title: 'Missing key' }] } as never }).body
+		).toThrow(/require a typed key/u);
 		const snippet = (() => undefined) as unknown as Snippet;
-		expect(
-			() =>
-				render(ZTimeline, {
-					props: { content: snippet as never, item: snippet as never, items: [] }
-				}).body
-		).toThrow(/either content or deprecated item/u);
 		expect(() => render(ZTimeline, { props: { items: [], pendingIcon: snippet } }).body).toThrow(
 			/pendingIcon requires a pending snippet/u
 		);

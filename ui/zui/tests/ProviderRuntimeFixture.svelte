@@ -27,7 +27,6 @@
 	localePack={zhCNLocalePack}
 	motion="reduced"
 	portalContainer={null}
-	translations={{ close: '关闭' }}
 	{runtime}
 	{theme}
 	timeZone="Asia/Shanghai"

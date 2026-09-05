@@ -223,7 +223,7 @@
 			s._selector('&::placeholder', (placeholder) => placeholder.color._textMuted);
 			s._focusVisible((focus) => {
 				focus.outlineColor._focus;
-				focus.outlineOffset.px(-2);
+				focus.outlineOffset._inner;
 				focus.outlineStyle.solid;
 				focus.outlineWidth._medium;
 			});

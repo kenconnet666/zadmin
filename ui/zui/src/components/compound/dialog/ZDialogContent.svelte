@@ -50,12 +50,11 @@
 			s.transform.raw('translate(-50%, -50%) scale(1)');
 			s.transitionDuration._normal;
 			s.transitionProperty.raw('opacity, transform');
-			s.transitionTimingFunction.ease;
 			s.width.percent(90);
 			s.zIndex._modal;
 			s._focusVisible((focus) => {
 				focus.outlineColor._focus;
-				focus.outlineOffset.px(2);
+				focus.outlineOffset._outer;
 				focus.outlineStyle.solid;
 				focus.outlineWidth._medium;
 			});
@@ -210,6 +209,7 @@
 	} from '../../../runtime/foundation/root-style.js';
 	import { useZui } from '../../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../../runtime/foundation/compiler-bridge.js';
+	import { stylePresenceEasing } from '../../../runtime/foundation/style-presence.js';
 	import { DismissableLayer } from '../../../runtime/layer/dismissable-layer.js';
 	import { FocusScope } from '../../../runtime/layer/focus-scope.js';
 	import { inertOthers } from '../../../runtime/layer/inert-others.js';
@@ -253,6 +253,7 @@
 				})
 			: undefined
 	);
+	const presenceEasingClass = $derived(zui.icss(stylePresenceEasing));
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 	const explicitLabel = $derived(ariaLabel?.trim() || undefined);
@@ -323,7 +324,7 @@
 	<div
 		{...rest}
 		bind:this={ref}
-		class={[rootClass, className]}
+		class={[rootClass, presenceEasingClass, className]}
 		style={initialStyle}
 		use:applyIcssRootStyle={{ style, variables: icssVariables }}
 		use:portal={{ target: dialog.portalTarget }}

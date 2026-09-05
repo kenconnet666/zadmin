@@ -17,7 +17,7 @@
 			s.margin.px(0);
 			s._focusVisible((focus) => {
 				focus.outlineColor._focus;
-				focus.outlineOffset.px(2);
+				focus.outlineOffset._outer;
 				focus.outlineStyle.solid;
 				focus.outlineWidth._medium;
 			});

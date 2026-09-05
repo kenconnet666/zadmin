@@ -2,6 +2,27 @@ import type { UnitFamilyName, UnitName } from './units.js';
 
 const AUTO = { auto: 'auto' } as const;
 
+// Modern CSS system colors are browser/OS values, distinct from theme `_color` tokens.
+const COLOR_KEYWORDS = {
+	transparent: 'transparent',
+	currentColor: 'currentColor',
+	canvas: 'Canvas',
+	canvasText: 'CanvasText',
+	field: 'Field',
+	fieldText: 'FieldText',
+	buttonFace: 'ButtonFace',
+	buttonText: 'ButtonText',
+	buttonBorder: 'ButtonBorder',
+	highlight: 'Highlight',
+	highlightText: 'HighlightText',
+	grayText: 'GrayText',
+	linkText: 'LinkText',
+	visitedText: 'VisitedText',
+	activeText: 'ActiveText',
+	mark: 'Mark',
+	markText: 'MarkText'
+} as const;
+
 const DISPLAY = {
 	block: 'block',
 	contents: 'contents',
@@ -63,21 +84,21 @@ export const PROPERTY_DEFINITIONS = {
 			stretch: 'stretch'
 		}
 	},
-	accentColor: { token: 'color' },
+	accentColor: { keywords: { ...COLOR_KEYWORDS, auto: 'auto' }, token: 'color' },
 	aspectRatio: { keywords: { auto: 'auto' } },
 	animationDuration: { token: 'duration', tokenUnit: 'ms', units: ['time'] },
 	appearance: { keywords: { auto: 'auto', none: 'none' } },
-	backgroundColor: { keywords: { transparent: 'transparent' }, token: 'color' },
+	backgroundColor: { keywords: COLOR_KEYWORDS, token: 'color' },
 	backdropFilter: {},
 	borderCollapse: { keywords: { collapse: 'collapse', separate: 'separate' } },
-	borderBottomColor: { token: 'color' },
+	borderBottomColor: { keywords: COLOR_KEYWORDS, token: 'color' },
 	borderBottomLeftRadius: { token: 'radius', tokenUnit: 'px', units: ['length', 'percent'] },
 	borderBottomRightRadius: { token: 'radius', tokenUnit: 'px', units: ['length', 'percent'] },
 	borderBottomStyle: {
 		keywords: { dashed: 'dashed', dotted: 'dotted', double: 'double', none: 'none', solid: 'solid' }
 	},
 	borderBottomWidth: { token: 'borderWidth', tokenUnit: 'px', units: ['length'] },
-	borderColor: { keywords: { transparent: 'transparent' }, token: 'color' },
+	borderColor: { keywords: COLOR_KEYWORDS, token: 'color' },
 	borderStyle: {
 		keywords: {
 			dashed: 'dashed',
@@ -88,7 +109,7 @@ export const PROPERTY_DEFINITIONS = {
 			solid: 'solid'
 		}
 	},
-	borderLeftColor: { keywords: { transparent: 'transparent' }, token: 'color' },
+	borderLeftColor: { keywords: COLOR_KEYWORDS, token: 'color' },
 	borderLeftStyle: {
 		keywords: { dashed: 'dashed', dotted: 'dotted', double: 'double', none: 'none', solid: 'solid' }
 	},
@@ -96,30 +117,30 @@ export const PROPERTY_DEFINITIONS = {
 	borderInlineEndStyle: {
 		keywords: { dashed: 'dashed', dotted: 'dotted', double: 'double', none: 'none', solid: 'solid' }
 	},
-	borderInlineEndColor: { keywords: { transparent: 'transparent' }, token: 'color' },
+	borderInlineEndColor: { keywords: COLOR_KEYWORDS, token: 'color' },
 	borderInlineEndWidth: { token: 'borderWidth', tokenUnit: 'px', units: ['length'] },
-	borderInlineStartColor: { keywords: { transparent: 'transparent' }, token: 'color' },
+	borderInlineStartColor: { keywords: COLOR_KEYWORDS, token: 'color' },
 	borderInlineStartStyle: {
 		keywords: { dashed: 'dashed', dotted: 'dotted', double: 'double', none: 'none', solid: 'solid' }
 	},
 	borderInlineStartWidth: { token: 'borderWidth', tokenUnit: 'px', units: ['length'] },
-	borderBlockEndColor: { keywords: { transparent: 'transparent' }, token: 'color' },
+	borderBlockEndColor: { keywords: COLOR_KEYWORDS, token: 'color' },
 	borderBlockEndStyle: {
 		keywords: { dashed: 'dashed', dotted: 'dotted', double: 'double', none: 'none', solid: 'solid' }
 	},
 	borderBlockEndWidth: { token: 'borderWidth', tokenUnit: 'px', units: ['length'] },
-	borderBlockStartColor: { keywords: { transparent: 'transparent' }, token: 'color' },
+	borderBlockStartColor: { keywords: COLOR_KEYWORDS, token: 'color' },
 	borderBlockStartStyle: {
 		keywords: { dashed: 'dashed', dotted: 'dotted', double: 'double', none: 'none', solid: 'solid' }
 	},
 	borderBlockStartWidth: { token: 'borderWidth', tokenUnit: 'px', units: ['length'] },
 	borderRadius: { token: 'radius', tokenUnit: 'px', units: ['length', 'percent'] },
-	borderRightColor: { token: 'color' },
+	borderRightColor: { keywords: COLOR_KEYWORDS, token: 'color' },
 	borderRightStyle: {
 		keywords: { dashed: 'dashed', dotted: 'dotted', double: 'double', none: 'none', solid: 'solid' }
 	},
 	borderRightWidth: { token: 'borderWidth', tokenUnit: 'px', units: ['length'] },
-	borderTopColor: { token: 'color' },
+	borderTopColor: { keywords: COLOR_KEYWORDS, token: 'color' },
 	borderTopLeftRadius: { token: 'radius', tokenUnit: 'px', units: ['length', 'percent'] },
 	borderTopRightRadius: { token: 'radius', tokenUnit: 'px', units: ['length', 'percent'] },
 	borderTopStyle: {
@@ -133,7 +154,7 @@ export const PROPERTY_DEFINITIONS = {
 	boxSizing: { keywords: { borderBox: 'border-box', contentBox: 'content-box' } },
 	clip: {},
 	clipPath: {},
-	color: { token: 'color' },
+	color: { keywords: COLOR_KEYWORDS, token: 'color' },
 	columnGap: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
 	cursor: {
 		keywords: {
@@ -148,7 +169,7 @@ export const PROPERTY_DEFINITIONS = {
 		}
 	},
 	display: { keywords: DISPLAY },
-	fill: { token: 'color' },
+	fill: { keywords: { ...COLOR_KEYWORDS, none: 'none' }, token: 'color' },
 	flexDirection: {
 		keywords: {
 			column: 'column',
@@ -272,8 +293,8 @@ export const PROPERTY_DEFINITIONS = {
 		}
 	},
 	opacity: { token: 'opacity' },
-	outlineColor: { token: 'color' },
-	outlineOffset: { units: ['length'] },
+	outlineColor: { keywords: COLOR_KEYWORDS, token: 'color' },
+	outlineOffset: { token: 'focusOffset', tokenUnit: 'px', units: ['length'] },
 	outlineStyle: {
 		keywords: {
 			dashed: 'dashed',
@@ -320,7 +341,7 @@ export const PROPERTY_DEFINITIONS = {
 	scrollbarGutter: { keywords: { auto: 'auto', stable: 'stable' } },
 	scrollbarWidth: { keywords: { auto: 'auto', none: 'none', thin: 'thin' } },
 	rowGap: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
-	stroke: { token: 'color' },
+	stroke: { keywords: { ...COLOR_KEYWORDS, none: 'none' }, token: 'color' },
 	textAlign: {
 		keywords: {
 			center: 'center',
@@ -358,13 +379,24 @@ export const PROPERTY_DEFINITIONS = {
 		}
 	},
 	tabSize: {},
-	textDecorationColor: { token: 'color' },
+	textDecorationColor: { keywords: COLOR_KEYWORDS, token: 'color' },
 	textOverflow: { keywords: { clip: 'clip', ellipsis: 'ellipsis' } },
 	textShadow: { token: 'shadow' },
 	top: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
 	transform: { token: 'transform' },
 	transitionDuration: { token: 'duration', tokenUnit: 'ms', units: ['time'] },
 	transitionTimingFunction: {
+		token: 'easing',
+		keywords: {
+			ease: 'ease',
+			easeIn: 'ease-in',
+			easeInOut: 'ease-in-out',
+			easeOut: 'ease-out',
+			linear: 'linear'
+		}
+	},
+	animationTimingFunction: {
+		token: 'easing',
 		keywords: {
 			ease: 'ease',
 			easeIn: 'ease-in',

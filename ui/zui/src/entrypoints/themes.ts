@@ -1,3 +1,5 @@
+export { themePalettes, withPrimaryPalette } from '../theme/palettes.js';
+export type { ThemePaletteName, ThemePaletteMode } from '../theme/palettes.js';
 export {
 	auroraLight,
 	highContrastDark,

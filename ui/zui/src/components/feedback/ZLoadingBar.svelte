@@ -28,8 +28,6 @@
 		readonly finishDelay?: number | null;
 		readonly label?: string;
 		readonly mode?: LoadingBarMode;
-		/** @deprecated Use mode="page". */
-		readonly page?: boolean;
 		ref?: HTMLDivElement | null;
 		state?: LoadingBarState;
 		value?: number;
@@ -97,14 +95,6 @@
 				type: "'local' | 'page'"
 			},
 			{
-				default: 'undefined',
-				description: 'deprecated兼容；true等价mode=page。',
-				name: 'page',
-				type: 'boolean',
-				deprecatedSince: 'unreleased',
-				replacement: 'mode'
-			},
-			{
 				default: '200',
 				description: 'controller.finish后由owner Window隐藏的毫秒数；null保持。',
 				name: 'finishDelay',
@@ -165,7 +155,7 @@
 					s.insetInlineEnd.px(0);
 					s.insetInlineStart.px(0);
 					s.position.fixed;
-					s.zIndex(100);
+					s.zIndex._pageLoading;
 				}
 			}
 		},
@@ -213,7 +203,6 @@
 		finishDelay = 200,
 		label,
 		mode,
-		page,
 		ref = $bindable(null),
 		state: loadingState = $bindable('loading'),
 		style,
@@ -280,14 +269,7 @@
 		resolvedState === 'success' && normalized === undefined ? 100 : normalized
 	);
 	const resolvedMode = $derived.by(() => {
-		if (page !== undefined && typeof page !== 'boolean') {
-			throw new TypeError('ZLoadingBar deprecated page must be boolean.');
-		}
-		const legacyMode = page === undefined ? undefined : page ? 'page' : 'local';
-		if (mode && legacyMode && mode !== legacyMode) {
-			throw new TypeError('ZLoadingBar mode conflicts with deprecated page.');
-		}
-		const next = mode ?? legacyMode ?? 'local';
+		const next = mode ?? 'local';
 		if (!['local', 'page'].includes(next)) {
 			throw new TypeError('ZLoadingBar mode must be local or page.');
 		}

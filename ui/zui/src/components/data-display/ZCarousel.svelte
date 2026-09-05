@@ -8,9 +8,7 @@
 		HTMLAttributes<HTMLElement>,
 		'aria-label' | 'children'
 	> {
-		readonly 'aria-label'?: string;
-		/** @deprecated Use the native `aria-label` spelling. */
-		readonly ariaLabel?: string;
+		readonly 'aria-label': string;
 		readonly autoplayInterval?: number;
 		readonly defaultValue?: SelectionKey;
 		readonly item: Snippet<[TItem, number]>;
@@ -64,17 +62,8 @@
 				default: '必填',
 				description: 'Carousel region的原生可访问名称。',
 				name: 'aria-label',
-				requiredWhen: '未提供deprecated ariaLabel兼容别名时',
+				required: true,
 				type: 'string'
-			},
-			{
-				default: 'undefined',
-				description: 'deprecated兼容别名；新代码使用aria-label。',
-				name: 'ariaLabel',
-				type: 'string',
-				deprecatedSince: 'unreleased',
-				replacement: 'aria-label',
-				replacementExternal: true
 			},
 			{
 				default: 'undefined',
@@ -229,8 +218,7 @@
 	import { isDomNode } from '../../runtime/layer/dom-realm.js';
 	import ZButton from '../gene/ZButton.svelte';
 	let {
-		'aria-label': ariaLabelNative,
-		ariaLabel,
+		'aria-label': ariaLabelAttribute,
 		autoplayInterval,
 		class: className,
 		defaultValue,
@@ -284,7 +272,7 @@
 	});
 	const reduced = $derived(reducedMotion.current);
 	const resolvedAriaLabel = $derived.by(() => {
-		const label = ariaLabelNative ?? ariaLabel;
+		const label = ariaLabelAttribute;
 		if (!label) throw new TypeError('ZCarousel requires aria-label.');
 		return label;
 	});

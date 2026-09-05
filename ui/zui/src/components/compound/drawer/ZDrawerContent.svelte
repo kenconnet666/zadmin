@@ -25,7 +25,7 @@
 			s.position.fixed;
 			s.transitionDuration._normal;
 			s.transitionProperty.raw('transform');
-			s.transitionTimingFunction.ease;
+			s.transitionTimingFunction._standard;
 			s.zIndex._modal;
 			s._focusVisible((focus) => {
 				focus.outlineColor._focus;

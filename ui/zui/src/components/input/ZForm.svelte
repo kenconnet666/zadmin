@@ -70,10 +70,6 @@
 		readonly onInvalidSubmit?: (detail: FormInvalidDetail) => void;
 		readonly onreset?: (event: Event & { currentTarget: HTMLFormElement }) => void;
 		readonly onsubmit?: (event: SubmitEvent & { currentTarget: HTMLFormElement }) => void;
-		/** @deprecated Use the native lowercase `onreset` callback. */
-		readonly onReset?: (event: Event) => void;
-		/** @deprecated Use the native lowercase `onsubmit` callback. */
-		readonly onSubmit?: (event: SubmitEvent) => void;
 		readonly onValidSubmit?: (
 			detail: FormSubmitDetail<PublicStandardSchemaV1.InferOutput<TSchema>>
 		) => void;
@@ -193,20 +189,6 @@
 				description: '原生reset事件；可preventDefault保留字段状态和值。',
 				name: 'onreset',
 				type: '(event: Event) => void'
-			},
-			{
-				description: '已弃用的camelCase原生reset回调；请使用onreset。',
-				name: 'onReset',
-				type: '(event: Event) => void',
-				deprecatedSince: 'unreleased',
-				replacement: 'onreset'
-			},
-			{
-				description: '已弃用的camelCase原生submit回调；请使用onsubmit。',
-				name: 'onSubmit',
-				type: '(event: SubmitEvent) => void',
-				deprecatedSince: 'unreleased',
-				replacement: 'onsubmit'
 			},
 			{
 				description: 'Schema执行抛错后的诊断回调；用户消息由validationMessages控制。',
@@ -361,8 +343,6 @@
 		onInvalidSubmit,
 		onreset,
 		onsubmit,
-		onReset,
-		onSubmit,
 		onValidSubmit,
 		onValidationError,
 		preventDefault = true,
@@ -584,7 +564,6 @@
 		event: SubmitEvent & { currentTarget: HTMLFormElement }
 	): Promise<void> {
 		onsubmit?.(event);
-		if (onSubmit !== onsubmit) onSubmit?.(event);
 		if (event.defaultPrevented) return;
 		if (preventDefault || schema) event.preventDefault();
 		clearValidationTimers();
@@ -646,7 +625,6 @@
 	onsubmit={handleSubmit}
 	onreset={(event) => {
 		onreset?.(event);
-		if (onReset !== onreset) onReset?.(event);
 	}}
 >
 	<FormResetSignal onReset={resetFromForm} owner={ref} />

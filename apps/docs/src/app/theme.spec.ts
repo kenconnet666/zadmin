@@ -32,7 +32,7 @@ describe('docs themes', () => {
 		expect(contrast(theme.color.codeMuted, theme.color.codeBackground)).toBeGreaterThanOrEqual(4.5);
 	});
 
-	it('uses a saved preset before the system preference and migrates legacy modes', () => {
+	it('uses a saved preset before the system preference', () => {
 		expect(resolveDocsThemeId('paper-light', true)).toBe('paper-light');
 		expect(resolveDocsThemeId('light', true)).toBe('aurora-light');
 		expect(resolveDocsThemeId('dark', false)).toBe('neon-dark');
@@ -54,6 +54,7 @@ describe('docs themes', () => {
 					density: 'compact',
 					direction: 'rtl',
 					motion: 'reduced',
+					palette: 'rose',
 					themeId: 'midnight-dark'
 				}),
 				'aurora-light'
@@ -63,16 +64,18 @@ describe('docs themes', () => {
 			density: 'compact',
 			direction: 'rtl',
 			motion: 'reduced',
+			palette: 'rose',
 			themeId: 'midnight-dark'
 		});
 		expect(
-			resolveDocsPreferences('{"density":"invalid","themeMode":"dark"}', 'aurora-light')
+			resolveDocsPreferences('{"density":"invalid","palette":"invalid"}', 'aurora-light')
 		).toEqual({
 			contrast: 'normal',
 			density: 'comfortable',
 			direction: 'ltr',
 			motion: 'auto',
-			themeId: 'neon-dark'
+			palette: 'preset',
+			themeId: 'aurora-light'
 		});
 		expect(resolveDocsPreferences('not-json', 'midnight-dark').themeId).toBe('midnight-dark');
 	});

@@ -33,7 +33,7 @@
 	nativeValidation
 	onValidationError={() => (validationErrors += 1)}
 	onInvalidSubmit={() => (invalidSubmits += 1)}
-	onReset={() => (resets += 1)}
+	onreset={() => (resets += 1)}
 	data-testid="throwing-form"
 >
 	<ZFormField name="edge" label="Edge"><ZInput name="edge" data-testid="edge-input" /></ZFormField>
@@ -44,7 +44,7 @@
 <ZForm
 	data-testid="prevented-reset-form"
 	nativeValidation
-	onReset={(event) => event.preventDefault()}
+	onreset={(event) => event.preventDefault()}
 >
 	<ZInput bind:value={preserved} defaultValue="seed" name="preserved" />
 </ZForm>
@@ -58,7 +58,7 @@
 	aria-busy="true"
 	preventDefault={false}
 	nativeValidation
-	onSubmit={(event) => {
+	onsubmit={(event) => {
 		preventedSubmits += 1;
 		event.preventDefault();
 	}}

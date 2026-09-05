@@ -48,12 +48,12 @@
 				s.padding._xsmall;
 				s.position.relative;
 				s.transitionProperty.raw('background-color, border-color, opacity');
-				s.transitionTimingFunction.ease;
+				s.transitionTimingFunction._standard;
 				s.userSelect.none;
 				s.verticalAlign.middle;
 				s._selector('&:focus-within', (focus) => {
 					focus.outlineColor._focus;
-					focus.outlineOffset.px(2);
+					focus.outlineOffset._outer;
 					focus.outlineStyle.solid;
 					focus.outlineWidth._medium;
 				});
@@ -76,7 +76,7 @@
 				s.justifyContent.center;
 				s.pointerEvents.none;
 				s.transitionProperty.raw('transform');
-				s.transitionTimingFunction.ease;
+				s.transitionTimingFunction._standard;
 			}
 		},
 		variants: {

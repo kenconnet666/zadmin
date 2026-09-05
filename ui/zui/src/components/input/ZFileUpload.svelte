@@ -372,11 +372,11 @@
 			s.padding._xlarge;
 			s.transitionDuration._fast;
 			s.transitionProperty.raw('background-color, border-color, color, opacity');
-			s.transitionTimingFunction.ease;
+			s.transitionTimingFunction._standard;
 			s.width.percent(100);
 			s._focusVisible((focus) => {
 				focus.outlineColor._focus;
-				focus.outlineOffset.px(2);
+				focus.outlineOffset._outer;
 				focus.outlineStyle.solid;
 				focus.outlineWidth._medium;
 			});

@@ -4,6 +4,7 @@ import type {
 	ZuiDensity,
 	ZuiDirection,
 	ZuiMotion,
+	ThemePaletteName,
 	ZuiTheme
 } from '@zadmin/zui';
 import {
@@ -63,6 +64,7 @@ export const docsThemeById = {
 
 export type DocsThemeId = keyof typeof docsThemeById;
 export type DocsTheme = (typeof docsThemeById)[DocsThemeId];
+export type DocsPalette = 'preset' | ThemePaletteName;
 
 export const docsThemes = Object.entries(docsThemeById).map(([id, definition]) => ({
 	...definition,
@@ -74,6 +76,7 @@ export interface DocsPreferences {
 	density: ZuiDensity;
 	direction: ZuiDirection;
 	motion: ZuiMotion;
+	palette: DocsPalette;
 	themeId: DocsThemeId;
 }
 
@@ -81,6 +84,16 @@ const contrasts = new Set<ZuiContrast>(['auto', 'high', 'normal']);
 const densities = new Set<ZuiDensity>(['compact', 'comfortable', 'spacious']);
 const directions = new Set<ZuiDirection>(['ltr', 'rtl']);
 const motions = new Set<ZuiMotion>(['auto', 'full', 'reduced']);
+const paletteNames = new Set<ThemePaletteName>([
+	'blue',
+	'violet',
+	'teal',
+	'green',
+	'amber',
+	'orange',
+	'rose',
+	'slate'
+]);
 
 export const docsLightTheme = auroraLight;
 export const docsDarkTheme = neonDark;
@@ -118,21 +131,15 @@ export function resolveDocsPreferences(
 		density: 'comfortable',
 		direction: 'ltr',
 		motion: 'auto',
+		palette: 'preset',
 		themeId: fallbackThemeId
 	};
 	if (!stored) return fallback;
 
 	try {
-		const value = JSON.parse(stored) as Partial<
-			Record<keyof DocsPreferences | 'themeMode', unknown>
-		>;
+		const value = JSON.parse(stored) as Partial<Record<keyof DocsPreferences, unknown>>;
 		if (typeof value !== 'object' || value === null || Array.isArray(value)) return fallback;
-		const storedTheme =
-			typeof value.themeId === 'string'
-				? value.themeId
-				: typeof value.themeMode === 'string'
-					? value.themeMode
-					: undefined;
+		const storedTheme = typeof value.themeId === 'string' ? value.themeId : undefined;
 		return {
 			contrast: contrasts.has(value.contrast as ZuiContrast)
 				? (value.contrast as ZuiContrast)
@@ -146,6 +153,10 @@ export function resolveDocsPreferences(
 			motion: motions.has(value.motion as ZuiMotion)
 				? (value.motion as ZuiMotion)
 				: fallback.motion,
+			palette:
+				value.palette === 'preset' || paletteNames.has(value.palette as ThemePaletteName)
+					? (value.palette as DocsPalette)
+					: fallback.palette,
 			themeId: resolveDocsThemeId(storedTheme, fallbackThemeId.endsWith('-dark'))
 		};
 	} catch {

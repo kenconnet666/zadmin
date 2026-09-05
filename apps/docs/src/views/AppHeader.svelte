@@ -51,16 +51,16 @@
 					s.letterSpacing.em(0.08);
 					s.marginTop._xsmall;
 					s.textTransform.uppercase;
-					s._media('(max-width: 48rem)', (mobile) => mobile.display.none);
+					s._media({ max: 'medium' }, (mobile) => mobile.display.none);
 				},
 				brandText: (s) => {
 					s.display.flex;
 					s.flexDirection.column;
 					s.lineHeight._compact;
-					s._media('(max-width: 48rem)', (mobile) => mobile.display.none);
+					s._media({ max: 'medium' }, (mobile) => mobile.display.none);
 				},
 				github: (s) => {
-					s._media('(max-width: 48rem)', (mobile) => mobile.display.none);
+					s._media({ max: 'medium' }, (mobile) => mobile.display.none);
 				},
 				mark: (s) => {
 					s.backgroundColor._primary;
@@ -88,13 +88,15 @@
 					s.paddingInline._xlarge;
 					s.position.sticky;
 					s.top.px(0);
-					s.zIndex(50);
-					s._media('(max-width: 80rem) and (min-width: 48.01rem)', (compact) => {
-						compact.gap._medium;
-						compact.gridTemplateColumns.raw('14rem minmax(0, 1fr) auto');
-						compact.paddingInline._large;
-					});
-					s._media('(max-width: 48rem)', (mobile) => {
+					s.zIndex._sticky;
+					s._media({ min: 'medium' }, (range) =>
+						range._media('(max-width: 80rem)', (compact) => {
+							compact.gap._medium;
+							compact.gridTemplateColumns.raw('14rem minmax(0, 1fr) auto');
+							compact.paddingInline._large;
+						})
+					);
+					s._media({ max: 'medium' }, (mobile) => {
 						mobile.gap._medium;
 						mobile.gridTemplateColumns.raw('auto minmax(0, 1fr) auto');
 						mobile.paddingInline._medium;
@@ -119,7 +121,7 @@
 					s.display.inlineFlex;
 					s.gap._small;
 					s.whiteSpace.nowrap;
-					s._media('(max-width: 48rem)', (mobile) => mobile.display.none);
+					s._media({ max: 'medium' }, (mobile) => mobile.display.none);
 				},
 				themeLabel: (s) => s._media('(max-width: 80rem)', (compact) => compact.display.none)
 			},
@@ -149,7 +151,7 @@
 		type ZuiDirection,
 		type ZuiMotion
 	} from '@zadmin/zui';
-	import { docsThemeById, docsThemes, type DocsThemeId } from '../app/theme.js';
+	import { docsThemeById, docsThemes, type DocsPalette, type DocsThemeId } from '../app/theme.js';
 	import type { ComponentCatalogManifestEntry } from '../framework/catalog-manifest.generated.js';
 	import AppCommandSearch from './AppCommandSearch.svelte';
 	import AppMobileNavigation from './AppMobileNavigation.svelte';
@@ -161,13 +163,16 @@
 		density = 'comfortable',
 		direction = 'ltr',
 		docs,
+		highContrast = false,
 		motion = 'auto',
 		onContrastChange,
 		onDensityChange,
 		onDirectionChange,
 		onMotionChange,
+		onPaletteChange,
 		onThemeChange,
-		themeId = 'aurora-light'
+		themeId = 'aurora-light',
+		palette = 'preset'
 	}: {
 		readonly contrast?: ZuiContrast;
 		readonly currentGuideId?: string;
@@ -175,13 +180,16 @@
 		readonly density?: ZuiDensity;
 		readonly direction?: ZuiDirection;
 		readonly docs: readonly ComponentCatalogManifestEntry[];
+		readonly highContrast?: boolean;
 		readonly motion?: ZuiMotion;
 		readonly onContrastChange?: (value: ZuiContrast) => void;
 		readonly onDensityChange?: (value: ZuiDensity) => void;
 		readonly onDirectionChange?: (value: ZuiDirection) => void;
 		readonly onMotionChange?: (value: ZuiMotion) => void;
+		readonly onPaletteChange?: (value: DocsPalette) => void;
 		readonly onThemeChange?: (value: DocsThemeId) => void;
 		readonly themeId?: DocsThemeId;
+		readonly palette?: DocsPalette;
 	} = $props();
 	const zui = useZui();
 	const classes = $derived(zui.slots(headerRecipe));
@@ -199,6 +207,18 @@
 	const contrastValueLabel = labelFrom(contrastLabels);
 	const motionValueLabel = labelFrom(motionLabels);
 	const directionValueLabel = labelFrom(directionLabels);
+	const paletteLabels = {
+		preset: '跟随预设',
+		blue: '蓝',
+		violet: '紫',
+		teal: '青',
+		green: '绿',
+		amber: '琥珀',
+		orange: '橙',
+		rose: '玫瑰',
+		slate: '石板'
+	} as const;
+	const paletteValueLabel = labelFrom(paletteLabels);
 
 	function setTheme(value: SelectionKey | undefined): void {
 		if (typeof value === 'string' && docsThemes.some((theme) => theme.id === value)) {
@@ -221,6 +241,10 @@
 
 	function setDirection(value: SelectionKey | undefined): void {
 		if (value === 'ltr' || value === 'rtl') onDirectionChange?.(value);
+	}
+	function setPalette(value: SelectionKey | undefined): void {
+		if (typeof value === 'string' && Object.hasOwn(paletteLabels, value))
+			onPaletteChange?.(value as DocsPalette);
 	}
 </script>
 
@@ -262,6 +286,25 @@
 				<ZText class={classes.preferencesLabel}>显示</ZText>
 			</ZPopoverTrigger>
 			<ZPopoverContent class={classes.preferencesPanel}>
+				<div class={classes.preference}>
+					<ZText>主色</ZText>
+					<ZSelect
+						value={palette}
+						valueLabel={paletteValueLabel}
+						onValueChange={setPalette}
+						disabled={highContrast}
+					>
+						<ZSelectTrigger aria-label="主色" />
+						<ZSelectContent>
+							{#each Object.entries(paletteLabels) as [value, label] (value)}
+								<ZSelectItem {value} disabled={value !== 'preset' && highContrast}
+									>{label}</ZSelectItem
+								>
+							{/each}
+						</ZSelectContent>
+					</ZSelect>
+					{#if highContrast}<ZText tone="muted">高对比模式保留高对比主题主色</ZText>{/if}
+				</div>
 				<div class={classes.preference}>
 					<ZText>密度</ZText>
 					<ZSelect value={density} valueLabel={densityValueLabel} onValueChange={setDensity}>

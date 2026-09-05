@@ -14,8 +14,6 @@
 		readonly controlId?: string;
 		readonly defaultOpen?: boolean;
 		readonly defaultValue?: readonly SelectionKey[];
-		/** @deprecated Use `defaultValue`. */
-		readonly defaultValues?: readonly SelectionKey[];
 		readonly disabled?: boolean;
 		readonly emptyText?: string;
 		readonly form?: string;
@@ -28,8 +26,6 @@
 		readonly name?: string;
 		readonly onOpenChange?: (open: boolean) => void;
 		readonly onValueChange?: (value: readonly SelectionKey[]) => void;
-		/** @deprecated Use `onValueChange`. */
-		readonly onValuesChange?: (values: readonly SelectionKey[]) => void;
 		open?: boolean;
 		readonly options?: readonly ZMultiSelectOption[];
 		readonly overflowLabel?: (hiddenCount: number) => string;
@@ -40,8 +36,6 @@
 		readonly size?: ZControlSize;
 		value?: readonly SelectionKey[];
 		readonly valueLabel?: (value: SelectionKey) => string;
-		/** @deprecated Use `value`. */
-		values?: readonly SelectionKey[];
 	}
 
 	export const zuiMetadata = {
@@ -52,13 +46,6 @@
 		name: 'ZMultiSelect',
 		bindings: [
 			{ description: '当前有序多选key。', name: 'value', type: 'readonly SelectionKey[]' },
-			{
-				description: 'deprecated value兼容绑定别名；不得与value同时传入。',
-				name: 'values',
-				type: 'readonly SelectionKey[]',
-				deprecatedSince: 'unreleased',
-				replacement: 'value'
-			},
 			{ description: '当前打开状态。', name: 'open', type: 'boolean' }
 		],
 		dependencies: [
@@ -74,13 +61,6 @@
 				description: '用户toggle、移除或清空后调用一次；options变化和reset不会伪造回调。',
 				name: 'onValueChange',
 				type: '(value: readonly SelectionKey[]) => void'
-			},
-			{
-				description: 'deprecated回调别名；不得与onValueChange同时传入。',
-				name: 'onValuesChange',
-				type: '(values: readonly SelectionKey[]) => void',
-				deprecatedSince: 'unreleased',
-				replacement: 'onValueChange'
 			},
 			{
 				description: '打开或dismiss后调用一次。',
@@ -129,23 +109,6 @@
 				description: '非受控初值与form reset目标。',
 				name: 'defaultValue',
 				type: 'readonly SelectionKey[]'
-			},
-			{
-				bindable: true,
-				default: 'undefined',
-				description: 'deprecated values兼容别名；不得与value同时传入。',
-				name: 'values',
-				type: 'readonly SelectionKey[]',
-				deprecatedSince: 'unreleased',
-				replacement: 'value'
-			},
-			{
-				default: 'undefined',
-				description: 'deprecated defaultValues兼容别名；不得与defaultValue同时传入。',
-				name: 'defaultValues',
-				type: 'readonly SelectionKey[]',
-				deprecatedSince: 'unreleased',
-				replacement: 'defaultValue'
 			},
 			{
 				bindable: true,
@@ -327,7 +290,6 @@
 		controlId: controlIdProp,
 		defaultOpen = false,
 		defaultValue,
-		defaultValues,
 		disabled: disabledProp = false,
 		emptyText,
 		form,
@@ -340,7 +302,6 @@
 		name: nameProp,
 		onOpenChange,
 		onValueChange,
-		onValuesChange,
 		open = $bindable(),
 		options,
 		overflowLabel,
@@ -350,24 +311,10 @@
 		required: requiredProp = false,
 		size: sizeProp,
 		value = $bindable(),
-		valueLabel = String,
-		values = $bindable()
+		valueLabel = String
 	}: ZMultiSelectProps = $props();
 
 	function assertPublicContract(): void {
-		if (value !== undefined && values !== undefined) {
-			throw new TypeError('ZMultiSelect value and deprecated values are mutually exclusive.');
-		}
-		if (defaultValue !== undefined && defaultValues !== undefined) {
-			throw new TypeError(
-				'ZMultiSelect defaultValue and deprecated defaultValues are mutually exclusive.'
-			);
-		}
-		if (onValueChange && onValuesChange) {
-			throw new TypeError(
-				'ZMultiSelect onValueChange and deprecated onValuesChange are mutually exclusive.'
-			);
-		}
 		if (maxTagCount !== undefined && (!Number.isInteger(maxTagCount) || maxTagCount < 0)) {
 			throw new TypeError('ZMultiSelect maxTagCount must be a non-negative integer.');
 		}
@@ -391,13 +338,11 @@
 	const required = $derived(requiredProp || (field?.required ?? false));
 	const resolvedSize = $derived(resolveControlSize(sizeProp ?? field?.size, zui.density));
 	const valueState = new ControllableState<readonly SelectionKey[]>({
-		defaultValue: () =>
-			normalizeValues(defaultValue ?? defaultValues ?? [], 'ZMultiSelect defaultValue'),
-		onChange: () => onValueChange ?? onValuesChange,
-		read: () => value ?? values,
+		defaultValue: () => normalizeValues(defaultValue ?? [], 'ZMultiSelect defaultValue'),
+		onChange: () => onValueChange,
+		read: () => value,
 		write: (next) => {
-			if (value !== undefined || values === undefined) value = next;
-			else values = next;
+			value = next;
 		}
 	});
 	const resolvedValues = $derived(normalizeValues(valueState.current, 'ZMultiSelect value'));

@@ -782,11 +782,6 @@ export const comboboxContentApiFacts = {
 			type: 'string'
 		},
 		{
-			name: 'ariaLabel',
-			required: false,
-			type: 'string'
-		},
-		{
 			name: 'children',
 			required: false,
 			type: 'Snippet'
@@ -1009,11 +1004,6 @@ export const contextMenuContentApiFacts = {
 	props: [
 		{
 			name: 'aria-label',
-			required: false,
-			type: 'string'
-		},
-		{
-			name: 'ariaLabel',
 			required: false,
 			type: 'string'
 		},
@@ -2582,11 +2572,6 @@ export const menuSubContentApiFacts = {
 			type: 'string'
 		},
 		{
-			name: 'ariaLabel',
-			required: false,
-			type: 'string'
-		},
-		{
 			name: 'children',
 			required: false,
 			type: 'Snippet'
@@ -2771,11 +2756,6 @@ export const multiSelectApiFacts = {
 			type: 'readonly SelectionKey[]'
 		},
 		{
-			name: 'defaultValues',
-			required: false,
-			type: 'readonly SelectionKey[]'
-		},
-		{
 			name: 'disabled',
 			required: false,
 			type: 'boolean'
@@ -2836,11 +2816,6 @@ export const multiSelectApiFacts = {
 			type: '(value: readonly SelectionKey[]) => void'
 		},
 		{
-			name: 'onValuesChange',
-			required: false,
-			type: '(values: readonly SelectionKey[]) => void'
-		},
-		{
 			name: 'open',
 			required: false,
 			type: 'boolean'
@@ -2889,11 +2864,6 @@ export const multiSelectApiFacts = {
 			name: 'valueLabel',
 			required: false,
 			type: '(value: SelectionKey) => string'
-		},
-		{
-			name: 'values',
-			required: false,
-			type: 'readonly SelectionKey[]'
 		}
 	],
 	source: 'ui/zui/src/components/compound/multi-select/ZMultiSelect.svelte',
@@ -5093,6 +5063,11 @@ export const cardApiFacts = {
 			type: "keyof ZuiTheme['space']"
 		},
 		{
+			name: 'elevation',
+			required: false,
+			type: "'large' | 'medium' | 'none' | 'small'"
+		},
+		{
 			name: 'children',
 			required: false,
 			type: 'Snippet'
@@ -5140,12 +5115,7 @@ export const carouselApiFacts = {
 	props: [
 		{
 			name: 'aria-label',
-			required: false,
-			type: 'string'
-		},
-		{
-			name: 'ariaLabel',
-			required: false,
+			required: true,
 			type: 'string'
 		},
 		{
@@ -6123,11 +6093,6 @@ export const timelineApiFacts = {
 			type: 'Snippet<[item: TimelineItem, index: number]>'
 		},
 		{
-			name: 'item',
-			required: false,
-			type: 'Snippet<[item: TimelineItem]>'
-		},
-		{
 			name: 'items',
 			required: true,
 			type: 'readonly TimelineItem[]'
@@ -6178,11 +6143,6 @@ export const virtualListApiFacts = {
 	inheritedFrom: ['HTMLAttributes<HTMLDivElement>'],
 	name: 'ZVirtualList',
 	props: [
-		{
-			name: 'ariaLabel',
-			required: false,
-			type: 'string'
-		},
 		{
 			name: 'controller',
 			required: false,
@@ -6420,11 +6380,6 @@ export const loadingBarApiFacts = {
 			name: 'mode',
 			required: false,
 			type: "'local' | 'page'"
-		},
-		{
-			name: 'page',
-			required: false,
-			type: 'boolean'
 		},
 		{
 			name: 'ref',
@@ -7082,11 +7037,6 @@ export const providerApiFacts = {
 			name: 'timeZone',
 			required: false,
 			type: 'string'
-		},
-		{
-			name: 'translations',
-			required: false,
-			type: 'ZuiTranslations'
 		}
 	],
 	source: 'ui/zui/src/components/gene/ZProvider.svelte',
@@ -7356,11 +7306,6 @@ export const calendarApiFacts = {
 			name: 'invalid',
 			required: false,
 			type: 'boolean'
-		},
-		{
-			name: 'isDateDisabled',
-			required: false,
-			type: '(date: CalendarDateValue) => boolean'
 		},
 		{
 			name: 'isDateUnavailable',
@@ -8587,16 +8532,6 @@ export const formApiFacts = {
 			type: '(event: SubmitEvent & { currentTarget: HTMLFormElement }) => void'
 		},
 		{
-			name: 'onReset',
-			required: false,
-			type: '(event: Event) => void'
-		},
-		{
-			name: 'onSubmit',
-			required: false,
-			type: '(event: SubmitEvent) => void'
-		},
-		{
 			name: 'onValidSubmit',
 			required: false,
 			type: '( detail: FormSubmitDetail<PublicStandardSchemaV1.InferOutput<TSchema>> ) => void'
@@ -9093,11 +9028,6 @@ export const numberFieldApiFacts = {
 			type: 'boolean'
 		},
 		{
-			name: 'clampOnBlur',
-			required: false,
-			type: 'boolean'
-		},
-		{
 			name: 'decrementLabel',
 			required: false,
 			type: 'string'
@@ -9366,11 +9296,6 @@ export const segmentedApiFacts = {
 			type: 'boolean'
 		},
 		{
-			name: 'items',
-			required: false,
-			type: 'readonly ZSegmentedOption[]'
-		},
-		{
 			name: 'loop',
 			required: false,
 			type: 'boolean'
@@ -9634,11 +9559,6 @@ export const tagsInputApiFacts = {
 			type: 'readonly string[]'
 		},
 		{
-			name: 'defaultValues',
-			required: false,
-			type: 'readonly string[]'
-		},
-		{
 			name: 'defaultInputValue',
 			required: false,
 			type: 'string'
@@ -9755,11 +9675,6 @@ export const tagsInputApiFacts = {
 		},
 		{
 			name: 'value',
-			required: false,
-			type: 'readonly string[]'
-		},
-		{
-			name: 'values',
 			required: false,
 			type: 'readonly string[]'
 		}
@@ -10122,11 +10037,6 @@ export const treeSelectApiFacts = {
 	inheritedFrom: ['HTMLAttributes<HTMLDivElement>'],
 	name: 'ZTreeSelect',
 	props: [
-		{
-			name: 'ariaLabel',
-			required: false,
-			type: 'string'
-		},
 		{
 			name: 'clearable',
 			required: false,

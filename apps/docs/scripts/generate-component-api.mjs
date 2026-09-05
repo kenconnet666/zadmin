@@ -668,8 +668,18 @@ if (process.argv.includes('--self-test')) {
 		componentPath('data-display', 'ZList.svelte'),
 		'ZListProps'
 	);
-	if (![...listDeprecatedPaths].includes('items.id'))
-		throw new Error('Workspace property scanner missed nested deprecated List items.id.');
+	if (listDeprecatedPaths.size !== 0)
+		throw new Error('Pre-release List still exposes deprecated property paths.');
+	const listPublicPaths = await scanWorkspacePropertyPaths(
+		workspaceTypeGraph,
+		componentPath('data-display', 'ZList.svelte'),
+		'ZListProps',
+		true
+	);
+	if (!listPublicPaths.has('items.key') || listPublicPaths.has('items.id'))
+		throw new Error(
+			'Workspace property scanner did not preserve keyed List identity after alias removal.'
+		);
 	const importedCases = [
 		[
 			componentPath('navigation', 'ZCommandPalette.svelte'),

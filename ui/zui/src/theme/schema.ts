@@ -4,6 +4,12 @@ export const DEFAULT_THEME_SCHEMA = {
 		medium: 2,
 		progress: 8
 	},
+	easing: {
+		enter: 'cubic-bezier(0.16, 1, 0.3, 1)',
+		exit: 'cubic-bezier(0.7, 0, 0.84, 0)',
+		linear: 'linear',
+		standard: 'ease'
+	},
 	breakpoint: {
 		large: '64rem',
 		medium: '48rem',
@@ -49,6 +55,7 @@ export const DEFAULT_THEME_SCHEMA = {
 		spinnerSpin: 800,
 		slow: 320
 	},
+	focusOffset: { inner: -2, none: 0, outer: 2, tight: 1 },
 	fontFamily: {
 		mono: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
 		sans: 'Inter, ui-sans-serif, system-ui, sans-serif'
@@ -98,6 +105,7 @@ export const DEFAULT_THEME_SCHEMA = {
 	},
 	shadow: {
 		codeHighlight: 'inset 3px 0 0 #2563eb',
+		large: '0 16px 48px rgb(0 0 0 / 0.18)',
 		medium: '0 8px 24px rgb(0 0 0 / 0.12)',
 		none: 'none',
 		small: '0 1px 2px rgb(0 0 0 / 0.08)'
@@ -134,6 +142,8 @@ export const DEFAULT_THEME_SCHEMA = {
 		switchThumbTravelSmall: 'translateX(12px)'
 	},
 	zIndex: {
+		sticky: 50,
+		pageLoading: 100,
 		dropdown: 1000,
 		modal: 1200,
 		overlay: 1100,

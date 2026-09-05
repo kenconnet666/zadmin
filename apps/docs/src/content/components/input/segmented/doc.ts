@@ -21,10 +21,6 @@ export const segmentedDoc = defineComponentDoc(segmentedMetadata, {
 				default: '最近祖先form',
 				description: '把隐藏的成功提交字段与reset owner关联到DOM外部form。'
 			},
-			items: {
-				default: 'undefined',
-				description: '兼容旧调用方的options别名；不能与options同时提供。'
-			},
 			invalid: { default: '继承Field或false', description: '同步aria-invalid与危险边框。' },
 			loop: { default: 'true', description: '控制方向键在首尾是否循环。' },
 			name: { default: '继承Field或—', description: 'FormValueBridge成功值字段名。' },
@@ -41,7 +37,7 @@ export const segmentedDoc = defineComponentDoc(segmentedMetadata, {
 				description: '视觉与方向键轴；horizontal结合Provider direction处理RTL。'
 			},
 			options: {
-				default: '必填（或兼容items）',
+				default: '必填',
 				description: '完整typed key、label与disabled权威集合，支持动态替换。'
 			},
 			readonly: {

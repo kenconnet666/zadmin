@@ -130,12 +130,12 @@
 			s.lineHeight._normal;
 			s.transitionDuration._fast;
 			s.transitionProperty.raw('border-color, box-shadow');
-			s.transitionTimingFunction.ease;
+			s.transitionTimingFunction._standard;
 			s.width._full;
 			s._selector('&::placeholder', (placeholder) => placeholder.color._textMuted);
 			s._focusVisible((focus) => {
 				focus.outlineColor._focus;
-				focus.outlineOffset.px(2);
+				focus.outlineOffset._outer;
 				focus.outlineStyle.solid;
 				focus.outlineWidth._medium;
 			});

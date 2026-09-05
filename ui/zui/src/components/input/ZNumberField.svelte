@@ -36,8 +36,6 @@
 
 	export interface ZNumberFieldProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onchange'> {
 		readonly allowOutOfRange?: boolean;
-		/** @deprecated Use `allowOutOfRange`; `false` is equivalent to allowing out-of-range text. */
-		readonly clampOnBlur?: boolean;
 		readonly decrementLabel?: string;
 		readonly defaultValue?: number;
 		readonly disabled?: boolean;
@@ -139,14 +137,6 @@
 				description: '允许直接输入保留越界值；所有步进交互仍会夹紧。',
 				name: 'allowOutOfRange',
 				type: 'boolean'
-			},
-			{
-				default: '!allowOutOfRange',
-				description: 'deprecated兼容别名；新代码使用allowOutOfRange。',
-				name: 'clampOnBlur',
-				type: 'boolean',
-				deprecatedSince: 'unreleased',
-				replacement: 'allowOutOfRange'
 			},
 			{
 				default: '本地化默认文案',
@@ -282,10 +272,10 @@
 			s.overflow.hidden;
 			s.transitionDuration._fast;
 			s.transitionProperty.raw('border-color, box-shadow');
-			s.transitionTimingFunction.ease;
+			s.transitionTimingFunction._standard;
 			s._selector('&:focus-within', (focus) => {
 				focus.outlineColor._focus;
-				focus.outlineOffset.px(2);
+				focus.outlineOffset._outer;
 				focus.outlineStyle.solid;
 				focus.outlineWidth._medium;
 			});
@@ -309,7 +299,7 @@
 			s.color._text;
 			s.fontWeight._semibold;
 			s._focusVisible((focus) => {
-				focus.outlineOffset.px(-2);
+				focus.outlineOffset._inner;
 			});
 		},
 		variants: {
@@ -401,7 +391,6 @@
 		'aria-label': ariaLabel,
 		'aria-labelledby': ariaLabelledBy,
 		allowOutOfRange = false,
-		clampOnBlur,
 		class: className,
 		decrementLabel,
 		defaultValue,
@@ -439,7 +428,7 @@
 	const field = useZField();
 	const resolvedLocale = $derived(locale ?? zui.locale);
 	const resolvedInputId = $derived(inputId ?? field?.controlId ?? generatedInputId);
-	const resolvedClampOnBlur = $derived(clampOnBlur ?? !allowOutOfRange);
+	const resolvedClampOnBlur = $derived(!allowOutOfRange);
 	const constraints = $derived.by(() => {
 		if (!Number.isFinite(step) || step <= 0)
 			throw new TypeError('ZNumberField step must be positive and finite.');

@@ -36,7 +36,7 @@
 </ZTable>
 
 <ZVirtualList
-	ariaLabel="Large deployment list"
+	aria-label="Large deployment list"
 	items={rows}
 	itemKey={(row) => row.id}
 	itemSize={40}

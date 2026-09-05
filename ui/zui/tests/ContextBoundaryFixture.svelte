@@ -25,12 +25,12 @@
 	} from '../src/entrypoints/index.js';
 
 	const duplicateItems = [
-		{ id: 'same', label: 'One' },
-		{ id: 'same', label: 'Two' }
+		{ key: 'same', label: 'One' },
+		{ key: 'same', label: 'Two' }
 	];
 	const duplicateTimeline = [
-		{ id: 'same', title: 'One' },
-		{ id: 'same', title: 'Two' }
+		{ key: 'same', title: 'One' },
+		{ key: 'same', title: 'Two' }
 	];
 	const tableRows = [
 		{ id: 'same', name: 'One' },
@@ -85,13 +85,13 @@
 	<ZFileUpload inputLabel="Invalid" maxSize={-1} />
 </svelte:boundary>
 <svelte:boundary onerror={capture}>
-	<ZVirtualList ariaLabel="Invalid" height={40} itemSize={0} items={[]} itemKey={() => 'none'}>
+	<ZVirtualList aria-label="Invalid" height={40} itemSize={0} items={[]} itemKey={() => 'none'}>
 		{#snippet item()}never{/snippet}
 	</ZVirtualList>
 </svelte:boundary>
 <svelte:boundary onerror={capture}>
 	<ZVirtualList
-		ariaLabel="Duplicates"
+		aria-label="Duplicates"
 		height={40}
 		items={duplicateVirtualItems}
 		itemKey={(item) => item.id}
@@ -115,7 +115,7 @@
 </svelte:boundary>
 <svelte:boundary onerror={capture}>
 	<ZCarousel
-		ariaLabel="Duplicates"
+		aria-label="Duplicates"
 		items={['one', 'two']}
 		itemKey={() => 'same'}
 		itemLabel={(value) => value}

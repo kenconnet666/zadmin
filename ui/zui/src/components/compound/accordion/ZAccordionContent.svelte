@@ -26,7 +26,7 @@
 				s.display.grid;
 				s.transitionDuration._normal;
 				s.transitionProperty.raw('grid-template-rows, opacity');
-				s.transitionTimingFunction.ease;
+				s.transitionTimingFunction._standard;
 			}
 		},
 		variants: {

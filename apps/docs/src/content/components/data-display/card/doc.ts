@@ -11,6 +11,8 @@ import SemanticRootsDemo from './SemanticRootsDemo.svelte';
 import semanticRootsSource from './SemanticRootsDemo.svelte?raw';
 import VariantsDemo from './VariantsDemo.svelte';
 import variantsSource from './VariantsDemo.svelte?raw';
+import ElevationDemo from './ElevationDemo.svelte';
+import elevationSource from './ElevationDemo.svelte?raw';
 import { cardApiFacts } from '../../../../framework/component-api.generated.js';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
@@ -32,6 +34,10 @@ export const cardDoc = defineComponentDoc(cardMetadata, {
 				description: '默认中性div；article和section必须由调用方提供真实标题关系。'
 			},
 			children: { default: '—', description: 'Card正文；loading时暂由内置Skeleton替换。' },
+			elevation: {
+				default: "componentDefaults.card.elevation或由variant推导('small'/'none')",
+				description: '阴影层级；显式值优先，elevated默认small、outlined默认none。'
+			},
 			footer: { default: '—', description: '补充说明区域，不承担主要操作。' },
 			header: { default: '—', description: '标题与摘要区域；标题层级由调用方拥有。' },
 			loading: {
@@ -50,6 +56,14 @@ export const cardDoc = defineComponentDoc(cardMetadata, {
 			'以默认中性div避免article泛滥，按固定media→header→body→footer→actions顺序组合语义内容面。'
 	},
 	demos: [
+		{
+			component: ElevationDemo,
+			covers: ['basic-render', 'variants-and-states'],
+			description: '显式选择none、small、medium或large阴影层级，具体值由Theme shadow tokens提供。',
+			id: 'card-elevation',
+			source: elevationSource,
+			title: '阴影层级'
+		},
 		{
 			component: BodyPaddingDemo,
 			covers: ['basic-render', 'composition', 'variants-and-states'],

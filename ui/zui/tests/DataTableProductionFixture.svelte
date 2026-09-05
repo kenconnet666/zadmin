@@ -83,7 +83,7 @@
 {#snippet expandedRow(row: Row, index: number)}
 	<ZDescriptionList
 		aria-label={`${row.name} details`}
-		items={[{ description: row.detail, id: `detail-${index}`, term: 'Detail' }]}
+		items={[{ description: row.detail, key: `detail-${index}`, term: 'Detail' }]}
 	/>
 {/snippet}
 

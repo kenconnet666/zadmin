@@ -57,7 +57,7 @@
 			);
 			s._focusVisible((focus) => {
 				focus.outlineColor._focus;
-				focus.outlineOffset.px(2);
+				focus.outlineOffset._outer;
 				focus.outlineStyle.solid;
 				focus.outlineWidth._medium;
 			});
@@ -91,7 +91,7 @@
 			s.flexShrink(0);
 			s.transitionDuration._fast;
 			s.transitionProperty.raw('transform');
-			s.transitionTimingFunction.ease;
+			s.transitionTimingFunction._standard;
 		},
 		variants: {
 			motion: {

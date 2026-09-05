@@ -313,10 +313,10 @@ const headingProps: ComponentProps<typeof ZHeading> = {
 	size: headingSize
 } satisfies ZHeadingProps;
 const descriptionListProps: ComponentProps<typeof ZDescriptionList> = {
-	items: [{ description: '1', id: 'version', term: 'Version' }]
+	items: [{ description: '1', key: 'version', term: 'Version' }]
 } satisfies ZDescriptionListProps;
 const listProps: ComponentProps<typeof ZList> = {
-	items: [{ id: 'one', label: 'One' }]
+	items: [{ key: 'one', label: 'One' }]
 } satisfies ZListProps;
 const tagProps: ComponentProps<typeof ZTag> = { removable: true } satisfies ZTagProps;
 const alertProps: ComponentProps<typeof ZAlert> = { title: 'Saved' } satisfies ZAlertProps;
@@ -362,7 +362,7 @@ const statisticProps: ComponentProps<typeof ZStatistic> = {
 } satisfies ZStatisticProps;
 const tableProps: ComponentProps<typeof ZTable> = { caption: 'Rows' } satisfies ZTableProps;
 const virtualListProps: ComponentProps<typeof ZVirtualList> = {
-	ariaLabel: 'Rows',
+	'aria-label': 'Rows',
 	item: (() => {}) as never,
 	itemKey: () => 'one',
 	items: [{ id: 'one' }]
@@ -454,11 +454,13 @@ const comboboxInputValueChangeConflict: ZComboboxInputProps = {
 // @ts-expect-error ZCombobox owns compound form reset behavior.
 const comboboxInputFormResetConflict: ZComboboxInputProps = { onFormReset: () => undefined };
 const comboboxContentProps: ComponentProps<typeof ZComboboxContent> = {
-	ariaLabel: 'Suggestions',
+	'aria-label': 'Suggestions',
 	virtual: true,
 	virtualHeight: 240,
 	virtualItemSize: 40
 } satisfies ZComboboxContentProps;
+// @ts-expect-error Deprecated ComboboxContent ariaLabel alias was removed.
+const removedComboboxAriaAlias = { ariaLabel: 'Suggestions' } satisfies ZComboboxContentProps;
 const comboboxItemProps: ComponentProps<typeof ZComboboxItem> = {
 	textValue: 'Ready',
 	value: 'ready'
@@ -469,8 +471,10 @@ const contextMenuProps: ComponentProps<typeof ZContextMenu> = {
 const contextMenuTriggerProps: ComponentProps<typeof ZContextMenuTrigger> =
 	{} satisfies ZContextMenuTriggerProps;
 const contextMenuContentProps: ComponentProps<typeof ZContextMenuContent> = {
-	ariaLabel: 'Actions'
+	'aria-label': 'Actions'
 } satisfies ZContextMenuContentProps;
+// @ts-expect-error Deprecated ContextMenuContent ariaLabel alias was removed.
+const removedContextMenuAriaAlias = { ariaLabel: 'Actions' } satisfies ZContextMenuContentProps;
 const dialogProps: ComponentProps<typeof ZDialog> = { defaultOpen: true } satisfies ZDialogProps;
 const dialogTriggerProps: ComponentProps<typeof ZDialogTrigger> = {} satisfies ZDialogTriggerProps;
 const dialogOverlayProps: ComponentProps<typeof ZDialogOverlay> = {} satisfies ZDialogOverlayProps;
@@ -521,12 +525,22 @@ const menuSubTriggerProps: ComponentProps<typeof ZMenuSubTrigger> = {
 const menuSubContentProps: ComponentProps<typeof ZMenuSubContent> = {
 	'aria-label': 'More actions'
 } satisfies ZMenuSubContentProps;
+// @ts-expect-error Deprecated submenu ariaLabel alias was removed.
+const removedMenuSubAriaAlias = { ariaLabel: 'More actions' } satisfies ZMenuSubContentProps;
 const multiSelectProps: ComponentProps<typeof ZMultiSelect> = {
 	defaultValue: ['a', 2],
 	maxTagCount: 2,
 	name: 'choice',
 	options: [{ label: 'A', value: 'a' }],
 	valueLabel: String
+} satisfies ZMultiSelectProps;
+// @ts-expect-error Deprecated MultiSelect plural value alias was removed.
+const removedMultiSelectAlias = { values: ['a'] } satisfies ZMultiSelectProps;
+// @ts-expect-error Deprecated MultiSelect defaultValues alias was removed.
+const removedMultiSelectDefaultAlias = { defaultValues: ['a'] } satisfies ZMultiSelectProps;
+const removedMultiSelectEventAlias = {
+	// @ts-expect-error Deprecated MultiSelect onValuesChange alias was removed.
+	onValuesChange: () => undefined
 } satisfies ZMultiSelectProps;
 const multiSelectTriggerProps: ComponentProps<typeof ZMultiSelectTrigger> =
 	{} satisfies ZMultiSelectTriggerProps;
@@ -599,6 +613,8 @@ const selectItemProps: ComponentProps<typeof ZSelectItem> = {
 const segmentedProps: ComponentProps<typeof ZSegmented> = {
 	options: [{ label: 'Ready', value: 1 }] satisfies readonly ZSegmentedOption[]
 } satisfies ZSegmentedProps;
+// @ts-expect-error Deprecated Segmented items alias was removed.
+const removedSegmentedAlias = { items: [{ label: 'Ready', value: 1 }] } satisfies ZSegmentedProps;
 const tagsInputProps: ComponentProps<typeof ZTagsInput> = {
 	defaultValue: ['alpha'],
 	defaultInputValue: 'draft',
@@ -608,15 +624,20 @@ const tagsInputProps: ComponentProps<typeof ZTagsInput> = {
 	size: 'small',
 	transform: (value) => value.toLocaleLowerCase()
 } satisfies ZTagsInputProps;
-const tagsInputLegacyProps: ZTagsInputProps = {
-	defaultValues: ['legacy-default'],
-	values: ['legacy-value']
-};
+// @ts-expect-error Deprecated TagsInput defaultValues alias was removed.
+const removedTagsDefaultAlias = { defaultValues: ['legacy'] } satisfies ZTagsInputProps;
+// @ts-expect-error Deprecated TagsInput values alias was removed.
+const removedTagsValueAlias = { values: ['legacy'] } satisfies ZTagsInputProps;
 const treeProps: ComponentProps<typeof ZTree> = {
 	nodes: [{ key: 'root', label: 'Root' }]
 } satisfies ZTreeProps;
 const treeSelectProps: ComponentProps<typeof ZTreeSelect> = {
 	nodes: [{ key: 'root', label: 'Root' }]
+} satisfies ZTreeSelectProps;
+const removedTreeAriaAlias = {
+	nodes: [{ key: 'root', label: 'Root' }],
+	// @ts-expect-error Deprecated TreeSelect ariaLabel alias was removed.
+	ariaLabel: 'Tree'
 } satisfies ZTreeSelectProps;
 const cascaderFilter: CascaderFilter = (path, query) =>
 	path.some(({ label }) => label.includes(query));
@@ -665,6 +686,8 @@ const numberFieldProps: ComponentProps<typeof ZNumberField> = {
 	step: 0.25,
 	value: 1.5
 } satisfies ZNumberFieldProps;
+// @ts-expect-error Deprecated NumberField clampOnBlur alias was removed.
+const removedNumberClampAlias = { clampOnBlur: true } satisfies ZNumberFieldProps;
 const pinInputProps: ComponentProps<typeof ZPinInput> = {
 	length: 6,
 	mask: true,
@@ -686,6 +709,8 @@ const calendarProps: ComponentProps<typeof ZCalendar> = {
 	firstDayOfWeek: 'mon',
 	timeZone: 'Asia/Shanghai'
 } satisfies ZCalendarProps;
+// @ts-expect-error Deprecated Calendar isDateDisabled alias was removed.
+const removedCalendarAlias = { isDateDisabled: () => false } satisfies ZCalendarProps;
 const dateFieldProps: ComponentProps<typeof ZDateField> = {
 	locale: 'zh-CN',
 	timeZone: 'Asia/Shanghai'
@@ -712,6 +737,10 @@ const formProps: ComponentProps<typeof ZForm> = {
 	children: (() => undefined) as never,
 	validateOn: ['submit']
 } satisfies ZFormProps;
+// @ts-expect-error Deprecated Form onReset alias was removed.
+const removedFormResetAlias = { onReset: () => undefined } satisfies ZFormProps;
+// @ts-expect-error Deprecated Form onSubmit alias was removed.
+const removedFormSubmitAlias = { onSubmit: () => undefined } satisfies ZFormProps;
 const formFieldProps: ComponentProps<typeof ZFormField> = {
 	label: 'Account',
 	name: ['users', 0, 'account']
@@ -817,10 +846,12 @@ void comboboxInputDefaultValueConflict;
 void comboboxInputValueChangeConflict;
 void comboboxInputFormResetConflict;
 void comboboxContentProps;
+void removedComboboxAriaAlias;
 void comboboxItemProps;
 void contextMenuProps;
 void contextMenuTriggerProps;
 void contextMenuContentProps;
+void removedContextMenuAriaAlias;
 void dialogProps;
 void dialogTriggerProps;
 void dialogOverlayProps;
@@ -849,7 +880,11 @@ void menuSeparatorProps;
 void menuSubProps;
 void menuSubTriggerProps;
 void menuSubContentProps;
+void removedMenuSubAriaAlias;
 void multiSelectProps;
+void removedMultiSelectAlias;
+void removedMultiSelectDefaultAlias;
+void removedMultiSelectEventAlias;
 void multiSelectTriggerProps;
 void multiSelectContentProps;
 void multiSelectItemProps;
@@ -872,10 +907,13 @@ void selectTriggerProps;
 void selectContentProps;
 void selectItemProps;
 void segmentedProps;
+void removedSegmentedAlias;
 void tagsInputProps;
-void tagsInputLegacyProps;
+void removedTagsDefaultAlias;
+void removedTagsValueAlias;
 void treeProps;
 void treeSelectProps;
+void removedTreeAriaAlias;
 void cascaderProps;
 void transferProps;
 void mentionProps;
@@ -884,15 +922,19 @@ void commandPaletteProps;
 void textareaProps;
 void inputGroupProps;
 void numberFieldProps;
+void removedNumberClampAlias;
 void pinInputProps;
 void colorPickerProps;
 void fileUploadProps;
 void calendarProps;
+void removedCalendarAlias;
 void dateFieldProps;
 void datePickerProps;
 void dateRangePickerProps;
 void timeFieldProps;
 void formProps;
+void removedFormResetAlias;
+void removedFormSubmitAlias;
 void formFieldProps;
 void typedFormProps;
 void nestedFieldPath;

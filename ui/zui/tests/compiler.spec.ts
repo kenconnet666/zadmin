@@ -19,6 +19,30 @@ async function transform(
 }
 
 describe('ICSS Svelte preprocessor', () => {
+	it('preserves token-based media boundaries and system colors while lifting dynamic values', async () => {
+		const diagnostics: IcssCompilerDiagnostic[] = [];
+		const output = await transform(
+			`<script>
+			import { defaultTheme, icss } from '@zadmin/zui';
+			let width = $state(120);
+			const panel = $derived(icss(defaultTheme, (s) => {
+				s._media({ min: 'medium' }, (m) => {
+					m.width.px(width);
+					m.color.canvasText;
+					m.outlineOffset._outer;
+				});
+			}));
+		</script><div class={panel}></div>`,
+			diagnostics
+		);
+		expect(output).toContain("_media({ min: 'medium' }");
+		expect(output).toContain('m.color.canvasText');
+		expect(output).toContain('m.outlineOffset._outer');
+		expect(output).toMatch(/m\.width\.px\(__zuiIcssSlot\(/u);
+		expect(diagnostics).toEqual([]);
+		expect(() => compile(output, { generate: 'client', runes: true })).not.toThrow();
+		expect(() => compile(output, { generate: 'server', runes: true })).not.toThrow();
+	});
 	it('lifts direct identifier values from a local derived class', async () => {
 		const output = await transform(`<script lang="ts">
 			import { defaultTheme, icss } from '@zadmin/zui';

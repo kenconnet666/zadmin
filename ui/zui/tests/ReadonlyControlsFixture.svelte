@@ -129,7 +129,7 @@
 				aria-label="Readonly segmented"
 				data-testid="readonly-segmented"
 				defaultValue="b"
-				{items}
+				options={items}
 				name="period"
 				onchange={() => (segmentedNativeChanges += 1)}
 				onValueChange={() => (segmentedChanges += 1)}
@@ -180,7 +180,7 @@
 				bind:value={boundarySegmented}
 				aria-label="Segmented safety boundary"
 				data-testid="boundary-segmented"
-				{items}
+				options={items}
 				onValueChange={() => undefined}
 				readonly={false}
 			/>

@@ -105,7 +105,7 @@ export const multiSelectDoc = defineComponentDoc(multiSelectMetadata, {
 		'readonly保持Trigger可聚焦和值可读，以aria-disabled表达不可激活并阻止打开、toggle、tag移除、clear和用户回调；disabled另用原生disabled并阻止FormData。',
 		'name通过FormValueBridge按value顺序提交重复同名entry，reset恢复defaultValue并清理selection/navigation瞬态，不触发onValueChange。',
 		'异步options变化默认保留未加载selected key；valueLabel或已见标签缓存使Trigger不依赖伪造option，未知孤儿仍可由tag删除或clear。',
-		'迁移：新代码统一使用value/defaultValue/onValueChange；values/defaultValues/onValuesChange仅作deprecated兼容。新旧主值、初值或回调成对同时传入会立即抛错，不静默建立双事实源。',
+		'主值API统一使用value/defaultValue/onValueChange；不建立第二套主值或回调事实源。',
 		'长期边界：ZSelect负责单值button/listbox；ZMultiSelect负责多值tag与重复FormData；需要自由文本查询和输入草稿时使用Combobox类输入模型，不把第二套inputValue塞进当前button焦点合同。'
 	],
 	keywords: [

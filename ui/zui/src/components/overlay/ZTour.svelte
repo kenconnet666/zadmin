@@ -233,7 +233,7 @@
 			s.position.fixed;
 			s.transitionDuration._normal;
 			s.transitionProperty.raw('opacity');
-			s.transitionTimingFunction.ease;
+			s.transitionTimingFunction._standard;
 		},
 		variants: {
 			interactive: { false: () => undefined, true: (s) => s.cursor.pointer },
@@ -258,7 +258,7 @@
 			s.position.fixed;
 			s.transitionDuration._normal;
 			s.transitionProperty.raw('left, top, width, height, opacity');
-			s.transitionTimingFunction.ease;
+			s.transitionTimingFunction._standard;
 		},
 		variants: {
 			motion: {
@@ -287,11 +287,11 @@
 			s.position.fixed;
 			s.transitionDuration._normal;
 			s.transitionProperty.raw('left, top, opacity');
-			s.transitionTimingFunction.ease;
+			s.transitionTimingFunction._standard;
 			s.zIndex._modal;
 			s._focusVisible((focus) => {
 				focus.outlineColor._focus;
-				focus.outlineOffset.px(2);
+				focus.outlineOffset._outer;
 				focus.outlineStyle.solid;
 				focus.outlineWidth._medium;
 			});

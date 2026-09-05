@@ -85,17 +85,4 @@ describe('ZMultiSelect logical collection integration', () => {
 		expect(activeId).toBeTruthy();
 		expect(listbox?.querySelector(`#${activeId}`)?.textContent).toContain('Virtual 200');
 	});
-
-	it('keeps deprecated plural aliases functional without creating a second callback path', async () => {
-		render(MultiSelectCollectionFixture);
-		document.querySelector<HTMLButtonElement>('[data-testid="multi-legacy-trigger"]')?.click();
-		await tick();
-		const content = document.querySelector<HTMLElement>('[data-testid="multi-legacy-content"]');
-		keydown(content, 'Home');
-		keydown(content, 'Enter');
-		await tick();
-		expect(document.querySelector('[data-testid="multi-legacy-output"]')?.textContent).toBe(
-			'stable,1:1'
-		);
-	});
 });

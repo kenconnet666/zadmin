@@ -14,7 +14,7 @@
 					s.alignContent.center;
 					s.minHeight.rem(8);
 					s.padding._xlarge;
-					s._media('(max-width: 48rem)', (mobile) => mobile.padding._large);
+					s._media({ max: 'medium' }, (mobile) => mobile.padding._large);
 				},
 				source: (s) => {
 					s.borderTopColor._border;

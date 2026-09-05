@@ -26,10 +26,6 @@ export const calendarDoc = defineComponentDoc(calendarMetadata, {
 				default: 'Field context或false',
 				description: '投射aria-invalid和data-invalid，不改变日期可用性。'
 			},
-			isDateDisabled: {
-				default: 'undefined',
-				description: 'deprecated兼容别名；新代码使用isDateUnavailable，二者互斥。'
-			},
 			name: { default: 'Field context或—', description: '以ISO CalendarDate字符串参与FormData。' },
 			onFocusedValueChange: {
 				default: 'undefined',

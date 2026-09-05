@@ -46,11 +46,10 @@
 			s.transform.raw('translateY(0) scale(1)');
 			s.transitionDuration._fast;
 			s.transitionProperty.raw('opacity, transform');
-			s.transitionTimingFunction.ease;
 			s.zIndex._dropdown;
 			s._focusVisible((focus) => {
 				focus.outlineColor._focus;
-				focus.outlineOffset.px(2);
+				focus.outlineOffset._outer;
 				focus.outlineStyle.solid;
 				focus.outlineWidth._medium;
 			});
@@ -179,6 +178,7 @@
 	} from '../../../runtime/foundation/root-style.js';
 	import { useZui } from '../../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../../runtime/foundation/compiler-bridge.js';
+	import { stylePresenceEasing } from '../../../runtime/foundation/style-presence.js';
 	import { DismissableLayer } from '../../../runtime/layer/dismissable-layer.js';
 	import { FloatingPositioner } from '../../../runtime/layer/floating.js';
 	import { FocusScope } from '../../../runtime/layer/focus-scope.js';
@@ -217,6 +217,7 @@
 			open: popover.open
 		})
 	);
+	const presenceEasingClass = $derived(zui.icss(stylePresenceEasing));
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 
@@ -274,7 +275,7 @@
 	<div
 		{...rest}
 		bind:this={ref}
-		class={[rootClass, className]}
+		class={[rootClass, presenceEasingClass, className]}
 		style={initialStyle}
 		use:applyIcssRootStyle={{ style, variables: icssVariables }}
 		use:portal={{ target: popover.portalTarget }}

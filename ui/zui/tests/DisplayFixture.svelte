@@ -15,23 +15,23 @@
 	} from '../src/entrypoints/index.js';
 
 	const listItems = [
-		{ description: 'Create release assets', id: 'build', label: 'Build' },
-		{ description: 'Verify production contracts', id: 'verify', label: 'Verify' }
+		{ description: 'Create release assets', key: 'build', label: 'Build' },
+		{ description: 'Verify production contracts', key: 'verify', label: 'Verify' }
 	];
 	const descriptions = [
-		{ description: 'v2.4.0', id: 'version', term: 'Version' },
-		{ description: 'cn-east-1', id: 'region', term: 'Region' }
+		{ description: 'v2.4.0', key: 'version', term: 'Version' },
+		{ description: 'cn-east-1', key: 'region', term: 'Region' }
 	];
 	const timeline = [
 		{
 			datetime: '2026-08-30T09:00:00Z',
-			id: 'build',
+			key: 'build',
 			status: 'done' as const,
 			time: '09:00',
 			title: 'Build'
 		},
-		{ id: 'deploy', status: 'current' as const, title: 'Deploy' },
-		{ id: 'verify', status: 'pending' as const, title: 'Verify' }
+		{ key: 'deploy', status: 'current' as const, title: 'Deploy' },
+		{ key: 'verify', status: 'pending' as const, title: 'Verify' }
 	];
 	let tagVisible = $state(true);
 </script>

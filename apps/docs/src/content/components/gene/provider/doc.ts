@@ -72,10 +72,6 @@ export const providerDoc = defineComponentDoc(providerMetadata, {
 			timeZone: {
 				default: "继承父级或 'UTC'",
 				description: '为日期组件提供SSR稳定的IANA时区。'
-			},
-			translations: {
-				default: '继承父级或空字典',
-				description: '旧字符串字典兼容入口；新代码优先使用localePack。'
 			}
 		},
 		summary:

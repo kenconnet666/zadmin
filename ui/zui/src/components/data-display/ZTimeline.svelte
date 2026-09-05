@@ -18,25 +18,11 @@
 		readonly tone?: TimelineTone;
 	}
 
-	interface TimelineKeyedItem {
-		/** Preferred typed collection identity. */
-		readonly key: PublicSelectionKey;
-		readonly id?: never;
-	}
-
-	interface TimelineLegacyItem {
-		/** @deprecated Use key. Retained during the pre-1.0 consumer migration. */
-		readonly id: PublicSelectionKey;
-		readonly key?: never;
-	}
-
-	export type TimelineItem = TimelineItemContent & (TimelineKeyedItem | TimelineLegacyItem);
+	export type TimelineItem = TimelineItemContent & { readonly key: PublicSelectionKey };
 
 	export interface ZTimelineProps extends Omit<HTMLOlAttributes, 'children'> {
 		readonly content?: Snippet<[item: TimelineItem, index: number]>;
 		readonly icon?: Snippet<[item: TimelineItem, index: number]>;
-		/** @deprecated Use content. */
-		readonly item?: Snippet<[item: TimelineItem]>;
 		readonly items: readonly TimelineItem[];
 		readonly label?: string;
 		readonly mode?: TimelineMode;
@@ -68,31 +54,18 @@
 		props: [
 			{
 				default: '必填',
-				description: '以typed key标识的事件；id仅为pre-1.0迁移别名，key与id不可同时提供。',
+				description: '以typed key标识的事件。',
 				name: 'items',
 				required: true,
 				type: 'readonly TimelineItem[]',
 				members: [
-					{
-						description: '与legacy id二选一；新代码必须使用key。',
-						name: 'key',
-						type: 'SelectionKey',
-						requiredWhen: '使用推荐的keyed identity分支'
-					},
+					{ description: '稳定typed身份。', name: 'key', type: 'SelectionKey', required: true },
 					{ description: '事件标题。', name: 'title', type: 'string', required: true },
 					{ description: '事件补充说明。', name: 'description', type: 'string', required: false },
 					{ description: '显示时间。', name: 'time', type: 'string', required: false },
 					{ description: '机器可读时间。', name: 'datetime', type: 'string', required: false },
 					{ description: '事件状态。', name: 'status', type: 'TimelineStatus', required: false },
-					{ description: '事件视觉色调。', name: 'tone', type: 'TimelineTone', required: false },
-					{
-						description: 'pre-1.0兼容身份别名；与key二选一。',
-						name: 'id',
-						type: 'SelectionKey',
-						deprecatedSince: 'unreleased',
-						replacement: 'key',
-						requiredWhen: '迁移期间仍使用deprecated legacy identity分支'
-					}
+					{ description: '事件视觉色调。', name: 'tone', type: 'TimelineTone', required: false }
 				]
 			},
 			{
@@ -132,14 +105,7 @@
 				type: 'Snippet<[TimelineItem, number]>'
 			},
 			{ description: '时间流尚未完成的尾项正文。', name: 'pending', type: 'Snippet' },
-			{ description: 'pending marker；默认使用ZSpinner。', name: 'pendingIcon', type: 'Snippet' },
-			{
-				description: '已弃用的content单参数别名。',
-				name: 'item',
-				type: 'Snippet<[TimelineItem]>',
-				deprecatedSince: 'unreleased',
-				replacement: 'content'
-			}
+			{ description: 'pending marker；默认使用ZSpinner。', name: 'pendingIcon', type: 'Snippet' }
 		],
 		source: 'ui/zui/src/components/data-display/ZTimeline.svelte',
 		states: [
@@ -183,7 +149,7 @@
 			mode: {
 				alternate: (s) => {
 					s.gridTemplateColumns.raw('minmax(0, 1fr) var(--zui-timeline-axis-size) minmax(0, 1fr)');
-					s._media('(max-width: 30rem)', (s) => {
+					s._media({ max: 'small' }, (s) => {
 						s.gridTemplateColumns.raw('var(--zui-timeline-axis-size) minmax(0, 1fr)');
 					});
 				},
@@ -203,7 +169,7 @@
 			mode: {
 				alternate: (s) => {
 					s.gridColumn.raw('2');
-					s._media('(max-width: 30rem)', (s) => s.gridColumn.raw('1'));
+					s._media({ max: 'small' }, (s) => s.gridColumn.raw('1'));
 				},
 				start: (s) => s.gridColumn.raw('1')
 			}
@@ -268,12 +234,12 @@
 				after: (s) => {
 					s.gridColumn.raw('3');
 					s.textAlign.start;
-					s._media('(max-width: 30rem)', (s) => s.gridColumn.raw('2'));
+					s._media({ max: 'small' }, (s) => s.gridColumn.raw('2'));
 				},
 				before: (s) => {
 					s.gridColumn.raw('1');
 					s.textAlign.end;
-					s._media('(max-width: 30rem)', (s) => {
+					s._media({ max: 'small' }, (s) => {
 						s.gridColumn.raw('2');
 						s.textAlign.start;
 					});
@@ -353,7 +319,6 @@
 		class: className,
 		content,
 		icon,
-		item,
 		items,
 		label = 'Timeline',
 		mode = 'start',
@@ -369,11 +334,8 @@
 	const pendingRowKey = Symbol('zui-timeline-pending');
 
 	function resolveKey(entry: TimelineItem): SelectionKey {
-		const key = entry.key ?? entry.id;
-		if (key === undefined)
-			throw new TypeError('ZTimeline items require exactly one typed key (key, or deprecated id).');
-		if (entry.key !== undefined && entry.id !== undefined)
-			throw new TypeError('ZTimeline items cannot provide both key and deprecated id.');
+		const key = entry.key;
+		if (key === undefined) throw new TypeError('ZTimeline items require a typed key.');
 		if (typeof key === 'number' && (!Number.isFinite(key) || Object.is(key, -0)))
 			throw new TypeError('ZTimeline numeric keys must be finite and cannot be -0.');
 		return key;
@@ -401,8 +363,6 @@
 	}
 
 	const validatedItems = $derived.by<ItemRow[]>(() => {
-		if (content && item)
-			throw new TypeError('ZTimeline accepts either content or deprecated item, not both.');
 		if (pendingIcon && !pending)
 			throw new TypeError('ZTimeline pendingIcon requires a pending snippet.');
 		const keys = new Set<SelectionKey>();
@@ -486,8 +446,6 @@
 				{:else}
 					{#if content}
 						{@render content(row.entry, row.index)}
-					{:else if item}
-						{@render item(row.entry)}
 					{:else}
 						<strong class={titleClass}>{row.entry.title}</strong>
 						{#if row.entry.description}

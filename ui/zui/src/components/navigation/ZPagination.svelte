@@ -69,7 +69,7 @@
 					s.width.rem(4);
 					s._focusVisible((focus) => {
 						focus.outlineColor._focus;
-						focus.outlineOffset.px(2);
+						focus.outlineOffset._outer;
 						focus.outlineStyle.solid;
 						focus.outlineWidth._medium;
 					});
@@ -100,7 +100,7 @@
 					s.paddingInline._small;
 					s._focusVisible((focus) => {
 						focus.outlineColor._focus;
-						focus.outlineOffset.px(2);
+						focus.outlineOffset._outer;
 						focus.outlineStyle.solid;
 						focus.outlineWidth._medium;
 					});

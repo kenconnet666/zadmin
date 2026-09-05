@@ -19,7 +19,7 @@
 			onkeydown={(event) => prevent && event.preventDefault()}>Target</ZContextMenuTrigger
 		>
 		<ZContextMenuContent
-			ariaLabel="Fixture context menu"
+			aria-label="Fixture context menu"
 			data-testid="context-content"
 			onAction={(event) => (action = String(event.value))}
 		>

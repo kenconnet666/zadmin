@@ -34,7 +34,27 @@ pnpm add @zadmin/zui @lucide/svelte svelte
 </ZProvider>
 ```
 
-`ZProvider` also owns direction, contrast, density, motion, typed locale packs, an explicit SSR-stable IANA time zone (UTC by default), legacy translation compatibility, portal boundaries, and the ICSS runtime. Providers can be nested without creating DOM wrappers.
+`ZProvider` also owns direction, contrast, density, motion, typed locale packs, an explicit SSR-stable IANA time zone (UTC by default), portal boundaries, and the ICSS runtime. Providers can be nested without creating DOM wrappers. Translation overrides use `localePack`; the untyped `translations` alias has been removed before release.
+
+### Theme palettes and effects
+
+`withPrimaryPalette(base, name, mode)` selects one of eight primary palettes (`blue`,
+`violet`, `teal`, `green`, `amber`, `orange`, `rose`, `slate`). Explicit `light`/`dark`
+mode must match the surface; the helper updates primary, hover and foreground colors
+and derives subtle colors without replacing semantic status colors. Preserve dedicated
+high-contrast presets when resolving accessibility preferences.
+
+```ts
+import { auroraLight, withPrimaryPalette } from '@zadmin/zui/themes';
+
+const theme = withPrimaryPalette(auroraLight, 'teal', 'light');
+```
+
+`ZCard` exposes `elevation="none|small|medium|large"`, backed by the corresponding
+`shadow` tokens. `focusOffset` and `easing` control shared focus geometry and motion
+curves. ICSS `_media({ min: 'medium' }, callback)` reads the theme breakpoint;
+`backgroundColor.canvas` uses native CSS `Canvas`, while `backgroundColor._canvas`
+uses the theme color. Zeroes, percentages and runtime geometry remain explicit values.
 
 ### Component defaults
 
@@ -120,7 +140,7 @@ Every documented root component has at least two executable examples in `apps/do
 
 ## Metadata and release facts
 
-Public `*Props` types are the source of truth for prop names, types, and requiredness. The documentation generator extracts those facts with the TypeScript AST; `apps/docs` owns teaching copy such as summaries, defaults, explanations, examples, and usage guidance. Components retain the legacy combined metadata shape during the incremental migration, so existing consumers do not break at once.
+Public `*Props` types are the source of truth for prop names, types, and requiredness. The documentation generator extracts those facts with the TypeScript AST; `apps/docs` owns teaching copy such as summaries, defaults, explanations, examples, and usage guidance. Component metadata also supplies structure and runtime tooling facts. Pre-release deprecated aliases are removed directly, with callers, generated contracts and documentation migrated together.
 
 `since` is either a real package version that has already been published or `unreleased`. Development stages and roadmap milestones are never represented as SemVer history.
 

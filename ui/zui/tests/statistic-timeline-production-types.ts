@@ -29,8 +29,7 @@ const timeline = {
 	content,
 	items: [
 		{ key: 1, status: 'done', title: 'Number' },
-		{ key: '1', status: 'current', title: 'String' },
-		{ id: 'legacy', title: 'Migration alias' }
+		{ key: '1', status: 'current', title: 'String' }
 	],
 	mode: 'alternate',
 	reverse: true
@@ -41,9 +40,13 @@ void timeline;
 const bigint: StatisticValue = 12_345_678_901_234_567_890n;
 void bigint;
 
-// @ts-expect-error key and deprecated id are mutually exclusive.
-const ambiguousTimelineItem: TimelineItem = { id: 'legacy', key: 'current', title: 'Invalid' };
-void ambiguousTimelineItem;
+// @ts-expect-error Timeline items require key identity.
+const missingTimelineKey: TimelineItem = { title: 'Invalid' };
+void missingTimelineKey;
+
+// @ts-expect-error ZTimeline no longer accepts the removed item snippet alias.
+const removedTimelineItemAlias = { item: content, items: [] } satisfies ZTimelineProps;
+void removedTimelineItemAlias;
 
 // @ts-expect-error Timeline status is a finite semantic union.
 const invalidTimelineStatus: TimelineItem = { key: 'invalid', status: 'warning', title: 'Invalid' };

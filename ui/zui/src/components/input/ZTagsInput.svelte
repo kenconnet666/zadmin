@@ -11,8 +11,6 @@
 		readonly commitOnBlur?: boolean;
 		readonly controlId?: string;
 		readonly defaultValue?: readonly string[];
-		/** @deprecated Use `defaultValue`. */
-		readonly defaultValues?: readonly string[];
 		readonly defaultInputValue?: string;
 		readonly delimiters?: readonly string[];
 		readonly disabled?: boolean;
@@ -37,8 +35,6 @@
 		readonly transform?: (value: string) => string;
 		readonly validate?: (value: string) => boolean;
 		value?: readonly string[];
-		/** @deprecated Use `value`. */
-		values?: readonly string[];
 	}
 
 	export const zuiMetadata = {
@@ -48,13 +44,6 @@
 		name: 'ZTagsInput',
 		bindings: [
 			{ description: '当前有序文本标签。', name: 'value', type: 'readonly string[]' },
-			{
-				description: 'deprecated value兼容绑定别名；不得与value同时传入。',
-				name: 'values',
-				type: 'readonly string[]',
-				deprecatedSince: 'unreleased',
-				replacement: 'value'
-			},
 			{ description: '当前受控草稿。', name: 'inputValue', type: 'string' },
 			{ description: '真实group引用。', name: 'ref', type: 'HTMLDivElement | null' },
 			{ description: '真实草稿input引用。', name: 'inputRef', type: 'HTMLInputElement | null' }
@@ -171,22 +160,6 @@
 				description: '非受控初始标签与form reset目标。',
 				name: 'defaultValue',
 				type: 'readonly string[]'
-			},
-			{
-				default: 'undefined',
-				description: 'deprecated values兼容别名；不得与value同时传入。',
-				name: 'values',
-				type: 'readonly string[]',
-				deprecatedSince: 'unreleased',
-				replacement: 'value'
-			},
-			{
-				default: 'undefined',
-				description: 'deprecated defaultValues兼容别名；不得与defaultValue同时传入。',
-				name: 'defaultValues',
-				type: 'readonly string[]',
-				deprecatedSince: 'unreleased',
-				replacement: 'defaultValue'
 			},
 			{
 				bindable: true,
@@ -429,7 +402,6 @@
 		commitOnBlur = true,
 		controlId,
 		defaultValue,
-		defaultValues,
 		defaultInputValue = '',
 		delimiters = [','],
 		disabled = false,
@@ -455,21 +427,8 @@
 		transform,
 		validate,
 		value = $bindable(),
-		values = $bindable(),
 		...rest
 	}: ZTagsInputProps = $props();
-	function assertPublicContract(): void {
-		if (value !== undefined && values !== undefined) {
-			throw new TypeError('ZTagsInput value and deprecated values are mutually exclusive.');
-		}
-		if (defaultValue !== undefined && defaultValues !== undefined) {
-			throw new TypeError(
-				'ZTagsInput defaultValue and deprecated defaultValues are mutually exclusive.'
-			);
-		}
-	}
-	assertPublicContract();
-	$effect(assertPublicContract);
 	const zui = useZui();
 	const fieldOwner = claimZFieldControlOwner();
 	const field = fieldOwner.field;
@@ -496,13 +455,11 @@
 		controlId ?? field?.controlId ?? createZuiId(zui.idPrefix, uid, 'tags-input')
 	);
 	const valueState = new ControllableState<readonly string[]>({
-		defaultValue: () =>
-			normalizeValues(defaultValue ?? defaultValues ?? [], allowDuplicates, resolvedMaxTags),
+		defaultValue: () => normalizeValues(defaultValue ?? [], allowDuplicates, resolvedMaxTags),
 		onChange: () => onValueChange,
-		read: () => value ?? values,
+		read: () => value,
 		write: (next) => {
-			if (value !== undefined || values === undefined) value = next;
-			else values = next;
+			value = next;
 		}
 	});
 	const draftState = new ControllableState<string>({

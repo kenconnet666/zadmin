@@ -20,7 +20,7 @@
 					s.display.flex;
 					s.gap._xsmall;
 					s.marginInlineStart.auto;
-					s._media('(max-width: 48rem)', (mobile) => mobile.display.none);
+					s._media({ max: 'medium' }, (mobile) => mobile.display.none);
 				},
 				trigger: (s) => {
 					s.color._textMuted;

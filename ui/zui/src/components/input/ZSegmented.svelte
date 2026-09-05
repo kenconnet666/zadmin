@@ -9,9 +9,6 @@
 		readonly value: SegmentedSelectionKey;
 	}
 
-	/** @deprecated Use ZSegmentedOption and the options prop. */
-	export type SegmentedItem = ZSegmentedOption;
-
 	export interface ZSegmentedProps extends Omit<
 		HTMLAttributes<HTMLDivElement>,
 		| 'aria-disabled'
@@ -26,8 +23,6 @@
 		readonly disabled?: boolean;
 		readonly form?: string;
 		readonly invalid?: boolean;
-		/** @deprecated Use options. */
-		readonly items?: readonly ZSegmentedOption[];
 		readonly loop?: boolean;
 		readonly name?: string;
 		readonly onchange?: (event: Event) => void;
@@ -78,7 +73,7 @@
 		parts: [{ description: '单个segment按钮。', name: 'item' }],
 		props: [
 			{
-				default: '必填（或兼容items）',
+				default: '必填',
 				description: '权威typed value、文本与disabled配置；支持动态替换。',
 				name: 'options',
 				type: 'readonly ZSegmentedOption[]',
@@ -92,14 +87,6 @@
 					{ description: 'segment显示文本。', name: 'label', type: 'string', required: true },
 					{ description: '禁止选择该segment。', name: 'disabled', type: 'boolean' }
 				]
-			},
-			{
-				default: 'undefined',
-				description: '兼容旧API的options别名；不能与options同时提供。',
-				name: 'items',
-				type: 'readonly ZSegmentedOption[]',
-				deprecatedSince: 'unreleased',
-				replacement: 'options'
 			},
 			{
 				bindable: true,
@@ -239,7 +226,7 @@
 			s.paddingInline._medium;
 			s._focusVisible((focus) => {
 				focus.outlineColor._focus;
-				focus.outlineOffset.px(1);
+				focus.outlineOffset._tight;
 				focus.outlineStyle.solid;
 				focus.outlineWidth._medium;
 			});
@@ -287,7 +274,6 @@
 		form,
 		id,
 		invalid,
-		items,
 		loop = true,
 		name: nameProp,
 		onchange,
@@ -319,12 +305,8 @@
 		ariaLabelledBy ?? (ariaLabel === undefined ? field?.labelId : undefined)
 	);
 	const sourceOptions = $derived.by(() => {
-		if (options !== undefined && items !== undefined) {
-			throw new TypeError('ZSegmented accepts either options or items, not both.');
-		}
-		const source = options ?? items;
-		if (source === undefined) throw new TypeError('ZSegmented requires options.');
-		return source;
+		if (options === undefined) throw new TypeError('ZSegmented requires options.');
+		return options;
 	});
 	const valueState = new ControllableState<SelectionKey | undefined>({
 		defaultValue: () => defaultValue,

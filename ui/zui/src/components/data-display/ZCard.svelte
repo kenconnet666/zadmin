@@ -6,12 +6,14 @@
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 
 	export type CardElement = 'article' | 'div' | 'section';
+	export type CardElevation = 'large' | 'medium' | 'none' | 'small';
 	export type CardVariant = 'elevated' | 'outlined';
 
 	export interface ZCardProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
 		readonly actions?: Snippet;
 		readonly as?: CardElement;
 		readonly bodyPadding?: keyof ZuiTheme['space'];
+		readonly elevation?: CardElevation;
 		readonly children?: Snippet;
 		readonly footer?: Snippet;
 		readonly header?: Snippet;
@@ -38,6 +40,13 @@
 			{ description: '与正文分离的补充操作区域。', name: 'actions' }
 		],
 		props: [
+			{
+				default: "componentDefaults.card.elevation或由variant推导('small'/'none')",
+				description:
+					'阴影层级；显式值优先于Provider组件默认，默认elevated为small、outlined为none。',
+				name: 'elevation',
+				type: "'none' | 'small' | 'medium' | 'large'"
+			},
 			{
 				default: "'large'",
 				description: '正文内边距；none适合媒体、表格或代码占满内容区，header/footer保持独立间距。',
@@ -74,6 +83,11 @@
 		source: 'ui/zui/src/components/data-display/ZCard.svelte',
 		states: [
 			{ description: '当前视觉surface。', name: 'data-variant', values: ['elevated', 'outlined'] },
+			{
+				description: '解析后的Theme阴影层级。',
+				name: 'data-elevation',
+				values: ['none', 'small', 'medium', 'large']
+			},
 			{ description: '正文正在加载。', name: 'data-loading', values: ['true'] }
 		],
 		status: 'stable',
@@ -93,12 +107,17 @@
 			variant: {
 				elevated: (s) => {
 					s.borderColor.transparent;
-					s.boxShadow._small;
 				},
 				outlined: (s) => s.borderColor._border
+			},
+			elevation: {
+				large: (s) => s.boxShadow._large,
+				medium: (s) => s.boxShadow._medium,
+				none: (s) => s.boxShadow._none,
+				small: (s) => s.boxShadow._small
 			}
 		},
-		defaultVariants: { variant: 'elevated' }
+		defaultVariants: { elevation: 'small', variant: 'elevated' }
 	});
 	const sectionRecipe = defineRecipe({
 		variants: {
@@ -183,6 +202,7 @@
 		bodyPadding = 'large',
 		children,
 		class: className,
+		elevation,
 		footer,
 		header,
 		loading = false,
@@ -196,7 +216,12 @@
 	const zui = useZui();
 	const componentDefaults = $derived(zui.componentDefaults.card);
 	const resolvedVariant = $derived(variant ?? componentDefaults?.variant ?? 'elevated');
-	const rootClass = $derived(zui.recipe(rootRecipe, { variant: resolvedVariant }));
+	const resolvedElevation = $derived(
+		elevation ?? componentDefaults?.elevation ?? (resolvedVariant === 'outlined' ? 'none' : 'small')
+	);
+	const rootClass = $derived(
+		zui.recipe(rootRecipe, { elevation: resolvedElevation, variant: resolvedVariant })
+	);
 	const sectionClass = $derived(zui.recipe(sectionRecipe, { padding: bodyPadding }));
 	const headerClass = $derived(zui.recipe(headerRecipe));
 	const separatedClass = $derived(zui.recipe(separatedRecipe));
@@ -215,6 +240,7 @@
 	use:applyIcssRootStyle={{ style, variables }}
 	aria-busy={loading ? true : ariaBusy}
 	data-loading={loading || undefined}
+	data-elevation={resolvedElevation}
 	data-variant={resolvedVariant}
 >
 	{#if media}<div data-slot="media">{@render media()}</div>{/if}

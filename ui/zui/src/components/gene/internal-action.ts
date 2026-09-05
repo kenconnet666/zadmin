@@ -1,19 +1,19 @@
 import type { IcssStyle } from '../../icss/types.js';
 import type { ZuiTheme } from '../../theme/types.js';
 
-function styleFocusRing(s: IcssStyle<ZuiTheme>, offset: number): void {
+function styleFocusRing(s: IcssStyle<ZuiTheme>): void {
 	s.outlineColor._focus;
-	s.outlineOffset.px(offset);
+	s.outlineOffset._outer;
 	s.outlineStyle.solid;
 	s.outlineWidth._medium;
 }
 
-export function styleInternalFocusRing(s: IcssStyle<ZuiTheme>, offset = 2): void {
-	s._focusVisible((focus) => styleFocusRing(focus, offset));
+export function styleInternalFocusRing(s: IcssStyle<ZuiTheme>): void {
+	s._focusVisible((focus) => styleFocusRing(focus));
 }
 
-export function styleInternalFocusWithinRing(s: IcssStyle<ZuiTheme>, offset = 2): void {
-	s._selector('&:focus-within', (focus) => styleFocusRing(focus, offset));
+export function styleInternalFocusWithinRing(s: IcssStyle<ZuiTheme>): void {
+	s._selector('&:focus-within', (focus) => styleFocusRing(focus));
 }
 
 export function styleInternalAction(s: IcssStyle<ZuiTheme>): void {

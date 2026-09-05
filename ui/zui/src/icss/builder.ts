@@ -84,6 +84,42 @@ function assertQuery(name: string, query: string): string {
 	return normalized;
 }
 
+function resolveMediaQuery<TTheme extends ThemeSchema>(
+	theme: TTheme,
+	query: string | { readonly min?: string; readonly max?: string }
+): string {
+	if (typeof query === 'string') return assertQuery('Media', query);
+	if (typeof query !== 'object' || query === null || Array.isArray(query))
+		throw new TypeError('Media query must be a string or breakpoint object.');
+	const keys = Object.keys(query);
+	if (keys.length === 0 || keys.some((key) => key !== 'min' && key !== 'max'))
+		throw new TypeError('Media breakpoint query requires min and/or max.');
+	if (query.min === undefined && query.max === undefined)
+		throw new TypeError('Media breakpoint query requires min and/or max.');
+	const breakpoints = theme.breakpoint;
+	if (!breakpoints || typeof breakpoints !== 'object')
+		throw new TypeError('Theme has no breakpoint group.');
+	const clauses: string[] = [];
+	for (const [name, key] of [
+		['min', query.min],
+		['max', query.max]
+	] as const) {
+		if (key === undefined) continue;
+		if (typeof key !== 'string' || !Object.hasOwn(breakpoints, key))
+			throw new TypeError(`Unknown breakpoint "${String(key)}".`);
+		const value = breakpoints[key];
+		if (
+			(typeof value !== 'string' && typeof value !== 'number') ||
+			String(value).trim().length === 0
+		)
+			throw new TypeError(`Unknown breakpoint "${key}".`);
+		if (typeof value === 'number' && (!Number.isFinite(value) || value < 0))
+			throw new TypeError(`Breakpoint "${key}" must be a non-negative finite length.`);
+		clauses.push(`(${name}-width: ${typeof value === 'number' ? `${value}px` : value})`);
+	}
+	return assertQuery('Media', clauses.join(' and '));
+}
+
 function createCarrier<TTheme extends ThemeSchema>(
 	theme: TTheme,
 	block: StyleBlock,
@@ -162,7 +198,22 @@ function createBuilder<TTheme extends ThemeSchema>(
 				};
 			}
 
-			if (key === '_media' || key === '_supports' || key === '_container') {
+			if (key === '_media') {
+				return (
+					value: string | { readonly min?: string; readonly max?: string },
+					factory: IcssFactory<TTheme>
+				): void => {
+					appendNested(
+						block,
+						theme,
+						'at-rule',
+						`@media ${resolveMediaQuery(theme, value)}`,
+						factory
+					);
+				};
+			}
+
+			if (key === '_supports' || key === '_container') {
 				return (value: string, factory: IcssFactory<TTheme>): void => {
 					const name = key.slice(1);
 					appendNested(block, theme, 'at-rule', `@${name} ${assertQuery(name, value)}`, factory);

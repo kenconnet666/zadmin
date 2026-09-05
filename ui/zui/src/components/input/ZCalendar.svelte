@@ -18,8 +18,6 @@
 		readonly form?: string;
 		readonly formParticipation?: 'auto' | 'none';
 		readonly invalid?: boolean;
-		/** @deprecated Use isDateUnavailable. */
-		readonly isDateDisabled?: (date: CalendarDateValue) => boolean;
 		readonly isDateUnavailable?: (date: CalendarDateValue) => boolean;
 		readonly locale?: string;
 		readonly maxValue?: CalendarDateValue;
@@ -172,14 +170,6 @@
 				description: '禁用特定日期；同时影响指针和键盘导航。',
 				name: 'isDateUnavailable',
 				type: '(date: CalendarDate) => boolean'
-			},
-			{
-				default: 'undefined',
-				description: '已弃用的日期禁用别名；不得与isDateUnavailable同时传入。',
-				name: 'isDateDisabled',
-				type: '(date: CalendarDate) => boolean',
-				deprecatedSince: 'unreleased',
-				replacement: 'isDateUnavailable'
 			},
 			{
 				default: 'Field context或false',
@@ -351,7 +341,7 @@
 			s.cursor.pointer;
 			s._focusVisible((focus) => {
 				focus.outlineColor._focus;
-				focus.outlineOffset.px(-2);
+				focus.outlineOffset._inner;
 				focus.outlineStyle.solid;
 				focus.outlineWidth._medium;
 			});
@@ -443,7 +433,6 @@
 		form,
 		formParticipation = 'auto',
 		invalid = false,
-		isDateDisabled,
 		isDateUnavailable,
 		locale,
 		maxValue,
@@ -485,11 +474,7 @@
 	const constraints = $derived.by(() => {
 		if (minValue && maxValue && minValue.compare(maxValue) > 0)
 			throw new RangeError('ZCalendar minValue cannot exceed maxValue.');
-		if (isDateDisabled && isDateUnavailable)
-			throw new TypeError(
-				'ZCalendar isDateUnavailable and deprecated isDateDisabled are mutually exclusive.'
-			);
-		return { predicate: isDateUnavailable ?? isDateDisabled };
+		return { predicate: isDateUnavailable };
 	});
 	const initialFocus = untrack(() => {
 		const candidate = clampDate(

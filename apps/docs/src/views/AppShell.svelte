@@ -29,7 +29,7 @@
 				main: (s) => {
 					s.minWidth.px(0);
 					s.padding.raw('3rem clamp(1.25rem, 3vw, 3.5rem) 6rem');
-					s._media('(max-width: 48rem)', (mobile) => mobile.padding.raw('2rem 1rem 4rem'));
+					s._media({ max: 'medium' }, (mobile) => mobile.padding.raw('2rem 1rem 4rem'));
 				},
 				skipLink: (s) => {
 					s.backgroundColor._canvas;
@@ -66,8 +66,8 @@
 					s.minHeight.vh(100);
 					s.transitionDuration._normal;
 					s.transitionProperty.raw('background-color, color');
-					s.transitionTimingFunction.ease;
-					s._media('(max-width: 48rem)', (mobile) => mobile.display.block);
+					s.transitionTimingFunction._standard;
+					s._media({ max: 'medium' }, (mobile) => mobile.display.block);
 				},
 				skipNavigation: (s) => {
 					s.position.fixed;
@@ -122,6 +122,7 @@
 	import { componentDocLoaders } from '../framework/component-doc-loaders.generated.js';
 	import type { ComponentDoc } from '../framework/component-doc.js';
 	import { docsRouter } from '../framework/router-runtime.svelte.js';
+	import type { DocsPalette } from '../app/theme.js';
 	import GuidePage from './GuidePage.svelte';
 	import HomePage from './HomePage.svelte';
 	import ThemeLabPage from './ThemeLabPage.svelte';
@@ -133,23 +134,29 @@
 		density = 'comfortable',
 		direction = 'ltr',
 		motion = 'auto',
+		highContrast = false,
 		onContrastChange,
 		onDensityChange,
 		onDirectionChange,
 		onMotionChange,
+		onPaletteChange,
 		onThemeChange,
-		themeId = 'aurora-light'
+		themeId = 'aurora-light',
+		palette = 'preset'
 	}: {
 		readonly contrast?: ZuiContrast;
 		readonly density?: ZuiDensity;
 		readonly direction?: ZuiDirection;
 		readonly motion?: ZuiMotion;
+		readonly highContrast?: boolean;
 		readonly onContrastChange?: (value: ZuiContrast) => void;
 		readonly onDensityChange?: (value: ZuiDensity) => void;
 		readonly onDirectionChange?: (value: ZuiDirection) => void;
 		readonly onMotionChange?: (value: ZuiMotion) => void;
+		readonly onPaletteChange?: (value: DocsPalette) => void;
 		readonly onThemeChange?: (value: DocsThemeId) => void;
 		readonly themeId?: DocsThemeId;
+		readonly palette?: DocsPalette;
 	} = $props();
 
 	const route = $derived(docsRouter.current);
@@ -268,15 +275,18 @@
 		{density}
 		{direction}
 		{motion}
+		{highContrast}
 		{onContrastChange}
 		{onDensityChange}
 		{onDirectionChange}
 		{onMotionChange}
+		{onPaletteChange}
 		{onThemeChange}
 		docs={componentCatalogManifest}
 		{currentGuideId}
 		{currentId}
 		{themeId}
+		{palette}
 	/>
 	<AppSidebar docs={componentCatalogManifest} {currentGuideId} {currentId} />
 	<main class={classes.main} id="zui-main-content" tabindex="-1">
@@ -289,7 +299,7 @@
 		{:else if currentDoc && ComponentPage}
 			<ComponentPage doc={currentDoc} />
 		{:else if currentGuideId === 'theme'}
-			<ThemeLabPage {onThemeChange} {themeId} />
+			<ThemeLabPage {onThemeChange} {themeId} {palette} />
 		{:else if currentGuide}
 			<GuidePage guide={currentGuide} />
 		{:else if invalidRoute}

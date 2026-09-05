@@ -5,15 +5,8 @@
 	import type { SelectionKey } from '../../runtime/collection/selection.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 
-	type DescriptionIdentity =
-		| { readonly id?: never; readonly key: SelectionKey }
-		| {
-				/** @deprecated Use key. */
-				readonly id: SelectionKey;
-				readonly key?: never;
-		  };
-
-	export type DescriptionItem = DescriptionIdentity & {
+	export type DescriptionItem = {
+		readonly key: SelectionKey;
 		readonly description: string;
 		readonly term: string;
 	};
@@ -67,27 +60,14 @@
 		props: [
 			{
 				default: '与children二选一',
-				description: '数据便利模式；每项使用typed key，deprecated id仅兼容迁移。',
+				description: '数据便利模式；每项使用typed key。',
 				name: 'items',
 				requiredWhen: '未提供children手写模式时',
 				type: 'readonly DescriptionItem[]',
 				members: [
-					{
-						description: '与legacy id二选一；新代码必须使用key。',
-						name: 'key',
-						type: 'SelectionKey',
-						requiredWhen: '使用推荐的keyed identity分支'
-					},
+					{ description: '稳定typed身份。', name: 'key', type: 'SelectionKey', required: true },
 					{ description: '描述项术语。', name: 'term', type: 'string', required: true },
-					{ description: '描述项正文。', name: 'description', type: 'string', required: true },
-					{
-						description: 'pre-1.0兼容身份别名；与key二选一。',
-						name: 'id',
-						type: 'SelectionKey',
-						deprecatedSince: 'unreleased',
-						replacement: 'key',
-						requiredWhen: '迁移期间仍使用deprecated legacy identity分支'
-					}
+					{ description: '描述项正文。', name: 'description', type: 'string', required: true }
 				]
 			},
 			{
@@ -325,10 +305,7 @@
 		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const keys = new Set<SelectionKey>();
 		for (const entry of items) {
-			if (entry.key !== undefined && entry.id !== undefined) {
-				throw new TypeError('ZDescriptionList items cannot provide both key and deprecated id.');
-			}
-			const key = entry.key ?? entry.id;
+			const key = entry.key;
 			if (typeof key !== 'string' && (!Number.isFinite(key) || Object.is(key, -0))) {
 				throw new TypeError(
 					'ZDescriptionList keys must be strings or finite numbers other than -0.'
@@ -347,7 +324,7 @@
 	});
 
 	function itemKey(entry: DescriptionItem): SelectionKey {
-		return entry.key ?? entry.id;
+		return entry.key;
 	}
 </script>
 

@@ -23,8 +23,7 @@ import {
 	enUSLocalePack,
 	resolveZuiLocalePack,
 	type ZuiLocalePack,
-	type ZuiLocalePackOverrides,
-	type ZuiTranslations
+	type ZuiLocalePackOverrides
 } from './locale.js';
 
 export type { ZuiTheme } from '../../theme/types.js';
@@ -35,7 +34,7 @@ export type ZuiDensity = 'compact' | 'comfortable' | 'spacious';
 export type ZuiDirection = 'ltr' | 'rtl';
 export type ZuiMotion = 'auto' | 'full' | 'reduced';
 export type ZuiPortalContainer = Document | HTMLElement | ShadowRoot | null;
-export type { ZuiLocalePack, ZuiLocalePackOverrides, ZuiTranslations } from './locale.js';
+export type { ZuiLocalePack, ZuiLocalePackOverrides } from './locale.js';
 
 export interface ZuiContext {
 	readonly colorScheme: ZuiColorScheme;
@@ -50,7 +49,6 @@ export interface ZuiContext {
 	readonly runtime: IcssRuntime;
 	readonly theme: ZuiTheme;
 	readonly timeZone: string;
-	readonly translations: ZuiTranslations;
 	readonly componentDefaults: ResolvedZuiComponentDefaults;
 	icss(factory: IcssFactory<ZuiTheme>): IcssClassName;
 	recipe<const TVariants extends RecipeVariantDefinitions>(
@@ -79,13 +77,10 @@ export interface ZuiContextSource {
 	readonly runtime?: IcssRuntime;
 	readonly theme?: ZuiTheme;
 	readonly timeZone?: string;
-	readonly translations?: ZuiTranslations;
 	readonly componentDefaults?: ZuiComponentDefaults | null;
 }
 
 const ZUI_CONTEXT = Symbol('zui-context');
-const EMPTY_TRANSLATIONS: ZuiTranslations = Object.freeze({});
-
 interface ResolvedZuiContextSource extends Required<
 	Omit<ZuiContextSource, 'localePack' | 'componentDefaults'>
 > {
@@ -131,9 +126,6 @@ function createZuiContext(read: () => ResolvedZuiContextSource): ZuiContext {
 		get timeZone() {
 			return read().timeZone;
 		},
-		get translations() {
-			return read().translations;
-		},
 		get componentDefaults() {
 			return read().componentDefaults;
 		},
@@ -163,7 +155,6 @@ const DEFAULT_CONTEXT = createZuiContext(() => ({
 	runtime: getDefaultIcssRuntime(),
 	theme: defaultTheme,
 	timeZone: 'UTC',
-	translations: EMPTY_TRANSLATIONS,
 	componentDefaults: resolveComponentDefaults(undefined, undefined)
 }));
 
@@ -178,14 +169,13 @@ export function provideZui(read: () => ZuiContextSource): ZuiContext {
 			direction: source.direction ?? parent.direction,
 			idPrefix: source.idPrefix ?? parent.idPrefix,
 			locale: source.locale ?? parent.locale,
-			localePack: resolveZuiLocalePack(parent.localePack, source.localePack, source.translations),
+			localePack: resolveZuiLocalePack(parent.localePack, source.localePack),
 			motion: source.motion ?? parent.motion,
 			portalContainer:
 				source.portalContainer === undefined ? parent.portalContainer : source.portalContainer,
 			runtime: source.runtime ?? parent.runtime,
 			theme: source.theme ?? parent.theme,
 			timeZone: source.timeZone ?? parent.timeZone,
-			translations: source.translations ?? parent.translations,
 			componentDefaults: resolveComponentDefaults(
 				parent.componentDefaults,
 				source.componentDefaults
@@ -199,11 +189,3 @@ export function provideZui(read: () => ZuiContextSource): ZuiContext {
 export function useZui(): ZuiContext {
 	return getContext<ZuiContext | undefined>(ZUI_CONTEXT) ?? DEFAULT_CONTEXT;
 }
-
-/** @deprecated Use provideZui(). */
-export function provideZuiTheme(readTheme: () => ZuiTheme): ZuiContext {
-	return provideZui(() => ({ theme: readTheme() }));
-}
-
-/** @deprecated Use useZui(). */
-export const useZuiTheme = useZui;

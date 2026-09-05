@@ -58,6 +58,78 @@ describe('ICSS builder edge behavior', () => {
 		).toThrow(/cannot contain CSS blocks/);
 	});
 
+	it('resolves typed breakpoint media queries and rejects invalid boundaries', () => {
+		const program = createStyleProgram(defaultTheme, (s) => {
+			s._media({ min: 'medium', max: 'large' }, (media) => media.display.grid);
+		});
+		expect(program.block.instructions[0]).toMatchObject({
+			query: '@media (min-width: 48rem) and (max-width: 64rem)',
+			type: 'at-rule'
+		});
+		expect(() =>
+			createStyleProgram(defaultTheme, (s) => s._media({} as never, () => undefined))
+		).toThrow(/requires min and\/or max/);
+		expect(() =>
+			createStyleProgram(defaultTheme, (s) =>
+				s._media({ min: 'missing' as never }, () => undefined)
+			)
+		).toThrow(/Unknown breakpoint/);
+		expect(() =>
+			createStyleProgram({ breakpoint: { small: '1px){body{display:none}}' } }, (s) =>
+				s._media({ min: 'small' }, () => undefined)
+			)
+		).toThrow(/cannot contain CSS blocks/);
+		expect(() =>
+			createStyleProgram({ color: { primary: 'red' } }, (s) =>
+				s._media({ min: 'small' } as never, () => undefined)
+			)
+		).toThrow(/no breakpoint group/);
+		expect(() =>
+			createStyleProgram(defaultTheme, (s) =>
+				s._media({ min: 'toString' } as never, () => undefined)
+			)
+		).toThrow(/Unknown breakpoint/);
+		const pixel = createStyleProgram({ breakpoint: { small: 480 } }, (s) =>
+			s._media({ min: 'small' }, (m) => m.display.block)
+		);
+		expect(pixel.block.instructions[0]).toMatchObject({ query: '@media (min-width: 480px)' });
+	});
+
+	it('distinguishes modern system colors from theme colors', () => {
+		const program = createStyleProgram(defaultTheme, (s) => {
+			s.color.canvasText;
+			s.backgroundColor.canvas;
+			s.color._text;
+			s.backgroundColor._canvas;
+			s.stroke.currentColor;
+		});
+		expect(program.block.instructions).toMatchObject([
+			{ property: 'color', values: [{ value: 'CanvasText' }] },
+			{ property: 'backgroundColor', values: [{ value: 'Canvas' }] },
+			{ property: 'color', values: [{ value: defaultTheme.color.text }] },
+			{ property: 'backgroundColor', values: [{ value: defaultTheme.color.canvas }] },
+			{ property: 'stroke', values: [{ value: 'currentColor' }] }
+		]);
+	});
+
+	it('records focus offsets and theme easing tokens alongside system keywords', () => {
+		const program = createStyleProgram(defaultTheme, (s) => {
+			s.outlineOffset._outer;
+			s.transitionTimingFunction._enter;
+			s.animationTimingFunction._exit;
+			s.transitionTimingFunction.ease;
+		});
+		expect(program.block.instructions).toMatchObject([
+			{ property: 'outlineOffset', values: [{ unit: 'px', value: 2 }] },
+			{
+				property: 'transitionTimingFunction',
+				values: [{ value: 'cubic-bezier(0.16, 1, 0.3, 1)' }]
+			},
+			{ property: 'animationTimingFunction', values: [{ value: 'cubic-bezier(0.7, 0, 0.84, 0)' }] },
+			{ property: 'transitionTimingFunction', values: [{ value: 'ease' }] }
+		]);
+	});
+
 	it('rejects missing runtime tokens and accepts compiler slots', () => {
 		expect(() =>
 			createStyleProgram(defaultTheme, (s) => {

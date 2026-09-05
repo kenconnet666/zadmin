@@ -150,7 +150,7 @@
 		base: (s) => {
 			s.transitionDuration._normal;
 			s.transitionProperty.raw('stroke-dashoffset');
-			s.transitionTimingFunction.ease;
+			s.transitionTimingFunction._standard;
 		},
 		variants: {
 			reduced: {

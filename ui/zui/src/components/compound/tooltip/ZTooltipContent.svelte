@@ -27,7 +27,6 @@
 			s.position.absolute;
 			s.transitionDuration._fast;
 			s.transitionProperty.raw('opacity, transform');
-			s.transitionTimingFunction.ease;
 			s.zIndex._dropdown;
 		},
 		variants: {
@@ -98,6 +97,7 @@
 	} from '../../../runtime/foundation/root-style.js';
 	import { useZui } from '../../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../../runtime/foundation/compiler-bridge.js';
+	import { stylePresenceEasing } from '../../../runtime/foundation/style-presence.js';
 	import { DismissableLayer } from '../../../runtime/layer/dismissable-layer.js';
 	import { FloatingPositioner } from '../../../runtime/layer/floating.js';
 	import { portal } from '../../../runtime/layer/portal.js';
@@ -126,6 +126,7 @@
 			open: tooltip.open
 		})
 	);
+	const presenceEasingClass = $derived(zui.icss(stylePresenceEasing));
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 	const interactiveSelector = [
@@ -214,7 +215,7 @@
 	<div
 		{...rest}
 		bind:this={ref}
-		class={[rootClass, className]}
+		class={[rootClass, presenceEasingClass, className]}
 		style={initialStyle}
 		use:applyIcssRootStyle={{ style, variables: icssVariables }}
 		use:portal={{ target: tooltip.portalTarget }}

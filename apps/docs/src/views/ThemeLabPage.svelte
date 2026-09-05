@@ -38,7 +38,7 @@
 					s.display.grid;
 					s.gap._large;
 					s.gridTemplateColumns.raw('repeat(4, minmax(0, 1fr))');
-					s._media('(max-width: 64rem)', (tablet) =>
+					s._media({ max: 'large' }, (tablet) =>
 						tablet.gridTemplateColumns.raw('repeat(2, minmax(0, 1fr))')
 					);
 					s._media('(max-width: 36rem)', (mobile) => mobile.gridTemplateColumns.raw('1fr'));
@@ -156,13 +156,15 @@
 		useZui
 	} from '@zadmin/zui';
 	import { ZCode } from '@zadmin/zui/code';
-	import { docsThemeById, docsThemes, type DocsThemeId } from '../app/theme.js';
+	import { docsThemeById, docsThemes, type DocsPalette, type DocsThemeId } from '../app/theme.js';
 
 	let {
 		onThemeChange,
+		palette = 'preset',
 		themeId = 'aurora-light'
 	}: {
 		readonly onThemeChange?: (value: DocsThemeId) => void;
+		readonly palette?: DocsPalette;
 		readonly themeId?: DocsThemeId;
 	} = $props();
 
@@ -170,6 +172,7 @@
 	const classes = $derived(zui.slots(themeLabRecipe));
 	const colors = $derived(Object.entries(zui.theme.color));
 	const currentTheme = $derived(docsThemeById[themeId]);
+	const elevations = ['none', 'small', 'medium', 'large'] as const;
 </script>
 
 <article class={classes.root} data-doc-route="guide:theme">
@@ -179,7 +182,7 @@
 			>主题不是一组颜色，而是一套系统合同。</ZHeading
 		>
 		<ZText as="p" class={classes.lead}>
-			使用顶部主题选择器切换六套官方预设，并在“显示”面板调整对比度、密度、动画和RTL。本页直接读取当前ZProvider上下文和Theme语义token，所有预览均为真实ZUI组件。
+			使用顶部主题选择器切换六套官方预设，并在“显示”面板选择八组主色、对比度、密度、动画和RTL。本页直接读取当前ZProvider上下文和Theme语义token，所有预览均为真实ZUI组件；高对比模式保留专用主题配色。
 		</ZText>
 	</header>
 
@@ -221,7 +224,7 @@
 			>当前偏好轴</ZHeading
 		>
 		<div class={classes.axisGrid}>
-			{#each [['Theme', currentTheme.label], ['Scheme', zui.colorScheme], ['Contrast', zui.contrast], ['Density', zui.density], ['Motion', zui.motion], ['Direction', zui.direction], ['Locale', zui.locale]] as axis (axis[0])}
+			{#each [['Theme', currentTheme.label], ['Palette', palette], ['Primary', zui.theme.color.primary], ['Scheme', zui.colorScheme], ['Contrast', zui.contrast], ['Density', zui.density], ['Motion', zui.motion], ['Direction', zui.direction], ['Locale', zui.locale]] as axis (axis[0])}
 				<ZCard variant="outlined">
 					<ZText class={classes.axisName}>{axis[0]}</ZText>
 					<ZText as="strong" class={classes.axisValue}>{axis[1]}</ZText>
@@ -278,5 +281,32 @@
 				</ZStack>
 			</ZCard>
 		</ZContainer>
+	</section>
+
+	<section class={classes.section} aria-labelledby="surface-elevation">
+		<ZHeading class={classes.sectionTitle} id="surface-elevation" level={2} size="xlarge"
+			>表面层级与动效</ZHeading
+		>
+		<ZStack gap="large">
+			<ZText tone="muted">
+				ZCard 的 elevation 独立控制阴影，不改变内容结构。四档效果直接读取当前主题
+				shadow；高对比主题不依赖阴影区分层级。
+			</ZText>
+			<div class={classes.presetGrid}>
+				{#each elevations as elevation (elevation)}
+					<ZCard {elevation} data-slot="elevation-preview">
+						<ZStack gap="medium">
+							<ZText weight="semibold">{elevation}</ZText>
+							<ZCode code={String(zui.theme.shadow[elevation])} inline />
+						</ZStack>
+					</ZCard>
+				{/each}
+			</div>
+			<ZText tone="muted">
+				焦点偏移由 focusOffset 管理；常规交互使用 easing.standard，Dialog、Popover 和 Tooltip
+				的进出场分别使用 easing.enter / exit。motion="reduced" 仍会取消非必要过渡。
+			</ZText>
+			<ZLink href="#/guides/icss">查看主题 API 与系统 token 用法</ZLink>
+		</ZStack>
 	</section>
 </article>

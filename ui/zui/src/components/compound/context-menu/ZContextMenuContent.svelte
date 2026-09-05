@@ -8,8 +8,6 @@
 		'aria-label' | 'ariaLabelledBy' | 'children' | 'initialFocus' | 'manageFocus' | 'role'
 	> & {
 		readonly 'aria-label'?: string;
-		/** @deprecated Use the native `aria-label` spelling. */
-		readonly ariaLabel?: string;
 		readonly children?: Snippet;
 		readonly loop?: boolean;
 		menuRef?: HTMLDivElement | null;
@@ -44,15 +42,6 @@
 				name: 'aria-label',
 				type: 'string'
 			},
-			{
-				default: 'undefined',
-				description: 'deprecated兼容别名；请改用aria-label。',
-				name: 'ariaLabel',
-				type: 'string',
-				deprecatedSince: 'unreleased',
-				replacement: 'aria-label',
-				replacementExternal: true
-			},
 			{ default: 'true', description: 'Item焦点是否循环。', name: 'loop', type: 'boolean' },
 			{
 				bindable: true,
@@ -86,7 +75,6 @@
 	import { useZPopover } from '../popover/context.svelte.js';
 	let {
 		'aria-label': ariaLabelNative,
-		ariaLabel,
 		children,
 		class: className,
 		loop = true,
@@ -97,7 +85,7 @@
 	}: ZContextMenuContentProps = $props();
 	const zui = useZui();
 	const popover = useZPopover();
-	const resolvedAriaLabel = $derived(ariaLabelNative ?? ariaLabel ?? 'Context menu');
+	const resolvedAriaLabel = $derived(ariaLabelNative ?? 'Context menu');
 	const popupClass = $derived(zui.recipe(menuPopupContentRecipe));
 	function initialFocus(): HTMLElement | null {
 		return (

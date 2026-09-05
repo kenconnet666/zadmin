@@ -139,6 +139,56 @@ const theme = extendTheme(defaultTheme, {
 				]
 			},
 			{
+				id: 'system-tokens',
+				title: '系统值、主题 token 与响应式断点',
+				paragraphs: [
+					'CSS 系统关键字不等于主题 token：backgroundColor.canvas 输出浏览器 Canvas，backgroundColor._canvas 读取 Theme.color.canvas；currentColor、CanvasText、FieldText、Highlight 等也有类型安全访问器。',
+					'outlineOffset._outer/_inner/_tight 读取 focusOffset；transitionTimingFunction 和 animationTimingFunction 支持 easing token，也保留标准 CSS 关键字。结构性的 0、100%、圆形 50% 和组件内部局部堆叠序号不应为了消除字面量而借用无关 token。'
+				],
+				code: `const theme = extendTheme(defaultTheme, {
+  breakpoint: { medium: '52rem' },
+  focusOffset: { outer: 3 },
+  easing: { standard: 'ease-in-out' }
+});
+const panel = icss(theme, (s) => {
+  s.backgroundColor._canvas;
+  s.outlineOffset._outer;
+  s.transitionTimingFunction._standard;
+  s._media({ min: 'medium' }, (wide) => wide.display.grid);
+  s._media('(forced-colors: active)', (forced) => {
+    forced.backgroundColor.canvas;
+    forced.color.canvasText;
+  });
+});`,
+				language: 'typescript',
+				bullets: [
+					'_media({ min, max }, callback) 至少提供一个边界，名称由主题 breakpoint 推导；边界遵循 CSS min/max-width 的包含语义。',
+					'主题断点改变时规则随主题重新解析；复合媒体查询仍使用字符串，不能在 @media 中引用 CSS var。',
+					'pnpm --filter @zadmin/docs tokens:audit 输出源代码 token 使用清单。相同数值仅是审查候选，不代表同一语义；静态清单不等于浏览器覆盖率。'
+				]
+			},
+			{
+				id: 'palettes-effects',
+				title: '可选主色与表面层级',
+				paragraphs: [
+					'withPrimaryPalette(base, name, mode) 同步替换 primary、primaryHover、onPrimary，并由 extendTheme 派生淡色。八组主色为 blue/violet/teal/green/amber/orange/rose/slate，每组提供 light/dark；mode 必须与实际背景模式一致。',
+					'它不改变危险色、状态色、密度或明暗模式，也不会自动识别高对比主题。文档应用在高对比模式保留专用预设，恢复标准对比度后再应用已保存主色。自定义画布仍需检查文字、边框和状态色的实际对比度。'
+				],
+				code: `import { auroraLight, withPrimaryPalette } from '@zadmin/zui/themes';
+
+const theme = withPrimaryPalette(auroraLight, 'teal', 'light');
+// <ZProvider {theme} colorScheme="light">
+//   <ZCard elevation="medium">共享主题表面</ZCard>
+// </ZProvider>`,
+				language: 'typescript',
+				bullets: [
+					'ZCard.elevation 为 none/small/medium/large，独立于 variant，消费同名 shadow token；显式 prop 优先于 componentDefaults.card.elevation。',
+					'zIndex.sticky/pageLoading 分别用于固定导航和页面加载条；不要把局部表格单元格堆叠替换成全局浮层层级。',
+					'easing.enter/exit 只改变过渡曲线，不延长 Presence 生命周期；duration 与 reduced motion 仍决定退出计时。'
+				],
+				links: [{ href: '#/guides/theme', label: 'Theme Lab 实际主题预览' }]
+			},
+			{
 				id: 'cascade',
 				title: '级联与Recipe优先级',
 				paragraphs: [

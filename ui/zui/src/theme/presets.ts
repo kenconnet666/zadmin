@@ -30,6 +30,7 @@ export const auroraLight = extendTheme(defaultTheme, {
 	},
 	shadow: {
 		codeHighlight: 'inset 3px 0 0 #a78bfa',
+		large: '0 24px 64px rgb(36 87 230 / 0.18)',
 		medium: '0 18px 50px rgb(36 87 230 / 0.12)',
 		small: '0 2px 8px rgb(36 87 230 / 0.12)'
 	}
@@ -64,6 +65,7 @@ export const paperLight = extendTheme(defaultTheme, {
 	},
 	shadow: {
 		codeHighlight: 'inset 3px 0 0 #c65d2e',
+		large: '0 20px 52px rgb(45 38 31 / 0.18)',
 		medium: '0 12px 32px rgb(45 38 31 / 0.1)',
 		small: '0 1px 4px rgb(45 38 31 / 0.12)'
 	}
@@ -98,6 +100,7 @@ export const neonDark = extendTheme(defaultTheme, {
 	},
 	shadow: {
 		codeHighlight: 'inset 3px 0 0 #f34edc',
+		large: '0 24px 72px rgb(0 229 255 / 0.18)',
 		medium: '0 20px 60px rgb(0 229 255 / 0.12)',
 		small: '0 2px 12px rgb(243 78 220 / 0.14)'
 	}
@@ -132,6 +135,7 @@ export const midnightDark = extendTheme(defaultTheme, {
 	},
 	shadow: {
 		codeHighlight: 'inset 3px 0 0 #8bafff',
+		large: '0 28px 72px rgb(2 6 23 / 0.5)',
 		medium: '0 20px 56px rgb(2 6 23 / 0.38)',
 		small: '0 2px 10px rgb(2 6 23 / 0.32)'
 	}
@@ -162,6 +166,7 @@ export const highContrastLight = extendTheme(defaultTheme, {
 	},
 	shadow: {
 		codeHighlight: 'inset 4px 0 0 #ffffff',
+		large: 'none',
 		medium: 'none',
 		small: 'none'
 	}
@@ -192,6 +197,7 @@ export const highContrastDark = extendTheme(defaultTheme, {
 	},
 	shadow: {
 		codeHighlight: 'inset 4px 0 0 #ffffff',
+		large: 'none',
 		medium: 'none',
 		small: 'none'
 	}

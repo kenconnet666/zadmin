@@ -15,10 +15,6 @@ export const treeSelectDoc = defineComponentDoc(treeSelectMetadata, {
 	sourceApi: treeSelectApiFacts,
 	teaching: {
 		props: {
-			ariaLabel: {
-				default: '—',
-				description: '旧Tree可访问名称alias；新代码使用原生aria-label或treeLabel。'
-			},
 			clearLabel: { default: 'localePack.common.clear', description: '独立清空按钮的可访问名称。' },
 			controlId: { default: 'Field或自动生成', description: '唯一Trigger焦点owner ID。' },
 			defaultExpandedKeys: { default: '[]', description: '内部ZTree非受控展开初值。' },

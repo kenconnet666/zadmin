@@ -38,13 +38,13 @@
 			s.transitionDuration._fast;
 			// A property list is structural CSS, not a theme value or single keyword.
 			s.transitionProperty.raw('background-color, border-color, color, opacity');
-			s.transitionTimingFunction.ease;
+			s.transitionTimingFunction._standard;
 			s.userSelect.none;
 			s._focusVisible((focus) => {
 				focus.outlineWidth._medium;
 				focus.outlineStyle.solid;
 				focus.outlineColor._focus;
-				focus.outlineOffset.px(2);
+				focus.outlineOffset._outer;
 			});
 		},
 		variants: {

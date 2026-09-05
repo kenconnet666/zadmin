@@ -5,15 +5,8 @@
 	import type { SelectionKey } from '../../runtime/collection/selection.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 
-	type ListItemIdentity =
-		| { readonly id?: never; readonly key: SelectionKey }
-		| {
-				/** @deprecated Use key. */
-				readonly id: SelectionKey;
-				readonly key?: never;
-		  };
-
-	export type ListItem = ListItemIdentity & {
+	export type ListItem = {
+		readonly key: SelectionKey;
 		readonly description?: string;
 		readonly label: string;
 	};
@@ -72,27 +65,14 @@
 		props: [
 			{
 				default: '与children二选一',
-				description: '数据便利模式；每项使用typed key，deprecated id仅兼容迁移。',
+				description: '数据便利模式；每项使用typed key。',
 				name: 'items',
 				requiredWhen: '未提供children手写模式时',
 				type: 'readonly ListItem[]',
 				members: [
-					{
-						description: '与legacy id二选一；新代码必须使用key。',
-						name: 'key',
-						type: 'SelectionKey',
-						requiredWhen: '使用推荐的keyed identity分支'
-					},
+					{ description: '稳定typed身份。', name: 'key', type: 'SelectionKey', required: true },
 					{ description: '列表项展示标题。', name: 'label', type: 'string', required: true },
-					{ description: '列表项补充说明。', name: 'description', type: 'string', required: false },
-					{
-						description: 'pre-1.0兼容身份别名；与key二选一。',
-						name: 'id',
-						type: 'SelectionKey',
-						deprecatedSince: 'unreleased',
-						replacement: 'key',
-						requiredWhen: '迁移期间仍使用deprecated legacy identity分支'
-					}
+					{ description: '列表项补充说明。', name: 'description', type: 'string', required: false }
 				]
 			},
 			{
@@ -324,10 +304,7 @@
 		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const keys = new Set<SelectionKey>();
 		for (const entry of items) {
-			if (entry.key !== undefined && entry.id !== undefined) {
-				throw new TypeError('ZList items cannot provide both key and deprecated id.');
-			}
-			const key = entry.key ?? entry.id;
+			const key = entry.key;
 			if (typeof key !== 'string' && (!Number.isFinite(key) || Object.is(key, -0))) {
 				throw new TypeError('ZList keys must be strings or finite numbers other than -0.');
 			}
@@ -344,7 +321,7 @@
 	});
 
 	function itemKey(entry: ListItem): SelectionKey {
-		return entry.key ?? entry.id;
+		return entry.key;
 	}
 </script>
 

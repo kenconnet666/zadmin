@@ -10,8 +10,7 @@
 		ZuiDirection,
 		ZuiLocalePackOverrides,
 		ZuiMotion,
-		ZuiPortalContainer,
-		ZuiTranslations
+		ZuiPortalContainer
 	} from '../../runtime/foundation/context.js';
 	import type { ZuiTheme } from '../../theme/types.js';
 	import type { ZuiComponentDefaults } from '../../runtime/foundation/component-defaults.js';
@@ -31,7 +30,6 @@
 		runtime?: IcssRuntime;
 		theme?: ZuiTheme;
 		timeZone?: string;
-		translations?: ZuiTranslations;
 	}
 
 	export const zuiMetadata = {
@@ -119,12 +117,6 @@
 				description: 'Document、ShadowRoot或SSR runtime。',
 				name: 'runtime',
 				type: 'IcssRuntime'
-			},
-			{
-				default: '继承父级或空字典',
-				description: '已弃用的字符串字典兼容层；新代码使用localePack。',
-				name: 'translations',
-				type: 'Readonly<Record<string, string>>'
 			}
 		],
 		since: '0.1.0',
@@ -154,8 +146,7 @@
 		portalContainer,
 		runtime,
 		theme,
-		timeZone,
-		translations
+		timeZone
 	}: ZProviderProps = $props();
 	provideZui(() => ({
 		colorScheme,
@@ -170,7 +161,6 @@
 		runtime,
 		theme,
 		timeZone,
-		translations,
 		componentDefaults
 	}));
 </script>

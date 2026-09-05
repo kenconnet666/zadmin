@@ -12,8 +12,6 @@
 		HTMLAttributes<HTMLDivElement>,
 		'children' | 'onchange'
 	> {
-		/** @deprecated Use the native `aria-label` attribute. */
-		readonly ariaLabel?: string;
 		readonly clearable?: boolean;
 		readonly clearLabel?: string;
 		readonly controlId?: string;
@@ -101,15 +99,6 @@
 			{ description: 'Popover内直接复用的ZTree。', name: 'tree' }
 		],
 		props: [
-			{
-				default: 'native aria-label或Provider treeOptions',
-				description: '已弃用；兼容旧调用的Trigger与Tree可访问名称别名，请使用原生aria-label。',
-				name: 'ariaLabel',
-				type: 'string',
-				deprecatedSince: 'unreleased',
-				replacement: 'aria-label',
-				replacementExternal: true
-			},
 			{
 				default: '必填',
 				description: '与ZTree相同的typed扁平节点数据。',
@@ -278,7 +267,7 @@
 				type: 'string'
 			},
 			{
-				default: 'aria-label、兼容ariaLabel或Provider treeOptions',
+				default: 'aria-label或Provider treeOptions',
 				description: 'Popover内真实tree的可访问名称。',
 				name: 'treeLabel',
 				type: 'string'
@@ -357,7 +346,6 @@
 	let {
 		'aria-describedby': ariaDescribedBy,
 		'aria-label': ariaLabelAttribute,
-		ariaLabel,
 		class: className,
 		clearable = false,
 		clearLabel,
@@ -410,7 +398,7 @@
 	const resolvedSize = $derived(resolveControlSize(size ?? field?.size, zui.density));
 	const describedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
 	const resolvedTreeLabel = $derived(
-		treeLabel ?? ariaLabelAttribute ?? ariaLabel ?? zui.localePack.collection.treeOptions
+		treeLabel ?? ariaLabelAttribute ?? zui.localePack.collection.treeOptions
 	);
 	const resolvedPlaceholder = $derived(placeholder ?? zui.localePack.collection.selectNode);
 	const resolvedClearLabel = $derived(clearLabel ?? zui.localePack.common.clear);
@@ -529,7 +517,7 @@
 		<ZPopoverTrigger
 			aria-describedby={describedBy}
 			aria-invalid={resolvedInvalid || undefined}
-			aria-label={ariaLabelAttribute ?? ariaLabel}
+			aria-label={ariaLabelAttribute}
 			aria-labelledby={field?.labelId}
 			bind:ref={triggerRef}
 			{disabled}

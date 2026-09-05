@@ -73,7 +73,7 @@
 					s._media('(max-width: 68rem)', (tablet) =>
 						tablet.gridTemplateColumns.raw('repeat(2, minmax(0, 1fr))')
 					);
-					s._media('(max-width: 48rem)', (mobile) => mobile.gridTemplateColumns.raw('1fr'));
+					s._media({ max: 'medium' }, (mobile) => mobile.gridTemplateColumns.raw('1fr'));
 				},
 				group: (s) => s.marginTop.rem(2.25),
 				groupTitle: (s) => {
@@ -86,7 +86,7 @@
 				hero: (s) => {
 					s.maxWidth.rem(65);
 					s.padding.raw('2rem 0 5rem');
-					s._media('(max-width: 48rem)', (mobile) => mobile.paddingTop.rem(1));
+					s._media({ max: 'medium' }, (mobile) => mobile.paddingTop.rem(1));
 				},
 				learnMore: (s) => {
 					s.alignItems.center;
@@ -109,7 +109,7 @@
 					s.gap._large;
 					s.gridTemplateColumns.raw('repeat(3, minmax(0, 1fr))');
 					s.maxWidth.rem(72);
-					s._media('(max-width: 48rem)', (mobile) => mobile.gridTemplateColumns.raw('1fr'));
+					s._media({ max: 'medium' }, (mobile) => mobile.gridTemplateColumns.raw('1fr'));
 				}
 			},
 			variants: {}

@@ -11,7 +11,7 @@
 				depth3: (s) => s.paddingInlineStart._xlarge,
 				root: (s) => s.scrollMarginTop.rem(5.5),
 				scroll: (s) => {
-					s._media('(max-width: 48rem)', (mobile) =>
+					s._media({ max: 'medium' }, (mobile) =>
 						mobile._selector('& th, & td', (cell) => cell.minWidth.rem(8))
 					);
 				}

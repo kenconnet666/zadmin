@@ -73,17 +73,12 @@ describe('typed locale packs', () => {
 		expect(pack.transfer).toMatchObject({ sourceTitle: 'Source', targetTitle: 'Selected' });
 	});
 
-	it('adapts legacy string templates without overriding typed values', () => {
-		const pack = resolveZuiLocalePack(
-			enUSLocalePack,
-			{ pagination: { next: '继续' } },
-			{
-				'date.previousMonth': '上个月',
-				'pagination.next': '下一页',
-				'pagination.page': '第{page}页',
-				'time.toggleDayPeriod': '切换上午下午'
-			}
-		);
+	it('keeps typed overrides explicit and parameterized', () => {
+		const pack = resolveZuiLocalePack(enUSLocalePack, {
+			date: { previousMonth: '上个月' },
+			pagination: { next: '继续', page: (page) => `第${page}页` },
+			time: { toggleDayPeriod: '切换上午下午' }
+		});
 
 		expect(pack.pagination.next).toBe('继续');
 		expect(pack.pagination.page('3')).toBe('第3页');

@@ -21,10 +21,6 @@ export const carouselDoc = defineComponentDoc(carouselMetadata, {
 				default: '必填',
 				description: 'Carousel region的原生业务可访问名称；不应只写泛化“轮播”。'
 			},
-			ariaLabel: {
-				default: 'undefined',
-				description: 'deprecated兼容别名；新代码使用原生aria-label。'
-			},
 			defaultValue: {
 				default: '第一张slide key',
 				description: '非受控初始slide；动态items仍按稳定typed key保持身份。'

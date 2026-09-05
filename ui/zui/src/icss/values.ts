@@ -8,9 +8,6 @@ export interface IcssDynamicSlot {
 	readonly id: string;
 }
 
-/** @deprecated Use IcssDynamicSlot. */
-export type IcssRuntimeSlot = IcssDynamicSlot;
-
 export type IcssInputValue = string | number | IcssDynamicSlot | null | undefined;
 
 export interface IcssDeclarationValue {

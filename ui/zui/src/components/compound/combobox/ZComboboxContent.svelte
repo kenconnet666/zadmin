@@ -9,8 +9,6 @@
 		'aria-label' | 'ariaLabelledBy' | 'children' | 'manageFocus' | 'role'
 	> & {
 		readonly 'aria-label'?: string;
-		/** @deprecated Use the native `aria-label` spelling. */
-		readonly ariaLabel?: string;
 		readonly children?: Snippet;
 		readonly empty?: Snippet;
 		readonly groupLabel?: Snippet<[group: string]>;
@@ -54,15 +52,6 @@
 				description: 'listbox原生可访问名称。',
 				name: 'aria-label',
 				type: 'string'
-			},
-			{
-				default: 'undefined',
-				description: 'deprecated兼容别名；请改用aria-label。',
-				name: 'ariaLabel',
-				type: 'string',
-				deprecatedSince: 'unreleased',
-				replacement: 'aria-label',
-				replacementExternal: true
 			},
 			{
 				bindable: true,
@@ -133,7 +122,6 @@
 
 	let {
 		'aria-label': ariaLabelNative,
-		ariaLabel,
 		children,
 		class: className,
 		empty,
@@ -151,9 +139,7 @@
 	const zui = useZui();
 	const popover = useZPopover();
 	const combo = useZCombobox();
-	const resolvedAriaLabel = $derived(
-		ariaLabelNative ?? ariaLabel ?? zui.localePack.collection.selectOptions
-	);
+	const resolvedAriaLabel = $derived(ariaLabelNative ?? zui.localePack.collection.selectOptions);
 	const groupLabelClass = $derived(zui.recipe(choiceGroupLabelRecipe));
 	const statusClass = $derived(zui.recipe(choiceStatusRecipe));
 	const sizingClass = $derived(

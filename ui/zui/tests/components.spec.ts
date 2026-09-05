@@ -464,24 +464,6 @@ describe('ZUI foundational components', () => {
 		expect(open.match(/aria-selected="true"/gu)).toHaveLength(2);
 	});
 
-	it('rejects mixed MultiSelect value aliases instead of creating dual ownership', () => {
-		expect(() => render(ZMultiSelect, { props: { value: ['one'], values: ['two'] } }).body).toThrow(
-			/value and deprecated values are mutually exclusive/u
-		);
-		expect(
-			() =>
-				render(ZMultiSelect, {
-					props: { defaultValue: ['one'], defaultValues: ['two'] }
-				}).body
-		).toThrow(/defaultValue and deprecated defaultValues are mutually exclusive/u);
-		expect(
-			() =>
-				render(ZMultiSelect, {
-					props: { onValueChange: () => undefined, onValuesChange: () => undefined }
-				}).body
-		).toThrow(/onValueChange and deprecated onValuesChange are mutually exclusive/u);
-	});
-
 	it('renders Segmented radiogroup, checked state and form value during SSR', () => {
 		const result = render(SegmentedFixture).body;
 		expect(result).toContain('role="radiogroup"');
@@ -504,19 +486,6 @@ describe('ZUI foundational components', () => {
 			props: { 'aria-label': 'Draft tags', defaultInputValue: 'draft-value' }
 		}).body;
 		expect(result).toContain('value="draft-value"');
-	});
-
-	it('keeps deprecated TagsInput value aliases compatible and exclusive', () => {
-		const legacy = render(ZTagsInput, { props: { defaultValues: ['legacy'] } }).body;
-		const legacyValue = render(ZTagsInput, { props: { values: ['bound-legacy'] } }).body;
-		expect(legacy).toContain('aria-label="Remove legacy"');
-		expect(legacyValue).toContain('aria-label="Remove bound-legacy"');
-		expect(() => render(ZTagsInput, { props: { value: ['one'], values: ['two'] } }).body).toThrow(
-			/value and deprecated values are mutually exclusive/u
-		);
-		expect(
-			() => render(ZTagsInput, { props: { defaultValue: ['one'], defaultValues: ['two'] } }).body
-		).toThrow(/defaultValue and deprecated defaultValues are mutually exclusive/u);
 	});
 
 	it('renders single and multiple Tree hierarchy metadata and form values during SSR', () => {
@@ -853,7 +822,7 @@ describe('ZUI foundational components', () => {
 
 	it('provides SSR-stable defaults outside an explicit provider', () => {
 		expect(render(ContextProbe, { props: { id: 'default-context' } }).body).toContain(
-			'data-testid="default-context">en-US:ltr:light:normal:comfortable:auto:zui:none:UTC:Calendar:12:default-portal'
+			'data-testid="default-context">en-US:ltr:light:normal:comfortable:auto:zui:Close:UTC:Calendar:12:default-portal'
 		);
 	});
 

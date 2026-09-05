@@ -35,20 +35,20 @@
 	} from '../src/entrypoints/index.js';
 
 	const listItems = [
-		{ description: 'First description', id: 'one', label: 'One' },
-		{ id: 'two', label: 'Two' }
+		{ description: 'First description', key: 'one', label: 'One' },
+		{ key: 'two', label: 'Two' }
 	];
 	const timelineItems = [
 		{
 			datetime: '2026-08-30T09:00:00Z',
 			description: 'Completed work',
-			id: 'done',
+			key: 'done',
 			status: 'done' as const,
 			time: '09:00',
 			title: 'Done'
 		},
-		{ id: 'queued', status: 'current' as const, title: 'Queued' },
-		{ id: 'pending', title: 'Pending' }
+		{ key: 'queued', status: 'current' as const, title: 'Queued' },
+		{ key: 'pending', title: 'Pending' }
 	];
 	const slides = [
 		{ id: 'a', label: 'Alpha' },
@@ -156,7 +156,7 @@
 </ZCarousel>
 
 <ZTimeline items={timelineItems} data-testid="coverage-timeline">
-	{#snippet item(entry)}<em>{entry.title}</em>{/snippet}
+	{#snippet content(entry)}<em>{entry.title}</em>{/snippet}
 </ZTimeline>
 <ZTimeline items={timelineItems} data-testid="coverage-timeline-default" />
 
@@ -238,7 +238,7 @@
 />
 
 <ZVirtualList
-	ariaLabel="Empty virtual list"
+	aria-label="Empty virtual list"
 	items={[]}
 	itemKey={() => 'none'}
 	height={80}

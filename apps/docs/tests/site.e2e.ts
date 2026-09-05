@@ -318,7 +318,7 @@ test('exposes API table hierarchy and scroll-region semantics', async ({ page })
 	await expect(region.locator('th[scope="col"]')).toHaveCount(5);
 	expect(await region.locator('[data-api-depth]').count()).toBeGreaterThan(0);
 	expect(await page.locator('[data-api-required-when]').count()).toBeGreaterThan(0);
-	expect(await page.locator('[data-api-deprecated]').count()).toBeGreaterThan(0);
+	await expect(page.locator('[data-api-deprecated]')).toHaveCount(0);
 });
 
 test('searches every component and guide through the site CommandPalette', async ({ page }) => {

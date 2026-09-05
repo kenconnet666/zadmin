@@ -21,7 +21,7 @@
 				trigger: (s) => {
 					s.display.none;
 					s.flexShrink(0);
-					s._media('(max-width: 48rem)', (mobile) => mobile.display.inlineFlex);
+					s._media({ max: 'medium' }, (mobile) => mobile.display.inlineFlex);
 				}
 			},
 			variants: {}

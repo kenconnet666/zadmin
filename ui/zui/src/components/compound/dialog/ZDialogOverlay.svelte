@@ -16,7 +16,6 @@
 			s.position.fixed;
 			s.transitionDuration._normal;
 			s.transitionProperty.raw('opacity');
-			s.transitionTimingFunction.ease;
 			s.zIndex._overlay;
 		},
 		variants: {
@@ -74,6 +73,7 @@
 	} from '../../../runtime/foundation/root-style.js';
 	import { useZui } from '../../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../../runtime/foundation/compiler-bridge.js';
+	import { stylePresenceEasing } from '../../../runtime/foundation/style-presence.js';
 	import { portal } from '../../../runtime/layer/portal.js';
 	import { useZDialog } from './context.svelte.js';
 
@@ -96,6 +96,7 @@
 			open: dialog.open
 		})
 	);
+	const presenceEasingClass = $derived(zui.icss(stylePresenceEasing));
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 	$effect(() =>
@@ -122,7 +123,7 @@
 	<div
 		{...rest}
 		bind:this={ref}
-		class={[rootClass, className]}
+		class={[rootClass, presenceEasingClass, className]}
 		style={initialStyle}
 		use:applyIcssRootStyle={{ style, variables: icssVariables }}
 		use:portal={{ target: dialog.portalTarget }}

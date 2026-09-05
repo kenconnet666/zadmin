@@ -216,9 +216,6 @@ export interface ZuiLocalePackOverrides {
 	readonly transfer?: Partial<ZuiTransferLocale>;
 }
 
-/** @deprecated Use the typed ZuiLocalePackOverrides contract. */
-export type ZuiTranslations = Readonly<Record<string, string>>;
-
 export const enUSLocalePack = Object.freeze({
 	carousel: Object.freeze({
 		automaticRotationDisabled: 'Automatic rotation disabled by motion preference',
@@ -534,42 +531,6 @@ export const zhCNLocalePack = Object.freeze({
 	})
 }) satisfies ZuiLocalePack;
 
-function legacyOverrides(translations: ZuiTranslations | undefined): ZuiLocalePackOverrides {
-	if (!translations) return {};
-	const page = translations['pagination.page'];
-	return {
-		common: {
-			clear: translations.clear,
-			close: translations.close,
-			copy: translations.copy
-		},
-		date: {
-			calendarLabel: translations['date.calendarLabel'],
-			chooseDate: translations['date.chooseDate'],
-			chooseDateRange: translations['date.chooseDateRange'],
-			day: translations['date.day'],
-			month: translations['date.month'],
-			nextMonth: translations['date.nextMonth'],
-			previousMonth: translations['date.previousMonth'],
-			year: translations['date.year']
-		},
-		pagination: {
-			label: translations['pagination.label'],
-			next: translations['pagination.next'],
-			page: page ? (formattedPage) => page.replace('{page}', formattedPage) : undefined,
-			previous: translations['pagination.previous']
-		},
-		time: {
-			am: translations['time.am'],
-			hour: translations['time.hour'],
-			minute: translations['time.minute'],
-			pm: translations['time.pm'],
-			second: translations['time.second'],
-			toggleDayPeriod: translations['time.toggleDayPeriod']
-		}
-	};
-}
-
 function mergeDefined<TValue extends object>(
 	base: TValue,
 	...sources: readonly (Partial<TValue> | undefined)[]
@@ -587,30 +548,26 @@ function mergeDefined<TValue extends object>(
 
 export function resolveZuiLocalePack(
 	base: ZuiLocalePack,
-	overrides?: ZuiLocalePackOverrides,
-	translations?: ZuiTranslations
+	overrides?: ZuiLocalePackOverrides
 ): ZuiLocalePack {
-	const legacy = legacyOverrides(translations);
 	return Object.freeze({
 		carousel: Object.freeze(mergeDefined(base.carousel, overrides?.carousel)),
 		collection: Object.freeze(mergeDefined(base.collection, overrides?.collection)),
 		colorPicker: Object.freeze(mergeDefined(base.colorPicker, overrides?.colorPicker)),
 		code: Object.freeze(mergeDefined(base.code, overrides?.code)),
 		command: Object.freeze(mergeDefined(base.command, overrides?.command)),
-		common: Object.freeze(mergeDefined(base.common, legacy.common, overrides?.common)),
-		date: Object.freeze(mergeDefined(base.date, legacy.date, overrides?.date)),
+		common: Object.freeze(mergeDefined(base.common, overrides?.common)),
+		date: Object.freeze(mergeDefined(base.date, overrides?.date)),
 		feedback: Object.freeze(mergeDefined(base.feedback, overrides?.feedback)),
 		fileUpload: Object.freeze(mergeDefined(base.fileUpload, overrides?.fileUpload)),
 		form: Object.freeze(mergeDefined(base.form, overrides?.form)),
 		link: Object.freeze(mergeDefined(base.link, overrides?.link)),
 		numberField: Object.freeze(mergeDefined(base.numberField, overrides?.numberField)),
-		pagination: Object.freeze(
-			mergeDefined(base.pagination, legacy.pagination, overrides?.pagination)
-		),
+		pagination: Object.freeze(mergeDefined(base.pagination, overrides?.pagination)),
 		progress: Object.freeze(mergeDefined(base.progress, overrides?.progress)),
 		tag: Object.freeze(mergeDefined(base.tag, overrides?.tag)),
 		tagsInput: Object.freeze(mergeDefined(base.tagsInput, overrides?.tagsInput)),
-		time: Object.freeze(mergeDefined(base.time, legacy.time, overrides?.time)),
+		time: Object.freeze(mergeDefined(base.time, overrides?.time)),
 		tour: Object.freeze(mergeDefined(base.tour, overrides?.tour)),
 		transfer: Object.freeze(mergeDefined(base.transfer, overrides?.transfer))
 	});

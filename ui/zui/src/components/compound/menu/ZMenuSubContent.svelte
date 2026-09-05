@@ -13,8 +13,6 @@
 		'aria-label' | 'ariaLabelledBy' | 'children' | 'initialFocus' | 'manageFocus' | 'role'
 	> & {
 		readonly 'aria-label'?: string;
-		/** @deprecated Use the native `aria-label` spelling. */
-		readonly ariaLabel?: string;
 		readonly children?: Snippet;
 		readonly loop?: boolean;
 		menuRef?: HTMLDivElement | null;
@@ -48,15 +46,6 @@
 				description: '覆盖submenu原生可访问名称。',
 				name: 'aria-label',
 				type: 'string'
-			},
-			{
-				default: 'undefined',
-				description: 'deprecated兼容别名；请改用aria-label。',
-				name: 'ariaLabel',
-				type: 'string',
-				deprecatedSince: 'unreleased',
-				replacement: 'aria-label',
-				replacementExternal: true
 			},
 			{
 				default: 'true',
@@ -101,7 +90,6 @@
 
 	let {
 		'aria-label': ariaLabelNative,
-		ariaLabel,
 		children,
 		class: className,
 		loop = true,
@@ -117,7 +105,7 @@
 	const parentMenu = useZMenu();
 	const popover = useZPopover();
 	const sub = useZMenuSub();
-	const resolvedAriaLabel = $derived(ariaLabelNative ?? ariaLabel);
+	const resolvedAriaLabel = $derived(ariaLabelNative);
 	const popupClass = $derived(zui.recipe(menuPopupContentRecipe));
 	const backwardKey = $derived(parentMenu.direction === 'rtl' ? 'ArrowRight' : 'ArrowLeft');
 

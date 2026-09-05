@@ -34,6 +34,7 @@ export interface TagComponentDefaults {
 }
 
 export interface CardComponentDefaults {
+	readonly elevation?: 'large' | 'medium' | 'none' | 'small';
 	readonly variant?: 'elevated' | 'outlined';
 }
 
@@ -73,7 +74,10 @@ const COMPONENT_RULES = {
 		tone: { kind: 'enum', values: ['default', 'danger'] },
 		variant: { kind: 'enum', values: ['ghost', 'primary', 'secondary'] }
 	},
-	card: { variant: { kind: 'enum', values: ['elevated', 'outlined'] } },
+	card: {
+		elevation: { kind: 'enum', values: ['large', 'medium', 'none', 'small'] },
+		variant: { kind: 'enum', values: ['elevated', 'outlined'] }
+	},
 	dataTable: {
 		density: { kind: 'enum', values: ['compact', 'comfortable', 'spacious'] },
 		overscan: { kind: 'integer', minimum: 0 },

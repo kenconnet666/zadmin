@@ -128,13 +128,13 @@
 			s.color._text;
 			s.transitionDuration._fast;
 			s.transitionProperty.raw('border-color, box-shadow');
-			s.transitionTimingFunction.ease;
+			s.transitionTimingFunction._standard;
 			s._selector('&::placeholder', (placeholder) => placeholder.color._textMuted);
 			s._focusVisible((focus) => {
 				focus.outlineWidth._medium;
 				focus.outlineStyle.solid;
 				focus.outlineColor._focus;
-				focus.outlineOffset.px(2);
+				focus.outlineOffset._outer;
 			});
 		},
 		variants: {

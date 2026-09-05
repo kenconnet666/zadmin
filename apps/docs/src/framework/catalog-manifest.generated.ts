@@ -394,13 +394,13 @@ export const componentCatalogManifest = Object.freeze([
 		profiles: ['data-view'],
 		capabilities: [
 			'basic-render',
-			'composition',
 			'variants-and-states',
+			'composition',
 			'accessible-name',
 			'native-props',
 			'loading'
 		],
-		demoCount: 6,
+		demoCount: 7,
 		publicComponentCount: 1
 	},
 	{

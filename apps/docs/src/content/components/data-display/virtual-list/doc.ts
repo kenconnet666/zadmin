@@ -17,10 +17,6 @@ export const virtualListDoc = defineComponentDoc(virtualListMetadata, {
 	sourceApi: virtualListApiFacts,
 	teaching: {
 		props: {
-			ariaLabel: {
-				default: '—',
-				description: '旧版兼容alias；新代码使用原生aria-label，并可用aria-labelledby关联可见标题。'
-			},
 			estimateSize: {
 				default: '—',
 				description: '一旦提供即启用动态DOM测量；应估算常见或偏大高度，避免首帧滚动范围剧烈收缩。'

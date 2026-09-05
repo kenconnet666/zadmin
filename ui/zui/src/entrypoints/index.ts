@@ -1,4 +1,6 @@
 export const ZUI_PACKAGE_NAME = '@zadmin/zui';
+export { themePalettes, withPrimaryPalette } from '../theme/palettes.js';
+export type { ThemePaletteName, ThemePaletteMode } from '../theme/palettes.js';
 
 export type { Selection, SelectionKey, SelectionMode } from '../runtime/collection/selection.js';
 export type { ZCollectionOption } from '../components/compound/choice-option.js';
@@ -281,7 +283,12 @@ export type {
 	ZBadgeProps
 } from '../components/data-display/ZBadge.svelte';
 export { default as ZCard } from '../components/data-display/ZCard.svelte';
-export type { CardElement, CardVariant, ZCardProps } from '../components/data-display/ZCard.svelte';
+export type {
+	CardElevation,
+	CardElement,
+	CardVariant,
+	ZCardProps
+} from '../components/data-display/ZCard.svelte';
 export { default as ZDescriptionList } from '../components/data-display/ZDescriptionList.svelte';
 export type {
 	DescriptionItem,
@@ -497,11 +504,7 @@ export type {
 	ZPinInputProps
 } from '../components/input/ZPinInput.svelte';
 export { default as ZSegmented } from '../components/input/ZSegmented.svelte';
-export type {
-	SegmentedItem,
-	ZSegmentedOption,
-	ZSegmentedProps
-} from '../components/input/ZSegmented.svelte';
+export type { ZSegmentedOption, ZSegmentedProps } from '../components/input/ZSegmented.svelte';
 export { default as ZSlider } from '../components/input/ZSlider.svelte';
 export type { ZSliderProps, ZSliderVariants } from '../components/input/ZSlider.svelte';
 export { default as ZSwitch } from '../components/input/ZSwitch.svelte';
@@ -578,8 +581,7 @@ export type {
 	ZuiLocalePack,
 	ZuiLocalePackOverrides,
 	ZuiMotion,
-	ZuiPortalContainer,
-	ZuiTranslations
+	ZuiPortalContainer
 } from '../runtime/foundation/context.js';
 export { enUSLocalePack, zhCNLocalePack } from '../runtime/foundation/locale.js';
 export type {

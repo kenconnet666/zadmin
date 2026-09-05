@@ -234,10 +234,3 @@ export class LogicalTree<TKey extends SelectionKey = SelectionKey> implements Tr
 		}
 	}
 }
-
-/** @deprecated Construct `LogicalTree` directly for new collection consumers. */
-export function createTreeIndex<TKey extends SelectionKey>(
-	source: readonly TreeNode<TKey>[]
-): TreeIndex<TKey> {
-	return new LogicalTree(source);
-}

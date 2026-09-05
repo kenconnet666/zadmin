@@ -72,7 +72,7 @@
 
 	const separatorRecipe = defineRecipe({
 		base: (s) => {
-			s.backgroundColor.raw('currentColor');
+			s.backgroundColor.currentColor;
 			s.borderWidth.px(0);
 			s.color._border;
 			s.flexShrink(0);

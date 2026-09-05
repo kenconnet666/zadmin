@@ -162,7 +162,7 @@
 			s.pointerEvents.none;
 			s.transitionDuration._fast;
 			s.transitionProperty.raw('opacity, transform');
-			s.transitionTimingFunction.ease;
+			s.transitionTimingFunction._standard;
 			s.whiteSpace.nowrap;
 		},
 		variants: {

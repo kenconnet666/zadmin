@@ -24,14 +24,13 @@ export const formDoc = defineComponentDoc(formMetadata, {
 				description:
 					'除验证、错误与导航外，controller.subscribeField(path, listener)只观察未来字段状态变化；当前快照通过getFieldState读取，不拥有字段value。'
 			},
-			onReset: {
+			onreset: {
 				default: '—',
-				description: 'deprecated兼容回调；新代码使用原生小写onreset，二者同一函数时不会重复调用。'
+				description: '原生reset回调；在组件执行字段reset后通知调用方。'
 			},
-			onSubmit: {
+			onsubmit: {
 				default: '—',
-				description:
-					'deprecated兼容回调；新代码使用原生小写onsubmit并可preventDefault取消语义提交。'
+				description: '原生submit回调；可调用preventDefault取消语义提交。'
 			}
 		},
 		summary:

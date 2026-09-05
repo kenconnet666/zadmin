@@ -21,13 +21,9 @@ export const timelineDoc = defineComponentDoc(timelineMetadata, {
 	sourceApi: timelineApiFacts,
 	teaching: {
 		props: {
-			item: {
-				default: '—',
-				description: 'pre-1.0 content单参数迁移别名；不能与content同时提供。'
-			},
 			items: {
 				default: '必填',
-				description: '优先使用typed key；number 1与string "1"独立，重复同类型key会早抛。'
+				description: '必须提供typed key；number 1与string "1"独立，重复同类型key会早抛。'
 			},
 			label: {
 				default: "'Timeline'",
@@ -101,7 +97,7 @@ export const timelineDoc = defineComponentDoc(timelineMetadata, {
 		'current事件使用aria-current="true"，但Timeline不提供方向键、焦点或步骤跳转；交互流程应使用Steps/Tabs。',
 		'默认时间使用原生time/datetime；自定义time snippet由调用方继续提供等价语义。',
 		'pending设置aria-busy并要求可见正文；默认ZSpinner位于装饰轴内，不制造第二套可访问名称。',
-		'alternate使用逻辑网格侧，在RTL自动镜像并于30rem以下回落单轴；长正文保持min-width:0。',
+		'alternate使用逻辑网格侧，在RTL自动镜像并于Theme.breakpoint.small（默认30rem）及以下回落单轴；长正文保持min-width:0。',
 		'参考Ant Design的items/mode/reverse/pending、MUI的alternate/opposite与Naive UI的RTL经验，但不复制Steps、水平轴或可导航状态机。'
 	],
 	keywords: [

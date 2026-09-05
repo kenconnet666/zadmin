@@ -10,16 +10,11 @@ import { defineComponentDoc } from './component-doc.js';
 import { componentRoute } from './router.js';
 
 describe('ZUI component documentation catalog', () => {
-	it('publishes structured deprecation versions and replacements', () => {
+	it('exposes only the current pre-release API without deprecated compatibility rows', () => {
 		const deprecated = componentDocs.flatMap((doc) =>
 			doc.api.flatMap((section) => section.rows.filter((row) => row.deprecatedSince))
 		);
-		expect(deprecated.length).toBeGreaterThan(0);
-		for (const row of deprecated) {
-			expect(row.since ?? row.deprecatedSince).toBeTruthy();
-			expect(row.replacement).toBeTruthy();
-			expect(row.replacementExternal === true || row.replacement !== row.name).toBe(true);
-		}
+		expect(deprecated).toEqual([]);
 	});
 
 	it('keeps all owner pages, generated API facts, demos and routes integrity-aligned', () => {
@@ -349,13 +344,13 @@ describe('ZUI component documentation catalog', () => {
 		}
 	});
 
-	it('preserves conditional metadata requirements without promoting optional source aliases', () => {
+	it('requires the native carousel label without a removed alias or conditional fallback', () => {
 		const carousel = componentDocsById.get('carousel');
 		const props = carousel?.api.find(({ id }) => id === 'props');
 		const nativeLabel = props?.rows.find(({ name }) => name === 'aria-label');
-		expect(nativeLabel?.required).not.toBe(true);
-		expect(nativeLabel?.requiredWhen).toContain('ariaLabel');
-		expect(props?.rows.find(({ name }) => name === 'ariaLabel')?.required).not.toBe(true);
+		expect(nativeLabel?.required).toBe(true);
+		expect(nativeLabel?.requiredWhen).toBeUndefined();
+		expect(props?.rows.find(({ name }) => name === 'ariaLabel')).toBeUndefined();
 	});
 
 	it('rejects misspelled teaching and legacy metadata omissions', () => {

@@ -72,11 +72,8 @@ describe('display collection server contracts', () => {
 				}).body
 		).toThrow(/finite numbers/u);
 		expect(
-			() =>
-				renderSsr(ZList, {
-					props: { items: [{ id: 'legacy', key: 'current', label: 'Ambiguous' }] } as never
-				}).body
-		).toThrow(/both key and deprecated id/u);
+			() => renderSsr(ZList, { props: { items: [{ label: 'Missing key' }] } as never }).body
+		).toThrow(/finite numbers/u);
 
 		const children = (() => undefined) as unknown as Snippet;
 		expect(

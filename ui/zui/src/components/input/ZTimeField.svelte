@@ -216,7 +216,7 @@
 			s.display.inlineFlex;
 			s._selector('&:focus-within', (focus) => {
 				focus.outlineColor._focus;
-				focus.outlineOffset.px(2);
+				focus.outlineOffset._outer;
 				focus.outlineStyle.solid;
 				focus.outlineWidth._medium;
 			});

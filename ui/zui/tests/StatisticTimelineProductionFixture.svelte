@@ -73,7 +73,7 @@
 </div>
 
 <ZTimeline
-	data-testid="timeline-legacy"
-	items={[{ id: 'legacy', status: 'done', title: 'Legacy id migration' }]}
-	label="Legacy timeline"
+	data-testid="timeline-keyed"
+	items={[{ key: 'keyed', status: 'done', title: 'Keyed identity' }]}
+	label="Keyed timeline"
 />

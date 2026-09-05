@@ -716,11 +716,12 @@ const preferenceCallbacks = [
 	'onDensityChange',
 	'onDirectionChange',
 	'onMotionChange',
+	'onPaletteChange',
 	'onThemeChange'
 ];
 if (
 	preferenceSources.some((source) =>
-		/bind:(?:contrast|density|direction|motion|themeId)\b/u.test(source)
+		/bind:(?:contrast|density|direction|motion|palette|themeId)\b/u.test(source)
 	) ||
 	!preferenceCallbacks.every(
 		(callback) => appSource.includes(callback) && appHeaderSource.includes(callback)

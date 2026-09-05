@@ -7,7 +7,7 @@ export const zuiProgress = {
 	},
 	api: {
 		components: 141,
-		declaredProps: 1764,
+		declaredProps: 1746,
 		metadataGapProps: 0,
 		fallbackProps: 0
 	},

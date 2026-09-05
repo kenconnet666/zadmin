@@ -40,7 +40,7 @@
 			id="fixture-combobox"
 			style={longLabels ? 'inline-size: 80px' : undefined}
 		/>
-		<ZComboboxContent ariaLabel="Choices" data-testid="combobox-content">
+		<ZComboboxContent aria-label="Choices" data-testid="combobox-content">
 			<ZComboboxItem
 				data-testid="combobox-a"
 				textValue={longLabels ? '极光明亮主题' : 'Alpha'}

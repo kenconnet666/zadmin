@@ -123,6 +123,9 @@ describe('ICSS builder', () => {
 		expectTypeOf<Style['padding']['px']>().toBeFunction();
 		expectTypeOf<Style['touchAction']['manipulation']>().toEqualTypeOf<void>();
 		expectTypeOf<Style['width']['fitContent']>().toEqualTypeOf<void>();
+		expectTypeOf<Style['outlineOffset']['_outer']>().toEqualTypeOf<void>();
+		expectTypeOf<Style['transitionTimingFunction']['_enter']>().toEqualTypeOf<void>();
+		expectTypeOf<Style['_media']>().toBeCallableWith({ min: 'medium' }, () => undefined);
 	});
 
 	it('records a tokenized focus outline without shorthand raw values', () => {

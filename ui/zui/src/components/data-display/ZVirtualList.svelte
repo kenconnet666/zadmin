@@ -35,8 +35,6 @@
 		TItem = unknown,
 		TKey extends SelectionKey = SelectionKey
 	> extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'role'> {
-		/** @deprecated Use the native `aria-label` attribute. */
-		readonly ariaLabel?: string;
 		controller?: ZVirtualListController<TKey> | null;
 		readonly empty?: Snippet;
 		readonly estimateSize?: number | ((item: TItem, index: number) => number);
@@ -99,15 +97,6 @@
 			{ description: '首次加载内容。', name: 'loading' }
 		],
 		props: [
-			{
-				default: '—',
-				description: '兼容旧版的可访问名称alias；新代码使用原生aria-label。',
-				name: 'ariaLabel',
-				type: 'string',
-				deprecatedSince: 'unreleased',
-				replacement: 'aria-label',
-				replacementExternal: true
-			},
 			{
 				default: '必填',
 				description: '数据项；排序、插入和删除均由itemKey维持测量身份。',
@@ -320,7 +309,6 @@
 		'aria-busy': ariaBusy,
 		'aria-label': ariaLabelAttribute,
 		'aria-labelledby': ariaLabelledBy,
-		ariaLabel,
 		class: className,
 		controller = $bindable(null),
 		empty,
@@ -397,7 +385,7 @@
 	const dynamic = $derived(estimateSize !== undefined);
 	const reduced = $derived(reducedMotion.current);
 	const resolvedAriaLabel = $derived.by(() => {
-		const label = ariaLabelAttribute ?? ariaLabel;
+		const label = ariaLabelAttribute;
 		if (role !== 'list' && !label && !ariaLabelledBy) {
 			throw new Error(`ZVirtualList role="${role}" requires aria-label or aria-labelledby.`);
 		}

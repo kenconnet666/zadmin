@@ -32,7 +32,7 @@ import {
 } from '../src/runtime/collection/selection.js';
 import { normalizeSliderValue } from '../src/runtime/slider.js';
 import { Typeahead } from '../src/runtime/collection/typeahead.js';
-import { createTreeIndex } from '../src/runtime/tree.js';
+import { LogicalTree } from '../src/runtime/tree.js';
 
 describe('ZUI foundation runtime', () => {
 	it('maps Provider density to control size without overriding an explicit size', () => {
@@ -206,7 +206,7 @@ describe('ZUI foundation runtime', () => {
 	});
 
 	it('indexes, validates and flattens tree nodes deterministically', () => {
-		const tree = createTreeIndex([
+		const tree = new LogicalTree([
 			{ key: 'root', label: 'Root' },
 			{ key: 'a', label: 'Alpha', parentKey: 'root' },
 			{ disabled: true, key: 'b', label: 'Beta', parentKey: 'root' },
@@ -219,16 +219,17 @@ describe('ZUI foundation runtime', () => {
 			['leaf', 3],
 			['b', 2]
 		]);
-		expect(() =>
-			createTreeIndex([
-				{ key: 'a', label: 'A' },
-				{ key: 'a', label: 'Again' }
-			])
+		expect(
+			() =>
+				new LogicalTree([
+					{ key: 'a', label: 'A' },
+					{ key: 'a', label: 'Again' }
+				])
 		).toThrow(/Duplicate tree key/u);
-		expect(() => createTreeIndex([{ key: 'a', label: 'A', parentKey: 'missing' }])).toThrow(
+		expect(() => new LogicalTree([{ key: 'a', label: 'A', parentKey: 'missing' }])).toThrow(
 			/Missing tree parent/u
 		);
-		expect(() => createTreeIndex([{ key: 'a', label: 'A', parentKey: 'a' }])).toThrow(/cycle/u);
+		expect(() => new LogicalTree([{ key: 'a', label: 'A', parentKey: 'a' }])).toThrow(/cycle/u);
 	});
 
 	it('keeps Presence mounted through exit duration and parses theme times', () => {

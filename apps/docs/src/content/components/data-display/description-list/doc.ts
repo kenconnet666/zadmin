@@ -25,7 +25,7 @@ export const descriptionListDoc = defineComponentDoc(descriptionListMetadata, {
 			},
 			items: {
 				default: '与children二选一',
-				description: 'typed data convenience；推荐key，deprecated id仅用于既有迁移。'
+				description: 'typed data convenience；每项必须使用稳定key。'
 			},
 			loading: {
 				default: 'false',
