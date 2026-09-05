@@ -183,7 +183,7 @@
 </script>
 
 <script lang="ts">
-	import { onMount, untrack } from 'svelte';
+	import { untrack } from 'svelte';
 	import ZVisuallyHidden from '../gene/ZVisuallyHidden.svelte';
 	import {
 		applyIcssRootStyle,
@@ -263,29 +263,36 @@
 	}
 
 	$effect(() => {
-		resolvedScroll;
-		if (resolvedScroll === 'none') {
+		const wrapper = wrapperRef;
+		const table = ref;
+		if (resolvedScroll === 'none' || !wrapper || !table) {
 			overflowing = false;
 			return;
 		}
-		updateOverflow();
-	});
-
-	onMount(() => {
-		const wrapper = wrapperRef;
-		const ownerWindow = wrapper?.ownerDocument.defaultView;
-		if (!wrapper || !ownerWindow) return;
+		const ownerWindow = wrapper.ownerDocument.defaultView;
+		if (!ownerWindow) return;
 		const ResizeObserverConstructor = ownerWindow.ResizeObserver;
-		const observer = ResizeObserverConstructor
-			? new ResizeObserverConstructor(updateOverflow)
-			: undefined;
-		observer?.observe(wrapper);
-		if (ref) observer?.observe(ref);
-		ownerWindow.addEventListener('resize', updateOverflow);
-		updateOverflow();
+		if (ResizeObserverConstructor) {
+			// ResizeObserver delivers the initial and changed sizes after layout. An eager
+			// mount/effect read here forces a full page layout while sibling tables mount.
+			const observer = new ResizeObserverConstructor(updateOverflow);
+			observer.observe(wrapper);
+			observer.observe(table);
+			return () => observer.disconnect();
+		}
+		let frame: number | undefined;
+		const schedule = () => {
+			if (frame !== undefined) return;
+			frame = ownerWindow.requestAnimationFrame(() => {
+				frame = undefined;
+				updateOverflow();
+			});
+		};
+		ownerWindow.addEventListener('resize', schedule);
+		schedule();
 		return () => {
-			observer?.disconnect();
-			ownerWindow.removeEventListener('resize', updateOverflow);
+			if (frame !== undefined) ownerWindow.cancelAnimationFrame(frame);
+			ownerWindow.removeEventListener('resize', schedule);
 		};
 	});
 </script>

@@ -44,7 +44,7 @@ describe('data-display and layout visual contracts', () => {
 		const tableOwner = table.parentElement!;
 		expect(table.querySelector('caption')?.textContent).toContain('Wide table');
 		expect(table.querySelectorAll('th')).toHaveLength(2);
-		expect(tableOwner.dataset.overflowing).toBe('true');
+		await expect.poll(() => tableOwner.dataset.overflowing).toBe('true');
 		expect(tableOwner.getAttribute('role')).toBe('region');
 		expect(getComputedStyle(tableOwner).overflowX).toBe('auto');
 	});

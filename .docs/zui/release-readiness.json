@@ -10,7 +10,7 @@
 	},
 	"changesets": {
 		"config": ".changeset/config.json",
-		"count": 87,
+		"count": 88,
 		"packages": ["@zadmin/miniapp", "@zadmin/webview", "@zadmin/zui"],
 		"publicAccess": true,
 		"baseBranch": "master"

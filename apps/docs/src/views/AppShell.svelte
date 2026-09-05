@@ -196,12 +196,24 @@
 	});
 	const currentDoc = $derived(loadedDoc);
 	$effect(() => {
-		const section = route.kind === 'component' ? route.section : undefined;
-		if (!section || !currentDoc) return;
+		const targetRoute = route;
+		// One scroll owner, after the requested lazy document has actually mounted.
+		if (
+			targetRoute.kind === 'component' &&
+			componentCatalogManifestById.has(targetRoute.componentId) &&
+			!docError &&
+			(loadingDoc || currentDoc?.id !== targetRoute.componentId)
+		)
+			return;
 		const view = globalThis.window;
 		if (!view) return;
 		const frame = view.requestAnimationFrame(() => {
-			view.document.getElementById(section)?.scrollIntoView({ block: 'start' });
+			const section =
+				targetRoute.kind === 'component' && targetRoute.section
+					? view.document.getElementById(targetRoute.section)
+					: null;
+			if (section) section.scrollIntoView({ block: 'start' });
+			else view.scrollTo({ top: 0 });
 		});
 		return () => view.cancelAnimationFrame(frame);
 	});

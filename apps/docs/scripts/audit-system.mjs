@@ -702,9 +702,12 @@ if (
 	!appShellSource.includes('const route = $derived(docsRouter.current)') ||
 	!routerRuntimeSource.includes("view.addEventListener('hashchange', sync)") ||
 	!routerRuntimeSource.includes("view.removeEventListener('hashchange', sync)") ||
-	!routerRuntimeSource.includes('view.cancelAnimationFrame(frame)')
+	!appShellSource.includes('view.cancelAnimationFrame(frame)') ||
+	/scrollIntoView|scrollTo|requestAnimationFrame/u.test(routerRuntimeSource)
 ) {
-	fail('Docs hash routing must keep one main-entry runtime owner that survives component HMR.');
+	fail(
+		'Docs routing must keep one HMR-safe state owner and one post-render AppShell scroll owner.'
+	);
 }
 const appHeaderSource = await readFile(resolve(docsRoot, 'src/views/AppHeader.svelte'), 'utf8');
 const preferenceSources = [appSource, appShellSource, appHeaderSource, themeLabSource];

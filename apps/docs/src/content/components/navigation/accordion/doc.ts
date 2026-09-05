@@ -27,11 +27,6 @@ export const accordionDoc = defineComponentDoc(accordionMetadata, {
 	sourceApi: accordionApiFacts,
 	teaching: {
 		props: {
-			appearance: {
-				default: "'block'",
-				description:
-					'Trigger布局；inline适合卡片工具栏或行内disclosure，保留open/disabled和主题色状态。'
-			},
 			activeValue: {
 				default: 'selected key或第一enabled key',
 				description: '与展开selection分离的roving焦点owner；动态恢复不触发用户回调。'

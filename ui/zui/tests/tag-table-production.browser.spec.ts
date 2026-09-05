@@ -1,10 +1,65 @@
 import { tick } from 'svelte';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 
 import TagTableProductionFixture from './TagTableProductionFixture.svelte';
 
 describe('ZTag and ZTable production browser contracts', () => {
+	it('keeps a deferred resize fallback when ResizeObserver is unavailable', async () => {
+		vi.stubGlobal('ResizeObserver', undefined);
+		try {
+			render(TagTableProductionFixture);
+			const table = document.querySelector('[data-testid="table-wide"]')!;
+			await expect.poll(() => table.parentElement?.getAttribute('role')).toBe('region');
+			expect(table.parentElement?.tabIndex).toBe(0);
+			expect(
+				document
+					.querySelector('[data-testid="table-no-scroll"]')
+					?.parentElement?.getAttribute('role')
+			).toBeNull();
+		} finally {
+			vi.unstubAllGlobals();
+		}
+	});
+	it('defers initial overflow reads until the layout observer delivers', async () => {
+		const deliver: Array<() => void> = [];
+		class DeferredResizeObserver {
+			constructor(callback: ResizeObserverCallback) {
+				deliver.push(() => callback([], this));
+			}
+			observe(): void {
+				/* Delivery is controlled by this test. */
+			}
+			unobserve(): void {
+				/* No native observer resources. */
+			}
+			disconnect(): void {
+				/* No native observer resources. */
+			}
+		}
+		const original = Object.getOwnPropertyDescriptor(Element.prototype, 'scrollWidth')!.get!;
+		let reads = 0;
+		const spy = vi.spyOn(Element.prototype, 'scrollWidth', 'get').mockImplementation(function (
+			this: Element
+		) {
+			if (this.getAttribute('data-slot') === 'wrapper' && this.querySelector('table')) reads += 1;
+			return original.call(this) as number;
+		});
+		vi.stubGlobal('ResizeObserver', DeferredResizeObserver);
+		try {
+			render(TagTableProductionFixture);
+			expect(deliver.length).toBeGreaterThan(0);
+			expect(reads).toBe(0);
+			for (const callback of deliver) callback();
+			await tick();
+			expect(reads).toBeGreaterThan(0);
+			const table = document.querySelector('[data-testid="table-wide"]')!;
+			expect(table.parentElement?.getAttribute('role')).toBe('region');
+		} finally {
+			vi.unstubAllGlobals();
+			spy.mockRestore();
+		}
+	});
 	it('localizes Tag removal, resolves finite size/tone and isolates remove propagation', async () => {
 		render(TagTableProductionFixture);
 		const tag = document.querySelector<HTMLElement>('[data-testid="tag-localized"]')!;
