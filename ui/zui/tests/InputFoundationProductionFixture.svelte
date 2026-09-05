@@ -9,6 +9,11 @@
 
 <ZProvider componentDefaults={{ input: { size: 'large' } }}>
 	<form data-testid="input-foundation-form" id="input-foundation-form">
+		<input
+			data-testid="native-autocomplete-reference"
+			aria-label="Native autocomplete reference"
+			autocomplete="username"
+		/>
 		<ZInput
 			bind:value={inputValue}
 			autocomplete="username"

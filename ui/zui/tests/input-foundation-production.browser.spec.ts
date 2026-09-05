@@ -34,7 +34,13 @@ describe('ZInput, ZTextarea and ZInputGroup production contracts', () => {
 			'[data-testid="input-foundation-field-group-control"]'
 		)!;
 
-		expect(input.autocomplete).toBe('username');
+		const nativeInput = document.querySelector<HTMLInputElement>(
+			'[data-testid="native-autocomplete-reference"]'
+		)!;
+		expect(input.getAttribute('autocomplete')).toBe('username');
+		// Firefox's IDL getter can normalize supported autofill tokens differently;
+		// the component must preserve the attribute and match the native control.
+		expect(input.autocomplete).toBe(nativeInput.autocomplete);
 		expect(input.maxLength).toBe(12);
 		expect(input.required).toBe(true);
 		expect(input.dataset.size).toBe('large');
