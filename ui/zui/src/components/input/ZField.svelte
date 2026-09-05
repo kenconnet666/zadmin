@@ -15,6 +15,7 @@
 		readonly description?: Snippet | string;
 		readonly disabled?: boolean;
 		readonly error?: FieldMessages;
+		readonly feedbackMinLines?: number;
 		readonly label: Snippet | string;
 		readonly name?: string;
 		readonly readonly?: boolean;
@@ -34,7 +35,14 @@
 		dependencies: [],
 		events: [],
 		keyboard: [],
-		parts: [],
+		parts: [
+			{ description: '原生label与必填标记。', name: 'label' },
+			{ description: '辅助说明容器。', name: 'description' },
+			{ description: '反馈消息与polite live region。', name: 'messages' },
+			{ description: '单条错误消息。', name: 'error' },
+			{ description: '单条警告消息。', name: 'warning' },
+			{ description: '单条成功消息。', name: 'success' }
+		],
 		props: [
 			{
 				default: '必填',
@@ -57,6 +65,13 @@
 				type: 'boolean'
 			},
 			{
+				default: '0',
+				description:
+					'反馈区预留的最少行数，非负整数；按反馈字号/行高计算，超出行数的内容仍可增长。',
+				name: 'feedbackMinLines',
+				type: 'number'
+			},
+			{
 				default: 'false',
 				description: '禁用状态。',
 				name: 'disabled',
@@ -77,7 +92,8 @@
 			},
 			{
 				default: 'undefined',
-				description: '显式覆盖字段间距和control继承尺寸；未传时control继续采用Provider density。',
+				description:
+					'显式覆盖字段间距和control继承尺寸；未传时不覆盖control的组件默认值或Provider density。',
 				name: 'size',
 				type: "'small' | 'medium' | 'large'"
 			},
@@ -114,6 +130,8 @@
 		source: 'ui/zui/src/components/input/ZField.svelte',
 		states: [
 			{ description: '禁用。', name: 'data-disabled', values: ['true'] },
+			{ description: '只读。', name: 'data-readonly', values: ['true'] },
+			{ description: '必填。', name: 'data-required', values: ['true'] },
 			{ description: '包含错误。', name: 'data-invalid', values: ['true'] },
 			{ description: '包含警告。', name: 'data-warning', values: ['true'] },
 			{ description: '包含成功消息。', name: 'data-success', values: ['true'] }
@@ -125,16 +143,36 @@
 	const fieldRecipe = defineSlotRecipe({
 		slots: ['root', 'label', 'description', 'messages', 'error', 'warning', 'success'] as const,
 		base: {
-			description: (s) => s.color._textMuted,
+			description: (s) => {
+				s.color._textMuted;
+				s.fontSize._small;
+				s.lineHeight._normal;
+				s.minWidth.px(0);
+				s.overflowWrap.anywhere;
+			},
 			error: (s) => s.color._danger,
-			label: (s) => s.fontWeight._medium,
+			label: (s) => {
+				s.fontWeight._medium;
+				s.fontSize._medium;
+				s.lineHeight._normal;
+				s.minWidth.px(0);
+				s.overflowWrap.anywhere;
+			},
 			messages: (s) => {
 				s.display.grid;
 				s.gap._xsmall;
+				s.fontSize._small;
+				s.lineHeight._normal;
+				s.minWidth.px(0);
+				s.overflowWrap.anywhere;
+				s._selector('& > p', (message) => message.margin.px(0));
 			},
 			success: (s) => s.color._success,
 			warning: (s) => s.color._warning,
-			root: (s) => s.display.grid
+			root: (s) => {
+				s.display.grid;
+				s.minWidth.px(0);
+			}
 		},
 		variants: {
 			size: {
@@ -171,6 +209,7 @@
 		description,
 		disabled = false,
 		error,
+		feedbackMinLines = 0,
 		label,
 		name,
 		readonly = false,
@@ -202,6 +241,14 @@
 	const classes = $derived(
 		size === undefined ? zui.slots(fieldRecipe) : zui.slots(fieldRecipe, { size })
 	);
+	const reservedFeedbackLines = $derived.by(() => {
+		if (!Number.isSafeInteger(feedbackMinLines) || feedbackMinLines < 0)
+			throw new TypeError('ZField feedbackMinLines must be a non-negative safe integer.');
+		return feedbackMinLines;
+	});
+	const feedbackClass = $derived(
+		reservedFeedbackLines > 0 ? zui.icss((s) => s.minHeight.lh(reservedFeedbackLines)) : undefined
+	);
 	let focusOwner: (() => void) | undefined;
 
 	function registerFocusOwner(focus: () => void): () => void {
@@ -213,6 +260,24 @@
 
 	function handleLabelClick(event: Event): void {
 		if (!focusOwner || event.defaultPrevented) return;
+		// Match native label activation: links/interactive descendants own their click.
+		for (const target of event.composedPath()) {
+			if (target === event.currentTarget) break;
+			if (
+				typeof target === 'object' &&
+				target !== null &&
+				'nodeType' in target &&
+				target.nodeType === 1
+			) {
+				const element = target as Element;
+				if (
+					element.matches(
+						'a[href], button, input, select, textarea, summary, audio[controls], video[controls], [contenteditable]:not([contenteditable="false"]), [role="button"], [role="link"], [tabindex]'
+					)
+				)
+					return;
+			}
+		}
 		event.preventDefault();
 		focusOwner();
 	}
@@ -246,30 +311,43 @@
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
 	data-disabled={disabled || undefined}
+	data-readonly={readonly || undefined}
+	data-required={required || undefined}
 	data-invalid={invalid || undefined}
 	data-success={successMessages.length > 0 || undefined}
 	data-warning={warningMessages.length > 0 || undefined}
 >
-	<label class={classes.label} for={resolvedControlId} id={labelId} {@attach attachLabel}>
+	<label
+		class={classes.label}
+		data-slot="label"
+		for={resolvedControlId}
+		id={labelId}
+		{@attach attachLabel}
+	>
 		{#if typeof label === 'string'}{label}{:else}{@render label()}{/if}
 		{#if required}<span aria-hidden="true"> *</span>{/if}
 	</label>
 	{@render children?.()}
 	{#if description}
-		<div class={classes.description} id={descriptionId}>
+		<div class={classes.description} data-slot="description" id={descriptionId}>
 			{#if typeof description === 'string'}{description}{:else}{@render description()}{/if}
 		</div>
 	{/if}
-	{#if invalid || warningMessages.length > 0 || successMessages.length > 0}
-		<div class={classes.messages} aria-live="polite" aria-atomic="true">
+	{#if reservedFeedbackLines > 0 || invalid || warningMessages.length > 0 || successMessages.length > 0}
+		<div
+			class={[classes.messages, feedbackClass]}
+			data-slot="messages"
+			aria-live="polite"
+			aria-atomic="true"
+		>
 			{#each messages as message, index (errorIds[index])}
-				<p class={classes.error} id={errorIds[index]}>{message}</p>
+				<p class={classes.error} data-slot="error" id={errorIds[index]}>{message}</p>
 			{/each}
 			{#each warningMessages as message, index (warningIds[index])}
-				<p class={classes.warning} id={warningIds[index]}>{message}</p>
+				<p class={classes.warning} data-slot="warning" id={warningIds[index]}>{message}</p>
 			{/each}
 			{#each successMessages as message, index (successIds[index])}
-				<p class={classes.success} id={successIds[index]}>{message}</p>
+				<p class={classes.success} data-slot="success" id={successIds[index]}>{message}</p>
 			{/each}
 		</div>
 	{/if}

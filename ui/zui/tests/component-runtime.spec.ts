@@ -175,6 +175,7 @@ describe('form control helpers', () => {
 		expect(normalizeFieldMessages(undefined)).toEqual([]);
 		expect(normalizeFieldMessages('Required')).toEqual(['Required']);
 		expect(normalizeFieldMessages(['First', '', 'Second'])).toEqual(['First', 'Second']);
+		expect(normalizeFieldMessages([' ', '\t\n', ' Keep spaces '])).toEqual([' Keep spaces ']);
 		expect(mergeFieldMessages('Required', ['Required', 'Try again'])).toEqual([
 			'Required',
 			'Try again'

@@ -73,6 +73,13 @@
 			data-testid="readonly-number"
 		/>
 
+		<ZNumberField
+			inputLabel="Required amount"
+			name="required"
+			required
+			data-testid="required-number"
+		/>
+
 		<ZButton type="reset">Reset values</ZButton>
 	</ZStack>
 </form>

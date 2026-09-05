@@ -3,21 +3,21 @@
 	"scope": ["ui/zui/src/components", "ui/zui/src/runtime", "apps/docs/src"],
 	"limitations": "AST source inventory, not runtime coverage. Numeric equality only identifies review candidates, not semantic equivalence. Dynamic/indexed theme reads and raw CSS returned from helpers require manual review. Entries without a direct reference are NOT proof of dead tokens.",
 	"summary": {
-		"files": 731,
+		"files": 732,
 		"registeredProperties": 142,
 		"themeGroups": 18,
 		"themeTokens": 119,
 		"directReferencedTokens": 113,
 		"kinds": {
 			"design-value-review": 8,
-			"dynamic-or-composed": 3,
+			"dynamic-or-composed": 4,
 			"explicit-geometry-or-css": 240,
 			"explicit-media-query": 8,
 			"local-stacking-order": 4,
 			"structural-percentage": 38,
-			"structural-zero": 156,
-			"system-keyword": 792,
-			"theme-accessor": 1516,
+			"structural-zero": 161,
+			"system-keyword": 795,
+			"theme-accessor": 1522,
 			"theme-token-candidate": 1
 		}
 	},
@@ -11135,80 +11135,191 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/ZField.svelte",
-			"line": 128,
+			"line": 147,
 			"property": "color",
 			"expression": "s.color._textMuted",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZField.svelte",
-			"line": 129,
+			"line": 148,
+			"property": "fontSize",
+			"expression": "s.fontSize._small",
+			"kind": "theme-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/input/ZField.svelte",
+			"line": 149,
+			"property": "lineHeight",
+			"expression": "s.lineHeight._normal",
+			"kind": "theme-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/input/ZField.svelte",
+			"line": 150,
+			"property": "minWidth",
+			"method": "px",
+			"expression": "s.minWidth.px(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "ui/zui/src/components/input/ZField.svelte",
+			"line": 151,
+			"property": "overflowWrap",
+			"expression": "s.overflowWrap.anywhere",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/input/ZField.svelte",
+			"line": 153,
 			"property": "color",
 			"expression": "s.color._danger",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZField.svelte",
-			"line": 130,
+			"line": 155,
 			"property": "fontWeight",
 			"expression": "s.fontWeight._medium",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZField.svelte",
-			"line": 132,
+			"line": 156,
+			"property": "fontSize",
+			"expression": "s.fontSize._medium",
+			"kind": "theme-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/input/ZField.svelte",
+			"line": 157,
+			"property": "lineHeight",
+			"expression": "s.lineHeight._normal",
+			"kind": "theme-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/input/ZField.svelte",
+			"line": 158,
+			"property": "minWidth",
+			"method": "px",
+			"expression": "s.minWidth.px(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "ui/zui/src/components/input/ZField.svelte",
+			"line": 159,
+			"property": "overflowWrap",
+			"expression": "s.overflowWrap.anywhere",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/input/ZField.svelte",
+			"line": 162,
 			"property": "display",
 			"expression": "s.display.grid",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZField.svelte",
-			"line": 133,
+			"line": 163,
 			"property": "gap",
 			"expression": "s.gap._xsmall",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZField.svelte",
-			"line": 135,
+			"line": 164,
+			"property": "fontSize",
+			"expression": "s.fontSize._small",
+			"kind": "theme-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/input/ZField.svelte",
+			"line": 165,
+			"property": "lineHeight",
+			"expression": "s.lineHeight._normal",
+			"kind": "theme-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/input/ZField.svelte",
+			"line": 166,
+			"property": "minWidth",
+			"method": "px",
+			"expression": "s.minWidth.px(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "ui/zui/src/components/input/ZField.svelte",
+			"line": 167,
+			"property": "overflowWrap",
+			"expression": "s.overflowWrap.anywhere",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/input/ZField.svelte",
+			"line": 168,
+			"property": "margin",
+			"method": "px",
+			"expression": "message.margin.px(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "ui/zui/src/components/input/ZField.svelte",
+			"line": 170,
 			"property": "color",
 			"expression": "s.color._success",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZField.svelte",
-			"line": 136,
+			"line": 171,
 			"property": "color",
 			"expression": "s.color._warning",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZField.svelte",
-			"line": 137,
+			"line": 173,
 			"property": "display",
 			"expression": "s.display.grid",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZField.svelte",
-			"line": 141,
+			"line": 174,
+			"property": "minWidth",
+			"method": "px",
+			"expression": "s.minWidth.px(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "ui/zui/src/components/input/ZField.svelte",
+			"line": 179,
 			"property": "gap",
 			"expression": "s.gap._medium",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZField.svelte",
-			"line": 142,
+			"line": 180,
 			"property": "gap",
 			"expression": "s.gap._small",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZField.svelte",
-			"line": 143,
+			"line": 181,
 			"property": "gap",
 			"expression": "s.gap._xsmall",
 			"kind": "theme-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/input/ZField.svelte",
+			"line": 250,
+			"property": "minHeight",
+			"method": "lh",
+			"expression": "s.minHeight.lh(reservedFeedbackLines)",
+			"kind": "dynamic-or-composed"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZFileUpload.svelte",
@@ -25181,55 +25292,91 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/ZField.svelte",
-			"line": 128,
+			"line": 147,
 			"token": "color.textMuted",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZField.svelte",
-			"line": 129,
+			"line": 148,
+			"token": "fontSize.small",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/input/ZField.svelte",
+			"line": 149,
+			"token": "lineHeight.normal",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/input/ZField.svelte",
+			"line": 153,
 			"token": "color.danger",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZField.svelte",
-			"line": 130,
+			"line": 155,
 			"token": "fontWeight.medium",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZField.svelte",
-			"line": 133,
+			"line": 156,
+			"token": "fontSize.medium",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/input/ZField.svelte",
+			"line": 157,
+			"token": "lineHeight.normal",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/input/ZField.svelte",
+			"line": 163,
 			"token": "space.xsmall",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZField.svelte",
-			"line": 135,
+			"line": 164,
+			"token": "fontSize.small",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/input/ZField.svelte",
+			"line": 165,
+			"token": "lineHeight.normal",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/input/ZField.svelte",
+			"line": 170,
 			"token": "color.success",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZField.svelte",
-			"line": 136,
+			"line": 171,
 			"token": "color.warning",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZField.svelte",
-			"line": 141,
+			"line": 179,
 			"token": "space.medium",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZField.svelte",
-			"line": 142,
+			"line": 180,
 			"token": "space.small",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZField.svelte",
-			"line": 143,
+			"line": 181,
 			"token": "space.xsmall",
 			"via": "icss-accessor"
 		},
@@ -29567,7 +29714,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/ZField.svelte",
-			"line": 246
+			"line": 311
 		},
 		{
 			"path": "ui/zui/src/components/input/ZFileUpload.svelte",
@@ -29575,7 +29722,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/ZForm.svelte",
-			"line": 615
+			"line": 623
 		},
 		{
 			"path": "ui/zui/src/components/input/ZInput.svelte",
@@ -29587,11 +29734,11 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/ZNumberField.svelte",
-			"line": 740
+			"line": 751
 		},
 		{
 			"path": "ui/zui/src/components/input/ZPinInput.svelte",
-			"line": 561
+			"line": 564
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",

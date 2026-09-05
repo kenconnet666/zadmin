@@ -659,6 +659,11 @@ test('keeps Form schema errors, async state, first-error focus, valid submit and
 	await expect(schemaDemo.getByText('请输入有效邮箱')).toBeVisible();
 	await account.fill('alice');
 	await email.fill('alice@example.com');
+	// Prove live change validation has settled before clicking a target whose
+	// position changes when feedback disappears (Firefox can otherwise release
+	// the pointer over the parent and never dispatch the second submit).
+	await expect(schemaDemo.getByText('账号至少需要3个字符')).toHaveCount(0);
+	await expect(schemaDemo.getByText('请输入有效邮箱')).toHaveCount(0);
 	await schemaDemo.getByRole('button', { name: '保存', exact: true }).click();
 	await expect(
 		schemaDemo.getByText('submitted = true · errors = 0 · validating = false · result = alice')

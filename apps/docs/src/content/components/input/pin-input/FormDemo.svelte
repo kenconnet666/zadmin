@@ -7,7 +7,11 @@
 
 <form>
 	<ZStack gap="medium">
-		<ZField label="一次性验证码" description="支持逐格输入和整段粘贴。" required>
+		<ZField
+			label="一次性验证码"
+			description="支持逐格输入、整段粘贴；聚焦槽位后按Backspace/Delete可清空。"
+			required
+		>
 			<ZPinInput
 				bind:value
 				inputLabel={(index, length) => `验证码第${index + 1}位，共${length}位`}
@@ -16,7 +20,10 @@
 				onComplete={() => (completed += 1)}
 			/>
 		</ZField>
-		<ZButton type="reset" variant="secondary">重置</ZButton>
+		<ZStack direction="row" gap="small" wrap>
+			<ZButton type="button" variant="secondary" onclick={() => (value = '')}>清空值</ZButton>
+			<ZButton type="reset" variant="secondary">重置</ZButton>
+		</ZStack>
 		<ZText tone="muted">value = {value || 'empty'} · complete = {completed}</ZText>
 	</ZStack>
 </form>

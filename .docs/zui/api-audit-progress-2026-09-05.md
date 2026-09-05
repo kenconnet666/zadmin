@@ -2,7 +2,7 @@
 
 日期：2026-09-05。基线：`d6b30da37beddb00e7a260c4262d1446ca3e7696`；该提交的主 CI [33951875994](https://github.com/kenconnet666/zadmin/actions/runs/33951875994) 已全绿。
 
-本轮按 79 个根组件文档家族登记，compound 子组件在所属家族下一起展开核查。当前 12 个根组件已有本轮具体复核记录，其他 67 个不因原成熟度标记或一次静态扫描而自动算完成。此表不是完成全库审计的声明。
+本台账按 79 个根组件文档家族登记，compound 子组件在所属家族下一起展开核查。两批累计 16 个根组件已有具体复核记录，其他 63 个不因原成熟度标记或一次静态扫描而自动算完成。第二批细节见[表单 API 审计](./form-api-audit-2026-09-05.md)。此表不是完成全库审计的声明。
 
 ## 审计口径
 
@@ -84,11 +84,11 @@
 | input-group       | 本轮已复核                     | 共享 Provider 默认尺寸；修复组合禁用透明度叠乘                              |
 | mention           | 本轮待逐项复核                 | —                                                                           |
 | multi-select      | 本轮待逐项复核                 | —                                                                           |
-| number-field      | 本轮待逐项复核                 | —                                                                           |
-| pin-input         | 本轮待逐项复核                 | —                                                                           |
-| field             | 本轮待逐项复核                 | —                                                                           |
+| number-field      | 第二批已复核                   | 只读键盘、partial draft 原生校验、有效提交与reset演示                       |
+| pin-input         | 第二批已复核                   | 只读删除、native input清空、OTP/RTL/动态length、Unicode降级边界             |
+| field             | 第二批已复核                   | 标签交互、空白反馈过滤、ARIA关联、消息排版与Parts                           |
 | file-upload       | 本轮待逐项复核                 | —                                                                           |
-| form              | 本轮待逐项复核                 | —                                                                           |
+| form              | 第二批已复核                   | FormField注册、typed路径冲突、提交/手动校验的queued task竞态、reset说明     |
 | radio-group       | 本轮待逐项复核                 | —                                                                           |
 | select            | 本轮待逐项复核                 | —                                                                           |
 | segmented         | 本轮待逐项复核                 | —                                                                           |
@@ -116,7 +116,7 @@
 | tooltip           | 本轮待逐项复核                 | —                                                                           |
 | tour              | 本轮待逐项复核                 | —                                                                           |
 
-## 本轮验证结果
+## 第一批验证结果
 
 - ZUI 与 Docs 的项目类型检查均为 0 errors / 0 warnings。
 - builder、component-defaults、gene-primitives 定向单测：3 files / 32 tests 通过；Avatar/Badge 最终 SSR：2 files / 7 tests 通过。
@@ -127,7 +127,7 @@
 
 ## 下一批顺序
 
-1. Field/Form 的标签、校验、error/help 与 native reset；NumberField/PinInput 的格式化、组合输入与尺寸。
+1. Field/Form/NumberField/PinInput 第二批已复核，后续关注本批新提交的完整 CI，不把旧 revision 的失败当成新代码已通过。
 2. Button/ToggleButton、Checkbox/RadioGroup/Switch/Slider/Segmented 的状态组合、键盘和主题一致性。
 3. Select/Combobox/MultiSelect、Tree/Cascader/Transfer 与虚拟集合的受控状态、过滤、空态、长内容。
 4. Dialog/Drawer/Popover/Tooltip/Menu 等浮层的嵌套层次、定位、退出动画、焦点恢复。

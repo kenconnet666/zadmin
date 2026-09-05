@@ -4,6 +4,7 @@ import { render } from 'vitest-browser-svelte';
 
 import FormEdgeFixture from './FormEdgeFixture.svelte';
 import FormGraphFixture from './FormGraphFixture.svelte';
+import FormQueuedChangeFixture from './FormQueuedChangeFixture.svelte';
 import FormSubmitEpochFixture from './FormSubmitEpochFixture.svelte';
 import { resetForm } from './form-reset.js';
 
@@ -54,6 +55,32 @@ describe('ZForm and ZFormField production contracts', () => {
 		await expect.poll(() => output.textContent).toContain('2:true:true:0:1');
 		document.querySelector<HTMLButtonElement>('[data-testid="resolve-old"]')!.click();
 		await expect.poll(() => output.textContent).toBe('2:true:false:0:1');
+	});
+
+	it('lets submit supersede an already queued change-validation callback', async () => {
+		render(FormQueuedChangeFixture);
+		const form = document.querySelector<HTMLFormElement>('[data-testid="queued-change-form"]')!;
+		const input = document.querySelector<HTMLInputElement>('[data-testid="queued-change-input"]')!;
+		const output = document.querySelector<HTMLOutputElement>(
+			'[data-testid="queued-change-output"]'
+		)!;
+		input.value = 'alice';
+		input.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		form.requestSubmit();
+		await expect.poll(() => output.textContent).toBe('0:valid');
+	});
+
+	it('lets explicit controller validation retire queued field validation', async () => {
+		render(FormQueuedChangeFixture);
+		const input = document.querySelector<HTMLInputElement>('[data-testid="queued-change-input"]')!;
+		input.value = 'alice';
+		input.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		document.querySelector<HTMLButtonElement>('[data-testid="queued-change-validate"]')!.click();
+		await expect
+			.poll(
+				() => document.querySelector('[data-testid="queued-change-manual-output"]')?.textContent
+			)
+			.toBe('valid');
 	});
 
 	it('keeps ZForm and ZFormField native busy, schema failure, reset and prevented-submit boundaries real', async () => {

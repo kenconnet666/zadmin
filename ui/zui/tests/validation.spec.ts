@@ -36,6 +36,27 @@ describe('form validation adapters', () => {
 		).toEqual({ roles: ['admin', 'editor'], users: [{ email: 'alice@example.com' }] });
 	});
 
+	it('rejects ancestor and descendant FieldPaths regardless of FormData entry order', () => {
+		const fieldPaths = new Map<string, readonly (string | number)[]>([
+			['profile', ['profile']],
+			['profile.email', ['profile', 'email']]
+		]);
+		const ancestorFirst = new FormData();
+		ancestorFirst.append('profile', 'display name');
+		ancestorFirst.append('profile.email', 'alice@example.com');
+		const descendantFirst = new FormData();
+		descendantFirst.append('profile.email', 'alice@example.com');
+		descendantFirst.append('profile', 'display name');
+		// Without the pre-scan, this order silently produced
+		// { profile: [{ email: 'alice@example.com' }, 'display name'] }.
+		expect(() => formDataToObject(ancestorFirst, fieldPaths)).toThrow(
+			/Conflicting ZForm FieldPaths/u
+		);
+		expect(() => formDataToObject(descendantFirst, fieldPaths)).toThrow(
+			/Conflicting ZForm FieldPaths/u
+		);
+	});
+
 	it('groups Standard Schema issues by the complete property path and deduplicates messages', () => {
 		const errors = issuesToFormErrors([
 			{ message: 'Required', path: ['users', 0, 'account'] },

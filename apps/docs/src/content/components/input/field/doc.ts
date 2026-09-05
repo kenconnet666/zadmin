@@ -13,6 +13,11 @@ export const fieldDoc = defineComponentDoc(fieldMetadata, {
 	sourceApi: fieldApiFacts,
 	teaching: {
 		props: {
+			feedbackMinLines: {
+				default: '0',
+				description:
+					'反馈区预留的最少行数，必须为非负整数。行高来自当前反馈样式；可为异步校验预留1–2行，超长消息仍正常增长。大于0时空live region保持挂载。'
+			},
 			controlId: {
 				default: '自动生成',
 				description: '覆盖label的for目标；复合控件通过Field上下文消费同一个ID。'
@@ -24,11 +29,13 @@ export const fieldDoc = defineComponentDoc(fieldMetadata, {
 			disabled: { default: 'false', description: '把禁用状态投射给Field内的控件。' },
 			error: {
 				default: '—',
-				description: '一个或多个错误消息，同时建立invalid状态和polite live region。'
+				description:
+					'一个或多个错误消息；空串/纯空白消息被忽略，有效消息建立invalid状态和polite live region。'
 			},
 			label: {
 				default: '必填',
-				description: '控件的可见标签；支持字符串或Snippet。'
+				description:
+					'控件的可见标签；支持字符串或Snippet。点击普通标签聚焦控件，标签内链接等交互内容保留自己的行为。'
 			},
 			name: { default: '—', description: '由Field内唯一表单控件继承的原生name。' },
 			readonly: { default: 'false', description: '把只读状态投射给Field内的控件。' },
@@ -40,7 +47,7 @@ export const fieldDoc = defineComponentDoc(fieldMetadata, {
 			size: {
 				default: 'undefined',
 				description:
-					'显式时控制字段间距并通过Field context声明control尺寸；未传时control继续采用Provider density。'
+					'显式时控制字段间距并通过Field context声明control尺寸；未传时不覆盖control的componentDefaults或Provider density。'
 			},
 			success: {
 				default: '—',
@@ -57,7 +64,8 @@ export const fieldDoc = defineComponentDoc(fieldMetadata, {
 		{
 			covers: ['basic-render', 'controlled', 'invalid'],
 			component: ValidationDemo,
-			description: '输入1–2个字符观察消息集合和aria-describedby关系。',
+			description:
+				'输入、首尾空白与清空操作展示error/warning/success消息集合和aria-describedby更新。',
 			id: 'field-validation',
 			source: validationSource,
 			title: '描述与错误状态'
@@ -75,7 +83,7 @@ export const fieldDoc = defineComponentDoc(fieldMetadata, {
 			covers: ['accessible-name', 'focus', 'keyboard'],
 			component: FocusOwnerDemo,
 			description:
-				'点击Field标签会把焦点交给Select的真实button trigger，说明复合控件只注册一个焦点owner。',
+				'普通标签只聚焦Select trigger、不展开；标签中的说明链接保留原生导航，不被Field截获。',
 			id: 'field-focus-owner',
 			source: focusOwnerSource,
 			title: '复合控件焦点Owner'

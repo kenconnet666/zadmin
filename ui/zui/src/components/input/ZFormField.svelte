@@ -38,6 +38,12 @@
 		parts: [],
 		props: [
 			{
+				default: '0',
+				description: '透传ZField反馈区最少行数，非负整数；适合避免异步反馈导致操作区位移。',
+				name: 'feedbackMinLines',
+				type: 'number'
+			},
+			{
 				default: '必填',
 				description: '字段图路径；字符串保持兼容，tuple保留数组段类型。',
 				name: 'name',

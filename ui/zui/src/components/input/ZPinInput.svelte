@@ -257,6 +257,7 @@
 	} from '../../runtime/foundation/root-style.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
+	import { splitPinInputGraphemes } from './pin-input.js';
 
 	let {
 		'aria-describedby': ariaDescribedBy,
@@ -318,9 +319,7 @@
 
 	function splitCharacters(source: string): string[] {
 		const ownerIntl = ref?.ownerDocument.defaultView?.Intl ?? Intl;
-		if (typeof ownerIntl.Segmenter !== 'function') return Array.from(source);
-		const segmenter = new ownerIntl.Segmenter(undefined, { granularity: 'grapheme' });
-		return Array.from(segmenter.segment(source), ({ segment }) => segment);
+		return splitPinInputGraphemes(source, ownerIntl);
 	}
 
 	function isAllowed(character: string): boolean {
@@ -436,7 +435,8 @@
 		const incoming = splitCharacters(normalize(source));
 		if (incoming.length === 0) {
 			const input = inputs[index];
-			if (input) input.value = characters[index] ?? '';
+			if (source.length === 0) replaceAt(index, '');
+			else if (input) input.value = characters[index] ?? '';
 			return;
 		}
 		const next = [...characters];
@@ -472,6 +472,7 @@
 	}
 
 	function handleKeydown(event: KeyboardEvent, index: number): void {
+		if (resolvedDisabled) return;
 		if (event.isComposing || composingIndex === index) return;
 		const previous = zui.direction === 'rtl' ? index + 1 : index - 1;
 		const next = zui.direction === 'rtl' ? index - 1 : index + 1;
@@ -493,11 +494,13 @@
 				focus(resolvedLength - 1);
 				return;
 			case 'Backspace':
+				if (resolvedReadonly) return;
 				event.preventDefault();
 				if (characters[index]) replaceAt(index, '');
 				else if (index > 0) replaceAt(index - 1, '');
 				return;
 			case 'Delete':
+				if (resolvedReadonly) return;
 				event.preventDefault();
 				replaceAt(index, '');
 				return;

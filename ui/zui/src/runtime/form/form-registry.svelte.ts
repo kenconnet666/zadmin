@@ -4,6 +4,7 @@ import { tabbable } from 'tabbable';
 import {
 	fieldPathKey,
 	fieldPathToString,
+	fieldPathStartsWith,
 	normalizeFieldPath,
 	type FieldPath,
 	type FieldPathInput
@@ -118,10 +119,21 @@ export class FormRegistry {
 	register(registration: FormFieldRegistration): () => void {
 		const path = normalizeFieldPath(registration.path);
 		const key = fieldPathKey(path);
+		if (registration.htmlName.length === 0) {
+			throw new TypeError('ZFormField htmlName must not be empty.');
+		}
 		if (this.#fields.has(registration.instanceId)) {
 			throw new Error(`Duplicate ZFormField instance "${registration.instanceId}".`);
 		}
 		for (const field of this.#fields.values()) {
+			if (
+				field.key !== key &&
+				(fieldPathStartsWith(path, field.path) || fieldPathStartsWith(field.path, path))
+			) {
+				throw new Error(
+					`Conflicting ZForm FieldPaths "${fieldPathToString(field.path)}" and "${fieldPathToString(path)}".`
+				);
+			}
 			if (field.htmlName === registration.htmlName && field.key !== key) {
 				throw new Error(
 					`ZFormField HTML name "${registration.htmlName}" cannot represent multiple FieldPaths.`

@@ -154,4 +154,45 @@ describe('NumberField production contracts', () => {
 		).toBe(true);
 		expect(new FormData(form).get('replicas')).toBe('4');
 	});
+
+	it('does not consume navigation keys on readonly inputs', () => {
+		render(NumberFieldProductionFixture);
+		const readonlyControl = spinbutton('readonly-number');
+		const event = new KeyboardEvent('keydown', {
+			bubbles: true,
+			cancelable: true,
+			key: 'ArrowUp'
+		});
+		readonlyControl.dispatchEvent(event);
+		expect(event.defaultPrevented).toBe(false);
+	});
+
+	it('rejects a partial draft for required form validation', async () => {
+		render(NumberFieldProductionFixture);
+		const control = spinbutton('required-number');
+		control.focus();
+		input(control, '-');
+		await tick();
+
+		expect(control.value).toBe('-');
+		expect(control.checkValidity()).toBe(false);
+	});
+
+	it('preserves the last committed value but blocks submission of an optional partial draft', async () => {
+		render(NumberFieldProductionFixture);
+		const control = spinbutton('controlled-number');
+		const form = document.querySelector<HTMLFormElement>('[data-testid="number-production-form"]')!;
+		control.focus();
+		input(control, '-');
+		await tick();
+
+		expect(control.value).toBe('-');
+		expect(control.getAttribute('aria-invalid')).toBeNull();
+		expect(fixture('controlled-value').textContent).toBe('12.5');
+		expect(new FormData(form).get('controlled')).toBe('12.5');
+		expect(control.checkValidity()).toBe(false);
+		control.blur();
+		await tick();
+		expect(control.checkValidity()).toBe(true);
+	});
 });

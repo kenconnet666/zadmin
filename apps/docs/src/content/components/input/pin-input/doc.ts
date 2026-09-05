@@ -19,6 +19,10 @@ export const pinInputDoc = defineComponentDoc(pinInputMetadata, {
 	sourceApi: pinInputApiFacts,
 	teaching: {
 		props: {
+			autocomplete: {
+				default: "'one-time-code'",
+				description: '仅首槽接收one-time-code；其余槽固定为off，浏览器OTP autofill走同一分配路径。'
+			},
 			defaultValue: {
 				default: "''",
 				description: '非受控初始连续值；reset按当前length/mode/validator重新规范化。'
@@ -46,7 +50,8 @@ export const pinInputDoc = defineComponentDoc(pinInputMetadata, {
 			},
 			mode: {
 				default: "'numeric'",
-				description: 'numeric只接受ASCII OTP数字；text按Unicode grapheme分格。'
+				description:
+					'numeric只接受ASCII OTP数字；text优先按owner Intl.Segmenter的Unicode grapheme分格；缺失时降级为code point。'
 			},
 			name: {
 				default: 'Field context',
@@ -62,16 +67,21 @@ export const pinInputDoc = defineComponentDoc(pinInputMetadata, {
 			},
 			readonly: {
 				default: 'Field context',
-				description: '保留聚焦、选择和阅读，禁止编辑、粘贴与删除。'
+				description: '保留聚焦、选择、方向导航和阅读，禁止编辑、粘贴与删除。'
 			},
 			ref: { default: 'null', description: '真实role=group根引用。' },
 			required: {
 				default: 'Field context',
 				description: '每个可见槽参与同一内联或外部form的原生required约束。'
 			},
+			size: {
+				default: 'Field > Provider density',
+				description: 'small/medium/large同时控制槽几何与间距；超长PIN在窄容器中可横向滚动。'
+			},
 			validateCharacter: {
 				default: 'mode规则',
-				description: '接收完整grapheme；自定义过滤不会把一个emoji或组合字符拆开。'
+				description:
+					'接收Intl.Segmenter返回的完整grapheme；无Segmenter时按code point降级，自定义过滤不会再额外拆分分段结果。'
 			},
 			value: {
 				default: "''",
@@ -134,8 +144,8 @@ export const pinInputDoc = defineComponentDoc(pinInputMetadata, {
 	accessibility: [
 		'ZPinInput声明Field唯一control owner；Field label点击聚焦第一空槽，description和error关联全部槽。',
 		'每格是真实input且只有一个roving tabindex；ArrowLeft/Right按Provider direction移动，Home/End到首尾。',
-		'composition期间不拦截IME键盘，compositionend才分配grapheme；粘贴和one-time-code autofill走同一规范化路径。',
-		'numeric只接收ASCII验证码数字；text使用Intl.Segmenter并保留完整emoji、组合字符和CJK grapheme。',
+		'composition期间不拦截IME键盘，compositionend才分配Intl.Segmenter结果；粘贴和one-time-code autofill走同一规范化路径。',
+		'numeric只接收ASCII验证码数字；text使用owner Intl.Segmenter处理Unicode grapheme。缺失Segmenter的运行时明确降级为code point，不宣称覆盖完整UAX #29。',
 		'mask只隐藏视觉，不改变内存、回调或FormData原值；敏感OTP仍应最短保留并走安全传输。',
 		'默认位置文案来自typed localePack.form.pinInputPosition并使用Intl格式化一基序号；inputLabel可覆盖业务专用名称。',
 		'参考Ant Design Input.OTP采用length、mask和one-time-code，但ZUI不加入formatter空格协议、任意mask字符串、separator DSL或第二套数组value owner。'

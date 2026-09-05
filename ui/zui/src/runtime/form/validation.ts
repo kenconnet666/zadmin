@@ -1,6 +1,11 @@
 import type { StandardSchemaV1 } from '@standard-schema/spec';
 
-import { fieldPathToString, normalizeFieldPath, type FieldPath } from './field-path.js';
+import {
+	fieldPathKey,
+	fieldPathToString,
+	normalizeFieldPath,
+	type FieldPath
+} from './field-path.js';
 
 export type FormErrors = Readonly<Record<string, readonly string[]>>;
 
@@ -125,11 +130,30 @@ export function formDataToObject(
 		else if (Array.isArray(current)) current.push(value);
 		else entries.set(name, [current, value]);
 	}
-	const firstPath = fieldPaths.get(entries.keys().next().value ?? '');
+	const mappedEntries = [...entries].map(([name, value]) => ({
+		path: fieldPaths.get(name) ?? normalizeFieldPath(name),
+		value
+	}));
+	// Track typed prefixes rather than comparing every field with every other field.
+	const exactPaths = new Map<string, FieldPath>();
+	const descendantPaths = new Map<string, FieldPath>();
+	for (const { path } of mappedEntries) {
+		const key = fieldPathKey(path);
+		const prefixes = path.slice(1).map((_, index) => fieldPathKey(path.slice(0, index + 1)));
+		const conflicting =
+			descendantPaths.get(key) ?? prefixes.map((prefix) => exactPaths.get(prefix)).find(Boolean);
+		if (conflicting) {
+			throw new TypeError(
+				`Conflicting ZForm FieldPaths "${fieldPathToString(conflicting)}" and "${fieldPathToString(path)}".`
+			);
+		}
+		exactPaths.set(key, path);
+		for (const prefix of prefixes) descendantPaths.set(prefix, path);
+	}
+	const firstPath = mappedEntries[0]?.path;
 	const result: Record<PropertyKey, unknown> | unknown[] =
 		firstPath && typeof firstPath[0] === 'number' ? [] : {};
-	for (const [name, value] of entries) {
-		const path = fieldPaths.get(name) ?? normalizeFieldPath(name);
+	for (const { path, value } of mappedEntries) {
 		assignPath(result, path, Array.isArray(value) ? Object.freeze([...value]) : value);
 	}
 	return freezeFormValue(result);

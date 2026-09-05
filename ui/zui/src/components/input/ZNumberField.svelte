@@ -502,16 +502,17 @@
 	let editing = $state(false);
 	let composing = $state(false);
 	let draftInvalid = $state(false);
+	let draftPartial = $state(false);
 	let synchronizedValue = $state<number | undefined>(untrack(() => currentValue));
 	let synchronizedLocale = $state(untrack(() => resolvedLocale));
 	const displayed = $derived(editing ? draft : formatted);
 	const outOfRange = $derived(isNumberOutOfRange(currentValue, constraints.min, constraints.max));
+	const resolvedRequired = $derived(required || field?.required || false);
 	const resolvedInvalid = $derived(
 		draftInvalid || outOfRange || (invalid ?? field?.invalid ?? false)
 	);
 	const resolvedDisabled = $derived(disabled || field?.disabled || false);
 	const resolvedReadonly = $derived(readonly || field?.readonly || false);
-	const resolvedRequired = $derived(required || field?.required || false);
 	const resolvedName = $derived(name ?? field?.name);
 	const resolvedSize = $derived(resolveControlSize(size ?? field?.size, zui.density));
 	const resolvedDescribedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
@@ -529,7 +530,7 @@
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
 	const internalValidityMessage = $derived.by(() => {
-		if (draftInvalid) return zui.localePack.numberField.invalidValue;
+		if (draftInvalid || draftPartial) return zui.localePack.numberField.invalidValue;
 		if (
 			currentValue !== undefined &&
 			constraints.min !== undefined &&
@@ -563,6 +564,7 @@
 		if (editing && !composing) {
 			draft = formatEditValue(nextValue);
 			draftInvalid = false;
+			draftPartial = false;
 		}
 	});
 	onMount(() => {
@@ -582,6 +584,7 @@
 		synchronizedValue = resetValue;
 		draft = '';
 		draftInvalid = false;
+		draftPartial = false;
 		composing = false;
 		editing = false;
 		if (inputRef)
@@ -608,6 +611,7 @@
 		synchronizedValue = normalized;
 		valueState.setFromUser(normalized);
 		draftInvalid = false;
+		draftPartial = false;
 		return normalized;
 	}
 
@@ -642,6 +646,7 @@
 	function updateFromDraft(): void {
 		const parsed = parseDraft(draft);
 		draftInvalid = !parsed.valid && !parsed.partial;
+		draftPartial = parsed.partial && !parsed.valid;
 		if (parsed.valid) commit(parsed.value);
 	}
 
@@ -668,6 +673,7 @@
 		editing = true;
 		draft = nextDraft;
 		draftInvalid = false;
+		draftPartial = false;
 		// Synchronize the edit presentation before an immediate native fill/type action.
 		// Waiting for the reactive value attribute can append to the formatted display.
 		event.currentTarget.value = nextDraft;
@@ -689,12 +695,17 @@
 			commit(next);
 		}
 		draftInvalid = false;
+		draftPartial = false;
 		editing = false;
 		draft = '';
 	}
 
 	function handleKeydown(event: KeyboardEvent & { currentTarget: HTMLInputElement }): void {
-		if (composing || event.isComposing) return;
+		// A readonly/disabled text input still receives keyboard events in some
+		// browsers. Leave those events to the native control so caret navigation
+		// and copy remain available for readonly values; disabled controls should
+		// likewise never claim a step key.
+		if (resolvedDisabled || resolvedReadonly || composing || event.isComposing) return;
 		switch (event.key) {
 			case 'ArrowUp':
 			case 'ArrowDown':

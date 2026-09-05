@@ -4,7 +4,7 @@
 		"metadataComponents": 141,
 		"documentationPages": 79,
 		"contractComponents": 141,
-		"testFiles": 177
+		"testFiles": 181
 	},
 	"stageNames": [
 		"Declared",
@@ -11433,7 +11433,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "c8c862d7df59348a1e6c035e6f8564d43e3c3d163ed73a3c032ff5179f42443e API snapshot entry"
+						"detail": "5c31a80ab85803079ade72609eef5c802338a1d21ee56ea8bb4af548982be5fd API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -11481,6 +11481,10 @@
 			"ssrEvidence": [
 				{
 					"path": "ui/zui/tests/components.spec.ts",
+					"detail": "ZField SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/field-audit.spec.ts",
 					"detail": "ZField SSR assertions"
 				},
 				{
@@ -11662,6 +11666,10 @@
 						"detail": "ZForm explicit rendered fixture usage"
 					},
 					{
+						"path": "ui/zui/tests/FormQueuedChangeFixture.svelte",
+						"detail": "ZForm explicit rendered fixture usage"
+					},
+					{
 						"path": "ui/zui/tests/FormSubmitEpochFixture.svelte",
 						"detail": "ZForm explicit rendered fixture usage"
 					}
@@ -11688,6 +11696,10 @@
 					},
 					{
 						"path": "ui/zui/tests/FormGraphFixture.svelte",
+						"detail": "ZForm explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/FormQueuedChangeFixture.svelte",
 						"detail": "ZForm explicit rendered fixture usage"
 					},
 					{
@@ -11748,7 +11760,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "7811f79ec43e56ea74f529f8fc9944c2e4b7f38722be11599876c8acc43a9f56 API snapshot entry"
+						"detail": "8d4f6bb1d7bba3396967093e78b1f016e469196f24b9ebe4e907549b43774af7 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -11795,6 +11807,10 @@
 						"detail": "ZFormField explicit rendered fixture usage"
 					},
 					{
+						"path": "ui/zui/tests/FormQueuedChangeFixture.svelte",
+						"detail": "ZFormField explicit rendered fixture usage"
+					},
+					{
 						"path": "ui/zui/tests/FormSubmitEpochFixture.svelte",
 						"detail": "ZFormField explicit rendered fixture usage"
 					}
@@ -11821,6 +11837,10 @@
 					},
 					{
 						"path": "ui/zui/tests/FormGraphFixture.svelte",
+						"detail": "ZFormField explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/FormQueuedChangeFixture.svelte",
 						"detail": "ZFormField explicit rendered fixture usage"
 					},
 					{

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import {
 		ZField,
+		ZLink,
 		ZSelect,
 		ZSelectContent,
 		ZSelectItem,
@@ -18,10 +19,12 @@
 	<ZField
 		controlId="field-focus-owner-trigger"
 		description="点击上方标签后，Field会把焦点交给复合控件注册的唯一trigger。"
-		label="部署环境"
 		name="environment"
 		required
 	>
+		{#snippet label()}
+			部署环境 · <ZLink href="#/guides/accessibility" size="small">标签与焦点说明</ZLink>
+		{/snippet}
 		<ZSelect bind:value>
 			<ZSelectTrigger onblur={() => (focused = false)} onfocus={() => (focused = true)} />
 			<ZSelectContent>

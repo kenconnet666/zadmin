@@ -68,10 +68,16 @@
 	validationDelay={80}
 >
 	<ZStack gap="medium">
-		<ZFormField name="account" label="账号" description="提交失败会聚焦首个错误字段。" required>
+		<ZFormField
+			name="account"
+			label="账号"
+			description="提交失败会聚焦首个错误字段。"
+			required
+			feedbackMinLines={1}
+		>
 			<ZInput autocomplete="username" bind:value={account} placeholder="alice" />
 		</ZFormField>
-		<ZFormField name="email" label="邮箱" required>
+		<ZFormField name="email" label="邮箱" required feedbackMinLines={1}>
 			<ZInput
 				autocomplete="email"
 				bind:value={email}

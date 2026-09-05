@@ -8270,6 +8270,11 @@ export const fieldApiFacts = {
 			type: 'FieldMessages'
 		},
 		{
+			name: 'feedbackMinLines',
+			required: false,
+			type: 'number'
+		},
+		{
 			name: 'label',
 			required: true,
 			type: 'Snippet | string'
@@ -8670,6 +8675,12 @@ export const formFieldApiFacts = {
 			name: 'disabled',
 			required: false,
 			type: 'boolean',
+			inheritedFrom: 'ZFieldProps'
+		},
+		{
+			name: 'feedbackMinLines',
+			required: false,
+			type: 'number',
 			inheritedFrom: 'ZFieldProps'
 		},
 		{

@@ -116,6 +116,7 @@ export const numberFieldDoc = defineComponentDoc(numberFieldMetadata, {
 		'可编辑input是唯一Tab停靠点并保留平台文本编辑键；相邻Lucide步进按钮使用tabindex=-1、aria-controls、可访问名称和title，点击后焦点返回input。',
 		'ArrowUp/ArrowDown按step增减，PageUp/PageDown与Shift+方向键按pageStep增减；Home/End仅在已知min/max时生效。',
 		'aria-valuenow/min/max/valueText始终描述已提交数值；非法草稿和allowOutOfRange值设置aria-invalid及本地化原生validity消息。',
+		'输入“-”或“.”等非空未完成草稿时阻止原生表单提交，包括可选字段；value/FormData仍保留最近有效提交值，失焦按提交策略恢复。不会把草稿误作为数值提交。',
 		'IME组合期间只保留草稿，不解析或触发onValueChange；compositionend后再通过当前locale或自定义parser提交。',
 		'formatOptions只影响默认显示，编辑态使用无分组本地数字；自定义formatter必须与parser成对设计，避免不可逆文本。'
 	],

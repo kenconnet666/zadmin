@@ -371,6 +371,7 @@
 	// Validation run ids are lifecycle bookkeeping, not rendered state.
 	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	const validationRuns = new Set<number>();
+	// One generation owns queued callbacks and already-running validation results.
 	let validationEpoch = 0;
 	let validationRunId = 0;
 	const triggers = $derived.by(() => {
@@ -481,7 +482,10 @@
 		const scopeKey = JSON.stringify(paths.map(fieldPathKey).sort());
 		const previous = validationTimers.get(scopeKey);
 		if (previous) previous.view.clearTimeout(previous.id);
+		// clearTimeout cannot cancel queued blur/zero-delay microtasks.
+		const scheduleEpoch = validationEpoch;
 		const run = () => {
+			if (scheduleEpoch !== validationEpoch || !lifecycle.active) return;
 			validationTimers.delete(scopeKey);
 			void validatePaths(paths, false);
 		};
@@ -549,7 +553,11 @@
 			}
 		},
 		subscribeField: (path, listener) => registry.subscribeField(path, listener),
-		validate: () => validatePaths(registry.registeredPaths(), true),
+		validate: () => {
+			clearValidationTimers();
+			validationEpoch += 1;
+			return validatePaths(registry.registeredPaths(), true);
+		},
 		validateField: (path) => validatePaths([path], false)
 	};
 	$effect(() => {

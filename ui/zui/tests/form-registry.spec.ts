@@ -43,6 +43,27 @@ describe('FormRegistry', () => {
 				path: 'different'
 			})
 		).toThrow(/multiple FieldPaths/u);
+		expect(() =>
+			registry.register({
+				control: () => null,
+				htmlName: 'users[0].account.email',
+				instanceId: 'nested-conflict',
+				path: ['users', 0, 'account', 'email']
+			})
+		).toThrow(/Conflicting ZForm FieldPaths/u);
+		expect(() =>
+			registry.register({
+				control: () => null,
+				htmlName: '',
+				instanceId: 'empty-html-name',
+				path: 'empty'
+			})
+		).toThrow(/htmlName must not be empty/u);
+		const childFirst = new FormRegistry();
+		register(childFirst, 'child', ['profile', 'email']);
+		expect(() => register(childFirst, 'parent', 'profile')).toThrow(
+			/Conflicting ZForm FieldPaths/u
+		);
 
 		registry.markDirty('a-1');
 		registry.markTouched('a-2');

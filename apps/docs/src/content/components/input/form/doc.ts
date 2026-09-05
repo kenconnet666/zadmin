@@ -26,7 +26,7 @@ export const formDoc = defineComponentDoc(formMetadata, {
 			},
 			onreset: {
 				default: '—',
-				description: '原生reset回调；在组件执行字段reset后通知调用方。'
+				description: '原生reset事件阶段同步回调；可调用event.preventDefault()阻止字段状态和值复位。'
 			},
 			onsubmit: {
 				default: '—',
@@ -82,10 +82,12 @@ export const formDoc = defineComponentDoc(formMetadata, {
 		}
 	],
 	accessibility: [
+		'异步反馈可通过ZFormField.feedbackMinLines预留行高，减少错误出现或消失时按钮位移；它是最小高度，不裁剪超长消息。',
 		'ZForm保持原生form与FormData；默认关闭浏览器constraint阻断，由Standard Schema形成统一错误来源。',
 		'ZFormField把schema完整路径映射的消息交给ZField生成稳定description/error/warning/success IDs，真实输入继续拥有label与aria-describedby。',
 		'无效提交等待最新异步验证完成后，按实时DOM顺序滚动并聚焦首错；reset取消旧验证并清空dirty/touched/messages。',
-		'FieldPath内部身份保留string/number段类型，HTML name独立生成；多个相同路径实例共享状态，但不会把ZForm变成私有值store。'
+		'FieldPath内部身份保留string/number段类型，HTML name独立生成；多个相同路径实例共享状态，但不会把ZForm变成私有值store。',
+		"同一表单的typed FieldPath不能互为父子（例如['profile']与['profile','email']），且htmlName不能为空；注册阶段会报告配置错误，避免提交时才出现标量/对象输入错误。"
 	],
 	keywords: [
 		'form',

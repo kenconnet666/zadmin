@@ -6,7 +6,7 @@ export function normalizeFieldMessages(
 ): readonly string[] {
 	if (messages === null || messages === undefined) return [];
 	return (Array.isArray(messages) ? messages : [messages]).filter(
-		(message): message is string => typeof message === 'string' && message.length > 0
+		(message): message is string => typeof message === 'string' && message.trim().length > 0
 	);
 }
 
