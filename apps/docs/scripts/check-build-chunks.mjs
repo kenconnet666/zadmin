@@ -35,7 +35,8 @@ export function validateManifest(manifest, { entryKey, docSourceKeys, docChunkKe
 		(key) =>
 			/(?:^|\/)src\/content\/components\/.*\/doc\.ts$/u.test(key) ||
 			/(?:^|\/)src\/content\/components\/.*\.svelte$/u.test(key) ||
-			key === 'src/framework/catalog.ts'
+			key === 'src/framework/catalog.ts' ||
+			key === 'src/views/ComponentPage.svelte'
 	);
 	if (forbiddenStaticSources.length > 0) {
 		throw new Error(
@@ -95,6 +96,15 @@ function selfTest() {
 		'entry.ts': { ...base['entry.ts'], dynamicImports: ['doc-a.ts'] }
 	};
 	try {
+		validateManifest(
+			{ ...base, 'entry.ts': { ...base['entry.ts'], imports: ['src/views/ComponentPage.svelte'] } },
+			args
+		);
+		throw new Error('self-test eager component view was accepted');
+	} catch (error) {
+		if (String(error).includes('self-test')) throw error;
+	}
+	try {
 		validateManifest(missingDynamic, args);
 		throw new Error('self-test missing dynamic was accepted');
 	} catch (error) {
@@ -106,7 +116,7 @@ function selfTest() {
 	} catch (error) {
 		if (String(error).includes('self-test')) throw error;
 	}
-	console.log(JSON.stringify({ cases: 4, status: 'passed' }));
+	console.log(JSON.stringify({ cases: 5, status: 'passed' }));
 }
 
 if (process.argv.includes('--self-test')) selfTest();

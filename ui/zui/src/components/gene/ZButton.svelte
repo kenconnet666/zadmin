@@ -100,19 +100,28 @@
 					s.backgroundColor.transparent;
 					s.borderColor.transparent;
 					s.color._primary;
-					s._hover((hover) => hover.backgroundColor._surface);
+					s._selector(
+						'&:not(:disabled):not([aria-disabled="true"]):hover',
+						(hover) => hover.backgroundColor._surface
+					);
 				},
 				primary: (s) => {
 					s.backgroundColor._primary;
 					s.borderColor._primary;
 					s.color._canvas;
-					s._hover((hover) => hover.backgroundColor._primaryHover);
+					s._selector(
+						'&:not(:disabled):not([aria-disabled="true"]):hover',
+						(hover) => hover.backgroundColor._primaryHover
+					);
 				},
 				secondary: (s) => {
 					s.backgroundColor._surface;
 					s.borderColor._border;
 					s.color._text;
-					s._hover((hover) => hover.backgroundColor._canvas);
+					s._selector(
+						'&:not(:disabled):not([aria-disabled="true"]):hover',
+						(hover) => hover.backgroundColor._canvas
+					);
 				}
 			}
 		},
@@ -126,7 +135,10 @@
 					s.backgroundColor._danger;
 					s.borderColor._danger;
 					s.color._canvas;
-					s._hover((hover) => hover.backgroundColor._dangerHover);
+					s._selector(
+						'&:not(:disabled):not([aria-disabled="true"]):hover',
+						(hover) => hover.backgroundColor._dangerHover
+					);
 				},
 				when: { tone: 'danger', variant: 'primary' }
 			},
@@ -135,7 +147,10 @@
 					s.backgroundColor._surface;
 					s.borderColor._danger;
 					s.color._danger;
-					s._hover((hover) => hover.backgroundColor._canvas);
+					s._selector(
+						'&:not(:disabled):not([aria-disabled="true"]):hover',
+						(hover) => hover.backgroundColor._canvas
+					);
 				},
 				when: { tone: 'danger', variant: 'secondary' }
 			},
@@ -144,7 +159,10 @@
 					s.backgroundColor.transparent;
 					s.borderColor.transparent;
 					s.color._danger;
-					s._hover((hover) => hover.backgroundColor._surface);
+					s._selector(
+						'&:not(:disabled):not([aria-disabled="true"]):hover',
+						(hover) => hover.backgroundColor._surface
+					);
 				},
 				when: { tone: 'danger', variant: 'ghost' }
 			},

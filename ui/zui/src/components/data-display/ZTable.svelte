@@ -259,7 +259,7 @@
 	function updateOverflow(): void {
 		const wrapper = wrapperRef;
 		overflowing =
-			resolvedScroll === 'auto' && !!wrapper && wrapper.scrollWidth > wrapper.clientWidth + 1;
+			resolvedScroll === 'auto' && !!wrapper && wrapper.scrollWidth > wrapper.clientWidth;
 	}
 
 	$effect(() => {

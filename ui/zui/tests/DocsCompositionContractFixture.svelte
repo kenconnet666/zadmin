@@ -100,4 +100,11 @@
 		{/snippet}
 		<tr><th scope="row">Docs</th><td>2.4.0</td></tr>
 	</ZTable>
+	<ZTable
+		caption="One pixel overflow"
+		data-testid="table-one-pixel"
+		style="min-inline-size: calc(100% + 1px);"
+	>
+		<tr><td>Fractional layout boundary</td></tr>
+	</ZTable>
 </div>

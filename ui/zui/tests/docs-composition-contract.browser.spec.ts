@@ -89,6 +89,12 @@ describe('DocsComposition component contracts', () => {
 		const overflow = document.querySelector<HTMLElement>('[data-testid="table-overflow"]')!;
 		const overflowOwner = overflow.parentElement!;
 		const compact = document.querySelector<HTMLElement>('[data-testid="table-no-overflow"]')!;
+		const tiny = document.querySelector<HTMLElement>(
+			'[data-testid="table-one-pixel"]'
+		)!.parentElement!;
+		await expect.poll(() => tiny.scrollWidth - tiny.clientWidth).toBe(1);
+		await expect.poll(() => tiny.getAttribute('role')).toBe('region');
+		expect(tiny.tabIndex).toBe(0);
 		const compactOwner = compact.parentElement!;
 
 		expect(overflowOwner.dataset.overflowing).toBe('true');

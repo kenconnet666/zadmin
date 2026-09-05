@@ -76,9 +76,14 @@ describe('ICSS builder edge behavior', () => {
 		expect(getUnitSuffix('unknown' as never)).toBeUndefined();
 	});
 
-	it('returns undefined for unknown carrier members', () => {
+	it('rejects unknown carrier members without breaking thenable probes', () => {
+		expect(() =>
+			createStyleProgram(defaultTheme, (s) => {
+				(s.color as unknown as Record<string, unknown>).unknown;
+			})
+		).toThrow(/Unknown ICSS accessor "color.unknown"/u);
 		createStyleProgram(defaultTheme, (s) => {
-			expect((s.color as unknown as Record<string, unknown>).unknown).toBeUndefined();
+			expect((s.color as unknown as Record<string, unknown>).then).toBeUndefined();
 		});
 	});
 });

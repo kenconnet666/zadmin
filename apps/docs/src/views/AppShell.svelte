@@ -129,7 +129,6 @@
 	import { componentDocLoaders } from '../framework/component-doc-loaders.generated.js';
 	import type { ComponentDoc } from '../framework/component-doc.js';
 	import { docsRouter } from '../framework/router-runtime.svelte.js';
-	import ComponentPage from './ComponentPage.svelte';
 	import GuidePage from './GuidePage.svelte';
 	import HomePage from './HomePage.svelte';
 	import ThemeLabPage from './ThemeLabPage.svelte';
@@ -166,6 +165,7 @@
 	const currentId = $derived(route.kind === 'component' ? route.componentId : undefined);
 	const currentGuideId = $derived(route.kind === 'guide' ? route.guideId : undefined);
 	let loadedDoc = $state<ComponentDoc | null>(null);
+	let ComponentPage = $state<typeof import('./ComponentPage.svelte').default | null>(null);
 	let loadingDoc = $state(false);
 	let docError = $state<string | null>(null);
 	let loadGeneration = 0;
@@ -184,9 +184,14 @@
 			return;
 		}
 		loadingDoc = true;
-		void loader()
-			.then((doc) => {
-				if (generation === loadGeneration) loadedDoc = doc;
+		// Fetch the route view and its document together; the overview must not eagerly
+		// ship the API table, disclosure and live-demo renderer in its entry chunk.
+		void Promise.all([loader(), import('./ComponentPage.svelte')])
+			.then(([doc, page]) => {
+				if (generation === loadGeneration) {
+					ComponentPage = page.default;
+					loadedDoc = doc;
+				}
 			})
 			.catch((error: unknown) => {
 				if (generation === loadGeneration)
@@ -276,7 +281,7 @@
 			>
 		{:else if currentId && docError}
 			<ZAlert tone="danger" title="组件文档加载失败">{docError}</ZAlert>
-		{:else if currentDoc}
+		{:else if currentDoc && ComponentPage}
 			<ComponentPage doc={currentDoc} />
 		{:else if currentGuideId === 'theme'}
 			<ThemeLabPage {onThemeChange} {themeId} />

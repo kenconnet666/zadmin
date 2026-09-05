@@ -156,7 +156,10 @@
 				always: (s) => s.textDecoration.underline,
 				hover: (s) => {
 					s.textDecoration.none;
-					s._hover((hover) => hover.textDecoration.underline);
+					s._selector(
+						'&:not(:disabled):not([aria-disabled="true"]):hover',
+						(hover) => hover.textDecoration.underline
+					);
 				},
 				none: (s) => s.textDecoration.none
 			}
@@ -191,7 +194,7 @@
 			s.justifyContent.spaceBetween;
 			s.minWidth.px(0);
 			s.textDecoration.none;
-			s._hover((hover) => {
+			s._selector('&:not(:disabled):not([aria-disabled="true"]):hover', (hover) => {
 				hover.backgroundColor._surface;
 				hover.color._primaryHover;
 			});

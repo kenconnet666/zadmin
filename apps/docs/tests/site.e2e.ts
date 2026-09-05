@@ -2106,7 +2106,7 @@ test('renders data-driven not-found routes with one recoverable 404 surface', as
 			page.getByRole('heading', { level: 1, name: '没有这个页面。', exact: true })
 		).toHaveCount(1);
 		await expect(
-			page.getByText('当前展示站只列出已经实现并通过验收的ZUI组件与生产指南。', { exact: true })
+			page.getByText('当前展示站只列出已经实现的ZUI组件与生产指南。', { exact: true })
 		).toBeVisible();
 		await expect(page.getByRole('link', { name: '返回文档概览', exact: true })).toHaveAttribute(
 			'href',

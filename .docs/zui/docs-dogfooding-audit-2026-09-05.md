@@ -126,3 +126,17 @@
 - 当前 Svelte MCP 不在可调用工具中；使用项目 Svelte compiler、svelte-check 与真实 Chromium 替代。WebStorm MCP 可发现；本轮不改 IDE 配置。
 - 未完成所有 141 组件的全部主题、视口和 API 笛卡尔积视觉验收，不能据此宣称组件库整体达到成熟库全部细节。`ZProgress` 自定义 min/max 的 native 归一化与 ARIA 原始范围目前没有证实为缺陷，本轮不盲目重写。
 - 用户原有四个修改保持原样：`.idea/vcs.xml`、Tooltip context、`ZField.svelte`、`MenuFamilyProductionFixture.svelte`。
+
+## 阶段提交与 CI 回归修复
+
+第一阶段：`1f1e2c4860c5ab86c89321ccf34b5532199f62f7`，已推送 master。CI run `33937855419` 的 Windows WebView2 桌面、静态合同、包与外部消费者检查通过；没有将整轮标记为通过。
+
+CI 暴露并继续修复的事项：
+
+1. **Docs 入口预算回归**：复用 Accordion/API 表格后，入口达到约 346KB，高于原有 326KB 限额。ComponentPage 现在与文档数据并行按路由加载，入口降至约 304KB（gzip 约 89KB），79 个文档仍独立懒加载。构建检查增加禁止 ComponentPage 重回静态入口的回归，不调高预算。
+2. **旧 ICSS 边界测试冲突**：旧 `builder-edge` 测试要求 `.color.unknown` 静默返回 undefined。更新为检查明确 TypeError，另保留 `then` 探测兼容断言；5 项通过。不回退 fail-fast 修复、不降低覆盖率门槛。
+3. **1px 表格溢出失去键盘入口**：Result 文档 API table 实测 scrollWidth-clientWidth=1，原 `> clientWidth + 1` 判断漏掉真实滚动区域。ZTable 改为严格检测正溢出，并新增单像素焦点/region 回归。Result 页 axe 检查与表格组合测试通过。
+4. **过度承诺的旧 404 文案测试**：同步移除测试中“并通过验收”的旧字符串，实际页面仍提供明确 404、正确路由状态与恢复链接。
+5. **禁用状态 hover**：Button 的原生 disabled/loading，以及 Button/Link 的 aria-disabled 状态不再应用可操作 hover 视觉；不改变全局 ICSS hover 语义。真实鼠标回归覆盖 enabled/disabled 的 button、navigation、text 外观，1 项通过。
+
+第二阶段的定向 Docs 回归（新排版、浏览器前进后退、Result 可访问性、代码/节深链接、404）为 5/5 通过。完整多浏览器与覆盖率结果以修复提交对应的新 CI run 为准，不能复用第一阶段的通过项作为新提交的完整验收。
