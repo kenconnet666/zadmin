@@ -77,7 +77,7 @@
 				type: 'HTMLHeadingElement | null'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [{ description: '标题文本或行内富内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/gene/ZHeading.svelte',
 		states: [

@@ -60,7 +60,7 @@
 				type: 'boolean'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [{ description: 'Checkbox标签。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/menu/ZMenuCheckboxItem.svelte',
 		states: [

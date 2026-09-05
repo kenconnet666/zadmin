@@ -86,7 +86,7 @@
 			},
 			{ default: '6', description: 'Trigger与Tooltip间距。', name: 'gutter', type: 'number' }
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [{ description: 'Trigger与Content组合。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/tooltip/ZTooltip.svelte',
 		states: [],

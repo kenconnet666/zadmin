@@ -87,7 +87,7 @@
 				type: 'boolean'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [
 			{
 				description: '事件正文，接收事件与原始数组index。',

@@ -37,7 +37,7 @@
 				type: 'boolean'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [{ description: 'Radio标签。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/menu/ZMenuRadioItem.svelte',
 		states: [

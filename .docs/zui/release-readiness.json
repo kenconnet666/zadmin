@@ -10,22 +10,22 @@
 	},
 	"changesets": {
 		"config": ".changeset/config.json",
-		"count": 91,
-		"packages": ["@zadmin/miniapp", "@zadmin/webview", "@zadmin/zui"],
+		"count": 0,
+		"packages": [],
 		"publicAccess": true,
 		"baseBranch": "master"
 	},
 	"packages": [
 		{
 			"name": "@zadmin/approval",
-			"version": "0.0.0",
+			"version": "0.0.1",
 			"changeset": false,
 			"packageCheck": false,
 			"acceptance": false
 		},
 		{
 			"name": "@zadmin/auth",
-			"version": "0.0.0",
+			"version": "0.0.1",
 			"changeset": false,
 			"packageCheck": false,
 			"acceptance": false
@@ -39,7 +39,7 @@
 		},
 		{
 			"name": "@zadmin/crm",
-			"version": "0.0.0",
+			"version": "0.0.1",
 			"changeset": false,
 			"packageCheck": false,
 			"acceptance": false
@@ -53,15 +53,15 @@
 		},
 		{
 			"name": "@zadmin/erp",
-			"version": "0.0.0",
+			"version": "0.0.1",
 			"changeset": false,
 			"packageCheck": false,
 			"acceptance": false
 		},
 		{
 			"name": "@zadmin/miniapp",
-			"version": "0.1.0",
-			"changeset": true,
+			"version": "0.1.1",
+			"changeset": false,
 			"packageCheck": false,
 			"acceptance": true
 		},
@@ -88,22 +88,22 @@
 		},
 		{
 			"name": "@zadmin/sveltekit",
-			"version": "0.0.0",
+			"version": "0.0.1",
 			"changeset": false,
 			"packageCheck": false,
 			"acceptance": true
 		},
 		{
 			"name": "@zadmin/webview",
-			"version": "0.1.0",
-			"changeset": true,
+			"version": "0.1.1",
+			"changeset": false,
 			"packageCheck": false,
 			"acceptance": true
 		},
 		{
 			"name": "@zadmin/zui",
-			"version": "0.1.0",
-			"changeset": true,
+			"version": "0.2.0",
+			"changeset": false,
 			"packageCheck": true,
 			"acceptance": true
 		}
@@ -117,7 +117,7 @@
 		"releasePrCiDispatchBound": true,
 		"releasePrCiCompletionBound": true,
 		"changesetsConfigured": true,
-		"changesetTargetsKnown": true,
+		"changesetTargetsKnown": false,
 		"packageCheckPresent": true,
 		"externalAcceptancePresent": true,
 		"ciRunsPackageAcceptance": true,
@@ -142,6 +142,7 @@
 		"versionedDocsDeploymentConfigured": true
 	},
 	"blocked": [
+		"changesetTargetsKnown",
 		"releasePublishTarballReuse",
 		"npmOidcProvenance",
 		"automatedTagAndGithubRelease",

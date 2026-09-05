@@ -316,7 +316,7 @@
 				type: 'string'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [],
 		source: 'ui/zui/src/components/input/ZCascader.svelte',
 		states: [

@@ -177,7 +177,7 @@
 				type: 'HTMLDivElement | null'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [
 			{
 				description: 'compound模式的ZRadioGroupItem与标签内容。',

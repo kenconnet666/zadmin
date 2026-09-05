@@ -1,7 +1,7 @@
 # Versioned Docs artifact contract
 
 - Package: @zadmin/zui
-- Version: 0.1.0
+- Version: 0.2.0
 - Revision: SOURCE_REVISION
 - Component routes: 79
 - Guide routes: 9

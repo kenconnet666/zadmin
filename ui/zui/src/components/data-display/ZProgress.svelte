@@ -86,7 +86,7 @@
 				type: '(value: number, range: { readonly max: number; readonly min: number }) => string'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [],
 		source: 'ui/zui/src/components/data-display/ZProgress.svelte',
 		states: [

@@ -52,7 +52,7 @@
 				type: 'HTMLDivElement | null'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [{ description: 'Trigger与Content组合。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/accordion/ZAccordionItem.svelte',
 		states: [

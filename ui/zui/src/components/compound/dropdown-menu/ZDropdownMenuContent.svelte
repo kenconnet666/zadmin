@@ -51,7 +51,7 @@
 				type: 'HTMLDivElement | null'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [{ description: 'ZMenuItem等Menu部件。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/dropdown-menu/ZDropdownMenuContent.svelte',
 		states: [{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] }],

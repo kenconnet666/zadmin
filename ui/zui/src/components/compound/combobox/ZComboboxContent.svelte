@@ -85,7 +85,7 @@
 				type: 'number'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [
 			{ description: 'compound模式的ZComboboxItem集合。', name: 'children', type: 'Snippet' },
 			{

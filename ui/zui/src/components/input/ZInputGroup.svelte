@@ -116,7 +116,7 @@
 				type: "'small' | 'medium' | 'large'"
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [
 			{ description: '唯一业务control。', name: 'children', type: 'Snippet' },
 			{ description: '非交互起始affix。', name: 'prefix', type: 'Snippet' },

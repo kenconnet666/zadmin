@@ -190,7 +190,7 @@
 				type: 'boolean'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [{ description: '内置Trigger按钮内容。', name: 'trigger', type: 'Snippet' }],
 		source: 'ui/zui/src/components/navigation/ZCommandPalette.svelte',
 		states: [{ description: 'Dialog打开状态。', name: 'data-state', values: ['open', 'closed'] }],

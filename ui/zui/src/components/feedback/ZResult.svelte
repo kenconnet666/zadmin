@@ -53,7 +53,7 @@
 			},
 			{ default: "'info'", description: '语义tone。', name: 'tone', type: 'AlertTone' }
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [
 			{ description: '替换默认装饰图形；传null可隐藏。', name: 'icon', type: 'Snippet' },
 			{ description: '结果详细正文；优先于兼容children。', name: 'content', type: 'Snippet' },

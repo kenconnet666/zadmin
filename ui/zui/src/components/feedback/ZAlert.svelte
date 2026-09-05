@@ -62,7 +62,7 @@
 				type: 'string'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [
 			{ description: '反馈正文。', name: 'children', type: 'Snippet' },
 			{ description: '可选操作。', name: 'action', type: 'Snippet' },

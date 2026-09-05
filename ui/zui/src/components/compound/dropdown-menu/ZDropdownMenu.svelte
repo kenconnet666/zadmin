@@ -47,7 +47,7 @@
 			},
 			{ default: '4', description: 'Trigger与Content间距px。', name: 'gutter', type: 'number' }
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [{ description: 'Trigger与Content。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/dropdown-menu/ZDropdownMenu.svelte',
 		states: [],

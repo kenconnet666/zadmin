@@ -455,7 +455,7 @@
 				type: 'boolean'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [
 			{ description: '自定义加载反馈。', name: 'loadingContent', type: 'Snippet' },
 			{ description: '自定义错误反馈。', name: 'errorContent', type: 'Snippet<[string]>' },

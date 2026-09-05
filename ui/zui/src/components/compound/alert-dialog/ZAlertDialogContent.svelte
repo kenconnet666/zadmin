@@ -38,7 +38,7 @@
 				type: 'HTMLDivElement | null'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [
 			{
 				description: 'Title、Description、业务信息、Cancel与Action。',

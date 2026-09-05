@@ -49,7 +49,7 @@
 				type: 'Snippet | null'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [
 			{ description: '替换默认装饰图形；传null可隐藏。', name: 'icon', type: 'Snippet' },
 			{

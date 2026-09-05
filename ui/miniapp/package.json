@@ -1,6 +1,6 @@
 {
 	"name": "@zadmin/miniapp",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Self-contained Svelte framework, components, compiler, runtime, and platform APIs for WeChat Mini Programs.",
 	"type": "module",
 	"sideEffects": [

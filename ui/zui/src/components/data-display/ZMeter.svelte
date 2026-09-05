@@ -73,7 +73,7 @@
 				type: '(value: number, range: MeterRange, state: MeterState) => string'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [],
 		source: 'ui/zui/src/components/data-display/ZMeter.svelte',
 		states: [

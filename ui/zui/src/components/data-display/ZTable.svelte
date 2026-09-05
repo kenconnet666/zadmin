@@ -89,7 +89,7 @@
 				type: 'string'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [
 			{ description: 'thead行。', name: 'header', type: 'Snippet' },
 			{ description: 'tbody行。', name: 'children', type: 'Snippet' },

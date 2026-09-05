@@ -118,7 +118,7 @@
 				type: 'FieldMessages'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [{ description: '真实输入control。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/input/ZFormField.svelte',
 		states: [

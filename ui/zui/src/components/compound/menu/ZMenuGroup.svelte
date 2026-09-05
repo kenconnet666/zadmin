@@ -35,7 +35,7 @@
 				type: 'HTMLDivElement | null'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [{ description: 'Label和Items。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/menu/ZMenuGroup.svelte',
 		states: [],

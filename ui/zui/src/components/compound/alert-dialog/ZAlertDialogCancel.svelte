@@ -30,7 +30,7 @@
 				type: 'HTMLButtonElement | null'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [{ description: '取消操作内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/alert-dialog/ZAlertDialogCancel.svelte',
 		states: [{ description: 'Action pending时禁用。', name: 'data-pending', values: ['true'] }],

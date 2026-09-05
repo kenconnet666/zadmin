@@ -24,7 +24,7 @@
 				type: 'HTMLParagraphElement | null'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [{ description: 'Drawer说明。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/drawer/ZDrawerDescription.svelte',
 		states: [],

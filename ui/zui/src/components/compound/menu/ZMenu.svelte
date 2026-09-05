@@ -64,7 +64,7 @@
 				type: 'HTMLDivElement | null'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [
 			{
 				description: 'Item、选择Item、Submenu、Group、Label与Separator。',

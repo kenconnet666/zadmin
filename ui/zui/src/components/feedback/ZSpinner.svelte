@@ -45,7 +45,7 @@
 				type: "'primary' | 'muted' | 'inherit'"
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [],
 		source: 'ui/zui/src/components/feedback/ZSpinner.svelte',
 		states: [

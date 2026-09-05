@@ -279,7 +279,7 @@
 				type: '(key: TKey, node: TreeNode<TKey> | undefined) => string'
 			}
 		],
-		since: 'unreleased',
+		since: '0.2.0',
 		snippets: [
 			{
 				description: '直接转发给内部ZTree的类型安全节点正文。',
