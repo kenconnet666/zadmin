@@ -43,6 +43,7 @@ it('keeps disabled and aria-disabled controls visually stable while enabled hove
 	expect(style('link-nav-disabled').backgroundColor).toBe(disabledNavigationBefore);
 
 	const enabledTextBefore = style('link-text-enabled').textDecorationLine;
+	expect(enabledTextBefore).toBe('none');
 	await hover('link-text-enabled');
 	await expect.poll(() => style('link-text-enabled').textDecorationLine).toBe('underline');
 	const disabledTextBefore = style('link-text-disabled').textDecorationLine;
