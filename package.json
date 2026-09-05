@@ -38,7 +38,8 @@
 		"release:candidate:check": "node scripts/check-release-candidate.mjs",
 		"release:candidate:self-test": "node scripts/check-release-candidate.mjs --self-test",
 		"release:status": "changeset status",
-		"release:version": "changeset version",
+		"release:version": "node scripts/version-packages.mjs",
+		"release:version:self-test": "node scripts/version-packages.mjs --self-test",
 		"format": "prettier --write .",
 		"test": "pnpm -r --if-present test"
 	},

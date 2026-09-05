@@ -79,6 +79,7 @@ jobs:
       - name: Verify release coherence dry-run contract
         run: |
           pnpm release:coherence
+          pnpm release:version:self-test
           pnpm release:candidate:self-test
           pnpm release:handoff:self-test
           pnpm release:artifact:self-test
