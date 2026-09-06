@@ -1,5 +1,7 @@
 # ZUI 组件与展示站改进蓝图
 
+2026-09-06 更新：本文保留历史阶段记录。新的建设范围、领域引擎取舍和执行顺序以[完整能力对标与大范围建设路线图](./full-capability-roadmap-2026-09-06.md)为准，旧候选和范围排除不限制本轮全面建设。
+
 状态：P0–P2已由[ZUI基础设施、已有组件与Docs加固蓝图](./foundation-hardening-blueprint.md)H0–H5吸收完成；P3–P8保留为中期候选映射。自2026-08-30起，实际实施阶段统一以[完整组件系统总蓝图](./system-blueprint.md)S0–S8为准。
 
 当前完成度与下一优先级不在本蓝图手工计数，统一读取[生成式生产进展](./progress.md)、[组件成熟度矩阵](./component-maturity.md)和[稳定性候选](./stability-candidates.md)。
