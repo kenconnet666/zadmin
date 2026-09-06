@@ -118,6 +118,7 @@ describe('ZNavLink production contract', () => {
 			expect(description.getBoundingClientRect().height).toBeGreaterThan(
 				link.getBoundingClientRect().height
 			);
+			expect(getComputedStyle(compact).boxSizing).toBe('border-box');
 			expect(compact.getBoundingClientRect().width).toBeCloseTo(
 				compact.getBoundingClientRect().height,
 				0

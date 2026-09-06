@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
-	"componentCount": 164,
-	"overallSha256": "e55ea45d9be653bdba8b2759de4efc51b2a199e5e25de25fe74d6e1c6c002b48",
+	"componentCount": 169,
+	"overallSha256": "9f458c23a90eace9ef3584f57bf410d89f62c03e0953817d5babc82bfd837c99",
 	"components": [
 		{
 			"id": "accordion",
@@ -544,13 +544,18 @@
 			"source": "src/components/gene/ZCode.svelte"
 		},
 		{
+			"id": "copy-button",
+			"sha256": "789a9f4e9f18fc5aa194769b70a3ca5c8220d0488fa0d348b9c729c7e706f30b",
+			"source": "src/components/gene/ZCopyButton.svelte"
+		},
+		{
 			"id": "heading",
 			"sha256": "41a0bd475343fd06b13138e386f22843b538d2e8ee1600a9d640662042a382f5",
 			"source": "src/components/gene/ZHeading.svelte"
 		},
 		{
 			"id": "icon",
-			"sha256": "325c34d36308aa7135efcc7574104f226d97f33715f326a5ae5a791a7f354603",
+			"sha256": "e8ff701e93a7be3e191363ac33c703ee60c1bde469867c826debb72877796f9b",
 			"source": "src/components/gene/ZIcon.svelte"
 		},
 		{
@@ -650,7 +655,7 @@
 		},
 		{
 			"id": "input-group",
-			"sha256": "8fa116d6998492f5219dc9e01869d19b9078f2d8f3804967f8a3243352da1572",
+			"sha256": "fa2fa2b211fc976d3fde6be2e747f64c6c239a70bbe56301d270e3b102e83d1c",
 			"source": "src/components/input/ZInputGroup.svelte"
 		},
 		{
@@ -659,9 +664,19 @@
 			"source": "src/components/input/ZMention.svelte"
 		},
 		{
+			"id": "native-select",
+			"sha256": "3cf30615ff0cd22d2c195e6d65c90ab74e00839b32f8274c3774d2df286fccde",
+			"source": "src/components/input/ZNativeSelect.svelte"
+		},
+		{
 			"id": "number-field",
 			"sha256": "cd995aac71610fe636753e5cd19dfec5805191524b0e75ce2d981d164eaf6ca7",
 			"source": "src/components/input/ZNumberField.svelte"
+		},
+		{
+			"id": "password-input",
+			"sha256": "bbe805ca5a4eb9771c28cf1435c320470d7fd734c9e9082bc718a8e6cad2b0e3",
+			"source": "src/components/input/ZPasswordInput.svelte"
 		},
 		{
 			"id": "pin-input",
@@ -712,6 +727,11 @@
 			"id": "tree-select",
 			"sha256": "2a94095dc060ec977d19d9785811b9db047e3fc290b5f5bbb966884146d4342c",
 			"source": "src/components/input/ZTreeSelect.svelte"
+		},
+		{
+			"id": "affix",
+			"sha256": "3c70dced13ed313c024b00d7b002db9d8e01bc9611f09a0335563073b9384b08",
+			"source": "src/components/layout/ZAffix.svelte"
 		},
 		{
 			"id": "app-shell",
@@ -785,8 +805,13 @@
 		},
 		{
 			"id": "anchor",
-			"sha256": "5936d915e6d35d0a9adbc190091a3b57f9a293337dd4adbc1bcf1cf1cd70767c",
+			"sha256": "33bcfe2e84941a3231d7283e4c1ae21c6c8e7afb8fc8988ca647d829f2c40d70",
 			"source": "src/components/navigation/ZAnchor.svelte"
+		},
+		{
+			"id": "back-top",
+			"sha256": "c84b1aa00c8460ad72ddce70c79c1325ab623517ad3ccebe8941344e7d60f5f2",
+			"source": "src/components/navigation/ZBackTop.svelte"
 		},
 		{
 			"id": "breadcrumb",
@@ -827,11 +852,11 @@
 	"entrypoints": {
 		"code.ts": "eabb8477e4c5ef93d016ab909e5c7f85a3111df231e2d2c3c7ef5e54897b36db",
 		"compiler.ts": "96fa979b36838e8b7a6d3f52bb463f23951438a4d974d52b631ad1e6d937b2e7",
-		"index.ts": "a1eb922afa6b8c4bb804d5fd62d682d4b9185914f71c416bd7f6a7c68f260123",
+		"index.ts": "c594130ef9a06db5d617aa9ee0921fce882b6826dae382e109b9a0921b812e75",
 		"internal.ts": "05f9ef9c8628e1cdf694dcc88b71831e5aab726a3189bd6189eef7ae645df4d7",
 		"layer.ts": "72d0fc8e5b7a8ab39a12e157879951b84f1a7fc19654f4bd8b6ea92fd8aa6db8",
-		"metadata.ts": "aa7ebfcad65a7688c68adc4f76f19c937c562512009fd79d7c06bb2c3e89a7a3",
-		"runtime.ts": "06b08bb3ef052b6717f5a5d522b72b22fad7b371500acde7f5bc039fe325087a",
+		"metadata.ts": "2238d17c1de1ded60bd6448cc2d44b281116dfca8c6e5d97ddfac5f6a615d01a",
+		"runtime.ts": "902679df258a1aee96a4742dc4f229210aef34e0db47c0bffcde4cc1d66016fb",
 		"testing.ts": "c596113f3cbcf4ce75be2728b6a10cd6a0b77c9b9101a4408ba2e18e174f15cb",
 		"theme.ts": "9625285286228f2548dadb74b934f40d7cd1804a1e96bc37a04f21d3cd32b527",
 		"themes.ts": "22c13a538ae761f96ccbf319431bcacf3d3466e93881f09f601733aba07e8bd0"

@@ -1,6 +1,6 @@
 # API teaching coverage
 
-Generated from 164 components and 2060 declared props. 0 metadata gaps remain; 0 remain true fallbacks after teaching overrides; 9 structured props are explicitly opaque.
+Generated from 169 components and 2141 declared props. 0 metadata gaps remain; 0 remain true fallbacks after teaching overrides; 9 structured props are explicitly opaque.
 
 Policy: every declared public prop must have owned component metadata, binding, event or snippet evidence; both totals are enforced at zero.
 
@@ -10,6 +10,7 @@ Policy: every declared public prop must have owned component metadata, binding, 
 | ZAccordionContent       | accordion    |              3 |             0 |                   0 | —              | ui/zui/src/components/compound/accordion/ZAccordionContent.svelte          |
 | ZAccordionItem          | accordion    |              4 |             0 |                   0 | —              | ui/zui/src/components/compound/accordion/ZAccordionItem.svelte             |
 | ZAccordionTrigger       | accordion    |              8 |             0 |                   0 | —              | ui/zui/src/components/compound/accordion/ZAccordionTrigger.svelte          |
+| ZAffix                  | —            |              8 |             0 |                   0 | —              | ui/zui/src/components/layout/ZAffix.svelte                                 |
 | ZAlert                  | —            |             10 |             0 |                   0 | —              | ui/zui/src/components/feedback/ZAlert.svelte                               |
 | ZAlertDialog            | alert-dialog |              6 |             0 |                   0 | —              | ui/zui/src/components/compound/alert-dialog/ZAlertDialog.svelte            |
 | ZAlertDialogAction      | alert-dialog |             13 |             0 |                   0 | —              | ui/zui/src/components/compound/alert-dialog/ZAlertDialogAction.svelte      |
@@ -23,6 +24,5 @@ Policy: every declared public prop must have owned component metadata, binding, 
 | ZAppShell               | —            |             19 |             0 |                   0 | —              | ui/zui/src/components/layout/ZAppShell.svelte                              |
 | ZAspectRatio            | —            |              3 |             0 |                   0 | —              | ui/zui/src/components/layout/ZAspectRatio.svelte                           |
 | ZAvatar                 | —            |             17 |             0 |                   0 | —              | ui/zui/src/components/data-display/ZAvatar.svelte                          |
+| ZBackTop                | —            |             22 |             0 |                   0 | —              | ui/zui/src/components/navigation/ZBackTop.svelte                           |
 | ZBadge                  | —            |             13 |             0 |                   0 | —              | ui/zui/src/components/data-display/ZBadge.svelte                           |
-| ZBox                    | —            |              2 |             0 |                   0 | —              | ui/zui/src/components/gene/ZBox.svelte                                     |
-| ZBreadcrumb             | —            |              5 |             0 |                   0 | —              | ui/zui/src/components/navigation/ZBreadcrumb.svelte                        |

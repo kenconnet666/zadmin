@@ -323,6 +323,7 @@
 			controlSizeStyles[size](s);
 			padding(s);
 			s._selector('&[data-compact="true"]', (s) => {
+				s.boxSizing.borderBox;
 				s.height[token];
 				s.minHeight[token];
 				s.paddingBlock.px(0);

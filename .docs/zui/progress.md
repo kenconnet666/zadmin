@@ -4,25 +4,25 @@
 
 ## 当前事实
 
-| 维度                      |                    当前值 |                           总量或边界 |
-| ------------------------- | ------------------------: | -----------------------------------: |
-| Public component metadata |                       164 |                                  164 |
-| Declared public props     |                      2060 |         metadata gaps 0; fallbacks 0 |
-| Stable                    |                       141 |                         violations 0 |
-| BrowserBehaviorVerified   |                       156 |                                  164 |
-| VisuallyVerified          |                       154 |                                  164 |
-| ProductionVerified        |                       159 |                                  164 |
-| DesktopVerified           |                         0 |                                  164 |
-| Docs routes               |                       107 | components 97; guides 9; deployed no |
-| Browser matrix            | chromium, firefox, webkit |                Node 24; pnpm 11.22.0 |
-| Release checks            |                        26 |                   31; status blocked |
+| 维度                      |                    当前值 |                            总量或边界 |
+| ------------------------- | ------------------------: | ------------------------------------: |
+| Public component metadata |                       169 |                                   169 |
+| Declared public props     |                      2141 |          metadata gaps 0; fallbacks 0 |
+| Stable                    |                       141 |                          violations 0 |
+| BrowserBehaviorVerified   |                       160 |                                   169 |
+| VisuallyVerified          |                       157 |                                   169 |
+| ProductionVerified        |                       164 |                                   169 |
+| DesktopVerified           |                         0 |                                   169 |
+| Docs routes               |                       112 | components 102; guides 9; deployed no |
+| Browser matrix            | chromium, firefox, webkit |                 Node 24; pnpm 11.22.0 |
+| Release checks            |                        26 |                    31; status blocked |
 
 ## 下一步优先级
 
 1. **production-evidence** (5 remaining): 为尚未ProductionVerified的组件补真实production browser/SSR合同。
-2. **visual-evidence** (10 remaining): 补齐组件级几何、computed style或截图证据；普通浏览器交互断言不再冒充视觉验证。
-3. **stable-promotion** (13 remaining): 逐项审查已满足门禁的experimental组件；禁止自动批量晋级。
-4. **desktop-evidence** (164 remaining): 建立组件级WebView2/Desktop证据后再提升DesktopVerified。
+2. **visual-evidence** (12 remaining): 补齐组件级几何、computed style或截图证据；普通浏览器交互断言不再冒充视觉验证。
+3. **stable-promotion** (17 remaining): 逐项审查已满足门禁的experimental组件；禁止自动批量晋级。
+4. **desktop-evidence** (169 remaining): 建立组件级WebView2/Desktop证据后再提升DesktopVerified。
 5. **release-boundary** (5 remaining): 完成真实publish/OIDC/tag/registry smoke与版本化Docs部署边界。
 
 ## 当前外部边界

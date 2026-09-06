@@ -1997,6 +1997,108 @@ export const componentCatalogManifest = Object.freeze([
 		publicComponentCount: 1
 	},
 	{
+		id: 'copy-button',
+		name: 'ZCopyButton',
+		category: 'gene',
+		summary:
+			'复用Button和owner Window ClipboardController提供真实用户手势复制、成功/失败反馈与可清理异步生命周期。',
+		status: 'experimental',
+		keywords: [],
+		profiles: ['primitive', 'form-control'],
+		capabilities: [
+			'basic-render',
+			'focus',
+			'native-props',
+			'variants-and-states',
+			'composition',
+			'controlled',
+			'resource-cleanup'
+		],
+		demoCount: 4,
+		publicComponentCount: 1
+	},
+	{
+		id: 'affix',
+		name: 'ZAffix',
+		category: 'layout',
+		summary: '使用真实sticky或明确的滚动owner投影，不隐藏占位与边界。',
+		status: 'experimental',
+		keywords: [],
+		profiles: ['primitive'],
+		capabilities: [
+			'basic-render',
+			'native-props',
+			'composition',
+			'resource-cleanup',
+			'variants-and-states'
+		],
+		demoCount: 3,
+		publicComponentCount: 1
+	},
+	{
+		id: 'back-top',
+		name: 'ZBackTop',
+		category: 'navigation',
+		summary: '真实button调用原生scrollTo；局部容器示例不会改变Docs整页位置。',
+		status: 'experimental',
+		keywords: [],
+		profiles: ['primitive', 'animated'],
+		capabilities: [
+			'basic-render',
+			'focus',
+			'native-props',
+			'composition',
+			'resource-cleanup',
+			'full-motion',
+			'reduced-motion',
+			'variants-and-states'
+		],
+		demoCount: 3,
+		publicComponentCount: 1
+	},
+	{
+		id: 'password-input',
+		name: 'ZPasswordInput',
+		category: 'input',
+		summary: '一个持久的ZInput拥有值、表单和焦点；独立真实button只切换password/text。',
+		status: 'experimental',
+		keywords: [],
+		profiles: ['primitive', 'form-control'],
+		capabilities: [
+			'basic-render',
+			'controlled',
+			'focus',
+			'native-props',
+			'form-data',
+			'form-reset',
+			'composition',
+			'variants-and-states'
+		],
+		demoCount: 3,
+		publicComponentCount: 1
+	},
+	{
+		id: 'native-select',
+		name: 'ZNativeSelect',
+		category: 'input',
+		summary: '保留浏览器原生select、有效性、FormData与reset语义。',
+		status: 'experimental',
+		keywords: [],
+		profiles: ['primitive', 'form-control'],
+		capabilities: [
+			'basic-render',
+			'controlled',
+			'native-props',
+			'variants-and-states',
+			'focus',
+			'form-data',
+			'form-reset',
+			'resource-cleanup'
+		],
+		demoCount: 3,
+		publicComponentCount: 1
+	},
+	{
 		id: 'switch',
 		name: 'ZSwitch',
 		category: 'input',

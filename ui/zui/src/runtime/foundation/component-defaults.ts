@@ -39,6 +39,13 @@ const typographyRules = {
 	weight: { kind: 'enum', values: keys(DEFAULT_THEME_SCHEMA.fontWeight) }
 } as const;
 
+const actionButtonRules = {
+	shape: buttonRules.shape,
+	size: buttonRules.size,
+	tone: buttonRules.tone,
+	variant: buttonRules.variant
+} as const;
+
 const navigationRules = {
 	size: buttonRules.size,
 	tone: buttonRules.tone,
@@ -57,6 +64,8 @@ const COMPONENT_RULES = {
 		tone: { kind: 'enum', values: semanticTones }
 	},
 	button: buttonRules,
+	copyButton: actionButtonRules,
+	backTop: actionButtonRules,
 	card: {
 		elevation: { kind: 'enum', values: ['large', 'medium', 'none', 'small'] },
 		variant: { kind: 'enum', values: ['elevated', 'outlined'] }
@@ -80,6 +89,8 @@ const COMPONENT_RULES = {
 		strokeWidth: { kind: 'number', exclusiveMinimum: 0 }
 	},
 	input: { size: { kind: 'enum', values: controlSizes } },
+	passwordInput: { size: buttonRules.size },
+	nativeSelect: { size: buttonRules.size },
 	link: {
 		appearance: { kind: 'enum', values: ['text', 'button', 'navigation'] },
 		size: { kind: 'enum', values: controlSizes },
@@ -137,12 +148,16 @@ type DefaultsFor<TName extends keyof typeof COMPONENT_RULES> = {
 export interface AvatarComponentDefaults extends DefaultsFor<'avatar'> {}
 export interface BadgeComponentDefaults extends DefaultsFor<'badge'> {}
 export interface ButtonComponentDefaults extends DefaultsFor<'button'> {}
+export interface CopyButtonComponentDefaults extends DefaultsFor<'copyButton'> {}
+export interface BackTopComponentDefaults extends DefaultsFor<'backTop'> {}
 export interface CardComponentDefaults extends DefaultsFor<'card'> {}
 export interface DataTableComponentDefaults extends DefaultsFor<'dataTable'> {}
 export interface DialogComponentDefaults extends DefaultsFor<'dialog'> {}
 export interface HeadingComponentDefaults extends DefaultsFor<'heading'> {}
 export interface IconComponentDefaults extends DefaultsFor<'icon'> {}
 export interface InputComponentDefaults extends DefaultsFor<'input'> {}
+export interface PasswordInputComponentDefaults extends DefaultsFor<'passwordInput'> {}
+export interface NativeSelectComponentDefaults extends DefaultsFor<'nativeSelect'> {}
 export interface LinkComponentDefaults extends DefaultsFor<'link'> {}
 export interface NavLinkComponentDefaults extends DefaultsFor<'navLink'> {}
 export interface NavigationMenuComponentDefaults extends DefaultsFor<'navigationMenu'> {}

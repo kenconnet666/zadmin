@@ -122,3 +122,18 @@ E2/E3 最终一起成功推送至 `ae19b1b`。本批新增 Toolbar、无 DOM Too
 - 旧Toolbar重复失败经Chrome定位到共享Compound registry的effect旧数组快照覆盖兄弟注册。现在token Map保存生命周期，独立递增计数只发出响应式通知；真实RTL/Inner/Outer First→Last均通过。Overflow在hold期间回退到focusable候选，640px真实owner下More隐藏且焦点回首个命令，唯一Tab入口保持。ScrollArea夹具等待父Provider传播，再断言真实坐标、CSS和事件；未放宽业务状态或删除失败断言。
 
 完整证据见[Anchor](./execution-anchor-2026-09-06.md)、[Menubar](./execution-menubar-2026-09-06.md)、[Resizable](./execution-resizable-2026-09-06.md)及[旧CI修复](./e6-previous-ci-remediation-2026-09-06.md)。本地仍只有WebStorm局部检查、必要Chrome交互、格式/源码制品生成，没有跑本地长套件。下一批继续Affix/BackTop与输入基础能力，推进Form/Input/日期和数据矩阵；新CI不等待，后续交付前读取结果。
+
+## E7：按组件族复用，补滚动辅助、原生输入与复制
+
+跨日收尾于2026-09-07。本批目录102族/169公开组件，API源审计2141个props、actionableIssues=0；componentDefaults增至29组。新增组件仍experimental/unreleased。用户要求的高层复用、主题/动画/控制成套一致及最终检查已写入[组件族验收](./component-family-consistency-2026-09-06.md)并链接总纲，作为整个目标的关闭前置条件。
+
+- 新增CopyButton、PasswordInput、NativeSelect、Affix、BackTop及15个以上实际Docs示例。每项同时补API/metadata与适用SSR、类型、浏览器/组合回归，不以数量代替验收。
+- 复制族共用ClipboardController/CopyStatusIcon/Button；Docs删除重复Promise与计时器，ZCode保持原onCopy接口，默认反馈统一2000ms。真实源码按钮和ZCode复制均得到copied/check，查看源码按钮顺序保持。
+- Input/NativeSelect共享input-control chrome；Password只有visible状态，内层ZInput唯一持有值/Field/FormData。InputGroup以已注册control marker向复合wrapper内输入传播内容高度，xsmall外层实际24px、输入22px、toggle24px；readonly/disabled同步，禁用透明度只在Group承担一次，RTL toggle位于逻辑结束边。实例/Group/Field/专属与基础defaults优先级明确。
+- 密码原生type切换后浏览器会在tick之后折叠selection；一次owner渲染帧恢复原选择并验证generation、连接与当前焦点，键盘toggle不抢input。真实Chrome同节点password→text、focus保留、selection恢复[2,7]；NativeSelect单选、多选以及readonly FormData/reset实际通过。
+- Anchor/Affix/BackTop使用统一公开ScrollContainer，删除重复AnchorScrollContainer/ZScrollTarget命名与scrollingElement解析。目标限定同owner Document，iframe通过对应文档挂载支持。
+- Affix默认CSS sticky，显式container才fixed投影；Portal content拥有自身几何变量和有限继承快照。真实高度前后21px、宽292px，祖先Window滚动80px时fixed top也跟随-80，仍与owner+offset相等。祖先发现复用Floating UI，避免重复引擎。
+- BackTop复用Button、Presence/EntryMotion、Theme间距与指标尺寸；退出inert并把焦点交实际scroll owner，显式dir优先。局部reduced示例实际滚至0、按钮卸载、焦点位于具名ScrollArea；Docs浮动示例位置分开，避免重叠。
+- 实际集成还修复NativeSelect的props.id放置错误、文档缺少accessibility、强制runes模式下普通let不响应、错误Stack方向和缺少控件名称。未为错误Docs改变生产状态机；所有临时诊断已清除。
+
+上一候选e99b407的已完成CI反馈及修复见[E7旧CI记录](./e7-previous-ci-remediation-2026-09-07.md)。本批仍只本地短诊断、制品生成和必要Chrome操作，完整验收交远程CI；继续后续输入、表单、日期与数据大能力，最终还须逐组件族执行主题、动画与控制一致性复查。

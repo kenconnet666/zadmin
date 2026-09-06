@@ -3,6 +3,8 @@
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import Check from '@lucide/svelte/icons/check';
 	import ChevronDown from '@lucide/svelte/icons/chevron-down';
+	import Eye from '@lucide/svelte/icons/eye';
+	import EyeOff from '@lucide/svelte/icons/eye-off';
 	import Menu from '@lucide/svelte/icons/menu';
 	import Maximize2 from '@lucide/svelte/icons/maximize-2';
 	import Minimize2 from '@lucide/svelte/icons/minimize-2';
@@ -25,6 +27,8 @@
 		check: Check,
 		chevronDown: ChevronDown,
 		close: X,
+		eye: Eye,
+		eyeOff: EyeOff,
 		menu: Menu,
 		maximize: Maximize2,
 		minimize: Minus,

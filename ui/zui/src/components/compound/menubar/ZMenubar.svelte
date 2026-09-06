@@ -386,12 +386,9 @@
 		if (!ref) return null;
 		const candidates = tabbable(ref.ownerDocument.body, {
 			getShadowRoot: (element) => element.shadowRoot ?? false
-		}).filter(
-			(element) =>
-				isDomHtmlElement(element) &&
-				!ref?.contains(element) &&
-				element.closest('[role="menu"]') === null
-		);
+		})
+			.filter(isDomHtmlElement)
+			.filter((element) => !ref?.contains(element) && element.closest('[role="menu"]') === null);
 		const relation = backward ? 2 : 4;
 		const related = candidates.filter(
 			(element) => (ref!.compareDocumentPosition(element) & relation) !== 0
@@ -454,7 +451,8 @@
 					next === undefined ? leaveTarget(false) : (mounted.get(next)?.element ?? null);
 				restoreByValue.get(currentOpen)?.(target);
 				close();
-				if (target) target.focus({ preventScroll: true });
+				if (next !== undefined) mounted.scheduleFocus(next);
+				else if (target) queueMicrotask(() => target.focus({ preventScroll: true }));
 			}
 			const previous = activeKey;
 			if (activeKey === undefined) navigation.set(currentView.first(), 'collection-change');

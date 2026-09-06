@@ -183,6 +183,20 @@ export const componentDocLoaders = {
 		import('../content/components/navigation/menubar/doc.js').then((module) => module.menubarDoc),
 	resizable: () =>
 		import('../content/components/layout/resizable/doc.js').then((module) => module.resizableDoc),
+	'copy-button': () =>
+		import('../content/components/gene/copy-button/doc.js').then((module) => module.copyButtonDoc),
+	affix: () =>
+		import('../content/components/layout/affix/doc.js').then((module) => module.affixDoc),
+	'back-top': () =>
+		import('../content/components/navigation/back-top/doc.js').then((module) => module.backTopDoc),
+	'password-input': () =>
+		import('../content/components/input/password-input/doc.js').then(
+			(module) => module.passwordInputDoc
+		),
+	'native-select': () =>
+		import('../content/components/input/native-select/doc.js').then(
+			(module) => module.nativeSelectDoc
+		),
 	switch: () =>
 		import('../content/components/input/switch/doc.js').then((module) => module.switchDoc),
 	'tags-input': () =>

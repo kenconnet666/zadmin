@@ -53,6 +53,7 @@
 		aria-label="Fixture contents"
 		data-testid="anchor-nav"
 	/>
+	<!-- svelte-ignore a11y_no_noninteractive_tabindex (the named native scroll owner needs keyboard access) -->
 	<div
 		bind:this={viewport}
 		data-testid="anchor-viewport"

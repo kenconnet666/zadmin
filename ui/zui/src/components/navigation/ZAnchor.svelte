@@ -6,12 +6,12 @@
 	import type {
 		AnchorItem,
 		AnchorNavigateRequest,
-		AnchorScrollContainer
+		ScrollContainer
 	} from '../../runtime/navigation-anchor.js';
 	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
 	import type { ZLinkTone } from '../gene/ZLink.svelte';
 	import { defineSlotRecipe } from '../../recipes/slots.js';
-	export type { AnchorItem, AnchorNavigateRequest, AnchorScrollContainer };
+	export type { AnchorItem, AnchorNavigateRequest, ScrollContainer };
 	export interface ZAnchorProps<TKey extends SelectionKey = SelectionKey> extends Omit<
 		HTMLAttributes<HTMLElement>,
 		'children'
@@ -21,7 +21,7 @@
 		readonly defaultActiveKey?: NoInfer<TKey> | null;
 		readonly onActiveKeyChange?: (key: TKey | null) => void;
 		readonly onNavigateRequest?: (request: AnchorNavigateRequest<TKey>) => void;
-		readonly scrollContainer?: AnchorScrollContainer | null;
+		readonly scrollContainer?: ScrollContainer | null;
 		readonly getTarget?: (item: AnchorItem<TKey>) => HTMLElement | null;
 		readonly offset?: number;
 		readonly behavior?: ScrollBehavior | false;
@@ -94,7 +94,7 @@
 			},
 			{
 				name: 'scrollContainer',
-				type: 'AnchorScrollContainer | null',
+				type: 'ScrollContainer | null',
 				default: 'owner Window',
 				description: '实际HTMLElement或Window滚动所有者；null使用nav所属Window。'
 			},
@@ -257,11 +257,11 @@
 	import {
 		anchorContainsTarget,
 		anchorLocalUrl,
-		anchorScrollElement,
 		anchorTargetPosition,
 		findAnchorTarget,
 		indexAnchorItems
 	} from '../../runtime/navigation-anchor.js';
+	import { assertScrollTargetOwner, scrollTargetElement } from '../../runtime/scroll-target.js';
 	import { containsComposedNode, isDomHtmlElement } from '../../runtime/layer/dom-realm.js';
 	import {
 		applyIcssRootStyle,
@@ -310,11 +310,15 @@
 		if (key !== null) assertSelectionKey(key, 'Anchor activeKey');
 		return key;
 	});
-	const container = $derived(scrollContainer ?? ref?.ownerDocument.defaultView ?? null);
+	const container = $derived.by(() => {
+		const target = scrollContainer ?? ref?.ownerDocument.defaultView ?? null;
+		if (target && ref) assertScrollTargetOwner(target, ref.ownerDocument);
+		return target;
+	});
 	let refreshVersion = $state(0);
 	let alive = true;
 	let stopFocusCleanup: (() => void) | undefined;
-	let commandedScroll: AnchorScrollContainer | null = null;
+	let commandedScroll: ScrollContainer | null = null;
 	function targetFor(entry: AnchorItem<TKey>): HTMLElement | null {
 		if (!ref || !container) return null;
 		const target = getTarget ? getTarget(entry) : findAnchorTarget(entry, ref);
@@ -324,7 +328,7 @@
 	}
 	function updateActive(): void {
 		if (!alive || !container) return;
-		const scroll = anchorScrollElement(container);
+		const scroll = scrollTargetElement(container);
 		const found = records
 			.flatMap((record) => {
 				const target = !record.disabled && !disabled ? targetFor(record.item) : null;
@@ -360,7 +364,7 @@
 	}
 	function moveTo(entry: AnchorItem<TKey>, target: HTMLElement): void {
 		if (!container || behavior === false || disabled) return;
-		const scroll = anchorScrollElement(container);
+		const scroll = scrollTargetElement(container);
 		const max = Math.max(0, scroll.scrollHeight - scroll.clientHeight);
 		const top = Math.max(0, Math.min(max, anchorTargetPosition(target, container, offset)));
 		if (focusTarget) focusSection(target);
@@ -424,11 +428,11 @@
 			throw new TypeError('Invalid Anchor history.');
 	});
 	$effect(() =>
-		reduced.connect(container ? anchorScrollElement(container).ownerDocument.defaultView : null)
+		reduced.connect(container ? scrollTargetElement(container).ownerDocument.defaultView : null)
 	);
 	$effect(() => {
 		if (!reduced.current || !commandedScroll) return;
-		const scroll = anchorScrollElement(commandedScroll);
+		const scroll = scrollTargetElement(commandedScroll);
 		commandedScroll.scrollTo({
 			top: scroll.scrollTop,
 			left: scroll.scrollLeft,
@@ -445,7 +449,7 @@
 		getTarget;
 		refreshVersion;
 		if (!root || !host) return;
-		const scroll = anchorScrollElement(host);
+		const scroll = scrollTargetElement(host);
 		const view = scroll.ownerDocument.defaultView;
 		if (!view) return;
 		let frame = 0;

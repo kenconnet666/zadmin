@@ -38,9 +38,12 @@ void invalidUnit;
 
 const invalidKey = {
 	panel: (() => undefined) as never,
-	// @ts-expect-error Stable panel identity is a SelectionKey, never a Symbol.
 	panels: [
-		{ key: Symbol('sidebar'), label: 'Files' },
+		{
+			// @ts-expect-error Stable panel identity is a SelectionKey, never a Symbol.
+			key: Symbol('sidebar'),
+			label: 'Files'
+		},
 		{ key: 'editor', label: 'Editor' }
 	]
 } satisfies ZSplitterProps<Key>;

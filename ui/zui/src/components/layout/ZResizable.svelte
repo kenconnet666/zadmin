@@ -392,8 +392,8 @@
 		'block-end-inline-start',
 		'block-end-inline-end'
 	] as const);
-	const resetWidth = validateLength(defaultWidth, 'ZResizable defaultWidth');
-	const resetHeight = validateLength(defaultHeight, 'ZResizable defaultHeight');
+	const resetWidth = untrack(() => validateLength(defaultWidth, 'ZResizable defaultWidth'));
+	const resetHeight = untrack(() => validateLength(defaultHeight, 'ZResizable defaultHeight'));
 	const widthState = new ControllableState<ResizableLength>({
 		defaultValue: () => resetWidth,
 		read: () => width,
@@ -1053,7 +1053,7 @@
 					></span>{/if}
 			</button>
 		{:else}
-			<!-- svelte-ignore a11y_no_noninteractive_tabindex (ARIA separator is the real keyboard and pointer resize control) -->
+			<!-- svelte-ignore a11y_no_noninteractive_tabindex a11y_no_noninteractive_element_interactions (ARIA separator is the real keyboard and pointer resize control) -->
 			<div
 				aria-disabled={disabled || undefined}
 				aria-label={label(handle)}

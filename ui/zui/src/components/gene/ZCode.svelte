@@ -370,9 +370,7 @@
 </script>
 
 <script lang="ts">
-	import Check from '@lucide/svelte/icons/check';
-	import Copy from '@lucide/svelte/icons/copy';
-	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
+	import CopyStatusIcon from './CopyStatusIcon.svelte';
 	import { onDestroy, untrack } from 'svelte';
 
 	import {
@@ -382,6 +380,7 @@
 	} from '../../runtime/foundation/root-style.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
+	import { ClipboardController } from '../../runtime/clipboard.svelte.js';
 	import ZButton from './ZButton.svelte';
 	import ZVisuallyHidden from './ZVisuallyHidden.svelte';
 
@@ -431,10 +430,10 @@
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 	let tokens = $state<HighlightedToken[][]>();
 	let status = $state<'failed' | 'highlighted' | 'loading' | 'plain' | 'too-large'>('plain');
-	let copyStatus = $state<ZCodeCopyStatus | 'idle'>('idle');
-	let copyGeneration = 0;
-	let copyTimer: number | undefined;
-	let copyTimerWindow: Window | undefined;
+	const clipboard = new ClipboardController({ getWindow: () => ref?.ownerDocument.defaultView });
+	const copyStatus = $derived<ZCodeCopyStatus | 'idle'>(
+		clipboard.status === 'copying' ? 'idle' : clipboard.status
+	);
 	let generation = 0;
 	const copyActionLabel = $derived.by(() => {
 		switch (copyStatus) {
@@ -461,11 +460,7 @@
 		const language = lang;
 		const themes = { dark: theme.dark, light: theme.light };
 		const current = ++generation;
-		untrack(() => {
-			copyGeneration += 1;
-			clearCopyTimer();
-			copyStatus = 'idle';
-		});
+		untrack(() => clipboard.reset());
 		tokens = undefined;
 		if (language === undefined) {
 			status = 'plain';
@@ -500,43 +495,13 @@
 		return values.length === 0 ? undefined : values.join(';');
 	}
 
-	function clearCopyTimer(): void {
-		if (copyTimer !== undefined) copyTimerWindow?.clearTimeout(copyTimer);
-		copyTimer = undefined;
-		copyTimerWindow = undefined;
-	}
-
 	async function copyCode(): Promise<void> {
-		clearCopyTimer();
-		const source = code;
-		const current = (copyGeneration += 1);
-		const ownerWindow = ref?.ownerDocument.defaultView ?? undefined;
-		let result: ZCodeCopyStatus;
-		try {
-			const clipboard = ownerWindow?.navigator.clipboard;
-			if (!clipboard?.writeText) throw new Error('Clipboard unavailable.');
-			await clipboard.writeText(source);
-			result = 'copied';
-		} catch {
-			result = 'failed';
-		}
-		if (current !== copyGeneration) return;
-		copyStatus = result;
-		onCopy?.({ code: source, status: result });
-		if (!ownerWindow) return;
-		copyTimerWindow = ownerWindow;
-		copyTimer = ownerWindow.setTimeout(() => {
-			if (current !== copyGeneration) return;
-			copyTimer = undefined;
-			copyTimerWindow = undefined;
-			copyStatus = 'idle';
-		}, 1500);
+		if (clipboard.pending) return;
+		const result = await clipboard.copy(code);
+		if (result.status !== 'stale') onCopy?.({ code: result.value, status: result.status });
 	}
 
-	onDestroy(() => {
-		copyGeneration += 1;
-		clearCopyTimer();
-	});
+	onDestroy(() => clipboard.destroy());
 </script>
 
 <!-- Whitespace between these nodes becomes code text; only token content and NEWLINE may emit it. -->
@@ -584,19 +549,15 @@
 			aria-label={copyActionLabel}
 			class={classes.copyButton}
 			data-slot="copy-action"
+			disabled={clipboard.pending}
+			aria-busy={clipboard.pending || undefined}
 			shape="square"
 			size="small"
 			title={copyActionLabel}
 			variant="ghost"
 			onclick={() => void copyCode()}
 		>
-			{#if copyStatus === 'copied'}
-				<Check aria-hidden="true" size={15} />
-			{:else if copyStatus === 'failed'}
-				<TriangleAlert aria-hidden="true" size={15} />
-			{:else}
-				<Copy aria-hidden="true" size={15} />
-			{/if}
+			<CopyStatusIcon status={copyStatus} size="small" />
 		</ZButton>
 		<ZVisuallyHidden aria-atomic="true" aria-live="polite" data-slot="copy-status">
 			{copyAnnouncement}

@@ -1209,6 +1209,16 @@
 			"fallbackPropNames": []
 		},
 		{
+			"id": "copy-button",
+			"name": "ZCopyButton",
+			"source": "ui/zui/src/components/gene/ZCopyButton.svelte",
+			"declaredPropCount": 22,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
 			"id": "heading",
 			"name": "ZHeading",
 			"source": "ui/zui/src/components/gene/ZHeading.svelte",
@@ -1448,6 +1458,16 @@
 			"fallbackPropNames": []
 		},
 		{
+			"id": "native-select",
+			"name": "ZNativeSelect",
+			"source": "ui/zui/src/components/input/ZNativeSelect.svelte",
+			"declaredPropCount": 14,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
 			"id": "number-field",
 			"name": "ZNumberField",
 			"source": "ui/zui/src/components/input/ZNumberField.svelte",
@@ -1465,6 +1485,16 @@
 			"opaqueByKind": {
 				"external-descriptor": 1
 			}
+		},
+		{
+			"id": "password-input",
+			"name": "ZPasswordInput",
+			"source": "ui/zui/src/components/input/ZPasswordInput.svelte",
+			"declaredPropCount": 15,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
 		},
 		{
 			"id": "pin-input",
@@ -1561,6 +1591,16 @@
 			"name": "ZTreeSelect",
 			"source": "ui/zui/src/components/input/ZTreeSelect.svelte",
 			"declaredPropCount": 34,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "affix",
+			"name": "ZAffix",
+			"source": "ui/zui/src/components/layout/ZAffix.svelte",
+			"declaredPropCount": 8,
 			"metadataGapPropCount": 0,
 			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
@@ -1726,6 +1766,16 @@
 			"fallbackPropNames": []
 		},
 		{
+			"id": "back-top",
+			"name": "ZBackTop",
+			"source": "ui/zui/src/components/navigation/ZBackTop.svelte",
+			"declaredPropCount": 22,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
 			"id": "breadcrumb",
 			"name": "ZBreadcrumb",
 			"source": "ui/zui/src/components/navigation/ZBreadcrumb.svelte",
@@ -1801,8 +1851,8 @@
 		"maxMetadataGapProps": 0
 	},
 	"totals": {
-		"components": 164,
-		"declaredProps": 2060,
+		"components": 169,
+		"declaredProps": 2141,
 		"metadataGapProps": 0,
 		"fallbackProps": 0,
 		"opaqueStructuredProps": 9,

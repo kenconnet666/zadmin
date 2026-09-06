@@ -1,4 +1,6 @@
 import { assertSelectionKey, type SelectionKey } from './collection/selection.js';
+import { scrollTargetElement, type ScrollContainer } from './scroll-target.js';
+export type { ScrollContainer } from './scroll-target.js';
 import { containsComposedNode, isDomHtmlElement, isDomShadowRoot } from './layer/dom-realm.js';
 
 export interface AnchorItem<TKey extends SelectionKey = SelectionKey> {
@@ -23,8 +25,6 @@ export interface AnchorNavigateRequest<TKey extends SelectionKey = SelectionKey>
 	readonly defaultPrevented: boolean;
 	preventDefault(): void;
 }
-
-export type AnchorScrollContainer = HTMLElement | Window;
 
 export function indexAnchorItems<TKey extends SelectionKey>(
 	items: readonly AnchorItem<TKey>[]
@@ -93,12 +93,6 @@ export function findAnchorTarget(item: AnchorItem, root: HTMLElement): HTMLEleme
 	return isDomHtmlElement(target) ? target : null;
 }
 
-export function anchorScrollElement(container: AnchorScrollContainer): HTMLElement {
-	return isDomHtmlElement(container)
-		? container
-		: ((container.document.scrollingElement ?? container.document.documentElement) as HTMLElement);
-}
-
 function cssPixels(value: string, reference = 0): number {
 	const pixels = Number.parseFloat(value);
 	return Number.isFinite(pixels)
@@ -110,10 +104,10 @@ function cssPixels(value: string, reference = 0): number {
 
 export function anchorTargetPosition(
 	target: HTMLElement,
-	container: AnchorScrollContainer,
+	container: ScrollContainer,
 	offset: number
 ): number {
-	const scroll = anchorScrollElement(container);
+	const scroll = scrollTargetElement(container);
 	const view = scroll.ownerDocument.defaultView;
 	if (!view) return 0;
 	const origin = isDomHtmlElement(container)
@@ -124,11 +118,8 @@ export function anchorTargetPosition(
 	return target.getBoundingClientRect().top - origin + scroll.scrollTop - padding - margin - offset;
 }
 
-export function anchorContainsTarget(
-	target: HTMLElement,
-	container: AnchorScrollContainer
-): boolean {
-	const scroll = anchorScrollElement(container);
+export function anchorContainsTarget(target: HTMLElement, container: ScrollContainer): boolean {
+	const scroll = scrollTargetElement(container);
 	return (
 		target.ownerDocument === scroll.ownerDocument &&
 		target.isConnected &&

@@ -59,6 +59,11 @@ import { navigationMenuDoc } from '../content/components/navigation/navigation-m
 import { anchorDoc } from '../content/components/navigation/anchor/doc.js';
 import { menubarDoc } from '../content/components/navigation/menubar/doc.js';
 import { resizableDoc } from '../content/components/layout/resizable/doc.js';
+import { copyButtonDoc } from '../content/components/gene/copy-button/doc.js';
+import { affixDoc } from '../content/components/layout/affix/doc.js';
+import { backTopDoc } from '../content/components/navigation/back-top/doc.js';
+import { passwordInputDoc } from '../content/components/input/password-input/doc.js';
+import { nativeSelectDoc } from '../content/components/input/native-select/doc.js';
 import { sliderDoc } from '../content/components/input/slider/doc.js';
 import { switchDoc } from '../content/components/input/switch/doc.js';
 import { tagsInputDoc } from '../content/components/input/tags-input/doc.js';
@@ -183,6 +188,11 @@ export const componentDocs = Object.freeze([
 	anchorDoc,
 	menubarDoc,
 	resizableDoc,
+	copyButtonDoc,
+	affixDoc,
+	backTopDoc,
+	passwordInputDoc,
+	nativeSelectDoc,
 	switchDoc,
 	tagsInputDoc,
 	textareaDoc,

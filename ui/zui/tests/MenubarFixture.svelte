@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { untrack } from 'svelte';
 	import ZMenubar from '../src/components/compound/menubar/ZMenubar.svelte';
 	import ZMenubarMenu from '../src/components/compound/menubar/ZMenubarMenu.svelte';
 	import ZMenubarTrigger from '../src/components/compound/menubar/ZMenubarTrigger.svelte';
@@ -14,7 +15,7 @@
 	import type { SelectionKey } from '../src/runtime/collection/selection.js';
 
 	let { defaultValue = null }: { defaultValue?: SelectionKey | null } = $props();
-	let value = $state<SelectionKey | null>(defaultValue);
+	let value = $state<SelectionKey | null>(untrack(() => defaultValue));
 	let valueChanges = $state(0);
 	let action = $state('none');
 	let showEdit = $state(true);

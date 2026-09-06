@@ -4,6 +4,10 @@
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
+	import {
+		styleInputGroupDirectControls,
+		styleInputGroupDisabledControls
+	} from './input-control.js';
 
 	export type InputGroupSize = ZControlSize;
 
@@ -33,7 +37,7 @@
 		dependencies: [
 			'FieldControl owner',
 			'InputGroupContext',
-			'ZInput/ZTextarea control registration',
+			'ZInput/ZTextarea/ZNativeSelect/ZPasswordInput control registration',
 			'ReducedMotionState',
 			'logical CSS focus-within'
 		],
@@ -55,7 +59,8 @@
 		props: [
 			{
 				default: '必填',
-				description: '一个直接ZInput/ZTextarea业务value owner；复合owner可投射自己的单一焦点入口。',
+				description:
+					'一个ZInput/ZTextarea/ZNativeSelect/ZPasswordInput业务value owner；复合owner由其内部原生control注册单一焦点入口。',
 				name: 'children',
 				required: true,
 				type: 'Snippet'
@@ -163,16 +168,7 @@
 				focus.outlineStyle.solid;
 				focus.outlineWidth._medium;
 			});
-			s._selector('& > input, & > textarea', (control) => {
-				control.borderRadius._none;
-				control.borderStyle.none;
-				control.flex.raw('1 1 auto');
-				control.minWidth.px(0);
-				control.outlineStyle.none;
-			});
-			s._selector('& > input:focus-visible, & > textarea:focus-visible', (control) => {
-				control.outlineStyle.none;
-			});
+			styleInputGroupDirectControls(s);
 		},
 		variants: {
 			disabled: {
@@ -180,10 +176,7 @@
 				true: (s) => {
 					s.opacity._disabled;
 					// The group owns disabled opacity; do not multiply it on the control.
-					s._selector(
-						'& > input:disabled, & > textarea:disabled',
-						(control) => control.opacity._opaque
-					);
+					styleInputGroupDisabledControls(s);
 				}
 			},
 			invalid: {
@@ -402,14 +395,19 @@
 			const metrics = controlSizeMetrics(zui.theme, resolvedSize);
 			s.boxSizing.borderBox;
 			s.minHeight.raw(metrics.height);
-			s._selector('& > input', (s) => s.minHeight.raw(metrics.contentHeight));
+			s._selector(
+				'& input[data-zui-input-group-control], & select[data-zui-input-group-control]',
+				(s) => s.minHeight.raw(metrics.contentHeight)
+			);
 		})
 	);
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
 	onMount(() => {
 		if (field && !controlOwner)
-			throw new TypeError('ZInputGroup inside ZField requires one registered ZInput or ZTextarea.');
+			throw new TypeError(
+				'ZInputGroup inside ZField requires one registered ZInput, ZTextarea, ZNativeSelect or ZPasswordInput.'
+			);
 		return reducedMotion.connect(ref?.ownerDocument.defaultView);
 	});
 	onDestroy(fieldOwner.registerFocusOwner(focusControl));

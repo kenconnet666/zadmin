@@ -1,5 +1,4 @@
 <script module lang="ts">
-	import { controlSizeStyles } from '../../runtime/foundation/control-size.js';
 	import type { HTMLInputAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 
@@ -119,63 +118,14 @@
 		summary: '保留原生input能力，并提供受控/非受控值、binding和Field语义关联。'
 	} as const satisfies ZuiComponentMetadata;
 
-	const inputRecipe = defineRecipe({
+	const inputAppearanceRecipe = defineRecipe({
 		base: (s) => {
 			s.appearance.none;
-			s.fontFamily._sans;
-			s.lineHeight._compact;
-			s.paddingBlock.px(0);
-			s.boxSizing.borderBox;
-			s.width._full;
-			s.borderWidth._hairline;
-			s.borderStyle.solid;
-			s.borderRadius._medium;
-			s.backgroundColor._canvas;
-			s.color._text;
-			s.transitionDuration._fast;
-			s.transitionProperty.raw('border-color, box-shadow');
-			s.transitionTimingFunction._standard;
-			s._selector('&::placeholder', (placeholder) => placeholder.color._textMuted);
-			s._focusVisible((focus) => {
-				focus.outlineWidth._medium;
-				focus.outlineStyle.solid;
-				focus.outlineColor._focus;
-				focus.outlineOffset._outer;
-			});
 		},
-		variants: {
-			disabled: {
-				false: () => undefined,
-				true: (s) => {
-					s.cursor.notAllowed;
-					s.opacity._disabled;
-				}
-			},
-			invalid: {
-				false: (s) => s.borderColor._border,
-				true: (s) => s.borderColor._danger
-			},
-			motion: {
-				auto: () => undefined,
-				full: () => undefined,
-				reduced: (s) => s.transitionDuration.ms(0)
-			},
-			readonly: {
-				false: () => undefined,
-				true: (s) => s.backgroundColor._surface
-			},
-			size: controlSizeStyles
-		},
-		defaultVariants: {
-			disabled: false,
-			invalid: false,
-			motion: 'auto',
-			readonly: false,
-			size: 'medium'
-		}
+		variants: {}
 	});
 
-	registerRecipeHmr(import.meta, inputRecipe);
+	registerRecipeHmr(import.meta, inputAppearanceRecipe);
 </script>
 
 <script lang="ts">
@@ -195,6 +145,7 @@
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { ReducedMotionState } from '../../runtime/foundation/motion.svelte.js';
+	import { inputControlRecipe } from './input-control.js';
 
 	let {
 		'aria-describedby': ariaDescribedBy,
@@ -238,7 +189,7 @@
 	);
 	const reduced = $derived(reducedMotion.current);
 	const rootClass = $derived(
-		zui.recipe(inputRecipe, {
+		zui.recipe(inputControlRecipe, {
 			disabled: resolvedDisabled,
 			invalid: resolvedInvalid,
 			motion: reduced ? 'reduced' : 'full',
@@ -246,6 +197,7 @@
 			size: resolvedSize
 		})
 	);
+	const appearanceClass = $derived(zui.recipe(inputAppearanceRecipe));
 	const state = new ControllableState<string>({
 		defaultValue: () => defaultValue,
 		onChange: () => onValueChange,
@@ -285,8 +237,9 @@
 
 <input
 	{...rest}
+	dir={rest.dir ?? (inputGroup ? undefined : zui.direction)}
 	bind:this={ref}
-	class={[rootClass, className]}
+	class={[appearanceClass, rootClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
 	id={id ?? inputGroup?.controlId ?? field?.controlId ?? generatedId}

@@ -138,3 +138,17 @@ export type {
 	MenubarComponentDefaults,
 	ResizableComponentDefaults
 } from '../runtime/foundation/component-defaults.js';
+export { ClipboardController, DEFAULT_CLIPBOARD_TIMEOUT } from '../runtime/clipboard.svelte.js';
+export type {
+	ClipboardStatus,
+	ClipboardSnapshot,
+	ClipboardCopyResult,
+	ClipboardControllerOptions
+} from '../runtime/clipboard.svelte.js';
+export type {
+	CopyButtonComponentDefaults,
+	BackTopComponentDefaults,
+	PasswordInputComponentDefaults,
+	NativeSelectComponentDefaults
+} from '../runtime/foundation/component-defaults.js';
+export type { ScrollContainer } from '../runtime/scroll-target.js';

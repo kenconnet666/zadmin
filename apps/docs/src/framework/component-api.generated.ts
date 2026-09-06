@@ -7333,6 +7333,136 @@ export const codeApiFacts = {
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
+export const copyButtonApiFacts = {
+	declaration: 'ZCopyButtonProps',
+	id: 'copy-button',
+	inheritedFrom: ['ZButtonProps'],
+	name: 'ZCopyButton',
+	props: [
+		{
+			name: 'value',
+			required: true,
+			type: 'string'
+		},
+		{
+			name: 'label',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'copiedLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'copyingLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'errorLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'successMessage',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'errorMessage',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'timeout',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'iconOnly',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'icon',
+			required: false,
+			type: 'Snippet<[snapshot: ClipboardSnapshot]>'
+		},
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet<[snapshot: ClipboardSnapshot]>'
+		},
+		{
+			name: 'onCopy',
+			required: false,
+			type: '(value: string) => void'
+		},
+		{
+			name: 'onCopyError',
+			required: false,
+			type: '(error: unknown) => void'
+		},
+		{
+			name: 'fullWidth',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: "'large' | 'medium' | 'small' | 'xlarge' | 'xsmall'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'shape',
+			required: false,
+			type: "'circle' | 'default' | 'square'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: "'danger' | 'info' | 'neutral' | 'primary' | 'success' | 'warning'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'variant',
+			required: false,
+			type: "'ghost' | 'outline' | 'solid'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'end',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingIndicator',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLButtonElement | null',
+			inheritedFrom: 'ZButtonProps'
+		}
+	],
+	source: 'ui/zui/src/components/gene/ZCopyButton.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
 export const headingApiFacts = {
 	declaration: 'ZHeadingProps',
 	id: 'heading',
@@ -9336,7 +9466,9 @@ export const inputApiFacts = {
 		formFieldApiFacts,
 		inputGroupApiFacts,
 		mentionApiFacts,
+		nativeSelectApiFacts,
 		numberFieldApiFacts,
+		passwordInputApiFacts,
 		pinInputApiFacts,
 		segmentedApiFacts,
 		sliderApiFacts,
@@ -9578,6 +9710,98 @@ export const mentionApiFacts = {
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
+export const nativeSelectApiFacts = {
+	declaration: 'ZNativeSelectProps',
+	id: 'native-select',
+	inheritedFrom: [
+		'HTMLSelectAttributes',
+		'ZNativeSelectSingleProps | ZNativeSelectMultipleProps',
+		'| { readonly items: readonly ZNativeSelectItem[]; readonly children?: never } | { readonly children: Snippet; readonly items?: never }'
+	],
+	name: 'ZNativeSelect',
+	props: [
+		{
+			name: 'invalid',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'nativeSize',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'onFormReset',
+			required: false,
+			type: '() => void'
+		},
+		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'resetOnForm',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLSelectElement | null'
+		},
+		{
+			name: 'items',
+			required: false,
+			type: 'readonly ZNativeSelectItem[]',
+			inheritedFrom: 'ZNativeSelectSource'
+		},
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZNativeSelectSource'
+		},
+		{
+			name: 'defaultValue',
+			required: false,
+			type: 'string | readonly string[]',
+			inheritedFrom: 'ZNativeSelectSingleProps'
+		},
+		{
+			name: 'multiple',
+			required: false,
+			type: 'false | true',
+			inheritedFrom: 'ZNativeSelectSingleProps'
+		},
+		{
+			name: 'onValueChange',
+			required: false,
+			type: '(value: string) => void | (value: readonly string[]) => void',
+			inheritedFrom: 'ZNativeSelectSingleProps'
+		},
+		{
+			name: 'placeholder',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZNativeSelectSingleProps'
+		},
+		{
+			name: 'value',
+			required: false,
+			type: 'string | readonly string[]',
+			inheritedFrom: 'ZNativeSelectSingleProps'
+		}
+	],
+	source: 'ui/zui/src/components/input/ZNativeSelect.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
 export const numberFieldApiFacts = {
 	declaration: 'ZNumberFieldProps',
 	id: 'number-field',
@@ -9727,6 +9951,100 @@ export const numberFieldApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZNumberField.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
+export const passwordInputApiFacts = {
+	declaration: 'ZPasswordInputProps',
+	id: 'password-input',
+	inheritedFrom: ['ZInputProps'],
+	name: 'ZPasswordInput',
+	props: [
+		{
+			name: 'defaultVisible',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'onVisibleChange',
+			required: false,
+			type: '(visible: boolean) => void'
+		},
+		{
+			name: 'rootRef',
+			required: false,
+			type: 'HTMLDivElement | null'
+		},
+		{
+			name: 'toggle',
+			required: false,
+			type: 'Snippet<[context: ZPasswordInputToggleContext]>'
+		},
+		{
+			name: 'toggleLabel',
+			required: false,
+			type: '(visible: boolean) => string'
+		},
+		{
+			name: 'toggleRef',
+			required: false,
+			type: 'HTMLButtonElement | null'
+		},
+		{
+			name: 'visible',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'defaultValue',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZInputProps'
+		},
+		{
+			name: 'invalid',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZInputProps'
+		},
+		{
+			name: 'onFormReset',
+			required: false,
+			type: '() => void',
+			inheritedFrom: 'ZInputProps'
+		},
+		{
+			name: 'onValueChange',
+			required: false,
+			type: '(value: string) => void',
+			inheritedFrom: 'ZInputProps'
+		},
+		{
+			name: 'resetOnForm',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZInputProps'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZInputSize',
+			inheritedFrom: 'ZInputProps'
+		},
+		{
+			name: 'value',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZInputProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLInputElement | null',
+			inheritedFrom: 'ZInputProps'
+		}
+	],
+	source: 'ui/zui/src/components/input/ZPasswordInput.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
@@ -10890,6 +11208,57 @@ export const treeSelectApiFacts = {
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
+export const affixApiFacts = {
+	declaration: 'ZAffixProps',
+	id: 'affix',
+	inheritedFrom: ['HTMLAttributes<HTMLDivElement>'],
+	name: 'ZAffix',
+	props: [
+		{
+			name: 'boundary',
+			required: false,
+			type: 'HTMLElement | null'
+		},
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'offsetBottom',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'offsetTop',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'onAffixChange',
+			required: false,
+			type: '(affixed: boolean) => void'
+		},
+		{
+			name: 'portalTarget',
+			required: false,
+			type: 'PortalTarget'
+		},
+		{
+			name: 'scrollContainer',
+			required: false,
+			type: 'ScrollContainer | null'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null'
+		}
+	],
+	source: 'ui/zui/src/components/layout/ZAffix.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
 export const appShellApiFacts = {
 	declaration: 'ZAppShellProps',
 	id: 'app-shell',
@@ -11833,7 +12202,7 @@ export const anchorApiFacts = {
 		{
 			name: 'scrollContainer',
 			required: false,
-			type: 'AnchorScrollContainer | null'
+			type: 'ScrollContainer | null'
 		},
 		{
 			name: 'getTarget',
@@ -11892,6 +12261,139 @@ export const anchorApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/navigation/ZAnchor.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
+export const backTopApiFacts = {
+	declaration: 'ZBackTopProps',
+	id: 'back-top',
+	inheritedFrom: ['ZButtonProps'],
+	name: 'ZBackTop',
+	props: [
+		{
+			name: 'behavior',
+			required: false,
+			type: 'ScrollBehavior'
+		},
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'insetBlockEnd',
+			required: false,
+			type: 'ZLayoutSpacing'
+		},
+		{
+			name: 'insetInline',
+			required: false,
+			type: 'ZLayoutSpacing'
+		},
+		{
+			name: 'label',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'onclick',
+			required: false,
+			type: "ZButtonProps['onclick']"
+		},
+		{
+			name: 'placement',
+			required: false,
+			type: "'end' | 'start'"
+		},
+		{
+			name: 'portalTarget',
+			required: false,
+			type: 'PortalTarget'
+		},
+		{
+			name: 'scrollContainer',
+			required: false,
+			type: 'ScrollContainer | null'
+		},
+		{
+			name: 'visibilityHeight',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'fullWidth',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: "'large' | 'medium' | 'small' | 'xlarge' | 'xsmall'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'shape',
+			required: false,
+			type: "'circle' | 'default' | 'square'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: "'danger' | 'info' | 'neutral' | 'primary' | 'success' | 'warning'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'variant',
+			required: false,
+			type: "'ghost' | 'outline' | 'solid'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'end',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loading',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingIndicator',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingLabel',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'start',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLButtonElement | null',
+			inheritedFrom: 'ZButtonProps'
+		}
+	],
+	source: 'ui/zui/src/components/navigation/ZBackTop.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 

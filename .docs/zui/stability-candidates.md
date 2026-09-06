@@ -2,7 +2,7 @@
 
 本文件由 `scripts/check-stability-policy.mjs` 生成；不会修改组件 status。compound member 可继承同 family root 的 Docs 页面。
 
-stableCompliant：141；stableViolations：0；promotionEligibleExperimental：13。
+stableCompliant：141；stableViolations：0；promotionEligibleExperimental：17。
 
 | Component               | Status       | Classification                | Blockers                                                          | Docs                                                                  | SSR |
 | ----------------------- | ------------ | ----------------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------- | --: |
@@ -114,6 +114,7 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：1
 | ZBox                    | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/box/doc.ts                      |   1 |
 | ZButton                 | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/button/doc.ts                   |  11 |
 | ZCode                   | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/code/doc.ts                     |   2 |
+| ZCopyButton             | experimental | experimental                  | BrowserBehaviorVerified                                           | apps/docs/src/content/components/gene/copy-button/doc.ts              |   1 |
 | ZHeading                | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/heading/doc.ts                  |   3 |
 | ZIcon                   | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/icon/doc.ts                     |   2 |
 | ZKbd                    | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/kbd/doc.ts                      |   3 |
@@ -130,14 +131,16 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：1
 | ZDateField              | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/date-field/doc.ts              |   1 |
 | ZDatePicker             | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/date-picker/doc.ts             |   1 |
 | ZDateRangePicker        | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/date-range-picker/doc.ts       |   1 |
-| ZField                  | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/field/doc.ts                   |   4 |
+| ZField                  | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/field/doc.ts                   |   5 |
 | ZFileUpload             | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/file-upload/doc.ts             |   1 |
 | ZForm                   | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/form/doc.ts                    |   2 |
 | ZFormField              | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/form/doc.ts                    |   2 |
 | ZInput                  | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/input/doc.ts                   |   3 |
-| ZInputGroup             | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/input-group/doc.ts             |   2 |
+| ZInputGroup             | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/input-group/doc.ts             |   3 |
 | ZMention                | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/mention/doc.ts                 |   1 |
+| ZNativeSelect           | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/native-select/doc.ts           |   1 |
 | ZNumberField            | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/number-field/doc.ts            |   1 |
+| ZPasswordInput          | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/password-input/doc.ts          |   1 |
 | ZPinInput               | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/pin-input/doc.ts               |   2 |
 | ZSegmented              | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/segmented/doc.ts               |   1 |
 | ZSlider                 | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/slider/doc.ts                  |   1 |
@@ -148,6 +151,7 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：1
 | ZToggleGroup            | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/toggle-group/doc.ts            |   2 |
 | ZTransfer               | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/transfer/doc.ts                |   1 |
 | ZTreeSelect             | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/tree-select/doc.ts             |   2 |
+| ZAffix                  | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/layout/affix/doc.ts                  |   1 |
 | ZAppShell               | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/layout/app-shell/doc.ts              |   1 |
 | ZAspectRatio            | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/layout/aspect-ratio/doc.ts           |   2 |
 | ZCenter                 | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/layout/center/doc.ts                 |   1 |
@@ -163,6 +167,7 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：1
 | ZSplitter               | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/layout/splitter/doc.ts               |   1 |
 | ZStack                  | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/layout/stack/doc.ts                  |   3 |
 | ZAnchor                 | experimental | experimental                  | BrowserBehaviorVerified                                           | apps/docs/src/content/components/navigation/anchor/doc.ts             |   1 |
+| ZBackTop                | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/navigation/back-top/doc.ts           |   1 |
 | ZBreadcrumb             | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/navigation/breadcrumb/doc.ts         |   1 |
 | ZCommand                | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/navigation/command/doc.ts            |   1 |
 | ZCommandPalette         | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/navigation/command-palette/doc.ts    |   1 |

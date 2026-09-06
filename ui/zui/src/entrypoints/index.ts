@@ -805,5 +805,36 @@ export type {
 	ZAnchorProps,
 	AnchorItem,
 	AnchorNavigateRequest,
-	AnchorScrollContainer
+	ScrollContainer
 } from '../components/navigation/ZAnchor.svelte';
+export { default as ZCopyButton } from '../components/gene/ZCopyButton.svelte';
+export type { ZCopyButtonProps } from '../components/gene/ZCopyButton.svelte';
+export { ClipboardController, DEFAULT_CLIPBOARD_TIMEOUT } from '../runtime/clipboard.svelte.js';
+export type {
+	ClipboardStatus,
+	ClipboardSnapshot,
+	ClipboardCopyResult,
+	ClipboardControllerOptions
+} from '../runtime/clipboard.svelte.js';
+export { default as ZAffix } from '../components/layout/ZAffix.svelte';
+export type { ZAffixProps } from '../components/layout/ZAffix.svelte';
+export { default as ZBackTop } from '../components/navigation/ZBackTop.svelte';
+export type { ZBackTopProps } from '../components/navigation/ZBackTop.svelte';
+export { default as ZPasswordInput } from '../components/input/ZPasswordInput.svelte';
+export type {
+	ZPasswordInputProps,
+	ZPasswordInputToggleContext
+} from '../components/input/ZPasswordInput.svelte';
+export { default as ZNativeSelect } from '../components/input/ZNativeSelect.svelte';
+export type {
+	ZNativeSelectProps,
+	ZNativeSelectItem,
+	ZNativeSelectOption,
+	ZNativeSelectGroup
+} from '../components/input/ZNativeSelect.svelte';
+export type {
+	CopyButtonComponentDefaults,
+	BackTopComponentDefaults,
+	PasswordInputComponentDefaults,
+	NativeSelectComponentDefaults
+} from '../runtime/foundation/component-defaults.js';

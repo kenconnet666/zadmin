@@ -13,6 +13,12 @@ export interface ZuiCommonLocale {
 	readonly clear: string;
 	readonly close: string;
 	readonly copy: string;
+	readonly copying: string;
+	readonly copied: string;
+	readonly copyFailed: string;
+	readonly backToTop: string;
+	readonly showPassword: string;
+	readonly hidePassword: string;
 }
 
 export interface ZuiCollectionLocale {
@@ -297,7 +303,7 @@ export const enUSLocalePack = Object.freeze({
 		primaryNavigation: 'Primary navigation',
 		navigationMore: 'More navigation',
 		tableOfContents: 'Table of contents',
-		resizeHandle: (position) => `Resize from ${position}`,
+		resizeHandle: (position: string) => `Resize from ${position}`,
 		resizeInlineStart: 'inline start',
 		resizeInlineEnd: 'inline end',
 		resizeBlockStart: 'block start',
@@ -305,7 +311,13 @@ export const enUSLocalePack = Object.freeze({
 		scrollArea: 'Scrollable content',
 		clear: 'Clear',
 		close: 'Close',
-		copy: 'Copy'
+		copy: 'Copy',
+		copying: 'Copying…',
+		copied: 'Copied',
+		copyFailed: 'Copy failed',
+		backToTop: 'Back to top',
+		showPassword: 'Show password',
+		hidePassword: 'Hide password'
 	}),
 	date: Object.freeze({
 		calendarLabel: 'Calendar',
@@ -476,7 +488,7 @@ export const zhCNLocalePack = Object.freeze({
 		primaryNavigation: '主导航',
 		navigationMore: '更多导航',
 		tableOfContents: '页内目录',
-		resizeHandle: (position) => `从${position}调整大小`,
+		resizeHandle: (position: string) => `从${position}调整大小`,
 		resizeInlineStart: '行内起始边',
 		resizeInlineEnd: '行内结束边',
 		resizeBlockStart: '块起始边',
@@ -484,7 +496,13 @@ export const zhCNLocalePack = Object.freeze({
 		scrollArea: '可滚动内容',
 		clear: '清空',
 		close: '关闭',
-		copy: '复制'
+		copy: '复制',
+		copying: '复制中…',
+		copied: '已复制',
+		copyFailed: '复制失败',
+		backToTop: '返回顶部',
+		showPassword: '显示密码',
+		hidePassword: '隐藏密码'
 	}),
 	date: Object.freeze({
 		calendarLabel: '日历',

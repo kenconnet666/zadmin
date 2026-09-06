@@ -3,7 +3,7 @@
 	"summary": {
 		"stableCompliant": 141,
 		"stableViolations": 0,
-		"promotionEligibleExperimental": 13
+		"promotionEligibleExperimental": 17
 	},
 	"components": [
 		{
@@ -1087,6 +1087,16 @@
 			"ssrEvidenceCount": 2
 		},
 		{
+			"id": "copy-button",
+			"name": "ZCopyButton",
+			"family": null,
+			"status": "experimental",
+			"classification": "experimental",
+			"blockers": ["BrowserBehaviorVerified"],
+			"docs": "apps/docs/src/content/components/gene/copy-button/doc.ts",
+			"ssrEvidenceCount": 1
+		},
+		{
 			"id": "heading",
 			"name": "ZHeading",
 			"family": null,
@@ -1254,7 +1264,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/field/doc.ts",
-			"ssrEvidenceCount": 4
+			"ssrEvidenceCount": 5
 		},
 		{
 			"id": "file-upload",
@@ -1304,7 +1314,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/input-group/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrEvidenceCount": 3
 		},
 		{
 			"id": "mention",
@@ -1317,6 +1327,16 @@
 			"ssrEvidenceCount": 1
 		},
 		{
+			"id": "native-select",
+			"name": "ZNativeSelect",
+			"family": null,
+			"status": "experimental",
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
+			"docs": "apps/docs/src/content/components/input/native-select/doc.ts",
+			"ssrEvidenceCount": 1
+		},
+		{
 			"id": "number-field",
 			"name": "ZNumberField",
 			"family": null,
@@ -1324,6 +1344,16 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/number-field/doc.ts",
+			"ssrEvidenceCount": 1
+		},
+		{
+			"id": "password-input",
+			"name": "ZPasswordInput",
+			"family": null,
+			"status": "experimental",
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
+			"docs": "apps/docs/src/content/components/input/password-input/doc.ts",
 			"ssrEvidenceCount": 1
 		},
 		{
@@ -1425,6 +1455,16 @@
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/tree-select/doc.ts",
 			"ssrEvidenceCount": 2
+		},
+		{
+			"id": "affix",
+			"name": "ZAffix",
+			"family": null,
+			"status": "experimental",
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
+			"docs": "apps/docs/src/content/components/layout/affix/doc.ts",
+			"ssrEvidenceCount": 1
 		},
 		{
 			"id": "app-shell",
@@ -1574,6 +1614,16 @@
 			"classification": "experimental",
 			"blockers": ["BrowserBehaviorVerified"],
 			"docs": "apps/docs/src/content/components/navigation/anchor/doc.ts",
+			"ssrEvidenceCount": 1
+		},
+		{
+			"id": "back-top",
+			"name": "ZBackTop",
+			"family": null,
+			"status": "experimental",
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
+			"docs": "apps/docs/src/content/components/navigation/back-top/doc.ts",
 			"ssrEvidenceCount": 1
 		},
 		{

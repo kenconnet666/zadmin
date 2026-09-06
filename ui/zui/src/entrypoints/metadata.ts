@@ -183,3 +183,8 @@ export { zuiMetadata as menubarMenuMetadata } from '../components/compound/menub
 export { zuiMetadata as menubarTriggerMetadata } from '../components/compound/menubar/ZMenubarTrigger.svelte';
 export { zuiMetadata as menubarContentMetadata } from '../components/compound/menubar/ZMenubarContent.svelte';
 export { zuiMetadata as resizableMetadata } from '../components/layout/ZResizable.svelte';
+export { zuiMetadata as copyButtonMetadata } from '../components/gene/ZCopyButton.svelte';
+export { zuiMetadata as affixMetadata } from '../components/layout/ZAffix.svelte';
+export { zuiMetadata as backTopMetadata } from '../components/navigation/ZBackTop.svelte';
+export { zuiMetadata as passwordInputMetadata } from '../components/input/ZPasswordInput.svelte';
+export { zuiMetadata as nativeSelectMetadata } from '../components/input/ZNativeSelect.svelte';

@@ -1,8 +1,19 @@
-import { describe, expect, it } from 'vitest';
-import { userEvent } from 'vitest/browser';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { page, userEvent } from 'vitest/browser';
 
 import { mount, unmount } from './browser-lifecycle.js';
 import ToolbarFixture from './ToolbarFixture.svelte';
+
+let originalViewport: { height: number; width: number };
+
+beforeEach(async () => {
+	originalViewport = { height: window.innerHeight, width: window.innerWidth };
+	await page.viewport(1024, 768);
+});
+
+afterEach(async () => {
+	await page.viewport(originalViewport.width, originalViewport.height);
+});
 
 function host(): HTMLDivElement {
 	const element = document.createElement('div');

@@ -2,11 +2,13 @@ import { tick } from 'svelte';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 
-import ZResizable, {
-	type ZResizableCancelReason,
-	type ZResizableResizeDetail
+import type {
+	ZResizableCancelReason,
+	ZResizableResizeDetail
 } from '../src/components/layout/ZResizable.svelte';
+import { createBrowserIcssRuntime } from '../src/icss/runtime.js';
 import ResizableFixture from './ResizableFixture.svelte';
+import ResizableOwnerRealmFixture from './ResizableOwnerRealmFixture.svelte';
 import { mount, unmount } from './browser-lifecycle.js';
 
 let originalViewport: { height: number; width: number };
@@ -367,21 +369,20 @@ describe('ZResizable production browser contract', () => {
 		const ownerDocument = frame.contentDocument;
 		if (!ownerWindow || !ownerDocument) throw new Error('Expected a same-origin iframe realm.');
 		const target = host(ownerDocument);
+		const runtime = createBrowserIcssRuntime({ root: ownerDocument });
 		let lastDetail: ZResizableResizeDetail | undefined;
 		let cancelReason: ZResizableCancelReason | undefined;
-		const component = mount(ZResizable, {
+		const component = mount(ResizableOwnerRealmFixture, {
 			props: {
-				axis: 'inline',
-				height: '100px',
 				onResize: (detail) => (lastDetail = detail),
 				onResizeCancel: (detail) => (cancelReason = detail.reason),
-				width: '200px'
+				runtime
 			},
 			target
 		});
 		try {
 			await tick();
-			const resizable = target.querySelector<HTMLElement>('[data-axis="inline"]')!;
+			const resizable = target.querySelector<HTMLElement>('[data-testid="resizable-owner-realm"]')!;
 			await expect.poll(() => resizable.dataset.measured).toBe('true');
 			const edge = handle(resizable, 'inline-end');
 			const start = begin(edge, 61);
@@ -402,6 +403,7 @@ describe('ZResizable production browser contract', () => {
 			await unmount(component);
 			expect(cancelReason).toBe('unmount');
 		} finally {
+			runtime.registry.clear();
 			if (target.isConnected) target.remove();
 			frame.remove();
 		}

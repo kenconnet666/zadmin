@@ -1,19 +1,19 @@
 # ZUI component maturity matrix
 
-Generated from 164 metadata components, 97 documentation modules, 164 API contract entries, and 248 test files.
+Generated from 169 metadata components, 102 documentation modules, 169 API contract entries, and 258 test files.
 
 This is a static inventory of authored test contracts, not an execution report or a whole-component visual acceptance result. Historical stage names are retained for compatibility. `VisuallyVerified` requires an explicit `@zui-visual ZComponent` marker, an owned component/fixture render, and a geometry, computed-style, CSS, or screenshot assertion in the SAME test block. A positive entry only identifies a scoped test; confirm its result against commit-matched CI and inspect real pages, themes, and densities separately. `DesktopVerified` remains false until a component-level desktop evidence source is added.
 
 | Stage                   | Count |
 | ----------------------- | ----: |
-| Declared                |   164 |
-| Authorable              |   164 |
-| ContractVerified        |   164 |
-| RuntimeImplemented      |   164 |
-| BrowserBehaviorVerified |   156 |
-| VisuallyVerified        |   154 |
+| Declared                |   169 |
+| Authorable              |   169 |
+| ContractVerified        |   169 |
+| RuntimeImplemented      |   169 |
+| BrowserBehaviorVerified |   160 |
+| VisuallyVerified        |   157 |
 | DesktopVerified         |     0 |
-| ProductionVerified      |   159 |
+| ProductionVerified      |   164 |
 
 | Component               | Category     | Declared | Authorable | Contract | Runtime | Browser | Visual | Desktop | Production | Docs                                                                  |
 | ----------------------- | ------------ | -------: | ---------: | -------: | ------: | ------: | -----: | ------: | ---------: | --------------------------------------------------------------------- |
@@ -125,6 +125,7 @@ This is a static inventory of authored test contracts, not an execution report o
 | ZBox                    | gene         |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/gene/box/doc.ts                      |
 | ZButton                 | gene         |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/gene/button/doc.ts                   |
 | ZCode                   | gene         |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/gene/code/doc.ts                     |
+| ZCopyButton             | gene         |        Y |          Y |        Y |       Y |       — |      Y |       — |          Y | apps/docs/src/content/components/gene/copy-button/doc.ts              |
 | ZHeading                | gene         |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/gene/heading/doc.ts                  |
 | ZIcon                   | gene         |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/gene/icon/doc.ts                     |
 | ZKbd                    | gene         |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/gene/kbd/doc.ts                      |
@@ -148,7 +149,9 @@ This is a static inventory of authored test contracts, not an execution report o
 | ZInput                  | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/input/doc.ts                   |
 | ZInputGroup             | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/input-group/doc.ts             |
 | ZMention                | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/mention/doc.ts                 |
+| ZNativeSelect           | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/native-select/doc.ts           |
 | ZNumberField            | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/number-field/doc.ts            |
+| ZPasswordInput          | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/password-input/doc.ts          |
 | ZPinInput               | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/pin-input/doc.ts               |
 | ZSegmented              | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/segmented/doc.ts               |
 | ZSlider                 | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/slider/doc.ts                  |
@@ -159,6 +162,7 @@ This is a static inventory of authored test contracts, not an execution report o
 | ZToggleGroup            | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/toggle-group/doc.ts            |
 | ZTransfer               | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/transfer/doc.ts                |
 | ZTreeSelect             | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/tree-select/doc.ts             |
+| ZAffix                  | layout       |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/layout/affix/doc.ts                  |
 | ZAppShell               | layout       |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/layout/app-shell/doc.ts              |
 | ZAspectRatio            | layout       |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/layout/aspect-ratio/doc.ts           |
 | ZCenter                 | layout       |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/layout/center/doc.ts                 |
@@ -174,6 +178,7 @@ This is a static inventory of authored test contracts, not an execution report o
 | ZSplitter               | layout       |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/layout/splitter/doc.ts               |
 | ZStack                  | layout       |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/layout/stack/doc.ts                  |
 | ZAnchor                 | navigation   |        Y |          Y |        Y |       Y |       — |      — |       — |          Y | apps/docs/src/content/components/navigation/anchor/doc.ts             |
+| ZBackTop                | navigation   |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/navigation/back-top/doc.ts           |
 | ZBreadcrumb             | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/breadcrumb/doc.ts         |
 | ZCommand                | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/command/doc.ts            |
 | ZCommandPalette         | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/command-palette/doc.ts    |

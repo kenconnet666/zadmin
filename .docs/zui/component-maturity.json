@@ -1,10 +1,10 @@
 {
 	"schemaVersion": 2,
 	"source": {
-		"metadataComponents": 164,
-		"documentationPages": 97,
-		"contractComponents": 164,
-		"testFiles": 248
+		"metadataComponents": 169,
+		"documentationPages": 102,
+		"contractComponents": 169,
+		"testFiles": 258
 	},
 	"stageNames": [
 		"Declared",
@@ -18,14 +18,14 @@
 	],
 	"evidenceScope": "Static inventory of authored test contracts, not test execution results or whole-component visual acceptance. Stage names are retained for compatibility; consult commit-matched CI and page-level review separately.",
 	"summary": {
-		"Declared": 164,
-		"Authorable": 164,
-		"ContractVerified": 164,
-		"RuntimeImplemented": 164,
-		"BrowserBehaviorVerified": 156,
-		"VisuallyVerified": 154,
+		"Declared": 169,
+		"Authorable": 169,
+		"ContractVerified": 169,
+		"RuntimeImplemented": 169,
+		"BrowserBehaviorVerified": 160,
+		"VisuallyVerified": 157,
 		"DesktopVerified": 0,
-		"ProductionVerified": 159
+		"ProductionVerified": 164
 	},
 	"components": [
 		{
@@ -10499,6 +10499,82 @@
 			]
 		},
 		{
+			"id": "copy-button",
+			"name": "ZCopyButton",
+			"category": "gene",
+			"family": null,
+			"status": "experimental",
+			"source": "ui/zui/src/components/gene/ZCopyButton.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": false,
+				"VisuallyVerified": true,
+				"DesktopVerified": false,
+				"ProductionVerified": true
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/gene/ZCopyButton.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZCopyButton"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "789a9f4e9f18fc5aa194769b70a3ca5c8220d0488fa0d348b9c729c7e706f30b API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/gene/ZCopyButton.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/copy-button-production.browser.spec.ts",
+						"detail": "ZCopyButton authored visual contract: writes the exact value on user activation and preserves label geometry across success (line 13); requires browser execution and page-level review"
+					},
+					{
+						"path": "ui/zui/tests/CopyButtonFixture.svelte",
+						"detail": "ZCopyButton explicit rendered fixture usage"
+					}
+				],
+				"DesktopVerified": [],
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/copy-button-production.spec.ts",
+						"detail": "ZCopyButton production assertions"
+					}
+				]
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/gene/copy-button/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/copy-button-production.spec.ts",
+					"detail": "ZCopyButton SSR assertions"
+				}
+			]
+		},
+		{
 			"id": "heading",
 			"name": "ZHeading",
 			"category": "gene",
@@ -10648,7 +10724,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "325c34d36308aa7135efcc7574104f226d97f33715f326a5ae5a791a7f354603 API snapshot entry"
+						"detail": "e8ff701e93a7be3e191363ac33c703ee60c1bde469867c826debb72877796f9b API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -12222,6 +12298,10 @@
 					"detail": "ZField SSR assertions"
 				},
 				{
+					"path": "ui/zui/tests/input-primitives-production.spec.ts",
+					"detail": "ZField SSR assertions"
+				},
+				{
 					"path": "ui/zui/tests/pin-input-group-production.spec.ts",
 					"detail": "ZField SSR assertions"
 				},
@@ -12764,7 +12844,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "8fa116d6998492f5219dc9e01869d19b9078f2d8f3804967f8a3243352da1572 API snapshot entry"
+						"detail": "fa2fa2b211fc976d3fde6be2e747f64c6c239a70bbe56301d270e3b102e83d1c API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -12860,6 +12940,10 @@
 			"ssrEvidence": [
 				{
 					"path": "ui/zui/tests/components.spec.ts",
+					"detail": "ZInputGroup SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/input-primitives-production.spec.ts",
 					"detail": "ZInputGroup SSR assertions"
 				},
 				{
@@ -12970,6 +13054,103 @@
 			]
 		},
 		{
+			"id": "native-select",
+			"name": "ZNativeSelect",
+			"category": "input",
+			"family": null,
+			"status": "experimental",
+			"source": "ui/zui/src/components/input/ZNativeSelect.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": true,
+				"VisuallyVerified": true,
+				"DesktopVerified": false,
+				"ProductionVerified": true
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/input/ZNativeSelect.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZNativeSelect"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "3cf30615ff0cd22d2c195e6d65c90ab74e00839b32f8274c3774d2df286fccde API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/input/ZNativeSelect.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [
+					{
+						"path": "ui/zui/tests/input-primitives-production.browser.spec.ts",
+						"detail": "ZNativeSelect browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/InputPrimitivesFixture.svelte",
+						"detail": "ZNativeSelect explicit rendered fixture usage"
+					}
+				],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/input-primitives-production.browser.spec.ts",
+						"detail": "ZNativeSelect authored visual contract: shares the five input chrome sizes while keeping visual size separate from native rows (line 247); requires browser execution and page-level review"
+					},
+					{
+						"path": "ui/zui/tests/InputPrimitivesFixture.svelte",
+						"detail": "ZNativeSelect explicit rendered fixture usage"
+					}
+				],
+				"DesktopVerified": [],
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/input-primitives-production.spec.ts",
+						"detail": "ZNativeSelect production assertions"
+					},
+					{
+						"path": "ui/zui/tests/InputPrimitivesFixture.svelte",
+						"detail": "ZNativeSelect explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/input-primitives-production.browser.spec.ts",
+						"detail": "ZNativeSelect production assertions"
+					},
+					{
+						"path": "ui/zui/tests/InputPrimitivesFixture.svelte",
+						"detail": "ZNativeSelect explicit rendered fixture usage"
+					}
+				]
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/input/native-select/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/input-primitives-production.spec.ts",
+					"detail": "ZNativeSelect SSR assertions"
+				}
+			]
+		},
+		{
 			"id": "number-field",
 			"name": "ZNumberField",
 			"category": "input",
@@ -13055,6 +13236,103 @@
 				{
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZNumberField SSR assertions"
+				}
+			]
+		},
+		{
+			"id": "password-input",
+			"name": "ZPasswordInput",
+			"category": "input",
+			"family": null,
+			"status": "experimental",
+			"source": "ui/zui/src/components/input/ZPasswordInput.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": true,
+				"VisuallyVerified": true,
+				"DesktopVerified": false,
+				"ProductionVerified": true
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/input/ZPasswordInput.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZPasswordInput"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "bbe805ca5a4eb9771c28cf1435c320470d7fd734c9e9082bc718a8e6cad2b0e3 API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/input/ZPasswordInput.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [
+					{
+						"path": "ui/zui/tests/input-primitives-production.browser.spec.ts",
+						"detail": "ZPasswordInput browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/InputPrimitivesFixture.svelte",
+						"detail": "ZPasswordInput explicit rendered fixture usage"
+					}
+				],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/input-primitives-production.browser.spec.ts",
+						"detail": "ZPasswordInput authored visual contract: inherits readonly and disabled Field state, keeps readonly reveal available and exposes five sizes (line 75); requires browser execution and page-level review"
+					},
+					{
+						"path": "ui/zui/tests/InputPrimitivesFixture.svelte",
+						"detail": "ZPasswordInput explicit rendered fixture usage"
+					}
+				],
+				"DesktopVerified": [],
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/input-primitives-production.spec.ts",
+						"detail": "ZPasswordInput production assertions"
+					},
+					{
+						"path": "ui/zui/tests/InputPrimitivesFixture.svelte",
+						"detail": "ZPasswordInput explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/input-primitives-production.browser.spec.ts",
+						"detail": "ZPasswordInput production assertions"
+					},
+					{
+						"path": "ui/zui/tests/InputPrimitivesFixture.svelte",
+						"detail": "ZPasswordInput explicit rendered fixture usage"
+					}
+				]
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/input/password-input/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/input-primitives-production.spec.ts",
+					"detail": "ZPasswordInput SSR assertions"
 				}
 			]
 		},
@@ -14057,6 +14335,90 @@
 			]
 		},
 		{
+			"id": "affix",
+			"name": "ZAffix",
+			"category": "layout",
+			"family": null,
+			"status": "experimental",
+			"source": "ui/zui/src/components/layout/ZAffix.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": true,
+				"VisuallyVerified": false,
+				"DesktopVerified": false,
+				"ProductionVerified": true
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/layout/ZAffix.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZAffix"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "3c70dced13ed313c024b00d7b002db9d8e01bc9611f09a0335563073b9384b08 API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/layout/ZAffix.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [
+					{
+						"path": "ui/zui/tests/affix-back-top-production.browser.spec.ts",
+						"detail": "ZAffix browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/AffixBackTopFixture.svelte",
+						"detail": "ZAffix explicit rendered fixture usage"
+					}
+				],
+				"VisuallyVerified": [],
+				"DesktopVerified": [],
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/affix-back-top-production.spec.ts",
+						"detail": "ZAffix production assertions"
+					},
+					{
+						"path": "ui/zui/tests/affix-back-top-production.browser.spec.ts",
+						"detail": "ZAffix production assertions"
+					},
+					{
+						"path": "ui/zui/tests/AffixBackTopFixture.svelte",
+						"detail": "ZAffix explicit rendered fixture usage"
+					}
+				]
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/layout/affix/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/affix-back-top-production.spec.ts",
+					"detail": "ZAffix SSR assertions"
+				}
+			]
+		},
+		{
 			"id": "app-shell",
 			"name": "ZAppShell",
 			"category": "layout",
@@ -14803,21 +15165,33 @@
 					{
 						"path": "ui/zui/tests/ResizableFixture.svelte",
 						"detail": "ZResizable explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/ResizableOwnerRealmFixture.svelte",
+						"detail": "ZResizable explicit rendered fixture usage"
 					}
 				],
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/resizable-production.browser.spec.ts",
-						"detail": "ZResizable authored visual contract: measures one element, exposes logical ARIA handles, usable handle snippets and five sizes (line 73); requires browser execution and page-level review"
+						"detail": "ZResizable authored visual contract: measures one element, exposes logical ARIA handles, usable handle snippets and five sizes (line 75); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/ResizableFixture.svelte",
+						"detail": "ZResizable explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/ResizableOwnerRealmFixture.svelte",
 						"detail": "ZResizable explicit rendered fixture usage"
 					}
 				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
+						"path": "ui/zui/tests/resizable-production.spec.ts",
+						"detail": "ZResizable production assertions"
+					},
+					{
 						"path": "ui/zui/tests/resizable-production.browser.spec.ts",
 						"detail": "ZResizable production assertions"
 					},
@@ -14826,8 +15200,8 @@
 						"detail": "ZResizable explicit rendered fixture usage"
 					},
 					{
-						"path": "ui/zui/tests/resizable-production.spec.ts",
-						"detail": "ZResizable production assertions"
+						"path": "ui/zui/tests/ResizableOwnerRealmFixture.svelte",
+						"detail": "ZResizable explicit rendered fixture usage"
 					}
 				]
 			},
@@ -15323,7 +15697,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "5936d915e6d35d0a9adbc190091a3b57f9a293337dd4adbc1bcf1cf1cd70767c API snapshot entry"
+						"detail": "33bcfe2e84941a3231d7283e4c1ae21c6c8e7afb8fc8988ca647d829f2c40d70 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -15350,6 +15724,90 @@
 				{
 					"path": "ui/zui/tests/anchor-production.spec.ts",
 					"detail": "ZAnchor SSR assertions"
+				}
+			]
+		},
+		{
+			"id": "back-top",
+			"name": "ZBackTop",
+			"category": "navigation",
+			"family": null,
+			"status": "experimental",
+			"source": "ui/zui/src/components/navigation/ZBackTop.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": true,
+				"VisuallyVerified": false,
+				"DesktopVerified": false,
+				"ProductionVerified": true
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/navigation/ZBackTop.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZBackTop"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "c84b1aa00c8460ad72ddce70c79c1325ab623517ad3ccebe8941344e7d60f5f2 API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/navigation/ZBackTop.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [
+					{
+						"path": "ui/zui/tests/affix-back-top-production.browser.spec.ts",
+						"detail": "ZBackTop browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/AffixBackTopFixture.svelte",
+						"detail": "ZBackTop explicit rendered fixture usage"
+					}
+				],
+				"VisuallyVerified": [],
+				"DesktopVerified": [],
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/affix-back-top-production.spec.ts",
+						"detail": "ZBackTop production assertions"
+					},
+					{
+						"path": "ui/zui/tests/affix-back-top-production.browser.spec.ts",
+						"detail": "ZBackTop production assertions"
+					},
+					{
+						"path": "ui/zui/tests/AffixBackTopFixture.svelte",
+						"detail": "ZBackTop explicit rendered fixture usage"
+					}
+				]
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/navigation/back-top/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/affix-back-top-production.spec.ts",
+					"detail": "ZBackTop SSR assertions"
 				}
 			]
 		},
