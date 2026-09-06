@@ -89,13 +89,13 @@
 			},
 			{
 				default: 'ZForm.disabled',
-				description: '显式值优先于表单级禁用状态。',
+				description: '继承表单级禁用；字段可进一步禁用，但false不会取消上层禁用。',
 				name: 'disabled',
 				type: 'boolean'
 			},
 			{
 				default: 'ZForm.readonly',
-				description: '显式值优先于表单级只读状态。',
+				description: '继承表单级只读；字段可进一步只读，但false不会取消上层只读。',
 				name: 'readonly',
 				type: 'boolean'
 			},
@@ -123,7 +123,8 @@
 		source: 'ui/zui/src/components/input/ZFormField.svelte',
 		states: [
 			{
-				description: '当前原生提交值与挂载或reset后的基线不同；改回原值恢复false。',
+				description:
+					'模型值与initialize/reset基线不同；native模式比较原生提交值与挂载或reset基线。改回基线恢复false。',
 				name: 'data-dirty',
 				values: ['true']
 			},
@@ -139,6 +140,7 @@
 <script lang="ts">
 	import { mergeFieldMessages } from '../../runtime/form/form-control.svelte.js';
 	import { useZForm } from '../../runtime/form/form-context.svelte.js';
+	import { provideFormValueScope } from '../../runtime/form/form-value-adapter.svelte.js';
 	import { fieldPathToString, normalizeFieldPath } from '../../runtime/form/field-path.js';
 	import { isDomNode } from '../../runtime/layer/dom-realm.js';
 	import ZField from './ZField.svelte';
@@ -163,13 +165,20 @@
 	const form = useZForm();
 	const instanceId = $props.id();
 	const path = $derived(normalizeFieldPath(name));
+	provideFormValueScope({
+		host: form,
+		instanceId,
+		get path() {
+			return path;
+		}
+	});
 	const resolvedHtmlName = $derived(htmlName ?? fieldPathToString(path));
 	const state = $derived(form.registry.state(path));
 	const messages = $derived(mergeFieldMessages(error, state.errors));
 	const warningMessages = $derived(mergeFieldMessages(warning, state.warnings));
 	const successMessages = $derived(mergeFieldMessages(success, state.success));
-	const resolvedDisabled = $derived(disabled ?? form.disabled);
-	const resolvedReadonly = $derived(readonly ?? form.readonly);
+	const resolvedDisabled = $derived(disabled || form.disabled);
+	const resolvedReadonly = $derived(readonly || form.readonly);
 	const resolvedSize = $derived(size ?? form.size);
 	$effect(() => {
 		if (!ref) return;

@@ -124,7 +124,7 @@
 			{ description: '当前选中或混合状态。', name: 'checked', type: "boolean | 'indeterminate'" },
 			{ description: '真实input元素引用。', name: 'ref', type: 'HTMLInputElement | null' }
 		],
-		dependencies: ['ControllableState', 'form-control', 'form-value'],
+		dependencies: ['FormControlState', 'form-control', 'form-value'],
 		events: [
 			{
 				description: '可编辑状态下，用户切换状态后调用一次。',
@@ -227,9 +227,10 @@
 <script lang="ts">
 	import { untrack } from 'svelte';
 
-	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
+	import { createFormControlState } from '../../runtime/form/form-value-adapter.svelte.js';
 	import { useZField } from '../../runtime/form/field-context.js';
-	import { formReset, mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
+	import { mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
+	import FormResetSignal from '../../runtime/form/FormResetSignal.svelte';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import { resolveControlSize } from '../../runtime/foundation/control-size.js';
 	import { serializeFormValue } from '../../runtime/form/form-value.js';
@@ -248,6 +249,7 @@
 		class: className,
 		defaultChecked = false,
 		disabled = false,
+		form,
 		id,
 		invalid,
 		name,
@@ -283,10 +285,23 @@
 			tone: resolvedTone
 		})
 	);
-	const state = new ControllableState<CheckboxState>({
+	const state = createFormControlState<CheckboxState>({
 		defaultValue: () => defaultChecked,
+		element: () => ref,
+		normalizeModelValue: (candidate) => {
+			if (candidate === undefined) return false;
+			if (candidate !== true && candidate !== false && candidate !== 'indeterminate')
+				throw new TypeError('ZCheckbox model value must be boolean, indeterminate or undefined.');
+			return candidate;
+		},
 		onChange: () => onCheckedChange,
+		owner: 'ZCheckbox',
 		read: () => checked,
+		syncNative: (next) => {
+			if (!ref) return;
+			ref.checked = next === true;
+			ref.indeterminate = next === 'indeterminate';
+		},
 		write: (next) => (checked = next)
 	});
 	const resolvedChecked = $derived(state.current);
@@ -303,12 +318,20 @@
 	});
 
 	function handleChange(event: Event & { currentTarget: HTMLInputElement }): void {
+		if (event.currentTarget.matches(':disabled')) {
+			event.currentTarget.checked = nativeChecked;
+			event.currentTarget.indeterminate = isIndeterminate;
+			return;
+		}
 		if (resolvedReadonly) {
 			event.currentTarget.checked = nativeChecked;
 			event.currentTarget.indeterminate = isIndeterminate;
 			return;
 		}
-		state.setFromUser(event.currentTarget.checked);
+		if (!state.setFromUser(event.currentTarget.checked)) {
+			event.currentTarget.checked = nativeChecked;
+			event.currentTarget.indeterminate = isIndeterminate;
+		}
 		onchange?.(event);
 	}
 
@@ -329,9 +352,9 @@
 	class={[rootClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
-	use:formReset={() => state.reset()}
 	id={id ?? field?.controlId ?? generatedId}
 	name={name ?? field?.name}
+	{form}
 	type="checkbox"
 	value={resolvedValue}
 	defaultChecked={defaultChecked === true}
@@ -350,3 +373,4 @@
 	data-tone={resolvedTone}
 	data-state={isIndeterminate ? 'indeterminate' : nativeChecked ? 'checked' : 'unchecked'}
 />
+<FormResetSignal association={form} control={ref} onReset={() => state.reset()} />

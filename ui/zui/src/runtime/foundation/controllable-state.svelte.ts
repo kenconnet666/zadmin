@@ -16,7 +16,7 @@ export interface ControllableStateOptions<TValue> {
 	readonly write: (value: TValue) => void;
 }
 
-function sameStateValue(
+export function sameStateValue(
 	left: unknown,
 	right: unknown,
 	seen = new WeakMap<object, object>()

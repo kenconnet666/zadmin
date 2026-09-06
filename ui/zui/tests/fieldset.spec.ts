@@ -17,7 +17,7 @@ it('renders a native named group with independent controls and merged descriptio
 		}
 	}).body;
 	expect(html).toMatch(/<fieldset[^>]*disabled/);
-	expect(html).toMatch(/<legend[^>]*>Account/);
+	expect(html.replace(/<!--[\s\S]*?-->/g, '')).toMatch(/<legend[^>]*>\s*Account/);
 	expect(html).toContain('external-help');
 	expect(html).toContain('Group help');
 	expect(html).toContain('aria-label="Name"');

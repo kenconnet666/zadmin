@@ -16,6 +16,7 @@ describe('ZCheckboxGroup production contract', () => {
 	it('keeps ordinary Tab stops, max/min constraints, mixed select-all and repeated FormData', async () => {
 		const target = host();
 		const component = mount(CheckboxGroupProductionFixture, { target });
+		await tick();
 		const form = target.querySelector<HTMLFormElement>('[data-testid="checkbox-group-form"]')!;
 		const group = target.querySelector<HTMLElement>('[data-testid="checkbox-group-main"]')!;
 		const selectAll = target.querySelector<HTMLInputElement>('[data-testid="checkbox-group-all"]')!;
@@ -139,6 +140,7 @@ describe('ZCheckboxGroup production contract', () => {
 	it('keeps typed option values, group required and all five checkbox sizes', async () => {
 		const target = host();
 		const component = mount(CheckboxGroupProductionFixture, { target });
+		await tick();
 		const options = target.querySelector<HTMLElement>('[data-testid="checkbox-group-options"]')!;
 		const optionInputs = options.querySelectorAll<HTMLInputElement>('input[type="checkbox"]');
 		const required = target.querySelector<HTMLElement>('[data-testid="checkbox-group-required"]')!;
@@ -150,7 +152,8 @@ describe('ZCheckboxGroup production contract', () => {
 			'[data-testid="checkbox-group-output"]'
 		)!;
 
-		expect(required.getAttribute('aria-required')).toBe('true');
+		expect(required.dataset.required).toBe('true');
+		expect(required.hasAttribute('aria-required')).toBe(false);
 		expect(required.dataset.selectionInvalid).toBe('true');
 		expect(requiredInputs[0]?.required).toBe(true);
 		expect(requiredInputs[1]?.required).toBe(false);
@@ -166,20 +169,26 @@ describe('ZCheckboxGroup production contract', () => {
 		await userEvent.click(optionInputs[1]!);
 		expect(output.textContent).toBe('read|1,2|1');
 
-		for (const [size, expected] of [
-			['xsmall', 24],
-			['small', 28],
-			['medium', 32],
-			['large', 40],
-			['xlarge', 48]
+		for (const [size, indicatorSize] of [
+			['xsmall', 12],
+			['small', 14],
+			['medium', 16],
+			['large', 20],
+			['xlarge', 24]
 		] as const) {
 			const input = target.querySelector<HTMLInputElement>(
 				`[data-testid="checkbox-group-${size}"] input`
 			)!;
+			const item = input.closest<HTMLLabelElement>('label')!;
+			const inputRect = input.getBoundingClientRect();
+			const itemRect = item.getBoundingClientRect();
 			expect(input.dataset.size).toBe(size);
 			expect(input.dataset.tone).toBe('info');
-			expect(input.getBoundingClientRect().width).toBe(expected);
-			expect(input.getBoundingClientRect().height).toBe(expected);
+			expect(inputRect.width).toBe(indicatorSize);
+			expect(inputRect.height).toBe(indicatorSize);
+			// The full implicit label is the pointer target; the native indicator remains token-sized.
+			expect(itemRect.width).toBeGreaterThan(inputRect.width);
+			expect(itemRect.height).toBeGreaterThanOrEqual(inputRect.height);
 		}
 		await unmount(component);
 		target.remove();

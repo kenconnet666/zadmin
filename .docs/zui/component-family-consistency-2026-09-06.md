@@ -29,6 +29,8 @@
 
 ## 最终关闭条件
 
+E10A 补充：Form/Field/Input/PasswordInput/Textarea/Checkbox/NativeSelect/CheckboxGroup 已共用 FormControlState 和 FormResetSignal 接入同一模型。组内值只由 compound owner 持有；父级 disabled/readonly 单向加强。schema/server/manual、batch 通知、reset 与晚到异步处理已接入既有 FormRegistry。其余值控件和动态数组仍须按相同合同接入；该实现记录不替代最终候选执行证据。
+
 1. 从最新总纲与全部能力矩阵列出最终组件和组合，不遗漏新增、删减、重命名、拆合与迁移后的真实消费者。
 2. 对每组审查重复状态/样式/计时器/监听器，确认复用边界及必要差异；发现问题直接修正源码、API/metadata与Docs。
 3. 检查实际组合中的默认值、五档/八字级、多主题、RTL、窄屏、readonly/disabled/loading、进入/退出/中断/reduced、原生表单和Portal/owner生命周期。

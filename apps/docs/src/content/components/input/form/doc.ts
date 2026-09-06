@@ -28,7 +28,7 @@ export const formDoc = defineComponentDoc(formMetadata, {
 			controller: {
 				default: '—',
 				description:
-					'除验证、反馈与导航外，getValues/getFieldValue只读取当前successful native controls；返回深冻结native快照，不拥有值也不冒充schema output。subscribeField只观察未来字段状态变化。'
+					'公开为ZFormController<TOutput, TValues>。模型模式可读写、initialize并精确reset字段；native模式只读当前successful controls。getState/subscribeState提供不可变聚合状态快照。'
 			},
 			onreset: {
 				default: '—',
@@ -40,7 +40,7 @@ export const formDoc = defineComponentDoc(formMetadata, {
 			}
 		},
 		summary:
-			'ZForm拥有提交、reset和验证生命周期；ZFormField只拥有字段路径注册与状态投射，真实control仍由调用方放入Field。以原生FormData为值事实、Standard Schema为typed输出边界，并用FieldPath图拥有依赖验证、消息状态、竞态和首错导航。'
+			'ZForm可注入唯一FormModel，由ZFormField把字段路径提供给适配控件自动读写；Standard Schema消费模型输入并产生typed output，原生FormData仍独立遵守successful controls规则。FieldPath图统一拥有依赖验证、错误分层、竞态和首错导航。'
 	},
 	demos: [
 		{
@@ -53,10 +53,10 @@ export const formDoc = defineComponentDoc(formMetadata, {
 			title: '五档尺寸与组合比例'
 		},
 		{
-			covers: ['controlled', 'focus', 'invalid', 'resource-cleanup'],
+			covers: ['controlled', 'form-data', 'invalid', 'loading'],
 			component: FormDemo,
 			description:
-				'Standard Schema异步验证按字段路径分发；change防抖、submit竞态和首错聚焦共享同一Registry。',
+				'Standard Schema把模型字符串输入转换为typed输出，同时保留原生FormData快照；异步提交暴露submitting、拦截重复提交并通过onSubmitError报告拒绝。',
 			id: 'form-schema',
 			source,
 			title: '异步Schema与字段状态'
@@ -88,13 +88,13 @@ export const formDoc = defineComponentDoc(formMetadata, {
 			title: 'Native Values与Baseline Dirty'
 		},
 		{
-			covers: ['composition', 'controlled'],
+			covers: ['composition', 'controlled', 'disabled', 'form-data', 'form-reset'],
 			component: ModelDemo,
 			description:
-				'独立FormModel通过value/onValueChange显式连接受控ZInput；批量写入、reset和FormArray增删移动保持immutable values与稳定row.id。',
+				'一个FormModel自动连接Input、PasswordInput、Textarea、Checkbox、NativeSelect和CheckboxGroup；展示批量写入、reset以及readonly/disabled对model与FormData的不同影响。',
 			id: 'form-model-composition',
 			source: modelSource,
-			title: '独立Model与稳定数组Row'
+			title: '自动Model与六族控件'
 		},
 		{
 			covers: ['controlled', 'loading', 'native-props'],
@@ -105,13 +105,13 @@ export const formDoc = defineComponentDoc(formMetadata, {
 			title: '外部Busy与可操作性'
 		},
 		{
-			covers: ['disabled', 'focus', 'form-reset', 'native-props', 'controlled'],
+			covers: ['controlled', 'form-reset', 'invalid', 'resource-cleanup'],
 			component: ControllerDemo,
 			description:
-				'controller注入服务端错误和字段状态，并演示subscribeField状态观察、表单外submit、原生小写事件、整表禁用与原生reset。',
+				'双泛型controller批量更新、保留dirty值重新initialize、resetField并观察聚合状态；显式schema重验不会覆盖已有server/manual错误。',
 			id: 'form-controller',
 			source: controllerSource,
-			title: 'Controller与外部Form owner'
+			title: 'Controller、基线与错误分层'
 		}
 	],
 	accessibility: [
@@ -120,9 +120,13 @@ export const formDoc = defineComponentDoc(formMetadata, {
 		'ZFormField把schema完整路径映射的消息交给ZField生成稳定description/error/warning/success IDs，真实输入继续拥有label与aria-describedby。',
 		'无效提交等待最新异步验证完成后，按实时DOM顺序滚动并聚焦首错；reset取消旧验证并清空dirty/touched/messages。',
 		'FieldPath内部身份保留string/number段类型，HTML name独立生成；多个相同路径实例共享状态，但不会把ZForm变成私有值store。',
-		'getValues/getFieldValue读取当前successful FormData并按FieldPath形成深冻结native对象或根数组；它与Standard Schema的typed output是两个边界。',
-		'dirty在真实input事件后的Svelte flush按挂载或reset后的同名有序FormData baseline比较；用户把值改回baseline会恢复false。外部owner无事件写值的统一通知留给后续adapter。',
-		'createFormModel/createFormArray可独立配合受控组件使用；当前ZForm提交仍读取原生successful controls，自动model模式、control adapter和ZFormList属于后续集成。',
+		'模型模式的getValues/getFieldValue返回FormModel快照；native模式按FieldPath形成successful FormData对象。两者都不冒充Standard Schema的typed output。',
+		'模型模式的dirty按当前值与initialize/reset基线精确比较；批量写入与initialize会同步到已注册控件，resetField只恢复一个路径。',
+		'ZFormField内的Input、PasswordInput、Textarea、Checkbox、NativeSelect和CheckboxGroup自动读取并写入model；不要再同时传value/checked形成第二个业务owner。',
+		'readonly控件保留原生提交，disabled控件从FormData排除；FormModel仍保留两类字段的业务值。',
+		'错误分为schema、server和manual三层：schema校验只更新schema层，setErrors写server层，setFieldFeedback的errors写manual层；clearErrors可按路径清理。',
+		'onValidSubmit可以返回Promise；等待期间submitting为true并拦截重复语义提交，拒绝交给onSubmitError。reset会使旧提交结果失效，但不会取消应用已经发出的请求。',
+		'ZFormList仍属于后续集成；需要动态数组时先直接使用FormModel API，不应把尚未存在的组件写进页面。',
 		"同一表单的typed FieldPath不能互为父子（例如['profile']与['profile','email']），且htmlName不能为空；注册阶段会报告配置错误，避免提交时才出现标量/对象输入错误。"
 	],
 	keywords: [

@@ -35,14 +35,18 @@ export interface ZCheckboxGroupContext<TKey extends SelectionKey = SelectionKey>
 	isNativeRequired(value: TKey, itemDisabled: boolean): boolean;
 	isSelected(value: TKey): boolean;
 	register(read: () => CheckboxGroupCollectionItem<TKey>): () => void;
+	registerSelectAll(element: () => HTMLInputElement | null): () => void;
 	restoreNativeSelection(): void;
 	toggle(value: TKey): boolean;
 	selectAllState(): CheckboxState;
 	toggleAll(): boolean;
 }
 
-// Provider and consumers keep the same key when Vite replaces this context module.
-const CHECKBOX_GROUP_CONTEXT = createContextKey(import.meta, 'zui-checkbox-group-context');
+// The literal hot access enables Vite injection; provider and consumers retain their shared key.
+const CHECKBOX_GROUP_CONTEXT = createContextKey(
+	{ hot: import.meta.hot },
+	'zui-checkbox-group-context'
+);
 
 export function provideZCheckboxGroup<TKey extends SelectionKey>(
 	context: ZCheckboxGroupContext<TKey>

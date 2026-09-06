@@ -4,7 +4,7 @@
 		"metadataComponents": 175,
 		"documentationPages": 106,
 		"contractComponents": 175,
-		"testFiles": 275
+		"testFiles": 282
 	},
 	"stageNames": [
 		"Declared",
@@ -1197,7 +1197,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "7c2b959c823f1d39ff62673ae62a377f85e4f4ecf66e5f533fd6b99986c937ed API snapshot entry"
+						"detail": "ced73a169a57fafd62944755359f1119a0f78f119988fdcbf5c9ecb7813e585e API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -1234,6 +1234,14 @@
 					{
 						"path": "ui/zui/tests/CheckboxGroupProductionFixture.svelte",
 						"detail": "ZCheckboxGroup explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/form-control-adapter-production.spec.ts",
+						"detail": "ZCheckboxGroup production assertions"
+					},
+					{
+						"path": "ui/zui/tests/FormControlAdapterInvalidFixture.svelte",
+						"detail": "ZCheckboxGroup explicit rendered fixture usage"
 					}
 				]
 			},
@@ -1244,6 +1252,10 @@
 			"ssrEvidence": [
 				{
 					"path": "ui/zui/tests/checkbox-group-production.spec.ts",
+					"detail": "ZCheckboxGroup SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-control-adapter-production.spec.ts",
 					"detail": "ZCheckboxGroup SSR assertions"
 				}
 			]
@@ -11969,7 +11981,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "413e3805b1e30527e3e924dddc42f9145b6e34b8812dd67a0240cf9f2c12f5ff API snapshot entry"
+						"detail": "b13ec622f58b1b424d695316aae29fddb8846ba37328ced5bdb899eebd1397cc API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -12001,6 +12013,14 @@
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
+						"path": "ui/zui/tests/form-control-adapter-production.spec.ts",
+						"detail": "ZCheckbox production assertions"
+					},
+					{
+						"path": "ui/zui/tests/FormControlAdapterInvalidFixture.svelte",
+						"detail": "ZCheckbox explicit rendered fixture usage"
+					},
+					{
 						"path": "ui/zui/tests/foundation-controls-production.browser.spec.ts",
 						"detail": "ZCheckbox production assertions"
 					},
@@ -12017,6 +12037,10 @@
 			"ssrEvidence": [
 				{
 					"path": "ui/zui/tests/components.spec.ts",
+					"detail": "ZCheckbox SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-control-adapter-production.spec.ts",
 					"detail": "ZCheckbox SSR assertions"
 				}
 			]
@@ -12727,7 +12751,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "dd8dd66bcfe5cadf29754c1614ea7c65b43fed0250a601001a16f90df3d1a5e8 API snapshot entry"
+						"detail": "5838febf3c906e8a752fe65ecb4fca0c1731abdb9a7322211e2fe34f492a971c API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -12755,6 +12779,22 @@
 					},
 					{
 						"path": "ui/zui/tests/FormGraphFixture.svelte",
+						"detail": "ZForm explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/form-control-adapter-production.browser.spec.ts",
+						"detail": "ZForm browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/FormControlAdapterFixture.svelte",
+						"detail": "ZForm explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/form-core-integration.browser.spec.ts",
+						"detail": "ZForm browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/FormCoreIntegrationFixture.svelte",
 						"detail": "ZForm explicit rendered fixture usage"
 					},
 					{
@@ -12791,6 +12831,22 @@
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
+						"path": "ui/zui/tests/form-control-adapter-production.browser.spec.ts",
+						"detail": "ZForm production assertions"
+					},
+					{
+						"path": "ui/zui/tests/FormControlAdapterFixture.svelte",
+						"detail": "ZForm explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/form-control-adapter-production.spec.ts",
+						"detail": "ZForm production assertions"
+					},
+					{
+						"path": "ui/zui/tests/FormControlAdapterInvalidFixture.svelte",
+						"detail": "ZForm explicit rendered fixture usage"
+					},
+					{
 						"path": "ui/zui/tests/form-production.browser.spec.ts",
 						"detail": "ZForm production assertions"
 					},
@@ -12819,6 +12875,10 @@
 			"ssrEvidence": [
 				{
 					"path": "ui/zui/tests/components.spec.ts",
+					"detail": "ZForm SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-control-adapter-production.spec.ts",
 					"detail": "ZForm SSR assertions"
 				},
 				{
@@ -12864,7 +12924,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "c0dee9b03e092348a107bf5a61a1866133e520e940866a60b9e54ed743cf992b API snapshot entry"
+						"detail": "f32e94eed30910133b7507e36df976d6a76d30d0707998f14a6d5846b221652a API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -12963,6 +13023,10 @@
 					"detail": "ZFormField SSR assertions"
 				},
 				{
+					"path": "ui/zui/tests/form-control-adapter-production.spec.ts",
+					"detail": "ZFormField SSR assertions"
+				},
+				{
 					"path": "ui/zui/tests/form-controller-ssr.spec.ts",
 					"detail": "ZFormField SSR assertions"
 				}
@@ -13005,7 +13069,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "4a320bfb4abe735511679ed889338722bd865b21ad23fe09a376598e71af0f42 API snapshot entry"
+						"detail": "8885c3392d19ef99b7b378175020fe932c5887715e471df1f93f9a7ee871c3c6 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -13061,6 +13125,14 @@
 						"detail": "ZInput explicit rendered fixture usage"
 					},
 					{
+						"path": "ui/zui/tests/form-control-adapter-production.spec.ts",
+						"detail": "ZInput production assertions"
+					},
+					{
+						"path": "ui/zui/tests/FormControlAdapterInvalidFixture.svelte",
+						"detail": "ZInput explicit rendered fixture usage"
+					},
+					{
 						"path": "ui/zui/tests/input-foundation-production.browser.spec.ts",
 						"detail": "ZInput production assertions"
 					},
@@ -13077,6 +13149,10 @@
 			"ssrEvidence": [
 				{
 					"path": "ui/zui/tests/components.spec.ts",
+					"detail": "ZInput SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-control-adapter-production.spec.ts",
 					"detail": "ZInput SSR assertions"
 				},
 				{
@@ -13372,7 +13448,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "3cf30615ff0cd22d2c195e6d65c90ab74e00839b32f8274c3774d2df286fccde API snapshot entry"
+						"detail": "e70466297e55b55428393e60a34ee1bf88d73a616c2c1a01b549ce83d211c3f9 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -13412,6 +13488,14 @@
 						"detail": "ZNativeSelect explicit rendered fixture usage"
 					},
 					{
+						"path": "ui/zui/tests/form-control-adapter-production.spec.ts",
+						"detail": "ZNativeSelect production assertions"
+					},
+					{
+						"path": "ui/zui/tests/FormControlAdapterInvalidFixture.svelte",
+						"detail": "ZNativeSelect explicit rendered fixture usage"
+					},
+					{
 						"path": "ui/zui/tests/input-primitives-production.browser.spec.ts",
 						"detail": "ZNativeSelect production assertions"
 					},
@@ -13428,6 +13512,10 @@
 			"ssrEvidence": [
 				{
 					"path": "ui/zui/tests/input-primitives-production.spec.ts",
+					"detail": "ZNativeSelect SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-control-adapter-production.spec.ts",
 					"detail": "ZNativeSelect SSR assertions"
 				}
 			]
@@ -14329,7 +14417,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "ef1d2b2f1b298da67ec434ca17f6412fece5410b4355c6ded999d0392027bbff API snapshot entry"
+						"detail": "9f3cf949bee8ecba571f7fb600a48bf084a22ca957927102f5600017b68bad86 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -14393,6 +14481,14 @@
 						"detail": "ZTextarea explicit rendered fixture usage"
 					},
 					{
+						"path": "ui/zui/tests/form-control-adapter-production.spec.ts",
+						"detail": "ZTextarea production assertions"
+					},
+					{
+						"path": "ui/zui/tests/FormControlAdapterInvalidFixture.svelte",
+						"detail": "ZTextarea explicit rendered fixture usage"
+					},
+					{
 						"path": "ui/zui/tests/input-foundation-production.browser.spec.ts",
 						"detail": "ZTextarea production assertions"
 					},
@@ -14409,6 +14505,10 @@
 			"ssrEvidence": [
 				{
 					"path": "ui/zui/tests/components.spec.ts",
+					"detail": "ZTextarea SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-control-adapter-production.spec.ts",
 					"detail": "ZTextarea SSR assertions"
 				},
 				{

@@ -3,6 +3,7 @@ import { dirname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import prettier from 'prettier';
 import ts from 'typescript';
+import { parse } from 'svelte/compiler';
 
 const docsRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const workspaceRoot = resolve(docsRoot, '../..');
@@ -22,6 +23,14 @@ const visualAssertionPattern =
 	/\b(?:getBoundingClientRect|getComputedStyle)\s*\(|\.toHaveCSS\s*\(|\.toHaveScreenshot\s*\(/u;
 const withoutComments = (source) =>
 	source.replace(/<!--[\s\S]*?-->|\/\*[\s\S]*?\*\/|\/\/[^\n]*/gu, '');
+
+function hasRuntimeImplementation(source) {
+	const component = parse(source, { modern: true });
+	return Boolean(
+		component.instance &&
+		component.fragment.nodes.some((node) => !['Comment', 'Text'].includes(node.type))
+	);
+}
 
 const visualBlockCache = new Map();
 function visualTestBlocks(source) {
@@ -297,6 +306,12 @@ function ownedVisualBlocks(testPath, content, name, sources = fixtureSources) {
 	);
 }
 if (process.argv.includes('--self-test')) {
+	if (
+		!hasRuntimeImplementation('<script\nlang="ts"\ngenerics="T">let value: T;</script><div />') ||
+		hasRuntimeImplementation('<script module lang="ts">export const data = {};</script><div />') ||
+		hasRuntimeImplementation('<script lang="ts">let value = 1;</script><!-- <div /> -->')
+	)
+		throw new Error('instance script and markup evidence self-test failed');
 	const fixturePath = resolve('C:/tests', 'Fixture.svelte');
 	const fixture = new Map([[fixturePath, '<ZButton />']]);
 	if (!directRenderPattern('ZButton').test('render(ZButton)'))
@@ -467,7 +482,7 @@ const rows = componentFiles.map(({ id, name, category, status, path, source }) =
 			content.includes('expect(') &&
 			content.includes('render(')
 	);
-	const runtimeImplemented = source.includes('<script lang=') && /<\/script>[\s\S]*</u.test(source);
+	const runtimeImplemented = hasRuntimeImplementation(source);
 	const exportPattern = new RegExp(`\\bdefault as ${name}\\b`, 'u');
 	const authorable = entrypointSources.some(([, entrypoint]) => exportPattern.test(entrypoint));
 	const row = {

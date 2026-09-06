@@ -1053,7 +1053,7 @@
 					></span>{/if}
 			</button>
 		{:else}
-			<!-- svelte-ignore a11y_no_noninteractive_tabindex a11y_no_noninteractive_element_interactions (ARIA separator is the real keyboard and pointer resize control) -->
+			<!-- svelte-ignore a11y_no_noninteractive_tabindex, a11y_no_noninteractive_element_interactions (ARIA separator is the real keyboard and pointer resize control) -->
 			<div
 				aria-disabled={disabled || undefined}
 				aria-label={label(handle)}

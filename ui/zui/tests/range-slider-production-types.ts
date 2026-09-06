@@ -51,20 +51,22 @@ const legacyVariants = {
 	valueLabel: 'focus'
 } satisfies ZSliderVariants;
 
-// @ts-expect-error A range always has exactly two values.
 const invalidValue = {
 	thumbLabels: ['Minimum', 'Maximum'],
+	// @ts-expect-error A range always has exactly two values.
 	value: [10]
 } satisfies ZRangeSliderProps;
 // @ts-expect-error Each real native thumb requires its own accessible name.
 const missingThumbLabels = { value: [10, 90] } satisfies ZRangeSliderProps;
-// @ts-expect-error Collision is a closed behavior contract.
 const invalidCollision = {
+	// @ts-expect-error Collision is a closed behavior contract.
 	collision: 'cross',
 	thumbLabels: ['Minimum', 'Maximum']
 } satisfies ZRangeSliderProps;
-// @ts-expect-error Slider orientation is a closed physical axis.
-const invalidOrientation = { orientation: 'diagonal' } satisfies ZSliderProps;
+const invalidOrientation = {
+	// @ts-expect-error Slider orientation is a closed physical axis.
+	orientation: 'diagonal'
+} satisfies ZSliderProps;
 
 void [
 	range,

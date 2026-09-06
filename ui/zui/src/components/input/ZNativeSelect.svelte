@@ -67,7 +67,7 @@
 		category: 'input',
 		dependencies: [
 			'native select/option/optgroup',
-			'ControllableState',
+			'FormControlState',
 			'FieldContext',
 			'inputControlRecipe'
 		],
@@ -272,7 +272,7 @@
 <script lang="ts">
 	import { onDestroy, onMount, untrack } from 'svelte';
 
-	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
+	import { createFormControlState } from '../../runtime/form/form-value-adapter.svelte.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { controlSizeMetrics, resolveControlSize } from '../../runtime/foundation/control-size.js';
 	import { useZui } from '../../runtime/foundation/context.js';
@@ -347,11 +347,13 @@
 			throw new TypeError('ZNativeSelect nativeSize must be a positive safe integer.');
 		return nativeSize;
 	});
-	// Native selected attributes establish SSR output and the browser reset baseline.
-	// They are construction-time defaults; the select value property owns later updates.
-	const initialSelection = untrack(() => normalize(value ?? defaultValue, 'initial value'));
-	const valueState = new ControllableState<string | readonly string[] | undefined>({
+	const valueState = createFormControlState<string | readonly string[] | undefined>({
 		defaultValue: () => normalize(defaultValue, 'defaultValue'),
+		element: () => ref,
+		normalizeModelValue: (candidate) => {
+			if (candidate === undefined) return multiple ? Object.freeze([]) : '';
+			return normalize(candidate as string | readonly string[], 'model value');
+		},
 		onChange: () => (next) => {
 			if (multiple)
 				(onValueChange as ((value: readonly string[]) => void) | undefined)?.(
@@ -359,10 +361,17 @@
 				);
 			else (onValueChange as ((value: string) => void) | undefined)?.(next as string);
 		},
+		owner: 'ZNativeSelect',
 		read: () => value,
+		syncNative: (next) => {
+			if (ref) synchronize(ref, next);
+		},
 		undefinedIsValue: true,
 		write: (next) => (value = next as never)
 	});
+	// Native selected attributes establish SSR output and the browser reset baseline.
+	// They are construction-time defaults; the select value property owns later updates.
+	const initialSelection = untrack(() => normalize(valueState.current, 'initial value'));
 	const resolvedValue = $derived(normalize(valueState.current, 'value'));
 	const uid = $props.id();
 	const generatedId = $derived(createZuiId(zui.idPrefix, uid, 'native-select'));
@@ -468,7 +477,10 @@
 			synchronize(event.currentTarget, readonlySnapshot ?? resolvedValue);
 			return;
 		}
-		valueState.setFromUser(readNative(event.currentTarget));
+		const previous = resolvedValue;
+		if (!valueState.setFromUser(readNative(event.currentTarget))) {
+			synchronize(event.currentTarget, previous);
+		}
 	}
 	function handleInput(event: Event & { currentTarget: HTMLSelectElement }): void {
 		commit(event);

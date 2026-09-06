@@ -167,3 +167,13 @@ E2/E3 最终一起成功推送至 `ae19b1b`。本批新增 Toolbar、无 DOM Too
 E8提交d4eb6fa起初因系统GitHub地址不可达而延迟推送。只读核查发现Cloudflare/Google DoH的当前地址可通过TLS，随后以单命令http.curloptResolve和schannel成功推送，未改全局代理、hosts或关闭证书校验。E9推送前查看上一轮CI34050004211仍在运行，没有轮询或等待。
 
 下一批按[E10集成](./execution-form-integration-next-2026-09-07.md)把已有模型注入ZForm，接入唯一control adapter、错误层、聚合状态与ZFormList。独立helper和手工受控示例不代表这些自动集成已完成；完整能力与最终组件族一致性目标保持进行中。
+
+## E10A：模型自动接入、统一错误层与异步提交
+
+本批将既有 FormModel 注入 ZForm，Input/PasswordInput/Textarea/Checkbox/NativeSelect/CheckboxGroup 自动接入 Field 值作用域。共用 FormControlState 处理用户写入、owner 拒绝、原生 reset 和 DOM 同步；PasswordInput 复用 ZInput，CheckboxGroup 唯一拥有组值。Field 的 disabled/readonly 不能取消上层限制。
+
+controller 增加初始化与保留脏值、局部 reset、聚合状态订阅和分路径错误清理。schema/server/manual 三层与现有 validation ticket/epoch 整合，批量通知只发布最终快照，父/子验证不会接收过期结果。模型/schema 替换、reset 和卸载隔离旧异步处理；onValidSubmit 的 Promise 期间公开 submitting，重复提交不重复进入处理器。
+
+Docs 已从手工绑定改为真实自动接入。浏览器确认 disabled/readonly 的模型与 FormData 差异、连续 reset、keepDirtyValues/新基线恢复、三层错误以及单次异步提交；390px 无页面横向溢出。HMR key 调用处显式引用 import.meta.hot，转换产物已确认注入；没有把该检查当作业务状态保留通过。
+
+详见 [E10A 执行](./execution-form-model-integration-2026-09-07.md)。本地仍只有 WebStorm、必要浏览器、格式和源码制品生成，远程运行回归资产。动态 ZFormList、preserve、其余控件适配与全库最终一致性审查继续执行，不以本批或 static stable 数量结束目标。

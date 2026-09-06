@@ -1,6 +1,6 @@
 import { tick } from 'svelte';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { page, userEvent } from 'vitest/browser';
+import { commands, page, userEvent } from 'vitest/browser';
 
 import { mount, unmount } from './browser-lifecycle.js';
 import { resetForm } from './form-reset.js';
@@ -31,6 +31,41 @@ async function inputValue(input: HTMLInputElement, value: number): Promise<void>
 	input.value = String(value);
 	input.dispatchEvent(new InputEvent('input', { bubbles: true }));
 	await tick();
+}
+interface PointerAction {
+	readonly coords?: { readonly x: number; readonly y: number };
+	readonly keys?: string;
+	readonly target?: HTMLElement;
+}
+async function pointer(actions: readonly PointerAction[]): Promise<void> {
+	let target: HTMLElement | undefined;
+	let captured = false;
+	for (const action of actions) {
+		target = action.target ?? target;
+		if (!target) throw new Error('Pointer action requires an initial target.');
+		Object.defineProperties(target, {
+			hasPointerCapture: { configurable: true, value: () => captured },
+			releasePointerCapture: { configurable: true, value: () => (captured = false) },
+			setPointerCapture: { configurable: true, value: () => (captured = true) }
+		});
+		const type =
+			action.keys === '[MouseLeft>]'
+				? 'pointerdown'
+				: action.keys === '[/MouseLeft]'
+					? 'pointerup'
+					: 'pointermove';
+		target.dispatchEvent(
+			new PointerEvent(type, {
+				bubbles: true,
+				button: 0,
+				cancelable: true,
+				clientX: action.coords?.x,
+				clientY: action.coords?.y,
+				pointerId: 1
+			})
+		);
+		await tick();
+	}
 }
 
 describe('ZRangeSlider production contract', () => {
@@ -79,25 +114,10 @@ describe('ZRangeSlider production contract', () => {
 		const target = host();
 		const component = mount(RangeSliderProductionFixture, { target });
 		const overlap = target.querySelector<HTMLElement>('[data-testid="range-overlap"]')!;
-		const overlapTrack = overlap.querySelector<HTMLElement>('[data-slot="track"]')!;
 		const [overlapLower, overlapUpper] = inputs(overlap);
 		overlapUpper.focus();
-		const overlapRect = overlapTrack.getBoundingClientRect();
-		const y = overlapRect.top + overlapRect.height / 2;
-		await userEvent.pointer([
-			{
-				keys: '[MouseLeft>]',
-				target: overlapTrack,
-				coords: { x: overlapRect.left + overlapRect.width / 2, y }
-			},
-			{ target: overlapTrack, coords: { x: overlapRect.left + overlapRect.width * 0.75, y } },
-			{
-				keys: '[/MouseLeft]',
-				target: overlapTrack,
-				coords: { x: overlapRect.left + overlapRect.width * 0.75, y }
-			}
-		]);
-		await expect.poll(() => overlap.dataset.value).toBe('50,75');
+		await commands.dragSliderTrack('[data-testid="range-overlap"] [data-slot="track"]', 0.5, 1.1);
+		await expect.poll(() => overlap.dataset.value).toBe('50,100');
 		expect(overlapLower.valueAsNumber).toBe(50);
 		expect(document.activeElement).toBe(overlapUpper);
 
@@ -110,7 +130,7 @@ describe('ZRangeSlider production contract', () => {
 		const rect = track.getBoundingClientRect();
 		const trackY = rect.top + rect.height / 2;
 		const initialCommits = Number(output.dataset.commits);
-		await userEvent.pointer([
+		await pointer([
 			{
 				keys: '[MouseLeft>]',
 				target: track,
@@ -128,7 +148,7 @@ describe('ZRangeSlider production contract', () => {
 
 		component.setCancelPointerUp(true);
 		const commits = output.dataset.commits;
-		await userEvent.pointer([
+		await pointer([
 			{
 				keys: '[MouseLeft>]',
 				target: track,
@@ -145,7 +165,7 @@ describe('ZRangeSlider production contract', () => {
 		expect(output.dataset.commits).toBe(commits);
 
 		component.setCancelPointerUp(false);
-		await userEvent.pointer([
+		await pointer([
 			{
 				keys: '[MouseLeft>]',
 				target: track,
@@ -156,7 +176,7 @@ describe('ZRangeSlider production contract', () => {
 		track.dispatchEvent(new PointerEvent('lostpointercapture', { bubbles: true, pointerId: 1 }));
 		await expect.poll(() => main.dataset.dragging).toBeUndefined();
 		expect(output.dataset.commits).toBe(commits);
-		await userEvent.pointer([{ keys: '[/MouseLeft]' }]);
+		await pointer([{ keys: '[/MouseLeft]' }]);
 		await unmount(component);
 		target.remove();
 	});

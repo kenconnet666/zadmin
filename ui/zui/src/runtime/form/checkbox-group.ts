@@ -12,7 +12,7 @@ export function normalizeCheckboxGroupValue<TKey extends SelectionKey>(
 	value: CheckboxGroupValue<TKey>,
 	owner = 'ZCheckboxGroup'
 ): CheckboxGroupValue<TKey> {
-	if (!Array.isArray(value)) throw new TypeError(`${owner} value must be an array.`);
+	if (!Array.isArray(value as unknown)) throw new TypeError(`${owner} value must be an array.`);
 	const seen = new Set<TKey>();
 	const result: TKey[] = [];
 	for (const key of value) {

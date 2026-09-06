@@ -595,8 +595,6 @@
 	aria-labelledby={field?.labelId}
 	aria-describedby={describedBy}
 	aria-disabled={resolvedDisabled || undefined}
-	aria-readonly={resolvedReadonly || undefined}
-	aria-invalid={resolvedInvalid || undefined}
 	data-slot="root"
 	data-value={`${resolvedValue[0]},${resolvedValue[1]}`}
 	data-orientation={orientation}
@@ -613,6 +611,7 @@
 			<output class={classes.value}>{formatted(0)} – {formatted(1)}</output>
 		</div>
 	{/if}
+	<!-- svelte-ignore a11y_no_static_element_interactions (the two native range inputs own semantics) -->
 	<div
 		class={classes.track}
 		data-slot="track"

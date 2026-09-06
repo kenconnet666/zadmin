@@ -555,7 +555,9 @@ export type {
 	FormFieldUpdate,
 	FormValuesChange,
 	FormValuesChangeReason,
-	FormValueListener
+	FormValueListener,
+	FormInitializeOptions,
+	FormValueSnapshot
 } from '../runtime/form/form-model.svelte.js';
 export { FormArrayController, createFormArray } from '../runtime/form/form-array.svelte.js';
 export type { FormArrayRow, FormArrayOptions } from '../runtime/form/form-array.svelte.js';
@@ -568,6 +570,8 @@ export {
 export type { FormErrorLayer, FormErrorLayers } from '../runtime/form/form-errors.js';
 export type {
 	FormInvalidDetail,
+	FormOutput,
+	FormState,
 	FormSubmitDetail,
 	FormValidationResult,
 	ZFormController,

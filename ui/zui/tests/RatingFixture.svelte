@@ -7,15 +7,13 @@
 	let hover = $state(0);
 	let hoverChanges = $state(0);
 	let resets = $state(0);
-	let customFrozen = $state(true);
-	function observe(context: ZRatingItemContext): string {
-		customFrozen &&= Object.isFrozen(context);
-		return '◆';
-	}
 </script>
 
 {#snippet customItem(context: ZRatingItemContext)}
-	<span data-custom-index={context.index} data-custom-state={context.state}>{observe(context)}</span
+	<span
+		data-custom-frozen={Object.isFrozen(context)}
+		data-custom-index={context.index}
+		data-custom-state={context.state}>◆</span
 	>
 {/snippet}
 
@@ -89,7 +87,6 @@
 	size="large"
 	data-testid="rating-custom"
 />
-<output data-testid="rating-custom-output">{customFrozen}</output>
 <fieldset disabled data-testid="rating-native-fieldset">
 	<legend
 		><ZRating

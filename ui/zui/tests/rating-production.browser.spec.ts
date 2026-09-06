@@ -124,7 +124,11 @@ describe('ZRating production contract', () => {
 		}
 		const custom = element('rating-custom');
 		expect(custom.querySelectorAll('[data-custom-index]')).toHaveLength(6);
-		expect(element('rating-custom-output').textContent).toBe('true');
+		expect(
+			[...custom.querySelectorAll<HTMLElement>('[data-custom-index]')].every(
+				(entry) => entry.dataset.customFrozen === 'true'
+			)
+		).toBe(true);
 		expect(element('rating-main').dataset.tone).toBe('warning');
 	});
 });

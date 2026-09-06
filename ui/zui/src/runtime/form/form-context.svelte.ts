@@ -3,10 +3,11 @@ import { createContextKey } from '../foundation/context-key.js';
 
 import type { ZControlSize } from '../foundation/control-size.js';
 import type { FormRegistry } from './form-registry.svelte.js';
+import type { FormValueHost } from './form-value-adapter.svelte.js';
 
 export type FormValidationTrigger = 'blur' | 'change' | 'submit';
 
-export interface ZFormContext {
+export interface ZFormContext extends FormValueHost {
 	readonly disabled: boolean;
 	readonly readonly: boolean;
 	readonly registry: FormRegistry;
@@ -15,7 +16,7 @@ export interface ZFormContext {
 	fieldEvent(instanceId: string, trigger: Exclude<FormValidationTrigger, 'submit'>): void;
 }
 
-const FORM_CONTEXT = createContextKey(import.meta, 'zui-form-context');
+const FORM_CONTEXT = createContextKey({ hot: import.meta.hot }, 'zui-form-context');
 
 export function provideZForm(context: ZFormContext): ZFormContext {
 	setContext(FORM_CONTEXT, context);

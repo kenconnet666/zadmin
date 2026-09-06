@@ -652,7 +652,6 @@
 						onfocus={() => (activeStep = option.step)}
 						onkeydown={(event) => handleKeydown(event, option.step)}
 						aria-label={optionLabel(option.value)}
-						aria-readonly={resolvedReadonly || undefined}
 					/>
 				</label>
 			{/each}

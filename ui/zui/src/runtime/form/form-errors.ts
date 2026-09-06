@@ -1,5 +1,5 @@
-import { fieldPathToString, normalizeFieldPath, type FieldPathInput } from './field-path.js';
-import type { FormErrors } from './validation.js';
+import { normalizeFieldPath, type FieldPathInput } from './field-path.js';
+import { mergeErrorsForPaths, type FormErrors } from './validation.js';
 
 export type FormErrorLayer = 'manual' | 'schema' | 'server';
 export interface FormErrorLayers {
@@ -8,6 +8,10 @@ export interface FormErrorLayers {
 	readonly server: FormErrors;
 }
 function freeze(errors: FormErrors = {}): FormErrors {
+	for (const messages of Object.values(errors)) {
+		if (!Array.isArray(messages) || messages.some((message) => typeof message !== 'string'))
+			throw new TypeError('ZForm errors must map paths to string arrays.');
+	}
 	return Object.freeze(
 		Object.fromEntries(
 			Object.entries(errors)
@@ -31,13 +35,10 @@ export function setFormErrorLayer(
 ): FormErrorLayers {
 	const replacement = freeze(errors);
 	if (!paths) return createFormErrorLayers({ ...layers, [layer]: replacement });
-	const next: Record<string, readonly string[]> = { ...layers[layer] };
-	for (const path of paths) {
-		const key = fieldPathToString(normalizeFieldPath(path));
-		delete next[key];
-		if (replacement[key]) next[key] = replacement[key];
-	}
-	return createFormErrorLayers({ ...layers, [layer]: next });
+	return createFormErrorLayers({
+		...layers,
+		[layer]: mergeErrorsForPaths(layers[layer], replacement, paths.map(normalizeFieldPath))
+	});
 }
 export function clearFormErrorLayers(
 	layers: FormErrorLayers,
@@ -52,7 +53,7 @@ export function clearFormErrorLayers(
 	return next;
 }
 export function mergeFormErrorLayers(layers: FormErrorLayers): FormErrors {
-	const result: Record<string, string[]> = {};
+	const result: Record<string, string[]> = Object.create(null);
 	for (const layer of [layers.schema, layers.server, layers.manual]) {
 		for (const [path, messages] of Object.entries(layer)) {
 			const current = result[path] ?? [];

@@ -9,7 +9,7 @@ import {
 	type FieldPath,
 	type FieldPathInput
 } from './field-path.js';
-import type { FormErrors } from './validation.js';
+import { errorsForPaths, mergeErrorsForPaths, type FormErrors } from './validation.js';
 
 export interface FormFieldState {
 	readonly dirty: boolean;
@@ -68,6 +68,10 @@ function freezeState(state: FormFieldState): FormFieldState {
 	});
 }
 
+function fieldErrorMessages(errors: FormErrors, path: FieldPath): readonly string[] {
+	return Object.freeze([...new Set(Object.values(errorsForPaths(errors, [path])).flat())]);
+}
+
 function sameFieldState(left: FormFieldState, right: FormFieldState): boolean {
 	return (
 		left.dirty === right.dirty &&
@@ -106,12 +110,28 @@ export class FormRegistry {
 	readonly #listeners = new Map<string, Set<FormFieldStateListener>>();
 	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	readonly #validationVersions = new Map<string, number>();
+	readonly #validationScopes = new Map<string, FieldPath>();
 	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	readonly #unmountVersions = new Map<string, number>();
 	readonly #onPathUnmount?: (path: FieldPath) => void;
 	readonly #onMembershipChange?: (field: FormFieldRegistration) => void;
 	#errors: FormErrors = Object.freeze({});
 	#order = 0;
+	#batchDepth = 0;
+	readonly #pendingNotifications = new Map<string, FormFieldState>();
+	batch(update: () => void): void {
+		this.#batchDepth += 1;
+		try {
+			update();
+		} finally {
+			this.#batchDepth -= 1;
+			if (this.#batchDepth === 0) {
+				const pending = [...this.#pendingNotifications];
+				this.#pendingNotifications.clear();
+				for (const [key, state] of pending) this.#notify(key, state);
+			}
+		}
+	}
 
 	constructor(
 		onPathUnmount?: (path: FieldPath) => void,
@@ -175,7 +195,7 @@ export class FormRegistry {
 				key,
 				freezeState({
 					...INITIAL_STATE,
-					errors: this.#errors[fieldPathToString(path)] ?? []
+					errors: fieldErrorMessages(this.#errors, path)
 				})
 			);
 		}
@@ -244,6 +264,16 @@ export class FormRegistry {
 	registeredPaths(): readonly FieldPath[] {
 		return Object.freeze([...this.#paths.values()]);
 	}
+	registeredInstances(): readonly string[] {
+		return Object.freeze([...this.#fields.keys()]);
+	}
+	summary(): { readonly dirty: boolean; readonly touched: boolean } {
+		const states = [...this.#states.values()];
+		return Object.freeze({
+			dirty: states.some((state) => state.dirty),
+			touched: states.some((state) => state.touched)
+		});
+	}
 
 	formDataPaths(): ReadonlyMap<string, FieldPath> {
 		// Callers receive a fresh read-only snapshot, not a reactive registry.
@@ -275,6 +305,21 @@ export class FormRegistry {
 		const field = this.#fields.get(instanceId);
 		if (field) this.#patch(field.key, { dirty: true });
 	}
+	/** Model updates can address several paths without a native input event. */
+	affectedPathsFor(paths: readonly FieldPath[]): readonly FieldPath[] {
+		const affected = new Map<string, FieldPath>();
+		for (const field of this.#fields.values()) {
+			if (
+				!paths.some(
+					(path) => fieldPathStartsWith(path, field.path) || fieldPathStartsWith(field.path, path)
+				)
+			)
+				continue;
+			for (const path of this.affectedPaths(field.instanceId))
+				affected.set(fieldPathKey(path), path);
+		}
+		return Object.freeze([...affected.values()]);
+	}
 
 	fieldInfo(instanceId: string): Pick<FormFieldRegistration, 'path' | 'htmlName'> | undefined {
 		return this.#fields.get(instanceId);
@@ -305,7 +350,7 @@ export class FormRegistry {
 	syncErrors(errors: FormErrors): void {
 		this.#errors = errors;
 		for (const [key, path] of this.#paths) {
-			const fieldErrors = Object.freeze([...(errors[fieldPathToString(path)] ?? [])]);
+			const fieldErrors = fieldErrorMessages(errors, path);
 			this.#patch(key, {
 				errors: fieldErrors,
 				...(fieldErrors.length > 0 ? { success: undefined } : {})
@@ -314,8 +359,22 @@ export class FormRegistry {
 	}
 
 	beginValidation(paths: readonly FieldPath[]): FormValidationTicket {
-		const entries = paths.map((path) => {
+		const requested = new Map(paths.map((path) => [fieldPathKey(path), path]));
+		for (const path of this.#paths.values()) {
+			if (
+				paths.some((scope) => fieldPathStartsWith(path, scope) || fieldPathStartsWith(scope, path))
+			)
+				requested.set(fieldPathKey(path), path);
+		}
+		for (const [key, scope] of this.#validationScopes) {
+			if (
+				paths.some((path) => fieldPathStartsWith(path, scope) || fieldPathStartsWith(scope, path))
+			)
+				this.#validationVersions.set(key, (this.#validationVersions.get(key) ?? 0) + 1);
+		}
+		const entries = [...requested.values()].map((path) => {
 			const key = fieldPathKey(path);
+			this.#validationScopes.set(key, path);
 			const version = (this.#validationVersions.get(key) ?? 0) + 1;
 			this.#validationVersions.set(key, version);
 			if (this.#states.has(key)) this.#patch(key, { validating: true });
@@ -324,13 +383,21 @@ export class FormRegistry {
 		return Object.freeze({ entries: Object.freeze(entries) });
 	}
 
-	finishValidation(ticket: FormValidationTicket, errors: FormErrors): readonly FieldPath[] {
+	finishValidation(
+		ticket: FormValidationTicket,
+		errors: FormErrors,
+		options: { readonly publishErrors?: boolean } = {}
+	): readonly FieldPath[] {
 		const accepted: FieldPath[] = [];
 		for (const entry of ticket.entries) {
 			if (this.#validationVersions.get(entry.key) !== entry.version) continue;
 			accepted.push(entry.path);
 			if (!this.#states.has(entry.key)) continue;
-			const fieldErrors = Object.freeze([...(errors[fieldPathToString(entry.path)] ?? [])]);
+			if (options.publishErrors === false) {
+				this.#patch(entry.key, { validating: false });
+				continue;
+			}
+			const fieldErrors = fieldErrorMessages(errors, entry.path);
 			this.#patch(entry.key, {
 				errors: fieldErrors,
 				...(fieldErrors.length > 0 ? { success: undefined } : {}),
@@ -341,6 +408,8 @@ export class FormRegistry {
 	}
 
 	cancelValidation(): void {
+		for (const key of this.#validationScopes.keys())
+			this.#validationVersions.set(key, (this.#validationVersions.get(key) ?? 0) + 1);
 		for (const key of this.#paths.keys()) {
 			this.#validationVersions.set(key, (this.#validationVersions.get(key) ?? 0) + 1);
 			this.#patch(key, { validating: false });
@@ -351,6 +420,18 @@ export class FormRegistry {
 		this.cancelValidation();
 		this.#errors = Object.freeze({});
 		for (const key of this.#paths.keys()) this.#setState(key, INITIAL_STATE);
+	}
+	resetField(path: FieldPathInput): void {
+		const scope = normalizeFieldPath(path);
+		for (const [key, active] of this.#validationScopes) {
+			if (fieldPathStartsWith(active, scope) || fieldPathStartsWith(scope, active))
+				this.#validationVersions.set(key, (this.#validationVersions.get(key) ?? 0) + 1);
+		}
+		this.#errors = mergeErrorsForPaths(this.#errors, {}, [scope]);
+		this.batch(() => {
+			for (const [key, registered] of this.#paths)
+				if (fieldPathStartsWith(registered, scope)) this.#setState(key, INITIAL_STATE);
+		});
 	}
 
 	focusField(path: FieldPathInput, options: FocusOptions = { preventScroll: true }): boolean {
@@ -412,6 +493,13 @@ export class FormRegistry {
 		const current = this.#states.get(key);
 		if (current && sameFieldState(current, next)) return;
 		this.#states.set(key, next);
+		if (this.#batchDepth > 0) {
+			this.#pendingNotifications.set(key, next);
+			return;
+		}
+		this.#notify(key, next);
+	}
+	#notify(key: string, next: FormFieldState): void {
 		const listeners = this.#listeners.get(key);
 		if (!listeners) return;
 		for (const listener of [...listeners]) {

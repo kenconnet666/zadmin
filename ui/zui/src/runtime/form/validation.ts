@@ -163,9 +163,17 @@ export function errorsToMap(errors: FormErrors): ReadonlyMap<string, readonly st
 	return new Map(Object.entries(errors));
 }
 
+function errorPathStartsWith(key: string, path: FieldPath): boolean {
+	const prefix = fieldPathToString(path);
+	return key === prefix || key.startsWith(`${prefix}.`) || key.startsWith(`${prefix}[`);
+}
+
 export function errorsForPaths(errors: FormErrors, paths: readonly FieldPath[]): FormErrors {
-	const keys = new Set(paths.map(fieldPathToString));
-	return Object.freeze(Object.fromEntries(Object.entries(errors).filter(([key]) => keys.has(key))));
+	return Object.freeze(
+		Object.fromEntries(
+			Object.entries(errors).filter(([key]) => paths.some((path) => errorPathStartsWith(key, path)))
+		)
+	);
 }
 
 export function mergeErrorsForPaths(
@@ -173,11 +181,11 @@ export function mergeErrorsForPaths(
 	incoming: FormErrors,
 	paths: readonly FieldPath[]
 ): FormErrors {
-	const next: Record<string, readonly string[]> = { ...current };
-	for (const path of paths) {
-		const key = fieldPathToString(path);
-		delete next[key];
-		if (incoming[key]?.length) next[key] = Object.freeze([...incoming[key]]);
+	const next: Record<string, readonly string[]> = Object.fromEntries(
+		Object.entries(current).filter(([key]) => !paths.some((path) => errorPathStartsWith(key, path)))
+	);
+	for (const [key, messages] of Object.entries(errorsForPaths(incoming, paths))) {
+		if (messages.length > 0) next[key] = Object.freeze([...messages]);
 	}
 	return Object.freeze(next);
 }

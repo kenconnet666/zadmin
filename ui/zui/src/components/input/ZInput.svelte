@@ -32,7 +32,7 @@
 			{ description: '受控或非受控文本值。', name: 'value', type: 'string' },
 			{ description: '真实input元素引用。', name: 'ref', type: 'HTMLInputElement | null' }
 		],
-		dependencies: ['ControllableState', 'FieldContext', 'ReducedMotionState', 'native form reset'],
+		dependencies: ['FormControlState', 'FieldContext', 'ReducedMotionState', 'native form reset'],
 		events: [
 			{
 				description: '仅在用户输入改变值时调用一次；外部更新不触发。',
@@ -131,7 +131,7 @@
 <script lang="ts">
 	import { onDestroy, onMount, untrack } from 'svelte';
 
-	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
+	import { createFormControlState } from '../../runtime/form/form-value-adapter.svelte.js';
 	import { useZField } from '../../runtime/form/field-context.js';
 	import { useZInputGroup } from '../../runtime/form/input-group-context.svelte.js';
 	import FormResetSignal from '../../runtime/form/FormResetSignal.svelte';
@@ -198,10 +198,21 @@
 		})
 	);
 	const appearanceClass = $derived(zui.recipe(inputAppearanceRecipe));
-	const state = new ControllableState<string>({
+	const state = createFormControlState<string>({
 		defaultValue: () => defaultValue,
+		element: () => ref,
+		normalizeModelValue: (candidate) => {
+			if (candidate === undefined) return '';
+			if (typeof candidate !== 'string')
+				throw new TypeError('ZInput model value must be a string or undefined.');
+			return candidate;
+		},
 		onChange: () => onValueChange,
+		owner: 'ZInput',
 		read: () => value,
+		syncNative: (next) => {
+			if (ref) ref.value = next;
+		},
 		write: (next) => (value = next)
 	});
 	const resolvedValue = $derived(state.current);
@@ -226,7 +237,9 @@
 		if (browserMounted) unregisterInputGroupControl?.();
 	});
 	function handleInput(event: Event & { currentTarget: HTMLInputElement }): void {
-		state.setFromUser(event.currentTarget.value);
+		if (!state.setFromUser(event.currentTarget.value)) {
+			event.currentTarget.value = resolvedValue;
+		}
 		oninput?.(event);
 	}
 	function resetFromForm(): void {

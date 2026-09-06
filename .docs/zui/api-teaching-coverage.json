@@ -1445,7 +1445,7 @@
 			"id": "form",
 			"name": "ZForm",
 			"source": "ui/zui/src/components/input/ZForm.svelte",
-			"declaredPropCount": 23,
+			"declaredPropCount": 28,
 			"metadataGapPropCount": 0,
 			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
@@ -1915,7 +1915,7 @@
 	},
 	"totals": {
 		"components": 175,
-		"declaredProps": 2251,
+		"declaredProps": 2256,
 		"metadataGapProps": 0,
 		"fallbackProps": 0,
 		"opaqueStructuredProps": 9,

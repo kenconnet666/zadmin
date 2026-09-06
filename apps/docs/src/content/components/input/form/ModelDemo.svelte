@@ -1,90 +1,88 @@
 <script lang="ts">
 	import {
-		createFormArray,
 		createFormModel,
 		ZButton,
-		ZField,
+		ZCheckbox,
+		ZCheckboxGroup,
+		ZForm,
+		ZFormField,
 		ZInput,
+		ZNativeSelect,
+		ZPasswordInput,
 		ZStack,
-		ZText
+		ZText,
+		ZTextarea,
+		type ZFormController
 	} from '@zadmin/zui';
 
-	interface Member {
+	interface ProfileValues {
+		bio: string;
+		channel: string;
 		name: string;
+		password: string;
+		reports: boolean;
+		topics: readonly string[];
 	}
-	interface Values {
-		profile: { name: string };
-		members: readonly Member[];
-	}
-
-	const model = createFormModel<Values>({
-		defaultValues: {
-			profile: { name: 'Alice' },
-			members: [{ name: 'One' }, { name: 'Two' }]
-		}
-	});
-	const members = createFormArray<Member, Values>(model, 'members');
+	const defaults: ProfileValues = {
+		bio: '负责每周发布',
+		channel: 'stable',
+		name: 'Alice',
+		password: 'release-secret',
+		reports: true,
+		topics: ['quality']
+	};
+	const model = createFormModel<ProfileValues>({ defaultValues: defaults });
+	let controller = $state<ZFormController<ProfileValues, ProfileValues> | null>(null);
+	let nativeSnapshot = $state('尚未提交');
+	const topicOptions = [
+		{ label: '质量', value: 'quality' },
+		{ label: '性能', value: 'performance' }
+	] as const;
 </script>
 
-<ZStack gap="medium">
-	<ZField label="负责人">
-		<ZInput
-			value={String(model.get(['profile', 'name']))}
-			onValueChange={(value) => model.setField(['profile', 'name'], value, 'user')}
-		/>
-	</ZField>
-
-	<ZStack gap="small">
-		{#each members.rows as row (row.id)}
-			<ZStack direction="row" gap="small" wrap>
-				<ZField label={`成员 ${row.index + 1} · ${row.id}`}>
-					<ZInput
-						value={row.value.name}
-						onValueChange={(value) => model.setField([...row.path, 'name'], value, 'user')}
-					/>
-				</ZField>
-				<ZButton type="button" variant="ghost" onclick={() => members.remove(row.index)}>
-					移除
-				</ZButton>
-			</ZStack>
-		{/each}
+<ZForm
+	bind:controller
+	{model}
+	onValidSubmit={({ formData }) => (nativeSnapshot = JSON.stringify(Object.fromEntries(formData)))}
+>
+	<ZStack gap="medium">
+		<ZFormField name="name" label="负责人"><ZInput autocomplete="name" /></ZFormField>
+		<ZFormField name="password" label="发布口令"
+			><ZPasswordInput autocomplete="current-password" /></ZFormField
+		>
+		<ZFormField name="bio" label="职责说明" readonly><ZTextarea rows={2} /></ZFormField>
+		<ZFormField name="channel" label="发布通道">
+			<ZNativeSelect
+				items={[
+					{ label: '稳定版', value: 'stable' },
+					{ label: '预览版', value: 'preview' }
+				]}
+			/>
+		</ZFormField>
+		<ZFormField name="reports" label="通知"
+			><label><ZCheckbox value="weekly" /> 接收周报</label></ZFormField
+		>
+		<ZFormField name="topics" label="关注主题" disabled
+			><ZCheckboxGroup options={topicOptions} orientation="horizontal" /></ZFormField
+		>
+		<ZStack direction="row" gap="small" wrap>
+			<ZButton type="submit">比较提交值</ZButton>
+			<ZButton
+				type="button"
+				variant="outline"
+				onclick={() =>
+					controller?.setValues((current) => ({
+						...current,
+						channel: 'preview',
+						name: 'Release Owner'
+					}))}>批量写入</ZButton
+			>
+			<ZButton type="reset" variant="outline">恢复默认值</ZButton>
+		</ZStack>
+		<ZText tone="muted">model dirty={model.dirty} · values={JSON.stringify(model.values)}</ZText>
+		<ZText tone="muted">FormData={nativeSnapshot}</ZText>
+		<ZText tone="muted"
+			>readonly职责仍进入FormData；disabled主题不进入FormData，但两者都保留在model中。</ZText
+		>
 	</ZStack>
-
-	<ZStack direction="row" gap="small" wrap>
-		<ZButton
-			type="button"
-			disabled={members.rows.length >= 3}
-			onclick={() => members.append({ name: `Member ${members.rows.length + 1}` })}
-		>
-			追加成员
-		</ZButton>
-		<ZButton
-			type="button"
-			variant="outline"
-			disabled={members.rows.length < 2}
-			onclick={() => members.move(0, members.rows.length - 1)}
-		>
-			首行移到末尾
-		</ZButton>
-		<ZButton
-			type="button"
-			variant="outline"
-			onclick={() =>
-				model.setFields(
-					[
-						{ path: ['profile', 'name'], value: 'Release Owner' },
-						{ path: ['members', 0, 'name'], value: 'Primary' }
-					],
-					'controller'
-				)}
-		>
-			批量写入
-		</ZButton>
-		<ZButton type="button" variant="ghost" onclick={() => model.reset()}>Reset Model</ZButton>
-	</ZStack>
-
-	<ZText tone="muted"
-		>dirty={model.dirty ? 'true' : 'false'} · values={JSON.stringify(model.values)}</ZText
-	>
-	<ZText tone="muted">move后相同行保留row.id；这个独立model通过受控props显式连接组件。</ZText>
-</ZStack>
+</ZForm>

@@ -9451,9 +9451,19 @@ export const formApiFacts = {
 			type: 'Snippet'
 		},
 		{
+			name: 'clearServerErrorsOnChange',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'controller',
 			required: false,
-			type: 'ZFormController<PublicStandardSchemaV1.InferOutput<TSchema>> | null'
+			type: 'ZFormController<FormOutput<TSchema, TValues>, TValues> | null'
+		},
+		{
+			name: 'model',
+			required: false,
+			type: 'PublicFormModel<TValues>'
 		},
 		{
 			name: 'disabled',
@@ -9481,6 +9491,16 @@ export const formApiFacts = {
 			type: '(errors: PublicFormErrors) => void'
 		},
 		{
+			name: 'onStateChange',
+			required: false,
+			type: '(state: FormState) => void'
+		},
+		{
+			name: 'onSubmitError',
+			required: false,
+			type: '(error: unknown) => void'
+		},
+		{
 			name: 'onInvalidSubmit',
 			required: false,
 			type: '(detail: FormInvalidDetail) => void'
@@ -9498,7 +9518,7 @@ export const formApiFacts = {
 		{
 			name: 'onValidSubmit',
 			required: false,
-			type: '( detail: FormSubmitDetail<PublicStandardSchemaV1.InferOutput<TSchema>> ) => void'
+			type: '(detail: FormSubmitDetail<FormOutput<TSchema, TValues>>) => unknown'
 		},
 		{
 			name: 'onValidationError',
@@ -9537,6 +9557,11 @@ export const formApiFacts = {
 		},
 		{
 			name: 'submitted',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'submitting',
 			required: false,
 			type: 'boolean'
 		},

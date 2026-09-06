@@ -145,10 +145,12 @@ describe('ZMenubar production contract', () => {
 		const host = document.createElement('div');
 		document.body.append(host);
 		let component = mount(MenubarFixture, { target: host });
+		await tick();
 		let edit = host.querySelector<HTMLButtonElement>('[data-testid="menubar-edit-trigger"]')!;
 		let view = host.querySelector<HTMLButtonElement>('[data-testid="menubar-view-trigger"]')!;
 		edit.focus();
 		await userEvent.keyboard('{ArrowDown}');
+		await expect.poll(() => edit.getAttribute('aria-expanded')).toBe('true');
 		component.disableEdit();
 		await expect.poll(() => edit.disabled).toBe(true);
 		await expect.poll(() => document.activeElement).toBe(view);
@@ -156,10 +158,12 @@ describe('ZMenubar production contract', () => {
 		host.replaceChildren();
 
 		component = mount(MenubarFixture, { target: host });
+		await tick();
 		edit = host.querySelector<HTMLButtonElement>('[data-testid="menubar-edit-trigger"]')!;
 		view = host.querySelector<HTMLButtonElement>('[data-testid="menubar-view-trigger"]')!;
 		edit.focus();
 		await userEvent.keyboard('{ArrowDown}');
+		await expect.poll(() => edit.getAttribute('aria-expanded')).toBe('true');
 		component.removeEdit();
 		await expect.poll(() => host.querySelector('[data-testid="menubar-edit-trigger"]')).toBeNull();
 		await expect.poll(() => document.activeElement).toBe(view);

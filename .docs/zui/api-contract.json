@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"componentCount": 175,
-	"overallSha256": "be2ab534e169132638871e1102c253dccdab8736782e75a8ead471bd0548ba20",
+	"overallSha256": "ffdf9119d23e8f0330b9baaa3ed453aa4b952b49b8521abdbdf8f0ee33783642",
 	"components": [
 		{
 			"id": "accordion",
@@ -65,7 +65,7 @@
 		},
 		{
 			"id": "checkbox-group",
-			"sha256": "7c2b959c823f1d39ff62673ae62a377f85e4f4ecf66e5f533fd6b99986c937ed",
+			"sha256": "ced73a169a57fafd62944755359f1119a0f78f119988fdcbf5c9ecb7813e585e",
 			"source": "src/components/compound/checkbox-group/ZCheckboxGroup.svelte"
 		},
 		{
@@ -620,7 +620,7 @@
 		},
 		{
 			"id": "checkbox",
-			"sha256": "413e3805b1e30527e3e924dddc42f9145b6e34b8812dd67a0240cf9f2c12f5ff",
+			"sha256": "b13ec622f58b1b424d695316aae29fddb8846ba37328ced5bdb899eebd1397cc",
 			"source": "src/components/input/ZCheckbox.svelte"
 		},
 		{
@@ -660,17 +660,17 @@
 		},
 		{
 			"id": "form",
-			"sha256": "dd8dd66bcfe5cadf29754c1614ea7c65b43fed0250a601001a16f90df3d1a5e8",
+			"sha256": "5838febf3c906e8a752fe65ecb4fca0c1731abdb9a7322211e2fe34f492a971c",
 			"source": "src/components/input/ZForm.svelte"
 		},
 		{
 			"id": "form-field",
-			"sha256": "c0dee9b03e092348a107bf5a61a1866133e520e940866a60b9e54ed743cf992b",
+			"sha256": "f32e94eed30910133b7507e36df976d6a76d30d0707998f14a6d5846b221652a",
 			"source": "src/components/input/ZFormField.svelte"
 		},
 		{
 			"id": "input",
-			"sha256": "4a320bfb4abe735511679ed889338722bd865b21ad23fe09a376598e71af0f42",
+			"sha256": "8885c3392d19ef99b7b378175020fe932c5887715e471df1f93f9a7ee871c3c6",
 			"source": "src/components/input/ZInput.svelte"
 		},
 		{
@@ -685,7 +685,7 @@
 		},
 		{
 			"id": "native-select",
-			"sha256": "3cf30615ff0cd22d2c195e6d65c90ab74e00839b32f8274c3774d2df286fccde",
+			"sha256": "e70466297e55b55428393e60a34ee1bf88d73a616c2c1a01b549ce83d211c3f9",
 			"source": "src/components/input/ZNativeSelect.svelte"
 		},
 		{
@@ -735,7 +735,7 @@
 		},
 		{
 			"id": "textarea",
-			"sha256": "ef1d2b2f1b298da67ec434ca17f6412fece5410b4355c6ded999d0392027bbff",
+			"sha256": "9f3cf949bee8ecba571f7fb600a48bf084a22ca957927102f5600017b68bad86",
 			"source": "src/components/input/ZTextarea.svelte"
 		},
 		{
@@ -882,7 +882,7 @@
 	"entrypoints": {
 		"code.ts": "eabb8477e4c5ef93d016ab909e5c7f85a3111df231e2d2c3c7ef5e54897b36db",
 		"compiler.ts": "96fa979b36838e8b7a6d3f52bb463f23951438a4d974d52b631ad1e6d937b2e7",
-		"index.ts": "193bb37709ce4208ee1dc0d67606533e5f18fa49680cb709ba6a6cfd48e06ccc",
+		"index.ts": "9d481e46e2bf1e7d1d9ebf2f4c39b45df88897f73cf00ada686f4d36a2807a3a",
 		"internal.ts": "05f9ef9c8628e1cdf694dcc88b71831e5aab726a3189bd6189eef7ae645df4d7",
 		"layer.ts": "72d0fc8e5b7a8ab39a12e157879951b84f1a7fc19654f4bd8b6ea92fd8aa6db8",
 		"metadata.ts": "089c8463748a5c370e751e939eaaef1a8448fb6142a69a407fb10a81f0196efc",

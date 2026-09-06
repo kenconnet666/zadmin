@@ -20,6 +20,28 @@ function register(
 }
 
 describe('FormRegistry', () => {
+	it('projects descendant errors onto an owning compound field', () => {
+		const registry = new FormRegistry();
+		registry.syncErrors({
+			'user.name': ['Name required'],
+			'user.age': ['Age invalid'],
+			other: ['Unrelated']
+		});
+		register(registry, 'user', 'user');
+		expect(registry.state('user').errors).toEqual(['Name required', 'Age invalid']);
+		registry.syncErrors({ 'user.name': ['Updated'] });
+		expect(registry.state('user').errors).toEqual(['Updated']);
+	});
+	it('supersedes overlapping parent and child validation scopes while preserving the newer error', () => {
+		const registry = new FormRegistry();
+		register(registry, 'name', ['user', 'name']);
+		const parent = registry.beginValidation([['user']]);
+		expect(registry.state(['user', 'name']).validating).toBe(true);
+		const child = registry.beginValidation([['user', 'name']]);
+		registry.finishValidation(child, { 'user.name': ['New error'] });
+		expect(registry.finishValidation(parent, { 'user.name': ['Old error'] })).toEqual([]);
+		expect(registry.state(['user', 'name']).errors).toEqual(['New error']);
+	});
 	it('rejects conflicting native names for one field path and reports partial membership changes', () => {
 		const changed = vi.fn();
 		const registry = new FormRegistry(undefined, changed);

@@ -37,4 +37,36 @@ describe('FormModel controlled Svelte state', () => {
 			target.remove();
 		}
 	});
+
+	it('publishes accepted plain-owner writes without making initialize effects self-dependent', async () => {
+		const target = document.createElement('div');
+		document.body.append(target);
+		const component = mount(FormModelReactiveFixture, { target });
+		try {
+			await tick();
+			const plainOutput = target.querySelector<HTMLOutputElement>(
+				'[data-testid="model-plain-owner"]'
+			)!;
+			const initializeOutput = target.querySelector<HTMLOutputElement>(
+				'[data-testid="model-initialize-effect"]'
+			)!;
+			expect(plainOutput.textContent).toBe('0');
+			expect(initializeOutput.textContent).toBe('1|1');
+
+			await userEvent.click(
+				target.querySelector<HTMLButtonElement>('[data-testid="model-set-plain-owner"]')!
+			);
+			await expect.poll(() => plainOutput.textContent).toBe('1');
+
+			await userEvent.click(
+				target.querySelector<HTMLButtonElement>('[data-testid="model-change-initialize-source"]')!
+			);
+			await expect.poll(() => initializeOutput.textContent).toBe('2|2');
+			await tick();
+			expect(initializeOutput.textContent).toBe('2|2');
+		} finally {
+			await unmount(component);
+			target.remove();
+		}
+	});
 });

@@ -1,6 +1,7 @@
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { playwright } from '@vitest/browser-playwright';
 import { defineConfig } from 'vitest/config';
+import { dragSliderTrack } from './tests/browser-commands.js';
 
 const collectingCoverage = process.argv.includes('--coverage');
 const focusedBrowser = process.env.ZUI_BROWSER;
@@ -92,6 +93,7 @@ export default defineConfig({
 				extends: true,
 				test: {
 					browser: {
+						commands: { dragSliderTrack },
 						api: {
 							host: '127.0.0.1',
 							port: configuredBrowserPort,

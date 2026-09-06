@@ -561,7 +561,9 @@
 	let keyboardDirty = false;
 	const requestedDirection = $derived(dir ?? zui.direction);
 	const direction = $derived(
-		getElementDirection(ref?.parentElement, dir === 'ltr' || dir === 'rtl' ? dir : zui.direction)
+		requestedDirection === 'auto'
+			? getElementDirection(ref?.parentElement ?? null, zui.direction)
+			: requestedDirection
 	);
 	const logical = $derived(sliderPercent(resolvedValue, min, max, reversed));
 	const physical = $derived(
@@ -649,8 +651,6 @@
 	}
 	function handleKey(event: KeyboardEvent & { currentTarget: HTMLInputElement }) {
 		if (event.currentTarget.matches(':disabled')) return;
-		onkeydown?.(event);
-		if (event.defaultPrevented) return;
 		const next = sliderKeyboardValue(
 			resolvedValue,
 			event.key,
@@ -661,9 +661,13 @@
 			max,
 			step
 		);
-		if (next === undefined) return;
+		if (resolvedReadonly) {
+			if (next !== undefined) event.preventDefault();
+			return;
+		}
+		onkeydown?.(event);
+		if (event.defaultPrevented || next === undefined) return;
 		event.preventDefault();
-		if (resolvedReadonly) return;
 		keyboardDirty = true;
 		setUser(next);
 	}
@@ -748,13 +752,13 @@
 			}}
 			onpointerdown={(event) => {
 				if (event.currentTarget.matches(':disabled')) return;
-				onpointerdown?.(event);
-				if (event.defaultPrevented) return;
 				if (resolvedReadonly) {
 					event.preventDefault();
 					event.currentTarget.focus();
 					return;
 				}
+				onpointerdown?.(event);
+				if (event.defaultPrevented) return;
 				dragging = true;
 			}}
 			onpointerup={(event) => {

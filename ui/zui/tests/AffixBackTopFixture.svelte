@@ -139,6 +139,7 @@
 
 <ZBackTop
 	data-testid="back-top-full-motion"
+	insetBlockEnd="xlarge"
 	label="Full motion return"
 	scrollContainer={backTopScroller}
 	visibilityHeight={100}

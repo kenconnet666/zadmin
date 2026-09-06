@@ -144,6 +144,7 @@
 	const state = $derived(group.selectAllState());
 	const resolvedDisabled = $derived(disabled || group.disabled);
 	const rootClass = $derived(zui.recipe(checkboxGroupSelectAllRecipe));
+	$effect(() => group.registerSelectAll(() => ref));
 
 	function handleCheckedChange(): void {
 		// Checkbox projects group state; rejected writes must not leave a local checked value.

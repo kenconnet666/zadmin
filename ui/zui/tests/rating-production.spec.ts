@@ -1,7 +1,7 @@
 import { createRawSnippet } from 'svelte';
 import { render } from 'svelte/server';
 import { describe, expect, it } from 'vitest';
-import ZRating from '../src/components/input/ZRating.svelte';
+import ZRating, { type ZRatingItemContext } from '../src/components/input/ZRating.svelte';
 
 describe('ZRating server contract', () => {
 	it('renders one labelled radiogroup with native fraction radios and no form bridge', () => {
@@ -29,7 +29,9 @@ describe('ZRating server contract', () => {
 	});
 
 	it('renders readonly and disabled as distinct native form states with custom content', () => {
-		const item = createRawSnippet<[never]>(() => ({ render: () => '<span>Diamond</span>' }));
+		const item = createRawSnippet<[ZRatingItemContext]>(() => ({
+			render: () => '<span>Diamond</span>'
+		}));
 		const readonlyBody = render(ZRating, {
 			props: { item, label: 'Readonly', name: 'score', readonly: true, value: 3 }
 		}).body;

@@ -7,7 +7,7 @@
 | 维度                      |                    当前值 |                            总量或边界 |
 | ------------------------- | ------------------------: | ------------------------------------: |
 | Public component metadata |                       175 |                                   175 |
-| Declared public props     |                      2251 |          metadata gaps 0; fallbacks 0 |
+| Declared public props     |                      2256 |          metadata gaps 0; fallbacks 0 |
 | Stable                    |                       141 |                          violations 0 |
 | BrowserBehaviorVerified   |                       163 |                                   175 |
 | VisuallyVerified          |                       159 |                                   175 |

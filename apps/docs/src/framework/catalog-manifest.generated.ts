@@ -1733,7 +1733,7 @@ export const componentCatalogManifest = Object.freeze([
 		name: 'ZForm',
 		category: 'input',
 		summary:
-			'ZForm拥有提交、reset和验证生命周期；ZFormField只拥有字段路径注册与状态投射，真实control仍由调用方放入Field。以原生FormData为值事实、Standard Schema为typed输出边界，并用FieldPath图拥有依赖验证、消息状态、竞态和首错导航。',
+			'ZForm可注入唯一FormModel，由ZFormField把字段路径提供给适配控件自动读写；Standard Schema消费模型输入并产生typed output，原生FormData仍独立遵守successful controls规则。FieldPath图统一拥有依赖验证、错误分层、竞态和首错导航。',
 		status: 'stable',
 		keywords: [
 			'form',
@@ -1753,12 +1753,11 @@ export const componentCatalogManifest = Object.freeze([
 			'composition',
 			'variants-and-states',
 			'controlled',
-			'focus',
-			'invalid',
-			'resource-cleanup',
 			'form-data',
-			'native-props',
+			'invalid',
 			'loading',
+			'resource-cleanup',
+			'native-props',
 			'disabled',
 			'form-reset'
 		],

@@ -12,6 +12,13 @@
 	import type { FieldPathInput as PublicFieldPathInput } from '../../runtime/form/field-path.js';
 	import type { FormErrors as PublicFormErrors } from '../../runtime/form/validation.js';
 	import type { FormValidationTrigger } from '../../runtime/form/form-context.svelte.js';
+	import type { FormModel as PublicFormModel } from '../../runtime/form/form-model.svelte.js';
+	export type FormOutput<
+		TSchema extends PublicStandardSchemaV1 | undefined,
+		TValues = unknown
+	> = TSchema extends PublicStandardSchemaV1
+		? PublicStandardSchemaV1.InferOutput<TSchema>
+		: TValues;
 
 	export interface FormSubmitDetail<TData = unknown> {
 		readonly data: TData;
@@ -35,11 +42,28 @@
 	export interface ZFormValidationMessages {
 		readonly unexpected?: string;
 	}
+	export interface FormState {
+		readonly dirty: boolean;
+		readonly touched: boolean;
+		readonly submitted: boolean;
+		readonly submitting: boolean;
+		readonly validating: boolean;
+		/** No currently reported errors; validate() refreshes schema and includes all error layers. */
+		readonly valid: boolean;
+		readonly errors: PublicFormErrors;
+	}
 
-	export interface ZFormController<TData = unknown> {
-		/** Reads current successful native controls; does not own or mutate their values. */
-		getValues(): unknown;
+	export interface ZFormController<TData = unknown, TValues = unknown> {
+		getState(): FormState;
+		subscribeState(listener: (state: FormState) => void): () => void;
+		/** Reads the injected model snapshot, or current successful controls in native mode. */
+		getValues(): TValues;
 		getFieldValue(path: PublicFieldPathInput): unknown;
+		setValues(values: TValues | ((current: TValues) => TValues)): boolean;
+		setFieldValue(path: PublicFieldPathInput, value: unknown): boolean;
+		initialize(values: TValues, options?: { readonly keepDirtyValues?: boolean }): void;
+		resetField(path: PublicFieldPathInput): void;
+		clearErrors(paths?: readonly PublicFieldPathInput[]): void;
 		focusField(path: PublicFieldPathInput, options?: FocusOptions): boolean;
 
 		getFieldState(path: PublicFieldPathInput): PublicFormFieldState;
@@ -63,21 +87,25 @@
 	}
 
 	export interface ZFormProps<
-		TSchema extends PublicStandardSchemaV1 = PublicStandardSchemaV1
+		TSchema extends PublicStandardSchemaV1 | undefined = PublicStandardSchemaV1 | undefined,
+		TValues = unknown
 	> extends Omit<HTMLFormAttributes, 'children' | 'onreset' | 'onsubmit'> {
 		readonly children?: Snippet;
-		controller?: ZFormController<PublicStandardSchemaV1.InferOutput<TSchema>> | null;
+		readonly clearServerErrorsOnChange?: boolean;
+		controller?: ZFormController<FormOutput<TSchema, TValues>, TValues> | null;
+		readonly model?: PublicFormModel<TValues>;
 		readonly disabled?: boolean;
 		errors?: PublicFormErrors;
 		readonly focusFirstError?: boolean;
 		readonly nativeValidation?: boolean;
 		readonly onErrorsChange?: (errors: PublicFormErrors) => void;
+		readonly onStateChange?: (state: FormState) => void;
+		readonly onSubmitError?: (error: unknown) => void;
 		readonly onInvalidSubmit?: (detail: FormInvalidDetail) => void;
 		readonly onreset?: (event: Event & { currentTarget: HTMLFormElement }) => void;
 		readonly onsubmit?: (event: SubmitEvent & { currentTarget: HTMLFormElement }) => void;
-		readonly onValidSubmit?: (
-			detail: FormSubmitDetail<PublicStandardSchemaV1.InferOutput<TSchema>>
-		) => void;
+		/** Promise results are awaited; resolved and synchronous return values are ignored. */
+		readonly onValidSubmit?: (detail: FormSubmitDetail<FormOutput<TSchema, TValues>>) => unknown;
 		readonly onValidationError?: (error: unknown) => void;
 		readonly preventDefault?: boolean;
 		ref?: HTMLFormElement | null;
@@ -86,6 +114,7 @@
 		readonly scrollToFirstError?: boolean | ScrollIntoViewOptions;
 		readonly size?: ZControlSize;
 		submitted?: boolean;
+		submitting?: boolean;
 		readonly validateOn?: readonly FormValidationTrigger[];
 		readonly validationDelay?: number;
 		readonly validationMessages?: ZFormValidationMessages;
@@ -98,10 +127,11 @@
 		importStatement: "import { ZForm } from '@zadmin/zui';",
 		name: 'ZForm',
 		bindings: [
+			{ name: 'submitting', type: 'boolean', description: '等待onValidSubmit处理器期间为true。' },
 			{
 				description: '验证、字段状态、订阅、聚焦、滚动与reset控制器；订阅不拥有字段值。',
 				name: 'controller',
-				type: 'ZFormController<TOutput> | null'
+				type: 'ZFormController<FormOutput<TSchema, TValues>, TValues> | null'
 			},
 			{ description: '按字段名聚合的错误。', name: 'errors', type: 'FormErrors' },
 			{ description: '当前最新验证是否进行中。', name: 'validating', type: 'boolean' },
@@ -111,14 +141,24 @@
 		dependencies: ['Standard Schema', 'FormRegistry', 'async race token', 'native FormData'],
 		events: [
 			{
+				name: 'onStateChange',
+				type: '(state: FormState) => void',
+				description: '聚合状态变化后的不可变快照。'
+			},
+			{
+				name: 'onSubmitError',
+				type: '(error: unknown) => void',
+				description: '语义提交处理器抛错或拒绝。'
+			},
+			{
 				description: '验证成功后的typed结果与FormData。',
 				name: 'onValidSubmit',
-				type: '(detail: FormSubmitDetail<PublicStandardSchemaV1.InferOutput<TSchema>>) => void',
+				type: '(detail: FormSubmitDetail<FormOutput<TSchema, TValues>>) => unknown',
 				callable: {
 					parameters: [
 						{
 							name: 'detail',
-							type: 'FormSubmitDetail<PublicStandardSchemaV1.InferOutput<TSchema>>',
+							type: 'FormSubmitDetail<FormOutput<TSchema, TValues>>',
 							required: true,
 							description: '回调payload。',
 							members: [
@@ -126,7 +166,7 @@
 									description: 'Standard Schema typed输出。',
 									name: 'data',
 									required: true,
-									type: 'PublicStandardSchemaV1.InferOutput<TSchema>'
+									type: 'FormOutput<TSchema, TValues>'
 								},
 								{
 									description: '原生FormData快照。',
@@ -207,6 +247,39 @@
 		],
 		parts: [],
 		props: [
+			{
+				name: 'submitting',
+				type: 'boolean',
+				bindable: true,
+				default: 'false',
+				description:
+					'等待onValidSubmit期间为true并阻止重复语义提交；reset只取消状态接收，不取消应用已发请求。'
+			},
+			{
+				name: 'onStateChange',
+				type: '(state: FormState) => void',
+				default: 'undefined',
+				description: '观察聚合状态的不可变快照；getState读取当前值。'
+			},
+			{
+				name: 'onSubmitError',
+				type: '(error: unknown) => void',
+				default: 'undefined',
+				description: 'onValidSubmit同步抛错或Promise拒绝时调用；未提供时重新抛出。'
+			},
+			{
+				name: 'clearServerErrorsOnChange',
+				type: 'boolean',
+				default: 'true',
+				description: '字段值改变时清理该字段server错误；schema与manual层继续由各自来源拥有。'
+			},
+			{
+				name: 'model',
+				type: 'FormModel<TValues>',
+				default: 'undefined',
+				description:
+					'注入唯一业务值模型；未传时维持native FormData模式。模型模式由适配控件读取，不能同时传控件value/checked。'
+			},
 			{
 				default: 'undefined',
 				description: 'Standard Schema v1协议对象。',
@@ -289,6 +362,7 @@
 		snippets: [{ description: '表单字段与操作。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/input/ZForm.svelte',
 		states: [
+			{ name: 'data-submitting', values: ['true'], description: '正在等待语义提交处理器。' },
 			{ description: '表单级禁用。', name: 'data-disabled', values: ['true'] },
 			{ description: '验证中。', name: 'data-validating', values: ['true'] },
 			{ description: '已提交过。', name: 'data-submitted', values: ['true'] },
@@ -306,14 +380,22 @@
 	} as const satisfies ZuiComponentMetadata;
 </script>
 
-<script lang="ts" generics="TSchema extends StandardSchemaV1 = StandardSchemaV1">
+<script
+	lang="ts"
+	generics="TSchema extends StandardSchemaV1 | undefined = undefined, TValues = unknown"
+>
 	import type { StandardSchemaV1 } from '@standard-schema/spec';
 	import { onDestroy, tick, untrack } from 'svelte';
 	import FormResetSignal from '../../runtime/form/FormResetSignal.svelte';
 	import { NativeFormBaseline } from '../../runtime/form/native-form-baseline.js';
-	import { getFormValue } from '../../runtime/form/form-model.svelte.js';
+	import {
+		getChangedFormPaths,
+		getFormValue,
+		type FormModel
+	} from '../../runtime/form/form-model.svelte.js';
 	import {
 		FormRegistry,
+		type FormValidationTicket,
 		type FormFieldStatePatch
 	} from '../../runtime/form/form-registry.svelte.js';
 	import { provideZForm } from '../../runtime/form/form-context.svelte.js';
@@ -328,7 +410,6 @@
 		errorsForPaths,
 		formDataToObject,
 		issuesToFormErrors,
-		mergeErrorsForPaths,
 		type FormErrors
 	} from '../../runtime/form/validation.js';
 	import {
@@ -338,19 +419,30 @@
 	} from '../../runtime/foundation/root-style.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
+	import { sameStateValue } from '../../runtime/foundation/controllable-state.svelte.js';
+	import {
+		createFormErrorLayers,
+		setFormErrorLayer,
+		clearFormErrorLayers,
+		mergeFormErrorLayers
+	} from '../../runtime/form/form-errors.js';
 
 	const DEFAULT_VALIDATION_MESSAGES: ZFormValidationMessages = Object.freeze({});
 
 	let {
 		'aria-busy': ariaBusy,
 		children,
+		clearServerErrorsOnChange = true,
 		class: className,
 		controller = $bindable(null),
 		disabled = false,
 		errors = $bindable({}),
 		focusFirstError = true,
+		model,
 		nativeValidation = false,
 		onErrorsChange,
+		onStateChange,
+		onSubmitError,
 		onInvalidSubmit,
 		onreset,
 		onsubmit,
@@ -364,21 +456,31 @@
 		size,
 		style,
 		submitted = $bindable(false),
+		submitting = $bindable(false),
 		validateOn = ['submit'],
 		validationDelay = 150,
 		validationMessages = DEFAULT_VALIDATION_MESSAGES,
 		validating = $bindable(false),
 		...rest
-	}: ZFormProps<TSchema> = $props();
+	}: ZFormProps<TSchema, TValues> = $props();
 	const zui = useZui();
 	const lifecycle = { active: true };
 	const nativeBaseline = new NativeFormBaseline();
 	let nativeValueEpoch = 0;
+	const valueControls = new Map<string, Map<symbol, () => HTMLElement | null>>();
+	const pendingDirty = new Set<string>();
+	let dirtyScheduled = false;
+	let suppressModelValidation = false;
+	let submissionId = 0;
+	let pendingReset: Event | undefined;
+	const stateListeners = new Set<(state: FormState) => void>();
+	let errorLayers = createFormErrorLayers({ server: untrack(() => errors) });
+	let publishedErrors = untrack(() => errors);
 	const registry = new FormRegistry(
 		(path) => {
 			nativeBaseline.forget(fieldPathKey(path));
 			if (!lifecycle.active || !(fieldPathToString(path) in errors)) return;
-			publishErrors(mergeErrorsForPaths(errors, {}, [path]));
+			clearErrors([path]);
 		},
 		(field) => {
 			const epoch = nativeValueEpoch;
@@ -392,10 +494,13 @@
 					fieldPathKey(current.path) !== fieldPathKey(field.path)
 				)
 					return;
-				const data = readFormData();
-				const key = fieldPathKey(field.path);
-				nativeBaseline.capture(key, field.htmlName, data);
-				registry.setDirty(field.path, nativeBaseline.isDirty(key, field.htmlName, data));
+				if (model) registry.setDirty(field.path, model.isDirty(field.path));
+				else {
+					const data = readFormData();
+					const key = fieldPathKey(field.path);
+					nativeBaseline.capture(key, field.htmlName, data);
+					registry.setDirty(field.path, nativeBaseline.isDirty(key, field.htmlName, data));
+				}
 			});
 		}
 	);
@@ -422,6 +527,34 @@
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
 	const invalid = $derived(Object.values(errors).some((messages) => messages.length > 0));
+	const formState = $derived.by((): FormState => {
+		const fields = registry.summary();
+		return Object.freeze({
+			dirty: model ? model.dirty : fields.dirty,
+			touched: fields.touched,
+			submitted,
+			submitting,
+			validating,
+			valid: !invalid,
+			errors
+		});
+	});
+	let reportedState: FormState | undefined;
+	$effect(() => {
+		const next = formState;
+		const notify = onStateChange;
+		untrack(() => {
+			if (sameStateValue(reportedState, next)) return;
+			reportedState = next;
+			for (const listener of [notify, ...stateListeners]) {
+				try {
+					listener?.(next);
+				} catch {
+					/* Observers do not own the form transition. */
+				}
+			}
+		});
+	});
 
 	function freezeErrors(next: FormErrors): FormErrors {
 		return Object.freeze(
@@ -432,16 +565,79 @@
 	}
 
 	function publishErrors(next: FormErrors): void {
-		const frozen = freezeErrors(next);
-		errors = frozen;
-		registry.syncErrors(frozen);
-		onErrorsChange?.(frozen);
+		errorLayers = setFormErrorLayer(errorLayers, 'server', next);
+		publishErrorLayers();
+	}
+	function publishErrorLayers(): void {
+		const next = mergeFormErrorLayers(errorLayers);
+		registry.syncErrors(next);
+		if (sameStateValue(errors, next)) {
+			publishedErrors = errors;
+			return;
+		}
+		publishedErrors = next;
+		errors = next;
+		onErrorsChange?.(next);
+	}
+	function clearErrors(paths?: readonly FieldPathInput[]): void {
+		errorLayers = clearFormErrorLayers(errorLayers, { paths });
+		publishErrorLayers();
+	}
+	function publishSchemaErrors(next: FormErrors, paths?: readonly FieldPath[]): void {
+		errorLayers = setFormErrorLayer(errorLayers, 'schema', next, paths);
+		publishErrorLayers();
+	}
+	function clearServerErrors(paths: readonly FieldPath[]): void {
+		if (!clearServerErrorsOnChange) return;
+		errorLayers = clearFormErrorLayers(errorLayers, { layers: ['server'], paths });
+		publishErrorLayers();
 	}
 
 	function readFormData(submitter?: HTMLElement | null): FormData {
 		if (!ref) return new FormData();
 		const FormDataConstructor = ref.ownerDocument.defaultView?.FormData ?? FormData;
 		return submitter ? new FormDataConstructor(ref, submitter) : new FormDataConstructor(ref);
+	}
+
+	function requireModel(): FormModel<TValues> {
+		if (!model)
+			throw new TypeError(
+				'ZForm value writes require a model; native values remain owned by their controls.'
+			);
+		return model;
+	}
+	function scheduleDirty(instanceId: string): void {
+		pendingDirty.add(instanceId);
+		if (dirtyScheduled) return;
+		dirtyScheduled = true;
+		const epoch = nativeValueEpoch;
+		void tick().then(() => {
+			if (!lifecycle.active || epoch !== nativeValueEpoch) return;
+			dirtyScheduled = false;
+			const instances = [...pendingDirty];
+			pendingDirty.clear();
+			const data = model ? undefined : readFormData();
+			for (const id of instances) {
+				const field = registry.fieldInfo(id);
+				if (!field) continue;
+				registry.setDirty(
+					field.path,
+					model
+						? model.isDirty(field.path)
+						: nativeBaseline.isDirty(fieldPathKey(field.path), field.htmlName, data!)
+				);
+			}
+		});
+	}
+	function assertModelControls(): void {
+		if (!model) return;
+		for (const instanceId of registry.registeredInstances()) {
+			const controls = valueControls.get(instanceId);
+			if (!controls || controls.size !== 1)
+				throw new TypeError(
+					`ZForm model field ${JSON.stringify(registry.fieldInfo(instanceId)?.path)} requires exactly one supported value owner; use a compound control for multiple inputs.`
+				);
+		}
 	}
 
 	function uniquePaths(paths: readonly FieldPathInput[]): readonly FieldPath[] {
@@ -463,7 +659,8 @@
 		pathInputs: readonly FieldPathInput[],
 		full: boolean,
 		formData = readFormData()
-	): Promise<FormValidationResult<StandardSchemaV1.InferOutput<TSchema>>> {
+	): Promise<FormValidationResult<FormOutput<TSchema, TValues>>> {
+		assertModelControls();
 		const paths = uniquePaths(pathInputs);
 		const ticket = registry.beginValidation(paths);
 		const epoch = validationEpoch;
@@ -471,18 +668,15 @@
 		validationRuns.add(runId);
 		validating = true;
 		try {
-			const input = formDataToObject(formData, registry.formDataPaths());
+			const input = model ? model.values : formDataToObject(formData, registry.formDataPaths());
 			const result = schema ? await schema['~standard'].validate(input) : { value: input };
 			const next: FormErrors = result.issues
 				? issuesToFormErrors(result.issues)
 				: Object.freeze({});
-			const accepted = registry.finishValidation(ticket, next);
-			const outdated = epoch !== validationEpoch || accepted.length !== ticket.entries.length;
-			if (full && !outdated) publishErrors(next);
-			else if (accepted.length > 0) publishErrors(mergeErrorsForPaths(errors, next, accepted));
-			const scopedErrors: FormErrors = full ? next : errorsForPaths(next, paths);
+			const { outdated } = commitValidation(ticket, next, full, epoch);
+			const scopedErrors: FormErrors = full ? errors : errorsForPaths(errors, paths);
 			return {
-				data: result.issues ? undefined : (result.value as StandardSchemaV1.InferOutput<TSchema>),
+				data: result.issues ? undefined : (result.value as FormOutput<TSchema, TValues>),
 				errors: scopedErrors,
 				outdated,
 				valid: Object.values(scopedErrors).every((messages) => messages.length === 0)
@@ -494,21 +688,35 @@
 					? { '': [message] }
 					: Object.fromEntries(paths.map((path) => [fieldPathToString(path), [message]]))
 			);
-			const accepted = registry.finishValidation(ticket, next);
-			const outdated = epoch !== validationEpoch || accepted.length !== ticket.entries.length;
-			if (full && !outdated) publishErrors(next);
-			else if (accepted.length > 0) publishErrors(mergeErrorsForPaths(errors, next, accepted));
+			const { accepted, outdated } = commitValidation(ticket, next, full, epoch);
 			if (!outdated || accepted.length > 0) onValidationError?.(error);
 			return { errors: next, outdated, valid: false };
 		} finally {
 			validationRuns.delete(runId);
-			validating = validationRuns.size > 0;
+			if (lifecycle.active) validating = validationRuns.size > 0;
 		}
 	}
 
 	function clearValidationTimers(): void {
 		for (const timer of validationTimers.values()) timer.view.clearTimeout(timer.id);
 		validationTimers.clear();
+	}
+	function commitValidation(
+		ticket: FormValidationTicket,
+		next: FormErrors,
+		full: boolean,
+		epoch: number
+	): { readonly accepted: readonly FieldPath[]; readonly outdated: boolean } {
+		let accepted: readonly FieldPath[] = [];
+		let outdated = true;
+		if (epoch !== validationEpoch || !lifecycle.active) return { accepted, outdated };
+		registry.batch(() => {
+			accepted = registry.finishValidation(ticket, next, { publishErrors: false });
+			outdated = epoch !== validationEpoch || accepted.length !== ticket.entries.length;
+			if (full && !outdated) publishSchemaErrors(next);
+			else if (accepted.length > 0) publishSchemaErrors(next, accepted);
+		});
+		return { accepted, outdated };
 	}
 
 	function scheduleValidation(trigger: 'blur' | 'change', paths: readonly FieldPath[]): void {
@@ -532,22 +740,29 @@
 	}
 
 	provideZForm({
+		get model() {
+			return model;
+		},
+		registerValueControl(instanceId, element) {
+			const token = Symbol();
+			const owners = valueControls.get(instanceId) ?? new Map<symbol, () => HTMLElement | null>();
+			owners.set(token, element);
+			valueControls.set(instanceId, owners);
+			return () => {
+				owners.delete(token);
+				if (owners.size === 0) valueControls.delete(instanceId);
+			};
+		},
+		controlValueChanged: scheduleDirty,
 		get disabled() {
 			return disabled;
 		},
 		fieldEvent(instanceId, trigger) {
-			if (trigger === 'change') {
-				const epoch = nativeValueEpoch;
-				// Compound controls may update several native inputs in one Svelte flush.
-				void tick().then(() => {
-					const field = registry.fieldInfo(instanceId);
-					if (!lifecycle.active || epoch !== nativeValueEpoch || !field) return;
-					registry.setDirty(
-						field.path,
-						nativeBaseline.isDirty(fieldPathKey(field.path), field.htmlName, readFormData())
-					);
-				});
-			} else registry.markTouched(instanceId);
+			if (trigger === 'change') scheduleDirty(instanceId);
+			else registry.markTouched(instanceId);
+			if (model && trigger === 'change') return;
+			const field = registry.fieldInfo(instanceId);
+			if (trigger === 'change' && field) clearServerErrors([normalizeFieldPath(field.path)]);
 			scheduleValidation(trigger, registry.affectedPaths(instanceId));
 		},
 		get readonly() {
@@ -561,20 +776,117 @@
 			return submitted;
 		}
 	});
+	let observedModel: FormModel<TValues> | undefined;
+	let observedSchema = untrack(() => schema);
+	$effect(() => {
+		const current = schema;
+		untrack(() => {
+			if (current === observedSchema) return;
+			observedSchema = current;
+			validationEpoch += 1;
+			clearValidationTimers();
+			validationRuns.clear();
+			validating = false;
+			registry.cancelValidation();
+			publishSchemaErrors({});
+		});
+	});
+	let observedValues: unknown;
+	let observedBaseline: unknown;
+	let pendingModelOwner: FormModel<TValues> | undefined;
+	let pendingModelPaths: readonly FieldPath[] = [];
+	$effect(() => {
+		const current = model;
+		if (!current) return;
+		return current.subscribe((detail) => {
+			pendingModelPaths = uniquePaths([
+				...(pendingModelOwner === current ? pendingModelPaths : []),
+				...detail.changedPaths
+			]);
+			pendingModelOwner = current;
+		});
+	});
+	$effect(() => {
+		const currentModel = model;
+		const currentValues = currentModel?.values;
+		const currentBaseline = currentModel?.defaultValues;
+		untrack(() => {
+			const sameOwner = currentModel === observedModel;
+			const hadModel = observedModel !== undefined;
+			const previous = observedValues;
+			const baselineChanged = currentBaseline !== observedBaseline;
+			const valuesChanged = !sameStateValue(previous, currentValues);
+			const changedInputPaths =
+				pendingModelOwner === currentModel && pendingModelPaths.length > 0
+					? pendingModelPaths
+					: getChangedFormPaths(previous, currentValues);
+			pendingModelOwner = undefined;
+			pendingModelPaths = [];
+			observedModel = currentModel;
+			observedValues = currentValues;
+			observedBaseline = currentBaseline;
+			if (!sameOwner || baselineChanged || valuesChanged) {
+				validationEpoch += 1;
+				clearValidationTimers();
+				registry.cancelValidation();
+				validationRuns.clear();
+				validating = false;
+			}
+			if (!sameOwner && hadModel) {
+				nativeValueEpoch += 1;
+				dirtyScheduled = false;
+				pendingDirty.clear();
+				nativeBaseline.clear();
+				registry.reset();
+				clearErrors();
+				if (!currentModel) {
+					const epoch = nativeValueEpoch;
+					void tick().then(() => {
+						if (!lifecycle.active || epoch !== nativeValueEpoch) return;
+						const data = readFormData();
+						for (const [name, path] of registry.formDataPaths())
+							nativeBaseline.capture(fieldPathKey(path), name, data);
+					});
+				}
+			}
+			if (!currentModel) return;
+			for (const path of registry.registeredPaths())
+				registry.setDirty(path, currentModel.isDirty(path));
+			if (!sameOwner || baselineChanged || !valuesChanged || suppressModelValidation) return;
+			clearServerErrors(changedInputPaths);
+			scheduleValidation(
+				'change',
+				uniquePaths([...changedInputPaths, ...registry.affectedPathsFor(changedInputPaths)])
+			);
+		});
+	});
 	$effect(() => {
 		const externalErrors = errors;
-		untrack(() => registry.syncErrors(externalErrors));
+		untrack(() => {
+			if (externalErrors !== publishedErrors) publishErrors(externalErrors);
+			else registry.syncErrors(mergeFormErrorLayers(errorLayers));
+		});
 	});
 
 	function resetFromForm(): void {
+		pendingReset = undefined;
+		submissionId += 1;
+		submitting = false;
+		suppressModelValidation = true;
+		model?.reset();
 		nativeValueEpoch += 1;
+		pendingDirty.clear();
+		dirtyScheduled = false;
 		nativeBaseline.clear();
 		const epoch = nativeValueEpoch;
 		void tick().then(() => {
 			if (!lifecycle.active || epoch !== nativeValueEpoch) return;
+			suppressModelValidation = false;
 			const data = readFormData();
 			for (const [name, path] of registry.formDataPaths())
 				nativeBaseline.capture(fieldPathKey(path), name, data);
+			if (model)
+				for (const path of registry.registeredPaths()) registry.setDirty(path, model.isDirty(path));
 		});
 		validationEpoch += 1;
 		clearValidationTimers();
@@ -582,26 +894,67 @@
 		validating = false;
 		submitted = false;
 		registry.reset();
-		publishErrors({});
+		clearErrors();
 	}
 
 	function setFieldFeedback(path: FieldPathInput, feedback: FormFieldStatePatch): void {
-		registry.setFieldState(path, feedback);
-		if (feedback.errors !== undefined) {
-			const normalized = normalizeFieldPath(path);
-			publishErrors(
-				mergeErrorsForPaths(errors, { [fieldPathToString(normalized)]: feedback.errors }, [
-					normalized
-				])
-			);
-		}
+		registry.batch(() => {
+			const { errors: manualErrors, ...visual } = feedback;
+			registry.setFieldState(path, visual);
+			if (manualErrors !== undefined) {
+				const normalized = normalizeFieldPath(path);
+				errorLayers = setFormErrorLayer(
+					errorLayers,
+					'manual',
+					{ [fieldPathToString(normalized)]: manualErrors },
+					[normalized]
+				);
+				publishErrorLayers();
+			}
+		});
 	}
-	const formController: ZFormController<StandardSchemaV1.InferOutput<TSchema>> = {
-		getValues: () => formDataToObject(readFormData(), registry.formDataPaths()),
+	const formController: ZFormController<FormOutput<TSchema, TValues>, TValues> = {
+		getState: () => formState,
+		subscribeState(listener) {
+			stateListeners.add(listener);
+			return () => {
+				stateListeners.delete(listener);
+			};
+		},
+		getValues: () =>
+			model
+				? model.values
+				: (formDataToObject(readFormData(), registry.formDataPaths()) as TValues),
 		getFieldValue: (path) =>
-			getFormValue(formDataToObject(readFormData(), registry.formDataPaths()), path),
+			getFormValue(
+				model ? model.values : formDataToObject(readFormData(), registry.formDataPaths()),
+				path
+			),
+		setValues: (values) => requireModel().setValues(values),
+		setFieldValue: (path, value) => requireModel().setField(path, value),
+		initialize: (values, options) => requireModel().initialize(values, options),
+		resetField(path) {
+			const current = requireModel();
+			suppressModelValidation = true;
+			try {
+				current.resetField(path);
+				if (!current.isDirty(path))
+					registry.batch(() => {
+						registry.resetField(path);
+						clearErrors([path]);
+					});
+			} finally {
+				void tick().then(() => {
+					suppressModelValidation = false;
+				});
+			}
+		},
+		clearErrors,
 		focusField: (path, options) => registry.focusField(path, options),
-		getFieldState: (path) => registry.state(path),
+		getFieldState: (path) =>
+			model
+				? Object.freeze({ ...registry.state(path), dirty: model.isDirty(path) })
+				: registry.state(path),
 		reset() {
 			if (ref) ref.reset();
 			else resetFromForm();
@@ -611,12 +964,16 @@
 		setFieldFeedback,
 		setFieldState: setFieldFeedback,
 		subscribeField: (path, listener) => registry.subscribeField(path, listener),
-		validate: () => {
+		validate: async () => {
+			await tick();
 			clearValidationTimers();
 			validationEpoch += 1;
 			return validatePaths(registry.registeredPaths(), true);
 		},
-		validateField: (path) => validatePaths([path], false)
+		validateField: async (path) => {
+			await tick();
+			return validatePaths([path], false);
+		}
 	};
 	$effect(() => {
 		controller = formController;
@@ -631,7 +988,24 @@
 	): Promise<void> {
 		onsubmit?.(event);
 		if (event.defaultPrevented) return;
+		if (disabled) {
+			event.preventDefault();
+			return;
+		}
+		if (submitting) {
+			event.preventDefault();
+			return;
+		}
+		const currentSubmission = ++submissionId;
 		if (preventDefault || schema) event.preventDefault();
+		await tick();
+		if (
+			currentSubmission !== submissionId ||
+			!lifecycle.active ||
+			disabled ||
+			(pendingReset && !pendingReset.defaultPrevented)
+		)
+			return;
 		clearValidationTimers();
 		// A submit is a new validation epoch: pending change/blur promises may finish later,
 		// but their results must never be allowed to compete with this full-form submission.
@@ -640,11 +1014,13 @@
 		registry.markAllTouched();
 		const formData = readFormData(event.submitter);
 		const result = await validatePaths(registry.registeredPaths(), true, formData);
-		if (result.outdated) return;
+		if (result.outdated || currentSubmission !== submissionId || !lifecycle.active || disabled)
+			return;
 		if (!result.valid) {
 			onInvalidSubmit?.({ errors: result.errors, formData, originalEvent: event });
 			if (focusFirstError || scrollToFirstError) {
 				await tick();
+				if (currentSubmission !== submissionId || !lifecycle.active || disabled) return;
 				const firstPath = registry.firstInvalidPath();
 				if (firstPath && scrollToFirstError) {
 					registry.scrollToField(
@@ -657,18 +1033,31 @@
 				}
 			}
 		} else {
-			onValidSubmit?.({
-				data: result.data as StandardSchemaV1.InferOutput<TSchema>,
-				formData,
-				originalEvent: event
-			});
+			submitting = true;
+			try {
+				await onValidSubmit?.({
+					data: result.data as FormOutput<TSchema, TValues>,
+					formData,
+					originalEvent: event
+				});
+			} catch (error) {
+				if (currentSubmission !== submissionId || !lifecycle.active) return;
+				if (onSubmitError) onSubmitError(error);
+				else throw error;
+			} finally {
+				if (currentSubmission === submissionId && lifecycle.active) submitting = false;
+			}
 		}
 	}
 
 	onDestroy(() => {
 		lifecycle.active = false;
+		submissionId += 1;
+		stateListeners.clear();
 		nativeValueEpoch += 1;
 		nativeBaseline.clear();
+		pendingDirty.clear();
+		valueControls.clear();
 		validationEpoch += 1;
 		clearValidationTimers();
 		validationRuns.clear();
@@ -683,16 +1072,23 @@
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
 	novalidate={!nativeValidation}
-	aria-busy={validating ? true : ariaBusy}
+	aria-busy={validating || submitting ? true : ariaBusy}
 	data-disabled={disabled || undefined}
 	data-validating={validating || undefined}
 	data-submitted={submitted || undefined}
+	data-submitting={submitting || undefined}
 	data-invalid={invalid || undefined}
 	data-readonly={readonly || undefined}
 	data-size={size}
 	onsubmit={handleSubmit}
 	onreset={(event) => {
 		onreset?.(event);
+		// The default reset signal is deferred. A submit queued earlier must see the accepted reset,
+		// while a later listener can still cancel this event before either microtask resumes.
+		pendingReset = event;
+		queueMicrotask(() => {
+			if (pendingReset === event && event.defaultPrevented) pendingReset = undefined;
+		});
 	}}
 >
 	<FormResetSignal onReset={resetFromForm} owner={ref} />

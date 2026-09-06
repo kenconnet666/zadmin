@@ -95,7 +95,7 @@
 		category: 'input',
 		dependencies: [
 			'ZCheckbox',
-			'ControllableState',
+			'FormControlState',
 			'LogicalCollection',
 			'SelectionModel',
 			'MountedElements',
@@ -243,6 +243,11 @@
 		source: 'ui/zui/src/components/compound/checkbox-group/ZCheckboxGroup.svelte',
 		states: [
 			{
+				name: 'data-required',
+				values: ['true'],
+				description: '组有最小选择要求；原生validity由可用input拥有。'
+			},
+			{
 				description: '视觉排列方向。',
 				name: 'data-orientation',
 				values: ['horizontal', 'vertical']
@@ -279,7 +284,10 @@
 	import { MountedElements } from '../../../runtime/collection/mounted-elements.svelte.js';
 	import { SelectionModel } from '../../../runtime/collection/selection-model.js';
 	import type { Selection } from '../../../runtime/collection/selection.js';
-	import { ControllableState } from '../../../runtime/foundation/controllable-state.svelte.js';
+	import {
+		claimFormValueScope,
+		createFormControlState
+	} from '../../../runtime/form/form-value-adapter.svelte.js';
 	import { resolveControlSize } from '../../../runtime/foundation/control-size.js';
 	import { createZuiId } from '../../../runtime/foundation/ids.js';
 	import { claimZFieldControlOwner } from '../../../runtime/form/field-context.js';
@@ -288,8 +296,7 @@
 		checkboxGroupSelectionState,
 		normalizeCheckboxGroupValue,
 		orderCheckboxGroupValue,
-		toggleAllCheckboxGroupValues,
-		type CheckboxGroupValue
+		toggleAllCheckboxGroupValues
 	} from '../../../runtime/form/checkbox-group.js';
 	import FormResetSignal from '../../../runtime/form/FormResetSignal.svelte';
 	import {
@@ -337,6 +344,7 @@
 	}: ZCheckboxGroupProps<TKey> = $props();
 
 	const zui = useZui();
+	const valueScope = claimFormValueScope();
 	const fieldOwner = claimZFieldControlOwner();
 	const field = fieldOwner.field;
 	const uid = $props.id();
@@ -377,15 +385,35 @@
 			);
 		return maxSelected;
 	});
-	const valueState = new ControllableState<CheckboxGroupValue<TKey>>({
-		defaultValue: () => normalizeCheckboxGroupValue(defaultValue),
-		onChange: () => onValueChange,
-		read: () => value,
-		write: (next) => (value = next)
-	});
+	const valueState = createFormControlState<CheckboxGroupValue<TKey>>(
+		{
+			defaultValue: () => normalizeCheckboxGroupValue(defaultValue),
+			element: () => ref,
+			normalizeModelValue: (candidate) => {
+				if (candidate === undefined) return Object.freeze([]);
+				if (!Array.isArray(candidate))
+					throw new TypeError(
+						'ZCheckboxGroup model value must be a SelectionKey array or undefined.'
+					);
+				return normalizeCheckboxGroupValue(
+					candidate as CheckboxGroupValue<TKey>,
+					'ZCheckboxGroup model'
+				);
+			},
+			onChange: () => onValueChange,
+			owner: 'ZCheckboxGroup',
+			read: () => value,
+			syncNative: (next) => synchronizeNative(next),
+			write: (next) => (value = next)
+		},
+		valueScope
+	);
 	const resolvedValue = $derived(normalizeCheckboxGroupValue(valueState.current));
 	const selected = $derived(new Set(resolvedValue));
 	const mounted = new MountedElements<TKey, HTMLInputElement>();
+	// Select-all elements are imperative reset mirrors; membership never drives rendering.
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
+	const selectAllControls = new Set<() => HTMLInputElement | null>();
 	const compound = new CompoundLogicalCollectionRegistry<TKey, CheckboxGroupLogicalItem<TKey>>(
 		mounted
 	);
@@ -485,8 +513,10 @@
 
 	function commitSelection(next: Selection<TKey>): void {
 		const candidate = valuesFromSelection(next);
-		selectionChanged = mayMoveTo(candidate) && !sameValue(candidate, resolvedValue);
-		if (selectionChanged) valueState.setFromUser(candidate);
+		selectionChanged =
+			mayMoveTo(candidate) &&
+			!sameValue(candidate, resolvedValue) &&
+			valueState.setFromUser(candidate);
 	}
 
 	function sameValue(left: CheckboxGroupValue<TKey>, right: CheckboxGroupValue<TKey>): boolean {
@@ -494,7 +524,7 @@
 	}
 
 	function writeSilently(next: CheckboxGroupValue<TKey>): void {
-		if (!sameValue(resolvedValue, next)) value = next;
+		if (!sameValue(resolvedValue, next)) valueState.reconcile(next);
 	}
 
 	function removeUnknownValues(): void {
@@ -509,6 +539,23 @@
 				element.focus({ preventScroll: true });
 				return;
 			}
+		}
+	}
+
+	function synchronizeNative(next: CheckboxGroupValue<TKey>): void {
+		const nextSelected = new Set(next);
+		for (const key of view.keys) {
+			const element = mounted.get(key)?.element;
+			if (!element) continue;
+			element.checked = nextSelected.has(key);
+			element.indeterminate = false;
+		}
+		const nextState = checkboxGroupSelectionState(next, actionableKeys, maximum);
+		for (const readControl of selectAllControls) {
+			const element = readControl();
+			if (!element) continue;
+			element.checked = nextState.all;
+			element.indeterminate = nextState.mixed;
 		}
 	}
 
@@ -578,11 +625,14 @@
 				}
 			};
 		},
+		registerSelectAll(element) {
+			selectAllControls.add(element);
+			return () => {
+				selectAllControls.delete(element);
+			};
+		},
 		restoreNativeSelection() {
-			for (const key of view.keys) {
-				const element = mounted.get(key)?.element;
-				if (element) element.checked = selected.has(key);
-			}
+			synchronizeNative(resolvedValue);
 		},
 		get size() {
 			return resolvedSize;
@@ -609,8 +659,7 @@
 				true
 			);
 			if (!mayMoveTo(candidate) || sameValue(candidate, resolvedValue)) return false;
-			valueState.setFromUser(candidate);
-			return true;
+			return valueState.setFromUser(candidate);
 		}
 	};
 	provideZCheckboxGroup(context);
@@ -679,9 +728,7 @@
 	aria-labelledby={labelledBy}
 	aria-describedby={describedBy}
 	aria-disabled={disabled || undefined}
-	aria-invalid={resolvedInvalid || selectionInvalid || undefined}
-	aria-readonly={readonly || undefined}
-	aria-required={minimum > 0 || undefined}
+	data-required={minimum > 0 || undefined}
 	data-slot="root"
 	data-disabled={disabled || undefined}
 	data-invalid={resolvedInvalid || undefined}

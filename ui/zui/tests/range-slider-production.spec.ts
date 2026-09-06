@@ -14,7 +14,7 @@ import {
 describe('Slider family server and math contract', () => {
 	it('renders one native owner for Slider and two common-domain owners for RangeSlider', () => {
 		const label = createRawSnippet<[number, 0 | 1]>((getValue) => ({
-			render: () => `<b>${getValue()[0]}</b>`
+			render: () => `<b>${getValue()}</b>`
 		}));
 		const single = render(ZSlider, {
 			props: { 'aria-label': 'Volume', defaultValue: 35, name: 'volume', orientation: 'vertical' }
