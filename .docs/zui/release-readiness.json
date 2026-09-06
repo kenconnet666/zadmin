@@ -10,8 +10,8 @@
 	},
 	"changesets": {
 		"config": ".changeset/config.json",
-		"count": 94,
-		"packages": ["@zadmin/miniapp", "@zadmin/webview", "@zadmin/zui"],
+		"count": 95,
+		"packages": ["@zadmin/drizzle", "@zadmin/miniapp", "@zadmin/webview", "@zadmin/zui"],
 		"publicAccess": true,
 		"baseBranch": "master"
 	},
@@ -47,7 +47,7 @@
 		{
 			"name": "@zadmin/drizzle",
 			"version": "0.0.0",
-			"changeset": false,
+			"changeset": true,
 			"packageCheck": false,
 			"acceptance": false
 		},

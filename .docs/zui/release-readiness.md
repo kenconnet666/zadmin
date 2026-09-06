@@ -48,7 +48,7 @@
 | @zadmin/auth      | 0.0.0   | no               | no            | no                  |
 | @zadmin/core      | 0.0.0   | no               | no            | no                  |
 | @zadmin/crm       | 0.0.0   | no               | no            | no                  |
-| @zadmin/drizzle   | 0.0.0   | no               | no            | no                  |
+| @zadmin/drizzle   | 0.0.0   | yes              | no            | no                  |
 | @zadmin/erp       | 0.0.0   | no               | no            | no                  |
 | @zadmin/miniapp   | 0.1.0   | yes              | no            | yes                 |
 | @zadmin/oss       | 0.0.0   | no               | no            | no                  |
