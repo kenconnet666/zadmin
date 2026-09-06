@@ -111,6 +111,7 @@
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { ReducedMotionState } from '../../runtime/foundation/motion.svelte.js';
 	import { durationMilliseconds } from '../../runtime/foundation/presence.svelte.js';
+	import { cssLength } from '../../theme/units.js';
 	let {
 		animated = true,
 		class: className,
@@ -148,7 +149,7 @@
 		return normalized;
 	};
 	const resolvedWidth = $derived(
-		dimension(width, shape === 'circle' ? `${zui.theme.size.medium}px` : '100%')
+		dimension(width, shape === 'circle' ? cssLength(zui.theme.size.medium) : '100%')
 	);
 	const resolvedHeight = $derived(
 		dimension(
@@ -156,8 +157,8 @@
 			shape === 'circle'
 				? resolvedWidth
 				: shape === 'line'
-					? `${zui.theme.size.skeletonLine}px`
-					: `${zui.theme.size.medium}px`
+					? cssLength(zui.theme.size.skeletonLine)
+					: cssLength(zui.theme.size.medium)
 		)
 	);
 	const reduced = $derived(reducedMotion.current);

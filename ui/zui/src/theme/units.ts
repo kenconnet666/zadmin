@@ -67,6 +67,10 @@ export function getUnitNames(families: readonly UnitFamilyName[]): ReadonlySet<s
 	return new Set(families.flatMap((family) => Object.keys(UNIT_FAMILIES[family])));
 }
 
+export function cssLength(value: number | string): string {
+	return typeof value === 'number' ? `${value}px` : value;
+}
+
 export function durationMilliseconds(value: number | string): number {
 	if (typeof value === 'number') {
 		if (!Number.isFinite(value) || value < 0) throw new TypeError('Duration must be non-negative.');

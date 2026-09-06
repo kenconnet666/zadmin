@@ -269,6 +269,7 @@
 	import { onMount, untrack } from 'svelte';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { ReducedMotionState } from '../../runtime/foundation/motion.svelte.js';
+	import { durationMilliseconds } from '../../theme/units.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -423,17 +424,27 @@
 		return {
 			destroy: () => animation?.cancel(),
 			update(next) {
+				if (next.reduced) {
+					currentKey = next.key;
+					animation?.cancel();
+					animation = undefined;
+					return;
+				}
 				if (next.key === currentKey) return;
 				currentKey = next.key;
 				animation?.cancel();
-				if (next.reduced || typeof node.animate !== 'function') return;
+				animation = undefined;
+				if (typeof node.animate !== 'function') return;
 				const positionedTransform = indicatorTransform === 'none' ? '' : `${indicatorTransform} `;
 				animation = node.animate(
 					[
 						{ opacity: 0.55, transform: `${positionedTransform}scale(0.88)` },
 						{ opacity: 1, transform: `${positionedTransform}scale(1)` }
 					],
-					{ duration: zui.theme.duration.fast, easing: 'ease-out' }
+					{
+						duration: durationMilliseconds(zui.theme.duration.fast),
+						easing: zui.theme.easing.enter
+					}
 				);
 			}
 		};

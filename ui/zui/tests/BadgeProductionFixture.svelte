@@ -1,13 +1,30 @@
 <script lang="ts">
 	import Bell from '@lucide/svelte/icons/bell';
-	import { ZAvatar, ZBadge, ZButton, ZProvider, ZStack } from '../src/entrypoints/index.js';
+	import {
+		defaultTheme,
+		extendTheme,
+		ZAvatar,
+		ZBadge,
+		ZButton,
+		ZProvider,
+		ZStack,
+		type DurationTokenValue
+	} from '../src/entrypoints/index.js';
 
+	let { duration, easing }: { duration?: DurationTokenValue; easing?: string } = $props();
 	let count = $state(100);
 	let direction = $state<'ltr' | 'rtl'>('ltr');
 	let invisible = $state(false);
+	let reduced = $state(false);
+	const theme = $derived(
+		extendTheme(defaultTheme, {
+			duration: { fast: duration ?? defaultTheme.duration.fast },
+			easing: { enter: easing ?? defaultTheme.easing.enter }
+		})
+	);
 </script>
 
-<ZProvider motion="full" {direction}>
+<ZProvider motion={reduced ? 'reduced' : 'full'} {direction} {theme}>
 	<ZStack direction="row" gap="large">
 		<ZBadge
 			{count}
@@ -43,5 +60,8 @@
 >
 <ZButton data-testid="badge-production-toggle-visible" onclick={() => (invisible = !invisible)}
 	>Toggle visible</ZButton
+>
+<ZButton data-testid="badge-production-toggle-motion" onclick={() => (reduced = !reduced)}
+	>Toggle motion</ZButton
 >
 <output data-testid="badge-production-output">{count}:{direction}:{invisible}</output>

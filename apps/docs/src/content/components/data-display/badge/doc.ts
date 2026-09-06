@@ -72,7 +72,7 @@ export const badgeDoc = defineComponentDoc(badgeMetadata, {
 				'variants-and-states'
 			],
 			description:
-				'动态数量更新复用同一indicator；reduced motion取消WAAPI缩放，实时公告由业务live region单独拥有。',
+				'动态数量更新复用同一indicator；切换reduced motion立即取消进行中的缩放，恢复动画偏好不会重播旧数量。动画时长沿用Theme，实时公告由业务live region单独拥有。',
 			id: 'badge-dynamic',
 			source: dynamicSource,
 			title: '动态计数、隐藏与Reduced Motion'

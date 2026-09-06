@@ -5,6 +5,58 @@ import { render } from 'vitest-browser-svelte';
 import BadgeProductionFixture from './BadgeProductionFixture.svelte';
 
 describe('ZBadge production contract', () => {
+	it.each([1500, '1500ms', '1.5s'] as const)(
+		'normalizes the Theme duration %s for count animations',
+		async (duration) => {
+			render(BadgeProductionFixture, { duration, easing: 'linear' });
+			const indicator = document.querySelector<HTMLElement>(
+				'[data-testid="badge-production-anchor"] [data-slot="indicator"]'
+			)!;
+			document
+				.querySelector<HTMLButtonElement>('[data-testid="badge-production-increment"]')
+				?.click();
+			await tick();
+			const animations = indicator.getAnimations();
+			expect(animations).toHaveLength(1);
+			expect(animations[0]!.effect?.getComputedTiming().duration).toBe(1500);
+			expect(animations[0]!.effect?.getTiming().easing).toBe('linear');
+		}
+	);
+
+	it('cancels an active count animation when motion becomes reduced without a count change', async () => {
+		render(BadgeProductionFixture, { duration: '10s' });
+		const indicator = document.querySelector<HTMLElement>(
+			'[data-testid="badge-production-anchor"] [data-slot="indicator"]'
+		)!;
+		const increment = document.querySelector<HTMLButtonElement>(
+			'[data-testid="badge-production-increment"]'
+		)!;
+		const toggleMotion = document.querySelector<HTMLButtonElement>(
+			'[data-testid="badge-production-toggle-motion"]'
+		)!;
+		increment.click();
+		await tick();
+		const animation = indicator.getAnimations()[0]!;
+		expect(animation).toBeDefined();
+		animation.pause();
+
+		toggleMotion.click();
+		await tick();
+		expect(indicator.querySelector('[data-slot="accessible-count"]')?.textContent).toBe('101');
+		expect(animation.playState).toBe('idle');
+		expect(indicator.getAnimations()).toHaveLength(0);
+
+		increment.click();
+		await tick();
+		expect(indicator.getAnimations()).toHaveLength(0);
+		toggleMotion.click();
+		await tick();
+		expect(indicator.getAnimations()).toHaveLength(0);
+		increment.click();
+		await tick();
+		expect(indicator.getAnimations()).toHaveLength(1);
+	});
+
 	it('preserves exact counts, logical placement, dot semantics and motion ownership', async () => {
 		render(BadgeProductionFixture);
 		const anchor = document.querySelector<HTMLElement>('[data-testid="badge-production-anchor"]')!;

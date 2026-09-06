@@ -302,6 +302,7 @@
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import type { SelectionKey } from '../../runtime/collection/selection.js';
+	import { cssLength } from '../../theme/units.js';
 	import ZSpinner from '../feedback/ZSpinner.svelte';
 
 	type ItemRow = Readonly<{
@@ -388,7 +389,7 @@
 	const timeClass = $derived(zui.recipe(timeRecipe));
 	const variables = $derived({
 		...readIcssCarrier(rest),
-		'--zui-timeline-axis-size': `${zui.theme.size.small}px`
+		'--zui-timeline-axis-size': cssLength(zui.theme.size.small)
 	} as const);
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
 </script>
