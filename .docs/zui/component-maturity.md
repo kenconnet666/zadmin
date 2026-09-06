@@ -1,19 +1,19 @@
 # ZUI component maturity matrix
 
-Generated from 141 metadata components, 79 documentation modules, 141 API contract entries, and 189 test files.
+Generated from 145 metadata components, 82 documentation modules, 145 API contract entries, and 201 test files.
 
 This is a static inventory of authored test contracts, not an execution report or a whole-component visual acceptance result. Historical stage names are retained for compatibility. `VisuallyVerified` requires an explicit `@zui-visual ZComponent` marker, an owned component/fixture render, and a geometry, computed-style, CSS, or screenshot assertion in the SAME test block. A positive entry only identifies a scoped test; confirm its result against commit-matched CI and inspect real pages, themes, and densities separately. `DesktopVerified` remains false until a component-level desktop evidence source is added.
 
 | Stage                   | Count |
 | ----------------------- | ----: |
-| Declared                |   141 |
-| Authorable              |   141 |
-| ContractVerified        |   141 |
-| RuntimeImplemented      |   141 |
-| BrowserBehaviorVerified |   141 |
-| VisuallyVerified        |   141 |
+| Declared                |   145 |
+| Authorable              |   145 |
+| ContractVerified        |   145 |
+| RuntimeImplemented      |   145 |
+| BrowserBehaviorVerified |   143 |
+| VisuallyVerified        |   145 |
 | DesktopVerified         |     0 |
-| ProductionVerified      |   141 |
+| ProductionVerified      |   143 |
 
 | Component               | Category     | Declared | Authorable | Contract | Runtime | Browser | Visual | Desktop | Production | Docs                                                                  |
 | ----------------------- | ------------ | -------: | ---------: | -------: | ------: | ------: | -----: | ------: | ---------: | --------------------------------------------------------------------- |
@@ -153,7 +153,11 @@ This is a static inventory of authored test contracts, not an execution report o
 | ZTreeSelect             | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/tree-select/doc.ts             |
 | ZAspectRatio            | layout       |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/layout/aspect-ratio/doc.ts           |
 | ZContainer              | layout       |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/layout/container/doc.ts              |
+| ZGrid                   | layout       |        Y |          Y |        Y |       Y |       — |      Y |       — |          — | apps/docs/src/content/components/layout/grid/doc.ts                   |
+| ZGridItem               | layout       |        Y |          Y |        Y |       Y |       — |      Y |       — |          — | apps/docs/src/content/components/layout/grid/doc.ts                   |
+| ZSimpleGrid             | layout       |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/layout/simple-grid/doc.ts            |
 | ZStack                  | layout       |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/layout/stack/doc.ts                  |
+| ZBreadcrumb             | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/breadcrumb/doc.ts         |
 | ZCommand                | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/command/doc.ts            |
 | ZCommandPalette         | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/command-palette/doc.ts    |
 | ZPagination             | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/pagination/doc.ts         |

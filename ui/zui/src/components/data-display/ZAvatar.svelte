@@ -117,13 +117,13 @@
 				type: 'string'
 			},
 			{
-				default: "'medium'",
+				default: "componentDefaults.avatar.size → 'medium'",
 				description: '视觉尺寸。',
 				name: 'size',
 				type: 'AvatarSize'
 			},
 			{
-				default: "'circle'",
+				default: "componentDefaults.avatar.shape → 'circle'",
 				description: '形状。',
 				name: 'shape',
 				type: "'circle' | 'rounded' | 'square'"
@@ -217,6 +217,7 @@
 	} from '../../runtime/foundation/root-style.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
+	import { resolveComponentDefault } from '../../runtime/foundation/component-defaults.js';
 
 	let {
 		alt,
@@ -232,8 +233,8 @@
 		onImageLoad,
 		ref = $bindable(null),
 		referrerpolicy,
-		shape = 'circle',
-		size = 'medium',
+		shape,
+		size,
 		sizes,
 		src,
 		srcset,
@@ -241,21 +242,24 @@
 		...rest
 	}: ZAvatarProps = $props();
 	const zui = useZui();
+	const defaults = $derived(zui.componentDefaults.avatar);
 	const resolvedAlt = $derived.by(() => {
 		if (typeof alt !== 'string') throw new TypeError('ZAvatar alt must be a string.');
 		return alt;
 	});
 	const resolvedShape = $derived.by(() => {
-		if (!['circle', 'rounded', 'square'].includes(shape)) {
+		const next = resolveComponentDefault(shape, defaults?.shape, 'circle');
+		if (!['circle', 'rounded', 'square'].includes(next)) {
 			throw new TypeError('ZAvatar shape must be circle, rounded or square.');
 		}
-		return shape;
+		return next;
 	});
 	const resolvedSize = $derived.by(() => {
-		if (!controlSizes.includes(size)) {
+		const next = resolveComponentDefault(size, defaults?.size, 'medium');
+		if (!controlSizes.includes(next)) {
 			throw new TypeError('ZAvatar size must be xsmall, small, medium, large or xlarge.');
 		}
-		return size;
+		return next;
 	});
 	const resolvedFallbackText = $derived.by(() => {
 		if (fallbackText !== undefined && typeof fallbackText !== 'string') {

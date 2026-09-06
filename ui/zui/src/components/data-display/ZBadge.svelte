@@ -88,13 +88,13 @@
 				type: 'string'
 			},
 			{
-				default: "'top-end'",
+				default: "componentDefaults.badge.placement → 'top-end'",
 				description: '相对children的逻辑角落，自动跟随RTL。',
 				name: 'placement',
 				type: 'BadgePlacement'
 			},
 			{
-				default: "'rectangular'",
+				default: "componentDefaults.badge.overlap → 'rectangular'",
 				description: '按anchor外形调整角落重叠比例。',
 				name: 'overlap',
 				type: 'BadgeOverlap'
@@ -106,13 +106,13 @@
 				type: 'BadgeOffset'
 			},
 			{
-				default: "'medium'",
+				default: "componentDefaults.badge.size → 'medium'",
 				description: '计数指示器尺寸。',
 				name: 'size',
 				type: 'BadgeSize'
 			},
 			{
-				default: "'neutral'",
+				default: "componentDefaults.badge.tone → 'neutral'",
 				description: '计数或圆点的语义tone。',
 				name: 'tone',
 				type: 'BadgeTone'
@@ -328,6 +328,7 @@
 	} from '../../runtime/foundation/root-style.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import ZVisuallyHidden from '../gene/ZVisuallyHidden.svelte';
+	import { resolveComponentDefault } from '../../runtime/foundation/component-defaults.js';
 
 	interface IndicatorAnimationOptions {
 		readonly key: string;
@@ -343,16 +344,17 @@
 		label,
 		max = 99,
 		offset = [0, 0],
-		overlap = 'rectangular',
-		placement = 'top-end',
+		overlap,
+		placement,
 		ref = $bindable(null),
 		showZero = false,
-		size = 'medium',
+		size,
 		style,
-		tone = 'neutral',
+		tone,
 		...rest
 	}: ZBadgeProps = $props();
 	const zui = useZui();
+	const defaults = $derived(zui.componentDefaults.badge);
 	const reducedMotion = new ReducedMotionState(() => zui.motion);
 	const anchored = $derived(children !== undefined);
 	const numberFormatter = $derived(new Intl.NumberFormat(zui.locale));
@@ -369,28 +371,32 @@
 		return showZero;
 	});
 	const resolvedOverlap = $derived.by(() => {
-		if (!['circular', 'rectangular'].includes(overlap)) {
+		const next = resolveComponentDefault(overlap, defaults?.overlap, 'rectangular');
+		if (!['circular', 'rectangular'].includes(next)) {
 			throw new TypeError('ZBadge overlap must be circular or rectangular.');
 		}
-		return overlap;
+		return next;
 	});
 	const resolvedPlacement = $derived.by(() => {
-		if (!['bottom-end', 'bottom-start', 'top-end', 'top-start'].includes(placement)) {
+		const next = resolveComponentDefault(placement, defaults?.placement, 'top-end');
+		if (!['bottom-end', 'bottom-start', 'top-end', 'top-start'].includes(next)) {
 			throw new TypeError('ZBadge placement must be a supported logical corner.');
 		}
-		return placement;
+		return next;
 	});
 	const resolvedSize = $derived.by(() => {
-		if (!controlSizes.includes(size)) {
+		const next = resolveComponentDefault(size, defaults?.size, 'medium');
+		if (!controlSizes.includes(next)) {
 			throw new TypeError('ZBadge size must be xsmall, small, medium, large or xlarge.');
 		}
-		return size;
+		return next;
 	});
 	const resolvedTone = $derived.by(() => {
-		if (!semanticTones.includes(tone)) {
+		const next = resolveComponentDefault(tone, defaults?.tone, 'neutral');
+		if (!semanticTones.includes(next)) {
 			throw new TypeError('ZBadge tone must be neutral, info, success, warning or danger.');
 		}
-		return tone;
+		return next;
 	});
 	const normalizedCount = $derived.by(() => {
 		if (count === undefined || count === null) return undefined;

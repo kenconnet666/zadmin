@@ -17,7 +17,19 @@ export const containerDoc = defineComponentDoc(containerMetadata, {
 		props: {
 			gutter: { default: "'medium'", description: '逻辑padding-inline token；none显式关闭。' },
 			ref: { default: 'null', description: '真实容器div引用。' },
-			size: { default: "'medium'", description: 'small/medium/large最大宽度或full流体边界。' }
+			queryName: {
+				default: '—',
+				description: '为后代建立命名inline-size容器，可与Grid、SimpleGrid、Stack的query组合。'
+			},
+			query: {
+				default: "'viewport'",
+				description: '自身响应式size/gutter/maxWidth使用的视口或祖先容器。'
+			},
+			maxWidth: {
+				default: '—',
+				description: '自定义CSS最大宽度，数字按px；支持断点对象并覆盖size预设。'
+			},
+			size: { default: "'medium'", description: '五档最大宽度或full流体边界，支持响应式对象。' }
 		},
 		summary: '用box-sizing安全的居中typed max-width和逻辑gutter建立内容边界，不承担Stack/Grid职责。'
 	},
@@ -33,7 +45,7 @@ export const containerDoc = defineComponentDoc(containerMetadata, {
 		{
 			component: SizesDemo,
 			covers: ['density', 'variants-and-states'],
-			description: '三种最大宽度与gutter组合覆盖内容密度需求。',
+			description: '五档最大宽度与独立gutter覆盖内容密度需求。',
 			id: 'container-sizes',
 			source: sizesSource,
 			title: '尺寸与Gutter'
@@ -59,6 +71,6 @@ export const containerDoc = defineComponentDoc(containerMetadata, {
 		'不增加landmark或role；需要main、section等语义时由调用方在外层使用原生元素。',
 		'padding-inline自动遵循RTL；box-sizing:border-box确保gutter计入100%宽度。',
 		'size=full只关闭max-width限制，不隐式关闭gutter；嵌套容器不会猜测父级。',
-		'参考MUI Container的maxWidth/gutter职责，但不采用breakpoint fixed、任意component、sx或Grid API。'
+		'支持maxWidth覆盖与响应式gutter；queryName建立后代查询容器，query控制自身参照，不与Grid的列布局混合。'
 	]
 });

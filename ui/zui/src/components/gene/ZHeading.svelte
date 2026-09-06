@@ -43,7 +43,7 @@
 		parts: [],
 		props: [
 			{
-				default: "'balance'",
+				default: "componentDefaults.heading.wrap → 'balance'",
 				description: '标题换行策略；balance平衡多行标题，nowrap仅用于已有宽度保障的短标题。',
 				name: 'wrap',
 				type: 'ZHeadingWrap'
@@ -55,25 +55,25 @@
 				type: '1 | 2 | 3 | 4 | 5 | 6'
 			},
 			{
-				default: "'xxlarge'",
+				default: "componentDefaults.heading.size → 'xxlarge'",
 				description: '独立于level的Theme字号token。',
 				name: 'size',
 				type: "keyof ZuiTheme['fontSize']"
 			},
 			{
-				default: "'compact'",
+				default: "componentDefaults.heading.lineHeight → 'compact'",
 				description: 'Theme行高token。',
 				name: 'lineHeight',
 				type: "keyof ZuiTheme['lineHeight']"
 			},
 			{
-				default: "'bold'",
+				default: "componentDefaults.heading.weight → 'bold'",
 				description: 'Theme字重token。',
 				name: 'weight',
 				type: "keyof ZuiTheme['fontWeight']"
 			},
 			{
-				default: "'neutral'",
+				default: "componentDefaults.heading.tone → 'neutral'",
 				description: '语义颜色；不改变heading level。',
 				name: 'tone',
 				type: 'ZHeadingTone'
@@ -153,23 +153,32 @@
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { headingElement } from './typography.js';
+	import { resolveComponentDefault } from '../../runtime/foundation/component-defaults.js';
 
 	let {
 		children,
 		class: className,
 		level = 2,
-		lineHeight = 'compact',
+		lineHeight,
 		ref = $bindable(null),
-		size = 'xxlarge',
+		size,
 		style,
-		tone = 'neutral',
-		weight = 'bold',
-		wrap = 'balance',
+		tone,
+		weight,
+		wrap,
 		...rest
 	}: ZHeadingProps = $props();
 	const zui = useZui();
+	const defaults = $derived(zui.componentDefaults.heading);
+	const typography = $derived({
+		lineHeight: resolveComponentDefault(lineHeight, defaults?.lineHeight, 'compact'),
+		size: resolveComponentDefault(size, defaults?.size, 'xxlarge'),
+		tone: resolveComponentDefault(tone, defaults?.tone, 'neutral'),
+		weight: resolveComponentDefault(weight, defaults?.weight, 'bold'),
+		wrap: resolveComponentDefault(wrap, defaults?.wrap, 'balance')
+	});
 	const element = $derived(headingElement(level));
-	const rootClass = $derived(zui.recipe(headingRecipe, { lineHeight, size, tone, weight, wrap }));
+	const rootClass = $derived(zui.recipe(headingRecipe, typography));
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 </script>
@@ -182,8 +191,8 @@
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
 	data-level={level}
-	data-size={size}
-	data-wrap={wrap}
+	data-size={typography.size}
+	data-wrap={typography.wrap}
 >
 	{@render children?.()}
 </svelte:element>

@@ -10354,12 +10354,27 @@ export const containerApiFacts = {
 		{
 			name: 'gutter',
 			required: false,
-			type: "'large' | 'medium' | 'none' | 'small'"
+			type: 'ResponsiveValue<ZContainerGutter>'
 		},
 		{
 			name: 'size',
 			required: false,
-			type: "ZControlSize | 'full'"
+			type: 'ResponsiveValue<ZContainerSize>'
+		},
+		{
+			name: 'maxWidth',
+			required: false,
+			type: 'ResponsiveValue<string | number>'
+		},
+		{
+			name: 'queryName',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'query',
+			required: false,
+			type: 'ResponsiveQuery'
 		},
 		{
 			name: 'ref',
@@ -10368,6 +10383,159 @@ export const containerApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/layout/ZContainer.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
+export const gridApiFacts = {
+	declaration: 'ZGridProps',
+	id: 'grid',
+	inheritedFrom: ['HTMLAttributes<HTMLDivElement>'],
+	name: 'ZGrid',
+	props: [
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'columns',
+			required: false,
+			type: 'ResponsiveValue<number>'
+		},
+		{
+			name: 'gap',
+			required: false,
+			type: 'ResponsiveValue<ZLayoutSpacing>'
+		},
+		{
+			name: 'rowGap',
+			required: false,
+			type: 'ResponsiveValue<ZLayoutSpacing>'
+		},
+		{
+			name: 'columnGap',
+			required: false,
+			type: 'ResponsiveValue<ZLayoutSpacing>'
+		},
+		{
+			name: 'align',
+			required: false,
+			type: 'ResponsiveValue<ZLayoutAlignment>'
+		},
+		{
+			name: 'query',
+			required: false,
+			type: 'ResponsiveQuery'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null'
+		}
+	],
+	source: 'ui/zui/src/components/layout/ZGrid.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
+export const gridItemApiFacts = {
+	declaration: 'ZGridItemProps',
+	id: 'grid-item',
+	inheritedFrom: ['HTMLAttributes<HTMLDivElement>'],
+	name: 'ZGridItem',
+	props: [
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'span',
+			required: false,
+			type: "ResponsiveValue<number | 'full'>"
+		},
+		{
+			name: 'start',
+			required: false,
+			type: "ResponsiveValue<number | 'auto'>"
+		},
+		{
+			name: 'rowSpan',
+			required: false,
+			type: 'ResponsiveValue<number>'
+		},
+		{
+			name: 'order',
+			required: false,
+			type: 'ResponsiveValue<number>'
+		},
+		{
+			name: 'align',
+			required: false,
+			type: "ResponsiveValue<ZLayoutAlignment | 'auto'>"
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null'
+		}
+	],
+	source: 'ui/zui/src/components/layout/ZGridItem.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
+export const simpleGridApiFacts = {
+	declaration: 'ZSimpleGridProps',
+	id: 'simple-grid',
+	inheritedFrom: [
+		'HTMLAttributes<HTMLDivElement>',
+		'ZSimpleGridColumnsProps | ZSimpleGridMinItemWidthProps'
+	],
+	name: 'ZSimpleGrid',
+	props: [
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'columnGap',
+			required: false,
+			type: 'ResponsiveValue<ZLayoutSpacing>'
+		},
+		{
+			name: 'gap',
+			required: false,
+			type: 'ResponsiveValue<ZLayoutSpacing>'
+		},
+		{
+			name: 'query',
+			required: false,
+			type: 'ResponsiveQuery'
+		},
+		{
+			name: 'rowGap',
+			required: false,
+			type: 'ResponsiveValue<ZLayoutSpacing>'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null'
+		},
+		{
+			name: 'columns',
+			required: false,
+			type: 'ResponsiveValue<number>',
+			inheritedFrom: 'ZSimpleGridColumnsProps'
+		},
+		{
+			name: 'minItemWidth',
+			required: false,
+			type: 'ResponsiveValue<ZSimpleGridMinItemWidth>',
+			inheritedFrom: 'ZSimpleGridColumnsProps'
+		}
+	],
+	source: 'ui/zui/src/components/layout/ZSimpleGrid.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
@@ -10380,7 +10548,7 @@ export const stackApiFacts = {
 		{
 			name: 'align',
 			required: false,
-			type: "'baseline' | 'center' | 'end' | 'start' | 'stretch'"
+			type: 'ResponsiveValue<ZStackAlignment>'
 		},
 		{
 			name: 'children',
@@ -10390,22 +10558,37 @@ export const stackApiFacts = {
 		{
 			name: 'direction',
 			required: false,
-			type: "'column' | 'column-reverse' | 'row' | 'row-reverse'"
+			type: 'ResponsiveValue<ZStackDirection>'
 		},
 		{
 			name: 'gap',
 			required: false,
-			type: "ZControlSize | 'none' | number"
+			type: 'ResponsiveValue<ZLayoutSpacing>'
+		},
+		{
+			name: 'rowGap',
+			required: false,
+			type: 'ResponsiveValue<ZLayoutSpacing>'
+		},
+		{
+			name: 'columnGap',
+			required: false,
+			type: 'ResponsiveValue<ZLayoutSpacing>'
+		},
+		{
+			name: 'query',
+			required: false,
+			type: 'ResponsiveQuery'
 		},
 		{
 			name: 'justify',
 			required: false,
-			type: "'around' | 'between' | 'center' | 'end' | 'evenly' | 'start'"
+			type: 'ResponsiveValue<ZStackJustification>'
 		},
 		{
 			name: 'wrap',
 			required: false,
-			type: 'boolean'
+			type: "ResponsiveValue<boolean | 'reverse'>"
 		},
 		{
 			name: 'ref',
@@ -10414,6 +10597,37 @@ export const stackApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/layout/ZStack.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
+export const breadcrumbApiFacts = {
+	declaration: 'ZBreadcrumbProps',
+	id: 'breadcrumb',
+	inheritedFrom: ['HTMLAttributes<HTMLElement>'],
+	name: 'ZBreadcrumb',
+	props: [
+		{
+			name: 'item',
+			required: false,
+			type: 'Snippet<[item: BreadcrumbItem, index: number]>'
+		},
+		{
+			name: 'items',
+			required: true,
+			type: 'readonly BreadcrumbItem[]'
+		},
+		{
+			name: 'separator',
+			required: false,
+			type: 'Snippet<[item: BreadcrumbItem, index: number]>'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLElement | null'
+		}
+	],
+	source: 'ui/zui/src/components/navigation/ZBreadcrumb.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 

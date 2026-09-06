@@ -1,10 +1,10 @@
 {
 	"schemaVersion": 2,
 	"source": {
-		"metadataComponents": 141,
-		"documentationPages": 79,
-		"contractComponents": 141,
-		"testFiles": 189
+		"metadataComponents": 145,
+		"documentationPages": 82,
+		"contractComponents": 145,
+		"testFiles": 201
 	},
 	"stageNames": [
 		"Declared",
@@ -18,14 +18,14 @@
 	],
 	"evidenceScope": "Static inventory of authored test contracts, not test execution results or whole-component visual acceptance. Stage names are retained for compatibility; consult commit-matched CI and page-level review separately.",
 	"summary": {
-		"Declared": 141,
-		"Authorable": 141,
-		"ContractVerified": 141,
-		"RuntimeImplemented": 141,
-		"BrowserBehaviorVerified": 141,
-		"VisuallyVerified": 141,
+		"Declared": 145,
+		"Authorable": 145,
+		"ContractVerified": 145,
+		"RuntimeImplemented": 145,
+		"BrowserBehaviorVerified": 143,
+		"VisuallyVerified": 145,
 		"DesktopVerified": 0,
-		"ProductionVerified": 141
+		"ProductionVerified": 143
 	},
 	"components": [
 		{
@@ -1935,6 +1935,10 @@
 					"detail": "ZDialog SSR assertions"
 				},
 				{
+					"path": "ui/zui/tests/component-defaults-extension-ssr.spec.ts",
+					"detail": "ZDialog SSR assertions"
+				},
+				{
 					"path": "ui/zui/tests/overlay-production-ssr.spec.ts",
 					"detail": "ZDialog SSR assertions"
 				}
@@ -2066,7 +2070,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "e294c1ddabb2bfeed0b6cb2b0f58ffab7ce5d89a2ff58d4774f9eba9aad9484a API snapshot entry"
+						"detail": "9b86cc837644a1043858f0d2263350ae37145f1d580201bb7c90f14bdc2e8ca6 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -2112,6 +2116,10 @@
 				"detail": "family-owned documentation module (dialog)"
 			},
 			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/component-defaults-extension-ssr.spec.ts",
+					"detail": "ZDialogContent SSR assertions"
+				},
 				{
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZDialogContent SSR assertions"
@@ -2384,6 +2392,10 @@
 			},
 			"ssrEvidence": [
 				{
+					"path": "ui/zui/tests/component-defaults-extension-ssr.spec.ts",
+					"detail": "ZDialogTitle SSR assertions"
+				},
+				{
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZDialogTitle SSR assertions"
 				},
@@ -2476,6 +2488,10 @@
 				"detail": "family-owned documentation module (dialog)"
 			},
 			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/component-defaults-extension-ssr.spec.ts",
+					"detail": "ZDialogTrigger SSR assertions"
+				},
 				{
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZDialogTrigger SSR assertions"
@@ -6851,6 +6867,10 @@
 					"detail": "ZTooltip SSR assertions"
 				},
 				{
+					"path": "ui/zui/tests/component-defaults-extension-ssr.spec.ts",
+					"detail": "ZTooltip SSR assertions"
+				},
+				{
 					"path": "ui/zui/tests/tooltip-popconfirm.spec.ts",
 					"detail": "ZTooltip SSR assertions"
 				}
@@ -6893,7 +6913,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "2b35afa6445d1c68d5d1b88da0b8b2b6e9790ebffe1e3f178e365898d1ae2b6f API snapshot entry"
+						"detail": "27afd48f24dd8661670bd354881ff169049b52e7356d84158fb048f77323b7b2 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -6951,6 +6971,10 @@
 				"detail": "family-owned documentation module (tooltip)"
 			},
 			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/component-defaults-extension-ssr.spec.ts",
+					"detail": "ZTooltipContent SSR assertions"
+				},
 				{
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZTooltipContent SSR assertions"
@@ -7134,6 +7158,10 @@
 			},
 			"ssrEvidence": [
 				{
+					"path": "ui/zui/tests/component-defaults-extension-ssr.spec.ts",
+					"detail": "ZTooltipTrigger SSR assertions"
+				},
+				{
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZTooltipTrigger SSR assertions"
 				},
@@ -7273,7 +7301,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "e86ec61a6b1da01a9b1fb431cd1e96b6d71f9aed90f819790c9ec223180c232b API snapshot entry"
+						"detail": "4edbf6c5517744c469518305670faeeae1babe2a66c525e89a4739acae39d313 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -7336,6 +7364,10 @@
 					"detail": "ZAvatar SSR assertions"
 				},
 				{
+					"path": "ui/zui/tests/component-defaults-extension-ssr.spec.ts",
+					"detail": "ZAvatar SSR assertions"
+				},
+				{
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZAvatar SSR assertions"
 				}
@@ -7378,7 +7410,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "0cb1a2c72b9659b5b0ccf24641ea15df90f327a2ff374461c31173b7d01ff7fd API snapshot entry"
+						"detail": "1d58b6aa096756b8bbddcc00ecff287c3c8de4aee945a02cb0a370540b08dff1 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -7426,6 +7458,10 @@
 			"ssrEvidence": [
 				{
 					"path": "ui/zui/tests/badge.spec.ts",
+					"detail": "ZBadge SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/component-defaults-extension-ssr.spec.ts",
 					"detail": "ZBadge SSR assertions"
 				},
 				{
@@ -8685,6 +8721,10 @@
 			},
 			"ssrEvidence": [
 				{
+					"path": "ui/zui/tests/component-defaults-extension-ssr.spec.ts",
+					"detail": "ZTag SSR assertions"
+				},
+				{
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZTag SSR assertions"
 				},
@@ -9264,7 +9304,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "ed7ef4ede4fb01f6642e54b8b7e325caa324c3dc53ed0ca5ef060e5da7b01247 API snapshot entry"
+						"detail": "03b7f213b089645504753b8336e24dff9d4a1df98bfe2b9a862f68beb138fbd5 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -9310,6 +9350,10 @@
 				"detail": "catalog component documentation module"
 			},
 			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/component-defaults-extension-ssr.spec.ts",
+					"detail": "ZSpinner SSR assertions"
+				},
 				{
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZSpinner SSR assertions"
@@ -9715,6 +9759,10 @@
 					"detail": "ZButton SSR assertions"
 				},
 				{
+					"path": "ui/zui/tests/component-defaults-extension-ssr.spec.ts",
+					"detail": "ZButton SSR assertions"
+				},
+				{
 					"path": "ui/zui/tests/data-table-production.spec.ts",
 					"detail": "ZButton SSR assertions"
 				},
@@ -9894,7 +9942,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "05d83e8594861cb9e5b9879e97db54b055e42dc50a172784fce0cdac40c6cba8 API snapshot entry"
+						"detail": "41a0bd475343fd06b13138e386f22843b538d2e8ee1600a9d640662042a382f5 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -9963,6 +10011,10 @@
 				{
 					"path": "ui/zui/tests/typography.spec.ts",
 					"detail": "ZHeading SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/component-defaults-extension-ssr.spec.ts",
+					"detail": "ZHeading SSR assertions"
 				}
 			]
 		},
@@ -10003,7 +10055,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "deec3cc4bbb2c236ec6fe5de044c7ddd63f8b2f752c4b55d76ca27bd913e2369 API snapshot entry"
+						"detail": "325c34d36308aa7135efcc7574104f226d97f33715f326a5ae5a791a7f354603 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -10043,6 +10095,10 @@
 			"ssrEvidence": [
 				{
 					"path": "ui/zui/tests/components.spec.ts",
+					"detail": "ZIcon SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/component-defaults-extension-ssr.spec.ts",
 					"detail": "ZIcon SSR assertions"
 				}
 			]
@@ -10185,7 +10241,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "de3a478301f156ed2dff5b0a137b43def9b8f095d66c73ec537163bb717b1ff5 API snapshot entry"
+						"detail": "0fcd7f30e4c9e69c6c5fb17cda0b2dbeaddc7212a28e153526028dbfb3b820b5 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -10274,6 +10330,10 @@
 				{
 					"path": "ui/zui/tests/link-production.spec.ts",
 					"detail": "ZLink SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/component-defaults-extension-ssr.spec.ts",
+					"detail": "ZLink SSR assertions"
 				}
 			]
 		},
@@ -10314,7 +10374,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "b11c216aebd03ef2d2b21190740937be71df631b08ea2fab4fb8c65703b16ec8 API snapshot entry"
+						"detail": "5e1b1a1a956846d27107bd035935f602348751e79252b2669ce0064da0473100 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -10362,6 +10422,10 @@
 			"ssrEvidence": [
 				{
 					"path": "ui/zui/tests/code-production.spec.ts",
+					"detail": "ZProvider SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/component-defaults-extension-ssr.spec.ts",
 					"detail": "ZProvider SSR assertions"
 				},
 				{
@@ -10524,7 +10588,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "74a24f2023c172e3d072979306940c3ae7abc14f87b9565542dbce8731a8dac5 API snapshot entry"
+						"detail": "4051e84e37fc088df7d1a436b29a488d700eaab34d2cb30894b5de4128dc070d API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -10587,6 +10651,10 @@
 					"detail": "ZText SSR assertions"
 				},
 				{
+					"path": "ui/zui/tests/component-defaults-extension-ssr.spec.ts",
+					"detail": "ZText SSR assertions"
+				},
+				{
 					"path": "ui/zui/tests/statistic-timeline-production.spec.ts",
 					"detail": "ZText SSR assertions"
 				}
@@ -10629,7 +10697,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "f72dfc16e10b01558e3a4662223f9d6058a5788e9bb23aebf33cb73966eec245 API snapshot entry"
+						"detail": "93e59ff37b60b0f4c2487113860c9f73c8574c26811ff1ca5c4a253a173d1d8a API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -10689,6 +10757,10 @@
 				},
 				{
 					"path": "ui/zui/tests/components.spec.ts",
+					"detail": "ZToggleButton SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/component-defaults-extension-ssr.spec.ts",
 					"detail": "ZToggleButton SSR assertions"
 				}
 			]
@@ -13400,7 +13472,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "b6e71a044aa856d3bba9767e2cad0164e818690e8d3a62e31dd65a425cb15902 API snapshot entry"
+						"detail": "f289d1cfe88c5f92d0682474f220f06d709c9c34fb4147af943c4712d60d5894 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -13461,6 +13533,231 @@
 			]
 		},
 		{
+			"id": "grid",
+			"name": "ZGrid",
+			"category": "layout",
+			"family": null,
+			"status": "experimental",
+			"source": "ui/zui/src/components/layout/ZGrid.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": false,
+				"VisuallyVerified": true,
+				"DesktopVerified": false,
+				"ProductionVerified": false
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/layout/ZGrid.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZGrid"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "c2c9033855b74c95ca6cd72e1b38f61f02ce9122206cd7cdcb84aba392d605fd API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/layout/ZGrid.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/responsive-grid.browser.spec.ts",
+						"detail": "ZGrid authored visual contract: coordinates native container tracks, spans and axis overrides while resizing without JS measurement (line 6); requires browser execution and page-level review"
+					},
+					{
+						"path": "ui/zui/tests/ResponsiveGridFixture.svelte",
+						"detail": "ZGrid explicit rendered fixture usage"
+					}
+				],
+				"DesktopVerified": [],
+				"ProductionVerified": []
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/layout/grid/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrEvidence": []
+		},
+		{
+			"id": "grid-item",
+			"name": "ZGridItem",
+			"category": "layout",
+			"family": null,
+			"status": "experimental",
+			"source": "ui/zui/src/components/layout/ZGridItem.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": false,
+				"VisuallyVerified": true,
+				"DesktopVerified": false,
+				"ProductionVerified": false
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/layout/ZGridItem.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZGridItem"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "793e7b297997556bd9c81d1e6928a5d0231d9a7d3cfd849b2bf3f9781befc33e API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/layout/ZGridItem.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/responsive-grid.browser.spec.ts",
+						"detail": "ZGridItem authored visual contract: coordinates native container tracks, spans and axis overrides while resizing without JS measurement (line 6); requires browser execution and page-level review"
+					},
+					{
+						"path": "ui/zui/tests/ResponsiveGridFixture.svelte",
+						"detail": "ZGridItem explicit rendered fixture usage"
+					}
+				],
+				"DesktopVerified": [],
+				"ProductionVerified": []
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/layout/grid/doc.ts",
+				"detail": "family-owned documentation module (grid)"
+			},
+			"ssrEvidence": []
+		},
+		{
+			"id": "simple-grid",
+			"name": "ZSimpleGrid",
+			"category": "layout",
+			"family": null,
+			"status": "experimental",
+			"source": "ui/zui/src/components/layout/ZSimpleGrid.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": true,
+				"VisuallyVerified": true,
+				"DesktopVerified": false,
+				"ProductionVerified": true
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/layout/ZSimpleGrid.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZSimpleGrid"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "e91d00f73db30c3ba498ec93e0f3475599f87c2129d072f3ef66b6921e81eb74 API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/layout/ZSimpleGrid.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [
+					{
+						"path": "ui/zui/tests/simple-grid-production.browser.spec.ts",
+						"detail": "ZSimpleGrid browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/SimpleGridFixture.svelte",
+						"detail": "ZSimpleGrid explicit rendered fixture usage"
+					}
+				],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/simple-grid-production.browser.spec.ts",
+						"detail": "ZSimpleGrid authored visual contract: uses CSS auto-fit minimum tracks that stay within a narrow owner and inherits RTL (line 23); requires browser execution and page-level review"
+					},
+					{
+						"path": "ui/zui/tests/SimpleGridFixture.svelte",
+						"detail": "ZSimpleGrid explicit rendered fixture usage"
+					}
+				],
+				"DesktopVerified": [],
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/simple-grid-production.spec.ts",
+						"detail": "ZSimpleGrid production assertions"
+					},
+					{
+						"path": "ui/zui/tests/simple-grid-production.browser.spec.ts",
+						"detail": "ZSimpleGrid production assertions"
+					},
+					{
+						"path": "ui/zui/tests/SimpleGridFixture.svelte",
+						"detail": "ZSimpleGrid explicit rendered fixture usage"
+					}
+				]
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/layout/simple-grid/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/simple-grid-production.spec.ts",
+					"detail": "ZSimpleGrid SSR assertions"
+				}
+			]
+		},
+		{
 			"id": "stack",
 			"name": "ZStack",
 			"category": "layout",
@@ -13497,7 +13794,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "b3b0f1c66b80252a9765f24f588a4b9d50fef5c9343c25f7eae1098b7ba2c498 API snapshot entry"
+						"detail": "ceba85df32202db062b1de58a0c22fa7bd60123a3bf3c31b80416c4d5c069ca0 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -13546,6 +13843,99 @@
 				{
 					"path": "ui/zui/tests/tooltip-popconfirm.spec.ts",
 					"detail": "ZStack SSR assertions"
+				}
+			]
+		},
+		{
+			"id": "breadcrumb",
+			"name": "ZBreadcrumb",
+			"category": "navigation",
+			"family": null,
+			"status": "experimental",
+			"source": "ui/zui/src/components/navigation/ZBreadcrumb.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": true,
+				"VisuallyVerified": true,
+				"DesktopVerified": false,
+				"ProductionVerified": true
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/navigation/ZBreadcrumb.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZBreadcrumb"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "923e18bd55b6a78990f1cb0dcff4969023aeef6321f736e4d9cd57d45206dcc0 API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/navigation/ZBreadcrumb.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [
+					{
+						"path": "ui/zui/tests/breadcrumb-production.browser.spec.ts",
+						"detail": "ZBreadcrumb browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/BreadcrumbFixture.svelte",
+						"detail": "ZBreadcrumb explicit rendered fixture usage"
+					}
+				],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/breadcrumb-production.browser.spec.ts",
+						"detail": "ZBreadcrumb authored visual contract: uses logical layout and wraps long labels within narrow and RTL owners (line 23); requires browser execution and page-level review"
+					},
+					{
+						"path": "ui/zui/tests/BreadcrumbFixture.svelte",
+						"detail": "ZBreadcrumb explicit rendered fixture usage"
+					}
+				],
+				"DesktopVerified": [],
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/breadcrumb-production.spec.ts",
+						"detail": "ZBreadcrumb production assertions"
+					},
+					{
+						"path": "ui/zui/tests/breadcrumb-production.browser.spec.ts",
+						"detail": "ZBreadcrumb production assertions"
+					},
+					{
+						"path": "ui/zui/tests/BreadcrumbFixture.svelte",
+						"detail": "ZBreadcrumb explicit rendered fixture usage"
+					}
+				]
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/navigation/breadcrumb/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/breadcrumb-production.spec.ts",
+					"detail": "ZBreadcrumb SSR assertions"
 				}
 			]
 		},

@@ -38,16 +38,16 @@ export const componentCatalogManifest = Object.freeze([
 			'controlled',
 			'density',
 			'variants-and-states',
+			'portal',
 			'basic-render',
 			'full-motion',
 			'reduced-motion',
 			'rtl',
-			'portal',
 			'ssr',
 			'locale',
 			'resource-cleanup'
 		],
-		demoCount: 6,
+		demoCount: 7,
 		publicComponentCount: 1
 	},
 	{
@@ -76,7 +76,77 @@ export const componentCatalogManifest = Object.freeze([
 			'native-props',
 			'variants-and-states',
 			'rtl',
-			'keyboard'
+			'keyboard',
+			'ssr'
+		],
+		demoCount: 4,
+		publicComponentCount: 1
+	},
+	{
+		id: 'grid',
+		name: 'ZGrid',
+		category: 'layout',
+		summary: '用显式列轨道和响应式查询建立可组合的逻辑栅格，ZGridItem负责跨列、起始列与跨行。',
+		status: 'experimental',
+		keywords: [],
+		profiles: ['primitive'],
+		capabilities: [
+			'basic-render',
+			'composition',
+			'native-props',
+			'ssr',
+			'variants-and-states',
+			'rtl'
+		],
+		demoCount: 4,
+		publicComponentCount: 2
+	},
+	{
+		id: 'simple-grid',
+		name: 'ZSimpleGrid',
+		category: 'layout',
+		summary:
+			'普通children的等宽CSS Grid：固定columns适合明确编排，minItemWidth用auto-fit适应可用空间；它不提供跨列、GridItem或布局上下文。',
+		status: 'experimental',
+		keywords: [
+			'simple grid',
+			'css grid',
+			'auto-fit',
+			'minmax',
+			'responsive',
+			'container query',
+			'rtl'
+		],
+		profiles: ['primitive'],
+		capabilities: [
+			'basic-render',
+			'composition',
+			'native-props',
+			'ssr',
+			'variants-and-states',
+			'rtl'
+		],
+		demoCount: 4,
+		publicComponentCount: 1
+	},
+	{
+		id: 'breadcrumb',
+		name: 'ZBreadcrumb',
+		category: 'navigation',
+		summary:
+			'生产Breadcrumb保持具名nav/ol/li、typed key、真实路由链接、唯一当前文本、装饰分隔符和窄屏/RTL自然换行；首版不测量或隐藏长路径。',
+		status: 'experimental',
+		keywords: ['breadcrumb', 'navigation', 'nav', 'ol', 'li', 'aria-current', 'typed key', 'rtl'],
+		profiles: ['collection'],
+		capabilities: [
+			'accessible-name',
+			'basic-render',
+			'native-props',
+			'ssr',
+			'composition',
+			'variants-and-states',
+			'rtl',
+			'locale'
 		],
 		demoCount: 4,
 		publicComponentCount: 1

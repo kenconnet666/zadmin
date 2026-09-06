@@ -6,6 +6,15 @@ export const componentDocLoaders = {
 	box: () => import('../content/components/gene/box/doc.js').then((module) => module.boxDoc),
 	stack: () =>
 		import('../content/components/layout/stack/doc.js').then((module) => module.stackDoc),
+	grid: () => import('../content/components/layout/grid/doc.js').then((module) => module.gridDoc),
+	'simple-grid': () =>
+		import('../content/components/layout/simple-grid/doc.js').then(
+			(module) => module.simpleGridDoc
+		),
+	breadcrumb: () =>
+		import('../content/components/navigation/breadcrumb/doc.js').then(
+			(module) => module.breadcrumbDoc
+		),
 	text: () => import('../content/components/gene/text/doc.js').then((module) => module.textDoc),
 	heading: () =>
 		import('../content/components/gene/heading/doc.js').then((module) => module.headingDoc),

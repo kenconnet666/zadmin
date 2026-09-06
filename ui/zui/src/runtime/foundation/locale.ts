@@ -1,4 +1,5 @@
 export interface ZuiCommonLocale {
+	readonly breadcrumb: string;
 	readonly clear: string;
 	readonly close: string;
 	readonly copy: string;
@@ -263,7 +264,7 @@ export const enUSLocalePack = Object.freeze({
 		placeholder: 'Type a command',
 		results: (formattedCount: string) => `${formattedCount} commands found`
 	}),
-	common: Object.freeze({ clear: 'Clear', close: 'Close', copy: 'Copy' }),
+	common: Object.freeze({ breadcrumb: 'Breadcrumb', clear: 'Clear', close: 'Close', copy: 'Copy' }),
 	date: Object.freeze({
 		calendarLabel: 'Calendar',
 		clearDate: 'Clear date',
@@ -420,7 +421,7 @@ export const zhCNLocalePack = Object.freeze({
 		placeholder: '输入命令',
 		results: (formattedCount: string) => `找到${formattedCount}个命令`
 	}),
-	common: Object.freeze({ clear: '清空', close: '关闭', copy: '复制' }),
+	common: Object.freeze({ breadcrumb: '当前位置', clear: '清空', close: '关闭', copy: '复制' }),
 	date: Object.freeze({
 		calendarLabel: '日历',
 		clearDate: '清空日期',

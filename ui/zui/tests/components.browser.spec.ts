@@ -2419,13 +2419,44 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		const content = document.querySelector<HTMLElement>('[data-testid="popover-content"]');
 		expect(content?.getAttribute('aria-modal')).toBe('true');
-		await expect
-			.poll(() => ({
-				connected: content?.isConnected,
-				state: content?.dataset.state,
-				opacity: content && getComputedStyle(content).opacity
-			}))
-			.toEqual({ connected: true, state: 'open', opacity: '1' });
+		const samples: Record<string, unknown>[] = [];
+		try {
+			await expect
+				.poll(() => {
+					const css = content && getComputedStyle(content);
+					const observed = {
+						connected: content?.isConnected,
+						state: content?.dataset.state,
+						opacity: css?.opacity
+					};
+					if (samples.length < 24)
+						samples.push({
+							...observed,
+							time: content?.ownerDocument.defaultView?.performance.now(),
+							timeline: content?.ownerDocument.timeline.currentTime?.toString(),
+							visibility: content?.ownerDocument.visibilityState,
+							focused: content?.ownerDocument.hasFocus(),
+							className: content?.className,
+							presence: content?.dataset.presence,
+							transform: css?.transform,
+							duration: css?.transitionDuration,
+							delay: css?.transitionDelay,
+							animations: content?.getAnimations().map((animation) => ({
+								playState: animation.playState,
+								pending: animation.pending,
+								currentTime: animation.currentTime?.toString(),
+								startTime: animation.startTime?.toString(),
+								playbackRate: animation.playbackRate,
+								timing: animation.effect?.getComputedTiming()
+							}))
+						});
+					return observed;
+				})
+				.toEqual({ connected: true, state: 'open', opacity: '1' });
+		} catch (error) {
+			console.error('Modal Popover transition diagnostics', JSON.stringify(samples));
+			throw error;
+		}
 		await expect
 			.poll(
 				() =>

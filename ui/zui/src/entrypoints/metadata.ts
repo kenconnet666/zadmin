@@ -137,6 +137,10 @@ export { zuiMetadata as paginationMetadata } from '../components/navigation/ZPag
 export { zuiMetadata as commandMetadata } from '../components/navigation/ZCommand.svelte';
 export { zuiMetadata as commandPaletteMetadata } from '../components/navigation/ZCommandPalette.svelte';
 export { zuiMetadata as stackMetadata } from '../components/layout/ZStack.svelte';
+export { zuiMetadata as gridMetadata } from '../components/layout/ZGrid.svelte';
+export { zuiMetadata as gridItemMetadata } from '../components/layout/ZGridItem.svelte';
+export { zuiMetadata as simpleGridMetadata } from '../components/layout/ZSimpleGrid.svelte';
+export { zuiMetadata as breadcrumbMetadata } from '../components/navigation/ZBreadcrumb.svelte';
 export { zuiMetadata as containerMetadata } from '../components/layout/ZContainer.svelte';
 export { zuiMetadata as aspectRatioMetadata } from '../components/layout/ZAspectRatio.svelte';
 export type {

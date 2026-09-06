@@ -59,6 +59,9 @@ import { timeFieldDoc } from '../content/components/input/time-field/doc.js';
 import { treeSelectDoc } from '../content/components/input/tree-select/doc.js';
 import { transferDoc } from '../content/components/input/transfer/doc.js';
 import { stackDoc } from '../content/components/layout/stack/doc.js';
+import { gridDoc } from '../content/components/layout/grid/doc.js';
+import { simpleGridDoc } from '../content/components/layout/simple-grid/doc.js';
+import { breadcrumbDoc } from '../content/components/navigation/breadcrumb/doc.js';
 import { aspectRatioDoc } from '../content/components/layout/aspect-ratio/doc.js';
 import { containerDoc } from '../content/components/layout/container/doc.js';
 import { accordionDoc } from '../content/components/navigation/accordion/doc.js';
@@ -94,6 +97,9 @@ export const componentDocs = Object.freeze([
 	providerDoc,
 	boxDoc,
 	stackDoc,
+	gridDoc,
+	simpleGridDoc,
+	breadcrumbDoc,
 	textDoc,
 	headingDoc,
 	iconDoc,

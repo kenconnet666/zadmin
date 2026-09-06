@@ -1,6 +1,8 @@
 import { providerMetadata } from '@zadmin/zui/metadata';
 import ComponentDefaultsDemo from './ComponentDefaultsDemo.svelte';
 import componentDefaultsSource from './ComponentDefaultsDemo.svelte?raw';
+import VisualDefaultsDemo from './VisualDefaultsDemo.svelte';
+import visualDefaultsSource from './VisualDefaultsDemo.svelte?raw';
 import LocaleDemo from './LocaleDemo.svelte';
 import localeSource from './LocaleDemo.svelte?raw';
 import MotionDemo from './MotionDemo.svelte';
@@ -22,7 +24,7 @@ export const providerDoc = defineComponentDoc(providerMetadata, {
 			componentDefaults: {
 				default: '继承父级或空值',
 				description:
-					'当前仅允许button/input/tag/card/dataTable/pagination六个配置分组；input.size覆盖Input、InputGroup和Textarea。显式组件prop和最近Field/InputGroup上下文优先。整个轴或单个分组设为null可停止继承，值/page/选择、回调、DOM与CSS会被拒绝。'
+					'支持avatar/badge/button/card/dataTable/dialog/heading/icon/input/link/pagination/spinner/tag/text/toggleButton/tooltip共16个分组。显式prop优先；Toggle先读专属分组再读Button，只有按钮外观的Link共享Button默认值。input.size覆盖Input、InputGroup和Textarea。整个轴或单个分组设为null可停止继承，业务状态、回调、DOM与CSS会被拒绝。'
 			},
 			colorScheme: {
 				default: "继承父级或 'light'",
@@ -82,10 +84,19 @@ export const providerDoc = defineComponentDoc(providerMetadata, {
 			covers: ['composition', 'controlled', 'density', 'variants-and-states'],
 			component: ComponentDefaultsDemo,
 			description:
-				'六类组件只继承白名单默认值；显式prop和局部Field上下文优先，组件级null停止继承，值/page/选择等受控状态仍由调用方拥有。',
+				'输入、按钮和数据组件继承声明过的默认值；显式prop和局部Field上下文优先，组件级null停止继承，值/page/选择等受控状态仍由调用方拥有。',
 			id: 'provider-component-defaults',
 			source: componentDefaultsSource,
 			title: '严格的组件默认值'
+		},
+		{
+			covers: ['composition', 'controlled', 'variants-and-states', 'portal'],
+			component: VisualDefaultsDemo,
+			description:
+				'文字、图标、展示和浮层共享响应式视觉默认值；单组件仍可显式覆盖。切换配置不会重置Toggle状态，也不会控制Dialog是否打开。',
+			id: 'provider-visual-defaults',
+			source: visualDefaultsSource,
+			title: '作用域视觉默认值'
 		},
 		{
 			covers: ['basic-render', 'composition'],

@@ -157,6 +157,7 @@ export const DEFAULT_THEME_SCHEMA = {
 		calendarCellLarge: 40,
 		calendarCellXlarge: 48,
 		containerXsmall: '24rem',
+		gridItemMinWidth: '16rem',
 		containerSmall: '40rem',
 		containerMedium: '64rem',
 		containerLarge: '80rem',

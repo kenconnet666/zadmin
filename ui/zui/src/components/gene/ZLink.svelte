@@ -48,20 +48,20 @@
 		],
 		props: [
 			{
-				default: "'text'",
+				default: "componentDefaults.link.appearance → 'text'",
 				description:
 					'文本、链接按钮或导航项；始终保留anchor语义，navigation从aria-current派生当前项视觉。',
 				name: 'appearance',
 				type: "'text' | 'button' | 'navigation'"
 			},
 			{
-				default: 'Provider density',
+				default: 'componentDefaults.link.size → 按钮外观时button.size → Provider density',
 				description: '按钮和导航链接的控件尺寸。',
 				name: 'size',
 				type: 'ButtonSize'
 			},
 			{
-				default: "'solid'",
+				default: "componentDefaults.link.variant → 按钮外观时button.variant → 'solid'",
 				description: '链接按钮的视觉层级；仅appearance=button时使用。',
 				name: 'variant',
 				type: 'ButtonVariant'
@@ -92,14 +92,14 @@
 				type: 'boolean'
 			},
 			{
-				default: "'primary'",
+				default: "componentDefaults.link.tone → 按钮外观时button.tone → 'primary'",
 				description:
 					'文本和按钮链接支持五种语义色及primary；muted用于正文，在按钮外观映射为neutral。navigation由aria-current决定颜色。',
 				name: 'tone',
 				type: 'ZLinkTone'
 			},
 			{
-				default: "'always'",
+				default: "componentDefaults.link.underline → 'always'",
 				description: '仅文本链接的下划线显示策略；默认不只依赖颜色识别链接。',
 				name: 'underline',
 				type: "'always' | 'hover' | 'none'"
@@ -270,6 +270,7 @@
 		serializeIcssVariables
 	} from '../../runtime/foundation/root-style.js';
 	import ZVisuallyHidden from './ZVisuallyHidden.svelte';
+	import { resolveComponentDefault } from '../../runtime/foundation/component-defaults.js';
 
 	let {
 		'aria-current': ariaCurrent,
@@ -277,7 +278,7 @@
 		'aria-label': ariaLabel,
 		'aria-labelledby': ariaLabelledBy,
 		children,
-		appearance = 'text',
+		appearance,
 		class: className,
 		disabled = false,
 		external = false,
@@ -290,15 +291,32 @@
 		size,
 		tabindex,
 		target,
-		tone = 'primary',
-		underline = 'always',
-		variant = 'solid',
+		tone,
+		underline,
+		variant,
 		...rest
 	}: ZLinkProps = $props();
 	const zui = useZui();
+	const defaults = $derived(zui.componentDefaults.link);
+	const resolvedAppearance = $derived(
+		resolveComponentDefault(appearance, defaults?.appearance, 'text')
+	);
+	const sharedDefaults = $derived(
+		resolvedAppearance === 'button' ? zui.componentDefaults.button : undefined
+	);
+	const resolvedTone = $derived(
+		resolveComponentDefault(tone, defaults?.tone ?? sharedDefaults?.tone, 'primary')
+	);
+	const resolvedVariant = $derived(
+		resolveComponentDefault(variant, defaults?.variant ?? sharedDefaults?.variant, 'solid')
+	);
+	const resolvedUnderline = $derived(
+		resolveComponentDefault(underline, defaults?.underline, 'always')
+	);
 	const reducedMotion = new ReducedMotionState(() => zui.motion);
 	$effect(() => {
-		if (appearance === 'button' && ref) return reducedMotion.connect(ref.ownerDocument.defaultView);
+		if (resolvedAppearance === 'button' && ref)
+			return reducedMotion.connect(ref.ownerDocument.defaultView);
 	});
 	const uid = $props.id();
 	const hintId = $derived(createZuiId(zui.idPrefix, uid, 'link-new-window'));
@@ -322,26 +340,31 @@
 			.filter(Boolean)
 			.join(' ') || undefined
 	);
-	const resolvedSize = $derived(resolveControlSize(size, zui.density));
+	const resolvedSize = $derived(
+		resolveControlSize(
+			resolveComponentDefault(size, defaults?.size ?? sharedDefaults?.size, undefined),
+			zui.density
+		)
+	);
 	const rootClass = $derived(
-		appearance === 'button'
+		resolvedAppearance === 'button'
 			? [
 					zui.recipe(buttonRecipe, {
 						disabled,
 						size: resolvedSize,
-						variant,
-						tone: tone === 'muted' ? 'neutral' : tone,
+						variant: resolvedVariant,
+						tone: resolvedTone === 'muted' ? 'neutral' : resolvedTone,
 						motion: reducedMotion.current ? 'reduced' : 'full'
 					}),
 					zui.recipe(buttonLinkRecipe)
 				]
-			: appearance === 'navigation'
+			: resolvedAppearance === 'navigation'
 				? zui.recipe(navigationRecipe, {
 						disabled,
 						size: resolvedSize,
 						current: Boolean(ariaCurrent && ariaCurrent !== 'false')
 					})
-				: zui.recipe(linkRecipe, { disabled, tone, underline })
+				: zui.recipe(linkRecipe, { disabled, tone: resolvedTone, underline: resolvedUnderline })
 	);
 	const externalIconClass = $derived(zui.recipe(externalIconRecipe));
 	const icssVariables = $derived(readIcssCarrier(rest));
@@ -377,10 +400,10 @@
 	aria-label={ariaLabel}
 	aria-labelledby={ariaLabelledBy}
 	data-disabled={disabled || undefined}
-	data-appearance={appearance}
-	data-variant={appearance === 'button' ? variant : undefined}
-	data-tone={appearance !== 'navigation' ? tone : undefined}
-	data-size={appearance !== 'text' ? resolvedSize : undefined}
+	data-appearance={resolvedAppearance}
+	data-variant={resolvedAppearance === 'button' ? resolvedVariant : undefined}
+	data-tone={resolvedAppearance !== 'navigation' ? resolvedTone : undefined}
+	data-size={resolvedAppearance !== 'text' ? resolvedSize : undefined}
 	data-external={external || undefined}
 	data-new-window={newWindow || undefined}
 	href={disabled ? undefined : href}

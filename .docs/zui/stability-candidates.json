@@ -3,7 +3,7 @@
 	"summary": {
 		"stableCompliant": 141,
 		"stableViolations": 0,
-		"promotionEligibleExperimental": 0
+		"promotionEligibleExperimental": 2
 	},
 	"components": [
 		{
@@ -204,7 +204,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/dialog/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrEvidenceCount": 3
 		},
 		{
 			"id": "dialog-close",
@@ -224,7 +224,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/dialog/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrEvidenceCount": 3
 		},
 		{
 			"id": "dialog-description",
@@ -254,7 +254,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/dialog/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrEvidenceCount": 3
 		},
 		{
 			"id": "dialog-trigger",
@@ -264,7 +264,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/dialog/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrEvidenceCount": 2
 		},
 		{
 			"id": "drawer",
@@ -724,7 +724,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/tooltip/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrEvidenceCount": 3
 		},
 		{
 			"id": "tooltip-content",
@@ -734,7 +734,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/tooltip/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrEvidenceCount": 3
 		},
 		{
 			"id": "tooltip-group",
@@ -754,7 +754,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/tooltip/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrEvidenceCount": 3
 		},
 		{
 			"id": "tree",
@@ -774,7 +774,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/data-display/avatar/doc.ts",
-			"ssrEvidenceCount": 3
+			"ssrEvidenceCount": 4
 		},
 		{
 			"id": "badge",
@@ -784,7 +784,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/data-display/badge/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrEvidenceCount": 3
 		},
 		{
 			"id": "card",
@@ -904,7 +904,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/data-display/tag/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrEvidenceCount": 3
 		},
 		{
 			"id": "timeline",
@@ -964,7 +964,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/feedback/spinner/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrEvidenceCount": 3
 		},
 		{
 			"id": "toast",
@@ -1004,7 +1004,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/gene/button/doc.ts",
-			"ssrEvidenceCount": 8
+			"ssrEvidenceCount": 9
 		},
 		{
 			"id": "code",
@@ -1024,7 +1024,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/gene/heading/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrEvidenceCount": 3
 		},
 		{
 			"id": "icon",
@@ -1034,7 +1034,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/gene/icon/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrEvidenceCount": 2
 		},
 		{
 			"id": "kbd",
@@ -1054,7 +1054,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/gene/link/doc.ts",
-			"ssrEvidenceCount": 3
+			"ssrEvidenceCount": 4
 		},
 		{
 			"id": "provider",
@@ -1064,7 +1064,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/gene/provider/doc.ts",
-			"ssrEvidenceCount": 7
+			"ssrEvidenceCount": 8
 		},
 		{
 			"id": "separator",
@@ -1084,7 +1084,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/gene/text/doc.ts",
-			"ssrEvidenceCount": 5
+			"ssrEvidenceCount": 6
 		},
 		{
 			"id": "toggle-button",
@@ -1094,7 +1094,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/gene/toggle-button/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrEvidenceCount": 3
 		},
 		{
 			"id": "visually-hidden",
@@ -1367,6 +1367,36 @@
 			"ssrEvidenceCount": 2
 		},
 		{
+			"id": "grid",
+			"name": "ZGrid",
+			"family": null,
+			"status": "experimental",
+			"classification": "experimental",
+			"blockers": ["BrowserBehaviorVerified", "ProductionVerified", "SSR"],
+			"docs": "apps/docs/src/content/components/layout/grid/doc.ts",
+			"ssrEvidenceCount": 0
+		},
+		{
+			"id": "grid-item",
+			"name": "ZGridItem",
+			"family": null,
+			"status": "experimental",
+			"classification": "experimental",
+			"blockers": ["BrowserBehaviorVerified", "ProductionVerified", "SSR"],
+			"docs": "apps/docs/src/content/components/layout/grid/doc.ts",
+			"ssrEvidenceCount": 0
+		},
+		{
+			"id": "simple-grid",
+			"name": "ZSimpleGrid",
+			"family": null,
+			"status": "experimental",
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
+			"docs": "apps/docs/src/content/components/layout/simple-grid/doc.ts",
+			"ssrEvidenceCount": 1
+		},
+		{
 			"id": "stack",
 			"name": "ZStack",
 			"family": null,
@@ -1375,6 +1405,16 @@
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/layout/stack/doc.ts",
 			"ssrEvidenceCount": 3
+		},
+		{
+			"id": "breadcrumb",
+			"name": "ZBreadcrumb",
+			"family": null,
+			"status": "experimental",
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
+			"docs": "apps/docs/src/content/components/navigation/breadcrumb/doc.ts",
+			"ssrEvidenceCount": 1
 		},
 		{
 			"id": "command",

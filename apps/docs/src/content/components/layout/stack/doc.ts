@@ -7,6 +7,8 @@ import WrapDemo from './WrapDemo.svelte';
 import wrapSource from './WrapDemo.svelte?raw';
 import NestedRtlDemo from './NestedRtlDemo.svelte';
 import nestedRtlSource from './NestedRtlDemo.svelte?raw';
+import ResponsiveDemo from './ResponsiveDemo.svelte';
+import responsiveSource from './ResponsiveDemo.svelte?raw';
 import { stackApiFacts } from '../../../../framework/component-api.generated.js';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
@@ -20,7 +22,13 @@ export const stackDoc = defineComponentDoc(stackMetadata, {
 			gap: { description: 'Theme间距token或明确px值。', default: "'none'" },
 			justify: { description: '主轴分布。', default: "'start'" },
 			ref: { description: '真实div引用。', default: 'null' },
-			wrap: { description: '是否允许Flex换行。', default: 'false' }
+			wrap: {
+				description: '是否允许Flex换行；reverse反向排列换行后的行，支持断点对象。',
+				default: 'false'
+			},
+			rowGap: { description: '独立行间距，优先于gap。', default: '—' },
+			columnGap: { description: '独立列间距，优先于gap。', default: '—' },
+			query: { description: 'viewport或命名祖先容器。', default: "'viewport'" }
 		},
 		summary: '类型安全的Flex布局容器，支持方向、间距、对齐、分布和换行。'
 	},
@@ -56,6 +64,13 @@ export const stackDoc = defineComponentDoc(stackMetadata, {
 			id: 'stack-nested-rtl',
 			source: nestedRtlSource,
 			title: '嵌套与RTL'
+		},
+		{
+			covers: ['composition', 'native-props', 'ssr'],
+			description: '方向、间距和换行在base/small/medium/large断点下生成稳定CSS，不依赖客户端测量。',
+			id: 'stack-responsive',
+			source: responsiveSource,
+			title: '响应式断点'
 		}
 	],
 	accessibility: [

@@ -80,7 +80,7 @@
 			{
 				name: 'size',
 				type: 'ZControlSize',
-				default: 'small',
+				default: "componentDefaults.tooltip.size → 'small'",
 				description: '说明文字、最小高度与内边距的五档尺寸；Trigger另用Button size。'
 			},
 			{
@@ -121,6 +121,7 @@
 	import { FloatingPositioner } from '../../../runtime/layer/floating.js';
 	import { portal } from '../../../runtime/layer/portal.js';
 	import { useZTooltip } from './context.svelte.js';
+	import { resolveComponentDefault } from '../../../runtime/foundation/component-defaults.js';
 
 	let {
 		children,
@@ -129,13 +130,16 @@
 		onpointerleave,
 		ontransitionend,
 		ref = $bindable(null),
-		size = 'small',
+		size,
 		style,
 		...rest
 	}: ZTooltipContentProps = $props();
 	const zui = useZui();
+	const resolvedSize = $derived(
+		resolveComponentDefault(size, zui.componentDefaults.tooltip?.size, 'small')
+	);
 	const tooltip = useZTooltip();
-	const metrics = $derived(controlSizeMetrics(zui.theme, size));
+	const metrics = $derived(controlSizeMetrics(zui.theme, resolvedSize));
 	const widthClass = $derived(
 		zui.icss((s) => {
 			s.maxWidth.raw(
@@ -153,7 +157,7 @@
 	const presenceState = $derived(presence.state);
 	const rootClass = $derived(
 		zui.recipe(tooltipContentRecipe, {
-			size,
+			size: resolvedSize,
 			hoverable: tooltip.hoverable && tooltip.open,
 			motion: tooltip.reducedMotion ? 'reduced' : 'full',
 			open: tooltip.open && entryMotion.entered

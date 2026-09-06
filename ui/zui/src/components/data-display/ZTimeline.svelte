@@ -134,7 +134,7 @@
 		base: (s) => {
 			s.display.grid;
 			s.gap._none;
-			s.listStyleType.raw('none');
+			s.listStyleType.none;
 			s.margin.px(0);
 			s.padding.px(0);
 		},

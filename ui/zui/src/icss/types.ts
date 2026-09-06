@@ -95,14 +95,18 @@ type UnitAccessors<TProperty extends string> = {
 	) => void;
 };
 
-type BreakpointName<TTheme extends ThemeSchema> = TTheme extends {
+export type IcssBreakpointName<TTheme extends ThemeSchema> = TTheme extends {
 	readonly breakpoint: infer TBreakpoints extends Record<string, unknown>;
 }
 	? keyof TBreakpoints & string
 	: never;
-type MediaBreakpointQuery<TTheme extends ThemeSchema> =
-	| { readonly min: BreakpointName<TTheme>; readonly max?: BreakpointName<TTheme> }
-	| { readonly min?: BreakpointName<TTheme>; readonly max: BreakpointName<TTheme> };
+export type IcssBreakpointQuery<TTheme extends ThemeSchema> =
+	| { readonly min: IcssBreakpointName<TTheme>; readonly max?: IcssBreakpointName<TTheme> }
+	| { readonly min?: IcssBreakpointName<TTheme>; readonly max: IcssBreakpointName<TTheme> };
+
+export type IcssContainerQuery<TTheme extends ThemeSchema> = IcssBreakpointQuery<TTheme> & {
+	readonly name?: string;
+};
 
 export type IcssPropertyCarrier<TTheme extends ThemeSchema, TProperty extends CssPropertyName> = ((
 	value: CssPropertyValue<TProperty> | IcssDynamicSlot | null | undefined
@@ -122,13 +126,16 @@ export interface IcssConditions<TTheme extends ThemeSchema> {
 	readonly _active: (factory: IcssFactory<TTheme>) => void;
 	readonly _after: (factory: IcssFactory<TTheme>) => void;
 	readonly _before: (factory: IcssFactory<TTheme>) => void;
-	readonly _container: (query: string, factory: IcssFactory<TTheme>) => void;
+	readonly _container: (
+		query: string | IcssContainerQuery<TTheme>,
+		factory: IcssFactory<TTheme>
+	) => void;
 	readonly _disabled: (factory: IcssFactory<TTheme>) => void;
 	readonly _focus: (factory: IcssFactory<TTheme>) => void;
 	readonly _focusVisible: (factory: IcssFactory<TTheme>) => void;
 	readonly _hover: (factory: IcssFactory<TTheme>) => void;
 	readonly _media: (
-		query: string | MediaBreakpointQuery<TTheme>,
+		query: string | IcssBreakpointQuery<TTheme>,
 		factory: IcssFactory<TTheme>
 	) => void;
 	readonly _selector: (selector: string, factory: IcssFactory<TTheme>) => void;

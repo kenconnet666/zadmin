@@ -46,7 +46,7 @@
 			{
 				default: '继承父级或空值',
 				description:
-					'仅允许button、input、tag、card、dataTable、pagination的白名单非受控props；null停止继承；禁止受控状态、回调、DOM和CSS。',
+					'支持16个类型安全分组，覆盖文字、图标、按钮、展示和浮层等视觉默认值；显式prop优先，null停止继承；禁止业务状态、回调、DOM和CSS。',
 				name: 'componentDefaults',
 				type: 'ZuiComponentDefaults | null'
 			},

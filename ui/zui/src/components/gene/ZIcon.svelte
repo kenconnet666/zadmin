@@ -74,7 +74,7 @@
 				type: 'keyof typeof iconManifest'
 			},
 			{
-				default: "'small'",
+				default: "componentDefaults.icon.size → 'small'",
 				description: 'Theme尺寸token或明确px值。',
 				name: 'size',
 				type: 'ZIconSize | number'
@@ -129,6 +129,7 @@
 	} from '../../runtime/foundation/root-style.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
+	import { resolveComponentDefault } from '../../runtime/foundation/component-defaults.js';
 
 	let {
 		'aria-label': ariaLabel,
@@ -136,20 +137,22 @@
 		label,
 		name,
 		ref = $bindable(null),
-		size = 'small',
+		size,
 		style,
 		...rest
 	}: ZIconProps = $props();
 
 	const zui = useZui();
+	const defaults = $derived(zui.componentDefaults.icon);
+	const resolvedSize = $derived(resolveComponentDefault(size, defaults?.size, 'small'));
 	const recipeClass = $derived(
-		zui.recipe(iconRecipe, { size: typeof size === 'number' ? 'custom' : size })
+		zui.recipe(iconRecipe, { size: typeof resolvedSize === 'number' ? 'custom' : resolvedSize })
 	);
 	const numericSizeClass = $derived(
-		typeof size === 'number'
+		typeof resolvedSize === 'number'
 			? zui.icss((s) => {
-					s.width.px(size);
-					s.height.px(size);
+					s.width.px(resolvedSize);
+					s.height.px(resolvedSize);
 				})
 			: undefined
 	);
@@ -159,6 +162,7 @@
 	const Icon = $derived(getIconComponent(name));
 	const lucideProps = $derived.by((): LucideProps => ({
 		...rest,
+		strokeWidth: resolveComponentDefault(rest.strokeWidth, defaults?.strokeWidth, undefined),
 		'aria-hidden': accessibleLabel ? undefined : 'true',
 		'aria-label': accessibleLabel ?? undefined,
 		class: [recipeClass, numericSizeClass, className],

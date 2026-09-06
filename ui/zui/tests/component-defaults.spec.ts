@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
 	resolveComponentDefaults,
+	resolveComponentDefault,
 	type ResolvedZuiComponentDefaults
 } from '../src/runtime/foundation/component-defaults.js';
 
@@ -27,7 +28,7 @@ describe('component defaults foundation', () => {
 	});
 
 	it.each([
-		['unknown component', { badge: { size: 'small' } }],
+		['unknown component', { unknownComponent: { size: 'small' } }],
 		['unknown prop', { button: { loading: true } }],
 		['controlled state', { button: { value: 'x' } }],
 		['callback', { button: { onClick: () => undefined } }],
@@ -102,5 +103,67 @@ describe('component defaults foundation', () => {
 		const resolved = resolveComponentDefaults(undefined, source);
 		source.button.size = 'small';
 		expect((resolved as ResolvedZuiComponentDefaults).button?.size).toBe('medium');
+	});
+
+	it('accepts the new visual groups and preserves group-level merge and null stops', () => {
+		const parent = resolveComponentDefaults(undefined, {
+			text: { size: 'large', tone: 'info', weight: 'semibold', lineHeight: 'relaxed' },
+			heading: { size: 'xxxlarge', tone: 'success', wrap: 'pretty' },
+			icon: { size: 22, strokeWidth: 1.5 },
+			spinner: { size: 'xlarge', tone: 'muted' },
+			toggleButton: { variant: 'ghost', fullWidth: false },
+			link: { appearance: 'button', underline: 'hover', tone: 'warning' },
+			badge: { size: 'small', tone: 'warning', placement: 'bottom-start', overlap: 'circular' },
+			avatar: { size: 'large', shape: 'square' },
+			dialog: { size: 'small' },
+			tooltip: { size: 'large' }
+		});
+		const child = resolveComponentDefaults(parent, {
+			text: { tone: 'danger' },
+			icon: null,
+			badge: { size: undefined }
+		});
+		expect(child.text).toEqual({
+			size: 'large',
+			tone: 'danger',
+			weight: 'semibold',
+			lineHeight: 'relaxed'
+		});
+		expect(child.icon).toBeUndefined();
+		expect(child.badge).toEqual(parent.badge);
+		for (const group of Object.values(child)) expect(Object.isFrozen(group)).toBe(true);
+		expect(parent.text?.tone).toBe('info');
+	});
+
+	it.each([
+		{ text: { size: 'giant' } },
+		{ text: { children: 'default text' } },
+		{ heading: { level: 1 } },
+		{ heading: { wrap: 'truncate' } },
+		{ icon: { size: 0 } },
+		{ icon: { size: Number.NaN } },
+		{ icon: { name: 'check' } },
+		{ icon: { strokeWidth: '2' } },
+		{ spinner: { label: 'Business loading' } },
+		{ spinner: { tone: 'success' } },
+		{ toggleButton: { pressed: true } },
+		{ link: { href: '/implicit-route' } },
+		{ badge: { count: 5 } },
+		{ avatar: { src: '/avatar.png' } },
+		{ avatar: { alt: 'Everyone' } },
+		{ dialog: { open: true } },
+		{ dialog: { disabled: true } },
+		{ tooltip: { openDelay: 300 } },
+		{ tooltip: { size: 'giant' } }
+	])('rejects data, behavior and unsupported visual defaults: %o', (source) => {
+		expect(() => resolveComponentDefaults(undefined, source as never)).toThrow();
+	});
+
+	it('uses undefined for inheritance without swallowing explicit false, zero or null', () => {
+		expect(resolveComponentDefault(undefined, 'large', 'medium')).toBe('large');
+		expect(resolveComponentDefault(undefined, undefined, 'medium')).toBe('medium');
+		expect(resolveComponentDefault(false, true, true)).toBe(false);
+		expect(resolveComponentDefault(0, 1, 2)).toBe(0);
+		expect(resolveComponentDefault(null, 'configured', 'built-in')).toBeNull();
 	});
 });

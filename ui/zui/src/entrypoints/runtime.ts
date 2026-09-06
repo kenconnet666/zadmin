@@ -1,14 +1,24 @@
 export { createBrowserIcssRuntime, createIcssRuntime, icss } from '../icss/runtime.js';
 export { resolveComponentDefaults } from '../runtime/foundation/component-defaults.js';
 export type {
+	AvatarComponentDefaults,
+	BadgeComponentDefaults,
 	CardComponentDefaults,
 	ButtonComponentDefaults,
 	ComponentDefaultPrimitive,
 	DataTableComponentDefaults,
+	DialogComponentDefaults,
+	HeadingComponentDefaults,
+	IconComponentDefaults,
 	InputComponentDefaults,
+	LinkComponentDefaults,
 	PaginationComponentDefaults,
 	ResolvedZuiComponentDefaults,
+	SpinnerComponentDefaults,
 	TagComponentDefaults,
+	TextComponentDefaults,
+	ToggleButtonComponentDefaults,
+	TooltipComponentDefaults,
 	ZuiComponentDefaults
 } from '../runtime/foundation/component-defaults.js';
 export type { IcssRuntime, IcssRuntimeOptions } from '../icss/runtime.js';

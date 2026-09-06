@@ -1,6 +1,6 @@
 # API teaching coverage
 
-Generated from 141 components and 1776 declared props. 0 metadata gaps remain; 0 remain true fallbacks after teaching overrides; 8 structured props are explicitly opaque.
+Generated from 145 components and 1809 declared props. 0 metadata gaps remain; 0 remain true fallbacks after teaching overrides; 8 structured props are explicitly opaque.
 
 Policy: every declared public prop must have owned component metadata, binding, event or snippet evidence; both totals are enforced at zero.
 
@@ -23,6 +23,6 @@ Policy: every declared public prop must have owned component metadata, binding, 
 | ZAvatar                 | —            |             17 |             0 |                   0 | —              | ui/zui/src/components/data-display/ZAvatar.svelte                          |
 | ZBadge                  | —            |             13 |             0 |                   0 | —              | ui/zui/src/components/data-display/ZBadge.svelte                           |
 | ZBox                    | —            |              2 |             0 |                   0 | —              | ui/zui/src/components/gene/ZBox.svelte                                     |
+| ZBreadcrumb             | —            |              4 |             0 |                   0 | —              | ui/zui/src/components/navigation/ZBreadcrumb.svelte                        |
 | ZButton                 | —            |             13 |             0 |                   0 | —              | ui/zui/src/components/gene/ZButton.svelte                                  |
 | ZCalendar               | —            |             27 |             0 |                   0 | —              | ui/zui/src/components/input/ZCalendar.svelte                               |
-| ZCard                   | —            |             11 |             0 |                   0 | —              | ui/zui/src/components/data-display/ZCard.svelte                            |

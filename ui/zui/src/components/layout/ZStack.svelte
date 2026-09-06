@@ -4,19 +4,23 @@
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
-	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
+	import type { ZLayoutSpacing } from '../../runtime/foundation/layout.js';
+	import type { ResponsiveQuery, ResponsiveValue } from '../../runtime/foundation/responsive.js';
 
 	export type ZStackDirection = 'column' | 'column-reverse' | 'row' | 'row-reverse';
 	export type ZStackAlignment = 'baseline' | 'center' | 'end' | 'start' | 'stretch';
 	export type ZStackJustification = 'around' | 'between' | 'center' | 'end' | 'evenly' | 'start';
 
 	export interface ZStackProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
-		readonly align?: ZStackAlignment;
+		readonly align?: ResponsiveValue<ZStackAlignment>;
 		readonly children?: Snippet;
-		readonly direction?: ZStackDirection;
-		readonly gap?: ZControlSize | 'none' | number;
-		readonly justify?: ZStackJustification;
-		readonly wrap?: boolean;
+		readonly direction?: ResponsiveValue<ZStackDirection>;
+		readonly gap?: ResponsiveValue<ZLayoutSpacing>;
+		readonly rowGap?: ResponsiveValue<ZLayoutSpacing>;
+		readonly columnGap?: ResponsiveValue<ZLayoutSpacing>;
+		readonly query?: ResponsiveQuery;
+		readonly justify?: ResponsiveValue<ZStackJustification>;
+		readonly wrap?: ResponsiveValue<boolean | 'reverse'>;
 		ref?: HTMLDivElement | null;
 	}
 
@@ -37,27 +41,50 @@
 				default: "'column'",
 				description: 'Flex主轴方向。',
 				name: 'direction',
-				type: "'row' | 'row-reverse' | 'column' | 'column-reverse'"
+				type: 'ResponsiveValue<ZStackDirection>'
 			},
 			{
 				default: "'none'",
 				description: 'Theme间距token或明确px值。',
 				name: 'gap',
-				type: "ZControlSize | 'none' | number"
+				type: 'ResponsiveValue<ZLayoutSpacing>'
 			},
 			{
 				default: "'stretch'",
 				description: '交叉轴对齐。',
 				name: 'align',
-				type: "'start' | 'center' | 'end' | 'baseline' | 'stretch'"
+				type: 'ResponsiveValue<ZStackAlignment>'
 			},
 			{
 				default: "'start'",
 				description: '主轴分布。',
 				name: 'justify',
-				type: "'start' | 'center' | 'end' | 'between' | 'around' | 'evenly'"
+				type: 'ResponsiveValue<ZStackJustification>'
 			},
-			{ default: 'false', description: '是否允许Flex换行。', name: 'wrap', type: 'boolean' },
+			{
+				default: 'false',
+				description: '换行；reverse反向排列换行后的行，支持断点配置。',
+				name: 'wrap',
+				type: "ResponsiveValue<boolean | 'reverse'>"
+			},
+			{
+				default: '—',
+				description: '行间距，独立覆盖gap，支持断点配置。',
+				name: 'rowGap',
+				type: 'ResponsiveValue<ZLayoutSpacing>'
+			},
+			{
+				default: '—',
+				description: '列间距，独立覆盖gap，支持断点配置。',
+				name: 'columnGap',
+				type: 'ResponsiveValue<ZLayoutSpacing>'
+			},
+			{
+				default: "'viewport'",
+				description: '响应式参照；viewport或已命名的祖先CSS容器。',
+				name: 'query',
+				type: 'ResponsiveQuery'
+			},
 			{
 				bindable: true,
 				default: 'null',
@@ -75,50 +102,12 @@
 	} as const satisfies ZuiComponentMetadata;
 
 	const stackRecipe = defineRecipe({
-		base: (s) => s.display.flex,
-		variants: {
-			align: {
-				baseline: (s) => s.alignItems.baseline,
-				center: (s) => s.alignItems.center,
-				end: (s) => s.alignItems.end,
-				start: (s) => s.alignItems.start,
-				stretch: (s) => s.alignItems.stretch
-			},
-			direction: {
-				column: (s) => s.flexDirection.column,
-				'column-reverse': (s) => s.flexDirection.columnReverse,
-				row: (s) => s.flexDirection.row,
-				'row-reverse': (s) => s.flexDirection.rowReverse
-			},
-			gap: {
-				custom: () => undefined,
-				large: (s) => s.gap._large,
-				medium: (s) => s.gap._medium,
-				none: (s) => s.gap._none,
-				small: (s) => s.gap._small,
-				xlarge: (s) => s.gap._xlarge,
-				xsmall: (s) => s.gap._xsmall
-			},
-			justify: {
-				around: (s) => s.justifyContent.spaceAround,
-				between: (s) => s.justifyContent.spaceBetween,
-				center: (s) => s.justifyContent.center,
-				end: (s) => s.justifyContent.end,
-				evenly: (s) => s.justifyContent.spaceEvenly,
-				start: (s) => s.justifyContent.start
-			},
-			wrap: {
-				false: (s) => s.flexWrap.nowrap,
-				true: (s) => s.flexWrap.wrap
-			}
+		base: (s) => {
+			s.display.flex;
+			s.boxSizing.borderBox;
+			s.minWidth.px(0);
 		},
-		defaultVariants: {
-			align: 'stretch',
-			direction: 'column',
-			gap: 'none',
-			justify: 'start',
-			wrap: false
-		}
+		variants: {}
 	});
 
 	registerRecipeHmr(import.meta, stackRecipe);
@@ -133,6 +122,12 @@
 		serializeIcssVariables
 	} from '../../runtime/foundation/root-style.js';
 	import { useZui } from '../../runtime/foundation/context.js';
+	import { applyResponsiveStyles } from '../../runtime/foundation/responsive.js';
+	import {
+		applyLayoutSpacing,
+		applyLayoutAlignment,
+		applyLayoutJustification
+	} from '../../runtime/foundation/layout.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 
 	let {
@@ -141,6 +136,9 @@
 		class: className,
 		direction = 'column',
 		gap = 'none',
+		rowGap,
+		columnGap,
+		query = 'viewport',
 		justify = 'start',
 		ref = $bindable(null),
 		style,
@@ -149,21 +147,59 @@
 	}: ZStackProps = $props();
 
 	const zui = useZui();
-	const recipeClass = $derived(
-		zui.recipe(stackRecipe, {
-			align,
-			direction,
-			gap: typeof gap === 'number' ? 'custom' : gap,
-			justify,
-			wrap
+	const recipeClass = $derived(zui.recipe(stackRecipe));
+	const layoutClass = $derived(
+		zui.icss((s) => {
+			s.flexDirection.column;
+			s.alignItems.stretch;
+			s.justifyContent.start;
+			s.flexWrap.nowrap;
+			s.gap._none;
+			applyResponsiveStyles(
+				s,
+				direction,
+				(s, value) => {
+					switch (value) {
+						case 'column':
+							s.flexDirection.column;
+							break;
+						case 'column-reverse':
+							s.flexDirection.columnReverse;
+							break;
+						case 'row':
+							s.flexDirection.row;
+							break;
+						case 'row-reverse':
+							s.flexDirection.rowReverse;
+							break;
+						default:
+							throw new TypeError('Invalid Stack direction.');
+					}
+				},
+				query
+			);
+			applyResponsiveStyles(s, align, applyLayoutAlignment, query);
+			applyResponsiveStyles(s, justify, applyLayoutJustification, query);
+			applyResponsiveStyles(
+				s,
+				wrap,
+				(s, value) => {
+					if (value === 'reverse') s.flexWrap.wrapReverse;
+					else if (value === true) s.flexWrap.wrap;
+					else if (value === false) s.flexWrap.nowrap;
+					else throw new TypeError('Invalid Stack wrap.');
+				},
+				query
+			);
+			applyResponsiveStyles(s, gap, (s, value) => applyLayoutSpacing(s, 'gap', value), query);
+			applyResponsiveStyles(s, rowGap, (s, value) => applyLayoutSpacing(s, 'rowGap', value), query);
+			applyResponsiveStyles(
+				s,
+				columnGap,
+				(s, value) => applyLayoutSpacing(s, 'columnGap', value),
+				query
+			);
 		})
-	);
-	const numericGapClass = $derived(
-		typeof gap === 'number'
-			? zui.icss((s) => {
-					s.gap.px(gap);
-				})
-			: undefined
 	);
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
@@ -172,7 +208,7 @@
 <div
 	{...rest}
 	bind:this={ref}
-	class={[recipeClass, numericGapClass, className]}
+	class={[recipeClass, layoutClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
 >

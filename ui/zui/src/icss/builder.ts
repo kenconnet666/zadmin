@@ -1,4 +1,5 @@
 import { getPropertyDefinition } from '../theme/properties.js';
+import { assertContainerName } from './container-name.js';
 import type { ThemeSchema } from '../theme/types.js';
 import { getUnitNames, getUnitSuffix, type UnitName } from '../theme/units.js';
 import type {
@@ -84,18 +85,19 @@ function assertQuery(name: string, query: string): string {
 	return normalized;
 }
 
-function resolveMediaQuery<TTheme extends ThemeSchema>(
+function resolveBreakpointQuery<TTheme extends ThemeSchema>(
 	theme: TTheme,
-	query: string | { readonly min?: string; readonly max?: string }
+	query: string | { readonly min?: string; readonly max?: string },
+	kind: 'Media' | 'Container' = 'Media'
 ): string {
-	if (typeof query === 'string') return assertQuery('Media', query);
+	if (typeof query === 'string') return assertQuery(kind, query);
 	if (typeof query !== 'object' || query === null || Array.isArray(query))
-		throw new TypeError('Media query must be a string or breakpoint object.');
+		throw new TypeError(`${kind} query must be a string or breakpoint object.`);
 	const keys = Object.keys(query);
 	if (keys.length === 0 || keys.some((key) => key !== 'min' && key !== 'max'))
-		throw new TypeError('Media breakpoint query requires min and/or max.');
+		throw new TypeError(`${kind} breakpoint query requires min and/or max.`);
 	if (query.min === undefined && query.max === undefined)
-		throw new TypeError('Media breakpoint query requires min and/or max.');
+		throw new TypeError(`${kind} breakpoint query requires min and/or max.`);
 	const breakpoints = theme.breakpoint;
 	if (!breakpoints || typeof breakpoints !== 'object')
 		throw new TypeError('Theme has no breakpoint group.');
@@ -115,9 +117,11 @@ function resolveMediaQuery<TTheme extends ThemeSchema>(
 			throw new TypeError(`Unknown breakpoint "${key}".`);
 		if (typeof value === 'number' && (!Number.isFinite(value) || value < 0))
 			throw new TypeError(`Breakpoint "${key}" must be a non-negative finite length.`);
-		clauses.push(`(${name}-width: ${typeof value === 'number' ? `${value}px` : value})`);
+		clauses.push(
+			`(${name}-${kind === 'Container' ? 'inline-size' : 'width'}: ${typeof value === 'number' ? `${value}px` : value})`
+		);
 	}
-	return assertQuery('Media', clauses.join(' and '));
+	return assertQuery(kind, clauses.join(' and '));
 }
 
 function createCarrier<TTheme extends ThemeSchema>(
@@ -207,13 +211,31 @@ function createBuilder<TTheme extends ThemeSchema>(
 						block,
 						theme,
 						'at-rule',
-						`@media ${resolveMediaQuery(theme, value)}`,
+						`@media ${resolveBreakpointQuery(theme, value)}`,
 						factory
 					);
 				};
 			}
 
-			if (key === '_supports' || key === '_container') {
+			if (key === '_container') {
+				return (
+					value: string | { readonly min?: string; readonly max?: string; readonly name?: string },
+					factory: IcssFactory<TTheme>
+				): void => {
+					let query: string;
+					if (typeof value === 'string') query = assertQuery('Container', value);
+					else {
+						if (typeof value !== 'object' || value === null || Array.isArray(value))
+							throw new TypeError('Container query must be a string or breakpoint object.');
+						const { name, ...bounds } = value;
+						if (name !== undefined) assertContainerName(name);
+						query = `${name === undefined ? '' : `${name} `}${resolveBreakpointQuery(theme, bounds, 'Container')}`;
+					}
+					appendNested(block, theme, 'at-rule', `@container ${query}`, factory);
+				};
+			}
+
+			if (key === '_supports') {
 				return (value: string, factory: IcssFactory<TTheme>): void => {
 					const name = key.slice(1);
 					appendNested(block, theme, 'at-rule', `@${name} ${assertQuery(name, value)}`, factory);

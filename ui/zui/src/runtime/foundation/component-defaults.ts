@@ -1,83 +1,56 @@
 /**
- * Provider-level defaults are deliberately narrower than component props.
- * This module has no component or Svelte imports so it can remain a cheap
- * foundation dependency and be used by SSR and build-time tooling.
+ * Provider defaults share one typed rule source for public shapes and runtime validation.
+ * No component/Svelte imports: this remains usable from SSR and package tooling.
  */
-
-import { controlSizes, type ZControlSize } from './control-size.js';
-import { semanticTones, type ZSemanticTone } from '../../theme/semantics.js';
+/* eslint @typescript-eslint/no-empty-object-type: ["error", { "allowInterfaces": "with-single-extends" }] -- Preserve public interface declarations while deriving their fields from the validation rules. */
+import { controlSizes } from './control-size.js';
+import { semanticTones } from '../../theme/semantics.js';
+import { DEFAULT_THEME_SCHEMA } from '../../theme/schema.js';
 
 export type ComponentDefaultPrimitive = string | number | boolean;
-
-export interface ButtonComponentDefaults {
-	readonly size?: ZControlSize;
-	readonly shape?: 'default' | 'circle' | 'square';
-	readonly tone?: ZSemanticTone | 'primary';
-	readonly variant?: 'ghost' | 'solid' | 'outline';
-	readonly fullWidth?: boolean;
-}
-
-export interface DataTableComponentDefaults {
-	readonly density?: 'compact' | 'comfortable' | 'spacious';
-	readonly selectionMode?: 'multiple' | 'none' | 'single';
-	readonly stickyHeader?: boolean;
-	readonly striped?: boolean;
-	readonly virtualized?: boolean;
-	readonly overscan?: number;
-	readonly rowHeight?: number;
-}
-
-export interface InputComponentDefaults {
-	readonly size?: ZControlSize;
-}
-
-export interface TagComponentDefaults {
-	readonly size?: ZControlSize;
-	readonly tone?: ZSemanticTone;
-}
-
-export interface CardComponentDefaults {
-	readonly elevation?: 'large' | 'medium' | 'none' | 'small';
-	readonly variant?: 'elevated' | 'outlined';
-}
-
-export interface PaginationComponentDefaults {
-	readonly mode?: 'compact' | 'default' | 'simple';
-	readonly size?: ZControlSize;
-}
-
-export interface ZuiComponentDefaults {
-	readonly button?: ButtonComponentDefaults | null;
-	readonly card?: CardComponentDefaults | null;
-	readonly dataTable?: DataTableComponentDefaults | null;
-	readonly input?: InputComponentDefaults | null;
-	readonly pagination?: PaginationComponentDefaults | null;
-	readonly tag?: TagComponentDefaults | null;
-}
-
-export interface ResolvedZuiComponentDefaults {
-	readonly button?: ButtonComponentDefaults;
-	readonly card?: CardComponentDefaults;
-	readonly dataTable?: DataTableComponentDefaults;
-	readonly input?: InputComponentDefaults;
-	readonly pagination?: PaginationComponentDefaults;
-	readonly tag?: TagComponentDefaults;
-}
 
 type ComponentDefaultRule =
 	| { readonly kind: 'boolean' }
 	| { readonly kind: 'enum'; readonly values: readonly string[] }
+	| {
+			readonly kind: 'enum-or-number';
+			readonly values: readonly string[];
+			readonly exclusiveMinimum: number;
+	  }
 	| { readonly kind: 'integer'; readonly minimum: number }
-	| { readonly exclusiveMinimum: number; readonly kind: 'number' };
+	| { readonly kind: 'number'; readonly exclusiveMinimum: number };
+
+function keys<T extends object>(source: T): readonly Extract<keyof T, string>[] {
+	return Object.freeze(Object.keys(source)) as readonly Extract<keyof T, string>[];
+}
+
+const buttonRules = {
+	fullWidth: { kind: 'boolean' },
+	shape: { kind: 'enum', values: ['default', 'circle', 'square'] },
+	size: { kind: 'enum', values: controlSizes },
+	tone: { kind: 'enum', values: ['primary', ...semanticTones] },
+	variant: { kind: 'enum', values: ['ghost', 'solid', 'outline'] }
+} as const;
+
+const typographyRules = {
+	lineHeight: { kind: 'enum', values: keys(DEFAULT_THEME_SCHEMA.lineHeight) },
+	size: { kind: 'enum', values: keys(DEFAULT_THEME_SCHEMA.fontSize) },
+	tone: { kind: 'enum', values: ['primary', 'muted', ...semanticTones] },
+	weight: { kind: 'enum', values: keys(DEFAULT_THEME_SCHEMA.fontWeight) }
+} as const;
 
 const COMPONENT_RULES = {
-	button: {
-		fullWidth: { kind: 'boolean' },
-		shape: { kind: 'enum', values: ['default', 'circle', 'square'] },
-		size: { kind: 'enum', values: controlSizes },
-		tone: { kind: 'enum', values: ['primary', ...semanticTones] },
-		variant: { kind: 'enum', values: ['ghost', 'solid', 'outline'] }
+	avatar: {
+		shape: { kind: 'enum', values: ['circle', 'rounded', 'square'] },
+		size: { kind: 'enum', values: controlSizes }
 	},
+	badge: {
+		overlap: { kind: 'enum', values: ['circular', 'rectangular'] },
+		placement: { kind: 'enum', values: ['bottom-end', 'bottom-start', 'top-end', 'top-start'] },
+		size: { kind: 'enum', values: controlSizes },
+		tone: { kind: 'enum', values: semanticTones }
+	},
+	button: buttonRules,
 	card: {
 		elevation: { kind: 'enum', values: ['large', 'medium', 'none', 'small'] },
 		variant: { kind: 'enum', values: ['elevated', 'outlined'] }
@@ -91,23 +64,96 @@ const COMPONENT_RULES = {
 		striped: { kind: 'boolean' },
 		virtualized: { kind: 'boolean' }
 	},
+	dialog: { size: { kind: 'enum', values: controlSizes } },
+	heading: {
+		...typographyRules,
+		wrap: { kind: 'enum', values: ['balance', 'pretty', 'wrap', 'nowrap'] }
+	},
+	icon: {
+		size: { kind: 'enum-or-number', values: ['full', ...controlSizes], exclusiveMinimum: 0 },
+		strokeWidth: { kind: 'number', exclusiveMinimum: 0 }
+	},
 	input: { size: { kind: 'enum', values: controlSizes } },
+	link: {
+		appearance: { kind: 'enum', values: ['text', 'button', 'navigation'] },
+		size: { kind: 'enum', values: controlSizes },
+		tone: typographyRules.tone,
+		underline: { kind: 'enum', values: ['always', 'hover', 'none'] },
+		variant: buttonRules.variant
+	},
 	pagination: {
 		mode: { kind: 'enum', values: ['compact', 'default', 'simple'] },
 		size: { kind: 'enum', values: controlSizes }
 	},
+	spinner: {
+		size: { kind: 'enum', values: controlSizes },
+		tone: { kind: 'enum', values: ['inherit', 'muted', 'primary'] }
+	},
 	tag: {
 		size: { kind: 'enum', values: controlSizes },
-		tone: {
-			kind: 'enum',
-			values: semanticTones
-		}
-	}
+		tone: { kind: 'enum', values: semanticTones }
+	},
+	text: typographyRules,
+	toggleButton: buttonRules,
+	tooltip: { size: { kind: 'enum', values: controlSizes } }
 } as const satisfies Readonly<Record<string, Readonly<Record<string, ComponentDefaultRule>>>>;
+
+type RuleValue<TRule extends ComponentDefaultRule> = TRule extends { readonly kind: 'boolean' }
+	? boolean
+	: TRule extends { readonly kind: 'enum'; readonly values: readonly (infer TValue)[] }
+		? TValue
+		: TRule extends { readonly kind: 'enum-or-number'; readonly values: readonly (infer TValue)[] }
+			? TValue | number
+			: number;
+
+type DefaultsFor<TName extends keyof typeof COMPONENT_RULES> = {
+	readonly [
+		TProp in keyof (typeof COMPONENT_RULES)[TName]
+	]?: (typeof COMPONENT_RULES)[TName][TProp] extends ComponentDefaultRule
+		? RuleValue<(typeof COMPONENT_RULES)[TName][TProp]>
+		: never;
+};
+
+export interface AvatarComponentDefaults extends DefaultsFor<'avatar'> {}
+export interface BadgeComponentDefaults extends DefaultsFor<'badge'> {}
+export interface ButtonComponentDefaults extends DefaultsFor<'button'> {}
+export interface CardComponentDefaults extends DefaultsFor<'card'> {}
+export interface DataTableComponentDefaults extends DefaultsFor<'dataTable'> {}
+export interface DialogComponentDefaults extends DefaultsFor<'dialog'> {}
+export interface HeadingComponentDefaults extends DefaultsFor<'heading'> {}
+export interface IconComponentDefaults extends DefaultsFor<'icon'> {}
+export interface InputComponentDefaults extends DefaultsFor<'input'> {}
+export interface LinkComponentDefaults extends DefaultsFor<'link'> {}
+export interface PaginationComponentDefaults extends DefaultsFor<'pagination'> {}
+export interface SpinnerComponentDefaults extends DefaultsFor<'spinner'> {}
+export interface TagComponentDefaults extends DefaultsFor<'tag'> {}
+export interface TextComponentDefaults extends DefaultsFor<'text'> {}
+export interface ToggleButtonComponentDefaults extends DefaultsFor<'toggleButton'> {}
+export interface TooltipComponentDefaults extends DefaultsFor<'tooltip'> {}
+
+type DefaultsWithStops = {
+	readonly [TName in keyof typeof COMPONENT_RULES]?: DefaultsFor<TName> | null;
+};
+type ResolvedDefaults = {
+	readonly [TName in keyof typeof COMPONENT_RULES]?: DefaultsFor<TName>;
+};
+export interface ZuiComponentDefaults extends DefaultsWithStops {}
+export interface ResolvedZuiComponentDefaults extends ResolvedDefaults {}
+
+/** Explicit props win; only undefined asks for a configured or built-in visual default. */
+export function resolveComponentDefault<T>(
+	value: T | undefined,
+	configured: T | undefined,
+	fallback: T
+): T {
+	return value === undefined ? (configured === undefined ? fallback : configured) : value;
+}
 
 const COMPONENTS = new Set(Object.keys(COMPONENT_RULES));
 const CONTROLLED_OR_UNSAFE = new Set([
 	'checked',
+	'defaultChecked',
+	'defaultPressed',
 	'defaultOpen',
 	'defaultPage',
 	'defaultPageSize',
@@ -182,6 +228,12 @@ function validateProp(component: string, prop: string, value: unknown): void {
 			if (typeof value !== 'string' || !rule.values.includes(value))
 				throw new TypeError(`${location} has an invalid value.`);
 			return;
+		case 'enum-or-number':
+			if (typeof value === 'string' && rule.values.includes(value)) return;
+			if (typeof value === 'number' && value > rule.exclusiveMinimum) return;
+			throw new TypeError(
+				`${location} must be a declared preset or a number greater than ${rule.exclusiveMinimum}.`
+			);
 		case 'integer':
 			if (typeof value !== 'number' || !Number.isInteger(value) || value < rule.minimum)
 				throw new TypeError(`${location} must be an integer of at least ${rule.minimum}.`);

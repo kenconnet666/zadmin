@@ -61,7 +61,7 @@
 			size="small"
 		/>
 		<ZStack direction="row" gap="small" wrap>
-			<ZTag>继承small/accent</ZTag>
+			<ZTag>继承small/info</ZTag>
 			<ZCard>
 				<ZText>继承outlined Card</ZText>
 			</ZCard>
@@ -69,7 +69,7 @@
 		<ZDataTable caption="Provider默认值服务清单" {columns} {rows} rowKey={(row) => row.id} />
 		<ZPagination aria-label="Provider默认简单分页" page={2} totalPages={5} />
 		<ZText tone="muted">
-			默认值只有六个配置分组；input.size统一覆盖Input、InputGroup和Textarea，显式属性及最近上下文优先。值、页码、选择状态、回调、DOM、class/style与任意CSS仍由组件调用方拥有。
+			input.size统一覆盖Input、InputGroup和Textarea，显式属性及最近上下文优先。值、页码、选择状态、回调、DOM、class/style与任意CSS仍由组件调用方拥有。
 		</ZText>
 	</ZStack>
 </ZProvider>

@@ -169,6 +169,8 @@ export const PROPERTY_DEFINITIONS = {
 	clipPath: {},
 	color: { keywords: COLOR_KEYWORDS, token: 'color' },
 	columnGap: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
+	containerName: { keywords: { none: 'none' } },
+	containerType: { keywords: { normal: 'normal', inlineSize: 'inline-size', size: 'size' } },
 	cursor: {
 		keywords: {
 			auto: 'auto',
@@ -197,7 +199,13 @@ export const PROPERTY_DEFINITIONS = {
 	fontWeight: { token: 'fontWeight' },
 	gap: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
 	inlineSize: { token: 'indicatorSize', tokenUnit: 'px', units: ['length', 'percent'] },
-	gridColumn: {},
+	listStyleType: { keywords: { none: 'none', decimal: 'decimal', disc: 'disc' } },
+	gridColumn: { keywords: { auto: 'auto' } },
+	gridColumnStart: { keywords: { auto: 'auto' } },
+	gridColumnEnd: { keywords: { auto: 'auto' } },
+	gridRow: { keywords: { auto: 'auto' } },
+	gridRowStart: { keywords: { auto: 'auto' } },
+	gridRowEnd: { keywords: { auto: 'auto' } },
 	gridTemplateColumns: {},
 	gridTemplateRows: {},
 	height: {

@@ -1493,7 +1493,37 @@
 			"id": "container",
 			"name": "ZContainer",
 			"source": "ui/zui/src/components/layout/ZContainer.svelte",
-			"declaredPropCount": 4,
+			"declaredPropCount": 7,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "grid",
+			"name": "ZGrid",
+			"source": "ui/zui/src/components/layout/ZGrid.svelte",
+			"declaredPropCount": 8,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "grid-item",
+			"name": "ZGridItem",
+			"source": "ui/zui/src/components/layout/ZGridItem.svelte",
+			"declaredPropCount": 7,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "simple-grid",
+			"name": "ZSimpleGrid",
+			"source": "ui/zui/src/components/layout/ZSimpleGrid.svelte",
+			"declaredPropCount": 8,
 			"metadataGapPropCount": 0,
 			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
@@ -1503,7 +1533,17 @@
 			"id": "stack",
 			"name": "ZStack",
 			"source": "ui/zui/src/components/layout/ZStack.svelte",
-			"declaredPropCount": 7,
+			"declaredPropCount": 10,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "breadcrumb",
+			"name": "ZBreadcrumb",
+			"source": "ui/zui/src/components/navigation/ZBreadcrumb.svelte",
+			"declaredPropCount": 4,
 			"metadataGapPropCount": 0,
 			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
@@ -1555,8 +1595,8 @@
 		"maxMetadataGapProps": 0
 	},
 	"totals": {
-		"components": 141,
-		"declaredProps": 1776,
+		"components": 145,
+		"declaredProps": 1809,
 		"metadataGapProps": 0,
 		"fallbackProps": 0,
 		"opaqueStructuredProps": 8,

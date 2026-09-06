@@ -56,25 +56,25 @@
 				type: 'string'
 			},
 			{
-				default: "'medium'",
+				default: "componentDefaults.text.size → 'medium'",
 				description: 'Theme字号token。',
 				name: 'size',
 				type: "keyof ZuiTheme['fontSize']"
 			},
 			{
-				default: "'normal'",
+				default: "componentDefaults.text.lineHeight → 'normal'",
 				description: 'Theme行高token。',
 				name: 'lineHeight',
 				type: "keyof ZuiTheme['lineHeight']"
 			},
 			{
-				default: "'normal'",
+				default: "componentDefaults.text.weight → 'normal'",
 				description: 'Theme字重token。',
 				name: 'weight',
 				type: "keyof ZuiTheme['fontWeight']"
 			},
 			{
-				default: "'neutral'",
+				default: "componentDefaults.text.tone → 'neutral'",
 				description: '语义颜色。',
 				name: 'tone',
 				type: 'ZTextTone'
@@ -159,27 +159,35 @@
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { resolveTypographyOverflow } from './typography.js';
+	import { resolveComponentDefault } from '../../runtime/foundation/component-defaults.js';
 
 	let {
 		as = 'span',
 		children,
 		class: className,
 		lineClamp,
-		lineHeight = 'normal',
+		lineHeight,
 		ref = $bindable(null),
-		size = 'medium',
+		size,
 		style,
 		tabularNumbers = false,
-		tone = 'neutral',
+		tone,
 		truncate = false,
-		weight = 'normal',
+		weight,
 		...rest
 	}: ZTextProps = $props();
 
 	const zui = useZui();
+	const defaults = $derived(zui.componentDefaults.text);
+	const typography = $derived({
+		lineHeight: resolveComponentDefault(lineHeight, defaults?.lineHeight, 'normal'),
+		size: resolveComponentDefault(size, defaults?.size, 'medium'),
+		tone: resolveComponentDefault(tone, defaults?.tone, 'neutral'),
+		weight: resolveComponentDefault(weight, defaults?.weight, 'normal')
+	});
 	const overflow = $derived(resolveTypographyOverflow({ lineClamp, tabularNumbers, truncate }));
 	const rootClass = $derived(
-		zui.recipe(textRecipe, { lineHeight, size, tone, truncate: overflow.truncate, weight })
+		zui.recipe(textRecipe, { ...typography, truncate: overflow.truncate })
 	);
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const authoredStyle = $derived(mergeStyles(style, overflow.inlineStyle));

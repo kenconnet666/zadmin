@@ -35,13 +35,13 @@
 				type: 'string'
 			},
 			{
-				default: "'medium'",
+				default: "componentDefaults.spinner.size → 'medium'",
 				description: '视觉尺寸。',
 				name: 'size',
 				type: 'SpinnerSize'
 			},
 			{
-				default: "'primary'",
+				default: "componentDefaults.spinner.tone → 'primary'",
 				description: '有限视觉tone；inherit用于Button等组合边界，muted用于低强调加载。',
 				name: 'tone',
 				type: "'primary' | 'muted' | 'inherit'"
@@ -89,31 +89,35 @@
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { ReducedMotionState } from '../../runtime/foundation/motion.svelte.js';
 	import { durationMilliseconds } from '../../runtime/foundation/presence.svelte.js';
+	import { resolveComponentDefault } from '../../runtime/foundation/component-defaults.js';
 	let {
 		'aria-hidden': ariaHidden,
 		class: className,
 		label,
 		ref = $bindable(null),
-		size = 'medium',
+		size,
 		style,
-		tone = 'primary',
+		tone,
 		...rest
 	}: ZSpinnerProps = $props();
 	const zui = useZui();
+	const defaults = $derived(zui.componentDefaults.spinner);
 	const reducedMotion = new ReducedMotionState(() => zui.motion);
 	let indicator = $state<SVGSVGElement | null>(null);
 	const hidden = $derived(ariaHidden === true || ariaHidden === 'true');
 	const resolvedSize = $derived.by(() => {
-		if (!['xsmall', 'small', 'medium', 'large', 'xlarge'].includes(size)) {
+		const next = resolveComponentDefault(size, defaults?.size, 'medium');
+		if (!['xsmall', 'small', 'medium', 'large', 'xlarge'].includes(next)) {
 			throw new TypeError('ZSpinner size must be xsmall, small, medium, large or xlarge.');
 		}
-		return size;
+		return next;
 	});
 	const resolvedTone = $derived.by(() => {
-		if (!['inherit', 'muted', 'primary'].includes(tone)) {
+		const next = resolveComponentDefault(tone, defaults?.tone, 'primary');
+		if (!['inherit', 'muted', 'primary'].includes(next)) {
 			throw new TypeError('ZSpinner tone must be primary, muted or inherit.');
 		}
-		return tone;
+		return next;
 	});
 	const reduced = $derived(reducedMotion.current);
 	const resolvedLabel = $derived.by(() => {

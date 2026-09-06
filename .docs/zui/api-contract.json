@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
-	"componentCount": 141,
-	"overallSha256": "824085c9c3b7e897d1ab8872d40eb327fd57021afbdd10a3f510d081f397e35f",
+	"componentCount": 145,
+	"overallSha256": "cc3d7322c7e56e2f88815dec5099e634e0334c8521f6aecd44f32bb820345cb8",
 	"components": [
 		{
 			"id": "accordion",
@@ -110,7 +110,7 @@
 		},
 		{
 			"id": "dialog-content",
-			"sha256": "e294c1ddabb2bfeed0b6cb2b0f58ffab7ce5d89a2ff58d4774f9eba9aad9484a",
+			"sha256": "9b86cc837644a1043858f0d2263350ae37145f1d580201bb7c90f14bdc2e8ca6",
 			"source": "src/components/compound/dialog/ZDialogContent.svelte"
 		},
 		{
@@ -365,7 +365,7 @@
 		},
 		{
 			"id": "tooltip-content",
-			"sha256": "2b35afa6445d1c68d5d1b88da0b8b2b6e9790ebffe1e3f178e365898d1ae2b6f",
+			"sha256": "27afd48f24dd8661670bd354881ff169049b52e7356d84158fb048f77323b7b2",
 			"source": "src/components/compound/tooltip/ZTooltipContent.svelte"
 		},
 		{
@@ -385,12 +385,12 @@
 		},
 		{
 			"id": "avatar",
-			"sha256": "e86ec61a6b1da01a9b1fb431cd1e96b6d71f9aed90f819790c9ec223180c232b",
+			"sha256": "4edbf6c5517744c469518305670faeeae1babe2a66c525e89a4739acae39d313",
 			"source": "src/components/data-display/ZAvatar.svelte"
 		},
 		{
 			"id": "badge",
-			"sha256": "0cb1a2c72b9659b5b0ccf24641ea15df90f327a2ff374461c31173b7d01ff7fd",
+			"sha256": "1d58b6aa096756b8bbddcc00ecff287c3c8de4aee945a02cb0a370540b08dff1",
 			"source": "src/components/data-display/ZBadge.svelte"
 		},
 		{
@@ -480,7 +480,7 @@
 		},
 		{
 			"id": "spinner",
-			"sha256": "ed7ef4ede4fb01f6642e54b8b7e325caa324c3dc53ed0ca5ef060e5da7b01247",
+			"sha256": "03b7f213b089645504753b8336e24dff9d4a1df98bfe2b9a862f68beb138fbd5",
 			"source": "src/components/feedback/ZSpinner.svelte"
 		},
 		{
@@ -510,12 +510,12 @@
 		},
 		{
 			"id": "heading",
-			"sha256": "05d83e8594861cb9e5b9879e97db54b055e42dc50a172784fce0cdac40c6cba8",
+			"sha256": "41a0bd475343fd06b13138e386f22843b538d2e8ee1600a9d640662042a382f5",
 			"source": "src/components/gene/ZHeading.svelte"
 		},
 		{
 			"id": "icon",
-			"sha256": "deec3cc4bbb2c236ec6fe5de044c7ddd63f8b2f752c4b55d76ca27bd913e2369",
+			"sha256": "325c34d36308aa7135efcc7574104f226d97f33715f326a5ae5a791a7f354603",
 			"source": "src/components/gene/ZIcon.svelte"
 		},
 		{
@@ -525,12 +525,12 @@
 		},
 		{
 			"id": "link",
-			"sha256": "de3a478301f156ed2dff5b0a137b43def9b8f095d66c73ec537163bb717b1ff5",
+			"sha256": "0fcd7f30e4c9e69c6c5fb17cda0b2dbeaddc7212a28e153526028dbfb3b820b5",
 			"source": "src/components/gene/ZLink.svelte"
 		},
 		{
 			"id": "provider",
-			"sha256": "b11c216aebd03ef2d2b21190740937be71df631b08ea2fab4fb8c65703b16ec8",
+			"sha256": "5e1b1a1a956846d27107bd035935f602348751e79252b2669ce0064da0473100",
 			"source": "src/components/gene/ZProvider.svelte"
 		},
 		{
@@ -540,12 +540,12 @@
 		},
 		{
 			"id": "text",
-			"sha256": "74a24f2023c172e3d072979306940c3ae7abc14f87b9565542dbce8731a8dac5",
+			"sha256": "4051e84e37fc088df7d1a436b29a488d700eaab34d2cb30894b5de4128dc070d",
 			"source": "src/components/gene/ZText.svelte"
 		},
 		{
 			"id": "toggle-button",
-			"sha256": "f72dfc16e10b01558e3a4662223f9d6058a5788e9bb23aebf33cb73966eec245",
+			"sha256": "93e59ff37b60b0f4c2487113860c9f73c8574c26811ff1ca5c4a253a173d1d8a",
 			"source": "src/components/gene/ZToggleButton.svelte"
 		},
 		{
@@ -680,13 +680,33 @@
 		},
 		{
 			"id": "container",
-			"sha256": "b6e71a044aa856d3bba9767e2cad0164e818690e8d3a62e31dd65a425cb15902",
+			"sha256": "f289d1cfe88c5f92d0682474f220f06d709c9c34fb4147af943c4712d60d5894",
 			"source": "src/components/layout/ZContainer.svelte"
 		},
 		{
+			"id": "grid",
+			"sha256": "c2c9033855b74c95ca6cd72e1b38f61f02ce9122206cd7cdcb84aba392d605fd",
+			"source": "src/components/layout/ZGrid.svelte"
+		},
+		{
+			"id": "grid-item",
+			"sha256": "793e7b297997556bd9c81d1e6928a5d0231d9a7d3cfd849b2bf3f9781befc33e",
+			"source": "src/components/layout/ZGridItem.svelte"
+		},
+		{
+			"id": "simple-grid",
+			"sha256": "e91d00f73db30c3ba498ec93e0f3475599f87c2129d072f3ef66b6921e81eb74",
+			"source": "src/components/layout/ZSimpleGrid.svelte"
+		},
+		{
 			"id": "stack",
-			"sha256": "b3b0f1c66b80252a9765f24f588a4b9d50fef5c9343c25f7eae1098b7ba2c498",
+			"sha256": "ceba85df32202db062b1de58a0c22fa7bd60123a3bf3c31b80416c4d5c069ca0",
 			"source": "src/components/layout/ZStack.svelte"
+		},
+		{
+			"id": "breadcrumb",
+			"sha256": "923e18bd55b6a78990f1cb0dcff4969023aeef6321f736e4d9cd57d45206dcc0",
+			"source": "src/components/navigation/ZBreadcrumb.svelte"
 		},
 		{
 			"id": "command",
@@ -712,11 +732,11 @@
 	"entrypoints": {
 		"code.ts": "eabb8477e4c5ef93d016ab909e5c7f85a3111df231e2d2c3c7ef5e54897b36db",
 		"compiler.ts": "96fa979b36838e8b7a6d3f52bb463f23951438a4d974d52b631ad1e6d937b2e7",
-		"index.ts": "6731b43b0df1756ad2034aa698f74ab2851a0c8dc15ee64595b91de10e9e4fa4",
+		"index.ts": "bca0b2cdf93657420affd8920d92247e5b589c4dd576cb6b14d965cf8b5e0359",
 		"internal.ts": "05f9ef9c8628e1cdf694dcc88b71831e5aab726a3189bd6189eef7ae645df4d7",
 		"layer.ts": "72d0fc8e5b7a8ab39a12e157879951b84f1a7fc19654f4bd8b6ea92fd8aa6db8",
-		"metadata.ts": "d17046a9f91612481a3e483da346c3edc14f008df9b2d6940d7334af30634401",
-		"runtime.ts": "7830f8a5ded370ffa58d902a6f71254c73240650c40dd68a26e4fa46ca0e3d04",
+		"metadata.ts": "5ac680b14a74dbfd40a02384f49f0c14de8c08adf2b6a55ffaefc73588764e36",
+		"runtime.ts": "0fad64d1dec1517f8648a3640753feaf1af03264ce96ccccb7eaab8c5ece6599",
 		"testing.ts": "c596113f3cbcf4ce75be2728b6a10cd6a0b77c9b9101a4408ba2e18e174f15cb",
 		"theme.ts": "9625285286228f2548dadb74b934f40d7cd1804a1e96bc37a04f21d3cd32b527",
 		"themes.ts": "22c13a538ae761f96ccbf319431bcacf3d3466e93881f09f601733aba07e8bd0"

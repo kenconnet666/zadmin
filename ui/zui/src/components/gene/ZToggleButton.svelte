@@ -58,30 +58,35 @@
 				type: 'boolean'
 			},
 			{
-				default: "'outline'",
+				default: "componentDefaults.toggleButton.variant → button.variant → 'outline'",
 				description: '复用Button视觉层级；pressed样式由aria-pressed与同一recipe派生。',
 				name: 'variant',
 				type: "'solid' | 'outline' | 'ghost'"
 			},
 			{
-				default: "'primary'",
+				default: "componentDefaults.toggleButton.tone → button.tone → 'primary'",
 				description: '复用Button有限语义tone。',
 				name: 'tone',
 				type: "'primary' | 'neutral' | 'info' | 'success' | 'warning' | 'danger'"
 			},
 			{
-				default: "'medium'",
+				default: 'componentDefaults.toggleButton.size → button.size → Provider density',
 				description: '按钮尺寸。',
 				name: 'size',
 				type: "'xsmall' | 'small' | 'medium' | 'large' | 'xlarge'"
 			},
 			{
-				default: "'default'",
+				default: "componentDefaults.toggleButton.shape → button.shape → 'default'",
 				description: '复用Button形状；square/circle图标按钮必须提供aria-label。',
 				name: 'shape',
 				type: "'default' | 'square' | 'circle'"
 			},
-			{ default: 'false', description: '扩展到父容器宽度。', name: 'fullWidth', type: 'boolean' },
+			{
+				default: 'componentDefaults.toggleButton.fullWidth → button.fullWidth → false',
+				description: '扩展到父容器宽度。',
+				name: 'fullWidth',
+				type: 'boolean'
+			},
 			{ default: 'false', description: '映射到原生disabled。', name: 'disabled', type: 'boolean' },
 			{
 				bindable: true,
@@ -120,18 +125,32 @@
 <script lang="ts">
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import ZButton from './ZButton.svelte';
+	import { useZui } from '../../runtime/foundation/context.js';
+	import { resolveComponentDefault } from '../../runtime/foundation/component-defaults.js';
 
 	let {
 		children,
 		defaultPressed = false,
+		fullWidth,
 		onclick,
 		onPressedChange,
 		pressed = $bindable(),
 		ref = $bindable(null),
-		tone = 'primary',
-		variant = 'outline',
+		shape,
+		size,
+		tone,
+		variant,
 		...rest
 	}: ZToggleButtonProps = $props();
+	const zui = useZui();
+	const defaults = $derived(zui.componentDefaults.toggleButton);
+	const sharedDefaults = $derived(zui.componentDefaults.button);
+	const resolvedTone = $derived(
+		resolveComponentDefault(tone, defaults?.tone ?? sharedDefaults?.tone, 'primary')
+	);
+	const resolvedVariant = $derived(
+		resolveComponentDefault(variant, defaults?.variant ?? sharedDefaults?.variant, 'outline')
+	);
 
 	const state = new ControllableState<boolean>({
 		defaultValue: () => defaultPressed,
@@ -150,8 +169,11 @@
 <ZButton
 	{...rest}
 	bind:ref
-	{tone}
-	{variant}
+	fullWidth={resolveComponentDefault(fullWidth, defaults?.fullWidth, undefined)}
+	shape={resolveComponentDefault(shape, defaults?.shape, undefined)}
+	size={resolveComponentDefault(size, defaults?.size, undefined)}
+	tone={resolvedTone}
+	variant={resolvedVariant}
 	aria-pressed={resolvedPressed}
 	data-state={resolvedPressed ? 'on' : 'off'}
 	onclick={handleClick}

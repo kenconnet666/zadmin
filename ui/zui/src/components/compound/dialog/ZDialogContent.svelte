@@ -128,7 +128,7 @@
 			{
 				name: 'size',
 				type: 'ZControlSize',
-				default: 'medium',
+				default: "componentDefaults.dialog.size → 'medium'",
 				description: '五档Dialog面板最大宽度，消费独立dialog尺寸token。'
 			},
 			{
@@ -232,6 +232,7 @@
 	import { portal } from '../../../runtime/layer/portal.js';
 	import { lockScroll } from '../../../runtime/layer/scroll-lock.js';
 	import { useZDialog } from './context.svelte.js';
+	import { resolveComponentDefault } from '../../../runtime/foundation/component-defaults.js';
 
 	let {
 		appearance = 'dialog',
@@ -251,11 +252,14 @@
 		restoreFocus = true,
 		restoreTarget,
 		role = 'dialog',
-		size = 'medium',
+		size,
 		style,
 		...rest
 	}: ZDialogContentProps = $props();
 	const zui = useZui();
+	const resolvedSize = $derived(
+		resolveComponentDefault(size, zui.componentDefaults.dialog?.size, 'medium')
+	);
 	const dialog = useZDialog();
 	const initiallyOpen = untrack(() => dialog.open);
 	const presence = createPresence(initiallyOpen);
@@ -267,7 +271,7 @@
 		appearance === 'dialog'
 			? zui.recipe(contentRecipe, {
 					motion: dialog.reducedMotion ? 'reduced' : 'full',
-					size,
+					size: resolvedSize,
 					open: dialog.open && entryMotion.entered
 				})
 			: undefined
