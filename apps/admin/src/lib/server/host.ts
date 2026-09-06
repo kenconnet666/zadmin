@@ -10,9 +10,10 @@ import {
 } from '@zadmin/core';
 import { authModule } from '@zadmin/auth';
 import { ossModule } from '@zadmin/oss';
-import { postgresModule } from '@zadmin/postgres';
+import { createPostgresModule, type PostgresOptions } from '@zadmin/postgres';
 import { redisModule } from '@zadmin/redis';
 import { SVELTEKIT, sveltekitModule } from '@zadmin/sveltekit';
+import { env } from '$env/dynamic/private';
 import { fileURLToPath } from 'node:url';
 import { AdminPluginBridge } from './plugins.ts';
 import { resolvePluginDataRoot } from './data.ts';
@@ -20,13 +21,20 @@ import { resolvePluginDataRoot } from './data.ts';
 export interface AdminHostOptions {
 	readonly enableInstalledPlugins?: boolean;
 	readonly pluginDataRoot?: string;
+	readonly postgres?: PostgresOptions;
 }
 
 export type AdminHost = Awaited<ReturnType<typeof createAdminHost>>;
 
 export async function createAdminHost(options: AdminHostOptions = {}) {
 	const runtime = new PluginRuntime({
-		modules: [sveltekitModule, postgresModule, redisModule, ossModule, authModule]
+		modules: [
+			sveltekitModule,
+			createPostgresModule(options.postgres),
+			redisModule,
+			ossModule,
+			authModule
+		]
 	});
 	await runtime.reconcile(defineApp({ id: 'admin', plugins: [] }));
 	const web = runtime.resolve(SVELTEKIT);
@@ -158,7 +166,8 @@ async function replaceAdminHost(): Promise<AdminHost> {
 	const next = retained.operation.then(async () => {
 		await retained.current?.dispose();
 		created = await createAdminHost({
-			enableInstalledPlugins: import.meta.env.MODE !== 'test'
+			enableInstalledPlugins: import.meta.env.MODE !== 'test',
+			postgres: import.meta.env.MODE === 'test' ? { disabled: true } : { url: env.DATABASE_URL }
 		});
 		retained.current = created;
 	});

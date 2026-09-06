@@ -24,7 +24,7 @@
 		"check": "tsc -p tsconfig.json --noEmit"
 	},
 	"peerDependencies": {
-		"drizzle-orm": "^0.45.0"
+		"drizzle-orm": "1.0.0-rc.4"
 	},
 	"devDependencies": {
 		"drizzle-kit": "catalog:",

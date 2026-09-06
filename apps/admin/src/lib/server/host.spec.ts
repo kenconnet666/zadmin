@@ -1,13 +1,27 @@
-import { afterAll, describe, expect, it } from 'vitest';
+import { afterAll, describe, expect, it, vi } from 'vitest';
 import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { packPluginArtifact } from '@zadmin/core';
+import { POSTGRES } from '@zadmin/postgres';
 import { adminHost, createAdminHost } from './host.js';
+
+vi.mock('$env/dynamic/private', () => ({
+	env: { DATABASE_URL: 'postgresql://unused.invalid/admin' }
+}));
 
 afterAll(() => adminHost.dispose());
 
 describe('admin host composition', () => {
+	it('keeps the test host database disabled instead of using local credentials', async () => {
+		const database = adminHost.runtime.resolve(POSTGRES);
+		expect(database.enabled).toBe(false);
+		expect(() => database.db).toThrow(/disabled/i);
+		expect(await database.checkHealth()).toEqual(
+			expect.objectContaining({ status: 'disabled', message: expect.stringMatching(/disabled/i) })
+		);
+	});
+
 	it('provides the configured static capabilities', () => {
 		expect(adminHost.runtime.snapshot.plugins).toEqual([]);
 		expect(adminHost.runtime.snapshot.modules).toEqual([

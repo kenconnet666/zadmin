@@ -1,0 +1,19 @@
+[Unit]
+Description=ZAdmin local PostgreSQL bridge for Windows and WSL
+After=docker.service
+Wants=docker.service
+
+[Service]
+Type=simple
+DynamicUser=true
+User=zadmin-postgres-bridge
+ExecStart=/usr/bin/socat TCP4-LISTEN:15432,bind=127.0.0.1,reuseaddr,fork TCP4:127.0.0.1:5432,connect-timeout=5
+Restart=on-failure
+RestartSec=2
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target
