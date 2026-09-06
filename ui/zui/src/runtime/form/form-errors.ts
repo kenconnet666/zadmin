@@ -1,4 +1,5 @@
 import { normalizeFieldPath, type FieldPathInput } from './field-path.js';
+import { remapFormListErrors, type FormListReconcile } from './form-list-reconcile.js';
 import { mergeErrorsForPaths, type FormErrors } from './validation.js';
 
 export type FormErrorLayer = 'manual' | 'schema' | 'server';
@@ -62,4 +63,14 @@ export function mergeFormErrorLayers(layers: FormErrorLayers): FormErrors {
 		}
 	}
 	return freeze(result);
+}
+export function remapFormErrorLayers(
+	layers: FormErrorLayers,
+	change: FormListReconcile
+): FormErrorLayers {
+	return createFormErrorLayers({
+		manual: remapFormListErrors(layers.manual, change),
+		schema: remapFormListErrors(layers.schema, change),
+		server: remapFormListErrors(layers.server, change)
+	});
 }

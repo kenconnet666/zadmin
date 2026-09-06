@@ -1,19 +1,19 @@
 # ZUI component maturity matrix
 
-Generated from 175 metadata components, 106 documentation modules, 175 API contract entries, and 282 test files.
+Generated from 176 metadata components, 106 documentation modules, 176 API contract entries, and 289 test files.
 
 This is a static inventory of authored test contracts, not an execution report or a whole-component visual acceptance result. Historical stage names are retained for compatibility. `VisuallyVerified` requires an explicit `@zui-visual ZComponent` marker, an owned component/fixture render, and a geometry, computed-style, CSS, or screenshot assertion in the SAME test block. A positive entry only identifies a scoped test; confirm its result against commit-matched CI and inspect real pages, themes, and densities separately. `DesktopVerified` remains false until a component-level desktop evidence source is added.
 
 | Stage                   | Count |
 | ----------------------- | ----: |
-| Declared                |   175 |
-| Authorable              |   175 |
-| ContractVerified        |   175 |
-| RuntimeImplemented      |   175 |
-| BrowserBehaviorVerified |   163 |
+| Declared                |   176 |
+| Authorable              |   176 |
+| ContractVerified        |   176 |
+| RuntimeImplemented      |   176 |
+| BrowserBehaviorVerified |   164 |
 | VisuallyVerified        |   159 |
 | DesktopVerified         |     0 |
-| ProductionVerified      |   167 |
+| ProductionVerified      |   168 |
 
 | Component               | Category     | Declared | Authorable | Contract | Runtime | Browser | Visual | Desktop | Production | Docs                                                                  |
 | ----------------------- | ------------ | -------: | ---------: | -------: | ------: | ------: | -----: | ------: | ---------: | --------------------------------------------------------------------- |
@@ -150,6 +150,7 @@ This is a static inventory of authored test contracts, not an execution report o
 | ZFileUpload             | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/file-upload/doc.ts             |
 | ZForm                   | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/form/doc.ts                    |
 | ZFormField              | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/form/doc.ts                    |
+| ZFormList               | input        |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/input/form/doc.ts                    |
 | ZInput                  | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/input/doc.ts                   |
 | ZInputGroup             | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/input-group/doc.ts             |
 | ZMention                | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/mention/doc.ts                 |

@@ -580,6 +580,8 @@ export type {
 } from '../components/input/ZForm.svelte';
 export { default as ZFormField } from '../components/input/ZFormField.svelte';
 export type { ZFormFieldProps } from '../components/input/ZFormField.svelte';
+export { default as ZFormList } from '../components/input/ZFormList.svelte';
+export type { ZFormListProps, FormListOperations } from '../components/input/ZFormList.svelte';
 export type {
 	FormFieldState,
 	FormFieldStateListener,

@@ -1746,7 +1746,9 @@ export const componentCatalogManifest = Object.freeze([
 			'controller',
 			'server errors',
 			'dirty',
-			'touched'
+			'touched',
+			'field array',
+			'form list'
 		],
 		profiles: ['form-control'],
 		capabilities: [
@@ -1761,8 +1763,8 @@ export const componentCatalogManifest = Object.freeze([
 			'disabled',
 			'form-reset'
 		],
-		demoCount: 8,
-		publicComponentCount: 2
+		demoCount: 10,
+		publicComponentCount: 3
 	},
 	{
 		id: 'radio-group',

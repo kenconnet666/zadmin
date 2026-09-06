@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import { fieldPathToString } from '../src/runtime/form/field-path.js';
+import { createFormListReconcile } from '../src/runtime/form/form-list-reconcile.js';
 import { FormRegistry } from '../src/runtime/form/form-registry.svelte.js';
 
 function register(
@@ -258,5 +259,88 @@ describe('FormRegistry', () => {
 		registry.markDirty('account');
 		expect(listener).toHaveBeenCalledOnce();
 		expect(() => registry.subscribeField('account', null as never)).toThrow(/listener/u);
+	});
+
+	it('atomically remaps list registrations, state, errors and dependencies by row id', async () => {
+		const unmounted: [string, boolean][] = [];
+		const registry = new FormRegistry((path, preserve) =>
+			unmounted.push([fieldPathToString(path), preserve])
+		);
+		const registerRow = (
+			instanceId: string,
+			path: readonly (string | number)[],
+			dependencies: readonly (readonly (string | number)[])[] = []
+		) =>
+			registry.register({
+				control: () => null,
+				dependencies,
+				htmlName: fieldPathToString(path),
+				htmlNameFollowsPath: true,
+				instanceId,
+				path,
+				preserve: true
+			});
+		const stopAName = registerRow('a-name', ['users', 0, 'name'], [['users', 0, 'role']]);
+		registerRow('a-role', ['users', 0, 'role']);
+		registerRow('b-name', ['users', 1, 'name']);
+		registry.markTouched('a-name');
+		registry.syncErrors({ 'users[0].name': ['A error'], 'users[1].name': ['B error'] });
+
+		registry.reconcileList(
+			createFormListReconcile(
+				['users'],
+				[
+					{ id: 'a', path: ['users', 0] },
+					{ id: 'b', path: ['users', 1] }
+				],
+				[
+					{ id: 'b', path: ['users', 0] },
+					{ id: 'a', path: ['users', 1] }
+				]
+			)
+		);
+
+		expect(registry.state(['users', 1, 'name'])).toMatchObject({
+			errors: ['A error'],
+			touched: true
+		});
+		expect(registry.state(['users', 0, 'name']).errors).toEqual(['B error']);
+		expect(registry.affectedPaths('a-role')).toContainEqual(['users', 1, 'name']);
+
+		stopAName();
+		const stopAgain = registerRow('a-name', ['users', 1, 'name'], [['users', 1, 'role']]);
+		await Promise.resolve();
+		expect(registry.state(['users', 1, 'name']).touched).toBe(true);
+		expect(unmounted).toEqual([]);
+		stopAgain();
+		await Promise.resolve();
+		expect(unmounted).toEqual([['users[1].name', true]]);
+	});
+
+	it('remaps and hard-purges preserved unmounted list state', async () => {
+		const registry = new FormRegistry();
+		const stop = registry.register({
+			control: () => null,
+			htmlName: 'users[0].name',
+			htmlNameFollowsPath: true,
+			instanceId: 'preserved',
+			path: ['users', 0, 'name'],
+			preserve: true
+		});
+		registry.markTouched('preserved');
+		stop();
+		await Promise.resolve();
+
+		registry.reconcileList(
+			createFormListReconcile(
+				'users',
+				[{ id: 'a', path: ['users', 0] }],
+				[{ id: 'a', path: ['users', 1] }]
+			)
+		);
+		expect(registry.state(['users', 1, 'name']).touched).toBe(true);
+
+		registry.reconcileList(createFormListReconcile('users', [{ id: 'a', path: ['users', 1] }], []));
+		expect(registry.state(['users', 1, 'name']).touched).toBe(false);
 	});
 });

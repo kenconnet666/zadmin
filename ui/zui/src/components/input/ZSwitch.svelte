@@ -267,7 +267,7 @@
 			{ description: '真实input元素引用。', name: 'ref', type: 'HTMLInputElement | null' }
 		],
 		dependencies: [
-			'ControllableState',
+			'FormControlState',
 			'ReducedMotionState',
 			'ZSpinner',
 			'form-control',
@@ -412,10 +412,11 @@
 <script lang="ts">
 	import { onMount, untrack } from 'svelte';
 
-	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
+	import { createFormControlState } from '../../runtime/form/form-value-adapter.svelte.js';
 	import { resolveControlSize } from '../../runtime/foundation/control-size.js';
 	import { useZField } from '../../runtime/form/field-context.js';
-	import { formReset, mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
+	import { mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
+	import FormResetSignal from '../../runtime/form/FormResetSignal.svelte';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import { ReducedMotionState } from '../../runtime/foundation/motion.svelte.js';
 	import { serializeFormValue } from '../../runtime/form/form-value.js';
@@ -437,6 +438,7 @@
 		class: className,
 		defaultChecked = false,
 		disabled = false,
+		form,
 		id,
 		indicator,
 		invalid,
@@ -464,10 +466,21 @@
 	const resolvedReadonly = $derived(readonly || field?.readonly || false);
 	const resolvedRequired = $derived(required || field?.required || false);
 	const resolvedSize = $derived(resolveControlSize(size ?? field?.size, zui.density));
-	const state = new ControllableState<boolean>({
+	const state = createFormControlState<boolean>({
 		defaultValue: () => defaultChecked,
+		element: () => ref,
+		normalizeModelValue: (candidate) => {
+			if (candidate === undefined) return false;
+			if (typeof candidate !== 'boolean')
+				throw new TypeError('ZSwitch model value must be boolean or undefined.');
+			return candidate;
+		},
 		onChange: () => onCheckedChange,
+		owner: 'ZSwitch',
 		read: () => checked,
+		syncNative: (next) => {
+			if (ref) ref.checked = next;
+		},
 		write: (next) => (checked = next)
 	});
 	const resolvedChecked = $derived(state.current);
@@ -503,11 +516,13 @@
 	}
 
 	function handleChange(event: Event & { currentTarget: HTMLInputElement }): void {
-		if (loading || resolvedReadonly) {
+		if (event.currentTarget.matches(':disabled') || loading || resolvedReadonly) {
 			event.currentTarget.checked = resolvedChecked;
 			return;
 		}
-		state.setFromUser(event.currentTarget.checked);
+		if (!state.setFromUser(event.currentTarget.checked)) {
+			event.currentTarget.checked = resolvedChecked;
+		}
 		onchange?.(event);
 	}
 </script>
@@ -530,9 +545,9 @@
 		{...rest}
 		bind:this={ref}
 		class={classes.control}
-		use:formReset={() => state.reset()}
 		id={id ?? field?.controlId ?? generatedId}
 		name={name ?? field?.name}
+		{form}
 		type="checkbox"
 		role="switch"
 		value={resolvedValue}
@@ -574,3 +589,4 @@
 		{/if}
 	</span>
 </span>
+<FormResetSignal association={form} control={ref} onReset={() => state.reset()} />

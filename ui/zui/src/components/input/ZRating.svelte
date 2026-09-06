@@ -312,7 +312,10 @@
 
 <script lang="ts">
 	import { onDestroy, onMount, untrack } from 'svelte';
-	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
+	import {
+		claimFormValueScope,
+		createFormControlState
+	} from '../../runtime/form/form-value-adapter.svelte.js';
 	import { controlSizeMetrics, resolveControlSize } from '../../runtime/foundation/control-size.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { useZui } from '../../runtime/foundation/context.js';
@@ -373,12 +376,29 @@
 	const resolvedTone = $derived(tone ?? zui.componentDefaults.rating?.tone ?? 'primary');
 	const resolvedDirection = $derived(dir ?? zui.direction);
 	const resolvedName = $derived(name ?? field?.name);
-	const valueState = new ControllableState<number>({
-		defaultValue: () => ratingValue(defaultValue, resolvedCount, resolvedFractions, 'defaultValue'),
-		onChange: () => onValueChange,
-		read: () => value,
-		write: (next) => (value = next)
-	});
+	const valueScope = claimFormValueScope();
+	const valueState = createFormControlState<number>(
+		{
+			defaultValue: () =>
+				ratingValue(defaultValue, resolvedCount, resolvedFractions, 'defaultValue'),
+			element: () => ref,
+			normalizeModelValue: (candidate) => {
+				if (candidate === undefined || candidate === null) return 0;
+				if (typeof candidate !== 'number')
+					throw new TypeError('ZRating model value must be a number, null or undefined.');
+				return ratingValue(candidate, resolvedCount, resolvedFractions, 'model value');
+			},
+			onChange: () => onValueChange,
+			owner: 'ZRating',
+			read: () => value,
+			syncNative: (next) => {
+				for (const input of ref?.querySelectorAll<HTMLInputElement>('input[type="radio"]') ?? [])
+					input.checked = Number(input.value) === next;
+			},
+			write: (next) => (value = next)
+		},
+		valueScope
+	);
 	const resolvedValue = $derived(
 		ratingValue(valueState.current, resolvedCount, resolvedFractions, 'value')
 	);
@@ -498,7 +518,10 @@
 			return;
 		}
 		activeStep = step;
-		valueState.setFromUser(optionValue);
+		if (!valueState.setFromUser(optionValue)) {
+			for (const input of ref?.querySelectorAll<HTMLInputElement>('input[type="radio"]') ?? [])
+				input.checked = Number(input.value) === resolvedValue;
+		}
 	}
 	function handleClick(
 		event: MouseEvent & { currentTarget: HTMLInputElement },
@@ -513,7 +536,7 @@
 		}
 		if (activationSelectedStep === step) {
 			event.preventDefault();
-			valueState.setFromUser(0);
+			if (!valueState.setFromUser(0)) event.currentTarget.checked = true;
 		}
 		activationSelectedStep = undefined;
 	}

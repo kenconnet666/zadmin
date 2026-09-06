@@ -1,6 +1,7 @@
 import { SvelteMap } from 'svelte/reactivity';
 import { tabbable } from 'tabbable';
 
+import { containsComposedNode, getActiveElement } from '../layer/dom-realm.js';
 import {
 	fieldPathKey,
 	fieldPathToString,
@@ -9,6 +10,11 @@ import {
 	type FieldPath,
 	type FieldPathInput
 } from './field-path.js';
+import {
+	remapFormListErrors,
+	remapFormListPath,
+	type FormListReconcile
+} from './form-list-reconcile.js';
 import { errorsForPaths, mergeErrorsForPaths, type FormErrors } from './validation.js';
 
 export interface FormFieldState {
@@ -29,8 +35,10 @@ export interface FormFieldRegistration {
 	readonly control: () => HTMLElement | null;
 	readonly dependencies?: readonly FieldPathInput[];
 	readonly htmlName: string;
+	readonly htmlNameFollowsPath?: boolean;
 	readonly instanceId: string;
 	readonly path: FieldPathInput;
+	readonly preserve?: boolean;
 }
 
 export interface FormValidationTicket {
@@ -43,12 +51,16 @@ export interface FormValidationTicket {
 
 interface RegisteredField {
 	readonly control: () => HTMLElement | null;
+	readonly dependencies: readonly FieldPath[];
 	readonly dependencyKeys: ReadonlySet<string>;
 	readonly htmlName: string;
+	readonly htmlNameFollowsPath: boolean;
 	readonly instanceId: string;
 	readonly key: string;
 	readonly order: number;
 	readonly path: FieldPath;
+	readonly preserve: boolean;
+	readonly registrationToken: symbol;
 }
 
 const INITIAL_STATE = Object.freeze({
@@ -104,6 +116,9 @@ export class FormRegistry {
 	readonly #pathInstances = new Map<string, Set<string>>();
 	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	readonly #paths = new Map<string, FieldPath>();
+	// Preserved unmounted state remains addressable for list remap and explicit removal.
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
+	readonly #retainedPaths = new Map<string, FieldPath>();
 	readonly #states = new SvelteMap<string, FormFieldState>();
 	// Subscribers observe immutable state snapshots; the registry remains the only state owner.
 	// eslint-disable-next-line svelte/prefer-svelte-reactivity
@@ -113,7 +128,7 @@ export class FormRegistry {
 	readonly #validationScopes = new Map<string, FieldPath>();
 	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	readonly #unmountVersions = new Map<string, number>();
-	readonly #onPathUnmount?: (path: FieldPath) => void;
+	readonly #onPathUnmount?: (path: FieldPath, preserve: boolean) => void;
 	readonly #onMembershipChange?: (field: FormFieldRegistration) => void;
 	#errors: FormErrors = Object.freeze({});
 	#order = 0;
@@ -134,7 +149,7 @@ export class FormRegistry {
 	}
 
 	constructor(
-		onPathUnmount?: (path: FieldPath) => void,
+		onPathUnmount?: (path: FieldPath, preserve: boolean) => void,
 		onMembershipChange?: (field: FormFieldRegistration) => void
 	) {
 		this.#onPathUnmount = onPathUnmount;
@@ -172,18 +187,29 @@ export class FormRegistry {
 		}
 		// Field dependencies are registration metadata; #states publishes reactive changes.
 		// eslint-disable-next-line svelte/prefer-svelte-reactivity
-		const dependencyKeys = new Set((registration.dependencies ?? []).map(fieldPathKey));
+		const dependencies = Object.freeze((registration.dependencies ?? []).map(normalizeFieldPath));
+		const dependencyKeys = new Set(dependencies.map(fieldPathKey));
+		const preserve = registration.preserve ?? false;
+		for (const instanceId of this.#pathInstances.get(key) ?? []) {
+			if (this.#fields.get(instanceId)?.preserve !== preserve)
+				throw new Error('ZFormField instances sharing one path must use one preserve policy.');
+		}
 		const field = {
 			control: registration.control,
+			dependencies,
 			dependencyKeys,
 			htmlName: registration.htmlName,
+			htmlNameFollowsPath: registration.htmlNameFollowsPath ?? false,
 			instanceId: registration.instanceId,
 			key,
 			order: (this.#order += 1),
-			path
+			path,
+			preserve,
+			registrationToken: Symbol()
 		} satisfies RegisteredField;
 		this.#fields.set(field.instanceId, field);
 		this.#paths.set(key, path);
+		this.#retainedPaths.delete(key);
 		// Instance membership is imperative registration bookkeeping.
 		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const instances = this.#pathInstances.get(key) ?? new Set<string>();
@@ -198,34 +224,40 @@ export class FormRegistry {
 					errors: fieldErrorMessages(this.#errors, path)
 				})
 			);
-		}
+		} else this.#patch(key, { errors: fieldErrorMessages(this.#errors, path) });
 		this.#onMembershipChange?.(field);
 		return () => {
 			const current = this.#fields.get(field.instanceId);
-			if (current !== field) return;
+			if (current?.registrationToken !== field.registrationToken) return;
 			this.#fields.delete(field.instanceId);
-			const currentInstances = this.#pathInstances.get(key);
+			const currentInstances = this.#pathInstances.get(current.key);
 			currentInstances?.delete(field.instanceId);
 			if ((currentInstances?.size ?? 0) > 0) {
 				const remaining = this.#fields.get(currentInstances!.values().next().value!);
 				if (remaining) this.#onMembershipChange?.(remaining);
 				return;
 			}
-			const unmountVersion = (this.#unmountVersions.get(key) ?? 0) + 1;
-			this.#unmountVersions.set(key, unmountVersion);
+			const unmountVersion = (this.#unmountVersions.get(current.key) ?? 0) + 1;
+			this.#unmountVersions.set(current.key, unmountVersion);
 			queueMicrotask(() => {
 				if (
-					this.#unmountVersions.get(key) !== unmountVersion ||
-					(this.#pathInstances.get(key)?.size ?? 0) > 0
+					this.#unmountVersions.get(current.key) !== unmountVersion ||
+					(this.#pathInstances.get(current.key)?.size ?? 0) > 0
 				) {
 					return;
 				}
-				this.#pathInstances.delete(key);
-				this.#paths.delete(key);
-				this.#states.delete(key);
-				this.#listeners.delete(key);
-				this.#validationVersions.set(key, (this.#validationVersions.get(key) ?? 0) + 1);
-				this.#onPathUnmount?.(path);
+				this.#pathInstances.delete(current.key);
+				this.#paths.delete(current.key);
+				if (!current.preserve) {
+					this.#states.delete(current.key);
+					this.#listeners.delete(current.key);
+					this.#retainedPaths.delete(current.key);
+				} else this.#retainedPaths.set(current.key, current.path);
+				this.#validationVersions.set(
+					current.key,
+					(this.#validationVersions.get(current.key) ?? 0) + 1
+				);
+				this.#onPathUnmount?.(current.path, current.preserve);
 			});
 		};
 	}
@@ -419,7 +451,7 @@ export class FormRegistry {
 	reset(): void {
 		this.cancelValidation();
 		this.#errors = Object.freeze({});
-		for (const key of this.#paths.keys()) this.#setState(key, INITIAL_STATE);
+		for (const key of this.#states.keys()) this.#setState(key, INITIAL_STATE);
 	}
 	resetField(path: FieldPathInput): void {
 		const scope = normalizeFieldPath(path);
@@ -429,14 +461,132 @@ export class FormRegistry {
 		}
 		this.#errors = mergeErrorsForPaths(this.#errors, {}, [scope]);
 		this.batch(() => {
-			for (const [key, registered] of this.#paths)
+			for (const [key, registered] of new Map([...this.#retainedPaths, ...this.#paths]))
 				if (fieldPathStartsWith(registered, scope)) this.#setState(key, INITIAL_STATE);
 		});
 	}
 
+	reconcileList(change: FormListReconcile): void {
+		const previousPaths = new Map([...this.#retainedPaths, ...this.#paths]);
+		const nextFields = new Map<string, RegisteredField>();
+		for (const field of this.#fields.values()) {
+			const path = remapFormListPath(field.path, change);
+			if (!path) continue;
+			const dependencies = Object.freeze(
+				field.dependencies
+					.map((dependency) => remapFormListPath(dependency, change))
+					.filter((dependency): dependency is FieldPath => dependency !== undefined)
+			);
+			nextFields.set(field.instanceId, {
+				...field,
+				dependencies,
+				dependencyKeys: new Set(dependencies.map(fieldPathKey)),
+				htmlName: field.htmlNameFollowsPath ? fieldPathToString(path) : field.htmlName,
+				key: fieldPathKey(path),
+				path
+			});
+		}
+		const candidates = [...nextFields.values()];
+		for (let leftIndex = 0; leftIndex < candidates.length; leftIndex += 1) {
+			const left = candidates[leftIndex]!;
+			for (let rightIndex = leftIndex + 1; rightIndex < candidates.length; rightIndex += 1) {
+				const right = candidates[rightIndex]!;
+				if (left.key === right.key && left.htmlName !== right.htmlName)
+					throw new Error(
+						`ZFormField path "${fieldPathToString(left.path)}" must use one shared HTML name.`
+					);
+				if (
+					left.key !== right.key &&
+					(fieldPathStartsWith(left.path, right.path) || fieldPathStartsWith(right.path, left.path))
+				)
+					throw new Error(
+						`Conflicting ZForm FieldPaths "${fieldPathToString(left.path)}" and "${fieldPathToString(right.path)}".`
+					);
+				if (left.htmlName === right.htmlName && left.key !== right.key)
+					throw new Error(
+						`ZFormField HTML name "${left.htmlName}" cannot represent multiple FieldPaths.`
+					);
+				if (left.key === right.key && left.preserve !== right.preserve)
+					throw new Error('ZFormField instances sharing one path must use one preserve policy.');
+			}
+		}
+		const nextErrors = remapFormListErrors(this.#errors, change);
+		const nextInstances = new Map<string, Set<string>>();
+		const nextPaths = new Map<string, FieldPath>();
+		for (const field of nextFields.values()) {
+			const instances = nextInstances.get(field.key) ?? new Set<string>();
+			instances.add(field.instanceId);
+			nextInstances.set(field.key, instances);
+			nextPaths.set(field.key, field.path);
+		}
+		const affectedKeys = new Set<string>();
+		const movedStates = new Map<string, FormFieldState>();
+		for (const [key, path] of previousPaths) {
+			const remapped = remapFormListPath(path, change);
+			if (fieldPathStartsWith(path, change.listPath)) affectedKeys.add(key);
+			if (!remapped) continue;
+			const nextKey = fieldPathKey(remapped);
+			if (nextKey !== key) affectedKeys.add(nextKey);
+			const state = this.#states.get(key);
+			if (state) {
+				if (state.validating) affectedKeys.add(key);
+				movedStates.set(
+					nextKey,
+					state.validating ? freezeState({ ...state, validating: false }) : state
+				);
+			}
+		}
+		const nextRetainedPaths = new Map<string, FieldPath>();
+		for (const path of this.#retainedPaths.values()) {
+			const remapped = remapFormListPath(path, change);
+			if (remapped) nextRetainedPaths.set(fieldPathKey(remapped), remapped);
+		}
+		for (const key of this.#validationScopes.keys())
+			this.#validationVersions.set(key, (this.#validationVersions.get(key) ?? 0) + 1);
+		for (const key of this.#paths.keys())
+			this.#validationVersions.set(key, (this.#validationVersions.get(key) ?? 0) + 1);
+		this.#validationScopes.clear();
+		this.batch(() => {
+			for (const key of affectedKeys) this.#states.delete(key);
+			for (const [key, state] of movedStates) this.#states.set(key, state);
+			for (const key of affectedKeys) if (!nextPaths.has(key)) this.#listeners.delete(key);
+			this.#fields.clear();
+			for (const [instanceId, field] of nextFields) this.#fields.set(instanceId, field);
+			this.#pathInstances.clear();
+			for (const [key, instances] of nextInstances) this.#pathInstances.set(key, instances);
+			this.#paths.clear();
+			for (const [key, path] of nextPaths) this.#paths.set(key, path);
+			this.#retainedPaths.clear();
+			for (const [key, path] of nextRetainedPaths) this.#retainedPaths.set(key, path);
+			this.#errors = nextErrors;
+			for (const key of affectedKeys) {
+				this.#unmountVersions.set(key, (this.#unmountVersions.get(key) ?? 0) + 1);
+				this.#pendingNotifications.set(key, this.#states.get(key) ?? INITIAL_STATE);
+			}
+			for (const field of nextFields.values())
+				if (affectedKeys.has(field.key)) this.#onMembershipChange?.(field);
+		});
+	}
+
+	listScopeContainsFocus(path: FieldPathInput): boolean {
+		const scope = normalizeFieldPath(path);
+		return this.#orderedFieldsInScope(scope).some((field) => {
+			const control = field.control();
+			return Boolean(control && containsComposedNode(control, getActiveElement(control)));
+		});
+	}
+
+	focusListScope(path: FieldPathInput, options: FocusOptions = { preventScroll: true }): boolean {
+		const target = this.#orderedFieldsInScope(normalizeFieldPath(path))[0]?.control();
+		return target ? this.#focus(target, options) : false;
+	}
+
 	focusField(path: FieldPathInput, options: FocusOptions = { preventScroll: true }): boolean {
 		const target = this.#orderedFields(path)[0]?.control();
-		if (!target) return false;
+		return target ? this.#focus(target, options) : false;
+	}
+
+	#focus(target: HTMLElement, options: FocusOptions): boolean {
 		const candidate =
 			(target.ownerDocument?.defaultView
 				? tabbable(target, { includeContainer: true })[0]
@@ -473,6 +623,19 @@ export class FormRegistry {
 		const requested = path === undefined ? undefined : fieldPathKey(path);
 		return [...this.#fields.values()]
 			.filter((field) => requested === undefined || field.key === requested)
+			.sort((left, right) => {
+				const leftNode = left.control();
+				const rightNode = right.control();
+				if (leftNode?.isConnected && rightNode?.isConnected) {
+					const documentOrder = compareDocumentOrder(leftNode, rightNode);
+					if (documentOrder !== 0) return documentOrder;
+				}
+				return left.order - right.order;
+			});
+	}
+	#orderedFieldsInScope(scope: FieldPath): RegisteredField[] {
+		return [...this.#fields.values()]
+			.filter((field) => fieldPathStartsWith(field.path, scope))
 			.sort((left, right) => {
 				const leftNode = left.control();
 				const rightNode = right.control();

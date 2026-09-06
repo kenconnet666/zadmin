@@ -148,6 +148,21 @@ function isDirtyAt(values: unknown, baseline: unknown, path: FieldPath): boolean
 		!equal(getFormValue(values, path), getFormValue(baseline, path))
 	);
 }
+function isDirtyFrom(
+	values: unknown,
+	baseline: unknown,
+	path: FieldPath,
+	baselinePath?: FieldPath
+): boolean {
+	return (
+		hasFormValue(values, path) !==
+			(baselinePath === undefined ? false : hasFormValue(baseline, baselinePath)) ||
+		!equal(
+			getFormValue(values, path),
+			baselinePath === undefined ? undefined : getFormValue(baseline, baselinePath)
+		)
+	);
+}
 function deleteFormValue<T>(values: T, path: FieldPath, preserveDepth: number): T {
 	function visit(current: unknown, index: number): unknown | typeof DELETE_VALUE {
 		if (current === null || typeof current !== 'object' || !Object.hasOwn(current, path[index]!))
@@ -243,6 +258,13 @@ export class FormModel<T> {
 	#controlledSnapshot?: T;
 	#nextRevision = 0;
 	#revision = $state(0);
+	#globalResetVersion = 0;
+	#nextResetVersion = 0;
+	#resetRevision = $state(0);
+	readonly #resetVersions = new Map<
+		string,
+		{ readonly path: FieldPath; readonly version: number }
+	>();
 	constructor(options: FormModelOptions<T>) {
 		this.#options = options;
 		this.#baseline = $state.raw(immutable(options.defaultValues));
@@ -280,6 +302,24 @@ export class FormModel<T> {
 	isDirty(path: FieldPathInput): boolean {
 		const normalized = normalizeFieldPath(path);
 		return isDirtyAt(this.values, this.#baseline, normalized);
+	}
+	/** @internal Compares a current address with the baseline address of the same stable row. */
+	isDirtyFrom(path: FieldPathInput, baselinePath?: FieldPathInput): boolean {
+		return isDirtyFrom(
+			this.values,
+			this.#baseline,
+			normalizeFieldPath(path),
+			baselinePath === undefined ? undefined : normalizeFieldPath(baselinePath)
+		);
+	}
+	/** @internal Monotonic reset signal for identity-bearing helpers such as FormArrayController. */
+	getResetVersion(path: FieldPathInput): number {
+		this.#resetRevision;
+		const normalized = normalizeFieldPath(path);
+		let version = this.#globalResetVersion;
+		for (const reset of this.#resetVersions.values())
+			if (fieldPathStartsWith(normalized, reset.path)) version = Math.max(version, reset.version);
+		return version;
 	}
 	get(path: FieldPathInput): unknown {
 		return getFormValue(this.values, path);
@@ -338,26 +378,69 @@ export class FormModel<T> {
 		this.#notifyInitialization(previous, previousBaseline, next, baseline);
 	}
 	reset(): void {
-		this.#replaceSilent(untrack(() => this.#baseline));
+		this.#replaceSilent(
+			untrack(() => this.#baseline),
+			() => this.#markReset()
+		);
 	}
 	resetField(path: FieldPathInput): void {
+		this.resetFieldTo(path, path);
+	}
+	/** @internal Resets a stable-row address from its corresponding baseline address. */
+	resetFieldTo(path: FieldPathInput, baselinePath?: FieldPathInput): boolean {
 		const normalized = normalizeFieldPath(path);
+		const normalizedBaseline =
+			baselinePath === undefined ? undefined : normalizeFieldPath(baselinePath);
 		const { baseline, current } = untrack(() => ({
 			baseline: this.#baseline,
 			current: this.values
 		}));
-		if (hasFormValue(baseline, normalized)) {
-			this.#replaceSilent(setFormValue(current, normalized, getFormValue(baseline, normalized)));
-			return;
+		const markReset = () => this.#markReset(normalized);
+		let accepted: boolean;
+		if (normalizedBaseline && hasFormValue(baseline, normalizedBaseline)) {
+			accepted = this.#replaceSilent(
+				setFormValue(current, normalized, getFormValue(baseline, normalizedBaseline)),
+				markReset
+			);
+		} else {
+			if (typeof normalized.at(-1) === 'number')
+				throw new TypeError(
+					'ZForm resetField cannot delete a missing baseline array path; use FormArray.remove.'
+				);
+			let preserveDepth = 0;
+			for (let index = 1; index < normalized.length; index += 1) {
+				if (!hasFormValue(baseline, normalized.slice(0, index))) break;
+				preserveDepth = index;
+			}
+			for (let index = 0; index < normalized.length; index += 1)
+				if (typeof normalized[index] === 'number')
+					preserveDepth = Math.max(preserveDepth, index + 1);
+			accepted = this.#replaceSilent(
+				deleteFormValue(current, normalized, preserveDepth),
+				markReset
+			);
 		}
-		if (normalized.some((segment) => typeof segment === 'number'))
-			throw new TypeError('ZForm resetField cannot delete a missing baseline array path.');
+		return accepted;
+	}
+	/** @internal Removes an unmounted model field without publishing a business change. */
+	removeFieldValue(path: FieldPathInput): boolean {
+		const normalized = normalizeFieldPath(path);
+		if (typeof normalized.at(-1) === 'number')
+			throw new TypeError(
+				'ZForm cannot remove an array row during field unmount; use FormArray.remove.'
+			);
+		const { baseline, current } = untrack(() => ({
+			baseline: this.#baseline,
+			current: this.values
+		}));
 		let preserveDepth = 0;
 		for (let index = 1; index < normalized.length; index += 1) {
 			if (!hasFormValue(baseline, normalized.slice(0, index))) break;
 			preserveDepth = index;
 		}
-		this.#replaceSilent(deleteFormValue(current, normalized, preserveDepth));
+		for (let index = 0; index < normalized.length; index += 1)
+			if (typeof normalized[index] === 'number') preserveDepth = Math.max(preserveDepth, index + 1);
+		return this.#replaceSilent(deleteFormValue(current, normalized, preserveDepth));
 	}
 	subscribe(listener: (detail: FormValuesChange<T>) => void): () => void {
 		this.#listeners.add(listener);
@@ -387,10 +470,14 @@ export class FormModel<T> {
 		this.#notifyPaths(paths, next);
 		return true;
 	}
-	#replaceSilent(next: T): boolean {
+	#replaceSilent(next: T, accepted?: () => void): boolean {
 		const previous = untrack(() => this.values);
-		if (equal(previous, next)) return true;
+		if (equal(previous, next)) {
+			accepted?.();
+			return true;
+		}
 		if (!this.#accept(previous, next)) return false;
+		accepted?.();
 		this.#notifyPaths(getChangedFormPaths(previous, next), next);
 		return true;
 	}
@@ -435,6 +522,12 @@ export class FormModel<T> {
 				listener(next);
 			}
 		}
+	}
+	#markReset(path?: FieldPath): void {
+		const version = ++this.#nextResetVersion;
+		if (path) this.#resetVersions.set(fieldPathKey(path), { path, version });
+		else this.#globalResetVersion = version;
+		this.#resetRevision = version;
 	}
 }
 export function createFormModel<T>(options: FormModelOptions<T>): FormModel<T> {

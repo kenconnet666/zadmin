@@ -229,11 +229,11 @@
 	);
 
 	function handleChange(event: Event & { currentTarget: HTMLInputElement }): void {
-		if (resolvedReadonly) {
+		if (event.currentTarget.matches(':disabled') || resolvedReadonly) {
 			group.restoreNativeSelection();
 			return;
 		}
-		if (event.currentTarget.checked) group.select(value);
+		if (event.currentTarget.checked && !group.select(value)) group.restoreNativeSelection();
 		onchange?.(event);
 	}
 

@@ -14,6 +14,7 @@
 		readonly htmlName?: string;
 		readonly name: FieldPathInput;
 		readonly onStateChange?: (state: FormFieldState) => void;
+		readonly preserve?: boolean;
 		readonly success?: FieldMessages;
 		readonly warning?: FieldMessages;
 	}
@@ -37,6 +38,13 @@
 		keyboard: [{ description: '不拦截control原生键盘。', key: 'Native control keys' }],
 		parts: [],
 		props: [
+			{
+				default: 'ZForm.preserve',
+				description:
+					'条件卸载后保留字段状态；model模式同时保留值。false清理值与反馈；FormList显式删除始终清理。native FormData始终只读取已挂载成功控件。',
+				name: 'preserve',
+				type: 'boolean'
+			},
 			{
 				default: '0',
 				description: '透传ZField反馈区最少行数，非负整数；适合避免异步反馈导致操作区位移。',
@@ -155,6 +163,7 @@
 		onfocusout,
 		oninput,
 		onStateChange,
+		preserve,
 		readonly,
 		ref = $bindable(null),
 		size,
@@ -187,7 +196,9 @@
 			dependencies,
 			htmlName: resolvedHtmlName,
 			instanceId,
-			path
+			path,
+			preserve: preserve ?? form.preserve,
+			htmlNameFollowsPath: htmlName === undefined
 		});
 	});
 	$effect(() => onStateChange?.(state));

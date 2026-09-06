@@ -5,29 +5,29 @@
 		"version": "0.1.0"
 	},
 	"api": {
-		"components": 175,
-		"declaredProps": 2256,
+		"components": 176,
+		"declaredProps": 2269,
 		"metadataGapProps": 0,
 		"fallbackProps": 0
 	},
 	"maturity": {
-		"Declared": 175,
-		"Authorable": 175,
-		"ContractVerified": 175,
-		"RuntimeImplemented": 175,
-		"BrowserBehaviorVerified": 163,
+		"Declared": 176,
+		"Authorable": 176,
+		"ContractVerified": 176,
+		"RuntimeImplemented": 176,
+		"BrowserBehaviorVerified": 164,
 		"VisuallyVerified": 159,
 		"DesktopVerified": 0,
-		"ProductionVerified": 167,
+		"ProductionVerified": 168,
 		"statuses": {
-			"experimental": 34,
+			"experimental": 35,
 			"stable": 141
 		}
 	},
 	"stability": {
 		"stableCompliant": 141,
 		"stableViolations": 0,
-		"promotionEligibleExperimental": 19
+		"promotionEligibleExperimental": 20
 	},
 	"docs": {
 		"routes": {
@@ -65,17 +65,17 @@
 		},
 		{
 			"id": "visual-evidence",
-			"remaining": 16,
+			"remaining": 17,
 			"description": "补齐组件级几何、computed style或截图证据；普通浏览器交互断言不再冒充视觉验证。"
 		},
 		{
 			"id": "stable-promotion",
-			"remaining": 19,
+			"remaining": 20,
 			"description": "逐项审查已满足门禁的experimental组件；禁止自动批量晋级。"
 		},
 		{
 			"id": "desktop-evidence",
-			"remaining": 175,
+			"remaining": 176,
 			"description": "建立组件级WebView2/Desktop证据后再提升DesktopVerified。"
 		},
 		{

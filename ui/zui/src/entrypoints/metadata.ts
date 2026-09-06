@@ -120,6 +120,7 @@ export { zuiMetadata as fieldMetadata } from '../components/input/ZField.svelte'
 export { zuiMetadata as fileUploadMetadata } from '../components/input/ZFileUpload.svelte';
 export { zuiMetadata as formMetadata } from '../components/input/ZForm.svelte';
 export { zuiMetadata as formFieldMetadata } from '../components/input/ZFormField.svelte';
+export { zuiMetadata as formListMetadata } from '../components/input/ZFormList.svelte';
 export { zuiMetadata as inputMetadata } from '../components/input/ZInput.svelte';
 export { zuiMetadata as inputGroupMetadata } from '../components/input/ZInputGroup.svelte';
 export { zuiMetadata as mentionMetadata } from '../components/input/ZMention.svelte';

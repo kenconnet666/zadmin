@@ -1,10 +1,10 @@
 {
 	"schemaVersion": 2,
 	"source": {
-		"metadataComponents": 175,
+		"metadataComponents": 176,
 		"documentationPages": 106,
-		"contractComponents": 175,
-		"testFiles": 282
+		"contractComponents": 176,
+		"testFiles": 289
 	},
 	"stageNames": [
 		"Declared",
@@ -18,14 +18,14 @@
 	],
 	"evidenceScope": "Static inventory of authored test contracts, not test execution results or whole-component visual acceptance. Stage names are retained for compatibility; consult commit-matched CI and page-level review separately.",
 	"summary": {
-		"Declared": 175,
-		"Authorable": 175,
-		"ContractVerified": 175,
-		"RuntimeImplemented": 175,
-		"BrowserBehaviorVerified": 163,
+		"Declared": 176,
+		"Authorable": 176,
+		"ContractVerified": 176,
+		"RuntimeImplemented": 176,
+		"BrowserBehaviorVerified": 164,
 		"VisuallyVerified": 159,
 		"DesktopVerified": 0,
-		"ProductionVerified": 167
+		"ProductionVerified": 168
 	},
 	"components": [
 		{
@@ -6527,7 +6527,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "edb875fd68bda8d75978fc4722b9fe05729745c40f4e8791e91709b138f857ed API snapshot entry"
+						"detail": "dbbf1906520b9b4e9a907c46030cab42d1d00030ad8e516e0530c01a528d7a10 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -6583,6 +6583,10 @@
 			"ssrEvidence": [
 				{
 					"path": "ui/zui/tests/components.spec.ts",
+					"detail": "ZRadioGroup SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-choice-adapter-production.spec.ts",
 					"detail": "ZRadioGroup SSR assertions"
 				}
 			]
@@ -11325,6 +11329,10 @@
 					"detail": "ZProvider SSR assertions"
 				},
 				{
+					"path": "ui/zui/tests/form-choice-adapter-production.spec.ts",
+					"detail": "ZProvider SSR assertions"
+				},
+				{
 					"path": "ui/zui/tests/menu-family-production.spec.ts",
 					"detail": "ZProvider SSR assertions"
 				},
@@ -12751,7 +12759,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "5838febf3c906e8a752fe65ecb4fca0c1731abdb9a7322211e2fe34f492a971c API snapshot entry"
+						"detail": "880d6116d2428f5c12e58add94f94b4534cf5a3de7bc8f2f6a1f472f8a0c3fed API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -12847,6 +12855,14 @@
 						"detail": "ZForm explicit rendered fixture usage"
 					},
 					{
+						"path": "ui/zui/tests/form-list-production.spec.ts",
+						"detail": "ZForm production assertions"
+					},
+					{
+						"path": "ui/zui/tests/FormListFixture.svelte",
+						"detail": "ZForm explicit rendered fixture usage"
+					},
+					{
 						"path": "ui/zui/tests/form-production.browser.spec.ts",
 						"detail": "ZForm production assertions"
 					},
@@ -12878,11 +12894,19 @@
 					"detail": "ZForm SSR assertions"
 				},
 				{
+					"path": "ui/zui/tests/form-choice-adapter-production.spec.ts",
+					"detail": "ZForm SSR assertions"
+				},
+				{
 					"path": "ui/zui/tests/form-control-adapter-production.spec.ts",
 					"detail": "ZForm SSR assertions"
 				},
 				{
 					"path": "ui/zui/tests/form-controller-ssr.spec.ts",
+					"detail": "ZForm SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-list-production.spec.ts",
 					"detail": "ZForm SSR assertions"
 				}
 			]
@@ -12924,7 +12948,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "f32e94eed30910133b7507e36df976d6a76d30d0707998f14a6d5846b221652a API snapshot entry"
+						"detail": "1859f1eab6d9a7c350035cc5f760e88bc62a6b39649d600ee5cf9064430f2307 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -13023,12 +13047,108 @@
 					"detail": "ZFormField SSR assertions"
 				},
 				{
+					"path": "ui/zui/tests/form-choice-adapter-production.spec.ts",
+					"detail": "ZFormField SSR assertions"
+				},
+				{
 					"path": "ui/zui/tests/form-control-adapter-production.spec.ts",
 					"detail": "ZFormField SSR assertions"
 				},
 				{
 					"path": "ui/zui/tests/form-controller-ssr.spec.ts",
 					"detail": "ZFormField SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-list-production.spec.ts",
+					"detail": "ZFormField SSR assertions"
+				}
+			]
+		},
+		{
+			"id": "form-list",
+			"name": "ZFormList",
+			"category": "input",
+			"family": null,
+			"status": "experimental",
+			"source": "ui/zui/src/components/input/ZFormList.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": true,
+				"VisuallyVerified": false,
+				"DesktopVerified": false,
+				"ProductionVerified": true
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/input/ZFormList.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZFormList"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "91edf80db121a6153977d2b04a15d08e999c8828da056605b9621821ac613c23 API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/input/ZFormList.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [
+					{
+						"path": "ui/zui/tests/form-list-production.browser.spec.ts",
+						"detail": "ZFormList browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/FormListFixture.svelte",
+						"detail": "ZFormList explicit rendered fixture usage"
+					}
+				],
+				"VisuallyVerified": [],
+				"DesktopVerified": [],
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/form-list-production.spec.ts",
+						"detail": "ZFormList production assertions"
+					},
+					{
+						"path": "ui/zui/tests/FormListFixture.svelte",
+						"detail": "ZFormList explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/form-list-production.browser.spec.ts",
+						"detail": "ZFormList production assertions"
+					},
+					{
+						"path": "ui/zui/tests/FormListFixture.svelte",
+						"detail": "ZFormList explicit rendered fixture usage"
+					}
+				]
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/input/form/doc.ts",
+				"detail": "family-owned documentation module (form)"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/form-list-production.spec.ts",
+					"detail": "ZFormList SSR assertions"
 				}
 			]
 		},
@@ -13157,6 +13277,10 @@
 				},
 				{
 					"path": "ui/zui/tests/form-controller-ssr.spec.ts",
+					"detail": "ZInput SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-list-production.spec.ts",
 					"detail": "ZInput SSR assertions"
 				},
 				{
@@ -14211,7 +14335,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "efff031e6f91a11ddf053c7003622b2d839c6b45642a65d76082fd95d94f6452 API snapshot entry"
+						"detail": "5cfbbcd53779dc3208215ea5ac9b80db7a855c3110b04b042d3b07644a20fc8f API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -14279,6 +14403,10 @@
 				},
 				{
 					"path": "ui/zui/tests/switch.spec.ts",
+					"detail": "ZSwitch SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-choice-adapter-production.spec.ts",
 					"detail": "ZSwitch SSR assertions"
 				}
 			]

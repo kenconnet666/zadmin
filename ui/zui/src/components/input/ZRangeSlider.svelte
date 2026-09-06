@@ -301,7 +301,10 @@
 <script lang="ts">
 	import { untrack } from 'svelte';
 	import { sliderVisualRecipe } from './ZSlider.svelte';
-	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
+	import {
+		claimFormValueScope,
+		createFormControlState
+	} from '../../runtime/form/form-value-adapter.svelte.js';
 	import { controlSizeMetrics, resolveControlSize } from '../../runtime/foundation/control-size.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { useZui } from '../../runtime/foundation/context.js';
@@ -390,12 +393,27 @@
 			'primary'
 	);
 	const metrics = $derived(controlSizeMetrics(zui.theme, resolvedSize));
-	const valueState = new ControllableState<SliderRangeValue>({
-		defaultValue: () => normalizeSliderRange(defaultValue, min, max, step),
-		onChange: () => onValueChange,
-		read: () => value,
-		write: (next) => (value = next)
-	});
+	const valueScope = claimFormValueScope();
+	const valueState = createFormControlState<SliderRangeValue>(
+		{
+			defaultValue: () => normalizeSliderRange(defaultValue, min, max, step),
+			element: () => ref,
+			normalizeModelValue: (candidate) => {
+				if (!Array.isArray(candidate) || candidate.length !== 2)
+					throw new TypeError('ZRangeSlider model value must be a two-number tuple.');
+				return normalizeSliderRange(candidate as SliderRangeValue, min, max, step);
+			},
+			onChange: () => onValueChange,
+			owner: 'ZRangeSlider',
+			read: () => value,
+			syncNative: (next) => {
+				if (lowerInput) lowerInput.value = String(next[0]);
+				if (upperInput) upperInput.value = String(next[1]);
+			},
+			write: (next) => (value = next)
+		},
+		valueScope
+	);
 	const resolvedValue = $derived(normalizeSliderRange(valueState.current, min, max, step));
 	let lowerInput = $state<HTMLInputElement | null>(null);
 	let upperInput = $state<HTMLInputElement | null>(null);
@@ -484,8 +502,12 @@
 			minRange,
 			step
 		});
+		if (!valueState.setFromUser(change.value)) {
+			if (lowerInput) lowerInput.value = String(resolvedValue[0]);
+			if (upperInput) upperInput.value = String(resolvedValue[1]);
+			return index;
+		}
 		activeIndex = change.activeIndex;
-		valueState.setFromUser(change.value);
 		return change.activeIndex;
 	}
 	function commit(): void {

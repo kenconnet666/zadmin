@@ -2,7 +2,7 @@
 
 本文件由 `scripts/check-stability-policy.mjs` 生成；不会修改组件 status。compound member 可继承同 family root 的 Docs 页面。
 
-stableCompliant：141；stableViolations：0；promotionEligibleExperimental：19。
+stableCompliant：141；stableViolations：0；promotionEligibleExperimental：20。
 
 | Component               | Status       | Classification                | Blockers                                                          | Docs                                                                  | SSR |
 | ----------------------- | ------------ | ----------------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------- | --: |
@@ -75,7 +75,7 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：1
 | ZPopover                | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/overlay/popover/doc.ts               |   4 |
 | ZPopoverContent         | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/overlay/popover/doc.ts               |   4 |
 | ZPopoverTrigger         | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/overlay/popover/doc.ts               |   4 |
-| ZRadioGroup             | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/radio-group/doc.ts             |   1 |
+| ZRadioGroup             | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/radio-group/doc.ts             |   2 |
 | ZRadioGroupItem         | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/radio-group/doc.ts             |   1 |
 | ZSelect                 | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/select/doc.ts                  |   1 |
 | ZSelectContent          | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/select/doc.ts                  |   1 |
@@ -122,7 +122,7 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：1
 | ZIcon                   | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/icon/doc.ts                     |   2 |
 | ZKbd                    | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/kbd/doc.ts                      |   3 |
 | ZLink                   | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/link/doc.ts                     |   5 |
-| ZProvider               | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/provider/doc.ts                 |  11 |
+| ZProvider               | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/provider/doc.ts                 |  12 |
 | ZSeparator              | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/separator/doc.ts                |   2 |
 | ZText                   | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/text/doc.ts                     |   6 |
 | ZToggleButton           | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/toggle-button/doc.ts            |   3 |
@@ -137,9 +137,10 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：1
 | ZField                  | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/field/doc.ts                   |   5 |
 | ZFieldset               | experimental | experimental                  | BrowserBehaviorVerified, ProductionVerified                       | apps/docs/src/content/components/input/fieldset/doc.ts                |   1 |
 | ZFileUpload             | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/file-upload/doc.ts             |   1 |
-| ZForm                   | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/form/doc.ts                    |   3 |
-| ZFormField              | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/form/doc.ts                    |   3 |
-| ZInput                  | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/input/doc.ts                   |   4 |
+| ZForm                   | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/form/doc.ts                    |   5 |
+| ZFormField              | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/form/doc.ts                    |   5 |
+| ZFormList               | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/form/doc.ts                    |   1 |
+| ZInput                  | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/input/doc.ts                   |   5 |
 | ZInputGroup             | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/input-group/doc.ts             |   3 |
 | ZMention                | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/mention/doc.ts                 |   1 |
 | ZNativeSelect           | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/native-select/doc.ts           |   2 |
@@ -150,7 +151,7 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：1
 | ZRating                 | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/rating/doc.ts                  |   1 |
 | ZSegmented              | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/segmented/doc.ts               |   1 |
 | ZSlider                 | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/slider/doc.ts                  |   2 |
-| ZSwitch                 | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/switch/doc.ts                  |   2 |
+| ZSwitch                 | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/switch/doc.ts                  |   3 |
 | ZTagsInput              | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/tags-input/doc.ts              |   1 |
 | ZTextarea               | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/textarea/doc.ts                |   3 |
 | ZTimeField              | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/time-field/doc.ts              |   1 |

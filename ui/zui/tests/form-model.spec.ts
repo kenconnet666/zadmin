@@ -4,8 +4,10 @@ import {
 	clearFormErrorLayers,
 	createFormErrorLayers,
 	mergeFormErrorLayers,
+	remapFormErrorLayers,
 	setFormErrorLayer
 } from '../src/runtime/form/form-errors.js';
+import { createFormListReconcile } from '../src/runtime/form/form-list-reconcile.js';
 import {
 	createFormModel,
 	getChangedFormPaths,
@@ -117,6 +119,11 @@ describe('FormModel', () => {
 		expect(model.values).toEqual({ count: 2 });
 		expect(model.defaultValues).toEqual({ count: 2 });
 		expect(observations).toHaveLength(1);
+		owner = { count: 4 };
+		const resetVersion = model.getResetVersion('count');
+		model.reset();
+		expect(model.getResetVersion('count')).toBe(resetVersion);
+		expect(model.values).toEqual({ count: 4 });
 	});
 
 	it('rebases clean object values while preserving dirty values, arrays and deletions', () => {
@@ -182,6 +189,19 @@ describe('FormModel', () => {
 
 		expect(observations).toEqual([{ dirty: false, value: 'Grace' }]);
 		expect(model.dirty).toBe(false);
+	});
+
+	it('advances reset versions for successful same-value global and scoped resets', () => {
+		const model = createFormModel({ defaultValues: { account: { name: 'Ada' }, other: true } });
+		const initial = model.getResetVersion(['account', 'name']);
+		model.resetField(['account', 'name']);
+		const scoped = model.getResetVersion(['account', 'name']);
+		expect(scoped).toBeGreaterThan(initial);
+		expect(model.getResetVersion('other')).toBe(initial);
+
+		model.reset();
+		expect(model.getResetVersion('other')).toBeGreaterThan(initial);
+		expect(model.getResetVersion(['account', 'name'])).toBeGreaterThan(scoped);
 	});
 
 	it('preserves null initial values and deletes object paths absent from baseline', () => {
@@ -315,7 +335,53 @@ describe('FormArrayController', () => {
 		expect(array.rows.map((row) => row.id)).toEqual(before);
 		expect(owner.rows.map((row) => row.key)).toEqual([1, 2]);
 		expect(() => array.replace(0, { key: 2 })).toThrow(/unique/u);
+		expect(() => array.replace(0, { key: Number.NaN })).toThrow();
 		expect(array.rows.map((row) => row.id)).toEqual(before);
+	});
+
+	it('uses explicit reset versions instead of equal values to restore baseline row identity', () => {
+		const model = createFormModel({
+			defaultValues: { rows: [{ value: 'same' }, { value: 'same' }] }
+		});
+		const array = createFormArray<{ value: string }, typeof model.values>(model, 'rows');
+		const baselineIds = array.rows.map((row) => row.id);
+
+		expect(array.move(0, 1)).toBe(true);
+		expect(model.dirty).toBe(false);
+		expect(array.rows.map((row) => row.id)).toEqual([...baselineIds].reverse());
+
+		model.reset();
+		expect(array.rows.map((row) => row.id)).toEqual(baselineIds);
+		array.move(0, 1);
+		model.reset();
+		array.move(0, 1);
+		expect(array.rows.map((row) => row.id)).toEqual([...baselineIds].reverse());
+	});
+
+	it('compares and resets fields against each stable row baseline', () => {
+		const model = createFormModel({
+			defaultValues: { rows: [{ name: 'Ada' }, { name: 'Grace' }] }
+		});
+		const array = createFormArray<{ name?: string }, typeof model.values>(model, 'rows');
+		const [adaId, graceId] = array.rows.map((row) => row.id);
+		array.move(0, 1);
+		expect(array.isDirty(adaId!, 'name')).toBe(false);
+		expect(array.isDirty(graceId!, 'name')).toBe(false);
+
+		model.setField(['rows', 1, 'name'], 'Edited');
+		expect(array.isDirty(adaId!, 'name')).toBe(true);
+		expect(array.resetField(adaId!, 'name')).toBe(true);
+		expect(model.get(['rows', 1, 'name'])).toBe('Ada');
+		expect(array.rows.map((row) => row.id)).toEqual([graceId, adaId]);
+
+		array.append({ name: 'Draft' });
+		const added = array.rows.at(-1)!;
+		expect(array.isDirty(added.id, 'name')).toBe(true);
+		expect(array.resetField(added.id, 'name')).toBe(true);
+		expect(model.get([...added.path, 'name'])).toBeUndefined();
+		expect(array.isDirty(added.id, 'name')).toBe(false);
+		expect(array.rows).toHaveLength(3);
+		expect(() => array.resetField(added.id)).toThrow(/remove/u);
 	});
 });
 
@@ -372,5 +438,44 @@ describe('Form error layers', () => {
 			'users[1].email': ['Old second email'],
 			other: ['Other']
 		});
+	});
+
+	it('remaps every error layer by stable list row identity', () => {
+		const change = createFormListReconcile(
+			['users'],
+			[
+				{ id: 'a', path: ['users', 0] },
+				{ id: 'b', path: ['users', 1] }
+			],
+			[{ id: 'b', path: ['users', 0] }]
+		);
+		const layers = remapFormErrorLayers(
+			createFormErrorLayers({
+				manual: { 'users[0].name': ['Manual A'] },
+				schema: { 'users[1].name': ['Schema B'], users: ['List'] },
+				server: { 'users[0].name': ['Server A'], other: ['Other'] }
+			}),
+			change
+		);
+
+		expect(layers.manual).toEqual({});
+		expect(layers.schema).toEqual({ 'users[0].name': ['Schema B'], users: ['List'] });
+		expect(layers.server).toEqual({ other: ['Other'] });
+	});
+
+	it('remaps error dictionaries without treating prototype names as accumulator state', () => {
+		const errors = Object.freeze(
+			Object.fromEntries([
+				['__proto__', Object.freeze(['Prototype'])],
+				['toString', Object.freeze(['Stringer'])]
+			])
+		);
+		const layers = remapFormErrorLayers(
+			createFormErrorLayers({ manual: errors }),
+			createFormListReconcile('users', [], [])
+		);
+		expect(Object.hasOwn(layers.manual, '__proto__')).toBe(true);
+		expect(Object.hasOwn(layers.manual, 'toString')).toBe(true);
+		expect(layers.manual.__proto__).toEqual(['Prototype']);
 	});
 });

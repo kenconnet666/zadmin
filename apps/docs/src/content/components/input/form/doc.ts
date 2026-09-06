@@ -1,6 +1,5 @@
 import SizingDemo from './SizingDemo.svelte';
 import sizingSource from './SizingDemo.svelte?raw';
-import { formFieldMetadata, formMetadata } from '@zadmin/zui/metadata';
 import BusyDemo from './BusyDemo.svelte';
 import busySource from './BusyDemo.svelte?raw';
 import ControllerDemo from './ControllerDemo.svelte';
@@ -15,12 +14,21 @@ import NativeValuesDemo from './NativeValuesDemo.svelte';
 import nativeValuesSource from './NativeValuesDemo.svelte?raw';
 import ModelDemo from './ModelDemo.svelte';
 import modelSource from './ModelDemo.svelte?raw';
-import { formApiFacts, formFieldApiFacts } from '../../../../framework/component-api.generated.js';
+import ListDemo from './ListDemo.svelte';
+import listSource from './ListDemo.svelte?raw';
+import AdaptersDemo from './AdaptersDemo.svelte';
+import adaptersSource from './AdaptersDemo.svelte?raw';
+import {
+	formApiFacts,
+	formFieldApiFacts,
+	formListApiFacts
+} from '../../../../framework/component-api.generated.js';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
+import { formFieldMetadata, formListMetadata, formMetadata } from '@zadmin/zui/metadata';
 
 export const formDoc = defineComponentDoc(formMetadata, {
-	members: [formFieldMetadata],
-	memberApis: [formFieldApiFacts],
+	members: [formFieldMetadata, formListMetadata],
+	memberApis: [formFieldApiFacts, formListApiFacts],
 	profiles: ['form-control'],
 	sourceApi: formApiFacts,
 	teaching: {
@@ -97,6 +105,24 @@ export const formDoc = defineComponentDoc(formMetadata, {
 			title: '自动Model与六族控件'
 		},
 		{
+			covers: ['composition', 'controlled', 'form-reset', 'invalid', 'resource-cleanup'],
+			component: ListDemo,
+			description:
+				'实验性首批以稳定row.id驱动一个动态成员列表；append、insert、move、replace、remove会成套迁移字段状态和错误，字段与表单reset继续使用同一model基线。',
+			id: 'form-list',
+			source: listSource,
+			title: '动态FormList与稳定行身份'
+		},
+		{
+			covers: ['composition', 'controlled', 'form-data', 'form-reset'],
+			component: AdaptersDemo,
+			description:
+				'Switch、RadioGroup、Slider、RangeSlider和Rating作为真实值owner自动连接FormModel，并继续按各自原生input合同生成FormData。',
+			id: 'form-choice-number-adapters',
+			source: adaptersSource,
+			title: '选择与数值控件Model适配'
+		},
+		{
 			covers: ['controlled', 'loading', 'native-props'],
 			component: BusyDemo,
 			description: '外部服务任务可以通过原生aria-busy公告状态，不必复用会禁用按钮的loading语义。',
@@ -122,11 +148,14 @@ export const formDoc = defineComponentDoc(formMetadata, {
 		'FieldPath内部身份保留string/number段类型，HTML name独立生成；多个相同路径实例共享状态，但不会把ZForm变成私有值store。',
 		'模型模式的getValues/getFieldValue返回FormModel快照；native模式按FieldPath形成successful FormData对象。两者都不冒充Standard Schema的typed output。',
 		'模型模式的dirty按当前值与initialize/reset基线精确比较；批量写入与initialize会同步到已注册控件，resetField只恢复一个路径。',
-		'ZFormField内的Input、PasswordInput、Textarea、Checkbox、NativeSelect和CheckboxGroup自动读取并写入model；不要再同时传value/checked形成第二个业务owner。',
+		'ZFormField内的Input、PasswordInput、Textarea、Checkbox、NativeSelect、CheckboxGroup、Switch、RadioGroup、Slider、RangeSlider和Rating自动读取并写入model；不要再同时传value/checked形成第二个业务owner。',
 		'readonly控件保留原生提交，disabled控件从FormData排除；FormModel仍保留两类字段的业务值。',
 		'错误分为schema、server和manual三层：schema校验只更新schema层，setErrors写server层，setFieldFeedback的errors写manual层；clearErrors可按路径清理。',
 		'onValidSubmit可以返回Promise；等待期间submitting为true并拦截重复语义提交，拒绝交给onSubmitError。reset会使旧提交结果失效，但不会取消应用已经发出的请求。',
-		'ZFormList仍属于后续集成；需要动态数组时先直接使用FormModel API，不应把尚未存在的组件写进页面。',
+		'ZFormList只在model表单内使用；children必须以row.id作为each key，字段路径在row.path后追加相对段。数组索引只表示当前地址，不能充当渲染身份。',
+		'ZFormList的append、insert、remove、move和replace返回model owner是否接受写入；Form disabled/readonly时操作返回false。删除聚焦行会把焦点移到相邻行或列表根。',
+		'字段卸载时model表单默认preserve=true，native表单默认false；ZFormField.preserve可逐字段覆盖。显式FormList remove始终删除对应行和值，不属于条件卸载保留。',
+		'当前实验性ZFormList只支持彼此独立的数组路径，并会明确拒绝嵌套FormList scope；嵌套列表需要后续让内层path与baseline跟随外层稳定row身份，不能用当前固定索引悄悄模拟。',
 		"同一表单的typed FieldPath不能互为父子（例如['profile']与['profile','email']），且htmlName不能为空；注册阶段会报告配置错误，避免提交时才出现标量/对象输入错误。"
 	],
 	keywords: [
@@ -140,6 +169,8 @@ export const formDoc = defineComponentDoc(formMetadata, {
 		'controller',
 		'server errors',
 		'dirty',
-		'touched'
+		'touched',
+		'field array',
+		'form list'
 	]
 });

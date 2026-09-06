@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
-	"componentCount": 175,
-	"overallSha256": "ffdf9119d23e8f0330b9baaa3ed453aa4b952b49b8521abdbdf8f0ee33783642",
+	"componentCount": 176,
+	"overallSha256": "972cfd4c61bcbb9bf592571f739711b6a9ba676d1a2ea394b38322dd2e08447b",
 	"components": [
 		{
 			"id": "accordion",
@@ -350,7 +350,7 @@
 		},
 		{
 			"id": "radio-group",
-			"sha256": "edb875fd68bda8d75978fc4722b9fe05729745c40f4e8791e91709b138f857ed",
+			"sha256": "dbbf1906520b9b4e9a907c46030cab42d1d00030ad8e516e0530c01a528d7a10",
 			"source": "src/components/compound/radio-group/ZRadioGroup.svelte"
 		},
 		{
@@ -660,13 +660,18 @@
 		},
 		{
 			"id": "form",
-			"sha256": "5838febf3c906e8a752fe65ecb4fca0c1731abdb9a7322211e2fe34f492a971c",
+			"sha256": "880d6116d2428f5c12e58add94f94b4534cf5a3de7bc8f2f6a1f472f8a0c3fed",
 			"source": "src/components/input/ZForm.svelte"
 		},
 		{
 			"id": "form-field",
-			"sha256": "f32e94eed30910133b7507e36df976d6a76d30d0707998f14a6d5846b221652a",
+			"sha256": "1859f1eab6d9a7c350035cc5f760e88bc62a6b39649d600ee5cf9064430f2307",
 			"source": "src/components/input/ZFormField.svelte"
+		},
+		{
+			"id": "form-list",
+			"sha256": "91edf80db121a6153977d2b04a15d08e999c8828da056605b9621821ac613c23",
+			"source": "src/components/input/ZFormList.svelte"
 		},
 		{
 			"id": "input",
@@ -725,7 +730,7 @@
 		},
 		{
 			"id": "switch",
-			"sha256": "efff031e6f91a11ddf053c7003622b2d839c6b45642a65d76082fd95d94f6452",
+			"sha256": "5cfbbcd53779dc3208215ea5ac9b80db7a855c3110b04b042d3b07644a20fc8f",
 			"source": "src/components/input/ZSwitch.svelte"
 		},
 		{
@@ -882,10 +887,10 @@
 	"entrypoints": {
 		"code.ts": "eabb8477e4c5ef93d016ab909e5c7f85a3111df231e2d2c3c7ef5e54897b36db",
 		"compiler.ts": "96fa979b36838e8b7a6d3f52bb463f23951438a4d974d52b631ad1e6d937b2e7",
-		"index.ts": "9d481e46e2bf1e7d1d9ebf2f4c39b45df88897f73cf00ada686f4d36a2807a3a",
+		"index.ts": "503b3104c84aaa192f89ac23901b03481a3028ffc84cf94a0cd2b1954e23186d",
 		"internal.ts": "05f9ef9c8628e1cdf694dcc88b71831e5aab726a3189bd6189eef7ae645df4d7",
 		"layer.ts": "72d0fc8e5b7a8ab39a12e157879951b84f1a7fc19654f4bd8b6ea92fd8aa6db8",
-		"metadata.ts": "089c8463748a5c370e751e939eaaef1a8448fb6142a69a407fb10a81f0196efc",
+		"metadata.ts": "78fa332b8cd9cc03f007356ea7edcd1b62d4cafcb878021858f91f15986c71e6",
 		"runtime.ts": "902679df258a1aee96a4742dc4f229210aef34e0db47c0bffcde4cc1d66016fb",
 		"testing.ts": "c596113f3cbcf4ce75be2728b6a10cd6a0b77c9b9101a4408ba2e18e174f15cb",
 		"theme.ts": "9625285286228f2548dadb74b934f40d7cd1804a1e96bc37a04f21d3cd32b527",

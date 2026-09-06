@@ -108,6 +108,7 @@
 		readonly onValidSubmit?: (detail: FormSubmitDetail<FormOutput<TSchema, TValues>>) => unknown;
 		readonly onValidationError?: (error: unknown) => void;
 		readonly preventDefault?: boolean;
+		readonly preserve?: boolean;
 		ref?: HTMLFormElement | null;
 		readonly readonly?: boolean;
 		readonly schema?: TSchema;
@@ -247,6 +248,13 @@
 		],
 		parts: [],
 		props: [
+			{
+				default: 'model模式true；native模式false',
+				description:
+					'字段条件卸载后保留状态，model模式同时保留值；Field可覆盖。native FormData不保留已卸载控件，FormList显式remove始终删除。',
+				name: 'preserve',
+				type: 'boolean'
+			},
 			{
 				name: 'submitting',
 				type: 'boolean',
@@ -398,10 +406,16 @@
 		type FormValidationTicket,
 		type FormFieldStatePatch
 	} from '../../runtime/form/form-registry.svelte.js';
-	import { provideZForm } from '../../runtime/form/form-context.svelte.js';
+	import {
+		provideZForm,
+		type FormListRegistration
+	} from '../../runtime/form/form-context.svelte.js';
+	import { createFormArray, type FormArrayOptions } from '../../runtime/form/form-array.svelte.js';
+	import { type FormListReconcile } from '../../runtime/form/form-list-reconcile.js';
 	import {
 		fieldPathKey,
 		fieldPathToString,
+		fieldPathStartsWith,
 		normalizeFieldPath,
 		type FieldPath,
 		type FieldPathInput
@@ -422,6 +436,7 @@
 	import { sameStateValue } from '../../runtime/foundation/controllable-state.svelte.js';
 	import {
 		createFormErrorLayers,
+		remapFormErrorLayers,
 		setFormErrorLayer,
 		clearFormErrorLayers,
 		mergeFormErrorLayers
@@ -449,6 +464,7 @@
 		onValidSubmit,
 		onValidationError,
 		preventDefault = true,
+		preserve,
 		ref = $bindable(null),
 		readonly = false,
 		schema,
@@ -468,6 +484,11 @@
 	const nativeBaseline = new NativeFormBaseline();
 	let nativeValueEpoch = 0;
 	const valueControls = new Map<string, Map<symbol, () => HTMLElement | null>>();
+	const lists = new Map<symbol, FormListRegistration>();
+	let reconciledModel: FormModel<TValues> | undefined;
+	let reconciledValues: unknown;
+	const movingListScopes = new Map<string, FieldPath>();
+	let listTransitionGeneration = 0;
 	const pendingDirty = new Set<string>();
 	let dirtyScheduled = false;
 	let suppressModelValidation = false;
@@ -477,9 +498,10 @@
 	let errorLayers = createFormErrorLayers({ server: untrack(() => errors) });
 	let publishedErrors = untrack(() => errors);
 	const registry = new FormRegistry(
-		(path) => {
+		(path, preserved) => {
 			nativeBaseline.forget(fieldPathKey(path));
-			if (!lifecycle.active || !(fieldPathToString(path) in errors)) return;
+			if (!lifecycle.active || preserved) return;
+			if (model && typeof path.at(-1) !== 'number') model.removeFieldValue(path);
 			clearErrors([path]);
 		},
 		(field) => {
@@ -494,7 +516,7 @@
 					fieldPathKey(current.path) !== fieldPathKey(field.path)
 				)
 					return;
-				if (model) registry.setDirty(field.path, model.isDirty(field.path));
+				if (model) registry.setDirty(field.path, fieldIsDirty(field.path));
 				else {
 					const data = readFormData();
 					const key = fieldPathKey(field.path);
@@ -606,6 +628,35 @@
 			);
 		return model;
 	}
+	function listForField(path: FieldPath): FormListRegistration | undefined {
+		return [...lists.values()]
+			.filter((list) => path.length > list.path.length && fieldPathStartsWith(path, list.path))
+			.sort((left, right) => right.path.length - left.path.length)[0];
+	}
+	function fieldIsDirty(pathInput: FieldPathInput): boolean {
+		const path = normalizeFieldPath(pathInput);
+		return listForField(path)?.isDirty(path) ?? model?.isDirty(path) ?? false;
+	}
+	function reconcileList(change: FormListReconcile): void {
+		movingListScopes.set(fieldPathKey(change.listPath), change.listPath);
+		const transition = ++listTransitionGeneration;
+		void tick().then(() => {
+			if (transition === listTransitionGeneration) movingListScopes.clear();
+		});
+		validationEpoch += 1;
+		clearValidationTimers();
+		validationRuns.clear();
+		validating = false;
+		registry.batch(() => {
+			registry.cancelValidation();
+			registry.reconcileList(change);
+			errorLayers = remapFormErrorLayers(errorLayers, change);
+			publishErrorLayers();
+			for (const path of registry.registeredPaths()) registry.setDirty(path, fieldIsDirty(path));
+		});
+		reconciledModel = model;
+		reconciledValues = model?.values;
+	}
 	function scheduleDirty(instanceId: string): void {
 		pendingDirty.add(instanceId);
 		if (dirtyScheduled) return;
@@ -623,7 +674,7 @@
 				registry.setDirty(
 					field.path,
 					model
-						? model.isDirty(field.path)
+						? fieldIsDirty(field.path)
 						: nativeBaseline.isDirty(fieldPathKey(field.path), field.htmlName, data!)
 				);
 			}
@@ -740,6 +791,27 @@
 	}
 
 	provideZForm({
+		createArray<T>(path: FieldPathInput, options?: FormArrayOptions<T>) {
+			return createFormArray<T, TValues>(requireModel(), path, options);
+		},
+		registerList(registration) {
+			if (
+				[...lists.values()].some(
+					(list) =>
+						fieldPathStartsWith(list.path, registration.path) ||
+						fieldPathStartsWith(registration.path, list.path)
+				)
+			)
+				throw new Error(
+					'ZFormList currently requires separate array scopes; nested list scopes need an identity-aware baseline owner.'
+				);
+			const token = Symbol();
+			lists.set(token, registration);
+			return () => {
+				lists.delete(token);
+			};
+		},
+		reconcileList,
 		get model() {
 			return model;
 		},
@@ -758,15 +830,26 @@
 			return disabled;
 		},
 		fieldEvent(instanceId, trigger) {
+			const field = registry.fieldInfo(instanceId);
+			if (
+				trigger === 'blur' &&
+				field &&
+				[...movingListScopes.values()].some((scope) =>
+					fieldPathStartsWith(normalizeFieldPath(field.path), scope)
+				)
+			)
+				return;
 			if (trigger === 'change') scheduleDirty(instanceId);
 			else registry.markTouched(instanceId);
 			if (model && trigger === 'change') return;
-			const field = registry.fieldInfo(instanceId);
 			if (trigger === 'change' && field) clearServerErrors([normalizeFieldPath(field.path)]);
 			scheduleValidation(trigger, registry.affectedPaths(instanceId));
 		},
 		get readonly() {
 			return readonly;
+		},
+		get preserve() {
+			return preserve ?? model !== undefined;
 		},
 		registry,
 		get size() {
@@ -850,10 +933,12 @@
 				}
 			}
 			if (!currentModel) return;
-			for (const path of registry.registeredPaths())
-				registry.setDirty(path, currentModel.isDirty(path));
+			for (const path of registry.registeredPaths()) registry.setDirty(path, fieldIsDirty(path));
 			if (!sameOwner || baselineChanged || !valuesChanged || suppressModelValidation) return;
-			clearServerErrors(changedInputPaths);
+			if (currentModel !== reconciledModel || currentValues !== reconciledValues)
+				clearServerErrors(changedInputPaths);
+			reconciledModel = undefined;
+			reconciledValues = undefined;
 			scheduleValidation(
 				'change',
 				uniquePaths([...changedInputPaths, ...registry.affectedPathsFor(changedInputPaths)])
@@ -886,7 +971,7 @@
 			for (const [name, path] of registry.formDataPaths())
 				nativeBaseline.capture(fieldPathKey(path), name, data);
 			if (model)
-				for (const path of registry.registeredPaths()) registry.setDirty(path, model.isDirty(path));
+				for (const path of registry.registeredPaths()) registry.setDirty(path, fieldIsDirty(path));
 		});
 		validationEpoch += 1;
 		clearValidationTimers();
@@ -937,8 +1022,11 @@
 			const current = requireModel();
 			suppressModelValidation = true;
 			try {
-				current.resetField(path);
-				if (!current.isDirty(path))
+				const normalized = normalizeFieldPath(path);
+				const list = listForField(normalized);
+				if (list) list.resetField(normalized);
+				else current.resetField(path);
+				if (!fieldIsDirty(path))
 					registry.batch(() => {
 						registry.resetField(path);
 						clearErrors([path]);
@@ -953,7 +1041,7 @@
 		focusField: (path, options) => registry.focusField(path, options),
 		getFieldState: (path) =>
 			model
-				? Object.freeze({ ...registry.state(path), dirty: model.isDirty(path) })
+				? Object.freeze({ ...registry.state(path), dirty: fieldIsDirty(path) })
 				: registry.state(path),
 		reset() {
 			if (ref) ref.reset();
@@ -1058,6 +1146,9 @@
 		nativeBaseline.clear();
 		pendingDirty.clear();
 		valueControls.clear();
+		lists.clear();
+		movingListScopes.clear();
+		listTransitionGeneration += 1;
 		validationEpoch += 1;
 		clearValidationTimers();
 		validationRuns.clear();

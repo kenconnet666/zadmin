@@ -1,6 +1,6 @@
 # API teaching coverage
 
-Generated from 175 components and 2256 declared props. 0 metadata gaps remain; 0 remain true fallbacks after teaching overrides; 9 structured props are explicitly opaque.
+Generated from 176 components and 2269 declared props. 0 metadata gaps remain; 0 remain true fallbacks after teaching overrides; 9 structured props are explicitly opaque.
 
 Policy: every declared public prop must have owned component metadata, binding, event or snippet evidence; both totals are enforced at zero.
 

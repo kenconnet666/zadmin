@@ -481,7 +481,7 @@
 
 <script lang="ts">
 	import { untrack } from 'svelte';
-	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
+	import { createFormControlState } from '../../runtime/form/form-value-adapter.svelte.js';
 	import { useZField } from '../../runtime/form/field-context.js';
 	import { formReset, mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
@@ -549,10 +549,20 @@
 	);
 	const resolvedTone = $derived(tone ?? zui.componentDefaults.slider?.tone ?? 'primary');
 	const metrics = $derived(controlSizeMetrics(zui.theme, resolvedSize));
-	const valueState = new ControllableState<number>({
+	const valueState = createFormControlState<number>({
 		defaultValue: () => normalizeSliderValue(defaultValue, min, max, step),
+		element: () => ref,
+		normalizeModelValue: (candidate) => {
+			if (typeof candidate !== 'number')
+				throw new TypeError('ZSlider model value must be a number.');
+			return normalizeSliderValue(candidate, min, max, step);
+		},
 		onChange: () => onValueChange,
+		owner: 'ZSlider',
 		read: () => value,
+		syncNative: (next) => {
+			if (ref) ref.value = String(next);
+		},
 		write: (next) => (value = next)
 	});
 	const resolvedValue = $derived(normalizeSliderValue(valueState.current, min, max, step));
@@ -628,8 +638,8 @@
 	);
 	const initialStyle = untrack(() => mergeStyles(inputStyle, serializeIcssVariables(variables)));
 	const initialRootStyle = untrack(() => serializeIcssVariables(variables));
-	function setUser(next: number) {
-		valueState.setFromUser(normalizeSliderValue(next, min, max, step));
+	function setUser(next: number): boolean {
+		return valueState.setFromUser(normalizeSliderValue(next, min, max, step));
 	}
 	function handleInput(event: Event & { currentTarget: HTMLInputElement }) {
 		if (event.currentTarget.matches(':disabled')) return;
@@ -637,7 +647,10 @@
 			event.currentTarget.value = String(resolvedValue);
 			return;
 		}
-		setUser(event.currentTarget.valueAsNumber);
+		if (!setUser(event.currentTarget.valueAsNumber)) {
+			event.currentTarget.value = String(resolvedValue);
+			return;
+		}
 		oninput?.(event);
 	}
 	function handleChange(event: Event & { currentTarget: HTMLInputElement }) {
@@ -669,7 +682,7 @@
 		if (event.defaultPrevented || next === undefined) return;
 		event.preventDefault();
 		keyboardDirty = true;
-		setUser(next);
+		if (!setUser(next)) event.currentTarget.value = String(resolvedValue);
 	}
 	function markPosition(v: number) {
 		let p = sliderPercent(v, min, max, reversed);

@@ -177,3 +177,13 @@ controller 增加初始化与保留脏值、局部 reset、聚合状态订阅和
 Docs 已从手工绑定改为真实自动接入。浏览器确认 disabled/readonly 的模型与 FormData 差异、连续 reset、keepDirtyValues/新基线恢复、三层错误以及单次异步提交；390px 无页面横向溢出。HMR key 调用处显式引用 import.meta.hot，转换产物已确认注入；没有把该检查当作业务状态保留通过。
 
 详见 [E10A 执行](./execution-form-model-integration-2026-09-07.md)。本地仍只有 WebStorm、必要浏览器、格式和源码制品生成，远程运行回归资产。动态 ZFormList、preserve、其余控件适配与全库最终一致性审查继续执行，不以本批或 static stable 数量结束目标。
+
+## E10B：稳定行身份、条件卸载与选择/数值适配
+
+新增实验性 ZFormList，根布局复用 ZStack，值与 baseline identity 复用 FormArray，状态/依赖/HTML name/错误迁移复用 FormRegistry 和 FormErrorLayers。move 保留 row.id，字段 dirty/reset 按该行原始字段计算；重复业务值 move 仍交换身份但不伪造 model dirty。preserve 明确区分保留模型/状态与真实 mounted FormData，显式 remove 始终清理。
+
+Switch、RadioGroup、Slider、RangeSlider、Rating 共用 E10A adapter。复合根 claim 唯一 value owner，用户拒绝写入和重复原生 reset 恢复真实 DOM。Docs 新增完整列表操作和五种控件的 model/FormData/reset 组合。
+
+浏览器发现 keyed move 保留 DOM 但丢 native focus/selection，现恢复原节点与选区并避免内部移动误记 touched。实测 moved 字段 reset 使用正确行基线、删除到相邻行/空列表根、连续 reset 恢复 baseline row ids；五控件批量与重复 FormData 正常，390px 无页面横向溢出。详见 [E10B 执行](./execution-form-list-adapters-2026-09-07.md)。
+
+提交前检查上一6559bc9的CI 34058991003仍在运行，没有等待或轮询。本地没有运行长测试或构建。独立数组列表为本批边界；嵌套数组身份和动画继续下一阶段，不把实验性实现、源码资产或旧 stable 标签当作全目标完成。

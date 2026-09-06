@@ -1445,7 +1445,7 @@
 			"id": "form",
 			"name": "ZForm",
 			"source": "ui/zui/src/components/input/ZForm.svelte",
-			"declaredPropCount": 28,
+			"declaredPropCount": 29,
 			"metadataGapPropCount": 0,
 			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
@@ -1464,7 +1464,17 @@
 			"id": "form-field",
 			"name": "ZFormField",
 			"source": "ui/zui/src/components/input/ZFormField.svelte",
-			"declaredPropCount": 17,
+			"declaredPropCount": 18,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "form-list",
+			"name": "ZFormList",
+			"source": "ui/zui/src/components/input/ZFormList.svelte",
+			"declaredPropCount": 11,
 			"metadataGapPropCount": 0,
 			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
@@ -1914,8 +1924,8 @@
 		"maxMetadataGapProps": 0
 	},
 	"totals": {
-		"components": 175,
-		"declaredProps": 2256,
+		"components": 176,
+		"declaredProps": 2269,
 		"metadataGapProps": 0,
 		"fallbackProps": 0,
 		"opaqueStructuredProps": 9,

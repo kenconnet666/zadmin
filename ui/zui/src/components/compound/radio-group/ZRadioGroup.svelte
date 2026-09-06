@@ -72,6 +72,7 @@
 		],
 		dependencies: [
 			'ZRadioGroupItem',
+			'FormControlState',
 			'LogicalCollection',
 			'MountedElements',
 			'CollectionNavigation',
@@ -211,11 +212,15 @@
 	import { MountedElements } from '../../../runtime/collection/mounted-elements.svelte.js';
 	import { SelectionModel } from '../../../runtime/collection/selection-model.js';
 	import {
+		assertSelectionKey,
 		singleSelection,
 		type Selection,
 		type SelectionKey
 	} from '../../../runtime/collection/selection.js';
-	import { ControllableState } from '../../../runtime/foundation/controllable-state.svelte.js';
+	import {
+		claimFormValueScope,
+		createFormControlState
+	} from '../../../runtime/form/form-value-adapter.svelte.js';
 	import { resolveControlSize } from '../../../runtime/foundation/control-size.js';
 	import { createZuiId } from '../../../runtime/foundation/ids.js';
 	import { claimZFieldControlOwner } from '../../../runtime/form/field-context.js';
@@ -263,6 +268,7 @@
 	}: ZRadioGroupProps = $props();
 
 	const zui = useZui();
+	const valueScope = claimFormValueScope();
 	const fieldOwner = claimZFieldControlOwner();
 	const field = fieldOwner.field;
 	const uid = $props.id();
@@ -279,15 +285,26 @@
 		ariaLabelledBy ?? (ariaLabel === undefined ? field?.labelId : undefined)
 	);
 	const rootClass = $derived(zui.recipe(radioGroupRecipe, { orientation }));
-	const valueState = new ControllableState<SelectionKey | undefined>({
-		defaultValue: () => defaultValue,
-		onChange: () => (next) => {
-			if (next !== undefined) onValueChange?.(next);
+	const valueState = createFormControlState<SelectionKey | undefined>(
+		{
+			defaultValue: () => defaultValue,
+			element: () => ref,
+			normalizeModelValue: (candidate) => {
+				if (candidate === undefined) return undefined;
+				assertSelectionKey(candidate, 'ZRadioGroup model value');
+				return candidate;
+			},
+			onChange: () => (next) => {
+				if (next !== undefined) onValueChange?.(next);
+			},
+			owner: 'ZRadioGroup',
+			read: () => value,
+			syncNative: (next) => synchronizeNative(next),
+			undefinedIsValue: true,
+			write: (next) => (value = next)
 		},
-		read: () => value,
-		undefinedIsValue: true,
-		write: (next) => (value = next)
-	});
+		valueScope
+	);
 	const mounted = new MountedElements<SelectionKey, HTMLInputElement>();
 	const compound = new CompoundLogicalCollectionRegistry<SelectionKey, RadioGroupLogicalItem>(
 		mounted
@@ -333,12 +350,15 @@
 	onDestroy(() => {
 		ownerActive = false;
 	});
+	let selectionAccepted = false;
 	const selection = new SelectionModel<SelectionKey, RadioGroupLogicalItem>({
 		collection: () => collection,
 		mode: () => 'single',
 		read: () => singleSelection(valueState.current),
 		view: () => view,
-		write: ({ selection: next }) => valueState.setFromUser(readSingleValue(next))
+		write: ({ selection: next }) => {
+			selectionAccepted = valueState.setFromUser(readSingleValue(next));
+		}
 	});
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
@@ -370,6 +390,21 @@
 		navigation.set(key, 'programmatic');
 		mounted.focus(key);
 	}
+	function synchronizeNative(next: SelectionKey | undefined): void {
+		for (const key of view.keys) {
+			const element = mounted.get(key)?.element;
+			if (element) element.checked = Object.is(next, key);
+		}
+	}
+	function selectValue(itemValue: SelectionKey): boolean {
+		if (disabled || readonly || selection.isSelected(itemValue)) return !disabled && !readonly;
+		const element = mounted.get(itemValue)?.element;
+		if (!element || element.matches(':disabled')) return false;
+		selectionAccepted = false;
+		selection.replace(itemValue);
+		if (!selectionAccepted) synchronizeNative(valueState.current);
+		return selectionAccepted;
+	}
 
 	const context: ZRadioGroupContext = {
 		get defaultValue() {
@@ -389,7 +424,7 @@
 			const next = navigation.currentKey;
 			if (next === undefined) return true;
 			mounted.focus(next);
-			if (!readonly) selection.replace(next);
+			if (!readonly) selectValue(next);
 			return true;
 		},
 		get invalid() {
@@ -448,15 +483,11 @@
 			return resolvedSize;
 		},
 		restoreNativeSelection() {
-			for (const key of view.keys) {
-				const element = mounted.get(key)?.element;
-				if (element) element.checked = selection.isSelected(key);
-			}
+			synchronizeNative(valueState.current);
 		},
 		select(itemValue) {
-			if (disabled || readonly) return false;
 			navigation.set(itemValue, 'pointer');
-			return selection.replace(itemValue);
+			return selectValue(itemValue);
 		},
 		tabIndex(itemValue) {
 			return disabled || !Object.is(preferredFocusKey(), itemValue) ? -1 : 0;

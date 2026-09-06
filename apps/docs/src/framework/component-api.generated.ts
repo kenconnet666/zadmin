@@ -9531,6 +9531,11 @@ export const formApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'preserve',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'ref',
 			required: false,
 			type: 'HTMLFormElement | null'
@@ -9628,6 +9633,11 @@ export const formFieldApiFacts = {
 			type: '(state: FormFieldState) => void'
 		},
 		{
+			name: 'preserve',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'success',
 			required: false,
 			type: 'FieldMessages'
@@ -9702,6 +9712,80 @@ export const formFieldApiFacts = {
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
+export const formListApiFacts = {
+	declaration: 'ZFormListProps',
+	id: 'form-list',
+	inheritedFrom: ['ZStackProps'],
+	name: 'ZFormList',
+	props: [
+		{
+			name: 'children',
+			required: true,
+			type: 'Snippet< [rows: readonly PublicFormArrayRow<T>[], operations: FormListOperations<T>] >'
+		},
+		{
+			name: 'getRowKey',
+			required: false,
+			type: '(value: T) => string | number'
+		},
+		{
+			name: 'name',
+			required: true,
+			type: 'FieldPathInput'
+		},
+		{
+			name: 'align',
+			required: false,
+			type: 'ResponsiveValue<ZStackAlignment>',
+			inheritedFrom: 'ZStackProps'
+		},
+		{
+			name: 'gap',
+			required: false,
+			type: 'ResponsiveValue<ZLayoutSpacing>',
+			inheritedFrom: 'ZStackProps'
+		},
+		{
+			name: 'rowGap',
+			required: false,
+			type: 'ResponsiveValue<ZLayoutSpacing>',
+			inheritedFrom: 'ZStackProps'
+		},
+		{
+			name: 'columnGap',
+			required: false,
+			type: 'ResponsiveValue<ZLayoutSpacing>',
+			inheritedFrom: 'ZStackProps'
+		},
+		{
+			name: 'query',
+			required: false,
+			type: 'ResponsiveQuery',
+			inheritedFrom: 'ZStackProps'
+		},
+		{
+			name: 'justify',
+			required: false,
+			type: 'ResponsiveValue<ZStackJustification>',
+			inheritedFrom: 'ZStackProps'
+		},
+		{
+			name: 'wrap',
+			required: false,
+			type: "ResponsiveValue<boolean | 'reverse'>",
+			inheritedFrom: 'ZStackProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null',
+			inheritedFrom: 'ZStackProps'
+		}
+	],
+	source: 'ui/zui/src/components/input/ZFormList.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
 export const inputApiFacts = {
 	declaration: 'ZInputProps',
 	id: 'input',
@@ -9769,6 +9853,7 @@ export const inputApiFacts = {
 		fileUploadApiFacts,
 		formApiFacts,
 		formFieldApiFacts,
+		formListApiFacts,
 		inputGroupApiFacts,
 		mentionApiFacts,
 		nativeSelectApiFacts,
