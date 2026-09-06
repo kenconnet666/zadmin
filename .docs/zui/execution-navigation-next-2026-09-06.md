@@ -7,7 +7,7 @@
 - `ZMenu` 是命令菜单，已经拥有真实 button/anchor item、typeahead、checkbox/radio、submenu、Popover layer 和 RTL 方向键；它不能继续承担站点 NavigationMenu。
 - `ZDropdownMenu`、`ZContextMenu`、`ZMenuSub` 应继续复用 `ZPopover`、Floating、dismiss、Presence 和 focus restore；不再新增第二套 overlay 或 outside/Escape 生命周期。
 - `roving-focus.svelte.ts` 仍依赖旧 `CollectionStore`，而逻辑集合架构已经把 `LogicalCollection`、`CollectionNavigation`、`MountedElements`、`SelectionModel` 定为目标分层。下一阶段应先做内部 adapter，迁移一个真实消费者后再删除旧实现。
-- `ZCommand`/`ZCommandPalette` 已有垂直方向导航和 `loop`，`ZSegmented` 已有 typed value、orientation、loop、roving 与五档视觉基础；重复实现应合并到共享 focus/selection 协议，而不是再造 Toolbar 专用键盘 switch。
+- `ZCommand`/`ZCommandPalette` 已有垂直方向导航和 `loop`；`ZSegmented` 与 `ZRadioGroup` 当前都已经使用 `LogicalCollection`、`CollectionNavigation`、`MountedElements` 和 `SelectionModel`，不是旧 `CollectionStore`/`RovingFocus` 消费者。下一步应审查两者重复的 wiring，再抽小型 adapter，而不是声称需要从旧 store 迁移。
 - `ZOverflowList` 已能提供真实 item、隐藏项、`pinnedKeys`、`suspended` 和可操作 overflow 入口；Toolbar/NavigationMenu 的溢出应复用它，不维护第二个宽度测量器。
 - Splitter/ResizablePanels 仍是独立布局职责，不能把 panel sizes 或 pointer capture 塞入 Toolbar/NavigationMenu 的状态模型。
 
@@ -61,7 +61,7 @@ interface RovingCollectionAdapter<TKey extends SelectionKey> {
 - `type: 'single' | 'multiple'`、`value/defaultValue`、`onValueChange`、`disabled`、`orientation`、`loop`、`roving`。
 - single/multiple 使用现有 `SelectionModel`；focus active key 不等于 selected keys。
 - 使用真实 button 与 `aria-pressed`；不把 ToggleGroup 伪装成 RadioGroup，也不让 Button defaults 覆盖 explicit size/tone。
-- `ZSegmented` 保留为视觉便利入口，内部迁移到同一 selection/focus adapter；相同能力不再维护两套 `loop`、RTL、disabled item 和 keyboard 逻辑。
+- `ZSegmented` 保留为单选视觉/表单便利入口，内部可复用 N3 adapter；但它当前输出 `role="radiogroup"` + `role="radio"`/`aria-checked`，不能直接改成 ToggleGroup 的 `aria-pressed`。RadioGroup 继续保留原生 `input[type=radio]`、name/FormData、required 和 compound children 语义；两者共享导航/selection wiring，不合并渲染语义。
 - `ZToggleButton` 作为单项低层入口保留；Toolbar 不新增 `ToolbarButton` 别名。
 
 ## 后续紧接阶段，不在 N3-A 混入

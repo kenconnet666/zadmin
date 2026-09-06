@@ -1,6 +1,11 @@
 import { tabbable } from 'tabbable';
 
-import { isDomHtmlElement, isDomNode } from './dom-realm.js';
+import {
+	containsComposedNode,
+	getActiveElement,
+	isDomHtmlElement,
+	isDomNode
+} from './dom-realm.js';
 
 export interface FocusScopeOptions {
 	/** Interactive branches that belong to the scope without being DOM descendants of its container. */
@@ -33,13 +38,12 @@ export class FocusScope {
 		this.#container = container;
 		this.#document = container.ownerDocument;
 		this.#options = options;
-		this.#previousFocus = isDomHtmlElement(this.#document.activeElement)
-			? this.#document.activeElement
-			: null;
+		const previous = getActiveElement(container);
+		this.#previousFocus = isDomHtmlElement(previous) ? previous : null;
 		stackFor(this.#document).push(this);
 		this.#document.addEventListener('keydown', this.#handleKey, true);
 		this.#document.addEventListener('focusin', this.#handleFocus, true);
-		queueMicrotask(() => {
+		(this.#document.defaultView ?? globalThis).queueMicrotask(() => {
 			if (!this.#active || !this.#isTopmost()) return;
 			const target = this.#options.initialFocus?.() ?? this.#candidates()[0] ?? this.#container;
 			target.focus({ preventScroll: true });
@@ -58,8 +62,7 @@ export class FocusScope {
 		const restoreTarget = this.#options.restoreTarget?.() ?? this.#previousFocus;
 		if (restoreTarget?.isConnected) {
 			restoreTarget.focus({ preventScroll: true });
-			const active = this.#document.activeElement;
-			if (active === restoreTarget || (isDomNode(active) && restoreTarget.contains(active))) {
+			if (containsComposedNode(restoreTarget, getActiveElement(restoreTarget))) {
 				return;
 			}
 		}
@@ -72,7 +75,8 @@ export class FocusScope {
 		if (
 			!this.#options.trap ||
 			!this.#isTopmost() ||
-			(isDomNode(event.target) && this.#contains(event.target))
+			this.#contains(getActiveElement(this.#container)) ||
+			event.composedPath().some((target) => this.#contains(target))
 		) {
 			return;
 		}
@@ -88,7 +92,7 @@ export class FocusScope {
 			this.#container.focus({ preventScroll: true });
 			return;
 		}
-		const current = this.#document.activeElement;
+		const current = getActiveElement(this.#container);
 		const index = candidates.indexOf(current as HTMLElement);
 		const next = event.shiftKey
 			? candidates[index <= 0 ? candidates.length - 1 : index - 1]
@@ -98,21 +102,23 @@ export class FocusScope {
 	};
 
 	#candidates(): ReturnType<typeof tabbable> {
-		const candidates = [...tabbable(this.#container)];
+		const options = { getShadowRoot: (element: Element) => element.shadowRoot ?? false };
+		const candidates = [...tabbable(this.#container, options)];
 		for (const branch of this.#options.branches?.() ?? []) {
 			if (branch.ownerDocument !== this.#document || !branch.isConnected) continue;
-			for (const candidate of tabbable(branch, { includeContainer: true })) {
+			for (const candidate of tabbable(branch, { ...options, includeContainer: true })) {
 				if (!candidates.includes(candidate)) candidates.push(candidate);
 			}
 		}
 		return candidates;
 	}
 
-	#contains(target: Node): boolean {
+	#contains(target: unknown): boolean {
+		if (!isDomNode(target)) return false;
 		return (
-			this.#container.contains(target) ||
+			containsComposedNode(this.#container, target) ||
 			(this.#options.branches?.() ?? []).some(
-				(branch) => branch.ownerDocument === this.#document && branch.contains(target)
+				(branch) => branch.ownerDocument === this.#document && containsComposedNode(branch, target)
 			)
 		);
 	}

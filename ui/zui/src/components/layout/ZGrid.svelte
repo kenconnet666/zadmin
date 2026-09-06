@@ -98,7 +98,11 @@
 	import { untrack } from 'svelte';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { applyResponsiveStyles } from '../../runtime/foundation/responsive.js';
-	import { applyLayoutSpacing, applyLayoutAlignment } from '../../runtime/foundation/layout.js';
+	import {
+		applyLayoutSpacing,
+		applyLayoutAlignment,
+		cascadeAxisSpacing
+	} from '../../runtime/foundation/layout.js';
 	import { assertGridInteger, provideGrid } from '../../runtime/foundation/grid-context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import {
@@ -140,10 +144,15 @@
 				query
 			);
 			applyResponsiveStyles(s, gap, (s, value) => applyLayoutSpacing(s, 'gap', value), query);
-			applyResponsiveStyles(s, rowGap, (s, value) => applyLayoutSpacing(s, 'rowGap', value), query);
 			applyResponsiveStyles(
 				s,
-				columnGap,
+				cascadeAxisSpacing(rowGap),
+				(s, value) => applyLayoutSpacing(s, 'rowGap', value),
+				query
+			);
+			applyResponsiveStyles(
+				s,
+				cascadeAxisSpacing(columnGap),
 				(s, value) => applyLayoutSpacing(s, 'columnGap', value),
 				query
 			);

@@ -2,7 +2,7 @@
 
 本文件由 `scripts/check-stability-policy.mjs` 生成；不会修改组件 status。compound member 可继承同 family root 的 Docs 页面。
 
-stableCompliant：141；stableViolations：0；promotionEligibleExperimental：8。
+stableCompliant：141；stableViolations：0；promotionEligibleExperimental：9。
 
 | Component               | Status       | Classification                | Blockers                                         | Docs                                                                  | SSR |
 | ----------------------- | ------------ | ----------------------------- | ------------------------------------------------ | --------------------------------------------------------------------- | --: |
@@ -64,9 +64,9 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：8
 | ZPopconfirmDescription  | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/overlay/popconfirm/doc.ts            |   2 |
 | ZPopconfirmTitle        | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/overlay/popconfirm/doc.ts            |   2 |
 | ZPopconfirmTrigger      | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/overlay/popconfirm/doc.ts            |   2 |
-| ZPopover                | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/overlay/popover/doc.ts               |   2 |
-| ZPopoverContent         | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/overlay/popover/doc.ts               |   2 |
-| ZPopoverTrigger         | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/overlay/popover/doc.ts               |   2 |
+| ZPopover                | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/overlay/popover/doc.ts               |   4 |
+| ZPopoverContent         | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/overlay/popover/doc.ts               |   4 |
+| ZPopoverTrigger         | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/overlay/popover/doc.ts               |   4 |
 | ZRadioGroup             | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/input/radio-group/doc.ts             |   1 |
 | ZRadioGroupItem         | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/input/radio-group/doc.ts             |   1 |
 | ZSelect                 | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/input/select/doc.ts                  |   1 |
@@ -77,6 +77,8 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：8
 | ZTabsList               | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/navigation/tabs/doc.ts               |   1 |
 | ZTabsPanel              | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/navigation/tabs/doc.ts               |   1 |
 | ZTabsTrigger            | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/navigation/tabs/doc.ts               |   1 |
+| ZToolbar                | experimental | experimental                  | Family readiness (ZToolbarItem)                  | apps/docs/src/content/components/navigation/toolbar/doc.ts            |   2 |
+| ZToolbarItem            | experimental | experimental                  | BrowserBehaviorVerified                          | apps/docs/src/content/components/navigation/toolbar/doc.ts            |   2 |
 | ZTooltip                | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/overlay/tooltip/doc.ts               |   3 |
 | ZTooltipContent         | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/overlay/tooltip/doc.ts               |   3 |
 | ZTooltipGroup           | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/overlay/tooltip/doc.ts               |   1 |
@@ -105,13 +107,13 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：8
 | ZToast                  | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/feedback/toast/doc.ts                |   1 |
 | ZToaster                | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/feedback/toast/doc.ts                |   2 |
 | ZBox                    | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/gene/box/doc.ts                      |   1 |
-| ZButton                 | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/gene/button/doc.ts                   |   9 |
+| ZButton                 | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/gene/button/doc.ts                   |  11 |
 | ZCode                   | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/gene/code/doc.ts                     |   2 |
 | ZHeading                | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/gene/heading/doc.ts                  |   3 |
 | ZIcon                   | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/gene/icon/doc.ts                     |   2 |
 | ZKbd                    | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/gene/kbd/doc.ts                      |   3 |
-| ZLink                   | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/gene/link/doc.ts                     |   4 |
-| ZProvider               | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/gene/provider/doc.ts                 |   8 |
+| ZLink                   | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/gene/link/doc.ts                     |   5 |
+| ZProvider               | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/gene/provider/doc.ts                 |  10 |
 | ZSeparator              | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/gene/separator/doc.ts                |   2 |
 | ZText                   | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/gene/text/doc.ts                     |   6 |
 | ZToggleButton           | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/gene/toggle-button/doc.ts            |   3 |
@@ -138,6 +140,7 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：8
 | ZTagsInput              | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/input/tags-input/doc.ts              |   1 |
 | ZTextarea               | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/input/textarea/doc.ts                |   2 |
 | ZTimeField              | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/input/time-field/doc.ts              |   1 |
+| ZToggleGroup            | experimental | promotionEligibleExperimental | —                                                | apps/docs/src/content/components/input/toggle-group/doc.ts            |   2 |
 | ZTransfer               | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/input/transfer/doc.ts                |   1 |
 | ZTreeSelect             | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/input/tree-select/doc.ts             |   2 |
 | ZAppShell               | experimental | promotionEligibleExperimental | —                                                | apps/docs/src/content/components/layout/app-shell/doc.ts              |   1 |
@@ -147,7 +150,7 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：8
 | ZGrid                   | experimental | experimental                  | BrowserBehaviorVerified, ProductionVerified, SSR | apps/docs/src/content/components/layout/grid/doc.ts                   |   0 |
 | ZGridItem               | experimental | experimental                  | BrowserBehaviorVerified, ProductionVerified, SSR | apps/docs/src/content/components/layout/grid/doc.ts                   |   0 |
 | ZGroup                  | experimental | promotionEligibleExperimental | —                                                | apps/docs/src/content/components/layout/group/doc.ts                  |   1 |
-| ZOverflowList           | experimental | promotionEligibleExperimental | —                                                | apps/docs/src/content/components/layout/overflow-list/doc.ts          |   1 |
+| ZOverflowList           | experimental | promotionEligibleExperimental | —                                                | apps/docs/src/content/components/layout/overflow-list/doc.ts          |   2 |
 | ZScrollArea             | experimental | experimental                  | BrowserBehaviorVerified                          | apps/docs/src/content/components/layout/scroll-area/doc.ts            |   1 |
 | ZSimpleGrid             | experimental | promotionEligibleExperimental | —                                                | apps/docs/src/content/components/layout/simple-grid/doc.ts            |   1 |
 | ZSpacer                 | experimental | promotionEligibleExperimental | —                                                | apps/docs/src/content/components/layout/spacer/doc.ts                 |   1 |

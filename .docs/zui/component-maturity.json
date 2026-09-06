@@ -1,10 +1,10 @@
 {
 	"schemaVersion": 2,
 	"source": {
-		"metadataComponents": 152,
-		"documentationPages": 89,
-		"contractComponents": 152,
-		"testFiles": 218
+		"metadataComponents": 155,
+		"documentationPages": 91,
+		"contractComponents": 155,
+		"testFiles": 228
 	},
 	"stageNames": [
 		"Declared",
@@ -18,14 +18,14 @@
 	],
 	"evidenceScope": "Static inventory of authored test contracts, not test execution results or whole-component visual acceptance. Stage names are retained for compatibility; consult commit-matched CI and page-level review separately.",
 	"summary": {
-		"Declared": 152,
-		"Authorable": 152,
-		"ContractVerified": 152,
-		"RuntimeImplemented": 152,
-		"BrowserBehaviorVerified": 149,
-		"VisuallyVerified": 151,
+		"Declared": 155,
+		"Authorable": 155,
+		"ContractVerified": 155,
+		"RuntimeImplemented": 155,
+		"BrowserBehaviorVerified": 151,
+		"VisuallyVerified": 152,
 		"DesktopVerified": 0,
-		"ProductionVerified": 150
+		"ProductionVerified": 153
 	},
 	"components": [
 		{
@@ -5648,6 +5648,14 @@
 				{
 					"path": "ui/zui/tests/overlay-production-ssr.spec.ts",
 					"detail": "ZPopover SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/toolbar-production.spec.ts",
+					"detail": "ZPopover SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/toolbar-toggle-group.spec.ts",
+					"detail": "ZPopover SSR assertions"
 				}
 			]
 		},
@@ -5753,6 +5761,14 @@
 				{
 					"path": "ui/zui/tests/overlay-production-ssr.spec.ts",
 					"detail": "ZPopoverContent SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/toolbar-production.spec.ts",
+					"detail": "ZPopoverContent SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/toolbar-toggle-group.spec.ts",
+					"detail": "ZPopoverContent SSR assertions"
 				}
 			]
 		},
@@ -5857,6 +5873,14 @@
 				},
 				{
 					"path": "ui/zui/tests/overlay-production-ssr.spec.ts",
+					"detail": "ZPopoverTrigger SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/toolbar-production.spec.ts",
+					"detail": "ZPopoverTrigger SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/toolbar-toggle-group.spec.ts",
 					"detail": "ZPopoverTrigger SSR assertions"
 				}
 			]
@@ -6764,6 +6788,181 @@
 				{
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZTabsTrigger SSR assertions"
+				}
+			]
+		},
+		{
+			"id": "toolbar",
+			"name": "ZToolbar",
+			"category": "navigation",
+			"family": "toolbar",
+			"status": "experimental",
+			"source": "ui/zui/src/components/compound/toolbar/ZToolbar.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": true,
+				"VisuallyVerified": false,
+				"DesktopVerified": false,
+				"ProductionVerified": true
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/compound/toolbar/ZToolbar.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZToolbar"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "bc54e92b18dbc1425cad3ac8f98da4e3cd361d851282a7a8d1269aecb48e4638 API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/compound/toolbar/ZToolbar.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [
+					{
+						"path": "ui/zui/tests/toolbar-production.browser.spec.ts",
+						"detail": "ZToolbar browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/ToolbarFixture.svelte",
+						"detail": "ZToolbar explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/toolbar-toggle-group.browser.spec.ts",
+						"detail": "ZToolbar browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/ToolbarToggleGroupFixture.svelte",
+						"detail": "ZToolbar explicit rendered fixture usage"
+					}
+				],
+				"VisuallyVerified": [],
+				"DesktopVerified": [],
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/toolbar-production.spec.ts",
+						"detail": "ZToolbar production assertions"
+					},
+					{
+						"path": "ui/zui/tests/ToolbarFixture.svelte",
+						"detail": "ZToolbar explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/toolbar-production.browser.spec.ts",
+						"detail": "ZToolbar production assertions"
+					},
+					{
+						"path": "ui/zui/tests/ToolbarFixture.svelte",
+						"detail": "ZToolbar explicit rendered fixture usage"
+					}
+				]
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/navigation/toolbar/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/toolbar-production.spec.ts",
+					"detail": "ZToolbar SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/toolbar-toggle-group.spec.ts",
+					"detail": "ZToolbar SSR assertions"
+				}
+			]
+		},
+		{
+			"id": "toolbar-item",
+			"name": "ZToolbarItem",
+			"category": "navigation",
+			"family": "toolbar",
+			"status": "experimental",
+			"source": "ui/zui/src/components/compound/toolbar/ZToolbarItem.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": false,
+				"VisuallyVerified": false,
+				"DesktopVerified": false,
+				"ProductionVerified": true
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/compound/toolbar/ZToolbarItem.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZToolbarItem"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "ab88e2befaa3e2d8c502daef680d272c7c827a2cb46bf3edacef9746a489c38e API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/compound/toolbar/ZToolbarItem.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [],
+				"VisuallyVerified": [],
+				"DesktopVerified": [],
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/toolbar-production.spec.ts",
+						"detail": "ZToolbarItem production assertions"
+					},
+					{
+						"path": "ui/zui/tests/ToolbarFixture.svelte",
+						"detail": "ZToolbarItem explicit rendered fixture usage"
+					}
+				]
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/navigation/toolbar/doc.ts",
+				"detail": "family-owned documentation module (toolbar)"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/toolbar-production.spec.ts",
+					"detail": "ZToolbarItem SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/toolbar-toggle-group.spec.ts",
+					"detail": "ZToolbarItem SSR assertions"
 				}
 			]
 		},
@@ -9779,6 +9978,14 @@
 					"detail": "ZButton SSR assertions"
 				},
 				{
+					"path": "ui/zui/tests/toolbar-production.spec.ts",
+					"detail": "ZButton SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/toolbar-toggle-group.spec.ts",
+					"detail": "ZButton SSR assertions"
+				},
+				{
 					"path": "ui/zui/tests/tooltip-popconfirm.spec.ts",
 					"detail": "ZButton SSR assertions"
 				}
@@ -10334,6 +10541,10 @@
 				{
 					"path": "ui/zui/tests/component-defaults-extension-ssr.spec.ts",
 					"detail": "ZLink SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/toolbar-production.spec.ts",
+					"detail": "ZLink SSR assertions"
 				}
 			]
 		},
@@ -10442,6 +10653,14 @@
 				},
 				{
 					"path": "ui/zui/tests/tag-table-production-ssr.spec.ts",
+					"detail": "ZProvider SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/toolbar-production.spec.ts",
+					"detail": "ZProvider SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/toolbar-toggle-group.spec.ts",
 					"detail": "ZProvider SSR assertions"
 				},
 				{
@@ -12604,6 +12823,10 @@
 					{
 						"path": "ui/zui/tests/ChoiceControlsCollectionFixture.svelte",
 						"detail": "ZSegmented explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/segmented-focus-ownership.browser.spec.ts",
+						"detail": "ZSegmented browser behavior assertions"
 					}
 				],
 				"VisuallyVerified": [
@@ -13145,6 +13368,111 @@
 				{
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZTimeField SSR assertions"
+				}
+			]
+		},
+		{
+			"id": "toggle-group",
+			"name": "ZToggleGroup",
+			"category": "input",
+			"family": null,
+			"status": "experimental",
+			"source": "ui/zui/src/components/input/ZToggleGroup.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": true,
+				"VisuallyVerified": true,
+				"DesktopVerified": false,
+				"ProductionVerified": true
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/input/ZToggleGroup.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZToggleGroup"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "44e98a56983c09ecd9466dbaac616344a96320b45787b9ea356b0de7f616d3c1 API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/input/ZToggleGroup.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [
+					{
+						"path": "ui/zui/tests/toggle-group-production.browser.spec.ts",
+						"detail": "ZToggleGroup browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/ToggleGroupFixture.svelte",
+						"detail": "ZToggleGroup explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/toolbar-toggle-group.browser.spec.ts",
+						"detail": "ZToggleGroup browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/ToolbarToggleGroupFixture.svelte",
+						"detail": "ZToggleGroup explicit rendered fixture usage"
+					}
+				],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/toggle-group-production.browser.spec.ts",
+						"detail": "ZToggleGroup authored visual contract: projects all five sizes to real button geometry and native pressed-button ARIA (line 182); requires browser execution and page-level review"
+					},
+					{
+						"path": "ui/zui/tests/ToggleGroupFixture.svelte",
+						"detail": "ZToggleGroup explicit rendered fixture usage"
+					}
+				],
+				"DesktopVerified": [],
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/toggle-group-production.spec.ts",
+						"detail": "ZToggleGroup production assertions"
+					},
+					{
+						"path": "ui/zui/tests/toggle-group-production.browser.spec.ts",
+						"detail": "ZToggleGroup production assertions"
+					},
+					{
+						"path": "ui/zui/tests/ToggleGroupFixture.svelte",
+						"detail": "ZToggleGroup explicit rendered fixture usage"
+					}
+				]
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/input/toggle-group/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/toggle-group-production.spec.ts",
+					"detail": "ZToggleGroup SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/toolbar-toggle-group.spec.ts",
+					"detail": "ZToggleGroup SSR assertions"
 				}
 			]
 		},
@@ -14024,6 +14352,10 @@
 				{
 					"path": "ui/zui/tests/overflow-list-production.spec.ts",
 					"detail": "ZOverflowList SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/toolbar-production.spec.ts",
+					"detail": "ZOverflowList SSR assertions"
 				}
 			]
 		},
@@ -14077,7 +14409,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/scroll-area-production.browser.spec.ts",
-						"detail": "ZScrollArea authored visual contract: uses one named native viewport with real overflow geometry and an autosize maximum (line 8); requires browser execution and page-level review"
+						"detail": "ZScrollArea authored visual contract: uses one named native viewport with real overflow geometry and an autosize maximum (line 26); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/ScrollAreaFixture.svelte",

@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
-	"componentCount": 152,
-	"overallSha256": "a5ed967b785674159e443414c57534c36056ad0daddf202188a27e930c633cd8",
+	"componentCount": 155,
+	"overallSha256": "027b6ea2889531a53bda10d594704db0645d98e2ef195d636da0df895b0ffa81",
 	"components": [
 		{
 			"id": "accordion",
@@ -359,6 +359,16 @@
 			"source": "src/components/compound/tabs/ZTabsTrigger.svelte"
 		},
 		{
+			"id": "toolbar",
+			"sha256": "bc54e92b18dbc1425cad3ac8f98da4e3cd361d851282a7a8d1269aecb48e4638",
+			"source": "src/components/compound/toolbar/ZToolbar.svelte"
+		},
+		{
+			"id": "toolbar-item",
+			"sha256": "ab88e2befaa3e2d8c502daef680d272c7c827a2cb46bf3edacef9746a489c38e",
+			"source": "src/components/compound/toolbar/ZToolbarItem.svelte"
+		},
+		{
 			"id": "tooltip",
 			"sha256": "1da72000471588e9e711db449754ffd9c2ad6e3fe7910048290f02a10ed03a88",
 			"source": "src/components/compound/tooltip/ZTooltip.svelte"
@@ -664,6 +674,11 @@
 			"source": "src/components/input/ZTimeField.svelte"
 		},
 		{
+			"id": "toggle-group",
+			"sha256": "44e98a56983c09ecd9466dbaac616344a96320b45787b9ea356b0de7f616d3c1",
+			"source": "src/components/input/ZToggleGroup.svelte"
+		},
+		{
 			"id": "transfer",
 			"sha256": "c0ab0501f9a734999e1a878400bbfda62241bfe7fd1ec31f62fd57e9cdac1f46",
 			"source": "src/components/input/ZTransfer.svelte"
@@ -767,11 +782,11 @@
 	"entrypoints": {
 		"code.ts": "eabb8477e4c5ef93d016ab909e5c7f85a3111df231e2d2c3c7ef5e54897b36db",
 		"compiler.ts": "96fa979b36838e8b7a6d3f52bb463f23951438a4d974d52b631ad1e6d937b2e7",
-		"index.ts": "97f12307fece3e2e3961d93b1879b20f18d7cfedcaf1dc51cf9683f56a9350ec",
+		"index.ts": "3cce49081d614a3d3802db70c697c9165ec84726db36d9883236c6ccc65a83ec",
 		"internal.ts": "05f9ef9c8628e1cdf694dcc88b71831e5aab726a3189bd6189eef7ae645df4d7",
 		"layer.ts": "72d0fc8e5b7a8ab39a12e157879951b84f1a7fc19654f4bd8b6ea92fd8aa6db8",
-		"metadata.ts": "6c2df5684cb28536620f110e26f0b4ab3a5bda13ae57135882a01253e87b7d07",
-		"runtime.ts": "0fad64d1dec1517f8648a3640753feaf1af03264ce96ccccb7eaab8c5ece6599",
+		"metadata.ts": "c8433865e81a49e050bf38ebfb877b61e6db51a5fdf2653e6817050652b41c32",
+		"runtime.ts": "42a2c7a610b473b4b444ab1d3f68a4723fa8f526012da7380e08939e5b13f944",
 		"testing.ts": "c596113f3cbcf4ce75be2728b6a10cd6a0b77c9b9101a4408ba2e18e174f15cb",
 		"theme.ts": "9625285286228f2548dadb74b934f40d7cd1804a1e96bc37a04f21d3cd32b527",
 		"themes.ts": "22c13a538ae761f96ccbf319431bcacf3d3466e93881f09f601733aba07e8bd0"

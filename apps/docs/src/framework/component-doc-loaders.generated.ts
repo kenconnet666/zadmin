@@ -163,6 +163,12 @@ export const componentDocLoaders = {
 		import('../content/components/input/select/doc.js').then((module) => module.selectDoc),
 	segmented: () =>
 		import('../content/components/input/segmented/doc.js').then((module) => module.segmentedDoc),
+	'toggle-group': () =>
+		import('../content/components/input/toggle-group/doc.js').then(
+			(module) => module.toggleGroupDoc
+		),
+	toolbar: () =>
+		import('../content/components/navigation/toolbar/doc.js').then((module) => module.toolbarDoc),
 	switch: () =>
 		import('../content/components/input/switch/doc.js').then((module) => module.switchDoc),
 	'tags-input': () =>

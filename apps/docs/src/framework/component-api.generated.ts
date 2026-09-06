@@ -4541,6 +4541,84 @@ export const tabsTriggerApiFacts = {
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
+export const toolbarApiFacts = {
+	declaration: 'ZToolbarProps',
+	id: 'toolbar',
+	inheritedFrom: ['HTMLAttributes<HTMLDivElement>'],
+	name: 'ZToolbar',
+	props: [
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'gap',
+			required: false,
+			type: 'ZLayoutSpacing'
+		},
+		{
+			name: 'loop',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'orientation',
+			required: false,
+			type: 'ToolbarOrientation'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		}
+	],
+	source: 'ui/zui/src/components/compound/toolbar/ZToolbar.svelte',
+	metadataGapProps: [],
+	members: () => [toolbarItemApiFacts]
+} as const satisfies ComponentApiFacts;
+
+export const toolbarItemApiFacts = {
+	declaration: 'ZToolbarItemProps',
+	id: 'toolbar-item',
+	inheritedFrom: [],
+	name: 'ZToolbarItem',
+	props: [
+		{
+			name: 'children',
+			required: true,
+			type: 'Snippet<[props: ToolbarItemAttributes]>'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'keyPolicy',
+			required: false,
+			type: 'ToolbarKeyPolicy'
+		},
+		{
+			name: 'value',
+			required: true,
+			type: 'SelectionKey'
+		}
+	],
+	source: 'ui/zui/src/components/compound/toolbar/ZToolbarItem.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
 export const tooltipApiFacts = {
 	declaration: 'ZTooltipProps',
 	id: 'tooltip',
@@ -8875,6 +8953,7 @@ export const inputApiFacts = {
 		tagsInputApiFacts,
 		textareaApiFacts,
 		timeFieldApiFacts,
+		toggleGroupApiFacts,
 		transferApiFacts,
 		treeSelectApiFacts
 	]
@@ -9984,6 +10063,112 @@ export const timeFieldApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZTimeField.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
+export const toggleGroupApiFacts = {
+	declaration: 'ZToggleGroupProps',
+	id: 'toggle-group',
+	inheritedFrom: ['HTMLAttributes<HTMLDivElement>'],
+	name: 'ZToggleGroup',
+	props: [
+		{
+			name: 'allowEmpty',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'defaultValue',
+			required: false,
+			type: 'readonly NoInfer<TKey>[]'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'form',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'item',
+			required: false,
+			type: 'Snippet<[item: ZToggleGroupItem<TKey>, index: number]>'
+		},
+		{
+			name: 'items',
+			required: true,
+			type: 'readonly ZToggleGroupItem<TKey>[]'
+		},
+		{
+			name: 'loop',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'name',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'onValueChange',
+			required: false,
+			type: '(value: readonly TKey[]) => void'
+		},
+		{
+			name: 'orientation',
+			required: false,
+			type: "'horizontal' | 'vertical'"
+		},
+		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'roving',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'selectionMode',
+			required: false,
+			type: "Extract<SelectionMode, 'multiple' | 'single'>"
+		},
+		{
+			name: 'shape',
+			required: false,
+			type: "ZButtonProps['shape']"
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: "ZButtonProps['tone']"
+		},
+		{
+			name: 'variant',
+			required: false,
+			type: "ZButtonProps['variant']"
+		},
+		{
+			name: 'value',
+			required: false,
+			type: 'readonly NoInfer<TKey>[]'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null'
+		}
+	],
+	source: 'ui/zui/src/components/input/ZToggleGroup.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 

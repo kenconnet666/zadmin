@@ -26,9 +26,11 @@
 	{header}
 	{navbar}
 	{asideCollapsed}
+	asideLabel="根滚动示例检查器"
 	layout="alternative"
 	mainAs="div"
 	{navbarCollapsed}
+	navbarLabel="根滚动示例主导航"
 	scroll="root"
 	style="height: 20rem"
 >

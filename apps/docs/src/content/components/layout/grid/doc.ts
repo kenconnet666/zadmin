@@ -9,6 +9,8 @@ import NamedContainerDemo from './NamedContainerDemo.svelte';
 import namedContainerSource from './NamedContainerDemo.svelte?raw';
 import RtlDemo from './RtlDemo.svelte';
 import rtlSource from './RtlDemo.svelte?raw';
+import AxisGapsDemo from './AxisGapsDemo.svelte';
+import axisGapsSource from './AxisGapsDemo.svelte?raw';
 
 export const gridDoc = defineComponentDoc(gridMetadata, {
 	members: [gridItemMetadata],
@@ -49,6 +51,15 @@ export const gridDoc = defineComponentDoc(gridMetadata, {
 			id: 'grid-named-container',
 			source: namedContainerSource,
 			title: '命名容器查询'
+		},
+		{
+			component: AxisGapsDemo,
+			covers: ['composition', 'native-props', 'ssr', 'variants-and-states'],
+			description:
+				'按钮切换命名容器最大宽度；ZStack与ZGrid共享断点gap，rowGap=3与columnGap=5分别覆盖对应轴。',
+			id: 'grid-axis-gaps',
+			source: axisGapsSource,
+			title: '命名容器与轴向间距'
 		},
 		{
 			component: RtlDemo,

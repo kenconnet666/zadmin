@@ -5,6 +5,7 @@
 	import ZKbd from '../src/components/gene/ZKbd.svelte';
 	import ZSeparator from '../src/components/gene/ZSeparator.svelte';
 	import ZVisuallyHidden from '../src/components/gene/ZVisuallyHidden.svelte';
+	const directions = ['ltr', 'rtl'] as const;
 </script>
 
 <ZSeparator data-testid="separator-named" label="Named boundary" />
@@ -14,6 +15,16 @@
 </ZBox>
 
 <ZVisuallyHidden data-testid="visually-hidden" role="status">Hidden status</ZVisuallyHidden>
+{#each directions as direction}
+	<div
+		dir={direction}
+		data-testid={`hidden-boundary-${direction}`}
+		style="width:280px;position:relative;display:flex;flex-direction:column"
+	>
+		<span>Visible content</span>
+		<ZVisuallyHidden role="status">Clipped status at the inline edge</ZVisuallyHidden>
+	</div>
+{/each}
 <ZKbd data-testid="kbd-single">Ctrl</ZKbd>
 <ZKbd data-testid="kbd-combination"><ZKbd>Ctrl</ZKbd> + <ZKbd>K</ZKbd></ZKbd>
 

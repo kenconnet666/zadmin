@@ -1,10 +1,28 @@
 import type { IcssStyle } from '../../icss/types.js';
 import type { ZuiTheme } from '../../theme/types.js';
 import type { ZControlSize } from './control-size.js';
+import type { ResponsiveValue } from './responsive.js';
 
 export type ZLayoutSpacing = ZControlSize | 'none' | number;
 export type ZLayoutAlignment = 'baseline' | 'center' | 'end' | 'start' | 'stretch';
 export type ZLayoutJustification = 'around' | 'between' | 'center' | 'end' | 'evenly' | 'start';
+
+/** Preserve an explicit longhand when a later responsive gap shorthand changes. */
+export function cascadeAxisSpacing(
+	value: ResponsiveValue<ZLayoutSpacing> | undefined
+): ResponsiveValue<ZLayoutSpacing> | undefined {
+	if (value === undefined) return undefined;
+	if (typeof value !== 'object' || value === null)
+		return { base: value, small: value, medium: value, large: value };
+	if (
+		Array.isArray(value) ||
+		(Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null)
+	)
+		return value;
+	const small = value.small ?? value.base;
+	const medium = value.medium ?? small;
+	return { ...value, base: value.base, small, medium, large: value.large ?? medium };
+}
 
 export function applyLayoutSpacing(
 	s: IcssStyle<ZuiTheme>,

@@ -47,3 +47,38 @@ export function isDomShadowRoot(value: unknown): value is ShadowRoot {
 		? candidate instanceof constructor
 		: 'host' in candidate && isDomElement(candidate.host);
 }
+
+/** Reads focus from the node's actual tree, including a known closed shadow root. */
+export function getActiveElement(node: Node): Element | null {
+	const tree = node.getRootNode();
+	const document = isDomDocument(node) ? node : node.ownerDocument;
+	let active =
+		(isDomShadowRoot(tree) ? tree.activeElement : null) ?? document?.activeElement ?? null;
+	while (active?.shadowRoot?.activeElement) active = active.shadowRoot.activeElement;
+	return active;
+}
+
+/** DOM containment across shadow boundaries and assigned slots, without realm assumptions. */
+export function containsComposedNode(container: Node | null, target: unknown): boolean {
+	if (!container || !isDomNode(target)) return false;
+	let node: Node | null = target;
+	while (node) {
+		if (container.contains(node)) return true;
+		if (isDomElement(node) && node.assignedSlot) {
+			node = node.assignedSlot;
+			continue;
+		}
+		const tree = node.getRootNode();
+		node = isDomShadowRoot(tree) ? tree.host : null;
+	}
+	return false;
+}
+
+/** Keyboard direction follows the rendered element, including native dir=auto and CSS overrides. */
+export function getElementDirection(
+	element: HTMLElement | null,
+	fallback: 'ltr' | 'rtl'
+): 'ltr' | 'rtl' {
+	const direction = element?.ownerDocument.defaultView?.getComputedStyle(element).direction;
+	return direction === 'ltr' || direction === 'rtl' ? direction : fallback;
+}

@@ -782,6 +782,28 @@
 			"fallbackPropNames": []
 		},
 		{
+			"id": "toolbar",
+			"name": "ZToolbar",
+			"source": "ui/zui/src/components/compound/toolbar/ZToolbar.svelte",
+			"family": "toolbar",
+			"declaredPropCount": 7,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "toolbar-item",
+			"name": "ZToolbarItem",
+			"source": "ui/zui/src/components/compound/toolbar/ZToolbarItem.svelte",
+			"family": "toolbar",
+			"declaredPropCount": 4,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
 			"id": "tooltip",
 			"name": "ZTooltip",
 			"source": "ui/zui/src/components/compound/tooltip/ZTooltip.svelte",
@@ -1460,6 +1482,16 @@
 			"fallbackPropNames": []
 		},
 		{
+			"id": "toggle-group",
+			"name": "ZToggleGroup",
+			"source": "ui/zui/src/components/input/ZToggleGroup.svelte",
+			"declaredPropCount": 19,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
 			"id": "transfer",
 			"name": "ZTransfer",
 			"source": "ui/zui/src/components/input/ZTransfer.svelte",
@@ -1674,8 +1706,8 @@
 		"maxMetadataGapProps": 0
 	},
 	"totals": {
-		"components": 152,
-		"declaredProps": 1888,
+		"components": 155,
+		"declaredProps": 1918,
 		"metadataGapProps": 0,
 		"fallbackProps": 0,
 		"opaqueStructuredProps": 9,

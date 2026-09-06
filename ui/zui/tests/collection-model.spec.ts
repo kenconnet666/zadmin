@@ -168,6 +168,7 @@ describe('collection navigation and active descendant', () => {
 		expect(active.activeId).toBeUndefined();
 		const element = {
 			addEventListener: vi.fn(),
+			getRootNode: () => ({}),
 			compareDocumentPosition: vi.fn(() => 0),
 			focus: vi.fn(),
 			isConnected: true,
@@ -208,6 +209,7 @@ describe('mounted elements', () => {
 		const createElement = (position: number, focus = vi.fn()) => {
 			const listeners = new Map<string, Set<EventListener>>();
 			const element = {
+				getRootNode: () => ownerDocument,
 				addEventListener(type: string, listener: EventListener) {
 					const bucket = listeners.get(type) ?? new Set<EventListener>();
 					bucket.add(listener);

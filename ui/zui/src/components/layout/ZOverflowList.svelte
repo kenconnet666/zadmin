@@ -241,6 +241,7 @@
 <script lang="ts" generics="TItem, TKey extends SelectionKey = SelectionKey">
 	import { onDestroy, tick, untrack } from 'svelte';
 	import { isFocusable, tabbable } from 'tabbable';
+	import { containsComposedNode, getActiveElement } from '../../runtime/layer/dom-realm.js';
 	import { OverflowMeasurement } from '../../runtime/collection/overflow-measure.js';
 	import {
 		assertOverflowCount,
@@ -306,8 +307,8 @@
 			return { key, value, index };
 		});
 	});
-	const hidden = $derived(new Set(collapse ? (layout?.overflowKeys ?? []) : []));
-	const state = $derived<OverflowListState<TItem, TKey>>({
+	const hidden = $derived(new Set<TKey>(collapse ? (layout?.overflowKeys ?? []) : []));
+	const snapshot = $derived<OverflowListState<TItem, TKey>>({
 		visibleItems: entries.filter((entry) => !hidden.has(entry.key)).map((entry) => entry.value),
 		overflowItems: entries.filter((entry) => hidden.has(entry.key)).map((entry) => entry.value),
 		visibleKeys: entries.filter((entry) => !hidden.has(entry.key)).map((entry) => entry.key),
@@ -328,22 +329,15 @@
 		return result;
 	});
 	function activeElement(): HTMLElement | null {
-		let active = ref?.ownerDocument.activeElement ?? null;
-		while (active?.shadowRoot?.activeElement) active = active.shadowRoot.activeElement;
+		const active = ref ? getActiveElement(ref) : null;
 		return active && 'focus' in active ? (active as HTMLElement) : null;
 	}
 	function captureFocus(): void {
 		const active = activeElement();
 		remembered =
-			active && contains(ref, active) ? { element: active, interaction: outsideInteraction } : null;
-	}
-	function contains(container: HTMLElement | null, element: HTMLElement): boolean {
-		let node: Node | null = element;
-		while (node) {
-			if (container?.contains(node)) return true;
-			node = (node.getRootNode() as ShadowRoot).host ?? null;
-		}
-		return false;
+			active && containsComposedNode(ref, active)
+				? { element: active, interaction: outsideInteraction }
+				: null;
 	}
 	function focusInside(node: HTMLElement | null): boolean {
 		if (!node) return false;
@@ -357,16 +351,18 @@
 		const id = ++sequence;
 		const active = activeElement();
 		const previousFocus =
-			active && contains(ref, active)
+			active && containsComposedNode(ref, active)
 				? { element: active, interaction: outsideInteraction }
 				: remembered;
 		const focusedItem =
 			previousFocus &&
-			[...measurement.itemElements].find(([, node]) => contains(node, previousFocus.element));
+			[...measurement.itemElements].find(([, node]) =>
+				containsComposedNode(node, previousFocus.element)
+			);
 		const losingItem = focusedItem && next.overflowKeys.includes(focusedItem[0]);
 		const losingOverflow =
 			previousFocus &&
-			contains(measurement.overflowElement, previousFocus.element) &&
+			containsComposedNode(measurement.overflowElement, previousFocus.element) &&
 			next.overflowKeys.length === 0;
 		heldKey = losingItem ? focusedItem[0] : undefined;
 		holdOverflow = Boolean(losingOverflow);
@@ -395,7 +391,7 @@
 			remembered = null;
 			await tick();
 			if (id !== sequence || !ref?.isConnected) return;
-			onVisibleItemsChange?.(state);
+			onVisibleItemsChange?.(snapshot);
 		});
 		return true;
 	}
@@ -508,8 +504,8 @@
 	dir={dir ?? zui.direction}
 	{tabindex}
 	role={role ?? (as === 'div' ? undefined : 'list')}
-	data-measured={state.measured || undefined}
-	data-fits={state.measured ? state.fits : undefined}
+	data-measured={snapshot.measured || undefined}
+	data-fits={snapshot.measured ? snapshot.fits : undefined}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
 >
@@ -531,7 +527,7 @@
 			</svelte:element>
 		{:else}
 			{@const concealed =
-				state.overflowKeys.length === 0 &&
+				snapshot.overflowKeys.length === 0 &&
 				!holdOverflow &&
 				!(suspended && (layout?.overflowKeys.length ?? 0) > 0)}
 			<svelte:element
@@ -543,7 +539,7 @@
 				inert={concealed}
 				use:registerOverflow
 			>
-				{@render overflow(state)}
+				{@render overflow(snapshot)}
 			</svelte:element>
 		{/if}
 	{/each}

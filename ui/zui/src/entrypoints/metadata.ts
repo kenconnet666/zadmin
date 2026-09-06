@@ -126,6 +126,9 @@ export { zuiMetadata as mentionMetadata } from '../components/input/ZMention.sve
 export { zuiMetadata as numberFieldMetadata } from '../components/input/ZNumberField.svelte';
 export { zuiMetadata as pinInputMetadata } from '../components/input/ZPinInput.svelte';
 export { zuiMetadata as segmentedMetadata } from '../components/input/ZSegmented.svelte';
+export { zuiMetadata as toggleGroupMetadata } from '../components/input/ZToggleGroup.svelte';
+export { zuiMetadata as toolbarMetadata } from '../components/compound/toolbar/ZToolbar.svelte';
+export { zuiMetadata as toolbarItemMetadata } from '../components/compound/toolbar/ZToolbarItem.svelte';
 export { zuiMetadata as sliderMetadata } from '../components/input/ZSlider.svelte';
 export { zuiMetadata as switchMetadata } from '../components/input/ZSwitch.svelte';
 export { zuiMetadata as tagsInputMetadata } from '../components/input/ZTagsInput.svelte';

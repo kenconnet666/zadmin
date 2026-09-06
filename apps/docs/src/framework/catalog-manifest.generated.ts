@@ -98,7 +98,7 @@ export const componentCatalogManifest = Object.freeze([
 			'variants-and-states',
 			'rtl'
 		],
-		demoCount: 4,
+		demoCount: 5,
 		publicComponentCount: 2
 	},
 	{
@@ -1812,6 +1812,54 @@ export const componentCatalogManifest = Object.freeze([
 		],
 		demoCount: 6,
 		publicComponentCount: 1
+	},
+	{
+		id: 'toggle-group',
+		name: 'ZToggleGroup',
+		category: 'input',
+		summary:
+			'用真实button与aria-pressed表达单/多选切换，不使用radiogroup语义；焦点导航与选择状态保持正交。',
+		status: 'experimental',
+		keywords: [],
+		profiles: ['form-control', 'collection'],
+		capabilities: [
+			'controlled',
+			'focus',
+			'keyboard',
+			'variants-and-states',
+			'form-data',
+			'form-reset',
+			'native-props',
+			'basic-render',
+			'composition',
+			'disabled',
+			'readonly',
+			'rtl'
+		],
+		demoCount: 4,
+		publicComponentCount: 1
+	},
+	{
+		id: 'toolbar',
+		name: 'ZToolbar',
+		category: 'navigation',
+		summary:
+			'以一个Toolbar焦点集合组合异构原生控件；ZToolbarItem不产生DOM，只为真实控件提供焦点和禁用属性。',
+		status: 'experimental',
+		keywords: [],
+		profiles: ['collection', 'primitive'],
+		capabilities: [
+			'accessible-name',
+			'basic-render',
+			'composition',
+			'native-props',
+			'focus',
+			'keyboard',
+			'readonly',
+			'variants-and-states'
+		],
+		demoCount: 4,
+		publicComponentCount: 2
 	},
 	{
 		id: 'switch',

@@ -24,5 +24,5 @@
 		onCurrentKeyChange={() => (changes += 1)}
 		aria-label="Uncontrolled steps"
 	/>
-	<output>{changes}</output>
 </form>
+<output>{changes}</output>

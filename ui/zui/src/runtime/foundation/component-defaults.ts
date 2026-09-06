@@ -89,12 +89,20 @@ const COMPONENT_RULES = {
 		size: { kind: 'enum', values: controlSizes },
 		tone: { kind: 'enum', values: ['inherit', 'muted', 'primary'] }
 	},
+	segmented: { size: buttonRules.size },
 	tag: {
 		size: { kind: 'enum', values: controlSizes },
 		tone: { kind: 'enum', values: semanticTones }
 	},
 	text: typographyRules,
 	toggleButton: buttonRules,
+	toggleGroup: {
+		shape: buttonRules.shape,
+		size: buttonRules.size,
+		tone: buttonRules.tone,
+		variant: buttonRules.variant
+	},
+	toolbar: { size: buttonRules.size },
 	tooltip: { size: { kind: 'enum', values: controlSizes } }
 } as const satisfies Readonly<Record<string, Readonly<Record<string, ComponentDefaultRule>>>>;
 
@@ -126,9 +134,12 @@ export interface InputComponentDefaults extends DefaultsFor<'input'> {}
 export interface LinkComponentDefaults extends DefaultsFor<'link'> {}
 export interface PaginationComponentDefaults extends DefaultsFor<'pagination'> {}
 export interface SpinnerComponentDefaults extends DefaultsFor<'spinner'> {}
+export interface SegmentedComponentDefaults extends DefaultsFor<'segmented'> {}
 export interface TagComponentDefaults extends DefaultsFor<'tag'> {}
 export interface TextComponentDefaults extends DefaultsFor<'text'> {}
 export interface ToggleButtonComponentDefaults extends DefaultsFor<'toggleButton'> {}
+export interface ToggleGroupComponentDefaults extends DefaultsFor<'toggleGroup'> {}
+export interface ToolbarComponentDefaults extends DefaultsFor<'toolbar'> {}
 export interface TooltipComponentDefaults extends DefaultsFor<'tooltip'> {}
 
 type DefaultsWithStops = {

@@ -51,6 +51,8 @@ import { pinInputDoc } from '../content/components/input/pin-input/doc.js';
 import { radioGroupDoc } from '../content/components/input/radio-group/doc.js';
 import { selectDoc } from '../content/components/input/select/doc.js';
 import { segmentedDoc } from '../content/components/input/segmented/doc.js';
+import { toggleGroupDoc } from '../content/components/input/toggle-group/doc.js';
+import { toolbarDoc } from '../content/components/navigation/toolbar/doc.js';
 import { sliderDoc } from '../content/components/input/slider/doc.js';
 import { switchDoc } from '../content/components/input/switch/doc.js';
 import { tagsInputDoc } from '../content/components/input/tags-input/doc.js';
@@ -167,6 +169,8 @@ export const componentDocs = Object.freeze([
 	radioGroupDoc,
 	selectDoc,
 	segmentedDoc,
+	toggleGroupDoc,
+	toolbarDoc,
 	switchDoc,
 	tagsInputDoc,
 	textareaDoc,

@@ -2,6 +2,7 @@ import { untrack } from 'svelte';
 import { SvelteMap } from 'svelte/reactivity';
 
 import type { SelectionKey } from './selection.js';
+import { containsComposedNode, getActiveElement } from '../layer/dom-realm.js';
 
 export interface MountedElementRecord<
 	TKey extends SelectionKey = SelectionKey,
@@ -47,9 +48,11 @@ export class MountedElements<
 		const previous = untrack(() => this.#records.get(key));
 		previous?.detachFocusTracking();
 		const handleFocus = () => {
+			this.#focusGeneration += 1;
 			this.#focusedKey = key;
 		};
 		const handleBlur = (event: FocusEvent) => {
+			this.#focusGeneration += 1;
 			const relatedTarget = event.relatedTarget;
 			if (relatedTarget !== null) {
 				const next = this.#keyForTarget(relatedTarget);
@@ -60,7 +63,7 @@ export class MountedElements<
 				if (
 					this.#records.get(key)?.token === token &&
 					element.isConnected &&
-					element.ownerDocument.activeElement !== element
+					!containsComposedNode(element, getActiveElement(element))
 				) {
 					this.#focusedKey = undefined;
 				}
@@ -73,7 +76,9 @@ export class MountedElements<
 			element.removeEventListener('blur', handleBlur);
 		};
 		this.#records.set(key, { detachFocusTracking, element, id, key, token });
-		if (element.ownerDocument.activeElement === element) this.#focusedKey = key;
+		const focusedElement = getActiveElement(element);
+		if (focusedElement === element || containsComposedNode(element, focusedElement))
+			this.#focusedKey = key;
 		let active = true;
 		return () => {
 			if (!active) return;
@@ -116,7 +121,8 @@ export class MountedElements<
 	#focusRecord(record: MountedElementRegistration<TKey, TElement>, options: FocusOptions): boolean {
 		const { element, key } = record;
 		element.focus(options);
-		const focused = element.ownerDocument.activeElement === element;
+		const active = getActiveElement(element);
+		const focused = active === element || containsComposedNode(element, active);
 		if (focused) this.#focusedKey = key;
 		return focused;
 	}
@@ -127,13 +133,15 @@ export class MountedElements<
 		const record = this.#records.get(key);
 		if (!record) return true;
 		const ownerDocument = record.element.ownerDocument;
-		const activeElement = ownerDocument.activeElement;
+		const activeElement = getActiveElement(record.element);
 		if (
 			activeElement !== null &&
 			activeElement !== ownerDocument.body &&
 			activeElement !== ownerDocument.documentElement
 		)
-			return activeElement === record.element || record.element.contains(activeElement);
+			return (
+				activeElement === record.element || containsComposedNode(record.element, activeElement)
+			);
 		return true;
 	}
 

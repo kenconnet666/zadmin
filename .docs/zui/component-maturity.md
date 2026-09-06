@@ -1,19 +1,19 @@
 # ZUI component maturity matrix
 
-Generated from 152 metadata components, 89 documentation modules, 152 API contract entries, and 218 test files.
+Generated from 155 metadata components, 91 documentation modules, 155 API contract entries, and 228 test files.
 
 This is a static inventory of authored test contracts, not an execution report or a whole-component visual acceptance result. Historical stage names are retained for compatibility. `VisuallyVerified` requires an explicit `@zui-visual ZComponent` marker, an owned component/fixture render, and a geometry, computed-style, CSS, or screenshot assertion in the SAME test block. A positive entry only identifies a scoped test; confirm its result against commit-matched CI and inspect real pages, themes, and densities separately. `DesktopVerified` remains false until a component-level desktop evidence source is added.
 
 | Stage                   | Count |
 | ----------------------- | ----: |
-| Declared                |   152 |
-| Authorable              |   152 |
-| ContractVerified        |   152 |
-| RuntimeImplemented      |   152 |
-| BrowserBehaviorVerified |   149 |
-| VisuallyVerified        |   151 |
+| Declared                |   155 |
+| Authorable              |   155 |
+| ContractVerified        |   155 |
+| RuntimeImplemented      |   155 |
+| BrowserBehaviorVerified |   151 |
+| VisuallyVerified        |   152 |
 | DesktopVerified         |     0 |
-| ProductionVerified      |   150 |
+| ProductionVerified      |   153 |
 
 | Component               | Category     | Declared | Authorable | Contract | Runtime | Browser | Visual | Desktop | Production | Docs                                                                  |
 | ----------------------- | ------------ | -------: | ---------: | -------: | ------: | ------: | -----: | ------: | ---------: | --------------------------------------------------------------------- |
@@ -88,6 +88,8 @@ This is a static inventory of authored test contracts, not an execution report o
 | ZTabsList               | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/tabs/doc.ts               |
 | ZTabsPanel              | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/tabs/doc.ts               |
 | ZTabsTrigger            | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/tabs/doc.ts               |
+| ZToolbar                | navigation   |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/navigation/toolbar/doc.ts            |
+| ZToolbarItem            | navigation   |        Y |          Y |        Y |       Y |       — |      — |       — |          Y | apps/docs/src/content/components/navigation/toolbar/doc.ts            |
 | ZTooltip                | overlay      |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/overlay/tooltip/doc.ts               |
 | ZTooltipContent         | overlay      |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/overlay/tooltip/doc.ts               |
 | ZTooltipGroup           | overlay      |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/overlay/tooltip/doc.ts               |
@@ -149,6 +151,7 @@ This is a static inventory of authored test contracts, not an execution report o
 | ZTagsInput              | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/tags-input/doc.ts              |
 | ZTextarea               | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/textarea/doc.ts                |
 | ZTimeField              | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/time-field/doc.ts              |
+| ZToggleGroup            | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/toggle-group/doc.ts            |
 | ZTransfer               | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/transfer/doc.ts                |
 | ZTreeSelect             | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/tree-select/doc.ts             |
 | ZAppShell               | layout       |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/layout/app-shell/doc.ts              |

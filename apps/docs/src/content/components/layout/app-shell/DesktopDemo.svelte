@@ -50,10 +50,12 @@
 	{header}
 	{navbar}
 	{asideCollapsed}
+	asideLabel="桌面活动"
 	asideWidth="15rem"
 	headerHeight="3.5rem"
 	mainAs="div"
 	{navbarCollapsed}
+	navbarLabel="桌面工作区主导航"
 	navbarWidth="12rem"
 	style="height: 28rem"
 >

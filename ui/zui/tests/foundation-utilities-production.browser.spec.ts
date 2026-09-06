@@ -27,6 +27,18 @@ describe('foundation utility production contracts', () => {
 		expect(hiddenStyle.width).toBe('1px');
 		expect(hiddenStyle.height).toBe('1px');
 		expect(hiddenStyle.clipPath).toBe('inset(50%)');
+		for (const direction of ['ltr', 'rtl']) {
+			const owner = document.querySelector<HTMLElement>(
+				`[data-testid="hidden-boundary-${direction}"]`
+			)!;
+			const status = owner.querySelector<HTMLElement>('[role="status"]')!;
+			const bounds = owner.getBoundingClientRect();
+			const pixel = status.getBoundingClientRect();
+			expect(owner.scrollWidth).toBeLessThanOrEqual(owner.clientWidth);
+			expect(pixel.left).toBeGreaterThanOrEqual(bounds.left);
+			expect(pixel.right).toBeLessThanOrEqual(bounds.right);
+			expect(status.getAttribute('aria-hidden')).toBeNull();
+		}
 	});
 
 	it('ZAspectRatio and ZContainer preserve native layout contracts without observers', () => {

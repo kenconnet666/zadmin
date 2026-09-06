@@ -7,8 +7,11 @@ export type {
 	IconComponentDefaults,
 	LinkComponentDefaults,
 	SpinnerComponentDefaults,
+	SegmentedComponentDefaults,
 	TextComponentDefaults,
 	ToggleButtonComponentDefaults,
+	ToggleGroupComponentDefaults,
+	ToolbarComponentDefaults,
 	TooltipComponentDefaults
 } from './runtime.js';
 export { applyResponsiveStyles, responsiveBreakpoints } from '../runtime/foundation/responsive.js';
@@ -582,6 +585,17 @@ export type {
 } from '../components/input/ZPinInput.svelte';
 export { default as ZSegmented } from '../components/input/ZSegmented.svelte';
 export type { ZSegmentedOption, ZSegmentedProps } from '../components/input/ZSegmented.svelte';
+export { default as ZToggleGroup } from '../components/input/ZToggleGroup.svelte';
+export type { ZToggleGroupItem, ZToggleGroupProps } from '../components/input/ZToggleGroup.svelte';
+export { default as ZToolbar } from '../components/compound/toolbar/ZToolbar.svelte';
+export type { ZToolbarProps } from '../components/compound/toolbar/ZToolbar.svelte';
+export { default as ZToolbarItem } from '../components/compound/toolbar/ZToolbarItem.svelte';
+export type { ZToolbarItemProps } from '../components/compound/toolbar/ZToolbarItem.svelte';
+export type {
+	ToolbarItemAttributes,
+	ToolbarKeyPolicy,
+	ToolbarOrientation
+} from '../components/compound/toolbar/context.svelte.js';
 export { default as ZSlider } from '../components/input/ZSlider.svelte';
 export type { ZSliderProps, ZSliderVariants } from '../components/input/ZSlider.svelte';
 export { default as ZSwitch } from '../components/input/ZSwitch.svelte';

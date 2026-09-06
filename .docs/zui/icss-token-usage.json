@@ -3,7 +3,7 @@
 	"scope": ["ui/zui/src/components", "ui/zui/src/runtime", "apps/docs/src"],
 	"limitations": "AST source inventory, not runtime coverage. Numeric equality only identifies review candidates, not semantic equivalence. Dynamic/indexed theme reads and raw CSS returned from helpers require manual review. Entries without a direct reference are NOT proof of dead tokens.",
 	"summary": {
-		"files": 841,
+		"files": 856,
 		"registeredProperties": 166,
 		"themeGroups": 18,
 		"themeTokens": 185,
@@ -11,14 +11,14 @@
 		"kinds": {
 			"design-value-review": 10,
 			"dynamic-or-composed": 47,
-			"explicit-geometry-or-css": 286,
+			"explicit-geometry-or-css": 285,
 			"explicit-media-query": 10,
 			"local-stacking-order": 4,
-			"structural-percentage": 50,
-			"structural-zero": 260,
-			"system-keyword": 959,
+			"structural-percentage": 52,
+			"structural-zero": 266,
+			"system-keyword": 970,
 			"system-keyword-candidate": 2,
-			"theme-accessor": 1801,
+			"theme-accessor": 1807,
 			"theme-token-candidate": 1
 		}
 	},
@@ -3091,6 +3091,57 @@
 			"property": "color",
 			"expression": "s.color._primary",
 			"kind": "theme-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/compound/toolbar/ZToolbar.svelte",
+			"line": 111,
+			"property": "alignItems",
+			"expression": "s.alignItems.center",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/compound/toolbar/ZToolbar.svelte",
+			"line": 112,
+			"property": "display",
+			"expression": "s.display.flex",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/compound/toolbar/ZToolbar.svelte",
+			"line": 113,
+			"property": "maxWidth",
+			"method": "percent",
+			"expression": "s.maxWidth.percent(100)",
+			"kind": "structural-percentage"
+		},
+		{
+			"path": "ui/zui/src/components/compound/toolbar/ZToolbar.svelte",
+			"line": 114,
+			"property": "minWidth",
+			"method": "px",
+			"expression": "s.minWidth.px(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "ui/zui/src/components/compound/toolbar/ZToolbar.svelte",
+			"line": 118,
+			"property": "flexDirection",
+			"expression": "s.flexDirection.row",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/compound/toolbar/ZToolbar.svelte",
+			"line": 120,
+			"property": "alignItems",
+			"expression": "s.alignItems.stretch",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/compound/toolbar/ZToolbar.svelte",
+			"line": 121,
+			"property": "flexDirection",
+			"expression": "s.flexDirection.column",
+			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/compound/tooltip/ZTooltipContent.svelte",
@@ -9549,8 +9600,8 @@
 			"line": 47,
 			"property": "margin",
 			"method": "px",
-			"expression": "s.margin.px(-1)",
-			"kind": "explicit-geometry-or-css"
+			"expression": "s.margin.px(0)",
+			"kind": "structural-zero"
 		},
 		{
 			"path": "ui/zui/src/components/gene/ZVisuallyHidden.svelte",
@@ -9576,14 +9627,30 @@
 		},
 		{
 			"path": "ui/zui/src/components/gene/ZVisuallyHidden.svelte",
-			"line": 51,
+			"line": 52,
+			"property": "insetInlineStart",
+			"method": "px",
+			"expression": "s.insetInlineStart.px(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "ui/zui/src/components/gene/ZVisuallyHidden.svelte",
+			"line": 53,
+			"property": "insetBlockStart",
+			"method": "px",
+			"expression": "s.insetBlockStart.px(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "ui/zui/src/components/gene/ZVisuallyHidden.svelte",
+			"line": 54,
 			"property": "whiteSpace",
 			"expression": "s.whiteSpace.nowrap",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/gene/ZVisuallyHidden.svelte",
-			"line": 52,
+			"line": 55,
 			"property": "width",
 			"method": "px",
 			"expression": "s.width.px(1)",
@@ -14304,161 +14371,161 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 210,
+			"line": 215,
 			"property": "backgroundColor",
 			"expression": "s.backgroundColor._surface",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 211,
+			"line": 216,
 			"property": "borderColor",
 			"expression": "s.borderColor._border",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 212,
+			"line": 217,
 			"property": "borderRadius",
 			"expression": "s.borderRadius._medium",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 213,
+			"line": 218,
 			"property": "borderStyle",
 			"expression": "s.borderStyle.solid",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 214,
+			"line": 219,
 			"property": "borderWidth",
 			"expression": "s.borderWidth._hairline",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 215,
+			"line": 220,
 			"property": "display",
 			"expression": "s.display.inlineFlex",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 216,
+			"line": 221,
 			"property": "gap",
 			"expression": "s.gap._xsmall",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 217,
+			"line": 222,
 			"property": "padding",
 			"expression": "s.padding._xsmall",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 222,
+			"line": 227,
 			"property": "borderColor",
 			"expression": "s.borderColor._danger",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 225,
+			"line": 230,
 			"property": "flexDirection",
 			"expression": "s.flexDirection.row",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 226,
+			"line": 231,
 			"property": "flexDirection",
 			"expression": "s.flexDirection.column",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 233,
+			"line": 238,
 			"property": "backgroundColor",
 			"expression": "s.backgroundColor.transparent",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 234,
+			"line": 239,
 			"property": "borderColor",
 			"expression": "s.borderColor.transparent",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 235,
+			"line": 240,
 			"property": "borderRadius",
 			"expression": "s.borderRadius._small",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 236,
+			"line": 241,
 			"property": "borderStyle",
 			"expression": "s.borderStyle.solid",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 237,
+			"line": 242,
 			"property": "borderWidth",
 			"expression": "s.borderWidth._hairline",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 238,
+			"line": 243,
 			"property": "color",
 			"expression": "s.color._text",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 239,
+			"line": 244,
 			"property": "cursor",
 			"expression": "s.cursor.pointer",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 240,
+			"line": 245,
 			"property": "boxSizing",
 			"expression": "s.boxSizing.borderBox",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 241,
+			"line": 246,
 			"property": "fontFamily",
 			"expression": "s.fontFamily._sans",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 242,
+			"line": 247,
 			"property": "fontWeight",
 			"expression": "s.fontWeight._semibold",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 243,
+			"line": 248,
 			"property": "lineHeight",
 			"expression": "s.lineHeight._compact",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 244,
+			"line": 249,
 			"property": "paddingBlock",
 			"method": "px",
 			"expression": "s.paddingBlock.px(0)",
@@ -14466,77 +14533,77 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 246,
+			"line": 251,
 			"property": "outlineColor",
 			"expression": "focus.outlineColor._focus",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 247,
+			"line": 252,
 			"property": "outlineOffset",
 			"expression": "focus.outlineOffset._tight",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 248,
+			"line": 253,
 			"property": "outlineStyle",
 			"expression": "focus.outlineStyle.solid",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 249,
+			"line": 254,
 			"property": "outlineWidth",
 			"expression": "focus.outlineWidth._medium",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 255,
+			"line": 260,
 			"property": "cursor",
 			"expression": "s.cursor.default",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 260,
+			"line": 265,
 			"property": "cursor",
 			"expression": "s.cursor.notAllowed",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 261,
+			"line": 266,
 			"property": "opacity",
 			"expression": "s.opacity._disabled",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 267,
+			"line": 272,
 			"property": "backgroundColor",
 			"expression": "s.backgroundColor._canvas",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 268,
+			"line": 273,
 			"property": "borderColor",
 			"expression": "s.borderColor._border",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 269,
+			"line": 274,
 			"property": "color",
 			"expression": "s.color._primary",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 270,
+			"line": 275,
 			"property": "boxShadow",
 			"expression": "s.boxShadow._small",
 			"kind": "theme-accessor"
@@ -16373,6 +16440,57 @@
 			"kind": "dynamic-or-composed"
 		},
 		{
+			"path": "ui/zui/src/components/input/ZToggleGroup.svelte",
+			"line": 207,
+			"property": "display",
+			"expression": "s.display.inlineFlex",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/input/ZToggleGroup.svelte",
+			"line": 208,
+			"property": "gap",
+			"expression": "s.gap._xsmall",
+			"kind": "theme-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/input/ZToggleGroup.svelte",
+			"line": 209,
+			"property": "minInlineSize",
+			"method": "px",
+			"expression": "s.minInlineSize.px(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "ui/zui/src/components/input/ZToggleGroup.svelte",
+			"line": 210,
+			"property": "maxInlineSize",
+			"method": "percent",
+			"expression": "s.maxInlineSize.percent(100)",
+			"kind": "structural-percentage"
+		},
+		{
+			"path": "ui/zui/src/components/input/ZToggleGroup.svelte",
+			"line": 211,
+			"property": "flexWrap",
+			"expression": "s.flexWrap.wrap",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/input/ZToggleGroup.svelte",
+			"line": 215,
+			"property": "flexDirection",
+			"expression": "s.flexDirection.row",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/input/ZToggleGroup.svelte",
+			"line": 216,
+			"property": "flexDirection",
+			"expression": "s.flexDirection.column",
+			"kind": "system-keyword"
+		},
+		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
 			"line": 319,
 			"property": "fontFamily",
@@ -16596,7 +16714,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 278,
+			"line": 276,
 			"property": "padding",
 			"method": "px",
 			"expression": "s.padding.px(value)",
@@ -16604,49 +16722,49 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 283,
+			"line": 281,
 			"property": "padding",
 			"expression": "s.padding._none",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 286,
+			"line": 284,
 			"property": "padding",
 			"expression": "s.padding._xsmall",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 289,
+			"line": 287,
 			"property": "padding",
 			"expression": "s.padding._small",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 292,
+			"line": 290,
 			"property": "padding",
 			"expression": "s.padding._medium",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 295,
+			"line": 293,
 			"property": "padding",
 			"expression": "s.padding._large",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 298,
+			"line": 296,
 			"property": "padding",
 			"expression": "s.padding._xlarge",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 363,
+			"line": 361,
 			"property": "gridTemplateAreas",
 			"method": "raw",
 			"expression": "s.gridTemplateAreas.raw(\n\t\t\t\tresolvedLayout === 'default'\n\t\t\t\t\t? '\"header header header\" \"navbar main aside\" \"footer footer footer\"'\n\t\t\t\t\t: '\"navbar header aside\" \"navbar main aside\" \"navbar footer aside\"'\n\t\t\t)",
@@ -16654,7 +16772,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 368,
+			"line": 366,
 			"property": "gridTemplateColumns",
 			"method": "raw",
 			"expression": "s.gridTemplateColumns.raw(value)",
@@ -16662,7 +16780,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 369,
+			"line": 367,
 			"property": "gridTemplateRows",
 			"method": "raw",
 			"expression": "s.gridTemplateRows.raw(value)",
@@ -16670,7 +16788,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 372,
+			"line": 370,
 			"property": "gridArea",
 			"method": "raw",
 			"expression": "s.gridArea.raw('header')",
@@ -16678,7 +16796,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 373,
+			"line": 371,
 			"property": "minInlineSize",
 			"method": "px",
 			"expression": "s.minInlineSize.px(0)",
@@ -16686,7 +16804,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 376,
+			"line": 374,
 			"property": "gridArea",
 			"method": "raw",
 			"expression": "s.gridArea.raw('navbar')",
@@ -16694,7 +16812,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 377,
+			"line": 375,
 			"property": "minBlockSize",
 			"method": "px",
 			"expression": "s.minBlockSize.px(0)",
@@ -16702,7 +16820,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 378,
+			"line": 376,
 			"property": "minInlineSize",
 			"method": "px",
 			"expression": "s.minInlineSize.px(0)",
@@ -16710,14 +16828,14 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 379,
+			"line": 377,
 			"property": "overflow",
 			"expression": "s.overflow.auto",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 382,
+			"line": 380,
 			"property": "gridArea",
 			"method": "raw",
 			"expression": "s.gridArea.raw('aside')",
@@ -16725,7 +16843,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 383,
+			"line": 381,
 			"property": "minBlockSize",
 			"method": "px",
 			"expression": "s.minBlockSize.px(0)",
@@ -16733,7 +16851,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 384,
+			"line": 382,
 			"property": "minInlineSize",
 			"method": "px",
 			"expression": "s.minInlineSize.px(0)",
@@ -16741,14 +16859,14 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 385,
+			"line": 383,
 			"property": "overflow",
 			"expression": "s.overflow.auto",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 388,
+			"line": 386,
 			"property": "gridArea",
 			"method": "raw",
 			"expression": "s.gridArea.raw('main')",
@@ -16756,7 +16874,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 389,
+			"line": 387,
 			"property": "minBlockSize",
 			"method": "px",
 			"expression": "s.minBlockSize.px(0)",
@@ -16764,7 +16882,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 390,
+			"line": 388,
 			"property": "minBlockSize",
 			"method": "raw",
 			"expression": "s.minBlockSize.raw('auto')",
@@ -16772,7 +16890,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 391,
+			"line": 389,
 			"property": "minInlineSize",
 			"method": "px",
 			"expression": "s.minInlineSize.px(0)",
@@ -16780,7 +16898,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 396,
+			"line": 394,
 			"property": "gridArea",
 			"method": "raw",
 			"expression": "s.gridArea.raw('footer')",
@@ -16788,7 +16906,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 397,
+			"line": 395,
 			"property": "minInlineSize",
 			"method": "px",
 			"expression": "s.minInlineSize.px(0)",
@@ -17016,7 +17134,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZGrid.svelte",
-			"line": 130,
+			"line": 134,
 			"property": "gridTemplateColumns",
 			"method": "raw",
 			"expression": "s.gridTemplateColumns.raw('repeat(12, minmax(0, 1fr))')",
@@ -17024,21 +17142,21 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZGrid.svelte",
-			"line": 131,
+			"line": 135,
 			"property": "gap",
 			"expression": "s.gap._medium",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZGrid.svelte",
-			"line": 132,
+			"line": 136,
 			"property": "alignItems",
 			"expression": "s.alignItems.stretch",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZGrid.svelte",
-			"line": 138,
+			"line": 142,
 			"property": "gridTemplateColumns",
 			"method": "raw",
 			"expression": "s.gridTemplateColumns.raw(`repeat(${value}, minmax(0, 1fr))`)",
@@ -17294,14 +17412,14 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZOverflowList.svelte",
-			"line": 493,
+			"line": 489,
 			"property": "columnGap",
 			"expression": "s.columnGap._small",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZOverflowList.svelte",
-			"line": 494,
+			"line": 490,
 			"property": "rowGap",
 			"expression": "s.rowGap._small",
 			"kind": "theme-accessor"
@@ -17634,84 +17752,84 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZStack.svelte",
-			"line": 154,
+			"line": 155,
 			"property": "flexDirection",
 			"expression": "s.flexDirection.column",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZStack.svelte",
-			"line": 155,
+			"line": 156,
 			"property": "alignItems",
 			"expression": "s.alignItems.stretch",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZStack.svelte",
-			"line": 156,
+			"line": 157,
 			"property": "justifyContent",
 			"expression": "s.justifyContent.start",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZStack.svelte",
-			"line": 157,
+			"line": 158,
 			"property": "flexWrap",
 			"expression": "s.flexWrap.nowrap",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZStack.svelte",
-			"line": 158,
+			"line": 159,
 			"property": "gap",
 			"expression": "s.gap._none",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZStack.svelte",
-			"line": 165,
+			"line": 166,
 			"property": "flexDirection",
 			"expression": "s.flexDirection.column",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZStack.svelte",
-			"line": 168,
+			"line": 169,
 			"property": "flexDirection",
 			"expression": "s.flexDirection.columnReverse",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZStack.svelte",
-			"line": 171,
+			"line": 172,
 			"property": "flexDirection",
 			"expression": "s.flexDirection.row",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZStack.svelte",
-			"line": 174,
+			"line": 175,
 			"property": "flexDirection",
 			"expression": "s.flexDirection.rowReverse",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZStack.svelte",
-			"line": 188,
+			"line": 189,
 			"property": "flexWrap",
 			"expression": "s.flexWrap.wrapReverse",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZStack.svelte",
-			"line": 189,
+			"line": 190,
 			"property": "flexWrap",
 			"expression": "s.flexWrap.wrap",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZStack.svelte",
-			"line": 190,
+			"line": 191,
 			"property": "flexWrap",
 			"expression": "s.flexWrap.nowrap",
 			"kind": "system-keyword"
@@ -20169,42 +20287,42 @@
 		},
 		{
 			"path": "ui/zui/src/runtime/foundation/layout.ts",
-			"line": 37,
+			"line": 55,
 			"property": "justifyContent",
 			"expression": "s.justifyContent.spaceAround",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/runtime/foundation/layout.ts",
-			"line": 40,
+			"line": 58,
 			"property": "justifyContent",
 			"expression": "s.justifyContent.spaceBetween",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/runtime/foundation/layout.ts",
-			"line": 43,
+			"line": 61,
 			"property": "justifyContent",
 			"expression": "s.justifyContent.center",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/runtime/foundation/layout.ts",
-			"line": 46,
+			"line": 64,
 			"property": "justifyContent",
 			"expression": "s.justifyContent.end",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/runtime/foundation/layout.ts",
-			"line": 49,
+			"line": 67,
 			"property": "justifyContent",
 			"expression": "s.justifyContent.spaceEvenly",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/runtime/foundation/layout.ts",
-			"line": 52,
+			"line": 70,
 			"property": "justifyContent",
 			"expression": "s.justifyContent.start",
 			"kind": "system-keyword"
@@ -20722,6 +20840,63 @@
 			"property": "padding",
 			"expression": "s.padding._large",
 			"kind": "theme-accessor"
+		},
+		{
+			"path": "apps/docs/src/content/components/layout/grid/AxisGapsDemo.svelte",
+			"line": 7,
+			"property": "backgroundColor",
+			"expression": "s.backgroundColor._surface",
+			"kind": "theme-accessor"
+		},
+		{
+			"path": "apps/docs/src/content/components/layout/grid/AxisGapsDemo.svelte",
+			"line": 8,
+			"property": "borderColor",
+			"expression": "s.borderColor._border",
+			"kind": "theme-accessor"
+		},
+		{
+			"path": "apps/docs/src/content/components/layout/grid/AxisGapsDemo.svelte",
+			"line": 9,
+			"property": "borderRadius",
+			"expression": "s.borderRadius._medium",
+			"kind": "theme-accessor"
+		},
+		{
+			"path": "apps/docs/src/content/components/layout/grid/AxisGapsDemo.svelte",
+			"line": 10,
+			"property": "borderStyle",
+			"expression": "s.borderStyle.solid",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "apps/docs/src/content/components/layout/grid/AxisGapsDemo.svelte",
+			"line": 11,
+			"property": "borderWidth",
+			"expression": "s.borderWidth._hairline",
+			"kind": "theme-accessor"
+		},
+		{
+			"path": "apps/docs/src/content/components/layout/grid/AxisGapsDemo.svelte",
+			"line": 12,
+			"property": "minWidth",
+			"method": "px",
+			"expression": "s.minWidth.px(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "apps/docs/src/content/components/layout/grid/AxisGapsDemo.svelte",
+			"line": 13,
+			"property": "padding",
+			"expression": "s.padding._small",
+			"kind": "theme-accessor"
+		},
+		{
+			"path": "apps/docs/src/content/components/layout/grid/AxisGapsDemo.svelte",
+			"line": 14,
+			"property": "overflowWrap",
+			"expression": "s.overflowWrap.anywhere",
+			"kind": "system-keyword"
 		},
 		{
 			"path": "apps/docs/src/content/components/layout/grid/BasicDemo.svelte",
@@ -31613,127 +31788,127 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 210,
+			"line": 215,
 			"token": "color.surface",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 211,
+			"line": 216,
 			"token": "color.border",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 212,
+			"line": 217,
 			"token": "radius.medium",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 214,
+			"line": 219,
 			"token": "borderWidth.hairline",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 216,
-			"token": "space.xsmall",
-			"via": "icss-accessor"
-		},
-		{
-			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 217,
+			"line": 221,
 			"token": "space.xsmall",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
 			"line": 222,
+			"token": "space.xsmall",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/input/ZSegmented.svelte",
+			"line": 227,
 			"token": "color.danger",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 235,
+			"line": 240,
 			"token": "radius.small",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 237,
+			"line": 242,
 			"token": "borderWidth.hairline",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 238,
+			"line": 243,
 			"token": "color.text",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 241,
+			"line": 246,
 			"token": "fontFamily.sans",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 242,
+			"line": 247,
 			"token": "fontWeight.semibold",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 243,
+			"line": 248,
 			"token": "lineHeight.compact",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 246,
+			"line": 251,
 			"token": "color.focus",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 247,
+			"line": 252,
 			"token": "focusOffset.tight",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 249,
+			"line": 254,
 			"token": "borderWidth.medium",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 261,
+			"line": 266,
 			"token": "opacity.disabled",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 267,
+			"line": 272,
 			"token": "color.canvas",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 268,
+			"line": 273,
 			"token": "color.border",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 269,
+			"line": 274,
 			"token": "color.primary",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 270,
+			"line": 275,
 			"token": "shadow.small",
 			"via": "icss-accessor"
 		},
@@ -32716,6 +32891,12 @@
 			"via": "icss-accessor"
 		},
 		{
+			"path": "ui/zui/src/components/input/ZToggleGroup.svelte",
+			"line": 208,
+			"token": "space.xsmall",
+			"via": "icss-accessor"
+		},
+		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
 			"line": 319,
 			"token": "fontFamily.sans",
@@ -32801,61 +32982,61 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 283,
+			"line": 281,
 			"token": "space.none",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 286,
+			"line": 284,
 			"token": "space.xsmall",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 289,
+			"line": 287,
 			"token": "space.small",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 292,
+			"line": 290,
 			"token": "space.medium",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 295,
+			"line": 293,
 			"token": "space.large",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 298,
+			"line": 296,
 			"token": "space.xlarge",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 309,
+			"line": 307,
 			"token": "size.appShellHeaderHeight",
 			"via": "direct-theme-read"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 314,
+			"line": 312,
 			"token": "size.appShellFooterHeight",
 			"via": "direct-theme-read"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 322,
+			"line": 320,
 			"token": "size.appShellNavbarWidth",
 			"via": "direct-theme-read"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 329,
+			"line": 327,
 			"token": "size.appShellAsideWidth",
 			"via": "direct-theme-read"
 		},
@@ -32921,19 +33102,19 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZGrid.svelte",
-			"line": 131,
+			"line": 135,
 			"token": "space.medium",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZOverflowList.svelte",
-			"line": 493,
+			"line": 489,
 			"token": "space.small",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZOverflowList.svelte",
-			"line": 494,
+			"line": 490,
 			"token": "space.small",
 			"via": "icss-accessor"
 		},
@@ -32993,7 +33174,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZStack.svelte",
-			"line": 158,
+			"line": 159,
 			"token": "space.none",
 			"via": "icss-accessor"
 		},
@@ -34255,6 +34436,36 @@
 			"path": "apps/docs/src/content/components/layout/container/BasicDemo.svelte",
 			"line": 12,
 			"token": "space.large",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "apps/docs/src/content/components/layout/grid/AxisGapsDemo.svelte",
+			"line": 7,
+			"token": "color.surface",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "apps/docs/src/content/components/layout/grid/AxisGapsDemo.svelte",
+			"line": 8,
+			"token": "color.border",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "apps/docs/src/content/components/layout/grid/AxisGapsDemo.svelte",
+			"line": 9,
+			"token": "radius.medium",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "apps/docs/src/content/components/layout/grid/AxisGapsDemo.svelte",
+			"line": 11,
+			"token": "borderWidth.hairline",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "apps/docs/src/content/components/layout/grid/AxisGapsDemo.svelte",
+			"line": 13,
+			"token": "space.small",
 			"via": "icss-accessor"
 		},
 		{
@@ -36044,6 +36255,10 @@
 			"line": 229
 		},
 		{
+			"path": "ui/zui/src/components/compound/toolbar/ZToolbar.svelte",
+			"line": 516
+		},
+		{
 			"path": "ui/zui/src/components/compound/tooltip/ZTooltipContent.svelte",
 			"line": 260
 		},
@@ -36253,7 +36468,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/gene/ZVisuallyHidden.svelte",
-			"line": 87
+			"line": 90
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
@@ -36317,7 +36532,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSegmented.svelte",
-			"line": 518
+			"line": 546
 		},
 		{
 			"path": "ui/zui/src/components/input/ZSlider.svelte",
@@ -36340,12 +36555,16 @@
 			"line": 638
 		},
 		{
+			"path": "ui/zui/src/components/input/ZToggleGroup.svelte",
+			"line": 546
+		},
+		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
 			"line": 731
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAppShell.svelte",
-			"line": 443
+			"line": 441
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAspectRatio.svelte",
@@ -36361,7 +36580,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZGrid.svelte",
-			"line": 161
+			"line": 170
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZGridItem.svelte",
@@ -36369,11 +36588,11 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZOverflowList.svelte",
-			"line": 513
+			"line": 509
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZScrollArea.svelte",
-			"line": 328
+			"line": 329
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZSimpleGrid.svelte",
@@ -36385,7 +36604,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZStack.svelte",
-			"line": 214
+			"line": 220
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZBreadcrumb.svelte",
@@ -36485,19 +36704,19 @@
 		},
 		{
 			"path": "apps/docs/src/content/components/layout/app-shell/AlternativeScrollDemo.svelte",
-			"line": 33
+			"line": 35
 		},
 		{
 			"path": "apps/docs/src/content/components/layout/app-shell/DesktopDemo.svelte",
-			"line": 58
+			"line": 60
 		},
 		{
 			"path": "apps/docs/src/content/components/layout/app-shell/ResponsiveDemo.svelte",
-			"line": 26
+			"line": 28
 		},
 		{
 			"path": "apps/docs/src/content/components/layout/app-shell/RtlDemo.svelte",
-			"line": 27
+			"line": 29
 		},
 		{
 			"path": "apps/docs/src/content/components/layout/center/BasicDemo.svelte",
@@ -36506,6 +36725,10 @@
 		{
 			"path": "apps/docs/src/content/components/layout/center/InlineDemo.svelte",
 			"line": 9
+		},
+		{
+			"path": "apps/docs/src/content/components/layout/grid/AxisGapsDemo.svelte",
+			"line": 56
 		},
 		{
 			"path": "apps/docs/src/content/components/layout/grid/NamedContainerDemo.svelte",
@@ -36538,6 +36761,14 @@
 		{
 			"path": "apps/docs/src/content/components/navigation/breadcrumb/LongPathDemo.svelte",
 			"line": 15
+		},
+		{
+			"path": "apps/docs/src/content/components/navigation/toolbar/OverflowDemo.svelte",
+			"line": 40
+		},
+		{
+			"path": "apps/docs/src/content/components/navigation/toolbar/ToggleGroupDemo.svelte",
+			"line": 14
 		},
 		{
 			"path": "apps/docs/src/views/ThemeLabPage.svelte",

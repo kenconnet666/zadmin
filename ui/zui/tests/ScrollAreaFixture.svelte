@@ -55,8 +55,9 @@
 	<ZScrollArea maxHeight={100} aria-label="Auto height" data-testid="scroll-autosize"
 		><div style="height: 40px">Short</div></ZScrollArea
 	>
-	<div dir="rtl">
+	<div>
 		<ZScrollArea
+			dir="rtl"
 			height={80}
 			axis="x"
 			aria-label="RTL native offset"

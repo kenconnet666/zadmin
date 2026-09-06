@@ -74,3 +74,22 @@ E1 仅是总目标的首个实现阶段，不代表 W1–W8 或全库稳定验�
 E3 同时保留上一远程 run 的严格 DateRangePicker 纯指针路径，并加阶段状态与终态联合诊断。证据仅定位到 focus preview 与 click commit 之间的中断，尚不能排除生产焦点滚动问题；不以预聚焦、重试、延时或放宽断言将其隐藏。Popover entry motion 的 WebKit 问题仍单列，见各自诊断文件。
 
 交付边界：E2 已在 `cfe32ad` 本地提交；此前普通 HTTPS push 连接 github.com:443 失败，E3 实施没有因此停止。E3 提交前读取远程记录，最新实现 run 仍为 E1 的 `34017484365`（failure）。下一次成功 push 将一起交付待推送阶段，不等待新 CI；在再下一次交付前读取其结果。
+
+## E4：Toolbar / ToggleGroup、焦点组合与旧 CI 反馈
+
+E2/E3 最终一起成功推送至 `ae19b1b`。本批新增 Toolbar、无 DOM ToolbarItem 和 ToggleGroup，目录为91族/155公开组件；source API 审计1918个props、actionableIssues=0。componentDefaults 从16组扩至19组，新增Toolbar、ToggleGroup、Segmented的低风险视觉默认值，保持业务状态由调用方拥有。
+
+- Toolbar直接组合已有LogicalCollection/CollectionNavigation/MountedElements，不新增同形roving引擎或Button/Link别名。通用Item用稳定Svelte attachment交付原生属性；单Tab入口、方向/RTL、真实控件编辑键、disabled、动态移除、嵌套Toolbar和OverflowList的物理可见性分别处理。
+- ToggleGroup支持统一typed数组的single/multiple、allowEmpty、readonly/disabled、五尺寸、六tone、三variant、Field关联、重复FormData和reset。组直接进入Toolbar时逐按钮委托焦点，保留各自选择；Portal内组不被父Toolbar收纳。避免了按钮与组各持一份pressed状态。
+- 三类焦点消费者共享DOM树边界方法：MountedElements、FocusScope、OverflowList现在理解已知ShadowRoot与owner document。真实原生focus/blur会取消过期排队请求；Segmented尊重用户取消事件、实际CSS方向和销毁后的焦点修复边界。
+- 本轮Vite浏览器检查发现并修复：MountedElements新旧局部变量active重复声明；ToggleGroup的state变量遮蔽$state符文；嵌套集合读取child派生状态造成递归；Toolbar子attachment早于父ref建立时的注册校验。WebStorm静态结果不能代替实际Vite转换与页面执行。
+- Chrome确认：Toolbar四个示例各有一个Tab入口；Arrow跨ToggleGroup不选中，Space只更新当前可编辑组；ToggleGroup五档高度24/28/32/40/48；相关390px页面不横向溢出。
+
+上一E3 run `34025263618` 的构建和外部包验收通过。旧Modal Popover严格opacity用例在三个浏览器有明确逐例通过日志，DateRangePicker在三个Docs引擎执行并计入185/186通过结果。新的失败与修复详见[E4远程反馈](./e4-previous-ci-remediation-2026-09-06.md)：
+
+- Grid/Stack轴向间距在后续断点持续覆盖共享gap；新Docs真实320→640容器下始终row=3px、column=5px。
+- Steps的280→281溢出实际来自共享VisuallyHidden的负margin；定位到RTL隐藏状态像素位于280..281后，修改为零margin和逻辑起始inset，真实owner恢复280/280；没有放宽严格断言。
+- AppShell四例改为唯一的导航/辅助区名称；ScrollArea原生量化误差仅在对应坐标断言使用半CSS像素范围，保留原始double，不在生产取整；旧RTL fixture明确原生dir来源。
+- 修正AppShell重复类型导入、OverflowList snapshot/$state命名与泛型测试实例，以及表单reset内部output夹具。
+
+本阶段编写了SSR、类型、原生键盘、ShadowRoot/iframe、Toolbar×ToggleGroup×Portal和视觉回归合同。完整运行仍交远程CI，暂不将新增组件提升stable。下一批继续N3-B NavigationMenu/Menubar和N2-B Splitter，再按总纲推进完整输入/表单/数据能力；全目标未缩小。

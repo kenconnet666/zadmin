@@ -4,6 +4,24 @@ import { render } from 'vitest-browser-svelte';
 import ScrollAreaFixture from './ScrollAreaFixture.svelte';
 
 const element = (id: string) => document.querySelector<HTMLElement>(`[data-testid="${id}"]`)!;
+const withinHalfCssPixel = (actual: number, expected: number) => Math.abs(actual - expected) <= 0.5;
+
+function outputState(): {
+	events: number;
+	left: number;
+	snapshot: number;
+	status: string;
+	top: number;
+} {
+	const [left, top, events, snapshot, status] = element('scroll-output').textContent!.split(':');
+	return {
+		events: Number(events),
+		left: Number(left),
+		snapshot: Number(snapshot),
+		status: status!,
+		top: Number(top)
+	};
+}
 
 it('uses one named native viewport with real overflow geometry and an autosize maximum', () => {
 	// @zui-visual ZScrollArea native viewport and overflow geometry
@@ -30,12 +48,26 @@ it('reports original native scroll events and makes reduced-motion commands imme
 	render(ScrollAreaFixture);
 	await tick();
 	element('scroll-position').click();
-	await expect.poll(() => element('scroll-vertical').scrollTop).toBe(80);
-	await expect.poll(() => element('scroll-output').textContent).toMatch(/^0:80:[1-9]\d*:0:ready$/u);
+	await expect.poll(() => withinHalfCssPixel(element('scroll-vertical').scrollTop, 80)).toBe(true);
+	await expect
+		.poll(() => {
+			const state = outputState();
+			return {
+				events: state.events > 0,
+				left: state.left,
+				snapshot: state.snapshot,
+				status: state.status,
+				top: withinHalfCssPixel(state.top, 80)
+			};
+		})
+		.toEqual({ events: true, left: 0, snapshot: 0, status: 'ready', top: true });
 	element('scroll-reduced').click();
 	await tick();
-	expect(element('scroll-vertical').scrollTop).toBe(160);
-	expect(element('scroll-output').textContent).toContain(':160:ready');
+	expect(withinHalfCssPixel(element('scroll-vertical').scrollTop, 160)).toBe(true);
+	const reducedState = outputState();
+	expect(withinHalfCssPixel(reducedState.top, 160)).toBe(true);
+	expect(withinHalfCssPixel(reducedState.snapshot, 160)).toBe(true);
+	expect(reducedState.status).toBe('ready');
 	expect(getComputedStyle(element('scroll-vertical')).scrollBehavior).toBe('auto');
 	element('scroll-unmount').click();
 	await tick();

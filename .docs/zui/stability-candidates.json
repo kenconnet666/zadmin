@@ -3,7 +3,7 @@
 	"summary": {
 		"stableCompliant": 141,
 		"stableViolations": 0,
-		"promotionEligibleExperimental": 8
+		"promotionEligibleExperimental": 9
 	},
 	"components": [
 		{
@@ -594,7 +594,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/popover/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrEvidenceCount": 4
 		},
 		{
 			"id": "popover-content",
@@ -604,7 +604,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/popover/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrEvidenceCount": 4
 		},
 		{
 			"id": "popover-trigger",
@@ -614,7 +614,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/overlay/popover/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrEvidenceCount": 4
 		},
 		{
 			"id": "radio-group",
@@ -715,6 +715,26 @@
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/tabs/doc.ts",
 			"ssrEvidenceCount": 1
+		},
+		{
+			"id": "toolbar",
+			"name": "ZToolbar",
+			"family": "toolbar",
+			"status": "experimental",
+			"classification": "experimental",
+			"blockers": ["Family readiness (ZToolbarItem)"],
+			"docs": "apps/docs/src/content/components/navigation/toolbar/doc.ts",
+			"ssrEvidenceCount": 2
+		},
+		{
+			"id": "toolbar-item",
+			"name": "ZToolbarItem",
+			"family": "toolbar",
+			"status": "experimental",
+			"classification": "experimental",
+			"blockers": ["BrowserBehaviorVerified"],
+			"docs": "apps/docs/src/content/components/navigation/toolbar/doc.ts",
+			"ssrEvidenceCount": 2
 		},
 		{
 			"id": "tooltip",
@@ -1004,7 +1024,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/gene/button/doc.ts",
-			"ssrEvidenceCount": 9
+			"ssrEvidenceCount": 11
 		},
 		{
 			"id": "code",
@@ -1054,7 +1074,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/gene/link/doc.ts",
-			"ssrEvidenceCount": 4
+			"ssrEvidenceCount": 5
 		},
 		{
 			"id": "provider",
@@ -1064,7 +1084,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/gene/provider/doc.ts",
-			"ssrEvidenceCount": 8
+			"ssrEvidenceCount": 10
 		},
 		{
 			"id": "separator",
@@ -1327,6 +1347,16 @@
 			"ssrEvidenceCount": 1
 		},
 		{
+			"id": "toggle-group",
+			"name": "ZToggleGroup",
+			"family": null,
+			"status": "experimental",
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
+			"docs": "apps/docs/src/content/components/input/toggle-group/doc.ts",
+			"ssrEvidenceCount": 2
+		},
+		{
 			"id": "transfer",
 			"name": "ZTransfer",
 			"family": null,
@@ -1424,7 +1454,7 @@
 			"classification": "promotionEligibleExperimental",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/layout/overflow-list/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrEvidenceCount": 2
 		},
 		{
 			"id": "scroll-area",

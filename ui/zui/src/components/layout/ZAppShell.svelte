@@ -181,11 +181,9 @@
 	import type { IcssStyle } from '../../icss/types.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { useZui } from '../../runtime/foundation/context.js';
-	import type { ZLayoutSpacing } from '../../runtime/foundation/layout.js';
 	import {
 		applyResponsiveStyles,
 		resolveResponsiveValue,
-		type ResponsiveValue,
 		type ZuiBreakpoint
 	} from '../../runtime/foundation/responsive.js';
 	import {

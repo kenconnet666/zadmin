@@ -15,9 +15,12 @@ export type {
 	PaginationComponentDefaults,
 	ResolvedZuiComponentDefaults,
 	SpinnerComponentDefaults,
+	SegmentedComponentDefaults,
 	TagComponentDefaults,
 	TextComponentDefaults,
 	ToggleButtonComponentDefaults,
+	ToggleGroupComponentDefaults,
+	ToolbarComponentDefaults,
 	TooltipComponentDefaults,
 	ZuiComponentDefaults
 } from '../runtime/foundation/component-defaults.js';

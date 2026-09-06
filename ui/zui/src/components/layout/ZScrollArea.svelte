@@ -315,6 +315,7 @@
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 </script>
 
+<!-- svelte-ignore a11y_no_noninteractive_tabindex -- named native scroll regions are intentionally keyboard-focusable -->
 <div
 	{...rest}
 	bind:this={ref}

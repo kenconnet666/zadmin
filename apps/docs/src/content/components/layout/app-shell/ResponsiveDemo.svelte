@@ -21,7 +21,9 @@
 	{header}
 	{navbar}
 	{asideCollapsed}
+	asideLabel="响应式示例辅助区"
 	{navbarCollapsed}
+	navbarLabel="响应式示例主导航"
 	mainAs="div"
 	style="height: 18rem"
 >

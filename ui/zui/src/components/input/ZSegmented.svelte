@@ -180,6 +180,11 @@
 <script lang="ts">
 	/* eslint-disable svelte/prefer-svelte-reactivity -- DOM id slots are a non-reactive identity cache. */
 	import { onDestroy, untrack } from 'svelte';
+	import {
+		containsComposedNode,
+		getActiveElement,
+		getElementDirection
+	} from '../../runtime/layer/dom-realm.js';
 
 	import { CollectionNavigation } from '../../runtime/collection/collection-navigation.svelte.js';
 	import { LogicalCollection } from '../../runtime/collection/logical-collection.js';
@@ -242,11 +247,11 @@
 			s.fontWeight._semibold;
 			s.lineHeight._compact;
 			s.paddingBlock.px(0);
-			s._focusVisible((focus) => {
-				focus.outlineColor._focus;
-				focus.outlineOffset._tight;
-				focus.outlineStyle.solid;
-				focus.outlineWidth._medium;
+			s._focusVisible((s) => {
+				s.outlineColor._focus;
+				s.outlineOffset._tight;
+				s.outlineStyle.solid;
+				s.outlineWidth._medium;
 			});
 		},
 		variants: {
@@ -288,6 +293,7 @@
 		'aria-label': ariaLabel,
 		'aria-labelledby': ariaLabelledBy,
 		class: className,
+		dir,
 		defaultValue,
 		disabled: disabledProp = false,
 		form,
@@ -298,6 +304,7 @@
 		onchange,
 		onfocusin,
 		onfocusout,
+		onkeydown,
 		onValueChange,
 		options,
 		orientation = 'horizontal',
@@ -319,7 +326,15 @@
 	const resolvedInvalid = $derived(invalid ?? field?.invalid ?? false);
 	const readonly = $derived(readonlyProp || (field?.readonly ?? false));
 	const required = $derived(requiredProp || (field?.required ?? false));
-	const resolvedSize = $derived(resolveControlSize(size ?? field?.size, zui.density));
+	const resolvedSize = $derived(
+		resolveControlSize(
+			size ??
+				field?.size ??
+				zui.componentDefaults.segmented?.size ??
+				zui.componentDefaults.input?.size,
+			zui.density
+		)
+	);
 	const resolvedName = $derived(nameProp ?? field?.name);
 	const resolvedDescribedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
 	const resolvedLabelledBy = $derived(
@@ -356,7 +371,7 @@
 	let activeKey = $state<SelectionKey>();
 	let focusWithin = $state(false);
 	const navigation = new CollectionNavigation<SelectionKey, ZSegmentedOption>({
-		direction: () => zui.direction,
+		direction: () => getElementDirection(ref, zui.direction),
 		disabled: () => disabled,
 		loop: () => loop,
 		orientation: () => orientation,
@@ -367,6 +382,7 @@
 	// A child action may defer reconciliation beyond the parent teardown. Guard
 	// the callback so it never evaluates derived state from a destroyed owner.
 	let ownerActive = true;
+	let focusRepairTicket = 0;
 	onDestroy(() => {
 		ownerActive = false;
 	});
@@ -411,8 +427,23 @@
 		mounted.focus(key);
 	}
 
+	function scheduleFocusRepair(repair: () => void): void {
+		const ticket = ++focusRepairTicket;
+		(ref?.ownerDocument.defaultView ?? globalThis).queueMicrotask(() => {
+			if (!ownerActive || ticket !== focusRepairTicket || !ref) return;
+			const active = getActiveElement(ref);
+			if (
+				active &&
+				active !== ref.ownerDocument.body &&
+				active !== ref.ownerDocument.documentElement &&
+				!containsComposedNode(ref, active)
+			)
+				return;
+			repair();
+		});
+	}
 	function restoreNearestFocus(): void {
-		queueMicrotask(() => {
+		scheduleFocusRepair(() => {
 			const key = navigation.reconcile();
 			if (key !== undefined) mounted.focus(key);
 		});
@@ -428,8 +459,7 @@
 				dispose();
 				if (restoreFocus) {
 					const removed = current.key;
-					queueMicrotask(() => {
-						if (!ownerActive) return;
+					scheduleFocusRepair(() => {
 						const key = navigation.reconcileRemoved(previousView, removed);
 						if (key !== undefined) mounted.focus(key);
 					});
@@ -453,7 +483,9 @@
 		if (selection.replace(key)) onchange?.(originalEvent);
 	}
 
-	function handleKeydown(event: KeyboardEvent): void {
+	function handleKeydown(event: KeyboardEvent & { currentTarget: HTMLDivElement }): void {
+		onkeydown?.(event);
+		if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
 		if (!navigation.handleKey(event)) return;
 		const next = navigation.currentKey;
 		if (next === undefined) return;
@@ -472,7 +504,7 @@
 		for (const key of optionSlots.keys()) if (!retained.has(key)) optionSlots.delete(key);
 		const selected = valueState.current;
 		const selectedItem = selected === undefined ? undefined : currentView.get(selected);
-		const focusInside = ref?.contains(ref.ownerDocument.activeElement) ?? false;
+		const focusInside = ref ? containsComposedNode(ref, getActiveElement(ref)) : false;
 		untrack(() => {
 			const previous = activeKey;
 			if (!focusInside && selectedItem && !selectedItem.disabled) {
@@ -491,16 +523,12 @@
 	});
 
 	function handleFocusout(event: FocusEvent & { currentTarget: HTMLDivElement }): void {
-		const NodeConstructor = event.currentTarget.ownerDocument.defaultView?.Node;
-		focusWithin = Boolean(
-			NodeConstructor &&
-			event.relatedTarget instanceof NodeConstructor &&
-			event.currentTarget.contains(event.relatedTarget)
-		);
+		focusWithin = containsComposedNode(event.currentTarget, event.relatedTarget);
 		onfocusout?.(event);
 	}
 
 	function handleFocusin(event: FocusEvent & { currentTarget: HTMLDivElement }): void {
+		focusRepairTicket += 1;
 		focusWithin = true;
 		onfocusin?.(event);
 	}
@@ -519,6 +547,7 @@
 	use:applyIcssRootStyle={{ style, variables }}
 	id={controlId}
 	role="radiogroup"
+	dir={dir ?? zui.direction}
 	aria-label={ariaLabel}
 	aria-labelledby={resolvedLabelledBy}
 	aria-describedby={resolvedDescribedBy}
@@ -534,6 +563,7 @@
 	data-orientation={orientation}
 	onfocusin={handleFocusin}
 	onfocusout={handleFocusout}
+	onkeydown={handleKeydown}
 >
 	{#each view.items as record (record.key)}
 		{@const option = record.value}
@@ -556,8 +586,7 @@
 			data-state={selection.isSelected(record.key) ? 'selected' : 'unselected'}
 			data-readonly={readonly || undefined}
 			onfocus={() => navigation.set(record.key, 'pointer')}
-			onclick={(event) => select(record.key, event)}
-			onkeydown={handleKeydown}>{option.label}</button
+			onclick={(event) => select(record.key, event)}>{option.label}</button
 		>
 	{/each}
 </div>

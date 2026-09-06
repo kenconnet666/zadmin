@@ -11,7 +11,7 @@ const items = [
 
 describe('ZOverflowList server contract', () => {
 	it('keeps every item in deterministic SSR markup without pretending to measure or collapse', () => {
-		const body = render(ZOverflowList, {
+		const body = render(ZOverflowList<(typeof items)[number], (typeof items)[number]['key']>, {
 			props: {
 				item: (() => undefined) as never,
 				itemKey: (entry: (typeof items)[number]) => entry.key,
@@ -34,11 +34,14 @@ describe('ZOverflowList server contract', () => {
 			items: [{ key: 1 }, { key: 1 }],
 			overflow: (() => undefined) as never
 		};
-		expect(() => render(ZOverflowList, { props }).body).toThrow(
+		expect(() => render(ZOverflowList<{ key: number }, number>, { props }).body).toThrow(
 			'OverflowList requires unique keys.'
 		);
 		expect(
-			() => render(ZOverflowList, { props: { ...props, items: [{ key: 1 }], maxRows: 0 } }).body
+			() =>
+				render(ZOverflowList<{ key: number }, number>, {
+					props: { ...props, items: [{ key: 1 }], maxRows: 0 }
+				}).body
 		).toThrow('maxRows must be a safe integer of at least 1');
 	});
 });

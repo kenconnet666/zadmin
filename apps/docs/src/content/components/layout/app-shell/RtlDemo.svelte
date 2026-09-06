@@ -22,8 +22,10 @@
 		{header}
 		{navbar}
 		{asideCollapsed}
+		asideLabel="تفاصيل مثال RTL"
 		mainAs="div"
 		{navbarCollapsed}
+		navbarLabel="التنقل الرئيسي لمثال RTL"
 		style="height: 16rem"
 	>
 		<AppShellRegion fill

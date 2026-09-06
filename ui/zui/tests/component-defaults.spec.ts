@@ -7,6 +7,20 @@ import {
 } from '../src/runtime/foundation/component-defaults.js';
 
 describe('component defaults foundation', () => {
+	it('accepts scoped Toolbar and choice appearance without accepting selection ownership', () => {
+		const parent = resolveComponentDefaults(undefined, {
+			button: { size: 'small' },
+			toolbar: { size: 'large' },
+			toggleGroup: { variant: 'outline' },
+			segmented: { size: 'xlarge' }
+		});
+		const child = resolveComponentDefaults(parent, { toggleGroup: { tone: 'warning' } });
+		expect(child.toggleGroup).toEqual({ variant: 'outline', tone: 'warning' });
+		expect(child.toolbar).toEqual({ size: 'large' });
+		expect(child.segmented).toEqual({ size: 'xlarge' });
+		for (const unsafe of [{ value: ['one'] }, { selectionMode: 'multiple' }, { roving: false }])
+			expect(() => resolveComponentDefaults(parent, { toggleGroup: unsafe } as never)).toThrow();
+	});
 	it('merges shallowly, supports null stops, and freezes snapshots', () => {
 		const parent = resolveComponentDefaults(undefined, {
 			button: { size: 'large', variant: 'solid' }

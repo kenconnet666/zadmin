@@ -44,10 +44,13 @@
 			s.clip.raw('rect(0 0 0 0)');
 			s.clipPath.raw('inset(50%)');
 			s.height.px(1);
-			s.margin.px(-1);
+			s.margin.px(0);
 			s.overflow.hidden;
 			s.padding.px(0);
 			s.position.absolute;
+			// Keep the clipped pixel inside its containing block in both LTR and RTL.
+			s.insetInlineStart.px(0);
+			s.insetBlockStart.px(0);
 			s.whiteSpace.nowrap;
 			s.width.px(1);
 		},

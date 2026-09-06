@@ -125,6 +125,7 @@
 	import { applyResponsiveStyles } from '../../runtime/foundation/responsive.js';
 	import {
 		applyLayoutSpacing,
+		cascadeAxisSpacing,
 		applyLayoutAlignment,
 		applyLayoutJustification
 	} from '../../runtime/foundation/layout.js';
@@ -193,10 +194,15 @@
 				query
 			);
 			applyResponsiveStyles(s, gap, (s, value) => applyLayoutSpacing(s, 'gap', value), query);
-			applyResponsiveStyles(s, rowGap, (s, value) => applyLayoutSpacing(s, 'rowGap', value), query);
 			applyResponsiveStyles(
 				s,
-				columnGap,
+				cascadeAxisSpacing(rowGap),
+				(s, value) => applyLayoutSpacing(s, 'rowGap', value),
+				query
+			);
+			applyResponsiveStyles(
+				s,
+				cascadeAxisSpacing(columnGap),
 				(s, value) => applyLayoutSpacing(s, 'columnGap', value),
 				query
 			);

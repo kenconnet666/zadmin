@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
 import { calculateOverflowLayout } from '../src/runtime/collection/overflow-layout.js';
+import type { SelectionKey } from '../src/runtime/collection/selection.js';
 
 describe('OverflowList pure packing contract', () => {
 	it('packs logical rows with gaps, preserves typed 1 and string 1 identities, and inserts overflow at the first hidden entry', () => {
-		const layout = calculateOverflowLayout({
+		const layout = calculateOverflowLayout<SelectionKey>({
 			availableInlineSize: 220,
 			collapseFrom: 'end',
 			gap: 10,
