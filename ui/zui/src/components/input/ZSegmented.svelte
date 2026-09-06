@@ -195,7 +195,10 @@
 		type Selection,
 		type SelectionKey
 	} from '../../runtime/collection/selection.js';
-	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
+	import {
+		claimFormValueScope,
+		createFormControlState
+	} from '../../runtime/form/form-value-adapter.svelte.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { resolveControlSize } from '../../runtime/foundation/control-size.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
@@ -319,6 +322,7 @@
 	const zui = useZui();
 	const fieldOwner = claimZFieldControlOwner();
 	const field = fieldOwner.field;
+	const valueScope = claimFormValueScope();
 	const uid = $props.id();
 	const idBase = $derived(createZuiId(zui.idPrefix, uid, 'segmented'));
 	const controlId = $derived(id ?? field?.controlId ?? idBase);
@@ -344,15 +348,26 @@
 		if (options === undefined) throw new TypeError('ZSegmented requires options.');
 		return options;
 	});
-	const valueState = new ControllableState<SelectionKey | undefined>({
-		defaultValue: () => defaultValue,
-		onChange: () => (next) => {
-			if (next !== undefined) onValueChange?.(next);
+	const valueState = createFormControlState<SelectionKey | undefined>(
+		{
+			defaultValue: () => defaultValue,
+			element: () => ref,
+			normalizeModelValue: (candidate) => {
+				if (candidate === undefined || candidate === null) return undefined;
+				if (typeof candidate !== 'string' && typeof candidate !== 'number')
+					throw new TypeError('ZSegmented model value must be a SelectionKey, null or undefined.');
+				return candidate;
+			},
+			onChange: () => (next) => {
+				if (next !== undefined) onValueChange?.(next);
+			},
+			owner: 'ZSegmented',
+			read: () => value,
+			undefinedIsValue: true,
+			write: (next) => (value = next)
 		},
-		read: () => value,
-		undefinedIsValue: true,
-		write: (next) => (value = next)
-	});
+		valueScope
+	);
 	const collection = $derived(
 		new LogicalCollection<SelectionKey, ZSegmentedOption>(
 			sourceOptions,

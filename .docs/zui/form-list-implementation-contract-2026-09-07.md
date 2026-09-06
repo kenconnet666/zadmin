@@ -1,4 +1,4 @@
-# E10B ZFormList 最小完整实施合同
+# ZFormList 实施合同（E10B / E10C）
 
 日期：2026-09-07。状态：可立即拆分实施。本合同以当前 E10A 工作树为准，只定义
 `ZFormList`、`FormArrayController` 与现有 `FormRegistry`/`ZForm` 的接缝；拖放、多选删除、
@@ -46,6 +46,7 @@ registry、errors、焦点均不得变化。保留现有方法名和参数，不
 interface FormArrayModel {
 	readonly defaultValues: unknown;
 	get(path: FieldPathInput): unknown;
+	getResetRevision(): number;
 	getResetVersion(path: FieldPathInput): number;
 	isDirty(path: FieldPathInput): boolean;
 	isDirtyFrom(path: FieldPathInput, baselinePath?: FieldPathInput): boolean;
@@ -180,6 +181,10 @@ getResetVersion(path: FieldPathInput): number;
 scope version；controlled owner 拒绝不推进。写方法内部继续 untrack 自身 reset revision，避免 effect
 回环。
 
+`getResetRevision()` 返回所有 global/scoped reset 共用的当前总 revision。FormArray 保存上次观察到的总
+revision，只有当前动态 path 的 `getResetVersion(path)` 大于该已观察总 revision 时才消费 reset。这样 row
+从一个 index 移到另一个 index 时，不会把新地址上属于旧 row 的历史 scoped reset 当作自己的新 reset。
+
 FormArray 保存上次看到的 `getResetVersion(listPath)`。version 推进才把 current ids 恢复为 baseline ids；
 普通 setValues、array move 和“值恰好等于 baseline”均不得触发身份恢复。resetField 的 scope 覆盖 list
 时恢复整组 baseline ids；row/field 级 reset 由上面的 row baseline API精确处理，不重置其他 row id。
@@ -235,9 +240,20 @@ ZFormList 本身不注册成 `ZFormField`，避免 array root 与 row descendant
 冲突。list-level schema error 先通过 controller/errors 暴露，成品 ErrorList 视图后续单独增加；本批不在
 registry 建一个假的 root field。
 
-第一版明确拒绝嵌套 `ZFormList` scope。当前 controller 的 list path 与 baseline path 固定，无法在外层
-row move 后安全重定位内层 list；检测到 list path 位于另一个已注册 list row 下时抛出明确错误。嵌套列表
-需要 stable row scope 组合后再开放，不能伪装成已支持。
+嵌套 `ZFormList` 通过内部 `FormArrayLocation` 连接父 row identity，不创建第二个 model：
+
+```ts
+interface FormArrayLocation {
+	readonly active?: boolean;
+	readonly path: FieldPathInput;
+	readonly baselinePath: FieldPathInput | undefined;
+}
+```
+
+父 list 以捕获的 row id 动态给出当前 path，并通过 `getRowBaselinePath(rowId)` 给出 stable baseline path。
+父 row move 只改变 location path，不重建内层 controller 或 ids。新增父 row 的 baselinePath 是显式
+undefined，不能回退到 current path。父 row 删除后 active=false；内层 rows 返回 frozen empty、mutation
+返回 false，path 保留最后合法地址供 identity cleanup，不能读取移位后占用旧 index 的另一行。
 
 ## 7. 两名实现者的文件边界
 
@@ -259,8 +275,8 @@ ZForm/ZFormField/组件/entrypoint。
 
 独占：
 
-- 新 `ui/zui/src/components/compound/form-list/ZFormList.svelte`
-- 如确有局部类型再建同目录 `context.svelte.ts`，没有第二个 owner 时不建
+- `ui/zui/src/components/input/ZFormList.svelte`
+- `ui/zui/src/runtime/form/form-list-context.svelte.ts`：传递父数组的只读定位能力
 - `ui/zui/src/components/input/ZForm.svelte`
 - `ui/zui/src/components/input/ZFormField.svelte`
 - `ui/zui/src/runtime/form/form-context.svelte.ts`

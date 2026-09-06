@@ -1,5 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
-import { createFormArray } from '../src/runtime/form/form-array.svelte.js';
+import {
+	FormArrayController,
+	createFormArray,
+	type FormArrayLocation
+} from '../src/runtime/form/form-array.svelte.js';
 import {
 	clearFormErrorLayers,
 	createFormErrorLayers,
@@ -382,6 +386,151 @@ describe('FormArrayController', () => {
 		expect(array.isDirty(added.id, 'name')).toBe(false);
 		expect(array.rows).toHaveLength(3);
 		expect(() => array.resetField(added.id)).toThrow(/remove/u);
+	});
+
+	it('keeps nested list identity and baseline paths through parent moves and resets', () => {
+		interface Values {
+			groups: { name: string; rows: { value?: string }[] }[];
+		}
+		const model = createFormModel<Values>({
+			defaultValues: {
+				groups: [
+					{ name: 'A', rows: [{ value: 'a-1' }, { value: 'a-2' }] },
+					{ name: 'B', rows: [{ value: 'b-1' }, { value: 'b-2' }] }
+				]
+			}
+		});
+		const groups = createFormArray<Values['groups'][number], Values>(model, 'groups');
+		const groupA = groups.rows[0]!.id;
+		const locate = () => groups.rows.find((row) => row.id === groupA);
+		const location: FormArrayLocation = {
+			get active() {
+				return locate() !== undefined;
+			},
+			get baselinePath() {
+				const path = groups.getRowBaselinePath(groupA);
+				return path ? [...path, 'rows'] : undefined;
+			},
+			get path() {
+				return [...locate()!.path, 'rows'];
+			}
+		};
+		const rows = new FormArrayController<Values['groups'][number]['rows'][number], Values>(
+			model,
+			['groups', 0, 'rows'],
+			{},
+			location
+		);
+		const baselineIds = rows.rows.map((row) => row.id);
+
+		groups.move(0, 1);
+		expect(rows.path).toEqual(['groups', 1, 'rows']);
+		expect(rows.rows.map((row) => row.value.value)).toEqual(['a-1', 'a-2']);
+		rows.move(0, 1);
+		expect(rows.rows.map((row) => row.id)).toEqual([...baselineIds].reverse());
+		expect(rows.isDirty(baselineIds[0]!, 'value')).toBe(false);
+		model.setField(['groups', 1, 'rows', 1, 'value'], 'edited');
+		expect(rows.isDirty(baselineIds[0]!, 'value')).toBe(true);
+		rows.resetField(baselineIds[0]!, 'value');
+		expect(model.get(['groups', 1, 'rows', 1, 'value'])).toBe('a-1');
+
+		model.reset();
+		expect(rows.rows.map((row) => row.id)).toEqual(baselineIds);
+		expect(rows.rows.map((row) => row.value.value)).toEqual(['a-1', 'a-2']);
+	});
+
+	it('treats a nested list in a new parent row as baseline-missing and becomes inert on removal', () => {
+		interface Values {
+			groups: { rows: { value?: string }[] }[];
+		}
+		const model = createFormModel<Values>({ defaultValues: { groups: [] } });
+		const groups = createFormArray<Values['groups'][number], Values>(model, 'groups');
+		groups.append({ rows: [{ value: 'draft' }] });
+		const groupId = groups.rows[0]!.id;
+		const locate = () => groups.rows.find((row) => row.id === groupId);
+		const rows = new FormArrayController<Values['groups'][number]['rows'][number], Values>(
+			model,
+			['groups', 0, 'rows'],
+			{},
+			{
+				get active() {
+					return locate() !== undefined;
+				},
+				baselinePath: undefined,
+				get path() {
+					return [...locate()!.path, 'rows'];
+				}
+			}
+		);
+		const row = rows.rows[0]!;
+		expect(rows.getRowBaselinePath(row.id)).toBeUndefined();
+		expect(rows.isDirty(row.id, 'value')).toBe(true);
+		rows.resetField(row.id, 'value');
+		expect(rows.isDirty(row.id, 'value')).toBe(false);
+
+		groups.remove(0);
+		expect(rows.active).toBe(false);
+		expect(rows.rows).toEqual([]);
+		expect(rows.append({ value: 'late' })).toBe(false);
+		expect(rows.getRowBaselinePath(row.id)).toBeUndefined();
+	});
+
+	it('ignores reset history from a newly occupied parent index', () => {
+		const model = createFormModel({
+			defaultValues: {
+				groups: [
+					{ rows: [{ value: 'same' }, { value: 'same' }] },
+					{ rows: [{ value: 'same' }, { value: 'same' }] }
+				]
+			}
+		});
+		const groups = createFormArray<{ rows: { value: string }[] }, typeof model.values>(
+			model,
+			'groups'
+		);
+		const groupB = groups.rows[1]!.id;
+		const locateB = () => groups.rows.find((row) => row.id === groupB);
+		const rows = new FormArrayController<{ value: string }, typeof model.values>(
+			model,
+			['groups', 1, 'rows'],
+			{},
+			{
+				get active() {
+					return locateB() !== undefined;
+				},
+				get baselinePath() {
+					const path = groups.getRowBaselinePath(groupB);
+					return path ? [...path, 'rows'] : undefined;
+				},
+				get path() {
+					return [...locateB()!.path, 'rows'];
+				}
+			}
+		);
+		const baselineIds = rows.rows.map((row) => row.id);
+		rows.move(0, 1);
+		model.resetField(['groups', 0, 'rows']);
+		rows.rows;
+		groups.move(1, 0);
+
+		expect(rows.path).toEqual(['groups', 0, 'rows']);
+		expect(rows.rows.map((row) => row.id)).toEqual([...baselineIds].reverse());
+	});
+
+	it('resets identity on default initialize without rebuilding equal array baselines', () => {
+		const model = createFormModel({
+			defaultValues: { other: 1, rows: [{ value: 'same' }, { value: 'same' }] }
+		});
+		const rows = createFormArray<{ value: string }, typeof model.values>(model, 'rows');
+		const baselineIds = rows.rows.map((row) => row.id);
+		rows.move(0, 1);
+
+		model.initialize({ other: 2, rows: [{ value: 'same' }, { value: 'same' }] });
+		expect(rows.rows.map((row) => row.id)).toEqual(baselineIds);
+		model.setValues({ other: 2, rows: [{ value: 'left' }, { value: 'right' }] });
+		const beforeKeepDirty = rows.rows.map((row) => row.id);
+		model.initialize({ other: 3, rows: [{ value: 'server' }] }, { keepDirtyValues: true });
+		expect(rows.rows.map((row) => row.id)).toEqual(beforeKeepDirty);
 	});
 });
 

@@ -387,7 +387,10 @@
 	import Minus from '@lucide/svelte/icons/minus';
 	import Plus from '@lucide/svelte/icons/plus';
 	import { onMount, untrack } from 'svelte';
-	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
+	import {
+		claimFormValueScope,
+		createFormControlState
+	} from '../../runtime/form/form-value-adapter.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import { ReducedMotionState } from '../../runtime/foundation/motion.svelte.js';
 	import { controlSizeMetrics, resolveControlSize } from '../../runtime/foundation/control-size.js';
@@ -451,6 +454,7 @@
 	const uid = $props.id();
 	const generatedInputId = $derived(createZuiId(zui.idPrefix, uid, 'number-field'));
 	const field = useZField();
+	const valueScope = claimFormValueScope();
 	const resolvedLocale = $derived(locale ?? zui.locale);
 	const resolvedInputId = $derived(inputId ?? field?.controlId ?? generatedInputId);
 	const resolvedClampOnBlur = $derived(!allowOutOfRange);
@@ -473,13 +477,30 @@
 			throw new RangeError('ZNumberField min cannot exceed max.');
 		return { max, min, pageStep: resolvedPageStep, precision, step };
 	});
-	const valueState = new ControllableState<number | undefined>({
-		defaultValue: () => defaultValue,
-		onChange: () => onValueChange,
-		read: () => value,
-		undefinedIsValue: true,
-		write: (next) => (value = next)
-	});
+	const valueState = createFormControlState<number | undefined>(
+		{
+			defaultValue: () => defaultValue,
+			element: () => ref,
+			normalizeModelValue: (candidate) => {
+				if (candidate === undefined || candidate === null) return undefined;
+				if (typeof candidate !== 'number' || !Number.isFinite(candidate))
+					throw new TypeError(
+						'ZNumberField model value must be a finite number, null or undefined.'
+					);
+				return candidate;
+			},
+			onChange: () => onValueChange,
+			owner: 'ZNumberField',
+			read: () => value,
+			syncNative: (next) => {
+				if (inputRef)
+					inputRef.value = next === undefined ? '' : formatNumber(next, false, presentationOptions);
+			},
+			undefinedIsValue: true,
+			write: (next) => (value = next)
+		},
+		valueScope
+	);
 	const currentValue = $derived.by(() => {
 		const current = valueState.current;
 		if (current !== undefined && !Number.isFinite(current))
@@ -638,8 +659,12 @@
 
 	function commit(next: number | undefined): number | undefined {
 		const normalized = normalizeValue(next);
+		if (!valueState.setFromUser(normalized)) {
+			draft = formatEditValue(currentValue);
+			if (inputRef) inputRef.value = draft;
+			return currentValue;
+		}
 		synchronizedValue = normalized;
-		valueState.setFromUser(normalized);
 		draftInvalid = false;
 		draftPartial = false;
 		return normalized;

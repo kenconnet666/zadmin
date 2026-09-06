@@ -1763,7 +1763,7 @@ export const componentCatalogManifest = Object.freeze([
 			'disabled',
 			'form-reset'
 		],
-		demoCount: 10,
+		demoCount: 12,
 		publicComponentCount: 3
 	},
 	{

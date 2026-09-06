@@ -60,6 +60,7 @@ export interface ZMultiSelectContext {
 	register(
 		read: () => MultiSelectItemRecord & { readonly element: HTMLDivElement | null }
 	): () => void;
+	registerValueElement(element: () => HTMLButtonElement | null): () => void;
 	remove(value: SelectionKey): boolean;
 	search(key: string): SelectionKey | undefined;
 	setActive(value: SelectionKey): void;

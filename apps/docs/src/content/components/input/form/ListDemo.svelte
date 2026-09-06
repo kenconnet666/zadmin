@@ -150,7 +150,7 @@
 		<ZText tone="muted">{lastAction} · form dirty={model.dirty}</ZText>
 		<ZText tone="muted">values={JSON.stringify(model.values.members)}</ZText>
 		<ZText tone="muted"
-			>当前为实验性单层列表；嵌套FormList会被明确拒绝，避免内层路径在外层移动后指向错误行。</ZText
+			>嵌套列表可以在当前keyed行内继续组合；下一示例展示团队与成员分别移动和重置。</ZText
 		>
 	</ZStack>
 </ZForm>

@@ -1,6 +1,6 @@
 # ZUI component maturity matrix
 
-Generated from 176 metadata components, 106 documentation modules, 176 API contract entries, and 289 test files.
+Generated from 176 metadata components, 106 documentation modules, 176 API contract entries, and 295 test files.
 
 This is a static inventory of authored test contracts, not an execution report or a whole-component visual acceptance result. Historical stage names are retained for compatibility. `VisuallyVerified` requires an explicit `@zui-visual ZComponent` marker, an owned component/fixture render, and a geometry, computed-style, CSS, or screenshot assertion in the SAME test block. A positive entry only identifies a scoped test; confirm its result against commit-matched CI and inspect real pages, themes, and densities separately. `DesktopVerified` remains false until a component-level desktop evidence source is added.
 

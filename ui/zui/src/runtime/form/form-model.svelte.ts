@@ -321,6 +321,11 @@ export class FormModel<T> {
 			if (fieldPathStartsWith(normalized, reset.path)) version = Math.max(version, reset.version);
 		return version;
 	}
+	/** @internal Total reset revision used to distinguish new scope resets from address history. */
+	getResetRevision(): number {
+		this.#resetRevision;
+		return this.#nextResetVersion;
+	}
 	get(path: FieldPathInput): unknown {
 		return getFormValue(this.values, path);
 	}
@@ -375,6 +380,7 @@ export class FormModel<T> {
 			: baseline;
 		if (!this.#accept(previous, next)) return;
 		if (!equal(previousBaseline, baseline)) this.#baseline = baseline;
+		if (!options.keepDirtyValues) this.#markReset();
 		this.#notifyInitialization(previous, previousBaseline, next, baseline);
 	}
 	reset(): void {

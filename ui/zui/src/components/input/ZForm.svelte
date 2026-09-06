@@ -410,7 +410,11 @@
 		provideZForm,
 		type FormListRegistration
 	} from '../../runtime/form/form-context.svelte.js';
-	import { createFormArray, type FormArrayOptions } from '../../runtime/form/form-array.svelte.js';
+	import {
+		FormArrayController,
+		type FormArrayOptions,
+		type FormArrayLocation
+	} from '../../runtime/form/form-array.svelte.js';
 	import { type FormListReconcile } from '../../runtime/form/form-list-reconcile.js';
 	import {
 		fieldPathKey,
@@ -630,7 +634,10 @@
 	}
 	function listForField(path: FieldPath): FormListRegistration | undefined {
 		return [...lists.values()]
-			.filter((list) => path.length > list.path.length && fieldPathStartsWith(path, list.path))
+			.filter(
+				(list) =>
+					list.active && path.length > list.path.length && fieldPathStartsWith(path, list.path)
+			)
 			.sort((left, right) => right.path.length - left.path.length)[0];
 	}
 	function fieldIsDirty(pathInput: FieldPathInput): boolean {
@@ -791,20 +798,29 @@
 	}
 
 	provideZForm({
-		createArray<T>(path: FieldPathInput, options?: FormArrayOptions<T>) {
-			return createFormArray<T, TValues>(requireModel(), path, options);
+		createArray<T>(
+			path: FieldPathInput,
+			options?: FormArrayOptions<T>,
+			location?: FormArrayLocation
+		) {
+			return new FormArrayController<T, TValues>(requireModel(), path, options, location);
 		},
 		registerList(registration) {
-			if (
-				[...lists.values()].some(
-					(list) =>
-						fieldPathStartsWith(list.path, registration.path) ||
-						fieldPathStartsWith(registration.path, list.path)
+			for (const list of lists.values()) {
+				if (!list.active || !registration.active) continue;
+				if (fieldPathKey(list.path) === fieldPathKey(registration.path))
+					throw new Error('ZFormList requires one owner per array path.');
+				if (
+					fieldPathStartsWith(registration.path, list.path) &&
+					!registration.ancestors.includes(list.owner)
 				)
-			)
-				throw new Error(
-					'ZFormList currently requires separate array scopes; nested list scopes need an identity-aware baseline owner.'
-				);
+					throw new Error('A nested ZFormList must render inside its parent list.');
+				if (
+					fieldPathStartsWith(list.path, registration.path) &&
+					!list.ancestors.includes(registration.owner)
+				)
+					throw new Error('A nested ZFormList must render inside its parent list.');
+			}
 			const token = Symbol();
 			lists.set(token, registration);
 			return () => {

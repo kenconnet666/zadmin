@@ -82,6 +82,7 @@
 		if (!owner || !fieldOwner) return;
 		return fieldOwner.registerFocusOwner(() => owner.focus({ preventScroll: true }));
 	});
+	$effect(() => select.registerValueElement(() => ref));
 
 	function handleKeydown(event: KeyboardEvent & { currentTarget: HTMLButtonElement }): void {
 		onkeydown?.(event);

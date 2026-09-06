@@ -15,9 +15,16 @@ export interface FormArrayOptions<T> {
 	readonly createId?: () => string;
 	readonly getRowKey?: (value: T) => string | number;
 }
+/** @internal Resolves a nested list through its stable parent row identity. */
+export interface FormArrayLocation {
+	readonly active?: boolean;
+	readonly baselinePath: FieldPathInput | undefined;
+	readonly path: FieldPathInput;
+}
 export interface FormArrayModel<TValues> {
 	readonly defaultValues: TValues;
 	get(path: FieldPathInput): unknown;
+	getResetRevision(): number;
 	getResetVersion(path: FieldPathInput): number;
 	isDirty(path: FieldPathInput): boolean;
 	isDirtyFrom(path: FieldPathInput, baselinePath?: FieldPathInput): boolean;
@@ -32,8 +39,10 @@ interface PendingRows<T> {
 
 export class FormArrayController<T, TValues> {
 	readonly #model: FormArrayModel<TValues>;
-	readonly #path: FieldPath;
+	readonly #staticPath: FieldPath;
 	readonly #options: FormArrayOptions<T>;
+	readonly #location?: FormArrayLocation;
+	#lastPath: FieldPath;
 	#baselineIds: string[] = [];
 	#baselineInput?: readonly T[];
 	#baselineKeys: (string | number)[] = [];
@@ -42,50 +51,68 @@ export class FormArrayController<T, TValues> {
 	#pending?: PendingRows<T>;
 	#sequence = 0;
 	#nextRevision = 0;
-	#resetVersion = 0;
+	#resetRevision = 0;
 	#revision = $state(0);
 	constructor(
 		model: FormArrayModel<TValues>,
 		path: FieldPathInput,
-		options: FormArrayOptions<T> = {}
+		options: FormArrayOptions<T> = {},
+		location?: FormArrayLocation
 	) {
 		this.#model = model;
-		this.#path = normalizeFieldPath(path);
+		this.#staticPath = normalizeFieldPath(path);
+		this.#lastPath = this.#staticPath;
 		this.#options = options;
-		this.#refreshBaseline();
-		this.#ids = [...this.#baselineIds];
-		this.#keys = [...this.#baselineKeys];
-		this.#reconcile(this.#values());
-		this.#resetVersion = this.#model.getResetVersion(this.#path);
+		this.#location = location;
+		if (this.active) {
+			this.#lastPath = normalizeFieldPath(location?.path ?? this.#staticPath);
+			this.#refreshBaseline();
+			this.#ids = [...this.#baselineIds];
+			this.#keys = [...this.#baselineKeys];
+			this.#reconcile(this.#values());
+			this.#resetRevision = this.#model.getResetRevision();
+		}
+	}
+	get active(): boolean {
+		return this.#location?.active ?? true;
+	}
+	get path(): FieldPath {
+		if (this.active) this.#lastPath = normalizeFieldPath(this.#location?.path ?? this.#staticPath);
+		return this.#lastPath;
 	}
 	get rows(): readonly FormArrayRow<T>[] {
 		this.#revision;
+		if (!this.active) return EMPTY_ROWS;
+		const path = this.path;
 		const values = this.#values();
 		this.#refreshBaseline();
-		const resetVersion = this.#model.getResetVersion(this.#path);
-		if (resetVersion !== this.#resetVersion) {
-			this.#resetVersion = resetVersion;
+		const resetRevision = this.#model.getResetRevision();
+		const resetVersion = this.#model.getResetVersion(path);
+		if (resetVersion > this.#resetRevision) {
 			this.#ids = values.map((_, index) => this.#baselineIds[index] ?? this.#id());
 			this.#keys = this.#options.getRowKey ? values.map(this.#options.getRowKey) : [];
 		} else if (this.#pending && sameStateValue(values, this.#pending.values)) {
 			this.#ids = [...this.#pending.ids];
 			this.#keys = [...this.#pending.keys];
 		} else this.#reconcile(values);
+		this.#resetRevision = resetRevision;
 		return Object.freeze(
 			values.map((value, index) =>
 				Object.freeze({
 					id: this.#ids[index]!,
 					index,
-					path: Object.freeze([...this.#path, index]),
+					path: Object.freeze([...path, index]),
 					value
 				})
 			)
 		);
 	}
 	append(value: T): boolean {
+		if (!this.active) return false;
 		return this.insert(this.rows.length, value);
 	}
 	insert(index: number, value: T): boolean {
+		if (!this.active) return false;
 		const values = this.rows.map((row) => row.value);
 		if (!Number.isSafeInteger(index) || index < 0 || index > values.length)
 			throw new RangeError('ZForm array insert index is out of bounds.');
@@ -97,6 +124,7 @@ export class FormArrayController<T, TValues> {
 		return this.#write(values, ids);
 	}
 	remove(index: number): boolean {
+		if (!this.active) return false;
 		const values = this.rows.map((row) => row.value);
 		this.#index(index, values.length);
 		this.#reconcile(values);
@@ -106,6 +134,7 @@ export class FormArrayController<T, TValues> {
 		return this.#write(values, ids);
 	}
 	move(from: number, to: number): boolean {
+		if (!this.active) return false;
 		const values = this.rows.map((row) => row.value);
 		this.#index(from, values.length);
 		this.#index(to, values.length);
@@ -117,6 +146,7 @@ export class FormArrayController<T, TValues> {
 		return this.#write(values, ids);
 	}
 	replace(index: number, value: T): boolean {
+		if (!this.active) return false;
 		const values = this.rows.map((row) => row.value);
 		this.#index(index, values.length);
 		if (sameStateValue(values[index], value)) return true;
@@ -125,6 +155,7 @@ export class FormArrayController<T, TValues> {
 		return this.#write(values, [...this.#ids]);
 	}
 	isDirty(rowId: string, relativePath?: FieldPathInput): boolean {
+		if (!this.active) return false;
 		const { baselineIndex, currentIndex } = this.#indices(rowId);
 		if (baselineIndex < 0)
 			return relativePath === undefined
@@ -132,10 +163,11 @@ export class FormArrayController<T, TValues> {
 				: this.#model.isDirtyFrom(this.#rowPath(currentIndex, relativePath));
 		return this.#model.isDirtyFrom(
 			this.#rowPath(currentIndex, relativePath),
-			this.#rowPath(baselineIndex, relativePath)
+			this.#baselineRowPath(baselineIndex, relativePath)
 		);
 	}
 	resetField(rowId: string, relativePath?: FieldPathInput): boolean {
+		if (!this.active) return false;
 		const { baselineIndex, currentIndex } = this.#indices(rowId);
 		const currentPath = this.#rowPath(currentIndex, relativePath);
 		if (baselineIndex < 0) {
@@ -143,15 +175,26 @@ export class FormArrayController<T, TValues> {
 				throw new TypeError('ZForm cannot reset a new array row; use FormArray.remove.');
 			return this.#model.resetFieldTo(currentPath);
 		}
-		return this.#model.resetFieldTo(currentPath, this.#rowPath(baselineIndex, relativePath));
+		return this.#model.resetFieldTo(
+			currentPath,
+			this.#baselineRowPath(baselineIndex, relativePath)
+		);
+	}
+	/** @internal Returns the stable baseline row address used by nested FormList locations. */
+	getRowBaselinePath(rowId: string): FieldPath | undefined {
+		if (!this.active) return undefined;
+		const { baselineIndex } = this.#indices(rowId);
+		return baselineIndex < 0 ? undefined : this.#baselineRowPath(baselineIndex);
 	}
 	#values(): readonly T[] {
-		const value = this.#model.get(this.#path);
+		const value = this.#model.get(this.path);
 		if (!Array.isArray(value)) throw new TypeError('ZForm array path must resolve to an array.');
 		return value as readonly T[];
 	}
 	#baselineValues(): readonly T[] {
-		const value = getFormValue(this.#model.defaultValues, this.#path);
+		const path = this.#baselinePath();
+		if (!path) return EMPTY_ROWS;
+		const value = getFormValue(this.#model.defaultValues, path);
 		if (value === undefined) return EMPTY_ROWS;
 		if (!Array.isArray(value))
 			throw new TypeError('ZForm array baseline path must resolve to an array.');
@@ -171,7 +214,7 @@ export class FormArrayController<T, TValues> {
 		this.#pending = { ids, keys, values };
 		let accepted = false;
 		try {
-			accepted = this.#model.setField(this.#path, Object.freeze(values), 'array');
+			accepted = this.#model.setField(this.path, Object.freeze(values), 'array');
 		} finally {
 			this.#pending = undefined;
 			if (!accepted) {
@@ -200,7 +243,22 @@ export class FormArrayController<T, TValues> {
 	}
 	#rowPath(index: number, relativePath?: FieldPathInput): FieldPath {
 		return Object.freeze([
-			...this.#path,
+			...this.path,
+			index,
+			...(relativePath === undefined ? [] : normalizeFieldPath(relativePath))
+		]);
+	}
+	#baselinePath(): FieldPath | undefined {
+		if (!this.#location) return this.#staticPath;
+		return this.#location.baselinePath === undefined
+			? undefined
+			: normalizeFieldPath(this.#location.baselinePath);
+	}
+	#baselineRowPath(index: number, relativePath?: FieldPathInput): FieldPath {
+		const path = this.#baselinePath();
+		if (!path) throw new TypeError('ZForm array row has no baseline path.');
+		return Object.freeze([
+			...path,
 			index,
 			...(relativePath === undefined ? [] : normalizeFieldPath(relativePath))
 		]);
@@ -215,6 +273,10 @@ export class FormArrayController<T, TValues> {
 	#refreshBaseline(): void {
 		const values = this.#baselineValues();
 		if (Object.is(values, this.#baselineInput)) return;
+		if (this.#baselineInput !== undefined && sameStateValue(values, this.#baselineInput)) {
+			this.#baselineInput = values;
+			return;
+		}
 		this.#assertKeys(values);
 		if (this.#options.getRowKey) {
 			const ids = new Map<string | number, string>();
@@ -230,7 +292,7 @@ export class FormArrayController<T, TValues> {
 			this.#baselineIds = values.map(() => this.#id());
 		}
 		this.#baselineInput = values;
-		if (!this.#model.isDirty(this.#path)) {
+		if (!this.#model.isDirty(this.path)) {
 			this.#ids = [...this.#baselineIds];
 			this.#keys = [...this.#baselineKeys];
 		}

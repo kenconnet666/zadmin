@@ -49,6 +49,7 @@
 			{ description: '当前打开状态。', name: 'open', type: 'boolean' }
 		],
 		dependencies: [
+			'FormControlState',
 			'LogicalCollection',
 			'SelectionModel',
 			'CollectionNavigation',
@@ -248,6 +249,10 @@
 	import { useZui } from '../../../runtime/foundation/context.js';
 	import { createZuiId } from '../../../runtime/foundation/ids.js';
 	import { claimZFieldControlOwner } from '../../../runtime/form/field-context.js';
+	import {
+		claimFormValueScope,
+		createFormControlState
+	} from '../../../runtime/form/form-value-adapter.svelte.js';
 	import FormValueBridge from '../../../runtime/form/FormValueBridge.svelte';
 	import { assertContiguousOptionGroups } from '../choice-option.js';
 	import { createChoiceVirtualMountBridge } from '../choice-virtualization.js';
@@ -323,6 +328,7 @@
 	assertPublicContract();
 	$effect(assertPublicContract);
 	const zui = useZui();
+	const valueScope = claimFormValueScope();
 	const field = claimZFieldControlOwner().field;
 	const uid = $props.id();
 	const idBase = $derived(createZuiId(zui.idPrefix, uid, 'multi-select'));
@@ -337,14 +343,41 @@
 	const resolvedPlaceholder = $derived(placeholder ?? zui.localePack.collection.selectOptions);
 	const required = $derived(requiredProp || (field?.required ?? false));
 	const resolvedSize = $derived(resolveControlSize(sizeProp ?? field?.size, zui.density));
-	const valueState = new ControllableState<readonly SelectionKey[]>({
-		defaultValue: () => normalizeValues(defaultValue ?? [], 'ZMultiSelect defaultValue'),
-		onChange: () => onValueChange,
-		read: () => value,
-		write: (next) => {
-			value = next;
+	// Trigger registrations are imperative owner references; membership never renders directly.
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
+	const valueElements = new Map<symbol, () => HTMLButtonElement | null>();
+	let valueElementRevision = $state(0);
+	let nextValueElementRevision = 0;
+	function valueElement(): HTMLButtonElement | null {
+		valueElementRevision;
+		for (const read of valueElements.values()) {
+			const element = read();
+			if (element) return element;
 		}
-	});
+		return null;
+	}
+	const valueState = createFormControlState<readonly SelectionKey[]>(
+		{
+			defaultValue: () => normalizeValues(defaultValue ?? [], 'ZMultiSelect defaultValue'),
+			element: valueElement,
+			normalizeModelValue: (candidate) => {
+				if (candidate === undefined) return Object.freeze([]);
+				if (!Array.isArray(candidate))
+					throw new TypeError(
+						'ZMultiSelect model value must be a SelectionKey array or undefined.'
+					);
+				return normalizeValues(candidate, 'ZMultiSelect model value');
+			},
+			onChange: () => onValueChange,
+			owner: 'ZMultiSelect',
+			read: () => value,
+			syncNative: () => undefined,
+			write: (next) => {
+				value = next;
+			}
+		},
+		valueScope
+	);
 	const resolvedValues = $derived(normalizeValues(valueState.current, 'ZMultiSelect value'));
 	const openState = new ControllableState<boolean>({
 		defaultValue: () => defaultOpen,
@@ -398,20 +431,22 @@
 		navigation,
 		virtualizer: virtualBridge
 	});
+	let selectionAccepted = false;
 	const selection = new SelectionModel<SelectionKey, MultiSelectItemRecord>({
 		collection: () => collection,
 		mode: () => 'multiple',
 		read: () => new Set(resolvedValues),
 		view: () => view,
-		write: ({ selection: next }) =>
-			valueState.setFromUser(
+		write: ({ selection: next }) => {
+			selectionAccepted = valueState.setFromUser(
 				valuesFromSelection(
 					next,
 					collection.full.items
 						.filter((item) => !item.disabled && !item.selectionDisabled)
 						.map((item) => item.key)
 				)
-			)
+			);
+		}
 	});
 	const typeahead = new Typeahead<SelectionKey>({ locale: () => zui.locale });
 	// The cache lets a remote selected key keep its last known label between result pages.
@@ -454,7 +489,9 @@
 			return activeDescendant.activeKey;
 		},
 		clear() {
-			return !disabled && !readonly && selection.clear();
+			if (disabled || readonly) return false;
+			selectionAccepted = false;
+			return selection.clear() && selectionAccepted;
 		},
 		get clearable() {
 			return clearable;
@@ -532,13 +569,23 @@
 				stopLogical();
 			};
 		},
+		registerValueElement(element) {
+			const token = Symbol('zui-multi-select-value-element');
+			valueElements.set(token, element);
+			valueElementRevision = ++nextValueElementRevision;
+			return () => {
+				if (valueElements.delete(token)) valueElementRevision = ++nextValueElementRevision;
+			};
+		},
 		remove(itemValue) {
 			if (disabled || readonly || !context.isSelected(itemValue)) return false;
-			if (collection.get(itemValue)) return selection.toggle(itemValue);
-			valueState.setFromUser(
+			if (collection.get(itemValue)) {
+				selectionAccepted = false;
+				return selection.toggle(itemValue) && selectionAccepted;
+			}
+			return valueState.setFromUser(
 				Object.freeze(resolvedValues.filter((entry) => !Object.is(entry, itemValue)))
 			);
-			return true;
 		},
 		get required() {
 			return required;
@@ -564,8 +611,8 @@
 			const event = new MultiSelectEvent(originalEvent, itemValue);
 			item?.value.onSelect?.(event);
 			if (!event.defaultPrevented && !disabled && !readonly && item) {
-				selection.toggle(itemValue);
-				labels.set(itemValue, item.textValue);
+				selectionAccepted = false;
+				if (selection.toggle(itemValue) && selectionAccepted) labels.set(itemValue, item.textValue);
 			}
 			return event;
 		},

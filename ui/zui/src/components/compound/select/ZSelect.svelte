@@ -46,6 +46,7 @@
 			{ description: '当前打开状态。', name: 'open', type: 'boolean' }
 		],
 		dependencies: [
+			'FormControlState',
 			'LogicalCollection',
 			'SelectionModel',
 			'CollectionNavigation',
@@ -220,13 +221,21 @@
 	import { LogicalCollection } from '../../../runtime/collection/logical-collection.js';
 	import { MountedElements } from '../../../runtime/collection/mounted-elements.svelte.js';
 	import { SelectionModel } from '../../../runtime/collection/selection-model.js';
-	import { singleSelection, type Selection } from '../../../runtime/collection/selection.js';
+	import {
+		assertSelectionKey,
+		singleSelection,
+		type Selection
+	} from '../../../runtime/collection/selection.js';
 	import { Typeahead } from '../../../runtime/collection/typeahead.js';
 	import { ControllableState } from '../../../runtime/foundation/controllable-state.svelte.js';
 	import { resolveControlSize } from '../../../runtime/foundation/control-size.js';
 	import { useZui } from '../../../runtime/foundation/context.js';
 	import { createZuiId } from '../../../runtime/foundation/ids.js';
 	import { claimZFieldControlOwner } from '../../../runtime/form/field-context.js';
+	import {
+		claimFormValueScope,
+		createFormControlState
+	} from '../../../runtime/form/form-value-adapter.svelte.js';
 	import FormValueBridge from '../../../runtime/form/FormValueBridge.svelte';
 	import { createChoiceVirtualMountBridge } from '../choice-virtualization.js';
 	import ZPopover from '../popover/ZPopover.svelte';
@@ -265,6 +274,7 @@
 		value = $bindable()
 	}: ZSelectProps = $props();
 	const zui = useZui();
+	const valueScope = claimFormValueScope();
 	const field = claimZFieldControlOwner().field;
 	const uid = $props.id();
 	const idBase = $derived(createZuiId(zui.idPrefix, uid, 'select'));
@@ -279,13 +289,37 @@
 	const resolvedPlaceholder = $derived(placeholder ?? zui.localePack.collection.selectOption);
 	const required = $derived(requiredProp || (field?.required ?? false));
 	const resolvedSize = $derived(resolveControlSize(sizeProp ?? field?.size, zui.density));
-	const valueState = new ControllableState<SelectionKey | undefined>({
-		defaultValue: () => defaultValue,
-		onChange: () => onValueChange,
-		read: () => value,
-		undefinedIsValue: true,
-		write: (next) => (value = next)
-	});
+	// Trigger registrations are imperative owner references; membership never renders directly.
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity
+	const valueElements = new Map<symbol, () => HTMLButtonElement | null>();
+	let valueElementRevision = $state(0);
+	let nextValueElementRevision = 0;
+	function valueElement(): HTMLButtonElement | null {
+		valueElementRevision;
+		for (const read of valueElements.values()) {
+			const element = read();
+			if (element) return element;
+		}
+		return null;
+	}
+	const valueState = createFormControlState<SelectionKey | undefined>(
+		{
+			defaultValue: () => defaultValue,
+			element: valueElement,
+			normalizeModelValue: (candidate) => {
+				if (candidate === undefined) return undefined;
+				assertSelectionKey(candidate, 'ZSelect model value');
+				return candidate;
+			},
+			onChange: () => onValueChange,
+			owner: 'ZSelect',
+			read: () => value,
+			syncNative: () => undefined,
+			undefinedIsValue: true,
+			write: (next) => (value = next)
+		},
+		valueScope
+	);
 	const openState = new ControllableState<boolean>({
 		defaultValue: () => defaultOpen,
 		onChange: () => onOpenChange,
@@ -336,12 +370,15 @@
 		navigation,
 		virtualizer: virtualBridge
 	});
+	let selectionAccepted = false;
 	const selection = new SelectionModel<SelectionKey, SelectItemRecord>({
 		collection: () => collection,
 		mode: () => 'single',
 		read: () => singleSelection(valueState.current),
 		view: () => view,
-		write: ({ selection: next }) => valueState.setFromUser(readSingleValue(next))
+		write: ({ selection: next }) => {
+			selectionAccepted = valueState.setFromUser(readSingleValue(next));
+		}
 	});
 	const typeahead = new Typeahead<SelectionKey>({ locale: () => zui.locale });
 	// This cache intentionally preserves labels for async values that temporarily leave options.
@@ -380,16 +417,21 @@
 			const item = collection.get(itemValue);
 			const event = new SelectEvent(originalEvent, itemValue);
 			item?.value.onSelect?.(event);
-			if (
-				!event.defaultPrevented &&
-				!disabled &&
-				!readonly &&
-				item &&
-				selection.replace(itemValue)
-			) {
+			selectionAccepted = selection.isSelected(itemValue);
+			let changed = false;
+			if (!event.defaultPrevented && !disabled && !readonly && item) {
+				changed = selection.replace(itemValue);
+			}
+			if (changed && selectionAccepted) {
 				labels.set(itemValue, item.textValue);
 			}
-			if (!event.defaultPrevented && item && !item.disabled && !item.selectionDisabled)
+			if (
+				!event.defaultPrevented &&
+				item &&
+				!item.disabled &&
+				!item.selectionDisabled &&
+				(!changed || selectionAccepted)
+			)
 				setOpen(false);
 			return event;
 		},
@@ -454,6 +496,14 @@
 			return () => {
 				stopMount();
 				stopLogical();
+			};
+		},
+		registerValueElement(element) {
+			const token = Symbol('zui-select-value-element');
+			valueElements.set(token, element);
+			valueElementRevision = ++nextValueElementRevision;
+			return () => {
+				if (valueElements.delete(token)) valueElementRevision = ++nextValueElementRevision;
 			};
 		},
 		get required() {

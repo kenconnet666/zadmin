@@ -187,3 +187,11 @@ Switch、RadioGroup、Slider、RangeSlider、Rating 共用 E10A adapter。复合
 浏览器发现 keyed move 保留 DOM 但丢 native focus/selection，现恢复原节点与选区并避免内部移动误记 touched。实测 moved 字段 reset 使用正确行基线、删除到相邻行/空列表根、连续 reset 恢复 baseline row ids；五控件批量与重复 FormData 正常，390px 无页面横向溢出。详见 [E10B 执行](./execution-form-list-adapters-2026-09-07.md)。
 
 提交前检查上一6559bc9的CI 34058991003仍在运行，没有等待或轮询。本地没有运行长测试或构建。独立数组列表为本批边界；嵌套数组身份和动画继续下一阶段，不把实验性实现、源码资产或旧 stable 标签当作全目标完成。
+
+## E10C：嵌套数组与集合控件
+
+移除独立数组限制，FormList通过父row.id解析内层current/baseline地址。内层controller和IDs在父行移动时保持；外层已迁移的后代地址不会被内层重复迁移，删除父行后旧child拒绝写入。全局reset revision与局部reset version一起隔离历史索引记录；默认initialize的同基线恢复和keepDirty身份分别处理。
+
+NumberField、Segmented、TagsInput、Select、MultiSelect共用模型adapter，草稿、Selection、Overlay、FormValueBridge和主题继续沿用。Select/MultiSelect复用真实Trigger注册owner，浏览器发现并修复注册revision自订阅循环。
+
+实际浏览器确认两层重排保DOM/focus/selection、字段reset取正确父行基线、错误只换址一次、新父行无baseline的增删/reset，以及五控件批量/重复FormData/连续reset。详见 [E10C 执行](./execution-nested-form-collections-2026-09-07.md)。本地仍未执行长套件，远程CI继续承接验证；新组件保持实验性，完整矩阵与最终家族审计继续推进。

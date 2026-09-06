@@ -49,6 +49,7 @@ export interface ZSelectContext {
 	idFor(value: SelectionKey): string;
 	isSelected(value: SelectionKey): boolean;
 	register(read: () => SelectItemRecord & { readonly element: HTMLDivElement | null }): () => void;
+	registerValueElement(element: () => HTMLButtonElement | null): () => void;
 	search(key: string): SelectionKey | undefined;
 	setActive(value: SelectionKey): void;
 	setOpen(open: boolean, strategy?: SelectOpenFocusStrategy): void;

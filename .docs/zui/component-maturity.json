@@ -4,7 +4,7 @@
 		"metadataComponents": 176,
 		"documentationPages": 106,
 		"contractComponents": 176,
-		"testFiles": 289
+		"testFiles": 295
 	},
 	"stageNames": [
 		"Declared",
@@ -5045,7 +5045,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "1a5bc8d138e30b96ac25f681e93e0bbd669bf948d9821dab7efa22b00efaf797 API snapshot entry"
+						"detail": "d9c81c9d1f17d12c5c28e4fdd4d8384e0c7476d18ed248d0e3c1dca70d8af50f API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -5113,6 +5113,10 @@
 			"ssrEvidence": [
 				{
 					"path": "ui/zui/tests/components.spec.ts",
+					"detail": "ZMultiSelect SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-collection-adapter-production.spec.ts",
 					"detail": "ZMultiSelect SSR assertions"
 				}
 			]
@@ -5215,6 +5219,10 @@
 				{
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZMultiSelectContent SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-collection-adapter-production.spec.ts",
+					"detail": "ZMultiSelectContent SSR assertions"
 				}
 			]
 		},
@@ -5303,6 +5311,10 @@
 			"ssrEvidence": [
 				{
 					"path": "ui/zui/tests/components.spec.ts",
+					"detail": "ZMultiSelectItem SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-collection-adapter-production.spec.ts",
 					"detail": "ZMultiSelectItem SSR assertions"
 				}
 			]
@@ -5404,6 +5416,10 @@
 			"ssrEvidence": [
 				{
 					"path": "ui/zui/tests/components.spec.ts",
+					"detail": "ZMultiSelectTrigger SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-collection-adapter-production.spec.ts",
 					"detail": "ZMultiSelectTrigger SSR assertions"
 				}
 			]
@@ -6717,7 +6733,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "adecb10af224c7d9ac44b176ded2bbd14ab53af4d875ca10252f1334630ab9a6 API snapshot entry"
+						"detail": "db106ae19c966023369eb3ef5ad45babd017e9298e1bce8bcb6553cdba6167bd API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -6773,6 +6789,10 @@
 			"ssrEvidence": [
 				{
 					"path": "ui/zui/tests/components.spec.ts",
+					"detail": "ZSelect SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-collection-adapter-production.spec.ts",
 					"detail": "ZSelect SSR assertions"
 				}
 			]
@@ -6863,6 +6883,10 @@
 				{
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZSelectContent SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-collection-adapter-production.spec.ts",
+					"detail": "ZSelectContent SSR assertions"
 				}
 			]
 		},
@@ -6952,6 +6976,10 @@
 				{
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZSelectItem SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-collection-adapter-production.spec.ts",
+					"detail": "ZSelectItem SSR assertions"
 				}
 			]
 		},
@@ -7040,6 +7068,10 @@
 			"ssrEvidence": [
 				{
 					"path": "ui/zui/tests/components.spec.ts",
+					"detail": "ZSelectTrigger SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-collection-adapter-production.spec.ts",
 					"detail": "ZSelectTrigger SSR assertions"
 				}
 			]
@@ -11333,6 +11365,10 @@
 					"detail": "ZProvider SSR assertions"
 				},
 				{
+					"path": "ui/zui/tests/form-collection-adapter-production.spec.ts",
+					"detail": "ZProvider SSR assertions"
+				},
+				{
 					"path": "ui/zui/tests/menu-family-production.spec.ts",
 					"detail": "ZProvider SSR assertions"
 				},
@@ -12898,6 +12934,10 @@
 					"detail": "ZForm SSR assertions"
 				},
 				{
+					"path": "ui/zui/tests/form-collection-adapter-production.spec.ts",
+					"detail": "ZForm SSR assertions"
+				},
+				{
 					"path": "ui/zui/tests/form-control-adapter-production.spec.ts",
 					"detail": "ZForm SSR assertions"
 				},
@@ -12907,6 +12947,10 @@
 				},
 				{
 					"path": "ui/zui/tests/form-list-production.spec.ts",
+					"detail": "ZForm SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-nested-list-production.spec.ts",
 					"detail": "ZForm SSR assertions"
 				}
 			]
@@ -13051,6 +13095,10 @@
 					"detail": "ZFormField SSR assertions"
 				},
 				{
+					"path": "ui/zui/tests/form-collection-adapter-production.spec.ts",
+					"detail": "ZFormField SSR assertions"
+				},
+				{
 					"path": "ui/zui/tests/form-control-adapter-production.spec.ts",
 					"detail": "ZFormField SSR assertions"
 				},
@@ -13060,6 +13108,10 @@
 				},
 				{
 					"path": "ui/zui/tests/form-list-production.spec.ts",
+					"detail": "ZFormField SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-nested-list-production.spec.ts",
 					"detail": "ZFormField SSR assertions"
 				}
 			]
@@ -13118,6 +13170,14 @@
 					{
 						"path": "ui/zui/tests/FormListFixture.svelte",
 						"detail": "ZFormList explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/form-nested-list-production.browser.spec.ts",
+						"detail": "ZFormList browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/FormNestedListFixture.svelte",
+						"detail": "ZFormList explicit rendered fixture usage"
 					}
 				],
 				"VisuallyVerified": [],
@@ -13138,6 +13198,22 @@
 					{
 						"path": "ui/zui/tests/FormListFixture.svelte",
 						"detail": "ZFormList explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/form-nested-list-production.browser.spec.ts",
+						"detail": "ZFormList production assertions"
+					},
+					{
+						"path": "ui/zui/tests/FormNestedListFixture.svelte",
+						"detail": "ZFormList explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/form-nested-list-production.spec.ts",
+						"detail": "ZFormList production assertions"
+					},
+					{
+						"path": "ui/zui/tests/FormNestedListFixture.svelte",
+						"detail": "ZFormList explicit rendered fixture usage"
 					}
 				]
 			},
@@ -13148,6 +13224,10 @@
 			"ssrEvidence": [
 				{
 					"path": "ui/zui/tests/form-list-production.spec.ts",
+					"detail": "ZFormList SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-nested-list-production.spec.ts",
 					"detail": "ZFormList SSR assertions"
 				}
 			]
@@ -13281,6 +13361,10 @@
 				},
 				{
 					"path": "ui/zui/tests/form-list-production.spec.ts",
+					"detail": "ZInput SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-nested-list-production.spec.ts",
 					"detail": "ZInput SSR assertions"
 				},
 				{
@@ -14448,7 +14532,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "966a9c7eb6897ca6f019b88c09d0db6c04dd2584a830d8dd69d4500cb553f477 API snapshot entry"
+						"detail": "e841f40c632750136d664d8c624d0c99b28f48e8467b7cca80abe1e21d56ed00 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -14504,6 +14588,10 @@
 			"ssrEvidence": [
 				{
 					"path": "ui/zui/tests/components.spec.ts",
+					"detail": "ZTagsInput SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-collection-adapter-production.spec.ts",
 					"detail": "ZTagsInput SSR assertions"
 				}
 			]

@@ -49,6 +49,7 @@
 			{ description: '真实草稿input引用。', name: 'inputRef', type: 'HTMLInputElement | null' }
 		],
 		dependencies: [
+			'FormControlState',
 			'LogicalCollection',
 			'CollectionNavigation',
 			'ZTag',
@@ -287,6 +288,10 @@
 	} from '../../runtime/foundation/root-style.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { claimZFieldControlOwner } from '../../runtime/form/field-context.js';
+	import {
+		claimFormValueScope,
+		createFormControlState
+	} from '../../runtime/form/form-value-adapter.svelte.js';
 	import { mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
 	import FormValueBridge from '../../runtime/form/FormValueBridge.svelte';
 	import { isDomElement, isDomNode } from '../../runtime/layer/dom-realm.js';
@@ -442,6 +447,7 @@
 		...rest
 	}: ZTagsInputProps = $props();
 	const zui = useZui();
+	const valueScope = claimFormValueScope();
 	const fieldOwner = claimZFieldControlOwner();
 	const field = fieldOwner.field;
 	const resolvedAddLabel = $derived(addLabel ?? zui.localePack.tagsInput.addTag);
@@ -466,14 +472,28 @@
 	const inputId = $derived(
 		controlId ?? field?.controlId ?? createZuiId(zui.idPrefix, uid, 'tags-input')
 	);
-	const valueState = new ControllableState<readonly string[]>({
-		defaultValue: () => normalizeValues(defaultValue ?? [], allowDuplicates, resolvedMaxTags),
-		onChange: () => onValueChange,
-		read: () => value,
-		write: (next) => {
-			value = next;
-		}
-	});
+	const valueState = createFormControlState<readonly string[]>(
+		{
+			defaultValue: () => normalizeValues(defaultValue ?? [], allowDuplicates, resolvedMaxTags),
+			element: () => ref,
+			normalizeModelValue: (candidate) => {
+				if (candidate === undefined) return Object.freeze([]);
+				if (!Array.isArray(candidate) || candidate.some((entry) => typeof entry !== 'string'))
+					throw new TypeError('ZTagsInput model value must be a string array or undefined.');
+				return normalizeValues(candidate, allowDuplicates, resolvedMaxTags);
+			},
+			onChange: () => onValueChange,
+			owner: 'ZTagsInput',
+			read: () => value,
+			syncNative: () => {
+				if (inputRef) inputRef.value = draftState.current;
+			},
+			write: (next) => {
+				value = next;
+			}
+		},
+		valueScope
+	);
 	const draftState = new ControllableState<string>({
 		defaultValue: () => defaultInputValue,
 		onChange: () => onInputValueChange,
@@ -532,6 +552,14 @@
 		identityValues = nextValues;
 		identityKeys = frozenKeys;
 		pendingIdentity = { values: nextValues, keys: frozenKeys };
+	}
+	function writeValues(nextValues: readonly string[], nextKeys: readonly number[]): boolean {
+		const previousValues = resolvedValues;
+		const previousKeys = identityKeys;
+		queueIdentity(nextValues, nextKeys);
+		if (valueState.setFromUser(nextValues)) return true;
+		queueIdentity(previousValues, previousKeys);
+		return false;
 	}
 	const records = $derived(
 		Object.freeze(resolvedValues.map((value, key) => Object.freeze({ key, value })))
@@ -599,8 +627,7 @@
 			return false;
 		}
 		const next = Object.freeze([...resolvedValues, candidate]);
-		queueIdentity(next, [...identityKeys, nextIdentityKey++]);
-		valueState.setFromUser(next);
+		if (!writeValues(next, [...identityKeys, nextIdentityKey++])) return false;
 		draftInvalid = false;
 		return true;
 	}
@@ -614,11 +641,13 @@
 	function remove(index: number, restoreFocus = false): void {
 		if (resolvedDisabled || resolvedReadonly || index < 0 || index >= resolvedValues.length) return;
 		const next = Object.freeze(resolvedValues.filter((_, itemIndex) => itemIndex !== index));
-		queueIdentity(
-			next,
-			identityKeys.filter((_, itemIndex) => itemIndex !== index)
-		);
-		valueState.setFromUser(next);
+		if (
+			!writeValues(
+				next,
+				identityKeys.filter((_, itemIndex) => itemIndex !== index)
+			)
+		)
+			return;
 		navigation.set(undefined, 'programmatic');
 		if (editingIndex === index) cancelEdit();
 		if (restoreFocus) {
@@ -670,8 +699,7 @@
 		if (candidate !== resolvedValues[index]) {
 			const next = [...resolvedValues];
 			next[index] = candidate;
-			queueIdentity(next, identityKeys);
-			valueState.setFromUser(Object.freeze(next));
+			if (!writeValues(Object.freeze(next), identityKeys)) return false;
 		}
 		editingIndex = undefined;
 		editingSnapshot = undefined;
@@ -768,11 +796,13 @@
 			next.push(candidate);
 		}
 		if (next.length > resolvedValues.length) {
-			queueIdentity(next, [
-				...identityKeys,
-				...next.slice(resolvedValues.length).map(() => nextIdentityKey++)
-			]);
-			valueState.setFromUser(Object.freeze(next));
+			if (
+				!writeValues(Object.freeze(next), [
+					...identityKeys,
+					...next.slice(resolvedValues.length).map(() => nextIdentityKey++)
+				])
+			)
+				return;
 			clearDraft();
 			draftInvalid = false;
 		}

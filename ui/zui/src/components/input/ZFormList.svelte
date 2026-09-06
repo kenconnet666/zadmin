@@ -99,9 +99,14 @@
 </script>
 
 <script lang="ts" generics="T">
-	import { tick, untrack } from 'svelte';
+	import { onDestroy, tick, untrack } from 'svelte';
 	import { useZForm, type FormListArray } from '../../runtime/form/form-context.svelte.js';
 	import type { FormArrayRow } from '../../runtime/form/form-array.svelte.js';
+	import {
+		provideFormList,
+		useFormListParent,
+		type FormListParentArray
+	} from '../../runtime/form/form-list-context.svelte.js';
 	import {
 		fieldPathKey,
 		fieldPathStartsWith,
@@ -127,17 +132,99 @@
 		...rest
 	}: ZFormListProps<T> = $props();
 	const form = useZForm();
-	const path = $derived(normalizeFieldPath(name));
+	let live = true;
+	onDestroy(() => {
+		live = false;
+	});
+	const parent = useFormListParent();
+	const requestedPath = $derived(normalizeFieldPath(name));
+	const ancestors = $derived.by(() => {
+		const result: FormListParentArray[] = [];
+		for (let current = parent; current && current.form === form; current = current.parent)
+			result.push(current.array);
+		return result;
+	});
+	let binding:
+		| {
+				owner: object;
+				parent?: FormListParentArray;
+				rowId?: string;
+				suffixKey: string;
+				getRowKey: ZFormListProps<T>['getRowKey'];
+				array: FormListArray<T>;
+		  }
+		| undefined;
 	const array = $derived.by(() => {
 		const owner = form.model;
-		const currentPath = path;
+		const currentPath = requestedPath;
 		const key = getRowKey;
+		const parents = ancestors;
 		if (!owner) throw new TypeError('ZFormList requires a ZForm model.');
-		return untrack(() => form.createArray<T>(currentPath, { getRowKey: key }));
+		return untrack(() => {
+			const containingArray = parents.find((candidate) =>
+				fieldPathStartsWith(currentPath, candidate.path)
+			);
+			const row = containingArray?.rows.find((candidate) =>
+				fieldPathStartsWith(currentPath, candidate.path)
+			);
+			if (containingArray && !row)
+				throw new TypeError('A nested ZFormList name must address a current parent row.');
+			const suffix = row ? currentPath.slice(row.path.length) : currentPath;
+			const suffixKey = suffix.length ? fieldPathKey(suffix) : '[]';
+			if (
+				binding &&
+				binding.owner === owner &&
+				binding.parent === containingArray &&
+				binding.rowId === row?.id &&
+				binding.suffixKey === suffixKey &&
+				binding.getRowKey === key
+			)
+				return binding.array;
+			let lastPath = currentPath;
+			const rowId = row?.id;
+			const location =
+				containingArray && rowId
+					? {
+							get active() {
+								return (
+									containingArray.active &&
+									containingArray.rows.some((candidate) => candidate.id === rowId)
+								);
+							},
+							get path() {
+								const currentRow = containingArray.rows.find((candidate) => candidate.id === rowId);
+								if (currentRow) lastPath = Object.freeze([...currentRow.path, ...suffix]);
+								return lastPath;
+							},
+							get baselinePath() {
+								const baseline = containingArray.getRowBaselinePath(rowId);
+								return baseline ? Object.freeze([...baseline, ...suffix]) : undefined;
+							}
+						}
+					: undefined;
+			const currentArray = form.createArray<T>(currentPath, { getRowKey: key }, location);
+			binding = {
+				owner,
+				parent: containingArray,
+				rowId,
+				suffixKey,
+				getRowKey: key,
+				array: currentArray
+			};
+			return currentArray;
+		});
+	});
+	provideFormList({
+		form,
+		parent,
+		get array() {
+			return array;
+		}
 	});
 	const rows = $derived(array.rows);
 	let observedArray: FormListArray<T> = untrack(() => array);
 	let observedRows = untrack(() => array.rows);
+	let observedPath = untrack(() => array.path);
 	let mutationGeneration = 0;
 	function focusIsVacant(container: HTMLElement): boolean {
 		const active = getActiveElement(container);
@@ -158,29 +245,49 @@
 	}
 	$effect.pre(() => {
 		const current = array;
-		const listPath = path;
-		return form.registerList({
-			path: listPath,
-			isDirty(fieldPath) {
-				const row = rowAt(fieldPath, current);
-				const relative = row ? fieldPath.slice(row.path.length) : [];
-				return row ? current.isDirty(row.id, relative.length ? relative : undefined) : false;
-			},
-			resetField(fieldPath) {
-				const row = rowAt(fieldPath, current);
-				const relative = row ? fieldPath.slice(row.path.length) : [];
-				return row ? current.resetField(row.id, relative.length ? relative : undefined) : false;
-			}
-		});
+		const parentArrays = ancestors;
+		return untrack(() =>
+			form.registerList({
+				owner: current,
+				ancestors: parentArrays,
+				get active() {
+					return current === array && current.active;
+				},
+				get path() {
+					return current.path;
+				},
+				isDirty(fieldPath) {
+					const row = rowAt(fieldPath, current);
+					const relative = row ? fieldPath.slice(row.path.length) : [];
+					return row ? current.isDirty(row.id, relative.length ? relative : undefined) : false;
+				},
+				resetField(fieldPath) {
+					const row = rowAt(fieldPath, current);
+					const relative = row ? fieldPath.slice(row.path.length) : [];
+					return row ? current.resetField(row.id, relative.length ? relative : undefined) : false;
+				}
+			})
+		);
 	});
 	function synchronize(current: FormListArray<T>, next: readonly FormArrayRow<T>[]): void {
-		if (current !== observedArray) {
+		if (current !== observedArray || !current.active) {
 			observedArray = current;
 			observedRows = next;
+			observedPath = current.path;
 			return;
 		}
-		const previous = observedRows;
+		const currentPath = current.path;
+		// The ancestor transaction already moved every descendant field and error. Translate this
+		// controller's prior addresses before applying only its own row identity changes.
+		const previous =
+			fieldPathKey(currentPath) === fieldPathKey(observedPath)
+				? observedRows
+				: observedRows.map((row) => ({
+						...row,
+						path: Object.freeze([...currentPath, ...row.path.slice(observedPath.length)])
+					}));
 		observedRows = next;
+		observedPath = currentPath;
 		if (
 			previous.length === next.length &&
 			previous.every(
@@ -189,7 +296,7 @@
 			)
 		)
 			return;
-		form.reconcileList(createFormListReconcile(path, previous, next));
+		form.reconcileList(createFormListReconcile(currentPath, previous, next));
 	}
 	$effect.pre(() => {
 		const current = array;
@@ -197,7 +304,7 @@
 		untrack(() => synchronize(current, next));
 	});
 	function mutate(update: (current: FormListArray<T>) => boolean, fallbackRowId?: string): boolean {
-		if (form.disabled || form.readonly) return false;
+		if (!live || form.disabled || form.readonly || !array.active) return false;
 		const current = array;
 		const container = ref;
 		const active = container ? getActiveElement(container) : null;
@@ -215,6 +322,7 @@
 		const generation = ++mutationGeneration;
 		void tick().then(() => {
 			if (
+				!live ||
 				generation !== mutationGeneration ||
 				array !== current ||
 				!container?.isConnected ||
@@ -258,7 +366,7 @@
 		const fallbackId = before[index + 1]?.id ?? before[index - 1]?.id;
 		if (!mutate((controller) => controller.remove(index))) return false;
 		const restoreFocus = () => {
-			if (!ref?.isConnected || array !== current) return;
+			if (!live || !ref?.isConnected || array !== current) return;
 			const fallback = current.rows.find((row) => row.id === fallbackId);
 			if (!fallback || !form.registry.focusListScope(fallback.path))
 				ref.focus({ preventScroll: true });

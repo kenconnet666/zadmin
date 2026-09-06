@@ -16,8 +16,12 @@ import ModelDemo from './ModelDemo.svelte';
 import modelSource from './ModelDemo.svelte?raw';
 import ListDemo from './ListDemo.svelte';
 import listSource from './ListDemo.svelte?raw';
+import NestedListDemo from './NestedListDemo.svelte';
+import nestedListSource from './NestedListDemo.svelte?raw';
 import AdaptersDemo from './AdaptersDemo.svelte';
 import adaptersSource from './AdaptersDemo.svelte?raw';
+import CollectionAdaptersDemo from './CollectionAdaptersDemo.svelte';
+import collectionAdaptersSource from './CollectionAdaptersDemo.svelte?raw';
 import {
 	formApiFacts,
 	formFieldApiFacts,
@@ -114,6 +118,15 @@ export const formDoc = defineComponentDoc(formMetadata, {
 			title: '动态FormList与稳定行身份'
 		},
 		{
+			covers: ['composition', 'controlled', 'form-reset', 'invalid', 'resource-cleanup'],
+			component: NestedListDemo,
+			description:
+				'每层列表独立持有行身份；内层路径与基线跟随父行移动，外层移除同时清理后代字段与错误。',
+			id: 'form-nested-list',
+			source: nestedListSource,
+			title: '嵌套团队与成员'
+		},
+		{
 			covers: ['composition', 'controlled', 'form-data', 'form-reset'],
 			component: AdaptersDemo,
 			description:
@@ -121,6 +134,15 @@ export const formDoc = defineComponentDoc(formMetadata, {
 			id: 'form-choice-number-adapters',
 			source: adaptersSource,
 			title: '选择与数值控件Model适配'
+		},
+		{
+			covers: ['composition', 'controlled', 'form-data', 'form-reset'],
+			component: CollectionAdaptersDemo,
+			description:
+				'NumberField、Segmented、TagsInput、Select和MultiSelect自动连接同一FormModel；number key与不可变数组保持typed，FormData继续使用原生字符串和重复字段。',
+			id: 'form-collection-adapters',
+			source: collectionAdaptersSource,
+			title: '集合与Typed Key控件适配'
 		},
 		{
 			covers: ['controlled', 'loading', 'native-props'],
@@ -148,14 +170,14 @@ export const formDoc = defineComponentDoc(formMetadata, {
 		'FieldPath内部身份保留string/number段类型，HTML name独立生成；多个相同路径实例共享状态，但不会把ZForm变成私有值store。',
 		'模型模式的getValues/getFieldValue返回FormModel快照；native模式按FieldPath形成successful FormData对象。两者都不冒充Standard Schema的typed output。',
 		'模型模式的dirty按当前值与initialize/reset基线精确比较；批量写入与initialize会同步到已注册控件，resetField只恢复一个路径。',
-		'ZFormField内的Input、PasswordInput、Textarea、Checkbox、NativeSelect、CheckboxGroup、Switch、RadioGroup、Slider、RangeSlider和Rating自动读取并写入model；不要再同时传value/checked形成第二个业务owner。',
+		'ZFormField内的Input、PasswordInput、Textarea、Checkbox、NativeSelect、CheckboxGroup、Switch、RadioGroup、Slider、RangeSlider、Rating、NumberField、Segmented、TagsInput、Select和MultiSelect自动读取并写入model；不要再同时传value/checked形成第二个业务owner。',
 		'readonly控件保留原生提交，disabled控件从FormData排除；FormModel仍保留两类字段的业务值。',
 		'错误分为schema、server和manual三层：schema校验只更新schema层，setErrors写server层，setFieldFeedback的errors写manual层；clearErrors可按路径清理。',
 		'onValidSubmit可以返回Promise；等待期间submitting为true并拦截重复语义提交，拒绝交给onSubmitError。reset会使旧提交结果失效，但不会取消应用已经发出的请求。',
 		'ZFormList只在model表单内使用；children必须以row.id作为each key，字段路径在row.path后追加相对段。数组索引只表示当前地址，不能充当渲染身份。',
 		'ZFormList的append、insert、remove、move和replace返回model owner是否接受写入；Form disabled/readonly时操作返回false。删除聚焦行会把焦点移到相邻行或列表根。',
 		'字段卸载时model表单默认preserve=true，native表单默认false；ZFormField.preserve可逐字段覆盖。显式FormList remove始终删除对应行和值，不属于条件卸载保留。',
-		'当前实验性ZFormList只支持彼此独立的数组路径，并会明确拒绝嵌套FormList scope；嵌套列表需要后续让内层path与baseline跟随外层稳定row身份，不能用当前固定索引悄悄模拟。',
+		'嵌套ZFormList在父列表的keyed行中渲染；内层地址和baseline按父行稳定身份定位。父行删除后旧内层操作失效，不会写到移位后的其他行。',
 		"同一表单的typed FieldPath不能互为父子（例如['profile']与['profile','email']），且htmlName不能为空；注册阶段会报告配置错误，避免提交时才出现标量/对象输入错误。"
 	],
 	keywords: [

@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"componentCount": 176,
-	"overallSha256": "972cfd4c61bcbb9bf592571f739711b6a9ba676d1a2ea394b38322dd2e08447b",
+	"overallSha256": "f4e6553bf5a0d7174ec4fd70442240f8407e8fbb9f99a4b75a7b4a212bb2c1d5",
 	"components": [
 		{
 			"id": "accordion",
@@ -275,7 +275,7 @@
 		},
 		{
 			"id": "multi-select",
-			"sha256": "1a5bc8d138e30b96ac25f681e93e0bbd669bf948d9821dab7efa22b00efaf797",
+			"sha256": "d9c81c9d1f17d12c5c28e4fdd4d8384e0c7476d18ed248d0e3c1dca70d8af50f",
 			"source": "src/components/compound/multi-select/ZMultiSelect.svelte"
 		},
 		{
@@ -360,7 +360,7 @@
 		},
 		{
 			"id": "select",
-			"sha256": "adecb10af224c7d9ac44b176ded2bbd14ab53af4d875ca10252f1334630ab9a6",
+			"sha256": "db106ae19c966023369eb3ef5ad45babd017e9298e1bce8bcb6553cdba6167bd",
 			"source": "src/components/compound/select/ZSelect.svelte"
 		},
 		{
@@ -735,7 +735,7 @@
 		},
 		{
 			"id": "tags-input",
-			"sha256": "966a9c7eb6897ca6f019b88c09d0db6c04dd2584a830d8dd69d4500cb553f477",
+			"sha256": "e841f40c632750136d664d8c624d0c99b28f48e8467b7cca80abe1e21d56ed00",
 			"source": "src/components/input/ZTagsInput.svelte"
 		},
 		{
