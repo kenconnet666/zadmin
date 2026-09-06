@@ -6893,7 +6893,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "9c9fbba3afe780dd1190861fe00b935f4d235b7bac48c22e47078b4cf542599e API snapshot entry"
+						"detail": "2b35afa6445d1c68d5d1b88da0b8b2b6e9790ebffe1e3f178e365898d1ae2b6f API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -7471,7 +7471,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "b05f0ddc7d219cc0bd29a8b522a571a857ed8e93da46254374c558d39af59aa2 API snapshot entry"
+						"detail": "72139f4550bfdd45a38233aa704b29a83772ac8b5d02c83a42bf29807ff50008 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -11609,7 +11609,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/input-api-audit.browser.spec.ts",
-						"detail": "ZFileUpload authored visual contract: dims composite controls once and applies the theme font to native controls (line 91); requires browser execution and page-level review"
+						"detail": "ZFileUpload authored visual contract: dims composite controls once and applies the theme font to native controls (line 93); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/InputApiAuditFixture.svelte",
@@ -13497,7 +13497,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "125e22fbec03220abdbcc34e6a7f8e40ae5b9841b0b094d8844c4b18954585e2 API snapshot entry"
+						"detail": "b3b0f1c66b80252a9765f24f588a4b9d50fef5c9343c25f7eae1098b7ba2c498 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [

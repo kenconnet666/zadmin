@@ -18,8 +18,9 @@ describe('ZAccordionTrigger appearance contract', () => {
 			inline.getBoundingClientRect().width
 		);
 		expect(inline.getBoundingClientRect().height).toBe(32);
-		expect(getComputedStyle(inline).paddingBlock).toBe('4px');
-		expect(getComputedStyle(inline).paddingInline).toBe('8px');
+		expect(getComputedStyle(inline).paddingBlock).toBe('0px');
+		expect(getComputedStyle(inline).paddingInline).toBe('16px');
+		expect(getComputedStyle(inline).fontSize).toBe('14px');
 		expect(getComputedStyle(inline).color).toBe('rgb(15, 23, 42)');
 		expect(block.getAttribute('aria-expanded')).toBe('true');
 		expect(inline.getAttribute('aria-expanded')).toBe('false');

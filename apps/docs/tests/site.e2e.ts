@@ -163,9 +163,9 @@ test('renders the component catalog and real demo source', async ({ page }) => {
 	await buttonStatesDemo.getByTestId('button-counter').click();
 	await expect(buttonStatesDemo.getByText('count = 1')).toBeVisible();
 	for (const [label, height, fontSize] of [
-		['Small', 24, '12px'],
+		['Small', 28, '12px'],
 		['Medium', 32, '14px'],
-		['Large', 48, '18px']
+		['Large', 40, '16px']
 	] as const) {
 		const button = buttonStatesDemo.getByRole('button', { name: label, exact: true });
 		await expect(button).toHaveCSS('font-size', fontSize);

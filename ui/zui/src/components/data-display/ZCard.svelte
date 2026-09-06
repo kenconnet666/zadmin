@@ -2,7 +2,7 @@
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
-	import type { ZuiTheme } from '../../theme/types.js';
+	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 
 	export type CardElement = 'article' | 'div' | 'section';
@@ -12,7 +12,7 @@
 	export interface ZCardProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
 		readonly actions?: Snippet;
 		readonly as?: CardElement;
-		readonly bodyPadding?: keyof ZuiTheme['space'];
+		readonly bodyPadding?: ZControlSize | 'none';
 		readonly elevation?: CardElevation;
 		readonly children?: Snippet;
 		readonly footer?: Snippet;
@@ -51,7 +51,7 @@
 				default: "'large'",
 				description: '正文内边距；none适合媒体、表格或代码占满内容区，header/footer保持独立间距。',
 				name: 'bodyPadding',
-				type: "keyof ZuiTheme['space']"
+				type: "ZControlSize | 'none'"
 			},
 			{
 				default: "'div'",

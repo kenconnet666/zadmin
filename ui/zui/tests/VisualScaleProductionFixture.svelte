@@ -26,7 +26,6 @@
 		ZAvatar,
 		ZBadge,
 		ZButton,
-		ZCode,
 		ZContainer,
 		ZHeading,
 		ZIcon,
@@ -41,6 +40,7 @@
 		ZToast,
 		ZToggleButton
 	} from '../src/entrypoints/index.js';
+	import { ZCode } from '../src/entrypoints/code.js';
 	import { semanticTones } from '../src/theme/semantics.js';
 
 	const sizes = ['xsmall', 'small', 'medium', 'large', 'xlarge'] as const;

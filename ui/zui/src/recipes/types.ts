@@ -10,7 +10,7 @@ export type RecipeVariantValue<TOptions> = keyof TOptions extends 'false' | 'tru
 	? boolean
 	: string extends keyof TOptions
 		? string | boolean
-		: keyof TOptions;
+		: Extract<keyof TOptions, string>;
 
 export type RecipeSelectionFrom<TVariants extends RecipeVariantDefinitions> = {
 	readonly [TName in keyof TVariants]?: RecipeVariantValue<TVariants[TName]>;

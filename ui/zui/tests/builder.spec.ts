@@ -178,12 +178,12 @@ describe('ICSS builder', () => {
 		expect(program.block.instructions).toMatchObject([
 			{ property: 'accentColor', values: [{ value: '#2563eb' }] },
 			{ property: 'aspectRatio', values: [{ value: '16 / 9' }] },
-			{ property: 'blockSize', values: [{ unit: 'px', value: 18 }] },
+			{ property: 'blockSize', values: [{ unit: 'px', value: 16 }] },
 			{ property: 'borderInlineEndStyle', values: [{ value: 'solid' }] },
 			{ property: 'borderInlineEndWidth', values: [{ unit: 'px', value: 1 }] },
 			{ property: 'clip', values: [{ value: 'rect(0 0 0 0)' }] },
 			{ property: 'clipPath', values: [{ value: 'inset(50%)' }] },
-			{ property: 'inlineSize', values: [{ unit: 'px', value: 16 }] },
+			{ property: 'inlineSize', values: [{ unit: 'px', value: 14 }] },
 			{ property: 'marginInline', values: [{ value: 'auto' }] }
 		]);
 	});

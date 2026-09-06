@@ -57,9 +57,9 @@ describe('date picker production contracts', () => {
 		)!;
 		expect(dateGroup.dataset.size).toBe('small');
 		expect(rangeGroup.dataset.size).toBe('large');
-		// The group owns a one-pixel border around the 24px/48px control boxes.
-		expect(dateGroup.getBoundingClientRect().height).toBe(26);
-		expect(rangeGroup.getBoundingClientRect().height).toBe(50);
+		// The complete group includes its border within the selected control height.
+		expect(dateGroup.getBoundingClientRect().height).toBe(28);
+		expect(rangeGroup.getBoundingClientRect().height).toBe(40);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="date-production-form"]')!;
 		const rangeTrigger = document.querySelector<HTMLButtonElement>(
 			'[data-testid="production-range-picker"] button[aria-haspopup="dialog"]'

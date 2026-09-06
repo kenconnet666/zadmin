@@ -137,6 +137,7 @@ jobs:
           path: |
             **/test-results/**
             **/.vitest-reports/**
+            ui/zui/tests/__screenshots__/**
 
   docs-e2e:
     name: Docs end-to-end (${{ matrix.browser }})
@@ -285,6 +286,7 @@ jobs:
           path: |
             packages/*/coverage/**
             ui/*/coverage/**
+            ui/zui/tests/__screenshots__/**
 
   packages:
     name: Bundles and external packages

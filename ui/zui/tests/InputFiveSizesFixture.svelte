@@ -35,6 +35,7 @@
 	const files = [createFileUploadItem('sizing', new File(['sizing'], 'sizing.txt'))];
 	const date = new CalendarDate(2026, 9, 6);
 	const range = { start: date, end: date.add({ days: 3 }) };
+	const directions = ['ltr', 'rtl'] as const;
 	const nodes = [
 		{ key: 'root', label: 'Root' },
 		...Array.from({ length: 1000 }, (_, index) => ({
@@ -46,9 +47,9 @@
 </script>
 
 {#if mode === 'switch'}
-	{#each ['ltr', 'rtl'] as direction (direction)}
+	{#each directions as direction (direction)}
 		<div dir={direction}>
-			<ZProvider direction={direction as 'ltr' | 'rtl'} motion="reduced">
+			<ZProvider {direction} motion="reduced">
 				{#each sizes as size (size)}
 					{#each [false, true] as checked (checked)}
 						<ZSwitch

@@ -27,11 +27,13 @@ test('copies real collapsed demo source from separate responsive actions and con
 	for (const width of [1280, 390]) {
 		await page.setViewportSize({ width, height: 844 });
 		await page.goto('/#/components/button');
+		// Repeated hash-only navigation can retain the preceding viewport's expanded state.
+		await page.reload();
 		const demo = page.locator('#button-variants');
 		const actions = demo.getByTestId('doc-source-actions');
 		const copy = actions.getByTestId('copy-demo-source');
 		const toggle = actions.getByRole('button', { name: '查看源码', exact: true });
-		await expect(copy).toHaveText('复制源码');
+		await expect(copy).toHaveAccessibleName('复制源码');
 		await expect(toggle).toHaveAttribute('aria-expanded', 'false');
 		await expect(copy.locator('[data-copy-icon="copy"]')).toBeVisible();
 		await expect(actions.locator('button button')).toHaveCount(0);
@@ -49,7 +51,7 @@ test('copies real collapsed demo source from separate responsive actions and con
 		await page.evaluate(() =>
 			(window as Window & { finishDemoCopy?: () => void }).finishDemoCopy?.()
 		);
-		await expect(copy).toHaveText('已复制');
+		await expect(copy).toHaveAccessibleName('已复制');
 		await expect(copy.locator('[data-copy-icon="check"]')).toBeVisible();
 		await expect(toggle).toHaveAttribute('aria-expanded', 'false');
 		await expect

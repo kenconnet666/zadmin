@@ -539,32 +539,17 @@
 	});
 </script>
 
-{#snippet highlightedContent()}
-	{#if tokens}
-		{#each tokens as line, index (index)}
-			{@const lineClasses = zui.slots(codeRecipe, {
-				copyable,
-				embedded,
-				highlighted: highlighted.has(index + 1),
-				inline,
-				scheme: resolvedScheme,
-				size: resolvedSize,
-				wrap
-			})}
-			<span class={lineClasses.line} data-highlighted={highlighted.has(index + 1) || undefined}
-				>{#if lineNumbers}<span class={classes.lineNumber} aria-hidden="true">{index + 1}</span
-					>{/if}
-				{#each line as token, tokenIndex (`${index}:${tokenIndex}`)}<span
-						class={classes.token}
-						style={tokenVariables(token)}>{token.content}</span
-					>{/each}</span
-			>
-			{#if index < tokens.length - 1}{NEWLINE}{/if}
-		{/each}
-	{:else}
-		{code}
-	{/if}
-{/snippet}
+<!-- Whitespace between these nodes becomes code text; only token content and NEWLINE may emit it. -->
+<!-- prettier-ignore -->
+{#snippet highlightedContent()}{#if tokens}{#each tokens as line, index (index)}{@const lineClasses = zui.slots(codeRecipe, {
+	copyable,
+	embedded,
+	highlighted: highlighted.has(index + 1),
+	inline,
+	scheme: resolvedScheme,
+	size: resolvedSize,
+	wrap
+})}<span class={lineClasses.line} data-highlighted={highlighted.has(index + 1) || undefined}>{#if lineNumbers}<span class={classes.lineNumber} aria-hidden="true">{index + 1}</span>{/if}{#each line as token, tokenIndex (`${index}:${tokenIndex}`)}<span class={classes.token} style={tokenVariables(token)}>{token.content}</span>{/each}</span>{#if index < tokens.length - 1}{NEWLINE}{/if}{/each}{:else}{code}{/if}{/snippet}
 
 {#snippet blockContent()}
 	<pre
@@ -581,6 +566,7 @@
 {/snippet}
 
 {#if inline}
+	<!-- prettier-ignore -->
 	<code
 		{...rest}
 		bind:this={ref}
@@ -590,10 +576,7 @@
 		aria-label={ariaLabel}
 		data-color-scheme={resolvedScheme}
 		data-size={resolvedSize}
-		data-highlight-status={status}
-	>
-		{#if status === 'loading' && loading}{@render loading()}{:else}{@render highlightedContent()}{/if}
-	</code>
+		data-highlight-status={status}>{#if status === 'loading' && loading}{@render loading()}{:else}{@render highlightedContent()}{/if}</code>
 {:else if copyable}
 	<div class={classes.container} data-slot="copy-container">
 		{@render blockContent()}

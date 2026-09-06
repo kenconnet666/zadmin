@@ -381,7 +381,14 @@
 		return normalizePageSizeOptions(pageSizeOptions, model.pageSize ?? 10);
 	});
 	const classes = $derived(zui.slots(paginationRecipe));
-	const controlClass = $derived(zui.icss(controlSizeStyles[resolvedSize]));
+	const controlClass = $derived(
+		zui.icss((s) => {
+			controlSizeStyles[resolvedSize](s);
+			// Native single-line select/input widgets must not substitute a taller platform minimum.
+			s.height.raw(metrics.height);
+			s.fontFamily._sans;
+		})
+	);
 	const textSizeClass = $derived(zui.icss((s) => s.fontSize.raw(metrics.fontSize)));
 	const numberFormat = $derived(new Intl.NumberFormat(zui.locale));
 	const localePack = $derived(zui.localePack.pagination);

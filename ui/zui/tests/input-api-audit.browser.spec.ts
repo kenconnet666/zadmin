@@ -44,6 +44,8 @@ describe('input API audit regressions', () => {
 		render(InputApiAuditFixture);
 		await tick();
 		const editor = element<HTMLTextAreaElement>('audit-mention');
+		expect(editor.labels).toHaveLength(1);
+		expect(editor.labels![0].htmlFor).toBe(editor.id);
 		for (const state of ['readonly', 'disabled'] as const) {
 			const query = state === 'readonly' ? '@a' : '@al';
 			edit(editor, query);

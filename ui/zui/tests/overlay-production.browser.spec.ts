@@ -70,7 +70,7 @@ describe('ZDialog, ZAlertDialog and ZPopover production contracts', () => {
 			title.getBoundingClientRect().height,
 			'dialog title has typography geometry'
 		).toBeGreaterThan(0);
-		expect(getComputedStyle(title).fontSize, 'dialog title has resolved typography').toBe('18px');
+		expect(getComputedStyle(title).fontSize, 'dialog title has resolved typography').toBe('20px');
 		expect(getComputedStyle(title).fontWeight).toBe('700');
 		expect(
 			description.getBoundingClientRect().height,

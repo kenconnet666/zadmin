@@ -4,7 +4,7 @@
 	const actionsRecipe = defineSlotRecipe(
 		{
 			layer: 'utilities',
-			slots: ['root', 'copy', 'icon', 'label'] as const,
+			slots: ['root', 'copy', 'icon', 'label', 'reserve'] as const,
 			base: {
 				root: (s) => {
 					s.maxWidth.percent(100);
@@ -20,10 +20,11 @@
 					s.flexShrink(0);
 				},
 				label: (s) => {
-					// Reserve the four-character idle/failure label while success text is shorter.
-					s.minWidth.em(4);
+					s.display.grid;
+					s._selector('& > span', (s) => s.gridArea.raw('1 / 1'));
 					s.textAlign.center;
-				}
+				},
+				reserve: (s) => s.visibility.hidden
 			},
 			variants: {}
 		},
@@ -127,7 +128,11 @@
 				<Copy aria-hidden="true" class={classes.icon} data-copy-icon="copy" />
 			{/if}
 		{/snippet}
-		<span class={classes.label}>{label}</span>
+		<span class={classes.label}>
+			<span class={classes.reserve} aria-hidden="true">复制源码</span>
+			<span class={classes.reserve} aria-hidden="true">复制失败</span>
+			<span>{label}</span>
+		</span>
 	</ZButton>
 	{@render children?.()}
 	<ZVisuallyHidden aria-atomic="true" aria-live="polite">{announcement}</ZVisuallyHidden>

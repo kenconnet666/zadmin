@@ -67,6 +67,19 @@
 
 前一提交 bf1e01c 的 CI 34006402280 报告 Tooltip 旧参数、固定颜色数量、入场中间帧几何采样、reset 完成时序及 Tree fixture 名称问题，均已有对应修复。另一次 Transfer 浏览器连接中断没有组件根因 stack，保留为执行不完整的边界。当前修订的跨浏览器、完整构建、覆盖率和桌面验收交给其自身 CI，不借用旧提交的绿色结果。
 
+## 07778ba 候选的 CI 收口
+
+CI 34011087935 的包体/仓库外消费检查通过，其余已出现的失败按源码根因逐项处理，保持行为与几何断言精度：
+
+- Recipe 泛型返回的 variant key 约束为字符串，保持严格 defaults/compound 推导，同时满足运行时缓存的公共形状；专门测试非法 runtime 输入时使用明确的类型越界值。
+- Card/Stack 的通用间距只暴露有实现的尺度，Switch 专用的 switchInset 不再通过 keyof space 混进公共枚举。
+- ZCode 的高亮 token 和换行保留精确文本，ZTag 移除可选按钮周围的多余空白；相关断言保持原始全文相等。
+- Mention 的 Popover triggerId 采用显式 id、InputGroup、Field 的顺序，恢复原生 label-for；状态也读取实际 InputGroup。浏览器验证五档 label 全部正确关联，未命名 textarea 为 0。
+- 修复测试中 ZCode 的错误入口、已经合法的旧尺寸/tone负例、旧字级/外框/边框断言、虚拟 Tree 选错测量层、重复 Pagination landmark 名称和原生小号 select 高度。
+- 复制按钮反馈宽度改用真实文字的 CSS grid 占位，兼容字体的实际字符宽度；测试逐视口使用新文档，避免 hash 导航保留上一次展开状态。
+- Docs 原始入口为 357858 bytes，超过原 326000 bytes 门槛。Theme Lab 已改为路由按需加载；按用户最新优先级，入口原始/gzip大小改为记录与告警，不再阻断交付，模块图与文档按需加载检查保持。
+- CI 开始保存组件失败截图。单次 Workspace WebKit 的 modal Popover opacity=0 尚无完整根因证据，保留 connected/state/opacity 诊断和原等待预算，未猜测修改动画或声称该项已解决。
+
 ## 基础设施命名迁移
 
 | 原 API             | 当前 API         | 原因                                                                                                                                 |

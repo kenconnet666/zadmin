@@ -27,8 +27,8 @@ describe('ZAvatar server contract', () => {
 		expect(
 			() => render(ZAvatar, { props: { alt: 'Avatar', shape: 'pill' as never } }).body
 		).toThrow(/shape must be circle, rounded or square/u);
-		expect(
-			() => render(ZAvatar, { props: { alt: 'Avatar', size: 'xlarge' as never } }).body
-		).toThrow(/size must be small, medium or large/u);
+		expect(() => render(ZAvatar, { props: { alt: 'Avatar', size: 'huge' as never } }).body).toThrow(
+			/size must be xsmall, small, medium, large or xlarge/u
+		);
 	});
 });

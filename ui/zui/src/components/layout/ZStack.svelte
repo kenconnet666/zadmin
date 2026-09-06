@@ -4,7 +4,7 @@
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
-	import type { ZuiTheme } from '../../theme/types.js';
+	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
 
 	export type ZStackDirection = 'column' | 'column-reverse' | 'row' | 'row-reverse';
 	export type ZStackAlignment = 'baseline' | 'center' | 'end' | 'start' | 'stretch';
@@ -14,7 +14,7 @@
 		readonly align?: ZStackAlignment;
 		readonly children?: Snippet;
 		readonly direction?: ZStackDirection;
-		readonly gap?: keyof ZuiTheme['space'] | number;
+		readonly gap?: ZControlSize | 'none' | number;
 		readonly justify?: ZStackJustification;
 		readonly wrap?: boolean;
 		ref?: HTMLDivElement | null;
@@ -43,7 +43,7 @@
 				default: "'none'",
 				description: 'Theme间距token或明确px值。',
 				name: 'gap',
-				type: "keyof ZuiTheme['space'] | number"
+				type: "ZControlSize | 'none' | number"
 			},
 			{
 				default: "'stretch'",

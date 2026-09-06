@@ -16,7 +16,14 @@ describe('small foundation primitives', () => {
 		expect(vertical.tagName).toBe('DIV');
 		expect(vertical.getAttribute('role')).toBe('separator');
 		expect(vertical.getAttribute('aria-orientation')).toBe('vertical');
-		expect(getComputedStyle(named).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+		const horizontalStyle = getComputedStyle(named);
+		const verticalStyle = getComputedStyle(vertical);
+		expect(horizontalStyle.borderBlockStartWidth).toBe('1px');
+		expect(horizontalStyle.borderBlockStartStyle).toBe('solid');
+		expect(horizontalStyle.borderBlockStartColor).toBe('rgb(226, 232, 240)');
+		expect(verticalStyle.borderInlineStartWidth).toBe('1px');
+		expect(verticalStyle.borderInlineStartStyle).toBe('solid');
+		expect(verticalStyle.borderInlineStartColor).toBe('rgb(226, 232, 240)');
 	});
 
 	it('keeps VisuallyHidden accessible and Kbd native/nestable without platform logic', () => {

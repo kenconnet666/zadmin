@@ -173,7 +173,7 @@
 	<ZCard class={classes.principle}>
 		<ZStatistic label="稳定组件族" tone="primary" value={stableCount} />
 		<ZText as="p" class={classes.principleCopy}>
-			每个组件族均逐项通过API、运行时、视觉和production门禁，兼容状态在页面明确展示。
+			这些组件族按稳定API维护，并有对应的行为和视觉回归合同；发布状态与支持范围在文档中分别说明。
 		</ZText>
 	</ZCard>
 </section>

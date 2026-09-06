@@ -2419,7 +2419,13 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		const content = document.querySelector<HTMLElement>('[data-testid="popover-content"]');
 		expect(content?.getAttribute('aria-modal')).toBe('true');
-		await expect.poll(() => content && getComputedStyle(content).opacity).toBe('1');
+		await expect
+			.poll(() => ({
+				connected: content?.isConnected,
+				state: content?.dataset.state,
+				opacity: content && getComputedStyle(content).opacity
+			}))
+			.toEqual({ connected: true, state: 'open', opacity: '1' });
 		await expect
 			.poll(
 				() =>

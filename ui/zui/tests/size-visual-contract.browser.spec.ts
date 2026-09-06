@@ -174,6 +174,7 @@ describe('size visual contracts for foundational controls', () => {
 		const groupInput = document.querySelector<HTMLInputElement>('[data-testid="group-input"]')!;
 		expect(group.dataset.size).toBe('small');
 		expect(groupInput.dataset.size).toBe('small');
-		expect(groupInput.getBoundingClientRect().height).toBe(28);
+		expect(group.getBoundingClientRect().height).toBe(28);
+		expect(groupInput.getBoundingClientRect().height).toBe(group.clientHeight);
 	});
 });

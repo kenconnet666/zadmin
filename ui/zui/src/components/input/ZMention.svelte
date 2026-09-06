@@ -224,6 +224,7 @@
 	import { findMentionQuery, insertMention, type MentionQuery } from '../../runtime/mention.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { useZField } from '../../runtime/form/field-context.js';
+	import { useZInputGroup } from '../../runtime/form/input-group-context.svelte.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 	import {
 		createChoiceVirtualMountBridge,
@@ -300,6 +301,7 @@
 		disabled: disabledProp = false,
 		emptyText,
 		filter,
+		id,
 		item: itemSnippet,
 		items,
 		listLabel,
@@ -326,8 +328,14 @@
 	}: ZMentionProps = $props();
 	const zui = useZui();
 	const field = useZField();
-	const disabled = $derived(disabledProp || (field?.disabled ?? false));
-	const readonly = $derived(readonlyProp || (field?.readonly ?? false));
+	const inputGroup = useZInputGroup();
+	const disabled = $derived(
+		disabledProp || (inputGroup?.disabled ?? false) || (field?.disabled ?? false)
+	);
+	const readonly = $derived(
+		readonlyProp || (inputGroup?.readonly ?? false) || (field?.readonly ?? false)
+	);
+	const triggerId = $derived(id ?? inputGroup?.controlId ?? field?.controlId);
 	const resolvedEmptyText = $derived(emptyText ?? zui.localePack.collection.mentionEmpty);
 	const resolvedLoadingText = $derived(loadingText ?? zui.localePack.collection.loading);
 	const resolvedListLabel = $derived(listLabel ?? zui.localePack.collection.mentionList);
@@ -560,6 +568,7 @@
 
 <ZPopover
 	gutter={4}
+	{triggerId}
 	matchWidth
 	modal={false}
 	onOpenChange={(next) => (open = next)}

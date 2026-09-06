@@ -5116,7 +5116,7 @@ export const cardApiFacts = {
 		{
 			name: 'bodyPadding',
 			required: false,
-			type: "keyof ZuiTheme['space']"
+			type: "ZControlSize | 'none'"
 		},
 		{
 			name: 'elevation',
@@ -10395,7 +10395,7 @@ export const stackApiFacts = {
 		{
 			name: 'gap',
 			required: false,
-			type: "keyof ZuiTheme['space'] | number"
+			type: "ZControlSize | 'none' | number"
 		},
 		{
 			name: 'justify',

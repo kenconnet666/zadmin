@@ -289,6 +289,8 @@
 	}
 </script>
 
+<!-- Adjacent content and optional action must not add text to caller-owned labels. -->
+<!-- prettier-ignore -->
 <span
 	{...rest}
 	bind:this={ref}
@@ -300,8 +302,7 @@
 	data-removable={resolvedRemovable || undefined}
 	data-size={resolvedSize}
 	data-tone={resolvedTone}
-	><span class={contentClass} data-slot="content">{@render children?.()}</span>
-	{#if resolvedRemovable}<button
+	><span class={contentClass} data-slot="content">{@render children?.()}</span>{#if resolvedRemovable}<button
 			type="button"
 			class={removeClass}
 			aria-label={resolvedRemoveLabel}

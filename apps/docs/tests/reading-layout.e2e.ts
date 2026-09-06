@@ -7,7 +7,7 @@ test('component introductions wrap long identifiers without widening the mobile 
 	await page.goto('/#/components/tabs');
 	const title = page.locator('main h1');
 	await expect(title).toHaveText('ZTabs');
-	await expect(page.locator('main header')).toContainText(
+	await expect(page.locator('main [data-doc-route="component:tabs"] > header')).toContainText(
 		'LogicalCollection/MountedElements/CollectionNavigation'
 	);
 	expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);

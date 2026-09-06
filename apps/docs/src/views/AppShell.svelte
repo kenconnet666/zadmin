@@ -126,7 +126,6 @@
 	import type { DocsPalette } from '../app/theme.js';
 	import GuidePage from './GuidePage.svelte';
 	import HomePage from './HomePage.svelte';
-	import ThemeLabPage from './ThemeLabPage.svelte';
 	import AppHeader from './AppHeader.svelte';
 	import AppSidebar from './AppSidebar.svelte';
 
@@ -300,7 +299,16 @@
 		{:else if currentDoc && ComponentPage}
 			<ComponentPage doc={currentDoc} />
 		{:else if currentGuideId === 'theme'}
-			<ThemeLabPage {onThemeChange} {themeId} {palette} />
+			{#await import('./ThemeLabPage.svelte')}
+				<ZStack direction="row" align="center" gap="medium">
+					<ZSpinner label="正在加载主题实验室" size="small" />
+					<ZText>正在加载主题实验室…</ZText>
+				</ZStack>
+			{:then { default: ThemeLabPage }}
+				<ThemeLabPage {onThemeChange} {themeId} {palette} />
+			{:catch}
+				<ZAlert tone="danger" title="主题实验室加载失败">请刷新页面后重试。</ZAlert>
+			{/await}
 		{:else if currentGuide}
 			<GuidePage guide={currentGuide} />
 		{:else if invalidRoute}

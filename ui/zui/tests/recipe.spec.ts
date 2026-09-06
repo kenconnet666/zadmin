@@ -182,13 +182,13 @@ describe('defineRecipe', () => {
 			defineRecipe({
 				defaultVariants: { missing: 'x' },
 				variants: { tone: { primary: () => undefined } }
-			})
+			} as never)
 		).toThrow(/Unknown recipe variant/);
 		expect(() =>
 			defineRecipe({
 				defaultVariants: { tone: 'missing' },
 				variants: { tone: { primary: () => undefined } }
-			})
+			} as never)
 		).toThrow(/Unknown recipe value/);
 		expect(() =>
 			defineRecipe({
@@ -338,7 +338,7 @@ describe('defineSlotRecipe', () => {
 				defaultVariants: { tone: 'missing' },
 				slots: ['root'] as const,
 				variants: { tone: { primary: {} } }
-			})
+			} as never)
 		).toThrow(/Unknown slot recipe value/u);
 		expect(() =>
 			defineSlotRecipe({

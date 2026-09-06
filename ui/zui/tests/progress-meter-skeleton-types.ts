@@ -37,7 +37,7 @@ const skeletonProps = {
 // @ts-expect-error Meter value is required
 const invalidMeter = { label: 'Capacity' } satisfies ZMeterProps;
 // @ts-expect-error Progress tones are finite
-const invalidProgress = { label: 'Build', tone: 'neutral' } satisfies ZProgressProps;
+const invalidProgress = { label: 'Build', tone: 'custom' } satisfies ZProgressProps;
 // @ts-expect-error Skeleton lines are numeric
 const invalidSkeleton = { lines: '3' } satisfies ZSkeletonProps;
 

@@ -94,3 +94,15 @@
 - Workspace 另有 `transfer-production.browser.spec.ts` 的浏览器连接关闭错误，没有组件源码 stack 能证明 Transfer 功能错误。Workspace 最终报告 14 断言失败、1444 通过、2 skipped，同时有该未处理的执行中断；不能认为剩余计划用例已全部执行。Coverage 为 5 断言失败、816 通过，失败归属如上。
 
 上述定向修复仅完成 Prettier、逐文件 WebStorm errors-only 与 diff-check；没有在本地执行测试，不借用旧 CI 宣称当前改动通过。
+
+### 07778ba 的后续 CI 收口
+
+已读取 [run 34011087935](https://github.com/kenconnet666/zadmin/actions/runs/34011087935) 已完成的 Coverage、Workspace 与三个 Docs job 日志。此次结果对应 07778ba，不代表以下工作树修复已经执行通过。
+
+- 五档 Tree 字体的 3 个失败来自宽泛 selector 先命中 ZVirtualList 的外层语义 item（继承 body 16px）；真实可见行是 treeitem 的直接子 item，使用同一 Tree itemBody recipe。几何/字号回归现在统一采样 `[role="treeitem"] > [data-slot="item"]`，仍精确检查可见行高度及 11/12/14/16/16px 字体，没有为错误的采样节点改生产样式。
+- Accordion inline 的共享 medium 合同为高度32、块向padding0、内联padding16和字体14；旧4/8px断言已迁移。DialogTitle 已使用20px xlarge，旧18px断言同步为20px。
+- Workspace WebKit 还发现 xsmall 原生分页select自然高度25px而目标24px；分页的两个单行原生辅助控件现在显式采用当前size的height，并保留原生select外观。严格24px回归未放宽。
+- Docs Pagination 新尺寸演示的10个nav原先共享默认“分页导航”名称，触发三个浏览器的landmark-unique；现按size和完整/简洁模式提供可区别的名称。
+- 仅Workspace WebKit出现的 modal Popover opacity仍为0的等待失败，现有日志没有connected/open/visibility等信息，且未上传该组件失败截图制品，不能确认是调度、关闭还是入场状态问题。回归保留原等待预算，新增connected/state/opacity联合诊断；没有通过延长等待或改motion源码猜修，也未宣称该额外问题已解决。
+
+已将Docs palette旧“Primary”按钮定位、Mention缺标签的实际textarea/trigger-id、阅读区多header选择器以及复制操作条等跨组证据分别转交对应维护者。本组6个代码/测试/演示文件最终逐文件WebStorm errors-only为空，Prettier和diff-check通过；仍未在本地运行测试或构建。

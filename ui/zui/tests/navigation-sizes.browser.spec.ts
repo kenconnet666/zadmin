@@ -47,6 +47,7 @@ describe('navigation and overlay five-size geometry', () => {
 			const host = target();
 			const component = mount(NavigationSizesFixture, { target: host, props: { size } });
 			await tick();
+			// VirtualList also owns an outer item slot; inspect Tree's actual rendered row content.
 			for (const selector of [
 				'[data-testid="size-accordion"]',
 				'[data-testid="size-tab"]',
@@ -56,8 +57,8 @@ describe('navigation and overlay five-size geometry', () => {
 				'[data-testid="size-pagination-simple"] input',
 				'[data-testid="size-command"] input',
 				'[data-testid="size-command"] [data-slot="item"]',
-				'[data-testid="size-tree"] [data-slot="item"]',
-				'[data-testid="size-virtual-tree"] [data-slot="item"]'
+				'[data-testid="size-tree"] [role="treeitem"] > [data-slot="item"]',
+				'[data-testid="size-virtual-tree"] [role="treeitem"] > [data-slot="item"]'
 			]) {
 				const element = host.querySelector<HTMLElement>(selector)!;
 				expect(element, selector).not.toBeNull();
@@ -96,7 +97,7 @@ describe('navigation and overlay five-size geometry', () => {
 			});
 			await tick();
 			const row = host.querySelector<HTMLElement>(
-				'[data-testid="size-virtual-tree"] [data-slot="item"]'
+				'[data-testid="size-virtual-tree"] [role="treeitem"] > [data-slot="item"]'
 			)!;
 			const expected =
 				itemSize ?? Number.parseFloat(getComputedStyle(document.documentElement).fontSize) * 2.75;
@@ -115,10 +116,10 @@ describe('navigation and overlay five-size geometry', () => {
 		});
 		await tick();
 		const virtualRow = host.querySelector<HTMLElement>(
-			'[data-testid="size-virtual-tree"] [data-slot="item"]'
+			'[data-testid="size-virtual-tree"] [role="treeitem"] > [data-slot="item"]'
 		)!;
 		const normalRow = host.querySelector<HTMLElement>(
-			'[data-testid="size-tree"] [data-slot="item"]'
+			'[data-testid="size-tree"] [role="treeitem"] > [data-slot="item"]'
 		)!;
 		expect(virtualRow.getBoundingClientRect().height).toBeCloseTo(38, 0);
 		host.style.setProperty('--tree-row-height', '52px');

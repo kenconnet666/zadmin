@@ -11,7 +11,7 @@ test('applies and persists primary palette while high contrast keeps its preset 
 	await expect(page.locator('html')).toHaveAttribute('data-palette', 'preset');
 	const primary = page
 		.getByTestId('demo-button-variants')
-		.getByRole('button', { name: 'Primary', exact: true });
+		.getByRole('button', { name: 'Solid 实心', exact: true });
 	const current = page.locator('nav[aria-label="组件导航"] a[aria-current="page"]');
 
 	await page.getByRole('button', { name: '调整显示偏好', exact: true }).click();

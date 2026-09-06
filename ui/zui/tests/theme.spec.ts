@@ -324,8 +324,9 @@ describe('ZUI themes', () => {
 		expect(defaultTheme.size.skeletonLine).toBe(12);
 		expect(defaultTheme.size.timelineMarker).toBe(12);
 		expect(defaultTheme.borderWidth.progress).toBe(8);
-		expect(defaultTheme.indicatorSize.medium).toBe(18);
-		expect(defaultTheme.fontSize.xxlarge).toBe(32);
+		expect(defaultTheme.indicatorSize.medium).toBe(16);
+		expect(defaultTheme.fontSize.xxlarge).toBe(24);
+		expect(defaultTheme.fontSize.xxxlarge).toBe(32);
 		expect(defaultTheme.space.medium).toBe(8);
 	});
 
