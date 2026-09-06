@@ -119,12 +119,19 @@
 			{
 				name: 'labelContent',
 				type: 'Snippet',
+				default: 'undefined',
 				description: '仅替换非compact状态的可见标签内容；label继续拥有可访问名称与折叠后备。'
 			},
-			{ name: 'description', type: 'string', description: '可选说明；空字符串不渲染。' },
+			{
+				name: 'description',
+				type: 'string',
+				default: 'undefined',
+				description: '可选说明；空字符串不渲染。'
+			},
 			{
 				name: 'href',
 				type: 'string',
+				default: 'undefined',
 				description: '提供时主元素为真实anchor；不提供时根据expanded分支为button或div。'
 			},
 			{
@@ -142,27 +149,32 @@
 			{
 				name: 'expanded',
 				type: 'boolean',
+				default: 'undefined',
 				description: '存在即声明该项拥有子级；只映射到负责展开的button。'
 			},
 			{
 				name: 'onExpandedChange',
 				type: '(expanded: boolean) => void',
+				default: 'undefined',
 				description: '展开请求回调；组件不拥有子级内容或面板状态。'
 			},
 			{
 				name: 'contentId',
 				type: 'string',
+				default: 'undefined',
 				description: '面板ID；作为aria-controls只写到负责展开的button。'
 			},
 			{
 				name: 'disclosureId',
 				type: 'string',
+				default: 'undefined',
 				description:
 					'负责展开的真实button ID；链接双控件分支不占用primary原生id，单button分支优先于原生id。'
 			},
 			{
 				name: 'disclosureLabel',
 				type: 'string',
+				default: 'undefined',
 				description: '独立展开按钮的可访问名称；默认复用可见label。'
 			},
 			{
@@ -206,6 +218,7 @@
 			{
 				name: 'newWindowLabel',
 				type: 'string',
+				default: 'undefined',
 				description: '链接target=_blank时覆盖ZLink的本地化隐藏提示。'
 			},
 			{
@@ -796,6 +809,7 @@
 			{referrerpolicy}
 			{rel}
 			style={linkStyle}
+			size={resolvedSize}
 			{target}
 			{type}
 		>
@@ -854,6 +868,7 @@
 		{referrerpolicy}
 		{rel}
 		style={linkStyle}
+		size={resolvedSize}
 		{target}
 		{type}
 	>

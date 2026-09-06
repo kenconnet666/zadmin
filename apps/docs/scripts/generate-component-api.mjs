@@ -122,6 +122,18 @@ function objectStringProperty(object, name) {
 		: undefined;
 }
 
+function validateLiteralMetadataRows(metadata, filename) {
+	for (const section of ['props', 'states', 'parts']) {
+		for (const row of metadataItems(metadata, section)) {
+			const name = objectStringProperty(row, 'name') ?? '<unnamed>';
+			for (const field of section === 'props' ? ['description', 'default'] : ['description']) {
+				if (objectStringProperty(row, field) === undefined)
+					throw new Error(`${filename} zuiMetadata.${section}.${name} requires a string ${field}.`);
+			}
+		}
+	}
+}
+
 function objectBooleanProperty(object, name) {
 	const property = object.properties.find((candidate) => propertyName(candidate) === name);
 	if (!property || !ts.isPropertyAssignment(property)) return undefined;
@@ -662,6 +674,26 @@ export function validateOpaqueMetadataFacts({ entries, publicFacts, filename = '
 }
 
 if (process.argv.includes('--self-test')) {
+	for (const [body, rejected] of [
+		["props: [{ name: 'href', description: 'Link destination.' }]", true],
+		["props: [{ name: 'href', description: 'Link destination.', default: 'undefined' }]", false],
+		["states: [{ name: 'data-size', values: ['small'] }]", true],
+		["states: [{ name: 'data-size', values: ['small'], description: 'Control size.' }]", false]
+	]) {
+		const file = ts.createSourceFile(
+			'metadata-row-self-test.ts',
+			`export const zuiMetadata = { ${body} };`,
+			ts.ScriptTarget.Latest,
+			true
+		);
+		let failed = false;
+		try {
+			validateLiteralMetadataRows(metadataObject(file, 'self-test'), 'self-test');
+		} catch {
+			failed = true;
+		}
+		if (failed !== rejected) throw new Error('Metadata required row field self-test failed.');
+	}
 	const componentPath = (...segments) => resolve(componentsRoot, ...segments);
 	const listDeprecatedPaths = await scanWorkspacePropertyPaths(
 		workspaceTypeGraph,
@@ -1684,6 +1716,7 @@ async function componentFacts(source, filename, path) {
 	if (!match) throw new Error(`${filename} is missing its TypeScript module script.`);
 	const sourceFile = ts.createSourceFile(filename, match[1], ts.ScriptTarget.Latest, true);
 	const metadata = metadataObject(sourceFile, filename);
+	validateLiteralMetadataRows(metadata, filename);
 	const id = stringProperty(metadata, 'id', sourceFile, filename);
 	const name = stringProperty(metadata, 'name', sourceFile, filename);
 	const sourcePath = stringProperty(metadata, 'source', sourceFile, filename);

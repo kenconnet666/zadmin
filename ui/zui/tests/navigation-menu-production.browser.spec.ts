@@ -165,7 +165,7 @@ describe('ZNavigationMenu production browser contract', () => {
 			await expect.poll(() => disclosure.getAttribute('aria-expanded')).toBe('true');
 			expect(
 				controlledPanel(disclosure)!
-					.querySelector<HTMLAnchorElement>('a[href="/products/overview"]')
+					.querySelector<HTMLAnchorElement>('a[href="/products/overview"]')!
 					.getAttribute('aria-current')
 			).toBe('page');
 		} finally {
@@ -266,8 +266,8 @@ describe('ZNavigationMenu production browser contract', () => {
 			popup.querySelectorAll(`li[data-key="${hiddenKey}"][data-key-type="${hiddenType}"]`)
 		).toHaveLength(1);
 		expect(
-			popup.querySelector(`li[data-key="${hiddenKey}"][data-key-type="${hiddenType}"]`)?.dataset
-				.overflowHidden
+			popup.querySelector<HTMLElement>(`li[data-key="${hiddenKey}"][data-key-type="${hiddenType}"]`)
+				?.dataset.overflowHidden
 		).toBeUndefined();
 
 		const ids = [

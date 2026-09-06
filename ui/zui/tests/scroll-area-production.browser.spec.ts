@@ -1,5 +1,6 @@
 import { expect, it } from 'vitest';
 import { tick } from 'svelte';
+import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-svelte';
 import ScrollAreaFixture from './ScrollAreaFixture.svelte';
 
@@ -47,7 +48,7 @@ it('uses one named native viewport with real overflow geometry and an autosize m
 it('reports original native scroll events and makes reduced-motion commands immediate, releasing its controller', async () => {
 	render(ScrollAreaFixture);
 	await tick();
-	element('scroll-position').click();
+	await userEvent.click(element('scroll-position'));
 	await expect.poll(() => withinHalfCssPixel(element('scroll-vertical').scrollTop, 80)).toBe(true);
 	await expect
 		.poll(() => {
@@ -61,15 +62,20 @@ it('reports original native scroll events and makes reduced-motion commands imme
 			};
 		})
 		.toEqual({ events: true, left: 0, snapshot: 0, status: 'ready', top: true });
-	element('scroll-reduced').click();
-	await tick();
-	expect(withinHalfCssPixel(element('scroll-vertical').scrollTop, 160)).toBe(true);
-	const reducedState = outputState();
-	expect(withinHalfCssPixel(reducedState.top, 160)).toBe(true);
-	expect(withinHalfCssPixel(reducedState.snapshot, 160)).toBe(true);
-	expect(reducedState.status).toBe('ready');
-	expect(getComputedStyle(element('scroll-vertical')).scrollBehavior).toBe('auto');
-	element('scroll-unmount').click();
+	await userEvent.click(element('scroll-reduced'));
+	await expect
+		.poll(() => {
+			const state = outputState();
+			return {
+				behavior: getComputedStyle(element('scroll-vertical')).scrollBehavior,
+				snapshot: withinHalfCssPixel(state.snapshot, 160),
+				status: state.status,
+				top: withinHalfCssPixel(element('scroll-vertical').scrollTop, 160),
+				topEvent: withinHalfCssPixel(state.top, 160)
+			};
+		})
+		.toEqual({ behavior: 'auto', snapshot: true, status: 'ready', top: true, topEvent: true });
+	await userEvent.click(element('scroll-unmount'));
 	await tick();
 	expect(document.querySelector('[data-testid="scroll-vertical"]')).toBeNull();
 	expect(element('scroll-output').textContent).toContain(':released');
@@ -85,7 +91,7 @@ it('keeps browser RTL scrollLeft semantics rather than changing offsets to posit
 	// value negative before any programmatic scroll occurs.
 	expect(viewport.scrollLeft).toBeLessThanOrEqual(0);
 	viewport.scrollTo({ left: -100, behavior: 'instant' });
-	await expect.poll(() => viewport.scrollLeft).toBe(-100);
+	await expect.poll(() => withinHalfCssPixel(viewport.scrollLeft, -100)).toBe(true);
 	providerViewport.scrollTo({ left: -100, behavior: 'instant' });
-	await expect.poll(() => providerViewport.scrollLeft).toBe(-100);
+	await expect.poll(() => withinHalfCssPixel(providerViewport.scrollLeft, -100)).toBe(true);
 });

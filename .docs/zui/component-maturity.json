@@ -1,10 +1,10 @@
 {
 	"schemaVersion": 2,
 	"source": {
-		"metadataComponents": 158,
-		"documentationPages": 94,
-		"contractComponents": 158,
-		"testFiles": 239
+		"metadataComponents": 164,
+		"documentationPages": 97,
+		"contractComponents": 164,
+		"testFiles": 248
 	},
 	"stageNames": [
 		"Declared",
@@ -18,14 +18,14 @@
 	],
 	"evidenceScope": "Static inventory of authored test contracts, not test execution results or whole-component visual acceptance. Stage names are retained for compatibility; consult commit-matched CI and page-level review separately.",
 	"summary": {
-		"Declared": 158,
-		"Authorable": 158,
-		"ContractVerified": 158,
-		"RuntimeImplemented": 158,
-		"BrowserBehaviorVerified": 154,
-		"VisuallyVerified": 153,
+		"Declared": 164,
+		"Authorable": 164,
+		"ContractVerified": 164,
+		"RuntimeImplemented": 164,
+		"BrowserBehaviorVerified": 156,
+		"VisuallyVerified": 154,
 		"DesktopVerified": 0,
-		"ProductionVerified": 156
+		"ProductionVerified": 159
 	},
 	"components": [
 		{
@@ -3667,6 +3667,10 @@
 				{
 					"path": "ui/zui/tests/menu-family-production.spec.ts",
 					"detail": "ZMenuCheckboxItem SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/menubar-production.spec.ts",
+					"detail": "ZMenuCheckboxItem SSR assertions"
 				}
 			]
 		},
@@ -3853,6 +3857,10 @@
 				{
 					"path": "ui/zui/tests/menu-family-production.spec.ts",
 					"detail": "ZMenuItem SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/menubar-production.spec.ts",
+					"detail": "ZMenuItem SSR assertions"
 				}
 			]
 		},
@@ -4035,6 +4043,10 @@
 				{
 					"path": "ui/zui/tests/menu-family-production.spec.ts",
 					"detail": "ZMenuRadioGroup SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/menubar-production.spec.ts",
+					"detail": "ZMenuRadioGroup SSR assertions"
 				}
 			]
 		},
@@ -4123,6 +4135,10 @@
 			"ssrEvidence": [
 				{
 					"path": "ui/zui/tests/menu-family-production.spec.ts",
+					"detail": "ZMenuRadioItem SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/menubar-production.spec.ts",
 					"detail": "ZMenuRadioItem SSR assertions"
 				}
 			]
@@ -4306,6 +4322,10 @@
 				{
 					"path": "ui/zui/tests/menu-family-production.spec.ts",
 					"detail": "ZMenuSub SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/menubar-production.spec.ts",
+					"detail": "ZMenuSub SSR assertions"
 				}
 			]
 		},
@@ -4394,6 +4414,10 @@
 			"ssrEvidence": [
 				{
 					"path": "ui/zui/tests/menu-family-production.spec.ts",
+					"detail": "ZMenuSubContent SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/menubar-production.spec.ts",
 					"detail": "ZMenuSubContent SSR assertions"
 				}
 			]
@@ -4484,6 +4508,284 @@
 				{
 					"path": "ui/zui/tests/menu-family-production.spec.ts",
 					"detail": "ZMenuSubTrigger SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/menubar-production.spec.ts",
+					"detail": "ZMenuSubTrigger SSR assertions"
+				}
+			]
+		},
+		{
+			"id": "menubar",
+			"name": "ZMenubar",
+			"category": "navigation",
+			"family": "menubar",
+			"status": "experimental",
+			"source": "ui/zui/src/components/compound/menubar/ZMenubar.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": true,
+				"VisuallyVerified": false,
+				"DesktopVerified": false,
+				"ProductionVerified": true
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/compound/menubar/ZMenubar.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZMenubar"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "ceae601c2cad6578e31666674c9dd7bdb03e2a2c45879f025646347a1552d405 API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/compound/menubar/ZMenubar.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [
+					{
+						"path": "ui/zui/tests/menubar-production.browser.spec.ts",
+						"detail": "ZMenubar browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/MenubarFixture.svelte",
+						"detail": "ZMenubar explicit rendered fixture usage"
+					}
+				],
+				"VisuallyVerified": [],
+				"DesktopVerified": [],
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/menubar-production.browser.spec.ts",
+						"detail": "ZMenubar production assertions"
+					},
+					{
+						"path": "ui/zui/tests/MenubarFixture.svelte",
+						"detail": "ZMenubar explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/menubar-production.spec.ts",
+						"detail": "ZMenubar production assertions"
+					},
+					{
+						"path": "ui/zui/tests/MenubarFixture.svelte",
+						"detail": "ZMenubar explicit rendered fixture usage"
+					}
+				]
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/navigation/menubar/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/menubar-production.spec.ts",
+					"detail": "ZMenubar SSR assertions"
+				}
+			]
+		},
+		{
+			"id": "menubar-content",
+			"name": "ZMenubarContent",
+			"category": "navigation",
+			"family": "menubar",
+			"status": "experimental",
+			"source": "ui/zui/src/components/compound/menubar/ZMenubarContent.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": false,
+				"VisuallyVerified": false,
+				"DesktopVerified": false,
+				"ProductionVerified": false
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/compound/menubar/ZMenubarContent.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZMenubarContent"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "de75d0128a5ede1bd097df0b5e9599dc2d0dba3645dd5d5a5f6b196a280798b8 API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/compound/menubar/ZMenubarContent.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [],
+				"VisuallyVerified": [],
+				"DesktopVerified": [],
+				"ProductionVerified": []
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/navigation/menubar/doc.ts",
+				"detail": "family-owned documentation module (menubar)"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/menubar-production.spec.ts",
+					"detail": "ZMenubarContent SSR assertions"
+				}
+			]
+		},
+		{
+			"id": "menubar-menu",
+			"name": "ZMenubarMenu",
+			"category": "navigation",
+			"family": "menubar",
+			"status": "experimental",
+			"source": "ui/zui/src/components/compound/menubar/ZMenubarMenu.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": false,
+				"VisuallyVerified": false,
+				"DesktopVerified": false,
+				"ProductionVerified": false
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/compound/menubar/ZMenubarMenu.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZMenubarMenu"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "32ed677da78aee2674391d034b416fe81804c333b12c5a09ce995013bf24eff9 API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/compound/menubar/ZMenubarMenu.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [],
+				"VisuallyVerified": [],
+				"DesktopVerified": [],
+				"ProductionVerified": []
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/navigation/menubar/doc.ts",
+				"detail": "family-owned documentation module (menubar)"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/menubar-production.spec.ts",
+					"detail": "ZMenubarMenu SSR assertions"
+				}
+			]
+		},
+		{
+			"id": "menubar-trigger",
+			"name": "ZMenubarTrigger",
+			"category": "navigation",
+			"family": "menubar",
+			"status": "experimental",
+			"source": "ui/zui/src/components/compound/menubar/ZMenubarTrigger.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": false,
+				"VisuallyVerified": false,
+				"DesktopVerified": false,
+				"ProductionVerified": false
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/compound/menubar/ZMenubarTrigger.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZMenubarTrigger"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "81854e5d7759e1c0b0ed55865099c2ea3f5cbad81eb2bf5f1065bef8b51954d3 API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/compound/menubar/ZMenubarTrigger.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [],
+				"VisuallyVerified": [],
+				"DesktopVerified": [],
+				"ProductionVerified": []
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/navigation/menubar/doc.ts",
+				"detail": "family-owned documentation module (menubar)"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/menubar-production.spec.ts",
+					"detail": "ZMenubarTrigger SSR assertions"
 				}
 			]
 		},
@@ -4924,7 +5226,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "dd2f098e31f57f563c342cd9c5b1a0ba4f4c221d510985d3e8d84b6c5e8d891c API snapshot entry"
+						"detail": "cabd7ac94a34e19220a20376804e8fb577d8a7d7cdd124d361e190c32e01b20d API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -10732,6 +11034,10 @@
 					"detail": "ZProvider SSR assertions"
 				},
 				{
+					"path": "ui/zui/tests/menubar-production.spec.ts",
+					"detail": "ZProvider SSR assertions"
+				},
+				{
 					"path": "ui/zui/tests/pin-input-group-production.spec.ts",
 					"detail": "ZProvider SSR assertions"
 				},
@@ -14444,6 +14750,99 @@
 			]
 		},
 		{
+			"id": "resizable",
+			"name": "ZResizable",
+			"category": "layout",
+			"family": null,
+			"status": "experimental",
+			"source": "ui/zui/src/components/layout/ZResizable.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": true,
+				"VisuallyVerified": true,
+				"DesktopVerified": false,
+				"ProductionVerified": true
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/layout/ZResizable.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZResizable"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "d670074c0ea8a89146e0297d7492798a8c4387122e78e2e67d0666e948ea829e API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/layout/ZResizable.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [
+					{
+						"path": "ui/zui/tests/resizable-production.browser.spec.ts",
+						"detail": "ZResizable browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/ResizableFixture.svelte",
+						"detail": "ZResizable explicit rendered fixture usage"
+					}
+				],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/resizable-production.browser.spec.ts",
+						"detail": "ZResizable authored visual contract: measures one element, exposes logical ARIA handles, usable handle snippets and five sizes (line 73); requires browser execution and page-level review"
+					},
+					{
+						"path": "ui/zui/tests/ResizableFixture.svelte",
+						"detail": "ZResizable explicit rendered fixture usage"
+					}
+				],
+				"DesktopVerified": [],
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/resizable-production.browser.spec.ts",
+						"detail": "ZResizable production assertions"
+					},
+					{
+						"path": "ui/zui/tests/ResizableFixture.svelte",
+						"detail": "ZResizable explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/resizable-production.spec.ts",
+						"detail": "ZResizable production assertions"
+					}
+				]
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/layout/resizable/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/resizable-production.spec.ts",
+					"detail": "ZResizable SSR assertions"
+				}
+			]
+		},
+		{
 			"id": "scroll-area",
 			"name": "ZScrollArea",
 			"category": "layout",
@@ -14493,7 +14892,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/scroll-area-production.browser.spec.ts",
-						"detail": "ZScrollArea authored visual contract: uses one named native viewport with real overflow geometry and an autosize maximum (line 26); requires browser execution and page-level review"
+						"detail": "ZScrollArea authored visual contract: uses one named native viewport with real overflow geometry and an autosize maximum (line 27); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/ScrollAreaFixture.svelte",
@@ -14888,6 +15287,73 @@
 			]
 		},
 		{
+			"id": "anchor",
+			"name": "ZAnchor",
+			"category": "navigation",
+			"family": null,
+			"status": "experimental",
+			"source": "ui/zui/src/components/navigation/ZAnchor.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": false,
+				"VisuallyVerified": false,
+				"DesktopVerified": false,
+				"ProductionVerified": true
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZAnchor"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "5936d915e6d35d0a9adbc190091a3b57f9a293337dd4adbc1bcf1cf1cd70767c API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [],
+				"VisuallyVerified": [],
+				"DesktopVerified": [],
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/anchor-production.spec.ts",
+						"detail": "ZAnchor production assertions"
+					}
+				]
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/navigation/anchor/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/anchor-production.spec.ts",
+					"detail": "ZAnchor SSR assertions"
+				}
+			]
+		},
+		{
 			"id": "breadcrumb",
 			"name": "ZBreadcrumb",
 			"category": "navigation",
@@ -15195,7 +15661,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "37ee80008ab6cbb4613275f0a923dbfb6d3a3a77359e73aaad1b4ee58fdb7c2b API snapshot entry"
+						"detail": "8d553907a91ab32c9b7b495562c754f13fb22e3eed3b2fc5c5771a834cd8097f API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [

@@ -100,6 +100,7 @@
 			{ name: 'panel', description: '内联或浮层内容。' }
 		],
 		states: [
+			{ name: 'data-disabled', values: ['true'], description: '整个导航及其数据后代停用。' },
 			{
 				name: 'data-mode',
 				values: ['inline', 'vertical', 'horizontal'],
@@ -904,6 +905,7 @@
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
 </script>
 
+<!-- svelte-ignore a11y_no_noninteractive_tabindex (programmatic focus fallback when every owned navigation control disappears) -->
 <nav
 	{...rest}
 	tabindex={rest.tabindex ?? -1}
@@ -914,7 +916,7 @@
 	dir={dir ?? zui.direction}
 	aria-label={ariaLabel ?? (ariaLabelledBy ? undefined : zui.localePack.common.primaryNavigation)}
 	aria-labelledby={ariaLabelledBy}
-	aria-disabled={disabled || undefined}
+	data-disabled={disabled || undefined}
 	data-mode={config.mode}
 	data-collapsed={collapsed || undefined}
 >

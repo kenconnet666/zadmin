@@ -123,11 +123,11 @@ const separatorWithLabel = [
 void separatorWithLabel;
 
 const itemWithTwoBranchSources = [
+	// @ts-expect-error an item owns either children or panel, never both.
 	{
 		children: [{ key: 'child', label: 'Child' }],
 		key: 'branch',
 		label: 'Ambiguous branch',
-		// @ts-expect-error an item owns either children or panel, never both.
 		panel
 	}
 ] as const satisfies readonly NavigationMenuEntry<KnownKey>[];

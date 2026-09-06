@@ -3,7 +3,7 @@
 	"summary": {
 		"stableCompliant": 141,
 		"stableViolations": 0,
-		"promotionEligibleExperimental": 12
+		"promotionEligibleExperimental": 13
 	},
 	"components": [
 		{
@@ -384,7 +384,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/menu/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrEvidenceCount": 2
 		},
 		{
 			"id": "menu-group",
@@ -404,7 +404,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/menu/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrEvidenceCount": 3
 		},
 		{
 			"id": "menu-label",
@@ -424,7 +424,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/menu/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrEvidenceCount": 2
 		},
 		{
 			"id": "menu-radio-item",
@@ -434,7 +434,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/menu/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrEvidenceCount": 2
 		},
 		{
 			"id": "menu-separator",
@@ -454,7 +454,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/menu/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrEvidenceCount": 2
 		},
 		{
 			"id": "menu-sub-content",
@@ -464,7 +464,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/menu/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrEvidenceCount": 2
 		},
 		{
 			"id": "menu-sub-trigger",
@@ -474,6 +474,46 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/menu/doc.ts",
+			"ssrEvidenceCount": 2
+		},
+		{
+			"id": "menubar",
+			"name": "ZMenubar",
+			"family": "menubar",
+			"status": "experimental",
+			"classification": "experimental",
+			"blockers": ["Family readiness (ZMenubarContent, ZMenubarMenu, ZMenubarTrigger)"],
+			"docs": "apps/docs/src/content/components/navigation/menubar/doc.ts",
+			"ssrEvidenceCount": 1
+		},
+		{
+			"id": "menubar-content",
+			"name": "ZMenubarContent",
+			"family": "menubar",
+			"status": "experimental",
+			"classification": "experimental",
+			"blockers": ["BrowserBehaviorVerified", "ProductionVerified"],
+			"docs": "apps/docs/src/content/components/navigation/menubar/doc.ts",
+			"ssrEvidenceCount": 1
+		},
+		{
+			"id": "menubar-menu",
+			"name": "ZMenubarMenu",
+			"family": "menubar",
+			"status": "experimental",
+			"classification": "experimental",
+			"blockers": ["BrowserBehaviorVerified", "ProductionVerified"],
+			"docs": "apps/docs/src/content/components/navigation/menubar/doc.ts",
+			"ssrEvidenceCount": 1
+		},
+		{
+			"id": "menubar-trigger",
+			"name": "ZMenubarTrigger",
+			"family": "menubar",
+			"status": "experimental",
+			"classification": "experimental",
+			"blockers": ["BrowserBehaviorVerified", "ProductionVerified"],
+			"docs": "apps/docs/src/content/components/navigation/menubar/doc.ts",
 			"ssrEvidenceCount": 1
 		},
 		{
@@ -1094,7 +1134,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/gene/provider/doc.ts",
-			"ssrEvidenceCount": 10
+			"ssrEvidenceCount": 11
 		},
 		{
 			"id": "separator",
@@ -1467,6 +1507,16 @@
 			"ssrEvidenceCount": 2
 		},
 		{
+			"id": "resizable",
+			"name": "ZResizable",
+			"family": null,
+			"status": "experimental",
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
+			"docs": "apps/docs/src/content/components/layout/resizable/doc.ts",
+			"ssrEvidenceCount": 1
+		},
+		{
 			"id": "scroll-area",
 			"name": "ZScrollArea",
 			"family": null,
@@ -1515,6 +1565,16 @@
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/layout/stack/doc.ts",
 			"ssrEvidenceCount": 3
+		},
+		{
+			"id": "anchor",
+			"name": "ZAnchor",
+			"family": null,
+			"status": "experimental",
+			"classification": "experimental",
+			"blockers": ["BrowserBehaviorVerified"],
+			"docs": "apps/docs/src/content/components/navigation/anchor/doc.ts",
+			"ssrEvidenceCount": 1
 		},
 		{
 			"id": "breadcrumb",

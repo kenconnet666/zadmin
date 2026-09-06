@@ -61,6 +61,7 @@
 </script>
 
 <script lang="ts">
+	import { untrack } from 'svelte';
 	import { createAttachmentKey, type Attachment } from 'svelte/attachments';
 
 	import { getActiveElement } from '../../../runtime/layer/dom-realm.js';
@@ -91,7 +92,7 @@
 		target.addEventListener('focus', handleFocus);
 		for (const type of ['pointerdown', 'click', 'auxclick'])
 			target.addEventListener(type, preventDisabledActivation, true);
-		if (getActiveElement(target) === target) handleFocus();
+		if (getActiveElement(target) === target) untrack(handleFocus);
 		return () => {
 			target.removeEventListener('focus', handleFocus);
 			for (const type of ['pointerdown', 'click', 'auxclick'])

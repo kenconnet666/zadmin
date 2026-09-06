@@ -89,6 +89,9 @@ const COMPONENT_RULES = {
 	},
 	navLink: { ...navigationRules, indicator: { kind: 'enum', values: ['none', 'start', 'end'] } },
 	navigationMenu: navigationRules,
+	anchor: { size: buttonRules.size, tone: typographyRules.tone },
+	menubar: { size: buttonRules.size },
+	resizable: { size: buttonRules.size },
 	splitter: { size: buttonRules.size },
 	pagination: {
 		mode: { kind: 'enum', values: ['compact', 'default', 'simple'] },
@@ -143,6 +146,9 @@ export interface InputComponentDefaults extends DefaultsFor<'input'> {}
 export interface LinkComponentDefaults extends DefaultsFor<'link'> {}
 export interface NavLinkComponentDefaults extends DefaultsFor<'navLink'> {}
 export interface NavigationMenuComponentDefaults extends DefaultsFor<'navigationMenu'> {}
+export interface AnchorComponentDefaults extends DefaultsFor<'anchor'> {}
+export interface MenubarComponentDefaults extends DefaultsFor<'menubar'> {}
+export interface ResizableComponentDefaults extends DefaultsFor<'resizable'> {}
 export interface SplitterComponentDefaults extends DefaultsFor<'splitter'> {}
 export interface PaginationComponentDefaults extends DefaultsFor<'pagination'> {}
 export interface SpinnerComponentDefaults extends DefaultsFor<'spinner'> {}

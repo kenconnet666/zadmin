@@ -177,3 +177,9 @@ export type {
 export { zuiMetadata as navLinkMetadata } from '../components/navigation/ZNavLink.svelte';
 export { zuiMetadata as splitterMetadata } from '../components/layout/ZSplitter.svelte';
 export { zuiMetadata as navigationMenuMetadata } from '../components/compound/navigation-menu/ZNavigationMenu.svelte';
+export { zuiMetadata as anchorMetadata } from '../components/navigation/ZAnchor.svelte';
+export { zuiMetadata as menubarMetadata } from '../components/compound/menubar/ZMenubar.svelte';
+export { zuiMetadata as menubarMenuMetadata } from '../components/compound/menubar/ZMenubarMenu.svelte';
+export { zuiMetadata as menubarTriggerMetadata } from '../components/compound/menubar/ZMenubarTrigger.svelte';
+export { zuiMetadata as menubarContentMetadata } from '../components/compound/menubar/ZMenubarContent.svelte';
+export { zuiMetadata as resizableMetadata } from '../components/layout/ZResizable.svelte';

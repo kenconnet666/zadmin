@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { tick } from 'svelte';
 	import ZProvider from '../src/components/gene/ZProvider.svelte';
 	import ZScrollArea, {
 		type ZScrollAreaController
@@ -20,8 +21,11 @@
 <button
 	type="button"
 	data-testid="scroll-reduced"
-	onclick={() => {
+	onclick={async () => {
 		reduced = true;
+		// Provider context updates on the next Svelte flush. Issue the controller command
+		// only after the requested motion policy is observable by its consumer.
+		await tick();
 		controller?.scrollTo({ top: 160, behavior: 'smooth' });
 		snapshot = controller?.position?.top ?? -1;
 	}}>Reduce motion</button

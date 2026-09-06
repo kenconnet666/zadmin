@@ -240,7 +240,7 @@
 
 <script lang="ts" generics="TItem, TKey extends SelectionKey = SelectionKey">
 	import { onDestroy, tick, untrack } from 'svelte';
-	import { isFocusable, tabbable } from 'tabbable';
+	import { focusable, isFocusable, tabbable } from 'tabbable';
 	import { containsComposedNode, getActiveElement } from '../../runtime/layer/dom-realm.js';
 	import { OverflowMeasurement } from '../../runtime/collection/overflow-measure.js';
 	import {
@@ -341,9 +341,10 @@
 	}
 	function focusInside(node: HTMLElement | null): boolean {
 		if (!node) return false;
-		const target = tabbable(node, { getShadowRoot: (element) => element.shadowRoot ?? false })[0];
+		const options = { getShadowRoot: (element: Element) => element.shadowRoot ?? false };
+		const target = tabbable(node, options)[0] ?? focusable(node, options)[0];
 		if (!target) return false;
-		target.focus({ preventScroll: true });
+		(target as HTMLElement).focus({ preventScroll: true });
 		return true;
 	}
 	function publish(next: OverflowLayout<TKey>, fromMeasurement = true): boolean {

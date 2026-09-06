@@ -177,6 +177,12 @@ export const componentDocLoaders = {
 		import('../content/components/navigation/navigation-menu/doc.js').then(
 			(module) => module.navigationMenuDoc
 		),
+	anchor: () =>
+		import('../content/components/navigation/anchor/doc.js').then((module) => module.anchorDoc),
+	menubar: () =>
+		import('../content/components/navigation/menubar/doc.js').then((module) => module.menubarDoc),
+	resizable: () =>
+		import('../content/components/layout/resizable/doc.js').then((module) => module.resizableDoc),
 	switch: () =>
 		import('../content/components/input/switch/doc.js').then((module) => module.switchDoc),
 	'tags-input': () =>

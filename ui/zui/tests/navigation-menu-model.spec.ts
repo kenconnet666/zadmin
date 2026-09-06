@@ -28,7 +28,7 @@ describe('NavigationMenu logical model', () => {
 			},
 			{ kind: 'separator', key: 'separator' }
 		] as const satisfies readonly NavigationMenuEntry<Key>[];
-		const tree = indexNavigationMenu(entries);
+		const tree = indexNavigationMenu<Key>(entries);
 
 		expect(tree.records.map((record) => record.key)).toEqual([
 			1,
@@ -65,7 +65,7 @@ describe('NavigationMenu logical model', () => {
 
 	it('rejects duplicate keys across the whole tree while keeping number and string identities distinct', () => {
 		expect(() =>
-			indexNavigationMenu([
+			indexNavigationMenu<1 | 'branch'>([
 				{ key: 1, label: 'Number one' },
 				{
 					key: 'branch',
@@ -75,7 +75,7 @@ describe('NavigationMenu logical model', () => {
 			])
 		).toThrow('globally unique typed keys');
 		expect(() =>
-			indexNavigationMenu([
+			indexNavigationMenu<1 | '1'>([
 				{ key: 1, label: 'Number one' },
 				{ key: '1', label: 'String one' }
 			])

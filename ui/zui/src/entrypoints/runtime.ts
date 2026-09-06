@@ -133,3 +133,8 @@ export type {
 	ToastUpdate,
 	ToastQueueDiagnostics
 } from '../runtime/toast.svelte.js';
+export type {
+	AnchorComponentDefaults,
+	MenubarComponentDefaults,
+	ResizableComponentDefaults
+} from '../runtime/foundation/component-defaults.js';

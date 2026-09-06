@@ -3,7 +3,7 @@
 	"scope": ["ui/zui/src/components", "ui/zui/src/runtime", "apps/docs/src"],
 	"limitations": "AST source inventory, not runtime coverage. Numeric equality only identifies review candidates, not semantic equivalence. Dynamic/indexed theme reads and raw CSS returned from helpers require manual review. Entries without a direct reference are NOT proof of dead tokens.",
 	"summary": {
-		"files": 882,
+		"files": 903,
 		"registeredProperties": 166,
 		"themeGroups": 18,
 		"themeTokens": 185,
@@ -11,14 +11,14 @@
 		"kinds": {
 			"design-value-review": 10,
 			"dynamic-or-composed": 47,
-			"explicit-geometry-or-css": 310,
+			"explicit-geometry-or-css": 322,
 			"explicit-media-query": 10,
 			"local-stacking-order": 4,
-			"structural-percentage": 60,
-			"structural-zero": 295,
-			"system-keyword": 1042,
+			"structural-percentage": 65,
+			"structural-zero": 315,
+			"system-keyword": 1068,
 			"system-keyword-candidate": 2,
-			"theme-accessor": 1875,
+			"theme-accessor": 1887,
 			"theme-token-candidate": 1
 		}
 	},
@@ -1895,6 +1895,85 @@
 			"kind": "system-keyword"
 		},
 		{
+			"path": "ui/zui/src/components/compound/menubar/ZMenubar.svelte",
+			"line": 122,
+			"property": "alignItems",
+			"expression": "s.alignItems.center",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/compound/menubar/ZMenubar.svelte",
+			"line": 123,
+			"property": "backgroundColor",
+			"expression": "s.backgroundColor._surface",
+			"kind": "theme-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/compound/menubar/ZMenubar.svelte",
+			"line": 124,
+			"property": "borderColor",
+			"expression": "s.borderColor._border",
+			"kind": "theme-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/compound/menubar/ZMenubar.svelte",
+			"line": 125,
+			"property": "borderRadius",
+			"expression": "s.borderRadius._medium",
+			"kind": "theme-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/compound/menubar/ZMenubar.svelte",
+			"line": 126,
+			"property": "borderStyle",
+			"expression": "s.borderStyle.solid",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/compound/menubar/ZMenubar.svelte",
+			"line": 127,
+			"property": "borderWidth",
+			"expression": "s.borderWidth._hairline",
+			"kind": "theme-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/compound/menubar/ZMenubar.svelte",
+			"line": 128,
+			"property": "boxSizing",
+			"expression": "s.boxSizing.borderBox",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/compound/menubar/ZMenubar.svelte",
+			"line": 129,
+			"property": "display",
+			"expression": "s.display.inlineFlex",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/compound/menubar/ZMenubar.svelte",
+			"line": 130,
+			"property": "maxWidth",
+			"method": "percent",
+			"expression": "s.maxWidth.percent(100)",
+			"kind": "structural-percentage"
+		},
+		{
+			"path": "ui/zui/src/components/compound/menubar/ZMenubar.svelte",
+			"line": 131,
+			"property": "minWidth",
+			"method": "px",
+			"expression": "s.minWidth.px(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "ui/zui/src/components/compound/menubar/ZMenubar.svelte",
+			"line": 132,
+			"property": "padding",
+			"expression": "s.padding._xsmall",
+			"kind": "theme-accessor"
+		},
+		{
 			"path": "ui/zui/src/components/compound/multi-select/ZMultiSelectItem.svelte",
 			"line": 97,
 			"property": "alignItems",
@@ -2313,7 +2392,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/compound/navigation-menu/ZNavigationMenu.svelte",
-			"line": 276,
+			"line": 283,
 			"property": "minInlineSize",
 			"method": "px",
 			"expression": "s.minInlineSize.px(0)",
@@ -2321,7 +2400,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/compound/navigation-menu/ZNavigationMenu.svelte",
-			"line": 277,
+			"line": 284,
 			"property": "maxInlineSize",
 			"method": "percent",
 			"expression": "s.maxInlineSize.percent(100)",
@@ -2329,7 +2408,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/compound/navigation-menu/ZNavigationMenu.svelte",
-			"line": 278,
+			"line": 285,
 			"property": "fontFamily",
 			"expression": "s.fontFamily._sans",
 			"kind": "theme-accessor"
@@ -17663,17 +17742,374 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZOverflowList.svelte",
-			"line": 489,
+			"line": 490,
 			"property": "columnGap",
 			"expression": "s.columnGap._small",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZOverflowList.svelte",
-			"line": 490,
+			"line": 491,
 			"property": "rowGap",
 			"expression": "s.rowGap._small",
 			"kind": "theme-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 263,
+			"property": "position",
+			"expression": "s.position.relative",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 264,
+			"property": "boxSizing",
+			"expression": "s.boxSizing.borderBox",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 265,
+			"property": "minInlineSize",
+			"method": "px",
+			"expression": "s.minInlineSize.px(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 266,
+			"property": "minBlockSize",
+			"method": "px",
+			"expression": "s.minBlockSize.px(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 267,
+			"property": "inlineSize",
+			"method": "raw",
+			"expression": "s.inlineSize.raw('var(--zui-resizable-width)')",
+			"kind": "explicit-geometry-or-css"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 268,
+			"property": "blockSize",
+			"method": "raw",
+			"expression": "s.blockSize.raw('var(--zui-resizable-height)')",
+			"kind": "explicit-geometry-or-css"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 269,
+			"property": "overflow",
+			"expression": "s.overflow.auto",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 272,
+			"property": "position",
+			"expression": "s.position.absolute",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 273,
+			"property": "display",
+			"expression": "s.display.flex",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 274,
+			"property": "alignItems",
+			"expression": "s.alignItems.center",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 275,
+			"property": "justifyContent",
+			"expression": "s.justifyContent.center",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 276,
+			"property": "boxSizing",
+			"expression": "s.boxSizing.borderBox",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 277,
+			"property": "padding",
+			"method": "px",
+			"expression": "s.padding.px(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 278,
+			"property": "borderWidth",
+			"method": "px",
+			"expression": "s.borderWidth.px(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 279,
+			"property": "backgroundColor",
+			"expression": "s.backgroundColor.transparent",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 280,
+			"property": "touchAction",
+			"expression": "s.touchAction.none",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 281,
+			"property": "userSelect",
+			"expression": "s.userSelect.none",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 283,
+			"property": "outlineColor",
+			"expression": "s.outlineColor._focus",
+			"kind": "theme-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 284,
+			"property": "outlineOffset",
+			"expression": "s.outlineOffset._inner",
+			"kind": "theme-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 285,
+			"property": "outlineStyle",
+			"expression": "s.outlineStyle.solid",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 286,
+			"property": "outlineWidth",
+			"expression": "s.outlineWidth._medium",
+			"kind": "theme-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 289,
+			"property": "blockSize",
+			"method": "percent",
+			"expression": "s.blockSize.percent(100)",
+			"kind": "structural-percentage"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 290,
+			"property": "inlineSize",
+			"method": "raw",
+			"expression": "s.inlineSize.raw('var(--zui-resizable-handle-size)')",
+			"kind": "explicit-geometry-or-css"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 291,
+			"property": "insetBlockStart",
+			"method": "px",
+			"expression": "s.insetBlockStart.px(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 292,
+			"property": "cursor",
+			"method": "raw",
+			"expression": "s.cursor.raw('col-resize')",
+			"kind": "explicit-geometry-or-css"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 294,
+			"property": "insetInlineStart",
+			"method": "px",
+			"expression": "s.insetInlineStart.px(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 295,
+			"property": "insetInlineEnd",
+			"method": "px",
+			"expression": "s.insetInlineEnd.px(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 297,
+			"property": "blockSize",
+			"method": "raw",
+			"expression": "s.blockSize.raw('var(--zui-resizable-handle-size)')",
+			"kind": "explicit-geometry-or-css"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 298,
+			"property": "inlineSize",
+			"method": "percent",
+			"expression": "s.inlineSize.percent(100)",
+			"kind": "structural-percentage"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 299,
+			"property": "insetInlineStart",
+			"method": "px",
+			"expression": "s.insetInlineStart.px(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 300,
+			"property": "cursor",
+			"method": "raw",
+			"expression": "s.cursor.raw('row-resize')",
+			"kind": "explicit-geometry-or-css"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 302,
+			"property": "insetBlockStart",
+			"method": "px",
+			"expression": "s.insetBlockStart.px(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 303,
+			"property": "insetBlockEnd",
+			"method": "px",
+			"expression": "s.insetBlockEnd.px(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 305,
+			"property": "blockSize",
+			"method": "raw",
+			"expression": "s.blockSize.raw('var(--zui-resizable-handle-size)')",
+			"kind": "explicit-geometry-or-css"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 306,
+			"property": "inlineSize",
+			"method": "raw",
+			"expression": "s.inlineSize.raw('var(--zui-resizable-handle-size)')",
+			"kind": "explicit-geometry-or-css"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 310,
+			"property": "cursor",
+			"method": "raw",
+			"expression": "s.cursor.raw('nwse-resize')",
+			"kind": "explicit-geometry-or-css"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 314,
+			"property": "cursor",
+			"method": "raw",
+			"expression": "s.cursor.raw('nesw-resize')",
+			"kind": "explicit-geometry-or-css"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 316,
+			"property": "insetBlockStart",
+			"method": "px",
+			"expression": "s.insetBlockStart.px(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 317,
+			"property": "insetBlockEnd",
+			"method": "px",
+			"expression": "s.insetBlockEnd.px(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 318,
+			"property": "insetInlineStart",
+			"method": "px",
+			"expression": "s.insetInlineStart.px(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 319,
+			"property": "insetInlineEnd",
+			"method": "px",
+			"expression": "s.insetInlineEnd.px(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 320,
+			"property": "cursor",
+			"expression": "s.cursor.default",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 323,
+			"property": "blockSize",
+			"method": "raw",
+			"expression": "s.blockSize.raw('calc(var(--zui-resizable-handle-size) / 2)')",
+			"kind": "explicit-geometry-or-css"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 324,
+			"property": "inlineSize",
+			"method": "raw",
+			"expression": "s.inlineSize.raw('calc(var(--zui-resizable-handle-size) / 2)')",
+			"kind": "explicit-geometry-or-css"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 325,
+			"property": "backgroundColor",
+			"expression": "s.backgroundColor._border",
+			"kind": "theme-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 326,
+			"property": "borderRadius",
+			"expression": "s.borderRadius._small",
+			"kind": "theme-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 327,
+			"property": "pointerEvents",
+			"expression": "s.pointerEvents.none",
+			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZScrollArea.svelte",
@@ -18517,6 +18953,132 @@
 			"kind": "system-keyword"
 		},
 		{
+			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
+			"line": 210,
+			"property": "minInlineSize",
+			"method": "px",
+			"expression": "s.minInlineSize.px(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
+			"line": 211,
+			"property": "maxInlineSize",
+			"method": "percent",
+			"expression": "s.maxInlineSize.percent(100)",
+			"kind": "structural-percentage"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
+			"line": 214,
+			"property": "display",
+			"expression": "s.display.flex",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
+			"line": 215,
+			"property": "flexDirection",
+			"expression": "s.flexDirection.column",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
+			"line": 216,
+			"property": "gap",
+			"expression": "s.gap._xsmall",
+			"kind": "theme-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
+			"line": 217,
+			"property": "padding",
+			"method": "px",
+			"expression": "s.padding.px(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
+			"line": 218,
+			"property": "margin",
+			"method": "px",
+			"expression": "s.margin.px(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
+			"line": 219,
+			"property": "listStyleType",
+			"expression": "s.listStyleType.none",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
+			"line": 220,
+			"property": "minInlineSize",
+			"method": "px",
+			"expression": "s.minInlineSize.px(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
+			"line": 222,
+			"property": "flexDirection",
+			"expression": "s.flexDirection.column",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
+			"line": 223,
+			"property": "paddingInlineStart",
+			"expression": "s.paddingInlineStart._medium",
+			"kind": "theme-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
+			"line": 227,
+			"property": "minInlineSize",
+			"method": "px",
+			"expression": "s.minInlineSize.px(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
+			"line": 228,
+			"property": "maxInlineSize",
+			"method": "percent",
+			"expression": "s.maxInlineSize.percent(100)",
+			"kind": "structural-percentage"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
+			"line": 229,
+			"property": "overflowWrap",
+			"expression": "s.overflowWrap.anywhere",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
+			"line": 236,
+			"property": "flexDirection",
+			"expression": "s.flexDirection.row",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
+			"line": 237,
+			"property": "flexWrap",
+			"expression": "s.flexWrap.wrap",
+			"kind": "system-keyword"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
+			"line": 238,
+			"property": "alignItems",
+			"expression": "s.alignItems.start",
+			"kind": "system-keyword"
+		},
+		{
 			"path": "ui/zui/src/components/navigation/ZBreadcrumb.svelte",
 			"line": 158,
 			"property": "alignItems",
@@ -19185,14 +19747,14 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 278,
+			"line": 291,
 			"property": "fontWeight",
 			"expression": "s.fontWeight._semibold",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 301,
+			"line": 314,
 			"property": "paddingBlock",
 			"method": "px",
 			"expression": "s.paddingBlock.px(0)",
@@ -19200,7 +19762,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 302,
+			"line": 315,
 			"property": "paddingInline",
 			"method": "px",
 			"expression": "s.paddingInline.px(0)",
@@ -19208,7 +19770,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 315,
+			"line": 328,
 			"property": "paddingBlock",
 			"method": "px",
 			"expression": "s.paddingBlock.px(0)",
@@ -19216,28 +19778,28 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 337,
+			"line": 350,
 			"property": "alignItems",
 			"expression": "s.alignItems.stretch",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 338,
+			"line": 351,
 			"property": "display",
 			"expression": "s.display.grid",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 339,
+			"line": 352,
 			"property": "gap",
 			"expression": "s.gap._xsmall",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 340,
+			"line": 353,
 			"property": "gridTemplateColumns",
 			"method": "raw",
 			"expression": "s.gridTemplateColumns.raw('minmax(0, 1fr) auto')",
@@ -19245,7 +19807,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 341,
+			"line": 354,
 			"property": "minWidth",
 			"method": "px",
 			"expression": "s.minWidth.px(0)",
@@ -19253,7 +19815,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 342,
+			"line": 355,
 			"property": "width",
 			"method": "percent",
 			"expression": "s.width.percent(100)",
@@ -19261,105 +19823,105 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 345,
+			"line": 358,
 			"property": "alignItems",
 			"expression": "s.alignItems.center",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 346,
+			"line": 359,
 			"property": "appearance",
 			"expression": "s.appearance.none",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 347,
+			"line": 360,
 			"property": "backgroundColor",
 			"expression": "s.backgroundColor.transparent",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 348,
+			"line": 361,
 			"property": "borderColor",
 			"expression": "s.borderColor.transparent",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 349,
+			"line": 362,
 			"property": "borderRadius",
 			"expression": "s.borderRadius._medium",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 350,
+			"line": 363,
 			"property": "borderStyle",
 			"expression": "s.borderStyle.solid",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 351,
+			"line": 364,
 			"property": "borderWidth",
 			"expression": "s.borderWidth._hairline",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 352,
+			"line": 365,
 			"property": "boxSizing",
 			"expression": "s.boxSizing.borderBox",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 353,
+			"line": 366,
 			"property": "color",
 			"expression": "s.color._text",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 354,
+			"line": 367,
 			"property": "display",
 			"expression": "s.display.flex",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 355,
+			"line": 368,
 			"property": "font",
 			"expression": "s.font.inherit",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 356,
+			"line": 369,
 			"property": "fontFamily",
 			"expression": "s.fontFamily._sans",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 357,
+			"line": 370,
 			"property": "gap",
 			"expression": "s.gap._medium",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 358,
+			"line": 371,
 			"property": "lineHeight",
 			"expression": "s.lineHeight._normal",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 359,
+			"line": 372,
 			"property": "maxWidth",
 			"method": "percent",
 			"expression": "s.maxWidth.percent(100)",
@@ -19367,7 +19929,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 360,
+			"line": 373,
 			"property": "minWidth",
 			"method": "px",
 			"expression": "s.minWidth.px(0)",
@@ -19375,42 +19937,42 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 361,
+			"line": 374,
 			"property": "overflowWrap",
 			"expression": "s.overflowWrap.anywhere",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 362,
+			"line": 375,
 			"property": "position",
 			"expression": "s.position.relative",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 363,
+			"line": 376,
 			"property": "textAlign",
 			"expression": "s.textAlign.start",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 364,
+			"line": 377,
 			"property": "textDecoration",
 			"expression": "s.textDecoration.none",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 365,
+			"line": 378,
 			"property": "transitionDuration",
 			"expression": "s.transitionDuration._fast",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 366,
+			"line": 379,
 			"property": "transitionProperty",
 			"method": "raw",
 			"expression": "s.transitionProperty.raw('background-color, border-color, color, opacity')",
@@ -19418,14 +19980,14 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 367,
+			"line": 380,
 			"property": "transitionTimingFunction",
 			"expression": "s.transitionTimingFunction._standard",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 368,
+			"line": 381,
 			"property": "width",
 			"method": "percent",
 			"expression": "s.width.percent(100)",
@@ -19433,63 +19995,63 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 370,
+			"line": 383,
 			"property": "cursor",
 			"expression": "s.cursor.pointer",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 371,
+			"line": 384,
 			"property": "backgroundColor",
 			"expression": "s.backgroundColor._surfaceHover",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 374,
+			"line": 387,
 			"property": "cursor",
 			"expression": "s.cursor.notAllowed",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 375,
+			"line": 388,
 			"property": "opacity",
 			"expression": "s.opacity._disabled",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 378,
+			"line": 391,
 			"property": "outlineColor",
 			"expression": "s.outlineColor._focus",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 379,
+			"line": 392,
 			"property": "outlineOffset",
 			"expression": "s.outlineOffset._outer",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 380,
+			"line": 393,
 			"property": "outlineStyle",
 			"expression": "s.outlineStyle.solid",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 381,
+			"line": 394,
 			"property": "outlineWidth",
 			"expression": "s.outlineWidth._medium",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 385,
+			"line": 398,
 			"property": "blockSize",
 			"method": "percent",
 			"expression": "s.blockSize.percent(60)",
@@ -19497,14 +20059,14 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 386,
+			"line": 399,
 			"property": "borderRadius",
 			"expression": "s.borderRadius._small",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 387,
+			"line": 400,
 			"property": "inlineSize",
 			"method": "raw",
 			"expression": "s.inlineSize.raw('var(--zui-nav-link-indicator-width)')",
@@ -19512,7 +20074,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 388,
+			"line": 401,
 			"property": "insetBlockStart",
 			"method": "percent",
 			"expression": "s.insetBlockStart.percent(20)",
@@ -19520,21 +20082,21 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 389,
+			"line": 402,
 			"property": "pointerEvents",
 			"expression": "s.pointerEvents.none",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 390,
+			"line": 403,
 			"property": "position",
 			"expression": "s.position.absolute",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 391,
+			"line": 404,
 			"property": "insetInlineStart",
 			"method": "px",
 			"expression": "s.insetInlineStart.px(0)",
@@ -19542,7 +20104,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 392,
+			"line": 405,
 			"property": "insetInlineEnd",
 			"method": "px",
 			"expression": "s.insetInlineEnd.px(0)",
@@ -19550,21 +20112,21 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 395,
+			"line": 408,
 			"property": "alignItems",
 			"expression": "s.alignItems.center",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 396,
+			"line": 409,
 			"property": "display",
 			"expression": "s.display.inlineFlex",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 401,
+			"line": 414,
 			"property": "minWidth",
 			"method": "px",
 			"expression": "s.minWidth.px(0)",
@@ -19572,161 +20134,161 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 404,
+			"line": 417,
 			"property": "display",
 			"expression": "s.display.block",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 405,
+			"line": 418,
 			"property": "overflowWrap",
 			"expression": "s.overflowWrap.anywhere",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 408,
+			"line": 421,
 			"property": "color",
 			"expression": "s.color._textMuted",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 409,
+			"line": 422,
 			"property": "display",
 			"expression": "s.display.block",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 410,
+			"line": 423,
 			"property": "fontWeight",
 			"expression": "s.fontWeight._normal",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 411,
+			"line": 424,
 			"property": "marginBlockStart",
 			"expression": "s.marginBlockStart._xsmall",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 412,
+			"line": 425,
 			"property": "overflowWrap",
 			"expression": "s.overflowWrap.anywhere",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 415,
+			"line": 428,
 			"property": "alignItems",
 			"expression": "s.alignItems.center",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 416,
+			"line": 429,
 			"property": "display",
 			"expression": "s.display.inlineFlex",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 420,
+			"line": 433,
 			"property": "alignItems",
 			"expression": "s.alignItems.center",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 421,
+			"line": 434,
 			"property": "appearance",
 			"expression": "s.appearance.none",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 422,
+			"line": 435,
 			"property": "backgroundColor",
 			"expression": "s.backgroundColor.transparent",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 423,
+			"line": 436,
 			"property": "borderColor",
 			"expression": "s.borderColor.transparent",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 424,
+			"line": 437,
 			"property": "borderRadius",
 			"expression": "s.borderRadius._medium",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 425,
+			"line": 438,
 			"property": "borderStyle",
 			"expression": "s.borderStyle.solid",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 426,
+			"line": 439,
 			"property": "borderWidth",
 			"expression": "s.borderWidth._hairline",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 427,
+			"line": 440,
 			"property": "boxSizing",
 			"expression": "s.boxSizing.borderBox",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 428,
+			"line": 441,
 			"property": "color",
 			"expression": "s.color._textMuted",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 429,
+			"line": 442,
 			"property": "cursor",
 			"expression": "s.cursor.pointer",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 430,
+			"line": 443,
 			"property": "display",
 			"expression": "s.display.inlineFlex",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 431,
+			"line": 444,
 			"property": "justifyContent",
 			"expression": "s.justifyContent.center",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 432,
+			"line": 445,
 			"property": "transitionDuration",
 			"expression": "s.transitionDuration._fast",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 433,
+			"line": 446,
 			"property": "transitionProperty",
 			"method": "raw",
 			"expression": "s.transitionProperty.raw('background-color, color, opacity')",
@@ -19734,84 +20296,84 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 434,
+			"line": 447,
 			"property": "transitionTimingFunction",
 			"expression": "s.transitionTimingFunction._standard",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 436,
+			"line": 449,
 			"property": "backgroundColor",
 			"expression": "s.backgroundColor._surfaceHover",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 437,
+			"line": 450,
 			"property": "color",
 			"expression": "s.color._primary",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 440,
+			"line": 453,
 			"property": "cursor",
 			"expression": "s.cursor.notAllowed",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 441,
+			"line": 454,
 			"property": "opacity",
 			"expression": "s.opacity._disabled",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 444,
+			"line": 457,
 			"property": "outlineColor",
 			"expression": "s.outlineColor._focus",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 445,
+			"line": 458,
 			"property": "outlineOffset",
 			"expression": "s.outlineOffset._outer",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 446,
+			"line": 459,
 			"property": "outlineStyle",
 			"expression": "s.outlineStyle.solid",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 447,
+			"line": 460,
 			"property": "outlineWidth",
 			"expression": "s.outlineWidth._medium",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 451,
+			"line": 464,
 			"property": "display",
 			"expression": "s.display.inlineFlex",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 452,
+			"line": 465,
 			"property": "transitionDuration",
 			"expression": "s.transitionDuration._fast",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 453,
+			"line": 466,
 			"property": "transitionProperty",
 			"method": "raw",
 			"expression": "s.transitionProperty.raw('transform')",
@@ -19819,14 +20381,14 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 454,
+			"line": 467,
 			"property": "transitionTimingFunction",
 			"expression": "s.transitionTimingFunction._standard",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 455,
+			"line": 468,
 			"property": "transform",
 			"method": "raw",
 			"expression": "s.transform.raw('rotate(90deg)')",
@@ -19834,7 +20396,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 457,
+			"line": 470,
 			"property": "transform",
 			"method": "raw",
 			"expression": "s.transform.raw('rotate(-90deg)')",
@@ -19842,21 +20404,21 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 465,
+			"line": 478,
 			"property": "width",
 			"expression": "s.width.fitContent",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 468,
+			"line": 481,
 			"property": "justifyContent",
 			"expression": "s.justifyContent.center",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 469,
+			"line": 482,
 			"property": "paddingInline",
 			"method": "px",
 			"expression": "s.paddingInline.px(0)",
@@ -19864,115 +20426,115 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 475,
+			"line": 488,
 			"property": "backgroundColor",
 			"expression": "s.backgroundColor._surface",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 478,
+			"line": 491,
 			"property": "backgroundColor",
 			"expression": "s.backgroundColor._surface",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 479,
+			"line": 492,
 			"property": "borderColor",
 			"expression": "s.borderColor._border",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 486,
+			"line": 499,
 			"property": "transitionDuration",
 			"method": "ms",
 			"expression": "s.transitionDuration.ms(0)",
 			"kind": "structural-zero"
-		},
-		{
-			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 487,
-			"property": "transitionDuration",
-			"method": "ms",
-			"expression": "s.transitionDuration.ms(0)",
-			"kind": "structural-zero"
-		},
-		{
-			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 488,
-			"property": "transitionDuration",
-			"method": "ms",
-			"expression": "s.transitionDuration.ms(0)",
-			"kind": "structural-zero"
-		},
-		{
-			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 493,
-			"property": "paddingBlock",
-			"expression": "s.paddingBlock._xsmall",
-			"kind": "theme-accessor"
-		},
-		{
-			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 495,
-			"property": "fontSize",
-			"expression": "s.fontSize._xsmall",
-			"kind": "theme-accessor"
-		},
-		{
-			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 498,
-			"property": "paddingBlock",
-			"expression": "s.paddingBlock._xsmall",
-			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
 			"line": 500,
+			"property": "transitionDuration",
+			"method": "ms",
+			"expression": "s.transitionDuration.ms(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
+			"line": 501,
+			"property": "transitionDuration",
+			"method": "ms",
+			"expression": "s.transitionDuration.ms(0)",
+			"kind": "structural-zero"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
+			"line": 506,
+			"property": "paddingBlock",
+			"expression": "s.paddingBlock._xsmall",
+			"kind": "theme-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
+			"line": 508,
 			"property": "fontSize",
 			"expression": "s.fontSize._xsmall",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 503,
+			"line": 511,
+			"property": "paddingBlock",
+			"expression": "s.paddingBlock._xsmall",
+			"kind": "theme-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
+			"line": 513,
+			"property": "fontSize",
+			"expression": "s.fontSize._xsmall",
+			"kind": "theme-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
+			"line": 516,
 			"property": "paddingBlock",
 			"expression": "s.paddingBlock._small",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 505,
+			"line": 518,
 			"property": "fontSize",
 			"expression": "s.fontSize._small",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 508,
+			"line": 521,
 			"property": "paddingBlock",
 			"expression": "s.paddingBlock._small",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 510,
+			"line": 523,
 			"property": "fontSize",
 			"expression": "s.fontSize._medium",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 513,
+			"line": 526,
 			"property": "paddingBlock",
 			"expression": "s.paddingBlock._medium",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 515,
+			"line": 528,
 			"property": "fontSize",
 			"expression": "s.fontSize._large",
 			"kind": "theme-accessor"
@@ -27119,6 +27681,36 @@
 			"via": "icss-accessor"
 		},
 		{
+			"path": "ui/zui/src/components/compound/menubar/ZMenubar.svelte",
+			"line": 123,
+			"token": "color.surface",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/compound/menubar/ZMenubar.svelte",
+			"line": 124,
+			"token": "color.border",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/compound/menubar/ZMenubar.svelte",
+			"line": 125,
+			"token": "radius.medium",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/compound/menubar/ZMenubar.svelte",
+			"line": 127,
+			"token": "borderWidth.hairline",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/compound/menubar/ZMenubar.svelte",
+			"line": 132,
+			"token": "space.xsmall",
+			"via": "icss-accessor"
+		},
+		{
 			"path": "ui/zui/src/components/compound/multi-select/ZMultiSelectItem.svelte",
 			"line": 98,
 			"token": "radius.small",
@@ -27270,7 +27862,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/compound/navigation-menu/ZNavigationMenu.svelte",
-			"line": 278,
+			"line": 285,
 			"token": "fontFamily.sans",
 			"via": "icss-accessor"
 		},
@@ -34662,14 +35254,44 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZOverflowList.svelte",
-			"line": 489,
+			"line": 490,
 			"token": "space.small",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZOverflowList.svelte",
-			"line": 490,
+			"line": 491,
 			"token": "space.small",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 283,
+			"token": "color.focus",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 284,
+			"token": "focusOffset.inner",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 286,
+			"token": "borderWidth.medium",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 325,
+			"token": "color.border",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 326,
+			"token": "radius.small",
 			"via": "icss-accessor"
 		},
 		{
@@ -34794,7 +35416,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZSplitter.svelte",
-			"line": 1078,
+			"line": 1092,
 			"token": "borderWidth.hairline",
 			"via": "direct-theme-read"
 		},
@@ -34802,6 +35424,18 @@
 			"path": "ui/zui/src/components/layout/ZStack.svelte",
 			"line": 159,
 			"token": "space.none",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
+			"line": 216,
+			"token": "space.xsmall",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
+			"line": 223,
+			"token": "space.medium",
 			"via": "icss-accessor"
 		},
 		{
@@ -35070,277 +35704,277 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 278,
+			"line": 291,
 			"token": "fontWeight.semibold",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 339,
+			"line": 352,
 			"token": "space.xsmall",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 349,
+			"line": 362,
 			"token": "radius.medium",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 351,
+			"line": 364,
 			"token": "borderWidth.hairline",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 353,
+			"line": 366,
 			"token": "color.text",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 356,
+			"line": 369,
 			"token": "fontFamily.sans",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 357,
+			"line": 370,
 			"token": "space.medium",
-			"via": "icss-accessor"
-		},
-		{
-			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 358,
-			"token": "lineHeight.normal",
-			"via": "icss-accessor"
-		},
-		{
-			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 365,
-			"token": "duration.fast",
-			"via": "icss-accessor"
-		},
-		{
-			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 367,
-			"token": "easing.standard",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
 			"line": 371,
-			"token": "color.surfaceHover",
-			"via": "icss-accessor"
-		},
-		{
-			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 375,
-			"token": "opacity.disabled",
+			"token": "lineHeight.normal",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
 			"line": 378,
-			"token": "color.focus",
-			"via": "icss-accessor"
-		},
-		{
-			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 379,
-			"token": "focusOffset.outer",
-			"via": "icss-accessor"
-		},
-		{
-			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 381,
-			"token": "borderWidth.medium",
-			"via": "icss-accessor"
-		},
-		{
-			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 386,
-			"token": "radius.small",
-			"via": "icss-accessor"
-		},
-		{
-			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 408,
-			"token": "color.textMuted",
-			"via": "icss-accessor"
-		},
-		{
-			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 410,
-			"token": "fontWeight.normal",
-			"via": "icss-accessor"
-		},
-		{
-			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 411,
-			"token": "space.xsmall",
-			"via": "icss-accessor"
-		},
-		{
-			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 424,
-			"token": "radius.medium",
-			"via": "icss-accessor"
-		},
-		{
-			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 426,
-			"token": "borderWidth.hairline",
-			"via": "icss-accessor"
-		},
-		{
-			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 428,
-			"token": "color.textMuted",
-			"via": "icss-accessor"
-		},
-		{
-			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 432,
 			"token": "duration.fast",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 434,
+			"line": 380,
 			"token": "easing.standard",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 436,
+			"line": 384,
 			"token": "color.surfaceHover",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 437,
-			"token": "color.primary",
-			"via": "icss-accessor"
-		},
-		{
-			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 441,
+			"line": 388,
 			"token": "opacity.disabled",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 444,
+			"line": 391,
 			"token": "color.focus",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 445,
+			"line": 392,
 			"token": "focusOffset.outer",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 447,
+			"line": 394,
 			"token": "borderWidth.medium",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 452,
+			"line": 399,
+			"token": "radius.small",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
+			"line": 421,
+			"token": "color.textMuted",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
+			"line": 423,
+			"token": "fontWeight.normal",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
+			"line": 424,
+			"token": "space.xsmall",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
+			"line": 437,
+			"token": "radius.medium",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
+			"line": 439,
+			"token": "borderWidth.hairline",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
+			"line": 441,
+			"token": "color.textMuted",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
+			"line": 445,
 			"token": "duration.fast",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 454,
+			"line": 447,
 			"token": "easing.standard",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 475,
+			"line": 449,
+			"token": "color.surfaceHover",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
+			"line": 450,
+			"token": "color.primary",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
+			"line": 454,
+			"token": "opacity.disabled",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
+			"line": 457,
+			"token": "color.focus",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
+			"line": 458,
+			"token": "focusOffset.outer",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
+			"line": 460,
+			"token": "borderWidth.medium",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
+			"line": 465,
+			"token": "duration.fast",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
+			"line": 467,
+			"token": "easing.standard",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
+			"line": 488,
 			"token": "color.surface",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 478,
+			"line": 491,
 			"token": "color.surface",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 479,
+			"line": 492,
 			"token": "color.border",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 493,
+			"line": 506,
 			"token": "space.xsmall",
-			"via": "icss-accessor"
-		},
-		{
-			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 495,
-			"token": "fontSize.xsmall",
-			"via": "icss-accessor"
-		},
-		{
-			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 498,
-			"token": "space.xsmall",
-			"via": "icss-accessor"
-		},
-		{
-			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 500,
-			"token": "fontSize.xsmall",
-			"via": "icss-accessor"
-		},
-		{
-			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 503,
-			"token": "space.small",
-			"via": "icss-accessor"
-		},
-		{
-			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 505,
-			"token": "fontSize.small",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
 			"line": 508,
-			"token": "space.small",
+			"token": "fontSize.xsmall",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 510,
-			"token": "fontSize.medium",
+			"line": 511,
+			"token": "space.xsmall",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
 			"line": 513,
+			"token": "fontSize.xsmall",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
+			"line": 516,
+			"token": "space.small",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
+			"line": 518,
+			"token": "fontSize.small",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
+			"line": 521,
+			"token": "space.small",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
+			"line": 523,
+			"token": "fontSize.medium",
+			"via": "icss-accessor"
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
+			"line": 526,
 			"token": "space.medium",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 515,
+			"line": 528,
 			"token": "fontSize.large",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 654,
+			"line": 667,
 			"token": "borderWidth.medium",
 			"via": "direct-theme-read"
 		},
@@ -38105,6 +38739,10 @@
 			"line": 66
 		},
 		{
+			"path": "ui/zui/src/components/compound/menubar/ZMenubar.svelte",
+			"line": 482
+		},
+		{
 			"path": "ui/zui/src/components/compound/multi-select/ZMultiSelectContent.svelte",
 			"line": 217
 		},
@@ -38114,7 +38752,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/compound/navigation-menu/ZNavigationMenu.svelte",
-			"line": 900
+			"line": 914
 		},
 		{
 			"path": "ui/zui/src/components/compound/popconfirm/ZPopconfirmDescription.svelte",
@@ -38494,7 +39132,11 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZOverflowList.svelte",
-			"line": 509
+			"line": 510
+		},
+		{
+			"path": "ui/zui/src/components/layout/ZResizable.svelte",
+			"line": 1025
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZScrollArea.svelte",
@@ -38510,15 +39152,19 @@
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZSplitter.svelte",
-			"line": 1095
+			"line": 1109
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZSplitter.svelte",
-			"line": 1118
+			"line": 1132
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZStack.svelte",
 			"line": 220
+		},
+		{
+			"path": "ui/zui/src/components/navigation/ZAnchor.svelte",
+			"line": 579
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZBreadcrumb.svelte",
@@ -38530,19 +39176,19 @@
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 798
+			"line": 811
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 856
+			"line": 870
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 869
+			"line": 884
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZNavLink.svelte",
-			"line": 897
+			"line": 912
 		},
 		{
 			"path": "ui/zui/src/components/navigation/ZPagination.svelte",
@@ -38677,6 +39323,42 @@
 			"line": 59
 		},
 		{
+			"path": "apps/docs/src/content/components/layout/resizable/BasicDemo.svelte",
+			"line": 12
+		},
+		{
+			"path": "apps/docs/src/content/components/layout/resizable/BasicDemo.svelte",
+			"line": 21
+		},
+		{
+			"path": "apps/docs/src/content/components/layout/resizable/BasicDemo.svelte",
+			"line": 23
+		},
+		{
+			"path": "apps/docs/src/content/components/layout/resizable/ConstraintsDemo.svelte",
+			"line": 7
+		},
+		{
+			"path": "apps/docs/src/content/components/layout/resizable/ConstraintsDemo.svelte",
+			"line": 16
+		},
+		{
+			"path": "apps/docs/src/content/components/layout/resizable/ConstraintsDemo.svelte",
+			"line": 18
+		},
+		{
+			"path": "apps/docs/src/content/components/layout/resizable/TwoDimensionalDemo.svelte",
+			"line": 9
+		},
+		{
+			"path": "apps/docs/src/content/components/layout/resizable/TwoDimensionalDemo.svelte",
+			"line": 23
+		},
+		{
+			"path": "apps/docs/src/content/components/layout/resizable/TwoDimensionalDemo.svelte",
+			"line": 25
+		},
+		{
 			"path": "apps/docs/src/content/components/layout/simple-grid/LongContentRtlDemo.svelte",
 			"line": 14
 		},
@@ -38739,6 +39421,102 @@
 		{
 			"path": "apps/docs/src/content/components/layout/stack/WrapDemo.svelte",
 			"line": 5
+		},
+		{
+			"path": "apps/docs/src/content/components/navigation/anchor/BasicDemo.svelte",
+			"line": 17
+		},
+		{
+			"path": "apps/docs/src/content/components/navigation/anchor/BasicDemo.svelte",
+			"line": 23
+		},
+		{
+			"path": "apps/docs/src/content/components/navigation/anchor/BasicDemo.svelte",
+			"line": 29
+		},
+		{
+			"path": "apps/docs/src/content/components/navigation/anchor/BasicDemo.svelte",
+			"line": 32
+		},
+		{
+			"path": "apps/docs/src/content/components/navigation/anchor/BasicDemo.svelte",
+			"line": 33
+		},
+		{
+			"path": "apps/docs/src/content/components/navigation/anchor/BasicDemo.svelte",
+			"line": 37
+		},
+		{
+			"path": "apps/docs/src/content/components/navigation/anchor/BasicDemo.svelte",
+			"line": 42
+		},
+		{
+			"path": "apps/docs/src/content/components/navigation/anchor/ControlledDemo.svelte",
+			"line": 39
+		},
+		{
+			"path": "apps/docs/src/content/components/navigation/anchor/ControlledDemo.svelte",
+			"line": 64
+		},
+		{
+			"path": "apps/docs/src/content/components/navigation/anchor/ControlledDemo.svelte",
+			"line": 65
+		},
+		{
+			"path": "apps/docs/src/content/components/navigation/anchor/ControlledDemo.svelte",
+			"line": 68
+		},
+		{
+			"path": "apps/docs/src/content/components/navigation/anchor/ControlledDemo.svelte",
+			"line": 71
+		},
+		{
+			"path": "apps/docs/src/content/components/navigation/anchor/HorizontalDemo.svelte",
+			"line": 28
+		},
+		{
+			"path": "apps/docs/src/content/components/navigation/anchor/HorizontalDemo.svelte",
+			"line": 43
+		},
+		{
+			"path": "apps/docs/src/content/components/navigation/anchor/HorizontalDemo.svelte",
+			"line": 44
+		},
+		{
+			"path": "apps/docs/src/content/components/navigation/anchor/HorizontalDemo.svelte",
+			"line": 47
+		},
+		{
+			"path": "apps/docs/src/content/components/navigation/anchor/HorizontalDemo.svelte",
+			"line": 50
+		},
+		{
+			"path": "apps/docs/src/content/components/navigation/anchor/ReducedDemo.svelte",
+			"line": 29
+		},
+		{
+			"path": "apps/docs/src/content/components/navigation/anchor/ReducedDemo.svelte",
+			"line": 34
+		},
+		{
+			"path": "apps/docs/src/content/components/navigation/anchor/ReducedDemo.svelte",
+			"line": 48
+		},
+		{
+			"path": "apps/docs/src/content/components/navigation/anchor/ReducedDemo.svelte",
+			"line": 50
+		},
+		{
+			"path": "apps/docs/src/content/components/navigation/anchor/ReducedDemo.svelte",
+			"line": 53
+		},
+		{
+			"path": "apps/docs/src/content/components/navigation/anchor/ReducedDemo.svelte",
+			"line": 59
+		},
+		{
+			"path": "apps/docs/src/content/components/navigation/anchor/ReducedDemo.svelte",
+			"line": 65
 		},
 		{
 			"path": "apps/docs/src/content/components/navigation/breadcrumb/CollapseDemo.svelte",

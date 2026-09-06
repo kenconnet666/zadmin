@@ -30,9 +30,16 @@ export const toolbarDoc = defineComponentDoc(toolbarMetadata, {
 	demos: [
 		{
 			component: BasicDemo,
-			covers: ['accessible-name', 'basic-render', 'composition', 'native-props'],
+			covers: [
+				'accessible-name',
+				'basic-render',
+				'composition',
+				'focus',
+				'keyboard',
+				'native-props'
+			],
 			description:
-				'真实保存按钮和原生导航链接通过children props注册到同一个Toolbar，ToolbarItem自身不增加DOM。',
+				'真实按钮和链接通过children props注册；同页可操作RTL两项与嵌套Toolbar，核对各自独立的roving焦点边界。',
 			id: 'toolbar-basic',
 			source: basicSource,
 			title: '异构控件与原生链接'

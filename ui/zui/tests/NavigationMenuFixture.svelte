@@ -10,6 +10,7 @@
 	import type { NavigationMenuItemContext } from '../src/components/compound/navigation-menu/context.js';
 
 	type MenuKey = string | number;
+	type ConsumerKey = 'consumer-panel' | 'consumer-one' | 'consumer-two' | 'consumer-three';
 	type MenuHandle = {
 		close(): void;
 		collapse(key: MenuKey): void;
@@ -198,24 +199,24 @@
 </script>
 
 {#snippet consumerItem(
-	item: NavigationMenuItem<MenuKey>,
-	context: NavigationMenuItemContext<MenuKey>
+	item: NavigationMenuItem<ConsumerKey>,
+	context: NavigationMenuItemContext<ConsumerKey>
 )}
 	<span id={`consumer-item-${String(item.key)}`} data-depth={context.depth}>{item.label}</span>
 {/snippet}
 {#snippet consumerStart(
-	item: NavigationMenuItem<MenuKey>,
-	_context: NavigationMenuItemContext<MenuKey>
+	item: NavigationMenuItem<ConsumerKey>,
+	_context: NavigationMenuItemContext<ConsumerKey>
 )}
 	<span id={`consumer-start-${String(item.key)}`} aria-hidden="true">S</span>
 {/snippet}
 {#snippet consumerEnd(
-	item: NavigationMenuItem<MenuKey>,
-	_context: NavigationMenuItemContext<MenuKey>
+	item: NavigationMenuItem<ConsumerKey>,
+	_context: NavigationMenuItemContext<ConsumerKey>
 )}
 	<span id={`consumer-end-${String(item.key)}`} aria-hidden="true">E</span>
 {/snippet}
-{#snippet consumerPanel(_context: NavigationMenuPanelContext<MenuKey>)}
+{#snippet consumerPanel(_context: NavigationMenuPanelContext<ConsumerKey>)}
 	<button id="consumer-panel-fixed" type="button">Custom panel action</button>
 {/snippet}
 

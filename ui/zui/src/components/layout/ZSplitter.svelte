@@ -1136,6 +1136,7 @@
 		{#if index < entries.length - 1}
 			{@const range = adjacentResizableRange(displayedPixels, accessibleBounds(index), index)}
 			{@const inactive = !adjustable(index)}
+			<!-- svelte-ignore a11y_no_noninteractive_tabindex (ARIA separator is the real keyboard and pointer resize control) -->
 			<div
 				{...handleAttributes}
 				aria-controls={panelId(entry)}

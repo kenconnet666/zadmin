@@ -1,4 +1,4 @@
-import type { ComponentProps } from 'svelte';
+import { createRawSnippet, type ComponentProps } from 'svelte';
 
 import ZNavLink, {
 	type NavLinkIndicator,
@@ -16,7 +16,7 @@ const link = {
 	expanded: false,
 	href: '/products',
 	label: 'Products',
-	labelContent: () => undefined,
+	labelContent: createRawSnippet(() => ({ render: () => '<span>Products</span>' })),
 	onExpandedChange: (expanded: boolean) => void expanded,
 	target: '_blank',
 	tone: 'info',

@@ -108,7 +108,7 @@
 </script>
 
 <script lang="ts">
-	import { ZCard, ZHeading, ZLink, ZList, ZStack, ZTag, ZText, useZui } from '@zadmin/zui';
+	import { ZAnchor, ZCard, ZHeading, ZLink, ZList, ZStack, ZTag, ZText, useZui } from '@zadmin/zui';
 	import { ZCode } from '@zadmin/zui/code';
 	import type { ComponentDoc } from '../framework/component-doc.js';
 	import { componentRoute } from '../framework/router.js';
@@ -116,35 +116,41 @@
 	import DemoBlock from './DemoBlock.svelte';
 
 	let { doc }: { doc: ComponentDoc } = $props();
-	let activeSection = $state('demos');
 	const zui = useZui();
 	const classes = $derived(zui.slots(pageRecipe));
 
-	$effect(() => {
-		const ids = [
-			'demos',
-			...doc.demos.map((demo) => demo.id),
-			'api',
-			...doc.api.map((section) => `api-${section.id}`),
-			'accessibility'
-		];
-		activeSection = 'demos';
-		if (typeof IntersectionObserver === 'undefined') return;
-		const observer = new IntersectionObserver(
-			(entries) => {
-				const visible = entries
-					.filter((entry) => entry.isIntersecting)
-					.sort((left, right) => left.boundingClientRect.top - right.boundingClientRect.top)[0];
-				if (visible?.target.id) activeSection = visible.target.id;
-			},
-			{ rootMargin: '-18% 0px -70% 0px', threshold: 0 }
-		);
-		for (const id of ids) {
-			const section = document.getElementById(id);
-			if (section) observer.observe(section);
+	const directory = $derived([
+		{
+			key: 'demos',
+			label: '实时演示',
+			href: componentRoute(doc.id, 'demos'),
+			targetId: 'demos',
+			children: doc.demos.map((demo) => ({
+				key: demo.id,
+				label: demo.title,
+				href: componentRoute(doc.id, demo.id),
+				targetId: demo.id
+			}))
+		},
+		{
+			key: 'api',
+			label: 'API',
+			href: componentRoute(doc.id, 'api'),
+			targetId: 'api',
+			children: doc.api.map((section) => ({
+				key: `api-${section.id}`,
+				label: section.title,
+				href: componentRoute(doc.id, `api-${section.id}`),
+				targetId: `api-${section.id}`
+			}))
+		},
+		{
+			key: 'accessibility',
+			label: '可访问性',
+			href: componentRoute(doc.id, 'accessibility'),
+			targetId: 'accessibility'
 		}
-		return () => observer.disconnect();
-	});
+	]);
 </script>
 
 <div class={classes.layout}>
@@ -213,14 +219,13 @@
 		<ZCard variant="outlined">
 			<ZStack gap="small">
 				<ZText weight="semibold" tone="muted">当前页面</ZText>
-				{#each [{ id: 'demos', label: '实时演示' }, ...doc.demos.map( (demo) => ({ id: demo.id, label: demo.title, nested: true }) ), { id: 'api', label: 'API' }, ...doc.api.map( (section) => ({ id: `api-${section.id}`, label: section.title, nested: true }) ), { id: 'accessibility', label: '可访问性' }] as entry (entry.id)}
-					<ZLink
-						appearance="navigation"
-						size="medium"
-						aria-current={activeSection === entry.id ? 'location' : undefined}
-						href={componentRoute(doc.id, entry.id)}>{entry.label}</ZLink
-					>
-				{/each}
+				<ZAnchor
+					items={directory}
+					behavior={false}
+					defaultActiveKey="demos"
+					aria-label="章节导航"
+					size="medium"
+				/>
 			</ZStack>
 		</ZCard>
 	</aside>

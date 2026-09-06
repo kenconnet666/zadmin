@@ -518,6 +518,50 @@
 			"fallbackPropNames": []
 		},
 		{
+			"id": "menubar",
+			"name": "ZMenubar",
+			"source": "ui/zui/src/components/compound/menubar/ZMenubar.svelte",
+			"family": "menubar",
+			"declaredPropCount": 9,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "menubar-content",
+			"name": "ZMenubarContent",
+			"source": "ui/zui/src/components/compound/menubar/ZMenubarContent.svelte",
+			"family": "menubar",
+			"declaredPropCount": 13,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "menubar-menu",
+			"name": "ZMenubarMenu",
+			"source": "ui/zui/src/components/compound/menubar/ZMenubarMenu.svelte",
+			"family": "menubar",
+			"declaredPropCount": 3,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "menubar-trigger",
+			"name": "ZMenubarTrigger",
+			"source": "ui/zui/src/components/compound/menubar/ZMenubarTrigger.svelte",
+			"family": "menubar",
+			"declaredPropCount": 17,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
 			"id": "multi-select",
 			"name": "ZMultiSelect",
 			"source": "ui/zui/src/components/compound/multi-select/ZMultiSelect.svelte",
@@ -1612,6 +1656,16 @@
 			}
 		},
 		{
+			"id": "resizable",
+			"name": "ZResizable",
+			"source": "ui/zui/src/components/layout/ZResizable.svelte",
+			"declaredPropCount": 23,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
 			"id": "scroll-area",
 			"name": "ZScrollArea",
 			"source": "ui/zui/src/components/layout/ZScrollArea.svelte",
@@ -1656,6 +1710,16 @@
 			"name": "ZStack",
 			"source": "ui/zui/src/components/layout/ZStack.svelte",
 			"declaredPropCount": 10,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "anchor",
+			"name": "ZAnchor",
+			"source": "ui/zui/src/components/navigation/ZAnchor.svelte",
+			"declaredPropCount": 17,
 			"metadataGapPropCount": 0,
 			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
@@ -1737,8 +1801,8 @@
 		"maxMetadataGapProps": 0
 	},
 	"totals": {
-		"components": 158,
-		"declaredProps": 1978,
+		"components": 164,
+		"declaredProps": 2060,
 		"metadataGapProps": 0,
 		"fallbackProps": 0,
 		"opaqueStructuredProps": 9,

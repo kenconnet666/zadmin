@@ -1852,9 +1852,9 @@ export const componentCatalogManifest = Object.freeze([
 			'accessible-name',
 			'basic-render',
 			'composition',
-			'native-props',
 			'focus',
 			'keyboard',
+			'native-props',
 			'readonly',
 			'variants-and-states'
 		],
@@ -1927,6 +1927,73 @@ export const componentCatalogManifest = Object.freeze([
 			'controlled'
 		],
 		demoCount: 5,
+		publicComponentCount: 1
+	},
+	{
+		id: 'anchor',
+		name: 'ZAnchor',
+		category: 'navigation',
+		summary:
+			'以真实anchor追踪和定位页面section，active观察、路由current、滚动容器和hash历史由各自owner管理。',
+		status: 'experimental',
+		keywords: [],
+		profiles: ['collection', 'primitive'],
+		capabilities: [
+			'accessible-name',
+			'basic-render',
+			'composition',
+			'native-props',
+			'controlled',
+			'focus',
+			'variants-and-states',
+			'keyboard',
+			'rtl',
+			'reduced-motion',
+			'ssr'
+		],
+		demoCount: 4,
+		publicComponentCount: 1
+	},
+	{
+		id: 'menubar',
+		name: 'ZMenubar',
+		category: 'navigation',
+		summary: '协调多个既有DropdownMenu的单开状态和根级menuitem焦点，菜单命令仍由ZMenu拥有。',
+		status: 'experimental',
+		keywords: [],
+		profiles: ['collection', 'layer'],
+		capabilities: [
+			'accessible-name',
+			'basic-render',
+			'composition',
+			'keyboard',
+			'controlled',
+			'rtl',
+			'variants-and-states',
+			'focus'
+		],
+		demoCount: 3,
+		publicComponentCount: 4
+	},
+	{
+		id: 'resizable',
+		name: 'ZResizable',
+		category: 'layout',
+		summary:
+			'以逻辑边/角handle调整单一真实元素的inline/block尺寸，保留单位、约束和完整pointer/keyboard生命周期。',
+		status: 'experimental',
+		keywords: [],
+		profiles: ['primitive'],
+		capabilities: [
+			'basic-render',
+			'focus',
+			'keyboard',
+			'native-props',
+			'composition',
+			'variants-and-states',
+			'rtl'
+		],
+		demoCount: 3,
 		publicComponentCount: 1
 	},
 	{

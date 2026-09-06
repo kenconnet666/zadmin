@@ -74,11 +74,15 @@ describe('ZToolbar production contract', () => {
 		)!;
 
 		expect(rtl.getAttribute('dir')).toBe('rtl');
+		expect(rtl.querySelectorAll(':scope > button')).toHaveLength(2);
 		expect(rtlFirst.tabIndex).toBe(0);
 		expect(rtlLast.tabIndex).toBe(-1);
 		await userEvent.click(rtlFirst);
 		await userEvent.keyboard('{ArrowRight}');
-		expect(document.activeElement).toBe(rtlLast);
+		await expect.poll(() => document.activeElement).toBe(rtlLast);
+		expect(rtlFirst.tabIndex).toBe(-1);
+		expect(rtlLast.tabIndex).toBe(0);
+		expect(rtl.querySelectorAll(':scope > button')).toHaveLength(2);
 
 		expect(vertical.getAttribute('aria-orientation')).toBe('vertical');
 		await userEvent.click(verticalFirst);
@@ -114,10 +118,15 @@ describe('ZToolbar production contract', () => {
 		)!;
 		expect(innerFirst.tabIndex).toBe(0);
 		expect(innerLast.tabIndex).toBe(-1);
+		expect(
+			innerFirst.closest('[role="toolbar"]')?.querySelectorAll(':scope > button')
+		).toHaveLength(2);
 
 		await userEvent.click(innerFirst);
 		await userEvent.keyboard('{ArrowRight}');
-		expect(document.activeElement).toBe(innerLast);
+		await expect.poll(() => document.activeElement).toBe(innerLast);
+		expect(innerFirst.tabIndex).toBe(-1);
+		expect(innerLast.tabIndex).toBe(0);
 		outerFirst.disabled = true;
 		await new Promise<void>((resolve) =>
 			requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
@@ -236,12 +245,23 @@ describe('ZToolbar production contract', () => {
 
 		component.setToolbarOverflowWidth(640);
 		await expect
+			.poll(
+				() =>
+					target
+						.querySelector<HTMLElement>('[data-testid="toolbar-overflow-owner"]')
+						?.getBoundingClientRect().width
+			)
+			.toBeCloseTo(640, 0);
+		await expect
 			.poll(() => trigger.closest<HTMLElement>('[data-overflow-hidden="true"]'))
 			.not.toBeNull();
 		await expect.poll(() => document.activeElement).toBe(first);
 		expect(list.querySelectorAll('[data-overflow-hidden="true"][data-slot="item"]')).toHaveLength(
 			0
 		);
+		expect(first.tabIndex).toBe(0);
+		expect(second.tabIndex).toBe(-1);
+		expect(trigger.tabIndex).toBe(-1);
 		await userEvent.keyboard('{ArrowRight}');
 		expect(document.activeElement).toBe(second);
 		await unmount(component);

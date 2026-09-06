@@ -3,6 +3,12 @@ export interface ZuiCommonLocale {
 	readonly breadcrumbMore: string;
 	readonly primaryNavigation: string;
 	readonly navigationMore: string;
+	readonly tableOfContents: string;
+	readonly resizeHandle: (position: string) => string;
+	readonly resizeInlineStart: string;
+	readonly resizeInlineEnd: string;
+	readonly resizeBlockStart: string;
+	readonly resizeBlockEnd: string;
 	readonly scrollArea: string;
 	readonly clear: string;
 	readonly close: string;
@@ -290,6 +296,12 @@ export const enUSLocalePack = Object.freeze({
 		breadcrumbMore: 'More path levels',
 		primaryNavigation: 'Primary navigation',
 		navigationMore: 'More navigation',
+		tableOfContents: 'Table of contents',
+		resizeHandle: (position) => `Resize from ${position}`,
+		resizeInlineStart: 'inline start',
+		resizeInlineEnd: 'inline end',
+		resizeBlockStart: 'block start',
+		resizeBlockEnd: 'block end',
 		scrollArea: 'Scrollable content',
 		clear: 'Clear',
 		close: 'Close',
@@ -463,6 +475,12 @@ export const zhCNLocalePack = Object.freeze({
 		breadcrumbMore: '更多路径层级',
 		primaryNavigation: '主导航',
 		navigationMore: '更多导航',
+		tableOfContents: '页内目录',
+		resizeHandle: (position) => `从${position}调整大小`,
+		resizeInlineStart: '行内起始边',
+		resizeInlineEnd: '行内结束边',
+		resizeBlockStart: '块起始边',
+		resizeBlockEnd: '块结束边',
 		scrollArea: '可滚动内容',
 		clear: '清空',
 		close: '关闭',

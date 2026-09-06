@@ -5,6 +5,7 @@
 </script>
 
 <script lang="ts" generics="TKey extends SelectionKey">
+	import { untrack } from 'svelte';
 	import ZNavLink from '../../navigation/ZNavLink.svelte';
 	import ZIcon from '../../gene/ZIcon.svelte';
 	import ZText from '../../gene/ZText.svelte';
@@ -22,7 +23,8 @@
 		entry: NavigationMenuItem<TKey>;
 		floating?: boolean;
 	} = $props();
-	const popover = floating ? useZPopover() : undefined;
+	// Compound context ancestry is fixed for this mounted row; changing mode remounts NavigationRow.
+	const popover = untrack(() => floating) ? useZPopover() : undefined;
 	let primary = $state<HTMLElement | null>(null);
 	let disclosure = $state<HTMLButtonElement | null>(null);
 	let panel = $state<HTMLDivElement | null>(null);

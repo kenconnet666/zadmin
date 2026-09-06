@@ -1,19 +1,19 @@
 # ZUI component maturity matrix
 
-Generated from 158 metadata components, 94 documentation modules, 158 API contract entries, and 239 test files.
+Generated from 164 metadata components, 97 documentation modules, 164 API contract entries, and 248 test files.
 
 This is a static inventory of authored test contracts, not an execution report or a whole-component visual acceptance result. Historical stage names are retained for compatibility. `VisuallyVerified` requires an explicit `@zui-visual ZComponent` marker, an owned component/fixture render, and a geometry, computed-style, CSS, or screenshot assertion in the SAME test block. A positive entry only identifies a scoped test; confirm its result against commit-matched CI and inspect real pages, themes, and densities separately. `DesktopVerified` remains false until a component-level desktop evidence source is added.
 
 | Stage                   | Count |
 | ----------------------- | ----: |
-| Declared                |   158 |
-| Authorable              |   158 |
-| ContractVerified        |   158 |
-| RuntimeImplemented      |   158 |
-| BrowserBehaviorVerified |   154 |
-| VisuallyVerified        |   153 |
+| Declared                |   164 |
+| Authorable              |   164 |
+| ContractVerified        |   164 |
+| RuntimeImplemented      |   164 |
+| BrowserBehaviorVerified |   156 |
+| VisuallyVerified        |   154 |
 | DesktopVerified         |     0 |
-| ProductionVerified      |   156 |
+| ProductionVerified      |   159 |
 
 | Component               | Category     | Declared | Authorable | Contract | Runtime | Browser | Visual | Desktop | Production | Docs                                                                  |
 | ----------------------- | ------------ | -------: | ---------: | -------: | ------: | ------: | -----: | ------: | ---------: | --------------------------------------------------------------------- |
@@ -64,6 +64,10 @@ This is a static inventory of authored test contracts, not an execution report o
 | ZMenuSub                | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/menu/doc.ts               |
 | ZMenuSubContent         | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/menu/doc.ts               |
 | ZMenuSubTrigger         | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/menu/doc.ts               |
+| ZMenubar                | navigation   |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/navigation/menubar/doc.ts            |
+| ZMenubarContent         | navigation   |        Y |          Y |        Y |       Y |       — |      — |       — |          — | apps/docs/src/content/components/navigation/menubar/doc.ts            |
+| ZMenubarMenu            | navigation   |        Y |          Y |        Y |       Y |       — |      — |       — |          — | apps/docs/src/content/components/navigation/menubar/doc.ts            |
+| ZMenubarTrigger         | navigation   |        Y |          Y |        Y |       Y |       — |      — |       — |          — | apps/docs/src/content/components/navigation/menubar/doc.ts            |
 | ZMultiSelect            | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/multi-select/doc.ts            |
 | ZMultiSelectContent     | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/multi-select/doc.ts            |
 | ZMultiSelectItem        | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/multi-select/doc.ts            |
@@ -163,11 +167,13 @@ This is a static inventory of authored test contracts, not an execution report o
 | ZGridItem               | layout       |        Y |          Y |        Y |       Y |       — |      Y |       — |          — | apps/docs/src/content/components/layout/grid/doc.ts                   |
 | ZGroup                  | layout       |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/layout/group/doc.ts                  |
 | ZOverflowList           | layout       |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/layout/overflow-list/doc.ts          |
+| ZResizable              | layout       |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/layout/resizable/doc.ts              |
 | ZScrollArea             | layout       |        Y |          Y |        Y |       Y |       — |      Y |       — |          Y | apps/docs/src/content/components/layout/scroll-area/doc.ts            |
 | ZSimpleGrid             | layout       |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/layout/simple-grid/doc.ts            |
 | ZSpacer                 | layout       |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/layout/spacer/doc.ts                 |
 | ZSplitter               | layout       |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/layout/splitter/doc.ts               |
 | ZStack                  | layout       |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/layout/stack/doc.ts                  |
+| ZAnchor                 | navigation   |        Y |          Y |        Y |       Y |       — |      — |       — |          Y | apps/docs/src/content/components/navigation/anchor/doc.ts             |
 | ZBreadcrumb             | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/breadcrumb/doc.ts         |
 | ZCommand                | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/command/doc.ts            |
 | ZCommandPalette         | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/command-palette/doc.ts    |

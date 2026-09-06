@@ -1,5 +1,3 @@
-import { untrack } from 'svelte';
-
 import { LogicalCollection } from './logical-collection.js';
 import type { MountedElements } from './mounted-elements.svelte.js';
 import type { SelectionKey } from './selection.js';
@@ -30,14 +28,21 @@ export class CompoundLogicalCollectionRegistry<
 	TItem extends CompoundLogicalCollectionItem<TKey>
 > {
 	readonly #mounted: MountedElements<TKey>;
-	#registrations = $state<readonly CompoundRegistration<TItem>[]>([]);
+	// Lifecycle ownership stays imperative. Multiple child effects can register or clean
+	// up in one Svelte flush; rebuilding a $state array from an effect-local snapshot can
+	// overwrite siblings. The revision is only a reactive invalidation signal.
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity -- token lifecycle ownership is imperative; revision publishes changes.
+	readonly #registrations = new Map<symbol, CompoundRegistration<TItem>>();
+	#revision = $state(0);
+	#nextRevision = 0;
 
 	constructor(mounted: MountedElements<TKey>) {
 		this.#mounted = mounted;
 	}
 
 	get collection(): LogicalCollection<TKey, TItem> {
-		const values = this.#registrations.map(({ read }) => read());
+		this.#revision;
+		const values = [...this.#registrations.values()].map(({ read }) => read());
 		const source = new LogicalCollection<TKey, TItem>(
 			values,
 			{
@@ -68,14 +73,13 @@ export class CompoundLogicalCollectionRegistry<
 	register(read: () => TItem): () => void {
 		const token = Symbol('zui-compound-logical-item');
 		const registration = { read, token };
-		this.#registrations = [...untrack(() => this.#registrations), registration];
+		this.#registrations.set(token, registration);
+		this.#revision = ++this.#nextRevision;
 		let active = true;
 		return () => {
 			if (!active) return;
 			active = false;
-			this.#registrations = untrack(() => this.#registrations).filter(
-				(candidate) => candidate.token !== token
-			);
+			if (this.#registrations.delete(token)) this.#revision = ++this.#nextRevision;
 		};
 	}
 }

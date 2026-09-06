@@ -2765,6 +2765,281 @@ export const menuSubTriggerApiFacts = {
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
+export const menubarApiFacts = {
+	declaration: 'ZMenubarProps',
+	id: 'menubar',
+	inheritedFrom: ['HTMLAttributes<HTMLDivElement>'],
+	name: 'ZMenubar',
+	props: [
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'defaultValue',
+			required: false,
+			type: 'SelectionKey | null'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'gap',
+			required: false,
+			type: 'ZLayoutSpacing'
+		},
+		{
+			name: 'loop',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'onValueChange',
+			required: false,
+			type: '(value: SelectionKey | null) => void'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
+			name: 'value',
+			required: false,
+			type: 'SelectionKey | null'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null'
+		}
+	],
+	source: 'ui/zui/src/components/compound/menubar/ZMenubar.svelte',
+	metadataGapProps: [],
+	members: () => [menubarContentApiFacts, menubarMenuApiFacts, menubarTriggerApiFacts]
+} as const satisfies ComponentApiFacts;
+
+export const menubarContentApiFacts = {
+	declaration: 'ZMenubarContentProps',
+	id: 'menubar-content',
+	inheritedFrom: ['ZDropdownMenuContentProps'],
+	name: 'ZMenubarContent',
+	props: [
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'onAction',
+			required: false,
+			type: '(event: MenuActionEvent) => void'
+		},
+		{
+			name: 'onEscape',
+			required: false,
+			type: '(event: PopoverEscapeEvent) => void'
+		},
+		{
+			name: 'onFocusOutside',
+			required: false,
+			type: '(event: PopoverFocusOutsideEvent) => void'
+		},
+		{
+			name: 'onPointerOutside',
+			required: false,
+			type: '(event: PopoverPointerOutsideEvent) => void'
+		},
+		{
+			name: 'onkeydown',
+			required: false,
+			type: "ZDropdownMenuContentProps['onkeydown']"
+		},
+		{
+			name: 'ariaDescribedBy',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'restoreFocus',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'restoreTarget',
+			required: false,
+			type: '() => HTMLElement | null',
+			inheritedFrom: 'ZPopoverContentProps'
+		},
+		{
+			name: 'loop',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZDropdownMenuContentProps'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize',
+			inheritedFrom: 'ZDropdownMenuContentProps'
+		},
+		{
+			name: 'menuRef',
+			required: false,
+			type: 'HTMLDivElement | null',
+			inheritedFrom: 'ZDropdownMenuContentProps'
+		}
+	],
+	source: 'ui/zui/src/components/compound/menubar/ZMenubarContent.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
+export const menubarMenuApiFacts = {
+	declaration: 'ZMenubarMenuProps',
+	id: 'menubar-menu',
+	inheritedFrom: [],
+	name: 'ZMenubarMenu',
+	props: [
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'value',
+			required: true,
+			type: 'SelectionKey'
+		}
+	],
+	source: 'ui/zui/src/components/compound/menubar/ZMenubarMenu.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
+export const menubarTriggerApiFacts = {
+	declaration: 'ZMenubarTriggerProps',
+	id: 'menubar-trigger',
+	inheritedFrom: ['ZDropdownMenuTriggerProps'],
+	name: 'ZMenubarTrigger',
+	props: [
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'onfocus',
+			required: false,
+			type: "ZDropdownMenuTriggerProps['onfocus']"
+		},
+		{
+			name: 'onkeydown',
+			required: false,
+			type: "ZDropdownMenuTriggerProps['onkeydown']"
+		},
+		{
+			name: 'onpointermove',
+			required: false,
+			type: "ZDropdownMenuTriggerProps['onpointermove']"
+		},
+		{
+			name: 'fullWidth',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: "'large' | 'medium' | 'small' | 'xlarge' | 'xsmall'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'shape',
+			required: false,
+			type: "'circle' | 'default' | 'square'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: "'danger' | 'info' | 'neutral' | 'primary' | 'success' | 'warning'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'variant',
+			required: false,
+			type: "'ghost' | 'outline' | 'solid'",
+			inheritedFrom: 'ZButtonVariants'
+		},
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'end',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loading',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingIndicator',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'loadingLabel',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'start',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLButtonElement | null',
+			inheritedFrom: 'ZButtonProps'
+		},
+		{
+			name: 'onclick',
+			required: false,
+			type: "ZButtonProps['onclick']",
+			inheritedFrom: 'ZPopoverTriggerProps'
+		}
+	],
+	source: 'ui/zui/src/components/compound/menubar/ZMenubarTrigger.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
 export const multiSelectApiFacts = {
 	declaration: 'ZMultiSelectProps',
 	id: 'multi-select',
@@ -11088,6 +11363,132 @@ export const overflowListApiFacts = {
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
+export const resizableApiFacts = {
+	declaration: 'ZResizableProps',
+	id: 'resizable',
+	inheritedFrom: ['HTMLAttributes<HTMLDivElement>'],
+	name: 'ZResizable',
+	props: [
+		{
+			name: 'axis',
+			required: false,
+			type: "'inline' | 'block' | 'both'"
+		},
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'defaultHeight',
+			required: false,
+			type: 'ResizableLength'
+		},
+		{
+			name: 'defaultWidth',
+			required: false,
+			type: 'ResizableLength'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'handle',
+			required: false,
+			type: 'Snippet<[context: ZResizableHandleContext]>'
+		},
+		{
+			name: 'handleLabel',
+			required: false,
+			type: '(handle: ZResizableHandle) => string'
+		},
+		{
+			name: 'handles',
+			required: false,
+			type: 'readonly ZResizableHandle[]'
+		},
+		{
+			name: 'height',
+			required: false,
+			type: 'ResizableLength'
+		},
+		{
+			name: 'maxHeight',
+			required: false,
+			type: 'ResizableLength'
+		},
+		{
+			name: 'maxWidth',
+			required: false,
+			type: 'ResizableLength'
+		},
+		{
+			name: 'minHeight',
+			required: false,
+			type: 'ResizableLength'
+		},
+		{
+			name: 'minWidth',
+			required: false,
+			type: 'ResizableLength'
+		},
+		{
+			name: 'onResize',
+			required: false,
+			type: '(detail: ZResizableResizeDetail) => void'
+		},
+		{
+			name: 'onResizeCancel',
+			required: false,
+			type: '(detail: ZResizableCancelDetail) => void'
+		},
+		{
+			name: 'onResizeEnd',
+			required: false,
+			type: '(detail: ZResizableResizeDetail) => void'
+		},
+		{
+			name: 'onResizeStart',
+			required: false,
+			type: '(detail: ZResizableResizeDetail) => void'
+		},
+		{
+			name: 'onSizeChange',
+			required: false,
+			type: '(value: ZResizableValue) => void'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null'
+		},
+		{
+			name: 'shiftStep',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
+			name: 'step',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'width',
+			required: false,
+			type: 'ResizableLength'
+		}
+	],
+	source: 'ui/zui/src/components/layout/ZResizable.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
 export const scrollAreaApiFacts = {
 	declaration: 'ZScrollAreaProps',
 	id: 'scroll-area',
@@ -11395,6 +11796,102 @@ export const stackApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/layout/ZStack.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
+export const anchorApiFacts = {
+	declaration: 'ZAnchorProps',
+	id: 'anchor',
+	inheritedFrom: ['HTMLAttributes<HTMLElement>'],
+	name: 'ZAnchor',
+	props: [
+		{
+			name: 'items',
+			required: true,
+			type: 'readonly AnchorItem<TKey>[]'
+		},
+		{
+			name: 'activeKey',
+			required: false,
+			type: 'NoInfer<TKey> | null'
+		},
+		{
+			name: 'defaultActiveKey',
+			required: false,
+			type: 'NoInfer<TKey> | null'
+		},
+		{
+			name: 'onActiveKeyChange',
+			required: false,
+			type: '(key: TKey | null) => void'
+		},
+		{
+			name: 'onNavigateRequest',
+			required: false,
+			type: '(request: AnchorNavigateRequest<TKey>) => void'
+		},
+		{
+			name: 'scrollContainer',
+			required: false,
+			type: 'AnchorScrollContainer | null'
+		},
+		{
+			name: 'getTarget',
+			required: false,
+			type: '(item: AnchorItem<TKey>) => HTMLElement | null'
+		},
+		{
+			name: 'offset',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'behavior',
+			required: false,
+			type: 'ScrollBehavior | false'
+		},
+		{
+			name: 'history',
+			required: false,
+			type: "false | 'push' | 'replace'"
+		},
+		{
+			name: 'focusTarget',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'orientation',
+			required: false,
+			type: "'horizontal' | 'vertical'"
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: 'ZLinkTone'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'item',
+			required: false,
+			type: 'Snippet<[item: AnchorItem<TKey>, active: boolean]>'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLElement | null'
+		}
+	],
+	source: 'ui/zui/src/components/navigation/ZAnchor.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 

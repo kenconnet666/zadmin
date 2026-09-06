@@ -108,3 +108,17 @@ E2/E3 最终一起成功推送至 `ae19b1b`。本批新增 Toolbar、无 DOM Too
 - 前一`db12350`的CI run `34029475777`构建/包边界通过，静态/组件/Docs失败。本批修复Toolbar/ToggleGroup泛型、夹具过窄类型、无效matcher、roving时序，以及ScrollArea即时reduced行为、原生RTL初始offset合同和AppShell可滚动区域键盘入口；详见[E5反馈](./e5-previous-ci-remediation-2026-09-06.md)。
 
 本地仅执行WebStorm局部诊断、真实浏览器检查、格式和源码制品生成；完整类型/SSR/多浏览器/几何/视觉/无障碍合同交远程CI。继续下一批Menubar、通用Resizable和Anchor，随后推进输入/表单/日期与数据大能力；不等待新CI。
+
+## E6：Menubar、Resizable、Anchor 与 Docs 目录迁移
+
+本批目录为97族/164公开组件，API源审计2060个props、actionableIssues=0；componentDefaults增至25组。新增组件维持experimental/unreleased，不将资产覆盖标签当作当前候选已通过远程稳定验收。
+
+- Menubar新增Root/Menu/Trigger/Content四个组合部件，复用DropdownMenu/Menu/Popover，拥有单开根菜单、单Tab入口、根级左右/RTL、首末项打开、跨菜单、取消、Escape/Tab和动态可用性；不重复实现命令、checkbox/radio、submenu、typeahead和浮层引擎。
+- Resizable提供单元素inline/block/both、八种逻辑边角、混合单位、min/max、原子尺寸通知、键盘/拖动/取消和reset，复用resize.ts。边使用separator，角用真实button；五档手柄、默认locale名称、RTL光标与可定制grip同步交付。
+- Anchor提供嵌套真实链接、活动章节、可替换滚动容器、getTarget、原生平滑/即时与减少动画、取消和历史策略、公开控制器。Docs ComponentPage移除私有IntersectionObserver和重复链接循环，改为Anchor；保留AppShell原有hash路由滚动所有权。
+- 浏览器揭示并修复Menubar ArrowUp的last策略被first覆盖，以及Resizable百分号被错误输出为percent。实际Menubar能跨根、Escape恢复、ArrowUp到末项、Tab离开；Resizable的真实px与ARIA一致，真实拖动会更新百分比，RTL角键盘同时调整两维。示例增加主题Card边界、正确尺寸绑定类型与真实滚动容器。
+- 164组件元数据的default/description字面量现在在API生成阶段校验，并有CI自测，提前发现与ZuiComponentMetadata类型不符的行，避免等全量类型门才暴露。
+- 上批E5已随后续远程master提交成功送达。已完成run `34034413308`（632fa5a，包含E5）的Docs三引擎、workspace build、bundles/external验收通过；失败仍来自Static/组件/Windows类型检查。本批修复NavLink可选props metadata与真实size透传、NavigationMenu类型/ARIA、Splitter合法键盘separator warning。
+- 旧Toolbar重复失败经Chrome定位到共享Compound registry的effect旧数组快照覆盖兄弟注册。现在token Map保存生命周期，独立递增计数只发出响应式通知；真实RTL/Inner/Outer First→Last均通过。Overflow在hold期间回退到focusable候选，640px真实owner下More隐藏且焦点回首个命令，唯一Tab入口保持。ScrollArea夹具等待父Provider传播，再断言真实坐标、CSS和事件；未放宽业务状态或删除失败断言。
+
+完整证据见[Anchor](./execution-anchor-2026-09-06.md)、[Menubar](./execution-menubar-2026-09-06.md)、[Resizable](./execution-resizable-2026-09-06.md)及[旧CI修复](./e6-previous-ci-remediation-2026-09-06.md)。本地仍只有WebStorm局部检查、必要Chrome交互、格式/源码制品生成，没有跑本地长套件。下一批继续Affix/BackTop与输入基础能力，推进Form/Input/日期和数据矩阵；新CI不等待，后续交付前读取结果。

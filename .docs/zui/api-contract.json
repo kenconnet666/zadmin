@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
-	"componentCount": 158,
-	"overallSha256": "bb47c35b5e5cd4a6a12dc9c394bb9b6cb7f41a78098e46d6e02282d6c2576060",
+	"componentCount": 164,
+	"overallSha256": "e55ea45d9be653bdba8b2759de4efc51b2a199e5e25de25fe74d6e1c6c002b48",
 	"components": [
 		{
 			"id": "accordion",
@@ -239,6 +239,26 @@
 			"source": "src/components/compound/menu/ZMenuSubTrigger.svelte"
 		},
 		{
+			"id": "menubar",
+			"sha256": "ceae601c2cad6578e31666674c9dd7bdb03e2a2c45879f025646347a1552d405",
+			"source": "src/components/compound/menubar/ZMenubar.svelte"
+		},
+		{
+			"id": "menubar-content",
+			"sha256": "de75d0128a5ede1bd097df0b5e9599dc2d0dba3645dd5d5a5f6b196a280798b8",
+			"source": "src/components/compound/menubar/ZMenubarContent.svelte"
+		},
+		{
+			"id": "menubar-menu",
+			"sha256": "32ed677da78aee2674391d034b416fe81804c333b12c5a09ce995013bf24eff9",
+			"source": "src/components/compound/menubar/ZMenubarMenu.svelte"
+		},
+		{
+			"id": "menubar-trigger",
+			"sha256": "81854e5d7759e1c0b0ed55865099c2ea3f5cbad81eb2bf5f1065bef8b51954d3",
+			"source": "src/components/compound/menubar/ZMenubarTrigger.svelte"
+		},
+		{
 			"id": "multi-select",
 			"sha256": "1a5bc8d138e30b96ac25f681e93e0bbd669bf948d9821dab7efa22b00efaf797",
 			"source": "src/components/compound/multi-select/ZMultiSelect.svelte"
@@ -260,7 +280,7 @@
 		},
 		{
 			"id": "navigation-menu",
-			"sha256": "dd2f098e31f57f563c342cd9c5b1a0ba4f4c221d510985d3e8d84b6c5e8d891c",
+			"sha256": "cabd7ac94a34e19220a20376804e8fb577d8a7d7cdd124d361e190c32e01b20d",
 			"source": "src/components/compound/navigation-menu/ZNavigationMenu.svelte"
 		},
 		{
@@ -734,6 +754,11 @@
 			"source": "src/components/layout/ZOverflowList.svelte"
 		},
 		{
+			"id": "resizable",
+			"sha256": "d670074c0ea8a89146e0297d7492798a8c4387122e78e2e67d0666e948ea829e",
+			"source": "src/components/layout/ZResizable.svelte"
+		},
+		{
 			"id": "scroll-area",
 			"sha256": "fb6c5ea5a91d303c91dc6fc4dcd4014c4ac854346ca7b43043fdc816003465ee",
 			"source": "src/components/layout/ZScrollArea.svelte"
@@ -759,6 +784,11 @@
 			"source": "src/components/layout/ZStack.svelte"
 		},
 		{
+			"id": "anchor",
+			"sha256": "5936d915e6d35d0a9adbc190091a3b57f9a293337dd4adbc1bcf1cf1cd70767c",
+			"source": "src/components/navigation/ZAnchor.svelte"
+		},
+		{
 			"id": "breadcrumb",
 			"sha256": "0dfba3127e79a0bfc71234b5b5d42509937815c17b5051ca4e5559d5c275ab3f",
 			"source": "src/components/navigation/ZBreadcrumb.svelte"
@@ -775,7 +805,7 @@
 		},
 		{
 			"id": "nav-link",
-			"sha256": "37ee80008ab6cbb4613275f0a923dbfb6d3a3a77359e73aaad1b4ee58fdb7c2b",
+			"sha256": "8d553907a91ab32c9b7b495562c754f13fb22e3eed3b2fc5c5771a834cd8097f",
 			"source": "src/components/navigation/ZNavLink.svelte"
 		},
 		{
@@ -797,11 +827,11 @@
 	"entrypoints": {
 		"code.ts": "eabb8477e4c5ef93d016ab909e5c7f85a3111df231e2d2c3c7ef5e54897b36db",
 		"compiler.ts": "96fa979b36838e8b7a6d3f52bb463f23951438a4d974d52b631ad1e6d937b2e7",
-		"index.ts": "4ec51a18a4a9c7eef36d28efab800f1833989aadaf060cc814eb936188926388",
+		"index.ts": "a1eb922afa6b8c4bb804d5fd62d682d4b9185914f71c416bd7f6a7c68f260123",
 		"internal.ts": "05f9ef9c8628e1cdf694dcc88b71831e5aab726a3189bd6189eef7ae645df4d7",
 		"layer.ts": "72d0fc8e5b7a8ab39a12e157879951b84f1a7fc19654f4bd8b6ea92fd8aa6db8",
-		"metadata.ts": "5a35f19ad836cc5adf32dc30826296432d8e63fe722d066afbabab2f803e02e4",
-		"runtime.ts": "476ca24f2a86489c002783a2031534ed387f38463d8a191e7e8ab57186fb4cc7",
+		"metadata.ts": "aa7ebfcad65a7688c68adc4f76f19c937c562512009fd79d7c06bb2c3e89a7a3",
+		"runtime.ts": "06b08bb3ef052b6717f5a5d522b72b22fad7b371500acde7f5bc039fe325087a",
 		"testing.ts": "c596113f3cbcf4ce75be2728b6a10cd6a0b77c9b9101a4408ba2e18e174f15cb",
 		"theme.ts": "9625285286228f2548dadb74b934f40d7cd1804a1e96bc37a04f21d3cd32b527",
 		"themes.ts": "22c13a538ae761f96ccbf319431bcacf3d3466e93881f09f601733aba07e8bd0"

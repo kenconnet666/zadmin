@@ -775,3 +775,35 @@ export type {
 	ThemeTokenValue,
 	ZuiTheme
 } from '../theme/types.js';
+export { default as ZAnchor } from '../components/navigation/ZAnchor.svelte';
+export { default as ZMenubar } from '../components/compound/menubar/ZMenubar.svelte';
+export { default as ZMenubarMenu } from '../components/compound/menubar/ZMenubarMenu.svelte';
+export { default as ZMenubarTrigger } from '../components/compound/menubar/ZMenubarTrigger.svelte';
+export { default as ZMenubarContent } from '../components/compound/menubar/ZMenubarContent.svelte';
+export { default as ZResizable } from '../components/layout/ZResizable.svelte';
+export type { ZMenubarProps } from '../components/compound/menubar/ZMenubar.svelte';
+export type { ZMenubarMenuProps } from '../components/compound/menubar/ZMenubarMenu.svelte';
+export type { ZMenubarTriggerProps } from '../components/compound/menubar/ZMenubarTrigger.svelte';
+export type { ZMenubarContentProps } from '../components/compound/menubar/ZMenubarContent.svelte';
+export type {
+	ZResizableProps,
+	ZResizableAxis,
+	ZResizableHandle,
+	ZResizableValue,
+	ZResizableResizeSource,
+	ZResizableResizeDetail,
+	ZResizableCancelReason,
+	ZResizableCancelDetail,
+	ZResizableHandleContext
+} from '../components/layout/ZResizable.svelte';
+export type {
+	AnchorComponentDefaults,
+	MenubarComponentDefaults,
+	ResizableComponentDefaults
+} from '../runtime/foundation/component-defaults.js';
+export type {
+	ZAnchorProps,
+	AnchorItem,
+	AnchorNavigateRequest,
+	AnchorScrollContainer
+} from '../components/navigation/ZAnchor.svelte';
