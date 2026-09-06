@@ -224,7 +224,7 @@
 	import { mergeStyles } from '../../../runtime/foundation/root-style.js';
 	import ZDialogContent from '../dialog/ZDialogContent.svelte';
 	import { useZDialog } from '../dialog/context.svelte.js';
-	import { DrawerEntryMotion } from './entry-motion.svelte.js';
+	import { PresenceEntryMotion } from '../../../runtime/foundation/presence-entry-motion.svelte.js';
 
 	function isPresetSize(size: DrawerSize): size is DrawerPresetSize {
 		switch (size) {
@@ -264,7 +264,7 @@
 	}: ZDrawerContentProps = $props();
 	const zui = useZui();
 	const dialog = useZDialog();
-	const entryMotion = new DrawerEntryMotion(untrack(() => dialog.open));
+	const entryMotion = new PresenceEntryMotion(untrack(() => dialog.open));
 	const presetSize = $derived(isPresetSize(size) ? size : 'custom');
 	const customSize = $derived(customSizeValue(size));
 	const sizeStyle = $derived(
@@ -280,7 +280,7 @@
 		zui.recipe(drawerContentRecipe, {
 			direction: zui.direction,
 			motion: dialog.reducedMotion ? 'reduced' : 'full',
-			open: entryMotion.entered,
+			open: dialog.open && entryMotion.entered,
 			placement,
 			size: presetSize
 		})

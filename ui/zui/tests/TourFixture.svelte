@@ -70,7 +70,7 @@
 	steps={functionSteps}
 	bind:open={persistentOpen}
 	modal={false}
-	closeOnEscape={false}
-	closeOnMaskClick={false}
+	dismissOnEscape={false}
+	dismissOnMaskClick={false}
 	closeLabel="Close persistent tour"
 />

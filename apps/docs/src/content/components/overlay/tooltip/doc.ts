@@ -30,7 +30,7 @@ export const tooltipDoc = defineComponentDoc(tooltipMetadata, {
 			covers: ['basic-render', 'controlled', 'focus', 'keyboard', 'portal'],
 			component: InteractiveDemo,
 			description:
-				'focus即时打开，hover使用显式delay；Content通过Portal定位并只在打开时建立describedby。',
+				'focus即时打开，hover使用显式openDelay；Content通过Portal定位并只在打开时建立describedby。',
 			id: 'tooltip-interactive',
 			source: interactiveSource,
 			title: '焦点与Hover提示'

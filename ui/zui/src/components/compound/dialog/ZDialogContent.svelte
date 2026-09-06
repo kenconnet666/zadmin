@@ -202,6 +202,7 @@
 <script lang="ts">
 	import { onDestroy, untrack } from 'svelte';
 	import { createPresence } from '../../../runtime/foundation/presence.svelte.js';
+	import { PresenceEntryMotion } from '../../../runtime/foundation/presence-entry-motion.svelte.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -242,6 +243,7 @@
 	const dialog = useZDialog();
 	const initiallyOpen = untrack(() => dialog.open);
 	const presence = createPresence(initiallyOpen);
+	const entryMotion = new PresenceEntryMotion(initiallyOpen);
 	const mounted = $derived(presence.mounted);
 	const presenceState = $derived(presence.state);
 	let presenceOwnerWindow = $state<Window | null>(null);
@@ -249,7 +251,7 @@
 		appearance === 'dialog'
 			? zui.recipe(contentRecipe, {
 					motion: dialog.reducedMotion ? 'reduced' : 'full',
-					open: dialog.open
+					open: dialog.open && entryMotion.entered
 				})
 			: undefined
 	);
@@ -269,6 +271,10 @@
 	$effect(() => {
 		const ownerWindow = dialog.ownerWindow ?? ref?.ownerDocument.defaultView;
 		if (ownerWindow) presenceOwnerWindow = ownerWindow;
+	});
+	$effect(() => {
+		if (appearance === 'dialog') entryMotion.update(dialog.open, dialog.reducedMotion, ref);
+		else entryMotion.destroy();
 	});
 	$effect(() => presence.update(dialog.open, dialog.exitDuration, presenceOwnerWindow));
 	$effect(() => {
@@ -315,7 +321,10 @@
 		if (event.target === event.currentTarget) presence.finishExit();
 		ontransitionend?.(event);
 	}
-	onDestroy(() => presence.destroy());
+	onDestroy(() => {
+		entryMotion.destroy();
+		presence.destroy();
+	});
 </script>
 
 {#if mounted}

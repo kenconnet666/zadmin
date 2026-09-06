@@ -103,6 +103,7 @@
 	import { onDestroy, untrack } from 'svelte';
 
 	import { createPresence } from '../../../runtime/foundation/presence.svelte.js';
+	import { PresenceEntryMotion } from '../../../runtime/foundation/presence-entry-motion.svelte.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -127,16 +128,18 @@
 	const open = $derived(accordion.isOpen(item.value));
 	const initiallyOpen = untrack(() => open);
 	const presence = createPresence(initiallyOpen);
+	const entryMotion = new PresenceEntryMotion(initiallyOpen);
 	const mounted = $derived(presence.mounted);
 	const presenceState = $derived(presence.state);
 	const classes = $derived(
 		zui.slots(accordionContentRecipe, {
 			motion: accordion.reducedMotion ? 'reduced' : 'full',
-			open
+			open: open && entryMotion.entered
 		})
 	);
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
+	$effect(() => entryMotion.update(open, accordion.reducedMotion, ref));
 
 	$effect.pre(() => {
 		const element = ref;
@@ -152,7 +155,10 @@
 		if (event.target === event.currentTarget) presence.finishExit();
 		ontransitionend?.(event);
 	}
-	onDestroy(() => presence.destroy());
+	onDestroy(() => {
+		entryMotion.destroy();
+		presence.destroy();
+	});
 </script>
 
 {#if mounted}

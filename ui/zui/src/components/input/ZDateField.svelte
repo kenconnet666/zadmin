@@ -23,7 +23,7 @@
 		readonly maxValue?: CalendarDateValue;
 		readonly minValue?: CalendarDateValue;
 		readonly name?: string;
-		readonly onReset?: () => void;
+		readonly onFormReset?: () => void;
 		readonly onValueChange?: (value: CalendarDateValue | null) => void;
 		readonly readonly?: boolean;
 		ref?: HTMLDivElement | null;
@@ -61,7 +61,7 @@
 			},
 			{
 				description: '所属form reset恢复defaultValue并清理segment草稿后调用。',
-				name: 'onReset',
+				name: 'onFormReset',
 				type: '() => void'
 			}
 		],
@@ -303,7 +303,7 @@
 		maxValue,
 		minValue,
 		name,
-		onReset,
+		onFormReset,
 		onValueChange,
 		readonly = false,
 		ref = $bindable(null),
@@ -450,7 +450,7 @@
 		valueState.reset();
 		drafts = {};
 		draftInvalid = false;
-		onReset?.();
+		onFormReset?.();
 	}
 	function handleInput(
 		event: Event & { currentTarget: HTMLInputElement },

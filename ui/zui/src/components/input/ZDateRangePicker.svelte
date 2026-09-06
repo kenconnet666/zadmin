@@ -1,6 +1,7 @@
 <script module lang="ts">
 	import type { CalendarDate as PublicCalendarDate } from '@internationalized/date';
 	import type { HTMLAttributes } from 'svelte/elements';
+	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import type {
 		CalendarRange as PublicCalendarRange,
@@ -42,6 +43,24 @@
 		value?: PublicCalendarRange | PublicCalendarRangeValue | null;
 	}
 
+	const rootRecipe = defineRecipe({
+		base: () => undefined,
+		variants: {
+			disabled: {
+				false: () => undefined,
+				true: (s) => {
+					// The enclosing InputGroup already dims this owned inline subtree.
+					s._selector(
+						'& > [data-slot="range-inputs"] > [data-slot="start-field"], & > [data-slot="range-inputs"] > [data-slot="end-field"], & > [data-slot="range-inputs"] > [data-slot="suffix-action"] > button:disabled',
+						(control) => control.opacity._opaque
+					);
+				}
+			}
+		},
+		defaultVariants: { disabled: false }
+	});
+	registerRecipeHmr(import.meta, rootRecipe);
+
 	export const zuiMetadata = {
 		category: 'input',
 		id: 'date-range-picker',
@@ -71,6 +90,7 @@
 			{ description: '关闭并恢复Calendar trigger焦点。', key: 'Escape' }
 		],
 		parts: [
+			{ description: '双日期输入与操作按钮共享的 InputGroup。', name: 'range-inputs' },
 			{ description: '起始日期segments。', name: 'start-field' },
 			{ description: '范围分隔符。', name: 'separator' },
 			{ description: '结束日期segments。', name: 'end-field' },
@@ -337,6 +357,7 @@
 	const resolvedEndLabel = $derived(endLabel ?? zui.localePack.date.endDate);
 	const resolvedClearLabel = $derived(clearLabel ?? zui.localePack.date.clearDateRange);
 	const resolvedDisabled = $derived(disabledProp || (field?.disabled ?? false));
+	const rootClass = $derived(zui.recipe(rootRecipe, { disabled: resolvedDisabled }));
 	const resolvedInvalid = $derived(invalid ?? field?.invalid ?? false);
 	const resolvedReadonly = $derived(readonlyProp || (field?.readonly ?? false));
 	const resolvedRequired = $derived(requiredProp || (field?.required ?? false));
@@ -491,7 +512,7 @@
 <div
 	{...rest}
 	bind:this={ref}
-	class={className}
+	class={[rootClass, className]}
 	role="group"
 	aria-label={labelledBy ? undefined : (ariaLabel ?? resolvedCalendarLabel)}
 	aria-labelledby={labelledBy}
@@ -503,12 +524,14 @@
 	data-state={openState.current ? 'open' : 'closed'}
 >
 	<ZInputGroup
+		data-slot="range-inputs"
 		disabled={resolvedDisabled}
 		invalid={resolvedInvalid}
 		size={resolvedSize}
 		suffixAction={actions}
 	>
 		<ZDateField
+			data-slot="start-field"
 			aria-describedby={describedBy}
 			aria-label={resolvedStartLabel}
 			appearance="bare"
@@ -530,6 +553,7 @@
 		/>
 		<span aria-hidden="true" data-slot="separator">–</span>
 		<ZDateField
+			data-slot="end-field"
 			aria-describedby={describedBy}
 			aria-label={resolvedEndLabel}
 			appearance="bare"

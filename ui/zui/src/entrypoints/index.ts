@@ -1,4 +1,6 @@
 export const ZUI_PACKAGE_NAME = '@zadmin/zui';
+export { semanticTones } from '../theme/semantics.js';
+export type { ZSemanticTone } from '../theme/semantics.js';
 export { themePalettes, withPrimaryPalette } from '../theme/palettes.js';
 export type { ThemePaletteName, ThemePaletteMode } from '../theme/palettes.js';
 

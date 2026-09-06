@@ -75,6 +75,7 @@
 		oninput,
 		onkeydown,
 		ref = $bindable(null),
+		size,
 		...rest
 	}: ZComboboxInputProps = $props();
 	const combo = useZCombobox();
@@ -163,6 +164,7 @@
 	readonly={combo.readonly}
 	role="combobox"
 	resetOnForm={false}
+	size={size ?? combo.size}
 	value={combo.inputValue}
 	data-state={combo.open ? 'open' : 'closed'}
 	onclick={handleClick}

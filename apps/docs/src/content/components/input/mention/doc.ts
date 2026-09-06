@@ -17,6 +17,10 @@ export const mentionDoc = defineComponentDoc(mentionMetadata, {
 	sourceApi: mentionApiFacts,
 	teaching: {
 		props: {
+			onFormReset: {
+				default: '—',
+				description: '原生 form reset 恢复文本、清除查询并关闭建议后调用一次。'
+			},
 			emptyText: {
 				default: 'localePack.collection.mentionEmpty',
 				description: '查询存在但没有建议时的本地化状态。'
@@ -61,9 +65,16 @@ export const mentionDoc = defineComponentDoc(mentionMetadata, {
 		},
 		{
 			component: ControlledDemo,
-			covers: ['controlled', 'external-clear', 'readonly', 'variants-and-states'],
+			covers: [
+				'controlled',
+				'disabled',
+				'external-clear',
+				'form-reset',
+				'readonly',
+				'variants-and-states'
+			],
 			description:
-				'外部owner可替换或清空完整文本而不伪造用户回调；readonly保留焦点、选择和FormData但不打开建议。',
+				'外部owner可替换或清空完整文本；Field 动态切换只读或禁用会立即关闭已打开的建议，form reset 恢复文本并通知一次。',
 			id: 'mention-controlled',
 			source: controlledSource,
 			title: '受控文本、外部清空与Readonly'

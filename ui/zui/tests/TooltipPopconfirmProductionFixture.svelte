@@ -65,7 +65,7 @@
 >
 <output data-testid="confirm-output">{open}:{confirmCalls}:{confirmErrors}</output>
 
-<ZTooltipGroup closeDelay={20} delay={40} skipDelayDuration={120}>
+<ZTooltipGroup closeDelay={20} openDelay={40} skipDelayDuration={120}>
 	<ZTooltip>
 		<ZTooltipTrigger data-testid="tooltip-first">First</ZTooltipTrigger>
 		<ZTooltipContent data-testid="tooltip-first-content">First description</ZTooltipContent>
@@ -74,7 +74,7 @@
 		<ZTooltipTrigger data-testid="tooltip-second">Second</ZTooltipTrigger>
 		<ZTooltipContent data-testid="tooltip-second-content">Second description</ZTooltipContent>
 	</ZTooltip>
-	<ZTooltip delay={0}>
+	<ZTooltip openDelay={0}>
 		<ZTooltipTrigger
 			data-testid="tooltip-disabled"
 			disabled
@@ -82,7 +82,7 @@
 		>
 		<ZTooltipContent data-testid="tooltip-disabled-content">Disabled reason</ZTooltipContent>
 	</ZTooltip>
-	<ZTooltip closeDelay={40} delay={0} hoverable>
+	<ZTooltip closeDelay={40} openDelay={0} hoverable>
 		<ZTooltipTrigger data-testid="tooltip-hoverable">Hoverable</ZTooltipTrigger>
 		<ZTooltipContent data-testid="tooltip-hoverable-content">
 			Non-interactive hoverable description
@@ -91,7 +91,7 @@
 </ZTooltipGroup>
 <ZTooltip
 	bind:open={delayedOpen}
-	delay={40}
+	openDelay={40}
 	disabled={delayedDisabled}
 	onOpenChange={() => (delayedChanges += 1)}
 >

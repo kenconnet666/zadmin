@@ -18,10 +18,13 @@
 			s.backgroundColor._text;
 			s.borderRadius._small;
 			s.boxShadow._small;
+			s.boxSizing.borderBox;
 			s.color._canvas;
 			s.fontSize._small;
 			s.fontWeight._medium;
+			s.maxWidth.raw('var(--zui-floating-available-width, 100vw)');
 			s.opacity._opaque;
+			s.overflowWrap.anywhere;
 			s.paddingBlock._small;
 			s.paddingInline._medium;
 			s.position.absolute;
@@ -90,6 +93,7 @@
 	import { onDestroy, untrack } from 'svelte';
 
 	import { createPresence } from '../../../runtime/foundation/presence.svelte.js';
+	import { PresenceEntryMotion } from '../../../runtime/foundation/presence-entry-motion.svelte.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -117,18 +121,20 @@
 	const tooltip = useZTooltip();
 	const initiallyOpen = untrack(() => tooltip.open);
 	const presence = createPresence(initiallyOpen);
+	const entryMotion = new PresenceEntryMotion(initiallyOpen);
 	const mounted = $derived(presence.mounted);
 	const presenceState = $derived(presence.state);
 	const rootClass = $derived(
 		zui.recipe(tooltipContentRecipe, {
 			hoverable: tooltip.hoverable && tooltip.open,
 			motion: tooltip.reducedMotion ? 'reduced' : 'full',
-			open: tooltip.open
+			open: tooltip.open && entryMotion.entered
 		})
 	);
 	const presenceEasingClass = $derived(zui.icss(stylePresenceEasing));
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
+	$effect(() => entryMotion.update(tooltip.open, tooltip.reducedMotion, ref));
 	const interactiveSelector = [
 		'a[href]',
 		'audio[controls]',
@@ -194,7 +200,10 @@
 			stopPositioning();
 		};
 	});
-	onDestroy(() => presence.destroy());
+	onDestroy(() => {
+		entryMotion.destroy();
+		presence.destroy();
+	});
 
 	function handlePointerEnter(event: PointerEvent & { currentTarget: HTMLDivElement }): void {
 		onpointerenter?.(event);

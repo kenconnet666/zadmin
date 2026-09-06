@@ -377,16 +377,14 @@
 		},
 		variants: {
 			active: { false: () => undefined, true: (s) => s.backgroundColor._surface },
+			dimmed: { false: () => undefined, true: (s) => s.opacity._disabled },
 			disabled: {
 				false: (s) => s.cursor.pointer,
-				true: (s) => {
-					s.cursor.notAllowed;
-					s.opacity._disabled;
-				}
+				true: (s) => s.cursor.notAllowed
 			},
 			selected: { false: () => undefined, true: (s) => s.color._primary }
 		},
-		defaultVariants: { active: false, disabled: false, selected: false }
+		defaultVariants: { active: false, dimmed: false, disabled: false, selected: false }
 	});
 	const switcherRecipe = defineRecipe({
 		base: (s) => {
@@ -922,6 +920,7 @@
 	<div
 		class={zui.recipe(itemRecipe, {
 			active: Object.is(entry.key, activeDescendant.activeKey),
+			dimmed: !disabled && entry.disabled,
 			disabled: disabled || entry.disabled,
 			selected: selected.has(entry.key)
 		})}

@@ -351,7 +351,17 @@
 			s.gap._medium;
 		},
 		variants: {
-			disabled: { false: () => undefined, true: (s) => s.opacity._disabled }
+			disabled: {
+				false: () => undefined,
+				true: (s) => {
+					s.opacity._disabled;
+					// Queue actions share the root's disabled visual treatment.
+					s._selector(
+						'& > [data-slot="list"] > [data-slot="item"] > [data-slot="actions"] > button:disabled',
+						(action) => action.opacity._opaque
+					);
+				}
+			}
 		},
 		defaultVariants: { disabled: false }
 	});
@@ -365,6 +375,9 @@
 			s.borderWidth._medium;
 			s.color._text;
 			s.cursor.pointer;
+			s.fontFamily._sans;
+			s.fontSize._medium;
+			s.lineHeight._normal;
 			s.display.flex;
 			s.flexDirection.column;
 			s.gap._small;
@@ -386,7 +399,6 @@
 				false: () => undefined,
 				true: (s) => {
 					s.cursor.notAllowed;
-					s.opacity._disabled;
 				}
 			},
 			dragging: {

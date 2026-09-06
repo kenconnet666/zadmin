@@ -141,8 +141,21 @@ function deriveColorTokens(
 	if (sourceChanged('canvas', 'danger')) mix('dangerSubtle', 'danger', 8);
 	if (sourceChanged('canvas', 'success')) mix('successSubtle', 'success', 8);
 	if (sourceChanged('canvas', 'warning')) mix('warningSubtle', 'warning', 8);
+	if (sourceChanged('canvas', 'info')) mix('infoSubtle', 'info', 8);
+	if (sourceChanged('canvas', 'neutral')) mix('neutralSubtle', 'neutral', 8);
+	for (const tone of ['info', 'neutral', 'success', 'warning'] as const) {
+		const hover = `${tone}Hover`;
+		if (sourceChanged(tone, 'text') && !explicit(hover)) {
+			// Mix toward the foreground so hover darkens in light themes and lightens in dark themes.
+			color[hover] = `color-mix(in srgb, ${color[tone]} 88%, ${color.text})`;
+		}
+	}
 	if (changed('canvas')) {
 		if (!explicit('onPrimary')) color.onPrimary = color.canvas;
 		if (!explicit('onDanger')) color.onDanger = color.canvas;
+		if (!explicit('onInfo')) color.onInfo = color.canvas;
+		if (!explicit('onNeutral')) color.onNeutral = color.canvas;
+		if (!explicit('onSuccess')) color.onSuccess = color.canvas;
+		if (!explicit('onWarning')) color.onWarning = color.canvas;
 	}
 }

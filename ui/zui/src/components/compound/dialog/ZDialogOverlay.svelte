@@ -55,6 +55,11 @@
 		snippets: [],
 		source: 'ui/zui/src/components/compound/dialog/ZDialogOverlay.svelte',
 		states: [
+			{
+				description: '入场与退出的视觉阶段。',
+				name: 'data-motion-state',
+				values: ['entering', 'entered', 'exiting']
+			},
 			{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] },
 			{ description: '解析后的减少动画状态。', name: 'data-reduced-motion', values: ['true'] }
 		],
@@ -66,6 +71,7 @@
 <script lang="ts">
 	import { onDestroy, untrack } from 'svelte';
 	import { createPresence } from '../../../runtime/foundation/presence.svelte.js';
+	import { PresenceEntryMotion } from '../../../runtime/foundation/presence-entry-motion.svelte.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -88,17 +94,22 @@
 	const dialog = useZDialog();
 	const initiallyOpen = untrack(() => dialog.open);
 	const presence = createPresence(initiallyOpen);
+	const entryMotion = new PresenceEntryMotion(initiallyOpen);
+	const motionState = $derived(
+		dialog.open ? (entryMotion.entered ? 'entered' : 'entering') : 'exiting'
+	);
 	const mounted = $derived(presence.mounted);
 	const presenceState = $derived(presence.state);
 	const rootClass = $derived(
 		zui.recipe(overlayRecipe, {
 			motion: dialog.reducedMotion ? 'reduced' : 'full',
-			open: dialog.open
+			open: dialog.open && entryMotion.entered
 		})
 	);
 	const presenceEasingClass = $derived(zui.icss(stylePresenceEasing));
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
+	$effect(() => entryMotion.update(dialog.open, dialog.reducedMotion, ref));
 	$effect(() =>
 		presence.update(
 			dialog.open,
@@ -116,7 +127,10 @@
 		if (event.target === event.currentTarget) presence.finishExit();
 		ontransitionend?.(event);
 	}
-	onDestroy(() => presence.destroy());
+	onDestroy(() => {
+		entryMotion.destroy();
+		presence.destroy();
+	});
 </script>
 
 {#if mounted}
@@ -129,6 +143,7 @@
 		use:portal={{ target: dialog.portalTarget }}
 		aria-hidden="true"
 		data-presence={presenceState}
+		data-motion-state={motionState}
 		data-reduced-motion={dialog.reducedMotion || undefined}
 		data-state={dialog.open ? 'open' : 'closed'}
 		ontransitionend={handleTransitionEnd}

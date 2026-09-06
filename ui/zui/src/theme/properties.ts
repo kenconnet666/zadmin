@@ -29,7 +29,6 @@ const DISPLAY = {
 	flex: 'flex',
 	flowRoot: 'flow-root',
 	grid: 'grid',
-	hidden: 'none',
 	inline: 'inline',
 	inlineBlock: 'inline-block',
 	inlineFlex: 'inline-flex',
@@ -86,7 +85,21 @@ export const PROPERTY_DEFINITIONS = {
 	},
 	accentColor: { keywords: { ...COLOR_KEYWORDS, auto: 'auto' }, token: 'color' },
 	aspectRatio: { keywords: { auto: 'auto' } },
+	animationDelay: { token: 'duration', tokenUnit: 'ms', units: ['time'] },
+	animationDirection: {
+		keywords: {
+			alternate: 'alternate',
+			alternateReverse: 'alternate-reverse',
+			normal: 'normal',
+			reverse: 'reverse'
+		}
+	},
 	animationDuration: { token: 'duration', tokenUnit: 'ms', units: ['time'] },
+	animationFillMode: {
+		keywords: { backwards: 'backwards', both: 'both', forwards: 'forwards', none: 'none' }
+	},
+	animationIterationCount: { keywords: { infinite: 'infinite' } },
+	animationPlayState: { keywords: { paused: 'paused', running: 'running' } },
 	appearance: { keywords: { auto: 'auto', none: 'none' } },
 	backgroundColor: { keywords: COLOR_KEYWORDS, token: 'color' },
 	backdropFilter: {},
@@ -382,9 +395,19 @@ export const PROPERTY_DEFINITIONS = {
 	tabSize: {},
 	textDecorationColor: { keywords: COLOR_KEYWORDS, token: 'color' },
 	textOverflow: { keywords: { clip: 'clip', ellipsis: 'ellipsis' } },
+	textWrap: {
+		keywords: {
+			balance: 'balance',
+			nowrap: 'nowrap',
+			pretty: 'pretty',
+			stable: 'stable',
+			wrap: 'wrap'
+		}
+	},
 	textShadow: { token: 'shadow' },
 	top: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
 	transform: { token: 'transform' },
+	transitionDelay: { token: 'duration', tokenUnit: 'ms', units: ['time'] },
 	transitionDuration: { token: 'duration', tokenUnit: 'ms', units: ['time'] },
 	transitionTimingFunction: {
 		token: 'easing',

@@ -237,6 +237,9 @@
 		base: (s) => {
 			s.display.inlineFlex;
 			s.flexDirection.column;
+			s.fontFamily._sans;
+			s.fontSize._medium;
+			s.lineHeight._normal;
 			s.gap._medium;
 		},
 		variants: {
@@ -339,6 +342,9 @@
 			s.borderWidth._hairline;
 			s.color._text;
 			s.cursor.pointer;
+			s.fontFamily.inherit;
+			s.fontSize.inherit;
+			s.lineHeight.inherit;
 			s._focusVisible((focus) => {
 				focus.outlineColor._focus;
 				focus.outlineOffset._inner;

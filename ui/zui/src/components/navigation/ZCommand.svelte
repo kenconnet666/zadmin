@@ -268,15 +268,13 @@
 		},
 		variants: {
 			active: { false: () => undefined, true: (s) => s.backgroundColor._surface },
+			dimmed: { false: () => undefined, true: (s) => s.opacity._disabled },
 			disabled: {
 				false: () => undefined,
-				true: (s) => {
-					s.cursor.notAllowed;
-					s.opacity._disabled;
-				}
+				true: (s) => s.cursor.notAllowed
 			}
 		},
-		defaultVariants: { active: false, disabled: false }
+		defaultVariants: { active: false, dimmed: false, disabled: false }
 	});
 	const descriptionRecipe = defineRecipe({
 		base: (s) => {
@@ -548,6 +546,7 @@
 						id={optionId}
 						class={zui.recipe(itemRecipe, {
 							active: Object.is(activeKey, record.key),
+							dimmed: !disabled && Boolean(record.disabled),
 							disabled: Boolean(disabled || record.disabled)
 						})}
 						data-slot="item"

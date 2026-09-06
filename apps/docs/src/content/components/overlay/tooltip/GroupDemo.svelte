@@ -9,7 +9,7 @@
 	} from '@zadmin/zui';
 </script>
 
-<ZTooltipGroup delay={350} skipDelayDuration={500}>
+<ZTooltipGroup openDelay={350} skipDelayDuration={500}>
 	<ZStack align="center" direction="row" gap="medium" wrap>
 		{#each ['构建', '发布', '回滚'] as action (action)}
 			<ZTooltip>

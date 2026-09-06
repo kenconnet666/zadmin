@@ -61,7 +61,7 @@ describe('ZUI themes', () => {
 		] as const;
 		const failures: Array<{ readonly contract: string; readonly ratio: number }> = [];
 		for (const [name, theme] of themes) {
-			for (const tone of ['accent', 'danger', 'success', 'warning'] as const) {
+			for (const tone of ['accent', 'danger', 'info', 'neutral', 'success', 'warning'] as const) {
 				const foreground = theme.color[tone];
 				expect(theme.color[`${tone}Subtle`]).toBe(
 					`color-mix(in srgb, ${foreground} 8%, ${theme.color.canvas})`
@@ -72,6 +72,10 @@ describe('ZUI themes', () => {
 			for (const [foreground, background, description] of [
 				[theme.color.onPrimary, theme.color.primary, 'primary foreground'],
 				[theme.color.onDanger, theme.color.danger, 'danger foreground'],
+				[theme.color.onInfo, theme.color.info, 'info foreground'],
+				[theme.color.onNeutral, theme.color.neutral, 'neutral foreground'],
+				[theme.color.onSuccess, theme.color.success, 'success foreground'],
+				[theme.color.onWarning, theme.color.warning, 'warning foreground'],
 				[
 					theme.color.primaryHover,
 					blend(theme.color.primary, theme.color.canvas, 0.14),
@@ -83,6 +87,23 @@ describe('ZUI themes', () => {
 			}
 		}
 		expect(failures).toEqual([]);
+	});
+
+	it('keeps status hover and foreground roles coherent across theme patches', () => {
+		const dark = extendTheme(defaultTheme, {
+			color: { canvas: '#101820', text: '#ffffff', info: '#7dd3fc', neutral: '#cbd5e1' }
+		});
+		expect(dark.color.infoSubtle).toBe('color-mix(in srgb, #7dd3fc 8%, #101820)');
+		expect(dark.color.infoHover).toBe('color-mix(in srgb, #7dd3fc 88%, #ffffff)');
+		expect(dark.color.onInfo).toBe('#101820');
+		expect(dark.color.onSuccess).toBe('#101820');
+		const customized = extendTheme(dark, {
+			color: { info: '#8fdaff', infoHover: '#abcdef', onInfo: '#000000' }
+		});
+		expect(customized.color.infoHover).toBe('#abcdef');
+		expect(customized.color.onInfo).toBe('#000000');
+		const radiusOnly = extendTheme(customized, { radius: { medium: 10 } });
+		expect(radiusOnly.color).toEqual(customized.color);
 	});
 
 	it('copies and deeply freezes the strict theme contract', () => {

@@ -1,5 +1,6 @@
 <script module lang="ts">
 	import type { Snippet } from 'svelte';
+	import type { ZControlSize } from '../../../runtime/foundation/control-size.js';
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
 	import type { SelectionKey } from '../../../runtime/collection/selection.js';
 	import { assertContiguousOptionGroups, type ZCollectionOption } from '../choice-option.js';
@@ -34,6 +35,7 @@
 		readonly readonly?: boolean;
 		readonly required?: boolean;
 		readonly shouldFilter?: boolean;
+		readonly size?: ZControlSize;
 		readonly valueLabel?: (value: SelectionKey) => string;
 		value?: SelectionKey;
 	}
@@ -80,6 +82,12 @@
 		],
 		parts: [],
 		props: [
+			{
+				default: 'Field size，其次为 Provider density',
+				description: '输入尺寸；ZComboboxInput 的显式 size 可覆盖根组件。',
+				name: 'size',
+				type: "'small' | 'medium' | 'large'"
+			},
 			{
 				default: 'Field controlId或自动生成的input ID',
 				description: '覆盖Field生成并用于关联输入框与表单错误描述的控件ID。',
@@ -240,6 +248,7 @@
 	import { singleSelection, type Selection } from '../../../runtime/collection/selection.js';
 	import { ControllableState } from '../../../runtime/foundation/controllable-state.svelte.js';
 	import { useZui } from '../../../runtime/foundation/context.js';
+	import { resolveControlSize } from '../../../runtime/foundation/control-size.js';
 	import { createZuiId } from '../../../runtime/foundation/ids.js';
 	import { claimZFieldControlOwner } from '../../../runtime/form/field-context.js';
 	import FormValueBridge from '../../../runtime/form/FormValueBridge.svelte';
@@ -280,6 +289,7 @@
 		readonly: readonlyProp = false,
 		required: requiredProp = false,
 		shouldFilter = true,
+		size,
 		value = $bindable(),
 		valueLabel = String
 	}: ZComboboxProps = $props();
@@ -296,6 +306,7 @@
 	const resolvedLoadingText = $derived(loadingText ?? zui.localePack.collection.loading);
 	const resolvedName = $derived(nameProp ?? field?.name);
 	const resolvedRequired = $derived(requiredProp || (field?.required ?? false));
+	const resolvedSize = $derived(resolveControlSize(size ?? field?.size, zui.density));
 	// Labels survive remote result replacement so selected keys never need fake option nodes.
 	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	const labels = new Map<SelectionKey, string>();
@@ -521,6 +532,9 @@
 		},
 		get required() {
 			return resolvedRequired;
+		},
+		get size() {
+			return resolvedSize;
 		},
 		setActive(itemValue) {
 			activeDescendant.set(itemValue, 'pointer');

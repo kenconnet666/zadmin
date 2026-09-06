@@ -9,7 +9,7 @@
 	let changes = $state(0);
 </script>
 
-<ZTooltip {defaultOpen} bind:open closeDelay={0} delay={0} onOpenChange={() => (changes += 1)}>
+<ZTooltip {defaultOpen} bind:open closeDelay={0} openDelay={0} onOpenChange={() => (changes += 1)}>
 	<ZTooltipTrigger
 		data-testid="tooltip-trigger"
 		onpointerenter={(event) => prevent && event.preventDefault()}

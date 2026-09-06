@@ -20,8 +20,8 @@
 
 	export interface ZTourProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
 		readonly closeLabel?: string;
-		readonly closeOnEscape?: boolean;
-		readonly closeOnMaskClick?: boolean;
+		readonly dismissOnEscape?: boolean;
+		readonly dismissOnMaskClick?: boolean;
 		readonly defaultOpen?: boolean;
 		readonly defaultStep?: number;
 		readonly finishLabel?: string;
@@ -103,13 +103,13 @@
 			{
 				default: 'true',
 				description: '是否允许最顶层Layer处理Escape关闭当前Tour。',
-				name: 'closeOnEscape',
+				name: 'dismissOnEscape',
 				type: 'boolean'
 			},
 			{
 				default: 'true',
 				description: 'modal遮罩是否允许点击关闭；高亮目标仍属于Layer branch。',
-				name: 'closeOnMaskClick',
+				name: 'dismissOnMaskClick',
 				type: 'boolean'
 			},
 			{
@@ -415,8 +415,8 @@
 	let {
 		class: className,
 		closeLabel,
-		closeOnEscape = true,
-		closeOnMaskClick = true,
+		dismissOnEscape = true,
+		dismissOnMaskClick = true,
 		defaultOpen = false,
 		defaultStep = 0,
 		finishLabel,
@@ -540,7 +540,7 @@
 	const layerClass = $derived(zui.recipe(layerRecipe));
 	const maskClass = $derived(
 		zui.recipe(maskRecipe, {
-			interactive: closeOnMaskClick,
+			interactive: dismissOnMaskClick,
 			motion: reduced ? 'reduced' : 'full',
 			open: openState.current
 		})
@@ -768,7 +768,7 @@
 			modal: () => modal,
 			onDismiss: () => openState.setFromUser(false),
 			onEscape: (event) => {
-				if (!closeOnEscape) event.preventDefault();
+				if (!dismissOnEscape) event.preventDefault();
 			},
 			onFocusOutside: (event) => event.preventDefault(),
 			onPointerOutside: (event) => event.preventDefault()
@@ -795,7 +795,7 @@
 	}
 
 	function maskClick(): void {
-		if (closeOnMaskClick) close();
+		if (dismissOnMaskClick) close();
 	}
 
 	function previous(): void {

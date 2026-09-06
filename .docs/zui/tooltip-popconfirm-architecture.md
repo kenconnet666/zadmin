@@ -52,7 +52,7 @@ ZPopconfirm
 
 `ZTooltipGroup`只提供Svelte上下文，不创建DOM：
 
-- `delay`：首次pointer hover warmup；
+- `openDelay`：首次pointer hover warmup；
 - `closeDelay`：Trigger/Content离开后的关闭缓冲；
 - `skipDelayDuration`：关闭后继续保持warm状态的cooldown；
 - coordinator：同组唯一active；新Tooltip进入后关闭旧Tooltip；若旧Tooltip仍由键盘焦点拥有，pointer Tooltip关闭后立即恢复它；
@@ -63,7 +63,7 @@ ZPopconfirm
 输入合同：
 
 - keyboard focus：立即打开；
-- pointer hover：首次使用delay，cooldown内即时；
+- pointer hover：首次使用openDelay，cooldown内即时；
 - focus和hover同时存在：任一来源仍active就不关闭；
 - Trigger click：立即关闭；
 - Escape：顶层Tooltip立即关闭且焦点不移动；
@@ -106,4 +106,4 @@ Tooltip Content允许pointer停留只为满足hover/focus内容可停留要求�
 
 ## 验收边界
 
-专属Fixture/spec源码固定：pending防重复、resolve关闭、reject错误、Cancel迟到generation、controlled open、focus restore、Group首次delay/cooldown即时切换、唯一active、disabled wrapper、hoverable非交互Content与iframe owner realm。SSR固定closed Portal内容不渲染、稳定ID和无浏览器global访问。完整行为执行交CI/CD，本地只运行WebStorm errorsOnly、Prettier和diff检查。
+专属Fixture/spec源码固定：pending防重复、resolve关闭、reject错误、Cancel迟到generation、controlled open、focus restore、Group首次openDelay/cooldown即时切换、唯一active、disabled wrapper、hoverable非交互Content与iframe owner realm。SSR固定closed Portal内容不渲染、稳定ID和无浏览器global访问。完整行为执行交CI/CD，本地只运行WebStorm errorsOnly、Prettier和diff检查。

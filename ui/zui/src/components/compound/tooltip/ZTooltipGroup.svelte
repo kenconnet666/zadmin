@@ -5,7 +5,7 @@
 	export interface ZTooltipGroupProps {
 		readonly children?: Snippet;
 		readonly closeDelay?: number;
-		readonly delay?: number;
+		readonly openDelay?: number;
 		readonly skipDelayDuration?: number;
 	}
 
@@ -24,7 +24,7 @@
 			{
 				default: '500',
 				description: '组内首次pointer hover打开延迟ms。',
-				name: 'delay',
+				name: 'openDelay',
 				type: 'number'
 			},
 			{
@@ -63,7 +63,7 @@
 	let {
 		children,
 		closeDelay = 100,
-		delay = 500,
+		openDelay = 500,
 		skipDelayDuration = 300
 	}: ZTooltipGroupProps = $props();
 	const coordinator = new TooltipGroupCoordinator();
@@ -78,8 +78,8 @@
 			return duration(closeDelay, 'closeDelay');
 		},
 		coordinator,
-		get delay() {
-			return duration(delay, 'delay');
+		get openDelay() {
+			return duration(openDelay, 'openDelay');
 		},
 		get skipDelayDuration() {
 			return duration(skipDelayDuration, 'skipDelayDuration');

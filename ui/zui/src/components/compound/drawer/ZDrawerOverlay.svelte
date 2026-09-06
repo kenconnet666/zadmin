@@ -41,21 +41,9 @@
 </script>
 
 <script lang="ts">
-	import { onDestroy, untrack } from 'svelte';
-	import { mergeStyles } from '../../../runtime/foundation/root-style.js';
 	import ZDialogOverlay from '../dialog/ZDialogOverlay.svelte';
-	import { useZDialog } from '../dialog/context.svelte.js';
-	import { DrawerEntryMotion } from './entry-motion.svelte.js';
 
-	let { ref = $bindable(null), style, ...rest }: ZDrawerOverlayProps = $props();
-	const dialog = useZDialog();
-	const entryMotion = new DrawerEntryMotion(untrack(() => dialog.open));
-	const motionState = $derived(
-		dialog.open ? (entryMotion.entered ? 'entered' : 'entering') : 'exiting'
-	);
-	const overlayStyle = $derived(mergeStyles(style, entryMotion.entered ? '' : 'opacity:0'));
-	$effect(() => entryMotion.update(dialog.open, dialog.reducedMotion, ref));
-	onDestroy(() => entryMotion.destroy());
+	let { ref = $bindable(null), ...rest }: ZDrawerOverlayProps = $props();
 </script>
 
-<ZDialogOverlay {...rest} bind:ref data-motion-state={motionState} style={overlayStyle} />
+<ZDialogOverlay {...rest} bind:ref />

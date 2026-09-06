@@ -41,6 +41,8 @@
 			s.opacity._opaque;
 			s.padding._large;
 			s.maxHeight.raw('var(--zui-floating-available-height, none)');
+			s.maxWidth.raw('var(--zui-floating-available-width, 100vw)');
+			s.overflowWrap.anywhere;
 			s.overflowY.auto;
 			s.position.absolute;
 			s.transform.raw('translateY(0) scale(1)');
@@ -171,6 +173,7 @@
 	import { onDestroy, untrack } from 'svelte';
 
 	import { createPresence } from '../../../runtime/foundation/presence.svelte.js';
+	import { PresenceEntryMotion } from '../../../runtime/foundation/presence-entry-motion.svelte.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -209,17 +212,19 @@
 	const popover = useZPopover();
 	const initiallyOpen = untrack(() => popover.open);
 	const presence = createPresence(initiallyOpen);
+	const entryMotion = new PresenceEntryMotion(initiallyOpen);
 	const mounted = $derived(presence.mounted);
 	const presenceState = $derived(presence.state);
 	const rootClass = $derived(
 		zui.recipe(popoverContentRecipe, {
 			motion: popover.reducedMotion ? 'reduced' : 'full',
-			open: popover.open
+			open: popover.open && entryMotion.entered
 		})
 	);
 	const presenceEasingClass = $derived(zui.icss(stylePresenceEasing));
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
+	$effect(() => entryMotion.update(popover.open, popover.reducedMotion, ref));
 
 	$effect(() =>
 		presence.update(popover.open, popover.exitDuration, ref?.ownerDocument.defaultView)
@@ -266,7 +271,10 @@
 		if (event.target === event.currentTarget) presence.finishExit();
 		ontransitionend?.(event);
 	}
-	onDestroy(() => presence.destroy());
+	onDestroy(() => {
+		entryMotion.destroy();
+		presence.destroy();
+	});
 </script>
 
 {#if mounted}

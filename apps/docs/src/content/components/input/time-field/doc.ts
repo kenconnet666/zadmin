@@ -40,7 +40,7 @@ export const timeFieldDoc = defineComponentDoc(timeFieldMetadata, {
 			},
 			maxValue: { default: 'undefined', description: '最大可提交Time。' },
 			minValue: { default: 'undefined', description: '最小可提交Time。' },
-			onReset: { default: 'undefined', description: '表单reset后通知复合外层清理辅助状态。' },
+			onFormReset: { default: 'undefined', description: '表单reset后通知复合外层清理辅助状态。' },
 			onValueChange: {
 				default: 'undefined',
 				description: '用户提交完整时间或清空全部segments后触发。'

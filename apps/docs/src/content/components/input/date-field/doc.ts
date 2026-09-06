@@ -34,7 +34,7 @@ export const dateFieldDoc = defineComponentDoc(dateFieldMetadata, {
 				default: 'undefined',
 				description: '拒绝直接输入，并让键盘cycle跳过特定CalendarDate。'
 			},
-			onReset: {
+			onFormReset: {
 				default: 'undefined',
 				description: '表单reset恢复defaultValue后通知复合外层清理辅助状态。'
 			},

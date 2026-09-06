@@ -778,13 +778,13 @@ const tabsPanelProps: ComponentProps<typeof ZTabsPanel> = {
 	tabindex: -1,
 	value: 1
 } satisfies ZTabsPanelProps;
-const tooltipProps: ComponentProps<typeof ZTooltip> = { delay: 200 } satisfies ZTooltipProps;
+const tooltipProps: ComponentProps<typeof ZTooltip> = { openDelay: 200 } satisfies ZTooltipProps;
 const tooltipTriggerProps: ComponentProps<typeof ZTooltipTrigger> =
 	{} satisfies ZTooltipTriggerProps;
 const tooltipContentProps: ComponentProps<typeof ZTooltipContent> =
 	{} satisfies ZTooltipContentProps;
 const tooltipGroupProps: ComponentProps<typeof ZTooltipGroup> = {
-	delay: 400,
+	openDelay: 400,
 	skipDelayDuration: 200
 } satisfies ZTooltipGroupProps;
 const toggleButtonProps: ComponentProps<typeof ZToggleButton> = {

@@ -19,11 +19,11 @@ export const tourDoc = defineComponentDoc(tourMetadata, {
 				default: 'localePack.tour.close',
 				description: '关闭图标的可访问名称；显式值优先于Provider typed locale pack。'
 			},
-			closeOnEscape: {
+			dismissOnEscape: {
 				default: 'true',
 				description: '是否允许最顶层Layer处理Escape；关闭时会阻止默认dismiss。'
 			},
-			closeOnMaskClick: {
+			dismissOnMaskClick: {
 				default: 'true',
 				description: 'modal遮罩是否允许点击关闭；高亮目标始终注册为Layer branch。'
 			},

@@ -1,5 +1,6 @@
 <script module lang="ts">
 	import type { HTMLAttributes } from 'svelte/elements';
+	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import type { SelectionKey as SegmentedSelectionKey } from '../../runtime/collection/selection.js';
 
@@ -32,6 +33,7 @@
 		readonly readonly?: boolean;
 		ref?: HTMLDivElement | null;
 		readonly required?: boolean;
+		readonly size?: ZControlSize;
 		value?: SegmentedSelectionKey;
 	}
 
@@ -72,6 +74,12 @@
 		],
 		parts: [{ description: '单个segment按钮。', name: 'item' }],
 		props: [
+			{
+				default: 'Field size，其次为 Provider density',
+				description: '同步选项高度、文字与水平留白。',
+				name: 'size',
+				type: "'small' | 'medium' | 'large'"
+			},
 			{
 				default: '必填',
 				description: '权威typed value、文本与disabled配置；支持动态替换。',
@@ -151,6 +159,7 @@
 		snippets: [],
 		source: 'ui/zui/src/components/input/ZSegmented.svelte',
 		states: [
+			{ description: '解析尺寸。', name: 'data-size', values: ['small', 'medium', 'large'] },
 			{ description: '选择状态。', name: 'data-state', values: ['selected', 'unselected'] },
 			{ description: '禁用状态。', name: 'data-disabled', values: ['true'] },
 			{ description: '无效状态。', name: 'data-invalid', values: ['true'] },
@@ -177,6 +186,7 @@
 	} from '../../runtime/collection/selection.js';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { useZui } from '../../runtime/foundation/context.js';
+	import { resolveControlSize } from '../../runtime/foundation/control-size.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import { claimZFieldControlOwner } from '../../runtime/form/field-context.js';
 	import { mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
@@ -221,9 +231,11 @@
 			s.borderWidth._hairline;
 			s.color._text;
 			s.cursor.pointer;
+			s.boxSizing.borderBox;
+			s.fontFamily._sans;
 			s.fontWeight._semibold;
-			s.paddingBlock._small;
-			s.paddingInline._medium;
+			s.lineHeight._compact;
+			s.paddingBlock.px(0);
 			s._focusVisible((focus) => {
 				focus.outlineColor._focus;
 				focus.outlineOffset._tight;
@@ -251,9 +263,26 @@
 					s.color._primary;
 					s.boxShadow._small;
 				}
+			},
+			size: {
+				large: (s) => {
+					s.minHeight._large;
+					s.fontSize._large;
+					s.paddingInline._large;
+				},
+				medium: (s) => {
+					s.minHeight._medium;
+					s.fontSize._medium;
+					s.paddingInline._medium;
+				},
+				small: (s) => {
+					s.minHeight._small;
+					s.fontSize._small;
+					s.paddingInline._small;
+				}
 			}
 		},
-		defaultVariants: { disabled: false, readonly: false, selected: false }
+		defaultVariants: { disabled: false, readonly: false, selected: false, size: 'medium' }
 	});
 	registerRecipeHmr(import.meta, rootRecipe);
 	registerRecipeHmr(import.meta, itemRecipe);
@@ -285,6 +314,7 @@
 		readonly: readonlyProp = false,
 		ref = $bindable(null),
 		required: requiredProp = false,
+		size,
 		style,
 		value = $bindable(),
 		...rest
@@ -299,6 +329,7 @@
 	const resolvedInvalid = $derived(invalid ?? field?.invalid ?? false);
 	const readonly = $derived(readonlyProp || (field?.readonly ?? false));
 	const required = $derived(requiredProp || (field?.required ?? false));
+	const resolvedSize = $derived(resolveControlSize(size ?? field?.size, zui.density));
 	const resolvedName = $derived(nameProp ?? field?.name);
 	const resolvedDescribedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
 	const resolvedLabelledBy = $derived(
@@ -509,6 +540,7 @@
 	data-disabled={disabled || undefined}
 	data-invalid={resolvedInvalid || undefined}
 	data-readonly={readonly || undefined}
+	data-size={resolvedSize}
 	data-orientation={orientation}
 	onfocusin={handleFocusin}
 	onfocusout={handleFocusout}
@@ -522,6 +554,7 @@
 			class={zui.recipe(itemRecipe, {
 				disabled: Boolean(disabled || record.disabled),
 				readonly,
+				size: resolvedSize,
 				selected: selection.isSelected(record.key)
 			})}
 			type="button"

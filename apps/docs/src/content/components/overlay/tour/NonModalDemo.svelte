@@ -30,7 +30,7 @@
 </ZStack>
 <ZTour
 	bind:open
-	closeOnMaskClick={false}
+	dismissOnMaskClick={false}
 	modal={false}
 	onComplete={() => (completed += 1)}
 	{steps}

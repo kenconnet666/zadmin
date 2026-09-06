@@ -7,12 +7,12 @@
 		readonly children?: Snippet;
 		readonly closeDelay?: number;
 		readonly defaultOpen?: boolean;
-		readonly delay?: number;
 		readonly disabled?: boolean;
 		readonly gutter?: number;
 		readonly hoverable?: boolean;
 		readonly onOpenChange?: (open: boolean) => void;
 		open?: boolean;
+		readonly openDelay?: number;
 		readonly placement?: PopoverPlacement;
 	}
 
@@ -55,9 +55,9 @@
 				type: 'boolean'
 			},
 			{
-				default: 'ZTooltipGroup delay或500',
+				default: 'ZTooltipGroup openDelay或500',
 				description: 'pointer首次打开延迟ms；keyboard focus始终即时。',
-				name: 'delay',
+				name: 'openDelay',
 				type: 'number'
 			},
 			{
@@ -115,12 +115,12 @@
 		children,
 		closeDelay,
 		defaultOpen = false,
-		delay,
 		disabled = false,
 		gutter = 6,
 		hoverable = true,
 		onOpenChange,
 		open = $bindable(),
+		openDelay,
 		placement = 'top'
 	}: ZTooltipProps = $props();
 	const zui = useZui();
@@ -134,7 +134,7 @@
 		write: (next) => (open = next)
 	});
 	const resolvedCloseDelay = $derived(closeDelay ?? group?.closeDelay ?? 100);
-	const resolvedDelay = $derived(delay ?? group?.delay ?? 500);
+	const resolvedOpenDelay = $derived(openDelay ?? group?.openDelay ?? 500);
 	const resolvedOpen = $derived(openState.current && !disabled);
 	const reducedMotion = new ReducedMotionState(() => zui.motion);
 	let portalAnchor = $state<HTMLElement | null>(null);
@@ -196,7 +196,8 @@
 			if (resolvedOpen) return;
 			const timeout = immediate
 				? 0
-				: (group?.coordinator.openDelay(assertDelay(resolvedDelay)) ?? assertDelay(resolvedDelay));
+				: (group?.coordinator.openDelay(assertDelay(resolvedOpenDelay)) ??
+					assertDelay(resolvedOpenDelay));
 			if (timeout === 0) openState.setFromUser(true);
 			else
 				schedule(() => {

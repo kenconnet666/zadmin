@@ -22,8 +22,8 @@ export class TooltipGroupCoordinator {
 	#suspendedFocus: ActiveTooltip | undefined;
 	#warm = false;
 
-	openDelay(delay: number): number {
-		return this.#warm ? 0 : delay;
+	openDelay(configuredDelay: number): number {
+		return this.#warm ? 0 : configuredDelay;
 	}
 
 	opened(id: string, close: () => void, open: () => void, focused: () => boolean): void {
@@ -103,7 +103,7 @@ export class TooltipGroupCoordinator {
 export interface ZTooltipGroupContext {
 	readonly closeDelay: number;
 	readonly coordinator: TooltipGroupCoordinator;
-	readonly delay: number;
+	readonly openDelay: number;
 	readonly skipDelayDuration: number;
 }
 

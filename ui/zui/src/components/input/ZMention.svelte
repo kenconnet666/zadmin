@@ -62,6 +62,11 @@
 			'ZPopover'
 		],
 		events: [
+			{
+				description: '原生 form reset 恢复文本并关闭建议后调用一次。',
+				name: 'onFormReset',
+				type: '() => void'
+			},
 			{ description: '文本变化。', name: 'onValueChange', type: '(value: string) => void' },
 			{
 				description: '搜索片段变化。',
@@ -88,6 +93,12 @@
 			{ description: 'mention option。', name: 'item' }
 		],
 		props: [
+			{
+				default: '—',
+				description: '原生 form reset 恢复文本并关闭建议后调用一次。',
+				name: 'onFormReset',
+				type: '() => void'
+			},
 			{
 				default: '必填',
 				description: '稳定key、标签、插入值和过滤关键词。',
@@ -212,6 +223,7 @@
 	import { isDomElement } from '../../runtime/layer/dom-realm.js';
 	import { findMentionQuery, insertMention, type MentionQuery } from '../../runtime/mention.js';
 	import { useZui } from '../../runtime/foundation/context.js';
+	import { useZField } from '../../runtime/form/field-context.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 	import {
 		createChoiceVirtualMountBridge,
@@ -285,7 +297,7 @@
 		appendSpace = true,
 		class: className,
 		defaultValue = '',
-		disabled = false,
+		disabled: disabledProp = false,
 		emptyText,
 		filter,
 		item: itemSnippet,
@@ -296,11 +308,12 @@
 		loop = true,
 		maxSuggestions = 8,
 		minQueryLength = 0,
+		onFormReset,
 		onMention,
 		onSearchChange,
 		onValueChange,
 		placement = 'bottom-start',
-		readonly = false,
+		readonly: readonlyProp = false,
 		ref = $bindable(null),
 		style,
 		triggers = ['@'],
@@ -312,6 +325,9 @@
 		...rest
 	}: ZMentionProps = $props();
 	const zui = useZui();
+	const field = useZField();
+	const disabled = $derived(disabledProp || (field?.disabled ?? false));
+	const readonly = $derived(readonlyProp || (field?.readonly ?? false));
 	const resolvedEmptyText = $derived(emptyText ?? zui.localePack.collection.mentionEmpty);
 	const resolvedLoadingText = $derived(loadingText ?? zui.localePack.collection.loading);
 	const resolvedListLabel = $derived(listLabel ?? zui.localePack.collection.mentionList);
@@ -415,6 +431,7 @@
 		);
 	}
 	function handleInput(event: InputEvent & { currentTarget: HTMLTextAreaElement }): void {
+		if (disabled || readonly) return;
 		valueState.setFromUser(event.currentTarget.value);
 		if (!event.isComposing)
 			updateQuery(event.currentTarget.value, event.currentTarget.selectionStart);
@@ -434,7 +451,7 @@
 		});
 	}
 	function handleKeydown(event: KeyboardEvent & { currentTarget: HTMLTextAreaElement }): void {
-		if (!open || isKeyboardComposing(event)) return;
+		if (!open || disabled || readonly || isKeyboardComposing(event)) return;
 		keyboardNavigation = true;
 		if (event.key === 'Escape') {
 			event.preventDefault();
@@ -514,6 +531,7 @@
 		query = undefined;
 		navigation.set(undefined, 'programmatic');
 		open = false;
+		onFormReset?.();
 	}
 </script>
 

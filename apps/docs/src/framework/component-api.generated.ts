@@ -755,6 +755,11 @@ export const comboboxApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
 			name: 'valueLabel',
 			required: false,
 			type: '(value: SelectionKey) => string'
@@ -4517,11 +4522,6 @@ export const tooltipApiFacts = {
 			type: 'boolean'
 		},
 		{
-			name: 'delay',
-			required: false,
-			type: 'number'
-		},
-		{
 			name: 'disabled',
 			required: false,
 			type: 'boolean'
@@ -4545,6 +4545,11 @@ export const tooltipApiFacts = {
 			name: 'open',
 			required: false,
 			type: 'boolean'
+		},
+		{
+			name: 'openDelay',
+			required: false,
+			type: 'number'
 		},
 		{
 			name: 'placement',
@@ -4595,7 +4600,7 @@ export const tooltipGroupApiFacts = {
 			type: 'number'
 		},
 		{
-			name: 'delay',
+			name: 'openDelay',
 			required: false,
 			type: 'number'
 		},
@@ -7872,7 +7877,7 @@ export const dateFieldApiFacts = {
 			type: 'string'
 		},
 		{
-			name: 'onReset',
+			name: 'onFormReset',
 			required: false,
 			type: '() => void'
 		},
@@ -9352,6 +9357,11 @@ export const segmentedApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
 			name: 'value',
 			required: false,
 			type: 'SegmentedSelectionKey'
@@ -9847,7 +9857,7 @@ export const timeFieldApiFacts = {
 			type: 'string'
 		},
 		{
-			name: 'onReset',
+			name: 'onFormReset',
 			required: false,
 			type: '() => void'
 		},
@@ -10666,12 +10676,12 @@ export const tourApiFacts = {
 			type: 'string'
 		},
 		{
-			name: 'closeOnEscape',
+			name: 'dismissOnEscape',
 			required: false,
 			type: 'boolean'
 		},
 		{
-			name: 'closeOnMaskClick',
+			name: 'dismissOnMaskClick',
 			required: false,
 			type: 'boolean'
 		},

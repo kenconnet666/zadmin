@@ -7,6 +7,8 @@ import OptionsDemo from './OptionsDemo.svelte';
 import optionsSource from './OptionsDemo.svelte?raw';
 import ReadonlyDemo from './ReadonlyDemo.svelte';
 import readonlySource from './ReadonlyDemo.svelte?raw';
+import SizesDemo from './SizesDemo.svelte';
+import sizesSource from './SizesDemo.svelte?raw';
 import VerticalDemo from './VerticalDemo.svelte';
 import verticalSource from './VerticalDemo.svelte?raw';
 import { segmentedApiFacts } from '../../../../framework/component-api.generated.js';
@@ -16,6 +18,11 @@ export const segmentedDoc = defineComponentDoc(segmentedMetadata, {
 	sourceApi: segmentedApiFacts,
 	teaching: {
 		props: {
+			size: {
+				default: 'Field size，其次为 Provider density',
+				description:
+					'同步选项高度、字号与水平留白；显式 size 优先于 Field，文字使用主题字体与紧凑行高。'
+			},
 			defaultValue: { default: 'undefined', description: 'typed非受控初值与form reset目标。' },
 			form: {
 				default: '最近祖先form',
@@ -58,6 +65,14 @@ export const segmentedDoc = defineComponentDoc(segmentedMetadata, {
 			'LogicalCollection、SelectionModel、MountedElements和FormValueBridge分别拥有typed options、选择、roving焦点与表单值的Segmented。'
 	},
 	demos: [
+		{
+			component: SizesDemo,
+			covers: ['composition', 'variants-and-states'],
+			description: '选项高度、字号与留白共同缩放；显式 size 优先于 Field 和 Provider density。',
+			id: 'segmented-sizes',
+			source: sizesSource,
+			title: '尺寸与主题排版'
+		},
 		{
 			covers: ['controlled', 'form-data', 'native-props'],
 			component: OptionsDemo,

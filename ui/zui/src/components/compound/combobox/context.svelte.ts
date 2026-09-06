@@ -4,6 +4,7 @@ import type { CompoundLogicalCollectionItem } from '../../../runtime/collection/
 import type { LogicalCollectionView } from '../../../runtime/collection/logical-collection.js';
 import type { SelectionKey } from '../../../runtime/collection/selection.js';
 import { CancelableEvent } from '../../../runtime/foundation/cancelable-event.js';
+import type { ZControlSize } from '../../../runtime/foundation/control-size.js';
 import type { ChoiceVirtualController } from '../choice-virtualization.js';
 import type { ZComboboxOption } from './ZCombobox.svelte';
 
@@ -41,6 +42,7 @@ export interface ZComboboxContext {
 	readonly openOnFocus: boolean;
 	readonly readonly: boolean;
 	readonly required: boolean;
+	readonly size: ZControlSize;
 	readonly value: SelectionKey | undefined;
 	readonly view: LogicalCollectionView<SelectionKey, ComboboxItemRecord>;
 	choose(value: SelectionKey, event: KeyboardEvent | MouseEvent): ComboboxSelectEvent;

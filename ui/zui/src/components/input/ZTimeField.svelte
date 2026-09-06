@@ -34,7 +34,7 @@
 		readonly minValue?: TimeValue;
 		readonly minuteStep?: number;
 		readonly name?: string;
-		readonly onReset?: () => void;
+		readonly onFormReset?: () => void;
 		readonly onValueChange?: (value: TimeValue | null) => void;
 		readonly readonly?: boolean;
 		ref?: HTMLDivElement | null;
@@ -174,7 +174,7 @@
 			{
 				default: 'undefined',
 				description: '表单reset后回到defaultValue，并在重置完成后调用。',
-				name: 'onReset',
+				name: 'onFormReset',
 				type: '() => void'
 			},
 			{
@@ -346,7 +346,7 @@
 		minValue,
 		minuteStep = 1,
 		name,
-		onReset,
+		onFormReset,
 		onValueChange,
 		readonly = false,
 		ref = $bindable(null),
@@ -560,7 +560,7 @@
 		drafts = {};
 		draftPeriod = null;
 		draftInvalid = false;
-		onReset?.();
+		onFormReset?.();
 	}
 	function handleInput(
 		event: Event & { currentTarget: HTMLInputElement },

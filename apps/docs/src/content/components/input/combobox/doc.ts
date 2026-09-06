@@ -16,6 +16,8 @@ import OptionsDemo from './OptionsDemo.svelte';
 import optionsSource from './OptionsDemo.svelte?raw';
 import PreferencesDemo from './PreferencesDemo.svelte';
 import preferencesSource from './PreferencesDemo.svelte?raw';
+import SizesDemo from './SizesDemo.svelte';
+import sizesSource from './SizesDemo.svelte?raw';
 import VirtualDemo from './VirtualDemo.svelte';
 import virtualSource from './VirtualDemo.svelte?raw';
 import { comboboxApiFacts } from '../../../../framework/component-api.generated.js';
@@ -27,6 +29,11 @@ export const comboboxDoc = defineComponentDoc(comboboxMetadata, {
 	sourceApi: comboboxApiFacts,
 	teaching: {
 		props: {
+			size: {
+				default: 'Field size，其次为 Provider density',
+				description:
+					'根组件统一输入尺寸；Input 显式 size > Combobox size > Field size > Provider density。'
+			},
 			loading: {
 				default: 'false',
 				description:
@@ -58,6 +65,14 @@ export const comboboxDoc = defineComponentDoc(comboboxMetadata, {
 			'生产单选Combobox：inputValue、value和open三轴独立，完整LogicalCollection在过滤与DOM挂载之外拥有顺序，ActiveDescendant只引用当前真实option。'
 	},
 	demos: [
+		{
+			component: SizesDemo,
+			covers: ['composition', 'variants-and-states'],
+			description: 'Field 尺寸贯穿 compound 输入；根组件和 Input 可以逐层显式覆盖。',
+			id: 'combobox-sizes',
+			source: sizesSource,
+			title: '尺寸与 Field 继承'
+		},
 		{
 			component: FormDemo,
 			covers: ['form-data', 'form-reset', 'focus', 'keyboard', 'uncontrolled'],
