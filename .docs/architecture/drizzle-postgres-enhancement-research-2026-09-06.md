@@ -1,10 +1,10 @@
 # Drizzle PostgreSQL 增强范围：以 TypeScript 和原生能力为基准
 
-调研与收敛日期：2026-09-06。本文是当前范围决策，替代此前按 Java/C# ORM 功能分类得到的宽泛实施清单。依赖升级与基础数据库接入已经完成；这里讨论的新增 API 尚未实现。运行与恢复方式见 [本地 PostgreSQL 接入](../development/postgres.md)。
+调研与收敛日期：2026-09-06。本文是当前范围决策，替代此前按 Java/C# ORM 功能分类得到的宽泛实施清单。依赖升级、基础数据库接入和 JSONB 路径读取已完成；其他候选仍按需求评估。运行方式见 [本地 PostgreSQL 接入](../development/postgres.md)，已实现 API 见 [JSONB 使用说明](../packages/drizzle.md)。
 
 ## 当前结论
 
-`@zadmin/drizzle` 只接收可以直接组合进原生查询、具有明确类型或语义收益的少量 PostgreSQL 表达式。现在最具体的候选是 JSONB 路径读取；搜索表达式等待实际搜索需求。没有业务重复证据时，包继续保持很小，暂不增加运行时代码也合理。
+`@zadmin/drizzle` 只接收可以直接组合进原生查询、具有明确类型或语义收益的少量 PostgreSQL 表达式。本次按用户授权实现了 JSONB 路径读取的 `jsonbValue` 与 `jsonbText`；搜索表达式等待实际需求。其他操作不因为已有一个增强包就自动进入范围。
 
 动态条件、DTO、列表分页、版本 PATCH、租户条件、事务审计和关系统计，优先写成普通 TypeScript 业务函数。连接、请求观测、COPY 与 RLS 执行配置属于基础设施。它们都不因 Java/C# ORM 提供一个专门 API，就自动成为本包需求。
 
@@ -138,18 +138,18 @@ const create = withTrace('orders.create', (input: CreateOrder) => createOrder(da
 
 装饰器求值阶段只记录描述或包装方法，不连接数据库、不扫描注册、不保存当前请求/连接。元数据附着当前 generation 的类；实际注册、撤销、资源释放沿用 core。现有工程约定只提供 class `@service` 是当前实现范围，不是 TS 能力限制；用户允许按实际用途讨论 method 等扩展，本轮不修改装饰器实现或编译选项。Node 的原生 TS type stripping 不应被当作装饰器转换器，采用新装饰器时仍需验证构建链。[Node TypeScript 边界](https://nodejs.org/api/typescript.html#typescript-features)
 
-## 保留候选一：JSONB 路径读取
+## 已实现：JSONB 路径读取
 
-这是目前最明确的库级候选，但仍需在真实 JSON 列查询中证明复用价值。固定一次性提取 `preferences->>'theme'` 时，一条原生 SQL 模板已经清楚，不为它单独包装。
+这是本次实施的库级能力，完整合同见 [使用说明](../packages/drizzle.md)。固定一次性提取 `preferences->>'theme'` 时，一条原生 SQL 模板仍然可用；多个类型化路径则可直接复用这两个函数。
 
-当多处需要从已有 JSON 类型获得合法路径和叶子类型时，候选初版只提供两个纯表达式函数：
+从已有 JSON 类型获得合法路径和叶子类型时，当前只提供两个纯表达式函数：
 
-| 候选函数                   | 语义                   | 类型目标                                |
+| 公开函数                   | 语义                   | 类型目标                                |
 | -------------------------- | ---------------------- | --------------------------------------- |
 | `jsonbValue(column, path)` | PG `#>` 路径取 JSON 值 | 字面量路径对应的 JSON 叶子类型，加 null |
 | `jsonbText(column, path)`  | PG `#>>` 路径取文本    | 始终返回文本或 null 的 SQL 表达式       |
 
-以下是拟议 API，不是当前可 import 的代码：
+以下 API 已从 `@zadmin/drizzle` 的公开入口导出：
 
 ```ts
 // preferences 的声明包含 { locale: 'zh' | 'en'; contact?: { email: string } }
@@ -163,13 +163,14 @@ const email = jsonbText(users.preferences, ['contact', 'email']);
 const rows = await db.select({ id: users.id, email }).from(users);
 ```
 
-新增价值应当是合法路径检查、叶子类型推导和路径参数编码，而非把 `#>` 改个名字：
+新增价值是原生 JSONB 列的合法路径检查、叶子类型推导和路径参数编码，而非把 `#>` 改个名字：
 
 - 使用 const 泛型/tuple 路径，从列上声明的 JSON 结构推导；对象、可选属性与数组路径明确支持范围，限制类型递归深度。
 - 路径作为 text[] 数据参数传递，不插入原始 SQL。动态路径只返回宽 JSON 类型/unknown，不声称还能精确推导。
 - 即使声明属性必填，数据库仍可能缺键，结果包含 null。SQL NULL、JSON null 和缺失键的区别不能仅靠 JS null 恢复；确需区分时显式选择存在性/类型信息。
 - JSON 模型必须使用实际 JSON 表示。`$type<{ createdAt: Date }>()` 不会把 JSON 字符串变成 Date，大整数也不会自动变为无损 bigint。
 - 不把整对象的 custom decoder 直接用于一个叶子。确需验证或转换时组合现有 mapWith/codec，不建立第二套 decoder registry。
+- 实施时进一步收紧：custom 列与 SQL/SQL.Aliased 的声明类型可能是 decoder 后的形状，因此 jsonbValue 返回 unknown；只有原生 JSONB 列按存储模型精确推导。真实 PG 回归覆盖了 decoder 将同一字段从 number 转为 string，而路径结果仍保持原始 number 的情况。
 
 `SQL<T>` 和 `.nullable()` 是静态类型表达，不等于执行 cast、校验或数据解析；实现必须让 SQL 返回值、TS 类型和实际 decoder 一致。[PG JSON 运算](https://www.postgresql.org/docs/current/functions-json.html)、[Drizzle SQL](https://orm.drizzle.team/docs/sql)、[Drizzle Codecs](https://orm.drizzle.team/docs/codecs)
 
@@ -203,16 +204,16 @@ const rows = await db.select({ id: users.id, email }).from(users);
 
 | 位置                        | 当前应做的事                                                        |
 | --------------------------- | ------------------------------------------------------------------- |
-| `@zadmin/drizzle`           | 暂无广泛框架计划；JSONB 读取是具体候选，搜索按真实需求再定          |
+| `@zadmin/drizzle`           | 已实现两个 JSONB 路径读取函数；搜索与其他表达式按真实需求再定       |
 | `@zadmin/postgres`          | 已有连接与生命周期；观测完成事件、取消、COPY/RLS 执行集成有需求再补 |
 | `@zadmin/core` / 应用执行层 | 现有 @service；重复行为成立后再讨论可选方法装饰器/HOF               |
 | 业务插件                    | 表与关系、查询/更新函数、输入 schema、权限和审计语义                |
 
-后续先用原生 Drizzle 完成一个真实列表与编辑流程；如果 JSON 路径读取反复出现，再提取上述两个函数，验证非法路径/可空性/数组路径的类型约束与真实 PG 结果。搜索、窗口、复杂加载与 COPY 由真实场景触发，不再按功能清单逐项建设。
+后续业务优先使用原生 Drizzle，类型化 JSONB 路径直接复用已实现的两个函数。非法路径、可空性、数组路径、参数化、别名与 decoder 边界均有专门合同和真实 PG 测试。搜索、窗口、复杂加载与 COPY 仍由真实场景触发，不再按功能清单逐项建设。
 
 表达式如进入实现，直接返回原生 SQL，能放入 select/where/update/RQB RAW；RQB 中由回调传入当前别名列。不扩展 db 原型，不复制私有 AST，不构造第二份 schema。
 
-这轮是范围与文档修订，没有实施候选 helper、修改装饰器或访问数据库。验证以已安装包和官方资料核对、文档审阅为限，不运行全量类型检查或测试。
+用户随后授权实施和测试，已完成 JSONB helper、受影响包类型合同、单元与真实 PG 测试，并接入独立 CI 门禁。PG 测试仅使用随机临时表与独立连接，不写入业务表；装饰器及其他候选未实施。
 
 ## 外部研究保留的价值
 
@@ -229,4 +230,4 @@ const rows = await db.select({ id: users.id, email }).from(users);
 
 此前提交 `632fa5a` 已升级 ORM/Kit 至 RC.4，完成 Postgres Module、Admin 私有环境接入和 WSL 本机转发；真实连接、事务提交、嵌套回滚、临时表清理、连接池关闭与应用健康检查通过。
 
-这些是前一实施阶段的验收记录，本轮未重复探测服务状态，也不把它们作为尚未实现的增强 API 证据。具体端口、凭据文件位置和恢复命令以 [接入文档](../development/postgres.md) 为准。
+这些是基础接入阶段的验收记录；JSONB 本次另外执行了自身的真实 PG 合同，不以基础连接成功代替功能验证。具体端口、凭据文件位置和恢复命令以 [接入文档](../development/postgres.md) 为准。

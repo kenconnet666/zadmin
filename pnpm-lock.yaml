@@ -445,12 +445,18 @@ importers:
 
   packages/drizzle:
     devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 26.2.0
       drizzle-kit:
         specifier: 'catalog:'
         version: 1.0.0-rc.4
       drizzle-orm:
         specifier: 'catalog:'
         version: 1.0.0-rc.4(postgres@3.4.9)
+      postgres:
+        specifier: 'catalog:'
+        version: 3.4.9
       typescript:
         specifier: 'catalog:'
         version: 6.0.3

@@ -21,14 +21,18 @@
 	},
 	"scripts": {
 		"build": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\" && tsc -p tsconfig.json",
-		"check": "tsc -p tsconfig.json --noEmit"
+		"check": "tsc -p tsconfig.test.json --noEmit",
+		"test": "node --test tests/jsonb.spec.ts",
+		"test:postgres": "node --test tests/jsonb.postgres.spec.ts"
 	},
 	"peerDependencies": {
 		"drizzle-orm": "1.0.0-rc.4"
 	},
 	"devDependencies": {
+		"@types/node": "catalog:",
 		"drizzle-kit": "catalog:",
 		"drizzle-orm": "catalog:",
+		"postgres": "catalog:",
 		"typescript": "catalog:"
 	}
 }

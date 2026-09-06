@@ -139,6 +139,49 @@ jobs:
             **/.vitest-reports/**
             ui/zui/tests/__screenshots__/**
 
+  drizzle-postgres:
+    name: Drizzle PostgreSQL JSONB
+    needs: dispatch-integrity
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: drizzle_test
+          POSTGRES_PASSWORD: drizzle_test
+          POSTGRES_DB: drizzle_jsonb_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U drizzle_test -d drizzle_jsonb_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup workspace
+        uses: ./.github/actions/setup-workspace
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          pnpm-version: ${{ env.PNPM_VERSION }}
+
+      - name: Check JSONB type contracts
+        run: pnpm --filter @zadmin/drizzle check
+
+      - name: Test JSONB query expressions
+        run: pnpm --filter @zadmin/drizzle test
+
+      - name: Test PostgreSQL JSONB semantics
+        env:
+          DRIZZLE_TEST_DATABASE_URL: postgresql://drizzle_test:drizzle_test@127.0.0.1:5432/drizzle_jsonb_test
+        run: pnpm --filter @zadmin/drizzle test:postgres
+
+      - name: Build the public package
+        run: pnpm --filter @zadmin/drizzle build
+
   docs-e2e:
     name: Docs end-to-end (${{ matrix.browser }})
     needs: dispatch-integrity
@@ -450,6 +493,7 @@ jobs:
     needs:
       - static
       - workspace-tests
+      - drizzle-postgres
       - docs-e2e
       - build
       - coverage
@@ -462,6 +506,7 @@ jobs:
         env:
           STATIC_RESULT: ${{ needs.static.result }}
           WORKSPACE_TESTS_RESULT: ${{ needs.workspace-tests.result }}
+          DRIZZLE_POSTGRES_RESULT: ${{ needs.drizzle-postgres.result }}
           DOCS_E2E_RESULT: ${{ needs.docs-e2e.result }}
           BUILD_RESULT: ${{ needs.build.result }}
           COVERAGE_RESULT: ${{ needs.coverage.result }}
@@ -472,6 +517,7 @@ jobs:
           for result in \
             "$STATIC_RESULT" \
             "$WORKSPACE_TESTS_RESULT" \
+            "$DRIZZLE_POSTGRES_RESULT" \
             "$DOCS_E2E_RESULT" \
             "$BUILD_RESULT" \
             "$COVERAGE_RESULT" \
