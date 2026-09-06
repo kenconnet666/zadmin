@@ -122,7 +122,11 @@
 		snippets: [{ description: '真实输入control。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/input/ZFormField.svelte',
 		states: [
-			{ description: '用户改变过字段。', name: 'data-dirty', values: ['true'] },
+			{
+				description: '当前原生提交值与挂载或reset后的基线不同；改回原值恢复false。',
+				name: 'data-dirty',
+				values: ['true']
+			},
 			{ description: '字段失焦过或表单已提交。', name: 'data-touched', values: ['true'] },
 			{ description: '字段验证中。', name: 'data-validating', values: ['true'] },
 			{ description: '字段存在错误。', name: 'data-invalid', values: ['true'] }

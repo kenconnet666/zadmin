@@ -11,6 +11,10 @@ import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
 import NativeDemo from './NativeDemo.svelte';
 import nativeSource from './NativeDemo.svelte?raw';
+import NativeValuesDemo from './NativeValuesDemo.svelte';
+import nativeValuesSource from './NativeValuesDemo.svelte?raw';
+import ModelDemo from './ModelDemo.svelte';
+import modelSource from './ModelDemo.svelte?raw';
 import { formApiFacts, formFieldApiFacts } from '../../../../framework/component-api.generated.js';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
@@ -24,7 +28,7 @@ export const formDoc = defineComponentDoc(formMetadata, {
 			controller: {
 				default: '—',
 				description:
-					'除验证、错误与导航外，controller.subscribeField(path, listener)只观察未来字段状态变化；当前快照通过getFieldState读取，不拥有字段value。'
+					'除验证、反馈与导航外，getValues/getFieldValue只读取当前successful native controls；返回深冻结native快照，不拥有值也不冒充schema output。subscribeField只观察未来字段状态变化。'
 			},
 			onreset: {
 				default: '—',
@@ -75,6 +79,24 @@ export const formDoc = defineComponentDoc(formMetadata, {
 			title: '原生约束验证'
 		},
 		{
+			covers: ['controlled', 'form-data', 'native-props'],
+			component: NativeValuesDemo,
+			description:
+				'getValues/getFieldValue从当前successful controls读取深冻结native快照；输入改回挂载baseline后dirty恢复false。',
+			id: 'form-native-values',
+			source: nativeValuesSource,
+			title: 'Native Values与Baseline Dirty'
+		},
+		{
+			covers: ['composition', 'controlled'],
+			component: ModelDemo,
+			description:
+				'独立FormModel通过value/onValueChange显式连接受控ZInput；批量写入、reset和FormArray增删移动保持immutable values与稳定row.id。',
+			id: 'form-model-composition',
+			source: modelSource,
+			title: '独立Model与稳定数组Row'
+		},
+		{
 			covers: ['controlled', 'loading', 'native-props'],
 			component: BusyDemo,
 			description: '外部服务任务可以通过原生aria-busy公告状态，不必复用会禁用按钮的loading语义。',
@@ -98,6 +120,9 @@ export const formDoc = defineComponentDoc(formMetadata, {
 		'ZFormField把schema完整路径映射的消息交给ZField生成稳定description/error/warning/success IDs，真实输入继续拥有label与aria-describedby。',
 		'无效提交等待最新异步验证完成后，按实时DOM顺序滚动并聚焦首错；reset取消旧验证并清空dirty/touched/messages。',
 		'FieldPath内部身份保留string/number段类型，HTML name独立生成；多个相同路径实例共享状态，但不会把ZForm变成私有值store。',
+		'getValues/getFieldValue读取当前successful FormData并按FieldPath形成深冻结native对象或根数组；它与Standard Schema的typed output是两个边界。',
+		'dirty在真实input事件后的Svelte flush按挂载或reset后的同名有序FormData baseline比较；用户把值改回baseline会恢复false。外部owner无事件写值的统一通知留给后续adapter。',
+		'createFormModel/createFormArray可独立配合受控组件使用；当前ZForm提交仍读取原生successful controls，自动model模式、control adapter和ZFormList属于后续集成。',
 		"同一表单的typed FieldPath不能互为父子（例如['profile']与['profile','email']），且htmlName不能为空；注册阶段会报告配置错误，避免提交时才出现标量/对象输入错误。"
 	],
 	keywords: [

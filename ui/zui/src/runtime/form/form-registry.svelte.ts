@@ -109,11 +109,16 @@ export class FormRegistry {
 	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	readonly #unmountVersions = new Map<string, number>();
 	readonly #onPathUnmount?: (path: FieldPath) => void;
+	readonly #onMembershipChange?: (field: FormFieldRegistration) => void;
 	#errors: FormErrors = Object.freeze({});
 	#order = 0;
 
-	constructor(onPathUnmount?: (path: FieldPath) => void) {
+	constructor(
+		onPathUnmount?: (path: FieldPath) => void,
+		onMembershipChange?: (field: FormFieldRegistration) => void
+	) {
 		this.#onPathUnmount = onPathUnmount;
+		this.#onMembershipChange = onMembershipChange;
 	}
 
 	register(registration: FormFieldRegistration): () => void {
@@ -126,6 +131,11 @@ export class FormRegistry {
 			throw new Error(`Duplicate ZFormField instance "${registration.instanceId}".`);
 		}
 		for (const field of this.#fields.values()) {
+			if (field.key === key && field.htmlName !== registration.htmlName) {
+				throw new Error(
+					`ZFormField path "${fieldPathToString(path)}" must use one shared HTML name.`
+				);
+			}
 			if (
 				field.key !== key &&
 				(fieldPathStartsWith(path, field.path) || fieldPathStartsWith(field.path, path))
@@ -169,13 +179,18 @@ export class FormRegistry {
 				})
 			);
 		}
+		this.#onMembershipChange?.(field);
 		return () => {
 			const current = this.#fields.get(field.instanceId);
 			if (current !== field) return;
 			this.#fields.delete(field.instanceId);
 			const currentInstances = this.#pathInstances.get(key);
 			currentInstances?.delete(field.instanceId);
-			if ((currentInstances?.size ?? 0) > 0) return;
+			if ((currentInstances?.size ?? 0) > 0) {
+				const remaining = this.#fields.get(currentInstances!.values().next().value!);
+				if (remaining) this.#onMembershipChange?.(remaining);
+				return;
+			}
 			const unmountVersion = (this.#unmountVersions.get(key) ?? 0) + 1;
 			this.#unmountVersions.set(key, unmountVersion);
 			queueMicrotask(() => {
@@ -259,6 +274,15 @@ export class FormRegistry {
 	markDirty(instanceId: string): void {
 		const field = this.#fields.get(instanceId);
 		if (field) this.#patch(field.key, { dirty: true });
+	}
+
+	fieldInfo(instanceId: string): Pick<FormFieldRegistration, 'path' | 'htmlName'> | undefined {
+		return this.#fields.get(instanceId);
+	}
+
+	setDirty(path: FieldPathInput, dirty: boolean): void {
+		const key = fieldPathKey(path);
+		if (this.#states.has(key)) this.#patch(key, { dirty });
 	}
 
 	markTouched(instanceId: string): void {

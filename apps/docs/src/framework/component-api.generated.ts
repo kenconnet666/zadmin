@@ -629,6 +629,229 @@ export const alertDialogTriggerApiFacts = {
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
+export const checkboxGroupApiFacts = {
+	declaration: 'ZCheckboxGroupProps',
+	id: 'checkbox-group',
+	inheritedFrom: [
+		'HTMLAttributes<HTMLDivElement>',
+		'| { readonly children?: never; readonly options: readonly ZCheckboxGroupOption<TKey>[]; } | { readonly children: Snippet; readonly options?: never; }'
+	],
+	name: 'ZCheckboxGroup',
+	props: [
+		{
+			name: 'defaultValue',
+			required: false,
+			type: 'CheckboxGroupValue<TKey>'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'form',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'invalid',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'maxSelected',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'minSelected',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'name',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'onValueChange',
+			required: false,
+			type: '(value: CheckboxGroupValue<TKey>) => void'
+		},
+		{
+			name: 'orientation',
+			required: false,
+			type: "'horizontal' | 'vertical'"
+		},
+		{
+			name: 'preserveUnknownValues',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null'
+		},
+		{
+			name: 'required',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: 'CheckboxGroupTone'
+		},
+		{
+			name: 'validationMessage',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'value',
+			required: false,
+			type: 'CheckboxGroupValue<TKey>'
+		},
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'options',
+			required: false,
+			type: 'readonly ZCheckboxGroupOption<TKey>[]'
+		}
+	],
+	source: 'ui/zui/src/components/compound/checkbox-group/ZCheckboxGroup.svelte',
+	metadataGapProps: [],
+	members: () => [checkboxGroupItemApiFacts, checkboxGroupSelectAllApiFacts]
+} as const satisfies ComponentApiFacts;
+
+export const checkboxGroupItemApiFacts = {
+	declaration: 'ZCheckboxGroupItemProps',
+	id: 'checkbox-group-item',
+	inheritedFrom: ['ZCheckboxProps'],
+	name: 'ZCheckboxGroupItem',
+	props: [
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'textValue',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'value',
+			required: true,
+			type: 'TKey'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: "'danger' | 'info' | 'neutral' | 'primary' | 'success' | 'warning'",
+			inheritedFrom: 'ZCheckboxVariants'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: "'large' | 'medium' | 'small' | 'xlarge' | 'xsmall'",
+			inheritedFrom: 'ZCheckboxVariants'
+		},
+		{
+			name: 'onchange',
+			required: false,
+			type: "HTMLInputAttributes['onchange']",
+			inheritedFrom: 'ZCheckboxProps'
+		},
+		{
+			name: 'onclick',
+			required: false,
+			type: "HTMLInputAttributes['onclick']",
+			inheritedFrom: 'ZCheckboxProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLInputElement | null',
+			inheritedFrom: 'ZCheckboxProps'
+		}
+	],
+	source: 'ui/zui/src/components/compound/checkbox-group/ZCheckboxGroupItem.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
+export const checkboxGroupSelectAllApiFacts = {
+	declaration: 'ZCheckboxGroupSelectAllProps',
+	id: 'checkbox-group-select-all',
+	inheritedFrom: ['ZCheckboxProps'],
+	name: 'ZCheckboxGroupSelectAll',
+	props: [
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: "'danger' | 'info' | 'neutral' | 'primary' | 'success' | 'warning'",
+			inheritedFrom: 'ZCheckboxVariants'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: "'large' | 'medium' | 'small' | 'xlarge' | 'xsmall'",
+			inheritedFrom: 'ZCheckboxVariants'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZCheckboxProps'
+		},
+		{
+			name: 'onchange',
+			required: false,
+			type: "HTMLInputAttributes['onchange']",
+			inheritedFrom: 'ZCheckboxProps'
+		},
+		{
+			name: 'onclick',
+			required: false,
+			type: "HTMLInputAttributes['onclick']",
+			inheritedFrom: 'ZCheckboxProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLInputElement | null',
+			inheritedFrom: 'ZCheckboxProps'
+		}
+	],
+	source: 'ui/zui/src/components/compound/checkbox-group/ZCheckboxGroupSelectAll.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
 export const comboboxApiFacts = {
 	declaration: 'ZComboboxProps',
 	id: 'combobox',
@@ -8274,6 +8497,11 @@ export const checkboxApiFacts = {
 	inheritedFrom: ['HTMLInputAttributes'],
 	name: 'ZCheckbox',
 	props: [
+		{
+			name: 'tone',
+			required: false,
+			type: "'danger' | 'info' | 'neutral' | 'primary' | 'success' | 'warning'"
+		},
 		{
 			name: 'size',
 			required: false,

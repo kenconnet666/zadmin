@@ -64,7 +64,7 @@
 			type="button"
 			variant="outline"
 			onclick={() =>
-				controller?.setFieldState('channel', {
+				controller?.setFieldFeedback('channel', {
 					success: '通道可用',
 					warnings: ['将立即对生产用户可见']
 				})}

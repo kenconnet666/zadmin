@@ -191,3 +191,6 @@ export { zuiMetadata as nativeSelectMetadata } from '../components/input/ZNative
 export { zuiMetadata as fieldsetMetadata } from '../components/input/ZFieldset.svelte';
 export { zuiMetadata as rangeSliderMetadata } from '../components/input/ZRangeSlider.svelte';
 export { zuiMetadata as ratingMetadata } from '../components/input/ZRating.svelte';
+export { zuiMetadata as checkboxGroupMetadata } from '../components/compound/checkbox-group/ZCheckboxGroup.svelte';
+export { zuiMetadata as checkboxGroupItemMetadata } from '../components/compound/checkbox-group/ZCheckboxGroupItem.svelte';
+export { zuiMetadata as checkboxGroupSelectAllMetadata } from '../components/compound/checkbox-group/ZCheckboxGroupSelectAll.svelte';

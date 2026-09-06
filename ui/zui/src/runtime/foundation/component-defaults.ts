@@ -89,6 +89,8 @@ const COMPONENT_RULES = {
 		strokeWidth: { kind: 'number', exclusiveMinimum: 0 }
 	},
 	input: { size: { kind: 'enum', values: controlSizes } },
+	checkbox: { size: buttonRules.size, tone: buttonRules.tone },
+	checkboxGroup: { size: buttonRules.size, tone: buttonRules.tone },
 	passwordInput: { size: buttonRules.size },
 	nativeSelect: { size: buttonRules.size },
 	fieldset: {
@@ -163,6 +165,8 @@ export interface DialogComponentDefaults extends DefaultsFor<'dialog'> {}
 export interface HeadingComponentDefaults extends DefaultsFor<'heading'> {}
 export interface IconComponentDefaults extends DefaultsFor<'icon'> {}
 export interface InputComponentDefaults extends DefaultsFor<'input'> {}
+export interface CheckboxComponentDefaults extends DefaultsFor<'checkbox'> {}
+export interface CheckboxGroupComponentDefaults extends DefaultsFor<'checkboxGroup'> {}
 export interface PasswordInputComponentDefaults extends DefaultsFor<'passwordInput'> {}
 export interface NativeSelectComponentDefaults extends DefaultsFor<'nativeSelect'> {}
 export interface FieldsetComponentDefaults extends DefaultsFor<'fieldset'> {}

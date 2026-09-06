@@ -1,0 +1,315 @@
+import {
+	fieldPathKey,
+	fieldPathStartsWith,
+	normalizeFieldPath,
+	type FieldPath,
+	type FieldPathInput
+} from './field-path.js';
+
+export type FormValuesChangeReason = 'array' | 'controller' | 'user';
+export interface FormValuesChange<T> {
+	readonly changedPaths: readonly FieldPath[];
+	readonly reason: FormValuesChangeReason;
+	readonly values: T;
+}
+export interface FormFieldUpdate {
+	readonly path: FieldPathInput;
+	readonly value: unknown;
+}
+export interface FormModelOptions<T> {
+	readonly defaultValues: T;
+	readonly onValuesChange?: (detail: FormValuesChange<T>) => void;
+	readonly read?: () => T | undefined;
+	readonly values?: T;
+	readonly write?: (values: T) => void;
+}
+export type FormValueListener = (value: unknown) => void;
+const DELETE_VALUE = Symbol('delete-form-value');
+
+function immutable<T>(value: T): T {
+	if (Array.isArray(value)) return Object.freeze(value.map(immutable)) as T;
+	if (
+		value !== null &&
+		typeof value === 'object' &&
+		Object.getPrototypeOf(value) === Object.prototype
+	) {
+		return Object.freeze(
+			Object.fromEntries(Object.entries(value).map(([key, item]) => [key, immutable(item)]))
+		) as T;
+	}
+	return value;
+}
+function equal(left: unknown, right: unknown): boolean {
+	if (Object.is(left, right)) return true;
+	if (Array.isArray(left) && Array.isArray(right))
+		return left.length === right.length && left.every((item, index) => equal(item, right[index]));
+	if (!left || !right || typeof left !== 'object' || typeof right !== 'object') return false;
+	if (
+		Object.getPrototypeOf(left) !== Object.prototype ||
+		Object.getPrototypeOf(right) !== Object.prototype
+	)
+		return false;
+	const leftKeys = Object.keys(left);
+	const rightKeys = Object.keys(right);
+	return (
+		leftKeys.length === rightKeys.length &&
+		leftKeys.every(
+			(key) =>
+				Object.hasOwn(right, key) &&
+				equal((left as Record<string, unknown>)[key], (right as Record<string, unknown>)[key])
+		)
+	);
+}
+export function getFormValue(values: unknown, path: FieldPathInput): unknown {
+	let current = values;
+	for (const segment of normalizeFieldPath(path)) {
+		if (current === null || typeof current !== 'object') return undefined;
+		if (!Object.hasOwn(current, segment)) return undefined;
+		current = (current as Record<string | number, unknown>)[segment];
+	}
+	return current;
+}
+function hasFormValue(values: unknown, path: FieldPath): boolean {
+	let current = values;
+	for (const segment of path) {
+		if (current === null || typeof current !== 'object' || !Object.hasOwn(current, segment))
+			return false;
+		current = (current as Record<string | number, unknown>)[segment];
+	}
+	return true;
+}
+function deleteFormValue<T>(values: T, path: FieldPath, preserveDepth: number): T {
+	function visit(current: unknown, index: number): unknown | typeof DELETE_VALUE {
+		if (current === null || typeof current !== 'object' || !Object.hasOwn(current, path[index]!))
+			return current;
+		const copy: Record<string | number, unknown> | unknown[] = Array.isArray(current)
+			? [...current]
+			: { ...(current as Record<string, unknown>) };
+		const segment = path[index]!;
+		if (index === path.length - 1) delete copy[segment];
+		else {
+			const child = visit((current as Record<string | number, unknown>)[segment], index + 1);
+			if (child === DELETE_VALUE) delete copy[segment];
+			else copy[segment] = child;
+		}
+		return Reflect.ownKeys(copy).length === 0 && index > preserveDepth ? DELETE_VALUE : copy;
+	}
+	const result = visit(values, 0);
+	return immutable(result === DELETE_VALUE ? {} : result) as T;
+}
+export function setFormValue<T>(values: T, pathInput: FieldPathInput, value: unknown): T {
+	const path = normalizeFieldPath(pathInput);
+	if (
+		path.some(
+			(segment) => segment === '__proto__' || segment === 'constructor' || segment === 'prototype'
+		)
+	)
+		throw new TypeError('ZForm model paths cannot address object prototype properties.');
+	function visit(current: unknown, index: number): unknown {
+		const segment = path[index]!;
+		const source =
+			current !== null && typeof current === 'object'
+				? current
+				: typeof segment === 'number'
+					? []
+					: {};
+		const copy: Record<string | number, unknown> | unknown[] = Array.isArray(source)
+			? [...source]
+			: { ...(source as Record<string, unknown>) };
+		Object.defineProperty(copy, segment, {
+			configurable: true,
+			enumerable: true,
+			value:
+				index === path.length - 1
+					? immutable(value)
+					: visit((source as Record<string | number, unknown>)[segment], index + 1),
+			writable: true
+		});
+		return copy;
+	}
+	return immutable(visit(values, 0)) as T;
+}
+function topLevelPaths(left: unknown, right: unknown): readonly FieldPath[] {
+	if (equal(left, right)) return [];
+	if (left && right && typeof left === 'object' && typeof right === 'object') {
+		const keys = new Set([...Object.keys(left), ...Object.keys(right)]);
+		return Object.freeze(
+			[...keys]
+				.filter(
+					(key) =>
+						!equal((left as Record<string, unknown>)[key], (right as Record<string, unknown>)[key])
+				)
+				.map((key) => Object.freeze([key]))
+		);
+	}
+	return Object.freeze([Object.freeze(['value'])]);
+}
+
+export class FormModel<T> {
+	#baseline: T;
+	#current: T;
+	readonly #listeners = new Set<(detail: FormValuesChange<T>) => void>();
+	readonly #pathListeners = new Map<
+		string,
+		{
+			readonly path: FieldPath;
+			readonly listeners: Map<FormValueListener, unknown>;
+		}
+	>();
+	readonly #options: FormModelOptions<T>;
+	#controlledInput?: T;
+	#controlledSnapshot?: T;
+	constructor(options: FormModelOptions<T>) {
+		this.#options = options;
+		this.#baseline = $state.raw(immutable(options.defaultValues));
+		const controlled = options.read?.();
+		this.#current = $state.raw(
+			immutable(
+				controlled !== undefined
+					? controlled
+					: options.values !== undefined
+						? options.values
+						: options.defaultValues
+			)
+		);
+	}
+	get values(): T {
+		const controlled = this.#options.read?.();
+		if (controlled === undefined) return this.#current;
+		if (
+			!Object.is(controlled, this.#controlledInput) ||
+			this.#controlledSnapshot === undefined ||
+			!equal(controlled, this.#controlledSnapshot)
+		) {
+			this.#controlledInput = controlled;
+			this.#controlledSnapshot = immutable(controlled);
+		}
+		return this.#controlledSnapshot!;
+	}
+	get defaultValues(): T {
+		return this.#baseline;
+	}
+	get dirty(): boolean {
+		return !equal(this.values, this.#baseline);
+	}
+	get(path: FieldPathInput): unknown {
+		return getFormValue(this.values, path);
+	}
+	setField(
+		path: FieldPathInput,
+		value: unknown,
+		reason: FormValuesChangeReason = 'controller'
+	): boolean {
+		return this.setFields([{ path, value }], reason);
+	}
+	setFields(
+		updates: readonly FormFieldUpdate[],
+		reason: FormValuesChangeReason = 'controller'
+	): boolean {
+		let next = this.values;
+		const paths = new Map<string, FieldPath>();
+		for (const update of updates) {
+			const path = normalizeFieldPath(update.path);
+			next = setFormValue(next, path, update.value);
+			paths.set(fieldPathKey(path), path);
+		}
+		const changed = [...paths.values()].filter(
+			(path) => !equal(getFormValue(this.values, path), getFormValue(next, path))
+		);
+		return this.#publish(next, changed, reason);
+	}
+	setValues(next: T | ((current: T) => T), reason: FormValuesChangeReason = 'controller'): boolean {
+		const current = this.values;
+		const value = immutable(
+			typeof next === 'function' ? (next as (current: T) => T)(current) : next
+		);
+		return this.#publish(value, topLevelPaths(current, value), reason);
+	}
+	syncExternal(values: T): void {
+		if (this.#options.read)
+			throw new TypeError('ZForm controlled models synchronize through their read owner.');
+		const previous = this.#current;
+		this.#current = immutable(values);
+		this.#notifyPaths(topLevelPaths(previous, this.#current), this.#current);
+	}
+	initialize(values: T): void {
+		const next = immutable(values);
+		if (this.#replaceSilent(next)) this.#baseline = next;
+	}
+	reset(): void {
+		this.#replaceSilent(this.#baseline);
+	}
+	resetField(path: FieldPathInput): void {
+		const normalized = normalizeFieldPath(path);
+		if (hasFormValue(this.#baseline, normalized)) {
+			this.#replaceSilent(
+				setFormValue(this.values, normalized, getFormValue(this.#baseline, normalized))
+			);
+			return;
+		}
+		if (normalized.some((segment) => typeof segment === 'number'))
+			throw new TypeError('ZForm resetField cannot delete a missing baseline array path.');
+		let preserveDepth = 0;
+		for (let index = 1; index < normalized.length; index += 1) {
+			if (!hasFormValue(this.#baseline, normalized.slice(0, index))) break;
+			preserveDepth = index;
+		}
+		this.#replaceSilent(deleteFormValue(this.values, normalized, preserveDepth));
+	}
+	subscribe(listener: (detail: FormValuesChange<T>) => void): () => void {
+		this.#listeners.add(listener);
+		return () => this.#listeners.delete(listener);
+	}
+	subscribeValue(path: FieldPathInput, listener: FormValueListener): () => void {
+		const key = fieldPathKey(path);
+		const normalized = normalizeFieldPath(path);
+		const entry = this.#pathListeners.get(key) ?? {
+			path: normalized,
+			listeners: new Map<FormValueListener, unknown>()
+		};
+		entry.listeners.set(listener, getFormValue(this.values, normalized));
+		this.#pathListeners.set(key, entry);
+		return () => {
+			entry.listeners.delete(listener);
+			if (entry.listeners.size === 0) this.#pathListeners.delete(key);
+		};
+	}
+	#publish(next: T, paths: readonly FieldPath[], reason: FormValuesChangeReason): boolean {
+		if (equal(this.values, next)) return true;
+		if (this.#options.read === undefined) this.#current = next;
+		this.#options.write?.(next);
+		if (!equal(this.values, next)) return false;
+		const detail = Object.freeze({ changedPaths: Object.freeze([...paths]), reason, values: next });
+		this.#options.onValuesChange?.(detail);
+		for (const listener of this.#listeners) listener(detail);
+		this.#notifyPaths(paths, next);
+		return true;
+	}
+	#replaceSilent(next: T): boolean {
+		const previous = this.values;
+		if (this.#options.read === undefined) this.#current = next;
+		this.#options.write?.(next);
+		if (!equal(this.values, next)) return false;
+		this.#notifyPaths(topLevelPaths(previous, next), next);
+		return true;
+	}
+	#notifyPaths(paths: readonly FieldPath[], values: T): void {
+		for (const entry of this.#pathListeners.values()) {
+			if (
+				!paths.some(
+					(path) => fieldPathStartsWith(path, entry.path) || fieldPathStartsWith(entry.path, path)
+				)
+			)
+				continue;
+			const next = getFormValue(values, entry.path);
+			for (const [listener, previous] of entry.listeners) {
+				if (equal(previous, next)) continue;
+				entry.listeners.set(listener, next);
+				listener(next);
+			}
+		}
+	}
+}
+export function createFormModel<T>(options: FormModelOptions<T>): FormModel<T> {
+	return new FormModel(options);
+}

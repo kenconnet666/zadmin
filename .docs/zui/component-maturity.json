@@ -1,10 +1,10 @@
 {
 	"schemaVersion": 2,
 	"source": {
-		"metadataComponents": 172,
-		"documentationPages": 105,
-		"contractComponents": 172,
-		"testFiles": 266
+		"metadataComponents": 175,
+		"documentationPages": 106,
+		"contractComponents": 175,
+		"testFiles": 275
 	},
 	"stageNames": [
 		"Declared",
@@ -18,14 +18,14 @@
 	],
 	"evidenceScope": "Static inventory of authored test contracts, not test execution results or whole-component visual acceptance. Stage names are retained for compatibility; consult commit-matched CI and page-level review separately.",
 	"summary": {
-		"Declared": 172,
-		"Authorable": 172,
-		"ContractVerified": 172,
-		"RuntimeImplemented": 172,
-		"BrowserBehaviorVerified": 162,
+		"Declared": 175,
+		"Authorable": 175,
+		"ContractVerified": 175,
+		"RuntimeImplemented": 175,
+		"BrowserBehaviorVerified": 163,
 		"VisuallyVerified": 159,
 		"DesktopVerified": 0,
-		"ProductionVerified": 166
+		"ProductionVerified": 167
 	},
 	"components": [
 		{
@@ -1159,6 +1159,213 @@
 					"detail": "ZAlertDialogTrigger SSR assertions"
 				}
 			]
+		},
+		{
+			"id": "checkbox-group",
+			"name": "ZCheckboxGroup",
+			"category": "input",
+			"family": "checkbox-group",
+			"status": "experimental",
+			"source": "ui/zui/src/components/compound/checkbox-group/ZCheckboxGroup.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": true,
+				"VisuallyVerified": false,
+				"DesktopVerified": false,
+				"ProductionVerified": true
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/compound/checkbox-group/ZCheckboxGroup.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZCheckboxGroup"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "7c2b959c823f1d39ff62673ae62a377f85e4f4ecf66e5f533fd6b99986c937ed API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/compound/checkbox-group/ZCheckboxGroup.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [
+					{
+						"path": "ui/zui/tests/checkbox-group-production.browser.spec.ts",
+						"detail": "ZCheckboxGroup browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/CheckboxGroupProductionFixture.svelte",
+						"detail": "ZCheckboxGroup explicit rendered fixture usage"
+					}
+				],
+				"VisuallyVerified": [],
+				"DesktopVerified": [],
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/checkbox-group-production.spec.ts",
+						"detail": "ZCheckboxGroup production assertions"
+					},
+					{
+						"path": "ui/zui/tests/CheckboxGroupSsrFixture.svelte",
+						"detail": "ZCheckboxGroup explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/checkbox-group-production.browser.spec.ts",
+						"detail": "ZCheckboxGroup production assertions"
+					},
+					{
+						"path": "ui/zui/tests/CheckboxGroupProductionFixture.svelte",
+						"detail": "ZCheckboxGroup explicit rendered fixture usage"
+					}
+				]
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/input/checkbox-group/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/checkbox-group-production.spec.ts",
+					"detail": "ZCheckboxGroup SSR assertions"
+				}
+			]
+		},
+		{
+			"id": "checkbox-group-item",
+			"name": "ZCheckboxGroupItem",
+			"category": "input",
+			"family": "checkbox-group",
+			"status": "experimental",
+			"source": "ui/zui/src/components/compound/checkbox-group/ZCheckboxGroupItem.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": false,
+				"VisuallyVerified": false,
+				"DesktopVerified": false,
+				"ProductionVerified": false
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/compound/checkbox-group/ZCheckboxGroupItem.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZCheckboxGroupItem"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "3b3c471075129623569ef5de8abef20b035574b8a3e6b253059d33841c56de4d API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/compound/checkbox-group/ZCheckboxGroupItem.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [],
+				"VisuallyVerified": [],
+				"DesktopVerified": [],
+				"ProductionVerified": []
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/input/checkbox-group/doc.ts",
+				"detail": "family-owned documentation module (checkbox-group)"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/checkbox-group-production.spec.ts",
+					"detail": "ZCheckboxGroupItem SSR assertions"
+				}
+			]
+		},
+		{
+			"id": "checkbox-group-select-all",
+			"name": "ZCheckboxGroupSelectAll",
+			"category": "input",
+			"family": "checkbox-group",
+			"status": "experimental",
+			"source": "ui/zui/src/components/compound/checkbox-group/ZCheckboxGroupSelectAll.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": false,
+				"VisuallyVerified": false,
+				"DesktopVerified": false,
+				"ProductionVerified": false
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/compound/checkbox-group/ZCheckboxGroupSelectAll.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZCheckboxGroupSelectAll"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "a9a45074ce8d2cc4529a923f41bb39ff1e4382eb869c5d7d9cb20f194da12c67 API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/compound/checkbox-group/ZCheckboxGroupSelectAll.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [],
+				"VisuallyVerified": [],
+				"DesktopVerified": [],
+				"ProductionVerified": []
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/input/checkbox-group/doc.ts",
+				"detail": "family-owned documentation module (checkbox-group)"
+			},
+			"ssrEvidence": []
 		},
 		{
 			"id": "combobox",
@@ -11762,7 +11969,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "e1455ed18762787ab1a3d9ce76b3fcdb2fa044ddbc2a5cbae6cf5198549b2d9c API snapshot entry"
+						"detail": "413e3805b1e30527e3e924dddc42f9145b6e34b8812dd67a0240cf9f2c12f5ff API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -12520,7 +12727,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "df4b10c03b937af1a3e752054c7ca3f05919952bacb4e0687b6f3816b7ac4ab4 API snapshot entry"
+						"detail": "dd8dd66bcfe5cadf29754c1614ea7c65b43fed0250a601001a16f90df3d1a5e8 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -12657,7 +12864,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "8d4f6bb1d7bba3396967093e78b1f016e469196f24b9ebe4e907549b43774af7 API snapshot entry"
+						"detail": "c0dee9b03e092348a107bf5a61a1866133e520e940866a60b9e54ed743cf992b API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -13819,7 +14026,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "61839df9e1b299bbf44e5d1f182b9b556d9bbe94f1b7d89d27c578e31e348fd4 API snapshot entry"
+						"detail": "26ec1e17a2d3965d1ae833a2d1845a72c155719cb98a720809caff823bc05b9b API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [

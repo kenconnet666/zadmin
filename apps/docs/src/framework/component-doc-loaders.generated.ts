@@ -120,6 +120,10 @@ export const componentDocLoaders = {
 		import('../content/components/feedback/toast/doc.js').then((module) => module.toastDoc),
 	checkbox: () =>
 		import('../content/components/input/checkbox/doc.js').then((module) => module.checkboxDoc),
+	'checkbox-group': () =>
+		import('../content/components/input/checkbox-group/doc.js').then(
+			(module) => module.checkboxGroupDoc
+		),
 	calendar: () =>
 		import('../content/components/input/calendar/doc.js').then((module) => module.calendarDoc),
 	cascader: () =>

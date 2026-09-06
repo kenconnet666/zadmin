@@ -34,8 +34,13 @@ export const checkboxDoc = defineComponentDoc(checkboxMetadata, {
 			},
 			ref: { default: 'null', description: '真实HTMLInputElement，可调用focus和blur。' },
 			size: {
-				default: 'Field size → Provider density',
-				description: '显式xsmall/small/medium/large/xlarge优先，再继承Field和Provider density。'
+				default: 'Field size → componentDefaults.checkbox.size → Provider density',
+				description:
+					'实例xsmall/small/medium/large/xlarge优先，再依次继承Field、Checkbox组件默认值和Provider density。'
+			},
+			tone: {
+				default: "componentDefaults.checkbox.tone → 'primary'",
+				description: '实例tone优先于Checkbox组件默认值；invalid视觉固定优先使用danger。'
 			},
 			value: { default: "'on'", description: '选中时由真实checkbox写入FormData的标量值。' }
 		},
@@ -62,7 +67,7 @@ export const checkboxDoc = defineComponentDoc(checkboxMetadata, {
 		{
 			covers: ['density', 'disabled', 'invalid', 'native-props', 'variants-and-states'],
 			component: StatesDemo,
-			description: '尺寸、选中、无效和禁用状态使用原生checkbox合同。',
+			description: '尺寸、语义tone、invalid危险色优先级和禁用状态使用原生checkbox合同。',
 			id: 'checkbox-states',
 			source: statesSource,
 			title: '尺寸与校验状态'

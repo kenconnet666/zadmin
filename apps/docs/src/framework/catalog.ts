@@ -32,6 +32,7 @@ import { textDoc } from '../content/components/gene/text/doc.js';
 import { toggleButtonDoc } from '../content/components/gene/toggle-button/doc.js';
 import { visuallyHiddenDoc } from '../content/components/gene/visually-hidden/doc.js';
 import { checkboxDoc } from '../content/components/input/checkbox/doc.js';
+import { checkboxGroupDoc } from '../content/components/input/checkbox-group/doc.js';
 import { calendarDoc } from '../content/components/input/calendar/doc.js';
 import { cascaderDoc } from '../content/components/input/cascader/doc.js';
 import { colorPickerDoc } from '../content/components/input/color-picker/doc.js';
@@ -164,6 +165,7 @@ export const componentDocs = Object.freeze([
 	spinnerDoc,
 	toastDoc,
 	checkboxDoc,
+	checkboxGroupDoc,
 	calendarDoc,
 	cascaderDoc,
 	colorPickerDoc,

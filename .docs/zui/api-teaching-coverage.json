@@ -133,6 +133,39 @@
 			"fallbackPropNames": []
 		},
 		{
+			"id": "checkbox-group",
+			"name": "ZCheckboxGroup",
+			"source": "ui/zui/src/components/compound/checkbox-group/ZCheckboxGroup.svelte",
+			"family": "checkbox-group",
+			"declaredPropCount": 19,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "checkbox-group-item",
+			"name": "ZCheckboxGroupItem",
+			"source": "ui/zui/src/components/compound/checkbox-group/ZCheckboxGroupItem.svelte",
+			"family": "checkbox-group",
+			"declaredPropCount": 9,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "checkbox-group-select-all",
+			"name": "ZCheckboxGroupSelectAll",
+			"source": "ui/zui/src/components/compound/checkbox-group/ZCheckboxGroupSelectAll.svelte",
+			"family": "checkbox-group",
+			"declaredPropCount": 7,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
 			"id": "combobox",
 			"name": "ZCombobox",
 			"source": "ui/zui/src/components/compound/combobox/ZCombobox.svelte",
@@ -1332,7 +1365,7 @@
 			"id": "checkbox",
 			"name": "ZCheckbox",
 			"source": "ui/zui/src/components/input/ZCheckbox.svelte",
-			"declaredPropCount": 11,
+			"declaredPropCount": 12,
 			"metadataGapPropCount": 0,
 			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
@@ -1881,8 +1914,8 @@
 		"maxMetadataGapProps": 0
 	},
 	"totals": {
-		"components": 172,
-		"declaredProps": 2215,
+		"components": 175,
+		"declaredProps": 2251,
 		"metadataGapProps": 0,
 		"fallbackProps": 0,
 		"opaqueStructuredProps": 9,

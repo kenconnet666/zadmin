@@ -20,6 +20,24 @@ function register(
 }
 
 describe('FormRegistry', () => {
+	it('rejects conflicting native names for one field path and reports partial membership changes', () => {
+		const changed = vi.fn();
+		const registry = new FormRegistry(undefined, changed);
+		const stop = register(registry, 'first', 'roles');
+		register(registry, 'second', 'roles');
+		expect(() =>
+			registry.register({
+				instanceId: 'bad',
+				path: 'roles',
+				htmlName: 'other',
+				control: () => null
+			})
+		).toThrow(/one shared HTML name/);
+		changed.mockClear();
+		stop();
+		expect(changed).toHaveBeenCalledTimes(1);
+		expect(changed.mock.calls[0]![0].instanceId).toBe('second');
+	});
 	it('tracks path state, permits repeated instances and restores the immutable initial snapshot', async () => {
 		const unmounted: string[] = [];
 		const registry = new FormRegistry((path) => unmounted.push(fieldPathToString(path)));

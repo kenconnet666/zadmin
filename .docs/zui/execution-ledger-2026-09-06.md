@@ -152,3 +152,18 @@ E2/E3 最终一起成功推送至 `ae19b1b`。本批新增 Toolbar、无 DOM Too
 - 本地真实Chrome确认 Fieldset 390px无横向溢出、禁用不提交/legend恢复、Password bind与FormData；CopyButton成功check图标与焦点保持；Rating键盘递增、再点清空、hover只预览、只读提交与reset；RangeSlider tuple绑定、重复FormData/reset、RTL及vertical语义。浏览器还发现并修掉无效ICSS accessor/token，不能只依赖IDE绿灯。
 
 详细实现见[Fieldset与输入族](./execution-fieldset-family-2026-09-07.md)、[Slider/RangeSlider](./execution-slider-range-2026-09-07.md)、[Rating](./execution-rating-2026-09-07.md)。上一1ce39f2的完整远程状态与修复见[E8旧CI反馈](./e8-previous-ci-remediation-2026-09-07.md)。本批使用WebStorm局部诊断、必要Chrome、格式/源码制品生成；多引擎测试和构建交远程CI，不等新CI。下一批按[E9表单基础准备](./execution-form-foundation-next-2026-09-07.md)推进CheckboxGroup和唯一显式model，再接FieldArray与控制适配；完整目标保持进行中。
+
+## E9：CheckboxGroup与表单值基础
+
+本批目录106族/175公开组件，API源审计2,251个属性、actionableIssues=0。新增CheckboxGroup、Item、SelectAll保持experimental/unreleased；141个既有stable标签不是本批完整远程验收证据。
+
+- CheckboxGroup直接复用ZCheckbox、Collection/SelectionModel/ControllableState/Field与native reset。options/children类型互斥，typed key数组、min/max/required、普通Tab、全选mixed/容量、readonly/disabled、重复FormData、动态移除、Field归属均有实现和回归资产。
+- ZCheckbox新增正式tone与组件默认值，Group/Item/SelectAll通过公开props继承五档/语义色。invalid选择器明确压过tone；组级原生customValidity使用localePack.form或validationMessage，并清理旧owner。
+- Chrome暴露拒绝超过max后Checkbox私有checked仍为true的问题。Item/SelectAll现通过函数binding投射唯一组状态；min/max拒绝后value、DOM checked、aria-checked、label状态一致。实测min2下0/1无效、2有效，max3拒绝第4项，错误色与success tone随有效性一致变化。
+- 原生ZForm增加getValues/getFieldValue只读快照与setFieldFeedback正式名，setFieldState保持兼容alias。NativeFormBaseline纠正用户改回初值仍dirty的旧行为，处理File身份/空占位、reset epoch、卸载以及重复同名字段增删。详见[原生表单执行](./execution-form-native-values-2026-09-07.md)与[交叉审查及修复](./review-form-native-foundation-e9-2026-09-07.md)。
+- 独立FormModel/FormArray/ErrorLayers已经公开并有真实组合Demo。不可变快照、typed path、batch、baseline dirty、受控接受/拒绝、同引用deep state、订阅、stable row id、失败回滚和分层错误使用同一套基础。数组响应式身份单独通知，因此相同值行的move也不会被值层no-op吞掉。详见[模型执行](./execution-form-model-array-2026-09-07.md)。
+- Chrome观察到Alice→Bob dirty=true、改回Alice=false；模型批量写入后dirty=true，reset回原值与false；row-1/row-2移动保持各自行身份。390px Docs正常换行，无页面横向滚动。完整SSR/类型/多引擎回归只编写资产，交远程执行。
+
+E8提交d4eb6fa起初因系统GitHub地址不可达而延迟推送。只读核查发现Cloudflare/Google DoH的当前地址可通过TLS，随后以单命令http.curloptResolve和schannel成功推送，未改全局代理、hosts或关闭证书校验。E9推送前查看上一轮CI34050004211仍在运行，没有轮询或等待。
+
+下一批按[E10集成](./execution-form-integration-next-2026-09-07.md)把已有模型注入ZForm，接入唯一control adapter、错误层、聚合状态与ZFormList。独立helper和手工受控示例不代表这些自动集成已完成；完整能力与最终组件族一致性目标保持进行中。

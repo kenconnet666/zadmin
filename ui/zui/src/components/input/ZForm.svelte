@@ -37,6 +37,9 @@
 	}
 
 	export interface ZFormController<TData = unknown> {
+		/** Reads current successful native controls; does not own or mutate their values. */
+		getValues(): unknown;
+		getFieldValue(path: PublicFieldPathInput): unknown;
 		focusField(path: PublicFieldPathInput, options?: FocusOptions): boolean;
 
 		getFieldState(path: PublicFieldPathInput): PublicFormFieldState;
@@ -47,6 +50,8 @@
 
 		setErrors(errors: PublicFormErrors): void;
 
+		setFieldFeedback(path: PublicFieldPathInput, feedback: PublicFormFieldStatePatch): void;
+		/** @deprecated Use setFieldFeedback; this method writes feedback, not value/dirty/touched. */
 		setFieldState(path: PublicFieldPathInput, state: PublicFormFieldStatePatch): void;
 
 		/** Subscribes to future field-state transitions; read getFieldState for the current snapshot. */
@@ -305,6 +310,8 @@
 	import type { StandardSchemaV1 } from '@standard-schema/spec';
 	import { onDestroy, tick, untrack } from 'svelte';
 	import FormResetSignal from '../../runtime/form/FormResetSignal.svelte';
+	import { NativeFormBaseline } from '../../runtime/form/native-form-baseline.js';
+	import { getFormValue } from '../../runtime/form/form-model.svelte.js';
 	import {
 		FormRegistry,
 		type FormFieldStatePatch
@@ -365,10 +372,33 @@
 	}: ZFormProps<TSchema> = $props();
 	const zui = useZui();
 	const lifecycle = { active: true };
-	const registry = new FormRegistry((path) => {
-		if (!lifecycle.active || !(fieldPathToString(path) in errors)) return;
-		publishErrors(mergeErrorsForPaths(errors, {}, [path]));
-	});
+	const nativeBaseline = new NativeFormBaseline();
+	let nativeValueEpoch = 0;
+	const registry = new FormRegistry(
+		(path) => {
+			nativeBaseline.forget(fieldPathKey(path));
+			if (!lifecycle.active || !(fieldPathToString(path) in errors)) return;
+			publishErrors(mergeErrorsForPaths(errors, {}, [path]));
+		},
+		(field) => {
+			const epoch = nativeValueEpoch;
+			void tick().then(() => {
+				const current = registry.fieldInfo(field.instanceId);
+				if (
+					!lifecycle.active ||
+					epoch !== nativeValueEpoch ||
+					!current ||
+					current.htmlName !== field.htmlName ||
+					fieldPathKey(current.path) !== fieldPathKey(field.path)
+				)
+					return;
+				const data = readFormData();
+				const key = fieldPathKey(field.path);
+				nativeBaseline.capture(key, field.htmlName, data);
+				registry.setDirty(field.path, nativeBaseline.isDirty(key, field.htmlName, data));
+			});
+		}
+	);
 	// Timers and running validation IDs are lifecycle bookkeeping, not rendered collections.
 	// eslint-disable-next-line svelte/prefer-svelte-reactivity
 	const validationTimers = new Map<string, { readonly id: number; readonly view: Window }>();
@@ -506,8 +536,18 @@
 			return disabled;
 		},
 		fieldEvent(instanceId, trigger) {
-			if (trigger === 'change') registry.markDirty(instanceId);
-			else registry.markTouched(instanceId);
+			if (trigger === 'change') {
+				const epoch = nativeValueEpoch;
+				// Compound controls may update several native inputs in one Svelte flush.
+				void tick().then(() => {
+					const field = registry.fieldInfo(instanceId);
+					if (!lifecycle.active || epoch !== nativeValueEpoch || !field) return;
+					registry.setDirty(
+						field.path,
+						nativeBaseline.isDirty(fieldPathKey(field.path), field.htmlName, readFormData())
+					);
+				});
+			} else registry.markTouched(instanceId);
 			scheduleValidation(trigger, registry.affectedPaths(instanceId));
 		},
 		get readonly() {
@@ -527,6 +567,15 @@
 	});
 
 	function resetFromForm(): void {
+		nativeValueEpoch += 1;
+		nativeBaseline.clear();
+		const epoch = nativeValueEpoch;
+		void tick().then(() => {
+			if (!lifecycle.active || epoch !== nativeValueEpoch) return;
+			const data = readFormData();
+			for (const [name, path] of registry.formDataPaths())
+				nativeBaseline.capture(fieldPathKey(path), name, data);
+		});
 		validationEpoch += 1;
 		clearValidationTimers();
 		validationRuns.clear();
@@ -536,7 +585,21 @@
 		publishErrors({});
 	}
 
+	function setFieldFeedback(path: FieldPathInput, feedback: FormFieldStatePatch): void {
+		registry.setFieldState(path, feedback);
+		if (feedback.errors !== undefined) {
+			const normalized = normalizeFieldPath(path);
+			publishErrors(
+				mergeErrorsForPaths(errors, { [fieldPathToString(normalized)]: feedback.errors }, [
+					normalized
+				])
+			);
+		}
+	}
 	const formController: ZFormController<StandardSchemaV1.InferOutput<TSchema>> = {
+		getValues: () => formDataToObject(readFormData(), registry.formDataPaths()),
+		getFieldValue: (path) =>
+			getFormValue(formDataToObject(readFormData(), registry.formDataPaths()), path),
 		focusField: (path, options) => registry.focusField(path, options),
 		getFieldState: (path) => registry.state(path),
 		reset() {
@@ -545,17 +608,8 @@
 		},
 		scrollToField: (path, options) => registry.scrollToField(path, options),
 		setErrors: publishErrors,
-		setFieldState(path: FieldPathInput, state: FormFieldStatePatch) {
-			registry.setFieldState(path, state);
-			if (state.errors !== undefined) {
-				const normalized = normalizeFieldPath(path);
-				publishErrors(
-					mergeErrorsForPaths(errors, { [fieldPathToString(normalized)]: state.errors }, [
-						normalized
-					])
-				);
-			}
-		},
+		setFieldFeedback,
+		setFieldState: setFieldFeedback,
 		subscribeField: (path, listener) => registry.subscribeField(path, listener),
 		validate: () => {
 			clearValidationTimers();
@@ -613,6 +667,8 @@
 
 	onDestroy(() => {
 		lifecycle.active = false;
+		nativeValueEpoch += 1;
+		nativeBaseline.clear();
 		validationEpoch += 1;
 		clearValidationTimers();
 		validationRuns.clear();

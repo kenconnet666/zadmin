@@ -118,6 +118,8 @@ export interface ZuiFeedbackLocale {
 }
 
 export interface ZuiFormLocale {
+	readonly minimumSelections: (count: number) => string;
+	readonly maximumSelections: (count: number) => string;
 	readonly pinInputPosition: (formattedIndex: string, formattedLength: string) => string;
 	readonly unexpectedValidation: string;
 }
@@ -364,7 +366,11 @@ export const enUSLocalePack = Object.freeze({
 	form: Object.freeze({
 		pinInputPosition: (formattedIndex: string, formattedLength: string) =>
 			`Digit ${formattedIndex} of ${formattedLength}`,
-		unexpectedValidation: 'Validation failed unexpectedly.'
+		unexpectedValidation: 'Validation failed unexpectedly.',
+		minimumSelections: (count: number) =>
+			`Select at least ${count} option${count === 1 ? '' : 's'}.`,
+		maximumSelections: (count: number) =>
+			`Select no more than ${count} option${count === 1 ? '' : 's'}.`
 	}),
 	link: Object.freeze({
 		opensInNewWindow: 'opens in a new window'
@@ -550,7 +556,9 @@ export const zhCNLocalePack = Object.freeze({
 	form: Object.freeze({
 		pinInputPosition: (formattedIndex: string, formattedLength: string) =>
 			`第${formattedIndex}位，共${formattedLength}位`,
-		unexpectedValidation: '验证过程中发生意外错误。'
+		unexpectedValidation: '验证过程中发生意外错误。',
+		minimumSelections: (count: number) => `请至少选择 ${count} 项。`,
+		maximumSelections: (count: number) => `请最多选择 ${count} 项。`
 	}),
 	link: Object.freeze({
 		opensInNewWindow: '在新窗口中打开'

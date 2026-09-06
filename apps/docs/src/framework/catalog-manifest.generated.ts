@@ -1155,6 +1155,32 @@ export const componentCatalogManifest = Object.freeze([
 		publicComponentCount: 1
 	},
 	{
+		id: 'checkbox-group',
+		name: 'ZCheckboxGroup',
+		category: 'input',
+		summary: '真实ZCheckbox形成重复FormData，typed多选、组约束与mixed全选共享同一selection。',
+		status: 'experimental',
+		keywords: [],
+		profiles: ['form-control', 'collection'],
+		capabilities: [
+			'accessible-name',
+			'basic-render',
+			'controlled',
+			'native-props',
+			'invalid',
+			'keyboard',
+			'variants-and-states',
+			'composition',
+			'disabled',
+			'density',
+			'form-data',
+			'form-reset',
+			'readonly'
+		],
+		demoCount: 4,
+		publicComponentCount: 3
+	},
+	{
 		id: 'calendar',
 		name: 'ZCalendar',
 		category: 'input',
@@ -1736,7 +1762,7 @@ export const componentCatalogManifest = Object.freeze([
 			'disabled',
 			'form-reset'
 		],
-		demoCount: 6,
+		demoCount: 8,
 		publicComponentCount: 2
 	},
 	{

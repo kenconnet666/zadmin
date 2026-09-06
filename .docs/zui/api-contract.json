@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
-	"componentCount": 172,
-	"overallSha256": "ef33d96b065e09624eaf9e3ffbe7c44fe95be7a425dabb64ba085d585f478937",
+	"componentCount": 175,
+	"overallSha256": "be2ab534e169132638871e1102c253dccdab8736782e75a8ead471bd0548ba20",
 	"components": [
 		{
 			"id": "accordion",
@@ -62,6 +62,21 @@
 			"id": "alert-dialog-trigger",
 			"sha256": "71a1ad67132372b555ad65f0e8e03f601645567061ce83cfb9129b2b6f7e0166",
 			"source": "src/components/compound/alert-dialog/ZAlertDialogTrigger.svelte"
+		},
+		{
+			"id": "checkbox-group",
+			"sha256": "7c2b959c823f1d39ff62673ae62a377f85e4f4ecf66e5f533fd6b99986c937ed",
+			"source": "src/components/compound/checkbox-group/ZCheckboxGroup.svelte"
+		},
+		{
+			"id": "checkbox-group-item",
+			"sha256": "3b3c471075129623569ef5de8abef20b035574b8a3e6b253059d33841c56de4d",
+			"source": "src/components/compound/checkbox-group/ZCheckboxGroupItem.svelte"
+		},
+		{
+			"id": "checkbox-group-select-all",
+			"sha256": "a9a45074ce8d2cc4529a923f41bb39ff1e4382eb869c5d7d9cb20f194da12c67",
+			"source": "src/components/compound/checkbox-group/ZCheckboxGroupSelectAll.svelte"
 		},
 		{
 			"id": "combobox",
@@ -605,7 +620,7 @@
 		},
 		{
 			"id": "checkbox",
-			"sha256": "e1455ed18762787ab1a3d9ce76b3fcdb2fa044ddbc2a5cbae6cf5198549b2d9c",
+			"sha256": "413e3805b1e30527e3e924dddc42f9145b6e34b8812dd67a0240cf9f2c12f5ff",
 			"source": "src/components/input/ZCheckbox.svelte"
 		},
 		{
@@ -645,12 +660,12 @@
 		},
 		{
 			"id": "form",
-			"sha256": "df4b10c03b937af1a3e752054c7ca3f05919952bacb4e0687b6f3816b7ac4ab4",
+			"sha256": "dd8dd66bcfe5cadf29754c1614ea7c65b43fed0250a601001a16f90df3d1a5e8",
 			"source": "src/components/input/ZForm.svelte"
 		},
 		{
 			"id": "form-field",
-			"sha256": "8d4f6bb1d7bba3396967093e78b1f016e469196f24b9ebe4e907549b43774af7",
+			"sha256": "c0dee9b03e092348a107bf5a61a1866133e520e940866a60b9e54ed743cf992b",
 			"source": "src/components/input/ZFormField.svelte"
 		},
 		{
@@ -705,7 +720,7 @@
 		},
 		{
 			"id": "slider",
-			"sha256": "61839df9e1b299bbf44e5d1f182b9b556d9bbe94f1b7d89d27c578e31e348fd4",
+			"sha256": "26ec1e17a2d3965d1ae833a2d1845a72c155719cb98a720809caff823bc05b9b",
 			"source": "src/components/input/ZSlider.svelte"
 		},
 		{
@@ -867,10 +882,10 @@
 	"entrypoints": {
 		"code.ts": "eabb8477e4c5ef93d016ab909e5c7f85a3111df231e2d2c3c7ef5e54897b36db",
 		"compiler.ts": "96fa979b36838e8b7a6d3f52bb463f23951438a4d974d52b631ad1e6d937b2e7",
-		"index.ts": "afb21090b830540902c06e0beca2ac97f0fa664e788613732d08039262473104",
+		"index.ts": "193bb37709ce4208ee1dc0d67606533e5f18fa49680cb709ba6a6cfd48e06ccc",
 		"internal.ts": "05f9ef9c8628e1cdf694dcc88b71831e5aab726a3189bd6189eef7ae645df4d7",
 		"layer.ts": "72d0fc8e5b7a8ab39a12e157879951b84f1a7fc19654f4bd8b6ea92fd8aa6db8",
-		"metadata.ts": "eda0f6982aa0747b956c4cd47b4a2da269f555ee0f00b0f85ea73175919d9521",
+		"metadata.ts": "089c8463748a5c370e751e939eaaef1a8448fb6142a69a407fb10a81f0196efc",
 		"runtime.ts": "902679df258a1aee96a4742dc4f229210aef34e0db47c0bffcde4cc1d66016fb",
 		"testing.ts": "c596113f3cbcf4ce75be2728b6a10cd6a0b77c9b9101a4408ba2e18e174f15cb",
 		"theme.ts": "9625285286228f2548dadb74b934f40d7cd1804a1e96bc37a04f21d3cd32b527",

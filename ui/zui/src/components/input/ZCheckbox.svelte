@@ -31,6 +31,14 @@
 			});
 		},
 		variants: {
+			tone: {
+				primary: (s) => s.accentColor._primary,
+				neutral: (s) => s.accentColor._neutral,
+				info: (s) => s.accentColor._info,
+				success: (s) => s.accentColor._success,
+				warning: (s) => s.accentColor._warning,
+				danger: (s) => s.accentColor._danger
+			},
 			readonly: {
 				false: () => undefined,
 				true: (s) => s.cursor.default
@@ -41,7 +49,7 @@
 			},
 			invalid: {
 				false: () => undefined,
-				true: (s) => s.accentColor._danger
+				true: (s) => s._selector('&[data-invalid="true"]', (s) => s.accentColor._danger)
 			},
 			size: {
 				xsmall: (s) => {
@@ -63,7 +71,13 @@
 				}
 			}
 		},
-		defaultVariants: { disabled: false, invalid: false, readonly: false, size: 'medium' }
+		defaultVariants: {
+			disabled: false,
+			invalid: false,
+			readonly: false,
+			size: 'medium',
+			tone: 'primary'
+		}
 	});
 
 	registerRecipeHmr(import.meta, checkboxRecipe);
@@ -132,6 +146,12 @@
 		parts: [],
 		props: [
 			{
+				name: 'tone',
+				type: "'primary' | 'neutral' | 'info' | 'success' | 'warning' | 'danger'",
+				default: "componentDefaults.checkbox.tone → 'primary'",
+				description: '原生勾选强调色；invalid视觉优先。'
+			},
+			{
 				bindable: true,
 				default: 'undefined',
 				description: '当前选中状态；indeterminate表达混合值。',
@@ -151,8 +171,8 @@
 				type: 'string | number | bigint'
 			},
 			{
-				default: 'Field size，其次为 Provider density',
-				description: '显式值优先，其次继承Field，最后由Provider density解析。',
+				default: 'Field size → componentDefaults.checkbox.size → Provider density',
+				description: '实例、Field、组件默认值、Provider density依次解析。',
 				name: 'size',
 				type: "'xsmall' | 'small' | 'medium' | 'large' | 'xlarge'"
 			},
@@ -181,6 +201,11 @@
 		snippets: [],
 		source: 'ui/zui/src/components/input/ZCheckbox.svelte',
 		states: [
+			{
+				name: 'data-tone',
+				values: ['primary', 'neutral', 'info', 'success', 'warning', 'danger'],
+				description: '解析后的勾选强调色。'
+			},
 			{
 				description: '选中状态。',
 				name: 'data-state',
@@ -234,6 +259,7 @@
 		required = false,
 		size,
 		style,
+		tone,
 		value = 'on',
 		...rest
 	}: ZCheckboxProps = $props();
@@ -244,13 +270,17 @@
 	const resolvedDisabled = $derived(disabled || field?.disabled || false);
 	const resolvedInvalid = $derived(invalid ?? field?.invalid ?? false);
 	const resolvedReadonly = $derived(readonly || field?.readonly || false);
-	const resolvedSize = $derived(resolveControlSize(size ?? field?.size, zui.density));
+	const resolvedSize = $derived(
+		resolveControlSize(size ?? field?.size ?? zui.componentDefaults.checkbox?.size, zui.density)
+	);
+	const resolvedTone = $derived(tone ?? zui.componentDefaults.checkbox?.tone ?? 'primary');
 	const rootClass = $derived(
 		zui.recipe(checkboxRecipe, {
 			disabled: resolvedDisabled,
 			invalid: resolvedInvalid,
 			readonly: resolvedReadonly,
-			size: resolvedSize
+			size: resolvedSize,
+			tone: resolvedTone
 		})
 	);
 	const state = new ControllableState<CheckboxState>({
@@ -317,5 +347,6 @@
 	data-invalid={resolvedInvalid ? 'true' : undefined}
 	data-readonly={resolvedReadonly || undefined}
 	data-size={resolvedSize}
+	data-tone={resolvedTone}
 	data-state={isIndeterminate ? 'indeterminate' : nativeChecked ? 'checked' : 'unchecked'}
 />

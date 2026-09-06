@@ -1,19 +1,19 @@
 # ZUI component maturity matrix
 
-Generated from 172 metadata components, 105 documentation modules, 172 API contract entries, and 266 test files.
+Generated from 175 metadata components, 106 documentation modules, 175 API contract entries, and 275 test files.
 
 This is a static inventory of authored test contracts, not an execution report or a whole-component visual acceptance result. Historical stage names are retained for compatibility. `VisuallyVerified` requires an explicit `@zui-visual ZComponent` marker, an owned component/fixture render, and a geometry, computed-style, CSS, or screenshot assertion in the SAME test block. A positive entry only identifies a scoped test; confirm its result against commit-matched CI and inspect real pages, themes, and densities separately. `DesktopVerified` remains false until a component-level desktop evidence source is added.
 
 | Stage                   | Count |
 | ----------------------- | ----: |
-| Declared                |   172 |
-| Authorable              |   172 |
-| ContractVerified        |   172 |
-| RuntimeImplemented      |   172 |
-| BrowserBehaviorVerified |   162 |
+| Declared                |   175 |
+| Authorable              |   175 |
+| ContractVerified        |   175 |
+| RuntimeImplemented      |   175 |
+| BrowserBehaviorVerified |   163 |
 | VisuallyVerified        |   159 |
 | DesktopVerified         |     0 |
-| ProductionVerified      |   166 |
+| ProductionVerified      |   167 |
 
 | Component               | Category     | Declared | Authorable | Contract | Runtime | Browser | Visual | Desktop | Production | Docs                                                                  |
 | ----------------------- | ------------ | -------: | ---------: | -------: | ------: | ------: | -----: | ------: | ---------: | --------------------------------------------------------------------- |
@@ -29,6 +29,9 @@ This is a static inventory of authored test contracts, not an execution report o
 | ZAlertDialogOverlay     | overlay      |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/overlay/alert-dialog/doc.ts          |
 | ZAlertDialogTitle       | overlay      |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/overlay/alert-dialog/doc.ts          |
 | ZAlertDialogTrigger     | overlay      |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/overlay/alert-dialog/doc.ts          |
+| ZCheckboxGroup          | input        |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/input/checkbox-group/doc.ts          |
+| ZCheckboxGroupItem      | input        |        Y |          Y |        Y |       Y |       — |      — |       — |          — | apps/docs/src/content/components/input/checkbox-group/doc.ts          |
+| ZCheckboxGroupSelectAll | input        |        Y |          Y |        Y |       Y |       — |      — |       — |          — | apps/docs/src/content/components/input/checkbox-group/doc.ts          |
 | ZCombobox               | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/combobox/doc.ts                |
 | ZComboboxContent        | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/combobox/doc.ts                |
 | ZComboboxInput          | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/combobox/doc.ts                |

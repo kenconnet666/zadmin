@@ -549,6 +549,23 @@ export type {
 	FileUploadStatus
 } from '../runtime/file.js';
 export { default as ZForm } from '../components/input/ZForm.svelte';
+export { FormModel, createFormModel } from '../runtime/form/form-model.svelte.js';
+export type {
+	FormModelOptions,
+	FormFieldUpdate,
+	FormValuesChange,
+	FormValuesChangeReason,
+	FormValueListener
+} from '../runtime/form/form-model.svelte.js';
+export { FormArrayController, createFormArray } from '../runtime/form/form-array.svelte.js';
+export type { FormArrayRow, FormArrayOptions } from '../runtime/form/form-array.svelte.js';
+export {
+	createFormErrorLayers,
+	setFormErrorLayer,
+	clearFormErrorLayers,
+	mergeFormErrorLayers
+} from '../runtime/form/form-errors.js';
+export type { FormErrorLayer, FormErrorLayers } from '../runtime/form/form-errors.js';
 export type {
 	FormInvalidDetail,
 	FormSubmitDetail,
@@ -580,6 +597,25 @@ export type { ZDatePickerProps } from '../components/input/ZDatePicker.svelte';
 export { default as ZDateRangePicker } from '../components/input/ZDateRangePicker.svelte';
 export type { ZDateRangePickerProps } from '../components/input/ZDateRangePicker.svelte';
 export { default as ZCheckbox } from '../components/input/ZCheckbox.svelte';
+export { default as ZCheckboxGroup } from '../components/compound/checkbox-group/ZCheckboxGroup.svelte';
+export { default as ZCheckboxGroupItem } from '../components/compound/checkbox-group/ZCheckboxGroupItem.svelte';
+export { default as ZCheckboxGroupSelectAll } from '../components/compound/checkbox-group/ZCheckboxGroupSelectAll.svelte';
+export type {
+	ZCheckboxGroupProps,
+	ZCheckboxGroupOption,
+	CheckboxGroupOrientation
+} from '../components/compound/checkbox-group/ZCheckboxGroup.svelte';
+export type { ZCheckboxGroupItemProps } from '../components/compound/checkbox-group/ZCheckboxGroupItem.svelte';
+export type { ZCheckboxGroupSelectAllProps } from '../components/compound/checkbox-group/ZCheckboxGroupSelectAll.svelte';
+export type { CheckboxGroupTone } from '../components/compound/checkbox-group/context.svelte.js';
+export type {
+	CheckboxGroupValue,
+	CheckboxGroupSelectionState
+} from '../runtime/form/checkbox-group.js';
+export type {
+	CheckboxComponentDefaults,
+	CheckboxGroupComponentDefaults
+} from '../runtime/foundation/component-defaults.js';
 export type {
 	CheckboxState,
 	CheckboxValue,
