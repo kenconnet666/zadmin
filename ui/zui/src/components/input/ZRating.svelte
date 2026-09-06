@@ -437,7 +437,7 @@
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
 	let hoverValue = $state(0);
 	let activeStep = $state(1);
-	let activationSelectedStep: number | undefined;
+	let clearedActivationStep: number | undefined;
 	let firstInput = $state<HTMLInputElement | null>(null);
 
 	function positiveInteger(candidate: number, name: string): number {
@@ -502,17 +502,16 @@
 		valueState.setFromUser(bounded / resolvedFractions);
 		target.focus({ preventScroll: true });
 	}
-	function captureActivation(step: number, input: HTMLInputElement | null): void {
-		activationSelectedStep =
-			!input?.matches(':disabled') && clearable && resolvedValue === step / resolvedFractions
-				? step
-				: undefined;
-	}
 	function handleChange(
 		event: Event & { currentTarget: HTMLInputElement },
 		step: number,
 		optionValue: number
 	): void {
+		if (clearedActivationStep === step) {
+			clearedActivationStep = undefined;
+			event.currentTarget.checked = false;
+			return;
+		}
 		if (resolvedReadonly || event.currentTarget.matches(':disabled')) {
 			event.currentTarget.checked = resolvedValue === optionValue;
 			return;
@@ -531,14 +530,19 @@
 		if (resolvedReadonly || event.currentTarget.matches(':disabled')) {
 			event.preventDefault();
 			event.currentTarget.checked = resolvedValue === optionValue;
-			activationSelectedStep = undefined;
 			return;
 		}
-		if (activationSelectedStep === step) {
-			event.preventDefault();
-			if (!valueState.setFromUser(0)) event.currentTarget.checked = true;
+		if (!clearable || resolvedValue !== optionValue) {
+			clearedActivationStep = undefined;
+			return;
 		}
-		activationSelectedStep = undefined;
+		event.preventDefault();
+		if (valueState.setFromUser(0)) {
+			clearedActivationStep = step;
+			queueMicrotask(() => {
+				if (clearedActivationStep === step) clearedActivationStep = undefined;
+			});
+		} else event.currentTarget.checked = true;
 	}
 	function handleKeydown(
 		event: KeyboardEvent & { currentTarget: HTMLInputElement },
@@ -553,7 +557,6 @@
 		)
 			return;
 		if (event.key === ' ') {
-			captureActivation(step, event.currentTarget);
 			if (resolvedReadonly) event.preventDefault();
 			return;
 		}
@@ -649,8 +652,6 @@
 						'%;inline-size:' +
 						100 / resolvedFractions +
 						'%'}
-					onpointerdown={(event) =>
-						captureActivation(option.step, event.currentTarget.querySelector('input'))}
 					onpointerenter={(event) =>
 						setHover(option.value, event.currentTarget.querySelector('input'))}
 				>

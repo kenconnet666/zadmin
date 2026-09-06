@@ -116,6 +116,7 @@ describe('ZForm real control adapters', () => {
 	it('repairs native DOM after baseline and rejected controlled resets', async () => {
 		const target = host();
 		const component = mount(FormControlAdapterFixture, { target });
+		await tick();
 		const form = target.querySelector<HTMLFormElement>('[data-testid="adapter-form"]')!;
 		const input = target.querySelector<HTMLInputElement>('[data-testid="adapter-input"]')!;
 		const textarea = target.querySelector<HTMLTextAreaElement>('[data-testid="adapter-textarea"]')!;

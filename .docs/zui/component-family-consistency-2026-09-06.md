@@ -29,6 +29,8 @@
 
 ## 最终关闭条件
 
+E11补充：六个日期/时间组件复用值语义、Field/InputGroup和五档size defaults，TimePicker复用Popover motion与有限列导航。DateField/TimeField新增Group继承与单一禁用透明度；Slider/Range视觉值提示改为非labelable文本，避免改变真实input的可访问名称并去掉常显重复。当前浏览器点查和回归资产已记录，仍须最终候选整组远程验证。
+
 E10B 补充：Switch/RadioGroup/Slider/RangeSlider/Rating 已接入同一适配器；FormList 复用 Stack/Array/Registry/错误层。真实浏览器补正移动后的焦点和选区保留、内部 blur 与 dirty 基线。独立列表的删除、reset、连续原生提交已点查；嵌套列表和退出/重排动画继续规划，不以本批点查结束最终家族验收。
 
 E10A 补充：Form/Field/Input/PasswordInput/Textarea/Checkbox/NativeSelect/CheckboxGroup 已共用 FormControlState 和 FormResetSignal 接入同一模型。组内值只由 compound owner 持有；父级 disabled/readonly 单向加强。schema/server/manual、batch 通知、reset 与晚到异步处理已接入既有 FormRegistry。其余值控件和动态数组仍须按相同合同接入；该实现记录不替代最终候选执行证据。

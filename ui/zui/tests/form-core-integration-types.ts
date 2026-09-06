@@ -13,13 +13,13 @@ interface Values {
 	readonly other: string;
 }
 
-const schema = {
+const schema: StandardSchemaV1<Values, Values> = {
 	'~standard': {
 		version: 1,
 		vendor: 'form-core-types',
 		validate: (input: unknown) => ({ value: input as Values })
 	}
-} satisfies StandardSchemaV1<Values, Values>;
+};
 const model = createFormModel<Values>({ defaultValues: { name: 'Ada', other: 'one' } });
 const props = {
 	model,
@@ -45,9 +45,9 @@ controller.setFieldFeedback('name', { errors: ['Manual'], warnings: ['Warning'] 
 
 // @ts-expect-error initialize values retain the form model shape.
 controller.initialize({ name: 1, other: 'two' });
-// @ts-expect-error onValidSubmit receives schema output.
 const invalidSubmit = {
 	model,
+	// @ts-expect-error onValidSubmit receives schema output.
 	onValidSubmit: (detail: FormSubmitDetail<number>) => detail.data,
 	schema
 } satisfies ZFormProps<typeof schema, Values>;

@@ -12,6 +12,7 @@
 		preserved: string;
 		users: readonly Row[];
 	}
+	let { native = false }: { native?: boolean } = $props();
 	let owner = $state<Values>({ preserved: 'keep', users: [{ name: 'same' }, { name: 'same' }] });
 	const model = createFormModel({
 		defaultValues: owner,
@@ -52,7 +53,7 @@
 		controller?.setErrors({ 'users[0].name': ['Server row zero'] });
 		controller?.setFieldFeedback(['users', 0, 'name'], { warnings: ['Manual row zero'] });
 	}
-	export function state(index: number) {
+	export function fieldState(index: number) {
 		return controller?.getFieldState(['users', index, 'name']);
 	}
 	export function formState() {
@@ -90,7 +91,13 @@
 	}
 </script>
 
-<ZForm bind:controller {model} {readonly} {schema} data-testid="list-form">
+<ZForm
+	bind:controller
+	model={native ? undefined : model}
+	{readonly}
+	{schema}
+	data-testid="list-form"
+>
 	<ZFormList name="users" data-testid="form-list">
 		{#snippet children(rows, operations)}
 			{#each rows as row (row.id)}

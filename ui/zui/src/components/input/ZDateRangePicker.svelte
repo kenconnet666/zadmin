@@ -78,7 +78,7 @@
 			{ description: 'Popover状态。', name: 'open', type: 'boolean' },
 			{ description: '真实根节点引用。', name: 'ref', type: 'HTMLDivElement | null' }
 		],
-		dependencies: ['ZDateField', 'ZCalendar', 'ZInputGroup', 'ZPopover', 'FormValueBridge'],
+		dependencies: ['ZDateField', 'ZCalendar', 'ZInputGroup', 'ZPopover', 'FormControlState'],
 		events: [
 			{
 				description: '字段编辑、第一/第二次日历选择或清空后的范围。',
@@ -250,7 +250,7 @@
 				type: 'boolean'
 			},
 			{
-				default: 'Field size或Provider density',
+				default: 'Field > componentDefaults.dateRangePicker > input > density',
 				description: '统一两个DateField和Lucide actions尺寸。',
 				name: 'size',
 				type: "'xsmall' | 'small' | 'medium' | 'large' | 'xlarge'"
@@ -272,6 +272,11 @@
 		snippets: [],
 		source: 'ui/zui/src/components/input/ZDateRangePicker.svelte',
 		states: [
+			{
+				description: '解析后传给双DateField、Calendar与actions的尺寸。',
+				name: 'data-size',
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge']
+			},
 			{ description: '等待结束日期。', name: 'data-selecting', values: ['true'] },
 			{ description: '当前编辑端。', name: 'data-range-part', values: ['start', 'end'] },
 			{ description: 'Field或显式无效状态。', name: 'data-invalid', values: ['true'] },
@@ -289,8 +294,10 @@
 	import type { CalendarDate } from '@internationalized/date';
 	import { onDestroy } from 'svelte';
 	import {
+		dateFieldPattern,
 		normalizeRange,
 		normalizeRangeValue,
+		normalizeCalendarRangeModelValue,
 		type CalendarRange,
 		type CalendarRangeValue
 	} from '../../runtime/date.js';
@@ -302,6 +309,10 @@
 	import FormValueBridge from '../../runtime/form/FormValueBridge.svelte';
 	import type { FormValueEntry } from '../../runtime/form/form-value.js';
 	import { mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
+	import {
+		claimFormValueScope,
+		createFormControlState
+	} from '../../runtime/form/form-value-adapter.svelte.js';
 	import ZPopover from '../compound/popover/ZPopover.svelte';
 	import ZPopoverContent from '../compound/popover/ZPopoverContent.svelte';
 	import ZPopoverTrigger from '../compound/popover/ZPopoverTrigger.svelte';
@@ -349,6 +360,7 @@
 	const zui = useZui();
 	const fieldOwner = claimZFieldControlOwner();
 	const field = fieldOwner.field;
+	const valueScope = claimFormValueScope();
 	const uid = $props.id();
 	const idBase = $derived(createZuiId(zui.idPrefix, uid, 'date-range-picker'));
 	const controlId = $derived(controlIdProp ?? field?.controlId ?? `${idBase}-start`);
@@ -365,7 +377,15 @@
 	const resolvedReadonly = $derived(readonlyProp || (field?.readonly ?? false));
 	const resolvedRequired = $derived(requiredProp || (field?.required ?? false));
 	const resolvedName = $derived(nameProp ?? field?.name);
-	const resolvedSize = $derived(resolveControlSize(size ?? field?.size, zui.density));
+	const resolvedSize = $derived(
+		resolveControlSize(
+			size ??
+				field?.size ??
+				zui.componentDefaults.dateRangePicker?.size ??
+				zui.componentDefaults.input?.size,
+			zui.density
+		)
+	);
 	const geometryClass = $derived(
 		zui.icss((s) => {
 			s._selector('& > [data-slot="range-inputs"]', (s) => s.flexWrap.wrap);
@@ -377,18 +397,33 @@
 	const describedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
 	const labelledBy = $derived(mergeAriaIds(ariaLabelledBy, field?.labelId));
 	let calendarRef = $state<HTMLDivElement | null>(null);
+	let endFieldRef = $state<HTMLDivElement | null>(null);
 	let startFieldRef = $state<HTMLDivElement | null>(null);
 	let triggerRef = $state<HTMLButtonElement | null>(null);
 	let rangePart = $state<'end' | 'start'>('start');
 	let previewFocus = $state<CalendarDate | null>(null);
-	const valueState = new ControllableState<CalendarRange | CalendarRangeValue | null>({
-		defaultValue: () => normalizeRangeValue(defaultValue),
-		resetToInitialValue: true,
-		onChange: () => (next) => onValueChange?.(normalizeRangeValue(next)),
-		read: () => value,
-		write: (next) => (value = next)
-	});
+	const valueState = createFormControlState<CalendarRangeValue | null>(
+		{
+			defaultValue: () => normalizeRangeValue(defaultValue),
+			element: () => ref,
+			normalizeModelValue: (candidate) =>
+				normalizeCalendarRangeModelValue(candidate, 'ZDateRangePicker'),
+			onChange: () => onValueChange,
+			owner: 'ZDateRangePicker',
+			read: () => value,
+			resetToInitialValue: true,
+			syncNative: () => syncOwnedValue(),
+			write: (next) => (value = next)
+		},
+		valueScope
+	);
 	const normalizedValue = $derived(normalizeRangeValue(valueState.current));
+	let calendarValue = $state<CalendarDate | null>(null);
+	let calendarFocusedValue = $state<CalendarDate | undefined>(
+		normalizedValue?.start ?? normalizedValue?.end ?? undefined
+	);
+	let endValue = $state<CalendarDate | null>(normalizedValue?.end ?? null);
+	let startValue = $state<CalendarDate | null>(normalizedValue?.start ?? null);
 	const openState = new ControllableState<boolean>({
 		defaultValue: () => defaultOpen,
 		onChange: () => onOpenChange,
@@ -413,31 +448,61 @@
 	function ownerMicrotask(callback: () => void): void {
 		(ref?.ownerDocument.defaultView ?? globalThis).queueMicrotask(callback);
 	}
-	function commit(next: CalendarRangeValue | null): void {
-		if (resolvedDisabled || resolvedReadonly) return;
-		valueState.setFromUser(normalizeRangeValue(next));
+
+	function syncOwnedValue(): void {
+		calendarValue = null;
+		calendarFocusedValue = normalizedValue?.start ?? normalizedValue?.end ?? undefined;
+		endValue = normalizedValue?.end ?? null;
+		startValue = normalizedValue?.start ?? null;
+		syncFieldInputs(startFieldRef, startValue);
+		syncFieldInputs(endFieldRef, endValue);
 	}
+
+	function syncFieldInputs(root: HTMLElement | null, next: CalendarDate | null): void {
+		const segments = dateFieldPattern(resolvedLocale, resolvedTimeZone).flatMap((part) =>
+			'segment' in part ? [part.segment] : []
+		);
+		for (const [index, segment] of segments.entries()) {
+			const raw = segment === 'year' ? next?.year : segment === 'month' ? next?.month : next?.day;
+			const input = root?.querySelectorAll<HTMLInputElement>('input')[index];
+			if (input)
+				input.value =
+					raw === undefined ? '' : String(raw).padStart(segment === 'year' ? 4 : 2, '0');
+		}
+	}
+
+	function commit(next: CalendarRangeValue | null): boolean {
+		if (resolvedDisabled || resolvedReadonly) return false;
+		const accepted = valueState.setFromUser(normalizeRangeValue(next));
+		if (!accepted) syncOwnedValue();
+		return accepted;
+	}
+
 	function updateStart(start: CalendarDate | null): void {
 		commit({ end: normalizedValue?.end ?? null, start });
 	}
+
 	function updateEnd(end: CalendarDate | null): void {
 		commit({ end, start: normalizedValue?.start ?? null });
 	}
+
 	function select(next: CalendarDate | null): void {
+		calendarValue = null;
 		if (!next || resolvedDisabled || resolvedReadonly) return;
 		if (rangePart === 'start' || !normalizedValue?.start) {
-			commit({ end: null, start: next });
+			if (!commit({ end: null, start: next })) return;
 			rangePart = 'end';
 			previewFocus = next;
 			return;
 		}
-		commit(normalizeRange(normalizedValue.start, next));
+		if (!commit(normalizeRange(normalizedValue.start, next))) return;
 		rangePart = 'start';
 		previewFocus = null;
 		if (closeOnSelect) setOpen(false);
 	}
+
 	function clear(): void {
-		commit(null);
+		if (!commit(null)) return;
 		rangePart = 'start';
 		previewFocus = null;
 		setOpen(false);
@@ -445,6 +510,7 @@
 			startFieldRef?.querySelector<HTMLInputElement>('input')?.focus({ preventScroll: true })
 		);
 	}
+
 	function setOpen(next: boolean): void {
 		if ((resolvedDisabled || resolvedReadonly) && next) return;
 		const restore = openState.current && !next;
@@ -453,12 +519,25 @@
 		openState.setFromUser(next);
 		if (restore) ownerMicrotask(() => triggerRef?.focus({ preventScroll: true }));
 	}
+
 	function resetFromForm(): void {
 		valueState.reset();
+		syncOwnedValue();
 		rangePart = 'start';
 		previewFocus = null;
 		open = false;
 	}
+
+	let observedValueKey: string | undefined;
+	$effect(() => {
+		const next = normalizedValue;
+		const key = `${next?.start?.toString() ?? ''}|${next?.end?.toString() ?? ''}`;
+		if (observedValueKey === key) return;
+		observedValueKey = key;
+		if (next?.start ?? next?.end) calendarFocusedValue = next?.start ?? next?.end ?? undefined;
+		endValue = next?.end ?? null;
+		startValue = next?.start ?? null;
+	});
 	onDestroy(
 		fieldOwner.registerFocusOwner(() =>
 			startFieldRef?.querySelector<HTMLInputElement>('input')?.focus({ preventScroll: true })
@@ -486,6 +565,7 @@
 		>
 			<ZCalendar
 				bind:ref={calendarRef}
+				bind:focusedValue={calendarFocusedValue}
 				appearance="bare"
 				calendarLabel={resolvedCalendarLabel}
 				defaultFocusedValue={normalizedValue?.start ?? normalizedValue?.end ?? undefined}
@@ -503,7 +583,7 @@
 				{showOutsideDates}
 				size={resolvedSize}
 				timeZone={resolvedTimeZone}
-				value={null}
+				bind:value={calendarValue}
 			/>
 		</ZPopoverContent>
 	</ZPopover>
@@ -531,6 +611,7 @@
 	data-range-part={rangePart}
 	data-readonly={resolvedReadonly || undefined}
 	data-required={resolvedRequired || undefined}
+	data-size={resolvedSize}
 	data-selecting={selectingEnd || undefined}
 	data-state={openState.current ? 'open' : 'closed'}
 >
@@ -560,7 +641,7 @@
 			required={resolvedRequired}
 			size={resolvedSize}
 			timeZone={resolvedTimeZone}
-			value={normalizedValue?.start ?? null}
+			bind:value={startValue}
 		/>
 		<span aria-hidden="true" data-slot="separator">–</span>
 		<ZDateField
@@ -568,6 +649,7 @@
 			aria-describedby={describedBy}
 			aria-label={resolvedEndLabel}
 			appearance="bare"
+			bind:ref={endFieldRef}
 			controlId={`${controlId}-end`}
 			disabled={resolvedDisabled}
 			formParticipation="none"
@@ -581,7 +663,7 @@
 			required={resolvedRequired}
 			size={resolvedSize}
 			timeZone={resolvedTimeZone}
-			value={normalizedValue?.end ?? null}
+			bind:value={endValue}
 		/>
 	</ZInputGroup>
 </div>

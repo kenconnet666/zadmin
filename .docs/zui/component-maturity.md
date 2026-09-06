@@ -1,19 +1,19 @@
 # ZUI component maturity matrix
 
-Generated from 176 metadata components, 106 documentation modules, 176 API contract entries, and 295 test files.
+Generated from 177 metadata components, 107 documentation modules, 177 API contract entries, and 308 test files.
 
 This is a static inventory of authored test contracts, not an execution report or a whole-component visual acceptance result. Historical stage names are retained for compatibility. `VisuallyVerified` requires an explicit `@zui-visual ZComponent` marker, an owned component/fixture render, and a geometry, computed-style, CSS, or screenshot assertion in the SAME test block. A positive entry only identifies a scoped test; confirm its result against commit-matched CI and inspect real pages, themes, and densities separately. `DesktopVerified` remains false until a component-level desktop evidence source is added.
 
 | Stage                   | Count |
 | ----------------------- | ----: |
-| Declared                |   176 |
-| Authorable              |   176 |
-| ContractVerified        |   176 |
-| RuntimeImplemented      |   176 |
-| BrowserBehaviorVerified |   164 |
+| Declared                |   177 |
+| Authorable              |   177 |
+| ContractVerified        |   177 |
+| RuntimeImplemented      |   177 |
+| BrowserBehaviorVerified |   165 |
 | VisuallyVerified        |   159 |
 | DesktopVerified         |     0 |
-| ProductionVerified      |   168 |
+| ProductionVerified      |   169 |
 
 | Component               | Category     | Declared | Authorable | Contract | Runtime | Browser | Visual | Desktop | Production | Docs                                                                  |
 | ----------------------- | ------------ | -------: | ---------: | -------: | ------: | ------: | -----: | ------: | ---------: | --------------------------------------------------------------------- |
@@ -166,6 +166,7 @@ This is a static inventory of authored test contracts, not an execution report o
 | ZTagsInput              | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/tags-input/doc.ts              |
 | ZTextarea               | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/textarea/doc.ts                |
 | ZTimeField              | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/time-field/doc.ts              |
+| ZTimePicker             | input        |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/input/time-picker/doc.ts             |
 | ZToggleGroup            | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/toggle-group/doc.ts            |
 | ZTransfer               | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/transfer/doc.ts                |
 | ZTreeSelect             | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/tree-select/doc.ts             |

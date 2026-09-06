@@ -1,10 +1,10 @@
 {
 	"schemaVersion": 2,
 	"source": {
-		"metadataComponents": 176,
-		"documentationPages": 106,
-		"contractComponents": 176,
-		"testFiles": 295
+		"metadataComponents": 177,
+		"documentationPages": 107,
+		"contractComponents": 177,
+		"testFiles": 308
 	},
 	"stageNames": [
 		"Declared",
@@ -18,14 +18,14 @@
 	],
 	"evidenceScope": "Static inventory of authored test contracts, not test execution results or whole-component visual acceptance. Stage names are retained for compatibility; consult commit-matched CI and page-level review separately.",
 	"summary": {
-		"Declared": 176,
-		"Authorable": 176,
-		"ContractVerified": 176,
-		"RuntimeImplemented": 176,
-		"BrowserBehaviorVerified": 164,
+		"Declared": 177,
+		"Authorable": 177,
+		"ContractVerified": 177,
+		"RuntimeImplemented": 177,
+		"BrowserBehaviorVerified": 165,
 		"VisuallyVerified": 159,
 		"DesktopVerified": 0,
-		"ProductionVerified": 168
+		"ProductionVerified": 169
 	},
 	"components": [
 		{
@@ -11369,6 +11369,10 @@
 					"detail": "ZProvider SSR assertions"
 				},
 				{
+					"path": "ui/zui/tests/form-date-adapter-production.spec.ts",
+					"detail": "ZProvider SSR assertions"
+				},
+				{
 					"path": "ui/zui/tests/menu-family-production.spec.ts",
 					"detail": "ZProvider SSR assertions"
 				},
@@ -11847,7 +11851,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "99e3be52f838adb546a6323374c776dab88a03cbd272d6bf5c0c338487ef3ff8 API snapshot entry"
+						"detail": "dd16f2d5fadb08d8d7fd89af09b8d201227fa5ce2eda0101d20cd292a1060799 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -11885,6 +11889,18 @@
 					{
 						"path": "ui/zui/tests/DateFixture.svelte",
 						"detail": "ZCalendar explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/form-date-adapter-production.spec.ts",
+						"detail": "ZCalendar production assertions"
+					},
+					{
+						"path": "ui/zui/tests/FormDateAdapterFixture.svelte",
+						"detail": "ZCalendar explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/FormDateAdapterInvalidFixture.svelte",
+						"detail": "ZCalendar explicit rendered fixture usage"
 					}
 				]
 			},
@@ -11895,6 +11911,14 @@
 			"ssrEvidence": [
 				{
 					"path": "ui/zui/tests/components.spec.ts",
+					"detail": "ZCalendar SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-date-adapter-production.spec.ts",
+					"detail": "ZCalendar SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-value-scope.spec.ts",
 					"detail": "ZCalendar SSR assertions"
 				}
 			]
@@ -12227,7 +12251,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "7fe8128354ebbddb5e55a8250302f163801de854e746abc7441a23445b8a872b API snapshot entry"
+						"detail": "93ef5b82e3be554b5f32728b7e5445fbce2c2dd3401fc7ded6bbf1470718b333 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -12265,6 +12289,18 @@
 					{
 						"path": "ui/zui/tests/DateFixture.svelte",
 						"detail": "ZDateField explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/form-date-adapter-production.spec.ts",
+						"detail": "ZDateField production assertions"
+					},
+					{
+						"path": "ui/zui/tests/FormDateAdapterFixture.svelte",
+						"detail": "ZDateField explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/FormDateAdapterInvalidFixture.svelte",
+						"detail": "ZDateField explicit rendered fixture usage"
 					}
 				]
 			},
@@ -12275,6 +12311,14 @@
 			"ssrEvidence": [
 				{
 					"path": "ui/zui/tests/components.spec.ts",
+					"detail": "ZDateField SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-date-adapter-production.spec.ts",
+					"detail": "ZDateField SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-value-scope.spec.ts",
 					"detail": "ZDateField SSR assertions"
 				}
 			]
@@ -12316,7 +12360,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "b299bb9a217de96ce07a0a9a1920e40b95c35b22da53847813069887917d4c4f API snapshot entry"
+						"detail": "4fabe391e3cf28c652c1ef76542a862a88377217095d64b852ccb035ede793a6 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -12366,6 +12410,18 @@
 					{
 						"path": "ui/zui/tests/DateProductionFixture.svelte",
 						"detail": "ZDatePicker explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/form-date-adapter-production.spec.ts",
+						"detail": "ZDatePicker production assertions"
+					},
+					{
+						"path": "ui/zui/tests/FormDateAdapterFixture.svelte",
+						"detail": "ZDatePicker explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/FormDateAdapterInvalidFixture.svelte",
+						"detail": "ZDatePicker explicit rendered fixture usage"
 					}
 				]
 			},
@@ -12376,6 +12432,10 @@
 			"ssrEvidence": [
 				{
 					"path": "ui/zui/tests/components.spec.ts",
+					"detail": "ZDatePicker SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-date-adapter-production.spec.ts",
 					"detail": "ZDatePicker SSR assertions"
 				}
 			]
@@ -12417,7 +12477,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "1a9b0bb159682bae0ec88d82126ceeab464653c6707512ea71ac934957900442 API snapshot entry"
+						"detail": "35404debdfc35e42768ff650e223a678e3356b1247340ea6a3cff5a9bae7dd1c API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -12467,6 +12527,18 @@
 					{
 						"path": "ui/zui/tests/DateProductionFixture.svelte",
 						"detail": "ZDateRangePicker explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/form-date-adapter-production.spec.ts",
+						"detail": "ZDateRangePicker production assertions"
+					},
+					{
+						"path": "ui/zui/tests/FormDateAdapterFixture.svelte",
+						"detail": "ZDateRangePicker explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/FormDateAdapterInvalidFixture.svelte",
+						"detail": "ZDateRangePicker explicit rendered fixture usage"
 					}
 				]
 			},
@@ -12477,6 +12549,10 @@
 			"ssrEvidence": [
 				{
 					"path": "ui/zui/tests/components.spec.ts",
+					"detail": "ZDateRangePicker SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-date-adapter-production.spec.ts",
 					"detail": "ZDateRangePicker SSR assertions"
 				}
 			]
@@ -12570,6 +12646,10 @@
 				},
 				{
 					"path": "ui/zui/tests/field-audit.spec.ts",
+					"detail": "ZField SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-value-scope.spec.ts",
 					"detail": "ZField SSR assertions"
 				},
 				{
@@ -12891,6 +12971,18 @@
 						"detail": "ZForm explicit rendered fixture usage"
 					},
 					{
+						"path": "ui/zui/tests/form-date-adapter-production.spec.ts",
+						"detail": "ZForm production assertions"
+					},
+					{
+						"path": "ui/zui/tests/FormDateAdapterFixture.svelte",
+						"detail": "ZForm explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/FormDateAdapterInvalidFixture.svelte",
+						"detail": "ZForm explicit rendered fixture usage"
+					},
+					{
 						"path": "ui/zui/tests/form-list-production.spec.ts",
 						"detail": "ZForm production assertions"
 					},
@@ -12946,11 +13038,19 @@
 					"detail": "ZForm SSR assertions"
 				},
 				{
+					"path": "ui/zui/tests/form-date-adapter-production.spec.ts",
+					"detail": "ZForm SSR assertions"
+				},
+				{
 					"path": "ui/zui/tests/form-list-production.spec.ts",
 					"detail": "ZForm SSR assertions"
 				},
 				{
 					"path": "ui/zui/tests/form-nested-list-production.spec.ts",
+					"detail": "ZForm SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-value-scope.spec.ts",
 					"detail": "ZForm SSR assertions"
 				}
 			]
@@ -13107,11 +13207,19 @@
 					"detail": "ZFormField SSR assertions"
 				},
 				{
+					"path": "ui/zui/tests/form-date-adapter-production.spec.ts",
+					"detail": "ZFormField SSR assertions"
+				},
+				{
 					"path": "ui/zui/tests/form-list-production.spec.ts",
 					"detail": "ZFormField SSR assertions"
 				},
 				{
 					"path": "ui/zui/tests/form-nested-list-production.spec.ts",
+					"detail": "ZFormField SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-value-scope.spec.ts",
 					"detail": "ZFormField SSR assertions"
 				}
 			]
@@ -13163,6 +13271,14 @@
 					}
 				],
 				"BrowserBehaviorVerified": [
+					{
+						"path": "ui/zui/tests/form-array-transaction.browser.spec.ts",
+						"detail": "ZFormList browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/FormArrayTransactionFixture.svelte",
+						"detail": "ZFormList explicit rendered fixture usage"
+					},
 					{
 						"path": "ui/zui/tests/form-list-production.browser.spec.ts",
 						"detail": "ZFormList browser behavior assertions"
@@ -13365,6 +13481,10 @@
 				},
 				{
 					"path": "ui/zui/tests/form-nested-list-production.spec.ts",
+					"detail": "ZInput SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-value-scope.spec.ts",
 					"detail": "ZInput SSR assertions"
 				},
 				{
@@ -14333,6 +14453,10 @@
 				],
 				"BrowserBehaviorVerified": [
 					{
+						"path": "ui/zui/tests/slider-label.browser.spec.ts",
+						"detail": "ZSlider browser behavior assertions"
+					},
+					{
 						"path": "ui/zui/tests/foundation-controls-production.browser.spec.ts",
 						"detail": "ZSlider browser behavior assertions"
 					},
@@ -14770,7 +14894,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "16127b84ac307757944414d40f6b2cd760c8d25fe7dd2338c1b20b6b35050250 API snapshot entry"
+						"detail": "83d4d2a527acfb97d3f523b5a04d95f01af8a76557847e88429824cdb2226b77 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -14808,6 +14932,18 @@
 					{
 						"path": "ui/zui/tests/DateFixture.svelte",
 						"detail": "ZTimeField explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/form-date-adapter-production.spec.ts",
+						"detail": "ZTimeField production assertions"
+					},
+					{
+						"path": "ui/zui/tests/FormDateAdapterFixture.svelte",
+						"detail": "ZTimeField explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/FormDateAdapterInvalidFixture.svelte",
+						"detail": "ZTimeField explicit rendered fixture usage"
 					}
 				]
 			},
@@ -14819,6 +14955,98 @@
 				{
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZTimeField SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-date-adapter-production.spec.ts",
+					"detail": "ZTimeField SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/form-value-scope.spec.ts",
+					"detail": "ZTimeField SSR assertions"
+				}
+			]
+		},
+		{
+			"id": "time-picker",
+			"name": "ZTimePicker",
+			"category": "input",
+			"family": null,
+			"status": "experimental",
+			"source": "ui/zui/src/components/input/ZTimePicker.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": true,
+				"VisuallyVerified": false,
+				"DesktopVerified": false,
+				"ProductionVerified": true
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/input/ZTimePicker.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZTimePicker"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "e024e3a442616d1a88cc78fdc85ad4172e14d14ea52a831d32a84f5d8d169e34 API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/input/ZTimePicker.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [
+					{
+						"path": "ui/zui/tests/time-picker-production.browser.spec.ts",
+						"detail": "ZTimePicker browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/TimePickerProductionFixture.svelte",
+						"detail": "ZTimePicker explicit rendered fixture usage"
+					}
+				],
+				"VisuallyVerified": [],
+				"DesktopVerified": [],
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/time-picker-production-ssr.spec.ts",
+						"detail": "ZTimePicker production assertions"
+					},
+					{
+						"path": "ui/zui/tests/time-picker-production.browser.spec.ts",
+						"detail": "ZTimePicker production assertions"
+					},
+					{
+						"path": "ui/zui/tests/TimePickerProductionFixture.svelte",
+						"detail": "ZTimePicker explicit rendered fixture usage"
+					}
+				]
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/input/time-picker/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/time-picker-production-ssr.spec.ts",
+					"detail": "ZTimePicker SSR assertions"
 				}
 			]
 		},

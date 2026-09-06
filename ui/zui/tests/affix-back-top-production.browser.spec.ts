@@ -133,8 +133,11 @@ describe('ZAffix and ZBackTop production contract', () => {
 		await tick();
 		component.scrollBackTop(140);
 		await expect
-			.poll(() => document.querySelectorAll('[data-testid^="back-top-"]').length)
-			.toBeGreaterThanOrEqual(7);
+			.poll(() => document.querySelector('[data-testid="back-top-primary"]'))
+			.not.toBeNull();
+		await expect
+			.poll(() => document.querySelector('[data-testid="back-top-cancelled"]'))
+			.not.toBeNull();
 		const primary = document.querySelector<HTMLButtonElement>('[data-testid="back-top-primary"]')!;
 		const cancelled = document.querySelector<HTMLButtonElement>(
 			'[data-testid="back-top-cancelled"]'

@@ -23,6 +23,7 @@
 </script>
 
 <script lang="ts">
+	import { onDestroy } from 'svelte';
 	import { formReset } from './form-control.svelte.js';
 	import { createExplicitFormEntries, createFormEntries } from './form-value.js';
 
@@ -32,6 +33,21 @@
 	}
 
 	let { disabled = false, entries, form, name, onReset, value }: FormValueBridgeProps = $props();
+	let live = true;
+	let nextResetRevision = 0;
+	let resetRevision = $state(0);
+	onDestroy(() => {
+		live = false;
+	});
+	function resetFromForm(): void {
+		try {
+			onReset();
+		} finally {
+			// Hidden input.value also changes its defaultValue. Recreate only the business entries
+			// from current props, even when a controlled owner rejects reset or the value is unchanged.
+			if (live) resetRevision = ++nextResetRevision;
+		}
+	}
 	const resolvedEntries = $derived.by(() => {
 		if (entries !== undefined) return createExplicitFormEntries(entries);
 		return name === null || name === undefined ? [] : createFormEntries(name, value);
@@ -92,9 +108,9 @@
 	{form}
 	data-zui-form-value-bridge=""
 	data-zui-form-reset-signal=""
-	use:bridgeFormReset={{ association: form, reset: onReset }}
+	use:bridgeFormReset={{ association: form, reset: resetFromForm }}
 />
-{#each resolvedEntries as [entryName, entryValue], index (`${entryName}\u0000${index}`)}
+{#each resolvedEntries as [entryName, entryValue], index (`${resetRevision}\u0000${entryName}\u0000${index}`)}
 	<input
 		aria-hidden="true"
 		tabindex={-1}

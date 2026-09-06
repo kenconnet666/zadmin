@@ -1,11 +1,11 @@
 import { getContext, setContext, tick, untrack } from 'svelte';
 import {
 	ControllableState,
-	sameStateValue,
 	type ControllableStateOptions
 } from '../foundation/controllable-state.svelte.js';
 import { createContextKey } from '../foundation/context-key.js';
 import type { FieldPath } from './field-path.js';
+import { sameFormValue } from './form-value-equality.js';
 
 /** The control-facing subset deliberately erases the model's whole-form generic. */
 export interface FormValueModel {
@@ -67,7 +67,7 @@ export class FormControlState<T> {
 		return this.#options.normalizeModelValue(model.get(this.#scope.path));
 	}
 	setFromUser(value: T): boolean {
-		if (sameStateValue(this.current, value)) return true;
+		if (sameFormValue(this.current, value)) return true;
 		const model = this.#scope?.host.model;
 		if (!model || !this.#scope) {
 			this.#native.setFromUser(value);
@@ -102,9 +102,12 @@ export class FormControlState<T> {
 /** Call during component setup, just like getContext; owns only registration effects. */
 export function createFormControlState<T>(
 	options: FormControlStateOptions<T>,
-	scope: FormValueScope | undefined = useFormValueScope()
+	scope: FormValueScope | null | undefined = useFormValueScope()
 ): FormControlState<T> {
-	const state = new FormControlState(options, scope);
+	const state = new FormControlState(options, scope ?? undefined);
+	untrack(() => {
+		if (state.modelOwned) state.current;
+	});
 	$effect(() => {
 		if (!scope || !options.element()) return;
 		return scope.host.registerValueControl(scope.instanceId, options.element);

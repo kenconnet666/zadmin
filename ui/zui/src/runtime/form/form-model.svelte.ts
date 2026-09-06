@@ -7,15 +7,22 @@ import {
 	type FieldPath,
 	type FieldPathInput
 } from './field-path.js';
+import {
+	copyFormDateValue,
+	sameFormValue as equal,
+	type FormDateValue
+} from './form-value-equality.js';
 
 export type FormValuesChangeReason = 'array' | 'controller' | 'user';
-export type FormValueSnapshot<T> = T extends (...args: never[]) => unknown
+export type FormValueSnapshot<T> = T extends FormDateValue
 	? T
-	: T extends readonly unknown[]
-		? { readonly [TKey in keyof T]: FormValueSnapshot<T[TKey]> }
-		: T extends object
+	: T extends (...args: never[]) => unknown
+		? T
+		: T extends readonly unknown[]
 			? { readonly [TKey in keyof T]: FormValueSnapshot<T[TKey]> }
-			: T;
+			: T extends object
+				? { readonly [TKey in keyof T]: FormValueSnapshot<T[TKey]> }
+				: T;
 export interface FormValuesChange<T> {
 	readonly changedPaths: readonly FieldPath[];
 	readonly reason: FormValuesChangeReason;
@@ -24,6 +31,10 @@ export interface FormValuesChange<T> {
 export interface FormFieldUpdate {
 	readonly path: FieldPathInput;
 	readonly value: unknown;
+}
+/** @internal Commits metadata that must become visible before value observers run. */
+export interface FormAcceptedWrite {
+	commit(): void;
 }
 export interface FormInitializeOptions {
 	readonly keepDirtyValues?: boolean;
@@ -39,6 +50,8 @@ export type FormValueListener = (value: unknown) => void;
 const DELETE_VALUE = Symbol('delete-form-value');
 
 function immutable<T>(value: T): T {
+	const dateValue = copyFormDateValue(value);
+	if (dateValue !== undefined) return dateValue as T;
 	if (Array.isArray(value)) return Object.freeze(value.map(immutable)) as T;
 	if (
 		value !== null &&
@@ -50,27 +63,6 @@ function immutable<T>(value: T): T {
 		) as T;
 	}
 	return value;
-}
-function equal(left: unknown, right: unknown): boolean {
-	if (Object.is(left, right)) return true;
-	if (Array.isArray(left) && Array.isArray(right))
-		return left.length === right.length && left.every((item, index) => equal(item, right[index]));
-	if (!left || !right || typeof left !== 'object' || typeof right !== 'object') return false;
-	if (
-		Object.getPrototypeOf(left) !== Object.prototype ||
-		Object.getPrototypeOf(right) !== Object.prototype
-	)
-		return false;
-	const leftKeys = Object.keys(left);
-	const rightKeys = Object.keys(right);
-	return (
-		leftKeys.length === rightKeys.length &&
-		leftKeys.every(
-			(key) =>
-				Object.hasOwn(right, key) &&
-				equal((left as Record<string, unknown>)[key], (right as Record<string, unknown>)[key])
-		)
-	);
 }
 function isPlainObject(value: unknown): value is Record<string, unknown> {
 	return (
@@ -253,7 +245,13 @@ export class FormModel<T> {
 			readonly listeners: Map<FormValueListener, unknown>;
 		}
 	>();
+	readonly #publications: {
+		readonly detail: FormValuesChange<T>;
+		readonly paths: readonly FieldPath[];
+		readonly values: FormValueSnapshot<T>;
+	}[] = [];
 	readonly #options: FormModelOptions<T>;
+	#publishing = false;
 	#controlledInput?: T;
 	#controlledSnapshot?: T;
 	#nextRevision = 0;
@@ -332,13 +330,15 @@ export class FormModel<T> {
 	setField(
 		path: FieldPathInput,
 		value: unknown,
-		reason: FormValuesChangeReason = 'controller'
+		reason: FormValuesChangeReason = 'controller',
+		acceptedWrite?: FormAcceptedWrite
 	): boolean {
-		return this.setFields([{ path, value }], reason);
+		return this.setFields([{ path, value }], reason, acceptedWrite);
 	}
 	setFields(
 		updates: readonly FormFieldUpdate[],
-		reason: FormValuesChangeReason = 'controller'
+		reason: FormValuesChangeReason = 'controller',
+		acceptedWrite?: FormAcceptedWrite
 	): boolean {
 		const current = untrack(() => this.values);
 		let next = current;
@@ -351,7 +351,7 @@ export class FormModel<T> {
 		const changed = [...paths.values()].filter(
 			(path) => !equal(getFormValue(current, path), getFormValue(next, path))
 		);
-		return this.#publish(next, changed, reason);
+		return this.#publish(next, changed, reason, acceptedWrite);
 	}
 	setValues(next: T | ((current: T) => T), reason: FormValuesChangeReason = 'controller'): boolean {
 		const current = untrack(() => this.values);
@@ -466,15 +466,72 @@ export class FormModel<T> {
 			if (entry.listeners.size === 0) this.#pathListeners.delete(key);
 		};
 	}
-	#publish(next: T, paths: readonly FieldPath[], reason: FormValuesChangeReason): boolean {
+	#publish(
+		next: T,
+		paths: readonly FieldPath[],
+		reason: FormValuesChangeReason,
+		acceptedWrite?: FormAcceptedWrite
+	): boolean {
 		const current = untrack(() => this.values);
-		if (equal(current, next)) return true;
-		if (!this.#accept(current, next)) return false;
-		const detail = Object.freeze({ changedPaths: Object.freeze([...paths]), reason, values: next });
-		this.#options.onValuesChange?.(detail);
-		for (const listener of this.#listeners) listener(detail);
-		this.#notifyPaths(paths, next);
+		if (equal(current, next)) {
+			acceptedWrite?.commit();
+			return true;
+		}
+		let accepted = false;
+		try {
+			accepted = this.#accept(current, next);
+		} catch (error) {
+			if (
+				equal(
+					untrack(() => this.values),
+					next
+				)
+			)
+				acceptedWrite?.commit();
+			throw error;
+		}
+		if (!accepted) return false;
+		acceptedWrite?.commit();
+		const snapshot = next as FormValueSnapshot<T>;
+		const detail = Object.freeze({
+			changedPaths: Object.freeze([...paths]),
+			reason,
+			values: snapshot
+		}) satisfies FormValuesChange<T>;
+		this.#queuePublication(detail, paths, snapshot);
 		return true;
+	}
+	#queuePublication(
+		detail: FormValuesChange<T>,
+		paths: readonly FieldPath[],
+		values: FormValueSnapshot<T>
+	): void {
+		this.#publications.push({ detail, paths, values });
+		if (this.#publishing) return;
+		this.#publishing = true;
+		let failed = false;
+		let failure: unknown;
+		const recordFailure = (error: unknown) => {
+			if (failed) return;
+			failed = true;
+			failure = error;
+		};
+		try {
+			while (this.#publications.length > 0) {
+				const publication = this.#publications.shift()!;
+				for (const listener of [this.#options.onValuesChange, ...this.#listeners]) {
+					try {
+						listener?.(publication.detail);
+					} catch (error) {
+						recordFailure(error);
+					}
+				}
+				this.#notifyPaths(publication.paths, publication.values, recordFailure);
+			}
+		} finally {
+			this.#publishing = false;
+		}
+		if (failed) throw failure;
 	}
 	#replaceSilent(next: T, accepted?: () => void): boolean {
 		const previous = untrack(() => this.values);
@@ -490,7 +547,7 @@ export class FormModel<T> {
 	#accept(previous: T, next: T): boolean {
 		if (equal(previous, next)) return true;
 		if (this.#options.read === undefined) this.#current = next;
-		this.#options.write?.(next);
+		this.#options.write?.(next as FormValueSnapshot<T>);
 		if (
 			!equal(
 				untrack(() => this.values),
@@ -513,7 +570,11 @@ export class FormModel<T> {
 			}
 		}
 	}
-	#notifyPaths(paths: readonly FieldPath[], values: T): void {
+	#notifyPaths(
+		paths: readonly FieldPath[],
+		values: unknown,
+		onError?: (error: unknown) => void
+	): void {
 		for (const entry of this.#pathListeners.values()) {
 			if (
 				!paths.some(
@@ -525,7 +586,12 @@ export class FormModel<T> {
 			for (const [listener, previous] of entry.listeners) {
 				if (equal(previous, next)) continue;
 				entry.listeners.set(listener, next);
-				listener(next);
+				try {
+					listener(next);
+				} catch (error) {
+					if (!onError) throw error;
+					onError(error);
+				}
 			}
 		}
 	}

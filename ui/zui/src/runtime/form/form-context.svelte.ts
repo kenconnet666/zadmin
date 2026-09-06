@@ -6,6 +6,7 @@ import type { FormRegistry } from './form-registry.svelte.js';
 import type { FormValueHost } from './form-value-adapter.svelte.js';
 import type {
 	FormArrayController,
+	FormArrayMutationHost,
 	FormArrayOptions,
 	FormArrayLocation
 } from './form-array.svelte.js';
@@ -47,9 +48,11 @@ export interface ZFormContext extends FormValueHost {
 	createArray<T>(
 		path: FieldPathInput,
 		options?: FormArrayOptions<T>,
-		location?: FormArrayLocation
+		location?: FormArrayLocation,
+		mutationHost?: FormArrayMutationHost
 	): FormListArray<T>;
 	registerList(registration: FormListRegistration): () => void;
+	prepareList(change: FormListReconcile): { commit(): void };
 	reconcileList(change: FormListReconcile): void;
 	fieldEvent(instanceId: string, trigger: Exclude<FormValidationTrigger, 'submit'>): void;
 }
@@ -61,8 +64,8 @@ export function provideZForm(context: ZFormContext): ZFormContext {
 	return context;
 }
 
-export function useZForm(): ZFormContext {
+export function useZForm(owner = 'ZFormField'): ZFormContext {
 	const context = getContext<ZFormContext | undefined>(FORM_CONTEXT);
-	if (!context) throw new Error('ZFormField requires a parent ZForm.');
+	if (!context) throw new Error(`${owner} requires a parent ZForm.`);
 	return context;
 }

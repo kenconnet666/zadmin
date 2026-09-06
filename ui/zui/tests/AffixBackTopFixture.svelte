@@ -126,9 +126,10 @@
 		scrollContainer={backTopScroller}
 		visibilityHeight={100}
 	/>
-	{#each sizes as size}
+	{#each sizes as size, index}
 		<ZBackTop
 			data-testid={`back-top-${size}`}
+			insetBlockEnd={80 + index * 64}
 			label={`Back top ${size}`}
 			scrollContainer={backTopScroller}
 			{size}
@@ -139,7 +140,7 @@
 
 <ZBackTop
 	data-testid="back-top-full-motion"
-	insetBlockEnd="xlarge"
+	insetBlockEnd={96}
 	label="Full motion return"
 	scrollContainer={backTopScroller}
 	visibilityHeight={100}

@@ -9868,6 +9868,7 @@ export const inputApiFacts = {
 		tagsInputApiFacts,
 		textareaApiFacts,
 		timeFieldApiFacts,
+		timePickerApiFacts,
 		toggleGroupApiFacts,
 		transferApiFacts,
 		treeSelectApiFacts
@@ -11516,6 +11517,192 @@ export const timeFieldApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZTimeField.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
+export const timePickerApiFacts = {
+	declaration: 'ZTimePickerProps',
+	id: 'time-picker',
+	inheritedFrom: ['HTMLAttributes<HTMLDivElement>'],
+	name: 'ZTimePicker',
+	props: [
+		{
+			name: 'clearLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'clearable',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'confirmLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'controlId',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'dayPeriodLabel',
+			required: false,
+			type: '(period: TimePickerDayPeriod) => string'
+		},
+		{
+			name: 'defaultOpen',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'defaultValue',
+			required: false,
+			type: 'PublicTime | null'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'form',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'formatOptions',
+			required: false,
+			type: 'Intl.DateTimeFormatOptions'
+		},
+		{
+			name: 'granularity',
+			required: false,
+			type: 'TimeFieldGranularity'
+		},
+		{
+			name: 'hourCycle',
+			required: false,
+			type: '12 | 24'
+		},
+		{
+			name: 'invalid',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'isTimeUnavailable',
+			required: false,
+			type: '(value: PublicTime) => boolean'
+		},
+		{
+			name: 'locale',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'maxValue',
+			required: false,
+			type: 'PublicTime'
+		},
+		{
+			name: 'minValue',
+			required: false,
+			type: 'PublicTime'
+		},
+		{
+			name: 'minuteStep',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'name',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'noAvailableTimeLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'onOpenChange',
+			required: false,
+			type: '(open: boolean) => void'
+		},
+		{
+			name: 'onValueChange',
+			required: false,
+			type: '(value: PublicTime | null) => void'
+		},
+		{
+			name: 'open',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'pickerLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'placeholder',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'placement',
+			required: false,
+			type: 'PopoverPlacement'
+		},
+		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null'
+		},
+		{
+			name: 'required',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'secondStep',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'segmentLabel',
+			required: false,
+			type: '(segment: TimeFieldSegment) => string'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
+			name: 'toggleDayPeriodLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'triggerLabel',
+			required: false,
+			type: '(display: string) => string'
+		},
+		{
+			name: 'value',
+			required: false,
+			type: 'PublicTime | null'
+		}
+	],
+	source: 'ui/zui/src/components/input/ZTimePicker.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 

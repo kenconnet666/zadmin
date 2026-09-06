@@ -55,7 +55,7 @@ export const timeFieldDoc = defineComponentDoc(timeFieldMetadata, {
 			required: { default: 'Field context或false', description: '向group和segments投射必填语义。' }
 		},
 		summary:
-			'本地化Time分段字段：Intl顺序、12/24小时、minute/second granularity与step、nullable owner、不可用值、Field/FormValueBridge/reset和复合bare外观。'
+			'本地化Time分段字段：Intl顺序、12/24小时、hour/minute/second granularity与step、nullable owner、不可用值、Field/FormValueBridge/reset和复合bare外观；编辑保留已有值的隐藏精度。'
 	},
 	demos: [
 		{
@@ -78,7 +78,7 @@ export const timeFieldDoc = defineComponentDoc(timeFieldMetadata, {
 		{
 			component: ModesDemo,
 			covers: ['disabled', 'keyboard', 'readonly', 'variants-and-states'],
-			description: '12/24小时、minute/second granularity、步长、readonly与disabled保持正交。',
+			description: '12/24小时、时间粒度、步长、readonly与disabled保持正交。',
 			id: 'time-field-modes',
 			source: modesSource,
 			title: '小时制、粒度与步长'

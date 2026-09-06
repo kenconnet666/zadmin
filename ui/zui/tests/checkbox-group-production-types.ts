@@ -61,15 +61,15 @@ const selectAll = {
 const emptyGroup = {} satisfies ZCheckboxGroupProps;
 // @ts-expect-error Data and compound modes are mutually exclusive.
 const mixedModes = { children, options } satisfies ZCheckboxGroupProps<Permission>;
-// @ts-expect-error CheckboxGroup values use SelectionKey values only.
 const objectValue = {
+	// @ts-expect-error CheckboxGroup values use SelectionKey values only.
 	options: [{ label: 'Object', value: { id: 1 } }]
 } satisfies ZCheckboxGroupProps;
 // @ts-expect-error Item value is required.
 const missingItemValue = { children } satisfies ZCheckboxGroupItemProps;
-// @ts-expect-error Orientation is a closed axis.
 const invalidOrientation = {
 	options,
+	// @ts-expect-error Orientation is a closed axis.
 	orientation: 'grid'
 } satisfies ZCheckboxGroupProps<Permission>;
 

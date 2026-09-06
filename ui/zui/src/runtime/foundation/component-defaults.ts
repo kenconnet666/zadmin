@@ -93,6 +93,12 @@ const COMPONENT_RULES = {
 	checkboxGroup: { size: buttonRules.size, tone: buttonRules.tone },
 	passwordInput: { size: buttonRules.size },
 	nativeSelect: { size: buttonRules.size },
+	calendar: { size: buttonRules.size },
+	dateField: { size: buttonRules.size },
+	timeField: { size: buttonRules.size },
+	datePicker: { size: buttonRules.size },
+	dateRangePicker: { size: buttonRules.size },
+	timePicker: { size: buttonRules.size },
 	fieldset: {
 		size: buttonRules.size,
 		variant: { kind: 'enum', values: ['outlined', 'filled', 'plain'] }
@@ -169,6 +175,12 @@ export interface CheckboxComponentDefaults extends DefaultsFor<'checkbox'> {}
 export interface CheckboxGroupComponentDefaults extends DefaultsFor<'checkboxGroup'> {}
 export interface PasswordInputComponentDefaults extends DefaultsFor<'passwordInput'> {}
 export interface NativeSelectComponentDefaults extends DefaultsFor<'nativeSelect'> {}
+export interface CalendarComponentDefaults extends DefaultsFor<'calendar'> {}
+export interface DateFieldComponentDefaults extends DefaultsFor<'dateField'> {}
+export interface TimeFieldComponentDefaults extends DefaultsFor<'timeField'> {}
+export interface DatePickerComponentDefaults extends DefaultsFor<'datePicker'> {}
+export interface DateRangePickerComponentDefaults extends DefaultsFor<'dateRangePicker'> {}
+export interface TimePickerComponentDefaults extends DefaultsFor<'timePicker'> {}
 export interface FieldsetComponentDefaults extends DefaultsFor<'fieldset'> {}
 export interface SliderComponentDefaults extends DefaultsFor<'slider'> {}
 export interface RangeSliderComponentDefaults extends DefaultsFor<'rangeSlider'> {}

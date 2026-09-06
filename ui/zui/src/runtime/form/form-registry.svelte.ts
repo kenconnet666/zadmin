@@ -49,6 +49,11 @@ export interface FormValidationTicket {
 	}[];
 }
 
+/** @internal A validated registry snapshot that can be committed synchronously. */
+export interface FormRegistryPreparedListMutation {
+	commit(): void;
+}
+
 interface RegisteredField {
 	readonly control: () => HTMLElement | null;
 	readonly dependencies: readonly FieldPath[];
@@ -466,7 +471,7 @@ export class FormRegistry {
 		});
 	}
 
-	reconcileList(change: FormListReconcile): void {
+	prepareList(change: FormListReconcile): FormRegistryPreparedListMutation {
 		const previousPaths = new Map([...this.#retainedPaths, ...this.#paths]);
 		const nextFields = new Map<string, RegisteredField>();
 		for (const field of this.#fields.values()) {
@@ -541,31 +546,49 @@ export class FormRegistry {
 			const remapped = remapFormListPath(path, change);
 			if (remapped) nextRetainedPaths.set(fieldPathKey(remapped), remapped);
 		}
+		const nextValidationVersions = new Map(this.#validationVersions);
 		for (const key of this.#validationScopes.keys())
-			this.#validationVersions.set(key, (this.#validationVersions.get(key) ?? 0) + 1);
+			nextValidationVersions.set(key, (nextValidationVersions.get(key) ?? 0) + 1);
 		for (const key of this.#paths.keys())
-			this.#validationVersions.set(key, (this.#validationVersions.get(key) ?? 0) + 1);
-		this.#validationScopes.clear();
-		this.batch(() => {
-			for (const key of affectedKeys) this.#states.delete(key);
-			for (const [key, state] of movedStates) this.#states.set(key, state);
-			for (const key of affectedKeys) if (!nextPaths.has(key)) this.#listeners.delete(key);
-			this.#fields.clear();
-			for (const [instanceId, field] of nextFields) this.#fields.set(instanceId, field);
-			this.#pathInstances.clear();
-			for (const [key, instances] of nextInstances) this.#pathInstances.set(key, instances);
-			this.#paths.clear();
-			for (const [key, path] of nextPaths) this.#paths.set(key, path);
-			this.#retainedPaths.clear();
-			for (const [key, path] of nextRetainedPaths) this.#retainedPaths.set(key, path);
-			this.#errors = nextErrors;
-			for (const key of affectedKeys) {
-				this.#unmountVersions.set(key, (this.#unmountVersions.get(key) ?? 0) + 1);
-				this.#pendingNotifications.set(key, this.#states.get(key) ?? INITIAL_STATE);
+			nextValidationVersions.set(key, (nextValidationVersions.get(key) ?? 0) + 1);
+		const nextUnmountVersions = new Map(this.#unmountVersions);
+		for (const key of affectedKeys)
+			nextUnmountVersions.set(key, (nextUnmountVersions.get(key) ?? 0) + 1);
+		let committed = false;
+		return {
+			commit: () => {
+				if (committed) return;
+				committed = true;
+				this.batch(() => {
+					for (const key of affectedKeys) this.#states.delete(key);
+					for (const [key, state] of movedStates) this.#states.set(key, state);
+					for (const key of affectedKeys) if (!nextPaths.has(key)) this.#listeners.delete(key);
+					this.#fields.clear();
+					for (const [instanceId, field] of nextFields) this.#fields.set(instanceId, field);
+					this.#pathInstances.clear();
+					for (const [key, instances] of nextInstances) this.#pathInstances.set(key, instances);
+					this.#paths.clear();
+					for (const [key, path] of nextPaths) this.#paths.set(key, path);
+					this.#retainedPaths.clear();
+					for (const [key, path] of nextRetainedPaths) this.#retainedPaths.set(key, path);
+					this.#validationVersions.clear();
+					for (const [key, version] of nextValidationVersions)
+						this.#validationVersions.set(key, version);
+					this.#validationScopes.clear();
+					this.#unmountVersions.clear();
+					for (const [key, version] of nextUnmountVersions) this.#unmountVersions.set(key, version);
+					this.#errors = nextErrors;
+					for (const key of affectedKeys)
+						this.#pendingNotifications.set(key, this.#states.get(key) ?? INITIAL_STATE);
+					for (const field of nextFields.values())
+						if (affectedKeys.has(field.key)) this.#onMembershipChange?.(field);
+				});
 			}
-			for (const field of nextFields.values())
-				if (affectedKeys.has(field.key)) this.#onMembershipChange?.(field);
-		});
+		};
+	}
+
+	reconcileList(change: FormListReconcile): void {
+		this.prepareList(change).commit();
 	}
 
 	listScopeContainsFocus(path: FieldPathInput): boolean {

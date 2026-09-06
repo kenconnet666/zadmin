@@ -16,24 +16,24 @@ const model = createFormModel<Values>({
 		void detail.values.permissions;
 	}
 });
-const schema = {
+const schema: StandardSchemaV1<Values, Values> = {
 	'~standard': {
 		version: 1,
 		vendor: 'adapter-types',
 		validate: (value: unknown) => ({ value: value as Values })
 	}
-} satisfies StandardSchemaV1<Values, Values>;
+};
 const form = {
 	model,
 	schema
 } satisfies ZFormProps<typeof schema, Values>;
-let controller: ZFormController<Values, Values> | null = null;
-controller?.setFieldValue('name', undefined);
-controller?.setFieldValue('active', false);
-controller?.setFieldValue('permissions', ['read', 'write']);
+declare const controller: ZFormController<Values, Values>;
+controller.setFieldValue('name', undefined);
+controller.setFieldValue('active', false);
+controller.setFieldValue('permissions', ['read', 'write']);
 
-// @ts-expect-error A model must use the same whole-form value shape as ZForm.
 const wrongModel = {
+	// @ts-expect-error A model must use the same whole-form value shape as ZForm.
 	model: createFormModel({ defaultValues: { count: 1 } }),
 	schema
 } satisfies ZFormProps<typeof schema, Values>;

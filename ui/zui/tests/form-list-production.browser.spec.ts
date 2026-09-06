@@ -19,17 +19,17 @@ describe('ZFormList production contract', () => {
 			component.seedState();
 			firstInput.focus();
 			firstInput.setSelectionRange(1, 3);
-			expect(component.state(0)?.touched).toBe(false);
+			expect(component.fieldState(0)?.touched).toBe(false);
 			target.querySelector<HTMLButtonElement>('[data-testid="move-rows"]')!.click();
 			await tick();
 			await expect.poll(() => target.querySelectorAll('[data-row-id]')[1]).toBe(first);
 			expect(document.activeElement).toBe(firstInput);
 			expect([firstInput.selectionStart, firstInput.selectionEnd]).toEqual([1, 3]);
-			expect(component.state(1)?.touched).toBe(false);
+			expect(component.fieldState(1)?.touched).toBe(false);
 			expect(target.querySelectorAll('[data-row-id]')[0]).toBe(second);
-			expect(component.state(1)?.errors).toEqual(['Server row zero']);
-			expect(component.state(1)?.warnings).toEqual(['Manual row zero']);
-			expect(component.state(1)?.dirty).toBe(false);
+			expect(component.fieldState(1)?.errors).toEqual(['Server row zero']);
+			expect(component.fieldState(1)?.warnings).toEqual(['Manual row zero']);
+			expect(component.fieldState(1)?.dirty).toBe(false);
 			expect(component.formState()?.dirty).toBe(false);
 			await userEvent.click(first.querySelector<HTMLButtonElement>('button')!);
 			await expect.poll(() => target.querySelectorAll('[data-row-id]')).toHaveLength(1);
@@ -69,7 +69,7 @@ describe('ZFormList production contract', () => {
 			await userEvent.click(target.querySelector<HTMLButtonElement>('[data-remove]')!);
 			const result = await component.finishValidation();
 			expect(result?.outdated).toBe(true);
-			expect(component.state(0)?.errors).not.toContain('Late row error');
+			expect(component.fieldState(0)?.errors).not.toContain('Late row error');
 		} finally {
 			await unmount(component);
 			target.remove();

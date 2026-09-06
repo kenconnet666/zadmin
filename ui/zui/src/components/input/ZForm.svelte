@@ -412,6 +412,7 @@
 	} from '../../runtime/form/form-context.svelte.js';
 	import {
 		FormArrayController,
+		type FormArrayMutationHost,
 		type FormArrayOptions,
 		type FormArrayLocation
 	} from '../../runtime/form/form-array.svelte.js';
@@ -644,25 +645,38 @@
 		const path = normalizeFieldPath(pathInput);
 		return listForField(path)?.isDirty(path) ?? model?.isDirty(path) ?? false;
 	}
+	function prepareList(change: FormListReconcile): { commit(): void } {
+		const registryMutation = registry.prepareList(change);
+		const nextErrorLayers = remapFormErrorLayers(errorLayers, change);
+		let committed = false;
+		return {
+			commit() {
+				if (committed) return;
+				committed = true;
+				movingListScopes.set(fieldPathKey(change.listPath), change.listPath);
+				const transition = ++listTransitionGeneration;
+				void tick().then(() => {
+					if (transition === listTransitionGeneration) movingListScopes.clear();
+				});
+				validationEpoch += 1;
+				clearValidationTimers();
+				validationRuns.clear();
+				validating = false;
+				registry.batch(() => {
+					registry.cancelValidation();
+					registryMutation.commit();
+					errorLayers = nextErrorLayers;
+					publishErrorLayers();
+					for (const path of registry.registeredPaths())
+						registry.setDirty(path, fieldIsDirty(path));
+				});
+				reconciledModel = model;
+				reconciledValues = model?.values;
+			}
+		};
+	}
 	function reconcileList(change: FormListReconcile): void {
-		movingListScopes.set(fieldPathKey(change.listPath), change.listPath);
-		const transition = ++listTransitionGeneration;
-		void tick().then(() => {
-			if (transition === listTransitionGeneration) movingListScopes.clear();
-		});
-		validationEpoch += 1;
-		clearValidationTimers();
-		validationRuns.clear();
-		validating = false;
-		registry.batch(() => {
-			registry.cancelValidation();
-			registry.reconcileList(change);
-			errorLayers = remapFormErrorLayers(errorLayers, change);
-			publishErrorLayers();
-			for (const path of registry.registeredPaths()) registry.setDirty(path, fieldIsDirty(path));
-		});
-		reconciledModel = model;
-		reconciledValues = model?.values;
+		prepareList(change).commit();
 	}
 	function scheduleDirty(instanceId: string): void {
 		pendingDirty.add(instanceId);
@@ -801,9 +815,16 @@
 		createArray<T>(
 			path: FieldPathInput,
 			options?: FormArrayOptions<T>,
-			location?: FormArrayLocation
+			location?: FormArrayLocation,
+			mutationHost?: FormArrayMutationHost
 		) {
-			return new FormArrayController<T, TValues>(requireModel(), path, options, location);
+			return new FormArrayController<T, TValues>(
+				requireModel(),
+				path,
+				options,
+				location,
+				mutationHost
+			);
 		},
 		registerList(registration) {
 			for (const list of lists.values()) {
@@ -827,6 +848,7 @@
 				lists.delete(token);
 			};
 		},
+		prepareList,
 		reconcileList,
 		get model() {
 			return model;

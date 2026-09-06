@@ -1,16 +1,16 @@
 import {
 	CalendarDate,
 	DateFormatter,
+	Time,
 	endOfMonth,
 	getDayOfWeek,
 	startOfMonth,
-	startOfWeek,
-	type Time
+	startOfWeek
 } from '@internationalized/date';
 
 export type Weekday = 'fri' | 'mon' | 'sat' | 'sun' | 'thu' | 'tue' | 'wed';
 export type DateFieldSegment = 'day' | 'month' | 'year';
-export type TimeFieldGranularity = 'minute' | 'second';
+export type TimeFieldGranularity = 'hour' | 'minute' | 'second';
 export type TimeFieldSegment = 'hour' | 'minute' | 'second';
 export type TimeDayPeriod = 'am' | 'pm';
 
@@ -40,6 +40,53 @@ export interface CalendarRange {
 export interface CalendarRangeValue {
 	readonly end: CalendarDate | null;
 	readonly start: CalendarDate | null;
+}
+
+export function isGregorianCalendarDate(value: unknown): value is CalendarDate {
+	return (
+		value instanceof CalendarDate &&
+		Object.getPrototypeOf(value) === CalendarDate.prototype &&
+		value.calendar.identifier === 'gregory'
+	);
+}
+
+export function normalizeCalendarDateModelValue(
+	value: unknown,
+	owner: string
+): CalendarDate | null {
+	if (value === null || value === undefined) return null;
+	if (!isGregorianCalendarDate(value))
+		throw new TypeError(
+			`${owner} model value must be a Gregorian CalendarDate, null or undefined.`
+		);
+	return value;
+}
+
+export function normalizeTimeModelValue(value: unknown, owner: string): Time | null {
+	if (value === null || value === undefined) return null;
+	if (!(value instanceof Time) || Object.getPrototypeOf(value) !== Time.prototype)
+		throw new TypeError(`${owner} model value must be a Time, null or undefined.`);
+	return value;
+}
+
+export function normalizeCalendarRangeModelValue(
+	value: unknown,
+	owner: string
+): CalendarRangeValue | null {
+	if (value === null || value === undefined) return null;
+	if (
+		typeof value !== 'object' ||
+		Object.getPrototypeOf(value) !== Object.prototype ||
+		!Object.hasOwn(value, 'start') ||
+		!Object.hasOwn(value, 'end')
+	)
+		throw new TypeError(
+			`${owner} model value must be a CalendarDate range with nullable start and end, null or undefined.`
+		);
+	const range = value as { readonly end: unknown; readonly start: unknown };
+	const start = normalizeCalendarDateModelValue(range.start, `${owner} start`);
+	const end = normalizeCalendarDateModelValue(range.end, `${owner} end`);
+	return normalizeRangeValue({ end, start });
 }
 
 export function calendarMonth(
@@ -136,7 +183,7 @@ export function timeFieldPattern(
 	const options: Intl.DateTimeFormatOptions = {
 		hour: 'numeric',
 		hourCycle: hourCycle === 12 ? 'h12' : 'h23',
-		minute: '2-digit',
+		minute: granularity === 'hour' ? undefined : '2-digit',
 		second: granularity === 'second' ? '2-digit' : undefined,
 		timeZone: 'UTC'
 	};

@@ -21,6 +21,8 @@ import nestedListSource from './NestedListDemo.svelte?raw';
 import AdaptersDemo from './AdaptersDemo.svelte';
 import adaptersSource from './AdaptersDemo.svelte?raw';
 import CollectionAdaptersDemo from './CollectionAdaptersDemo.svelte';
+import DateModelDemo from './DateModelDemo.svelte';
+import dateModelSource from './DateModelDemo.svelte?raw';
 import collectionAdaptersSource from './CollectionAdaptersDemo.svelte?raw';
 import {
 	formApiFacts,
@@ -143,6 +145,15 @@ export const formDoc = defineComponentDoc(formMetadata, {
 			id: 'form-collection-adapters',
 			source: collectionAdaptersSource,
 			title: '集合与Typed Key控件适配'
+		},
+		{
+			covers: ['composition', 'controlled', 'form-data', 'form-reset'],
+			component: DateModelDemo,
+			description:
+				'CalendarDate、Time和日期范围直接进入同一模型；共享值比较使同值新对象回到干净基线，表单仍按真实控件序列化字符串。',
+			id: 'form-date-model',
+			source: dateModelSource,
+			title: '日期值与模型基线'
 		},
 		{
 			covers: ['controlled', 'loading', 'native-props'],

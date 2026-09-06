@@ -1763,7 +1763,7 @@ export const componentCatalogManifest = Object.freeze([
 			'disabled',
 			'form-reset'
 		],
-		demoCount: 12,
+		demoCount: 13,
 		publicComponentCount: 3
 	},
 	{
@@ -2301,7 +2301,7 @@ export const componentCatalogManifest = Object.freeze([
 		name: 'ZTimeField',
 		category: 'input',
 		summary:
-			'本地化Time分段字段：Intl顺序、12/24小时、minute/second granularity与step、nullable owner、不可用值、Field/FormValueBridge/reset和复合bare外观。',
+			'本地化Time分段字段：Intl顺序、12/24小时、hour/minute/second granularity与step、nullable owner、不可用值、Field/FormValueBridge/reset和复合bare外观；编辑保留已有值的隐藏精度。',
 		status: 'stable',
 		keywords: ['time field', 'segments', 'hour cycle', 'granularity', 'step', 'nullable'],
 		profiles: ['form-control'],
@@ -2325,6 +2325,34 @@ export const componentCatalogManifest = Object.freeze([
 			'native-props'
 		],
 		demoCount: 6,
+		publicComponentCount: 1
+	},
+	{
+		id: 'time-picker',
+		name: 'ZTimePicker',
+		category: 'input',
+		summary:
+			'实验性 Time Picker：以唯一 Time/null owner 组合可编辑 TimeField、有限时间列、复用 ZPopover 和真实表单语义；面板选择先进入草稿，确认后提交。',
+		status: 'experimental',
+		keywords: ['time picker', 'time field', 'popover', 'draft', 'controlled', 'form', 'nullable'],
+		profiles: ['form-control', 'layer'],
+		capabilities: [
+			'basic-render',
+			'controlled',
+			'external-clear',
+			'focus',
+			'keyboard',
+			'portal',
+			'invalid',
+			'variants-and-states',
+			'disabled',
+			'readonly',
+			'density',
+			'form-data',
+			'form-reset',
+			'uncontrolled'
+		],
+		demoCount: 4,
 		publicComponentCount: 1
 	},
 	{

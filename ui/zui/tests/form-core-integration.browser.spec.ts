@@ -53,6 +53,7 @@ describe('ZForm core model integration', () => {
 	it('reports baseline dirty correctly across initialize, replacement and resetField', async () => {
 		const target = host();
 		const component = mount(FormCoreIntegrationFixture, { target });
+		await tick();
 		const input = target.querySelector<HTMLInputElement>('[data-testid="form-core-name"]')!;
 		const state = target.querySelector<HTMLOutputElement>('[data-testid="form-core-state"]')!;
 		const field = target.querySelector<HTMLOutputElement>('[data-testid="form-core-field"]')!;
@@ -81,6 +82,7 @@ describe('ZForm core model integration', () => {
 	it('clears accepted resetField interaction and feedback state but preserves it when the owner rejects', async () => {
 		const target = host();
 		const component = mount(FormCoreIntegrationFixture, { target });
+		await tick();
 		const input = target.querySelector<HTMLInputElement>('[data-testid="form-core-name"]')!;
 		const field = target.querySelector<HTMLOutputElement>('[data-testid="form-core-field"]')!;
 		const rejected = target.querySelector<HTMLInputElement>(
@@ -119,6 +121,7 @@ describe('ZForm core model integration', () => {
 	it('keeps Form disabled and readonly dominant over explicit false Field props', async () => {
 		const target = host();
 		const component = mount(FormCoreIntegrationFixture, { target });
+		await tick();
 		const form = target.querySelector<HTMLFormElement>('[data-testid="form-core"]')!;
 		const input = target.querySelector<HTMLInputElement>('[data-testid="form-core-name"]')!;
 		const other = target.querySelector<HTMLInputElement>('[data-testid="form-core-other"]')!;
@@ -146,6 +149,7 @@ describe('ZForm core model integration', () => {
 	it('lets validate await the DOM projection of a batch model update', async () => {
 		const target = host();
 		const component = mount(FormCoreIntegrationFixture, { target });
+		await tick();
 		await component.batchAndValidate();
 		expect(target.querySelector('[data-testid="form-core-validation"]')?.textContent).toBe(
 			'Batch:Fresh:Batch:Fresh'
@@ -157,6 +161,7 @@ describe('ZForm core model integration', () => {
 	it('awaits one semantic submit, handles reject, and cancels state reception on reset/unmount', async () => {
 		const target = host();
 		const component = mount(FormCoreIntegrationFixture, { target });
+		await tick();
 		const form = target.querySelector<HTMLFormElement>('[data-testid="form-core"]')!;
 		const output = target.querySelector<HTMLOutputElement>('[data-testid="form-core-submit"]')!;
 
@@ -190,6 +195,7 @@ describe('ZForm core model integration', () => {
 	it('cancels a submit synchronously followed by native reset before semantic submission', async () => {
 		const target = host();
 		const component = mount(FormCoreIntegrationFixture, { target });
+		await tick();
 		const form = target.querySelector<HTMLFormElement>('[data-testid="form-core"]')!;
 		const output = target.querySelector<HTMLOutputElement>('[data-testid="form-core-submit"]')!;
 		form.requestSubmit();
@@ -204,6 +210,7 @@ describe('ZForm core model integration', () => {
 	it('continues submit when the synchronously following reset is cancelled', async () => {
 		const target = host();
 		const component = mount(FormCoreIntegrationFixture, { target });
+		await tick();
 		const form = target.querySelector<HTMLFormElement>('[data-testid="form-core"]')!;
 		const output = target.querySelector<HTMLOutputElement>('[data-testid="form-core-submit"]')!;
 		component.setPreventReset(true);
@@ -221,6 +228,7 @@ describe('ZForm core model integration', () => {
 	it('rejects a late schema result from a replaced model owner', async () => {
 		const target = host();
 		const component = mount(FormCoreIntegrationFixture, { target });
+		await tick();
 		const input = target.querySelector<HTMLInputElement>('[data-testid="form-core-name"]')!;
 		component.deferNextValidation();
 		const pending = component.startValidation()!;

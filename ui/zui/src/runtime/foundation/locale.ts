@@ -11,6 +11,7 @@ export interface ZuiCommonLocale {
 	readonly resizeBlockEnd: string;
 	readonly scrollArea: string;
 	readonly clear: string;
+	readonly confirm: string;
 	readonly close: string;
 	readonly copy: string;
 	readonly copying: string;
@@ -159,7 +160,9 @@ export interface ZuiTagLocale {
 
 export interface ZuiTimeLocale {
 	readonly am: string;
+	readonly chooseTime: string;
 	readonly clearTime: string;
+	readonly noAvailableTime: string;
 	readonly hour: string;
 	readonly hourCycle: 12 | 24;
 	readonly minute: string;
@@ -313,6 +316,7 @@ export const enUSLocalePack = Object.freeze({
 		resizeBlockEnd: 'block end',
 		scrollArea: 'Scrollable content',
 		clear: 'Clear',
+		confirm: 'Confirm',
 		close: 'Close',
 		copy: 'Copy',
 		copying: 'Copying…',
@@ -408,7 +412,9 @@ export const enUSLocalePack = Object.freeze({
 	}),
 	time: Object.freeze({
 		am: 'AM',
+		chooseTime: 'Choose time',
 		clearTime: 'Clear time',
+		noAvailableTime: 'No available time',
 		hour: 'Hour',
 		hourCycle: 12,
 		minute: 'Minute',
@@ -503,6 +509,7 @@ export const zhCNLocalePack = Object.freeze({
 		resizeBlockEnd: '块结束边',
 		scrollArea: '可滚动内容',
 		clear: '清空',
+		confirm: '确认',
 		close: '关闭',
 		copy: '复制',
 		copying: '复制中…',
@@ -596,7 +603,9 @@ export const zhCNLocalePack = Object.freeze({
 	}),
 	time: Object.freeze({
 		am: '上午',
+		chooseTime: '选择时间',
 		clearTime: '清空时间',
+		noAvailableTime: '没有可选时间',
 		hour: '小时',
 		hourCycle: 24,
 		minute: '分钟',

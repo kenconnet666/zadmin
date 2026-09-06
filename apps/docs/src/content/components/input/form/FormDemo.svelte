@@ -23,7 +23,8 @@
 		'~standard': {
 			version: 1,
 			vendor: 'zui-docs',
-			validate(input) {
+			async validate(input) {
+				await delay(140);
 				const values = input as SignupInput;
 				const age = Number(values.age);
 				const issues: { message: string; path: readonly string[] }[] = [];

@@ -609,9 +609,7 @@
 	);
 	const formatted = $derived(formatValue?.(resolvedValue) ?? String(resolvedValue));
 	const showBubble = $derived(
-		valueLabel === 'always' ||
-			(valueLabel === 'focus' && focused) ||
-			(valueLabel === 'drag' && dragging)
+		(valueLabel === 'focus' && focused) || (valueLabel === 'drag' && dragging)
 	);
 	const generatedId = $derived(createZuiId(zui.idPrefix, uid, 'slider'));
 	const describedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
@@ -709,14 +707,14 @@
 	data-dragging={dragging || undefined}
 >
 	{#if valueLabel === 'always'}<div class={classes.header}>
-			<span></span><output class={classes.value}
-				>{#if label}{@render label(resolvedValue)}{:else}{formatted}{/if}</output
+			<span></span><span aria-hidden="true" class={classes.value} data-slot="value-label"
+				>{#if label}{@render label(resolvedValue)}{:else}{formatted}{/if}</span
 			>
 		</div>{/if}
 	<div class={classes.track} data-slot="track">
 		<span class={classes.rail} data-slot="rail"></span>
 		<span class={classes.fill} data-slot="fill"></span>
-		{#if marks.length}<span class={classes.marks} data-slot="marks"
+		{#if marks.length}<span aria-hidden="true" class={classes.marks} data-slot="marks"
 				>{#each marks as entry, index}<span
 						class={classes.mark}
 						data-edge={markEdge(entry.value)}
@@ -732,8 +730,8 @@
 			class={classes.thumb}
 			data-slot="thumb"
 			style={`left:${orientation === 'horizontal' ? physical * 100 : 50}%;top:${orientation === 'vertical' ? physical * 100 : 50}%`}
-			>{#if showBubble}<output class={classes.bubble} data-slot="value-label"
-					>{#if label}{@render label(resolvedValue)}{:else}{formatted}{/if}</output
+			>{#if showBubble}<span aria-hidden="true" class={classes.bubble} data-slot="value-label"
+					>{#if label}{@render label(resolvedValue)}{:else}{formatted}{/if}</span
 				>{/if}</span
 		>
 		<input

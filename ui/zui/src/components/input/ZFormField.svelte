@@ -146,6 +146,7 @@
 </script>
 
 <script lang="ts">
+	import { untrack } from 'svelte';
 	import { mergeFieldMessages } from '../../runtime/form/form-control.svelte.js';
 	import { useZForm } from '../../runtime/form/form-context.svelte.js';
 	import { provideFormValueScope } from '../../runtime/form/form-value-adapter.svelte.js';
@@ -201,7 +202,17 @@
 			htmlNameFollowsPath: htmlName === undefined
 		});
 	});
-	$effect(() => onStateChange?.(state));
+	$effect(() => {
+		const next = state;
+		const notify = onStateChange;
+		untrack(() => {
+			try {
+				notify?.(next);
+			} catch {
+				/* State observers do not own the field transition. */
+			}
+		});
+	});
 </script>
 
 <ZField

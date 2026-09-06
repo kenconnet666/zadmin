@@ -422,7 +422,7 @@
 			if (!event.defaultPrevented && !disabled && !readonly && item) {
 				changed = selection.replace(itemValue);
 			}
-			if (changed && selectionAccepted) {
+			if (changed && selectionAccepted && item) {
 				labels.set(itemValue, item.textValue);
 			}
 			if (

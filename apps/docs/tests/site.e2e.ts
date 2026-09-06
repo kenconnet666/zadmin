@@ -685,27 +685,34 @@ test('keeps Form schema errors, async state, first-error focus, valid submit and
 }) => {
 	await gotoComponent(page, 'form');
 	const schemaDemo = demo(page, 'form-schema');
-	await schemaDemo.getByRole('button', { name: '保存', exact: true }).click();
-	const account = schemaDemo.getByRole('textbox', { name: '账号', exact: true });
 	const email = schemaDemo.getByRole('textbox', { name: '邮箱', exact: true });
-	await expect(account).toBeFocused();
-	await expect(schemaDemo.getByText('账号至少需要3个字符')).toBeVisible();
+	const age = schemaDemo.getByRole('textbox', { name: '年龄', exact: true });
+	const form = schemaDemo.locator('form');
+	const submit = schemaDemo.locator('button[type="submit"]');
+	await email.fill('invalid');
+	await age.fill('17');
+	await submit.click();
+	await expect(email).toBeFocused();
 	await expect(schemaDemo.getByText('请输入有效邮箱')).toBeVisible();
-	await account.fill('alice');
-	await email.fill('alice@example.com');
-	// Prove live change validation has settled before clicking a target whose
-	// position changes when feedback disappears (Firefox can otherwise release
-	// the pointer over the parent and never dispatch the second submit).
-	await expect(schemaDemo.getByText('账号至少需要3个字符')).toHaveCount(0);
-	await expect(schemaDemo.getByText('请输入有效邮箱')).toHaveCount(0);
-	await schemaDemo.getByRole('button', { name: '保存', exact: true }).click();
+	await expect(schemaDemo.getByText('年龄必须是至少18岁的整数')).toBeVisible();
+	await email.fill('Alice@Example.com');
+	await age.fill('21');
+	await submit.click();
+	await expect(form).toHaveAttribute('data-submitting', 'true');
+	await expect(submit).toHaveAttribute('aria-busy', 'true');
+	await form.evaluate((element: HTMLFormElement) => element.requestSubmit());
 	await expect(
-		schemaDemo.getByText('submitted = true · errors = 0 · validating = false · result = alice')
-	).toBeVisible({ timeout: 10_000 });
-	await resetDemo(schemaDemo);
-	await expect(
-		schemaDemo.getByText('submitted = false · errors = 0 · validating = false · result = alice')
+		schemaDemo.getByText('typed age=21 (number)；FormData age=21 (string)')
 	).toBeVisible();
+	await expect(schemaDemo.getByText('onValidSubmit实际进入次数：1')).toBeVisible();
+	await expect(schemaDemo.getByText('请输入有效邮箱')).toHaveCount(0);
+	await expect(schemaDemo.getByText('年龄必须是至少18岁的整数')).toHaveCount(0);
+	await expect(form).not.toHaveAttribute('data-submitting');
+	await resetDemo(schemaDemo);
+	await expect(email).toHaveValue('Alice@Example.com');
+	await expect(age).toHaveValue('20');
+	await expect(form).not.toHaveAttribute('data-submitted');
+	await expect(form).not.toHaveAttribute('data-validating');
 	await expect(schemaDemo.locator('[data-dirty="true"]')).toHaveCount(0);
 
 	const busyDemo = demo(page, 'form-external-busy');
@@ -728,10 +735,10 @@ test('settles pending docs validation delays when navigating away', async ({ pag
 	});
 	page.on('pageerror', (error) => errors.push(error.message));
 	await gotoComponent(page, 'form');
-	const account = demo(page, 'form-schema').getByRole('textbox', { name: '账号', exact: true });
-	await account.fill('ab');
-	await account.blur();
-	await page.waitForTimeout(90);
+	const schemaDemo = demo(page, 'form-schema');
+	await schemaDemo.getByRole('textbox', { name: '邮箱', exact: true }).fill('invalid');
+	await schemaDemo.locator('button[type="submit"]').click();
+	await expect(schemaDemo.locator('form')).toHaveAttribute('data-validating', 'true');
 	await page.goto('/#/');
 	await page.waitForTimeout(160);
 	await expect(page.getByRole('heading', { level: 1 })).toHaveText(

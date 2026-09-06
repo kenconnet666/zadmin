@@ -10,6 +10,7 @@
 	} from '../../runtime/date.js';
 	import { styleInternalAction } from '../gene/internal-action.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
+	import { compositeInputDisabledStyles } from '../../runtime/foundation/control-styles.js';
 
 	export type TimeGranularity = TimeFieldGranularity;
 	export type TimeDayPeriod = TimeDayPeriodValue;
@@ -17,6 +18,7 @@
 	export type TimeFieldAppearance = 'bare' | 'field';
 	export type TimeFieldFormParticipation = 'auto' | 'none';
 	export type TimeFieldSize = ZControlSize;
+
 	export interface ZTimeFieldProps extends Omit<
 		HTMLAttributes<HTMLDivElement>,
 		'children' | 'onchange'
@@ -48,6 +50,7 @@
 		readonly toggleDayPeriodLabel?: string;
 		value?: TimeValue | null;
 	}
+
 	export const zuiMetadata = {
 		category: 'input',
 		id: 'time-field',
@@ -57,7 +60,12 @@
 			{ description: 'Time值；null是显式空值。', name: 'value', type: 'Time | null' },
 			{ description: '真实group引用。', name: 'ref', type: 'HTMLDivElement | null' }
 		],
-		dependencies: ['@internationalized/date', 'time segments', 'ControllableState', 'FormValue'],
+		dependencies: [
+			'@internationalized/date',
+			'time segments',
+			'FormControlState',
+			'FormValueBridge'
+		],
 		events: [
 			{
 				description: '完整时间或清空变化。',
@@ -107,9 +115,10 @@
 			},
 			{
 				default: "'minute'",
-				description: '是否显示秒。',
+				description:
+					'最小可见编辑单位为hour、minute或second；编辑已有Time保留未编辑的隐藏单位，空值从零构造。',
 				name: 'granularity',
-				type: "'minute' | 'second'"
+				type: "'hour' | 'minute' | 'second'"
 			},
 			{
 				default: 'Intl locale（locale pack后备）',
@@ -199,7 +208,7 @@
 				type: 'boolean'
 			},
 			{
-				default: 'Field size或Provider density',
+				default: 'Field > componentDefaults.timeField > input > density',
 				description: '统一group padding、segment和day-period尺寸。',
 				name: 'size',
 				type: "'xsmall' | 'small' | 'medium' | 'large' | 'xlarge'"
@@ -208,12 +217,20 @@
 		since: 'unreleased',
 		snippets: [],
 		source: 'ui/zui/src/components/input/ZTimeField.svelte',
-		states: [{ description: '存在不完整或非法segment。', name: 'data-invalid', values: ['true'] }],
+		states: [
+			{ description: '存在不完整或非法segment。', name: 'data-invalid', values: ['true'] },
+			{
+				description: '解析后的五档控件尺寸。',
+				name: 'data-size',
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge']
+			}
+		],
 		status: 'stable',
-		summary: 'Time值、分钟/秒step、12/24小时segment与表单桥接的Time Field。'
+		summary: 'Time值、hour/minute/second粒度、12/24小时segment与FormModel桥接的Time Field。'
 	} as const satisfies ZuiComponentMetadata;
 	const rootRecipe = defineRecipe({
 		base: (s) => {
+			compositeInputDisabledStyles(s);
 			s.fontFamily._mono;
 			s.lineHeight._compact;
 			s.minWidth.px(0);
@@ -342,20 +359,29 @@
 		navigationIntent,
 		type NavigationIntent
 	} from '../../runtime/collection/list-navigation.js';
-	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { controlSizeMetrics, resolveControlSize } from '../../runtime/foundation/control-size.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import { claimZFieldControlOwner } from '../../runtime/form/field-context.js';
 	import FormValueBridge from '../../runtime/form/FormValueBridge.svelte';
 	import { mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
-	import { resolveHourCycle, timeFieldPattern } from '../../runtime/date.js';
+	import {
+		claimFormValueScope,
+		createFormControlState
+	} from '../../runtime/form/form-value-adapter.svelte.js';
+	import {
+		normalizeTimeModelValue,
+		resolveHourCycle,
+		timeFieldPattern
+	} from '../../runtime/date.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
 		serializeIcssVariables
 	} from '../../runtime/foundation/root-style.js';
 	import { useZui } from '../../runtime/foundation/context.js';
+	import { useZInputGroup } from '../../runtime/form/input-group-context.svelte.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
+
 	let {
 		'aria-describedby': ariaDescribedBy,
 		'aria-invalid': ariaInvalid,
@@ -394,9 +420,14 @@
 	const zui = useZui();
 	const fieldOwner = claimZFieldControlOwner();
 	const field = fieldOwner.field;
+	const group = useZInputGroup();
+	const valueScope = formParticipation === 'auto' ? claimFormValueScope() : null;
 	const uid = $props.id();
 	const idBase = $derived(
-		controlId ?? field?.controlId ?? createZuiId(zui.idPrefix, uid, 'time-field')
+		controlId ??
+			group?.controlId ??
+			field?.controlId ??
+			createZuiId(zui.idPrefix, uid, 'time-field')
 	);
 	const resolvedLocale = $derived(locale ?? zui.locale);
 	const hourCycle = $derived(
@@ -409,18 +440,38 @@
 			throw new RangeError('ZTimeField minValue cannot exceed maxValue.');
 		return { minuteStep, secondStep };
 	});
-	const resolvedDisabled = $derived(disabled || field?.disabled || false);
-	const resolvedReadonly = $derived(readonly || field?.readonly || false);
-	const resolvedRequired = $derived(required || field?.required || false);
-	const resolvedName = $derived(name ?? field?.name);
-	const describedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
-	const resolvedSize = $derived(resolveControlSize(size ?? field?.size, zui.density));
-	const valueState = new ControllableState<Time | null>({
-		defaultValue: () => defaultValue ?? null,
-		onChange: () => onValueChange,
-		read: () => value,
-		write: (next) => (value = next)
-	});
+	const resolvedDisabled = $derived(disabled || group?.disabled || field?.disabled || false);
+	const resolvedReadonly = $derived(readonly || group?.readonly || field?.readonly || false);
+	const resolvedRequired = $derived(required || group?.required || field?.required || false);
+	const resolvedInvalid = $derived(invalidProp || group?.invalid || field?.invalid || false);
+	const resolvedName = $derived(name ?? group?.name ?? field?.name);
+	const describedBy = $derived(
+		mergeAriaIds(ariaDescribedBy, group?.describedBy, field?.describedBy)
+	);
+	const labelledBy = $derived(mergeAriaIds(ariaLabelledBy, group?.labelId, field?.labelId));
+	const resolvedSize = $derived(
+		resolveControlSize(
+			size ??
+				group?.size ??
+				field?.size ??
+				zui.componentDefaults.timeField?.size ??
+				zui.componentDefaults.input?.size,
+			zui.density
+		)
+	);
+	const valueState = createFormControlState<Time | null>(
+		{
+			defaultValue: () => defaultValue ?? null,
+			element: () => ref,
+			normalizeModelValue: (candidate) => normalizeTimeModelValue(candidate, 'ZTimeField'),
+			onChange: () => onValueChange,
+			owner: 'ZTimeField',
+			read: () => value,
+			syncNative: (next) => syncInputs(next),
+			write: (next) => (value = next)
+		},
+		valueScope
+	);
 	const pattern = $derived(timeFieldPattern(resolvedLocale, hourCycle, granularity));
 	const segments = $derived<readonly TimeSegment[]>(
 		pattern.flatMap((part) => ('segment' in part ? [part.segment] : []))
@@ -441,8 +492,8 @@
 	const rootClass = $derived(
 		zui.recipe(rootRecipe, {
 			appearance,
-			disabled: resolvedDisabled,
-			invalid: draftInvalid || invalidProp || field?.invalid || false,
+			disabled: resolvedDisabled && !group,
+			invalid: draftInvalid || resolvedInvalid,
 			size: resolvedSize
 		})
 	);
@@ -455,6 +506,17 @@
 	);
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
+
+	function syncInputs(next: Time | null): void {
+		for (const [index, segment] of segments.entries()) {
+			let raw =
+				segment === 'hour' ? next?.hour : segment === 'minute' ? next?.minute : next?.second;
+			if (raw !== undefined && segment === 'hour' && hourCycle === 12) raw = raw % 12 || 12;
+			if (inputs[index])
+				inputs[index].value = raw === undefined ? '' : String(raw).padStart(2, '0');
+		}
+	}
+
 	function display(segment: TimeSegment): string {
 		if (drafts[segment] !== undefined) return drafts[segment]!;
 		const current = valueState.current;
@@ -464,11 +526,13 @@
 		if (segment === 'hour' && hourCycle === 12) raw = raw % 12 || 12;
 		return String(raw).padStart(2, '0');
 	}
+
 	function clamp(next: Time): Time {
 		if (minValue && next.compare(minValue) < 0) return minValue;
 		if (maxValue && next.compare(maxValue) > 0) return maxValue;
 		return next;
 	}
+
 	function unavailable(next: Time): boolean {
 		return Boolean(
 			(minValue && next.compare(minValue) < 0) ||
@@ -476,13 +540,21 @@
 			isTimeUnavailable?.(next)
 		);
 	}
+
 	function commit(markIncomplete = true): boolean {
 		if (Object.keys(drafts).length === 0) return true;
 		let hour = Number(drafts.hour ?? valueState.current?.hour);
 		const enteredHour = hour;
-		const minute = Number(drafts.minute ?? valueState.current?.minute);
+		// Editing visible segments preserves the other units of an existing typed Time.
+		const minute =
+			granularity === 'hour'
+				? (valueState.current?.minute ?? 0)
+				: Number(drafts.minute ?? valueState.current?.minute);
 		const second =
-			granularity === 'second' ? Number(drafts.second ?? valueState.current?.second) : 0;
+			granularity === 'second'
+				? Number(drafts.second ?? valueState.current?.second)
+				: (valueState.current?.second ?? 0);
+		const millisecond = valueState.current?.millisecond ?? 0;
 		if (hourCycle === 12 && drafts.hour !== undefined) {
 			const pm = (draftPeriod ?? ((valueState.current?.hour ?? 0) >= 12 ? 'pm' : 'am')) === 'pm';
 			hour = (hour % 12) + (pm ? 12 : 0);
@@ -503,7 +575,7 @@
 			draftInvalid = true;
 			return false;
 		}
-		const next = new Time(hour, minute, second);
+		const next = new Time(hour, minute, second, millisecond);
 		if (unavailable(next)) {
 			draftInvalid = true;
 			return false;
@@ -514,6 +586,7 @@
 		draftInvalid = false;
 		return true;
 	}
+
 	function cycle(segment: TimeSegment, amount: number): void {
 		if (resolvedDisabled || resolvedReadonly) return;
 		const base = valueState.current ?? new Time(0);
@@ -532,16 +605,19 @@
 		draftPeriod = null;
 		draftInvalid = false;
 	}
+
 	function focusElement(key: TimeSegment | 'dayPeriod'): void {
 		const target = key === 'dayPeriod' ? periodRef : inputs[segments.indexOf(key)];
 		target?.focus({ preventScroll: true });
 		if (target && 'select' in target && typeof target.select === 'function') target.select();
 	}
+
 	function move(index: number, intent: NavigationIntent): void {
 		const target = moveIndex(focusOrder.length, index, intent, false);
 		const key = focusOrder[target];
 		if (key) focusElement(key);
 	}
+
 	function handleKey(event: KeyboardEvent, segment: TimeSegment, index: number): void {
 		const intent = navigationIntent(event.key, 'horizontal', zui.direction);
 		if (intent) {
@@ -569,6 +645,7 @@
 				return;
 		}
 	}
+
 	function togglePeriod(): void {
 		if (resolvedDisabled || resolvedReadonly) return;
 		if (Object.keys(drafts).length > 0 || !valueState.current) {
@@ -579,6 +656,7 @@
 		const base = valueState.current ?? new Time(0);
 		valueState.setFromUser(clamp(base.cycle('hour', 12)));
 	}
+
 	function handlePeriodKey(event: KeyboardEvent): void {
 		const index = focusOrder.indexOf('dayPeriod');
 		const intent = navigationIntent(event.key, 'horizontal', zui.direction);
@@ -592,6 +670,7 @@
 			togglePeriod();
 		}
 	}
+
 	function resetFromForm(): void {
 		valueState.reset();
 		drafts = {};
@@ -599,6 +678,7 @@
 		draftInvalid = false;
 		onFormReset?.();
 	}
+
 	function handleInput(
 		event: Event & { currentTarget: HTMLInputElement },
 		segment: TimeSegment,
@@ -618,6 +698,7 @@
 			if (focusIndex < focusOrder.length - 1) move(focusIndex, 'next');
 		}
 	}
+
 	function handleFocusOut(event: FocusEvent & { currentTarget: HTMLDivElement }): void {
 		const NodeConstructor = event.currentTarget.ownerDocument.defaultView?.Node;
 		if (
@@ -628,7 +709,10 @@
 			return;
 		commit();
 	}
+
 	onDestroy(fieldOwner.registerFocusOwner(() => inputs[0]?.focus({ preventScroll: true })));
+	if (group && formParticipation === 'auto')
+		onDestroy(group.registerControl({ focus: () => inputs[0]?.focus({ preventScroll: true }) }));
 </script>
 
 <div
@@ -638,16 +722,17 @@
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
 	role="group"
-	aria-label={ariaLabelledBy || field
-		? undefined
-		: (ariaLabel ?? zui.localePack.time.timeFieldLabel)}
-	aria-labelledby={mergeAriaIds(ariaLabelledBy, field?.labelId)}
+	data-zui-composite-control=""
+	data-zui-input-group-control={group ? '' : undefined}
+	aria-label={labelledBy ? undefined : (ariaLabel ?? zui.localePack.time.timeFieldLabel)}
+	aria-labelledby={labelledBy}
 	aria-describedby={describedBy}
 	aria-disabled={resolvedDisabled || undefined}
 	data-disabled={resolvedDisabled || undefined}
-	data-invalid={draftInvalid || invalidProp || field?.invalid || undefined}
+	data-invalid={draftInvalid || resolvedInvalid || undefined}
 	data-readonly={resolvedReadonly || undefined}
 	data-required={resolvedRequired || undefined}
+	data-size={resolvedSize}
 	onfocusout={handleFocusOut}
 >
 	{#each pattern as part, partIndex (partIndex)}
@@ -671,16 +756,17 @@
 				aria-label={index === 0 && field
 					? undefined
 					: (segmentLabel?.(segment) ?? zui.localePack.time[segment])}
-				aria-labelledby={index === 0 ? mergeAriaIds(ariaLabelledBy, field?.labelId) : undefined}
+				aria-labelledby={index === 0 ? labelledBy : undefined}
 				aria-describedby={describedBy}
-				aria-invalid={draftInvalid || invalidProp || field?.invalid ? 'true' : ariaInvalid}
+				aria-invalid={draftInvalid || resolvedInvalid ? 'true' : ariaInvalid}
 				aria-readonly={resolvedReadonly || undefined}
 				aria-required={resolvedRequired || undefined}
 				onfocus={(event) => event.currentTarget.select()}
 				oninput={(event) => handleInput(event, segment, focusIndex)}
 				onkeydown={(event) => handleKey(event, segment, focusIndex)}
 			/>
-		{:else}<button
+		{:else}
+			<button
 				bind:this={periodRef}
 				type="button"
 				class={[periodClass, contentClass]}
@@ -691,7 +777,8 @@
 				onclick={togglePeriod}
 				onkeydown={handlePeriodKey}
 				>{dayPeriodLabel?.(visiblePeriod) ?? zui.localePack.time[visiblePeriod]}</button
-			>{/if}
+			>
+		{/if}
 	{/each}
 </div>
 {#if formParticipation === 'auto'}

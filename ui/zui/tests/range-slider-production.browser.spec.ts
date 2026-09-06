@@ -176,7 +176,7 @@ describe('ZRangeSlider production contract', () => {
 		track.dispatchEvent(new PointerEvent('lostpointercapture', { bubbles: true, pointerId: 1 }));
 		await expect.poll(() => main.dataset.dragging).toBeUndefined();
 		expect(output.dataset.commits).toBe(commits);
-		await pointer([{ keys: '[/MouseLeft]' }]);
+		await pointer([{ keys: '[/MouseLeft]', target: track }]);
 		await unmount(component);
 		target.remove();
 	});
@@ -227,11 +227,11 @@ describe('ZRangeSlider production contract', () => {
 		vertical.dispatchEvent(
 			new PointerEvent('pointerdown', { bubbles: true, button: 0, cancelable: true, pointerId: 71 })
 		);
-		expect(verticalRoot.dataset.dragging).toBe('true');
+		await expect.poll(() => verticalRoot.dataset.dragging).toBe('true');
 		vertical.dispatchEvent(
 			new PointerEvent('lostpointercapture', { bubbles: true, pointerId: 71 })
 		);
-		expect(verticalRoot.dataset.dragging).toBeUndefined();
+		await expect.poll(() => verticalRoot.dataset.dragging).toBeUndefined();
 		vertical.focus();
 		await userEvent.keyboard('{ArrowUp}');
 		expect(vertical.valueAsNumber).toBe(39);

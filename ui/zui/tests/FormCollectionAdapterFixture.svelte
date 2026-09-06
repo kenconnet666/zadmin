@@ -57,6 +57,14 @@
 		read: () => rejectedOwner,
 		write: () => undefined
 	});
+	const targetLabel = (value: string | number): string =>
+		value === 'a' ? 'Alpha' : value === 'b' ? 'Beta' : String(value);
+	const scopeLabel = (value: string | number): string =>
+		value === 'read' ? 'Read' : value === 'write' ? 'Write' : String(value);
+	const rejectedTargetLabel = (value: string | number): string =>
+		value === 'a' ? 'Rejected Alpha' : value === 'b' ? 'Rejected Beta' : String(value);
+	const rejectedScopeLabel = (value: string | number): string =>
+		value === 'read' ? 'Rejected Read' : value === 'write' ? 'Rejected Write' : String(value);
 
 	export function mutateExternal(): void {
 		owner.tags = ['external'];
@@ -99,6 +107,7 @@
 				disabled={controlsDisabled}
 				onValueChange={() => (controlChanges += 1)}
 				readonly={controlsReadonly}
+				valueLabel={targetLabel}
 			>
 				<ZSelectTrigger aria-label="Target" data-testid="collection-select-trigger" />
 				<ZSelectContent data-testid="collection-select-content">
@@ -113,6 +122,7 @@
 				disabled={controlsDisabled}
 				onValueChange={() => (controlChanges += 1)}
 				readonly={controlsReadonly}
+				valueLabel={scopeLabel}
 			>
 				<ZMultiSelectTrigger aria-label="Scopes" data-testid="collection-multi-trigger" />
 				<ZMultiSelectContent data-testid="collection-multi-content">
@@ -131,7 +141,7 @@
 			<ZTagsInput addLabel="Add rejected tag" data-testid="rejected-tags" />
 		</ZFormField>
 		<ZFormField name="target" label="Rejected target">
-			<ZSelect>
+			<ZSelect valueLabel={rejectedTargetLabel}>
 				<ZSelectTrigger aria-label="Rejected target" data-testid="rejected-select-trigger" />
 				<ZSelectContent>
 					<ZSelectItem data-testid="rejected-select-a" value="a">Rejected Alpha</ZSelectItem>
@@ -140,7 +150,7 @@
 			</ZSelect>
 		</ZFormField>
 		<ZFormField name="scopes" label="Rejected scopes">
-			<ZMultiSelect>
+			<ZMultiSelect valueLabel={rejectedScopeLabel}>
 				<ZMultiSelectTrigger aria-label="Rejected scopes" data-testid="rejected-multi-trigger" />
 				<ZMultiSelectContent>
 					<ZMultiSelectItem data-testid="rejected-multi-read" value="read"

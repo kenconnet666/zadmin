@@ -131,7 +131,7 @@
 		tabindex = -1,
 		...rest
 	}: ZFormListProps<T> = $props();
-	const form = useZForm();
+	const form = useZForm('ZFormList');
 	let live = true;
 	onDestroy(() => {
 		live = false;
@@ -202,7 +202,21 @@
 							}
 						}
 					: undefined;
-			const currentArray = form.createArray<T>(currentPath, { getRowKey: key }, location);
+			let currentArray!: FormListArray<T>;
+			currentArray = form.createArray<T>(currentPath, { getRowKey: key }, location, {
+				prepareList(change) {
+					const prepared = form.prepareList(change);
+					return {
+						commit() {
+							try {
+								prepared.commit();
+							} finally {
+								recordCommittedRows(currentArray);
+							}
+						}
+					};
+				}
+			});
 			binding = {
 				owner,
 				parent: containingArray,
@@ -225,6 +239,13 @@
 	let observedArray: FormListArray<T> = untrack(() => array);
 	let observedRows = untrack(() => array.rows);
 	let observedPath = untrack(() => array.path);
+	let committedMutationGeneration = 0;
+	function recordCommittedRows(current: FormListArray<T>): void {
+		observedArray = current;
+		observedRows = current.rows;
+		observedPath = current.path;
+		committedMutationGeneration += 1;
+	}
 	let mutationGeneration = 0;
 	function focusIsVacant(container: HTMLElement): boolean {
 		const active = getActiveElement(container);
@@ -317,7 +338,16 @@
 		const selectionStart = textControl?.selectionStart ?? null;
 		const selectionEnd = textControl?.selectionEnd ?? null;
 		const selectionDirection = textControl?.selectionDirection ?? 'none';
-		if (!update(current)) return false;
+		const beforeCommit = committedMutationGeneration;
+		let failed = false;
+		let failure: unknown;
+		try {
+			if (!update(current)) return false;
+		} catch (error) {
+			if (committedMutationGeneration === beforeCommit) throw error;
+			failed = true;
+			failure = error;
+		}
 		synchronize(current, current.rows);
 		const generation = ++mutationGeneration;
 		void tick().then(() => {
@@ -354,6 +384,7 @@
 			)
 				textControl.setSelectionRange(selectionStart, selectionEnd, selectionDirection);
 		});
+		if (failed) throw failure;
 		return true;
 	}
 	function remove(index: number): boolean {

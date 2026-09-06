@@ -3,7 +3,7 @@
 	"summary": {
 		"stableCompliant": 141,
 		"stableViolations": 0,
-		"promotionEligibleExperimental": 20
+		"promotionEligibleExperimental": 21
 	},
 	"components": [
 		{
@@ -1174,7 +1174,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/gene/provider/doc.ts",
-			"ssrEvidenceCount": 13
+			"ssrEvidenceCount": 14
 		},
 		{
 			"id": "separator",
@@ -1224,7 +1224,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/calendar/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrEvidenceCount": 3
 		},
 		{
 			"id": "cascader",
@@ -1264,7 +1264,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/date-field/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrEvidenceCount": 3
 		},
 		{
 			"id": "date-picker",
@@ -1274,7 +1274,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/date-picker/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrEvidenceCount": 2
 		},
 		{
 			"id": "date-range-picker",
@@ -1284,7 +1284,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/date-range-picker/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrEvidenceCount": 2
 		},
 		{
 			"id": "field",
@@ -1294,7 +1294,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/field/doc.ts",
-			"ssrEvidenceCount": 5
+			"ssrEvidenceCount": 6
 		},
 		{
 			"id": "fieldset",
@@ -1324,7 +1324,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/form/doc.ts",
-			"ssrEvidenceCount": 7
+			"ssrEvidenceCount": 9
 		},
 		{
 			"id": "form-field",
@@ -1334,7 +1334,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/form/doc.ts",
-			"ssrEvidenceCount": 7
+			"ssrEvidenceCount": 9
 		},
 		{
 			"id": "form-list",
@@ -1354,7 +1354,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/input/doc.ts",
-			"ssrEvidenceCount": 6
+			"ssrEvidenceCount": 7
 		},
 		{
 			"id": "input-group",
@@ -1494,6 +1494,16 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/time-field/doc.ts",
+			"ssrEvidenceCount": 3
+		},
+		{
+			"id": "time-picker",
+			"name": "ZTimePicker",
+			"family": null,
+			"status": "experimental",
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
+			"docs": "apps/docs/src/content/components/input/time-picker/doc.ts",
 			"ssrEvidenceCount": 1
 		},
 		{

@@ -461,8 +461,9 @@
 			: target.value;
 	}
 	function initiallySelected(optionValue: string): boolean | undefined {
-		if (!multiple || !Array.isArray(initialSelection)) return undefined;
-		return initialSelection.includes(optionValue);
+		if (typeof initialSelection === 'string') return initialSelection === optionValue;
+		if (Array.isArray(initialSelection)) return initialSelection.includes(optionValue);
+		return undefined;
 	}
 	function synchronize(
 		target: HTMLSelectElement,

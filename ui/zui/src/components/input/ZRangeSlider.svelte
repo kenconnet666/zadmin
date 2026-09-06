@@ -394,15 +394,20 @@
 	);
 	const metrics = $derived(controlSizeMetrics(zui.theme, resolvedSize));
 	const valueScope = claimFormValueScope();
+	function asSliderRangeValue(candidate: unknown): SliderRangeValue {
+		if (!Array.isArray(candidate) || candidate.length !== 2)
+			throw new TypeError('ZRangeSlider model value must be a two-number tuple.');
+		const [lower, upper] = candidate;
+		if (typeof lower !== 'number' || typeof upper !== 'number')
+			throw new TypeError('ZRangeSlider model value must be a two-number tuple.');
+		return [lower, upper];
+	}
 	const valueState = createFormControlState<SliderRangeValue>(
 		{
 			defaultValue: () => normalizeSliderRange(defaultValue, min, max, step),
 			element: () => ref,
-			normalizeModelValue: (candidate) => {
-				if (!Array.isArray(candidate) || candidate.length !== 2)
-					throw new TypeError('ZRangeSlider model value must be a two-number tuple.');
-				return normalizeSliderRange(candidate as SliderRangeValue, min, max, step);
-			},
+			normalizeModelValue: (candidate) =>
+				normalizeSliderRange(asSliderRangeValue(candidate), min, max, step),
 			onChange: () => onValueChange,
 			owner: 'ZRangeSlider',
 			read: () => value,
@@ -479,7 +484,7 @@
 		return formatValue?.(resolvedValue[index], index) ?? String(resolvedValue[index]);
 	}
 	function showBubble(index: 0 | 1): boolean {
-		if (valueLabel === 'always') return true;
+		if (valueLabel === 'always') return false;
 		if (valueLabel === 'drag') return dragIndex === index;
 		return valueLabel === 'focus' && focusedIndex === index;
 	}
@@ -630,7 +635,12 @@
 	{#if valueLabel === 'always'}
 		<div class={classes.header}>
 			<span></span>
-			<output class={classes.value}>{formatted(0)} – {formatted(1)}</output>
+			<span aria-hidden="true" class={classes.value} data-slot="value-label">
+				{#if label}{@render label(resolvedValue[0], 0)} – {@render label(
+						resolvedValue[1],
+						1
+					)}{:else}{formatted(0)} – {formatted(1)}{/if}
+			</span>
 		</div>
 	{/if}
 	<!-- svelte-ignore a11y_no_static_element_interactions (the two native range inputs own semantics) -->
@@ -646,7 +656,7 @@
 		<span class={classes.rail} data-slot="rail"></span>
 		<span class={classes.fill} data-slot="fill"></span>
 		{#if marks.length}
-			<span class={classes.marks} data-slot="marks">
+			<span aria-hidden="true" class={classes.marks} data-slot="marks">
 				{#each marks as entry, markIndex}
 					<span
 						class={classes.mark}
@@ -670,13 +680,13 @@
 				style={`left:${orientation === 'horizontal' ? (index === 0 ? lowerPhysical : upperPhysical) * 100 : 50}%;top:${orientation === 'vertical' ? (index === 0 ? lowerPhysical : upperPhysical) * 100 : 50}%`}
 			>
 				{#if showBubble(index)}
-					<output class={classes.bubble} data-slot="value-label">
+					<span aria-hidden="true" class={classes.bubble} data-slot="value-label">
 						{#if label}
 							{@render label(resolvedValue[index], index)}
 						{:else}
 							{formatted(index)}
 						{/if}
-					</output>
+					</span>
 				{/if}
 			</span>
 		{/each}

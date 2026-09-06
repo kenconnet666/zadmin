@@ -1,7 +1,12 @@
-import { sameStateValue } from '../foundation/controllable-state.svelte.js';
 import { assertSelectionKey } from '../collection/selection.js';
 import { normalizeFieldPath, type FieldPath, type FieldPathInput } from './field-path.js';
-import { getFormValue, type FormValuesChangeReason } from './form-model.svelte.js';
+import {
+	getFormValue,
+	type FormAcceptedWrite,
+	type FormValuesChangeReason
+} from './form-model.svelte.js';
+import { createFormListReconcile, type FormListReconcile } from './form-list-reconcile.js';
+import { sameFormValue as equal } from './form-value-equality.js';
 
 const EMPTY_ROWS: readonly never[] = Object.freeze([]);
 
@@ -29,7 +34,20 @@ export interface FormArrayModel<TValues> {
 	isDirty(path: FieldPathInput): boolean;
 	isDirtyFrom(path: FieldPathInput, baselinePath?: FieldPathInput): boolean;
 	resetFieldTo(path: FieldPathInput, baselinePath?: FieldPathInput): boolean;
-	setField(path: FieldPathInput, value: unknown, reason: FormValuesChangeReason): boolean;
+	setField(
+		path: FieldPathInput,
+		value: unknown,
+		reason: FormValuesChangeReason,
+		acceptedWrite?: FormAcceptedWrite
+	): boolean;
+}
+/** @internal A fully validated list transition whose commit cannot be rejected. */
+export interface FormArrayPreparedMutation {
+	commit(): void;
+}
+/** @internal Bridges row identity to the owning form registry and error layers. */
+export interface FormArrayMutationHost {
+	prepareList(change: FormListReconcile): FormArrayPreparedMutation;
 }
 interface PendingRows<T> {
 	readonly ids: readonly string[];
@@ -42,6 +60,7 @@ export class FormArrayController<T, TValues> {
 	readonly #staticPath: FieldPath;
 	readonly #options: FormArrayOptions<T>;
 	readonly #location?: FormArrayLocation;
+	readonly #mutationHost?: FormArrayMutationHost;
 	#lastPath: FieldPath;
 	#baselineIds: string[] = [];
 	#baselineInput?: readonly T[];
@@ -57,13 +76,15 @@ export class FormArrayController<T, TValues> {
 		model: FormArrayModel<TValues>,
 		path: FieldPathInput,
 		options: FormArrayOptions<T> = {},
-		location?: FormArrayLocation
+		location?: FormArrayLocation,
+		mutationHost?: FormArrayMutationHost
 	) {
 		this.#model = model;
 		this.#staticPath = normalizeFieldPath(path);
 		this.#lastPath = this.#staticPath;
 		this.#options = options;
 		this.#location = location;
+		this.#mutationHost = mutationHost;
 		if (this.active) {
 			this.#lastPath = normalizeFieldPath(location?.path ?? this.#staticPath);
 			this.#refreshBaseline();
@@ -91,15 +112,14 @@ export class FormArrayController<T, TValues> {
 		if (resetVersion > this.#resetRevision) {
 			this.#ids = values.map((_, index) => this.#baselineIds[index] ?? this.#id());
 			this.#keys = this.#options.getRowKey ? values.map(this.#options.getRowKey) : [];
-		} else if (this.#pending && sameStateValue(values, this.#pending.values)) {
-			this.#ids = [...this.#pending.ids];
-			this.#keys = [...this.#pending.keys];
-		} else this.#reconcile(values);
+		} else if (!(this.#pending && equal(values, this.#pending.values))) this.#reconcile(values);
 		this.#resetRevision = resetRevision;
+		const ids =
+			this.#pending && equal(values, this.#pending.values) ? this.#pending.ids : this.#ids;
 		return Object.freeze(
 			values.map((value, index) =>
 				Object.freeze({
-					id: this.#ids[index]!,
+					id: ids[index]!,
 					index,
 					path: Object.freeze([...path, index]),
 					value
@@ -149,7 +169,7 @@ export class FormArrayController<T, TValues> {
 		if (!this.active) return false;
 		const values = this.rows.map((row) => row.value);
 		this.#index(index, values.length);
-		if (sameStateValue(values[index], value)) return true;
+		if (equal(values[index], value)) return true;
 		this.#reconcile(values);
 		values[index] = value;
 		return this.#write(values, [...this.#ids]);
@@ -211,21 +231,40 @@ export class FormArrayController<T, TValues> {
 			: positionalIds;
 		const previousIds = [...this.#ids];
 		const previousKeys = [...this.#keys];
+		const path = this.path;
+		const change = createFormListReconcile(
+			path,
+			previousIds.map((id, index) => ({ id, path: Object.freeze([...path, index]) })),
+			ids.map((id, index) => ({ id, path: Object.freeze([...path, index]) }))
+		);
+		const identityChanged =
+			previousIds.length !== ids.length || previousIds.some((id, index) => id !== ids[index]);
+		const prepared = identityChanged ? this.#mutationHost?.prepareList(change) : undefined;
 		this.#pending = { ids, keys, values };
+		let committed = false;
+		const acceptedWrite: FormAcceptedWrite = {
+			commit: () => {
+				if (committed) return;
+				this.#keys = [...keys];
+				this.#ids = [...ids];
+				this.#revision = ++this.#nextRevision;
+				committed = true;
+				prepared?.commit();
+			}
+		};
 		let accepted = false;
 		try {
-			accepted = this.#model.setField(this.path, Object.freeze(values), 'array');
+			accepted = this.#model.setField(path, Object.freeze(values), 'array', acceptedWrite);
+			// Structural models written against the earlier narrow contract may ignore the hook.
+			if (accepted && !committed) acceptedWrite.commit();
 		} finally {
 			this.#pending = undefined;
-			if (!accepted) {
+			if (!committed) {
 				this.#ids = previousIds;
 				this.#keys = previousKeys;
 			}
 		}
 		if (!accepted) return false;
-		this.#keys = keys;
-		this.#ids = ids;
-		this.#revision = ++this.#nextRevision;
 		return true;
 	}
 	#id(): string {
@@ -273,7 +312,7 @@ export class FormArrayController<T, TValues> {
 	#refreshBaseline(): void {
 		const values = this.#baselineValues();
 		if (Object.is(values, this.#baselineInput)) return;
-		if (this.#baselineInput !== undefined && sameStateValue(values, this.#baselineInput)) {
+		if (this.#baselineInput !== undefined && equal(values, this.#baselineInput)) {
 			this.#baselineInput = values;
 			return;
 		}
@@ -300,7 +339,7 @@ export class FormArrayController<T, TValues> {
 	#reconcile(values = this.#values()): void {
 		this.#refreshBaseline();
 		this.#assertKeys(values);
-		if (this.#pending && sameStateValue(values, this.#pending.values)) {
+		if (this.#pending && equal(values, this.#pending.values)) {
 			this.#ids = [...this.#pending.ids];
 			this.#keys = [...this.#pending.keys];
 			return;

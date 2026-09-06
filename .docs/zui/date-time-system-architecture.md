@@ -2,11 +2,17 @@
 
 ## Scope and model
 
-This stage productionizes `ZCalendar`, `ZDateField`, `ZTimeField`, `ZDatePicker`, and
-`ZDateRangePicker`. Values remain the immutable `CalendarDate` and `Time` types from
+The system includes `ZCalendar`, `ZDateField`, `ZTimeField`, `ZDatePicker`,
+`ZDateRangePicker`, and the experimental `ZTimePicker`. Values remain the immutable `CalendarDate` and `Time` types from
 `@internationalized/date`; date-only and wall-clock values are not converted through the host
 `Date` constructor. `null` is the explicit controlled empty value. `undefined` only means that a
 Svelte binding was not supplied and may therefore select `defaultValue` during initialization.
+
+In model mode, a missing field (`undefined`) projects to an empty value without using the component's
+defaultValue. FormModel copies and freezes the supported immutable date values and compares their
+declared fields, so equivalent new CalendarDate/Time instances share value semantics. Arbitrary
+class instances and native Date objects retain identity semantics. Composite children explicitly opt
+out of model participation; an absent scope argument and an explicit opt-out are distinct.
 
 `CalendarRangeValue` intentionally permits start-only and end-only field drafts. When both endpoints
 exist, `normalizeRangeValue` guarantees chronological order. FormData contains only existing
@@ -47,6 +53,12 @@ Primary references:
   externally changing selection does not create a user callback.
 
 ## Keyboard and range contracts
+
+TimePicker reuses TimeField, InputGroup, Popover, Button, ScrollArea and the collection navigation
+primitives. Its finite columns hold a panel draft; Space/click updates the draft, Enter/Confirm commits,
+and Escape discards it. Existing hidden time units survive edits at coarser granularity. Empty pickers
+may search a legal reference under precise constraints. Date/time inputs inherit InputGroup name,
+label, state and size, and the enclosing group owns disabled opacity once.
 
 - Date/time segments: logical Left/Right plus Home/End navigation, Up/Down cycle, Enter commit, and
   Escape draft rollback. The DOM order is produced by `Intl.DateTimeFormat.formatToParts`, including

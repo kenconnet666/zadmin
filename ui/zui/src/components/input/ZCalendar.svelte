@@ -50,7 +50,12 @@
 			{ description: '键盘焦点日期。', name: 'focusedValue', type: 'CalendarDate | undefined' },
 			{ description: '真实calendar根引用。', name: 'ref', type: 'HTMLDivElement | null' }
 		],
-		dependencies: ['@internationalized/date', '6x7 calendar grid', 'roving focus', 'FormValue'],
+		dependencies: [
+			'@internationalized/date',
+			'6x7 calendar grid',
+			'roving focus',
+			'FormControlState'
+		],
 		events: [
 			{
 				description: '用户选择可用日期。',
@@ -217,7 +222,7 @@
 				type: 'CalendarRange | CalendarRangeValue | null'
 			},
 			{
-				default: 'Field size或Provider density',
+				default: 'Field > componentDefaults.calendar > Provider density',
 				description: '统一容器间距、导航与日期cell尺寸。',
 				name: 'size',
 				type: "'xsmall' | 'small' | 'medium' | 'large' | 'xlarge'"
@@ -227,6 +232,11 @@
 		snippets: [],
 		source: 'ui/zui/src/components/input/ZCalendar.svelte',
 		states: [
+			{
+				description: '解析后的五档控件尺寸。',
+				name: 'data-size',
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge']
+			},
 			{ description: '选择日期或range内日期。', name: 'data-selected', values: ['true'] },
 			{ description: '范围起点或终点。', name: 'data-range-edge', values: ['start', 'end'] },
 			{ description: '当前显示月外日期。', name: 'data-outside', values: ['true'] },
@@ -459,17 +469,21 @@
 	} from '@internationalized/date';
 	import { onDestroy, untrack } from 'svelte';
 	import { SvelteMap } from 'svelte/reactivity';
-	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { resolveControlSize } from '../../runtime/foundation/control-size.js';
 	import { claimZFieldControlOwner } from '../../runtime/form/field-context.js';
 	import FormValueBridge from '../../runtime/form/FormValueBridge.svelte';
 	import { mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
+	import {
+		claimFormValueScope,
+		createFormControlState
+	} from '../../runtime/form/form-value-adapter.svelte.js';
 	import {
 		calendarMonth,
 		clampDate,
 		formatDate,
 		isDateInRange,
 		isDateUnavailable as dateIsUnavailable,
+		normalizeCalendarDateModelValue,
 		normalizeRangeValue,
 		weekdayLabels,
 		weekDayIndex
@@ -519,6 +533,7 @@
 	const zui = useZui();
 	const fieldOwner = claimZFieldControlOwner();
 	const field = fieldOwner.field;
+	const valueScope = formParticipation === 'auto' ? claimFormValueScope() : null;
 	const PreviousIcon = $derived(zui.direction === 'rtl' ? ChevronRight : ChevronLeft);
 	const NextIcon = $derived(zui.direction === 'rtl' ? ChevronLeft : ChevronRight);
 	const resolvedLocale = $derived(locale ?? zui.locale);
@@ -531,7 +546,9 @@
 	const resolvedReadonly = $derived(readonly || (field?.readonly ?? false));
 	const resolvedRequired = $derived(required || (field?.required ?? false));
 	const resolvedName = $derived(name ?? field?.name);
-	const resolvedSize = $derived(resolveControlSize(size ?? field?.size, zui.density));
+	const resolvedSize = $derived(
+		resolveControlSize(size ?? field?.size ?? zui.componentDefaults.calendar?.size, zui.density)
+	);
 	const describedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
 	const labelledBy = $derived(mergeAriaIds(ariaLabelledBy, field?.labelId));
 	const constraints = $derived.by(() => {
@@ -539,9 +556,22 @@
 			throw new RangeError('ZCalendar minValue cannot exceed maxValue.');
 		return { predicate: isDateUnavailable };
 	});
+	const valueState = createFormControlState<CalendarDate | null>(
+		{
+			defaultValue: () => defaultValue ?? null,
+			element: () => ref,
+			normalizeModelValue: (candidate) => normalizeCalendarDateModelValue(candidate, 'ZCalendar'),
+			onChange: () => onValueChange,
+			owner: 'ZCalendar',
+			read: () => value,
+			syncNative: (next) => syncCalendar(next),
+			write: (next) => (value = next)
+		},
+		valueScope
+	);
 	const initialFocus = untrack(() => {
 		const candidate = clampDate(
-			defaultFocusedValue ?? defaultValue ?? today(resolvedTimeZone),
+			defaultFocusedValue ?? valueState.current ?? defaultValue ?? today(resolvedTimeZone),
 			minValue,
 			maxValue
 		);
@@ -553,12 +583,6 @@
 		new CalendarDate(initialFocus.year, initialFocus.month, 1)
 	);
 	const buttons = new SvelteMap<string, HTMLButtonElement>();
-	const valueState = new ControllableState<CalendarDate | null>({
-		defaultValue: () => defaultValue ?? null,
-		onChange: () => onValueChange,
-		read: () => value,
-		write: (next) => (value = next)
-	});
 	const cells = $derived(calendarMonth(displayedMonth, resolvedLocale, firstDayOfWeek));
 	const weekdays = $derived(
 		weekdayLabels(displayedMonth, resolvedLocale, firstDayOfWeek, 'short', resolvedTimeZone)
@@ -577,29 +601,37 @@
 	const weekdayClass = $derived(zui.recipe(weekdayRecipe, { size: resolvedSize }));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
-	function resetFromForm(): void {
-		valueState.reset();
-		const next = clampDate(
-			defaultFocusedValue ?? defaultValue ?? today(resolvedTimeZone),
+
+	function syncCalendar(next: CalendarDate | null): void {
+		const target = clampDate(
+			defaultFocusedValue ?? next ?? defaultValue ?? today(resolvedTimeZone),
 			minValue,
 			maxValue
 		);
-		fallbackFocused = next;
-		focusedValue = next;
-		displayedMonth = new CalendarDate(next.year, next.month, 1);
+		setFocused(target, false);
+		displayedMonth = new CalendarDate(target.year, target.month, 1);
 	}
+
+	function resetFromForm(): void {
+		valueState.reset();
+		syncCalendar(valueState.current);
+	}
+
 	function unavailableDate(date: CalendarDate): boolean {
 		return dateIsUnavailable(date, minValue, maxValue, constraints.predicate);
 	}
+
 	function unavailable(date: CalendarDate): boolean {
 		return resolvedDisabled || unavailableDate(date);
 	}
+
 	function setFocused(next: CalendarDate, notify = true): void {
 		const changed = !isSameDay(focused, next);
 		fallbackFocused = next;
 		focusedValue = next;
 		if (notify && changed) onFocusedValueChange?.(next);
 	}
+
 	function availableFrom(candidate: CalendarDate, direction: -1 | 1): CalendarDate | null {
 		let next = clampDate(candidate, minValue, maxValue);
 		for (let attempts = 0; attempts < 3660; attempts += 1) {
@@ -614,6 +646,7 @@
 		}
 		return null;
 	}
+
 	function focusDate(next: CalendarDate, direction: -1 | 1): void {
 		if (resolvedDisabled) return;
 		const available = availableFrom(next, direction);
@@ -625,6 +658,7 @@
 			buttons.get(available.toString())?.focus({ preventScroll: true })
 		);
 	}
+
 	function registerButton(node: HTMLButtonElement, key: string) {
 		let current = key;
 		buttons.set(current, node);
@@ -639,11 +673,18 @@
 			}
 		};
 	}
+
 	function select(date: CalendarDate): void {
 		if (resolvedReadonly || unavailable(date)) return;
+		const previousFocus = focused;
+		const previousMonth = displayedMonth;
 		setFocused(date);
-		valueState.setFromUser(date);
+		if (!valueState.setFromUser(date)) {
+			setFocused(previousFocus, false);
+			displayedMonth = previousMonth;
+		}
 	}
+
 	function handleKeydown(event: KeyboardEvent, date: CalendarDate): void {
 		const horizontal = zui.direction === 'rtl' ? -1 : 1;
 		let next: CalendarDate;
@@ -696,6 +737,7 @@
 		event.preventDefault();
 		focusDate(next, direction);
 	}
+
 	function moveMonth(amount: number): void {
 		if (resolvedDisabled) return;
 		const next = displayedMonth.add({ months: amount });
@@ -710,6 +752,7 @@
 		const available = availableFrom(candidate, amount < 0 ? -1 : 1);
 		if (available && isSameMonth(available, next)) setFocused(available);
 	}
+
 	const previousDisabled = $derived(
 		resolvedDisabled ||
 			Boolean(
@@ -724,6 +767,14 @@
 		const next = focused;
 		if (!isSameMonth(next, displayedMonth))
 			displayedMonth = new CalendarDate(next.year, next.month, 1);
+	});
+	let observedValueKey: string | null | undefined;
+	$effect(() => {
+		const next = valueState.current;
+		const key = next?.toString() ?? null;
+		if (observedValueKey === key) return;
+		observedValueKey = key;
+		if (next) syncCalendar(next);
 	});
 	onDestroy(
 		fieldOwner.registerFocusOwner(() => {
@@ -751,16 +802,20 @@
 			class={navClass}
 			aria-label={resolvedPreviousLabel}
 			disabled={previousDisabled}
-			onclick={() => moveMonth(-1)}><PreviousIcon aria-hidden="true" size="1em" /></button
+			onclick={() => moveMonth(-1)}
 		>
+			<PreviousIcon aria-hidden="true" size="1em" />
+		</button>
 		<strong aria-live="polite">{monthLabel}</strong>
 		<button
 			type="button"
 			class={navClass}
 			aria-label={resolvedNextLabel}
 			disabled={nextDisabled}
-			onclick={() => moveMonth(1)}><NextIcon aria-hidden="true" size="1em" /></button
+			onclick={() => moveMonth(1)}
 		>
+			<NextIcon aria-hidden="true" size="1em" />
+		</button>
 	</div>
 	<table
 		class={tableClass}
@@ -773,14 +828,13 @@
 		aria-readonly={resolvedReadonly || undefined}
 		aria-multiselectable={range ? true : undefined}
 	>
-		<thead
-			><tr
-				>{#each weekdays as weekday, index (`${weekday}-${index}`)}<th
-						class={weekdayClass}
-						scope="col">{weekday}</th
-					>{/each}</tr
-			></thead
-		>
+		<thead>
+			<tr>
+				{#each weekdays as weekday, index (`${weekday}-${index}`)}
+					<th class={weekdayClass} scope="col">{weekday}</th>
+				{/each}
+			</tr>
+		</thead>
 		<tbody>
 			{#each Array.from({ length: 6 }, (_, index) => index) as week (week)}
 				<tr>

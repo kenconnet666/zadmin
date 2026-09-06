@@ -195,3 +195,11 @@ Switch、RadioGroup、Slider、RangeSlider、Rating 共用 E10A adapter。复合
 NumberField、Segmented、TagsInput、Select、MultiSelect共用模型adapter，草稿、Selection、Overlay、FormValueBridge和主题继续沿用。Select/MultiSelect复用真实Trigger注册owner，浏览器发现并修复注册revision自订阅循环。
 
 实际浏览器确认两层重排保DOM/focus/selection、字段reset取正确父行基线、错误只换址一次、新父行无baseline的增删/reset，以及五控件批量/重复FormData/连续reset。详见 [E10C 执行](./execution-nested-form-collections-2026-09-07.md)。本地仍未执行长套件，远程CI继续承接验证；新组件保持实验性，完整矩阵与最终家族审计继续推进。
+
+## E11：TimePicker、日期模型和数组预检事务
+
+新增TimePicker，复用TimeField/InputGroup/Popover/ScrollArea/Collection，六类日期控件使用同一模型值语义与五档默认。日期值复制冻结但保留class私有类型和方法，同逻辑日期的新对象不产生dirty。数组先prepare完整registry/errors候选，owner接受后先提交身份与字段状态再通知；拒绝与观察者异常不会留下半次重排。
+
+真实浏览器补正TimePicker CSS长度运算与窄屏四列、受控拒绝回滚、日期/时间Group双重禁用透明度，以及Slider output抢走隐式label的长期CI问题。FormValueBridge统一恢复同值reset后的hidden entries。前一ba12b9e的已完成CI失败已按源码/fixture分别修复可定位项，仍有历史边界待后续候选隔离；完整测试继续远程执行。
+
+详见 [E11执行](./execution-time-picker-form-transactions-2026-09-07.md)。DateTime/TimeRange、TimePicker presets/now、日期多月/周期与动画、企业能力及最终组件族审计继续，不以本批源码制品或既有stable标签结束目标。

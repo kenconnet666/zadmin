@@ -419,9 +419,7 @@
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
 	onMount(() => {
 		if (field && !controlOwner)
-			throw new TypeError(
-				'ZInputGroup inside ZField requires one registered ZInput, ZTextarea, ZNativeSelect or ZPasswordInput.'
-			);
+			throw new TypeError('ZInputGroup inside ZField requires one registered input control.');
 		return reducedMotion.connect(ref?.ownerDocument.defaultView);
 	});
 	onDestroy(fieldOwner.registerFocusOwner(focusControl));

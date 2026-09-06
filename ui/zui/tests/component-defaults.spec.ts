@@ -7,6 +7,30 @@ import {
 } from '../src/runtime/foundation/component-defaults.js';
 
 describe('component defaults foundation', () => {
+	it('shares the five visual date-family sizes without sharing date values or constraints', () => {
+		const parent = resolveComponentDefaults(undefined, {
+			dateField: { size: 'small' },
+			timeField: { size: 'small' },
+			calendar: { size: 'large' },
+			datePicker: { size: 'medium' },
+			dateRangePicker: { size: 'medium' },
+			timePicker: { size: 'medium' }
+		});
+		const child = resolveComponentDefaults(parent, {
+			timePicker: { size: 'xlarge' },
+			dateField: null
+		});
+		expect(child.timePicker?.size).toBe('xlarge');
+		expect(child.timeField?.size).toBe('small');
+		expect(child.calendar?.size).toBe('large');
+		expect(child.dateField).toBeUndefined();
+		expect(() =>
+			resolveComponentDefaults(parent, { timePicker: { value: '10:30' } } as never)
+		).toThrow();
+		expect(() =>
+			resolveComponentDefaults(parent, { datePicker: { minValue: '2026-09-07' } } as never)
+		).toThrow();
+	});
 	it('merges input family visual defaults without sharing value or interaction policy', () => {
 		const parent = resolveComponentDefaults(undefined, {
 			slider: { size: 'large', tone: 'success' },

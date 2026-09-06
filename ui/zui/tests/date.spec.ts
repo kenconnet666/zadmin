@@ -1,4 +1,4 @@
-import { CalendarDate, Time } from '@internationalized/date';
+import { CalendarDate, JapaneseCalendar, Time } from '@internationalized/date';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -10,8 +10,11 @@ import {
 	formatTime,
 	isDateInRange,
 	isDateUnavailable,
+	normalizeCalendarDateModelValue,
+	normalizeCalendarRangeModelValue,
 	normalizeRange,
 	normalizeRangeValue,
+	normalizeTimeModelValue,
 	resolveHourCycle,
 	timeFieldPattern,
 	weekdayLabels
@@ -61,6 +64,40 @@ describe('date runtime', () => {
 		expect(resolveHourCycle('zh-CN')).toBe(24);
 		expect(timeFieldPattern('en-US', 12, 'second').some((part) => 'dayPeriod' in part)).toBe(true);
 		expect(timeFieldPattern('zh-CN', 24, 'minute').some((part) => 'dayPeriod' in part)).toBe(false);
+		expect(
+			timeFieldPattern('en-US', 12, 'hour').flatMap((part) =>
+				'segment' in part ? [part.segment] : []
+			)
+		).toEqual(['hour']);
+		expect(timeFieldPattern('en-US', 12, 'hour').some((part) => 'dayPeriod' in part)).toBe(true);
+	});
+
+	it('normalizes only the first-party date model value shapes', () => {
+		const date = new CalendarDate(2026, 9, 7);
+		const time = new Time(9, 30, 45, 125);
+		expect(normalizeCalendarDateModelValue(date, 'Date owner')).toBe(date);
+		expect(normalizeTimeModelValue(time, 'Time owner')).toBe(time);
+		expect(
+			normalizeCalendarRangeModelValue(
+				{ start: new CalendarDate(2026, 9, 9), end: new CalendarDate(2026, 9, 8) },
+				'Range owner'
+			)
+		).toEqual({ start: new CalendarDate(2026, 9, 8), end: new CalendarDate(2026, 9, 9) });
+		expect(normalizeCalendarDateModelValue(undefined, 'Date owner')).toBeNull();
+		expect(normalizeTimeModelValue(undefined, 'Time owner')).toBeNull();
+		expect(normalizeCalendarRangeModelValue(undefined, 'Range owner')).toBeNull();
+		expect(() => normalizeCalendarDateModelValue('2026-09-07', 'Date owner')).toThrow(
+			/CalendarDate, null or undefined/u
+		);
+		expect(() =>
+			normalizeCalendarDateModelValue(
+				new CalendarDate(new JapaneseCalendar(), 'reiwa', 8, 9, 7),
+				'Date owner'
+			)
+		).toThrow(/Gregorian CalendarDate/u);
+		expect(() => normalizeTimeModelValue(new Date(), 'Time owner')).toThrow(
+			/Time, null or undefined/u
+		);
 	});
 
 	it('formats CalendarDate values in the same explicit time zone used to create the instant', () => {
