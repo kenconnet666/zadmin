@@ -10,9 +10,15 @@ const items = [
 
 describe('ZToggleGroup server contract', () => {
 	it('renders a native group of pressed buttons without radiogroup semantics', () => {
-		const body = render(ZToggleGroup, { props: { items, value: [1] } }).body;
+		const body = render(ZToggleGroup, {
+			props: { 'aria-invalid': true, items, value: [1] }
+		}).body;
+		const root = body.match(/<div[^>]*role="group"[^>]*>/u)?.[0];
 		expect(body).toContain('role="group"');
 		expect(body).not.toContain('role="radiogroup"');
+		expect(root).toContain('data-invalid="true"');
+		expect(root).not.toContain('aria-invalid=');
+		expect(root).not.toContain('tabindex=');
 		expect(body.match(/aria-pressed="true"/gu)).toHaveLength(1);
 		expect(body.match(/aria-pressed="false"/gu)).toHaveLength(1);
 		expect(body).toContain('data-state="on"');

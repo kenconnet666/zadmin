@@ -3,7 +3,7 @@
 	"summary": {
 		"stableCompliant": 141,
 		"stableViolations": 0,
-		"promotionEligibleExperimental": 9
+		"promotionEligibleExperimental": 12
 	},
 	"components": [
 		{
@@ -514,6 +514,16 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/multi-select/doc.ts",
+			"ssrEvidenceCount": 1
+		},
+		{
+			"id": "navigation-menu",
+			"name": "ZNavigationMenu",
+			"family": "navigation-menu",
+			"status": "experimental",
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
+			"docs": "apps/docs/src/content/components/navigation/navigation-menu/doc.ts",
 			"ssrEvidenceCount": 1
 		},
 		{
@@ -1487,6 +1497,16 @@
 			"ssrEvidenceCount": 1
 		},
 		{
+			"id": "splitter",
+			"name": "ZSplitter",
+			"family": null,
+			"status": "experimental",
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
+			"docs": "apps/docs/src/content/components/layout/splitter/doc.ts",
+			"ssrEvidenceCount": 1
+		},
+		{
 			"id": "stack",
 			"name": "ZStack",
 			"family": null,
@@ -1524,6 +1544,16 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/command-palette/doc.ts",
+			"ssrEvidenceCount": 1
+		},
+		{
+			"id": "nav-link",
+			"name": "ZNavLink",
+			"family": null,
+			"status": "experimental",
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
+			"docs": "apps/docs/src/content/components/navigation/nav-link/doc.ts",
 			"ssrEvidenceCount": 1
 		},
 		{

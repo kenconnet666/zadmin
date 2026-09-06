@@ -230,6 +230,15 @@ function normalizeMetadataDefault(fact) {
 function incompleteControllableFamilies(props) {
 	const names = new Set(props.map(({ name }) => name));
 	return controllablePropFamilies.flatMap(([value, defaultValue, onChange]) => {
+		// A stateless disclosure uses expanded/onExpandedChange; that callback alone does not
+		// imply the collection's expandedKeys/defaultExpandedKeys ownership contract.
+		if (
+			value === 'expandedKeys' &&
+			names.has('expanded') &&
+			!names.has(value) &&
+			!names.has(defaultValue)
+		)
+			return [];
 		if (!names.has(defaultValue) && !names.has(onChange)) return [];
 		const missing = [value, defaultValue, onChange].filter((name) => !names.has(name));
 		return missing.length > 0 ? [{ family: value, missing }] : [];
@@ -324,6 +333,22 @@ if (process.argv.includes('--self-test')) {
 		]).length !== 0
 	)
 		throw new Error('API runtime audit complete controllable-family self-test failed.');
+	if (
+		incompleteControllableFamilies([{ name: 'expanded' }, { name: 'onExpandedChange' }]).length !==
+		0
+	)
+		throw new Error(
+			'API runtime audit confused a boolean disclosure with an expanded-key collection.'
+		);
+	const incompleteExpanded = incompleteControllableFamilies([
+		{ name: 'expandedKeys' },
+		{ name: 'onExpandedChange' }
+	]);
+	if (
+		incompleteExpanded.length !== 1 ||
+		incompleteExpanded[0]?.missing.join(',') !== 'defaultExpandedKeys'
+	)
+		throw new Error('API runtime audit stopped enforcing the expanded-key collection contract.');
 	const facts = generatedApiFacts(await readFile(generatedApiPath, 'utf8'));
 	const button = facts.get('ui/zui/src/components/gene/ZButton.svelte');
 	if (

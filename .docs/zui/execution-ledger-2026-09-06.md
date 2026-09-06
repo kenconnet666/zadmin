@@ -93,3 +93,18 @@ E2/E3 最终一起成功推送至 `ae19b1b`。本批新增 Toolbar、无 DOM Too
 - 修正AppShell重复类型导入、OverflowList snapshot/$state命名与泛型测试实例，以及表单reset内部output夹具。
 
 本阶段编写了SSR、类型、原生键盘、ShadowRoot/iframe、Toolbar×ToggleGroup×Portal和视觉回归合同。完整运行仍交远程CI，暂不将新增组件提升stable。下一批继续N3-B NavigationMenu/Menubar和N2-B Splitter，再按总纲推进完整输入/表单/数据能力；全目标未缩小。
+
+## E5：导航菜单、导航项与分栏，继续修复上一轮 CI
+
+本批新增 NavLink、NavigationMenu、Splitter，目录扩至94族/158公开组件；componentDefaults由19组扩至22组。新增组件保持experimental/unreleased。生成器中的覆盖标签是源码资产盘点，不代表此提交已执行通过远程稳定验收。
+
+- NavLink以真实Link、Button或被动内容呈现；href与disclosure并列，统一五档尺寸、五语义色加primary、三种variant、当前项指示和紧凑呈现。独立导航项不重复承担树状态。
+- NavigationMenu支持inline/vertical/horizontal、静态分组/分隔、受控current与open、single/multiple、collapsed、RTL、可取消SPA请求、原生修饰链接、公开focus/expand/collapse/close与panel snippets。复用现有集合、Popover和OverflowList；children/panel在TS和runtime互斥。
+- 关闭single sibling同步移除所有后代key；方向键只交给一个owner；Portal面板以具名region呈现。Overflow固定当前项与含自定义panel的根项，More使用数据标签和图标，避免消费者片段、固定ID、表单状态重复挂载。
+- Splitter支持百分比数字、百分号、px/rem混合单位，真实content-box分配、多面板min/max、RTL、两轴与嵌套、拖动生命周期、键盘大小步长/Home/End、折叠恢复和reset。SSR未测量时不伪造ARIA数值或隐藏内容；不可能的约束通过constrained状态呈现。
+- 本次减法包括：共享Popover/Floating/Presence，未新增第二套浮层或导航焦点引擎；删除独立current-change回调设想，由真实路由owner确认；共享已有主题尺寸/颜色/动画token，避免重复尺度。
+- Chrome在390px检查三页没有页面横向溢出；NavigationMenu展开、More与Escape正常，面板末项Tab移至下一真实入口。Splitter键盘25/50/25→26/49/25；1440px下折叠文件186.5→40px并inert，恢复186.5px。浏览器还发现pointerdown取消默认行为后handle未获焦点，已补真实焦点并改为真实点击/按键CI回归。
+- 面板Tab揭示共享Popover恢复目标使用$state导致effect cleanup读旧快照；改成普通imperative字段后Chrome确认目标保持。审查修复和未完成的禁用/移除焦点验收边界见[E5集成审查](./e5-navigation-integration-review-2026-09-06.md)。
+- 前一`db12350`的CI run `34029475777`构建/包边界通过，静态/组件/Docs失败。本批修复Toolbar/ToggleGroup泛型、夹具过窄类型、无效matcher、roving时序，以及ScrollArea即时reduced行为、原生RTL初始offset合同和AppShell可滚动区域键盘入口；详见[E5反馈](./e5-previous-ci-remediation-2026-09-06.md)。
+
+本地仅执行WebStorm局部诊断、真实浏览器检查、格式和源码制品生成；完整类型/SSR/多浏览器/几何/视觉/无障碍合同交远程CI。继续下一批Menubar、通用Resizable和Anchor，随后推进输入/表单/日期与数据大能力；不等待新CI。

@@ -6,8 +6,8 @@ import ZToolbarItem, {
 } from '../src/components/compound/toolbar/ZToolbarItem.svelte';
 import type { ToolbarItemAttributes } from '../src/components/compound/toolbar/context.svelte.js';
 
-const children = (() => undefined) as Snippet;
-const itemChildren = ((_attributes: ToolbarItemAttributes) => undefined) as Snippet<
+const children = (() => undefined) as unknown as Snippet;
+const itemChildren = ((_attributes: ToolbarItemAttributes) => undefined) as unknown as Snippet<
 	[ToolbarItemAttributes]
 >;
 

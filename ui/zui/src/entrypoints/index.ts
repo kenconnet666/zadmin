@@ -1,4 +1,34 @@
 export const ZUI_PACKAGE_NAME = '@zadmin/zui';
+export { default as ZNavLink } from '../components/navigation/ZNavLink.svelte';
+export type {
+	ZNavLinkProps,
+	NavLinkTone,
+	NavLinkVariant,
+	NavLinkIndicator
+} from '../components/navigation/ZNavLink.svelte';
+export { default as ZSplitter } from '../components/layout/ZSplitter.svelte';
+export type {
+	ZSplitterProps,
+	ZSplitterPanel,
+	ZSplitterSize,
+	ZSplitterOrientation,
+	ZSplitterResizeSource,
+	ZSplitterResizeDetail,
+	ZSplitterCancelReason,
+	ZSplitterCancelDetail
+} from '../components/layout/ZSplitter.svelte';
+export { default as ZNavigationMenu } from '../components/compound/navigation-menu/ZNavigationMenu.svelte';
+export type { ZNavigationMenuProps } from '../components/compound/navigation-menu/ZNavigationMenu.svelte';
+export type {
+	NavigationMenuEntry,
+	NavigationMenuItem,
+	NavigationMenuGroup,
+	NavigationMenuSeparator,
+	NavigationMenuMode,
+	NavigationMenuNavigateRequest,
+	NavigationMenuPanelContext
+} from '../runtime/collection/navigation-menu.js';
+export type { NavigationMenuItemContext } from '../components/compound/navigation-menu/context.js';
 export type {
 	AvatarComponentDefaults,
 	BadgeComponentDefaults,
@@ -6,6 +36,9 @@ export type {
 	HeadingComponentDefaults,
 	IconComponentDefaults,
 	LinkComponentDefaults,
+	NavLinkComponentDefaults,
+	NavigationMenuComponentDefaults,
+	SplitterComponentDefaults,
 	SpinnerComponentDefaults,
 	SegmentedComponentDefaults,
 	TextComponentDefaults,

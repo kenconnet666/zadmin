@@ -10,6 +10,7 @@ describe('ZAppShell server contract', () => {
 		expect(body).toContain('<main');
 		expect(body).toContain('data-layout="default"');
 		expect(body).toContain('data-scroll="main"');
+		expect(body).toContain('data-region="main" data-slot="main" tabindex="0"');
 		expect(body).not.toContain('ResizeObserver');
 	});
 
@@ -29,6 +30,10 @@ describe('ZAppShell server contract', () => {
 		expect(body).toContain('<footer');
 		expect(body).toContain('aria-label="Primary navigation"');
 		expect(body).toContain('data-main-as="div"');
+		expect(body).toContain('data-region="navbar" data-slot="navbar" tabindex="0"');
+		expect(body).toContain('data-region="aside" data-slot="aside" tabindex="0"');
+		const explicitTabIndex = render(ZAppShell, { props: { scroll: 'root', tabindex: -1 } }).body;
+		expect(explicitTabIndex).toContain('tabindex="-1"');
 		expect(() => render(ZAppShell, { props: { mainAs: 'section' } as never }).body).toThrow(
 			'mainAs must be main or div'
 		);

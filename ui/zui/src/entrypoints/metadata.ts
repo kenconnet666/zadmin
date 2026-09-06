@@ -174,3 +174,6 @@ export type {
 	ZuiReleasedVersion,
 	ZuiSnippetMetadata
 } from '../metadata/types.js';
+export { zuiMetadata as navLinkMetadata } from '../components/navigation/ZNavLink.svelte';
+export { zuiMetadata as splitterMetadata } from '../components/layout/ZSplitter.svelte';
+export { zuiMetadata as navigationMenuMetadata } from '../components/compound/navigation-menu/ZNavigationMenu.svelte';

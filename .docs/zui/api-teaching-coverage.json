@@ -562,6 +562,17 @@
 			"fallbackPropNames": []
 		},
 		{
+			"id": "navigation-menu",
+			"name": "ZNavigationMenu",
+			"source": "ui/zui/src/components/compound/navigation-menu/ZNavigationMenu.svelte",
+			"family": "navigation-menu",
+			"declaredPropCount": 21,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
 			"id": "popconfirm",
 			"name": "ZPopconfirm",
 			"source": "ui/zui/src/components/compound/popconfirm/ZPopconfirm.svelte",
@@ -1631,6 +1642,16 @@
 			"fallbackPropNames": []
 		},
 		{
+			"id": "splitter",
+			"name": "ZSplitter",
+			"source": "ui/zui/src/components/layout/ZSplitter.svelte",
+			"declaredPropCount": 15,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
 			"id": "stack",
 			"name": "ZStack",
 			"source": "ui/zui/src/components/layout/ZStack.svelte",
@@ -1665,6 +1686,16 @@
 			"name": "ZCommandPalette",
 			"source": "ui/zui/src/components/navigation/ZCommandPalette.svelte",
 			"declaredPropCount": 32,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "nav-link",
+			"name": "ZNavLink",
+			"source": "ui/zui/src/components/navigation/ZNavLink.svelte",
+			"declaredPropCount": 24,
 			"metadataGapPropCount": 0,
 			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
@@ -1706,8 +1737,8 @@
 		"maxMetadataGapProps": 0
 	},
 	"totals": {
-		"components": 155,
-		"declaredProps": 1918,
+		"components": 158,
+		"declaredProps": 1978,
 		"metadataGapProps": 0,
 		"fallbackProps": 0,
 		"opaqueStructuredProps": 9,

@@ -32,6 +32,9 @@ describe('ZAppShell production contract', () => {
 		expect(getComputedStyle(shell).display).toBe('grid');
 		expect(getComputedStyle(shell).overflow).toBe('hidden');
 		expect(getComputedStyle(main).overflow).toBe('auto');
+		expect(main.tabIndex).toBe(0);
+		expect(navbar.tabIndex).toBe(0);
+		expect(aside.tabIndex).toBe(0);
 		expect(main.getBoundingClientRect().top).toBeGreaterThanOrEqual(
 			header.getBoundingClientRect().bottom
 		);
@@ -69,6 +72,7 @@ describe('ZAppShell production contract', () => {
 		).toBe('none');
 		expect(alternative.scrollWidth).toBeLessThanOrEqual(alternative.clientWidth + 1);
 		expect(getComputedStyle(alternative).overflow).toBe('auto');
+		expect(alternative.tabIndex).toBe(0);
 		expect(getComputedStyle(alternativeMain).overflow).toBe('visible');
 		expect(alternative.scrollHeight).toBeGreaterThan(alternative.clientHeight);
 		expect(alternativeMain.scrollHeight).toBe(alternativeMain.clientHeight);

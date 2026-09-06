@@ -53,6 +53,9 @@ import { selectDoc } from '../content/components/input/select/doc.js';
 import { segmentedDoc } from '../content/components/input/segmented/doc.js';
 import { toggleGroupDoc } from '../content/components/input/toggle-group/doc.js';
 import { toolbarDoc } from '../content/components/navigation/toolbar/doc.js';
+import { navLinkDoc } from '../content/components/navigation/nav-link/doc.js';
+import { splitterDoc } from '../content/components/layout/splitter/doc.js';
+import { navigationMenuDoc } from '../content/components/navigation/navigation-menu/doc.js';
 import { sliderDoc } from '../content/components/input/slider/doc.js';
 import { switchDoc } from '../content/components/input/switch/doc.js';
 import { tagsInputDoc } from '../content/components/input/tags-input/doc.js';
@@ -171,6 +174,9 @@ export const componentDocs = Object.freeze([
 	segmentedDoc,
 	toggleGroupDoc,
 	toolbarDoc,
+	navLinkDoc,
+	splitterDoc,
+	navigationMenuDoc,
 	switchDoc,
 	tagsInputDoc,
 	textareaDoc,

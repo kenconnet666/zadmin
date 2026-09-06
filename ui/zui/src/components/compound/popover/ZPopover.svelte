@@ -144,7 +144,8 @@
 	});
 	const reducedMotion = new ReducedMotionState(() => zui.motion);
 	let portalAnchor = $state<HTMLElement | null>(null);
-	let restoreTarget = $state<HTMLElement | null>(null);
+	// FocusScope reads this during effect cleanup, which must see the latest imperative target.
+	let restoreTarget: HTMLElement | null = null;
 	let trigger = $state<HTMLElement | null>(null);
 	const context: ZPopoverContext = {
 		get contentId() {

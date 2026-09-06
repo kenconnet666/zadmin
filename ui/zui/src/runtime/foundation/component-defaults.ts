@@ -39,6 +39,12 @@ const typographyRules = {
 	weight: { kind: 'enum', values: keys(DEFAULT_THEME_SCHEMA.fontWeight) }
 } as const;
 
+const navigationRules = {
+	size: buttonRules.size,
+	tone: buttonRules.tone,
+	variant: { kind: 'enum', values: ['subtle', 'solid', 'outline'] }
+} as const;
+
 const COMPONENT_RULES = {
 	avatar: {
 		shape: { kind: 'enum', values: ['circle', 'rounded', 'square'] },
@@ -81,6 +87,9 @@ const COMPONENT_RULES = {
 		underline: { kind: 'enum', values: ['always', 'hover', 'none'] },
 		variant: buttonRules.variant
 	},
+	navLink: { ...navigationRules, indicator: { kind: 'enum', values: ['none', 'start', 'end'] } },
+	navigationMenu: navigationRules,
+	splitter: { size: buttonRules.size },
 	pagination: {
 		mode: { kind: 'enum', values: ['compact', 'default', 'simple'] },
 		size: { kind: 'enum', values: controlSizes }
@@ -132,6 +141,9 @@ export interface HeadingComponentDefaults extends DefaultsFor<'heading'> {}
 export interface IconComponentDefaults extends DefaultsFor<'icon'> {}
 export interface InputComponentDefaults extends DefaultsFor<'input'> {}
 export interface LinkComponentDefaults extends DefaultsFor<'link'> {}
+export interface NavLinkComponentDefaults extends DefaultsFor<'navLink'> {}
+export interface NavigationMenuComponentDefaults extends DefaultsFor<'navigationMenu'> {}
+export interface SplitterComponentDefaults extends DefaultsFor<'splitter'> {}
 export interface PaginationComponentDefaults extends DefaultsFor<'pagination'> {}
 export interface SpinnerComponentDefaults extends DefaultsFor<'spinner'> {}
 export interface SegmentedComponentDefaults extends DefaultsFor<'segmented'> {}

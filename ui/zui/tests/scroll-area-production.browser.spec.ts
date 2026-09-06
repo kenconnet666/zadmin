@@ -81,7 +81,9 @@ it('keeps browser RTL scrollLeft semantics rather than changing offsets to posit
 	const providerViewport = element('scroll-provider-rtl');
 	expect(getComputedStyle(viewport).direction).toBe('rtl');
 	expect(getComputedStyle(providerViewport).direction).toBe('rtl');
-	expect(viewport.scrollLeft).toBe(0);
+	// RTL scrollLeft is browser-native; classic scrollbar gutters may make the initial
+	// value negative before any programmatic scroll occurs.
+	expect(viewport.scrollLeft).toBeLessThanOrEqual(0);
 	viewport.scrollTo({ left: -100, behavior: 'instant' });
 	await expect.poll(() => viewport.scrollLeft).toBe(-100);
 	providerViewport.scrollTo({ left: -100, behavior: 'instant' });

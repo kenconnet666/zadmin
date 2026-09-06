@@ -1862,6 +1862,74 @@ export const componentCatalogManifest = Object.freeze([
 		publicComponentCount: 2
 	},
 	{
+		id: 'nav-link',
+		name: 'ZNavLink',
+		category: 'navigation',
+		summary:
+			'以真实anchor、button或被动内容呈现导航行；当前页、子级展开、disabled和视觉tone保持独立。',
+		status: 'experimental',
+		keywords: [],
+		profiles: ['primitive', 'collection'],
+		capabilities: [
+			'accessible-name',
+			'basic-render',
+			'native-props',
+			'variants-and-states',
+			'composition',
+			'focus',
+			'keyboard',
+			'rtl',
+			'reduced-motion'
+		],
+		demoCount: 4,
+		publicComponentCount: 1
+	},
+	{
+		id: 'splitter',
+		name: 'ZSplitter',
+		category: 'layout',
+		summary:
+			'以真实panel snippet、ARIA separator和pointer/keyboard生命周期调整可约束的多面板布局。',
+		status: 'experimental',
+		keywords: [],
+		profiles: ['primitive'],
+		capabilities: [
+			'basic-render',
+			'composition',
+			'focus',
+			'keyboard',
+			'native-props',
+			'variants-and-states',
+			'controlled',
+			'rtl'
+		],
+		demoCount: 4,
+		publicComponentCount: 1
+	},
+	{
+		id: 'navigation-menu',
+		name: 'ZNavigationMenu',
+		category: 'navigation',
+		summary:
+			'以真实nav列表、链接和disclosure构建站点导航；current、focus、open和SPA路由请求由独立owner管理。',
+		status: 'experimental',
+		keywords: [],
+		profiles: ['collection', 'layer'],
+		capabilities: [
+			'accessible-name',
+			'basic-render',
+			'composition',
+			'keyboard',
+			'focus',
+			'native-props',
+			'variants-and-states',
+			'rtl',
+			'controlled'
+		],
+		demoCount: 5,
+		publicComponentCount: 1
+	},
+	{
 		id: 'switch',
 		name: 'ZSwitch',
 		category: 'input',

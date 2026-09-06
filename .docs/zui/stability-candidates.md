@@ -2,7 +2,7 @@
 
 本文件由 `scripts/check-stability-policy.mjs` 生成；不会修改组件 status。compound member 可继承同 family root 的 Docs 页面。
 
-stableCompliant：141；stableViolations：0；promotionEligibleExperimental：9。
+stableCompliant：141；stableViolations：0；promotionEligibleExperimental：12。
 
 | Component               | Status       | Classification                | Blockers                                         | Docs                                                                  | SSR |
 | ----------------------- | ------------ | ----------------------------- | ------------------------------------------------ | --------------------------------------------------------------------- | --: |
@@ -57,6 +57,7 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：9
 | ZMultiSelectContent     | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/input/multi-select/doc.ts            |   1 |
 | ZMultiSelectItem        | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/input/multi-select/doc.ts            |   1 |
 | ZMultiSelectTrigger     | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/input/multi-select/doc.ts            |   1 |
+| ZNavigationMenu         | experimental | promotionEligibleExperimental | —                                                | apps/docs/src/content/components/navigation/navigation-menu/doc.ts    |   1 |
 | ZPopconfirm             | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/overlay/popconfirm/doc.ts            |   2 |
 | ZPopconfirmAction       | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/overlay/popconfirm/doc.ts            |   2 |
 | ZPopconfirmCancel       | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/overlay/popconfirm/doc.ts            |   2 |
@@ -154,10 +155,12 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：9
 | ZScrollArea             | experimental | experimental                  | BrowserBehaviorVerified                          | apps/docs/src/content/components/layout/scroll-area/doc.ts            |   1 |
 | ZSimpleGrid             | experimental | promotionEligibleExperimental | —                                                | apps/docs/src/content/components/layout/simple-grid/doc.ts            |   1 |
 | ZSpacer                 | experimental | promotionEligibleExperimental | —                                                | apps/docs/src/content/components/layout/spacer/doc.ts                 |   1 |
+| ZSplitter               | experimental | promotionEligibleExperimental | —                                                | apps/docs/src/content/components/layout/splitter/doc.ts               |   1 |
 | ZStack                  | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/layout/stack/doc.ts                  |   3 |
 | ZBreadcrumb             | experimental | promotionEligibleExperimental | —                                                | apps/docs/src/content/components/navigation/breadcrumb/doc.ts         |   1 |
 | ZCommand                | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/navigation/command/doc.ts            |   1 |
 | ZCommandPalette         | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/navigation/command-palette/doc.ts    |   1 |
+| ZNavLink                | experimental | promotionEligibleExperimental | —                                                | apps/docs/src/content/components/navigation/nav-link/doc.ts           |   1 |
 | ZPagination             | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/navigation/pagination/doc.ts         |   1 |
 | ZSteps                  | experimental | promotionEligibleExperimental | —                                                | apps/docs/src/content/components/navigation/steps/doc.ts              |   1 |
 | ZTour                   | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/overlay/tour/doc.ts                  |   1 |

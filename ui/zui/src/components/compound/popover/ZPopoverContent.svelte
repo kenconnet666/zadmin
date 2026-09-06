@@ -25,7 +25,7 @@
 		ref?: HTMLDivElement | null;
 		readonly restoreFocus?: boolean;
 		readonly restoreTarget?: () => HTMLElement | null;
-		readonly role?: 'dialog' | 'listbox' | 'presentation';
+		readonly role?: 'dialog' | 'listbox' | 'presentation' | 'region';
 	}
 
 	const popoverContentRecipe = defineRecipe({
@@ -125,9 +125,9 @@
 			},
 			{
 				default: "'dialog'",
-				description: 'Popover shell角色；Menu等复合封装使用presentation。',
+				description: 'Popover shell角色；站点导航可用具名region，命令Menu封装使用presentation。',
 				name: 'role',
-				type: "'dialog' | 'listbox' | 'presentation'"
+				type: "'dialog' | 'listbox' | 'presentation' | 'region'"
 			},
 			{
 				default: 'Trigger id',

@@ -546,7 +546,7 @@ export function validateMemberMetadataFacts({ entries, publicFacts, filename = '
 			);
 		if (entry.requiredWhen !== undefined && entry.requiredWhen.trim() === '')
 			throw new Error(`${filename} ${path}.requiredWhen must not be empty.`);
-		const typeCandidates = source.typeCandidates ?? [source.declaredType];
+		const typeCandidates = [source.declaredType, ...(source.typeCandidates ?? [])];
 		if (
 			source.requiredness !== REQUIREDNESS.unknown &&
 			source.declaredType !== 'unknown' &&
@@ -761,6 +761,14 @@ if (process.argv.includes('--self-test')) {
 		if (!String(error).includes('does not exist')) throw error;
 	}
 	const semanticFacts = new Map([
+		[
+			'items.branchKind',
+			{
+				requiredness: REQUIREDNESS.optional,
+				declaredType: "'left' | 'right'",
+				typeCandidates: ["'left'", "'right'"]
+			}
+		],
 		['items.required', { requiredness: REQUIREDNESS.required, declaredType: 'string | number' }],
 		['items.optional', { requiredness: REQUIREDNESS.optional, declaredType: 'readonly string[]' }],
 		[
@@ -785,6 +793,7 @@ if (process.argv.includes('--self-test')) {
 		publicFacts: semanticFacts,
 		entries: [
 			{ path: 'items.required', required: true, type: 'number | string' },
+			{ path: 'items.branchKind', type: "'left' | 'right'" },
 			{ path: 'items.optional', type: 'ReadonlyArray<string>' },
 			{ path: 'items.conditional', requiredWhen: 'selected branch', type: 'boolean' },
 			{ path: 'items.conditionalOptional', type: 'string' }
@@ -920,6 +929,11 @@ if (process.argv.includes('--self-test')) {
 			/requiredWhen must not be empty/u
 		],
 		['wrong type', { path: 'items.optional', type: 'readonly number[]' }, /type does not match/u],
+		[
+			'wrong branch union',
+			{ path: 'items.branchKind', type: "'left' | 'outside'" },
+			/type does not match/u
+		],
 		['forbidden member', { path: 'items.forbidden' }, /forbidden/u]
 	]) {
 		try {

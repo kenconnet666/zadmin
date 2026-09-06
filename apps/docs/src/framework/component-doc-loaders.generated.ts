@@ -169,6 +169,14 @@ export const componentDocLoaders = {
 		),
 	toolbar: () =>
 		import('../content/components/navigation/toolbar/doc.js').then((module) => module.toolbarDoc),
+	'nav-link': () =>
+		import('../content/components/navigation/nav-link/doc.js').then((module) => module.navLinkDoc),
+	splitter: () =>
+		import('../content/components/layout/splitter/doc.js').then((module) => module.splitterDoc),
+	'navigation-menu': () =>
+		import('../content/components/navigation/navigation-menu/doc.js').then(
+			(module) => module.navigationMenuDoc
+		),
 	switch: () =>
 		import('../content/components/input/switch/doc.js').then((module) => module.switchDoc),
 	'tags-input': () =>

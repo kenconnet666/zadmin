@@ -185,6 +185,11 @@
 		states: [
 			{ name: 'data-state', values: ['on', 'off'], description: '单项按下状态。' },
 			{
+				name: 'data-invalid',
+				values: ['true', 'false', 'grammar', 'spelling'],
+				description: 'group角色不接收aria-invalid；保留Field/原生输入的校验视觉状态。'
+			},
+			{
 				name: 'data-size',
 				values: ['xsmall', 'small', 'medium', 'large', 'xlarge'],
 				description: '解析后的五档尺寸。'
@@ -358,8 +363,9 @@
 	function validateValue(values: readonly TKey[]): readonly TKey[] {
 		if (!Array.isArray(values)) throw new TypeError('ZToggleGroup value must be an array.');
 		const seen = new Set<TKey>();
-		for (const key of values) {
-			assertSelectionKey(key, 'ZToggleGroup value');
+		for (const valueKey of values) {
+			assertSelectionKey(valueKey, 'ZToggleGroup value');
+			const key = valueKey as TKey;
 			if (seen.has(key)) throw new TypeError('ZToggleGroup value keys must be unique.');
 			seen.add(key);
 		}
@@ -518,7 +524,6 @@
 			beforeFocus = null;
 			if (enabledRoving && canRepair && previous !== undefined && key !== previous) {
 				if (key !== undefined) mounted.scheduleFocus(key);
-				else ref?.focus({ preventScroll: true });
 			}
 		});
 	});
@@ -542,7 +547,6 @@
 	class={[rootClass, className]}
 	id={controlId}
 	dir={dir ?? zui.direction}
-	tabindex={-1}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
 	role="group"
@@ -553,7 +557,7 @@
 	)}
 	aria-describedby={mergeAriaIds(ariaDescribedBy, field?.describedBy)}
 	aria-disabled={disabled || undefined}
-	aria-invalid={ariaInvalid ?? (field?.invalid || undefined)}
+	data-invalid={ariaInvalid ?? (field?.invalid || undefined)}
 	data-readonly={readonly || undefined}
 	data-selection-mode={resolvedSelectionMode}
 	data-size={resolvedSize}

@@ -2,6 +2,7 @@ export interface ZuiCommonLocale {
 	readonly breadcrumb: string;
 	readonly breadcrumbMore: string;
 	readonly primaryNavigation: string;
+	readonly navigationMore: string;
 	readonly scrollArea: string;
 	readonly clear: string;
 	readonly close: string;
@@ -288,6 +289,7 @@ export const enUSLocalePack = Object.freeze({
 		breadcrumb: 'Breadcrumb',
 		breadcrumbMore: 'More path levels',
 		primaryNavigation: 'Primary navigation',
+		navigationMore: 'More navigation',
 		scrollArea: 'Scrollable content',
 		clear: 'Clear',
 		close: 'Close',
@@ -460,6 +462,7 @@ export const zhCNLocalePack = Object.freeze({
 		breadcrumb: '当前位置',
 		breadcrumbMore: '更多路径层级',
 		primaryNavigation: '主导航',
+		navigationMore: '更多导航',
 		scrollArea: '可滚动内容',
 		clear: '清空',
 		close: '关闭',

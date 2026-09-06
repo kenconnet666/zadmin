@@ -219,6 +219,7 @@
 		ref = $bindable(null),
 		scroll = 'main',
 		style,
+		tabindex: tabIndexProp,
 		...rest
 	}: ZAppShellProps = $props();
 
@@ -434,6 +435,7 @@
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 </script>
 
+<!-- svelte-ignore a11y_no_noninteractive_tabindex -- the active scroll owner is a named keyboard region -->
 <div
 	{...rest}
 	bind:this={ref}
@@ -446,20 +448,29 @@
 	data-navbar-collapsed={baseNavbarCollapsed || undefined}
 	data-aside-collapsed={baseAsideCollapsed || undefined}
 	dir={resolvedDirection}
+	tabindex={tabIndexProp ?? (resolvedScroll === 'root' ? 0 : undefined)}
 >
 	{#if header}
 		<header data-region="header" data-slot="header">{@render header()}</header>
 	{/if}
 	{#if navbar}
-		<nav aria-label={resolvedNavbarLabel} data-region="navbar" data-slot="navbar">
+		<nav aria-label={resolvedNavbarLabel} data-region="navbar" data-slot="navbar" tabindex="0">
 			{@render navbar()}
 		</nav>
 	{/if}
-	<svelte:element this={resolvedMainAs} data-region="main" data-slot="main">
+	<!-- svelte-ignore a11y_no_noninteractive_tabindex -- the main scroll owner is keyboard accessible -->
+	<svelte:element
+		this={resolvedMainAs}
+		data-region="main"
+		data-slot="main"
+		tabindex={resolvedScroll === 'main' ? 0 : undefined}
+	>
 		{@render children?.()}
 	</svelte:element>
 	{#if aside}
-		<aside aria-label={asideLabel} data-region="aside" data-slot="aside">{@render aside()}</aside>
+		<aside aria-label={asideLabel} data-region="aside" data-slot="aside" tabindex="0">
+			{@render aside()}
+		</aside>
 	{/if}
 	{#if footer}
 		<footer data-region="footer" data-slot="footer">{@render footer()}</footer>

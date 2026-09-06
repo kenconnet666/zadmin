@@ -276,7 +276,7 @@
 				current.getAttribute('data-overflow-hidden') === 'true'
 			)
 				return false;
-			const parent = current.parentElement;
+			const parent: Element | null = current.parentElement;
 			if (parent) {
 				current = parent;
 				continue;
@@ -467,7 +467,7 @@
 		if (item.value.keyPolicy === 'control' && controlOwnsKey(item.value.element, event.key)) return;
 		if (!navigation.handleKey(event)) return;
 		const next = navigation.currentKey;
-		if (next !== undefined) mounted.focus(next);
+		if (next !== undefined) mounted.scheduleFocus(next);
 	}
 
 	function handleFocusin(event: FocusEvent & { currentTarget: HTMLDivElement }): void {

@@ -277,7 +277,7 @@
 	const position = (): ScrollAreaPosition | null =>
 		ref ? { left: ref.scrollLeft, top: ref.scrollTop } : null;
 	const behavior = (requested?: ScrollBehavior): ScrollBehavior =>
-		reducedMotion.current ? 'instant' : (requested ?? scrollBehavior);
+		zui.motion === 'reduced' || reducedMotion.current ? 'instant' : (requested ?? scrollBehavior);
 	const api: ZScrollAreaController = {
 		get element() {
 			return ref;

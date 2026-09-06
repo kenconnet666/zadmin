@@ -1,49 +1,54 @@
 <script lang="ts">
-	import ZToggleGroup from '../src/components/input/ZToggleGroup.svelte';
+	import ZToggleGroup, { type ZToggleGroupItem } from '../src/components/input/ZToggleGroup.svelte';
+
+	type DynamicKey = number | 'a' | 'b' | 'c';
+	type BinaryKey = 'alpha' | 'beta';
+	type KeyboardKey = 'key-a' | 'key-b' | 'key-c';
+	type TypedKey = number | string;
 
 	const textItems = [
 		{ value: 'a', label: 'A' },
 		{ value: 'b', label: 'B' },
 		{ value: 'c', label: 'C' }
 	] as const;
-	const binaryItems = [
+	const binaryItems: readonly ZToggleGroupItem<BinaryKey>[] = [
 		{ value: 'alpha', label: 'Alpha' },
 		{ value: 'beta', label: 'Beta' }
 	] as const;
-	const typedItems: readonly { value: number | string; label: string }[] = [
+	const typedItems: readonly ZToggleGroupItem<TypedKey>[] = [
 		{ value: 1, label: 'Number one' },
 		{ value: '1', label: 'String one' }
 	];
-	const typedDefaultValue: readonly (number | string)[] = [1, '1'];
-	const keyboardItems = [
+	const typedDefaultValue: readonly TypedKey[] = [1, '1'];
+	const keyboardItems: readonly ZToggleGroupItem<KeyboardKey>[] = [
 		{ value: 'key-a', label: 'Key A' },
 		{ value: 'key-b', label: 'Key B' },
 		{ value: 'key-c', label: 'Key C' }
 	] as const;
 	const sizes = ['xsmall', 'small', 'medium', 'large', 'xlarge'] as const;
 
-	let value = $state<readonly (number | string)[]>([1]);
-	let items = $state<readonly { value: string; label: string; disabled?: boolean }[]>(textItems);
+	let value = $state<readonly DynamicKey[]>([1]);
+	let items = $state<readonly ZToggleGroupItem<DynamicKey>[]>(textItems);
 	let changes = $state(0);
 	let external: HTMLButtonElement | null = null;
 
-	let emptySingle = $state<readonly string[]>(['alpha']);
+	let emptySingle = $state<readonly BinaryKey[]>(['alpha']);
 	let emptySingleChanges = $state(0);
-	let requiredSingle = $state<readonly string[]>(['alpha']);
+	let requiredSingle = $state<readonly BinaryKey[]>(['alpha']);
 	let requiredSingleChanges = $state(0);
 
-	let typedValue = $state<readonly (number | string)[]>([1]);
+	let typedValue = $state<readonly TypedKey[]>([1]);
 	let typedChanges = $state(0);
 
-	let keyboardValue = $state<readonly string[]>(['key-a']);
+	let keyboardValue = $state<readonly KeyboardKey[]>(['key-a']);
 	let keyboardChanges = $state(0);
-	let cancelledValue = $state<readonly string[]>(['key-a']);
+	let cancelledValue = $state<readonly KeyboardKey[]>(['key-a']);
 	let cancelledChanges = $state(0);
 	let cancelledKeydowns = $state(0);
 
-	let readonlyValue = $state<readonly string[]>(['alpha']);
+	let readonlyValue = $state<readonly BinaryKey[]>(['alpha']);
 	let readonlyChanges = $state(0);
-	let disabledValue = $state<readonly string[]>(['alpha']);
+	let disabledValue = $state<readonly BinaryKey[]>(['alpha']);
 	let disabledChanges = $state(0);
 
 	export function focus(value: string): void {
@@ -71,7 +76,7 @@
 		event.preventDefault();
 	}
 
-	function typed(values: readonly (number | string)[]): string {
+	function typed(values: readonly TypedKey[]): string {
 		return values.map((key) => `${typeof key}:${String(key)}`).join(',');
 	}
 </script>

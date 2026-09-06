@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
-	"componentCount": 155,
-	"overallSha256": "027b6ea2889531a53bda10d594704db0645d98e2ef195d636da0df895b0ffa81",
+	"componentCount": 158,
+	"overallSha256": "bb47c35b5e5cd4a6a12dc9c394bb9b6cb7f41a78098e46d6e02282d6c2576060",
 	"components": [
 		{
 			"id": "accordion",
@@ -259,6 +259,11 @@
 			"source": "src/components/compound/multi-select/ZMultiSelectTrigger.svelte"
 		},
 		{
+			"id": "navigation-menu",
+			"sha256": "dd2f098e31f57f563c342cd9c5b1a0ba4f4c221d510985d3e8d84b6c5e8d891c",
+			"source": "src/components/compound/navigation-menu/ZNavigationMenu.svelte"
+		},
+		{
 			"id": "popconfirm",
 			"sha256": "9c6516c938486c054ae7d5310e693f6d3b936c7a7abb7ef530f74ca33fd13c9b",
 			"source": "src/components/compound/popconfirm/ZPopconfirm.svelte"
@@ -300,7 +305,7 @@
 		},
 		{
 			"id": "popover-content",
-			"sha256": "dac1c90438162896d0d8d61e3189ebcb086520f20f5b4f9cc0e76e9b13d33a1c",
+			"sha256": "1eb5ba047d005d63dbeca798f69a95cf34df9f555c32b6670605bd74c5ad9891",
 			"source": "src/components/compound/popover/ZPopoverContent.svelte"
 		},
 		{
@@ -675,7 +680,7 @@
 		},
 		{
 			"id": "toggle-group",
-			"sha256": "44e98a56983c09ecd9466dbaac616344a96320b45787b9ea356b0de7f616d3c1",
+			"sha256": "6131c2bd8b4b524e5aa90bc086efbc287b376ca260cb42e4231aa1f8f603f16b",
 			"source": "src/components/input/ZToggleGroup.svelte"
 		},
 		{
@@ -744,6 +749,11 @@
 			"source": "src/components/layout/ZSpacer.svelte"
 		},
 		{
+			"id": "splitter",
+			"sha256": "af743d85b8a89c612670e9dd25bd0e3e9c64124b356ff8c332aac350a96f1b83",
+			"source": "src/components/layout/ZSplitter.svelte"
+		},
+		{
 			"id": "stack",
 			"sha256": "ceba85df32202db062b1de58a0c22fa7bd60123a3bf3c31b80416c4d5c069ca0",
 			"source": "src/components/layout/ZStack.svelte"
@@ -764,6 +774,11 @@
 			"source": "src/components/navigation/ZCommandPalette.svelte"
 		},
 		{
+			"id": "nav-link",
+			"sha256": "37ee80008ab6cbb4613275f0a923dbfb6d3a3a77359e73aaad1b4ee58fdb7c2b",
+			"source": "src/components/navigation/ZNavLink.svelte"
+		},
+		{
 			"id": "pagination",
 			"sha256": "333b85f867e452b2d22a98c0ad4c93b178c4879d7804d37163394376f3a25b67",
 			"source": "src/components/navigation/ZPagination.svelte"
@@ -782,11 +797,11 @@
 	"entrypoints": {
 		"code.ts": "eabb8477e4c5ef93d016ab909e5c7f85a3111df231e2d2c3c7ef5e54897b36db",
 		"compiler.ts": "96fa979b36838e8b7a6d3f52bb463f23951438a4d974d52b631ad1e6d937b2e7",
-		"index.ts": "3cce49081d614a3d3802db70c697c9165ec84726db36d9883236c6ccc65a83ec",
+		"index.ts": "4ec51a18a4a9c7eef36d28efab800f1833989aadaf060cc814eb936188926388",
 		"internal.ts": "05f9ef9c8628e1cdf694dcc88b71831e5aab726a3189bd6189eef7ae645df4d7",
 		"layer.ts": "72d0fc8e5b7a8ab39a12e157879951b84f1a7fc19654f4bd8b6ea92fd8aa6db8",
-		"metadata.ts": "c8433865e81a49e050bf38ebfb877b61e6db51a5fdf2653e6817050652b41c32",
-		"runtime.ts": "42a2c7a610b473b4b444ab1d3f68a4723fa8f526012da7380e08939e5b13f944",
+		"metadata.ts": "5a35f19ad836cc5adf32dc30826296432d8e63fe722d066afbabab2f803e02e4",
+		"runtime.ts": "476ca24f2a86489c002783a2031534ed387f38463d8a191e7e8ab57186fb4cc7",
 		"testing.ts": "c596113f3cbcf4ce75be2728b6a10cd6a0b77c9b9101a4408ba2e18e174f15cb",
 		"theme.ts": "9625285286228f2548dadb74b934f40d7cd1804a1e96bc37a04f21d3cd32b527",
 		"themes.ts": "22c13a538ae761f96ccbf319431bcacf3d3466e93881f09f601733aba07e8bd0"

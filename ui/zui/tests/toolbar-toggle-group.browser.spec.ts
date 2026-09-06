@@ -52,7 +52,7 @@ describe('ZToolbar and ZToggleGroup composition contract', () => {
 		expect(root.dataset.size).toBe('large');
 		expect(root.querySelectorAll('button')).toHaveLength(7);
 		expect([...root.querySelectorAll<HTMLElement>('[tabindex="0"]')]).toEqual([before]);
-		expect(new Set([...root.querySelectorAll('button')])).toHaveSize(7);
+		expect(new Set([...root.querySelectorAll('button')]).size).toBe(7);
 
 		expect(before.dataset.size).toBe('large');
 		expect(editable.parentElement).toBe(root);

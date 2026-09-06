@@ -1,19 +1,19 @@
 # ZUI component maturity matrix
 
-Generated from 155 metadata components, 91 documentation modules, 155 API contract entries, and 228 test files.
+Generated from 158 metadata components, 94 documentation modules, 158 API contract entries, and 239 test files.
 
 This is a static inventory of authored test contracts, not an execution report or a whole-component visual acceptance result. Historical stage names are retained for compatibility. `VisuallyVerified` requires an explicit `@zui-visual ZComponent` marker, an owned component/fixture render, and a geometry, computed-style, CSS, or screenshot assertion in the SAME test block. A positive entry only identifies a scoped test; confirm its result against commit-matched CI and inspect real pages, themes, and densities separately. `DesktopVerified` remains false until a component-level desktop evidence source is added.
 
 | Stage                   | Count |
 | ----------------------- | ----: |
-| Declared                |   155 |
-| Authorable              |   155 |
-| ContractVerified        |   155 |
-| RuntimeImplemented      |   155 |
-| BrowserBehaviorVerified |   151 |
-| VisuallyVerified        |   152 |
+| Declared                |   158 |
+| Authorable              |   158 |
+| ContractVerified        |   158 |
+| RuntimeImplemented      |   158 |
+| BrowserBehaviorVerified |   154 |
+| VisuallyVerified        |   153 |
 | DesktopVerified         |     0 |
-| ProductionVerified      |   153 |
+| ProductionVerified      |   156 |
 
 | Component               | Category     | Declared | Authorable | Contract | Runtime | Browser | Visual | Desktop | Production | Docs                                                                  |
 | ----------------------- | ------------ | -------: | ---------: | -------: | ------: | ------: | -----: | ------: | ---------: | --------------------------------------------------------------------- |
@@ -68,6 +68,7 @@ This is a static inventory of authored test contracts, not an execution report o
 | ZMultiSelectContent     | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/multi-select/doc.ts            |
 | ZMultiSelectItem        | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/multi-select/doc.ts            |
 | ZMultiSelectTrigger     | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/multi-select/doc.ts            |
+| ZNavigationMenu         | navigation   |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/navigation/navigation-menu/doc.ts    |
 | ZPopconfirm             | overlay      |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/overlay/popconfirm/doc.ts            |
 | ZPopconfirmAction       | overlay      |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/overlay/popconfirm/doc.ts            |
 | ZPopconfirmCancel       | overlay      |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/overlay/popconfirm/doc.ts            |
@@ -165,10 +166,12 @@ This is a static inventory of authored test contracts, not an execution report o
 | ZScrollArea             | layout       |        Y |          Y |        Y |       Y |       — |      Y |       — |          Y | apps/docs/src/content/components/layout/scroll-area/doc.ts            |
 | ZSimpleGrid             | layout       |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/layout/simple-grid/doc.ts            |
 | ZSpacer                 | layout       |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/layout/spacer/doc.ts                 |
+| ZSplitter               | layout       |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/layout/splitter/doc.ts               |
 | ZStack                  | layout       |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/layout/stack/doc.ts                  |
 | ZBreadcrumb             | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/breadcrumb/doc.ts         |
 | ZCommand                | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/command/doc.ts            |
 | ZCommandPalette         | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/command-palette/doc.ts    |
+| ZNavLink                | navigation   |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/navigation/nav-link/doc.ts           |
 | ZPagination             | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/pagination/doc.ts         |
 | ZSteps                  | navigation   |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/navigation/steps/doc.ts              |
 | ZTour                   | overlay      |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/overlay/tour/doc.ts                  |

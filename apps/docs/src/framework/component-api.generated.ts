@@ -3150,6 +3150,122 @@ export const multiSelectTriggerApiFacts = {
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
+export const navigationMenuApiFacts = {
+	declaration: 'ZNavigationMenuProps',
+	id: 'navigation-menu',
+	inheritedFrom: ['HTMLAttributes<HTMLElement>'],
+	name: 'ZNavigationMenu',
+	props: [
+		{
+			name: 'items',
+			required: true,
+			type: 'readonly NavigationMenuEntry<TKey>[]'
+		},
+		{
+			name: 'currentKey',
+			required: false,
+			type: 'NoInfer<TKey> | null'
+		},
+		{
+			name: 'defaultOpenKeys',
+			required: false,
+			type: 'readonly NoInfer<TKey>[]'
+		},
+		{
+			name: 'openKeys',
+			required: false,
+			type: 'readonly NoInfer<TKey>[]'
+		},
+		{
+			name: 'onOpenKeysChange',
+			required: false,
+			type: '(keys: readonly TKey[]) => void'
+		},
+		{
+			name: 'onNavigateRequest',
+			required: false,
+			type: '(request: NavigationMenuNavigateRequest<TKey>) => void'
+		},
+		{
+			name: 'mode',
+			required: false,
+			type: 'NavigationMenuMode'
+		},
+		{
+			name: 'expandMode',
+			required: false,
+			type: "'single' | 'multiple'"
+		},
+		{
+			name: 'collapsed',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'loop',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'keyboardNavigation',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'overflow',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'overflowLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: 'NavLinkTone'
+		},
+		{
+			name: 'variant',
+			required: false,
+			type: 'NavLinkVariant'
+		},
+		{
+			name: 'item',
+			required: false,
+			type: 'Snippet< [item: NavigationMenuItem<TKey>, context: NavigationMenuItemContext<TKey>] >'
+		},
+		{
+			name: 'start',
+			required: false,
+			type: 'Snippet< [item: NavigationMenuItem<TKey>, context: NavigationMenuItemContext<TKey>] >'
+		},
+		{
+			name: 'end',
+			required: false,
+			type: 'Snippet< [item: NavigationMenuItem<TKey>, context: NavigationMenuItemContext<TKey>] >'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLElement | null'
+		}
+	],
+	source: 'ui/zui/src/components/compound/navigation-menu/ZNavigationMenu.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
 export const popconfirmApiFacts = {
 	declaration: 'ZPopconfirmProps',
 	id: 'popconfirm',
@@ -3465,7 +3581,7 @@ export const popconfirmContentApiFacts = {
 		{
 			name: 'role',
 			required: false,
-			type: "'dialog' | 'listbox' | 'presentation'",
+			type: "'dialog' | 'listbox' | 'presentation' | 'region'",
 			inheritedFrom: 'ZPopoverContentProps'
 		}
 	],
@@ -3742,7 +3858,7 @@ export const popoverContentApiFacts = {
 		{
 			name: 'role',
 			required: false,
-			type: "'dialog' | 'listbox' | 'presentation'"
+			type: "'dialog' | 'listbox' | 'presentation' | 'region'"
 		}
 	],
 	source: 'ui/zui/src/components/compound/popover/ZPopoverContent.svelte',
@@ -11135,6 +11251,92 @@ export const spacerApiFacts = {
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
+export const splitterApiFacts = {
+	declaration: 'ZSplitterProps',
+	id: 'splitter',
+	inheritedFrom: ['HTMLAttributes<HTMLDivElement>'],
+	name: 'ZSplitter',
+	props: [
+		{
+			name: 'panels',
+			required: true,
+			type: 'readonly ZSplitterPanel<TKey>[]'
+		},
+		{
+			name: 'panel',
+			required: true,
+			type: 'Snippet<[panel: ZSplitterPanel<TKey>, index: number]>'
+		},
+		{
+			name: 'defaultSizes',
+			required: false,
+			type: 'readonly ZSplitterSize[]'
+		},
+		{
+			name: 'sizes',
+			required: false,
+			type: 'readonly ZSplitterSize[]'
+		},
+		{
+			name: 'orientation',
+			required: false,
+			type: "'horizontal' | 'vertical'"
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
+			name: 'step',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'shiftStep',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'onSizesChange',
+			required: false,
+			type: '(sizes: readonly ZSplitterSize[]) => void'
+		},
+		{
+			name: 'onResizeStart',
+			required: false,
+			type: '(detail: ZSplitterResizeDetail) => void'
+		},
+		{
+			name: 'onResize',
+			required: false,
+			type: '(detail: ZSplitterResizeDetail) => void'
+		},
+		{
+			name: 'onResizeEnd',
+			required: false,
+			type: '(detail: ZSplitterResizeDetail) => void'
+		},
+		{
+			name: 'onResizeCancel',
+			required: false,
+			type: '(detail: ZSplitterCancelDetail) => void'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null'
+		}
+	],
+	source: 'ui/zui/src/components/layout/ZSplitter.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
 export const stackApiFacts = {
 	declaration: 'ZStackProps',
 	id: 'stack',
@@ -11511,6 +11713,137 @@ export const commandPaletteApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/navigation/ZCommandPalette.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
+export const navLinkApiFacts = {
+	declaration: 'ZNavLinkProps',
+	id: 'nav-link',
+	inheritedFrom: ['HTMLAnchorAttributes', 'HTMLAttributes<HTMLElement>'],
+	name: 'ZNavLink',
+	props: [
+		{
+			name: 'active',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'compact',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'contentId',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'description',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'disclosureId',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'disclosureLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'end',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'expanded',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'external',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'href',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'indicator',
+			required: false,
+			type: "'none' | 'start' | 'end'"
+		},
+		{
+			name: 'label',
+			required: true,
+			type: 'string'
+		},
+		{
+			name: 'labelContent',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'newWindowLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'onExpandedChange',
+			required: false,
+			type: '(expanded: boolean) => void'
+		},
+		{
+			name: 'onclick',
+			required: false,
+			type: 'MouseEventHandler<HTMLElement>'
+		},
+		{
+			name: 'onkeydown',
+			required: false,
+			type: 'KeyboardEventHandler<HTMLElement>'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
+			name: 'start',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: "ZSemanticTone | 'primary'"
+		},
+		{
+			name: 'variant',
+			required: false,
+			type: "'subtle' | 'solid' | 'outline'"
+		},
+		{
+			name: 'disclosureRef',
+			required: false,
+			type: 'HTMLButtonElement | null'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLElement | null'
+		}
+	],
+	source: 'ui/zui/src/components/navigation/ZNavLink.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 

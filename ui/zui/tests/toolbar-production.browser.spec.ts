@@ -74,6 +74,8 @@ describe('ZToolbar production contract', () => {
 		)!;
 
 		expect(rtl.getAttribute('dir')).toBe('rtl');
+		expect(rtlFirst.tabIndex).toBe(0);
+		expect(rtlLast.tabIndex).toBe(-1);
 		await userEvent.click(rtlFirst);
 		await userEvent.keyboard('{ArrowRight}');
 		expect(document.activeElement).toBe(rtlLast);
@@ -110,6 +112,8 @@ describe('ZToolbar production contract', () => {
 		const innerLast = target.querySelector<HTMLButtonElement>(
 			'[data-testid="toolbar-inner-last"]'
 		)!;
+		expect(innerFirst.tabIndex).toBe(0);
+		expect(innerLast.tabIndex).toBe(-1);
 
 		await userEvent.click(innerFirst);
 		await userEvent.keyboard('{ArrowRight}');
@@ -230,7 +234,7 @@ describe('ZToolbar production contract', () => {
 		await expect.poll(() => trigger.getAttribute('aria-expanded')).toBe('false');
 		await expect.poll(() => document.activeElement).toBe(trigger);
 
-		component.setToolbarOverflowWidth(500);
+		component.setToolbarOverflowWidth(640);
 		await expect
 			.poll(() => trigger.closest<HTMLElement>('[data-overflow-hidden="true"]'))
 			.not.toBeNull();
