@@ -7,6 +7,27 @@ import {
 } from '../src/runtime/foundation/component-defaults.js';
 
 describe('component defaults foundation', () => {
+	it('merges input family visual defaults without sharing value or interaction policy', () => {
+		const parent = resolveComponentDefaults(undefined, {
+			slider: { size: 'large', tone: 'success' },
+			rangeSlider: { tone: 'info' },
+			rating: { size: 'small' },
+			fieldset: { variant: 'filled' }
+		});
+		const child = resolveComponentDefaults(parent, {
+			slider: { size: 'small' },
+			rangeSlider: null,
+			fieldset: { size: 'large' }
+		});
+		expect(child.slider).toEqual({ size: 'small', tone: 'success' });
+		expect(child.rangeSlider).toBeUndefined();
+		expect(child.rating).toEqual({ size: 'small' });
+		expect(child.fieldset).toEqual({ variant: 'filled', size: 'large' });
+		expect(() => resolveComponentDefaults(undefined, { rating: { value: 3 } } as never)).toThrow();
+		expect(() =>
+			resolveComponentDefaults(undefined, { fieldset: { disabled: true } } as never)
+		).toThrow();
+	});
 	it('accepts scoped Toolbar and choice appearance without accepting selection ownership', () => {
 		const parent = resolveComponentDefaults(undefined, {
 			button: { size: 'small' },

@@ -274,7 +274,7 @@
 
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
-	import { resolveControlSize } from '../../runtime/foundation/control-size.js';
+	import { controlSizeMetrics, resolveControlSize } from '../../runtime/foundation/control-size.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { ReducedMotionState } from '../../runtime/foundation/motion.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
@@ -371,6 +371,11 @@
 		mergeAriaIds(ariaDescribedBy, inputGroup?.describedBy, field?.describedBy)
 	);
 	const reduced = $derived(reducedMotion.current);
+	const geometryClass = $derived(
+		!multiple && (resolvedNativeSize ?? 0) <= 1
+			? zui.icss((s) => s.height.raw(controlSizeMetrics(zui.theme, resolvedSize).height))
+			: undefined
+	);
 	const rootClass = $derived(
 		zui.recipe(inputControlRecipe, {
 			disabled: resolvedDisabled,
@@ -529,7 +534,7 @@
 	aria-describedby={resolvedDescribedBy}
 	aria-invalid={resolvedInvalid ? 'true' : ariaInvalid}
 	aria-readonly={resolvedReadonly || undefined}
-	class={[rootClass, className]}
+	class={[rootClass, geometryClass, className]}
 	data-disabled={resolvedDisabled || undefined}
 	data-invalid={resolvedInvalid || undefined}
 	data-multiple={multiple || undefined}

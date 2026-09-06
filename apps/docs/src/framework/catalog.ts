@@ -40,6 +40,7 @@ import { dateFieldDoc } from '../content/components/input/date-field/doc.js';
 import { datePickerDoc } from '../content/components/input/date-picker/doc.js';
 import { dateRangePickerDoc } from '../content/components/input/date-range-picker/doc.js';
 import { fieldDoc } from '../content/components/input/field/doc.js';
+import { fieldsetDoc } from '../content/components/input/fieldset/doc.js';
 import { fileUploadDoc } from '../content/components/input/file-upload/doc.js';
 import { formDoc } from '../content/components/input/form/doc.js';
 import { inputDoc } from '../content/components/input/input/doc.js';
@@ -49,6 +50,8 @@ import { multiSelectDoc } from '../content/components/input/multi-select/doc.js'
 import { numberFieldDoc } from '../content/components/input/number-field/doc.js';
 import { pinInputDoc } from '../content/components/input/pin-input/doc.js';
 import { radioGroupDoc } from '../content/components/input/radio-group/doc.js';
+import { rangeSliderDoc } from '../content/components/input/range-slider/doc.js';
+import { ratingDoc } from '../content/components/input/rating/doc.js';
 import { selectDoc } from '../content/components/input/select/doc.js';
 import { segmentedDoc } from '../content/components/input/segmented/doc.js';
 import { toggleGroupDoc } from '../content/components/input/toggle-group/doc.js';
@@ -175,9 +178,12 @@ export const componentDocs = Object.freeze([
 	numberFieldDoc,
 	pinInputDoc,
 	fieldDoc,
+	fieldsetDoc,
 	fileUploadDoc,
 	formDoc,
 	radioGroupDoc,
+	rangeSliderDoc,
+	ratingDoc,
 	selectDoc,
 	segmentedDoc,
 	toggleGroupDoc,

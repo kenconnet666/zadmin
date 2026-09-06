@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 
 import { format, resolveConfig } from 'prettier';
 import ts from 'typescript';
+import { writeGeneratedFile } from './write-generated-file.mjs';
 
 import {
 	collectWorkspacePropertyFacts,
@@ -2200,9 +2201,9 @@ const serialized = await format(generatedSource, {
 });
 
 if (write) {
-	await writeFile(outputPath, serialized);
-	await writeFile(teachingCoverageJsonPath, serializedTeachingCoverageJson);
-	await writeFile(teachingCoverageMarkdownPath, serializedTeachingCoverageMarkdown);
+	await writeGeneratedFile(outputPath, serialized);
+	await writeGeneratedFile(teachingCoverageJsonPath, serializedTeachingCoverageJson);
+	await writeGeneratedFile(teachingCoverageMarkdownPath, serializedTeachingCoverageMarkdown);
 	console.log(`Wrote ${portable(relative(workspaceRoot, outputPath))}.`);
 } else {
 	const current = await readFile(outputPath, 'utf8').catch(() => '');

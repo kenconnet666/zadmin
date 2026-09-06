@@ -188,3 +188,6 @@ export { zuiMetadata as affixMetadata } from '../components/layout/ZAffix.svelte
 export { zuiMetadata as backTopMetadata } from '../components/navigation/ZBackTop.svelte';
 export { zuiMetadata as passwordInputMetadata } from '../components/input/ZPasswordInput.svelte';
 export { zuiMetadata as nativeSelectMetadata } from '../components/input/ZNativeSelect.svelte';
+export { zuiMetadata as fieldsetMetadata } from '../components/input/ZFieldset.svelte';
+export { zuiMetadata as rangeSliderMetadata } from '../components/input/ZRangeSlider.svelte';
+export { zuiMetadata as ratingMetadata } from '../components/input/ZRating.svelte';

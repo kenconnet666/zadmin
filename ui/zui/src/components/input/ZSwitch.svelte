@@ -10,12 +10,13 @@
 	export type SwitchValue = Exclude<PrimitiveFormValue, boolean>;
 	// The native checkbox remains the only focus/form owner; every visual slot is decorative.
 	const interactiveHoverSelector =
-		'&:not([data-disabled="true"]):not([data-loading="true"]):not([data-readonly="true"]):hover';
+		'&:not(:has(> input:disabled)):not([data-disabled="true"]):not([data-loading="true"]):not([data-readonly="true"]):hover';
 
 	const switchRecipe = defineSlotRecipe({
 		slots: ['root', 'control', 'thumb', 'indicator', 'spinner'] as const,
 		base: {
 			control: (s) => {
+				s._selector('&:disabled', (s) => s.cursor.notAllowed);
 				s.appearance.none;
 				s.cursor.pointer;
 				s.height.percent(100);
@@ -35,6 +36,12 @@
 				s.width.percent(100);
 			},
 			root: (s) => {
+				s._selector('&:has(> input:disabled)', (s) => {
+					s.backgroundColor._border;
+					s.borderColor._border;
+					s.cursor.notAllowed;
+					s.opacity._disabled;
+				});
 				s.alignItems.center;
 				s.backgroundColor._border;
 				s.borderColor._border;

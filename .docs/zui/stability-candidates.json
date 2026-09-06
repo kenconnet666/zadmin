@@ -3,7 +3,7 @@
 	"summary": {
 		"stableCompliant": 141,
 		"stableViolations": 0,
-		"promotionEligibleExperimental": 17
+		"promotionEligibleExperimental": 19
 	},
 	"components": [
 		{
@@ -1267,6 +1267,16 @@
 			"ssrEvidenceCount": 5
 		},
 		{
+			"id": "fieldset",
+			"name": "ZFieldset",
+			"family": null,
+			"status": "experimental",
+			"classification": "experimental",
+			"blockers": ["BrowserBehaviorVerified", "ProductionVerified"],
+			"docs": "apps/docs/src/content/components/input/fieldset/doc.ts",
+			"ssrEvidenceCount": 1
+		},
+		{
 			"id": "file-upload",
 			"name": "ZFileUpload",
 			"family": null,
@@ -1367,6 +1377,26 @@
 			"ssrEvidenceCount": 2
 		},
 		{
+			"id": "range-slider",
+			"name": "ZRangeSlider",
+			"family": null,
+			"status": "experimental",
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
+			"docs": "apps/docs/src/content/components/input/range-slider/doc.ts",
+			"ssrEvidenceCount": 1
+		},
+		{
+			"id": "rating",
+			"name": "ZRating",
+			"family": null,
+			"status": "experimental",
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
+			"docs": "apps/docs/src/content/components/input/rating/doc.ts",
+			"ssrEvidenceCount": 1
+		},
+		{
 			"id": "segmented",
 			"name": "ZSegmented",
 			"family": null,
@@ -1384,7 +1414,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/slider/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrEvidenceCount": 2
 		},
 		{
 			"id": "switch",

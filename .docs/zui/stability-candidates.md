@@ -2,7 +2,7 @@
 
 本文件由 `scripts/check-stability-policy.mjs` 生成；不会修改组件 status。compound member 可继承同 family root 的 Docs 页面。
 
-stableCompliant：141；stableViolations：0；promotionEligibleExperimental：17。
+stableCompliant：141；stableViolations：0；promotionEligibleExperimental：19。
 
 | Component               | Status       | Classification                | Blockers                                                          | Docs                                                                  | SSR |
 | ----------------------- | ------------ | ----------------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------- | --: |
@@ -132,6 +132,7 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：1
 | ZDatePicker             | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/date-picker/doc.ts             |   1 |
 | ZDateRangePicker        | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/date-range-picker/doc.ts       |   1 |
 | ZField                  | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/field/doc.ts                   |   5 |
+| ZFieldset               | experimental | experimental                  | BrowserBehaviorVerified, ProductionVerified                       | apps/docs/src/content/components/input/fieldset/doc.ts                |   1 |
 | ZFileUpload             | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/file-upload/doc.ts             |   1 |
 | ZForm                   | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/form/doc.ts                    |   2 |
 | ZFormField              | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/form/doc.ts                    |   2 |
@@ -142,8 +143,10 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：1
 | ZNumberField            | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/number-field/doc.ts            |   1 |
 | ZPasswordInput          | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/password-input/doc.ts          |   1 |
 | ZPinInput               | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/pin-input/doc.ts               |   2 |
+| ZRangeSlider            | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/range-slider/doc.ts            |   1 |
+| ZRating                 | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/rating/doc.ts                  |   1 |
 | ZSegmented              | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/segmented/doc.ts               |   1 |
-| ZSlider                 | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/slider/doc.ts                  |   1 |
+| ZSlider                 | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/slider/doc.ts                  |   2 |
 | ZSwitch                 | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/switch/doc.ts                  |   2 |
 | ZTagsInput              | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/tags-input/doc.ts              |   1 |
 | ZTextarea               | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/textarea/doc.ts                |   2 |

@@ -1641,6 +1641,28 @@ export const componentCatalogManifest = Object.freeze([
 		publicComponentCount: 1
 	},
 	{
+		id: 'fieldset',
+		name: 'ZFieldset',
+		category: 'input',
+		summary: '真实fieldset与第一legend组织多个独立字段，并保留浏览器整组禁用语义。',
+		status: 'experimental',
+		keywords: [],
+		profiles: ['form-control'],
+		capabilities: [
+			'accessible-name',
+			'basic-render',
+			'composition',
+			'native-props',
+			'controlled',
+			'disabled',
+			'form-data',
+			'density',
+			'variants-and-states'
+		],
+		demoCount: 4,
+		publicComponentCount: 1
+	},
+	{
 		id: 'file-upload',
 		name: 'ZFileUpload',
 		category: 'input',
@@ -1744,6 +1766,58 @@ export const componentCatalogManifest = Object.freeze([
 		],
 		demoCount: 6,
 		publicComponentCount: 2
+	},
+	{
+		id: 'range-slider',
+		name: 'ZRangeSlider',
+		category: 'input',
+		summary: '两个真实range共享domain与表单字段，并以明确碰撞策略维护已排序二元范围。',
+		status: 'experimental',
+		keywords: [],
+		profiles: ['form-control'],
+		capabilities: [
+			'accessible-name',
+			'basic-render',
+			'controlled',
+			'focus',
+			'keyboard',
+			'uncontrolled',
+			'variants-and-states',
+			'form-data',
+			'form-reset',
+			'native-props',
+			'composition',
+			'rtl'
+		],
+		demoCount: 4,
+		publicComponentCount: 1
+	},
+	{
+		id: 'rating',
+		name: 'ZRating',
+		category: 'input',
+		summary: '真实radio保留评分键盘、FormData与reset，视觉层负责fraction预览和可替换符号。',
+		status: 'experimental',
+		keywords: [],
+		profiles: ['form-control', 'collection'],
+		capabilities: [
+			'accessible-name',
+			'basic-render',
+			'controlled',
+			'focus',
+			'native-props',
+			'variants-and-states',
+			'disabled',
+			'form-data',
+			'form-reset',
+			'readonly',
+			'composition',
+			'density',
+			'keyboard',
+			'rtl'
+		],
+		demoCount: 4,
+		publicComponentCount: 1
 	},
 	{
 		id: 'select',
@@ -2325,7 +2399,7 @@ export const componentCatalogManifest = Object.freeze([
 			'focus',
 			'readonly'
 		],
-		demoCount: 4,
+		demoCount: 5,
 		publicComponentCount: 1
 	},
 	{

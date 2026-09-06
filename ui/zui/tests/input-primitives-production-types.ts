@@ -1,4 +1,4 @@
-import type { ComponentProps, Snippet } from 'svelte';
+import { createRawSnippet, type ComponentProps } from 'svelte';
 
 import ZNativeSelect, {
 	type ZNativeSelectProps
@@ -8,7 +8,9 @@ import ZPasswordInput, {
 	type ZPasswordInputToggleContext
 } from '../src/components/input/ZPasswordInput.svelte';
 
-const toggle = (() => undefined) as unknown as Snippet<[ZPasswordInputToggleContext]>;
+const toggle = createRawSnippet<[ZPasswordInputToggleContext]>(() => ({
+	render: () => '<span>Toggle</span>'
+}));
 
 const password = {
 	autocomplete: 'new-password',
@@ -56,34 +58,34 @@ const multiple = {
 } satisfies ComponentProps<typeof ZNativeSelect> satisfies ZNativeSelectProps;
 void multiple;
 
-const invalidSingleValue = {
+// @ts-expect-error single mode owns one native string value.
+const invalidSingleValue: ZNativeSelectProps = {
 	items: [{ value: 'a', label: 'Alpha' }],
-	// @ts-expect-error single mode owns one native string value.
 	value: ['a']
-} satisfies ZNativeSelectProps;
+};
 void invalidSingleValue;
 
-const invalidMultipleValue = {
+// @ts-expect-error multiple mode owns a readonly string array.
+const invalidMultipleValue: ZNativeSelectProps = {
 	items: [{ value: 'a', label: 'Alpha' }],
 	multiple: true,
-	// @ts-expect-error multiple mode owns a readonly string array.
 	value: 'a'
-} satisfies ZNativeSelectProps;
+};
 void invalidMultipleValue;
 
-const invalidMultiplePlaceholder = {
+// @ts-expect-error placeholder belongs only to the single-select contract.
+const invalidMultiplePlaceholder: ZNativeSelectProps = {
 	items: [{ value: 'a', label: 'Alpha' }],
 	multiple: true,
-	// @ts-expect-error placeholder belongs only to the single-select contract.
 	placeholder: 'Choose'
-} satisfies ZNativeSelectProps;
+};
 void invalidMultiplePlaceholder;
 
-const invalidSources = {
-	children: (() => undefined) as unknown as Snippet,
-	// @ts-expect-error items and children are exclusive source owners.
+// @ts-expect-error items and children are exclusive source owners.
+const invalidSources: ZNativeSelectProps = {
+	children: createRawSnippet(() => ({ render: () => '<option>Alpha</option>' })),
 	items: [{ value: 'a', label: 'Alpha' }]
-} satisfies ZNativeSelectProps;
+};
 void invalidSources;
 
 const invalidOptionValue = {

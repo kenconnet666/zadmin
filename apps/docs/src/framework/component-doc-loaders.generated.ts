@@ -154,11 +154,19 @@ export const componentDocLoaders = {
 	'pin-input': () =>
 		import('../content/components/input/pin-input/doc.js').then((module) => module.pinInputDoc),
 	field: () => import('../content/components/input/field/doc.js').then((module) => module.fieldDoc),
+	fieldset: () =>
+		import('../content/components/input/fieldset/doc.js').then((module) => module.fieldsetDoc),
 	'file-upload': () =>
 		import('../content/components/input/file-upload/doc.js').then((module) => module.fileUploadDoc),
 	form: () => import('../content/components/input/form/doc.js').then((module) => module.formDoc),
 	'radio-group': () =>
 		import('../content/components/input/radio-group/doc.js').then((module) => module.radioGroupDoc),
+	'range-slider': () =>
+		import('../content/components/input/range-slider/doc.js').then(
+			(module) => module.rangeSliderDoc
+		),
+	rating: () =>
+		import('../content/components/input/rating/doc.js').then((module) => module.ratingDoc),
 	select: () =>
 		import('../content/components/input/select/doc.js').then((module) => module.selectDoc),
 	segmented: () =>

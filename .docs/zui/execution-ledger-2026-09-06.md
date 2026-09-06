@@ -137,3 +137,18 @@ E2/E3 最终一起成功推送至 `ae19b1b`。本批新增 Toolbar、无 DOM Too
 - 实际集成还修复NativeSelect的props.id放置错误、文档缺少accessibility、强制runes模式下普通let不响应、错误Stack方向和缺少控件名称。未为错误Docs改变生产状态机；所有临时诊断已清除。
 
 上一候选e99b407的已完成CI反馈及修复见[E7旧CI记录](./e7-previous-ci-remediation-2026-09-07.md)。本批仍只本地短诊断、制品生成和必要Chrome操作，完整验收交远程CI；继续后续输入、表单、日期与数据大能力，最终还须逐组件族执行主题、动画与控制一致性复查。
+
+## E8：RangeSlider、Rating、Fieldset 与输入族一致性
+
+本批新增三个家族，目录达到105族/172公开组件；新增 fieldset、slider、rangeSlider、rating 四组视觉默认。新组件保持 experimental/unreleased。
+
+最终 API 源审计为2,215个属性、actionableIssues=0。Windows IDE/文件监控两次造成生成文件短暂占用；API与目录生成器现跳过未变化内容，并仅对Windows共享占用错误有限重试（总退避上限750ms），避免反复触发HMR或重跑整个生成链。最终制品生成成功。
+
+- Slider/RangeSlider 共用数值域、百分比、碰撞和尺寸/色调/轨道 recipe。单值继续真实 input ref；双值为严格 readonly tuple、两个独立具名原生 range 和一个 reset owner。增加 marks、valueLabel、format/snippet、orientation/reversed、commit、minRange、clamp/push/swap。不把邻居边界错误写成每个input不同坐标域。
+- Rating 使用真实 radio 集合，提供 fractions、清除、hover-only preview、自定义符号、Field owner、locale itemLabel、readonly/disabled、FormData/reset 和方向键。实际命中尺寸采用五档control尺度，避免把装饰图标尺寸当作控件。
+- Fieldset 使用真实 fieldset/第一 legend，组内复用 ZStack，不伪造 Field/value context。五档只影响组布局；原生 disabled 的第一 legend 例外保持。Button/Input/NativeSelect/Checkbox/Textarea 共用原生禁用样式，Switch 只淡化可见根，InputGroup 统一拥有一次透明度。
+- 一致性审查修正了 PasswordInput 双向 value 转发、Group 内外几何、CopyButton/ZCode 等待时丢焦点、NavLink 紧凑内边距、Menubar 动态禁用的相邻焦点回收。
+- 第二位代理交叉审查滑块，修复 orientation 语义、端点 marks 溢出、pointer cancel/lost capture/consumer preventDefault 清理、重叠 thumb 与 swap 焦点、实例dir优先级。共享轨道命中区域与装饰thumb分开使用control/indicator尺寸。
+- 本地真实Chrome确认 Fieldset 390px无横向溢出、禁用不提交/legend恢复、Password bind与FormData；CopyButton成功check图标与焦点保持；Rating键盘递增、再点清空、hover只预览、只读提交与reset；RangeSlider tuple绑定、重复FormData/reset、RTL及vertical语义。浏览器还发现并修掉无效ICSS accessor/token，不能只依赖IDE绿灯。
+
+详细实现见[Fieldset与输入族](./execution-fieldset-family-2026-09-07.md)、[Slider/RangeSlider](./execution-slider-range-2026-09-07.md)、[Rating](./execution-rating-2026-09-07.md)。上一1ce39f2的完整远程状态与修复见[E8旧CI反馈](./e8-previous-ci-remediation-2026-09-07.md)。本批使用WebStorm局部诊断、必要Chrome、格式/源码制品生成；多引擎测试和构建交远程CI，不等新CI。下一批按[E9表单基础准备](./execution-form-foundation-next-2026-09-07.md)推进CheckboxGroup和唯一显式model，再接FieldArray与控制适配；完整目标保持进行中。

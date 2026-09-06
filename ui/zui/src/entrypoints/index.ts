@@ -630,6 +630,25 @@ export type {
 	ToolbarOrientation
 } from '../components/compound/toolbar/context.svelte.js';
 export { default as ZSlider } from '../components/input/ZSlider.svelte';
+export { default as ZRangeSlider } from '../components/input/ZRangeSlider.svelte';
+export type {
+	ZRangeSliderProps,
+	RangeSliderThumbRefs
+} from '../components/input/ZRangeSlider.svelte';
+export type {
+	SliderMark,
+	SliderTone,
+	SliderValueLabel,
+	SliderSize,
+	SliderVisualProps
+} from '../components/input/ZSlider.svelte';
+export type { SliderCollision, SliderOrientation, SliderRangeValue } from '../runtime/slider.js';
+export { default as ZRating } from '../components/input/ZRating.svelte';
+export type {
+	ZRatingProps,
+	ZRatingItemContext,
+	ZRatingTone
+} from '../components/input/ZRating.svelte';
 export type { ZSliderProps, ZSliderVariants } from '../components/input/ZSlider.svelte';
 export { default as ZSwitch } from '../components/input/ZSwitch.svelte';
 export type {
@@ -826,6 +845,14 @@ export type {
 	ZPasswordInputToggleContext
 } from '../components/input/ZPasswordInput.svelte';
 export { default as ZNativeSelect } from '../components/input/ZNativeSelect.svelte';
+export { default as ZFieldset } from '../components/input/ZFieldset.svelte';
+export type { ZFieldsetProps, ZFieldsetVariant } from '../components/input/ZFieldset.svelte';
+export type {
+	FieldsetComponentDefaults,
+	SliderComponentDefaults,
+	RangeSliderComponentDefaults,
+	RatingComponentDefaults
+} from '../runtime/foundation/component-defaults.js';
 export type {
 	ZNativeSelectProps,
 	ZNativeSelectItem,

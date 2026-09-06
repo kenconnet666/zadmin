@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
-	"componentCount": 169,
-	"overallSha256": "9f458c23a90eace9ef3584f57bf410d89f62c03e0953817d5babc82bfd837c99",
+	"componentCount": 172,
+	"overallSha256": "ef33d96b065e09624eaf9e3ffbe7c44fe95be7a425dabb64ba085d585f478937",
 	"components": [
 		{
 			"id": "accordion",
@@ -535,7 +535,7 @@
 		},
 		{
 			"id": "button",
-			"sha256": "0b4282c4e5937566da874fe6599eb123f8da9819165c67ca0054514f026ac256",
+			"sha256": "aa0c3c5aecdbddd2634221d8df818bd493e89e7be443f2e0dac3500798184f1b",
 			"source": "src/components/gene/ZButton.svelte"
 		},
 		{
@@ -634,6 +634,11 @@
 			"source": "src/components/input/ZField.svelte"
 		},
 		{
+			"id": "fieldset",
+			"sha256": "d67bc1fd7be3f1b9e839febd34ae6bf83bf11b4ebeae1b147899018348c62cc7",
+			"source": "src/components/input/ZFieldset.svelte"
+		},
+		{
 			"id": "file-upload",
 			"sha256": "8649d71567a1c7f2296fc51a9563be108e57da64467de4e093a2811e555186f7",
 			"source": "src/components/input/ZFileUpload.svelte"
@@ -684,13 +689,23 @@
 			"source": "src/components/input/ZPinInput.svelte"
 		},
 		{
+			"id": "range-slider",
+			"sha256": "d18eae5b07f2930e265177be43b048fb4331c10ac0545a2f7c82ef9fb01e5bb0",
+			"source": "src/components/input/ZRangeSlider.svelte"
+		},
+		{
+			"id": "rating",
+			"sha256": "f67b57e9db4d8c7207540563d991173fa12d5c061a2fca50f82d9d983a7416c8",
+			"source": "src/components/input/ZRating.svelte"
+		},
+		{
 			"id": "segmented",
 			"sha256": "80ba4a40e23193d4661e7c6654a907c591f62c40b7a2f2792e7b80aac8b9046d",
 			"source": "src/components/input/ZSegmented.svelte"
 		},
 		{
 			"id": "slider",
-			"sha256": "4cda7987a48cee6ec5ca6d904faba2f8838daf554b7c8e8c45a7749bd8bb59d1",
+			"sha256": "61839df9e1b299bbf44e5d1f182b9b556d9bbe94f1b7d89d27c578e31e348fd4",
 			"source": "src/components/input/ZSlider.svelte"
 		},
 		{
@@ -852,10 +867,10 @@
 	"entrypoints": {
 		"code.ts": "eabb8477e4c5ef93d016ab909e5c7f85a3111df231e2d2c3c7ef5e54897b36db",
 		"compiler.ts": "96fa979b36838e8b7a6d3f52bb463f23951438a4d974d52b631ad1e6d937b2e7",
-		"index.ts": "c594130ef9a06db5d617aa9ee0921fce882b6826dae382e109b9a0921b812e75",
+		"index.ts": "afb21090b830540902c06e0beca2ac97f0fa664e788613732d08039262473104",
 		"internal.ts": "05f9ef9c8628e1cdf694dcc88b71831e5aab726a3189bd6189eef7ae645df4d7",
 		"layer.ts": "72d0fc8e5b7a8ab39a12e157879951b84f1a7fc19654f4bd8b6ea92fd8aa6db8",
-		"metadata.ts": "2238d17c1de1ded60bd6448cc2d44b281116dfca8c6e5d97ddfac5f6a615d01a",
+		"metadata.ts": "eda0f6982aa0747b956c4cd47b4a2da269f555ee0f00b0f85ea73175919d9521",
 		"runtime.ts": "902679df258a1aee96a4742dc4f229210aef34e0db47c0bffcde4cc1d66016fb",
 		"testing.ts": "c596113f3cbcf4ce75be2728b6a10cd6a0b77c9b9101a4408ba2e18e174f15cb",
 		"theme.ts": "9625285286228f2548dadb74b934f40d7cd1804a1e96bc37a04f21d3cd32b527",

@@ -216,7 +216,7 @@
 	});
 	onDestroy(() => clipboard.destroy());
 	export async function copy(): Promise<boolean> {
-		if (disabled || clipboard.pending) return false;
+		if (disabled || ref?.matches(':disabled') || clipboard.pending) return false;
 		const result = await clipboard.copy(value, timeout);
 		if (result.status === 'copied') {
 			onCopy?.(result.value);
@@ -239,8 +239,8 @@
 	bind:ref
 	type="button"
 	{disabled}
-	loading={clipboard.pending}
-	loadingLabel={labels.copying}
+	aria-disabled={clipboard.pending || rest['aria-disabled']}
+	aria-busy={clipboard.pending || rest['aria-busy']}
 	aria-label={rest['aria-label'] ?? actionLabel}
 	title={rest.title ?? (announcement || actionLabel)}
 	data-copy-state={snapshot.status}

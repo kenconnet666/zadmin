@@ -10,6 +10,32 @@ function host(): HTMLDivElement {
 	return target;
 }
 describe('CopyButton real control integration', () => {
+	it('keeps the initiating focus while a clipboard promise is pending and ignores repeat activation', async () => {
+		let complete!: () => void;
+		const write = vi.spyOn(navigator.clipboard, 'writeText').mockImplementation(
+			() =>
+				new Promise<void>((resolve) => {
+					complete = resolve;
+				})
+		);
+		const target = host();
+		const app = mount(CopyButtonFixture, { target });
+		await tick();
+		const button = target.querySelector<HTMLButtonElement>('[data-testid=copy-fixture]')!;
+		button.focus();
+		button.click();
+		await tick();
+		expect(document.activeElement).toBe(button);
+		expect(button.disabled).toBe(false);
+		expect(button.getAttribute('aria-busy')).toBe('true');
+		button.click();
+		expect(write).toHaveBeenCalledTimes(1);
+		complete();
+		await expect.poll(() => button.dataset.copyState).toBe('copied');
+		expect(document.activeElement).toBe(button);
+		await unmount(app);
+		target.remove();
+	});
 	it('writes the exact value on user activation and preserves label geometry across success', async () => {
 		// @zui-visual ZCopyButton stable feedback width and state icon
 		const write = vi.spyOn(navigator.clipboard, 'writeText').mockResolvedValue();

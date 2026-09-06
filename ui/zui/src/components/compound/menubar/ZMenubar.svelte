@@ -446,7 +446,7 @@
 				close();
 				if (target) target.focus({ preventScroll: true });
 			} else if (currentOpen !== null && currentView.get(currentOpen)?.disabled) {
-				const next = currentView.first();
+				const next = currentView.next(currentOpen) ?? currentView.previous(currentOpen);
 				const target =
 					next === undefined ? leaveTarget(false) : (mounted.get(next)?.element ?? null);
 				restoreByValue.get(currentOpen)?.(target);

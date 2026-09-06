@@ -91,6 +91,13 @@ const COMPONENT_RULES = {
 	input: { size: { kind: 'enum', values: controlSizes } },
 	passwordInput: { size: buttonRules.size },
 	nativeSelect: { size: buttonRules.size },
+	fieldset: {
+		size: buttonRules.size,
+		variant: { kind: 'enum', values: ['outlined', 'filled', 'plain'] }
+	},
+	slider: { size: buttonRules.size, tone: buttonRules.tone },
+	rangeSlider: { size: buttonRules.size, tone: buttonRules.tone },
+	rating: { size: buttonRules.size, tone: buttonRules.tone },
 	link: {
 		appearance: { kind: 'enum', values: ['text', 'button', 'navigation'] },
 		size: { kind: 'enum', values: controlSizes },
@@ -158,6 +165,10 @@ export interface IconComponentDefaults extends DefaultsFor<'icon'> {}
 export interface InputComponentDefaults extends DefaultsFor<'input'> {}
 export interface PasswordInputComponentDefaults extends DefaultsFor<'passwordInput'> {}
 export interface NativeSelectComponentDefaults extends DefaultsFor<'nativeSelect'> {}
+export interface FieldsetComponentDefaults extends DefaultsFor<'fieldset'> {}
+export interface SliderComponentDefaults extends DefaultsFor<'slider'> {}
+export interface RangeSliderComponentDefaults extends DefaultsFor<'rangeSlider'> {}
+export interface RatingComponentDefaults extends DefaultsFor<'rating'> {}
 export interface LinkComponentDefaults extends DefaultsFor<'link'> {}
 export interface NavLinkComponentDefaults extends DefaultsFor<'navLink'> {}
 export interface NavigationMenuComponentDefaults extends DefaultsFor<'navigationMenu'> {}

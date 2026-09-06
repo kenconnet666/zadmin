@@ -15,6 +15,7 @@ describe('ZAffix and ZBackTop production contract', () => {
 	it('uses native sticky by default and projects an explicit scroll owner through a real placeholder', async () => {
 		const target = host();
 		const component = mount(AffixBackTopFixture, { target });
+		await tick();
 		const native = target.querySelector<HTMLElement>('[data-testid="native-affix"]')!;
 		const nativeContent = target.querySelector<HTMLElement>(
 			'[data-testid="native-affix-content"]'
@@ -88,6 +89,7 @@ describe('ZAffix and ZBackTop production contract', () => {
 		const target = host();
 		const component = mount(AffixBackTopFixture, { target });
 		expect(target.querySelector('[data-testid="back-top-primary"]')).toBeNull();
+		await tick();
 		component.scrollBackTop(140);
 		await expect
 			.poll(() => document.querySelector<HTMLButtonElement>('[data-testid="back-top-primary"]'))
@@ -128,6 +130,7 @@ describe('ZAffix and ZBackTop production contract', () => {
 	it('uses logical RTL placement and projects all five Button sizes', async () => {
 		const target = host();
 		const component = mount(AffixBackTopFixture, { target });
+		await tick();
 		component.scrollBackTop(140);
 		await expect
 			.poll(() => document.querySelectorAll('[data-testid^="back-top-"]').length)
@@ -164,6 +167,7 @@ describe('ZAffix and ZBackTop production contract', () => {
 	it('disconnects target listeners and clears bindable button refs on unmount', async () => {
 		const target = host();
 		const component = mount(AffixBackTopFixture, { target });
+		await tick();
 		component.scrollBackTop(140);
 		await expect
 			.poll(() => document.querySelector('[data-testid="back-top-primary"]'))

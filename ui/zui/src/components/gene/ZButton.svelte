@@ -1,4 +1,8 @@
 <script module lang="ts">
+	import {
+		disabledControlStyles,
+		nativeDisabledControlStyles
+	} from '../../runtime/foundation/control-styles.js';
 	import type { Snippet } from 'svelte';
 	import type { HTMLButtonAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
@@ -79,6 +83,7 @@
 	/** Shared visual recipe for native buttons and button-shaped links. */
 	export const buttonRecipe = defineRecipe({
 		base: (s) => {
+			nativeDisabledControlStyles(s);
 			s.display.inlineFlex;
 			s.alignItems.center;
 			s.justifyContent.center;
@@ -105,10 +110,7 @@
 		variants: {
 			disabled: {
 				false: () => undefined,
-				true: (s) => {
-					s.cursor.notAllowed;
-					s.opacity._disabled;
-				}
+				true: disabledControlStyles
 			},
 			fullWidth: { false: () => undefined, true: (s) => s.width.percent(100) },
 			motion: {

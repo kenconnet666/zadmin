@@ -1389,6 +1389,16 @@
 			"fallbackPropNames": []
 		},
 		{
+			"id": "fieldset",
+			"name": "ZFieldset",
+			"source": "ui/zui/src/components/input/ZFieldset.svelte",
+			"declaredPropCount": 8,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
 			"id": "file-upload",
 			"name": "ZFileUpload",
 			"source": "ui/zui/src/components/input/ZFileUpload.svelte",
@@ -1507,6 +1517,26 @@
 			"fallbackPropNames": []
 		},
 		{
+			"id": "range-slider",
+			"name": "ZRangeSlider",
+			"source": "ui/zui/src/components/input/ZRangeSlider.svelte",
+			"declaredPropCount": 34,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "rating",
+			"name": "ZRating",
+			"source": "ui/zui/src/components/input/ZRating.svelte",
+			"declaredPropCount": 20,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
 			"id": "segmented",
 			"name": "ZSegmented",
 			"source": "ui/zui/src/components/input/ZSegmented.svelte",
@@ -1520,7 +1550,7 @@
 			"id": "slider",
 			"name": "ZSlider",
 			"source": "ui/zui/src/components/input/ZSlider.svelte",
-			"declaredPropCount": 16,
+			"declaredPropCount": 28,
 			"metadataGapPropCount": 0,
 			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
@@ -1851,8 +1881,8 @@
 		"maxMetadataGapProps": 0
 	},
 	"totals": {
-		"components": 169,
-		"declaredProps": 2141,
+		"components": 172,
+		"declaredProps": 2215,
 		"metadataGapProps": 0,
 		"fallbackProps": 0,
 		"opaqueStructuredProps": 9,

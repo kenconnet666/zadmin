@@ -1,4 +1,8 @@
 <script module lang="ts">
+	import {
+		disabledControlStyles,
+		nativeDisabledControlStyles
+	} from '../../runtime/foundation/control-styles.js';
 	import type { HTMLInputAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import type { PrimitiveFormValue } from '../../runtime/form/form-value.js';
@@ -11,6 +15,7 @@
 
 	const checkboxRecipe = defineRecipe({
 		base: (s) => {
+			nativeDisabledControlStyles(s);
 			s.accentColor._primary;
 			s.appearance.auto;
 			s.blockSize._medium;
@@ -32,10 +37,7 @@
 			},
 			disabled: {
 				false: () => undefined,
-				true: (s) => {
-					s.cursor.notAllowed;
-					s.opacity._disabled;
-				}
+				true: disabledControlStyles
 			},
 			invalid: {
 				false: () => undefined,

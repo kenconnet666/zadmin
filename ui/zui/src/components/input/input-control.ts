@@ -1,4 +1,8 @@
 import { controlSizeStyles } from '../../runtime/foundation/control-size.js';
+import {
+	disabledControlStyles,
+	nativeDisabledControlStyles
+} from '../../runtime/foundation/control-styles.js';
 import type { IcssStyle } from '../../icss/types.js';
 import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 import type { ZuiTheme } from '../../theme/types.js';
@@ -31,7 +35,7 @@ export function styleInputGroupDirectControls(s: IcssStyle<ZuiTheme>): void {
 /** Prevents a disabled child from multiplying the opacity already owned by ZInputGroup. */
 export function styleInputGroupDisabledControls(s: IcssStyle<ZuiTheme>): void {
 	s._selector(
-		'& > input:disabled, & > select:disabled, & > textarea:disabled',
+		'& > input:disabled, & > select:disabled, & > textarea:disabled, & > [data-zui-composite-control] > input:disabled, & > [data-zui-composite-control] > button:disabled',
 		styleGroupOwnedDisabledOpacity
 	);
 }
@@ -39,6 +43,7 @@ export function styleInputGroupDisabledControls(s: IcssStyle<ZuiTheme>): void {
 /** Shared text-control chrome; each native element keeps its own appearance semantics. */
 export const inputControlRecipe = defineRecipe({
 	base: (s) => {
+		nativeDisabledControlStyles(s);
 		s.fontFamily._sans;
 		s.lineHeight._compact;
 		s.paddingBlock.px(0);
@@ -63,10 +68,7 @@ export const inputControlRecipe = defineRecipe({
 	variants: {
 		disabled: {
 			false: () => undefined,
-			true: (s) => {
-				s.cursor.notAllowed;
-				s.opacity._disabled;
-			}
+			true: disabledControlStyles
 		},
 		invalid: {
 			false: (s) => s.borderColor._border,

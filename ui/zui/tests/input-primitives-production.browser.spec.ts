@@ -132,7 +132,7 @@ describe('ZPasswordInput production contract', () => {
 		expect(toggle.dataset.size).toBe('xsmall');
 		expect(input.readOnly).toBe(true);
 		expect(toggle.disabled).toBe(false);
-		expect(input.getBoundingClientRect().height).toBeCloseTo(24, 0);
+		expect(input.getBoundingClientRect().height).toBeCloseTo(22, 0);
 		expect(group.getBoundingClientRect().height).toBeCloseTo(24, 0);
 		expect(getComputedStyle(input).borderStyle).toBe('none');
 		await userEvent.click(label);

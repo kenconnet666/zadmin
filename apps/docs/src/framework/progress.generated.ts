@@ -6,35 +6,35 @@ export const zuiProgress = {
 		version: '0.1.0'
 	},
 	api: {
-		components: 169,
-		declaredProps: 2141,
+		components: 172,
+		declaredProps: 2215,
 		metadataGapProps: 0,
 		fallbackProps: 0
 	},
 	maturity: {
-		Declared: 169,
-		Authorable: 169,
-		ContractVerified: 169,
-		RuntimeImplemented: 169,
-		BrowserBehaviorVerified: 160,
-		VisuallyVerified: 157,
+		Declared: 172,
+		Authorable: 172,
+		ContractVerified: 172,
+		RuntimeImplemented: 172,
+		BrowserBehaviorVerified: 162,
+		VisuallyVerified: 159,
 		DesktopVerified: 0,
-		ProductionVerified: 164,
+		ProductionVerified: 166,
 		statuses: {
-			experimental: 28,
+			experimental: 31,
 			stable: 141
 		}
 	},
 	stability: {
 		stableCompliant: 141,
 		stableViolations: 0,
-		promotionEligibleExperimental: 17
+		promotionEligibleExperimental: 19
 	},
 	docs: {
 		routes: {
-			componentCount: 102,
+			componentCount: 105,
 			guideCount: 9,
-			totalCount: 112
+			totalCount: 115
 		},
 		deployed: false
 	},
@@ -61,22 +61,22 @@ export const zuiProgress = {
 	nextPriorities: [
 		{
 			id: 'production-evidence',
-			remaining: 5,
+			remaining: 6,
 			description: '为尚未ProductionVerified的组件补真实production browser/SSR合同。'
 		},
 		{
 			id: 'visual-evidence',
-			remaining: 12,
+			remaining: 13,
 			description: '补齐组件级几何、computed style或截图证据；普通浏览器交互断言不再冒充视觉验证。'
 		},
 		{
 			id: 'stable-promotion',
-			remaining: 17,
+			remaining: 19,
 			description: '逐项审查已满足门禁的experimental组件；禁止自动批量晋级。'
 		},
 		{
 			id: 'desktop-evidence',
-			remaining: 169,
+			remaining: 172,
 			description: '建立组件级WebView2/Desktop证据后再提升DesktopVerified。'
 		},
 		{

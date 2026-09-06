@@ -7,6 +7,8 @@ import ReadonlyDemo from './ReadonlyDemo.svelte';
 import readonlySource from './ReadonlyDemo.svelte?raw';
 import StatesDemo from './StatesDemo.svelte';
 import statesSource from './StatesDemo.svelte?raw';
+import MarksDemo from './MarksDemo.svelte';
+import marksSource from './MarksDemo.svelte?raw';
 import { sliderApiFacts } from '../../../../framework/component-api.generated.js';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
@@ -75,6 +77,15 @@ export const sliderDoc = defineComponentDoc(sliderMetadata, {
 			id: 'slider-readonly',
 			source: readonlySource,
 			title: '只读、Owner同步与对照'
+		},
+		{
+			covers: ['controlled', 'keyboard', 'variants-and-states'],
+			component: MarksDemo,
+			description:
+				'marks与常显值标签提供刻度对照，垂直reversed展示方向；commit仅在交互完成时报告。',
+			id: 'slider-marks',
+			source: marksSource,
+			title: 'Marks、方向与Commit'
 		}
 	],
 	accessibility: [

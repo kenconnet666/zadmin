@@ -1,19 +1,19 @@
 # ZUI component maturity matrix
 
-Generated from 169 metadata components, 102 documentation modules, 169 API contract entries, and 258 test files.
+Generated from 172 metadata components, 105 documentation modules, 172 API contract entries, and 266 test files.
 
 This is a static inventory of authored test contracts, not an execution report or a whole-component visual acceptance result. Historical stage names are retained for compatibility. `VisuallyVerified` requires an explicit `@zui-visual ZComponent` marker, an owned component/fixture render, and a geometry, computed-style, CSS, or screenshot assertion in the SAME test block. A positive entry only identifies a scoped test; confirm its result against commit-matched CI and inspect real pages, themes, and densities separately. `DesktopVerified` remains false until a component-level desktop evidence source is added.
 
 | Stage                   | Count |
 | ----------------------- | ----: |
-| Declared                |   169 |
-| Authorable              |   169 |
-| ContractVerified        |   169 |
-| RuntimeImplemented      |   169 |
-| BrowserBehaviorVerified |   160 |
-| VisuallyVerified        |   157 |
+| Declared                |   172 |
+| Authorable              |   172 |
+| ContractVerified        |   172 |
+| RuntimeImplemented      |   172 |
+| BrowserBehaviorVerified |   162 |
+| VisuallyVerified        |   159 |
 | DesktopVerified         |     0 |
-| ProductionVerified      |   164 |
+| ProductionVerified      |   166 |
 
 | Component               | Category     | Declared | Authorable | Contract | Runtime | Browser | Visual | Desktop | Production | Docs                                                                  |
 | ----------------------- | ------------ | -------: | ---------: | -------: | ------: | ------: | -----: | ------: | ---------: | --------------------------------------------------------------------- |
@@ -143,6 +143,7 @@ This is a static inventory of authored test contracts, not an execution report o
 | ZDatePicker             | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/date-picker/doc.ts             |
 | ZDateRangePicker        | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/date-range-picker/doc.ts       |
 | ZField                  | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/field/doc.ts                   |
+| ZFieldset               | input        |        Y |          Y |        Y |       Y |       — |      Y |       — |          — | apps/docs/src/content/components/input/fieldset/doc.ts                |
 | ZFileUpload             | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/file-upload/doc.ts             |
 | ZForm                   | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/form/doc.ts                    |
 | ZFormField              | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/form/doc.ts                    |
@@ -153,6 +154,8 @@ This is a static inventory of authored test contracts, not an execution report o
 | ZNumberField            | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/number-field/doc.ts            |
 | ZPasswordInput          | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/password-input/doc.ts          |
 | ZPinInput               | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/pin-input/doc.ts               |
+| ZRangeSlider            | input        |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/input/range-slider/doc.ts            |
+| ZRating                 | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/rating/doc.ts                  |
 | ZSegmented              | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/segmented/doc.ts               |
 | ZSlider                 | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/slider/doc.ts                  |
 | ZSwitch                 | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/switch/doc.ts                  |

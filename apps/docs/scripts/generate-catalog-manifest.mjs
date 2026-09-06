@@ -1,4 +1,5 @@
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
+import { writeGeneratedFile } from './write-generated-file.mjs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import prettier from 'prettier';
@@ -198,8 +199,8 @@ const formattedLoaders = await prettier.format(loaders, {
 	filepath: loadersPath
 });
 if (process.argv.includes('--write')) {
-	await writeFile(manifestPath, formattedManifest, 'utf8');
-	await writeFile(loadersPath, formattedLoaders, 'utf8');
+	await writeGeneratedFile(manifestPath, formattedManifest);
+	await writeGeneratedFile(loadersPath, formattedLoaders);
 	console.log(
 		`Catalog manifest generated (${docs.length} families; ${publicComponentCount} public components).`
 	);

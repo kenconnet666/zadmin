@@ -1,10 +1,10 @@
 {
 	"schemaVersion": 2,
 	"source": {
-		"metadataComponents": 169,
-		"documentationPages": 102,
-		"contractComponents": 169,
-		"testFiles": 258
+		"metadataComponents": 172,
+		"documentationPages": 105,
+		"contractComponents": 172,
+		"testFiles": 266
 	},
 	"stageNames": [
 		"Declared",
@@ -18,14 +18,14 @@
 	],
 	"evidenceScope": "Static inventory of authored test contracts, not test execution results or whole-component visual acceptance. Stage names are retained for compatibility; consult commit-matched CI and page-level review separately.",
 	"summary": {
-		"Declared": 169,
-		"Authorable": 169,
-		"ContractVerified": 169,
-		"RuntimeImplemented": 169,
-		"BrowserBehaviorVerified": 160,
-		"VisuallyVerified": 157,
+		"Declared": 172,
+		"Authorable": 172,
+		"ContractVerified": 172,
+		"RuntimeImplemented": 172,
+		"BrowserBehaviorVerified": 162,
+		"VisuallyVerified": 159,
 		"DesktopVerified": 0,
-		"ProductionVerified": 164
+		"ProductionVerified": 166
 	},
 	"components": [
 		{
@@ -10261,7 +10261,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "0b4282c4e5937566da874fe6599eb123f8da9819165c67ca0054514f026ac256 API snapshot entry"
+						"detail": "aa0c3c5aecdbddd2634221d8df818bd493e89e7be443f2e0dac3500798184f1b API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -10548,7 +10548,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/copy-button-production.browser.spec.ts",
-						"detail": "ZCopyButton authored visual contract: writes the exact value on user activation and preserves label geometry across success (line 13); requires browser execution and page-level review"
+						"detail": "ZCopyButton authored visual contract: writes the exact value on user activation and preserves label geometry across success (line 39); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/CopyButtonFixture.svelte",
@@ -12312,6 +12312,81 @@
 			]
 		},
 		{
+			"id": "fieldset",
+			"name": "ZFieldset",
+			"category": "input",
+			"family": null,
+			"status": "experimental",
+			"source": "ui/zui/src/components/input/ZFieldset.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": false,
+				"VisuallyVerified": true,
+				"DesktopVerified": false,
+				"ProductionVerified": false
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/input/ZFieldset.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZFieldset"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "d67bc1fd7be3f1b9e839febd34ae6bf83bf11b4ebeae1b147899018348c62cc7 API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/input/ZFieldset.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/fieldset-production.browser.spec.ts",
+						"detail": "ZFieldset authored visual contract: preserves native legend exceptions, successful controls and a single disabled visual owner (line 12); requires browser execution and page-level review"
+					},
+					{
+						"path": "ui/zui/tests/fieldset-production.browser.spec.ts",
+						"detail": "ZFieldset authored visual contract: wraps a long legend within narrow layouts without imposing its size on child controls (line 54); requires browser execution and page-level review"
+					},
+					{
+						"path": "ui/zui/tests/FieldsetFixture.svelte",
+						"detail": "ZFieldset explicit rendered fixture usage"
+					}
+				],
+				"DesktopVerified": [],
+				"ProductionVerified": []
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/input/fieldset/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/fieldset.spec.ts",
+					"detail": "ZFieldset SSR assertions"
+				}
+			]
+		},
+		{
 			"id": "file-upload",
 			"name": "ZFileUpload",
 			"category": "input",
@@ -13438,6 +13513,183 @@
 			]
 		},
 		{
+			"id": "range-slider",
+			"name": "ZRangeSlider",
+			"category": "input",
+			"family": null,
+			"status": "experimental",
+			"source": "ui/zui/src/components/input/ZRangeSlider.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": true,
+				"VisuallyVerified": false,
+				"DesktopVerified": false,
+				"ProductionVerified": true
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/input/ZRangeSlider.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZRangeSlider"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "d18eae5b07f2930e265177be43b048fb4331c10ac0545a2f7c82ef9fb01e5bb0 API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/input/ZRangeSlider.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [
+					{
+						"path": "ui/zui/tests/range-slider-production.browser.spec.ts",
+						"detail": "ZRangeSlider browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/RangeSliderProductionFixture.svelte",
+						"detail": "ZRangeSlider explicit rendered fixture usage"
+					}
+				],
+				"VisuallyVerified": [],
+				"DesktopVerified": [],
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/range-slider-production.spec.ts",
+						"detail": "ZRangeSlider production assertions"
+					},
+					{
+						"path": "ui/zui/tests/range-slider-production.browser.spec.ts",
+						"detail": "ZRangeSlider production assertions"
+					},
+					{
+						"path": "ui/zui/tests/RangeSliderProductionFixture.svelte",
+						"detail": "ZRangeSlider explicit rendered fixture usage"
+					}
+				]
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/input/range-slider/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/range-slider-production.spec.ts",
+					"detail": "ZRangeSlider SSR assertions"
+				}
+			]
+		},
+		{
+			"id": "rating",
+			"name": "ZRating",
+			"category": "input",
+			"family": null,
+			"status": "experimental",
+			"source": "ui/zui/src/components/input/ZRating.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": true,
+				"VisuallyVerified": true,
+				"DesktopVerified": false,
+				"ProductionVerified": true
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/input/ZRating.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZRating"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "f67b57e9db4d8c7207540563d991173fa12d5c061a2fca50f82d9d983a7416c8 API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/input/ZRating.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [
+					{
+						"path": "ui/zui/tests/rating-production.browser.spec.ts",
+						"detail": "ZRating browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/RatingFixture.svelte",
+						"detail": "ZRating explicit rendered fixture usage"
+					}
+				],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/rating-production.browser.spec.ts",
+						"detail": "ZRating authored visual contract: uses five Theme sizes and exposes frozen custom item contexts (line 108); requires browser execution and page-level review"
+					},
+					{
+						"path": "ui/zui/tests/RatingFixture.svelte",
+						"detail": "ZRating explicit rendered fixture usage"
+					}
+				],
+				"DesktopVerified": [],
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/rating-production.spec.ts",
+						"detail": "ZRating production assertions"
+					},
+					{
+						"path": "ui/zui/tests/rating-production.browser.spec.ts",
+						"detail": "ZRating production assertions"
+					},
+					{
+						"path": "ui/zui/tests/RatingFixture.svelte",
+						"detail": "ZRating explicit rendered fixture usage"
+					}
+				]
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/input/rating/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/rating-production.spec.ts",
+					"detail": "ZRating SSR assertions"
+				}
+			]
+		},
+		{
 			"id": "segmented",
 			"name": "ZSegmented",
 			"category": "input",
@@ -13567,7 +13819,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "4cda7987a48cee6ec5ca6d904faba2f8838daf554b7c8e8c45a7749bd8bb59d1 API snapshot entry"
+						"detail": "61839df9e1b299bbf44e5d1f182b9b556d9bbe94f1b7d89d27c578e31e348fd4 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -13599,6 +13851,10 @@
 				"DesktopVerified": [],
 				"ProductionVerified": [
 					{
+						"path": "ui/zui/tests/range-slider-production.spec.ts",
+						"detail": "ZSlider production assertions"
+					},
+					{
 						"path": "ui/zui/tests/foundation-controls-production.browser.spec.ts",
 						"detail": "ZSlider production assertions"
 					},
@@ -13615,6 +13871,10 @@
 			"ssrEvidence": [
 				{
 					"path": "ui/zui/tests/components.spec.ts",
+					"detail": "ZSlider SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/range-slider-production.spec.ts",
 					"detail": "ZSlider SSR assertions"
 				}
 			]

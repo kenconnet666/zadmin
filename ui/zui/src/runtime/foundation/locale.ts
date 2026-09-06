@@ -19,6 +19,7 @@ export interface ZuiCommonLocale {
 	readonly backToTop: string;
 	readonly showPassword: string;
 	readonly hidePassword: string;
+	readonly ratingValue: (value: number, count: number) => string;
 }
 
 export interface ZuiCollectionLocale {
@@ -317,7 +318,8 @@ export const enUSLocalePack = Object.freeze({
 		copyFailed: 'Copy failed',
 		backToTop: 'Back to top',
 		showPassword: 'Show password',
-		hidePassword: 'Hide password'
+		hidePassword: 'Hide password',
+		ratingValue: (value: number, count: number) => `${value} out of ${count}`
 	}),
 	date: Object.freeze({
 		calendarLabel: 'Calendar',
@@ -502,7 +504,8 @@ export const zhCNLocalePack = Object.freeze({
 		copyFailed: '复制失败',
 		backToTop: '返回顶部',
 		showPassword: '显示密码',
-		hidePassword: '隐藏密码'
+		hidePassword: '隐藏密码',
+		ratingValue: (value: number, count: number) => `${value} 分，满分 ${count} 分`
 	}),
 	date: Object.freeze({
 		calendarLabel: '日历',

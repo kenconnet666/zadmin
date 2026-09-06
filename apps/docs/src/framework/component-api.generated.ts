@@ -8994,6 +8994,57 @@ export const fieldApiFacts = {
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
+export const fieldsetApiFacts = {
+	declaration: 'ZFieldsetProps',
+	id: 'fieldset',
+	inheritedFrom: ['HTMLFieldsetAttributes'],
+	name: 'ZFieldset',
+	props: [
+		{
+			name: 'legend',
+			required: true,
+			type: 'string | Snippet'
+		},
+		{
+			name: 'description',
+			required: false,
+			type: 'string | Snippet'
+		},
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
+			name: 'variant',
+			required: false,
+			type: "'outlined' | 'filled' | 'plain'"
+		},
+		{
+			name: 'name',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'form',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLFieldSetElement | null'
+		}
+	],
+	source: 'ui/zui/src/components/input/ZFieldset.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
 export const fileUploadApiFacts = {
 	declaration: 'ZFileUploadProps',
 	id: 'file-upload',
@@ -9461,6 +9512,7 @@ export const inputApiFacts = {
 		datePickerApiFacts,
 		dateRangePickerApiFacts,
 		fieldApiFacts,
+		fieldsetApiFacts,
 		fileUploadApiFacts,
 		formApiFacts,
 		formFieldApiFacts,
@@ -9470,6 +9522,8 @@ export const inputApiFacts = {
 		numberFieldApiFacts,
 		passwordInputApiFacts,
 		pinInputApiFacts,
+		rangeSliderApiFacts,
+		ratingApiFacts,
 		segmentedApiFacts,
 		sliderApiFacts,
 		switchApiFacts,
@@ -10149,6 +10203,298 @@ export const pinInputApiFacts = {
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
+export const rangeSliderApiFacts = {
+	declaration: 'ZRangeSliderProps',
+	id: 'range-slider',
+	inheritedFrom: ['HTMLAttributes<HTMLDivElement>'],
+	name: 'ZRangeSlider',
+	props: [
+		{
+			name: 'collision',
+			required: false,
+			type: 'SliderCollision'
+		},
+		{
+			name: 'defaultValue',
+			required: false,
+			type: 'SliderRangeValue'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'form',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'formatValue',
+			required: false,
+			type: '(value: number, index: 0 | 1) => string'
+		},
+		{
+			name: 'id',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'invalid',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'label',
+			required: false,
+			type: 'Snippet<[value: number, index: 0 | 1]>'
+		},
+		{
+			name: 'mark',
+			required: false,
+			type: 'Snippet<[mark: SliderMark, index: number]>'
+		},
+		{
+			name: 'marks',
+			required: false,
+			type: 'readonly SliderMark[]'
+		},
+		{
+			name: 'max',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'min',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'minRange',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'name',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'onkeydown',
+			required: false,
+			type: '(event: KeyboardEvent & { currentTarget: HTMLInputElement }) => void'
+		},
+		{
+			name: 'onlostpointercapture',
+			required: false,
+			type: "HTMLAttributes<HTMLDivElement>['onlostpointercapture']"
+		},
+		{
+			name: 'onpointercancel',
+			required: false,
+			type: "HTMLAttributes<HTMLDivElement>['onpointercancel']"
+		},
+		{
+			name: 'onpointerdown',
+			required: false,
+			type: "HTMLAttributes<HTMLDivElement>['onpointerdown']"
+		},
+		{
+			name: 'onpointermove',
+			required: false,
+			type: "HTMLAttributes<HTMLDivElement>['onpointermove']"
+		},
+		{
+			name: 'onpointerup',
+			required: false,
+			type: "HTMLAttributes<HTMLDivElement>['onpointerup']"
+		},
+		{
+			name: 'onValueChange',
+			required: false,
+			type: '(value: SliderRangeValue) => void'
+		},
+		{
+			name: 'onValueCommit',
+			required: false,
+			type: '(value: SliderRangeValue) => void'
+		},
+		{
+			name: 'orientation',
+			required: false,
+			type: 'SliderOrientation'
+		},
+		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null'
+		},
+		{
+			name: 'required',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'reversed',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'SliderSize'
+		},
+		{
+			name: 'step',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'thumbRefs',
+			required: false,
+			type: 'RangeSliderThumbRefs'
+		},
+		{
+			name: 'thumbLabels',
+			required: true,
+			type: 'readonly [string, string]'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: 'SliderTone'
+		},
+		{
+			name: 'value',
+			required: false,
+			type: 'SliderRangeValue'
+		},
+		{
+			name: 'valueLabel',
+			required: false,
+			type: 'SliderValueLabel'
+		}
+	],
+	source: 'ui/zui/src/components/input/ZRangeSlider.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
+export const ratingApiFacts = {
+	declaration: 'ZRatingProps',
+	id: 'rating',
+	inheritedFrom: ['HTMLAttributes<HTMLDivElement>'],
+	name: 'ZRating',
+	props: [
+		{
+			name: 'clearable',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'count',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'defaultValue',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'form',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'fractions',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'invalid',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'item',
+			required: false,
+			type: 'Snippet<[context: ZRatingItemContext]>'
+		},
+		{
+			name: 'itemLabel',
+			required: false,
+			type: '(value: number) => string'
+		},
+		{
+			name: 'label',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'name',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'onFormReset',
+			required: false,
+			type: '() => void'
+		},
+		{
+			name: 'onHoverChange',
+			required: false,
+			type: '(value: number) => void'
+		},
+		{
+			name: 'onValueChange',
+			required: false,
+			type: '(value: number) => void'
+		},
+		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null'
+		},
+		{
+			name: 'required',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: "'primary' | ZSemanticTone"
+		},
+		{
+			name: 'value',
+			required: false,
+			type: 'number'
+		}
+	],
+	source: 'ui/zui/src/components/input/ZRating.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
 export const segmentedApiFacts = {
 	declaration: 'ZSegmentedProps',
 	id: 'segmented',
@@ -10242,9 +10588,49 @@ export const sliderApiFacts = {
 	name: 'ZSlider',
 	props: [
 		{
+			name: 'formatValue',
+			required: false,
+			type: '(value: number) => string'
+		},
+		{
+			name: 'label',
+			required: false,
+			type: 'Snippet<[value: number]>'
+		},
+		{
+			name: 'mark',
+			required: false,
+			type: 'Snippet<[mark: SliderMark, index: number]>'
+		},
+		{
+			name: 'marks',
+			required: false,
+			type: 'readonly SliderMark[]'
+		},
+		{
+			name: 'orientation',
+			required: false,
+			type: 'SliderOrientation'
+		},
+		{
+			name: 'reversed',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'size',
 			required: false,
-			type: "'large' | 'medium' | 'small' | 'xlarge' | 'xsmall'"
+			type: 'ZControlSize'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: "ZSemanticTone | 'primary'"
+		},
+		{
+			name: 'valueLabel',
+			required: false,
+			type: "'always' | 'drag' | 'focus' | 'never'"
 		},
 		{
 			name: 'defaultValue',
@@ -10257,9 +10643,9 @@ export const sliderApiFacts = {
 			type: 'boolean'
 		},
 		{
-			name: 'formatValue',
+			name: 'dir',
 			required: false,
-			type: '(value: number) => string'
+			type: "HTMLInputAttributes['dir']"
 		},
 		{
 			name: 'invalid',
@@ -10292,12 +10678,32 @@ export const sliderApiFacts = {
 			type: "HTMLInputAttributes['onkeydown']"
 		},
 		{
+			name: 'onlostpointercapture',
+			required: false,
+			type: "HTMLInputAttributes['onlostpointercapture']"
+		},
+		{
+			name: 'onpointercancel',
+			required: false,
+			type: "HTMLInputAttributes['onpointercancel']"
+		},
+		{
 			name: 'onpointerdown',
 			required: false,
 			type: "HTMLInputAttributes['onpointerdown']"
 		},
 		{
+			name: 'onpointerup',
+			required: false,
+			type: "HTMLInputAttributes['onpointerup']"
+		},
+		{
 			name: 'onValueChange',
+			required: false,
+			type: '(value: number) => void'
+		},
+		{
+			name: 'onValueCommit',
 			required: false,
 			type: '(value: number) => void'
 		},

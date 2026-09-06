@@ -169,6 +169,13 @@
 				focus.outlineWidth._medium;
 			});
 			styleInputGroupDirectControls(s);
+			s._selector(
+				'&:has(> input:disabled, > select:disabled, > textarea:disabled, > [data-zui-composite-control] > input:disabled)',
+				(s) => {
+					s.opacity._disabled;
+					styleInputGroupDisabledControls(s);
+				}
+			);
 		},
 		variants: {
 			disabled: {
@@ -397,8 +404,15 @@
 			s.minHeight.raw(metrics.height);
 			s._selector(
 				'& input[data-zui-input-group-control], & select[data-zui-input-group-control]',
-				(s) => s.minHeight.raw(metrics.contentHeight)
+				(s) => {
+					s.minHeight.raw(metrics.contentHeight);
+					s.height.raw(metrics.contentHeight);
+				}
 			);
+			s._selector('& > [data-zui-composite-control] > button', (s) => {
+				s.minHeight.raw(metrics.contentHeight);
+				s.height.raw(metrics.contentHeight);
+			});
 		})
 	);
 	const variables = $derived(readIcssCarrier(rest));

@@ -1,4 +1,8 @@
 <script module lang="ts">
+	import {
+		disabledControlStyles,
+		nativeDisabledControlStyles
+	} from '../../runtime/foundation/control-styles.js';
 	import type { HTMLTextareaAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
@@ -121,6 +125,7 @@
 
 	const textareaRecipe = defineRecipe({
 		base: (s) => {
+			nativeDisabledControlStyles(s);
 			s.appearance.none;
 			s.backgroundColor._canvas;
 			s.boxSizing.borderBox;
@@ -145,10 +150,7 @@
 		variants: {
 			disabled: {
 				false: () => undefined,
-				true: (s) => {
-					s.cursor.notAllowed;
-					s.opacity._disabled;
-				}
+				true: disabledControlStyles
 			},
 			invalid: {
 				false: (s) => s.borderColor._border,

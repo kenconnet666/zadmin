@@ -327,6 +327,7 @@
 				s.height[token];
 				s.minHeight[token];
 				s.paddingBlock.px(0);
+				s.paddingInline.px(0);
 				s.width[token];
 			});
 		};

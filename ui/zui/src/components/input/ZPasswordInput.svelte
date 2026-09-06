@@ -272,6 +272,7 @@
 		toggleLabel,
 		toggleRef = $bindable(null),
 		visible = $bindable(),
+		value = $bindable(),
 		...inputProps
 	}: ZPasswordInputProps = $props();
 	const zui = useZui();
@@ -377,6 +378,7 @@
 
 <div
 	bind:this={rootRef}
+	data-zui-composite-control="password-input"
 	dir={inputProps.dir ?? (inputGroup ? undefined : zui.direction)}
 	class={[classes.root, inputGroupClass]}
 	data-disabled={resolvedDisabled || undefined}
@@ -390,6 +392,7 @@
 	<ZInput
 		{...inputProps}
 		bind:ref
+		bind:value
 		class={[classes.input, className]}
 		{disabled}
 		{invalid}

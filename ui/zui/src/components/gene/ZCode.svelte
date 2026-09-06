@@ -549,7 +549,7 @@
 			aria-label={copyActionLabel}
 			class={classes.copyButton}
 			data-slot="copy-action"
-			disabled={clipboard.pending}
+			aria-disabled={clipboard.pending || undefined}
 			aria-busy={clipboard.pending || undefined}
 			shape="square"
 			size="small"
