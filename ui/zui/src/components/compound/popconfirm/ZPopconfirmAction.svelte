@@ -22,16 +22,16 @@
 		parts: [],
 		props: [
 			{
-				default: "'primary'",
+				default: "'solid'",
 				description: '继承ZButton视觉强调层级。',
 				name: 'variant',
-				type: "'primary' | 'secondary' | 'ghost'"
+				type: "'solid' | 'outline' | 'ghost'"
 			},
 			{
 				default: "'danger'",
 				description: '默认使用危险语义，可由调用方明确覆盖。',
 				name: 'tone',
-				type: "'default' | 'danger'"
+				type: "'danger' | 'info' | 'neutral' | 'primary' | 'success' | 'warning'"
 			},
 			{
 				bindable: true,
@@ -60,7 +60,7 @@
 		onclick,
 		ref = $bindable(null),
 		tone = 'danger',
-		variant = 'primary',
+		variant = 'solid',
 		...rest
 	}: ZPopconfirmActionProps = $props();
 	const popconfirm = useZPopconfirm();

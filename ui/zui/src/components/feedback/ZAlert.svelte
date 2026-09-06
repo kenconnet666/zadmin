@@ -3,8 +3,11 @@
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
+	import { semanticTones, type ZSemanticTone } from '../../theme/semantics.js';
+
 	export type AlertLive = 'assertive' | 'off' | 'polite';
-	export type AlertTone = 'danger' | 'info' | 'success' | 'warning';
+	export type AlertTone = ZSemanticTone;
+
 	export interface ZAlertProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'title'> {
 		readonly action?: Snippet;
 		readonly children?: Snippet;
@@ -17,6 +20,7 @@
 		readonly title: string;
 		readonly tone?: AlertTone;
 	}
+
 	export const zuiMetadata = {
 		category: 'feedback',
 		id: 'alert',
@@ -77,7 +81,7 @@
 			{
 				description: '语义tone。',
 				name: 'data-tone',
-				values: ['info', 'success', 'warning', 'danger']
+				values: ['neutral', 'info', 'success', 'warning', 'danger']
 			},
 			{ description: 'live优先级。', name: 'data-live', values: ['off', 'polite', 'assertive'] }
 		],
@@ -102,13 +106,17 @@
 		},
 		variants: {
 			tone: {
+				neutral: (s) => {
+					s.backgroundColor._neutralSubtle;
+					s.borderColor._neutral;
+				},
 				danger: (s) => {
 					s.backgroundColor._dangerSubtle;
 					s.borderColor._danger;
 				},
 				info: (s) => {
-					s.backgroundColor._accentSubtle;
-					s.borderColor._accent;
+					s.backgroundColor._infoSubtle;
+					s.borderColor._info;
 				},
 				success: (s) => {
 					s.backgroundColor._successSubtle;
@@ -139,8 +147,9 @@
 		},
 		variants: {
 			tone: {
+				neutral: (s) => s.color._neutral,
 				danger: (s) => s.color._danger,
-				info: (s) => s.color._accent,
+				info: (s) => s.color._info,
 				success: (s) => s.color._success,
 				warning: (s) => s.color._warning
 			}
@@ -195,6 +204,7 @@
 	} from '../../runtime/foundation/root-style.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
+
 	let {
 		action,
 		children,
@@ -218,8 +228,8 @@
 		return live;
 	});
 	const resolvedTone = $derived.by(() => {
-		if (!['danger', 'info', 'success', 'warning'].includes(tone)) {
-			throw new TypeError('ZAlert tone must be info, success, warning or danger.');
+		if (!semanticTones.includes(tone)) {
+			throw new TypeError('ZAlert tone must be neutral, info, success, warning or danger.');
 		}
 		return tone;
 	});
@@ -277,16 +287,26 @@
 			</span>{/if}
 		<div class={bodyClass} data-slot="body">
 			<strong class={titleClass} data-slot="title">{resolvedTitle}</strong>
-			{#if children}<div data-slot="content">{@render children()}</div>{/if}
+			{#if children}
+				<div data-slot="content">{@render children()}</div>
+			{/if}
 		</div>
 	</div>
-	{#if action || dismissible}<div class={actionsClass} data-slot="actions">
-			{@render action?.()}{#if dismissible}<ZButton
+	{#if action || dismissible}
+		<div class={actionsClass} data-slot="actions">
+			{@render action?.()}
+			{#if dismissible}
+				<ZButton
 					aria-label={resolvedDismissLabel}
 					data-slot="dismiss"
+					tone="neutral"
 					size="small"
 					variant="ghost"
-					onclick={(event) => onDismiss?.(event)}><X aria-hidden="true" size={16} /></ZButton
-				>{/if}
-		</div>{/if}
+					onclick={(event) => onDismiss?.(event)}
+				>
+					<X aria-hidden="true" size={16} />
+				</ZButton>
+			{/if}
+		</div>
+	{/if}
 </div>

@@ -14,7 +14,7 @@
 
 	export interface ZCascaderProps<
 		TKey extends PublicSelectionKey = PublicSelectionKey
-	> extends Omit<HTMLAttributes<HTMLDivElement>, 'onchange'> {
+	> extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'onchange'> {
 		readonly clearable?: boolean;
 		readonly clearLabel?: string;
 		readonly controlId?: string;
@@ -324,7 +324,11 @@
 			{ description: '整个控件只读。', name: 'data-readonly', values: ['true'] },
 			{ description: '整个控件正在加载。', name: 'data-loading', values: ['true'] },
 			{ description: '路径无效。', name: 'data-invalid', values: ['true'] },
-			{ description: '当前解析尺寸。', name: 'data-size', values: ['small', 'medium', 'large'] }
+			{
+				description: '当前解析尺寸。',
+				name: 'data-size',
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge']
+			}
 		],
 		status: 'stable',
 		summary:
@@ -852,7 +856,7 @@
 			onkeydown={handleTriggerKeydown}
 			popupRole="listbox"
 			size={resolvedSize}
-			variant="secondary"
+			variant="outline"
 		>
 			{triggerLabel}
 		</ZPopoverTrigger>
@@ -910,7 +914,7 @@
 			shape="square"
 			size={resolvedSize}
 			title={resolvedClearLabel}
-			variant="secondary"
+			variant="outline"
 		>
 			<X aria-hidden="true" size={16} />
 		</ZButton>

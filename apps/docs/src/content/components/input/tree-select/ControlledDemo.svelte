@@ -13,8 +13,8 @@
 
 <ZStack gap="medium">
 	<ZStack direction="row" gap="small" wrap>
-		<ZButton size="small" variant="secondary" onclick={() => (open = true)}>外部打开</ZButton>
-		<ZButton size="small" variant="secondary" onclick={() => (value = 'docs')}>选择文档站</ZButton>
+		<ZButton size="small" variant="outline" onclick={() => (open = true)}>外部打开</ZButton>
+		<ZButton size="small" variant="outline" onclick={() => (value = 'docs')}>选择文档站</ZButton>
 		<ZButton size="small" variant="ghost" onclick={() => (value = null)}>外部清空</ZButton>
 	</ZStack>
 	<ZTreeSelect aria-label="受控节点选择" bind:expandedKeys bind:open bind:value clearable {nodes} />

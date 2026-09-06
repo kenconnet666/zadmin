@@ -44,12 +44,13 @@ export const buttonDoc = defineComponentDoc(buttonMetadata, {
 			size: { default: "'medium'", description: '统一控制高度、间距与文本尺寸。' },
 			start: { default: '—', description: '在主体内容之前渲染的图标或辅助Snippet。' },
 			tone: {
-				default: "'default'",
-				description: '有限语义色调；danger与所有variant正交组合。'
+				default: "'primary'",
+				description:
+					'primary表示品牌主色，neutral/info/success/warning/danger表示状态语义；均可与三种variant独立组合。'
 			},
 			variant: {
-				default: "'primary'",
-				description: '只表达primary、secondary或ghost视觉强调层级。'
+				default: "'solid'",
+				description: '只表达solid、outline或ghost视觉强调层级。'
 			}
 		},
 		summary:
@@ -67,7 +68,7 @@ export const buttonDoc = defineComponentDoc(buttonMetadata, {
 		{
 			covers: ['variants-and-states'],
 			component: ToneDemo,
-			description: 'danger tone与primary/secondary/ghost逐一组合，替代旧variant="danger"。',
+			description: '五种语义状态与独立primary品牌色都可组合solid/outline/ghost。',
 			id: 'button-tone',
 			source: toneSource,
 			title: '语义Tone与视觉层级'

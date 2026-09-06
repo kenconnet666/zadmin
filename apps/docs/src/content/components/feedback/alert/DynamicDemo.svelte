@@ -16,7 +16,7 @@
 	<ZStack direction="row" gap="small" wrap>
 		<ZButton size="small" onclick={() => show('polite')}>插入普通状态</ZButton>
 		<ZButton size="small" tone="danger" onclick={() => show('assertive')}>插入紧急错误</ZButton>
-		<ZButton size="small" variant="secondary" onclick={() => (visible = false)}>移除Alert</ZButton>
+		<ZButton size="small" variant="outline" onclick={() => (visible = false)}>移除Alert</ZButton>
 	</ZStack>
 	{#if visible}
 		{#key revision}

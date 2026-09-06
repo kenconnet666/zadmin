@@ -9,7 +9,10 @@
 	export type PinInputMode = 'numeric' | 'text';
 	export type PinInputSize = ZControlSize;
 
-	export interface ZPinInputProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onchange'> {
+	export interface ZPinInputProps extends Omit<
+		HTMLAttributes<HTMLDivElement>,
+		'children' | 'onchange'
+	> {
 		readonly autocomplete?: PinInputAutocomplete;
 		readonly defaultValue?: string;
 		readonly disabled?: boolean;
@@ -109,7 +112,7 @@
 				default: 'Field > Provider density',
 				description: '显式size优先于Field和Provider density。',
 				name: 'size',
-				type: "'small' | 'medium' | 'large'"
+				type: "'xsmall' | 'small' | 'medium' | 'large' | 'xlarge'"
 			},
 			{
 				default: 'mode规则',
@@ -173,7 +176,11 @@
 			{ description: 'Field或显式必填。', name: 'data-required', values: ['true'] },
 			{ description: '输入模式。', name: 'data-mode', values: ['numeric', 'text'] },
 			{ description: '遮罩显示。', name: 'data-mask', values: ['true'] },
-			{ description: '解析尺寸。', name: 'data-size', values: ['small', 'medium', 'large'] }
+			{
+				description: '解析尺寸。',
+				name: 'data-size',
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge']
+			}
 		],
 		status: 'stable',
 		summary:
@@ -189,9 +196,11 @@
 		variants: {
 			disabled: { false: () => undefined, true: (s) => s.opacity._disabled },
 			size: {
-				large: (s) => s.gap._medium,
+				xsmall: (s) => s.gap._xsmall,
+				small: (s) => s.gap._xsmall,
 				medium: (s) => s.gap._small,
-				small: (s) => s.gap._xsmall
+				large: (s) => s.gap._medium,
+				xlarge: (s) => s.gap._medium
 			}
 		},
 		defaultVariants: { disabled: false, size: 'medium' }
@@ -199,6 +208,9 @@
 	const inputRecipe = defineRecipe({
 		base: (s) => {
 			s.appearance.none;
+			s.boxSizing.borderBox;
+			s.padding.px(0);
+			s.lineHeight._compact;
 			s.backgroundColor._canvas;
 			s.borderColor._border;
 			s.borderRadius._medium;
@@ -219,20 +231,30 @@
 		variants: {
 			invalid: { false: (s) => s.borderColor._border, true: (s) => s.borderColor._danger },
 			size: {
-				large: (s) => {
-					s.fontSize._large;
-					s.height._large;
-					s.width._large;
+				xsmall: (s) => {
+					s.fontSize._xsmall;
+					s.height._xsmall;
+					s.width._xsmall;
+				},
+				small: (s) => {
+					s.fontSize._small;
+					s.height._small;
+					s.width._small;
 				},
 				medium: (s) => {
 					s.fontSize._medium;
 					s.height._medium;
 					s.width._medium;
 				},
-				small: (s) => {
-					s.fontSize._small;
-					s.height._small;
-					s.width._small;
+				large: (s) => {
+					s.fontSize._large;
+					s.height._large;
+					s.width._large;
+				},
+				xlarge: (s) => {
+					s.fontSize._large;
+					s.height._xlarge;
+					s.width._xlarge;
 				}
 			}
 		},

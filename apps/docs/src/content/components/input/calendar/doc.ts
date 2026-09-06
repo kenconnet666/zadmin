@@ -1,3 +1,5 @@
+import SizingDemo from './SizingDemo.svelte';
+import sizingSource from './SizingDemo.svelte?raw';
 import { calendarMetadata } from '@zadmin/zui/metadata';
 import { calendarApiFacts } from '../../../../framework/component-api.generated.js';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
@@ -50,6 +52,15 @@ export const calendarDoc = defineComponentDoc(calendarMetadata, {
 			'生产单月Calendar：显式nullable选择、独立focusedValue、固定6周grid、可跳过不可用日期的完整RTL键盘、partial range呈现、typed locale/timeZone与唯一表单owner。'
 	},
 	demos: [
+		{
+			component: SizingDemo,
+			covers: ['composition', 'variants-and-states'],
+			description:
+				'五档尺寸按组件用途同步文字、留白和内部控件；Field/Form 显式尺寸优先于 Provider density。',
+			id: 'calendar-sizing',
+			source: sizingSource,
+			title: '五档尺寸与组合比例'
+		},
 		{
 			component: FormDemo,
 			covers: ['basic-render', 'form-data', 'form-reset', 'keyboard', 'uncontrolled'],

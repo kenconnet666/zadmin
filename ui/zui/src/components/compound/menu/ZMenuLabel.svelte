@@ -44,7 +44,8 @@
 	} from '../../../runtime/foundation/root-style.js';
 	import { useZui } from '../../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../../runtime/foundation/compiler-bridge.js';
-	import { useOptionalZMenuGroup } from './context.svelte.js';
+	import { useOptionalZMenuGroup, useZMenu } from './context.svelte.js';
+	import { controlSizeMetrics } from '../../../runtime/foundation/control-size.js';
 	const recipe = defineRecipe({
 		base: (s) => {
 			s.color._textMuted;
@@ -65,6 +66,14 @@
 		...rest
 	}: ZMenuLabelProps = $props();
 	const zui = useZui();
+	const menu = useZMenu();
+	const metrics = $derived(controlSizeMetrics(zui.theme, menu.size));
+	const sizeClass = $derived(
+		zui.icss((s) => {
+			s.fontSize.raw(metrics.fontSize);
+			s.paddingInline.raw(metrics.paddingInline);
+		})
+	);
 	const group = useOptionalZMenuGroup();
 	const resolvedId = $derived(rest.id ?? group?.labelId);
 	const rootClass = $derived(zui.recipe(recipe));
@@ -77,7 +86,7 @@
 	{...rest}
 	bind:this={ref}
 	id={resolvedId}
-	class={[rootClass, className]}
+	class={[rootClass, sizeClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
 >

@@ -28,6 +28,6 @@
 			<ZDialogClose>保存并关闭</ZDialogClose>
 		</ZDialogContent>
 	</ZDialog>
-	<ZButton bind:ref={restoreRef} variant="secondary">显式恢复目标</ZButton>
+	<ZButton bind:ref={restoreRef} variant="outline">显式恢复目标</ZButton>
 </ZStack>
 <ZText tone="muted">restoreFocus=false可完全关闭自动恢复；默认仍恢复Trigger。</ZText>

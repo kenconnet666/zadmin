@@ -1,3 +1,5 @@
+import ControlSizesDemo from './ControlSizesDemo.svelte';
+import controlSizesSource from './ControlSizesDemo.svelte?raw';
 import {
 	drawerCloseMetadata,
 	drawerContentMetadata,
@@ -36,6 +38,14 @@ export const drawerDoc = defineComponentDoc(drawerMetadata, {
 		drawerCloseMetadata
 	],
 	demos: [
+		{
+			component: ControlSizesDemo,
+			covers: ['variants-and-states', 'composition'],
+			description: '五档尺寸直接消费主题 token；组合部件继承有视觉意义的尺寸 owner。',
+			id: 'drawer-control-sizes',
+			source: controlSizesSource,
+			title: '五档尺寸与主题比例'
+		},
 		{
 			covers: ['basic-render', 'controlled', 'focus', 'keyboard', 'portal'],
 			component: InteractiveDemo,

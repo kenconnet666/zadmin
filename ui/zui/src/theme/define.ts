@@ -135,6 +135,8 @@ function deriveColorTokens(
 	};
 
 	if (sourceChanged('canvas', 'text')) mix('surfaceHover', 'text', 6);
+	if (changed('text') && !explicit('inverseSurface')) color.inverseSurface = color.text;
+	if (changed('canvas') && !explicit('inverseText')) color.inverseText = color.canvas;
 	if (sourceChanged('canvas', 'primary')) mix('primarySubtle', 'primary', 8);
 	if (sourceChanged('canvas', 'primary')) mix('primarySubtleHover', 'primary', 14);
 	if (sourceChanged('canvas', 'accent')) mix('accentSubtle', 'accent', 8);

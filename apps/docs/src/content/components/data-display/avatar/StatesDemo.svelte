@@ -1,12 +1,15 @@
 <script lang="ts">
 	import { ZAvatar, ZStack, ZText } from '@zadmin/zui';
+	const sizes = ['xsmall', 'small', 'medium', 'large', 'xlarge'] as const;
 </script>
 
 <ZStack gap="medium">
 	<ZStack align="center" direction="row" gap="large" wrap>
-		<ZAvatar alt="小尺寸圆形头像" fallbackText="小" size="small" />
-		<ZAvatar alt="中尺寸圆角头像" fallbackText="中" shape="rounded" />
-		<ZAvatar alt="大尺寸方形头像" fallbackText="大" shape="square" size="large" />
+		{#each sizes as size (size)}<ZAvatar alt={`${size}头像`} fallbackText="林" {size} />{/each}
 	</ZStack>
-	<ZText tone="muted">三种尺寸与形状始终保留稳定占位和可访问名称。</ZText>
+	<ZStack direction="row" gap="medium">
+		<ZAvatar alt="圆角头像" fallbackText="圆" shape="rounded" />
+		<ZAvatar alt="方形头像" fallbackText="方" shape="square" />
+	</ZStack>
+	<ZText tone="muted">五档头像消费专用24/32/40/48/64px主题尺寸，与图标和控件高度分离。</ZText>
 </ZStack>

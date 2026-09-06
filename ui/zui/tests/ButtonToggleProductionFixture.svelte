@@ -19,7 +19,7 @@
 	}}
 >
 	<ZButton data-testid="button-default">Default action</ZButton>
-	<ZButton data-testid="button-danger-secondary" tone="danger" variant="secondary">
+	<ZButton data-testid="button-danger-secondary" tone="danger" variant="outline">
 		Danger secondary
 	</ZButton>
 	<ZButton data-testid="button-ghost" variant="ghost">Ghost action</ZButton>
@@ -34,14 +34,14 @@
 	>
 		Save deployment
 	</ZButton>
-	<ZButton data-testid="button-submit" type="submit" variant="secondary">Submit form</ZButton>
+	<ZButton data-testid="button-submit" type="submit" variant="outline">Submit form</ZButton>
 </form>
 <button data-testid="button-loading-on" type="button" onclick={() => (loading = true)}
-	>Loading on</button
->
+	>Loading on
+</button>
 <button data-testid="button-loading-off" type="button" onclick={() => (loading = false)}
-	>Loading off</button
->
+	>Loading off
+</button>
 <output data-testid="button-output">{loading}:{buttonClicks}:{submissions}</output>
 
 <div data-testid="button-size-contract">
@@ -71,9 +71,9 @@
 	Prevented toggle
 </ZToggleButton>
 <button data-testid="toggle-owner-on" type="button" onclick={() => (pressed = true)}
-	>Owner on</button
->
+	>Owner on
+</button>
 <button data-testid="toggle-owner-off" type="button" onclick={() => (pressed = false)}
-	>Owner off</button
->
+	>Owner off
+</button>
 <output data-testid="toggle-output">{pressed}:{pressedChanges}:{prevented}</output>

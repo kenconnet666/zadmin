@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { ZCombobox, ZComboboxContent, ZComboboxInput, ZField, ZStack } from '@zadmin/zui';
 
-	const sizes = ['small', 'medium', 'large'] as const;
+	const sizes = ['xsmall', 'small', 'medium', 'large', 'xlarge'] as const;
 	const options = [
 		{ label: '设计系统', value: 'design' },
 		{ label: '工程实践', value: 'engineering' }

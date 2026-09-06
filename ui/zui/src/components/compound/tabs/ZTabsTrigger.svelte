@@ -5,6 +5,7 @@
 	import type { SelectionKey } from '../../../runtime/collection/selection.js';
 
 	import { defineRecipe, registerRecipeHmr } from '../../../recipes/define.js';
+	import { controlSizeStyles } from '../../../runtime/foundation/control-size.js';
 
 	export type ZTabsTriggerProps = Omit<
 		HTMLButtonAttributes,
@@ -37,13 +38,21 @@
 			s.borderStyle.solid;
 			s.borderWidth.px(0);
 			s.color._textMuted;
+			s.boxSizing.borderBox;
+			s.flexShrink(0);
 			s.cursor.pointer;
 			s.fontFamily._sans;
 			s.fontSize._medium;
 			s.fontWeight._semibold;
-			s.paddingBlock._medium;
+			s.paddingBlock.px(0);
 			s.paddingInline._large;
+			s.lineHeight(1);
+			s.whiteSpace.nowrap;
 			s.position.relative;
+			s._selector('&:not(:disabled):hover', (s) => {
+				s.backgroundColor._surfaceHover;
+				s.color._text;
+			});
 			s._focusVisible((focus) => {
 				focus.outlineColor._focus;
 				focus.outlineOffset._inner;
@@ -52,6 +61,7 @@
 			});
 		},
 		variants: {
+			size: controlSizeStyles,
 			disabled: {
 				false: () => undefined,
 				true: (s) => {
@@ -67,6 +77,11 @@
 				vertical: (s) => {
 					s.borderInlineEndWidth._medium;
 					s.marginInlineEnd.px(-1);
+					s.minWidth.px(0);
+					s.whiteSpace.normal;
+					s.overflowWrap.anywhere;
+					s.lineHeight._compact;
+					s.paddingBlock._small;
 				}
 			},
 			selected: {
@@ -124,6 +139,11 @@
 		snippets: [{ description: 'Tab标签内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/tabs/ZTabsTrigger.svelte',
 		states: [
+			{
+				name: 'data-size',
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge'],
+				description: '解析后的五档控件尺寸。'
+			},
 			{ description: '选择状态。', name: 'data-state', values: ['active', 'inactive'] },
 			{ description: '禁用状态。', name: 'data-disabled', values: ['true'] },
 			{ description: '布局方向。', name: 'data-orientation', values: ['horizontal', 'vertical'] }
@@ -166,6 +186,7 @@
 	const active = $derived(tabs.isActive(value));
 	const rootClass = $derived(
 		zui.recipe(tabsTriggerRecipe, {
+			size: tabs.size,
 			disabled: resolvedDisabled,
 			orientation: tabs.orientation,
 			selected
@@ -218,6 +239,7 @@
 	aria-controls={tabs.shouldMountPanel(value) ? tabs.panelId(value) : undefined}
 	aria-selected={selected}
 	data-disabled={resolvedDisabled || undefined}
+	data-size={tabs.size}
 	data-active={active || undefined}
 	data-orientation={tabs.orientation}
 	data-state={selected ? 'active' : 'inactive'}

@@ -3,10 +3,10 @@
 </script>
 
 <div>
-	<ZButton data-testid="button-enabled" variant="primary">Enabled button</ZButton>
-	<ZButton data-testid="button-disabled" disabled variant="primary">Disabled button</ZButton>
-	<ZButton data-testid="button-loading" loading variant="primary">Loading button</ZButton>
-	<ZButton aria-disabled="true" data-testid="button-aria-disabled" variant="primary">
+	<ZButton data-testid="button-enabled" variant="solid">Enabled button</ZButton>
+	<ZButton data-testid="button-disabled" disabled variant="solid">Disabled button</ZButton>
+	<ZButton data-testid="button-loading" loading variant="solid">Loading button</ZButton>
+	<ZButton aria-disabled="true" data-testid="button-aria-disabled" variant="solid">
 		ARIA-disabled button
 	</ZButton>
 
@@ -14,7 +14,7 @@
 		appearance="button"
 		data-testid="link-button-enabled"
 		href="#enabled-button"
-		variant="primary"
+		variant="solid"
 	>
 		Enabled button link
 	</ZLink>
@@ -23,7 +23,7 @@
 		data-testid="link-button-disabled"
 		disabled
 		href="#disabled-button"
-		variant="primary"
+		variant="solid"
 	>
 		Disabled button link
 	</ZLink>

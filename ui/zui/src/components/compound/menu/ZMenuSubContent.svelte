@@ -1,4 +1,5 @@
 <script module lang="ts">
+	import type { ZControlSize } from '../../../runtime/foundation/control-size.js';
 	import type { Snippet } from 'svelte';
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
 	import type { MenuActionEvent } from './context.svelte.js';
@@ -15,6 +16,7 @@
 		readonly 'aria-label'?: string;
 		readonly children?: Snippet;
 		readonly loop?: boolean;
+		readonly size?: ZControlSize;
 		menuRef?: HTMLDivElement | null;
 		readonly onAction?: (event: MenuActionEvent) => void;
 	};
@@ -41,6 +43,12 @@
 		],
 		parts: [],
 		props: [
+			{
+				name: 'size',
+				type: 'ZControlSize',
+				default: 'parent Menu or Provider density',
+				description: '内部菜单行的五档大小；Trigger独立设置Button size。'
+			},
 			{
 				default: '父Item',
 				description: '覆盖submenu原生可访问名称。',
@@ -93,6 +101,7 @@
 		children,
 		class: className,
 		loop = true,
+		size,
 		menuRef = $bindable(null),
 		onAction,
 		onFocusOutside,
@@ -164,6 +173,7 @@
 		aria-labelledby={resolvedAriaLabel === undefined ? popover.triggerId : undefined}
 		bind:ref={menuRef}
 		{loop}
+		{size}
 		onAction={handleAction}
 		onDismissRequest={() => parentMenu.dismissPopup()}
 	>

@@ -29,7 +29,7 @@ export const textDoc = defineComponentDoc(textMetadata, {
 				default: 'false',
 				description: '启用tabular-nums；不负责数字格式化或本地化。'
 			},
-			tone: { default: "'default'", description: '设置语义文本颜色，不改变元素语义。' },
+			tone: { default: "'neutral'", description: '设置语义文本颜色，不改变元素语义。' },
 			truncate: {
 				default: 'false',
 				description: '在调用方提供可收缩宽度时应用单行省略。'

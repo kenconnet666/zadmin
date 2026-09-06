@@ -42,14 +42,13 @@
 				type="button"
 				onclick={() => (options = complete.filter(({ value }) => value !== 'week'))}>移除周</ZButton
 			>
-			<ZButton size="small" type="button" variant="secondary" onclick={() => (options = complete)}
+			<ZButton size="small" type="button" variant="outline" onclick={() => (options = complete)}
 				>恢复options</ZButton
 			>
-			<ZButton size="small" type="button" variant="secondary" onclick={() => (value = undefined)}
+			<ZButton size="small" type="button" variant="outline" onclick={() => (value = undefined)}
 				>Owner清空</ZButton
 			>
-			<ZButton size="small" type="button" variant="secondary" onclick={readForm}
-				>读取FormData</ZButton
+			<ZButton size="small" type="button" variant="outline" onclick={readForm}>读取FormData</ZButton
 			>
 		</ZStack>
 		<ZText tone="muted"

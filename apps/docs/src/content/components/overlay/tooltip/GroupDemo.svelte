@@ -13,7 +13,7 @@
 	<ZStack align="center" direction="row" gap="medium" wrap>
 		{#each ['构建', '发布', '回滚'] as action (action)}
 			<ZTooltip>
-				<ZTooltipTrigger variant="secondary">{action}</ZTooltipTrigger>
+				<ZTooltipTrigger variant="outline">{action}</ZTooltipTrigger>
 				<ZTooltipContent>{action}操作说明</ZTooltipContent>
 			</ZTooltip>
 		{/each}

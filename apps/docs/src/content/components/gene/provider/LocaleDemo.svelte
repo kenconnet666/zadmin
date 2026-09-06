@@ -13,7 +13,7 @@
 </script>
 
 <ZStack gap="medium">
-	<ZButton variant="secondary" onclick={() => (chinese = !chinese)}>
+	<ZButton variant="outline" onclick={() => (chinese = !chinese)}>
 		切换到{chinese ? '英文' : '中文'}组件文案
 	</ZButton>
 	<ZProvider

@@ -1,3 +1,5 @@
+import SizingDemo from './SizingDemo.svelte';
+import sizingSource from './SizingDemo.svelte?raw';
 import { colorPickerMetadata } from '@zadmin/zui/metadata';
 import { colorPickerApiFacts } from '../../../../framework/component-api.generated.js';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
@@ -78,6 +80,15 @@ export const colorPickerDoc = defineComponentDoc(colorPickerMetadata, {
 			'生产级单值ColorPicker：规范化hex/null、原生color/range、alpha、预设、清空、Field/FormValueBridge和Popover各自拥有清晰边界。'
 	},
 	demos: [
+		{
+			component: SizingDemo,
+			covers: ['composition', 'variants-and-states'],
+			description:
+				'五档尺寸按组件用途同步文字、留白和内部控件；Field/Form 显式尺寸优先于 Provider density。',
+			id: 'color-picker-sizing',
+			source: sizingSource,
+			title: '五档尺寸与组合比例'
+		},
 		{
 			component: FormDemo,
 			covers: ['controlled', 'form-data', 'form-reset', 'keyboard', 'locale'],

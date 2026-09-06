@@ -47,6 +47,7 @@
 			status: '在线'
 		}
 	];
+
 	function createColumns(
 		statusCell: Snippet<[ServiceRow, unknown, number]>
 	): readonly DataTableColumn<ServiceRow>[] {
@@ -86,6 +87,7 @@
 			}
 		];
 	}
+
 	let columnVisibility = $state<DataTableColumnVisibility>({});
 	let columnWidths = $state<DataTableColumnWidths>({});
 	let controller = $state<ZDataTableController<string> | null>(null);
@@ -104,9 +106,9 @@
 			/>
 			显示负责人列
 		</label>
-		<ZButton size="small" variant="secondary" onclick={() => controller?.resetColumnWidths()}
-			>重置列宽</ZButton
-		>
+		<ZButton size="small" variant="outline" onclick={() => controller?.resetColumnWidths()}
+			>重置列宽
+		</ZButton>
 	</ZStack>
 	<ZText aria-live="polite" tone="muted">
 		visible = {controller?.visibleColumnIds.join(', ') ?? '准备中'} · description width =

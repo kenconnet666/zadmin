@@ -116,8 +116,9 @@ export default {
 				id: 'semantic-theme',
 				title: '共享语义颜色与排版',
 				paragraphs: [
-					'主题扩展优先使用extendTheme，避免复制整份主题。primarySubtle/primarySubtleHover分别用于选中与选中悬停，surfaceHover用于中性悬停；accent/danger/success/warningSubtle用于对应提示背景。修改源色时相关淡色会一起派生，显式覆盖始终优先。',
-					'onPrimary/onDanger决定强调色背景上的文字和loading指示器；深浅主题下都需要检查对比度。fontSize.xxlarge供页面标题使用，ZHeading与ZText读取同一主题刻度，文档不另外覆盖字号。'
+					'主题扩展优先使用extendTheme，避免复制整份主题。neutral/info/success/warning/danger表达五种状态语义，primary是独立品牌色，accent保留装饰用途。各状态都有Hover、Subtle和onX前景角色；修改源色会派生对应浅背景，同次显式覆盖优先。',
+					'Button variant使用solid/outline/ghost，tone单独决定颜色；onPrimary/onInfo等控制实心背景文字和加载指示器。ZHeading与ZText共用11/12/14/16/20/24/32/40八档字号，页面标题使用xxxlarge=32，level仅决定HTML标题层级。',
+					'控件size使用xsmall/small/medium/large/xlarge，默认高度24/28/32/40/48，文字11/12/14/16/16。Icon/Spinner单独使用12/14/16/20/24的indicatorSize，Badge/Avatar、弹层宽度与Container最大宽度各有用途token。'
 				],
 				code: `import { defaultTheme, extendTheme } from '@zadmin/zui';
 
@@ -127,7 +128,7 @@ const theme = extendTheme(defaultTheme, {
     primaryHover: '#7c2d12',
     onPrimary: '#fffaf3'
   },
-  fontSize: { xxlarge: 32 },
+  fontSize: { xxxlarge: 32 },
   duration: { fast: '120ms' }
 });`,
 				language: 'typescript',
@@ -143,7 +144,8 @@ const theme = extendTheme(defaultTheme, {
 				title: '系统值、主题 token 与响应式断点',
 				paragraphs: [
 					'CSS 系统关键字不等于主题 token：backgroundColor.canvas 输出浏览器 Canvas，backgroundColor._canvas 读取 Theme.color.canvas；currentColor、CanvasText、FieldText、Highlight 等也有类型安全访问器。',
-					'outlineOffset._outer/_inner/_tight 读取 focusOffset；transitionTimingFunction 和 animationTimingFunction 支持 easing token，也保留标准 CSS 关键字。结构性的 0、100%、圆形 50% 和组件内部局部堆叠序号不应为了消除字面量而借用无关 token。'
+					'outlineOffset._outer/_inner/_tight 读取 focusOffset；transitionTimingFunction 和 animationTimingFunction 支持 easing token，也保留标准 CSS 关键字。结构性的 0、100%、圆形 50% 和组件内部局部堆叠序号不应为了消除字面量而借用无关 token。',
+					'animationDelay和transitionDelay支持duration token；animationFillMode、animationDirection、animationPlayState、animationIterationCount与textWrap都有标准关键字访问器。移除旧display.hidden别名：移除布局使用display.none，保留布局仅隐藏可见性使用visibility.hidden。'
 				],
 				code: `const theme = extendTheme(defaultTheme, {
   breakpoint: { medium: '52rem' },

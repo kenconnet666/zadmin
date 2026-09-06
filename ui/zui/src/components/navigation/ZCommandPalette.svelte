@@ -3,7 +3,7 @@
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import type { CommandShortcut } from '../../runtime/command.js';
 	import type { ZDialogContentProps } from '../compound/dialog/ZDialogContent.svelte';
-	import type { CommandActionEvent, CommandItem } from './ZCommand.svelte';
+	import type { CommandActionEvent, CommandItem, ZCommandProps } from './ZCommand.svelte';
 
 	export type CommandPaletteShortcutTarget = Document | Element | ShadowRoot;
 
@@ -15,20 +15,27 @@
 		readonly description?: string;
 		readonly disabled?: boolean;
 		readonly emptyText?: string;
+		readonly filter?: ZCommandProps['filter'];
 		readonly inputLabel?: string;
 		readonly items: readonly CommandItem[];
 		readonly listLabel?: string;
+		readonly loop?: boolean;
+		readonly maxResults?: number;
 		readonly onAction?: (event: CommandActionEvent) => void;
 		readonly onOpenChange?: (open: boolean) => void;
 		readonly onQueryChange?: (query: string) => void;
 		open?: boolean;
 		readonly placeholder?: string;
+		readonly panelSize?: ZDialogContentProps['size'];
 		query?: string;
 		ref?: HTMLDivElement | null;
 		readonly resetQueryOnClose?: boolean;
+		readonly resultsLabel?: ZCommandProps['resultsLabel'];
 		readonly shortcut?: CommandShortcut;
 		readonly shortcutTarget?: CommandPaletteShortcutTarget | null;
 		readonly showTrigger?: boolean;
+		readonly shouldFilter?: boolean;
+		readonly size?: ZCommandProps['size'];
 		readonly style?: ZDialogContentProps['style'];
 		readonly title?: string;
 		readonly trigger?: Snippet;
@@ -68,6 +75,48 @@
 			{ description: 'ZCommand内核。', name: 'command' }
 		],
 		props: [
+			{
+				name: 'size',
+				type: 'ZControlSize',
+				default: 'Provider density',
+				description: 'Command行、内置Trigger和Close的控件尺寸。'
+			},
+			{
+				name: 'panelSize',
+				type: 'ZControlSize',
+				default: 'medium',
+				description: 'Dialog面板宽度预设，与内部控件尺寸独立。'
+			},
+			{
+				name: 'filter',
+				type: '(item: CommandItem, query: string) => boolean | number',
+				default: 'scoreCommand',
+				description: '透传Command过滤与相关性排序函数。'
+			},
+			{
+				name: 'loop',
+				type: 'boolean',
+				default: 'true',
+				description: 'Command方向键是否在边界循环。'
+			},
+			{
+				name: 'maxResults',
+				type: 'number',
+				default: '50',
+				description: '最多渲染的Command结果数。'
+			},
+			{
+				name: 'resultsLabel',
+				type: '(count: number) => string',
+				default: 'localePack.command.results',
+				description: 'Command结果数量的无障碍公告。'
+			},
+			{
+				name: 'shouldFilter',
+				type: 'boolean',
+				default: 'true',
+				description: 'false直接展示外部搜索结果，不做内部过滤。'
+			},
 			{
 				default: '必填',
 				description: '传给ZCommand的命令集合。',
@@ -221,20 +270,27 @@
 		description,
 		disabled = false,
 		emptyText,
+		filter,
 		inputLabel,
 		items,
 		listLabel,
+		loop,
+		maxResults,
 		onAction,
 		onOpenChange,
 		onQueryChange,
 		open = $bindable(),
 		placeholder,
+		panelSize,
 		query = $bindable(),
 		ref = $bindable(null),
 		resetQueryOnClose = true,
+		resultsLabel,
 		shortcut,
 		shortcutTarget,
 		showTrigger = true,
+		shouldFilter,
+		size,
 		style,
 		title,
 		trigger,
@@ -322,12 +378,12 @@
 
 <ZDialog onOpenChange={setOpen} open={openState.current}>
 	{#if showTrigger}
-		<ZDialogTrigger bind:ref={triggerRef} aria-label={resolvedTriggerLabel} {disabled}>
+		<ZDialogTrigger bind:ref={triggerRef} aria-label={resolvedTriggerLabel} {disabled} {size}>
 			{#if trigger}{@render trigger()}{:else}{resolvedTriggerLabel}{/if}
 		</ZDialogTrigger>
 	{/if}
 	<ZDialogOverlay data-slot="overlay" />
-	<ZDialogContent bind:ref class={className} {style} data-slot="content">
+	<ZDialogContent bind:ref class={className} {style} data-slot="content" size={panelSize}>
 		<ZDialogTitle>{resolvedTitle}</ZDialogTitle>
 		{#if description}
 			<ZDialogDescription>{description}</ZDialogDescription>
@@ -337,15 +393,21 @@
 			data-slot="command"
 			{defaultQuery}
 			{disabled}
+			{filter}
 			emptyText={resolvedEmptyText}
 			inputLabel={resolvedInputLabel}
 			{items}
 			listLabel={resolvedListLabel}
+			{loop}
+			{maxResults}
 			onAction={handleAction}
 			onQueryChange={(next) => queryState.setFromUser(next)}
 			placeholder={resolvedPlaceholder}
 			query={queryState.current}
+			{resultsLabel}
+			{shouldFilter}
+			{size}
 		/>
-		<ZDialogClose variant="secondary">{resolvedCloseLabel}</ZDialogClose>
+		<ZDialogClose variant="outline" {size}>{resolvedCloseLabel}</ZDialogClose>
 	</ZDialogContent>
 </ZDialog>

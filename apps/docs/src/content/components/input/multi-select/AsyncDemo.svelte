@@ -26,7 +26,7 @@
 <ZStack gap="small">
 	<ZStack direction="row" gap="small" wrap>
 		<ZButton
-			variant="secondary"
+			variant="outline"
 			onclick={() => {
 				loading = true;
 				options = [];
@@ -34,7 +34,7 @@
 			>开始远程查询
 		</ZButton>
 		<ZButton
-			variant="secondary"
+			variant="outline"
 			onclick={() => {
 				options = secondPage;
 				loading = false;
@@ -42,7 +42,7 @@
 			>返回下一页
 		</ZButton>
 		<ZButton
-			variant="secondary"
+			variant="outline"
 			onclick={() => {
 				options = [];
 				loading = false;

@@ -9,6 +9,13 @@
 		TreeNode as PublicTreeNode
 	} from '../../../runtime/tree.js';
 	import type { ZVirtualListController } from '../../data-display/ZVirtualList.svelte';
+	import {
+		controlSizeStyles,
+		controlSizeMetrics,
+		resolveControlSize,
+		type ZControlSize
+	} from '../../../runtime/foundation/control-size.js';
+	import { defaultTheme } from '../../../theme/default.js';
 
 	export type TreeSelectionMode = SelectionMode;
 	export type TreeSelectionStyle = 'checkbox' | 'highlight';
@@ -65,6 +72,7 @@
 		readonly selectionMode?: TreeSelectionMode;
 		readonly selectionStyle?: TreeSelectionStyle;
 		readonly ssrViewportSize?: number;
+		readonly size?: ZControlSize;
 		readonly virtualized?: boolean;
 	}
 
@@ -133,6 +141,12 @@
 			{ description: '空树状态。', name: 'empty' }
 		],
 		props: [
+			{
+				name: 'size',
+				type: 'ZControlSize',
+				default: 'Provider density',
+				description: '五档节点字号、图标与默认行高。虚拟行itemSize显式像素值优先。'
+			},
 			{
 				default: '[]',
 				description: '非受控模式下的初始展开key集合。',
@@ -227,7 +241,7 @@
 				type: 'boolean'
 			},
 			{
-				default: '36',
+				default: 'resolved size height',
 				description: '虚拟模式固定项高px。',
 				name: 'itemSize',
 				type: 'number'
@@ -371,11 +385,14 @@
 			s.gap._small;
 			s.height._full;
 			s.minHeight._medium;
-			s.paddingBlock._small;
+			s.paddingBlock.px(0);
+			s.lineHeight(1);
 			s.paddingInlineEnd._small;
 			s.userSelect.none;
 		},
 		variants: {
+			size: controlSizeStyles,
+			virtualized: { false: () => undefined, true: (s) => s.minHeight.px(0) },
 			active: { false: () => undefined, true: (s) => s.backgroundColor._surface },
 			dimmed: { false: () => undefined, true: (s) => s.opacity._disabled },
 			disabled: {
@@ -392,8 +409,8 @@
 			s.display.inlineFlex;
 			s.flexShrink(0);
 			s.justifyContent.center;
-			s.minHeight._small;
-			s.minWidth._small;
+			s.minHeight.px(0);
+			s.minWidth.px(0);
 		},
 		variants: {},
 		defaultVariants: {}
@@ -426,7 +443,7 @@
 		form,
 		height = 320,
 		item: renderItem,
-		itemSize = 36,
+		itemSize,
 		name,
 		nodes,
 		onExpandedChange,
@@ -444,12 +461,69 @@
 		selectionMode = 'single',
 		selectionStyle = 'highlight',
 		ssrViewportSize,
+		size,
 		style,
 		virtualized = false,
 		...rest
 	}: ZTreeProps<TKey> = $props();
 
 	const zui = useZui();
+	const resolvedSize = $derived(resolveControlSize(size, zui.density));
+	const metrics = $derived(controlSizeMetrics(zui.theme, resolvedSize));
+	let measuredRowHeight = $state<number>();
+	const resolvedItemSize = $derived(
+		itemSize ??
+			(typeof zui.theme.size[resolvedSize] === 'number'
+				? (zui.theme.size[resolvedSize] as number)
+				: (measuredRowHeight ?? defaultTheme.size[resolvedSize]))
+	);
+	const labelClass = $derived(
+		zui.icss((s) => {
+			s.minWidth.px(0);
+			s.overflow.hidden;
+			s.textOverflow.ellipsis;
+			s.whiteSpace.nowrap;
+		})
+	);
+	const indicatorSizeClass = $derived(
+		zui.icss((s) => {
+			s.width.raw(metrics.indicatorSize);
+			s.height.raw(metrics.indicatorSize);
+		})
+	);
+	$effect(() => {
+		const element = ref;
+		const height = metrics.height;
+		const fontSize = metrics.fontSize;
+		if (!element || itemSize !== undefined || !virtualized) return;
+		// Keep CSS lengths live when inherited variables, fonts or viewport units change.
+		const probe = element.ownerDocument.createElement('div');
+		probe.style.cssText =
+			'position:absolute;visibility:hidden;pointer-events:none;inset:0 auto auto 0;width:0;margin:0;padding:0;border:0;min-height:0;max-height:none;line-height:1;';
+		probe.style.fontSize = fontSize;
+		probe.style.height = height;
+		probe.setAttribute('aria-hidden', 'true');
+		probe.inert = true;
+		element.append(probe);
+		let active = true;
+		const measure = () => {
+			if (!active) return;
+			const pixels = probe.getBoundingClientRect().height;
+			if (pixels > 0) measuredRowHeight = pixels;
+		};
+		const view = element.ownerDocument.defaultView;
+		const Observer = view?.ResizeObserver;
+		const observer = Observer ? new Observer(measure) : undefined;
+		observer?.observe(probe);
+		if (!observer) view?.addEventListener('resize', measure);
+		measure();
+		return () => {
+			active = false;
+			observer?.disconnect();
+			if (!observer) view?.removeEventListener('resize', measure);
+			probe.remove();
+		};
+	});
 	const uid = $props.id();
 	const idBase = $derived(createZuiId(zui.idPrefix, uid, 'tree'));
 	const tree = $derived(new LogicalTree<TKey>(nodes));
@@ -919,6 +993,8 @@
 {#snippet itemBody(entry: TreeEntry<TKey>)}
 	<div
 		class={zui.recipe(itemRecipe, {
+			size: resolvedSize,
+			virtualized,
 			active: Object.is(entry.key, activeDescendant.activeKey),
 			dimmed: !disabled && entry.disabled,
 			disabled: disabled || entry.disabled,
@@ -935,18 +1011,18 @@
 				: undefined}
 		style={`padding-inline-start: ${itemPadding(entry)};`}
 	>
-		<span class={switcherClass} data-slot="switcher" aria-hidden="true">
+		<span class={[switcherClass, indicatorSizeClass]} data-slot="switcher" aria-hidden="true">
 			{#if loadingKeys.has(entry.key)}
-				<ZSpinner aria-hidden="true" size="small" tone="inherit" />
+				<ZSpinner aria-hidden="true" size={resolvedSize} tone="inherit" />
 			{:else if errorKeys.has(entry.key)}
-				<RotateCcw size={15} />
+				<RotateCcw size={metrics.indicatorSize} />
 			{:else if entry.hasChildren}
 				{#if expanded.has(entry.key)}
-					<ChevronDown size={15} />
+					<ChevronDown size={metrics.indicatorSize} />
 				{:else if zui.direction === 'rtl'}
-					<ChevronLeft size={15} />
+					<ChevronLeft size={metrics.indicatorSize} />
 				{:else}
-					<ChevronRight size={15} />
+					<ChevronRight size={metrics.indicatorSize} />
 				{/if}
 			{:else}
 				<Circle fill="currentColor" size={6} />
@@ -954,10 +1030,14 @@
 		</span>
 		{#if selectionStyle === 'checkbox' && selectionMode !== 'none' && !entry.selectionDisabled}
 			<span data-slot="selection" aria-hidden="true">
-				{#if selected.has(entry.key)}<SquareCheck size={16} />{:else}<Square size={16} />{/if}
+				{#if selected.has(entry.key)}<SquareCheck size={metrics.indicatorSize} />{:else}<Square
+						size={metrics.indicatorSize}
+					/>{/if}
 			</span>
 		{/if}
-		{#if renderItem}{@render renderItem(entry.node, entry)}{:else}<span>{entry.label}</span>{/if}
+		{#if renderItem}{@render renderItem(entry.node, entry)}{:else}<span class={labelClass}
+				>{entry.label}</span
+			>{/if}
 		{#if errorKeys.has(entry.key)}
 			<span data-slot="load-error" role="status" aria-live="polite"
 				>{zui.localePack.collection.treeLoadError(entry.label)}</span
@@ -992,7 +1072,7 @@
 		itemRole="treeitem"
 		itemSelected={(entry) => (selectionMode === 'none' ? undefined : selected.has(entry.key))}
 		itemSetSize={(entry) => entry.setSize}
-		{itemSize}
+		itemSize={resolvedItemSize}
 		items={treeView.entries}
 		onItemMount={mountItem}
 		{overscan}

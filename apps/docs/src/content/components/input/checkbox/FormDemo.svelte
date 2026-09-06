@@ -27,7 +27,7 @@
 		</label>
 		<ZStack direction="row" gap="small" wrap>
 			<ZButton size="small" type="submit">读取FormData</ZButton>
-			<ZButton size="small" type="reset" variant="secondary">重置</ZButton>
+			<ZButton size="small" type="reset" variant="outline">重置</ZButton>
 		</ZStack>
 		<ZText tone="muted">state = {checked} · 用户变更次数 = {changes} · {submitted}</ZText>
 	</ZStack>

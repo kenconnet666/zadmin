@@ -42,14 +42,22 @@
 				true: (s) => s.accentColor._danger
 			},
 			size: {
+				xsmall: (s) => {
+					s.blockSize._xsmall;
+					s.inlineSize._xsmall;
+				},
+				small: (s) => {
+					s.blockSize._small;
+					s.inlineSize._small;
+				},
+				medium: () => undefined,
 				large: (s) => {
 					s.blockSize._large;
 					s.inlineSize._large;
 				},
-				medium: () => undefined,
-				small: (s) => {
-					s.blockSize._small;
-					s.inlineSize._small;
+				xlarge: (s) => {
+					s.blockSize._xlarge;
+					s.inlineSize._xlarge;
 				}
 			}
 		},
@@ -65,6 +73,7 @@
 
 	export type ZCheckboxProps = Omit<
 		HTMLInputAttributes,
+		| 'children'
 		| 'aria-checked'
 		| 'aria-readonly'
 		| 'checked'
@@ -143,7 +152,7 @@
 				default: 'Field size，其次为 Provider density',
 				description: '显式值优先，其次继承Field，最后由Provider density解析。',
 				name: 'size',
-				type: "'small' | 'medium' | 'large'"
+				type: "'xsmall' | 'small' | 'medium' | 'large' | 'xlarge'"
 			},
 			{ default: 'false', description: '禁用原生控件。', name: 'disabled', type: 'boolean' },
 			{
@@ -180,7 +189,7 @@
 			{
 				description: '解析后的control尺寸。',
 				name: 'data-size',
-				values: ['small', 'medium', 'large']
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge']
 			}
 		],
 		status: 'stable',

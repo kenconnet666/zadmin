@@ -11,8 +11,8 @@
 		<ZText as="label" for="switch-controlled-scan">受控安全扫描</ZText>
 	</ZStack>
 	<ZStack align="center" direction="row" gap="small" wrap>
-		<ZButton size="small" variant="secondary" onclick={() => (checked = true)}>外部开启</ZButton>
-		<ZButton size="small" variant="secondary" onclick={() => (checked = false)}>外部关闭</ZButton>
+		<ZButton size="small" variant="outline" onclick={() => (checked = true)}>外部开启</ZButton>
+		<ZButton size="small" variant="outline" onclick={() => (checked = false)}>外部关闭</ZButton>
 		<ZSwitch aria-label="独立非受控开关" defaultChecked />
 	</ZStack>
 	<ZText tone="muted">checked = {checked} · 仅用户操作回调 {userChanges} 次</ZText>

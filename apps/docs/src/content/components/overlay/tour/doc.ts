@@ -1,3 +1,5 @@
+import ControlSizesDemo from './ControlSizesDemo.svelte';
+import controlSizesSource from './ControlSizesDemo.svelte?raw';
 import { tourMetadata } from '@zadmin/zui/metadata';
 import AsyncTargetDemo from './AsyncTargetDemo.svelte';
 import asyncTargetSource from './AsyncTargetDemo.svelte?raw';
@@ -106,6 +108,14 @@ export const tourDoc = defineComponentDoc(tourMetadata, {
 			'生产导览层：受控open/step、作用域安全target、缺失目标close/skip/wait策略、显式居中步骤、typed locale、RTL、Portal/Floating、联合焦点branch和reduced-motion Presence；不复制页面路由、异步请求或业务完成状态。'
 	},
 	demos: [
+		{
+			component: ControlSizesDemo,
+			covers: ['variants-and-states', 'composition'],
+			description: '五档大小同步正文、间距和按钮；首次进入使用独立主题缓动。',
+			id: 'tour-control-sizes',
+			source: controlSizesSource,
+			title: '五档尺寸与动画'
+		},
 		{
 			component: FormDemo,
 			covers: ['controlled', 'focus', 'keyboard', 'portal'],

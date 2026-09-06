@@ -1,3 +1,5 @@
+import SizingDemo from './SizingDemo.svelte';
+import sizingSource from './SizingDemo.svelte?raw';
 import { sliderMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import formSource from './FormDemo.svelte?raw';
@@ -40,6 +42,15 @@ export const sliderDoc = defineComponentDoc(sliderMetadata, {
 		summary: '真实range驱动、支持Field/RTL/readonly、受控状态和原生表单的单值Slider。'
 	},
 	demos: [
+		{
+			component: SizingDemo,
+			covers: ['composition', 'variants-and-states'],
+			description:
+				'五档尺寸按组件用途同步文字、留白和内部控件；Field/Form 显式尺寸优先于 Provider density。',
+			id: 'slider-sizing',
+			source: sizingSource,
+			title: '五档尺寸与组合比例'
+		},
 		{
 			covers: ['controlled', 'form-data', 'form-reset', 'keyboard', 'uncontrolled'],
 			component: FormDemo,

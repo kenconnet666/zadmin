@@ -15,11 +15,11 @@
 
 <ZProvider motion="reduced">
 	<ZStack direction="row" gap="medium" wrap>
-		<ZButton variant="secondary" onclick={() => (open = !open)}>
+		<ZButton variant="outline" onclick={() => (open = !open)}>
 			外部{open ? '关闭' : '打开'}
 		</ZButton>
 		<ZDropdownMenu bind:open onOpenChange={() => (changes += 1)}>
-			<ZDropdownMenuTrigger variant="secondary">受控菜单</ZDropdownMenuTrigger>
+			<ZDropdownMenuTrigger variant="outline">受控菜单</ZDropdownMenuTrigger>
 			<ZDropdownMenuContent>
 				<ZMenuItem value="inspect">查看详情</ZMenuItem>
 				<ZMenuItem

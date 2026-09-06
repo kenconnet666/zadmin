@@ -34,14 +34,10 @@
 			</ZSelectContent>
 		</ZSelect>
 		<ZStack direction="row" gap="medium">
-			<ZButton
-				type="button"
-				variant="secondary"
-				onclick={(event) => read(event.currentTarget.form!)}
-			>
+			<ZButton type="button" variant="outline" onclick={(event) => read(event.currentTarget.form!)}>
 				读取FormData
 			</ZButton>
-			<ZButton type="reset" variant="secondary">重置</ZButton>
+			<ZButton type="reset" variant="outline">重置</ZButton>
 		</ZStack>
 		<ZText tone="muted">value = {value} · 用户变更次数 = {changes} · {submitted}</ZText>
 	</ZStack>

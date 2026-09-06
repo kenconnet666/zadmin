@@ -10,7 +10,7 @@
 	<ZDatePicker bind:open bind:value calendarLabel="受控选择日期" />
 	<ZStack align="center" direction="row" gap="small" wrap>
 		<ZButton onclick={() => (open = true)}>外部打开</ZButton>
-		<ZButton onclick={() => (value = new CalendarDate(2026, 10, 1))} variant="secondary">
+		<ZButton onclick={() => (value = new CalendarDate(2026, 10, 1))} variant="outline">
 			写入日期
 		</ZButton>
 		<ZButton onclick={() => (value = null)} variant="ghost">外部清空</ZButton>

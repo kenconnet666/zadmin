@@ -62,17 +62,17 @@
 		placeholder="选择异步路径"
 	/>
 	<ZStack direction="row" gap="small" wrap>
-		<ZButton disabled={!pending} onclick={() => pending?.complete()} variant="secondary"
+		<ZButton disabled={!pending} onclick={() => pending?.complete()} variant="outline"
 			>完成加载</ZButton
 		>
-		<ZButton disabled={!pending} onclick={() => pending?.fail()} variant="secondary"
+		<ZButton disabled={!pending} onclick={() => pending?.fail()} variant="outline"
 			>使加载失败</ZButton
 		>
 		<ZButton
 			disabled={!nodes.some(({ key }) => key === 'remote')}
 			onclick={() =>
 				(nodes = nodes.filter(({ key, parentKey }) => key !== 'remote' && parentKey !== 'remote'))}
-			variant="secondary"
+			variant="outline"
 		>
 			移除请求节点
 		</ZButton>

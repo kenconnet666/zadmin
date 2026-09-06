@@ -9,7 +9,7 @@
 			{#each ['生产', '预发布', '只读', '审计中'] as label (label)}
 				<ZTag>{label}</ZTag>
 			{/each}
-			<ZButton size="small" variant="secondary">清空筛选</ZButton>
+			<ZButton size="small" variant="outline">清空筛选</ZButton>
 		</ZStack>
 	</ZStack>
 </ZBox>

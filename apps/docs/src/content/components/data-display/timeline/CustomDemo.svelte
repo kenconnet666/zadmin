@@ -20,7 +20,7 @@
 	{#snippet content(entry)}
 		<ZStack direction="row" gap="medium" align="center">
 			<ZText weight="semibold">{entry.title}</ZText>
-			<ZTag tone={entry.status === 'done' ? 'success' : 'accent'}>{entry.status}</ZTag>
+			<ZTag tone={entry.status === 'done' ? 'success' : 'info'}>{entry.status}</ZTag>
 		</ZStack>
 	{/snippet}
 	{#snippet time(entry)}<ZText as="small" tone="muted">{entry.time}</ZText>{/snippet}

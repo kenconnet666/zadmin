@@ -12,7 +12,7 @@
 	</ZStack>
 	<ZStack align="center" gap="small">
 		<ZBadge count={1} dot label="有新通知" tone="danger">
-			<ZButton aria-label="通知中心有新通知" shape="square" variant="secondary">
+			<ZButton aria-label="通知中心有新通知" shape="square" variant="outline">
 				<Bell aria-hidden="true" size={18} />
 			</ZButton>
 		</ZBadge>
@@ -20,7 +20,7 @@
 	</ZStack>
 	<ZStack align="center" gap="small">
 		<ZBadge count={0} dot label="没有新通知">
-			<ZButton aria-label="通知中心没有新通知" shape="square" variant="secondary">
+			<ZButton aria-label="通知中心没有新通知" shape="square" variant="outline">
 				<Bell aria-hidden="true" size={18} />
 			</ZButton>
 		</ZBadge>

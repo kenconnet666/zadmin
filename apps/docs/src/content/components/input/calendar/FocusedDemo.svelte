@@ -11,11 +11,11 @@
 	<ZStack align="center" direction="row" gap="small" wrap>
 		<ZButton
 			onclick={() => (focusedValue = focusedValue.subtract({ months: 1 }))}
-			variant="secondary"
+			variant="outline"
 		>
 			焦点上一月
 		</ZButton>
-		<ZButton onclick={() => (focusedValue = focusedValue.add({ months: 1 }))} variant="secondary">
+		<ZButton onclick={() => (focusedValue = focusedValue.add({ months: 1 }))} variant="outline">
 			焦点下一月
 		</ZButton>
 		<ZButton onclick={() => (value = null)} variant="ghost">清空选择</ZButton>

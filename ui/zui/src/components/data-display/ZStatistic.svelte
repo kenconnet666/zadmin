@@ -4,7 +4,14 @@
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 
-	export type StatisticTone = 'danger' | 'default' | 'muted' | 'primary' | 'success';
+	import type { ZSemanticTone } from '../../theme/semantics.js';
+	import {
+		typographySizes,
+		typographyTones,
+		type TypographySize,
+		type TypographyTone
+	} from '../gene/typography.js';
+	export type StatisticTone = TypographyTone;
 	export type StatisticTrend = 'down' | 'neutral' | 'up';
 	export type StatisticValue = bigint | number;
 
@@ -35,9 +42,11 @@
 		readonly suffix?: Snippet;
 		readonly tone?: StatisticTone;
 		readonly trend?: number;
+		readonly trendTone?: ZSemanticTone;
 		readonly trendFormatOptions?: Intl.NumberFormatOptions;
 		readonly trendLabel?: StatisticTrendFormatter;
 		readonly value: StatisticValue;
+		readonly valueSize?: TypographySize;
 	}
 
 	export const zuiMetadata = {
@@ -59,6 +68,18 @@
 			{ description: '加载占位。', name: 'loading' }
 		],
 		props: [
+			{
+				default: "'neutral'",
+				description: '趋势的业务含义；增减方向不会自动判断成功或危险。',
+				name: 'trendTone',
+				type: 'ZSemanticTone'
+			},
+			{
+				default: "'xxlarge'",
+				description: '主数值的Theme字号，默认24px；不改变标签和趋势的层次。',
+				name: 'valueSize',
+				type: 'TypographySize'
+			},
 			{
 				default: '必填',
 				description: '有限number或任意精度bigint；不拥有动画或计时状态。',
@@ -100,10 +121,10 @@
 				type: 'StatisticFormatter'
 			},
 			{
-				default: "'default'",
+				default: "'neutral'",
 				description: '值的有限语义色调。',
 				name: 'tone',
-				type: "'default' | 'muted' | 'primary' | 'success' | 'danger'"
+				type: 'StatisticTone'
 			},
 			{
 				default: 'undefined',
@@ -137,11 +158,16 @@
 		],
 		source: 'ui/zui/src/components/data-display/ZStatistic.svelte',
 		states: [
+			{
+				description: '主数值字号。',
+				name: 'data-value-size',
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge', 'xxlarge', 'xxxlarge', 'xxxxlarge']
+			},
 			{ description: '趋势方向。', name: 'data-trend', values: ['up', 'down', 'neutral'] },
 			{
 				description: '值tone。',
 				name: 'data-tone',
-				values: ['default', 'muted', 'primary', 'success', 'danger']
+				values: ['neutral', 'muted', 'primary', 'info', 'success', 'warning', 'danger']
 			},
 			{ description: '加载状态。', name: 'data-loading', values: ['true'] }
 		],
@@ -172,25 +198,18 @@
 			s.minWidth.px(0);
 		},
 		variants: {
-			tone: {
-				danger: (s) => s.color._danger,
-				default: (s) => s.color._text,
-				muted: (s) => s.color._textMuted,
-				primary: (s) => s.color._primary,
-				success: (s) => s.color._success
-			}
+			tone: typographyTones
 		},
-		defaultVariants: { tone: 'default' }
+		defaultVariants: { tone: 'neutral' }
 	});
 	const valueRecipe = defineRecipe({
 		base: (s) => {
-			s.fontSize._xlarge;
 			s.fontVariantNumeric.raw('tabular-nums');
 			s.fontWeight._bold;
 			s.minWidth.px(0);
 		},
-		variants: {},
-		defaultVariants: {}
+		variants: { size: typographySizes },
+		defaultVariants: { size: 'xxlarge' }
 	});
 	const trendRecipe = defineRecipe({
 		base: (s) => {
@@ -199,14 +218,8 @@
 			s.fontWeight._semibold;
 			s.marginInlineStart.px(0);
 		},
-		variants: {
-			trend: {
-				down: (s) => s.color._danger,
-				neutral: (s) => s.color._textMuted,
-				up: (s) => s.color._success
-			}
-		},
-		defaultVariants: { trend: 'neutral' }
+		variants: { tone: typographyTones },
+		defaultVariants: { tone: 'neutral' }
 	});
 	registerRecipeHmr(import.meta, rootRecipe);
 	registerRecipeHmr(import.meta, labelRecipe);
@@ -238,11 +251,13 @@
 		ref = $bindable(null),
 		style,
 		suffix,
-		tone = 'default',
+		tone = 'neutral',
 		trend,
+		trendTone = 'neutral',
 		trendFormatOptions,
 		trendLabel,
 		value,
+		valueSize = 'xxlarge',
 		...rest
 	}: ZStatisticProps = $props();
 	const zui = useZui();
@@ -299,8 +314,8 @@
 	const rootClass = $derived(zui.recipe(rootRecipe));
 	const labelClass = $derived(zui.recipe(labelRecipe));
 	const contentClass = $derived(zui.recipe(contentRecipe, { tone }));
-	const valueClass = $derived(zui.recipe(valueRecipe));
-	const trendClass = $derived(zui.recipe(trendRecipe, { trend: direction }));
+	const valueClass = $derived(zui.recipe(valueRecipe, { size: valueSize }));
+	const trendClass = $derived(zui.recipe(trendRecipe, { tone: trendTone }));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
 </script>
@@ -314,6 +329,7 @@
 	aria-busy={loading || undefined}
 	data-loading={loading || undefined}
 	data-tone={tone}
+	data-value-size={valueSize}
 >
 	<div>
 		<dt class={labelClass} data-slot="label">{label}</dt>
@@ -327,7 +343,9 @@
 			{/if}
 		</dd>
 		{#if !loading && formattedTrend !== undefined}
-			<dd class={trendClass} data-slot="trend" data-trend={direction}>{formattedTrend}</dd>
+			<dd class={trendClass} data-slot="trend" data-trend={direction} data-tone={trendTone}>
+				{formattedTrend}
+			</dd>
 		{/if}
 	</div>
 </dl>

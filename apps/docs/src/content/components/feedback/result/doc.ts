@@ -88,7 +88,7 @@ export const resultDoc = defineComponentDoc(resultMetadata, {
 		'Result不是live region；异步完成公告应由任务状态或Alert/Toast承担。',
 		'操作保持真实按钮或链接；长正文支持逻辑起点对齐和任意长标识换行，操作区可响应式换行。',
 		'Result只表达重要操作的处理结果；集合没有数据使用ZEmpty，加载中使用Spinner/Skeleton owner组合。',
-		'参考Ant Result采用title、subtitle/body、icon和extra分区；保留与ZAlert一致的四种tone，不复制403/404/500为视觉状态，也不引入loading。'
+		'参考Ant Result采用title、subtitle/body、icon和extra分区；保留与ZAlert一致的五种tone，不复制403/404/500为视觉状态，也不引入loading。'
 	],
 	keywords: ['result', 'status page', 'success', 'operation outcome', 'heading', 'actions']
 });

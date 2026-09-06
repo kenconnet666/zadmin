@@ -18,7 +18,7 @@
 	</ZText>
 	<ZStack direction="row" gap="medium" wrap>
 		<ZDrawer>
-			<ZDrawerTrigger variant="secondary">Small start</ZDrawerTrigger>
+			<ZDrawerTrigger variant="outline">Small start</ZDrawerTrigger>
 			<ZDrawerOverlay />
 			<ZDrawerContent placement="start" size="small">
 				<ZStack gap="large">
@@ -29,7 +29,7 @@
 			</ZDrawerContent>
 		</ZDrawer>
 		<ZDrawer>
-			<ZDrawerTrigger variant="secondary">Large bottom</ZDrawerTrigger>
+			<ZDrawerTrigger variant="outline">Large bottom</ZDrawerTrigger>
 			<ZDrawerOverlay />
 			<ZDrawerContent placement="bottom" size="large">
 				<ZStack gap="large">
@@ -40,7 +40,7 @@
 			</ZDrawerContent>
 		</ZDrawer>
 		<ZDrawer>
-			<ZDrawerTrigger variant="secondary">响应式自定义尺寸</ZDrawerTrigger>
+			<ZDrawerTrigger variant="outline">响应式自定义尺寸</ZDrawerTrigger>
 			<ZDrawerOverlay />
 			<ZDrawerContent placement="end" size="min(32rem, calc(100vw - 2rem))">
 				<ZStack gap="large">
@@ -53,7 +53,7 @@
 			</ZDrawerContent>
 		</ZDrawer>
 		<ZDrawer>
-			<ZDrawerTrigger variant="secondary">Full top</ZDrawerTrigger>
+			<ZDrawerTrigger variant="outline">Full top</ZDrawerTrigger>
 			<ZDrawerOverlay />
 			<ZDrawerContent placement="top" size="full">
 				<ZStack gap="large">

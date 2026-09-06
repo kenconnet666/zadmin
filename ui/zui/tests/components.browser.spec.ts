@@ -921,6 +921,16 @@ describe('compiled ICSS browser updates', () => {
 		expect(anchor?.getBoundingClientRect().top).toBeCloseTo(80, 0);
 		expect(content?.parentNode).toBe(document.body);
 		expect(content?.style.position).toBe('fixed');
+		// Position assertions measure the settled surface, not its initial scaled entry frame.
+		await expect.poll(() => content && getComputedStyle(content).opacity).toBe('1');
+		await expect
+			.poll(
+				() =>
+					content
+						?.getAnimations()
+						.filter((animation) => animation.playState === 'running' || animation.pending).length
+			)
+			.toBe(0);
 		expect(content?.getBoundingClientRect().left).toBeCloseTo(120, 0);
 		expect(content?.getBoundingClientRect().top).toBeCloseTo(82, 0);
 		expect(document.activeElement).toBe(inspect);
@@ -2409,6 +2419,15 @@ describe('compiled ICSS browser updates', () => {
 		await tick();
 		const content = document.querySelector<HTMLElement>('[data-testid="popover-content"]');
 		expect(content?.getAttribute('aria-modal')).toBe('true');
+		await expect.poll(() => content && getComputedStyle(content).opacity).toBe('1');
+		await expect
+			.poll(
+				() =>
+					content
+						?.getAnimations()
+						.filter((animation) => animation.playState === 'running' || animation.pending).length
+			)
+			.toBe(0);
 		expect(content?.getBoundingClientRect().width).toBe(trigger?.getBoundingClientRect().width);
 		expect(outside?.inert || outside?.closest('[inert]') !== null).toBe(true);
 		expect(document.body.style.overflow).toBe('hidden');
@@ -3127,9 +3146,9 @@ describe('compiled ICSS browser updates', () => {
 		const card = document.querySelector('[data-testid="default-card"]');
 		const pagination = document.querySelector('[data-testid="default-pagination"]');
 		expect(defaultButton?.dataset.size).toBe('small');
-		expect(defaultButton?.dataset.variant).toBe('secondary');
+		expect(defaultButton?.dataset.variant).toBe('outline');
 		expect(defaultButton?.style.width).toBe('');
-		expect(explicitButton?.dataset.variant).toBe('primary');
+		expect(explicitButton?.dataset.variant).toBe('solid');
 		expect(explicitButton?.style.width).toBe('');
 		expect(busyButton?.disabled).toBe(true);
 		expect(busyButton?.getAttribute('aria-pressed')).toBe('true');
@@ -3138,7 +3157,7 @@ describe('compiled ICSS browser updates', () => {
 		expect(explicitInput?.getAttribute('data-size')).toBe('small');
 		expect(localInput?.getAttribute('data-size')).toBe('small');
 		expect(tag?.getAttribute('data-size')).toBe('small');
-		expect(tag?.getAttribute('data-tone')).toBe('accent');
+		expect(tag?.getAttribute('data-tone')).toBe('info');
 		expect(card?.getAttribute('data-variant')).toBe('outlined');
 		expect(pagination?.getAttribute('data-mode')).toBe('simple');
 		expect(table?.querySelectorAll('input[type="checkbox"]').length).toBeGreaterThan(0);

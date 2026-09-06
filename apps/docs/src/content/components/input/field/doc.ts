@@ -1,3 +1,5 @@
+import SizingDemo from './SizingDemo.svelte';
+import sizingSource from './SizingDemo.svelte?raw';
 import { fieldMetadata } from '@zadmin/zui/metadata';
 import ValidationDemo from './ValidationDemo.svelte';
 import validationSource from './ValidationDemo.svelte?raw';
@@ -61,6 +63,15 @@ export const fieldDoc = defineComponentDoc(fieldMetadata, {
 		summary: '统一关联label、description、错误、表单状态与唯一焦点owner的无侵入字段容器。'
 	},
 	demos: [
+		{
+			component: SizingDemo,
+			covers: ['composition', 'variants-and-states'],
+			description:
+				'五档尺寸按组件用途同步文字、留白和内部控件；Field/Form 显式尺寸优先于 Provider density。',
+			id: 'field-sizing',
+			source: sizingSource,
+			title: '五档尺寸与组合比例'
+		},
 		{
 			covers: ['basic-render', 'controlled', 'invalid'],
 			component: ValidationDemo,

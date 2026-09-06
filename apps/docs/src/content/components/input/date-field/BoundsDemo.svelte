@@ -21,7 +21,7 @@
 			/>
 		</ZField>
 		<ZStack direction="row" gap="small" align="center" wrap>
-			<ZButton type="reset" variant="secondary">恢复中间日期</ZButton>
+			<ZButton type="reset" variant="outline">恢复中间日期</ZButton>
 			<ZText tone="muted">value = {value?.toString() ?? 'null'} · 允许 2026-08-10…2026-08-20</ZText>
 		</ZStack>
 	</ZStack>

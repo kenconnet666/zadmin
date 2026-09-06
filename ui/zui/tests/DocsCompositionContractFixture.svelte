@@ -10,31 +10,29 @@
 		data-testid="link-button-small"
 		href="#small"
 		size="small"
-		variant="secondary"
+		variant="outline"
 	>
 		Small action
 	</ZLink>
-	<ZButton data-testid="button-small-reference" size="small" variant="secondary"
-		>Small action</ZButton
+	<ZButton data-testid="button-small-reference" size="small" variant="outline">Small action</ZButton
 	>
 	<ZLink
 		appearance="button"
 		data-testid="link-button-medium"
 		href="#medium"
 		size="medium"
-		variant="primary">Medium action</ZLink
+		variant="solid">Medium action</ZLink
 	>
-	<ZButton data-testid="button-medium-reference" size="medium" variant="primary"
+	<ZButton data-testid="button-medium-reference" size="medium" variant="solid"
 		>Medium action</ZButton
 	>
-	<ZButton data-testid="button-large-reference" size="large" variant="primary">Large action</ZButton
-	>
+	<ZButton data-testid="button-large-reference" size="large" variant="solid">Large action</ZButton>
 	<ZLink
 		appearance="button"
 		data-testid="link-button-large"
 		href="#large"
 		size="large"
-		variant="primary"
+		variant="solid"
 	>
 		Large action
 	</ZLink>

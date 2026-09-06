@@ -43,14 +43,17 @@
 					s.marginTop._medium;
 				},
 				listItem: (s) => s.lineHeight._relaxed,
-				root: (s) => s.maxWidth.rem(72),
+				root: (s) => {
+					s.minWidth.px(0);
+					s.maxWidth.rem(72);
+				},
 				section: (s) => s.scrollMarginTop.rem(6),
 				sections: (s) => {
 					s.display.grid;
 					s.gap._large;
 				},
 				sectionTitle: (s) => {
-					s.fontSize._xlarge;
+					s.fontSize._xxlarge;
 					s.letterSpacing.em(-0.02);
 					s.margin.px(0);
 				}
@@ -79,7 +82,7 @@
 	<ZContainer gutter="small" size="medium">
 		<header class={classes.header}>
 			<ZText as="p" class={classes.eyebrow}>{guide.eyebrow}</ZText>
-			<ZHeading data-doc-page-title="true" id={`guide-${guide.id}`} level={1} size="xxlarge"
+			<ZHeading data-doc-page-title="true" id={`guide-${guide.id}`} level={1} size="xxxlarge"
 				>{guide.title}</ZHeading
 			>
 			<ZText class={classes.lead} tone="muted">{guide.summary}</ZText>
@@ -98,7 +101,7 @@
 							class={classes.sectionTitle}
 							id={`${section.id}-title`}
 							level={2}
-							size="xlarge">{section.title}</ZHeading
+							size="xxlarge">{section.title}</ZHeading
 						>
 					{/snippet}
 					<ZStack gap="medium">
@@ -123,6 +126,7 @@
 								embedded
 								lang={section.language}
 								lineNumbers
+								wrap
 							/>
 						{/if}
 						{#if section.links}

@@ -40,13 +40,13 @@
 		<ZStack direction="row" gap="medium">
 			<ZButton
 				type="button"
-				variant="secondary"
+				variant="outline"
 				onclick={(event) =>
 					(submitted = String(new FormData(event.currentTarget.form!).get('environment')))}
 			>
 				读取FormData
 			</ZButton>
-			<ZButton type="reset" variant="secondary">重置</ZButton>
+			<ZButton type="reset" variant="outline">重置</ZButton>
 		</ZStack>
 		<ZText tone="muted"
 			>value = {value} · input = {inputValue} · 变更 = {changes} · {submitted}</ZText

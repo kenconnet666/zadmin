@@ -16,13 +16,22 @@
 		defaultTheme,
 		extendTheme
 	} from '../src/entrypoints/index.js';
+	let {
+		onMentionReset,
+		onDateReset,
+		onTimeReset
+	}: {
+		onMentionReset?: () => void;
+		onDateReset?: () => void;
+		onTimeReset?: () => void;
+	} = $props();
 
 	const theme = extendTheme(defaultTheme, {
 		fontFamily: { sans: 'monospace' },
 		fontSize: { medium: 15 },
 		opacity: { disabled: 0.4 }
 	});
-	const sizes = ['small', 'medium', 'large'] as const;
+	const sizes = ['xsmall', 'small', 'medium', 'large', 'xlarge'] as const;
 	const options = [{ label: 'Alpha', value: 'alpha' }];
 	const mentions = [{ key: 'alice', label: 'Alice', value: 'alice' }];
 	const defaultFiles = [createFileUploadItem('audit-file', new File(['audit'], 'audit.txt'))];
@@ -59,7 +68,10 @@
 				items={mentions}
 				defaultValue="Initial"
 				onValueChange={() => (changes += 1)}
-				onFormReset={() => (resets += 1)}
+				onFormReset={() => {
+					resets += 1;
+					onMentionReset?.();
+				}}
 			/>
 		</ZField>
 	</form>
@@ -71,11 +83,23 @@
 	>
 	<output data-testid="audit-mention-events">{changes}:{resets}</output>
 	<form data-testid="audit-date-form">
-		<ZDateField name="date" onFormReset={() => (dateResets += 1)} />
-		<ZTimeField name="time" onFormReset={() => (timeResets += 1)} />
+		<ZDateField
+			name="date"
+			onFormReset={() => {
+				dateResets += 1;
+				onDateReset?.();
+			}}
+		/>
+		<ZTimeField
+			name="time"
+			onFormReset={() => {
+				timeResets += 1;
+				onTimeReset?.();
+			}}
+		/>
 	</form>
 	<output data-testid="audit-date-events">{dateResets}:{timeResets}</output>
 	<ZFileUpload data-testid="audit-upload" {defaultFiles} disabled />
 	<ZDateRangePicker data-testid="audit-range" disabled />
-	<ZCalendar data-testid="audit-calendar" />
+	<ZCalendar data-testid="audit-calendar" size="medium" />
 </ZProvider>

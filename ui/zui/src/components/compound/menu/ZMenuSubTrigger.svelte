@@ -54,6 +54,8 @@
 	import { useZMenu } from './context.svelte.js';
 	import { useZMenuSub } from './submenu-context.svelte.js';
 	import ZMenuItem from './ZMenuItem.svelte';
+	import { useZui } from '../../../runtime/foundation/context.js';
+	import { controlSizeMetrics } from '../../../runtime/foundation/control-size.js';
 
 	let {
 		children,
@@ -67,6 +69,8 @@
 		...rest
 	}: ZMenuSubTriggerProps = $props();
 	const menu = useZMenu();
+	const zui = useZui();
+	const metrics = $derived(controlSizeMetrics(zui.theme, menu.size));
 	const popover = useZPopover();
 	const sub = useZMenuSub();
 	const resolvedDisabled = $derived(disabled || menu.disabled);
@@ -108,7 +112,9 @@
 </script>
 
 {#snippet indicator()}
-	{#if menu.direction === 'rtl'}<ChevronLeft size={15} />{:else}<ChevronRight size={15} />{/if}
+	{#if menu.direction === 'rtl'}<ChevronLeft size={metrics.indicatorSize} />{:else}<ChevronRight
+			size={metrics.indicatorSize}
+		/>{/if}
 {/snippet}
 
 <ZMenuItem

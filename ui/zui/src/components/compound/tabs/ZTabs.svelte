@@ -9,6 +9,10 @@
 		TabsPanelMount as TabsPanelMountValue
 	} from './context.svelte.js';
 	import { defineRecipe, registerRecipeHmr } from '../../../recipes/define.js';
+	import {
+		resolveControlSize,
+		type ZControlSize
+	} from '../../../runtime/foundation/control-size.js';
 
 	export type TabsActivationMode = TabsActivationModeValue;
 	export type TabsOrientation = TabsOrientationValue;
@@ -27,11 +31,16 @@
 		readonly orientation?: TabsOrientation;
 		readonly panelMount?: TabsPanelMount;
 		ref?: HTMLDivElement | null;
+		readonly size?: ZControlSize;
 		value?: PublicSelectionKey | null;
 	}
 
 	const tabsRecipe = defineRecipe({
-		base: (s) => s.display.block,
+		base: (s) => {
+			s.display.block;
+			s.minWidth.px(0);
+			s.maxWidth._full;
+		},
 		variants: {},
 		defaultVariants: {}
 	});
@@ -82,6 +91,12 @@
 		],
 		parts: [],
 		props: [
+			{
+				name: 'size',
+				type: 'ZControlSize',
+				default: 'Provider density',
+				description: '五档Trigger高度、字号与内边距；Panel布局独立。'
+			},
 			{
 				bindable: true,
 				default: 'null',
@@ -147,6 +162,11 @@
 		],
 		source: 'ui/zui/src/components/compound/tabs/ZTabs.svelte',
 		states: [
+			{
+				name: 'data-size',
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge'],
+				description: '解析后的五档控件尺寸。'
+			},
 			{ description: '布局方向。', name: 'data-orientation', values: ['horizontal', 'vertical'] },
 			{
 				description: 'Panel挂载策略。',
@@ -199,11 +219,13 @@
 		orientation = 'horizontal',
 		panelMount = 'keep-mounted',
 		ref = $bindable(null),
+		size,
 		style,
 		value = $bindable(),
 		...rest
 	}: ZTabsProps = $props();
 	const zui = useZui();
+	const resolvedSize = $derived(resolveControlSize(size, zui.density));
 	const uid = $props.id();
 	const idBase = $derived(createZuiId(zui.idPrefix, uid, 'tabs'));
 	const rootClass = $derived(zui.recipe(tabsRecipe));
@@ -350,6 +372,9 @@
 	}
 
 	const context: ZTabsContext = {
+		get size() {
+			return resolvedSize;
+		},
 		get activationMode() {
 			return activationMode;
 		},
@@ -489,6 +514,7 @@
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
 	data-disabled={disabled || undefined}
+	data-size={resolvedSize}
 	data-orientation={orientation}
 	data-panel-mount={panelMount}
 	onfocusin={handleFocusin}

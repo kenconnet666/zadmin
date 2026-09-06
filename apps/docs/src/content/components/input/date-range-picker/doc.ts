@@ -1,3 +1,5 @@
+import SizingDemo from './SizingDemo.svelte';
+import sizingSource from './SizingDemo.svelte?raw';
 import { dateRangePickerMetadata } from '@zadmin/zui/metadata';
 import { dateRangePickerApiFacts } from '../../../../framework/component-api.generated.js';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
@@ -86,6 +88,15 @@ export const dateRangePickerDoc = defineComponentDoc(dateRangePickerMetadata, {
 			'生产Date Range Picker：两个可编辑DateField、partial start/end、完整反向规范化、按端可用性、Calendar range preview、value/open双owner、typed locale/RTL和唯一双字段FormValueBridge。'
 	},
 	demos: [
+		{
+			component: SizingDemo,
+			covers: ['composition', 'variants-and-states'],
+			description:
+				'五档尺寸按组件用途同步文字、留白和内部控件；Field/Form 显式尺寸优先于 Provider density。',
+			id: 'date-range-picker-sizing',
+			source: sizingSource,
+			title: '五档尺寸与组合比例'
+		},
 		{
 			component: FormDemo,
 			covers: ['basic-render', 'form-data', 'form-reset', 'keyboard', 'uncontrolled'],

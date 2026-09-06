@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { ZAlert, ZButton, ZStack, ZText } from '@zadmin/zui';
+
 	let visible = $state(true);
 </script>
 
@@ -13,7 +14,9 @@
 			onDismiss={() => (visible = false)}
 		>
 			生产配置已写入，下一次部署会使用新版本。
-			{#snippet action()}<ZButton variant="secondary" size="small">查看变更</ZButton>{/snippet}
+			{#snippet action()}
+				<ZButton variant="outline" size="small">查看变更</ZButton>
+			{/snippet}
 		</ZAlert>
 	{/if}
 	<ZText tone="muted">visible = {visible}</ZText>

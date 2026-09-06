@@ -50,7 +50,7 @@
 		</ZField>
 		<ZStack direction="row" gap="small">
 			<ZButton type="submit">读取 FormData</ZButton>
-			<ZButton type="reset" variant="secondary">重置</ZButton>
+			<ZButton type="reset" variant="outline">重置</ZButton>
 		</ZStack>
 		<ZText tone="muted"
 			>queue = {files.map((item) => `${item.file.name}:${item.status}`).join(',') || 'none'} · rejected

@@ -11,7 +11,7 @@
 	</ZField>
 	<ZStack align="center" direction="row" gap="small" wrap>
 		<ZButton onclick={() => (value = new CalendarDate(2026, 10, 1))}>写入国庆日期</ZButton>
-		<ZButton onclick={() => (value = null)} variant="secondary">显式写入 null</ZButton>
+		<ZButton onclick={() => (value = null)} variant="outline">显式写入 null</ZButton>
 		<ZText tone="muted">owner = {value?.toString() ?? 'null'}</ZText>
 	</ZStack>
 </ZStack>

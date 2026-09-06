@@ -4,13 +4,16 @@
  * foundation dependency and be used by SSR and build-time tooling.
  */
 
+import { controlSizes, type ZControlSize } from './control-size.js';
+import { semanticTones, type ZSemanticTone } from '../../theme/semantics.js';
+
 export type ComponentDefaultPrimitive = string | number | boolean;
 
 export interface ButtonComponentDefaults {
-	readonly size?: 'small' | 'medium' | 'large';
+	readonly size?: ZControlSize;
 	readonly shape?: 'default' | 'circle' | 'square';
-	readonly tone?: 'default' | 'danger';
-	readonly variant?: 'ghost' | 'primary' | 'secondary';
+	readonly tone?: ZSemanticTone | 'primary';
+	readonly variant?: 'ghost' | 'solid' | 'outline';
 	readonly fullWidth?: boolean;
 }
 
@@ -25,12 +28,12 @@ export interface DataTableComponentDefaults {
 }
 
 export interface InputComponentDefaults {
-	readonly size?: 'small' | 'medium' | 'large';
+	readonly size?: ZControlSize;
 }
 
 export interface TagComponentDefaults {
-	readonly size?: 'small' | 'medium';
-	readonly tone?: 'accent' | 'danger' | 'default' | 'success' | 'warning';
+	readonly size?: ZControlSize;
+	readonly tone?: ZSemanticTone;
 }
 
 export interface CardComponentDefaults {
@@ -40,6 +43,7 @@ export interface CardComponentDefaults {
 
 export interface PaginationComponentDefaults {
 	readonly mode?: 'compact' | 'default' | 'simple';
+	readonly size?: ZControlSize;
 }
 
 export interface ZuiComponentDefaults {
@@ -70,9 +74,9 @@ const COMPONENT_RULES = {
 	button: {
 		fullWidth: { kind: 'boolean' },
 		shape: { kind: 'enum', values: ['default', 'circle', 'square'] },
-		size: { kind: 'enum', values: ['small', 'medium', 'large'] },
-		tone: { kind: 'enum', values: ['default', 'danger'] },
-		variant: { kind: 'enum', values: ['ghost', 'primary', 'secondary'] }
+		size: { kind: 'enum', values: controlSizes },
+		tone: { kind: 'enum', values: ['primary', ...semanticTones] },
+		variant: { kind: 'enum', values: ['ghost', 'solid', 'outline'] }
 	},
 	card: {
 		elevation: { kind: 'enum', values: ['large', 'medium', 'none', 'small'] },
@@ -87,13 +91,16 @@ const COMPONENT_RULES = {
 		striped: { kind: 'boolean' },
 		virtualized: { kind: 'boolean' }
 	},
-	input: { size: { kind: 'enum', values: ['small', 'medium', 'large'] } },
-	pagination: { mode: { kind: 'enum', values: ['compact', 'default', 'simple'] } },
+	input: { size: { kind: 'enum', values: controlSizes } },
+	pagination: {
+		mode: { kind: 'enum', values: ['compact', 'default', 'simple'] },
+		size: { kind: 'enum', values: controlSizes }
+	},
 	tag: {
-		size: { kind: 'enum', values: ['small', 'medium'] },
+		size: { kind: 'enum', values: controlSizes },
 		tone: {
 			kind: 'enum',
-			values: ['accent', 'danger', 'default', 'success', 'warning']
+			values: semanticTones
 		}
 	}
 } as const satisfies Readonly<Record<string, Readonly<Record<string, ComponentDefaultRule>>>>;

@@ -23,7 +23,7 @@ export interface SlotRecipeInput<
 	/** Component styles by default; utilities explicitly customize an existing component. */
 	readonly layer?: IcssLayer;
 	readonly base?: SlotStyles<TSlots[number]>;
-	readonly defaultVariants?: Readonly<Record<string, string | boolean>>;
+	readonly defaultVariants?: SlotRecipeSelectionFrom<NoInfer<TVariants>>;
 	readonly slots: TSlots;
 	readonly variants: TVariants;
 }

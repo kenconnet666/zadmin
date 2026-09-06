@@ -1,3 +1,5 @@
+import ControlSizesDemo from './ControlSizesDemo.svelte';
+import controlSizesSource from './ControlSizesDemo.svelte?raw';
 import {
 	tabsListMetadata,
 	tabsMetadata,
@@ -65,6 +67,14 @@ export const tabsDoc = defineComponentDoc(tabsMetadata, {
 			'生产Tabs compound collection：LogicalCollection/MountedElements/CollectionNavigation分离逻辑顺序、DOM和active焦点；nullable typed selection支持automatic/manual、动态nearest恢复、RTL/IME和明确Panel挂载策略。'
 	},
 	demos: [
+		{
+			component: ControlSizesDemo,
+			covers: ['variants-and-states', 'composition'],
+			description: '五档尺寸直接消费主题 token；组合部件继承有视觉意义的尺寸 owner。',
+			id: 'tabs-control-sizes',
+			source: controlSizesSource,
+			title: '五档尺寸与主题比例'
+		},
 		{
 			component: InteractiveDemo,
 			covers: ['basic-render', 'controlled', 'focus', 'keyboard', 'uncontrolled'],

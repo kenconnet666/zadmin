@@ -1,4 +1,5 @@
 <script module lang="ts">
+	import type { ZControlSize } from '../../../runtime/foundation/control-size.js';
 	import type { Snippet } from 'svelte';
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
 	import type { MenuActionEvent } from '../menu/context.svelte.js';
@@ -10,6 +11,7 @@
 		readonly 'aria-label'?: string;
 		readonly children?: Snippet;
 		readonly loop?: boolean;
+		readonly size?: ZControlSize;
 		menuRef?: HTMLDivElement | null;
 		readonly onAction?: (event: MenuActionEvent) => void;
 	};
@@ -37,7 +39,13 @@
 		parts: [],
 		props: [
 			{
-				default: "'Context menu'",
+				name: 'size',
+				type: 'ZControlSize',
+				default: 'parent Menu or Provider density',
+				description: '内部菜单行的五档大小；Trigger独立设置Button size。'
+			},
+			{
+				default: 'localePack.collection.contextMenu',
 				description: 'Menu可访问名称。',
 				name: 'aria-label',
 				type: 'string'
@@ -78,6 +86,7 @@
 		children,
 		class: className,
 		loop = true,
+		size,
 		menuRef = $bindable(null),
 		onAction,
 		ref = $bindable(null),
@@ -85,7 +94,7 @@
 	}: ZContextMenuContentProps = $props();
 	const zui = useZui();
 	const popover = useZPopover();
-	const resolvedAriaLabel = $derived(ariaLabelNative ?? 'Context menu');
+	const resolvedAriaLabel = $derived(ariaLabelNative ?? zui.localePack.collection.contextMenu);
 	const popupClass = $derived(zui.recipe(menuPopupContentRecipe));
 	function initialFocus(): HTMLElement | null {
 		return (
@@ -112,6 +121,7 @@
 		aria-label={resolvedAriaLabel}
 		bind:ref={menuRef}
 		{loop}
+		{size}
 		onAction={handleAction}
 		onDismissRequest={() => popover.setOpen(false)}>{@render children?.()}</ZMenu
 	>

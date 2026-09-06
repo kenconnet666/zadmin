@@ -33,7 +33,7 @@
 </script>
 
 <ZStack direction="column" gap="small">
-	<ZButton variant="secondary" onclick={prepend}>在顶部插入记录</ZButton>
+	<ZButton variant="outline" onclick={prepend}>在顶部插入记录</ZButton>
 	<ZVirtualList
 		aria-label="动态高度审计记录"
 		estimateSize={56}

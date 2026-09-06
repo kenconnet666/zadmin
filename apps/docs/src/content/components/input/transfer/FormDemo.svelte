@@ -24,7 +24,7 @@
 			sourceTitle="可用通道"
 			targetTitle="已选通道"
 		/>
-		<ZButton type="reset" variant="secondary">重置</ZButton>
+		<ZButton type="reset" variant="outline">重置</ZButton>
 		<ZText tone="muted">selected = {value.join('/') || 'none'}</ZText>
 	</ZStack>
 </form>

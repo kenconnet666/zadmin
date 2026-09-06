@@ -15,7 +15,7 @@ describe('ZHeading and ZText production browser semantics', () => {
 		expect(h1?.tagName).toBe('H1');
 		expect(h4?.tagName).toBe('H4');
 		expect(h1?.dataset.size).toBe('medium');
-		expect(h4?.dataset.size).toBe('xlarge');
+		expect(h4?.dataset.size).toBe('xxlarge');
 		expect(clamp?.style.webkitLineClamp).toBe('2');
 		expect(clamp?.style.webkitBoxOrient).toBe('vertical');
 		expect(numbers?.style.fontVariantNumeric).toBe('tabular-nums');

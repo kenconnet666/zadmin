@@ -1,8 +1,10 @@
 <script module lang="ts">
 	import type { HTMLAttributes } from 'svelte/elements';
+	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
+	import { indicatorSizeStyles } from '../gene/indicator-size.js';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
-	export type SpinnerSize = 'large' | 'medium' | 'small';
+	export type SpinnerSize = ZControlSize;
 	export type SpinnerTone = 'inherit' | 'muted' | 'primary';
 	export interface ZSpinnerProps extends HTMLAttributes<HTMLSpanElement> {
 		readonly label?: string;
@@ -36,7 +38,7 @@
 				default: "'medium'",
 				description: '视觉尺寸。',
 				name: 'size',
-				type: "'small' | 'medium' | 'large'"
+				type: 'SpinnerSize'
 			},
 			{
 				default: "'primary'",
@@ -62,20 +64,7 @@
 			s.flexShrink(0);
 		},
 		variants: {
-			size: {
-				large: (s) => {
-					s.height._large;
-					s.width._large;
-				},
-				medium: (s) => {
-					s.height._medium;
-					s.width._medium;
-				},
-				small: (s) => {
-					s.height._small;
-					s.width._small;
-				}
-			},
+			size: indicatorSizeStyles,
 			tone: {
 				inherit: () => undefined,
 				muted: (s) => s.color._textMuted,
@@ -115,8 +104,8 @@
 	let indicator = $state<SVGSVGElement | null>(null);
 	const hidden = $derived(ariaHidden === true || ariaHidden === 'true');
 	const resolvedSize = $derived.by(() => {
-		if (!['large', 'medium', 'small'].includes(size)) {
-			throw new TypeError('ZSpinner size must be small, medium or large.');
+		if (!['xsmall', 'small', 'medium', 'large', 'xlarge'].includes(size)) {
+			throw new TypeError('ZSpinner size must be xsmall, small, medium, large or xlarge.');
 		}
 		return size;
 	});
@@ -150,7 +139,7 @@
 			[{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }],
 			{
 				duration: durationMilliseconds(zui.theme.duration.spinnerSpin),
-				easing: 'linear',
+				easing: zui.theme.easing.linear,
 				iterations: Infinity
 			}
 		);

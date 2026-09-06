@@ -10,7 +10,7 @@
 </script>
 
 <ZDropdownMenu bind:open placement="top-end">
-	<ZDropdownMenuTrigger variant="secondary">向上打开</ZDropdownMenuTrigger>
+	<ZDropdownMenuTrigger variant="outline">向上打开</ZDropdownMenuTrigger>
 	<ZDropdownMenuContent loop={false}>
 		<ZMenuItem value="first">第一项</ZMenuItem>
 		<ZMenuItem value="last">最后一项</ZMenuItem>

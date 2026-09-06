@@ -234,6 +234,6 @@
 	onpointermove={handlePointerMove}
 >
 	<span data-slot="label">{@render children?.()}</span><span aria-hidden="true"
-		>{#if selected}<Check size={15} />{/if}</span
+		>{#if selected}<Check size="1em" />{/if}</span
 	>
 </div>

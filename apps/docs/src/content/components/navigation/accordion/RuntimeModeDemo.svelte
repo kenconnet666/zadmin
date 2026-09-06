@@ -26,10 +26,10 @@
 
 <ZStack gap="medium">
 	<ZStack direction="row" gap="small" wrap>
-		<ZButton onclick={useSingle} variant={type === 'single' ? 'primary' : 'secondary'}>
+		<ZButton onclick={useSingle} variant={type === 'single' ? 'solid' : 'outline'}>
 			Single mode
 		</ZButton>
-		<ZButton onclick={useMultiple} variant={type === 'multiple' ? 'primary' : 'secondary'}>
+		<ZButton onclick={useMultiple} variant={type === 'multiple' ? 'solid' : 'outline'}>
 			Multiple mode
 		</ZButton>
 	</ZStack>

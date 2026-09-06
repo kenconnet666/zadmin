@@ -28,6 +28,7 @@
 				},
 				main: (s) => {
 					s.minWidth.px(0);
+					s.overflowWrap.anywhere;
 					s.padding.raw('3rem clamp(1.25rem, 3vw, 3.5rem) 6rem');
 					s._media({ max: 'medium' }, (mobile) => mobile.padding.raw('2rem 1rem 4rem'));
 				},
@@ -305,7 +306,7 @@
 		{:else if invalidRoute}
 			<section class={classes.notFound}>
 				<ZText as="p" class={classes.eyebrow}>404</ZText>
-				<ZHeading level={1} size="xxlarge">没有这个页面。</ZHeading>
+				<ZHeading level={1} size="xxxlarge">没有这个页面。</ZHeading>
 				<ZText as="p" class={classes.copy}>当前展示站只列出已经实现的ZUI组件与生产指南。</ZText>
 				<ZLink appearance="button" href="#/">返回文档概览</ZLink>
 			</section>

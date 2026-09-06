@@ -4,6 +4,7 @@
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
 	import type { DismissableLayerEvent } from '../../../runtime/layer/dismissable-layer.js';
 	import { defineRecipe, registerRecipeHmr } from '../../../recipes/define.js';
+	import type { ZControlSize } from '../../../runtime/foundation/control-size.js';
 
 	export type DialogEscapeEvent = DismissableLayerEvent<KeyboardEvent>;
 	export type DialogFocusOutsideEvent = DismissableLayerEvent<FocusEvent>;
@@ -28,6 +29,7 @@
 		readonly restoreFocus?: boolean;
 		readonly restoreTarget?: () => HTMLElement | null;
 		readonly role?: 'alertdialog' | 'dialog';
+		readonly size?: ZControlSize;
 	}
 
 	const contentRecipe = defineRecipe({
@@ -60,6 +62,13 @@
 			});
 		},
 		variants: {
+			size: {
+				xsmall: (s) => s.maxWidth._dialogXsmall,
+				small: (s) => s.maxWidth._dialogSmall,
+				medium: (s) => s.maxWidth._dialogMedium,
+				large: (s) => s.maxWidth._dialogLarge,
+				xlarge: (s) => s.maxWidth._dialogXlarge
+			},
 			motion: {
 				auto: () => undefined,
 				full: () => undefined,
@@ -73,7 +82,7 @@
 				true: () => undefined
 			}
 		},
-		defaultVariants: { motion: 'auto', open: false }
+		defaultVariants: { motion: 'auto', open: false, size: 'medium' }
 	});
 	registerRecipeHmr(import.meta, contentRecipe);
 	export const zuiMetadata = {
@@ -116,6 +125,12 @@
 		],
 		parts: [],
 		props: [
+			{
+				name: 'size',
+				type: 'ZControlSize',
+				default: 'medium',
+				description: '五档Dialog面板最大宽度，消费独立dialog尺寸token。'
+			},
 			{
 				default: "'dialog'",
 				description: '使用默认居中Dialog视觉，或由复合封装提供完整视觉。',
@@ -236,6 +251,7 @@
 		restoreFocus = true,
 		restoreTarget,
 		role = 'dialog',
+		size = 'medium',
 		style,
 		...rest
 	}: ZDialogContentProps = $props();
@@ -251,6 +267,7 @@
 		appearance === 'dialog'
 			? zui.recipe(contentRecipe, {
 					motion: dialog.reducedMotion ? 'reduced' : 'full',
+					size,
 					open: dialog.open && entryMotion.entered
 				})
 			: undefined

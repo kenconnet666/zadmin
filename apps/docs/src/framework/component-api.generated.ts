@@ -58,6 +58,11 @@ export const accordionApiFacts = {
 			type: 'HTMLDivElement | null'
 		},
 		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
 			name: 'type',
 			required: false,
 			type: 'AccordionTypeValue'
@@ -251,7 +256,7 @@ export const alertDialogActionApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'large' | 'medium' | 'small'",
+			type: "'large' | 'medium' | 'small' | 'xlarge' | 'xsmall'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -263,13 +268,13 @@ export const alertDialogActionApiFacts = {
 		{
 			name: 'tone',
 			required: false,
-			type: "'danger' | 'default'",
+			type: "'danger' | 'info' | 'neutral' | 'primary' | 'success' | 'warning'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
 			name: 'variant',
 			required: false,
-			type: "'ghost' | 'primary' | 'secondary'",
+			type: "'ghost' | 'outline' | 'solid'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -339,7 +344,7 @@ export const alertDialogCancelApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'large' | 'medium' | 'small'",
+			type: "'large' | 'medium' | 'small' | 'xlarge' | 'xsmall'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -351,13 +356,13 @@ export const alertDialogCancelApiFacts = {
 		{
 			name: 'tone',
 			required: false,
-			type: "'danger' | 'default'",
+			type: "'danger' | 'info' | 'neutral' | 'primary' | 'success' | 'warning'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
 			name: 'variant',
 			required: false,
-			type: "'ghost' | 'primary' | 'secondary'",
+			type: "'ghost' | 'outline' | 'solid'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -454,6 +459,12 @@ export const alertDialogContentApiFacts = {
 			required: false,
 			type: '() => HTMLElement | null',
 			inheritedFrom: 'ZDialogContentProps'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize',
+			inheritedFrom: 'ZDialogContentProps'
 		}
 	],
 	source: 'ui/zui/src/components/compound/alert-dialog/ZAlertDialogContent.svelte',
@@ -538,7 +549,7 @@ export const alertDialogTriggerApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'large' | 'medium' | 'small'",
+			type: "'large' | 'medium' | 'small' | 'xlarge' | 'xsmall'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -550,13 +561,13 @@ export const alertDialogTriggerApiFacts = {
 		{
 			name: 'tone',
 			required: false,
-			type: "'danger' | 'default'",
+			type: "'danger' | 'info' | 'neutral' | 'primary' | 'success' | 'warning'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
 			name: 'variant',
 			required: false,
-			type: "'ghost' | 'primary' | 'secondary'",
+			type: "'ghost' | 'outline' | 'solid'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -1023,6 +1034,11 @@ export const contextMenuContentApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
 			name: 'menuRef',
 			required: false,
 			type: 'HTMLDivElement | null'
@@ -1159,7 +1175,7 @@ export const dialogCloseApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'large' | 'medium' | 'small'",
+			type: "'large' | 'medium' | 'small' | 'xlarge' | 'xsmall'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -1171,13 +1187,13 @@ export const dialogCloseApiFacts = {
 		{
 			name: 'tone',
 			required: false,
-			type: "'danger' | 'default'",
+			type: "'danger' | 'info' | 'neutral' | 'primary' | 'success' | 'warning'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
 			name: 'variant',
 			required: false,
-			type: "'ghost' | 'primary' | 'secondary'",
+			type: "'ghost' | 'outline' | 'solid'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -1313,6 +1329,11 @@ export const dialogContentApiFacts = {
 			name: 'role',
 			required: false,
 			type: "'alertdialog' | 'dialog'"
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
 		}
 	],
 	source: 'ui/zui/src/components/compound/dialog/ZDialogContent.svelte',
@@ -1397,7 +1418,7 @@ export const dialogTriggerApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'large' | 'medium' | 'small'",
+			type: "'large' | 'medium' | 'small' | 'xlarge' | 'xsmall'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -1409,13 +1430,13 @@ export const dialogTriggerApiFacts = {
 		{
 			name: 'tone',
 			required: false,
-			type: "'danger' | 'default'",
+			type: "'danger' | 'info' | 'neutral' | 'primary' | 'success' | 'warning'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
 			name: 'variant',
 			required: false,
-			type: "'ghost' | 'primary' | 'secondary'",
+			type: "'ghost' | 'outline' | 'solid'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -1525,7 +1546,7 @@ export const drawerCloseApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'large' | 'medium' | 'small'",
+			type: "'large' | 'medium' | 'small' | 'xlarge' | 'xsmall'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -1537,13 +1558,13 @@ export const drawerCloseApiFacts = {
 		{
 			name: 'tone',
 			required: false,
-			type: "'danger' | 'default'",
+			type: "'danger' | 'info' | 'neutral' | 'primary' | 'success' | 'warning'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
 			name: 'variant',
 			required: false,
-			type: "'ghost' | 'primary' | 'secondary'",
+			type: "'ghost' | 'outline' | 'solid'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -1619,7 +1640,7 @@ export const drawerContentApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'full' | 'large' | 'medium' | 'small' | number | string"
+			type: "'full' | 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge' | number | string"
 		},
 		{
 			name: 'ariaDescribedBy',
@@ -1782,7 +1803,7 @@ export const drawerTriggerApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'large' | 'medium' | 'small'",
+			type: "'large' | 'medium' | 'small' | 'xlarge' | 'xsmall'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -1794,13 +1815,13 @@ export const drawerTriggerApiFacts = {
 		{
 			name: 'tone',
 			required: false,
-			type: "'danger' | 'default'",
+			type: "'danger' | 'info' | 'neutral' | 'primary' | 'success' | 'warning'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
 			name: 'variant',
 			required: false,
-			type: "'ghost' | 'primary' | 'secondary'",
+			type: "'ghost' | 'outline' | 'solid'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -1921,6 +1942,11 @@ export const dropdownMenuContentApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
 			name: 'menuRef',
 			required: false,
 			type: 'HTMLDivElement | null'
@@ -1992,7 +2018,7 @@ export const dropdownMenuTriggerApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'large' | 'medium' | 'small'",
+			type: "'large' | 'medium' | 'small' | 'xlarge' | 'xsmall'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -2004,13 +2030,13 @@ export const dropdownMenuTriggerApiFacts = {
 		{
 			name: 'tone',
 			required: false,
-			type: "'danger' | 'default'",
+			type: "'danger' | 'info' | 'neutral' | 'primary' | 'success' | 'warning'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
 			name: 'variant',
 			required: false,
-			type: "'ghost' | 'primary' | 'secondary'",
+			type: "'ghost' | 'outline' | 'solid'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -2112,6 +2138,11 @@ export const menuApiFacts = {
 			name: 'ref',
 			required: false,
 			type: 'HTMLDivElement | null'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
 		}
 	],
 	source: 'ui/zui/src/components/compound/menu/ZMenu.svelte',
@@ -2587,6 +2618,11 @@ export const menuSubContentApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
 			name: 'menuRef',
 			required: false,
 			type: 'HTMLDivElement | null'
@@ -3046,7 +3082,7 @@ export const multiSelectTriggerApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'large' | 'medium' | 'small'",
+			type: "'large' | 'medium' | 'small' | 'xlarge' | 'xsmall'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -3058,13 +3094,13 @@ export const multiSelectTriggerApiFacts = {
 		{
 			name: 'tone',
 			required: false,
-			type: "'danger' | 'default'",
+			type: "'danger' | 'info' | 'neutral' | 'primary' | 'success' | 'warning'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
 			name: 'variant',
 			required: false,
-			type: "'ghost' | 'primary' | 'secondary'",
+			type: "'ghost' | 'outline' | 'solid'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -3198,7 +3234,7 @@ export const popconfirmActionApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'large' | 'medium' | 'small'",
+			type: "'large' | 'medium' | 'small' | 'xlarge' | 'xsmall'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -3210,13 +3246,13 @@ export const popconfirmActionApiFacts = {
 		{
 			name: 'tone',
 			required: false,
-			type: "'danger' | 'default'",
+			type: "'danger' | 'info' | 'neutral' | 'primary' | 'success' | 'warning'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
 			name: 'variant',
 			required: false,
-			type: "'ghost' | 'primary' | 'secondary'",
+			type: "'ghost' | 'outline' | 'solid'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -3292,7 +3328,7 @@ export const popconfirmCancelApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'large' | 'medium' | 'small'",
+			type: "'large' | 'medium' | 'small' | 'xlarge' | 'xsmall'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -3304,13 +3340,13 @@ export const popconfirmCancelApiFacts = {
 		{
 			name: 'tone',
 			required: false,
-			type: "'danger' | 'default'",
+			type: "'danger' | 'info' | 'neutral' | 'primary' | 'success' | 'warning'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
 			name: 'variant',
 			required: false,
-			type: "'ghost' | 'primary' | 'secondary'",
+			type: "'ghost' | 'outline' | 'solid'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -3494,7 +3530,7 @@ export const popconfirmTriggerApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'large' | 'medium' | 'small'",
+			type: "'large' | 'medium' | 'small' | 'xlarge' | 'xsmall'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -3506,13 +3542,13 @@ export const popconfirmTriggerApiFacts = {
 		{
 			name: 'tone',
 			required: false,
-			type: "'danger' | 'default'",
+			type: "'danger' | 'info' | 'neutral' | 'primary' | 'success' | 'warning'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
 			name: 'variant',
 			required: false,
-			type: "'ghost' | 'primary' | 'secondary'",
+			type: "'ghost' | 'outline' | 'solid'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -3738,7 +3774,7 @@ export const popoverTriggerApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'large' | 'medium' | 'small'",
+			type: "'large' | 'medium' | 'small' | 'xlarge' | 'xsmall'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -3750,13 +3786,13 @@ export const popoverTriggerApiFacts = {
 		{
 			name: 'tone',
 			required: false,
-			type: "'danger' | 'default'",
+			type: "'danger' | 'info' | 'neutral' | 'primary' | 'success' | 'warning'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
 			name: 'variant',
 			required: false,
-			type: "'ghost' | 'primary' | 'secondary'",
+			type: "'ghost' | 'outline' | 'solid'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -3908,7 +3944,7 @@ export const radioGroupItemApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'large' | 'medium' | 'small'"
+			type: "'large' | 'medium' | 'small' | 'xlarge' | 'xsmall'"
 		},
 		{
 			name: 'disabled',
@@ -4257,7 +4293,7 @@ export const selectTriggerApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'large' | 'medium' | 'small'",
+			type: "'large' | 'medium' | 'small' | 'xlarge' | 'xsmall'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -4269,13 +4305,13 @@ export const selectTriggerApiFacts = {
 		{
 			name: 'tone',
 			required: false,
-			type: "'danger' | 'default'",
+			type: "'danger' | 'info' | 'neutral' | 'primary' | 'success' | 'warning'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
 			name: 'variant',
 			required: false,
-			type: "'ghost' | 'primary' | 'secondary'",
+			type: "'ghost' | 'outline' | 'solid'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -4390,6 +4426,11 @@ export const tabsApiFacts = {
 			name: 'ref',
 			required: false,
 			type: 'HTMLDivElement | null'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
 		},
 		{
 			name: 'value',
@@ -4577,6 +4618,11 @@ export const tooltipContentApiFacts = {
 			name: 'ref',
 			required: false,
 			type: 'HTMLDivElement | null'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
 		}
 	],
 	source: 'ui/zui/src/components/compound/tooltip/ZTooltipContent.svelte',
@@ -4654,7 +4700,7 @@ export const tooltipTriggerApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'large' | 'medium' | 'small'",
+			type: "'large' | 'medium' | 'small' | 'xlarge' | 'xsmall'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -4666,13 +4712,13 @@ export const tooltipTriggerApiFacts = {
 		{
 			name: 'tone',
 			required: false,
-			type: "'danger' | 'default'",
+			type: "'danger' | 'info' | 'neutral' | 'primary' | 'success' | 'warning'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
 			name: 'variant',
 			required: false,
-			type: "'ghost' | 'primary' | 'secondary'",
+			type: "'ghost' | 'outline' | 'solid'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -4865,6 +4911,11 @@ export const treeApiFacts = {
 			type: 'number'
 		},
 		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
 			name: 'virtualized',
 			required: false,
 			type: 'boolean'
@@ -4943,7 +4994,7 @@ export const avatarApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'large' | 'medium' | 'small'"
+			type: 'ZControlSize'
 		},
 		{
 			name: 'sizes',
@@ -5034,12 +5085,12 @@ export const badgeApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'medium' | 'small'"
+			type: 'ZControlSize'
 		},
 		{
 			name: 'tone',
 			required: false,
-			type: "'accent' | 'danger' | 'default' | 'success' | 'warning'"
+			type: 'ZSemanticTone'
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZBadge.svelte',
@@ -5804,7 +5855,7 @@ export const progressApiFacts = {
 		{
 			name: 'tone',
 			required: false,
-			type: "'danger' | 'primary' | 'success' | 'warning'"
+			type: "ZSemanticTone | 'primary'"
 		},
 		{
 			name: 'view',
@@ -5911,12 +5962,17 @@ export const statisticApiFacts = {
 		{
 			name: 'tone',
 			required: false,
-			type: "'danger' | 'default' | 'muted' | 'primary' | 'success'"
+			type: 'TypographyTone'
 		},
 		{
 			name: 'trend',
 			required: false,
 			type: 'number'
+		},
+		{
+			name: 'trendTone',
+			required: false,
+			type: 'ZSemanticTone'
 		},
 		{
 			name: 'trendFormatOptions',
@@ -5932,6 +5988,11 @@ export const statisticApiFacts = {
 			name: 'value',
 			required: true,
 			type: 'bigint | number'
+		},
+		{
+			name: 'valueSize',
+			required: false,
+			type: 'TypographySize'
 		}
 	],
 	opaqueProps: [
@@ -6064,7 +6125,7 @@ export const tagApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'medium' | 'small'"
+			type: 'ZControlSize'
 		},
 		{
 			name: 'textValue',
@@ -6074,7 +6135,7 @@ export const tagApiFacts = {
 		{
 			name: 'tone',
 			required: false,
-			type: "'accent' | 'danger' | 'default' | 'success' | 'warning'"
+			type: 'ZSemanticTone'
 		}
 	],
 	source: 'ui/zui/src/components/data-display/ZTag.svelte',
@@ -6343,7 +6404,7 @@ export const alertApiFacts = {
 		{
 			name: 'tone',
 			required: false,
-			type: "'danger' | 'info' | 'success' | 'warning'"
+			type: 'ZSemanticTone'
 		}
 	],
 	source: 'ui/zui/src/components/feedback/ZAlert.svelte',
@@ -6481,7 +6542,7 @@ export const spinnerApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'large' | 'medium' | 'small'"
+			type: 'ZControlSize'
 		},
 		{
 			name: 'tone',
@@ -6640,7 +6701,7 @@ export const buttonApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'large' | 'medium' | 'small'"
+			type: "'large' | 'medium' | 'small' | 'xlarge' | 'xsmall'"
 		},
 		{
 			name: 'shape',
@@ -6650,12 +6711,12 @@ export const buttonApiFacts = {
 		{
 			name: 'tone',
 			required: false,
-			type: "'danger' | 'default'"
+			type: "'danger' | 'info' | 'neutral' | 'primary' | 'success' | 'warning'"
 		},
 		{
 			name: 'variant',
 			required: false,
-			type: "'ghost' | 'primary' | 'secondary'"
+			type: "'ghost' | 'outline' | 'solid'"
 		},
 		{
 			name: 'children',
@@ -6843,6 +6904,11 @@ export const headingApiFacts = {
 			name: 'weight',
 			required: false,
 			type: 'TypographyWeight'
+		},
+		{
+			name: 'wrap',
+			required: false,
+			type: "'balance' | 'pretty' | 'wrap' | 'nowrap'"
 		}
 	],
 	source: 'ui/zui/src/components/gene/ZHeading.svelte',
@@ -6868,7 +6934,7 @@ export const iconApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'full' | 'large' | 'medium' | 'small' | number"
+			type: "ZControlSize | 'full' | number"
 		},
 		{
 			name: 'ref',
@@ -6890,6 +6956,11 @@ export const kbdApiFacts = {
 			name: 'children',
 			required: false,
 			type: 'Snippet'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'TypographySize'
 		},
 		{
 			name: 'ref',
@@ -6950,7 +7021,7 @@ export const linkApiFacts = {
 		{
 			name: 'tone',
 			required: false,
-			type: "'danger' | 'muted' | 'primary'"
+			type: 'TypographyTone'
 		},
 		{
 			name: 'underline',
@@ -7185,7 +7256,7 @@ export const toggleButtonApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'large' | 'medium' | 'small'",
+			type: "'large' | 'medium' | 'small' | 'xlarge' | 'xsmall'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -7197,13 +7268,13 @@ export const toggleButtonApiFacts = {
 		{
 			name: 'tone',
 			required: false,
-			type: "'danger' | 'default'",
+			type: "'danger' | 'info' | 'neutral' | 'primary' | 'success' | 'warning'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
 			name: 'variant',
 			required: false,
-			type: "'ghost' | 'primary' | 'secondary'",
+			type: "'ghost' | 'outline' | 'solid'",
 			inheritedFrom: 'ZButtonVariants'
 		},
 		{
@@ -7607,7 +7678,7 @@ export const checkboxApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'large' | 'medium' | 'small'"
+			type: "'large' | 'medium' | 'small' | 'xlarge' | 'xsmall'"
 		},
 		{
 			name: 'checked',
@@ -8464,6 +8535,11 @@ export const fileUploadApiFacts = {
 			name: 'required',
 			required: false,
 			type: 'boolean'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
 		},
 		{
 			name: 'retryLabel',
@@ -9380,7 +9456,7 @@ export const sliderApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'large' | 'medium' | 'small'"
+			type: "'large' | 'medium' | 'small' | 'xlarge' | 'xsmall'"
 		},
 		{
 			name: 'defaultValue',
@@ -9471,7 +9547,7 @@ export const switchApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'large' | 'medium' | 'small'"
+			type: "'large' | 'medium' | 'small' | 'xlarge' | 'xsmall'"
 		},
 		{
 			name: 'checked',
@@ -10013,6 +10089,11 @@ export const transferApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
 			name: 'sourceTitle',
 			required: false,
 			type: 'string'
@@ -10109,7 +10190,7 @@ export const treeSelectApiFacts = {
 			type: 'number'
 		},
 		{
-			name: 'height',
+			name: 'virtualHeight',
 			required: false,
 			type: 'number'
 		},
@@ -10124,7 +10205,7 @@ export const treeSelectApiFacts = {
 			type: 'Snippet<[TreeNode<TKey>, TreeEntry<TKey>]>'
 		},
 		{
-			name: 'itemSize',
+			name: 'virtualItemSize',
 			required: false,
 			type: 'number'
 		},
@@ -10174,7 +10255,7 @@ export const treeSelectApiFacts = {
 			type: 'boolean'
 		},
 		{
-			name: 'overscan',
+			name: 'virtualOverscan',
 			required: false,
 			type: 'number'
 		},
@@ -10224,7 +10305,7 @@ export const treeSelectApiFacts = {
 			type: 'TKey | null'
 		},
 		{
-			name: 'virtualized',
+			name: 'virtual',
 			required: false,
 			type: 'boolean'
 		}
@@ -10278,7 +10359,7 @@ export const containerApiFacts = {
 		{
 			name: 'size',
 			required: false,
-			type: "'full' | 'large' | 'medium' | 'small'"
+			type: "ZControlSize | 'full'"
 		},
 		{
 			name: 'ref',
@@ -10436,6 +10517,11 @@ export const commandApiFacts = {
 			name: 'shouldFilter',
 			required: false,
 			type: 'boolean'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
 		}
 	],
 	source: 'ui/zui/src/components/navigation/ZCommand.svelte',
@@ -10484,6 +10570,11 @@ export const commandPaletteApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'filter',
+			required: false,
+			type: "ZCommandProps['filter']"
+		},
+		{
 			name: 'inputLabel',
 			required: false,
 			type: 'string'
@@ -10497,6 +10588,16 @@ export const commandPaletteApiFacts = {
 			name: 'listLabel',
 			required: false,
 			type: 'string'
+		},
+		{
+			name: 'loop',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'maxResults',
+			required: false,
+			type: 'number'
 		},
 		{
 			name: 'onAction',
@@ -10524,6 +10625,11 @@ export const commandPaletteApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'panelSize',
+			required: false,
+			type: "ZDialogContentProps['size']"
+		},
+		{
 			name: 'query',
 			required: false,
 			type: 'string'
@@ -10539,6 +10645,11 @@ export const commandPaletteApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'resultsLabel',
+			required: false,
+			type: "ZCommandProps['resultsLabel']"
+		},
+		{
 			name: 'shortcut',
 			required: false,
 			type: 'CommandShortcut'
@@ -10552,6 +10663,16 @@ export const commandPaletteApiFacts = {
 			name: 'showTrigger',
 			required: false,
 			type: 'boolean'
+		},
+		{
+			name: 'shouldFilter',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: "ZCommandProps['size']"
 		},
 		{
 			name: 'style',
@@ -10648,6 +10769,11 @@ export const paginationApiFacts = {
 			name: 'siblingCount',
 			required: false,
 			type: 'number'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
 		},
 		{
 			name: 'totalItems',
@@ -10759,6 +10885,11 @@ export const tourApiFacts = {
 			name: 'spotlightOffset',
 			required: false,
 			type: 'number'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
 		},
 		{
 			name: 'step',

@@ -71,17 +71,17 @@ of `null` stops inheritance for that component.
 ```svelte
 <ZProvider
 	componentDefaults={{
-		button: { size: 'small', variant: 'secondary' },
+		button: { size: 'small', variant: 'outline' },
 		card: { variant: 'outlined' },
 		dataTable: { virtualized: true, overscan: 0 },
 		input: { size: 'large' },
 		pagination: { mode: 'simple' },
-		tag: { size: 'small', tone: 'accent' }
+		tag: { size: 'small', tone: 'info' }
 	}}
 >
-	<ZButton>Small secondary button</ZButton>
+	<ZButton>Small outlined button</ZButton>
 	<!-- Explicit props override Provider defaults. -->
-	<ZButton variant="primary">Primary button</ZButton>
+	<ZButton variant="solid">Primary button</ZButton>
 	<ZInput placeholder="Large input" />
 </ZProvider>
 ```

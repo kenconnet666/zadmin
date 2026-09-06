@@ -70,8 +70,8 @@
 			<ZButton size="small" type="button" onclick={() => (locked = 'enterprise')}
 				>Owner选择企业版
 			</ZButton>
-			<ZButton size="small" type="submit" variant="secondary">读取FormData</ZButton>
-			<ZButton size="small" type="reset" variant="secondary">重置</ZButton>
+			<ZButton size="small" type="submit" variant="outline">读取FormData</ZButton>
+			<ZButton size="small" type="reset" variant="outline">重置</ZButton>
 		</ZStack>
 		<ZText tone="muted"
 			>只读 = {locked}:{lockedChanges} · 对照 = {editable}:{editableChanges} · {submitted}</ZText

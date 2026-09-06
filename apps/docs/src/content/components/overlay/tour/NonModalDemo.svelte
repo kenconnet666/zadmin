@@ -23,8 +23,8 @@
 <ZStack gap="medium">
 	<ZStack direction="row" gap="medium" wrap>
 		<ZButton onclick={() => (open = true)}>开始非模态导览</ZButton>
-		<ZButton id="docs-tour-filter" variant="secondary">筛选</ZButton>
-		<ZButton id="docs-tour-export" variant="secondary">导出</ZButton>
+		<ZButton id="docs-tour-filter" variant="outline">筛选</ZButton>
+		<ZButton id="docs-tour-export" variant="outline">导出</ZButton>
 	</ZStack>
 	<ZText tone="muted">completed = {completed}</ZText>
 </ZStack>

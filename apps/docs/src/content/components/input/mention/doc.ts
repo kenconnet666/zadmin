@@ -1,3 +1,5 @@
+import SizingDemo from './SizingDemo.svelte';
+import sizingSource from './SizingDemo.svelte?raw';
 import { mentionMetadata } from '@zadmin/zui/metadata';
 import { mentionApiFacts } from '../../../../framework/component-api.generated.js';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
@@ -46,6 +48,15 @@ export const mentionDoc = defineComponentDoc(mentionMetadata, {
 			'光标感知的原生textarea Mention：LogicalCollection和ActiveDescendant拥有typed建议，外部owner可异步更新结果，固定行窗口支持大型目录。'
 	},
 	demos: [
+		{
+			component: SizingDemo,
+			covers: ['composition', 'variants-and-states'],
+			description:
+				'五档尺寸按组件用途同步文字、留白和内部控件；Field/Form 显式尺寸优先于 Provider density。',
+			id: 'mention-sizing',
+			source: sizingSource,
+			title: '五档尺寸与组合比例'
+		},
 		{
 			component: FormDemo,
 			covers: ['focus', 'form-data', 'form-reset', 'keyboard', 'uncontrolled'],

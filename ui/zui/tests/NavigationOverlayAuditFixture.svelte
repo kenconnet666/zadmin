@@ -48,6 +48,7 @@
 <ZProvider {motion} {theme}>
 	{#if kind === 'disabled'}
 		<ZTree
+			aria-label="Disabled visual audit tree"
 			data-testid="disabled-tree"
 			{disabled}
 			nodes={[

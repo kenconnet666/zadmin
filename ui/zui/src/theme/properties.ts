@@ -393,6 +393,7 @@ export const PROPERTY_DEFINITIONS = {
 		}
 	},
 	tabSize: {},
+	tableLayout: { keywords: { auto: 'auto', fixed: 'fixed' } },
 	textDecorationColor: { keywords: COLOR_KEYWORDS, token: 'color' },
 	textOverflow: { keywords: { clip: 'clip', ellipsis: 'ellipsis' } },
 	textWrap: {

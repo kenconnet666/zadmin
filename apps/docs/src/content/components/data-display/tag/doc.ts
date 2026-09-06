@@ -40,10 +40,10 @@ export const tagDoc = defineComponentDoc(tagMetadata, {
 			},
 			size: {
 				default: 'componentDefaults.tag.size或Provider density',
-				description: '显式small/medium优先；否则使用严格Provider组件默认，最后由density解析。'
+				description: '显式五档size优先；否则使用严格Provider组件默认，最后由density解析。'
 			},
 			tone: {
-				default: "componentDefaults.tag.tone或'default'",
+				default: "componentDefaults.tag.tone或'neutral'",
 				description:
 					'显式语义tone优先于严格Provider组件默认；文字、边框和currentColor混合背景在高对比时仍保留边界。'
 			}
@@ -71,7 +71,7 @@ export const tagDoc = defineComponentDoc(tagMetadata, {
 		{
 			component: SizeDemo,
 			covers: ['composition', 'density', 'variants-and-states'],
-			description: 'small/medium有限尺寸与Provider density继承，显式size优先。',
+			description: '五档尺寸与Provider density继承，显式size优先；移除图标使用独立indicatorSize。',
 			id: 'tag-sizes-density',
 			source: sizeSource,
 			title: '尺寸与Density'

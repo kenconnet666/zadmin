@@ -4,6 +4,12 @@
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
 
 	import { defineRecipe, registerRecipeHmr } from '../../../recipes/define.js';
+	import {
+		controlSizeStyles,
+		controlSizeMetrics,
+		type ZControlSize
+	} from '../../../runtime/foundation/control-size.js';
+	import { cssLength } from '../../../theme/units.js';
 
 	export interface ZTooltipContentProps extends Omit<
 		HTMLAttributes<HTMLDivElement>,
@@ -11,17 +17,19 @@
 	> {
 		readonly children?: Snippet;
 		ref?: HTMLDivElement | null;
+		readonly size?: ZControlSize;
 	}
 
 	const tooltipContentRecipe = defineRecipe({
 		base: (s) => {
-			s.backgroundColor._text;
+			s.backgroundColor._inverseSurface;
 			s.borderRadius._small;
 			s.boxShadow._small;
 			s.boxSizing.borderBox;
-			s.color._canvas;
+			s.color._inverseText;
 			s.fontSize._small;
 			s.fontWeight._medium;
+			s.lineHeight._compact;
 			s.maxWidth.raw('var(--zui-floating-available-width, 100vw)');
 			s.opacity._opaque;
 			s.overflowWrap.anywhere;
@@ -33,6 +41,7 @@
 			s.zIndex._dropdown;
 		},
 		variants: {
+			size: controlSizeStyles,
 			hoverable: {
 				false: (s) => s.pointerEvents.none,
 				true: (s) => s.pointerEvents.auto
@@ -50,7 +59,7 @@
 				true: (s) => s.transform.raw('scale(1)')
 			}
 		},
-		defaultVariants: { hoverable: true, motion: 'auto', open: false }
+		defaultVariants: { hoverable: true, motion: 'auto', open: false, size: 'small' }
 	});
 
 	registerRecipeHmr(import.meta, tooltipContentRecipe);
@@ -68,6 +77,12 @@
 		keyboard: [{ description: '关闭顶层Tooltip。', key: 'Escape' }],
 		parts: [],
 		props: [
+			{
+				name: 'size',
+				type: 'ZControlSize',
+				default: 'small',
+				description: '说明文字、最小高度与内边距的五档尺寸；Trigger另用Button size。'
+			},
 			{
 				bindable: true,
 				default: 'null',
@@ -114,11 +129,23 @@
 		onpointerleave,
 		ontransitionend,
 		ref = $bindable(null),
+		size = 'small',
 		style,
 		...rest
 	}: ZTooltipContentProps = $props();
 	const zui = useZui();
 	const tooltip = useZTooltip();
+	const metrics = $derived(controlSizeMetrics(zui.theme, size));
+	const widthClass = $derived(
+		zui.icss((s) => {
+			s.maxWidth.raw(
+				`min(${cssLength(zui.theme.size.tooltipMaxWidth)}, var(--zui-floating-available-width, 100vw))`
+			);
+			s.paddingBlock.raw(
+				`max(${cssLength(zui.theme.space.small)}, calc((${metrics.height} - ${metrics.fontSize} * ${zui.theme.lineHeight.compact}) / 2))`
+			);
+		})
+	);
 	const initiallyOpen = untrack(() => tooltip.open);
 	const presence = createPresence(initiallyOpen);
 	const entryMotion = new PresenceEntryMotion(initiallyOpen);
@@ -126,6 +153,7 @@
 	const presenceState = $derived(presence.state);
 	const rootClass = $derived(
 		zui.recipe(tooltipContentRecipe, {
+			size,
 			hoverable: tooltip.hoverable && tooltip.open,
 			motion: tooltip.reducedMotion ? 'reduced' : 'full',
 			open: tooltip.open && entryMotion.entered
@@ -224,7 +252,7 @@
 	<div
 		{...rest}
 		bind:this={ref}
-		class={[rootClass, presenceEasingClass, className]}
+		class={[rootClass, presenceEasingClass, widthClass, className]}
 		style={initialStyle}
 		use:applyIcssRootStyle={{ style, variables: icssVariables }}
 		use:portal={{ target: tooltip.portalTarget }}

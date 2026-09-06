@@ -69,7 +69,7 @@ describe('ZDrawer compound production contracts', () => {
 			title.getBoundingClientRect().height,
 			'drawer title has typography geometry'
 		).toBeGreaterThan(0);
-		expect(getComputedStyle(title).fontSize).toBe('18px');
+		expect(getComputedStyle(title).fontSize).toBe('20px');
 		expect(getComputedStyle(title).fontWeight).toBe('700');
 		expect(
 			description.getBoundingClientRect().height,

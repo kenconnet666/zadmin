@@ -23,6 +23,7 @@
 	let controller = $state<ZVirtualListController<number> | null>(null);
 	let activeKey = $state<number>();
 	let activeId = $state<string>();
+
 	function mountOption(key: number, element: HTMLElement): () => void {
 		const token = Symbol();
 		mountedOptions.set(key, { element, token });
@@ -30,6 +31,7 @@
 			if (mountedOptions.get(key)?.token === token) mountedOptions.delete(key);
 		};
 	}
+
 	function synchronizeActiveId(): void {
 		activeId = activeKey === undefined ? undefined : mountedOptions.get(activeKey)?.element.id;
 	}
@@ -85,10 +87,10 @@
 <ZProvider direction="rtl" motion="reduced">
 	<ZStack direction="column" gap="small">
 		<ZStack gap="small" wrap>
-			<ZButton variant="secondary" onclick={() => activate(0)}>首项</ZButton>
-			<ZButton variant="secondary" onclick={() => activate(499)}>第500项</ZButton>
-			<ZButton variant="secondary" onclick={() => activate(999)}>末项</ZButton>
-			<ZButton variant="secondary" onclick={() => activateSmooth(749)}>
+			<ZButton variant="outline" onclick={() => activate(0)}>首项</ZButton>
+			<ZButton variant="outline" onclick={() => activate(499)}>第500项</ZButton>
+			<ZButton variant="outline" onclick={() => activate(999)}>末项</ZButton>
+			<ZButton variant="outline" onclick={() => activateSmooth(749)}>
 				减少动画下请求平滑定位
 			</ZButton>
 		</ZStack>
@@ -119,7 +121,7 @@
 			role="listbox"
 		>
 			{#snippet item(option, index)}
-				<ZText tone={option.disabled ? 'muted' : 'default'}
+				<ZText tone={option.disabled ? 'muted' : 'neutral'}
 					>{index + 1}. {option.label}{option.disabled ? '（禁用）' : ''}</ZText
 				>
 			{/snippet}

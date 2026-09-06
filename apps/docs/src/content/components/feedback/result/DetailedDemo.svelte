@@ -15,6 +15,6 @@
 	{/snippet}
 	{#snippet actions()}
 		<ZButton>返回修正</ZButton>
-		<ZButton variant="secondary">下载错误报告</ZButton>
+		<ZButton variant="outline">下载错误报告</ZButton>
 	{/snippet}
 </ZResult>

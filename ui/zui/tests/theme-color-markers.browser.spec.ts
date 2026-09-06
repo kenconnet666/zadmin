@@ -13,13 +13,13 @@ const themes = [
 		'custom',
 		extendTheme(defaultTheme, {
 			color: {
-				accentSubtle: '#eeddee',
+				infoSubtle: '#eeddee',
 				dangerSubtle: '#fcddee',
 				successSubtle: '#ddfcee',
 				warningSubtle: '#fceedd',
 				onPrimary: '#ffeecc',
 				onDanger: '#ddeeff',
-				surfaceHover: '#ccddff',
+				primarySubtle: '#ccddff',
 				text: '#302040'
 			}
 		})
@@ -37,11 +37,11 @@ it.each(themes)(
 		render(ThemeColorMarkerFixture, { theme });
 
 		for (const [component, marker] of [
-			['tag-accent', 'marker-accent-subtle'],
+			['tag-info', 'marker-info-subtle'],
 			['tag-danger', 'marker-danger-subtle'],
 			['tag-success', 'marker-success-subtle'],
 			['tag-warning', 'marker-warning-subtle'],
-			['alert-info', 'marker-accent-subtle'],
+			['alert-info', 'marker-info-subtle'],
 			['alert-success', 'marker-success-subtle'],
 			['alert-warning', 'marker-warning-subtle'],
 			['alert-danger', 'marker-danger-subtle']
@@ -50,7 +50,7 @@ it.each(themes)(
 		}
 
 		for (const [component, marker] of [
-			['alert-info', 'marker-accent'],
+			['alert-info', 'marker-info'],
 			['alert-success', 'marker-success'],
 			['alert-warning', 'marker-warning'],
 			['alert-danger', 'marker-danger']
@@ -83,11 +83,11 @@ it.each(themes)(
 );
 
 it.each(themes)(
-	'uses custom surfaceHover for enabled secondary and ghost states: %s',
+	'uses custom primarySubtle for enabled outline and ghost states: %s',
 	async (_name, theme) => {
 		render(ThemeColorMarkerFixture, { theme });
-		const markerBackground = computed('marker-surface-hover').backgroundColor;
-		for (const testId of ['button-secondary', 'button-ghost']) {
+		const markerBackground = computed('marker-primary-subtle').backgroundColor;
+		for (const testId of ['button-outline', 'button-ghost']) {
 			await userEvent.hover(document.querySelector<HTMLElement>(`[data-testid="${testId}"]`)!);
 			await expect.poll(() => computed(testId).backgroundColor).toBe(markerBackground);
 		}

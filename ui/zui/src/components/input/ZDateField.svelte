@@ -10,7 +10,10 @@
 	export type DateFieldAppearance = 'bare' | 'field';
 	export type DateFieldFormParticipation = 'auto' | 'none';
 	export type DateFieldSize = ZControlSize;
-	export interface ZDateFieldProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onchange'> {
+	export interface ZDateFieldProps extends Omit<
+		HTMLAttributes<HTMLDivElement>,
+		'children' | 'onchange'
+	> {
 		readonly appearance?: DateFieldAppearance;
 		readonly controlId?: string;
 		readonly defaultValue?: CalendarDateValue | null;
@@ -171,7 +174,7 @@
 				default: 'Field size或Provider density',
 				description: '统一group padding、segment高度与字号。',
 				name: 'size',
-				type: "'small' | 'medium' | 'large'"
+				type: "'xsmall' | 'small' | 'medium' | 'large' | 'xlarge'"
 			}
 		],
 		since: 'unreleased',
@@ -184,6 +187,9 @@
 
 	const rootRecipe = defineRecipe({
 		base: (s) => {
+			s.fontFamily._mono;
+			s.lineHeight._compact;
+			s.minWidth.px(0);
 			s.alignItems.center;
 			s.borderRadius._medium;
 			s.display.inlineFlex;
@@ -207,25 +213,41 @@
 			disabled: { false: () => undefined, true: (s) => s.opacity._disabled },
 			invalid: { false: () => undefined, true: (s) => s.borderColor._danger },
 			size: {
-				large: (s) => {
-					s.gap._medium;
-					s.paddingInline._large;
+				xsmall: (s) => {
+					s.fontSize._xsmall;
+					s.gap._small;
+					s.paddingInline._small;
+				},
+				small: (s) => {
+					s.fontSize._small;
+					s.gap._small;
+					s.paddingInline._small;
 				},
 				medium: (s) => {
+					s.fontSize._medium;
 					s.gap._small;
 					s.paddingInline._medium;
 				},
-				small: (s) => {
+				large: (s) => {
+					s.fontSize._large;
 					s.gap._small;
-					s.paddingInline._small;
+					s.paddingInline._large;
+				},
+				xlarge: (s) => {
+					s.fontSize._large;
+					s.gap._small;
+					s.paddingInline._large;
 				}
 			}
 		},
+		compoundVariants: [{ when: { appearance: 'bare' }, style: (s) => s.paddingInline._small }],
 		defaultVariants: { appearance: 'field', disabled: false, invalid: false, size: 'medium' }
 	});
 	const segmentRecipe = defineRecipe({
 		base: (s) => {
 			s.appearance.none;
+			s.boxSizing.borderBox;
+			s.lineHeight._compact;
 			s.backgroundColor.transparent;
 			s.borderStyle.none;
 			s.color._text;
@@ -233,24 +255,28 @@
 			s.outlineStyle.none;
 			s.padding.px(0);
 			s.textAlign.center;
-			s.width.rem(3);
+			s.width.ch(2);
+			s.flexShrink(0);
 		},
 		variants: {
 			size: {
-				large: (s) => {
-					s.fontSize._large;
-					s.minHeight._large;
-				},
-				medium: (s) => {
-					s.fontSize._medium;
-					s.minHeight._medium;
+				xsmall: (s) => {
+					s.fontSize._xsmall;
 				},
 				small: (s) => {
 					s.fontSize._small;
-					s.minHeight._small;
+				},
+				medium: (s) => {
+					s.fontSize._medium;
+				},
+				large: (s) => {
+					s.fontSize._large;
+				},
+				xlarge: (s) => {
+					s.fontSize._large;
 				}
 			},
-			year: { false: () => undefined, true: (s) => s.width.rem(4) }
+			year: { false: () => undefined, true: (s) => s.width.ch(4) }
 		},
 		defaultVariants: { size: 'medium', year: false }
 	});
@@ -267,7 +293,7 @@
 		type NavigationIntent
 	} from '../../runtime/collection/list-navigation.js';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
-	import { resolveControlSize } from '../../runtime/foundation/control-size.js';
+	import { controlSizeMetrics, resolveControlSize } from '../../runtime/foundation/control-size.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import { claimZFieldControlOwner } from '../../runtime/form/field-context.js';
 	import FormValueBridge from '../../runtime/form/FormValueBridge.svelte';
@@ -354,6 +380,11 @@
 			disabled: resolvedDisabled,
 			invalid: draftInvalid || invalidProp || field?.invalid || false,
 			size: resolvedSize
+		})
+	);
+	const contentClass = $derived(
+		zui.icss((s) => {
+			s.minHeight.raw(controlSizeMetrics(zui.theme, resolvedSize).contentHeight);
 		})
 	);
 	const variables = $derived(readIcssCarrier(rest));
@@ -508,10 +539,13 @@
 			{@const index = segmentOrder.indexOf(part.segment)}
 			<input
 				bind:this={inputs[index]}
-				class={zui.recipe(segmentRecipe, {
-					size: resolvedSize,
-					year: part.segment === 'year'
-				})}
+				class={[
+					zui.recipe(segmentRecipe, {
+						size: resolvedSize,
+						year: part.segment === 'year'
+					}),
+					contentClass
+				]}
 				id={index === 0 ? idBase : `${idBase}-${part.segment}`}
 				type="text"
 				inputmode="numeric"

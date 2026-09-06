@@ -22,7 +22,7 @@
 		commitOnBlur={false}
 		defaultValue={['stable']}
 	/>
-	<ZButton type="button" variant="secondary">把焦点移到这里</ZButton>
+	<ZButton type="button" variant="outline">把焦点移到这里</ZButton>
 	<ZText tone="muted"
 		>自动 = {duplicateValues.join(',')} / 草稿 {duplicateDraft || '空'} · 手动 = {manualValues.join(
 			','

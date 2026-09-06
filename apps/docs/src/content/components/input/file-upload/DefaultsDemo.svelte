@@ -44,7 +44,7 @@
 				multiple
 				name="baseline"
 			/>
-			<ZButton type="reset" variant="secondary">恢复初始队列</ZButton>
+			<ZButton type="reset" variant="outline">恢复初始队列</ZButton>
 			<ZText tone="muted"
 				>files = {(files ?? defaultFiles)
 					.map((item) => `${item.file.name}:${item.status}`)

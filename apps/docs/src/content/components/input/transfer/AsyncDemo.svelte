@@ -24,27 +24,27 @@
 <ZStack gap="small">
 	<ZStack direction="row" gap="small" wrap>
 		<ZButton
-			variant="secondary"
+			variant="outline"
 			onclick={() => {
 				loading = true;
 				items = [];
 			}}>开始远程请求</ZButton
 		>
 		<ZButton
-			variant="secondary"
+			variant="outline"
 			onclick={() => {
 				items = remotePage;
 				loading = false;
 			}}>返回远程页面</ZButton
 		>
 		<ZButton
-			variant="secondary"
+			variant="outline"
 			onclick={() => {
 				items = firstPage;
 				loading = false;
 			}}>返回第一页</ZButton
 		>
-		<ZButton variant="secondary" onclick={() => (value = [])}>Owner清空</ZButton>
+		<ZButton variant="outline" onclick={() => (value = [])}>Owner清空</ZButton>
 	</ZStack>
 	<ZTransfer bind:value {items} {loading} name="cluster" />
 	<ZText tone="muted" size="small">

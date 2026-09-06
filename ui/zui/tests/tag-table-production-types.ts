@@ -39,7 +39,7 @@ const tagLocale: ZuiTagLocale = {
 const localeOverride = { tag: tagLocale } satisfies ZuiLocalePackOverrides;
 
 // @ts-expect-error Tag size is finite
-const invalidTagSize = { size: 'large' } satisfies ZTagProps;
+const invalidTagSize = { size: 'huge' } satisfies ZTagProps;
 // @ts-expect-error compound owners can only choose 0 or -1
 const invalidTabIndex = { removeTabIndex: 2 } satisfies ZTagProps;
 // @ts-expect-error Table caption is required

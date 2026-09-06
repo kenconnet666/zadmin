@@ -41,7 +41,7 @@
 	</ZBox>
 	<ZProvider idPrefix="provider-demo" portalContainer={portalHost}>
 		<ZPopover bind:open placement="bottom-start">
-			<ZPopoverTrigger variant="secondary">检查Portal边界</ZPopoverTrigger>
+			<ZPopoverTrigger variant="outline">检查Portal边界</ZPopoverTrigger>
 			<ZPopoverContent data-testid="provider-portal-content">
 				<ZText>自定义Portal容器中的内容</ZText>
 			</ZPopoverContent>

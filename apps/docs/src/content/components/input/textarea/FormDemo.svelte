@@ -15,7 +15,7 @@
 	<form id={formId} onsubmit={handleSubmit}>
 		<ZStack direction="row" gap="small" wrap>
 			<ZButton type="submit">读取FormData</ZButton>
-			<ZButton type="reset" variant="secondary">重置外部控件</ZButton>
+			<ZButton type="reset" variant="outline">重置外部控件</ZButton>
 		</ZStack>
 	</form>
 	<ZField

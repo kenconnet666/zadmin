@@ -4,8 +4,11 @@
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 
-	export type BadgeTone = 'accent' | 'danger' | 'default' | 'success' | 'warning';
-	export type BadgeSize = 'medium' | 'small';
+	import { controlSizes, type ZControlSize } from '../../runtime/foundation/control-size.js';
+	import { semanticTones, type ZSemanticTone } from '../../theme/semantics.js';
+
+	export type BadgeTone = ZSemanticTone;
+	export type BadgeSize = ZControlSize;
 	export type BadgeOverlap = 'circular' | 'rectangular';
 	export type BadgePlacement = 'bottom-end' | 'bottom-start' | 'top-end' | 'top-start';
 	export type BadgeOffset = readonly [inline: number, block: number];
@@ -109,7 +112,7 @@
 				type: 'BadgeSize'
 			},
 			{
-				default: "'default'",
+				default: "'neutral'",
 				description: '计数或圆点的语义tone。',
 				name: 'tone',
 				type: 'BadgeTone'
@@ -138,11 +141,15 @@
 				name: 'data-placement',
 				values: ['top-start', 'top-end', 'bottom-start', 'bottom-end']
 			},
-			{ description: '解析后的指示器尺寸。', name: 'data-size', values: ['small', 'medium'] },
+			{
+				description: '解析后的指示器尺寸。',
+				name: 'data-size',
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge']
+			},
 			{
 				description: '指示器语义tone。',
 				name: 'data-tone',
-				values: ['default', 'accent', 'success', 'warning', 'danger']
+				values: ['neutral', 'info', 'success', 'warning', 'danger']
 			}
 		],
 		status: 'stable',
@@ -206,49 +213,93 @@
 				}
 			},
 			size: {
-				medium: (s) => {
-					s.fontSize._small;
-					s.minHeight._medium;
-					s.minWidth._medium;
-					s.paddingInline._small;
+				xsmall: (s) => {
+					s.fontSize._xsmall;
+					s.minHeight._badgeXsmall;
+					s.minWidth._badgeXsmall;
+					s.paddingInline._xsmall;
+					s._selector('&[data-dot="true"]', (dot) => {
+						dot.height._badgeDotXsmall;
+						dot.width._badgeDotXsmall;
+						dot.minHeight._badgeDotXsmall;
+						dot.minWidth._badgeDotXsmall;
+						dot.padding.px(0);
+					});
 				},
 				small: (s) => {
-					s.fontSize._small;
-					s.minHeight._small;
-					s.minWidth._small;
+					s.fontSize._xsmall;
+					s.minHeight._badgeSmall;
+					s.minWidth._badgeSmall;
 					s.paddingInline._xsmall;
+					s._selector('&[data-dot="true"]', (dot) => {
+						dot.height._badgeDotSmall;
+						dot.width._badgeDotSmall;
+						dot.minHeight._badgeDotSmall;
+						dot.minWidth._badgeDotSmall;
+						dot.padding.px(0);
+					});
+				},
+				medium: (s) => {
+					s.fontSize._small;
+					s.minHeight._badgeMedium;
+					s.minWidth._badgeMedium;
+					s.paddingInline._xsmall;
+					s._selector('&[data-dot="true"]', (dot) => {
+						dot.height._badgeDotMedium;
+						dot.width._badgeDotMedium;
+						dot.minHeight._badgeDotMedium;
+						dot.minWidth._badgeDotMedium;
+						dot.padding.px(0);
+					});
+				},
+				large: (s) => {
+					s.fontSize._small;
+					s.minHeight._badgeLarge;
+					s.minWidth._badgeLarge;
+					s.paddingInline._xsmall;
+					s._selector('&[data-dot="true"]', (dot) => {
+						dot.height._badgeDotLarge;
+						dot.width._badgeDotLarge;
+						dot.minHeight._badgeDotLarge;
+						dot.minWidth._badgeDotLarge;
+						dot.padding.px(0);
+					});
+				},
+				xlarge: (s) => {
+					s.fontSize._medium;
+					s.minHeight._badgeXlarge;
+					s.minWidth._badgeXlarge;
+					s.paddingInline._xsmall;
+					s._selector('&[data-dot="true"]', (dot) => {
+						dot.height._badgeDotXlarge;
+						dot.width._badgeDotXlarge;
+						dot.minHeight._badgeDotXlarge;
+						dot.minWidth._badgeDotXlarge;
+						dot.padding.px(0);
+					});
 				}
 			},
-			dot: {
-				false: () => undefined,
-				true: (s) => {
-					s.height._small;
-					s.minHeight._small;
-					s.minWidth._small;
-					s.padding.px(0);
-					s.width._small;
-				}
-			},
+			dot: { false: () => undefined, true: () => undefined },
 			tone: {
-				accent: (s) => {
-					s.backgroundColor._accent;
-					s.color._canvas;
+				neutral: (s) => {
+					s.backgroundColor._neutral;
+					s.color._onNeutral;
+				},
+				info: (s) => {
+					s.backgroundColor._info;
+					s.color._onInfo;
+				},
+				success: (s) => {
+					s.backgroundColor._success;
+					s.color._onSuccess;
+				},
+				warning: (s) => {
+					s.backgroundColor._warning;
+					s.color._onWarning;
 				},
 				danger: (s) => {
 					s.backgroundColor._danger;
 					s.color._onDanger;
-				},
-				default: (s) => {
-					s.backgroundColor._surface;
-					s.color._text;
-				},
-				success: (s) => {
-					s.backgroundColor._success;
-					s.color._canvas;
-				},
-				warning: (s) => {
-					s.backgroundColor._warning;
-					s.color._canvas;
 				}
 			}
 		},
@@ -258,7 +309,7 @@
 			motion: 'full',
 			placement: 'top-end',
 			size: 'medium',
-			tone: 'default'
+			tone: 'neutral'
 		}
 	});
 	registerRecipeHmr(import.meta, rootRecipe);
@@ -298,7 +349,7 @@
 		showZero = false,
 		size = 'medium',
 		style,
-		tone = 'default',
+		tone = 'neutral',
 		...rest
 	}: ZBadgeProps = $props();
 	const zui = useZui();
@@ -330,14 +381,14 @@
 		return placement;
 	});
 	const resolvedSize = $derived.by(() => {
-		if (!['medium', 'small'].includes(size)) {
-			throw new TypeError('ZBadge size must be small or medium.');
+		if (!controlSizes.includes(size)) {
+			throw new TypeError('ZBadge size must be xsmall, small, medium, large or xlarge.');
 		}
 		return size;
 	});
 	const resolvedTone = $derived.by(() => {
-		if (!['accent', 'danger', 'default', 'success', 'warning'].includes(tone)) {
-			throw new TypeError('ZBadge tone must be default, accent, success, warning or danger.');
+		if (!semanticTones.includes(tone)) {
+			throw new TypeError('ZBadge tone must be neutral, info, success, warning or danger.');
 		}
 		return tone;
 	});
@@ -475,6 +526,7 @@
 			style={indicatorStyle}
 			aria-hidden={resolvedLabel === undefined ? 'true' : undefined}
 			data-slot="indicator"
+			data-dot={resolvedDot || undefined}
 			use:animateIndicator={{
 				key: resolvedDot
 					? `dot:${resolvedLabel ?? ''}`

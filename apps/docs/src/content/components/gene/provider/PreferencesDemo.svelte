@@ -41,31 +41,31 @@
 	<ZStack align="center" direction="row" gap="small" wrap>
 		<ZButton
 			size="small"
-			variant="secondary"
+			variant="outline"
 			onclick={() => (colorScheme = colorScheme === 'light' ? 'dark' : 'light')}
 		>
 			明暗：{colorScheme}
 		</ZButton>
 		<ZButton
 			size="small"
-			variant="secondary"
+			variant="outline"
 			onclick={() => (contrast = contrast === 'normal' ? 'high' : 'normal')}
 		>
 			对比度：{contrast}
 		</ZButton>
-		<ZButton size="small" variant="secondary" onclick={cycleDensity}>
+		<ZButton size="small" variant="outline" onclick={cycleDensity}>
 			密度：{density}
 		</ZButton>
 		<ZButton
 			size="small"
-			variant="secondary"
+			variant="outline"
 			onclick={() => (direction = direction === 'ltr' ? 'rtl' : 'ltr')}
 		>
 			方向：{direction}
 		</ZButton>
 		<ZButton
 			size="small"
-			variant="secondary"
+			variant="outline"
 			onclick={() => (motion = motion === 'full' ? 'reduced' : 'full')}
 		>
 			动画：{motion}
@@ -80,7 +80,7 @@
 			</ZText>
 			<ZStack align="center" direction="row" gap="small" wrap>
 				<ZButton data-testid="provider-density-button">继承当前密度</ZButton>
-				<ZButton data-testid="provider-explicit-button" size="large" variant="secondary"
+				<ZButton data-testid="provider-explicit-button" size="large" variant="outline"
 					>显式大按钮
 				</ZButton>
 			</ZStack>

@@ -1,3 +1,5 @@
+import ControlSizesDemo from './ControlSizesDemo.svelte';
+import controlSizesSource from './ControlSizesDemo.svelte?raw';
 import {
 	tooltipContentMetadata,
 	tooltipGroupMetadata,
@@ -26,6 +28,14 @@ export const tooltipDoc = defineComponentDoc(tooltipMetadata, {
 			'focus即时打开；pointer hover通过作用域Group共享warmup/cooldown并保持唯一active；Content可停留但持续拒绝任何可聚焦或交互后代。'
 	},
 	demos: [
+		{
+			component: ControlSizesDemo,
+			covers: ['variants-and-states', 'composition'],
+			description: '五档尺寸直接消费主题 token；组合部件继承有视觉意义的尺寸 owner。',
+			id: 'tooltip-control-sizes',
+			source: controlSizesSource,
+			title: '五档尺寸与主题比例'
+		},
 		{
 			covers: ['basic-render', 'controlled', 'focus', 'keyboard', 'portal'],
 			component: InteractiveDemo,

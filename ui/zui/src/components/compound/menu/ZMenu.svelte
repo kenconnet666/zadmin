@@ -3,6 +3,10 @@
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
 	import type { MenuActionEvent as MenuActionEventType } from './context.svelte.js';
+	import {
+		resolveControlSize,
+		type ZControlSize
+	} from '../../../runtime/foundation/control-size.js';
 
 	export interface ZMenuProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'role'> {
 		readonly appearance?: 'bare' | 'menu';
@@ -12,6 +16,7 @@
 		readonly onAction?: (event: MenuActionEventType) => void;
 		readonly onDismissRequest?: () => void;
 		ref?: HTMLDivElement | null;
+		readonly size?: ZControlSize;
 	}
 
 	export const zuiMetadata = {
@@ -44,6 +49,12 @@
 		parts: [],
 		props: [
 			{
+				name: 'size',
+				type: 'ZControlSize',
+				default: 'parent Menu or Provider density',
+				description: '菜单行五档尺寸；子菜单默认继承。'
+			},
+			{
 				default: "'menu'",
 				description: '独立Menu shell或浮层内部bare布局。',
 				name: 'appearance',
@@ -73,7 +84,14 @@
 			}
 		],
 		source: 'ui/zui/src/components/compound/menu/ZMenu.svelte',
-		states: [{ description: '整个Menu禁用。', name: 'data-disabled', values: ['true'] }],
+		states: [
+			{
+				name: 'data-size',
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge'],
+				description: '解析后的五档控件尺寸。'
+			},
+			{ description: '整个Menu禁用。', name: 'data-disabled', values: ['true'] }
+		],
 		status: 'stable',
 		summary:
 			'以LogicalCollection为唯一顺序事实、MountedElements只管理真实节点，并统一action、selection与submenu冒泡的Menu。'
@@ -145,11 +163,13 @@
 		onfocusout,
 		onkeydown,
 		ref = $bindable(null),
+		size,
 		style,
 		...rest
 	}: ZMenuProps = $props();
 	const zui = useZui();
 	const parentMenu = useOptionalZMenu();
+	const resolvedSize = $derived(resolveControlSize(size ?? parentMenu?.size, zui.density));
 	const mounted = new MountedElements<SelectionKey>();
 	const compound = new CompoundLogicalCollectionRegistry<SelectionKey, MenuItemRecord>(mounted);
 	const collection = $derived(compound.collection);
@@ -185,6 +205,9 @@
 	}
 
 	const context: ZMenuContext = {
+		get size() {
+			return resolvedSize;
+		},
 		activate(value, originalEvent) {
 			const item = collection.get(value);
 			const event = new MenuActionEvent(originalEvent, value, item?.value.closeOnSelect ?? true);
@@ -324,6 +347,7 @@
 	aria-orientation="vertical"
 	tabindex={-1}
 	data-disabled={disabled || undefined}
+	data-size={resolvedSize}
 	onfocusin={handleFocusin}
 	onfocusout={handleFocusout}
 	onkeydown={handleKeydown}

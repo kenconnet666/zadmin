@@ -1,6 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Locator, type Page } from '@playwright/test';
 import { Buffer } from 'node:buffer';
+import { DEFAULT_THEME_SCHEMA } from '../../../ui/zui/src/theme/schema.js';
 import { guideDocs } from '../src/content/guides.js';
 import { componentCatalogManifest } from '../src/framework/catalog-manifest.generated.js';
 
@@ -297,26 +298,33 @@ test('aligns reference headings and keeps explanatory lists readable', async ({ 
 	expect(new Set(metrics.weights)).toEqual(new Set(['400']));
 });
 
-test('exposes API table hierarchy and scroll-region semantics', async ({ page }) => {
+test('exposes API hierarchy without requiring a horizontal scroll region', async ({ page }) => {
 	await page.setViewportSize({ width: 769, height: 900 });
 	await gotoComponent(page, 'list');
 	const apiSection = page.locator('main section[id^="api-"]').first();
 	const heading = apiSection.getByRole('heading', { level: 2 }).first();
 	const description = apiSection.locator('p').first();
-	const region = apiSection.getByRole('region');
+	const table = apiSection.locator('[data-api-layout="table"] table');
+	const wrapper = apiSection.locator('[data-api-layout="table"] [data-slot="wrapper"]');
 	await expect(heading).toBeVisible();
 	const headingId = await heading.getAttribute('id');
 	expect(headingId).toBeTruthy();
-	await expect(region).toHaveAttribute('aria-labelledby', headingId!);
+	await expect(apiSection).toHaveAttribute('aria-labelledby', headingId!);
+	await expect(table).toBeVisible();
 	if (await description.count()) {
 		const descriptionId = await description.getAttribute('id');
 		expect(descriptionId).toBeTruthy();
-		await expect(region).toHaveAttribute('aria-describedby', descriptionId!);
+		await expect(table).toHaveAttribute('aria-describedby', descriptionId!);
 	}
-	await expect(region).toHaveAttribute('tabindex', '0');
-	await expect(region.locator('table caption')).toHaveCount(1);
-	await expect(region.locator('th[scope="col"]')).toHaveCount(5);
-	expect(await region.locator('[data-api-depth]').count()).toBeGreaterThan(0);
+	await expect(wrapper).toHaveAttribute('data-scroll', 'none');
+	await expect(wrapper).not.toHaveAttribute('tabindex', '0');
+	await expect(wrapper).not.toHaveAttribute('data-overflowing', 'true');
+	expect(await wrapper.evaluate((element) => element.scrollWidth <= element.clientWidth + 1)).toBe(
+		true
+	);
+	await expect(table.locator('caption')).toHaveCount(1);
+	await expect(table.locator('th[scope="col"]')).toHaveCount(5);
+	expect(await table.locator('[data-api-depth]').count()).toBeGreaterThan(0);
 	expect(await page.locator('[data-api-required-when]').count()).toBeGreaterThan(0);
 	await expect(page.locator('[data-api-deprecated]')).toHaveCount(0);
 });
@@ -536,20 +544,20 @@ test('inherits compact Provider density while preserving explicit control size',
 	const compactInput = preferencesDemo.getByTestId('provider-density-input');
 	const compactTextarea = preferencesDemo.getByTestId('provider-density-textarea');
 
-	await expect(compactButton).toHaveCSS('min-height', '24px');
-	await expect(compactInput).toHaveCSS('min-height', '24px');
+	await expect(compactButton).toHaveCSS('min-height', '28px');
+	await expect(compactInput).toHaveCSS('min-height', '28px');
 	await expect(compactTextarea).toHaveCSS('min-height', '64px');
-	await expect(explicitButton).toHaveCSS('min-height', '48px');
+	await expect(explicitButton).toHaveCSS('min-height', '40px');
 	await expect(compactButton).toHaveCSS('font-size', '12px');
 	await expect(compactInput).toHaveCSS('font-size', '12px');
 	await expect(compactTextarea).toHaveCSS('font-size', '12px');
-	await expect(explicitButton).toHaveCSS('font-size', '18px');
+	await expect(explicitButton).toHaveCSS('font-size', '16px');
 	expect(
 		await compactButton.evaluate((element) => element.getBoundingClientRect().height)
-	).toBeCloseTo(24, 0);
+	).toBeCloseTo(28, 0);
 	expect(
 		await explicitButton.evaluate((element) => element.getBoundingClientRect().height)
-	).toBeCloseTo(48, 0);
+	).toBeCloseTo(40, 0);
 });
 
 test('keeps input binding and field validation interactive', async ({ page }) => {
@@ -1418,7 +1426,19 @@ test('anchors ContextMenu to pointer coordinates and supports the keyboard entry
 	await page.mouse.click(clickX, clickY, { button: 'right' });
 	const menu = page.getByRole('menu', { name: '部署上下文菜单', exact: true });
 	await expect(menu).toBeVisible();
-	const surfaceBox = await page.getByTestId('context-menu-content').boundingBox();
+	const surface = page.getByTestId('context-menu-content');
+	await expect(surface).toHaveCSS('opacity', '1');
+	await expect
+		.poll(() =>
+			surface.evaluate(
+				(element) =>
+					element
+						.getAnimations()
+						.filter((animation) => animation.playState === 'running' || animation.pending).length
+			)
+		)
+		.toBe(0);
+	const surfaceBox = await surface.boundingBox();
 	expect(surfaceBox).not.toBeNull();
 	expect(surfaceBox!.x).toBeCloseTo(clickX, 0);
 	expect(
@@ -2037,7 +2057,9 @@ test('keeps S1 primitives semantic and display preferences effective', async ({ 
 	await expect(
 		semanticColors.getByRole('heading', { name: '语义颜色', exact: true })
 	).toBeVisible();
-	await expect(semanticColors.locator('[data-slot="semantic-color"]')).toHaveCount(29);
+	await expect(semanticColors.locator('[data-slot="semantic-color"]')).toHaveCount(
+		Object.keys(DEFAULT_THEME_SCHEMA.color).length
+	);
 
 	await page.goto('/#/components/link');
 	const disabledLink = demo(page, 'link-disabled').locator('a[aria-disabled="true"]');
@@ -2255,7 +2277,7 @@ test('handles denied clipboard permission without a console error', async ({ pag
 	await page.goto('/#/components/button');
 	const variantsBlock = page.locator('#button-variants');
 	await variantsBlock.getByRole('button', { name: '查看源码', exact: true }).click();
-	await variantsBlock.getByRole('button', { name: '复制代码', exact: true }).click();
+	await variantsBlock.getByRole('button', { name: '复制源码', exact: true }).click();
 	await expect(variantsBlock.getByRole('button', { name: '复制失败', exact: true })).toBeVisible();
 	expect(errors).toEqual([]);
 });

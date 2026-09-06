@@ -16,8 +16,11 @@
 	const tabsListRecipe = defineRecipe({
 		base: (s) => {
 			s.borderColor._border;
+			s.boxSizing.borderBox;
 			s.display.flex;
 			s.gap._small;
+			s.minWidth.px(0);
+			s.maxWidth._full;
 		},
 		variants: {
 			orientation: {

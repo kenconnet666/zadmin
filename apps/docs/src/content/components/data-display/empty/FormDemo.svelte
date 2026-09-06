@@ -4,6 +4,8 @@
 
 <ZEmpty title="没有发布记录" headingLevel={4}>
 	{#snippet description()}当前筛选条件下没有可显示的发布记录。{/snippet}
-	{#snippet actions()}<ZButton>创建首次发布</ZButton><ZButton variant="secondary">清除筛选</ZButton
-		>{/snippet}
+	{#snippet actions()}
+		<ZButton>创建首次发布</ZButton>
+		<ZButton variant="outline">清除筛选</ZButton>
+	{/snippet}
 </ZEmpty>

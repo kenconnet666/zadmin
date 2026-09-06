@@ -425,7 +425,7 @@ const buttonTone: ButtonTone = 'danger';
 const buttonProps: ComponentProps<typeof ZButton> = {
 	shape: 'circle',
 	tone: buttonTone,
-	variant: 'primary'
+	variant: 'solid'
 } satisfies ZButtonProps;
 const checkboxProps: ComponentProps<typeof ZCheckbox> = {
 	defaultChecked: 'indeterminate',
@@ -583,7 +583,7 @@ const popoverProps: ComponentProps<typeof ZPopover> = {
 	placement: 'bottom-start'
 } satisfies ZPopoverProps;
 const popoverTriggerProps: ComponentProps<typeof ZPopoverTrigger> = {
-	variant: 'secondary'
+	variant: 'outline'
 } satisfies ZPopoverTriggerProps;
 const popoverContentProps: ComponentProps<typeof ZPopoverContent> =
 	{} satisfies ZPopoverContentProps;
@@ -1005,3 +1005,36 @@ void validSlotVariants;
 // @ts-expect-error slot recipe boolean variants are normalized
 const invalidSlotVariants: SlotRecipeSelection<typeof slotRecipe> = { invalid: 'true' };
 void invalidSlotVariants;
+
+declare const nativeControlChildren: import('svelte').Snippet;
+// @ts-expect-error Native checkbox controls cannot render child content; use a label or ZField.
+const checkboxChildren: ZCheckboxProps = { children: nativeControlChildren };
+void checkboxChildren;
+// @ts-expect-error Switch labels belong to native aria-label or the surrounding Field.
+const switchChildren: ZSwitchProps = { children: nativeControlChildren };
+void switchChildren;
+// @ts-expect-error Radio inputs have no renderable child slot.
+const radioChildren: ZRadioGroupItemProps = { value: 'one', children: nativeControlChildren };
+void radioChildren;
+
+defineRecipe({
+	variants: { tone: { neutral: () => undefined } },
+	// @ts-expect-error Defaults must select an existing variant value.
+	defaultVariants: { tone: 'default' }
+});
+defineRecipe({
+	variants: { tone: { neutral: () => undefined } },
+	compoundVariants: [
+		{
+			// @ts-expect-error Compound conditions cannot refer to an undeclared variant.
+			when: { disabled: true },
+			style: () => undefined
+		}
+	]
+});
+defineSlotRecipe({
+	slots: ['root'] as const,
+	variants: { tone: { neutral: {} } },
+	// @ts-expect-error Slot recipe defaults share the exact variant contract.
+	defaultVariants: { tone: 'default' }
+});

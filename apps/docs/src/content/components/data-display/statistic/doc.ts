@@ -19,6 +19,14 @@ export const statisticDoc = defineComponentDoc(statisticMetadata, {
 	sourceApi: statisticApiFacts,
 	teaching: {
 		props: {
+			trendTone: {
+				default: "'neutral'",
+				description: '业务语义独立于增减方向；例如错误率下降可显式使用success。'
+			},
+			valueSize: {
+				default: "'xxlarge'",
+				description: '主数值采用Theme八档字号，默认24px；标签和趋势保持层次。'
+			},
 			formatOptions: {
 				default: '{}',
 				description: '直接传给Intl.NumberFormat；precision最后覆盖两个小数位选项。'

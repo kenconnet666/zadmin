@@ -2,6 +2,7 @@ import { getContext, setContext } from 'svelte';
 
 import type { CompoundLogicalCollectionItem } from '../../../runtime/collection/compound-logical-collection.svelte.js';
 import type { SelectionKey } from '../../../runtime/collection/selection.js';
+import type { ZControlSize } from '../../../runtime/foundation/control-size.js';
 
 export type AccordionType = 'multiple' | 'single';
 export type AccordionSingleValue = SelectionKey | null;
@@ -18,6 +19,7 @@ export interface ZAccordionContext {
 	readonly exitDuration: number;
 	readonly owner: symbol;
 	readonly reducedMotion: boolean;
+	readonly size: ZControlSize;
 	contentId(value: SelectionKey): string;
 	focus(value: SelectionKey): void;
 	handleKey(event: KeyboardEvent): boolean;

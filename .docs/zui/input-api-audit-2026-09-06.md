@@ -4,7 +4,56 @@
 
 本轮逐项读取公开 Props、运行时状态消费、Field owner 与辅助输入边界、尺寸 recipe、语义颜色、动画及 Docs 使用点。表中的“源码复核”只代表本轮源码检查；浏览器几何、视觉和交互回归另行列明，不能用旧审计或 metadata 的 stable 标记代替本轮运行证据。
 
-## 本批实施
+## 第二批：五档尺寸与组合比例
+
+第二批基线：`bf1e01c`。以下结果取代后文第一批台账中的“五档待实施”计划。控件使用 `xsmall / small / medium / large / xlarge`，普通控件行高为 24 / 28 / 32 / 40 / 48，控件字号为 11 / 12 / 14 / 16 / 16；Checkbox、Radio、Slider 的 indicatorSize 为 12 / 14 / 16 / 20 / 24。Provider density 仍保留三档，显式 size 有五档。
+
+| 家族              | 本批落实                                                                                       | 特殊尺寸职责                                                                                               |
+| ----------------- | ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| checkbox          | 五档 indicator recipe 与 metadata/state 清单                                                   | 原生 checkbox 无 children，标签由 Field 或原生 label 提供。                                                |
+| calendar          | 五档 root/nav/weekday/cell，独立 calendarCell tokens 24/28/32/40/48；补 xsmall/xlarge 外边留白 | 星期与日期列宽保持同档对齐；日期 cell 采用 border-box 与零 padding，图标随文字缩放。                       |
+| cascader          | 五档根尺寸和 trigger/clear 贯通；按钮 appearance 改 outline                                    | 搜索 input 仍为明确的 small 辅助控件；虚拟 column 行高独立。                                               |
+| color-picker      | 五档主 trigger/clear 与图标比例                                                                | 色值、alpha 和 preset 是业务颜色，不映射为组件 tone；preset 按钮保持辅助 small。                           |
+| combobox          | 五档根、Field 和 Input 传递；Docs 五档示例                                                     | 选项列表保持独立默认文字和虚拟行高，size 描述输入行。                                                      |
+| date-field        | 五档 root/segment，内部高度用主题 contentHeight 扣除外框边线                                   | 日期段宽度改为实际字符数 2ch/4ch；mono 数字与本地化分隔符保持，bare 降低嵌入留白。                         |
+| date-picker       | 五档日期段、主 action 和日历；已知 suffix buttons 使用扣边线高度                               | 自身 InputGroup 的 field/action 禁用视觉只应用一次；不用环境上下文推断 Portal 内的 CSS 祖先。              |
+| date-range-picker | 五档双日期、actions 和日历；已知子项扣边线                                                     | 内部 Group 允许窄容器自然换行，避免双完整日期被 overflow:hidden 截断；宽容器仍为单行。                     |
+| input             | 复用共享 controlSizeStyles 五档，补主题 sans、紧凑行高与零块向 padding                         | border-box 外框与同档按钮保持一致。                                                                        |
+| input-group       | 五档 affix/action 留白；自身 minimum height 与直接 input 的 contentHeight 统一                 | Textarea 总高度及调用方自定义 action 内容仍可自然撑开，不强制截断。                                        |
+| mention           | 通过 Textarea 继承五档，新增本页五档演示                                                       | 查询列表、suggestion 虚拟行高独立于 textarea 行数。                                                        |
+| multi-select      | 五档 Root/Trigger，内部 Tag/overflow Tag 同档，remove/clear 图标使用 em                        | 不把 size 传入虚拟窗口行高；不能出现大 trigger 内仍固定中号 Tag。                                          |
+| number-field      | 五档输入和步进按钮字号、宽度；内部输入消费 contentHeight                                       | 根 border 与内部输入不再叠出额外 2px；图标随按钮字号缩放。                                                 |
+| pin-input         | 五档 gap、字号和槽长宽，槽使用 border-box                                                      | 每个槽的外框尺寸直接对应 24/28/32/40/48；mono 字体保留。                                                   |
+| field             | 五档 gap 与向子控件的 size 投影                                                                | 反馈文字仍独立表达 label/description/error 层级，不强制所有文字随控件放大。                                |
+| file-upload       | 新增五档 size，贯穿 dropzone 留白、文件队列、状态文字和操作按钮                                | 总高度由内容决定，不伪装为单行输入；没有增加无实际需求的 tone。                                            |
+| form              | ZControlSize 五档自动经 FormField/Field 投影；本页提供五档表单演示                             | Form 自身是状态 owner，没有额外视觉外框或装饰 tone。                                                       |
+| radio-group       | 五档 Root/Item、indicator 与 metadata/state                                                    | 原生 radio 无 children；权威 options 或外部 label 表达可见标签。                                           |
+| select            | 五档 Root/Trigger 与 metadata；选中图标使用 em                                                 | 选择列表保持独立文字/虚拟行高。                                                                            |
+| segmented         | 复用共享 controlSizeStyles 五档，保证同档高度/字号/水平留白                                    | value 和 roving focus 合同保持；没有添加无法表达真实状态的色轴。                                           |
+| switch            | 五档 track/thumb/travel；块向 inset=1px，inline=2px，xsmall inline=1px                         | 真实外层 dir=rtl 也保持物理轨道 LTR，由逻辑 checked 映射 thumb 位移；回归检查四周端点间隙。                |
+| tags-input        | 五档 root/input/Tag/overflow/编辑输入/编辑按钮贯通                                             | 草稿和已提交标签仍独立；图标使用 em，不保留固定中号内部 Tag。                                              |
+| textarea          | 五档字体与 padding，继承 Field/Group/Provider defaults                                         | rows/autosize/resize 独立拥有总高度；不接受会被丢弃的 children。                                           |
+| time-field        | 五档 root/segment/period；内容扣边线，数字段 2ch，period 继承字号                              | hourCycle/granularity/step 语义保持，mono 数字与本地化文案独立。                                           |
+| tree-select       | 五档 trigger/clear；虚拟化四个公开属性统一命名                                                 | virtual/virtualHeight/virtualItemSize/virtualOverscan 显式转发为内部 ZTree 原有属性，不改 ZTree 自身 API。 |
+| transfer          | 新增五档 size，贯穿面板、过滤输入、列表文字与转移按钮                                          | virtualItemSize 仍为调用方确定的固定行高；不由组件 size 重写。                                             |
+| slider            | 五档逻辑 block-size 与 metadata/state                                                          | 仍为原生 range；indicatorSize 与平台 thumb/track 绘制职责不同，未声称完全接管跨浏览器原生外观。            |
+
+27 个输入家族的 Docs 都有真实五档示例：新增 25 个 `SizingDemo.svelte`，升级原 Combobox/Segmented `SizesDemo.svelte`。输入目录旧按钮 `variant="primary"/"secondary"` 已分别迁移为 `solid/outline`。标签默认 tone 的实际使用改为 neutral，validation 的 danger 优先语义保留。
+
+公开 API 还排除了“接受但静默丢弃 children”的陷阱：Checkbox、RadioGroupItem、Switch、Slider、Textarea，以及 Calendar、Date/Time/Number/Pin、Picker、Cascader、ColorPicker、TreeSelect、Transfer、FileUpload、Segmented 都从原生属性继承中排除 children。具有真实 children snippet 的 Field、Form、InputGroup、TagsInput 和 compound 根保留各自合同；没有为原生 void 控件另造 label renderer。
+
+迁移说明：
+
+- 旧三档尺寸的视觉值已重校准，small/medium/large 的普通控件高度由 24/32/48 调整为 28/32/40。要求最紧凑或最大行高时分别使用 xsmall/xlarge。
+- TreeSelect 的 `virtualized/height/itemSize/overscan` 改为 `virtual/virtualHeight/virtualItemSize/virtualOverscan`。本批已迁移 TreeSelect Docs 的 lazy virtual 演示；内部 `<ZTree>` 保留自己的原始命名。通用 Docs profile 字符串 `virtualized` 也保留，因为它不是组件 prop。
+- 无 children 合同的输入控件应由 `ZField label=...` 或真实 HTML label 提供标签，不再写 `<ZCheckbox>标签</ZCheckbox>`。
+- 普通 Input/Group、Number/Date/Time、DatePicker/DateRangePicker 的内容高度使用 `controlSizeMetrics(...).contentHeight`，支持主题数字、rem 和 calc，不能使用 parseFloat 将主题长度误当 px。
+
+新增 `InputFiveSizesFixture.svelte` / `input-five-sizes.browser.spec.ts` 四条针对真实几何的回归：普通及复合外框、Tag/上传/Transfer 子项比例、带真实外层 dir 的 Switch LTR/RTL 端点间隙、TreeSelect 新虚拟化命名。第一批 InputApiAudit fixture/spec 同步五档与新比例。所有测试只编写，未本地运行；浏览器验收与 CI 结果由合并批次统一记录。
+
+第二批本地验证：33 个修改后的输入组件/compound 成员、27 个五档 Docs 示例均经 WebStorm 小批完整检查返回 errors=[]。新增专项 fixture/spec 与 TreeSelect 迁移示例也有单独 IDE 检查；Prettier 定向解析与格式化通过。没有本地执行浏览器测试、构建或全量类型检查；IDE 零错误只代表此诊断层的结果，不能替代 CI 或浏览器实际几何验收。
+
+## 第一批实施
 
 | 问题                                                     | 修复与可见结果                                                                                                                                                                                         |
 | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |

@@ -1,5 +1,6 @@
 <script module lang="ts">
 	import type { Attachment } from 'svelte/attachments';
+	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
 	import type { ActiveDescendant } from '../../runtime/collection/active-descendant.svelte.js';
 	import type { LogicalCollectionView } from '../../runtime/collection/logical-collection.js';
 	import type { SelectionKey } from '../../runtime/collection/selection.js';
@@ -30,6 +31,7 @@
 		readonly readonly: boolean;
 		readonly required: boolean;
 		readonly searchPlaceholder: string;
+		readonly size: ZControlSize;
 		readonly totalCount: number;
 		readonly view: LogicalCollectionView<SelectionKey, TransferItem>;
 		readonly virtual: boolean;
@@ -42,6 +44,7 @@
 <script lang="ts">
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 	import { useZui } from '../../runtime/foundation/context.js';
+	import { controlSizeStyles } from '../../runtime/foundation/control-size.js';
 	import ZInput from './ZInput.svelte';
 	import ZVirtualList from '../data-display/ZVirtualList.svelte';
 
@@ -59,7 +62,25 @@
 			s.minWidth._menu;
 			s.padding._medium;
 		},
-		variants: {},
+		variants: {
+			size: {
+				xsmall: (s) => {
+					s.padding._small;
+				},
+				small: (s) => {
+					s.padding._medium;
+				},
+				medium: (s) => {
+					s.padding._medium;
+				},
+				large: (s) => {
+					s.padding._large;
+				},
+				xlarge: (s) => {
+					s.padding._large;
+				}
+			}
+		},
 		defaultVariants: {}
 	});
 	const headerRecipe = defineRecipe({
@@ -98,6 +119,7 @@
 			s.userSelect.none;
 		},
 		variants: {
+			size: controlSizeStyles,
 			disabled: {
 				false: () => undefined,
 				true: (s) => {
@@ -120,7 +142,25 @@
 			s.color._textMuted;
 			s.fontSize._small;
 		},
-		variants: {},
+		variants: {
+			size: {
+				xsmall: (s) => {
+					s.fontSize._xsmall;
+				},
+				small: (s) => {
+					s.fontSize._xsmall;
+				},
+				medium: (s) => {
+					s.fontSize._small;
+				},
+				large: (s) => {
+					s.fontSize._small;
+				},
+				xlarge: (s) => {
+					s.fontSize._medium;
+				}
+			}
+		},
 		defaultVariants: {}
 	});
 	const stateRecipe = defineRecipe({
@@ -166,6 +206,7 @@
 		readonly,
 		required,
 		searchPlaceholder,
+		size,
 		totalCount,
 		view,
 		virtual,
@@ -174,10 +215,10 @@
 		virtualOverscan
 	}: TransferPaneProps = $props();
 	const zui = useZui();
-	const panelClass = $derived(zui.recipe(panelRecipe));
+	const panelClass = $derived(zui.recipe(panelRecipe, { size }));
 	const headerClass = $derived(zui.recipe(headerRecipe));
 	const listClass = $derived(zui.recipe(listRecipe, { virtual }));
-	const descriptionClass = $derived(zui.recipe(descriptionRecipe));
+	const descriptionClass = $derived(zui.recipe(descriptionRecipe, { size }));
 	const stateClass = $derived(zui.recipe(stateRecipe));
 	let controller = $state<ChoiceVirtualController<SelectionKey> | null>(null);
 
@@ -260,7 +301,7 @@
 			placeholder={searchPlaceholder}
 			{readonly}
 			resetOnForm={false}
-			size="small"
+			{size}
 			{disabled}
 			onkeydown={handleFilterKeydown}
 		/>
@@ -303,7 +344,8 @@
 					{@attach attachItem(logicalItem.value, false)}
 					class={zui.recipe(itemRecipe, {
 						disabled: disabled || logicalItem.disabled,
-						selected: checked.has(logicalItem.key)
+						selected: checked.has(logicalItem.key),
+						size
 					})}
 					data-slot="item-content"
 					data-state={checked.has(logicalItem.key) ? 'selected' : 'unselected'}
@@ -355,7 +397,8 @@
 					{@attach attachItem(logicalItem.value, true)}
 					class={zui.recipe(itemRecipe, {
 						disabled: disabled || logicalItem.disabled,
-						selected: checked.has(logicalItem.key)
+						selected: checked.has(logicalItem.key),
+						size
 					})}
 					data-disabled={disabled || logicalItem.disabled || undefined}
 					data-slot="item"

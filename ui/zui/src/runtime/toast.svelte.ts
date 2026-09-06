@@ -1,9 +1,11 @@
 /* eslint-disable svelte/prefer-svelte-reactivity -- Timers use imperative Map and Set bookkeeping. */
+import type { ZSemanticTone } from '../theme/semantics.js';
+
 export type ToastDismissReason = 'action' | 'close' | 'programmatic' | 'timeout';
 export type ToastPhase = 'exiting' | 'queued' | 'visible';
 export type ToastPauseReason = 'focus' | 'hover' | 'visibility';
 export type ToastPriority = 'assertive' | 'polite';
-export type ToastTone = 'danger' | 'info' | 'success' | 'warning';
+export type ToastTone = ZSemanticTone;
 
 export interface ToastQueueOptions {
 	readonly maxVisible?: number;

@@ -58,22 +58,22 @@
 				type: 'boolean'
 			},
 			{
-				default: "'secondary'",
+				default: "'outline'",
 				description: '复用Button视觉层级；pressed样式由aria-pressed与同一recipe派生。',
 				name: 'variant',
-				type: "'primary' | 'secondary' | 'ghost'"
+				type: "'solid' | 'outline' | 'ghost'"
 			},
 			{
-				default: "'default'",
+				default: "'primary'",
 				description: '复用Button有限语义tone。',
 				name: 'tone',
-				type: "'default' | 'danger'"
+				type: "'primary' | 'neutral' | 'info' | 'success' | 'warning' | 'danger'"
 			},
 			{
 				default: "'medium'",
 				description: '按钮尺寸。',
 				name: 'size',
-				type: "'small' | 'medium' | 'large'"
+				type: "'xsmall' | 'small' | 'medium' | 'large' | 'xlarge'"
 			},
 			{
 				default: "'default'",
@@ -103,9 +103,13 @@
 			{
 				description: '视觉层级。',
 				name: 'data-variant',
-				values: ['primary', 'secondary', 'ghost']
+				values: ['solid', 'outline', 'ghost']
 			},
-			{ description: '语义tone。', name: 'data-tone', values: ['default', 'danger'] }
+			{
+				description: '语义tone。',
+				name: 'data-tone',
+				values: ['primary', 'neutral', 'info', 'success', 'warning', 'danger']
+			}
 		],
 		status: 'stable',
 		summary:
@@ -124,8 +128,8 @@
 		onPressedChange,
 		pressed = $bindable(),
 		ref = $bindable(null),
-		tone = 'default',
-		variant = 'secondary',
+		tone = 'primary',
+		variant = 'outline',
 		...rest
 	}: ZToggleButtonProps = $props();
 

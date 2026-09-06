@@ -25,8 +25,7 @@
 		<ZInput bind:value={account} data-testid="field-account" placeholder="alice" />
 	</ZField>
 	<ZStack direction="row" gap="small">
-		<ZButton size="small" variant="secondary" onclick={() => (account = '')}>清空并重置反馈</ZButton
-		>
+		<ZButton size="small" variant="outline" onclick={() => (account = '')}>清空并重置反馈</ZButton>
 	</ZStack>
 	<ZText tone="muted" size="small"
 		>输入1–2个字符显示错误，完整账号显示成功，首尾空格显示非阻断警告。</ZText

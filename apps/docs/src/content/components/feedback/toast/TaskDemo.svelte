@@ -34,6 +34,7 @@
 			signal.addEventListener('abort', abort, { once: true });
 		});
 	}
+
 	function errorProperty(error: unknown, property: 'message' | 'name'): string | undefined {
 		if (typeof error !== 'object' || error === null) return undefined;
 		const record = error as Record<string, unknown>;
@@ -84,11 +85,11 @@
 	<ZStack direction="row" gap="small" wrap>
 		<ZButton onclick={demonstrateGeneration}>演示迟到结果防覆盖</ZButton>
 		<ZButton
-			variant="secondary"
+			variant="outline"
 			onclick={(event) =>
 				track(event.currentTarget.ownerDocument.defaultView!, '失败任务', 400, true)}
-			>运行失败任务</ZButton
-		>
+			>运行失败任务
+		</ZButton>
 		<ZButton variant="ghost" onclick={() => controller?.abort()}>取消最新任务</ZButton>
 	</ZStack>
 	<ZText tone="muted"

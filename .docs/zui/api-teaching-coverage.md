@@ -1,12 +1,12 @@
 # API teaching coverage
 
-Generated from 141 components and 1750 declared props. 0 metadata gaps remain; 0 remain true fallbacks after teaching overrides; 8 structured props are explicitly opaque.
+Generated from 141 components and 1776 declared props. 0 metadata gaps remain; 0 remain true fallbacks after teaching overrides; 8 structured props are explicitly opaque.
 
 Policy: every declared public prop must have owned component metadata, binding, event or snippet evidence; both totals are enforced at zero.
 
 | Component               | Family       | Declared props | Metadata gaps | True fallback props | Fallback names | Source                                                                     |
 | ----------------------- | ------------ | -------------: | ------------: | ------------------: | -------------- | -------------------------------------------------------------------------- |
-| ZAccordion              | accordion    |             12 |             0 |                   0 | —              | ui/zui/src/components/compound/accordion/ZAccordion.svelte                 |
+| ZAccordion              | accordion    |             13 |             0 |                   0 | —              | ui/zui/src/components/compound/accordion/ZAccordion.svelte                 |
 | ZAccordionContent       | accordion    |              3 |             0 |                   0 | —              | ui/zui/src/components/compound/accordion/ZAccordionContent.svelte          |
 | ZAccordionItem          | accordion    |              4 |             0 |                   0 | —              | ui/zui/src/components/compound/accordion/ZAccordionItem.svelte             |
 | ZAccordionTrigger       | accordion    |              8 |             0 |                   0 | —              | ui/zui/src/components/compound/accordion/ZAccordionTrigger.svelte          |
@@ -14,7 +14,7 @@ Policy: every declared public prop must have owned component metadata, binding, 
 | ZAlertDialog            | alert-dialog |              6 |             0 |                   0 | —              | ui/zui/src/components/compound/alert-dialog/ZAlertDialog.svelte            |
 | ZAlertDialogAction      | alert-dialog |             13 |             0 |                   0 | —              | ui/zui/src/components/compound/alert-dialog/ZAlertDialogAction.svelte      |
 | ZAlertDialogCancel      | alert-dialog |             14 |             0 |                   0 | —              | ui/zui/src/components/compound/alert-dialog/ZAlertDialogCancel.svelte      |
-| ZAlertDialogContent     | alert-dialog |              6 |             0 |                   0 | —              | ui/zui/src/components/compound/alert-dialog/ZAlertDialogContent.svelte     |
+| ZAlertDialogContent     | alert-dialog |              7 |             0 |                   0 | —              | ui/zui/src/components/compound/alert-dialog/ZAlertDialogContent.svelte     |
 | ZAlertDialogDescription | alert-dialog |              2 |             0 |                   0 | —              | ui/zui/src/components/compound/alert-dialog/ZAlertDialogDescription.svelte |
 | ZAlertDialogOverlay     | alert-dialog |              1 |             0 |                   0 | —              | ui/zui/src/components/compound/alert-dialog/ZAlertDialogOverlay.svelte     |
 | ZAlertDialogTitle       | alert-dialog |              2 |             0 |                   0 | —              | ui/zui/src/components/compound/alert-dialog/ZAlertDialogTitle.svelte       |

@@ -14,7 +14,7 @@
 
 <ZProvider direction="rtl" motion="reduced">
 	<ZStack gap="medium">
-		<ZButton variant="secondary" onclick={() => (open = false)}>从外部关闭</ZButton>
+		<ZButton variant="outline" onclick={() => (open = false)}>从外部关闭</ZButton>
 		<ZContextMenu bind:open placement="bottom-end">
 			<ZContextMenuTrigger
 				><ZText>RTL目标：右键、ContextMenu键或Shift+F10。</ZText></ZContextMenuTrigger

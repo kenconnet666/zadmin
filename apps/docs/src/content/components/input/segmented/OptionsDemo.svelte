@@ -43,7 +43,7 @@
 		</ZField>
 		<ZStack direction="row" gap="small" wrap>
 			<ZButton size="small" type="submit">读取FormData</ZButton>
-			<ZButton size="small" type="reset" variant="secondary">重置</ZButton>
+			<ZButton size="small" type="reset" variant="outline">重置</ZButton>
 		</ZStack>
 		<ZText tone="muted"
 			>value = {String(value)} ({typeof value}) · 用户变更 = {changes} · FormData = {submitted}</ZText

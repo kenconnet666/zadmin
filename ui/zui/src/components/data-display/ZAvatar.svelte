@@ -4,8 +4,10 @@
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 
+	import { controlSizes, type ZControlSize } from '../../runtime/foundation/control-size.js';
+
 	export type AvatarShape = 'circle' | 'rounded' | 'square';
-	export type AvatarSize = 'large' | 'medium' | 'small';
+	export type AvatarSize = ZControlSize;
 	export type AvatarImageEvent = Event & { currentTarget: HTMLImageElement };
 
 	export interface ZAvatarProps extends Omit<
@@ -118,7 +120,7 @@
 				default: "'medium'",
 				description: '视觉尺寸。',
 				name: 'size',
-				type: "'small' | 'medium' | 'large'"
+				type: 'AvatarSize'
 			},
 			{
 				default: "'circle'",
@@ -136,7 +138,7 @@
 			{
 				description: '解析后的视觉尺寸。',
 				name: 'data-size',
-				values: ['small', 'medium', 'large']
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge']
 			},
 			{
 				description: '解析后的占位形状。',
@@ -164,20 +166,30 @@
 				square: (s) => s.borderRadius._none
 			},
 			size: {
-				large: (s) => {
-					s.fontSize._large;
-					s.height._large;
-					s.width._large;
-				},
-				medium: (s) => {
-					s.fontSize._medium;
-					s.height._medium;
-					s.width._medium;
+				xsmall: (s) => {
+					s.fontSize._small;
+					s.height._avatarXsmall;
+					s.width._avatarXsmall;
 				},
 				small: (s) => {
 					s.fontSize._small;
-					s.height._small;
-					s.width._small;
+					s.height._avatarSmall;
+					s.width._avatarSmall;
+				},
+				medium: (s) => {
+					s.fontSize._medium;
+					s.height._avatarMedium;
+					s.width._avatarMedium;
+				},
+				large: (s) => {
+					s.fontSize._large;
+					s.height._avatarLarge;
+					s.width._avatarLarge;
+				},
+				xlarge: (s) => {
+					s.fontSize._xxlarge;
+					s.height._avatarXlarge;
+					s.width._avatarXlarge;
 				}
 			}
 		},
@@ -240,8 +252,8 @@
 		return shape;
 	});
 	const resolvedSize = $derived.by(() => {
-		if (!['large', 'medium', 'small'].includes(size)) {
-			throw new TypeError('ZAvatar size must be small, medium or large.');
+		if (!controlSizes.includes(size)) {
+			throw new TypeError('ZAvatar size must be xsmall, small, medium, large or xlarge.');
 		}
 		return size;
 	});

@@ -41,7 +41,7 @@
 			currentPhase === 'exiting' ? [visibleFrame, hiddenFrame] : [hiddenFrame, visibleFrame],
 			{
 				duration,
-				easing: 'ease',
+				easing: currentPhase === 'exiting' ? zui.theme.easing.exit : zui.theme.easing.enter,
 				fill: currentPhase === 'exiting' ? 'forwards' : 'none'
 			}
 		);

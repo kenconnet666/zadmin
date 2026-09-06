@@ -1,3 +1,5 @@
+import SizingDemo from './SizingDemo.svelte';
+import sizingSource from './SizingDemo.svelte?raw';
 import { numberFieldMetadata } from '@zadmin/zui/metadata';
 import { numberFieldApiFacts } from '../../../../framework/component-api.generated.js';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
@@ -14,6 +16,15 @@ import statesSource from './StatesDemo.svelte?raw';
 
 export const numberFieldDoc = defineComponentDoc(numberFieldMetadata, {
 	demos: [
+		{
+			component: SizingDemo,
+			covers: ['composition', 'variants-and-states'],
+			description:
+				'五档尺寸按组件用途同步文字、留白和内部控件；Field/Form 显式尺寸优先于 Provider density。',
+			id: 'number-field-sizing',
+			source: sizingSource,
+			title: '五档尺寸与组合比例'
+		},
 		{
 			component: FormDemo,
 			covers: [

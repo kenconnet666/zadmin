@@ -1,3 +1,5 @@
+import SizingDemo from './SizingDemo.svelte';
+import sizingSource from './SizingDemo.svelte?raw';
 import { dateFieldMetadata } from '@zadmin/zui/metadata';
 import { dateFieldApiFacts } from '../../../../framework/component-api.generated.js';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
@@ -53,6 +55,15 @@ export const dateFieldDoc = defineComponentDoc(dateFieldMetadata, {
 			'本地化CalendarDate分段字段：locale驱动DOM顺序、nullable owner、完整/非法草稿分离、边界与不可用日期、Field焦点、FormValueBridge/reset及可复用bare外观。'
 	},
 	demos: [
+		{
+			component: SizingDemo,
+			covers: ['composition', 'variants-and-states'],
+			description:
+				'五档尺寸按组件用途同步文字、留白和内部控件；Field/Form 显式尺寸优先于 Provider density。',
+			id: 'date-field-sizing',
+			source: sizingSource,
+			title: '五档尺寸与组合比例'
+		},
 		{
 			component: FormDemo,
 			covers: ['basic-render', 'form-data', 'form-reset', 'keyboard', 'uncontrolled'],

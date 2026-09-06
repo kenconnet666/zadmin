@@ -34,7 +34,7 @@
 		source: 'ui/zui/src/components/compound/popconfirm/ZPopconfirmCancel.svelte',
 		states: [],
 		status: 'stable',
-		summary: '默认secondary视觉并显式取消Popconfirm。'
+		summary: '默认neutral outline视觉并显式取消Popconfirm。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
 
@@ -44,7 +44,8 @@
 	let {
 		onclick,
 		ref = $bindable(null),
-		variant = 'secondary',
+		tone = 'neutral',
+		variant = 'outline',
 		...rest
 	}: ZPopconfirmCancelProps = $props();
 	const popconfirm = useZPopconfirm();
@@ -54,4 +55,4 @@
 	}
 </script>
 
-<ZButton {...rest} bind:ref {variant} onclick={handleClick} />
+<ZButton {...rest} bind:ref {variant} {tone} onclick={handleClick} />

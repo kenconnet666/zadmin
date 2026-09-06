@@ -24,7 +24,7 @@
 </script>
 
 <ZProvider {theme}>
-	<ZButton class={overrideClass} data-testid="button" variant="secondary">Save</ZButton>
+	<ZButton class={overrideClass} data-testid="button" variant="outline">Save</ZButton>
 	<ZButton aria-label="Small square" data-testid="button-square-small" shape="square" size="small"
 		><ZIcon name="search" /></ZButton
 	>

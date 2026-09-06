@@ -1,3 +1,5 @@
+import SizingDemo from './SizingDemo.svelte';
+import sizingSource from './SizingDemo.svelte?raw';
 import { checkboxMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import formSource from './FormDemo.svelte?raw';
@@ -33,13 +35,22 @@ export const checkboxDoc = defineComponentDoc(checkboxMetadata, {
 			ref: { default: 'null', description: '真实HTMLInputElement，可调用focus和blur。' },
 			size: {
 				default: 'Field size → Provider density',
-				description: '显式small/medium/large优先，再继承Field和Provider density。'
+				description: '显式xsmall/small/medium/large/xlarge优先，再继承Field和Provider density。'
 			},
 			value: { default: "'on'", description: '选中时由真实checkbox写入FormData的标量值。' }
 		},
 		summary: '保留原生checkbox、mixed状态、Field继承、readonly与FormData/reset合同的选择控件。'
 	},
 	demos: [
+		{
+			component: SizingDemo,
+			covers: ['composition', 'variants-and-states'],
+			description:
+				'五档尺寸按组件用途同步文字、留白和内部控件；Field/Form 显式尺寸优先于 Provider density。',
+			id: 'checkbox-sizing',
+			source: sizingSource,
+			title: '五档尺寸与组合比例'
+		},
 		{
 			covers: ['controlled', 'form-data', 'form-reset', 'uncontrolled'],
 			component: FormDemo,

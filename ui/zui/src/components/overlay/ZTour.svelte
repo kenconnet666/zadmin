@@ -4,6 +4,11 @@
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import type { FloatingPlacement } from '../../runtime/layer/floating.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
+	import {
+		controlSizeMetrics,
+		resolveControlSize,
+		type ZControlSize
+	} from '../../runtime/foundation/control-size.js';
 
 	export type TourMissingTargetBehavior = 'close' | 'skip' | 'wait';
 	export type TourTargetRoot = Document | Element | ShadowRoot;
@@ -37,6 +42,7 @@
 		ref?: HTMLDivElement | null;
 		readonly scrollIntoViewOptions?: boolean | ScrollIntoViewOptions;
 		readonly spotlightOffset?: number;
+		readonly size?: ZControlSize;
 		step?: number;
 		readonly steps: readonly TourStep[];
 		readonly targetRoot?: TourTargetRoot | (() => TourTargetRoot | null);
@@ -94,6 +100,12 @@
 			{ description: '步骤操作。', name: 'actions' }
 		],
 		props: [
+			{
+				name: 'size',
+				type: 'ZControlSize',
+				default: 'Provider density',
+				description: '引导正文、面板间距与操作按钮的五档尺寸。'
+			},
 			{
 				default: 'localePack.tour.close',
 				description: '关闭操作的可访问名称；显式值优先于Provider typed locale pack。',
@@ -202,6 +214,11 @@
 		snippets: [],
 		source: 'ui/zui/src/components/overlay/ZTour.svelte',
 		states: [
+			{
+				name: 'data-size',
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge'],
+				description: '解析后的五档控件尺寸。'
+			},
 			{ description: '当前步骤id。', name: 'data-step', values: ['TourStep.id'] },
 			{ description: '目标等待状态。', name: 'data-missing-target', values: ['true'] },
 			{ description: 'Presence生命周期。', name: 'data-presence', values: ['entered', 'exiting'] },
@@ -335,7 +352,7 @@
 	});
 	const titleRecipe = defineRecipe({
 		base: (s) => {
-			s.fontSize._large;
+			s.fontSize._xlarge;
 			s.margin.px(0);
 		},
 		variants: {},
@@ -380,6 +397,7 @@
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import { ReducedMotionState } from '../../runtime/foundation/motion.svelte.js';
+	import { PresenceEntryMotion } from '../../runtime/foundation/presence-entry-motion.svelte.js';
 	import {
 		createPresence,
 		durationMilliseconds
@@ -434,6 +452,7 @@
 		scrollIntoViewOptions = true,
 		spotlightOffset = 8,
 		step = $bindable(),
+		size,
 		steps,
 		style,
 		targetRoot,
@@ -445,6 +464,34 @@
 	const descriptionId = $derived(createZuiId(zui.idPrefix, uid, 'tour-description'));
 	const reducedMotion = new ReducedMotionState(() => zui.motion);
 	const presence = createPresence(false);
+	const entryMotion = new PresenceEntryMotion(false);
+	const resolvedSize = $derived(resolveControlSize(size, zui.density));
+	const metrics = $derived(controlSizeMetrics(zui.theme, resolvedSize));
+	const sizeClass = $derived(
+		zui.icss((s) => {
+			s.fontSize.raw(metrics.fontSize);
+			s.padding.raw(metrics.paddingInline);
+		})
+	);
+	const timingClass = $derived(
+		zui.icss((s) => {
+			const standard = zui.theme.easing.standard;
+			for (const state of ['open', 'closed'] as const) {
+				const easing = state === 'open' ? zui.theme.easing.enter : zui.theme.easing.exit;
+				s._selector(`&[data-state="${state}"] [data-slot="mask"]`, (s) =>
+					s.transitionTimingFunction.raw(easing)
+				);
+				s._selector(`&[data-state="${state}"] [data-slot="spotlight"]`, (s) =>
+					s.transitionTimingFunction.raw(
+						`${standard}, ${standard}, ${standard}, ${standard}, ${easing}`
+					)
+				);
+				s._selector(`&[data-state="${state}"] [data-slot="content"]`, (s) =>
+					s.transitionTimingFunction.raw(`${standard}, ${standard}, ${easing}`)
+				);
+			}
+		})
+	);
 	let anchor = $state<HTMLElement | null>(null);
 	let clientMounted = $state(false);
 	let layer = $state<HTMLDivElement | null>(null);
@@ -542,20 +589,20 @@
 		zui.recipe(maskRecipe, {
 			interactive: dismissOnMaskClick,
 			motion: reduced ? 'reduced' : 'full',
-			open: openState.current
+			open: shouldPresent && entryMotion.entered
 		})
 	);
 	const spotlightClass = $derived(
 		zui.recipe(spotlightRecipe, {
 			motion: reduced ? 'reduced' : 'full',
-			open: openState.current
+			open: shouldPresent && entryMotion.entered
 		})
 	);
 	const contentClass = $derived(
 		zui.recipe(contentRecipe, {
 			centered,
 			motion: reduced ? 'reduced' : 'full',
-			open: openState.current,
+			open: shouldPresent && entryMotion.entered,
 			positioned: centered || positioned
 		})
 	);
@@ -656,9 +703,13 @@
 			disconnect();
 		};
 	});
-	onDestroy(() => presence.destroy());
+	onDestroy(() => {
+		entryMotion.destroy();
+		presence.destroy();
+	});
 
-	$effect(() => presence.update(shouldPresent, exitDuration));
+	$effect(() => entryMotion.update(shouldPresent, reduced, layer));
+	$effect(() => presence.update(shouldPresent, exitDuration, anchor?.ownerDocument.defaultView));
 	$effect(() => {
 		if (!clientMounted || !openState.current) {
 			reportedMissingId = null;
@@ -821,7 +872,7 @@
 {#if presence.mounted && renderStep}
 	<div
 		bind:this={layer}
-		class={layerClass}
+		class={[layerClass, timingClass]}
 		use:portal={{ target: portalTarget }}
 		inert={!openState.current}
 		data-slot="layer"
@@ -885,7 +936,7 @@
 		<div
 			{...rest}
 			bind:this={ref}
-			class={[contentClass, className]}
+			class={[contentClass, sizeClass, className]}
 			style={initialStyle}
 			use:applyIcssRootStyle={{ style, variables }}
 			role="dialog"
@@ -896,6 +947,7 @@
 			dir={zui.direction}
 			data-slot="content"
 			data-step={renderStep.id}
+			data-size={resolvedSize}
 			data-placement={resolvedPlacement}
 			data-missing-target={targetMode === 'waiting' || undefined}
 			data-presence={presence.state}
@@ -905,8 +957,13 @@
 		>
 			<div class={headerClass} data-slot="header">
 				<div class={progressClass}>{progressText}</div>
-				<ZButton aria-label={resolvedCloseLabel} size="small" variant="ghost" onclick={close}>
-					<X aria-hidden="true" size={16} />
+				<ZButton
+					aria-label={resolvedCloseLabel}
+					size={resolvedSize}
+					variant="ghost"
+					onclick={close}
+				>
+					<X aria-hidden="true" size={metrics.indicatorSize} />
 				</ZButton>
 			</div>
 			<h2 id={titleId} class={titleClass}>
@@ -924,10 +981,13 @@
 				{/if}
 			</div>
 			<div class={actionsClass} data-slot="actions">
-				<ZButton size="small" variant="secondary" disabled={currentIndex === 0} onclick={previous}
-					>{resolvedPreviousLabel}</ZButton
+				<ZButton
+					size={resolvedSize}
+					variant="outline"
+					disabled={currentIndex === 0}
+					onclick={previous}>{resolvedPreviousLabel}</ZButton
 				>
-				<ZButton size="small" onclick={next}>
+				<ZButton size={resolvedSize} onclick={next}>
 					{currentIndex === normalized.length - 1 ? resolvedFinishLabel : resolvedNextLabel}
 				</ZButton>
 			</div>

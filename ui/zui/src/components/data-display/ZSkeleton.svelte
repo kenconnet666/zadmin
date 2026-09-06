@@ -2,8 +2,10 @@
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
+
 	export type SkeletonDimension = number | string;
 	export type SkeletonShape = 'circle' | 'line' | 'rectangle';
+
 	export interface ZSkeletonProps extends HTMLAttributes<HTMLSpanElement> {
 		readonly animated?: boolean;
 		readonly height?: SkeletonDimension;
@@ -12,6 +14,7 @@
 		readonly shape?: SkeletonShape;
 		readonly width?: SkeletonDimension;
 	}
+
 	export const zuiMetadata = {
 		category: 'data-display',
 		id: 'skeleton',
@@ -112,6 +115,7 @@
 	import { ReducedMotionState } from '../../runtime/foundation/motion.svelte.js';
 	import { durationMilliseconds } from '../../runtime/foundation/presence.svelte.js';
 	import { cssLength } from '../../theme/units.js';
+
 	let {
 		animated = true,
 		class: className,
@@ -175,7 +179,7 @@
 		if (!ref || !animated || reduced || typeof ref.animate !== 'function') return;
 		const animation = ref.animate([{ opacity: 0.45 }, { opacity: 1 }, { opacity: 0.45 }], {
 			duration: durationMilliseconds(zui.theme.duration.skeletonPulse),
-			easing: 'ease-in-out',
+			easing: zui.theme.easing.standard,
 			iterations: Infinity
 		});
 		return () => animation.cancel();

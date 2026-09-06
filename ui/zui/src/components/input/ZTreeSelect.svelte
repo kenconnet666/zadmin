@@ -22,10 +22,10 @@
 		expandedKeys?: readonly TKey[];
 		readonly form?: string;
 		readonly gutter?: number;
-		readonly height?: number;
+		readonly virtualHeight?: number;
 		readonly invalid?: boolean;
 		readonly item?: Snippet<[TreeNode<TKey>, TreeEntry<TKey>]>;
-		readonly itemSize?: number;
+		readonly virtualItemSize?: number;
 		readonly matchWidth?: boolean;
 		readonly name?: string;
 		readonly nodes: readonly TreeNode<TKey>[];
@@ -38,7 +38,7 @@
 		readonly onOpenChange?: (open: boolean) => void;
 		readonly onValueChange?: (value: TKey | null) => void;
 		open?: boolean;
-		readonly overscan?: number;
+		readonly virtualOverscan?: number;
 		readonly placeholder?: string;
 		readonly placement?: PopoverPlacement;
 		readonly readonly?: boolean;
@@ -48,7 +48,7 @@
 		readonly treeLabel?: string;
 		readonly valueLabel?: (key: TKey, node: TreeNode<TKey> | undefined) => string;
 		value?: TKey | null;
-		readonly virtualized?: boolean;
+		readonly virtual?: boolean;
 	}
 
 	export const zuiMetadata = {
@@ -227,25 +227,25 @@
 			{
 				default: 'false',
 				description: '内部ZTree复用ZVirtualList。',
-				name: 'virtualized',
+				name: 'virtual',
 				type: 'boolean'
 			},
 			{
 				default: '320',
-				description: 'virtualized模式的ZTree viewport高度px。',
-				name: 'height',
+				description: 'virtual模式的ZTree viewport高度px。',
+				name: 'virtualHeight',
 				type: 'number'
 			},
 			{
 				default: '36',
-				description: 'virtualized模式的固定树项高度px。',
-				name: 'itemSize',
+				description: 'virtual模式的固定树项高度px。',
+				name: 'virtualItemSize',
 				type: 'number'
 			},
 			{
 				default: '4',
-				description: 'virtualized模式在可见区前后额外挂载项数。',
-				name: 'overscan',
+				description: 'virtual模式在可见区前后额外挂载项数。',
+				name: 'virtualOverscan',
 				type: 'number'
 			},
 			{
@@ -357,10 +357,10 @@
 		expandedKeys = $bindable(),
 		form,
 		gutter = 4,
-		height = 320,
+		virtualHeight = 320,
 		invalid,
 		item,
-		itemSize = 36,
+		virtualItemSize = 36,
 		matchWidth = true,
 		name,
 		nodes,
@@ -370,7 +370,7 @@
 		onOpenChange,
 		onValueChange,
 		open = $bindable(),
-		overscan = 4,
+		virtualOverscan = 4,
 		placeholder,
 		placement = 'bottom-start',
 		readonly: readonlyProp = false,
@@ -380,7 +380,7 @@
 		treeLabel,
 		value = $bindable(),
 		valueLabel = (key, node) => node?.label ?? String(key),
-		virtualized = false,
+		virtual = false,
 		...rest
 	}: ZTreeSelectProps<TKey> = $props();
 
@@ -526,7 +526,7 @@
 			onkeydown={handleTriggerKeydown}
 			popupRole="tree"
 			size={resolvedSize}
-			variant="secondary"
+			variant="outline"
 			data-required={required || undefined}
 			data-slot="trigger">{label}</ZPopoverTrigger
 		>
@@ -543,19 +543,19 @@
 				disabled={disabled || readonly}
 				disallowEmptySelection
 				expandedKeys={expandedState.current}
-				{height}
+				height={virtualHeight}
 				{item}
-				{itemSize}
+				itemSize={virtualItemSize}
 				{nodes}
 				onExpandedChange={(keys) => expandedState.setFromUser(keys)}
 				{onLoadChildren}
 				{onLoadError}
 				onSelectionChange={handleSelection}
-				{overscan}
+				overscan={virtualOverscan}
 				resetOnForm={false}
 				selectedKeys={currentValue === null ? [] : [currentValue]}
 				selectionMode="single"
-				{virtualized}
+				virtualized={virtual}
 				data-slot="tree"
 			/>
 		</ZPopoverContent>
@@ -565,11 +565,11 @@
 			aria-label={resolvedClearLabel}
 			data-slot="clear"
 			disabled={disabled || readonly}
-			size="small"
+			size={resolvedSize}
 			variant="ghost"
 			onclick={clear}
 		>
-			<X aria-hidden="true" size={14} />
+			<X aria-hidden="true" size="1em" />
 		</ZButton>
 	{/if}
 </div>

@@ -14,7 +14,7 @@
 			locale="zh-CN"
 			name="date"
 			calendarLabel="部署日期"
-		/><ZButton type="reset" variant="secondary">重置</ZButton><ZText tone="muted"
+		/><ZButton type="reset" variant="outline">重置</ZButton><ZText tone="muted"
 			>value = {value?.toString() ?? 'null'}</ZText
 		></ZStack
 	>

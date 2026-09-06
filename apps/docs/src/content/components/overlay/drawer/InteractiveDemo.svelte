@@ -39,14 +39,14 @@
 		value={placement}
 	/>
 	<ZDrawer bind:open>
-		<ZDrawerTrigger data-testid="drawer-trigger" variant="secondary">打开部署面板</ZDrawerTrigger>
+		<ZDrawerTrigger data-testid="drawer-trigger" variant="outline">打开部署面板</ZDrawerTrigger>
 		<ZDrawerOverlay data-testid="drawer-overlay" />
 		<ZDrawerContent data-testid="drawer-content" {placement} size="medium">
 			<ZStack gap="large">
 				<ZDrawerTitle>部署设置</ZDrawerTitle>
 				<ZDrawerDescription>逻辑start/end会随RTL方向自动翻转。</ZDrawerDescription>
 				<ZInput aria-label="发布通道" id="drawer-channel" name="channel" value="production" />
-				<ZDrawerClose data-testid="drawer-close" variant="secondary">保存并关闭</ZDrawerClose>
+				<ZDrawerClose data-testid="drawer-close" variant="outline">保存并关闭</ZDrawerClose>
 			</ZStack>
 		</ZDrawerContent>
 	</ZDrawer>

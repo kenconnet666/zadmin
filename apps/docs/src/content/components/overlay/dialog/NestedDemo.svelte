@@ -22,7 +22,7 @@
 				>内层关闭后焦点返回内层Trigger；外层关闭后返回页面Trigger。</ZDialogDescription
 			>
 			<ZDialog>
-				<ZDialogTrigger variant="secondary">打开内层Dialog</ZDialogTrigger>
+				<ZDialogTrigger variant="outline">打开内层Dialog</ZDialogTrigger>
 				<ZDialogOverlay />
 				<ZDialogContent>
 					<ZStack gap="medium"
@@ -33,7 +33,7 @@
 				</ZDialogContent>
 			</ZDialog>
 			<ZText tone="muted">嵌套层共享LayerStack与FocusScope。</ZText>
-			<ZDialogClose variant="secondary">关闭外层</ZDialogClose>
+			<ZDialogClose variant="outline">关闭外层</ZDialogClose>
 		</ZStack>
 	</ZDialogContent>
 </ZDialog>

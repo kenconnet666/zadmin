@@ -4,10 +4,11 @@
 	const demoRecipe = defineSlotRecipe(
 		{
 			layer: 'utilities',
-			slots: ['root', 'item', 'preview', 'source'] as const,
+			slots: ['root', 'item', 'heading', 'preview', 'source'] as const,
 			base: {
 				root: (s) => s.scrollMarginTop.rem(5.5),
 				item: (s) => s.borderBottomWidth.px(0),
+				heading: (s) => s.minWidth.px(0),
 				preview: (s) => {
 					s.backgroundColor._surface;
 					s.display.grid;
@@ -17,6 +18,7 @@
 					s._media({ max: 'medium' }, (mobile) => mobile.padding._large);
 				},
 				source: (s) => {
+					s.minWidth.px(0);
 					s.borderTopColor._border;
 					s.borderTopStyle.solid;
 					s.borderTopWidth._hairline;
@@ -44,6 +46,7 @@
 	} from '@zadmin/zui';
 	import { ZCode } from '@zadmin/zui/code';
 	import type { DemoDefinition } from '../framework/component-doc.js';
+	import DocSourceActions from './DocSourceActions.svelte';
 
 	let { demo }: { demo: DemoDefinition } = $props();
 	let expanded = $state<AccordionSingleValue>(null);
@@ -59,13 +62,15 @@
 		<ZCard as="section" bodyPadding="none" class={classes.root} id={demo.id} variant="outlined">
 			{#snippet header()}
 				<ZStack align="start" direction="row" gap="large" justify="between" wrap>
-					<ZStack gap="medium">
+					<ZStack class={classes.heading} gap="medium">
 						<ZHeading level={3} size="large">{demo.title}</ZHeading>
 						<ZText as="p" tone="muted" lineHeight="relaxed">{demo.description}</ZText>
 					</ZStack>
-					<ZAccordionTrigger appearance="inline" headingLevel={4}>
-						{expanded === 'source' ? '收起源码' : '查看源码'}
-					</ZAccordionTrigger>
+					<DocSourceActions {source} title={demo.title}>
+						<ZAccordionTrigger appearance="inline" headingLevel={4}>
+							{expanded === 'source' ? '收起源码' : '查看源码'}
+						</ZAccordionTrigger>
+					</DocSourceActions>
 				</ZStack>
 			{/snippet}
 			<ZBox class={classes.preview} data-testid={`demo-${demo.id}`}>
@@ -76,10 +81,11 @@
 					<ZCode
 						ariaLabel={`${demo.title}源码`}
 						code={source}
-						copyable
+						copyable={false}
 						embedded
 						lang="svelte"
 						lineNumbers
+						wrap
 					/>
 				</ZBox>
 			</ZAccordionContent>

@@ -1,5 +1,7 @@
 # ZBadge生产语义与迁移边界
 
+2026-09-06更新：Badge采用五档独立计数/圆点尺寸和neutral/info/success/warning/danger语义色，实心背景使用对应on-color。当前调用与数值见[视觉API迁移记录](./visual-api-migration-2026-09-06.md)；计数动画时长和动态reduced偏好修复见[动画专项](./badge-motion-audit-2026-09-06.md)。下文保留初始设计记录。
+
 状态：已实现，等待统一生成事实与远程浏览器矩阵（2026-09-02）
 
 ## 1. 单一职责

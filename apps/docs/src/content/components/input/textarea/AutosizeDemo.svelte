@@ -11,10 +11,10 @@
 
 <ZStack gap="medium">
 	<ZStack direction="row" gap="small" wrap>
-		<ZButton onclick={() => (narrow = !narrow)} variant="secondary">
+		<ZButton onclick={() => (narrow = !narrow)} variant="outline">
 			{narrow ? '切换为宽容器' : '切换为窄容器'}
 		</ZButton>
-		<ZButton onclick={() => (visible = !visible)} variant="secondary">
+		<ZButton onclick={() => (visible = !visible)} variant="outline">
 			{visible ? '隐藏' : '重新显示'}
 		</ZButton>
 	</ZStack>

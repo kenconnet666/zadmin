@@ -18,6 +18,7 @@
 			});
 		}
 	}
+
 	function announceSuccess(): void {
 		queue.push({ duration: 5000, title: '普通保存成功', tone: 'success' });
 	}
@@ -26,11 +27,12 @@
 <ZStack gap="medium">
 	<ZStack direction="row" gap="small" wrap>
 		<ZButton onclick={announceFailures}>连续发送 3 条关键失败</ZButton>
-		<ZButton onclick={announceSuccess} variant="secondary">发送普通成功</ZButton>
+		<ZButton onclick={announceSuccess} variant="outline">发送普通成功</ZButton>
 		<ZButton
 			onclick={() => queue.update(`failure-${burst}-1`, { title: '关键检查详情已更新' })}
-			variant="ghost">同 ID 更新</ZButton
-		>
+			variant="ghost"
+			>同 ID 更新
+		</ZButton>
 	</ZStack>
 	<ZText tone="muted">
 		视觉Toast立即原位更新；集中live

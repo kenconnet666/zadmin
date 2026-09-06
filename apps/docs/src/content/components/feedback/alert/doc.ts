@@ -58,7 +58,7 @@ export const alertDoc = defineComponentDoc(alertMetadata, {
 		{
 			component: TonesDemo,
 			covers: ['native-props', 'variants-and-states'],
-			description: '四种语义tone与live优先级分别表达静态、礼貌和紧急反馈。',
+			description: '五种语义tone与live优先级分别表达静态、礼貌和紧急反馈。',
 			id: 'alert-tones',
 			source: tonesSource,
 			title: '语义与Live优先级'

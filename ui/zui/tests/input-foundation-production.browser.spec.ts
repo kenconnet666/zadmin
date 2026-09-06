@@ -58,11 +58,12 @@ describe('ZInput, ZTextarea and ZInputGroup production contracts', () => {
 		expect(Number.parseFloat(largeInputStyle.paddingInlineStart)).toBeGreaterThan(
 			Number.parseFloat(smallInputStyle.paddingInlineStart)
 		);
-		expect(textareaStyle.fontSize).toBe('18px');
+		expect(textareaStyle.fontSize).toBe('16px');
 		expect(textareaStyle.paddingInlineStart).toBe('16px');
-		expect(getComputedStyle(groupInput).fontSize).toBe('18px');
-		expect(getComputedStyle(groupInput).paddingInlineStart).toBe('24px');
-		expect(groupInput.getBoundingClientRect().height).toBe(input.getBoundingClientRect().height);
+		expect(getComputedStyle(groupInput).fontSize).toBe('16px');
+		expect(getComputedStyle(groupInput).paddingInlineStart).toBe('16px');
+		expect(group.getBoundingClientRect().height).toBe(input.getBoundingClientRect().height);
+		expect(groupInput.getBoundingClientRect().height).toBe(group.clientHeight);
 		expect(prefix.clientWidth).toBeLessThan(prefix.scrollWidth);
 		expect(suffix.clientWidth).toBeLessThan(suffix.scrollWidth);
 		expect(group.scrollWidth).toBeLessThanOrEqual(group.clientWidth);

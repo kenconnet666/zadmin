@@ -13,7 +13,7 @@
 <ZProvider direction="rtl" motion="reduced">
 	<ZStack gap="medium">
 		<ZTooltip bind:open closeDelay={250} openDelay={0} hoverable placement="bottom-start">
-			<ZTooltipTrigger variant="secondary">RTL与停留内容</ZTooltipTrigger>
+			<ZTooltipTrigger variant="outline">RTL与停留内容</ZTooltipTrigger>
 			<ZTooltipContent>
 				pointer可移入这段非交互说明以保持打开；任何按钮或链接仍会被运行时守卫拒绝。
 			</ZTooltipContent>

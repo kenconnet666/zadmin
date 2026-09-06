@@ -29,7 +29,7 @@
 	<ZStack direction="row" gap="small" wrap>
 		<ZButton
 			type="button"
-			variant="secondary"
+			variant="outline"
 			onclick={() => {
 				loading = true;
 				options = [];
@@ -38,7 +38,7 @@
 		</ZButton>
 		<ZButton
 			type="button"
-			variant="secondary"
+			variant="outline"
 			onclick={() => {
 				loading = false;
 				options = allOptions.filter((option) => option.value !== 'prod');
@@ -47,7 +47,7 @@
 		</ZButton>
 		<ZButton
 			type="button"
-			variant="secondary"
+			variant="outline"
 			onclick={() => {
 				loading = false;
 				options = allOptions;

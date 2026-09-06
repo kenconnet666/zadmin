@@ -3,6 +3,12 @@
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 
 	import { defineSlotRecipe, registerSlotRecipeHmr } from '../../recipes/slots.js';
+	import {
+		controlSizeStyles,
+		controlSizeMetrics,
+		resolveControlSize,
+		type ZControlSize
+	} from '../../runtime/foundation/control-size.js';
 
 	export type PaginationMode = 'compact' | 'default' | 'simple';
 
@@ -20,6 +26,7 @@
 		readonly pageSizeOptions?: readonly number[];
 		ref?: HTMLElement | null;
 		readonly siblingCount?: number;
+		readonly size?: ZControlSize;
 		readonly totalItems?: number;
 		readonly totalPages?: number;
 	}
@@ -56,6 +63,9 @@
 					s.gap._small;
 				},
 				pageInput: (s) => {
+					s.boxSizing.borderBox;
+					s.paddingBlock.px(0);
+					s.lineHeight(1);
 					s.backgroundColor._canvas;
 					s.borderColor._border;
 					s.borderRadius._medium;
@@ -89,6 +99,9 @@
 					s.whiteSpace.nowrap;
 				},
 				sizeSelect: (s) => {
+					s.boxSizing.borderBox;
+					s.paddingBlock.px(0);
+					s.lineHeight(1);
 					s.backgroundColor._canvas;
 					s.borderColor._border;
 					s.borderRadius._medium;
@@ -160,6 +173,12 @@
 			{ description: 'simple模式原生页码输入。', name: 'page-input' }
 		],
 		props: [
+			{
+				name: 'size',
+				type: 'ZControlSize',
+				default: 'Provider pagination.size or density',
+				description: '五档分页按钮、输入、选择器、图标与状态文字大小；pageSize仍是每页条数。'
+			},
 			{
 				default: '1（未传totalItems时）',
 				description: '已由外部owner计算的总页数；不能与totalItems或页尺寸API同时使用。',
@@ -241,6 +260,11 @@
 		snippets: [],
 		source: 'ui/zui/src/components/navigation/ZPagination.svelte',
 		states: [
+			{
+				name: 'data-size',
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge'],
+				description: '解析后的五档控件尺寸。'
+			},
 			{ description: '当前页码。', name: 'data-page', values: ['positive integer'] },
 			{ description: '解析后的总页数。', name: 'data-total-pages', values: ['positive integer'] },
 			{
@@ -301,6 +325,7 @@
 		pageSizeOptions,
 		ref = $bindable(null),
 		siblingCount = 1,
+		size,
 		style,
 		totalItems,
 		totalPages,
@@ -308,6 +333,8 @@
 	}: ZPaginationProps = $props();
 	const zui = useZui();
 	const componentDefaults = $derived(zui.componentDefaults.pagination);
+	const resolvedSize = $derived(resolveControlSize(size ?? componentDefaults?.size, zui.density));
+	const metrics = $derived(controlSizeMetrics(zui.theme, resolvedSize));
 	const resolvedMode = $derived(mode ?? componentDefaults?.mode ?? 'default');
 	const uid = $props.id();
 	const idBase = $derived(createZuiId(zui.idPrefix, uid, 'pagination'));
@@ -354,6 +381,8 @@
 		return normalizePageSizeOptions(pageSizeOptions, model.pageSize ?? 10);
 	});
 	const classes = $derived(zui.slots(paginationRecipe));
+	const controlClass = $derived(zui.icss(controlSizeStyles[resolvedSize]));
+	const textSizeClass = $derived(zui.icss((s) => s.fontSize.raw(metrics.fontSize)));
 	const numberFormat = $derived(new Intl.NumberFormat(zui.locale));
 	const localePack = $derived(zui.localePack.pagination);
 	const resolvedDirection = $derived(dir ?? zui.direction);
@@ -514,6 +543,7 @@
 	data-mode={resolvedMode}
 	data-page={currentPage}
 	data-page-size={model.pageSize}
+	data-size={resolvedSize}
 	data-total-pages={resolvedTotalPages}
 	onfocusin={handleFocusIn}
 	onfocusout={handleFocusOut}
@@ -524,11 +554,11 @@
 			aria-label={localePack.previous}
 			data-pagination-control="previous"
 			disabled={disabled || currentPage === 1}
-			size="small"
-			variant="secondary"
+			size={resolvedSize}
+			variant="outline"
 			onclick={() => select(currentPage - 1)}
 		>
-			<PreviousIcon aria-hidden="true" size={16} />
+			<PreviousIcon aria-hidden="true" size={metrics.indicatorSize} />
 		</ZButton>
 		{#if resolvedMode === 'default'}
 			{#each items as item (item)}
@@ -541,18 +571,20 @@
 						data-page-number={item}
 						data-pagination-control="page"
 						{disabled}
-						size="small"
-						variant={item === currentPage ? 'primary' : 'secondary'}
+						size={resolvedSize}
+						variant={item === currentPage ? 'solid' : 'outline'}
 						onclick={() => select(item)}>{numberFormat.format(item)}</ZButton
 					>
 				{:else}
-					<span aria-hidden="true" class={classes.ellipsis} data-slot="ellipsis">…</span>
+					<span aria-hidden="true" class={[classes.ellipsis, textSizeClass]} data-slot="ellipsis"
+						>…</span
+					>
 				{/if}
 			{/each}
 		{:else if resolvedMode === 'simple'}
 			<input
 				bind:this={pageInputRef}
-				class={classes.pageInput}
+				class={[classes.pageInput, controlClass]}
 				data-slot="page-input"
 				id={`${idBase}-page-input`}
 				type="number"
@@ -572,33 +604,35 @@
 				}}
 				onkeydown={handlePageInputKeydown}
 			/>
-			<span class={classes.status} data-slot="status" aria-hidden="true"
+			<span class={[classes.status, textSizeClass]} data-slot="status" aria-hidden="true"
 				>/ {formattedTotalPages}</span
 			>
 		{:else}
-			<span class={classes.status} data-slot="status" aria-live="polite">{pageStatus}</span>
+			<span class={[classes.status, textSizeClass]} data-slot="status" aria-live="polite"
+				>{pageStatus}</span
+			>
 		{/if}
 		<ZButton
 			aria-label={localePack.next}
 			data-pagination-control="next"
 			disabled={disabled || currentPage === resolvedTotalPages}
-			size="small"
-			variant="secondary"
+			size={resolvedSize}
+			variant="outline"
 			onclick={() => select(currentPage + 1)}
 		>
-			<NextIcon aria-hidden="true" size={16} />
+			<NextIcon aria-hidden="true" size={metrics.indicatorSize} />
 		</ZButton>
 	</div>
 	{#if formattedTotalItems !== undefined}
 		<div class={classes.details} data-slot="details">
-			<span class={classes.status} data-slot="status"
+			<span class={[classes.status, textSizeClass]} data-slot="status"
 				>{localePack.totalItems(formattedTotalItems)}</span
 			>
 			{#if pageSizeOptions !== undefined && resolvedPageSizeOptions.length > 0}
-				<label class={classes.sizeLabel}>
+				<label class={[classes.sizeLabel, textSizeClass]}>
 					<span>{localePack.itemsPerPage}</span>
 					<select
-						class={classes.sizeSelect}
+						class={[classes.sizeSelect, controlClass]}
 						data-slot="size-select"
 						id={`${idBase}-page-size`}
 						{disabled}

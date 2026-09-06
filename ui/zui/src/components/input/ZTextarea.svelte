@@ -12,7 +12,7 @@
 		readonly minRows?: number;
 	}
 
-	export interface ZTextareaProps extends Omit<HTMLTextareaAttributes, 'value'> {
+	export interface ZTextareaProps extends Omit<HTMLTextareaAttributes, 'children' | 'value'> {
 		readonly autosize?: boolean | ZTextareaAutosizeOptions;
 		readonly defaultValue?: string;
 		readonly invalid?: boolean;
@@ -85,7 +85,7 @@
 				description:
 					'最小高度、字号和padding尺寸；显式值、上下文与组件默认优先于Provider density。',
 				name: 'size',
-				type: "'small' | 'medium' | 'large'"
+				type: "'xsmall' | 'small' | 'medium' | 'large' | 'xlarge'"
 			},
 			{
 				default: 'Field context',
@@ -108,7 +108,7 @@
 			{
 				description: '解析后的control尺寸。',
 				name: 'data-size',
-				values: ['small', 'medium', 'large']
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge']
 			},
 			{ description: 'autosize启用。', name: 'data-autosize', values: ['true'] },
 			{ description: '禁用状态。', name: 'data-disabled', values: ['true'] },
@@ -170,20 +170,30 @@
 				true: (s) => s.backgroundColor._surface
 			},
 			size: {
-				large: (s) => {
-					s.fontSize._large;
-					s.minHeight.rem(8);
-					s.padding._large;
+				xsmall: (s) => {
+					s.fontSize._xsmall;
+					s.minHeight.rem(4);
+					s.padding._small;
+				},
+				small: (s) => {
+					s.fontSize._small;
+					s.minHeight.rem(4);
+					s.padding._small;
 				},
 				medium: (s) => {
 					s.fontSize._medium;
 					s.minHeight.rem(6);
 					s.padding._medium;
 				},
-				small: (s) => {
-					s.fontSize._small;
-					s.minHeight.rem(4);
-					s.padding._small;
+				large: (s) => {
+					s.fontSize._large;
+					s.minHeight.rem(8);
+					s.padding._large;
+				},
+				xlarge: (s) => {
+					s.fontSize._large;
+					s.minHeight.rem(8);
+					s.padding._large;
 				}
 			}
 		},

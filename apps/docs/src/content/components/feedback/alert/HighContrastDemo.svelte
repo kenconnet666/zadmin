@@ -21,7 +21,7 @@
 					逻辑布局让图标、正文与关闭按钮在RTL中保持正确次序。
 				</ZAlert>
 			{:else}
-				<ZButton size="small" variant="secondary" onclick={() => (rtlVisible = true)}>
+				<ZButton size="small" variant="outline" onclick={() => (rtlVisible = true)}>
 					恢复RTL Alert
 				</ZButton>
 			{/if}

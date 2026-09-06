@@ -1,4 +1,5 @@
 <script module lang="ts">
+	import { controlSizeStyles } from '../../runtime/foundation/control-size.js';
 	import type { HTMLInputAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 
@@ -72,7 +73,7 @@
 					"Field/InputGroup，其次componentDefaults.input.size，最后Provider density（'comfortable'映射为'medium'）",
 				description: '输入框尺寸；显式值和最近表单上下文优先于Provider组件默认值与density。',
 				name: 'size',
-				type: "'small' | 'medium' | 'large'"
+				type: "'xsmall' | 'small' | 'medium' | 'large' | 'xlarge'"
 			},
 			{
 				default: '继承Field或false',
@@ -110,7 +111,7 @@
 			{
 				description: '解析后的control尺寸。',
 				name: 'data-size',
-				values: ['small', 'medium', 'large']
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge']
 			},
 			{ description: '当前已解析为减少动画。', name: 'data-reduced-motion', values: ['true'] }
 		],
@@ -121,6 +122,9 @@
 	const inputRecipe = defineRecipe({
 		base: (s) => {
 			s.appearance.none;
+			s.fontFamily._sans;
+			s.lineHeight._compact;
+			s.paddingBlock.px(0);
 			s.boxSizing.borderBox;
 			s.width._full;
 			s.borderWidth._hairline;
@@ -160,23 +164,7 @@
 				false: () => undefined,
 				true: (s) => s.backgroundColor._surface
 			},
-			size: {
-				large: (s) => {
-					s.minHeight._large;
-					s.paddingInline._xlarge;
-					s.fontSize._large;
-				},
-				medium: (s) => {
-					s.minHeight._medium;
-					s.paddingInline._large;
-					s.fontSize._medium;
-				},
-				small: (s) => {
-					s.minHeight._small;
-					s.paddingInline._medium;
-					s.fontSize._small;
-				}
-			}
+			size: controlSizeStyles
 		},
 		defaultVariants: {
 			disabled: false,

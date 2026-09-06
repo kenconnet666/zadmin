@@ -54,7 +54,7 @@ describe('gene primitive API forwarding', () => {
 				download: 'service-report.txt',
 				href: '/reports/service.txt',
 				size: 'large',
-				variant: 'secondary'
+				variant: 'outline'
 			}
 		}).body;
 

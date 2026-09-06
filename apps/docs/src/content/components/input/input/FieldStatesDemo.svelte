@@ -24,7 +24,7 @@
 				<ZInput defaultValue="不会提交" />
 			</ZField>
 		</ZStack>
-		<ZButton type="reset" variant="secondary">恢复默认值</ZButton>
+		<ZButton type="reset" variant="outline">恢复默认值</ZButton>
 		<ZText aria-live="polite" tone="muted">value = {account} · invalid = {Boolean(error)}</ZText>
 	</ZStack>
 </form>

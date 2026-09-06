@@ -1,3 +1,5 @@
+import ControlSizesDemo from './ControlSizesDemo.svelte';
+import controlSizesSource from './ControlSizesDemo.svelte?raw';
 import {
 	dialogCloseMetadata,
 	dialogContentMetadata,
@@ -44,6 +46,14 @@ export const dialogDoc = defineComponentDoc(dialogMetadata, {
 			'modal-only Dialog根，统一Portal/Layer/Presence；Content拥有真实ARIA引用、typed outside事件与initial/restore焦点策略。'
 	},
 	demos: [
+		{
+			component: ControlSizesDemo,
+			covers: ['variants-and-states', 'composition'],
+			description: '五档尺寸直接消费主题 token；组合部件继承有视觉意义的尺寸 owner。',
+			id: 'dialog-control-sizes',
+			source: controlSizesSource,
+			title: '五档尺寸与主题比例'
+		},
 		{
 			component: InteractiveDemo,
 			covers: ['basic-render', 'focus', 'keyboard', 'portal', 'resource-cleanup'],

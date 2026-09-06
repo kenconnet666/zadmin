@@ -1,12 +1,23 @@
 <script lang="ts">
 	import { ZHeading, ZStack, ZText } from '@zadmin/zui';
+
+	const sizes = [
+		'xsmall',
+		'small',
+		'medium',
+		'large',
+		'xlarge',
+		'xxlarge',
+		'xxxlarge',
+		'xxxxlarge'
+	] as const;
 </script>
 
 <ZStack gap="medium">
-	<ZHeading level={2} size="xxlarge">h2 · xxlarge</ZHeading>
-	<ZHeading level={2} size="xlarge">h2 · xlarge</ZHeading>
-	<ZHeading level={2} size="large">h2 · large</ZHeading>
-	<ZHeading level={2} size="medium">h2 · medium</ZHeading>
-	<ZHeading level={2} size="small">h2 · small</ZHeading>
-	<ZText tone="muted">五个标题拥有相同h2语义；size只改变Theme视觉token。</ZText>
+	{#each sizes as size (size)}
+		<ZHeading level={2} {size}>h2 · {size}</ZHeading>
+	{/each}
+	<ZText tone="muted"
+		>八档字号保持相同h2语义；默认balance平衡窄屏标题，24px与32px分别使用xxlarge与xxxlarge。</ZText
+	>
 </ZStack>

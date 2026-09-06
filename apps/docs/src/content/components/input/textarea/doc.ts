@@ -1,3 +1,5 @@
+import SizingDemo from './SizingDemo.svelte';
+import sizingSource from './SizingDemo.svelte?raw';
 import { textareaMetadata } from '@zadmin/zui/metadata';
 import AutosizeDemo from './AutosizeDemo.svelte';
 import autosizeSource from './AutosizeDemo.svelte?raw';
@@ -48,6 +50,15 @@ export const textareaDoc = defineComponentDoc(textareaMetadata, {
 	},
 	demos: [
 		{
+			component: SizingDemo,
+			covers: ['composition', 'variants-and-states'],
+			description:
+				'五档尺寸按组件用途同步文字、留白和内部控件；Field/Form 显式尺寸优先于 Provider density。',
+			id: 'textarea-sizing',
+			source: sizingSource,
+			title: '五档尺寸与组合比例'
+		},
+		{
 			covers: ['controlled', 'external-clear', 'keyboard', 'native-props'],
 			component: ControlledDemo,
 			description:
@@ -69,7 +80,7 @@ export const textareaDoc = defineComponentDoc(textareaMetadata, {
 			covers: ['disabled', 'focus', 'invalid', 'readonly', 'variants-and-states'],
 			component: StatesDemo,
 			description:
-				'Field统一投射required、readonly、disabled和invalid；三档尺寸与原生resize保持独立。',
+				'Field统一投射required、readonly、disabled和invalid；五档尺寸与原生resize保持独立。',
 			id: 'textarea-states',
 			source: statesSource,
 			title: 'Field、尺寸与状态'

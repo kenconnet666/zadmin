@@ -30,9 +30,10 @@
 				onclick={() => {
 					actions += 1;
 					status = '普通按钮没有触发表单提交';
-				}}>普通操作</ZButton
-			>
-			<ZButton type="submit" variant="secondary">显式提交</ZButton>
+				}}
+				>普通操作
+			</ZButton>
+			<ZButton type="submit" variant="outline">显式提交</ZButton>
 			<ZButton type="reset" variant="ghost">重置</ZButton>
 		</ZStack>
 		<ZText aria-live="polite" tone="muted">

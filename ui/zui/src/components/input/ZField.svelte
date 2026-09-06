@@ -95,7 +95,7 @@
 				description:
 					'显式覆盖字段间距和control继承尺寸；未传时不覆盖control的组件默认值或Provider density。',
 				name: 'size',
-				type: "'small' | 'medium' | 'large'"
+				type: "'xsmall' | 'small' | 'medium' | 'large' | 'xlarge'"
 			},
 			{
 				default: '—',
@@ -176,9 +176,11 @@
 		},
 		variants: {
 			size: {
-				large: { root: (s) => s.gap._medium },
+				xsmall: { root: (s) => s.gap._xsmall },
+				small: { root: (s) => s.gap._xsmall },
 				medium: { root: (s) => s.gap._small },
-				small: { root: (s) => s.gap._xsmall }
+				large: { root: (s) => s.gap._medium },
+				xlarge: { root: (s) => s.gap._medium }
 			}
 		},
 		defaultVariants: { size: 'medium' }

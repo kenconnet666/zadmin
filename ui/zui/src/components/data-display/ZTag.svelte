@@ -2,10 +2,20 @@
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
+	import { indicatorSizeStyles } from '../gene/indicator-size.js';
 	import { styleInternalAction } from '../gene/internal-action.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
-	export type TagSize = 'medium' | 'small';
-	export type TagTone = 'accent' | 'danger' | 'default' | 'success' | 'warning';
+	import {
+		controlSizes,
+		controlSizeStyles,
+		resolveControlSize,
+		type ZControlSize
+	} from '../../runtime/foundation/control-size.js';
+	import { semanticTones, type ZSemanticTone } from '../../theme/semantics.js';
+
+	export type TagSize = ZControlSize;
+	export type TagTone = ZSemanticTone;
+
 	export interface ZTagProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'children'> {
 		readonly children?: Snippet;
 		readonly disabled?: boolean;
@@ -18,6 +28,7 @@
 		readonly textValue?: string;
 		readonly tone?: TagTone;
 	}
+
 	export const zuiMetadata = {
 		category: 'data-display',
 		id: 'tag',
@@ -59,10 +70,9 @@
 			},
 			{
 				default: 'componentDefaults.tag.size或Provider density',
-				description:
-					'有限small/medium尺寸；显式值优先，未配置组件默认时compact density解析为small。',
+				description: '五档控件尺寸；显式值优先于Provider组件默认和density，移除按钮保持同一高度。',
 				name: 'size',
-				type: "'small' | 'medium'"
+				type: 'TagSize'
 			},
 			{
 				default: 'undefined',
@@ -71,7 +81,7 @@
 				type: 'string'
 			},
 			{
-				default: "componentDefaults.tag.tone或'default'",
+				default: "componentDefaults.tag.tone或'neutral'",
 				description: '有限语义tone；显式值优先于Provider组件默认。',
 				name: 'tone',
 				type: 'TagTone'
@@ -83,11 +93,15 @@
 		states: [
 			{ description: '禁用移除。', name: 'data-disabled', values: ['true'] },
 			{ description: '是否包含移除动作。', name: 'data-removable', values: ['true'] },
-			{ description: '解析后的尺寸。', name: 'data-size', values: ['small', 'medium'] },
+			{
+				description: '解析后的尺寸。',
+				name: 'data-size',
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge']
+			},
 			{
 				description: '语义tone。',
 				name: 'data-tone',
-				values: ['default', 'accent', 'success', 'warning', 'danger']
+				values: ['neutral', 'info', 'success', 'warning', 'danger']
 			}
 		],
 		status: 'stable',
@@ -96,6 +110,7 @@
 	} as const satisfies ZuiComponentMetadata;
 	const recipe = defineRecipe({
 		base: (s) => {
+			s.boxSizing.borderBox;
 			s.fontFamily._sans;
 			s.lineHeight._normal;
 			s.alignItems.center;
@@ -111,31 +126,43 @@
 		},
 		variants: {
 			size: {
-				medium: (s) => {
-					s.fontSize._medium;
-					s.gap._small;
-					s.paddingBlock._xsmall;
-					s.paddingInline._medium;
+				xsmall: (s) => {
+					controlSizeStyles.xsmall(s);
+					s.paddingBlock.px(0);
+					s.gap._xsmall;
 				},
 				small: (s) => {
-					s.fontSize._small;
-					s.gap._xsmall;
-					s.paddingBlock._xsmall;
-					s.paddingInline._small;
+					controlSizeStyles.small(s);
+					s.paddingBlock.px(0);
+					s.gap._small;
+				},
+				medium: (s) => {
+					controlSizeStyles.medium(s);
+					s.paddingBlock.px(0);
+					s.gap._small;
+				},
+				large: (s) => {
+					controlSizeStyles.large(s);
+					s.paddingBlock.px(0);
+					s.gap._small;
+				},
+				xlarge: (s) => {
+					controlSizeStyles.xlarge(s);
+					s.paddingBlock.px(0);
+					s.gap._small;
 				}
 			},
 			tone: {
-				accent: (s) => {
-					s.backgroundColor._accentSubtle;
-					s.borderColor._accent;
-					s.color._accent;
+				neutral: (s) => {
+					s.backgroundColor._neutralSubtle;
+					s.borderColor._neutral;
+					s.color._text;
 				},
-				danger: (s) => {
-					s.backgroundColor._dangerSubtle;
-					s.borderColor._danger;
-					s.color._danger;
+				info: (s) => {
+					s.backgroundColor._infoSubtle;
+					s.borderColor._info;
+					s.color._info;
 				},
-				default: (s) => s.color._text,
 				success: (s) => {
 					s.backgroundColor._successSubtle;
 					s.borderColor._success;
@@ -145,10 +172,15 @@
 					s.backgroundColor._warningSubtle;
 					s.borderColor._warning;
 					s.color._warning;
+				},
+				danger: (s) => {
+					s.backgroundColor._dangerSubtle;
+					s.borderColor._danger;
+					s.color._danger;
 				}
 			}
 		},
-		defaultVariants: { size: 'medium', tone: 'default' }
+		defaultVariants: { size: 'medium', tone: 'neutral' }
 	});
 	const contentRecipe = defineRecipe({
 		base: (s) => {
@@ -162,13 +194,16 @@
 		base: (s) => {
 			styleInternalAction(s);
 			s.color._textMuted;
-			s.minHeight._small;
-			s.minWidth._small;
+			s.alignSelf.stretch;
+			s.minHeight.px(0);
+			s.minWidth._xsmall;
 			s.padding.px(0);
 		},
 		variants: {},
 		defaultVariants: {}
 	});
+	const removeIconRecipe = defineRecipe({ variants: { size: indicatorSizeStyles } });
+	registerRecipeHmr(import.meta, removeIconRecipe);
 	registerRecipeHmr(import.meta, recipe);
 	registerRecipeHmr(import.meta, contentRecipe);
 	registerRecipeHmr(import.meta, removeRecipe);
@@ -185,6 +220,7 @@
 	} from '../../runtime/foundation/root-style.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
+
 	let {
 		children,
 		class: className,
@@ -213,17 +249,16 @@
 		return removable;
 	});
 	const resolvedSize = $derived.by(() => {
-		const next =
-			size ?? componentDefaults?.size ?? (zui.density === 'compact' ? 'small' : 'medium');
-		if (!['medium', 'small'].includes(next)) {
-			throw new TypeError('ZTag size must be small or medium.');
+		const next = resolveControlSize(size ?? componentDefaults?.size, zui.density);
+		if (!controlSizes.includes(next)) {
+			throw new TypeError('ZTag size must be xsmall, small, medium, large or xlarge.');
 		}
 		return next;
 	});
 	const resolvedTone = $derived.by(() => {
-		const next = tone ?? componentDefaults?.tone ?? 'default';
-		if (!['accent', 'danger', 'default', 'success', 'warning'].includes(next)) {
-			throw new TypeError('ZTag tone must be default, accent, success, warning or danger.');
+		const next = tone ?? componentDefaults?.tone ?? 'neutral';
+		if (!semanticTones.includes(next)) {
+			throw new TypeError('ZTag tone must be neutral, info, success, warning or danger.');
 		}
 		return next;
 	});
@@ -243,9 +278,11 @@
 	});
 	const rootClass = $derived(zui.recipe(recipe, { size: resolvedSize, tone: resolvedTone }));
 	const contentClass = $derived(zui.recipe(contentRecipe));
+	const removeIconClass = $derived(zui.recipe(removeIconRecipe, { size: resolvedSize }));
 	const removeClass = $derived(zui.recipe(removeRecipe));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
+
 	function handleRemove(event: MouseEvent): void {
 		event.stopPropagation();
 		onRemove?.(event);
@@ -263,15 +300,14 @@
 	data-removable={resolvedRemovable || undefined}
 	data-size={resolvedSize}
 	data-tone={resolvedTone}
-	><span class={contentClass} data-slot="content">{@render children?.()}</span
-	>{#if resolvedRemovable}<button
+	><span class={contentClass} data-slot="content">{@render children?.()}</span>
+	{#if resolvedRemovable}<button
 			type="button"
 			class={removeClass}
 			aria-label={resolvedRemoveLabel}
 			data-slot="remove"
 			use:captureClick={handleRemove}
 			disabled={resolvedDisabled}
-			tabindex={resolvedRemoveTabIndex}
-			><X aria-hidden="true" size={resolvedSize === 'small' ? 12 : 14} /></button
+			tabindex={resolvedRemoveTabIndex}><X aria-hidden="true" class={removeIconClass} /></button
 		>{/if}</span
 >

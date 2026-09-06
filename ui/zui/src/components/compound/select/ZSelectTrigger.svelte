@@ -72,7 +72,7 @@
 		onkeydown,
 		ref = $bindable(null),
 		size,
-		variant = 'secondary',
+		variant = 'outline',
 		...rest
 	}: ZSelectTriggerProps = $props();
 	const select = useZSelect();

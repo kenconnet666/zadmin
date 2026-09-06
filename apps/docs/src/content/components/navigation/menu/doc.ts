@@ -1,3 +1,5 @@
+import ControlSizesDemo from './ControlSizesDemo.svelte';
+import controlSizesSource from './ControlSizesDemo.svelte?raw';
 import {
 	menuCheckboxItemMetadata,
 	menuGroupMetadata,
@@ -44,6 +46,14 @@ export const menuDoc = defineComponentDoc(menuMetadata, {
 			'LogicalCollection拥有typed顺序、禁用与typeahead文本，MountedElements仅把当前挂载节点接到roving focus；action、selection与nested submenu共用同一事件链。'
 	},
 	demos: [
+		{
+			component: ControlSizesDemo,
+			covers: ['variants-and-states', 'composition'],
+			description: '五档尺寸直接消费主题 token；组合部件继承有视觉意义的尺寸 owner。',
+			id: 'menu-control-sizes',
+			source: controlSizesSource,
+			title: '五档尺寸与主题比例'
+		},
 		{
 			covers: ['accessible-name', 'basic-render', 'disabled', 'keyboard'],
 			component: InteractiveDemo,

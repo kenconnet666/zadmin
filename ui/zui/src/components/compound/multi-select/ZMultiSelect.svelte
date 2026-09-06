@@ -214,7 +214,7 @@
 				default: "Field size，其次为Provider density（'comfortable'映射为'medium'）",
 				description: 'MultiSelect默认Trigger尺寸；Trigger显式size优先。',
 				name: 'size',
-				type: "'small' | 'medium' | 'large'"
+				type: "'xsmall' | 'small' | 'medium' | 'large' | 'xlarge'"
 			},
 			{
 				default: 'String(value)',

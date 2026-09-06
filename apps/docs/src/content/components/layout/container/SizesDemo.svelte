@@ -1,9 +1,13 @@
 <script lang="ts">
 	import { ZContainer, ZStack, ZText } from '@zadmin/zui';
+	const sizes = ['xsmall', 'small', 'medium', 'large', 'xlarge'] as const;
 </script>
 
 <ZStack gap="large">
-	<ZContainer gutter="small" size="small"><ZText>small容器 + small gutter</ZText></ZContainer>
-	<ZContainer gutter="medium" size="medium"><ZText>medium容器 + medium gutter</ZText></ZContainer>
-	<ZContainer gutter="large" size="large"><ZText>large容器 + large gutter</ZText></ZContainer>
+	{#each sizes as size (size)}
+		<ZContainer {size}><ZText>{size} 最大宽度容器</ZText></ZContainer>
+	{/each}
+	<ZText tone="muted"
+		>size选择主题中的容器最大宽度，gutter控制逻辑留白；不会改变内部控件高度。</ZText
+	>
 </ZStack>

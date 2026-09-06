@@ -16,6 +16,7 @@ describe('ICSS property definitions', () => {
 			s.animationIterationCount.infinite;
 			s.animationPlayState.paused;
 			s.textWrap.balance;
+			s.tableLayout.fixed;
 		});
 		const { cssText } = serializeStyleProgram(program, 'motion');
 		for (const declaration of [
@@ -27,7 +28,8 @@ describe('ICSS property definitions', () => {
 			'animation-direction:alternate-reverse',
 			'animation-iteration-count:infinite',
 			'animation-play-state:paused',
-			'text-wrap:balance'
+			'text-wrap:balance',
+			'table-layout:fixed'
 		])
 			expect(cssText).toContain(declaration);
 	});

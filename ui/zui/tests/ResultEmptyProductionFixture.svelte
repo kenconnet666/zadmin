@@ -29,13 +29,15 @@
 	title="Detailed result"
 	tone="danger"
 >
-	{#snippet icon()}<Rocket aria-hidden="true" size={48} />{/snippet}
+	{#snippet icon()}
+		<Rocket aria-hidden="true" size={48} />
+	{/snippet}
 	{#snippet content()}
 		Detailed release-candidate-with-an-intentionally-long-name result content that must wrap safely.
 	{/snippet}
 	{#snippet actions()}
 		<ZButton data-testid="result-action" onclick={() => (resultActions += 1)}>Retry</ZButton>
-		<ZButton variant="secondary">Download report</ZButton>
+		<ZButton variant="outline">Download report</ZButton>
 	{/snippet}
 </ZResult>
 <ZResult data-testid="result-no-icon" icon={null} title="Text-only result" />
@@ -47,7 +49,9 @@
 	{/snippet}
 </ZEmpty>
 <ZEmpty data-native-empty="true" data-testid="empty-custom" headingLevel={5} title="No artifacts">
-	{#snippet icon()}<PackageOpen aria-hidden="true" size={40} />{/snippet}
+	{#snippet icon()}
+		<PackageOpen aria-hidden="true" size={40} />
+	{/snippet}
 	{#snippet description()}
 		No artifact matched environment-production-east-with-an-intentionally-long-name.
 	{/snippet}

@@ -21,8 +21,8 @@
 			/>
 		</ZField>
 		<ZStack direction="row" gap="small" wrap>
-			<ZButton type="button" variant="secondary" onclick={() => (value = '')}>清空值</ZButton>
-			<ZButton type="reset" variant="secondary">重置</ZButton>
+			<ZButton type="button" variant="outline" onclick={() => (value = '')}>清空值</ZButton>
+			<ZButton type="reset" variant="outline">重置</ZButton>
 		</ZStack>
 		<ZText tone="muted">value = {value || 'empty'} · complete = {completed}</ZText>
 	</ZStack>

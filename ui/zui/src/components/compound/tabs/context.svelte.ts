@@ -2,6 +2,7 @@ import { getContext, setContext } from 'svelte';
 
 import type { CompoundLogicalCollectionItem } from '../../../runtime/collection/compound-logical-collection.svelte.js';
 import type { SelectionKey } from '../../../runtime/collection/selection.js';
+import type { ZControlSize } from '../../../runtime/foundation/control-size.js';
 
 export type TabsActivationMode = 'automatic' | 'manual';
 export type TabsOrientation = 'horizontal' | 'vertical';
@@ -16,6 +17,7 @@ export interface ZTabsContext {
 	readonly activationMode: TabsActivationMode;
 	readonly disabled: boolean;
 	readonly orientation: TabsOrientation;
+	readonly size: ZControlSize;
 	focus(value: SelectionKey): void;
 	handleKey(event: KeyboardEvent): boolean;
 	isActive(value: SelectionKey): boolean;

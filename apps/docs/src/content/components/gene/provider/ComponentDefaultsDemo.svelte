@@ -32,18 +32,18 @@
 
 <ZProvider
 	componentDefaults={{
-		button: { size: 'small', variant: 'secondary' },
+		button: { size: 'small', variant: 'outline' },
 		card: { variant: 'outlined' },
 		dataTable: { density: 'compact', selectionMode: 'multiple', striped: true },
 		input: { size: 'large' },
 		pagination: { mode: 'simple' },
-		tag: { size: 'small', tone: 'accent' }
+		tag: { size: 'small', tone: 'info' }
 	}}
 >
 	<ZStack gap="medium">
 		<ZStack direction="row" gap="small" wrap>
-			<ZButton>继承small/secondary</ZButton>
-			<ZButton variant="primary">显式primary优先</ZButton>
+			<ZButton>继承small/outline</ZButton>
+			<ZButton variant="solid">显式实心外观优先</ZButton>
 			<ZProvider componentDefaults={{ button: null }}>
 				<ZButton>停止Button继承</ZButton>
 			</ZProvider>
@@ -62,7 +62,9 @@
 		/>
 		<ZStack direction="row" gap="small" wrap>
 			<ZTag>继承small/accent</ZTag>
-			<ZCard><ZText>继承outlined Card</ZText></ZCard>
+			<ZCard>
+				<ZText>继承outlined Card</ZText>
+			</ZCard>
 		</ZStack>
 		<ZDataTable caption="Provider默认值服务清单" {columns} {rows} rowKey={(row) => row.id} />
 		<ZPagination aria-label="Provider默认简单分页" page={2} totalPages={5} />

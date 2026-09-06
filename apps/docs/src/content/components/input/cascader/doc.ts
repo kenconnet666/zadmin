@@ -1,3 +1,5 @@
+import SizingDemo from './SizingDemo.svelte';
+import sizingSource from './SizingDemo.svelte?raw';
 import { cascaderMetadata } from '@zadmin/zui/metadata';
 import { cascaderApiFacts } from '../../../../framework/component-api.generated.js';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
@@ -90,6 +92,15 @@ export const cascaderDoc = defineComponentDoc(cascaderMetadata, {
 			'生产级单路径Cascader：LogicalTree只拥有层级，每列各自拥有Collection导航与DOM active，根统一管理路径、loaded search、lazy请求、Popover和FormValue。'
 	},
 	demos: [
+		{
+			component: SizingDemo,
+			covers: ['composition', 'variants-and-states'],
+			description:
+				'五档尺寸按组件用途同步文字、留白和内部控件；Field/Form 显式尺寸优先于 Provider density。',
+			id: 'cascader-sizing',
+			source: sizingSource,
+			title: '五档尺寸与组合比例'
+		},
 		{
 			component: FormDemo,
 			covers: ['focus', 'form-data', 'form-reset', 'keyboard', 'uncontrolled'],

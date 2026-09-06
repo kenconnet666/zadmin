@@ -165,7 +165,7 @@ describe('ZUI foundational components', () => {
 
 	it('renders an accessible native button with loading state', () => {
 		const result = render(ZButton, {
-			props: { loading: true, loadingLabel: 'Saving', variant: 'primary' }
+			props: { loading: true, loadingLabel: 'Saving', variant: 'solid' }
 		});
 
 		expect(result.body).toContain('<button');
@@ -815,7 +815,7 @@ describe('ZUI foundational components', () => {
 		expect(body).toMatch(/data-testid="default-input"[^>]+data-size="large"/u);
 		expect(body).toMatch(/data-testid="explicit-input"[^>]+data-size="small"/u);
 		expect(body).toMatch(/data-testid="local-input"[^>]+data-size="small"/u);
-		expect(body).toMatch(/data-testid="default-tag"[^>]+data-size="small"[^>]+data-tone="accent"/u);
+		expect(body).toMatch(/data-testid="default-tag"[^>]+data-size="small"[^>]+data-tone="info"/u);
 		expect(body).toMatch(/data-testid="default-card"[^>]+data-variant="outlined"/u);
 		expect(body).toMatch(/data-testid="default-pagination"[^>]+data-mode="simple"/u);
 	});

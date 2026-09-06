@@ -1,3 +1,5 @@
+import SizingDemo from './SizingDemo.svelte';
+import sizingSource from './SizingDemo.svelte?raw';
 import { formFieldMetadata, formMetadata } from '@zadmin/zui/metadata';
 import BusyDemo from './BusyDemo.svelte';
 import busySource from './BusyDemo.svelte?raw';
@@ -37,6 +39,15 @@ export const formDoc = defineComponentDoc(formMetadata, {
 			'ZForm拥有提交、reset和验证生命周期；ZFormField只拥有字段路径注册与状态投射，真实control仍由调用方放入Field。以原生FormData为值事实、Standard Schema为typed输出边界，并用FieldPath图拥有依赖验证、消息状态、竞态和首错导航。'
 	},
 	demos: [
+		{
+			component: SizingDemo,
+			covers: ['composition', 'variants-and-states'],
+			description:
+				'五档尺寸按组件用途同步文字、留白和内部控件；Field/Form 显式尺寸优先于 Provider density。',
+			id: 'form-sizing',
+			source: sizingSource,
+			title: '五档尺寸与组合比例'
+		},
 		{
 			covers: ['controlled', 'focus', 'invalid', 'resource-cleanup'],
 			component: FormDemo,

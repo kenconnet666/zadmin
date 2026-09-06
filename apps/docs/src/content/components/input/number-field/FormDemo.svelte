@@ -29,7 +29,7 @@
 		</ZField>
 		<ZStack direction="row" gap="small" wrap>
 			<ZButton type="submit">提交数值</ZButton>
-			<ZButton type="reset" variant="secondary">重置</ZButton>
+			<ZButton type="reset" variant="outline">重置</ZButton>
 		</ZStack>
 		<ZText tone="muted">value = {value ?? 'empty'}</ZText>
 		<ZText tone="muted" size="small"

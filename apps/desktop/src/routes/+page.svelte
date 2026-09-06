@@ -197,7 +197,7 @@
 		data-desktop-evidence="ZStack"
 	>
 		<ZStack gap="small">
-			<ZText as="strong" size="xlarge" data-desktop-component="ZText" data-desktop-evidence="ZText"
+			<ZText as="strong" size="xxlarge" data-desktop-component="ZText" data-desktop-evidence="ZText"
 				>Windows WebView2 capability lab</ZText
 			>
 			<ZText tone="muted">
@@ -232,7 +232,7 @@
 		<ZProvider motion="reduced">
 			<ZBox class={panelClass} data-desktop-evidence="ZTooltip-background-sibling">
 				<ZText as="strong">Tooltip desktop contract</ZText>
-				<ZTooltip delay={0} closeDelay={0}>
+				<ZTooltip openDelay={0} closeDelay={0}>
 					<ZTooltipTrigger
 						data-desktop-component="ZTooltipTrigger"
 						data-desktop-evidence="ZTooltipTrigger-settings">Focus for help</ZTooltipTrigger
@@ -256,11 +256,11 @@
 					data-desktop-evidence-runs={componentEvidenceRuns}
 					onclick={recordComponentEvidence}>Verify component</ZButton
 				>
-				<ZButton variant="secondary" onclick={runtimeReport}>Runtime report</ZButton>
-				<ZButton variant="secondary" onclick={typedErrorProbe}>Native guard error</ZButton>
-				<ZButton variant="secondary" onclick={storeProbe}>Store roundtrip</ZButton>
-				<ZButton variant="secondary" onclick={logProbe}>Write log</ZButton>
-				<ZButton variant="secondary" onclick={windowStateProbe}>Save window state</ZButton>
+				<ZButton variant="outline" onclick={runtimeReport}>Runtime report</ZButton>
+				<ZButton variant="outline" onclick={typedErrorProbe}>Native guard error</ZButton>
+				<ZButton variant="outline" onclick={storeProbe}>Store roundtrip</ZButton>
+				<ZButton variant="outline" onclick={logProbe}>Write log</ZButton>
+				<ZButton variant="outline" onclick={windowStateProbe}>Save window state</ZButton>
 			</ZStack>
 		</ZStack>
 
@@ -525,7 +525,7 @@
 						status = selectedPath ? `Selected: ${selectedPath}` : 'Selection cancelled.';
 					}}
 				/>
-				<ZButton variant="secondary" onclick={fileReadProbe}>Read selected text</ZButton>
+				<ZButton variant="outline" onclick={fileReadProbe}>Read selected text</ZButton>
 				<ClipboardButton
 					mode="read"
 					label="Read clipboard"

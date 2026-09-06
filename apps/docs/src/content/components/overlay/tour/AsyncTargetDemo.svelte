@@ -42,9 +42,9 @@
 	<ZStack direction="row" gap="medium" wrap>
 		<ZButton onclick={start}>模拟异步挂载</ZButton>
 		{#if showLazyTarget}
-			<ZButton id="docs-tour-lazy-target" variant="secondary">异步目标已就绪</ZButton>
+			<ZButton id="docs-tour-lazy-target" variant="outline">异步目标已就绪</ZButton>
 		{/if}
-		<ZButton id="docs-tour-ready-target" variant="secondary">稳定目标</ZButton>
+		<ZButton id="docs-tour-ready-target" variant="outline">稳定目标</ZButton>
 	</ZStack>
 	<ZText tone="muted">onTargetMissing 调用次数：{missingCount}</ZText>
 </ZStack>

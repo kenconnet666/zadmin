@@ -17,7 +17,7 @@
 			<ZButton
 				aria-pressed={motion === choice.value}
 				size="small"
-				variant={motion === choice.value ? 'primary' : 'secondary'}
+				variant={motion === choice.value ? 'solid' : 'outline'}
 				onclick={() => (motion = choice.value)}>{choice.label}</ZButton
 			>
 		{/each}

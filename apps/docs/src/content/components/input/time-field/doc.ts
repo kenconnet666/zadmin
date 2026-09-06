@@ -1,3 +1,5 @@
+import SizingDemo from './SizingDemo.svelte';
+import sizingSource from './SizingDemo.svelte?raw';
 import { timeFieldMetadata } from '@zadmin/zui/metadata';
 import { timeFieldApiFacts } from '../../../../framework/component-api.generated.js';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
@@ -56,6 +58,15 @@ export const timeFieldDoc = defineComponentDoc(timeFieldMetadata, {
 			'本地化Time分段字段：Intl顺序、12/24小时、minute/second granularity与step、nullable owner、不可用值、Field/FormValueBridge/reset和复合bare外观。'
 	},
 	demos: [
+		{
+			component: SizingDemo,
+			covers: ['composition', 'variants-and-states'],
+			description:
+				'五档尺寸按组件用途同步文字、留白和内部控件；Field/Form 显式尺寸优先于 Provider density。',
+			id: 'time-field-sizing',
+			source: sizingSource,
+			title: '五档尺寸与组合比例'
+		},
 		{
 			component: FormDemo,
 			covers: ['basic-render', 'form-data', 'form-reset', 'keyboard', 'uncontrolled'],

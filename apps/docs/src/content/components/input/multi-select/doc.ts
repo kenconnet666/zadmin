@@ -1,3 +1,5 @@
+import SizingDemo from './SizingDemo.svelte';
+import sizingSource from './SizingDemo.svelte?raw';
 import {
 	multiSelectContentMetadata,
 	multiSelectItemMetadata,
@@ -48,6 +50,15 @@ export const multiSelectDoc = defineComponentDoc(multiSelectMetadata, {
 			'生产多选集合：value统一数组主值命名，LogicalCollection拥有完整typed-key顺序，SelectionModel拥有toggle，ActiveDescendant拥有容器焦点，ZTag、Popover、VirtualList与FormValueBridge分别承接摘要、浮层、大数据窗口和提交。'
 	},
 	demos: [
+		{
+			component: SizingDemo,
+			covers: ['composition', 'variants-and-states'],
+			description:
+				'五档尺寸按组件用途同步文字、留白和内部控件；Field/Form 显式尺寸优先于 Provider density。',
+			id: 'multi-select-sizing',
+			source: sizingSource,
+			title: '五档尺寸与组合比例'
+		},
 		{
 			component: FormDemo,
 			covers: ['form-data', 'form-reset', 'keyboard', 'uncontrolled'],

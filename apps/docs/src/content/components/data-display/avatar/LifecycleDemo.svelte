@@ -10,7 +10,7 @@
 	let shape = $state<AvatarShape>('circle');
 	let size = $state<AvatarSize>('large');
 	const shapes: readonly AvatarShape[] = ['circle', 'rounded', 'square'];
-	const sizes: readonly AvatarSize[] = ['large', 'medium', 'small'];
+	const sizes: readonly AvatarSize[] = ['xsmall', 'small', 'medium', 'large', 'xlarge'];
 
 	function cycle<T>(values: readonly T[], current: T): T {
 		return values[(values.indexOf(current) + 1) % values.length]!;
@@ -30,12 +30,12 @@
 			{src}
 		/>
 		<ZButton onclick={() => (src = validSource)}>加载有效图片</ZButton>
-		<ZButton onclick={() => (src = brokenSource)} variant="secondary">切换失败图片</ZButton>
+		<ZButton onclick={() => (src = brokenSource)} variant="outline">切换失败图片</ZButton>
 		<ZButton onclick={() => (src = '')} variant="ghost">移除图片源</ZButton>
-		<ZButton onclick={() => (shape = cycle(shapes, shape))} variant="secondary">
+		<ZButton onclick={() => (shape = cycle(shapes, shape))} variant="outline">
 			shape（{shape}）
 		</ZButton>
-		<ZButton onclick={() => (size = cycle(sizes, size))} variant="secondary">
+		<ZButton onclick={() => (size = cycle(sizes, size))} variant="outline">
 			size（{size}）
 		</ZButton>
 	</ZStack>

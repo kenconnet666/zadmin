@@ -1,3 +1,5 @@
+import ControlSizesDemo from './ControlSizesDemo.svelte';
+import controlSizesSource from './ControlSizesDemo.svelte?raw';
 import { treeMetadata } from '@zadmin/zui/metadata';
 import ControllerDemo from './ControllerDemo.svelte';
 import controllerSource from './ControllerDemo.svelte?raw';
@@ -38,7 +40,10 @@ export const treeDoc = defineComponentDoc(treeMetadata, {
 				default: 'node.label',
 				description: 'typed节点正文；不能接管treeitem角色、ID或键盘。'
 			},
-			itemSize: { default: '36', description: 'virtualized固定行高px。' },
+			itemSize: {
+				default: 'resolved size height',
+				description: 'virtualized固定行高px；省略时由当前size主题高度解析，显式值优先。'
+			},
 			onLoadChildren: {
 				default: '—',
 				description: '展开lazy branch时调用；signal在节点删除或卸载时abort。'
@@ -66,6 +71,14 @@ export const treeDoc = defineComponentDoc(treeMetadata, {
 			'LogicalTree只规范完整typed层级；SelectionModel、CollectionNavigation、ActiveDescendant、lazy coordinator和ZVirtualList分别拥有选择、active、DOM、请求与窗口。'
 	},
 	demos: [
+		{
+			component: ControlSizesDemo,
+			covers: ['variants-and-states', 'composition'],
+			description: '五档尺寸直接消费主题 token；组合部件继承有视觉意义的尺寸 owner。',
+			id: 'tree-control-sizes',
+			source: controlSizesSource,
+			title: '五档尺寸与主题比例'
+		},
 		{
 			covers: ['controlled', 'form-data', 'form-reset', 'keyboard', 'uncontrolled'],
 			component: InteractiveDemo,

@@ -10,9 +10,9 @@ describe('ZButton and ZToggleButton production browser contract', () => {
 	it('renders distinct default-shape size geometry and typography', () => {
 		render(ButtonToggleProductionFixture);
 		for (const [size, expectedHeight, expectedFontSize] of [
-			['small', 24, 12],
+			['small', 28, 12],
 			['medium', 32, 14],
-			['large', 48, 18]
+			['large', 40, 16]
 		] as const) {
 			const button = document.querySelector<HTMLButtonElement>(
 				`[data-testid="button-size-${size}"]`
@@ -34,9 +34,9 @@ describe('ZButton and ZToggleButton production browser contract', () => {
 		)!;
 		const circle = document.querySelector<HTMLButtonElement>('[data-testid="button-circle"]')!;
 		expect(primary.type).toBe('button');
-		expect(primary.dataset.variant).toBe('primary');
-		expect(primary.dataset.tone).toBe('default');
-		expect(danger.dataset.variant).toBe('secondary');
+		expect(primary.dataset.variant).toBe('solid');
+		expect(primary.dataset.tone).toBe('primary');
+		expect(danger.dataset.variant).toBe('outline');
 		expect(danger.dataset.tone).toBe('danger');
 		expect(circle.dataset.shape).toBe('circle');
 		expect(circle.getAttribute('aria-label')).toBe('Favorite');

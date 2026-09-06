@@ -34,9 +34,9 @@
 	<ZStack gap="medium">
 		<ZFileUpload bind:files />
 		<ZStack direction="row" gap="small">
-			<ZButton onclick={() => replace('queued')} variant="secondary">替换为 Queued</ZButton>
-			<ZButton onclick={() => replace('error')} variant="secondary">替换为 Error</ZButton>
-			<ZButton onclick={() => replace('success')} variant="secondary">替换为 Success</ZButton>
+			<ZButton onclick={() => replace('queued')} variant="outline">替换为 Queued</ZButton>
+			<ZButton onclick={() => replace('error')} variant="outline">替换为 Error</ZButton>
+			<ZButton onclick={() => replace('success')} variant="outline">替换为 Success</ZButton>
 			<ZButton onclick={() => (files = [])} variant="ghost">外部清空</ZButton>
 		</ZStack>
 		<ZText tone="muted">Owner 队列：{files.map((item) => item.id).join(', ') || '空'}</ZText>

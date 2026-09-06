@@ -3,10 +3,17 @@
 </script>
 
 <ZStack direction="row" gap="xlarge" wrap>
-	<ZStatistic label="转化率" value={18.2} precision={1} trend={2.7}>
+	<ZStatistic label="转化率" value={18.2} precision={1} trend={2.7} trendTone="success">
 		{#snippet suffix()}%{/snippet}
 	</ZStatistic>
-	<ZStatistic label="错误率" value={0.42} precision={2} trend={-18.25} tone="danger">
+	<ZStatistic
+		label="错误率"
+		value={0.42}
+		precision={2}
+		trend={-18.25}
+		trendTone="success"
+		tone="neutral"
+	>
 		{#snippet suffix()}%{/snippet}
 	</ZStatistic>
 	<ZStatistic

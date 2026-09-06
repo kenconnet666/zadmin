@@ -1,3 +1,5 @@
+import SizingDemo from './SizingDemo.svelte';
+import sizingSource from './SizingDemo.svelte?raw';
 import { radioGroupItemMetadata, radioGroupMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import formSource from './FormDemo.svelte?raw';
@@ -53,6 +55,15 @@ export const radioGroupDoc = defineComponentDoc(radioGroupMetadata, {
 			'真实radio承担FormData/required，LogicalCollection、SelectionModel与MountedElements分别承担typed选项、选择和roving焦点。'
 	},
 	demos: [
+		{
+			component: SizingDemo,
+			covers: ['composition', 'variants-and-states'],
+			description:
+				'五档尺寸按组件用途同步文字、留白和内部控件；Field/Form 显式尺寸优先于 Provider density。',
+			id: 'radio-group-sizing',
+			source: sizingSource,
+			title: '五档尺寸与组合比例'
+		},
 		{
 			covers: ['controlled', 'form-data', 'native-props'],
 			component: OptionsDemo,

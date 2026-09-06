@@ -2,6 +2,12 @@
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import type { SelectionKey } from '../../runtime/collection/selection.js';
+	import {
+		controlSizeStyles,
+		controlSizeMetrics,
+		resolveControlSize,
+		type ZControlSize
+	} from '../../runtime/foundation/control-size.js';
 
 	export interface CommandItem {
 		readonly description?: string;
@@ -43,6 +49,7 @@
 		ref?: HTMLDivElement | null;
 		readonly resultsLabel?: (count: number) => string;
 		readonly shouldFilter?: boolean;
+		readonly size?: ZControlSize;
 	}
 
 	export const zuiMetadata = {
@@ -82,6 +89,12 @@
 			{ description: '命令option。', name: 'item' }
 		],
 		props: [
+			{
+				name: 'size',
+				type: 'ZControlSize',
+				default: 'Provider density',
+				description: '查询输入与命令行的五档高度、字号和间距。'
+			},
 			{
 				default: 'false',
 				description: '挂载后将焦点交给查询输入框；调用方仍可通过inputRef接管焦点。',
@@ -161,6 +174,11 @@
 		snippets: [],
 		source: 'ui/zui/src/components/navigation/ZCommand.svelte',
 		states: [
+			{
+				name: 'data-size',
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge'],
+				description: '解析后的五档控件尺寸。'
+			},
 			{ description: '当前active option。', name: 'data-active', values: ['true'] },
 			{ description: '禁用option。', name: 'data-disabled', values: ['true'] }
 		],
@@ -218,7 +236,9 @@
 			s.borderTopStyle.none;
 			s.color._text;
 			s.fontSize._medium;
-			s.padding._large;
+			s.paddingBlock.px(0);
+			s.boxSizing.borderBox;
+			s.lineHeight(1);
 			s.width._full;
 			s._selector('&::placeholder', (placeholder) => placeholder.color._textMuted);
 			s._focusVisible((focus) => {
@@ -228,7 +248,7 @@
 				focus.outlineWidth._medium;
 			});
 		},
-		variants: {},
+		variants: { size: controlSizeStyles },
 		defaultVariants: {}
 	});
 	const listRecipe = defineRecipe({
@@ -262,12 +282,15 @@
 			s.display.flex;
 			s.gap._medium;
 			s.justifyContent.spaceBetween;
-			s.paddingBlock._small;
+			s.paddingBlock.px(0);
+			s.lineHeight._compact;
+			s.overflowWrap.anywhere;
 			s.paddingInline._medium;
 			s.userSelect.none;
 		},
 		variants: {
-			active: { false: () => undefined, true: (s) => s.backgroundColor._surface },
+			size: controlSizeStyles,
+			active: { false: () => undefined, true: (s) => s.backgroundColor._surfaceHover },
 			dimmed: { false: () => undefined, true: (s) => s.opacity._disabled },
 			disabled: {
 				false: () => undefined,
@@ -336,10 +359,29 @@
 		ref = $bindable(null),
 		resultsLabel,
 		shouldFilter = true,
+		size,
 		style,
 		...rest
 	}: ZCommandProps = $props();
 	const zui = useZui();
+	const resolvedSize = $derived(resolveControlSize(size, zui.density));
+	const captionMetrics = $derived(
+		controlSizeMetrics(
+			zui.theme,
+			resolvedSize === 'xsmall' || resolvedSize === 'small'
+				? 'xsmall'
+				: resolvedSize === 'medium'
+					? 'small'
+					: 'medium'
+		)
+	);
+	const captionClass = $derived(zui.icss((s) => s.fontSize.raw(captionMetrics.fontSize)));
+	const labelClass = $derived(
+		zui.icss((s) => {
+			s.minWidth.px(0);
+			s.overflowWrap.anywhere;
+		})
+	);
 	const resolvedEmptyText = $derived(emptyText ?? zui.localePack.command.empty);
 	const resolvedInputLabel = $derived(inputLabel ?? zui.localePack.command.inputLabel);
 	const resolvedListLabel = $derived(listLabel ?? zui.localePack.command.listLabel);
@@ -432,7 +474,7 @@
 		};
 	}
 	const rootClass = $derived(zui.recipe(rootRecipe, { disabled }));
-	const inputClass = $derived(zui.recipe(inputRecipe));
+	const inputClass = $derived(zui.recipe(inputRecipe, { size: resolvedSize }));
 	const listClass = $derived(zui.recipe(listRecipe));
 	const groupLabelClass = $derived(zui.recipe(groupLabelRecipe));
 	const descriptionClass = $derived(zui.recipe(descriptionRecipe));
@@ -492,6 +534,7 @@
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
 	aria-disabled={disabled || undefined}
+	data-size={resolvedSize}
 >
 	<input
 		bind:this={inputRef}
@@ -545,6 +588,7 @@
 						use:mountOption={{ id: optionId, key: record.key }}
 						id={optionId}
 						class={zui.recipe(itemRecipe, {
+							size: resolvedSize,
 							active: Object.is(activeKey, record.key),
 							dimmed: !disabled && Boolean(record.disabled),
 							disabled: Boolean(disabled || record.disabled)
@@ -568,11 +612,14 @@
 							}
 						}}
 					>
-						<div>
+						<div class={labelClass}>
 							<div>{item.label}</div>
-							{#if item.description}<div class={descriptionClass}>{item.description}</div>{/if}
+							{#if item.description}<div class={[descriptionClass, captionClass]}>
+									{item.description}
+								</div>{/if}
 						</div>
-						{#if item.shortcut}<span class={shortcutClass}>{item.shortcut}</span>{/if}
+						{#if item.shortcut}<span class={[shortcutClass, captionClass]}>{item.shortcut}</span
+							>{/if}
 					</div>
 				{/each}
 			</div>

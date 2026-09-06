@@ -15,7 +15,7 @@
 </script>
 
 <ZDropdownMenu>
-	<ZDropdownMenuTrigger variant="secondary">视图</ZDropdownMenuTrigger>
+	<ZDropdownMenuTrigger variant="outline">视图</ZDropdownMenuTrigger>
 	<ZDropdownMenuContent>
 		<ZMenuLabel>面板</ZMenuLabel>
 		<ZMenuCheckboxItem bind:checked={sidebar} value="sidebar">侧栏</ZMenuCheckboxItem>

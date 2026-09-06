@@ -39,11 +39,11 @@
 
 <ZProvider direction="rtl" {localePack}>
 	<ZStack gap="medium">
-		<ZButton class="docs-tour-scoped-target" variant="secondary">作用域外同名目标</ZButton>
+		<ZButton class="docs-tour-scoped-target" variant="outline">作用域外同名目标</ZButton>
 		<div bind:this={targetRoot}>
 			<ZStack direction="row" gap="medium" wrap>
 				<ZButton onclick={() => (open = true)}>开始作用域导览</ZButton>
-				<ZButton class="docs-tour-scoped-target" variant="secondary">作用域内真实目标</ZButton>
+				<ZButton class="docs-tour-scoped-target" variant="outline">作用域内真实目标</ZButton>
 			</ZStack>
 		</div>
 		<ZText tone="muted">此示例同时验证 RTL、嵌套 locale pack 和显式关闭自动滚动。</ZText>

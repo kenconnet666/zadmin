@@ -11,7 +11,10 @@
 	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
 	import type { PopoverPlacement } from '../compound/popover/ZPopover.svelte';
 
-	export interface ZDateRangePickerProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onchange'> {
+	export interface ZDateRangePickerProps extends Omit<
+		HTMLAttributes<HTMLDivElement>,
+		'children' | 'onchange'
+	> {
 		readonly calendarLabel?: string;
 		readonly clearLabel?: string;
 		readonly clearable?: boolean;
@@ -250,7 +253,7 @@
 				default: 'Field size或Provider density',
 				description: '统一两个DateField和Lucide actions尺寸。',
 				name: 'size',
-				type: "'small' | 'medium' | 'large'"
+				type: "'xsmall' | 'small' | 'medium' | 'large' | 'xlarge'"
 			},
 			{
 				default: 'Provider localePack.date.startDate',
@@ -292,7 +295,7 @@
 		type CalendarRangeValue
 	} from '../../runtime/date.js';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
-	import { resolveControlSize } from '../../runtime/foundation/control-size.js';
+	import { controlSizeMetrics, resolveControlSize } from '../../runtime/foundation/control-size.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import { claimZFieldControlOwner } from '../../runtime/form/field-context.js';
@@ -363,6 +366,14 @@
 	const resolvedRequired = $derived(requiredProp || (field?.required ?? false));
 	const resolvedName = $derived(nameProp ?? field?.name);
 	const resolvedSize = $derived(resolveControlSize(size ?? field?.size, zui.density));
+	const geometryClass = $derived(
+		zui.icss((s) => {
+			s._selector('& > [data-slot="range-inputs"]', (s) => s.flexWrap.wrap);
+			s._selector('& > [data-slot="range-inputs"] > [data-slot="suffix-action"] > button', (s) =>
+				s.minHeight.raw(controlSizeMetrics(zui.theme, resolvedSize).contentHeight)
+			);
+		})
+	);
 	const describedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
 	const labelledBy = $derived(mergeAriaIds(ariaLabelledBy, field?.labelId));
 	let calendarRef = $state<HTMLDivElement | null>(null);
@@ -465,7 +476,7 @@
 			size={resolvedSize}
 			variant="ghost"
 		>
-			<CalendarRangeIcon aria-hidden="true" size={16} />
+			<CalendarRangeIcon aria-hidden="true" size="1em" />
 		</ZPopoverTrigger>
 		<ZPopoverContent
 			aria-label={resolvedCalendarLabel}
@@ -504,7 +515,7 @@
 			size={resolvedSize}
 			variant="ghost"
 		>
-			<X aria-hidden="true" size={16} />
+			<X aria-hidden="true" size="1em" />
 		</ZButton>
 	{/if}
 {/snippet}
@@ -512,7 +523,7 @@
 <div
 	{...rest}
 	bind:this={ref}
-	class={[rootClass, className]}
+	class={[rootClass, geometryClass, className]}
 	role="group"
 	aria-label={labelledBy ? undefined : (ariaLabel ?? resolvedCalendarLabel)}
 	aria-labelledby={labelledBy}

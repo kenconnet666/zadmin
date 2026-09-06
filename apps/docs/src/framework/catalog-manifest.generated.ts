@@ -924,6 +924,8 @@ export const componentCatalogManifest = Object.freeze([
 		keywords: [],
 		profiles: ['form-control'],
 		capabilities: [
+			'composition',
+			'variants-and-states',
 			'controlled',
 			'form-data',
 			'form-reset',
@@ -932,12 +934,11 @@ export const componentCatalogManifest = Object.freeze([
 			'disabled',
 			'invalid',
 			'native-props',
-			'variants-and-states',
 			'focus',
 			'keyboard',
 			'readonly'
 		],
-		demoCount: 3,
+		demoCount: 4,
 		publicComponentCount: 1
 	},
 	{
@@ -950,6 +951,8 @@ export const componentCatalogManifest = Object.freeze([
 		keywords: ['calendar', 'grid', 'focused value', 'calendar date', 'range', 'rtl'],
 		profiles: ['form-control', 'collection'],
 		capabilities: [
+			'composition',
+			'variants-and-states',
 			'basic-render',
 			'form-data',
 			'form-reset',
@@ -958,16 +961,14 @@ export const componentCatalogManifest = Object.freeze([
 			'disabled',
 			'focus',
 			'invalid',
-			'variants-and-states',
 			'accessible-name',
 			'locale',
 			'ssr',
 			'controlled',
 			'external-clear',
-			'composition',
 			'readonly'
 		],
-		demoCount: 5,
+		demoCount: 6,
 		publicComponentCount: 1
 	},
 	{
@@ -989,6 +990,8 @@ export const componentCatalogManifest = Object.freeze([
 		],
 		profiles: ['collection', 'form-control', 'layer', 'virtualized'],
 		capabilities: [
+			'composition',
+			'variants-and-states',
 			'focus',
 			'form-data',
 			'form-reset',
@@ -997,7 +1000,6 @@ export const componentCatalogManifest = Object.freeze([
 			'controlled',
 			'external-clear',
 			'locale',
-			'variants-and-states',
 			'loading',
 			'resource-cleanup',
 			'ssr',
@@ -1006,7 +1008,7 @@ export const componentCatalogManifest = Object.freeze([
 			'readonly',
 			'rtl'
 		],
-		demoCount: 6,
+		demoCount: 7,
 		publicComponentCount: 1
 	},
 	{
@@ -1028,6 +1030,8 @@ export const componentCatalogManifest = Object.freeze([
 		],
 		profiles: ['form-control', 'layer'],
 		capabilities: [
+			'composition',
+			'variants-and-states',
 			'controlled',
 			'form-data',
 			'form-reset',
@@ -1035,13 +1039,12 @@ export const componentCatalogManifest = Object.freeze([
 			'locale',
 			'external-clear',
 			'focus',
-			'variants-and-states',
 			'disabled',
 			'invalid',
 			'readonly',
 			'native-props'
 		],
-		demoCount: 5,
+		demoCount: 6,
 		publicComponentCount: 1
 	},
 	{
@@ -1096,6 +1099,8 @@ export const componentCatalogManifest = Object.freeze([
 		keywords: ['date field', 'segments', 'calendar date', 'locale', 'form', 'nullable'],
 		profiles: ['form-control'],
 		capabilities: [
+			'composition',
+			'variants-and-states',
 			'basic-render',
 			'form-data',
 			'form-reset',
@@ -1108,13 +1113,11 @@ export const componentCatalogManifest = Object.freeze([
 			'rtl',
 			'focus',
 			'invalid',
-			'variants-and-states',
 			'controlled',
 			'external-clear',
-			'composition',
 			'native-props'
 		],
-		demoCount: 5,
+		demoCount: 6,
 		publicComponentCount: 1
 	},
 	{
@@ -1127,6 +1130,8 @@ export const componentCatalogManifest = Object.freeze([
 		keywords: ['date picker', 'date field', 'calendar', 'popover', 'controlled', 'form'],
 		profiles: ['form-control', 'layer'],
 		capabilities: [
+			'composition',
+			'variants-and-states',
 			'basic-render',
 			'form-data',
 			'form-reset',
@@ -1135,7 +1140,6 @@ export const componentCatalogManifest = Object.freeze([
 			'disabled',
 			'invalid',
 			'readonly',
-			'variants-and-states',
 			'controlled',
 			'external-clear',
 			'portal',
@@ -1144,11 +1148,10 @@ export const componentCatalogManifest = Object.freeze([
 			'locale',
 			'rtl',
 			'ssr',
-			'composition',
 			'focus',
 			'native-props'
 		],
-		demoCount: 5,
+		demoCount: 6,
 		publicComponentCount: 1
 	},
 	{
@@ -1161,6 +1164,8 @@ export const componentCatalogManifest = Object.freeze([
 		keywords: ['date range picker', 'partial range', 'calendar range', 'popover', 'rtl', 'form'],
 		profiles: ['form-control', 'layer'],
 		capabilities: [
+			'composition',
+			'variants-and-states',
 			'basic-render',
 			'form-data',
 			'form-reset',
@@ -1169,10 +1174,8 @@ export const componentCatalogManifest = Object.freeze([
 			'disabled',
 			'invalid',
 			'readonly',
-			'variants-and-states',
 			'controlled',
 			'external-clear',
-			'composition',
 			'focus',
 			'native-props',
 			'accessible-name',
@@ -1182,7 +1185,7 @@ export const componentCatalogManifest = Object.freeze([
 			'rtl',
 			'ssr'
 		],
-		demoCount: 5,
+		demoCount: 6,
 		publicComponentCount: 1
 	},
 	{
@@ -1195,19 +1198,20 @@ export const componentCatalogManifest = Object.freeze([
 		keywords: [],
 		profiles: ['form-control'],
 		capabilities: [
+			'composition',
+			'variants-and-states',
 			'controlled',
 			'uncontrolled',
 			'density',
 			'disabled',
 			'native-props',
-			'variants-and-states',
 			'form-data',
 			'form-reset',
 			'focus',
 			'invalid',
 			'readonly'
 		],
-		demoCount: 4,
+		demoCount: 5,
 		publicComponentCount: 1
 	},
 	{
@@ -1230,19 +1234,19 @@ export const componentCatalogManifest = Object.freeze([
 		],
 		profiles: ['form-control'],
 		capabilities: [
+			'composition',
+			'variants-and-states',
 			'accessible-name',
 			'form-data',
 			'form-reset',
 			'native-props',
-			'composition',
 			'disabled',
-			'variants-and-states',
 			'focus',
 			'invalid',
 			'rtl',
 			'readonly'
 		],
-		demoCount: 6,
+		demoCount: 7,
 		publicComponentCount: 1
 	},
 	{
@@ -1264,14 +1268,14 @@ export const componentCatalogManifest = Object.freeze([
 		],
 		profiles: ['collection', 'form-control', 'layer', 'virtualized'],
 		capabilities: [
+			'composition',
+			'variants-and-states',
 			'focus',
 			'form-data',
 			'form-reset',
 			'keyboard',
 			'uncontrolled',
-			'composition',
 			'locale',
-			'variants-and-states',
 			'controlled',
 			'disabled',
 			'external-clear',
@@ -1280,7 +1284,7 @@ export const componentCatalogManifest = Object.freeze([
 			'resource-cleanup',
 			'ssr'
 		],
-		demoCount: 5,
+		demoCount: 6,
 		publicComponentCount: 1
 	},
 	{
@@ -1304,14 +1308,14 @@ export const componentCatalogManifest = Object.freeze([
 		],
 		profiles: ['form-control', 'collection', 'layer', 'virtualized'],
 		capabilities: [
+			'composition',
+			'variants-and-states',
 			'form-data',
 			'form-reset',
 			'keyboard',
 			'uncontrolled',
-			'composition',
 			'controlled',
 			'disabled',
-			'variants-and-states',
 			'loading',
 			'locale',
 			'portal',
@@ -1321,7 +1325,7 @@ export const componentCatalogManifest = Object.freeze([
 			'accessible-name',
 			'readonly'
 		],
-		demoCount: 5,
+		demoCount: 6,
 		publicComponentCount: 4
 	},
 	{
@@ -1343,6 +1347,8 @@ export const componentCatalogManifest = Object.freeze([
 		],
 		profiles: ['form-control', 'animated'],
 		capabilities: [
+			'composition',
+			'variants-and-states',
 			'accessible-name',
 			'basic-render',
 			'focus',
@@ -1354,13 +1360,12 @@ export const componentCatalogManifest = Object.freeze([
 			'disabled',
 			'invalid',
 			'readonly',
-			'variants-and-states',
 			'controlled',
 			'external-clear',
 			'density',
 			'native-props'
 		],
-		demoCount: 5,
+		demoCount: 6,
 		publicComponentCount: 1
 	},
 	{
@@ -1383,20 +1388,20 @@ export const componentCatalogManifest = Object.freeze([
 		],
 		profiles: ['form-control'],
 		capabilities: [
+			'composition',
+			'variants-and-states',
 			'accessible-name',
 			'form-data',
 			'form-reset',
 			'keyboard',
 			'disabled',
 			'native-props',
-			'variants-and-states',
 			'controlled',
 			'external-clear',
-			'composition',
 			'readonly',
 			'rtl'
 		],
-		demoCount: 6,
+		demoCount: 7,
 		publicComponentCount: 1
 	},
 	{
@@ -1408,17 +1413,18 @@ export const componentCatalogManifest = Object.freeze([
 		keywords: [],
 		profiles: ['form-control'],
 		capabilities: [
+			'composition',
+			'variants-and-states',
 			'basic-render',
 			'controlled',
 			'invalid',
 			'disabled',
 			'readonly',
-			'variants-and-states',
 			'accessible-name',
 			'focus',
 			'keyboard'
 		],
-		demoCount: 3,
+		demoCount: 4,
 		publicComponentCount: 1
 	},
 	{
@@ -1442,6 +1448,8 @@ export const componentCatalogManifest = Object.freeze([
 		],
 		profiles: ['form-control', 'animated'],
 		capabilities: [
+			'composition',
+			'variants-and-states',
 			'form-data',
 			'form-reset',
 			'invalid',
@@ -1451,13 +1459,12 @@ export const componentCatalogManifest = Object.freeze([
 			'resource-cleanup',
 			'controlled',
 			'external-clear',
-			'variants-and-states',
 			'disabled',
 			'focus',
 			'readonly',
 			'locale'
 		],
-		demoCount: 6,
+		demoCount: 7,
 		publicComponentCount: 1
 	},
 	{
@@ -1482,6 +1489,8 @@ export const componentCatalogManifest = Object.freeze([
 		],
 		profiles: ['form-control'],
 		capabilities: [
+			'composition',
+			'variants-and-states',
 			'controlled',
 			'focus',
 			'invalid',
@@ -1492,7 +1501,7 @@ export const componentCatalogManifest = Object.freeze([
 			'disabled',
 			'form-reset'
 		],
-		demoCount: 5,
+		demoCount: 6,
 		publicComponentCount: 2
 	},
 	{
@@ -1505,6 +1514,8 @@ export const componentCatalogManifest = Object.freeze([
 		keywords: [],
 		profiles: ['form-control', 'collection'],
 		capabilities: [
+			'composition',
+			'variants-and-states',
 			'controlled',
 			'form-data',
 			'native-props',
@@ -1516,10 +1527,9 @@ export const componentCatalogManifest = Object.freeze([
 			'disabled',
 			'invalid',
 			'rtl',
-			'variants-and-states',
 			'readonly'
 		],
-		demoCount: 5,
+		demoCount: 6,
 		publicComponentCount: 2
 	},
 	{
@@ -1542,13 +1552,13 @@ export const componentCatalogManifest = Object.freeze([
 		],
 		profiles: ['form-control', 'collection', 'layer', 'virtualized'],
 		capabilities: [
+			'composition',
+			'variants-and-states',
 			'form-data',
 			'form-reset',
 			'keyboard',
 			'uncontrolled',
-			'composition',
 			'disabled',
-			'variants-and-states',
 			'controlled',
 			'focus',
 			'resource-cleanup',
@@ -1560,7 +1570,7 @@ export const componentCatalogManifest = Object.freeze([
 			'accessible-name',
 			'rtl'
 		],
-		demoCount: 7,
+		demoCount: 8,
 		publicComponentCount: 4
 	},
 	{
@@ -1600,18 +1610,18 @@ export const componentCatalogManifest = Object.freeze([
 		keywords: [],
 		profiles: ['form-control', 'animated'],
 		capabilities: [
+			'composition',
+			'variants-and-states',
 			'controlled',
 			'uncontrolled',
 			'form-data',
 			'form-reset',
 			'native-props',
-			'composition',
 			'density',
 			'disabled',
 			'invalid',
 			'loading',
 			'readonly',
-			'variants-and-states',
 			'accessible-name',
 			'focus',
 			'full-motion',
@@ -1619,7 +1629,7 @@ export const componentCatalogManifest = Object.freeze([
 			'reduced-motion',
 			'rtl'
 		],
-		demoCount: 4,
+		demoCount: 5,
 		publicComponentCount: 1
 	},
 	{
@@ -1641,6 +1651,8 @@ export const componentCatalogManifest = Object.freeze([
 		],
 		profiles: ['collection', 'data-view', 'form-control'],
 		capabilities: [
+			'composition',
+			'variants-and-states',
 			'form-data',
 			'form-reset',
 			'keyboard',
@@ -1648,7 +1660,6 @@ export const componentCatalogManifest = Object.freeze([
 			'disabled',
 			'invalid',
 			'readonly',
-			'variants-and-states',
 			'controlled',
 			'external-clear',
 			'focus',
@@ -1656,7 +1667,7 @@ export const componentCatalogManifest = Object.freeze([
 			'ssr',
 			'native-props'
 		],
-		demoCount: 6,
+		demoCount: 7,
 		publicComponentCount: 1
 	},
 	{
@@ -1668,12 +1679,13 @@ export const componentCatalogManifest = Object.freeze([
 		keywords: ['textarea', 'autosize', 'minRows', 'maxRows', 'form', 'field', 'IME', 'resize'],
 		profiles: ['form-control'],
 		capabilities: [
+			'composition',
+			'variants-and-states',
 			'controlled',
 			'external-clear',
 			'keyboard',
 			'native-props',
 			'resource-cleanup',
-			'variants-and-states',
 			'disabled',
 			'focus',
 			'invalid',
@@ -1682,7 +1694,7 @@ export const componentCatalogManifest = Object.freeze([
 			'form-reset',
 			'uncontrolled'
 		],
-		demoCount: 4,
+		demoCount: 5,
 		publicComponentCount: 1
 	},
 	{
@@ -1695,6 +1707,8 @@ export const componentCatalogManifest = Object.freeze([
 		keywords: ['time field', 'segments', 'hour cycle', 'granularity', 'step', 'nullable'],
 		profiles: ['form-control'],
 		capabilities: [
+			'composition',
+			'variants-and-states',
 			'basic-render',
 			'form-data',
 			'form-reset',
@@ -1702,7 +1716,6 @@ export const componentCatalogManifest = Object.freeze([
 			'uncontrolled',
 			'disabled',
 			'readonly',
-			'variants-and-states',
 			'accessible-name',
 			'locale',
 			'rtl',
@@ -1712,7 +1725,7 @@ export const componentCatalogManifest = Object.freeze([
 			'invalid',
 			'native-props'
 		],
-		demoCount: 5,
+		demoCount: 6,
 		publicComponentCount: 1
 	},
 	{
@@ -1733,6 +1746,8 @@ export const componentCatalogManifest = Object.freeze([
 		],
 		profiles: ['collection', 'form-control', 'layer', 'virtualized'],
 		capabilities: [
+			'composition',
+			'variants-and-states',
 			'form-data',
 			'form-reset',
 			'uncontrolled',
@@ -1741,13 +1756,12 @@ export const componentCatalogManifest = Object.freeze([
 			'keyboard',
 			'disabled',
 			'readonly',
-			'variants-and-states',
 			'loading',
 			'portal',
 			'resource-cleanup',
 			'ssr'
 		],
-		demoCount: 4,
+		demoCount: 5,
 		publicComponentCount: 1
 	},
 	{
@@ -1770,13 +1784,14 @@ export const componentCatalogManifest = Object.freeze([
 		],
 		profiles: ['form-control', 'collection', 'data-view', 'virtualized'],
 		capabilities: [
+			'composition',
+			'variants-and-states',
 			'form-data',
 			'form-reset',
 			'keyboard',
 			'uncontrolled',
 			'disabled',
 			'readonly',
-			'variants-and-states',
 			'accessible-name',
 			'locale',
 			'rtl',
@@ -1786,7 +1801,7 @@ export const componentCatalogManifest = Object.freeze([
 			'focus',
 			'resource-cleanup'
 		],
-		demoCount: 5,
+		demoCount: 6,
 		publicComponentCount: 1
 	},
 	{
@@ -1798,6 +1813,8 @@ export const componentCatalogManifest = Object.freeze([
 		keywords: [],
 		profiles: ['form-control'],
 		capabilities: [
+			'composition',
+			'variants-and-states',
 			'controlled',
 			'form-data',
 			'form-reset',
@@ -1807,11 +1824,10 @@ export const componentCatalogManifest = Object.freeze([
 			'disabled',
 			'invalid',
 			'native-props',
-			'variants-and-states',
 			'focus',
 			'readonly'
 		],
-		demoCount: 3,
+		demoCount: 4,
 		publicComponentCount: 1
 	},
 	{
@@ -1834,9 +1850,9 @@ export const componentCatalogManifest = Object.freeze([
 		],
 		profiles: ['collection', 'animated'],
 		capabilities: [
-			'basic-render',
-			'composition',
 			'variants-and-states',
+			'composition',
+			'basic-render',
 			'controlled',
 			'focus',
 			'keyboard',
@@ -1849,7 +1865,7 @@ export const componentCatalogManifest = Object.freeze([
 			'full-motion',
 			'reduced-motion'
 		],
-		demoCount: 7,
+		demoCount: 8,
 		publicComponentCount: 4
 	},
 	{
@@ -1862,16 +1878,17 @@ export const componentCatalogManifest = Object.freeze([
 		keywords: ['command', 'ranked filter', 'active descendant', 'keyboard', 'action'],
 		profiles: ['collection'],
 		capabilities: [
+			'variants-and-states',
+			'composition',
 			'controlled',
 			'focus',
 			'keyboard',
 			'locale',
 			'uncontrolled',
-			'variants-and-states',
 			'loading',
 			'resource-cleanup'
 		],
-		demoCount: 3,
+		demoCount: 4,
 		publicComponentCount: 1
 	},
 	{
@@ -1884,17 +1901,17 @@ export const componentCatalogManifest = Object.freeze([
 		keywords: ['command palette', 'dialog', 'shortcut', 'focus trap', 'modal'],
 		profiles: ['collection', 'layer'],
 		capabilities: [
+			'variants-and-states',
+			'composition',
 			'accessible-name',
 			'focus',
 			'keyboard',
 			'portal',
-			'composition',
 			'controlled',
 			'external-clear',
-			'variants-and-states',
 			'resource-cleanup'
 		],
-		demoCount: 5,
+		demoCount: 6,
 		publicComponentCount: 1
 	},
 	{
@@ -1907,20 +1924,21 @@ export const componentCatalogManifest = Object.freeze([
 		keywords: ['context menu', 'right click', 'Shift F10', 'pointer coordinates', 'submenu', 'RTL'],
 		profiles: ['collection', 'layer', 'animated'],
 		capabilities: [
+			'variants-and-states',
+			'composition',
 			'accessible-name',
 			'focus',
 			'full-motion',
 			'keyboard',
 			'portal',
 			'disabled',
-			'variants-and-states',
 			'controlled',
 			'uncontrolled',
 			'resource-cleanup',
 			'reduced-motion',
 			'rtl'
 		],
-		demoCount: 5,
+		demoCount: 6,
 		publicComponentCount: 3
 	},
 	{
@@ -1940,13 +1958,14 @@ export const componentCatalogManifest = Object.freeze([
 		],
 		profiles: ['collection', 'layer', 'animated'],
 		capabilities: [
+			'variants-and-states',
+			'composition',
 			'basic-render',
 			'focus',
 			'full-motion',
 			'keyboard',
 			'portal',
 			'disabled',
-			'variants-and-states',
 			'controlled',
 			'uncontrolled',
 			'resource-cleanup',
@@ -1954,7 +1973,7 @@ export const componentCatalogManifest = Object.freeze([
 			'native-props',
 			'reduced-motion'
 		],
-		demoCount: 5,
+		demoCount: 6,
 		publicComponentCount: 3
 	},
 	{
@@ -1975,21 +1994,21 @@ export const componentCatalogManifest = Object.freeze([
 		],
 		profiles: ['collection'],
 		capabilities: [
+			'variants-and-states',
+			'composition',
 			'accessible-name',
 			'basic-render',
 			'disabled',
 			'keyboard',
-			'variants-and-states',
 			'controlled',
 			'uncontrolled',
 			'focus',
 			'portal',
 			'resource-cleanup',
 			'rtl',
-			'composition',
 			'native-props'
 		],
-		demoCount: 5,
+		demoCount: 6,
 		publicComponentCount: 11
 	},
 	{
@@ -2012,19 +2031,19 @@ export const componentCatalogManifest = Object.freeze([
 		],
 		profiles: ['data-view'],
 		capabilities: [
+			'variants-and-states',
+			'composition',
 			'controlled',
 			'focus',
 			'keyboard',
-			'variants-and-states',
 			'locale',
 			'native-props',
 			'accessible-name',
 			'rtl',
-			'composition',
 			'disabled',
 			'uncontrolled'
 		],
-		demoCount: 5,
+		demoCount: 6,
 		publicComponentCount: 1
 	},
 	{
@@ -2044,22 +2063,22 @@ export const componentCatalogManifest = Object.freeze([
 		],
 		profiles: ['collection'],
 		capabilities: [
+			'variants-and-states',
+			'composition',
 			'basic-render',
 			'controlled',
 			'focus',
 			'keyboard',
 			'uncontrolled',
-			'variants-and-states',
 			'external-clear',
 			'native-props',
 			'resource-cleanup',
-			'composition',
 			'ssr',
 			'accessible-name',
 			'locale',
 			'rtl'
 		],
-		demoCount: 6,
+		demoCount: 7,
 		publicComponentCount: 4
 	},
 	{
@@ -2081,6 +2100,8 @@ export const componentCatalogManifest = Object.freeze([
 		],
 		profiles: ['collection', 'form-control', 'virtualized'],
 		capabilities: [
+			'variants-and-states',
+			'composition',
 			'controlled',
 			'form-data',
 			'form-reset',
@@ -2088,13 +2109,12 @@ export const componentCatalogManifest = Object.freeze([
 			'uncontrolled',
 			'focus',
 			'rtl',
-			'variants-and-states',
 			'loading',
 			'locale',
 			'resource-cleanup',
 			'ssr'
 		],
-		demoCount: 5,
+		demoCount: 6,
 		publicComponentCount: 1
 	},
 	{
@@ -2131,19 +2151,19 @@ export const componentCatalogManifest = Object.freeze([
 		keywords: [],
 		profiles: ['layer', 'animated'],
 		capabilities: [
+			'variants-and-states',
+			'composition',
 			'basic-render',
 			'focus',
 			'keyboard',
 			'portal',
 			'resource-cleanup',
-			'composition',
 			'controlled',
 			'native-props',
 			'accessible-name',
-			'ssr',
-			'variants-and-states'
+			'ssr'
 		],
-		demoCount: 5,
+		demoCount: 6,
 		publicComponentCount: 7
 	},
 	{
@@ -2156,21 +2176,21 @@ export const componentCatalogManifest = Object.freeze([
 		keywords: [],
 		profiles: ['layer', 'animated'],
 		capabilities: [
+			'variants-and-states',
+			'composition',
 			'basic-render',
 			'controlled',
 			'focus',
 			'keyboard',
 			'portal',
-			'composition',
 			'ssr',
 			'uncontrolled',
-			'variants-and-states',
 			'resource-cleanup',
 			'full-motion',
 			'reduced-motion',
 			'rtl'
 		],
-		demoCount: 5,
+		demoCount: 6,
 		publicComponentCount: 7
 	},
 	{
@@ -2245,13 +2265,14 @@ export const componentCatalogManifest = Object.freeze([
 		],
 		profiles: ['layer', 'animated', 'service'],
 		capabilities: [
+			'variants-and-states',
+			'composition',
 			'basic-render',
 			'controlled',
 			'focus',
 			'keyboard',
 			'portal',
 			'full-motion',
-			'variants-and-states',
 			'resource-cleanup',
 			'accessible-name',
 			'disabled',
@@ -2259,7 +2280,7 @@ export const componentCatalogManifest = Object.freeze([
 			'reduced-motion',
 			'rtl'
 		],
-		demoCount: 5,
+		demoCount: 6,
 		publicComponentCount: 4
 	},
 	{
@@ -2283,17 +2304,18 @@ export const componentCatalogManifest = Object.freeze([
 		],
 		profiles: ['layer', 'animated'],
 		capabilities: [
+			'variants-and-states',
+			'composition',
 			'controlled',
 			'focus',
 			'keyboard',
 			'portal',
-			'variants-and-states',
 			'resource-cleanup',
 			'locale',
 			'rtl',
 			'reduced-motion'
 		],
-		demoCount: 4,
+		demoCount: 5,
 		publicComponentCount: 1
 	}
 ] as readonly ComponentCatalogManifestEntry[]);

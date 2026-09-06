@@ -21,7 +21,7 @@
 		<ZButton size="small" onclick={() => controller?.start()}>start不确定任务</ZButton>
 		<ZButton size="small" onclick={() => controller?.update(48)}>update到48%</ZButton>
 		<ZButton size="small" tone="danger" onclick={() => controller?.error()}>error持久化</ZButton>
-		<ZButton size="small" variant="secondary" onclick={() => controller?.finish()}>
+		<ZButton size="small" variant="outline" onclick={() => controller?.finish()}>
 			finish并收尾
 		</ZButton>
 		<ZButton size="small" variant="ghost" onclick={() => controller?.reset()}>reset</ZButton>

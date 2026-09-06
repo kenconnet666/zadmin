@@ -13,7 +13,7 @@
 
 <ZStack direction="row" gap="medium" wrap>
 	<ZDrawer>
-		<ZDrawerTrigger variant="secondary">标准关闭策略</ZDrawerTrigger>
+		<ZDrawerTrigger variant="outline">标准关闭策略</ZDrawerTrigger>
 		<ZDrawerOverlay />
 		<ZDrawerContent placement="end" size="small">
 			<ZStack gap="large">
@@ -24,7 +24,7 @@
 		</ZDrawerContent>
 	</ZDrawer>
 	<ZDrawer>
-		<ZDrawerTrigger variant="secondary">必须显式完成</ZDrawerTrigger>
+		<ZDrawerTrigger variant="outline">必须显式完成</ZDrawerTrigger>
 		<ZDrawerOverlay />
 		<ZDrawerContent
 			dismissOnEscape={false}

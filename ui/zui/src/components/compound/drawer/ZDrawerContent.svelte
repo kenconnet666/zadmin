@@ -4,9 +4,12 @@
 	import type { ZDialogContentProps } from '../dialog/ZDialogContent.svelte';
 
 	export type DrawerPlacement = 'bottom' | 'end' | 'start' | 'top';
-	export type DrawerPresetSize = 'full' | 'large' | 'medium' | 'small';
+	export type DrawerPresetSize = 'full' | 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge';
 	export type DrawerSize = DrawerPresetSize | number | string;
-	export type ZDrawerContentProps = Omit<ZDialogContentProps, 'appearance' | 'dir' | 'role'> & {
+	export type ZDrawerContentProps = Omit<
+		ZDialogContentProps,
+		'appearance' | 'dir' | 'role' | 'size'
+	> & {
 		readonly placement?: DrawerPlacement;
 		readonly size?: DrawerSize;
 	};
@@ -43,6 +46,14 @@
 			},
 			open: { false: () => undefined, true: (s) => s.transform.raw('translate(0, 0)') },
 			size: {
+				xsmall: (s) => {
+					s.height._drawerXsmall;
+					s.width._drawerXsmall;
+				},
+				xlarge: (s) => {
+					s.height._drawerXlarge;
+					s.width._drawerXlarge;
+				},
 				custom: () => undefined,
 				full: (s) => {
 					s.height._full;
@@ -179,7 +190,7 @@
 				default: "'medium'",
 				description: '沿滑入轴的预设或CSS尺寸；number按px处理，非full值仍受90vw/90vh窄屏边界约束。',
 				name: 'size',
-				type: "'small' | 'medium' | 'large' | 'full' | number | string"
+				type: "'xsmall' | 'small' | 'medium' | 'large' | 'xlarge' | 'full' | number | string"
 			},
 			{
 				bindable: true,
@@ -209,7 +220,7 @@
 			{
 				description: '解析后的尺寸预设；number和CSS值统一为custom。',
 				name: 'data-size',
-				values: ['small', 'medium', 'large', 'full', 'custom']
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge', 'full', 'custom']
 			},
 			{ description: '解析后的减少动画状态。', name: 'data-reduced-motion', values: ['true'] }
 		],
@@ -228,6 +239,8 @@
 
 	function isPresetSize(size: DrawerSize): size is DrawerPresetSize {
 		switch (size) {
+			case 'xsmall':
+			case 'xlarge':
 			case 'full':
 			case 'large':
 			case 'medium':

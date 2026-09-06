@@ -48,6 +48,16 @@ describe('ZMention production collection contract', () => {
 		input(editor, '@');
 		await tick();
 		const listbox = document.querySelector<HTMLElement>('[role="listbox"]')!;
+		const surface = listbox.parentElement!;
+		await expect.poll(() => getComputedStyle(surface).opacity).toBe('1');
+		await expect
+			.poll(
+				() =>
+					surface
+						.getAnimations()
+						.filter((animation) => animation.playState === 'running' || animation.pending).length
+			)
+			.toBe(0);
 		expect(listbox.getBoundingClientRect().height).toBe(260);
 		expect(getComputedStyle(listbox).overflowY).toBe('auto');
 		expect(getComputedStyle(listbox.parentElement!).position).toMatch(/absolute|fixed/);

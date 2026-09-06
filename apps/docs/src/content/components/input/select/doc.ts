@@ -1,3 +1,5 @@
+import SizingDemo from './SizingDemo.svelte';
+import sizingSource from './SizingDemo.svelte?raw';
 import {
 	selectContentMetadata,
 	selectItemMetadata,
@@ -46,6 +48,15 @@ export const selectDoc = defineComponentDoc(selectMetadata, {
 			'生产单选集合：options模式在未挂载时仍拥有完整typed-key顺序，compound模式保持兼容；SelectionModel、ActiveDescendant、Popover与FormValueBridge分别拥有选择、焦点、浮层和提交。'
 	},
 	demos: [
+		{
+			component: SizingDemo,
+			covers: ['composition', 'variants-and-states'],
+			description:
+				'五档尺寸按组件用途同步文字、留白和内部控件；Field/Form 显式尺寸优先于 Provider density。',
+			id: 'select-sizing',
+			source: sizingSource,
+			title: '五档尺寸与组合比例'
+		},
 		{
 			component: FormDemo,
 			covers: ['form-data', 'form-reset', 'keyboard', 'uncontrolled'],

@@ -7,4 +7,6 @@
 	<ZKbd>Ctrl</ZKbd>
 	<ZText>+</ZText>
 	<ZKbd>K</ZKbd>
+	<ZKbd size="xsmall">Esc</ZKbd>
+	<ZKbd size="medium">Enter</ZKbd>
 </ZStack>

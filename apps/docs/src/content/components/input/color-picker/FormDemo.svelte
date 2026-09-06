@@ -16,7 +16,7 @@
 			name="accent"
 			triggerLabel={(current) => `主题强调色 ${current}`}
 		/>
-		<ZButton type="reset" variant="secondary">重置</ZButton>
+		<ZButton type="reset" variant="outline">重置</ZButton>
 		<ZText tone="muted">value = {value}</ZText>
 	</ZStack>
 </form>

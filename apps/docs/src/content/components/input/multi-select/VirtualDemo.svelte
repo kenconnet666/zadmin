@@ -20,8 +20,8 @@
 
 <ZStack gap="small">
 	<ZStack direction="row" gap="small" wrap>
-		<ZButton variant="secondary" onclick={() => (value = [0, 749, 999])}>选择第 750 项</ZButton>
-		<ZButton variant="secondary" onclick={() => (value = [])}>外部清空</ZButton>
+		<ZButton variant="outline" onclick={() => (value = [0, 749, 999])}>选择第 750 项</ZButton>
+		<ZButton variant="outline" onclick={() => (value = [])}>外部清空</ZButton>
 	</ZStack>
 	<ZMultiSelect bind:value maxTagCount={2} {options}>
 		<ZMultiSelectTrigger aria-label="大型环境集合" />

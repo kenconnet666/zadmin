@@ -12,9 +12,8 @@
 
 <ZStack gap="medium">
 	<ZStack direction="row" gap="small" wrap>
-		<ZButton size="small" variant="secondary" onclick={() => (value = 1)}>owner写number 1</ZButton>
-		<ZButton size="small" variant="secondary" onclick={() => (value = '1')}>owner写string 1</ZButton
-		>
+		<ZButton size="small" variant="outline" onclick={() => (value = 1)}>owner写number 1</ZButton>
+		<ZButton size="small" variant="outline" onclick={() => (value = '1')}>owner写string 1</ZButton>
 	</ZStack>
 	<ZCarousel
 		aria-label="受控typed key轮播"

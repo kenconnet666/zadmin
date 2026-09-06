@@ -1,4 +1,5 @@
 <script module lang="ts">
+	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import type { SelectionKey } from '../../runtime/collection/selection.js';
@@ -10,7 +11,10 @@
 		readonly label: string;
 	}
 
-	export interface ZTransferProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onchange'> {
+	export interface ZTransferProps extends Omit<
+		HTMLAttributes<HTMLDivElement>,
+		'children' | 'onchange'
+	> {
 		readonly controlId?: string;
 		readonly defaultValue?: readonly SelectionKey[];
 		readonly disabled?: boolean;
@@ -30,6 +34,7 @@
 		ref?: HTMLDivElement | null;
 		readonly required?: boolean;
 		readonly searchPlaceholder?: string;
+		readonly size?: ZControlSize;
 		readonly sourceTitle?: string;
 		readonly targetTitle?: string;
 		value?: readonly SelectionKey[];
@@ -82,6 +87,13 @@
 			{ description: '加载、空集合或异步孤儿状态。', name: 'status' }
 		],
 		props: [
+			{
+				name: 'size',
+				type: "'xsmall' | 'small' | 'medium' | 'large' | 'xlarge'",
+				default: 'Field size，其次为 Provider density',
+				description:
+					'统一面板、过滤输入、列表文字与转移动作尺寸；virtualItemSize 仍独立拥有虚拟行高。'
+			},
 			{
 				default: '继承Field或自动生成',
 				description: '来源listbox这一业务值焦点owner的id。',
@@ -244,6 +256,11 @@
 		snippets: [],
 		source: 'ui/zui/src/components/input/ZTransfer.svelte',
 		states: [
+			{
+				description: '解析尺寸。',
+				name: 'data-size',
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge']
+			},
 			{ description: '整个Transfer或项目禁用。', name: 'data-disabled', values: ['true'] },
 			{ description: '整个Transfer只读。', name: 'data-readonly', values: ['true'] },
 			{ description: '整个Transfer无效。', name: 'data-invalid', values: ['true'] },
@@ -279,6 +296,7 @@
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { useZui } from '../../runtime/foundation/context.js';
+	import { resolveControlSize } from '../../runtime/foundation/control-size.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import {
 		applyIcssRootStyle,
@@ -298,12 +316,31 @@
 	type Side = 'source' | 'target';
 	const rootRecipe = defineRecipe({
 		base: (s) => {
+			s.fontFamily._sans;
+			s.lineHeight._compact;
 			s.alignItems.stretch;
 			s.display.flex;
 			s.flexWrap.wrap;
 			s.gap._medium;
 		},
 		variants: {
+			size: {
+				xsmall: (s) => {
+					s.fontSize._xsmall;
+				},
+				small: (s) => {
+					s.fontSize._small;
+				},
+				medium: (s) => {
+					s.fontSize._medium;
+				},
+				large: (s) => {
+					s.fontSize._large;
+				},
+				xlarge: (s) => {
+					s.fontSize._large;
+				}
+			},
 			disabled: { false: () => undefined, true: (s) => s.opacity._disabled }
 		},
 		defaultVariants: { disabled: false }
@@ -373,6 +410,7 @@
 		ref = $bindable(null),
 		required: requiredProp = false,
 		searchPlaceholder,
+		size,
 		sourceTitle,
 		style,
 		targetTitle,
@@ -386,6 +424,7 @@
 	const zui = useZui();
 	const fieldOwner = claimZFieldControlOwner();
 	const field = fieldOwner.field;
+	const resolvedSize = $derived(resolveControlSize(size ?? field?.size, zui.density));
 	const uid = $props.id();
 	const idBase = $derived(createZuiId(zui.idPrefix, uid, 'transfer'));
 	const disabled = $derived(disabledProp || (field?.disabled ?? false));
@@ -539,7 +578,7 @@
 	});
 	const sourceTypeahead = new Typeahead<SelectionKey>({ locale: () => zui.locale });
 	const targetTypeahead = new Typeahead<SelectionKey>({ locale: () => zui.locale });
-	const rootClass = $derived(zui.recipe(rootRecipe, { disabled }));
+	const rootClass = $derived(zui.recipe(rootRecipe, { disabled, size: resolvedSize }));
 	const controlsClass = $derived(zui.recipe(controlsRecipe));
 	const MoveToTargetIcon = $derived(zui.direction === 'rtl' ? ArrowLeft : ArrowRight);
 	const MoveToSourceIcon = $derived(zui.direction === 'rtl' ? ArrowRight : ArrowLeft);
@@ -701,8 +740,10 @@
 	data-invalid={resolvedInvalid || undefined}
 	data-loading={loading || undefined}
 	data-readonly={readonly || undefined}
+	data-size={resolvedSize}
 >
 	<TransferPane
+		size={resolvedSize}
 		active={sourceActive}
 		bind:listRef={sourceListRef}
 		bind:query={sourceQuery}
@@ -737,23 +778,26 @@
 
 	<div class={controlsClass} data-slot="controls">
 		<ZButton
+			size={resolvedSize}
 			aria-label={resolvedMoveToTargetLabel}
 			disabled={disabled || readonly || sourceChecked.size === 0}
 			onclick={() => move('target')}
 		>
-			<MoveToTargetIcon aria-hidden="true" size={18} />
+			<MoveToTargetIcon aria-hidden="true" size="1em" />
 		</ZButton>
 		<ZButton
+			size={resolvedSize}
 			aria-label={resolvedMoveToSourceLabel}
 			disabled={disabled || readonly || targetChecked.size === 0}
 			onclick={() => move('source')}
-			variant="secondary"
+			variant="outline"
 		>
-			<MoveToSourceIcon aria-hidden="true" size={18} />
+			<MoveToSourceIcon aria-hidden="true" size="1em" />
 		</ZButton>
 	</div>
 
 	<TransferPane
+		size={resolvedSize}
 		active={targetActive}
 		bind:listRef={targetListRef}
 		bind:query={targetQuery}

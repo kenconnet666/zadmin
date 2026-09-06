@@ -19,7 +19,7 @@
 	/>
 	<ZStack direction="row" gap="small">
 		<ZButton form="pin-external-form-demo" type="submit">提交外部表单</ZButton>
-		<ZButton form="pin-external-form-demo" type="reset" variant="secondary">重置</ZButton>
+		<ZButton form="pin-external-form-demo" type="reset" variant="outline">重置</ZButton>
 	</ZStack>
 	<ZText tone="muted">FormData：{submitted}</ZText>
 </ZStack>

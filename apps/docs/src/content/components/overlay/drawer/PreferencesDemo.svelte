@@ -47,7 +47,7 @@
 	<ZSegmented aria-label="动画偏好" options={motions} onValueChange={setMotion} value={motion} />
 	<ZProvider {direction} {motion}>
 		<ZDrawer>
-			<ZDrawerTrigger variant="secondary">打开逻辑 start Drawer</ZDrawerTrigger>
+			<ZDrawerTrigger variant="outline">打开逻辑 start Drawer</ZDrawerTrigger>
 			<ZDrawerOverlay />
 			<ZDrawerContent placement="start" size="small">
 				<ZStack gap="large">

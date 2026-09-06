@@ -1,3 +1,5 @@
+import SizingDemo from './SizingDemo.svelte';
+import sizingSource from './SizingDemo.svelte?raw';
 import { pinInputMetadata } from '@zadmin/zui/metadata';
 import ControlledDemo from './ControlledDemo.svelte';
 import controlledSource from './ControlledDemo.svelte?raw';
@@ -76,7 +78,8 @@ export const pinInputDoc = defineComponentDoc(pinInputMetadata, {
 			},
 			size: {
 				default: 'Field > Provider density',
-				description: 'small/medium/large同时控制槽几何与间距；超长PIN在窄容器中可横向滚动。'
+				description:
+					'xsmall/small/medium/large/xlarge同时控制槽几何与间距；超长PIN在窄容器中可横向滚动。'
 			},
 			validateCharacter: {
 				default: 'mode规则',
@@ -92,6 +95,15 @@ export const pinInputDoc = defineComponentDoc(pinInputMetadata, {
 			'单一nullable字符串、Field owner和FormValueBridge驱动的OTP/PIN输入，覆盖grapheme/IME、整段粘贴/autofill、动态length、受控清空与外部form。'
 	},
 	demos: [
+		{
+			component: SizingDemo,
+			covers: ['composition', 'variants-and-states'],
+			description:
+				'五档尺寸按组件用途同步文字、留白和内部控件；Field/Form 显式尺寸优先于 Provider density。',
+			id: 'pin-input-sizing',
+			source: sizingSource,
+			title: '五档尺寸与组合比例'
+		},
 		{
 			component: FormDemo,
 			covers: ['accessible-name', 'form-data', 'form-reset', 'keyboard'],

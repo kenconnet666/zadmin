@@ -3,7 +3,7 @@
 </script>
 
 <ZStack direction="row" gap="medium" wrap>
-	<ZTag tone="accent">预览</ZTag>
+	<ZTag tone="info">预览</ZTag>
 	<ZTag tone="success">稳定</ZTag>
 	<ZTag tone="warning">即将弃用</ZTag>
 	<ZTag tone="danger">已阻断</ZTag>

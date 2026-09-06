@@ -5,7 +5,7 @@
 </script>
 
 <ZStack gap="medium">
-	<ZButton size="small" variant="secondary" onclick={() => (showMiddle = !showMiddle)}>
+	<ZButton size="small" variant="outline" onclick={() => (showMiddle = !showMiddle)}>
 		{showMiddle ? '移除中间项' : '恢复中间项'}
 	</ZButton>
 	<ZMenu aria-label="动态菜单" loop={false} onAction={(event) => (action = String(event.value))}>

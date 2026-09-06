@@ -17,7 +17,10 @@
 	export type TimeFieldAppearance = 'bare' | 'field';
 	export type TimeFieldFormParticipation = 'auto' | 'none';
 	export type TimeFieldSize = ZControlSize;
-	export interface ZTimeFieldProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onchange'> {
+	export interface ZTimeFieldProps extends Omit<
+		HTMLAttributes<HTMLDivElement>,
+		'children' | 'onchange'
+	> {
 		readonly appearance?: TimeFieldAppearance;
 		readonly controlId?: string;
 		readonly dayPeriodLabel?: (period: TimeDayPeriod) => string;
@@ -199,7 +202,7 @@
 				default: 'Field size或Provider density',
 				description: '统一group padding、segment和day-period尺寸。',
 				name: 'size',
-				type: "'small' | 'medium' | 'large'"
+				type: "'xsmall' | 'small' | 'medium' | 'large' | 'xlarge'"
 			}
 		],
 		since: 'unreleased',
@@ -211,6 +214,9 @@
 	} as const satisfies ZuiComponentMetadata;
 	const rootRecipe = defineRecipe({
 		base: (s) => {
+			s.fontFamily._mono;
+			s.lineHeight._compact;
+			s.minWidth.px(0);
 			s.alignItems.center;
 			s.borderRadius._medium;
 			s.display.inlineFlex;
@@ -234,25 +240,41 @@
 			disabled: { false: () => undefined, true: (s) => s.opacity._disabled },
 			invalid: { false: () => undefined, true: (s) => s.borderColor._danger },
 			size: {
-				large: (s) => {
-					s.gap._medium;
-					s.paddingInline._large;
+				xsmall: (s) => {
+					s.fontSize._xsmall;
+					s.gap._small;
+					s.paddingInline._small;
+				},
+				small: (s) => {
+					s.fontSize._small;
+					s.gap._small;
+					s.paddingInline._small;
 				},
 				medium: (s) => {
+					s.fontSize._medium;
 					s.gap._small;
 					s.paddingInline._medium;
 				},
-				small: (s) => {
+				large: (s) => {
+					s.fontSize._large;
 					s.gap._small;
-					s.paddingInline._small;
+					s.paddingInline._large;
+				},
+				xlarge: (s) => {
+					s.fontSize._large;
+					s.gap._small;
+					s.paddingInline._large;
 				}
 			}
 		},
+		compoundVariants: [{ when: { appearance: 'bare' }, style: (s) => s.paddingInline._small }],
 		defaultVariants: { appearance: 'field', disabled: false, invalid: false, size: 'medium' }
 	});
 	const segmentRecipe = defineRecipe({
 		base: (s) => {
 			s.appearance.none;
+			s.boxSizing.borderBox;
+			s.lineHeight._compact;
 			s.backgroundColor.transparent;
 			s.borderStyle.none;
 			s.color._text;
@@ -260,21 +282,25 @@
 			s.outlineStyle.none;
 			s.padding.px(0);
 			s.textAlign.center;
-			s.width.rem(3);
+			s.width.ch(2);
+			s.flexShrink(0);
 		},
 		variants: {
 			size: {
-				large: (s) => {
-					s.fontSize._large;
-					s.minHeight._large;
-				},
-				medium: (s) => {
-					s.fontSize._medium;
-					s.minHeight._medium;
+				xsmall: (s) => {
+					s.fontSize._xsmall;
 				},
 				small: (s) => {
 					s.fontSize._small;
-					s.minHeight._small;
+				},
+				medium: (s) => {
+					s.fontSize._medium;
+				},
+				large: (s) => {
+					s.fontSize._large;
+				},
+				xlarge: (s) => {
+					s.fontSize._large;
 				}
 			}
 		},
@@ -283,6 +309,10 @@
 	const periodRecipe = defineRecipe({
 		base: (s) => {
 			styleInternalAction(s);
+			s.boxSizing.borderBox;
+			s.fontFamily.inherit;
+			s.fontSize.inherit;
+			s.lineHeight._compact;
 			s.backgroundColor._surface;
 			s.borderStyle.none;
 			s.color._text;
@@ -290,9 +320,11 @@
 		},
 		variants: {
 			size: {
-				large: (s) => s.padding._medium,
+				xsmall: (s) => s.padding._small,
+				small: (s) => s.padding._small,
 				medium: (s) => s.padding._small,
-				small: (s) => s.padding._small
+				large: (s) => s.padding._medium,
+				xlarge: (s) => s.padding._medium
 			}
 		},
 		defaultVariants: { size: 'medium' }
@@ -311,7 +343,7 @@
 		type NavigationIntent
 	} from '../../runtime/collection/list-navigation.js';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
-	import { resolveControlSize } from '../../runtime/foundation/control-size.js';
+	import { controlSizeMetrics, resolveControlSize } from '../../runtime/foundation/control-size.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import { claimZFieldControlOwner } from '../../runtime/form/field-context.js';
 	import FormValueBridge from '../../runtime/form/FormValueBridge.svelte';
@@ -416,6 +448,11 @@
 	);
 	const segmentClass = $derived(zui.recipe(segmentRecipe, { size: resolvedSize }));
 	const periodClass = $derived(zui.recipe(periodRecipe, { size: resolvedSize }));
+	const contentClass = $derived(
+		zui.icss((s) => {
+			s.minHeight.raw(controlSizeMetrics(zui.theme, resolvedSize).contentHeight);
+		})
+	);
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
 	function display(segment: TimeSegment): string {
@@ -621,7 +658,7 @@
 			{@const focusIndex = focusOrder.indexOf(segment)}
 			<input
 				bind:this={inputs[index]}
-				class={segmentClass}
+				class={[segmentClass, contentClass]}
 				id={index === 0 ? idBase : `${idBase}-${segment}`}
 				type="text"
 				inputmode="numeric"
@@ -646,7 +683,7 @@
 		{:else}<button
 				bind:this={periodRef}
 				type="button"
-				class={periodClass}
+				class={[periodClass, contentClass]}
 				data-slot="day-period"
 				disabled={resolvedDisabled || resolvedReadonly}
 				aria-disabled={resolvedReadonly || undefined}

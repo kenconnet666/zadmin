@@ -15,9 +15,9 @@
 		placeholder="未选择颜色"
 	/>
 	<ZStack direction="row" gap="small" wrap>
-		<ZButton onclick={() => (value = null)} variant="secondary">外部清空</ZButton>
-		<ZButton onclick={() => (value = '#0ea5e9')} variant="secondary">外部设置蓝色</ZButton>
-		<ZButton onclick={() => (open = true)} variant="secondary">外部打开</ZButton>
+		<ZButton onclick={() => (value = null)} variant="outline">外部清空</ZButton>
+		<ZButton onclick={() => (value = '#0ea5e9')} variant="outline">外部设置蓝色</ZButton>
+		<ZButton onclick={() => (open = true)} variant="outline">外部打开</ZButton>
 	</ZStack>
 	<ZText tone="muted">value = {value ?? 'null'} · open = {open} · 用户变更 = {changes}</ZText>
 </ZStack>

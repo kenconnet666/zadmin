@@ -1,5 +1,7 @@
 # ZUI Statistic and Timeline Production Architecture
 
+The 2026-09-06 update adds `valueSize` (default 24px) and `trendTone` (default neutral) to Statistic. Trend direction no longer chooses success/danger automatically; business examples specify the appropriate tone. Statistic and Timeline share the current semantic color vocabulary. See [the migration record](./visual-api-migration-2026-09-06.md); the original behavioral ownership described below remains valid.
+
 Status: implemented P1 production increment, 2026-09-02.
 
 ## Scope

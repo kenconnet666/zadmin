@@ -34,7 +34,7 @@
 			triggers={['@', '#']}
 			{items}
 		/>
-		<ZButton type="reset" variant="secondary">重置</ZButton>
+		<ZButton type="reset" variant="outline">重置</ZButton>
 		<ZText tone="muted">message = {value}</ZText>
 	</ZStack>
 </form>

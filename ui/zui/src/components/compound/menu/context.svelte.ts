@@ -3,6 +3,7 @@ import { getContext, setContext } from 'svelte';
 import type { CompoundLogicalCollectionItem } from '../../../runtime/collection/compound-logical-collection.svelte.js';
 import type { SelectionKey } from '../../../runtime/collection/selection.js';
 import { CancelableEvent } from '../../../runtime/foundation/cancelable-event.js';
+import type { ZControlSize } from '../../../runtime/foundation/control-size.js';
 
 export type MenuItemRole = 'menuitem' | 'menuitemcheckbox' | 'menuitemradio';
 
@@ -45,6 +46,7 @@ export interface ZMenuContext {
 	readonly activeKey: SelectionKey | undefined;
 	readonly direction: 'ltr' | 'rtl';
 	readonly disabled: boolean;
+	readonly size: ZControlSize;
 	activate(value: SelectionKey, originalEvent: KeyboardEvent | MouseEvent): MenuActionEvent;
 	claimSubmenu(value: SelectionKey, close: () => void): () => void;
 	contains(target: EventTarget | null): boolean;

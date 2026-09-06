@@ -22,12 +22,12 @@
 
 <ZStack gap="medium">
 	<ZStack direction="row" gap="small" wrap>
-		<ZButton type="button" variant="secondary" onclick={() => (open = !open)}>
+		<ZButton type="button" variant="outline" onclick={() => (open = !open)}>
 			{open ? '外部关闭' : '外部打开'}
 		</ZButton>
 		<ZButton
 			type="button"
-			variant="secondary"
+			variant="outline"
 			onclick={() => {
 				value = undefined;
 				inputValue = '';

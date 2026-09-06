@@ -8,23 +8,27 @@ export type RecipeVariantDefinitions = Readonly<Record<string, RecipeVariantOpti
 
 export type RecipeVariantValue<TOptions> = keyof TOptions extends 'false' | 'true'
 	? boolean
-	: keyof TOptions;
+	: string extends keyof TOptions
+		? string | boolean
+		: keyof TOptions;
 
 export type RecipeSelectionFrom<TVariants extends RecipeVariantDefinitions> = {
 	readonly [TName in keyof TVariants]?: RecipeVariantValue<TVariants[TName]>;
 };
 
-export interface RecipeCompoundVariant {
+export interface RecipeCompoundVariant<
+	TVariants extends RecipeVariantDefinitions = RecipeVariantDefinitions
+> {
 	readonly style: IcssFactory<ZuiTheme>;
-	readonly when: Readonly<Record<string, string | boolean>>;
+	readonly when: RecipeSelectionFrom<NoInfer<TVariants>>;
 }
 
 export interface RecipeInput<TVariants extends RecipeVariantDefinitions> {
 	/** Component styles by default; utilities explicitly customize an existing component. */
 	readonly layer?: IcssLayer;
 	readonly base?: IcssFactory<ZuiTheme>;
-	readonly compoundVariants?: readonly RecipeCompoundVariant[];
-	readonly defaultVariants?: Readonly<Record<string, string | boolean>>;
+	readonly compoundVariants?: readonly RecipeCompoundVariant<TVariants>[];
+	readonly defaultVariants?: RecipeSelectionFrom<NoInfer<TVariants>>;
 	readonly variants: TVariants;
 }
 

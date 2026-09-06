@@ -22,14 +22,14 @@
 <ZStack gap="small">
 	<ZStack direction="row" gap="small" wrap>
 		<ZButton
-			variant="secondary"
+			variant="outline"
 			onclick={() => {
 				value = 749;
 				inputValue = '环境 750';
 			}}>外部选择第 750 项</ZButton
 		>
 		<ZButton
-			variant="secondary"
+			variant="outline"
 			onclick={() => {
 				value = undefined;
 				inputValue = '';

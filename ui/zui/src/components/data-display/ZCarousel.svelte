@@ -4,6 +4,7 @@
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import type { SelectionKey } from '../../runtime/collection/selection.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
+
 	export interface ZCarouselProps<TItem = unknown> extends Omit<
 		HTMLAttributes<HTMLElement>,
 		'aria-label' | 'children'
@@ -25,6 +26,7 @@
 		ref?: HTMLElement | null;
 		value?: SelectionKey;
 	}
+
 	export const zuiMetadata = {
 		category: 'data-display',
 		id: 'carousel',
@@ -217,6 +219,7 @@
 	import { ReducedMotionState } from '../../runtime/foundation/motion.svelte.js';
 	import { isDomNode } from '../../runtime/layer/dom-realm.js';
 	import ZButton from '../gene/ZButton.svelte';
+
 	let {
 		'aria-label': ariaLabelAttribute,
 		autoplayInterval,
@@ -317,27 +320,33 @@
 		const timer = view.setInterval(() => move(1), autoplayInterval);
 		return () => view.clearInterval(timer);
 	});
+
 	function move(delta: -1 | 1): void {
 		const target = activeIndex + delta;
 		if (!loop && (target < 0 || target >= normalized.length)) return;
 		const index = (target + normalized.length) % normalized.length;
 		valueState.setFromUser(normalized[index]!.key);
 	}
+
 	function choose(index: number): void {
 		valueState.setFromUser(normalized[index]!.key);
 	}
+
 	function mouseEnter(event: MouseEvent & { currentTarget: HTMLElement }): void {
 		hovered = true;
 		onmouseenter?.(event);
 	}
+
 	function mouseLeave(event: MouseEvent & { currentTarget: HTMLElement }): void {
 		hovered = false;
 		onmouseleave?.(event);
 	}
+
 	function focusIn(event: FocusEvent & { currentTarget: HTMLElement }): void {
 		focusWithin = true;
 		onfocusin?.(event);
 	}
+
 	function focusOut(event: FocusEvent & { currentTarget: HTMLElement }): void {
 		if (!isDomNode(event.relatedTarget) || !event.currentTarget.contains(event.relatedTarget)) {
 			focusWithin = false;
@@ -361,7 +370,8 @@
 	onfocusin={focusIn}
 	onfocusout={focusOut}
 >
-	{#if autoplayInterval !== undefined}<ZButton
+	{#if autoplayInterval !== undefined}
+		<ZButton
 			aria-label={reduced
 				? zui.localePack.carousel.automaticRotationDisabled
 				: pausedByUser
@@ -372,17 +382,21 @@
 			size="small"
 			variant="ghost"
 			onclick={() => (pausedByUser = !pausedByUser)}
-			>{#if pausedByUser}<Play aria-hidden="true" size={16} />{:else}<Pause
-					aria-hidden="true"
-					size={16}
-				/>{/if}</ZButton
-		>{/if}
+		>
+			{#if pausedByUser}
+				<Play aria-hidden="true" size={16} />
+			{:else}
+				<Pause aria-hidden="true" size={16} />
+			{/if}
+		</ZButton>
+	{/if}
 	<div
 		class={viewportClass}
 		data-slot="viewport"
 		aria-live={autoplayInterval !== undefined && !autoPaused ? 'off' : 'polite'}
 	>
-		{#each normalized as slide, index (slide.key)}<div
+		{#each normalized as slide, index (slide.key)}
+			<div
 				class={slideClass}
 				data-slot="slide"
 				role="group"
@@ -396,39 +410,46 @@
 				hidden={index !== activeIndex}
 			>
 				{@render item(slide.entry, index)}
-			</div>{/each}
+			</div>
+		{/each}
 	</div>
 	<div class={controlsClass} data-slot="controls">
 		<ZButton
 			aria-label={resolvedPreviousLabel}
 			disabled={!loop && activeIndex === 0}
 			size="small"
-			variant="secondary"
-			onclick={() => move(-1)}><PreviousIcon aria-hidden="true" size={16} /></ZButton
+			variant="outline"
+			onclick={() => move(-1)}
 		>
+			<PreviousIcon aria-hidden="true" size={16} />
+		</ZButton>
 		<div
 			class={indicatorsClass}
 			data-slot="indicators"
 			role="group"
 			aria-label={zui.localePack.carousel.chooseSlide}
 		>
-			{#each normalized as slide, index (slide.key)}<ZButton
+			{#each normalized as slide, index (slide.key)}
+				<ZButton
 					aria-label={zui.localePack.carousel.goToSlide(
 						numberFormatter.format(index + 1),
 						slide.label
 					)}
 					aria-current={index === activeIndex ? 'true' : undefined}
 					size="small"
-					variant={index === activeIndex ? 'primary' : 'ghost'}
+					variant={index === activeIndex ? 'solid' : 'ghost'}
 					onclick={() => choose(index)}>{index + 1}</ZButton
-				>{/each}
+				>
+			{/each}
 		</div>
 		<ZButton
 			aria-label={resolvedNextLabel}
 			disabled={!loop && activeIndex === normalized.length - 1}
 			size="small"
-			variant="secondary"
-			onclick={() => move(1)}><NextIcon aria-hidden="true" size={16} /></ZButton
+			variant="outline"
+			onclick={() => move(1)}
 		>
+			<NextIcon aria-hidden="true" size={16} />
+		</ZButton>
 	</div>
 </section>

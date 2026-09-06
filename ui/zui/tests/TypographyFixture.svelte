@@ -9,7 +9,7 @@
 <ZHeading bind:ref={headingRef} data-testid="heading-h1" level={1} size="medium">
 	Semantic title
 </ZHeading>
-<ZHeading data-testid="heading-h4-large" level={4} size="xlarge" tone="primary">
+<ZHeading data-testid="heading-h4-large" level={4} size="xxlarge" tone="primary">
 	Visual title
 </ZHeading>
 <ZText bind:ref={textRef} as="p" data-testid="text-clamp" lineClamp={2}>

@@ -1,5 +1,7 @@
 # Button and ToggleButton Production Architecture
 
+The current 2026-09-06 visual contract supersedes the original two-tone/three-size choices below: `solid | outline | ghost`, brand `primary` plus five semantic tones, and five independent control sizes. See [the migration record](./visual-api-migration-2026-09-06.md) for current calls, proportions, and validation boundaries. Native loading and pressed ownership remain unchanged.
+
 ## Orthogonal visual axes
 
 `ZButton` separates four independent decisions:

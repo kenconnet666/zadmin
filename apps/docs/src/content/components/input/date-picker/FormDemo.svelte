@@ -19,7 +19,7 @@
 				locale="zh-CN"
 			/>
 		</ZField>
-		<ZButton type="reset" variant="secondary">重置</ZButton>
+		<ZButton type="reset" variant="outline">重置</ZButton>
 		<ZText tone="muted">value = {value?.toString() ?? 'null'}</ZText>
 	</ZStack>
 </form>

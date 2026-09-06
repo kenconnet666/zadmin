@@ -6,7 +6,7 @@
 </script>
 
 <ZStack direction="column" gap="small">
-	<ZButton variant="secondary" onclick={() => (loading = !loading)}>
+	<ZButton variant="outline" onclick={() => (loading = !loading)}>
 		切换为{loading ? '空结果' : '加载中'}
 	</ZButton>
 	<ZVirtualList

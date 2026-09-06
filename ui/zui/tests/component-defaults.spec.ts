@@ -8,14 +8,14 @@ import {
 describe('component defaults foundation', () => {
 	it('merges shallowly, supports null stops, and freezes snapshots', () => {
 		const parent = resolveComponentDefaults(undefined, {
-			button: { size: 'large', variant: 'primary' }
+			button: { size: 'large', variant: 'solid' }
 		});
 		const child = resolveComponentDefaults(parent, {
 			button: { size: 'small' },
 			dataTable: { overscan: 4, virtualized: true }
 		});
 		expect(child).toEqual({
-			button: { size: 'small', variant: 'primary' },
+			button: { size: 'small', variant: 'solid' },
 			dataTable: { overscan: 4, virtualized: true }
 		});
 		expect(Object.isFrozen(child)).toBe(true);
@@ -37,7 +37,7 @@ describe('component defaults foundation', () => {
 		['invalid overscan', { dataTable: { overscan: -1 } }],
 		['invalid rowHeight', { dataTable: { rowHeight: 0 } }],
 		['invalid input size', { input: { size: 'giant' } }],
-		['invalid tag tone', { tag: { tone: 'info' } }],
+		['invalid tag tone', { tag: { tone: 'accent' } }],
 		['invalid card variant', { card: { variant: 'filled' } }],
 		['invalid pagination mode', { pagination: { mode: 'cursor' } }],
 		['nested object', { button: { size: { value: 'small' } } }]
@@ -85,13 +85,13 @@ describe('component defaults foundation', () => {
 	it('merges low-risk input, tag, card and pagination defaults', () => {
 		const resolved = resolveComponentDefaults(undefined, {
 			input: { size: 'large' },
-			tag: { size: 'small', tone: 'accent' },
+			tag: { size: 'small', tone: 'info' },
 			card: { variant: 'outlined' },
 			pagination: { mode: 'simple' }
 		});
 		expect(resolved).toEqual({
 			input: { size: 'large' },
-			tag: { size: 'small', tone: 'accent' },
+			tag: { size: 'small', tone: 'info' },
 			card: { variant: 'outlined' },
 			pagination: { mode: 'simple' }
 		});

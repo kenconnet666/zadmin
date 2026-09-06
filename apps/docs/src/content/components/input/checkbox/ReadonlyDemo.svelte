@@ -41,7 +41,7 @@
 		</ZField>
 		<ZStack direction="row" gap="small" wrap>
 			<ZButton size="small" type="submit">读取FormData</ZButton>
-			<ZButton size="small" type="reset" variant="secondary">重置</ZButton>
+			<ZButton size="small" type="reset" variant="outline">重置</ZButton>
 		</ZStack>
 		<ZText tone="muted"
 			>只读 = {locked}:{lockedChanges} · 对照 = {editable}:{editableChanges} · {submitted}</ZText

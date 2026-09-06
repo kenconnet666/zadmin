@@ -21,7 +21,7 @@ export type {
 } from '../icss/registry.js';
 export type { BrowserStyleSheetOptions } from '../icss/sheet.js';
 export { createZuiId, createZuiIdScope } from '../runtime/foundation/ids.js';
-export { resolveControlSize } from '../runtime/foundation/control-size.js';
+export { controlSizes, resolveControlSize } from '../runtime/foundation/control-size.js';
 export type { ZControlSize } from '../runtime/foundation/control-size.js';
 export { createFormEntries, serializeFormValue } from '../runtime/form/form-value.js';
 export type { FormValue, PrimitiveFormValue } from '../runtime/form/form-value.js';

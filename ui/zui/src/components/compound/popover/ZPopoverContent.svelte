@@ -45,7 +45,7 @@
 			s.overflowWrap.anywhere;
 			s.overflowY.auto;
 			s.position.absolute;
-			s.transform.raw('translateY(0) scale(1)');
+			s.transform.raw('scale(1)');
 			s.transitionDuration._fast;
 			s.transitionProperty.raw('opacity, transform');
 			s.zIndex._dropdown;
@@ -57,6 +57,12 @@
 			});
 		},
 		variants: {
+			side: {
+				top: (s) => s.transformOrigin.raw('bottom center'),
+				bottom: (s) => s.transformOrigin.raw('top center'),
+				left: (s) => s.transformOrigin.raw('right center'),
+				right: (s) => s.transformOrigin.raw('left center')
+			},
 			motion: {
 				auto: () => undefined,
 				full: () => undefined,
@@ -65,7 +71,7 @@
 			open: {
 				false: (s) => {
 					s.opacity(0);
-					s.transform.raw('translateY(-4px) scale(0.98)');
+					s.transform.raw('scale(0.98)');
 				},
 				true: () => undefined
 			}
@@ -159,6 +165,24 @@
 		snippets: [{ description: 'Popover内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/popover/ZPopoverContent.svelte',
 		states: [
+			{
+				name: 'data-placement',
+				values: [
+					'top',
+					'top-start',
+					'top-end',
+					'bottom',
+					'bottom-start',
+					'bottom-end',
+					'left',
+					'left-start',
+					'left-end',
+					'right',
+					'right-start',
+					'right-end'
+				],
+				description: 'Floating完成flip/shift后实际解析的位置；动画以面向锚点的边为原点。'
+			},
 			{ description: '打开状态。', name: 'data-state', values: ['open', 'closed'] },
 			{ description: 'modal dialog语义。', name: 'aria-modal', values: ['true'] },
 			{ description: '解析后的减少动画状态。', name: 'data-reduced-motion', values: ['true'] },
@@ -183,7 +207,7 @@
 	import { readIcssCarrier } from '../../../runtime/foundation/compiler-bridge.js';
 	import { stylePresenceEasing } from '../../../runtime/foundation/style-presence.js';
 	import { DismissableLayer } from '../../../runtime/layer/dismissable-layer.js';
-	import { FloatingPositioner } from '../../../runtime/layer/floating.js';
+	import { FloatingPositioner, type FloatingPlacement } from '../../../runtime/layer/floating.js';
 	import { FocusScope } from '../../../runtime/layer/focus-scope.js';
 	import { inertOthers } from '../../../runtime/layer/inert-others.js';
 	import { portal } from '../../../runtime/layer/portal.js';
@@ -215,8 +239,13 @@
 	const entryMotion = new PresenceEntryMotion(initiallyOpen);
 	const mounted = $derived(presence.mounted);
 	const presenceState = $derived(presence.state);
+	let resolvedPlacement = $state<FloatingPlacement>();
+	const side = $derived(
+		(resolvedPlacement ?? popover.placement).split('-')[0] as 'top' | 'bottom' | 'left' | 'right'
+	);
 	const rootClass = $derived(
 		zui.recipe(popoverContentRecipe, {
+			side,
 			motion: popover.reducedMotion ? 'reduced' : 'full',
 			open: popover.open && entryMotion.entered
 		})
@@ -237,6 +266,9 @@
 		const stopPositioning = positioner.start(trigger, content, {
 			gutter: popover.gutter,
 			matchWidth: popover.matchWidth,
+			onPosition: (position) => {
+				resolvedPlacement = position.placement;
+			},
 			placement: popover.placement,
 			strategy: popover.strategy
 		});
@@ -295,6 +327,7 @@
 		aria-labelledby={ariaLabelledBy === null ? undefined : (ariaLabelledBy ?? popover.triggerId)}
 		aria-describedby={ariaDescribedBy}
 		data-presence={presenceState}
+		data-placement={resolvedPlacement ?? popover.placement}
 		data-reduced-motion={popover.reducedMotion || undefined}
 		data-state={popover.open ? 'open' : 'closed'}
 		ontransitionend={handleTransitionEnd}

@@ -7,7 +7,10 @@
 	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 
-	export interface ZCalendarProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onchange'> {
+	export interface ZCalendarProps extends Omit<
+		HTMLAttributes<HTMLDivElement>,
+		'children' | 'onchange'
+	> {
 		readonly appearance?: 'bare' | 'calendar';
 		readonly calendarLabel?: string;
 		readonly defaultFocusedValue?: CalendarDateValue;
@@ -217,7 +220,7 @@
 				default: 'Field size或Provider density',
 				description: '统一容器间距、导航与日期cell尺寸。',
 				name: 'size',
-				type: "'small' | 'medium' | 'large'"
+				type: "'xsmall' | 'small' | 'medium' | 'large' | 'xlarge'"
 			}
 		],
 		since: 'unreleased',
@@ -255,12 +258,31 @@
 			},
 			disabled: { false: () => undefined, true: (s) => s.opacity._disabled },
 			size: {
-				large: (s) => s.gap._large,
-				medium: (s) => s.gap._medium,
-				small: (s) => s.gap._small
+				xsmall: (s) => {
+					s.gap._small;
+					s.fontSize._xsmall;
+				},
+				small: (s) => {
+					s.gap._small;
+					s.fontSize._small;
+				},
+				medium: (s) => {
+					s.gap._medium;
+					s.fontSize._medium;
+				},
+				large: (s) => {
+					s.gap._medium;
+					s.fontSize._large;
+				},
+				xlarge: (s) => {
+					s.gap._large;
+					s.fontSize._large;
+				}
 			}
 		},
 		compoundVariants: [
+			{ style: (s) => s.padding._small, when: { appearance: 'calendar', size: 'xsmall' } },
+			{ style: (s) => s.padding._large, when: { appearance: 'calendar', size: 'xlarge' } },
 			{ style: (s) => s.padding._large, when: { appearance: 'calendar', size: 'large' } },
 			{ style: (s) => s.padding._medium, when: { appearance: 'calendar', size: 'medium' } },
 			{ style: (s) => s.padding._small, when: { appearance: 'calendar', size: 'small' } }
@@ -285,17 +307,30 @@
 		},
 		variants: {
 			size: {
-				large: (s) => {
-					s.height._large;
-					s.width._large;
-				},
-				medium: (s) => {
-					s.height._medium;
-					s.width._medium;
+				xsmall: (s) => {
+					s.height._xsmall;
+					s.width._xsmall;
+					s.fontSize._xsmall;
 				},
 				small: (s) => {
 					s.height._small;
 					s.width._small;
+					s.fontSize._small;
+				},
+				medium: (s) => {
+					s.height._medium;
+					s.width._medium;
+					s.fontSize._medium;
+				},
+				large: (s) => {
+					s.height._large;
+					s.width._large;
+					s.fontSize._large;
+				},
+				xlarge: (s) => {
+					s.height._xlarge;
+					s.width._xlarge;
+					s.fontSize._large;
 				}
 			}
 		},
@@ -304,6 +339,10 @@
 	const tableRecipe = defineRecipe({
 		base: (s) => {
 			s.borderCollapse.collapse;
+			s._selector('& th, & td', (s) => {
+				s.boxSizing.borderBox;
+				s.padding.px(0);
+			});
 		},
 		variants: {},
 		defaultVariants: {}
@@ -317,17 +356,25 @@
 		},
 		variants: {
 			size: {
+				xsmall: (s) => {
+					s.height._xsmall;
+					s.width._calendarCellXsmall;
+				},
+				small: (s) => {
+					s.height._small;
+					s.width._calendarCellSmall;
+				},
+				medium: (s) => {
+					s.height._medium;
+					s.width._calendarCellMedium;
+				},
 				large: (s) => {
 					s.height._large;
 					s.width._calendarCellLarge;
 				},
-				medium: (s) => {
-					s.height._medium;
-					s.width._large;
-				},
-				small: (s) => {
-					s.height._small;
-					s.width._medium;
+				xlarge: (s) => {
+					s.height._xlarge;
+					s.width._calendarCellXlarge;
 				}
 			}
 		},
@@ -343,6 +390,8 @@
 			s.color._text;
 			s.cursor.pointer;
 			s.fontFamily.inherit;
+			s.boxSizing.borderBox;
+			s.padding.px(0);
 			s.fontSize.inherit;
 			s.lineHeight.inherit;
 			s._focusVisible((focus) => {
@@ -363,17 +412,25 @@
 				}
 			},
 			size: {
+				xsmall: (s) => {
+					s.height._calendarCellXsmall;
+					s.width._calendarCellXsmall;
+				},
+				small: (s) => {
+					s.height._calendarCellSmall;
+					s.width._calendarCellSmall;
+				},
+				medium: (s) => {
+					s.height._calendarCellMedium;
+					s.width._calendarCellMedium;
+				},
 				large: (s) => {
 					s.height._calendarCellLarge;
 					s.width._calendarCellLarge;
 				},
-				medium: (s) => {
-					s.height._large;
-					s.width._large;
-				},
-				small: (s) => {
-					s.height._medium;
-					s.width._medium;
+				xlarge: (s) => {
+					s.height._calendarCellXlarge;
+					s.width._calendarCellXlarge;
 				}
 			}
 		},
@@ -694,7 +751,7 @@
 			class={navClass}
 			aria-label={resolvedPreviousLabel}
 			disabled={previousDisabled}
-			onclick={() => moveMonth(-1)}><PreviousIcon aria-hidden="true" size={16} /></button
+			onclick={() => moveMonth(-1)}><PreviousIcon aria-hidden="true" size="1em" /></button
 		>
 		<strong aria-live="polite">{monthLabel}</strong>
 		<button
@@ -702,7 +759,7 @@
 			class={navClass}
 			aria-label={resolvedNextLabel}
 			disabled={nextDisabled}
-			onclick={() => moveMonth(1)}><NextIcon aria-hidden="true" size={16} /></button
+			onclick={() => moveMonth(1)}><NextIcon aria-hidden="true" size="1em" /></button
 		>
 	</div>
 	<table

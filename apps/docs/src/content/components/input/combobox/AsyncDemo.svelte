@@ -51,16 +51,16 @@
 
 <ZStack gap="medium">
 	<ZStack direction="row" gap="small" wrap>
-		<ZButton type="button" variant="secondary" onclick={() => void query.load('loading')}
+		<ZButton type="button" variant="outline" onclick={() => void query.load('loading')}
 			>进入远程加载
 		</ZButton>
-		<ZButton type="button" variant="secondary" onclick={() => void query.load('empty')}
+		<ZButton type="button" variant="outline" onclick={() => void query.load('empty')}
 			>返回空结果
 		</ZButton>
-		<ZButton type="button" variant="secondary" onclick={() => void query.load('orphan')}
+		<ZButton type="button" variant="outline" onclick={() => void query.load('orphan')}
 			>返回不含当前值的结果
 		</ZButton>
-		<ZButton type="button" variant="secondary" onclick={() => void query.load('error')}
+		<ZButton type="button" variant="outline" onclick={() => void query.load('error')}
 			>模拟错误</ZButton
 		>
 	</ZStack>

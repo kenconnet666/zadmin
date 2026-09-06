@@ -8,11 +8,11 @@ import ButtonToggleProductionFixture from './ButtonToggleProductionFixture.svelt
 describe('Button and ToggleButton production server contract', () => {
 	it('renders native button type and orthogonal visual state during SSR', () => {
 		const result = render(ZButton, {
-			props: { shape: 'circle', tone: 'danger', variant: 'secondary' }
+			props: { shape: 'circle', tone: 'danger', variant: 'outline' }
 		}).body;
 		expect(result).toContain('<button');
 		expect(result).toContain('type="button"');
-		expect(result).toContain('data-variant="secondary"');
+		expect(result).toContain('data-variant="outline"');
 		expect(result).toContain('data-tone="danger"');
 		expect(result).toContain('data-shape="circle"');
 	});

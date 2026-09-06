@@ -26,7 +26,7 @@
 <ZProvider direction="rtl">
 	<ZStack gap="medium">
 		<ZStack direction="row" gap="small" wrap>
-			<ZButton size="small" variant="secondary" onclick={() => controller?.focusKey('worker')}>
+			<ZButton size="small" variant="outline" onclick={() => controller?.focusKey('worker')}>
 				定位任务执行器
 			</ZButton>
 			<ZButton size="small" tone="danger" onclick={removeActive}>移除active节点</ZButton>

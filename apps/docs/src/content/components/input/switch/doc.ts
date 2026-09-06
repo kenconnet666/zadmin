@@ -1,3 +1,5 @@
+import SizingDemo from './SizingDemo.svelte';
+import sizingSource from './SizingDemo.svelte?raw';
 import { switchMetadata } from '@zadmin/zui/metadata';
 import ControlledDemo from './ControlledDemo.svelte';
 import controlledSource from './ControlledDemo.svelte?raw';
@@ -53,7 +55,8 @@ export const switchDoc = defineComponentDoc(switchMetadata, {
 			ref: { default: 'null', description: '真实HTMLInputElement，可调用focus和blur。' },
 			size: {
 				default: "Provider density（默认 'comfortable' → 'medium'）",
-				description: '显式small/medium/large优先，其次继承Field/Form，最后使用Provider density。'
+				description:
+					'显式xsmall/small/medium/large/xlarge优先，其次继承Field/Form，最后使用Provider density。'
 			},
 			value: { default: "'on'", description: '开启时写入FormData的标量值。' }
 		},
@@ -61,6 +64,15 @@ export const switchDoc = defineComponentDoc(switchMetadata, {
 			'真实checkbox驱动的双态设置开关，覆盖受控与非受控状态、Field、原生表单、异步busy和方向/动画偏好。'
 	},
 	demos: [
+		{
+			component: SizingDemo,
+			covers: ['composition', 'variants-and-states'],
+			description:
+				'五档尺寸按组件用途同步文字、留白和内部控件；Field/Form 显式尺寸优先于 Provider density。',
+			id: 'switch-sizing',
+			source: sizingSource,
+			title: '五档尺寸与组合比例'
+		},
 		{
 			covers: ['controlled', 'uncontrolled'],
 			component: ControlledDemo,

@@ -13,7 +13,7 @@
 - **长内容边界**：PopoverContent 与 TooltipContent 消费 Floating 的 available width 并使用 `overflow-wrap:anywhere`；Tooltip 补 `box-sizing:border-box`。长 URL / 无空格 token 保留原文，由排版换行。
 - **命名迁移**：Tooltip 与 TooltipGroup 的 `delay` 改为 `openDelay`，对称于 `closeDelay`；Tour 的 `closeOnEscape` / `closeOnMaskClick` 改为 `dismissOnEscape` / `dismissOnMaskClick`。组件类型、runtime、metadata、Docs teaching / demos 与已有 fixtures / types 同步。
 
-## 16 族记录
+## 首批 16 族记录（后续落实见第二批）
 
 | 家族           | 已审查的合同                                                                                  | 本批处理与后续边界                                                                                                                    |
 | -------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
@@ -45,7 +45,34 @@
 
 这些是 unreleased API 的集中改名，不提供旧名称双轨兼容。全局 entrypoint 与自动生成 API/catalog 合同由同批集成步骤统一再生成。`PresenceEntryMotion` 是私有 runtime 类，不新增全局 public export。
 
-共享尺寸后续统一使用 `xsmall / small / medium / large / xlarge`。控件尺寸、面板尺寸、虚拟行几何与文字大小可共享名称但必须保留各自用途和 token；无视觉尺寸意义的 Root 不扩容 API。语义色按组件职责选择，不为菜单、导航或无 DOM Root 强制凑齐五色。
+共享尺寸统一使用 `xsmall / small / medium / large / xlarge`。控件尺寸、面板尺寸、虚拟行几何与文字大小可共享名称但必须保留各自用途和 token；无视觉尺寸意义的 Root 不扩容 API。语义色按组件职责选择，不为菜单、导航或无 DOM Root 强制凑齐五色。
+
+## 第二批：五档尺寸与视觉落地
+
+基线 `bf1e01c`。控件实际目标高度为 24/28/32/40/48px，控件字级为 11/12/14/16/16px，indicator 为 12/14/16/20/24px。统一复用 `controlSizeStyles` / `controlSizeMetrics`，不为每个家族复制高度/字级表。
+
+| 家族           | 第二批落实                                                                                                            | 保留理由与职责边界                                                                                                                              |
+| -------------- | --------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Accordion      | Root size → Trigger 字体、间距、最小高度、indicator；block/inline 保留独立布局                                        | Content 正文布局由内容拥有，不随控件行高强制缩放。                                                                                              |
+| Tabs           | Root size → Trigger；补 enabled hover、border-box、不可压缩/不换行的完整长标签                                        | 横向列表负责滚动；Panel 不增加 tone 或控件高度。                                                                                                |
+| Menu           | Root size 通过 context 传 Item/Label/indicator；新子菜单默认继承父 size                                               | MenuItem 的 danger 布尔语义明确，暂不增加五色或破坏性改名；单选点保持相对 indicator 的小标记比例。                                              |
+| DropdownMenu   | Content.size 传内部 bare Menu；Trigger 的 Button size 独立                                                            | 无 DOM Root 只管理打开与定位，不添加冗余 size。                                                                                                 |
+| ContextMenu    | 同 DropdownMenu；默认名称改为 localePack.collection.contextMenu，补中英文                                             | 保留原生 aria-label 覆盖；坐标锚点不拥有控件大小。                                                                                              |
+| Command        | 输入与命令行消费共享五档；说明/快捷键分层字级，标签可断长词；active 背景统一 surfaceHover                             | 原 query、filter、active-descendant 与行动职责不改变。                                                                                          |
+| CommandPalette | size 传 Command/内置 Trigger/Close；panelSize 传 DialogContent；透传 filter/shouldFilter/maxResults/loop/resultsLabel | `shouldFilter=false` 直接展示外部搜索结果，仍受 maxResults 截断；不新增网络请求 owner。                                                         |
+| Pagination     | size 统一按钮、原生 input/select、icon、状态文字；显式值 → Provider pagination.size → density                         | pageSize 始终表示每页条数，不重命名为视觉 size。                                                                                                |
+| Tree           | 节点文字、图标、switcher 五档；默认虚拟 itemSize 来自同档主题高度                                                     | 数字直接消费；rem/calc 在实际 owner DOM 测为 px，SSR 暂用默认主题同档数字；显式 itemSize 优先且取消虚拟 item 的冲突 minHeight。事件命名不扩迁。 |
+| Dialog         | Content.size 消费 dialogXsmall/Small/Medium/Large/Xlarge：320/400/512/640/768                                         | Root 无 DOM，保留状态职责；Title 使用独立 xlarge=20px 字级。                                                                                    |
+| AlertDialog    | Content 自动继承 Dialog 五档；Action 默认 solid danger，Cancel 默认 outline neutral                                   | onAction 仍表示业务动作，不机械改为 onConfirm；pending/generation 合同保持。                                                                    |
+| Drawer         | 五档专用尺寸 256/320/400/560/720；full/custom 与逻辑 placement 保留                                                   | size 属于沿滑入轴的面板宽/高，不等同内部按钮尺寸。                                                                                              |
+| Popover        | 使用 Floating 实际解析后的 data-placement 选择朝向锚点的缩放原点，删除固定向上偏移                                    | 通用内容不存在统一行高，保留业务内容自行组合尺寸；不向无 DOM Root 强塞 size。                                                                   |
+| Popconfirm     | 自动继承 Popover 新入场/定位原点；Action solid danger、Cancel outline neutral，按钮继承五档 API                       | 确认面板继续使用专用 popconfirm 宽度 token；不把行尺寸误当面板宽度。                                                                            |
+| Tooltip        | Content.size 五档字级/高度/内边距，垂直留白与 compact 行高联动；inverseSurface/inverseText/tooltipMaxWidth            | Trigger 保持 Button 的独立尺寸；内容严格非交互，不添加无意义 tone。                                                                             |
+| Tour           | size 同步正文、面板留白、按钮；首次入场使用 PresenceEntryMotion；opacity 使用 enter/exit，步骤位置几何仍 standard     | 目标定位和遮罩几何由步骤内容拥有；不以按钮尺寸改变 target 或 spotlightOffset。                                                                  |
+
+13 个相关 Docs 页面新增 `ControlSizesDemo.svelte`。Menu/Dropdown/Context 展示尺寸继承；Tree 同时展示普通/虚拟树；Palette 展示外部结果与 maxResults；Dialog/Drawer 展示专用面板尺寸；Tooltip/Tour 展示内容与动画。第一方导航/浮层 Button 消费者完成 primary→solid、secondary→outline 迁移，Action metadata 同步；取消操作明确使用 neutral。
+
+新增 `NavigationSizesFixture.svelte` / `navigation-sizes.browser.spec.ts`，为 CI 验证五档真实高度/字号、两类面板宽度、Tree rem 解析与显式 itemSize、Tooltip 自定义 inverse/宽度 token、Palette 搜索透传与边界键盘行为。原 disabled audit fixture 补齐 Tree 可访问名称。没有在本地执行这些测试；第二批分小组 WebStorm errors-only 未返回问题。
 
 ## 验证
 
@@ -54,3 +81,16 @@
 - `presence-entry-motion.spec.ts` 为 CI 检查 owner Window、重复 update、迟到帧、退出重开、减少动画、SSR 初态及跨 realm / destroy 清理。
 - 既有 `drawer-production.browser.spec.ts` 的 entering/entered 断言保持适用；既有 Tooltip/Tour fixtures 与类型用例已迁移新命名。
 - 本地没有运行这些测试、构建或全量类型检查。Svelte MCP 未在本会话注册，不能执行 svelte-autofixer；用已验证可达的 WebStorm 文件诊断提供本地证据。浏览器及完整 CI 结果由后续集成记录补齐，不能从静态检查推断通过。
+
+## 前一提交 CI 失败复核
+
+在下一次 push 前读取已完成的 [run 34006402280](https://github.com/kenconnet666/zadmin/actions/runs/34006402280)，确认 head 为 `bf1e01c4f1c4e040ef42ec8aa3fd46aac922abb4`。没有等待或轮询新 CI。
+
+- Static contracts 与 Windows desktop 都被 `apps/desktop/src/routes/+page.svelte:235` 遗留的 Tooltip `delay` 属性阻断；已补成 `openDelay`。
+- ContextMenu / modal Popover / Mention 的几何断言立即读取进入帧：Popover 宽 73.8828125 对期望 75.390625、Mention 高 254.8 对期望 260 均恰好是 `scale(0.98)`；ContextMenu x=122.26 对期望 120 也是原中心缩放造成的偏移。现在组件测试和 Docs ContextMenu E2E 先等待表面 opacity=1 且自身 transition 无 running/pending，再保持原有精确坐标和宽高断言；不改成宽松误差或关闭实际动画。
+- 本批 `NavigationOverlayAuditFixture` 的 Tree 缺少可访问名称导致禁用视觉回归提前抛错，已补 aria-label。
+- 三个 Docs 浏览器的两个 Theme Lab 检查仍固定期待 29 个颜色，前一提交实际 41 个；由集成步骤迁移为当前 schema 合同。
+- `input-api-audit.browser.spec.ts:76` 在三个浏览器都得到 reset 后 data-state=open，而期望 closed；前一行 value=Initial 已通过，后续事件计数尚未执行。已把精确证据转交输入组件代理。
+- Workspace 另有 `transfer-production.browser.spec.ts` 的浏览器连接关闭错误，没有组件源码 stack 能证明 Transfer 功能错误。Workspace 最终报告 14 断言失败、1444 通过、2 skipped，同时有该未处理的执行中断；不能认为剩余计划用例已全部执行。Coverage 为 5 断言失败、816 通过，失败归属如上。
+
+上述定向修复仅完成 Prettier、逐文件 WebStorm errors-only 与 diff-check；没有在本地执行测试，不借用旧 CI 宣称当前改动通过。

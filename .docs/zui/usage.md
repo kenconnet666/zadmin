@@ -172,7 +172,7 @@ export const theme = extendTheme(defaultTheme, {
 			<ZInput />
 		</ZField>
 		<ZBox>Content</ZBox>
-		<ZButton variant="primary">Save</ZButton>
+		<ZButton variant="solid">Save</ZButton>
 	</ZStack>
 </ZProvider>
 ```

@@ -21,12 +21,10 @@
 
 <ZStack gap="medium">
 	<ZStack direction="row" gap="small" align="center" wrap>
-		<ZButton type="button" variant="secondary" onclick={() => (open = !open)}
+		<ZButton type="button" variant="outline" onclick={() => (open = !open)}
 			>{open ? '由外部关闭' : '由外部打开'}</ZButton
 		>
-		<ZButton type="button" variant="secondary" onclick={() => (value = undefined)}>
-			外部清空
-		</ZButton>
+		<ZButton type="button" variant="outline" onclick={() => (value = undefined)}>外部清空</ZButton>
 		<ZSelect bind:open bind:value valueLabel={(key) => labels[String(key)] ?? String(key)}>
 			<ZSelectTrigger aria-label="受控部署环境" />
 			<ZSelectContent>

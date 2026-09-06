@@ -20,8 +20,8 @@
 
 <ZStack gap="small">
 	<ZStack direction="row" gap="small" wrap>
-		<ZButton variant="secondary" onclick={() => (value = 749)}>外部选择第 750 项</ZButton>
-		<ZButton variant="secondary" onclick={() => (value = undefined)}>外部清空</ZButton>
+		<ZButton variant="outline" onclick={() => (value = 749)}>外部选择第 750 项</ZButton>
+		<ZButton variant="outline" onclick={() => (value = undefined)}>外部清空</ZButton>
 	</ZStack>
 	<ZSelect bind:value {options} valueLabel={(key) => `环境 ${Number(key) + 1}`}>
 		<ZSelectTrigger aria-label="大型单选环境集合" />

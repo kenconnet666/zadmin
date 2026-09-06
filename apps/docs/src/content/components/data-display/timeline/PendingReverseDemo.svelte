@@ -9,7 +9,7 @@
 </script>
 
 <ZStack gap="medium" align="start">
-	<ZButton variant="secondary" onclick={() => (reverse = !reverse)}>
+	<ZButton variant="outline" onclick={() => (reverse = !reverse)}>
 		{reverse ? '恢复正序' : '查看倒序'}
 	</ZButton>
 	<ZTimeline label="带未完成尾项的计算时间线" {items} {reverse}>

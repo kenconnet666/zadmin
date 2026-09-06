@@ -11,7 +11,10 @@
 		readonly value: string;
 	}
 
-	export interface ZColorPickerProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onchange'> {
+	export interface ZColorPickerProps extends Omit<
+		HTMLAttributes<HTMLDivElement>,
+		'children' | 'onchange'
+	> {
 		readonly allowAlpha?: boolean;
 		readonly alphaLabel?: string;
 		readonly clearable?: boolean;
@@ -226,7 +229,7 @@
 				default: 'Field size，其次为Provider density',
 				description: 'Trigger和清空按钮尺寸。',
 				name: 'size',
-				type: "'small' | 'medium' | 'large'"
+				type: "'xsmall' | 'small' | 'medium' | 'large' | 'xlarge'"
 			}
 		],
 		since: 'unreleased',
@@ -238,7 +241,11 @@
 			{ description: '明确无颜色值。', name: 'data-empty', values: ['true'] },
 			{ description: '只读状态。', name: 'data-readonly', values: ['true'] },
 			{ description: '必填状态。', name: 'data-required', values: ['true'] },
-			{ description: '解析后的尺寸。', name: 'data-size', values: ['small', 'medium', 'large'] }
+			{
+				description: '解析后的尺寸。',
+				name: 'data-size',
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge']
+			}
 		],
 		status: 'stable',
 		summary:
@@ -577,7 +584,7 @@
 			onkeydown={handleTriggerKeydown}
 			popupRole="dialog"
 			size={resolvedSize}
-			variant="secondary"
+			variant="outline"
 		>
 			<span
 				class={swatchClass}
@@ -646,7 +653,7 @@
 								disabled={resolvedDisabled || resolvedReadonly}
 								onclick={() => setValue(preset.value)}
 								size="small"
-								variant="secondary"
+								variant="outline"
 							>
 								<span
 									class={swatchClass}
@@ -669,9 +676,9 @@
 			shape="square"
 			size={resolvedSize}
 			title={resolvedClearLabel}
-			variant="secondary"
+			variant="outline"
 		>
-			<X aria-hidden="true" size={16} />
+			<X aria-hidden="true" size="1em" />
 		</ZButton>
 	{/if}
 </div>

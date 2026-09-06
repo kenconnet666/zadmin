@@ -103,7 +103,7 @@
 				root: (s) => s.maxWidth.rem(72),
 				section: (s) => s.marginTop.rem(4),
 				sectionTitle: (s) => {
-					s.fontSize._xlarge;
+					s.fontSize._xxlarge;
 					s.marginBottom._xlarge;
 				},
 				swatch: (s) => {
@@ -157,6 +157,7 @@
 	} from '@zadmin/zui';
 	import { ZCode } from '@zadmin/zui/code';
 	import { docsThemeById, docsThemes, type DocsPalette, type DocsThemeId } from '../app/theme.js';
+	import ThemeScalePreview from './ThemeScalePreview.svelte';
 
 	let {
 		onThemeChange,
@@ -178,18 +179,18 @@
 <article class={classes.root} data-doc-route="guide:theme">
 	<header>
 		<ZText as="p" class={classes.eyebrow}>THEME LAB</ZText>
-		<ZHeading data-doc-page-title="true" level={1} size="xxlarge"
-			>主题不是一组颜色，而是一套系统合同。</ZHeading
-		>
+		<ZHeading data-doc-page-title="true" level={1} size="xxxlarge"
+			>主题不是一组颜色，而是一套系统合同。
+		</ZHeading>
 		<ZText as="p" class={classes.lead}>
 			使用顶部主题选择器切换六套官方预设，并在“显示”面板选择八组主色、对比度、密度、动画和RTL。本页直接读取当前ZProvider上下文和Theme语义token，所有预览均为真实ZUI组件；高对比模式保留专用主题配色。
 		</ZText>
 	</header>
 
 	<section class={classes.section} aria-labelledby="official-presets">
-		<ZHeading class={classes.sectionTitle} id="official-presets" level={2} size="xlarge"
-			>官方主题预设</ZHeading
-		>
+		<ZHeading class={classes.sectionTitle} id="official-presets" level={2} size="xxlarge"
+			>官方主题预设
+		</ZHeading>
 		<div class={classes.presetGrid}>
 			{#each docsThemes as preset (preset.id)}
 				<ZCard
@@ -209,7 +210,7 @@
 						<ZButton
 							disabled={themeId === preset.id}
 							onclick={() => onThemeChange?.(preset.id)}
-							variant={themeId === preset.id ? 'secondary' : 'primary'}
+							variant={themeId === preset.id ? 'outline' : 'solid'}
 						>
 							{themeId === preset.id ? '当前主题' : `应用${preset.label}`}
 						</ZButton>
@@ -220,9 +221,9 @@
 	</section>
 
 	<section class={classes.section} aria-labelledby="theme-axes">
-		<ZHeading class={classes.sectionTitle} id="theme-axes" level={2} size="xlarge"
-			>当前偏好轴</ZHeading
-		>
+		<ZHeading class={classes.sectionTitle} id="theme-axes" level={2} size="xxlarge"
+			>当前偏好轴
+		</ZHeading>
 		<div class={classes.axisGrid}>
 			{#each [['Theme', currentTheme.label], ['Palette', palette], ['Primary', zui.theme.color.primary], ['Scheme', zui.colorScheme], ['Contrast', zui.contrast], ['Density', zui.density], ['Motion', zui.motion], ['Direction', zui.direction], ['Locale', zui.locale]] as axis (axis[0])}
 				<ZCard variant="outlined">
@@ -233,10 +234,12 @@
 		</div>
 	</section>
 
+	<ThemeScalePreview />
+
 	<section class={classes.section} aria-labelledby="semantic-colors" data-slot="semantic-colors">
-		<ZHeading class={classes.sectionTitle} id="semantic-colors" level={2} size="xlarge"
-			>语义颜色</ZHeading
-		>
+		<ZHeading class={classes.sectionTitle} id="semantic-colors" level={2} size="xxlarge"
+			>语义颜色
+		</ZHeading>
 		<div class={classes.tokenGrid}>
 			{#each colors as [name, value] (name)}
 				<ZCard data-slot="semantic-color" variant="outlined">
@@ -249,15 +252,15 @@
 	</section>
 
 	<section class={classes.section} aria-labelledby="component-surfaces">
-		<ZHeading class={classes.sectionTitle} id="component-surfaces" level={2} size="xlarge"
-			>真实组件表面</ZHeading
-		>
+		<ZHeading class={classes.sectionTitle} id="component-surfaces" level={2} size="xxlarge"
+			>真实组件表面
+		</ZHeading>
 		<ZContainer gutter="large" size="medium">
 			<ZCard>
 				<ZStack gap="large">
 					<ZStack direction="row" gap="medium" wrap>
 						<ZButton>主要操作</ZButton>
-						<ZButton variant="secondary">次要操作</ZButton>
+						<ZButton variant="outline">次要操作</ZButton>
 						<ZButton tone="danger">危险操作</ZButton>
 						<ZLink href="#/guides/theme">主题链接</ZLink>
 					</ZStack>
@@ -265,18 +268,24 @@
 					<ZStack gap="medium">
 						<ZText tone="muted">悬停、选中和状态背景来自共享语义 token，可在主题中统一覆盖。</ZText>
 						<ZStack direction="row" gap="medium" wrap>
-							<ZTag tone="accent">分类</ZTag><ZTag tone="success">已完成</ZTag><ZTag tone="warning"
-								>待确认</ZTag
-							><ZTag tone="danger">需处理</ZTag>
+							<ZTag tone="info">分类</ZTag>
+							<ZTag tone="success">已完成</ZTag>
+							<ZTag tone="warning">待确认</ZTag>
+							<ZTag tone="danger">需处理</ZTag>
 						</ZStack>
 						<ZAlert tone="info" title="统一主题来源" live="off"
-							>提示、标签、按钮和导航共同消费主题语义颜色，不在文档页面另设一套配色。</ZAlert
-						>
+							>提示、标签、按钮和导航共同消费主题语义颜色，不在文档页面另设一套配色。
+						</ZAlert>
 					</ZStack>
 					<ZField description="焦点、边框和错误色都来自当前Theme。" label="主题输入">
 						<ZInput placeholder="输入以检查当前表面" />
 					</ZField>
-					<ZText tone="muted">快捷键示例：<ZKbd>Ctrl</ZKbd> + <ZKbd>K</ZKbd></ZText>
+					<ZText tone="muted"
+						>快捷键示例：
+						<ZKbd>Ctrl</ZKbd>
+						+
+						<ZKbd>K</ZKbd>
+					</ZText>
 					<ZAspectRatio class={classes.aspectPreview} ratio="16 / 9">当前主色比例区域</ZAspectRatio>
 				</ZStack>
 			</ZCard>
@@ -284,9 +293,9 @@
 	</section>
 
 	<section class={classes.section} aria-labelledby="surface-elevation">
-		<ZHeading class={classes.sectionTitle} id="surface-elevation" level={2} size="xlarge"
-			>表面层级与动效</ZHeading
-		>
+		<ZHeading class={classes.sectionTitle} id="surface-elevation" level={2} size="xxlarge"
+			>表面层级与动效
+		</ZHeading>
 		<ZStack gap="large">
 			<ZText tone="muted">
 				ZCard 的 elevation 独立控制阴影，不改变内容结构。四档效果直接读取当前主题

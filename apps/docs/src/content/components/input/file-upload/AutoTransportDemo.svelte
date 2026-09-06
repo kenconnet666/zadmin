@@ -59,7 +59,7 @@
 {#if ready}
 	<ZStack gap="medium">
 		<ZFileUpload autoUpload bind:files {transport} />
-		<ZButton onclick={replaceQueue} variant="secondary">外部换入新的 queued 文件</ZButton>
+		<ZButton onclick={replaceQueue} variant="outline">外部换入新的 queued 文件</ZButton>
 		<ZText tone="muted">
 			autoUpload 仅决定何时调用 adapter；URL、凭据、缓存和响应仍不属于组件。当前：
 			{files?.map((item) => `${item.file.name}:${item.status}`).join(', ') || '空'}

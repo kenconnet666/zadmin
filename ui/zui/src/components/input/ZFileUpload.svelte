@@ -1,4 +1,5 @@
 <script module lang="ts">
+	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import type { FileRejection, FileUploadItem } from '../../runtime/file.js';
@@ -25,7 +26,7 @@
 
 	export interface ZFileUploadProps extends Omit<
 		HTMLAttributes<HTMLDivElement>,
-		'ondragenter' | 'ondragleave' | 'ondragover' | 'ondrop'
+		'children' | 'ondragenter' | 'ondragleave' | 'ondragover' | 'ondrop'
 	> {
 		readonly abortLabel?: (item: FileUploadItem) => string;
 		readonly accept?: string;
@@ -54,6 +55,7 @@
 		ref?: HTMLDivElement | null;
 		readonly removeLabel?: (item: FileUploadItem) => string;
 		readonly required?: boolean;
+		readonly size?: ZControlSize;
 		readonly retryLabel?: (item: FileUploadItem) => string;
 		readonly transport?: FileUploadTransport;
 		readonly uploadLabel?: (item: FileUploadItem) => string;
@@ -118,6 +120,12 @@
 			{ description: '单项命令集合。', name: 'actions' }
 		],
 		props: [
+			{
+				name: 'size',
+				type: "'xsmall' | 'small' | 'medium' | 'large' | 'xlarge'",
+				default: 'Field size，其次为 Provider density',
+				description: '统一 dropzone 留白、文件队列文字与操作按钮尺寸；不固定上传区域总高度。'
+			},
 			{
 				default: 'Provider localePack.fileUpload.abortUpload(item.file.name)',
 				description: 'uploading项的中止命令名称。',
@@ -333,6 +341,11 @@
 		snippets: [],
 		source: 'ui/zui/src/components/input/ZFileUpload.svelte',
 		states: [
+			{
+				description: '解析尺寸。',
+				name: 'data-size',
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge']
+			},
 			{ description: '文件正位于drop zone。', name: 'data-dragging', values: ['true'] },
 			{ description: '达到maxFiles或单文件上限。', name: 'data-full', values: ['true'] },
 			{ description: 'Field或显式invalid。', name: 'data-invalid', values: ['true'] },
@@ -346,11 +359,30 @@
 
 	const rootRecipe = defineRecipe({
 		base: (s) => {
+			s.fontFamily._sans;
+			s.lineHeight._compact;
 			s.display.flex;
 			s.flexDirection.column;
 			s.gap._medium;
 		},
 		variants: {
+			size: {
+				xsmall: (s) => {
+					s.fontSize._xsmall;
+				},
+				small: (s) => {
+					s.fontSize._small;
+				},
+				medium: (s) => {
+					s.fontSize._medium;
+				},
+				large: (s) => {
+					s.fontSize._large;
+				},
+				xlarge: (s) => {
+					s.fontSize._large;
+				}
+			},
 			disabled: {
 				false: () => undefined,
 				true: (s) => {
@@ -376,7 +408,7 @@
 			s.color._text;
 			s.cursor.pointer;
 			s.fontFamily._sans;
-			s.fontSize._medium;
+			s.fontSize.inherit;
 			s.lineHeight._normal;
 			s.display.flex;
 			s.flexDirection.column;
@@ -395,6 +427,23 @@
 			});
 		},
 		variants: {
+			size: {
+				xsmall: (s) => {
+					s.padding._medium;
+				},
+				small: (s) => {
+					s.padding._medium;
+				},
+				medium: (s) => {
+					s.padding._large;
+				},
+				large: (s) => {
+					s.padding._xlarge;
+				},
+				xlarge: (s) => {
+					s.padding._xlarge;
+				}
+			},
 			disabled: {
 				false: () => undefined,
 				true: (s) => {
@@ -447,7 +496,30 @@
 			s.justifyContent.spaceBetween;
 			s.padding._medium;
 		},
-		variants: {},
+		variants: {
+			size: {
+				xsmall: (s) => {
+					s.padding._small;
+					s.gap._small;
+				},
+				small: (s) => {
+					s.padding._medium;
+					s.gap._small;
+				},
+				medium: (s) => {
+					s.padding._medium;
+					s.gap._medium;
+				},
+				large: (s) => {
+					s.padding._large;
+					s.gap._medium;
+				},
+				xlarge: (s) => {
+					s.padding._large;
+					s.gap._medium;
+				}
+			}
+		},
 		defaultVariants: {}
 	});
 	const detailsRecipe = defineRecipe({
@@ -473,6 +545,23 @@
 	const statusRecipe = defineRecipe({
 		base: (s) => s.fontSize._small,
 		variants: {
+			size: {
+				xsmall: (s) => {
+					s.fontSize._xsmall;
+				},
+				small: (s) => {
+					s.fontSize._xsmall;
+				},
+				medium: (s) => {
+					s.fontSize._small;
+				},
+				large: (s) => {
+					s.fontSize._small;
+				},
+				xlarge: (s) => {
+					s.fontSize._medium;
+				}
+			},
 			status: {
 				aborted: (s) => s.color._textMuted,
 				error: (s) => s.color._danger,
@@ -530,6 +619,7 @@
 		serializeIcssVariables
 	} from '../../runtime/foundation/root-style.js';
 	import { useZui } from '../../runtime/foundation/context.js';
+	import { resolveControlSize } from '../../runtime/foundation/control-size.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { ReducedMotionState } from '../../runtime/foundation/motion.svelte.js';
 	import { claimZFieldControlOwner } from '../../runtime/form/field-context.js';
@@ -576,6 +666,7 @@
 		ref = $bindable(null),
 		removeLabel,
 		required: requiredProp = false,
+		size,
 		retryLabel,
 		style,
 		transport,
@@ -585,6 +676,7 @@
 	const zui = useZui();
 	const fieldOwner = claimZFieldControlOwner();
 	const field = fieldOwner.field;
+	const resolvedSize = $derived(resolveControlSize(size ?? field?.size, zui.density));
 	const reducedMotion = new ReducedMotionState(() => zui.motion);
 	const uid = $props.id();
 	const idBase = $derived(createZuiId(zui.idPrefix, uid, 'file-upload'));
@@ -634,18 +726,19 @@
 		resolvedFiles.length >= constraints.maxFiles || (!multiple && resolvedFiles.length >= 1)
 	);
 	const reduced = $derived(reducedMotion.current);
-	const rootClass = $derived(zui.recipe(rootRecipe, { disabled }));
+	const rootClass = $derived(zui.recipe(rootRecipe, { disabled, size: resolvedSize }));
 	const dropzoneClass = $derived(
 		zui.recipe(dropzoneRecipe, {
 			disabled,
 			dragging,
 			invalid: resolvedInvalid,
 			motion: reduced ? 'reduced' : 'full',
+			size: resolvedSize,
 			readonly
 		})
 	);
 	const listClass = $derived(zui.recipe(listRecipe));
-	const itemClass = $derived(zui.recipe(itemRecipe));
+	const itemClass = $derived(zui.recipe(itemRecipe, { size: resolvedSize }));
 	const detailsClass = $derived(zui.recipe(detailsRecipe));
 	const headingClass = $derived(zui.recipe(headingRecipe));
 	const actionsClass = $derived(zui.recipe(actionsRecipe));
@@ -677,7 +770,7 @@
 		}
 	}
 	function statusClass(status: FileUploadStatus): string {
-		return zui.recipe(statusRecipe, { status });
+		return zui.recipe(statusRecipe, { status, size: resolvedSize });
 	}
 	function allocateId(): string {
 		const ids = new Set(resolvedFiles.map((item) => item.id));
@@ -954,6 +1047,7 @@
 	data-readonly={readonly || undefined}
 	data-reduced-motion={reduced || undefined}
 	data-required={resolvedRequired || undefined}
+	data-size={resolvedSize}
 >
 	<button
 		bind:this={dropzoneRef}
@@ -974,7 +1068,7 @@
 		}}
 		ondrop={handleDrop}
 	>
-		<CloudUpload aria-hidden="true" size={28} />
+		<CloudUpload aria-hidden="true" size="1.75em" />
 		<strong>{resolvedChooseLabel}</strong>
 		<span>{resolvedDropLabel}</span>
 	</button>
@@ -1009,13 +1103,16 @@
 					<div class={detailsClass}>
 						<div class={headingClass}>
 							<span
-								><FileIcon aria-hidden="true" size={16} />
+								><FileIcon aria-hidden="true" size="1em" />
 								{item.file.name} · {formatSize(item.file)}</span
 							>
 							<span class={statusClass(item.status)} data-slot="status" aria-live="polite">
-								{#if item.status === 'success'}<CircleCheck aria-hidden="true" size={14} />
-								{:else if item.status === 'error'}<TriangleAlert aria-hidden="true" size={14} />
-								{:else if item.status === 'aborted'}<CircleStop aria-hidden="true" size={14} />{/if}
+								{#if item.status === 'success'}<CircleCheck aria-hidden="true" size="1em" />
+								{:else if item.status === 'error'}<TriangleAlert aria-hidden="true" size="1em" />
+								{:else if item.status === 'aborted'}<CircleStop
+										aria-hidden="true"
+										size="1em"
+									/>{/if}
 								{statusText(item)}
 							</span>
 						</div>
@@ -1028,41 +1125,41 @@
 							<ZButton
 								aria-label={getUploadLabel(item)}
 								disabled={disabled || readonly}
-								size="small"
+								size={resolvedSize}
 								variant="ghost"
 								onclick={() => void upload(item.id)}
 							>
-								<Upload aria-hidden="true" size={14} />
+								<Upload aria-hidden="true" size="1em" />
 							</ZButton>
 						{:else if item.status === 'uploading'}
 							<ZButton
 								aria-label={getAbortLabel(item)}
 								disabled={disabled || readonly}
-								size="small"
+								size={resolvedSize}
 								variant="ghost"
 								onclick={() => publicController.abort(item.id)}
 							>
-								<CircleStop aria-hidden="true" size={14} />
+								<CircleStop aria-hidden="true" size="1em" />
 							</ZButton>
 						{:else if transport && (item.status === 'error' || item.status === 'aborted')}
 							<ZButton
 								aria-label={getRetryLabel(item)}
 								disabled={disabled || readonly}
-								size="small"
+								size={resolvedSize}
 								variant="ghost"
 								onclick={() => void retry(item.id)}
 							>
-								<RefreshCw aria-hidden="true" size={14} />
+								<RefreshCw aria-hidden="true" size="1em" />
 							</ZButton>
 						{/if}
 						<ZButton
 							aria-label={getRemoveLabel(item)}
 							disabled={disabled || readonly}
-							size="small"
+							size={resolvedSize}
 							variant="ghost"
 							onclick={() => remove(item.id)}
 						>
-							<X aria-hidden="true" size={14} />
+							<X aria-hidden="true" size="1em" />
 						</ZButton>
 					</div>
 				</div>

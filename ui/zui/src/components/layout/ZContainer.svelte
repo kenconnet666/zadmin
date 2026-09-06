@@ -5,8 +5,10 @@
 
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 
+	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
+
 	export type ZContainerGutter = 'large' | 'medium' | 'none' | 'small';
-	export type ZContainerSize = 'full' | 'large' | 'medium' | 'small';
+	export type ZContainerSize = ZControlSize | 'full';
 
 	export interface ZContainerProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
 		readonly children?: Snippet;
@@ -30,7 +32,7 @@
 				default: "'medium'",
 				description: '内容最大宽度预设。',
 				name: 'size',
-				type: "'small' | 'medium' | 'large' | 'full'"
+				type: 'ZContainerSize'
 			},
 			{
 				default: "'medium'",
@@ -54,7 +56,7 @@
 			{
 				description: '最大宽度预设。',
 				name: 'data-size',
-				values: ['small', 'medium', 'large', 'full']
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge', 'full']
 			},
 			{
 				description: '逻辑内联gutter。',
@@ -83,9 +85,11 @@
 			},
 			size: {
 				full: (s) => s.maxWidth._full,
-				large: (s) => s.maxWidth.rem(80),
-				medium: (s) => s.maxWidth.rem(64),
-				small: (s) => s.maxWidth.rem(40)
+				xsmall: (s) => s.maxWidth._containerXsmall,
+				small: (s) => s.maxWidth._containerSmall,
+				medium: (s) => s.maxWidth._containerMedium,
+				large: (s) => s.maxWidth._containerLarge,
+				xlarge: (s) => s.maxWidth._containerXlarge
 			}
 		},
 		defaultVariants: { gutter: 'medium', size: 'medium' }

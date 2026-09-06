@@ -29,11 +29,11 @@
 		bind:value
 		clearable
 		defaultExpandedKeys={['services']}
-		height={216}
-		itemSize={36}
+		virtualHeight={216}
+		virtualItemSize={36}
 		{nodes}
 		onLoadChildren={loadChildren}
-		virtualized
+		virtual
 	/>
 	<ZText tone="muted">value = {value ?? 'null'}；加载后仍只挂载viewport窗口。</ZText>
 </ZStack>

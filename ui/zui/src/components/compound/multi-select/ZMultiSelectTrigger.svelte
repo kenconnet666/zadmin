@@ -109,12 +109,13 @@
 		onkeydown,
 		ref = $bindable(null),
 		size,
-		variant = 'secondary',
+		variant = 'outline',
 		...rest
 	}: ZMultiSelectTriggerProps = $props();
 	const multi = useZMultiSelect();
 	const fieldOwner = useZFieldControlOwner();
 	const zui = useZui();
+	const resolvedSize = $derived(size ?? multi.size);
 	const removeClass = $derived(zui.recipe(removeRecipe));
 	const triggerClass = $derived(zui.recipe(triggerRecipe));
 	const visibleTags = $derived(
@@ -189,7 +190,7 @@
 	class={[triggerClass, className]}
 	disabled={disabledProp || multi.disabled}
 	popupRole="listbox"
-	size={size ?? multi.size}
+	size={resolvedSize}
 	{variant}
 	onkeydown={handleKeydown}
 	data-invalid={multi.invalid || undefined}
@@ -204,7 +205,7 @@
 		{multi.placeholder}
 	{:else}
 		{#each visibleTags as tag (tag.value)}
-			<ZTag data-slot="tag">
+			<ZTag data-slot="tag" size={resolvedSize}>
 				<span data-slot="tag-label">{tag.label}</span>
 				{#if !tag.disabled && !multi.disabled && !multi.readonly}
 					<span
@@ -213,13 +214,13 @@
 						class={removeClass}
 						data-slot="tag-remove"
 					>
-						<X size={13} />
+						<X size="1em" />
 					</span>
 				{/if}
 			</ZTag>
 		{/each}
 		{#if hiddenCount > 0}
-			<ZTag data-slot="overflow">{multi.overflowLabel(hiddenCount)}</ZTag>
+			<ZTag data-slot="overflow" size={resolvedSize}>{multi.overflowLabel(hiddenCount)}</ZTag>
 		{/if}
 		{#if multi.clearable && !multi.disabled && !multi.readonly}
 			<span
@@ -228,7 +229,7 @@
 				class={removeClass}
 				data-slot="clear"
 			>
-				<X size={15} />
+				<X size="1em" />
 			</span>
 		{/if}
 	{/if}

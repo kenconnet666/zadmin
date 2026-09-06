@@ -86,7 +86,7 @@
 				default: 'Field size，其次为 Provider density',
 				description: '输入尺寸；ZComboboxInput 的显式 size 可覆盖根组件。',
 				name: 'size',
-				type: "'small' | 'medium' | 'large'"
+				type: "'xsmall' | 'small' | 'medium' | 'large' | 'xlarge'"
 			},
 			{
 				default: 'Field controlId或自动生成的input ID',

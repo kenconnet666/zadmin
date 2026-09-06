@@ -27,11 +27,11 @@
 		</ZField>
 	</form>
 	<ZStack direction="row" gap="small" wrap>
-		<ZButton onclick={() => (value = '')} variant="secondary">外部清空</ZButton>
-		<ZButton onclick={() => (value = 'Notify @')} variant="secondary">外部替换文本</ZButton>
-		<ZButton onclick={() => (readonly = !readonly)} variant="secondary">切换Readonly</ZButton>
-		<ZButton onclick={() => (disabled = !disabled)} variant="secondary">切换Disabled</ZButton>
-		<ZButton form={formId} type="reset" variant="secondary">重置表单</ZButton>
+		<ZButton onclick={() => (value = '')} variant="outline">外部清空</ZButton>
+		<ZButton onclick={() => (value = 'Notify @')} variant="outline">外部替换文本</ZButton>
+		<ZButton onclick={() => (readonly = !readonly)} variant="outline">切换Readonly</ZButton>
+		<ZButton onclick={() => (disabled = !disabled)} variant="outline">切换Disabled</ZButton>
+		<ZButton form={formId} type="reset" variant="outline">重置表单</ZButton>
 	</ZStack>
 	<ZText tone="muted"
 		>value = {value || 'empty'} · readonly = {readonly} · disabled = {disabled} · 用户变更 = {changes}

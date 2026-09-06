@@ -8,11 +8,11 @@
 <ZStack gap="medium">
 	<ZStack direction="row" gap="small" wrap>
 		<ZForm id="input-external-owner">
-			<ZButton type="reset" variant="secondary">重置主表单</ZButton>
+			<ZButton type="reset" variant="outline">重置主表单</ZButton>
 		</ZForm>
 		{#key backupVersion}
 			<ZForm data-version={backupVersion} id="input-external-backup">
-				<ZButton type="reset" variant="secondary">重置备用表单</ZButton>
+				<ZButton type="reset" variant="outline">重置备用表单</ZButton>
 			</ZForm>
 		{/key}
 		<ZButton

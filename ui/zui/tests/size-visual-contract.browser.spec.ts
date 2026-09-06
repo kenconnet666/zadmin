@@ -4,9 +4,9 @@ import { render } from 'vitest-browser-svelte';
 import SizeVisualContractFixture from './SizeVisualContractFixture.svelte';
 
 const sizes = [
-	['small', 24, 12],
+	['small', 28, 12],
 	['medium', 32, 14],
-	['large', 48, 18]
+	['large', 40, 16]
 ] as const;
 
 describe('size visual contracts for foundational controls', () => {
@@ -93,13 +93,13 @@ describe('size visual contracts for foundational controls', () => {
 			mediumTag.getBoundingClientRect().height
 		);
 		for (const [size, dimension] of [
-			['small', 24],
-			['medium', 32]
+			['small', 16],
+			['medium', 20]
 		] as const) {
 			const badge = document.querySelector<HTMLElement>(`[data-testid="badge-${size}"]`)!;
 			const indicator = badge.querySelector<HTMLElement>('[data-slot="indicator"]')!;
 			expect(badge.dataset.size).toBe(size);
-			expect(getComputedStyle(indicator).fontSize).toBe('12px');
+			expect(getComputedStyle(indicator).fontSize).toBe(size === 'small' ? '11px' : '12px');
 			expect(indicator.getBoundingClientRect().width).toBe(dimension);
 			expect(indicator.getBoundingClientRect().height).toBe(dimension);
 		}
@@ -108,19 +108,21 @@ describe('size visual contracts for foundational controls', () => {
 	// @zui-visual ZAvatar size geometry
 	// @zui-visual ZSpinner size geometry
 	// @zui-visual ZIcon size geometry
-	it('keeps visual primitives on the size token scale', () => {
+	it('keeps avatars and indicators on their independent token scales', () => {
 		render(SizeVisualContractFixture);
-		for (const [size, height, fontSize] of sizes) {
+		for (const [size, avatarSize, indicatorSize, fontSize] of [
+			['small', 32, 14, 12],
+			['medium', 40, 16, 14],
+			['large', 48, 20, 16]
+		] as const) {
 			const avatar = document.querySelector<HTMLElement>(`[data-testid="avatar-${size}"]`)!;
-			expect(avatar.getBoundingClientRect().width).toBe(height);
-			expect(avatar.getBoundingClientRect().height).toBe(height);
-			const spinner = document.querySelector<HTMLElement>(`[data-testid="spinner-${size}"]`)!;
-			expect(spinner.getBoundingClientRect().width).toBe(height);
-			expect(spinner.getBoundingClientRect().height).toBe(height);
-			const icon = document.querySelector<SVGSVGElement>(`[data-testid="icon-${size}"]`)!;
-			expect(icon.getAttribute('width')).toBe(icon.getAttribute('height'));
-			expect(icon.getBoundingClientRect().width).toBe(height);
-			expect(icon.getBoundingClientRect().height).toBe(height);
+			expect(avatar.getBoundingClientRect().width).toBe(avatarSize);
+			expect(avatar.getBoundingClientRect().height).toBe(avatarSize);
+			for (const kind of ['spinner', 'icon']) {
+				const indicator = document.querySelector<HTMLElement>(`[data-testid="${kind}-${size}"]`)!;
+				expect(indicator.getBoundingClientRect().width).toBe(indicatorSize);
+				expect(indicator.getBoundingClientRect().height).toBe(indicatorSize);
+			}
 			expect(getComputedStyle(avatar).fontSize).toBe(`${fontSize}px`);
 		}
 	});
@@ -167,11 +169,11 @@ describe('size visual contracts for foundational controls', () => {
 		expect(directInput.dataset.size).toBe('medium');
 		expect(directInput.getBoundingClientRect().height).toBe(32);
 		expect(formFieldInput.dataset.size).toBe('large');
-		expect(formFieldInput.getBoundingClientRect().height).toBe(48);
+		expect(formFieldInput.getBoundingClientRect().height).toBe(40);
 		const group = document.querySelector<HTMLElement>('[data-testid="group-small"]')!;
 		const groupInput = document.querySelector<HTMLInputElement>('[data-testid="group-input"]')!;
 		expect(group.dataset.size).toBe('small');
 		expect(groupInput.dataset.size).toBe('small');
-		expect(groupInput.getBoundingClientRect().height).toBe(24);
+		expect(groupInput.getBoundingClientRect().height).toBe(28);
 	});
 });

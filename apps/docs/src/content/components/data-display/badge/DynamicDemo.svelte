@@ -17,8 +17,8 @@
 	let size = $state<BadgeSize>('medium');
 	let tone = $state<BadgeTone>('danger');
 	let placement = $state<BadgePlacement>('top-end');
-	const sizes: readonly BadgeSize[] = ['medium', 'small'];
-	const tones: readonly BadgeTone[] = ['danger', 'accent', 'success', 'warning', 'default'];
+	const sizes: readonly BadgeSize[] = ['xsmall', 'small', 'medium', 'large', 'xlarge'];
+	const tones: readonly BadgeTone[] = ['danger', 'info', 'success', 'warning', 'neutral'];
 	const placements: readonly BadgePlacement[] = [
 		'top-end',
 		'top-start',
@@ -44,7 +44,7 @@
 				{tone}
 				label={dot ? '有通知' : undefined}
 			>
-				<ZButton aria-label={`完整动画任务箱有${count}项`} shape="square" variant="secondary">
+				<ZButton aria-label={`完整动画任务箱有${count}项`} shape="square" variant="outline">
 					<Inbox aria-hidden="true" size={18} />
 				</ZButton>
 			</ZBadge>
@@ -59,10 +59,10 @@
 					{placement}
 					{size}
 					max={99}
-					tone="accent"
+					tone="info"
 					label={dot ? '有通知' : undefined}
 				>
-					<ZButton aria-label={`减少动画任务箱有${count}项`} shape="square" variant="secondary">
+					<ZButton aria-label={`减少动画任务箱有${count}项`} shape="square" variant="outline">
 						<Inbox aria-hidden="true" size={18} />
 					</ZButton>
 				</ZBadge>
@@ -71,25 +71,25 @@
 		</ZProvider>
 	</ZStack>
 	<ZStack direction="row" gap="small" wrap>
-		<ZButton size="small" variant="secondary" onclick={() => (count = Math.max(0, count - 1))}
-			>减少</ZButton
-		>
+		<ZButton size="small" variant="outline" onclick={() => (count = Math.max(0, count - 1))}
+			>减少
+		</ZButton>
 		<ZButton size="small" onclick={() => (count += 1)}>增加</ZButton>
-		<ZButton size="small" variant="secondary" onclick={() => (invisible = !invisible)}>
+		<ZButton size="small" variant="outline" onclick={() => (invisible = !invisible)}>
 			{invisible ? '显示' : '隐藏'}指示器
 		</ZButton>
-		<ZButton size="small" variant="secondary" onclick={() => (dot = !dot)}>
+		<ZButton size="small" variant="outline" onclick={() => (dot = !dot)}>
 			{dot ? '计数' : 'Dot'}模式
 		</ZButton>
-		<ZButton size="small" variant="secondary" onclick={() => (size = cycle(sizes, size))}>
+		<ZButton size="small" variant="outline" onclick={() => (size = cycle(sizes, size))}>
 			size（{size}）
 		</ZButton>
-		<ZButton size="small" variant="secondary" onclick={() => (tone = cycle(tones, tone))}>
+		<ZButton size="small" variant="outline" onclick={() => (tone = cycle(tones, tone))}>
 			tone（{tone}）
 		</ZButton>
 		<ZButton
 			size="small"
-			variant="secondary"
+			variant="outline"
 			onclick={() => (placement = cycle(placements, placement))}
 		>
 			placement（{placement}）

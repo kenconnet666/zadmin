@@ -11,7 +11,8 @@
 		defaultTheme,
 		extendTheme
 	} from '../src/entrypoints/index.js';
-	const customTheme = extendTheme(defaultTheme, { fontSize: { xxlarge: 38 } });
+
+	const customTheme = extendTheme(defaultTheme, { fontSize: { xxxlarge: 38 } });
 	const sizes = ['small', 'medium', 'large'] as const;
 
 	const listItems = [
@@ -22,15 +23,15 @@
 </script>
 
 <ZList aria-label="Primitive list" data-testid="primitive-list" items={listItems} />
-<ZHeading size="xxlarge" data-testid="heading-xxlarge">Theme heading</ZHeading>
+<ZHeading size="xxxlarge" data-testid="heading-xxlarge">Theme heading</ZHeading>
 <ZProvider theme={customTheme}>
-	<ZHeading size="xxlarge" data-testid="heading-custom">Custom theme heading</ZHeading>
-	<ZText size="xxlarge" data-testid="text-custom">Custom text scale</ZText>
+	<ZHeading size="xxxlarge" data-testid="heading-custom">Custom theme heading</ZHeading>
+	<ZText size="xxxlarge" data-testid="text-custom">Custom text scale</ZText>
 </ZProvider>
 {#each sizes as size (size)}
 	<ZLink appearance="navigation" {size} href="#typography" data-testid={`nav-${size}`}
-		>Navigation</ZLink
-	>
+		>Navigation
+	</ZLink>
 {/each}
 <ZDescriptionList
 	aria-label="Primitive descriptions"

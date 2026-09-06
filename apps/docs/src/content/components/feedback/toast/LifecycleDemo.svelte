@@ -54,8 +54,8 @@
 <ZStack gap="medium">
 	<ZStack direction="row" gap="small" wrap>
 		<ZButton onclick={addBurst}>加入 4 条通知</ZButton>
-		<ZButton variant="secondary" onclick={updateStableToast}>更新稳定 id</ZButton>
-		<ZButton variant="secondary" onclick={addActionToast}>发送定时操作通知</ZButton>
+		<ZButton variant="outline" onclick={updateStableToast}>更新稳定 id</ZButton>
+		<ZButton variant="outline" onclick={addActionToast}>发送定时操作通知</ZButton>
 		<ZButton variant="ghost" onclick={() => queue.clear()}>清空</ZButton>
 	</ZStack>
 	<ZText tone="muted">

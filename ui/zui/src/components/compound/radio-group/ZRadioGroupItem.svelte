@@ -39,14 +39,22 @@
 				true: (s) => s.accentColor._danger
 			},
 			size: {
+				xsmall: (s) => {
+					s.blockSize._xsmall;
+					s.inlineSize._xsmall;
+				},
+				small: (s) => {
+					s.blockSize._small;
+					s.inlineSize._small;
+				},
+				medium: () => undefined,
 				large: (s) => {
 					s.blockSize._large;
 					s.inlineSize._large;
 				},
-				medium: () => undefined,
-				small: (s) => {
-					s.blockSize._small;
-					s.inlineSize._small;
+				xlarge: (s) => {
+					s.blockSize._xlarge;
+					s.inlineSize._xlarge;
 				}
 			}
 		},
@@ -62,6 +70,7 @@
 
 	export type ZRadioGroupItemProps = Omit<
 		HTMLInputAttributes,
+		| 'children'
 		| 'aria-checked'
 		| 'checked'
 		| 'defaultChecked'
@@ -130,7 +139,7 @@
 					"RadioGroup size，其次为Field size与Provider density（'comfortable'映射为'medium'）",
 				description: 'radio指示器尺寸；显式Item size优先。',
 				name: 'size',
-				type: "'small' | 'medium' | 'large'"
+				type: "'xsmall' | 'small' | 'medium' | 'large' | 'xlarge'"
 			},
 			{ default: 'false', description: '禁用当前Item。', name: 'disabled', type: 'boolean' },
 			{
@@ -151,7 +160,7 @@
 			{
 				description: '解析后的radio指示器尺寸。',
 				name: 'data-size',
-				values: ['small', 'medium', 'large']
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge']
 			}
 		],
 		status: 'stable',

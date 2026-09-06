@@ -6,7 +6,7 @@
 </script>
 
 <ZPopover bind:open onOpenChange={() => (changes += 1)} placement="bottom-start">
-	<ZPopoverTrigger data-testid="popover-trigger" variant="secondary">部署详情</ZPopoverTrigger>
+	<ZPopoverTrigger data-testid="popover-trigger" variant="outline">部署详情</ZPopoverTrigger>
 	<ZPopoverContent data-testid="popover-content">
 		<ZStack gap="small">
 			<ZText as="strong">生产部署</ZText>

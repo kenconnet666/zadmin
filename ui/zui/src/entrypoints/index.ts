@@ -239,6 +239,7 @@ export type {
 export { default as ZHeading } from '../components/gene/ZHeading.svelte';
 export type {
 	ZHeadingLevel,
+	ZHeadingWrap,
 	ZHeadingLineHeight,
 	ZHeadingProps,
 	ZHeadingSize,
@@ -572,7 +573,7 @@ export type {
 	ZAspectRatioValue
 } from '../components/layout/ZAspectRatio.svelte';
 export { useZui } from '../runtime/foundation/context.js';
-export { resolveControlSize } from '../runtime/foundation/control-size.js';
+export { controlSizes, resolveControlSize } from '../runtime/foundation/control-size.js';
 export type { ZControlSize } from '../runtime/foundation/control-size.js';
 export type {
 	ZuiColorScheme,

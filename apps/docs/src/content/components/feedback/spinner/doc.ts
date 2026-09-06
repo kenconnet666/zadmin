@@ -24,7 +24,7 @@ export const spinnerDoc = defineComponentDoc(spinnerMetadata, {
 			ref: { default: 'null', description: '真实span与owner Document/Window边界。' },
 			size: {
 				default: 'medium',
-				description: 'small用于行内，medium用于局部，large用于显著但仍非overlay的等待。'
+				description: '五档indicatorSize为12/14/16/20/24px，与控件高度独立；尺寸不改变等待语义。'
 			}
 		},
 		summary:
@@ -78,7 +78,7 @@ export const spinnerDoc = defineComponentDoc(spinnerMetadata, {
 		'省略label时使用Provider localePack.feedback.loading；显式业务名称始终优先。',
 		'长任务仍需邻近文字说明和可取消路径，Spinner不是进度值；已知比例改用ZProgress或ZLoadingBar。',
 		'容器的aria-busy、占位布局、overlay、延迟防闪烁与请求取消由调用方拥有，Spinner不复制Ant Spin fullscreen/container。',
-		'参考Ant Design small/medium/large与MUI color/inherit，但保留三个token尺寸和primary/muted/inherit，拒绝任意像素、determinate与全屏遮罩。'
+		'参考Ant Design small/medium/large与MUI color/inherit，但保留五个indicatorSize尺寸和primary/muted/inherit，拒绝任意像素、determinate与全屏遮罩。'
 	],
 	keywords: ['spinner', 'loading', 'reduced motion', 'WAAPI', 'owner Window']
 });

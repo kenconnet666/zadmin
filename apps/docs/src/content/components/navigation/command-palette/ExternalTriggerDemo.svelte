@@ -9,7 +9,7 @@
 </script>
 
 <ZStack gap="medium">
-	<ZButton type="button" variant="secondary" onclick={() => (open = true)}>由业务按钮打开</ZButton>
+	<ZButton type="button" variant="outline" onclick={() => (open = true)}>由业务按钮打开</ZButton>
 	<ZCommandPalette
 		bind:open
 		inputLabel="搜索开发工具"

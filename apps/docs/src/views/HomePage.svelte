@@ -46,7 +46,7 @@
 					s.paddingTop.rem(6);
 				},
 				catalogTitle: (s) => {
-					s.fontSize._xlarge;
+					s.fontSize._xxlarge;
 					s.letterSpacing.em(-0.03);
 					s.margin.px(0);
 				},
@@ -139,7 +139,7 @@
 
 <section class={classes.hero}>
 	<ZText as="p" class={classes.eyebrow}>ZADMIN UI SYSTEM</ZText>
-	<ZHeading data-doc-page-title="true" level={1} size="xxlarge"
+	<ZHeading data-doc-page-title="true" level={1} size="xxxlarge"
 		>看见组件，运行组件，复制真实源码。</ZHeading
 	>
 	<ZText as="p" class={classes.copy}>
@@ -151,7 +151,7 @@
 		<ZLink appearance="button" href="#/components/button">开始浏览组件</ZLink>
 		<ZLink
 			appearance="button"
-			variant="secondary"
+			variant="outline"
 			external
 			href="https://github.com/kenconnet666/zadmin/tree/master/ui/zui"
 			underline="none">GitHub源码</ZLink
@@ -181,7 +181,7 @@
 <section class={classes.catalog}>
 	<header>
 		<ZText as="p" class={classes.eyebrow}>PRODUCTION GUIDES</ZText>
-		<ZHeading class={classes.catalogTitle} level={2} size="xlarge">生产指南</ZHeading>
+		<ZHeading class={classes.catalogTitle} level={2} size="xxlarge">生产指南</ZHeading>
 	</header>
 	<div class={classes.grid}>
 		{#each guideDocs as guide (guide.id)}
@@ -205,7 +205,7 @@
 
 	<header class={classes.group}>
 		<ZText as="p" class={classes.eyebrow}>COMPONENT CATALOG</ZText>
-		<ZHeading class={classes.catalogTitle} level={2} size="xlarge">组件目录</ZHeading>
+		<ZHeading class={classes.catalogTitle} level={2} size="xxlarge">组件目录</ZHeading>
 	</header>
 	{#each componentCategories as category (category.id)}
 		{@const categoryDocs = docs.filter((doc) => doc.category === category.id)}

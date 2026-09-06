@@ -17,7 +17,7 @@
 <ZStack gap="medium">
 	<ZStack direction="row" gap="small" wrap>
 		<ZButton start={addIcon}>新建项目</ZButton>
-		<ZButton end={nextIcon} variant="secondary">继续配置</ZButton>
+		<ZButton end={nextIcon} variant="outline">继续配置</ZButton>
 		<ZButton loading loadingIndicator={saveIndicator} loadingLabel="正在保存设置">保存设置</ZButton>
 	</ZStack>
 	<ZStack gap="small">

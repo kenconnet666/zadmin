@@ -4,13 +4,20 @@
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
+	import type { IcssFactory } from '../../icss/types.js';
+	import type { ZuiTheme } from '../../theme/types.js';
+	import type { ZSemanticTone } from '../../theme/semantics.js';
 	import type { RecipeVariants } from '../../recipes/types.js';
-	import { resolveControlSize, type ZControlSize } from '../../runtime/foundation/control-size.js';
+	import {
+		controlSizeStyles,
+		resolveControlSize,
+		type ZControlSize
+	} from '../../runtime/foundation/control-size.js';
 
 	export type ButtonSize = ZControlSize;
 	export type ButtonShape = 'circle' | 'default' | 'square';
-	export type ButtonTone = 'danger' | 'default';
-	export type ButtonVariant = 'ghost' | 'primary' | 'secondary';
+	export type ButtonTone = ZSemanticTone | 'primary';
+	export type ButtonVariant = 'ghost' | 'solid' | 'outline';
 
 	export interface ButtonDesignProps {
 		disabled?: boolean;
@@ -21,12 +28,61 @@
 		variant?: ButtonVariant;
 	}
 
+	function buttonTone(tone: ButtonTone): IcssFactory<ZuiTheme> {
+		const color = `_${tone}` as const;
+		const hover = `_${tone}Hover` as const;
+		const subtle = `_${tone}Subtle` as const;
+		const onColor = {
+			primary: '_onPrimary',
+			neutral: '_onNeutral',
+			info: '_onInfo',
+			success: '_onSuccess',
+			warning: '_onWarning',
+			danger: '_onDanger'
+		} as const;
+		const interactive = ':not(:disabled):not([aria-disabled="true"])';
+		const pressed = ':is([aria-pressed="true"], [aria-pressed="mixed"])';
+		return (s) => {
+			s._selector('&[data-variant="solid"]', (solid) => {
+				solid.backgroundColor[color];
+				solid.borderColor[color];
+				solid.color[onColor[tone]];
+				solid._selector(`&${interactive}:hover, &${pressed}`, (active) => {
+					active.backgroundColor[hover];
+					active.borderColor[hover];
+				});
+			});
+			s._selector('&[data-variant="outline"]', (outline) => {
+				outline.backgroundColor._canvas;
+				outline.borderColor[tone === 'neutral' ? '_border' : color];
+				outline.color[color];
+				outline._selector(`&${interactive}:hover`, (active) => active.backgroundColor[subtle]);
+				outline._selector(`&${pressed}`, (active) => {
+					active.backgroundColor[color];
+					active.borderColor[color];
+					active.color[onColor[tone]];
+				});
+			});
+			s._selector('&[data-variant="ghost"]', (ghost) => {
+				ghost.backgroundColor.transparent;
+				ghost.borderColor.transparent;
+				ghost.color[color];
+				ghost._selector(
+					`&${interactive}:hover, &${pressed}`,
+					(active) => active.backgroundColor[subtle]
+				);
+				ghost._selector(`&${pressed}`, (active) => active.borderColor[color]);
+			});
+		};
+	}
+
 	/** Shared visual recipe for native buttons and button-shaped links. */
 	export const buttonRecipe = defineRecipe({
 		base: (s) => {
 			s.display.inlineFlex;
 			s.alignItems.center;
 			s.justifyContent.center;
+			s.boxSizing.borderBox;
 			s.borderWidth._hairline;
 			s.borderStyle.solid;
 			s.borderRadius._medium;
@@ -36,7 +92,6 @@
 			s.position.relative;
 			s.cursor.pointer;
 			s.transitionDuration._fast;
-			// A property list is structural CSS, not a theme value or single keyword.
 			s.transitionProperty.raw('background-color, border-color, color, opacity');
 			s.transitionTimingFunction._standard;
 			s.userSelect.none;
@@ -55,212 +110,78 @@
 					s.opacity._disabled;
 				}
 			},
-			fullWidth: {
-				false: () => undefined,
-				true: (s) => s.width.percent(100)
-			},
+			fullWidth: { false: () => undefined, true: (s) => s.width.percent(100) },
 			motion: {
 				auto: () => undefined,
 				full: () => undefined,
 				reduced: (s) => s.transitionDuration.ms(0)
 			},
 			size: {
-				large: (s) => {
-					s.minHeight._large;
+				xsmall: (s) => {
+					controlSizeStyles.xsmall(s);
 					s.paddingBlock.px(0);
-					s.fontSize._large;
-				},
-				medium: (s) => {
-					s.minHeight._medium;
-					s.paddingBlock.px(0);
-					s.fontSize._medium;
+					s._selector('&[data-shape="square"], &[data-shape="circle"]', (shape) => {
+						shape.height._xsmall;
+						shape.width._xsmall;
+						shape.paddingInline.px(0);
+					});
 				},
 				small: (s) => {
-					s.minHeight._small;
+					controlSizeStyles.small(s);
 					s.paddingBlock.px(0);
-					s.fontSize._small;
+					s._selector('&[data-shape="square"], &[data-shape="circle"]', (shape) => {
+						shape.height._small;
+						shape.width._small;
+						shape.paddingInline.px(0);
+					});
+				},
+				medium: (s) => {
+					controlSizeStyles.medium(s);
+					s.paddingBlock.px(0);
+					s._selector('&[data-shape="square"], &[data-shape="circle"]', (shape) => {
+						shape.height._medium;
+						shape.width._medium;
+						shape.paddingInline.px(0);
+					});
+				},
+				large: (s) => {
+					controlSizeStyles.large(s);
+					s.paddingBlock.px(0);
+					s._selector('&[data-shape="square"], &[data-shape="circle"]', (shape) => {
+						shape.height._large;
+						shape.width._large;
+						shape.paddingInline.px(0);
+					});
+				},
+				xlarge: (s) => {
+					controlSizeStyles.xlarge(s);
+					s.paddingBlock.px(0);
+					s._selector('&[data-shape="square"], &[data-shape="circle"]', (shape) => {
+						shape.height._xlarge;
+						shape.width._xlarge;
+						shape.paddingInline.px(0);
+					});
 				}
 			},
 			shape: {
 				circle: (s) => {
 					s.borderRadius.percent(50);
 					s.flexShrink(0);
-					s.paddingInline.px(0);
 				},
 				default: () => undefined,
-				square: (s) => {
-					s.flexShrink(0);
-					s.paddingInline.px(0);
-				}
+				square: (s) => s.flexShrink(0)
 			},
 			pressed: { false: () => undefined, true: () => undefined },
-			tone: { danger: () => undefined, default: () => undefined },
-			variant: {
-				ghost: (s) => {
-					s.backgroundColor.transparent;
-					s.borderColor.transparent;
-					s.color._primary;
-					s._selector(
-						'&:not(:disabled):not([aria-disabled="true"]):hover',
-						(hover) => hover.backgroundColor._surfaceHover
-					);
-				},
-				primary: (s) => {
-					s.backgroundColor._primary;
-					s.borderColor._primary;
-					s.color._onPrimary;
-					s._selector(
-						'&:not(:disabled):not([aria-disabled="true"]):hover',
-						(hover) => hover.backgroundColor._primaryHover
-					);
-				},
-				secondary: (s) => {
-					s.backgroundColor._surface;
-					s.borderColor._border;
-					s.color._text;
-					s._selector(
-						'&:not(:disabled):not([aria-disabled="true"]):hover',
-						(hover) => hover.backgroundColor._surfaceHover
-					);
-				}
-			}
+			tone: {
+				primary: buttonTone('primary'),
+				neutral: buttonTone('neutral'),
+				info: buttonTone('info'),
+				success: buttonTone('success'),
+				warning: buttonTone('warning'),
+				danger: buttonTone('danger')
+			},
+			variant: { solid: () => undefined, outline: () => undefined, ghost: () => undefined }
 		},
-		compoundVariants: [
-			{
-				style: (s) => s.backgroundColor._surface,
-				when: { disabled: true, variant: 'ghost' }
-			},
-			{
-				style: (s) => {
-					s.backgroundColor._danger;
-					s.borderColor._danger;
-					s.color._onDanger;
-					s._selector(
-						'&:not(:disabled):not([aria-disabled="true"]):hover',
-						(hover) => hover.backgroundColor._dangerHover
-					);
-				},
-				when: { tone: 'danger', variant: 'primary' }
-			},
-			{
-				style: (s) => {
-					s.backgroundColor._surface;
-					s.borderColor._danger;
-					s.color._danger;
-					s._selector(
-						'&:not(:disabled):not([aria-disabled="true"]):hover',
-						(hover) => hover.backgroundColor._surfaceHover
-					);
-				},
-				when: { tone: 'danger', variant: 'secondary' }
-			},
-			{
-				style: (s) => {
-					s.backgroundColor.transparent;
-					s.borderColor.transparent;
-					s.color._danger;
-					s._selector(
-						'&:not(:disabled):not([aria-disabled="true"]):hover',
-						(hover) => hover.backgroundColor._surfaceHover
-					);
-				},
-				when: { tone: 'danger', variant: 'ghost' }
-			},
-			{
-				style: (s) => s.backgroundColor._primaryHover,
-				when: { pressed: true, tone: 'default', variant: 'primary' }
-			},
-			{
-				style: (s) => {
-					s.backgroundColor._primary;
-					s.borderColor._primary;
-					s.color._onPrimary;
-				},
-				when: { pressed: true, tone: 'default', variant: 'secondary' }
-			},
-			{
-				style: (s) => {
-					s.backgroundColor._surface;
-					s.borderColor._primary;
-					s.color._primary;
-				},
-				when: { pressed: true, tone: 'default', variant: 'ghost' }
-			},
-			{
-				style: (s) => s.backgroundColor._dangerHover,
-				when: { pressed: true, tone: 'danger', variant: 'primary' }
-			},
-			{
-				style: (s) => {
-					s.backgroundColor._danger;
-					s.borderColor._danger;
-					s.color._onDanger;
-				},
-				when: { pressed: true, tone: 'danger', variant: 'secondary' }
-			},
-			{
-				style: (s) => {
-					s.backgroundColor._surface;
-					s.borderColor._danger;
-					s.color._danger;
-				},
-				when: { pressed: true, tone: 'danger', variant: 'ghost' }
-			},
-			{
-				style: (s) => s.paddingInline._medium,
-				when: { shape: 'default', size: 'small' }
-			},
-			{
-				style: (s) => s.paddingInline._large,
-				when: { shape: 'default', size: 'medium' }
-			},
-			{
-				style: (s) => s.paddingInline._xlarge,
-				when: { shape: 'default', size: 'large' }
-			},
-			{
-				style: (s) => {
-					s.height._small;
-					s.width._small;
-				},
-				when: { shape: 'square', size: 'small' }
-			},
-			{
-				style: (s) => {
-					s.height._medium;
-					s.width._medium;
-				},
-				when: { shape: 'square', size: 'medium' }
-			},
-			{
-				style: (s) => {
-					s.height._large;
-					s.width._large;
-				},
-				when: { shape: 'square', size: 'large' }
-			},
-			{
-				style: (s) => {
-					s.height._small;
-					s.width._small;
-				},
-				when: { shape: 'circle', size: 'small' }
-			},
-			{
-				style: (s) => {
-					s.height._medium;
-					s.width._medium;
-				},
-				when: { shape: 'circle', size: 'medium' }
-			},
-			{
-				style: (s) => {
-					s.height._large;
-					s.width._large;
-				},
-				when: { shape: 'circle', size: 'large' }
-			}
-		],
 		defaultVariants: {
 			disabled: false,
 			fullWidth: false,
@@ -268,15 +189,15 @@
 			pressed: false,
 			shape: 'default',
 			size: 'medium',
-			tone: 'default',
-			variant: 'primary'
+			tone: 'primary',
+			variant: 'solid'
 		}
 	});
 	const buttonContentRecipe = defineRecipe({
 		base: (s) => {
 			s.alignItems.center;
 			s.display.inlineFlex;
-			s.gap._medium;
+			s.gap._small;
 			s.justifyContent.center;
 		},
 		variants: {
@@ -298,19 +219,7 @@
 			s.justifyContent.center;
 			s.position.absolute;
 		},
-		variants: {
-			indicatorTone: {
-				danger: (s) =>
-					s._selector('& [data-slot="indicator"]', (indicator) => indicator.color._danger),
-				onDanger: (s) =>
-					s._selector('& [data-slot="indicator"]', (indicator) => indicator.color._onDanger),
-				onPrimary: (s) =>
-					s._selector('& [data-slot="indicator"]', (indicator) => indicator.color._onPrimary),
-				primary: (s) =>
-					s._selector('& [data-slot="indicator"]', (indicator) => indicator.color._primary)
-			}
-		},
-		defaultVariants: { indicatorTone: 'primary' }
+		variants: {}
 	});
 
 	registerRecipeHmr(import.meta, buttonRecipe);
@@ -362,22 +271,22 @@
 		],
 		props: [
 			{
-				default: "'primary'",
+				default: "'solid'",
 				description: '只表达视觉强调层级。',
 				name: 'variant',
-				type: "'primary' | 'secondary' | 'ghost'"
+				type: 'ButtonVariant'
 			},
 			{
-				default: "'default'",
+				default: "'primary'",
 				description: '与variant正交的有限语义色调。',
 				name: 'tone',
-				type: "'default' | 'danger'"
+				type: 'ButtonTone'
 			},
 			{
 				default: "Provider density（默认把 'comfortable' 映射为 'medium'）",
 				description: '按钮尺寸；显式值优先于Provider density。',
 				name: 'size',
-				type: "'small' | 'medium' | 'large'"
+				type: 'ButtonSize'
 			},
 			{
 				default: "'default'",
@@ -428,14 +337,18 @@
 			{
 				description: '按钮解析后的尺寸。',
 				name: 'data-size',
-				values: ['small', 'medium', 'large']
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge']
 			},
 			{ description: '按钮形状。', name: 'data-shape', values: ['default', 'square', 'circle'] },
-			{ description: '语义tone。', name: 'data-tone', values: ['default', 'danger'] },
+			{
+				description: '语义tone。',
+				name: 'data-tone',
+				values: ['primary', 'neutral', 'info', 'success', 'warning', 'danger']
+			},
 			{
 				description: '视觉层级。',
 				name: 'data-variant',
-				values: ['primary', 'secondary', 'ghost']
+				values: ['solid', 'outline', 'ghost']
 			},
 			{ description: '当前已解析为减少动画。', name: 'data-reduced-motion', values: ['true'] }
 		],
@@ -488,21 +401,11 @@
 		resolveControlSize(size ?? zui.componentDefaults.button?.size, zui.density)
 	);
 	const resolvedShape = $derived(shape ?? zui.componentDefaults.button?.shape ?? 'default');
-	const resolvedTone = $derived(tone ?? zui.componentDefaults.button?.tone ?? 'default');
-	const resolvedVariant = $derived(variant ?? zui.componentDefaults.button?.variant ?? 'primary');
+	const resolvedTone = $derived(tone ?? zui.componentDefaults.button?.tone ?? 'primary');
+	const resolvedVariant = $derived(variant ?? zui.componentDefaults.button?.variant ?? 'solid');
 	const resolvedFullWidth = $derived(fullWidth ?? zui.componentDefaults.button?.fullWidth ?? false);
 	const pressed = $derived(
 		ariaPressed === true || ariaPressed === 'true' || ariaPressed === 'mixed'
-	);
-	const spinnerSize = $derived(resolvedSize === 'large' ? 'medium' : 'small');
-	const spinnerTone = $derived(
-		resolvedVariant === 'primary'
-			? resolvedTone === 'danger'
-				? 'onDanger'
-				: 'onPrimary'
-			: resolvedTone === 'danger'
-				? 'danger'
-				: 'primary'
 	);
 	const rootClass = $derived(
 		zui.recipe(buttonRecipe, {
@@ -517,7 +420,7 @@
 		})
 	);
 	const contentClass = $derived(zui.recipe(buttonContentRecipe, { loading }));
-	const loadingClass = $derived(zui.recipe(buttonLoadingRecipe, { indicatorTone: spinnerTone }));
+	const loadingClass = $derived(zui.recipe(buttonLoadingRecipe));
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 	onMount(() => reducedMotion.connect(ref?.ownerDocument.defaultView));
@@ -551,7 +454,7 @@
 			{#if loadingIndicator}
 				{@render loadingIndicator()}
 			{:else}
-				<ZSpinner aria-hidden="true" size={spinnerSize} tone="inherit" />
+				<ZSpinner aria-hidden="true" size={resolvedSize} tone="inherit" />
 			{/if}
 		</span>
 	{/if}

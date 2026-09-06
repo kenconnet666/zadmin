@@ -5,9 +5,11 @@
 	import type { SelectionKey as PublicSelectionKey } from '../../runtime/collection/selection.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 
+	import type { TypographyTone } from '../gene/typography.js';
+
 	export type TimelineMode = 'alternate' | 'start';
 	export type TimelineStatus = 'current' | 'done' | 'error' | 'pending';
-	export type TimelineTone = 'danger' | 'default' | 'muted' | 'primary' | 'success';
+	export type TimelineTone = TypographyTone;
 
 	interface TimelineItemContent {
 		readonly datetime?: string;
@@ -117,7 +119,7 @@
 			{
 				description: '解析后的有限语义tone。',
 				name: 'data-tone',
-				values: ['default', 'muted', 'primary', 'success', 'danger']
+				values: ['neutral', 'muted', 'primary', 'info', 'success', 'warning', 'danger']
 			},
 			{ description: 'pending尾项。', name: 'data-pending', values: ['true'] },
 			{ description: '布局模式。', name: 'data-mode', values: ['start', 'alternate'] },
@@ -198,11 +200,13 @@
 				}
 			},
 			tone: {
+				neutral: (s) => s.backgroundColor._neutral,
+				info: (s) => s.backgroundColor._info,
+				success: (s) => s.backgroundColor._success,
+				warning: (s) => s.backgroundColor._warning,
 				danger: (s) => s.backgroundColor._danger,
-				default: (s) => s.backgroundColor._border,
 				muted: (s) => s.backgroundColor._textMuted,
-				primary: (s) => s.backgroundColor._primary,
-				success: (s) => s.backgroundColor._success
+				primary: (s) => s.backgroundColor._primary
 			}
 		},
 		compoundVariants: [
@@ -211,7 +215,7 @@
 				style: (s) => s.backgroundColor.transparent
 			}
 		],
-		defaultVariants: { custom: false, tone: 'default' }
+		defaultVariants: { custom: false, tone: 'neutral' }
 	});
 	const connectorRecipe = defineRecipe({
 		base: (s) => {
@@ -354,7 +358,7 @@
 			case 'pending':
 				return 'muted';
 			default:
-				return 'default';
+				return 'neutral';
 		}
 	}
 
@@ -432,7 +436,8 @@
 								aria-hidden="true"
 								size="small"
 								tone="inherit"
-							/>{/if}
+							/>
+						{/if}
 					{:else if icon}
 						{@render icon(row.entry, row.index)}
 					{/if}

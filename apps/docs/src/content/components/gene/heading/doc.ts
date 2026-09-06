@@ -15,14 +15,18 @@ export const headingDoc = defineComponentDoc(headingMetadata, {
 	sourceApi: headingApiFacts,
 	teaching: {
 		props: {
+			wrap: {
+				default: "'balance'",
+				description: '平衡标题换行；可选pretty、wrap或nowrap，不改变标题level。'
+			},
 			level: { default: '2', description: '唯一决定真实h1–h6元素；必须按文档层级选择。' },
 			lineHeight: { default: "'compact'", description: '独立Theme行高token。' },
 			ref: { default: 'null', description: '绑定真实HTMLHeadingElement。' },
 			size: {
-				default: "'xlarge'",
-				description: '独立于level的Theme字号token；xxlarge默认32px，用于页面标题。'
+				default: "'xxlarge'",
+				description: '独立于level的Theme字号token；xxxlarge默认32px，用于页面标题。'
 			},
-			tone: { default: "'default'", description: '语义颜色，不改变heading level。' },
+			tone: { default: "'neutral'", description: '语义颜色，不改变heading level。' },
 			weight: { default: "'bold'", description: 'Theme字重token。' }
 		},
 		summary: '始终输出真实h1–h6，并明确分离文档层级与视觉字号、行高、字重、tone。'

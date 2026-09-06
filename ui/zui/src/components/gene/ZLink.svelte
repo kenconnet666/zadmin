@@ -4,9 +4,11 @@
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 	import { buttonRecipe, type ButtonSize, type ButtonVariant } from './ZButton.svelte';
-	import { resolveControlSize } from '../../runtime/foundation/control-size.js';
+	import { controlSizeStyles, resolveControlSize } from '../../runtime/foundation/control-size.js';
 
-	export type ZLinkTone = 'danger' | 'muted' | 'primary';
+	import { typographyTones, type TypographyTone } from './typography.js';
+
+	export type ZLinkTone = TypographyTone;
 	export type ZLinkUnderline = 'always' | 'hover' | 'none';
 
 	export interface ZLinkProps extends Omit<HTMLAnchorAttributes, 'children' | 'href'> {
@@ -59,7 +61,7 @@
 				type: 'ButtonSize'
 			},
 			{
-				default: "'primary'",
+				default: "'solid'",
 				description: '链接按钮的视觉层级；仅appearance=button时使用。',
 				name: 'variant',
 				type: 'ButtonVariant'
@@ -92,9 +94,9 @@
 			{
 				default: "'primary'",
 				description:
-					'文本链接的语义颜色；button仅使用danger或默认品牌色，navigation由aria-current决定颜色。',
+					'文本和按钮链接支持五种语义色及primary；muted用于正文，在按钮外观映射为neutral。navigation由aria-current决定颜色。',
 				name: 'tone',
-				type: "'primary' | 'muted' | 'danger'"
+				type: 'ZLinkTone'
 			},
 			{
 				default: "'always'",
@@ -147,11 +149,7 @@
 					s.opacity._disabled;
 				}
 			},
-			tone: {
-				danger: (s) => s.color._danger,
-				muted: (s) => s.color._textMuted,
-				primary: (s) => s.color._primary
-			},
+			tone: typographyTones,
 			underline: {
 				always: (s) => s.textDecoration.underline,
 				hover: (s) => {
@@ -207,23 +205,25 @@
 		},
 		variants: {
 			size: {
+				xsmall: (s) => {
+					controlSizeStyles.xsmall(s);
+					s.paddingBlock._xsmall;
+				},
 				small: (s) => {
-					s.fontSize._small;
-					s.minHeight._small;
-					s.paddingInline._small;
+					controlSizeStyles.small(s);
 					s.paddingBlock._xsmall;
 				},
 				medium: (s) => {
-					s.fontSize._medium;
-					s.minHeight._medium;
-					s.paddingInline._medium;
+					controlSizeStyles.medium(s);
 					s.paddingBlock._small;
 				},
 				large: (s) => {
-					s.fontSize._large;
-					s.minHeight._large;
-					s.paddingInline._large;
-					s.paddingBlock._medium;
+					controlSizeStyles.large(s);
+					s.paddingBlock._small;
+				},
+				xlarge: (s) => {
+					controlSizeStyles.xlarge(s);
+					s.paddingBlock._small;
 				}
 			},
 			current: {
@@ -292,7 +292,7 @@
 		target,
 		tone = 'primary',
 		underline = 'always',
-		variant = 'primary',
+		variant = 'solid',
 		...rest
 	}: ZLinkProps = $props();
 	const zui = useZui();
@@ -330,7 +330,7 @@
 						disabled,
 						size: resolvedSize,
 						variant,
-						tone: tone === 'danger' ? 'danger' : 'default',
+						tone: tone === 'muted' ? 'neutral' : tone,
 						motion: reducedMotion.current ? 'reduced' : 'full'
 					}),
 					zui.recipe(buttonLinkRecipe)
@@ -355,6 +355,7 @@
 		}
 		onclick?.(event);
 	}
+
 	function interceptDisabledClick(event: MouseEvent): void {
 		if (!disabled) return;
 		event.preventDefault();
@@ -377,6 +378,8 @@
 	aria-labelledby={ariaLabelledBy}
 	data-disabled={disabled || undefined}
 	data-appearance={appearance}
+	data-variant={appearance === 'button' ? variant : undefined}
+	data-tone={appearance !== 'navigation' ? tone : undefined}
 	data-size={appearance !== 'text' ? resolvedSize : undefined}
 	data-external={external || undefined}
 	data-new-window={newWindow || undefined}

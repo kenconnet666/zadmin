@@ -1,3 +1,5 @@
+import ControlSizesDemo from './ControlSizesDemo.svelte';
+import controlSizesSource from './ControlSizesDemo.svelte?raw';
 import {
 	dropdownMenuContentMetadata,
 	dropdownMenuMetadata,
@@ -25,6 +27,14 @@ export const dropdownMenuDoc = defineComponentDoc(dropdownMenuMetadata, {
 			'Popover唯一拥有controlled open、Portal、Floating、dismiss、Presence与焦点恢复；Content只接入共享ZMenu及未取消action后的关闭策略。'
 	},
 	demos: [
+		{
+			component: ControlSizesDemo,
+			covers: ['variants-and-states', 'composition'],
+			description: '五档尺寸直接消费主题 token；组合部件继承有视觉意义的尺寸 owner。',
+			id: 'dropdown-menu-control-sizes',
+			source: controlSizesSource,
+			title: '五档尺寸与主题比例'
+		},
 		{
 			covers: ['basic-render', 'focus', 'full-motion', 'keyboard', 'portal'],
 			component: InteractiveDemo,

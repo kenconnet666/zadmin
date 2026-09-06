@@ -1,3 +1,5 @@
+import SizingDemo from './SizingDemo.svelte';
+import sizingSource from './SizingDemo.svelte?raw';
 import { treeSelectMetadata } from '@zadmin/zui/metadata';
 import ControlledDemo from './ControlledDemo.svelte';
 import controlledSource from './ControlledDemo.svelte?raw';
@@ -22,9 +24,9 @@ export const treeSelectDoc = defineComponentDoc(treeSelectMetadata, {
 			defaultValue: { default: 'null', description: '非受控选择初值；null表示明确为空。' },
 			expandedKeys: { default: '[]', description: '直接交给同一个ZTree的受控或bindable展开keys。' },
 			form: { default: '最近form', description: '把唯一FormValueBridge关联到外部form id。' },
-			height: { default: '320', description: 'virtualized popup tree高度px。' },
+			virtualHeight: { default: '320', description: 'virtual popup tree高度px。' },
 			item: { default: 'node.label', description: '直接转发给ZTree的typed节点正文。' },
-			itemSize: { default: '36', description: 'virtualized popup tree固定行高px。' },
+			virtualItemSize: { default: '36', description: 'virtual popup tree固定行高px。' },
 			onLoadChildren: {
 				default: '—',
 				description: '直接复用ZTree的lazy请求、去重、abort、error和retry合同。'
@@ -37,7 +39,7 @@ export const treeSelectDoc = defineComponentDoc(treeSelectMetadata, {
 			},
 			onValueChange: { default: '—', description: '用户选择或清空后的typed key/null。' },
 			open: { default: 'false', description: '受控或bindablePopover状态。' },
-			overscan: { default: '4', description: 'virtualized popup tree overscan。' },
+			virtualOverscan: { default: '4', description: 'virtual popup tree overscan。' },
 			placeholder: {
 				default: 'localePack.collection.selectNode',
 				description: 'value=null时的Trigger文本。'
@@ -51,7 +53,7 @@ export const treeSelectDoc = defineComponentDoc(treeSelectMetadata, {
 				default: 'node.label或String(key)',
 				description: '异步orphan key仍保留可见标签策略。'
 			},
-			virtualized: {
+			virtual: {
 				default: 'false',
 				description: '让内部ZTree复用P2 ZVirtualList与active mount握手。'
 			}
@@ -60,6 +62,15 @@ export const treeSelectDoc = defineComponentDoc(treeSelectMetadata, {
 			'TreeSelect只拥有value/open/Field/FormValue与Popover组合；层级、expanded、active、selection、lazy和virtual全部委托同一个ZTree。'
 	},
 	demos: [
+		{
+			component: SizingDemo,
+			covers: ['composition', 'variants-and-states'],
+			description:
+				'五档尺寸按组件用途同步文字、留白和内部控件；Field/Form 显式尺寸优先于 Provider density。',
+			id: 'tree-select-sizing',
+			source: sizingSource,
+			title: '五档尺寸与组合比例'
+		},
 		{
 			covers: ['form-data', 'form-reset', 'uncontrolled'],
 			component: FormDemo,

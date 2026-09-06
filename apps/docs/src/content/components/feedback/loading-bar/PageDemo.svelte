@@ -5,9 +5,11 @@
 </script>
 
 <ZStack gap="medium">
-	<ZButton size="small" variant="secondary" onclick={() => (page = !page)}>
+	<ZButton size="small" variant="outline" onclick={() => (page = !page)}>
 		{page ? '停止页面进度' : '预览页面进度'}
 	</ZButton>
 	<ZText tone="muted">page = {page}；页面模式固定在逻辑视口顶部。</ZText>
-	{#if page}<ZLoadingBar label="页面正在导航" mode="page" />{/if}
+	{#if page}
+		<ZLoadingBar label="页面正在导航" mode="page" />
+	{/if}
 </ZStack>

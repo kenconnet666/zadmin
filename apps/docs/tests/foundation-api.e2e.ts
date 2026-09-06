@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { DEFAULT_THEME_SCHEMA } from '../../../ui/zui/src/theme/schema.js';
 
 test('Provider demonstrates shared text-control defaults and an explicit override', async ({
 	page
@@ -12,7 +13,7 @@ test('Provider demonstrates shared text-control defaults and an explicit overrid
 	]) {
 		const control = demo.getByRole('textbox', { name, exact: true });
 		await expect(control).toHaveAttribute('data-size', 'large');
-		await expect(control).toHaveCSS('font-size', '18px');
+		await expect(control).toHaveCSS('font-size', '16px');
 	}
 	const small = demo.getByRole('textbox', { name: '显式小尺寸多行输入框', exact: true });
 	await expect(small).toHaveAttribute('data-size', 'small');
@@ -30,7 +31,7 @@ test('long-code demo and Theme Lab token values wrap on a narrow viewport', asyn
 	expect(await code.evaluate((el) => el.scrollWidth <= el.clientWidth + 1)).toBe(true);
 	await page.goto('/#/guides/theme');
 	const values = page.locator('[data-slot="semantic-color"] code');
-	await expect(values).toHaveCount(29);
+	await expect(values).toHaveCount(Object.keys(DEFAULT_THEME_SCHEMA.color).length);
 	expect(
 		await values.evaluateAll((elements) =>
 			elements.every((el) => el.scrollWidth <= el.clientWidth + 1)
@@ -51,12 +52,12 @@ test('Badge controls change actual size, tone and placement while Avatar preserv
 	const height = await indicator.evaluate((el) => el.getBoundingClientRect().height);
 	const color = await indicator.evaluate((el) => getComputedStyle(el).backgroundColor);
 	await demo.getByRole('button', { name: 'size（medium）', exact: true }).click();
-	await expect(badge).toHaveAttribute('data-size', 'small');
+	await expect(badge).toHaveAttribute('data-size', 'large');
 	await expect
 		.poll(() => indicator.evaluate((el) => el.getBoundingClientRect().height))
-		.toBeLessThan(height);
+		.toBeGreaterThan(height);
 	await demo.getByRole('button', { name: 'tone（danger）', exact: true }).click();
-	await expect(badge).toHaveAttribute('data-tone', 'accent');
+	await expect(badge).toHaveAttribute('data-tone', 'info');
 	await expect(indicator).not.toHaveCSS('background-color', color);
 	await demo.getByRole('button', { name: 'placement（top-end）', exact: true }).click();
 	await expect(badge).toHaveAttribute('data-placement', 'top-start');

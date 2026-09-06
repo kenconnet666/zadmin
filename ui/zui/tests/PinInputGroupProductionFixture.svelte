@@ -93,13 +93,13 @@
 	<button type="reset">Reset external PIN</button>
 </form>
 <ZStack direction="row" gap="small">
-	<ZButton data-testid="pin-clear" variant="secondary" onclick={() => (pinValue = null)}>
+	<ZButton data-testid="pin-clear" variant="outline" onclick={() => (pinValue = null)}>
 		Clear PIN
 	</ZButton>
-	<ZButton data-testid="pin-invalid" variant="secondary" onclick={() => (pinValue = '98x7654321')}>
+	<ZButton data-testid="pin-invalid" variant="outline" onclick={() => (pinValue = '98x7654321')}>
 		Inject invalid PIN
 	</ZButton>
-	<ZButton data-testid="pin-length" variant="secondary" onclick={() => (pinLength = 4)}>
+	<ZButton data-testid="pin-length" variant="outline" onclick={() => (pinLength = 4)}>
 		Shrink PIN
 	</ZButton>
 </ZStack>

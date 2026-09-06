@@ -29,7 +29,7 @@
 				name="deployment-name"
 				value="zadmin-web"
 			/>
-			<ZDialogClose data-testid="dialog-close" variant="secondary">完成</ZDialogClose>
+			<ZDialogClose data-testid="dialog-close" variant="outline">完成</ZDialogClose>
 		</ZStack>
 	</ZDialogContent>
 </ZDialog>

@@ -9,7 +9,7 @@
 	<ZButton
 		aria-label={`通知，${count}条未读`}
 		size="small"
-		variant="secondary"
+		variant="outline"
 		onclick={() => (count = 0)}
 	>
 		<Bell aria-hidden="true" size={16} />

@@ -289,7 +289,11 @@
 			{ description: '已提交过。', name: 'data-submitted', values: ['true'] },
 			{ description: '存在错误。', name: 'data-invalid', values: ['true'] },
 			{ description: '表单级只读。', name: 'data-readonly', values: ['true'] },
-			{ description: '表单级尺寸。', name: 'data-size', values: ['small', 'medium', 'large'] }
+			{
+				description: '表单级尺寸。',
+				name: 'data-size',
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge']
+			}
 		],
 		status: 'stable',
 		summary:

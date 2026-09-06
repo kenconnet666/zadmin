@@ -24,6 +24,6 @@
 			<ZText>显式aria-label、可取消dismiss和自定义restore target共享同一Content。</ZText>
 		</ZPopoverContent>
 	</ZPopover>
-	<ZButton bind:ref={restoreRef} variant="secondary">恢复目标</ZButton>
+	<ZButton bind:ref={restoreRef} variant="outline">恢复目标</ZButton>
 </ZStack>
 <ZText tone="muted">已阻止 {attempts} 次关闭请求。</ZText>

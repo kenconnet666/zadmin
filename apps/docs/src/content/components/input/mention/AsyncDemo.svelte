@@ -37,7 +37,7 @@
 		onSearchChange={search}
 		placeholder="输入 @ 后由owner返回结果"
 	/>
-	<ZButton disabled={!loading} onclick={resolve} variant="secondary">返回异步结果</ZButton>
+	<ZButton disabled={!loading} onclick={resolve} variant="outline">返回异步结果</ZButton>
 	<ZText tone="muted">
 		query = {pendingQuery || 'empty'} · loading = {loading} · value = {value}
 	</ZText>

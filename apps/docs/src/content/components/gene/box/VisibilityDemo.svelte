@@ -5,7 +5,7 @@
 </script>
 
 <ZStack gap="medium">
-	<ZButton size="small" variant="secondary" onclick={() => (visible = !visible)}>
+	<ZButton size="small" variant="outline" onclick={() => (visible = !visible)}>
 		{visible ? '隐藏原生区域' : '显示原生区域'}
 	</ZButton>
 	<ZBox

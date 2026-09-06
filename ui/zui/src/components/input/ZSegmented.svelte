@@ -1,4 +1,5 @@
 <script module lang="ts">
+	import { controlSizeStyles } from '../../runtime/foundation/control-size.js';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
@@ -12,6 +13,7 @@
 
 	export interface ZSegmentedProps extends Omit<
 		HTMLAttributes<HTMLDivElement>,
+		| 'children'
 		| 'aria-disabled'
 		| 'aria-invalid'
 		| 'aria-readonly'
@@ -78,7 +80,7 @@
 				default: 'Field size，其次为 Provider density',
 				description: '同步选项高度、文字与水平留白。',
 				name: 'size',
-				type: "'small' | 'medium' | 'large'"
+				type: "'xsmall' | 'small' | 'medium' | 'large' | 'xlarge'"
 			},
 			{
 				default: '必填',
@@ -159,7 +161,11 @@
 		snippets: [],
 		source: 'ui/zui/src/components/input/ZSegmented.svelte',
 		states: [
-			{ description: '解析尺寸。', name: 'data-size', values: ['small', 'medium', 'large'] },
+			{
+				description: '解析尺寸。',
+				name: 'data-size',
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge']
+			},
 			{ description: '选择状态。', name: 'data-state', values: ['selected', 'unselected'] },
 			{ description: '禁用状态。', name: 'data-disabled', values: ['true'] },
 			{ description: '无效状态。', name: 'data-invalid', values: ['true'] },
@@ -264,23 +270,7 @@
 					s.boxShadow._small;
 				}
 			},
-			size: {
-				large: (s) => {
-					s.minHeight._large;
-					s.fontSize._large;
-					s.paddingInline._large;
-				},
-				medium: (s) => {
-					s.minHeight._medium;
-					s.fontSize._medium;
-					s.paddingInline._medium;
-				},
-				small: (s) => {
-					s.minHeight._small;
-					s.fontSize._small;
-					s.paddingInline._small;
-				}
-			}
+			size: controlSizeStyles
 		},
 		defaultVariants: { disabled: false, readonly: false, selected: false, size: 'medium' }
 	});

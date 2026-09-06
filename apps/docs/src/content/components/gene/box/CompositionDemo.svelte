@@ -31,7 +31,7 @@
 		<ZText tone="muted">ZBox只提供真实div边界；标题、布局、文字和操作继续由各自组件拥有。</ZText>
 		<ZStack direction="row" gap="small" wrap>
 			<ZButton size="small">查看发布</ZButton>
-			<ZButton size="small" variant="secondary">复制版本</ZButton>
+			<ZButton size="small" variant="outline">复制版本</ZButton>
 		</ZStack>
 	</ZStack>
 </ZBox>

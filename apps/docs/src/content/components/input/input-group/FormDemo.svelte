@@ -19,7 +19,7 @@
 				{#snippet suffix()}<ZText tone="muted">.internal</ZText>{/snippet}
 			</ZInputGroup>
 		</ZField>
-		<ZButton type="reset" variant="secondary">重置</ZButton>
+		<ZButton type="reset" variant="outline">重置</ZButton>
 		<ZText tone="muted">url = https://{value || 'empty'}.internal</ZText>
 	</ZStack>
 </form>

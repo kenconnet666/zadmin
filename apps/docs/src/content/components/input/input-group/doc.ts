@@ -1,3 +1,5 @@
+import SizingDemo from './SizingDemo.svelte';
+import sizingSource from './SizingDemo.svelte?raw';
 import { inputGroupMetadata } from '@zadmin/zui/metadata';
 import ActionsDemo from './ActionsDemo.svelte';
 import actionsSource from './ActionsDemo.svelte?raw';
@@ -50,6 +52,15 @@ export const inputGroupDoc = defineComponentDoc(inputGroupMetadata, {
 	},
 	demos: [
 		{
+			component: SizingDemo,
+			covers: ['composition', 'variants-and-states'],
+			description:
+				'五档尺寸按组件用途同步文字、留白和内部控件；Field/Form 显式尺寸优先于 Provider density。',
+			id: 'input-group-sizing',
+			source: sizingSource,
+			title: '五档尺寸与组合比例'
+		},
+		{
 			component: FormDemo,
 			covers: ['accessible-name', 'form-data', 'form-reset', 'native-props'],
 			description: 'Field的label、name、required、description和size经Group进入唯一真实input。',
@@ -94,7 +105,8 @@ export const inputGroupDoc = defineComponentDoc(inputGroupMetadata, {
 		{
 			component: StatesDemo,
 			covers: ['disabled', 'invalid', 'readonly', 'variants-and-states'],
-			description: 'small/medium/large、required、readonly、disabled与invalid按统一优先级解析。',
+			description:
+				'xsmall/small/medium/large/xlarge、required、readonly、disabled与invalid按统一优先级解析。',
 			id: 'input-group-states',
 			source: statesSource,
 			title: '尺寸与Field状态'

@@ -1,4 +1,5 @@
 <script module lang="ts">
+	import { typographySizes, typographyTones } from './typography.js';
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
@@ -73,10 +74,10 @@
 				type: "keyof ZuiTheme['fontWeight']"
 			},
 			{
-				default: "'default'",
+				default: "'neutral'",
 				description: '语义颜色。',
 				name: 'tone',
-				type: "'default' | 'muted' | 'primary' | 'danger'"
+				type: 'ZTextTone'
 			},
 			{ default: 'false', description: '单行省略显示。', name: 'truncate', type: 'boolean' },
 			{
@@ -118,19 +119,8 @@
 				normal: (s) => s.lineHeight._normal,
 				relaxed: (s) => s.lineHeight._relaxed
 			},
-			size: {
-				large: (s) => s.fontSize._large,
-				medium: (s) => s.fontSize._medium,
-				small: (s) => s.fontSize._small,
-				xlarge: (s) => s.fontSize._xlarge,
-				xxlarge: (s) => s.fontSize._xxlarge
-			},
-			tone: {
-				danger: (s) => s.color._danger,
-				default: (s) => s.color._text,
-				muted: (s) => s.color._textMuted,
-				primary: (s) => s.color._primary
-			},
+			size: typographySizes,
+			tone: typographyTones,
 			truncate: {
 				false: () => undefined,
 				true: (s) => {
@@ -149,7 +139,7 @@
 		defaultVariants: {
 			lineHeight: 'normal',
 			size: 'medium',
-			tone: 'default',
+			tone: 'neutral',
 			truncate: false,
 			weight: 'normal'
 		}
@@ -180,7 +170,7 @@
 		size = 'medium',
 		style,
 		tabularNumbers = false,
-		tone = 'default',
+		tone = 'neutral',
 		truncate = false,
 		weight = 'normal',
 		...rest

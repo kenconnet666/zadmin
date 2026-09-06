@@ -28,12 +28,12 @@
 
 <ZStack gap="medium">
 	<ZStack direction="row" gap="medium" wrap>
-		<ZButton size="small" variant="secondary" onclick={() => (open = true)}>外部打开</ZButton>
-		<ZButton size="small" variant="secondary" onclick={() => (open = false)}>外部关闭</ZButton>
+		<ZButton size="small" variant="outline" onclick={() => (open = true)}>外部打开</ZButton>
+		<ZButton size="small" variant="outline" onclick={() => (open = false)}>外部关闭</ZButton>
 		<ZButton
 			disabled={!finishOldRequest}
 			size="small"
-			variant="secondary"
+			variant="outline"
 			onclick={() => finishOldRequest?.()}
 		>
 			完成旧请求

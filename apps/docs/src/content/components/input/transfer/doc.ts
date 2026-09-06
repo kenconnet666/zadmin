@@ -1,3 +1,5 @@
+import SizingDemo from './SizingDemo.svelte';
+import sizingSource from './SizingDemo.svelte?raw';
 import { transferMetadata } from '@zadmin/zui/metadata';
 import AsyncDemo from './AsyncDemo.svelte';
 import asyncSource from './AsyncDemo.svelte?raw';
@@ -17,6 +19,11 @@ export const transferDoc = defineComponentDoc(transferMetadata, {
 	sourceApi: transferApiFacts,
 	teaching: {
 		props: {
+			size: {
+				default: 'Field size，其次为 Provider density',
+				description:
+					'五档同步两侧面板留白、过滤输入、列表文字与转移按钮；虚拟模式仍显式使用 virtualItemSize，不用尺寸覆盖行高。'
+			},
 			emptyText: {
 				default: 'Provider localePack.transfer.empty',
 				description: 'pane view为空且不在loading时的状态文本；异步孤儿使用独立locale状态。'
@@ -58,6 +65,15 @@ export const transferDoc = defineComponentDoc(transferMetadata, {
 			'生产双栏Transfer：完整LogicalCollection是唯一数据顺序，来源/目标view和两套SelectionModel分别拥有过滤与临时勾选，最终value、FormData和异步孤儿由Root独立拥有；两栏可共享固定行VirtualList而不复制状态。'
 	},
 	demos: [
+		{
+			component: SizingDemo,
+			covers: ['composition', 'variants-and-states'],
+			description:
+				'五档尺寸按组件用途同步文字、留白和内部控件；Field/Form 显式尺寸优先于 Provider density。',
+			id: 'transfer-sizing',
+			source: sizingSource,
+			title: '五档尺寸与组合比例'
+		},
 		{
 			component: FormDemo,
 			covers: ['form-data', 'form-reset', 'keyboard', 'uncontrolled'],

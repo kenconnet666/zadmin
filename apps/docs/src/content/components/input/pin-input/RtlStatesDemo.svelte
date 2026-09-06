@@ -16,10 +16,10 @@
 			size="large"
 		/>
 		<ZStack direction="row" gap="small" wrap>
-			<ZButton type="button" variant="secondary" onclick={() => (readonly = !readonly)}>
+			<ZButton type="button" variant="outline" onclick={() => (readonly = !readonly)}>
 				{readonly ? '开启编辑' : '设为只读'}
 			</ZButton>
-			<ZButton type="button" variant="secondary" onclick={() => (readonlyValue = null)}>
+			<ZButton type="button" variant="outline" onclick={() => (readonlyValue = null)}>
 				外部清空
 			</ZButton>
 		</ZStack>

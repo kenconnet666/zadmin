@@ -23,7 +23,7 @@
 		/>
 	</ZField>
 	<ZStack align="center" direction="row" gap="small" justify="between" wrap>
-		<ZButton disabled={value.length === 0} onclick={() => (value = '')} variant="secondary">
+		<ZButton disabled={value.length === 0} onclick={() => (value = '')} variant="outline">
 			外部清空
 		</ZButton>
 		<ZText tone={value.length >= limit ? 'danger' : 'muted'}>

@@ -37,9 +37,11 @@
 				true: (s) => s.accentColor._danger
 			},
 			size: {
-				large: (s) => s.blockSize._large,
+				xsmall: (s) => s.blockSize._xsmall,
+				small: (s) => s.blockSize._small,
 				medium: () => undefined,
-				small: (s) => s.blockSize._small
+				large: (s) => s.blockSize._large,
+				xlarge: (s) => s.blockSize._xlarge
 			}
 		},
 		defaultVariants: { disabled: false, invalid: false, readonly: false, size: 'medium' }
@@ -54,6 +56,7 @@
 
 	export type ZSliderProps = Omit<
 		HTMLInputAttributes,
+		| 'children'
 		| 'aria-readonly'
 		| 'defaultValue'
 		| 'disabled'
@@ -142,7 +145,7 @@
 				default: 'Field size，其次为 Provider density',
 				description: '显式值优先，其次继承Field，最后由Provider density解析控件高度。',
 				name: 'size',
-				type: "'small' | 'medium' | 'large'"
+				type: "'xsmall' | 'small' | 'medium' | 'large' | 'xlarge'"
 			},
 			{
 				default: 'undefined',
@@ -181,7 +184,7 @@
 			{
 				description: '解析后的control尺寸。',
 				name: 'data-size',
-				values: ['small', 'medium', 'large']
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge']
 			}
 		],
 		status: 'stable',

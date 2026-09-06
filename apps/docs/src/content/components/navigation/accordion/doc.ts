@@ -1,3 +1,5 @@
+import ControlSizesDemo from './ControlSizesDemo.svelte';
+import controlSizesSource from './ControlSizesDemo.svelte?raw';
 import {
 	accordionContentMetadata,
 	accordionItemMetadata,
@@ -70,6 +72,14 @@ export const accordionDoc = defineComponentDoc(accordionMetadata, {
 			'生产Accordion compound collection：组件props保持扁平以服务Svelte绑定和ComponentProps，严格single/multiple helper服务静态配置，运行时仍校验值shape并保留LogicalCollection、active焦点、nested与Presence。'
 	},
 	demos: [
+		{
+			component: ControlSizesDemo,
+			covers: ['variants-and-states', 'composition'],
+			description: '五档尺寸直接消费主题 token；组合部件继承有视觉意义的尺寸 owner。',
+			id: 'accordion-control-sizes',
+			source: controlSizesSource,
+			title: '五档尺寸与主题比例'
+		},
 		{
 			component: InlineAppearanceDemo,
 			covers: ['basic-render', 'composition', 'variants-and-states'],

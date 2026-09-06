@@ -13,7 +13,7 @@
 </script>
 
 <ZDropdownMenu>
-	<ZDropdownMenuTrigger variant="secondary">分享</ZDropdownMenuTrigger>
+	<ZDropdownMenuTrigger variant="outline">分享</ZDropdownMenuTrigger>
 	<ZDropdownMenuContent onAction={(event) => (action = String(event.value))}>
 		<ZMenuItem value="copy">复制链接</ZMenuItem>
 		<ZMenuSub>

@@ -1,3 +1,5 @@
+import SizingDemo from './SizingDemo.svelte';
+import sizingSource from './SizingDemo.svelte?raw';
 import { fileUploadMetadata } from '@zadmin/zui/metadata';
 import { fileUploadApiFacts } from '../../../../framework/component-api.generated.js';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
@@ -19,6 +21,11 @@ export const fileUploadDoc = defineComponentDoc(fileUploadMetadata, {
 	sourceApi: fileUploadApiFacts,
 	teaching: {
 		props: {
+			size: {
+				default: 'Field size，其次为 Provider density',
+				description:
+					'xsmall/small/medium/large/xlarge 同步 dropzone 留白、文件队列文字和操作按钮；不固定总高度，上传进度和状态色不受尺寸干扰。'
+			},
 			abortLabel: {
 				default: 'localePack.fileUpload.abortUpload(item.file.name)',
 				description: 'uploading项的中止命令名称；显式函数优先于Provider typed locale。'
@@ -85,6 +92,15 @@ export const fileUploadDoc = defineComponentDoc(fileUploadMetadata, {
 			'生产FilePicker/queue边界：原生选择与拖放只创建typed队列，组件管理可控状态、进度、AbortSignal、重试和FormData；transport由调用方注入，默认手动且不拥有URL、fetch、凭据、响应、缓存或分片策略。'
 	},
 	demos: [
+		{
+			component: SizingDemo,
+			covers: ['composition', 'variants-and-states'],
+			description:
+				'五档尺寸按组件用途同步文字、留白和内部控件；Field/Form 显式尺寸优先于 Provider density。',
+			id: 'file-upload-sizing',
+			source: sizingSource,
+			title: '五档尺寸与组合比例'
+		},
 		{
 			component: FormDemo,
 			covers: ['form-data', 'form-reset', 'invalid', 'keyboard', 'uncontrolled'],

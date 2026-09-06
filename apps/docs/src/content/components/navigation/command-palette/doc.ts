@@ -1,3 +1,5 @@
+import ControlSizesDemo from './ControlSizesDemo.svelte';
+import controlSizesSource from './ControlSizesDemo.svelte?raw';
 import { commandPaletteMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
@@ -66,6 +68,14 @@ export const commandPaletteDoc = defineComponentDoc(commandPaletteMetadata, {
 			'CommandPalette只组合ZCommand的筛选/active-descendant与ZDialog的模态焦点/Portal，并以显式DOM作用域快捷键协调打开；路由、异步请求和业务确认由调用方拥有。'
 	},
 	demos: [
+		{
+			component: ControlSizesDemo,
+			covers: ['variants-and-states', 'composition'],
+			description: '五档尺寸直接消费主题 token；组合部件继承有视觉意义的尺寸 owner。',
+			id: 'command-palette-control-sizes',
+			source: controlSizesSource,
+			title: '五档尺寸与主题比例'
+		},
 		{
 			component: FormDemo,
 			covers: ['accessible-name', 'focus', 'keyboard', 'portal'],

@@ -14,7 +14,7 @@
 		<ZButton onclick={() => (value = { start: null, end: new CalendarDate(2026, 9, 30) })}>
 			写入end-only草稿
 		</ZButton>
-		<ZButton onclick={() => (value = null)} variant="secondary">清空范围</ZButton>
+		<ZButton onclick={() => (value = null)} variant="outline">清空范围</ZButton>
 	</ZStack>
 	<ZText tone="muted">
 		start = {value?.start?.toString() ?? 'null'} · end = {value?.end?.toString() ?? 'null'}

@@ -1,4 +1,5 @@
 <script module lang="ts">
+	import { typographySizes, typographyTones } from './typography.js';
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
@@ -10,6 +11,7 @@
 		TypographyWeight
 	} from './typography.js';
 
+	export type ZHeadingWrap = 'balance' | 'pretty' | 'wrap' | 'nowrap';
 	export type ZHeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 	export type ZHeadingLineHeight = TypographyLineHeight;
 	export type ZHeadingSize = TypographySize;
@@ -24,6 +26,7 @@
 		readonly size?: ZHeadingSize;
 		readonly tone?: ZHeadingTone;
 		readonly weight?: ZHeadingWeight;
+		readonly wrap?: ZHeadingWrap;
 	}
 
 	export const zuiMetadata = {
@@ -40,13 +43,19 @@
 		parts: [],
 		props: [
 			{
+				default: "'balance'",
+				description: '标题换行策略；balance平衡多行标题，nowrap仅用于已有宽度保障的短标题。',
+				name: 'wrap',
+				type: 'ZHeadingWrap'
+			},
+			{
 				default: '2',
 				description: '决定真实h1–h6语义，不决定视觉字号。',
 				name: 'level',
 				type: '1 | 2 | 3 | 4 | 5 | 6'
 			},
 			{
-				default: "'xlarge'",
+				default: "'xxlarge'",
 				description: '独立于level的Theme字号token。',
 				name: 'size',
 				type: "keyof ZuiTheme['fontSize']"
@@ -64,10 +73,10 @@
 				type: "keyof ZuiTheme['fontWeight']"
 			},
 			{
-				default: "'default'",
+				default: "'neutral'",
 				description: '语义颜色；不改变heading level。',
 				name: 'tone',
-				type: "'default' | 'muted' | 'primary' | 'danger'"
+				type: 'ZHeadingTone'
 			},
 			{
 				bindable: true,
@@ -81,11 +90,16 @@
 		snippets: [{ description: '标题文本或行内富内容。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/gene/ZHeading.svelte',
 		states: [
+			{
+				description: '标题换行策略。',
+				name: 'data-wrap',
+				values: ['balance', 'pretty', 'wrap', 'nowrap']
+			},
 			{ description: '真实标题层级。', name: 'data-level', values: ['1', '2', '3', '4', '5', '6'] },
 			{
 				description: '独立视觉字号。',
 				name: 'data-size',
-				values: ['small', 'medium', 'large', 'xlarge', 'xxlarge']
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge', 'xxlarge', 'xxxlarge', 'xxxxlarge']
 			}
 		],
 		status: 'stable',
@@ -103,18 +117,13 @@
 				normal: (s) => s.lineHeight._normal,
 				relaxed: (s) => s.lineHeight._relaxed
 			},
-			size: {
-				large: (s) => s.fontSize._large,
-				medium: (s) => s.fontSize._medium,
-				small: (s) => s.fontSize._small,
-				xlarge: (s) => s.fontSize._xlarge,
-				xxlarge: (s) => s.fontSize._xxlarge
-			},
-			tone: {
-				danger: (s) => s.color._danger,
-				default: (s) => s.color._text,
-				muted: (s) => s.color._textMuted,
-				primary: (s) => s.color._primary
+			size: typographySizes,
+			tone: typographyTones,
+			wrap: {
+				balance: (s) => s.textWrap.balance,
+				pretty: (s) => s.textWrap.pretty,
+				wrap: (s) => s.textWrap.wrap,
+				nowrap: (s) => s.textWrap.nowrap
 			},
 			weight: {
 				bold: (s) => s.fontWeight._bold,
@@ -125,9 +134,10 @@
 		},
 		defaultVariants: {
 			lineHeight: 'compact',
-			size: 'xlarge',
-			tone: 'default',
-			weight: 'bold'
+			size: 'xxlarge',
+			tone: 'neutral',
+			weight: 'bold',
+			wrap: 'balance'
 		}
 	});
 	registerRecipeHmr(import.meta, headingRecipe);
@@ -150,15 +160,16 @@
 		level = 2,
 		lineHeight = 'compact',
 		ref = $bindable(null),
-		size = 'xlarge',
+		size = 'xxlarge',
 		style,
-		tone = 'default',
+		tone = 'neutral',
 		weight = 'bold',
+		wrap = 'balance',
 		...rest
 	}: ZHeadingProps = $props();
 	const zui = useZui();
 	const element = $derived(headingElement(level));
-	const rootClass = $derived(zui.recipe(headingRecipe, { lineHeight, size, tone, weight }));
+	const rootClass = $derived(zui.recipe(headingRecipe, { lineHeight, size, tone, weight, wrap }));
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 </script>
@@ -172,6 +183,7 @@
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
 	data-level={level}
 	data-size={size}
+	data-wrap={wrap}
 >
 	{@render children?.()}
 </svelte:element>

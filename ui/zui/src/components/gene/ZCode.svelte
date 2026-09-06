@@ -3,6 +3,7 @@
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { LanguageRegistration } from 'shiki/core';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
+	import { typographySizes } from './typography.js';
 	import type { TypographySize } from './typography.js';
 
 	import { defineSlotRecipe, registerSlotRecipeHmr } from '../../recipes/slots.js';
@@ -303,11 +304,14 @@
 				}
 			},
 			size: {
-				large: { root: (s) => s.fontSize._large },
-				medium: { root: (s) => s.fontSize._medium },
-				small: { root: (s) => s.fontSize._small },
-				xlarge: { root: (s) => s.fontSize._xlarge },
-				xxlarge: { root: (s) => s.fontSize._xxlarge }
+				xsmall: { root: typographySizes.xsmall },
+				small: { root: typographySizes.small },
+				medium: { root: typographySizes.medium },
+				large: { root: typographySizes.large },
+				xlarge: { root: typographySizes.xlarge },
+				xxlarge: { root: typographySizes.xxlarge },
+				xxxlarge: { root: typographySizes.xxxlarge },
+				xxxxlarge: { root: typographySizes.xxxxlarge }
 			},
 			scheme: {
 				dark: {
@@ -549,11 +553,13 @@
 			})}
 			<span class={lineClasses.line} data-highlighted={highlighted.has(index + 1) || undefined}
 				>{#if lineNumbers}<span class={classes.lineNumber} aria-hidden="true">{index + 1}</span
-					>{/if}{#each line as token, tokenIndex (`${index}:${tokenIndex}`)}<span
+					>{/if}
+				{#each line as token, tokenIndex (`${index}:${tokenIndex}`)}<span
 						class={classes.token}
 						style={tokenVariables(token)}>{token.content}</span
 					>{/each}</span
-			>{#if index < tokens.length - 1}{NEWLINE}{/if}
+			>
+			{#if index < tokens.length - 1}{NEWLINE}{/if}
 		{/each}
 	{:else}
 		{code}
@@ -585,8 +591,9 @@
 		data-color-scheme={resolvedScheme}
 		data-size={resolvedSize}
 		data-highlight-status={status}
-		>{#if status === 'loading' && loading}{@render loading()}{:else}{@render highlightedContent()}{/if}</code
 	>
+		{#if status === 'loading' && loading}{@render loading()}{:else}{@render highlightedContent()}{/if}
+	</code>
 {:else if copyable}
 	<div class={classes.container} data-slot="copy-container">
 		{@render blockContent()}

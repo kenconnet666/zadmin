@@ -1,4 +1,5 @@
 <script module lang="ts">
+	import { typographySizes, type TypographySize } from './typography.js';
 	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
@@ -7,6 +8,7 @@
 
 	export interface ZKbdProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
 		readonly children?: Snippet;
+		readonly size?: TypographySize;
 		ref?: HTMLElement | null;
 	}
 
@@ -21,6 +23,12 @@
 		name: 'ZKbd',
 		parts: [],
 		props: [
+			{
+				default: "'small'",
+				description: 'Theme文字字号；仅改变按键提示的排版比例，不创建交互控件。',
+				name: 'size',
+				type: 'TypographySize'
+			},
 			{ default: '—', description: '键盘按键或输入序列。', name: 'children', type: 'Snippet' },
 			{
 				bindable: true,
@@ -33,7 +41,13 @@
 		since: 'unreleased',
 		snippets: [{ description: '键盘按键或输入序列。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/gene/ZKbd.svelte',
-		states: [],
+		states: [
+			{
+				description: '键盘提示字号。',
+				name: 'data-size',
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge', 'xxlarge', 'xxxlarge', 'xxxxlarge']
+			}
+		],
 		status: 'stable',
 		summary: '使用原生kbd语义展示快捷键、按键和需要用户输入的键盘序列。'
 	} as const satisfies ZuiComponentMetadata;
@@ -49,13 +63,13 @@
 			s.color._text;
 			s.display.inlineBlock;
 			s.fontFamily._mono;
-			s.fontSize._small;
 			s.lineHeight._normal;
 			s.paddingBlock._xsmall;
 			s.paddingInline._small;
 			s.whiteSpace.nowrap;
 		},
-		variants: {}
+		variants: { size: typographySizes },
+		defaultVariants: { size: 'small' }
 	});
 
 	registerRecipeHmr(import.meta, kbdRecipe);
@@ -71,9 +85,16 @@
 		serializeIcssVariables
 	} from '../../runtime/foundation/root-style.js';
 
-	let { children, class: className, ref = $bindable(null), style, ...rest }: ZKbdProps = $props();
+	let {
+		children,
+		class: className,
+		ref = $bindable(null),
+		size = 'small',
+		style,
+		...rest
+	}: ZKbdProps = $props();
 	const zui = useZui();
-	const rootClass = $derived(zui.recipe(kbdRecipe));
+	const rootClass = $derived(zui.recipe(kbdRecipe, { size }));
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
 </script>
@@ -82,6 +103,7 @@
 	{...rest}
 	bind:this={ref}
 	class={[rootClass, className]}
+	data-size={size}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
 >

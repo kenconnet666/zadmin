@@ -2,6 +2,7 @@
 	import { ZAlert, ZButton, ZDataTable, ZStack, type DataTableColumn } from '@zadmin/zui';
 
 	type ViewState = 'empty' | 'error' | 'loading' | 'ready';
+
 	interface ServiceRow {
 		id: string;
 		name: string;
@@ -29,7 +30,7 @@
 	<ZAlert live="assertive" title={message} tone="danger">
 		表格保留已成功的数据快照；请求层决定何时重试或替换rows。
 		{#snippet action()}
-			<ZButton size="small" variant="secondary" onclick={() => (state = 'loading')}>重试</ZButton>
+			<ZButton size="small" variant="outline" onclick={() => (state = 'loading')}>重试</ZButton>
 		{/snippet}
 	</ZAlert>
 {/snippet}
@@ -39,7 +40,7 @@
 		{#each states as option (option.id)}
 			<ZButton
 				size="small"
-				variant={state === option.id ? 'primary' : 'secondary'}
+				variant={state === option.id ? 'solid' : 'outline'}
 				onclick={() => (state = option.id)}>{option.label}</ZButton
 			>
 		{/each}

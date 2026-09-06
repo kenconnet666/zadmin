@@ -2,7 +2,8 @@
 	import type { HTMLAttributes, HTMLProgressAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
-	export type ProgressTone = 'danger' | 'primary' | 'success' | 'warning';
+	import type { ZSemanticTone } from '../../theme/semantics.js';
+	export type ProgressTone = ZSemanticTone | 'primary';
 	export type ProgressView = 'circle' | 'line';
 	export interface ZProgressProps extends Omit<
 		HTMLAttributes<HTMLDivElement> & HTMLProgressAttributes,
@@ -77,7 +78,7 @@
 				default: "'primary'",
 				description: '有限语义颜色，不改变进度数值。',
 				name: 'tone',
-				type: "'primary' | 'success' | 'warning' | 'danger'"
+				type: 'ProgressTone'
 			},
 			{
 				default: 'undefined',
@@ -95,7 +96,7 @@
 			{
 				description: '语义颜色。',
 				name: 'data-tone',
-				values: ['primary', 'success', 'warning', 'danger']
+				values: ['primary', 'neutral', 'info', 'success', 'warning', 'danger']
 			}
 		],
 		status: 'stable',
@@ -110,6 +111,8 @@
 		},
 		variants: {
 			tone: {
+				neutral: (s) => s.accentColor._neutral,
+				info: (s) => s.accentColor._info,
 				danger: (s) => s.accentColor._danger,
 				primary: (s) => s.accentColor._primary,
 				success: (s) => s.accentColor._success,
@@ -129,6 +132,8 @@
 		},
 		variants: {
 			tone: {
+				neutral: (s) => s.color._neutral,
+				info: (s) => s.color._info,
 				danger: (s) => s.color._danger,
 				primary: (s) => s.color._primary,
 				success: (s) => s.color._success,
@@ -225,7 +230,7 @@
 			[{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }],
 			{
 				duration: durationMilliseconds(zui.theme.duration.progressIndeterminate),
-				easing: 'linear',
+				easing: zui.theme.easing.linear,
 				iterations: Infinity
 			}
 		);

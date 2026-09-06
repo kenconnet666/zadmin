@@ -52,7 +52,7 @@ export const linkDoc = defineComponentDoc(linkMetadata, {
 				default: "'always'",
 				description: '默认不只依赖颜色识别链接；紧凑导航可显式选择hover或none。'
 			},
-			variant: { default: "'primary'", description: 'appearance为button时复用ZButton视觉variant。' }
+			variant: { default: "'solid'", description: 'appearance为button时复用ZButton视觉variant。' }
 		},
 		summary:
 			'以必填href和真实anchor为唯一导航语义，显式分离外链图标、新窗口行为、安全rel、disabled与视觉tone/underline。'

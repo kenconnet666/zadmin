@@ -6,12 +6,12 @@
 
 <ZStack align="center" direction="row" gap="xlarge" wrap>
 	<ZBadge count={4} tone="danger">
-		<ZButton aria-label="收件箱有4条未读消息" shape="square" variant="secondary">
+		<ZButton aria-label="收件箱有4条未读消息" shape="square" variant="outline">
 			<Mail aria-hidden="true" size={18} />
 		</ZButton>
 	</ZBadge>
-	<ZBadge count={18} max={9} size="small" tone="accent">
-		<ZButton aria-label="通知中心有18条更新" shape="square" variant="secondary">
+	<ZBadge count={18} max={9} size="small" tone="info">
+		<ZButton aria-label="通知中心有18条更新" shape="square" variant="outline">
 			<Bell aria-hidden="true" size={18} />
 		</ZButton>
 	</ZBadge>

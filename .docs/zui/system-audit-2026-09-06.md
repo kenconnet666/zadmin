@@ -39,8 +39,33 @@
 - `dd5f18c`：Badge 的 duration/easing/reduced-motion；Skeleton 与 Timeline 的 CSS 长度值。已推送，新增回归交给 CI。
 - ICSS 补齐 animation/transition delay 的主题访问器，以及 animation direction、fill mode、iteration count、play state 与 text wrap 的标准关键字。类型负例与序列化回归已编写。
 - 主题新增 info/neutral 的完整前景、悬停、浅背景和实心文字角色，补齐 success/warning 的实心文字与悬停角色。浏览器对默认主题和六个预设做了 70 组状态前景/浅背景、实心文字/状态背景的对比度计算，最低约 5.28:1；此结果只覆盖该配色组合，不替代组件无障碍检查。
-- [输入 27 族](./input-api-audit-2026-09-06.md)和[导航/浮层 16 族](./navigation-overlay-audit-2026-09-06.md)的第一批确定缺陷已经实施，加上[通用/布局/展示/反馈 36 族](./foundation-display-feedback-audit-2026-09-06.md)，79 族都有源码复核条目。各表后续尺寸、颜色和 API 项仍按待实施记录。
+- `bf1e01c`：[输入 27 族](./input-api-audit-2026-09-06.md)和[导航/浮层 16 族](./navigation-overlay-audit-2026-09-06.md)的第一批确定缺陷已经实施，加上[通用/布局/展示/反馈 36 族](./foundation-display-feedback-audit-2026-09-06.md)，79 族都有源码复核条目。后续尺寸、颜色和 API 迁移现已按三组台账落实；具有不同职责的 density、面板宽度、虚拟行高等保留理由也逐项登记。
 - 浏览器补证：Dialog 首次打开捕获到 opacity 从 0 经过 0.236、0.432 等中间值递增，证明实际入场过渡；Mention 建议已打开时切换 Field readonly，textarea 变为只读且 listbox 从 1 个变为 0，原生 reset 回调计数为 1。对应页面无 console error/warn。
+
+## 五档体系与文档体验收口
+
+| 轴       | 当前合同                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------- |
+| 控件     | xsmall / small / medium / large / xlarge，高度 24 / 28 / 32 / 40 / 48px                     |
+| 控件文字 | 11 / 12 / 14 / 16 / 16px，独立于大标题字号                                                  |
+| 指示器   | Icon / Spinner 为 12 / 14 / 16 / 20 / 24px；Switch、Badge、Avatar 各有用途尺寸              |
+| 排版     | 11 / 12 / 14 / 16 / 20 / 24 / 32 / 40px；Heading 的 level 与 size、wrap 分开                |
+| 颜色     | neutral / info / success / warning / danger，品牌 primary 与文字 muted/inherit 保留独立职责 |
+| 外观     | Button solid / outline / ghost；颜色、pressed、disabled、loading 与外观正交                 |
+
+- 本轮还修正复合输入外框多出的边框高度、Switch 的轨道/拇指/RTL比例、Tree CSS变量变化后的虚拟行高测量；Statistic 新增 valueSize/trendTone，趋势默认中性。
+- ICSS 支持 150 个已建模属性、18 组 / 180 个主题 token；Recipe defaults/compound 条件的类型引用真实 variant，运行时校验继续保护动态输入。
+- 141 个公开组件的 API 静态合同核对得到 1776 个生成属性，actionableIssues、missingConsumption、missingRestForwarding、defaultMismatches 均为 0。
+- 六套官方主题在真实浏览器中的五档按钮高度均为 24/28/32/40/48px；30 组实心语义按钮前景/背景的最低对比度约 5.75:1。它只证明该组配色，不替代完整无障碍审计。
+- API 桌面表格固定列宽并允许完整类型换行，说明列占 34%；窄屏使用真实 dl/dt/dd 纵向阅读。源码、指南与长英文标识符换行，不用裁切隐藏溢出。
+- 390px 巡检中发现的 PIN 尺寸例与 Tabs 容器/简介溢出均已修正。仅保留两个明确用于演示原生表格横向滚动的 ZTable 示例。
+- Demo 顶部复制操作位于展开按钮之前；折叠时可复制真实源码，writeText 兑现后才显示 Check/已复制；拒绝、源码更新、卸载均有相应处理。真实浏览器复制成功，反馈前后宽度均为 110px，且不改变折叠状态。Demo 源码区底部复制入口已关闭。
+
+## 稳定性证据
+
+最新生成库存为 141 / 141 stableCompliant、141 / 141 有关联视觉合同、stableViolations=0。七项布局/数据组件的既有有效视觉断言已准确关联到各自 it 块，未添加空标记或放宽生成器。这个库存表示合同和回归存在，不表示当前修订已经执行通过全部 CI。
+
+前一提交 bf1e01c 的 CI 34006402280 报告 Tooltip 旧参数、固定颜色数量、入场中间帧几何采样、reset 完成时序及 Tree fixture 名称问题，均已有对应修复。另一次 Transfer 浏览器连接中断没有组件根因 stack，保留为执行不完整的边界。当前修订的跨浏览器、完整构建、覆盖率和桌面验收交给其自身 CI，不借用旧提交的绿色结果。
 
 ## 基础设施命名迁移
 

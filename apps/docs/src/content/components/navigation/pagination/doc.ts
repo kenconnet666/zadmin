@@ -1,3 +1,5 @@
+import ControlSizesDemo from './ControlSizesDemo.svelte';
+import controlSizesSource from './ControlSizesDemo.svelte?raw';
 import { paginationMetadata } from '@zadmin/zui/metadata';
 import InteractiveDemo from './InteractiveDemo.svelte';
 import interactiveSource from './InteractiveDemo.svelte?raw';
@@ -80,6 +82,14 @@ export const paginationDoc = defineComponentDoc(paginationMetadata, {
 			'生产分页导航：用互斥totalPages/totalItems合同避免双重总量事实，提供受控页尺寸、三种呈现、RTL和动态焦点恢复，但把请求、URL、筛选与DataTable状态留给调用方owner。'
 	},
 	demos: [
+		{
+			component: ControlSizesDemo,
+			covers: ['variants-and-states', 'composition'],
+			description: '五档尺寸直接消费主题 token；组合部件继承有视觉意义的尺寸 owner。',
+			id: 'pagination-control-sizes',
+			source: controlSizesSource,
+			title: '五档尺寸与主题比例'
+		},
 		{
 			component: InteractiveDemo,
 			covers: ['controlled', 'focus', 'keyboard', 'variants-and-states'],

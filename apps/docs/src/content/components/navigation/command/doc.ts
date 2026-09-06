@@ -1,3 +1,5 @@
+import ControlSizesDemo from './ControlSizesDemo.svelte';
+import controlSizesSource from './ControlSizesDemo.svelte?raw';
 import { commandMetadata } from '@zadmin/zui/metadata';
 import FormDemo from './FormDemo.svelte';
 import source from './FormDemo.svelte?raw';
@@ -94,6 +96,14 @@ export const commandDoc = defineComponentDoc(commandMetadata, {
 			'生产Command collection：输入保持唯一DOM焦点，LogicalCollection与ActiveDescendant拥有typed结果导航，相关性排序或外部结果owner保持正交，并用本地化live status公告结果数量。'
 	},
 	demos: [
+		{
+			component: ControlSizesDemo,
+			covers: ['variants-and-states', 'composition'],
+			description: '五档尺寸直接消费主题 token；组合部件继承有视觉意义的尺寸 owner。',
+			id: 'command-control-sizes',
+			source: controlSizesSource,
+			title: '五档尺寸与主题比例'
+		},
 		{
 			component: FormDemo,
 			covers: ['controlled', 'focus', 'keyboard', 'locale'],

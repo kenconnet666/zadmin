@@ -1,5 +1,7 @@
 # ZUI Typography Architecture
 
+The 2026-09-06 update adds eight Theme font sizes, shared semantic text tones, balanced Heading wrapping and Kbd size. Existing 24px/32px typography moves to `xxlarge`/`xxxlarge`; heading level and text overflow ownership remain independent. See [the migration record](./visual-api-migration-2026-09-06.md).
+
 ## Ownership and semantics
 
 ZUI separates two responsibilities that mature typography systems often combine:

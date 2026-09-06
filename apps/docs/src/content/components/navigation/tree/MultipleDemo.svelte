@@ -36,7 +36,7 @@
 		/>
 		<ZStack direction="row" gap="small" align="center" wrap>
 			<ZButton type="button" onclick={readFormData}>读取FormData</ZButton>
-			<ZButton type="reset" variant="secondary">重置多选</ZButton>
+			<ZButton type="reset" variant="outline">重置多选</ZButton>
 			<ZText tone="muted">selected = {selectedKeys.join(',') || 'none'}</ZText>
 		</ZStack>
 		<ZText aria-live="polite" tone="muted">FormData = {formValues}</ZText>

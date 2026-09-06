@@ -57,11 +57,11 @@ describe('ZBadge server contract', () => {
 		expect(
 			() => render(ZBadge, { props: { count: 1, offset: new Array(2) as never } }).body
 		).toThrow(/two finite numbers/u);
-		expect(() => render(ZBadge, { props: { count: 1, size: 'large' as never } }).body).toThrow(
-			/size must be small or medium/u
+		expect(() => render(ZBadge, { props: { count: 1, size: 'huge' as never } }).body).toThrow(
+			/size must be xsmall, small, medium, large or xlarge/u
 		);
-		expect(() => render(ZBadge, { props: { count: 1, tone: 'info' as never } }).body).toThrow(
-			/tone must be default, accent, success, warning or danger/u
+		expect(() => render(ZBadge, { props: { count: 1, tone: 'accent' as never } }).body).toThrow(
+			/tone must be neutral, info, success, warning or danger/u
 		);
 	});
 });

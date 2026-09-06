@@ -45,7 +45,8 @@
 				s.cursor.pointer;
 				s.display.inlineFlex;
 				s.flexShrink(0);
-				s.padding._xsmall;
+				s.paddingBlock._switchInset;
+				s.paddingInline._xsmall;
 				s.position.relative;
 				s.transitionProperty.raw('background-color, border-color, opacity');
 				s.transitionTimingFunction._standard;
@@ -140,14 +141,25 @@
 				}
 			},
 			size: {
-				large: {
+				xsmall: {
 					root: (s) => {
-						s.blockSize._switchLargeBlock;
-						s.inlineSize._switchLargeInline;
+						s.paddingInline._switchInset;
+						s.blockSize._switchXsmallBlock;
+						s.inlineSize._switchXsmallInline;
 					},
 					thumb: (s) => {
-						s.blockSize._switchThumbLarge;
-						s.inlineSize._switchThumbLarge;
+						s.blockSize._switchThumbXsmall;
+						s.inlineSize._switchThumbXsmall;
+					}
+				},
+				small: {
+					root: (s) => {
+						s.blockSize._switchSmallBlock;
+						s.inlineSize._switchSmallInline;
+					},
+					thumb: (s) => {
+						s.blockSize._switchThumbSmall;
+						s.inlineSize._switchThumbSmall;
 					}
 				},
 				medium: {
@@ -160,18 +172,30 @@
 						s.inlineSize._switchThumbMedium;
 					}
 				},
-				small: {
+				large: {
 					root: (s) => {
-						s.blockSize._switchSmallBlock;
-						s.inlineSize._switchSmallInline;
+						s.blockSize._switchLargeBlock;
+						s.inlineSize._switchLargeInline;
 					},
 					thumb: (s) => {
-						s.blockSize._switchThumbSmall;
-						s.inlineSize._switchThumbSmall;
+						s.blockSize._switchThumbLarge;
+						s.inlineSize._switchThumbLarge;
+					}
+				},
+				xlarge: {
+					root: (s) => {
+						s.blockSize._switchXlargeBlock;
+						s.inlineSize._switchXlargeInline;
+					},
+					thumb: (s) => {
+						s.blockSize._switchThumbXlarge;
+						s.inlineSize._switchThumbXlarge;
 					}
 				}
 			},
 			travel: {
+				xsmall: { thumb: (s) => s.transform._switchThumbTravelXsmall },
+				xlarge: { thumb: (s) => s.transform._switchThumbTravelXlarge },
 				large: { thumb: (s) => s.transform._switchThumbTravelLarge },
 				medium: { thumb: (s) => s.transform._switchThumbTravelMedium },
 				none: { thumb: (s) => s.transform.raw('translateX(0)') },
@@ -196,6 +220,7 @@
 
 	export type ZSwitchProps = Omit<
 		HTMLInputAttributes,
+		| 'children'
 		| 'aria-checked'
 		| 'aria-readonly'
 		| 'checked'
@@ -308,7 +333,7 @@
 				default: "Provider density（默认把 'comfortable' 映射为 'medium'）",
 				description: '显式尺寸优先，否则响应最近Provider的density。',
 				name: 'size',
-				type: "'small' | 'medium' | 'large'"
+				type: "'xsmall' | 'small' | 'medium' | 'large' | 'xlarge'"
 			},
 			{ default: 'false', description: '禁用原生控件。', name: 'disabled', type: 'boolean' },
 			{
@@ -368,7 +393,7 @@
 			{
 				description: '解析后的control尺寸。',
 				name: 'data-size',
-				values: ['small', 'medium', 'large']
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge']
 			},
 			{ description: '系统或Provider减少动画。', name: 'data-reduced-motion', values: ['true'] }
 		],
@@ -440,6 +465,7 @@
 	});
 	const resolvedChecked = $derived(state.current);
 	const reduced = $derived(reducedMotion.current);
+	// The track has physical LTR coordinates; only the logical on/off position is mirrored.
 	const shouldTravel = $derived(zui.direction === 'ltr' ? resolvedChecked : !resolvedChecked);
 	const classes = $derived(
 		zui.slots(switchRecipe, {
@@ -481,6 +507,7 @@
 
 <span
 	class={[classes.root, className]}
+	dir="ltr"
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
 	data-disabled={resolvedDisabled || undefined}

@@ -17,9 +17,7 @@
 		原生ARIA、tabindex、data、class、style与ref都转发到同一个div。
 	</ZBox>
 	<ZStack align="center" direction="row" gap="small" wrap>
-		<ZButton size="small" variant="secondary" onclick={() => region?.focus()}>
-			聚焦真实根元素
-		</ZButton>
+		<ZButton size="small" variant="outline" onclick={() => region?.focus()}>聚焦真实根元素</ZButton>
 		<ZText tone="muted">
 			ref = {region?.tagName ?? 'pending'} · class = {region?.classList.contains(
 				'docs-box-native-marker'

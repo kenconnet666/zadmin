@@ -14,9 +14,9 @@
 		onValueChange={(next) => (normalized = next || 'empty')}
 	/>
 	<ZStack direction="row" gap="small" wrap>
-		<ZButton variant="secondary" onclick={() => (value = null)}>外部清空</ZButton>
-		<ZButton variant="secondary" onclick={() => (value = '98x7654321')}>注入非法超长值</ZButton>
-		<ZButton variant="secondary" onclick={() => (length = length === 6 ? 4 : 6)}>
+		<ZButton variant="outline" onclick={() => (value = null)}>外部清空</ZButton>
+		<ZButton variant="outline" onclick={() => (value = '98x7654321')}>注入非法超长值</ZButton>
+		<ZButton variant="outline" onclick={() => (length = length === 6 ? 4 : 6)}>
 			切换为 {length === 6 ? 4 : 6} 位
 		</ZButton>
 	</ZStack>

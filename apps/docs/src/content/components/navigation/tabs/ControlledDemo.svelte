@@ -28,8 +28,8 @@
 		<ZTabsPanel value="last">Last panel</ZTabsPanel>
 	</ZTabs>
 	<ZStack direction="row" gap="small" wrap>
-		<ZButton onclick={() => (value = null)} variant="secondary">显式清为null</ZButton>
-		<ZButton onclick={() => (value = '1')} variant="secondary">选择string 1</ZButton>
+		<ZButton onclick={() => (value = null)} variant="outline">显式清为null</ZButton>
+		<ZButton onclick={() => (value = '1')} variant="outline">选择string 1</ZButton>
 		<ZButton onclick={() => (activeValue = 'last')} variant="ghost">移动active owner</ZButton>
 	</ZStack>
 	<ZText tone="muted">value = {identity(value)} · active = {identity(activeValue)}</ZText>

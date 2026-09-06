@@ -127,7 +127,7 @@
 	aria-label="搜索组件与指南"
 	class={classes.trigger}
 	onclick={() => (open = true)}
-	variant="secondary"
+	variant="outline"
 	size="medium"
 >
 	<ZIcon name="search" size={18} />

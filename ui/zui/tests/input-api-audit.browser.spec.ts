@@ -20,9 +20,11 @@ describe('input API audit regressions', () => {
 		render(InputApiAuditFixture);
 		await tick();
 		for (const [size, height, font] of [
-			['small', 24, 12],
+			['xsmall', 24, 11],
+			['small', 28, 12],
 			['medium', 32, 15],
-			['large', 48, 18]
+			['large', 40, 16],
+			['xlarge', 48, 16]
 		] as const) {
 			const input = element<HTMLInputElement>(`audit-combobox-${size}`);
 			const segment = element(`audit-segmented-${size}`).querySelector<HTMLButtonElement>(
@@ -62,15 +64,23 @@ describe('input API audit regressions', () => {
 	});
 
 	it('forwards public form reset callbacks exactly once after clearing draft state', async () => {
-		render(InputApiAuditFixture);
+		const mentionReset = Promise.withResolvers<void>();
+		const dateReset = Promise.withResolvers<void>();
+		const timeReset = Promise.withResolvers<void>();
+		render(InputApiAuditFixture, {
+			onMentionReset: () => mentionReset.resolve(),
+			onDateReset: () => dateReset.resolve(),
+			onTimeReset: () => timeReset.resolve()
+		});
 		await tick();
 		const editor = element<HTMLTextAreaElement>('audit-mention');
 		edit(editor, '@a');
 		await tick();
 		element<HTMLFormElement>('audit-mention-form').reset();
 		element<HTMLFormElement>('audit-date-form').reset();
-		await tick();
-		await Promise.resolve();
+		// Native reset can precede the library's after-default task. Await the public
+		// completion signals before asserting component state, rather than flushing microtasks.
+		await Promise.all([mentionReset.promise, dateReset.promise, timeReset.promise]);
 		await tick();
 		expect(editor.value).toBe('Initial');
 		expect(editor.getAttribute('data-state')).toBe('closed');

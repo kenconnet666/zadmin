@@ -27,9 +27,9 @@ export const toggleButtonDoc = defineComponentDoc(toggleButtonMetadata, {
 				description: '复用Button default/square/circle；图标按钮必须具名。'
 			},
 			size: { default: 'Provider density', description: '复用Button控制高度和内容间距。' },
-			tone: { default: "'default'", description: '复用Button有限语义tone。' },
+			tone: { default: "'primary'", description: '复用Button有限语义tone。' },
 			variant: {
-				default: "'secondary'",
+				default: "'outline'",
 				description: '复用Button视觉层级；pressed由同一recipe增加选中表现。'
 			}
 		},

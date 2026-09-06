@@ -1,3 +1,5 @@
+import SizingDemo from './SizingDemo.svelte';
+import sizingSource from './SizingDemo.svelte?raw';
 import { inputMetadata } from '@zadmin/zui/metadata';
 import BindingDemo from './BindingDemo.svelte';
 import bindingSource from './BindingDemo.svelte?raw';
@@ -42,6 +44,15 @@ export const inputDoc = defineComponentDoc(inputMetadata, {
 			'原生input语义、Svelte bindable值、Field状态、外部form关联和唯一owner reset的稳定文本控件。'
 	},
 	demos: [
+		{
+			component: SizingDemo,
+			covers: ['composition', 'variants-and-states'],
+			description:
+				'五档尺寸按组件用途同步文字、留白和内部控件；Field/Form 显式尺寸优先于 Provider density。',
+			id: 'input-sizing',
+			source: sizingSource,
+			title: '五档尺寸与组合比例'
+		},
 		{
 			covers: ['controlled', 'uncontrolled'],
 			component: BindingDemo,

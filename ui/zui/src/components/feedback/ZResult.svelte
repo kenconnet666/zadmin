@@ -5,6 +5,7 @@
 	import type { ZHeadingLevel } from '../gene/ZHeading.svelte';
 	import type { AlertTone } from './ZAlert.svelte';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
+
 	export interface ZResultProps extends Omit<HTMLAttributes<HTMLElement>, 'children' | 'title'> {
 		readonly actions?: Snippet;
 		readonly children?: Snippet;
@@ -16,6 +17,7 @@
 		readonly title: string;
 		readonly tone?: AlertTone;
 	}
+
 	export const zuiMetadata = {
 		category: 'feedback',
 		id: 'result',
@@ -65,7 +67,7 @@
 			{
 				description: '语义tone。',
 				name: 'data-tone',
-				values: ['info', 'success', 'warning', 'danger']
+				values: ['neutral', 'info', 'success', 'warning', 'danger']
 			}
 		],
 		status: 'stable',
@@ -86,8 +88,9 @@
 		},
 		variants: {
 			tone: {
+				neutral: (s) => s.color._neutral,
 				danger: (s) => s.color._danger,
-				info: (s) => s.color._accent,
+				info: (s) => s.color._info,
 				success: (s) => s.color._success,
 				warning: (s) => s.color._warning
 			}
@@ -160,10 +163,12 @@
 				return CircleCheck;
 			case 'warning':
 				return TriangleAlert;
+			case 'neutral':
 			case 'info':
 				return Info;
 		}
 	}
+
 	let {
 		actions,
 		children,
@@ -204,19 +209,24 @@
 	aria-labelledby={titleId}
 	data-tone={tone}
 >
-	{#if icon !== null}<div class={iconClass} data-slot="icon" aria-hidden="true">
-			{#if icon}{@render icon()}{:else}<DefaultIcon
-					aria-hidden="true"
-					size={56}
-					strokeWidth={1.75}
-				/>{/if}
-		</div>{/if}
-	<ZHeading id={titleId} data-slot="title" level={headingLevel} size="xlarge">
+	{#if icon !== null}
+		<div class={iconClass} data-slot="icon" aria-hidden="true">
+			{#if icon}{@render icon()}{:else}
+				<DefaultIcon aria-hidden="true" size={56} strokeWidth={1.75} />
+			{/if}
+		</div>
+	{/if}
+	<ZHeading id={titleId} data-slot="title" level={headingLevel} size="xxlarge">
 		{title}
 	</ZHeading>
-	{#if resolvedContent}<div class={contentClass} data-slot="content">
+	{#if resolvedContent}
+		<div class={contentClass} data-slot="content">
 			{@render resolvedContent()}
-		</div>{/if}{#if actions}<div class={actionsClass} data-slot="actions">
+		</div>
+	{/if}
+	{#if actions}
+		<div class={actionsClass} data-slot="actions">
 			{@render actions()}
-		</div>{/if}
+		</div>
+	{/if}
 </section>

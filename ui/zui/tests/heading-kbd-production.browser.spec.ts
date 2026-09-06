@@ -14,7 +14,7 @@ describe('ZHeading and ZKbd production browser contracts', () => {
 		expect(h1.dataset.level).toBe('1');
 		expect(h4.dataset.level).toBe('4');
 		expect(h1.dataset.size).toBe('medium');
-		expect(h4.dataset.size).toBe('xlarge');
+		expect(h4.dataset.size).toBe('xxlarge');
 		expect(h1.getAttribute('aria-label')).toBeNull();
 	});
 

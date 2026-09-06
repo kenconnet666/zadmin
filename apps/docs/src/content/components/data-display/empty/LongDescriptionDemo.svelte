@@ -8,6 +8,6 @@
 	{/snippet}
 	{#snippet actions()}
 		<ZButton>创建审计任务</ZButton>
-		<ZButton variant="secondary">清除全部筛选条件</ZButton>
+		<ZButton variant="outline">清除全部筛选条件</ZButton>
 	{/snippet}
 </ZEmpty>

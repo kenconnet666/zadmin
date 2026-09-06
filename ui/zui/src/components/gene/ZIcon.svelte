@@ -14,6 +14,8 @@
 	import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 	import User from '@lucide/svelte/icons/user';
 	import X from '@lucide/svelte/icons/x';
+	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
+	import { indicatorSizeStyles } from './indicator-size.js';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
@@ -36,7 +38,7 @@
 	} as const satisfies Readonly<Record<string, LucideIcon>>;
 
 	export type ZIconName = keyof typeof iconManifest;
-	export type ZIconSize = 'full' | 'large' | 'medium' | 'small';
+	export type ZIconSize = ZControlSize | 'full';
 
 	export function getIconComponent(name: ZIconName): LucideIcon {
 		const component = iconManifest[name];
@@ -107,18 +109,7 @@
 					s.width._full;
 					s.height._full;
 				},
-				large: (s) => {
-					s.width._large;
-					s.height._large;
-				},
-				medium: (s) => {
-					s.width._medium;
-					s.height._medium;
-				},
-				small: (s) => {
-					s.width._small;
-					s.height._small;
-				}
+				...indicatorSizeStyles
 			}
 		},
 		defaultVariants: { size: 'small' }

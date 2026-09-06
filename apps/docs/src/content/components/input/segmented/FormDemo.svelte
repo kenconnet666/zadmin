@@ -20,7 +20,7 @@
 			name="period"
 			onValueChange={() => (changes += 1)}
 		/>
-		<ZButton type="reset" variant="secondary">重置</ZButton>
+		<ZButton type="reset" variant="outline">重置</ZButton>
 		<ZText tone="muted">value = {value} · 变更 = {changes}</ZText>
 	</ZStack>
 </form>

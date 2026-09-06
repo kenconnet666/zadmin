@@ -12,7 +12,7 @@
 <ZStack align="center" direction="row" gap="xlarge" wrap>
 	{#each placements as placement, index (placement)}
 		<ZStack align="center" gap="small">
-			<ZBadge count={index + 1} offset={[2, 2]} overlap="circular" {placement} tone="accent">
+			<ZBadge count={index + 1} offset={[2, 2]} overlap="circular" {placement} tone="info">
 				<ZAvatar alt={placement} fallbackText={String(index + 1)} size="large" />
 			</ZBadge>
 			<ZText size="small">{placement}</ZText>

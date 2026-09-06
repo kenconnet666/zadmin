@@ -12,7 +12,7 @@
 	}
 	const recipe = defineRecipe({
 		base: (s) => {
-			s.fontSize._large;
+			s.fontSize._xlarge;
 			s.fontWeight._bold;
 			s.margin.px(0);
 		},

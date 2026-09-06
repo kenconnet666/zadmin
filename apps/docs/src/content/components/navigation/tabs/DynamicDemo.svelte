@@ -24,7 +24,7 @@
 	</ZTabs>
 	<ZStack direction="row" gap="small" wrap>
 		<ZButton onclick={() => (items = items.filter((key) => key !== value))}>删除selected</ZButton>
-		<ZButton onclick={() => (items = [...items].reverse())} variant="secondary">反转顺序</ZButton>
+		<ZButton onclick={() => (items = [...items].reverse())} variant="outline">反转顺序</ZButton>
 	</ZStack>
 	<ZText tone="muted">selected = {value ?? 'null'} · active = {activeValue ?? 'null'}</ZText>
 </ZStack>

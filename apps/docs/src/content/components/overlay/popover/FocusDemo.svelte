@@ -4,7 +4,7 @@
 </script>
 
 <ZPopover placement="right-start">
-	<ZPopoverTrigger variant="secondary">编辑备注</ZPopoverTrigger>
+	<ZPopoverTrigger variant="outline">编辑备注</ZPopoverTrigger>
 	<ZPopoverContent initialFocus={() => input}>
 		<ZStack gap="medium"
 			><ZText as="strong">部署备注</ZText><ZInput

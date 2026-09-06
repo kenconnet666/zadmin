@@ -34,7 +34,10 @@
 		context: ZNumberFieldFormatterContext
 	) => string;
 
-	export interface ZNumberFieldProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onchange'> {
+	export interface ZNumberFieldProps extends Omit<
+		HTMLAttributes<HTMLDivElement>,
+		'children' | 'onchange'
+	> {
 		readonly allowOutOfRange?: boolean;
 		readonly decrementLabel?: string;
 		readonly defaultValue?: number;
@@ -210,7 +213,7 @@
 				default: "Provider density（默认把 'comfortable' 映射为 'medium'）",
 				description: '显式值优先于Field和Provider density。',
 				name: 'size',
-				type: "'small' | 'medium' | 'large'"
+				type: "'xsmall' | 'small' | 'medium' | 'large' | 'xlarge'"
 			},
 			{
 				default: 'Field context',
@@ -253,7 +256,7 @@
 			{
 				description: '解析后的control尺寸。',
 				name: 'data-size',
-				values: ['small', 'medium', 'large']
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge']
 			},
 			{ description: '当前已解析为减少动画。', name: 'data-reduced-motion', values: ['true'] }
 		],
@@ -293,6 +296,7 @@
 	const buttonRecipe = defineRecipe({
 		base: (s) => {
 			styleInternalAction(s);
+			s.boxSizing.borderBox;
 			s.backgroundColor._surface;
 			s.borderStyle.none;
 			s.borderRadius.px(0);
@@ -304,17 +308,30 @@
 		},
 		variants: {
 			size: {
-				large: (s) => {
-					s.minWidth._large;
-					s.paddingInline._large;
+				xsmall: (s) => {
+					s.fontSize._xsmall;
+					s.minWidth._xsmall;
+					s.paddingInline._small;
+				},
+				small: (s) => {
+					s.fontSize._small;
+					s.minWidth._small;
+					s.paddingInline._small;
 				},
 				medium: (s) => {
+					s.fontSize._medium;
 					s.minWidth._medium;
 					s.paddingInline._medium;
 				},
-				small: (s) => {
-					s.minWidth._small;
-					s.paddingInline._small;
+				large: (s) => {
+					s.fontSize._large;
+					s.minWidth._large;
+					s.paddingInline._large;
+				},
+				xlarge: (s) => {
+					s.fontSize._large;
+					s.minWidth._xlarge;
+					s.paddingInline._large;
 				}
 			}
 		},
@@ -323,6 +340,9 @@
 	const inputRecipe = defineRecipe({
 		base: (s) => {
 			s.appearance.none;
+			s.fontFamily._sans;
+			s.boxSizing.borderBox;
+			s.lineHeight._compact;
 			s.backgroundColor.transparent;
 			s.borderStyle.none;
 			s.color._text;
@@ -334,20 +354,25 @@
 		},
 		variants: {
 			size: {
-				large: (s) => {
-					s.fontSize._large;
-					s.minHeight._large;
-					s.paddingInline._xlarge;
-				},
-				medium: (s) => {
-					s.fontSize._medium;
-					s.minHeight._medium;
-					s.paddingInline._large;
+				xsmall: (s) => {
+					s.fontSize._xsmall;
+					s.paddingInline._medium;
 				},
 				small: (s) => {
 					s.fontSize._small;
-					s.minHeight._small;
 					s.paddingInline._medium;
+				},
+				medium: (s) => {
+					s.fontSize._medium;
+					s.paddingInline._large;
+				},
+				large: (s) => {
+					s.fontSize._large;
+					s.paddingInline._xlarge;
+				},
+				xlarge: (s) => {
+					s.fontSize._large;
+					s.paddingInline._xlarge;
 				}
 			}
 		},
@@ -365,7 +390,7 @@
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import { ReducedMotionState } from '../../runtime/foundation/motion.svelte.js';
-	import { resolveControlSize } from '../../runtime/foundation/control-size.js';
+	import { controlSizeMetrics, resolveControlSize } from '../../runtime/foundation/control-size.js';
 	import { useZField } from '../../runtime/form/field-context.js';
 	import FormValueBridge from '../../runtime/form/FormValueBridge.svelte';
 	import { mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
@@ -527,6 +552,11 @@
 	);
 	const buttonClass = $derived(zui.recipe(buttonRecipe, { size: resolvedSize }));
 	const inputClass = $derived(zui.recipe(inputRecipe, { size: resolvedSize }));
+	const contentClass = $derived(
+		zui.icss((s) => {
+			s.minHeight.raw(controlSizeMetrics(zui.theme, resolvedSize).contentHeight);
+		})
+	);
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
 	const internalValidityMessage = $derived.by(() => {
@@ -774,11 +804,11 @@
 				currentValue <= constraints.min)}
 		onclick={() => handleStepButton(-1)}
 	>
-		<Minus aria-hidden="true" size={16} />
+		<Minus aria-hidden="true" size="1em" />
 	</button>
 	<input
 		bind:this={inputRef}
-		class={inputClass}
+		class={[inputClass, contentClass]}
 		id={resolvedInputId}
 		type="text"
 		inputmode="decimal"
@@ -825,7 +855,7 @@
 				currentValue >= constraints.max)}
 		onclick={() => handleStepButton(1)}
 	>
-		<Plus aria-hidden="true" size={16} />
+		<Plus aria-hidden="true" size="1em" />
 	</button>
 </div>
 <FormValueBridge

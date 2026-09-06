@@ -19,8 +19,8 @@
 
 <ZStack gap="medium">
 	<ZStack direction="row" gap="small" wrap>
-		<ZButton variant="secondary" onclick={() => (open = true)}>由owner打开</ZButton>
-		<ZButton variant="secondary" onclick={() => (query = '')}>由owner清空查询</ZButton>
+		<ZButton variant="outline" onclick={() => (open = true)}>由owner打开</ZButton>
+		<ZButton variant="outline" onclick={() => (query = '')}>由owner清空查询</ZButton>
 	</ZStack>
 	<ZCommandPalette
 		bind:open

@@ -2,6 +2,8 @@
 
 > 状态：已于2026-08-30批准进入无人值守持续实施。本文是ZUI未来演进总纲；组件表仍是上限蓝图，只有进入对应S阶段并完成前置合同后才获得实现授权。
 
+2026-09-06 更新：用户已授权全库逐组件 API 与视觉审计并直接实施。当前尺寸、语义色和命名合同以[本轮系统审计](./system-audit-2026-09-06.md)与实际 Docs 为准；下文保留原阶段规划。
+
 ## 1. 目标与边界
 
 ZUI是面向浏览器与通用桌面WebView的第一方Svelte组件系统。它同时提供：
@@ -210,7 +212,7 @@ runtime/
 - 保持有限`as`集合和真实语义，不用role伪造heading；
 - 增加`truncate`、`lineClamp`和`tabularNumbers`；
 - truncate不默认写title，避免擅自改变可访问名称；
-- tone扩展到success、warning、danger、accent、inverse；
+- 状态 tone 使用 neutral、info、success、warning、danger；primary 品牌色与 muted/inherit 呈现按实际组件用途独立，accent 保留装饰 token，inverse 使用专用表面/文字 token；
 - 长文本、CJK、RTL和用户缩放下保持可读。
 
 ### 4.5 ZIcon

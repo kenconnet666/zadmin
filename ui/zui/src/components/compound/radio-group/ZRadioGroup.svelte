@@ -167,7 +167,7 @@
 				default: "Field size，其次为Provider density（'comfortable'映射为'medium'）",
 				description: 'RadioGroup默认Item尺寸；Item显式size优先。',
 				name: 'size',
-				type: "'small' | 'medium' | 'large'"
+				type: "'xsmall' | 'small' | 'medium' | 'large' | 'xlarge'"
 			},
 			{
 				bindable: true,
@@ -191,7 +191,11 @@
 			{ description: '禁用状态。', name: 'data-disabled', values: ['true'] },
 			{ description: '无效状态。', name: 'data-invalid', values: ['true'] },
 			{ description: '只读状态。', name: 'data-readonly', values: ['true'] },
-			{ description: '解析后的Item尺寸。', name: 'data-size', values: ['small', 'medium', 'large'] }
+			{
+				description: '解析后的Item尺寸。',
+				name: 'data-size',
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge']
+			}
 		],
 		status: 'stable',
 		summary: '以LogicalCollection统一typed选项、原生radio表单语义和roving焦点的生产单选组。'

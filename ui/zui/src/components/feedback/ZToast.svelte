@@ -3,6 +3,7 @@
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import type { ToastPriority, ToastTone } from '../../runtime/toast.svelte.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
+
 	export interface ZToastProps extends Omit<HTMLAttributes<HTMLElement>, 'title'> {
 		readonly actionLabel?: string;
 		readonly announce?: boolean;
@@ -18,6 +19,7 @@
 		readonly title: string;
 		readonly tone?: ToastTone;
 	}
+
 	export const zuiMetadata = {
 		category: 'feedback',
 		id: 'toast',
@@ -107,7 +109,7 @@
 			{
 				description: '消息tone。',
 				name: 'data-tone',
-				values: ['info', 'success', 'warning', 'danger']
+				values: ['neutral', 'info', 'success', 'warning', 'danger']
 			},
 			{
 				description: 'Toaster队列阶段。',
@@ -136,8 +138,9 @@
 		},
 		variants: {
 			tone: {
+				neutral: (s) => s.borderColor._neutral,
 				danger: (s) => s.borderColor._danger,
-				info: (s) => s.borderColor._accent,
+				info: (s) => s.borderColor._info,
 				success: (s) => s.borderColor._success,
 				warning: (s) => s.borderColor._warning
 			}
@@ -181,6 +184,7 @@
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { isDomHtmlElement, isDomNode } from '../../runtime/layer/dom-realm.js';
+
 	let {
 		actionLabel,
 		announce = true,
@@ -215,18 +219,22 @@
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
 	const resolvedPriority = $derived(priority ?? (tone === 'danger' ? 'assertive' : 'polite'));
+
 	function mouseEnter(event: MouseEvent & { currentTarget: HTMLElement }): void {
 		onPauseChange?.('hover', true);
 		onmouseenter?.(event);
 	}
+
 	function mouseLeave(event: MouseEvent & { currentTarget: HTMLElement }): void {
 		onPauseChange?.('hover', false);
 		onmouseleave?.(event);
 	}
+
 	function focusIn(event: FocusEvent & { currentTarget: HTMLElement }): void {
 		onPauseChange?.('focus', true);
 		onfocusin?.(event);
 	}
+
 	function focusOut(event: FocusEvent & { currentTarget: HTMLElement }): void {
 		const leaving =
 			!isDomHtmlElement(event.currentTarget) ||
@@ -235,6 +243,7 @@
 		if (leaving) onPauseChange?.('focus', false);
 		onfocusout?.(event);
 	}
+
 	function handleKeydown(event: KeyboardEvent & { currentTarget: HTMLElement }): void {
 		onkeydown?.(event);
 		if (
@@ -270,23 +279,31 @@
 		aria-live={announce ? resolvedPriority : undefined}
 		aria-atomic={announce ? 'true' : undefined}
 	>
-		<strong class={titleClass} data-slot="title">{title}</strong>{#if description}<div
-				class={descriptionClass}
-				data-slot="description"
-			>
+		<strong class={titleClass} data-slot="title">{title}</strong>
+		{#if description}
+			<div class={descriptionClass} data-slot="description">
 				{description}
-			</div>{/if}
+			</div>
+		{/if}
 	</div>
-	{#if actionLabel || dismissible}<div class={actionClass} data-slot="actions">
-			{#if actionLabel}<ZButton
-					size="small"
-					variant="secondary"
-					onclick={(event) => onAction?.(event)}>{actionLabel}</ZButton
-				>{/if}{#if dismissible}<ZButton
+	{#if actionLabel || dismissible}
+		<div class={actionClass} data-slot="actions">
+			{#if actionLabel}
+				<ZButton size="small" variant="outline" onclick={(event) => onAction?.(event)}
+					>{actionLabel}</ZButton
+				>
+			{/if}
+			{#if dismissible}
+				<ZButton
 					aria-label={resolvedDismissLabel}
+					tone="neutral"
 					size="small"
 					variant="ghost"
-					onclick={(event) => onDismiss?.(event)}><X aria-hidden="true" size={16} /></ZButton
-				>{/if}
-		</div>{/if}
+					onclick={(event) => onDismiss?.(event)}
+				>
+					<X aria-hidden="true" size={16} />
+				</ZButton>
+			{/if}
+		</div>
+	{/if}
 </article>

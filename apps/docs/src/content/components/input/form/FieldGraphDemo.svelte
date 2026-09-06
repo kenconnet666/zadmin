@@ -75,7 +75,7 @@
 		{/if}
 		<ZStack direction="row" gap="medium" wrap>
 			<ZButton type="submit">验证并提交</ZButton>
-			<ZButton type="button" variant="secondary" onclick={() => (showConfirm = !showConfirm)}>
+			<ZButton type="button" variant="outline" onclick={() => (showConfirm = !showConfirm)}>
 				{showConfirm ? '卸载确认字段' : '挂载确认字段'}
 			</ZButton>
 		</ZStack>

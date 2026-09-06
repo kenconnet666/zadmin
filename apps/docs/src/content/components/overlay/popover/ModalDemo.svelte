@@ -5,7 +5,7 @@
 </script>
 
 <ZPopover matchWidth modal placement="bottom-start">
-	<ZPopoverTrigger data-testid="popover-modal-trigger" variant="secondary"
+	<ZPopoverTrigger data-testid="popover-modal-trigger" variant="outline"
 		>配置发布权限</ZPopoverTrigger
 	>
 	<ZPopoverContent data-testid="popover-modal-content" initialFocus={() => input}>

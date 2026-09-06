@@ -33,12 +33,12 @@
 		<ZStack direction="row" gap="medium">
 			<ZButton
 				type="button"
-				variant="secondary"
+				variant="outline"
 				onclick={(event) =>
 					(submitted = new FormData(event.currentTarget.form!).getAll('environment').join(','))}
 				>读取FormData
 			</ZButton>
-			<ZButton type="reset" variant="secondary">重置</ZButton>
+			<ZButton type="reset" variant="outline">重置</ZButton>
 		</ZStack>
 		<ZText tone="muted">value = {value.join(',')} · 变更 = {changes} · {submitted}</ZText>
 	</ZStack>

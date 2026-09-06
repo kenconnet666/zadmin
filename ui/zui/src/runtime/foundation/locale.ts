@@ -6,6 +6,7 @@ export interface ZuiCommonLocale {
 
 export interface ZuiCollectionLocale {
 	readonly cascaderLevel: (formattedLevel: string) => string;
+	readonly contextMenu: string;
 	readonly empty: string;
 	readonly loading: string;
 	readonly mentionEmpty: string;
@@ -232,6 +233,7 @@ export const enUSLocalePack = Object.freeze({
 	}),
 	collection: Object.freeze({
 		cascaderLevel: (formattedLevel: string) => `Level ${formattedLevel}`,
+		contextMenu: 'Context menu',
 		empty: 'No options',
 		loading: 'Loading options',
 		mentionEmpty: 'No suggestions',
@@ -388,6 +390,7 @@ export const zhCNLocalePack = Object.freeze({
 	}),
 	collection: Object.freeze({
 		cascaderLevel: (formattedLevel: string) => `第${formattedLevel}级`,
+		contextMenu: '上下文菜单',
 		empty: '暂无选项',
 		loading: '正在加载选项',
 		mentionEmpty: '暂无建议',

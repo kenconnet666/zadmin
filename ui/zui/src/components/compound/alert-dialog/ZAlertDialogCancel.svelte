@@ -35,7 +35,7 @@
 		source: 'ui/zui/src/components/compound/alert-dialog/ZAlertDialogCancel.svelte',
 		states: [{ description: 'Action pending时禁用。', name: 'data-pending', values: ['true'] }],
 		status: 'stable',
-		summary: '默认secondary视觉并显式取消AlertDialog。'
+		summary: '默认neutral outline视觉并显式取消AlertDialog。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
 
@@ -46,7 +46,8 @@
 	let {
 		onclick,
 		ref = $bindable(null),
-		variant = 'secondary',
+		tone = 'neutral',
+		variant = 'outline',
 		...rest
 	}: ZAlertDialogCancelProps = $props();
 	const dialog = useZAlertDialog();
@@ -69,4 +70,5 @@
 	data-pending={dialog.pending || undefined}
 	onclick={handleClick}
 	{variant}
+	{tone}
 />

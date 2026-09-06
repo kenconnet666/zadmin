@@ -43,7 +43,7 @@
 		<ZButton
 			disabled={!completeRequest}
 			size="small"
-			variant="secondary"
+			variant="outline"
 			onclick={() => completeRequest?.()}
 		>
 			模拟服务端完成

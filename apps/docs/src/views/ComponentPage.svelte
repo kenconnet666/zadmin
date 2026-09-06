@@ -152,10 +152,10 @@
 		<header class={classes.header}>
 			<ZText as="p" class={classes.eyebrow}>ZUI COMPONENTS</ZText>
 			<ZStack direction="row" align="center" gap="large" wrap>
-				<ZHeading data-doc-page-title="true" level={1} size="xxlarge">
+				<ZHeading data-doc-page-title="true" level={1} size="xxxlarge">
 					{doc.name}
 				</ZHeading>
-				<ZTag size="small" tone="accent">{doc.status}</ZTag>
+				<ZTag size="small" tone="info">{doc.status}</ZTag>
 			</ZStack>
 			<ZText class={classes.lead} tone="muted">{doc.summary}</ZText>
 			<div class={classes.meta} aria-label="组件发布信息">
@@ -185,7 +185,7 @@
 		</header>
 
 		<section id="demos" class={classes.demoSection}>
-			<ZHeading class={classes.sectionTitle} level={2} size="xlarge">实时演示</ZHeading>
+			<ZHeading class={classes.sectionTitle} level={2} size="xxlarge">实时演示</ZHeading>
 			<ZStack gap="large">
 				{#each doc.demos as demo (demo.id)}
 					<DemoBlock {demo} />
@@ -201,7 +201,7 @@
 
 		<section id="accessibility" class={classes.accessibility}>
 			<ZStack gap="large">
-				<ZHeading class={classes.sectionTitle} level={2} size="xlarge">可访问性</ZHeading>
+				<ZHeading class={classes.sectionTitle} level={2} size="xxlarge">可访问性</ZHeading>
 				<ZCard variant="outlined">
 					<ZList items={doc.accessibility.map((label, key) => ({ key, label }))} />
 				</ZCard>

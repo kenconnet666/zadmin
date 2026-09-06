@@ -1,5 +1,7 @@
 # ZUI 运行时 CSS 与组件 API 蓝图
 
+2026-09-06：本文保留最初运行时/编译器方案及阶段示例。当前组件 API 已经过全库语义命名与五档尺寸迁移，使用时以[系统审计与迁移记录](./system-audit-2026-09-06.md)、[当前用法](./usage.md)和运行中的组件 Docs 为准；下文的历史组件草图不作为当前 Props 规范。
+
 状态：Z0–Z8基础范围与自动生产验收已完成（2026-08-29）。`@zadmin/zui`已落地严格Theme、`useZui`、recipe/slot recipe、Symbol attachment carrier、运行时CSS、testing工具和8个基础组件；`@zadmin/sveltekit`已落地server/client/testing公开面及ZUI SSR/CSP/HMR集成。Core/ZUI/SvelteKit三个tarball已在仓库外完成安装、frozen reinstall、testing入口执行、check、build、Node SSR、critical CSS、CSP hash和client边界验收；同一门禁进入GitHub Actions。第21节仍明确列出不属于首批范围的组件和API。
 
 ## 1. 目标

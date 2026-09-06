@@ -7,7 +7,7 @@
 
 <ZStack direction="row" gap="small" wrap>
 	<ZButton onclick={() => (open = true)}>外部打开</ZButton>
-	<ZButton onclick={() => (open = false)} variant="secondary">外部关闭</ZButton>
+	<ZButton onclick={() => (open = false)} variant="outline">外部关闭</ZButton>
 	<ZButton onclick={() => (alternateTrigger = !alternateTrigger)} variant="ghost"
 		>替换Trigger</ZButton
 	>

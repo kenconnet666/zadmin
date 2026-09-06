@@ -4,6 +4,10 @@
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
 	import type { SelectionKey } from '../../../runtime/collection/selection.js';
 	import type { MenuActionEvent, MenuItemRole } from './context.svelte.js';
+	import {
+		controlSizeStyles,
+		controlSizeMetrics
+	} from '../../../runtime/foundation/control-size.js';
 
 	export interface ZMenuItemProps extends Omit<
 		HTMLAttributes<HTMLElement>,
@@ -169,10 +173,12 @@
 			s.fontSize._medium;
 			s.gap._medium;
 			s.justifyContent.spaceBetween;
-			s.paddingBlock._small;
+			s.paddingBlock.px(0);
+			s.lineHeight(1);
 			s.paddingInline._medium;
 			s.textAlign.start;
 			s.textDecoration.none;
+			s.overflowWrap.anywhere;
 			s.userSelect.none;
 			s.width._full;
 			s._focusVisible((focus) => {
@@ -183,6 +189,7 @@
 			});
 		},
 		variants: {
+			size: controlSizeStyles,
 			danger: { false: () => undefined, true: (s) => s.color._danger },
 			disabled: {
 				false: () => undefined,
@@ -267,6 +274,20 @@
 	}: ZMenuItemProps = $props();
 	const zui = useZui();
 	const menu = useZMenu();
+	const metrics = $derived(controlSizeMetrics(zui.theme, menu.size));
+	const indicatorSizeClass = $derived(
+		zui.icss((s) => {
+			s.inlineSize.raw(metrics.indicatorSize);
+			const glyphSize =
+				itemRole === 'menuitemradio'
+					? `calc(${metrics.indicatorSize} * 0.55)`
+					: metrics.indicatorSize;
+			s._selector('& > svg', (s) => {
+				s.width.raw(glyphSize);
+				s.height.raw(glyphSize);
+			});
+		})
+	);
 	const group = useOptionalZMenuGroup();
 	const uid = $props.id();
 	const generatedId = $derived(createZuiId(zui.idPrefix, uid, 'menu-item'));
@@ -279,6 +300,7 @@
 	);
 	const rootClass = $derived(
 		zui.recipe(itemRecipe, {
+			size: menu.size,
 			danger,
 			disabled: resolvedDisabled,
 			highlighted: highlighted && !resolvedDisabled,
@@ -351,7 +373,7 @@
 {#snippet content()}
 	<span class={labelClass} data-slot="label">
 		{#if leading}
-			<span class={indicatorClass} data-slot="indicator" aria-hidden="true">
+			<span class={[indicatorClass, indicatorSizeClass]} data-slot="indicator" aria-hidden="true">
 				{@render leading()}
 			</span>
 		{/if}

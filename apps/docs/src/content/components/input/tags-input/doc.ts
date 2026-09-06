@@ -1,3 +1,5 @@
+import SizingDemo from './SizingDemo.svelte';
+import sizingSource from './SizingDemo.svelte?raw';
 import { tagsInputMetadata } from '@zadmin/zui/metadata';
 import { tagsInputApiFacts } from '../../../../framework/component-api.generated.js';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
@@ -72,6 +74,15 @@ export const tagsInputDoc = defineComponentDoc(tagsInputMetadata, {
 			'生产级string-only TagsInput：独立values/draft owner、ZTag复用、方向键标签焦点、批量粘贴、可选编辑、视觉overflow与多值FormValueBridge保持正交。'
 	},
 	demos: [
+		{
+			component: SizingDemo,
+			covers: ['composition', 'variants-and-states'],
+			description:
+				'五档尺寸按组件用途同步文字、留白和内部控件；Field/Form 显式尺寸优先于 Provider density。',
+			id: 'tags-input-sizing',
+			source: sizingSource,
+			title: '五档尺寸与组合比例'
+		},
 		{
 			component: FormDemo,
 			covers: ['form-data', 'form-reset', 'keyboard', 'uncontrolled'],

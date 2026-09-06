@@ -72,7 +72,6 @@
 
 	const separatorRecipe = defineRecipe({
 		base: (s) => {
-			s.backgroundColor.currentColor;
 			s.borderWidth.px(0);
 			s.color._border;
 			s.flexShrink(0);
@@ -81,13 +80,19 @@
 		variants: {
 			orientation: {
 				horizontal: (s) => {
-					s.height.px(1);
+					s.height.px(0);
+					s.borderBlockStartColor.currentColor;
+					s.borderBlockStartStyle.solid;
+					s.borderBlockStartWidth._hairline;
 					s.width._full;
 				},
 				vertical: (s) => {
 					s.alignSelf.stretch;
 					s.minHeight.rem(1);
-					s.width.px(1);
+					s.width.px(0);
+					s.borderInlineStartColor.currentColor;
+					s.borderInlineStartStyle.solid;
+					s.borderInlineStartWidth._hairline;
 				}
 			}
 		},

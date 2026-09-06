@@ -69,15 +69,17 @@
 	<ZStack direction="row" gap="small" wrap>
 		<ZButton
 			size="small"
-			variant="secondary"
-			onclick={() => controller?.scrollToRow('deploy-900', 'center')}>滚动到第901行</ZButton
-		>
+			variant="outline"
+			onclick={() => controller?.scrollToRow('deploy-900', 'center')}
+			>滚动到第901行
+		</ZButton>
 		<ZButton
 			size="small"
-			variant="secondary"
-			onclick={() => controller?.focusRow('deploy-900', 'selection')}>定位并聚焦选择框</ZButton
-		>
-		<ZButton size="small" variant="secondary" onclick={prepend}>在顶部插入一行</ZButton>
+			variant="outline"
+			onclick={() => controller?.focusRow('deploy-900', 'selection')}
+			>定位并聚焦选择框
+		</ZButton>
+		<ZButton size="small" variant="outline" onclick={prepend}>在顶部插入一行</ZButton>
 	</ZStack>
 	<ZText aria-live="polite" tone="muted">
 		DOM窗口 = {controller?.range

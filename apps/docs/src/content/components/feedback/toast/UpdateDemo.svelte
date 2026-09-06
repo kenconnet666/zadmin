@@ -17,6 +17,7 @@
 			title: `发布进度 ${progress}%`
 		});
 	}
+
 	function update(): void {
 		progress = Math.min(100, progress + 30);
 		queue.update(toastId, {
@@ -29,7 +30,7 @@
 <ZStack gap="medium">
 	<ZStack direction="row" gap="small" wrap>
 		<ZButton onclick={open}>创建稳定 ID</ZButton>
-		<ZButton onclick={update} variant="secondary">局部更新</ZButton>
+		<ZButton onclick={update} variant="outline">局部更新</ZButton>
 		<ZButton onclick={() => queue.dismiss(toastId)} variant="ghost">关闭</ZButton>
 	</ZStack>
 	<ZText tone="muted">

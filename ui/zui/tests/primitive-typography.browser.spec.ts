@@ -12,9 +12,9 @@ describe('primitive typography and surface contracts', () => {
 		expect(style('heading-custom').fontSize).toBe('38px');
 		expect(style('text-custom').fontSize).toBe('38px');
 		for (const [size, height] of [
-			['small', 24],
+			['small', 28],
 			['medium', 32],
-			['large', 48]
+			['large', 40]
 		] as const) {
 			expect(
 				document.querySelector(`[data-testid="nav-${size}"]`)!.getBoundingClientRect().height

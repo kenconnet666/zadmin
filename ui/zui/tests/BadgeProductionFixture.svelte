@@ -36,7 +36,7 @@
 			placement="top-start"
 			tone="danger"
 		>
-			<ZButton aria-label={`通知中心有${count}条消息`} shape="square" variant="secondary">
+			<ZButton aria-label={`通知中心有${count}条消息`} shape="square" variant="outline">
 				<Bell aria-hidden="true" size={16} />
 			</ZButton>
 		</ZBadge>
@@ -56,12 +56,13 @@
 <ZButton data-testid="badge-production-increment" onclick={() => (count += 1)}>Increment</ZButton>
 <ZButton
 	data-testid="badge-production-toggle-direction"
-	onclick={() => (direction = direction === 'ltr' ? 'rtl' : 'ltr')}>Toggle direction</ZButton
->
+	onclick={() => (direction = direction === 'ltr' ? 'rtl' : 'ltr')}
+	>Toggle direction
+</ZButton>
 <ZButton data-testid="badge-production-toggle-visible" onclick={() => (invisible = !invisible)}
-	>Toggle visible</ZButton
->
+	>Toggle visible
+</ZButton>
 <ZButton data-testid="badge-production-toggle-motion" onclick={() => (reduced = !reduced)}
-	>Toggle motion</ZButton
->
+	>Toggle motion
+</ZButton>
 <output data-testid="badge-production-output">{count}:{direction}:{invisible}</output>

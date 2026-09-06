@@ -22,7 +22,7 @@
 		</ZButton>
 		<ZButton
 			size="small"
-			variant="secondary"
+			variant="outline"
 			onclick={() => {
 				active = true;
 				barState = 'loading';
@@ -37,8 +37,9 @@
 			onclick={() => {
 				active = true;
 				barState = 'error';
-			}}>外部错误</ZButton
-		>
+			}}
+			>外部错误
+		</ZButton>
 		<ZButton size="small" variant="ghost" onclick={() => (active = !active)}>切换active</ZButton>
 	</ZStack>
 	<ZText tone="muted">外部数据层仍拥有请求、重试和取消；组件只渲染绑定状态。</ZText>

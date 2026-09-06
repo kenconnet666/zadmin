@@ -113,7 +113,7 @@
 				description:
 					'显式Group size供control继承；control显式size仍优先，组件默认用于未声明Group size。',
 				name: 'size',
-				type: "'small' | 'medium' | 'large'"
+				type: "'xsmall' | 'small' | 'medium' | 'large' | 'xlarge'"
 			}
 		],
 		since: 'unreleased',
@@ -130,7 +130,11 @@
 			{ description: 'Field或显式无效。', name: 'data-invalid', values: ['true'] },
 			{ description: 'Field或显式只读。', name: 'data-readonly', values: ['true'] },
 			{ description: 'Field或显式必填。', name: 'data-required', values: ['true'] },
-			{ description: '解析尺寸。', name: 'data-size', values: ['small', 'medium', 'large'] },
+			{
+				description: '解析尺寸。',
+				name: 'data-size',
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge']
+			},
 			{ description: '当前已解析为减少动画。', name: 'data-reduced-motion', values: ['true'] }
 		],
 		status: 'stable',
@@ -211,9 +215,11 @@
 		},
 		variants: {
 			size: {
-				large: (s) => s.paddingInline._xlarge,
+				xsmall: (s) => s.paddingInline._medium,
+				small: (s) => s.paddingInline._medium,
 				medium: (s) => s.paddingInline._large,
-				small: (s) => s.paddingInline._medium
+				large: (s) => s.paddingInline._xlarge,
+				xlarge: (s) => s.paddingInline._xlarge
 			}
 		},
 		defaultVariants: { size: 'medium' }
@@ -228,9 +234,11 @@
 		},
 		variants: {
 			size: {
-				large: (s) => s.paddingInline._small,
+				xsmall: (s) => s.paddingInline._xsmall,
+				small: (s) => s.paddingInline._xsmall,
 				medium: (s) => s.paddingInline._xsmall,
-				small: (s) => s.paddingInline._xsmall
+				large: (s) => s.paddingInline._small,
+				xlarge: (s) => s.paddingInline._small
 			}
 		},
 		defaultVariants: { size: 'medium' }
@@ -249,7 +257,7 @@
 		useZInputGroup,
 		type ZInputGroupControl
 	} from '../../runtime/form/input-group-context.svelte.js';
-	import { resolveControlSize } from '../../runtime/foundation/control-size.js';
+	import { controlSizeMetrics, resolveControlSize } from '../../runtime/foundation/control-size.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -389,6 +397,14 @@
 	);
 	const affixClass = $derived(zui.recipe(affixRecipe, { size: resolvedSize }));
 	const actionClass = $derived(zui.recipe(actionRecipe, { size: resolvedSize }));
+	const geometryClass = $derived(
+		zui.icss((s) => {
+			const metrics = controlSizeMetrics(zui.theme, resolvedSize);
+			s.boxSizing.borderBox;
+			s.minHeight.raw(metrics.height);
+			s._selector('& > input', (s) => s.minHeight.raw(metrics.contentHeight));
+		})
+	);
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
 	onMount(() => {
@@ -402,7 +418,7 @@
 <div
 	{...rest}
 	bind:this={ref}
-	class={[rootClass, className]}
+	class={[rootClass, geometryClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
 	role="group"

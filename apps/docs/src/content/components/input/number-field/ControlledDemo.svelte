@@ -7,12 +7,8 @@
 <ZStack gap="medium">
 	<ZNumberField bind:value inputLabel="受控金额" precision={2} />
 	<ZStack direction="row" gap="small" wrap>
-		<ZButton type="button" variant="secondary" onclick={() => (value = undefined)}>
-			外部清空
-		</ZButton>
-		<ZButton type="button" variant="secondary" onclick={() => (value = 7.25)}>
-			外部写入 7.25
-		</ZButton>
+		<ZButton type="button" variant="outline" onclick={() => (value = undefined)}>外部清空</ZButton>
+		<ZButton type="button" variant="outline" onclick={() => (value = 7.25)}>外部写入 7.25</ZButton>
 	</ZStack>
 	<ZText tone="muted">value = {value ?? 'undefined'}</ZText>
 </ZStack>

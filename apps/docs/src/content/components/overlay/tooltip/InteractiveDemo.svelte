@@ -6,7 +6,7 @@
 </script>
 
 <ZTooltip bind:open closeDelay={80} openDelay={150} onOpenChange={() => (changes += 1)}>
-	<ZTooltipTrigger data-testid="tooltip-trigger" variant="secondary">健康状态</ZTooltipTrigger>
+	<ZTooltipTrigger data-testid="tooltip-trigger" variant="outline">健康状态</ZTooltipTrigger>
 	<ZTooltipContent data-testid="tooltip-content">所有生产探针均正常</ZTooltipContent>
 </ZTooltip>
 <ZText tone="muted">open = {open} · 用户变更次数 = {changes}</ZText>

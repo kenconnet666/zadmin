@@ -13,7 +13,7 @@
 </script>
 
 <ZDropdownMenu bind:open>
-	<ZDropdownMenuTrigger data-testid="dropdown-menu-trigger" variant="secondary">
+	<ZDropdownMenuTrigger data-testid="dropdown-menu-trigger" variant="outline">
 		部署操作
 	</ZDropdownMenuTrigger>
 	<ZDropdownMenuContent

@@ -28,11 +28,8 @@
 		{/each}
 	</ZAccordion>
 	<ZStack direction="row" gap="small" wrap>
-		<ZButton onclick={() => (value = null)} variant="secondary">外部清空展开值</ZButton>
-		<ZButton
-			onclick={() => (items = items.filter((key) => key !== activeValue))}
-			variant="secondary"
-		>
+		<ZButton onclick={() => (value = null)} variant="outline">外部清空展开值</ZButton>
+		<ZButton onclick={() => (items = items.filter((key) => key !== activeValue))} variant="outline">
 			删除active项
 		</ZButton>
 		<ZButton onclick={() => (items = [...items].reverse())} variant="ghost">反转顺序</ZButton>

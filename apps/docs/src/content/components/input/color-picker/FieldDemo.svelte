@@ -16,7 +16,7 @@
 	>
 		<ZStack direction="row" gap="small">
 			<ZButton type="submit">读取外部Form</ZButton>
-			<ZButton type="reset" variant="secondary">重置外部控件</ZButton>
+			<ZButton type="reset" variant="outline">重置外部控件</ZButton>
 		</ZStack>
 	</form>
 	<ZField

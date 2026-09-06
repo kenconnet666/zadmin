@@ -5,6 +5,10 @@
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
 
 	import { defineRecipe, registerRecipeHmr } from '../../../recipes/define.js';
+	import {
+		controlSizeStyles,
+		controlSizeMetrics
+	} from '../../../runtime/foundation/control-size.js';
 
 	export type ZAccordionTriggerProps = Omit<
 		HTMLButtonAttributes,
@@ -47,7 +51,8 @@
 			s.fontSize._medium;
 			s.fontWeight._semibold;
 			s.justifyContent.spaceBetween;
-			s.paddingBlock._large;
+			s.paddingBlock.px(0);
+			s.lineHeight._compact;
 			s.paddingInline.px(0);
 			s.textAlign.start;
 			s.width._full;
@@ -63,15 +68,12 @@
 			});
 		},
 		variants: {
+			size: controlSizeStyles,
 			appearance: {
 				block: () => undefined,
 				inline: (s) => {
-					s.fontSize._medium;
 					s.fontWeight._medium;
 					s.gap._medium;
-					s.minHeight._medium;
-					s.paddingBlock._small;
-					s.paddingInline._medium;
 					s.width.auto;
 				}
 			},
@@ -205,13 +207,19 @@
 	}: ZAccordionTriggerProps = $props();
 	const zui = useZui();
 	const accordion = useZAccordion();
+	const metrics = $derived(controlSizeMetrics(zui.theme, accordion.size));
 	const item = useZAccordionItem(accordion.owner);
 	const open = $derived(accordion.isOpen(item.value));
 	const active = $derived(accordion.isActive(item.value));
 	const locked = $derived(accordion.isTriggerLocked(item.value));
 	const headingClass = $derived(zui.recipe(accordionHeadingRecipe));
 	const rootClass = $derived(
-		zui.recipe(accordionTriggerRecipe, { appearance, disabled: item.disabled, open })
+		zui.recipe(accordionTriggerRecipe, {
+			appearance,
+			disabled: item.disabled,
+			open,
+			size: accordion.size
+		})
 	);
 	const indicatorClass = $derived(
 		zui.recipe(accordionIndicatorRecipe, {
@@ -273,6 +281,6 @@
 		data-reduced-motion={accordion.reducedMotion || undefined}
 	>
 		{@render children?.()}
-		<ChevronDown aria-hidden="true" class={indicatorClass} size={16} />
+		<ChevronDown aria-hidden="true" class={indicatorClass} size={metrics.indicatorSize} />
 	</button>
 </div>

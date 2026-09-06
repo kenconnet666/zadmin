@@ -106,6 +106,25 @@ describe('ZUI themes', () => {
 		expect(radiusOnly.color).toEqual(customized.color);
 	});
 
+	it('derives inverse surfaces while respecting explicit and unrelated theme overrides', () => {
+		const inverted = extendTheme(defaultTheme, { color: { text: '#102030', canvas: '#f0e0d0' } });
+		expect(inverted.color.inverseSurface).toBe('#102030');
+		expect(inverted.color.inverseText).toBe('#f0e0d0');
+		const explicit = extendTheme(inverted, {
+			color: {
+				text: '#202030',
+				canvas: '#ffffff',
+				inverseSurface: '#301020',
+				inverseText: '#fff0d0'
+			}
+		});
+		expect(explicit.color.inverseSurface).toBe('#301020');
+		expect(explicit.color.inverseText).toBe('#fff0d0');
+		const radiusOnly = extendTheme(explicit, { radius: { medium: 10 } });
+		expect(radiusOnly.color.inverseSurface).toBe('#301020');
+		expect(radiusOnly.color.inverseText).toBe('#fff0d0');
+	});
+
 	it('copies and deeply freezes the strict theme contract', () => {
 		const source = {
 			...defaultTheme,

@@ -19,7 +19,7 @@
 
 <ZStack gap="medium">
 	<ZDrawer bind:open={outerOpen}>
-		<ZDrawerTrigger variant="secondary">编辑发布流程</ZDrawerTrigger>
+		<ZDrawerTrigger variant="outline">编辑发布流程</ZDrawerTrigger>
 		<ZDrawerOverlay />
 		<ZDrawerContent placement="end" size="medium">
 			<ZStack gap="large">
@@ -34,7 +34,7 @@
 				</ZStack>
 				<ZInput aria-label="流程名称" name="workflow" value="Production release" />
 				<ZDrawer bind:open={innerOpen}>
-					<ZDrawerTrigger variant="secondary">配置审批人</ZDrawerTrigger>
+					<ZDrawerTrigger variant="outline">配置审批人</ZDrawerTrigger>
 					<ZDrawerOverlay />
 					<ZDrawerContent placement="end" size="small">
 						<ZStack gap="large">

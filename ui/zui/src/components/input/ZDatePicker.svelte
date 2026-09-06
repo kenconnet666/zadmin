@@ -6,7 +6,10 @@
 	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
 	import type { PopoverPlacement } from '../compound/popover/ZPopover.svelte';
 
-	export interface ZDatePickerProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onchange'> {
+	export interface ZDatePickerProps extends Omit<
+		HTMLAttributes<HTMLDivElement>,
+		'children' | 'onchange'
+	> {
 		readonly calendarLabel?: string;
 		readonly clearLabel?: string;
 		readonly clearable?: boolean;
@@ -69,6 +72,7 @@
 			{ description: '关闭并恢复Calendar trigger焦点。', key: 'Escape' }
 		],
 		parts: [
+			{ description: '日期输入与操作共享的 InputGroup。', name: 'input-group' },
 			{ description: '可编辑日期segments。', name: 'field' },
 			{ description: 'Calendar按钮。', name: 'trigger' },
 			{ description: '可选清空按钮。', name: 'clear' },
@@ -195,7 +199,7 @@
 				default: 'Field size或Provider density',
 				description: '统一DateField和Lucide actions尺寸。',
 				name: 'size',
-				type: "'small' | 'medium' | 'large'"
+				type: "'xsmall' | 'small' | 'medium' | 'large' | 'xlarge'"
 			},
 			{
 				default: 'localePack.date.chooseDate',
@@ -261,7 +265,7 @@
 	import { onDestroy } from 'svelte';
 	import { formatDate } from '../../runtime/date.js';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
-	import { resolveControlSize } from '../../runtime/foundation/control-size.js';
+	import { controlSizeMetrics, resolveControlSize } from '../../runtime/foundation/control-size.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import { claimZFieldControlOwner } from '../../runtime/form/field-context.js';
@@ -329,6 +333,19 @@
 	const resolvedRequired = $derived(requiredProp || (field?.required ?? false));
 	const resolvedName = $derived(nameProp ?? field?.name);
 	const resolvedSize = $derived(resolveControlSize(size ?? field?.size, zui.density));
+	const geometryClass = $derived(
+		zui.icss((s) => {
+			s._selector('& > [data-slot="input-group"] > [data-slot="suffix-action"] > button', (s) =>
+				s.minHeight.raw(controlSizeMetrics(zui.theme, resolvedSize).contentHeight)
+			);
+			if (resolvedDisabled) {
+				s._selector(
+					'& > [data-slot="input-group"] > [data-slot="field"], & > [data-slot="input-group"] > [data-slot="suffix-action"] > button:disabled',
+					(s) => s.opacity._opaque
+				);
+			}
+		})
+	);
 	const describedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
 	const labelledBy = $derived(mergeAriaIds(ariaLabelledBy, field?.labelId));
 	let calendarRef = $state<HTMLDivElement | null>(null);
@@ -398,7 +415,7 @@
 			size={resolvedSize}
 			variant="ghost"
 		>
-			<CalendarDays aria-hidden="true" size={16} />
+			<CalendarDays aria-hidden="true" size="1em" />
 		</ZPopoverTrigger>
 		<ZPopoverContent
 			aria-label={resolvedCalendarLabel}
@@ -435,7 +452,7 @@
 			size={resolvedSize}
 			variant="ghost"
 		>
-			<X aria-hidden="true" size={16} />
+			<X aria-hidden="true" size="1em" />
 		</ZButton>
 	{/if}
 {/snippet}
@@ -443,19 +460,21 @@
 <div
 	{...rest}
 	bind:this={ref}
-	class={className}
+	class={[geometryClass, className]}
 	data-invalid={resolvedInvalid || undefined}
 	data-readonly={resolvedReadonly || undefined}
 	data-required={resolvedRequired || undefined}
 	data-state={openState.current ? 'open' : 'closed'}
 >
 	<ZInputGroup
+		data-slot="input-group"
 		disabled={resolvedDisabled}
 		invalid={resolvedInvalid}
 		size={resolvedSize}
 		suffixAction={actions}
 	>
 		<ZDateField
+			data-slot="field"
 			aria-describedby={describedBy}
 			aria-label={ariaLabel}
 			aria-labelledby={labelledBy}

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { ZField, ZSegmented, ZStack } from '@zadmin/zui';
 
-	const sizes = ['small', 'medium', 'large'] as const;
+	const sizes = ['xsmall', 'small', 'medium', 'large', 'xlarge'] as const;
 	const options = [
 		{ label: '列表', value: 'list' },
 		{ label: '看板', value: 'board' },

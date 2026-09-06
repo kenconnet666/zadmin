@@ -10,6 +10,10 @@
 		AccordionValue as AccordionPublicValue
 	} from './context.svelte.js';
 	import { defineRecipe, registerRecipeHmr } from '../../../recipes/define.js';
+	import {
+		resolveControlSize,
+		type ZControlSize
+	} from '../../../runtime/foundation/control-size.js';
 
 	export type AccordionType = AccordionTypeValue;
 	export type AccordionValue = AccordionPublicValue;
@@ -31,6 +35,7 @@
 		readonly onActiveValueChange?: (value: PublicSelectionKey | null) => void;
 		readonly onValueChange?: AccordionValueChangeHandler;
 		ref?: HTMLDivElement | null;
+		readonly size?: ZControlSize;
 		readonly type?: AccordionType;
 		value?: AccordionValue;
 	}
@@ -113,6 +118,12 @@
 		parts: [],
 		props: [
 			{
+				name: 'size',
+				type: 'ZControlSize',
+				default: 'Provider density',
+				description: '五档Trigger高度、字号、间距与展开指示器。'
+			},
+			{
 				bindable: true,
 				default: 'single: null；multiple: []',
 				description: '由type判别的展开值；number 1与string 1保持不同身份。',
@@ -170,6 +181,11 @@
 		snippets: [{ description: 'Item组合；支持嵌套Accordion。', name: 'children', type: 'Snippet' }],
 		source: 'ui/zui/src/components/compound/accordion/ZAccordion.svelte',
 		states: [
+			{
+				name: 'data-size',
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge'],
+				description: '解析后的五档控件尺寸。'
+			},
 			{ description: '禁用状态。', name: 'data-disabled', values: ['true'] },
 			{ description: '当前已解析为减少动画。', name: 'data-reduced-motion', values: ['true'] }
 		],
@@ -218,12 +234,14 @@
 		onfocusout,
 		onValueChange,
 		ref = $bindable(null),
+		size,
 		style,
 		type = 'single',
 		value = $bindable(),
 		...rest
 	}: ZAccordionProps = $props();
 	const zui = useZui();
+	const resolvedSize = $derived(resolveControlSize(size, zui.density));
 	const reducedMotion = new ReducedMotionState(() => zui.motion);
 	const reduced = $derived(reducedMotion.current);
 	const uid = $props.id();
@@ -348,6 +366,9 @@
 	}
 
 	const context: ZAccordionContext = {
+		get size() {
+			return resolvedSize;
+		},
 		contentId(itemValue) {
 			return itemId(itemValue, 'content');
 		},
@@ -485,6 +506,7 @@
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
 	data-disabled={disabled || undefined}
+	data-size={resolvedSize}
 	data-reduced-motion={reduced || undefined}
 	onfocusin={handleFocusin}
 	onfocusout={handleFocusout}

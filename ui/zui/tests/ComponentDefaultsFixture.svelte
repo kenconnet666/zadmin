@@ -20,16 +20,16 @@
 
 <ZProvider
 	componentDefaults={{
-		button: { size: 'small', variant: 'secondary', fullWidth: true },
+		button: { size: 'small', variant: 'outline', fullWidth: true },
 		card: { variant: 'outlined' },
 		dataTable: { virtualized: true, overscan: 0, selectionMode: 'multiple' },
 		input: { size: 'large' },
 		pagination: { mode: 'simple' },
-		tag: { size: 'small', tone: 'accent' }
+		tag: { size: 'small', tone: 'info' }
 	}}
 >
 	<ZButton data-testid="default-button">Default</ZButton>
-	<ZButton data-testid="explicit-button" variant="primary" fullWidth={false}>Explicit</ZButton>
+	<ZButton data-testid="explicit-button" variant="solid" fullWidth={false}>Explicit</ZButton>
 	<ZButton data-testid="busy-button" loading aria-pressed="true">Busy</ZButton>
 	<ZInput data-testid="default-input" />
 	<ZInput data-testid="explicit-input" size="small" />

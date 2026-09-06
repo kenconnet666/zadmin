@@ -15,6 +15,6 @@
 
 <ZStack gap="medium">
 	<ZCascader bind:open bind:value {nodes} virtual virtualHeight={256} virtualItemSize={36} />
-	<ZButton onclick={() => (open = true)} variant="secondary">打开千项Cascader</ZButton>
+	<ZButton onclick={() => (open = true)} variant="outline">打开千项Cascader</ZButton>
 	<ZText tone="muted">virtual path = {value.join('/') || 'empty'}</ZText>
 </ZStack>

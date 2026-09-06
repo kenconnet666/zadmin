@@ -53,7 +53,7 @@
 		<ZButton form="controller-demo-form" type="submit">表单外提交</ZButton>
 		<ZButton
 			type="button"
-			variant="secondary"
+			variant="outline"
 			onclick={() => {
 				controller?.setErrors({ release: ['版本已经存在'] });
 				controller?.focusField('release');
@@ -62,7 +62,7 @@
 		</ZButton>
 		<ZButton
 			type="button"
-			variant="secondary"
+			variant="outline"
 			onclick={() =>
 				controller?.setFieldState('channel', {
 					success: '通道可用',
@@ -70,10 +70,10 @@
 				})}
 			>设置字段状态
 		</ZButton>
-		<ZButton type="button" variant="secondary" onclick={() => (disabled = !disabled)}>
+		<ZButton type="button" variant="outline" onclick={() => (disabled = !disabled)}>
 			{disabled ? '启用表单' : '禁用表单'}
 		</ZButton>
-		<ZButton type="button" variant="secondary" onclick={() => controller?.reset()}>重置</ZButton>
+		<ZButton type="button" variant="outline" onclick={() => controller?.reset()}>重置</ZButton>
 	</ZStack>
 	<ZText tone="muted">native submit/reset = {nativeSubmits}/{nativeResets}</ZText>
 	<ZText tone="muted">release状态订阅：{releaseSummary}</ZText>

@@ -1,4 +1,5 @@
 <script module lang="ts">
+	import type { ZControlSize } from '../../../runtime/foundation/control-size.js';
 	import type { Snippet } from 'svelte';
 	import type { ZuiComponentMetadata } from '../../../metadata/types.js';
 	import type { MenuActionEvent } from '../menu/context.svelte.js';
@@ -9,6 +10,7 @@
 	> & {
 		readonly children?: Snippet;
 		readonly loop?: boolean;
+		readonly size?: ZControlSize;
 		menuRef?: HTMLDivElement | null;
 		readonly onAction?: (event: MenuActionEvent) => void;
 	};
@@ -35,6 +37,12 @@
 		],
 		parts: [],
 		props: [
+			{
+				name: 'size',
+				type: 'ZControlSize',
+				default: 'parent Menu or Provider density',
+				description: '内部菜单行的五档大小；Trigger独立设置Button size。'
+			},
 			{ default: 'true', description: 'Item焦点是否循环。', name: 'loop', type: 'boolean' },
 			{
 				bindable: true,
@@ -71,6 +79,7 @@
 		children,
 		class: className,
 		loop = true,
+		size,
 		menuRef = $bindable(null),
 		onAction,
 		ref = $bindable(null),
@@ -108,6 +117,7 @@
 		aria-labelledby={popover.triggerId}
 		bind:ref={menuRef}
 		{loop}
+		{size}
 		onAction={handleAction}
 		onDismissRequest={() => popover.setOpen(false)}
 	>

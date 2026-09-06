@@ -1,3 +1,5 @@
+import SizingDemo from './SizingDemo.svelte';
+import sizingSource from './SizingDemo.svelte?raw';
 import { datePickerMetadata } from '@zadmin/zui/metadata';
 import { datePickerApiFacts } from '../../../../framework/component-api.generated.js';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
@@ -80,6 +82,15 @@ export const datePickerDoc = defineComponentDoc(datePickerMetadata, {
 			'可编辑Date Picker：复用bare ZDateField、ZInputGroup、Lucide actions和owner-realm ZPopover/ZCalendar；value/open双owner、显式null、约束、clear/readonly/Field与唯一FormValueBridge。'
 	},
 	demos: [
+		{
+			component: SizingDemo,
+			covers: ['composition', 'variants-and-states'],
+			description:
+				'五档尺寸按组件用途同步文字、留白和内部控件；Field/Form 显式尺寸优先于 Provider density。',
+			id: 'date-picker-sizing',
+			source: sizingSource,
+			title: '五档尺寸与组合比例'
+		},
 		{
 			component: FormDemo,
 			covers: ['basic-render', 'form-data', 'form-reset', 'keyboard', 'uncontrolled'],

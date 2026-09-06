@@ -258,7 +258,7 @@
 			{
 				description: '解析后的control尺寸。',
 				name: 'data-size',
-				values: ['small', 'medium', 'large']
+				values: ['xsmall', 'small', 'medium', 'large', 'xlarge']
 			}
 		],
 		status: 'stable',
@@ -318,9 +318,11 @@
 			disabled: { false: () => undefined, true: (s) => s.opacity._disabled },
 			invalid: { false: () => undefined, true: (s) => s.borderColor._danger },
 			size: {
-				large: (s) => s.padding._medium,
+				xsmall: (s) => s.padding._xsmall,
+				small: (s) => s.padding._xsmall,
 				medium: (s) => s.padding._small,
-				small: (s) => s.padding._xsmall
+				large: (s) => s.padding._medium,
+				xlarge: (s) => s.padding._medium
 			}
 		},
 		defaultVariants: { disabled: false, invalid: false, size: 'medium' }
@@ -330,6 +332,8 @@
 			s.backgroundColor.transparent;
 			s.borderStyle.none;
 			s.color._text;
+			s.fontFamily._sans;
+			s.lineHeight._compact;
 			s.flex.raw('1 1 8rem');
 			s.minWidth.rem(8);
 			s.outlineStyle.none;
@@ -338,17 +342,25 @@
 		},
 		variants: {
 			size: {
-				large: (s) => {
-					s.fontSize._large;
-					s.padding._medium;
+				xsmall: (s) => {
+					s.fontSize._xsmall;
+					s.padding._xsmall;
+				},
+				small: (s) => {
+					s.fontSize._small;
+					s.padding._xsmall;
 				},
 				medium: (s) => {
 					s.fontSize._medium;
 					s.padding._small;
 				},
-				small: (s) => {
-					s.fontSize._small;
-					s.padding._xsmall;
+				large: (s) => {
+					s.fontSize._large;
+					s.padding._medium;
+				},
+				xlarge: (s) => {
+					s.fontSize._large;
+					s.padding._medium;
 				}
 			}
 		},
@@ -832,7 +844,12 @@
 	{#each visibleValues as record, index (record.key)}
 		{@const tag = record.value}
 		{#if editingIndex === index}
-			<ZTag data-slot="tag" data-tag-index={index} tone={editInvalid ? 'danger' : 'default'}>
+			<ZTag
+				data-slot="tag"
+				data-tag-index={index}
+				size={resolvedSize}
+				tone={editInvalid ? 'danger' : 'neutral'}
+			>
 				<ZInput
 					aria-label={getEditLabel(tag)}
 					bind:ref={editInputRef}
@@ -840,7 +857,7 @@
 					data-slot="edit-input"
 					name=""
 					resetOnForm={false}
-					size="small"
+					size={resolvedSize}
 					onblur={() => {
 						if (!commitEdit()) cancelEdit();
 					}}
@@ -862,6 +879,7 @@
 			</ZTag>
 		{:else}
 			<ZTag
+				size={resolvedSize}
 				data-slot="tag"
 				data-tag-index={index}
 				disabled={resolvedDisabled || resolvedReadonly}
@@ -878,19 +896,19 @@
 						data-slot="edit"
 						onclick={() => beginEdit(index)}
 						shape="square"
-						size="small"
+						size={resolvedSize}
 						tabindex={-1}
 						title={getEditLabel(tag)}
 						variant="ghost"
 					>
-						<PenLine aria-hidden="true" size={13} />
+						<PenLine aria-hidden="true" size="1em" />
 					</ZButton>
 				{/if}
 			</ZTag>
 		{/if}
 	{/each}
 	{#if omittedValues.length > 0}
-		<ZTag data-slot="overflow">{overflowLabel(omittedValues)}</ZTag>
+		<ZTag data-slot="overflow" size={resolvedSize}>{overflowLabel(omittedValues)}</ZTag>
 	{/if}
 	<input
 		bind:this={inputRef}

@@ -1,3 +1,5 @@
+import ControlSizesDemo from './ControlSizesDemo.svelte';
+import controlSizesSource from './ControlSizesDemo.svelte?raw';
 import {
 	contextMenuContentMetadata,
 	contextMenuMetadata,
@@ -25,6 +27,14 @@ export const contextMenuDoc = defineComponentDoc(contextMenuMetadata, {
 			'真实pointer client坐标与键盘目标logical start只负责更新零尺寸锚点，Popup生命周期继续由Popover唯一拥有，内容完整复用ZMenu。'
 	},
 	demos: [
+		{
+			component: ControlSizesDemo,
+			covers: ['variants-and-states', 'composition'],
+			description: '五档尺寸直接消费主题 token；组合部件继承有视觉意义的尺寸 owner。',
+			id: 'context-menu-control-sizes',
+			source: controlSizesSource,
+			title: '五档尺寸与主题比例'
+		},
 		{
 			covers: ['accessible-name', 'focus', 'full-motion', 'keyboard', 'portal'],
 			component: InteractiveDemo,
