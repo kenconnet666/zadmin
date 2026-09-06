@@ -3,7 +3,7 @@
 	"summary": {
 		"stableCompliant": 141,
 		"stableViolations": 0,
-		"promotionEligibleExperimental": 6
+		"promotionEligibleExperimental": 8
 	},
 	"components": [
 		{
@@ -1347,6 +1347,16 @@
 			"ssrEvidenceCount": 2
 		},
 		{
+			"id": "app-shell",
+			"name": "ZAppShell",
+			"family": null,
+			"status": "experimental",
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
+			"docs": "apps/docs/src/content/components/layout/app-shell/doc.ts",
+			"ssrEvidenceCount": 1
+		},
+		{
 			"id": "aspect-ratio",
 			"name": "ZAspectRatio",
 			"family": null,
@@ -1404,6 +1414,16 @@
 			"classification": "promotionEligibleExperimental",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/layout/group/doc.ts",
+			"ssrEvidenceCount": 1
+		},
+		{
+			"id": "overflow-list",
+			"name": "ZOverflowList",
+			"family": null,
+			"status": "experimental",
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
+			"docs": "apps/docs/src/content/components/layout/overflow-list/doc.ts",
 			"ssrEvidenceCount": 1
 		},
 		{

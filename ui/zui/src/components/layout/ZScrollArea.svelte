@@ -210,6 +210,7 @@
 		controller = $bindable(null),
 		ref = $bindable(null),
 		class: className,
+		dir,
 		style,
 		'aria-label': ariaLabel,
 		'aria-labelledby': ariaLabelledby,
@@ -219,6 +220,7 @@
 		...rest
 	}: ZScrollAreaProps = $props();
 	const zui = useZui();
+	const resolvedDirection = $derived(dir ?? zui.direction);
 	const reducedMotion = new ReducedMotionState(() => zui.motion);
 	const rootClass = $derived(zui.recipe(scrollAreaRecipe));
 	function length(value: number | string): string {
@@ -321,6 +323,7 @@
 	aria-label={ariaLabel ?? (ariaLabelledby ? undefined : zui.localePack.common.scrollArea)}
 	aria-labelledby={ariaLabelledby}
 	data-axis={axis}
+	dir={resolvedDirection}
 	class={[rootClass, layoutClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}

@@ -127,6 +127,7 @@
 	let {
 		children,
 		class: className,
+		dir,
 		columnGap,
 		columns,
 		gap = 'medium',
@@ -145,6 +146,7 @@
 	}
 
 	const zui = useZui();
+	const resolvedDirection = $derived(dir ?? zui.direction);
 	const rootClass = $derived(zui.recipe(simpleGridRecipe));
 	const resolvedColumns = $derived(columns ?? 3);
 	const mode = $derived(minItemWidth === undefined ? 'columns' : 'min-item-width');
@@ -196,6 +198,7 @@
 	class={[rootClass, layoutClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
+	dir={resolvedDirection}
 	data-mode={mode}
 >
 	{@render children?.()}

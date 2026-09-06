@@ -100,6 +100,7 @@
 	let {
 		children,
 		class: className,
+		dir,
 		span = 1,
 		start = 'auto',
 		rowSpan = 1,
@@ -110,6 +111,7 @@
 		...rest
 	}: ZGridItemProps = $props();
 	const zui = useZui();
+	const resolvedDirection = $derived(dir ?? zui.direction);
 	const grid = useGrid();
 	const rootClass = $derived(zui.recipe(gridItemRecipe));
 	const layoutClass = $derived(
@@ -118,7 +120,8 @@
 			applyResponsiveStyles(
 				s,
 				span,
-				(_s, value) => {
+				(s, value) => {
+					void s;
 					if (value !== 'full') assertGridInteger(value, 'Grid span');
 				},
 				grid.query
@@ -126,7 +129,8 @@
 			applyResponsiveStyles(
 				s,
 				start,
-				(_s, value) => {
+				(s, value) => {
+					void s;
 					if (value !== 'auto') assertGridInteger(value, 'Grid start');
 				},
 				grid.query
@@ -187,6 +191,7 @@
 	class={[rootClass, layoutClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
+	dir={resolvedDirection}
 >
 	{@render children?.()}
 </div>

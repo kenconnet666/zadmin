@@ -1,4 +1,13 @@
 export type SelectionKey = number | string;
+
+export function assertSelectionKey(key: unknown, owner = 'Selection'): asserts key is SelectionKey {
+	if (
+		typeof key !== 'string' &&
+		(typeof key !== 'number' || !Number.isFinite(key) || Object.is(key, -0))
+	) {
+		throw new TypeError(`${owner} keys must be strings or finite numbers other than -0.`);
+	}
+}
 export type SelectionMode = 'multiple' | 'none' | 'single';
 export type Selection<TKey extends SelectionKey = SelectionKey> = 'all' | ReadonlySet<TKey>;
 

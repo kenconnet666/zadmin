@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
-	"componentCount": 150,
-	"overallSha256": "dac8691236d8a312e36c4bd80865c259ebbbb573bf16770305061b6b64dbe962",
+	"componentCount": 152,
+	"overallSha256": "a5ed967b785674159e443414c57534c36056ad0daddf202188a27e930c633cd8",
 	"components": [
 		{
 			"id": "accordion",
@@ -674,6 +674,11 @@
 			"source": "src/components/input/ZTreeSelect.svelte"
 		},
 		{
+			"id": "app-shell",
+			"sha256": "773fdeea6f3b49bc0aaf7bffd4a5c3365b616df1e531dc5645d20895da3593df",
+			"source": "src/components/layout/ZAppShell.svelte"
+		},
+		{
 			"id": "aspect-ratio",
 			"sha256": "f3bce7b9ae8e2e6a719e10fa3a5171def3cae6af7151d1e4d2932d8f752a3cf8",
 			"source": "src/components/layout/ZAspectRatio.svelte"
@@ -704,6 +709,11 @@
 			"source": "src/components/layout/ZGroup.svelte"
 		},
 		{
+			"id": "overflow-list",
+			"sha256": "fc5b44e8bebdedc8e70df6bedc524f9300d22929de6ad75f209bcb118fc6a797",
+			"source": "src/components/layout/ZOverflowList.svelte"
+		},
+		{
 			"id": "scroll-area",
 			"sha256": "fb6c5ea5a91d303c91dc6fc4dcd4014c4ac854346ca7b43043fdc816003465ee",
 			"source": "src/components/layout/ZScrollArea.svelte"
@@ -725,7 +735,7 @@
 		},
 		{
 			"id": "breadcrumb",
-			"sha256": "923e18bd55b6a78990f1cb0dcff4969023aeef6321f736e4d9cd57d45206dcc0",
+			"sha256": "0dfba3127e79a0bfc71234b5b5d42509937815c17b5051ca4e5559d5c275ab3f",
 			"source": "src/components/navigation/ZBreadcrumb.svelte"
 		},
 		{
@@ -757,10 +767,10 @@
 	"entrypoints": {
 		"code.ts": "eabb8477e4c5ef93d016ab909e5c7f85a3111df231e2d2c3c7ef5e54897b36db",
 		"compiler.ts": "96fa979b36838e8b7a6d3f52bb463f23951438a4d974d52b631ad1e6d937b2e7",
-		"index.ts": "65f73adc3d166a8c1e4920720dc5d3eb364476b1eb074fc19b1caff7f3b7e66d",
+		"index.ts": "97f12307fece3e2e3961d93b1879b20f18d7cfedcaf1dc51cf9683f56a9350ec",
 		"internal.ts": "05f9ef9c8628e1cdf694dcc88b71831e5aab726a3189bd6189eef7ae645df4d7",
 		"layer.ts": "72d0fc8e5b7a8ab39a12e157879951b84f1a7fc19654f4bd8b6ea92fd8aa6db8",
-		"metadata.ts": "fe800579ae4a7c21080d286f3d6d7baf9f172fe94cbf60e3475a02ad05335db6",
+		"metadata.ts": "6c2df5684cb28536620f110e26f0b4ab3a5bda13ae57135882a01253e87b7d07",
 		"runtime.ts": "0fad64d1dec1517f8648a3640753feaf1af03264ce96ccccb7eaab8c5ece6599",
 		"testing.ts": "c596113f3cbcf4ce75be2728b6a10cd6a0b77c9b9101a4408ba2e18e174f15cb",
 		"theme.ts": "9625285286228f2548dadb74b934f40d7cd1804a1e96bc37a04f21d3cd32b527",

@@ -49,6 +49,12 @@ describe('ZGroup, ZCenter and ZSpacer production contracts', () => {
 		const inline = document.querySelector<HTMLElement>('[data-testid="center-inline"]')!;
 		const fixed = document.querySelector<HTMLElement>('[data-testid="spacer-fixed"]')!;
 		const defaultSpacer = document.querySelector<HTMLElement>('[data-testid="spacer-default"]')!;
+		const providerCenter = document.querySelector<HTMLElement>(
+			'[data-testid="center-provider-rtl"]'
+		)!;
+		const providerSpacer = document.querySelector<HTMLElement>(
+			'[data-testid="spacer-provider-rtl"]'
+		)!;
 		expect(getComputedStyle(center).display).toBe('flex');
 		expect(getComputedStyle(center).alignItems).toBe('center');
 		expect(getComputedStyle(center).justifyContent).toBe('center');
@@ -58,6 +64,8 @@ describe('ZGroup, ZCenter and ZSpacer production contracts', () => {
 		expect(getComputedStyle(defaultSpacer).inlineSize).toBe('8px');
 		expect(getComputedStyle(defaultSpacer).blockSize).toBe('0px');
 		expect(getComputedStyle(fixed).flexShrink).toBe('0');
+		expect(getComputedStyle(providerCenter).direction).toBe('rtl');
+		expect(getComputedStyle(providerSpacer).direction).toBe('rtl');
 	});
 });
 

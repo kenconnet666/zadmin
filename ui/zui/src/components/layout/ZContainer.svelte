@@ -122,6 +122,7 @@
 	let {
 		children,
 		class: className,
+		dir,
 		gutter = 'medium',
 		maxWidth,
 		queryName,
@@ -132,6 +133,7 @@
 		...rest
 	}: ZContainerProps = $props();
 	const zui = useZui();
+	const resolvedDirection = $derived(dir ?? zui.direction);
 	const rootClass = $derived(zui.recipe(containerRecipe));
 	const layoutClass = $derived(
 		zui.icss((s) => {
@@ -205,6 +207,7 @@
 	class={[rootClass, layoutClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
+	dir={resolvedDirection}
 	data-gutter={typeof gutter === 'object'
 		? 'responsive'
 		: typeof gutter === 'number'

@@ -1,10 +1,10 @@
 {
 	"schemaVersion": 2,
 	"source": {
-		"metadataComponents": 150,
-		"documentationPages": 87,
-		"contractComponents": 150,
-		"testFiles": 211
+		"metadataComponents": 152,
+		"documentationPages": 89,
+		"contractComponents": 152,
+		"testFiles": 218
 	},
 	"stageNames": [
 		"Declared",
@@ -18,14 +18,14 @@
 	],
 	"evidenceScope": "Static inventory of authored test contracts, not test execution results or whole-component visual acceptance. Stage names are retained for compatibility; consult commit-matched CI and page-level review separately.",
 	"summary": {
-		"Declared": 150,
-		"Authorable": 150,
-		"ContractVerified": 150,
-		"RuntimeImplemented": 150,
-		"BrowserBehaviorVerified": 147,
-		"VisuallyVerified": 150,
+		"Declared": 152,
+		"Authorable": 152,
+		"ContractVerified": 152,
+		"RuntimeImplemented": 152,
+		"BrowserBehaviorVerified": 149,
+		"VisuallyVerified": 151,
 		"DesktopVerified": 0,
-		"ProductionVerified": 148
+		"ProductionVerified": 150
 	},
 	"components": [
 		{
@@ -13339,6 +13339,99 @@
 			]
 		},
 		{
+			"id": "app-shell",
+			"name": "ZAppShell",
+			"category": "layout",
+			"family": null,
+			"status": "experimental",
+			"source": "ui/zui/src/components/layout/ZAppShell.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": true,
+				"VisuallyVerified": true,
+				"DesktopVerified": false,
+				"ProductionVerified": true
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/layout/ZAppShell.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZAppShell"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "773fdeea6f3b49bc0aaf7bffd4a5c3365b616df1e531dc5645d20895da3593df API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/layout/ZAppShell.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [
+					{
+						"path": "ui/zui/tests/app-shell-production.browser.spec.ts",
+						"detail": "ZAppShell browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/AppShellFixture.svelte",
+						"detail": "ZAppShell explicit rendered fixture usage"
+					}
+				],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/app-shell-production.browser.spec.ts",
+						"detail": "ZAppShell authored visual contract: keeps native regions in deterministic grid offsets and gives main the bounded scroll owner (line 17); requires browser execution and page-level review"
+					},
+					{
+						"path": "ui/zui/tests/AppShellFixture.svelte",
+						"detail": "ZAppShell explicit rendered fixture usage"
+					}
+				],
+				"DesktopVerified": [],
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/app-shell-production.spec.ts",
+						"detail": "ZAppShell production assertions"
+					},
+					{
+						"path": "ui/zui/tests/app-shell-production.browser.spec.ts",
+						"detail": "ZAppShell production assertions"
+					},
+					{
+						"path": "ui/zui/tests/AppShellFixture.svelte",
+						"detail": "ZAppShell explicit rendered fixture usage"
+					}
+				]
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/layout/app-shell/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/app-shell-production.spec.ts",
+					"detail": "ZAppShell SSR assertions"
+				}
+			]
+		},
+		{
 			"id": "aspect-ratio",
 			"name": "ZAspectRatio",
 			"category": "layout",
@@ -13851,6 +13944,90 @@
 			]
 		},
 		{
+			"id": "overflow-list",
+			"name": "ZOverflowList",
+			"category": "layout",
+			"family": null,
+			"status": "experimental",
+			"source": "ui/zui/src/components/layout/ZOverflowList.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": true,
+				"VisuallyVerified": false,
+				"DesktopVerified": false,
+				"ProductionVerified": true
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/layout/ZOverflowList.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZOverflowList"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "fc5b44e8bebdedc8e70df6bedc524f9300d22929de6ad75f209bcb118fc6a797 API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/layout/ZOverflowList.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [
+					{
+						"path": "ui/zui/tests/overflow-list-production.browser.spec.ts",
+						"detail": "ZOverflowList browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/OverflowListFixture.svelte",
+						"detail": "ZOverflowList explicit rendered fixture usage"
+					}
+				],
+				"VisuallyVerified": [],
+				"DesktopVerified": [],
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/overflow-list-production.spec.ts",
+						"detail": "ZOverflowList production assertions"
+					},
+					{
+						"path": "ui/zui/tests/overflow-list-production.browser.spec.ts",
+						"detail": "ZOverflowList production assertions"
+					},
+					{
+						"path": "ui/zui/tests/OverflowListFixture.svelte",
+						"detail": "ZOverflowList explicit rendered fixture usage"
+					}
+				]
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/layout/overflow-list/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/overflow-list-production.spec.ts",
+					"detail": "ZOverflowList SSR assertions"
+				}
+			]
+		},
+		{
 			"id": "scroll-area",
 			"name": "ZScrollArea",
 			"category": "layout",
@@ -14238,7 +14415,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "923e18bd55b6a78990f1cb0dcff4969023aeef6321f736e4d9cd57d45206dcc0 API snapshot entry"
+						"detail": "0dfba3127e79a0bfc71234b5b5d42509937815c17b5051ca4e5559d5c275ab3f API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -14260,7 +14437,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/breadcrumb-production.browser.spec.ts",
-						"detail": "ZBreadcrumb authored visual contract: uses logical layout and wraps long labels within narrow and RTL owners (line 23); requires browser execution and page-level review"
+						"detail": "ZBreadcrumb authored visual contract: uses logical layout and wraps long labels within narrow and RTL owners (line 43); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/BreadcrumbFixture.svelte",

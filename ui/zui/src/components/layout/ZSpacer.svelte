@@ -93,6 +93,7 @@
 	let {
 		blockSize = 'none',
 		class: className,
+		dir,
 		inlineSize = 'medium',
 		query = 'viewport',
 		ref = $bindable(null),
@@ -111,6 +112,7 @@
 	}
 
 	const zui = useZui();
+	const resolvedDirection = $derived(dir ?? zui.direction);
 	const rootClass = $derived(zui.recipe(spacerRecipe));
 	const sizeClass = $derived(
 		zui.icss((s) => {
@@ -140,4 +142,5 @@
 	class={[rootClass, sizeClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
+	dir={resolvedDirection}
 ></div>

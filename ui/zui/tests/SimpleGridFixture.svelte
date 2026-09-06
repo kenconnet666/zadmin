@@ -1,4 +1,5 @@
 <script lang="ts">
+	import ZProvider from '../src/components/gene/ZProvider.svelte';
 	import ZSimpleGrid from '../src/components/layout/ZSimpleGrid.svelte';
 
 	const responsiveColumns = { base: 1, medium: 3 } as const;
@@ -24,9 +25,9 @@
 	<div>Three</div>
 </ZSimpleGrid>
 
-<div dir="rtl" data-testid="simple-grid-rtl-owner">
+<ZProvider direction="rtl">
 	<ZSimpleGrid columns={2} data-testid="simple-grid-rtl">
 		<div>يمين</div>
 		<div>يسار</div>
 	</ZSimpleGrid>
-</div>
+</ZProvider>

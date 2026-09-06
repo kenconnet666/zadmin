@@ -9,6 +9,12 @@ export const componentDocLoaders = {
 	grid: () => import('../content/components/layout/grid/doc.js').then((module) => module.gridDoc),
 	group: () =>
 		import('../content/components/layout/group/doc.js').then((module) => module.groupDoc),
+	'overflow-list': () =>
+		import('../content/components/layout/overflow-list/doc.js').then(
+			(module) => module.overflowListDoc
+		),
+	'app-shell': () =>
+		import('../content/components/layout/app-shell/doc.js').then((module) => module.appShellDoc),
 	center: () =>
 		import('../content/components/layout/center/doc.js').then((module) => module.centerDoc),
 	spacer: () =>

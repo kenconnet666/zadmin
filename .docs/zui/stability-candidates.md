@@ -2,7 +2,7 @@
 
 本文件由 `scripts/check-stability-policy.mjs` 生成；不会修改组件 status。compound member 可继承同 family root 的 Docs 页面。
 
-stableCompliant：141；stableViolations：0；promotionEligibleExperimental：6。
+stableCompliant：141；stableViolations：0；promotionEligibleExperimental：8。
 
 | Component               | Status       | Classification                | Blockers                                         | Docs                                                                  | SSR |
 | ----------------------- | ------------ | ----------------------------- | ------------------------------------------------ | --------------------------------------------------------------------- | --: |
@@ -140,12 +140,14 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：6
 | ZTimeField              | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/input/time-field/doc.ts              |   1 |
 | ZTransfer               | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/input/transfer/doc.ts                |   1 |
 | ZTreeSelect             | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/input/tree-select/doc.ts             |   2 |
+| ZAppShell               | experimental | promotionEligibleExperimental | —                                                | apps/docs/src/content/components/layout/app-shell/doc.ts              |   1 |
 | ZAspectRatio            | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/layout/aspect-ratio/doc.ts           |   2 |
 | ZCenter                 | experimental | promotionEligibleExperimental | —                                                | apps/docs/src/content/components/layout/center/doc.ts                 |   1 |
 | ZContainer              | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/layout/container/doc.ts              |   2 |
 | ZGrid                   | experimental | experimental                  | BrowserBehaviorVerified, ProductionVerified, SSR | apps/docs/src/content/components/layout/grid/doc.ts                   |   0 |
 | ZGridItem               | experimental | experimental                  | BrowserBehaviorVerified, ProductionVerified, SSR | apps/docs/src/content/components/layout/grid/doc.ts                   |   0 |
 | ZGroup                  | experimental | promotionEligibleExperimental | —                                                | apps/docs/src/content/components/layout/group/doc.ts                  |   1 |
+| ZOverflowList           | experimental | promotionEligibleExperimental | —                                                | apps/docs/src/content/components/layout/overflow-list/doc.ts          |   1 |
 | ZScrollArea             | experimental | experimental                  | BrowserBehaviorVerified                          | apps/docs/src/content/components/layout/scroll-area/doc.ts            |   1 |
 | ZSimpleGrid             | experimental | promotionEligibleExperimental | —                                                | apps/docs/src/content/components/layout/simple-grid/doc.ts            |   1 |
 | ZSpacer                 | experimental | promotionEligibleExperimental | —                                                | apps/docs/src/content/components/layout/spacer/doc.ts                 |   1 |

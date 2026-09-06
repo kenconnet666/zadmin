@@ -7,6 +7,8 @@ import RtlDemo from './RtlDemo.svelte';
 import rtlSource from './RtlDemo.svelte?raw';
 import SnippetDemo from './SnippetDemo.svelte';
 import snippetSource from './SnippetDemo.svelte?raw';
+import CollapseDemo from './CollapseDemo.svelte';
+import collapseSource from './CollapseDemo.svelte?raw';
 import { breadcrumbApiFacts } from '../../../../framework/component-api.generated.js';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
 
@@ -15,6 +17,11 @@ export const breadcrumbDoc = defineComponentDoc(breadcrumbMetadata, {
 	sourceApi: breadcrumbApiFacts,
 	teaching: {
 		props: {
+			collapse: {
+				default: 'false',
+				description:
+					'true或{ maxItems, maxRows, keepFirst }；固定首页和当前末项优先，预算不保证一定fits。'
+			},
 			items: {
 				default: '必填',
 				description:
@@ -23,7 +30,7 @@ export const breadcrumbDoc = defineComponentDoc(breadcrumbMetadata, {
 			ref: { default: 'null', description: '真实nav引用，可供页面壳测量或宿主集成。' }
 		},
 		summary:
-			'生产Breadcrumb保持具名nav/ol/li、typed key、真实路由链接、唯一当前文本、装饰分隔符和窄屏/RTL自然换行；首版不测量或隐藏长路径。'
+			'生产Breadcrumb保持具名nav/ol/li、typed key、真实路由链接、唯一当前文本、可访问的折叠祖先入口和窄屏/RTL自然换行。'
 	},
 	demos: [
 		{
@@ -45,10 +52,19 @@ export const breadcrumbDoc = defineComponentDoc(breadcrumbMetadata, {
 		{
 			component: LongPathDemo,
 			covers: ['native-props', 'rtl', 'ssr', 'variants-and-states'],
-			description: '长CJK路径在窄容器中自然换行；当前版本完整展示路径，不提供伪折叠。',
+			description: '默认不折叠，长CJK路径在窄容器中自然换行；需要折叠时使用单独的collapse演示。',
 			id: 'breadcrumb-long-path',
 			source: longPathSource,
 			title: '窄容器长路径'
+		},
+		{
+			component: CollapseDemo,
+			covers: ['accessible-name', 'composition', 'native-props', 'variants-and-states'],
+			description:
+				'真实宽度变化下切换完整路径、collapse=true与maxItems预算；隐藏祖先通过组件Popover中的原生链接访问。',
+			id: 'breadcrumb-collapse',
+			source: collapseSource,
+			title: '长路径折叠与恢复'
 		},
 		{
 			component: RtlDemo,

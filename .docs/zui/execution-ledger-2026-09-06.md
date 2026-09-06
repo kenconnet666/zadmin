@@ -53,8 +53,24 @@ E1远程反馈也并入本批：移除Breadcrumb重复类型导入；SimpleGrid�
 
 ## 下一执行批次
 
-1. OverflowList测量折叠与Breadcrumb完整祖先菜单；继续Toolbar/NavigationMenu及AppShell/Splitter。
+1. [N3-A Toolbar/ToggleGroup 执行方案](./execution-navigation-next-2026-09-06.md)：复用并收敛集合焦点与选择基础，接入 OverflowList；随后 NavigationMenu/Menubar 与 Splitter。
 2. F1 状态与 F5 DOM 组合合同，真实输入和浮层消费者；现有API按六类处置表逐项处理。
 3. 输入首批与完整日期/表单集合并行展开；大能力引擎选型按[平台能力台账](./platform-capabilities-2026-09-06.md)适度采用新CSS/JS/TS/Node能力。
 
 E1 仅是总目标的首个实现阶段，不代表 W1–W8 或全库稳定验收已完成。
+
+## E3：测量集合、完整祖先导航和应用布局壳
+
+本阶段新增 OverflowList/AppShell，目录为 89 个组件家族、152 个公开组件；API 源审计为 1888 个 props、actionableIssues=0。141 个 stable 标签为已有声明，新组件继续 experimental/unreleased；源码生成器的覆盖标签不等同于本候选已经执行通过远程稳定矩阵。
+
+- OverflowList 支持真实尺寸测量、多行/数量预算、逻辑折叠方向、固定 key、暂停和显式刷新；每项一个 DOM 实例，隐藏 wrapper 保持可测但 inert/aria-hidden，不克隆交互树。入口宽度变窄可回收空间，非单调宽度回路才采用有界保守预算。禁用期间的人工布局不会伪装成已测量。
+- Breadcrumb 的 `collapse` 复用 OverflowList/Popover：保留首页（可关）、当前项和末项，被折叠祖先通过真实链接访问；默认不折叠，保留原生 nav/ol/li 和单一 aria-current。
+- AppShell 支持五个原生区域、两种布局、响应式侧栏、main/root 滚动、main/div 语义。修复根滚动模式正文覆盖页脚；增加四个目的明确的尺寸 Theme token 和 locale 主导航名称。
+- 真实浏览器揭示无 DOM Provider 的 direction 未落到部分布局根；Stack、Container、Grid/GridItem、SimpleGrid、Center、Spacer、ScrollArea、OverflowList、Breadcrumb、AppShell 现统一使用显式原生 dir 优先于 Provider context。Group 继续复用 Stack。
+- 做减法：Breadcrumb 和 OverflowList 共用 typed key 校验；不增加第二套祖先浮层/测量；AppShell 以 Grid 轨道确定区域位置，不引入相互矛盾的 fixed/offset 开关。
+- WebStorm 已使用读取、运行点发现、受影响文件诊断及真实语义 rename；`parseCssPixels` 的命名修改自动更新 7 处引用。Docs 继续由 WebStorm dev 运行于 localhost:5174。
+- Chrome 检查：OverflowList/Breadcrumb/AppShell 在 390px 无页面横向溢出；折叠项目失焦时转交入口、展开恢复首项；祖先弹层 Escape 恢复入口；AppShell 根滚动 main 内容完整结束后才到 footer。额外 SSR/类型/几何/RTL/焦点合同已编写，远程执行结果仍待后续交付流程。
+
+E3 同时保留上一远程 run 的严格 DateRangePicker 纯指针路径，并加阶段状态与终态联合诊断。证据仅定位到 focus preview 与 click commit 之间的中断，尚不能排除生产焦点滚动问题；不以预聚焦、重试、延时或放宽断言将其隐藏。Popover entry motion 的 WebKit 问题仍单列，见各自诊断文件。
+
+交付边界：E2 已在 `cfe32ad` 本地提交；此前普通 HTTPS push 连接 github.com:443 失败，E3 实施没有因此停止。E3 提交前读取远程记录，最新实现 run 仍为 E1 的 `34017484365`（failure）。下一次成功 push 将一起交付待推送阶段，不等待新 CI；在再下一次交付前读取其结果。

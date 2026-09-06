@@ -17,7 +17,7 @@
 
 <button type="button" data-testid="resize-grid" onclick={() => (wide = !wide)}>Resize layout</button
 >
-<ZProvider {theme}>
+<ZProvider direction="rtl" {theme}>
 	<ZContainer
 		queryName="layout-contract"
 		size="full"

@@ -198,7 +198,17 @@ export const PROPERTY_DEFINITIONS = {
 	fontSize: { token: 'fontSize', tokenUnit: 'px', units: ['length', 'percent'] },
 	fontWeight: { token: 'fontWeight' },
 	gap: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
-	inlineSize: { token: 'indicatorSize', tokenUnit: 'px', units: ['length', 'percent'] },
+	inlineSize: {
+		keywords: {
+			auto: 'auto',
+			minContent: 'min-content',
+			maxContent: 'max-content',
+			fitContent: 'fit-content'
+		},
+		token: 'indicatorSize',
+		tokenUnit: 'px',
+		units: ['length', 'percent']
+	},
 	listStyleType: { keywords: { none: 'none', decimal: 'decimal', disc: 'disc' } },
 	gridColumn: { keywords: { auto: 'auto' } },
 	gridAutoColumns: {

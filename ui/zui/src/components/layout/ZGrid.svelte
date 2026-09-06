@@ -110,6 +110,7 @@
 	let {
 		children,
 		class: className,
+		dir,
 		columns = 12,
 		gap = 'medium',
 		rowGap,
@@ -121,6 +122,7 @@
 		...rest
 	}: ZGridProps = $props();
 	const zui = useZui();
+	const resolvedDirection = $derived(dir ?? zui.direction);
 	provideGrid(() => ({ columns, query }));
 	const rootClass = $derived(zui.recipe(gridRecipe));
 	const layoutClass = $derived(
@@ -158,6 +160,7 @@
 	class={[rootClass, layoutClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
+	dir={resolvedDirection}
 >
 	{@render children?.()}
 </div>

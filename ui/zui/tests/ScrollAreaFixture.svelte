@@ -64,4 +64,13 @@
 			style="width: 240px"><div style="width: 600px">RTL content</div></ZScrollArea
 		>
 	</div>
+	<ZProvider direction="rtl">
+		<ZScrollArea
+			height={80}
+			axis="x"
+			aria-label="Provider RTL native offset"
+			data-testid="scroll-provider-rtl"
+			style="width: 240px"><div style="width: 600px">Provider RTL content</div></ZScrollArea
+		>
+	</ZProvider>
 </ZProvider>

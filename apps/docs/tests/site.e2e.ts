@@ -13,6 +13,32 @@ async function resetDemo(scope: Locator): Promise<void> {
 	await scope.getByRole('button', { name: '重置', exact: true }).press('Enter');
 }
 
+async function dateRangePickerState(scope: Locator) {
+	return scope.evaluate((container) => {
+		const picker = container.querySelector<HTMLElement>('[data-range-part]');
+		const trigger = container.querySelector<HTMLButtonElement>('button[aria-haspopup="dialog"]');
+		const contentId = trigger?.getAttribute('aria-controls');
+		const content = contentId ? container.ownerDocument.getElementById(contentId) : null;
+		const form = container.querySelector('form');
+		const formData = form ? new FormData(form) : null;
+		const range = [...container.querySelectorAll<HTMLElement>('*')]
+			.map((element) => element.textContent?.trim())
+			.find((text) => text?.startsWith('range = '));
+		return {
+			activeTrigger: container.ownerDocument.activeElement === trigger,
+			contentInteractive: Boolean(content && !content.hasAttribute('inert')),
+			formEnd: formData?.get('window.end') ?? null,
+			formStart: formData?.get('window.start') ?? null,
+			open: trigger?.getAttribute('aria-expanded') ?? null,
+			range: range ?? null,
+			rangePart: picker?.dataset.rangePart ?? null,
+			rootState: picker?.dataset.state ?? null,
+			selecting: picker?.dataset.selecting === 'true',
+			triggerState: trigger?.dataset.state ?? null
+		};
+	});
+}
+
 async function gotoComponent(page: Page, id: string): Promise<void> {
 	await page.goto(`/#/components/${id}`);
 	await expect(page).toHaveURL(new RegExp(`#/components/${id}$`, 'u'));
@@ -854,7 +880,39 @@ test('keeps DateRangePicker two-step normalized selection and dual form fields s
 	await trigger.click();
 	const calendarDialog = page.getByRole('dialog', { name: '选择发布窗口', exact: true });
 	await calendarDialog.getByRole('button', { name: '2026年8月25日星期二', exact: true }).click();
+	await expect
+		.poll(() => dateRangePickerState(rangeDemo), {
+			message: 'the first calendar click must publish the partial range before the end click'
+		})
+		.toEqual({
+			activeTrigger: false,
+			contentInteractive: true,
+			formEnd: null,
+			formStart: '2026-08-25',
+			open: 'true',
+			range: 'range = 2026-08-25 / null',
+			rangePart: 'end',
+			rootState: 'open',
+			selecting: true,
+			triggerState: 'open'
+		});
 	await calendarDialog.getByRole('button', { name: '2026年8月22日星期六', exact: true }).click();
+	await expect
+		.poll(() => dateRangePickerState(rangeDemo), {
+			message: 'the end click must atomically commit, close, inert the content and restore focus'
+		})
+		.toEqual({
+			activeTrigger: true,
+			contentInteractive: false,
+			formEnd: '2026-08-25',
+			formStart: '2026-08-22',
+			open: 'false',
+			range: 'range = 2026-08-22 / 2026-08-25',
+			rangePart: 'start',
+			rootState: 'closed',
+			selecting: false,
+			triggerState: 'closed'
+		});
 	await expect(trigger).toBeFocused();
 	await expect(rangeDemo.getByText('range = 2026-08-22 / 2026-08-25')).toBeVisible();
 	await expect

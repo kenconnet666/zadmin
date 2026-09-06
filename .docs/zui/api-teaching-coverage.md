@@ -1,6 +1,6 @@
 # API teaching coverage
 
-Generated from 150 components and 1852 declared props. 0 metadata gaps remain; 0 remain true fallbacks after teaching overrides; 8 structured props are explicitly opaque.
+Generated from 152 components and 1888 declared props. 0 metadata gaps remain; 0 remain true fallbacks after teaching overrides; 9 structured props are explicitly opaque.
 
 Policy: every declared public prop must have owned component metadata, binding, event or snippet evidence; both totals are enforced at zero.
 
@@ -19,10 +19,10 @@ Policy: every declared public prop must have owned component metadata, binding, 
 | ZAlertDialogOverlay     | alert-dialog |              1 |             0 |                   0 | —              | ui/zui/src/components/compound/alert-dialog/ZAlertDialogOverlay.svelte     |
 | ZAlertDialogTitle       | alert-dialog |              2 |             0 |                   0 | —              | ui/zui/src/components/compound/alert-dialog/ZAlertDialogTitle.svelte       |
 | ZAlertDialogTrigger     | alert-dialog |             14 |             0 |                   0 | —              | ui/zui/src/components/compound/alert-dialog/ZAlertDialogTrigger.svelte     |
+| ZAppShell               | —            |             19 |             0 |                   0 | —              | ui/zui/src/components/layout/ZAppShell.svelte                              |
 | ZAspectRatio            | —            |              3 |             0 |                   0 | —              | ui/zui/src/components/layout/ZAspectRatio.svelte                           |
 | ZAvatar                 | —            |             17 |             0 |                   0 | —              | ui/zui/src/components/data-display/ZAvatar.svelte                          |
 | ZBadge                  | —            |             13 |             0 |                   0 | —              | ui/zui/src/components/data-display/ZBadge.svelte                           |
 | ZBox                    | —            |              2 |             0 |                   0 | —              | ui/zui/src/components/gene/ZBox.svelte                                     |
-| ZBreadcrumb             | —            |              4 |             0 |                   0 | —              | ui/zui/src/components/navigation/ZBreadcrumb.svelte                        |
+| ZBreadcrumb             | —            |              5 |             0 |                   0 | —              | ui/zui/src/components/navigation/ZBreadcrumb.svelte                        |
 | ZButton                 | —            |             13 |             0 |                   0 | —              | ui/zui/src/components/gene/ZButton.svelte                                  |
-| ZCalendar               | —            |             27 |             0 |                   0 | —              | ui/zui/src/components/input/ZCalendar.svelte                               |

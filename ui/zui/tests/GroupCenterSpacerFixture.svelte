@@ -1,4 +1,5 @@
 <script lang="ts">
+	import ZProvider from '../src/components/gene/ZProvider.svelte';
 	import ZCenter from '../src/components/layout/ZCenter.svelte';
 	import ZGroup from '../src/components/layout/ZGroup.svelte';
 	import ZSpacer from '../src/components/layout/ZSpacer.svelte';
@@ -31,12 +32,12 @@
 	</ZGroup>
 </div>
 
-<div dir="rtl" data-testid="group-rtl-owner">
+<ZProvider direction="rtl">
 	<ZGroup data-testid="group-rtl" justify="between">
 		<span>يمين</span>
 		<span>يسار</span>
 	</ZGroup>
-</div>
+</ZProvider>
 
 <ZCenter data-testid="center-block" style="width: 240px; height: 120px">
 	<span>Centered</span>
@@ -50,3 +51,8 @@
 	data-testid="spacer-responsive"
 	inlineSize={{ base: 'small', medium: 'xlarge' }}
 />
+
+<ZProvider direction="rtl">
+	<ZCenter data-testid="center-provider-rtl" style="width: 120px; height: 48px">Centered</ZCenter>
+	<ZSpacer data-testid="spacer-provider-rtl" inlineSize="large" />
+</ZProvider>

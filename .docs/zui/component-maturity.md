@@ -1,19 +1,19 @@
 # ZUI component maturity matrix
 
-Generated from 150 metadata components, 87 documentation modules, 150 API contract entries, and 211 test files.
+Generated from 152 metadata components, 89 documentation modules, 152 API contract entries, and 218 test files.
 
 This is a static inventory of authored test contracts, not an execution report or a whole-component visual acceptance result. Historical stage names are retained for compatibility. `VisuallyVerified` requires an explicit `@zui-visual ZComponent` marker, an owned component/fixture render, and a geometry, computed-style, CSS, or screenshot assertion in the SAME test block. A positive entry only identifies a scoped test; confirm its result against commit-matched CI and inspect real pages, themes, and densities separately. `DesktopVerified` remains false until a component-level desktop evidence source is added.
 
 | Stage                   | Count |
 | ----------------------- | ----: |
-| Declared                |   150 |
-| Authorable              |   150 |
-| ContractVerified        |   150 |
-| RuntimeImplemented      |   150 |
-| BrowserBehaviorVerified |   147 |
-| VisuallyVerified        |   150 |
+| Declared                |   152 |
+| Authorable              |   152 |
+| ContractVerified        |   152 |
+| RuntimeImplemented      |   152 |
+| BrowserBehaviorVerified |   149 |
+| VisuallyVerified        |   151 |
 | DesktopVerified         |     0 |
-| ProductionVerified      |   148 |
+| ProductionVerified      |   150 |
 
 | Component               | Category     | Declared | Authorable | Contract | Runtime | Browser | Visual | Desktop | Production | Docs                                                                  |
 | ----------------------- | ------------ | -------: | ---------: | -------: | ------: | ------: | -----: | ------: | ---------: | --------------------------------------------------------------------- |
@@ -151,12 +151,14 @@ This is a static inventory of authored test contracts, not an execution report o
 | ZTimeField              | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/time-field/doc.ts              |
 | ZTransfer               | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/transfer/doc.ts                |
 | ZTreeSelect             | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/tree-select/doc.ts             |
+| ZAppShell               | layout       |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/layout/app-shell/doc.ts              |
 | ZAspectRatio            | layout       |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/layout/aspect-ratio/doc.ts           |
 | ZCenter                 | layout       |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/layout/center/doc.ts                 |
 | ZContainer              | layout       |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/layout/container/doc.ts              |
 | ZGrid                   | layout       |        Y |          Y |        Y |       Y |       — |      Y |       — |          — | apps/docs/src/content/components/layout/grid/doc.ts                   |
 | ZGridItem               | layout       |        Y |          Y |        Y |       Y |       — |      Y |       — |          — | apps/docs/src/content/components/layout/grid/doc.ts                   |
 | ZGroup                  | layout       |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/layout/group/doc.ts                  |
+| ZOverflowList           | layout       |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/layout/overflow-list/doc.ts          |
 | ZScrollArea             | layout       |        Y |          Y |        Y |       Y |       — |      Y |       — |          Y | apps/docs/src/content/components/layout/scroll-area/doc.ts            |
 | ZSimpleGrid             | layout       |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/layout/simple-grid/doc.ts            |
 | ZSpacer                 | layout       |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/layout/spacer/doc.ts                 |

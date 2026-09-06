@@ -139,6 +139,8 @@ export { zuiMetadata as commandPaletteMetadata } from '../components/navigation/
 export { zuiMetadata as stackMetadata } from '../components/layout/ZStack.svelte';
 export { zuiMetadata as gridMetadata } from '../components/layout/ZGrid.svelte';
 export { zuiMetadata as groupMetadata } from '../components/layout/ZGroup.svelte';
+export { zuiMetadata as overflowListMetadata } from '../components/layout/ZOverflowList.svelte';
+export { zuiMetadata as appShellMetadata } from '../components/layout/ZAppShell.svelte';
 export { zuiMetadata as centerMetadata } from '../components/layout/ZCenter.svelte';
 export { zuiMetadata as spacerMetadata } from '../components/layout/ZSpacer.svelte';
 export { zuiMetadata as scrollAreaMetadata } from '../components/layout/ZScrollArea.svelte';

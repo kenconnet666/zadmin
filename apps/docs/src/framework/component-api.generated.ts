@@ -10314,6 +10314,112 @@ export const treeSelectApiFacts = {
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
+export const appShellApiFacts = {
+	declaration: 'ZAppShellProps',
+	id: 'app-shell',
+	inheritedFrom: ['HTMLAttributes<HTMLDivElement>'],
+	name: 'ZAppShell',
+	props: [
+		{
+			name: 'aside',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'asideCollapsed',
+			required: false,
+			type: 'ResponsiveValue<boolean>'
+		},
+		{
+			name: 'asideLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'asideWidth',
+			required: false,
+			type: 'ResponsiveValue<ZAppShellLength>'
+		},
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'footer',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'footerHeight',
+			required: false,
+			type: 'ResponsiveValue<ZAppShellLength>'
+		},
+		{
+			name: 'header',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'headerHeight',
+			required: false,
+			type: 'ResponsiveValue<ZAppShellLength>'
+		},
+		{
+			name: 'layout',
+			required: false,
+			type: "'alternative' | 'default'"
+		},
+		{
+			name: 'mainAs',
+			required: false,
+			type: "'div' | 'main'"
+		},
+		{
+			name: 'mainPadding',
+			required: false,
+			type: 'ResponsiveValue<ZLayoutSpacing>'
+		},
+		{
+			name: 'navbar',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'navbarCollapsed',
+			required: false,
+			type: 'ResponsiveValue<boolean>'
+		},
+		{
+			name: 'navbarLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'navbarWidth',
+			required: false,
+			type: 'ResponsiveValue<ZAppShellLength>'
+		},
+		{
+			name: 'query',
+			required: false,
+			type: 'ResponsiveQuery'
+		},
+		{
+			name: 'scroll',
+			required: false,
+			type: "'main' | 'root'"
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null'
+		}
+	],
+	source: 'ui/zui/src/components/layout/ZAppShell.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
 export const aspectRatioApiFacts = {
 	declaration: 'ZAspectRatioProps',
 	id: 'aspect-ratio',
@@ -10584,6 +10690,103 @@ export const groupApiFacts = {
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
+export const overflowListApiFacts = {
+	declaration: 'ZOverflowListProps',
+	id: 'overflow-list',
+	inheritedFrom: ['HTMLAttributes<HTMLElement>'],
+	name: 'ZOverflowList',
+	props: [
+		{
+			name: 'as',
+			required: false,
+			type: "'div' | 'ol' | 'ul'"
+		},
+		{
+			name: 'collapse',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'items',
+			required: true,
+			type: 'readonly TItem[]'
+		},
+		{
+			name: 'itemKey',
+			required: true,
+			type: '(item: TItem, index: number) => TKey'
+		},
+		{
+			name: 'item',
+			required: true,
+			type: 'Snippet<[item: TItem, index: number]>'
+		},
+		{
+			name: 'overflow',
+			required: true,
+			type: 'Snippet<[state: OverflowListState<TItem, TKey>]>'
+		},
+		{
+			name: 'maxRows',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'maxVisibleItems',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'collapseFrom',
+			required: false,
+			type: 'OverflowCollapseFrom'
+		},
+		{
+			name: 'pinnedKeys',
+			required: false,
+			type: 'readonly NoInfer<TKey>[]'
+		},
+		{
+			name: 'suspended',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'gap',
+			required: false,
+			type: 'ResponsiveValue<ZLayoutSpacing>'
+		},
+		{
+			name: 'rowGap',
+			required: false,
+			type: 'ResponsiveValue<ZLayoutSpacing>'
+		},
+		{
+			name: 'query',
+			required: false,
+			type: 'ResponsiveQuery'
+		},
+		{
+			name: 'onVisibleItemsChange',
+			required: false,
+			type: '(state: OverflowListState<TItem, TKey>) => void'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLElement | null'
+		}
+	],
+	opaqueProps: [
+		{
+			path: 'items',
+			kind: 'caller-generic'
+		}
+	],
+	source: 'ui/zui/src/components/layout/ZOverflowList.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
 export const scrollAreaApiFacts = {
 	declaration: 'ZScrollAreaProps',
 	id: 'scroll-area',
@@ -10814,6 +11017,11 @@ export const breadcrumbApiFacts = {
 	inheritedFrom: ['HTMLAttributes<HTMLElement>'],
 	name: 'ZBreadcrumb',
 	props: [
+		{
+			name: 'collapse',
+			required: false,
+			type: 'boolean | BreadcrumbCollapseOptions'
+		},
 		{
 			name: 'item',
 			required: false,

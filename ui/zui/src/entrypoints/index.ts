@@ -25,6 +25,20 @@ export type {
 export type { IcssBreakpointName, IcssBreakpointQuery, IcssContainerQuery } from '../icss/types.js';
 export { default as ZGrid } from '../components/layout/ZGrid.svelte';
 export { default as ZGroup } from '../components/layout/ZGroup.svelte';
+export { default as ZOverflowList } from '../components/layout/ZOverflowList.svelte';
+export type {
+	ZOverflowListProps,
+	OverflowListState
+} from '../components/layout/ZOverflowList.svelte';
+export type { OverflowCollapseFrom } from '../runtime/collection/overflow-layout.js';
+export { default as ZAppShell } from '../components/layout/ZAppShell.svelte';
+export type {
+	ZAppShellProps,
+	ZAppShellLayout,
+	ZAppShellMainAs,
+	ZAppShellScroll,
+	ZAppShellLength
+} from '../components/layout/ZAppShell.svelte';
 export type { ZGroupProps } from '../components/layout/ZGroup.svelte';
 export { default as ZCenter } from '../components/layout/ZCenter.svelte';
 export type { ZCenterProps } from '../components/layout/ZCenter.svelte';
@@ -54,7 +68,11 @@ export type {
 	ZSimpleGridProps
 } from '../components/layout/ZSimpleGrid.svelte';
 export { default as ZBreadcrumb } from '../components/navigation/ZBreadcrumb.svelte';
-export type { BreadcrumbItem, ZBreadcrumbProps } from '../components/navigation/ZBreadcrumb.svelte';
+export type {
+	BreadcrumbCollapseOptions,
+	BreadcrumbItem,
+	ZBreadcrumbProps
+} from '../components/navigation/ZBreadcrumb.svelte';
 export { semanticTones } from '../theme/semantics.js';
 export type { ZSemanticTone } from '../theme/semantics.js';
 export { themePalettes, withPrimaryPalette } from '../theme/palettes.js';

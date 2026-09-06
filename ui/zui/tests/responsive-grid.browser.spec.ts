@@ -24,6 +24,9 @@ it('coordinates native container tracks, spans and axis overrides while resizing
 	const second = document.querySelector<HTMLElement>('[data-testid="clamped-start"]')!;
 	const full = document.querySelector<HTMLElement>('[data-testid="full-span"]')!;
 	const stack = document.querySelector<HTMLElement>('[data-testid="responsive-stack"]')!;
+	expect(getComputedStyle(container).direction).toBe('rtl');
+	expect(getComputedStyle(grid).direction).toBe('rtl');
+	expect(getComputedStyle(first).direction).toBe('rtl');
 	await expect.poll(() => getComputedStyle(grid).gridTemplateColumns.split(' ').length).toBe(4);
 	expect(container.style.width).toBe('320px');
 	expect(container.getBoundingClientRect().width).toBe(320);

@@ -78,6 +78,7 @@
 	let {
 		children,
 		class: className,
+		dir,
 		inline = false,
 		ref = $bindable(null),
 		style,
@@ -85,6 +86,7 @@
 	}: ZCenterProps = $props();
 
 	const zui = useZui();
+	const resolvedDirection = $derived(dir ?? zui.direction);
 	const rootClass = $derived(zui.recipe(centerRecipe, { inline }));
 	const icssVariables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(icssVariables)));
@@ -96,6 +98,7 @@
 	class={[rootClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
+	dir={resolvedDirection}
 	data-inline={inline || undefined}
 >
 	{@render children?.()}

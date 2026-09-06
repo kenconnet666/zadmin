@@ -134,6 +134,7 @@
 		align = 'stretch',
 		children,
 		class: className,
+		dir,
 		direction = 'column',
 		gap = 'none',
 		rowGap,
@@ -209,6 +210,7 @@
 	{...rest}
 	bind:this={ref}
 	class={[recipeClass, layoutClass, className]}
+	dir={dir ?? zui.direction}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables: icssVariables }}
 >

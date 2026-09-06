@@ -18,7 +18,9 @@ describe('ZBreadcrumb server contract', () => {
 		expect(body.match(/<li/g)).toHaveLength(3);
 		expect(body).toContain('href="/workspace"');
 		expect(body).toContain('aria-current="page"');
-		expect(body.match(/aria-hidden="true"/g)).toHaveLength(2);
+		expect(body.match(/data-slot="separator"/g)).toHaveLength(2);
+		expect(body.match(/<span[^>]*aria-hidden="true"[^>]*data-slot="separator"/g)).toHaveLength(2);
+		expect(body).not.toContain('aria-haspopup="dialog"');
 	});
 
 	it('rejects ambiguous current ownership before producing markup', () => {
@@ -41,5 +43,26 @@ describe('ZBreadcrumb server contract', () => {
 		}).body;
 		expect(body).toContain('href="/only"');
 		expect(body.match(/aria-current="page"/g)).toHaveLength(1);
+	});
+
+	it('rejects invalid collapse options while rendering the server body', () => {
+		expect(
+			() =>
+				render(ZBreadcrumb, {
+					props: { collapse: { maxRows: 0 }, items }
+				}).body
+		).toThrow('Breadcrumb maxRows');
+		expect(
+			() =>
+				render(ZBreadcrumb, {
+					props: { collapse: { maxItems: -1 }, items }
+				}).body
+		).toThrow('Breadcrumb maxItems');
+		expect(
+			() =>
+				render(ZBreadcrumb, {
+					props: { collapse: { keepFirst: 'yes' } as never, items }
+				}).body
+		).toThrow('Breadcrumb keepFirst');
 	});
 });

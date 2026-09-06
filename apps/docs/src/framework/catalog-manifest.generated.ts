@@ -122,6 +122,55 @@ export const componentCatalogManifest = Object.freeze([
 		publicComponentCount: 1
 	},
 	{
+		id: 'overflow-list',
+		name: 'ZOverflowList',
+		category: 'layout',
+		summary: '用真实CSS布局尺寸折叠集合，保留唯一item DOM、逻辑顺序、固定项目和可访问的溢出入口。',
+		status: 'experimental',
+		keywords: [],
+		profiles: ['primitive'],
+		capabilities: [
+			'basic-render',
+			'composition',
+			'native-props',
+			'variants-and-states',
+			'rtl',
+			'keyboard'
+		],
+		demoCount: 4,
+		publicComponentCount: 1
+	},
+	{
+		id: 'app-shell',
+		name: 'ZAppShell',
+		category: 'layout',
+		summary:
+			'原生区域的CSS Grid应用壳：通过响应式轨道完成侧栏折叠和内容offset，明确main/root唯一滚动owner，并保留调用方的内容、路由与交互所有权。',
+		status: 'experimental',
+		keywords: [
+			'app shell',
+			'application layout',
+			'header',
+			'navbar',
+			'aside',
+			'footer',
+			'scroll',
+			'responsive',
+			'rtl'
+		],
+		profiles: ['primitive'],
+		capabilities: [
+			'basic-render',
+			'composition',
+			'native-props',
+			'ssr',
+			'rtl',
+			'variants-and-states'
+		],
+		demoCount: 4,
+		publicComponentCount: 1
+	},
+	{
 		id: 'center',
 		name: 'ZCenter',
 		category: 'layout',
@@ -228,7 +277,7 @@ export const componentCatalogManifest = Object.freeze([
 		name: 'ZBreadcrumb',
 		category: 'navigation',
 		summary:
-			'生产Breadcrumb保持具名nav/ol/li、typed key、真实路由链接、唯一当前文本、装饰分隔符和窄屏/RTL自然换行；首版不测量或隐藏长路径。',
+			'生产Breadcrumb保持具名nav/ol/li、typed key、真实路由链接、唯一当前文本、可访问的折叠祖先入口和窄屏/RTL自然换行。',
 		status: 'experimental',
 		keywords: ['breadcrumb', 'navigation', 'nav', 'ol', 'li', 'aria-current', 'typed key', 'rtl'],
 		profiles: ['collection'],
@@ -242,7 +291,7 @@ export const componentCatalogManifest = Object.freeze([
 			'rtl',
 			'locale'
 		],
-		demoCount: 4,
+		demoCount: 5,
 		publicComponentCount: 1
 	},
 	{

@@ -61,6 +61,8 @@ import { transferDoc } from '../content/components/input/transfer/doc.js';
 import { stackDoc } from '../content/components/layout/stack/doc.js';
 import { gridDoc } from '../content/components/layout/grid/doc.js';
 import { groupDoc } from '../content/components/layout/group/doc.js';
+import { overflowListDoc } from '../content/components/layout/overflow-list/doc.js';
+import { appShellDoc } from '../content/components/layout/app-shell/doc.js';
 import { centerDoc } from '../content/components/layout/center/doc.js';
 import { spacerDoc } from '../content/components/layout/spacer/doc.js';
 import { scrollAreaDoc } from '../content/components/layout/scroll-area/doc.js';
@@ -104,6 +106,8 @@ export const componentDocs = Object.freeze([
 	stackDoc,
 	gridDoc,
 	groupDoc,
+	overflowListDoc,
+	appShellDoc,
 	centerDoc,
 	spacerDoc,
 	scrollAreaDoc,

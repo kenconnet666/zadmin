@@ -46,8 +46,12 @@ it('reports original native scroll events and makes reduced-motion commands imme
 it('keeps browser RTL scrollLeft semantics rather than changing offsets to positive numbers', async () => {
 	render(ScrollAreaFixture);
 	const viewport = element('scroll-rtl');
+	const providerViewport = element('scroll-provider-rtl');
 	expect(getComputedStyle(viewport).direction).toBe('rtl');
+	expect(getComputedStyle(providerViewport).direction).toBe('rtl');
 	expect(viewport.scrollLeft).toBe(0);
 	viewport.scrollTo({ left: -100, behavior: 'instant' });
 	await expect.poll(() => viewport.scrollLeft).toBe(-100);
+	providerViewport.scrollTo({ left: -100, behavior: 'instant' });
+	await expect.poll(() => providerViewport.scrollLeft).toBe(-100);
 });

@@ -1480,6 +1480,16 @@
 			"fallbackPropNames": []
 		},
 		{
+			"id": "app-shell",
+			"name": "ZAppShell",
+			"source": "ui/zui/src/components/layout/ZAppShell.svelte",
+			"declaredPropCount": 19,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
 			"id": "aspect-ratio",
 			"name": "ZAspectRatio",
 			"source": "ui/zui/src/components/layout/ZAspectRatio.svelte",
@@ -1540,6 +1550,25 @@
 			"fallbackPropNames": []
 		},
 		{
+			"id": "overflow-list",
+			"name": "ZOverflowList",
+			"source": "ui/zui/src/components/layout/ZOverflowList.svelte",
+			"declaredPropCount": 16,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": [],
+			"opaqueStructuredProps": [
+				{
+					"path": "items",
+					"kind": "caller-generic"
+				}
+			],
+			"opaqueByKind": {
+				"caller-generic": 1
+			}
+		},
+		{
 			"id": "scroll-area",
 			"name": "ZScrollArea",
 			"source": "ui/zui/src/components/layout/ZScrollArea.svelte",
@@ -1583,7 +1612,7 @@
 			"id": "breadcrumb",
 			"name": "ZBreadcrumb",
 			"source": "ui/zui/src/components/navigation/ZBreadcrumb.svelte",
-			"declaredPropCount": 4,
+			"declaredPropCount": 5,
 			"metadataGapPropCount": 0,
 			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
@@ -1645,13 +1674,13 @@
 		"maxMetadataGapProps": 0
 	},
 	"totals": {
-		"components": 150,
-		"declaredProps": 1852,
+		"components": 152,
+		"declaredProps": 1888,
 		"metadataGapProps": 0,
 		"fallbackProps": 0,
-		"opaqueStructuredProps": 8,
+		"opaqueStructuredProps": 9,
 		"opaqueByKind": {
-			"caller-generic": 3,
+			"caller-generic": 4,
 			"dynamic-record": 2,
 			"external-descriptor": 2,
 			"external-protocol": 1
