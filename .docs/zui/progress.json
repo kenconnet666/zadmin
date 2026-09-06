@@ -5,35 +5,35 @@
 		"version": "0.1.0"
 	},
 	"api": {
-		"components": 145,
-		"declaredProps": 1809,
+		"components": 150,
+		"declaredProps": 1852,
 		"metadataGapProps": 0,
 		"fallbackProps": 0
 	},
 	"maturity": {
-		"Declared": 145,
-		"Authorable": 145,
-		"ContractVerified": 145,
-		"RuntimeImplemented": 145,
-		"BrowserBehaviorVerified": 143,
-		"VisuallyVerified": 145,
+		"Declared": 150,
+		"Authorable": 150,
+		"ContractVerified": 150,
+		"RuntimeImplemented": 150,
+		"BrowserBehaviorVerified": 147,
+		"VisuallyVerified": 150,
 		"DesktopVerified": 0,
-		"ProductionVerified": 143,
+		"ProductionVerified": 148,
 		"statuses": {
-			"experimental": 4,
+			"experimental": 9,
 			"stable": 141
 		}
 	},
 	"stability": {
 		"stableCompliant": 141,
 		"stableViolations": 0,
-		"promotionEligibleExperimental": 2
+		"promotionEligibleExperimental": 6
 	},
 	"docs": {
 		"routes": {
-			"componentCount": 82,
+			"componentCount": 87,
 			"guideCount": 9,
-			"totalCount": 92
+			"totalCount": 97
 		},
 		"deployed": false
 	},
@@ -70,12 +70,12 @@
 		},
 		{
 			"id": "stable-promotion",
-			"remaining": 2,
+			"remaining": 6,
 			"description": "逐项审查已满足门禁的experimental组件；禁止自动批量晋级。"
 		},
 		{
 			"id": "desktop-evidence",
-			"remaining": 145,
+			"remaining": 150,
 			"description": "建立组件级WebView2/Desktop证据后再提升DesktopVerified。"
 		},
 		{

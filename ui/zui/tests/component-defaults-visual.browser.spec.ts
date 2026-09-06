@@ -1,5 +1,6 @@
 import { tick } from 'svelte';
 import { describe, expect, it } from 'vitest';
+import { page } from 'vitest/browser';
 import { mount, unmount } from './browser-lifecycle.js';
 import ExtendedComponentDefaultsFixture from './ExtendedComponentDefaultsFixture.svelte';
 
@@ -94,29 +95,40 @@ describe('expanded visual component defaults', () => {
 	});
 
 	it('keeps defaults reactive across Portal while explicit surface sizes remain authoritative', async () => {
-		for (const explicitOverlaySize of [undefined, 'small'] as const) {
-			const host = target();
-			const component = mount(ExtendedComponentDefaultsFixture, {
-				target: host,
-				props: { explicitOverlaySize }
-			});
-			await tick();
-			component.showSurface('dialog');
-			await tick();
-			expect(element('defaults-dialog').parentElement).toBe(document.body);
-			expect(element('defaults-dialog').getBoundingClientRect().width).toBe(400);
-			component.changeDefaults();
-			await tick();
-			expect(element('defaults-dialog').dataset.state).toBe('open');
-			expect(element('defaults-dialog').getBoundingClientRect().width).toBe(
-				explicitOverlaySize ? 400 : 768
-			);
-			component.showSurface('tooltip');
-			await tick();
-			expect(element('defaults-tooltip').parentElement).toBe(document.body);
-			expect(style('defaults-tooltip').fontSize).toBe(explicitOverlaySize ? '12px' : '11px');
-			await unmount(component);
-			host.remove();
+		const originalViewport = { width: window.innerWidth, height: window.innerHeight };
+		try {
+			// Dialog uses min(90% of the viewport, size token); both caps must fit for this defaults test.
+			await page.viewport(1024, 768);
+			for (const explicitOverlaySize of [undefined, 'small'] as const) {
+				const host = target();
+				const component = mount(ExtendedComponentDefaultsFixture, {
+					target: host,
+					props: { explicitOverlaySize }
+				});
+				await tick();
+				component.showSurface('dialog');
+				await tick();
+				expect(element('defaults-dialog').parentElement).toBe(document.body);
+				expect(element('defaults-dialog').dataset.reducedMotion).toBe('true');
+				expect(style('defaults-dialog').transitionDuration).toBe('0s');
+				expect(style('defaults-dialog').opacity).toBe('1');
+				expect(new DOMMatrixReadOnly(style('defaults-dialog').transform).a).toBe(1);
+				expect(element('defaults-dialog').getBoundingClientRect().width).toBe(400);
+				component.changeDefaults();
+				await tick();
+				expect(element('defaults-dialog').dataset.state).toBe('open');
+				expect(element('defaults-dialog').getBoundingClientRect().width).toBe(
+					explicitOverlaySize ? 400 : 768
+				);
+				component.showSurface('tooltip');
+				await tick();
+				expect(element('defaults-tooltip').parentElement).toBe(document.body);
+				expect(style('defaults-tooltip').fontSize).toBe(explicitOverlaySize ? '12px' : '11px');
+				await unmount(component);
+				host.remove();
+			}
+		} finally {
+			await page.viewport(originalViewport.width, originalViewport.height);
 		}
 	});
 });

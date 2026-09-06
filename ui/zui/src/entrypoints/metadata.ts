@@ -138,6 +138,11 @@ export { zuiMetadata as commandMetadata } from '../components/navigation/ZComman
 export { zuiMetadata as commandPaletteMetadata } from '../components/navigation/ZCommandPalette.svelte';
 export { zuiMetadata as stackMetadata } from '../components/layout/ZStack.svelte';
 export { zuiMetadata as gridMetadata } from '../components/layout/ZGrid.svelte';
+export { zuiMetadata as groupMetadata } from '../components/layout/ZGroup.svelte';
+export { zuiMetadata as centerMetadata } from '../components/layout/ZCenter.svelte';
+export { zuiMetadata as spacerMetadata } from '../components/layout/ZSpacer.svelte';
+export { zuiMetadata as scrollAreaMetadata } from '../components/layout/ZScrollArea.svelte';
+export { zuiMetadata as stepsMetadata } from '../components/navigation/ZSteps.svelte';
 export { zuiMetadata as gridItemMetadata } from '../components/layout/ZGridItem.svelte';
 export { zuiMetadata as simpleGridMetadata } from '../components/layout/ZSimpleGrid.svelte';
 export { zuiMetadata as breadcrumbMetadata } from '../components/navigation/ZBreadcrumb.svelte';

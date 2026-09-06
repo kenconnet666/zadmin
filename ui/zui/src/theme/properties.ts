@@ -201,13 +201,36 @@ export const PROPERTY_DEFINITIONS = {
 	inlineSize: { token: 'indicatorSize', tokenUnit: 'px', units: ['length', 'percent'] },
 	listStyleType: { keywords: { none: 'none', decimal: 'decimal', disc: 'disc' } },
 	gridColumn: { keywords: { auto: 'auto' } },
+	gridAutoColumns: {
+		keywords: { auto: 'auto', minContent: 'min-content', maxContent: 'max-content' },
+		units: ['length', 'percent', 'fraction']
+	},
+	gridAutoRows: {
+		keywords: { auto: 'auto', minContent: 'min-content', maxContent: 'max-content' },
+		units: ['length', 'percent', 'fraction']
+	},
+	gridAutoFlow: {
+		keywords: {
+			row: 'row',
+			column: 'column',
+			dense: 'dense',
+			rowDense: 'row dense',
+			columnDense: 'column dense'
+		}
+	},
 	gridColumnStart: { keywords: { auto: 'auto' } },
 	gridColumnEnd: { keywords: { auto: 'auto' } },
 	gridRow: { keywords: { auto: 'auto' } },
 	gridRowStart: { keywords: { auto: 'auto' } },
 	gridRowEnd: { keywords: { auto: 'auto' } },
-	gridTemplateColumns: {},
-	gridTemplateRows: {},
+	gridTemplateColumns: {
+		keywords: { none: 'none', subgrid: 'subgrid' },
+		units: ['length', 'percent', 'fraction']
+	},
+	gridTemplateRows: {
+		keywords: { none: 'none', subgrid: 'subgrid' },
+		units: ['length', 'percent', 'fraction']
+	},
 	height: {
 		keywords: {
 			auto: 'auto',
@@ -304,6 +327,8 @@ export const PROPERTY_DEFINITIONS = {
 	minHeight: { token: 'size', tokenUnit: 'px', units: ['length', 'percent'] },
 	minWidth: { token: 'size', tokenUnit: 'px', units: ['length', 'percent'] },
 	minInlineSize: { token: 'size', tokenUnit: 'px', units: ['length', 'percent'] },
+	minBlockSize: { token: 'size', tokenUnit: 'px', units: ['length', 'percent'] },
+	maxBlockSize: { token: 'size', tokenUnit: 'px', units: ['length', 'percent'] },
 	objectFit: {
 		keywords: {
 			contain: 'contain',
@@ -331,6 +356,7 @@ export const PROPERTY_DEFINITIONS = {
 	overflowAnchor: { keywords: { auto: 'auto', none: 'none' } },
 	overflowX: { keywords: OVERFLOW },
 	overflowY: { keywords: OVERFLOW },
+	overscrollBehavior: { keywords: { auto: 'auto', contain: 'contain', none: 'none' } },
 	padding: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
 	paddingBlock: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
 	paddingBlockEnd: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
@@ -360,7 +386,11 @@ export const PROPERTY_DEFINITIONS = {
 	},
 	right: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
 	scrollMarginTop: { token: 'space', tokenUnit: 'px', units: ['length'] },
-	scrollbarGutter: { keywords: { auto: 'auto', stable: 'stable' } },
+	scrollBehavior: { keywords: { auto: 'auto', smooth: 'smooth' } },
+	scrollbarColor: { keywords: { auto: 'auto' } },
+	scrollbarGutter: {
+		keywords: { auto: 'auto', stable: 'stable', stableBothEdges: 'stable both-edges' }
+	},
 	scrollbarWidth: { keywords: { auto: 'auto', none: 'none', thin: 'thin' } },
 	rowGap: { token: 'space', tokenUnit: 'px', units: ['length', 'percent'] },
 	stroke: { keywords: { ...COLOR_KEYWORDS, none: 'none' }, token: 'color' },

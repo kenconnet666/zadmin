@@ -10340,6 +10340,32 @@ export const aspectRatioApiFacts = {
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
+export const centerApiFacts = {
+	declaration: 'ZCenterProps',
+	id: 'center',
+	inheritedFrom: ['HTMLAttributes<HTMLDivElement>'],
+	name: 'ZCenter',
+	props: [
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'inline',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null'
+		}
+	],
+	source: 'ui/zui/src/components/layout/ZCenter.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
 export const containerApiFacts = {
 	declaration: 'ZContainerProps',
 	id: 'container',
@@ -10483,13 +10509,166 @@ export const gridItemApiFacts = {
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
+export const groupApiFacts = {
+	declaration: 'ZGroupProps',
+	id: 'group',
+	inheritedFrom: ['ZStackProps'],
+	name: 'ZGroup',
+	props: [
+		{
+			name: 'itemSizing',
+			required: false,
+			type: "'auto' | 'equal' | 'grow'"
+		},
+		{
+			name: 'preventGrowOverflow',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'align',
+			required: false,
+			type: 'ResponsiveValue<ZStackAlignment>',
+			inheritedFrom: 'ZStackProps'
+		},
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet',
+			inheritedFrom: 'ZStackProps'
+		},
+		{
+			name: 'gap',
+			required: false,
+			type: 'ResponsiveValue<ZLayoutSpacing>',
+			inheritedFrom: 'ZStackProps'
+		},
+		{
+			name: 'rowGap',
+			required: false,
+			type: 'ResponsiveValue<ZLayoutSpacing>',
+			inheritedFrom: 'ZStackProps'
+		},
+		{
+			name: 'columnGap',
+			required: false,
+			type: 'ResponsiveValue<ZLayoutSpacing>',
+			inheritedFrom: 'ZStackProps'
+		},
+		{
+			name: 'query',
+			required: false,
+			type: 'ResponsiveQuery',
+			inheritedFrom: 'ZStackProps'
+		},
+		{
+			name: 'justify',
+			required: false,
+			type: 'ResponsiveValue<ZStackJustification>',
+			inheritedFrom: 'ZStackProps'
+		},
+		{
+			name: 'wrap',
+			required: false,
+			type: "ResponsiveValue<boolean | 'reverse'>",
+			inheritedFrom: 'ZStackProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null',
+			inheritedFrom: 'ZStackProps'
+		}
+	],
+	source: 'ui/zui/src/components/layout/ZGroup.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
+export const scrollAreaApiFacts = {
+	declaration: 'ZScrollAreaProps',
+	id: 'scroll-area',
+	inheritedFrom: ['HTMLAttributes<HTMLDivElement>'],
+	name: 'ZScrollArea',
+	props: [
+		{
+			name: 'children',
+			required: false,
+			type: 'Snippet'
+		},
+		{
+			name: 'axis',
+			required: false,
+			type: "'x' | 'y' | 'both'"
+		},
+		{
+			name: 'height',
+			required: false,
+			type: 'ResponsiveValue<number | string>'
+		},
+		{
+			name: 'minHeight',
+			required: false,
+			type: 'ResponsiveValue<number | string>'
+		},
+		{
+			name: 'maxHeight',
+			required: false,
+			type: 'ResponsiveValue<number | string>'
+		},
+		{
+			name: 'query',
+			required: false,
+			type: 'ResponsiveQuery'
+		},
+		{
+			name: 'scrollbarWidth',
+			required: false,
+			type: "'auto' | 'thin' | 'none'"
+		},
+		{
+			name: 'scrollbarGutter',
+			required: false,
+			type: "'auto' | 'stable' | 'stable both-edges'"
+		},
+		{
+			name: 'scrollbarStyle',
+			required: false,
+			type: "'native' | 'themed'"
+		},
+		{
+			name: 'overscroll',
+			required: false,
+			type: "'auto' | 'contain' | 'none'"
+		},
+		{
+			name: 'scrollBehavior',
+			required: false,
+			type: "'auto' | 'smooth'"
+		},
+		{
+			name: 'onScrollPositionChange',
+			required: false,
+			type: '(position: ScrollAreaPosition) => void'
+		},
+		{
+			name: 'controller',
+			required: false,
+			type: 'ZScrollAreaController | null'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null'
+		}
+	],
+	source: 'ui/zui/src/components/layout/ZScrollArea.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
 export const simpleGridApiFacts = {
 	declaration: 'ZSimpleGridProps',
 	id: 'simple-grid',
-	inheritedFrom: [
-		'HTMLAttributes<HTMLDivElement>',
-		'ZSimpleGridColumnsProps | ZSimpleGridMinItemWidthProps'
-	],
+	inheritedFrom: ['HTMLAttributes<HTMLDivElement>'],
 	name: 'ZSimpleGrid',
 	props: [
 		{
@@ -10503,9 +10682,19 @@ export const simpleGridApiFacts = {
 			type: 'ResponsiveValue<ZLayoutSpacing>'
 		},
 		{
+			name: 'columns',
+			required: false,
+			type: 'ResponsiveValue<number>'
+		},
+		{
 			name: 'gap',
 			required: false,
 			type: 'ResponsiveValue<ZLayoutSpacing>'
+		},
+		{
+			name: 'minItemWidth',
+			required: false,
+			type: 'ResponsiveValue<ZSimpleGridMinItemWidth>'
 		},
 		{
 			name: 'query',
@@ -10521,21 +10710,40 @@ export const simpleGridApiFacts = {
 			name: 'ref',
 			required: false,
 			type: 'HTMLDivElement | null'
-		},
-		{
-			name: 'columns',
-			required: false,
-			type: 'ResponsiveValue<number>',
-			inheritedFrom: 'ZSimpleGridColumnsProps'
-		},
-		{
-			name: 'minItemWidth',
-			required: false,
-			type: 'ResponsiveValue<ZSimpleGridMinItemWidth>',
-			inheritedFrom: 'ZSimpleGridColumnsProps'
 		}
 	],
 	source: 'ui/zui/src/components/layout/ZSimpleGrid.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
+export const spacerApiFacts = {
+	declaration: 'ZSpacerProps',
+	id: 'spacer',
+	inheritedFrom: ['HTMLAttributes<HTMLDivElement>'],
+	name: 'ZSpacer',
+	props: [
+		{
+			name: 'blockSize',
+			required: false,
+			type: 'ResponsiveValue<ZSpacerSize>'
+		},
+		{
+			name: 'inlineSize',
+			required: false,
+			type: 'ResponsiveValue<ZSpacerSize>'
+		},
+		{
+			name: 'query',
+			required: false,
+			type: 'ResponsiveQuery'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null'
+		}
+	],
+	source: 'ui/zui/src/components/layout/ZSpacer.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
@@ -11001,6 +11209,72 @@ export const paginationApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/navigation/ZPagination.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
+export const stepsApiFacts = {
+	declaration: 'ZStepsProps',
+	id: 'steps',
+	inheritedFrom: ['HTMLAttributes<HTMLOListElement>'],
+	name: 'ZSteps',
+	props: [
+		{
+			name: 'items',
+			required: true,
+			type: 'readonly StepsItem<TKey>[]'
+		},
+		{
+			name: 'currentKey',
+			required: false,
+			type: 'TKey | null'
+		},
+		{
+			name: 'defaultCurrentKey',
+			required: false,
+			type: 'TKey | null'
+		},
+		{
+			name: 'onStepRequest',
+			required: false,
+			type: '(event: StepRequestEvent<TKey>) => void'
+		},
+		{
+			name: 'onCurrentKeyChange',
+			required: false,
+			type: '(key: TKey | null) => void'
+		},
+		{
+			name: 'orientation',
+			required: false,
+			type: "'horizontal' | 'vertical'"
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
+			name: 'indicator',
+			required: false,
+			type: 'Snippet<[item: StepsItem<TKey>, context: StepsItemContext]>'
+		},
+		{
+			name: 'title',
+			required: false,
+			type: 'Snippet<[item: StepsItem<TKey>, context: StepsItemContext]>'
+		},
+		{
+			name: 'description',
+			required: false,
+			type: 'Snippet<[item: StepsItem<TKey>, context: StepsItemContext]>'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLOListElement | null'
+		}
+	],
+	source: 'ui/zui/src/components/navigation/ZSteps.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 

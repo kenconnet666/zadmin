@@ -1,10 +1,10 @@
 {
 	"schemaVersion": 2,
 	"source": {
-		"metadataComponents": 145,
-		"documentationPages": 82,
-		"contractComponents": 145,
-		"testFiles": 201
+		"metadataComponents": 150,
+		"documentationPages": 87,
+		"contractComponents": 150,
+		"testFiles": 211
 	},
 	"stageNames": [
 		"Declared",
@@ -18,14 +18,14 @@
 	],
 	"evidenceScope": "Static inventory of authored test contracts, not test execution results or whole-component visual acceptance. Stage names are retained for compatibility; consult commit-matched CI and page-level review separately.",
 	"summary": {
-		"Declared": 145,
-		"Authorable": 145,
-		"ContractVerified": 145,
-		"RuntimeImplemented": 145,
-		"BrowserBehaviorVerified": 143,
-		"VisuallyVerified": 145,
+		"Declared": 150,
+		"Authorable": 150,
+		"ContractVerified": 150,
+		"RuntimeImplemented": 150,
+		"BrowserBehaviorVerified": 147,
+		"VisuallyVerified": 150,
 		"DesktopVerified": 0,
-		"ProductionVerified": 143
+		"ProductionVerified": 148
 	},
 	"components": [
 		{
@@ -13436,6 +13436,99 @@
 			]
 		},
 		{
+			"id": "center",
+			"name": "ZCenter",
+			"category": "layout",
+			"family": null,
+			"status": "experimental",
+			"source": "ui/zui/src/components/layout/ZCenter.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": true,
+				"VisuallyVerified": true,
+				"DesktopVerified": false,
+				"ProductionVerified": true
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/layout/ZCenter.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZCenter"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "7af5ba543cb36b04e550b67f72f9f979c92fa9c43482c05aa32e40257f344eaf API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/layout/ZCenter.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [
+					{
+						"path": "ui/zui/tests/group-center-spacer-production.browser.spec.ts",
+						"detail": "ZCenter browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/GroupCenterSpacerFixture.svelte",
+						"detail": "ZCenter explicit rendered fixture usage"
+					}
+				],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/group-center-spacer-production.browser.spec.ts",
+						"detail": "ZCenter authored visual contract: centers both axes and applies fixed or theme spacer dimensions without changing parent gap (line 36); requires browser execution and page-level review"
+					},
+					{
+						"path": "ui/zui/tests/GroupCenterSpacerFixture.svelte",
+						"detail": "ZCenter explicit rendered fixture usage"
+					}
+				],
+				"DesktopVerified": [],
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/group-center-spacer-production.spec.ts",
+						"detail": "ZCenter production assertions"
+					},
+					{
+						"path": "ui/zui/tests/group-center-spacer-production.browser.spec.ts",
+						"detail": "ZCenter production assertions"
+					},
+					{
+						"path": "ui/zui/tests/GroupCenterSpacerFixture.svelte",
+						"detail": "ZCenter explicit rendered fixture usage"
+					}
+				]
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/layout/center/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/group-center-spacer-production.spec.ts",
+					"detail": "ZCenter SSR assertions"
+				}
+			]
+		},
+		{
 			"id": "container",
 			"name": "ZContainer",
 			"category": "layout",
@@ -13582,7 +13675,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/responsive-grid.browser.spec.ts",
-						"detail": "ZGrid authored visual contract: coordinates native container tracks, spans and axis overrides while resizing without JS measurement (line 6); requires browser execution and page-level review"
+						"detail": "ZGrid authored visual contract: coordinates native container tracks, spans and axis overrides while resizing without JS measurement (line 17); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/ResponsiveGridFixture.svelte",
@@ -13648,7 +13741,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/responsive-grid.browser.spec.ts",
-						"detail": "ZGridItem authored visual contract: coordinates native container tracks, spans and axis overrides while resizing without JS measurement (line 6); requires browser execution and page-level review"
+						"detail": "ZGridItem authored visual contract: coordinates native container tracks, spans and axis overrides while resizing without JS measurement (line 17); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/ResponsiveGridFixture.svelte",
@@ -13663,6 +13756,175 @@
 				"detail": "family-owned documentation module (grid)"
 			},
 			"ssrEvidence": []
+		},
+		{
+			"id": "group",
+			"name": "ZGroup",
+			"category": "layout",
+			"family": null,
+			"status": "experimental",
+			"source": "ui/zui/src/components/layout/ZGroup.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": true,
+				"VisuallyVerified": true,
+				"DesktopVerified": false,
+				"ProductionVerified": true
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/layout/ZGroup.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZGroup"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "8696525fd20a6ddefe80aa7cd4cd4f97b8eb7310ab8c070d034e47b96efed179 API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/layout/ZGroup.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [
+					{
+						"path": "ui/zui/tests/group-center-spacer-production.browser.spec.ts",
+						"detail": "ZGroup browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/GroupCenterSpacerFixture.svelte",
+						"detail": "ZGroup explicit rendered fixture usage"
+					}
+				],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/group-center-spacer-production.browser.spec.ts",
+						"detail": "ZGroup authored visual contract: keeps Group children in DOM order with declared grow, equal-width and shrink boundaries (line 8); requires browser execution and page-level review"
+					},
+					{
+						"path": "ui/zui/tests/GroupCenterSpacerFixture.svelte",
+						"detail": "ZGroup explicit rendered fixture usage"
+					}
+				],
+				"DesktopVerified": [],
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/group-center-spacer-production.spec.ts",
+						"detail": "ZGroup production assertions"
+					},
+					{
+						"path": "ui/zui/tests/group-center-spacer-production.browser.spec.ts",
+						"detail": "ZGroup production assertions"
+					},
+					{
+						"path": "ui/zui/tests/GroupCenterSpacerFixture.svelte",
+						"detail": "ZGroup explicit rendered fixture usage"
+					}
+				]
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/layout/group/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/group-center-spacer-production.spec.ts",
+					"detail": "ZGroup SSR assertions"
+				}
+			]
+		},
+		{
+			"id": "scroll-area",
+			"name": "ZScrollArea",
+			"category": "layout",
+			"family": null,
+			"status": "experimental",
+			"source": "ui/zui/src/components/layout/ZScrollArea.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": false,
+				"VisuallyVerified": true,
+				"DesktopVerified": false,
+				"ProductionVerified": true
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/layout/ZScrollArea.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZScrollArea"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "fb6c5ea5a91d303c91dc6fc4dcd4014c4ac854346ca7b43043fdc816003465ee API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/layout/ZScrollArea.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/scroll-area-production.browser.spec.ts",
+						"detail": "ZScrollArea authored visual contract: uses one named native viewport with real overflow geometry and an autosize maximum (line 8); requires browser execution and page-level review"
+					},
+					{
+						"path": "ui/zui/tests/ScrollAreaFixture.svelte",
+						"detail": "ZScrollArea explicit rendered fixture usage"
+					}
+				],
+				"DesktopVerified": [],
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/scroll-area-production.spec.ts",
+						"detail": "ZScrollArea production assertions"
+					}
+				]
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/layout/scroll-area/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/scroll-area-production.spec.ts",
+					"detail": "ZScrollArea SSR assertions"
+				}
+			]
 		},
 		{
 			"id": "simple-grid",
@@ -13701,7 +13963,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "e91d00f73db30c3ba498ec93e0f3475599f87c2129d072f3ef66b6921e81eb74 API snapshot entry"
+						"detail": "ec4e1b1a4e93035490f9e755c7a4566ae3217071b7f076b0f92e204c1d14c736 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -13754,6 +14016,99 @@
 				{
 					"path": "ui/zui/tests/simple-grid-production.spec.ts",
 					"detail": "ZSimpleGrid SSR assertions"
+				}
+			]
+		},
+		{
+			"id": "spacer",
+			"name": "ZSpacer",
+			"category": "layout",
+			"family": null,
+			"status": "experimental",
+			"source": "ui/zui/src/components/layout/ZSpacer.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": true,
+				"VisuallyVerified": true,
+				"DesktopVerified": false,
+				"ProductionVerified": true
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/layout/ZSpacer.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZSpacer"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "85b8e23617367a70acfc3573a58521e6ad3e3eff2d7ee2fd56c70db8de2350b6 API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/layout/ZSpacer.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [
+					{
+						"path": "ui/zui/tests/group-center-spacer-production.browser.spec.ts",
+						"detail": "ZSpacer browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/GroupCenterSpacerFixture.svelte",
+						"detail": "ZSpacer explicit rendered fixture usage"
+					}
+				],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/group-center-spacer-production.browser.spec.ts",
+						"detail": "ZSpacer authored visual contract: centers both axes and applies fixed or theme spacer dimensions without changing parent gap (line 36); requires browser execution and page-level review"
+					},
+					{
+						"path": "ui/zui/tests/GroupCenterSpacerFixture.svelte",
+						"detail": "ZSpacer explicit rendered fixture usage"
+					}
+				],
+				"DesktopVerified": [],
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/group-center-spacer-production.spec.ts",
+						"detail": "ZSpacer production assertions"
+					},
+					{
+						"path": "ui/zui/tests/group-center-spacer-production.browser.spec.ts",
+						"detail": "ZSpacer production assertions"
+					},
+					{
+						"path": "ui/zui/tests/GroupCenterSpacerFixture.svelte",
+						"detail": "ZSpacer explicit rendered fixture usage"
+					}
+				]
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/layout/spacer/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/group-center-spacer-production.spec.ts",
+					"detail": "ZSpacer SSR assertions"
 				}
 			]
 		},
@@ -14211,6 +14566,127 @@
 				{
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZPagination SSR assertions"
+				}
+			]
+		},
+		{
+			"id": "steps",
+			"name": "ZSteps",
+			"category": "navigation",
+			"family": null,
+			"status": "experimental",
+			"source": "ui/zui/src/components/navigation/ZSteps.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": true,
+				"VisuallyVerified": true,
+				"DesktopVerified": false,
+				"ProductionVerified": true
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/navigation/ZSteps.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZSteps"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "a80ecb03cd0b768ec338bda1eaeacf57263c2e91a80c28aa3c005e2a2c1f595d API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/navigation/ZSteps.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [
+					{
+						"path": "ui/zui/tests/steps-production.browser.spec.ts",
+						"detail": "ZSteps browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/StepsFixture.svelte",
+						"detail": "ZSteps explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/StepsLongFixture.svelte",
+						"detail": "ZSteps explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/StepsUncontrolledFixture.svelte",
+						"detail": "ZSteps explicit rendered fixture usage"
+					}
+				],
+				"VisuallyVerified": [
+					{
+						"path": "ui/zui/tests/steps-production.browser.spec.ts",
+						"detail": "ZSteps authored visual contract: projects %s marker, typography and theme into real geometry (line 159); requires browser execution and page-level review"
+					},
+					{
+						"path": "ui/zui/tests/steps-production.browser.spec.ts",
+						"detail": "ZSteps authored visual contract: wraps long %s titles and descriptions in narrow RTL owners (line 198); requires browser execution and page-level review"
+					},
+					{
+						"path": "ui/zui/tests/StepsFixture.svelte",
+						"detail": "ZSteps explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/StepsLongFixture.svelte",
+						"detail": "ZSteps explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/StepsUncontrolledFixture.svelte",
+						"detail": "ZSteps explicit rendered fixture usage"
+					}
+				],
+				"DesktopVerified": [],
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/steps-production.spec.ts",
+						"detail": "ZSteps production assertions"
+					},
+					{
+						"path": "ui/zui/tests/steps-production.browser.spec.ts",
+						"detail": "ZSteps production assertions"
+					},
+					{
+						"path": "ui/zui/tests/StepsFixture.svelte",
+						"detail": "ZSteps explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/StepsLongFixture.svelte",
+						"detail": "ZSteps explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/StepsUncontrolledFixture.svelte",
+						"detail": "ZSteps explicit rendered fixture usage"
+					}
+				]
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/navigation/steps/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/steps-production.spec.ts",
+					"detail": "ZSteps SSR assertions"
 				}
 			]
 		},

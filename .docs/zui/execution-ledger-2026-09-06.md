@@ -11,6 +11,8 @@
 
 ## E1：响应式布局与默认值基础，导航首个消费者
 
+已提交并推送：`424128d6fd5c6e73cbe5a99bc50b8845591bcf0f`。推送后继续E2，未等待新CI。
+
 对应总纲 W1/F2/F4、W2/N2/N3 与 V1–V4。当前目录为 82 个家族、145 个公开组件；新增能力尚待远程完整验收，metadata 保持 experimental/unreleased。
 
 | 工作               | 已落实内容                                                                                                                            | 仍需后续扩展                                                  |
@@ -35,9 +37,23 @@
 - 格式失败已修复；遗留 modal Popover 终态断言仍待继续定位，最新失败为 connected/open 但 opacity≈0.601663，另有浏览器连接中断。不能以改宽松断言或忽略引擎关闭缺陷。
 - 已为下一次CI加入有上限且只在失败时输出的动画时间线诊断，保留原poll预算、严格opacity和几何断言，详见[定向诊断](./popover-ci-diagnosis-2026-09-06.md)。
 
-## 后续直接推进
+## E2：布局组合、原生滚动与流程步骤
 
-1. N2 布局便利组合与 ScrollArea/OverflowList 基础；N3 Steps/Toolbar/NavigationMenu。
+当前源码新增 Group/Center/Spacer/ScrollArea/Steps，目录扩至87族/150公开组件，均为experimental/unreleased。
+
+- Group以`itemSizing=auto/grow/equal`替代互斥布尔；复用Stack并让原始style/ICSS carrier持续透传，不再保存会过期的初始style。
+- Spacer收窄为空白布局部件；SimpleGrid和Spacer共用CSS长度表达式格式处理，支持主题、数学函数与变量，不用JS换算CSS相对单位。
+- ScrollArea保持单一原生viewport、可聚焦具名区域、原始RTL偏移、双轴/高度约束、标准scrollbar属性和controller；reduced motion下明确instant并停止原有平滑滚动。
+- Steps采用稳定泛型key、native ol/li/button/link、同步可取消请求、受控更新与实例reset；链接与按钮/被动项使用互斥类型，补locale和实例方法文档。
+- ICSS补齐逻辑小/大/动态视口与cqmin/cqmax单位、subgrid、自动网格轨道及标准滚动条/overscroll关键词与单位合同。
+- 修正Docs预览grid的固有最小宽度：统一`minmax(0, 1fr)`，避免子Demo把滚动viewport撑成1208px后被外层裁切。390px下实际viewport324px、内容1208px，水平/二维滚动留在明确示例自身。
+- 本地WebStorm局部诊断无已报告错误；实际浏览器核对了ScrollArea top=96/reduced、Steps取消→确认→reset，以及五页390px不出现页面横向溢出。完整测试执行继续交CI。
+
+E1远程反馈也并入本批：移除Breadcrumb重复类型导入；SimpleGrid改为flat Props和明确minItemWidth优先，修外部.d.ts联合类型复杂度；SSR负例读取惰性render输出的body；locale验证随继承的namespace扩展。414px默认测试视口正是Dialog372.6px和Grid未跨500px断点的原因，几何用例现明确宽/窄视口，不改生产尺寸或放宽断言。WebKit Popover改用真实用户点击后仍保留严格终态与时间线诊断，尚待CI验证；DateRangePicker另一个open/焦点失败继续单列跟进。
+
+## 下一执行批次
+
+1. OverflowList测量折叠与Breadcrumb完整祖先菜单；继续Toolbar/NavigationMenu及AppShell/Splitter。
 2. F1 状态与 F5 DOM 组合合同，真实输入和浮层消费者；现有API按六类处置表逐项处理。
 3. 输入首批与完整日期/表单集合并行展开；大能力引擎选型按[平台能力台账](./platform-capabilities-2026-09-06.md)适度采用新CSS/JS/TS/Node能力。
 

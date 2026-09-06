@@ -16,12 +16,11 @@ describe('ZSimpleGrid server contract', () => {
 		expect(body).toContain('data-mode="columns"');
 	});
 
-	it('rejects mutually exclusive tracks and invalid minimum widths during SSR', () => {
-		expect(() =>
-			render(ZSimpleGrid, { props: { columns: 2, minItemWidth: 160 } as never })
-		).toThrow('either columns or minItemWidth');
-		expect(() =>
-			render(ZSimpleGrid, { props: { minItemWidth: 'calc(10rem + var(--invalid)' } })
+	it('prioritizes minItemWidth and rejects invalid minimum widths during SSR', () => {
+		const body = render(ZSimpleGrid, { props: { columns: 2, minItemWidth: 160 } }).body;
+		expect(body).toContain('data-mode="min-item-width"');
+		expect(
+			() => render(ZSimpleGrid, { props: { minItemWidth: 'calc(10rem + var(--invalid)' } }).body
 		).toThrow('balanced CSS sizing expression');
 	});
 

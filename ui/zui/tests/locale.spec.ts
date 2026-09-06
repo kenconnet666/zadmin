@@ -25,6 +25,7 @@ describe('typed locale packs', () => {
 			numberField: { increment: 'Add amount' },
 			pagination: { label: '分页导航', page: (page) => `第${page}页` },
 			progress: { label: 'Completion' },
+			steps: { label: 'Workflow' },
 			tag: { removeTag: (value) => (value ? `Delete tag ${value}` : 'Delete tag') },
 			tagsInput: { removeTag: (value) => `Delete ${value}` },
 			time: { hourCycle: 24, minute: '分钟' },
@@ -32,7 +33,8 @@ describe('typed locale packs', () => {
 			transfer: { sourceTitle: 'Source' }
 		});
 
-		expect(pack.common).toEqual({ clear: 'Clear', close: '关闭', copy: 'Copy' });
+		expect(pack.common).toEqual({ ...enUSLocalePack.common, close: '关闭' });
+		expect(pack.steps).toEqual({ ...enUSLocalePack.steps, label: 'Workflow' });
 		expect(pack.carousel.nextSlide).toBe('Continue slides');
 		expect(pack.carousel.slidePosition('2', '5', 'Release')).toBe('2 of 5: Release');
 		expect(pack.code).toEqual({

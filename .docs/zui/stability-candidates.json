@@ -3,7 +3,7 @@
 	"summary": {
 		"stableCompliant": 141,
 		"stableViolations": 0,
-		"promotionEligibleExperimental": 2
+		"promotionEligibleExperimental": 6
 	},
 	"components": [
 		{
@@ -1357,6 +1357,16 @@
 			"ssrEvidenceCount": 2
 		},
 		{
+			"id": "center",
+			"name": "ZCenter",
+			"family": null,
+			"status": "experimental",
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
+			"docs": "apps/docs/src/content/components/layout/center/doc.ts",
+			"ssrEvidenceCount": 1
+		},
+		{
 			"id": "container",
 			"name": "ZContainer",
 			"family": null,
@@ -1387,6 +1397,26 @@
 			"ssrEvidenceCount": 0
 		},
 		{
+			"id": "group",
+			"name": "ZGroup",
+			"family": null,
+			"status": "experimental",
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
+			"docs": "apps/docs/src/content/components/layout/group/doc.ts",
+			"ssrEvidenceCount": 1
+		},
+		{
+			"id": "scroll-area",
+			"name": "ZScrollArea",
+			"family": null,
+			"status": "experimental",
+			"classification": "experimental",
+			"blockers": ["BrowserBehaviorVerified"],
+			"docs": "apps/docs/src/content/components/layout/scroll-area/doc.ts",
+			"ssrEvidenceCount": 1
+		},
+		{
 			"id": "simple-grid",
 			"name": "ZSimpleGrid",
 			"family": null,
@@ -1394,6 +1424,16 @@
 			"classification": "promotionEligibleExperimental",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/layout/simple-grid/doc.ts",
+			"ssrEvidenceCount": 1
+		},
+		{
+			"id": "spacer",
+			"name": "ZSpacer",
+			"family": null,
+			"status": "experimental",
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
+			"docs": "apps/docs/src/content/components/layout/spacer/doc.ts",
 			"ssrEvidenceCount": 1
 		},
 		{
@@ -1444,6 +1484,16 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/navigation/pagination/doc.ts",
+			"ssrEvidenceCount": 1
+		},
+		{
+			"id": "steps",
+			"name": "ZSteps",
+			"family": null,
+			"status": "experimental",
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
+			"docs": "apps/docs/src/content/components/navigation/steps/doc.ts",
 			"ssrEvidenceCount": 1
 		},
 		{

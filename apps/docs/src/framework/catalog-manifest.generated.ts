@@ -102,11 +102,105 @@ export const componentCatalogManifest = Object.freeze([
 		publicComponentCount: 2
 	},
 	{
+		id: 'group',
+		name: 'ZGroup',
+		category: 'layout',
+		summary:
+			'固定row的ZStack便利层，保留普通children顺序，提供响应式间距/对齐/换行以及唯一itemSizing轴的auto、grow、equal直接子项宽度策略。',
+		status: 'experimental',
+		keywords: ['group', 'row', 'flex', 'grow', 'equal width', 'wrap', 'responsive'],
+		profiles: ['primitive'],
+		capabilities: [
+			'basic-render',
+			'composition',
+			'native-props',
+			'variants-and-states',
+			'rtl',
+			'ssr'
+		],
+		demoCount: 3,
+		publicComponentCount: 1
+	},
+	{
+		id: 'center',
+		name: 'ZCenter',
+		category: 'layout',
+		summary: '不测量内容的原生双轴居中容器；inline只控制外部格式，不改变居中算法。',
+		status: 'experimental',
+		keywords: ['center', 'flex', 'inline flex', 'alignment', 'layout'],
+		profiles: ['primitive'],
+		capabilities: ['basic-render', 'composition', 'native-props', 'rtl'],
+		demoCount: 2,
+		publicComponentCount: 1
+	},
+	{
+		id: 'spacer',
+		name: 'ZSpacer',
+		category: 'layout',
+		summary:
+			'一个固定逻辑尺寸的普通div。它表达某一处显式留白，不会修改父布局的gap、也不充当自动弹性填充物。',
+		status: 'experimental',
+		keywords: ['spacer', 'space', 'inline size', 'block size', 'responsive', 'layout'],
+		profiles: ['primitive'],
+		capabilities: ['basic-render', 'composition', 'native-props', 'rtl', 'ssr'],
+		demoCount: 2,
+		publicComponentCount: 1
+	},
+	{
+		id: 'scroll-area',
+		name: 'ZScrollArea',
+		category: 'layout',
+		summary:
+			'单一真实div滚动节点，提供原生键盘滚动、响应式高度、标准CSS滚动条和遵从动画偏好的controller。',
+		status: 'experimental',
+		keywords: [],
+		profiles: ['primitive'],
+		capabilities: [
+			'accessible-name',
+			'basic-render',
+			'keyboard',
+			'native-props',
+			'composition',
+			'ssr',
+			'variants-and-states',
+			'rtl'
+		],
+		demoCount: 5,
+		publicComponentCount: 1
+	},
+	{
+		id: 'steps',
+		name: 'ZSteps',
+		category: 'navigation',
+		summary:
+			'流程导航保留真实ol/li和原生按钮/链接。currentKey表达当前位置，items.status表达业务完成或错误；请求与完成时机由调用方决定。',
+		status: 'experimental',
+		keywords: ['steps', 'stepper', 'workflow', 'aria-current', 'request', 'typed key', 'rtl'],
+		profiles: ['collection'],
+		capabilities: [
+			'basic-render',
+			'accessible-name',
+			'ssr',
+			'variants-and-states',
+			'controlled',
+			'keyboard',
+			'composition',
+			'density',
+			'full-motion',
+			'reduced-motion',
+			'rtl',
+			'locale',
+			'native-props'
+		],
+		demoCount: 4,
+		publicComponentCount: 1
+	},
+	{
 		id: 'simple-grid',
 		name: 'ZSimpleGrid',
 		category: 'layout',
 		summary:
-			'普通children的等宽CSS Grid：固定columns适合明确编排，minItemWidth用auto-fit适应可用空间；它不提供跨列、GridItem或布局上下文。',
+			'普通children的等宽CSS Grid：未传minItemWidth时固定columns明确编排，传入minItemWidth后auto-fit优先适应可用空间；它不提供跨列、GridItem或布局上下文。',
 		status: 'experimental',
 		keywords: [
 			'simple grid',

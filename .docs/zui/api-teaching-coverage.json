@@ -1490,6 +1490,16 @@
 			"fallbackPropNames": []
 		},
 		{
+			"id": "center",
+			"name": "ZCenter",
+			"source": "ui/zui/src/components/layout/ZCenter.svelte",
+			"declaredPropCount": 3,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
 			"id": "container",
 			"name": "ZContainer",
 			"source": "ui/zui/src/components/layout/ZContainer.svelte",
@@ -1520,10 +1530,40 @@
 			"fallbackPropNames": []
 		},
 		{
+			"id": "group",
+			"name": "ZGroup",
+			"source": "ui/zui/src/components/layout/ZGroup.svelte",
+			"declaredPropCount": 11,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "scroll-area",
+			"name": "ZScrollArea",
+			"source": "ui/zui/src/components/layout/ZScrollArea.svelte",
+			"declaredPropCount": 14,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
 			"id": "simple-grid",
 			"name": "ZSimpleGrid",
 			"source": "ui/zui/src/components/layout/ZSimpleGrid.svelte",
 			"declaredPropCount": 8,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "spacer",
+			"name": "ZSpacer",
+			"source": "ui/zui/src/components/layout/ZSpacer.svelte",
+			"declaredPropCount": 4,
 			"metadataGapPropCount": 0,
 			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
@@ -1580,6 +1620,16 @@
 			"fallbackPropNames": []
 		},
 		{
+			"id": "steps",
+			"name": "ZSteps",
+			"source": "ui/zui/src/components/navigation/ZSteps.svelte",
+			"declaredPropCount": 11,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
 			"id": "tour",
 			"name": "ZTour",
 			"source": "ui/zui/src/components/overlay/ZTour.svelte",
@@ -1595,8 +1645,8 @@
 		"maxMetadataGapProps": 0
 	},
 	"totals": {
-		"components": 145,
-		"declaredProps": 1809,
+		"components": 150,
+		"declaredProps": 1852,
 		"metadataGapProps": 0,
 		"fallbackProps": 0,
 		"opaqueStructuredProps": 8,

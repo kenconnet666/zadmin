@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
-	"componentCount": 145,
-	"overallSha256": "cc3d7322c7e56e2f88815dec5099e634e0334c8521f6aecd44f32bb820345cb8",
+	"componentCount": 150,
+	"overallSha256": "dac8691236d8a312e36c4bd80865c259ebbbb573bf16770305061b6b64dbe962",
 	"components": [
 		{
 			"id": "accordion",
@@ -679,6 +679,11 @@
 			"source": "src/components/layout/ZAspectRatio.svelte"
 		},
 		{
+			"id": "center",
+			"sha256": "7af5ba543cb36b04e550b67f72f9f979c92fa9c43482c05aa32e40257f344eaf",
+			"source": "src/components/layout/ZCenter.svelte"
+		},
+		{
 			"id": "container",
 			"sha256": "f289d1cfe88c5f92d0682474f220f06d709c9c34fb4147af943c4712d60d5894",
 			"source": "src/components/layout/ZContainer.svelte"
@@ -694,9 +699,24 @@
 			"source": "src/components/layout/ZGridItem.svelte"
 		},
 		{
+			"id": "group",
+			"sha256": "8696525fd20a6ddefe80aa7cd4cd4f97b8eb7310ab8c070d034e47b96efed179",
+			"source": "src/components/layout/ZGroup.svelte"
+		},
+		{
+			"id": "scroll-area",
+			"sha256": "fb6c5ea5a91d303c91dc6fc4dcd4014c4ac854346ca7b43043fdc816003465ee",
+			"source": "src/components/layout/ZScrollArea.svelte"
+		},
+		{
 			"id": "simple-grid",
-			"sha256": "e91d00f73db30c3ba498ec93e0f3475599f87c2129d072f3ef66b6921e81eb74",
+			"sha256": "ec4e1b1a4e93035490f9e755c7a4566ae3217071b7f076b0f92e204c1d14c736",
 			"source": "src/components/layout/ZSimpleGrid.svelte"
+		},
+		{
+			"id": "spacer",
+			"sha256": "85b8e23617367a70acfc3573a58521e6ad3e3eff2d7ee2fd56c70db8de2350b6",
+			"source": "src/components/layout/ZSpacer.svelte"
 		},
 		{
 			"id": "stack",
@@ -724,6 +744,11 @@
 			"source": "src/components/navigation/ZPagination.svelte"
 		},
 		{
+			"id": "steps",
+			"sha256": "a80ecb03cd0b768ec338bda1eaeacf57263c2e91a80c28aa3c005e2a2c1f595d",
+			"source": "src/components/navigation/ZSteps.svelte"
+		},
+		{
 			"id": "tour",
 			"sha256": "bb82e9b87f55e941c9c4f91a311460d9064684379435e1ab7211f5bdbba5ef55",
 			"source": "src/components/overlay/ZTour.svelte"
@@ -732,10 +757,10 @@
 	"entrypoints": {
 		"code.ts": "eabb8477e4c5ef93d016ab909e5c7f85a3111df231e2d2c3c7ef5e54897b36db",
 		"compiler.ts": "96fa979b36838e8b7a6d3f52bb463f23951438a4d974d52b631ad1e6d937b2e7",
-		"index.ts": "bca0b2cdf93657420affd8920d92247e5b589c4dd576cb6b14d965cf8b5e0359",
+		"index.ts": "65f73adc3d166a8c1e4920720dc5d3eb364476b1eb074fc19b1caff7f3b7e66d",
 		"internal.ts": "05f9ef9c8628e1cdf694dcc88b71831e5aab726a3189bd6189eef7ae645df4d7",
 		"layer.ts": "72d0fc8e5b7a8ab39a12e157879951b84f1a7fc19654f4bd8b6ea92fd8aa6db8",
-		"metadata.ts": "5ac680b14a74dbfd40a02384f49f0c14de8c08adf2b6a55ffaefc73588764e36",
+		"metadata.ts": "fe800579ae4a7c21080d286f3d6d7baf9f172fe94cbf60e3475a02ad05335db6",
 		"runtime.ts": "0fad64d1dec1517f8648a3640753feaf1af03264ce96ccccb7eaab8c5ece6599",
 		"testing.ts": "c596113f3cbcf4ce75be2728b6a10cd6a0b77c9b9101a4408ba2e18e174f15cb",
 		"theme.ts": "9625285286228f2548dadb74b934f40d7cd1804a1e96bc37a04f21d3cd32b527",

@@ -1,5 +1,6 @@
 export interface ZuiCommonLocale {
 	readonly breadcrumb: string;
+	readonly scrollArea: string;
 	readonly clear: string;
 	readonly close: string;
 	readonly copy: string;
@@ -174,7 +175,16 @@ export interface ZuiTourLocale {
 	readonly progress: (formattedCurrent: string, formattedTotal: string) => string;
 }
 
+export interface ZuiStepsLocale {
+	readonly label: string;
+	readonly pending: string;
+	readonly complete: string;
+	readonly error: string;
+	readonly loading: string;
+}
+
 export interface ZuiLocalePack {
+	readonly steps: ZuiStepsLocale;
 	readonly carousel: ZuiCarouselLocale;
 	readonly collection: ZuiCollectionLocale;
 	readonly colorPicker: ZuiColorPickerLocale;
@@ -197,6 +207,7 @@ export interface ZuiLocalePack {
 }
 
 export interface ZuiLocalePackOverrides {
+	readonly steps?: Partial<ZuiStepsLocale>;
 	readonly carousel?: Partial<ZuiCarouselLocale>;
 	readonly collection?: Partial<ZuiCollectionLocale>;
 	readonly colorPicker?: Partial<ZuiColorPickerLocale>;
@@ -219,6 +230,13 @@ export interface ZuiLocalePackOverrides {
 }
 
 export const enUSLocalePack = Object.freeze({
+	steps: Object.freeze({
+		label: 'Progress',
+		pending: 'Pending',
+		complete: 'Complete',
+		error: 'Error',
+		loading: 'Loading'
+	}),
 	carousel: Object.freeze({
 		automaticRotationDisabled: 'Automatic rotation disabled by motion preference',
 		carouselRole: 'carousel',
@@ -264,7 +282,13 @@ export const enUSLocalePack = Object.freeze({
 		placeholder: 'Type a command',
 		results: (formattedCount: string) => `${formattedCount} commands found`
 	}),
-	common: Object.freeze({ breadcrumb: 'Breadcrumb', clear: 'Clear', close: 'Close', copy: 'Copy' }),
+	common: Object.freeze({
+		breadcrumb: 'Breadcrumb',
+		scrollArea: 'Scrollable content',
+		clear: 'Clear',
+		close: 'Close',
+		copy: 'Copy'
+	}),
 	date: Object.freeze({
 		calendarLabel: 'Calendar',
 		clearDate: 'Clear date',
@@ -376,6 +400,13 @@ export const enUSLocalePack = Object.freeze({
 }) satisfies ZuiLocalePack;
 
 export const zhCNLocalePack = Object.freeze({
+	steps: Object.freeze({
+		label: '步骤进度',
+		pending: '待完成',
+		complete: '已完成',
+		error: '错误',
+		loading: '处理中'
+	}),
 	carousel: Object.freeze({
 		automaticRotationDisabled: '已按动画偏好停用自动轮播',
 		carouselRole: '轮播',
@@ -421,7 +452,13 @@ export const zhCNLocalePack = Object.freeze({
 		placeholder: '输入命令',
 		results: (formattedCount: string) => `找到${formattedCount}个命令`
 	}),
-	common: Object.freeze({ breadcrumb: '当前位置', clear: '清空', close: '关闭', copy: '复制' }),
+	common: Object.freeze({
+		breadcrumb: '当前位置',
+		scrollArea: '可滚动内容',
+		clear: '清空',
+		close: '关闭',
+		copy: '复制'
+	}),
 	date: Object.freeze({
 		calendarLabel: '日历',
 		clearDate: '清空日期',
@@ -555,6 +592,7 @@ export function resolveZuiLocalePack(
 	overrides?: ZuiLocalePackOverrides
 ): ZuiLocalePack {
 	return Object.freeze({
+		steps: Object.freeze(mergeDefined(base.steps, overrides?.steps)),
 		carousel: Object.freeze(mergeDefined(base.carousel, overrides?.carousel)),
 		collection: Object.freeze(mergeDefined(base.collection, overrides?.collection)),
 		colorPicker: Object.freeze(mergeDefined(base.colorPicker, overrides?.colorPicker)),

@@ -17,12 +17,13 @@ export const simpleGridDoc = defineComponentDoc(simpleGridMetadata, {
 		props: {
 			columns: {
 				default: '3',
-				description: '固定等宽列数，接受base/small/medium/large断点对象；和minItemWidth互斥。'
+				description:
+					'固定等宽列数，接受base/small/medium/large断点对象；传入minItemWidth时保留但不参与布局。'
 			},
 			minItemWidth: {
 				default: '—',
 				description:
-					'切换为CSS auto-fit。number按px；string支持长度、百分比与var/calc/min/max/clamp，直接由CSS解析；响应式对象省略base时使用Theme.size.gridItemMinWidth。'
+					'切换为CSS auto-fit并优先于columns。number按px；string支持长度、百分比与var/calc/min/max/clamp，直接由CSS解析；响应式对象省略base时使用Theme.size.gridItemMinWidth。'
 			},
 			query: {
 				default: "'viewport'",
@@ -31,7 +32,7 @@ export const simpleGridDoc = defineComponentDoc(simpleGridMetadata, {
 			ref: { default: 'null', description: '真实网格div引用。' }
 		},
 		summary:
-			'普通children的等宽CSS Grid：固定columns适合明确编排，minItemWidth用auto-fit适应可用空间；它不提供跨列、GridItem或布局上下文。'
+			'普通children的等宽CSS Grid：未传minItemWidth时固定columns明确编排，传入minItemWidth后auto-fit优先适应可用空间；它不提供跨列、GridItem或布局上下文。'
 	},
 	demos: [
 		{

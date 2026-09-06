@@ -7,6 +7,18 @@ export const componentDocLoaders = {
 	stack: () =>
 		import('../content/components/layout/stack/doc.js').then((module) => module.stackDoc),
 	grid: () => import('../content/components/layout/grid/doc.js').then((module) => module.gridDoc),
+	group: () =>
+		import('../content/components/layout/group/doc.js').then((module) => module.groupDoc),
+	center: () =>
+		import('../content/components/layout/center/doc.js').then((module) => module.centerDoc),
+	spacer: () =>
+		import('../content/components/layout/spacer/doc.js').then((module) => module.spacerDoc),
+	'scroll-area': () =>
+		import('../content/components/layout/scroll-area/doc.js').then(
+			(module) => module.scrollAreaDoc
+		),
+	steps: () =>
+		import('../content/components/navigation/steps/doc.js').then((module) => module.stepsDoc),
 	'simple-grid': () =>
 		import('../content/components/layout/simple-grid/doc.js').then(
 			(module) => module.simpleGridDoc

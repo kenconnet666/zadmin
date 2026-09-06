@@ -29,6 +29,12 @@ WebKit 官方说明非活跃页面会暂停 rAF，源码历史也区分页面渲
 
 ## 下一次 CI 的最小取证合同
 
+### 424128d 远程采样后的补充
+
+run34017484365 的20条样本显示：从performance16336到17232约896ms，文档一直visible且hasFocus=true，timeline正常前进，但关闭class仍在、opacity=0且animations为空。约919ms后关闭class只移除一次，两个120ms过渡共同startTime17255；最后样本currentTime81ms、progress0.994289，与失败opacity吻合。这支持“入口类开始较晚，剩余动画尚未完成”，不支持动画终态卡死、反复重启或timeline冻结；两次rAF的实际回调时刻仍未记录。
+
+当前将该几何用例的触发改为现有`userEvent.click`，先建立真实可见、可操作的用户交互，再保留原1000ms严格终态与完整采样。它是需要下一次CI确认的测试交互修正，不据此宣称生产EntryMotion已修复。DateRangePicker另一个Docs失败中trigger仍open，不能简单归并为此动画问题。
+
 主任务已在同一条原有 `expect.poll` 中接入最多24条只读采样：owner performance/timeline、visibility/focus、class、CSS终态参数和各Animation时间状态。仅原断言失败时输出一次JSON；没有另加rAF、监听器、延长预算或修改动画。下面的事件监听与额外rAF实验仅保留为需要更多证据时的后续选项。
 
 保持原 1000 ms 预算、三个引擎、`opacity === '1'`、实际匹配宽度、资源清理与焦点恢复全部断言，不调用 `animation.finish()`、不关闭动画、不增加重试或跳过引擎。

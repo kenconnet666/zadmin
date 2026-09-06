@@ -2415,7 +2415,9 @@ describe('compiled ICSS browser updates', () => {
 		render(PopoverFixture, { matchWidth: true, modal: true });
 		const trigger = document.querySelector<HTMLButtonElement>('[data-testid="popover-trigger"]');
 		const outside = document.querySelector<HTMLButtonElement>('[data-testid="popover-outside"]');
-		trigger?.click();
+		// Establish the same visible, actionable interaction as the actual modal UI.
+		// A synthetic DOM click alone does not establish the browser's paint prerequisites.
+		await userEvent.click(trigger!);
 		await tick();
 		const content = document.querySelector<HTMLElement>('[data-testid="popover-content"]');
 		expect(content?.getAttribute('aria-modal')).toBe('true');

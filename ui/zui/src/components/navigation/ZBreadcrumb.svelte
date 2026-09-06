@@ -162,7 +162,6 @@
 		mergeStyles,
 		serializeIcssVariables
 	} from '../../runtime/foundation/root-style.js';
-	import type { SelectionKey } from '../../runtime/collection/selection.js';
 	import ZLink from '../gene/ZLink.svelte';
 
 	let {

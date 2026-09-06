@@ -12,6 +12,7 @@
 				preview: (s) => {
 					s.backgroundColor._surface;
 					s.display.grid;
+					s.gridTemplateColumns.raw('minmax(0, 1fr)');
 					s.alignContent.center;
 					s.minHeight.rem(8);
 					s.padding._xlarge;

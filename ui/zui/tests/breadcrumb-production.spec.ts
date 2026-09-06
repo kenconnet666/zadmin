@@ -22,15 +22,16 @@ describe('ZBreadcrumb server contract', () => {
 	});
 
 	it('rejects ambiguous current ownership before producing markup', () => {
-		expect(() =>
-			render(ZBreadcrumb, {
-				props: {
-					items: [
-						{ current: true, key: 'a', label: 'A' },
-						{ current: true, key: 'b', label: 'B' }
-					]
-				}
-			})
+		expect(
+			() =>
+				render(ZBreadcrumb, {
+					props: {
+						items: [
+							{ current: true, key: 'a', label: 'A' },
+							{ current: true, key: 'b', label: 'B' }
+						]
+					}
+				}).body
 		).toThrow('at most one current item');
 	});
 

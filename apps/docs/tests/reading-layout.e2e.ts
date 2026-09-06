@@ -1,5 +1,27 @@
 import { expect, test, type Locator } from '@playwright/test';
 
+test('scroll-area demos keep a constrained viewport instead of cropping an intrinsic-width preview', async ({
+	page
+}) => {
+	for (const width of [390, 1280]) {
+		await page.setViewportSize({ width, height: 844 });
+		await page.goto('/#/components/scroll-area');
+		const viewport = page.locator('#scroll-area-axes [data-axis="x"]');
+		await expect(viewport).toBeVisible();
+		const dimensions = await viewport.evaluate((element) => ({
+			width: element.clientWidth,
+			scroll: element.scrollWidth,
+			preview: element.closest('[data-testid="demo-scroll-area-axes"]')!.clientWidth,
+			pageWidth: document.documentElement.clientWidth,
+			pageScroll: document.documentElement.scrollWidth
+		}));
+		expect(dimensions.width).toBeGreaterThan(0);
+		expect(dimensions.width).toBeLessThanOrEqual(dimensions.preview);
+		expect(dimensions.scroll).toBeGreaterThan(dimensions.width);
+		expect(dimensions.pageScroll).toBe(dimensions.pageWidth);
+	}
+});
+
 test('component introductions wrap long identifiers without widening the mobile page', async ({
 	page
 }) => {

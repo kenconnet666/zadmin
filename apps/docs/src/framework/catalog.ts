@@ -60,6 +60,11 @@ import { treeSelectDoc } from '../content/components/input/tree-select/doc.js';
 import { transferDoc } from '../content/components/input/transfer/doc.js';
 import { stackDoc } from '../content/components/layout/stack/doc.js';
 import { gridDoc } from '../content/components/layout/grid/doc.js';
+import { groupDoc } from '../content/components/layout/group/doc.js';
+import { centerDoc } from '../content/components/layout/center/doc.js';
+import { spacerDoc } from '../content/components/layout/spacer/doc.js';
+import { scrollAreaDoc } from '../content/components/layout/scroll-area/doc.js';
+import { stepsDoc } from '../content/components/navigation/steps/doc.js';
 import { simpleGridDoc } from '../content/components/layout/simple-grid/doc.js';
 import { breadcrumbDoc } from '../content/components/navigation/breadcrumb/doc.js';
 import { aspectRatioDoc } from '../content/components/layout/aspect-ratio/doc.js';
@@ -98,6 +103,11 @@ export const componentDocs = Object.freeze([
 	boxDoc,
 	stackDoc,
 	gridDoc,
+	groupDoc,
+	centerDoc,
+	spacerDoc,
+	scrollAreaDoc,
+	stepsDoc,
 	simpleGridDoc,
 	breadcrumbDoc,
 	textDoc,

@@ -8,27 +8,16 @@
 
 	export type ZSimpleGridMinItemWidth = number | string;
 
-	interface ZSimpleGridBaseProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
+	export interface ZSimpleGridProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
 		readonly children?: Snippet;
 		readonly columnGap?: ResponsiveValue<ZLayoutSpacing>;
+		readonly columns?: ResponsiveValue<number>;
 		readonly gap?: ResponsiveValue<ZLayoutSpacing>;
+		readonly minItemWidth?: ResponsiveValue<ZSimpleGridMinItemWidth>;
 		readonly query?: ResponsiveQuery;
 		readonly rowGap?: ResponsiveValue<ZLayoutSpacing>;
 		ref?: HTMLDivElement | null;
 	}
-
-	interface ZSimpleGridColumnsProps {
-		readonly columns?: ResponsiveValue<number>;
-		readonly minItemWidth?: never;
-	}
-
-	interface ZSimpleGridMinItemWidthProps {
-		readonly columns?: never;
-		readonly minItemWidth: ResponsiveValue<ZSimpleGridMinItemWidth>;
-	}
-
-	export type ZSimpleGridProps = ZSimpleGridBaseProps &
-		(ZSimpleGridColumnsProps | ZSimpleGridMinItemWidthProps);
 
 	export const zuiMetadata = {
 		bindings: [{ description: '真实网格div引用。', name: 'ref', type: 'HTMLDivElement | null' }],
@@ -43,16 +32,15 @@
 		props: [
 			{
 				default: '3',
-				description: '每个断点的正整数等宽列数；不能与minItemWidth同时提供。',
+				description: '每个断点的正整数等宽列数；minItemWidth存在时此值保留但不参与布局。',
 				name: 'columns',
 				type: 'ResponsiveValue<number>'
 			},
 			{
 				default: '—',
 				description:
-					'每个断点的最小列宽，切换到CSS auto-fit；数字按px，支持CSS长度、百分比和var/calc/min/max/clamp；未给base时使用Theme.size.gridItemMinWidth，不能与columns同时提供。',
+					'每个断点的最小列宽，切换到CSS auto-fit并优先于columns；数字按px，支持CSS长度、百分比和var/calc/min/max/clamp；未给base时使用Theme.size.gridItemMinWidth。',
 				name: 'minItemWidth',
-				requiredWhen: '使用auto-fit模式时必填，并且不能同时提供columns。',
 				type: 'ResponsiveValue<number | string>'
 			},
 			{
@@ -129,18 +117,12 @@
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { applyLayoutSpacing } from '../../runtime/foundation/layout.js';
 	import { applyResponsiveStyles } from '../../runtime/foundation/responsive.js';
-	import { UNIT_FAMILIES } from '../../theme/units.js';
+	import { cssLengthExpression } from '../../theme/units.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
 		serializeIcssVariables
 	} from '../../runtime/foundation/root-style.js';
-
-	const CSS_LENGTH_UNIT = `(?:%|${Object.values(UNIT_FAMILIES.length).join('|')})`;
-	const CSS_LENGTH_LITERAL = new RegExp(
-		`^(?:0|(?:\\d+(?:\\.\\d*)?|\\.\\d+)${CSS_LENGTH_UNIT})$`,
-		'u'
-	);
 
 	let {
 		children,
@@ -162,46 +144,12 @@
 		}
 	}
 
-	function formatMinItemWidth(value: ZSimpleGridMinItemWidth): string {
-		if (typeof value === 'number') {
-			if (!Number.isFinite(value) || value < 0) {
-				throw new TypeError('SimpleGrid minItemWidth number must be non-negative and finite.');
-			}
-			return `${value}px`;
-		}
-		const normalized = value.trim();
-		// CSS resolves expressions and variables. Validate the value boundary without
-		// reading browser geometry or pretending that a JS parser can resolve CSS units.
-		const expression = /^(?:var|calc|min|max|clamp)\(.+\)$/su.test(normalized);
-		let depth = 0;
-		let balanced = true;
-		for (const character of normalized) {
-			if (character === '(') depth += 1;
-			if (character === ')') depth -= 1;
-			if (depth < 0) balanced = false;
-		}
-		if (
-			(!CSS_LENGTH_LITERAL.test(normalized) && !expression) ||
-			/[;{}]/u.test(normalized) ||
-			!balanced ||
-			depth !== 0
-		) {
-			throw new TypeError(
-				'SimpleGrid minItemWidth must be a CSS length or a balanced CSS sizing expression.'
-			);
-		}
-		return normalized;
-	}
-
 	const zui = useZui();
 	const rootClass = $derived(zui.recipe(simpleGridRecipe));
 	const resolvedColumns = $derived(columns ?? 3);
 	const mode = $derived(minItemWidth === undefined ? 'columns' : 'min-item-width');
 	const layoutClass = $derived(
 		zui.icss((s) => {
-			if (columns !== undefined && minItemWidth !== undefined) {
-				throw new TypeError('ZSimpleGrid accepts either columns or minItemWidth, not both.');
-			}
 			s.gap._medium;
 			if (minItemWidth === undefined) {
 				s.gridTemplateColumns.raw('repeat(3, minmax(0, 1fr))');
@@ -216,13 +164,13 @@
 				);
 			} else {
 				s.gridTemplateColumns.raw(
-					`repeat(auto-fit, minmax(min(100%, ${formatMinItemWidth(zui.theme.size.gridItemMinWidth)}), 1fr))`
+					`repeat(auto-fit, minmax(min(100%, ${cssLengthExpression(zui.theme.size.gridItemMinWidth)}), 1fr))`
 				);
 				applyResponsiveStyles(
 					s,
 					minItemWidth,
 					(s, value) => {
-						const width = formatMinItemWidth(value);
+						const width = cssLengthExpression(value);
 						s.gridTemplateColumns.raw(`repeat(auto-fit, minmax(min(100%, ${width}), 1fr))`);
 					},
 					query

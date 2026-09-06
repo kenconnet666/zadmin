@@ -2,7 +2,7 @@
 
 本文件由 `scripts/check-stability-policy.mjs` 生成；不会修改组件 status。compound member 可继承同 family root 的 Docs 页面。
 
-stableCompliant：141；stableViolations：0；promotionEligibleExperimental：2。
+stableCompliant：141；stableViolations：0；promotionEligibleExperimental：6。
 
 | Component               | Status       | Classification                | Blockers                                         | Docs                                                                  | SSR |
 | ----------------------- | ------------ | ----------------------------- | ------------------------------------------------ | --------------------------------------------------------------------- | --: |
@@ -141,15 +141,20 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：2
 | ZTransfer               | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/input/transfer/doc.ts                |   1 |
 | ZTreeSelect             | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/input/tree-select/doc.ts             |   2 |
 | ZAspectRatio            | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/layout/aspect-ratio/doc.ts           |   2 |
+| ZCenter                 | experimental | promotionEligibleExperimental | —                                                | apps/docs/src/content/components/layout/center/doc.ts                 |   1 |
 | ZContainer              | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/layout/container/doc.ts              |   2 |
 | ZGrid                   | experimental | experimental                  | BrowserBehaviorVerified, ProductionVerified, SSR | apps/docs/src/content/components/layout/grid/doc.ts                   |   0 |
 | ZGridItem               | experimental | experimental                  | BrowserBehaviorVerified, ProductionVerified, SSR | apps/docs/src/content/components/layout/grid/doc.ts                   |   0 |
+| ZGroup                  | experimental | promotionEligibleExperimental | —                                                | apps/docs/src/content/components/layout/group/doc.ts                  |   1 |
+| ZScrollArea             | experimental | experimental                  | BrowserBehaviorVerified                          | apps/docs/src/content/components/layout/scroll-area/doc.ts            |   1 |
 | ZSimpleGrid             | experimental | promotionEligibleExperimental | —                                                | apps/docs/src/content/components/layout/simple-grid/doc.ts            |   1 |
+| ZSpacer                 | experimental | promotionEligibleExperimental | —                                                | apps/docs/src/content/components/layout/spacer/doc.ts                 |   1 |
 | ZStack                  | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/layout/stack/doc.ts                  |   3 |
 | ZBreadcrumb             | experimental | promotionEligibleExperimental | —                                                | apps/docs/src/content/components/navigation/breadcrumb/doc.ts         |   1 |
 | ZCommand                | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/navigation/command/doc.ts            |   1 |
 | ZCommandPalette         | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/navigation/command-palette/doc.ts    |   1 |
 | ZPagination             | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/navigation/pagination/doc.ts         |   1 |
+| ZSteps                  | experimental | promotionEligibleExperimental | —                                                | apps/docs/src/content/components/navigation/steps/doc.ts              |   1 |
 | ZTour                   | stable       | stableCompliant               | —                                                | apps/docs/src/content/components/overlay/tour/doc.ts                  |   1 |
 
 ## 晋级规则

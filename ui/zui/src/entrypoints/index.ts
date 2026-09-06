@@ -24,6 +24,27 @@ export type {
 } from '../runtime/foundation/layout.js';
 export type { IcssBreakpointName, IcssBreakpointQuery, IcssContainerQuery } from '../icss/types.js';
 export { default as ZGrid } from '../components/layout/ZGrid.svelte';
+export { default as ZGroup } from '../components/layout/ZGroup.svelte';
+export type { ZGroupProps } from '../components/layout/ZGroup.svelte';
+export { default as ZCenter } from '../components/layout/ZCenter.svelte';
+export type { ZCenterProps } from '../components/layout/ZCenter.svelte';
+export { default as ZSpacer } from '../components/layout/ZSpacer.svelte';
+export type { ZSpacerProps, ZSpacerSize } from '../components/layout/ZSpacer.svelte';
+export { default as ZScrollArea } from '../components/layout/ZScrollArea.svelte';
+export type {
+	ZScrollAreaProps,
+	ZScrollAreaController,
+	ScrollAreaPosition,
+	ScrollAreaAxis
+} from '../components/layout/ZScrollArea.svelte';
+export { default as ZSteps, StepRequestEvent } from '../components/navigation/ZSteps.svelte';
+export type {
+	ZStepsProps,
+	StepsItem,
+	StepsItemContext,
+	StepsStatus,
+	StepsOrientation
+} from '../components/navigation/ZSteps.svelte';
 export type { ZGridProps } from '../components/layout/ZGrid.svelte';
 export { default as ZGridItem } from '../components/layout/ZGridItem.svelte';
 export type { ZGridItemProps } from '../components/layout/ZGridItem.svelte';
