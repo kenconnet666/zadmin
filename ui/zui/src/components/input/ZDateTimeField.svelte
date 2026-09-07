@@ -59,10 +59,11 @@
 		value?: ZonedDateTime | null;
 	}
 
-	export type ZDateTimeFieldLocalProps = ZDateTimeFieldSharedProps & ZDateTimeFieldLocalValueProps;
-	export type ZDateTimeFieldZonedProps = ZDateTimeFieldSharedProps & ZDateTimeFieldZonedValueProps;
-	export type ZDateTimeFieldProps = ZDateTimeFieldSharedProps &
-		(ZDateTimeFieldLocalValueProps | ZDateTimeFieldZonedValueProps);
+	export interface ZDateTimeFieldLocalProps
+		extends ZDateTimeFieldSharedProps, ZDateTimeFieldLocalValueProps {}
+	export interface ZDateTimeFieldZonedProps
+		extends ZDateTimeFieldSharedProps, ZDateTimeFieldZonedValueProps {}
+	export type ZDateTimeFieldProps = ZDateTimeFieldLocalProps | ZDateTimeFieldZonedProps;
 
 	export const zuiMetadata = {
 		category: 'input',

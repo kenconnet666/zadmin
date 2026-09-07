@@ -12,6 +12,7 @@ export interface ZuiCommonLocale {
 	readonly scrollArea: string;
 	readonly clear: string;
 	readonly confirm: string;
+	readonly cancel: string;
 	readonly close: string;
 	readonly copy: string;
 	readonly copying: string;
@@ -361,6 +362,7 @@ export const enUSLocalePack = Object.freeze({
 		clear: 'Clear',
 		confirm: 'Confirm',
 		close: 'Close',
+		cancel: 'Cancel',
 		copy: 'Copy',
 		copying: 'Copying…',
 		copied: 'Copied',
@@ -591,6 +593,7 @@ export const zhCNLocalePack = Object.freeze({
 		clear: '清空',
 		confirm: '确认',
 		close: '关闭',
+		cancel: '取消',
 		copy: '复制',
 		copying: '复制中…',
 		copied: '已复制',

@@ -103,6 +103,40 @@ function metadataItemNames(object, name) {
 	});
 }
 
+function declarationHasLocalPublicMembers(declaration, declarations, seen = new Set()) {
+	if (!declaration?.name || seen.has(declaration.name.text)) return false;
+	seen.add(declaration.name.text);
+	const visit = (node) => {
+		if (
+			ts.isPropertySignature(node) ||
+			ts.isPropertyDeclaration(node) ||
+			ts.isMethodSignature(node) ||
+			ts.isMethodDeclaration(node)
+		)
+			return true;
+		if (ts.isTypeReferenceNode(node) && ts.isIdentifier(node.typeName)) {
+			const target = declarations.get(node.typeName.text);
+			if (target && declarationHasLocalPublicMembers(target, declarations, seen)) return true;
+		}
+		if (ts.isExpressionWithTypeArguments(node) && ts.isIdentifier(node.expression)) {
+			const target = declarations.get(node.expression.text);
+			if (target && declarationHasLocalPublicMembers(target, declarations, seen)) return true;
+		}
+		return ts.forEachChild(node, visit) === true;
+	};
+	return ts.forEachChild(declaration, visit) === true;
+}
+
+function assertNonEmptyComponentProps({ filename, declaration, declarations, metadata, props }) {
+	if (props.size > 0) return;
+	const metadataProps = metadataItemNames(metadata, 'props');
+	const localMembers = declarationHasLocalPublicMembers(declaration, declarations);
+	if (metadataProps.length === 0 && !localMembers) return;
+	throw new Error(
+		`${filename} generated zero public props despite ${metadataProps.length} metadata props${localMembers ? ' and local public Props members' : ''}.`
+	);
+}
+
 function metadataItems(object, name) {
 	const property = object.properties.find((candidate) => propertyName(candidate) === name);
 	if (!property || !ts.isPropertyAssignment(property)) return [];
@@ -695,6 +729,28 @@ if (process.argv.includes('--self-test')) {
 		}
 		if (failed !== rejected) throw new Error('Metadata required row field self-test failed.');
 	}
+	const emptyPropsFile = ts.createSourceFile(
+		'empty-props-self-test.ts',
+		// language=TypeScript
+		`interface Shared { value?: string }
+		type Props<T extends 'a' | 'b' = 'a' | 'b'> = T extends T ? Shared : never;
+		export const zuiMetadata = { props: [{ name: 'value' }] };`,
+		ts.ScriptTarget.Latest,
+		true
+	);
+	let emptyPropsRejected = false;
+	try {
+		assertNonEmptyComponentProps({
+			filename: 'empty-props-self-test',
+			declaration: declarationMap(emptyPropsFile).get('Props'),
+			declarations: declarationMap(emptyPropsFile),
+			metadata: metadataObject(emptyPropsFile, 'empty-props-self-test'),
+			props: new Map()
+		});
+	} catch {
+		emptyPropsRejected = true;
+	}
+	if (!emptyPropsRejected) throw new Error('Empty public Props guard self-test failed.');
 	const componentPath = (...segments) => resolve(componentsRoot, ...segments);
 	const listDeprecatedPaths = await scanWorkspacePropertyPaths(
 		workspaceTypeGraph,
@@ -1809,6 +1865,13 @@ async function componentFacts(source, filename, path) {
 				: {})
 		});
 	}
+	assertNonEmptyComponentProps({
+		filename,
+		declaration,
+		declarations,
+		metadata,
+		props: context.props
+	});
 	const metadataGapProps = [...context.props.values()]
 		.filter(
 			(prop) =>
@@ -2061,6 +2124,26 @@ if (process.argv.includes('--self-test')) {
 		const missing = expected.filter((name) => !actual.has(name));
 		if (missing.length > 0)
 			throw new Error(`Recipe API self-test missed ${id}: ${missing.join(', ')}.`);
+	}
+	for (const id of ['period-calendar', 'period-picker']) {
+		const fact = facts[id];
+		const granularity = fact?.props.find(({ name }) => name === 'granularity');
+		const selectionMode = fact?.props.find(({ name }) => name === 'selectionMode');
+		const value = fact?.props.find(({ name }) => name === 'value');
+		if (
+			!fact ||
+			fact.props.length === 0 ||
+			granularity?.required !== true ||
+			!granularity.type.includes("'month'") ||
+			!granularity.type.includes("'week'") ||
+			selectionMode?.required !== false ||
+			!selectionMode.type.includes("'single'") ||
+			!selectionMode.type.includes("'multiple'") ||
+			!selectionMode.type.includes("'range'") ||
+			!value?.type.includes("PeriodSelectionValue<'month', 'single'>") ||
+			!value.type.includes("PeriodSelectionValue<'week', 'range'>")
+		)
+			throw new Error(`Distributed conditional API self-test missed ${id} discriminants.`);
 	}
 	const nested = parseDocTeaching(
 		`defineComponentDoc(meta, { demos: [{ teaching: { props: { fake: {} } } }] })`,

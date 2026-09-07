@@ -2,6 +2,7 @@
 	import type { CalendarRangeValue } from '../../runtime/date.js';
 	import type { FormControlDraftState } from '../../runtime/form/form-value-adapter.svelte.js';
 	import { ZonedDateTime, type CalendarDateTime, type Time } from '@internationalized/date';
+	import type { Snippet } from 'svelte';
 	import type { TimeFieldSegment, Weekday } from '../../runtime/date.js';
 	import type { DateTimeDisambiguation, DateTimeMode } from '../../runtime/date-time.js';
 	import type {
@@ -12,6 +13,7 @@
 	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
 	import type { TimePickerDayPeriod } from '../../runtime/time-picker.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
+	import type { CalendarCellContext, CalendarHeaderContext } from './ZCalendar.svelte';
 
 	export type {
 		DateTimePickerDirection,
@@ -23,15 +25,18 @@
 		readonly firstFocusableElement: HTMLElement | null;
 
 		focusFirst(): boolean;
+
 		resetDraft(): void;
 	}
 
 	export interface DateTimePickerPanelProps {
 		readonly highlightRange?: CalendarRangeValue | null;
 		readonly calendarLabel: string;
+		readonly calendarHeader?: Snippet<[context: CalendarHeaderContext]>;
 		readonly cancelLabel?: string;
 		readonly confirmLabel: string;
 		readonly dayPeriodLabel?: (period: TimePickerDayPeriod) => string;
+		readonly dateCell?: Snippet<[context: CalendarCellContext]>;
 		readonly direction: DateTimePickerDirection;
 		readonly disabled: boolean;
 		readonly disambiguation: DateTimeDisambiguation;
@@ -57,6 +62,7 @@
 		readonly placeholderValue: DateTimePickerValue;
 		readonly presets?: readonly DateTimePickerPreset[];
 		readonly previousLabel: string;
+		readonly readonly?: boolean;
 		readonly secondStep: number;
 		readonly segmentLabel?: (segment: TimeFieldSegment) => string;
 		readonly showNow?: boolean;
@@ -121,6 +127,7 @@
 		dateTimePickerParts,
 		dateTimePickerTimeConstraints,
 		dateTimePickerValueAvailable,
+		initialDateTimePickerTime,
 		isDateTimePickerValue,
 		resolveDateTimePickerPreset,
 		sameDateTimePickerValue,
@@ -132,9 +139,11 @@
 
 	let {
 		calendarLabel,
+		calendarHeader,
 		cancelLabel,
 		confirmLabel,
 		dayPeriodLabel,
+		dateCell,
 		direction,
 		disabled,
 		disambiguation,
@@ -161,6 +170,7 @@
 		placeholderValue,
 		presets = [],
 		previousLabel,
+		readonly = false,
 		secondStep,
 		segmentLabel,
 		showNow = false,
@@ -202,6 +212,9 @@
 	const timeConstraints = $derived(
 		dateTimePickerTimeConstraints(activeDate, reference, constraints)
 	);
+	const panelTime = $derived(
+		value ? parts.time : initialDateTimePickerTime(activeDate, reference, constraints)
+	);
 	const resolvedPresets = $derived.by(() => {
 		for (const preset of presets)
 			if (!preset.label.trim())
@@ -225,6 +238,7 @@
 			calendarValue = value ? parts.date : null;
 			focusedValue = parts.date;
 			feedback = '';
+			timeController?.resetDraft();
 		},
 		get firstFocusableElement() {
 			return (
@@ -272,8 +286,12 @@
 	}
 
 	function chooseDate(date: CalendarDate | null): void {
-		if (disabled || !date) return;
-		updateCandidate(composeDateTimePickerCandidate(date, parts.time, reference, constraints), true);
+		if (disabled || readonly || !date) return;
+		const time = value ? parts.time : initialDateTimePickerTime(date, reference, constraints);
+		updateCandidate(
+			time ? composeDateTimePickerCandidate(date, time, reference, constraints) : null,
+			value !== null
+		);
 	}
 
 	function composeTime(time: Time): DateTimePickerValue | null {
@@ -281,10 +299,12 @@
 	}
 
 	function chooseTime(time: Time): void {
+		if (readonly) return;
 		updateCandidate(composeTime(time));
 	}
 
 	function confirmTime(time: Time): void {
+		if (readonly) return;
 		const candidate = composeTime(time);
 		if (!candidate || !dateTimePickerValueAvailable(candidate, constraints)) {
 			announceInvalid();
@@ -295,12 +315,12 @@
 	}
 
 	function choosePreset(preset: DateTimePickerPreset): void {
-		if (disabled) return;
+		if (disabled || readonly) return;
 		updateCandidate(resolveDateTimePickerPreset(preset, constraints));
 	}
 
 	function chooseNow(): void {
-		if (disabled) return;
+		if (disabled || readonly) return;
 		updateCandidate(
 			dateTimePickerNow(
 				constraints,
@@ -311,7 +331,7 @@
 	}
 
 	function confirm(): void {
-		if (disabled || !value) return;
+		if (disabled || readonly || !value) return;
 		const candidate = composeTime(parts.time);
 		if (!candidate || !dateTimePickerValueAvailable(candidate, constraints)) {
 			announceInvalid();
@@ -343,16 +363,23 @@
 	});
 </script>
 
-<div data-slot="date-time-panel" dir={direction}>
+<div data-readonly={readonly || undefined} data-slot="date-time-panel" dir={direction}>
 	{#if resolvedPresets.length > 0 || showNow}
 		<div class={actionsClass} data-slot="date-time-actions">
 			{#each resolvedPresets as preset, index (`${index}:${preset.label}`)}
-				<ZButton {disabled} onclick={() => choosePreset(preset)} {size} variant="outline">
+				<ZButton
+					disabled={disabled || readonly}
+					onclick={() => choosePreset(preset)}
+					{size}
+					variant="outline"
+				>
 					{preset.label}
 				</ZButton>
 			{/each}
 			{#if showNow}
-				<ZButton {disabled} onclick={chooseNow} {size} variant="outline">{nowLabel}</ZButton>
+				<ZButton disabled={disabled || readonly} onclick={chooseNow} {size} variant="outline">
+					{nowLabel}
+				</ZButton>
 			{/if}
 		</div>
 	{/if}
@@ -363,11 +390,13 @@
 			bind:focusedValue
 			bind:ref={calendarRef}
 			{calendarLabel}
+			{dateCell}
 			defaultFocusedValue={parts.date}
 			{disabled}
 			dir={direction}
 			{firstDayOfWeek}
 			formParticipation="none"
+			header={calendarHeader}
 			isDateUnavailable={(date) =>
 				Boolean(
 					(bounds.minValue && date.compare(bounds.minValue) < 0) ||
@@ -379,6 +408,7 @@
 			{nextLabel}
 			onValueChange={chooseDate}
 			{previousLabel}
+			{readonly}
 			required
 			{showOutsideDates}
 			{size}
@@ -399,11 +429,12 @@
 			onConfirm={confirmTime}
 			onControllerChange={(next) => (timeController = next)}
 			onValueChange={chooseTime}
+			{readonly}
 			{segmentLabel}
 			{size}
 			{timeZone}
 			{toggleDayPeriodLabel}
-			value={parts.time}
+			value={panelTime}
 		/>
 	</div>
 	{#if feedback}
@@ -419,6 +450,8 @@
 				{cancelLabel}
 			</ZButton>
 		{/if}
-		<ZButton disabled={disabled || !value} onclick={confirm} {size}>{confirmLabel}</ZButton>
+		<ZButton disabled={disabled || readonly || !value} onclick={confirm} {size}
+			>{confirmLabel}</ZButton
+		>
 	</div>
 </div>

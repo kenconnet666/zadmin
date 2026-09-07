@@ -8,6 +8,7 @@
 	import type {
 		TypographyLineHeight,
 		TypographySize,
+		TypographyStyleOptions,
 		TypographyTone,
 		TypographyWeight
 	} from './typography.js';
@@ -18,17 +19,11 @@
 	export type ZTextTone = TypographyTone;
 	export type ZTextWeight = TypographyWeight;
 
-	export interface ZTextProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
+	export interface ZTextProps
+		extends Omit<HTMLAttributes<HTMLElement>, 'children'>, TypographyStyleOptions {
 		readonly as?: ZTextElement;
 		readonly children?: Snippet;
 		readonly for?: string;
-		readonly lineClamp?: number;
-		readonly lineHeight?: ZTextLineHeight;
-		readonly size?: ZTextSize;
-		readonly tabularNumbers?: boolean;
-		readonly tone?: ZTextTone;
-		readonly truncate?: boolean;
-		readonly weight?: ZTextWeight;
 		ref?: HTMLElement | null;
 	}
 
@@ -108,7 +103,7 @@
 		summary: '在有限正文语义元素上组合Theme字号、行高、字重、tone、单/多行省略与表格数字。'
 	} as const satisfies ZuiComponentMetadata;
 
-	const textRecipe = defineRecipe({
+	export const textRecipe = defineRecipe({
 		base: (s) => {
 			s.fontFamily._sans;
 			s.margin.px(0);

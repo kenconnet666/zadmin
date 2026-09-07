@@ -20,21 +20,25 @@
 
 ## 调用迁移
 
-| 旧调用                                                     | 新调用                                           | 原因                                                        |
-| ---------------------------------------------------------- | ------------------------------------------------ | ----------------------------------------------------------- |
-| `ZButton variant="primary"`                                | `variant="solid"`                                | 外观与品牌色分开；默认 tone 为 primary。                    |
-| `variant="secondary"`                                      | `variant="outline"`                              | 表达描边形式；中性外观显式 `tone="neutral"`。               |
-| Button/Toggle `tone="default"`                             | `tone="primary"`                                 | 保留默认品牌动作的含义。                                    |
-| Tag/Badge/Text/Heading/Statistic/Timeline `tone="default"` | `tone="neutral"`                                 | 明确中性语义。                                              |
-| Tag/Badge `tone="accent"`                                  | `tone="info"`                                    | 使用一致的信息状态词。                                      |
-| Typography `size="xlarge"`（原 24px）                      | `size="xxlarge"`                                 | 保留原 24px 视觉规模。                                      |
-| Typography `size="xxlarge"`（原 32px）                     | `size="xxxlarge"`                                | 保留原 32px 页面标题。                                      |
-| Statistic `trend={-18}` 自动红色                           | 默认 neutral；业务改善显式 `trendTone="success"` | 增减方向不能自动判断业务好坏。                              |
-| `ZCalendar range={preview}`                                | `highlightRange={preview}`                       | 旧参数只画范围却与真实range value同名；新名不冒充selected。 |
+| 旧调用                                                     | 新调用                                           | 原因                                                         |
+| ---------------------------------------------------------- | ------------------------------------------------ | ------------------------------------------------------------ |
+| `ZButton variant="primary"`                                | `variant="solid"`                                | 外观与品牌色分开；默认 tone 为 primary。                     |
+| `variant="secondary"`                                      | `variant="outline"`                              | 表达描边形式；中性外观显式 `tone="neutral"`。                |
+| Button/Toggle `tone="default"`                             | `tone="primary"`                                 | 保留默认品牌动作的含义。                                     |
+| Tag/Badge/Text/Heading/Statistic/Timeline `tone="default"` | `tone="neutral"`                                 | 明确中性语义。                                               |
+| Tag/Badge `tone="accent"`                                  | `tone="info"`                                    | 使用一致的信息状态词。                                       |
+| Typography `size="xlarge"`（原 24px）                      | `size="xxlarge"`                                 | 保留原 24px 视觉规模。                                       |
+| Typography `size="xxlarge"`（原 32px）                     | `size="xxxlarge"`                                | 保留原 32px 页面标题。                                       |
+| Statistic `trend={-18}` 自动红色                           | 默认 neutral；业务改善显式 `trendTone="success"` | 增减方向不能自动判断业务好坏。                               |
+| `ZCalendar range={preview}`                                | `highlightRange={preview}`                       | 旧参数只画范围却与真实range value同名；新名不冒充selected。  |
+| 手写常驻Calendar+TimeField模拟DateTimePicker               | `presentation="inline"`                          | 复用Picker唯一owner、Panel、草稿、提交、readonly与FormData。 |
+| 替换Calendar内部button/header DOM                          | `dateCell` / `header` typed snippets             | 只定制内容；Calendar继续拥有button、ARIA、焦点、选择和分页。 |
 
 Button、ToggleButton 与按钮外观的 Link 共用同一 recipe。色调 factory 通过明确的 `data-variant` 和原生 `aria-pressed` 选择器组合外观与选中态，总分支数保持在现有 64 上限内；没有创建六色×三外观×pressed 的 compound 笛卡尔积。Loading 的 Spinner 继承按钮已经解析的前景，不再维护第二套颜色映射。
 
 E14补充：Calendar真实范围选择现在由`selectionMode="range"`的判别`value`拥有；`highlightRange`只承接DateRangePicker、DateTimePickerPanel/DateTimeRange和只读展示的额外范围，并只投射`data-highlighted`，不改变`aria-selected/data-selected`。源码与真实Docs直接消费者同步迁移，不保留两个都叫range但所有权不同的入口。
+
+E15补充：DateTimePicker/DateTimeRangePicker的inline是同一组件的判别presentation，不新增`InlineDateTimePicker`别名或第二套事件模型。inline分支从类型上排除open/defaultOpen/onOpenChange/placement；Confirm后面板保持常驻，Cancel只回滚草稿。Calendar/PeriodCalendar及上层DateTime Picker传递typed cell/header内容时，调用方不再重建日期button、gridcell或分页状态。TimeValue作为ZText上的typed Time格式化展示，不能替代TimeField/TimeGrid的编辑或选择职责。
 
 新增的最小 API：
 

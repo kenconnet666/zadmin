@@ -1,5 +1,6 @@
 <script module lang="ts">
 	import { today } from '@internationalized/date';
+	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import { styleInternalAction } from '../gene/internal-action.js';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
@@ -41,7 +42,37 @@
 		TMode extends PeriodSelectionMode
 	> = PeriodSelectionValue<TKind, TMode>;
 
-	interface PeriodCalendarSharedOptions<
+	export interface PeriodCalendarCellContext<TKind extends PeriodKind = PeriodKind> {
+		readonly current: boolean;
+		readonly direction: 'ltr' | 'rtl';
+		readonly disabled: boolean;
+		readonly focused: boolean;
+		readonly label: string;
+		readonly period: PeriodOfKind<TKind>;
+		readonly preview: boolean;
+		readonly previewInvalid: boolean;
+		readonly rangeEdge?: 'end' | 'start';
+		readonly readonly: boolean;
+		readonly selected: boolean;
+		readonly size: ZControlSize;
+		readonly unavailable: boolean;
+		readonly visibleLabel: string;
+		readonly weekRangeLabel?: string;
+	}
+
+	export interface PeriodCalendarHeaderContext<TKind extends PeriodKind = PeriodKind> {
+		readonly direction: 'ltr' | 'rtl';
+		readonly label: string;
+		readonly nextDisabled: boolean;
+		readonly previousDisabled: boolean;
+		readonly size: ZControlSize;
+		readonly visiblePeriods: readonly PeriodOfKind<TKind>[];
+
+		goToNextPage(): void;
+		goToPreviousPage(): void;
+	}
+
+	export interface PeriodCalendarSharedOptions<
 		TKind extends PeriodKind,
 		TMode extends PeriodSelectionMode
 	> {
@@ -56,6 +87,7 @@
 		readonly form?: string;
 		readonly formParticipation?: PeriodCalendarFormParticipation;
 		readonly granularity: TKind;
+		readonly header?: Snippet<[context: PeriodCalendarHeaderContext<TKind>]>;
 		readonly invalid?: boolean;
 		readonly isPeriodUnavailable?: (period: PeriodOfKind<TKind>) => boolean;
 		readonly locale?: string;
@@ -65,6 +97,7 @@
 		readonly nextPageLabel?: string;
 		readonly onFocusedValueChange?: (period: PeriodOfKind<TKind>) => void;
 		readonly onValueChange?: (value: PeriodSelectionValue<TKind, TMode>) => void;
+		readonly periodCell?: Snippet<[context: PeriodCalendarCellContext<TKind>]>;
 		readonly previousPageLabel?: string;
 		readonly readonly?: boolean;
 		ref?: HTMLDivElement | null;
@@ -76,18 +109,22 @@
 		readonly weekRules?: WeekRules;
 	}
 
-	type PeriodCalendarModeProp<TMode extends PeriodSelectionMode> = TMode extends 'single'
-		? { readonly selectionMode?: 'single' }
-		: { readonly selectionMode: TMode };
+	export type PeriodCalendarModeProp<TMode extends PeriodSelectionMode> = {
+		readonly selectionMode?: TMode;
+	} & (TMode extends 'single' ? unknown : { readonly selectionMode: TMode });
 
 	export type PeriodCalendarOptions<
 		TKind extends PeriodKind = PeriodKind,
-		TMode extends PeriodSelectionMode = 'single'
-	> = PeriodCalendarSharedOptions<TKind, TMode> & PeriodCalendarModeProp<TMode>;
+		TMode extends PeriodSelectionMode = PeriodSelectionMode
+	> = TKind extends PeriodKind
+		? TMode extends PeriodSelectionMode
+			? PeriodCalendarSharedOptions<TKind, TMode> & PeriodCalendarModeProp<TMode>
+			: never
+		: never;
 
 	export type ZPeriodCalendarProps<
 		TKind extends PeriodKind = PeriodKind,
-		TMode extends PeriodSelectionMode = 'single'
+		TMode extends PeriodSelectionMode = PeriodSelectionMode
 	> = Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'onchange'> &
 		PeriodCalendarOptions<TKind, TMode>;
 
@@ -112,7 +149,8 @@
 			'CollectionNavigation',
 			'MountedElements',
 			'FormControlState',
-			'FormValueBridge'
+			'FormValueBridge',
+			'typed content snippets'
 		],
 		events: [
 			{
@@ -154,9 +192,22 @@
 				type: "'month' | 'quarter' | 'week' | 'year'"
 			},
 			{
+				default: '内置周期label或week双行内容',
+				description: '只替换内部周期button内容；ARIA grid、焦点、选择和Form owner保持在Calendar。',
+				name: 'periodCell',
+				type: 'Snippet<[PeriodCalendarCellContext<TKind>]>'
+			},
+			{
+				default: '内置前页、页label和后页',
+				description: '替换header内容并通过只读context请求分页，不拥有周期选择。',
+				name: 'header',
+				type: 'Snippet<[PeriodCalendarHeaderContext<TKind>]>'
+			},
+			{
 				default: "'single'",
 				description: '判别value/defaultValue与FormData形状；multiple和range分支必须显式传入。',
 				name: 'selectionMode',
+				requiredWhen: 'multiple/range分支必须显式设置；single可省略',
 				type: "'single' | 'multiple' | 'range'"
 			},
 			{
@@ -313,7 +364,20 @@
 			}
 		],
 		since: 'unreleased',
-		snippets: [],
+		snippets: [
+			{
+				description: '周期button内的定制内容。',
+				name: 'periodCell',
+				required: false,
+				type: 'Snippet<[PeriodCalendarCellContext<TKind>]>'
+			},
+			{
+				description: '使用PeriodCalendarHeaderContext分页的header内容。',
+				name: 'header',
+				required: false,
+				type: 'Snippet<[PeriodCalendarHeaderContext<TKind>]>'
+			}
+		],
 		source: 'ui/zui/src/components/input/ZPeriodCalendar.svelte',
 		states: [
 			{
@@ -424,7 +488,10 @@
 		registerRecipeHmr(import.meta, recipe);
 </script>
 
-<script lang="ts" generics="TKind extends PeriodKind, TMode extends PeriodSelectionMode = 'single'">
+<script
+	lang="ts"
+	generics="TKind extends PeriodKind, TMode extends PeriodSelectionMode = PeriodSelectionMode"
+>
 	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import { onDestroy, untrack } from 'svelte';
@@ -481,6 +548,7 @@
 		form,
 		formParticipation = 'auto',
 		granularity,
+		header,
 		invalid,
 		isPeriodUnavailable,
 		locale,
@@ -490,6 +558,7 @@
 		nextPageLabel,
 		onFocusedValueChange,
 		onValueChange,
+		periodCell,
 		previousPageLabel,
 		readonly: readonlyProp = false,
 		ref = $bindable(null),
@@ -599,7 +668,7 @@
 		}
 		return candidate ? [candidate as KindPeriod] : [];
 	}
-	const resolvedConfiguration = $derived.by(() => {
+	function readConfiguration(): ReturnType<typeof resolvePeriodConfiguration> {
 		const configuration = resolvePeriodConfiguration({
 			fiscalYearStartMonth,
 			kind: granularity,
@@ -617,7 +686,9 @@
 		if (minValue && maxValue && comparePeriods(minValue, maxValue) > 0)
 			throw new RangeError('ZPeriodCalendar minValue cannot exceed maxValue.');
 		return configuration;
-	});
+	}
+	untrack(readConfiguration);
+	const resolvedConfiguration = $derived.by(readConfiguration);
 	const resolvedWeekRules = $derived<WeekRules>(resolvedConfiguration.weekRules);
 	const resolvedFiscalStart = $derived(resolvedConfiguration.fiscalYearStartMonth);
 
@@ -669,15 +740,16 @@
 		return granularity === 'quarter' ? 2 : granularity === 'week' ? 1 : 4;
 	}
 	function pageStart(period: KindPeriod): KindPeriod {
-		switch (period.kind) {
+		const normalized = period as Period;
+		switch (normalized.kind) {
 			case 'month':
-				return monthPeriod(period.year, 1) as KindPeriod;
+				return monthPeriod(normalized.year, 1) as KindPeriod;
 			case 'quarter':
-				return quarterPeriod(period.year, 1, period.fiscalYearStartMonth) as KindPeriod;
+				return quarterPeriod(normalized.year, 1, normalized.fiscalYearStartMonth) as KindPeriod;
 			case 'year':
-				return yearPeriod(Math.floor((period.year - 1) / 12) * 12 + 1) as KindPeriod;
+				return yearPeriod(Math.floor((normalized.year - 1) / 12) * 12 + 1) as KindPeriod;
 			case 'week':
-				return addPeriod(period, -((period.week - 1) % 12)) as KindPeriod;
+				return addPeriod(normalized, -((normalized.week - 1) % 12)) as KindPeriod;
 		}
 	}
 	let page = $state<KindPeriod>(untrack(() => pageStart(initialFocus)));
@@ -703,8 +775,9 @@
 		return `${formatter.format(periodStart(period).toDate(resolvedTimeZone))} – ${formatter.format(periodEnd(period).toDate(resolvedTimeZone))}`;
 	}
 	function recordLabel(period: KindPeriod): string {
-		if (period.kind === 'week' && showWeekNumbers)
-			return zui.localePack.period.weekNumber(period.year, period.week);
+		const normalized = period as Period;
+		if (normalized.kind === 'week' && showWeekNumbers)
+			return zui.localePack.period.weekNumber(normalized.year, normalized.week);
 		return formatPeriod(period, resolvedLocale, { timeZone: resolvedTimeZone });
 	}
 	function visibleLabel(period: KindPeriod, label: string): string {
@@ -740,7 +813,7 @@
 	);
 	const view = $derived(collection.full);
 	const mounted = new MountedElements<string, HTMLButtonElement>();
-	let activeKey = $state<string>(
+	let activeKey = $state<string | undefined>(
 		untrack(() => {
 			const preferred = periodKey(initialFocus);
 			return (
@@ -759,8 +832,13 @@
 		view: () => view,
 		writeActive: (next) => (activeKey = next)
 	});
-	const mountCell: Action<HTMLButtonElement, CellRecord> = (node, record) =>
-		mounted.mount(record.key, node, `${idBase}-${record.key.replace(/[^a-zA-Z0-9_-]/gu, '-')}`);
+	const mountCell: Action<HTMLButtonElement, CellRecord> = (node, record) => ({
+		destroy: mounted.mount(
+			record.key,
+			node,
+			`${idBase}-${record.key.replace(/[^a-zA-Z0-9_-]/gu, '-')}`
+		)
+	});
 	const rootClass = $derived(zui.recipe(rootRecipe));
 	const headerClass = $derived(zui.recipe(headerRecipe));
 	const gridClass = $derived(zui.recipe(gridRecipe));
@@ -774,6 +852,18 @@
 			});
 		})
 	]);
+	const headerContext = $derived.by<PeriodCalendarHeaderContext<TKind>>(() =>
+		Object.freeze({
+			direction: effectiveDirection,
+			goToNextPage: () => movePage(1),
+			goToPreviousPage: () => movePage(-1),
+			label: pageLabel(),
+			nextDisabled: resolvedDisabled || !targetPage(1),
+			previousDisabled: resolvedDisabled || !targetPage(-1),
+			size: resolvedSize,
+			visiblePeriods: Object.freeze(records.map((record) => record.period))
+		})
+	);
 	const weekRangeClass = $derived(zui.recipe(weekRangeRecipe));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
@@ -791,6 +881,12 @@
 		if (!range?.start || range.end || !hoverPeriod) return null;
 		return normalizePeriodRange({ end: hoverPeriod, start: range.start }, granularity);
 	});
+	const previewRangeInvalid = $derived(
+		Boolean(
+			previewRange &&
+			!isPeriodRangeAvailable(previewRange, isPeriodUnavailable, allowNonContiguousRange)
+		)
+	);
 	function periodInRange(period: KindPeriod, range: PeriodRangeValue<TKind> | null): boolean {
 		if (!range) return false;
 		if (!range.start) return Boolean(range.end && samePeriod(period, range.end));
@@ -809,7 +905,30 @@
 		if (range?.end && samePeriod(range.end, period)) return 'end';
 		return undefined;
 	}
-	function setSelection(next: SelectionValue): boolean {
+	function periodCellContext(
+		record: CellRecord,
+		selected: boolean,
+		preview: boolean
+	): PeriodCalendarCellContext<TKind> {
+		return Object.freeze({
+			current: samePeriod(record.period, currentPeriod()),
+			direction: effectiveDirection,
+			disabled: resolvedDisabled,
+			focused: activeKey === record.key,
+			label: record.label,
+			period: record.period,
+			preview,
+			previewInvalid: preview && previewRangeInvalid,
+			rangeEdge: rangeEdge(record.period),
+			readonly: resolvedReadonly,
+			selected,
+			size: resolvedSize,
+			unavailable: record.disabled,
+			visibleLabel: record.visibleLabel,
+			weekRangeLabel: record.period.kind === 'week' ? weekRangeLabel(record.period) : undefined
+		});
+	}
+	function setSelection(next: unknown): boolean {
 		if (resolvedDisabled || resolvedReadonly) return false;
 		const accepted = valueState.setFromUser(normalizedSelection(next));
 		if (accepted) feedback = '';
@@ -824,16 +943,16 @@
 		if (selectionMode === 'multiple') {
 			const current = valueState.current as readonly KindPeriod[];
 			setSelection(
-				(current.some((item) => samePeriod(item, period))
+				current.some((item) => samePeriod(item, period))
 					? current.filter((item) => !samePeriod(item, period))
-					: [...current, period]) as SelectionValue
+					: [...current, period]
 			);
 			return;
 		}
 		if (selectionMode === 'range') {
 			const current = rangeValue();
 			if (!current?.start || current.end) {
-				setSelection({ end: null, start: period } as SelectionValue);
+				setSelection({ end: null, start: period });
 				hoverPeriod = null;
 				return;
 			}
@@ -843,15 +962,11 @@
 				feedbackRevision += 1;
 				return;
 			}
-			setSelection(candidate as SelectionValue);
+			setSelection(candidate);
 			hoverPeriod = null;
 			return;
 		}
-		setSelection(
-			(samePeriod(valueState.current as KindPeriod | null, period)
-				? null
-				: period) as SelectionValue
-		);
+		setSelection(samePeriod(valueState.current as KindPeriod | null, period) ? null : period);
 	}
 	function setFocused(period: KindPeriod, focus = false): void {
 		if (unavailable(period)) return;
@@ -982,7 +1097,8 @@
 		valueState.reset();
 		hoverPeriod = null;
 		const target = selectionPeriods(valueState.current)[0] ?? currentPeriod();
-		focusedState.reconcile(target);
+		focusedValue = target;
+		activeKey = periodKey(target);
 		page = pageStart(target);
 		feedback = '';
 	}
@@ -1022,36 +1138,41 @@
 	onpointerleave={() => (hoverPeriod = null)}
 >
 	<div class={headerClass} data-slot="header">
-		<ZButton
-			aria-label={resolvedPreviousLabel}
-			disabled={resolvedDisabled || !targetPage(-1)}
-			onclick={() => movePage(-1)}
-			shape="square"
-			size={resolvedSize}
-			variant="ghost"
-		>
-			<PreviousIcon aria-hidden="true" size="1em" />
-		</ZButton>
-		<strong aria-live="polite">{pageLabel()}</strong>
-		<ZButton
-			aria-label={resolvedNextLabel}
-			disabled={resolvedDisabled || !targetPage(1)}
-			onclick={() => movePage(1)}
-			shape="square"
-			size={resolvedSize}
-			variant="ghost"
-		>
-			<NextIcon aria-hidden="true" size="1em" />
-		</ZButton>
+		{#if header}
+			<ZVisuallyHidden aria-live="polite" data-slot="header-label"
+				>{headerContext.label}</ZVisuallyHidden
+			>
+			{@render header(headerContext)}
+		{:else}
+			<ZButton
+				aria-label={resolvedPreviousLabel}
+				disabled={resolvedDisabled || !targetPage(-1)}
+				onclick={() => movePage(-1)}
+				shape="square"
+				size={resolvedSize}
+				variant="ghost"
+			>
+				<PreviousIcon aria-hidden="true" size="1em" />
+			</ZButton>
+			<strong aria-live="polite">{pageLabel()}</strong>
+			<ZButton
+				aria-label={resolvedNextLabel}
+				disabled={resolvedDisabled || !targetPage(1)}
+				onclick={() => movePage(1)}
+				shape="square"
+				size={resolvedSize}
+				variant="ghost"
+			>
+				<NextIcon aria-hidden="true" size="1em" />
+			</ZButton>
+		{/if}
 	</div>
 	<div
 		aria-describedby={resolvedDescribedBy}
-		aria-invalid={resolvedInvalid || undefined}
 		aria-label={resolvedLabelledBy ? undefined : resolvedCalendarLabel}
 		aria-labelledby={resolvedLabelledBy}
 		aria-multiselectable={selectionMode === 'multiple' || selectionMode === 'range' || undefined}
 		aria-readonly={resolvedReadonly || undefined}
-		aria-required={resolvedRequired || undefined}
 		class={gridClass}
 		data-slot="grid"
 		role="grid"
@@ -1061,6 +1182,7 @@
 				{#each records.slice(row * columns(), row * columns() + columns()) as record (record.key)}
 					{@const isSelected = selected(record.period)}
 					{@const isPreview = periodInRange(record.period, previewRange)}
+					{@const context = periodCellContext(record, isSelected, isPreview)}
 					<div aria-selected={isSelected} role="gridcell">
 						<button
 							use:mountCell={record}
@@ -1068,7 +1190,7 @@
 							aria-label={record.period.kind === 'week'
 								? `${formatPeriod(record.period, resolvedLocale)}: ${weekRangeLabel(record.period)}`
 								: record.label}
-							aria-readonly={resolvedReadonly || undefined}
+							aria-disabled={resolvedReadonly || undefined}
 							class={zui.recipe(cellRecipe, {
 								disabled: resolvedDisabled || record.disabled,
 								preview: isPreview,
@@ -1092,7 +1214,9 @@
 							}}
 							tabindex={activeKey === record.key && !record.disabled && !resolvedDisabled ? 0 : -1}
 						>
-							{#if record.period.kind === 'week'}
+							{#if periodCell}
+								{@render periodCell(context)}
+							{:else if record.period.kind === 'week'}
 								{#if showWeekNumbers}
 									<span data-slot="week-number">{record.label}</span>
 								{/if}

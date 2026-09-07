@@ -45,7 +45,8 @@ describe('ZPeriodPicker SSR contract', () => {
 		expect(form).toContain('value="2026-Q3@fs=04"');
 		expect(form).not.toContain('name="weeks.start"');
 		expect(form).not.toContain('name="weeks.end"');
-		expect(form).not.toContain('data-slot="content"');
+		for (const [, contentId] of form.matchAll(/aria-controls="([^"]+)"/gu))
+			expect(form).not.toContain(`id="${contentId}"`);
 		const required = renderedForm(body, 'period-picker-required-form');
 		expect(required.match(/name="period"/gu)).toHaveLength(1);
 		expect(required).toContain('value="2026"');
@@ -58,8 +59,9 @@ describe('ZPeriodPicker SSR contract', () => {
 		const readonlyStart = body.indexOf('data-testid="period-picker-readonly"');
 		const readonlyEnd = body.indexOf('</div>', readonlyStart);
 		const readonly = body.slice(readonlyStart, readonlyEnd);
-		expect(readonly).toContain('aria-disabled="true"');
-		expect(readonly).not.toMatch(/\sdisabled(?:=|\s|>)/u);
+		const readonlyTrigger = readonly.match(/<button data-slot="trigger"[^>]*>/u)?.[0];
+		expect(readonlyTrigger).toContain('aria-disabled="true"');
+		expect(readonlyTrigger).not.toMatch(/\sdisabled(?:=|\s|>)/u);
 	});
 
 	it('serializes a self-describing weekly range through one Picker root', () => {

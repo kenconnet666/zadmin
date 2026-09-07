@@ -1,16 +1,19 @@
 <script module lang="ts">
 	import type { CalendarDate as PublicCalendarDate } from '@internationalized/date';
+	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import type { Weekday } from '../../runtime/date.js';
 	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
 	import type { PopoverPlacement } from '../compound/popover/ZPopover.svelte';
+	import type { CalendarCellContext, CalendarHeaderContext } from './ZCalendar.svelte';
 
 	export interface ZDatePickerProps extends Omit<
 		HTMLAttributes<HTMLDivElement>,
 		'children' | 'onchange'
 	> {
 		readonly calendarLabel?: string;
+		readonly calendarHeader?: Snippet<[context: CalendarHeaderContext]>;
 		readonly clearLabel?: string;
 		readonly clearable?: boolean;
 		readonly closeOnSelect?: boolean;
@@ -23,6 +26,7 @@
 		readonly formatOptions?: Intl.DateTimeFormatOptions;
 		readonly invalid?: boolean;
 		readonly isDateUnavailable?: (date: PublicCalendarDate) => boolean;
+		readonly dateCell?: Snippet<[context: CalendarCellContext]>;
 		readonly locale?: string;
 		readonly maxValue?: PublicCalendarDate;
 		readonly minValue?: PublicCalendarDate;
@@ -56,7 +60,14 @@
 			{ description: 'Popover状态。', name: 'open', type: 'boolean' },
 			{ description: '真实根引用。', name: 'ref', type: 'HTMLDivElement | null' }
 		],
-		dependencies: ['ZDateField', 'ZCalendar', 'ZInputGroup', 'ZPopover', 'FormControlState'],
+		dependencies: [
+			'ZDateField',
+			'ZCalendar',
+			'ZInputGroup',
+			'ZPopover',
+			'FormControlState',
+			'typed content snippets'
+		],
 		events: [
 			{
 				description: '分段编辑、日历选择或清空后的值。',
@@ -84,6 +95,12 @@
 				description: 'Calendar dialog与trigger的后备可访问名称。',
 				name: 'calendarLabel',
 				type: 'string'
+			},
+			{
+				default: 'Calendar默认页头',
+				description: '透传给内部Calendar的页头；避免与Picker根结构混淆。',
+				name: 'calendarHeader',
+				type: 'Snippet<[CalendarHeaderContext]>'
 			},
 			{
 				default: 'Provider localePack.date.clearDate',
@@ -197,6 +214,12 @@
 				type: '(date: CalendarDate) => boolean'
 			},
 			{
+				default: 'Calendar默认日期内容',
+				description: '透传给内部Calendar，只替换日期button内容。',
+				name: 'dateCell',
+				type: 'Snippet<[CalendarCellContext]>'
+			},
+			{
 				default: 'Field > componentDefaults.datePicker > input > density',
 				description: '统一DateField和Lucide actions尺寸。',
 				name: 'size',
@@ -246,7 +269,20 @@
 			}
 		],
 		since: 'unreleased',
-		snippets: [],
+		snippets: [
+			{
+				description: '内部Calendar的定制页头。',
+				name: 'calendarHeader',
+				required: false,
+				type: 'Snippet<[CalendarHeaderContext]>'
+			},
+			{
+				description: '内部日期button内的定制内容。',
+				name: 'dateCell',
+				required: false,
+				type: 'Snippet<[CalendarCellContext]>'
+			}
+		],
 		source: 'ui/zui/src/components/input/ZDatePicker.svelte',
 		states: [
 			{
@@ -298,6 +334,7 @@
 		'aria-describedby': ariaDescribedBy,
 		'aria-label': ariaLabel,
 		'aria-labelledby': ariaLabelledBy,
+		calendarHeader,
 		calendarLabel,
 		class: className,
 		clearLabel,
@@ -306,6 +343,7 @@
 		controlId: controlIdProp,
 		defaultOpen = false,
 		defaultValue,
+		dateCell,
 		disabled: disabledProp = false,
 		firstDayOfWeek,
 		form,
@@ -507,9 +545,11 @@
 				bind:focusedValue={calendarFocusedValue}
 				appearance="bare"
 				calendarLabel={resolvedCalendarLabel}
+				{dateCell}
 				defaultFocusedValue={valueState.current ?? defaultValue ?? undefined}
 				disabled={resolvedDisabled}
 				{firstDayOfWeek}
+				header={calendarHeader}
 				formParticipation="none"
 				{isDateUnavailable}
 				locale={resolvedLocale}

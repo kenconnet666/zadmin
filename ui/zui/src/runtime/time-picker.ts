@@ -132,12 +132,27 @@ export function findAvailableTime(options: FindAvailableTimeOptions): Time | nul
 				: options.allowHiddenSearch
 					? fullUnit()
 					: [options.preferred.second];
+	// Milliseconds are never rendered as a column. For an empty picker, sample the exact
+	// min/max precision in addition to the preferred value so a narrow boundary interval remains
+	// reachable without scanning all 1,000 hidden values.
+	const milliseconds = options.allowHiddenSearch
+		? [
+				...new Set(
+					[
+						options.preferred.millisecond,
+						options.minValue?.millisecond,
+						options.maxValue?.millisecond
+					].filter((value): value is number => value !== undefined)
+				)
+			]
+		: [options.preferred.millisecond];
 	for (const hour of nearest(hours, options.preferred.hour)) {
 		for (const minute of nearest(minutes, options.preferred.minute)) {
 			for (const second of nearest(seconds, options.preferred.second)) {
-				const millisecond = options.preferred.millisecond;
-				const candidate = new Time(hour, minute, second, millisecond);
-				if (timePickerValueAvailable(candidate, options)) return candidate;
+				for (const millisecond of nearest(milliseconds, options.preferred.millisecond)) {
+					const candidate = new Time(hour, minute, second, millisecond);
+					if (timePickerValueAvailable(candidate, options)) return candidate;
+				}
 			}
 		}
 	}
@@ -146,14 +161,15 @@ export function findAvailableTime(options: FindAvailableTimeOptions): Time | nul
 
 export function initialTimePickerReference(
 	value: Time | null,
-	constraints: TimePickerConstraints
+	constraints: TimePickerConstraints,
+	preferred = value ?? new Time(0)
 ): Time | null {
 	validateTimePickerConstraints(constraints);
 	if (value && timePickerValueAvailable(value, constraints)) return value;
 	return findAvailableTime({
 		...constraints,
 		allowHiddenSearch: value === null,
-		preferred: value ?? new Time(0)
+		preferred
 	});
 }
 

@@ -1,7 +1,10 @@
 <script module lang="ts">
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import type { HTMLAttributes } from 'svelte/elements';
-	import type { PeriodCalendarOptions } from './ZPeriodCalendar.svelte';
+	import type {
+		PeriodCalendarModeProp,
+		PeriodCalendarSharedOptions
+	} from './ZPeriodCalendar.svelte';
 	import type {
 		PeriodKind,
 		PeriodSelectionMode,
@@ -9,11 +12,11 @@
 	} from '../../runtime/period.js';
 	import type { PopoverPlacement } from '../compound/popover/ZPopover.svelte';
 	export type PeriodPickerCommitMode = 'immediate' | 'confirm';
-	export type ZPeriodPickerProps<
+	type ZPeriodPickerSharedProps<
 		TKind extends PeriodKind = PeriodKind,
 		TMode extends PeriodSelectionMode = 'single'
 	> = Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'onchange'> &
-		Omit<PeriodCalendarOptions<TKind, TMode>, 'formParticipation'> & {
+		Omit<PeriodCalendarSharedOptions<TKind, TMode>, 'formParticipation'> & {
 			readonly cancelLabel?: string;
 			readonly clearable?: boolean;
 			readonly clearLabel?: string;
@@ -31,6 +34,15 @@
 			readonly placeholder?: string;
 		};
 
+	export type ZPeriodPickerProps<
+		TKind extends PeriodKind = PeriodKind,
+		TMode extends PeriodSelectionMode = PeriodSelectionMode
+	> = TKind extends PeriodKind
+		? TMode extends PeriodSelectionMode
+			? ZPeriodPickerSharedProps<TKind, TMode> & PeriodCalendarModeProp<TMode>
+			: never
+		: never;
+
 	export const zuiMetadata = {
 		id: 'period-picker',
 		name: 'ZPeriodPicker',
@@ -47,7 +59,8 @@
 			'ZInputGroup',
 			'ZPopover',
 			'FormControlState',
-			'FormValueBridge'
+			'FormValueBridge',
+			'typed content snippets'
 		],
 		bindings: [
 			{
@@ -286,6 +299,18 @@
 				description: '内部Calendar的可访问名称。'
 			},
 			{
+				name: 'header',
+				type: 'Snippet<[PeriodCalendarHeaderContext<TKind>]>',
+				default: 'PeriodCalendar默认页头',
+				description: '透传给内部PeriodCalendar的页头内容；导航和可用性仍由Picker拥有。'
+			},
+			{
+				name: 'periodCell',
+				type: 'Snippet<[PeriodCalendarCellContext<TKind>]>',
+				default: 'PeriodCalendar默认内容',
+				description: '透传给内部PeriodCalendar，只替换周期button内容。'
+			},
+			{
 				name: 'clearLabel',
 				type: 'string',
 				default: 'localePack.period.clearPeriod',
@@ -353,7 +378,20 @@
 				description: '内部Calendar焦点变化。'
 			}
 		],
-		snippets: [],
+		snippets: [
+			{
+				name: 'header',
+				type: 'Snippet<[PeriodCalendarHeaderContext<TKind>]>',
+				description: '内部PeriodCalendar的定制页头。',
+				required: false
+			},
+			{
+				name: 'periodCell',
+				type: 'Snippet<[PeriodCalendarCellContext<TKind>]>',
+				description: '内部周期button内的定制内容。',
+				required: false
+			}
+		],
 		parts: [
 			{ name: 'trigger', description: '承载当前周期文本的唯一触发按钮。' },
 			{ name: 'clear', description: '独立清空操作。' },
@@ -390,7 +428,7 @@
 
 <script
 	lang="ts"
-	generics="TKind extends PeriodKind = PeriodKind, TMode extends PeriodSelectionMode = 'single'"
+	generics="TKind extends PeriodKind = PeriodKind, TMode extends PeriodSelectionMode = PeriodSelectionMode"
 >
 	import CalendarDays from '@lucide/svelte/icons/calendar-days';
 	import X from '@lucide/svelte/icons/x';
@@ -459,6 +497,7 @@
 		form,
 		formatter,
 		granularity,
+		header,
 		invalid: invalidProp = false,
 		isPeriodUnavailable,
 		locale,
@@ -474,6 +513,7 @@
 		pickerLabel,
 		placement = 'bottom-start',
 		placeholder,
+		periodCell,
 		previousPageLabel,
 		readonly: readonlyProp = false,
 		ref = $bindable(null),
@@ -565,6 +605,8 @@
 		},
 		valueScope
 	);
+	// Configuration conflicts are contract errors even when SSR never mounts the closed panel.
+	untrack(() => normalize(valueState.current));
 	const current = $derived(normalize(valueState.current));
 	let panelValue = $state.raw<SelectionValue>(untrack(() => current));
 	const openState = new ControllableState({
@@ -847,6 +889,7 @@
 				{allowEmpty}
 				{allowNonContiguousRange}
 				{calendarLabel}
+				{header}
 				{defaultFocusedValue}
 				{focusedValue}
 				onFocusedValueChange={(next) => {
@@ -858,6 +901,7 @@
 				{minValue}
 				{maxValue}
 				{isPeriodUnavailable}
+				{periodCell}
 				{showWeekNumbers}
 				{previousPageLabel}
 				{nextPageLabel}

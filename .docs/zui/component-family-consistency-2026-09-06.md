@@ -48,3 +48,9 @@ E13补充：DateTimePicker/Range已共享Calendar+TimePickerPanel；DateTimeFiel
 E14补充：PeriodCalendar/Picker共享一个Period runtime、选择归一化、规则与FormData合同；month/year/quarter/week只改变值语义和网格分页，不复制四套owner。ZCalendar的single/multiple/range共享一个FormControlState、focusedValue和roving refs；visibleMonths只投影多个month grid，outside/clamp副本不重复按钮或ref。Calendar周号复用Period的`periodFromDate/getLocaleWeekRules`，locale优先Intl weekInfo并保留旧运行时回退，不维护第二套week-year算法；旧视觉`range`改名`highlightRange`，真实range由判别value拥有。DateRange和DateTimeRange均复用该高亮通道，`data-highlighted`不冒充`aria-selected/data-selected`。
 
 当前家族一致性证据限于源码资产、WebStorm/格式检查和390px点查：PeriodPicker五档、键盘/confirm/readonly/Form reset，以及Calendar两月跨界键盘/multiple均有实际观察且无横向溢出。E13 CI 34075524716 仍有WebKit、静态、组件、覆盖率、Windows和外部SSR失败；E14已定位修正不等于远程通过。下一次成组验收必须覆盖Period四granularity×三selectionMode、Calendar 1/多月×single/multiple/range、Date/DateTime Picker组合、RTL/auto、disabled/readonly/required、边界era/year、Theme/reduced-motion与Form owner，不能以183组件/113 Docs families关闭矩阵。
+
+E15补充：DateTime single/range的popover与inline只改变呈现容器，继续共享同一根value、Field、DateTimePickerPanel、FormValueBridge、草稿和confirm/immediate策略；inline类型分支排除popup-only props。Calendar/PeriodCalendar的typed cell/header定制只替换内部内容或请求分页，button/grid/ARIA/roving/selection owner仍由原组件持有，并由DateTime Picker透传。TimeGrid候选复用集合导航与`Time`值，TimeValue复用ZText且不拥有编辑状态，避免产生第三套时间格式或选择owner。
+
+联合约束一致性包括：边界日部分时刻可用时保留日期入口；隐藏分秒/毫秒仍可找到合法空值参考；DST gap拒绝后日期草稿可修正；fold无改动确认保留原instant/time zone/offset；preset/Now不可用时拒绝而不clamp。inline readonly保留Calendar和时间列焦点/导航，只阻断写入和确认，Cancel/reset仍清草稿。390px仅已验证single inline宽度与Cancel/Confirm/reset唯一owner；range、readonly、TimeGrid/TimeValue和完整辅助技术矩阵仍待验收。
+
+E14完成job日志仍是失败证据：覆盖率1320通过、6项Period失败；静态41个类型错误多数为Period泛型；外部SSR四个生成声明因大DOM属性交叉联合在`Component<Props>`触发TS2590。当前Props按具体mode/selection/presentation组合物化named interface后再组成纯union，保留判别强度并减少`keyof Props`/`Partial<Props>`分配；整个run最后一次状态未知，不能登记为家族通过或稳定晋升。

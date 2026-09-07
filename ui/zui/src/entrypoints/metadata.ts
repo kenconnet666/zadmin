@@ -142,6 +142,8 @@ export { zuiMetadata as dateTimePickerMetadata } from '../components/input/ZDate
 export { zuiMetadata as dateTimeRangePickerMetadata } from '../components/input/ZDateTimeRangePicker.svelte';
 export { zuiMetadata as periodCalendarMetadata } from '../components/input/ZPeriodCalendar.svelte';
 export { zuiMetadata as periodPickerMetadata } from '../components/input/ZPeriodPicker.svelte';
+export { zuiMetadata as timeGridMetadata } from '../components/input/ZTimeGrid.svelte';
+export { zuiMetadata as timeValueMetadata } from '../components/data-display/ZTimeValue.svelte';
 export { zuiMetadata as treeSelectMetadata } from '../components/input/ZTreeSelect.svelte';
 export { zuiMetadata as transferMetadata } from '../components/input/ZTransfer.svelte';
 export { zuiMetadata as paginationMetadata } from '../components/navigation/ZPagination.svelte';

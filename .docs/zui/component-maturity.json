@@ -1,10 +1,10 @@
 {
 	"schemaVersion": 2,
 	"source": {
-		"metadataComponents": 183,
-		"documentationPages": 113,
-		"contractComponents": 183,
-		"testFiles": 342
+		"metadataComponents": 185,
+		"documentationPages": 115,
+		"contractComponents": 185,
+		"testFiles": 354
 	},
 	"stageNames": [
 		"Declared",
@@ -18,14 +18,14 @@
 	],
 	"evidenceScope": "Static inventory of authored test contracts, not test execution results or whole-component visual acceptance. Stage names are retained for compatibility; consult commit-matched CI and page-level review separately.",
 	"summary": {
-		"Declared": 183,
-		"Authorable": 183,
-		"ContractVerified": 183,
-		"RuntimeImplemented": 183,
-		"BrowserBehaviorVerified": 171,
+		"Declared": 185,
+		"Authorable": 185,
+		"ContractVerified": 185,
+		"RuntimeImplemented": 185,
+		"BrowserBehaviorVerified": 173,
 		"VisuallyVerified": 160,
 		"DesktopVerified": 0,
-		"ProductionVerified": 175
+		"ProductionVerified": 177
 	},
 	"components": [
 		{
@@ -9575,6 +9575,90 @@
 			]
 		},
 		{
+			"id": "time-value",
+			"name": "ZTimeValue",
+			"category": "data-display",
+			"family": null,
+			"status": "experimental",
+			"source": "ui/zui/src/components/data-display/ZTimeValue.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": true,
+				"VisuallyVerified": false,
+				"DesktopVerified": false,
+				"ProductionVerified": true
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/data-display/ZTimeValue.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZTimeValue"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "bd7771b444c40554d9a09d33a9a886c48f70fec928da6090d8c47613d97ee52b API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/data-display/ZTimeValue.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [
+					{
+						"path": "ui/zui/tests/time-grid-production.browser.spec.ts",
+						"detail": "ZTimeValue browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/TimeGridProductionFixture.svelte",
+						"detail": "ZTimeValue explicit rendered fixture usage"
+					}
+				],
+				"VisuallyVerified": [],
+				"DesktopVerified": [],
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/time-grid-production-ssr.spec.ts",
+						"detail": "ZTimeValue production assertions"
+					},
+					{
+						"path": "ui/zui/tests/time-grid-production.browser.spec.ts",
+						"detail": "ZTimeValue production assertions"
+					},
+					{
+						"path": "ui/zui/tests/TimeGridProductionFixture.svelte",
+						"detail": "ZTimeValue explicit rendered fixture usage"
+					}
+				]
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/data-display/time-value/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/time-grid-production-ssr.spec.ts",
+					"detail": "ZTimeValue SSR assertions"
+				}
+			]
+		},
+		{
 			"id": "timeline",
 			"name": "ZTimeline",
 			"category": "data-display",
@@ -11552,7 +11636,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "4051e84e37fc088df7d1a436b29a488d700eaab34d2cb30894b5de4128dc070d API snapshot entry"
+						"detail": "e5ea0c85a19ab68ddc88f0fdbb9b6c59a1258f53cef09d564cc84dc5317e2ad2 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -11863,7 +11947,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "a6bfdbf974015bed310700c9ec31c04d676f05bf4b8b114c660c5eb2478dd720 API snapshot entry"
+						"detail": "333fc605f96f7c2908426581f800677e75dd359ece7fc777babc0d279ed34b23 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -11949,6 +12033,10 @@
 				"detail": "catalog component documentation module"
 			},
 			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/calendar-content-production-ssr.spec.ts",
+					"detail": "ZCalendar SSR assertions"
+				},
 				{
 					"path": "ui/zui/tests/calendar-selection-production-ssr.spec.ts",
 					"detail": "ZCalendar SSR assertions"
@@ -12408,7 +12496,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "f08090029e19ffea79a24ee7be49dfde87da32b62f0cd29f554c20e0abbcbd8a API snapshot entry"
+						"detail": "7a79b980ee9e383e72ed729a7fec9fe930589291ee3c5283885d7278e061e03c API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -12479,6 +12567,10 @@
 			},
 			"ssrEvidence": [
 				{
+					"path": "ui/zui/tests/calendar-content-production-ssr.spec.ts",
+					"detail": "ZDatePicker SSR assertions"
+				},
+				{
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZDatePicker SSR assertions"
 				},
@@ -12525,7 +12617,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "2b0cbffc6739099c499795e67ea478915e354d7a972586b50b7fb1faf6f2323e API snapshot entry"
+						"detail": "c1006e57dd6a185dac7703ad98ce2862ba2f8aa4cf0794787295fee15aad50cb API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -12596,6 +12688,10 @@
 			},
 			"ssrEvidence": [
 				{
+					"path": "ui/zui/tests/calendar-content-production-ssr.spec.ts",
+					"detail": "ZDateRangePicker SSR assertions"
+				},
+				{
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZDateRangePicker SSR assertions"
 				},
@@ -12642,7 +12738,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "e79d04957032521d94c1de850e9b291020b41cb1c87935f8cf559fd9048f1a20 API snapshot entry"
+						"detail": "660373e8ec258270d4c3214feac3cc906926ac42f56ae43f9c0620c6c1e0436b API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -12730,7 +12826,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "2721436857d263020c2baef54f63f4cf517cdecaded446a321aae5bc21b073a8 API snapshot entry"
+						"detail": "60eb8249be29b8807df6592024ed16bc692123adab9c63d1f5cb0ada99b5a4de API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -12818,7 +12914,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "df88d6ed6a14ddebf731799997331f1f3255bb4263fc0775f2279baf082da69b API snapshot entry"
+						"detail": "505bb685f2760e634bccf8cf92e5b1aaee3669b254dc2bd5df75b61c75a94163 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -14415,7 +14511,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "a7ccff01045bf3f3be0f835d623564dc1c1542b020f89204a3b029e8c104d1ea API snapshot entry"
+						"detail": "be1445d600947f707449644d9e15fcd48973f732ebcca96f486c8f61f8a6e04c API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -14459,6 +14555,10 @@
 				{
 					"path": "ui/zui/tests/period-calendar-production-ssr.spec.ts",
 					"detail": "ZPeriodCalendar SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/calendar-content-production-ssr.spec.ts",
+					"detail": "ZPeriodCalendar SSR assertions"
 				}
 			]
 		},
@@ -14499,7 +14599,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "9a5c5bae9246115e50f72672b9c42088e7efb225a218dcf8362383b76174f128 API snapshot entry"
+						"detail": "8f9a5399e0042a930e66e4e6e186fcff941184dfc287f283dd73c620cb0cf695 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -14546,6 +14646,10 @@
 			"ssrEvidence": [
 				{
 					"path": "ui/zui/tests/period-picker-production-ssr.spec.ts",
+					"detail": "ZPeriodPicker SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/calendar-content-production-ssr.spec.ts",
 					"detail": "ZPeriodPicker SSR assertions"
 				}
 			]
@@ -15483,6 +15587,90 @@
 				{
 					"path": "ui/zui/tests/form-value-scope.spec.ts",
 					"detail": "ZTimeField SSR assertions"
+				}
+			]
+		},
+		{
+			"id": "time-grid",
+			"name": "ZTimeGrid",
+			"category": "input",
+			"family": null,
+			"status": "experimental",
+			"source": "ui/zui/src/components/input/ZTimeGrid.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": true,
+				"VisuallyVerified": false,
+				"DesktopVerified": false,
+				"ProductionVerified": true
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZTimeGrid"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "1345b1a2dcf5f3c7fbc8ea9cb9f1a5f65858abdb078ef95c38e247527cfacc41 API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/input/ZTimeGrid.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [
+					{
+						"path": "ui/zui/tests/time-grid-production.browser.spec.ts",
+						"detail": "ZTimeGrid browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/TimeGridProductionFixture.svelte",
+						"detail": "ZTimeGrid explicit rendered fixture usage"
+					}
+				],
+				"VisuallyVerified": [],
+				"DesktopVerified": [],
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/time-grid-production-ssr.spec.ts",
+						"detail": "ZTimeGrid production assertions"
+					},
+					{
+						"path": "ui/zui/tests/time-grid-production.browser.spec.ts",
+						"detail": "ZTimeGrid production assertions"
+					},
+					{
+						"path": "ui/zui/tests/TimeGridProductionFixture.svelte",
+						"detail": "ZTimeGrid explicit rendered fixture usage"
+					}
+				]
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/input/time-grid/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/time-grid-production-ssr.spec.ts",
+					"detail": "ZTimeGrid SSR assertions"
 				}
 			]
 		},

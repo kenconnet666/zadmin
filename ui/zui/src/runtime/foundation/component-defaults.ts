@@ -99,6 +99,7 @@ const COMPONENT_RULES = {
 	datePicker: { size: buttonRules.size },
 	dateRangePicker: { size: buttonRules.size },
 	timePicker: { size: buttonRules.size },
+	timeGrid: { size: buttonRules.size },
 	timeRangePicker: { size: buttonRules.size },
 	dateTimeField: { size: buttonRules.size },
 	dateTimePicker: { size: buttonRules.size },
@@ -188,6 +189,7 @@ export interface TimeFieldComponentDefaults extends DefaultsFor<'timeField'> {}
 export interface DatePickerComponentDefaults extends DefaultsFor<'datePicker'> {}
 export interface DateRangePickerComponentDefaults extends DefaultsFor<'dateRangePicker'> {}
 export interface TimePickerComponentDefaults extends DefaultsFor<'timePicker'> {}
+export interface TimeGridComponentDefaults extends DefaultsFor<'timeGrid'> {}
 export interface TimeRangePickerComponentDefaults extends DefaultsFor<'timeRangePicker'> {}
 export interface DateTimeFieldComponentDefaults extends DefaultsFor<'dateTimeField'> {}
 export interface DateTimePickerComponentDefaults extends DefaultsFor<'dateTimePicker'> {}

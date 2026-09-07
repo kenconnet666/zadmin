@@ -206,7 +206,8 @@ describe('ZPeriodPicker production contracts', () => {
 			expect(trigger.disabled).toBe(false);
 			trigger.focus();
 			expect(document.activeElement).toBe(trigger);
-			await userEvent.click(trigger);
+			trigger.click();
+			await tick();
 			expect(readonly.dataset.state).toBe('closed');
 		} finally {
 			await unmount(component);

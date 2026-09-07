@@ -178,7 +178,10 @@ function weekYearStart(year: number, rules: WeekRules): CalendarDate {
 	const first = new CalendarDate(year, 1, 1);
 	const offset = getDayOfWeek(first, 'en-US', rules.firstDayOfWeek);
 	const containingStart = first.subtract({ days: offset });
-	if (containingStart.add({ days: offset }).compare(first) !== 0)
+	if (
+		containingStart.era !== first.era ||
+		containingStart.add({ days: offset }).compare(first) !== 0
+	)
 		throw new RangeError(`Week year ${year} cannot be represented completely.`);
 	return 7 - offset >= rules.minimalDaysInFirstWeek
 		? containingStart
@@ -399,7 +402,7 @@ export function periodEnd(periodValue: Period): CalendarDate {
 		case 'week': {
 			const start = periodStart(period);
 			const end = start.add({ days: 6 });
-			if (end.compare(start) !== 6)
+			if (end.era !== start.era || end.year > 9999 || end.compare(start) !== 6)
 				throw new RangeError('Week cannot be represented as seven complete days.');
 			return end;
 		}

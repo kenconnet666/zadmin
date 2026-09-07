@@ -596,6 +596,8 @@ export { default as ZDateTimeField } from '../components/input/ZDateTimeField.sv
 export { default as ZPeriodCalendar } from '../components/input/ZPeriodCalendar.svelte';
 export type {
 	ZPeriodCalendarProps,
+	PeriodCalendarCellContext,
+	PeriodCalendarHeaderContext,
 	PeriodCalendarGranularity,
 	PeriodCalendarSelectionMode,
 	PeriodCalendarFormParticipation,
@@ -647,6 +649,29 @@ export type {
 	PeriodFromDateOptions,
 	PeriodFormatOptions
 } from '../runtime/period.js';
+export type {
+	PickerPresentation,
+	PickerPresentationProps
+} from '../runtime/picker-presentation.js';
+export { default as ZTimeGrid } from '../components/input/ZTimeGrid.svelte';
+export type {
+	ZTimeGridProps,
+	TimeGridFormParticipation,
+	TimeGridSize,
+	TimeGridGranularity,
+	TimeGridSlot
+} from '../components/input/ZTimeGrid.svelte';
+export { default as ZTimeValue } from '../components/data-display/ZTimeValue.svelte';
+export type {
+	ZTimeValueProps,
+	TimeValueGranularity,
+	TimeValueLineHeight,
+	TimeValueSize,
+	TimeValueTone,
+	TimeValueWeight
+} from '../components/data-display/ZTimeValue.svelte';
+export { formatTimeValue, serializeTimeValue } from '../runtime/time-value.js';
+export type { TimeValueFormatOptions } from '../runtime/time-value.js';
 export type {
 	ZDateTimeFieldProps,
 	ZDateTimeFieldLocalProps,
@@ -729,6 +754,8 @@ export type { CascaderFilter, ZCascaderProps } from '../components/input/ZCascad
 export { default as ZCalendar } from '../components/input/ZCalendar.svelte';
 export type {
 	ZCalendarProps,
+	CalendarCellContext,
+	CalendarHeaderContext,
 	CalendarSelectionMode,
 	CalendarWeekNumbering
 } from '../components/input/ZCalendar.svelte';
@@ -1029,6 +1056,7 @@ export type {
 	DatePickerComponentDefaults,
 	DateRangePickerComponentDefaults,
 	TimePickerComponentDefaults,
+	TimeGridComponentDefaults,
 	TimeRangePickerComponentDefaults,
 	DateTimeFieldComponentDefaults,
 	DateTimePickerComponentDefaults,

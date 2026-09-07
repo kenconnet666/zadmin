@@ -243,6 +243,12 @@ export const componentDocLoaders = {
 		import('../content/components/input/period-picker/doc.js').then(
 			(module) => module.periodPickerDoc
 		),
+	'time-grid': () =>
+		import('../content/components/input/time-grid/doc.js').then((module) => module.timeGridDoc),
+	'time-value': () =>
+		import('../content/components/data-display/time-value/doc.js').then(
+			(module) => module.timeValueDoc
+		),
 	'tree-select': () =>
 		import('../content/components/input/tree-select/doc.js').then((module) => module.treeSelectDoc),
 	transfer: () =>

@@ -236,35 +236,123 @@ function hasForbiddenAncestor(items, path) {
 export async function collectWorkspacePropertyFacts(graph, modulePath, rootName, options = {}) {
 	const active = new Set();
 
+	function mergeUnionBranches(branchFacts, context) {
+		const allPaths = new Set(branchFacts.flatMap((items) => items.map((item) => item.path)));
+		const branches = [...allPaths].flatMap((factPath) =>
+			branchFacts
+				.filter((items) => !hasForbiddenAncestor(items, factPath))
+				.map(
+					(items) =>
+						items.find((item) => item.path === factPath) ?? {
+							path: factPath,
+							requiredness: REQUIREDNESS.forbidden,
+							valueAllowsUndefined: true,
+							declaredType: 'never',
+							source: { modulePath: context.modulePath, declaration: context.declaration }
+						}
+				)
+		);
+		return [...mergeFacts(branches, 'union').values()];
+	}
+
+	async function finiteLiteralCandidates(node, context, seen = new Set()) {
+		if (!node) return undefined;
+		if (ts.isParenthesizedTypeNode(node)) return finiteLiteralCandidates(node.type, context, seen);
+		if (ts.isUnionTypeNode(node)) {
+			const candidates = [];
+			for (const branch of node.types) {
+				const branchCandidates = await finiteLiteralCandidates(branch, context, seen);
+				if (!branchCandidates) return undefined;
+				candidates.push(...branchCandidates);
+			}
+			return [...new Map(candidates.map((candidate) => [candidate.key, candidate])).values()];
+		}
+		if (ts.isLiteralTypeNode(node)) {
+			const literal = node.literal;
+			if (ts.isStringLiteral(literal)) return [{ key: `string:${literal.text}`, node, context }];
+			if (ts.isNumericLiteral(literal)) return [{ key: `number:${literal.text}`, node, context }];
+			if (literal.kind === ts.SyntaxKind.TrueKeyword)
+				return [{ key: 'boolean:true', node, context }];
+			if (literal.kind === ts.SyntaxKind.FalseKeyword)
+				return [{ key: 'boolean:false', node, context }];
+			return undefined;
+		}
+		if (!ts.isTypeReferenceNode(node) || !ts.isIdentifier(node.typeName)) return undefined;
+		const name = node.typeName.text;
+		const binding = context.bindings.get(name) ?? context.constraints?.get(name);
+		if (binding) return finiteLiteralCandidates(binding.node, binding.context, seen);
+		const resolution = await graph.resolveDeclaration(
+			context.modulePath,
+			name,
+			node.typeArguments ?? []
+		);
+		if (resolution.status !== 'local' || !ts.isTypeAliasDeclaration(resolution.declaration))
+			return undefined;
+		const identity = `${resolution.path}#${resolution.name}<${(node.typeArguments ?? [])
+			.map((argument) => text(argument, context.sourceFile))
+			.join(',')}>`;
+		if (seen.has(identity)) return undefined;
+		const next = {
+			bindings: new Map(),
+			constraints: new Map(),
+			declarations: resolution.declarations,
+			genericParameters: context.genericParameters,
+			modulePath: resolution.path,
+			declaration: resolution.name,
+			sourceFile: resolution.declaration.getSourceFile()
+		};
+		for (const [index, parameter] of (resolution.declaration.typeParameters ?? []).entries()) {
+			const argument = node.typeArguments?.[index];
+			if (argument) next.bindings.set(parameter.name.text, { node: argument, context });
+			else if (parameter.default)
+				next.bindings.set(parameter.name.text, { node: parameter.default, context: next });
+			if (parameter.constraint)
+				next.constraints.set(parameter.name.text, { node: parameter.constraint, context: next });
+		}
+		seen.add(identity);
+		const candidates = await finiteLiteralCandidates(resolution.declaration.type, next, seen);
+		seen.delete(identity);
+		return candidates;
+	}
+
 	async function visitType(node, context, path = '', modifiers = {}) {
 		if (!node) return [];
 		if (ts.isParenthesizedTypeNode(node)) return visitType(node.type, context, path, modifiers);
 		if (ts.isArrayTypeNode(node)) return visitType(node.elementType, context, path, modifiers);
 		if (ts.isTypeOperatorNode(node) && node.operator === ts.SyntaxKind.ReadonlyKeyword)
 			return visitType(node.type, context, path, modifiers);
+		if (ts.isConditionalTypeNode(node)) {
+			if (!ts.isTypeReferenceNode(node.checkType) || !ts.isIdentifier(node.checkType.typeName))
+				return [];
+			const candidates = await finiteLiteralCandidates(node.checkType, context);
+			const accepted = await finiteLiteralCandidates(node.extendsType, context);
+			if (!candidates || candidates.length === 0 || !accepted || accepted.length === 0) return [];
+			const acceptedKeys = new Set(accepted.map((candidate) => candidate.key));
+			const branchFacts = [];
+			for (const candidate of candidates) {
+				const branchContext = { ...context, bindings: new Map(context.bindings) };
+				branchContext.bindings.set(node.checkType.typeName.text, {
+					node: candidate.node,
+					context: candidate.context
+				});
+				branchFacts.push(
+					await visitType(
+						acceptedKeys.has(candidate.key) ? node.trueType : node.falseType,
+						branchContext,
+						path,
+						modifiers
+					)
+				);
+			}
+			return mergeUnionBranches(branchFacts, context);
+		}
 		if (ts.isUnionTypeNode(node) || ts.isIntersectionTypeNode(node)) {
 			const branchFacts = [];
 			for (const branch of node.types)
 				branchFacts.push(await visitType(branch, context, path, modifiers));
-			const allPaths = new Set(branchFacts.flatMap((items) => items.map((item) => item.path)));
-			const branches = ts.isUnionTypeNode(node)
-				? [...allPaths].flatMap((factPath) =>
-						branchFacts
-							.filter((items) => !hasForbiddenAncestor(items, factPath))
-							.map(
-								(items) =>
-									items.find((item) => item.path === factPath) ?? {
-										path: factPath,
-										requiredness: REQUIREDNESS.forbidden,
-										valueAllowsUndefined: true,
-										declaredType: 'never',
-										source: { modulePath: context.modulePath, declaration: context.declaration }
-									}
-							)
-					)
-				: branchFacts.flat();
-			const merged = mergeFacts(branches, ts.isUnionTypeNode(node) ? 'union' : 'intersection');
-			return [...merged.values()];
+			return ts.isUnionTypeNode(node)
+				? mergeUnionBranches(branchFacts, context)
+				: [...mergeFacts(branchFacts.flat(), 'intersection').values()];
 		}
 		if (ts.isTypeLiteralNode(node)) {
 			const facts = [];
@@ -344,6 +432,7 @@ export async function collectWorkspacePropertyFacts(graph, modulePath, rootName,
 		const bindings = new Map();
 		const next = {
 			bindings,
+			constraints: new Map(),
 			declarations: resolution.declarations,
 			genericParameters: context.genericParameters,
 			modulePath: resolution.path,
@@ -355,6 +444,8 @@ export async function collectWorkspacePropertyFacts(graph, modulePath, rootName,
 			if (argument) bindings.set(parameter.name.text, { node: argument, context });
 			else if (parameter.default)
 				bindings.set(parameter.name.text, { node: parameter.default, context: next });
+			if (parameter.constraint)
+				next.constraints.set(parameter.name.text, { node: parameter.constraint, context: next });
 		}
 		active.add(identity);
 		const output = await visitDeclaration(resolution.declaration, next, path, modifiers);
@@ -410,6 +501,7 @@ export async function collectWorkspacePropertyFacts(graph, modulePath, rootName,
 			throw new Error(`${modulePath} cannot load callable type source.`);
 		rootContext = options.context ?? {
 			bindings: new Map(),
+			constraints: new Map(),
 			declarations: module.declarations,
 			genericParameters: new Set(),
 			modulePath: module.path,
@@ -423,6 +515,7 @@ export async function collectWorkspacePropertyFacts(graph, modulePath, rootName,
 		const rootBindings = new Map();
 		rootContext = {
 			bindings: rootBindings,
+			constraints: new Map(),
 			declarations: root.declarations,
 			genericParameters: new Set(
 				(root.declaration.typeParameters ?? []).map((parameter) => parameter.name.text)
@@ -431,6 +524,12 @@ export async function collectWorkspacePropertyFacts(graph, modulePath, rootName,
 			declaration: root.name,
 			sourceFile: root.declaration.getSourceFile()
 		};
+		for (const parameter of root.declaration.typeParameters ?? [])
+			if (parameter.constraint)
+				rootContext.constraints.set(parameter.name.text, {
+					node: parameter.constraint,
+					context: rootContext
+				});
 		for (const parameter of root.declaration.typeParameters ?? [])
 			if (parameter.default)
 				rootBindings.set(parameter.name.text, { node: parameter.default, context: rootContext });
@@ -496,7 +595,17 @@ export type Props<T = string> = {
 };
 export interface Extended extends Omit<Alias, 'optional'> {
 	own?: number;
-}`,
+}
+type Kind = 'month' | 'year';
+type Mode = 'single' | 'multiple';
+interface DistributedShared<K extends Kind, M extends Mode> {
+	granularity: K;
+	value?: { kind: K; mode: M };
+}
+type ModeProp<M extends Mode> = { selectionMode?: M } &
+	(M extends 'single' ? unknown : { selectionMode: M });
+export type Distributed<K extends Kind = Kind, M extends Mode = Mode> =
+	K extends Kind ? (M extends Mode ? DistributedShared<K, M> & ModeProp<M> : never) : never;`,
 			'utf8'
 		);
 		const graph = new WorkspaceTypeGraph({ workspaceRoot: root });
@@ -558,6 +667,20 @@ export interface Extended extends Omit<Alias, 'optional'> {
 			extendedFacts.get('own')?.requiredness !== REQUIREDNESS.optional
 		)
 			throw new Error('interface heritage facts were not preserved through Omit');
+		const distributedFacts = await collectWorkspacePropertyFacts(
+			graph,
+			resolve(root, 'src/props.ts'),
+			'Distributed'
+		);
+		if (
+			distributedFacts.get('granularity')?.requiredness !== REQUIREDNESS.required ||
+			!distributedFacts.get('granularity')?.declaredType.includes("'month'") ||
+			!distributedFacts.get('granularity')?.declaredType.includes("'year'") ||
+			distributedFacts.get('selectionMode')?.requiredness !== REQUIREDNESS.conditional ||
+			distributedFacts.get('selectionMode')?.requiredInSomeBranch !== true ||
+			distributedFacts.get('value.kind')?.requiredness !== REQUIREDNESS.required
+		)
+			throw new Error('finite distributed conditional facts were not preserved');
 		console.log(JSON.stringify({ status: 'passed', facts: facts.size }));
 	} finally {
 		await rm(root, { recursive: true, force: true });

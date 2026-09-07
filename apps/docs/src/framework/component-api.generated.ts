@@ -6834,6 +6834,84 @@ export const tagApiFacts = {
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
+export const timeValueApiFacts = {
+	declaration: 'ZTimeValueProps',
+	id: 'time-value',
+	inheritedFrom: ['HTMLTimeAttributes', 'TypographyStyleOptions'],
+	name: 'ZTimeValue',
+	props: [
+		{
+			name: 'granularity',
+			required: false,
+			type: 'TimeValueGranularity'
+		},
+		{
+			name: 'hourCycle',
+			required: false,
+			type: '12 | 24'
+		},
+		{
+			name: 'locale',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLTimeElement | null'
+		},
+		{
+			name: 'value',
+			required: true,
+			type: 'Time'
+		},
+		{
+			name: 'lineClamp',
+			required: false,
+			type: 'number',
+			inheritedFrom: 'TypographyOverflowOptions'
+		},
+		{
+			name: 'tabularNumbers',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'TypographyOverflowOptions'
+		},
+		{
+			name: 'truncate',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'TypographyOverflowOptions'
+		},
+		{
+			name: 'lineHeight',
+			required: false,
+			type: 'TypographyLineHeight',
+			inheritedFrom: 'TypographyStyleOptions'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'TypographySize',
+			inheritedFrom: 'TypographyStyleOptions'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: 'TypographyTone',
+			inheritedFrom: 'TypographyStyleOptions'
+		},
+		{
+			name: 'weight',
+			required: false,
+			type: 'TypographyWeight',
+			inheritedFrom: 'TypographyStyleOptions'
+		}
+	],
+	source: 'ui/zui/src/components/data-display/ZTimeValue.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
 export const timelineApiFacts = {
 	declaration: 'ZTimelineProps',
 	id: 'timeline',
@@ -7975,7 +8053,7 @@ export const separatorApiFacts = {
 export const textApiFacts = {
 	declaration: 'ZTextProps',
 	id: 'text',
-	inheritedFrom: ['HTMLAttributes<HTMLElement>'],
+	inheritedFrom: ['HTMLAttributes<HTMLElement>', 'TypographyStyleOptions'],
 	name: 'ZText',
 	props: [
 		{
@@ -7994,44 +8072,51 @@ export const textApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLElement | null'
+		},
+		{
 			name: 'lineClamp',
 			required: false,
-			type: 'number'
-		},
-		{
-			name: 'lineHeight',
-			required: false,
-			type: 'TypographyLineHeight'
-		},
-		{
-			name: 'size',
-			required: false,
-			type: 'TypographySize'
+			type: 'number',
+			inheritedFrom: 'TypographyOverflowOptions'
 		},
 		{
 			name: 'tabularNumbers',
 			required: false,
-			type: 'boolean'
-		},
-		{
-			name: 'tone',
-			required: false,
-			type: 'TypographyTone'
+			type: 'boolean',
+			inheritedFrom: 'TypographyOverflowOptions'
 		},
 		{
 			name: 'truncate',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'TypographyOverflowOptions'
+		},
+		{
+			name: 'lineHeight',
+			required: false,
+			type: 'TypographyLineHeight',
+			inheritedFrom: 'TypographyStyleOptions'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'TypographySize',
+			inheritedFrom: 'TypographyStyleOptions'
+		},
+		{
+			name: 'tone',
+			required: false,
+			type: 'TypographyTone',
+			inheritedFrom: 'TypographyStyleOptions'
 		},
 		{
 			name: 'weight',
 			required: false,
-			type: 'TypographyWeight'
-		},
-		{
-			name: 'ref',
-			required: false,
-			type: 'HTMLElement | null'
+			type: 'TypographyWeight',
+			inheritedFrom: 'TypographyStyleOptions'
 		}
 	],
 	source: 'ui/zui/src/components/gene/ZText.svelte',
@@ -8152,166 +8237,206 @@ export const visuallyHiddenApiFacts = {
 export const calendarApiFacts = {
 	declaration: 'ZCalendarProps',
 	id: 'calendar',
-	inheritedFrom: [
-		'HTMLAttributes<HTMLDivElement>',
-		'ZCalendarSingleBranch | ZCalendarMultipleBranch | ZCalendarRangeBranch'
-	],
+	inheritedFrom: ['ZCalendarSingleProps | ZCalendarMultipleProps | ZCalendarRangeProps'],
 	name: 'ZCalendar',
 	props: [
 		{
 			name: 'allowEmpty',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
 			name: 'allowNonContiguousRange',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
 			name: 'appearance',
 			required: false,
-			type: "'bare' | 'calendar'"
+			type: "'bare' | 'calendar'",
+			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
 			name: 'calendarLabel',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
 			name: 'defaultFocusedValue',
 			required: false,
-			type: 'CalendarDateValue'
+			type: 'CalendarDateValue',
+			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
 			name: 'disabled',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
 			name: 'firstDayOfWeek',
 			required: false,
-			type: 'Weekday'
+			type: 'Weekday',
+			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
 			name: 'focusedValue',
 			required: false,
-			type: 'CalendarDateValue'
+			type: 'CalendarDateValue',
+			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
 			name: 'form',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
 			name: 'formParticipation',
 			required: false,
-			type: "'auto' | 'none'"
+			type: "'auto' | 'none'",
+			inheritedFrom: 'ZCalendarSharedProps'
+		},
+		{
+			name: 'header',
+			required: false,
+			type: 'Snippet<[context: CalendarHeaderContext]>',
+			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
 			name: 'highlightRange',
 			required: false,
-			type: 'CalendarRangeValue | null'
+			type: 'CalendarRangeValue | null',
+			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
 			name: 'invalid',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
 			name: 'isDateUnavailable',
 			required: false,
-			type: '(date: CalendarDateValue) => boolean'
+			type: '(date: CalendarDateValue) => boolean',
+			inheritedFrom: 'ZCalendarSharedProps'
+		},
+		{
+			name: 'dateCell',
+			required: false,
+			type: 'Snippet<[context: CalendarCellContext]>',
+			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
 			name: 'locale',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
 			name: 'maxValue',
 			required: false,
-			type: 'CalendarDateValue'
+			type: 'CalendarDateValue',
+			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
 			name: 'minValue',
 			required: false,
-			type: 'CalendarDateValue'
+			type: 'CalendarDateValue',
+			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
 			name: 'name',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
 			name: 'nextLabel',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
 			name: 'onFocusedValueChange',
 			required: false,
-			type: '(value: CalendarDateValue) => void'
+			type: '(value: CalendarDateValue) => void',
+			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
 			name: 'previousLabel',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
 			name: 'ref',
 			required: false,
-			type: 'HTMLDivElement | null'
+			type: 'HTMLDivElement | null',
+			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
 			name: 'readonly',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
 			name: 'required',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
 			name: 'showOutsideDates',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
 			name: 'showWeekNumbers',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
 			name: 'size',
 			required: false,
-			type: 'ZControlSize'
+			type: 'ZControlSize',
+			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
 			name: 'timeZone',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
 			name: 'visibleMonths',
 			required: false,
-			type: 'number'
+			type: 'number',
+			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
 			name: 'weekLabel',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
 			name: 'weekNumbering',
 			required: false,
-			type: 'CalendarWeekNumbering'
+			type: 'CalendarWeekNumbering',
+			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
 			name: 'weekNumberLabel',
 			required: false,
-			type: '(week: number, year: number) => string'
+			type: '(week: number, year: number) => string',
+			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
 			name: 'defaultValue',
@@ -8893,6 +9018,11 @@ export const datePickerApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'calendarHeader',
+			required: false,
+			type: 'Snippet<[context: CalendarHeaderContext]>'
+		},
+		{
 			name: 'clearLabel',
 			required: false,
 			type: 'string'
@@ -8951,6 +9081,11 @@ export const datePickerApiFacts = {
 			name: 'isDateUnavailable',
 			required: false,
 			type: '(date: PublicCalendarDate) => boolean'
+		},
+		{
+			name: 'dateCell',
+			required: false,
+			type: 'Snippet<[context: CalendarCellContext]>'
 		},
 		{
 			name: 'locale',
@@ -9054,6 +9189,11 @@ export const dateRangePickerApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'calendarHeader',
+			required: false,
+			type: 'Snippet<[context: CalendarHeaderContext]>'
+		},
+		{
 			name: 'clearLabel',
 			required: false,
 			type: 'string'
@@ -9082,6 +9222,11 @@ export const dateRangePickerApiFacts = {
 			name: 'defaultValue',
 			required: false,
 			type: 'PublicCalendarRange | PublicCalendarRangeValue | null'
+		},
+		{
+			name: 'dateCell',
+			required: false,
+			type: 'Snippet<[context: CalendarCellContext]>'
 		},
 		{
 			name: 'disabled',
@@ -9201,116 +9346,134 @@ export const dateRangePickerApiFacts = {
 export const dateTimeFieldApiFacts = {
 	declaration: 'ZDateTimeFieldProps',
 	id: 'date-time-field',
-	inheritedFrom: [
-		'HTMLAttributes<HTMLDivElement>',
-		'ZDateTimeFieldLocalValueProps | ZDateTimeFieldZonedValueProps'
-	],
+	inheritedFrom: ['ZDateTimeFieldLocalProps | ZDateTimeFieldZonedProps'],
 	name: 'ZDateTimeField',
 	props: [
 		{
 			name: 'controlId',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
 		},
 		{
 			name: 'disabled',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
 		},
 		{
 			name: 'disambiguation',
 			required: false,
-			type: 'DateTimeDisambiguation'
+			type: 'DateTimeDisambiguation',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
 		},
 		{
 			name: 'form',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
 		},
 		{
 			name: 'formParticipation',
 			required: false,
-			type: "'auto' | 'none'"
+			type: 'DateTimeFieldFormParticipation',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
 		},
 		{
 			name: 'granularity',
 			required: false,
-			type: 'DateTimeGranularity'
+			type: 'DateTimeGranularity',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
 		},
 		{
 			name: 'hideTimeZone',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
 		},
 		{
 			name: 'hourCycle',
 			required: false,
-			type: '12 | 24'
+			type: '12 | 24',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
 		},
 		{
 			name: 'invalid',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
 		},
 		{
 			name: 'locale',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
 		},
 		{
 			name: 'minuteStep',
 			required: false,
-			type: 'number'
+			type: 'number',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
 		},
 		{
 			name: 'name',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
 		},
 		{
 			name: 'onDraftChange',
 			required: false,
-			type: '(state: FormControlDraftState) => void'
+			type: '(state: FormControlDraftState) => void',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
 		},
 		{
 			name: 'onFormReset',
 			required: false,
-			type: '() => void'
+			type: '() => void',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
 		},
 		{
 			name: 'readonly',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
 		},
 		{
 			name: 'ref',
 			required: false,
-			type: 'HTMLDivElement | null'
+			type: 'HTMLDivElement | null',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
 		},
 		{
 			name: 'required',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
 		},
 		{
 			name: 'secondStep',
 			required: false,
-			type: 'number'
+			type: 'number',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
 		},
 		{
 			name: 'size',
 			required: false,
-			type: 'ZControlSize'
+			type: 'DateTimeFieldSize',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
 		},
 		{
 			name: 'suffixAction',
 			required: false,
-			type: 'Snippet'
+			type: 'Snippet',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
 		},
 		{
 			name: 'timeZone',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
 		},
 		{
 			name: 'defaultValue',
@@ -9368,206 +9531,230 @@ export const dateTimeFieldApiFacts = {
 export const dateTimePickerApiFacts = {
 	declaration: 'ZDateTimePickerProps',
 	id: 'date-time-picker',
-	inheritedFrom: [
-		'HTMLAttributes<HTMLDivElement>',
-		'ZDateTimePickerLocalValueProps | ZDateTimePickerZonedValueProps'
-	],
+	inheritedFrom: ['ZDateTimePickerLocalProps | ZDateTimePickerZonedProps'],
 	name: 'ZDateTimePicker',
 	props: [
 		{
 			name: 'calendarLabel',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
+		},
+		{
+			name: 'calendarHeader',
+			required: false,
+			type: 'Snippet<[context: CalendarHeaderContext]>',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
+		},
+		{
+			name: 'dateCell',
+			required: false,
+			type: 'Snippet<[context: CalendarCellContext]>',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'cancelLabel',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'clearLabel',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'clearable',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'commitMode',
 			required: false,
-			type: "'confirm' | 'immediate'"
+			type: 'DateTimePickerCommitMode',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'confirmLabel',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'controlId',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'dayPeriodLabel',
 			required: false,
-			type: '(period: TimePickerDayPeriod) => string'
-		},
-		{
-			name: 'defaultOpen',
-			required: false,
-			type: 'boolean'
+			type: '(period: TimePickerDayPeriod) => string',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'disabled',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'disambiguation',
 			required: false,
-			type: 'DateTimeDisambiguation'
+			type: 'DateTimeDisambiguation',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'firstDayOfWeek',
 			required: false,
-			type: 'Weekday'
+			type: 'Weekday',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'form',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'granularity',
 			required: false,
-			type: 'DateTimeGranularity'
+			type: 'DateTimeGranularity',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'hideTimeZone',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'hourCycle',
 			required: false,
-			type: '12 | 24'
+			type: '12 | 24',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'invalid',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'invalidDateTimeLabel',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'locale',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'minuteStep',
 			required: false,
-			type: 'number'
+			type: 'number',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'name',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'nextLabel',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'noAvailableTimeLabel',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'nowLabel',
 			required: false,
-			type: 'string'
-		},
-		{
-			name: 'onOpenChange',
-			required: false,
-			type: '(open: boolean) => void'
-		},
-		{
-			name: 'open',
-			required: false,
-			type: 'boolean'
+			type: 'string',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'pickerLabel',
 			required: false,
-			type: 'string'
-		},
-		{
-			name: 'placement',
-			required: false,
-			type: 'PopoverPlacement'
+			type: 'string',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'previousLabel',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'readonly',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'ref',
 			required: false,
-			type: 'HTMLDivElement | null'
+			type: 'HTMLDivElement | null',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'required',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'secondStep',
 			required: false,
-			type: 'number'
+			type: 'number',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'segmentLabel',
 			required: false,
-			type: "(segment: 'hour' | 'minute' | 'second') => string"
+			type: "(segment: 'hour' | 'minute' | 'second') => string",
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'showNow',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'showOutsideDates',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'size',
 			required: false,
-			type: 'ZControlSize'
+			type: 'DateTimePickerSize',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'timeZone',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'toggleDayPeriodLabel',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimePickerSharedProps'
 		},
 		{
 			name: 'defaultValue',
@@ -9628,6 +9815,36 @@ export const dateTimePickerApiFacts = {
 			required: false,
 			type: 'CalendarDateTime | null | ZonedDateTime | null',
 			inheritedFrom: 'ZDateTimePickerLocalValueProps'
+		},
+		{
+			name: 'presentation',
+			required: false,
+			type: "'popover' | 'inline'",
+			inheritedFrom: 'PopoverPickerPresentationProps'
+		},
+		{
+			name: 'defaultOpen',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'PopoverPickerPresentationProps'
+		},
+		{
+			name: 'onOpenChange',
+			required: false,
+			type: '(open: boolean) => void',
+			inheritedFrom: 'PopoverPickerPresentationProps'
+		},
+		{
+			name: 'open',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'PopoverPickerPresentationProps'
+		},
+		{
+			name: 'placement',
+			required: false,
+			type: 'PopoverPlacement',
+			inheritedFrom: 'PopoverPickerPresentationProps'
 		}
 	],
 	source: 'ui/zui/src/components/input/ZDateTimePicker.svelte',
@@ -9637,236 +9854,266 @@ export const dateTimePickerApiFacts = {
 export const dateTimeRangePickerApiFacts = {
 	declaration: 'ZDateTimeRangePickerProps',
 	id: 'date-time-range-picker',
-	inheritedFrom: [
-		'HTMLAttributes<HTMLDivElement>',
-		'ZDateTimeRangePickerLocalBranch | ZDateTimeRangePickerZonedBranch'
-	],
+	inheritedFrom: ['ZDateTimeRangePickerLocalProps | ZDateTimeRangePickerZonedProps'],
 	name: 'ZDateTimeRangePicker',
 	props: [
 		{
 			name: 'allowEmpty',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'calendarLabel',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
+		},
+		{
+			name: 'calendarHeader',
+			required: false,
+			type: 'Snippet<[context: CalendarHeaderContext]>',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
+		},
+		{
+			name: 'dateCell',
+			required: false,
+			type: 'Snippet<[context: CalendarCellContext]>',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'cancelLabel',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'clearLabel',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'clearable',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'commitMode',
 			required: false,
-			type: "'confirm' | 'immediate'"
+			type: 'DateTimeRangeCommitMode',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'confirmLabel',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'controlId',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'dayPeriodLabel',
 			required: false,
-			type: '(period: TimePickerDayPeriod) => string'
-		},
-		{
-			name: 'defaultOpen',
-			required: false,
-			type: 'boolean'
+			type: '(period: TimePickerDayPeriod) => string',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'disabled',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'disambiguation',
 			required: false,
-			type: 'DateTimeDisambiguation'
+			type: 'DateTimeDisambiguation',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'endLabel',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'firstDayOfWeek',
 			required: false,
-			type: 'Weekday'
+			type: 'Weekday',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'form',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'granularity',
 			required: false,
-			type: 'DateTimeGranularity'
+			type: 'DateTimeGranularity',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'hideTimeZone',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'hourCycle',
 			required: false,
-			type: '12 | 24'
+			type: '12 | 24',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'invalid',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'invalidDateTimeLabel',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'invalidRangeLabel',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'locale',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'minuteStep',
 			required: false,
-			type: 'number'
+			type: 'number',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'name',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'nextLabel',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'noAvailableTimeLabel',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'nowLabel',
 			required: false,
-			type: 'string'
-		},
-		{
-			name: 'onOpenChange',
-			required: false,
-			type: '(open: boolean) => void'
-		},
-		{
-			name: 'open',
-			required: false,
-			type: 'boolean'
+			type: 'string',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'order',
 			required: false,
-			type: 'DateTimeRangeOrder'
+			type: 'DateTimeRangeOrder',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'orderedRangeLabel',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'pickerLabel',
 			required: false,
-			type: 'string'
-		},
-		{
-			name: 'placement',
-			required: false,
-			type: 'PopoverPlacement'
+			type: 'string',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'previousLabel',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'readonly',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'ref',
 			required: false,
-			type: 'HTMLDivElement | null'
+			type: 'HTMLDivElement | null',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'required',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'secondStep',
 			required: false,
-			type: 'number'
+			type: 'number',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'segmentLabel',
 			required: false,
-			type: '(segment: TimeFieldSegment) => string'
+			type: '(segment: TimeFieldSegment) => string',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'showNow',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'showOutsideDates',
 			required: false,
-			type: 'boolean'
+			type: 'boolean',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'size',
 			required: false,
-			type: 'ZControlSize'
+			type: 'DateTimeRangePickerSize',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'startLabel',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'timeZone',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'toggleDayPeriodLabel',
 			required: false,
-			type: 'string'
+			type: 'string',
+			inheritedFrom: 'ZDateTimeRangePickerSharedProps'
 		},
 		{
 			name: 'defaultValue',
@@ -9927,6 +10174,36 @@ export const dateTimeRangePickerApiFacts = {
 			required: false,
 			type: 'LocalDateTimeRangeValue | null | ZonedDateTimeRangeValue | null',
 			inheritedFrom: 'ZDateTimeRangePickerLocalBranch'
+		},
+		{
+			name: 'presentation',
+			required: false,
+			type: "'popover' | 'inline'",
+			inheritedFrom: 'PopoverPickerPresentationProps'
+		},
+		{
+			name: 'defaultOpen',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'PopoverPickerPresentationProps'
+		},
+		{
+			name: 'onOpenChange',
+			required: false,
+			type: '(open: boolean) => void',
+			inheritedFrom: 'PopoverPickerPresentationProps'
+		},
+		{
+			name: 'open',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'PopoverPickerPresentationProps'
+		},
+		{
+			name: 'placement',
+			required: false,
+			type: 'PopoverPlacement',
+			inheritedFrom: 'PopoverPickerPresentationProps'
 		}
 	],
 	source: 'ui/zui/src/components/input/ZDateTimeRangePicker.svelte',
@@ -10665,6 +10942,7 @@ export const inputApiFacts = {
 		tagsInputApiFacts,
 		textareaApiFacts,
 		timeFieldApiFacts,
+		timeGridApiFacts,
 		timePickerApiFacts,
 		timeRangePickerApiFacts,
 		toggleGroupApiFacts,
@@ -11249,241 +11527,10 @@ export const periodCalendarApiFacts = {
 	id: 'period-calendar',
 	inheritedFrom: [
 		'HTMLAttributes<HTMLDivElement>',
-		"TMode extends 'single' ? { readonly selectionMode?: 'single' } : { readonly selectionMode: TMode }"
+		'TKind extends PeriodKind ? TMode extends PeriodSelectionMode ? PeriodCalendarSharedOptions<TKind, TMode> & PeriodCalendarModeProp<TMode> : never : never'
 	],
 	name: 'ZPeriodCalendar',
 	props: [
-		{
-			name: 'allowEmpty',
-			required: false,
-			type: 'boolean'
-		},
-		{
-			name: 'allowNonContiguousRange',
-			required: false,
-			type: 'boolean'
-		},
-		{
-			name: 'calendarLabel',
-			required: false,
-			type: 'string'
-		},
-		{
-			name: 'defaultFocusedValue',
-			required: false,
-			type: 'PeriodOfKind<TKind>'
-		},
-		{
-			name: 'defaultValue',
-			required: false,
-			type: 'PeriodSelectionValue<TKind, TMode>'
-		},
-		{
-			name: 'disabled',
-			required: false,
-			type: 'boolean'
-		},
-		{
-			name: 'fiscalYearStartMonth',
-			required: false,
-			type: 'number'
-		},
-		{
-			name: 'focusedValue',
-			required: false,
-			type: 'PeriodOfKind<TKind>'
-		},
-		{
-			name: 'form',
-			required: false,
-			type: 'string'
-		},
-		{
-			name: 'formParticipation',
-			required: false,
-			type: "'auto' | 'none'"
-		},
-		{
-			name: 'granularity',
-			required: true,
-			type: 'TKind'
-		},
-		{
-			name: 'invalid',
-			required: false,
-			type: 'boolean'
-		},
-		{
-			name: 'isPeriodUnavailable',
-			required: false,
-			type: '(period: PeriodOfKind<TKind>) => boolean'
-		},
-		{
-			name: 'locale',
-			required: false,
-			type: 'string'
-		},
-		{
-			name: 'maxValue',
-			required: false,
-			type: 'PeriodOfKind<TKind>'
-		},
-		{
-			name: 'minValue',
-			required: false,
-			type: 'PeriodOfKind<TKind>'
-		},
-		{
-			name: 'name',
-			required: false,
-			type: 'string'
-		},
-		{
-			name: 'nextPageLabel',
-			required: false,
-			type: 'string'
-		},
-		{
-			name: 'onFocusedValueChange',
-			required: false,
-			type: '(period: PeriodOfKind<TKind>) => void'
-		},
-		{
-			name: 'onValueChange',
-			required: false,
-			type: '(value: PeriodSelectionValue<TKind, TMode>) => void'
-		},
-		{
-			name: 'previousPageLabel',
-			required: false,
-			type: 'string'
-		},
-		{
-			name: 'readonly',
-			required: false,
-			type: 'boolean'
-		},
-		{
-			name: 'ref',
-			required: false,
-			type: 'HTMLDivElement | null'
-		},
-		{
-			name: 'required',
-			required: false,
-			type: 'boolean'
-		},
-		{
-			name: 'showWeekNumbers',
-			required: false,
-			type: 'boolean'
-		},
-		{
-			name: 'size',
-			required: false,
-			type: 'ZControlSize'
-		},
-		{
-			name: 'timeZone',
-			required: false,
-			type: 'string'
-		},
-		{
-			name: 'value',
-			required: false,
-			type: 'PeriodSelectionValue<TKind, TMode>'
-		},
-		{
-			name: 'weekRules',
-			required: false,
-			type: 'WeekRules'
-		}
-	],
-	source: 'ui/zui/src/components/input/ZPeriodCalendar.svelte',
-	metadataGapProps: []
-} as const satisfies ComponentApiFacts;
-
-export const periodPickerApiFacts = {
-	declaration: 'ZPeriodPickerProps',
-	id: 'period-picker',
-	inheritedFrom: ['HTMLAttributes<HTMLDivElement>', 'PeriodCalendarOptions<TKind, TMode>'],
-	name: 'ZPeriodPicker',
-	props: [
-		{
-			name: 'cancelLabel',
-			required: false,
-			type: 'string'
-		},
-		{
-			name: 'clearable',
-			required: false,
-			type: 'boolean'
-		},
-		{
-			name: 'clearLabel',
-			required: false,
-			type: 'string'
-		},
-		{
-			name: 'closeOnSelect',
-			required: false,
-			type: 'boolean'
-		},
-		{
-			name: 'commitMode',
-			required: false,
-			type: "'immediate' | 'confirm'"
-		},
-		{
-			name: 'confirmLabel',
-			required: false,
-			type: 'string'
-		},
-		{
-			name: 'controlId',
-			required: false,
-			type: 'string'
-		},
-		{
-			name: 'defaultOpen',
-			required: false,
-			type: 'boolean'
-		},
-		{
-			name: 'formatter',
-			required: false,
-			type: '(value: PeriodSelectionValue<TKind, TMode>) => string'
-		},
-		{
-			name: 'onCommit',
-			required: false,
-			type: '(value: PeriodSelectionValue<TKind, TMode>) => void'
-		},
-		{
-			name: 'onOpenChange',
-			required: false,
-			type: '(open: boolean) => void'
-		},
-		{
-			name: 'open',
-			required: false,
-			type: 'boolean'
-		},
-		{
-			name: 'pickerLabel',
-			required: false,
-			type: 'string'
-		},
-		{
-			name: 'placement',
-			required: false,
-			type: 'PopoverPlacement'
-		},
-		{
-			name: 'placeholder',
-			required: false,
-			type: 'string'
-		},
 		{
 			name: 'allowEmpty',
 			required: false,
@@ -11505,13 +11552,13 @@ export const periodPickerApiFacts = {
 		{
 			name: 'defaultFocusedValue',
 			required: false,
-			type: 'PeriodOfKind<PeriodKind>',
+			type: "PeriodOfKind<'month'> | PeriodOfKind<'quarter'> | PeriodOfKind<'week'> | PeriodOfKind<'year'>",
 			inheritedFrom: 'PeriodCalendarSharedOptions'
 		},
 		{
 			name: 'defaultValue',
 			required: false,
-			type: "PeriodSelectionValue<PeriodKind, 'single'>",
+			type: "PeriodSelectionValue<'month', 'multiple'> | PeriodSelectionValue<'month', 'range'> | PeriodSelectionValue<'month', 'single'> | PeriodSelectionValue<'quarter', 'multiple'> | PeriodSelectionValue<'quarter', 'range'> | PeriodSelectionValue<'quarter', 'single'> | PeriodSelectionValue<'week', 'multiple'> | PeriodSelectionValue<'week', 'range'> | PeriodSelectionValue<'week', 'single'> | PeriodSelectionValue<'year', 'multiple'> | PeriodSelectionValue<'year', 'range'> | PeriodSelectionValue<'year', 'single'>",
 			inheritedFrom: 'PeriodCalendarSharedOptions'
 		},
 		{
@@ -11529,7 +11576,7 @@ export const periodPickerApiFacts = {
 		{
 			name: 'focusedValue',
 			required: false,
-			type: 'PeriodOfKind<PeriodKind>',
+			type: "PeriodOfKind<'month'> | PeriodOfKind<'quarter'> | PeriodOfKind<'week'> | PeriodOfKind<'year'>",
 			inheritedFrom: 'PeriodCalendarSharedOptions'
 		},
 		{
@@ -11539,9 +11586,21 @@ export const periodPickerApiFacts = {
 			inheritedFrom: 'PeriodCalendarSharedOptions'
 		},
 		{
+			name: 'formParticipation',
+			required: false,
+			type: 'PeriodCalendarFormParticipation',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
 			name: 'granularity',
 			required: true,
-			type: 'PeriodKind',
+			type: "'month' | 'quarter' | 'week' | 'year'",
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'header',
+			required: false,
+			type: 'Snippet<[context: PeriodCalendarHeaderContext<TKind>]>',
 			inheritedFrom: 'PeriodCalendarSharedOptions'
 		},
 		{
@@ -11565,13 +11624,13 @@ export const periodPickerApiFacts = {
 		{
 			name: 'maxValue',
 			required: false,
-			type: 'PeriodOfKind<PeriodKind>',
+			type: "PeriodOfKind<'month'> | PeriodOfKind<'quarter'> | PeriodOfKind<'week'> | PeriodOfKind<'year'>",
 			inheritedFrom: 'PeriodCalendarSharedOptions'
 		},
 		{
 			name: 'minValue',
 			required: false,
-			type: 'PeriodOfKind<PeriodKind>',
+			type: "PeriodOfKind<'month'> | PeriodOfKind<'quarter'> | PeriodOfKind<'week'> | PeriodOfKind<'year'>",
 			inheritedFrom: 'PeriodCalendarSharedOptions'
 		},
 		{
@@ -11596,6 +11655,12 @@ export const periodPickerApiFacts = {
 			name: 'onValueChange',
 			required: false,
 			type: '(value: PeriodSelectionValue<TKind, TMode>) => void',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'periodCell',
+			required: false,
+			type: 'Snippet<[context: PeriodCalendarCellContext<TKind>]>',
 			inheritedFrom: 'PeriodCalendarSharedOptions'
 		},
 		{
@@ -11643,7 +11708,7 @@ export const periodPickerApiFacts = {
 		{
 			name: 'value',
 			required: false,
-			type: "PeriodSelectionValue<PeriodKind, 'single'>",
+			type: "PeriodSelectionValue<'month', 'multiple'> | PeriodSelectionValue<'month', 'range'> | PeriodSelectionValue<'month', 'single'> | PeriodSelectionValue<'quarter', 'multiple'> | PeriodSelectionValue<'quarter', 'range'> | PeriodSelectionValue<'quarter', 'single'> | PeriodSelectionValue<'week', 'multiple'> | PeriodSelectionValue<'week', 'range'> | PeriodSelectionValue<'week', 'single'> | PeriodSelectionValue<'year', 'multiple'> | PeriodSelectionValue<'year', 'range'> | PeriodSelectionValue<'year', 'single'>",
 			inheritedFrom: 'PeriodCalendarSharedOptions'
 		},
 		{
@@ -11651,6 +11716,301 @@ export const periodPickerApiFacts = {
 			required: false,
 			type: 'WeekRules',
 			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'selectionMode',
+			required: false,
+			type: "'multiple' | 'range' | 'single'",
+			inheritedFrom: 'PeriodCalendarModeProp'
+		}
+	],
+	source: 'ui/zui/src/components/input/ZPeriodCalendar.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
+export const periodPickerApiFacts = {
+	declaration: 'ZPeriodPickerProps',
+	id: 'period-picker',
+	inheritedFrom: [
+		'TKind extends PeriodKind ? TMode extends PeriodSelectionMode ? ZPeriodPickerSharedProps<TKind, TMode> & PeriodCalendarModeProp<TMode> : never : never'
+	],
+	name: 'ZPeriodPicker',
+	props: [
+		{
+			name: 'allowEmpty',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'allowNonContiguousRange',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'calendarLabel',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'defaultFocusedValue',
+			required: false,
+			type: "PeriodOfKind<'month'> | PeriodOfKind<'quarter'> | PeriodOfKind<'week'> | PeriodOfKind<'year'>",
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'defaultValue',
+			required: false,
+			type: "PeriodSelectionValue<'month', 'multiple'> | PeriodSelectionValue<'month', 'range'> | PeriodSelectionValue<'month', 'single'> | PeriodSelectionValue<'quarter', 'multiple'> | PeriodSelectionValue<'quarter', 'range'> | PeriodSelectionValue<'quarter', 'single'> | PeriodSelectionValue<'week', 'multiple'> | PeriodSelectionValue<'week', 'range'> | PeriodSelectionValue<'week', 'single'> | PeriodSelectionValue<'year', 'multiple'> | PeriodSelectionValue<'year', 'range'> | PeriodSelectionValue<'year', 'single'>",
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'fiscalYearStartMonth',
+			required: false,
+			type: 'number',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'focusedValue',
+			required: false,
+			type: "PeriodOfKind<'month'> | PeriodOfKind<'quarter'> | PeriodOfKind<'week'> | PeriodOfKind<'year'>",
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'form',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'granularity',
+			required: true,
+			type: "'month' | 'quarter' | 'week' | 'year'",
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'header',
+			required: false,
+			type: 'Snippet<[context: PeriodCalendarHeaderContext<TKind>]>',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'invalid',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'isPeriodUnavailable',
+			required: false,
+			type: '(period: PeriodOfKind<TKind>) => boolean',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'locale',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'maxValue',
+			required: false,
+			type: "PeriodOfKind<'month'> | PeriodOfKind<'quarter'> | PeriodOfKind<'week'> | PeriodOfKind<'year'>",
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'minValue',
+			required: false,
+			type: "PeriodOfKind<'month'> | PeriodOfKind<'quarter'> | PeriodOfKind<'week'> | PeriodOfKind<'year'>",
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'name',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'nextPageLabel',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'onFocusedValueChange',
+			required: false,
+			type: '(period: PeriodOfKind<TKind>) => void',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'onValueChange',
+			required: false,
+			type: '(value: PeriodSelectionValue<TKind, TMode>) => void',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'periodCell',
+			required: false,
+			type: 'Snippet<[context: PeriodCalendarCellContext<TKind>]>',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'previousPageLabel',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'required',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'showWeekNumbers',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'PeriodCalendarSize',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'timeZone',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'value',
+			required: false,
+			type: "PeriodSelectionValue<'month', 'multiple'> | PeriodSelectionValue<'month', 'range'> | PeriodSelectionValue<'month', 'single'> | PeriodSelectionValue<'quarter', 'multiple'> | PeriodSelectionValue<'quarter', 'range'> | PeriodSelectionValue<'quarter', 'single'> | PeriodSelectionValue<'week', 'multiple'> | PeriodSelectionValue<'week', 'range'> | PeriodSelectionValue<'week', 'single'> | PeriodSelectionValue<'year', 'multiple'> | PeriodSelectionValue<'year', 'range'> | PeriodSelectionValue<'year', 'single'>",
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'weekRules',
+			required: false,
+			type: 'WeekRules',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'cancelLabel',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZPeriodPickerSharedProps'
+		},
+		{
+			name: 'clearable',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZPeriodPickerSharedProps'
+		},
+		{
+			name: 'clearLabel',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZPeriodPickerSharedProps'
+		},
+		{
+			name: 'closeOnSelect',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZPeriodPickerSharedProps'
+		},
+		{
+			name: 'commitMode',
+			required: false,
+			type: 'PeriodPickerCommitMode',
+			inheritedFrom: 'ZPeriodPickerSharedProps'
+		},
+		{
+			name: 'confirmLabel',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZPeriodPickerSharedProps'
+		},
+		{
+			name: 'controlId',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZPeriodPickerSharedProps'
+		},
+		{
+			name: 'defaultOpen',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZPeriodPickerSharedProps'
+		},
+		{
+			name: 'formatter',
+			required: false,
+			type: '(value: PeriodSelectionValue<TKind, TMode>) => string',
+			inheritedFrom: 'ZPeriodPickerSharedProps'
+		},
+		{
+			name: 'onCommit',
+			required: false,
+			type: '(value: PeriodSelectionValue<TKind, TMode>) => void',
+			inheritedFrom: 'ZPeriodPickerSharedProps'
+		},
+		{
+			name: 'onOpenChange',
+			required: false,
+			type: '(open: boolean) => void',
+			inheritedFrom: 'ZPeriodPickerSharedProps'
+		},
+		{
+			name: 'open',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZPeriodPickerSharedProps'
+		},
+		{
+			name: 'pickerLabel',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZPeriodPickerSharedProps'
+		},
+		{
+			name: 'placement',
+			required: false,
+			type: 'PopoverPlacement',
+			inheritedFrom: 'ZPeriodPickerSharedProps'
+		},
+		{
+			name: 'placeholder',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZPeriodPickerSharedProps'
+		},
+		{
+			name: 'selectionMode',
+			required: false,
+			type: "'multiple' | 'range' | 'single'",
+			inheritedFrom: 'PeriodCalendarModeProp'
 		}
 	],
 	source: 'ui/zui/src/components/input/ZPeriodPicker.svelte',
@@ -12743,6 +13103,127 @@ export const timeFieldApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZTimeField.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
+export const timeGridApiFacts = {
+	declaration: 'ZTimeGridProps',
+	id: 'time-grid',
+	inheritedFrom: ['HTMLAttributes<HTMLDivElement>'],
+	name: 'ZTimeGrid',
+	props: [
+		{
+			name: 'allowDeselect',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'columns',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'defaultValue',
+			required: false,
+			type: 'Time | null'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'form',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'formParticipation',
+			required: false,
+			type: "'auto' | 'none'"
+		},
+		{
+			name: 'granularity',
+			required: false,
+			type: 'TimeGridGranularity'
+		},
+		{
+			name: 'gridLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'hourCycle',
+			required: false,
+			type: '12 | 24'
+		},
+		{
+			name: 'invalid',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'isTimeUnavailable',
+			required: false,
+			type: '(value: Time) => boolean'
+		},
+		{
+			name: 'locale',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'maxValue',
+			required: false,
+			type: 'Time'
+		},
+		{
+			name: 'minValue',
+			required: false,
+			type: 'Time'
+		},
+		{
+			name: 'name',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'onValueChange',
+			required: false,
+			type: '(value: Time | null) => void'
+		},
+		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null'
+		},
+		{
+			name: 'required',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
+			name: 'slots',
+			required: true,
+			type: 'readonly TimeGridSlot[]'
+		},
+		{
+			name: 'value',
+			required: false,
+			type: 'Time | null'
+		}
+	],
+	source: 'ui/zui/src/components/input/ZTimeGrid.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 

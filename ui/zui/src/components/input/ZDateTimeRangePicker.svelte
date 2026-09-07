@@ -1,6 +1,8 @@
 <script module lang="ts">
 	import { CalendarDateTime, ZonedDateTime } from '@internationalized/date';
 	import type { HTMLAttributes } from 'svelte/elements';
+	import type { Snippet } from 'svelte';
+	import type { CalendarCellContext, CalendarHeaderContext } from './ZCalendar.svelte';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import type { DateTimeDisambiguation, DateTimeGranularity } from '../../runtime/date-time.js';
 	import type {
@@ -13,7 +15,10 @@
 	import type { TimeFieldSegment, Weekday } from '../../runtime/date.js';
 	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
 	import type { TimePickerDayPeriod } from '../../runtime/time-picker.js';
-	import type { PopoverPlacement } from '../compound/popover/ZPopover.svelte';
+	import type {
+		PopoverPickerPresentationProps,
+		InlinePickerPresentationProps
+	} from '../../runtime/picker-presentation.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 
 	export type {
@@ -32,6 +37,8 @@
 	> {
 		readonly allowEmpty?: boolean;
 		readonly calendarLabel?: string;
+		readonly calendarHeader?: Snippet<[context: CalendarHeaderContext]>;
+		readonly dateCell?: Snippet<[context: CalendarCellContext]>;
 		readonly cancelLabel?: string;
 		readonly clearLabel?: string;
 		readonly clearable?: boolean;
@@ -39,7 +46,6 @@
 		readonly confirmLabel?: string;
 		readonly controlId?: string;
 		readonly dayPeriodLabel?: (period: TimePickerDayPeriod) => string;
-		readonly defaultOpen?: boolean;
 		readonly disabled?: boolean;
 		readonly disambiguation?: DateTimeDisambiguation;
 		readonly endLabel?: string;
@@ -57,12 +63,9 @@
 		readonly nextLabel?: string;
 		readonly noAvailableTimeLabel?: string;
 		readonly nowLabel?: string;
-		readonly onOpenChange?: (open: boolean) => void;
-		open?: boolean;
 		readonly order?: DateTimeRangeOrder;
 		readonly orderedRangeLabel?: string;
 		readonly pickerLabel?: string;
-		readonly placement?: PopoverPlacement;
 		readonly previousLabel?: string;
 		readonly readonly?: boolean;
 		ref?: HTMLDivElement | null;
@@ -111,12 +114,30 @@
 		value?: ZonedDateTimeRangeValue | null;
 	}
 
-	export type ZDateTimeRangePickerLocalProps = ZDateTimeRangePickerSharedProps &
-		ZDateTimeRangePickerLocalBranch;
-	export type ZDateTimeRangePickerZonedProps = ZDateTimeRangePickerSharedProps &
-		ZDateTimeRangePickerZonedBranch;
-	export type ZDateTimeRangePickerProps = ZDateTimeRangePickerSharedProps &
-		(ZDateTimeRangePickerLocalBranch | ZDateTimeRangePickerZonedBranch);
+	interface LocalPopoverProps
+		extends
+			ZDateTimeRangePickerSharedProps,
+			ZDateTimeRangePickerLocalBranch,
+			PopoverPickerPresentationProps {}
+	interface LocalInlineProps
+		extends
+			ZDateTimeRangePickerSharedProps,
+			ZDateTimeRangePickerLocalBranch,
+			InlinePickerPresentationProps {}
+	interface ZonedPopoverProps
+		extends
+			ZDateTimeRangePickerSharedProps,
+			ZDateTimeRangePickerZonedBranch,
+			PopoverPickerPresentationProps {}
+	interface ZonedInlineProps
+		extends
+			ZDateTimeRangePickerSharedProps,
+			ZDateTimeRangePickerZonedBranch,
+			InlinePickerPresentationProps {}
+	export type ZDateTimeRangePickerLocalProps = LocalPopoverProps | LocalInlineProps;
+	export type ZDateTimeRangePickerZonedProps = ZonedPopoverProps | ZonedInlineProps;
+	export type ZDateTimeRangePickerProps =
+		ZDateTimeRangePickerLocalProps | ZDateTimeRangePickerZonedProps;
 
 	export const zuiMetadata = {
 		bindings: [
@@ -162,6 +183,7 @@
 		],
 		name: 'ZDateTimeRangePicker',
 		parts: [
+			{ description: 'inline常驻范围面板，不创建Portal或dialog。', name: 'inline-panel' },
 			{ description: '可自然换行的起止字段布局。', name: 'range-fields' },
 			{ description: '起始DateTimeField。', name: 'start-field' },
 			{ description: '范围分隔符。', name: 'separator' },
@@ -173,6 +195,26 @@
 			{ description: '只更新range draft或按immediate提交的完整范围preset。', name: 'range-presets' }
 		],
 		props: [
+			{
+				name: 'calendarHeader',
+				default: 'undefined',
+				type: 'Snippet<[CalendarHeaderContext]>',
+				description: '传递给共享Calendar的header内容，保持范围owner和导航分离。'
+			},
+			{
+				name: 'dateCell',
+				default: 'undefined',
+				type: 'Snippet<[CalendarCellContext]>',
+				description: '传递给共享Calendar的日期button内部内容，保留内部ARIA和键盘。'
+			},
+			{
+				name: 'presentation',
+				requiredWhen: "inline分支必须显式为'inline'；popover可省略",
+				type: "'popover' | 'inline'",
+				default: "'popover'",
+				description:
+					'显示方式；inline常驻并从类型上排除open/defaultOpen/onOpenChange/placement，复用同一范围owner。'
+			},
 			{
 				default: "'local'",
 				description: '判别CalendarDateTime与ZonedDateTime范围。',
@@ -499,7 +541,18 @@
 			}
 		],
 		since: 'unreleased',
-		snippets: [],
+		snippets: [
+			{
+				name: 'calendarHeader',
+				type: 'Snippet<[CalendarHeaderContext]>',
+				description: '日期面板页头内容。'
+			},
+			{
+				name: 'dateCell',
+				type: 'Snippet<[CalendarCellContext]>',
+				description: '日期单元内部内容，不替换日期button。'
+			}
+		],
 		source: 'ui/zui/src/components/input/ZDateTimeRangePicker.svelte',
 		states: [
 			{ description: '当前mode。', name: 'data-mode', values: ['local', 'zoned'] },
@@ -509,7 +562,12 @@
 				name: 'data-range-state',
 				values: ['empty', 'partial', 'complete']
 			},
-			{ description: '实际Popover状态。', name: 'data-state', values: ['open', 'closed'] },
+			{
+				description: '浮层状态或inline常驻呈现。',
+				name: 'data-state',
+				values: ['open', 'closed', 'inline']
+			},
+			{ description: '实际显示方式。', name: 'data-presentation', values: ['popover', 'inline'] },
 			{ description: '外部或内在draft无效。', name: 'data-invalid', values: ['true'] },
 			{
 				description: '解析五档尺寸。',
@@ -524,6 +582,8 @@
 
 	const rangeRecipe = defineRecipe({
 		base: (s) => {
+			s.minWidth.px(0);
+			s.width._full;
 			s.alignItems.center;
 			s.display.flex;
 			s.flexWrap.wrap;
@@ -571,6 +631,8 @@
 
 <script lang="ts">
 	import CalendarClock from '@lucide/svelte/icons/calendar-clock';
+	import PickerInlineSurface from './PickerInlineSurface.svelte';
+	import { resolvePickerPresentation } from '../../runtime/picker-presentation.js';
 	import X from '@lucide/svelte/icons/x';
 	import { Time, toCalendarDateTime, toZoned, today } from '@internationalized/date';
 	import { onDestroy, untrack } from 'svelte';
@@ -625,6 +687,8 @@
 		'aria-labelledby': ariaLabelledBy,
 		allowEmpty = false,
 		calendarLabel,
+		calendarHeader,
+		dateCell,
 		cancelLabel,
 		class: className,
 		clearLabel,
@@ -664,6 +728,7 @@
 		order = 'strict',
 		orderedRangeLabel,
 		pickerLabel,
+		presentation = 'popover',
 		placement = 'bottom-start',
 		placeholderValue,
 		presets = [],
@@ -684,6 +749,7 @@
 		...rest
 	}: ZDateTimeRangePickerProps = $props();
 	const zui = useZui();
+	const resolvedPresentation = $derived(resolvePickerPresentation(presentation));
 	const fieldOwner = claimZFieldControlOwner();
 	const field = fieldOwner.field;
 	const valueScope = claimFormValueScope();
@@ -718,7 +784,12 @@
 	const resolvedPreviousLabel = $derived(previousLabel ?? zui.localePack.date.previousMonth);
 	const resolvedNextLabel = $derived(nextLabel ?? zui.localePack.date.nextMonth);
 	const resolvedConfirmLabel = $derived(confirmLabel ?? zui.localePack.common.confirm);
-	const resolvedCancelLabel = $derived(cancelLabel ?? zui.localePack.common.close);
+	const resolvedCancelLabel = $derived(
+		cancelLabel ??
+			(resolvedPresentation === 'inline'
+				? zui.localePack.common.cancel
+				: zui.localePack.common.close)
+	);
 	const resolvedNoAvailableLabel = $derived(
 		noAvailableTimeLabel ?? zui.localePack.dateTime.noAvailableDateTime
 	);
@@ -759,12 +830,9 @@
 	let endController = $state<DraftController | null>(null);
 	let triggerRef = $state<HTMLButtonElement | null>(null);
 	let panelController = $state<DateTimePickerPanelController | null>(null);
-	let startFieldValue = $state<DateTimePickerValue | null>(null);
-	let endFieldValue = $state<DateTimePickerValue | null>(null);
 	let startDraftState = $state<FormControlDraftState>({ dirty: false, valid: true });
 	let endDraftState = $state<FormControlDraftState>({ dirty: false, valid: true });
 	let panelFieldDraft = $state<FormControlDraftState>({ dirty: false, valid: true });
-	let panelDraft = $state<RangeValue | null>(null);
 	let panelDirty = $state(false);
 	let panelFeedback = $state('');
 	let panelFeedbackRevision = $state(0);
@@ -790,13 +858,25 @@
 	const normalizedValue = $derived(
 		normalizeDateTimeRangeModelValue(valueState.current, mode as DateTimeMode)
 	);
+	let startFieldValue = $state<DateTimePickerValue | null>(
+		untrack(() => normalizedValue?.start ?? null)
+	);
+	let endFieldValue = $state<DateTimePickerValue | null>(
+		untrack(() => normalizedValue?.end ?? null)
+	);
+	let panelDraft = $state<RangeValue | null>(
+		untrack(() => (resolvedPresentation === 'inline' ? normalizedValue : null))
+	);
 	const openState = new ControllableState<boolean>({
 		defaultValue: () => defaultOpen,
 		onChange: () => onOpenChange,
 		read: () => open,
 		write: (next) => (open = next)
 	});
-	const resolvedOpen = $derived(openState.current && !resolvedDisabled && !resolvedReadonly);
+	const panelVisible = $derived(
+		resolvedPresentation === 'inline' ||
+			(openState.current && !resolvedDisabled && !resolvedReadonly)
+	);
 	const ownerValidation = $derived(validateDateTimeRangeValue(normalizedValue, rangeConstraints));
 	const compositeDraft = $derived.by<FormControlDraftState>(() => inspectDraftState());
 	const resolvedInvalid = $derived(
@@ -906,7 +986,7 @@
 	}
 
 	function inspectDraftState(): FormControlDraftState {
-		if (resolvedOpen && !panelFieldDraft.valid) return panelFieldDraft;
+		if (panelVisible && !panelFieldDraft.valid) return panelFieldDraft;
 		const child = !startDraftState.valid
 			? startDraftState
 			: !endDraftState.valid
@@ -987,7 +1067,7 @@
 			return;
 		}
 		rangePart = resolved.part;
-		if (resolvedOpen) {
+		if (panelVisible) {
 			panelDraft = resolved.range;
 			panelDirty = false;
 		}
@@ -1004,19 +1084,32 @@
 		syncFields(normalizedValue);
 		startDraftState = { dirty: false, valid: true };
 		endDraftState = { dirty: false, valid: true };
-		panelDraft = resolvedOpen ? normalizedValue : null;
+		panelDraft = panelVisible ? normalizedValue : null;
 		panelDirty = false;
 		panelFeedback = '';
 		panelController?.resetDraft();
 	}
 
 	function setOpen(next: boolean): void {
+		if (resolvedPresentation === 'inline') return;
 		if ((resolvedDisabled || resolvedReadonly) && next) return;
 		openState.setFromUser(next);
 	}
 
+	function cancelPanel(): void {
+		if (resolvedPresentation === 'popover') {
+			setOpen(false);
+			return;
+		}
+		panelDraft = normalizedValue;
+		panelDirty = false;
+		panelFeedback = '';
+		panelFieldDraft = { dirty: false, valid: true };
+		panelController?.resetDraft();
+	}
+
 	function selectRangePart(part: DateTimeRangePart): void {
-		if (resolvedDisabled || resolvedReadonly) return;
+		if (resolvedDisabled) return;
 		rangePart = part;
 		panelFeedback = '';
 		ownerMicrotask(() => panelController?.focusFirst());
@@ -1028,6 +1121,7 @@
 	}
 
 	function applyPanelCandidate(next: DateTimePickerValue): RangeValue | null {
+		if (resolvedDisabled || resolvedReadonly) return null;
 		const staged = stageDateTimeRangeCandidate(panelDraft, rangePart, next, order);
 		panelDraft = staged.range;
 		rangePart = staged.part;
@@ -1084,10 +1178,11 @@
 		valueState.reset();
 		syncFields();
 		open = false;
-		panelDraft = null;
+		panelDraft = resolvedPresentation === 'inline' ? normalizedValue : null;
 		panelDirty = false;
 		panelFeedback = '';
 		rangePart = 'start';
+		panelController?.resetDraft();
 	}
 
 	function endpointText(part: DateTimeRangePart): string {
@@ -1112,7 +1207,7 @@
 	let previouslyOpen = false;
 	$effect(() => {
 		const current = normalizedValue;
-		const currentlyOpen = resolvedOpen;
+		const currentlyOpen = panelVisible;
 		const changed = !sameDateTimeRangeValue(current, observedOwner);
 		if (changed) untrack(() => syncFields(current));
 		if (currentlyOpen && (!previouslyOpen || changed)) {
@@ -1138,114 +1233,123 @@
 	);
 </script>
 
-{#snippet actions()}
-	<ZPopover modal={false} onOpenChange={setOpen} open={resolvedOpen} {placement} {triggerId}>
-		<ZPopoverTrigger
-			bind:ref={triggerRef}
-			aria-label={resolvedPickerLabel}
-			data-slot="trigger"
-			disabled={resolvedDisabled || resolvedReadonly}
-			popupRole="dialog"
+{#snippet panel()}
+	<div
+		aria-label={resolvedPickerLabel}
+		class={panelHeaderClass}
+		data-slot="range-parts"
+		role="group"
+	>
+		<ZButton
+			aria-pressed={rangePart === 'start'}
+			onclick={() => selectRangePart('start')}
 			size={resolvedSize}
-			variant="ghost"
+			variant={rangePart === 'start' ? 'solid' : 'outline'}
+			>{resolvedStartLabel}
+			: {endpointText('start')}</ZButton
 		>
-			<CalendarClock aria-hidden="true" size="1em" />
-		</ZPopoverTrigger>
-		<ZPopoverContent
+		<ZButton
+			aria-pressed={rangePart === 'end'}
+			onclick={() => selectRangePart('end')}
+			size={resolvedSize}
+			variant={rangePart === 'end' ? 'solid' : 'outline'}
+			>{resolvedEndLabel}
+			: {endpointText('end')}</ZButton
+		>
+	</div>
+	{#if presets.length > 0}
+		<div
 			aria-label={resolvedPickerLabel}
-			ariaLabelledBy={null}
-			data-slot="content"
-			dir={resolvedDirection}
-			initialFocus={() => panelController?.firstFocusableElement ?? null}
-			role="dialog"
+			class={panelHeaderClass}
+			data-slot="range-presets"
+			role="group"
 		>
-			<div
-				aria-label={resolvedPickerLabel}
-				class={panelHeaderClass}
-				data-slot="range-parts"
-				role="group"
-			>
+			{#each presets as preset, index (`${index}:${preset.label}`)}
 				<ZButton
-					aria-pressed={rangePart === 'start'}
-					onclick={() => selectRangePart('start')}
+					onclick={() => chooseRangePreset(preset as DateTimeRangePreset<DateTimeMode>)}
 					size={resolvedSize}
-					variant={rangePart === 'start' ? 'solid' : 'outline'}
-					>{resolvedStartLabel}
-					: {endpointText('start')}</ZButton
+					variant="outline">{preset.label}</ZButton
 				>
-				<ZButton
-					aria-pressed={rangePart === 'end'}
-					onclick={() => selectRangePart('end')}
-					size={resolvedSize}
-					variant={rangePart === 'end' ? 'solid' : 'outline'}
-					>{resolvedEndLabel}
-					: {endpointText('end')}</ZButton
-				>
+			{/each}
+		</div>
+	{/if}
+	{#if panelFeedback}
+		{#key panelFeedbackRevision}
+			<div aria-live="polite" class={feedbackClass} data-slot="range-feedback" role="status">
+				{panelFeedback}
 			</div>
-			{#if presets.length > 0}
-				<div
-					aria-label={resolvedPickerLabel}
-					class={panelHeaderClass}
-					data-slot="range-presets"
-					role="group"
-				>
-					{#each presets as preset, index (`${index}:${preset.label}`)}
-						<ZButton
-							onclick={() => chooseRangePreset(preset as DateTimeRangePreset<DateTimeMode>)}
-							size={resolvedSize}
-							variant="outline">{preset.label}</ZButton
-						>
-					{/each}
-				</div>
-			{/if}
-			{#if panelFeedback}
-				{#key panelFeedbackRevision}
-					<div aria-live="polite" class={feedbackClass} data-slot="range-feedback" role="status">
-						{panelFeedback}
-					</div>
-				{/key}
-			{/if}
-			<DateTimePickerPanel
-				highlightRange={panelHighlight}
-				calendarLabel={resolvedCalendarLabel}
-				cancelLabel={resolvedCancelLabel}
-				confirmLabel={resolvedConfirmLabel}
-				{dayPeriodLabel}
-				direction={resolvedDirection}
+		{/key}
+	{/if}
+	<DateTimePickerPanel
+		{calendarHeader}
+		{dateCell}
+		highlightRange={panelHighlight}
+		calendarLabel={resolvedCalendarLabel}
+		cancelLabel={resolvedCancelLabel}
+		confirmLabel={resolvedConfirmLabel}
+		{dayPeriodLabel}
+		direction={resolvedDirection}
+		disabled={resolvedDisabled}
+		readonly={resolvedReadonly}
+		{disambiguation}
+		{firstDayOfWeek}
+		{granularity}
+		hourCycle={resolvedHourCycle}
+		idBase={`${idBase}-${rangePart}`}
+		invalidDateTimeLabel={resolvedInvalidDateTimeLabel}
+		isDateTimeUnavailable={(candidate) => endpointUnavailable(candidate, rangePart, panelDraft)}
+		locale={resolvedLocale}
+		maxValue={maxValue as DateTimePickerValue | undefined}
+		minValue={minValue as DateTimePickerValue | undefined}
+		{minuteStep}
+		mode={mode as DateTimeMode}
+		nextLabel={resolvedNextLabel}
+		noAvailableTimeLabel={resolvedNoAvailableLabel}
+		nowLabel={resolvedNowLabel}
+		onCancel={cancelPanel}
+		onConfirm={confirmPanel}
+		onDraftChange={(next) => (panelFieldDraft = next)}
+		onControllerChange={(controller) => (panelController = controller)}
+		onValueChange={applyPanelCandidate}
+		placeholderValue={resolvedPlaceholder}
+		previousLabel={resolvedPreviousLabel}
+		{secondStep}
+		{segmentLabel}
+		{showNow}
+		{showOutsideDates}
+		size={resolvedSize}
+		timeZone={resolvedTimeZone}
+		toggleDayPeriodLabel={toggleDayPeriodLabel ?? zui.localePack.time.toggleDayPeriod}
+		value={activePanelValue}
+	/>
+{/snippet}
+
+{#snippet actions()}
+	{#if resolvedPresentation === 'popover'}
+		<ZPopover modal={false} onOpenChange={setOpen} open={panelVisible} {placement} {triggerId}>
+			<ZPopoverTrigger
+				bind:ref={triggerRef}
+				aria-label={resolvedPickerLabel}
+				data-slot="trigger"
 				disabled={resolvedDisabled || resolvedReadonly}
-				{disambiguation}
-				{firstDayOfWeek}
-				{granularity}
-				hourCycle={resolvedHourCycle}
-				idBase={`${idBase}-${rangePart}`}
-				invalidDateTimeLabel={resolvedInvalidDateTimeLabel}
-				isDateTimeUnavailable={(candidate) => endpointUnavailable(candidate, rangePart, panelDraft)}
-				locale={resolvedLocale}
-				maxValue={maxValue as DateTimePickerValue | undefined}
-				minValue={minValue as DateTimePickerValue | undefined}
-				{minuteStep}
-				mode={mode as DateTimeMode}
-				nextLabel={resolvedNextLabel}
-				noAvailableTimeLabel={resolvedNoAvailableLabel}
-				nowLabel={resolvedNowLabel}
-				onCancel={() => setOpen(false)}
-				onConfirm={confirmPanel}
-				onDraftChange={(next) => (panelFieldDraft = next)}
-				onControllerChange={(controller) => (panelController = controller)}
-				onValueChange={applyPanelCandidate}
-				placeholderValue={resolvedPlaceholder}
-				previousLabel={resolvedPreviousLabel}
-				{secondStep}
-				{segmentLabel}
-				{showNow}
-				{showOutsideDates}
+				popupRole="dialog"
 				size={resolvedSize}
-				timeZone={resolvedTimeZone}
-				toggleDayPeriodLabel={toggleDayPeriodLabel ?? zui.localePack.time.toggleDayPeriod}
-				value={activePanelValue}
-			/>
-		</ZPopoverContent>
-	</ZPopover>
+				variant="ghost"
+			>
+				<CalendarClock aria-hidden="true" size="1em" />
+			</ZPopoverTrigger>
+			<ZPopoverContent
+				aria-label={resolvedPickerLabel}
+				ariaLabelledBy={null}
+				data-slot="content"
+				dir={resolvedDirection}
+				initialFocus={() => panelController?.firstFocusableElement ?? null}
+				role="dialog"
+			>
+				{@render panel()}
+			</ZPopoverContent>
+		</ZPopover>
+	{/if}
 	{#if clearable && normalizedValue}
 		<ZButton
 			aria-label={resolvedClearLabel}
@@ -1277,7 +1381,8 @@
 	data-readonly={resolvedReadonly || undefined}
 	data-required={resolvedRequired || undefined}
 	data-size={resolvedSize}
-	data-state={resolvedOpen ? 'open' : 'closed'}
+	data-presentation={resolvedPresentation}
+	data-state={resolvedPresentation === 'inline' ? 'inline' : panelVisible ? 'open' : 'closed'}
 >
 	<ZDateTimeField {...startFieldProps} bind:this={startController} bind:ref={startFieldRef} />
 	<span aria-hidden="true" data-slot="separator">–</span>
@@ -1285,7 +1390,14 @@
 		{...endFieldProps}
 		bind:this={endController}
 		bind:ref={endFieldRef}
-		suffixAction={actions}
+		suffixAction={resolvedPresentation === 'popover' || (clearable && normalizedValue)
+			? actions
+			: undefined}
 	/>
+	{#if resolvedPresentation === 'inline'}
+		<PickerInlineSurface label={resolvedPickerLabel} dir={resolvedDirection}>
+			{@render panel()}
+		</PickerInlineSurface>
+	{/if}
 </div>
 <FormValueBridge disabled={resolvedDisabled} entries={formEntries} {form} onReset={resetFromForm} />

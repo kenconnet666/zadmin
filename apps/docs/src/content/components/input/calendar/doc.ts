@@ -17,6 +17,8 @@ import LocaleTimeZoneDemo from './LocaleTimeZoneDemo.svelte';
 import localeTimeZoneSource from './LocaleTimeZoneDemo.svelte?raw';
 import RangeDemo from './RangeDemo.svelte';
 import rangeSource from './RangeDemo.svelte?raw';
+import ContentDemo from './ContentDemo.svelte';
+import contentSource from './ContentDemo.svelte?raw';
 
 export const calendarDoc = defineComponentDoc(calendarMetadata, {
 	profiles: ['form-control', 'collection'],
@@ -59,6 +61,15 @@ export const calendarDoc = defineComponentDoc(calendarMetadata, {
 			'统一single/multiple/range的Calendar，一个owner覆盖多月窗口、独立focusedValue、周号、范围preview与连续性约束；每月固定6周网格，跨月不重复交互日期。'
 	},
 	demos: [
+		{
+			component: ContentDemo,
+			covers: ['accessible-name', 'composition', 'keyboard'],
+			description:
+				'dateCell只替换日期按钮内容；header通过只读context分页，不接管选择、焦点或表单。',
+			id: 'calendar-content-snippets',
+			source: contentSource,
+			title: '日期内容与页头定制'
+		},
 		{
 			component: MultiMonthDemo,
 			source: multiMonthSource,

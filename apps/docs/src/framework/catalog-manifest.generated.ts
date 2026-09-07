@@ -1190,11 +1190,12 @@ export const componentCatalogManifest = Object.freeze([
 		keywords: ['calendar', 'grid', 'focused value', 'calendar date', 'range', 'rtl'],
 		profiles: ['form-control', 'collection'],
 		capabilities: [
-			'controlled',
+			'accessible-name',
+			'composition',
 			'keyboard',
+			'controlled',
 			'locale',
 			'invalid',
-			'composition',
 			'variants-and-states',
 			'basic-render',
 			'form-data',
@@ -1202,12 +1203,11 @@ export const componentCatalogManifest = Object.freeze([
 			'uncontrolled',
 			'disabled',
 			'focus',
-			'accessible-name',
 			'ssr',
 			'external-clear',
 			'readonly'
 		],
-		demoCount: 8,
+		demoCount: 9,
 		publicComponentCount: 1
 	},
 	{
@@ -2407,8 +2407,11 @@ export const componentCatalogManifest = Object.freeze([
 		keywords: [],
 		profiles: ['form-control', 'layer'],
 		capabilities: [
-			'basic-render',
+			'composition',
+			'form-data',
+			'form-reset',
 			'controlled',
+			'basic-render',
 			'external-clear',
 			'keyboard',
 			'portal',
@@ -2416,11 +2419,9 @@ export const componentCatalogManifest = Object.freeze([
 			'locale',
 			'density',
 			'disabled',
-			'readonly',
-			'form-data',
-			'form-reset'
+			'readonly'
 		],
-		demoCount: 4,
+		demoCount: 5,
 		publicComponentCount: 1
 	},
 	{
@@ -2433,8 +2434,9 @@ export const componentCatalogManifest = Object.freeze([
 		keywords: [],
 		profiles: ['form-control', 'layer'],
 		capabilities: [
-			'basic-render',
+			'composition',
 			'controlled',
+			'basic-render',
 			'portal',
 			'keyboard',
 			'locale',
@@ -2445,7 +2447,7 @@ export const componentCatalogManifest = Object.freeze([
 			'form-data',
 			'form-reset'
 		],
-		demoCount: 3,
+		demoCount: 4,
 		publicComponentCount: 1
 	},
 	{
@@ -2458,15 +2460,17 @@ export const componentCatalogManifest = Object.freeze([
 		keywords: [],
 		profiles: ['form-control', 'collection'],
 		capabilities: [
-			'basic-render',
+			'accessible-name',
+			'composition',
 			'keyboard',
+			'basic-render',
 			'locale',
 			'controlled',
 			'form-data',
 			'form-reset',
 			'invalid'
 		],
-		demoCount: 4,
+		demoCount: 5,
 		publicComponentCount: 1
 	},
 	{
@@ -2490,6 +2494,49 @@ export const componentCatalogManifest = Object.freeze([
 			'form-reset'
 		],
 		demoCount: 3,
+		publicComponentCount: 1
+	},
+	{
+		id: 'time-grid',
+		name: 'ZTimeGrid',
+		category: 'input',
+		summary:
+			'TimeGrid接收显式、唯一且有序的Time时隙，不解析字符串或自行生成日期状态。slot标签可由业务命名，也可按Provider locale和hourCycle格式化。',
+		status: 'experimental',
+		keywords: ['time grid', 'time slots', 'radio group', 'nullable', 'form', 'rtl'],
+		profiles: ['form-control', 'collection'],
+		capabilities: [
+			'basic-render',
+			'controlled',
+			'keyboard',
+			'locale',
+			'form-data',
+			'invalid',
+			'disabled',
+			'readonly',
+			'rtl'
+		],
+		demoCount: 3,
+		publicComponentCount: 1
+	},
+	{
+		id: 'time-value',
+		name: 'ZTimeValue',
+		category: 'data-display',
+		summary:
+			'TimeValue只把Time格式化为本地化文本，并复用ZText的字号、行高、字重、tone和溢出能力；它没有编辑、时区或表单owner。',
+		status: 'experimental',
+		keywords: ['time value', 'intl', 'locale', 'hour cycle', 'semantic time', 'typography'],
+		profiles: ['data-view'],
+		capabilities: [
+			'basic-render',
+			'locale',
+			'native-props',
+			'variants-and-states',
+			'accessible-name',
+			'composition'
+		],
+		demoCount: 2,
 		publicComponentCount: 1
 	},
 	{

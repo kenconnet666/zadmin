@@ -3,7 +3,7 @@
 	"summary": {
 		"stableCompliant": 141,
 		"stableViolations": 0,
-		"promotionEligibleExperimental": 27
+		"promotionEligibleExperimental": 29
 	},
 	"components": [
 		{
@@ -1007,6 +1007,16 @@
 			"ssrEvidenceCount": 3
 		},
 		{
+			"id": "time-value",
+			"name": "ZTimeValue",
+			"family": null,
+			"status": "experimental",
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
+			"docs": "apps/docs/src/content/components/data-display/time-value/doc.ts",
+			"ssrEvidenceCount": 1
+		},
+		{
 			"id": "timeline",
 			"name": "ZTimeline",
 			"family": null,
@@ -1224,7 +1234,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/calendar/doc.ts",
-			"ssrEvidenceCount": 4
+			"ssrEvidenceCount": 5
 		},
 		{
 			"id": "cascader",
@@ -1274,7 +1284,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/date-picker/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrEvidenceCount": 3
 		},
 		{
 			"id": "date-range-picker",
@@ -1284,7 +1294,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/date-range-picker/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrEvidenceCount": 3
 		},
 		{
 			"id": "date-time-field",
@@ -1444,7 +1454,7 @@
 			"classification": "promotionEligibleExperimental",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/period-calendar/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrEvidenceCount": 2
 		},
 		{
 			"id": "period-picker",
@@ -1454,7 +1464,7 @@
 			"classification": "promotionEligibleExperimental",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/period-picker/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrEvidenceCount": 2
 		},
 		{
 			"id": "pin-input",
@@ -1545,6 +1555,16 @@
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/time-field/doc.ts",
 			"ssrEvidenceCount": 4
+		},
+		{
+			"id": "time-grid",
+			"name": "ZTimeGrid",
+			"family": null,
+			"status": "experimental",
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
+			"docs": "apps/docs/src/content/components/input/time-grid/doc.ts",
+			"ssrEvidenceCount": 1
 		},
 		{
 			"id": "time-picker",

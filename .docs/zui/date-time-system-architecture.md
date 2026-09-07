@@ -47,6 +47,14 @@ focusedValue/selection owner, and locale/ISO week numbers call the Period runtim
 grids are projections; adjacent outside dates and representational clamp duplicates never gain a
 second interactive node.
 
+E15 adds `popover` and `inline` presentations to the same DateTimePicker and DateTimeRangePicker
+roots. Inline rendering removes the Portal, popup trigger and popup-only props; it does not introduce
+a second value, field, panel draft, FormData bridge or commit protocol. Calendar and PeriodCalendar
+cell/header snippets replace content inside owned controls or request navigation through a read-only
+context. DateTime pickers forward these snippets to the shared Calendar rather than copying its grid.
+TimeGrid and TimeValue candidates continue the same boundary: TimeGrid selects typed `Time` slots
+through shared collection/form primitives, while TimeValue reuses ZText and owns formatting only.
+
 Raw drafts participate in FormControlState through FormControlDraftState even when no valid canonical
 value has changed. Form validation blocks stale-value submission, excludes disabled native controls,
 and returns no successful data for invalid/outdated results. Child fields opt out of model/FormData
@@ -81,6 +89,8 @@ Primary references:
 - PeriodCalendar owns one period selection; PeriodPicker owns one open request and optional draft
   while reusing PeriodCalendar with form participation disabled.
 - Picker roots own `value`, `open`, FormData, reset, Field projection, and focus restoration.
+- Inline picker roots own the same value and draft protocol without an open-state owner; presentation
+  changes containment only. Confirm keeps the inline surface mounted and Cancel restores the draft.
 - Nested `ZDateField` and `ZCalendar` use `formParticipation="none"`; they never create duplicate
   hidden inputs or reset listeners.
 - `ZPopover` resolves portal, motion, observers, dismissal, and focus from the actual trigger realm.
@@ -95,6 +105,13 @@ primitives. Its finite columns hold a panel draft; Space/click updates the draft
 and Escape discards it. Existing hidden time units survive edits at coarser granularity. Empty pickers
 may search a legal reference under precise constraints. Date/time inputs inherit InputGroup name,
 label, state and size, and the enclosing group owns disabled opacity once.
+
+DateTime joint constraints disable only calendar days proven outside date-level min/max bounds. A
+boundary day remains reachable when its carried time is unavailable; the time panel then validates
+complete candidates, including hidden minute/second and min/max millisecond precision. DST gaps use
+the declared disambiguation policy and keep a repairable date draft, while an unchanged resolved fold
+preserves its original instant, owner time zone and offset. Read-only inline calendars and time columns
+remain focusable and navigable but do not select, run presets/Now, or confirm a new value.
 
 - Date/time segments: logical Left/Right plus Home/End navigation, Up/Down cycle, Enter commit, and
   Escape draft rollback. The DOM order is produced by `Intl.DateTimeFormat.formatToParts`, including
@@ -115,8 +132,9 @@ time/date-time range pickers, presets, and explicit DST fold/gap handling. These
 or otherwise subject to their declared metadata and current remote evidence; inclusion here does not
 promote them to stable.
 
-Still deferred are drag range selection, recurring rules, cell/header customization for Calendar,
-complete non-Gregorian editing, mobile modal variants, and the full assistive-technology/forced-colors
-matrix. Calendar systems other than Gregorian may format through Intl, and era/calendar identity is
-preserved at representational boundaries, but editable non-Gregorian value calendars are not yet
-claimed.
+Still deferred are drag range selection, recurring rules, MiniCalendar, complete non-Gregorian
+editing, mobile modal variants, and the full assistive-technology/forced-colors matrix. Cell/header
+customization and inline DateTime source contracts are now present, but their current candidate still
+requires remote and assistive-technology acceptance. Calendar systems other than Gregorian may format
+through Intl, and era/calendar identity is preserved at representational boundaries, but editable
+non-Gregorian value calendars are not yet claimed.

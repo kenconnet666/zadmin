@@ -1,5 +1,6 @@
 <script module lang="ts">
 	import type { CalendarDate as CalendarDateValue } from '@internationalized/date';
+	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import { styleInternalAction } from '../gene/internal-action.js';
@@ -7,6 +8,35 @@
 	import type { CalendarWeekNumbering } from '../../runtime/calendar.js';
 	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
+
+	export interface CalendarCellContext {
+		readonly date: CalendarDateValue;
+		readonly direction: 'ltr' | 'rtl';
+		readonly disabled: boolean;
+		readonly focused: boolean;
+		readonly highlighted: boolean;
+		readonly outside: boolean;
+		readonly preview: boolean;
+		readonly previewInvalid: boolean;
+		readonly rangeEdge?: 'end' | 'start';
+		readonly readonly: boolean;
+		readonly selected: boolean;
+		readonly size: ZControlSize;
+		readonly today: boolean;
+		readonly unavailable: boolean;
+	}
+
+	export interface CalendarHeaderContext {
+		readonly direction: 'ltr' | 'rtl';
+		readonly label: string;
+		readonly nextDisabled: boolean;
+		readonly previousDisabled: boolean;
+		readonly size: ZControlSize;
+		readonly visibleMonths: readonly CalendarDateValue[];
+
+		goToNextPage(): void;
+		goToPreviousPage(): void;
+	}
 
 	interface ZCalendarSharedProps extends Omit<
 		HTMLAttributes<HTMLDivElement>,
@@ -22,9 +52,11 @@
 		focusedValue?: CalendarDateValue;
 		readonly form?: string;
 		readonly formParticipation?: 'auto' | 'none';
+		readonly header?: Snippet<[context: CalendarHeaderContext]>;
 		readonly highlightRange?: CalendarRangeValue | null;
 		readonly invalid?: boolean;
 		readonly isDateUnavailable?: (date: CalendarDateValue) => boolean;
+		readonly dateCell?: Snippet<[context: CalendarCellContext]>;
 		readonly locale?: string;
 		readonly maxValue?: CalendarDateValue;
 		readonly minValue?: CalendarDateValue;
@@ -66,8 +98,10 @@
 		value?: CalendarRangeValue | null;
 	}
 
-	export type ZCalendarProps = ZCalendarSharedProps &
-		(ZCalendarSingleBranch | ZCalendarMultipleBranch | ZCalendarRangeBranch);
+	export interface ZCalendarSingleProps extends ZCalendarSharedProps, ZCalendarSingleBranch {}
+	export interface ZCalendarMultipleProps extends ZCalendarSharedProps, ZCalendarMultipleBranch {}
+	export interface ZCalendarRangeProps extends ZCalendarSharedProps, ZCalendarRangeBranch {}
+	export type ZCalendarProps = ZCalendarSingleProps | ZCalendarMultipleProps | ZCalendarRangeProps;
 	export type { CalendarSelectionMode, CalendarWeekNumbering } from '../../runtime/calendar.js';
 
 	export const zuiMetadata = {
@@ -89,7 +123,8 @@
 			'共享6x7 month grids',
 			'periodFromDate week rules',
 			'roving focus',
-			'FormControlState'
+			'FormControlState',
+			'typed content snippets'
 		],
 		events: [
 			{
@@ -124,6 +159,19 @@
 				description: '独立边框或供Picker复用的bare外观。',
 				name: 'appearance',
 				type: "'bare' | 'calendar'"
+			},
+			{
+				default: '日期数字',
+				description:
+					'只替换内部日期button的内容；gridcell、button、ARIA、焦点和选择仍由Calendar拥有。',
+				name: 'dateCell',
+				type: 'Snippet<[CalendarCellContext]>'
+			},
+			{
+				default: '内置上一页、窗口label和下一页',
+				description: '替换header内容并通过只读context请求分页；不暴露或转移selection owner。',
+				name: 'header',
+				type: 'Snippet<[CalendarHeaderContext]>'
 			},
 			{
 				bindable: true,
@@ -316,7 +364,20 @@
 			}
 		],
 		since: 'unreleased',
-		snippets: [],
+		snippets: [
+			{
+				description: '日期button内的定制内容。',
+				name: 'dateCell',
+				required: false,
+				type: 'Snippet<[CalendarCellContext]>'
+			},
+			{
+				description: '使用CalendarHeaderContext导航的header内容。',
+				name: 'header',
+				required: false,
+				type: 'Snippet<[CalendarHeaderContext]>'
+			}
+		],
 		source: 'ui/zui/src/components/input/ZCalendar.svelte',
 		states: [
 			{
@@ -639,6 +700,7 @@
 	} from '../../runtime/foundation/root-style.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
+	import ZVisuallyHidden from '../gene/ZVisuallyHidden.svelte';
 
 	type CalendarSelectionValue = CalendarDate | readonly CalendarDate[] | CalendarRangeValue | null;
 
@@ -650,6 +712,7 @@
 		appearance = 'calendar',
 		calendarLabel,
 		class: className,
+		dateCell,
 		defaultFocusedValue,
 		defaultValue,
 		dir: dirProp,
@@ -658,6 +721,7 @@
 		focusedValue = $bindable(),
 		form,
 		formParticipation = 'auto',
+		header,
 		highlightRange,
 		invalid = false,
 		isDateUnavailable,
@@ -688,9 +752,13 @@
 	const zui = useZui();
 	const fieldOwner = claimZFieldControlOwner();
 	const field = fieldOwner.field;
-	const valueScope = formParticipation === 'auto' ? claimFormValueScope() : null;
+	const claimedValueScope = untrack(claimFormValueScope);
+	const valueScope = untrack(() => (formParticipation === 'auto' ? claimedValueScope : null));
 	const resolvedDirection = $derived(dirProp ?? zui.direction);
-	const effectiveDirection = $derived(getElementDirection(ref, zui.direction));
+	const directionFallback = $derived(
+		dirProp === 'rtl' ? 'rtl' : dirProp === 'ltr' ? 'ltr' : zui.direction
+	);
+	const effectiveDirection = $derived(getElementDirection(ref, directionFallback));
 	const PreviousIcon = $derived(effectiveDirection === 'rtl' ? ChevronRight : ChevronLeft);
 	const NextIcon = $derived(effectiveDirection === 'rtl' ? ChevronLeft : ChevronRight);
 	const resolvedLocale = $derived(locale ?? zui.locale);
@@ -1052,6 +1120,7 @@
 		const available = availableFrom(candidate, direction);
 		const availableMonth = available ? startOfMonth(available) : null;
 		if (
+			available &&
 			availableMonth &&
 			availableMonth.compare(next) >= 0 &&
 			availableMonth.compare(nextLast) <= 0
@@ -1074,6 +1143,18 @@
 			Boolean(maxValue && next.compare(startOfMonth(maxValue)) > 0)
 		);
 	});
+	const headerContext = $derived.by<CalendarHeaderContext>(() =>
+		Object.freeze({
+			direction: effectiveDirection,
+			goToNextPage: () => moveMonth(1),
+			goToPreviousPage: () => moveMonth(-1),
+			label: windowLabel,
+			nextDisabled,
+			previousDisabled,
+			size: resolvedSize,
+			visibleMonths: visibleMonthList
+		})
+	);
 	$effect(() => {
 		const next = focused;
 		ensureFocusedVisible(next);
@@ -1086,10 +1167,6 @@
 		return Boolean(selected && isSameDay(selected, date));
 	}
 
-	function paintedSelected(date: CalendarDate): boolean {
-		return actualSelected(date) || isDateInRange(date, normalizedHighlightRange);
-	}
-
 	function previewed(date: CalendarDate): boolean {
 		return Boolean(hoverRange && isDateInRange(date, hoverRange));
 	}
@@ -1100,6 +1177,27 @@
 			: displayRange?.end && isSameDay(date, displayRange.end)
 				? 'end'
 				: undefined;
+	}
+
+	function calendarCellContext(date: CalendarDate, outside: boolean): CalendarCellContext {
+		const highlighted = isDateInRange(date, normalizedHighlightRange);
+		const preview = previewed(date);
+		return Object.freeze({
+			date,
+			direction: effectiveDirection,
+			disabled: resolvedDisabled,
+			focused: isSameDay(date, focused),
+			highlighted,
+			outside,
+			preview,
+			previewInvalid: preview && !hoverRangeContiguous,
+			rangeEdge: rangeEdge(date),
+			readonly: resolvedReadonly,
+			selected: actualSelected(date),
+			size: resolvedSize,
+			today: isSameDay(date, currentToday),
+			unavailable: unavailableDate(date)
+		});
 	}
 
 	function weekPeriod(date: CalendarDate | undefined): WeekPeriod | null {
@@ -1151,25 +1249,30 @@
 	onpointerleave={() => (hoverDate = null)}
 >
 	<div class={headerClass} data-slot="header">
-		<button
-			type="button"
-			class={navClass}
-			aria-label={resolvedPreviousLabel}
-			disabled={previousDisabled}
-			onclick={() => moveMonth(-1)}
-		>
-			<PreviousIcon aria-hidden="true" size="1em" />
-		</button>
-		<strong aria-live="polite">{windowLabel}</strong>
-		<button
-			type="button"
-			class={navClass}
-			aria-label={resolvedNextLabel}
-			disabled={nextDisabled}
-			onclick={() => moveMonth(1)}
-		>
-			<NextIcon aria-hidden="true" size="1em" />
-		</button>
+		{#if header}
+			<ZVisuallyHidden aria-live="polite" data-slot="header-label">{windowLabel}</ZVisuallyHidden>
+			{@render header(headerContext)}
+		{:else}
+			<button
+				type="button"
+				class={navClass}
+				aria-label={resolvedPreviousLabel}
+				disabled={previousDisabled}
+				onclick={() => moveMonth(-1)}
+			>
+				<PreviousIcon aria-hidden="true" size="1em" />
+			</button>
+			<strong aria-live="polite">{windowLabel}</strong>
+			<button
+				type="button"
+				class={navClass}
+				aria-label={resolvedNextLabel}
+				disabled={nextDisabled}
+				onclick={() => moveMonth(1)}
+			>
+				<NextIcon aria-hidden="true" size="1em" />
+			</button>
+		{/if}
 	</div>
 	<div class={monthsClass} data-slot="months">
 		{#each visibleMonthList as month, monthIndex (`${month.year}-${month.month}`)}
@@ -1227,39 +1330,39 @@
 										data-duplicate-outside={cell.duplicateOutside || undefined}
 									>
 										{#if !cell.duplicateOutside && (showOutsideDates || !cell.outsideMonth)}
+											{@const context = calendarCellContext(cell.date, cell.outsideMonth)}
 											<button
 												use:registerButton={cell.date.toString()}
 												type="button"
 												class={zui.recipe(cellRecipe, {
-													disabled: unavailable(cell.date),
+													disabled: context.disabled || context.unavailable,
 													outside: cell.outsideMonth,
 													size: resolvedSize,
-													selected: paintedSelected(cell.date)
+													selected: context.selected || context.highlighted
 												})}
-												disabled={unavailable(cell.date)}
-												tabindex={isSameDay(cell.date, focused) ? 0 : -1}
+												disabled={context.disabled || context.unavailable}
+												tabindex={context.focused ? 0 : -1}
 												aria-label={formatDate(
 													cell.date,
 													resolvedLocale,
 													{ day: 'numeric', month: 'long', weekday: 'long', year: 'numeric' },
 													resolvedTimeZone
 												)}
-												aria-current={isSameDay(cell.date, currentToday) ? 'date' : undefined}
-												data-selected={actualSelected(cell.date) || undefined}
-												data-highlighted={isDateInRange(cell.date, normalizedHighlightRange) ||
-													undefined}
-												data-preview={previewed(cell.date) || undefined}
-												data-preview-invalid={(previewed(cell.date) && !hoverRangeContiguous) ||
-													undefined}
-												data-range-edge={rangeEdge(cell.date)}
+												aria-current={context.today ? 'date' : undefined}
+												data-selected={context.selected || undefined}
+												data-highlighted={context.highlighted || undefined}
+												data-preview={context.preview || undefined}
+												data-preview-invalid={context.previewInvalid || undefined}
+												data-range-edge={context.rangeEdge}
 												data-outside={cell.outsideMonth || undefined}
-												data-disabled={unavailable(cell.date) || undefined}
-												aria-disabled={unavailable(cell.date) || undefined}
+												data-disabled={context.disabled || context.unavailable || undefined}
+												aria-disabled={context.disabled || context.unavailable || undefined}
 												onpointerenter={() => (hoverDate = cell.date)}
 												onfocus={() => setFocused(cell.date)}
 												onclick={() => select(cell.date)}
 												onkeydown={(event) => handleKeydown(event, cell.date)}
-												>{cell.date.day}</button
+												>{#if dateCell}{@render dateCell(context)}{:else}{cell.date
+														.day}{/if}</button
 											>
 										{/if}
 									</td>

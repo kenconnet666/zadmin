@@ -225,3 +225,13 @@ NumberField、Segmented、TagsInput、Select、MultiSelect共用模型adapter，
 本地390px点查确认PeriodPicker单月键盘提交、季度confirm事务、readonly焦点、Calendar两月跨界键盘与multiple；PeriodPicker五档外框24/28/32/40/48px，动作内容22/26/30/38/46px，页面横向溢出0。必填month清空后FormData为空并显示“请填写此项”，reset恢复唯一`month=2026-09`并清除invalid。
 
 E13 CI [34075524716](https://github.com/kenconnet666/zadmin/actions/runs/34075524716) 已完成失败：build、Chromium、Firefox通过；WebKit、静态契约、组件、覆盖率、Windows、外部SSR仍失败。E14修复了已定位类型、测试资产与Form clone echo，但尚无当前候选远程验收。当前资产183公开组件、113 Docs families；实验实现、源码资产和手工点查均不表示稳定晋升。详见[E14执行记录](./execution-period-calendar-2026-09-07.md)。
+
+## E15：内嵌日期时间、内容定制与时间部件
+
+DateTimePicker/DateTimeRangePicker新增判别`presentation="popover" | "inline"`：inline与popover共用唯一root value、Field、DateTimePickerPanel、草稿、FormData和提交策略，不创建Portal/浮层trigger；类型分支排除open/defaultOpen/onOpenChange/placement。Calendar/PeriodCalendar提供保留内部button/grid/ARIA/roving owner的typed cell/header内容入口，DateTime single/range继续向共享Calendar透传。TimeGrid与TimeValue候选按`Time`、共享集合导航、ZText和单一表单owner落盘，不引入字符串时间模型或第二编辑状态。
+
+共享日期时间runtime/Panel同时修正同日部分时刻可用、隐藏分秒/毫秒边界、DST gap/fold/reference、preset/Now精确拒绝及inline readonly。只读Calendar和时间列仍可聚焦导航，选择与确认不写值，Cancel/reset清理草稿。Zoned range相等性保留instant之外的owner time zone/offset，避免外部同步吞掉reference变化。
+
+E14已完成job日志显示覆盖率1320通过、6失败，失败只在Period六项；静态契约有41个类型错误，多数为Period泛型；外部SSR有4个DateTime/Calendar生成声明在`Component<Props>`处触发大DOM交叉联合TS2590。当前按具体named interface物化mode/selection/presentation分支后再组成纯union，保留判别强度并降低`keyof Props`/`Partial<Props>`分配；这是待下一候选远程复验的修复，不能写成CI已绿。整个run最后一次状态仍为running，结论未知。
+
+390px已实测inline single的form宽314px、surface宽312px且无横向溢出；Cancel不写、Confirm只保留唯一`appointment`并保持inline，reset不增加commit。readonly、range、TimeGrid/TimeValue尚待最终浏览器点查；所有新品保持experimental/unreleased。详见[E15执行记录](./execution-inline-time-customization-2026-09-07.md)。下一阶段继续MiniCalendar、国际历法与当前候选复验，并与集合、拖放、媒体、图表和编辑器波次并行；日期家族没有关闭。

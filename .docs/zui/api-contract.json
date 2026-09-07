@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
-	"componentCount": 183,
-	"overallSha256": "55fd193dde44b63ebc14c410a6c65be22ad4861db22e620139d53acf098d9941",
+	"componentCount": 185,
+	"overallSha256": "b57567e4e890e51c655b620da1c690167986197f246eb81fd8dd738ff18d0a71",
 	"components": [
 		{
 			"id": "accordion",
@@ -504,6 +504,11 @@
 			"source": "src/components/data-display/ZTag.svelte"
 		},
 		{
+			"id": "time-value",
+			"sha256": "bd7771b444c40554d9a09d33a9a886c48f70fec928da6090d8c47613d97ee52b",
+			"source": "src/components/data-display/ZTimeValue.svelte"
+		},
+		{
 			"id": "timeline",
 			"sha256": "d71757a9a071b709f47d06a5b37a07bdc18b4162fc366bb6b2ae9680da715348",
 			"source": "src/components/data-display/ZTimeline.svelte"
@@ -595,7 +600,7 @@
 		},
 		{
 			"id": "text",
-			"sha256": "4051e84e37fc088df7d1a436b29a488d700eaab34d2cb30894b5de4128dc070d",
+			"sha256": "e5ea0c85a19ab68ddc88f0fdbb9b6c59a1258f53cef09d564cc84dc5317e2ad2",
 			"source": "src/components/gene/ZText.svelte"
 		},
 		{
@@ -610,7 +615,7 @@
 		},
 		{
 			"id": "calendar",
-			"sha256": "a6bfdbf974015bed310700c9ec31c04d676f05bf4b8b114c660c5eb2478dd720",
+			"sha256": "333fc605f96f7c2908426581f800677e75dd359ece7fc777babc0d279ed34b23",
 			"source": "src/components/input/ZCalendar.svelte"
 		},
 		{
@@ -635,27 +640,27 @@
 		},
 		{
 			"id": "date-picker",
-			"sha256": "f08090029e19ffea79a24ee7be49dfde87da32b62f0cd29f554c20e0abbcbd8a",
+			"sha256": "7a79b980ee9e383e72ed729a7fec9fe930589291ee3c5283885d7278e061e03c",
 			"source": "src/components/input/ZDatePicker.svelte"
 		},
 		{
 			"id": "date-range-picker",
-			"sha256": "2b0cbffc6739099c499795e67ea478915e354d7a972586b50b7fb1faf6f2323e",
+			"sha256": "c1006e57dd6a185dac7703ad98ce2862ba2f8aa4cf0794787295fee15aad50cb",
 			"source": "src/components/input/ZDateRangePicker.svelte"
 		},
 		{
 			"id": "date-time-field",
-			"sha256": "e79d04957032521d94c1de850e9b291020b41cb1c87935f8cf559fd9048f1a20",
+			"sha256": "660373e8ec258270d4c3214feac3cc906926ac42f56ae43f9c0620c6c1e0436b",
 			"source": "src/components/input/ZDateTimeField.svelte"
 		},
 		{
 			"id": "date-time-picker",
-			"sha256": "2721436857d263020c2baef54f63f4cf517cdecaded446a321aae5bc21b073a8",
+			"sha256": "60eb8249be29b8807df6592024ed16bc692123adab9c63d1f5cb0ada99b5a4de",
 			"source": "src/components/input/ZDateTimePicker.svelte"
 		},
 		{
 			"id": "date-time-range-picker",
-			"sha256": "df88d6ed6a14ddebf731799997331f1f3255bb4263fc0775f2279baf082da69b",
+			"sha256": "505bb685f2760e634bccf8cf92e5b1aaee3669b254dc2bd5df75b61c75a94163",
 			"source": "src/components/input/ZDateTimeRangePicker.svelte"
 		},
 		{
@@ -720,12 +725,12 @@
 		},
 		{
 			"id": "period-calendar",
-			"sha256": "a7ccff01045bf3f3be0f835d623564dc1c1542b020f89204a3b029e8c104d1ea",
+			"sha256": "be1445d600947f707449644d9e15fcd48973f732ebcca96f486c8f61f8a6e04c",
 			"source": "src/components/input/ZPeriodCalendar.svelte"
 		},
 		{
 			"id": "period-picker",
-			"sha256": "9a5c5bae9246115e50f72672b9c42088e7efb225a218dcf8362383b76174f128",
+			"sha256": "8f9a5399e0042a930e66e4e6e186fcff941184dfc287f283dd73c620cb0cf695",
 			"source": "src/components/input/ZPeriodPicker.svelte"
 		},
 		{
@@ -772,6 +777,11 @@
 			"id": "time-field",
 			"sha256": "61343676e6dd409b9f815cbd5db27716b891c05599741bb381fe5e082fbbae7f",
 			"source": "src/components/input/ZTimeField.svelte"
+		},
+		{
+			"id": "time-grid",
+			"sha256": "1345b1a2dcf5f3c7fbc8ea9cb9f1a5f65858abdb078ef95c38e247527cfacc41",
+			"source": "src/components/input/ZTimeGrid.svelte"
 		},
 		{
 			"id": "time-picker",
@@ -922,10 +932,10 @@
 	"entrypoints": {
 		"code.ts": "eabb8477e4c5ef93d016ab909e5c7f85a3111df231e2d2c3c7ef5e54897b36db",
 		"compiler.ts": "96fa979b36838e8b7a6d3f52bb463f23951438a4d974d52b631ad1e6d937b2e7",
-		"index.ts": "6b8cd4b47d289e625a6b2eb83de9395f639c89b10444d6d2d72401e6cae5ff66",
+		"index.ts": "f7ce5175f59fb840952a96b8c8e3030f1353884107605b59d5addda295d9ec58",
 		"internal.ts": "05f9ef9c8628e1cdf694dcc88b71831e5aab726a3189bd6189eef7ae645df4d7",
 		"layer.ts": "72d0fc8e5b7a8ab39a12e157879951b84f1a7fc19654f4bd8b6ea92fd8aa6db8",
-		"metadata.ts": "5472d40345fb22b199d4cd76ab2157c7dee1234ffa7fddf7e242928cf0d97062",
+		"metadata.ts": "201812661af08f2befb1c8486fe505f1b02fb3bdfa97050f21ecf6c9cc88afd6",
 		"runtime.ts": "902679df258a1aee96a4742dc4f229210aef34e0db47c0bffcde4cc1d66016fb",
 		"testing.ts": "c596113f3cbcf4ce75be2728b6a10cd6a0b77c9b9101a4408ba2e18e174f15cb",
 		"theme.ts": "9625285286228f2548dadb74b934f40d7cd1804a1e96bc37a04f21d3cd32b527",

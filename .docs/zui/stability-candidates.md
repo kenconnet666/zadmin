@@ -2,7 +2,7 @@
 
 本文件由 `scripts/check-stability-policy.mjs` 生成；不会修改组件 status。compound member 可继承同 family root 的 Docs 页面。
 
-stableCompliant：141；stableViolations：0；promotionEligibleExperimental：27。
+stableCompliant：141；stableViolations：0；promotionEligibleExperimental：29。
 
 | Component               | Status       | Classification                | Blockers                                                          | Docs                                                                  | SSR |
 | ----------------------- | ------------ | ----------------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------- | --: |
@@ -106,6 +106,7 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：2
 | ZStatistic              | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/data-display/statistic/doc.ts        |   2 |
 | ZTable                  | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/data-display/table/doc.ts            |   2 |
 | ZTag                    | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/data-display/tag/doc.ts              |   3 |
+| ZTimeValue              | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/data-display/time-value/doc.ts       |   1 |
 | ZTimeline               | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/data-display/timeline/doc.ts         |   2 |
 | ZVirtualList            | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/data-display/virtual-list/doc.ts     |   2 |
 | ZAlert                  | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/feedback/alert/doc.ts                |   2 |
@@ -127,13 +128,13 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：2
 | ZText                   | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/text/doc.ts                     |   6 |
 | ZToggleButton           | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/toggle-button/doc.ts            |   3 |
 | ZVisuallyHidden         | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/visually-hidden/doc.ts          |   2 |
-| ZCalendar               | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/calendar/doc.ts                |   4 |
+| ZCalendar               | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/calendar/doc.ts                |   5 |
 | ZCascader               | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/cascader/doc.ts                |   1 |
 | ZCheckbox               | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/checkbox/doc.ts                |   2 |
 | ZColorPicker            | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/color-picker/doc.ts            |   1 |
 | ZDateField              | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/date-field/doc.ts              |   4 |
-| ZDatePicker             | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/date-picker/doc.ts             |   2 |
-| ZDateRangePicker        | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/date-range-picker/doc.ts       |   2 |
+| ZDatePicker             | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/date-picker/doc.ts             |   3 |
+| ZDateRangePicker        | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/date-range-picker/doc.ts       |   3 |
 | ZDateTimeField          | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/date-time-field/doc.ts         |   1 |
 | ZDateTimePicker         | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/date-time-picker/doc.ts        |   1 |
 | ZDateTimeRangePicker    | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/date-time-range-picker/doc.ts  |   1 |
@@ -149,8 +150,8 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：2
 | ZNativeSelect           | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/native-select/doc.ts           |   2 |
 | ZNumberField            | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/number-field/doc.ts            |   1 |
 | ZPasswordInput          | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/password-input/doc.ts          |   1 |
-| ZPeriodCalendar         | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/period-calendar/doc.ts         |   1 |
-| ZPeriodPicker           | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/period-picker/doc.ts           |   1 |
+| ZPeriodCalendar         | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/period-calendar/doc.ts         |   2 |
+| ZPeriodPicker           | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/period-picker/doc.ts           |   2 |
 | ZPinInput               | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/pin-input/doc.ts               |   2 |
 | ZRangeSlider            | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/range-slider/doc.ts            |   1 |
 | ZRating                 | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/rating/doc.ts                  |   1 |
@@ -160,6 +161,7 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：2
 | ZTagsInput              | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/tags-input/doc.ts              |   2 |
 | ZTextarea               | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/textarea/doc.ts                |   3 |
 | ZTimeField              | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/time-field/doc.ts              |   4 |
+| ZTimeGrid               | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/time-grid/doc.ts               |   1 |
 | ZTimePicker             | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/time-picker/doc.ts             |   1 |
 | ZTimeRangePicker        | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/time-range-picker/doc.ts       |   1 |
 | ZToggleGroup            | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/toggle-group/doc.ts            |   2 |

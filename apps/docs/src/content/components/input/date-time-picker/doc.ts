@@ -9,6 +9,8 @@ import PresetsDemo from './PresetsDemo.svelte';
 import presetsSource from './PresetsDemo.svelte?raw';
 import FamilyDemo from './FamilyDemo.svelte';
 import familySource from './FamilyDemo.svelte?raw';
+import InlineDemo from './InlineDemo.svelte';
+import inlineSource from './InlineDemo.svelte?raw';
 
 export const dateTimePickerDoc = defineComponentDoc(dateTimePickerMetadata, {
 	profiles: ['form-control', 'layer'],
@@ -23,6 +25,15 @@ export const dateTimePickerDoc = defineComponentDoc(dateTimePickerMetadata, {
 		'disabled 和 readonly 统一阻止写入；减少动画偏好由共享 Popover/Presence 处理。'
 	],
 	demos: [
+		{
+			id: 'date-time-picker-inline',
+			title: '内嵌日期时间与同一表单',
+			component: InlineDemo,
+			source: inlineSource,
+			covers: ['composition', 'form-data', 'form-reset', 'controlled'],
+			description:
+				'presentation=inline常驻显示共享面板，复用相同owner与confirm/immediate策略；不接受浮层open和placement参数。'
+		},
 		{
 			id: 'date-time-picker-value',
 			title: '值、打开状态与提交策略',

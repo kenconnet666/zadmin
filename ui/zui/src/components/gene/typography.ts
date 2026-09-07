@@ -7,6 +7,13 @@ export type TypographySize = keyof ZuiTheme['fontSize'];
 export type TypographyTone = ZSemanticTone | 'muted' | 'primary';
 export type TypographyWeight = keyof ZuiTheme['fontWeight'];
 
+export interface TypographyStyleOptions extends TypographyOverflowOptions {
+	readonly lineHeight?: TypographyLineHeight;
+	readonly size?: TypographySize;
+	readonly tone?: TypographyTone;
+	readonly weight?: TypographyWeight;
+}
+
 export const typographySizes = {
 	xsmall: (s) => s.fontSize._xsmall,
 	small: (s) => s.fontSize._small,

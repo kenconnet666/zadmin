@@ -1,4 +1,4 @@
-import type { CalendarDateTime, ZonedDateTime } from '@internationalized/date';
+import { ZonedDateTime, type CalendarDateTime } from '@internationalized/date';
 import {
 	compareDateTime,
 	isDateTimeUnavailable,
@@ -108,13 +108,24 @@ export function sameDateTimeRangeValue<TMode extends DateTimeMode>(
 		left === right ||
 		(left !== null &&
 			right !== null &&
-			(left.start === right.start ||
-				(left.start !== null &&
-					right.start !== null &&
-					compareDateTime(left.start, right.start) === 0)) &&
-			(left.end === right.end ||
-				(left.end !== null && right.end !== null && compareDateTime(left.end, right.end) === 0)))
+			sameDateTimeRangeEndpoint(left.start, right.start) &&
+			sameDateTimeRangeEndpoint(left.end, right.end))
 	);
+}
+
+function sameDateTimeRangeEndpoint(
+	left: CalendarDateTime | ZonedDateTime | null,
+	right: CalendarDateTime | ZonedDateTime | null
+): boolean {
+	if (left === right) return true;
+	if (!left || !right || Object.getPrototypeOf(left) !== Object.getPrototypeOf(right)) return false;
+	if (left instanceof ZonedDateTime && right instanceof ZonedDateTime)
+		return (
+			compareDateTime(left, right) === 0 &&
+			left.timeZone === right.timeZone &&
+			left.offset === right.offset
+		);
+	return compareDateTime(left, right) === 0;
 }
 
 export function replaceDateTimeRangePart<TMode extends DateTimeMode>(

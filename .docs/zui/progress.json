@@ -5,35 +5,35 @@
 		"version": "0.1.0"
 	},
 	"api": {
-		"components": 183,
-		"declaredProps": 2572,
+		"components": 185,
+		"declaredProps": 2624,
 		"metadataGapProps": 0,
 		"fallbackProps": 0
 	},
 	"maturity": {
-		"Declared": 183,
-		"Authorable": 183,
-		"ContractVerified": 183,
-		"RuntimeImplemented": 183,
-		"BrowserBehaviorVerified": 171,
+		"Declared": 185,
+		"Authorable": 185,
+		"ContractVerified": 185,
+		"RuntimeImplemented": 185,
+		"BrowserBehaviorVerified": 173,
 		"VisuallyVerified": 160,
 		"DesktopVerified": 0,
-		"ProductionVerified": 175,
+		"ProductionVerified": 177,
 		"statuses": {
-			"experimental": 42,
+			"experimental": 44,
 			"stable": 141
 		}
 	},
 	"stability": {
 		"stableCompliant": 141,
 		"stableViolations": 0,
-		"promotionEligibleExperimental": 27
+		"promotionEligibleExperimental": 29
 	},
 	"docs": {
 		"routes": {
-			"componentCount": 113,
+			"componentCount": 115,
 			"guideCount": 9,
-			"totalCount": 123
+			"totalCount": 125
 		},
 		"deployed": false
 	},
@@ -65,17 +65,17 @@
 		},
 		{
 			"id": "visual-evidence",
-			"remaining": 23,
+			"remaining": 25,
 			"description": "补齐组件级几何、computed style或截图证据；普通浏览器交互断言不再冒充视觉验证。"
 		},
 		{
 			"id": "stable-promotion",
-			"remaining": 27,
+			"remaining": 29,
 			"description": "逐项审查已满足门禁的experimental组件；禁止自动批量晋级。"
 		},
 		{
 			"id": "desktop-evidence",
-			"remaining": 183,
+			"remaining": 185,
 			"description": "建立组件级WebView2/Desktop证据后再提升DesktopVerified。"
 		},
 		{

@@ -21,7 +21,11 @@ import {
 } from './date-time.js';
 import type { Weekday } from './date.js';
 import type { ZControlSize } from './foundation/control-size.js';
-import { validateTimePickerConstraints, type TimePickerConstraints } from './time-picker.js';
+import {
+	initialTimePickerReference,
+	validateTimePickerConstraints,
+	type TimePickerConstraints
+} from './time-picker.js';
 
 export type DateTimePickerDirection = 'auto' | 'ltr' | 'rtl';
 export type DateTimePickerValue = CalendarDateTime | ZonedDateTime;
@@ -58,6 +62,7 @@ export interface DateTimePickerPanelSharedProps extends DateTimePickerConstraint
 	readonly nowLabel: string;
 	readonly presets?: readonly DateTimePickerPreset[];
 	readonly previousLabel: string;
+	readonly readonly?: boolean;
 	readonly showNow?: boolean;
 	readonly showOutsideDates?: boolean;
 	readonly size: ZControlSize;
@@ -263,6 +268,21 @@ export function dateTimePickerTimeConstraints(
 		minuteStep: constraints.minuteStep,
 		secondStep: constraints.secondStep
 	});
+}
+
+/**
+ * Resolves the time shown by an empty date-time panel for one concrete day. It preserves the
+ * placeholder precision when available and otherwise searches hidden units as well, which keeps
+ * a boundary day reachable when the configured granularity does not render minutes or seconds.
+ */
+export function initialDateTimePickerTime(
+	date: CalendarDate,
+	reference: DateTimePickerValue,
+	constraints: DateTimePickerConstraints
+): Time | null {
+	const parts = dateTimePickerParts(reference, constraints);
+	const timeConstraints = dateTimePickerTimeConstraints(date, reference, constraints);
+	return initialTimePickerReference(null, timeConstraints, parts.time);
 }
 
 export function dateTimePickerParts(

@@ -1,6 +1,8 @@
 import { dateTimeRangePickerMetadata } from '@zadmin/zui/metadata';
 import { dateTimeRangePickerApiFacts } from '../../../../framework/component-api.generated.js';
 import { defineComponentDoc } from '../../../../framework/component-doc.js';
+import InlineDemo from './InlineDemo.svelte';
+import inlineSource from './InlineDemo.svelte?raw';
 import BasicDemo from './BasicDemo.svelte';
 import basicSource from './BasicDemo.svelte?raw';
 import ConstraintsDemo from './ConstraintsDemo.svelte';
@@ -21,6 +23,14 @@ export const dateTimeRangePickerDoc = defineComponentDoc(dateTimeRangePickerMeta
 		'统一禁用、只读、方向和焦点回收；显式取消撤销尚未提交的面板草稿。'
 	],
 	demos: [
+		{
+			id: 'date-time-range-inline',
+			title: '内嵌范围与端点组合',
+			component: InlineDemo,
+			source: inlineSource,
+			covers: ['composition', 'controlled'],
+			description: '范围字段与常驻面板共享唯一业务值；取消草稿、预设和确认与浮层模式一致。'
+		},
 		{
 			id: 'date-time-range-picker-basic',
 			title: '范围面板、预设与确认',

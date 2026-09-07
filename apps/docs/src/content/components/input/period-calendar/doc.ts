@@ -9,6 +9,8 @@ import RulesDemo from './RulesDemo.svelte';
 import rulesSource from './RulesDemo.svelte?raw';
 import FormDemo from './FormDemo.svelte';
 import formSource from './FormDemo.svelte?raw';
+import ContentDemo from './ContentDemo.svelte';
+import contentSource from './ContentDemo.svelte?raw';
 
 export const periodCalendarDoc = defineComponentDoc(periodCalendarMetadata, {
 	profiles: ['form-control', 'collection'],
@@ -23,6 +25,14 @@ export const periodCalendarDoc = defineComponentDoc(periodCalendarMetadata, {
 		'周单元明确显示周号与日期边界，财年和周规则随值保存。'
 	],
 	demos: [
+		{
+			id: 'period-calendar-content-snippets',
+			title: '周期内容与页头定制',
+			component: ContentDemo,
+			source: contentSource,
+			covers: ['accessible-name', 'composition', 'keyboard'],
+			description: 'periodCell与header共享只读上下文，内部button、grid、选择和Form owner保持不变。'
+		},
 		{
 			id: 'period-calendar-granularity',
 			title: '四种明确的周期值',

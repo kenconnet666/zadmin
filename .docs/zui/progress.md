@@ -6,23 +6,23 @@
 
 | 维度                      |                    当前值 |                            总量或边界 |
 | ------------------------- | ------------------------: | ------------------------------------: |
-| Public component metadata |                       183 |                                   183 |
-| Declared public props     |                      2572 |          metadata gaps 0; fallbacks 0 |
+| Public component metadata |                       185 |                                   185 |
+| Declared public props     |                      2624 |          metadata gaps 0; fallbacks 0 |
 | Stable                    |                       141 |                          violations 0 |
-| BrowserBehaviorVerified   |                       171 |                                   183 |
-| VisuallyVerified          |                       160 |                                   183 |
-| ProductionVerified        |                       175 |                                   183 |
-| DesktopVerified           |                         0 |                                   183 |
-| Docs routes               |                       123 | components 113; guides 9; deployed no |
+| BrowserBehaviorVerified   |                       173 |                                   185 |
+| VisuallyVerified          |                       160 |                                   185 |
+| ProductionVerified        |                       177 |                                   185 |
+| DesktopVerified           |                         0 |                                   185 |
+| Docs routes               |                       125 | components 115; guides 9; deployed no |
 | Browser matrix            | chromium, firefox, webkit |                 Node 24; pnpm 11.22.0 |
 | Release checks            |                        26 |                    31; status blocked |
 
 ## 下一步优先级
 
 1. **production-evidence** (8 remaining): 为尚未ProductionVerified的组件补真实production browser/SSR合同。
-2. **visual-evidence** (23 remaining): 补齐组件级几何、computed style或截图证据；普通浏览器交互断言不再冒充视觉验证。
-3. **stable-promotion** (27 remaining): 逐项审查已满足门禁的experimental组件；禁止自动批量晋级。
-4. **desktop-evidence** (183 remaining): 建立组件级WebView2/Desktop证据后再提升DesktopVerified。
+2. **visual-evidence** (25 remaining): 补齐组件级几何、computed style或截图证据；普通浏览器交互断言不再冒充视觉验证。
+3. **stable-promotion** (29 remaining): 逐项审查已满足门禁的experimental组件；禁止自动批量晋级。
+4. **desktop-evidence** (185 remaining): 建立组件级WebView2/Desktop证据后再提升DesktopVerified。
 5. **release-boundary** (5 remaining): 完成真实publish/OIDC/tag/registry smoke与版本化Docs部署边界。
 
 ## 当前外部边界

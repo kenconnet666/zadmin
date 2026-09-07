@@ -1,5 +1,6 @@
 <script module lang="ts">
 	import type { CalendarDate as PublicCalendarDate } from '@internationalized/date';
+	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
@@ -10,18 +11,21 @@
 	} from '../../runtime/date.js';
 	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
 	import type { PopoverPlacement } from '../compound/popover/ZPopover.svelte';
+	import type { CalendarCellContext, CalendarHeaderContext } from './ZCalendar.svelte';
 
 	export interface ZDateRangePickerProps extends Omit<
 		HTMLAttributes<HTMLDivElement>,
 		'children' | 'onchange'
 	> {
 		readonly calendarLabel?: string;
+		readonly calendarHeader?: Snippet<[context: CalendarHeaderContext]>;
 		readonly clearLabel?: string;
 		readonly clearable?: boolean;
 		readonly closeOnSelect?: boolean;
 		readonly controlId?: string;
 		readonly defaultOpen?: boolean;
 		readonly defaultValue?: PublicCalendarRange | PublicCalendarRangeValue | null;
+		readonly dateCell?: Snippet<[context: CalendarCellContext]>;
 		readonly disabled?: boolean;
 		readonly endLabel?: string;
 		readonly firstDayOfWeek?: Weekday;
@@ -78,7 +82,14 @@
 			{ description: 'Popover状态。', name: 'open', type: 'boolean' },
 			{ description: '真实根节点引用。', name: 'ref', type: 'HTMLDivElement | null' }
 		],
-		dependencies: ['ZDateField', 'ZCalendar', 'ZInputGroup', 'ZPopover', 'FormControlState'],
+		dependencies: [
+			'ZDateField',
+			'ZCalendar',
+			'ZInputGroup',
+			'ZPopover',
+			'FormControlState',
+			'typed content snippets'
+		],
 		events: [
 			{
 				description: '字段编辑、第一/第二次日历选择或清空后的范围。',
@@ -109,6 +120,12 @@
 				type: 'string'
 			},
 			{
+				default: 'Calendar默认页头',
+				description: '透传给内部Calendar的页头；名称与Picker根结构区分。',
+				name: 'calendarHeader',
+				type: 'Snippet<[CalendarHeaderContext]>'
+			},
+			{
 				default: 'Provider localePack.date.clearDateRange',
 				description: '有任一端值时清空按钮的可访问名称。',
 				name: 'clearLabel',
@@ -132,6 +149,12 @@
 				description: '非受控初始范围；反向完整值在消费时规范化。',
 				name: 'defaultValue',
 				type: 'CalendarRangeValue | CalendarRange | null'
+			},
+			{
+				default: 'Calendar默认日期内容',
+				description: '透传给内部Calendar，只替换日期button内容。',
+				name: 'dateCell',
+				type: 'Snippet<[CalendarCellContext]>'
 			},
 			{
 				default: 'false',
@@ -270,7 +293,20 @@
 			}
 		],
 		since: 'unreleased',
-		snippets: [],
+		snippets: [
+			{
+				description: '内部Calendar的定制页头。',
+				name: 'calendarHeader',
+				required: false,
+				type: 'Snippet<[CalendarHeaderContext]>'
+			},
+			{
+				description: '内部日期button内的定制内容。',
+				name: 'dateCell',
+				required: false,
+				type: 'Snippet<[CalendarCellContext]>'
+			}
+		],
 		source: 'ui/zui/src/components/input/ZDateRangePicker.svelte',
 		states: [
 			{
@@ -327,6 +363,7 @@
 		'aria-describedby': ariaDescribedBy,
 		'aria-label': ariaLabel,
 		'aria-labelledby': ariaLabelledBy,
+		calendarHeader,
 		calendarLabel,
 		class: className,
 		clearLabel,
@@ -335,6 +372,7 @@
 		controlId: controlIdProp,
 		defaultOpen = false,
 		defaultValue,
+		dateCell,
 		disabled: disabledProp = false,
 		endLabel,
 		firstDayOfWeek,
@@ -589,9 +627,11 @@
 				bind:focusedValue={calendarFocusedValue}
 				appearance="bare"
 				calendarLabel={resolvedCalendarLabel}
+				{dateCell}
 				defaultFocusedValue={normalizedValue?.start ?? normalizedValue?.end ?? undefined}
 				disabled={resolvedDisabled}
 				{firstDayOfWeek}
+				header={calendarHeader}
 				formParticipation="none"
 				isDateUnavailable={(date) => isDateUnavailable?.(date, rangePart) ?? false}
 				locale={resolvedLocale}

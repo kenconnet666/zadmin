@@ -1,19 +1,19 @@
 # ZUI component maturity matrix
 
-Generated from 183 metadata components, 113 documentation modules, 183 API contract entries, and 342 test files.
+Generated from 185 metadata components, 115 documentation modules, 185 API contract entries, and 354 test files.
 
 This is a static inventory of authored test contracts, not an execution report or a whole-component visual acceptance result. Historical stage names are retained for compatibility. `VisuallyVerified` requires an explicit `@zui-visual ZComponent` marker, an owned component/fixture render, and a geometry, computed-style, CSS, or screenshot assertion in the SAME test block. A positive entry only identifies a scoped test; confirm its result against commit-matched CI and inspect real pages, themes, and densities separately. `DesktopVerified` remains false until a component-level desktop evidence source is added.
 
 | Stage                   | Count |
 | ----------------------- | ----: |
-| Declared                |   183 |
-| Authorable              |   183 |
-| ContractVerified        |   183 |
-| RuntimeImplemented      |   183 |
-| BrowserBehaviorVerified |   171 |
+| Declared                |   185 |
+| Authorable              |   185 |
+| ContractVerified        |   185 |
+| RuntimeImplemented      |   185 |
+| BrowserBehaviorVerified |   173 |
 | VisuallyVerified        |   160 |
 | DesktopVerified         |     0 |
-| ProductionVerified      |   175 |
+| ProductionVerified      |   177 |
 
 | Component               | Category     | Declared | Authorable | Contract | Runtime | Browser | Visual | Desktop | Production | Docs                                                                  |
 | ----------------------- | ------------ | -------: | ---------: | -------: | ------: | ------: | -----: | ------: | ---------: | --------------------------------------------------------------------- |
@@ -117,6 +117,7 @@ This is a static inventory of authored test contracts, not an execution report o
 | ZStatistic              | data-display |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/statistic/doc.ts        |
 | ZTable                  | data-display |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/table/doc.ts            |
 | ZTag                    | data-display |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/tag/doc.ts              |
+| ZTimeValue              | data-display |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/data-display/time-value/doc.ts       |
 | ZTimeline               | data-display |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/timeline/doc.ts         |
 | ZVirtualList            | data-display |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/data-display/virtual-list/doc.ts     |
 | ZAlert                  | feedback     |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/feedback/alert/doc.ts                |
@@ -171,6 +172,7 @@ This is a static inventory of authored test contracts, not an execution report o
 | ZTagsInput              | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/tags-input/doc.ts              |
 | ZTextarea               | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/textarea/doc.ts                |
 | ZTimeField              | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/time-field/doc.ts              |
+| ZTimeGrid               | input        |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/input/time-grid/doc.ts               |
 | ZTimePicker             | input        |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/input/time-picker/doc.ts             |
 | ZTimeRangePicker        | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/time-range-picker/doc.ts       |
 | ZToggleGroup            | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/toggle-group/doc.ts            |

@@ -28,6 +28,7 @@
 		readonly onChoose: (item: TimePickerColumnItem, commit: boolean) => void;
 		readonly onControllerChange: (controller: TimePickerColumnController | null) => void;
 		readonly onFocusSibling: (direction: -1 | 1) => void;
+		readonly readonly?: boolean;
 		readonly selectedKey?: SelectionKey;
 		readonly size: ZControlSize;
 	}
@@ -112,6 +113,7 @@
 		onChoose,
 		onControllerChange,
 		onFocusSibling,
+		readonly = false,
 		selectedKey,
 		size
 	}: TimePickerColumnProps = $props();
@@ -153,6 +155,7 @@
 		virtualizer: scrollBridge
 	});
 	let listRef = $state<HTMLDivElement | null>(null);
+
 	function revealOption(key: SelectionKey): void {
 		const option = mounted.get(key)?.element;
 		const list = listRef;
@@ -165,6 +168,7 @@
 		else if (item.bottom > top + list.clientHeight)
 			list.scrollTop += item.bottom - top - list.clientHeight;
 	}
+
 	$effect(() => {
 		const list = listRef;
 		const key = selectedKey;
@@ -223,7 +227,7 @@
 				if (!disabled && !item.disabled) active.set(item.key, 'pointer');
 			};
 			const handleClick = () => {
-				if (!disabled && !item.disabled) onChoose(item, false);
+				if (!disabled && !readonly && !item.disabled) onChoose(item, false);
 			};
 			element.addEventListener('click', handleClick);
 			element.addEventListener('pointerdown', handlePointerDown);
@@ -256,7 +260,7 @@
 		if (!item) return;
 		if (event.key === 'Enter' || event.key === ' ') {
 			event.preventDefault();
-			onChoose(item, event.key === 'Enter');
+			if (!readonly) onChoose(item, event.key === 'Enter');
 		}
 	}
 </script>
@@ -264,6 +268,7 @@
 <ZScrollArea
 	aria-activedescendant={active.activeId}
 	aria-label={label}
+	aria-readonly={readonly || undefined}
 	bind:ref={listRef}
 	class={[listClass, geometryClass]}
 	data-slot="column"

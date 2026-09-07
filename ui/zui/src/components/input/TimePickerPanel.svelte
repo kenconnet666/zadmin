@@ -18,6 +18,7 @@
 		readonly firstFocusableElement: HTMLElement | null;
 
 		focusFirst(): boolean;
+		resetDraft(): void;
 	}
 
 	export interface TimePickerPanelProps {
@@ -38,6 +39,7 @@
 		readonly onControllerChange: (controller: TimePickerPanelController | null) => void;
 		readonly onValueChange: (value: Time) => void;
 		readonly presets?: readonly TimePickerPreset[];
+		readonly readonly?: boolean;
 		readonly segmentLabel?: (segment: TimeFieldSegment) => string;
 		readonly size: ZControlSize;
 		readonly timeZone: string;
@@ -131,6 +133,7 @@
 		onControllerChange,
 		onValueChange,
 		presets = [],
+		readonly = false,
 		segmentLabel,
 		size,
 		timeZone,
@@ -158,6 +161,9 @@
 	const feedbackClass = $derived(zui.recipe(feedbackRecipe));
 	const footerClass = $derived(zui.recipe(footerRecipe));
 	const controller: TimePickerPanelController = {
+		resetDraft() {
+			feedback = '';
+		},
 		get firstFocusableElement() {
 			return (
 				columnControllers.get(0)?.element ??
@@ -193,17 +199,17 @@
 	}
 
 	function choosePreset(preset: TimePickerPreset): void {
-		if (disabled) return;
+		if (disabled || readonly) return;
 		acceptCandidate(resolveTimePickerPreset(preset, constraints));
 	}
 
 	function chooseNow(): void {
-		if (disabled) return;
+		if (disabled || readonly) return;
 		acceptCandidate(timePickerNow(timeZone, constraints));
 	}
 
 	function confirm(): void {
-		if (disabled || !value || !timePickerValueAvailable(value, constraints)) return;
+		if (disabled || readonly || !value || !timePickerValueAvailable(value, constraints)) return;
 		onConfirm(value);
 	}
 
@@ -265,7 +271,7 @@
 	}
 
 	function choosePart(part: TimePickerPart, item: TimePickerColumnItem, commit: boolean): void {
-		if (disabled || !value || item.disabled) return;
+		if (disabled || readonly || !value || item.disabled) return;
 		const next = selectTimePickerPart(
 			value,
 			part,
@@ -293,16 +299,26 @@
 	});
 </script>
 
-<div bind:this={panelRef} data-slot="panel" dir={resolvedDirection}>
+<div
+	bind:this={panelRef}
+	data-readonly={readonly || undefined}
+	data-slot="panel"
+	dir={resolvedDirection}
+>
 	{#if resolvedPresets.length > 0 || nowLabel}
 		<div class={actionsClass} data-slot="actions">
 			{#each resolvedPresets as preset, index (`${index}:${preset.label}`)}
-				<ZButton {disabled} onclick={() => choosePreset(preset)} {size} variant="outline">
+				<ZButton
+					disabled={disabled || readonly}
+					onclick={() => choosePreset(preset)}
+					{size}
+					variant="outline"
+				>
 					{preset.label}
 				</ZButton>
 			{/each}
 			{#if nowLabel}
-				<ZButton {disabled} onclick={chooseNow} {size} variant="outline">
+				<ZButton disabled={disabled || readonly} onclick={chooseNow} {size} variant="outline">
 					{nowLabel}
 				</ZButton>
 			{/if}
@@ -321,6 +337,7 @@
 					onChoose={(item, commit) => choosePart(part, item, commit)}
 					onControllerChange={(column) => setColumnController(index, column)}
 					onFocusSibling={(direction) => focusSibling(index, direction)}
+					{readonly}
 					selectedKey={selectedPartValue(part)}
 					{size}
 				/>
@@ -343,7 +360,7 @@
 					{cancelLabel}
 				</ZButton>
 			{/if}
-			<ZButton disabled={!value || disabled} onclick={confirm} {size}>
+			<ZButton disabled={!value || disabled || readonly} onclick={confirm} {size}>
 				{confirmLabel}
 			</ZButton>
 		</div>
