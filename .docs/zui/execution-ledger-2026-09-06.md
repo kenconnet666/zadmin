@@ -203,3 +203,9 @@ NumberField、Segmented、TagsInput、Select、MultiSelect共用模型adapter，
 真实浏览器补正TimePicker CSS长度运算与窄屏四列、受控拒绝回滚、日期/时间Group双重禁用透明度，以及Slider output抢走隐式label的长期CI问题。FormValueBridge统一恢复同值reset后的hidden entries。前一ba12b9e的已完成CI失败已按源码/fixture分别修复可定位项，仍有历史边界待后续候选隔离；完整测试继续远程执行。
 
 详见 [E11执行](./execution-time-picker-form-transactions-2026-09-07.md)。DateTime/TimeRange、TimePicker presets/now、日期多月/周期与动画、企业能力及最终组件族审计继续，不以本批源码制品或既有stable标签结束目标。
+
+## E12：DateTimeField、TimeRangePicker与共享草稿
+
+新增DateTimeField与TimeRangePicker，单值/范围时间复用同一个TimePickerPanel，支持预设与Now；复用Date/Time字段和InputGroup，明确唯一模型/FormData、跨午夜、时区/DST、确认/取消及整体草稿回滚。FormControlDraftState统一处理未完成输入，不再让旧canonical值绕过验证；无效/过期validate结果不返回成功data。
+
+独立五档默认、locale文案、组合键盘与单一focus ring同步补齐。完成上一E11已结束CI中可定位的日期、集合RTL、Rating、类型/fixture问题修复。真实390px浏览器点查和源/API制品审计已进行，完整执行继续远端；详见 [E12执行](./execution-date-time-range-drafts-2026-09-07.md)。DateTimePicker/Range、多月/周期、企业能力与最终家族验收继续，目标保持进行中。

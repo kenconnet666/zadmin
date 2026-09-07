@@ -1,19 +1,19 @@
 # ZUI component maturity matrix
 
-Generated from 177 metadata components, 107 documentation modules, 177 API contract entries, and 308 test files.
+Generated from 179 metadata components, 109 documentation modules, 179 API contract entries, and 318 test files.
 
 This is a static inventory of authored test contracts, not an execution report or a whole-component visual acceptance result. Historical stage names are retained for compatibility. `VisuallyVerified` requires an explicit `@zui-visual ZComponent` marker, an owned component/fixture render, and a geometry, computed-style, CSS, or screenshot assertion in the SAME test block. A positive entry only identifies a scoped test; confirm its result against commit-matched CI and inspect real pages, themes, and densities separately. `DesktopVerified` remains false until a component-level desktop evidence source is added.
 
 | Stage                   | Count |
 | ----------------------- | ----: |
-| Declared                |   177 |
-| Authorable              |   177 |
-| ContractVerified        |   177 |
-| RuntimeImplemented      |   177 |
-| BrowserBehaviorVerified |   165 |
-| VisuallyVerified        |   159 |
+| Declared                |   179 |
+| Authorable              |   179 |
+| ContractVerified        |   179 |
+| RuntimeImplemented      |   179 |
+| BrowserBehaviorVerified |   167 |
+| VisuallyVerified        |   160 |
 | DesktopVerified         |     0 |
-| ProductionVerified      |   169 |
+| ProductionVerified      |   171 |
 
 | Component               | Category     | Declared | Authorable | Contract | Runtime | Browser | Visual | Desktop | Production | Docs                                                                  |
 | ----------------------- | ------------ | -------: | ---------: | -------: | ------: | ------: | -----: | ------: | ---------: | --------------------------------------------------------------------- |
@@ -145,6 +145,7 @@ This is a static inventory of authored test contracts, not an execution report o
 | ZDateField              | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/date-field/doc.ts              |
 | ZDatePicker             | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/date-picker/doc.ts             |
 | ZDateRangePicker        | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/date-range-picker/doc.ts       |
+| ZDateTimeField          | input        |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/input/date-time-field/doc.ts         |
 | ZField                  | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/field/doc.ts                   |
 | ZFieldset               | input        |        Y |          Y |        Y |       Y |       — |      Y |       — |          — | apps/docs/src/content/components/input/fieldset/doc.ts                |
 | ZFileUpload             | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/file-upload/doc.ts             |
@@ -167,6 +168,7 @@ This is a static inventory of authored test contracts, not an execution report o
 | ZTextarea               | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/textarea/doc.ts                |
 | ZTimeField              | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/time-field/doc.ts              |
 | ZTimePicker             | input        |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/input/time-picker/doc.ts             |
+| ZTimeRangePicker        | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/time-range-picker/doc.ts       |
 | ZToggleGroup            | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/toggle-group/doc.ts            |
 | ZTransfer               | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/transfer/doc.ts                |
 | ZTreeSelect             | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/tree-select/doc.ts             |

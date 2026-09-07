@@ -61,6 +61,7 @@
 <script lang="ts">
 	import { mergeAriaIds } from '../../../runtime/form/form-control.svelte.js';
 	import { useZFieldControlOwner } from '../../../runtime/form/field-context.js';
+	import { useZui } from '../../../runtime/foundation/context.js';
 	import ZPopoverTrigger from '../popover/ZPopoverTrigger.svelte';
 	import { useZSelect } from './context.svelte.js';
 
@@ -76,6 +77,7 @@
 		...rest
 	}: ZSelectTriggerProps = $props();
 	const select = useZSelect();
+	const zui = useZui();
 	const fieldOwner = useZFieldControlOwner();
 	$effect(() => {
 		const owner = ref;
@@ -105,6 +107,7 @@
 	aria-invalid={select.invalid || undefined}
 	bind:ref
 	disabled={disabledProp || select.disabled}
+	dir={rest.dir ?? zui.direction}
 	popupRole="listbox"
 	size={size ?? select.size}
 	{variant}

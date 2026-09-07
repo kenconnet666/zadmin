@@ -8,6 +8,8 @@ import constraintsSource from './ConstraintsDemo.svelte?raw';
 import FormDemo from './FormDemo.svelte';
 import formSource from './FormDemo.svelte?raw';
 import ModesDemo from './ModesDemo.svelte';
+import PresetsDemo from './PresetsDemo.svelte';
+import presetsSource from './PresetsDemo.svelte?raw';
 import modesSource from './ModesDemo.svelte?raw';
 
 export const timePickerDoc = defineComponentDoc(timePickerMetadata, {
@@ -99,6 +101,14 @@ export const timePickerDoc = defineComponentDoc(timePickerMetadata, {
 			'实验性 Time Picker：以唯一 Time/null owner 组合可编辑 TimeField、有限时间列、复用 ZPopover 和真实表单语义；面板选择先进入草稿，确认后提交。'
 	},
 	demos: [
+		{
+			id: 'time-picker-presets',
+			title: '预设、现在与延迟读取',
+			component: PresetsDemo,
+			source: presetsSource,
+			covers: ['controlled', 'portal'],
+			description: '预设与当前时间复用同一面板约束与确认流程；timeZone 控制当前时间的读取。'
+		},
 		{
 			component: BasicDemo,
 			covers: ['basic-render', 'controlled', 'external-clear', 'focus', 'keyboard', 'portal'],

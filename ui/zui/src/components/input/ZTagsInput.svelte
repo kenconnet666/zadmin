@@ -867,6 +867,7 @@
 	data-readonly={resolvedReadonly || undefined}
 	data-size={resolvedSize}
 	data-slot="root"
+	dir={rest.dir ?? zui.direction}
 	onfocusin={handleFocusIn}
 	onfocusout={handleFocusOut}
 	onkeydown={handleRootKeydown}

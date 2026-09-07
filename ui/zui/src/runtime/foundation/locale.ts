@@ -76,7 +76,14 @@ export interface ZuiCommandLocale {
 	readonly results: (formattedCount: string) => string;
 }
 
+export interface ZuiDateTimeLocale {
+	readonly unavailable: string;
+	readonly invalidLocalTime: string;
+}
+
 export interface ZuiDateLocale {
+	readonly invalidDate: string;
+	readonly incompleteDate: string;
 	readonly calendarLabel: string;
 	readonly clearDate: string;
 	readonly clearDateRange: string;
@@ -119,6 +126,8 @@ export interface ZuiFeedbackLocale {
 }
 
 export interface ZuiFormLocale {
+	readonly requiredValue: string;
+	readonly invalidValue: string;
 	readonly minimumSelections: (count: number) => string;
 	readonly maximumSelections: (count: number) => string;
 	readonly pinInputPosition: (formattedIndex: string, formattedLength: string) => string;
@@ -159,6 +168,15 @@ export interface ZuiTagLocale {
 }
 
 export interface ZuiTimeLocale {
+	readonly startTime: string;
+	readonly endTime: string;
+	readonly chooseTimeRange: string;
+	readonly clearTimeRange: string;
+	readonly invalidRange: string;
+	readonly orderedRange: string;
+	readonly now: string;
+	readonly invalidTime: string;
+	readonly incompleteTime: string;
 	readonly am: string;
 	readonly chooseTime: string;
 	readonly clearTime: string;
@@ -213,6 +231,7 @@ export interface ZuiLocalePack {
 	readonly command: ZuiCommandLocale;
 	readonly common: ZuiCommonLocale;
 	readonly date: ZuiDateLocale;
+	readonly dateTime: ZuiDateTimeLocale;
 	readonly feedback: ZuiFeedbackLocale;
 	readonly fileUpload: ZuiFileUploadLocale;
 	readonly form: ZuiFormLocale;
@@ -236,6 +255,7 @@ export interface ZuiLocalePackOverrides {
 	readonly command?: Partial<ZuiCommandLocale>;
 	readonly common?: Partial<ZuiCommonLocale>;
 	readonly date?: Partial<ZuiDateLocale>;
+	readonly dateTime?: Partial<ZuiDateTimeLocale>;
 	readonly feedback?: Partial<ZuiFeedbackLocale>;
 	readonly fileUpload?: Partial<ZuiFileUploadLocale>;
 	readonly form?: Partial<ZuiFormLocale>;
@@ -327,7 +347,13 @@ export const enUSLocalePack = Object.freeze({
 		hidePassword: 'Hide password',
 		ratingValue: (value: number, count: number) => `${value} out of ${count}`
 	}),
+	dateTime: Object.freeze({
+		unavailable: 'This date and time is unavailable',
+		invalidLocalTime: 'This local time does not exist or is ambiguous in the selected time zone'
+	}),
 	date: Object.freeze({
+		invalidDate: 'This date is invalid or unavailable',
+		incompleteDate: 'Complete all date segments',
 		calendarLabel: 'Calendar',
 		clearDate: 'Clear date',
 		clearDateRange: 'Clear date range',
@@ -370,6 +396,8 @@ export const enUSLocalePack = Object.freeze({
 	form: Object.freeze({
 		pinInputPosition: (formattedIndex: string, formattedLength: string) =>
 			`Digit ${formattedIndex} of ${formattedLength}`,
+		requiredValue: 'Enter a value',
+		invalidValue: 'Enter a valid value',
 		unexpectedValidation: 'Validation failed unexpectedly.',
 		minimumSelections: (count: number) =>
 			`Select at least ${count} option${count === 1 ? '' : 's'}.`,
@@ -412,6 +440,15 @@ export const enUSLocalePack = Object.freeze({
 	}),
 	time: Object.freeze({
 		am: 'AM',
+		startTime: 'Start time',
+		endTime: 'End time',
+		chooseTimeRange: 'Choose time range',
+		clearTimeRange: 'Clear time range',
+		invalidRange: 'This time range is unavailable',
+		orderedRange: 'End time must not be earlier than start time',
+		now: 'Now',
+		invalidTime: 'This time is unavailable',
+		incompleteTime: 'Complete all time segments',
 		chooseTime: 'Choose time',
 		clearTime: 'Clear time',
 		noAvailableTime: 'No available time',
@@ -520,7 +557,13 @@ export const zhCNLocalePack = Object.freeze({
 		hidePassword: '隐藏密码',
 		ratingValue: (value: number, count: number) => `${value} 分，满分 ${count} 分`
 	}),
+	dateTime: Object.freeze({
+		unavailable: '该日期时间不可用',
+		invalidLocalTime: '该时区的本地时间不存在或存在歧义'
+	}),
 	date: Object.freeze({
+		invalidDate: '该日期无效或不可用',
+		incompleteDate: '请填写完整日期',
 		calendarLabel: '日历',
 		clearDate: '清空日期',
 		clearDateRange: '清空日期范围',
@@ -561,6 +604,8 @@ export const zhCNLocalePack = Object.freeze({
 			`正在上传 ${fileName}：${formattedProgress}`
 	}),
 	form: Object.freeze({
+		requiredValue: '请填写此项',
+		invalidValue: '请填写有效值',
 		pinInputPosition: (formattedIndex: string, formattedLength: string) =>
 			`第${formattedIndex}位，共${formattedLength}位`,
 		unexpectedValidation: '验证过程中发生意外错误。',
@@ -603,6 +648,15 @@ export const zhCNLocalePack = Object.freeze({
 	}),
 	time: Object.freeze({
 		am: '上午',
+		startTime: '开始时间',
+		endTime: '结束时间',
+		chooseTimeRange: '选择时间范围',
+		clearTimeRange: '清空时间范围',
+		invalidRange: '该时间范围不可用',
+		orderedRange: '结束时间不能早于开始时间',
+		now: '现在',
+		invalidTime: '该时间不可用',
+		incompleteTime: '请填写完整时间',
 		chooseTime: '选择时间',
 		clearTime: '清空时间',
 		noAvailableTime: '没有可选时间',
@@ -665,6 +719,7 @@ export function resolveZuiLocalePack(
 		command: Object.freeze(mergeDefined(base.command, overrides?.command)),
 		common: Object.freeze(mergeDefined(base.common, overrides?.common)),
 		date: Object.freeze(mergeDefined(base.date, overrides?.date)),
+		dateTime: Object.freeze(mergeDefined(base.dateTime, overrides?.dateTime)),
 		feedback: Object.freeze(mergeDefined(base.feedback, overrides?.feedback)),
 		fileUpload: Object.freeze(mergeDefined(base.fileUpload, overrides?.fileUpload)),
 		form: Object.freeze(mergeDefined(base.form, overrides?.form)),

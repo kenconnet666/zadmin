@@ -4,6 +4,14 @@ import { describe, expect, it } from 'vitest';
 import FormDateAdapterFixture from './FormDateAdapterFixture.svelte';
 import FormDateAdapterInvalidFixture from './FormDateAdapterInvalidFixture.svelte';
 
+function renderedForm(body: string, testId: string): string {
+	const start = body.indexOf(`data-testid="${testId}"`);
+	if (start < 0) throw new Error(`Missing SSR form ${testId}.`);
+	const end = body.indexOf('</form>', start);
+	if (end < 0) throw new Error(`Missing SSR form end for ${testId}.`);
+	return body.slice(start, end);
+}
+
 describe('date Form model adapter server contract', () => {
 	it.each([
 		['calendar', /ZCalendar model value must be a Gregorian CalendarDate, null or undefined/u],
@@ -28,6 +36,7 @@ describe('date Form model adapter server contract', () => {
 
 	it('serializes each root owner once during SSR, including a partial range', () => {
 		const body = render(FormDateAdapterFixture).body;
+		const modelForm = renderedForm(body, 'date-model-form');
 		for (const [name, value] of [
 			['calendar', '2026-09-10'],
 			['dateField', '2026-09-11'],
@@ -37,12 +46,13 @@ describe('date Form model adapter server contract', () => {
 			['readonlyDate', '2026-09-15'],
 			['disabledDate', '2026-09-12']
 		] as const) {
-			expect(body.match(new RegExp(`name="${name}"`, 'gu'))).toHaveLength(1);
-			expect(body).toContain(`value="${value}"`);
+			expect(modelForm.match(new RegExp(`name="${name}"`, 'gu'))).toHaveLength(1);
+			expect(modelForm).toContain(`value="${value}"`);
 		}
-		expect(body).not.toContain('name="range.end"');
-		expect(body).not.toContain('name="addedDate"');
-		expect(body).not.toContain('name="addedTime"');
-		expect(body).not.toContain('name="addedRange.start"');
+		expect(modelForm).not.toContain('name="range.end"');
+		const missingForm = renderedForm(body, 'date-missing-form');
+		expect(missingForm).not.toContain('name="addedDate"');
+		expect(missingForm).not.toContain('name="addedTime"');
+		expect(missingForm).not.toContain('name="addedRange.start"');
 	});
 });

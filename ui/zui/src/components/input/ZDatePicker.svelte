@@ -173,7 +173,8 @@
 			{
 				bindable: true,
 				default: 'false',
-				description: 'Popover打开状态。',
+				description:
+					'请求的Popover状态；disabled/readonly期间实际隐藏，解除后仍遵循该值，不伪造用户回调。',
 				name: 'open',
 				type: 'boolean'
 			},
@@ -290,6 +291,7 @@
 	import ZButton from '../gene/ZButton.svelte';
 	import ZCalendar from './ZCalendar.svelte';
 	import ZDateField from './ZDateField.svelte';
+	import type { FormControlDraftState } from '../../runtime/form/form-value-adapter.svelte.js';
 	import ZInputGroup from './ZInputGroup.svelte';
 
 	let {
@@ -342,8 +344,9 @@
 	const resolvedCalendarLabel = $derived(calendarLabel ?? zui.localePack.date.chooseDate);
 	const resolvedClearLabel = $derived(clearLabel ?? zui.localePack.date.clearDate);
 	const resolvedDisabled = $derived(disabledProp || (field?.disabled ?? false));
-	const resolvedInvalid = $derived(invalid ?? field?.invalid ?? false);
+	const resolvedInvalid = $derived(invalid || field?.invalid || false);
 	const resolvedReadonly = $derived(readonlyProp || (field?.readonly ?? false));
+	const resolvedDirection = $derived(rest.dir ?? zui.direction);
 	const resolvedRequired = $derived(requiredProp || (field?.required ?? false));
 	const resolvedName = $derived(nameProp ?? field?.name);
 	const resolvedSize = $derived(
@@ -372,10 +375,14 @@
 	const labelledBy = $derived(mergeAriaIds(ariaLabelledBy, field?.labelId));
 	let calendarRef = $state<HTMLDivElement | null>(null);
 	let fieldRef = $state<HTMLDivElement | null>(null);
+	let fieldController = $state<{ rollbackDraft(): void }>();
+	let fieldDraft = $state<FormControlDraftState>({ valid: true, dirty: false });
 	let triggerRef = $state<HTMLButtonElement | null>(null);
 	const valueState = createFormControlState<CalendarDate | null>(
 		{
 			defaultValue: () => defaultValue ?? null,
+			draftState: () => fieldDraft,
+			resetDraft: () => fieldController?.rollbackDraft(),
 			element: () => ref,
 			normalizeModelValue: (candidate) => normalizeCalendarDateModelValue(candidate, 'ZDatePicker'),
 			onChange: () => onValueChange,
@@ -397,6 +404,7 @@
 		read: () => open,
 		write: (next) => (open = next)
 	});
+	const resolvedOpen = $derived(openState.current && !resolvedDisabled && !resolvedReadonly);
 	const display = $derived(
 		valueState.current
 			? formatDate(valueState.current, resolvedLocale, formatOptions, resolvedTimeZone)
@@ -415,6 +423,7 @@
 	}
 
 	function syncOwnedValue(next = valueState.current): void {
+		fieldController?.rollbackDraft();
 		calendarValue = next;
 		calendarFocusedValue = next ?? defaultValue ?? undefined;
 		fieldValue = next;
@@ -474,7 +483,7 @@
 </script>
 
 {#snippet actions()}
-	<ZPopover modal={false} onOpenChange={setOpen} open={openState.current} {placement} {triggerId}>
+	<ZPopover modal={false} onOpenChange={setOpen} open={resolvedOpen} {placement} {triggerId}>
 		<ZPopoverTrigger
 			bind:ref={triggerRef}
 			aria-label={resolvedTriggerLabel}
@@ -486,12 +495,14 @@
 			<CalendarDays aria-hidden="true" size="1em" />
 		</ZPopoverTrigger>
 		<ZPopoverContent
+			dir={resolvedDirection}
 			aria-label={resolvedCalendarLabel}
 			ariaLabelledBy={null}
 			initialFocus={() => calendarRef?.querySelector<HTMLElement>('[tabindex="0"]') ?? null}
 			role="dialog"
 		>
 			<ZCalendar
+				dir={resolvedDirection}
 				bind:ref={calendarRef}
 				bind:focusedValue={calendarFocusedValue}
 				appearance="bare"
@@ -534,9 +545,10 @@
 	data-readonly={resolvedReadonly || undefined}
 	data-required={resolvedRequired || undefined}
 	data-size={resolvedSize}
-	data-state={openState.current ? 'open' : 'closed'}
+	data-state={resolvedOpen ? 'open' : 'closed'}
 >
 	<ZInputGroup
+		dir={resolvedDirection}
 		data-slot="input-group"
 		disabled={resolvedDisabled}
 		invalid={resolvedInvalid}
@@ -544,6 +556,9 @@
 		suffixAction={actions}
 	>
 		<ZDateField
+			dir={resolvedDirection}
+			bind:this={fieldController}
+			onDraftChange={(next) => (fieldDraft = next)}
 			data-slot="field"
 			aria-describedby={describedBy}
 			aria-label={ariaLabel}

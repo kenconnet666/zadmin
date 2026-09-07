@@ -136,6 +136,8 @@ export { zuiMetadata as tagsInputMetadata } from '../components/input/ZTagsInput
 export { zuiMetadata as textareaMetadata } from '../components/input/ZTextarea.svelte';
 export { zuiMetadata as timeFieldMetadata } from '../components/input/ZTimeField.svelte';
 export { zuiMetadata as timePickerMetadata } from '../components/input/ZTimePicker.svelte';
+export { zuiMetadata as timeRangePickerMetadata } from '../components/input/ZTimeRangePicker.svelte';
+export { zuiMetadata as dateTimeFieldMetadata } from '../components/input/ZDateTimeField.svelte';
 export { zuiMetadata as treeSelectMetadata } from '../components/input/ZTreeSelect.svelte';
 export { zuiMetadata as transferMetadata } from '../components/input/ZTransfer.svelte';
 export { zuiMetadata as paginationMetadata } from '../components/navigation/ZPagination.svelte';

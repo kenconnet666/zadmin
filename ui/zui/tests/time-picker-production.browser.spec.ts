@@ -23,6 +23,13 @@ describe('ZTimePicker production contracts', () => {
 		const fieldInput = document.getElementById(fieldLabel.htmlFor) as HTMLInputElement;
 		expect(fieldInput.required).toBe(true);
 		expect(new FormData(form).getAll('deployment')).toEqual(['09:30:15']);
+		expect(trigger('time-picker-disabled').disabled).toBe(true);
+		expect(new FormData(form).has('disabled-time')).toBe(false);
+		expect(trigger('time-picker-readonly').disabled).toBe(true);
+		expect(
+			root('time-picker-readonly').querySelector<HTMLButtonElement>('[data-slot="clear"]')?.disabled
+		).toBe(true);
+		expect(new FormData(form).get('readonly-time')).toBe('06:45:00');
 
 		trigger('time-picker').click();
 		await tick();
@@ -105,6 +112,104 @@ describe('ZTimePicker production contracts', () => {
 		expect(dialog.scrollWidth).toBeLessThanOrEqual(dialog.clientWidth);
 	});
 
+	it('keeps instance direction through the portal and lets InputGroup own disabled opacity', async () => {
+		render(TimePickerProductionFixture);
+		trigger('time-picker-instance-rtl').click();
+		await tick();
+		const dialog = document.querySelector<HTMLElement>(
+			'[role="dialog"][aria-label="Instance RTL time"]'
+		)!;
+		expect(dialog.dir).toBe('rtl');
+		const columns = [...dialog.querySelectorAll<HTMLElement>('[role="listbox"]')];
+		columns[0]!.focus();
+		columns[0]!.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowLeft' }));
+		await tick();
+		expect(document.activeElement).toBe(columns[1]);
+
+		const disabled = root('time-picker-disabled');
+		const group = disabled.querySelector<HTMLElement>('[data-slot="input-group"]')!;
+		expect(Number(getComputedStyle(group).opacity)).toBeLessThan(1);
+		expect(getComputedStyle(trigger('time-picker-disabled')).opacity).toBe('1');
+	});
+
+	it('keeps presets and Now as live panel drafts and announces rejected candidates', async () => {
+		render(TimePickerProductionFixture);
+		const form = document.querySelector<HTMLFormElement>('[data-testid="time-picker-form"]')!;
+		trigger('time-picker-actions').click();
+		await tick();
+		let dialog = document.querySelector<HTMLElement>('[role="dialog"][aria-label="Action time"]')!;
+		const lazyPreset = [...dialog.querySelectorAll<HTMLButtonElement>('button')].find(
+			(button) => button.textContent?.trim() === 'Lazy preset'
+		)!;
+		lazyPreset.click();
+		await tick();
+		expect(document.querySelector('[data-testid="time-picker-actions-output"]')?.textContent).toBe(
+			'07:15:10.5:1'
+		);
+		expect(new FormData(form).get('actions')).toBe('07:15:10.5');
+		expect(
+			dialog
+				.querySelector('[role="listbox"][aria-label="Hour"] [aria-selected="true"]')
+				?.textContent?.trim()
+		).toBe('11');
+		dialog.querySelector<HTMLButtonElement>('[data-slot="footer"] button')!.click();
+		await tick();
+		expect(document.querySelector('[data-testid="time-picker-actions-output"]')?.textContent).toBe(
+			'11:22:33.001:1'
+		);
+		expect(new FormData(form).get('actions')).toBe('11:22:33.001');
+
+		trigger('time-picker-actions').click();
+		await tick();
+		dialog = document.querySelector<HTMLElement>('[role="dialog"][aria-label="Action time"]')!;
+		[...dialog.querySelectorAll<HTMLButtonElement>('button')]
+			.find((button) => button.textContent?.trim() === 'Lazy preset')!
+			.click();
+		await tick();
+		expect(document.querySelector('[data-testid="time-picker-actions-output"]')?.textContent).toBe(
+			'11:22:33.001:2'
+		);
+		dialog.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Escape' }));
+		await tick();
+
+		trigger('time-picker-now-invalid').click();
+		await tick();
+		dialog = document.querySelector<HTMLElement>(
+			'[role="dialog"][aria-label="Invalid current time"]'
+		)!;
+		[...dialog.querySelectorAll<HTMLButtonElement>('button')]
+			.find((button) => button.textContent?.trim() === 'Now')!
+			.click();
+		await tick();
+		expect(dialog.querySelector('[data-slot="feedback"]')?.textContent?.trim()).toBe(
+			'Current time is outside the allowed range'
+		);
+		expect(dialog.querySelector('[data-slot="feedback"]')?.getAttribute('role')).toBe('status');
+		expect(dialog.querySelector<HTMLButtonElement>('[data-slot="footer"] button')?.disabled).toBe(
+			true
+		);
+	});
+
+	it('reconciles an external Time update into an open panel while preserving hidden milliseconds', async () => {
+		render(TimePickerProductionFixture);
+		const form = document.querySelector<HTMLFormElement>('[data-testid="time-picker-form"]')!;
+		trigger('time-picker').click();
+		await tick();
+		document.querySelector<HTMLButtonElement>('[data-testid="time-picker-external"]')!.click();
+		await tick();
+		const dialog = document.querySelector<HTMLElement>(
+			'[role="dialog"][aria-label="Choose time"]'
+		)!;
+		const selected = [...dialog.querySelectorAll<HTMLElement>('[aria-selected="true"]')].map(
+			(option) => option.textContent?.trim()
+		);
+		expect(selected).toEqual(['14', '45', '30']);
+		expect(document.querySelector('[data-testid="time-picker-output"]')?.textContent).toBe(
+			'14:45:30.125'
+		);
+		expect(new FormData(form).get('deployment')).toBe('14:45:30.125');
+	});
+
 	it('discards Escape drafts, keeps clear singular and does not close for a rejecting value owner', async () => {
 		render(TimePickerProductionFixture);
 		const form = document.querySelector<HTMLFormElement>('[data-testid="time-picker-form"]')!;
@@ -140,13 +245,24 @@ describe('ZTimePicker production contracts', () => {
 		trigger('time-picker-rejected').click();
 		await tick();
 		dialog = document.querySelector<HTMLElement>('[role="dialog"][aria-label="Rejected time"]')!;
+		[...dialog.querySelectorAll<HTMLButtonElement>('button')]
+			.find((button) => button.textContent?.trim() === 'Rejected preset')!
+			.click();
+		dialog.querySelector<HTMLButtonElement>('[data-slot="footer"] button')!.click();
+		await tick();
+		expect(document.querySelector('[data-testid="time-picker-rejected-output"]')?.textContent).toBe(
+			'09:30:15:2'
+		);
+		expect(new FormData(form).getAll('rejected')).toEqual(['09:30:15']);
+		expect(trigger('time-picker-rejected').getAttribute('aria-expanded')).toBe('true');
+
 		const rejectedHours = dialog.querySelector<HTMLElement>('[role="listbox"][aria-label="Hour"]')!;
 		rejectedHours.focus();
 		rejectedHours.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowDown' }));
 		rejectedHours.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
 		await tick();
 		expect(document.querySelector('[data-testid="time-picker-rejected-output"]')?.textContent).toBe(
-			'09:30:15:2'
+			'09:30:15:3'
 		);
 		expect(new FormData(form).getAll('rejected')).toEqual(['09:30:15']);
 		expect(trigger('time-picker-rejected').getAttribute('aria-expanded')).toBe('true');

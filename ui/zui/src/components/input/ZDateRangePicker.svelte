@@ -196,7 +196,8 @@
 			{
 				bindable: true,
 				default: 'false',
-				description: 'Popover打开状态。',
+				description:
+					'请求的Popover状态；disabled/readonly期间实际隐藏，解除后仍遵循该值，不伪造用户回调。',
 				name: 'open',
 				type: 'boolean'
 			},
@@ -319,6 +320,7 @@
 	import ZButton from '../gene/ZButton.svelte';
 	import ZCalendar from './ZCalendar.svelte';
 	import ZDateField from './ZDateField.svelte';
+	import type { FormControlDraftState } from '../../runtime/form/form-value-adapter.svelte.js';
 	import ZInputGroup from './ZInputGroup.svelte';
 
 	let {
@@ -373,8 +375,9 @@
 	const resolvedClearLabel = $derived(clearLabel ?? zui.localePack.date.clearDateRange);
 	const resolvedDisabled = $derived(disabledProp || (field?.disabled ?? false));
 	const rootClass = $derived(zui.recipe(rootRecipe, { disabled: resolvedDisabled }));
-	const resolvedInvalid = $derived(invalid ?? field?.invalid ?? false);
+	const resolvedInvalid = $derived(invalid || field?.invalid || false);
 	const resolvedReadonly = $derived(readonlyProp || (field?.readonly ?? false));
+	const resolvedDirection = $derived(rest.dir ?? zui.direction);
 	const resolvedRequired = $derived(requiredProp || (field?.required ?? false));
 	const resolvedName = $derived(nameProp ?? field?.name);
 	const resolvedSize = $derived(
@@ -399,12 +402,25 @@
 	let calendarRef = $state<HTMLDivElement | null>(null);
 	let endFieldRef = $state<HTMLDivElement | null>(null);
 	let startFieldRef = $state<HTMLDivElement | null>(null);
+	let startController = $state<{ rollbackDraft(): void }>();
+	let endController = $state<{ rollbackDraft(): void }>();
+	let startDraft = $state<FormControlDraftState>({ valid: true, dirty: false });
+	let endDraft = $state<FormControlDraftState>({ valid: true, dirty: false });
 	let triggerRef = $state<HTMLButtonElement | null>(null);
 	let rangePart = $state<'end' | 'start'>('start');
 	let previewFocus = $state<CalendarDate | null>(null);
 	const valueState = createFormControlState<CalendarRangeValue | null>(
 		{
 			defaultValue: () => normalizeRangeValue(defaultValue),
+			draftState: () => ({
+				valid: startDraft.valid && endDraft.valid,
+				dirty: startDraft.dirty || endDraft.dirty,
+				message: !startDraft.valid ? startDraft.message : endDraft.message
+			}),
+			resetDraft: () => {
+				startController?.rollbackDraft();
+				endController?.rollbackDraft();
+			},
 			element: () => ref,
 			normalizeModelValue: (candidate) =>
 				normalizeCalendarRangeModelValue(candidate, 'ZDateRangePicker'),
@@ -430,6 +446,7 @@
 		read: () => open,
 		write: (next) => (open = next)
 	});
+	const resolvedOpen = $derived(openState.current && !resolvedDisabled && !resolvedReadonly);
 	const selectingEnd = $derived(rangePart === 'end' && Boolean(normalizedValue?.start));
 	const previewRange = $derived<CalendarRangeValue | null>(
 		selectingEnd && normalizedValue?.start && previewFocus
@@ -522,6 +539,8 @@
 
 	function resetFromForm(): void {
 		valueState.reset();
+		startController?.rollbackDraft();
+		endController?.rollbackDraft();
 		syncOwnedValue();
 		rangePart = 'start';
 		previewFocus = null;
@@ -546,7 +565,7 @@
 </script>
 
 {#snippet actions()}
-	<ZPopover modal={false} onOpenChange={setOpen} open={openState.current} {placement} {triggerId}>
+	<ZPopover modal={false} onOpenChange={setOpen} open={resolvedOpen} {placement} {triggerId}>
 		<ZPopoverTrigger
 			bind:ref={triggerRef}
 			aria-label={resolvedCalendarLabel}
@@ -558,12 +577,14 @@
 			<CalendarRangeIcon aria-hidden="true" size="1em" />
 		</ZPopoverTrigger>
 		<ZPopoverContent
+			dir={resolvedDirection}
 			aria-label={resolvedCalendarLabel}
 			ariaLabelledBy={null}
 			initialFocus={() => calendarRef?.querySelector<HTMLElement>('[tabindex="0"]') ?? null}
 			role="dialog"
 		>
 			<ZCalendar
+				dir={resolvedDirection}
 				bind:ref={calendarRef}
 				bind:focusedValue={calendarFocusedValue}
 				appearance="bare"
@@ -613,9 +634,10 @@
 	data-required={resolvedRequired || undefined}
 	data-size={resolvedSize}
 	data-selecting={selectingEnd || undefined}
-	data-state={openState.current ? 'open' : 'closed'}
+	data-state={resolvedOpen ? 'open' : 'closed'}
 >
 	<ZInputGroup
+		dir={resolvedDirection}
 		data-slot="range-inputs"
 		disabled={resolvedDisabled}
 		invalid={resolvedInvalid}
@@ -624,6 +646,9 @@
 	>
 		<ZDateField
 			data-slot="start-field"
+			dir={resolvedDirection}
+			bind:this={startController}
+			onDraftChange={(next) => (startDraft = next)}
 			aria-describedby={describedBy}
 			aria-label={resolvedStartLabel}
 			appearance="bare"
@@ -646,6 +671,9 @@
 		<span aria-hidden="true" data-slot="separator">–</span>
 		<ZDateField
 			data-slot="end-field"
+			dir={resolvedDirection}
+			bind:this={endController}
+			onDraftChange={(next) => (endDraft = next)}
 			aria-describedby={describedBy}
 			aria-label={resolvedEndLabel}
 			appearance="bare"

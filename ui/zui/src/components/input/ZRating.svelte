@@ -438,6 +438,7 @@
 	let hoverValue = $state(0);
 	let activeStep = $state(1);
 	let clearedActivationStep: number | undefined;
+	let notifiedHoverValue = 0;
 	let firstInput = $state<HTMLInputElement | null>(null);
 
 	function positiveInteger(candidate: number, name: string): number {
@@ -475,14 +476,16 @@
 		});
 	}
 	function setHover(next: number, input: HTMLInputElement | null): void {
-		if (resolvedDisabled || resolvedReadonly || input?.matches(':disabled') || hoverValue === next)
-			return;
+		if (resolvedDisabled || resolvedReadonly || input?.matches(':disabled')) return;
 		hoverValue = next;
+		if (notifiedHoverValue === next) return;
+		notifiedHoverValue = next;
 		onHoverChange?.(next);
 	}
 	function clearHover(): void {
-		if (hoverValue === 0) return;
 		hoverValue = 0;
+		if (notifiedHoverValue === 0) return;
+		notifiedHoverValue = 0;
 		onHoverChange?.(0);
 	}
 	function inputFor(step: number): HTMLInputElement | null {
@@ -537,9 +540,13 @@
 			return;
 		}
 		event.preventDefault();
+		const input = event.currentTarget;
 		if (valueState.setFromUser(0)) {
 			clearedActivationStep = step;
 			queueMicrotask(() => {
+				// Cancelling a radio click restores its pre-activation checked state after the handler.
+				// Reassert the component value after that rollback so native FormData also becomes empty.
+				input.checked = valueState.current === step / resolvedFractions;
 				if (clearedActivationStep === step) clearedActivationStep = undefined;
 			});
 		} else event.currentTarget.checked = true;
@@ -557,7 +564,15 @@
 		)
 			return;
 		if (event.key === ' ') {
-			if (resolvedReadonly) event.preventDefault();
+			if (resolvedReadonly) {
+				event.preventDefault();
+				return;
+			}
+			if (clearable && resolvedValue === step / resolvedFractions) {
+				event.preventDefault();
+				if (valueState.setFromUser(0))
+					event.currentTarget.checked = valueState.current === step / resolvedFractions;
+			}
 			return;
 		}
 		let next: number | undefined;

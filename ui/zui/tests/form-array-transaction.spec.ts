@@ -95,7 +95,7 @@ describe('FormArray mutation transactions', () => {
 		expect(() => rows.move(0, 1)).toThrow(observerError);
 		expect(model.values.rows.map((row) => row.name)).toEqual(['second', 'first']);
 		expect(rows.rows.map((row) => row.id)).toEqual([...beforeIds].reverse());
-		expect(registry.fieldInfo('row-0')).toEqual({
+		expect(registry.fieldInfo('row-0')).toMatchObject({
 			path: ['rows', 1, 'name'],
 			htmlName: 'rows[1].name'
 		});

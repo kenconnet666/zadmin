@@ -34,7 +34,9 @@ describe('TagsInput, Select and MultiSelect Form model adapters', () => {
 		expect(counts.textContent).toBe('0:0');
 		expect(selectTrigger.textContent).toContain('Beta');
 		expect(multiTrigger.textContent).toContain('Read');
+		expect(getComputedStyle(tags).direction).toBe('rtl');
 		expect(getComputedStyle(selectTrigger).direction).toBe('rtl');
+		expect(getComputedStyle(multiTrigger).direction).toBe('rtl');
 		expect(new FormData(form).getAll('tags')).toEqual(['alpha']);
 		expect(new FormData(form).get('target')).toBe('b');
 		expect(new FormData(form).getAll('scopes')).toEqual(['read']);
@@ -146,6 +148,9 @@ describe('TagsInput, Select and MultiSelect Form model adapters', () => {
 			document.querySelector<HTMLElement>('[data-testid="rejected-select-a"]')!
 		);
 		expect(rejectedSelect.textContent).toContain('Rejected Beta');
+		expect(rejectedSelect.getAttribute('aria-expanded')).toBe('true');
+		await userEvent.keyboard('{Escape}');
+		expect(rejectedSelect.getAttribute('aria-expanded')).toBe('false');
 		await userEvent.click(rejectedMulti);
 		await userEvent.click(
 			document.querySelector<HTMLElement>('[data-testid="rejected-multi-write"]')!

@@ -470,6 +470,7 @@
 	import { onDestroy, untrack } from 'svelte';
 	import { SvelteMap } from 'svelte/reactivity';
 	import { resolveControlSize } from '../../runtime/foundation/control-size.js';
+	import { getElementDirection } from '../../runtime/layer/dom-realm.js';
 	import { claimZFieldControlOwner } from '../../runtime/form/field-context.js';
 	import FormValueBridge from '../../runtime/form/FormValueBridge.svelte';
 	import { mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
@@ -534,8 +535,11 @@
 	const fieldOwner = claimZFieldControlOwner();
 	const field = fieldOwner.field;
 	const valueScope = formParticipation === 'auto' ? claimFormValueScope() : null;
-	const PreviousIcon = $derived(zui.direction === 'rtl' ? ChevronRight : ChevronLeft);
-	const NextIcon = $derived(zui.direction === 'rtl' ? ChevronLeft : ChevronRight);
+	const resolvedDirection = $derived(
+		rest.dir === 'rtl' || rest.dir === 'ltr' ? rest.dir : zui.direction
+	);
+	const PreviousIcon = $derived(resolvedDirection === 'rtl' ? ChevronRight : ChevronLeft);
+	const NextIcon = $derived(resolvedDirection === 'rtl' ? ChevronLeft : ChevronRight);
 	const resolvedLocale = $derived(locale ?? zui.locale);
 	const resolvedTimeZone = $derived(timeZone ?? zui.timeZone);
 	const resolvedCalendarLabel = $derived(calendarLabel ?? zui.localePack.date.calendarLabel);
@@ -686,7 +690,7 @@
 	}
 
 	function handleKeydown(event: KeyboardEvent, date: CalendarDate): void {
-		const horizontal = zui.direction === 'rtl' ? -1 : 1;
+		const horizontal = getElementDirection(ref, resolvedDirection) === 'rtl' ? -1 : 1;
 		let next: CalendarDate;
 		let direction: -1 | 1 = 1;
 		switch (event.key) {
@@ -785,6 +789,7 @@
 
 <div
 	{...rest}
+	dir={rest.dir ?? resolvedDirection}
 	bind:this={ref}
 	class={[rootClass, className]}
 	style={initialStyle}

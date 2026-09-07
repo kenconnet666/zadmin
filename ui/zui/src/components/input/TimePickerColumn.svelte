@@ -1,7 +1,10 @@
 <script module lang="ts">
+	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
 	import type { SelectionKey } from '../../runtime/collection/selection.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
+
+	type TimePickerColumnDirection = NonNullable<HTMLAttributes<HTMLElement>['dir']>;
 
 	export interface TimePickerColumnItem {
 		readonly disabled: boolean;
@@ -18,6 +21,7 @@
 	export interface TimePickerColumnProps {
 		readonly columnId: string;
 		readonly disabled: boolean;
+		readonly direction?: TimePickerColumnDirection;
 		readonly height: string;
 		readonly items: readonly TimePickerColumnItem[];
 		readonly label: string;
@@ -94,11 +98,13 @@
 	import { MountedElements } from '../../runtime/collection/mounted-elements.svelte.js';
 	import { controlSizeMetrics } from '../../runtime/foundation/control-size.js';
 	import { useZui } from '../../runtime/foundation/context.js';
+	import { getElementDirection } from '../../runtime/layer/dom-realm.js';
 	import ZScrollArea from '../layout/ZScrollArea.svelte';
 
 	let {
 		columnId,
 		disabled,
+		direction,
 		height,
 		items,
 		label,
@@ -109,6 +115,7 @@
 		size
 	}: TimePickerColumnProps = $props();
 	const zui = useZui();
+	const resolvedDirection = $derived(direction ?? zui.direction);
 	const collection = $derived(
 		new LogicalCollection(
 			items,
@@ -123,7 +130,7 @@
 	const view = $derived(collection.full);
 	const mounted = new MountedElements<SelectionKey>();
 	const navigation = new CollectionNavigation({
-		direction: () => zui.direction,
+		direction: () => getElementDirection(listRef, zui.direction),
 		disabled: () => disabled,
 		loop: () => false,
 		orientation: () => 'vertical',
@@ -215,7 +222,8 @@
 		if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
 			event.preventDefault();
 			const forward = event.key === 'ArrowRight';
-			onFocusSibling((forward === (zui.direction === 'ltr') ? 1 : -1) as -1 | 1);
+			const direction = getElementDirection(listRef, zui.direction);
+			onFocusSibling((forward === (direction === 'ltr') ? 1 : -1) as -1 | 1);
 			return;
 		}
 		const key = active.activeKey;
@@ -234,6 +242,7 @@
 	bind:ref={listRef}
 	class={[listClass, geometryClass]}
 	data-slot="column"
+	dir={resolvedDirection}
 	maxHeight={height}
 	overscroll="contain"
 	role="listbox"

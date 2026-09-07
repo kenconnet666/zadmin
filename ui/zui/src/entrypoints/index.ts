@@ -590,7 +590,21 @@ export type {
 export { fieldPathToString } from '../runtime/form/field-path.js';
 export type { FieldPath, FieldPathInput } from '../runtime/form/field-path.js';
 export type { FormErrors } from '../runtime/form/validation.js';
+export type { FormControlDraftState } from '../runtime/form/form-value-adapter.svelte.js';
 export { default as ZDateField } from '../components/input/ZDateField.svelte';
+export { default as ZDateTimeField } from '../components/input/ZDateTimeField.svelte';
+export type {
+	ZDateTimeFieldProps,
+	ZDateTimeFieldLocalProps,
+	ZDateTimeFieldZonedProps,
+	DateTimeFieldSize
+} from '../components/input/ZDateTimeField.svelte';
+export type {
+	DateTimeMode,
+	DateTimeValue,
+	DateTimeGranularity,
+	DateTimeDisambiguation
+} from '../runtime/date-time.js';
 export type {
 	DateFieldAppearance,
 	DateFieldFormParticipation,
@@ -709,9 +723,19 @@ export type {
 } from '../components/input/ZTextarea.svelte';
 export { default as ZTimeField } from '../components/input/ZTimeField.svelte';
 export { default as ZTimePicker } from '../components/input/ZTimePicker.svelte';
+export { default as ZTimeRangePicker } from '../components/input/ZTimeRangePicker.svelte';
+export type {
+	ZTimeRangePickerProps,
+	TimeRangeValue,
+	TimeRangeMode,
+	TimeRangePickerPreset,
+	TimeRangePickerGranularity
+} from '../components/input/ZTimeRangePicker.svelte';
+export type { TimeRangePart } from '../runtime/time-range.js';
 export type {
 	ZTimePickerProps,
-	TimePickerGranularity
+	TimePickerGranularity,
+	TimePickerPreset
 } from '../components/input/ZTimePicker.svelte';
 export type {
 	TimeFieldAppearance,
@@ -782,6 +806,7 @@ export type {
 	ZuiCommandLocale,
 	ZuiCommonLocale,
 	ZuiDateLocale,
+	ZuiDateTimeLocale,
 	ZuiFeedbackLocale,
 	ZuiFileUploadLocale,
 	ZuiFormLocale,
@@ -916,5 +941,7 @@ export type {
 	TimeFieldComponentDefaults,
 	DatePickerComponentDefaults,
 	DateRangePickerComponentDefaults,
-	TimePickerComponentDefaults
+	TimePickerComponentDefaults,
+	TimeRangePickerComponentDefaults,
+	DateTimeFieldComponentDefaults
 } from '../runtime/foundation/component-defaults.js';

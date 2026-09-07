@@ -219,6 +219,14 @@ export const componentDocLoaders = {
 		import('../content/components/input/time-field/doc.js').then((module) => module.timeFieldDoc),
 	'time-picker': () =>
 		import('../content/components/input/time-picker/doc.js').then((module) => module.timePickerDoc),
+	'time-range-picker': () =>
+		import('../content/components/input/time-range-picker/doc.js').then(
+			(module) => module.timeRangePickerDoc
+		),
+	'date-time-field': () =>
+		import('../content/components/input/date-time-field/doc.js').then(
+			(module) => module.dateTimeFieldDoc
+		),
 	'tree-select': () =>
 		import('../content/components/input/tree-select/doc.js').then((module) => module.treeSelectDoc),
 	transfer: () =>

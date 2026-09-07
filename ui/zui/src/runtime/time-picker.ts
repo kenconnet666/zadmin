@@ -1,4 +1,4 @@
-import { Time } from '@internationalized/date';
+import { fromDate, Time, toTime } from '@internationalized/date';
 
 export type TimePickerGranularity = 'hour' | 'minute' | 'second';
 export type TimePickerDayPeriod = 'am' | 'pm';
@@ -13,6 +13,11 @@ export interface TimePickerConstraints {
 	readonly minValue?: Time;
 	readonly minuteStep: number;
 	readonly secondStep: number;
+}
+
+export interface TimePickerPreset {
+	readonly label: string;
+	readonly value: Time | (() => Time);
 }
 
 export function validateTimePickerConstraints(constraints: TimePickerConstraints): void {
@@ -39,6 +44,30 @@ export function timePickerValueAvailable(
 		(constraints.maxValue && value.compare(constraints.maxValue) > 0) ||
 		constraints.isTimeUnavailable?.(value)
 	);
+}
+
+export function resolveTimePickerPreset(
+	preset: TimePickerPreset,
+	constraints: TimePickerConstraints
+): Time | null {
+	validateTimePickerConstraints(constraints);
+	const candidate: unknown = typeof preset.value === 'function' ? preset.value() : preset.value;
+	return candidate !== null &&
+		typeof candidate === 'object' &&
+		Object.getPrototypeOf(candidate) === Time.prototype &&
+		timePickerValueAvailable(candidate, constraints)
+		? candidate
+		: null;
+}
+
+export function timePickerNow(
+	timeZone: string,
+	constraints: TimePickerConstraints,
+	instant = new Date()
+): Time | null {
+	validateTimePickerConstraints(constraints);
+	const candidate = toTime(fromDate(instant, timeZone));
+	return timePickerValueAvailable(candidate, constraints) ? candidate : null;
 }
 
 export function sameTimeValue(left: Time | null, right: Time | null): boolean {

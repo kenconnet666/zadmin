@@ -2,7 +2,7 @@
 
 本文件由 `scripts/check-stability-policy.mjs` 生成；不会修改组件 status。compound member 可继承同 family root 的 Docs 页面。
 
-stableCompliant：141；stableViolations：0；promotionEligibleExperimental：21。
+stableCompliant：141；stableViolations：0；promotionEligibleExperimental：23。
 
 | Component               | Status       | Classification                | Blockers                                                          | Docs                                                                  | SSR |
 | ----------------------- | ------------ | ----------------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------- | --: |
@@ -122,7 +122,7 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：2
 | ZIcon                   | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/icon/doc.ts                     |   2 |
 | ZKbd                    | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/kbd/doc.ts                      |   3 |
 | ZLink                   | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/link/doc.ts                     |   5 |
-| ZProvider               | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/provider/doc.ts                 |  14 |
+| ZProvider               | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/provider/doc.ts                 |  15 |
 | ZSeparator              | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/separator/doc.ts                |   2 |
 | ZText                   | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/text/doc.ts                     |   6 |
 | ZToggleButton           | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/toggle-button/doc.ts            |   3 |
@@ -131,14 +131,15 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：2
 | ZCascader               | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/cascader/doc.ts                |   1 |
 | ZCheckbox               | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/checkbox/doc.ts                |   2 |
 | ZColorPicker            | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/color-picker/doc.ts            |   1 |
-| ZDateField              | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/date-field/doc.ts              |   3 |
+| ZDateField              | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/date-field/doc.ts              |   4 |
 | ZDatePicker             | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/date-picker/doc.ts             |   2 |
 | ZDateRangePicker        | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/date-range-picker/doc.ts       |   2 |
-| ZField                  | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/field/doc.ts                   |   6 |
+| ZDateTimeField          | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/date-time-field/doc.ts         |   1 |
+| ZField                  | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/field/doc.ts                   |   7 |
 | ZFieldset               | experimental | experimental                  | BrowserBehaviorVerified, ProductionVerified                       | apps/docs/src/content/components/input/fieldset/doc.ts                |   1 |
 | ZFileUpload             | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/file-upload/doc.ts             |   1 |
-| ZForm                   | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/form/doc.ts                    |   9 |
-| ZFormField              | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/form/doc.ts                    |   9 |
+| ZForm                   | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/form/doc.ts                    |  10 |
+| ZFormField              | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/form/doc.ts                    |  10 |
 | ZFormList               | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/form/doc.ts                    |   2 |
 | ZInput                  | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/input/doc.ts                   |   7 |
 | ZInputGroup             | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/input-group/doc.ts             |   3 |
@@ -154,8 +155,9 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：2
 | ZSwitch                 | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/switch/doc.ts                  |   3 |
 | ZTagsInput              | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/tags-input/doc.ts              |   2 |
 | ZTextarea               | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/textarea/doc.ts                |   3 |
-| ZTimeField              | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/time-field/doc.ts              |   3 |
+| ZTimeField              | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/time-field/doc.ts              |   4 |
 | ZTimePicker             | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/time-picker/doc.ts             |   1 |
+| ZTimeRangePicker        | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/time-range-picker/doc.ts       |   1 |
 | ZToggleGroup            | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/toggle-group/doc.ts            |   2 |
 | ZTransfer               | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/transfer/doc.ts                |   1 |
 | ZTreeSelect             | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/tree-select/doc.ts             |   2 |

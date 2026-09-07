@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
-	"componentCount": 177,
-	"overallSha256": "10233a9d6ac18a099c32eaffc3a18f384ff5d037e36ea7e50d4cd7f1534630bc",
+	"componentCount": 179,
+	"overallSha256": "c9d4d9f4d5b7a248aa68e68dd373f0d6ed5c387a9d23080a39ef109b4a62f194",
 	"components": [
 		{
 			"id": "accordion",
@@ -630,18 +630,23 @@
 		},
 		{
 			"id": "date-field",
-			"sha256": "93ef5b82e3be554b5f32728b7e5445fbce2c2dd3401fc7ded6bbf1470718b333",
+			"sha256": "e61b2708bf842d9cf8d35fdfe49fe2f8283feb338f71b1f95f29d295247c508e",
 			"source": "src/components/input/ZDateField.svelte"
 		},
 		{
 			"id": "date-picker",
-			"sha256": "4fabe391e3cf28c652c1ef76542a862a88377217095d64b852ccb035ede793a6",
+			"sha256": "f08090029e19ffea79a24ee7be49dfde87da32b62f0cd29f554c20e0abbcbd8a",
 			"source": "src/components/input/ZDatePicker.svelte"
 		},
 		{
 			"id": "date-range-picker",
-			"sha256": "35404debdfc35e42768ff650e223a678e3356b1247340ea6a3cff5a9bae7dd1c",
+			"sha256": "2b0cbffc6739099c499795e67ea478915e354d7a972586b50b7fb1faf6f2323e",
 			"source": "src/components/input/ZDateRangePicker.svelte"
+		},
+		{
+			"id": "date-time-field",
+			"sha256": "ce0b31c3d4f90151aab623f8e963b7510d6d717c5f9229f5d72f2cfc717aa0f8",
+			"source": "src/components/input/ZDateTimeField.svelte"
 		},
 		{
 			"id": "field",
@@ -660,7 +665,7 @@
 		},
 		{
 			"id": "form",
-			"sha256": "880d6116d2428f5c12e58add94f94b4534cf5a3de7bc8f2f6a1f472f8a0c3fed",
+			"sha256": "761b4aea04e24a4b872af28255359acad7367af35b4c849ddd240792e4da1145",
 			"source": "src/components/input/ZForm.svelte"
 		},
 		{
@@ -745,13 +750,18 @@
 		},
 		{
 			"id": "time-field",
-			"sha256": "83d4d2a527acfb97d3f523b5a04d95f01af8a76557847e88429824cdb2226b77",
+			"sha256": "61343676e6dd409b9f815cbd5db27716b891c05599741bb381fe5e082fbbae7f",
 			"source": "src/components/input/ZTimeField.svelte"
 		},
 		{
 			"id": "time-picker",
-			"sha256": "e024e3a442616d1a88cc78fdc85ad4172e14d14ea52a831d32a84f5d8d169e34",
+			"sha256": "175c76a8ea871c3fb1fe81b1b2bfa3a6fdc33ce80be7864066b519e4d8fbd854",
 			"source": "src/components/input/ZTimePicker.svelte"
+		},
+		{
+			"id": "time-range-picker",
+			"sha256": "790ba466bd52a820ecd4ad30185dde4e434b1c73a5fd5a8c14676cc558cf3584",
+			"source": "src/components/input/ZTimeRangePicker.svelte"
 		},
 		{
 			"id": "toggle-group",
@@ -892,10 +902,10 @@
 	"entrypoints": {
 		"code.ts": "eabb8477e4c5ef93d016ab909e5c7f85a3111df231e2d2c3c7ef5e54897b36db",
 		"compiler.ts": "96fa979b36838e8b7a6d3f52bb463f23951438a4d974d52b631ad1e6d937b2e7",
-		"index.ts": "a13316b5cf4a055786708b29fa75f88189896d3785b3a9e5ebf4949cb56c35c8",
+		"index.ts": "a0ba38b919aa25cdea3576beda852c03019b93bf1d511dcb2924bb93319dcdab",
 		"internal.ts": "05f9ef9c8628e1cdf694dcc88b71831e5aab726a3189bd6189eef7ae645df4d7",
 		"layer.ts": "72d0fc8e5b7a8ab39a12e157879951b84f1a7fc19654f4bd8b6ea92fd8aa6db8",
-		"metadata.ts": "cd4d15befb45d219a4f03f2a799087d9429f85f27875f730f1fbb962f5327379",
+		"metadata.ts": "5e1f3397f58205cc20f0b76f47e53f5d2f86f95c0b977222d18a6c36a01d8058",
 		"runtime.ts": "902679df258a1aee96a4742dc4f229210aef34e0db47c0bffcde4cc1d66016fb",
 		"testing.ts": "c596113f3cbcf4ce75be2728b6a10cd6a0b77c9b9101a4408ba2e18e174f15cb",
 		"theme.ts": "9625285286228f2548dadb74b934f40d7cd1804a1e96bc37a04f21d3cd32b527",

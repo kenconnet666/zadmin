@@ -259,7 +259,11 @@ describe('ZRangeSlider production contract', () => {
 		);
 		expect(markLabels[0]!.getBoundingClientRect().left).toBeGreaterThanOrEqual(track.left - 1);
 		expect(markLabels[1]!.getBoundingClientRect().right).toBeLessThanOrEqual(track.right + 1);
-		expect(main.querySelectorAll('[data-slot="value-label"]')).toHaveLength(2);
+		const valueLabels = main.querySelectorAll<HTMLElement>('[data-slot="value-label"]');
+		expect(valueLabels).toHaveLength(1);
+		expect(valueLabels[0]!.textContent?.replace(/\s+/gu, ' ').trim()).toBe(
+			'20 percent – 80 percent'
+		);
 
 		const verticalRange = target.querySelector<HTMLElement>('[data-testid="range-vertical"]')!;
 		expect(

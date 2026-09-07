@@ -190,6 +190,7 @@
 	bind:ref
 	class={[triggerClass, className]}
 	disabled={disabledProp || multi.disabled}
+	dir={rest.dir ?? zui.direction}
 	popupRole="listbox"
 	size={resolvedSize}
 	{variant}

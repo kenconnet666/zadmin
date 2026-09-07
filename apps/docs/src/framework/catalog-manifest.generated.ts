@@ -2337,12 +2337,12 @@ export const componentCatalogManifest = Object.freeze([
 		keywords: ['time picker', 'time field', 'popover', 'draft', 'controlled', 'form', 'nullable'],
 		profiles: ['form-control', 'layer'],
 		capabilities: [
-			'basic-render',
 			'controlled',
+			'portal',
+			'basic-render',
 			'external-clear',
 			'focus',
 			'keyboard',
-			'portal',
 			'invalid',
 			'variants-and-states',
 			'disabled',
@@ -2352,7 +2352,49 @@ export const componentCatalogManifest = Object.freeze([
 			'form-reset',
 			'uncontrolled'
 		],
-		demoCount: 4,
+		demoCount: 5,
+		publicComponentCount: 1
+	},
+	{
+		id: 'time-range-picker',
+		name: 'ZTimeRangePicker',
+		category: 'input',
+		summary:
+			'实验性时间范围选择器，复用两个 TimeField 和共享 TimePickerPanel。根组件独占范围模型、打开状态及两个 FormData 端点；明确区分同日有序与跨午夜范围。',
+		status: 'experimental',
+		keywords: [],
+		profiles: ['form-control', 'layer'],
+		capabilities: [
+			'basic-render',
+			'controlled',
+			'keyboard',
+			'portal',
+			'disabled',
+			'readonly',
+			'form-data',
+			'form-reset'
+		],
+		demoCount: 3,
+		publicComponentCount: 1
+	},
+	{
+		id: 'date-time-field',
+		name: 'ZDateTimeField',
+		category: 'input',
+		summary:
+			'组合日期与时间分段的实验性字段。local 值为 CalendarDateTime，zoned 值为 ZonedDateTime；根节点独占模型和一个 FormData 条目。当前仅支持 Gregorian 日历编辑。',
+		status: 'experimental',
+		keywords: [],
+		profiles: ['form-control'],
+		capabilities: [
+			'basic-render',
+			'controlled',
+			'external-clear',
+			'keyboard',
+			'form-data',
+			'form-reset'
+		],
+		demoCount: 3,
 		publicComponentCount: 1
 	},
 	{

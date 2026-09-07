@@ -3,6 +3,7 @@
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
+	import type { FormControlDraftState } from '../../runtime/form/form-value-adapter.svelte.js';
 	import type {
 		TimeDayPeriod as TimeDayPeriodValue,
 		TimeFieldGranularity,
@@ -39,8 +40,10 @@
 		readonly minValue?: TimeValue;
 		readonly minuteStep?: number;
 		readonly name?: string;
+		readonly onDraftChange?: (state: FormControlDraftState) => void;
 		readonly onFormReset?: () => void;
 		readonly onValueChange?: (value: TimeValue | null) => void;
+		readonly placeholderValue?: TimeValue;
 		readonly readonly?: boolean;
 		ref?: HTMLDivElement | null;
 		readonly required?: boolean;
@@ -67,6 +70,11 @@
 			'FormValueBridge'
 		],
 		events: [
+			{
+				description: '本地segment草稿的原子有效性、脏状态与本地化消息。',
+				name: 'onDraftChange',
+				type: '(state: FormControlDraftState) => void'
+			},
 			{
 				description: '完整时间或清空变化。',
 				name: 'onValueChange',
@@ -106,6 +114,12 @@
 				description: '非受控初始时间。',
 				name: 'defaultValue',
 				type: 'Time | null'
+			},
+			{
+				default: '00:00',
+				description: '空值首次编辑或键盘步进时补齐尚未编辑segment的wall-clock时间。',
+				name: 'placeholderValue',
+				type: 'Time'
 			},
 			{
 				default: 'false（或继承Field）',
@@ -237,11 +251,11 @@
 			s.alignItems.center;
 			s.borderRadius._medium;
 			s.display.inlineFlex;
-			s._selector('&:focus-within', (focus) => {
-				focus.outlineColor._focus;
-				focus.outlineOffset._outer;
-				focus.outlineStyle.solid;
-				focus.outlineWidth._medium;
+			s._selector('&:not([data-zui-input-group-control]):focus-within', (s) => {
+				s.outlineColor._focus;
+				s.outlineOffset._outer;
+				s.outlineStyle.solid;
+				s.outlineWidth._medium;
 			});
 		},
 		variants: {
@@ -381,6 +395,7 @@
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { useZInputGroup } from '../../runtime/form/input-group-context.svelte.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
+	import { getElementDirection } from '../../runtime/layer/dom-realm.js';
 
 	let {
 		'aria-describedby': ariaDescribedBy,
@@ -393,6 +408,7 @@
 		dayPeriodLabel,
 		defaultValue,
 		disabled = false,
+		dir: dirProp,
 		form,
 		formParticipation = 'auto',
 		granularity = 'minute',
@@ -404,8 +420,10 @@
 		minValue,
 		minuteStep = 1,
 		name,
+		onDraftChange,
 		onFormReset,
 		onValueChange,
+		placeholderValue,
 		readonly = false,
 		ref = $bindable(null),
 		required = false,
@@ -430,9 +448,16 @@
 			createZuiId(zui.idPrefix, uid, 'time-field')
 	);
 	const resolvedLocale = $derived(locale ?? zui.locale);
+	const resolvedDirection = $derived(dirProp ?? zui.direction);
 	const hourCycle = $derived(
 		hourCycleProp ?? resolveHourCycle(resolvedLocale, zui.localePack.time.hourCycle)
 	);
+	const resolvedPlaceholderValue = $derived.by(() => {
+		if (placeholderValue === undefined) return new Time(0);
+		const normalized = normalizeTimeModelValue(placeholderValue, 'ZTimeField placeholderValue');
+		if (!normalized) throw new TypeError('ZTimeField placeholderValue cannot be null.');
+		return normalized;
+	});
 	const constraints = $derived.by(() => {
 		if (![minuteStep, secondStep].every((step) => Number.isInteger(step) && step > 0 && step < 60))
 			throw new TypeError('ZTimeField steps must be positive integers below 60.');
@@ -462,11 +487,13 @@
 	const valueState = createFormControlState<Time | null>(
 		{
 			defaultValue: () => defaultValue ?? null,
+			draftState: () => inspectDraftState(),
 			element: () => ref,
 			normalizeModelValue: (candidate) => normalizeTimeModelValue(candidate, 'ZTimeField'),
 			onChange: () => onValueChange,
 			owner: 'ZTimeField',
 			read: () => value,
+			resetDraft: rollbackDraft,
 			syncNative: (next) => syncInputs(next),
 			write: (next) => (value = next)
 		},
@@ -506,6 +533,69 @@
 	);
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
+	const localDraftState = $derived.by<FormControlDraftState>(() => inspectDraftState());
+
+	function draftMessage(kind: 'incomplete' | 'invalid' | 'required'): string {
+		if (kind === 'required') return zui.localePack.form.requiredValue;
+		if (kind === 'incomplete') return zui.localePack.time.incompleteTime;
+		return zui.localePack.time.invalidTime;
+	}
+
+	function inspectDraftState(): FormControlDraftState {
+		const entries = Object.entries(drafts) as [TimeSegment, string][];
+		const dirty = entries.length > 0 || draftPeriod !== null;
+		if (!dirty) {
+			const current = valueState.current;
+			const requiredMissing = resolvedRequired && current === null;
+			const constrained = Boolean(current && unavailable(current));
+			const valid = !requiredMissing && !constrained;
+			return Object.freeze({
+				dirty: false,
+				message: valid ? undefined : draftMessage(requiredMissing ? 'required' : 'invalid'),
+				valid
+			});
+		}
+		if (
+			(valueState.current === null && segments.some((segment) => drafts[segment] === undefined)) ||
+			entries.some(([, raw]) => raw.length !== 2 || !/^\d+$/u.test(raw))
+		)
+			return Object.freeze({ dirty: true, message: draftMessage('incomplete'), valid: false });
+		let hour = Number(drafts.hour ?? valueState.current?.hour ?? resolvedPlaceholderValue.hour);
+		const enteredHour = Number(drafts.hour ?? hour);
+		const minute =
+			granularity === 'hour'
+				? (valueState.current?.minute ?? resolvedPlaceholderValue.minute)
+				: Number(drafts.minute ?? valueState.current?.minute ?? resolvedPlaceholderValue.minute);
+		const second =
+			granularity === 'second'
+				? Number(drafts.second ?? valueState.current?.second ?? resolvedPlaceholderValue.second)
+				: (valueState.current?.second ?? resolvedPlaceholderValue.second);
+		const millisecond = valueState.current?.millisecond ?? resolvedPlaceholderValue.millisecond;
+		if (hourCycle === 12 && drafts.hour !== undefined) {
+			const pm =
+				(draftPeriod ??
+					((valueState.current?.hour ?? resolvedPlaceholderValue.hour) >= 12 ? 'pm' : 'am')) ===
+				'pm';
+			hour = (hour % 12) + (pm ? 12 : 0);
+		}
+		const inRange =
+			Number.isInteger(hour) &&
+			Number.isInteger(minute) &&
+			Number.isInteger(second) &&
+			(hourCycle !== 12 || drafts.hour === undefined || (enteredHour >= 1 && enteredHour <= 12)) &&
+			hour >= 0 &&
+			hour <= 23 &&
+			minute >= 0 &&
+			minute <= 59 &&
+			second >= 0 &&
+			second <= 59;
+		const valid = inRange && !unavailable(new Time(hour, minute, second, millisecond));
+		return Object.freeze({
+			dirty: true,
+			message: valid ? undefined : draftMessage('invalid'),
+			valid
+		});
+	}
 
 	function syncInputs(next: Time | null): void {
 		for (const [index, segment] of segments.entries()) {
@@ -543,20 +633,27 @@
 
 	function commit(markIncomplete = true): boolean {
 		if (Object.keys(drafts).length === 0) return true;
-		let hour = Number(drafts.hour ?? valueState.current?.hour);
+		if (valueState.current === null && segments.some((segment) => drafts[segment] === undefined)) {
+			draftInvalid = markIncomplete;
+			return false;
+		}
+		let hour = Number(drafts.hour ?? valueState.current?.hour ?? resolvedPlaceholderValue.hour);
 		const enteredHour = hour;
 		// Editing visible segments preserves the other units of an existing typed Time.
 		const minute =
 			granularity === 'hour'
-				? (valueState.current?.minute ?? 0)
-				: Number(drafts.minute ?? valueState.current?.minute);
+				? (valueState.current?.minute ?? resolvedPlaceholderValue.minute)
+				: Number(drafts.minute ?? valueState.current?.minute ?? resolvedPlaceholderValue.minute);
 		const second =
 			granularity === 'second'
-				? Number(drafts.second ?? valueState.current?.second)
-				: (valueState.current?.second ?? 0);
-		const millisecond = valueState.current?.millisecond ?? 0;
+				? Number(drafts.second ?? valueState.current?.second ?? resolvedPlaceholderValue.second)
+				: (valueState.current?.second ?? resolvedPlaceholderValue.second);
+		const millisecond = valueState.current?.millisecond ?? resolvedPlaceholderValue.millisecond;
 		if (hourCycle === 12 && drafts.hour !== undefined) {
-			const pm = (draftPeriod ?? ((valueState.current?.hour ?? 0) >= 12 ? 'pm' : 'am')) === 'pm';
+			const pm =
+				(draftPeriod ??
+					((valueState.current?.hour ?? resolvedPlaceholderValue.hour) >= 12 ? 'pm' : 'am')) ===
+				'pm';
 			hour = (hour % 12) + (pm ? 12 : 0);
 		}
 		if (![hour, minute, second].every(Number.isInteger)) {
@@ -580,7 +677,10 @@
 			draftInvalid = true;
 			return false;
 		}
-		valueState.setFromUser(next);
+		if (!valueState.setFromUser(next)) {
+			rollbackDraft();
+			return false;
+		}
 		drafts = {};
 		draftPeriod = null;
 		draftInvalid = false;
@@ -589,7 +689,7 @@
 
 	function cycle(segment: TimeSegment, amount: number): void {
 		if (resolvedDisabled || resolvedReadonly) return;
-		const base = valueState.current ?? new Time(0);
+		const base = valueState.current ?? resolvedPlaceholderValue;
 		const step =
 			segment === 'minute'
 				? constraints.minuteStep
@@ -600,7 +700,10 @@
 		for (let attempts = 0; attempts < 60 && unavailable(next); attempts += 1)
 			next = clamp(next.cycle(segment, amount * step));
 		if (unavailable(next)) return;
-		valueState.setFromUser(next);
+		if (!valueState.setFromUser(next)) {
+			rollbackDraft();
+			return;
+		}
 		drafts = {};
 		draftPeriod = null;
 		draftInvalid = false;
@@ -619,7 +722,11 @@
 	}
 
 	function handleKey(event: KeyboardEvent, segment: TimeSegment, index: number): void {
-		const intent = navigationIntent(event.key, 'horizontal', zui.direction);
+		const intent = navigationIntent(
+			event.key,
+			'horizontal',
+			getElementDirection(ref, zui.direction)
+		);
 		if (intent) {
 			event.preventDefault();
 			move(index, intent);
@@ -653,13 +760,17 @@
 			draftPeriod = current === 'am' ? 'pm' : 'am';
 			return;
 		}
-		const base = valueState.current ?? new Time(0);
-		valueState.setFromUser(clamp(base.cycle('hour', 12)));
+		const base = valueState.current ?? resolvedPlaceholderValue;
+		if (!valueState.setFromUser(clamp(base.cycle('hour', 12)))) rollbackDraft();
 	}
 
 	function handlePeriodKey(event: KeyboardEvent): void {
 		const index = focusOrder.indexOf('dayPeriod');
-		const intent = navigationIntent(event.key, 'horizontal', zui.direction);
+		const intent = navigationIntent(
+			event.key,
+			'horizontal',
+			getElementDirection(ref, zui.direction)
+		);
 		if (intent) {
 			event.preventDefault();
 			move(index, intent);
@@ -679,6 +790,13 @@
 		onFormReset?.();
 	}
 
+	export function rollbackDraft(): void {
+		drafts = {};
+		draftPeriod = null;
+		draftInvalid = false;
+		syncInputs(valueState.current);
+	}
+
 	function handleInput(
 		event: Event & { currentTarget: HTMLInputElement },
 		segment: TimeSegment,
@@ -687,7 +805,10 @@
 		const nextDraft = event.currentTarget.value.replace(/\D/gu, '');
 		drafts = { ...drafts, [segment]: nextDraft };
 		if (inputs.every((input) => !input?.value)) {
-			valueState.setFromUser(null);
+			if (!valueState.setFromUser(null)) {
+				rollbackDraft();
+				return;
+			}
 			drafts = {};
 			draftPeriod = null;
 			draftInvalid = false;
@@ -713,6 +834,10 @@
 	onDestroy(fieldOwner.registerFocusOwner(() => inputs[0]?.focus({ preventScroll: true })));
 	if (group && formParticipation === 'auto')
 		onDestroy(group.registerControl({ focus: () => inputs[0]?.focus({ preventScroll: true }) }));
+	$effect(() => {
+		const state = localDraftState;
+		untrack(() => onDraftChange?.(state));
+	});
 </script>
 
 <div
@@ -722,6 +847,7 @@
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
 	role="group"
+	dir={resolvedDirection}
 	data-zui-composite-control=""
 	data-zui-input-group-control={group ? '' : undefined}
 	aria-label={labelledBy ? undefined : (ariaLabel ?? zui.localePack.time.timeFieldLabel)}

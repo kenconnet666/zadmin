@@ -4,11 +4,14 @@
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import type { TimeFieldGranularity, TimeFieldSegment } from '../../runtime/date.js';
 	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
-	import type { TimePickerDayPeriod } from '../../runtime/time-picker.js';
+	import type {
+		TimePickerDayPeriod,
+		TimePickerPreset as RuntimeTimePickerPreset
+	} from '../../runtime/time-picker.js';
 	import type { PopoverPlacement } from '../compound/popover/ZPopover.svelte';
-	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 
 	export type TimePickerGranularity = TimeFieldGranularity;
+	export type TimePickerPreset = RuntimeTimePickerPreset;
 
 	export interface ZTimePickerProps extends Omit<
 		HTMLAttributes<HTMLDivElement>,
@@ -27,6 +30,7 @@
 		readonly granularity?: TimePickerGranularity;
 		readonly hourCycle?: 12 | 24;
 		readonly invalid?: boolean;
+		readonly invalidTimeLabel?: string;
 		readonly isTimeUnavailable?: (value: PublicTime) => boolean;
 		readonly locale?: string;
 		readonly maxValue?: PublicTime;
@@ -34,18 +38,22 @@
 		readonly minuteStep?: number;
 		readonly name?: string;
 		readonly noAvailableTimeLabel?: string;
+		readonly nowLabel?: string;
 		readonly onOpenChange?: (open: boolean) => void;
 		readonly onValueChange?: (value: PublicTime | null) => void;
 		open?: boolean;
 		readonly pickerLabel?: string;
 		readonly placeholder?: string;
 		readonly placement?: PopoverPlacement;
+		readonly presets?: readonly TimePickerPreset[];
 		readonly readonly?: boolean;
 		ref?: HTMLDivElement | null;
 		readonly required?: boolean;
 		readonly secondStep?: number;
 		readonly segmentLabel?: (segment: TimeFieldSegment) => string;
+		readonly showNow?: boolean;
 		readonly size?: ZControlSize;
+		readonly timeZone?: string;
 		readonly toggleDayPeriodLabel?: string;
 		readonly triggerLabel?: (display: string) => string;
 		value?: PublicTime | null;
@@ -54,12 +62,18 @@
 	export const zuiMetadata = {
 		bindings: [
 			{ description: '唯一Time值；null是显式空值。', name: 'value', type: 'Time | null' },
-			{ description: 'Popover打开状态。', name: 'open', type: 'boolean' },
+			{
+				description:
+					'请求的Popover状态；disabled/readonly期间实际隐藏，解除后仍遵循该值，不伪造用户回调。',
+				name: 'open',
+				type: 'boolean'
+			},
 			{ description: '真实Picker根引用。', name: 'ref', type: 'HTMLDivElement | null' }
 		],
 		category: 'input',
 		dependencies: [
 			'ZTimeField',
+			'TimePickerPanel',
 			'ZInputGroup',
 			'ZPopover',
 			'ZScrollArea',
@@ -95,8 +109,10 @@
 			{ description: '打开时间面板的按钮。', name: 'trigger' },
 			{ description: '有值时的清空按钮。', name: 'clear' },
 			{ description: 'Popover dialog。', name: 'content' },
+			{ description: '预设与现在操作。', name: 'actions' },
 			{ description: '共享实现的小时、分钟、秒或时段listbox。', name: 'column' },
 			{ description: '没有任何完整合法组合时的状态。', name: 'empty' },
+			{ description: '拒绝预设或现在候选时的可访问反馈。', name: 'feedback' },
 			{ description: '确认面板草稿的操作区。', name: 'footer' }
 		],
 		props: [
@@ -174,6 +190,12 @@
 				type: 'boolean'
 			},
 			{
+				default: 'Provider localePack.time.invalidTime',
+				description: '预设或现在候选不满足约束时的反馈。',
+				name: 'invalidTimeLabel',
+				type: 'string'
+			},
+			{
 				default: 'undefined',
 				description: '完整Time可用性谓词，由字段和所有面板列共用。',
 				name: 'isTimeUnavailable',
@@ -216,9 +238,16 @@
 				type: 'string'
 			},
 			{
+				default: 'Provider localePack.time.now',
+				description: '现在操作的文案。',
+				name: 'nowLabel',
+				type: 'string'
+			},
+			{
 				bindable: true,
 				default: 'false',
-				description: 'Popover打开状态。',
+				description:
+					'请求的Popover状态；disabled/readonly期间实际隐藏，解除后仍遵循该值，不伪造用户回调。',
 				name: 'open',
 				type: 'boolean'
 			},
@@ -239,6 +268,12 @@
 				description: 'Popover逻辑首选方位。',
 				name: 'placement',
 				type: 'PopoverPlacement'
+			},
+			{
+				default: '[]',
+				description: '静态或按用户操作惰性求值的Time预设；只更新面板草稿。',
+				name: 'presets',
+				type: 'readonly TimePickerPreset[]'
 			},
 			{
 				default: 'Field context或false',
@@ -269,6 +304,18 @@
 				description: '覆盖列与字段segment名称。',
 				name: 'segmentLabel',
 				type: '(segment: TimeFieldSegment) => string'
+			},
+			{
+				default: 'false',
+				description: '显示按每次用户操作和当前时区重新求值的现在按钮。',
+				name: 'showNow',
+				type: 'boolean'
+			},
+			{
+				default: 'Provider timeZone',
+				description: '现在操作解析墙上时间使用的IANA时区。',
+				name: 'timeZone',
+				type: 'string'
 			},
 			{
 				default: 'Provider localePack.time.toggleDayPeriod',
@@ -320,37 +367,6 @@
 		status: 'experimental',
 		summary: '以唯一Time owner组合可编辑TimeField、有限时间列、Popover和真实表单语义的Time Picker。'
 	} as const satisfies ZuiComponentMetadata;
-
-	const columnsRecipe = defineRecipe({
-		base: (s) => {
-			s.alignItems.stretch;
-			s.display.flex;
-			s.gap._small;
-		},
-		variants: {}
-	});
-	const emptyRecipe = defineRecipe({
-		base: (s) => {
-			s.color._textMuted;
-			s.padding._large;
-			s.textAlign.center;
-		},
-		variants: {}
-	});
-	const footerRecipe = defineRecipe({
-		base: (s) => {
-			s.borderTopColor._border;
-			s.borderTopStyle.solid;
-			s.borderTopWidth._hairline;
-			s.display.flex;
-			s.justifyContent.end;
-			s.marginTop._large;
-			s.paddingTop._large;
-		},
-		variants: {}
-	});
-	for (const recipe of [columnsRecipe, emptyRecipe, footerRecipe])
-		registerRecipeHmr(import.meta, recipe);
 </script>
 
 <script lang="ts">
@@ -358,7 +374,6 @@
 	import X from '@lucide/svelte/icons/x';
 	import { Time } from '@internationalized/date';
 	import { onDestroy } from 'svelte';
-	import type { SelectionKey } from '../../runtime/collection/selection.js';
 	import { formatTime, resolveHourCycle, timeFieldPattern } from '../../runtime/date.js';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { controlSizeMetrics, resolveControlSize } from '../../runtime/foundation/control-size.js';
@@ -369,25 +384,20 @@
 	import { mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
 	import {
 		claimFormValueScope,
-		createFormControlState
+		createFormControlState,
+		type FormControlDraftState
 	} from '../../runtime/form/form-value-adapter.svelte.js';
 	import {
 		initialTimePickerReference,
 		sameTimeValue,
-		selectTimePickerPart,
-		timePickerStepValues,
 		timePickerValueAvailable,
-		type TimePickerConstraints,
-		type TimePickerPart
+		type TimePickerConstraints
 	} from '../../runtime/time-picker.js';
 	import ZPopover from '../compound/popover/ZPopover.svelte';
 	import ZPopoverContent from '../compound/popover/ZPopoverContent.svelte';
 	import ZPopoverTrigger from '../compound/popover/ZPopoverTrigger.svelte';
 	import ZButton from '../gene/ZButton.svelte';
-	import TimePickerColumn, {
-		type TimePickerColumnController,
-		type TimePickerColumnItem
-	} from './TimePickerColumn.svelte';
+	import TimePickerPanel, { type TimePickerPanelController } from './TimePickerPanel.svelte';
 	import ZInputGroup from './ZInputGroup.svelte';
 	import ZTimeField from './ZTimeField.svelte';
 
@@ -403,12 +413,14 @@
 		dayPeriodLabel,
 		defaultOpen = false,
 		defaultValue,
+		dir,
 		disabled: disabledProp = false,
 		form,
 		formatOptions,
 		granularity = 'minute',
 		hourCycle: hourCycleProp,
 		invalid,
+		invalidTimeLabel,
 		isTimeUnavailable,
 		locale,
 		maxValue,
@@ -416,18 +428,22 @@
 		minuteStep = 1,
 		name: nameProp,
 		noAvailableTimeLabel,
+		nowLabel,
 		onOpenChange,
 		onValueChange,
 		open = $bindable(),
 		pickerLabel,
 		placeholder,
 		placement = 'bottom-start',
+		presets = [],
 		readonly: readonlyProp = false,
 		ref = $bindable(null),
 		required: requiredProp = false,
 		secondStep = 1,
 		segmentLabel,
+		showNow = false,
 		size,
+		timeZone,
 		toggleDayPeriodLabel,
 		triggerLabel,
 		value = $bindable(),
@@ -442,6 +458,8 @@
 	const controlId = $derived(controlIdProp ?? field?.controlId ?? `${idBase}-field`);
 	const triggerId = $derived(`${idBase}-trigger`);
 	const resolvedLocale = $derived(locale ?? zui.locale);
+	const resolvedDirection = $derived(dir ?? zui.direction);
+	const resolvedTimeZone = $derived(timeZone ?? zui.timeZone);
 	const resolvedHourCycle = $derived(
 		hourCycleProp ?? resolveHourCycle(resolvedLocale, zui.localePack.time.hourCycle)
 	);
@@ -463,6 +481,8 @@
 	const resolvedClearLabel = $derived(clearLabel ?? zui.localePack.time.clearTime);
 	const resolvedConfirmLabel = $derived(confirmLabel ?? zui.localePack.common.confirm);
 	const resolvedEmptyLabel = $derived(noAvailableTimeLabel ?? zui.localePack.time.noAvailableTime);
+	const resolvedInvalidTimeLabel = $derived(invalidTimeLabel ?? zui.localePack.time.invalidTime);
+	const resolvedNowLabel = $derived(nowLabel ?? zui.localePack.time.now);
 	const describedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
 	const labelledBy = $derived(mergeAriaIds(ariaLabelledBy, field?.labelId));
 	const constraints = $derived<TimePickerConstraints>({
@@ -475,14 +495,15 @@
 		secondStep
 	});
 	let fieldRef = $state<HTMLDivElement | null>(null);
+	let fieldController = $state<{ rollbackDraft(): void }>();
+	let fieldDraft = $state<FormControlDraftState>({ valid: true, dirty: false });
 	let panelValue = $state<Time | null>(null);
 	let observedOwnerValue = $state<Time | null>(null);
-	// Imperative focus owners do not participate in rendering.
-	// eslint-disable-next-line svelte/prefer-svelte-reactivity
-	const columnControllers = new Map<number, TimePickerColumnController>();
+	let panelController = $state<TimePickerPanelController | null>(null);
 	const valueState = createFormControlState<Time | null>(
 		{
 			defaultValue: () => defaultValue ?? null,
+			draftState: () => fieldDraft,
 			element: () => ref,
 			normalizeModelValue: (candidate) => {
 				if (candidate === null || candidate === undefined) return null;
@@ -493,6 +514,7 @@
 			onChange: () => onValueChange,
 			owner: 'ZTimePicker',
 			read: () => value,
+			resetDraft: () => fieldController?.rollbackDraft(),
 			syncNative: (next) => syncFieldValue(next),
 			write: (next) => (value = next)
 		},
@@ -520,17 +542,18 @@
 			: (placeholder ?? resolvedPickerLabel)
 	);
 	const resolvedTriggerLabel = $derived(triggerLabel?.(display) ?? resolvedPickerLabel);
-	const panelHeight = $derived(`calc(${controlSizeMetrics(zui.theme, resolvedSize).height} * 6)`);
 	const rootClass = $derived(
 		zui.icss((s) => {
 			s._selector('& > [data-slot="input-group"] > [data-slot="suffix-action"] > button', (s) =>
 				s.minHeight.raw(controlSizeMetrics(zui.theme, resolvedSize).contentHeight)
 			);
+			if (resolvedDisabled)
+				s._selector(
+					'& > [data-slot="input-group"] > [data-slot="suffix-action"] > button:disabled',
+					(s) => s.opacity._opaque
+				);
 		})
 	);
-	const columnsClass = $derived(zui.recipe(columnsRecipe));
-	const emptyClass = $derived(zui.recipe(emptyRecipe));
-	const footerClass = $derived(zui.recipe(footerRecipe));
 
 	function ownerMicrotask(callback: () => void): void {
 		(ref?.ownerDocument.defaultView ?? globalThis).queueMicrotask(callback);
@@ -566,6 +589,7 @@
 	}
 
 	function syncFieldValue(next = valueState.current): void {
+		fieldController?.rollbackDraft();
 		fieldValue = next;
 		const segments = timeFieldPattern(resolvedLocale, resolvedHourCycle, granularity).flatMap(
 			(part) => ('segment' in part ? [part.segment] : [])
@@ -584,82 +608,6 @@
 		syncFieldValue();
 		open = false;
 		panelValue = null;
-	}
-
-	function columnParts(): readonly TimePickerPart[] {
-		return timeFieldPattern(resolvedLocale, resolvedHourCycle, granularity).flatMap((part) => {
-			if ('segment' in part) return [part.segment];
-			if ('dayPeriod' in part) return ['dayPeriod' as const];
-			return [];
-		});
-	}
-
-	function partLabel(part: TimePickerPart): string {
-		if (part === 'dayPeriod') return toggleDayPeriodLabel ?? zui.localePack.time.toggleDayPeriod;
-		return segmentLabel?.(part) ?? zui.localePack.time[part];
-	}
-
-	function partValues(part: TimePickerPart): readonly SelectionKey[] {
-		if (part === 'dayPeriod') return ['am', 'pm'];
-		if (part === 'hour')
-			return resolvedHourCycle === 12
-				? Array.from({ length: 12 }, (_, index) => index + 1)
-				: Array.from({ length: 24 }, (_, index) => index);
-		const current = panelValue?.[part];
-		return timePickerStepValues(part === 'minute' ? minuteStep : secondStep, current);
-	}
-
-	function selectedPartValue(part: TimePickerPart): SelectionKey | undefined {
-		if (!panelValue) return undefined;
-		if (part === 'dayPeriod') return panelValue.hour < 12 ? 'am' : 'pm';
-		if (part === 'hour' && resolvedHourCycle === 12) return panelValue.hour % 12 || 12;
-		return panelValue[part];
-	}
-
-	function formatPartValue(part: TimePickerPart, key: SelectionKey): string {
-		if (part === 'dayPeriod')
-			return (
-				dayPeriodLabel?.(key as TimePickerDayPeriod) ??
-				zui.localePack.time[key as TimePickerDayPeriod]
-			);
-		return new Intl.NumberFormat(resolvedLocale, {
-			minimumIntegerDigits: 2,
-			useGrouping: false
-		}).format(key as number);
-	}
-
-	function partItems(part: TimePickerPart): readonly TimePickerColumnItem[] {
-		const reference = panelValue;
-		return partValues(part).map((key) => ({
-			disabled:
-				!reference ||
-				selectTimePickerPart(reference, part, key as number | TimePickerDayPeriod, constraints) ===
-					null,
-			key,
-			label: formatPartValue(part, key)
-		}));
-	}
-
-	function choosePart(part: TimePickerPart, item: TimePickerColumnItem, commit: boolean): void {
-		if (!panelValue || item.disabled) return;
-		const next = selectTimePickerPart(
-			panelValue,
-			part,
-			item.key as number | TimePickerDayPeriod,
-			constraints
-		);
-		if (!next) return;
-		panelValue = next;
-		if (commit) confirm(next);
-	}
-
-	function setColumnController(index: number, controller: TimePickerColumnController | null): void {
-		if (controller) columnControllers.set(index, controller);
-		else columnControllers.delete(index);
-	}
-
-	function focusSibling(index: number, direction: -1 | 1): void {
-		columnControllers.get(index + direction)?.focus();
 	}
 
 	let previouslyOpen = false;
@@ -705,38 +653,31 @@
 			ariaLabelledBy={null}
 			data-unavailable={!panelValue || undefined}
 			data-slot="content"
-			initialFocus={() => columnControllers.get(0)?.element ?? null}
+			dir={resolvedDirection}
+			initialFocus={() => panelController?.firstFocusableElement ?? null}
 			role="dialog"
 		>
-			{#if panelValue}
-				<div class={columnsClass} data-slot="columns">
-					{#each columnParts() as part, index (part)}
-						<TimePickerColumn
-							columnId={`${idBase}-${part}`}
-							disabled={resolvedDisabled || resolvedReadonly}
-							height={panelHeight}
-							items={partItems(part)}
-							label={partLabel(part)}
-							onChoose={(item, commit) => choosePart(part, item, commit)}
-							onControllerChange={(controller) => setColumnController(index, controller)}
-							onFocusSibling={(direction) => focusSibling(index, direction)}
-							selectedKey={selectedPartValue(part)}
-							size={resolvedSize}
-						/>
-					{/each}
-				</div>
-			{:else}
-				<div class={emptyClass} data-slot="empty" role="status">{resolvedEmptyLabel}</div>
-			{/if}
-			<div class={footerClass} data-slot="footer">
-				<ZButton
-					disabled={!panelValue || resolvedDisabled || resolvedReadonly}
-					onclick={() => confirm()}
-					size={resolvedSize}
-				>
-					{resolvedConfirmLabel}
-				</ZButton>
-			</div>
+			<TimePickerPanel
+				confirmLabel={resolvedConfirmLabel}
+				{constraints}
+				{dayPeriodLabel}
+				disabled={resolvedDisabled || resolvedReadonly}
+				direction={resolvedDirection}
+				{idBase}
+				invalidTimeLabel={resolvedInvalidTimeLabel}
+				locale={resolvedLocale}
+				noAvailableTimeLabel={resolvedEmptyLabel}
+				nowLabel={showNow ? resolvedNowLabel : undefined}
+				onConfirm={confirm}
+				onControllerChange={(controller) => (panelController = controller)}
+				onValueChange={(next) => (panelValue = next)}
+				{presets}
+				{segmentLabel}
+				size={resolvedSize}
+				timeZone={resolvedTimeZone}
+				toggleDayPeriodLabel={toggleDayPeriodLabel ?? zui.localePack.time.toggleDayPeriod}
+				value={panelValue}
+			/>
 		</ZPopoverContent>
 	</ZPopover>
 	{#if clearable && valueState.current}
@@ -757,6 +698,7 @@
 	{...rest}
 	bind:this={ref}
 	class={[rootClass, className]}
+	dir={resolvedDirection}
 	data-size={resolvedSize}
 	data-disabled={resolvedDisabled || undefined}
 	data-empty={!valueState.current || undefined}
@@ -769,11 +711,13 @@
 	<ZInputGroup
 		data-slot="input-group"
 		disabled={resolvedDisabled}
+		dir={resolvedDirection}
 		invalid={resolvedInvalid}
 		size={resolvedSize}
 		suffixAction={actions}
 	>
 		<ZTimeField
+			bind:this={fieldController}
 			data-slot="field"
 			aria-describedby={describedBy}
 			aria-label={ariaLabel}
@@ -784,6 +728,7 @@
 			{controlId}
 			{dayPeriodLabel}
 			disabled={resolvedDisabled}
+			dir={resolvedDirection}
 			formParticipation="none"
 			{granularity}
 			hourCycle={resolvedHourCycle}
@@ -793,6 +738,7 @@
 			{maxValue}
 			{minValue}
 			{minuteStep}
+			onDraftChange={(next) => (fieldDraft = next)}
 			onValueChange={updateFromField}
 			readonly={resolvedReadonly}
 			required={resolvedRequired}

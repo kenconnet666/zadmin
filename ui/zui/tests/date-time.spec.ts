@@ -1,0 +1,66 @@
+import {
+	CalendarDate,
+	CalendarDateTime,
+	Time,
+	parseZonedDateTime,
+	toTimeZone
+} from '@internationalized/date';
+import { describe, expect, it } from 'vitest';
+
+import {
+	composeDateTime,
+	dateTimeParts,
+	displayDateTime,
+	isDateTimeUnavailable,
+	normalizeDateTimeModelValue
+} from '../src/runtime/date-time.js';
+
+describe('date-time runtime', () => {
+	it('keeps local values as CalendarDateTime and rejects type or calendar drift', () => {
+		const value = composeDateTime({
+			date: new CalendarDate(2026, 9, 7),
+			displayTimeZone: 'UTC',
+			mode: 'local',
+			time: new Time(9, 30, 15)
+		});
+		expect(value).toEqual(new CalendarDateTime(2026, 9, 7, 9, 30, 15));
+		expect(() =>
+			normalizeDateTimeModelValue(new CalendarDate(2026, 9, 7), 'local', 'Test')
+		).toThrow(/CalendarDateTime/u);
+		expect(() => normalizeDateTimeModelValue(value, 'zoned', 'Test')).toThrow(/ZonedDateTime/u);
+	});
+
+	it('preserves an existing instant in a display zone and restores its owner zone after editing', () => {
+		const owner = parseZonedDateTime('2026-09-07T09:30-07:00[America/Los_Angeles]');
+		const display = displayDateTime(owner, 'zoned', 'America/New_York');
+		expect(display.toDate().getTime()).toBe(owner.toDate().getTime());
+		const parts = dateTimeParts(display);
+		const edited = composeDateTime({
+			date: parts.date,
+			displayTimeZone: 'America/New_York',
+			mode: 'zoned',
+			ownerTimeZone: owner.timeZone,
+			time: parts.time.add({ minutes: 1 })
+		});
+		expect(edited.timeZone).toBe('America/Los_Angeles');
+		expect(toTimeZone(edited, 'America/New_York').minute).toBe(display.minute + 1);
+	});
+
+	it('applies DST disambiguation and date-time-wide availability to the combined value', () => {
+		const options = {
+			date: new CalendarDate(2026, 3, 8),
+			displayTimeZone: 'America/New_York',
+			mode: 'zoned' as const,
+			time: new Time(2, 30)
+		};
+		expect(() => composeDateTime({ ...options, disambiguation: 'reject' })).toThrow(RangeError);
+		const earlier = composeDateTime({ ...options, disambiguation: 'earlier' });
+		const later = composeDateTime({ ...options, disambiguation: 'later' });
+		const compatible = composeDateTime({ ...options, disambiguation: 'compatible' });
+		expect(later.toDate().getTime() - earlier.toDate().getTime()).toBe(3_600_000);
+		expect(compatible.toDate().getTime()).toBe(later.toDate().getTime());
+		expect(isDateTimeUnavailable(later, earlier, undefined, (value) => value.minute === 30)).toBe(
+			true
+		);
+	});
+});

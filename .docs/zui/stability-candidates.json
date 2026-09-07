@@ -3,7 +3,7 @@
 	"summary": {
 		"stableCompliant": 141,
 		"stableViolations": 0,
-		"promotionEligibleExperimental": 21
+		"promotionEligibleExperimental": 23
 	},
 	"components": [
 		{
@@ -1174,7 +1174,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/gene/provider/doc.ts",
-			"ssrEvidenceCount": 14
+			"ssrEvidenceCount": 15
 		},
 		{
 			"id": "separator",
@@ -1264,7 +1264,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/date-field/doc.ts",
-			"ssrEvidenceCount": 3
+			"ssrEvidenceCount": 4
 		},
 		{
 			"id": "date-picker",
@@ -1287,6 +1287,16 @@
 			"ssrEvidenceCount": 2
 		},
 		{
+			"id": "date-time-field",
+			"name": "ZDateTimeField",
+			"family": null,
+			"status": "experimental",
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
+			"docs": "apps/docs/src/content/components/input/date-time-field/doc.ts",
+			"ssrEvidenceCount": 1
+		},
+		{
 			"id": "field",
 			"name": "ZField",
 			"family": null,
@@ -1294,7 +1304,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/field/doc.ts",
-			"ssrEvidenceCount": 6
+			"ssrEvidenceCount": 7
 		},
 		{
 			"id": "fieldset",
@@ -1324,7 +1334,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/form/doc.ts",
-			"ssrEvidenceCount": 9
+			"ssrEvidenceCount": 10
 		},
 		{
 			"id": "form-field",
@@ -1334,7 +1344,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/form/doc.ts",
-			"ssrEvidenceCount": 9
+			"ssrEvidenceCount": 10
 		},
 		{
 			"id": "form-list",
@@ -1494,7 +1504,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/time-field/doc.ts",
-			"ssrEvidenceCount": 3
+			"ssrEvidenceCount": 4
 		},
 		{
 			"id": "time-picker",
@@ -1504,6 +1514,16 @@
 			"classification": "promotionEligibleExperimental",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/time-picker/doc.ts",
+			"ssrEvidenceCount": 1
+		},
+		{
+			"id": "time-range-picker",
+			"name": "ZTimeRangePicker",
+			"family": null,
+			"status": "experimental",
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
+			"docs": "apps/docs/src/content/components/input/time-range-picker/doc.ts",
 			"ssrEvidenceCount": 1
 		},
 		{

@@ -4,6 +4,7 @@
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import type { DateFieldSegment } from '../../runtime/date.js';
 	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
+	import type { FormControlDraftState } from '../../runtime/form/form-value-adapter.svelte.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 	import { compositeInputDisabledStyles } from '../../runtime/foundation/control-styles.js';
 
@@ -28,8 +29,10 @@
 		readonly maxValue?: CalendarDateValue;
 		readonly minValue?: CalendarDateValue;
 		readonly name?: string;
+		readonly onDraftChange?: (state: FormControlDraftState) => void;
 		readonly onFormReset?: () => void;
 		readonly onValueChange?: (value: CalendarDateValue | null) => void;
+		readonly placeholderValue?: CalendarDateValue;
 		readonly readonly?: boolean;
 		ref?: HTMLDivElement | null;
 		readonly required?: boolean;
@@ -59,6 +62,11 @@
 			'FormValue'
 		],
 		events: [
+			{
+				description: '本地segment草稿的原子有效性、脏状态与本地化消息。',
+				name: 'onDraftChange',
+				type: '(state: FormControlDraftState) => void'
+			},
 			{
 				description: '完整日期或清空变化。',
 				name: 'onValueChange',
@@ -97,6 +105,12 @@
 				description: '非受控初始日期。',
 				name: 'defaultValue',
 				type: 'CalendarDate | null'
+			},
+			{
+				default: 'today(timeZone)',
+				description: '空值首次编辑或键盘步进时补齐尚未编辑segment的Gregorian日期。',
+				name: 'placeholderValue',
+				type: 'CalendarDate'
 			},
 			{
 				default: 'Field controlId或自动生成',
@@ -203,11 +217,11 @@
 			s.alignItems.center;
 			s.borderRadius._medium;
 			s.display.inlineFlex;
-			s._selector('&:focus-within', (focus) => {
-				focus.outlineColor._focus;
-				focus.outlineOffset._outer;
-				focus.outlineStyle.solid;
-				focus.outlineWidth._medium;
+			s._selector('&:not([data-zui-input-group-control]):focus-within', (s) => {
+				s.outlineColor._focus;
+				s.outlineOffset._outer;
+				s.outlineStyle.solid;
+				s.outlineWidth._medium;
 			});
 		},
 		variants: {
@@ -325,6 +339,7 @@
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { useZInputGroup } from '../../runtime/form/input-group-context.svelte.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
+	import { getElementDirection } from '../../runtime/layer/dom-realm.js';
 
 	let {
 		'aria-describedby': ariaDescribedBy,
@@ -336,6 +351,7 @@
 		controlId,
 		defaultValue,
 		disabled = false,
+		dir: dirProp,
 		form,
 		formParticipation = 'auto',
 		invalid: invalidProp = false,
@@ -344,8 +360,10 @@
 		maxValue,
 		minValue,
 		name,
+		onDraftChange,
 		onFormReset,
 		onValueChange,
+		placeholderValue,
 		readonly = false,
 		ref = $bindable(null),
 		required = false,
@@ -370,6 +388,16 @@
 	);
 	const resolvedLocale = $derived(locale ?? zui.locale);
 	const resolvedTimeZone = $derived(timeZone ?? zui.timeZone);
+	const resolvedDirection = $derived(dirProp ?? zui.direction);
+	const resolvedPlaceholderValue = $derived.by(() => {
+		if (placeholderValue === undefined) return today(resolvedTimeZone);
+		const normalized = normalizeCalendarDateModelValue(
+			placeholderValue,
+			'ZDateField placeholderValue'
+		);
+		if (!normalized) throw new TypeError('ZDateField placeholderValue cannot be null.');
+		return normalized;
+	});
 	const resolvedDisabled = $derived(disabled || group?.disabled || field?.disabled || false);
 	const resolvedReadonly = $derived(readonly || group?.readonly || field?.readonly || false);
 	const resolvedRequired = $derived(required || group?.required || field?.required || false);
@@ -397,11 +425,13 @@
 	const valueState = createFormControlState<CalendarDate | null>(
 		{
 			defaultValue: () => defaultValue ?? null,
+			draftState: () => inspectDraftState(),
 			element: () => ref,
 			normalizeModelValue: (candidate) => normalizeCalendarDateModelValue(candidate, 'ZDateField'),
 			onChange: () => onValueChange,
 			owner: 'ZDateField',
 			read: () => value,
+			resetDraft: rollbackDraft,
 			syncNative: (next) => syncInputs(next),
 			write: (next) => (value = next)
 		},
@@ -429,6 +459,59 @@
 	);
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
+	const localDraftState = $derived.by<FormControlDraftState>(() => inspectDraftState());
+
+	function draftMessage(kind: 'incomplete' | 'invalid' | 'required'): string {
+		if (kind === 'required') return zui.localePack.form.requiredValue;
+		if (kind === 'incomplete') return zui.localePack.date.incompleteDate;
+		return zui.localePack.date.invalidDate;
+	}
+
+	function inspectDraftState(): FormControlDraftState {
+		const entries = Object.entries(drafts) as [DateSegment, string][];
+		if (entries.length === 0) {
+			const current = valueState.current;
+			const requiredMissing = resolvedRequired && current === null;
+			const constrained = Boolean(
+				current &&
+				dateIsUnavailable(current, constraints.minValue, constraints.maxValue, isDateUnavailable)
+			);
+			const valid = !requiredMissing && !constrained;
+			return Object.freeze({
+				dirty: false,
+				message: valid ? undefined : draftMessage(requiredMissing ? 'required' : 'invalid'),
+				valid
+			});
+		}
+		if (
+			(valueState.current === null &&
+				segmentOrder.some((segment) => drafts[segment] === undefined)) ||
+			entries.some(
+				([segment, raw]) => raw.length !== (segment === 'year' ? 4 : 2) || !/^\d+$/u.test(raw)
+			)
+		)
+			return Object.freeze({ dirty: true, message: draftMessage('incomplete'), valid: false });
+		const year = Number(drafts.year ?? valueState.current?.year ?? resolvedPlaceholderValue.year);
+		const month = Number(
+			drafts.month ?? valueState.current?.month ?? resolvedPlaceholderValue.month
+		);
+		const day = Number(drafts.day ?? valueState.current?.day ?? resolvedPlaceholderValue.day);
+		try {
+			const next = new CalendarDate(year, month, day);
+			const valid =
+				next.year === year &&
+				next.month === month &&
+				next.day === day &&
+				!dateIsUnavailable(next, constraints.minValue, constraints.maxValue, isDateUnavailable);
+			return Object.freeze({
+				dirty: true,
+				message: valid ? undefined : draftMessage('invalid'),
+				valid
+			});
+		} catch {
+			return Object.freeze({ dirty: true, message: draftMessage('invalid'), valid: false });
+		}
+	}
 
 	function syncInputs(next: CalendarDate | null): void {
 		for (const [index, segment] of segmentOrder.entries()) {
@@ -451,9 +534,18 @@
 
 	function commitDrafts(markIncomplete = true): boolean {
 		if (Object.keys(drafts).length === 0) return true;
-		const year = Number(drafts.year ?? valueState.current?.year);
-		const month = Number(drafts.month ?? valueState.current?.month);
-		const day = Number(drafts.day ?? valueState.current?.day);
+		if (
+			valueState.current === null &&
+			segmentOrder.some((segment) => drafts[segment] === undefined)
+		) {
+			draftInvalid = markIncomplete;
+			return false;
+		}
+		const year = Number(drafts.year ?? valueState.current?.year ?? resolvedPlaceholderValue.year);
+		const month = Number(
+			drafts.month ?? valueState.current?.month ?? resolvedPlaceholderValue.month
+		);
+		const day = Number(drafts.day ?? valueState.current?.day ?? resolvedPlaceholderValue.day);
 		if (![year, month, day].every(Number.isInteger)) {
 			draftInvalid = markIncomplete;
 			return false;
@@ -465,7 +557,10 @@
 				draftInvalid = true;
 				return false;
 			}
-			valueState.setFromUser(next);
+			if (!valueState.setFromUser(next)) {
+				rollbackDraft();
+				return false;
+			}
 			drafts = {};
 			draftInvalid = false;
 			return true;
@@ -492,10 +587,13 @@
 
 	function cycle(segment: DateSegment, amount: number): void {
 		if (resolvedDisabled || resolvedReadonly) return;
-		const base = valueState.current ?? today(resolvedTimeZone);
+		const base = valueState.current ?? resolvedPlaceholderValue;
 		const next = availableFrom(base.cycle(segment, amount), amount < 0 ? -1 : 1);
 		if (!next) return;
-		valueState.setFromUser(next);
+		if (!valueState.setFromUser(next)) {
+			rollbackDraft();
+			return;
+		}
 		drafts = {};
 		draftInvalid = false;
 	}
@@ -507,7 +605,11 @@
 	}
 
 	function handleKey(event: KeyboardEvent, segment: DateSegment, index: number): void {
-		const intent = navigationIntent(event.key, 'horizontal', zui.direction);
+		const intent = navigationIntent(
+			event.key,
+			'horizontal',
+			getElementDirection(ref, zui.direction)
+		);
 		if (intent) {
 			event.preventDefault();
 			move(index, intent);
@@ -540,6 +642,12 @@
 		onFormReset?.();
 	}
 
+	export function rollbackDraft(): void {
+		drafts = {};
+		draftInvalid = false;
+		syncInputs(valueState.current);
+	}
+
 	function handleInput(
 		event: Event & { currentTarget: HTMLInputElement },
 		segment: DateSegment,
@@ -548,7 +656,10 @@
 		const nextDraft = event.currentTarget.value.replace(/\D/gu, '');
 		drafts = { ...drafts, [segment]: nextDraft };
 		if (inputs.every((input) => !input?.value)) {
-			valueState.setFromUser(null);
+			if (!valueState.setFromUser(null)) {
+				rollbackDraft();
+				return;
+			}
 			drafts = {};
 			draftInvalid = false;
 			return;
@@ -574,6 +685,10 @@
 	onDestroy(fieldOwner.registerFocusOwner(() => inputs[0]?.focus({ preventScroll: true })));
 	if (group && formParticipation === 'auto')
 		onDestroy(group.registerControl({ focus: () => inputs[0]?.focus({ preventScroll: true }) }));
+	$effect(() => {
+		const state = localDraftState;
+		untrack(() => onDraftChange?.(state));
+	});
 </script>
 
 <div
@@ -583,6 +698,7 @@
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
 	role="group"
+	dir={resolvedDirection}
 	data-zui-composite-control=""
 	data-zui-input-group-control={group ? '' : undefined}
 	aria-label={labelledBy ? undefined : (ariaLabel ?? zui.localePack.date.dateFieldLabel)}

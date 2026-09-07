@@ -8775,6 +8775,11 @@ export const dateFieldApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'onDraftChange',
+			required: false,
+			type: '(state: FormControlDraftState) => void'
+		},
+		{
 			name: 'onFormReset',
 			required: false,
 			type: '() => void'
@@ -8783,6 +8788,11 @@ export const dateFieldApiFacts = {
 			name: 'onValueChange',
 			required: false,
 			type: '(value: CalendarDateValue | null) => void'
+		},
+		{
+			name: 'placeholderValue',
+			required: false,
+			type: 'CalendarDateValue'
 		},
 		{
 			name: 'readonly',
@@ -9138,6 +9148,173 @@ export const dateRangePickerApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZDateRangePicker.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
+export const dateTimeFieldApiFacts = {
+	declaration: 'ZDateTimeFieldProps',
+	id: 'date-time-field',
+	inheritedFrom: ['ZDateTimeFieldLocalProps | ZDateTimeFieldZonedProps'],
+	name: 'ZDateTimeField',
+	props: [
+		{
+			name: 'controlId',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
+		},
+		{
+			name: 'disambiguation',
+			required: false,
+			type: 'DateTimeDisambiguation',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
+		},
+		{
+			name: 'form',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
+		},
+		{
+			name: 'granularity',
+			required: false,
+			type: 'DateTimeGranularity',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
+		},
+		{
+			name: 'hideTimeZone',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
+		},
+		{
+			name: 'hourCycle',
+			required: false,
+			type: '12 | 24',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
+		},
+		{
+			name: 'invalid',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
+		},
+		{
+			name: 'locale',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
+		},
+		{
+			name: 'minuteStep',
+			required: false,
+			type: 'number',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
+		},
+		{
+			name: 'name',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
+		},
+		{
+			name: 'onDraftChange',
+			required: false,
+			type: '(state: FormControlDraftState) => void',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
+		},
+		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
+		},
+		{
+			name: 'required',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
+		},
+		{
+			name: 'secondStep',
+			required: false,
+			type: 'number',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'DateTimeFieldSize',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
+		},
+		{
+			name: 'timeZone',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'ZDateTimeFieldSharedProps'
+		},
+		{
+			name: 'defaultValue',
+			required: false,
+			type: 'CalendarDateTime | null | ZonedDateTime | null',
+			inheritedFrom: 'ZDateTimeFieldLocalProps'
+		},
+		{
+			name: 'isDateTimeUnavailable',
+			required: false,
+			type: '(value: CalendarDateTime) => boolean | (value: ZonedDateTime) => boolean',
+			inheritedFrom: 'ZDateTimeFieldLocalProps'
+		},
+		{
+			name: 'maxValue',
+			required: false,
+			type: 'CalendarDateTime | ZonedDateTime',
+			inheritedFrom: 'ZDateTimeFieldLocalProps'
+		},
+		{
+			name: 'minValue',
+			required: false,
+			type: 'CalendarDateTime | ZonedDateTime',
+			inheritedFrom: 'ZDateTimeFieldLocalProps'
+		},
+		{
+			name: 'mode',
+			required: false,
+			type: "'local' | 'zoned'",
+			inheritedFrom: 'ZDateTimeFieldLocalProps'
+		},
+		{
+			name: 'onValueChange',
+			required: false,
+			type: '(value: CalendarDateTime | null) => void | (value: ZonedDateTime | null) => void',
+			inheritedFrom: 'ZDateTimeFieldLocalProps'
+		},
+		{
+			name: 'placeholderValue',
+			required: false,
+			type: 'CalendarDateTime | ZonedDateTime',
+			inheritedFrom: 'ZDateTimeFieldLocalProps'
+		},
+		{
+			name: 'value',
+			required: false,
+			type: 'CalendarDateTime | null | ZonedDateTime | null',
+			inheritedFrom: 'ZDateTimeFieldLocalProps'
+		}
+	],
+	source: 'ui/zui/src/components/input/ZDateTimeField.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
@@ -9848,6 +10025,7 @@ export const inputApiFacts = {
 		dateFieldApiFacts,
 		datePickerApiFacts,
 		dateRangePickerApiFacts,
+		dateTimeFieldApiFacts,
 		fieldApiFacts,
 		fieldsetApiFacts,
 		fileUploadApiFacts,
@@ -9869,6 +10047,7 @@ export const inputApiFacts = {
 		textareaApiFacts,
 		timeFieldApiFacts,
 		timePickerApiFacts,
+		timeRangePickerApiFacts,
 		toggleGroupApiFacts,
 		transferApiFacts,
 		treeSelectApiFacts
@@ -11466,6 +11645,11 @@ export const timeFieldApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'onDraftChange',
+			required: false,
+			type: '(state: FormControlDraftState) => void'
+		},
+		{
 			name: 'onFormReset',
 			required: false,
 			type: '() => void'
@@ -11474,6 +11658,11 @@ export const timeFieldApiFacts = {
 			name: 'onValueChange',
 			required: false,
 			type: '(value: TimeValue | null) => void'
+		},
+		{
+			name: 'placeholderValue',
+			required: false,
+			type: 'TimeValue'
 		},
 		{
 			name: 'readonly',
@@ -11592,6 +11781,11 @@ export const timePickerApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'invalidTimeLabel',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'isTimeUnavailable',
 			required: false,
 			type: '(value: PublicTime) => boolean'
@@ -11627,6 +11821,11 @@ export const timePickerApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'nowLabel',
+			required: false,
+			type: 'string'
+		},
+		{
 			name: 'onOpenChange',
 			required: false,
 			type: '(open: boolean) => void'
@@ -11657,6 +11856,11 @@ export const timePickerApiFacts = {
 			type: 'PopoverPlacement'
 		},
 		{
+			name: 'presets',
+			required: false,
+			type: 'readonly TimePickerPreset[]'
+		},
+		{
 			name: 'readonly',
 			required: false,
 			type: 'boolean'
@@ -11682,9 +11886,19 @@ export const timePickerApiFacts = {
 			type: '(segment: TimeFieldSegment) => string'
 		},
 		{
+			name: 'showNow',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'size',
 			required: false,
 			type: 'ZControlSize'
+		},
+		{
+			name: 'timeZone',
+			required: false,
+			type: 'string'
 		},
 		{
 			name: 'toggleDayPeriodLabel',
@@ -11703,6 +11917,242 @@ export const timePickerApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZTimePicker.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
+export const timeRangePickerApiFacts = {
+	declaration: 'ZTimeRangePickerProps',
+	id: 'time-range-picker',
+	inheritedFrom: ['HTMLAttributes<HTMLDivElement>'],
+	name: 'ZTimeRangePicker',
+	props: [
+		{
+			name: 'allowEmpty',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'cancelLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'clearLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'clearable',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'confirmLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'controlId',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'dayPeriodLabel',
+			required: false,
+			type: '(period: TimePickerDayPeriod) => string'
+		},
+		{
+			name: 'defaultOpen',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'defaultValue',
+			required: false,
+			type: 'TimeRangeValue | null'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'endLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'form',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'granularity',
+			required: false,
+			type: 'TimeFieldGranularity'
+		},
+		{
+			name: 'hourCycle',
+			required: false,
+			type: '12 | 24'
+		},
+		{
+			name: 'invalidRangeLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'invalidTimeLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'invalid',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'isTimeUnavailable',
+			required: false,
+			type: '( value: Time, part: TimeRangePart, range: TimeRangeValue ) => boolean'
+		},
+		{
+			name: 'locale',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'maxValue',
+			required: false,
+			type: 'Time'
+		},
+		{
+			name: 'minValue',
+			required: false,
+			type: 'Time'
+		},
+		{
+			name: 'minuteStep',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'name',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'noAvailableTimeLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'nowLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'onCommit',
+			required: false,
+			type: '(value: TimeRangeValue | null) => void'
+		},
+		{
+			name: 'onOpenChange',
+			required: false,
+			type: '(open: boolean) => void'
+		},
+		{
+			name: 'onValueChange',
+			required: false,
+			type: '(value: TimeRangeValue | null) => void'
+		},
+		{
+			name: 'open',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'orderedRangeLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'pickerLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'placement',
+			required: false,
+			type: 'PopoverPlacement'
+		},
+		{
+			name: 'presets',
+			required: false,
+			type: 'readonly TimeRangePickerPreset[]'
+		},
+		{
+			name: 'rangeMode',
+			required: false,
+			type: 'TimeRangeMode'
+		},
+		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null'
+		},
+		{
+			name: 'required',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'secondStep',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'segmentLabel',
+			required: false,
+			type: '(segment: TimeFieldSegment) => string'
+		},
+		{
+			name: 'showNow',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
+			name: 'startLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'timeZone',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'toggleDayPeriodLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'value',
+			required: false,
+			type: 'TimeRangeValue | null'
+		}
+	],
+	source: 'ui/zui/src/components/input/ZTimeRangePicker.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 

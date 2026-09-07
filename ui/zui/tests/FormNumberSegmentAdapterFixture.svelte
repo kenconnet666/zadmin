@@ -11,7 +11,7 @@
 	}
 	const defaults: Values = { amount: 12.5, mode: 1 };
 	let owner = $state<Values>({ ...defaults });
-	let controller = $state<ZFormController<unknown, Values> | null>(null);
+	let controller = $state<ZFormController<Values, Values> | null>(null);
 	let userChanges = $state(0);
 	const model = createFormModel({
 		defaultValues: defaults,

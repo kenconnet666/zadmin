@@ -3,7 +3,9 @@ import { describe, expect, it } from 'vitest';
 
 import {
 	initialTimePickerReference,
+	resolveTimePickerPreset,
 	selectTimePickerPart,
+	timePickerNow,
 	type TimePickerConstraints
 } from '../src/runtime/time-picker.js';
 
@@ -74,6 +76,42 @@ describe('time picker finite-column resolution', () => {
 				null,
 				constraints({ isTimeUnavailable: () => true, minuteStep: 15 })
 			)
+		).toBeNull();
+	});
+
+	it('evaluates lazy presets exactly once per request and validates the current constraints', () => {
+		expect(
+			resolveTimePickerPreset(
+				{ label: 'Static', value: new Time(8, 20, 30, 250) },
+				constraints()
+			)?.toString()
+		).toBe('08:20:30.25');
+		let calls = 0;
+		const preset = {
+			label: 'Release',
+			value: () => {
+				calls += 1;
+				return new Time(10, 30, 15, calls);
+			}
+		};
+		expect(resolveTimePickerPreset(preset, constraints())?.toString()).toBe('10:30:15.001');
+		expect(calls).toBe(1);
+		expect(
+			resolveTimePickerPreset(
+				preset,
+				constraints({ isTimeUnavailable: (candidate) => candidate.hour === 10 })
+			)
+		).toBeNull();
+		expect(calls).toBe(2);
+	});
+
+	it('derives Now from each supplied instant and time zone without clamping an unavailable value', () => {
+		const first = new Date('2026-09-07T00:30:15.125Z');
+		const second = new Date('2026-09-07T01:31:16.250Z');
+		expect(timePickerNow('Asia/Shanghai', constraints(), first)?.toString()).toBe('08:30:15.125');
+		expect(timePickerNow('Asia/Shanghai', constraints(), second)?.toString()).toBe('09:31:16.25');
+		expect(
+			timePickerNow('Asia/Shanghai', constraints({ maxValue: new Time(8, 30, 15, 124) }), first)
 		).toBeNull();
 	});
 });

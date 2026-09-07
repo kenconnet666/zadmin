@@ -16,8 +16,19 @@ export interface FormValueModel {
 }
 export interface FormValueHost {
 	readonly model?: FormValueModel;
-	registerValueControl(instanceId: string, element: () => HTMLElement | null): () => void;
+	registerValueControl(
+		instanceId: string,
+		element: () => HTMLElement | null,
+		draftState?: () => FormControlDraftState,
+		resetDraft?: () => void
+	): () => void;
 	controlValueChanged(instanceId: string): void;
+}
+/** Intrinsic input feedback; excludes external Field/server/schema errors. */
+export interface FormControlDraftState {
+	readonly valid: boolean;
+	readonly dirty: boolean;
+	readonly message?: string;
 }
 export interface FormValueScope {
 	readonly host: FormValueHost;
@@ -43,6 +54,8 @@ export interface FormControlStateOptions<T> extends ControllableStateOptions<T> 
 	readonly normalizeModelValue: (value: unknown) => T;
 	readonly owner: string;
 	readonly syncNative?: (value: T) => void;
+	readonly draftState?: () => FormControlDraftState;
+	readonly resetDraft?: () => void;
 }
 
 export class FormControlState<T> {
@@ -83,6 +96,10 @@ export class FormControlState<T> {
 		this.#options.write(value);
 		return true;
 	}
+	resetDraft(): void {
+		this.#options.resetDraft?.();
+		this.#options.syncNative?.(this.current);
+	}
 	reset(): void {
 		const element = this.#options.element();
 		const model = this.#scope?.host.model;
@@ -110,10 +127,15 @@ export function createFormControlState<T>(
 	});
 	$effect(() => {
 		if (!scope || !options.element()) return;
-		return scope.host.registerValueControl(scope.instanceId, options.element);
+		return untrack(() =>
+			scope.host.registerValueControl(scope.instanceId, options.element, options.draftState, () =>
+				state.resetDraft()
+			)
+		);
 	});
 	$effect(() => {
 		state.current;
+		options.draftState?.();
 		if (scope) untrack(() => scope.host.controlValueChanged(scope.instanceId));
 	});
 	return state;

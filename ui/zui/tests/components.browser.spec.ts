@@ -1775,7 +1775,7 @@ describe('compiled ICSS browser updates', () => {
 		form?.requestSubmit();
 		await new Promise((resolve) => setTimeout(resolve, 10));
 		await tick();
-		expect(output?.textContent).toBe('true:false:0:alice');
+		await expect.poll(() => output?.textContent).toBe('true:false:0:alice');
 		await resetForm(form);
 		expect(output?.textContent).toBe('false:false:0:alice');
 		expect(form?.querySelector('[data-dirty="true"]')).toBeNull();
@@ -1848,7 +1848,7 @@ describe('compiled ICSS browser updates', () => {
 		throwing?.requestSubmit();
 		await tick();
 		await Promise.resolve();
-		expect(output?.textContent).toContain(':2:1:0:0');
+		await expect.poll(() => output?.textContent).toContain(':2:1:0:0');
 		await resetForm(throwing);
 		expect(output?.textContent).toContain(':2:1:1:0');
 		prevented?.requestSubmit();

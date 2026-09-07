@@ -3,7 +3,7 @@
 ## Scope and model
 
 The system includes `ZCalendar`, `ZDateField`, `ZTimeField`, `ZDatePicker`,
-`ZDateRangePicker`, and the experimental `ZTimePicker`. Values remain the immutable `CalendarDate` and `Time` types from
+`ZDateRangePicker`, and the experimental `ZTimePicker`, `ZTimeRangePicker`, and `ZDateTimeField`. Values remain the immutable `CalendarDate`, `Time`, `CalendarDateTime`, and `ZonedDateTime` types from
 `@internationalized/date`; date-only and wall-clock values are not converted through the host
 `Date` constructor. `null` is the explicit controlled empty value. `undefined` only means that a
 Svelte binding was not supplied and may therefore select `defaultValue` during initialization.
@@ -19,6 +19,17 @@ exist, `normalizeRangeValue` guarantees chronological order. FormData contains o
 endpoints as `name.start` and `name.end`.
 
 ## Benchmark decisions
+
+E12 adds a shared TimePickerPanel below the single and range pickers. DateTimeField composes the existing
+date/time fields rather than nesting two pickers. Its local/zoned discriminated API keeps the display
+time zone separate from the zoned value's original owner zone; only Gregorian editing is supported.
+Time ranges never reorder endpoints implicitly: ordered requires end >= start, overnight explicitly
+permits crossing midnight. Partial endpoints remain representable, with allowEmpty controlling validity.
+
+Raw drafts participate in FormControlState through FormControlDraftState even when no valid canonical
+value has changed. Form validation blocks stale-value submission, excludes disabled native controls,
+and returns no successful data for invalid/outdated results. Child fields opt out of model/FormData
+ownership while forwarding intrinsic draft feedback and sharing rollback behavior.
 
 - React Aria supplies the primary accessibility decomposition: editable segments, a separately named
   calendar trigger, one grid roving-focus owner, `focusedValue`, locale-derived field order, and

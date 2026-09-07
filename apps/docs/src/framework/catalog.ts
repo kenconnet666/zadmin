@@ -74,6 +74,8 @@ import { tagsInputDoc } from '../content/components/input/tags-input/doc.js';
 import { textareaDoc } from '../content/components/input/textarea/doc.js';
 import { timeFieldDoc } from '../content/components/input/time-field/doc.js';
 import { timePickerDoc } from '../content/components/input/time-picker/doc.js';
+import { timeRangePickerDoc } from '../content/components/input/time-range-picker/doc.js';
+import { dateTimeFieldDoc } from '../content/components/input/date-time-field/doc.js';
 import { treeSelectDoc } from '../content/components/input/tree-select/doc.js';
 import { transferDoc } from '../content/components/input/transfer/doc.js';
 import { stackDoc } from '../content/components/layout/stack/doc.js';
@@ -207,6 +209,8 @@ export const componentDocs = Object.freeze([
 	textareaDoc,
 	timeFieldDoc,
 	timePickerDoc,
+	timeRangePickerDoc,
+	dateTimeFieldDoc,
 	treeSelectDoc,
 	transferDoc,
 	sliderDoc,

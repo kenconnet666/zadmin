@@ -95,9 +95,9 @@ describe('ZForm and ZFormField production contracts', () => {
 		throwing.requestSubmit();
 		await tick();
 		await Promise.resolve();
-		expect(document.querySelector('[data-testid="form-edge-output"]')?.textContent).toContain(
-			':2:1:0:0'
-		);
+		await expect
+			.poll(() => document.querySelector('[data-testid="form-edge-output"]')?.textContent)
+			.toContain(':2:1:0:0');
 		await resetForm(throwing);
 		await tick();
 		expect(document.querySelector('[data-testid="form-edge-output"]')?.textContent).toContain(

@@ -75,6 +75,7 @@ describe('date family Form model adapters', () => {
 		const target = host();
 		const component = mount(FormDateAdapterFixture, { target });
 		try {
+			await tick();
 			const form = target.querySelector<HTMLFormElement>('[data-testid="date-model-form"]')!;
 			const values = target.querySelector<HTMLOutputElement>('[data-testid="date-values"]')!;
 			const counts = target.querySelector<HTMLOutputElement>('[data-testid="date-counts"]')!;

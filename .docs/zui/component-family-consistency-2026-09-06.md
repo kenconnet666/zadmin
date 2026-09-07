@@ -40,3 +40,5 @@ E10A 补充：Form/Field/Input/PasswordInput/Textarea/Checkbox/NativeSelect/Chec
 3. 检查实际组合中的默认值、五档/八字级、多主题、RTL、窄屏、readonly/disabled/loading、进入/退出/中断/reduced、原生表单和Portal/owner生命周期。
 4. 使用最终候选提交的适用CI执行结果证明整组行为；源码资产、metadata stable、历史提交绿灯或单页截图均不足以结束目标。
 5. 记录未覆盖边界与仍需修改事项；未完成或证据不足时保持总目标进行中。
+
+E12补充：TimePicker/TimeRangePicker已共享TimePickerPanel，DateTimeField组合Date/TimeField；FormControlDraftState、resetDraft、公共分段边界导航、五档componentDefaults与locale-pack统一。Date/Time在InputGroup中由Group独占focus ring。已点查跨字段键盘、时区显示、范围preset/confirm、raw draft阻止提交和390px布局；全家族motion中断/reduced、全部状态与当前提交远程执行仍是最终门槛。

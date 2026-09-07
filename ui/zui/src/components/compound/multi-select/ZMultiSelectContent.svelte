@@ -187,6 +187,7 @@
 		ariaLabelledBy={null}
 		bind:ref
 		class={[sizingClass, className]}
+		dir={rest.dir ?? zui.direction}
 		initialFocus={() => virtualRef}
 		role="presentation"
 		{style}
@@ -253,6 +254,7 @@
 		ariaLabelledBy={popover.triggerId}
 		bind:ref
 		class={[sizingClass, className]}
+		dir={rest.dir ?? zui.direction}
 		initialFocus={() => ref}
 		role="listbox"
 		{style}

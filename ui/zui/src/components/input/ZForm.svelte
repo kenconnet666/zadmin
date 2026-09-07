@@ -48,7 +48,7 @@
 		readonly submitted: boolean;
 		readonly submitting: boolean;
 		readonly validating: boolean;
-		/** No currently reported errors; validate() refreshes schema and includes all error layers. */
+		/** No reported errors or intrinsically invalid control drafts; validate() also refreshes schema. */
 		readonly valid: boolean;
 		readonly errors: PublicFormErrors;
 	}
@@ -396,6 +396,7 @@
 	import { onDestroy, tick, untrack } from 'svelte';
 	import FormResetSignal from '../../runtime/form/FormResetSignal.svelte';
 	import { NativeFormBaseline } from '../../runtime/form/native-form-baseline.js';
+	import { FormValueControls } from '../../runtime/form/form-value-controls.js';
 	import {
 		getChangedFormPaths,
 		getFormValue,
@@ -488,7 +489,9 @@
 	const lifecycle = { active: true };
 	const nativeBaseline = new NativeFormBaseline();
 	let nativeValueEpoch = 0;
-	const valueControls = new Map<string, Map<symbol, () => HTMLElement | null>>();
+	const valueControls = new FormValueControls();
+	const validatedControls = new Set<string>();
+	let draftRevision = $state(0);
 	const lists = new Map<symbol, FormListRegistration>();
 	let reconciledModel: FormModel<TValues> | undefined;
 	let reconciledValues: unknown;
@@ -505,7 +508,14 @@
 	const registry = new FormRegistry(
 		(path, preserved) => {
 			nativeBaseline.forget(fieldPathKey(path));
-			if (!lifecycle.active || preserved) return;
+			if (!lifecycle.active) return;
+			if (preserved) {
+				// A destroyed control cannot retain its raw draft; retain only canonical baseline dirtiness.
+				if (model)
+					registry.setDirty(path, listForField(path)?.isDirty(path) ?? model.isDirty(path));
+				publishErrorLayers();
+				return;
+			}
 			if (model && typeof path.at(-1) !== 'number') model.removeFieldValue(path);
 			clearErrors([path]);
 		},
@@ -557,16 +567,32 @@
 	const formState = $derived.by((): FormState => {
 		const fields = registry.summary();
 		return Object.freeze({
-			dirty: model ? model.dirty : fields.dirty,
+			dirty: (model?.dirty ?? false) || fields.dirty,
 			touched: fields.touched,
 			submitted,
 			submitting,
 			validating,
-			valid: !invalid,
+			valid: !invalid && !hasInvalidDraft(),
 			errors
 		});
 	});
 	let reportedState: FormState | undefined;
+	$effect(() => {
+		const form = ref;
+		const Observer = form?.ownerDocument.defaultView?.MutationObserver;
+		if (!form || !Observer) return;
+		const observer = new Observer((records) => {
+			if (!records.some((record) => form.contains(record.target) || record.target.contains(form)))
+				return;
+			for (const id of registry.registeredInstances()) scheduleDirty(id);
+		});
+		observer.observe(form.ownerDocument.documentElement, {
+			subtree: true,
+			attributes: true,
+			attributeFilter: ['disabled', 'data-disabled']
+		});
+		return () => observer.disconnect();
+	});
 	$effect(() => {
 		const next = formState;
 		const notify = onStateChange;
@@ -596,7 +622,20 @@
 		publishErrorLayers();
 	}
 	function publishErrorLayers(): void {
-		const next = mergeFormErrorLayers(errorLayers);
+		const merged: Record<string, readonly string[]> = { ...mergeFormErrorLayers(errorLayers) };
+		for (const instanceId of registry.registeredInstances()) {
+			const field = registry.fieldInfo(instanceId)!;
+			if (!submitted && !validatedControls.has(instanceId) && !registry.state(field.path).touched)
+				continue;
+			const messages = valueControls
+				.drafts(instanceId)
+				.filter((draft) => !draft.valid)
+				.map((draft) => draft.message || zui.localePack.form.invalidValue);
+			if (messages.length === 0) continue;
+			const key = fieldPathToString(field.path);
+			merged[key] = [...new Set([...(merged[key] ?? []), ...messages])];
+		}
+		const next = freezeErrors(merged);
 		registry.syncErrors(next);
 		if (sameStateValue(errors, next)) {
 			publishedErrors = errors;
@@ -643,7 +682,33 @@
 	}
 	function fieldIsDirty(pathInput: FieldPathInput): boolean {
 		const path = normalizeFieldPath(pathInput);
-		return listForField(path)?.isDirty(path) ?? model?.isDirty(path) ?? false;
+		return (
+			(listForField(path)?.isDirty(path) ?? model?.isDirty(path) ?? false) || draftIsDirty(path)
+		);
+	}
+	function draftIsDirty(path: FieldPath): boolean {
+		draftRevision;
+		return registry
+			.registeredInstances()
+			.some(
+				(id) =>
+					fieldPathKey(registry.fieldInfo(id)!.path) === fieldPathKey(path) &&
+					valueControls.drafts(id).some((draft) => draft.dirty)
+			);
+	}
+	function hasInvalidDraft(): boolean {
+		draftRevision;
+		return registry
+			.registeredInstances()
+			.some((id) => valueControls.drafts(id).some((draft) => !draft.valid));
+	}
+	function refreshDrafts(): void {
+		if (valueControls.refresh()) {
+			draftRevision += 1;
+			// Raw edits may leave the canonical model unchanged; invalidate in-flight validation too.
+			validationEpoch += 1;
+		}
+		publishErrorLayers();
 	}
 	function prepareList(change: FormListReconcile): { commit(): void } {
 		const registryMutation = registry.prepareList(change);
@@ -688,6 +753,7 @@
 			dirtyScheduled = false;
 			const instances = [...pendingDirty];
 			pendingDirty.clear();
+			refreshDrafts();
 			const data = model ? undefined : readFormData();
 			for (const id of instances) {
 				const field = registry.fieldInfo(id);
@@ -696,7 +762,8 @@
 					field.path,
 					model
 						? fieldIsDirty(field.path)
-						: nativeBaseline.isDirty(fieldPathKey(field.path), field.htmlName, data!)
+						: nativeBaseline.isDirty(fieldPathKey(field.path), field.htmlName, data!) ||
+								draftIsDirty(normalizeFieldPath(field.path))
 				);
 			}
 		});
@@ -704,8 +771,7 @@
 	function assertModelControls(): void {
 		if (!model) return;
 		for (const instanceId of registry.registeredInstances()) {
-			const controls = valueControls.get(instanceId);
-			if (!controls || controls.size !== 1)
+			if (valueControls.count(instanceId) !== 1)
 				throw new TypeError(
 					`ZForm model field ${JSON.stringify(registry.fieldInfo(instanceId)?.path)} requires exactly one supported value owner; use a compound control for multiple inputs.`
 				);
@@ -734,6 +800,12 @@
 	): Promise<FormValidationResult<FormOutput<TSchema, TValues>>> {
 		assertModelControls();
 		const paths = uniquePaths(pathInputs);
+		for (const id of registry.registeredInstances()) {
+			const path = registry.fieldInfo(id)!.path;
+			if (full || paths.some((target) => fieldPathStartsWith(path, target)))
+				validatedControls.add(id);
+		}
+		refreshDrafts();
 		const ticket = registry.beginValidation(paths);
 		const epoch = validationEpoch;
 		const runId = (validationRunId += 1);
@@ -742,16 +814,19 @@
 		try {
 			const input = model ? model.values : formDataToObject(formData, registry.formDataPaths());
 			const result = schema ? await schema['~standard'].validate(input) : { value: input };
+			refreshDrafts();
 			const next: FormErrors = result.issues
 				? issuesToFormErrors(result.issues)
 				: Object.freeze({});
 			const { outdated } = commitValidation(ticket, next, full, epoch);
 			const scopedErrors: FormErrors = full ? errors : errorsForPaths(errors, paths);
+			const valid =
+				!outdated && Object.values(scopedErrors).every((messages) => messages.length === 0);
 			return {
-				data: result.issues ? undefined : (result.value as FormOutput<TSchema, TValues>),
+				data: valid && !result.issues ? (result.value as FormOutput<TSchema, TValues>) : undefined,
 				errors: scopedErrors,
 				outdated,
-				valid: Object.values(scopedErrors).every((messages) => messages.length === 0)
+				valid
 			};
 		} catch (error) {
 			const message = validationMessages.unexpected ?? zui.localePack.form.unexpectedValidation;
@@ -853,14 +928,17 @@
 		get model() {
 			return model;
 		},
-		registerValueControl(instanceId, element) {
-			const token = Symbol();
-			const owners = valueControls.get(instanceId) ?? new Map<symbol, () => HTMLElement | null>();
-			owners.set(token, element);
-			valueControls.set(instanceId, owners);
+		registerValueControl(instanceId, element, draftState, resetDraft) {
+			const unregister = valueControls.register(instanceId, element, draftState, resetDraft);
+			scheduleDirty(instanceId);
 			return () => {
-				owners.delete(token);
-				if (owners.size === 0) valueControls.delete(instanceId);
+				const field = registry.fieldInfo(instanceId);
+				unregister();
+				validatedControls.delete(instanceId);
+				if (!lifecycle.active) return;
+				draftRevision += 1;
+				if (field && model) registry.setDirty(field.path, fieldIsDirty(field.path));
+				scheduleDirty(instanceId);
 			};
 		},
 		controlValueChanged: scheduleDirty,
@@ -878,7 +956,10 @@
 			)
 				return;
 			if (trigger === 'change') scheduleDirty(instanceId);
-			else registry.markTouched(instanceId);
+			else {
+				registry.markTouched(instanceId);
+				refreshDrafts();
+			}
 			if (model && trigger === 'change') return;
 			if (trigger === 'change' && field) clearServerErrors([normalizeFieldPath(field.path)]);
 			scheduleValidation(trigger, registry.affectedPaths(instanceId));
@@ -987,11 +1068,12 @@
 		const externalErrors = errors;
 		untrack(() => {
 			if (externalErrors !== publishedErrors) publishErrors(externalErrors);
-			else registry.syncErrors(mergeFormErrorLayers(errorLayers));
+			else registry.syncErrors(errors);
 		});
 	});
 
 	function resetFromForm(): void {
+		validatedControls.clear();
 		pendingReset = undefined;
 		submissionId += 1;
 		submitting = false;
@@ -1064,8 +1146,14 @@
 				const list = listForField(normalized);
 				if (list) list.resetField(normalized);
 				else current.resetField(path);
-				if (!fieldIsDirty(path))
+				if (!(list?.isDirty(normalized) ?? current.isDirty(normalized)))
 					registry.batch(() => {
+						for (const id of registry.registeredInstances()) {
+							if (!fieldPathStartsWith(registry.fieldInfo(id)!.path, normalized)) continue;
+							valueControls.resetDraft(id);
+							validatedControls.delete(id);
+						}
+						refreshDrafts();
 						registry.resetField(path);
 						clearErrors([path]);
 					});
@@ -1184,6 +1272,7 @@
 		nativeBaseline.clear();
 		pendingDirty.clear();
 		valueControls.clear();
+		validatedControls.clear();
 		lists.clear();
 		movingListScopes.clear();
 		listTransitionGeneration += 1;

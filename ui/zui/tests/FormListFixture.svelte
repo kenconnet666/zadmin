@@ -45,7 +45,10 @@
 		write: () => undefined
 	});
 	let rejectedResult = $state('none');
-	let rejectedController = $state<ZFormController<unknown, typeof rejectedOwner> | null>(null);
+	let rejectedController = $state<ZFormController<
+		typeof rejectedOwner,
+		typeof rejectedOwner
+	> | null>(null);
 	export function setReadonly(value: boolean): void {
 		readonly = value;
 	}

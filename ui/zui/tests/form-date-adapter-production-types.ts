@@ -37,10 +37,10 @@ const missingModel = createFormModel<{
 	readonly time?: Time | null;
 }>({ defaultValues: {} });
 const form = { model } satisfies ZFormProps<undefined, DateValues>;
-let controller: ZFormController<DateValues, DateValues> | null = null;
-controller?.setFieldValue('calendar', new CalendarDate(2026, 9, 10));
-controller?.setFieldValue('time', new Time(10));
-controller?.setFieldValue('range', { start: null, end: new CalendarDate(2026, 9, 11) });
+declare const controller: ZFormController<DateValues, DateValues>;
+controller.setFieldValue('calendar', new CalendarDate(2026, 9, 10));
+controller.setFieldValue('time', new Time(10));
+controller.setFieldValue('range', { start: null, end: new CalendarDate(2026, 9, 11) });
 
 const calendar = { value: new CalendarDate(2026, 9, 7) } satisfies ZCalendarProps;
 const dateField = { value: null } satisfies ZDateFieldProps;
@@ -52,8 +52,8 @@ const range = {
 
 // @ts-expect-error Native Date is not a CalendarDate value.
 const wrongPicker = { value: new Date() } satisfies ZDatePickerProps;
-// @ts-expect-error Range endpoints are explicitly nullable, not omittable.
 const wrongRange = {
+	// @ts-expect-error Range endpoints are explicitly nullable, not omittable.
 	value: { start: new CalendarDate(2026, 9, 9) }
 } satisfies ZDateRangePickerProps;
 // @ts-expect-error TimeField granularity is a closed public union.

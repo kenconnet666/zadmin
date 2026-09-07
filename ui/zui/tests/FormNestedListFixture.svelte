@@ -2,7 +2,8 @@
 	import type { StandardSchemaV1 } from '@standard-schema/spec';
 	import ZForm, { type ZFormController } from '../src/components/input/ZForm.svelte';
 	import ZFormField from '../src/components/input/ZFormField.svelte';
-	import ZFormList from '../src/components/input/ZFormList.svelte';
+	import ZFormList, { type FormListOperations } from '../src/components/input/ZFormList.svelte';
+	import type { FormArrayRow } from '../src/runtime/form/form-array.svelte.js';
 	import ZInput from '../src/components/input/ZInput.svelte';
 	import { createFormModel } from '../src/runtime/form/form-model.svelte.js';
 
@@ -126,7 +127,10 @@
 
 <ZForm bind:controller {model} {schema} data-testid="nested-list-form">
 	<ZFormList name="groups" data-testid="outer-list">
-		{#snippet children(groups, outerOperations)}
+		{#snippet children(
+			groups: readonly FormArrayRow<Group>[],
+			outerOperations: FormListOperations<Group>
+		)}
 			{#each groups as group (group.id)}
 				<section data-main-group-id={group.id} data-group-key={group.value.key}>
 					<ZFormList name={[...group.path, 'members']} data-members-for={group.value.key}>
@@ -190,7 +194,10 @@
 	data-testid="rejected-nested-form"
 >
 	<ZFormList name="groups" data-testid="rejected-outer-list">
-		{#snippet children(groups, outerOperations)}
+		{#snippet children(
+			groups: readonly FormArrayRow<Group>[],
+			outerOperations: FormListOperations<Group>
+		)}
 			{#each groups as group (group.id)}
 				<section data-rejected-group-id={group.id} data-rejected-group-key={group.value.key}>
 					<ZFormList name={[...group.path, 'members']}>
