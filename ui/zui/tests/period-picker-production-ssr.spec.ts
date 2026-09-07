@@ -15,23 +15,25 @@ function renderedForm(body: string, testId: string): string {
 
 describe('ZPeriodPicker SSR contract', () => {
 	it('rejects conflicting period rules before a popup is mounted', () => {
-		expect(() =>
-			render(ZPeriodPicker, {
-				props: {
-					granularity: 'quarter',
-					value: quarterPeriod(2026, 1, 4),
-					fiscalYearStartMonth: 1
-				}
-			})
+		expect(
+			() =>
+				render(ZPeriodPicker, {
+					props: {
+						granularity: 'quarter',
+						value: quarterPeriod(2026, 1, 4),
+						fiscalYearStartMonth: 1
+					}
+				}).body
 		).toThrow(/fiscalYearStartMonth/u);
-		expect(() =>
-			render(ZPeriodPicker, {
-				props: {
-					granularity: 'week',
-					defaultValue: weekPeriod(2026, 1),
-					weekRules: { firstDayOfWeek: 'sun', minimalDaysInFirstWeek: 1 }
-				}
-			})
+		expect(
+			() =>
+				render(ZPeriodPicker, {
+					props: {
+						granularity: 'week',
+						defaultValue: weekPeriod(2026, 1),
+						weekRules: { firstDayOfWeek: 'sun', minimalDaysInFirstWeek: 1 }
+					}
+				}).body
 		).toThrow(/weekRules/u);
 	});
 	it('serializes each single, repeated multiple and range owner once while keeping panels closed', () => {

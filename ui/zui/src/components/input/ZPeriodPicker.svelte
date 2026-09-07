@@ -432,8 +432,12 @@
 >
 	import CalendarDays from '@lucide/svelte/icons/calendar-days';
 	import X from '@lucide/svelte/icons/x';
-	import { onDestroy, untrack } from 'svelte';
-	import ZPeriodCalendar from './ZPeriodCalendar.svelte';
+	import { onDestroy, untrack, type Snippet } from 'svelte';
+	import ZPeriodCalendar, {
+		type PeriodCalendarCellContext,
+		type PeriodCalendarHeaderContext,
+		type ZPeriodCalendarProps
+	} from './ZPeriodCalendar.svelte';
 	import ZInputGroup from './ZInputGroup.svelte';
 	import ZButton from '../gene/ZButton.svelte';
 	import ZPopover from '../compound/popover/ZPopover.svelte';
@@ -472,6 +476,7 @@
 	} from '../../runtime/period.js';
 
 	type SelectionValue = PeriodSelectionValue<TKind, TMode>;
+	type KindPeriod = PeriodOfKind<TKind>;
 	let {
 		'aria-label': ariaLabel,
 		'aria-labelledby': ariaLabelledBy,
@@ -528,6 +533,23 @@
 		...rest
 	}: ZPeriodPickerProps<TKind, TMode> = $props();
 	const zui = useZui();
+	const typedFormatter = $derived(formatter as ((value: SelectionValue) => string) | undefined);
+	const typedHeader = $derived(
+		header as Snippet<[context: PeriodCalendarHeaderContext<TKind>]> | undefined
+	);
+	const typedOnCommit = $derived(onCommit as ((value: SelectionValue) => void) | undefined);
+	const typedOnFocusedValueChange = $derived(
+		onFocusedValueChange as ((period: KindPeriod) => void) | undefined
+	);
+	const typedOnValueChange = $derived(
+		onValueChange as ((value: SelectionValue) => void) | undefined
+	);
+	const typedPeriodCell = $derived(
+		periodCell as Snippet<[context: PeriodCalendarCellContext<TKind>]> | undefined
+	);
+	const typedUnavailable = $derived(
+		isPeriodUnavailable as ((period: KindPeriod) => boolean) | undefined
+	);
 	const fieldOwner = claimZFieldControlOwner();
 	const field = fieldOwner.field;
 	const valueScope = claimFormValueScope();
@@ -564,18 +586,26 @@
 			throw new TypeError('ZPeriodPicker granularity must be month, year, quarter or week.');
 		if (commitMode !== 'immediate' && commitMode !== 'confirm')
 			throw new TypeError('ZPeriodPicker commitMode must be immediate or confirm.');
-		const minimum = normalizePeriodSelection('single', minValue, granularity);
-		const maximum = normalizePeriodSelection('single', maxValue, granularity);
+		const minimum = normalizePeriodSelection('single', minValue, granularity) as KindPeriod | null;
+		const maximum = normalizePeriodSelection('single', maxValue, granularity) as KindPeriod | null;
 		if (minimum && maximum && comparePeriods(minimum, maximum) > 0)
 			throw new RangeError('ZPeriodPicker minValue cannot exceed maxValue.');
-		const selection = normalizePeriodSelection(selectionMode, candidate, granularity);
-		const initial = normalizePeriodSelection(selectionMode, defaultValue, granularity);
+		const selection = normalizePeriodSelection(
+			selectionMode,
+			candidate,
+			granularity
+		) as SelectionValue;
+		const initial = normalizePeriodSelection(
+			selectionMode,
+			defaultValue,
+			granularity
+		) as SelectionValue;
 		resolvePeriodConfiguration({
 			kind: granularity,
 			periods: [
 				...selectedPeriods(selection),
-				focusedValue,
-				defaultFocusedValue,
+				focusedValue as KindPeriod | undefined,
+				defaultFocusedValue as KindPeriod | undefined,
 				...selectedPeriods(initial),
 				minimum,
 				maximum
@@ -592,11 +622,11 @@
 			element: () => ref,
 			normalizeModelValue: normalize,
 			draftState: () => inspectPickerDraft(),
-			onChange: () => onValueChange,
+			onChange: () => typedOnValueChange,
 			owner: 'ZPeriodPicker',
-			read: () => value,
+			read: () => value as SelectionValue | undefined,
 			write: (next) => {
-				value = next;
+				value = next as typeof value;
 			},
 			resetDraft: () => {
 				panelValue = valueState.current;
@@ -622,7 +652,7 @@
 	const intrinsic = $derived(inspectPickerDraft());
 	const resolvedInvalid = $derived(invalidProp || field?.invalid || !intrinsic.valid);
 	const panelValid = $derived(inspectSelection(panelValue).valid);
-	const display = $derived(formatter?.(current) ?? selectionLabel(current));
+	const display = $derived(typedFormatter?.(current) ?? selectionLabel(current));
 	const entries = $derived<readonly FormValueEntry[]>(formEntries(current));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
@@ -670,19 +700,19 @@
 		})
 	);
 
-	function selectedPeriods(candidate: SelectionValue): readonly PeriodOfKind<TKind>[] {
-		if (selectionMode === 'multiple') return candidate as readonly PeriodOfKind<TKind>[];
+	function selectedPeriods(candidate: SelectionValue): readonly KindPeriod[] {
+		if (selectionMode === 'multiple') return candidate as readonly KindPeriod[];
 		if (selectionMode === 'range') {
 			const range = candidate as PeriodRangeValue<TKind> | null;
-			return [range?.start, range?.end].filter((period): period is PeriodOfKind<TKind> => !!period);
+			return [range?.start, range?.end].filter((period): period is KindPeriod => !!period);
 		}
-		return candidate ? [candidate as PeriodOfKind<TKind>] : [];
+		return candidate ? [candidate as KindPeriod] : [];
 	}
-	function unavailable(period: PeriodOfKind<TKind>): boolean {
+	function unavailable(period: KindPeriod): boolean {
 		return Boolean(
 			(minValue && comparePeriods(period, minValue) < 0) ||
 			(maxValue && comparePeriods(period, maxValue) > 0) ||
-			isPeriodUnavailable?.(period)
+			typedUnavailable?.(period)
 		);
 	}
 	function incomplete(candidate: SelectionValue): boolean {
@@ -700,7 +730,7 @@
 			(selectionMode !== 'range' ||
 				isPeriodRangeAvailable(
 					candidate as PeriodRangeValue<TKind> | null,
-					isPeriodUnavailable,
+					typedUnavailable,
 					allowNonContiguousRange
 				));
 		return Object.freeze({
@@ -759,13 +789,13 @@
 		panelDirty = true;
 		if (commitMode !== 'immediate' || !accept(panelValue)) return;
 		panelDirty = false;
-		if (!incomplete(panelValue) || allowEmpty) onCommit?.(panelValue);
+		if (!incomplete(panelValue) || allowEmpty) typedOnCommit?.(panelValue);
 		if (resolvedCloseOnSelect && !incomplete(panelValue)) setOpen(false);
 	}
 	function confirm(): void {
 		if (!panelValid || !accept(panelValue)) return;
 		panelDirty = false;
-		onCommit?.(panelValue);
+		typedOnCommit?.(panelValue);
 		setOpen(false);
 	}
 	function clear(): void {
@@ -773,7 +803,7 @@
 		if (!accept(empty)) return;
 		panelValue = empty;
 		panelDirty = false;
-		onCommit?.(empty);
+		typedOnCommit?.(empty);
 		setOpen(false);
 		triggerRef?.focus({ preventScroll: true });
 	}
@@ -785,7 +815,7 @@
 		valueState.reset();
 		panelValue = valueState.current;
 		panelDirty = false;
-		focusedValue = defaultFocusedValue;
+		focusedValue = defaultFocusedValue as typeof focusedValue;
 		open = false;
 	}
 	function handleTriggerKey(event: KeyboardEvent): void {
@@ -810,6 +840,42 @@
 		previous = next;
 		previouslyOpen = visible;
 	});
+	const calendarProps = $derived.by(
+		() =>
+			({
+				allowEmpty,
+				allowNonContiguousRange,
+				calendarLabel,
+				defaultFocusedValue: defaultFocusedValue as KindPeriod | undefined,
+				dir: resolvedDirection,
+				disabled: resolvedDisabled,
+				fiscalYearStartMonth,
+				focusedValue: focusedValue as KindPeriod | undefined,
+				formParticipation: 'none',
+				granularity: granularity as TKind,
+				header: typedHeader,
+				isPeriodUnavailable: typedUnavailable,
+				locale: resolvedLocale,
+				maxValue: maxValue as KindPeriod | undefined,
+				minValue: minValue as KindPeriod | undefined,
+				nextPageLabel,
+				onFocusedValueChange: (next: KindPeriod) => {
+					focusedValue = next as typeof focusedValue;
+					typedOnFocusedValueChange?.(next);
+				},
+				onValueChange: select,
+				periodCell: typedPeriodCell,
+				previousPageLabel,
+				readonly: resolvedReadonly,
+				required: resolvedRequired,
+				selectionMode: selectionMode as TMode,
+				showWeekNumbers,
+				size: resolvedSize,
+				timeZone: resolvedTimeZone,
+				value: panelValue,
+				weekRules
+			}) as unknown as ZPeriodCalendarProps<TKind, TMode>
+	);
 	onDestroy(fieldOwner.registerFocusOwner(() => triggerRef?.focus({ preventScroll: true })));
 </script>
 
@@ -879,40 +945,7 @@
 			dir={resolvedDirection}
 			initialFocus={() => calendarRef?.querySelector<HTMLElement>('[tabindex="0"]') ?? null}
 		>
-			<ZPeriodCalendar
-				bind:ref={calendarRef}
-				{granularity}
-				{selectionMode}
-				value={panelValue}
-				onValueChange={select}
-				formParticipation="none"
-				{allowEmpty}
-				{allowNonContiguousRange}
-				{calendarLabel}
-				{header}
-				{defaultFocusedValue}
-				{focusedValue}
-				onFocusedValueChange={(next) => {
-					focusedValue = next;
-					onFocusedValueChange?.(next);
-				}}
-				{fiscalYearStartMonth}
-				{weekRules}
-				{minValue}
-				{maxValue}
-				{isPeriodUnavailable}
-				{periodCell}
-				{showWeekNumbers}
-				{previousPageLabel}
-				{nextPageLabel}
-				locale={resolvedLocale}
-				timeZone={resolvedTimeZone}
-				size={resolvedSize}
-				dir={resolvedDirection}
-				disabled={resolvedDisabled}
-				readonly={resolvedReadonly}
-				required={resolvedRequired}
-			/>
+			<ZPeriodCalendar bind:ref={calendarRef} {...calendarProps} />
 			{#if commitMode === 'confirm'}<div class={footerClass} data-slot="footer">
 					<ZButton size={resolvedSize} variant="ghost" onclick={() => setOpen(false)}
 						>{cancelLabel ?? zui.localePack.common.close}</ZButton

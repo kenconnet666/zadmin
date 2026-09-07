@@ -23,4 +23,10 @@
 			<ZTimeField defaultValue={new Time(13, 5, 9)} granularity="second" />
 		</ZStack>
 	</ZProvider>
+	<ZProvider locale="fa-IR-u-ca-persian">
+		<ZStack gap="small">
+			<ZText tone="muted">fa-IR使用Persian数字显示并接受同一数字输入</ZText>
+			<ZTimeField defaultValue={new Time(13, 5, 9, 125)} granularity="second" hourCycle={24} />
+		</ZStack>
+	</ZProvider>
 </ZStack>

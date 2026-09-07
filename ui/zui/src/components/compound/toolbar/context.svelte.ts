@@ -1,6 +1,7 @@
 import { getContext, setContext } from 'svelte';
 import type { Attachment } from 'svelte/attachments';
 
+import { createContextKey } from '../../../runtime/foundation/context-key.js';
 import type { CollectionNavigationReason } from '../../../runtime/collection/collection-navigation.svelte.js';
 import type { CompoundLogicalCollectionItem } from '../../../runtime/collection/compound-logical-collection.svelte.js';
 import type { SelectionKey } from '../../../runtime/collection/selection.js';
@@ -36,7 +37,7 @@ export interface ZToolbarContext {
 	tabIndex(value: SelectionKey, itemDisabled?: boolean): 0 | -1;
 }
 
-const TOOLBAR_CONTEXT = Symbol('zui-toolbar-context');
+const TOOLBAR_CONTEXT = createContextKey({ hot: import.meta.hot }, 'zui-toolbar-context');
 
 export function provideZToolbar(context: ZToolbarContext): ZToolbarContext {
 	setContext(TOOLBAR_CONTEXT, context);

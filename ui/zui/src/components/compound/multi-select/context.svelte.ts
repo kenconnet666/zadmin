@@ -1,5 +1,7 @@
 import { getContext, setContext } from 'svelte';
 
+import { createContextKey } from '../../../runtime/foundation/context-key.js';
+
 import type { CompoundLogicalCollectionItem } from '../../../runtime/collection/compound-logical-collection.svelte.js';
 import type { LogicalCollectionView } from '../../../runtime/collection/logical-collection.js';
 import type { SelectionKey } from '../../../runtime/collection/selection.js';
@@ -69,7 +71,7 @@ export interface ZMultiSelectContext {
 	toggle(value: SelectionKey, event: KeyboardEvent | MouseEvent): MultiSelectEvent;
 }
 
-const MULTI_SELECT_CONTEXT = Symbol('zui-multi-select-context');
+const MULTI_SELECT_CONTEXT = createContextKey({ hot: import.meta.hot }, 'zui-multi-select-context');
 
 export function provideZMultiSelect(context: ZMultiSelectContext): ZMultiSelectContext {
 	setContext(MULTI_SELECT_CONTEXT, context);

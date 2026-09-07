@@ -19,6 +19,8 @@ import RangeDemo from './RangeDemo.svelte';
 import rangeSource from './RangeDemo.svelte?raw';
 import ContentDemo from './ContentDemo.svelte';
 import contentSource from './ContentDemo.svelte?raw';
+import InternationalDemo from './InternationalDemo.svelte';
+import internationalSource from './InternationalDemo.svelte?raw';
 
 export const calendarDoc = defineComponentDoc(calendarMetadata, {
 	profiles: ['form-control', 'collection'],
@@ -62,6 +64,15 @@ export const calendarDoc = defineComponentDoc(calendarMetadata, {
 	},
 	demos: [
 		{
+			component: InternationalDemo,
+			covers: ['controlled', 'keyboard', 'locale', 'rtl'],
+			description:
+				'显示locale与业务Calendar owner独立：Hebrew/Persian切换不写值，Hebrew闰月和Japanese年号跨界仍回写原calendar。',
+			id: 'calendar-international-owner',
+			source: internationalSource,
+			title: '显示历法与业务Calendar owner'
+		},
+		{
 			component: ContentDemo,
 			covers: ['accessible-name', 'composition', 'keyboard'],
 			description:
@@ -77,7 +88,7 @@ export const calendarDoc = defineComponentDoc(calendarMetadata, {
 			title: '多月窗口、多选与周号',
 			covers: ['controlled', 'keyboard', 'locale'],
 			description:
-				'一个Calendar拥有多个网格，焦点窗口与选择独立，重复outside日期不再拥有第二个交互节点。'
+				'一个Calendar拥有多个网格，焦点窗口与选择独立，重复outside日期不再拥有第二个交互节点；周号按Gregorian week-year计算，locale与ISO规则决定周首和首周，不随显示历法改写。'
 		},
 		{
 			component: RangeSelectionDemo,

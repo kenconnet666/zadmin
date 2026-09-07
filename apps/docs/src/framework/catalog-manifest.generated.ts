@@ -1190,11 +1190,12 @@ export const componentCatalogManifest = Object.freeze([
 		keywords: ['calendar', 'grid', 'focused value', 'calendar date', 'range', 'rtl'],
 		profiles: ['form-control', 'collection'],
 		capabilities: [
+			'controlled',
+			'keyboard',
+			'locale',
+			'rtl',
 			'accessible-name',
 			'composition',
-			'keyboard',
-			'controlled',
-			'locale',
 			'invalid',
 			'variants-and-states',
 			'basic-render',
@@ -1207,7 +1208,29 @@ export const componentCatalogManifest = Object.freeze([
 			'external-clear',
 			'readonly'
 		],
-		demoCount: 9,
+		demoCount: 10,
+		publicComponentCount: 1
+	},
+	{
+		id: 'mini-calendar',
+		name: 'ZMiniCalendar',
+		category: 'input',
+		summary:
+			'MiniCalendar是ZCalendar strip view的单日期便利入口；选择、焦点、日期约束、键盘和FormData仍只有一个Calendar owner。',
+		status: 'experimental',
+		keywords: ['mini calendar', 'date strip', 'calendar date', 'form', 'rtl'],
+		profiles: ['form-control', 'collection'],
+		capabilities: [
+			'basic-render',
+			'controlled',
+			'keyboard',
+			'locale',
+			'composition',
+			'disabled',
+			'rtl',
+			'variants-and-states'
+		],
+		demoCount: 2,
 		publicComponentCount: 1
 	},
 	{
@@ -1333,30 +1356,39 @@ export const componentCatalogManifest = Object.freeze([
 		name: 'ZDateField',
 		category: 'input',
 		summary:
-			'本地化CalendarDate分段字段：locale驱动DOM顺序、nullable owner、完整/非法草稿分离、边界与不可用日期、Field焦点、FormValueBridge/reset及可复用bare外观。',
+			'本地化CalendarDate分段字段：locale的Unicode ca扩展决定真实display calendar，编辑后转换回原owner calendar；同时保留nullable owner、草稿验证、边界、Field焦点与FormValueBridge。',
 		status: 'stable',
-		keywords: ['date field', 'segments', 'calendar date', 'locale', 'form', 'nullable'],
+		keywords: [
+			'date field',
+			'segments',
+			'calendar date',
+			'international calendar',
+			'era',
+			'locale',
+			'form',
+			'nullable'
+		],
 		profiles: ['form-control'],
 		capabilities: [
+			'controlled',
+			'keyboard',
+			'locale',
+			'external-clear',
 			'composition',
 			'variants-and-states',
 			'basic-render',
 			'form-data',
 			'form-reset',
-			'keyboard',
 			'uncontrolled',
 			'accessible-name',
 			'disabled',
-			'locale',
 			'readonly',
 			'rtl',
 			'focus',
 			'invalid',
-			'controlled',
-			'external-clear',
 			'native-props'
 		],
-		demoCount: 6,
+		demoCount: 8,
 		publicComponentCount: 1
 	},
 	{

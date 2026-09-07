@@ -493,6 +493,7 @@ test('switches and persists all coordinated production themes', async ({ page })
 	await page.reload();
 	await expect(page.locator('html')).toHaveAttribute('data-theme', 'midnight-dark');
 	await expect(theme).toContainText('午夜专业');
+	await expect(page.getByText('ZUI', { exact: true })).toHaveCSS('color', 'rgb(248, 250, 252)');
 
 	const results = await new AxeBuilder({ page }).analyze();
 	expect(results.violations).toEqual([]);

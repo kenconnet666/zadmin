@@ -9,6 +9,7 @@
 
 	export type DateTimeFieldSize = ZControlSize;
 	export type DateTimeFieldFormParticipation = 'auto' | 'none';
+	type DateTimeFieldMode = 'local' | 'zoned';
 
 	interface ZDateTimeFieldSharedProps extends Omit<
 		HTMLAttributes<HTMLDivElement>,
@@ -63,7 +64,9 @@
 		extends ZDateTimeFieldSharedProps, ZDateTimeFieldLocalValueProps {}
 	export interface ZDateTimeFieldZonedProps
 		extends ZDateTimeFieldSharedProps, ZDateTimeFieldZonedValueProps {}
-	export type ZDateTimeFieldProps = ZDateTimeFieldLocalProps | ZDateTimeFieldZonedProps;
+	export type ZDateTimeFieldProps<TMode extends DateTimeFieldMode = DateTimeFieldMode> = {
+		readonly mode?: TMode;
+	} & (TMode extends 'zoned' ? ZDateTimeFieldZonedProps : ZDateTimeFieldLocalProps);
 
 	export const zuiMetadata = {
 		category: 'input',
@@ -282,8 +285,8 @@
 	} as const satisfies ZuiComponentMetadata;
 </script>
 
-<script lang="ts">
-	import { Time, today, toCalendarDateTime, toZoned } from '@internationalized/date';
+<script lang="ts" generics="TMode extends DateTimeFieldMode = DateTimeFieldMode">
+	import { Time, today, toCalendarDateTime, toZoned, type Calendar } from '@internationalized/date';
 	import { onDestroy, untrack } from 'svelte';
 	import {
 		composeDateTime,
@@ -294,6 +297,7 @@
 		normalizeDateTimeModelValue,
 		type DateTimeMode
 	} from '../../runtime/date-time.js';
+	import { preserveCalendarOwner, resolveOwnerCalendar } from '../../runtime/date.js';
 	import { controlSizeMetrics, resolveControlSize } from '../../runtime/foundation/control-size.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
@@ -344,7 +348,7 @@
 		maxValue,
 		minValue,
 		minuteStep = 1,
-		mode = 'local',
+		mode = 'local' as TMode,
 		name: nameProp,
 		onDraftChange,
 		onFormReset,
@@ -360,11 +364,12 @@
 		timeZone,
 		value = $bindable(),
 		...rest
-	}: ZDateTimeFieldProps = $props();
+	}: ZDateTimeFieldProps<TMode> = $props();
 	const zui = useZui();
 	const fieldOwner = claimZFieldControlOwner();
 	const field = fieldOwner.field;
-	const valueScope = formParticipation === 'auto' ? claimFormValueScope() : null;
+	const claimedValueScope = untrack(claimFormValueScope);
+	const valueScope = untrack(() => (formParticipation === 'auto' ? claimedValueScope : null));
 	const uid = $props.id();
 	const idBase = $derived(createZuiId(zui.idPrefix, uid, 'date-time-field'));
 	const controlId = $derived(controlIdProp ?? field?.controlId ?? `${idBase}-date`);
@@ -420,12 +425,24 @@
 			throw new RangeError('ZDateTimeField minValue cannot exceed maxValue.');
 		return { maximum, minimum };
 	});
+	const normalizedDefaultValue = $derived(
+		defaultValue === undefined
+			? null
+			: normalizeDateTimeModelValue(defaultValue, mode, 'ZDateTimeField defaultValue')
+	);
+	const explicitPlaceholderValue = $derived.by<DateTimeFieldValue | null>(() => {
+		if (placeholderValue === undefined) return null;
+		const normalized = normalizeDateTimeModelValue(
+			placeholderValue,
+			mode,
+			'ZDateTimeField placeholderValue'
+		);
+		if (!normalized) throw new TypeError('ZDateTimeField placeholderValue cannot be null.');
+		return normalized;
+	});
 	const valueState = createFormControlState<DateTimeFieldValue | null>(
 		{
-			defaultValue: () =>
-				defaultValue === undefined
-					? null
-					: normalizeDateTimeModelValue(defaultValue, mode, 'ZDateTimeField defaultValue'),
+			defaultValue: () => normalizedDefaultValue,
 			draftState: () => inspectCompositeDraft(),
 			element: () => ref,
 			normalizeModelValue: (candidate) =>
@@ -439,18 +456,31 @@
 		},
 		valueScope
 	);
+	let rememberedOwnerCalendar = $state.raw<Calendar | null>(
+		untrack(
+			() =>
+				normalizeDateTimeModelValue(valueState.current, mode, 'ZDateTimeField')?.calendar ??
+				normalizedDefaultValue?.calendar ??
+				explicitPlaceholderValue?.calendar ??
+				null
+		)
+	);
+	const configuredOwnerCalendar = $derived(
+		currentValue()?.calendar ??
+			normalizedDefaultValue?.calendar ??
+			explicitPlaceholderValue?.calendar ??
+			null
+	);
+	const ownerCalendar = $derived<Calendar>(
+		configuredOwnerCalendar ?? rememberedOwnerCalendar ?? resolveOwnerCalendar()
+	);
 	const placeholder = $derived.by((): DateTimeFieldValue => {
-		if (placeholderValue !== undefined) {
-			const normalized = normalizeDateTimeModelValue(
-				placeholderValue,
-				mode,
-				'ZDateTimeField placeholderValue'
-			);
-			if (!normalized) throw new TypeError('ZDateTimeField placeholderValue cannot be null.');
-			return normalized;
-		}
-		const local = toCalendarDateTime(today(resolvedTimeZone), new Time(0));
-		return mode === 'zoned' ? toZoned(local, resolvedTimeZone, disambiguation) : local;
+		const fallback = (() => {
+			if (explicitPlaceholderValue) return explicitPlaceholderValue;
+			const local = toCalendarDateTime(today(resolvedTimeZone), new Time(0));
+			return mode === 'zoned' ? toZoned(local, resolvedTimeZone, disambiguation) : local;
+		})();
+		return preserveCalendarOwner(fallback, ownerCalendar);
 	});
 	const placeholderParts = $derived(
 		dateTimeParts(displayDateTime(placeholder, mode, resolvedTimeZone))
@@ -463,8 +493,10 @@
 	let draftFailure = $state<DraftFailure>();
 	let ownerTimeZone = $state(
 		untrack(() =>
-			mode === 'zoned' && currentValue() instanceof ZonedDateTime
-				? (currentValue() as ZonedDateTime).timeZone
+			mode === 'zoned'
+				? ([currentValue(), normalizedDefaultValue, explicitPlaceholderValue].find(
+						(candidate): candidate is ZonedDateTime => candidate instanceof ZonedDateTime
+					)?.timeZone ?? resolvedTimeZone)
 				: resolvedTimeZone
 		)
 	);
@@ -542,6 +574,10 @@
 		});
 	}
 
+	function ownerCandidate(next: DateTimeFieldValue): DateTimeFieldValue {
+		return preserveCalendarOwner(next, ownerCalendar);
+	}
+
 	function unavailable(next: DateTimeFieldValue): boolean {
 		return valueIsUnavailable(
 			next,
@@ -559,7 +595,7 @@
 			return;
 		}
 		try {
-			const next = combinedValue()!;
+			const next = ownerCandidate(combinedValue()!);
 			if (unavailable(next)) {
 				draftFailure = 'unavailable';
 				return;
@@ -576,7 +612,7 @@
 	}
 
 	function handleDateValue(next: import('@internationalized/date').CalendarDate | null): void {
-		dateValue = next;
+		dateValue = next ? preserveCalendarOwner(next, ownerCalendar) : null;
 		composeDraft();
 	}
 
@@ -587,8 +623,8 @@
 
 	function syncOwnedValue(next: DateTimeFieldValue | null): void {
 		const normalized = normalizeDateTimeModelValue(next, mode, 'ZDateTimeField');
+		if (normalized) rememberedOwnerCalendar = normalized.calendar;
 		if (normalized instanceof ZonedDateTime) ownerTimeZone = normalized.timeZone;
-		else if (mode === 'zoned') ownerTimeZone = resolvedTimeZone;
 		const parts = normalized
 			? dateTimeParts(displayDateTime(normalized, mode, resolvedTimeZone))
 			: null;
@@ -634,7 +670,9 @@
 	let observedValueKey: string | undefined;
 	$effect(() => {
 		const current = currentValue();
-		const key = `${mode}:${resolvedTimeZone}:${current?.toString() ?? 'null'}`;
+		const key = current
+			? `${mode}:${resolvedTimeZone}:${current.calendar.identifier}:${current.era}:${current.toString()}:${current instanceof ZonedDateTime ? `${current.timeZone}:${current.offset}` : ''}`
+			: `${mode}:${resolvedTimeZone}:null`;
 		if (key === observedValueKey) return;
 		observedValueKey = key;
 		untrack(() => syncOwnedValue(current));
@@ -645,7 +683,9 @@
 	});
 	onDestroy(
 		fieldOwner.registerFocusOwner(() =>
-			compositeRef?.querySelector<HTMLInputElement>('input')?.focus({ preventScroll: true })
+			compositeRef
+				?.querySelector<HTMLInputElement | HTMLSelectElement>('input, select')
+				?.focus({ preventScroll: true })
 		)
 	);
 </script>

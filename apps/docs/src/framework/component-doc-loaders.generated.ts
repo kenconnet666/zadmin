@@ -126,6 +126,10 @@ export const componentDocLoaders = {
 		),
 	calendar: () =>
 		import('../content/components/input/calendar/doc.js').then((module) => module.calendarDoc),
+	'mini-calendar': () =>
+		import('../content/components/input/mini-calendar/doc.js').then(
+			(module) => module.miniCalendarDoc
+		),
 	cascader: () =>
 		import('../content/components/input/cascader/doc.js').then((module) => module.cascaderDoc),
 	'color-picker': () =>

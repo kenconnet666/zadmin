@@ -10,11 +10,13 @@
 	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
 	import type { TimePickerDayPeriod } from '../../runtime/time-picker.js';
 	import type {
-		PopoverPickerPresentationProps,
-		InlinePickerPresentationProps
+		InlinePickerPresentationProps,
+		PickerPresentation,
+		PopoverPickerPresentationProps
 	} from '../../runtime/picker-presentation.js';
 
 	export type DateTimePickerCommitMode = 'confirm' | 'immediate';
+	type DateTimePickerMode = 'local' | 'zoned';
 	export type DateTimePickerSize = ZControlSize;
 	export type { DateTimePickerDirection } from '../../runtime/date-time-picker.js';
 
@@ -114,7 +116,16 @@
 			InlinePickerPresentationProps {}
 	export type ZDateTimePickerLocalProps = LocalPopoverProps | LocalInlineProps;
 	export type ZDateTimePickerZonedProps = ZonedPopoverProps | ZonedInlineProps;
-	export type ZDateTimePickerProps = ZDateTimePickerLocalProps | ZDateTimePickerZonedProps;
+	export type ZDateTimePickerProps<
+		TMode extends DateTimePickerMode = DateTimePickerMode,
+		TPresentation extends PickerPresentation = PickerPresentation
+	> = { readonly mode?: TMode; readonly presentation?: TPresentation } & (TMode extends 'zoned'
+		? TPresentation extends 'inline'
+			? ZonedInlineProps
+			: ZonedPopoverProps
+		: TPresentation extends 'inline'
+			? LocalInlineProps
+			: LocalPopoverProps);
 
 	export const zuiMetadata = {
 		bindings: [
@@ -492,14 +503,21 @@
 	} as const satisfies ZuiComponentMetadata;
 </script>
 
-<script lang="ts">
+<script
+	lang="ts"
+	generics="TMode extends DateTimePickerMode = DateTimePickerMode, TPresentation extends PickerPresentation = PickerPresentation"
+>
 	import CalendarClock from '@lucide/svelte/icons/calendar-clock';
 	import PickerInlineSurface from './PickerInlineSurface.svelte';
 	import { resolvePickerPresentation } from '../../runtime/picker-presentation.js';
 	import X from '@lucide/svelte/icons/x';
-	import { Time, today, toCalendarDateTime, toTimeZone, toZoned } from '@internationalized/date';
+	import { Time, today, toCalendarDateTime, toZoned, type Calendar } from '@internationalized/date';
 	import { onDestroy, untrack } from 'svelte';
-	import { resolveHourCycle } from '../../runtime/date.js';
+	import {
+		preserveCalendarOwner,
+		resolveHourCycle,
+		resolveOwnerCalendar
+	} from '../../runtime/date.js';
 	import { normalizeDateTimeModelValue } from '../../runtime/date-time.js';
 	import {
 		dateTimePickerValueAvailable,
@@ -568,7 +586,7 @@
 		maxValue,
 		minValue,
 		minuteStep = 1,
-		mode = 'local',
+		mode = 'local' as TMode,
 		name: nameProp,
 		nextLabel,
 		noAvailableTimeLabel,
@@ -578,7 +596,7 @@
 		onValueChange,
 		open = $bindable(),
 		pickerLabel,
-		presentation = 'popover',
+		presentation = 'popover' as TPresentation,
 		placement = 'bottom-start',
 		placeholderValue,
 		presets = [],
@@ -596,7 +614,7 @@
 		toggleDayPeriodLabel,
 		value = $bindable(),
 		...rest
-	}: ZDateTimePickerProps = $props();
+	}: ZDateTimePickerProps<TMode, TPresentation> = $props();
 	const zui = useZui();
 	const resolvedPresentation = $derived(resolvePickerPresentation(presentation));
 	const fieldOwner = claimZFieldControlOwner();
@@ -655,6 +673,21 @@
 	);
 	const describedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
 	const labelledBy = $derived(mergeAriaIds(ariaLabelledBy, field?.labelId));
+	const normalizedDefaultValue = $derived(
+		defaultValue === undefined
+			? null
+			: normalizeDateTimeModelValue(defaultValue, mode, 'ZDateTimePicker defaultValue')
+	);
+	const explicitPlaceholderValue = $derived.by<DateTimePickerValue | null>(() => {
+		if (placeholderValue === undefined) return null;
+		const normalized = normalizeDateTimeModelValue(
+			placeholderValue,
+			mode,
+			'ZDateTimePicker placeholderValue'
+		);
+		if (!normalized) throw new TypeError('ZDateTimePicker placeholderValue cannot be null.');
+		return normalized;
+	});
 	const constraints = $derived.by<DateTimePickerConstraints>(() => {
 		const resolved: DateTimePickerConstraints = {
 			disambiguation,
@@ -678,21 +711,6 @@
 		validateDateTimePickerConstraints(resolved);
 		return resolved;
 	});
-	const resolvedPlaceholderValue = $derived.by<DateTimePickerValue>(() => {
-		if (placeholderValue !== undefined) {
-			const normalized = normalizeDateTimeModelValue(
-				placeholderValue,
-				mode,
-				'ZDateTimePicker placeholderValue'
-			);
-			if (!normalized) throw new TypeError('ZDateTimePicker placeholderValue cannot be null.');
-			return normalized instanceof ZonedDateTime
-				? toTimeZone(normalized, resolvedTimeZone)
-				: normalized;
-		}
-		const local = toCalendarDateTime(today(resolvedTimeZone), new Time(0));
-		return mode === 'zoned' ? toZoned(local, resolvedTimeZone, disambiguation) : local;
-	});
 	let fieldRef = $state<HTMLDivElement | null>(null);
 	let fieldController = $state<{ rollbackDraft(): void } | null>(null);
 	let panelController = $state<DateTimePickerPanelController | null>(null);
@@ -702,10 +720,7 @@
 	let immediateCommitCandidate: DateTimePickerValue | null = null;
 	const valueState = createFormControlState<DateTimePickerValue | null>(
 		{
-			defaultValue: () =>
-				defaultValue === undefined
-					? null
-					: normalizeDateTimeModelValue(defaultValue, mode, 'ZDateTimePicker defaultValue'),
+			defaultValue: () => normalizedDefaultValue,
 			draftState: () => inspectDraftState(),
 			element: () => ref,
 			normalizeModelValue: (candidate) =>
@@ -719,6 +734,32 @@
 		},
 		valueScope
 	);
+	let rememberedOwnerCalendar = $state.raw<Calendar | null>(
+		untrack(
+			() =>
+				normalizeDateTimeModelValue(valueState.current, mode, 'ZDateTimePicker')?.calendar ??
+				normalizedDefaultValue?.calendar ??
+				explicitPlaceholderValue?.calendar ??
+				null
+		)
+	);
+	const configuredOwnerCalendar = $derived(
+		currentValue()?.calendar ??
+			normalizedDefaultValue?.calendar ??
+			explicitPlaceholderValue?.calendar ??
+			null
+	);
+	const ownerCalendar = $derived<Calendar>(
+		configuredOwnerCalendar ?? rememberedOwnerCalendar ?? resolveOwnerCalendar()
+	);
+	const resolvedPlaceholderValue = $derived.by<DateTimePickerValue>(() => {
+		const fallback = (() => {
+			if (explicitPlaceholderValue) return explicitPlaceholderValue;
+			const local = toCalendarDateTime(today(resolvedTimeZone), new Time(0));
+			return mode === 'zoned' ? toZoned(local, resolvedTimeZone, disambiguation) : local;
+		})();
+		return preserveCalendarOwner(fallback, ownerCalendar);
+	});
 	let fieldValue = $state<DateTimePickerValue | null>(
 		untrack(() => normalizeDateTimeModelValue(valueState.current, mode, 'ZDateTimePicker'))
 	);
@@ -871,14 +912,20 @@
 	}
 
 	function syncFieldValue(next = currentValue()): void {
+		if (next) rememberedOwnerCalendar = next.calendar;
 		fieldValue = next;
 		fieldController?.rollbackDraft();
 		fieldDraft = { dirty: false, valid: true };
 	}
 
+	function ownerCandidate(next: DateTimePickerValue | null): DateTimePickerValue | null {
+		return next ? preserveCalendarOwner(next, ownerCalendar) : null;
+	}
+
 	function updateValue(next: DateTimePickerValue | null): boolean {
 		if (resolvedDisabled || resolvedReadonly) return false;
-		const accepted = valueState.setFromUser(next) && sameFormValue(currentValue(), next);
+		const owned = ownerCandidate(next);
+		const accepted = valueState.setFromUser(owned) && sameFormValue(currentValue(), owned);
 		if (!accepted) {
 			syncFieldValue();
 			panelValue = panelVisible ? currentValue() : null;
@@ -891,47 +938,51 @@
 		// Stage the child projection before asking the canonical owner. A rejecting model can then
 		// always project the old canonical value back, even though the unbound child already wrote
 		// its own $bindable value during the same event.
-		fieldValue = next;
-		if (!updateValue(next)) return;
+		const owned = ownerCandidate(next);
+		fieldValue = owned;
+		if (!updateValue(owned)) return;
 		if (panelVisible) {
-			panelValue = next;
+			panelValue = currentValue();
 			panelDirty = false;
 		}
 	}
 
 	function updateFromPanel(next: DateTimePickerValue): void {
-		panelValue = next;
+		const owned = ownerCandidate(next)!;
+		panelValue = owned;
 		panelDirty = true;
-		if (resolvedCommitMode !== 'immediate' || !dateTimePickerValueAvailable(next, constraints))
+		if (resolvedCommitMode !== 'immediate' || !dateTimePickerValueAvailable(owned, constraints))
 			return;
-		if (!updateValue(next)) {
+		if (!updateValue(owned)) {
 			panelValue = currentValue();
 			panelDirty = false;
 			return;
 		}
 		panelDirty = false;
-		(onCommit as ((candidate: DateTimePickerValue | null) => void) | undefined)?.(next);
-		immediateCommitCandidate = next;
+		const committed = currentValue();
+		(onCommit as ((candidate: DateTimePickerValue | null) => void) | undefined)?.(committed);
+		immediateCommitCandidate = committed;
 		ownerMicrotask(() => {
-			if (immediateCommitCandidate && sameFormValue(immediateCommitCandidate, next))
+			if (immediateCommitCandidate && sameFormValue(immediateCommitCandidate, committed))
 				immediateCommitCandidate = null;
 		});
 	}
 
 	function confirmPanel(next: DateTimePickerValue): void {
+		const owned = ownerCandidate(next)!;
 		if (
 			resolvedCommitMode === 'immediate' &&
 			immediateCommitCandidate &&
-			sameFormValue(immediateCommitCandidate, next)
+			sameFormValue(immediateCommitCandidate, owned)
 		) {
 			immediateCommitCandidate = null;
 			panelDirty = false;
 			setOpen(false);
 			return;
 		}
-		if (!dateTimePickerValueAvailable(next, constraints) || !updateValue(next)) return;
+		if (!dateTimePickerValueAvailable(owned, constraints) || !updateValue(owned)) return;
 		panelDirty = false;
-		(onCommit as ((candidate: DateTimePickerValue | null) => void) | undefined)?.(next);
+		(onCommit as ((candidate: DateTimePickerValue | null) => void) | undefined)?.(currentValue());
 		setOpen(false);
 	}
 
@@ -960,7 +1011,9 @@
 		(onCommit as ((candidate: DateTimePickerValue | null) => void) | undefined)?.(null);
 		setOpen(false);
 		ownerMicrotask(() =>
-			fieldRef?.querySelector<HTMLInputElement>('input')?.focus({ preventScroll: true })
+			fieldRef
+				?.querySelector<HTMLInputElement | HTMLSelectElement>('input, select')
+				?.focus({ preventScroll: true })
 		);
 	}
 
@@ -988,6 +1041,7 @@
 		const current = currentValue();
 		const currentlyOpen = panelVisible;
 		const ownerChanged = !sameFormValue(current, observedOwner);
+		if (current) rememberedOwnerCalendar = current.calendar;
 		if (ownerChanged) syncFieldValue(current);
 		if (currentlyOpen && (!previouslyOpen || ownerChanged)) {
 			panelValue = current;
@@ -1004,7 +1058,9 @@
 	});
 	onDestroy(
 		fieldOwner.registerFocusOwner(() =>
-			fieldRef?.querySelector<HTMLInputElement>('input')?.focus({ preventScroll: true })
+			fieldRef
+				?.querySelector<HTMLInputElement | HTMLSelectElement>('input, select')
+				?.focus({ preventScroll: true })
 		)
 	);
 </script>

@@ -49,17 +49,18 @@ describe('ZPeriodCalendar SSR contract', () => {
 	});
 
 	it('rejects explicit week rules that conflict with the self-describing business value', () => {
-		expect(() =>
-			render(ZPeriodCalendar, {
-				props: {
-					granularity: 'week',
-					value: weekPeriod(2026, 10, {
-						firstDayOfWeek: 'sun',
-						minimalDaysInFirstWeek: 1
-					}),
-					weekRules: { firstDayOfWeek: 'mon', minimalDaysInFirstWeek: 4 }
-				}
-			})
+		expect(
+			() =>
+				render(ZPeriodCalendar, {
+					props: {
+						granularity: 'week',
+						value: weekPeriod(2026, 10, {
+							firstDayOfWeek: 'sun',
+							minimalDaysInFirstWeek: 1
+						}),
+						weekRules: { firstDayOfWeek: 'mon', minimalDaysInFirstWeek: 4 }
+					}
+				}).body
 		).toThrow(/weekRules conflict/u);
 	});
 

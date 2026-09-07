@@ -1,5 +1,7 @@
 import { getContext, setContext } from 'svelte';
 
+import { createContextKey } from '../../../runtime/foundation/context-key.js';
+
 import type { PortalTarget } from '../../../runtime/layer/portal.js';
 
 export interface ZDialogContext {
@@ -27,7 +29,7 @@ export interface ZDialogContext {
 	setTrigger(trigger: HTMLButtonElement | null): void;
 }
 
-const DIALOG_CONTEXT = Symbol('zui-dialog-context');
+const DIALOG_CONTEXT = createContextKey({ hot: import.meta.hot }, 'zui-dialog-context');
 
 export function provideZDialog(context: ZDialogContext): ZDialogContext {
 	setContext(DIALOG_CONTEXT, context);

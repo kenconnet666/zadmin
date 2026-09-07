@@ -92,6 +92,9 @@ export interface ZuiDateTimeLocale {
 }
 
 export interface ZuiDateLocale {
+	readonly era: string;
+	readonly nextDateWindow: string;
+	readonly previousDateWindow: string;
 	readonly week: string;
 	readonly weekNumber: (week: number) => string;
 	readonly invalidDate: string;
@@ -386,6 +389,9 @@ export const enUSLocalePack = Object.freeze({
 		invalidLocalTime: 'This local time does not exist or is ambiguous in the selected time zone'
 	}),
 	date: Object.freeze({
+		era: 'Era',
+		nextDateWindow: 'Next dates',
+		previousDateWindow: 'Previous dates',
 		week: 'Week',
 		weekNumber: (week: number) => `Week ${week}`,
 		invalidDate: 'This date is invalid or unavailable',
@@ -617,6 +623,9 @@ export const zhCNLocalePack = Object.freeze({
 		invalidLocalTime: '该时区的本地时间不存在或存在歧义'
 	}),
 	date: Object.freeze({
+		era: '纪元',
+		nextDateWindow: '下一组日期',
+		previousDateWindow: '上一组日期',
 		week: '周',
 		weekNumber: (week: number) => `第${week}周`,
 		invalidDate: '该日期无效或不可用',

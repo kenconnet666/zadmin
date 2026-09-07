@@ -1,5 +1,6 @@
 import { getContext, setContext } from 'svelte';
 
+import { createContextKey } from '../foundation/context-key.js';
 import type { ZControlSize } from '../foundation/control-size.js';
 
 export interface ZInputGroupControl {
@@ -19,7 +20,7 @@ export interface ZInputGroupContext {
 	registerControl(control: ZInputGroupControl): () => void;
 }
 
-const INPUT_GROUP_CONTEXT = Symbol('zui-input-group-context');
+const INPUT_GROUP_CONTEXT = createContextKey({ hot: import.meta.hot }, 'zui-input-group-context');
 
 export function provideZInputGroup(context: ZInputGroupContext): ZInputGroupContext {
 	setContext(INPUT_GROUP_CONTEXT, context);

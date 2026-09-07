@@ -1,9 +1,10 @@
 {
-	"schemaVersion": 1,
+	"schemaVersion": 2,
 	"summary": {
-		"stableCompliant": 141,
+		"stableCompliant": 0,
+		"stablePendingExecution": 141,
 		"stableViolations": 0,
-		"promotionEligibleExperimental": 29
+		"promotionEligibleExperimental": 0
 	},
 	"components": [
 		{
@@ -11,120 +12,168 @@
 			"name": "ZAccordion",
 			"family": "accordion",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/accordion/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "accordion-content",
 			"name": "ZAccordionContent",
 			"family": "accordion",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/accordion/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "accordion-item",
 			"name": "ZAccordionItem",
 			"family": "accordion",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/accordion/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "accordion-trigger",
 			"name": "ZAccordionTrigger",
 			"family": "accordion",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/accordion/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "alert-dialog",
 			"name": "ZAlertDialog",
 			"family": "alert-dialog",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/alert-dialog/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "alert-dialog-action",
 			"name": "ZAlertDialogAction",
 			"family": "alert-dialog",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/alert-dialog/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "alert-dialog-cancel",
 			"name": "ZAlertDialogCancel",
 			"family": "alert-dialog",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/alert-dialog/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "alert-dialog-content",
 			"name": "ZAlertDialogContent",
 			"family": "alert-dialog",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/alert-dialog/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "alert-dialog-description",
 			"name": "ZAlertDialogDescription",
 			"family": "alert-dialog",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/alert-dialog/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "alert-dialog-overlay",
 			"name": "ZAlertDialogOverlay",
 			"family": "alert-dialog",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/alert-dialog/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "alert-dialog-title",
 			"name": "ZAlertDialogTitle",
 			"family": "alert-dialog",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/alert-dialog/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "alert-dialog-trigger",
 			"name": "ZAlertDialogTrigger",
 			"family": "alert-dialog",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/alert-dialog/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "checkbox-group",
@@ -132,9 +181,13 @@
 			"family": "checkbox-group",
 			"status": "experimental",
 			"classification": "experimental",
-			"blockers": ["Family readiness (ZCheckboxGroupItem, ZCheckboxGroupSelectAll)"],
+			"staticBlockers": ["Family static readiness (ZCheckboxGroupItem, ZCheckboxGroupSelectAll)"],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/checkbox-group/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "checkbox-group-item",
@@ -142,9 +195,16 @@
 			"family": "checkbox-group",
 			"status": "experimental",
 			"classification": "experimental",
-			"blockers": ["BrowserBehaviorVerified", "ProductionVerified"],
+			"staticBlockers": [
+				"BrowserBehaviorContractsDeclared missing",
+				"ProductionContractsDeclared missing"
+			],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/checkbox-group/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "checkbox-group-select-all",
@@ -152,359 +212,507 @@
 			"family": "checkbox-group",
 			"status": "experimental",
 			"classification": "experimental",
-			"blockers": ["BrowserBehaviorVerified", "ProductionVerified", "SSR"],
+			"staticBlockers": [
+				"BrowserBehaviorContractsDeclared missing",
+				"ProductionContractsDeclared missing",
+				"SsrContractsDeclared missing"
+			],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/checkbox-group/doc.ts",
-			"ssrEvidenceCount": 0
+			"ssrContractCount": 0
 		},
 		{
 			"id": "combobox",
 			"name": "ZCombobox",
 			"family": "combobox",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/combobox/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "combobox-content",
 			"name": "ZComboboxContent",
 			"family": "combobox",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/combobox/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "combobox-input",
 			"name": "ZComboboxInput",
 			"family": "combobox",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/combobox/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "combobox-item",
 			"name": "ZComboboxItem",
 			"family": "combobox",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/combobox/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "context-menu",
 			"name": "ZContextMenu",
 			"family": "context-menu",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/context-menu/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "context-menu-content",
 			"name": "ZContextMenuContent",
 			"family": "context-menu",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/context-menu/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "context-menu-trigger",
 			"name": "ZContextMenuTrigger",
 			"family": "context-menu",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/context-menu/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "dialog",
 			"name": "ZDialog",
 			"family": "dialog",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/dialog/doc.ts",
-			"ssrEvidenceCount": 3
+			"ssrContractCount": 3
 		},
 		{
 			"id": "dialog-close",
 			"name": "ZDialogClose",
 			"family": "dialog",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/dialog/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "dialog-content",
 			"name": "ZDialogContent",
 			"family": "dialog",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/dialog/doc.ts",
-			"ssrEvidenceCount": 3
+			"ssrContractCount": 3
 		},
 		{
 			"id": "dialog-description",
 			"name": "ZDialogDescription",
 			"family": "dialog",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/dialog/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "dialog-overlay",
 			"name": "ZDialogOverlay",
 			"family": "dialog",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/dialog/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "dialog-title",
 			"name": "ZDialogTitle",
 			"family": "dialog",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/dialog/doc.ts",
-			"ssrEvidenceCount": 3
+			"ssrContractCount": 3
 		},
 		{
 			"id": "dialog-trigger",
 			"name": "ZDialogTrigger",
 			"family": "dialog",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/dialog/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "drawer",
 			"name": "ZDrawer",
 			"family": "drawer",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/drawer/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "drawer-close",
 			"name": "ZDrawerClose",
 			"family": "drawer",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/drawer/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "drawer-content",
 			"name": "ZDrawerContent",
 			"family": "drawer",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/drawer/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "drawer-description",
 			"name": "ZDrawerDescription",
 			"family": "drawer",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/drawer/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "drawer-overlay",
 			"name": "ZDrawerOverlay",
 			"family": "drawer",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/drawer/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "drawer-title",
 			"name": "ZDrawerTitle",
 			"family": "drawer",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/drawer/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "drawer-trigger",
 			"name": "ZDrawerTrigger",
 			"family": "drawer",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/drawer/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "dropdown-menu",
 			"name": "ZDropdownMenu",
 			"family": "dropdown-menu",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/dropdown-menu/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "dropdown-menu-content",
 			"name": "ZDropdownMenuContent",
 			"family": "dropdown-menu",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/dropdown-menu/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "dropdown-menu-trigger",
 			"name": "ZDropdownMenuTrigger",
 			"family": "dropdown-menu",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/dropdown-menu/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "menu",
 			"name": "ZMenu",
 			"family": "menu",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/menu/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "menu-checkbox-item",
 			"name": "ZMenuCheckboxItem",
 			"family": "menu",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/menu/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "menu-group",
 			"name": "ZMenuGroup",
 			"family": "menu",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/menu/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "menu-item",
 			"name": "ZMenuItem",
 			"family": "menu",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/menu/doc.ts",
-			"ssrEvidenceCount": 3
+			"ssrContractCount": 3
 		},
 		{
 			"id": "menu-label",
 			"name": "ZMenuLabel",
 			"family": "menu",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/menu/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "menu-radio-group",
 			"name": "ZMenuRadioGroup",
 			"family": "menu",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/menu/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "menu-radio-item",
 			"name": "ZMenuRadioItem",
 			"family": "menu",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/menu/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "menu-separator",
 			"name": "ZMenuSeparator",
 			"family": "menu",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/menu/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "menu-sub",
 			"name": "ZMenuSub",
 			"family": "menu",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/menu/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "menu-sub-content",
 			"name": "ZMenuSubContent",
 			"family": "menu",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/menu/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "menu-sub-trigger",
 			"name": "ZMenuSubTrigger",
 			"family": "menu",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/menu/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "menubar",
@@ -512,9 +720,15 @@
 			"family": "menubar",
 			"status": "experimental",
 			"classification": "experimental",
-			"blockers": ["Family readiness (ZMenubarContent, ZMenubarMenu, ZMenubarTrigger)"],
+			"staticBlockers": [
+				"Family static readiness (ZMenubarContent, ZMenubarMenu, ZMenubarTrigger)"
+			],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/menubar/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "menubar-content",
@@ -522,9 +736,16 @@
 			"family": "menubar",
 			"status": "experimental",
 			"classification": "experimental",
-			"blockers": ["BrowserBehaviorVerified", "ProductionVerified"],
+			"staticBlockers": [
+				"BrowserBehaviorContractsDeclared missing",
+				"ProductionContractsDeclared missing"
+			],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/menubar/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "menubar-menu",
@@ -532,9 +753,16 @@
 			"family": "menubar",
 			"status": "experimental",
 			"classification": "experimental",
-			"blockers": ["BrowserBehaviorVerified", "ProductionVerified"],
+			"staticBlockers": [
+				"BrowserBehaviorContractsDeclared missing",
+				"ProductionContractsDeclared missing"
+			],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/menubar/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "menubar-trigger",
@@ -542,259 +770,366 @@
 			"family": "menubar",
 			"status": "experimental",
 			"classification": "experimental",
-			"blockers": ["BrowserBehaviorVerified", "ProductionVerified"],
+			"staticBlockers": [
+				"BrowserBehaviorContractsDeclared missing",
+				"ProductionContractsDeclared missing"
+			],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/menubar/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "multi-select",
 			"name": "ZMultiSelect",
 			"family": "multi-select",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/multi-select/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "multi-select-content",
 			"name": "ZMultiSelectContent",
 			"family": "multi-select",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/multi-select/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "multi-select-item",
 			"name": "ZMultiSelectItem",
 			"family": "multi-select",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/multi-select/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "multi-select-trigger",
 			"name": "ZMultiSelectTrigger",
 			"family": "multi-select",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/multi-select/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "navigation-menu",
 			"name": "ZNavigationMenu",
 			"family": "navigation-menu",
 			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
-			"blockers": [],
+			"classification": "experimental",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/navigation-menu/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "popconfirm",
 			"name": "ZPopconfirm",
 			"family": "popconfirm",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/popconfirm/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "popconfirm-action",
 			"name": "ZPopconfirmAction",
 			"family": "popconfirm",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/popconfirm/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "popconfirm-cancel",
 			"name": "ZPopconfirmCancel",
 			"family": "popconfirm",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/popconfirm/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "popconfirm-content",
 			"name": "ZPopconfirmContent",
 			"family": "popconfirm",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/popconfirm/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "popconfirm-description",
 			"name": "ZPopconfirmDescription",
 			"family": "popconfirm",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/popconfirm/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "popconfirm-title",
 			"name": "ZPopconfirmTitle",
 			"family": "popconfirm",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/popconfirm/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "popconfirm-trigger",
 			"name": "ZPopconfirmTrigger",
 			"family": "popconfirm",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/popconfirm/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "popover",
 			"name": "ZPopover",
 			"family": "popover",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/popover/doc.ts",
-			"ssrEvidenceCount": 4
+			"ssrContractCount": 4
 		},
 		{
 			"id": "popover-content",
 			"name": "ZPopoverContent",
 			"family": "popover",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/popover/doc.ts",
-			"ssrEvidenceCount": 4
+			"ssrContractCount": 4
 		},
 		{
 			"id": "popover-trigger",
 			"name": "ZPopoverTrigger",
 			"family": "popover",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/popover/doc.ts",
-			"ssrEvidenceCount": 4
+			"ssrContractCount": 4
 		},
 		{
 			"id": "radio-group",
 			"name": "ZRadioGroup",
 			"family": "radio-group",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/radio-group/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "radio-group-item",
 			"name": "ZRadioGroupItem",
 			"family": "radio-group",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/radio-group/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "select",
 			"name": "ZSelect",
 			"family": "select",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/select/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "select-content",
 			"name": "ZSelectContent",
 			"family": "select",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/select/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "select-item",
 			"name": "ZSelectItem",
 			"family": "select",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/select/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "select-trigger",
 			"name": "ZSelectTrigger",
 			"family": "select",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/select/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "tabs",
 			"name": "ZTabs",
 			"family": "tabs",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/tabs/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "tabs-list",
 			"name": "ZTabsList",
 			"family": "tabs",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/tabs/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "tabs-panel",
 			"name": "ZTabsPanel",
 			"family": "tabs",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/tabs/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "tabs-trigger",
 			"name": "ZTabsTrigger",
 			"family": "tabs",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/tabs/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "toolbar",
@@ -802,9 +1137,13 @@
 			"family": "toolbar",
 			"status": "experimental",
 			"classification": "experimental",
-			"blockers": ["Family readiness (ZToolbarItem)"],
+			"staticBlockers": ["Family static readiness (ZToolbarItem)"],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/toolbar/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "toolbar-item",
@@ -812,319 +1151,447 @@
 			"family": "toolbar",
 			"status": "experimental",
 			"classification": "experimental",
-			"blockers": ["BrowserBehaviorVerified"],
+			"staticBlockers": ["BrowserBehaviorContractsDeclared missing"],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/toolbar/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "tooltip",
 			"name": "ZTooltip",
 			"family": "tooltip",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/tooltip/doc.ts",
-			"ssrEvidenceCount": 3
+			"ssrContractCount": 3
 		},
 		{
 			"id": "tooltip-content",
 			"name": "ZTooltipContent",
 			"family": "tooltip",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/tooltip/doc.ts",
-			"ssrEvidenceCount": 3
+			"ssrContractCount": 3
 		},
 		{
 			"id": "tooltip-group",
 			"name": "ZTooltipGroup",
 			"family": "tooltip",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/tooltip/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "tooltip-trigger",
 			"name": "ZTooltipTrigger",
 			"family": "tooltip",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/tooltip/doc.ts",
-			"ssrEvidenceCount": 3
+			"ssrContractCount": 3
 		},
 		{
 			"id": "tree",
 			"name": "ZTree",
 			"family": "tree",
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/tree/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "avatar",
 			"name": "ZAvatar",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/data-display/avatar/doc.ts",
-			"ssrEvidenceCount": 4
+			"ssrContractCount": 4
 		},
 		{
 			"id": "badge",
 			"name": "ZBadge",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/data-display/badge/doc.ts",
-			"ssrEvidenceCount": 3
+			"ssrContractCount": 3
 		},
 		{
 			"id": "card",
 			"name": "ZCard",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/data-display/card/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "carousel",
 			"name": "ZCarousel",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/data-display/carousel/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "data-table",
 			"name": "ZDataTable",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/data-display/data-table/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "description-list",
 			"name": "ZDescriptionList",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/data-display/description-list/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "empty",
 			"name": "ZEmpty",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/data-display/empty/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "list",
 			"name": "ZList",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/data-display/list/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "meter",
 			"name": "ZMeter",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/data-display/meter/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "progress",
 			"name": "ZProgress",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/data-display/progress/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "skeleton",
 			"name": "ZSkeleton",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/data-display/skeleton/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "statistic",
 			"name": "ZStatistic",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/data-display/statistic/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "table",
 			"name": "ZTable",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/data-display/table/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "tag",
 			"name": "ZTag",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/data-display/tag/doc.ts",
-			"ssrEvidenceCount": 3
+			"ssrContractCount": 3
 		},
 		{
 			"id": "time-value",
 			"name": "ZTimeValue",
 			"family": null,
 			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
-			"blockers": [],
+			"classification": "experimental",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/data-display/time-value/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "timeline",
 			"name": "ZTimeline",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/data-display/timeline/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "virtual-list",
 			"name": "ZVirtualList",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/data-display/virtual-list/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "alert",
 			"name": "ZAlert",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/feedback/alert/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "loading-bar",
 			"name": "ZLoadingBar",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/feedback/loading-bar/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "result",
 			"name": "ZResult",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/feedback/result/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "spinner",
 			"name": "ZSpinner",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/feedback/spinner/doc.ts",
-			"ssrEvidenceCount": 3
+			"ssrContractCount": 3
 		},
 		{
 			"id": "toast",
 			"name": "ZToast",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/feedback/toast/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "toaster",
 			"name": "ZToaster",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/feedback/toast/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "box",
 			"name": "ZBox",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/gene/box/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "button",
 			"name": "ZButton",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/gene/button/doc.ts",
-			"ssrEvidenceCount": 11
+			"ssrContractCount": 11
 		},
 		{
 			"id": "code",
 			"name": "ZCode",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/gene/code/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "copy-button",
@@ -1132,209 +1599,293 @@
 			"family": null,
 			"status": "experimental",
 			"classification": "experimental",
-			"blockers": ["BrowserBehaviorVerified"],
+			"staticBlockers": ["BrowserBehaviorContractsDeclared missing"],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/gene/copy-button/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "heading",
 			"name": "ZHeading",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/gene/heading/doc.ts",
-			"ssrEvidenceCount": 3
+			"ssrContractCount": 3
 		},
 		{
 			"id": "icon",
 			"name": "ZIcon",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/gene/icon/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "kbd",
 			"name": "ZKbd",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/gene/kbd/doc.ts",
-			"ssrEvidenceCount": 3
+			"ssrContractCount": 3
 		},
 		{
 			"id": "link",
 			"name": "ZLink",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/gene/link/doc.ts",
-			"ssrEvidenceCount": 5
+			"ssrContractCount": 5
 		},
 		{
 			"id": "provider",
 			"name": "ZProvider",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/gene/provider/doc.ts",
-			"ssrEvidenceCount": 17
+			"ssrContractCount": 18
 		},
 		{
 			"id": "separator",
 			"name": "ZSeparator",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/gene/separator/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "text",
 			"name": "ZText",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/gene/text/doc.ts",
-			"ssrEvidenceCount": 6
+			"ssrContractCount": 6
 		},
 		{
 			"id": "toggle-button",
 			"name": "ZToggleButton",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/gene/toggle-button/doc.ts",
-			"ssrEvidenceCount": 3
+			"ssrContractCount": 3
 		},
 		{
 			"id": "visually-hidden",
 			"name": "ZVisuallyHidden",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/gene/visually-hidden/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "calendar",
 			"name": "ZCalendar",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/calendar/doc.ts",
-			"ssrEvidenceCount": 5
+			"ssrContractCount": 6
 		},
 		{
 			"id": "cascader",
 			"name": "ZCascader",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/cascader/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "checkbox",
 			"name": "ZCheckbox",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/checkbox/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "color-picker",
 			"name": "ZColorPicker",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/color-picker/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "date-field",
 			"name": "ZDateField",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/date-field/doc.ts",
-			"ssrEvidenceCount": 4
+			"ssrContractCount": 5
 		},
 		{
 			"id": "date-picker",
 			"name": "ZDatePicker",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/date-picker/doc.ts",
-			"ssrEvidenceCount": 3
+			"ssrContractCount": 4
 		},
 		{
 			"id": "date-range-picker",
 			"name": "ZDateRangePicker",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/date-range-picker/doc.ts",
-			"ssrEvidenceCount": 3
+			"ssrContractCount": 4
 		},
 		{
 			"id": "date-time-field",
 			"name": "ZDateTimeField",
 			"family": null,
 			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
-			"blockers": [],
+			"classification": "experimental",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/date-time-field/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 3
 		},
 		{
 			"id": "date-time-picker",
 			"name": "ZDateTimePicker",
 			"family": null,
 			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
-			"blockers": [],
+			"classification": "experimental",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/date-time-picker/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 2
 		},
 		{
 			"id": "date-time-range-picker",
 			"name": "ZDateTimeRangePicker",
 			"family": null,
 			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
-			"blockers": [],
+			"classification": "experimental",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/date-time-range-picker/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 2
 		},
 		{
 			"id": "field",
 			"name": "ZField",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/field/doc.ts",
-			"ssrEvidenceCount": 8
+			"ssrContractCount": 9
 		},
 		{
 			"id": "fieldset",
@@ -1342,329 +1893,478 @@
 			"family": null,
 			"status": "experimental",
 			"classification": "experimental",
-			"blockers": ["BrowserBehaviorVerified", "ProductionVerified"],
+			"staticBlockers": [
+				"BrowserBehaviorContractsDeclared missing",
+				"ProductionContractsDeclared missing"
+			],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/fieldset/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "file-upload",
 			"name": "ZFileUpload",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/file-upload/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "form",
 			"name": "ZForm",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/form/doc.ts",
-			"ssrEvidenceCount": 12
+			"ssrContractCount": 12
 		},
 		{
 			"id": "form-field",
 			"name": "ZFormField",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/form/doc.ts",
-			"ssrEvidenceCount": 12
+			"ssrContractCount": 12
 		},
 		{
 			"id": "form-list",
 			"name": "ZFormList",
 			"family": null,
 			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
-			"blockers": [],
+			"classification": "experimental",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/form/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "input",
 			"name": "ZInput",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/input/doc.ts",
-			"ssrEvidenceCount": 7
+			"ssrContractCount": 7
 		},
 		{
 			"id": "input-group",
 			"name": "ZInputGroup",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/input-group/doc.ts",
-			"ssrEvidenceCount": 3
+			"ssrContractCount": 3
 		},
 		{
 			"id": "mention",
 			"name": "ZMention",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/mention/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
+		},
+		{
+			"id": "mini-calendar",
+			"name": "ZMiniCalendar",
+			"family": null,
+			"status": "experimental",
+			"classification": "experimental",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
+			"docs": "apps/docs/src/content/components/input/mini-calendar/doc.ts",
+			"ssrContractCount": 2
 		},
 		{
 			"id": "native-select",
 			"name": "ZNativeSelect",
 			"family": null,
 			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
-			"blockers": [],
+			"classification": "experimental",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/native-select/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "number-field",
 			"name": "ZNumberField",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/number-field/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "password-input",
 			"name": "ZPasswordInput",
 			"family": null,
 			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
-			"blockers": [],
+			"classification": "experimental",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/password-input/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "period-calendar",
 			"name": "ZPeriodCalendar",
 			"family": null,
 			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
-			"blockers": [],
+			"classification": "experimental",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/period-calendar/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "period-picker",
 			"name": "ZPeriodPicker",
 			"family": null,
 			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
-			"blockers": [],
+			"classification": "experimental",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/period-picker/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "pin-input",
 			"name": "ZPinInput",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/pin-input/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "range-slider",
 			"name": "ZRangeSlider",
 			"family": null,
 			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
-			"blockers": [],
+			"classification": "experimental",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/range-slider/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "rating",
 			"name": "ZRating",
 			"family": null,
 			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
-			"blockers": [],
+			"classification": "experimental",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/rating/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "segmented",
 			"name": "ZSegmented",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/segmented/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "slider",
 			"name": "ZSlider",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/slider/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "switch",
 			"name": "ZSwitch",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/switch/doc.ts",
-			"ssrEvidenceCount": 3
+			"ssrContractCount": 3
 		},
 		{
 			"id": "tags-input",
 			"name": "ZTagsInput",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/tags-input/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "textarea",
 			"name": "ZTextarea",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/textarea/doc.ts",
-			"ssrEvidenceCount": 3
+			"ssrContractCount": 3
 		},
 		{
 			"id": "time-field",
 			"name": "ZTimeField",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/time-field/doc.ts",
-			"ssrEvidenceCount": 4
+			"ssrContractCount": 4
 		},
 		{
 			"id": "time-grid",
 			"name": "ZTimeGrid",
 			"family": null,
 			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
-			"blockers": [],
+			"classification": "experimental",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/time-grid/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "time-picker",
 			"name": "ZTimePicker",
 			"family": null,
 			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
-			"blockers": [],
+			"classification": "experimental",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/time-picker/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "time-range-picker",
 			"name": "ZTimeRangePicker",
 			"family": null,
 			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
-			"blockers": [],
+			"classification": "experimental",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/time-range-picker/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "toggle-group",
 			"name": "ZToggleGroup",
 			"family": null,
 			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
-			"blockers": [],
+			"classification": "experimental",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/toggle-group/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "transfer",
 			"name": "ZTransfer",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/transfer/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "tree-select",
 			"name": "ZTreeSelect",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/input/tree-select/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "affix",
 			"name": "ZAffix",
 			"family": null,
 			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
-			"blockers": [],
+			"classification": "experimental",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/layout/affix/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "app-shell",
 			"name": "ZAppShell",
 			"family": null,
 			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
-			"blockers": [],
+			"classification": "experimental",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/layout/app-shell/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "aspect-ratio",
 			"name": "ZAspectRatio",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/layout/aspect-ratio/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "center",
 			"name": "ZCenter",
 			"family": null,
 			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
-			"blockers": [],
+			"classification": "experimental",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/layout/center/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "container",
 			"name": "ZContainer",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/layout/container/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "grid",
@@ -1672,9 +2372,17 @@
 			"family": null,
 			"status": "experimental",
 			"classification": "experimental",
-			"blockers": ["BrowserBehaviorVerified", "ProductionVerified", "SSR"],
+			"staticBlockers": [
+				"BrowserBehaviorContractsDeclared missing",
+				"ProductionContractsDeclared missing",
+				"SsrContractsDeclared missing"
+			],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/layout/grid/doc.ts",
-			"ssrEvidenceCount": 0
+			"ssrContractCount": 0
 		},
 		{
 			"id": "grid-item",
@@ -1682,39 +2390,59 @@
 			"family": null,
 			"status": "experimental",
 			"classification": "experimental",
-			"blockers": ["BrowserBehaviorVerified", "ProductionVerified", "SSR"],
+			"staticBlockers": [
+				"BrowserBehaviorContractsDeclared missing",
+				"ProductionContractsDeclared missing",
+				"SsrContractsDeclared missing"
+			],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/layout/grid/doc.ts",
-			"ssrEvidenceCount": 0
+			"ssrContractCount": 0
 		},
 		{
 			"id": "group",
 			"name": "ZGroup",
 			"family": null,
 			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
-			"blockers": [],
+			"classification": "experimental",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/layout/group/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "overflow-list",
 			"name": "ZOverflowList",
 			"family": null,
 			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
-			"blockers": [],
+			"classification": "experimental",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/layout/overflow-list/doc.ts",
-			"ssrEvidenceCount": 2
+			"ssrContractCount": 2
 		},
 		{
 			"id": "resizable",
 			"name": "ZResizable",
 			"family": null,
 			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
-			"blockers": [],
+			"classification": "experimental",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/layout/resizable/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "scroll-area",
@@ -1722,49 +2450,69 @@
 			"family": null,
 			"status": "experimental",
 			"classification": "experimental",
-			"blockers": ["BrowserBehaviorVerified"],
+			"staticBlockers": ["BrowserBehaviorContractsDeclared missing"],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/layout/scroll-area/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "simple-grid",
 			"name": "ZSimpleGrid",
 			"family": null,
 			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
-			"blockers": [],
+			"classification": "experimental",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/layout/simple-grid/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "spacer",
 			"name": "ZSpacer",
 			"family": null,
 			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
-			"blockers": [],
+			"classification": "experimental",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/layout/spacer/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "splitter",
 			"name": "ZSplitter",
 			"family": null,
 			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
-			"blockers": [],
+			"classification": "experimental",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/layout/splitter/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "stack",
 			"name": "ZStack",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/layout/stack/doc.ts",
-			"ssrEvidenceCount": 3
+			"ssrContractCount": 3
 		},
 		{
 			"id": "anchor",
@@ -1772,89 +2520,125 @@
 			"family": null,
 			"status": "experimental",
 			"classification": "experimental",
-			"blockers": ["BrowserBehaviorVerified"],
+			"staticBlockers": ["BrowserBehaviorContractsDeclared missing"],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/anchor/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "back-top",
 			"name": "ZBackTop",
 			"family": null,
 			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
-			"blockers": [],
+			"classification": "experimental",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/back-top/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "breadcrumb",
 			"name": "ZBreadcrumb",
 			"family": null,
 			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
-			"blockers": [],
+			"classification": "experimental",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/breadcrumb/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "command",
 			"name": "ZCommand",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/command/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "command-palette",
 			"name": "ZCommandPalette",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/command-palette/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "nav-link",
 			"name": "ZNavLink",
 			"family": null,
 			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
-			"blockers": [],
+			"classification": "experimental",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/nav-link/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "pagination",
 			"name": "ZPagination",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/pagination/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "steps",
 			"name": "ZSteps",
 			"family": null,
 			"status": "experimental",
-			"classification": "promotionEligibleExperimental",
-			"blockers": [],
+			"classification": "experimental",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/navigation/steps/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		},
 		{
 			"id": "tour",
 			"name": "ZTour",
 			"family": null,
 			"status": "stable",
-			"classification": "stableCompliant",
-			"blockers": [],
+			"classification": "stablePendingExecution",
+			"staticBlockers": [],
+			"executionBlockers": [
+				"BrowserBehaviorVerified pending for current revision",
+				"ProductionVerified pending for current revision"
+			],
 			"docs": "apps/docs/src/content/components/overlay/tour/doc.ts",
-			"ssrEvidenceCount": 1
+			"ssrContractCount": 1
 		}
 	]
 }

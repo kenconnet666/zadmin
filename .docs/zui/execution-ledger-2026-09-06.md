@@ -235,3 +235,13 @@ DateTimePicker/DateTimeRangePicker新增判别`presentation="popover" | "inline"
 E14已完成job日志显示覆盖率1320通过、6失败，失败只在Period六项；静态契约有41个类型错误，多数为Period泛型；外部SSR有4个DateTime/Calendar生成声明在`Component<Props>`处触发大DOM交叉联合TS2590。当前按具体named interface物化mode/selection/presentation分支后再组成纯union，保留判别强度并降低`keyof Props`/`Partial<Props>`分配；这是待下一候选远程复验的修复，不能写成CI已绿。整个run最后一次状态仍为running，结论未知。
 
 390px已实测inline single的form宽314px、surface宽312px且无横向溢出；Cancel不写、Confirm只保留唯一`appointment`并保持inline，reset不增加commit。readonly、range、TimeGrid/TimeValue尚待最终浏览器点查；所有新品保持experimental/unreleased。详见[E15执行记录](./execution-inline-time-customization-2026-09-07.md)。下一阶段继续MiniCalendar、国际历法与当前候选复验，并与集合、拖放、媒体、图表和编辑器波次并行；日期家族没有关闭。
+
+## E16：MiniCalendar、国际历法与真实执行状态
+
+Calendar新增共享owner的month/strip view，MiniCalendar作为single/strip紧凑入口，不复制selection、focusedValue、按钮注册或Form状态。日期与DateTime族把model calendar和locale display calendar分开；clear保留最近非空owner calendar，字段、Panel、preset和Now候选在业务约束、canonical及回调前恢复parent calendar/era。DateTimeRange分别保留start/end calendar，混合Hebrew/Persian端点不被统一成Gregorian。
+
+当前支持13套calendar算法并将ISO 8601明确作为Gregorian别名；未实现的Chinese、Dangi及泛化Islamic标识明确拒绝。真实浏览器已观察Mini 7/10日窗口宽314px且无横溢出、Hebrew→Persian显示切换不写Gregorian、Hebrew 13月29日跨新年后clear/reselect仍为Hebrew、Japanese平成31-4-30跨至令和1-5-1。DateTime同日毫秒边界、同instant切calendar后Now及Hebrew/Persian混合范围preset也保持parent owner；详见[E16执行记录](./execution-calendar-systems-2026-09-07.md)。
+
+成熟度报告现区分静态`*ContractsDeclared`/`*Present`与绑定revision的真实执行证据；当前186个公开组件中141个为`stablePendingExecution`、0个`stableCompliant`，不能把metadata stable或测试资产数写成当前候选通过。DateTime/Calendar已改语义generic声明以避开外部`Component<Props>`联合展开，但新tarball尚待远程复验；全部辅助技术、三浏览器、SSR、Windows及历法引擎矩阵仍开放，不晋升stable。
+
+下一主线转入当前revision执行证据composer，并启动W4集合/拖放及后续完整波次。日期剩余国际历法、辅助技术、RTL/auto、极值与远程边界并行处理，不再阻塞全部路线，也不宣称D14关闭。

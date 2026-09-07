@@ -2,6 +2,7 @@ import {
 	CalendarDate,
 	CalendarDateTime,
 	Time,
+	createCalendar,
 	parseZonedDateTime,
 	toTimeZone
 } from '@internationalized/date';
@@ -31,7 +32,7 @@ describe('date-time runtime', () => {
 			)
 		).toContain('13:30');
 	});
-	it('keeps local values as CalendarDateTime and rejects type or calendar drift', () => {
+	it('keeps local values as CalendarDateTime and rejects only type or mode drift', () => {
 		const value = composeDateTime({
 			date: new CalendarDate(2026, 9, 7),
 			displayTimeZone: 'UTC',
@@ -43,6 +44,31 @@ describe('date-time runtime', () => {
 			normalizeDateTimeModelValue(new CalendarDate(2026, 9, 7), 'local', 'Test')
 		).toThrow(/CalendarDateTime/u);
 		expect(() => normalizeDateTimeModelValue(value, 'zoned', 'Test')).toThrow(/ZonedDateTime/u);
+	});
+
+	it('preserves the date calendar and era through local and zoned composition', () => {
+		const date = new CalendarDate(createCalendar('hebrew'), 5787, 1, 1);
+		const local = composeDateTime({
+			date,
+			displayTimeZone: 'Asia/Jerusalem',
+			mode: 'local',
+			time: new Time(9, 30, 15, 125)
+		});
+		expect(local.calendar.identifier).toBe('hebrew');
+		expect(local.era).toBe(date.era);
+		expect(normalizeDateTimeModelValue(local, 'local', 'Test')).toBe(local);
+
+		const zoned = composeDateTime({
+			date,
+			displayTimeZone: 'Asia/Jerusalem',
+			mode: 'zoned',
+			ownerTimeZone: 'America/New_York',
+			time: new Time(9, 30)
+		});
+		expect(zoned.calendar.identifier).toBe('hebrew');
+		expect(zoned.timeZone).toBe('America/New_York');
+		expect(dateTimeParts(zoned).date.calendar.identifier).toBe('hebrew');
+		expect(normalizeDateTimeModelValue(zoned, 'zoned', 'Test')).toBe(zoned);
 	});
 
 	it('preserves an existing instant in a display zone and restores its owner zone after editing', () => {

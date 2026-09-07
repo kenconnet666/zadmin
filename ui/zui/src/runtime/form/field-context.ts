@@ -1,5 +1,6 @@
 import { getContext, setContext } from 'svelte';
 
+import { createContextKey } from '../foundation/context-key.js';
 import type { ZControlSize } from '../foundation/control-size.js';
 
 export interface ZFieldContext {
@@ -27,8 +28,11 @@ export interface ZFieldControlOwner {
 	registerFocusOwner(focus: () => void): () => void;
 }
 
-const FIELD_CONTEXT = Symbol('zui-field-context');
-const FIELD_CONTROL_OWNER_CONTEXT = Symbol('zui-field-control-owner-context');
+const FIELD_CONTEXT = createContextKey({ hot: import.meta.hot }, 'zui-field-context');
+const FIELD_CONTROL_OWNER_CONTEXT = createContextKey(
+	{ hot: import.meta.hot },
+	'zui-field-control-owner-context'
+);
 
 export function provideZField(read: () => ZFieldContext): ZFieldContext {
 	const context: ZFieldContext = {

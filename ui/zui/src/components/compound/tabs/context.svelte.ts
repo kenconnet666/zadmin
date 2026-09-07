@@ -1,5 +1,7 @@
 import { getContext, setContext } from 'svelte';
 
+import { createContextKey } from '../../../runtime/foundation/context-key.js';
+
 import type { CompoundLogicalCollectionItem } from '../../../runtime/collection/compound-logical-collection.svelte.js';
 import type { SelectionKey } from '../../../runtime/collection/selection.js';
 import type { ZControlSize } from '../../../runtime/foundation/control-size.js';
@@ -31,7 +33,7 @@ export interface ZTabsContext {
 	triggerId(value: SelectionKey): string;
 }
 
-const TABS_CONTEXT = Symbol('zui-tabs-context');
+const TABS_CONTEXT = createContextKey({ hot: import.meta.hot }, 'zui-tabs-context');
 
 export function provideZTabs(context: ZTabsContext): ZTabsContext {
 	setContext(TABS_CONTEXT, context);

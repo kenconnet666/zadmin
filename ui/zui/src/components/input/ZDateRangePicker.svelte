@@ -328,13 +328,15 @@
 <script lang="ts">
 	import CalendarRangeIcon from '@lucide/svelte/icons/calendar-range';
 	import X from '@lucide/svelte/icons/x';
-	import type { CalendarDate } from '@internationalized/date';
-	import { onDestroy } from 'svelte';
+	import { today, type Calendar, type CalendarDate } from '@internationalized/date';
+	import { onDestroy, untrack } from 'svelte';
 	import {
-		dateFieldPattern,
+		calendarDateKey,
 		normalizeRange,
 		normalizeRangeValue,
 		normalizeCalendarRangeModelValue,
+		preserveCalendarOwner,
+		resolveOwnerCalendar,
 		type CalendarRange,
 		type CalendarRangeValue
 	} from '../../runtime/date.js';
@@ -447,9 +449,12 @@
 	let triggerRef = $state<HTMLButtonElement | null>(null);
 	let rangePart = $state<'end' | 'start'>('start');
 	let previewFocus = $state<CalendarDate | null>(null);
+	const normalizedDefaultValue = $derived(
+		normalizeCalendarRangeModelValue(defaultValue, 'ZDateRangePicker defaultValue')
+	);
 	const valueState = createFormControlState<CalendarRangeValue | null>(
 		{
-			defaultValue: () => normalizeRangeValue(defaultValue),
+			defaultValue: () => normalizedDefaultValue,
 			draftState: () => ({
 				valid: startDraft.valid && endDraft.valid,
 				dirty: startDraft.dirty || endDraft.dirty,
@@ -472,12 +477,46 @@
 		valueScope
 	);
 	const normalizedValue = $derived(normalizeRangeValue(valueState.current));
+	let rememberedOwnerCalendar = $state.raw<Calendar | null>(
+		untrack(
+			() =>
+				normalizedValue?.start?.calendar ??
+				normalizedValue?.end?.calendar ??
+				normalizedDefaultValue?.start?.calendar ??
+				normalizedDefaultValue?.end?.calendar ??
+				null
+		)
+	);
+	const configuredOwnerCalendar = $derived(
+		normalizedValue?.start?.calendar ??
+			normalizedValue?.end?.calendar ??
+			normalizedDefaultValue?.start?.calendar ??
+			normalizedDefaultValue?.end?.calendar ??
+			null
+	);
+	const ownerCalendar = $derived<Calendar>(
+		configuredOwnerCalendar ?? rememberedOwnerCalendar ?? resolveOwnerCalendar()
+	);
+	const fieldPlaceholderValue = $derived(
+		normalizedValue?.start ??
+			normalizedValue?.end ??
+			normalizedDefaultValue?.start ??
+			normalizedDefaultValue?.end ??
+			preserveCalendarOwner(today(resolvedTimeZone), ownerCalendar)
+	);
 	let calendarValue = $state<CalendarDate | null>(null);
 	let calendarFocusedValue = $state<CalendarDate | undefined>(
-		normalizedValue?.start ?? normalizedValue?.end ?? undefined
+		untrack(
+			() =>
+				normalizedValue?.start ??
+				normalizedValue?.end ??
+				normalizedDefaultValue?.start ??
+				normalizedDefaultValue?.end ??
+				undefined
+		)
 	);
-	let endValue = $state<CalendarDate | null>(normalizedValue?.end ?? null);
-	let startValue = $state<CalendarDate | null>(normalizedValue?.start ?? null);
+	let endValue = $state<CalendarDate | null>(untrack(() => normalizedValue?.end ?? null));
+	let startValue = $state<CalendarDate | null>(untrack(() => normalizedValue?.start ?? null));
 	const openState = new ControllableState<boolean>({
 		defaultValue: () => defaultOpen,
 		onChange: () => onOpenChange,
@@ -505,30 +544,30 @@
 	}
 
 	function syncOwnedValue(): void {
+		startController?.rollbackDraft();
+		endController?.rollbackDraft();
 		calendarValue = null;
-		calendarFocusedValue = normalizedValue?.start ?? normalizedValue?.end ?? undefined;
+		calendarFocusedValue =
+			normalizedValue?.start ??
+			normalizedValue?.end ??
+			normalizedDefaultValue?.start ??
+			normalizedDefaultValue?.end ??
+			undefined;
 		endValue = normalizedValue?.end ?? null;
 		startValue = normalizedValue?.start ?? null;
-		syncFieldInputs(startFieldRef, startValue);
-		syncFieldInputs(endFieldRef, endValue);
 	}
 
-	function syncFieldInputs(root: HTMLElement | null, next: CalendarDate | null): void {
-		const segments = dateFieldPattern(resolvedLocale, resolvedTimeZone).flatMap((part) =>
-			'segment' in part ? [part.segment] : []
-		);
-		for (const [index, segment] of segments.entries()) {
-			const raw = segment === 'year' ? next?.year : segment === 'month' ? next?.month : next?.day;
-			const input = root?.querySelectorAll<HTMLInputElement>('input')[index];
-			if (input)
-				input.value =
-					raw === undefined ? '' : String(raw).padStart(segment === 'year' ? 4 : 2, '0');
-		}
+	function preserveRangeOwner(next: CalendarRangeValue | null): CalendarRangeValue | null {
+		if (!next) return null;
+		return normalizeRangeValue({
+			end: next.end ? preserveCalendarOwner(next.end, ownerCalendar) : null,
+			start: next.start ? preserveCalendarOwner(next.start, ownerCalendar) : null
+		});
 	}
 
 	function commit(next: CalendarRangeValue | null): boolean {
 		if (resolvedDisabled || resolvedReadonly) return false;
-		const accepted = valueState.setFromUser(normalizeRangeValue(next));
+		const accepted = valueState.setFromUser(preserveRangeOwner(normalizeRangeValue(next)));
 		if (!accepted) syncOwnedValue();
 		return accepted;
 	}
@@ -562,7 +601,9 @@
 		previewFocus = null;
 		setOpen(false);
 		ownerMicrotask(() =>
-			startFieldRef?.querySelector<HTMLInputElement>('input')?.focus({ preventScroll: true })
+			startFieldRef
+				?.querySelector<HTMLInputElement | HTMLSelectElement>('input, select')
+				?.focus({ preventScroll: true })
 		);
 	}
 
@@ -588,16 +629,22 @@
 	let observedValueKey: string | undefined;
 	$effect(() => {
 		const next = normalizedValue;
-		const key = `${next?.start?.toString() ?? ''}|${next?.end?.toString() ?? ''}`;
+		const key = `${calendarDateKey(next?.start)}|${calendarDateKey(next?.end)}`;
 		if (observedValueKey === key) return;
 		observedValueKey = key;
 		if (next?.start ?? next?.end) calendarFocusedValue = next?.start ?? next?.end ?? undefined;
 		endValue = next?.end ?? null;
 		startValue = next?.start ?? null;
 	});
+	$effect(() => {
+		const next = configuredOwnerCalendar;
+		if (next) rememberedOwnerCalendar = next;
+	});
 	onDestroy(
 		fieldOwner.registerFocusOwner(() =>
-			startFieldRef?.querySelector<HTMLInputElement>('input')?.focus({ preventScroll: true })
+			startFieldRef
+				?.querySelector<HTMLInputElement | HTMLSelectElement>('input, select')
+				?.focus({ preventScroll: true })
 		)
 	);
 </script>
@@ -628,7 +675,11 @@
 				appearance="bare"
 				calendarLabel={resolvedCalendarLabel}
 				{dateCell}
-				defaultFocusedValue={normalizedValue?.start ?? normalizedValue?.end ?? undefined}
+				defaultFocusedValue={normalizedValue?.start ??
+					normalizedValue?.end ??
+					normalizedDefaultValue?.start ??
+					normalizedDefaultValue?.end ??
+					undefined}
 				disabled={resolvedDisabled}
 				{firstDayOfWeek}
 				header={calendarHeader}
@@ -637,7 +688,7 @@
 				locale={resolvedLocale}
 				{maxValue}
 				{minValue}
-				onFocusedValueChange={(next) => (previewFocus = next)}
+				onFocusedValueChange={(next) => (previewFocus = preserveCalendarOwner(next, ownerCalendar))}
 				onValueChange={select}
 				highlightRange={previewRange}
 				readonly={resolvedReadonly}
@@ -702,6 +753,7 @@
 			{maxValue}
 			{minValue}
 			onValueChange={updateStart}
+			placeholderValue={fieldPlaceholderValue}
 			readonly={resolvedReadonly}
 			required={resolvedRequired}
 			size={resolvedSize}
@@ -727,6 +779,7 @@
 			{maxValue}
 			{minValue}
 			onValueChange={updateEnd}
+			placeholderValue={fieldPlaceholderValue}
 			readonly={resolvedReadonly}
 			required={resolvedRequired}
 			size={resolvedSize}

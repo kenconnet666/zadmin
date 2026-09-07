@@ -106,7 +106,7 @@ describe('date-time picker runtime', () => {
 		const ownerNow = dateTimePickerNow(
 			constraints({ mode: 'zoned', timeZone: 'Asia/Shanghai' }),
 			instant,
-			'America/New_York'
+			parseZonedDateTime('2026-09-07T09:30-04:00[America/New_York]')
 		);
 		if (!(ownerNow instanceof ZonedDateTime)) throw new Error('Expected zoned Now.');
 		expect(ownerNow.timeZone).toBe('America/New_York');

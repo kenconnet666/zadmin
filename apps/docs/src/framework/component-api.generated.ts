@@ -8237,9 +8237,21 @@ export const visuallyHiddenApiFacts = {
 export const calendarApiFacts = {
 	declaration: 'ZCalendarProps',
 	id: 'calendar',
-	inheritedFrom: ['ZCalendarSingleProps | ZCalendarMultipleProps | ZCalendarRangeProps'],
+	inheritedFrom: [
+		"TView extends 'strip' ? TSelectionMode extends 'multiple' ? StripMultipleProps : TSelectionMode extends 'range' ? StripRangeProps : StripSingleProps : TSelectionMode extends 'multiple' ? MonthMultipleProps : TSelectionMode extends 'range' ? MonthRangeProps : MonthSingleProps"
+	],
 	name: 'ZCalendar',
 	props: [
+		{
+			name: 'selectionMode',
+			required: false,
+			type: 'TSelectionMode'
+		},
+		{
+			name: 'view',
+			required: false,
+			type: 'TView'
+		},
 		{
 			name: 'allowEmpty',
 			required: false,
@@ -8415,12 +8427,6 @@ export const calendarApiFacts = {
 			inheritedFrom: 'ZCalendarSharedProps'
 		},
 		{
-			name: 'visibleMonths',
-			required: false,
-			type: 'number',
-			inheritedFrom: 'ZCalendarSharedProps'
-		},
-		{
 			name: 'weekLabel',
 			required: false,
 			type: 'string',
@@ -8451,16 +8457,22 @@ export const calendarApiFacts = {
 			inheritedFrom: 'ZCalendarSingleBranch'
 		},
 		{
-			name: 'selectionMode',
-			required: false,
-			type: "'single' | 'multiple' | 'range'",
-			inheritedFrom: 'ZCalendarSingleBranch'
-		},
-		{
 			name: 'value',
 			required: false,
 			type: 'CalendarDateValue | null | readonly CalendarDateValue[] | CalendarRangeValue | null',
 			inheritedFrom: 'ZCalendarSingleBranch'
+		},
+		{
+			name: 'visibleMonths',
+			required: false,
+			type: 'number',
+			inheritedFrom: 'CalendarMonthViewOptions'
+		},
+		{
+			name: 'visibleDays',
+			required: false,
+			type: 'number',
+			inheritedFrom: 'CalendarMonthViewOptions'
 		}
 	],
 	source: 'ui/zui/src/components/input/ZCalendar.svelte',
@@ -9346,9 +9358,14 @@ export const dateRangePickerApiFacts = {
 export const dateTimeFieldApiFacts = {
 	declaration: 'ZDateTimeFieldProps',
 	id: 'date-time-field',
-	inheritedFrom: ['ZDateTimeFieldLocalProps | ZDateTimeFieldZonedProps'],
+	inheritedFrom: ["TMode extends 'zoned' ? ZDateTimeFieldZonedProps : ZDateTimeFieldLocalProps"],
 	name: 'ZDateTimeField',
 	props: [
+		{
+			name: 'mode',
+			required: false,
+			type: 'TMode'
+		},
 		{
 			name: 'controlId',
 			required: false,
@@ -9500,12 +9517,6 @@ export const dateTimeFieldApiFacts = {
 			inheritedFrom: 'ZDateTimeFieldLocalValueProps'
 		},
 		{
-			name: 'mode',
-			required: false,
-			type: "'local' | 'zoned'",
-			inheritedFrom: 'ZDateTimeFieldLocalValueProps'
-		},
-		{
 			name: 'onValueChange',
 			required: false,
 			type: '(value: CalendarDateTime | null) => void | (value: ZonedDateTime | null) => void',
@@ -9531,9 +9542,21 @@ export const dateTimeFieldApiFacts = {
 export const dateTimePickerApiFacts = {
 	declaration: 'ZDateTimePickerProps',
 	id: 'date-time-picker',
-	inheritedFrom: ['ZDateTimePickerLocalProps | ZDateTimePickerZonedProps'],
+	inheritedFrom: [
+		"TMode extends 'zoned' ? TPresentation extends 'inline' ? ZonedInlineProps : ZonedPopoverProps : TPresentation extends 'inline' ? LocalInlineProps : LocalPopoverProps"
+	],
 	name: 'ZDateTimePicker',
 	props: [
+		{
+			name: 'mode',
+			required: false,
+			type: 'TMode'
+		},
+		{
+			name: 'presentation',
+			required: false,
+			type: 'TPresentation'
+		},
 		{
 			name: 'calendarLabel',
 			required: false,
@@ -9781,12 +9804,6 @@ export const dateTimePickerApiFacts = {
 			inheritedFrom: 'ZDateTimePickerLocalValueProps'
 		},
 		{
-			name: 'mode',
-			required: false,
-			type: "'local' | 'zoned'",
-			inheritedFrom: 'ZDateTimePickerLocalValueProps'
-		},
-		{
 			name: 'onCommit',
 			required: false,
 			type: '(value: CalendarDateTime | null) => void | (value: ZonedDateTime | null) => void',
@@ -9815,12 +9832,6 @@ export const dateTimePickerApiFacts = {
 			required: false,
 			type: 'CalendarDateTime | null | ZonedDateTime | null',
 			inheritedFrom: 'ZDateTimePickerLocalValueProps'
-		},
-		{
-			name: 'presentation',
-			required: false,
-			type: "'popover' | 'inline'",
-			inheritedFrom: 'PopoverPickerPresentationProps'
 		},
 		{
 			name: 'defaultOpen',
@@ -9854,9 +9865,21 @@ export const dateTimePickerApiFacts = {
 export const dateTimeRangePickerApiFacts = {
 	declaration: 'ZDateTimeRangePickerProps',
 	id: 'date-time-range-picker',
-	inheritedFrom: ['ZDateTimeRangePickerLocalProps | ZDateTimeRangePickerZonedProps'],
+	inheritedFrom: [
+		"TMode extends 'zoned' ? TPresentation extends 'inline' ? ZonedInlineProps : ZonedPopoverProps : TPresentation extends 'inline' ? LocalInlineProps : LocalPopoverProps"
+	],
 	name: 'ZDateTimeRangePicker',
 	props: [
+		{
+			name: 'mode',
+			required: false,
+			type: 'TMode'
+		},
+		{
+			name: 'presentation',
+			required: false,
+			type: 'TPresentation'
+		},
 		{
 			name: 'allowEmpty',
 			required: false,
@@ -10140,12 +10163,6 @@ export const dateTimeRangePickerApiFacts = {
 			inheritedFrom: 'ZDateTimeRangePickerLocalBranch'
 		},
 		{
-			name: 'mode',
-			required: false,
-			type: "'local' | 'zoned'",
-			inheritedFrom: 'ZDateTimeRangePickerLocalBranch'
-		},
-		{
 			name: 'onCommit',
 			required: false,
 			type: '(value: LocalDateTimeRangeValue | null) => void | (value: ZonedDateTimeRangeValue | null) => void',
@@ -10174,12 +10191,6 @@ export const dateTimeRangePickerApiFacts = {
 			required: false,
 			type: 'LocalDateTimeRangeValue | null | ZonedDateTimeRangeValue | null',
 			inheritedFrom: 'ZDateTimeRangePickerLocalBranch'
-		},
-		{
-			name: 'presentation',
-			required: false,
-			type: "'popover' | 'inline'",
-			inheritedFrom: 'PopoverPickerPresentationProps'
 		},
 		{
 			name: 'defaultOpen',
@@ -10928,6 +10939,7 @@ export const inputApiFacts = {
 		formListApiFacts,
 		inputGroupApiFacts,
 		mentionApiFacts,
+		miniCalendarApiFacts,
 		nativeSelectApiFacts,
 		numberFieldApiFacts,
 		passwordInputApiFacts,
@@ -11176,6 +11188,152 @@ export const mentionApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZMention.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
+export const miniCalendarApiFacts = {
+	declaration: 'ZMiniCalendarProps',
+	id: 'mini-calendar',
+	inheritedFrom: ['HTMLAttributes<HTMLDivElement>'],
+	name: 'ZMiniCalendar',
+	props: [
+		{
+			name: 'calendarLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'dateCell',
+			required: false,
+			type: 'Snippet<[context: CalendarCellContext]>'
+		},
+		{
+			name: 'defaultFocusedValue',
+			required: false,
+			type: 'CalendarDate'
+		},
+		{
+			name: 'defaultValue',
+			required: false,
+			type: 'CalendarDate | null'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'firstDayOfWeek',
+			required: false,
+			type: 'Weekday'
+		},
+		{
+			name: 'focusedValue',
+			required: false,
+			type: 'CalendarDate'
+		},
+		{
+			name: 'form',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'formParticipation',
+			required: false,
+			type: "'auto' | 'none'"
+		},
+		{
+			name: 'header',
+			required: false,
+			type: 'Snippet<[context: CalendarHeaderContext]>'
+		},
+		{
+			name: 'invalid',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'isDateUnavailable',
+			required: false,
+			type: '(date: CalendarDate) => boolean'
+		},
+		{
+			name: 'locale',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'maxValue',
+			required: false,
+			type: 'CalendarDate'
+		},
+		{
+			name: 'minValue',
+			required: false,
+			type: 'CalendarDate'
+		},
+		{
+			name: 'name',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'nextLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'onFocusedValueChange',
+			required: false,
+			type: '(value: CalendarDate) => void'
+		},
+		{
+			name: 'onValueChange',
+			required: false,
+			type: '(value: CalendarDate | null) => void'
+		},
+		{
+			name: 'previousLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null'
+		},
+		{
+			name: 'required',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
+			name: 'timeZone',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'value',
+			required: false,
+			type: 'CalendarDate | null'
+		},
+		{
+			name: 'visibleDays',
+			required: false,
+			type: 'number'
+		}
+	],
+	source: 'ui/zui/src/components/input/ZMiniCalendar.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 

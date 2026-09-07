@@ -1,7 +1,7 @@
 <script module lang="ts">
 	import type { CalendarRangeValue } from '../../runtime/date.js';
 	import type { FormControlDraftState } from '../../runtime/form/form-value-adapter.svelte.js';
-	import { ZonedDateTime, type CalendarDateTime, type Time } from '@internationalized/date';
+	import type { CalendarDateTime, Time, ZonedDateTime } from '@internationalized/date';
 	import type { Snippet } from 'svelte';
 	import type { TimeFieldSegment, Weekday } from '../../runtime/date.js';
 	import type { DateTimeDisambiguation, DateTimeMode } from '../../runtime/date-time.js';
@@ -316,18 +316,12 @@
 
 	function choosePreset(preset: DateTimePickerPreset): void {
 		if (disabled || readonly) return;
-		updateCandidate(resolveDateTimePickerPreset(preset, constraints));
+		updateCandidate(resolveDateTimePickerPreset(preset, constraints, reference));
 	}
 
 	function chooseNow(): void {
 		if (disabled || readonly) return;
-		updateCandidate(
-			dateTimePickerNow(
-				constraints,
-				new Date(),
-				reference instanceof ZonedDateTime ? reference.timeZone : undefined
-			)
-		);
+		updateCandidate(dateTimePickerNow(constraints, new Date(), reference));
 	}
 
 	function confirm(): void {

@@ -2,7 +2,7 @@
 	import type { CalendarDate as CalendarDateValue } from '@internationalized/date';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
-	import type { DateFieldSegment } from '../../runtime/date.js';
+	import { supportedDisplayCalendars, type DateFieldSegment } from '../../runtime/date.js';
 	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
 	import type { FormControlDraftState } from '../../runtime/form/form-value-adapter.svelte.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
@@ -85,7 +85,7 @@
 			{ description: '提交完整segment草稿。', key: 'Enter' },
 			{ description: '放弃未提交草稿并恢复当前值。', key: 'Escape' }
 		],
-		parts: [{ description: 'year/month/day输入。', name: 'segment' }],
+		parts: [{ description: 'display calendar的era/year/month/day原生控件。', name: 'segment' }],
 		props: [
 			{
 				default: "'field'",
@@ -108,7 +108,8 @@
 			},
 			{
 				default: 'today(timeZone)',
-				description: '空值首次编辑或键盘步进时补齐尚未编辑segment的Gregorian日期。',
+				description:
+					'空值首次编辑或键盘步进的日期参考；其calendar在没有current/default owner时建立模型历法。',
 				name: 'placeholderValue',
 				type: 'CalendarDate'
 			},
@@ -150,7 +151,8 @@
 			},
 			{
 				default: 'Provider locale',
-				description: 'segment DOM顺序和数字格式。',
+				description:
+					'决定Unicode ca display calendar、segment顺序、era标签与本地数字解析/格式；不改写模型calendar。',
 				name: 'locale',
 				type: 'string'
 			},
@@ -162,7 +164,7 @@
 			},
 			{
 				default: 'localePack.date对应segment',
-				description: '覆盖year、month、day segment可访问名称。',
+				description: '覆盖era、year、month、day segment可访问名称。',
 				name: 'segmentLabel',
 				type: '(segment: DateSegment) => string'
 			},
@@ -199,13 +201,19 @@
 		states: [
 			{ description: '存在不完整或非法segment。', name: 'data-invalid', values: ['true'] },
 			{
+				description: 'locale解析并由实际算法承载的display calendar。',
+				name: 'data-calendar',
+				values: supportedDisplayCalendars
+			},
+			{
 				description: '解析后的五档控件尺寸。',
 				name: 'data-size',
 				values: ['xsmall', 'small', 'medium', 'large', 'xlarge']
 			}
 		],
 		status: 'stable',
-		summary: '按locale排列year/month/day、使用CalendarDate约束并桥接表单的Date Field。'
+		summary:
+			'按locale display calendar编辑era/year/month/day、回写原CalendarDate owner并桥接表单的Date Field。'
 	} as const satisfies ZuiComponentMetadata;
 
 	const rootRecipe = defineRecipe({
@@ -283,6 +291,7 @@
 			s.flexShrink(0);
 		},
 		variants: {
+			era: { false: () => undefined, true: (s) => s.width.auto },
 			size: {
 				xsmall: (s) => {
 					s.fontSize._xsmall;
@@ -302,14 +311,14 @@
 			},
 			year: { false: () => undefined, true: (s) => s.width.ch(4) }
 		},
-		defaultVariants: { size: 'medium', year: false }
+		defaultVariants: { era: false, size: 'medium', year: false }
 	});
 	registerRecipeHmr(import.meta, rootRecipe);
 	registerRecipeHmr(import.meta, segmentRecipe);
 </script>
 
 <script lang="ts">
-	import { CalendarDate, today } from '@internationalized/date';
+	import { CalendarDate, today, type Calendar } from '@internationalized/date';
 	import { onDestroy, untrack } from 'svelte';
 	import {
 		moveIndex,
@@ -326,10 +335,15 @@
 		createFormControlState
 	} from '../../runtime/form/form-value-adapter.svelte.js';
 	import {
-		clampDate,
+		calendarEraOptions,
 		dateFieldPattern,
 		isDateUnavailable as dateIsUnavailable,
-		normalizeCalendarDateModelValue
+		normalizeCalendarDateModelValue,
+		preserveCalendarOwner,
+		resolveDisplayCalendar,
+		resolveOwnerCalendar,
+		toDisplayCalendar,
+		type CalendarEraOption
 	} from '../../runtime/date.js';
 	import {
 		applyIcssRootStyle,
@@ -340,6 +354,7 @@
 	import { useZInputGroup } from '../../runtime/form/input-group-context.svelte.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { getElementDirection } from '../../runtime/layer/dom-realm.js';
+	import { parseLocalizedNumber } from '../../runtime/number.js';
 
 	let {
 		'aria-describedby': ariaDescribedBy,
@@ -378,7 +393,8 @@
 	const fieldOwner = claimZFieldControlOwner();
 	const field = fieldOwner.field;
 	const group = useZInputGroup();
-	const valueScope = formParticipation === 'auto' ? claimFormValueScope() : null;
+	const claimedValueScope = untrack(claimFormValueScope);
+	const valueScope = untrack(() => (formParticipation === 'auto' ? claimedValueScope : null));
 	const uid = $props.id();
 	const idBase = $derived(
 		controlId ??
@@ -389,6 +405,9 @@
 	const resolvedLocale = $derived(locale ?? zui.locale);
 	const resolvedTimeZone = $derived(timeZone ?? zui.timeZone);
 	const resolvedDirection = $derived(dirProp ?? zui.direction);
+	const normalizedDefaultValue = $derived(
+		normalizeCalendarDateModelValue(defaultValue, 'ZDateField defaultValue')
+	);
 	const resolvedPlaceholderValue = $derived.by(() => {
 		if (placeholderValue === undefined) return today(resolvedTimeZone);
 		const normalized = normalizeCalendarDateModelValue(
@@ -418,13 +437,21 @@
 		)
 	);
 	const constraints = $derived.by(() => {
-		if (minValue && maxValue && minValue.compare(maxValue) > 0)
+		const min =
+			minValue === undefined
+				? undefined
+				: (normalizeCalendarDateModelValue(minValue, 'ZDateField minValue') ?? undefined);
+		const max =
+			maxValue === undefined
+				? undefined
+				: (normalizeCalendarDateModelValue(maxValue, 'ZDateField maxValue') ?? undefined);
+		if (min && max && min.compare(max) > 0)
 			throw new RangeError('ZDateField minValue cannot exceed maxValue.');
-		return { maxValue, minValue };
+		return { maxValue: max, minValue: min };
 	});
 	const valueState = createFormControlState<CalendarDate | null>(
 		{
-			defaultValue: () => defaultValue ?? null,
+			defaultValue: () => normalizedDefaultValue,
 			draftState: () => inspectDraftState(),
 			element: () => ref,
 			normalizeModelValue: (candidate) => normalizeCalendarDateModelValue(candidate, 'ZDateField'),
@@ -439,8 +466,40 @@
 	);
 	let drafts = $state<Partial<Record<DateSegment, string>>>({});
 	let draftInvalid = $state(false);
-	const inputs = $state<(HTMLInputElement | null)[]>([]);
-	const pattern = $derived(dateFieldPattern(resolvedLocale, resolvedTimeZone));
+	type DateSegmentControl = HTMLInputElement | HTMLSelectElement;
+	const inputs = $state<(DateSegmentControl | null)[]>([]);
+	const displayCalendar = $derived(resolveDisplayCalendar(resolvedLocale));
+	let rememberedOwnerCalendar = $state.raw<Calendar | null>(
+		untrack(
+			() =>
+				valueState.current?.calendar ??
+				normalizedDefaultValue?.calendar ??
+				(placeholderValue === undefined ? null : resolvedPlaceholderValue.calendar)
+		)
+	);
+	const configuredOwnerCalendar = $derived(
+		valueState.current?.calendar ??
+			normalizedDefaultValue?.calendar ??
+			(placeholderValue === undefined ? null : resolvedPlaceholderValue.calendar)
+	);
+	const ownerCalendar = $derived<Calendar>(
+		configuredOwnerCalendar ?? rememberedOwnerCalendar ?? resolveOwnerCalendar()
+	);
+	const displayValue = $derived(
+		valueState.current ? toDisplayCalendar(valueState.current, displayCalendar) : null
+	);
+	const ownerReference = $derived(
+		valueState.current ?? normalizedDefaultValue ?? resolvedPlaceholderValue
+	);
+	const displayReference = $derived(toDisplayCalendar(ownerReference, displayCalendar));
+	const eraOptions = $derived<readonly CalendarEraOption[]>(
+		calendarEraOptions(displayReference, resolvedLocale, resolvedTimeZone)
+	);
+	const pattern = $derived(dateFieldPattern(resolvedLocale, resolvedTimeZone, displayReference));
+	$effect(() => {
+		const next = configuredOwnerCalendar;
+		if (next) rememberedOwnerCalendar = next;
+	});
 	const segmentOrder = $derived(
 		pattern.flatMap((part) => ('segment' in part ? [part.segment] : []))
 	);
@@ -457,6 +516,7 @@
 			s.minHeight.raw(controlSizeMetrics(zui.theme, resolvedSize).contentHeight);
 		})
 	);
+	const yearWidthClass = $derived(zui.icss((s) => s.width.ch(maximumSegmentLength('year')!)));
 	const variables = $derived(readIcssCarrier(rest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
 	const localDraftState = $derived.by<FormControlDraftState>(() => inspectDraftState());
@@ -466,15 +526,92 @@
 		if (kind === 'incomplete') return zui.localePack.date.incompleteDate;
 		return zui.localePack.date.invalidDate;
 	}
+	function fixedSegmentLength(segment: DateSegment): number | undefined {
+		if (segment === 'era') return undefined;
+		if (segment === 'year' && displayCalendar.identifier !== 'gregory') return undefined;
+		return segment === 'year' ? 4 : 2;
+	}
+	function maximumSegmentLength(segment: DateSegment): number | undefined {
+		if (segment === 'era') return undefined;
+		if (segment === 'year')
+			return displayCalendar.identifier === 'gregory'
+				? 4
+				: String(displayCalendar.getYearsInEra(displayReference)).length;
+		return 2;
+	}
+	function parseSegmentNumber(raw: string): number | undefined {
+		const parsed = parseLocalizedNumber(raw, resolvedLocale);
+		return parsed.valid && Number.isInteger(parsed.value) && (parsed.value ?? 0) > 0
+			? parsed.value
+			: undefined;
+	}
+	function segmentIncomplete(segment: DateSegment, raw: string): boolean {
+		if (!raw) return true;
+		const fixed = fixedSegmentLength(segment);
+		return fixed !== undefined && raw.length < fixed;
+	}
+	function segmentInvalid(segment: DateSegment, raw: string): boolean {
+		if (segment === 'era') return !displayCalendar.getEras().includes(raw);
+		const maximum = maximumSegmentLength(segment)!;
+		const fixed = fixedSegmentLength(segment);
+		return (
+			raw.length > maximum ||
+			(fixed !== undefined && raw.length !== fixed) ||
+			parseSegmentNumber(raw) === undefined
+		);
+	}
+	function formatSegmentNumber(value: number, segment: Exclude<DateSegment, 'era'>): string {
+		return new Intl.NumberFormat(resolvedLocale, {
+			maximumFractionDigits: 0,
+			minimumIntegerDigits: fixedSegmentLength(segment) ?? 1,
+			useGrouping: false
+		}).format(value);
+	}
+	function displayCandidate(): CalendarDate | null {
+		const reference = displayValue ?? displayReference;
+		const era = drafts.era ?? reference.era;
+		const year = drafts.year === undefined ? reference.year : parseSegmentNumber(drafts.year);
+		const month = drafts.month === undefined ? reference.month : parseSegmentNumber(drafts.month);
+		const day = drafts.day === undefined ? reference.day : parseSegmentNumber(drafts.day);
+		if (
+			!displayCalendar.getEras().includes(era) ||
+			year === undefined ||
+			month === undefined ||
+			day === undefined
+		)
+			return null;
+		try {
+			const candidate = new CalendarDate(displayCalendar, era, year, month, day);
+			return candidate.era === era &&
+				candidate.year === year &&
+				candidate.month === month &&
+				candidate.day === day
+				? candidate
+				: null;
+		} catch {
+			return null;
+		}
+	}
+	function ownerCandidate(candidate: CalendarDate): CalendarDate {
+		return preserveCalendarOwner(candidate, ownerCalendar);
+	}
+	function candidateUnavailable(candidate: CalendarDate): boolean {
+		return dateIsUnavailable(
+			candidate,
+			constraints.minValue,
+			constraints.maxValue,
+			isDateUnavailable
+		);
+	}
 
 	function inspectDraftState(): FormControlDraftState {
+		const rules = constraints;
 		const entries = Object.entries(drafts) as [DateSegment, string][];
 		if (entries.length === 0) {
 			const current = valueState.current;
 			const requiredMissing = resolvedRequired && current === null;
 			const constrained = Boolean(
-				current &&
-				dateIsUnavailable(current, constraints.minValue, constraints.maxValue, isDateUnavailable)
+				current && dateIsUnavailable(current, rules.minValue, rules.maxValue, isDateUnavailable)
 			);
 			const valid = !requiredMissing && !constrained;
 			return Object.freeze({
@@ -484,113 +621,120 @@
 			});
 		}
 		if (
-			(valueState.current === null &&
-				segmentOrder.some((segment) => drafts[segment] === undefined)) ||
-			entries.some(
-				([segment, raw]) => raw.length !== (segment === 'year' ? 4 : 2) || !/^\d+$/u.test(raw)
-			)
+			(valueState.current === null && segmentOrder.some((segment) => !drafts[segment])) ||
+			entries.some(([segment, raw]) => segmentIncomplete(segment, raw))
 		)
 			return Object.freeze({ dirty: true, message: draftMessage('incomplete'), valid: false });
-		const year = Number(drafts.year ?? valueState.current?.year ?? resolvedPlaceholderValue.year);
-		const month = Number(
-			drafts.month ?? valueState.current?.month ?? resolvedPlaceholderValue.month
-		);
-		const day = Number(drafts.day ?? valueState.current?.day ?? resolvedPlaceholderValue.day);
-		try {
-			const next = new CalendarDate(year, month, day);
-			const valid =
-				next.year === year &&
-				next.month === month &&
-				next.day === day &&
-				!dateIsUnavailable(next, constraints.minValue, constraints.maxValue, isDateUnavailable);
-			return Object.freeze({
-				dirty: true,
-				message: valid ? undefined : draftMessage('invalid'),
-				valid
-			});
-		} catch {
+		if (entries.some(([segment, raw]) => segmentInvalid(segment, raw)))
 			return Object.freeze({ dirty: true, message: draftMessage('invalid'), valid: false });
-		}
+		const displayed = displayCandidate();
+		const valid = Boolean(displayed && !candidateUnavailable(ownerCandidate(displayed)));
+		return Object.freeze({
+			dirty: true,
+			message: valid ? undefined : draftMessage('invalid'),
+			valid
+		});
 	}
 
 	function syncInputs(next: CalendarDate | null): void {
+		const displayed = next ? toDisplayCalendar(next, displayCalendar) : null;
 		for (const [index, segment] of segmentOrder.entries()) {
-			const raw = segment === 'year' ? next?.year : segment === 'month' ? next?.month : next?.day;
-			if (inputs[index])
-				inputs[index].value =
-					raw === undefined ? '' : String(raw).padStart(segment === 'year' ? 4 : 2, '0');
+			const control = inputs[index];
+			if (!control) continue;
+			if (segment === 'era') {
+				control.value = displayed?.era ?? displayReference.era;
+				continue;
+			}
+			const raw =
+				segment === 'year'
+					? displayed?.year
+					: segment === 'month'
+						? displayed?.month
+						: displayed?.day;
+			control.value =
+				raw === undefined ? '' : formatSegmentNumber(raw, segment as Exclude<DateSegment, 'era'>);
 		}
 	}
 
 	function segmentValue(segment: DateSegment): string {
 		const draft = drafts[segment];
 		if (draft !== undefined) return draft;
-		const current = valueState.current;
+		if (segment === 'era') return displayValue?.era ?? displayReference.era;
+		const current = displayValue;
 		if (!current) return '';
 		const raw =
 			segment === 'year' ? current.year : segment === 'month' ? current.month : current.day;
-		return String(raw).padStart(segment === 'year' ? 4 : 2, '0');
+		return formatSegmentNumber(raw, segment as Exclude<DateSegment, 'era'>);
+	}
+	function segmentClass(segment: DateSegment): unknown[] {
+		return [
+			zui.recipe(segmentRecipe, {
+				era: segment === 'era',
+				size: resolvedSize,
+				year: segment === 'year'
+			}),
+			contentClass,
+			segment === 'year' && yearWidthClass
+		];
 	}
 
 	function commitDrafts(markIncomplete = true): boolean {
 		if (Object.keys(drafts).length === 0) return true;
 		if (
 			valueState.current === null &&
-			segmentOrder.some(
-				(segment) => (drafts[segment]?.length ?? 0) !== (segment === 'year' ? 4 : 2)
-			)
+			segmentOrder.some((segment) => !drafts[segment] || segmentInvalid(segment, drafts[segment]!))
 		) {
 			draftInvalid = markIncomplete;
 			return false;
 		}
-		const year = Number(drafts.year ?? valueState.current?.year ?? resolvedPlaceholderValue.year);
-		const month = Number(
-			drafts.month ?? valueState.current?.month ?? resolvedPlaceholderValue.month
-		);
-		const day = Number(drafts.day ?? valueState.current?.day ?? resolvedPlaceholderValue.day);
-		if (![year, month, day].every(Number.isInteger)) {
-			draftInvalid = markIncomplete;
-			return false;
-		}
-		try {
-			const next = new CalendarDate(year, month, day);
-			if (next.year !== year || next.month !== month || next.day !== day) throw new Error();
-			if (dateIsUnavailable(next, constraints.minValue, constraints.maxValue, isDateUnavailable)) {
-				draftInvalid = true;
-				return false;
-			}
-			if (!valueState.setFromUser(next)) {
-				rollbackDraft();
-				return false;
-			}
-			drafts = {};
-			draftInvalid = false;
-			return true;
-		} catch {
+		const displayed = displayCandidate();
+		if (!displayed) {
 			draftInvalid = true;
 			return false;
 		}
+		const next = ownerCandidate(displayed);
+		if (candidateUnavailable(next)) {
+			draftInvalid = true;
+			return false;
+		}
+		if (!valueState.setFromUser(next)) {
+			rollbackDraft();
+			return false;
+		}
+		drafts = {};
+		draftInvalid = false;
+		return true;
 	}
 
 	function availableFrom(candidate: CalendarDate, direction: -1 | 1): CalendarDate | null {
-		let next = clampDate(candidate, minValue, maxValue);
+		let next = candidate;
+		let owned = ownerCandidate(next);
+		if (constraints.minValue && owned.compare(constraints.minValue) < 0) {
+			next = toDisplayCalendar(constraints.minValue, displayCalendar);
+			owned = ownerCandidate(next);
+		}
+		if (constraints.maxValue && owned.compare(constraints.maxValue) > 0) {
+			next = toDisplayCalendar(constraints.maxValue, displayCalendar);
+			owned = ownerCandidate(next);
+		}
 		for (let attempts = 0; attempts < 3660; attempts += 1) {
-			if (!dateIsUnavailable(next, minValue, maxValue, isDateUnavailable)) return next;
+			if (!candidateUnavailable(owned)) return owned;
 			const stepped = next.add({ days: direction });
+			const steppedOwner = ownerCandidate(stepped);
 			if (
-				(minValue && stepped.compare(minValue) < 0) ||
-				(maxValue && stepped.compare(maxValue) > 0)
+				(constraints.minValue && steppedOwner.compare(constraints.minValue) < 0) ||
+				(constraints.maxValue && steppedOwner.compare(constraints.maxValue) > 0)
 			)
 				return null;
 			next = stepped;
+			owned = steppedOwner;
 		}
 		return null;
 	}
 
 	function cycle(segment: DateSegment, amount: number): void {
 		if (resolvedDisabled || resolvedReadonly) return;
-		const base = valueState.current ?? resolvedPlaceholderValue;
-		const next = availableFrom(base.cycle(segment, amount), amount < 0 ? -1 : 1);
+		const next = availableFrom(displayReference.cycle(segment, amount), amount < 0 ? -1 : 1);
 		if (!next) return;
 		if (!valueState.setFromUser(next)) {
 			rollbackDraft();
@@ -602,8 +746,13 @@
 
 	function move(index: number, intent: NavigationIntent): void {
 		const target = moveIndex(segmentOrder.length, index, intent, false);
-		inputs[target]?.focus({ preventScroll: true });
-		inputs[target]?.select();
+		focusSegment(target);
+	}
+
+	function focusSegment(index: number): void {
+		const control = inputs[index];
+		control?.focus({ preventScroll: true });
+		if (control?.tagName === 'INPUT') (control as HTMLInputElement).select();
 	}
 
 	function handleKey(event: KeyboardEvent, segment: DateSegment, index: number): void {
@@ -655,16 +804,20 @@
 		segment: DateSegment,
 		index: number
 	): void {
-		const nextDraft = event.currentTarget.value.replace(/\D/gu, '');
+		const nextDraft = event.currentTarget.value;
 		drafts = { ...drafts, [segment]: nextDraft };
 		if (valueState.current === null)
 			drafts = Object.fromEntries(
 				segmentOrder.map((key, inputIndex) => [
 					key,
-					inputIndex === index ? nextDraft : (inputs[inputIndex]?.value.replace(/\D/gu, '') ?? '')
+					inputIndex === index
+						? nextDraft
+						: key === 'era'
+							? (inputs[inputIndex]?.value ?? '')
+							: (inputs[inputIndex]?.value ?? '')
 				])
 			) as Partial<Record<DateSegment, string>>;
-		if (inputs.every((input) => !input?.value)) {
+		if (segmentOrder.every((key, inputIndex) => key === 'era' || !inputs[inputIndex]?.value)) {
 			if (!valueState.setFromUser(null)) {
 				rollbackDraft();
 				return;
@@ -673,11 +826,24 @@
 			draftInvalid = false;
 			return;
 		}
-		const expectedLength = segment === 'year' ? 4 : 2;
-		if (nextDraft.length === expectedLength) {
+		const expectedLength = fixedSegmentLength(segment);
+		if (
+			expectedLength !== undefined &&
+			nextDraft.length === expectedLength &&
+			parseSegmentNumber(nextDraft) !== undefined
+		) {
 			commitDrafts(false);
 			if (index < segmentOrder.length - 1) move(index, 'next');
 		}
+	}
+
+	function handleEraChange(event: Event & { currentTarget: HTMLSelectElement }): void {
+		if (resolvedDisabled || resolvedReadonly || event.currentTarget.matches(':disabled')) {
+			syncInputs(valueState.current);
+			return;
+		}
+		drafts = { ...drafts, era: event.currentTarget.value };
+		commitDrafts(false);
 	}
 
 	function handleFocusOut(event: FocusEvent & { currentTarget: HTMLDivElement }): void {
@@ -691,9 +857,9 @@
 		commitDrafts();
 	}
 
-	onDestroy(fieldOwner.registerFocusOwner(() => inputs[0]?.focus({ preventScroll: true })));
+	onDestroy(fieldOwner.registerFocusOwner(() => focusSegment(0)));
 	if (group && formParticipation === 'auto')
-		onDestroy(group.registerControl({ focus: () => inputs[0]?.focus({ preventScroll: true }) }));
+		onDestroy(group.registerControl({ focus: () => focusSegment(0) }));
 	$effect(() => {
 		const state = localDraftState;
 		untrack(() => onDraftChange?.(state));
@@ -715,6 +881,7 @@
 	aria-describedby={describedBy}
 	aria-disabled={resolvedDisabled || undefined}
 	data-disabled={resolvedDisabled || undefined}
+	data-calendar={displayCalendar.identifier}
 	data-invalid={draftInvalid || resolvedInvalid || undefined}
 	data-readonly={resolvedReadonly || undefined}
 	data-required={resolvedRequired || undefined}
@@ -724,36 +891,56 @@
 	{#each pattern as part, partIndex (partIndex)}
 		{#if 'literal' in part}<span aria-hidden="true">{part.literal}</span>{:else}
 			{@const index = segmentOrder.indexOf(part.segment)}
-			<input
-				bind:this={inputs[index]}
-				class={[
-					zui.recipe(segmentRecipe, {
-						size: resolvedSize,
-						year: part.segment === 'year'
-					}),
-					contentClass
-				]}
-				id={index === 0 ? idBase : `${idBase}-${part.segment}`}
-				type="text"
-				inputmode="numeric"
-				autocomplete="off"
-				value={segmentValue(part.segment)}
-				maxlength={part.segment === 'year' ? 4 : 2}
-				disabled={resolvedDisabled}
-				readonly={resolvedReadonly}
-				required={resolvedRequired}
-				aria-label={index === 0 && field
-					? undefined
-					: (segmentLabel?.(part.segment) ?? zui.localePack.date[part.segment])}
-				aria-labelledby={index === 0 ? labelledBy : undefined}
-				aria-describedby={describedBy}
-				aria-invalid={draftInvalid || resolvedInvalid ? 'true' : ariaInvalid}
-				aria-readonly={resolvedReadonly || undefined}
-				aria-required={resolvedRequired || undefined}
-				onfocus={(event) => event.currentTarget.select()}
-				oninput={(event) => handleInput(event, part.segment, index)}
-				onkeydown={(event) => handleKey(event, part.segment, index)}
-			/>
+			{#if part.segment === 'era'}
+				<select
+					bind:this={inputs[index]}
+					class={segmentClass(part.segment)}
+					id={index === 0 ? idBase : `${idBase}-${part.segment}`}
+					autocomplete="off"
+					value={segmentValue(part.segment)}
+					disabled={resolvedDisabled}
+					required={resolvedRequired}
+					aria-label={index === 0 && field
+						? undefined
+						: (segmentLabel?.(part.segment) ?? zui.localePack.date[part.segment])}
+					aria-labelledby={index === 0 ? labelledBy : undefined}
+					aria-describedby={describedBy}
+					aria-invalid={draftInvalid || resolvedInvalid ? 'true' : ariaInvalid}
+					aria-readonly={resolvedReadonly || undefined}
+					aria-required={resolvedRequired || undefined}
+					onchange={handleEraChange}
+					onkeydown={(event) => handleKey(event, part.segment, index)}
+				>
+					{#each eraOptions as option (option.identifier)}
+						<option value={option.identifier}>{option.label}</option>
+					{/each}
+				</select>
+			{:else}
+				<input
+					bind:this={inputs[index]}
+					class={segmentClass(part.segment)}
+					id={index === 0 ? idBase : `${idBase}-${part.segment}`}
+					type="text"
+					inputmode="numeric"
+					autocomplete="off"
+					value={segmentValue(part.segment)}
+					maxlength={maximumSegmentLength(part.segment)}
+					disabled={resolvedDisabled}
+					readonly={resolvedReadonly}
+					required={resolvedRequired}
+					aria-label={index === 0 && field
+						? undefined
+						: (segmentLabel?.(part.segment) ?? zui.localePack.date[part.segment])}
+					aria-labelledby={index === 0 ? labelledBy : undefined}
+					aria-describedby={describedBy}
+					aria-invalid={draftInvalid || resolvedInvalid ? 'true' : ariaInvalid}
+					aria-readonly={resolvedReadonly || undefined}
+					aria-required={resolvedRequired || undefined}
+					onfocus={(event) => event.currentTarget.select()}
+					oninput={(event) => handleInput(event, part.segment, index)}
+					onkeydown={(event) => handleKey(event, part.segment, index)}
+				/>
+			{/if}
 		{/if}
 	{/each}
 </div>

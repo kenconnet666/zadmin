@@ -16,8 +16,9 @@
 	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
 	import type { TimePickerDayPeriod } from '../../runtime/time-picker.js';
 	import type {
-		PopoverPickerPresentationProps,
-		InlinePickerPresentationProps
+		InlinePickerPresentationProps,
+		PickerPresentation,
+		PopoverPickerPresentationProps
 	} from '../../runtime/picker-presentation.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 
@@ -29,6 +30,7 @@
 		ZonedDateTimeRangeValue
 	} from '../../runtime/date-time-range.js';
 	export type DateTimeRangeCommitMode = 'confirm' | 'immediate';
+	type DateTimeRangePickerMode = 'local' | 'zoned';
 	export type DateTimeRangePickerSize = ZControlSize;
 
 	interface ZDateTimeRangePickerSharedProps extends Omit<
@@ -136,8 +138,16 @@
 			InlinePickerPresentationProps {}
 	export type ZDateTimeRangePickerLocalProps = LocalPopoverProps | LocalInlineProps;
 	export type ZDateTimeRangePickerZonedProps = ZonedPopoverProps | ZonedInlineProps;
-	export type ZDateTimeRangePickerProps =
-		ZDateTimeRangePickerLocalProps | ZDateTimeRangePickerZonedProps;
+	export type ZDateTimeRangePickerProps<
+		TMode extends DateTimeRangePickerMode = DateTimeRangePickerMode,
+		TPresentation extends PickerPresentation = PickerPresentation
+	> = { readonly mode?: TMode; readonly presentation?: TPresentation } & (TMode extends 'zoned'
+		? TPresentation extends 'inline'
+			? ZonedInlineProps
+			: ZonedPopoverProps
+		: TPresentation extends 'inline'
+			? LocalInlineProps
+			: LocalPopoverProps);
 
 	export const zuiMetadata = {
 		bindings: [
@@ -629,12 +639,15 @@
 		registerRecipeHmr(import.meta, recipe);
 </script>
 
-<script lang="ts">
+<script
+	lang="ts"
+	generics="TMode extends DateTimeRangePickerMode = DateTimeRangePickerMode, TPresentation extends PickerPresentation = PickerPresentation"
+>
 	import CalendarClock from '@lucide/svelte/icons/calendar-clock';
 	import PickerInlineSurface from './PickerInlineSurface.svelte';
 	import { resolvePickerPresentation } from '../../runtime/picker-presentation.js';
 	import X from '@lucide/svelte/icons/x';
-	import { Time, toCalendarDateTime, toZoned, today } from '@internationalized/date';
+	import { Time, toCalendarDateTime, toZoned, today, type Calendar } from '@internationalized/date';
 	import { onDestroy, untrack } from 'svelte';
 	import type {
 		DateTimePickerPanelController,
@@ -657,7 +670,11 @@
 		type DateTimeRangeConstraints,
 		type DateTimeRangeValue
 	} from '../../runtime/date-time-range.js';
-	import { resolveHourCycle } from '../../runtime/date.js';
+	import {
+		preserveCalendarOwner,
+		resolveHourCycle,
+		resolveOwnerCalendar
+	} from '../../runtime/date.js';
 	import { dateTimePickerParts } from '../../runtime/date-time-picker.js';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { resolveControlSize } from '../../runtime/foundation/control-size.js';
@@ -716,7 +733,7 @@
 		maxValue,
 		minValue,
 		minuteStep = 1,
-		mode = 'local',
+		mode = 'local' as TMode,
 		name: nameProp,
 		nextLabel,
 		noAvailableTimeLabel,
@@ -728,7 +745,7 @@
 		order = 'strict',
 		orderedRangeLabel,
 		pickerLabel,
-		presentation = 'popover',
+		presentation = 'popover' as TPresentation,
 		placement = 'bottom-start',
 		placeholderValue,
 		presets = [],
@@ -747,7 +764,7 @@
 		toggleDayPeriodLabel,
 		value = $bindable(),
 		...rest
-	}: ZDateTimeRangePickerProps = $props();
+	}: ZDateTimeRangePickerProps<TMode, TPresentation> = $props();
 	const zui = useZui();
 	const resolvedPresentation = $derived(resolvePickerPresentation(presentation));
 	const fieldOwner = claimZFieldControlOwner();
@@ -814,13 +831,22 @@
 		mode: mode as DateTimeMode,
 		order
 	});
-	const resolvedPlaceholder = $derived.by<DateTimePickerValue>(() => {
-		if (placeholderValue !== undefined)
-			return normalizeDateTimeModelValue(
-				placeholderValue,
-				mode as DateTimeMode,
-				'ZDateTimeRangePicker placeholderValue'
-			)!;
+	const normalizedDefaultValue = $derived(
+		normalizeDateTimeRangeModelValue(
+			defaultValue,
+			mode as DateTimeMode,
+			'ZDateTimeRangePicker defaultValue'
+		)
+	);
+	const explicitPlaceholderValue = $derived.by<DateTimePickerValue | null>(() => {
+		if (placeholderValue === undefined) return null;
+		return normalizeDateTimeModelValue(
+			placeholderValue,
+			mode as DateTimeMode,
+			'ZDateTimeRangePicker placeholderValue'
+		)!;
+	});
+	const generatedPlaceholder = $derived.by<DateTimePickerValue>(() => {
 		const local = toCalendarDateTime(today(resolvedTimeZone), new Time(0));
 		return mode === 'zoned' ? toZoned(local, resolvedTimeZone, disambiguation) : local;
 	});
@@ -840,7 +866,7 @@
 
 	const valueState = createFormControlState<RangeValue | null>(
 		{
-			defaultValue: () => normalizeDateTimeRangeModelValue(defaultValue, mode as DateTimeMode),
+			defaultValue: () => normalizedDefaultValue,
 			draftState: () => inspectDraftState(),
 			element: () => ref,
 			normalizeModelValue: (candidate) =>
@@ -858,6 +884,51 @@
 	const normalizedValue = $derived(
 		normalizeDateTimeRangeModelValue(valueState.current, mode as DateTimeMode)
 	);
+	let rememberedStartCalendar = $state.raw<Calendar | null>(
+		untrack(
+			() =>
+				normalizedValue?.start?.calendar ??
+				normalizedDefaultValue?.start?.calendar ??
+				explicitPlaceholderValue?.calendar ??
+				null
+		)
+	);
+	let rememberedEndCalendar = $state.raw<Calendar | null>(
+		untrack(
+			() =>
+				normalizedValue?.end?.calendar ??
+				normalizedDefaultValue?.end?.calendar ??
+				explicitPlaceholderValue?.calendar ??
+				null
+		)
+	);
+	const startOwnerCalendar = $derived<Calendar>(
+		normalizedValue?.start?.calendar ??
+			normalizedDefaultValue?.start?.calendar ??
+			explicitPlaceholderValue?.calendar ??
+			rememberedStartCalendar ??
+			normalizedValue?.end?.calendar ??
+			normalizedDefaultValue?.end?.calendar ??
+			rememberedEndCalendar ??
+			resolveOwnerCalendar()
+	);
+	const endOwnerCalendar = $derived<Calendar>(
+		normalizedValue?.end?.calendar ??
+			normalizedDefaultValue?.end?.calendar ??
+			explicitPlaceholderValue?.calendar ??
+			rememberedEndCalendar ??
+			normalizedValue?.start?.calendar ??
+			normalizedDefaultValue?.start?.calendar ??
+			rememberedStartCalendar ??
+			resolveOwnerCalendar()
+	);
+	const startPlaceholder = $derived(
+		preserveCalendarOwner(explicitPlaceholderValue ?? generatedPlaceholder, startOwnerCalendar)
+	);
+	const endPlaceholder = $derived(
+		preserveCalendarOwner(explicitPlaceholderValue ?? generatedPlaceholder, endOwnerCalendar)
+	);
+	const resolvedPlaceholder = $derived(rangePart === 'start' ? startPlaceholder : endPlaceholder);
 	let startFieldValue = $state<DateTimePickerValue | null>(
 		untrack(() => normalizedValue?.start ?? null)
 	);
@@ -916,6 +987,7 @@
 	const endFieldProps = $derived(buildFieldProps('end'));
 	function buildFieldProps(part: DateTimeRangePart): ZDateTimeFieldProps {
 		const projected = part === 'start' ? startFieldValue : endFieldValue;
+		const fieldPlaceholder = part === 'start' ? startPlaceholder : endPlaceholder;
 		const common = {
 			'aria-describedby': describedBy,
 			'aria-label': part === 'start' ? resolvedStartLabel : resolvedEndLabel,
@@ -951,7 +1023,7 @@
 				mode: 'zoned',
 				value: normalizeDateTimeModelValue(projected, 'zoned', 'ZDateTimeRangePicker field value'),
 				placeholderValue: normalizeDateTimeModelValue(
-					resolvedPlaceholder,
+					fieldPlaceholder,
 					'zoned',
 					'ZDateTimeRangePicker placeholder'
 				)!,
@@ -967,7 +1039,7 @@
 			mode: 'local',
 			value: normalizeDateTimeModelValue(projected, 'local', 'ZDateTimeRangePicker field value'),
 			placeholderValue: normalizeDateTimeModelValue(
-				resolvedPlaceholder,
+				fieldPlaceholder,
 				'local',
 				'ZDateTimeRangePicker placeholder'
 			)!,
@@ -1020,8 +1092,30 @@
 
 	function commit(next: RangeValue | null, notifyCommit: boolean): boolean {
 		if (!updateValue(next)) return false;
-		if (notifyCommit) (onCommit as ((value: RangeValue | null) => void) | undefined)?.(next);
+		if (notifyCommit)
+			(onCommit as ((value: RangeValue | null) => void) | undefined)?.(
+				normalizeDateTimeRangeModelValue(valueState.current, mode as DateTimeMode)
+			);
 		return true;
+	}
+
+	function endpointOwnerCalendar(part: DateTimeRangePart): Calendar {
+		return part === 'start' ? startOwnerCalendar : endOwnerCalendar;
+	}
+
+	function ownerEndpoint(
+		part: DateTimeRangePart,
+		next: DateTimePickerValue | null
+	): DateTimePickerValue | null {
+		return next ? preserveCalendarOwner(next, endpointOwnerCalendar(part)) : null;
+	}
+
+	function ownerRange(next: RangeValue | null): RangeValue | null {
+		if (!next) return null;
+		return Object.freeze({
+			start: ownerEndpoint('start', next.start),
+			end: ownerEndpoint('end', next.end)
+		});
 	}
 
 	function resolveCandidate(
@@ -1059,9 +1153,10 @@
 	}
 
 	function updateFromField(part: DateTimeRangePart, next: DateTimePickerValue | null): void {
-		if (part === 'start') startFieldValue = next;
-		else endFieldValue = next;
-		const resolved = resolveCandidate(normalizedValue, part, next);
+		const owned = ownerEndpoint(part, next);
+		if (part === 'start') startFieldValue = owned;
+		else endFieldValue = owned;
+		const resolved = resolveCandidate(normalizedValue, part, owned);
 		if (!resolved || !commit(resolved.range, false)) {
 			syncFields();
 			return;
@@ -1122,7 +1217,8 @@
 
 	function applyPanelCandidate(next: DateTimePickerValue): RangeValue | null {
 		if (resolvedDisabled || resolvedReadonly) return null;
-		const staged = stageDateTimeRangeCandidate(panelDraft, rangePart, next, order);
+		const owned = ownerEndpoint(rangePart, next)!;
+		const staged = stageDateTimeRangeCandidate(panelDraft, rangePart, owned, order);
 		panelDraft = staged.range;
 		rangePart = staged.part;
 		panelDirty = true;
@@ -1154,7 +1250,16 @@
 
 	function chooseRangePreset(preset: DateTimeRangePreset<DateTimeMode>): void {
 		if (resolvedDisabled || resolvedReadonly) return;
-		const candidate = resolveDateTimeRangePreset(preset, rangeConstraints);
+		const raw = typeof preset.value === 'function' ? preset.value() : preset.value;
+		const normalized = normalizeDateTimeRangeModelValue(
+			raw,
+			mode as DateTimeMode,
+			'ZDateTimeRangePicker preset'
+		);
+		const candidate = resolveDateTimeRangePreset(
+			{ label: preset.label, value: ownerRange(normalized) },
+			rangeConstraints
+		);
 		if (candidate === undefined) {
 			announceInvalid();
 			return;
@@ -1170,7 +1275,9 @@
 		if (!commit(null, true)) return;
 		setOpen(false);
 		ownerMicrotask(() =>
-			startFieldRef?.querySelector<HTMLInputElement>('input')?.focus({ preventScroll: true })
+			startFieldRef
+				?.querySelector<HTMLInputElement | HTMLSelectElement>('input, select')
+				?.focus({ preventScroll: true })
 		);
 	}
 
@@ -1209,6 +1316,8 @@
 		const current = normalizedValue;
 		const currentlyOpen = panelVisible;
 		const changed = !sameDateTimeRangeValue(current, observedOwner);
+		if (current?.start) rememberedStartCalendar = current.start.calendar;
+		if (current?.end) rememberedEndCalendar = current.end.calendar;
 		if (changed) untrack(() => syncFields(current));
 		if (currentlyOpen && (!previouslyOpen || changed)) {
 			panelDraft = current;
@@ -1228,7 +1337,9 @@
 	});
 	onDestroy(
 		fieldOwner.registerFocusOwner(() =>
-			startFieldRef?.querySelector<HTMLInputElement>('input')?.focus({ preventScroll: true })
+			startFieldRef
+				?.querySelector<HTMLInputElement | HTMLSelectElement>('input, select')
+				?.focus({ preventScroll: true })
 		)
 	);
 </script>

@@ -1,5 +1,7 @@
 import { getContext, setContext } from 'svelte';
 
+import { createContextKey } from '../../../runtime/foundation/context-key.js';
+
 import type { CompoundLogicalCollectionItem } from '../../../runtime/collection/compound-logical-collection.svelte.js';
 import type { SelectionKey } from '../../../runtime/collection/selection.js';
 import { CancelableEvent } from '../../../runtime/foundation/cancelable-event.js';
@@ -69,9 +71,12 @@ export interface ZMenuRadioGroupContext {
 	select(value: SelectionKey): void;
 }
 
-const MENU_CONTEXT = Symbol('zui-menu-context');
-const MENU_GROUP_CONTEXT = Symbol('zui-menu-group-context');
-const MENU_RADIO_GROUP_CONTEXT = Symbol('zui-menu-radio-group-context');
+const MENU_CONTEXT = createContextKey({ hot: import.meta.hot }, 'zui-menu-context');
+const MENU_GROUP_CONTEXT = createContextKey({ hot: import.meta.hot }, 'zui-menu-group-context');
+const MENU_RADIO_GROUP_CONTEXT = createContextKey(
+	{ hot: import.meta.hot },
+	'zui-menu-radio-group-context'
+);
 
 export function provideZMenu(context: ZMenuContext): ZMenuContext {
 	setContext(MENU_CONTEXT, context);

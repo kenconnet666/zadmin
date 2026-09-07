@@ -1,5 +1,7 @@
 import { getContext, setContext } from 'svelte';
 
+import { createContextKey } from '../../../runtime/foundation/context-key.js';
+
 import type { PortalTarget } from '../../../runtime/layer/portal.js';
 import type { PopoverPlacement } from '../popover/context.svelte.js';
 
@@ -126,8 +128,11 @@ export interface ZTooltipContext {
 	setTriggerFocused(focused: boolean): void;
 }
 
-const TOOLTIP_CONTEXT = Symbol('zui-tooltip-context');
-const TOOLTIP_GROUP_CONTEXT = Symbol('zui-tooltip-group-context');
+const TOOLTIP_CONTEXT = createContextKey({ hot: import.meta.hot }, 'zui-tooltip-context');
+const TOOLTIP_GROUP_CONTEXT = createContextKey(
+	{ hot: import.meta.hot },
+	'zui-tooltip-group-context'
+);
 
 export function provideZTooltip(context: ZTooltipContext): ZTooltipContext {
 	setContext(TOOLTIP_CONTEXT, context);

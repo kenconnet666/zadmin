@@ -92,6 +92,24 @@ function evidence(path, detail) {
 	return { path: portable(relative(workspaceRoot, path)), detail };
 }
 
+function pendingExecutionStages() {
+	return {
+		BrowserBehaviorVerified: false,
+		VisuallyVerified: false,
+		ProductionVerified: false,
+		DesktopVerified: false
+	};
+}
+
+function pendingExecutionEvidence() {
+	return {
+		BrowserBehaviorVerified: [],
+		VisuallyVerified: [],
+		ProductionVerified: [],
+		DesktopVerified: []
+	};
+}
+
 function metadataIdentifierForComponent(name) {
 	if (!/^Z[A-Z]/u.test(name)) throw new Error(`Unsupported component metadata name: ${name}`);
 	return `${name.slice(1).replace(/^./u, (letter) => letter.toLowerCase())}Metadata`;
@@ -307,7 +325,7 @@ function ownedVisualBlocks(testPath, content, name, sources = fixtureSources) {
 }
 if (process.argv.includes('--self-test')) {
 	if (
-		!hasRuntimeImplementation('<script\nlang="ts"\ngenerics="T">let value: T;</script><div />') ||
+		!hasRuntimeImplementation('<script\nlang="ts"\ngenerics="T">let value;</script><div />') ||
 		hasRuntimeImplementation('<script module lang="ts">export const data = {};</script><div />') ||
 		hasRuntimeImplementation('<script lang="ts">let value = 1;</script><!-- <div /> -->')
 	)
@@ -358,6 +376,8 @@ if (process.argv.includes('--self-test')) {
 		).length
 	)
 		throw new Error('visual fixture ownership incorrectly crossed test block boundaries');
+	if (Object.values(pendingExecutionStages()).some(Boolean))
+		throw new Error('static maturity inventory must not synthesize execution verification');
 	if (
 		fixtureEvidenceFor(
 			resolve('C:/tests', 'example.spec.ts'),
@@ -497,68 +517,81 @@ const rows = componentFiles.map(({ id, name, category, status, path, source }) =
 			teachingFallbackPropCount: apiDocumentation.fallbackPropCount
 		},
 		stages: {
-			Declared: true,
-			Authorable: authorable,
-			ContractVerified: Boolean(contractFact),
+			MetadataDeclared: true,
+			PublicExportPresent: authorable,
+			ApiContractDeclared: Boolean(contractFact),
 			RuntimeImplemented: runtimeImplemented,
-			BrowserBehaviorVerified: browserTests.length > 0,
-			VisuallyVerified: visualTests.length > 0,
-			DesktopVerified: false,
-			ProductionVerified: productionTests.length > 0
+			BrowserBehaviorContractsDeclared: browserTests.length > 0,
+			VisualContractsDeclared: visualTests.length > 0,
+			ProductionContractsDeclared: productionTests.length > 0,
+			SsrContractsDeclared: ssrTests.length > 0
 		},
 		evidence: {
-			Declared: [evidence(path, 'zuiMetadata declaration')],
-			Authorable: authorable
+			MetadataDeclared: [evidence(path, 'zuiMetadata declaration')],
+			PublicExportPresent: authorable
 				? entrypointSources
 						.filter(([, entrypoint]) => exportPattern.test(entrypoint))
 						.map(([entrypoint]) => evidence(entrypoint, `public entrypoint export ${name}`))
 				: [],
-			ContractVerified: contractFact
+			ApiContractDeclared: contractFact
 				? [evidence(contractPath, `${contractFact.sha256} API snapshot entry`)]
 				: [],
 			RuntimeImplemented: runtimeImplemented
 				? [evidence(path, 'component markup and instance script')]
 				: [],
-			BrowserBehaviorVerified: browserTests.flatMap(([testPath, content]) => [
+			BrowserBehaviorContractsDeclared: browserTests.flatMap(([testPath, content]) => [
 				evidence(testPath, `${name} browser behavior assertions`),
 				...fixtureEvidenceFor(testPath, content, name)
 			]),
-			VisuallyVerified: visualTests.flatMap(([testPath, content]) => [
+			VisualContractsDeclared: visualTests.flatMap(([testPath, content]) => [
 				...ownedVisualBlocks(testPath, content, name).map((block) =>
-					evidence(
-						testPath,
-						`${name} authored visual contract: ${block.name} (line ${block.line}); requires browser execution and page-level review`
-					)
+					evidence(testPath, `${name} authored visual contract: ${block.name} (line ${block.line})`)
 				),
 				...fixtureEvidenceFor(testPath, content, name)
 			]),
-			DesktopVerified: [],
-			ProductionVerified: productionTests.flatMap(([testPath, content]) => [
+			ProductionContractsDeclared: productionTests.flatMap(([testPath, content]) => [
 				evidence(testPath, `${name} production assertions`),
 				...fixtureEvidenceFor(testPath, content, name)
-			])
+			]),
+			SsrContractsDeclared: ssrTests.map(([testPath]) =>
+				evidence(testPath, `${name} SSR assertions`)
+			)
 		},
+		executionStages: pendingExecutionStages(),
+		executionEvidence: pendingExecutionEvidence(),
 		docs: docs ? evidence(docs.path, docs.detail) : null,
-		ssrEvidence: ssrTests.map(([testPath]) => evidence(testPath, `${name} SSR assertions`))
+		ssrContracts: ssrTests.map(([testPath]) => evidence(testPath, `${name} SSR assertions`))
 	};
 	return row;
 });
 
 const stageNames = [
-	'Declared',
-	'Authorable',
-	'ContractVerified',
+	'MetadataDeclared',
+	'PublicExportPresent',
+	'ApiContractDeclared',
 	'RuntimeImplemented',
+	'BrowserBehaviorContractsDeclared',
+	'VisualContractsDeclared',
+	'ProductionContractsDeclared',
+	'SsrContractsDeclared'
+];
+const executionStageNames = [
 	'BrowserBehaviorVerified',
 	'VisuallyVerified',
-	'DesktopVerified',
-	'ProductionVerified'
+	'ProductionVerified',
+	'DesktopVerified'
 ];
 const summary = Object.fromEntries(
 	stageNames.map((stage) => [stage, rows.filter((row) => row.stages[stage]).length])
 );
+const executionSummary = Object.fromEntries(
+	executionStageNames.map((stage) => [
+		stage,
+		rows.filter((row) => row.executionStages[stage]).length
+	])
+);
 const output = {
-	schemaVersion: 2,
+	schemaVersion: 3,
 	source: {
 		metadataComponents: rows.length,
 		documentationPages: new Set(rows.map((row) => row.docs?.path).filter(Boolean)).size,
@@ -566,9 +599,18 @@ const output = {
 		testFiles: testFiles.length
 	},
 	stageNames,
+	executionStageNames,
 	evidenceScope:
-		'Static inventory of authored test contracts, not test execution results or whole-component visual acceptance. Stage names are retained for compatibility; consult commit-matched CI and page-level review separately.',
+		'Static inventory of source, exports, API snapshots, and authored test contracts. Assets never imply execution success.',
+	execution: {
+		status: 'pending',
+		revision: null,
+		source: null,
+		detail:
+			'No repository manifest binds per-component browser, production, or visual results to the current commit.'
+	},
 	summary,
+	executionSummary,
 	components: rows
 };
 const serializedJson = `${JSON.stringify(output, null, '\t')}\n`;
@@ -578,17 +620,24 @@ const lines = [
 	'',
 	`Generated from ${rows.length} metadata components, ${output.source.documentationPages} documentation modules, ${contract.components.length} API contract entries, and ${testFiles.length} test files.`,
 	'',
-	'This is a static inventory of authored test contracts, not an execution report or a whole-component visual acceptance result. Historical stage names are retained for compatibility. `VisuallyVerified` requires an explicit `@zui-visual ZComponent` marker, an owned component/fixture render, and a geometry, computed-style, CSS, or screenshot assertion in the SAME test block. A positive entry only identifies a scoped test; confirm its result against commit-matched CI and inspect real pages, themes, and densities separately. `DesktopVerified` remains false until a component-level desktop evidence source is added.',
+	'This is a static inventory of authored contracts and source assets. `BrowserBehaviorContractsDeclared`, `VisualContractsDeclared`, `ProductionContractsDeclared`, and `SsrContractsDeclared` only mean matching assets exist. They do not report that a test ran or passed. Per-component execution stages remain pending until a revision-bound evidence manifest is supplied; the existing WebView2 desktop composer is one such independent evidence path.',
 	'',
-	'| Stage | Count |',
+	'| Static stage | Count |',
 	'|---|---:|',
 	...stageNames.map((stage) => `| ${stage} | ${summary[stage]} |`),
 	'',
-	'| Component | Category | Declared | Authorable | Contract | Runtime | Browser | Visual | Desktop | Production | Docs |',
-	'|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---|',
+	'| Execution stage | Current revision status |',
+	'|---|---:|',
+	...executionStageNames.map(
+		(stage) =>
+			`| ${stage} | ${executionSummary[stage]} verified; ${rows.length - executionSummary[stage]} pending |`
+	),
+	'',
+	'| Component | Category | Metadata | Export | API contract | Runtime | Browser contracts | Visual contracts | Production contracts | SSR contracts | Current execution | Docs |',
+	'|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---|---|',
 	...rows.map(
 		(row) =>
-			`| ${row.name} | ${row.category} | ${row.stages.Declared ? 'Y' : '—'} | ${row.stages.Authorable ? 'Y' : '—'} | ${row.stages.ContractVerified ? 'Y' : '—'} | ${row.stages.RuntimeImplemented ? 'Y' : '—'} | ${row.stages.BrowserBehaviorVerified ? 'Y' : '—'} | ${row.stages.VisuallyVerified ? 'Y' : '—'} | ${row.stages.DesktopVerified ? 'Y' : '—'} | ${row.stages.ProductionVerified ? 'Y' : '—'} | ${row.docs?.path ?? '—'} |`
+			`| ${row.name} | ${row.category} | ${row.stages.MetadataDeclared ? 'Y' : '—'} | ${row.stages.PublicExportPresent ? 'Y' : '—'} | ${row.stages.ApiContractDeclared ? 'Y' : '—'} | ${row.stages.RuntimeImplemented ? 'Y' : '—'} | ${row.stages.BrowserBehaviorContractsDeclared ? 'Y' : '—'} | ${row.stages.VisualContractsDeclared ? 'Y' : '—'} | ${row.stages.ProductionContractsDeclared ? 'Y' : '—'} | ${row.stages.SsrContractsDeclared ? 'Y' : '—'} | pending | ${row.docs?.path ?? '—'} |`
 	)
 ];
 const prettierConfig = (await prettier.resolveConfig(markdownPath)) ?? {};
@@ -619,6 +668,7 @@ console.log(
 		json: portable(relative(workspaceRoot, jsonPath)),
 		markdown: portable(relative(workspaceRoot, markdownPath)),
 		source: output.source,
-		summary
+		summary,
+		executionSummary
 	})
 );

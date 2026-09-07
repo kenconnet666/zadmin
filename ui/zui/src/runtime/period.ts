@@ -662,11 +662,14 @@ export function isPeriodRangeAvailable<TKind extends PeriodKind>(
 
 export function getLocaleWeekRules(locale: string): WeekRules {
 	type WeekInfo = { readonly firstDay?: number; readonly minimalDays?: number };
-	const localeValue = new Intl.Locale(locale) as Intl.Locale & {
+	const localeValue = new Intl.Locale(locale);
+	// Keep the optional capability separate: an intersection may select an ambient overload
+	// whose WeekInfo declaration omits minimalDays even though the runtime provides it.
+	const weekAccess = localeValue as unknown as {
 		readonly weekInfo?: WeekInfo;
 		getWeekInfo?: () => WeekInfo;
 	};
-	const info = localeValue.getWeekInfo?.() ?? localeValue.weekInfo;
+	const info = weekAccess.getWeekInfo?.() ?? weekAccess.weekInfo;
 	if (info?.firstDay && info.minimalDays) {
 		const firstDay = WEEKDAYS[(info.firstDay + 6) % 7];
 		if (firstDay) return weekRules(firstDay, info.minimalDays);

@@ -1,5 +1,7 @@
 import { getContext, setContext } from 'svelte';
 
+import { createContextKey } from '../../../runtime/foundation/context-key.js';
+
 export type DropdownMenuFocusStrategy = 'first' | 'last';
 
 export interface ZDropdownMenuContext {
@@ -7,7 +9,10 @@ export interface ZDropdownMenuContext {
 	prepareOpen(strategy: DropdownMenuFocusStrategy): void;
 }
 
-const DROPDOWN_MENU_CONTEXT = Symbol('zui-dropdown-menu-context');
+const DROPDOWN_MENU_CONTEXT = createContextKey(
+	{ hot: import.meta.hot },
+	'zui-dropdown-menu-context'
+);
 
 export function provideZDropdownMenu(context: ZDropdownMenuContext): ZDropdownMenuContext {
 	setContext(DROPDOWN_MENU_CONTEXT, context);

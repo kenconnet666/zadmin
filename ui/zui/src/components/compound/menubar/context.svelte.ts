@@ -1,5 +1,7 @@
 import { getContext, setContext } from 'svelte';
 
+import { createContextKey } from '../../../runtime/foundation/context-key.js';
+
 import type { CollectionNavigationReason } from '../../../runtime/collection/collection-navigation.svelte.js';
 import type { CompoundLogicalCollectionItem } from '../../../runtime/collection/compound-logical-collection.svelte.js';
 import type { SelectionKey } from '../../../runtime/collection/selection.js';
@@ -36,8 +38,8 @@ export interface ZMenubarMenuContext {
 	readonly value: SelectionKey;
 }
 
-const MENUBAR_CONTEXT = Symbol('zui-menubar-context');
-const MENUBAR_MENU_CONTEXT = Symbol('zui-menubar-menu-context');
+const MENUBAR_CONTEXT = createContextKey({ hot: import.meta.hot }, 'zui-menubar-context');
+const MENUBAR_MENU_CONTEXT = createContextKey({ hot: import.meta.hot }, 'zui-menubar-menu-context');
 
 export function provideZMenubar(context: ZMenubarContext): ZMenubarContext {
 	setContext(MENUBAR_CONTEXT, context);

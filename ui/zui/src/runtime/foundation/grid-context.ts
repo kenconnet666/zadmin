@@ -1,4 +1,5 @@
 import { getContext, setContext } from 'svelte';
+import { createContextKey } from './context-key.js';
 import type { ResponsiveQuery, ResponsiveValue } from './responsive.js';
 
 export interface GridContext {
@@ -6,7 +7,7 @@ export interface GridContext {
 	readonly query: ResponsiveQuery;
 }
 
-const GRID_CONTEXT = Symbol('zui-grid');
+const GRID_CONTEXT = createContextKey({ hot: import.meta.hot }, 'zui-grid');
 
 export function provideGrid(read: () => GridContext): void {
 	setContext<GridContext>(GRID_CONTEXT, {

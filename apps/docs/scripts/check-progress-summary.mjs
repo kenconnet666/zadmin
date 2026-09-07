@@ -25,6 +25,8 @@ export function createProgressSummary({
 	if (!Number.isInteger(componentCount) || componentCount < 1)
 		throw new Error('Progress summary requires API component totals.');
 	if (
+		maturity?.schemaVersion !== 3 ||
+		stability?.schemaVersion !== 2 ||
 		maturity?.source?.metadataComponents !== componentCount ||
 		stability?.components?.length !== componentCount
 	)
@@ -38,7 +40,12 @@ export function createProgressSummary({
 		).sort(([left], [right]) => left.localeCompare(right))
 	);
 	const stableCount = statusCounts.stable ?? 0;
-	if (stableCount !== stability.summary.stableCompliant + stability.summary.stableViolations)
+	if (
+		stableCount !==
+		stability.summary.stableCompliant +
+			stability.summary.stablePendingExecution +
+			stability.summary.stableViolations
+	)
 		throw new Error('Progress summary stable status and policy totals disagree.');
 	const releaseChecks = Object.values(release.checks);
 	const releasePassed = releaseChecks.filter(Boolean).length;
@@ -48,8 +55,13 @@ export function createProgressSummary({
 		browsers.join('\n') !== versionedDocs.supportMatrix.browsers.join('\n')
 	)
 		throw new Error('Progress summary browser matrices disagree.');
+	const currentRevisionVerified = maturity.components.filter(
+		(component) =>
+			component.executionStages?.BrowserBehaviorVerified === true &&
+			component.executionStages?.ProductionVerified === true
+	).length;
 	return {
-		schemaVersion: 1,
+		schemaVersion: 2,
 		package: versionedDocs.package,
 		api: {
 			components: componentCount,
@@ -59,6 +71,9 @@ export function createProgressSummary({
 		},
 		maturity: {
 			...maturity.summary,
+			execution: maturity.executionSummary,
+			executionStatus: maturity.execution,
+			currentRevisionVerified,
 			statuses: statusCounts
 		},
 		stability: stability.summary,
@@ -82,15 +97,20 @@ export function createProgressSummary({
 		},
 		nextPriorities: [
 			{
-				id: 'production-evidence',
-				remaining: componentCount - maturity.summary.ProductionVerified,
-				description: '为尚未ProductionVerified的组件补真实production browser/SSR合同。'
+				id: 'production-contract-assets',
+				remaining: componentCount - maturity.summary.ProductionContractsDeclared,
+				description: '为缺少production browser/SSR合同资产的组件补明确测试。'
 			},
 			{
-				id: 'visual-evidence',
-				remaining: componentCount - maturity.summary.VisuallyVerified,
+				id: 'current-revision-execution',
+				remaining: componentCount - currentRevisionVerified,
 				description:
-					'补齐组件级几何、computed style或截图证据；普通浏览器交互断言不再冒充视觉验证。'
+					'用现有revision-bound执行制品证明当前commit的browser与production合同真实通过；无制品保持pending。'
+			},
+			{
+				id: 'visual-contract-assets',
+				remaining: componentCount - maturity.summary.VisualContractsDeclared,
+				description: '补齐组件级几何、computed style或截图合同资产；资产存在不等于视觉执行通过。'
 			},
 			{
 				id: 'stable-promotion',
@@ -99,7 +119,7 @@ export function createProgressSummary({
 			},
 			{
 				id: 'desktop-evidence',
-				remaining: componentCount - maturity.summary.DesktopVerified,
+				remaining: componentCount - maturity.executionSummary.DesktopVerified,
 				description: '建立组件级WebView2/Desktop证据后再提升DesktopVerified。'
 			},
 			{
@@ -134,11 +154,13 @@ const markdownSource = `# ZUI production progress
 |---|---:|---:|
 | Public component metadata | ${progress.api.components} | ${progress.api.components} |
 | Declared public props | ${progress.api.declaredProps} | metadata gaps ${progress.api.metadataGapProps}; fallbacks ${progress.api.fallbackProps} |
-| Stable | ${progress.maturity.statuses.stable ?? 0} | violations ${progress.stability.stableViolations} |
-| BrowserBehaviorVerified | ${progress.maturity.BrowserBehaviorVerified} | ${progress.api.components} |
-| VisuallyVerified | ${progress.maturity.VisuallyVerified} | ${progress.api.components} |
-| ProductionVerified | ${progress.maturity.ProductionVerified} | ${progress.api.components} |
-| DesktopVerified | ${progress.maturity.DesktopVerified} | ${progress.api.components} |
+| Metadata status stable | ${progress.maturity.statuses.stable ?? 0} | compliant ${progress.stability.stableCompliant}; pending execution ${progress.stability.stablePendingExecution}; static violations ${progress.stability.stableViolations} |
+| Browser behavior contracts declared | ${progress.maturity.BrowserBehaviorContractsDeclared} | ${progress.api.components} |
+| Visual contracts declared | ${progress.maturity.VisualContractsDeclared} | ${progress.api.components} |
+| Production contracts declared | ${progress.maturity.ProductionContractsDeclared} | ${progress.api.components} |
+| SSR contracts declared | ${progress.maturity.SsrContractsDeclared} | ${progress.api.components} |
+| Current-revision browser + production verified | ${progress.maturity.currentRevisionVerified} | ${progress.api.components}; status ${progress.maturity.executionStatus.status} |
+| DesktopVerified execution evidence | ${progress.maturity.execution.DesktopVerified} | ${progress.api.components} |
 | Docs routes | ${progress.docs.routes.totalCount} | components ${progress.docs.routes.componentCount}; guides ${progress.docs.routes.guideCount}; deployed ${progress.docs.deployed ? 'yes' : 'no'} |
 | Browser matrix | ${progress.support.browsers.join(', ')} | Node ${progress.support.node}; pnpm ${progress.support.pnpm} |
 | Release checks | ${progress.release.passedChecks} | ${progress.release.totalChecks}; status ${progress.release.status} |
@@ -183,7 +205,8 @@ console.log(
 	JSON.stringify({
 		components: progress.api.components,
 		stable: progress.maturity.statuses.stable ?? 0,
-		productionVerified: progress.maturity.ProductionVerified,
+		productionContractsDeclared: progress.maturity.ProductionContractsDeclared,
+		currentRevisionVerified: progress.maturity.currentRevisionVerified,
 		releaseStatus: progress.release.status
 	})
 );

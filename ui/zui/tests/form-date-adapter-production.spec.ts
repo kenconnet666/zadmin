@@ -14,16 +14,13 @@ function renderedForm(body: string, testId: string): string {
 
 describe('date Form model adapter server contract', () => {
 	it.each([
-		['calendar', /ZCalendar model value must be a Gregorian CalendarDate, null or undefined/u],
-		['date-field', /ZDateField model value must be a Gregorian CalendarDate, null or undefined/u],
+		['calendar', /ZCalendar model value must be a CalendarDate, null or undefined/u],
+		['date-field', /ZDateField model value must be a CalendarDate, null or undefined/u],
 		['time-field', /ZTimeField model value must be a Time, null or undefined/u],
-		['picker', /ZDatePicker model value must be a Gregorian CalendarDate, null or undefined/u],
-		[
-			'range',
-			/ZDateRangePicker start model value must be a Gregorian CalendarDate, null or undefined/u
-		],
+		['picker', /ZDatePicker model value must be a CalendarDate, null or undefined/u],
+		['range', /ZDateRangePicker start model value must be a CalendarDate, null or undefined/u],
 		['range-shape', /CalendarDate range with nullable start and end/u],
-		['string', /ZDateField model value must be a Gregorian CalendarDate, null or undefined/u]
+		['string', /ZDateField model value must be a CalendarDate, null or undefined/u]
 	] as const)('rejects an invalid %s model value during SSR', (kind, message) => {
 		expect(() => render(FormDateAdapterInvalidFixture, { props: { kind } }).body).toThrow(message);
 	});

@@ -1,15 +1,21 @@
 import {
+	type Calendar,
 	CalendarDate,
+	type CalendarDateTime,
+	type CalendarIdentifier,
 	DateFormatter,
 	Time,
-	endOfMonth,
+	type ZonedDateTime,
+	createCalendar,
 	getDayOfWeek,
+	isSameMonth,
 	startOfMonth,
-	startOfWeek
+	startOfWeek,
+	toCalendar
 } from '@internationalized/date';
 
 export type Weekday = 'fri' | 'mon' | 'sat' | 'sun' | 'thu' | 'tue' | 'wed';
-export type DateFieldSegment = 'day' | 'month' | 'year';
+export type DateFieldSegment = 'day' | 'era' | 'month' | 'year';
 export type TimeFieldGranularity = 'hour' | 'minute' | 'second';
 export type TimeFieldSegment = 'hour' | 'minute' | 'second';
 export type TimeDayPeriod = 'am' | 'pm';
@@ -25,6 +31,133 @@ export type TimeFieldPatternPart =
 export interface CalendarCell {
 	readonly date: CalendarDate;
 	readonly outsideMonth: boolean;
+}
+
+export type SupportedDisplayCalendarIdentifier = (typeof supportedDisplayCalendars)[number];
+
+export const supportedDisplayCalendars = Object.freeze([
+	'buddhist',
+	'coptic',
+	'ethioaa',
+	'ethiopic',
+	'gregory',
+	'hebrew',
+	'indian',
+	'iso8601',
+	'islamic-civil',
+	'islamic-tbla',
+	'islamic-umalqura',
+	'japanese',
+	'persian',
+	'roc'
+] as const satisfies readonly CalendarIdentifier[]);
+
+const supportedDisplayCalendarSet = new Set<string>(supportedDisplayCalendars);
+type ImplementedDisplayCalendarIdentifier = Exclude<SupportedDisplayCalendarIdentifier, 'iso8601'>;
+
+export type CalendarValue = CalendarDate | CalendarDateTime | ZonedDateTime;
+
+export interface CalendarEraOption {
+	readonly identifier: string;
+	readonly label: string;
+}
+
+export function resolveDisplayCalendar(locale: string): Calendar {
+	const requested = new Intl.Locale(locale).calendar;
+	if (requested && !supportedDisplayCalendarSet.has(requested))
+		throw new RangeError(
+			`ZUI requested display calendar "${requested}" is not supported by @internationalized/date. ` +
+				`Supported calendars: ${supportedDisplayCalendars.join(', ')}.`
+		);
+	const identifier = new Intl.DateTimeFormat(locale).resolvedOptions().calendar;
+	if (!supportedDisplayCalendarSet.has(identifier))
+		throw new RangeError(
+			`ZUI display calendar "${identifier}" is not supported by @internationalized/date. ` +
+				`Supported calendars: ${supportedDisplayCalendars.join(', ')}.`
+		);
+	const isoGregorianAlias = requested === 'iso8601' && identifier === 'gregory';
+	if (requested && requested !== identifier && !isoGregorianAlias)
+		throw new RangeError(
+			`ZUI requested display calendar "${requested}", but Intl resolved "${identifier}" in this environment.`
+		);
+	// @internationalized/date does not expose a distinct ISO calendar class. ISO 8601 uses the
+	// same era/year/month/day arithmetic as Gregorian; week-number policy remains a separate option.
+	if (identifier === 'iso8601') return createCalendar('gregory');
+	return createCalendar(identifier as ImplementedDisplayCalendarIdentifier);
+}
+
+export function resolveOwnerCalendar(
+	...references: readonly (CalendarValue | null | undefined)[]
+): Calendar {
+	return (
+		references.find((reference): reference is CalendarValue => reference != null)?.calendar ??
+		createCalendar('gregory')
+	);
+}
+
+export function toDisplayCalendar<TValue extends CalendarValue>(
+	value: TValue,
+	displayCalendar: Calendar
+): TValue {
+	return toCalendar(value, displayCalendar);
+}
+
+export function preserveCalendarOwner<TValue extends CalendarValue>(
+	value: TValue,
+	owner: Calendar | CalendarValue
+): TValue {
+	return toCalendar(value, 'calendar' in owner ? owner.calendar : owner);
+}
+
+/** Includes the owner calendar fields; CalendarDate.toString() intentionally erases them to ISO. */
+export function calendarDateKey(value: CalendarDate | null | undefined): string {
+	return value
+		? `${value.calendar.identifier}:${value.era}:${value.year}-${value.month}-${value.day}`
+		: '';
+}
+
+export function calendarEraOptions(
+	reference: CalendarDate,
+	locale: string,
+	timeZone = 'UTC'
+): readonly CalendarEraOption[] {
+	const displayed = toDisplayCalendar(reference, resolveDisplayCalendar(locale));
+	const formatter = new Intl.DateTimeFormat(locale, {
+		day: 'numeric',
+		era: 'short',
+		month: 'numeric',
+		timeZone,
+		year: 'numeric'
+	});
+	return Object.freeze(
+		displayed.calendar.getEras().map((identifier) => {
+			let sample: CalendarDate | undefined;
+			for (const [year, month, day] of [
+				[2, 7, 1],
+				[1, 7, 1],
+				[1, 1, 1]
+			] as const) {
+				if (sample) break;
+				try {
+					const candidate = new CalendarDate(displayed.calendar, identifier, year, month, day);
+					if (candidate.era === identifier) sample = candidate;
+				} catch {
+					// Try another stable point inside this era before falling back to its identifier.
+				}
+			}
+			if (!sample && identifier === displayed.era) sample = displayed;
+			const label =
+				(sample
+					? formatter.formatToParts(sample.toDate(timeZone)).find(({ type }) => type === 'era')
+							?.value
+					: undefined) ?? identifier;
+			return Object.freeze({ identifier, label });
+		})
+	);
+}
+
+export function isCalendarDate(value: unknown): value is CalendarDate {
+	return value instanceof CalendarDate && Object.getPrototypeOf(value) === CalendarDate.prototype;
 }
 
 export interface CalendarRange {
@@ -55,10 +188,8 @@ export function normalizeCalendarDateModelValue(
 	owner: string
 ): CalendarDate | null {
 	if (value === null || value === undefined) return null;
-	if (!isGregorianCalendarDate(value))
-		throw new TypeError(
-			`${owner} model value must be a Gregorian CalendarDate, null or undefined.`
-		);
+	if (!isCalendarDate(value))
+		throw new TypeError(`${owner} model value must be a CalendarDate, null or undefined.`);
 	return value;
 }
 
@@ -98,7 +229,10 @@ export function calendarMonth(
 	return Object.freeze(
 		Array.from({ length: 42 }, (_, index) => {
 			const date = first.add({ days: index });
-			return Object.freeze({ date, outsideMonth: date.month !== month.month });
+			return Object.freeze({
+				date,
+				outsideMonth: !isSameMonth(date, month)
+			});
 		})
 	);
 }
@@ -141,8 +275,13 @@ export function formatTime(
 
 export function dateFieldPattern(
 	locale: string,
-	timeZone = 'UTC'
+	timeZone = 'UTC',
+	reference?: CalendarDate
 ): readonly DateFieldPatternPart[] {
+	const displayCalendar = resolveDisplayCalendar(locale);
+	const sample = reference
+		? toDisplayCalendar(reference, displayCalendar)
+		: toDisplayCalendar(new CalendarDate(2006, 11, 22), displayCalendar);
 	return Object.freeze(
 		new Intl.DateTimeFormat(locale, {
 			day: 'numeric',
@@ -150,10 +289,11 @@ export function dateFieldPattern(
 			timeZone,
 			year: 'numeric'
 		})
-			.formatToParts(new CalendarDate(2006, 11, 22).toDate(timeZone))
+			.formatToParts(sample.toDate(timeZone))
 			.flatMap((part): DateFieldPatternPart[] => {
 				switch (part.type) {
 					case 'day':
+					case 'era':
 					case 'month':
 					case 'year':
 						return [Object.freeze({ segment: part.type })];
@@ -256,7 +396,19 @@ export function isDateInRange(
 }
 
 export function daysInMonth(value: CalendarDate): number {
-	return endOfMonth(value).day;
+	return value.calendar.getDaysInMonth(value);
+}
+
+export function monthsInYear(value: CalendarDate): number {
+	return value.calendar.getMonthsInYear(value);
+}
+
+export function minimumMonthInYear(value: CalendarDate): number {
+	return value.calendar.getMinimumMonthInYear?.(value) ?? 1;
+}
+
+export function minimumDayInMonth(value: CalendarDate): number {
+	return value.calendar.getMinimumDayInMonth?.(value) ?? 1;
 }
 
 export function weekDayIndex(

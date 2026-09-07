@@ -64,8 +64,10 @@ export function composeDesktopMaturity({
 }) {
 	const evidence = validateDesktopEvidenceArtifact(desktopEvidence, { expectedRevision });
 	if (
+		baseMaturity?.schemaVersion !== 3 ||
 		!baseMaturity?.source ||
 		!baseMaturity?.summary ||
+		!baseMaturity?.executionSummary ||
 		!Array.isArray(baseMaturity.components) ||
 		baseMaturity.components.length !== baseMaturity.source.metadataComponents
 	)
@@ -82,11 +84,11 @@ export function composeDesktopMaturity({
 		if (!row || row.name !== component.name)
 			throw new Error(`Desktop evidence component is not in the base matrix: ${component.id}.`);
 		if (
-			row.stages?.Declared !== true ||
-			row.stages?.Authorable !== true ||
-			row.stages?.ContractVerified !== true ||
+			row.stages?.MetadataDeclared !== true ||
+			row.stages?.PublicExportPresent !== true ||
+			row.stages?.ApiContractDeclared !== true ||
 			row.stages?.RuntimeImplemented !== true ||
-			row.stages?.ProductionVerified !== true
+			row.stages?.ProductionContractsDeclared !== true
 		)
 			throw new Error(`Desktop evidence component lacks base production stages: ${component.id}.`);
 		evidenceById.set(component.id, component);
@@ -96,11 +98,11 @@ export function composeDesktopMaturity({
 		if (!row || row.name !== composition.name)
 			throw new Error(`Desktop evidence composition is not in the base matrix: ${composition.id}.`);
 		if (
-			row.stages?.Declared !== true ||
-			row.stages?.Authorable !== true ||
-			row.stages?.ContractVerified !== true ||
+			row.stages?.MetadataDeclared !== true ||
+			row.stages?.PublicExportPresent !== true ||
+			row.stages?.ApiContractDeclared !== true ||
 			row.stages?.RuntimeImplemented !== true ||
-			row.stages?.ProductionVerified !== true
+			row.stages?.ProductionContractsDeclared !== true
 		)
 			throw new Error(
 				`Desktop evidence composition lacks base production stages: ${composition.id}.`
@@ -112,9 +114,9 @@ export function composeDesktopMaturity({
 		if (!component) return row;
 		return {
 			...row,
-			stages: { ...row.stages, DesktopVerified: true },
-			evidence: {
-				...row.evidence,
+			executionStages: { ...row.executionStages, DesktopVerified: true },
+			executionEvidence: {
+				...row.executionEvidence,
 				DesktopVerified: [
 					{
 						path: portable(evidencePath),
@@ -124,12 +126,14 @@ export function composeDesktopMaturity({
 			}
 		};
 	});
-	const verified = components.filter(({ stages }) => stages.DesktopVerified === true).length;
+	const verified = components.filter(
+		({ executionStages }) => executionStages.DesktopVerified === true
+	).length;
 	const subjectCount = evidence.components.length + (evidence.compositions?.length ?? 0);
 	if (verified !== subjectCount)
 		throw new Error(`Desktop maturity count mismatch: ${verified} != ${subjectCount}.`);
 	return {
-		schemaVersion: 1,
+		schemaVersion: 2,
 		status: 'passed',
 		revision: evidence.revision,
 		target: evidence.target,
@@ -139,7 +143,8 @@ export function composeDesktopMaturity({
 			componentCount: baseMaturity.components.length,
 			path: '.docs/zui/component-maturity.json'
 		},
-		summary: { ...baseMaturity.summary, DesktopVerified: verified },
+		summary: baseMaturity.summary,
+		executionSummary: { ...baseMaturity.executionSummary, DesktopVerified: verified },
 		components
 	};
 }
@@ -253,37 +258,45 @@ async function selfTest() {
 		}))
 	};
 	const baseMaturity = {
+		schemaVersion: 3,
 		source: { metadataComponents: componentContracts.length + desktopCompositionContracts.length },
 		summary: {
+			MetadataDeclared: componentContracts.length + desktopCompositionContracts.length,
+			PublicExportPresent: componentContracts.length + desktopCompositionContracts.length,
+			ApiContractDeclared: componentContracts.length + desktopCompositionContracts.length,
+			RuntimeImplemented: componentContracts.length + desktopCompositionContracts.length,
+			ProductionContractsDeclared: componentContracts.length + desktopCompositionContracts.length
+		},
+		executionSummary: {
 			DesktopVerified: 0,
-			ProductionVerified: componentContracts.length + desktopCompositionContracts.length
+			ProductionVerified: 0
 		},
 		components: [
 			...componentContracts.map(({ id, name }) => ({
 				id,
 				name,
 				stages: {
-					Declared: true,
-					Authorable: true,
-					ContractVerified: true,
+					MetadataDeclared: true,
+					PublicExportPresent: true,
+					ApiContractDeclared: true,
 					RuntimeImplemented: true,
-					DesktopVerified: false,
-					ProductionVerified: true
+					ProductionContractsDeclared: true
 				},
-				evidence: { DesktopVerified: [] }
+				executionStages: { DesktopVerified: false, ProductionVerified: false },
+				executionEvidence: { DesktopVerified: [] }
 			})),
 			...desktopCompositionContracts.map(({ id, name }) => ({
 				id,
 				name,
 				stages: {
-					Declared: true,
-					Authorable: true,
-					ContractVerified: true,
+					MetadataDeclared: true,
+					PublicExportPresent: true,
+					ApiContractDeclared: true,
 					RuntimeImplemented: true,
-					DesktopVerified: false,
-					ProductionVerified: true
+					ProductionContractsDeclared: true
 				},
-				evidence: { DesktopVerified: [] }
+				executionStages: { DesktopVerified: false, ProductionVerified: false },
+				executionEvidence: { DesktopVerified: [] }
 			}))
 		]
 	};
@@ -294,7 +307,7 @@ async function selfTest() {
 		evidencePath: 'apps/desktop/dist/desktop/windows-x64/desktop-evidence.json'
 	});
 	if (
-		composed.summary.DesktopVerified !==
+		composed.executionSummary.DesktopVerified !==
 		componentContracts.length + desktopCompositionContracts.length
 	)
 		throw new Error('Desktop maturity self-test produced the wrong verified set.');
@@ -314,7 +327,10 @@ async function selfTest() {
 		if (!String(error).includes('normalized component')) throw error;
 	}
 	console.log(
-		JSON.stringify({ desktopVerified: composed.summary.DesktopVerified, status: 'passed' })
+		JSON.stringify({
+			desktopVerified: composed.executionSummary.DesktopVerified,
+			status: 'passed'
+		})
 	);
 }
 
@@ -365,7 +381,7 @@ async function main(argv = process.argv.slice(2)) {
 	});
 	console.log(
 		JSON.stringify({
-			desktopVerified: composed.summary.DesktopVerified,
+			desktopVerified: composed.executionSummary.DesktopVerified,
 			output: portable(relative(workspaceRoot, outputPath)),
 			revision: composed.revision,
 			status: composed.status

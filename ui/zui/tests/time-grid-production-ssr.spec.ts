@@ -41,10 +41,11 @@ describe('ZTimeGrid and ZTimeValue SSR contracts', () => {
 		}).body;
 		expect(none).not.toContain('name="ignored"');
 		expect(none).not.toContain('data-zui-form-value');
-		expect(() =>
-			render(ZTimeGrid, {
-				props: { slots, value: '09:30' as never }
-			})
+		expect(
+			() =>
+				render(ZTimeGrid, {
+					props: { slots, value: '09:30' as never }
+				}).body
 		).toThrow(/must be a Time/u);
 	});
 

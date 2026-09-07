@@ -38,7 +38,8 @@ export const timeFieldDoc = defineComponentDoc(timeFieldMetadata, {
 			},
 			locale: {
 				default: 'Provider locale',
-				description: '决定segment、literal与day period的真实DOM顺序。'
+				description:
+					'决定segment、literal与day period的真实DOM顺序，并通过共享number runtime解析/格式化locale数字。'
 			},
 			maxValue: { default: 'undefined', description: '最大可提交Time。' },
 			minValue: { default: 'undefined', description: '最小可提交Time。' },
@@ -87,7 +88,7 @@ export const timeFieldDoc = defineComponentDoc(timeFieldMetadata, {
 			component: LocaleDemo,
 			covers: ['accessible-name', 'locale', 'rtl'],
 			description:
-				'Intl locale决定segment/day period位置；typed locale pack提供各segment名称与后备hourCycle。',
+				'Intl locale决定segment/day period位置与数字；Persian等本地数字由共享parseLocalizedNumber处理。',
 			id: 'time-field-locale',
 			source: localeSource,
 			title: 'Locale、day period与顺序'
@@ -115,6 +116,7 @@ export const timeFieldDoc = defineComponentDoc(timeFieldMetadata, {
 		'Intl formatToParts决定segment、literal与day period DOM顺序；左右/Home/End按该顺序移动并支持RTL。',
 		'ArrowUp/Down按hour、minuteStep或secondStep cycle；day period segment也能用方向键或按钮切换。',
 		'直接输入只在所有显示segments完整且可用时更新Time；非法/partial草稿设置aria-invalid。',
+		'每个时间segment固定两位并复用Intl.NumberFormat与parseLocalizedNumber；Persian和Arabic数字不会被ASCII正则删除，完整两位仍按原协议自动提交。',
 		'Time是无时区wall-clock模型；时区日期时间和DST折叠明确后置给未来ZDateTimeField。'
 	],
 	keywords: ['time field', 'segments', 'hour cycle', 'granularity', 'step', 'nullable']

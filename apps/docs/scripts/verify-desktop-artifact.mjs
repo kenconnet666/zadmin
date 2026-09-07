@@ -37,12 +37,14 @@ export function verifyDesktopArtifact({ evidence, maturity, baseMaturity, expect
 		fail('expected revision must be a full SHA.');
 	const normalized = validateDesktopEvidenceArtifact(evidence, { expectedRevision });
 	const compositions = normalized.compositions ?? [];
-	if (maturity?.schemaVersion !== 1 || maturity.status !== 'passed')
+	if (maturity?.schemaVersion !== 2 || maturity.status !== 'passed')
 		fail('runtime maturity identity is invalid.');
 	if (
 		!Array.isArray(maturity.components) ||
 		!maturity.summary ||
-		typeof maturity.summary !== 'object'
+		typeof maturity.summary !== 'object' ||
+		!maturity.executionSummary ||
+		typeof maturity.executionSummary !== 'object'
 	)
 		fail('runtime maturity components or summary are invalid.');
 	if (maturity.revision !== expectedRevision || maturity.target !== 'windows-x64')
@@ -58,7 +60,11 @@ export function verifyDesktopArtifact({ evidence, maturity, baseMaturity, expect
 		fail('runtime maturity host differs from normalized host.');
 	if (stableJson(maturity.bridgeRoundTrip) !== stableJson(normalized.bridgeRoundTrip))
 		fail('runtime maturity bridge round trip differs from normalized evidence.');
-	if (!baseMaturity?.source || !Array.isArray(baseMaturity.components))
+	if (
+		baseMaturity?.schemaVersion !== 3 ||
+		!baseMaturity?.source ||
+		!Array.isArray(baseMaturity.components)
+	)
 		fail('base maturity matrix is invalid.');
 	if (
 		maturity.base?.componentCount !== baseMaturity.components.length ||
@@ -85,8 +91,10 @@ export function verifyDesktopArtifact({ evidence, maturity, baseMaturity, expect
 		if (!base || row.name !== base.name) fail(`base component identity changed: ${row.id}.`);
 		const withoutDesktop = (value) => {
 			const copy = structuredClone(value);
-			if (copy.stages) copy.stages.DesktopVerified = base.stages?.DesktopVerified;
-			if (copy.evidence) copy.evidence.DesktopVerified = base.evidence?.DesktopVerified;
+			if (copy.executionStages)
+				copy.executionStages.DesktopVerified = base.executionStages?.DesktopVerified;
+			if (copy.executionEvidence)
+				copy.executionEvidence.DesktopVerified = base.executionEvidence?.DesktopVerified;
 			return copy;
 		};
 		if (stableJson(withoutDesktop(row)) !== stableJson(withoutDesktop(base)))
@@ -94,19 +102,24 @@ export function verifyDesktopArtifact({ evidence, maturity, baseMaturity, expect
 	}
 	if (maturity.components.length !== baseMaturity.components.length)
 		fail('runtime maturity component count does not match base matrix.');
-	const desktopVerified = maturity.components.filter((row) => row.stages?.DesktopVerified === true);
+	const desktopVerified = maturity.components.filter(
+		(row) => row.executionStages?.DesktopVerified === true
+	);
 	if (desktopVerified.length !== normalized.components.length + compositions.length)
 		fail('DesktopVerified count does not match evidence component count.');
-	if (maturity.summary?.DesktopVerified !== desktopVerified.length)
+	if (maturity.executionSummary?.DesktopVerified !== desktopVerified.length)
 		fail('maturity summary DesktopVerified count is invalid.');
-	const baseSummary = { ...baseMaturity.summary, DesktopVerified: desktopVerified.length };
-	if (stableJson(maturity.summary) !== stableJson(baseSummary))
+	const baseSummary = {
+		...baseMaturity.executionSummary,
+		DesktopVerified: desktopVerified.length
+	};
+	if (stableJson(maturity.executionSummary) !== stableJson(baseSummary))
 		fail('maturity summary baseline was modified.');
 	for (const component of normalized.components) {
 		const row = maturity.components.find((candidate) => candidate.id === component.id);
-		if (!row || row.stages?.DesktopVerified !== true)
+		if (!row || row.executionStages?.DesktopVerified !== true)
 			fail(`missing DesktopVerified row: ${component.id}.`);
-		const records = row.evidence?.DesktopVerified;
+		const records = row.executionEvidence?.DesktopVerified;
 		if (
 			!Array.isArray(records) ||
 			records.length !== 1 ||
@@ -117,9 +130,9 @@ export function verifyDesktopArtifact({ evidence, maturity, baseMaturity, expect
 	}
 	for (const composition of compositions) {
 		const row = maturity.components.find((candidate) => candidate.id === composition.id);
-		if (!row || row.stages?.DesktopVerified !== true)
+		if (!row || row.executionStages?.DesktopVerified !== true)
 			fail(`missing DesktopVerified row: ${composition.id}.`);
-		const records = row.evidence?.DesktopVerified;
+		const records = row.executionEvidence?.DesktopVerified;
 		if (
 			!Array.isArray(records) ||
 			records.length !== 1 ||
@@ -235,25 +248,27 @@ async function main(argv = process.argv.slice(2)) {
 			...desktopCompositionContracts.map((contract) => ({ kind: 'composition', contract }))
 		];
 		const base = {
+			schemaVersion: 3,
 			source: { metadataComponents: subjects.length },
 			path: '.docs/zui/component-maturity.json',
 			components: subjects.map(({ contract }) => ({
 				id: contract.id,
 				name: contract.name,
 				stages: {
-					Declared: true,
-					Authorable: true,
-					ContractVerified: true,
+					MetadataDeclared: true,
+					PublicExportPresent: true,
+					ApiContractDeclared: true,
 					RuntimeImplemented: true,
-					ProductionVerified: true,
-					DesktopVerified: false
+					ProductionContractsDeclared: true
 				},
-				evidence: { DesktopVerified: [] }
+				executionStages: { ProductionVerified: false, DesktopVerified: false },
+				executionEvidence: { DesktopVerified: [] }
 			})),
-			summary: {}
+			summary: {},
+			executionSummary: { ProductionVerified: 0, DesktopVerified: 0 }
 		};
 		const maturity = {
-			schemaVersion: 1,
+			schemaVersion: 2,
 			status: 'passed',
 			revision,
 			target: 'windows-x64',
@@ -263,11 +278,12 @@ async function main(argv = process.argv.slice(2)) {
 				componentCount: subjects.length,
 				path: '.docs/zui/component-maturity.json'
 			},
-			summary: { DesktopVerified: subjects.length },
+			summary: base.summary,
+			executionSummary: { ...base.executionSummary, DesktopVerified: subjects.length },
 			components: base.components.map((row, index) => ({
 				...row,
-				stages: { ...row.stages, DesktopVerified: true },
-				evidence: {
+				executionStages: { ...row.executionStages, DesktopVerified: true },
+				executionEvidence: {
 					DesktopVerified: [
 						{
 							path: 'apps/desktop/dist/desktop/windows-x64/desktop-evidence.json',
@@ -291,7 +307,10 @@ async function main(argv = process.argv.slice(2)) {
 		const v3Maturity = {
 			...maturity,
 			base: { ...maturity.base, componentCount: desktopComponentContracts.length },
-			summary: { DesktopVerified: desktopComponentContracts.length },
+			executionSummary: {
+				...maturity.executionSummary,
+				DesktopVerified: desktopComponentContracts.length
+			},
 			components: maturity.components.slice(0, desktopComponentContracts.length)
 		};
 		verifyDesktopArtifact({
@@ -306,10 +325,14 @@ async function main(argv = process.argv.slice(2)) {
 			['bridge', (value) => (value.bridgeRoundTrip.responseValidated = false), /bridge/u],
 			['base path', (value) => (value.base.path = 'wrong.json'), /base component/u],
 			['baseline', (value) => (value.components[0].stages.RuntimeImplemented = false), /baseline/u],
-			['summary', (value) => (value.summary.DesktopVerified += 1), /summary DesktopVerified/u],
+			[
+				'summary',
+				(value) => (value.executionSummary.DesktopVerified += 1),
+				/summary DesktopVerified/u
+			],
 			[
 				'evidence record',
-				(value) => (value.components[0].evidence.DesktopVerified[0].path = 'wrong.json'),
+				(value) => (value.components[0].executionEvidence.DesktopVerified[0].path = 'wrong.json'),
 				/evidence record/u
 			],
 			[
@@ -317,7 +340,7 @@ async function main(argv = process.argv.slice(2)) {
 				(value) =>
 					(value.components.find(
 						(component) => component.id === 'select'
-					).evidence.DesktopVerified[0].detail = 'tampered'),
+					).executionEvidence.DesktopVerified[0].detail = 'tampered'),
 				/composition evidence/u
 			],
 			[
@@ -325,7 +348,7 @@ async function main(argv = process.argv.slice(2)) {
 				(value) =>
 					(value.components.find(
 						(component) => component.id === 'dialog'
-					).evidence.DesktopVerified = []),
+					).executionEvidence.DesktopVerified = []),
 				/composition evidence/u
 			],
 			['duplicate id', (value) => (value.components.at(-1).id = value.components[0].id), /ids/u]

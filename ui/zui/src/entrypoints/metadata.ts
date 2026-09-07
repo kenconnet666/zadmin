@@ -112,6 +112,7 @@ export { zuiMetadata as toasterMetadata } from '../components/feedback/ZToaster.
 export { zuiMetadata as checkboxMetadata } from '../components/input/ZCheckbox.svelte';
 export { zuiMetadata as cascaderMetadata } from '../components/input/ZCascader.svelte';
 export { zuiMetadata as calendarMetadata } from '../components/input/ZCalendar.svelte';
+export { zuiMetadata as miniCalendarMetadata } from '../components/input/ZMiniCalendar.svelte';
 export { zuiMetadata as colorPickerMetadata } from '../components/input/ZColorPicker.svelte';
 export { zuiMetadata as dateFieldMetadata } from '../components/input/ZDateField.svelte';
 export { zuiMetadata as datePickerMetadata } from '../components/input/ZDatePicker.svelte';

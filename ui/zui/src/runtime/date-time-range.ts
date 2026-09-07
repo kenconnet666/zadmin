@@ -119,6 +119,8 @@ function sameDateTimeRangeEndpoint(
 ): boolean {
 	if (left === right) return true;
 	if (!left || !right || Object.getPrototypeOf(left) !== Object.getPrototypeOf(right)) return false;
+	if (left.calendar.identifier !== right.calendar.identifier || left.era !== right.era)
+		return false;
 	if (left instanceof ZonedDateTime && right instanceof ZonedDateTime)
 		return (
 			compareDateTime(left, right) === 0 &&

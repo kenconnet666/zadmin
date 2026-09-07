@@ -1,5 +1,7 @@
 import { getContext, setContext } from 'svelte';
 
+import { createContextKey } from '../../../runtime/foundation/context-key.js';
+
 import type { CompoundLogicalCollectionItem } from '../../../runtime/collection/compound-logical-collection.svelte.js';
 import type { LogicalCollectionView } from '../../../runtime/collection/logical-collection.js';
 import type { SelectionKey } from '../../../runtime/collection/selection.js';
@@ -56,7 +58,7 @@ export interface ZSelectContext {
 	setVirtualizer(controller: ChoiceVirtualController<SelectionKey> | null): void;
 }
 
-const SELECT_CONTEXT = Symbol('zui-select-context');
+const SELECT_CONTEXT = createContextKey({ hot: import.meta.hot }, 'zui-select-context');
 
 export function provideZSelect(context: ZSelectContext): ZSelectContext {
 	setContext(SELECT_CONTEXT, context);

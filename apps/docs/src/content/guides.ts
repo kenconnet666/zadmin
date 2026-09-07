@@ -463,7 +463,7 @@ environments.dispose();`,
 				bullets: [
 					'组件记录精确marker、原生元素语义和可观察交互状态。',
 					'Host独立校验app.snapshot请求与成功响应，再绑定完整revision。',
-					'运行时生成的DesktopVerified矩阵不回写仓库内静态成熟度基线。'
+					'按revision生成的DesktopVerified执行矩阵不回写仓库内静态合同资产基线。'
 				],
 				links: [{ href: '#/components/provider', label: 'Provider偏好轴' }]
 			}
@@ -480,10 +480,11 @@ environments.dispose();`,
 				id: 'maturity',
 				title: '成熟度是可生成事实，不是页面徽标',
 				paragraphs: [
-					`当前${zuiProgress.api.components}个公开组件、${zuiProgress.api.declaredProps}个公开Props均已进入API合同，metadata gap与teaching fallback均为0；${zuiProgress.maturity.statuses.stable ?? 0}个组件满足stable策略，${zuiProgress.maturity.ProductionVerified}个拥有ProductionVerified证据。`
+					`当前${zuiProgress.api.components}个公开组件、${zuiProgress.api.declaredProps}个公开Props均已进入API合同，metadata gap与teaching fallback均为0；metadata声明为stable的组件有${zuiProgress.maturity.statuses.stable ?? 0}个，其中${zuiProgress.stability.stablePendingExecution}个仍等待当前revision执行证据。`
 				],
 				bullets: [
-					`BrowserBehaviorVerified ${zuiProgress.maturity.BrowserBehaviorVerified}/${zuiProgress.api.components}；VisuallyVerified ${zuiProgress.maturity.VisuallyVerified}/${zuiProgress.api.components}；DesktopVerified ${zuiProgress.maturity.DesktopVerified}/${zuiProgress.api.components}。`,
+					`Browser behavior contracts ${zuiProgress.maturity.BrowserBehaviorContractsDeclared}/${zuiProgress.api.components}；visual contracts ${zuiProgress.maturity.VisualContractsDeclared}/${zuiProgress.api.components}；production contracts ${zuiProgress.maturity.ProductionContractsDeclared}/${zuiProgress.api.components}。这些是静态资产，不是执行通过。`,
+					`当前revision的browser+production verified为${zuiProgress.maturity.currentRevisionVerified}/${zuiProgress.api.components}，状态${zuiProgress.maturity.executionStatus.status}；DesktopVerified为${zuiProgress.maturity.execution.DesktopVerified}/${zuiProgress.api.components}。`,
 					`当前release状态为${zuiProgress.release.status}，仍有${zuiProgress.release.blocked.length}个外部发布边界；页面不会把artifact合同冒充真实registry或Docs部署。`,
 					'experimental只在生产证据、SSR、Docs、API metadata和family原子门禁全部满足后逐项晋级。'
 				],

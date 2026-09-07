@@ -7,6 +7,7 @@
 	const zui = useZui();
 	const surfaceClass = $derived(
 		zui.icss((s) => {
+			s.boxSizing.borderBox;
 			s.width._full;
 			s.minWidth.px(0);
 			s.maxWidth._full;

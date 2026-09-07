@@ -1355,7 +1355,7 @@
 			"id": "calendar",
 			"name": "ZCalendar",
 			"source": "ui/zui/src/components/input/ZCalendar.svelte",
-			"declaredPropCount": 37,
+			"declaredPropCount": 39,
 			"metadataGapPropCount": 0,
 			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
@@ -1545,6 +1545,16 @@
 			"name": "ZMention",
 			"source": "ui/zui/src/components/input/ZMention.svelte",
 			"declaredPropCount": 29,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "mini-calendar",
+			"name": "ZMiniCalendar",
+			"source": "ui/zui/src/components/input/ZMiniCalendar.svelte",
+			"declaredPropCount": 27,
 			"metadataGapPropCount": 0,
 			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
@@ -2014,8 +2024,8 @@
 		"maxMetadataGapProps": 0
 	},
 	"totals": {
-		"components": 185,
-		"declaredProps": 2624,
+		"components": 186,
+		"declaredProps": 2653,
 		"metadataGapProps": 0,
 		"fallbackProps": 0,
 		"opaqueStructuredProps": 9,

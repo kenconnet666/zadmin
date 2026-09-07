@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
-	"componentCount": 185,
-	"overallSha256": "b57567e4e890e51c655b620da1c690167986197f246eb81fd8dd738ff18d0a71",
+	"componentCount": 186,
+	"overallSha256": "e2d243d9bdfc2c7a9c8ed9e66acbc669c973ab6b5f88ccc23839b168451edac2",
 	"components": [
 		{
 			"id": "accordion",
@@ -615,7 +615,7 @@
 		},
 		{
 			"id": "calendar",
-			"sha256": "333fc605f96f7c2908426581f800677e75dd359ece7fc777babc0d279ed34b23",
+			"sha256": "29796b24f2e793a6a7fb1ceb3cfd720dbf07c7891e196f589b2f0e5630766de3",
 			"source": "src/components/input/ZCalendar.svelte"
 		},
 		{
@@ -635,7 +635,7 @@
 		},
 		{
 			"id": "date-field",
-			"sha256": "e61b2708bf842d9cf8d35fdfe49fe2f8283feb338f71b1f95f29d295247c508e",
+			"sha256": "53b7379ddd8a41dea2f7140aae49b93022e36b47d7db4a7b0148caf3d5b53e51",
 			"source": "src/components/input/ZDateField.svelte"
 		},
 		{
@@ -650,17 +650,17 @@
 		},
 		{
 			"id": "date-time-field",
-			"sha256": "660373e8ec258270d4c3214feac3cc906926ac42f56ae43f9c0620c6c1e0436b",
+			"sha256": "eadba607d6f4446dadf18fcd9c9b7a705d83aae426d3d71123c18b174a95586c",
 			"source": "src/components/input/ZDateTimeField.svelte"
 		},
 		{
 			"id": "date-time-picker",
-			"sha256": "60eb8249be29b8807df6592024ed16bc692123adab9c63d1f5cb0ada99b5a4de",
+			"sha256": "40c4edde15c63cbb1183c0f17ed88f074ba84fda15de01346bd37f550eaf710c",
 			"source": "src/components/input/ZDateTimePicker.svelte"
 		},
 		{
 			"id": "date-time-range-picker",
-			"sha256": "505bb685f2760e634bccf8cf92e5b1aaee3669b254dc2bd5df75b61c75a94163",
+			"sha256": "218e8b446933c632323bf7047523619cc1b2412cfa6e73c86e11e9c68e19f062",
 			"source": "src/components/input/ZDateTimeRangePicker.svelte"
 		},
 		{
@@ -707,6 +707,11 @@
 			"id": "mention",
 			"sha256": "75556c29419873b480b6475ed7633eadf2a6d05a1a67b1d7e7cf9e3a1d07958d",
 			"source": "src/components/input/ZMention.svelte"
+		},
+		{
+			"id": "mini-calendar",
+			"sha256": "74688a6885bd5d80fe512149b7b4a6b81c2a727abf840608fc4cded07a394837",
+			"source": "src/components/input/ZMiniCalendar.svelte"
 		},
 		{
 			"id": "native-select",
@@ -775,7 +780,7 @@
 		},
 		{
 			"id": "time-field",
-			"sha256": "61343676e6dd409b9f815cbd5db27716b891c05599741bb381fe5e082fbbae7f",
+			"sha256": "02a19adda5bf7d6a0038f787c3b7e1dfb221822f05904f7a93d2eb46b4fc6d62",
 			"source": "src/components/input/ZTimeField.svelte"
 		},
 		{
@@ -932,10 +937,10 @@
 	"entrypoints": {
 		"code.ts": "eabb8477e4c5ef93d016ab909e5c7f85a3111df231e2d2c3c7ef5e54897b36db",
 		"compiler.ts": "96fa979b36838e8b7a6d3f52bb463f23951438a4d974d52b631ad1e6d937b2e7",
-		"index.ts": "f7ce5175f59fb840952a96b8c8e3030f1353884107605b59d5addda295d9ec58",
+		"index.ts": "60c97438aaf7856dc765bb8e3f251fce68cb9b893b158d36e4812f4988a5dcae",
 		"internal.ts": "05f9ef9c8628e1cdf694dcc88b71831e5aab726a3189bd6189eef7ae645df4d7",
 		"layer.ts": "72d0fc8e5b7a8ab39a12e157879951b84f1a7fc19654f4bd8b6ea92fd8aa6db8",
-		"metadata.ts": "201812661af08f2befb1c8486fe505f1b02fb3bdfa97050f21ecf6c9cc88afd6",
+		"metadata.ts": "009f71610f5edc697bee0a7cc1821744640ef89cc1c2257e5e6636c333852bab",
 		"runtime.ts": "902679df258a1aee96a4742dc4f229210aef34e0db47c0bffcde4cc1d66016fb",
 		"testing.ts": "c596113f3cbcf4ce75be2728b6a10cd6a0b77c9b9101a4408ba2e18e174f15cb",
 		"theme.ts": "9625285286228f2548dadb74b934f40d7cd1804a1e96bc37a04f21d3cd32b527",

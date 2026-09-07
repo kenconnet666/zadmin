@@ -62,6 +62,9 @@ const headerContext: CalendarHeaderContext = Object.freeze({
 	nextDisabled: false,
 	previousDisabled: false,
 	size: 'medium',
+	view: 'month',
+	visibleEnd: new CalendarDate(2026, 9, 30),
+	visibleStart: new CalendarDate(2026, 9, 1),
 	visibleMonths: Object.freeze([new CalendarDate(2026, 9, 1)])
 });
 // @ts-expect-error Calendar snippet contexts are readonly snapshots.

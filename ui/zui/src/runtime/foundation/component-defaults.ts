@@ -94,6 +94,7 @@ const COMPONENT_RULES = {
 	passwordInput: { size: buttonRules.size },
 	nativeSelect: { size: buttonRules.size },
 	calendar: { size: buttonRules.size },
+	miniCalendar: { size: buttonRules.size },
 	dateField: { size: buttonRules.size },
 	timeField: { size: buttonRules.size },
 	datePicker: { size: buttonRules.size },
@@ -184,6 +185,7 @@ export interface CheckboxGroupComponentDefaults extends DefaultsFor<'checkboxGro
 export interface PasswordInputComponentDefaults extends DefaultsFor<'passwordInput'> {}
 export interface NativeSelectComponentDefaults extends DefaultsFor<'nativeSelect'> {}
 export interface CalendarComponentDefaults extends DefaultsFor<'calendar'> {}
+export interface MiniCalendarComponentDefaults extends DefaultsFor<'miniCalendar'> {}
 export interface DateFieldComponentDefaults extends DefaultsFor<'dateField'> {}
 export interface TimeFieldComponentDefaults extends DefaultsFor<'timeField'> {}
 export interface DatePickerComponentDefaults extends DefaultsFor<'datePicker'> {}

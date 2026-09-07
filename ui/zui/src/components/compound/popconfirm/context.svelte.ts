@@ -1,5 +1,7 @@
 import { getContext, setContext } from 'svelte';
 
+import { createContextKey } from '../../../runtime/foundation/context-key.js';
+
 export interface ZPopconfirmContext {
 	readonly descriptionId: string;
 	readonly errorId: string;
@@ -11,7 +13,7 @@ export interface ZPopconfirmContext {
 	setAction(action: HTMLButtonElement | null): void;
 }
 
-const POPCONFIRM_CONTEXT = Symbol('zui-popconfirm-context');
+const POPCONFIRM_CONTEXT = createContextKey({ hot: import.meta.hot }, 'zui-popconfirm-context');
 
 export function provideZPopconfirm(context: ZPopconfirmContext): ZPopconfirmContext {
 	setContext(POPCONFIRM_CONTEXT, context);

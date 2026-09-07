@@ -3,6 +3,7 @@ import {
 	CalendarDateTime,
 	Time,
 	ZonedDateTime,
+	toCalendar,
 	toCalendarDateTime,
 	toTime,
 	toTimeZone,
@@ -40,12 +41,22 @@ export function isGregorianCalendarDateTime(value: unknown): value is CalendarDa
 	);
 }
 
+export function isCalendarDateTime(value: unknown): value is CalendarDateTime {
+	return (
+		value instanceof CalendarDateTime && Object.getPrototypeOf(value) === CalendarDateTime.prototype
+	);
+}
+
 export function isGregorianZonedDateTime(value: unknown): value is ZonedDateTime {
 	return (
 		value instanceof ZonedDateTime &&
 		Object.getPrototypeOf(value) === ZonedDateTime.prototype &&
 		value.calendar.identifier === 'gregory'
 	);
+}
+
+export function isZonedDateTime(value: unknown): value is ZonedDateTime {
+	return value instanceof ZonedDateTime && Object.getPrototypeOf(value) === ZonedDateTime.prototype;
 }
 
 export function normalizeDateTimeModelValue<TMode extends DateTimeMode>(
@@ -55,15 +66,15 @@ export function normalizeDateTimeModelValue<TMode extends DateTimeMode>(
 ): DateTimeValue<TMode> | null {
 	if (value === null || value === undefined) return null;
 	if (mode === 'zoned') {
-		if (!isGregorianZonedDateTime(value))
+		if (!isZonedDateTime(value))
 			throw new TypeError(
-				`${owner} model value must be a Gregorian ZonedDateTime, null or undefined in zoned mode.`
+				`${owner} model value must be a ZonedDateTime, null or undefined in zoned mode.`
 			);
 		return value as DateTimeValue<TMode>;
 	}
-	if (!isGregorianCalendarDateTime(value))
+	if (!isCalendarDateTime(value))
 		throw new TypeError(
-			`${owner} model value must be a Gregorian CalendarDateTime, null or undefined in local mode.`
+			`${owner} model value must be a CalendarDateTime, null or undefined in local mode.`
 		);
 	return value as DateTimeValue<TMode>;
 }
@@ -92,10 +103,11 @@ export function composeDateTime<TMode extends DateTimeMode>(
 	options: ComposeDateTimeOptions<TMode>
 ): DateTimeValue<TMode> {
 	const local = toCalendarDateTime(options.date, options.time);
-	if (!isGregorianCalendarDateTime(local))
-		throw new TypeError('ZDateTimeField only supports Gregorian editing.');
 	if (options.mode === 'local') return local as DateTimeValue<TMode>;
-	const displayed = toZoned(local, options.displayTimeZone, options.disambiguation ?? 'compatible');
+	const displayed = toCalendar(
+		toZoned(local, options.displayTimeZone, options.disambiguation ?? 'compatible'),
+		local.calendar
+	);
 	return toTimeZone(
 		displayed,
 		options.ownerTimeZone ?? options.displayTimeZone

@@ -1,4 +1,4 @@
-import { CalendarDate, GregorianCalendar } from '@internationalized/date';
+import { CalendarDate, GregorianCalendar, createCalendar } from '@internationalized/date';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -22,6 +22,21 @@ describe('calendar selection and visible-month runtime', () => {
 		expect(() => validateVisibleMonths(1.5)).toThrow(/integer/u);
 		const bc = new CalendarDate(new GregorianCalendar(), 'BC', 2, 12, 15);
 		expect(visibleCalendarMonths(bc, 2)[0]?.era).toBe('BC');
+	});
+
+	it('preserves non-Gregorian calendars across variable month windows and multiple values', () => {
+		const leapEnd = new CalendarDate(createCalendar('hebrew'), 5784, 13, 1);
+		const months = visibleCalendarMonths(leapEnd, 2);
+		expect(months.map(({ calendar, year, month }) => [calendar.identifier, year, month])).toEqual([
+			['hebrew', 5784, 13],
+			['hebrew', 5785, 1]
+		]);
+		const normalized = normalizeCalendarMultipleModelValue([
+			leapEnd,
+			new CalendarDate(createCalendar('hebrew'), 5784, 13, 1)
+		]);
+		expect(normalized).toHaveLength(1);
+		expect(normalized[0]?.calendar.identifier).toBe('hebrew');
 	});
 
 	it('shortens the window and removes repeated interactive dates at the maximum month', () => {

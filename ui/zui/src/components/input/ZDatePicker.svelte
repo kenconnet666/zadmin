@@ -303,12 +303,14 @@
 <script lang="ts">
 	import CalendarDays from '@lucide/svelte/icons/calendar-days';
 	import X from '@lucide/svelte/icons/x';
-	import type { CalendarDate } from '@internationalized/date';
-	import { onDestroy } from 'svelte';
+	import { today, type Calendar, type CalendarDate } from '@internationalized/date';
+	import { onDestroy, untrack } from 'svelte';
 	import {
-		dateFieldPattern,
+		calendarDateKey,
 		formatDate,
-		normalizeCalendarDateModelValue
+		normalizeCalendarDateModelValue,
+		preserveCalendarOwner,
+		resolveOwnerCalendar
 	} from '../../runtime/date.js';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { controlSizeMetrics, resolveControlSize } from '../../runtime/foundation/control-size.js';
@@ -411,6 +413,9 @@
 	);
 	const describedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
 	const labelledBy = $derived(mergeAriaIds(ariaLabelledBy, field?.labelId));
+	const normalizedDefaultValue = $derived(
+		normalizeCalendarDateModelValue(defaultValue, 'ZDatePicker defaultValue')
+	);
 	let calendarRef = $state<HTMLDivElement | null>(null);
 	let fieldRef = $state<HTMLDivElement | null>(null);
 	let fieldController = $state<{ rollbackDraft(): void }>();
@@ -418,7 +423,7 @@
 	let triggerRef = $state<HTMLButtonElement | null>(null);
 	const valueState = createFormControlState<CalendarDate | null>(
 		{
-			defaultValue: () => defaultValue ?? null,
+			defaultValue: () => normalizedDefaultValue,
 			draftState: () => fieldDraft,
 			resetDraft: () => fieldController?.rollbackDraft(),
 			element: () => ref,
@@ -431,11 +436,25 @@
 		},
 		valueScope
 	);
-	let calendarValue = $state<CalendarDate | null>(valueState.current);
-	let calendarFocusedValue = $state<CalendarDate | undefined>(
-		valueState.current ?? defaultValue ?? undefined
+	let rememberedOwnerCalendar = $state.raw<Calendar | null>(
+		untrack(() => valueState.current?.calendar ?? normalizedDefaultValue?.calendar ?? null)
 	);
-	let fieldValue = $state<CalendarDate | null>(valueState.current);
+	const configuredOwnerCalendar = $derived(
+		valueState.current?.calendar ?? normalizedDefaultValue?.calendar ?? null
+	);
+	const ownerCalendar = $derived<Calendar>(
+		configuredOwnerCalendar ?? rememberedOwnerCalendar ?? resolveOwnerCalendar()
+	);
+	const fieldPlaceholderValue = $derived(
+		valueState.current ??
+			normalizedDefaultValue ??
+			preserveCalendarOwner(today(resolvedTimeZone), ownerCalendar)
+	);
+	let calendarValue = $state<CalendarDate | null>(untrack(() => valueState.current));
+	let calendarFocusedValue = $state<CalendarDate | undefined>(
+		untrack(() => valueState.current ?? normalizedDefaultValue ?? undefined)
+	);
+	let fieldValue = $state<CalendarDate | null>(untrack(() => valueState.current));
 	const openState = new ControllableState<boolean>({
 		defaultValue: () => defaultOpen,
 		onChange: () => onOpenChange,
@@ -463,23 +482,14 @@
 	function syncOwnedValue(next = valueState.current): void {
 		fieldController?.rollbackDraft();
 		calendarValue = next;
-		calendarFocusedValue = next ?? defaultValue ?? undefined;
+		calendarFocusedValue = next ?? normalizedDefaultValue ?? undefined;
 		fieldValue = next;
-		const segments = dateFieldPattern(resolvedLocale, resolvedTimeZone).flatMap((part) =>
-			'segment' in part ? [part.segment] : []
-		);
-		for (const [index, segment] of segments.entries()) {
-			const raw = segment === 'year' ? next?.year : segment === 'month' ? next?.month : next?.day;
-			const input = fieldRef?.querySelectorAll<HTMLInputElement>('input')[index];
-			if (input)
-				input.value =
-					raw === undefined ? '' : String(raw).padStart(segment === 'year' ? 4 : 2, '0');
-		}
 	}
 
 	function updateValue(next: CalendarDate | null): boolean {
 		if (resolvedDisabled || resolvedReadonly) return false;
-		const accepted = valueState.setFromUser(next);
+		const owned = next ? preserveCalendarOwner(next, ownerCalendar) : null;
+		const accepted = valueState.setFromUser(owned);
 		if (!accepted) syncOwnedValue();
 		return accepted;
 	}
@@ -492,7 +502,9 @@
 		updateValue(null);
 		setOpen(false);
 		ownerMicrotask(() =>
-			fieldRef?.querySelector<HTMLInputElement>('input')?.focus({ preventScroll: true })
+			fieldRef
+				?.querySelector<HTMLInputElement | HTMLSelectElement>('input, select')
+				?.focus({ preventScroll: true })
 		);
 	}
 
@@ -503,19 +515,25 @@
 		if (restore) ownerMicrotask(() => triggerRef?.focus({ preventScroll: true }));
 	}
 
-	let observedValueKey: string | null | undefined;
+	let observedValueKey: string | undefined;
 	$effect(() => {
 		const next = valueState.current;
-		const key = next?.toString() ?? null;
+		const key = calendarDateKey(next);
 		if (observedValueKey === key) return;
 		observedValueKey = key;
 		calendarValue = next;
 		if (next) calendarFocusedValue = next;
 		fieldValue = next;
 	});
+	$effect(() => {
+		const next = configuredOwnerCalendar;
+		if (next) rememberedOwnerCalendar = next;
+	});
 	onDestroy(
 		fieldOwner.registerFocusOwner(() =>
-			fieldRef?.querySelector<HTMLInputElement>('input')?.focus({ preventScroll: true })
+			fieldRef
+				?.querySelector<HTMLInputElement | HTMLSelectElement>('input, select')
+				?.focus({ preventScroll: true })
 		)
 	);
 </script>
@@ -546,7 +564,7 @@
 				appearance="bare"
 				calendarLabel={resolvedCalendarLabel}
 				{dateCell}
-				defaultFocusedValue={valueState.current ?? defaultValue ?? undefined}
+				defaultFocusedValue={valueState.current ?? normalizedDefaultValue ?? undefined}
 				disabled={resolvedDisabled}
 				{firstDayOfWeek}
 				header={calendarHeader}
@@ -614,6 +632,7 @@
 			{maxValue}
 			{minValue}
 			onValueChange={updateValue}
+			placeholderValue={fieldPlaceholderValue}
 			readonly={resolvedReadonly}
 			required={resolvedRequired}
 			size={resolvedSize}

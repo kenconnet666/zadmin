@@ -1,5 +1,7 @@
 import { getContext, setContext } from 'svelte';
 
+import { createContextKey } from '../../../runtime/foundation/context-key.js';
+
 import type { PortalTarget } from '../../../runtime/layer/portal.js';
 
 export type PopoverPlacement =
@@ -36,7 +38,7 @@ export interface ZPopoverContext {
 	setTrigger(trigger: HTMLElement | null): void;
 }
 
-const POPOVER_CONTEXT = Symbol('zui-popover-context');
+const POPOVER_CONTEXT = createContextKey({ hot: import.meta.hot }, 'zui-popover-context');
 
 export function provideZPopover(context: ZPopoverContext): ZPopoverContext {
 	setContext(POPOVER_CONTEXT, context);

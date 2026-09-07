@@ -4,6 +4,7 @@ import {
 	Time,
 	ZonedDateTime,
 	fromDate,
+	toCalendar,
 	toCalendarDateTime,
 	toTime,
 	toTimeZone,
@@ -14,9 +15,9 @@ import {
 	composeDateTime,
 	dateTimeParts,
 	displayDateTime,
+	isCalendarDateTime,
 	isDateTimeUnavailable,
-	isGregorianCalendarDateTime,
-	isGregorianZonedDateTime,
+	isZonedDateTime,
 	type DateTimeMode
 } from './date-time.js';
 import type { Weekday } from './date.js';
@@ -85,10 +86,7 @@ export function validateDateTimePickerConstraints(constraints: DateTimePickerCon
 		['maxValue', constraints.maxValue]
 	] as const) {
 		if (value === undefined) continue;
-		const valid =
-			constraints.mode === 'zoned'
-				? isGregorianZonedDateTime(value)
-				: isGregorianCalendarDateTime(value);
+		const valid = constraints.mode === 'zoned' ? isZonedDateTime(value) : isCalendarDateTime(value);
 		if (!valid)
 			throw new TypeError(
 				`DateTimePickerPanel ${name} must match its ${constraints.mode} value mode.`
@@ -108,6 +106,8 @@ export function sameDateTimePickerValue(
 ): boolean {
 	if (left === right) return true;
 	if (!left || !right || Object.getPrototypeOf(left) !== Object.getPrototypeOf(right)) return false;
+	if (left.calendar.identifier !== right.calendar.identifier || left.era !== right.era)
+		return false;
 	if (left instanceof ZonedDateTime && right instanceof ZonedDateTime)
 		return (
 			left.compare(right) === 0 && left.timeZone === right.timeZone && left.offset === right.offset
@@ -119,7 +119,7 @@ export function isDateTimePickerValue(
 	value: unknown,
 	mode: DateTimeMode
 ): value is DateTimePickerValue {
-	return mode === 'zoned' ? isGregorianZonedDateTime(value) : isGregorianCalendarDateTime(value);
+	return mode === 'zoned' ? isZonedDateTime(value) : isCalendarDateTime(value);
 }
 
 export function dateTimePickerDisplayValue(
@@ -220,26 +220,37 @@ function dateTimePickerValueAvailableUnchecked(
 
 export function resolveDateTimePickerPreset(
 	preset: DateTimePickerPreset,
-	constraints: DateTimePickerConstraints
+	constraints: DateTimePickerConstraints,
+	reference?: DateTimePickerValue
 ): DateTimePickerValue | null {
 	validateDateTimePickerConstraints(constraints);
 	const candidate: unknown = typeof preset.value === 'function' ? preset.value() : preset.value;
-	return isDateTimePickerValue(candidate, constraints.mode) &&
-		dateTimePickerValueAvailable(candidate, constraints)
-		? candidate
-		: null;
+	if (!isDateTimePickerValue(candidate, constraints.mode)) return null;
+	if (reference && !isDateTimePickerValue(reference, constraints.mode))
+		throw new TypeError('DateTimePickerPanel preset reference must match its value mode.');
+	let owned = reference ? toCalendar(candidate, reference.calendar) : candidate;
+	if (owned instanceof ZonedDateTime && reference instanceof ZonedDateTime)
+		owned = toTimeZone(owned, reference.timeZone);
+	return dateTimePickerValueAvailable(owned, constraints) ? owned : null;
 }
 
 export function dateTimePickerNow(
 	constraints: DateTimePickerConstraints,
 	instant = new Date(),
-	ownerTimeZone?: string
+	reference?: DateTimePickerValue
 ): DateTimePickerValue | null {
+	validateDateTimePickerConstraints(constraints);
+	if (reference && !isDateTimePickerValue(reference, constraints.mode))
+		throw new TypeError('DateTimePickerPanel Now reference must match its value mode.');
 	const zoned = fromDate(instant, constraints.timeZone);
+	const displayed = reference ? toCalendar(zoned, reference.calendar) : zoned;
 	const candidate: DateTimePickerValue =
 		constraints.mode === 'zoned'
-			? toTimeZone(zoned, ownerTimeZone ?? constraints.timeZone)
-			: toCalendarDateTime(zoned);
+			? toTimeZone(
+					displayed,
+					reference instanceof ZonedDateTime ? reference.timeZone : constraints.timeZone
+				)
+			: toCalendarDateTime(displayed);
 	return dateTimePickerValueAvailable(candidate, constraints) ? candidate : null;
 }
 
@@ -282,7 +293,14 @@ export function initialDateTimePickerTime(
 ): Time | null {
 	const parts = dateTimePickerParts(reference, constraints);
 	const timeConstraints = dateTimePickerTimeConstraints(date, reference, constraints);
-	return initialTimePickerReference(null, timeConstraints, parts.time);
+	// These are search candidates, not Time min/max. Around a DST fold, wall-clock order can differ
+	// from instant order; the composed DateTime predicate remains the only availability authority.
+	const boundaryMilliseconds = [constraints.minValue, constraints.maxValue].flatMap((boundary) => {
+		if (!boundary) return [];
+		const boundaryParts = dateTimePickerParts(boundary, constraints);
+		return boundaryParts.date.compare(date) === 0 ? [boundaryParts.time.millisecond] : [];
+	});
+	return initialTimePickerReference(null, timeConstraints, parts.time, boundaryMilliseconds);
 }
 
 export function dateTimePickerParts(

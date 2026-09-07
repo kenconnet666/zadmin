@@ -3,9 +3,9 @@
 - Package: @zadmin/zui
 - Version: 0.1.0
 - Revision: SOURCE_REVISION
-- Component routes: 115
+- Component routes: 116
 - Guide routes: 9
-- Total routes including home: 125
+- Total routes including home: 126
 - Build files: BUILD_FILE_COUNT
 - Build SHA-256: BUILD_SHA256
 - Support matrix SHA-256: b73e6cb6e24b1d48f8c42f18220b730124cdc7c84e7f248c94899a540fb6ab2e

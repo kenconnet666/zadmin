@@ -13,6 +13,10 @@ import FormDemo from './FormDemo.svelte';
 import formSource from './FormDemo.svelte?raw';
 import LocalesDemo from './LocalesDemo.svelte';
 import localesSource from './LocalesDemo.svelte?raw';
+import InternationalCalendarsDemo from './InternationalCalendarsDemo.svelte';
+import internationalCalendarsSource from './InternationalCalendarsDemo.svelte?raw';
+import CalendarOwnerDemo from './CalendarOwnerDemo.svelte';
+import calendarOwnerSource from './CalendarOwnerDemo.svelte?raw';
 
 export const dateFieldDoc = defineComponentDoc(dateFieldMetadata, {
 	profiles: ['form-control'],
@@ -52,9 +56,27 @@ export const dateFieldDoc = defineComponentDoc(dateFieldMetadata, {
 			required: { default: 'Field context或false', description: '向group与segments投射必填语义。' }
 		},
 		summary:
-			'本地化CalendarDate分段字段：locale驱动DOM顺序、nullable owner、完整/非法草稿分离、边界与不可用日期、Field焦点、FormValueBridge/reset及可复用bare外观。'
+			'本地化CalendarDate分段字段：locale的Unicode ca扩展决定真实display calendar，编辑后转换回原owner calendar；同时保留nullable owner、草稿验证、边界、Field焦点与FormValueBridge。'
 	},
 	demos: [
+		{
+			component: InternationalCalendarsDemo,
+			covers: ['controlled', 'keyboard', 'locale'],
+			description:
+				'Japanese显示并编辑真实era；Hebrew闰年使用13个月，两个owner都不会被转换成Gregorian业务值。',
+			id: 'date-field-international-calendars',
+			source: internationalCalendarsSource,
+			title: '日本纪元与希伯来闰月'
+		},
+		{
+			component: CalendarOwnerDemo,
+			covers: ['controlled', 'external-clear', 'keyboard', 'locale'],
+			description:
+				'Persian owner在清空后仍作为再次选择的模型历法；ISO 8601采用明确的Gregorian日期算法别名。',
+			id: 'date-field-calendar-owner',
+			source: calendarOwnerSource,
+			title: '清空后的历法所有权与ISO别名'
+		},
 		{
 			component: SizingDemo,
 			covers: ['composition', 'variants-and-states'],
@@ -68,7 +90,7 @@ export const dateFieldDoc = defineComponentDoc(dateFieldMetadata, {
 			component: FormDemo,
 			covers: ['basic-render', 'form-data', 'form-reset', 'keyboard', 'uncontrolled'],
 			description:
-				'year/month/day按locale顺序编辑，完整值才提交CalendarDate，reset恢复defaultValue。',
+				'era/year/month/day按locale与display calendar顺序编辑，完整值才提交CalendarDate，reset恢复defaultValue。',
 			id: 'date-field-segments-form',
 			source: formSource,
 			title: '日期segments与表单'
@@ -108,11 +130,23 @@ export const dateFieldDoc = defineComponentDoc(dateFieldMetadata, {
 		}
 	],
 	accessibility: [
-		'group获得Field或后备日期名称；第一segment使用controlId，其他segment使用typed locale名称并共享description/invalid关系。',
-		'左右、Home/End按真实locale DOM顺序移动，RTL使用逻辑方向；上下键通过CalendarDate.cycle处理闰年和月长。',
+		'group获得Field或后备日期名称；第一segment使用controlId，其他segment使用typed locale名称并共享description/invalid关系；多纪元历法使用具名原生select。',
+		'左右、Home/End按真实locale DOM顺序移动，RTL使用逻辑方向；上下键在display calendar中通过CalendarDate.cycle处理era、闰月和月长。',
 		'输入中的partial/非法文本只存在于segment草稿；完整可用日期才更新value和ISO FormData。',
+		'Gregorian与ISO年份保留四位自动完成；Japanese、ROC等纪元年使用1–4位自然草稿，只在完整提交边界写回，输入第一位不会被格式化打断。',
+		'数字segment复用共享parseLocalizedNumber与Intl.NumberFormat，因此Persian和Arabic数字既可显示也可输入；calendar构造仍负责正整数与日期范围校验。',
+		'locale calendar仅在@internationalized/date提供实际日期算法时启用；Chinese、Dangi、generic Islamic与Islamic RGSA会明确拒绝，ISO 8601是公开说明的Gregorian日期算法别名。',
 		'readonly保持Tab焦点、文本选择与FormData，disabled使用原生disabled并退出提交。',
 		'formParticipation=none只用于复合owner，避免嵌套DateField产生重复hidden input或reset listener。'
 	],
-	keywords: ['date field', 'segments', 'calendar date', 'locale', 'form', 'nullable']
+	keywords: [
+		'date field',
+		'segments',
+		'calendar date',
+		'international calendar',
+		'era',
+		'locale',
+		'form',
+		'nullable'
+	]
 });

@@ -87,6 +87,7 @@ interface FindAvailableTimeOptions extends TimePickerConstraints {
 	readonly fixedHour?: number;
 	readonly fixedMinute?: number;
 	readonly fixedSecond?: number;
+	readonly hiddenMillisecondCandidates?: readonly number[];
 	readonly preferred: Time;
 }
 
@@ -107,6 +108,14 @@ function fullUnit(): readonly number[] {
  */
 export function findAvailableTime(options: FindAvailableTimeOptions): Time | null {
 	validateTimePickerConstraints(options);
+	if (
+		options.hiddenMillisecondCandidates?.some(
+			(value) => !Number.isInteger(value) || value < 0 || value > 999
+		)
+	)
+		throw new TypeError(
+			'Time picker hidden millisecond candidates must be integers from 0 to 999.'
+		);
 	const hours =
 		options.fixedHour === undefined
 			? Array.from({ length: 24 }, (_, hour) => hour).filter(
@@ -141,7 +150,8 @@ export function findAvailableTime(options: FindAvailableTimeOptions): Time | nul
 					[
 						options.preferred.millisecond,
 						options.minValue?.millisecond,
-						options.maxValue?.millisecond
+						options.maxValue?.millisecond,
+						...(options.hiddenMillisecondCandidates ?? [])
 					].filter((value): value is number => value !== undefined)
 				)
 			]
@@ -162,13 +172,15 @@ export function findAvailableTime(options: FindAvailableTimeOptions): Time | nul
 export function initialTimePickerReference(
 	value: Time | null,
 	constraints: TimePickerConstraints,
-	preferred = value ?? new Time(0)
+	preferred = value ?? new Time(0),
+	hiddenMillisecondCandidates: readonly number[] = []
 ): Time | null {
 	validateTimePickerConstraints(constraints);
 	if (value && timePickerValueAvailable(value, constraints)) return value;
 	return findAvailableTime({
 		...constraints,
 		allowHiddenSearch: value === null,
+		hiddenMillisecondCandidates,
 		preferred
 	});
 }

@@ -142,7 +142,8 @@
 			},
 			{
 				default: 'undefined（继承Provider locale）',
-				description: '用于解析和渲染时间segment顺序、数字格式与hour cycle的locale。',
+				description:
+					'用于解析和渲染时间segment顺序、本地数字与hour cycle；数字输入复用共享number runtime。',
 				name: 'locale',
 				type: 'string'
 			},
@@ -396,6 +397,7 @@
 	import { useZInputGroup } from '../../runtime/form/input-group-context.svelte.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { getElementDirection } from '../../runtime/layer/dom-realm.js';
+	import { parseLocalizedNumber } from '../../runtime/number.js';
 
 	let {
 		'aria-describedby': ariaDescribedBy,
@@ -439,7 +441,8 @@
 	const fieldOwner = claimZFieldControlOwner();
 	const field = fieldOwner.field;
 	const group = useZInputGroup();
-	const valueScope = formParticipation === 'auto' ? claimFormValueScope() : null;
+	const claimedValueScope = untrack(claimFormValueScope);
+	const valueScope = untrack(() => (formParticipation === 'auto' ? claimedValueScope : null));
 	const uid = $props.id();
 	const idBase = $derived(
 		controlId ??
@@ -540,6 +543,19 @@
 		if (kind === 'incomplete') return zui.localePack.time.incompleteTime;
 		return zui.localePack.time.invalidTime;
 	}
+	function parseSegmentNumber(raw: string): number | undefined {
+		const parsed = parseLocalizedNumber(raw, resolvedLocale);
+		return parsed.valid && Number.isInteger(parsed.value) && (parsed.value ?? -1) >= 0
+			? parsed.value
+			: undefined;
+	}
+	function formatSegmentNumber(value: number): string {
+		return new Intl.NumberFormat(resolvedLocale, {
+			maximumFractionDigits: 0,
+			minimumIntegerDigits: 2,
+			useGrouping: false
+		}).format(value);
+	}
 
 	function inspectDraftState(): FormControlDraftState {
 		const entries = Object.entries(drafts) as [TimeSegment, string][];
@@ -557,18 +573,27 @@
 		}
 		if (
 			(valueState.current === null && segments.some((segment) => drafts[segment] === undefined)) ||
-			entries.some(([, raw]) => raw.length !== 2 || !/^\d+$/u.test(raw))
+			entries.some(([, raw]) => raw.length < 2)
 		)
 			return Object.freeze({ dirty: true, message: draftMessage('incomplete'), valid: false });
-		let hour = Number(drafts.hour ?? valueState.current?.hour ?? resolvedPlaceholderValue.hour);
-		const enteredHour = Number(drafts.hour ?? hour);
+		if (entries.some(([, raw]) => raw.length > 2 || parseSegmentNumber(raw) === undefined))
+			return Object.freeze({ dirty: true, message: draftMessage('invalid'), valid: false });
+		let hour =
+			drafts.hour === undefined
+				? (valueState.current?.hour ?? resolvedPlaceholderValue.hour)
+				: parseSegmentNumber(drafts.hour)!;
+		const enteredHour = drafts.hour === undefined ? hour : parseSegmentNumber(drafts.hour)!;
 		const minute =
 			granularity === 'hour'
 				? (valueState.current?.minute ?? resolvedPlaceholderValue.minute)
-				: Number(drafts.minute ?? valueState.current?.minute ?? resolvedPlaceholderValue.minute);
+				: drafts.minute === undefined
+					? (valueState.current?.minute ?? resolvedPlaceholderValue.minute)
+					: parseSegmentNumber(drafts.minute)!;
 		const second =
 			granularity === 'second'
-				? Number(drafts.second ?? valueState.current?.second ?? resolvedPlaceholderValue.second)
+				? drafts.second === undefined
+					? (valueState.current?.second ?? resolvedPlaceholderValue.second)
+					: parseSegmentNumber(drafts.second)!
 				: (valueState.current?.second ?? resolvedPlaceholderValue.second);
 		const millisecond = valueState.current?.millisecond ?? resolvedPlaceholderValue.millisecond;
 		if (hourCycle === 12 && drafts.hour !== undefined) {
@@ -602,8 +627,7 @@
 			let raw =
 				segment === 'hour' ? next?.hour : segment === 'minute' ? next?.minute : next?.second;
 			if (raw !== undefined && segment === 'hour' && hourCycle === 12) raw = raw % 12 || 12;
-			if (inputs[index])
-				inputs[index].value = raw === undefined ? '' : String(raw).padStart(2, '0');
+			if (inputs[index]) inputs[index].value = raw === undefined ? '' : formatSegmentNumber(raw);
 		}
 	}
 
@@ -614,7 +638,7 @@
 		let raw =
 			segment === 'hour' ? current.hour : segment === 'minute' ? current.minute : current.second;
 		if (segment === 'hour' && hourCycle === 12) raw = raw % 12 || 12;
-		return String(raw).padStart(2, '0');
+		return formatSegmentNumber(raw);
 	}
 
 	function clamp(next: Time): Time {
@@ -635,21 +659,32 @@
 		if (Object.keys(drafts).length === 0) return true;
 		if (
 			valueState.current === null &&
-			segments.some((segment) => (drafts[segment]?.length ?? 0) !== 2)
+			segments.some(
+				(segment) =>
+					(drafts[segment]?.length ?? 0) !== 2 ||
+					parseSegmentNumber(drafts[segment] ?? '') === undefined
+			)
 		) {
 			draftInvalid = markIncomplete;
 			return false;
 		}
-		let hour = Number(drafts.hour ?? valueState.current?.hour ?? resolvedPlaceholderValue.hour);
+		let hour =
+			drafts.hour === undefined
+				? (valueState.current?.hour ?? resolvedPlaceholderValue.hour)
+				: (parseSegmentNumber(drafts.hour) ?? Number.NaN);
 		const enteredHour = hour;
 		// Editing visible segments preserves the other units of an existing typed Time.
 		const minute =
 			granularity === 'hour'
 				? (valueState.current?.minute ?? resolvedPlaceholderValue.minute)
-				: Number(drafts.minute ?? valueState.current?.minute ?? resolvedPlaceholderValue.minute);
+				: drafts.minute === undefined
+					? (valueState.current?.minute ?? resolvedPlaceholderValue.minute)
+					: (parseSegmentNumber(drafts.minute) ?? Number.NaN);
 		const second =
 			granularity === 'second'
-				? Number(drafts.second ?? valueState.current?.second ?? resolvedPlaceholderValue.second)
+				? drafts.second === undefined
+					? (valueState.current?.second ?? resolvedPlaceholderValue.second)
+					: (parseSegmentNumber(drafts.second) ?? Number.NaN)
 				: (valueState.current?.second ?? resolvedPlaceholderValue.second);
 		const millisecond = valueState.current?.millisecond ?? resolvedPlaceholderValue.millisecond;
 		if (hourCycle === 12 && drafts.hour !== undefined) {
@@ -805,13 +840,13 @@
 		segment: TimeSegment,
 		focusIndex: number
 	): void {
-		const nextDraft = event.currentTarget.value.replace(/\D/gu, '');
+		const nextDraft = event.currentTarget.value;
 		drafts = { ...drafts, [segment]: nextDraft };
 		if (valueState.current === null)
 			drafts = Object.fromEntries(
 				segments.map((key, inputIndex) => [
 					key,
-					key === segment ? nextDraft : (inputs[inputIndex]?.value.replace(/\D/gu, '') ?? '')
+					key === segment ? nextDraft : (inputs[inputIndex]?.value ?? '')
 				])
 			) as Partial<Record<TimeSegment, string>>;
 		if (inputs.every((input) => !input?.value)) {
@@ -824,7 +859,7 @@
 			draftInvalid = false;
 			return;
 		}
-		if (nextDraft.length === 2) {
+		if (nextDraft.length === 2 && parseSegmentNumber(nextDraft) !== undefined) {
 			commit(false);
 			if (focusIndex < focusOrder.length - 1) move(focusIndex, 'next');
 		}

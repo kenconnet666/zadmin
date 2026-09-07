@@ -752,6 +752,28 @@ export type {
 export { default as ZCascader } from '../components/input/ZCascader.svelte';
 export type { CascaderFilter, ZCascaderProps } from '../components/input/ZCascader.svelte';
 export { default as ZCalendar } from '../components/input/ZCalendar.svelte';
+export { default as ZMiniCalendar } from '../components/input/ZMiniCalendar.svelte';
+export type { ZMiniCalendarProps } from '../components/input/ZMiniCalendar.svelte';
+export type { CalendarView } from '../runtime/calendar-window.js';
+export {
+	supportedDisplayCalendars,
+	resolveDisplayCalendar,
+	resolveOwnerCalendar,
+	toDisplayCalendar,
+	preserveCalendarOwner,
+	calendarDateKey,
+	calendarEraOptions,
+	isCalendarDate,
+	monthsInYear,
+	minimumMonthInYear,
+	minimumDayInMonth
+} from '../runtime/date.js';
+export type {
+	SupportedDisplayCalendarIdentifier,
+	CalendarValue,
+	CalendarEraOption
+} from '../runtime/date.js';
+export { isCalendarDateTime, isZonedDateTime } from '../runtime/date-time.js';
 export type {
 	ZCalendarProps,
 	CalendarCellContext,
@@ -1051,6 +1073,7 @@ export type {
 	PasswordInputComponentDefaults,
 	NativeSelectComponentDefaults,
 	CalendarComponentDefaults,
+	MiniCalendarComponentDefaults,
 	DateFieldComponentDefaults,
 	TimeFieldComponentDefaults,
 	DatePickerComponentDefaults,

@@ -34,6 +34,7 @@ import { visuallyHiddenDoc } from '../content/components/gene/visually-hidden/do
 import { checkboxDoc } from '../content/components/input/checkbox/doc.js';
 import { checkboxGroupDoc } from '../content/components/input/checkbox-group/doc.js';
 import { calendarDoc } from '../content/components/input/calendar/doc.js';
+import { miniCalendarDoc } from '../content/components/input/mini-calendar/doc.js';
 import { cascaderDoc } from '../content/components/input/cascader/doc.js';
 import { colorPickerDoc } from '../content/components/input/color-picker/doc.js';
 import { comboboxDoc } from '../content/components/input/combobox/doc.js';
@@ -176,6 +177,7 @@ export const componentDocs = Object.freeze([
 	checkboxDoc,
 	checkboxGroupDoc,
 	calendarDoc,
+	miniCalendarDoc,
 	cascaderDoc,
 	colorPickerDoc,
 	comboboxDoc,

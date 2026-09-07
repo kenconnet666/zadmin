@@ -6,7 +6,7 @@
 
 审查基线：`f906246dab9b4b48f909e4c86c2ed4f894f8e58a`；本机 Docs：`http://127.0.0.1:5174/`。浏览器探测使用全新 Chromium context，1920×1080、默认 aurora-light 主题。
 
-结论：当前文档站大量调用 ZUI，但仍自行维护了通用 UI 外观和行为。前一轮的 recipe specificity 修复还暴露了组件与 Docs 样式组合的回归。现有 `VisuallyVerified=141` 是测试文件存在局部视觉断言的覆盖指标，不能作为整站排版、所有 API 组合或成熟设计质量已验收的依据。
+结论：当前文档站大量调用 ZUI，但仍自行维护了通用 UI 外观和行为。前一轮的 recipe specificity 修复还暴露了组件与 Docs 样式组合的回归。该历史快照中的141项实际只是局部视觉合同资产；现行报告称为`VisualContractsDeclared`，不能作为整站排版、所有 API 组合或成熟设计质量已验收的依据。
 
 仅 `apps/docs/src/views` 就有 11 个 Svelte 文件，全部定义 Docs 自有 slot recipe；约 2544 行源码中有 1226 行位于 module recipe 区域，含 136 个静态 ZUI 调用位置。这些计数用于定位维护面，不是运行时节点计数或组件质量评分。
 

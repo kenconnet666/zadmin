@@ -573,6 +573,15 @@
 		...rest
 	}: ZPeriodCalendarProps<TKind, TMode> = $props();
 	const zui = useZui();
+	const typedHeader = $derived(
+		header as Snippet<[context: PeriodCalendarHeaderContext<TKind>]> | undefined
+	);
+	const typedPeriodCell = $derived(
+		periodCell as Snippet<[context: PeriodCalendarCellContext<TKind>]> | undefined
+	);
+	const typedUnavailable = $derived(
+		isPeriodUnavailable as ((period: KindPeriod) => boolean) | undefined
+	);
 	const fieldOwner = claimZFieldControlOwner();
 	const field = fieldOwner.field;
 	const claimedValueScope = untrack(claimFormValueScope);
@@ -630,7 +639,7 @@
 		);
 		const unavailableRange =
 			selectionMode === 'range' &&
-			!isPeriodRangeAvailable(range, isPeriodUnavailable, allowNonContiguousRange);
+			!isPeriodRangeAvailable(range, typedUnavailable, allowNonContiguousRange);
 		const valid =
 			(!resolvedRequired || !selectionEmpty(valueState.current)) &&
 			(allowEmpty || !partial) &&
@@ -655,7 +664,7 @@
 			onChange: () => onValueChange as ((value: SelectionValue) => void) | undefined,
 			owner: 'ZPeriodCalendar',
 			read: () => value as SelectionValue | undefined,
-			write: (next) => (value = next)
+			write: (next) => (value = next as typeof value)
 		},
 		valueScope
 	);
@@ -714,13 +723,13 @@
 			maxValue ??
 			currentPeriod()
 	);
-	const focusedState = new ControllableState<KindPeriod | undefined>({
+	const focusedState = new ControllableState<KindPeriod>({
 		defaultValue: () => initialFocus,
-		onChange: () => onFocusedValueChange,
-		read: () => focusedValue,
-		write: (next) => (focusedValue = next)
+		onChange: () => onFocusedValueChange as ((period: KindPeriod) => void) | undefined,
+		read: () => focusedValue as KindPeriod | undefined,
+		write: (next) => (focusedValue = next as typeof focusedValue)
 	});
-	const resolvedFocused = $derived(focusedState.current ?? initialFocus);
+	const resolvedFocused = $derived(focusedState.current);
 
 	function pageSize(): number {
 		return granularity === 'quarter' ? 4 : 12;
@@ -760,7 +769,7 @@
 		Boolean(
 			(minValue && comparePeriods(period, minValue) < 0) ||
 			(maxValue && comparePeriods(period, maxValue) > 0) ||
-			isPeriodUnavailable?.(period)
+			typedUnavailable?.(period)
 		);
 	const unavailable = (period: KindPeriod): boolean =>
 		resolvedDisabled || periodUnavailable(period);
@@ -876,15 +885,18 @@
 			? (valueState.current as PeriodRangeValue<TKind> | null)
 			: null;
 	}
-	const previewRange = $derived.by(() => {
+	const previewRange = $derived.by<PeriodRangeValue<TKind> | null>(() => {
 		const range = rangeValue();
 		if (!range?.start || range.end || !hoverPeriod) return null;
-		return normalizePeriodRange({ end: hoverPeriod, start: range.start }, granularity);
+		return normalizePeriodRange(
+			{ end: hoverPeriod, start: range.start },
+			granularity
+		) as PeriodRangeValue<TKind>;
 	});
 	const previewRangeInvalid = $derived(
 		Boolean(
 			previewRange &&
-			!isPeriodRangeAvailable(previewRange, isPeriodUnavailable, allowNonContiguousRange)
+			!isPeriodRangeAvailable(previewRange, typedUnavailable, allowNonContiguousRange)
 		)
 	);
 	function periodInRange(period: KindPeriod, range: PeriodRangeValue<TKind> | null): boolean {
@@ -957,7 +969,7 @@
 				return;
 			}
 			const candidate = normalizePeriodRange({ end: period, start: current.start }, granularity);
-			if (!isPeriodRangeAvailable(candidate, isPeriodUnavailable, allowNonContiguousRange)) {
+			if (!isPeriodRangeAvailable(candidate, typedUnavailable, allowNonContiguousRange)) {
 				feedback = zui.localePack.period.unavailable;
 				feedbackRevision += 1;
 				return;
@@ -1097,7 +1109,7 @@
 		valueState.reset();
 		hoverPeriod = null;
 		const target = selectionPeriods(valueState.current)[0] ?? currentPeriod();
-		focusedValue = target;
+		focusedValue = target as typeof focusedValue;
 		activeKey = periodKey(target);
 		page = pageStart(target);
 		feedback = '';
@@ -1138,11 +1150,11 @@
 	onpointerleave={() => (hoverPeriod = null)}
 >
 	<div class={headerClass} data-slot="header">
-		{#if header}
+		{#if typedHeader}
 			<ZVisuallyHidden aria-live="polite" data-slot="header-label"
 				>{headerContext.label}</ZVisuallyHidden
 			>
-			{@render header(headerContext)}
+			{@render typedHeader(headerContext)}
 		{:else}
 			<ZButton
 				aria-label={resolvedPreviousLabel}
@@ -1214,8 +1226,8 @@
 							}}
 							tabindex={activeKey === record.key && !record.disabled && !resolvedDisabled ? 0 : -1}
 						>
-							{#if periodCell}
-								{@render periodCell(context)}
+							{#if typedPeriodCell}
+								{@render typedPeriodCell(context)}
 							{:else if record.period.kind === 'week'}
 								{#if showWeekNumbers}
 									<span data-slot="week-number">{record.label}</span>

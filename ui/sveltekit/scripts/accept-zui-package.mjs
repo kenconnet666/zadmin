@@ -194,6 +194,38 @@ const panel = icss(defaultTheme, (s) => { s.padding._large; s.backgroundColor._s
 `
 	);
 	await write(
+		resolve(fixtureRoot, 'src/date-time-component-types.ts'),
+		// language=TypeScript
+		`import type { ComponentProps } from 'svelte';
+import { ZDateTimeField, ZDateTimePicker, ZDateTimeRangePicker } from '@zadmin/zui';
+import type {
+  ZDateTimeFieldLocalProps,
+  ZDateTimeFieldZonedProps,
+  ZDateTimeRangePickerLocalProps,
+  ZDateTimeRangePickerZonedProps
+} from '@zadmin/zui';
+
+declare const local: NonNullable<ZDateTimeFieldLocalProps['value']>;
+declare const zoned: NonNullable<ZDateTimeFieldZonedProps['value']>;
+declare const localRange: NonNullable<ZDateTimeRangePickerLocalProps['value']>;
+declare const zonedRange: NonNullable<ZDateTimeRangePickerZonedProps['value']>;
+
+const fieldLocal = { value: local, onValueChange: (value) => value?.hour } satisfies ComponentProps<typeof ZDateTimeField>;
+const fieldZoned = { mode: 'zoned', value: zoned, onValueChange: (value) => value?.timeZone } satisfies ComponentProps<typeof ZDateTimeField>;
+const pickerInline = { presentation: 'inline', value: local, onCommit: (value) => value?.minute } satisfies ComponentProps<typeof ZDateTimePicker>;
+const pickerZonedInline = { mode: 'zoned', presentation: 'inline', value: zoned, onCommit: (value) => value?.timeZone } satisfies ComponentProps<typeof ZDateTimePicker>;
+const rangeInline = { presentation: 'inline', value: localRange, onValueChange: (value) => value?.end?.hour } satisfies ComponentProps<typeof ZDateTimeRangePicker>;
+const rangeZonedInline = { mode: 'zoned', presentation: 'inline', value: zonedRange, onValueChange: (value) => value?.start?.timeZone } satisfies ComponentProps<typeof ZDateTimeRangePicker>;
+
+// @ts-expect-error inline presentation excludes popup ownership.
+const invalidInlineOpen: ComponentProps<typeof ZDateTimePicker> = { presentation: 'inline', open: true, value: local };
+// @ts-expect-error zoned range rejects local endpoints.
+const invalidZonedRange: ComponentProps<typeof ZDateTimeRangePicker> = { mode: 'zoned', presentation: 'inline', value: localRange };
+
+void [fieldLocal, fieldZoned, pickerInline, pickerZonedInline, rangeInline, rangeZonedInline, invalidInlineOpen, invalidZonedRange];
+`
+	);
+	await write(
 		resolve(fixtureRoot, 'testing.mjs'),
 		`import { defaultTheme } from '@zadmin/zui/theme';
 import { createPluginRouteHandle } from '@zadmin/sveltekit/server';

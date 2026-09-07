@@ -5,6 +5,7 @@
 ## 统一原则
 
 - 同一语义职责只保留一个状态、DOM交互或资源生命周期所有者。高层组件只增加自身职责，例如PasswordInput拥有visible，内部ZInput仍唯一拥有value/Field/FormData。
+- 同一逻辑context在Vite热更新模块实例间保留身份，统一复用createContextKey；避免Provider、Field、菜单或弹层各自退回默认状态。生产使用局部Symbol，不让不同安装版本通过全局Symbol意外共享context。
 - 同组控件使用五档control size、共享图标比例、五个语义色加独立品牌色。八档文字大小属于排版轴，不能混成控件高度；图表类别色、用户选色等业务颜色独立处理。
 - 默认值优先级明确：实例覆盖；局部组合/Field作用域优先于全局专属或基础组件默认；在每个真正消费点核对，不仅允许配置字段。
 - 所有按钮操作沿用Button的禁用、loading、原生Enter/Space和用户取消click规则。readonly保留可访问与提交行为，不能统一替换成disabled。
@@ -54,3 +55,9 @@ E15补充：DateTime single/range的popover与inline只改变呈现容器，继�
 联合约束一致性包括：边界日部分时刻可用时保留日期入口；隐藏分秒/毫秒仍可找到合法空值参考；DST gap拒绝后日期草稿可修正；fold无改动确认保留原instant/time zone/offset；preset/Now不可用时拒绝而不clamp。inline readonly保留Calendar和时间列焦点/导航，只阻断写入和确认，Cancel/reset仍清草稿。390px仅已验证single inline宽度与Cancel/Confirm/reset唯一owner；range、readonly、TimeGrid/TimeValue和完整辅助技术矩阵仍待验收。
 
 E14完成job日志仍是失败证据：覆盖率1320通过、6项Period失败；静态41个类型错误多数为Period泛型；外部SSR四个生成声明因大DOM属性交叉联合在`Component<Props>`触发TS2590。当前Props按具体mode/selection/presentation组合物化named interface后再组成纯union，保留判别强度并减少`keyof Props`/`Partial<Props>`分配；整个run最后一次状态未知，不能登记为家族通过或稳定晋升。
+
+E16补充：Calendar month/strip、MiniCalendar、DateField/Picker/Range及DateTimeField/Picker/Range现在共享“model owner calendar—locale display calendar—候选回写owner”的边界。clear只清业务值，不清最近非空calendar表示上下文；current/default/显式placeholder优先。DateTime single的Field、Panel、preset与Now在业务predicate、canonical和回调前恢复parent calendar/era，zoned同时保持instant/timeZone/offset；range分别记忆start/end calendar，混合Hebrew/Persian端点不互相覆盖。表示上下文不进入FormData或成为第二business value。
+
+真实浏览器已覆盖Mini 7/10日窗口314px无横溢出、Hebrew→Persian仅切display、Hebrew闰月13月29日跨新年并clear/reselect、Japanese平成至令和，以及DateTime精确毫秒、同instant切Hebrew后Now、混合calendar范围preset。支持范围是13套实际算法加ISO/Gregorian别名；Chinese、Dangi和未实现Islamic标识明确拒绝。仍需成组验收全部支持算法、极值、RTL/auto、readonly/disabled、三浏览器、SSR、Windows、screen reader与forced-colors。
+
+成熟度已改为静态`*ContractsDeclared`/`*Present`与revision-bound执行证据分离：186个公开组件中141个为`stablePendingExecution`、0个`stableCompliant`。DateTime/Calendar的语义generic声明用于解决外部`Component<Props>` TS2590，但新tarball结果仍待远程验证。下一主线进入同revision执行证据composer和W4集合/拖放；日期剩余边界并行处理，不以本轮点查关闭家族，也不让日期目录无限阻塞后续波次。

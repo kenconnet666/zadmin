@@ -4,8 +4,17 @@
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import { styleInternalAction } from '../gene/internal-action.js';
-	import type { CalendarRangeValue, Weekday } from '../../runtime/date.js';
-	import type { CalendarWeekNumbering } from '../../runtime/calendar.js';
+	import {
+		supportedDisplayCalendars,
+		type CalendarRangeValue,
+		type Weekday
+	} from '../../runtime/date.js';
+	import type { CalendarSelectionMode, CalendarWeekNumbering } from '../../runtime/calendar.js';
+	import type {
+		CalendarView,
+		CalendarMonthViewOptions,
+		CalendarStripViewOptions
+	} from '../../runtime/calendar-window.js';
 	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 
@@ -27,6 +36,9 @@
 	}
 
 	export interface CalendarHeaderContext {
+		readonly view: CalendarView;
+		readonly visibleStart: CalendarDateValue;
+		readonly visibleEnd: CalendarDateValue;
 		readonly direction: 'ltr' | 'rtl';
 		readonly label: string;
 		readonly nextDisabled: boolean;
@@ -71,7 +83,6 @@
 		readonly showWeekNumbers?: boolean;
 		readonly size?: ZControlSize;
 		readonly timeZone?: string;
-		readonly visibleMonths?: number;
 		readonly weekLabel?: string;
 		readonly weekNumbering?: CalendarWeekNumbering;
 		readonly weekNumberLabel?: (week: number, year: number) => string;
@@ -98,10 +109,35 @@
 		value?: CalendarRangeValue | null;
 	}
 
-	export interface ZCalendarSingleProps extends ZCalendarSharedProps, ZCalendarSingleBranch {}
-	export interface ZCalendarMultipleProps extends ZCalendarSharedProps, ZCalendarMultipleBranch {}
-	export interface ZCalendarRangeProps extends ZCalendarSharedProps, ZCalendarRangeBranch {}
-	export type ZCalendarProps = ZCalendarSingleProps | ZCalendarMultipleProps | ZCalendarRangeProps;
+	interface MonthSingleProps
+		extends ZCalendarSharedProps, ZCalendarSingleBranch, CalendarMonthViewOptions {}
+	interface StripSingleProps
+		extends ZCalendarSharedProps, ZCalendarSingleBranch, CalendarStripViewOptions {}
+	interface MonthMultipleProps
+		extends ZCalendarSharedProps, ZCalendarMultipleBranch, CalendarMonthViewOptions {}
+	interface StripMultipleProps
+		extends ZCalendarSharedProps, ZCalendarMultipleBranch, CalendarStripViewOptions {}
+	interface MonthRangeProps
+		extends ZCalendarSharedProps, ZCalendarRangeBranch, CalendarMonthViewOptions {}
+	interface StripRangeProps
+		extends ZCalendarSharedProps, ZCalendarRangeBranch, CalendarStripViewOptions {}
+	export type ZCalendarSingleProps = MonthSingleProps | StripSingleProps;
+	export type ZCalendarMultipleProps = MonthMultipleProps | StripMultipleProps;
+	export type ZCalendarRangeProps = MonthRangeProps | StripRangeProps;
+	export type ZCalendarProps<
+		TSelectionMode extends CalendarSelectionMode = CalendarSelectionMode,
+		TView extends CalendarView = CalendarView
+	> = { readonly selectionMode?: TSelectionMode; readonly view?: TView } & (TView extends 'strip'
+		? TSelectionMode extends 'multiple'
+			? StripMultipleProps
+			: TSelectionMode extends 'range'
+				? StripRangeProps
+				: StripSingleProps
+		: TSelectionMode extends 'multiple'
+			? MonthMultipleProps
+			: TSelectionMode extends 'range'
+				? MonthRangeProps
+				: MonthSingleProps);
 	export type { CalendarSelectionMode, CalendarWeekNumbering } from '../../runtime/calendar.js';
 
 	export const zuiMetadata = {
@@ -141,12 +177,15 @@
 		keyboard: [
 			{ description: '按日/周移动，RTL反转左右。', key: 'Arrow keys' },
 			{ description: '移动到当前周首尾。', key: 'Home / End' },
-			{ description: '按月移动；Shift按年。', key: 'PageUp / PageDown' },
+			{
+				description: 'month按月移动，Shift按年；strip按visibleDays移动。',
+				key: 'PageUp / PageDown'
+			},
 			{ description: '选择focused日期。', key: 'Enter / Space' },
 			{ description: '清空当前选择；required随后报告内在无效。', key: 'Delete / Backspace' }
 		],
 		parts: [
-			{ description: '按visibleMonths整页导航的header。', name: 'header' },
+			{ description: '按visibleMonths或visibleDays整页导航的header。', name: 'header' },
 			{ description: '共享owner的可换行月份集合。', name: 'months' },
 			{ description: '一个月及其唯一主日期cell。', name: 'month' },
 			{ description: '日期grid。', name: 'grid' },
@@ -154,6 +193,19 @@
 			{ description: '可选ISO或locale周号列。', name: 'week-number' }
 		],
 		props: [
+			{
+				name: 'view',
+				type: "'month' | 'strip'",
+				default: "'month'",
+				requiredWhen: "strip分支必须显式为'strip'；month可省略",
+				description: '月份网格或紧凑日期条；共用同一选择、焦点和表单owner。'
+			},
+			{
+				name: 'visibleDays',
+				type: 'number',
+				default: '7',
+				description: '仅strip：1–31个连续日期，每行最多7天；上界无法表示时缩短窗口。'
+			},
 			{
 				default: "'calendar'",
 				description: '独立边框或供Picker复用的bare外观。',
@@ -208,7 +260,7 @@
 			},
 			{
 				default: 'Provider locale',
-				description: '周标题和日期名称locale。',
+				description: '解析显示历法、日期名称与数字系统；业务值保留原calendar owner。',
 				name: 'locale',
 				type: 'string'
 			},
@@ -225,14 +277,14 @@
 				type: 'string'
 			},
 			{
-				default: 'localePack.date.previousMonth',
-				description: '上一月按钮可访问名称。',
+				default: 'localePack.date.previousMonth或previousDateWindow',
+				description: '上一月份页或日期窗口按钮的可访问名称。',
 				name: 'previousLabel',
 				type: 'string'
 			},
 			{
-				default: 'localePack.date.nextMonth',
-				description: '下一月按钮可访问名称。',
+				default: 'localePack.date.nextMonth或nextDateWindow',
+				description: '下一月份页或日期窗口按钮的可访问名称。',
 				name: 'nextLabel',
 				type: 'string'
 			},
@@ -274,7 +326,8 @@
 			},
 			{
 				default: "'locale'",
-				description: 'locale复用CLDR周规则；iso固定Monday/4-day规则。',
+				description:
+					'周号均基于Gregorian week-year；locale复用CLDR周规则，iso固定Monday/4-day规则，不随显示历法改写。',
 				name: 'weekNumbering',
 				type: "'locale' | 'iso'"
 			},
@@ -380,6 +433,17 @@
 		],
 		source: 'ui/zui/src/components/input/ZCalendar.svelte',
 		states: [
+			{
+				description: 'locale解析并由实际算法承载的显示历法；iso8601使用gregory算法。',
+				name: 'data-calendar',
+				values: supportedDisplayCalendars
+			},
+			{ name: 'data-view', values: ['month', 'strip'], description: '实际日历显示模式。' },
+			{
+				name: 'data-visible-days',
+				values: ['number'],
+				description: 'strip中实际可表示的日期数量。'
+			},
 			{
 				name: 'data-highlighted',
 				values: ['true'],
@@ -592,19 +656,19 @@
 			s.padding.px(0);
 			s.fontSize.inherit;
 			s.lineHeight.inherit;
-			s._focusVisible((focus) => {
-				focus.outlineColor._focus;
-				focus.outlineOffset._inner;
-				focus.outlineStyle.solid;
-				focus.outlineWidth._medium;
+			s._focusVisible((s) => {
+				s.outlineColor._focus;
+				s.outlineOffset._inner;
+				s.outlineStyle.solid;
+				s.outlineWidth._medium;
 			});
-			s._selector('&[data-preview="true"]:not([data-selected="true"])', (preview) => {
-				preview.backgroundColor._primarySubtle;
-				preview.color._primary;
+			s._selector('&[data-preview="true"]:not([data-selected="true"])', (s) => {
+				s.backgroundColor._primarySubtle;
+				s.color._primary;
 			});
-			s._selector('&[data-preview-invalid="true"]', (preview) => {
-				preview.backgroundColor._dangerSubtle;
-				preview.color._danger;
+			s._selector('&[data-preview-invalid="true"]', (s) => {
+				s.backgroundColor._dangerSubtle;
+				s.color._danger;
 			});
 		},
 		variants: {
@@ -655,13 +719,23 @@
 		registerRecipeHmr(import.meta, recipe);
 </script>
 
-<script lang="ts">
+<script
+	lang="ts"
+	generics="TSelectionMode extends CalendarSelectionMode = CalendarSelectionMode, TView extends CalendarView = CalendarView"
+>
 	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
-	import { CalendarDate, isSameDay, startOfMonth, today } from '@internationalized/date';
+	import {
+		CalendarDate,
+		isSameDay,
+		startOfMonth,
+		today,
+		type Calendar
+	} from '@internationalized/date';
 	import { onDestroy, untrack } from 'svelte';
-	import { SvelteMap } from 'svelte/reactivity';
-	import { resolveControlSize } from '../../runtime/foundation/control-size.js';
+	import { MountedElements } from '../../runtime/collection/mounted-elements.svelte.js';
+	import { controlSizeMetrics, resolveControlSize } from '../../runtime/foundation/control-size.js';
+	import { createZuiId } from '../../runtime/foundation/ids.js';
 	import { getElementDirection } from '../../runtime/layer/dom-realm.js';
 	import { claimZFieldControlOwner } from '../../runtime/form/field-context.js';
 	import FormValueBridge from '../../runtime/form/FormValueBridge.svelte';
@@ -672,6 +746,7 @@
 	} from '../../runtime/form/form-value-adapter.svelte.js';
 	import {
 		clampDate,
+		calendarDateKey,
 		formatDate,
 		isDateInRange,
 		isDateUnavailable as dateIsUnavailable,
@@ -679,6 +754,10 @@
 		normalizeCalendarRangeModelValue,
 		normalizeRange,
 		normalizeRangeValue,
+		preserveCalendarOwner,
+		resolveDisplayCalendar,
+		resolveOwnerCalendar,
+		toDisplayCalendar,
 		weekdayLabels,
 		weekDayIndex
 	} from '../../runtime/date.js';
@@ -691,6 +770,13 @@
 		visibleCalendarMonths
 	} from '../../runtime/calendar.js';
 	import { getLocaleWeekRules, periodFromDate, type WeekPeriod } from '../../runtime/period.js';
+	import {
+		calendarMonthsInWindow,
+		calendarStripStart,
+		validateCalendarView,
+		validateVisibleDays,
+		visibleCalendarDates
+	} from '../../runtime/calendar-window.js';
 	import type { FormValueEntry } from '../../runtime/form/form-value.js';
 	import type { FormControlDraftState } from '../../runtime/form/form-value-adapter.svelte.js';
 	import {
@@ -740,16 +826,20 @@
 		showWeekNumbers = false,
 		size,
 		style,
-		selectionMode = 'single',
+		selectionMode = 'single' as TSelectionMode,
 		timeZone,
 		value = $bindable(),
+		view: viewProp = 'month' as TView,
+		visibleDays = 7,
 		visibleMonths = 1,
 		weekLabel,
 		weekNumbering = 'locale',
 		weekNumberLabel,
 		...rest
-	}: ZCalendarProps = $props();
+	}: ZCalendarProps<TSelectionMode, TView> = $props();
 	const zui = useZui();
+	const uid = $props.id();
+	const dayIdBase = $derived(createZuiId(zui.idPrefix, uid, 'calendar-day'));
 	const fieldOwner = claimZFieldControlOwner();
 	const field = fieldOwner.field;
 	const claimedValueScope = untrack(claimFormValueScope);
@@ -762,10 +852,27 @@
 	const PreviousIcon = $derived(effectiveDirection === 'rtl' ? ChevronRight : ChevronLeft);
 	const NextIcon = $derived(effectiveDirection === 'rtl' ? ChevronLeft : ChevronRight);
 	const resolvedLocale = $derived(locale ?? zui.locale);
+	const displayCalendar = $derived(resolveDisplayCalendar(resolvedLocale));
+	const dayNumberFormatter = $derived(
+		new Intl.NumberFormat(resolvedLocale, { useGrouping: false })
+	);
+	const gregorianCalendar = resolveOwnerCalendar();
 	const resolvedTimeZone = $derived(timeZone ?? zui.timeZone);
+	const resolvedView = $derived(validateCalendarView(viewProp));
+	const resolvedVisibleDays = $derived(validateVisibleDays(visibleDays));
 	const resolvedCalendarLabel = $derived(calendarLabel ?? zui.localePack.date.calendarLabel);
-	const resolvedNextLabel = $derived(nextLabel ?? zui.localePack.date.nextMonth);
-	const resolvedPreviousLabel = $derived(previousLabel ?? zui.localePack.date.previousMonth);
+	const resolvedNextLabel = $derived(
+		nextLabel ??
+			(resolvedView === 'strip'
+				? zui.localePack.date.nextDateWindow
+				: zui.localePack.date.nextMonth)
+	);
+	const resolvedPreviousLabel = $derived(
+		previousLabel ??
+			(resolvedView === 'strip'
+				? zui.localePack.date.previousDateWindow
+				: zui.localePack.date.previousMonth)
+	);
 	const resolvedDisabled = $derived(disabled || (field?.disabled ?? false));
 	const resolvedReadonly = $derived(readonly || (field?.readonly ?? false));
 	const resolvedRequired = $derived(required || (field?.required ?? false));
@@ -871,36 +978,101 @@
 		valueScope
 	);
 	const normalizedSelection = $derived(normalizeSelection(valueState.current));
+	const normalizedDefaultSelection = $derived(defaultSelection());
+	const configuredOwnerCalendar = $derived(
+		selectionAnchor(normalizedSelection)?.calendar ??
+			selectionAnchor(normalizedDefaultSelection)?.calendar
+	);
+	let rememberedOwnerCalendar = $state.raw<Calendar | null>(
+		untrack(() => configuredOwnerCalendar ?? null)
+	);
+	const ownerCalendar = $derived(
+		configuredOwnerCalendar ?? rememberedOwnerCalendar ?? resolveOwnerCalendar()
+	);
+	const focusOwnerCalendar = $derived(
+		focusedValue?.calendar ?? defaultFocusedValue?.calendar ?? ownerCalendar
+	);
+	$effect(() => {
+		const next = configuredOwnerCalendar;
+		if (next) rememberedOwnerCalendar = next;
+	});
 	const intrinsicState = $derived.by<FormControlDraftState>(() => intrinsicDraft());
 	const resolvedInvalid = $derived(invalid || (field?.invalid ?? false) || !intrinsicState.valid);
 	const initialFocus = untrack(() => {
-		const candidate = clampDate(
-			focusedValue ??
-				defaultFocusedValue ??
-				selectionAnchor(normalizedSelection) ??
-				today(resolvedTimeZone),
-			minValue,
-			maxValue
+		const candidate = toDisplayCalendar(
+			clampDate(
+				focusedValue ??
+					defaultFocusedValue ??
+					selectionAnchor(normalizedSelection) ??
+					today(resolvedTimeZone),
+				minValue,
+				maxValue
+			),
+			displayCalendar
 		);
 		return availableFrom(candidate, 1) ?? availableFrom(candidate, -1) ?? candidate;
 	});
 	let fallbackFocused = $state<CalendarDate>(initialFocus);
-	const focused = $derived(focusedValue ?? fallbackFocused);
+	const focused = $derived(toDisplayCalendar(focusedValue ?? fallbackFocused, displayCalendar));
 	let displayedMonth = $state<CalendarDate>(startOfMonth(initialFocus));
-	const buttons = new SvelteMap<string, HTMLButtonElement>();
-	const visibleMonthList = $derived(visibleCalendarMonths(displayedMonth, resolvedVisibleMonths));
+	let stripStart = $state<CalendarDate>(
+		untrack(() => calendarStripStart(initialFocus, resolvedLocale, resolvedFirstDayOfWeek))
+	);
+	const buttons = new MountedElements<string, HTMLButtonElement>();
+	const stripDates = $derived(visibleCalendarDates(stripStart, resolvedVisibleDays));
+	const visibleMonthList = $derived(
+		resolvedView === 'strip'
+			? calendarMonthsInWindow(stripDates)
+			: visibleCalendarMonths(displayedMonth, resolvedVisibleMonths)
+	);
+	const monthCellLists = $derived(
+		resolvedView === 'month'
+			? visibleMonthList.map((month) =>
+					calendarMonthCells(month, visibleMonthList, resolvedLocale, resolvedFirstDayOfWeek)
+				)
+			: []
+	);
+	const renderedDates = $derived(
+		resolvedView === 'strip'
+			? stripDates
+			: monthCellLists.flatMap((cells) =>
+					cells
+						.filter((cell) => !cell.duplicateOutside && (showOutsideDates || !cell.outsideMonth))
+						.map((cell) => cell.date)
+				)
+	);
+	const gridHasFocusedDate = $derived(
+		renderedDates.some((date) => isSameDay(date, focused) && !unavailable(date))
+	);
+	const visibleStart = $derived(resolvedView === 'strip' ? stripDates[0]! : visibleMonthList[0]!);
+	const visibleEnd = $derived.by(() => {
+		if (resolvedView === 'strip') return stripDates[stripDates.length - 1]!;
+		const last = visibleMonthList[visibleMonthList.length - 1]!;
+		return last.add({ days: last.calendar.getDaysInMonth(last) - last.day });
+	});
 	const weekdays = $derived(
 		weekdayLabels(displayedMonth, resolvedLocale, resolvedFirstDayOfWeek, 'short', resolvedTimeZone)
 	);
 	const monthLabels = $derived(
-		visibleMonthList.map((month) =>
-			formatDate(month, resolvedLocale, { month: 'long', year: 'numeric' }, resolvedTimeZone)
-		)
+		visibleMonthList.map((month) => {
+			const end = month.add({ days: month.calendar.getDaysInMonth(month) - month.day });
+			const label = formatDate(
+				month,
+				resolvedLocale,
+				{ month: 'long', year: 'numeric' },
+				resolvedTimeZone
+			);
+			return month.era !== end.era || month.year !== end.year
+				? `${label} – ${formatDate(end, resolvedLocale, { month: 'long', year: 'numeric' }, resolvedTimeZone)}`
+				: label;
+		})
 	);
 	const windowLabel = $derived(
-		monthLabels.length === 1
-			? monthLabels[0]
-			: `${monthLabels[0]} – ${monthLabels[monthLabels.length - 1]}`
+		resolvedView === 'strip'
+			? `${formatDate(visibleStart, resolvedLocale, { month: 'short', day: 'numeric', year: 'numeric' }, resolvedTimeZone)} – ${formatDate(visibleEnd, resolvedLocale, { month: 'short', day: 'numeric', year: 'numeric' }, resolvedTimeZone)}`
+			: monthLabels.length === 1
+				? monthLabels[0]
+				: `${monthLabels[0]} – ${monthLabels[monthLabels.length - 1]}`
 	);
 	const currentToday = $derived(today(resolvedTimeZone));
 	const selectedRange = $derived(
@@ -914,7 +1086,10 @@
 	let hoverDate = $state<CalendarDate | null>(null);
 	const hoverRange = $derived(
 		selectionMode === 'range' && selectedRange?.start && !selectedRange.end
-			? normalizeRange(selectedRange.start, hoverDate ?? focused)
+			? normalizeRange(
+					selectedRange.start,
+					preserveCalendarOwner(hoverDate ?? focused, ownerCalendar)
+				)
 			: null
 	);
 	const hoverRangeContiguous = $derived(rangeIsContiguous(hoverRange));
@@ -923,6 +1098,41 @@
 		zui.recipe(rootRecipe, { appearance, disabled: resolvedDisabled, size: resolvedSize })
 	);
 	const headerClass = $derived(zui.recipe(headerRecipe));
+	const stripGridClass = $derived(
+		zui.icss((s) => {
+			s.display.grid;
+			s.gap._small;
+			s.minWidth.px(0);
+		})
+	);
+	const stripRowClass = $derived(
+		zui.icss((s) => {
+			s.display.grid;
+			s.gridTemplateColumns.raw(`repeat(${Math.min(resolvedVisibleDays, 7)}, minmax(0, 1fr))`);
+			s.gap._xsmall;
+		})
+	);
+	const stripButtonClass = $derived(
+		zui.icss((s) => {
+			s.display.flex;
+			s.flexDirection.column;
+			s.gap._xsmall;
+			s.height.auto;
+			s.minHeight.raw(controlSizeMetrics(zui.theme, resolvedSize).height);
+			s.width._full;
+			s.minWidth.px(0);
+			s.paddingBlock._small;
+			s.whiteSpace.normal;
+			s.overflowWrap.anywhere;
+		})
+	);
+	const stripWeekdayClass = $derived(
+		zui.icss((s) => {
+			s.fontSize._xsmall;
+			s.color._textMuted;
+			s._selector('[data-selected="true"] &', (s) => s.color.inherit);
+		})
+	);
 	const navClass = $derived(zui.recipe(navRecipe, { size: resolvedSize }));
 	const tableClass = $derived(zui.recipe(tableRecipe));
 	const monthsClass = $derived(zui.recipe(monthsRecipe));
@@ -932,10 +1142,13 @@
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
 
 	function syncCalendar(next: CalendarSelectionValue): void {
-		const target = clampDate(
-			selectionAnchor(next) ?? defaultFocusedValue ?? today(resolvedTimeZone),
-			minValue,
-			maxValue
+		const target = toDisplayCalendar(
+			clampDate(
+				selectionAnchor(next) ?? defaultFocusedValue ?? today(resolvedTimeZone),
+				minValue,
+				maxValue
+			),
+			displayCalendar
 		);
 		setFocused(target, false);
 		ensureFocusedVisible(target);
@@ -944,6 +1157,8 @@
 	function resetFromForm(): void {
 		valueState.reset();
 		syncCalendar(normalizedSelection);
+		if (resolvedView === 'strip')
+			stripStart = calendarStripStart(focused, resolvedLocale, resolvedFirstDayOfWeek);
 	}
 
 	function unavailableDate(date: CalendarDate): boolean {
@@ -951,7 +1166,7 @@
 	}
 
 	function unavailable(date: CalendarDate): boolean {
-		return resolvedDisabled || unavailableDate(date);
+		return resolvedDisabled || unavailableDate(preserveCalendarOwner(date, ownerCalendar));
 	}
 
 	function rangeIsContiguous(range: CalendarRangeValue | null): boolean {
@@ -964,16 +1179,18 @@
 
 	function setFocused(next: CalendarDate, notify = true): void {
 		const changed = !isSameDay(focused, next);
-		fallbackFocused = next;
-		focusedValue = next;
-		if (notify && changed) onFocusedValueChange?.(next);
+		fallbackFocused = toDisplayCalendar(next, displayCalendar);
+		const published = preserveCalendarOwner(next, focusOwnerCalendar);
+		focusedValue = published;
+		if (notify && changed) onFocusedValueChange?.(published);
 	}
 
 	function availableFrom(candidate: CalendarDate, direction: -1 | 1): CalendarDate | null {
-		let next = clampDate(candidate, minValue, maxValue);
+		let next = toDisplayCalendar(clampDate(candidate, minValue, maxValue), displayCalendar);
 		for (let attempts = 0; attempts < 3660; attempts += 1) {
-			if (!unavailableDate(next)) return next;
+			if (!unavailableDate(preserveCalendarOwner(next, ownerCalendar))) return next;
 			const stepped = next.add({ days: direction });
+			if (stepped.compare(next) === 0) return null;
 			if (
 				(minValue && stepped.compare(minValue) < 0) ||
 				(maxValue && stepped.compare(maxValue) > 0)
@@ -991,11 +1208,47 @@
 		setFocused(available);
 		ensureFocusedVisible(available);
 		(ref?.ownerDocument.defaultView ?? globalThis).queueMicrotask(() =>
-			buttons.get(available.toString())?.focus({ preventScroll: true })
+			buttons.focus(available.toString())
 		);
 	}
 
+	function availableInWindow(
+		preferred: CalendarDate,
+		first: CalendarDate,
+		last: CalendarDate,
+		direction: -1 | 1
+	): CalendarDate | null {
+		const lower =
+			minValue && minValue.compare(first) > 0
+				? toDisplayCalendar(minValue, displayCalendar)
+				: first;
+		const upper =
+			maxValue && maxValue.compare(last) < 0 ? toDisplayCalendar(maxValue, displayCalendar) : last;
+		if (lower.compare(upper) > 0) return null;
+		let candidate = clampDate(preferred, lower, upper);
+		for (let remaining = upper.compare(lower) + 1; remaining > 0; remaining -= 1) {
+			if (!unavailableDate(preserveCalendarOwner(candidate, ownerCalendar))) return candidate;
+			const next = candidate.add({ days: direction });
+			candidate =
+				next.compare(lower) < 0 || next.compare(upper) > 0 || next.compare(candidate) === 0
+					? direction === 1
+						? lower
+						: upper
+					: next;
+		}
+		return null;
+	}
+
 	function ensureFocusedVisible(date: CalendarDate): void {
+		date = toDisplayCalendar(date, displayCalendar);
+		if (stripStart.calendar.identifier !== displayCalendar.identifier)
+			stripStart = calendarStripStart(date, resolvedLocale, resolvedFirstDayOfWeek);
+		if (displayedMonth.calendar.identifier !== displayCalendar.identifier)
+			displayedMonth = startOfMonth(date);
+		if (resolvedView === 'strip') {
+			if (date.compare(visibleStart) < 0 || date.compare(visibleEnd) > 0) stripStart = date;
+			return;
+		}
 		const month = startOfMonth(date);
 		const first = visibleMonthList[0]!;
 		const last = visibleMonthList[visibleMonthList.length - 1]!;
@@ -1006,44 +1259,60 @@
 
 	function registerButton(node: HTMLButtonElement, key: string) {
 		let current = key;
-		buttons.set(current, node);
+		function mountCurrent() {
+			const mountedKey = current;
+			const restore = buttons.ownsFocus(mountedKey);
+			const destroy = buttons.mount(mountedKey, node, `${dayIdBase}-${mountedKey}`);
+			if (restore && focused.toString() === mountedKey)
+				(node.ownerDocument.defaultView ?? globalThis).queueMicrotask(() => {
+					if (buttons.ownsFocus(mountedKey) && focused.toString() === mountedKey)
+						buttons.focus(mountedKey);
+				});
+			return destroy;
+		}
+		let destroy = mountCurrent();
 		return {
 			destroy() {
-				buttons.delete(current);
+				destroy();
 			},
 			update(next: string) {
-				buttons.delete(current);
+				if (next === current) return;
+				destroy();
 				current = next;
-				buttons.set(current, node);
+				destroy = mountCurrent();
 			}
 		};
 	}
 
 	function select(date: CalendarDate): void {
 		if (resolvedReadonly || unavailable(date)) return;
+		const modelDate = preserveCalendarOwner(date, ownerCalendar);
 		const previousFocus = focused;
 		const previousMonth = displayedMonth;
+		const previousStripStart = stripStart;
 		setFocused(date);
 		let next: CalendarSelectionValue;
 		if (selectionMode === 'multiple')
-			next = toggleCalendarMultipleValue(normalizedSelection as readonly CalendarDate[], date);
+			next = toggleCalendarMultipleValue(normalizedSelection as readonly CalendarDate[], modelDate);
 		else if (selectionMode === 'range') {
 			const current = normalizeRangeValue(normalizedSelection as CalendarRangeValue | null);
-			if (!current?.start || current.end) next = Object.freeze({ end: null, start: date });
+			if (!current?.start || current.end) next = Object.freeze({ end: null, start: modelDate });
 			else {
-				const candidate = normalizeRange(current.start, date);
+				const candidate = normalizeRange(current.start, modelDate);
 				if (!rangeIsContiguous(candidate)) return;
 				next = candidate;
 			}
-		} else next = date;
+		} else next = modelDate;
 		hoverDate = null;
 		if (!valueState.setFromUser(next)) {
 			setFocused(previousFocus, false);
 			displayedMonth = previousMonth;
+			stripStart = previousStripStart;
 		}
 	}
 
 	function handleKeydown(event: KeyboardEvent, date: CalendarDate): void {
+		if (resolvedDisabled) return;
 		const horizontal = getElementDirection(ref, zui.direction) === 'rtl' ? -1 : 1;
 		let next: CalendarDate;
 		let direction: -1 | 1 = 1;
@@ -1075,10 +1344,22 @@
 				});
 				break;
 			case 'PageDown':
-				next = date.add(event.shiftKey ? { years: 1 } : { months: 1 });
+				next = date.add(
+					resolvedView === 'strip'
+						? { days: resolvedVisibleDays }
+						: event.shiftKey
+							? { years: 1 }
+							: { months: 1 }
+				);
 				break;
 			case 'PageUp':
-				next = date.subtract(event.shiftKey ? { years: 1 } : { months: 1 });
+				next = date.subtract(
+					resolvedView === 'strip'
+						? { days: resolvedVisibleDays }
+						: event.shiftKey
+							? { years: 1 }
+							: { months: 1 }
+				);
 				direction = -1;
 				break;
 			case 'Enter':
@@ -1099,9 +1380,33 @@
 		event.preventDefault();
 		focusDate(next, direction);
 	}
+	function handleGridKeydown(event: KeyboardEvent): void {
+		if (event.target !== event.currentTarget) return;
+		handleKeydown(event, clampDate(focused, visibleStart, visibleEnd));
+	}
 
-	function moveMonth(direction: -1 | 1): void {
+	function movePage(direction: -1 | 1): void {
 		if (resolvedDisabled) return;
+		if (resolvedView === 'strip') {
+			const next = stripStart.add({ days: direction * resolvedVisibleDays });
+			const dates = visibleCalendarDates(next, resolvedVisibleDays);
+			if (
+				next.compare(stripStart) === 0 ||
+				(minValue && dates[dates.length - 1]!.compare(minValue) < 0) ||
+				(maxValue && next.compare(maxValue) > 0)
+			)
+				return;
+			const shiftedFocus = focused.add({ days: direction * resolvedVisibleDays });
+			stripStart = next;
+			const available = availableInWindow(
+				shiftedFocus,
+				dates[0]!,
+				dates[dates.length - 1]!,
+				direction
+			);
+			setFocused(available ?? clampDate(shiftedFocus, dates[0]!, dates[dates.length - 1]!));
+			return;
+		}
 		const amount = direction * resolvedVisibleMonths;
 		const next = startOfMonth(displayedMonth.add({ months: amount }));
 		if (next.compare(displayedMonth) === 0) return;
@@ -1110,26 +1415,26 @@
 		if (minValue && direction < 0 && nextLast.compare(startOfMonth(minValue)) < 0) return;
 		if (maxValue && direction > 0 && next.compare(startOfMonth(maxValue)) > 0) return;
 		displayedMonth = next;
-		const candidate = new CalendarDate(
-			next.calendar,
-			next.era,
-			next.year,
-			next.month,
-			Math.min(focused.day, next.calendar.getDaysInMonth(next))
-		);
-		const available = availableFrom(candidate, direction);
-		const availableMonth = available ? startOfMonth(available) : null;
-		if (
-			available &&
-			availableMonth &&
-			availableMonth.compare(next) >= 0 &&
-			availableMonth.compare(nextLast) <= 0
-		)
-			setFocused(available);
+		const candidate = next.add({
+			days: Math.min(focused.day, next.calendar.getDaysInMonth(next)) - next.day
+		});
+		const lastDay = nextLast.add({
+			days: nextLast.calendar.getDaysInMonth(nextLast) - nextLast.day
+		});
+		const available = availableInWindow(candidate, next, lastDay, direction);
+		setFocused(available ?? candidate);
 	}
 
 	const previousDisabled = $derived.by(() => {
 		if (resolvedDisabled) return true;
+		if (resolvedView === 'strip') {
+			const previous = stripStart.subtract({ days: resolvedVisibleDays });
+			const dates = visibleCalendarDates(previous, resolvedVisibleDays);
+			return (
+				previous.compare(stripStart) >= 0 ||
+				Boolean(minValue && dates[dates.length - 1]!.compare(minValue) < 0)
+			);
+		}
 		const previous = startOfMonth(displayedMonth.subtract({ months: resolvedVisibleMonths }));
 		if (previous.compare(displayedMonth) >= 0) return true;
 		const months = visibleCalendarMonths(previous, resolvedVisibleMonths);
@@ -1137,6 +1442,10 @@
 	});
 	const nextDisabled = $derived.by(() => {
 		if (resolvedDisabled) return true;
+		if (resolvedView === 'strip') {
+			const next = stripStart.add({ days: resolvedVisibleDays });
+			return next.compare(stripStart) <= 0 || Boolean(maxValue && next.compare(maxValue) > 0);
+		}
 		const next = startOfMonth(displayedMonth.add({ months: resolvedVisibleMonths }));
 		return (
 			next.compare(displayedMonth) <= 0 ||
@@ -1145,9 +1454,12 @@
 	});
 	const headerContext = $derived.by<CalendarHeaderContext>(() =>
 		Object.freeze({
+			view: resolvedView,
+			visibleStart,
+			visibleEnd,
 			direction: effectiveDirection,
-			goToNextPage: () => moveMonth(1),
-			goToPreviousPage: () => moveMonth(-1),
+			goToNextPage: () => movePage(1),
+			goToPreviousPage: () => movePage(-1),
 			label: windowLabel,
 			nextDisabled,
 			previousDisabled,
@@ -1157,7 +1469,9 @@
 	);
 	$effect(() => {
 		const next = focused;
-		ensureFocusedVisible(next);
+		void displayCalendar;
+		void resolvedView;
+		untrack(() => ensureFocusedVisible(next));
 	});
 	function actualSelected(date: CalendarDate): boolean {
 		if (selectionMode === 'multiple')
@@ -1196,12 +1510,14 @@
 			selected: actualSelected(date),
 			size: resolvedSize,
 			today: isSameDay(date, currentToday),
-			unavailable: unavailableDate(date)
+			unavailable: unavailableDate(preserveCalendarOwner(date, ownerCalendar))
 		});
 	}
 
 	function weekPeriod(date: CalendarDate | undefined): WeekPeriod | null {
-		if (!date || date.calendar.identifier !== 'gregory' || date.era !== 'AD') return null;
+		if (!date) return null;
+		date = preserveCalendarOwner(date, gregorianCalendar);
+		if (date.era !== 'AD') return null;
 		// Period week-year resolution probes an adjacent year. Do not ask it to construct
 		// an unrepresentable year 0 or 10000 for an otherwise renderable boundary month.
 		if (date.year <= 1 || date.year >= 9999) return null;
@@ -1225,10 +1541,61 @@
 	});
 	onDestroy(
 		fieldOwner.registerFocusOwner(() => {
-			buttons.get(focused.toString())?.focus({ preventScroll: true });
+			if (!buttons.focus(focused.toString())) {
+				const fallback =
+					ref?.querySelector<HTMLElement>('[role="grid"][tabindex="0"]') ??
+					ref?.querySelector<HTMLButtonElement>('[data-slot="header"] button:not(:disabled)');
+				fallback?.focus({ preventScroll: true });
+			}
 		})
 	);
+	onDestroy(() => buttons.clear());
 </script>
+
+{#snippet dateButton(date: CalendarDate, outside = false, compact = false)}
+	{@const context = calendarCellContext(date, outside)}
+	<button
+		use:registerButton={date.toString()}
+		type="button"
+		data-slot="cell"
+		id={`${dayIdBase}-${date.toString()}`}
+		class={[
+			zui.recipe(cellRecipe, {
+				disabled: context.disabled || context.unavailable,
+				outside: outside,
+				size: resolvedSize,
+				selected: context.selected || context.highlighted
+			}),
+			compact && stripButtonClass
+		]}
+		disabled={context.disabled || context.unavailable}
+		tabindex={context.focused && !context.disabled && !context.unavailable ? 0 : -1}
+		aria-label={formatDate(
+			date,
+			resolvedLocale,
+			{ day: 'numeric', month: 'long', weekday: 'long', year: 'numeric' },
+			resolvedTimeZone
+		)}
+		aria-current={context.today ? 'date' : undefined}
+		data-selected={context.selected || undefined}
+		data-highlighted={context.highlighted || undefined}
+		data-preview={context.preview || undefined}
+		data-preview-invalid={context.previewInvalid || undefined}
+		data-range-edge={context.rangeEdge}
+		data-outside={outside || undefined}
+		data-disabled={context.disabled || context.unavailable || undefined}
+		aria-disabled={context.disabled || context.unavailable || undefined}
+		onpointerenter={() => (hoverDate = date)}
+		onfocus={() => setFocused(date)}
+		onclick={() => select(date)}
+		onkeydown={(event) => handleKeydown(event, date)}
+		>{#if dateCell}{@render dateCell(context)}{:else}
+			{#if compact}<span class={stripWeekdayClass} data-slot="weekday"
+					>{formatDate(date, resolvedLocale, { weekday: 'short' }, resolvedTimeZone)}</span
+				>{/if}
+			<span data-slot="day-number">{dayNumberFormatter.format(date.day)}</span>{/if}</button
+	>
+{/snippet}
 
 <div
 	{...rest}
@@ -1245,7 +1612,10 @@
 	data-required={resolvedRequired || undefined}
 	data-selection-mode={selectionMode}
 	data-size={resolvedSize}
-	data-visible-months={visibleMonthList.length}
+	data-view={resolvedView}
+	data-calendar={displayCalendar.identifier}
+	data-visible-days={resolvedView === 'strip' ? stripDates.length : undefined}
+	data-visible-months={resolvedView === 'month' ? visibleMonthList.length : undefined}
 	onpointerleave={() => (hoverDate = null)}
 >
 	<div class={headerClass} data-slot="header">
@@ -1258,7 +1628,7 @@
 				class={navClass}
 				aria-label={resolvedPreviousLabel}
 				disabled={previousDisabled}
-				onclick={() => moveMonth(-1)}
+				onclick={() => movePage(-1)}
 			>
 				<PreviousIcon aria-hidden="true" size="1em" />
 			</button>
@@ -1268,112 +1638,101 @@
 				class={navClass}
 				aria-label={resolvedNextLabel}
 				disabled={nextDisabled}
-				onclick={() => moveMonth(1)}
+				onclick={() => movePage(1)}
 			>
 				<NextIcon aria-hidden="true" size="1em" />
 			</button>
 		{/if}
 	</div>
-	<div class={monthsClass} data-slot="months">
-		{#each visibleMonthList as month, monthIndex (`${month.year}-${month.month}`)}
-			{@const cells = calendarMonthCells(
-				month,
-				visibleMonthList,
-				resolvedLocale,
-				resolvedFirstDayOfWeek
-			)}
-			{@const monthLabel = monthLabels[monthIndex]!}
-			<section class={monthClass} data-slot="month" data-month={month.toString()}>
-				{#if resolvedVisibleMonths > 1}<strong>{monthLabel}</strong>{/if}
-				<table
-					class={tableClass}
-					data-slot="grid"
-					role="grid"
-					aria-label={`${resolvedCalendarLabel}: ${monthLabel}`}
-					aria-describedby={describedBy}
-					aria-disabled={resolvedDisabled || undefined}
-					aria-readonly={resolvedReadonly || undefined}
-					aria-multiselectable={selectionMode === 'single' ? undefined : true}
-				>
-					<thead>
-						<tr>
-							{#if showWeekNumbers}<th class={weekdayClass} scope="col">{resolvedWeekLabel}</th
-								>{/if}
-							{#each weekdays as weekday, index (`${weekday}-${index}`)}
-								<th class={weekdayClass} scope="col">{weekday}</th>
-							{/each}
-						</tr>
-					</thead>
-					<tbody>
-						{#each Array.from({ length: 6 }, (_, index) => index) as week (week)}
-							{@const rowCells = cells.slice(week * 7, week * 7 + 7)}
+	{#if resolvedView === 'strip'}
+		<div
+			class={stripGridClass}
+			data-slot="strip"
+			role="grid"
+			tabindex={!resolvedDisabled && !gridHasFocusedDate ? 0 : undefined}
+			onkeydown={handleGridKeydown}
+			aria-label={resolvedCalendarLabel + ': ' + windowLabel}
+			aria-describedby={describedBy}
+			aria-disabled={resolvedDisabled || undefined}
+			aria-readonly={resolvedReadonly || undefined}
+			aria-multiselectable={selectionMode === 'single' ? undefined : true}
+		>
+			{#each Array.from({ length: Math.ceil(stripDates.length / 7) }, (_, index) => index) as row (row)}
+				<div class={stripRowClass} role="row">
+					{#each stripDates.slice(row * 7, row * 7 + 7) as date (date.toString())}
+						<div role="gridcell" aria-selected={actualSelected(date)}>
+							{@render dateButton(date, false, true)}
+						</div>
+					{/each}
+				</div>
+			{/each}
+		</div>
+	{:else}
+		<div class={monthsClass} data-slot="months">
+			{#each visibleMonthList as month, monthIndex (calendarDateKey(month))}
+				{@const cells = monthCellLists[monthIndex]!}
+				{@const monthLabel = monthLabels[monthIndex]!}
+				<section class={monthClass} data-slot="month" data-month={month.toString()}>
+					{#if resolvedVisibleMonths > 1}<strong>{monthLabel}</strong>{/if}
+					<table
+						class={tableClass}
+						data-slot="grid"
+						role="grid"
+						tabindex={monthIndex === 0 && !resolvedDisabled && !gridHasFocusedDate ? 0 : undefined}
+						onkeydown={handleGridKeydown}
+						aria-label={`${resolvedCalendarLabel}: ${monthLabel}`}
+						aria-describedby={describedBy}
+						aria-disabled={resolvedDisabled || undefined}
+						aria-readonly={resolvedReadonly || undefined}
+						aria-multiselectable={selectionMode === 'single' ? undefined : true}
+					>
+						<thead>
 							<tr>
-								{#if showWeekNumbers}
-									{@const actualDays = rowCells.filter((cell) => !cell.duplicateOutside)}
-									{@const weekValue = weekPeriod(
-										actualDays[Math.floor(actualDays.length / 2)]?.date
-									)}
-									<th
-										class={weekdayClass}
-										data-slot="week-number"
-										scope="row"
-										aria-label={weekValue
-											? resolvedWeekNumberLabel(weekValue.week, weekValue.year)
-											: undefined}
-										aria-hidden={!weekValue || undefined}>{weekValue?.week ?? ''}</th
-									>
-								{/if}
-								{#each rowCells as cell, cellIndex (`${cell.date.toString()}-${cellIndex}`)}
-									<td
-										role="gridcell"
-										aria-selected={cell.duplicateOutside ? undefined : actualSelected(cell.date)}
-										data-duplicate-outside={cell.duplicateOutside || undefined}
-									>
-										{#if !cell.duplicateOutside && (showOutsideDates || !cell.outsideMonth)}
-											{@const context = calendarCellContext(cell.date, cell.outsideMonth)}
-											<button
-												use:registerButton={cell.date.toString()}
-												type="button"
-												class={zui.recipe(cellRecipe, {
-													disabled: context.disabled || context.unavailable,
-													outside: cell.outsideMonth,
-													size: resolvedSize,
-													selected: context.selected || context.highlighted
-												})}
-												disabled={context.disabled || context.unavailable}
-												tabindex={context.focused ? 0 : -1}
-												aria-label={formatDate(
-													cell.date,
-													resolvedLocale,
-													{ day: 'numeric', month: 'long', weekday: 'long', year: 'numeric' },
-													resolvedTimeZone
-												)}
-												aria-current={context.today ? 'date' : undefined}
-												data-selected={context.selected || undefined}
-												data-highlighted={context.highlighted || undefined}
-												data-preview={context.preview || undefined}
-												data-preview-invalid={context.previewInvalid || undefined}
-												data-range-edge={context.rangeEdge}
-												data-outside={cell.outsideMonth || undefined}
-												data-disabled={context.disabled || context.unavailable || undefined}
-												aria-disabled={context.disabled || context.unavailable || undefined}
-												onpointerenter={() => (hoverDate = cell.date)}
-												onfocus={() => setFocused(cell.date)}
-												onclick={() => select(cell.date)}
-												onkeydown={(event) => handleKeydown(event, cell.date)}
-												>{#if dateCell}{@render dateCell(context)}{:else}{cell.date
-														.day}{/if}</button
-											>
-										{/if}
-									</td>
+								{#if showWeekNumbers}<th class={weekdayClass} scope="col">{resolvedWeekLabel}</th
+									>{/if}
+								{#each weekdays as weekday, index (`${weekday}-${index}`)}
+									<th class={weekdayClass} scope="col">{weekday}</th>
 								{/each}
 							</tr>
-						{/each}
-					</tbody>
-				</table>
-			</section>
-		{/each}
-	</div>
+						</thead>
+						<tbody>
+							{#each Array.from({ length: 6 }, (_, index) => index) as week (week)}
+								{@const rowCells = cells.slice(week * 7, week * 7 + 7)}
+								<tr>
+									{#if showWeekNumbers}
+										{@const actualDays = rowCells.filter((cell) => !cell.duplicateOutside)}
+										{@const weekValue = weekPeriod(
+											actualDays[Math.floor(actualDays.length / 2)]?.date
+										)}
+										<th
+											class={weekdayClass}
+											data-slot="week-number"
+											scope="row"
+											aria-label={weekValue
+												? resolvedWeekNumberLabel(weekValue.week, weekValue.year)
+												: undefined}
+											aria-hidden={!weekValue || undefined}>{weekValue?.week ?? ''}</th
+										>
+									{/if}
+									{#each rowCells as cell, cellIndex (`${cell.date.toString()}-${cellIndex}`)}
+										<td
+											role="gridcell"
+											aria-selected={cell.duplicateOutside ? undefined : actualSelected(cell.date)}
+											data-duplicate-outside={cell.duplicateOutside || undefined}
+										>
+											{#if !cell.duplicateOutside && (showOutsideDates || !cell.outsideMonth)}
+												{@render dateButton(cell.date, cell.outsideMonth)}
+											{/if}
+										</td>
+									{/each}
+								</tr>
+							{/each}
+						</tbody>
+					</table>
+				</section>
+			{/each}
+		</div>
+	{/if}
 </div>
 {#if formParticipation === 'auto'}
 	<FormValueBridge

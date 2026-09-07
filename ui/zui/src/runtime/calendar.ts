@@ -2,7 +2,7 @@ import { CalendarDate, startOfMonth } from '@internationalized/date';
 
 import {
 	calendarMonth,
-	isGregorianCalendarDate,
+	isCalendarDate,
 	normalizeRangeValue,
 	type CalendarCell,
 	type CalendarRangeValue,
@@ -70,16 +70,12 @@ export function normalizeCalendarMultipleModelValue(
 ): readonly CalendarDate[] {
 	if (value === null || value === undefined) return Object.freeze([]);
 	if (!Array.isArray(value))
-		throw new TypeError(
-			`${owner} multiple value must be an array of Gregorian CalendarDate values.`
-		);
+		throw new TypeError(`${owner} multiple value must be an array of CalendarDate values.`);
 	const result: CalendarDate[] = [];
 	const seen = new Set<string>();
 	for (const candidate of value) {
-		if (!isGregorianCalendarDate(candidate))
-			throw new TypeError(
-				`${owner} multiple value must contain only Gregorian CalendarDate values.`
-			);
+		if (!isCalendarDate(candidate))
+			throw new TypeError(`${owner} multiple value must contain only CalendarDate values.`);
 		const key = candidate.toString();
 		if (seen.has(key)) continue;
 		seen.add(key);
