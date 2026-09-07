@@ -6,20 +6,20 @@ export const zuiProgress = {
 		version: '0.1.0'
 	},
 	api: {
-		components: 186,
-		declaredProps: 2653,
+		components: 187,
+		declaredProps: 2674,
 		metadataGapProps: 0,
 		fallbackProps: 0
 	},
 	maturity: {
-		MetadataDeclared: 186,
-		PublicExportPresent: 186,
-		ApiContractDeclared: 186,
-		RuntimeImplemented: 186,
-		BrowserBehaviorContractsDeclared: 174,
-		VisualContractsDeclared: 160,
-		ProductionContractsDeclared: 178,
-		SsrContractsDeclared: 183,
+		MetadataDeclared: 187,
+		PublicExportPresent: 187,
+		ApiContractDeclared: 187,
+		RuntimeImplemented: 187,
+		BrowserBehaviorContractsDeclared: 175,
+		VisualContractsDeclared: 161,
+		ProductionContractsDeclared: 179,
+		SsrContractsDeclared: 184,
 		execution: {
 			BrowserBehaviorVerified: 0,
 			VisuallyVerified: 0,
@@ -35,7 +35,7 @@ export const zuiProgress = {
 		},
 		currentRevisionVerified: 0,
 		statuses: {
-			experimental: 45,
+			experimental: 46,
 			stable: 141
 		}
 	},
@@ -47,9 +47,9 @@ export const zuiProgress = {
 	},
 	docs: {
 		routes: {
-			componentCount: 116,
+			componentCount: 117,
 			guideCount: 9,
-			totalCount: 126
+			totalCount: 127
 		},
 		deployed: false
 	},
@@ -81,7 +81,7 @@ export const zuiProgress = {
 		},
 		{
 			id: 'current-revision-execution',
-			remaining: 186,
+			remaining: 187,
 			description:
 				'用现有revision-bound执行制品证明当前commit的browser与production合同真实通过；无制品保持pending。'
 		},
@@ -97,7 +97,7 @@ export const zuiProgress = {
 		},
 		{
 			id: 'desktop-evidence',
-			remaining: 186,
+			remaining: 187,
 			description: '建立组件级WebView2/Desktop证据后再提升DesktopVerified。'
 		},
 		{

@@ -247,6 +247,21 @@ export interface ZuiStepsLocale {
 	readonly loading: string;
 }
 
+export interface ZuiSortableLocale {
+	readonly rootLabel: string;
+	readonly instructions: string;
+	readonly started: (label: string, formattedPosition: string, formattedCount: string) => string;
+	readonly target: (label: string, formattedPosition: string, formattedCount: string) => string;
+	readonly moved: (label: string, formattedPosition: string, formattedCount: string) => string;
+	readonly pending: (label: string) => string;
+	readonly cancelled: (label: string) => string;
+	readonly rejected: (label: string) => string;
+	readonly error: (label: string) => string;
+	readonly dragHandle: (label: string) => string;
+	readonly movePrevious: (label: string) => string;
+	readonly moveNext: (label: string) => string;
+}
+
 export interface ZuiLocalePack {
 	readonly steps: ZuiStepsLocale;
 	readonly carousel: ZuiCarouselLocale;
@@ -265,6 +280,7 @@ export interface ZuiLocalePack {
 	readonly pagination: ZuiPaginationLocale;
 	readonly progress: ZuiProgressLocale;
 	readonly period: ZuiPeriodLocale;
+	readonly sortable: ZuiSortableLocale;
 	readonly tag: ZuiTagLocale;
 	readonly tagsInput: ZuiTagsInputLocale;
 	readonly time: ZuiTimeLocale;
@@ -290,6 +306,7 @@ export interface ZuiLocalePackOverrides {
 	readonly pagination?: Partial<ZuiPaginationLocale>;
 	readonly progress?: Partial<ZuiProgressLocale>;
 	readonly period?: Partial<ZuiPeriodLocale>;
+	readonly sortable?: Partial<ZuiSortableLocale>;
 	readonly tag?: Partial<ZuiTagLocale>;
 	readonly tagsInput?: Partial<ZuiTagsInputLocale>;
 	readonly time?: Partial<ZuiTimeLocale>;
@@ -480,6 +497,24 @@ export const enUSLocalePack = Object.freeze({
 	}),
 	progress: Object.freeze({
 		label: 'Progress'
+	}),
+	sortable: Object.freeze({
+		rootLabel: 'Sortable list',
+		instructions:
+			'Press Space or Enter on a reorder handle to pick up an item. Use the arrow keys to choose a position, Space or Enter to drop, and Escape to cancel.',
+		started: (label: string, formattedPosition: string, formattedCount: string) =>
+			`Picked up ${label}, position ${formattedPosition} of ${formattedCount}.`,
+		target: (label: string, formattedPosition: string, formattedCount: string) =>
+			`${label} is over position ${formattedPosition} of ${formattedCount}.`,
+		moved: (label: string, formattedPosition: string, formattedCount: string) =>
+			`Moved ${label} to position ${formattedPosition} of ${formattedCount}.`,
+		pending: (label: string) => `Waiting to move ${label}.`,
+		cancelled: (label: string) => `Cancelled moving ${label}.`,
+		rejected: (label: string) => `Could not move ${label}.`,
+		error: (label: string) => `Moving ${label} failed.`,
+		dragHandle: (label: string) => `Reorder ${label}`,
+		movePrevious: (label: string) => `Move ${label} backward`,
+		moveNext: (label: string) => `Move ${label} forward`
 	}),
 	tag: Object.freeze({
 		removeTag: (textValue?: string) => (textValue ? `Remove ${textValue}` : 'Remove tag')
@@ -713,6 +748,24 @@ export const zhCNLocalePack = Object.freeze({
 	progress: Object.freeze({
 		label: '进度'
 	}),
+	sortable: Object.freeze({
+		rootLabel: '可排序列表',
+		instructions:
+			'在排序手柄上按空格键或回车键拿起项目，使用方向键选择位置，再按空格键或回车键放下，按 Escape 键取消。',
+		started: (label: string, formattedPosition: string, formattedCount: string) =>
+			`已拿起${label}，当前位置第${formattedPosition}项，共${formattedCount}项。`,
+		target: (label: string, formattedPosition: string, formattedCount: string) =>
+			`${label}的目标位置是第${formattedPosition}项，共${formattedCount}项。`,
+		moved: (label: string, formattedPosition: string, formattedCount: string) =>
+			`已将${label}移动到第${formattedPosition}项，共${formattedCount}项。`,
+		pending: (label: string) => `正在等待移动${label}。`,
+		cancelled: (label: string) => `已取消移动${label}。`,
+		rejected: (label: string) => `无法移动${label}。`,
+		error: (label: string) => `移动${label}时发生错误。`,
+		dragHandle: (label: string) => `重新排序${label}`,
+		movePrevious: (label: string) => `向前移动${label}`,
+		moveNext: (label: string) => `向后移动${label}`
+	}),
 	tag: Object.freeze({
 		removeTag: (textValue?: string) => (textValue ? `移除标签 ${textValue}` : '移除标签')
 	}),
@@ -803,6 +856,7 @@ export function resolveZuiLocalePack(
 		pagination: Object.freeze(mergeDefined(base.pagination, overrides?.pagination)),
 		progress: Object.freeze(mergeDefined(base.progress, overrides?.progress)),
 		period: Object.freeze(mergeDefined(base.period, overrides?.period)),
+		sortable: Object.freeze(mergeDefined(base.sortable, overrides?.sortable)),
 		tag: Object.freeze(mergeDefined(base.tag, overrides?.tag)),
 		tagsInput: Object.freeze(mergeDefined(base.tagsInput, overrides?.tagsInput)),
 		time: Object.freeze(mergeDefined(base.time, overrides?.time)),

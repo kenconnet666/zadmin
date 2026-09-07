@@ -60,6 +60,7 @@ import { toggleGroupDoc } from '../content/components/input/toggle-group/doc.js'
 import { toolbarDoc } from '../content/components/navigation/toolbar/doc.js';
 import { navLinkDoc } from '../content/components/navigation/nav-link/doc.js';
 import { splitterDoc } from '../content/components/layout/splitter/doc.js';
+import { sortableDoc } from '../content/components/layout/sortable/doc.js';
 import { navigationMenuDoc } from '../content/components/navigation/navigation-menu/doc.js';
 import { anchorDoc } from '../content/components/navigation/anchor/doc.js';
 import { menubarDoc } from '../content/components/navigation/menubar/doc.js';
@@ -203,6 +204,7 @@ export const componentDocs = Object.freeze([
 	toolbarDoc,
 	navLinkDoc,
 	splitterDoc,
+	sortableDoc,
 	navigationMenuDoc,
 	anchorDoc,
 	menubarDoc,

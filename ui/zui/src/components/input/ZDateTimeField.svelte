@@ -366,7 +366,7 @@
 		value = $bindable(),
 		...rest
 	}: ZDateTimeFieldProps<TMode> = $props();
-	const domRest = $derived(rest as HTMLAttributes<HTMLDivElement>);
+	const domRest = $derived(rest as unknown as HTMLAttributes<HTMLDivElement>);
 	const zui = useZui();
 	const fieldOwner = claimZFieldControlOwner();
 	const field = fieldOwner.field;

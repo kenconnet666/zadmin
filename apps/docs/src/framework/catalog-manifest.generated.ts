@@ -2040,6 +2040,27 @@ export const componentCatalogManifest = Object.freeze([
 		publicComponentCount: 1
 	},
 	{
+		id: 'sortable',
+		name: 'ZSortable',
+		category: 'layout',
+		summary:
+			'受控顺序的可排序集合：手柄拖动、键盘与可见前后移动操作共用一个接受和取消流程。FormList组合继续使用现有FormArray.move，拖动预览不会改写表单。',
+		status: 'experimental',
+		keywords: ['sortable', 'reorder', 'drag', 'keyboard', 'form list', 'async'],
+		profiles: ['collection'],
+		capabilities: [
+			'controlled',
+			'keyboard',
+			'composition',
+			'variants-and-states',
+			'form-data',
+			'form-reset',
+			'invalid'
+		],
+		demoCount: 2,
+		publicComponentCount: 1
+	},
+	{
 		id: 'navigation-menu',
 		name: 'ZNavigationMenu',
 		category: 'navigation',

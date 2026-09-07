@@ -4975,6 +4975,130 @@ export const selectTriggerApiFacts = {
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
+export const sortableApiFacts = {
+	declaration: 'ZSortableProps',
+	id: 'sortable',
+	inheritedFrom: ['ZStackProps'],
+	name: 'ZSortable',
+	props: [
+		{
+			name: 'items',
+			required: true,
+			type: 'readonly T[]'
+		},
+		{
+			name: 'itemKey',
+			required: true,
+			type: '(item: T) => TKey'
+		},
+		{
+			name: 'itemLabel',
+			required: true,
+			type: '(item: T) => string'
+		},
+		{
+			name: 'itemDisabled',
+			required: false,
+			type: '(item: T) => boolean'
+		},
+		{
+			name: 'onMoveRequest',
+			required: true,
+			type: '(request: SortableMoveRequest<T, TKey>) => boolean | Promise<boolean>'
+		},
+		{
+			name: 'onMoveEnd',
+			required: false,
+			type: '(detail: SortableMoveEnd<T, TKey>) => void'
+		},
+		{
+			name: 'item',
+			required: false,
+			type: 'Snippet<[item: T, context: SortableItemContext<TKey>]>'
+		},
+		{
+			name: 'actions',
+			required: false,
+			type: 'Snippet<[context: SortableItemContext<TKey>]>'
+		},
+		{
+			name: 'orientation',
+			required: false,
+			type: "'horizontal' | 'vertical'"
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
+			name: 'nonce',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'align',
+			required: false,
+			type: 'ResponsiveValue<ZStackAlignment>',
+			inheritedFrom: 'ZStackProps'
+		},
+		{
+			name: 'gap',
+			required: false,
+			type: 'ResponsiveValue<ZLayoutSpacing>',
+			inheritedFrom: 'ZStackProps'
+		},
+		{
+			name: 'rowGap',
+			required: false,
+			type: 'ResponsiveValue<ZLayoutSpacing>',
+			inheritedFrom: 'ZStackProps'
+		},
+		{
+			name: 'columnGap',
+			required: false,
+			type: 'ResponsiveValue<ZLayoutSpacing>',
+			inheritedFrom: 'ZStackProps'
+		},
+		{
+			name: 'query',
+			required: false,
+			type: 'ResponsiveQuery',
+			inheritedFrom: 'ZStackProps'
+		},
+		{
+			name: 'justify',
+			required: false,
+			type: 'ResponsiveValue<ZStackJustification>',
+			inheritedFrom: 'ZStackProps'
+		},
+		{
+			name: 'wrap',
+			required: false,
+			type: "ResponsiveValue<boolean | 'reverse'>",
+			inheritedFrom: 'ZStackProps'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null',
+			inheritedFrom: 'ZStackProps'
+		}
+	],
+	source: 'ui/zui/src/components/compound/sortable/ZSortable.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
 export const tabsApiFacts = {
 	declaration: 'ZTabsProps',
 	id: 'tabs',

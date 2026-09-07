@@ -826,6 +826,17 @@
 			"fallbackPropNames": []
 		},
 		{
+			"id": "sortable",
+			"name": "ZSortable",
+			"source": "ui/zui/src/components/compound/sortable/ZSortable.svelte",
+			"family": "sortable",
+			"declaredPropCount": 21,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
 			"id": "tabs",
 			"name": "ZTabs",
 			"source": "ui/zui/src/components/compound/tabs/ZTabs.svelte",
@@ -2024,8 +2035,8 @@
 		"maxMetadataGapProps": 0
 	},
 	"totals": {
-		"components": 186,
-		"declaredProps": 2653,
+		"components": 187,
+		"declaredProps": 2674,
 		"metadataGapProps": 0,
 		"fallbackProps": 0,
 		"opaqueStructuredProps": 9,

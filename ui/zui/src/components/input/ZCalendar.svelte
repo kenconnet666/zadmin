@@ -837,7 +837,7 @@
 		weekNumberLabel,
 		...rest
 	}: ZCalendarProps<TSelectionMode, TView> = $props();
-	const domRest = $derived(rest as HTMLAttributes<HTMLDivElement>);
+	const domRest = $derived(rest as unknown as HTMLAttributes<HTMLDivElement>);
 	const zui = useZui();
 	const uid = $props.id();
 	const dayIdBase = $derived(createZuiId(zui.idPrefix, uid, 'calendar-day'));

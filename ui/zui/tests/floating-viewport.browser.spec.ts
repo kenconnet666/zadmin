@@ -1,4 +1,4 @@
-import { expect, it } from 'vitest';
+import { expect, it, vi } from 'vitest';
 import { FloatingPositioner } from '../src/runtime/layer/floating.js';
 
 it('sizes and shifts an oversized popup within the same viewport padding', async () => {
@@ -40,5 +40,51 @@ it('sizes and shifts an oversized popup within the same viewport padding', async
 	} finally {
 		cleanup();
 		frame.remove();
+	}
+});
+
+it('defers and coalesces element resize positioning outside ResizeObserver delivery', async () => {
+	const callbacks: ResizeObserverCallback[] = [];
+	class ControlledResizeObserver implements ResizeObserver {
+		constructor(callback: ResizeObserverCallback) {
+			callbacks.push(callback);
+		}
+		disconnect = vi.fn();
+		observe = vi.fn();
+		unobserve = vi.fn();
+	}
+	class InertIntersectionObserver implements IntersectionObserver {
+		readonly root = null;
+		readonly rootMargin = '0px';
+		readonly thresholds = [];
+		disconnect = vi.fn();
+		observe = vi.fn();
+		takeRecords = vi.fn(() => []);
+		unobserve = vi.fn();
+	}
+	vi.stubGlobal('ResizeObserver', ControlledResizeObserver);
+	vi.stubGlobal('IntersectionObserver', InertIntersectionObserver);
+	const reference = document.createElement('button');
+	const floating = document.createElement('div');
+	document.body.append(reference, floating);
+	const positioned = vi.fn();
+	const positioner = new FloatingPositioner();
+	const cleanup = positioner.start(reference, floating, { onPosition: positioned });
+	try {
+		await positioner.update();
+		await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+		const beforeResize = positioned.mock.calls.length;
+		expect(callbacks).toHaveLength(1);
+		callbacks[0]!([], {} as ResizeObserver);
+		callbacks[0]!([], {} as ResizeObserver);
+		expect(positioned).toHaveBeenCalledTimes(beforeResize);
+		await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+		await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+		expect(positioned).toHaveBeenCalledTimes(beforeResize + 1);
+	} finally {
+		cleanup();
+		reference.remove();
+		floating.remove();
+		vi.unstubAllGlobals();
 	}
 });

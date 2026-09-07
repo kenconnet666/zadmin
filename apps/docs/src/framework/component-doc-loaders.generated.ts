@@ -189,6 +189,8 @@ export const componentDocLoaders = {
 		import('../content/components/navigation/nav-link/doc.js').then((module) => module.navLinkDoc),
 	splitter: () =>
 		import('../content/components/layout/splitter/doc.js').then((module) => module.splitterDoc),
+	sortable: () =>
+		import('../content/components/layout/sortable/doc.js').then((module) => module.sortableDoc),
 	'navigation-menu': () =>
 		import('../content/components/navigation/navigation-menu/doc.js').then(
 			(module) => module.navigationMenuDoc

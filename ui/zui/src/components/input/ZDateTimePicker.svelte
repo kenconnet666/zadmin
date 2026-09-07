@@ -615,6 +615,7 @@
 		value = $bindable(),
 		...rest
 	}: ZDateTimePickerProps<TMode, TPresentation> = $props();
+	const domRest = $derived(rest as unknown as HTMLAttributes<HTMLDivElement>);
 	const zui = useZui();
 	const resolvedPresentation = $derived(resolvePickerPresentation(presentation));
 	const fieldOwner = claimZFieldControlOwner();
@@ -778,7 +779,7 @@
 	);
 	const draftState = $derived.by<FormControlDraftState>(() => inspectDraftState());
 	const resolvedInvalid = $derived(resolvedExternalInvalid || !draftState.valid);
-	const variables = $derived(readIcssCarrier(rest));
+	const variables = $derived(readIcssCarrier(domRest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
 	const rootClass = $derived(
 		zui.icss((s) => {
@@ -1150,7 +1151,7 @@
 {/snippet}
 
 <div
-	{...rest}
+	{...domRest}
 	bind:this={ref}
 	class={[rootClass, className]}
 	style={initialStyle}

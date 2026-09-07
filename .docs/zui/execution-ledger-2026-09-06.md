@@ -251,3 +251,11 @@ Calendar新增共享owner的month/strip view，MiniCalendar作为single/strip紧
 本批给现有CI补结构化证据链：Vitest真实project/browser、定义位置、重试/取消与runner版本；Docs三browser JSON；共享AST测试归属inventory；绑定revision/run/输入hash的composer与独立verifier。186组件对应2845份合同，renderer直接alias同源归属也进入静态证据清单，执行结果只写artifact内runtime matrix及stability candidates。成功producer缺报告硬失败，参数化实例全部通过才接受，Production同时要求原类型/构建/覆盖率/外部包等gate，不把生成partial报告等同组件稳定。
 
 合成CLI输入已验证失败producer保持0个Verified及141个待执行stable声明，成功producer缺报告会拒绝；完整真实结果仍交新候选远程流程。拖放同时核对官方dnd-kit 0.5.0发布包，明确重用Svelte attachment/sensor/collision/auto-scroll，ZUI拥有typed identity、FormArray接受/拒绝、主题motion、class-only与最终公告。首个真实消费者为FormList，再承接Transfer、Tree和DataTable；详见[E17执行记录](./execution-dragdrop-evidence-2026-09-07.md)。
+
+## E18：Sortable 与 FormList 实际组合
+
+新增 ZSortable，复用 Stack / Button / LogicalCollection / MountedElements 和官方 dnd-kit；受控 items、稳定 typed key、冻结移动快照、AbortSignal、五种终态及真实 owner 回声检查共用一条提交路径。FormList 直接使用 row.id 与 operations.move，不增加第二数据或表单 owner。五档 size / indicatorSize、Theme、动态 reduced-motion、原生替代按钮、最终公告与焦点同时接入。
+
+真实 Chrome 已验证 mouse / keyboard / action、异步确认/拒绝/取消、FormList 编辑后的 row/input identity 与 FormData、reset，以及390px纵向和横向wrap的0横向溢出。class-only 移除 Feedback 后缺失的 engine shape 由无 DOM 写入的 geometry bridge 补齐；滚动、等值 ref 替换和 shape ownership 也有独立资产。真实触摸和跨容器等边界仍开放。
+
+E17 完成结果确认构建、外部包与 Chromium/Firefox Docs 通过；组件、静态、Windows 与 WebKit 仍有失败。真实执行证据 job 已完成且保守报告 partial / 0 Verified。E18 继续处理具体私有 DOM rest、日期断言、Toolbar Portal 注册及 Mention mouse 序列问题，不把修复落盘视为远程通过。详见[E18执行记录](./execution-sortable-form-list-2026-09-07.md)。下一批按[E19具体计划](./w4-composition-next-2026-09-07.md)推进 Transfer 事务和跨栏消费，完整目标保持进行中。

@@ -1,6 +1,7 @@
 import { tick } from 'svelte';
 import { describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
+import { userEvent } from 'vitest/browser';
 
 import MentionFixture from './MentionFixture.svelte';
 import MentionProductionFixture from './MentionProductionFixture.svelte';
@@ -13,7 +14,7 @@ function input(textarea: HTMLTextAreaElement, value: string): void {
 
 describe('ZMention production collection contract', () => {
 	it('keeps async loading, typed keys and textarea-owned active descendant synchronized', async () => {
-		render(MentionProductionFixture, { mode: 'async' });
+		await render(MentionProductionFixture, { mode: 'async' });
 		const editor = document.querySelector<HTMLTextAreaElement>(
 			'textarea[aria-label="Async mention"]'
 		)!;
@@ -41,7 +42,7 @@ describe('ZMention production collection contract', () => {
 
 	it('mounts a distant virtual option before exposing and committing it', async () => {
 		// @zui-visual ZMention virtual list and floating geometry
-		render(MentionProductionFixture, { mode: 'virtual' });
+		await render(MentionProductionFixture, { mode: 'virtual' });
 		const editor = document.querySelector<HTMLTextAreaElement>(
 			'textarea[aria-label="Virtual mention"]'
 		)!;
@@ -83,7 +84,7 @@ describe('ZMention production collection contract', () => {
 	});
 
 	it('delegates pointer selection to the listbox while the textarea keeps focus', async () => {
-		render(MentionProductionFixture, { mode: 'async' });
+		await render(MentionProductionFixture, { mode: 'async' });
 		const editor = document.querySelector<HTMLTextAreaElement>(
 			'textarea[aria-label="Async mention"]'
 		)!;
@@ -98,9 +99,13 @@ describe('ZMention production collection contract', () => {
 		);
 		await tick();
 		expect(document.querySelector<HTMLElement>('[role="option"]')).toBe(option);
-		option.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true }));
-		option.click();
+		let retainedFocus = false;
+		option.addEventListener('mouseup', () => (retainedFocus = document.activeElement === editor), {
+			once: true
+		});
+		await userEvent.click(option);
 		await tick();
+		expect(retainedFocus).toBe(true);
 		expect(document.activeElement).toBe(editor);
 		expect(document.querySelector('[data-testid="mention-production-output"]')?.textContent).toBe(
 			'@numeric :1'
@@ -108,7 +113,7 @@ describe('ZMention production collection contract', () => {
 	});
 
 	it('lets the async owner discard stale responses before Mention can expose or commit them', async () => {
-		render(MentionProductionFixture, { mode: 'generation' });
+		await render(MentionProductionFixture, { mode: 'generation' });
 		const editor = document.querySelector<HTMLTextAreaElement>(
 			'textarea[aria-label="Async mention"]'
 		)!;
@@ -124,8 +129,7 @@ describe('ZMention production collection contract', () => {
 		const latest = document.querySelector<HTMLElement>('[role="option"]')!;
 		expect(latest.textContent).toContain('Latest al');
 		latest.dispatchEvent(new PointerEvent('pointermove', { bubbles: true }));
-		latest.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true }));
-		latest.click();
+		await userEvent.click(latest);
 		await tick();
 		expect(document.querySelector('[data-testid="mention-production-output"]')?.textContent).toBe(
 			'@latest :2'
@@ -133,7 +137,7 @@ describe('ZMention production collection contract', () => {
 	});
 
 	it('defers query parsing during real composition and supports multiple triggers', async () => {
-		render(MentionFixture);
+		await render(MentionFixture);
 		const editor = document.querySelector<HTMLTextAreaElement>('textarea[aria-label="Message"]')!;
 		editor.focus();
 		editor.value = 'Notify @al';

@@ -5,6 +5,9 @@ packages:
   - ui/*
 
 catalog:
+  '@dnd-kit/dom': ^0.5.0
+  '@dnd-kit/state': ^0.5.0
+  '@dnd-kit/svelte': ^0.5.0
   '@aws-sdk/client-s3': ^3.1115.0
   '@aws-sdk/s3-request-presigner': ^3.1115.0
   '@axe-core/playwright': ^4.13.0

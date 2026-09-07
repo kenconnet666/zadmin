@@ -1,4 +1,15 @@
 export const ZUI_PACKAGE_NAME = '@zadmin/zui';
+export { default as ZSortable } from '../components/compound/sortable/ZSortable.svelte';
+export type {
+	ZSortableProps,
+	SortableItemContext,
+	SortableMoveRequest,
+	SortableMoveEnd,
+	SortableMoveResult
+} from '../components/compound/sortable/ZSortable.svelte';
+export { createReorderRequest, applyReorderRequest } from '../runtime/collection/reorder.js';
+export type { ReorderRequest, ReorderSource } from '../runtime/collection/reorder.js';
+export type { SortableComponentDefaults } from '../runtime/foundation/component-defaults.js';
 export { default as ZNavLink } from '../components/navigation/ZNavLink.svelte';
 export type {
 	ZNavLinkProps,
@@ -950,6 +961,7 @@ export type {
 	ZuiPaginationLocale,
 	ZuiProgressLocale,
 	ZuiPeriodLocale,
+	ZuiSortableLocale,
 	ZuiTagLocale,
 	ZuiTagsInputLocale,
 	ZuiTimeLocale,

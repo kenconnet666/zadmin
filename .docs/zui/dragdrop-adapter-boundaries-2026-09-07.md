@@ -2,7 +2,7 @@
 
 ## 结论
 
-`@dnd-kit/svelte@0.5.0` 可以作为 ZUI W4 拖放交互内核，但只能通过一个窄适配层使用。可以直接采用 manager、Svelte attachment、Pointer/Keyboard sensor、collision、AutoScroller 和基础 reactive state；必须适配 Sortable plugins、ZUI 数据 owner、locale announcement、Theme motion、CSP nonce 和严格 class-only 模式。不能让 FormList、Transfer、Tree 或 DataTable 直接依赖 dnd-kit，也不能照搬官方示例在 `onDragOver` 中持续写业务值。
+`@dnd-kit/svelte@0.5.0` 可以作为 ZUI W4 拖放交互内核，但只能通过一个窄适配层使用。可以采用 manager、Svelte attachment、Pointer/Keyboard sensor、collision、AutoScroller 和基础 reactive state；必须适配 class-only 模式下的 engine geometry、Sortable plugins、ZUI 数据 owner、locale announcement、Theme motion 与 CSP nonce。不能让 FormList、Transfer、Tree 或 DataTable 直接依赖 dnd-kit，也不能照搬官方示例在 `onDragOver` 中持续写业务值。
 
 | 结论     | 能力                                                                                           | 原因                                                                                                                               |
 | -------- | ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
@@ -12,6 +12,7 @@
 | 需要适配 | disabled、data、group、index、sensors、modifiers                                               | 应由 ZUI typed key、容器 identity 和 disabled/readonly owner 生成 reactive getters，不公开底层实例作为业务 API                     |
 | 需要适配 | Feedback、sortable transition、reduced motion                                                  | 默认时间和 easing 不来自 ZUI Theme；dnd-kit 只读取系统 `prefers-reduced-motion`，不能完整表达 ZUI 的 `auto                         | full | reduced` |
 | 需要适配 | Accessibility                                                                                  | 默认英文公告直接使用裸 ID，并由插件创建带 inline style 的隐藏节点；ZUI 需要 locale pack、业务 label、拒绝原因和稳定 ID             |
+| 需要适配 | class-only engine geometry                                                                     | Feedback 是0.5.0中唯一初始化并持续更新 `dragOperation.shape` 的默认插件；排除后必须以无DOM写入的bridge补回shape                    |
 | 需要适配 | StyleInjector nonce/ShadowRoot                                                                 | nonce 只处理 Document 中动态 `<style>`；当前 ZUI context/runtime 没有可读取的 `cspNonce`，ShadowRoot 则使用 constructed stylesheet |
 | 不宜直用 | DOM `Sortable` 或 `OptimisticSortingPlugin`                                                    | 插件直接移动 DOM，会与 Svelte 5 keyed reconciliation 冲突；官方 changelog 与 Svelte 发布代码均明确排除                             |
 | 不宜直用 | 官方 `onDragOver -> move(items)` 作为 FormList owner                                           | 会在每次 hover 时写 canonical Form values、dirty/errors/validation，并绕过 FormArray 已有的接受/拒绝事务                           |
@@ -132,10 +133,12 @@ hash-only CSP 不能直接复用 ZUI 当前 critical-style hash：dnd-kit 样式
 
 以下是待实现阶段权衡的两个候选，不是已冻结的公开 API。现有 ZUI 严格 class-only 合同应作为默认方向；只有远程 CSP、ShadowRoot、动画和清理资产通过后，才考虑增加显式 opt-in 的增强反馈：
 
-1. 默认 class-only 候选：从 manager defaults 排除 Feedback、Accessibility、Cursor、PreventSelection；由 ZUI 自己用 ICSS classes/data-state 渲染 source/target/placeholder 状态、`ZVisuallyHidden` live region、provider root 的 cursor/user-select class。Pointer drag 仍由 sensors/collision/AutoScroller 工作，但首版不显示任意坐标跟随指针的 ghost；不可暗中退回 inline CSS variables。
+1. 默认 class-only 候选：从 manager defaults 排除 Feedback、Accessibility、Cursor、PreventSelection；由 ZUI 自己用 ICSS classes/data-state 渲染 source/target/placeholder 状态、`ZVisuallyHidden` live region、provider root 的 cursor/user-select class。排除 Feedback 也会移除它对 `dragOperation.shape` 的初始化和持续更新，因此必须用 geometry-only bridge 从 source DOMRectangle 和 operation transform 维护 engine shape，collision、AutoScroller 与 SortableKeyboardPlugin 才能继续工作。该 bridge 只写 engine state，不写 DOM style，也不另造 collision。Pointer drag 首版不显示任意坐标跟随指针的 ghost；不可暗中退回 inline CSS variables。
 2. 待验证的 enhanced 候选：显式允许 dnd-kit Feedback 的动态 style properties；要求 Document style element nonce，映射 ZUI motion，并完成 ShadowRoot/iframe 与清理验证。没有这些证据前不应作为默认值或承诺的公开 profile。
 
 默认 class-only 路径仍应提供可见“上移/下移/移至”按钮或菜单，作为 keyboard、触摸和不能使用拖动手势时的稳定操作入口。
+
+geometry-only bridge 的 shape ownership 不能依赖“刚赋值的对象就是 `ValueHistory.current`”。dnd-kit 的 `DragOperation` 使用 `Shape.equals()` 作为 ValueHistory equality；相同 left/top/width/height 的新 Rectangle 会被忽略并保留旧对象。bridge 必须记录 setter 后 engine 实际接受的 current，并且只有该对象已由 bridge 发布时，idle/dispose 才能清空它。滚动时 source `getBoundingClientRect()` 会变化，但 drag operation position/transform 与 collision shape 都使用 viewport engine 坐标；bridge 保留 drag-start DOMRectangle，以 operation transform 平移，不能把 scroll 后的 source rect 再叠加一次。ScrollListener 继续只负责请求 collision observer 刷新，AutoScroller 继续根据同一个 operation position 与 shape 工作。
 
 ## Theme motion 与动态 reduced motion
 

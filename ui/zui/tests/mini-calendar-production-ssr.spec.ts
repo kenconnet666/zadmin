@@ -17,7 +17,7 @@ describe('ZMiniCalendar SSR contract', () => {
 		expect(body.match(/role="grid"/gu)).toHaveLength(6);
 		expect(body).toContain('data-testid="mini-calendar-provider-size"');
 		expect(body).toContain('data-testid="mini-calendar-field-size"');
-		expect(body).toContain('aria-label="Delivery dates"');
+		expect(body).toMatch(/aria-label="Delivery dates: [^"]+"/u);
 		expect(body).toContain('aria-selected="true"');
 	});
 });

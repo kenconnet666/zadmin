@@ -52,7 +52,7 @@
 		"package:check": "node scripts/check-package.mjs",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"test": "vitest --run",
-		"test:browser-lifecycle": "node scripts/check-browser-lifecycle.mjs",
+		"test:browser-lifecycle": "node scripts/check-browser-lifecycle.mjs --self-test && node scripts/check-browser-lifecycle.mjs",
 		"test:execution-reporter": "node --experimental-strip-types scripts/component-execution-reporter.ts --self-test",
 		"test:coverage": "vitest --run --coverage",
 		"test:bundle": "node scripts/check-bundle.mjs"
@@ -77,6 +77,9 @@
 		"url": "https://github.com/kenconnet666/zadmin/issues"
 	},
 	"dependencies": {
+		"@dnd-kit/dom": "catalog:",
+		"@dnd-kit/state": "catalog:",
+		"@dnd-kit/svelte": "catalog:",
 		"@floating-ui/dom": "catalog:",
 		"@internationalized/date": "catalog:",
 		"@standard-schema/spec": "catalog:",

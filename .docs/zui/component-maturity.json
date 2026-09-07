@@ -1,10 +1,10 @@
 {
 	"schemaVersion": 3,
 	"source": {
-		"metadataComponents": 186,
-		"documentationPages": 116,
-		"contractComponents": 186,
-		"testFiles": 373
+		"metadataComponents": 187,
+		"documentationPages": 117,
+		"contractComponents": 187,
+		"testFiles": 382
 	},
 	"stageNames": [
 		"MetadataDeclared",
@@ -30,14 +30,14 @@
 		"detail": "No repository manifest binds per-component browser, production, or visual results to the current commit."
 	},
 	"summary": {
-		"MetadataDeclared": 186,
-		"PublicExportPresent": 186,
-		"ApiContractDeclared": 186,
-		"RuntimeImplemented": 186,
-		"BrowserBehaviorContractsDeclared": 174,
-		"VisualContractsDeclared": 160,
-		"ProductionContractsDeclared": 178,
-		"SsrContractsDeclared": 183
+		"MetadataDeclared": 187,
+		"PublicExportPresent": 187,
+		"ApiContractDeclared": 187,
+		"RuntimeImplemented": 187,
+		"BrowserBehaviorContractsDeclared": 175,
+		"VisualContractsDeclared": 161,
+		"ProductionContractsDeclared": 179,
+		"SsrContractsDeclared": 184
 	},
 	"executionSummary": {
 		"BrowserBehaviorVerified": 0,
@@ -8597,6 +8597,136 @@
 			]
 		},
 		{
+			"id": "sortable",
+			"name": "ZSortable",
+			"category": "layout",
+			"family": "sortable",
+			"status": "experimental",
+			"source": "ui/zui/src/components/compound/sortable/ZSortable.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"MetadataDeclared": true,
+				"PublicExportPresent": true,
+				"ApiContractDeclared": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorContractsDeclared": true,
+				"VisualContractsDeclared": true,
+				"ProductionContractsDeclared": true,
+				"SsrContractsDeclared": true
+			},
+			"evidence": {
+				"MetadataDeclared": [
+					{
+						"path": "ui/zui/src/components/compound/sortable/ZSortable.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"PublicExportPresent": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZSortable"
+					}
+				],
+				"ApiContractDeclared": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "fbd84ae6c33e4b34be464a16470220330ee756a57beb81aefbb84ea72ff6ce1e API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/compound/sortable/ZSortable.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorContractsDeclared": [
+					{
+						"path": "ui/zui/tests/sortable-production.browser.spec.ts",
+						"detail": "ZSortable browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/SortableFormListFixture.svelte",
+						"detail": "ZSortable explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/SortableProductionFixture.svelte",
+						"detail": "ZSortable explicit rendered fixture usage"
+					}
+				],
+				"VisualContractsDeclared": [
+					{
+						"path": "ui/zui/tests/sortable-production.browser.spec.ts",
+						"detail": "ZSortable authored visual contract: renders ICSS-owned five-size geometry without inline style escape hatches (line 367)"
+					},
+					{
+						"path": "ui/zui/tests/SortableFormListFixture.svelte",
+						"detail": "ZSortable explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/SortableProductionFixture.svelte",
+						"detail": "ZSortable explicit rendered fixture usage"
+					}
+				],
+				"ProductionContractsDeclared": [
+					{
+						"path": "ui/zui/tests/sortable-production-ssr.spec.ts",
+						"detail": "ZSortable production assertions"
+					},
+					{
+						"path": "ui/zui/tests/SortableFormListFixture.svelte",
+						"detail": "ZSortable explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/SortableProductionFixture.svelte",
+						"detail": "ZSortable explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/sortable-production.browser.spec.ts",
+						"detail": "ZSortable production assertions"
+					},
+					{
+						"path": "ui/zui/tests/SortableFormListFixture.svelte",
+						"detail": "ZSortable explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/SortableProductionFixture.svelte",
+						"detail": "ZSortable explicit rendered fixture usage"
+					}
+				],
+				"SsrContractsDeclared": [
+					{
+						"path": "ui/zui/tests/sortable-production-ssr.spec.ts",
+						"detail": "ZSortable SSR assertions"
+					}
+				]
+			},
+			"executionStages": {
+				"BrowserBehaviorVerified": false,
+				"VisuallyVerified": false,
+				"ProductionVerified": false,
+				"DesktopVerified": false
+			},
+			"executionEvidence": {
+				"BrowserBehaviorVerified": [],
+				"VisuallyVerified": [],
+				"ProductionVerified": [],
+				"DesktopVerified": []
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/layout/sortable/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrContracts": [
+				{
+					"path": "ui/zui/tests/sortable-production-ssr.spec.ts",
+					"detail": "ZSortable SSR assertions"
+				}
+			]
+		},
+		{
 			"id": "tabs",
 			"name": "ZTabs",
 			"category": "navigation",
@@ -13945,6 +14075,10 @@
 						"detail": "ZProvider SSR assertions"
 					},
 					{
+						"path": "ui/zui/tests/sortable-production-ssr.spec.ts",
+						"detail": "ZProvider SSR assertions"
+					},
+					{
 						"path": "ui/zui/tests/tag-table-production-ssr.spec.ts",
 						"detail": "ZProvider SSR assertions"
 					},
@@ -14037,6 +14171,10 @@
 				},
 				{
 					"path": "ui/zui/tests/pin-input-group-production.spec.ts",
+					"detail": "ZProvider SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/sortable-production-ssr.spec.ts",
 					"detail": "ZProvider SSR assertions"
 				},
 				{
@@ -16582,6 +16720,10 @@
 					{
 						"path": "ui/zui/tests/period-picker-production-ssr.spec.ts",
 						"detail": "ZForm SSR assertions"
+					},
+					{
+						"path": "ui/zui/tests/sortable-production-ssr.spec.ts",
+						"detail": "ZForm SSR assertions"
 					}
 				]
 			},
@@ -16652,6 +16794,10 @@
 				},
 				{
 					"path": "ui/zui/tests/period-picker-production-ssr.spec.ts",
+					"detail": "ZForm SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/sortable-production-ssr.spec.ts",
 					"detail": "ZForm SSR assertions"
 				}
 			]
@@ -16832,6 +16978,10 @@
 					{
 						"path": "ui/zui/tests/period-picker-production-ssr.spec.ts",
 						"detail": "ZFormField SSR assertions"
+					},
+					{
+						"path": "ui/zui/tests/sortable-production-ssr.spec.ts",
+						"detail": "ZFormField SSR assertions"
 					}
 				]
 			},
@@ -16902,6 +17052,10 @@
 				},
 				{
 					"path": "ui/zui/tests/period-picker-production-ssr.spec.ts",
+					"detail": "ZFormField SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/sortable-production-ssr.spec.ts",
 					"detail": "ZFormField SSR assertions"
 				}
 			]
@@ -17021,6 +17175,10 @@
 					{
 						"path": "ui/zui/tests/form-nested-list-production.spec.ts",
 						"detail": "ZFormList SSR assertions"
+					},
+					{
+						"path": "ui/zui/tests/sortable-production-ssr.spec.ts",
+						"detail": "ZFormList SSR assertions"
 					}
 				]
 			},
@@ -17047,6 +17205,10 @@
 				},
 				{
 					"path": "ui/zui/tests/form-nested-list-production.spec.ts",
+					"detail": "ZFormList SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/sortable-production-ssr.spec.ts",
 					"detail": "ZFormList SSR assertions"
 				}
 			]
@@ -17187,6 +17349,10 @@
 					{
 						"path": "ui/zui/tests/pin-input-group-production.spec.ts",
 						"detail": "ZInput SSR assertions"
+					},
+					{
+						"path": "ui/zui/tests/sortable-production-ssr.spec.ts",
+						"detail": "ZInput SSR assertions"
 					}
 				]
 			},
@@ -17233,6 +17399,10 @@
 				},
 				{
 					"path": "ui/zui/tests/pin-input-group-production.spec.ts",
+					"detail": "ZInput SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/sortable-production-ssr.spec.ts",
 					"detail": "ZInput SSR assertions"
 				}
 			]
@@ -17470,7 +17640,7 @@
 				"VisualContractsDeclared": [
 					{
 						"path": "ui/zui/tests/mention-production.browser.spec.ts",
-						"detail": "ZMention authored visual contract: mounts a distant virtual option before exposing and committing it (line 42)"
+						"detail": "ZMention authored visual contract: mounts a distant virtual option before exposing and committing it (line 43)"
 					},
 					{
 						"path": "ui/zui/tests/MentionFixture.svelte",

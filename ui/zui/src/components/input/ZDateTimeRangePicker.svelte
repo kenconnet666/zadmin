@@ -765,6 +765,7 @@
 		value = $bindable(),
 		...rest
 	}: ZDateTimeRangePickerProps<TMode, TPresentation> = $props();
+	const domRest = $derived(rest as unknown as HTMLAttributes<HTMLDivElement>);
 	const zui = useZui();
 	const resolvedPresentation = $derived(resolvePickerPresentation(presentation));
 	const fieldOwner = claimZFieldControlOwner();
@@ -1481,7 +1482,7 @@
 {/snippet}
 
 <div
-	{...rest}
+	{...domRest}
 	bind:this={ref}
 	class={[rangeClass, className]}
 	{style}

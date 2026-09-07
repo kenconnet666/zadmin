@@ -34,7 +34,7 @@ function output(testId: string): string | null | undefined {
 
 describe('ZToolbar and ZToggleGroup composition contract', () => {
 	it('keeps one outer Tab stop, unique identities for repeated typed keys and explicit size priority', async () => {
-		render(ToolbarToggleGroupFixture);
+		await render(ToolbarToggleGroupFixture);
 		await tick();
 		const root = toolbar();
 		const before = document.querySelector<HTMLButtonElement>(
@@ -71,7 +71,7 @@ describe('ZToolbar and ZToggleGroup composition contract', () => {
 	});
 
 	it('moves across both groups without selecting, limits Space writes and honors Toolbar Home and End', async () => {
-		render(ToolbarToggleGroupFixture);
+		await render(ToolbarToggleGroupFixture);
 		await tick();
 		const root = toolbar();
 		const before = document.querySelector<HTMLButtonElement>(
@@ -117,7 +117,7 @@ describe('ZToolbar and ZToggleGroup composition contract', () => {
 	});
 
 	it('keeps a portalled ToggleGroup on independent roving focus and restores the Toolbar trigger', async () => {
-		render(ToolbarToggleGroupFixture);
+		await render(ToolbarToggleGroupFixture);
 		await tick();
 		const root = toolbar();
 		const trigger = document.querySelector<HTMLButtonElement>(

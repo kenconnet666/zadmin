@@ -513,7 +513,9 @@
 		const index = Number(item.dataset.mentionIndex);
 		return Number.isInteger(index) ? suggestions[index] : undefined;
 	}
-	function handleListPointerDown(event: PointerEvent & { currentTarget: HTMLElement }): void {
+	function handleListMouseDown(event: MouseEvent & { currentTarget: HTMLElement }): void {
+		// Preserve the textarea caret at the native focus default, while leaving
+		// pointerdown and its compatibility click sequence intact.
 		if (event.button === 0 && suggestionFromEvent(event)) event.preventDefault();
 	}
 	function handleListPointerMove(event: PointerEvent & { currentTarget: HTMLElement }): void {
@@ -610,7 +612,7 @@
 				{loading}
 				onItemMount={mountVirtualOption}
 				onclick={handleListClick}
-				onpointerdown={handleListPointerDown}
+				onmousedown={handleListMouseDown}
 				onpointermove={handleListPointerMove}
 				overscan={virtualOverscan}
 				role="listbox"
@@ -632,7 +634,7 @@
 				data-slot="list"
 				id={listId}
 				onclick={handleListClick}
-				onpointerdown={handleListPointerDown}
+				onmousedown={handleListMouseDown}
 				onpointermove={handleListPointerMove}
 				role="listbox"
 				tabindex={-1}

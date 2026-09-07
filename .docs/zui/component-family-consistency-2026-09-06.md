@@ -30,6 +30,8 @@
 
 ## 最终关闭条件
 
+E18补充：Sortable / FormList / 后续 Transfer 复用现有集合与按钮，不再复制数据 owner。Sortable 把 pointer、keyboard 和 action 接入同一接受、拒绝、取消、过期、异常合同；FormList继续由FormArray维护row identity与表单字段。五档行/手柄/indicatorSize、Theme颜色和布局动画、动态reduced、readonly/disabled、pending取消与焦点必须成组验收。真实mouse/keyboard及FormList重排已有点查，触摸、跨容器、辅助技术和全部主题仍开放。Toolbar/ToggleGroup同时修正Portal注册边界，Mention恢复textarea焦点的事件路径与真实mouse资产一起调整；当前候选远程结果仍是最终门槛。
+
 E11补充：六个日期/时间组件复用值语义、Field/InputGroup和五档size defaults，TimePicker复用Popover motion与有限列导航。DateField/TimeField新增Group继承与单一禁用透明度；Slider/Range视觉值提示改为非labelable文本，避免改变真实input的可访问名称并去掉常显重复。当前浏览器点查和回归资产已记录，仍须最终候选整组远程验证。
 
 E10B 补充：Switch/RadioGroup/Slider/RangeSlider/Rating 已接入同一适配器；FormList 复用 Stack/Array/Registry/错误层。真实浏览器补正移动后的焦点和选区保留、内部 blur 与 dirty 基线。独立列表的删除、reset、连续原生提交已点查；嵌套列表和退出/重排动画继续规划，不以本批点查结束最终家族验收。

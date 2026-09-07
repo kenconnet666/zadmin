@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
-	"componentCount": 186,
-	"overallSha256": "e2d243d9bdfc2c7a9c8ed9e66acbc669c973ab6b5f88ccc23839b168451edac2",
+	"componentCount": 187,
+	"overallSha256": "986a13f0728efc6009148a41897c05ae01eba999c9686a1c290af6ba3f03463f",
 	"components": [
 		{
 			"id": "accordion",
@@ -377,6 +377,11 @@
 			"id": "select-trigger",
 			"sha256": "cb6b569843b3bccdd691f4c7cf4fc327cf7f31118a13d0ad09f31b354cd11935",
 			"source": "src/components/compound/select/ZSelectTrigger.svelte"
+		},
+		{
+			"id": "sortable",
+			"sha256": "fbd84ae6c33e4b34be464a16470220330ee756a57beb81aefbb84ea72ff6ce1e",
+			"source": "src/components/compound/sortable/ZSortable.svelte"
 		},
 		{
 			"id": "tabs",
@@ -937,10 +942,10 @@
 	"entrypoints": {
 		"code.ts": "eabb8477e4c5ef93d016ab909e5c7f85a3111df231e2d2c3c7ef5e54897b36db",
 		"compiler.ts": "96fa979b36838e8b7a6d3f52bb463f23951438a4d974d52b631ad1e6d937b2e7",
-		"index.ts": "60c97438aaf7856dc765bb8e3f251fce68cb9b893b158d36e4812f4988a5dcae",
+		"index.ts": "c714f5ce876921af2a99d28931f634de3825edc2b45bfa0da027528583d2479e",
 		"internal.ts": "05f9ef9c8628e1cdf694dcc88b71831e5aab726a3189bd6189eef7ae645df4d7",
 		"layer.ts": "72d0fc8e5b7a8ab39a12e157879951b84f1a7fc19654f4bd8b6ea92fd8aa6db8",
-		"metadata.ts": "009f71610f5edc697bee0a7cc1821744640ef89cc1c2257e5e6636c333852bab",
+		"metadata.ts": "4344520ef762df920eb3e0345212021c34486cae7f5884ab020a306a3474984e",
 		"runtime.ts": "902679df258a1aee96a4742dc4f229210aef34e0db47c0bffcde4cc1d66016fb",
 		"testing.ts": "c596113f3cbcf4ce75be2728b6a10cd6a0b77c9b9101a4408ba2e18e174f15cb",
 		"theme.ts": "9625285286228f2548dadb74b934f40d7cd1804a1e96bc37a04f21d3cd32b527",

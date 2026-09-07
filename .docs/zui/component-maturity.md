@@ -1,26 +1,26 @@
 # ZUI component maturity matrix
 
-Generated from 186 metadata components, 116 documentation modules, 186 API contract entries, and 373 test files.
+Generated from 187 metadata components, 117 documentation modules, 187 API contract entries, and 382 test files.
 
 This is a static inventory of authored contracts and source assets. `BrowserBehaviorContractsDeclared`, `VisualContractsDeclared`, `ProductionContractsDeclared`, and `SsrContractsDeclared` only mean matching assets exist. They do not report that a test ran or passed. Per-component execution stages remain pending until a revision-bound evidence manifest is supplied; the existing WebView2 desktop composer is one such independent evidence path.
 
 | Static stage                     | Count |
 | -------------------------------- | ----: |
-| MetadataDeclared                 |   186 |
-| PublicExportPresent              |   186 |
-| ApiContractDeclared              |   186 |
-| RuntimeImplemented               |   186 |
-| BrowserBehaviorContractsDeclared |   174 |
-| VisualContractsDeclared          |   160 |
-| ProductionContractsDeclared      |   178 |
-| SsrContractsDeclared             |   183 |
+| MetadataDeclared                 |   187 |
+| PublicExportPresent              |   187 |
+| ApiContractDeclared              |   187 |
+| RuntimeImplemented               |   187 |
+| BrowserBehaviorContractsDeclared |   175 |
+| VisualContractsDeclared          |   161 |
+| ProductionContractsDeclared      |   179 |
+| SsrContractsDeclared             |   184 |
 
 | Execution stage         | Current revision status |
 | ----------------------- | ----------------------: |
-| BrowserBehaviorVerified | 0 verified; 186 pending |
-| VisuallyVerified        | 0 verified; 186 pending |
-| ProductionVerified      | 0 verified; 186 pending |
-| DesktopVerified         | 0 verified; 186 pending |
+| BrowserBehaviorVerified | 0 verified; 187 pending |
+| VisuallyVerified        | 0 verified; 187 pending |
+| ProductionVerified      | 0 verified; 187 pending |
+| DesktopVerified         | 0 verified; 187 pending |
 
 | Component               | Category     | Metadata | Export | API contract | Runtime | Browser contracts | Visual contracts | Production contracts | SSR contracts | Current execution | Docs                                                                  |
 | ----------------------- | ------------ | -------: | -----: | -----------: | ------: | ----------------: | ---------------: | -------------------: | ------------: | ----------------- | --------------------------------------------------------------------- |
@@ -99,6 +99,7 @@ This is a static inventory of authored contracts and source assets. `BrowserBeha
 | ZSelectContent          | input        |        Y |      Y |            Y |       Y |                 Y |                Y |                    Y |             Y | pending           | apps/docs/src/content/components/input/select/doc.ts                  |
 | ZSelectItem             | input        |        Y |      Y |            Y |       Y |                 Y |                Y |                    Y |             Y | pending           | apps/docs/src/content/components/input/select/doc.ts                  |
 | ZSelectTrigger          | input        |        Y |      Y |            Y |       Y |                 Y |                Y |                    Y |             Y | pending           | apps/docs/src/content/components/input/select/doc.ts                  |
+| ZSortable               | layout       |        Y |      Y |            Y |       Y |                 Y |                Y |                    Y |             Y | pending           | apps/docs/src/content/components/layout/sortable/doc.ts               |
 | ZTabs                   | navigation   |        Y |      Y |            Y |       Y |                 Y |                Y |                    Y |             Y | pending           | apps/docs/src/content/components/navigation/tabs/doc.ts               |
 | ZTabsList               | navigation   |        Y |      Y |            Y |       Y |                 Y |                Y |                    Y |             Y | pending           | apps/docs/src/content/components/navigation/tabs/doc.ts               |
 | ZTabsPanel              | navigation   |        Y |      Y |            Y |       Y |                 Y |                Y |                    Y |             Y | pending           | apps/docs/src/content/components/navigation/tabs/doc.ts               |

@@ -205,3 +205,4 @@ export { zuiMetadata as ratingMetadata } from '../components/input/ZRating.svelt
 export { zuiMetadata as checkboxGroupMetadata } from '../components/compound/checkbox-group/ZCheckboxGroup.svelte';
 export { zuiMetadata as checkboxGroupItemMetadata } from '../components/compound/checkbox-group/ZCheckboxGroupItem.svelte';
 export { zuiMetadata as checkboxGroupSelectAllMetadata } from '../components/compound/checkbox-group/ZCheckboxGroupSelectAll.svelte';
+export { zuiMetadata as sortableMetadata } from '../components/compound/sortable/ZSortable.svelte';

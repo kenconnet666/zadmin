@@ -44,6 +44,47 @@ export interface FloatingOptions {
 
 const oppositeSide = { bottom: 'top', left: 'right', right: 'left', top: 'bottom' } as const;
 
+function observeElementResize(
+	reference: Element,
+	floating: HTMLElement,
+	update: () => void
+): () => void {
+	const observers = new Map<typeof ResizeObserver, ResizeObserver>();
+	const scheduler = floating.ownerDocument.defaultView;
+	let active = true;
+	let frame: number | undefined;
+	let microtaskQueued = false;
+	const run = (): void => {
+		frame = undefined;
+		microtaskQueued = false;
+		if (active) update();
+	};
+	const schedule = (): void => {
+		if (!active || frame !== undefined || microtaskQueued) return;
+		if (scheduler) frame = scheduler.requestAnimationFrame(run);
+		else {
+			microtaskQueued = true;
+			queueMicrotask(run);
+		}
+	};
+	for (const element of [reference, floating]) {
+		const ResizeObserverConstructor = element.ownerDocument.defaultView?.ResizeObserver;
+		if (!ResizeObserverConstructor) continue;
+		let observer = observers.get(ResizeObserverConstructor);
+		if (!observer) {
+			observer = new ResizeObserverConstructor(schedule);
+			observers.set(ResizeObserverConstructor, observer);
+		}
+		observer.observe(element);
+	}
+	return () => {
+		active = false;
+		if (frame !== undefined) scheduler?.cancelAnimationFrame(frame);
+		for (const observer of observers.values()) observer.disconnect();
+		observers.clear();
+	};
+}
+
 export class FloatingPositioner {
 	#cleanup: (() => void) | undefined;
 	#floating: HTMLElement | undefined;
@@ -65,7 +106,16 @@ export class FloatingPositioner {
 			this.#setReferenceWidth(reference.getBoundingClientRect().width);
 		}
 		const generation = (this.#generation += 1);
-		this.#cleanup = autoUpdate(reference, floating, () => void this.#update(generation));
+		const update = () => void this.#update(generation);
+		// Floating UI invokes its element ResizeObserver callback synchronously. The size
+		// middleware below changes the observed floating dimensions, so defer that one source
+		// to the next owner-realm frame while retaining ancestor/layout-shift auto updates.
+		const stopAutoUpdate = autoUpdate(reference, floating, update, { elementResize: false });
+		const stopResizeObserver = observeElementResize(reference, floating, update);
+		this.#cleanup = () => {
+			stopResizeObserver();
+			stopAutoUpdate();
+		};
 		return () => this.stop();
 	}
 
@@ -102,9 +152,14 @@ export class FloatingPositioner {
 			size({
 				padding: 8,
 				apply: ({ availableHeight, availableWidth, rects }) => {
-					floating.style.setProperty('--zui-floating-available-height', `${availableHeight}px`);
-					floating.style.setProperty('--zui-floating-available-width', `${availableWidth}px`);
-					floating.style.setProperty(
+					this.#setStyleProperty(
+						floating,
+						'--zui-floating-available-height',
+						`${availableHeight}px`
+					);
+					this.#setStyleProperty(floating, '--zui-floating-available-width', `${availableWidth}px`);
+					this.#setStyleProperty(
+						floating,
 						'--zui-floating-reference-width',
 						`${rects.reference.width}px`
 					);
@@ -150,6 +205,11 @@ export class FloatingPositioner {
 
 	#setReferenceWidth(width: number): void {
 		if (!this.#floating || !Number.isFinite(width) || width < 0) return;
-		this.#floating.style.width = `${width}px`;
+		this.#setStyleProperty(this.#floating, 'width', `${width}px`);
+	}
+
+	#setStyleProperty(element: HTMLElement, property: string, value: string): void {
+		if (element.style.getPropertyValue(property) !== value)
+			element.style.setProperty(property, value);
 	}
 }

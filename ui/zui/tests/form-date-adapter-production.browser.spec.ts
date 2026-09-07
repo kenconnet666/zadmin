@@ -266,7 +266,9 @@ describe('date family Form model adapters', () => {
 			await userEvent.click(dayButton(rejectedPickerDialog, '20'));
 			expect(new FormData(rejectedForm).get('picker')).toBe('2026-09-13');
 			expect(
-				rejectedPickerDialog.querySelector<HTMLButtonElement>('[data-selected="true"]')?.textContent
+				rejectedPickerDialog
+					.querySelector('[data-selected="true"] [data-slot="day-number"]')
+					?.textContent?.trim()
 			).toBe('13');
 			await userEvent.click(rejectedPicker.querySelector('button[aria-haspopup="dialog"]')!);
 

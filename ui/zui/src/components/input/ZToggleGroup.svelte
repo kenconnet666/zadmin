@@ -467,7 +467,7 @@
 					const button = node as HTMLButtonElement;
 					const dispose = untrack(() => mounted.mount(key, button, toolbarKey(key)));
 					$effect(() => {
-						if (!delegated || !toolbar) return;
+						if (!delegated || !toolbar || !toolbar.owns(button)) return;
 						const registration = {
 							key: toolbarKey(key),
 							element: button,
