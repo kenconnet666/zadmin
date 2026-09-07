@@ -17,7 +17,7 @@ function slot(root: HTMLElement, value: string): HTMLButtonElement {
 describe('ZTimeGrid and ZTimeValue production contracts', () => {
 	it('selects explicit Time slots with roving focus, constraints, FormData and reset', async () => {
 		// @zui-visual ZTimeGrid typed slots, selected/disabled states, five sizes and ZTimeValue text
-		render(TimeGridProductionFixture);
+		await render(TimeGridProductionFixture);
 		await tick();
 		const form = element<HTMLFormElement>('time-grid-form');
 		const grid = element('time-grid-main');
@@ -50,20 +50,24 @@ describe('ZTimeGrid and ZTimeValue production contracts', () => {
 	});
 
 	it('keeps controlled rejection, readonly, native disabledness and participation ownership explicit', async () => {
-		render(TimeGridProductionFixture);
+		await render(TimeGridProductionFixture);
 		await tick();
 		const form = element<HTMLFormElement>('time-grid-form');
 		const rejected = element('time-grid-rejected');
 		await userEvent.click(slot(rejected, '10:30:15.25'));
 		await tick();
-		expect(rejected.querySelector('[data-selected="true"]')?.dataset.value).toBe('09:00:00');
+		expect(rejected.querySelector<HTMLElement>('[data-selected="true"]')?.dataset.value).toBe(
+			'09:00:00'
+		);
 		expect(element('time-grid-output').textContent).toContain('|09:00:00|1');
 
 		const readonly = element('time-grid-readonly');
 		slot(readonly, '09:00:00').focus();
 		await userEvent.keyboard('{ArrowRight}');
 		expect(document.activeElement).toBe(slot(readonly, '10:30:15.25'));
-		expect(readonly.querySelector('[data-selected="true"]')?.dataset.value).toBe('09:00:00');
+		expect(readonly.querySelector<HTMLElement>('[data-selected="true"]')?.dataset.value).toBe(
+			'09:00:00'
+		);
 		expect(new FormData(form).get('readonly-time')).toBe('09:00:00');
 		expect(new FormData(form).has('disabled-time')).toBe(false);
 		expect(new FormData(form).has('fieldset-time')).toBe(false);
@@ -76,7 +80,7 @@ describe('ZTimeGrid and ZTimeValue production contracts', () => {
 	});
 
 	it('uses rendered RTL direction for arrows and exposes all five Theme sizes', async () => {
-		render(TimeGridProductionFixture);
+		await render(TimeGridProductionFixture);
 		await tick();
 		const rtl = element('time-grid-rtl');
 		const selected = slot(rtl, '09:00:00');
@@ -99,7 +103,7 @@ describe('ZTimeGrid and ZTimeValue production contracts', () => {
 	});
 
 	it('cleans up removed slot mounts and reconnects roving focus when they return', async () => {
-		const component = render(TimeGridProductionFixture);
+		const { component } = await render(TimeGridProductionFixture);
 		await tick();
 		const grid = element('time-grid-dynamic');
 		slot(grid, '09:00:00').focus();
@@ -120,14 +124,16 @@ describe('ZTimeGrid and ZTimeValue production contracts', () => {
 	});
 
 	it('keeps invalid external owners visible to form validation without inventing slots', async () => {
-		const component = render(TimeGridProductionFixture);
+		const { component } = await render(TimeGridProductionFixture);
 		await tick();
 		const form = element<HTMLFormElement>('time-grid-form');
 		const grid = element('time-grid-main');
 		component.setExternalUnavailable();
 		await tick();
 		expect(grid.dataset.invalid).toBe('true');
-		expect(grid.querySelector('[data-selected="true"]')?.dataset.value).toBe('11:00:00');
+		expect(grid.querySelector<HTMLElement>('[data-selected="true"]')?.dataset.value).toBe(
+			'11:00:00'
+		);
 		expect(new FormData(form).get('appointment')).toBe('11:00:00');
 
 		component.setExternalMissing();
@@ -138,7 +144,7 @@ describe('ZTimeGrid and ZTimeValue production contracts', () => {
 	});
 
 	it('renders localized semantic time values with shared ZText typography', async () => {
-		render(TimeGridProductionFixture);
+		await render(TimeGridProductionFixture);
 		await tick();
 		const value = element<HTMLTimeElement>('time-value-main');
 		expect(value.tagName).toBe('TIME');

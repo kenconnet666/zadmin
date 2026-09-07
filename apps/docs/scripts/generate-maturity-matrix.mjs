@@ -1,9 +1,19 @@
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import prettier from 'prettier';
 import ts from 'typescript';
 import { parse } from 'svelte/compiler';
+import {
+	directRenderPattern,
+	executesComponentRender,
+	explicitComponentPattern,
+	filesUnder,
+	fixtureEvidenceFor,
+	hasExplicitVisualEvidence,
+	ownedVisualBlocks,
+	withoutComments
+} from './component-test-inventory.mjs';
 
 const docsRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const workspaceRoot = resolve(docsRoot, '../..');
@@ -15,14 +25,6 @@ const jsonPath = resolve(workspaceRoot, '.docs/zui/component-maturity.json');
 const markdownPath = resolve(workspaceRoot, '.docs/zui/component-maturity.md');
 const write = process.argv.includes('--write');
 const portable = (value) => value.replaceAll('\\', '/');
-const directRenderPattern = (name) => new RegExp(`\\b(?:render|mount)\\(\\s*${name}\\b`, 'u');
-const explicitComponentPattern = (name) => new RegExp(`\\b${name}\\b`, 'u');
-const executesComponentRender = (source) => /\b(?:render|mount)\(/u.test(source);
-const explicitVisualEvidencePattern = (name) => new RegExp(`@zui-visual\\s+${name}(?:\\s|$)`, 'u');
-const visualAssertionPattern =
-	/\b(?:getBoundingClientRect|getComputedStyle)\s*\(|\.toHaveCSS\s*\(|\.toHaveScreenshot\s*\(/u;
-const withoutComments = (source) =>
-	source.replace(/<!--[\s\S]*?-->|\/\*[\s\S]*?\*\/|\/\/[^\n]*/gu, '');
 
 function hasRuntimeImplementation(source) {
 	const component = parse(source, { modern: true });
@@ -30,62 +32,6 @@ function hasRuntimeImplementation(source) {
 		component.instance &&
 		component.fragment.nodes.some((node) => !['Comment', 'Text'].includes(node.type))
 	);
-}
-
-const visualBlockCache = new Map();
-function visualTestBlocks(source) {
-	if (visualBlockCache.has(source)) return visualBlockCache.get(source);
-	const file = ts.createSourceFile('visual.spec.ts', source, ts.ScriptTarget.Latest, true);
-	const blocks = [];
-	function visit(node) {
-		if (
-			ts.isCallExpression(node) &&
-			/^(?:it|test)(?:\.|\(|$)/u.test(node.expression.getText(file))
-		) {
-			const callback = node.arguments.find(
-				(argument) => ts.isArrowFunction(argument) || ts.isFunctionExpression(argument)
-			);
-			if (callback?.body && ts.isBlock(callback.body)) {
-				const start = ts.isExpressionStatement(node.parent)
-					? node.parent.getFullStart()
-					: node.getFullStart();
-				blocks.push({
-					name:
-						node.arguments[0] && ts.isStringLiteral(node.arguments[0])
-							? node.arguments[0].text
-							: '<parameterized test>',
-					source: source.slice(start, node.end),
-					line: file.getLineAndCharacterOfPosition(node.getStart(file)).line + 1
-				});
-				return;
-			}
-		}
-		ts.forEachChild(node, visit);
-	}
-	visit(file);
-	visualBlockCache.set(source, blocks);
-	return blocks;
-}
-
-function hasExplicitVisualEvidence(source, componentName) {
-	return visualTestBlocks(source).some(
-		(block) =>
-			explicitVisualEvidencePattern(componentName).test(block.source) &&
-			executesComponentRender(block.source) &&
-			block.source.includes('expect(') &&
-			visualAssertionPattern.test(block.source)
-	);
-}
-
-async function filesUnder(root, extension) {
-	const entries = await readdir(root, { withFileTypes: true });
-	const files = [];
-	for (const entry of entries) {
-		const path = resolve(root, entry.name);
-		if (entry.isDirectory()) files.push(...(await filesUnder(path, extension)));
-		else if (entry.name.endsWith(extension)) files.push(path);
-	}
-	return files.sort();
 }
 
 function evidence(path, detail) {
@@ -286,43 +232,6 @@ const fixtureFiles = await filesUnder(testsRoot, '.svelte');
 const fixtureSources = new Map(
 	await Promise.all(fixtureFiles.map(async (path) => [path, await readFile(path, 'utf8')]))
 );
-function fixtureEvidenceFor(
-	testPath,
-	testSource,
-	componentName,
-	sources = fixtureSources,
-	renderSource = testSource
-) {
-	return [...testSource.matchAll(/from ['"](\.\/[^'"]+\.svelte)['"]/gu)].flatMap(
-		([, importPath]) => {
-			const fixturePath = resolve(dirname(testPath), importPath);
-			const fixtureSource = sources.get(fixturePath);
-			const fixtureName = importPath
-				.split('/')
-				.pop()
-				?.replace(/\.svelte$/u, '');
-			if (
-				!fixtureSource ||
-				!fixtureName ||
-				!new RegExp(`(?:render|mount)\\(\\s*${fixtureName}\\b`, 'u').test(renderSource)
-			)
-				return [];
-			const markup = withoutComments(fixtureSource);
-			return new RegExp(`<${componentName}\\b`, 'u').test(markup)
-				? [evidence(fixturePath, `${componentName} explicit rendered fixture usage`)]
-				: [];
-		}
-	);
-}
-function ownedVisualBlocks(testPath, content, name, sources = fixtureSources) {
-	return visualTestBlocks(content).filter(
-		(block) =>
-			hasExplicitVisualEvidence(block.source, name) &&
-			(directRenderPattern(name).test(withoutComments(block.source)) ||
-				fixtureEvidenceFor(testPath, content, name, sources, withoutComments(block.source)).length >
-					0)
-	);
-}
 if (process.argv.includes('--self-test')) {
 	if (
 		!hasRuntimeImplementation('<script\nlang="ts"\ngenerics="T">let value;</script><div />') ||
@@ -334,6 +243,13 @@ if (process.argv.includes('--self-test')) {
 	const fixture = new Map([[fixturePath, '<ZButton />']]);
 	if (!directRenderPattern('ZButton').test('render(ZButton)'))
 		throw new Error('direct render self-test failed');
+	if (
+		!directRenderPattern('ZButton').test(
+			'const renderSsr = render as unknown as Renderer; renderSsr(ZButton);'
+		) ||
+		!executesComponentRender('const renderSsr = render as unknown as Renderer; renderSsr(ZButton);')
+	)
+		throw new Error('direct renderer alias self-test failed');
 	if (directRenderPattern('ZButton').test('import ZButton from "x"; expect(true)'))
 		throw new Error('import-only self-test failed');
 	if (!explicitComponentPattern('ZButton').test("describe('ZButton contract', () => {})"))
@@ -396,6 +312,15 @@ if (process.argv.includes('--self-test')) {
 		).length > 0
 	)
 		throw new Error('comment-only self-test failed');
+	if (
+		fixtureEvidenceFor(
+			resolve('C:/tests', 'example.spec.ts'),
+			"import Fixture from './Fixture.svelte'; const renderSsr = render as unknown as Renderer; renderSsr(Fixture); expect(true);",
+			'ZButton',
+			fixture
+		).length === 0
+	)
+		throw new Error('fixture renderer alias self-test failed');
 	const docsFixtureRoot = resolve('C:/docs/components');
 	const docsComponents = [
 		{ id: 'form', name: 'ZForm', path: 'ZForm.svelte' },
@@ -468,7 +393,8 @@ const rows = componentFiles.map(({ id, name, category, status, path, source }) =
 	const explicitComponentReference = explicitComponentPattern(name);
 	const directTests = tests.filter(([, content]) => componentReference.test(content));
 	const fixtureTests = tests.filter(
-		([testPath, content]) => fixtureEvidenceFor(testPath, content, name).length > 0
+		([testPath, content]) =>
+			fixtureEvidenceFor(testPath, content, name, fixtureSources, content, workspaceRoot).length > 0
 	);
 	const relatedTests = [
 		...new Map(
@@ -487,7 +413,7 @@ const rows = componentFiles.map(({ id, name, category, status, path, source }) =
 			testPath.endsWith('.browser.spec.ts') &&
 			content.includes('expect(') &&
 			executesComponentRender(content) &&
-			ownedVisualBlocks(testPath, content, name).length > 0
+			ownedVisualBlocks(testPath, content, name, fixtureSources).length > 0
 	);
 	const productionTests = relatedTests.filter(
 		([testPath, content]) =>
@@ -500,7 +426,7 @@ const rows = componentFiles.map(({ id, name, category, status, path, source }) =
 		([, content]) =>
 			content.includes("from 'svelte/server'") &&
 			content.includes('expect(') &&
-			content.includes('render(')
+			executesComponentRender(content)
 	);
 	const runtimeImplemented = hasRuntimeImplementation(source);
 	const exportPattern = new RegExp(`\\bdefault as ${name}\\b`, 'u');
@@ -541,17 +467,17 @@ const rows = componentFiles.map(({ id, name, category, status, path, source }) =
 				: [],
 			BrowserBehaviorContractsDeclared: browserTests.flatMap(([testPath, content]) => [
 				evidence(testPath, `${name} browser behavior assertions`),
-				...fixtureEvidenceFor(testPath, content, name)
+				...fixtureEvidenceFor(testPath, content, name, fixtureSources, content, workspaceRoot)
 			]),
 			VisualContractsDeclared: visualTests.flatMap(([testPath, content]) => [
-				...ownedVisualBlocks(testPath, content, name).map((block) =>
+				...ownedVisualBlocks(testPath, content, name, fixtureSources).map((block) =>
 					evidence(testPath, `${name} authored visual contract: ${block.name} (line ${block.line})`)
 				),
-				...fixtureEvidenceFor(testPath, content, name)
+				...fixtureEvidenceFor(testPath, content, name, fixtureSources, content, workspaceRoot)
 			]),
 			ProductionContractsDeclared: productionTests.flatMap(([testPath, content]) => [
 				evidence(testPath, `${name} production assertions`),
-				...fixtureEvidenceFor(testPath, content, name)
+				...fixtureEvidenceFor(testPath, content, name, fixtureSources, content, workspaceRoot)
 			]),
 			SsrContractsDeclared: ssrTests.map(([testPath]) =>
 				evidence(testPath, `${name} SSR assertions`)

@@ -837,6 +837,7 @@
 		weekNumberLabel,
 		...rest
 	}: ZCalendarProps<TSelectionMode, TView> = $props();
+	const domRest = $derived(rest as HTMLAttributes<HTMLDivElement>);
 	const zui = useZui();
 	const uid = $props.id();
 	const dayIdBase = $derived(createZuiId(zui.idPrefix, uid, 'calendar-day'));
@@ -1138,7 +1139,7 @@
 	const monthsClass = $derived(zui.recipe(monthsRecipe));
 	const monthClass = $derived(zui.recipe(monthRecipe));
 	const weekdayClass = $derived(zui.recipe(weekdayRecipe, { size: resolvedSize }));
-	const variables = $derived(readIcssCarrier(rest));
+	const variables = $derived(readIcssCarrier(domRest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
 
 	function syncCalendar(next: CalendarSelectionValue): void {
@@ -1598,7 +1599,7 @@
 {/snippet}
 
 <div
-	{...rest}
+	{...domRest}
 	dir={resolvedDirection}
 	bind:this={ref}
 	class={[rootClass, className]}

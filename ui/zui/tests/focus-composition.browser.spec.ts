@@ -1,10 +1,34 @@
 import { describe, expect, it } from 'vitest';
 import { userEvent } from 'vitest/browser';
+import { focusCollectionForPointer } from '../src/runtime/collection/active-descendant.svelte.js';
 import { MountedElements } from '../src/runtime/collection/mounted-elements.svelte.js';
 import { containsComposedNode, getActiveElement } from '../src/runtime/layer/dom-realm.js';
 import { FocusScope } from '../src/runtime/layer/focus-scope.js';
 
 describe('focus ownership across DOM roots', () => {
+	it('keeps a ShadowRoot editor focused when its aria-controls tokens own the collection', () => {
+		const host = document.createElement('div');
+		const shadow = host.attachShadow({ mode: 'open' });
+		const editor = document.createElement('input');
+		const collection = document.createElement('div');
+		collection.id = 'shadow-results';
+		collection.tabIndex = -1;
+		editor.setAttribute('aria-controls', `other-results  ${collection.id}`);
+		shadow.append(editor, collection);
+		document.body.append(host);
+		try {
+			editor.focus();
+			focusCollectionForPointer(collection);
+			expect(getActiveElement(collection)).toBe(editor);
+
+			editor.setAttribute('aria-controls', 'other-results');
+			focusCollectionForPointer(collection);
+			expect(getActiveElement(collection)).toBe(collection);
+		} finally {
+			host.remove();
+		}
+	});
+
 	it.each(['open', 'closed'] as const)(
 		'tracks real focus and removal in a known %s shadow root',
 		async (mode) => {

@@ -858,7 +858,7 @@
 	}
 
 	onDestroy(fieldOwner.registerFocusOwner(() => focusSegment(0)));
-	if (group && formParticipation === 'auto')
+	if (group && untrack(() => formParticipation === 'auto'))
 		onDestroy(group.registerControl({ focus: () => focusSegment(0) }));
 	$effect(() => {
 		const state = localDraftState;

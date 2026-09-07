@@ -1,5 +1,6 @@
 import { tick } from 'svelte';
 import { describe, expect, it } from 'vitest';
+import { userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-svelte';
 
 import CascaderProductionFixture from './CascaderProductionFixture.svelte';
@@ -21,7 +22,7 @@ describe('ZCascader production collection contract', () => {
 
 		expect(trigger.id).toBe(label.htmlFor);
 		expect(new FormData(form).get('path')).toBe('root/1');
-		trigger.click();
+		await userEvent.click(trigger);
 		await tick();
 		const search = document.querySelector<HTMLInputElement>('input[aria-label="Filter paths"]')!;
 		const content = search.closest<HTMLElement>('[data-state="open"]')!;
@@ -30,13 +31,13 @@ describe('ZCascader production collection contract', () => {
 		expect(content.getBoundingClientRect().bottom).toBeLessThanOrEqual(window.innerHeight);
 		expect(search.name).toBe('');
 		expect(search.form).toBeNull();
-		search.value = 'String';
-		search.dispatchEvent(new InputEvent('input', { bubbles: true }));
+		await userEvent.fill(search, 'String');
 		await tick();
+		expect(document.activeElement).toBe(search);
 		const result = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find((option) =>
 			option.textContent?.includes('String one')
 		)!;
-		result.click();
+		await userEvent.click(result);
 		await tick();
 		expect(output.textContent).toBe('root/1:string:1');
 		expect(new FormData(form).get('path')).toBe('root/1');

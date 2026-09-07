@@ -1256,8 +1256,13 @@
 			mode as DateTimeMode,
 			'ZDateTimeRangePicker preset'
 		);
+		const owned = ownerRange(normalized);
+		if (!owned) {
+			announceInvalid();
+			return;
+		}
 		const candidate = resolveDateTimeRangePreset(
-			{ label: preset.label, value: ownerRange(normalized) },
+			{ label: preset.label, value: owned },
 			rangeConstraints
 		);
 		if (candidate === undefined) {

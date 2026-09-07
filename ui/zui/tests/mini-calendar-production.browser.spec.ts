@@ -85,7 +85,9 @@ describe('ZMiniCalendar façade', () => {
 
 			const disabled = target.querySelector<HTMLElement>('[data-testid="mini-calendar-disabled"]')!;
 			expect(cells(disabled).every((candidate) => candidate.disabled)).toBe(true);
-			expect(target.querySelector('[name="disabled-date"]')).toBeNull();
+			const disabledValue = target.querySelector<HTMLInputElement>('[name="disabled-date"]')!;
+			expect(disabledValue.disabled).toBe(true);
+			expect(disabledValue.matches(':disabled')).toBe(true);
 
 			const none = target.querySelector<HTMLElement>('[data-testid="mini-calendar-none"]')!;
 			expect(cells(none)).toHaveLength(10);

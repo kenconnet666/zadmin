@@ -36,7 +36,10 @@ describe('ZCalendar international calendar ownership', () => {
 			).toBe('gregory:AD:2024-4-8|0');
 
 			const next = [...root.querySelectorAll<HTMLButtonElement>('[data-slot="cell"]')].find(
-				(button) => !button.disabled && button.dataset.selected !== 'true'
+				(button) =>
+					!button.disabled &&
+					button.dataset.outside !== 'true' &&
+					button.dataset.selected !== 'true'
 			)!;
 			await userEvent.click(next);
 			await tick();

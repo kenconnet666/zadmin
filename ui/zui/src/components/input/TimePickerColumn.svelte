@@ -91,7 +91,10 @@
 <script lang="ts">
 	import { tick } from 'svelte';
 	import type { Attachment } from 'svelte/attachments';
-	import { ActiveDescendant } from '../../runtime/collection/active-descendant.svelte.js';
+	import {
+		ActiveDescendant,
+		focusCollectionForPointer
+	} from '../../runtime/collection/active-descendant.svelte.js';
 	import {
 		CollectionNavigation,
 		isKeyboardComposing
@@ -220,7 +223,7 @@
 			const handlePointerDown = (event: PointerEvent) => {
 				if (disabled || item.disabled) return;
 				event.preventDefault();
-				listRef?.focus({ preventScroll: true });
+				focusCollectionForPointer(listRef);
 				active.set(item.key, 'pointer');
 			};
 			const handlePointerMove = () => {

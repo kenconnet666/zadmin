@@ -888,10 +888,10 @@
 	const previewRange = $derived.by<PeriodRangeValue<TKind> | null>(() => {
 		const range = rangeValue();
 		if (!range?.start || range.end || !hoverPeriod) return null;
-		return normalizePeriodRange(
+		return normalizePeriodRange<TKind>(
 			{ end: hoverPeriod, start: range.start },
-			granularity
-		) as PeriodRangeValue<TKind>;
+			granularity as TKind
+		);
 	});
 	const previewRangeInvalid = $derived(
 		Boolean(
@@ -968,7 +968,10 @@
 				hoverPeriod = null;
 				return;
 			}
-			const candidate = normalizePeriodRange({ end: period, start: current.start }, granularity);
+			const candidate = normalizePeriodRange<TKind>(
+				{ end: period, start: current.start },
+				granularity as TKind
+			);
 			if (!isPeriodRangeAvailable(candidate, typedUnavailable, allowNonContiguousRange)) {
 				feedback = zui.localePack.period.unavailable;
 				feedbackRevision += 1;

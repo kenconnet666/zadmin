@@ -295,7 +295,8 @@
 		displayDateTime,
 		isDateTimeUnavailable as valueIsUnavailable,
 		normalizeDateTimeModelValue,
-		type DateTimeMode
+		type DateTimeMode,
+		type DateTimeValue
 	} from '../../runtime/date-time.js';
 	import { preserveCalendarOwner, resolveOwnerCalendar } from '../../runtime/date.js';
 	import { controlSizeMetrics, resolveControlSize } from '../../runtime/foundation/control-size.js';
@@ -365,6 +366,7 @@
 		value = $bindable(),
 		...rest
 	}: ZDateTimeFieldProps<TMode> = $props();
+	const domRest = $derived(rest as HTMLAttributes<HTMLDivElement>);
 	const zui = useZui();
 	const fieldOwner = claimZFieldControlOwner();
 	const field = fieldOwner.field;
@@ -410,7 +412,7 @@
 			});
 		})
 	);
-	const variables = $derived(readIcssCarrier(rest));
+	const variables = $derived(readIcssCarrier(domRest));
 	const initialStyle = untrack(() => mergeStyles(style, serializeIcssVariables(variables)));
 	const normalizedConstraints = $derived.by(() => {
 		const minimum =
@@ -483,7 +485,7 @@
 		return preserveCalendarOwner(fallback, ownerCalendar);
 	});
 	const placeholderParts = $derived(
-		dateTimeParts(displayDateTime(placeholder, mode, resolvedTimeZone))
+		dateTimeParts(displayDateTime(placeholder as DateTimeValue<TMode>, mode, resolvedTimeZone))
 	);
 	const initial = untrack(() => currentDisplayParts());
 	let dateValue = $state(initial?.date ?? null);
@@ -522,7 +524,9 @@
 
 	function currentDisplayParts() {
 		const current = currentValue();
-		return current ? dateTimeParts(displayDateTime(current, mode, resolvedTimeZone)) : null;
+		return current
+			? dateTimeParts(displayDateTime(current as DateTimeValue<TMode>, mode, resolvedTimeZone))
+			: null;
 	}
 
 	function inspectCompositeDraft(): FormControlDraftState {
@@ -695,7 +699,7 @@
 {/snippet}
 
 <div
-	{...rest}
+	{...domRest}
 	bind:this={ref}
 	class={[actionGeometryClass, className]}
 	style={initialStyle}

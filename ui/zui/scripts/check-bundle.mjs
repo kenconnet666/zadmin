@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { build } from 'vite';
+import { assertBundleBoundary } from './bundle-boundaries.mjs';
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const sourceRoot = resolve(packageRoot, 'src');
@@ -280,14 +281,6 @@ const components = [
 	{ id: 'form-field', name: 'ZFormField', path: 'input/ZFormField.svelte' }
 ];
 
-const FORBIDDEN_FOUNDATION_DEPENDENCIES = [
-	'@floating-ui',
-	'@internationalized/date',
-	'runed',
-	'shiki',
-	'tabbable'
-];
-
 async function bundle(source, extraExternal = () => false) {
 	const virtualId = '\0zadmin-zui-bundle-entry';
 	const result = await build({
@@ -316,11 +309,25 @@ async function bundle(source, extraExternal = () => false) {
 			}
 		}
 	});
-	const outputs = (Array.isArray(result) ? result.flatMap((entry) => entry.output) : result.output)
-		.filter((entry) => entry.type === 'chunk')
-		.map((entry) => entry.code)
-		.join('\n');
-	return { code: outputs, gzip: gzipSync(outputs, { level: 9 }).byteLength };
+	const chunks = (
+		Array.isArray(result) ? result.flatMap((entry) => entry.output) : result.output
+	).filter((entry) => entry.type === 'chunk');
+	const code = chunks.map((entry) => entry.code).join('\n');
+	return {
+		code,
+		gzip: gzipSync(code, { level: 9 }).byteLength,
+		modules: [
+			...new Set(
+				chunks.flatMap((entry) =>
+					Object.entries(entry.modules)
+						.filter(([, module]) => module.renderedLength > 0)
+						.map(([id]) => id)
+				)
+			)
+		],
+		imports: [...new Set(chunks.flatMap((entry) => entry.imports))],
+		dynamicImports: [...new Set(chunks.flatMap((entry) => entry.dynamicImports))]
+	};
 }
 
 const runtimeBundle = await bundle(
@@ -333,26 +340,16 @@ const layerBundle = await bundle(
 	`import * as layer from ${JSON.stringify(layerEntry)}; globalThis.__zuiLayerBudget = layer;`
 );
 report.layerGzip = layerBundle.gzip;
-for (const dependency of FORBIDDEN_FOUNDATION_DEPENDENCIES) {
-	if (runtimeBundle.code.includes(dependency)) {
-		throw new Error(`ZUI root runtime unexpectedly contains ${dependency}.`);
-	}
-}
+assertBundleBoundary(runtimeBundle, 'ZUI root runtime', { foundation: true });
 for (const component of components) {
 	const componentEntry = portable(resolve(sourceRoot, `components/${component.path}`));
 	const output = await bundle(
 		`import * as runtime from ${JSON.stringify(runtime)}; import component from ${JSON.stringify(componentEntry)}; globalThis.__zuiRuntimeBudget = runtime; globalThis.__zuiComponentBudget = component;`
 	);
 	const incremental = Math.max(0, output.gzip - runtimeBundle.gzip);
-	if (/node:async_hooks|compiler\/preprocess|svelte\/compiler/u.test(output.code)) {
-		throw new Error(`${component.name} browser bundle contains compiler/server code.`);
-	}
-	for (const dependency of FORBIDDEN_FOUNDATION_DEPENDENCIES) {
-		if (output.code.includes(dependency)) {
-			throw new Error(`${component.name} unexpectedly contains ${dependency}.`);
-		}
-	}
+	const bundledDependencies = assertBundleBoundary(output, component.name);
 	report.components[component.id] = {
+		bundledDependencies,
 		gzip: output.gzip,
 		incrementalGzip: incremental
 	};
@@ -364,7 +361,11 @@ const codeBundle = await bundle(
 	(id) => id === 'shiki' || id.startsWith('shiki/')
 );
 const codeIncremental = Math.max(0, codeBundle.gzip - runtimeBundle.gzip);
-if (!codeBundle.code.includes('shiki')) {
+if (
+	![...codeBundle.imports, ...codeBundle.dynamicImports].some(
+		(id) => id === 'shiki' || id.startsWith('shiki/')
+	)
+) {
 	throw new Error('ZCode bundle lost its explicit optional Shiki boundary.');
 }
 report.components.code = { gzip: codeBundle.gzip, incrementalGzip: codeIncremental };

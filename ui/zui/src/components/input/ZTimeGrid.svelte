@@ -415,8 +415,6 @@
 		return normalizeTimeGridValue(candidate, 'ZTimeGrid');
 	}
 
-	let valueState!: ReturnType<typeof createFormControlState<Time | null>>;
-
 	function selectedRecord(candidate: Time | null): GridSlotRecord | undefined {
 		return candidate ? records.find((record) => record.value.compare(candidate) === 0) : undefined;
 	}
@@ -437,7 +435,7 @@
 		});
 	}
 
-	valueState = createFormControlState<Time | null>(
+	const valueState = createFormControlState<Time | null>(
 		{
 			defaultValue: () => normalizeValue(defaultValue),
 			draftState: inspectDraftState,
@@ -445,7 +443,7 @@
 			normalizeModelValue: normalizeValue,
 			onChange: () => onValueChange,
 			owner: 'ZTimeGrid',
-			read: () => value,
+			read: () => (value === undefined ? undefined : normalizeValue(value)),
 			write: (next) => (value = next)
 		},
 		valueScope

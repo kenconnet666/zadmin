@@ -6,9 +6,9 @@ import InternationalCalendarFixture from './InternationalCalendarFixture.svelte'
 describe('ZCalendar international calendar SSR', () => {
 	it('renders display calendars while retaining each model owner and strip contract', () => {
 		const body = render(InternationalCalendarFixture).body;
-		expect(body.match(/data-calendar="hebrew"/gu).length).toBeGreaterThan(1);
+		expect((body.match(/data-calendar="hebrew"/gu) ?? []).length).toBeGreaterThan(1);
 		expect(body).toContain('data-calendar="japanese"');
-		expect(body.match(/data-calendar="persian"/gu).length).toBeGreaterThan(1);
+		expect((body.match(/data-calendar="persian"/gu) ?? []).length).toBeGreaterThan(1);
 		expect(body).toContain('data-context-month="13"');
 		expect(body).toContain('data-context-era="heisei"');
 		expect(body.match(/data-view="strip"/gu)).toHaveLength(2);

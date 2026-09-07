@@ -1,16 +1,48 @@
 import { readFile, writeFile } from 'node:fs/promises';
-import { resolve } from 'node:path';
+import { isAbsolute, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { parseArgs } from 'node:util';
 import prettier from 'prettier';
 
 const root = fileURLToPath(new URL('../../..', import.meta.url));
+const { values: options } = parseArgs({
+	options: {
+		write: { type: 'boolean', default: false },
+		maturity: { type: 'string' },
+		out: { type: 'string' },
+		revision: { type: 'string' }
+	}
+});
+const runtimeInput = options.maturity !== undefined;
+if (
+	runtimeInput !== (options.out !== undefined) ||
+	runtimeInput !== (options.revision !== undefined)
+)
+	throw new Error('Runtime stability requires --maturity, --revision and a separate --out prefix.');
+const outputPrefix = resolve(root, options.out ?? '.docs/zui/stability-candidates');
+const outputRelative = relative(root, outputPrefix);
+if (
+	runtimeInput &&
+	(isAbsolute(outputRelative) ||
+		outputRelative.replaceAll('\\', '/').split('/')[0] === '..' ||
+		!outputRelative
+			.replaceAll('\\', '/')
+			.split('/')
+			.some((segment) => segment === 'test-results' || segment === 'artifacts'))
+)
+	throw new Error('Runtime stability output must stay in an artifacts or test-results directory.');
 const matrix = JSON.parse(
-	await readFile(resolve(root, '.docs/zui/component-maturity.json'), 'utf8')
+	await readFile(resolve(root, options.maturity ?? '.docs/zui/component-maturity.json'), 'utf8')
 );
 if (matrix.schemaVersion !== 3)
 	throw new Error('Stability policy requires component maturity schemaVersion 3.');
-const outputPath = resolve(root, '.docs/zui/stability-candidates.md');
-const jsonOutputPath = resolve(root, '.docs/zui/stability-candidates.json');
+if (
+	runtimeInput &&
+	(!/^[a-f0-9]{40}$/u.test(options.revision) || matrix.execution?.revision !== options.revision)
+)
+	throw new Error('Runtime maturity must match the requested complete commit revision.');
+const outputPath = `${outputPrefix}.md`;
+const jsonOutputPath = `${outputPrefix}.json`;
 const docsById = new Map(
 	matrix.components.filter(({ docs }) => docs).map(({ id, docs }) => [id, docs])
 );
@@ -28,7 +60,11 @@ const baseRows = matrix.components.map((component) => {
 		.filter((stage) => !component.stages[stage])
 		.map((stage) => `${stage} missing`);
 	const executionBlockers = executionRequired
-		.filter((stage) => !component.executionStages?.[stage])
+		.filter(
+			(stage) =>
+				!component.executionStages?.[stage] ||
+				(runtimeInput && component.executionResults?.[stage]?.status !== 'verified')
+		)
 		.map((stage) => `${stage} pending for current revision`);
 	const familyDocs = component.family ? docsById.get(component.family) : undefined;
 	const resolvedDocs = component.docs ?? familyDocs;
@@ -108,6 +144,7 @@ const classification = ({ status, staticBlockers, executionBlockers }) =>
 			: 'promotionEligibleExperimental';
 const jsonOutput = {
 	schemaVersion: 2,
+	...(runtimeInput ? { execution: matrix.execution } : {}),
 	summary: {
 		stableCompliant: stableCompliant.length,
 		stablePendingExecution: stablePendingExecution.length,
@@ -131,6 +168,7 @@ const lines = [
 	'',
 	'本文件由 `scripts/check-stability-policy.mjs` 生成；不会修改组件 status。compound member 可继承同 family root 的 Docs 页面。',
 	'',
+	...(runtimeInput ? [`当前执行提交：\`${options.revision}\`。`, ''] : []),
 	`stableCompliant：${stableCompliant.length}；stablePendingExecution：${stablePendingExecution.length}；stableViolations：${stableViolations.length}；promotionEligibleExperimental：${promotionEligibleExperimental.length}。`,
 	'',
 	'| Component | Metadata status | Classification | Static blockers | Current-revision execution | Docs | SSR contracts |',
@@ -164,7 +202,7 @@ const formattedJson = await prettier.format(`${JSON.stringify(jsonOutput, null, 
 	...((await prettier.resolveConfig(jsonOutputPath)) ?? {}),
 	filepath: jsonOutputPath
 });
-if (process.argv.includes('--write')) {
+if (options.write) {
 	await Promise.all([
 		writeFile(outputPath, formatted, 'utf8'),
 		writeFile(jsonOutputPath, formattedJson, 'utf8')
@@ -179,11 +217,11 @@ if (process.argv.includes('--write')) {
 }
 console.log(
 	JSON.stringify({
-		outputs: ['.docs/zui/stability-candidates.json', '.docs/zui/stability-candidates.md'],
+		outputs: [jsonOutputPath, outputPath].map((path) => relative(root, path).replaceAll('\\', '/')),
 		stableCompliant: stableCompliant.length,
 		stablePendingExecution: stablePendingExecution.length,
 		stableViolations: stableViolations.length,
 		promotionEligibleExperimental: promotionEligibleExperimental.length
 	})
 );
-if (!process.argv.includes('--write') && stableViolations.length > 0) process.exitCode = 1;
+if (!options.write && stableViolations.length > 0) process.exitCode = 1;

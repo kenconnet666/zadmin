@@ -1,10 +1,24 @@
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { playwright } from '@vitest/browser-playwright';
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
+import { createComponentExecutionReporter } from './scripts/component-execution-reporter.js';
 import { dragSliderTrack } from './tests/browser-commands.js';
 
 const collectingCoverage = process.argv.includes('--coverage');
+const packageRoot = fileURLToPath(new URL('.', import.meta.url));
 const focusedBrowser = process.env.ZUI_BROWSER;
+const executionReportPath = process.env.ZUI_EXECUTION_REPORT;
+const executionReporter =
+	executionReportPath !== undefined
+		? createComponentExecutionReporter({
+				packageRoot,
+				outputFile: executionReportPath,
+				revision: process.env.GITHUB_SHA ?? '',
+				runId: process.env.GITHUB_RUN_ID ?? '',
+				runAttempt: Number(process.env.GITHUB_RUN_ATTEMPT ?? '')
+			})
+		: undefined;
 const configuredBrowserPort = Number(process.env.ZUI_BROWSER_PORT ?? 63315);
 if (
 	!Number.isInteger(configuredBrowserPort) ||
@@ -43,7 +57,9 @@ export default defineConfig({
 	plugins: [svelte()],
 	test: {
 		fileParallelism: !requiresSerialBrowserFiles,
+		includeTaskLocation: executionReporter !== undefined,
 		maxWorkers: requiresSerialBrowserFiles ? 1 : undefined,
+		reporters: executionReporter === undefined ? ['default'] : ['default', executionReporter],
 		coverage: {
 			exclude: ['dist/**', 'tests/**', 'src/entrypoints/**'],
 			provider: 'v8',

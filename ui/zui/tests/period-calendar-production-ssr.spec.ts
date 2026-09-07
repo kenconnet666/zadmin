@@ -4,9 +4,14 @@ import { describe, expect, it } from 'vitest';
 import ZPeriodCalendar from '../src/components/input/ZPeriodCalendar.svelte';
 import { monthPeriod, weekPeriod, yearPeriod } from '../src/runtime/period.js';
 
+const renderSsr = render as unknown as (
+	component: unknown,
+	options: { props: unknown }
+) => { body: string };
+
 describe('ZPeriodCalendar SSR contract', () => {
 	it('renders finite period grids and the discriminated form entry shapes without browser globals', () => {
-		const single = render(ZPeriodCalendar, {
+		const single = renderSsr(ZPeriodCalendar, {
 			props: {
 				'aria-label': 'Billing month',
 				granularity: 'month',
@@ -20,7 +25,7 @@ describe('ZPeriodCalendar SSR contract', () => {
 		expect(single).toContain('name="month"');
 		expect(single).toContain('value="2026-05"');
 
-		const range = render(ZPeriodCalendar, {
+		const range = renderSsr(ZPeriodCalendar, {
 			props: {
 				granularity: 'year',
 				name: 'years',
@@ -33,7 +38,7 @@ describe('ZPeriodCalendar SSR contract', () => {
 		expect(range).toContain('name="years.end"');
 		expect(range).toContain('value="2027"');
 
-		const weekNone = render(ZPeriodCalendar, {
+		const weekNone = renderSsr(ZPeriodCalendar, {
 			props: {
 				formParticipation: 'none',
 				granularity: 'week',
@@ -51,7 +56,7 @@ describe('ZPeriodCalendar SSR contract', () => {
 	it('rejects explicit week rules that conflict with the self-describing business value', () => {
 		expect(
 			() =>
-				render(ZPeriodCalendar, {
+				renderSsr(ZPeriodCalendar, {
 					props: {
 						granularity: 'week',
 						value: weekPeriod(2026, 10, {
@@ -61,11 +66,11 @@ describe('ZPeriodCalendar SSR contract', () => {
 						weekRules: { firstDayOfWeek: 'mon', minimalDaysInFirstWeek: 4 }
 					}
 				}).body
-		).toThrow(/weekRules conflict/u);
+		).toThrow(/conflicts with explicit weekRules/u);
 	});
 
 	it('inherits empty-selection week rules from minValue before the locale fallback', () => {
-		const body = render(ZPeriodCalendar, {
+		const body = renderSsr(ZPeriodCalendar, {
 			props: {
 				granularity: 'week',
 				locale: 'en-US',

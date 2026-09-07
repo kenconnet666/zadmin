@@ -8,7 +8,7 @@ import { resetForm } from './form-reset.js';
 
 describe('ZTransfer production contract', () => {
 	it('keeps ZTransfer typed identity, filter-scoped select-all, source/target movement and FormData reset real', async () => {
-		render(TransferProductionFixture);
+		await render(TransferProductionFixture);
 		const root = document.querySelector<HTMLElement>('[data-testid="transfer-production"]')!;
 		const form = document.querySelector<HTMLFormElement>(
 			'[data-testid="transfer-production-form"]'
@@ -26,8 +26,10 @@ describe('ZTransfer production contract', () => {
 		await userEvent.fill(filter, 'Alpha');
 		await tick();
 		expect(source.querySelectorAll('[role="option"]')).toHaveLength(1);
-		source.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'a', ctrlKey: true }));
-		await tick();
+		const alpha = source.querySelector<HTMLElement>('[role="option"]')!;
+		expect(document.activeElement).toBe(filter);
+		await userEvent.click(alpha);
+		expect(document.activeElement).toBe(filter);
 		root.querySelector<HTMLButtonElement>('[aria-label="Move selected to target"]')!.click();
 		await tick();
 		expect(target.textContent).toContain('Alpha');
@@ -37,7 +39,7 @@ describe('ZTransfer production contract', () => {
 	});
 
 	it('keeps ZTransfer orphan/loading and readonly boundaries explicit', async () => {
-		render(TransferProductionFixture);
+		await render(TransferProductionFixture);
 		document.querySelector<HTMLButtonElement>('[data-testid="transfer-empty-items"]')!.click();
 		await tick();
 		expect(document.body.textContent).toContain('2 selected items are not loaded');

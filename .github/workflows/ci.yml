@@ -94,6 +94,14 @@ jobs:
       - name: Audit ZUI browser lifecycle ownership
         run: pnpm --filter @zadmin/zui test:browser-lifecycle
 
+      - name: Verify component execution evidence contracts
+        run: |
+          node ui/zui/scripts/bundle-boundaries.mjs --self-test
+          node --experimental-strip-types ui/zui/scripts/component-execution-reporter.ts --self-test
+          node apps/docs/scripts/component-test-inventory.mjs --self-test
+          node apps/docs/scripts/compose-component-execution.mjs --self-test
+          node apps/docs/scripts/verify-component-execution.mjs --self-test
+
       - name: Validate Changesets release metadata
         run: pnpm release:status
 
@@ -125,7 +133,18 @@ jobs:
         run: pnpm --filter @zadmin/docs exec playwright install --with-deps chromium firefox webkit
 
       - name: Run full workspace tests
+        env:
+          ZUI_EXECUTION_REPORT: test-results/component-execution-vitest.json
         run: pnpm test
+
+      - name: Upload structured component execution input
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: component-execution-input-vitest-${{ github.sha }}
+          retention-days: 14
+          if-no-files-found: error
+          path: ui/zui/test-results/component-execution-vitest.json
 
       - name: Upload browser test diagnostics
         if: always()
@@ -208,7 +227,19 @@ jobs:
         run: pnpm --filter @zadmin/docs exec playwright install --with-deps ${{ matrix.browser }}
 
       - name: Run Docs end-to-end tests
+        env:
+          PLAYWRIGHT_EXECUTION_REPORT: test-results/component-execution-docs-${{ matrix.browser }}.json
+          ZUI_EXECUTION_BROWSER: ${{ matrix.browser }}
         run: pnpm --filter @zadmin/docs test:e2e --project=${{ matrix.browser }}
+
+      - name: Upload structured Docs execution input
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: component-execution-input-docs-${{ matrix.browser }}-${{ github.sha }}
+          retention-days: 14
+          if-no-files-found: error
+          path: apps/docs/test-results/component-execution-docs-${{ matrix.browser }}.json
 
       - name: Upload Docs Playwright diagnostics
         if: always()
@@ -487,6 +518,79 @@ jobs:
           if-no-files-found: error
           path: apps/desktop/dist/desktop/**
 
+  component-execution-evidence:
+    name: Component execution evidence
+    if: always()
+    needs:
+      - dispatch-integrity
+      - static
+      - workspace-tests
+      - docs-e2e
+      - build
+      - coverage
+      - packages
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup workspace
+        uses: ./.github/actions/setup-workspace
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          pnpm-version: ${{ env.PNPM_VERSION }}
+
+      - name: Record independent gate results
+        env:
+          GATE_RESULTS: ${{ toJSON(needs) }}
+        run: |
+          mkdir -p test-results/component-execution/inputs
+          printf '%s\n' "$GATE_RESULTS" > test-results/component-execution/gates.json
+
+      - name: Download structured execution inputs from this run
+        uses: actions/download-artifact@v7
+        with:
+          pattern: component-execution-input-*-${{ github.sha }}
+          path: test-results/component-execution/inputs
+
+      - name: Compose component execution evidence
+        run: >-
+          node apps/docs/scripts/compose-component-execution.mjs
+          --revision "${{ github.sha }}"
+          --run-id "${{ github.run_id }}"
+          --run-attempt "${{ github.run_attempt }}"
+          --reports test-results/component-execution/inputs
+          --gates test-results/component-execution/gates.json
+          --out test-results/component-execution/component-execution.json
+
+      - name: Verify composed evidence and input integrity
+        run: >-
+          node apps/docs/scripts/verify-component-execution.mjs
+          --revision "${{ github.sha }}"
+          --run-id "${{ github.run_id }}"
+          --run-attempt "${{ github.run_attempt }}"
+          --report test-results/component-execution/component-execution.json
+          --reports test-results/component-execution/inputs
+          --gates test-results/component-execution/gates.json
+
+      - name: Derive stability candidates from verified runtime evidence
+        run: >-
+          node apps/docs/scripts/check-stability-policy.mjs
+          --maturity test-results/component-execution/component-maturity.runtime.json
+          --revision "${{ github.sha }}"
+          --out test-results/component-execution/stability-candidates.runtime
+          --write
+
+      - name: Upload component execution evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: component-execution-${{ github.sha }}
+          retention-days: 14
+          if-no-files-found: error
+          path: test-results/component-execution/**
+
   required:
     name: Required aggregate
     if: always()
@@ -499,6 +603,7 @@ jobs:
       - coverage
       - packages
       - desktop-windows
+      - component-execution-evidence
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -512,6 +617,7 @@ jobs:
           COVERAGE_RESULT: ${{ needs.coverage.result }}
           PACKAGES_RESULT: ${{ needs.packages.result }}
           DESKTOP_WINDOWS_RESULT: ${{ needs.desktop-windows.result }}
+          COMPONENT_EXECUTION_RESULT: ${{ needs.component-execution-evidence.result }}
         run: |
           failed=0
           for result in \
@@ -522,7 +628,8 @@ jobs:
             "$BUILD_RESULT" \
             "$COVERAGE_RESULT" \
             "$PACKAGES_RESULT" \
-            "$DESKTOP_WINDOWS_RESULT"; do
+            "$DESKTOP_WINDOWS_RESULT" \
+            "$COMPONENT_EXECUTION_RESULT"; do
             if [ "$result" != 'success' ]; then
               failed=1
             fi

@@ -245,7 +245,9 @@ describe('date family Form model adapters', () => {
 			await userEvent.click(dayButton(rejectedCalendar, '18'));
 			expect(new FormData(rejectedForm).get('calendar')).toBe('2026-09-10');
 			expect(
-				rejectedCalendar.querySelector<HTMLButtonElement>('[data-selected="true"]')?.textContent
+				rejectedCalendar.querySelector<HTMLElement>(
+					'[data-selected="true"] [data-slot="day-number"]'
+				)?.textContent
 			).toBe('10');
 
 			const rejectedDateInputs = target.querySelectorAll<HTMLInputElement>(

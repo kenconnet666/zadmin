@@ -5,6 +5,7 @@ import {
 } from './collection-navigation.svelte.js';
 import type { NavigationIntent } from './list-navigation.js';
 import type { SelectionKey } from './selection.js';
+import { getActiveElement } from '../layer/dom-realm.js';
 
 export type ActiveDescendantAlign = 'center' | 'end' | 'nearest' | 'start';
 
@@ -19,6 +20,15 @@ export interface ActiveDescendantOptions<TKey extends SelectionKey, TValue> {
 	readonly mounted: MountedElements<TKey>;
 	readonly navigation: CollectionNavigation<TKey, TValue>;
 	readonly virtualizer?: VirtualMountBridge<TKey>;
+}
+
+/** Keeps a search/editor focus owner through pointerdown when it controls this collection. */
+export function focusCollectionForPointer(container: HTMLElement | null | undefined): void {
+	if (!container) return;
+	const active = getActiveElement(container);
+	const controls = active?.getAttribute('aria-controls')?.trim().split(/\s+/u) ?? [];
+	if (container.id.length > 0 && controls.includes(container.id)) return;
+	container.focus({ preventScroll: true });
 }
 
 /** Container-focus adapter over CollectionNavigation with opaque, typed-key DOM ids. */

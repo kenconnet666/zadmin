@@ -4,9 +4,14 @@ import { describe, expect, it } from 'vitest';
 
 import ZDateTimeField from '../src/components/input/ZDateTimeField.svelte';
 
+const renderSsr = render as unknown as (
+	component: unknown,
+	options: { props: unknown }
+) => { body: string };
+
 describe('Persian DateTimeField locale numeral SSR contract', () => {
 	it('renders Persian date and time digits with one ISO owner value', () => {
-		const body = render(ZDateTimeField, {
+		const body = renderSsr(ZDateTimeField, {
 			props: {
 				granularity: 'second',
 				hourCycle: 24,

@@ -1,7 +1,10 @@
 <script module lang="ts">
 	import type { Attachment } from 'svelte/attachments';
 	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
-	import type { ActiveDescendant } from '../../runtime/collection/active-descendant.svelte.js';
+	import {
+		focusCollectionForPointer,
+		type ActiveDescendant
+	} from '../../runtime/collection/active-descendant.svelte.js';
 	import type { LogicalCollectionView } from '../../runtime/collection/logical-collection.js';
 	import type { SelectionKey } from '../../runtime/collection/selection.js';
 	import type { ChoiceVirtualController } from '../compound/choice-virtualization.js';
@@ -253,7 +256,7 @@
 			const handlePointerDown = (event: PointerEvent): void => {
 				if (disabled) return;
 				event.preventDefault();
-				listRef?.focus({ preventScroll: true });
+				focusCollectionForPointer(listRef);
 				active.set(item.key, 'pointer');
 			};
 			const handlePointerMove = (): void => {

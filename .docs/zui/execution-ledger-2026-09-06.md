@@ -245,3 +245,9 @@ Calendar新增共享owner的month/strip view，MiniCalendar作为single/strip紧
 成熟度报告现区分静态`*ContractsDeclared`/`*Present`与绑定revision的真实执行证据；当前186个公开组件中141个为`stablePendingExecution`、0个`stableCompliant`，不能把metadata stable或测试资产数写成当前候选通过。DateTime/Calendar已改语义generic声明以避开外部`Component<Props>`联合展开，但新tarball尚待远程复验；全部辅助技术、三浏览器、SSR、Windows及历法引擎矩阵仍开放，不晋升stable。
 
 下一主线转入当前revision执行证据composer，并启动W4集合/拖放及后续完整波次。日期剩余国际历法、辅助技术、RTL/auto、极值与远程边界并行处理，不再阻塞全部路线，也不宣称D14关闭。
+
+## E17：逐组件执行证据与拖放适配边界
+
+本批给现有CI补结构化证据链：Vitest真实project/browser、定义位置、重试/取消与runner版本；Docs三browser JSON；共享AST测试归属inventory；绑定revision/run/输入hash的composer与独立verifier。186组件对应2845份合同，renderer直接alias同源归属也进入静态证据清单，执行结果只写artifact内runtime matrix及stability candidates。成功producer缺报告硬失败，参数化实例全部通过才接受，Production同时要求原类型/构建/覆盖率/外部包等gate，不把生成partial报告等同组件稳定。
+
+合成CLI输入已验证失败producer保持0个Verified及141个待执行stable声明，成功producer缺报告会拒绝；完整真实结果仍交新候选远程流程。拖放同时核对官方dnd-kit 0.5.0发布包，明确重用Svelte attachment/sensor/collision/auto-scroll，ZUI拥有typed identity、FormArray接受/拒绝、主题motion、class-only与最终公告。首个真实消费者为FormList，再承接Transfer、Tree和DataTable；详见[E17执行记录](./execution-dragdrop-evidence-2026-09-07.md)。

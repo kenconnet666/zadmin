@@ -11,7 +11,8 @@ describe('ZMiniCalendar SSR contract', () => {
 		expect(body).toContain('data-visible-days="5"');
 		expect(body.match(/name="delivery"/gu)).toHaveLength(1);
 		expect(body).toContain('value="2026-09-15"');
-		expect(body).not.toContain('name="disabled-date"');
+		expect(body.match(/name="disabled-date"/gu)).toHaveLength(1);
+		expect(body).toMatch(/<input[^>]*disabled=""[^>]*name="disabled-date"/u);
 		expect(body).not.toContain('name="ignored-date"');
 		expect(body.match(/role="grid"/gu)).toHaveLength(6);
 		expect(body).toContain('data-testid="mini-calendar-provider-size"');

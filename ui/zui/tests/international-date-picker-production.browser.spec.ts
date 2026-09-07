@@ -11,7 +11,7 @@ function element<T extends HTMLElement>(testId: string): T {
 
 describe('date picker international calendar owners', () => {
 	it('keeps Japanese era field synchronization in the parent picker', async () => {
-		render(InternationalDatePickerFixture);
+		await render(InternationalDatePickerFixture);
 		await tick();
 		const picker = element('picker-japanese');
 		const era = picker.querySelector<HTMLSelectElement>('select')!;
@@ -23,7 +23,7 @@ describe('date picker international calendar owners', () => {
 	});
 
 	it('preserves a Hebrew parent owner when a cleared picker mounts Calendar and selects again', async () => {
-		const component = render(InternationalDatePickerFixture);
+		const { component } = await render(InternationalDatePickerFixture);
 		await tick();
 		const picker = element('picker-hebrew');
 		component.clearHebrew();
@@ -51,7 +51,7 @@ describe('date picker international calendar owners', () => {
 	});
 
 	it('preserves the range parent calendar when an empty endpoint is edited', async () => {
-		const component = render(InternationalDatePickerFixture);
+		const { component } = await render(InternationalDatePickerFixture);
 		await tick();
 		const picker = element('picker-hebrew-range');
 		component.clearHebrewRange();

@@ -15,6 +15,7 @@
 		end: new CalendarDate(createCalendar('hebrew'), 5784, 7, 15)
 	});
 	let lastRangePredicateCalendar = $state('none');
+	let scheduledRangePredicateCalendar = 'none';
 
 	export function clearHebrew(): void {
 		hebrew = null;
@@ -22,7 +23,17 @@
 
 	export function clearHebrewRange(): void {
 		hebrewRange = null;
+		scheduledRangePredicateCalendar = 'none';
 		lastRangePredicateCalendar = 'none';
+	}
+
+	function observeRangePredicate(candidate: CalendarDate): boolean {
+		const calendar = candidate.calendar.identifier;
+		if (scheduledRangePredicateCalendar !== calendar) {
+			scheduledRangePredicateCalendar = calendar;
+			queueMicrotask(() => (lastRangePredicateCalendar = calendar));
+		}
+		return false;
 	}
 </script>
 
@@ -35,10 +46,7 @@
 		<ZDateRangePicker
 			bind:value={hebrewRange}
 			data-testid="picker-hebrew-range"
-			isDateUnavailable={(candidate) => {
-				lastRangePredicateCalendar = candidate.calendar.identifier;
-				return false;
-			}}
+			isDateUnavailable={observeRangePredicate}
 			name="hebrew-range"
 		/>
 	</ZProvider>

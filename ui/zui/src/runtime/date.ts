@@ -56,6 +56,11 @@ const supportedDisplayCalendarSet = new Set<string>(supportedDisplayCalendars);
 type ImplementedDisplayCalendarIdentifier = Exclude<SupportedDisplayCalendarIdentifier, 'iso8601'>;
 
 export type CalendarValue = CalendarDate | CalendarDateTime | ZonedDateTime;
+type ConvertedCalendarValue<TValue extends CalendarValue> = TValue extends ZonedDateTime
+	? ZonedDateTime
+	: TValue extends CalendarDateTime
+		? CalendarDateTime
+		: CalendarDate;
 
 export interface CalendarEraOption {
 	readonly identifier: string;
@@ -98,14 +103,19 @@ export function resolveOwnerCalendar(
 export function toDisplayCalendar<TValue extends CalendarValue>(
 	value: TValue,
 	displayCalendar: Calendar
-): TValue {
+): ConvertedCalendarValue<TValue>;
+export function toDisplayCalendar(value: CalendarValue, displayCalendar: Calendar): CalendarValue {
 	return toCalendar(value, displayCalendar);
 }
 
 export function preserveCalendarOwner<TValue extends CalendarValue>(
 	value: TValue,
 	owner: Calendar | CalendarValue
-): TValue {
+): ConvertedCalendarValue<TValue>;
+export function preserveCalendarOwner(
+	value: CalendarValue,
+	owner: Calendar | CalendarValue
+): CalendarValue {
 	return toCalendar(value, 'calendar' in owner ? owner.calendar : owner);
 }
 

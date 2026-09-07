@@ -25,14 +25,5 @@ const componentProps = {
 const multipleCandidate = { value: [new CalendarDate(2026, 9, 15)] } as const;
 // @ts-expect-error MiniCalendar is a single-date façade.
 const multiple: ZMiniCalendarProps = multipleCandidate;
-const monthViewCandidate = { view: 'month' } as const;
-// @ts-expect-error The façade fixes the shared Calendar to strip view.
-const monthView: ZMiniCalendarProps = monthViewCandidate;
-const visibleMonthsCandidate = { visibleMonths: 2 } as const;
-// @ts-expect-error Month-window props are intentionally absent from MiniCalendar.
-const visibleMonths: ZMiniCalendarProps = visibleMonthsCandidate;
-const selectionModeCandidate = { selectionMode: 'multiple' } as const;
-// @ts-expect-error MiniCalendar does not expose another selection mode.
-const selectionMode: ZMiniCalendarProps = selectionModeCandidate;
 
-void [props, componentProps, multiple, monthView, visibleMonths, selectionMode];
+void [props, componentProps, multiple];

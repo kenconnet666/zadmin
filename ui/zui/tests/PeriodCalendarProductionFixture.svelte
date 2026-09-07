@@ -40,6 +40,10 @@
 		rejectedAttempts += 1;
 	}
 
+	function formatMonth(value: MonthPeriod | null): string {
+		return value ? `${value.year}-${value.month}` : 'null';
+	}
+
 	export function setExternalMonth(): void {
 		month = monthPeriod(2027, 2);
 	}
@@ -138,5 +142,5 @@
 		.map((period) => `Q${period.quarter}`)
 		.join(',')}|{years?.start?.year ?? 'null'}..{years?.end?.year ?? 'null'}|{weeks
 		.map((period) => period.week)
-		.join(',')}|{changes}:{focusChanges}|{rejected.year}-{rejected.month}:{rejectedAttempts}</output
+		.join(',')}|{changes}:{focusChanges}|{formatMonth(rejected)}:{rejectedAttempts}</output
 >

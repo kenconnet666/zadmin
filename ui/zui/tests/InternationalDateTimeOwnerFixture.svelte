@@ -9,6 +9,7 @@
 	import ZProvider from '../src/components/gene/ZProvider.svelte';
 	import ZDateTimePicker from '../src/components/input/ZDateTimePicker.svelte';
 	import ZDateTimeRangePicker from '../src/components/input/ZDateTimeRangePicker.svelte';
+	import type { DateTimeRangeValue } from '../src/runtime/date-time-range.js';
 
 	const hebrewCalendar = createCalendar('hebrew');
 	const persianCalendar = createCalendar('persian');
@@ -38,8 +39,9 @@
 	<div data-testid="owner-local">
 		<ZDateTimePicker
 			commitMode="immediate"
-			onCommit={(next) => (localCommitCalendar = next?.calendar.identifier ?? 'none')}
-			onValueChange={(next) => (localValue = next)}
+			onCommit={(next: CalendarDateTime | null) =>
+				(localCommitCalendar = next?.calendar.identifier ?? 'none')}
+			onValueChange={(next: CalendarDateTime | null) => (localValue = next)}
 			presentation="inline"
 			showNow
 			value={localValue}
@@ -57,7 +59,7 @@
 		<ZDateTimePicker
 			commitMode="immediate"
 			mode="zoned"
-			onValueChange={(next) => (zonedValue = next)}
+			onValueChange={(next: ZonedDateTime | null) => (zonedValue = next)}
 			presentation="inline"
 			showNow
 			value={zonedValue}
@@ -67,11 +69,11 @@
 	<div data-testid="owner-range">
 		<ZDateTimeRangePicker
 			commitMode="immediate"
-			onCommit={(next) =>
+			onCommit={(next: DateTimeRangeValue<'local'> | null) =>
 				(rangeCommitCalendars = next
 					? `${next.start?.calendar.identifier}:${next.end?.calendar.identifier}`
 					: 'none')}
-			onValueChange={(next) => {
+			onValueChange={(next: DateTimeRangeValue<'local'> | null) => {
 				if (next?.start && next.end) rangeValue = { start: next.start, end: next.end };
 			}}
 			presentation="inline"

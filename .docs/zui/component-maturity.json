@@ -10607,6 +10607,10 @@
 				],
 				"SsrContractsDeclared": [
 					{
+						"path": "ui/zui/tests/display-collections.spec.ts",
+						"detail": "ZDescriptionList SSR assertions"
+					},
+					{
 						"path": "ui/zui/tests/components.spec.ts",
 						"detail": "ZDescriptionList SSR assertions"
 					},
@@ -10633,6 +10637,10 @@
 				"detail": "catalog component documentation module"
 			},
 			"ssrContracts": [
+				{
+					"path": "ui/zui/tests/display-collections.spec.ts",
+					"detail": "ZDescriptionList SSR assertions"
+				},
 				{
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZDescriptionList SSR assertions"
@@ -10867,6 +10875,10 @@
 				],
 				"SsrContractsDeclared": [
 					{
+						"path": "ui/zui/tests/display-collections.spec.ts",
+						"detail": "ZList SSR assertions"
+					},
+					{
 						"path": "ui/zui/tests/components.spec.ts",
 						"detail": "ZList SSR assertions"
 					}
@@ -10889,6 +10901,10 @@
 				"detail": "catalog component documentation module"
 			},
 			"ssrContracts": [
+				{
+					"path": "ui/zui/tests/display-collections.spec.ts",
+					"detail": "ZList SSR assertions"
+				},
 				{
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZList SSR assertions"
@@ -13889,6 +13905,10 @@
 						"detail": "ZProvider SSR assertions"
 					},
 					{
+						"path": "ui/zui/tests/date-time-inline-production-ssr.spec.ts",
+						"detail": "ZProvider SSR assertions"
+					},
+					{
 						"path": "ui/zui/tests/date-time-picker-production-ssr.spec.ts",
 						"detail": "ZProvider SSR assertions"
 					},
@@ -13977,6 +13997,10 @@
 				},
 				{
 					"path": "ui/zui/tests/date-time-field-production-ssr.spec.ts",
+					"detail": "ZProvider SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/date-time-inline-production-ssr.spec.ts",
 					"detail": "ZProvider SSR assertions"
 				},
 				{
@@ -14818,7 +14842,7 @@
 				"VisualContractsDeclared": [
 					{
 						"path": "ui/zui/tests/cascader-production.browser.spec.ts",
-						"detail": "ZCascader authored visual contract: keeps typed paths, Field ownership, auxiliary search and reset synchronized (line 10)"
+						"detail": "ZCascader authored visual contract: keeps typed paths, Field ownership, auxiliary search and reset synchronized (line 11)"
 					},
 					{
 						"path": "ui/zui/tests/CascaderProductionFixture.svelte",
@@ -15797,6 +15821,10 @@
 						"detail": "ZDateTimePicker SSR assertions"
 					},
 					{
+						"path": "ui/zui/tests/date-time-inline-production-ssr.spec.ts",
+						"detail": "ZDateTimePicker SSR assertions"
+					},
+					{
 						"path": "ui/zui/tests/date-time-picker-production-ssr.spec.ts",
 						"detail": "ZDateTimePicker SSR assertions"
 					}
@@ -15821,6 +15849,10 @@
 			"ssrContracts": [
 				{
 					"path": "ui/zui/tests/international-date-time-owner-ssr.spec.ts",
+					"detail": "ZDateTimePicker SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/date-time-inline-production-ssr.spec.ts",
 					"detail": "ZDateTimePicker SSR assertions"
 				},
 				{
@@ -15910,6 +15942,10 @@
 						"detail": "ZDateTimeRangePicker SSR assertions"
 					},
 					{
+						"path": "ui/zui/tests/date-time-inline-production-ssr.spec.ts",
+						"detail": "ZDateTimeRangePicker SSR assertions"
+					},
+					{
 						"path": "ui/zui/tests/date-time-range-production-ssr.spec.ts",
 						"detail": "ZDateTimeRangePicker SSR assertions"
 					}
@@ -15934,6 +15970,10 @@
 			"ssrContracts": [
 				{
 					"path": "ui/zui/tests/international-date-time-owner-ssr.spec.ts",
+					"detail": "ZDateTimeRangePicker SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/date-time-inline-production-ssr.spec.ts",
 					"detail": "ZDateTimeRangePicker SSR assertions"
 				},
 				{
@@ -16500,6 +16540,10 @@
 						"detail": "ZForm SSR assertions"
 					},
 					{
+						"path": "ui/zui/tests/date-time-inline-production-ssr.spec.ts",
+						"detail": "ZForm SSR assertions"
+					},
+					{
 						"path": "ui/zui/tests/date-time-picker-production-ssr.spec.ts",
 						"detail": "ZForm SSR assertions"
 					},
@@ -16564,6 +16608,10 @@
 				},
 				{
 					"path": "ui/zui/tests/date-time-field-production-ssr.spec.ts",
+					"detail": "ZForm SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/date-time-inline-production-ssr.spec.ts",
 					"detail": "ZForm SSR assertions"
 				},
 				{
@@ -16742,6 +16790,10 @@
 						"detail": "ZFormField SSR assertions"
 					},
 					{
+						"path": "ui/zui/tests/date-time-inline-production-ssr.spec.ts",
+						"detail": "ZFormField SSR assertions"
+					},
+					{
 						"path": "ui/zui/tests/date-time-picker-production-ssr.spec.ts",
 						"detail": "ZFormField SSR assertions"
 					},
@@ -16806,6 +16858,10 @@
 				},
 				{
 					"path": "ui/zui/tests/date-time-field-production-ssr.spec.ts",
+					"detail": "ZFormField SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/date-time-inline-production-ssr.spec.ts",
 					"detail": "ZFormField SSR assertions"
 				},
 				{
@@ -20831,10 +20887,6 @@
 				"VisualContractsDeclared": [],
 				"ProductionContractsDeclared": [
 					{
-						"path": "ui/zui/tests/overflow-list-production.spec.ts",
-						"detail": "ZOverflowList production assertions"
-					},
-					{
 						"path": "ui/zui/tests/overflow-list-production.browser.spec.ts",
 						"detail": "ZOverflowList production assertions"
 					},
@@ -20844,10 +20896,6 @@
 					}
 				],
 				"SsrContractsDeclared": [
-					{
-						"path": "ui/zui/tests/overflow-list-production.spec.ts",
-						"detail": "ZOverflowList SSR assertions"
-					},
 					{
 						"path": "ui/zui/tests/toolbar-production.spec.ts",
 						"detail": "ZOverflowList SSR assertions"
@@ -20871,10 +20919,6 @@
 				"detail": "catalog component documentation module"
 			},
 			"ssrContracts": [
-				{
-					"path": "ui/zui/tests/overflow-list-production.spec.ts",
-					"detail": "ZOverflowList SSR assertions"
-				},
 				{
 					"path": "ui/zui/tests/toolbar-production.spec.ts",
 					"detail": "ZOverflowList SSR assertions"

@@ -146,15 +146,15 @@ W2、W3可在共同基础接口冻结后并行；W5依赖集合/表单/拖放的
 
 每个波次拆为可独立验证的小提交。W0完成已定位修复后，下一批直接从 **W1 + W2/W3接口设计** 启动；不再将新增规模收缩成一两个候选组件。
 
-### 7.0 E14–E16 当前检查点（2026-09-07）
+### 7.0 E14–E17 当前检查点（2026-09-07）
 
 W3/N5 已落盘 Date/Time/DateTime 字段与 Picker、PeriodCalendar/Picker、Calendar判别选择/多月/周号/preview，以及inline、TimeGrid/TimeValue和typed cell/header。E16新增共享owner的Calendar strip/MiniCalendar，并把model calendar、locale display calendar及parent owner回写分开。实现继续复用 Field、Calendar、TimePickerPanel、Period runtime、Collection、FormControlDraftState、Popover/Presence 与唯一FormValueBridge；这表示路线已有真实消费者，不表示W3整体、D14或日期族稳定验收完成。
 
 E16当前为186个公开组件；成熟度把静态合同资产与执行证据分开，141个metadata stable组件为`stablePendingExecution`，`stableCompliant`为0。本地390px已点查Mini 7/10日窗口宽314px且无横溢出；Hebrew→Persian只改变display，不写Gregorian；Hebrew 13月29日跨新年并clear/reselect保持Hebrew；Japanese平成31-4-30跨至令和1-5-1。DateTime同日精确毫秒、同instant换calendar后Now、Hebrew/Persian混合范围preset均保持parent owner。这些路径证据不能代替整组远程与辅助技术验收。
 
-E15 external结果仍暴露DateTimeField/Picker/Range与Calendar四个生成声明在`Component<Props>`触发TS2590；named interface不足以阻止Svelte/TypeScript展开。当前已改为带直接判别推断锚点的语义generic component，并新增外部`ComponentProps`资产，但新tarball尚未远程复验。其他当前提交CI、SSR、Windows、三浏览器、覆盖率和辅助技术结果也必须按revision单列；这里不晋升stable，也不把手工页面、源码资产或历史结果作为accepted证据。
+E15 external曾暴露DateTimeField/Picker/Range与Calendar四个生成声明的TS2590；改为语义generic component及外部ComponentProps资产后，E16真实tarball TypeScript/SSR验收已经通过。E17继续修正源码泛型、私有DOM rest、异步测试API、TimeGrid早期值验证、bundle依赖误判和WebKit Cascader搜索焦点；这些新修改仍待新候选CI，不能把外部包通过扩展成全部源码/组件/平台通过。
 
-从这一检查点主线推进当前revision执行证据composer，复用CI/artifact并让缺证据组件保持pending；同时启动W4集合/拖放和W6/W7后续波次。日期线并行处理generic DTS远程复验、国际历法剩余引擎与极值、RTL/auto、辅助技术/forced-colors及TimeGrid到Schedule消费，不再无限卡住全部路线，也不因MiniCalendar和13套算法落盘而关闭D14。
+E17已接入当前revision执行证据composer、共享AST inventory、Vitest/Docs结构化reporter、独立verifier与artifact内runtime稳定报告；缺证据保持pending，成功producer缺报告硬失败。下一批按[拖放适配边界](./dragdrop-adapter-boundaries-2026-09-07.md)推进FormList首个真实重排消费者，再接Transfer/Tree/DataTable，并继续W6/W7。日期线的国际历法剩余引擎与极值、RTL/auto、辅助技术/forced-colors及TimeGrid到Schedule消费并行处理，不把MiniCalendar和13套算法落盘当成D14关闭。
 
 ### 7.1 下一轮直接执行的工作包
 

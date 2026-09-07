@@ -12,7 +12,7 @@ function element<T extends HTMLElement>(testId: string): T {
 describe('ZDateField international calendar contract', () => {
 	it('edits a localized Japanese era while preserving the Japanese model owner', async () => {
 		// @zui-visual DateField Japanese era select plus Hebrew and Persian numeric segments
-		render(InternationalDateFieldFixture);
+		await render(InternationalDateFieldFixture);
 		await tick();
 		const field = element('date-field-japanese');
 		expect(field.dataset.calendar).toBe('japanese');
@@ -29,7 +29,7 @@ describe('ZDateField international calendar contract', () => {
 	});
 
 	it('keeps a natural era-year draft intact until explicit commit', async () => {
-		render(InternationalDateFieldFixture);
+		await render(InternationalDateFieldFixture);
 		await tick();
 		const year = element('date-field-japanese').querySelector<HTMLInputElement>(
 			'[aria-label="Japanese year"]'
@@ -46,7 +46,7 @@ describe('ZDateField international calendar contract', () => {
 	});
 
 	it('preserves four-digit Gregorian drafting and automatic completion', async () => {
-		render(InternationalDateFieldFixture);
+		await render(InternationalDateFieldFixture);
 		await tick();
 		const year = element('date-field-gregorian').querySelector<HTMLInputElement>(
 			'[aria-label="Gregorian year"]'
@@ -61,7 +61,7 @@ describe('ZDateField international calendar contract', () => {
 	});
 
 	it('cycles a Hebrew leap-month field with calendar-owned month arithmetic', async () => {
-		render(InternationalDateFieldFixture);
+		await render(InternationalDateFieldFixture);
 		await tick();
 		const field = element('date-field-hebrew');
 		const month = field.querySelector<HTMLInputElement>('[aria-label="Hebrew month"]')!;
@@ -76,7 +76,7 @@ describe('ZDateField international calendar contract', () => {
 	});
 
 	it('remembers a Persian owner calendar after a controlled clear and reselect', async () => {
-		const component = render(InternationalDateFieldFixture);
+		const { component } = await render(InternationalDateFieldFixture);
 		await tick();
 		const field = element('date-field-persian');
 		component.clearPersian();
@@ -95,7 +95,7 @@ describe('ZDateField international calendar contract', () => {
 	});
 
 	it('formats and parses Persian locale numerals through the shared number runtime', async () => {
-		render(InternationalDateFieldFixture);
+		await render(InternationalDateFieldFixture);
 		await tick();
 		const year = element('date-field-persian').querySelector<HTMLInputElement>(
 			'[aria-label="Persian year"]'
