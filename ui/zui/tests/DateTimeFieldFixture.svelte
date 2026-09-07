@@ -19,6 +19,7 @@
 	let zoned = $state<ZonedDateTime | null>(
 		parseZonedDateTime('2026-09-07T09:30-07:00[America/Los_Angeles]')
 	);
+	let resetCallbacks = $state(0);
 	let rtl = $state<CalendarDateTime | null>(new CalendarDateTime(2026, 9, 7, 9, 30));
 	const rejectedValue = new CalendarDateTime(2026, 9, 11, 10, 30);
 	const rejectedOwner = $state({ value: rejectedValue as CalendarDateTime | null });
@@ -32,13 +33,19 @@
 <ZProvider locale="en-US" timeZone="America/New_York">
 	<form data-testid="date-time-form">
 		<ZField label="Local appointment" name="local">
-			<ZDateTimeField bind:value={local} data-testid="local-date-time" granularity="second" />
+			<ZDateTimeField
+				bind:value={local}
+				data-testid="local-date-time"
+				granularity="second"
+				onFormReset={() => (resetCallbacks += 1)}
+			/>
 		</ZField>
 		<ZField label="Zoned appointment" name="zoned">
 			<ZDateTimeField
 				bind:value={zoned}
 				data-testid="zoned-date-time"
 				mode="zoned"
+				onFormReset={() => (resetCallbacks += 1)}
 				timeZone="America/New_York"
 			/>
 		</ZField>
@@ -60,3 +67,4 @@
 
 <output data-testid="local-date-time-output">{local?.toString() ?? 'null'}</output>
 <output data-testid="zoned-date-time-output">{zoned?.toString() ?? 'null'}</output>
+<output data-testid="date-time-reset-output">{resetCallbacks}</output>

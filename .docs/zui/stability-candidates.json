@@ -3,7 +3,7 @@
 	"summary": {
 		"stableCompliant": 141,
 		"stableViolations": 0,
-		"promotionEligibleExperimental": 23
+		"promotionEligibleExperimental": 25
 	},
 	"components": [
 		{
@@ -1174,7 +1174,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/gene/provider/doc.ts",
-			"ssrEvidenceCount": 15
+			"ssrEvidenceCount": 16
 		},
 		{
 			"id": "separator",
@@ -1297,6 +1297,26 @@
 			"ssrEvidenceCount": 1
 		},
 		{
+			"id": "date-time-picker",
+			"name": "ZDateTimePicker",
+			"family": null,
+			"status": "experimental",
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
+			"docs": "apps/docs/src/content/components/input/date-time-picker/doc.ts",
+			"ssrEvidenceCount": 1
+		},
+		{
+			"id": "date-time-range-picker",
+			"name": "ZDateTimeRangePicker",
+			"family": null,
+			"status": "experimental",
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
+			"docs": "apps/docs/src/content/components/input/date-time-range-picker/doc.ts",
+			"ssrEvidenceCount": 1
+		},
+		{
 			"id": "field",
 			"name": "ZField",
 			"family": null,
@@ -1304,7 +1324,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/field/doc.ts",
-			"ssrEvidenceCount": 7
+			"ssrEvidenceCount": 8
 		},
 		{
 			"id": "fieldset",
@@ -1334,7 +1354,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/form/doc.ts",
-			"ssrEvidenceCount": 10
+			"ssrEvidenceCount": 11
 		},
 		{
 			"id": "form-field",
@@ -1344,7 +1364,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/form/doc.ts",
-			"ssrEvidenceCount": 10
+			"ssrEvidenceCount": 11
 		},
 		{
 			"id": "form-list",

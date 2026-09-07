@@ -1,4 +1,5 @@
 <script module lang="ts">
+	import type { FormControlDraftState } from '../../runtime/form/form-value-adapter.svelte.js';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import { styleInternalAction } from '../gene/internal-action.js';
@@ -54,6 +55,7 @@
 		readonly max?: number;
 		readonly min?: number;
 		readonly name?: string;
+		readonly onDraftChange?: (state: FormControlDraftState) => void;
 		readonly onValueChange?: (value: number | undefined) => void;
 		readonly pageStep?: number;
 		readonly parser?: ZNumberFieldParser;
@@ -91,6 +93,11 @@
 		],
 		events: [
 			{
+				description: '本地输入草稿的有效性、脏状态与消息，不包含外部Field错误。',
+				name: 'onDraftChange',
+				type: '(state: FormControlDraftState) => void'
+			},
+			{
 				description: '用户输入、清空或步进产生不同数值后调用。',
 				name: 'onValueChange',
 				type: '(value: number | undefined) => void'
@@ -107,6 +114,12 @@
 			{ description: '增加按钮。', name: 'increment' }
 		],
 		props: [
+			{
+				default: 'undefined',
+				description: '本地输入草稿的原子有效性、脏状态与本地化消息；排除外部Field/schema错误。',
+				name: 'onDraftChange',
+				type: '(state: FormControlDraftState) => void'
+			},
 			{
 				bindable: true,
 				default: 'undefined',
@@ -210,8 +223,8 @@
 				type: 'string'
 			},
 			{
-				default: "Provider density（默认把 'comfortable' 映射为 'medium'）",
-				description: '显式值优先于Field和Provider density。',
+				default: 'Field > componentDefaults.numberField > input > density',
+				description: '显式值优先于Field、NumberField专用默认、Input默认与density。',
 				name: 'size',
 				type: "'xsmall' | 'small' | 'medium' | 'large' | 'xlarge'"
 			},
@@ -435,6 +448,7 @@
 		max,
 		min,
 		name,
+		onDraftChange,
 		onValueChange,
 		pageStep,
 		parser,
@@ -480,6 +494,8 @@
 	const valueState = createFormControlState<number | undefined>(
 		{
 			defaultValue: () => defaultValue,
+			draftState: () => localDraftState,
+			resetDraft: rollbackDraft,
 			element: () => ref,
 			normalizeModelValue: (candidate) => {
 				if (candidate === undefined || candidate === null) return undefined;
@@ -494,7 +510,11 @@
 			read: () => value,
 			syncNative: (next) => {
 				if (inputRef)
-					inputRef.value = next === undefined ? '' : formatNumber(next, false, presentationOptions);
+					inputRef.value = editing
+						? formatEditValue(next)
+						: next === undefined
+							? ''
+							: formatNumber(next, false, presentationOptions);
 			},
 			undefinedIsValue: true,
 			write: (next) => (value = next)
@@ -555,12 +575,20 @@
 	const outOfRange = $derived(isNumberOutOfRange(currentValue, constraints.min, constraints.max));
 	const resolvedRequired = $derived(required || field?.required || false);
 	const resolvedInvalid = $derived(
-		draftInvalid || outOfRange || (invalid ?? field?.invalid ?? false)
+		draftInvalid || outOfRange || invalid || field?.invalid || false
 	);
 	const resolvedDisabled = $derived(disabled || field?.disabled || false);
 	const resolvedReadonly = $derived(readonly || field?.readonly || false);
 	const resolvedName = $derived(name ?? field?.name);
-	const resolvedSize = $derived(resolveControlSize(size ?? field?.size, zui.density));
+	const resolvedSize = $derived(
+		resolveControlSize(
+			size ??
+				field?.size ??
+				zui.componentDefaults.numberField?.size ??
+				zui.componentDefaults.input?.size,
+			zui.density
+		)
+	);
 	const resolvedDescribedBy = $derived(mergeAriaIds(ariaDescribedBy, field?.describedBy));
 	const resolvedLabelledBy = $derived(mergeAriaIds(ariaLabelledBy, field?.labelId));
 	const reduced = $derived(reducedMotion.current);
@@ -602,6 +630,23 @@
 		}
 		return '';
 	});
+	const localDraftState = $derived.by(() => {
+		const requiredMissing = resolvedRequired && currentValue === undefined;
+		const valid = !draftInvalid && !draftPartial && !composing && !outOfRange && !requiredMissing;
+		return Object.freeze({
+			valid,
+			dirty: editing && draft !== editFormatted,
+			message: valid
+				? undefined
+				: requiredMissing
+					? zui.localePack.form.requiredValue
+					: internalValidityMessage || zui.localePack.numberField.invalidValue
+		});
+	});
+	$effect(() => {
+		const next = localDraftState;
+		untrack(() => onDraftChange?.(next));
+	});
 
 	$effect(() => {
 		inputRef?.setCustomValidity(internalValidityMessage);
@@ -641,6 +686,14 @@
 		if (inputRef)
 			inputRef.value =
 				resetValue === undefined ? '' : formatNumber(resetValue, false, presentationOptions);
+	}
+	function rollbackDraft(): void {
+		synchronizedValue = currentValue;
+		draftInvalid = false;
+		draftPartial = false;
+		composing = false;
+		draft = formatEditValue(currentValue);
+		if (inputRef) inputRef.value = editing ? draft : formatted;
 	}
 
 	function parseDraft(input: string): ZNumberFieldParseResult {

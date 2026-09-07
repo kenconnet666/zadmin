@@ -97,9 +97,10 @@ export class FloatingPositioner {
 		if (!reference || !floating || !options) return;
 		const middleware: Middleware[] = [
 			offset(options.gutter ?? 8),
-			flip(),
+			flip({ padding: 8 }),
 			shift({ padding: 8 }),
 			size({
+				padding: 8,
 				apply: ({ availableHeight, availableWidth, rects }) => {
 					floating.style.setProperty('--zui-floating-available-height', `${availableHeight}px`);
 					floating.style.setProperty('--zui-floating-available-width', `${availableWidth}px`);

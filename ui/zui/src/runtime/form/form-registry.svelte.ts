@@ -358,7 +358,7 @@ export class FormRegistry {
 		return Object.freeze([...affected.values()]);
 	}
 
-	fieldInfo(instanceId: string): Pick<FormFieldRegistration, 'path' | 'htmlName'> | undefined {
+	fieldInfo(instanceId: string): Pick<RegisteredField, 'path' | 'htmlName'> | undefined {
 		return this.#fields.get(instanceId);
 	}
 

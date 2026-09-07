@@ -633,7 +633,10 @@
 
 	function commit(markIncomplete = true): boolean {
 		if (Object.keys(drafts).length === 0) return true;
-		if (valueState.current === null && segments.some((segment) => drafts[segment] === undefined)) {
+		if (
+			valueState.current === null &&
+			segments.some((segment) => (drafts[segment]?.length ?? 0) !== 2)
+		) {
 			draftInvalid = markIncomplete;
 			return false;
 		}
@@ -804,6 +807,13 @@
 	): void {
 		const nextDraft = event.currentTarget.value.replace(/\D/gu, '');
 		drafts = { ...drafts, [segment]: nextDraft };
+		if (valueState.current === null)
+			drafts = Object.fromEntries(
+				segments.map((key, inputIndex) => [
+					key,
+					key === segment ? nextDraft : (inputs[inputIndex]?.value.replace(/\D/gu, '') ?? '')
+				])
+			) as Partial<Record<TimeSegment, string>>;
 		if (inputs.every((input) => !input?.value)) {
 			if (!valueState.setFromUser(null)) {
 				rollbackDraft();

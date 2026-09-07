@@ -597,8 +597,36 @@ export type {
 	ZDateTimeFieldProps,
 	ZDateTimeFieldLocalProps,
 	ZDateTimeFieldZonedProps,
-	DateTimeFieldSize
+	DateTimeFieldSize,
+	DateTimeFieldFormParticipation
 } from '../components/input/ZDateTimeField.svelte';
+export { default as ZDateTimePicker } from '../components/input/ZDateTimePicker.svelte';
+export type {
+	ZDateTimePickerProps,
+	ZDateTimePickerLocalProps,
+	ZDateTimePickerZonedProps,
+	DateTimePickerCommitMode,
+	DateTimePickerPreset,
+	DateTimePickerSize
+} from '../components/input/ZDateTimePicker.svelte';
+export { default as ZDateTimeRangePicker } from '../components/input/ZDateTimeRangePicker.svelte';
+export type {
+	ZDateTimeRangePickerProps,
+	ZDateTimeRangePickerLocalProps,
+	ZDateTimeRangePickerZonedProps,
+	DateTimeRangeCommitMode,
+	DateTimeRangePickerSize,
+	DateTimeRangeOrder,
+	DateTimeRangePart,
+	DateTimeRangePreset,
+	LocalDateTimeRangeValue,
+	ZonedDateTimeRangeValue
+} from '../components/input/ZDateTimeRangePicker.svelte';
+export type {
+	DateTimeRangeValue,
+	LocalDateTimeRangePreset,
+	ZonedDateTimeRangePreset
+} from '../runtime/date-time-range.js';
 export type {
 	DateTimeMode,
 	DateTimeValue,
@@ -943,5 +971,8 @@ export type {
 	DateRangePickerComponentDefaults,
 	TimePickerComponentDefaults,
 	TimeRangePickerComponentDefaults,
-	DateTimeFieldComponentDefaults
+	DateTimeFieldComponentDefaults,
+	DateTimePickerComponentDefaults,
+	DateTimeRangePickerComponentDefaults,
+	NumberFieldComponentDefaults
 } from '../runtime/foundation/component-defaults.js';

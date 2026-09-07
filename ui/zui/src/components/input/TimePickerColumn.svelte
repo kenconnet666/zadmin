@@ -88,6 +88,7 @@
 </script>
 
 <script lang="ts">
+	import { tick } from 'svelte';
 	import type { Attachment } from 'svelte/attachments';
 	import { ActiveDescendant } from '../../runtime/collection/active-descendant.svelte.js';
 	import {
@@ -138,11 +139,11 @@
 	});
 	const scrollBridge = {
 		ensureKey(key: SelectionKey): void {
-			mounted.get(key)?.element.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+			revealOption(key);
 		},
 		isRendered: (key: SelectionKey): boolean => mounted.has(key),
 		scrollToKey(key: SelectionKey): void {
-			mounted.get(key)?.element.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+			revealOption(key);
 		}
 	};
 	const active = new ActiveDescendant({
@@ -152,6 +153,30 @@
 		virtualizer: scrollBridge
 	});
 	let listRef = $state<HTMLDivElement | null>(null);
+	function revealOption(key: SelectionKey): void {
+		const option = mounted.get(key)?.element;
+		const list = listRef;
+		if (!option || !list) return;
+		// Scroll only this column. Revealing a time must not move the surrounding popup or page.
+		const item = option.getBoundingClientRect();
+		const viewport = list.getBoundingClientRect();
+		const top = viewport.top + list.clientTop;
+		if (item.top < top) list.scrollTop += item.top - top;
+		else if (item.bottom > top + list.clientHeight)
+			list.scrollTop += item.bottom - top - list.clientHeight;
+	}
+	$effect(() => {
+		const list = listRef;
+		const key = selectedKey;
+		let current = true;
+		if (list && key !== undefined)
+			void tick().then(() => {
+				if (current && list.isConnected && list === listRef) revealOption(key);
+			});
+		return () => {
+			current = false;
+		};
+	});
 	const listClass = $derived(zui.recipe(listRecipe));
 	const geometryClass = $derived(
 		zui.icss((s) => {

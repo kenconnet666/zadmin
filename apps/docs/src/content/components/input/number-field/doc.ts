@@ -1,4 +1,6 @@
 import SizingDemo from './SizingDemo.svelte';
+import DraftDemo from './DraftDemo.svelte';
+import draftSource from './DraftDemo.svelte?raw';
 import sizingSource from './SizingDemo.svelte?raw';
 import { numberFieldMetadata } from '@zadmin/zui/metadata';
 import { numberFieldApiFacts } from '../../../../framework/component-api.generated.js';
@@ -16,6 +18,15 @@ import statesSource from './StatesDemo.svelte?raw';
 
 export const numberFieldDoc = defineComponentDoc(numberFieldMetadata, {
 	demos: [
+		{
+			component: DraftDemo,
+			source: draftSource,
+			id: 'number-field-form-draft',
+			title: '模型与原始输入草稿',
+			covers: ['controlled', 'invalid', 'form-data', 'form-reset'],
+			description:
+				'字段原始草稿参与统一Form有效性和dirty计算，成功模型值与编辑中的未完成文本保持区分。'
+		},
 		{
 			component: SizingDemo,
 			covers: ['composition', 'variants-and-states'],

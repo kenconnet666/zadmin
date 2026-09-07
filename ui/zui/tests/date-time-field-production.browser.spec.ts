@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 import { mount, unmount } from './browser-lifecycle.js';
 import DateTimeFieldFixture from './DateTimeFieldFixture.svelte';
+import { resetForm } from './form-reset.js';
 
 function key(target: HTMLElement, value: string): void {
 	target.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: value }));
@@ -20,14 +21,15 @@ describe('ZDateTimeField browser contract', () => {
 			const groups = [...root.querySelectorAll<HTMLElement>('[data-zui-composite-control]')];
 			const dateInputs = [...groups[1]!.querySelectorAll<HTMLInputElement>('input')];
 			const timeInputs = [...groups[2]!.querySelectorAll<HTMLInputElement>('input')];
+			const dayPeriod = groups[2]!.querySelector<HTMLButtonElement>('[data-slot="day-period"]');
 			expect(new FormData(form).get('local')).toBe('2026-09-07T09:30:00');
 
 			dateInputs.at(-1)!.focus();
 			key(dateInputs.at(-1)!, 'ArrowRight');
 			expect(document.activeElement).toBe(timeInputs[0]);
 			key(timeInputs[0]!, 'End');
-			expect(document.activeElement).toBe(timeInputs.at(-1));
-			key(timeInputs.at(-1)!, 'Home');
+			expect(document.activeElement).toBe(dayPeriod ?? timeInputs.at(-1));
+			key(dayPeriod ?? timeInputs.at(-1)!, 'Home');
 			expect(document.activeElement).toBe(dateInputs[0]);
 
 			const day = dateInputs.find((input) => input.getAttribute('aria-label') === 'Day')!;
@@ -44,6 +46,18 @@ describe('ZDateTimeField browser contract', () => {
 			expect(day.value).toBe('07');
 			expect(minute.value).toBe('30');
 			expect(root.dataset.invalid).toBeUndefined();
+			for (const input of dateInputs) {
+				input.value = '';
+				input.dispatchEvent(new InputEvent('input', { bubbles: true }));
+			}
+			await tick();
+			expect(root.dataset.invalid).toBe('true');
+			expect(new FormData(form).get('local')).toBe('2026-09-07T09:30:00');
+			key(dateInputs[0]!, 'Escape');
+			await tick();
+			expect(day.value).toBe('07');
+			await resetForm(form);
+			expect(target.querySelector('[data-testid="date-time-reset-output"]')?.textContent).toBe('2');
 		} finally {
 			await unmount(component);
 			target.remove();

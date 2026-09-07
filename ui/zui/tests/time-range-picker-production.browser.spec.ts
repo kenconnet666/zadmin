@@ -99,7 +99,8 @@ describe('ZTimeRangePicker production contracts', () => {
 			(item) => item.textContent?.trim() === '11'
 		)!;
 		hourEleven.click();
-		popup.querySelector<HTMLButtonElement>('[data-slot="footer"] button')!.click();
+		await tick();
+		popup.querySelector<HTMLButtonElement>('[data-slot="footer"] button:last-child')!.click();
 		await tick();
 		expect(new FormData(form).get('deployment.end')).toBe('11:30:00');
 		expect(document.querySelector('[data-testid="time-range-output"]')?.textContent).toContain(
@@ -113,7 +114,9 @@ describe('ZTimeRangePicker production contracts', () => {
 		expect(overnight.dataset.overnight).toBe('true');
 		expect(overnight.dir).toBe('ltr');
 		trigger('time-range-overnight').click();
-		await tick();
+		await expect
+			.poll(() => document.querySelector('[role="dialog"][aria-label="选择时间范围"]'))
+			.not.toBeNull();
 		const popup = dialog('选择时间范围');
 		expect(popup.dir).toBe('ltr');
 		const columns = [...popup.querySelectorAll<HTMLElement>('[role="listbox"]')];
@@ -126,7 +129,7 @@ describe('ZTimeRangePicker production contracts', () => {
 		expect(
 			overnight.querySelector<HTMLInputElement>('[data-slot="start-field"] input')?.value
 		).toBe('23');
-		popup.querySelector<HTMLButtonElement>('[data-slot="footer"] button')!.click();
+		popup.querySelector<HTMLButtonElement>('[data-slot="footer"] button:last-child')!.click();
 		await tick();
 		expect(overnight.dataset.overnight).toBe('true');
 		expect(
@@ -147,7 +150,8 @@ describe('ZTimeRangePicker production contracts', () => {
 			(item) => item.textContent?.trim() === '11'
 		)!;
 		eleven.click();
-		popup.querySelector<HTMLButtonElement>('[data-slot="footer"] button')!.click();
+		await tick();
+		popup.querySelector<HTMLButtonElement>('[data-slot="footer"] button:last-child')!.click();
 		await tick();
 		expect(
 			document.querySelector('[data-testid="time-range-rejected-output"]')?.textContent

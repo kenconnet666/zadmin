@@ -2,7 +2,7 @@
 
 本文件由 `scripts/check-stability-policy.mjs` 生成；不会修改组件 status。compound member 可继承同 family root 的 Docs 页面。
 
-stableCompliant：141；stableViolations：0；promotionEligibleExperimental：23。
+stableCompliant：141；stableViolations：0；promotionEligibleExperimental：25。
 
 | Component               | Status       | Classification                | Blockers                                                          | Docs                                                                  | SSR |
 | ----------------------- | ------------ | ----------------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------- | --: |
@@ -122,7 +122,7 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：2
 | ZIcon                   | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/icon/doc.ts                     |   2 |
 | ZKbd                    | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/kbd/doc.ts                      |   3 |
 | ZLink                   | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/link/doc.ts                     |   5 |
-| ZProvider               | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/provider/doc.ts                 |  15 |
+| ZProvider               | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/provider/doc.ts                 |  16 |
 | ZSeparator              | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/separator/doc.ts                |   2 |
 | ZText                   | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/text/doc.ts                     |   6 |
 | ZToggleButton           | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/gene/toggle-button/doc.ts            |   3 |
@@ -135,11 +135,13 @@ stableCompliant：141；stableViolations：0；promotionEligibleExperimental：2
 | ZDatePicker             | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/date-picker/doc.ts             |   2 |
 | ZDateRangePicker        | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/date-range-picker/doc.ts       |   2 |
 | ZDateTimeField          | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/date-time-field/doc.ts         |   1 |
-| ZField                  | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/field/doc.ts                   |   7 |
+| ZDateTimePicker         | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/date-time-picker/doc.ts        |   1 |
+| ZDateTimeRangePicker    | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/date-time-range-picker/doc.ts  |   1 |
+| ZField                  | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/field/doc.ts                   |   8 |
 | ZFieldset               | experimental | experimental                  | BrowserBehaviorVerified, ProductionVerified                       | apps/docs/src/content/components/input/fieldset/doc.ts                |   1 |
 | ZFileUpload             | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/file-upload/doc.ts             |   1 |
-| ZForm                   | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/form/doc.ts                    |  10 |
-| ZFormField              | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/form/doc.ts                    |  10 |
+| ZForm                   | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/form/doc.ts                    |  11 |
+| ZFormField              | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/form/doc.ts                    |  11 |
 | ZFormList               | experimental | promotionEligibleExperimental | —                                                                 | apps/docs/src/content/components/input/form/doc.ts                    |   2 |
 | ZInput                  | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/input/doc.ts                   |   7 |
 | ZInputGroup             | stable       | stableCompliant               | —                                                                 | apps/docs/src/content/components/input/input-group/doc.ts             |   3 |

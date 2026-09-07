@@ -28,6 +28,9 @@
 		controller?.setFieldValue('amount', null);
 		controller?.setFieldValue('mode', '1');
 	}
+	export const validate = () => controller!.validate();
+	export const getState = () => controller!.getState();
+	export const resetAmount = () => controller!.resetField('amount');
 </script>
 
 <ZForm bind:controller {model} data-testid="number-segment-form">

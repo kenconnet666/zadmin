@@ -52,8 +52,7 @@ export function resolveTimePickerPreset(
 ): Time | null {
 	validateTimePickerConstraints(constraints);
 	const candidate: unknown = typeof preset.value === 'function' ? preset.value() : preset.value;
-	return candidate !== null &&
-		typeof candidate === 'object' &&
+	return candidate instanceof Time &&
 		Object.getPrototypeOf(candidate) === Time.prototype &&
 		timePickerValueAvailable(candidate, constraints)
 		? candidate

@@ -49,7 +49,7 @@ describe('ZRating production contract', () => {
 		expect(new FormData(form).get('rating')).toBe('4.5');
 		await userEvent.click(radio(root, 4.5));
 		await expect.poll(() => root.dataset.value).toBe('0');
-		expect(new FormData(form).get('rating')).toBeNull();
+		await expect.poll(() => new FormData(form).get('rating')).toBeNull();
 		await userEvent.click(element('rating-reset'));
 		await settleFormReset(form);
 		expect(root.dataset.value).toBe('2.5');

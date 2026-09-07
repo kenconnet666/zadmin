@@ -209,3 +209,9 @@ NumberField、Segmented、TagsInput、Select、MultiSelect共用模型adapter，
 新增DateTimeField与TimeRangePicker，单值/范围时间复用同一个TimePickerPanel，支持预设与Now；复用Date/Time字段和InputGroup，明确唯一模型/FormData、跨午夜、时区/DST、确认/取消及整体草稿回滚。FormControlDraftState统一处理未完成输入，不再让旧canonical值绕过验证；无效/过期validate结果不返回成功data。
 
 独立五档默认、locale文案、组合键盘与单一focus ring同步补齐。完成上一E11已结束CI中可定位的日期、集合RTL、Rating、类型/fixture问题修复。真实390px浏览器点查和源/API制品审计已进行，完整执行继续远端；详见 [E12执行](./execution-date-time-range-drafts-2026-09-07.md)。DateTimePicker/Range、多月/周期、企业能力与最终家族验收继续，目标保持进行中。
+
+## E13：日期时间选择器与范围
+
+新增DateTimePicker/DateTimeRangePicker，共享DateTimePickerPanel(Calendar+TimePickerPanel)并直接组合DateTimeField suffixAction/none；明确confirm/immediate、nullable partial、strict/swap、联合时刻和DST边界。NumberField接统一草稿；FormField注册untrack修复真实验证错误残留。面板响应式列、选中时间可见、footer、字段同高和Floating全边距已点查修正，文档实测390/1280均无横向溢出。
+
+上一E12远程三浏览器Docs与build通过，相关类型/组件失败已继续修正。新增回归资产与全矩阵执行仍交远程；[E13执行记录](./execution-date-time-pickers-2026-09-07.md)保存当前证据，周期/多月/国际历法及其余能力继续。

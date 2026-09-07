@@ -1,10 +1,10 @@
 {
 	"schemaVersion": 2,
 	"source": {
-		"metadataComponents": 179,
-		"documentationPages": 109,
-		"contractComponents": 179,
-		"testFiles": 318
+		"metadataComponents": 181,
+		"documentationPages": 111,
+		"contractComponents": 181,
+		"testFiles": 330
 	},
 	"stageNames": [
 		"Declared",
@@ -18,14 +18,14 @@
 	],
 	"evidenceScope": "Static inventory of authored test contracts, not test execution results or whole-component visual acceptance. Stage names are retained for compatibility; consult commit-matched CI and page-level review separately.",
 	"summary": {
-		"Declared": 179,
-		"Authorable": 179,
-		"ContractVerified": 179,
-		"RuntimeImplemented": 179,
-		"BrowserBehaviorVerified": 167,
+		"Declared": 181,
+		"Authorable": 181,
+		"ContractVerified": 181,
+		"RuntimeImplemented": 181,
+		"BrowserBehaviorVerified": 169,
 		"VisuallyVerified": 160,
 		"DesktopVerified": 0,
-		"ProductionVerified": 171
+		"ProductionVerified": 173
 	},
 	"components": [
 		{
@@ -11365,6 +11365,10 @@
 					"detail": "ZProvider SSR assertions"
 				},
 				{
+					"path": "ui/zui/tests/date-time-picker-production-ssr.spec.ts",
+					"detail": "ZProvider SSR assertions"
+				},
+				{
 					"path": "ui/zui/tests/form-choice-adapter-production.spec.ts",
 					"detail": "ZProvider SSR assertions"
 				},
@@ -12602,7 +12606,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "ce0b31c3d4f90151aab623f8e963b7510d6d717c5f9229f5d72f2cfc717aa0f8 API snapshot entry"
+						"detail": "e79d04957032521d94c1de850e9b291020b41cb1c87935f8cf559fd9048f1a20 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -12650,6 +12654,178 @@
 				{
 					"path": "ui/zui/tests/date-time-field-production-ssr.spec.ts",
 					"detail": "ZDateTimeField SSR assertions"
+				}
+			]
+		},
+		{
+			"id": "date-time-picker",
+			"name": "ZDateTimePicker",
+			"category": "input",
+			"family": null,
+			"status": "experimental",
+			"source": "ui/zui/src/components/input/ZDateTimePicker.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": true,
+				"VisuallyVerified": false,
+				"DesktopVerified": false,
+				"ProductionVerified": true
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/input/ZDateTimePicker.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZDateTimePicker"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "2721436857d263020c2baef54f63f4cf517cdecaded446a321aae5bc21b073a8 API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/input/ZDateTimePicker.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [
+					{
+						"path": "ui/zui/tests/date-time-picker-production.browser.spec.ts",
+						"detail": "ZDateTimePicker browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/DateTimePickerProductionFixture.svelte",
+						"detail": "ZDateTimePicker explicit rendered fixture usage"
+					}
+				],
+				"VisuallyVerified": [],
+				"DesktopVerified": [],
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/date-time-picker-production-ssr.spec.ts",
+						"detail": "ZDateTimePicker production assertions"
+					},
+					{
+						"path": "ui/zui/tests/DateTimePickerProductionFixture.svelte",
+						"detail": "ZDateTimePicker explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/date-time-picker-production.browser.spec.ts",
+						"detail": "ZDateTimePicker production assertions"
+					},
+					{
+						"path": "ui/zui/tests/DateTimePickerProductionFixture.svelte",
+						"detail": "ZDateTimePicker explicit rendered fixture usage"
+					}
+				]
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/input/date-time-picker/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/date-time-picker-production-ssr.spec.ts",
+					"detail": "ZDateTimePicker SSR assertions"
+				}
+			]
+		},
+		{
+			"id": "date-time-range-picker",
+			"name": "ZDateTimeRangePicker",
+			"category": "input",
+			"family": null,
+			"status": "experimental",
+			"source": "ui/zui/src/components/input/ZDateTimeRangePicker.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": true,
+				"VisuallyVerified": false,
+				"DesktopVerified": false,
+				"ProductionVerified": true
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/input/ZDateTimeRangePicker.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZDateTimeRangePicker"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "a1924cd09daf083bcab9bfd3d8d83f78f59bece241758045c01d5809cb563c8c API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/input/ZDateTimeRangePicker.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [
+					{
+						"path": "ui/zui/tests/date-time-range-production.browser.spec.ts",
+						"detail": "ZDateTimeRangePicker browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/DateTimeRangePickerProductionFixture.svelte",
+						"detail": "ZDateTimeRangePicker explicit rendered fixture usage"
+					}
+				],
+				"VisuallyVerified": [],
+				"DesktopVerified": [],
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/date-time-range-production-ssr.spec.ts",
+						"detail": "ZDateTimeRangePicker production assertions"
+					},
+					{
+						"path": "ui/zui/tests/date-time-range-production.browser.spec.ts",
+						"detail": "ZDateTimeRangePicker production assertions"
+					},
+					{
+						"path": "ui/zui/tests/DateTimeRangePickerProductionFixture.svelte",
+						"detail": "ZDateTimeRangePicker explicit rendered fixture usage"
+					}
+				]
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/input/date-time-range-picker/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/date-time-range-production-ssr.spec.ts",
+					"detail": "ZDateTimeRangePicker SSR assertions"
 				}
 			]
 		},
@@ -12746,6 +12922,10 @@
 				},
 				{
 					"path": "ui/zui/tests/date-time-field-production-ssr.spec.ts",
+					"detail": "ZField SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/date-time-picker-production-ssr.spec.ts",
 					"detail": "ZField SSR assertions"
 				},
 				{
@@ -13126,6 +13306,10 @@
 					"detail": "ZForm SSR assertions"
 				},
 				{
+					"path": "ui/zui/tests/date-time-picker-production-ssr.spec.ts",
+					"detail": "ZForm SSR assertions"
+				},
+				{
 					"path": "ui/zui/tests/form-choice-adapter-production.spec.ts",
 					"detail": "ZForm SSR assertions"
 				},
@@ -13296,6 +13480,10 @@
 				},
 				{
 					"path": "ui/zui/tests/date-time-field-production-ssr.spec.ts",
+					"detail": "ZFormField SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/date-time-picker-production-ssr.spec.ts",
 					"detail": "ZFormField SSR assertions"
 				},
 				{
@@ -13993,7 +14181,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "cd995aac71610fe636753e5cd19dfec5805191524b0e75ce2d981d164eaf6ca7 API snapshot entry"
+						"detail": "ae17bb5ddfd6d35272699fdcca0d32f3bfc4ae6c65216b658834e0f82f9066ff API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [

@@ -1,5 +1,6 @@
 <script module lang="ts">
-	import type { CalendarDateTime, Time, ZonedDateTime } from '@internationalized/date';
+	import { CalendarDateTime, ZonedDateTime } from '@internationalized/date';
+	import type { Snippet } from 'svelte';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import type { DateTimeDisambiguation, DateTimeGranularity } from '../../runtime/date-time.js';
@@ -7,6 +8,7 @@
 	import type { FormControlDraftState } from '../../runtime/form/form-value-adapter.svelte.js';
 
 	export type DateTimeFieldSize = ZControlSize;
+	export type DateTimeFieldFormParticipation = 'auto' | 'none';
 
 	interface ZDateTimeFieldSharedProps extends Omit<
 		HTMLAttributes<HTMLDivElement>,
@@ -16,6 +18,7 @@
 		readonly disabled?: boolean;
 		readonly disambiguation?: DateTimeDisambiguation;
 		readonly form?: string;
+		readonly formParticipation?: DateTimeFieldFormParticipation;
 		readonly granularity?: DateTimeGranularity;
 		readonly hideTimeZone?: boolean;
 		readonly hourCycle?: 12 | 24;
@@ -24,15 +27,17 @@
 		readonly minuteStep?: number;
 		readonly name?: string;
 		readonly onDraftChange?: (state: FormControlDraftState) => void;
+		readonly onFormReset?: () => void;
 		readonly readonly?: boolean;
 		ref?: HTMLDivElement | null;
 		readonly required?: boolean;
 		readonly secondStep?: number;
 		readonly size?: DateTimeFieldSize;
+		readonly suffixAction?: Snippet;
 		readonly timeZone?: string;
 	}
 
-	export interface ZDateTimeFieldLocalProps extends ZDateTimeFieldSharedProps {
+	interface ZDateTimeFieldLocalValueProps {
 		readonly defaultValue?: CalendarDateTime | null;
 		readonly isDateTimeUnavailable?: (value: CalendarDateTime) => boolean;
 		readonly maxValue?: CalendarDateTime;
@@ -43,7 +48,7 @@
 		value?: CalendarDateTime | null;
 	}
 
-	export interface ZDateTimeFieldZonedProps extends ZDateTimeFieldSharedProps {
+	interface ZDateTimeFieldZonedValueProps {
 		readonly defaultValue?: ZonedDateTime | null;
 		readonly isDateTimeUnavailable?: (value: ZonedDateTime) => boolean;
 		readonly maxValue?: ZonedDateTime;
@@ -54,7 +59,10 @@
 		value?: ZonedDateTime | null;
 	}
 
-	export type ZDateTimeFieldProps = ZDateTimeFieldLocalProps | ZDateTimeFieldZonedProps;
+	export type ZDateTimeFieldLocalProps = ZDateTimeFieldSharedProps & ZDateTimeFieldLocalValueProps;
+	export type ZDateTimeFieldZonedProps = ZDateTimeFieldSharedProps & ZDateTimeFieldZonedValueProps;
+	export type ZDateTimeFieldProps = ZDateTimeFieldSharedProps &
+		(ZDateTimeFieldLocalValueProps | ZDateTimeFieldZonedValueProps);
 
 	export const zuiMetadata = {
 		category: 'input',
@@ -87,6 +95,11 @@
 				description: '合成后的日期、时间、DST和联合约束草稿反馈。',
 				name: 'onDraftChange',
 				type: '(state: FormControlDraftState) => void'
+			},
+			{
+				description: '所属form reset恢复defaultValue并清理日期时间草稿后调用。',
+				name: 'onFormReset',
+				type: '() => void'
 			}
 		],
 		keyboard: [
@@ -215,6 +228,18 @@
 				type: 'string'
 			},
 			{
+				default: "'auto'",
+				description: '上层Picker可设none，由上层唯一拥有FormValue scope、bridge和reset。',
+				name: 'formParticipation',
+				type: "'auto' | 'none'"
+			},
+			{
+				default: 'undefined',
+				description: '透传到唯一内部InputGroup的真实操作区。',
+				name: 'suffixAction',
+				type: 'Snippet'
+			},
+			{
 				default: 'Field > componentDefaults.dateTimeField > input > density',
 				description: '日期、时间和InputGroup共享尺寸。',
 				name: 'size',
@@ -228,7 +253,14 @@
 			}
 		],
 		since: 'unreleased',
-		snippets: [],
+		snippets: [
+			{
+				description: '唯一内部InputGroup的逻辑结束操作区。',
+				name: 'suffixAction',
+				required: false,
+				type: 'Snippet'
+			}
+		],
 		source: 'ui/zui/src/components/input/ZDateTimeField.svelte',
 		states: [
 			{
@@ -250,14 +282,7 @@
 </script>
 
 <script lang="ts">
-	import {
-		CalendarDateTime,
-		Time,
-		ZonedDateTime,
-		today,
-		toCalendarDateTime,
-		toZoned
-	} from '@internationalized/date';
+	import { Time, today, toCalendarDateTime, toZoned } from '@internationalized/date';
 	import { onDestroy, untrack } from 'svelte';
 	import {
 		composeDateTime,
@@ -268,7 +293,7 @@
 		normalizeDateTimeModelValue,
 		type DateTimeMode
 	} from '../../runtime/date-time.js';
-	import { resolveControlSize } from '../../runtime/foundation/control-size.js';
+	import { controlSizeMetrics, resolveControlSize } from '../../runtime/foundation/control-size.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
@@ -308,6 +333,7 @@
 		disambiguation = 'compatible',
 		dir: dirProp,
 		form,
+		formParticipation = 'auto',
 		granularity = 'minute',
 		hideTimeZone = false,
 		hourCycle,
@@ -320,6 +346,7 @@
 		mode = 'local',
 		name: nameProp,
 		onDraftChange,
+		onFormReset,
 		onValueChange,
 		placeholderValue,
 		readonly: readonlyProp = false,
@@ -328,6 +355,7 @@
 		secondStep = 1,
 		size,
 		style,
+		suffixAction,
 		timeZone,
 		value = $bindable(),
 		...rest
@@ -335,7 +363,7 @@
 	const zui = useZui();
 	const fieldOwner = claimZFieldControlOwner();
 	const field = fieldOwner.field;
-	const valueScope = claimFormValueScope();
+	const valueScope = formParticipation === 'auto' ? claimFormValueScope() : null;
 	const uid = $props.id();
 	const idBase = $derived(createZuiId(zui.idPrefix, uid, 'date-time-field'));
 	const controlId = $derived(controlIdProp ?? field?.controlId ?? `${idBase}-date`);
@@ -362,8 +390,18 @@
 		zui.icss((s) => {
 			s.alignItems.center;
 			s.display.flex;
+			s.flexWrap.wrap;
 			s.flex.raw('1 1 auto');
 			s.minWidth.px(0);
+		})
+	);
+	const actionGeometryClass = $derived(
+		zui.icss((s) => {
+			const height = controlSizeMetrics(zui.theme, resolvedSize).contentHeight;
+			s._selector('& > [data-slot="input-group"] > [data-slot="suffix-action"] > button', (s) => {
+				s.height.raw(height);
+				s.minHeight.raw(height);
+			});
 		})
 	);
 	const variables = $derived(readIcssCarrier(rest));
@@ -394,7 +432,7 @@
 			onChange: () => onValueChange as ((next: DateTimeFieldValue | null) => void) | undefined,
 			owner: 'ZDateTimeField',
 			read: () => value,
-			resetDraft: rollbackCompositeDraft,
+			resetDraft: rollbackDraft,
 			syncNative: (next) => syncOwnedValue(next),
 			write: (next) => (value = next as typeof value)
 		},
@@ -510,7 +548,7 @@
 	function composeDraft(): void {
 		if (!dateValue || !timeValue) {
 			draftFailure = undefined;
-			if (currentValue() && (!dateValue || !timeValue) && !valueState.setFromUser(null))
+			if (!dateValue && !timeValue && currentValue() && !valueState.setFromUser(null))
 				syncOwnedValue(currentValue());
 			return;
 		}
@@ -548,15 +586,19 @@
 		const parts = normalized
 			? dateTimeParts(displayDateTime(normalized, mode, resolvedTimeZone))
 			: null;
-		dateController?.rollbackDraft();
-		timeController?.rollbackDraft();
 		dateValue = parts?.date ?? null;
 		timeValue = parts?.time ?? null;
+		dateController?.rollbackDraft();
+		timeController?.rollbackDraft();
 		draftFailure = undefined;
 	}
 
 	function rollbackCompositeDraft(): void {
 		syncOwnedValue(currentValue());
+	}
+
+	export function rollbackDraft(): void {
+		rollbackCompositeDraft();
 	}
 
 	function handleBoundaryKey(event: KeyboardEvent): void {
@@ -580,6 +622,7 @@
 	function resetFromForm(): void {
 		valueState.reset();
 		syncOwnedValue(currentValue());
+		onFormReset?.();
 	}
 
 	let observedValueKey: string | undefined;
@@ -608,7 +651,7 @@
 <div
 	{...rest}
 	bind:this={ref}
-	class={className}
+	class={[actionGeometryClass, className]}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
 	dir={resolvedDirection}
@@ -632,6 +675,7 @@
 		readonly={resolvedReadonly}
 		required={resolvedRequired}
 		size={resolvedSize}
+		{suffixAction}
 		suffix={timeZoneText ? zoneSuffix : undefined}
 	>
 		<div
@@ -691,10 +735,12 @@
 		</div>
 	</ZInputGroup>
 </div>
-<FormValueBridge
-	disabled={resolvedDisabled}
-	{form}
-	name={resolvedName}
-	onReset={resetFromForm}
-	value={currentValue()?.toString()}
-/>
+{#if formParticipation === 'auto'}
+	<FormValueBridge
+		disabled={resolvedDisabled}
+		{form}
+		name={resolvedName}
+		onReset={resetFromForm}
+		value={currentValue()?.toString()}
+	/>
+{/if}

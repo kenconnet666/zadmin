@@ -3,7 +3,7 @@
 ## Scope and model
 
 The system includes `ZCalendar`, `ZDateField`, `ZTimeField`, `ZDatePicker`,
-`ZDateRangePicker`, and the experimental `ZTimePicker`, `ZTimeRangePicker`, and `ZDateTimeField`. Values remain the immutable `CalendarDate`, `Time`, `CalendarDateTime`, and `ZonedDateTime` types from
+`ZDateRangePicker`, and the experimental `ZTimePicker`, `ZTimeRangePicker`, `ZDateTimeField`, `ZDateTimePicker`, and `ZDateTimeRangePicker`. Values remain the immutable `CalendarDate`, `Time`, `CalendarDateTime`, and `ZonedDateTime` types from
 `@internationalized/date`; date-only and wall-clock values are not converted through the host
 `Date` constructor. `null` is the explicit controlled empty value. `undefined` only means that a
 Svelte binding was not supplied and may therefore select `defaultValue` during initialization.

@@ -1586,25 +1586,25 @@ export const componentCatalogManifest = Object.freeze([
 		],
 		profiles: ['form-control', 'animated'],
 		capabilities: [
+			'controlled',
+			'invalid',
+			'form-data',
+			'form-reset',
 			'composition',
 			'variants-and-states',
 			'accessible-name',
 			'basic-render',
 			'focus',
-			'form-data',
-			'form-reset',
 			'keyboard',
 			'locale',
 			'uncontrolled',
 			'disabled',
-			'invalid',
 			'readonly',
-			'controlled',
 			'external-clear',
 			'density',
 			'native-props'
 		],
-		demoCount: 6,
+		demoCount: 7,
 		publicComponentCount: 1
 	},
 	{
@@ -2391,6 +2391,57 @@ export const componentCatalogManifest = Object.freeze([
 			'controlled',
 			'external-clear',
 			'keyboard',
+			'form-data',
+			'form-reset'
+		],
+		demoCount: 3,
+		publicComponentCount: 1
+	},
+	{
+		id: 'date-time-picker',
+		name: 'ZDateTimePicker',
+		category: 'input',
+		summary:
+			'由 DateTimeField、Calendar 和共享时间面板组合的实验性选择器。根组件唯一持有值、打开状态与表单条目，local/zoned 类型明确，面板支持确认或即时提交。',
+		status: 'experimental',
+		keywords: [],
+		profiles: ['form-control', 'layer'],
+		capabilities: [
+			'basic-render',
+			'controlled',
+			'external-clear',
+			'keyboard',
+			'portal',
+			'invalid',
+			'locale',
+			'density',
+			'disabled',
+			'readonly',
+			'form-data',
+			'form-reset'
+		],
+		demoCount: 4,
+		publicComponentCount: 1
+	},
+	{
+		id: 'date-time-range-picker',
+		name: 'ZDateTimeRangePicker',
+		category: 'input',
+		summary:
+			'实验性日期时间范围选择器。两个 DateTimeField 与一个共享 DateTimePickerPanel 组合，根组件唯一管理范围值、表单端点和提交策略，支持 local/zoned、部分范围与显式排序。',
+		status: 'experimental',
+		keywords: [],
+		profiles: ['form-control', 'layer'],
+		capabilities: [
+			'basic-render',
+			'controlled',
+			'portal',
+			'keyboard',
+			'locale',
+			'invalid',
+			'density',
+			'disabled',
+			'readonly',
 			'form-data',
 			'form-reset'
 		],

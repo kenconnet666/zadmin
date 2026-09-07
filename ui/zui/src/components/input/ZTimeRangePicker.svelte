@@ -1,5 +1,5 @@
 <script module lang="ts">
-	import type { Time } from '@internationalized/date';
+	import { Time } from '@internationalized/date';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
 	import type { TimeFieldGranularity, TimeFieldSegment } from '../../runtime/date.js';
@@ -458,7 +458,6 @@
 <script lang="ts">
 	import Clock3 from '@lucide/svelte/icons/clock-3';
 	import X from '@lucide/svelte/icons/x';
-	import { Time } from '@internationalized/date';
 	import { onDestroy } from 'svelte';
 	import { formatTime, resolveHourCycle, timeFieldPattern } from '../../runtime/date.js';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
@@ -488,9 +487,7 @@
 		timeRangeEndpointAvailable,
 		timeRangeValue,
 		validateTimeRangeValue,
-		type TimeRangeConstraints,
-		type TimeRangePart,
-		type TimeRangeValue
+		type TimeRangeConstraints
 	} from '../../runtime/time-range.js';
 	import ZPopover from '../compound/popover/ZPopover.svelte';
 	import ZPopoverContent from '../compound/popover/ZPopoverContent.svelte';

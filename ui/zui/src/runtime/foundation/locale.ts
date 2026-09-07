@@ -77,6 +77,15 @@ export interface ZuiCommandLocale {
 }
 
 export interface ZuiDateTimeLocale {
+	readonly chooseDateTime: string;
+	readonly clearDateTime: string;
+	readonly chooseDateTimeRange: string;
+	readonly clearDateTimeRange: string;
+	readonly startDateTime: string;
+	readonly endDateTime: string;
+	readonly invalidRange: string;
+	readonly orderedRange: string;
+	readonly noAvailableDateTime: string;
 	readonly unavailable: string;
 	readonly invalidLocalTime: string;
 }
@@ -348,6 +357,15 @@ export const enUSLocalePack = Object.freeze({
 		ratingValue: (value: number, count: number) => `${value} out of ${count}`
 	}),
 	dateTime: Object.freeze({
+		chooseDateTime: 'Choose date and time',
+		clearDateTime: 'Clear date and time',
+		chooseDateTimeRange: 'Choose date and time range',
+		clearDateTimeRange: 'Clear date and time range',
+		startDateTime: 'Start date and time',
+		endDateTime: 'End date and time',
+		invalidRange: 'This date and time range is incomplete or unavailable',
+		orderedRange: 'End date and time must not be earlier than start',
+		noAvailableDateTime: 'No available date and time',
 		unavailable: 'This date and time is unavailable',
 		invalidLocalTime: 'This local time does not exist or is ambiguous in the selected time zone'
 	}),
@@ -558,6 +576,15 @@ export const zhCNLocalePack = Object.freeze({
 		ratingValue: (value: number, count: number) => `${value} 分，满分 ${count} 分`
 	}),
 	dateTime: Object.freeze({
+		chooseDateTime: '选择日期时间',
+		clearDateTime: '清空日期时间',
+		chooseDateTimeRange: '选择日期时间范围',
+		clearDateTimeRange: '清空日期时间范围',
+		startDateTime: '开始日期时间',
+		endDateTime: '结束日期时间',
+		invalidRange: '日期时间范围未填写完整或不可用',
+		orderedRange: '结束日期时间不能早于开始',
+		noAvailableDateTime: '没有可用日期时间',
 		unavailable: '该日期时间不可用',
 		invalidLocalTime: '该时区的本地时间不存在或存在歧义'
 	}),

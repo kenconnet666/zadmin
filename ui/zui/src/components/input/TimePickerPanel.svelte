@@ -27,6 +27,7 @@
 		readonly dayPeriodLabel?: (period: TimePickerDayPeriod) => string;
 		readonly disabled: boolean;
 		readonly direction?: TimePickerPanelDirection;
+		readonly footer?: boolean;
 		readonly idBase: string;
 		readonly invalidTimeLabel: string;
 		readonly locale: string;
@@ -104,7 +105,6 @@
 		timePickerNow,
 		timePickerStepValues,
 		timePickerValueAvailable,
-		type TimePickerDayPeriod,
 		type TimePickerPart
 	} from '../../runtime/time-picker.js';
 	import ZButton from '../gene/ZButton.svelte';
@@ -120,6 +120,7 @@
 		dayPeriodLabel,
 		disabled,
 		direction,
+		footer = true,
 		idBase,
 		invalidTimeLabel,
 		locale,
@@ -335,14 +336,16 @@
 			</div>
 		{/key}
 	{/if}
-	<div class={footerClass} data-slot="footer">
-		{#if cancelLabel && onCancel}
-			<ZButton data-slot="cancel" {disabled} onclick={onCancel} {size} variant="ghost">
-				{cancelLabel}
+	{#if footer}
+		<div class={footerClass} data-slot="footer">
+			{#if cancelLabel && onCancel}
+				<ZButton data-slot="cancel" {disabled} onclick={onCancel} {size} variant="ghost">
+					{cancelLabel}
+				</ZButton>
+			{/if}
+			<ZButton disabled={!value || disabled} onclick={confirm} {size}>
+				{confirmLabel}
 			</ZButton>
-		{/if}
-		<ZButton disabled={!value || disabled} onclick={confirm} {size}>
-			{confirmLabel}
-		</ZButton>
-	</div>
+		</div>
+	{/if}
 </div>

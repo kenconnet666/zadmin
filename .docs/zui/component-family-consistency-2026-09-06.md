@@ -42,3 +42,5 @@ E10A 补充：Form/Field/Input/PasswordInput/Textarea/Checkbox/NativeSelect/Chec
 5. 记录未覆盖边界与仍需修改事项；未完成或证据不足时保持总目标进行中。
 
 E12补充：TimePicker/TimeRangePicker已共享TimePickerPanel，DateTimeField组合Date/TimeField；FormControlDraftState、resetDraft、公共分段边界导航、五档componentDefaults与locale-pack统一。Date/Time在InputGroup中由Group独占focus ring。已点查跨字段键盘、时区显示、范围preset/confirm、raw draft阻止提交和390px布局；全家族motion中断/reduced、全部状态与当前提交远程执行仍是最终门槛。
+
+E13补充：DateTimePicker/Range已共享Calendar+TimePickerPanel；DateTimeField的suffixAction/none使上层无需重复InputGroup/bridge。DateTime本地/时区Props精确分支、range端点角色与确认策略同组实现；NumberField统一草稿/五档默认；Field登记与状态观察分离。时间列只滚自身、宽窄屏grid响应式、suffix动作同高、footer和Floating边距由共享下层承担。当前候选全族CI与剩余矩阵仍是最终完成条件。

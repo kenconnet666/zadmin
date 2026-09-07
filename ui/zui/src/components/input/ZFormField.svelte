@@ -191,16 +191,20 @@
 	const resolvedReadonly = $derived(readonly || form.readonly);
 	const resolvedSize = $derived(size ?? form.size);
 	$effect(() => {
-		if (!ref) return;
-		return form.registry.register({
-			control: () => ref,
+		const control = ref;
+		const registration = {
+			control: () => control,
 			dependencies,
 			htmlName: resolvedHtmlName,
+			htmlNameFollowsPath: htmlName === undefined,
 			instanceId,
 			path,
-			preserve: preserve ?? form.preserve,
-			htmlNameFollowsPath: htmlName === undefined
-		});
+			preserve: preserve ?? form.preserve
+		};
+		if (!control) return;
+		// register() reads the reactive state map to seed this field. Those reads are registry
+		// implementation details and must not make validation/error patches re-register the field.
+		return untrack(() => form.registry.register(registration));
 	});
 	$effect(() => {
 		const next = state;

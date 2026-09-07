@@ -38,7 +38,9 @@ export default defineConfig({
 	server: {
 		host: '0.0.0.0',
 		port: 5174,
-		strictPort: true
+		strictPort: true,
+		// Formatters and IDE saves can briefly truncate a file before replacing its contents.
+		watch: { awaitWriteFinish: { stabilityThreshold: 150, pollInterval: 25 } }
 	},
 	test: {
 		expect: { requireAssertions: true },

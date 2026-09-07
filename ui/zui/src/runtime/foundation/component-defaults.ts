@@ -101,6 +101,9 @@ const COMPONENT_RULES = {
 	timePicker: { size: buttonRules.size },
 	timeRangePicker: { size: buttonRules.size },
 	dateTimeField: { size: buttonRules.size },
+	dateTimePicker: { size: buttonRules.size },
+	dateTimeRangePicker: { size: buttonRules.size },
+	numberField: { size: buttonRules.size },
 	fieldset: {
 		size: buttonRules.size,
 		variant: { kind: 'enum', values: ['outlined', 'filled', 'plain'] }
@@ -185,6 +188,9 @@ export interface DateRangePickerComponentDefaults extends DefaultsFor<'dateRange
 export interface TimePickerComponentDefaults extends DefaultsFor<'timePicker'> {}
 export interface TimeRangePickerComponentDefaults extends DefaultsFor<'timeRangePicker'> {}
 export interface DateTimeFieldComponentDefaults extends DefaultsFor<'dateTimeField'> {}
+export interface DateTimePickerComponentDefaults extends DefaultsFor<'dateTimePicker'> {}
+export interface DateTimeRangePickerComponentDefaults extends DefaultsFor<'dateTimeRangePicker'> {}
+export interface NumberFieldComponentDefaults extends DefaultsFor<'numberField'> {}
 export interface FieldsetComponentDefaults extends DefaultsFor<'fieldset'> {}
 export interface SliderComponentDefaults extends DefaultsFor<'slider'> {}
 export interface RangeSliderComponentDefaults extends DefaultsFor<'rangeSlider'> {}

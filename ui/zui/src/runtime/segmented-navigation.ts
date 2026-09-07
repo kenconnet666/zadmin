@@ -7,7 +7,7 @@ export function segmentedNavigationIntent(
 	event: Pick<KeyboardEvent, 'key'>,
 	direction: 'ltr' | 'rtl'
 ): NavigationIntent | null {
-	return navigationIntent(event.key, 'horizontal', direction);
+	return navigationIntent(event.key, 'horizontal', direction) ?? null;
 }
 
 export function moveWithinSegmentedBoundary(

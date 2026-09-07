@@ -1415,7 +1415,27 @@
 			"id": "date-time-field",
 			"name": "ZDateTimeField",
 			"source": "ui/zui/src/components/input/ZDateTimeField.svelte",
-			"declaredPropCount": 26,
+			"declaredPropCount": 29,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "date-time-picker",
+			"name": "ZDateTimePicker",
+			"source": "ui/zui/src/components/input/ZDateTimePicker.svelte",
+			"declaredPropCount": 49,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "date-time-range-picker",
+			"name": "ZDateTimeRangePicker",
+			"source": "ui/zui/src/components/input/ZDateTimeRangePicker.svelte",
+			"declaredPropCount": 55,
 			"metadataGapPropCount": 0,
 			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
@@ -1534,7 +1554,7 @@
 			"id": "number-field",
 			"name": "ZNumberField",
 			"source": "ui/zui/src/components/input/ZNumberField.svelte",
-			"declaredPropCount": 27,
+			"declaredPropCount": 28,
 			"metadataGapPropCount": 0,
 			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
@@ -1954,8 +1974,8 @@
 		"maxMetadataGapProps": 0
 	},
 	"totals": {
-		"components": 179,
-		"declaredProps": 2384,
+		"components": 181,
+		"declaredProps": 2492,
 		"metadataGapProps": 0,
 		"fallbackProps": 0,
 		"opaqueStructuredProps": 9,

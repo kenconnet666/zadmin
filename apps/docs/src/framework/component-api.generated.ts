@@ -9154,167 +9154,735 @@ export const dateRangePickerApiFacts = {
 export const dateTimeFieldApiFacts = {
 	declaration: 'ZDateTimeFieldProps',
 	id: 'date-time-field',
-	inheritedFrom: ['ZDateTimeFieldLocalProps | ZDateTimeFieldZonedProps'],
+	inheritedFrom: [
+		'HTMLAttributes<HTMLDivElement>',
+		'ZDateTimeFieldLocalValueProps | ZDateTimeFieldZonedValueProps'
+	],
 	name: 'ZDateTimeField',
 	props: [
 		{
 			name: 'controlId',
 			required: false,
-			type: 'string',
-			inheritedFrom: 'ZDateTimeFieldSharedProps'
+			type: 'string'
 		},
 		{
 			name: 'disabled',
 			required: false,
-			type: 'boolean',
-			inheritedFrom: 'ZDateTimeFieldSharedProps'
+			type: 'boolean'
 		},
 		{
 			name: 'disambiguation',
 			required: false,
-			type: 'DateTimeDisambiguation',
-			inheritedFrom: 'ZDateTimeFieldSharedProps'
+			type: 'DateTimeDisambiguation'
 		},
 		{
 			name: 'form',
 			required: false,
-			type: 'string',
-			inheritedFrom: 'ZDateTimeFieldSharedProps'
+			type: 'string'
+		},
+		{
+			name: 'formParticipation',
+			required: false,
+			type: "'auto' | 'none'"
 		},
 		{
 			name: 'granularity',
 			required: false,
-			type: 'DateTimeGranularity',
-			inheritedFrom: 'ZDateTimeFieldSharedProps'
+			type: 'DateTimeGranularity'
 		},
 		{
 			name: 'hideTimeZone',
 			required: false,
-			type: 'boolean',
-			inheritedFrom: 'ZDateTimeFieldSharedProps'
+			type: 'boolean'
 		},
 		{
 			name: 'hourCycle',
 			required: false,
-			type: '12 | 24',
-			inheritedFrom: 'ZDateTimeFieldSharedProps'
+			type: '12 | 24'
 		},
 		{
 			name: 'invalid',
 			required: false,
-			type: 'boolean',
-			inheritedFrom: 'ZDateTimeFieldSharedProps'
+			type: 'boolean'
 		},
 		{
 			name: 'locale',
 			required: false,
-			type: 'string',
-			inheritedFrom: 'ZDateTimeFieldSharedProps'
+			type: 'string'
 		},
 		{
 			name: 'minuteStep',
 			required: false,
-			type: 'number',
-			inheritedFrom: 'ZDateTimeFieldSharedProps'
+			type: 'number'
 		},
 		{
 			name: 'name',
 			required: false,
-			type: 'string',
-			inheritedFrom: 'ZDateTimeFieldSharedProps'
+			type: 'string'
 		},
 		{
 			name: 'onDraftChange',
 			required: false,
-			type: '(state: FormControlDraftState) => void',
-			inheritedFrom: 'ZDateTimeFieldSharedProps'
+			type: '(state: FormControlDraftState) => void'
+		},
+		{
+			name: 'onFormReset',
+			required: false,
+			type: '() => void'
 		},
 		{
 			name: 'readonly',
 			required: false,
-			type: 'boolean',
-			inheritedFrom: 'ZDateTimeFieldSharedProps'
+			type: 'boolean'
 		},
 		{
 			name: 'ref',
 			required: false,
-			type: 'HTMLDivElement | null',
-			inheritedFrom: 'ZDateTimeFieldSharedProps'
+			type: 'HTMLDivElement | null'
 		},
 		{
 			name: 'required',
 			required: false,
-			type: 'boolean',
-			inheritedFrom: 'ZDateTimeFieldSharedProps'
+			type: 'boolean'
 		},
 		{
 			name: 'secondStep',
 			required: false,
-			type: 'number',
-			inheritedFrom: 'ZDateTimeFieldSharedProps'
+			type: 'number'
 		},
 		{
 			name: 'size',
 			required: false,
-			type: 'DateTimeFieldSize',
-			inheritedFrom: 'ZDateTimeFieldSharedProps'
+			type: 'ZControlSize'
+		},
+		{
+			name: 'suffixAction',
+			required: false,
+			type: 'Snippet'
 		},
 		{
 			name: 'timeZone',
 			required: false,
-			type: 'string',
-			inheritedFrom: 'ZDateTimeFieldSharedProps'
+			type: 'string'
 		},
 		{
 			name: 'defaultValue',
 			required: false,
 			type: 'CalendarDateTime | null | ZonedDateTime | null',
-			inheritedFrom: 'ZDateTimeFieldLocalProps'
+			inheritedFrom: 'ZDateTimeFieldLocalValueProps'
 		},
 		{
 			name: 'isDateTimeUnavailable',
 			required: false,
 			type: '(value: CalendarDateTime) => boolean | (value: ZonedDateTime) => boolean',
-			inheritedFrom: 'ZDateTimeFieldLocalProps'
+			inheritedFrom: 'ZDateTimeFieldLocalValueProps'
 		},
 		{
 			name: 'maxValue',
 			required: false,
 			type: 'CalendarDateTime | ZonedDateTime',
-			inheritedFrom: 'ZDateTimeFieldLocalProps'
+			inheritedFrom: 'ZDateTimeFieldLocalValueProps'
 		},
 		{
 			name: 'minValue',
 			required: false,
 			type: 'CalendarDateTime | ZonedDateTime',
-			inheritedFrom: 'ZDateTimeFieldLocalProps'
+			inheritedFrom: 'ZDateTimeFieldLocalValueProps'
 		},
 		{
 			name: 'mode',
 			required: false,
 			type: "'local' | 'zoned'",
-			inheritedFrom: 'ZDateTimeFieldLocalProps'
+			inheritedFrom: 'ZDateTimeFieldLocalValueProps'
 		},
 		{
 			name: 'onValueChange',
 			required: false,
 			type: '(value: CalendarDateTime | null) => void | (value: ZonedDateTime | null) => void',
-			inheritedFrom: 'ZDateTimeFieldLocalProps'
+			inheritedFrom: 'ZDateTimeFieldLocalValueProps'
 		},
 		{
 			name: 'placeholderValue',
 			required: false,
 			type: 'CalendarDateTime | ZonedDateTime',
-			inheritedFrom: 'ZDateTimeFieldLocalProps'
+			inheritedFrom: 'ZDateTimeFieldLocalValueProps'
 		},
 		{
 			name: 'value',
 			required: false,
 			type: 'CalendarDateTime | null | ZonedDateTime | null',
-			inheritedFrom: 'ZDateTimeFieldLocalProps'
+			inheritedFrom: 'ZDateTimeFieldLocalValueProps'
 		}
 	],
 	source: 'ui/zui/src/components/input/ZDateTimeField.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
+export const dateTimePickerApiFacts = {
+	declaration: 'ZDateTimePickerProps',
+	id: 'date-time-picker',
+	inheritedFrom: [
+		'HTMLAttributes<HTMLDivElement>',
+		'ZDateTimePickerLocalValueProps | ZDateTimePickerZonedValueProps'
+	],
+	name: 'ZDateTimePicker',
+	props: [
+		{
+			name: 'calendarLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'cancelLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'clearLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'clearable',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'commitMode',
+			required: false,
+			type: "'confirm' | 'immediate'"
+		},
+		{
+			name: 'confirmLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'controlId',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'dayPeriodLabel',
+			required: false,
+			type: '(period: TimePickerDayPeriod) => string'
+		},
+		{
+			name: 'defaultOpen',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'disambiguation',
+			required: false,
+			type: 'DateTimeDisambiguation'
+		},
+		{
+			name: 'firstDayOfWeek',
+			required: false,
+			type: 'Weekday'
+		},
+		{
+			name: 'form',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'granularity',
+			required: false,
+			type: 'DateTimeGranularity'
+		},
+		{
+			name: 'hideTimeZone',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'hourCycle',
+			required: false,
+			type: '12 | 24'
+		},
+		{
+			name: 'invalid',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'invalidDateTimeLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'locale',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'minuteStep',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'name',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'nextLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'noAvailableTimeLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'nowLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'onOpenChange',
+			required: false,
+			type: '(open: boolean) => void'
+		},
+		{
+			name: 'open',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'pickerLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'placement',
+			required: false,
+			type: 'PopoverPlacement'
+		},
+		{
+			name: 'previousLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null'
+		},
+		{
+			name: 'required',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'secondStep',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'segmentLabel',
+			required: false,
+			type: "(segment: 'hour' | 'minute' | 'second') => string"
+		},
+		{
+			name: 'showNow',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'showOutsideDates',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
+			name: 'timeZone',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'toggleDayPeriodLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'defaultValue',
+			required: false,
+			type: 'CalendarDateTime | null | ZonedDateTime | null',
+			inheritedFrom: 'ZDateTimePickerLocalValueProps'
+		},
+		{
+			name: 'isDateTimeUnavailable',
+			required: false,
+			type: '(value: CalendarDateTime) => boolean | (value: ZonedDateTime) => boolean',
+			inheritedFrom: 'ZDateTimePickerLocalValueProps'
+		},
+		{
+			name: 'maxValue',
+			required: false,
+			type: 'CalendarDateTime | ZonedDateTime',
+			inheritedFrom: 'ZDateTimePickerLocalValueProps'
+		},
+		{
+			name: 'minValue',
+			required: false,
+			type: 'CalendarDateTime | ZonedDateTime',
+			inheritedFrom: 'ZDateTimePickerLocalValueProps'
+		},
+		{
+			name: 'mode',
+			required: false,
+			type: "'local' | 'zoned'",
+			inheritedFrom: 'ZDateTimePickerLocalValueProps'
+		},
+		{
+			name: 'onCommit',
+			required: false,
+			type: '(value: CalendarDateTime | null) => void | (value: ZonedDateTime | null) => void',
+			inheritedFrom: 'ZDateTimePickerLocalValueProps'
+		},
+		{
+			name: 'onValueChange',
+			required: false,
+			type: '(value: CalendarDateTime | null) => void | (value: ZonedDateTime | null) => void',
+			inheritedFrom: 'ZDateTimePickerLocalValueProps'
+		},
+		{
+			name: 'placeholderValue',
+			required: false,
+			type: 'CalendarDateTime | ZonedDateTime',
+			inheritedFrom: 'ZDateTimePickerLocalValueProps'
+		},
+		{
+			name: 'presets',
+			required: false,
+			type: 'readonly DateTimePickerPreset<CalendarDateTime>[] | readonly DateTimePickerPreset<ZonedDateTime>[]',
+			inheritedFrom: 'ZDateTimePickerLocalValueProps'
+		},
+		{
+			name: 'value',
+			required: false,
+			type: 'CalendarDateTime | null | ZonedDateTime | null',
+			inheritedFrom: 'ZDateTimePickerLocalValueProps'
+		}
+	],
+	source: 'ui/zui/src/components/input/ZDateTimePicker.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
+export const dateTimeRangePickerApiFacts = {
+	declaration: 'ZDateTimeRangePickerProps',
+	id: 'date-time-range-picker',
+	inheritedFrom: [
+		'HTMLAttributes<HTMLDivElement>',
+		'ZDateTimeRangePickerLocalBranch | ZDateTimeRangePickerZonedBranch'
+	],
+	name: 'ZDateTimeRangePicker',
+	props: [
+		{
+			name: 'allowEmpty',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'calendarLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'cancelLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'clearLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'clearable',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'commitMode',
+			required: false,
+			type: "'confirm' | 'immediate'"
+		},
+		{
+			name: 'confirmLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'controlId',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'dayPeriodLabel',
+			required: false,
+			type: '(period: TimePickerDayPeriod) => string'
+		},
+		{
+			name: 'defaultOpen',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'disambiguation',
+			required: false,
+			type: 'DateTimeDisambiguation'
+		},
+		{
+			name: 'endLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'firstDayOfWeek',
+			required: false,
+			type: 'Weekday'
+		},
+		{
+			name: 'form',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'granularity',
+			required: false,
+			type: 'DateTimeGranularity'
+		},
+		{
+			name: 'hideTimeZone',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'hourCycle',
+			required: false,
+			type: '12 | 24'
+		},
+		{
+			name: 'invalid',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'invalidDateTimeLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'invalidRangeLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'locale',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'minuteStep',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'name',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'nextLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'noAvailableTimeLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'nowLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'onOpenChange',
+			required: false,
+			type: '(open: boolean) => void'
+		},
+		{
+			name: 'open',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'order',
+			required: false,
+			type: 'DateTimeRangeOrder'
+		},
+		{
+			name: 'orderedRangeLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'pickerLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'placement',
+			required: false,
+			type: 'PopoverPlacement'
+		},
+		{
+			name: 'previousLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null'
+		},
+		{
+			name: 'required',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'secondStep',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'segmentLabel',
+			required: false,
+			type: '(segment: TimeFieldSegment) => string'
+		},
+		{
+			name: 'showNow',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'showOutsideDates',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
+			name: 'startLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'timeZone',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'toggleDayPeriodLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'defaultValue',
+			required: false,
+			type: 'LocalDateTimeRangeValue | null | ZonedDateTimeRangeValue | null',
+			inheritedFrom: 'ZDateTimeRangePickerLocalBranch'
+		},
+		{
+			name: 'isDateTimeUnavailable',
+			required: false,
+			type: '( value: CalendarDateTime, part: DateTimeRangePart, range: LocalDateTimeRangeValue ) => boolean | ( value: ZonedDateTime, part: DateTimeRangePart, range: ZonedDateTimeRangeValue ) => boolean',
+			inheritedFrom: 'ZDateTimeRangePickerLocalBranch'
+		},
+		{
+			name: 'maxValue',
+			required: false,
+			type: 'CalendarDateTime | ZonedDateTime',
+			inheritedFrom: 'ZDateTimeRangePickerLocalBranch'
+		},
+		{
+			name: 'minValue',
+			required: false,
+			type: 'CalendarDateTime | ZonedDateTime',
+			inheritedFrom: 'ZDateTimeRangePickerLocalBranch'
+		},
+		{
+			name: 'mode',
+			required: false,
+			type: "'local' | 'zoned'",
+			inheritedFrom: 'ZDateTimeRangePickerLocalBranch'
+		},
+		{
+			name: 'onCommit',
+			required: false,
+			type: '(value: LocalDateTimeRangeValue | null) => void | (value: ZonedDateTimeRangeValue | null) => void',
+			inheritedFrom: 'ZDateTimeRangePickerLocalBranch'
+		},
+		{
+			name: 'onValueChange',
+			required: false,
+			type: '(value: LocalDateTimeRangeValue | null) => void | (value: ZonedDateTimeRangeValue | null) => void',
+			inheritedFrom: 'ZDateTimeRangePickerLocalBranch'
+		},
+		{
+			name: 'placeholderValue',
+			required: false,
+			type: 'CalendarDateTime | ZonedDateTime',
+			inheritedFrom: 'ZDateTimeRangePickerLocalBranch'
+		},
+		{
+			name: 'presets',
+			required: false,
+			type: "readonly DateTimeRangePreset<'local'>[] | readonly DateTimeRangePreset<'zoned'>[]",
+			inheritedFrom: 'ZDateTimeRangePickerLocalBranch'
+		},
+		{
+			name: 'value',
+			required: false,
+			type: 'LocalDateTimeRangeValue | null | ZonedDateTimeRangeValue | null',
+			inheritedFrom: 'ZDateTimeRangePickerLocalBranch'
+		}
+	],
+	source: 'ui/zui/src/components/input/ZDateTimeRangePicker.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 
@@ -10026,6 +10594,8 @@ export const inputApiFacts = {
 		datePickerApiFacts,
 		dateRangePickerApiFacts,
 		dateTimeFieldApiFacts,
+		dateTimePickerApiFacts,
+		dateTimeRangePickerApiFacts,
 		fieldApiFacts,
 		fieldsetApiFacts,
 		fileUploadApiFacts,
@@ -10459,6 +11029,11 @@ export const numberFieldApiFacts = {
 			name: 'name',
 			required: false,
 			type: 'string'
+		},
+		{
+			name: 'onDraftChange',
+			required: false,
+			type: '(state: FormControlDraftState) => void'
 		},
 		{
 			name: 'onValueChange',

@@ -60,5 +60,5 @@
 		{/if}
 	</fieldset>
 	<button type="submit">Submit</button>
-	<output data-submissions>{submissions}</output>
 </ZForm>
+<output data-submissions>{submissions}</output>

@@ -32,7 +32,7 @@ describe('ZPasswordInput production contract', () => {
 		const label = document.querySelector<HTMLLabelElement>(`label[for="${input.id}"]`)!;
 
 		expect(input.type).toBe('password');
-		expect(input.autocomplete).toBe('current-password');
+		expect(input.getAttribute('autocomplete')).toBe('current-password');
 		expect(input.required).toBe(true);
 		expect(input.dataset.size).toBe('large');
 		expect(input.getAttribute('aria-invalid')).toBe('true');

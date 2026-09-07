@@ -10,6 +10,7 @@ const local = {
 const defaultLocal = { value: null } satisfies ZDateTimeFieldProps;
 const explicitDirection = { dir: 'rtl', value: null } satisfies ZDateTimeFieldProps;
 const automaticDirection = { dir: 'auto', value: null } satisfies ZDateTimeFieldProps;
+const auxiliary = { formParticipation: 'none', value: null } satisfies ZDateTimeFieldProps;
 const zoned = {
 	mode: 'zoned',
 	value: parseZonedDateTime('2026-09-07T09:30-07:00[America/Los_Angeles]'),
@@ -22,13 +23,13 @@ const dateOnly = {
 } satisfies ZDateTimeFieldProps;
 const zonedWithLocal = {
 	mode: 'zoned',
-	// @ts-expect-error Zoned mode requires ZonedDateTime.
 	value: new CalendarDateTime(2026, 9, 7, 9, 30)
+	// @ts-expect-error Zoned mode requires ZonedDateTime.
 } satisfies ZDateTimeFieldProps;
 const mismatchedCallback = {
 	mode: 'local',
-	// @ts-expect-error Local callbacks cannot receive ZonedDateTime.
 	onValueChange: (value: ReturnType<typeof parseZonedDateTime> | null) => value?.timeZone
+	// @ts-expect-error Local callbacks cannot receive ZonedDateTime.
 } satisfies ZDateTimeFieldProps;
 
 void [
@@ -36,6 +37,7 @@ void [
 	defaultLocal,
 	explicitDirection,
 	automaticDirection,
+	auxiliary,
 	zoned,
 	dateOnly,
 	zonedWithLocal,

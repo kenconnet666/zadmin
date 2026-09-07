@@ -536,7 +536,9 @@
 		if (Object.keys(drafts).length === 0) return true;
 		if (
 			valueState.current === null &&
-			segmentOrder.some((segment) => drafts[segment] === undefined)
+			segmentOrder.some(
+				(segment) => (drafts[segment]?.length ?? 0) !== (segment === 'year' ? 4 : 2)
+			)
 		) {
 			draftInvalid = markIncomplete;
 			return false;
@@ -655,6 +657,13 @@
 	): void {
 		const nextDraft = event.currentTarget.value.replace(/\D/gu, '');
 		drafts = { ...drafts, [segment]: nextDraft };
+		if (valueState.current === null)
+			drafts = Object.fromEntries(
+				segmentOrder.map((key, inputIndex) => [
+					key,
+					inputIndex === index ? nextDraft : (inputs[inputIndex]?.value.replace(/\D/gu, '') ?? '')
+				])
+			) as Partial<Record<DateSegment, string>>;
 		if (inputs.every((input) => !input?.value)) {
 			if (!valueState.setFromUser(null)) {
 				rollbackDraft();

@@ -488,6 +488,26 @@
 		notifiedHoverValue = 0;
 		onHoverChange?.(0);
 	}
+	function handlePointerOver(event: PointerEvent & { currentTarget: HTMLDivElement }): void {
+		const ElementConstructor = event.currentTarget.ownerDocument.defaultView?.Element;
+		if (!ElementConstructor || !(event.target instanceof ElementConstructor)) return;
+		const option = event.target.closest<HTMLLabelElement>('[data-slot="option"]');
+		if (!option || !event.currentTarget.contains(option)) return;
+		const optionValue = Number(option.dataset.value);
+		if (!Number.isFinite(optionValue)) return;
+		setHover(optionValue, option.querySelector<HTMLInputElement>('input'));
+	}
+	function reconcileNativeSelection(input: HTMLInputElement, step: number): void {
+		const reconcile = () => {
+			if (!input.isConnected) return;
+			for (const candidate of ref?.querySelectorAll<HTMLInputElement>('input[type="radio"]') ?? [])
+				candidate.checked = Number(candidate.value) === valueState.current;
+			if (clearedActivationStep === step) clearedActivationStep = undefined;
+		};
+		const ownerWindow = input.ownerDocument.defaultView;
+		if (ownerWindow) ownerWindow.requestAnimationFrame(reconcile);
+		else queueMicrotask(reconcile);
+	}
 	function inputFor(step: number): HTMLInputElement | null {
 		return ref?.querySelector<HTMLInputElement>('input[data-step="' + step + '"]') ?? null;
 	}
@@ -539,16 +559,11 @@
 			clearedActivationStep = undefined;
 			return;
 		}
-		event.preventDefault();
 		const input = event.currentTarget;
-		if (valueState.setFromUser(0)) {
+		if (valueState.setFromUser(0) && valueState.current === 0) {
 			clearedActivationStep = step;
-			queueMicrotask(() => {
-				// Cancelling a radio click restores its pre-activation checked state after the handler.
-				// Reassert the component value after that rollback so native FormData also becomes empty.
-				input.checked = valueState.current === step / resolvedFractions;
-				if (clearedActivationStep === step) clearedActivationStep = undefined;
-			});
+			input.checked = false;
+			reconcileNativeSelection(input, step);
 		} else event.currentTarget.checked = true;
 	}
 	function handleKeydown(
@@ -570,8 +585,10 @@
 			}
 			if (clearable && resolvedValue === step / resolvedFractions) {
 				event.preventDefault();
-				if (valueState.setFromUser(0))
-					event.currentTarget.checked = valueState.current === step / resolvedFractions;
+				if (valueState.setFromUser(0) && valueState.current === 0) {
+					event.currentTarget.checked = false;
+					reconcileNativeSelection(event.currentTarget, step);
+				}
 			}
 			return;
 		}
@@ -640,6 +657,7 @@
 	data-size={resolvedSize}
 	data-tone={resolvedTone}
 	data-value={resolvedValue}
+	onpointerover={handlePointerOver}
 	onpointerleave={clearHover}
 >
 	{#each Array.from({ length: resolvedCount }, (_, index) => index + 1) as index (index)}
@@ -667,8 +685,6 @@
 						'%;inline-size:' +
 						100 / resolvedFractions +
 						'%'}
-					onpointerenter={(event) =>
-						setHover(option.value, event.currentTarget.querySelector('input'))}
 				>
 					<input
 						class={classes.input}

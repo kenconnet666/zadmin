@@ -76,6 +76,8 @@ import { timeFieldDoc } from '../content/components/input/time-field/doc.js';
 import { timePickerDoc } from '../content/components/input/time-picker/doc.js';
 import { timeRangePickerDoc } from '../content/components/input/time-range-picker/doc.js';
 import { dateTimeFieldDoc } from '../content/components/input/date-time-field/doc.js';
+import { dateTimePickerDoc } from '../content/components/input/date-time-picker/doc.js';
+import { dateTimeRangePickerDoc } from '../content/components/input/date-time-range-picker/doc.js';
 import { treeSelectDoc } from '../content/components/input/tree-select/doc.js';
 import { transferDoc } from '../content/components/input/transfer/doc.js';
 import { stackDoc } from '../content/components/layout/stack/doc.js';
@@ -211,6 +213,8 @@ export const componentDocs = Object.freeze([
 	timePickerDoc,
 	timeRangePickerDoc,
 	dateTimeFieldDoc,
+	dateTimePickerDoc,
+	dateTimeRangePickerDoc,
 	treeSelectDoc,
 	transferDoc,
 	sliderDoc,

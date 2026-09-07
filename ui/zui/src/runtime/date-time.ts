@@ -72,6 +72,11 @@ export function displayDateTime<TMode extends DateTimeMode>(
 	value: DateTimeValue<TMode>,
 	mode: TMode,
 	timeZone: string
+): DateTimeValue<TMode>;
+export function displayDateTime(
+	value: CalendarDateTime | ZonedDateTime,
+	mode: DateTimeMode,
+	timeZone: string
 ): CalendarDateTime | ZonedDateTime {
 	return mode === 'zoned' ? toTimeZone(value as ZonedDateTime, timeZone) : value;
 }
@@ -126,4 +131,23 @@ export function dateTimeZoneLabel(value: ZonedDateTime, locale: string, timeZone
 		.formatToParts(value.toDate())
 		.find(({ type }) => type === 'timeZoneName');
 	return part?.value ?? timeZone;
+}
+
+/** Local values are formatted in UTC to preserve wall-clock fields across DST gaps. */
+export function formatDateTime(
+	value: CalendarDateTime | ZonedDateTime,
+	locale: string,
+	options: Intl.DateTimeFormatOptions = {},
+	timeZone = 'UTC'
+): string {
+	const zoned = value instanceof ZonedDateTime;
+	return new Intl.DateTimeFormat(locale, {
+		year: 'numeric',
+		month: '2-digit',
+		day: '2-digit',
+		hour: 'numeric',
+		minute: '2-digit',
+		...options,
+		timeZone: zoned ? timeZone : 'UTC'
+	}).format(zoned ? value.toDate() : value.toDate('UTC'));
 }
