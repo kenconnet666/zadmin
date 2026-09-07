@@ -593,6 +593,60 @@ export type { FormErrors } from '../runtime/form/validation.js';
 export type { FormControlDraftState } from '../runtime/form/form-value-adapter.svelte.js';
 export { default as ZDateField } from '../components/input/ZDateField.svelte';
 export { default as ZDateTimeField } from '../components/input/ZDateTimeField.svelte';
+export { default as ZPeriodCalendar } from '../components/input/ZPeriodCalendar.svelte';
+export type {
+	ZPeriodCalendarProps,
+	PeriodCalendarGranularity,
+	PeriodCalendarSelectionMode,
+	PeriodCalendarFormParticipation,
+	PeriodCalendarSize,
+	PeriodCalendarValue
+} from '../components/input/ZPeriodCalendar.svelte';
+export { default as ZPeriodPicker } from '../components/input/ZPeriodPicker.svelte';
+export type {
+	ZPeriodPickerProps,
+	PeriodPickerCommitMode
+} from '../components/input/ZPeriodPicker.svelte';
+export {
+	monthPeriod,
+	yearPeriod,
+	quarterPeriod,
+	weekPeriod,
+	normalizePeriod,
+	periodFromDate,
+	periodStart,
+	periodEnd,
+	comparePeriods,
+	samePeriod,
+	periodKey,
+	formatPeriod,
+	serializePeriod,
+	parsePeriod,
+	parsePeriodOfKind,
+	addPeriod,
+	periodSequence,
+	getLocaleWeekRules,
+	normalizeSinglePeriodSelection,
+	normalizeMultiplePeriodSelection,
+	normalizePeriodRange,
+	normalizePeriodSelection,
+	isPeriodRangeAvailable
+} from '../runtime/period.js';
+export type {
+	Period,
+	PeriodKind,
+	PeriodOfKind,
+	MonthPeriod,
+	YearPeriod,
+	QuarterPeriod,
+	WeekPeriod,
+	WeekRules,
+	PeriodRangeValue,
+	PeriodSelectionMode,
+	PeriodSelectionValue,
+	PeriodFromDateOptions,
+	PeriodFormatOptions
+} from '../runtime/period.js';
 export type {
 	ZDateTimeFieldProps,
 	ZDateTimeFieldLocalProps,
@@ -673,7 +727,11 @@ export type {
 export { default as ZCascader } from '../components/input/ZCascader.svelte';
 export type { CascaderFilter, ZCascaderProps } from '../components/input/ZCascader.svelte';
 export { default as ZCalendar } from '../components/input/ZCalendar.svelte';
-export type { ZCalendarProps } from '../components/input/ZCalendar.svelte';
+export type {
+	ZCalendarProps,
+	CalendarSelectionMode,
+	CalendarWeekNumbering
+} from '../components/input/ZCalendar.svelte';
 export { default as ZColorPicker } from '../components/input/ZColorPicker.svelte';
 export type { ColorPickerPreset, ZColorPickerProps } from '../components/input/ZColorPicker.svelte';
 export { default as ZInput } from '../components/input/ZInput.svelte';
@@ -842,6 +900,7 @@ export type {
 	ZuiNumberFieldLocale,
 	ZuiPaginationLocale,
 	ZuiProgressLocale,
+	ZuiPeriodLocale,
 	ZuiTagLocale,
 	ZuiTagsInputLocale,
 	ZuiTimeLocale,
@@ -974,5 +1033,7 @@ export type {
 	DateTimeFieldComponentDefaults,
 	DateTimePickerComponentDefaults,
 	DateTimeRangePickerComponentDefaults,
-	NumberFieldComponentDefaults
+	NumberFieldComponentDefaults,
+	PeriodCalendarComponentDefaults,
+	PeriodPickerComponentDefaults
 } from '../runtime/foundation/component-defaults.js';

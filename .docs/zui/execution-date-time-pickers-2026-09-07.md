@@ -49,3 +49,11 @@
 新增 pure/SSR/types/browser 资产交远端；源码清洁、静态制品和个别浏览器点查不替代全矩阵稳定验收。后续继续周期选择、多月 Calendar、国际历法与其余企业组件能力，目标保持进行中。
 
 最终API源码审计：181公开组件、2492 props、actionableIssues=0，111文档组件族。制品写入曾遇到一次Windows短时文件占用，单独重试progress生成后完成。
+
+## E14集成后的远程边界
+
+E13 CI [34075524716](https://github.com/kenconnet666/zadmin/actions/runs/34075524716) 已完成失败。工作区build、Chromium和Firefox通过；WebKit、静态契约、组件测试、覆盖率、Windows与外部SSR失败。后续已按日志修复DateTime分支类型与SSR fixture、range preset确认的flush边界、Form clone echo等已定位项，但未获得当前E14候选的同SHA远程结果。
+
+TimeRange中文资产此前只设置`locale="zh-CN"`而未提供中文locale pack；组件按设计保持locale格式与文案包分离，所以真实trigger仍为English。fixture现显式传入`zhCNLocalePack`。Form draft的禁用/恢复/卸载已手工验证；异步outdated资产改为等待`validating===true`后再编辑，避免schema尚未开始时用一个`tick`伪造竞态。修正后的手工序列返回`outdated=true`，仍需远程矩阵确认。
+
+E14已让DateTimePickerPanel/DateTimeRange把active endpoint按display time zone投影为CalendarDate，并通过`highlightRange`显示草稿范围；该高亮不修改Calendar真实`aria-selected/data-selected`。当前总资产183公开组件、113 Docs families；历史181/111数字保留为E13当时快照，不代表当前稳定面扩大。

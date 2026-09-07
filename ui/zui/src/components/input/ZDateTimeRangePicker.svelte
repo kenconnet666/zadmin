@@ -111,6 +111,10 @@
 		value?: ZonedDateTimeRangeValue | null;
 	}
 
+	export type ZDateTimeRangePickerLocalProps = ZDateTimeRangePickerSharedProps &
+		ZDateTimeRangePickerLocalBranch;
+	export type ZDateTimeRangePickerZonedProps = ZDateTimeRangePickerSharedProps &
+		ZDateTimeRangePickerZonedBranch;
 	export type ZDateTimeRangePickerProps = ZDateTimeRangePickerSharedProps &
 		(ZDateTimeRangePickerLocalBranch | ZDateTimeRangePickerZonedBranch);
 
@@ -592,6 +596,7 @@
 		type DateTimeRangeValue
 	} from '../../runtime/date-time-range.js';
 	import { resolveHourCycle } from '../../runtime/date.js';
+	import { dateTimePickerParts } from '../../runtime/date-time-picker.js';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { resolveControlSize } from '../../runtime/foundation/control-size.js';
 	import { useZui } from '../../runtime/foundation/context.js';
@@ -798,6 +803,18 @@
 		invalidProp || (field?.invalid ?? false) || !ownerValidation.valid || !compositeDraft.valid
 	);
 	const activePanelValue = $derived(panelDraft?.[rangePart] ?? null);
+	const panelHighlight = $derived(
+		panelDraft
+			? {
+					start: panelDraft.start
+						? dateTimePickerParts(panelDraft.start, { mode, timeZone: resolvedTimeZone }).date
+						: null,
+					end: panelDraft.end
+						? dateTimePickerParts(panelDraft.end, { mode, timeZone: resolvedTimeZone }).date
+						: null
+				}
+			: null
+	);
 	const rangeState = $derived(
 		!normalizedValue
 			? 'empty'
@@ -1189,6 +1206,7 @@
 				{/key}
 			{/if}
 			<DateTimePickerPanel
+				highlightRange={panelHighlight}
 				calendarLabel={resolvedCalendarLabel}
 				cancelLabel={resolvedCancelLabel}
 				confirmLabel={resolvedConfirmLabel}

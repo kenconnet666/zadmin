@@ -235,6 +235,14 @@ export const componentDocLoaders = {
 		import('../content/components/input/date-time-range-picker/doc.js').then(
 			(module) => module.dateTimeRangePickerDoc
 		),
+	'period-calendar': () =>
+		import('../content/components/input/period-calendar/doc.js').then(
+			(module) => module.periodCalendarDoc
+		),
+	'period-picker': () =>
+		import('../content/components/input/period-picker/doc.js').then(
+			(module) => module.periodPickerDoc
+		),
 	'tree-select': () =>
 		import('../content/components/input/tree-select/doc.js').then((module) => module.treeSelectDoc),
 	transfer: () =>

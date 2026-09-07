@@ -474,8 +474,13 @@
 	const resolvedInvalid = $derived(resolvedExternalInvalid || !compositeDraft.valid);
 	const timeZoneText = $derived.by(() => {
 		if (mode !== 'zoned' || hideTimeZone) return undefined;
-		const display = displayDateTime(currentValue() ?? placeholder, mode, resolvedTimeZone);
-		return dateTimeZoneLabel(display as ZonedDateTime, resolvedLocale, resolvedTimeZone);
+		const zoned = normalizeDateTimeModelValue(
+			currentValue() ?? placeholder,
+			'zoned',
+			'ZDateTimeField time zone label'
+		)!;
+		const display = displayDateTime(zoned, 'zoned', resolvedTimeZone);
+		return dateTimeZoneLabel(display, resolvedLocale, resolvedTimeZone);
 	});
 
 	function currentValue(): DateTimeFieldValue | null {

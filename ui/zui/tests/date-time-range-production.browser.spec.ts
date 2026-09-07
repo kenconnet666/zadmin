@@ -88,6 +88,7 @@ describe('ZDateTimeRangePicker production contracts', () => {
 		await tick();
 		popup = dialog();
 		popup.querySelector<HTMLButtonElement>('[data-slot="range-presets"] button')!.click();
+		await tick();
 		popup
 			.querySelector<HTMLButtonElement>('[data-slot="date-time-footer"] button:last-child')!
 			.click();

@@ -250,7 +250,7 @@ export function dateTimePickerTimeConstraints(
 	return Object.freeze({
 		granularity: constraints.granularity,
 		hourCycle: constraints.hourCycle,
-		isTimeUnavailable: (time) => {
+		isTimeUnavailable: (time: Time) => {
 			const candidate = composeDateTimePickerCandidateUnchecked(
 				date,
 				time,

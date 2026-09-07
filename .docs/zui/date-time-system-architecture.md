@@ -3,7 +3,7 @@
 ## Scope and model
 
 The system includes `ZCalendar`, `ZDateField`, `ZTimeField`, `ZDatePicker`,
-`ZDateRangePicker`, and the experimental `ZTimePicker`, `ZTimeRangePicker`, `ZDateTimeField`, `ZDateTimePicker`, and `ZDateTimeRangePicker`. Values remain the immutable `CalendarDate`, `Time`, `CalendarDateTime`, and `ZonedDateTime` types from
+`ZDateRangePicker`, and the experimental `ZTimePicker`, `ZTimeRangePicker`, `ZDateTimeField`, `ZDateTimePicker`, `ZDateTimeRangePicker`, `ZPeriodCalendar`, and `ZPeriodPicker`. Date/time values remain the immutable `CalendarDate`, `Time`, `CalendarDateTime`, and `ZonedDateTime` types from
 `@internationalized/date`; date-only and wall-clock values are not converted through the host
 `Date` constructor. `null` is the explicit controlled empty value. `undefined` only means that a
 Svelte binding was not supplied and may therefore select `defaultValue` during initialization.
@@ -18,6 +18,20 @@ out of model participation; an absent scope argument and an explicit opt-out are
 exist, `normalizeRangeValue` guarantees chronological order. FormData contains only existing
 endpoints as `name.start` and `name.end`.
 
+`ZCalendar` now discriminates `single`, `multiple`, and `range` values. Multiple arrays are frozen,
+deduplicated without changing input/append order, and serialize as repeated names. Range partials
+remain representable; `allowEmpty` controls intrinsic validity, while `allowNonContiguousRange`
+controls whether a complete range may cross a business-unavailable day. The former visual-only
+`range` prop is now `highlightRange`; it projects `data-highlighted` without changing
+`aria-selected`/`data-selected` and does not become a second selection owner. Date and DateTime range
+panels share this path; DateTime drafts first project their active endpoint through the display time
+zone to a CalendarDate.
+
+Month, year, quarter, and week selection use frozen plain Period records rather than encoding a
+period as an arbitrary day. `WeekPeriod` stores its first-day/minimal-days rules and `QuarterPeriod`
+stores the fiscal-year start. `ZPeriodCalendar` and `ZPeriodPicker` share one period runtime and one
+selection/FormData protocol across the four granularities.
+
 ## Benchmark decisions
 
 E12 adds a shared TimePickerPanel below the single and range pickers. DateTimeField composes the existing
@@ -25,6 +39,13 @@ date/time fields rather than nesting two pickers. Its local/zoned discriminated 
 time zone separate from the zoned value's original owner zone; only Gregorian editing is supported.
 Time ranges never reorder endpoints implicitly: ordered requires end >= start, overnight explicitly
 permits crossing midnight. Partial endpoints remain representable, with allowEmpty controlling validity.
+
+E13 composes `DateTimePickerPanel` from the existing Calendar and TimePickerPanel, keeping field,
+panel draft, canonical value, open request, FormData and commit events separately owned. E14 extends
+the same date foundation rather than adding parallel engines: Calendar multi-month views share one
+focusedValue/selection owner, and locale/ISO week numbers call the Period runtime. Multiple visible
+grids are projections; adjacent outside dates and representational clamp duplicates never gain a
+second interactive node.
 
 Raw drafts participate in FormControlState through FormControlDraftState even when no valid canonical
 value has changed. Form validation blocks stale-value submission, excludes disabled native controls,
@@ -55,6 +76,10 @@ Primary references:
 ## Ownership graph
 
 - Standalone fields and Calendar own one `ControllableState` and one `FormValueBridge`.
+- Calendar selection mode changes the typed value and serialization, not the number of state owners;
+  `visibleMonths` changes only the number of projected grids.
+- PeriodCalendar owns one period selection; PeriodPicker owns one open request and optional draft
+  while reusing PeriodCalendar with form participation disabled.
 - Picker roots own `value`, `open`, FormData, reset, Field projection, and focus restoration.
 - Nested `ZDateField` and `ZCalendar` use `formParticipation="none"`; they never create duplicate
   hidden inputs or reset listeners.
@@ -76,15 +101,22 @@ label, state and size, and the enclosing group owns disabled opacity once.
   day-period placement.
 - Calendar: RTL-aware horizontal arrows, vertical week movement, Home/End week boundaries,
   PageUp/PageDown month movement, Shift+Page year movement, and Enter/Space selection. Navigation
-  skips unavailable dates along the requested direction and stops at min/max.
+  skips unavailable dates along the requested direction and stops at min/max. Arrows cross visible
+  month grids through one roving map; header navigation pages by `visibleMonths`. A focused date
+  already inside the second or later visible month does not force that month to the first position.
 - Range Picker publishes a start-only value after the first Calendar choice and a normalized complete
   value after the second. Focused dates preview the prospective range without becoming a second value
   owner.
 
 ## Deliberate deferrals
 
-The public contract does not promise multi-month grids, month/quarter/year panels, presets, drag range
-selection, recurring rules, non-Gregorian editing, date-time or time-range pickers, DST fold/gap
-resolution, or mobile modal variants. These need separate interaction and value-model design; they are
-not hidden behind incomplete props. Calendar systems other than Gregorian may format through Intl but
-are not yet editable value calendars.
+The current public source includes multi-month Calendar grids, month/year/quarter/week period panels,
+time/date-time range pickers, presets, and explicit DST fold/gap handling. These remain experimental
+or otherwise subject to their declared metadata and current remote evidence; inclusion here does not
+promote them to stable.
+
+Still deferred are drag range selection, recurring rules, cell/header customization for Calendar,
+complete non-Gregorian editing, mobile modal variants, and the full assistive-technology/forced-colors
+matrix. Calendar systems other than Gregorian may format through Intl, and era/calendar identity is
+preserved at representational boundaries, but editable non-Gregorian value calendars are not yet
+claimed.

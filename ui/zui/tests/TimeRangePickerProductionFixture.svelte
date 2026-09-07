@@ -5,6 +5,7 @@
 	import ZField from '../src/components/input/ZField.svelte';
 	import ZTimeRangePicker from '../src/components/input/ZTimeRangePicker.svelte';
 	import type { TimeRangeValue } from '../src/runtime/time-range.js';
+	import { zhCNLocalePack } from '../src/runtime/foundation/locale.js';
 
 	const initial: TimeRangeValue = { start: new Time(9, 30), end: new Time(10, 30) };
 	let value = $state<TimeRangeValue | null>(initial);
@@ -76,7 +77,7 @@
 	</form>
 </ZProvider>
 
-<ZProvider direction="rtl" locale="zh-CN">
+<ZProvider direction="rtl" locale="zh-CN" localePack={zhCNLocalePack}>
 	<ZTimeRangePicker
 		data-testid="time-range-overnight"
 		defaultValue={{ start: new Time(23), end: new Time(1) }}

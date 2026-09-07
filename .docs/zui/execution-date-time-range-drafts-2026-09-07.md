@@ -44,6 +44,6 @@ E11 CI [34067417026](https://github.com/kenconnet666/zadmin/actions/runs/3406741
 
 ## 下一阶段
 
-继续组合 DateTimePicker、DateTimeRange 与 Calendar 的多月/周期选择；优先复用 DateTimeField、Calendar 和共享 TimePickerPanel，并检查统一确认策略、约束、时区及生命周期。保留最终整族主题、动作、禁用/只读、RTL、窄屏、动画中断/reduced-motion 和当前提交远端稳定验收门槛。
+后续E13已组合DateTimePicker/DateTimeRange与共享Calendar/TimePickerPanel，E14已落PeriodCalendar/Picker和ZCalendar多月/判别选择，并把日期时间范围草稿接入`highlightRange`。剩余工作转为当前候选远程归因、日期与具体时刻联合约束、Calendar定制/辅助技术、国际历法，以及最终整族主题、禁用/只读、RTL/auto、窄屏、动画中断/reduced-motion验收；这些后续实现不反向把E12历史记录写成已通过。
 
 最终交叉检查还统一了实例dir与Provider方向优先级：方向透传到字段、Calendar、InputGroup和portalled时间面板，原生auto/CSS方向在键盘操作时读取。Time两Picker消除disabled action重复淡化；TimeRange秒粒度端点标题保留秒、showNow与单值同名同义、取消与确认复用Panel同一行footer。Date/Time所有Picker统一把open作为请求状态，disabled/readonly期间抑制实际层，解除后仍遵循请求值；该抑制不伪造用户open回调。新增DatePicker状态/方向回归资产交远端。

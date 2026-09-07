@@ -31,7 +31,7 @@ describe('date-time range runtime', () => {
 		).toEqual(local(7, 9));
 		expect(() =>
 			normalizeDateTimeRangeModelValue(
-				{ start: parseZonedDateTime('2026-09-07T09:00Z[UTC]'), end: null },
+				{ start: parseZonedDateTime('2026-09-07T09:00+00:00[UTC]'), end: null },
 				'local'
 			)
 		).toThrow(/CalendarDateTime/u);
@@ -105,7 +105,7 @@ describe('date-time range runtime', () => {
 			validateDateTimeRangeValue(
 				range(7, 8),
 				constraints({
-					minValue: parseZonedDateTime('2026-09-07T09:00Z[UTC]') as never
+					minValue: parseZonedDateTime('2026-09-07T09:00+00:00[UTC]') as never
 				})
 			)
 		).toThrow(/CalendarDateTime/u);

@@ -215,3 +215,13 @@ NumberField、Segmented、TagsInput、Select、MultiSelect共用模型adapter，
 新增DateTimePicker/DateTimeRangePicker，共享DateTimePickerPanel(Calendar+TimePickerPanel)并直接组合DateTimeField suffixAction/none；明确confirm/immediate、nullable partial、strict/swap、联合时刻和DST边界。NumberField接统一草稿；FormField注册untrack修复真实验证错误残留。面板响应式列、选中时间可见、footer、字段同高和Floating全边距已点查修正，文档实测390/1280均无横向溢出。
 
 上一E12远程三浏览器Docs与build通过，相关类型/组件失败已继续修正。新增回归资产与全矩阵执行仍交远程；[E13执行记录](./execution-date-time-pickers-2026-09-07.md)保存当前证据，周期/多月/国际历法及其余能力继续。
+
+## E14：周期选择与多月 Calendar
+
+新增 `ZPeriodCalendar` 与 `ZPeriodPicker`，用冻结的 month/year/quarter/week Period records 覆盖 D06–D09 核心，不以四套同构组件重复选择、焦点、分页和表单状态。Period runtime 统一规则、比较、范围、格式与序列化；周值携带规则，季度值携带财年起点。`weekPeriod` 工厂在 Docs 点查后已统一为 `(year, week, rules?)` 并同步直接消费者；尚无当前远程结果，仍不标记稳定。
+
+`ZCalendar` 现以判别 API 支持 single/multiple/range、1–12月、ISO/locale周号、range preview、partial/allowEmpty与业务不可用日连续性。multiple保输入序去重；focusedValue独立；多月共享一个owner和roving refs；相邻outside与9999日期clamp副本不重复交互。旧视觉`range`重命名`highlightRange`并迁移DateRangePicker/Docs，真实range由value拥有。
+
+本地390px点查确认PeriodPicker单月键盘提交、季度confirm事务、readonly焦点、Calendar两月跨界键盘与multiple；PeriodPicker五档外框24/28/32/40/48px，动作内容22/26/30/38/46px，页面横向溢出0。必填month清空后FormData为空并显示“请填写此项”，reset恢复唯一`month=2026-09`并清除invalid。
+
+E13 CI [34075524716](https://github.com/kenconnet666/zadmin/actions/runs/34075524716) 已完成失败：build、Chromium、Firefox通过；WebKit、静态契约、组件、覆盖率、Windows、外部SSR仍失败。E14修复了已定位类型、测试资产与Form clone echo，但尚无当前候选远程验收。当前资产183公开组件、113 Docs families；实验实现、源码资产和手工点查均不表示稳定晋升。详见[E14执行记录](./execution-period-calendar-2026-09-07.md)。

@@ -146,6 +146,16 @@ W2、W3可在共同基础接口冻结后并行；W5依赖集合/表单/拖放的
 
 每个波次拆为可独立验证的小提交。W0完成已定位修复后，下一批直接从 **W1 + W2/W3接口设计** 启动；不再将新增规模收缩成一两个候选组件。
 
+### 7.0 E14 当前检查点（2026-09-07）
+
+W3/N5 已落盘 Date/Time/DateTime 字段与 Picker、PeriodCalendar/Picker，以及 ZCalendar single/multiple/range、1–12月、周号和range preview核心。实现通过共享 Field、Calendar、TimePickerPanel、Period runtime、FormControlDraftState、Popover/Presence 与唯一FormValueBridge组合；这表示路线已有真实消费者，不表示W3整体或日期族稳定验收完成。
+
+当前源码/API资产为183个公开组件、113个Docs families。本地390px实际点查覆盖PeriodPicker五档24/28/32/40/48px、单月键盘提交、季度confirm、readonly焦点、必填清空/reset，以及Calendar两月跨界键盘与multiple；所查页面横向溢出为0。DateTime的`highlightRange`已按display time zone投影并复用Calendar，不建立第二range owner。
+
+E13 CI [34075524716](https://github.com/kenconnet666/zadmin/actions/runs/34075524716) 已完成失败：build、Chromium、Firefox通过；WebKit、静态、组件、覆盖率、Windows与外部SSR失败。其后已修复已定位的类型/资产、Form clone echo、localePack测试边界和异步状态等待；尚未产生当前E14候选的远程结果。这里不晋升stable，也不把手工页面、源码资产或组件数量作为accepted证据。
+
+从这一检查点可并行推进：A) 当前候选按gate远程归因；B) Calendar cell/header定制与辅助技术/forced-colors；C) DateTime日期与具体时刻联合约束复验；D) 国际历法模型研究；E) W3的InlineDateTime、TimeGrid/TimeValue、MiniCalendar；F) 与日期目录无重叠的W4集合/拖放和W6/W7引擎研究。每条线继续复用现有owner/runtime，不再复制Calendar、Period或Panel状态机。
+
 ### 7.1 下一轮直接执行的工作包
 
 | 工作包                | 代码范围与动作                                                                                                                                        | 可检查的交付结果                                                                                       |
@@ -154,7 +164,7 @@ W2、W3可在共同基础接口冻结后并行；W5依赖集合/表单/拖放的
 | N2 布局首批           | `components/layout`；实现 Grid/SimpleGrid、AppShell、Splitter、ScrollArea，应用结构与容器滚动边界同步设计                                             | 桌面/窄屏工作台、可折叠侧栏、可拖动分区、嵌套滚动四类完整示例；键盘/RTL/持久化接入合同                 |
 | N3 导航首批           | `components/navigation`；Breadcrumb、Steps、Toolbar/ToggleGroup、NavigationMenu/Menubar，复用现有集合与焦点原语；Anchor/BackTop 随滚动结构接入        | 页面导航、命令导航、分步骤表单各有独立交互；路由链接/当前项/取消切换/溢出明确                          |
 | N4 输入与选择首批     | `components/input`；Password/Search/Mask/CheckboxGroup/Rating/RangeSlider；并行增强 TreeSelect 多选与 Cascader 多路径                                 | 完整 Field/FormData/reset，合法类型和互斥负例；分组/异步/清空/禁用/长内容；Docs 可复制的便利和组合用法 |
-| N5 日期与集合设计落地 | 日期值域/段输入/约束、Collection/Selection 与 Form arrays；先落 TimePicker/DateTimePicker 和一个动态数组表单，再展开各日期粒度与 DataGrid             | 共用接口已有真实消费者；时区/空值/非法草稿/字段移动和异步验证的状态所有权明确                          |
+| N5 日期与集合设计落地 | Time/DateTime、Period与Calendar核心已落；继续日期-时刻联合约束、Calendar定制/辅助技术、国际历法，并与Collection/DataGrid后续并行                      | 当前候选远程矩阵、无重复owner的真实组合、时区/空值/非法草稿/多月/周期规则证据                          |
 
 N1 中相应子合同明确后，N2/N3/N4 可按互不重叠的组件目录并行。N5 与输入设计并行推进，依赖未稳定时先完成类型合同、示例和适配决策；图表/编辑器/日程的引擎核对同步进行。每个工作包在实现中补齐必要 ICSS 属性与 token，不先搭没有消费者的大框架。
 

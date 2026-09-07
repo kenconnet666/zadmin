@@ -3,7 +3,7 @@
 	"summary": {
 		"stableCompliant": 141,
 		"stableViolations": 0,
-		"promotionEligibleExperimental": 25
+		"promotionEligibleExperimental": 27
 	},
 	"components": [
 		{
@@ -1174,7 +1174,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/gene/provider/doc.ts",
-			"ssrEvidenceCount": 16
+			"ssrEvidenceCount": 17
 		},
 		{
 			"id": "separator",
@@ -1224,7 +1224,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/calendar/doc.ts",
-			"ssrEvidenceCount": 3
+			"ssrEvidenceCount": 4
 		},
 		{
 			"id": "cascader",
@@ -1354,7 +1354,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/form/doc.ts",
-			"ssrEvidenceCount": 11
+			"ssrEvidenceCount": 12
 		},
 		{
 			"id": "form-field",
@@ -1364,7 +1364,7 @@
 			"classification": "stableCompliant",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/form/doc.ts",
-			"ssrEvidenceCount": 11
+			"ssrEvidenceCount": 12
 		},
 		{
 			"id": "form-list",
@@ -1434,6 +1434,26 @@
 			"classification": "promotionEligibleExperimental",
 			"blockers": [],
 			"docs": "apps/docs/src/content/components/input/password-input/doc.ts",
+			"ssrEvidenceCount": 1
+		},
+		{
+			"id": "period-calendar",
+			"name": "ZPeriodCalendar",
+			"family": null,
+			"status": "experimental",
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
+			"docs": "apps/docs/src/content/components/input/period-calendar/doc.ts",
+			"ssrEvidenceCount": 1
+		},
+		{
+			"id": "period-picker",
+			"name": "ZPeriodPicker",
+			"family": null,
+			"status": "experimental",
+			"classification": "promotionEligibleExperimental",
+			"blockers": [],
+			"docs": "apps/docs/src/content/components/input/period-picker/doc.ts",
 			"ssrEvidenceCount": 1
 		},
 		{

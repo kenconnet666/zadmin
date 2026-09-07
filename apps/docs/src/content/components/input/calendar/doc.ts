@@ -1,4 +1,8 @@
 import SizingDemo from './SizingDemo.svelte';
+import MultiMonthDemo from './MultiMonthDemo.svelte';
+import multiMonthSource from './MultiMonthDemo.svelte?raw';
+import RangeSelectionDemo from './RangeSelectionDemo.svelte';
+import rangeSelectionSource from './RangeSelectionDemo.svelte?raw';
 import sizingSource from './SizingDemo.svelte?raw';
 import { calendarMetadata } from '@zadmin/zui/metadata';
 import { calendarApiFacts } from '../../../../framework/component-api.generated.js';
@@ -35,9 +39,12 @@ export const calendarDoc = defineComponentDoc(calendarMetadata, {
 			},
 			onValueChange: {
 				default: 'undefined',
-				description: '用户选择或Delete清空时返回CalendarDate或null。'
+				description: '按selectionMode返回单日期、日期数组或nullable端点范围；Delete可清空。'
 			},
-			range: { default: 'null', description: '呈现partial或完整范围；不建立第二个选择owner。' },
+			highlightRange: {
+				default: 'null',
+				description: '额外视觉范围；真实范围选择使用selectionMode="range"与value。'
+			},
 			readonly: {
 				default: 'Field context或false',
 				description: '保留网格焦点和月份浏览，阻止选择写入。'
@@ -45,13 +52,30 @@ export const calendarDoc = defineComponentDoc(calendarMetadata, {
 			ref: { default: 'null', description: '真实Calendar根，用于Picker initialFocus和测试。' },
 			required: {
 				default: 'Field context或false',
-				description: '阻止Delete清空并暴露必填ARIA语义。'
+				description: '空选择进入无效状态并暴露必填ARIA语义，不阻止Delete清空。'
 			}
 		},
 		summary:
-			'生产单月Calendar：显式nullable选择、独立focusedValue、固定6周grid、可跳过不可用日期的完整RTL键盘、partial range呈现、typed locale/timeZone与唯一表单owner。'
+			'统一single/multiple/range的Calendar，一个owner覆盖多月窗口、独立focusedValue、周号、范围preview与连续性约束；每月固定6周网格，跨月不重复交互日期。'
 	},
 	demos: [
+		{
+			component: MultiMonthDemo,
+			source: multiMonthSource,
+			id: 'calendar-multiple-months',
+			title: '多月窗口、多选与周号',
+			covers: ['controlled', 'keyboard', 'locale'],
+			description:
+				'一个Calendar拥有多个网格，焦点窗口与选择独立，重复outside日期不再拥有第二个交互节点。'
+		},
+		{
+			component: RangeSelectionDemo,
+			source: rangeSelectionSource,
+			id: 'calendar-range-selection',
+			title: '范围选择与连续性',
+			covers: ['controlled', 'invalid', 'keyboard'],
+			description: 'selectionMode=range真正拥有起止值；highlightRange保留为单独视觉能力。'
+		},
 		{
 			component: SizingDemo,
 			covers: ['composition', 'variants-and-states'],
@@ -98,7 +122,8 @@ export const calendarDoc = defineComponentDoc(calendarMetadata, {
 		{
 			component: RangeDemo,
 			covers: ['composition', 'readonly', 'variants-and-states'],
-			description: 'Calendar只负责partial/complete范围呈现和端点语义，由Range Picker拥有选择阶段。',
+			description:
+				'highlightRange只负责partial/complete范围呈现，组合中的Range Picker拥有选择阶段与范围值。',
 			id: 'calendar-range-projection',
 			source: rangeSource,
 			title: 'Partial与完整范围投影'
@@ -108,8 +133,8 @@ export const calendarDoc = defineComponentDoc(calendarMetadata, {
 		'table grid保留row、columnheader和gridcell关系；每个日期按钮使用完整locale日期名称。',
 		'只有focusedValue对应日期tabindex=0；方向键按日/周移动，Home/End按周，Page键按月或年，RTL反转水平键。',
 		'不可用日期同时退出指针与键盘；导航会沿意图方向跳过不可用日期，月份按钮在min/max边界停用。',
-		'readonly仍可聚焦并浏览月份但不选择；disabled退出全部交互和FormData；required阻止键盘清空。',
-		'range仅投影aria-selected、data-selected和端点，不改变单选value owner。'
+		'readonly仍可聚焦并浏览月份但不选择；disabled退出全部交互和FormData；required允许清空并提供必填校验。',
+		'highlightRange通过data-highlighted与端点呈现装饰范围，不改变aria-selected或data-selected；真正的范围选择使用selectionMode与value。'
 	],
 	keywords: ['calendar', 'grid', 'focused value', 'calendar date', 'range', 'rtl']
 });

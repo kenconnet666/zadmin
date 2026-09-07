@@ -78,6 +78,8 @@ import { timeRangePickerDoc } from '../content/components/input/time-range-picke
 import { dateTimeFieldDoc } from '../content/components/input/date-time-field/doc.js';
 import { dateTimePickerDoc } from '../content/components/input/date-time-picker/doc.js';
 import { dateTimeRangePickerDoc } from '../content/components/input/date-time-range-picker/doc.js';
+import { periodCalendarDoc } from '../content/components/input/period-calendar/doc.js';
+import { periodPickerDoc } from '../content/components/input/period-picker/doc.js';
 import { treeSelectDoc } from '../content/components/input/tree-select/doc.js';
 import { transferDoc } from '../content/components/input/transfer/doc.js';
 import { stackDoc } from '../content/components/layout/stack/doc.js';
@@ -215,6 +217,8 @@ export const componentDocs = Object.freeze([
 	dateTimeFieldDoc,
 	dateTimePickerDoc,
 	dateTimeRangePickerDoc,
+	periodCalendarDoc,
+	periodPickerDoc,
 	treeSelectDoc,
 	transferDoc,
 	sliderDoc,

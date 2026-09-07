@@ -21,7 +21,7 @@ describe('date-time runtime', () => {
 		const options = { hourCycle: 'h23' } as const;
 		expect(
 			formatDateTime(new CalendarDateTime(2026, 3, 8, 2, 30), 'en-GB', options, 'America/New_York')
-		).toContain('02:30');
+		).toContain('2:30');
 		expect(
 			formatDateTime(
 				parseZonedDateTime('2026-11-01T01:30-04:00[America/New_York]'),

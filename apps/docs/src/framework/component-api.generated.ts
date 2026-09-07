@@ -8152,9 +8152,22 @@ export const visuallyHiddenApiFacts = {
 export const calendarApiFacts = {
 	declaration: 'ZCalendarProps',
 	id: 'calendar',
-	inheritedFrom: ['HTMLAttributes<HTMLDivElement>'],
+	inheritedFrom: [
+		'HTMLAttributes<HTMLDivElement>',
+		'ZCalendarSingleBranch | ZCalendarMultipleBranch | ZCalendarRangeBranch'
+	],
 	name: 'ZCalendar',
 	props: [
+		{
+			name: 'allowEmpty',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'allowNonContiguousRange',
+			required: false,
+			type: 'boolean'
+		},
 		{
 			name: 'appearance',
 			required: false,
@@ -8169,11 +8182,6 @@ export const calendarApiFacts = {
 			name: 'defaultFocusedValue',
 			required: false,
 			type: 'CalendarDateValue'
-		},
-		{
-			name: 'defaultValue',
-			required: false,
-			type: 'CalendarDateValue | null'
 		},
 		{
 			name: 'disabled',
@@ -8199,6 +8207,11 @@ export const calendarApiFacts = {
 			name: 'formParticipation',
 			required: false,
 			type: "'auto' | 'none'"
+		},
+		{
+			name: 'highlightRange',
+			required: false,
+			type: 'CalendarRangeValue | null'
 		},
 		{
 			name: 'invalid',
@@ -8241,19 +8254,9 @@ export const calendarApiFacts = {
 			type: '(value: CalendarDateValue) => void'
 		},
 		{
-			name: 'onValueChange',
-			required: false,
-			type: '(value: CalendarDateValue | null) => void'
-		},
-		{
 			name: 'previousLabel',
 			required: false,
 			type: 'string'
-		},
-		{
-			name: 'range',
-			required: false,
-			type: 'CalendarRange | CalendarRangeValue | null'
 		},
 		{
 			name: 'ref',
@@ -8276,6 +8279,11 @@ export const calendarApiFacts = {
 			type: 'boolean'
 		},
 		{
+			name: 'showWeekNumbers',
+			required: false,
+			type: 'boolean'
+		},
+		{
 			name: 'size',
 			required: false,
 			type: 'ZControlSize'
@@ -8286,9 +8294,48 @@ export const calendarApiFacts = {
 			type: 'string'
 		},
 		{
+			name: 'visibleMonths',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'weekLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'weekNumbering',
+			required: false,
+			type: 'CalendarWeekNumbering'
+		},
+		{
+			name: 'weekNumberLabel',
+			required: false,
+			type: '(week: number, year: number) => string'
+		},
+		{
+			name: 'defaultValue',
+			required: false,
+			type: 'CalendarDateValue | null | readonly CalendarDateValue[] | CalendarRangeValue | null',
+			inheritedFrom: 'ZCalendarSingleBranch'
+		},
+		{
+			name: 'onValueChange',
+			required: false,
+			type: '(value: CalendarDateValue | null) => void | (value: readonly CalendarDateValue[]) => void | (value: CalendarRangeValue | null) => void',
+			inheritedFrom: 'ZCalendarSingleBranch'
+		},
+		{
+			name: 'selectionMode',
+			required: false,
+			type: "'single' | 'multiple' | 'range'",
+			inheritedFrom: 'ZCalendarSingleBranch'
+		},
+		{
 			name: 'value',
 			required: false,
-			type: 'CalendarDateValue | null'
+			type: 'CalendarDateValue | null | readonly CalendarDateValue[] | CalendarRangeValue | null',
+			inheritedFrom: 'ZCalendarSingleBranch'
 		}
 	],
 	source: 'ui/zui/src/components/input/ZCalendar.svelte',
@@ -10607,6 +10654,8 @@ export const inputApiFacts = {
 		nativeSelectApiFacts,
 		numberFieldApiFacts,
 		passwordInputApiFacts,
+		periodCalendarApiFacts,
+		periodPickerApiFacts,
 		pinInputApiFacts,
 		rangeSliderApiFacts,
 		ratingApiFacts,
@@ -11192,6 +11241,419 @@ export const passwordInputApiFacts = {
 		}
 	],
 	source: 'ui/zui/src/components/input/ZPasswordInput.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
+export const periodCalendarApiFacts = {
+	declaration: 'ZPeriodCalendarProps',
+	id: 'period-calendar',
+	inheritedFrom: [
+		'HTMLAttributes<HTMLDivElement>',
+		"TMode extends 'single' ? { readonly selectionMode?: 'single' } : { readonly selectionMode: TMode }"
+	],
+	name: 'ZPeriodCalendar',
+	props: [
+		{
+			name: 'allowEmpty',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'allowNonContiguousRange',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'calendarLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'defaultFocusedValue',
+			required: false,
+			type: 'PeriodOfKind<TKind>'
+		},
+		{
+			name: 'defaultValue',
+			required: false,
+			type: 'PeriodSelectionValue<TKind, TMode>'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'fiscalYearStartMonth',
+			required: false,
+			type: 'number'
+		},
+		{
+			name: 'focusedValue',
+			required: false,
+			type: 'PeriodOfKind<TKind>'
+		},
+		{
+			name: 'form',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'formParticipation',
+			required: false,
+			type: "'auto' | 'none'"
+		},
+		{
+			name: 'granularity',
+			required: true,
+			type: 'TKind'
+		},
+		{
+			name: 'invalid',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'isPeriodUnavailable',
+			required: false,
+			type: '(period: PeriodOfKind<TKind>) => boolean'
+		},
+		{
+			name: 'locale',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'maxValue',
+			required: false,
+			type: 'PeriodOfKind<TKind>'
+		},
+		{
+			name: 'minValue',
+			required: false,
+			type: 'PeriodOfKind<TKind>'
+		},
+		{
+			name: 'name',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'nextPageLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'onFocusedValueChange',
+			required: false,
+			type: '(period: PeriodOfKind<TKind>) => void'
+		},
+		{
+			name: 'onValueChange',
+			required: false,
+			type: '(value: PeriodSelectionValue<TKind, TMode>) => void'
+		},
+		{
+			name: 'previousPageLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null'
+		},
+		{
+			name: 'required',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'showWeekNumbers',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'ZControlSize'
+		},
+		{
+			name: 'timeZone',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'value',
+			required: false,
+			type: 'PeriodSelectionValue<TKind, TMode>'
+		},
+		{
+			name: 'weekRules',
+			required: false,
+			type: 'WeekRules'
+		}
+	],
+	source: 'ui/zui/src/components/input/ZPeriodCalendar.svelte',
+	metadataGapProps: []
+} as const satisfies ComponentApiFacts;
+
+export const periodPickerApiFacts = {
+	declaration: 'ZPeriodPickerProps',
+	id: 'period-picker',
+	inheritedFrom: ['HTMLAttributes<HTMLDivElement>', 'PeriodCalendarOptions<TKind, TMode>'],
+	name: 'ZPeriodPicker',
+	props: [
+		{
+			name: 'cancelLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'clearable',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'clearLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'closeOnSelect',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'commitMode',
+			required: false,
+			type: "'immediate' | 'confirm'"
+		},
+		{
+			name: 'confirmLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'controlId',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'defaultOpen',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'formatter',
+			required: false,
+			type: '(value: PeriodSelectionValue<TKind, TMode>) => string'
+		},
+		{
+			name: 'onCommit',
+			required: false,
+			type: '(value: PeriodSelectionValue<TKind, TMode>) => void'
+		},
+		{
+			name: 'onOpenChange',
+			required: false,
+			type: '(open: boolean) => void'
+		},
+		{
+			name: 'open',
+			required: false,
+			type: 'boolean'
+		},
+		{
+			name: 'pickerLabel',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'placement',
+			required: false,
+			type: 'PopoverPlacement'
+		},
+		{
+			name: 'placeholder',
+			required: false,
+			type: 'string'
+		},
+		{
+			name: 'allowEmpty',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'allowNonContiguousRange',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'calendarLabel',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'defaultFocusedValue',
+			required: false,
+			type: 'PeriodOfKind<PeriodKind>',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'defaultValue',
+			required: false,
+			type: "PeriodSelectionValue<PeriodKind, 'single'>",
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'disabled',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'fiscalYearStartMonth',
+			required: false,
+			type: 'number',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'focusedValue',
+			required: false,
+			type: 'PeriodOfKind<PeriodKind>',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'form',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'granularity',
+			required: true,
+			type: 'PeriodKind',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'invalid',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'isPeriodUnavailable',
+			required: false,
+			type: '(period: PeriodOfKind<TKind>) => boolean',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'locale',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'maxValue',
+			required: false,
+			type: 'PeriodOfKind<PeriodKind>',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'minValue',
+			required: false,
+			type: 'PeriodOfKind<PeriodKind>',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'name',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'nextPageLabel',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'onFocusedValueChange',
+			required: false,
+			type: '(period: PeriodOfKind<TKind>) => void',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'onValueChange',
+			required: false,
+			type: '(value: PeriodSelectionValue<TKind, TMode>) => void',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'previousPageLabel',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'readonly',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'ref',
+			required: false,
+			type: 'HTMLDivElement | null',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'required',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'showWeekNumbers',
+			required: false,
+			type: 'boolean',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'size',
+			required: false,
+			type: 'PeriodCalendarSize',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'timeZone',
+			required: false,
+			type: 'string',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'value',
+			required: false,
+			type: "PeriodSelectionValue<PeriodKind, 'single'>",
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		},
+		{
+			name: 'weekRules',
+			required: false,
+			type: 'WeekRules',
+			inheritedFrom: 'PeriodCalendarSharedOptions'
+		}
+	],
+	source: 'ui/zui/src/components/input/ZPeriodPicker.svelte',
 	metadataGapProps: []
 } as const satisfies ComponentApiFacts;
 

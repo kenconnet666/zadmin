@@ -71,19 +71,22 @@ describe('date-time picker runtime', () => {
 
 	it('returns null for rejected DST wall time and enforces complete-value constraints', () => {
 		const rules = constraints({
+			mode: 'zoned',
 			disambiguation: 'reject',
-			maxValue: new CalendarDateTime(2026, 3, 9),
-			minValue: new CalendarDateTime(2026, 3, 1)
+			maxValue: parseZonedDateTime('2026-03-09T00:00[America/New_York]'),
+			minValue: parseZonedDateTime('2026-03-01T00:00[America/New_York]')
 		});
 		expect(
 			composeDateTimePickerCandidate(
 				new CalendarDate(2026, 3, 8),
 				new Time(2, 30),
-				new CalendarDateTime(2026, 3, 7, 12),
+				parseZonedDateTime('2026-03-07T12:00[America/New_York]'),
 				rules
 			)
 		).toBeNull();
-		expect(dateTimePickerValueAvailable(new CalendarDateTime(2026, 3, 10), rules)).toBe(false);
+		expect(
+			dateTimePickerValueAvailable(parseZonedDateTime('2026-03-10T00:00[America/New_York]'), rules)
+		).toBe(false);
 	});
 
 	it('resolves typed presets and Now without crossing the selected mode', () => {

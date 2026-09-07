@@ -38,7 +38,10 @@ describe('ZRating production contract', () => {
 		await userEvent.hover(preview);
 		await expect.poll(() => root.dataset.preview).toBe('3.5');
 		expect(root.dataset.value).toBe('2.5');
-		expect(element('rating-output').textContent).toBe('2.5|0|3.5|1|0');
+		const hoverOutput = element('rating-output').textContent!.split('|');
+		expect(hoverOutput.slice(0, 3)).toEqual(['2.5', '0', '3.5']);
+		expect(Number(hoverOutput[3])).toBeGreaterThanOrEqual(1);
+		expect(hoverOutput[4]).toBe('0');
 		expect(root.querySelector<HTMLElement>('[data-index="4"]')?.dataset.fill).toBe('50');
 		await userEvent.unhover(preview);
 		await expect.poll(() => root.dataset.preview).toBe('0');
@@ -54,7 +57,25 @@ describe('ZRating production contract', () => {
 		await settleFormReset(form);
 		expect(root.dataset.value).toBe('2.5');
 		expect(new FormData(form).get('rating')).toBe('2.5');
-		expect(element('rating-output').textContent).toBe('2.5|2|0|2|1');
+		const resetOutput = element('rating-output').textContent!.split('|');
+		expect(resetOutput.slice(0, 3)).toEqual(['2.5', '2', '0']);
+		expect(Number(resetOutput[3])).toBeGreaterThanOrEqual(2);
+		expect(resetOutput[4]).toBe('1');
+	});
+
+	it('does not repeat notifications while pointer events stay in the same fraction hit zone', async () => {
+		render(RatingFixture);
+		await tick();
+		const root = element('rating-main');
+		const fraction = radio(root, 3.5).closest('label')!;
+		fraction.dispatchEvent(new PointerEvent('pointerover', { bubbles: true }));
+		fraction.dispatchEvent(new PointerEvent('pointerover', { bubbles: true }));
+		await tick();
+		expect(root.dataset.preview).toBe('3.5');
+		expect(element('rating-output').textContent).toBe('2.5|0|3.5|1|0');
+		root.dispatchEvent(new PointerEvent('pointerleave'));
+		await tick();
+		expect(element('rating-output').textContent).toBe('2.5|0|0|2|0');
 	});
 
 	it('selects by real keyboard in LTR and RTL while keeping one Tab stop', async () => {

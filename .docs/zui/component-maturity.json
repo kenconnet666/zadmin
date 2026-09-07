@@ -1,10 +1,10 @@
 {
 	"schemaVersion": 2,
 	"source": {
-		"metadataComponents": 181,
-		"documentationPages": 111,
-		"contractComponents": 181,
-		"testFiles": 330
+		"metadataComponents": 183,
+		"documentationPages": 113,
+		"contractComponents": 183,
+		"testFiles": 342
 	},
 	"stageNames": [
 		"Declared",
@@ -18,14 +18,14 @@
 	],
 	"evidenceScope": "Static inventory of authored test contracts, not test execution results or whole-component visual acceptance. Stage names are retained for compatibility; consult commit-matched CI and page-level review separately.",
 	"summary": {
-		"Declared": 181,
-		"Authorable": 181,
-		"ContractVerified": 181,
-		"RuntimeImplemented": 181,
-		"BrowserBehaviorVerified": 169,
+		"Declared": 183,
+		"Authorable": 183,
+		"ContractVerified": 183,
+		"RuntimeImplemented": 183,
+		"BrowserBehaviorVerified": 171,
 		"VisuallyVerified": 160,
 		"DesktopVerified": 0,
-		"ProductionVerified": 173
+		"ProductionVerified": 175
 	},
 	"components": [
 		{
@@ -11389,6 +11389,10 @@
 					"detail": "ZProvider SSR assertions"
 				},
 				{
+					"path": "ui/zui/tests/period-picker-production-ssr.spec.ts",
+					"detail": "ZProvider SSR assertions"
+				},
+				{
 					"path": "ui/zui/tests/pin-input-group-production.spec.ts",
 					"detail": "ZProvider SSR assertions"
 				},
@@ -11859,7 +11863,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "dd16f2d5fadb08d8d7fd89af09b8d201227fa5ce2eda0101d20cd292a1060799 API snapshot entry"
+						"detail": "a6bfdbf974015bed310700c9ec31c04d676f05bf4b8b114c660c5eb2478dd720 API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -11869,6 +11873,14 @@
 					}
 				],
 				"BrowserBehaviorVerified": [
+					{
+						"path": "ui/zui/tests/calendar-selection-production.browser.spec.ts",
+						"detail": "ZCalendar browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/CalendarSelectionProductionFixture.svelte",
+						"detail": "ZCalendar explicit rendered fixture usage"
+					},
 					{
 						"path": "ui/zui/tests/date-time-production.browser.spec.ts",
 						"detail": "ZCalendar browser behavior assertions"
@@ -11890,6 +11902,26 @@
 				],
 				"DesktopVerified": [],
 				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/calendar-selection-production-ssr.spec.ts",
+						"detail": "ZCalendar production assertions"
+					},
+					{
+						"path": "ui/zui/tests/CalendarSelectionSsrFixture.svelte",
+						"detail": "ZCalendar explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/CalendarSelectionProductionFixture.svelte",
+						"detail": "ZCalendar explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/calendar-selection-production.browser.spec.ts",
+						"detail": "ZCalendar production assertions"
+					},
+					{
+						"path": "ui/zui/tests/CalendarSelectionProductionFixture.svelte",
+						"detail": "ZCalendar explicit rendered fixture usage"
+					},
 					{
 						"path": "ui/zui/tests/date-time-production.browser.spec.ts",
 						"detail": "ZCalendar production assertions"
@@ -11917,6 +11949,10 @@
 				"detail": "catalog component documentation module"
 			},
 			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/calendar-selection-production-ssr.spec.ts",
+					"detail": "ZCalendar SSR assertions"
+				},
 				{
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZCalendar SSR assertions"
@@ -12782,7 +12818,7 @@
 				"ContractVerified": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "a1924cd09daf083bcab9bfd3d8d83f78f59bece241758045c01d5809cb563c8c API snapshot entry"
+						"detail": "df88d6ed6a14ddebf731799997331f1f3255bb4263fc0775f2279baf082da69b API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -12807,6 +12843,10 @@
 					{
 						"path": "ui/zui/tests/date-time-range-production-ssr.spec.ts",
 						"detail": "ZDateTimeRangePicker production assertions"
+					},
+					{
+						"path": "ui/zui/tests/DateTimeRangeSsrFixture.svelte",
+						"detail": "ZDateTimeRangePicker explicit rendered fixture usage"
 					},
 					{
 						"path": "ui/zui/tests/date-time-range-production.browser.spec.ts",
@@ -13340,6 +13380,10 @@
 				{
 					"path": "ui/zui/tests/form-value-scope.spec.ts",
 					"detail": "ZForm SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/period-picker-production-ssr.spec.ts",
+					"detail": "ZForm SSR assertions"
 				}
 			]
 		},
@@ -13516,6 +13560,10 @@
 				},
 				{
 					"path": "ui/zui/tests/form-value-scope.spec.ts",
+					"detail": "ZFormField SSR assertions"
+				},
+				{
+					"path": "ui/zui/tests/period-picker-production-ssr.spec.ts",
 					"detail": "ZFormField SSR assertions"
 				}
 			]
@@ -14331,6 +14379,178 @@
 			]
 		},
 		{
+			"id": "period-calendar",
+			"name": "ZPeriodCalendar",
+			"category": "input",
+			"family": null,
+			"status": "experimental",
+			"source": "ui/zui/src/components/input/ZPeriodCalendar.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": true,
+				"VisuallyVerified": false,
+				"DesktopVerified": false,
+				"ProductionVerified": true
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/input/ZPeriodCalendar.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZPeriodCalendar"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "a7ccff01045bf3f3be0f835d623564dc1c1542b020f89204a3b029e8c104d1ea API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/input/ZPeriodCalendar.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [
+					{
+						"path": "ui/zui/tests/period-calendar-production.browser.spec.ts",
+						"detail": "ZPeriodCalendar browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/PeriodCalendarProductionFixture.svelte",
+						"detail": "ZPeriodCalendar explicit rendered fixture usage"
+					}
+				],
+				"VisuallyVerified": [],
+				"DesktopVerified": [],
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/period-calendar-production-ssr.spec.ts",
+						"detail": "ZPeriodCalendar production assertions"
+					},
+					{
+						"path": "ui/zui/tests/period-calendar-production.browser.spec.ts",
+						"detail": "ZPeriodCalendar production assertions"
+					},
+					{
+						"path": "ui/zui/tests/PeriodCalendarProductionFixture.svelte",
+						"detail": "ZPeriodCalendar explicit rendered fixture usage"
+					}
+				]
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/input/period-calendar/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/period-calendar-production-ssr.spec.ts",
+					"detail": "ZPeriodCalendar SSR assertions"
+				}
+			]
+		},
+		{
+			"id": "period-picker",
+			"name": "ZPeriodPicker",
+			"category": "input",
+			"family": null,
+			"status": "experimental",
+			"source": "ui/zui/src/components/input/ZPeriodPicker.svelte",
+			"apiDocumentation": {
+				"metadataGapPropCount": 0,
+				"teachingFallbackPropCount": 0
+			},
+			"stages": {
+				"Declared": true,
+				"Authorable": true,
+				"ContractVerified": true,
+				"RuntimeImplemented": true,
+				"BrowserBehaviorVerified": true,
+				"VisuallyVerified": false,
+				"DesktopVerified": false,
+				"ProductionVerified": true
+			},
+			"evidence": {
+				"Declared": [
+					{
+						"path": "ui/zui/src/components/input/ZPeriodPicker.svelte",
+						"detail": "zuiMetadata declaration"
+					}
+				],
+				"Authorable": [
+					{
+						"path": "ui/zui/src/entrypoints/index.ts",
+						"detail": "public entrypoint export ZPeriodPicker"
+					}
+				],
+				"ContractVerified": [
+					{
+						"path": ".docs/zui/api-contract.json",
+						"detail": "9a5c5bae9246115e50f72672b9c42088e7efb225a218dcf8362383b76174f128 API snapshot entry"
+					}
+				],
+				"RuntimeImplemented": [
+					{
+						"path": "ui/zui/src/components/input/ZPeriodPicker.svelte",
+						"detail": "component markup and instance script"
+					}
+				],
+				"BrowserBehaviorVerified": [
+					{
+						"path": "ui/zui/tests/period-picker-production.browser.spec.ts",
+						"detail": "ZPeriodPicker browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/PeriodPickerProductionFixture.svelte",
+						"detail": "ZPeriodPicker explicit rendered fixture usage"
+					}
+				],
+				"VisuallyVerified": [],
+				"DesktopVerified": [],
+				"ProductionVerified": [
+					{
+						"path": "ui/zui/tests/period-picker-production-ssr.spec.ts",
+						"detail": "ZPeriodPicker production assertions"
+					},
+					{
+						"path": "ui/zui/tests/PeriodPickerProductionFixture.svelte",
+						"detail": "ZPeriodPicker explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/period-picker-production.browser.spec.ts",
+						"detail": "ZPeriodPicker production assertions"
+					},
+					{
+						"path": "ui/zui/tests/PeriodPickerProductionFixture.svelte",
+						"detail": "ZPeriodPicker explicit rendered fixture usage"
+					}
+				]
+			},
+			"docs": {
+				"path": "apps/docs/src/content/components/input/period-picker/doc.ts",
+				"detail": "catalog component documentation module"
+			},
+			"ssrEvidence": [
+				{
+					"path": "ui/zui/tests/period-picker-production-ssr.spec.ts",
+					"detail": "ZPeriodPicker SSR assertions"
+				}
+			]
+		},
+		{
 			"id": "pin-input",
 			"name": "ZPinInput",
 			"category": "input",
@@ -14574,7 +14794,7 @@
 				"VisuallyVerified": [
 					{
 						"path": "ui/zui/tests/rating-production.browser.spec.ts",
-						"detail": "ZRating authored visual contract: uses five Theme sizes and exposes frozen custom item contexts (line 108); requires browser execution and page-level review"
+						"detail": "ZRating authored visual contract: uses five Theme sizes and exposes frozen custom item contexts (line 129); requires browser execution and page-level review"
 					},
 					{
 						"path": "ui/zui/tests/RatingFixture.svelte",

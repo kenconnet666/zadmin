@@ -1,6 +1,9 @@
 import { CalendarDateTime, parseZonedDateTime } from '@internationalized/date';
 
-import type { ZDateTimeRangePickerProps } from '../src/components/input/ZDateTimeRangePicker.svelte';
+import type {
+	ZDateTimeRangePickerLocalProps,
+	ZDateTimeRangePickerZonedProps
+} from '../src/components/input/ZDateTimeRangePicker.svelte';
 import type {
 	DateTimeRangePreset,
 	LocalDateTimeRangeValue,
@@ -26,19 +29,25 @@ const local = {
 	order: 'swap',
 	presets: [localPreset],
 	value: localRange
-} satisfies ZDateTimeRangePickerProps;
+} satisfies ZDateTimeRangePickerLocalProps;
 const zoned = {
 	mode: 'zoned',
 	onValueChange: (value: ZonedDateTimeRangeValue | null) => value?.start?.timeZone,
 	value: zonedRange
-} satisfies ZDateTimeRangePickerProps;
+} satisfies ZDateTimeRangePickerZonedProps;
 // @ts-expect-error Local mode endpoints must be CalendarDateTime.
-const localWithZoned = { mode: 'local', value: zonedRange } satisfies ZDateTimeRangePickerProps;
+const localWithZoned = {
+	mode: 'local',
+	value: zonedRange
+} satisfies ZDateTimeRangePickerLocalProps;
 // @ts-expect-error Zoned mode endpoints must be ZonedDateTime.
-const zonedWithLocal = { mode: 'zoned', value: localRange } satisfies ZDateTimeRangePickerProps;
+const zonedWithLocal = {
+	mode: 'zoned',
+	value: localRange
+} satisfies ZDateTimeRangePickerZonedProps;
 // @ts-expect-error Both nullable endpoint keys are required.
-const missingEnd = { value: { start: localRange.start } } satisfies ZDateTimeRangePickerProps;
+const missingEnd = { value: { start: localRange.start } } satisfies ZDateTimeRangePickerLocalProps;
 // @ts-expect-error Order is a closed, explicit policy.
-const preserve = { order: 'preserve' } satisfies ZDateTimeRangePickerProps;
+const preserve = { order: 'preserve' } satisfies ZDateTimeRangePickerLocalProps;
 
 void [local, zoned, localWithZoned, zonedWithLocal, missingEnd, preserve];

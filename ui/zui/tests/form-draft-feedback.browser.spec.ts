@@ -34,7 +34,7 @@ describe('intrinsic form drafts', () => {
 			expect((await fixture.component.validate()).valid).toBe(false);
 			fixture.component.removeField();
 			await expect.poll(() => fixture.component.getState().dirty).toBe(false);
-			expect(fixture.component.getState().valid).toBe(true);
+			await expect.poll(() => fixture.component.getState().valid).toBe(true);
 			expect(fixture.component.canonical()).toBe('09:30:00');
 		} finally {
 			await fixture.cleanup();
@@ -87,7 +87,7 @@ describe('intrinsic form drafts', () => {
 		try {
 			fixture.component.deferNext();
 			const validation = fixture.component.validate();
-			await tick();
+			await expect.poll(() => fixture.component.getState().validating).toBe(true);
 			await fixture.edit('');
 			fixture.component.finishValidation();
 			const result = await validation;

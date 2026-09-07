@@ -1067,8 +1067,14 @@
 	$effect(() => {
 		const externalErrors = errors;
 		untrack(() => {
-			if (externalErrors !== publishedErrors) publishErrors(externalErrors);
-			else registry.syncErrors(errors);
+			if (!sameStateValue(externalErrors, publishedErrors)) {
+				publishErrors(externalErrors);
+				return;
+			}
+			// A bind:errors owner may reflect the same immutable publication through a new proxy or
+			// object identity. Adopt that identity without feeding our merged output into server errors.
+			publishedErrors = externalErrors;
+			registry.syncErrors(externalErrors);
 		});
 	});
 

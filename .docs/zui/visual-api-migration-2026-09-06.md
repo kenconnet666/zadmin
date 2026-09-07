@@ -20,18 +20,21 @@
 
 ## 调用迁移
 
-| 旧调用                                                     | 新调用                                           | 原因                                          |
-| ---------------------------------------------------------- | ------------------------------------------------ | --------------------------------------------- |
-| `ZButton variant="primary"`                                | `variant="solid"`                                | 外观与品牌色分开；默认 tone 为 primary。      |
-| `variant="secondary"`                                      | `variant="outline"`                              | 表达描边形式；中性外观显式 `tone="neutral"`。 |
-| Button/Toggle `tone="default"`                             | `tone="primary"`                                 | 保留默认品牌动作的含义。                      |
-| Tag/Badge/Text/Heading/Statistic/Timeline `tone="default"` | `tone="neutral"`                                 | 明确中性语义。                                |
-| Tag/Badge `tone="accent"`                                  | `tone="info"`                                    | 使用一致的信息状态词。                        |
-| Typography `size="xlarge"`（原 24px）                      | `size="xxlarge"`                                 | 保留原 24px 视觉规模。                        |
-| Typography `size="xxlarge"`（原 32px）                     | `size="xxxlarge"`                                | 保留原 32px 页面标题。                        |
-| Statistic `trend={-18}` 自动红色                           | 默认 neutral；业务改善显式 `trendTone="success"` | 增减方向不能自动判断业务好坏。                |
+| 旧调用                                                     | 新调用                                           | 原因                                                        |
+| ---------------------------------------------------------- | ------------------------------------------------ | ----------------------------------------------------------- |
+| `ZButton variant="primary"`                                | `variant="solid"`                                | 外观与品牌色分开；默认 tone 为 primary。                    |
+| `variant="secondary"`                                      | `variant="outline"`                              | 表达描边形式；中性外观显式 `tone="neutral"`。               |
+| Button/Toggle `tone="default"`                             | `tone="primary"`                                 | 保留默认品牌动作的含义。                                    |
+| Tag/Badge/Text/Heading/Statistic/Timeline `tone="default"` | `tone="neutral"`                                 | 明确中性语义。                                              |
+| Tag/Badge `tone="accent"`                                  | `tone="info"`                                    | 使用一致的信息状态词。                                      |
+| Typography `size="xlarge"`（原 24px）                      | `size="xxlarge"`                                 | 保留原 24px 视觉规模。                                      |
+| Typography `size="xxlarge"`（原 32px）                     | `size="xxxlarge"`                                | 保留原 32px 页面标题。                                      |
+| Statistic `trend={-18}` 自动红色                           | 默认 neutral；业务改善显式 `trendTone="success"` | 增减方向不能自动判断业务好坏。                              |
+| `ZCalendar range={preview}`                                | `highlightRange={preview}`                       | 旧参数只画范围却与真实range value同名；新名不冒充selected。 |
 
 Button、ToggleButton 与按钮外观的 Link 共用同一 recipe。色调 factory 通过明确的 `data-variant` 和原生 `aria-pressed` 选择器组合外观与选中态，总分支数保持在现有 64 上限内；没有创建六色×三外观×pressed 的 compound 笛卡尔积。Loading 的 Spinner 继承按钮已经解析的前景，不再维护第二套颜色映射。
+
+E14补充：Calendar真实范围选择现在由`selectionMode="range"`的判别`value`拥有；`highlightRange`只承接DateRangePicker、DateTimePickerPanel/DateTimeRange和只读展示的额外范围，并只投射`data-highlighted`，不改变`aria-selected/data-selected`。源码与真实Docs直接消费者同步迁移，不保留两个都叫range但所有权不同的入口。
 
 新增的最小 API：
 

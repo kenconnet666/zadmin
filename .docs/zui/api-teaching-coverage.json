@@ -1345,7 +1345,7 @@
 			"id": "calendar",
 			"name": "ZCalendar",
 			"source": "ui/zui/src/components/input/ZCalendar.svelte",
-			"declaredPropCount": 27,
+			"declaredPropCount": 35,
 			"metadataGapPropCount": 0,
 			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
@@ -1574,6 +1574,26 @@
 			"name": "ZPasswordInput",
 			"source": "ui/zui/src/components/input/ZPasswordInput.svelte",
 			"declaredPropCount": 15,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "period-calendar",
+			"name": "ZPeriodCalendar",
+			"source": "ui/zui/src/components/input/ZPeriodCalendar.svelte",
+			"declaredPropCount": 29,
+			"metadataGapPropCount": 0,
+			"metadataGapPropNames": [],
+			"fallbackPropCount": 0,
+			"fallbackPropNames": []
+		},
+		{
+			"id": "period-picker",
+			"name": "ZPeriodPicker",
+			"source": "ui/zui/src/components/input/ZPeriodPicker.svelte",
+			"declaredPropCount": 43,
 			"metadataGapPropCount": 0,
 			"metadataGapPropNames": [],
 			"fallbackPropCount": 0,
@@ -1974,8 +1994,8 @@
 		"maxMetadataGapProps": 0
 	},
 	"totals": {
-		"components": 181,
-		"declaredProps": 2492,
+		"components": 183,
+		"declaredProps": 2572,
 		"metadataGapProps": 0,
 		"fallbackProps": 0,
 		"opaqueStructuredProps": 9,

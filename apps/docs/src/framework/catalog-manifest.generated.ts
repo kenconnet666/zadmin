@@ -1185,29 +1185,29 @@ export const componentCatalogManifest = Object.freeze([
 		name: 'ZCalendar',
 		category: 'input',
 		summary:
-			'生产单月Calendar：显式nullable选择、独立focusedValue、固定6周grid、可跳过不可用日期的完整RTL键盘、partial range呈现、typed locale/timeZone与唯一表单owner。',
+			'统一single/multiple/range的Calendar，一个owner覆盖多月窗口、独立focusedValue、周号、范围preview与连续性约束；每月固定6周网格，跨月不重复交互日期。',
 		status: 'stable',
 		keywords: ['calendar', 'grid', 'focused value', 'calendar date', 'range', 'rtl'],
 		profiles: ['form-control', 'collection'],
 		capabilities: [
+			'controlled',
+			'keyboard',
+			'locale',
+			'invalid',
 			'composition',
 			'variants-and-states',
 			'basic-render',
 			'form-data',
 			'form-reset',
-			'keyboard',
 			'uncontrolled',
 			'disabled',
 			'focus',
-			'invalid',
 			'accessible-name',
-			'locale',
 			'ssr',
-			'controlled',
 			'external-clear',
 			'readonly'
 		],
-		demoCount: 6,
+		demoCount: 8,
 		publicComponentCount: 1
 	},
 	{
@@ -2442,6 +2442,50 @@ export const componentCatalogManifest = Object.freeze([
 			'density',
 			'disabled',
 			'readonly',
+			'form-data',
+			'form-reset'
+		],
+		demoCount: 3,
+		publicComponentCount: 1
+	},
+	{
+		id: 'period-calendar',
+		name: 'ZPeriodCalendar',
+		category: 'input',
+		summary:
+			'同一个周期日历覆盖月份、年份、季度和周，并支持单选、多选与范围。周期是带种类和规则的冻结记录，日期边界由共享算法计算，不使用某一天冒充整个月或季度。',
+		status: 'experimental',
+		keywords: [],
+		profiles: ['form-control', 'collection'],
+		capabilities: [
+			'basic-render',
+			'keyboard',
+			'locale',
+			'controlled',
+			'form-data',
+			'form-reset',
+			'invalid'
+		],
+		demoCount: 4,
+		publicComponentCount: 1
+	},
+	{
+		id: 'period-picker',
+		name: 'ZPeriodPicker',
+		category: 'input',
+		summary:
+			'以PeriodCalendar、Popover和InputGroup组合的周期选择器。四种granularity、三种selectionMode共用唯一模型、序列化、焦点与主题，不维护平行的月份/年份/周/季度状态机。',
+		status: 'experimental',
+		keywords: [],
+		profiles: ['form-control', 'layer', 'collection'],
+		capabilities: [
+			'basic-render',
+			'keyboard',
+			'portal',
+			'controlled',
+			'density',
+			'readonly',
+			'disabled',
 			'form-data',
 			'form-reset'
 		],

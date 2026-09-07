@@ -1,4 +1,5 @@
 <script module lang="ts">
+	import type { CalendarRangeValue } from '../../runtime/date.js';
 	import type { FormControlDraftState } from '../../runtime/form/form-value-adapter.svelte.js';
 	import { ZonedDateTime, type CalendarDateTime, type Time } from '@internationalized/date';
 	import type { TimeFieldSegment, Weekday } from '../../runtime/date.js';
@@ -26,6 +27,7 @@
 	}
 
 	export interface DateTimePickerPanelProps {
+		readonly highlightRange?: CalendarRangeValue | null;
 		readonly calendarLabel: string;
 		readonly cancelLabel?: string;
 		readonly confirmLabel: string;
@@ -138,6 +140,7 @@
 		disambiguation,
 		firstDayOfWeek,
 		granularity,
+		highlightRange,
 		hourCycle,
 		idBase,
 		invalidDateTimeLabel,
@@ -355,6 +358,7 @@
 	{/if}
 	<div class={[bodyClass, bodyGeometryClass]} data-slot="date-time-body">
 		<ZCalendar
+			{highlightRange}
 			appearance="bare"
 			bind:focusedValue
 			bind:ref={calendarRef}

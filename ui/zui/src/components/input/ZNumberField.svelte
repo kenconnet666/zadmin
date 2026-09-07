@@ -491,36 +491,37 @@
 			throw new RangeError('ZNumberField min cannot exceed max.');
 		return { max, min, pageStep: resolvedPageStep, precision, step };
 	});
-	const valueState = createFormControlState<number | undefined>(
-		{
-			defaultValue: () => defaultValue,
-			draftState: () => localDraftState,
-			resetDraft: rollbackDraft,
-			element: () => ref,
-			normalizeModelValue: (candidate) => {
-				if (candidate === undefined || candidate === null) return undefined;
-				if (typeof candidate !== 'number' || !Number.isFinite(candidate))
-					throw new TypeError(
-						'ZNumberField model value must be a finite number, null or undefined.'
-					);
-				return candidate;
+	const valueState: ReturnType<typeof createFormControlState<number | undefined>> =
+		createFormControlState<number | undefined>(
+			{
+				defaultValue: () => defaultValue,
+				draftState: () => localDraftState,
+				resetDraft: rollbackDraft,
+				element: () => ref,
+				normalizeModelValue: (candidate) => {
+					if (candidate === undefined || candidate === null) return undefined;
+					if (typeof candidate !== 'number' || !Number.isFinite(candidate))
+						throw new TypeError(
+							'ZNumberField model value must be a finite number, null or undefined.'
+						);
+					return candidate;
+				},
+				onChange: () => onValueChange,
+				owner: 'ZNumberField',
+				read: () => value,
+				syncNative: (next) => {
+					if (inputRef)
+						inputRef.value = editing
+							? formatEditValue(next)
+							: next === undefined
+								? ''
+								: formatNumber(next, false, presentationOptions);
+				},
+				undefinedIsValue: true,
+				write: (next) => (value = next)
 			},
-			onChange: () => onValueChange,
-			owner: 'ZNumberField',
-			read: () => value,
-			syncNative: (next) => {
-				if (inputRef)
-					inputRef.value = editing
-						? formatEditValue(next)
-						: next === undefined
-							? ''
-							: formatNumber(next, false, presentationOptions);
-			},
-			undefinedIsValue: true,
-			write: (next) => (value = next)
-		},
-		valueScope
-	);
+			valueScope
+		);
 	const currentValue = $derived.by(() => {
 		const current = valueState.current;
 		if (current !== undefined && !Number.isFinite(current))
@@ -630,7 +631,7 @@
 		}
 		return '';
 	});
-	const localDraftState = $derived.by(() => {
+	const localDraftState = $derived.by<FormControlDraftState>(() => {
 		const requiredMissing = resolvedRequired && currentValue === undefined;
 		const valid = !draftInvalid && !draftPartial && !composing && !outOfRange && !requiredMissing;
 		return Object.freeze({

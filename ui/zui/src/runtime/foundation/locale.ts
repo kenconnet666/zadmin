@@ -91,6 +91,8 @@ export interface ZuiDateTimeLocale {
 }
 
 export interface ZuiDateLocale {
+	readonly week: string;
+	readonly weekNumber: (week: number) => string;
 	readonly invalidDate: string;
 	readonly incompleteDate: string;
 	readonly calendarLabel: string;
@@ -172,6 +174,16 @@ export interface ZuiProgressLocale {
 	readonly label: string;
 }
 
+export interface ZuiPeriodLocale {
+	readonly calendarLabel: string;
+	readonly choosePeriod: string;
+	readonly clearPeriod: string;
+	readonly previousPage: string;
+	readonly nextPage: string;
+	readonly weekNumber: (year: number, week: number) => string;
+	readonly unavailable: string;
+}
+
 export interface ZuiTagLocale {
 	readonly removeTag: (textValue?: string) => string;
 }
@@ -248,6 +260,7 @@ export interface ZuiLocalePack {
 	readonly numberField: ZuiNumberFieldLocale;
 	readonly pagination: ZuiPaginationLocale;
 	readonly progress: ZuiProgressLocale;
+	readonly period: ZuiPeriodLocale;
 	readonly tag: ZuiTagLocale;
 	readonly tagsInput: ZuiTagsInputLocale;
 	readonly time: ZuiTimeLocale;
@@ -272,6 +285,7 @@ export interface ZuiLocalePackOverrides {
 	readonly numberField?: Partial<ZuiNumberFieldLocale>;
 	readonly pagination?: Partial<ZuiPaginationLocale>;
 	readonly progress?: Partial<ZuiProgressLocale>;
+	readonly period?: Partial<ZuiPeriodLocale>;
 	readonly tag?: Partial<ZuiTagLocale>;
 	readonly tagsInput?: Partial<ZuiTagsInputLocale>;
 	readonly time?: Partial<ZuiTimeLocale>;
@@ -370,6 +384,8 @@ export const enUSLocalePack = Object.freeze({
 		invalidLocalTime: 'This local time does not exist or is ambiguous in the selected time zone'
 	}),
 	date: Object.freeze({
+		week: 'Week',
+		weekNumber: (week: number) => `Week ${week}`,
 		invalidDate: 'This date is invalid or unavailable',
 		incompleteDate: 'Complete all date segments',
 		calendarLabel: 'Calendar',
@@ -444,6 +460,15 @@ export const enUSLocalePack = Object.freeze({
 			`Page ${formattedPage} of ${formattedTotalPages}`,
 		previous: 'Previous page',
 		totalItems: (formattedTotal: string) => `${formattedTotal} items`
+	}),
+	period: Object.freeze({
+		calendarLabel: 'Choose a period',
+		choosePeriod: 'Choose a period',
+		clearPeriod: 'Clear period',
+		previousPage: 'Previous page',
+		nextPage: 'Next page',
+		weekNumber: (year: number, week: number) => year + ' week ' + week,
+		unavailable: 'This period selection is incomplete or unavailable'
 	}),
 	progress: Object.freeze({
 		label: 'Progress'
@@ -589,6 +614,8 @@ export const zhCNLocalePack = Object.freeze({
 		invalidLocalTime: '该时区的本地时间不存在或存在歧义'
 	}),
 	date: Object.freeze({
+		week: '周',
+		weekNumber: (week: number) => `第${week}周`,
 		invalidDate: '该日期无效或不可用',
 		incompleteDate: '请填写完整日期',
 		calendarLabel: '日历',
@@ -661,6 +688,15 @@ export const zhCNLocalePack = Object.freeze({
 			`第${formattedPage}页，共${formattedTotalPages}页`,
 		previous: '上一页',
 		totalItems: (formattedTotal: string) => `共${formattedTotal}条`
+	}),
+	period: Object.freeze({
+		calendarLabel: '选择周期',
+		choosePeriod: '选择周期',
+		clearPeriod: '清空周期',
+		previousPage: '上一页',
+		nextPage: '下一页',
+		weekNumber: (year: number, week: number) => year + '年第' + week + '周',
+		unavailable: '周期选择未完成或不可用'
 	}),
 	progress: Object.freeze({
 		label: '进度'
@@ -754,6 +790,7 @@ export function resolveZuiLocalePack(
 		numberField: Object.freeze(mergeDefined(base.numberField, overrides?.numberField)),
 		pagination: Object.freeze(mergeDefined(base.pagination, overrides?.pagination)),
 		progress: Object.freeze(mergeDefined(base.progress, overrides?.progress)),
+		period: Object.freeze(mergeDefined(base.period, overrides?.period)),
 		tag: Object.freeze(mergeDefined(base.tag, overrides?.tag)),
 		tagsInput: Object.freeze(mergeDefined(base.tagsInput, overrides?.tagsInput)),
 		time: Object.freeze(mergeDefined(base.time, overrides?.time)),

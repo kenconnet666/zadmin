@@ -15,10 +15,14 @@
 <ZStack direction="row" gap="large" wrap>
 	<ZStack gap="small">
 		<ZText tone="muted">等待结束日期：只标记起点</ZText>
-		<ZCalendar defaultFocusedValue={partial.start ?? undefined} range={partial} readonly />
+		<ZCalendar defaultFocusedValue={partial.start ?? undefined} highlightRange={partial} readonly />
 	</ZStack>
 	<ZStack gap="small">
 		<ZText tone="muted">完整范围：起止端点和区间共享语义</ZText>
-		<ZCalendar defaultFocusedValue={complete.start ?? undefined} range={complete} readonly />
+		<ZCalendar
+			defaultFocusedValue={complete.start ?? undefined}
+			highlightRange={complete}
+			readonly
+		/>
 	</ZStack>
 </ZStack>

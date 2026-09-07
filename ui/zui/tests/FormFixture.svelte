@@ -31,10 +31,23 @@
 	let validating = $state(false);
 	let submitted = $state(false);
 	let result = $state('none');
+
+	function readErrors(): FormErrors {
+		return errors;
+	}
+
+	// A bind owner may reflect an immutable publication through a fresh proxy/object identity.
+	function reflectErrors(next: FormErrors): void {
+		errors = Object.freeze(
+			Object.fromEntries(
+				Object.entries(next).map(([path, messages]) => [path, Object.freeze([...messages])])
+			)
+		);
+	}
 </script>
 
 <ZForm
-	bind:errors
+	bind:errors={readErrors, reflectErrors}
 	bind:submitted
 	bind:validating
 	data-testid="z-form"

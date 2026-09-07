@@ -31,7 +31,9 @@ describe('ZDateTimePicker browser contract', () => {
 
 			let dialog = await openDialog(root);
 			await userEvent.click(
-				[...dialog.querySelectorAll('button')].find((button) => button.textContent === 'Lunch')!
+				[...dialog.querySelectorAll('button')].find(
+					(button) => button.textContent?.trim() === 'Lunch'
+				)!
 			);
 			await tick();
 			expect(new FormData(form).get('appointment')).toBe('2026-09-08T09:30:00');
@@ -75,7 +77,7 @@ describe('ZDateTimePicker browser contract', () => {
 			expect(dialog.dir).toBe('rtl');
 			await userEvent.click(
 				[...dialog.querySelectorAll('button')].find(
-					(button) => button.textContent === 'West coast'
+					(button) => button.textContent?.trim() === 'West coast'
 				)!
 			);
 			await tick();
@@ -105,7 +107,9 @@ describe('ZDateTimePicker browser contract', () => {
 			const form = target.querySelector<HTMLFormElement>('[data-testid="date-time-picker-form"]')!;
 			const dialog = await openDialog(root);
 			await userEvent.click(
-				[...dialog.querySelectorAll('button')].find((button) => button.textContent === 'Lunch')!
+				[...dialog.querySelectorAll('button')].find(
+					(button) => button.textContent?.trim() === 'Lunch'
+				)!
 			);
 			component.writeExternalLocal();
 			await tick();
@@ -138,7 +142,7 @@ describe('ZDateTimePicker browser contract', () => {
 			const dialog = await openDialog(root);
 			await userEvent.click(
 				[...dialog.querySelectorAll('button')].find(
-					(button) => button.textContent === 'Rejected lunch'
+					(button) => button.textContent?.trim() === 'Rejected lunch'
 				)!
 			);
 			await userEvent.click(

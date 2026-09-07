@@ -599,7 +599,7 @@
 				{minValue}
 				onFocusedValueChange={(next) => (previewFocus = next)}
 				onValueChange={select}
-				range={previewRange}
+				highlightRange={previewRange}
 				readonly={resolvedReadonly}
 				{showOutsideDates}
 				size={resolvedSize}

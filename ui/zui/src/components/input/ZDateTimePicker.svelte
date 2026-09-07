@@ -475,7 +475,7 @@
 	import DateTimePickerPanel, {
 		type DateTimePickerPanelController
 	} from './DateTimePickerPanel.svelte';
-	import ZDateTimeField from './ZDateTimeField.svelte';
+	import ZDateTimeField, { type ZDateTimeFieldProps } from './ZDateTimeField.svelte';
 
 	let {
 		'aria-describedby': ariaDescribedBy,

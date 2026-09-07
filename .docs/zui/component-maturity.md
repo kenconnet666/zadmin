@@ -1,19 +1,19 @@
 # ZUI component maturity matrix
 
-Generated from 181 metadata components, 111 documentation modules, 181 API contract entries, and 330 test files.
+Generated from 183 metadata components, 113 documentation modules, 183 API contract entries, and 342 test files.
 
 This is a static inventory of authored test contracts, not an execution report or a whole-component visual acceptance result. Historical stage names are retained for compatibility. `VisuallyVerified` requires an explicit `@zui-visual ZComponent` marker, an owned component/fixture render, and a geometry, computed-style, CSS, or screenshot assertion in the SAME test block. A positive entry only identifies a scoped test; confirm its result against commit-matched CI and inspect real pages, themes, and densities separately. `DesktopVerified` remains false until a component-level desktop evidence source is added.
 
 | Stage                   | Count |
 | ----------------------- | ----: |
-| Declared                |   181 |
-| Authorable              |   181 |
-| ContractVerified        |   181 |
-| RuntimeImplemented      |   181 |
-| BrowserBehaviorVerified |   169 |
+| Declared                |   183 |
+| Authorable              |   183 |
+| ContractVerified        |   183 |
+| RuntimeImplemented      |   183 |
+| BrowserBehaviorVerified |   171 |
 | VisuallyVerified        |   160 |
 | DesktopVerified         |     0 |
-| ProductionVerified      |   173 |
+| ProductionVerified      |   175 |
 
 | Component               | Category     | Declared | Authorable | Contract | Runtime | Browser | Visual | Desktop | Production | Docs                                                                  |
 | ----------------------- | ------------ | -------: | ---------: | -------: | ------: | ------: | -----: | ------: | ---------: | --------------------------------------------------------------------- |
@@ -160,6 +160,8 @@ This is a static inventory of authored test contracts, not an execution report o
 | ZNativeSelect           | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/native-select/doc.ts           |
 | ZNumberField            | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/number-field/doc.ts            |
 | ZPasswordInput          | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/password-input/doc.ts          |
+| ZPeriodCalendar         | input        |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/input/period-calendar/doc.ts         |
+| ZPeriodPicker           | input        |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/input/period-picker/doc.ts           |
 | ZPinInput               | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/pin-input/doc.ts               |
 | ZRangeSlider            | input        |        Y |          Y |        Y |       Y |       Y |      — |       — |          Y | apps/docs/src/content/components/input/range-slider/doc.ts            |
 | ZRating                 | input        |        Y |          Y |        Y |       Y |       Y |      Y |       — |          Y | apps/docs/src/content/components/input/rating/doc.ts                  |

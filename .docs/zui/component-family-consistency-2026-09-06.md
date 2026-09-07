@@ -44,3 +44,7 @@ E10A 补充：Form/Field/Input/PasswordInput/Textarea/Checkbox/NativeSelect/Chec
 E12补充：TimePicker/TimeRangePicker已共享TimePickerPanel，DateTimeField组合Date/TimeField；FormControlDraftState、resetDraft、公共分段边界导航、五档componentDefaults与locale-pack统一。Date/Time在InputGroup中由Group独占focus ring。已点查跨字段键盘、时区显示、范围preset/confirm、raw draft阻止提交和390px布局；全家族motion中断/reduced、全部状态与当前提交远程执行仍是最终门槛。
 
 E13补充：DateTimePicker/Range已共享Calendar+TimePickerPanel；DateTimeField的suffixAction/none使上层无需重复InputGroup/bridge。DateTime本地/时区Props精确分支、range端点角色与确认策略同组实现；NumberField统一草稿/五档默认；Field登记与状态观察分离。时间列只滚自身、宽窄屏grid响应式、suffix动作同高、footer和Floating边距由共享下层承担。当前候选全族CI与剩余矩阵仍是最终完成条件。
+
+E14补充：PeriodCalendar/Picker共享一个Period runtime、选择归一化、规则与FormData合同；month/year/quarter/week只改变值语义和网格分页，不复制四套owner。ZCalendar的single/multiple/range共享一个FormControlState、focusedValue和roving refs；visibleMonths只投影多个month grid，outside/clamp副本不重复按钮或ref。Calendar周号复用Period的`periodFromDate/getLocaleWeekRules`，locale优先Intl weekInfo并保留旧运行时回退，不维护第二套week-year算法；旧视觉`range`改名`highlightRange`，真实range由判别value拥有。DateRange和DateTimeRange均复用该高亮通道，`data-highlighted`不冒充`aria-selected/data-selected`。
+
+当前家族一致性证据限于源码资产、WebStorm/格式检查和390px点查：PeriodPicker五档、键盘/confirm/readonly/Form reset，以及Calendar两月跨界键盘/multiple均有实际观察且无横向溢出。E13 CI 34075524716 仍有WebKit、静态、组件、覆盖率、Windows和外部SSR失败；E14已定位修正不等于远程通过。下一次成组验收必须覆盖Period四granularity×三selectionMode、Calendar 1/多月×single/multiple/range、Date/DateTime Picker组合、RTL/auto、disabled/readonly/required、边界era/year、Theme/reduced-motion与Form owner，不能以183组件/113 Docs families关闭矩阵。
