@@ -16,17 +16,28 @@ export interface ControllableStateOptions<TValue> {
 	readonly write: (value: TValue) => void;
 }
 
-export function sameStateValue(
-	left: unknown,
-	right: unknown,
-	seen = new WeakMap<object, object>()
-): boolean {
+type ComparedStatePairs = WeakMap<object, WeakSet<object>>;
+
+function hasVisitedStatePair(seen: ComparedStatePairs, left: object, right: object): boolean {
+	const rights = seen.get(left);
+	if (rights?.has(right)) return true;
+	if (rights) rights.add(right);
+	else seen.set(left, new WeakSet([right]));
+	return false;
+}
+
+function compareStateValue(left: unknown, right: unknown, seen: ComparedStatePairs): boolean {
 	if (Object.is(left, right)) return true;
 	if (Array.isArray(left) && Array.isArray(right)) {
 		if (left.length !== right.length) return false;
-		if (seen.get(left) === right) return true;
-		seen.set(left, right);
-		return left.every((value, index) => sameStateValue(value, right[index], seen));
+		if (hasVisitedStatePair(seen, left, right)) return true;
+		for (let index = 0; index < left.length; index += 1) {
+			const leftOwn = Object.prototype.hasOwnProperty.call(left, index);
+			const rightOwn = Object.prototype.hasOwnProperty.call(right, index);
+			if (leftOwn !== rightOwn) return false;
+			if (leftOwn && !compareStateValue(left[index], right[index], seen)) return false;
+		}
+		return true;
 	}
 	if (left === null || right === null || typeof left !== 'object' || typeof right !== 'object') {
 		return false;
@@ -37,20 +48,27 @@ export function sameStateValue(
 	) {
 		return false;
 	}
-	if (seen.get(left) === right) return true;
-	seen.set(left, right);
+	if (hasVisitedStatePair(seen, left, right)) return true;
 	const leftKeys = Object.keys(left);
 	const rightKeys = Object.keys(right);
 	if (leftKeys.length !== rightKeys.length) return false;
 	return leftKeys.every(
 		(key) =>
 			Object.prototype.hasOwnProperty.call(right, key) &&
-			sameStateValue(
+			compareStateValue(
 				(left as Record<string, unknown>)[key],
 				(right as Record<string, unknown>)[key],
 				seen
 			)
 	);
+}
+
+/** Compare state contents without requiring identical aliases or cycle topology. */
+export function sameStateValue(left: unknown, right: unknown): boolean {
+	if (Object.is(left, right)) return true;
+	// A left object may be compared with multiple right objects in a cyclic value.
+	// A single right per left loses earlier pairs and can recurse forever.
+	return compareStateValue(left, right, new WeakMap());
 }
 
 /**

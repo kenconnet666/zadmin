@@ -1,7 +1,10 @@
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 
-import { ControllableState } from '../src/runtime/foundation/controllable-state.svelte.js';
+import {
+	ControllableState,
+	sameStateValue
+} from '../src/runtime/foundation/controllable-state.svelte.js';
 import {
 	mergeAriaIds,
 	mergeFieldMessages,
@@ -115,6 +118,94 @@ describe('component runtime state', () => {
 		});
 		recordState.setFromUser({ value: 'ready', nested: { enabled: true } });
 		expect(notifications).toBe(0);
+	});
+
+	it('distinguishes sparse array holes from own undefined slots in both directions', () => {
+		const sparse = new Array<number>(1);
+		const dense = [undefined] as unknown as number[];
+		let sparseExternal: number[] | undefined;
+		let sparseNotifications = 0;
+		const sparseState = new ControllableState<number[]>({
+			defaultValue: () => sparse,
+			onChange: () => () => (sparseNotifications += 1),
+			read: () => sparseExternal,
+			write: (value) => (sparseExternal = value)
+		});
+
+		sparseState.setFromUser(new Array<number>(1));
+		expect(sparseNotifications).toBe(0);
+		sparseState.setFromUser(dense);
+		expect(sparseNotifications).toBe(1);
+
+		let denseExternal: number[] | undefined;
+		let denseNotifications = 0;
+		const denseState = new ControllableState<number[]>({
+			defaultValue: () => dense,
+			onChange: () => () => (denseNotifications += 1),
+			read: () => denseExternal,
+			write: (value) => (denseExternal = value)
+		});
+		denseState.setFromUser(new Array<number>(1));
+		expect(denseNotifications).toBe(1);
+	});
+
+	it('keeps nested and circular arrays structurally stable', () => {
+		const sparseNested = [new Array<number>(1)];
+		const sameSparseNested = [new Array<number>(1)];
+		let external: unknown[] | undefined;
+		let notifications = 0;
+		const nestedState = new ControllableState<unknown[]>({
+			defaultValue: () => sparseNested,
+			onChange: () => () => (notifications += 1),
+			read: () => external,
+			write: (value) => (external = value)
+		});
+
+		nestedState.setFromUser(sameSparseNested);
+		expect(notifications).toBe(0);
+
+		const circularA: unknown[] = [];
+		circularA.push(circularA);
+		const circularB: unknown[] = [];
+		circularB.push(circularB);
+		nestedState.setFromUser(circularA);
+		expect(notifications).toBe(1);
+		nestedState.setFromUser(circularB);
+		expect(notifications).toBe(1);
+	});
+
+	it('terminates for different cycle lengths without conflating unequal nested contents', () => {
+		const one: unknown[] = [];
+		one.push(one, 'same');
+		const first: unknown[] = [];
+		const second: unknown[] = [];
+		first.push(second, 'same');
+		second.push(first, 'same');
+		expect(sameStateValue(one, first)).toBe(true);
+		expect(sameStateValue(first, one)).toBe(true);
+		second[1] = 'different';
+		expect(sameStateValue(one, first)).toBe(false);
+		expect(sameStateValue(first, one)).toBe(false);
+
+		interface Node {
+			next?: Node;
+			value: string;
+		}
+		const left: Node = { value: 'same' };
+		left.next = left;
+		const right: Node = { value: 'same' };
+		const tail: Node = { next: right, value: 'same' };
+		right.next = tail;
+		expect(sameStateValue(left, right)).toBe(true);
+		expect(sameStateValue(right, left)).toBe(true);
+		tail.value = 'different';
+		expect(sameStateValue(left, right)).toBe(false);
+		expect(sameStateValue(right, left)).toBe(false);
+
+		const shared = { value: 1 };
+		expect(sameStateValue([shared, shared], [{ value: 1 }, { value: 1 }])).toBe(true);
+		expect(sameStateValue([{ value: 1 }, { value: 1 }], [shared, shared])).toBe(true);
+		expect(sameStateValue({}, { value: undefined })).toBe(false);
 	});
 
 	it('treats null as an explicit empty value instead of an uncontrolled signal', () => {
