@@ -153,7 +153,8 @@ Charts、RichText、Markdown、CodeEditor、DiffViewer、Scheduler进入接受�
 | P11  | 局部通过，完整CI未闭合   | Vitest5迁移已提交；三浏览器Docs及WebKit组件通过，Chromium仍断连、Firefox两处断言失败、coverage超预算                                             |
 | P12  | 局部已验证，触屏未闭合   | Transfer布局动画、Docs策略和RangeSlider回归定向通过；Chromium触屏原型保留明确失败/未执行边界，未作为发布门禁                                     |
 | P13  | 本地通过，待精确SHA CI   | 修复触屏滚动/长按焦点冲突，普通/虚拟模式10项模拟通过；补容器resize失效和脱敏浏览器生命周期诊断                                                   |
-| P14+ | 待执行                   | 继续CI与覆盖缺口、Playwright成对升级、Sortable触屏/异步几何一致性及G2–G4；不缩减接受能力                                                         |
+| P14  | 本地通过，待精确SHA CI   | Playwright/test1.63成对升级，通用触屏驱动供Transfer/Sortable复用，17项模拟回归通过；主CI配置保持对照                                             |
+| P15+ | 待执行                   | 继续整库连接/覆盖缺口、Sortable异步几何一致性、剩余依赖组及G2–G4；预算停止线不变                                                                 |
 
 ### P01 集成记录
 
@@ -350,5 +351,14 @@ P10后续收口：
 - 诊断wrapper默认关闭、factory保持同步，保留provider descriptor/prewarm/serverFactory及原launch/端口/并发；启用时区分unexpected、session-replaced、provider-teardown。URL仅pathname，消息去host/userinfo/query/hash、折行并截断，3项unit通过。主CI不运行旧touch原型，因此主Chromium断连原因仍待新SHA的诊断，不能用touch导航结论代替。
 - 依赖候选重新核实于[依赖审计](./dependency-upgrade-audit-2026-09-08.md)：Playwright/test1.63.0已过等待期，但本轮未安装，以保持本批输入/runner诊断版本固定。typescript-eslint8.70.0在核查时仍未满1440分钟，保留8.69.0，没有增加安全例外。
 - 最终本地：ZUI/Docs类型0 errors/0 warnings，unit/SSR/诊断17项、鼠标/键盘与既有motion9项、修正探针后的容器resize2项、触屏普通/虚拟10项通过。resize fixture显式full，不依赖宿主系统动画偏好；最后再核对2项通过。API/Token生成、lifecycle、格式/lint和audit:system通过；见`.codex/production-p13-final.json`（保留Spinner误计导致的首次失败）、`production-p13-reviewed.json`及`p13-resize-final.json`。诊断URL大小写scheme脱敏补充负例后单独3项unit通过。无本地整库三浏览器或coverage重跑，仍等待提交SHA的完整CI。
+
+### P14 Playwright 成对升级与 Sortable 触屏合同
+
+- 前置为`d14c2337ddd749a108060ea460e5ef5059d38b34`，[CI 34259123075](https://github.com/kenconnet666/zadmin/actions/runs/34259123075)已结束：Firefox/WebKit组件、三浏览器Docs、Static、build、外部包、Windows和Drizzle通过；独立Transfer触屏10项也通过。Chromium主套件仍断连，Coverage321文件2110项全过但未覆盖global1619/450/2975/3760、components1326/378/2475/3121超旧预算。证据生成成功不是全库验收成功。
+- 诊断更正：历史116/142/130/150个browser文件完成后分别出现断连，不能把unit+browser总文件数当iframe次数或固定阈值。本轮第151个browser文件tester已连接，Vite与control WS接着连接失败；Page没有异常导航、关闭、崩溃或pageerror，provider随后才teardown。现有socketerror为空字符串，不能臆造Chromium net error。每页iframe/WS周转与问题相关的假设仍待验证；未用内部强制GC、增加并发、改端口或放宽timeout冒充根因修复。
+- 按[官方1.63发布说明](https://playwright.dev/docs/release-notes#version-163)升级Playwright/test成对版本，保留Vitest5、主spec集与CI并发作为对照。Node24满足要求，三个浏览器安装通过并用`--no-remove`保留旧缓存。pnpm顺带调整的svelte-check三个peer指向和Parcel的picomatch解析已恢复，完整frozen安装与523条供应链校验通过；当前锁SHA256为`C28CA8A2ABF3083AD60B77C7AB13E3DDEC52A5A1B94FA156D02F3845BC000190`。1.63官方未声明修复本项目这类WS问题，完整CI结果仍是判据。
+- 触屏命令提取为`tests/touch-commands.ts`与独立类型声明，供Transfer和Sortable共享；不保留未发布旧名字的deprecated别名。专属config输出改为`test-results/touch-input-chromium.json`，主三浏览器证据协议不变。健康tester在文件隔离时会关闭WS，诊断现在标记Page仍active，不误称为异常Page关闭。
+- Sortable直接使用已有readonly/disabled/itemDisabled和onMoveRequest合同：内容区短滑滚动，独立grip长按跨行，cancel、整体禁用、单项禁用、只读与owner拒绝各有真实协议输入和实际顺序/终态断言。起终点先验证可见，锁定项先滚入视口；修正了content选择器误匹配嵌套ZButton content的问题，采用row直接子部件。既有组件实现通过，不为了测试额外制造API或定制一套手势。新增7项与Transfer10项合计17项Chromium模拟通过；真机与其他引擎触屏仍未验收。
+- 本地验证见`.codex/production-p14-final.json`：API等生成、ZUI/Docs类型0 errors/0 warnings、26项Chromium组件回归、2项Docs E2E、证据composer/verifier自测、3项诊断unit、lifecycle、格式/lint与audit:system全通过；触屏17项见`.codex/p14-touch-combined.log`。旧的Sortable选择器失败保留在`p14-sortable-touch.log`。没有本地整库三浏览器或coverage重跑，下一步用新SHA完整CI确认1.63的稳定性及覆盖情况。
 
 每条完成记录提交、命令/CI链接、结果和未验证边界。目标模式不能把一次局部测试通过当作全库完成，也不授权未经确认的生产发布。

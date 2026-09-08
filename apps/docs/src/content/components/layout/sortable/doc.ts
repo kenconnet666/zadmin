@@ -35,10 +35,11 @@ export const sortableDoc = defineComponentDoc(sortableMetadata, {
 	],
 	accessibility: [
 		'每行提供有名称的原生button手柄与可见移动按钮；行内输入保留自己的键盘和表单语义。',
+		'触屏可从行内容区短滑滚动；独立手柄是拖动专属区域，长按后跨行排序。内容、手柄、取消、只读/禁用与owner拒绝已有Chromium触屏模拟回归；真机与其他引擎触屏仍需独立验收。',
 		'在手柄按Space/Enter开始和放下，方向键选择目标，Escape取消。等待异步接受时也提供取消按钮。',
 		'位置、接受、拒绝和异常只由根live region公告；没有第二个依赖默认公告区域。',
 		'所有结构修改交给onMoveRequest，返回true后仍核对实际items顺序；不会偷偷回滚调用方已经写入的数据。',
 		'默认样式使用Theme/ICSS；布局移动使用可取消Web Animations，reduced变化立即取消本组件的动画。'
 	],
-	keywords: ['sortable', 'reorder', 'drag', 'keyboard', 'form list', 'async']
+	keywords: ['sortable', 'reorder', 'drag', 'touch', 'keyboard', 'form list', 'async']
 });

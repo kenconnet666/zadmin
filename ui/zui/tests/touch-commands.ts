@@ -1,14 +1,14 @@
 import type { BrowserCommand } from 'vitest/node';
 
-export interface TransferTouchStep {
+export interface TouchStep {
 	readonly dx: number;
 	readonly dy: number;
 }
 
-export type TransferTouchTerminal = 'cancel' | 'end';
+export type TouchTerminal = 'cancel' | 'end';
 
-export interface TransferTouchCheckpoint {
-	readonly phase: 'start' | 'hold' | 'move' | TransferTouchTerminal;
+export interface TouchCheckpoint {
+	readonly phase: 'start' | 'hold' | 'move' | TouchTerminal;
 	readonly point: { readonly x: number; readonly y: number };
 	readonly dragging: readonly string[];
 	readonly lists: readonly {
@@ -41,11 +41,11 @@ export const isolateTouchBrowserHistory: BrowserCommand<[]> = async (context) =>
 };
 
 /**
- * Chromium CDP touch emulation for Transfer probes. This sends protocol-level touch input,
+ * Chromium CDP touch emulation for component probes. This sends protocol-level touch input,
  * not synthetic DOM PointerEvents, but it is still emulation rather than physical-device proof.
  */
 export const touchSequence: BrowserCommand<
-	[string, readonly TransferTouchStep[], TransferTouchTerminal, number?]
+	[string, readonly TouchStep[], TouchTerminal, number?]
 > = async (context, sourceSelector, steps, terminal, holdMilliseconds = 0) => {
 	if (context.provider.name !== 'playwright') throw new TypeError('Playwright provider required.');
 	if (!Number.isFinite(holdMilliseconds) || holdMilliseconds < 0 || holdMilliseconds > 1_000)
@@ -58,11 +58,8 @@ export const touchSequence: BrowserCommand<
 			() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()))
 		);
 	const session = await context.page.context().newCDPSession(context.page);
-	const checkpoints: TransferTouchCheckpoint[] = [];
-	const checkpoint = async (
-		phase: TransferTouchCheckpoint['phase'],
-		point: TransferTouchCheckpoint['point']
-	) => {
+	const checkpoints: TouchCheckpoint[] = [];
+	const checkpoint = async (phase: TouchCheckpoint['phase'], point: TouchCheckpoint['point']) => {
 		await nextFrame();
 		checkpoints.push(
 			await frame.evaluate(

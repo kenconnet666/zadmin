@@ -167,7 +167,7 @@ jobs:
             pnpm --filter @zadmin/zui exec vitest --run --project=browser
           fi
 
-      - name: Verify Transfer Chromium touch simulation
+      - name: Verify Chromium touch input simulation
         if: ${{ !cancelled() && matrix.browser == 'chromium' && steps.workspace.outcome == 'success' && steps.browser.outcome == 'success' }}
         env:
           ZUI_BROWSER_DIAGNOSTICS: '1'

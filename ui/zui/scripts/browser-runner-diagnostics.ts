@@ -104,7 +104,8 @@ function instrumentProvider(provider: PlaywrightBrowserProvider): PlaywrightBrow
 			const path = browserRunnerPathname(socket.url());
 			socket.on('close', () =>
 				report('websocket-close', {
-					closeReason: closeReason(page),
+					// A tester's sockets close normally on each isolated file, even while its Page lives.
+					pageState: expectedClose.get(page) ?? 'active',
 					kind,
 					pathname: path,
 					sessionId

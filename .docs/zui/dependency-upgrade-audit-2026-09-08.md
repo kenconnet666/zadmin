@@ -267,3 +267,10 @@ Core类型、35项unit与release version self-test通过；该self-test没有执
 官方 registry 页面：[playwright](https://registry.npmjs.org/playwright)、[@playwright/test](https://registry.npmjs.org/@playwright%2Ftest)、[vitest](https://registry.npmjs.org/vitest)、[@vitest/browser-playwright](https://registry.npmjs.org/@vitest%2Fbrowser-playwright)、[@vitest/coverage-v8](https://registry.npmjs.org/@vitest%2Fcoverage-v8)、[vitest-browser-svelte](https://registry.npmjs.org/vitest-browser-svelte)、[typescript-eslint](https://registry.npmjs.org/typescript-eslint)。
 
 当前动作边界：Playwright 1.63.0 是已过等待期的成对候选，但本次没有更新或验证；Vitest 5 组已在 lock 中，仍需按既有 P11 记录的 unit/browser/coverage/CI 证据收口；typescript-eslint 8.70.0 等待窗口结束前不应进入 lock。查到 registry latest 不代表升级成功或验收完成。
+
+### P14 Playwright 成对升级记录
+
+- `playwright` 与 `@playwright/test` 已实际成对升级到 `1.63.0`；workspace catalog 仍使用 catalog 协议，当前声明已为 `^1.63.0`，lock 中两者也解析为 `1.63.0`。
+- 三个 Playwright 浏览器安装均以 exit 0 完成；使用 `--no-remove` 保留旧浏览器缓存。非目标的svelte-check peer指向和Parcel/picomatch解析已恢复，frozen安装与523条供应链校验通过；主三浏览器spec矩阵、并发和timeout不变，独立触屏套件扩为17项。
+- 本地ZUI/Docs类型、26项组件回归、2项Docs E2E、17项触屏模拟及证据链自测已通过，完整新SHA CI待运行；当前不宣称浏览器断连已经修复。
+- `typescript-eslint` 仍保持 `8.69.0`，其锁条目未改；P13的等待期结论是当时快照，后续单独升级前重新核查1440分钟窗口，本批未增加例外。
