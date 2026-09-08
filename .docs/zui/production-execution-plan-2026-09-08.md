@@ -129,8 +129,9 @@ Charts、RichText、Markdown、CodeEditor、DiffViewer、Scheduler进入接受�
 | P00  | 已提交                 | `6477326`：先提交本文与总纲入口，再创建持续执行目标；此前未修改生产代码                                                                          |
 | P01  | 已提交，CI发现后续阻断 | `95d1113`：ZUI包2984用例通过（2跳过）、Docs三浏览器、构建、外部包、Windows桌面通过；Static/WebView类型、Docs生成类型语法、Coverage综合用例仍阻断 |
 | P02  | 已提交，CI发现后续阻断 | `76c1f82` + `8375bfe`：运行时/类型显示/演示修复；精确CI已通过workspace行为、构建、外部包和Windows，但Static、Coverage及两个Docs时序用例仍失败    |
-| P03  | 集成收口中             | Rating帧释放、Splitter键盘路径、完整SSR拆分、静态合同/局部lint、日期偏好和action默认值验收；Transfer仅纯事务内核，不算E19完成                    |
-| P04+ | 待执行                 | 依赖闭合后按G2–G4与D主线继续，下一步Transfer组件接入；不重复历史数量                                                                             |
+| P03  | 已提交，CI发现后续阻断 | `2858e37` + `2e8495a` + `d852182`：运行时/文档/审计修复，完整结果与未闭合项见P03记录；不算M0通过                                                 |
+| P04  | 本地收口，待新SHA CI   | Transfer E19A真实组件与Docs接入、状态比较器、callable文档生成和API行唯一性；核心修复`6576d4d`、CI修复`2d72d1e`，完整候选另行绑定                 |
+| P05+ | 待执行                 | 优先消除真实coverage预算缺口和浏览器中断，再按G2–G4与D继续；E19B跨栏拖放等接受能力不删减                                                         |
 
 ### P01 集成记录
 
@@ -173,9 +174,15 @@ P02运行时修复单独提交为`76c1f82`；Docs/类型显示/CI诊断与同步
 - 日期偏好：现有DateTimePicker family demo增加RTL/full/reduced、外部清空和native reset；确认前后owner、草稿和实际CSS motion/方向回归1项Chromium通过。异步Docs pilot显式pause clock后5项通过；Slider的WebKit键盘FormData流程改为真实Enter提交并保留全部值/reset断言，不宣称发现Slider运行时缺陷。
 - Transfer：新增不可变membership candidate/snapshot和共同结果词汇，typed key、disabled、orphan/order、过期快照与只读getter读取边界有20项mutation/transfer/reorder unit通过。尚未接入ZTransfer请求、取消、状态、locale、公开entrypoint与Docs，E19仍pending。
 
-阶段提交已完成：`2858e37`（Rating/Splitter）和`2e8495a`（mutation/Transfer内核）。ZUI与Docs类型均0 errors/0 warnings，产物/token刷新和完整`audit-system.mjs`通过；最终全库ESLint与串联门禁仍在后台收口，日志见`.codex/production-p03-*.json`及对应log。
+阶段提交已完成：`2858e37`（Rating/Splitter）和`2e8495a`（mutation/Transfer内核）。当批ZUI与Docs类型均0 errors/0 warnings，产物/token刷新和完整`audit-system.mjs`通过；其后的整库ESLint/CI结果见下文，不把当时后台检查记为已通过。历史日志见`.codex/production-p03-*.json`及对应log。
 
 本地完整`pnpm lint`因历史CRLF工作树失败，不能记为原命令通过：Git索引与`.gitattributes`均为LF，工作树保留CRLF/混合换行。使用本地auto-EOL格式检查后，剩余32个warning文件逐个以原Prettier配置格式化结果对账，LF归一化后全部完全相同。未放宽仓库Prettier/CI配置，未批量重排849个历史文件；提交索引继续遵循LF。整库ESLint独立执行，远端仍执行标准`pnpm lint`。
+
+P03最终组合提交为`d8521829917a03592cebed0c22957d4cb1d750c7`，对应[CI 34201251501](https://github.com/kenconnet666/zadmin/actions/runs/34201251501)。后续已核实：workspace类型、标准Prettier、完整系统/发布静态合同、构建、外部包、Windows桌面与Docs Chromium通过；ESLint只剩FormDemo新增timer Set的命令式所有权例外遗漏，P04按具体声明补齐。后台本地整库lint因耗时且要开始新代码编辑已显式停止，不能与新工作树混跑后记为该SHA验收。
+
+Coverage的2052项测试全通过，但未覆盖预算失败。下载当前和旧绿`3b4536f`的实际summary后确认：uncovered lines 875→1591、functions 290→456、branches 1966→3760、statements 1694→2938；期间源码新增/变更多个组件族，不能归咎于当前SSR拆分，也不能把旧失败轮当作budget已通过。现有阈值不变，后续CI增加完整JSON定位分支；优先补NavigationMenu、TimeField/TimeRange/DateTimeRange与Tree/DataTable真实边界回归，不再重复基础smoke抬数量。Workspace测试另因`international-date-time-owner.browser.spec.ts`期间browser连接断开，在444/640文件后中止；只有3124通过/2跳过的局部结果，剩余文件不算通过。P04修正该文件对异步render的等待，并增加浏览器进程日志；尚未证明断连根因已解决。
+
+该轮Docs WebKit/Firefox最终各220通过/1失败。WebKit失败发生在刻意打开未提交draft后点击被popup遮住的外部reset按钮，不是已经证明有退出残留；改为在确认dialog仍open时调用真实`HTMLFormElement.reset()`，直接验证reset本身关闭/重建草稿，普通reset按钮click仍在同测试前段保留。Firefox Cascader失败时trace显示popup已关闭、attempts=1、pending=true/error=none，失败按钮动作未真正结算应用Promise；不能归为请求被close abort。当前两场景在本机WebKit/Firefox合计4项通过，但Firefox原因尚未复现/闭合，新SHA CI继续验收。
 
 ### P04 接入前的关键边界
 
@@ -189,5 +196,15 @@ P02运行时修复单独提交为`76c1f82`；Docs/类型显示/CI诊断与同步
 6. immediate保持一次onValueChange；request由显式判别模式和外部精确回声确认，不再写第二次canonical value。最终公共Props/locale/entrypoint和正负类型测试一起定稿，纯candidate是否公开须由真实消费需求决定。
 
 后续仍推进动画公共owner和Docs其余家族整理；G2–G4接受范围不缩减。新提交绑定精确SHA CI，不以以上定向结果代替M0。
+
+### P04 集成收口记录
+
+- `6576d4d`独立修复共享状态比较器：区分数组空洞与自有undefined槽位；逐对象对记录循环访问，单节点/多节点循环不再栈溢出，同时保留普通alias和复制对象的内容比较语义。组件状态与相邻Form共49项unit通过。
+- Transfer E19A已有真实按钮消费者、显式immediate/request判别、精确raw echo、pending/终态、深层item变更、模式切换、reset/unmount及container-focus lease。独立8项Chromium与5项SSR通过。提前echo时header按当前full pane投影勾选数量，保留真实selection且不受filter影响。没有实现E19B跨栏拖放，不把本地通过当作完整W4交付。
+- 实测发现并修复：onMoveEnd重入读取缓存的旧value；重复/稀疏echo被错误规范化；深层item修改未进入tracked snapshot；旧await后的focus未复核session；双重data-state metadata使API表格重复key崩溃。Docs新增统一递归API行路径校验，覆盖metadata和additionalApi，不用index key遮盖重复。
+- Docs新增独立请求owner演示，保留数据加载/孤儿演示。通过真实FormData（不去重）、手动接受/拒绝/error、外部value/items stale、native reset和路由卸载验收；Chromium1项通过。继续补完整callback参数/终态文档，不仅显示类型别名。
+- 生成器已支持同模块Shared、alias、union/intersection及可明确解析的Omit/Pick组成，request和terminal文档展示真实参数结构；继续拒绝外部原生handler、无关local、never-only、不明确filter和未支持的本地泛型实例化，不删除来源门禁。自测及真实API生成通过，187组件/2677 Props、0 metadata gaps/0 true fallbacks只是当前事实，不是成熟度。
+- 最终验证：ZUI与Docs类型均0 errors/0 warnings；Docs unit 6文件35项通过；最后的artifacts/token刷新、全部修改文件Prettier/ESLint、完整audit:system、SSR5项及计数修复后的ZUI类型检查全部通过。日志见`.codex/production-p04-validation.json`和`.codex/production-p04-finish.json`及对应log；早期失败记录只用于诊断，不能混作通过。
+- 未执行本地整库Coverage或重复三浏览器完整矩阵；新SHA CI必须继续验证coverage、浏览器中断与Firefox Cascader未复现路径。未发布npm、tag或生产站点，M0–M3未宣布完成。
 
 每条完成记录提交、命令/CI链接、结果和未验证边界。目标模式不能把一次局部测试通过当作全库完成，也不授权未经确认的生产发布。

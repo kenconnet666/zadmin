@@ -3,7 +3,7 @@
 	"scope": ["ui/zui/src/components", "ui/zui/src/runtime", "apps/docs/src"],
 	"limitations": "AST source inventory, not runtime coverage. Numeric equality only identifies review candidates, not semantic equivalence. Dynamic/indexed theme reads and raw CSS returned from helpers require manual review. Entries without a direct reference are NOT proof of dead tokens.",
 	"summary": {
-		"files": 1072,
+		"files": 1073,
 		"registeredProperties": 166,
 		"themeGroups": 18,
 		"themeTokens": 185,
@@ -11533,49 +11533,49 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 56,
+			"line": 58,
 			"property": "backgroundColor",
 			"expression": "s.backgroundColor._canvas",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 57,
+			"line": 59,
 			"property": "borderColor",
 			"expression": "s.borderColor._border",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 58,
+			"line": 60,
 			"property": "borderRadius",
 			"expression": "s.borderRadius._medium",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 59,
+			"line": 61,
 			"property": "borderStyle",
 			"expression": "s.borderStyle.solid",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 60,
+			"line": 62,
 			"property": "borderWidth",
 			"expression": "s.borderWidth._hairline",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 61,
+			"line": 63,
 			"property": "display",
 			"expression": "s.display.flex",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 62,
+			"line": 64,
 			"property": "flex",
 			"method": "raw",
 			"expression": "s.flex.raw('1 1 14rem')",
@@ -11583,119 +11583,119 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 63,
+			"line": 65,
 			"property": "flexDirection",
 			"expression": "s.flexDirection.column",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 64,
+			"line": 66,
 			"property": "gap",
 			"expression": "s.gap._small",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 65,
+			"line": 67,
 			"property": "minWidth",
 			"expression": "s.minWidth._menu",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 66,
+			"line": 68,
 			"property": "padding",
 			"expression": "s.padding._medium",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 71,
+			"line": 73,
 			"property": "padding",
 			"expression": "s.padding._small",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 74,
+			"line": 76,
 			"property": "padding",
 			"expression": "s.padding._medium",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 77,
+			"line": 79,
 			"property": "padding",
 			"expression": "s.padding._medium",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 80,
+			"line": 82,
 			"property": "padding",
 			"expression": "s.padding._large",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 83,
+			"line": 85,
 			"property": "padding",
 			"expression": "s.padding._large",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 91,
+			"line": 93,
 			"property": "alignItems",
 			"expression": "s.alignItems.center",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 92,
+			"line": 94,
 			"property": "display",
 			"expression": "s.display.flex",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 93,
+			"line": 95,
 			"property": "fontWeight",
 			"expression": "s.fontWeight._semibold",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 94,
+			"line": 96,
 			"property": "justifyContent",
 			"expression": "s.justifyContent.spaceBetween",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 104,
+			"line": 106,
 			"property": "display",
 			"expression": "s.display.flex",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 105,
+			"line": 107,
 			"property": "flexDirection",
 			"expression": "s.flexDirection.column",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 106,
+			"line": 108,
 			"property": "gap",
 			"expression": "s.gap._xsmall",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 107,
+			"line": 109,
 			"property": "maxHeight",
 			"method": "rem",
 			"expression": "s.maxHeight.rem(16)",
@@ -11703,7 +11703,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 108,
+			"line": 110,
 			"property": "minHeight",
 			"method": "rem",
 			"expression": "s.minHeight.rem(10)",
@@ -11711,133 +11711,133 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 109,
+			"line": 111,
 			"property": "overflow",
 			"expression": "s.overflow.auto",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 118,
+			"line": 120,
 			"property": "borderRadius",
 			"expression": "s.borderRadius._small",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 119,
+			"line": 121,
 			"property": "cursor",
 			"expression": "s.cursor.pointer",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 120,
+			"line": 122,
 			"property": "paddingBlock",
 			"expression": "s.paddingBlock._small",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 121,
+			"line": 123,
 			"property": "paddingInline",
 			"expression": "s.paddingInline._medium",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 122,
+			"line": 124,
 			"property": "userSelect",
 			"expression": "s.userSelect.none",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 129,
+			"line": 131,
 			"property": "cursor",
 			"expression": "s.cursor.notAllowed",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 130,
+			"line": 132,
 			"property": "opacity",
 			"expression": "s.opacity._disabled",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 136,
+			"line": 138,
 			"property": "backgroundColor",
 			"expression": "s.backgroundColor._surface",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 137,
+			"line": 139,
 			"property": "color",
 			"expression": "s.color._primary",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 145,
+			"line": 147,
 			"property": "color",
 			"expression": "s.color._textMuted",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 146,
+			"line": 148,
 			"property": "fontSize",
 			"expression": "s.fontSize._small",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 151,
+			"line": 153,
 			"property": "fontSize",
 			"expression": "s.fontSize._xsmall",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 154,
+			"line": 156,
 			"property": "fontSize",
 			"expression": "s.fontSize._xsmall",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 157,
+			"line": 159,
 			"property": "fontSize",
 			"expression": "s.fontSize._small",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 160,
+			"line": 162,
 			"property": "fontSize",
 			"expression": "s.fontSize._small",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 163,
+			"line": 165,
 			"property": "fontSize",
 			"expression": "s.fontSize._medium",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 171,
+			"line": 173,
 			"property": "color",
 			"expression": "s.color._textMuted",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 172,
+			"line": 174,
 			"property": "padding",
 			"expression": "s.padding._large",
 			"kind": "theme-accessor"
@@ -20329,119 +20329,119 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 319,
+			"line": 479,
 			"property": "fontFamily",
 			"expression": "s.fontFamily._sans",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 320,
+			"line": 480,
 			"property": "lineHeight",
 			"expression": "s.lineHeight._compact",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 321,
+			"line": 481,
 			"property": "alignItems",
 			"expression": "s.alignItems.stretch",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 322,
+			"line": 482,
 			"property": "display",
 			"expression": "s.display.flex",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 323,
+			"line": 483,
 			"property": "flexWrap",
 			"expression": "s.flexWrap.wrap",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 324,
+			"line": 484,
 			"property": "gap",
 			"expression": "s.gap._medium",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 329,
+			"line": 489,
 			"property": "fontSize",
 			"expression": "s.fontSize._xsmall",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 332,
+			"line": 492,
 			"property": "fontSize",
 			"expression": "s.fontSize._small",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 335,
+			"line": 495,
 			"property": "fontSize",
 			"expression": "s.fontSize._medium",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 338,
+			"line": 498,
 			"property": "fontSize",
 			"expression": "s.fontSize._large",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 341,
+			"line": 501,
 			"property": "fontSize",
 			"expression": "s.fontSize._large",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 344,
+			"line": 504,
 			"property": "opacity",
 			"expression": "s.opacity._disabled",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 350,
+			"line": 510,
 			"property": "alignItems",
 			"expression": "s.alignItems.center",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 351,
+			"line": 511,
 			"property": "display",
 			"expression": "s.display.flex",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 352,
+			"line": 512,
 			"property": "flexDirection",
 			"expression": "s.flexDirection.column",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 353,
+			"line": 513,
 			"property": "gap",
 			"expression": "s.gap._small",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 354,
+			"line": 514,
 			"property": "justifyContent",
 			"expression": "s.justifyContent.center",
 			"kind": "system-keyword"
@@ -35948,175 +35948,175 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 56,
+			"line": 58,
 			"token": "color.canvas",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 57,
+			"line": 59,
 			"token": "color.border",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 58,
+			"line": 60,
 			"token": "radius.medium",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 60,
+			"line": 62,
 			"token": "borderWidth.hairline",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 64,
+			"line": 66,
 			"token": "space.small",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 65,
+			"line": 67,
 			"token": "size.menu",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 66,
+			"line": 68,
 			"token": "space.medium",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 71,
+			"line": 73,
 			"token": "space.small",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 74,
+			"line": 76,
 			"token": "space.medium",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 77,
+			"line": 79,
 			"token": "space.medium",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 80,
+			"line": 82,
 			"token": "space.large",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 83,
+			"line": 85,
 			"token": "space.large",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 93,
+			"line": 95,
 			"token": "fontWeight.semibold",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 106,
+			"line": 108,
 			"token": "space.xsmall",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 118,
+			"line": 120,
 			"token": "radius.small",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 120,
+			"line": 122,
 			"token": "space.small",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 121,
+			"line": 123,
 			"token": "space.medium",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 130,
+			"line": 132,
 			"token": "opacity.disabled",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 136,
+			"line": 138,
 			"token": "color.surface",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 137,
+			"line": 139,
 			"token": "color.primary",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 145,
+			"line": 147,
 			"token": "color.textMuted",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 146,
+			"line": 148,
 			"token": "fontSize.small",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 151,
+			"line": 153,
 			"token": "fontSize.xsmall",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 154,
+			"line": 156,
 			"token": "fontSize.xsmall",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 157,
+			"line": 159,
 			"token": "fontSize.small",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 160,
+			"line": 162,
 			"token": "fontSize.small",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 163,
+			"line": 165,
 			"token": "fontSize.medium",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 171,
+			"line": 173,
 			"token": "color.textMuted",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 172,
+			"line": 174,
 			"token": "space.large",
 			"via": "icss-accessor"
 		},
@@ -40220,61 +40220,61 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 319,
+			"line": 479,
 			"token": "fontFamily.sans",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 320,
+			"line": 480,
 			"token": "lineHeight.compact",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 324,
+			"line": 484,
 			"token": "space.medium",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 329,
+			"line": 489,
 			"token": "fontSize.xsmall",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 332,
+			"line": 492,
 			"token": "fontSize.small",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 335,
+			"line": 495,
 			"token": "fontSize.medium",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 338,
+			"line": 498,
 			"token": "fontSize.large",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 341,
+			"line": 501,
 			"token": "fontSize.large",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 344,
+			"line": 504,
 			"token": "opacity.disabled",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 353,
+			"line": 513,
 			"token": "space.small",
 			"via": "icss-accessor"
 		},
@@ -44338,7 +44338,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/TransferPane.svelte",
-			"line": 355
+			"line": 359
 		},
 		{
 			"path": "ui/zui/src/components/input/ZCalendar.svelte",
@@ -44502,7 +44502,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 731
+			"line": 1208
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAffix.svelte",

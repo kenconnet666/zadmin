@@ -7,6 +7,32 @@ import {
 } from '../src/runtime/foundation/locale.js';
 
 describe('typed locale packs', () => {
+	it('announces Transfer request phases with locale counts and override inheritance', () => {
+		const en = enUSLocalePack.transfer;
+		const zh = zhCNLocalePack.transfer;
+		expect(en.pending('1', 1, 'Selected')).toBe('Waiting to move 1 item to Selected.');
+		expect(en.accepted('2', 2, 'Available')).toBe('Moved 2 items to Available.');
+		expect(en.rejected('2', 2, 'Selected')).toBe('Moving 2 items to Selected was not accepted.');
+		expect(en.cancelled('1', 1, 'Selected')).toBe('Cancelled moving 1 item to Selected.');
+		expect(en.error('1', 1, 'Selected')).toBe('Moving 1 item to Selected failed.');
+		expect(zh.pending('２', 2, '已选项目')).toBe('正在请求将 ２ 个项目移至已选项目。');
+		expect(zh.accepted('２', 2, '已选项目')).toBe('已将 ２ 个项目移至已选项目。');
+		expect(zh.rejected('２', 2, '已选项目')).toBe('将 ２ 个项目移至已选项目的请求未被接受。');
+		expect(zh.cancelled('２', 2, '已选项目')).toBe('已取消将 ２ 个项目移至已选项目的请求。');
+		expect(zh.error('２', 2, '已选项目')).toBe('将 ２ 个项目移至已选项目时发生错误。');
+		const pack = resolveZuiLocalePack(enUSLocalePack, {
+			transfer: {
+				accepted: (formattedCount, count, destination) =>
+					`${destination}: ${formattedCount}/${count}`,
+				pending: undefined
+			}
+		});
+		expect(pack.transfer.accepted('３', 3, 'Target')).toBe('Target: ３/3');
+		expect(pack.transfer.pending).toBe(en.pending);
+		expect(pack.transfer.cancelled).toBe(en.cancelled);
+		expect(Object.isFrozen(pack.transfer)).toBe(true);
+	});
+
 	it('merges typed namespaces while preserving parameterized defaults', () => {
 		const pack = resolveZuiLocalePack(enUSLocalePack, {
 			carousel: { nextSlide: 'Continue slides' },

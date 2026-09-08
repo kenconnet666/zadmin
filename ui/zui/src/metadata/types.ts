@@ -70,7 +70,7 @@ export type ZuiCallableParameterMetadata = ZuiApiMetadata & {
 };
 
 export interface ZuiCallableMetadata {
-	/** Parameters for a callback property declared directly by the component's root Props type. */
+	/** Parameters for a callback property declared by the component module's local root Props composition. */
 	readonly parameters: readonly ZuiCallableParameterMetadata[];
 	readonly returns?: never;
 }

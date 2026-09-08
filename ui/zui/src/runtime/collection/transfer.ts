@@ -127,7 +127,46 @@ export function matchesTransferSnapshot<TKey extends SelectionKey>(
 	currentValue: readonly TKey[],
 	candidate: TransferMoveCandidate<TKey>
 ): boolean {
-	const items = itemSnapshot(currentItems, 'Current transfer items');
-	const value = uniqueKeys(currentValue, 'Current transfer value');
-	return sameItems(items, candidate.items) && sameKeys(value, candidate.value);
+	return (
+		matchesTransferItemsSnapshot(currentItems, candidate) &&
+		matchesTransferValueSnapshot(currentValue, candidate.value)
+	);
+}
+
+/** Checks the item key, order and normalized disabled snapshot without reading membership. */
+export function matchesTransferItemsSnapshot<TKey extends SelectionKey>(
+	currentItems: readonly TransferItemInput<TKey>[],
+	candidate: TransferMoveCandidate<TKey>
+): boolean {
+	return sameItems(itemSnapshot(currentItems, 'Current transfer items'), candidate.items);
+}
+
+/** Checks one canonical membership echo with typed key identity and exact order. */
+export function matchesTransferValueSnapshot<TKey extends SelectionKey>(
+	currentValue: readonly TKey[],
+	expectedValue: readonly TKey[]
+): boolean {
+	return sameKeys(
+		uniqueKeys(currentValue, 'Current transfer value'),
+		uniqueKeys(expectedValue, 'Expected transfer value')
+	);
+}
+
+/** Matches an external owner echo exactly without normalizing duplicate or invalid JavaScript input. */
+export function matchesTransferValueEcho<TKey extends SelectionKey>(
+	currentValue: unknown,
+	expectedValue: readonly TKey[]
+): boolean {
+	if (!Array.isArray(currentValue) || currentValue.length !== expectedValue.length) return false;
+	for (let index = 0; index < currentValue.length; index += 1) {
+		if (!Object.prototype.hasOwnProperty.call(currentValue, index)) return false;
+		const key: unknown = currentValue[index];
+		try {
+			assertSelectionKey(key, 'Transfer owner echo');
+		} catch {
+			return false;
+		}
+		if (!Object.is(key, expectedValue[index])) return false;
+	}
+	return true;
 }

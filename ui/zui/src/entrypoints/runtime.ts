@@ -50,6 +50,10 @@ export type {
 	AsyncCollectionQueryStatus
 } from '../runtime/collection/async-query.js';
 export { CollectionStore } from '../runtime/collection/collection.svelte.js';
+export type {
+	CollectionMutationResult,
+	CollectionMutationSource
+} from '../runtime/collection/mutation.js';
 export type { CollectionItem } from '../runtime/collection/collection.svelte.js';
 export { moveIndex, navigationIntent } from '../runtime/collection/list-navigation.js';
 export type {

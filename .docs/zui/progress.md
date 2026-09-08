@@ -7,7 +7,7 @@
 | 维度                                           |                    当前值 |                                              总量或边界 |
 | ---------------------------------------------- | ------------------------: | ------------------------------------------------------: |
 | Public component metadata                      |                       187 |                                                     187 |
-| Declared public props                          |                      2674 |                            metadata gaps 0; fallbacks 0 |
+| Declared public props                          |                      2677 |                            metadata gaps 0; fallbacks 0 |
 | Metadata status stable                         |                       141 | compliant 0; pending execution 141; static violations 0 |
 | Browser behavior contracts declared            |                       175 |                                                     187 |
 | Visual contracts declared                      |                       161 |                                                     187 |

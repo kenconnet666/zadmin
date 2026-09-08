@@ -13,6 +13,7 @@
 	export interface TransferPaneProps {
 		readonly active: ActiveDescendant<SelectionKey, TransferItem>;
 		readonly checked: ReadonlySet<SelectionKey>;
+		readonly checkedCount: number;
 		readonly controlId: string;
 		readonly describedBy?: string;
 		readonly disabled: boolean;
@@ -30,6 +31,7 @@
 		readonly onListKeydown: (event: KeyboardEvent) => void;
 		readonly onToggle: (item: TransferItem) => void;
 		readonly orphanText?: string;
+		readonly pending: boolean;
 		query?: string;
 		readonly readonly: boolean;
 		readonly required: boolean;
@@ -188,6 +190,7 @@
 	let {
 		active,
 		checked,
+		checkedCount,
 		controlId,
 		describedBy,
 		disabled,
@@ -205,6 +208,7 @@
 		onListKeydown,
 		onToggle,
 		orphanText,
+		pending,
 		query = $bindable(''),
 		readonly,
 		required,
@@ -263,7 +267,7 @@
 				if (!disabled && !item.disabled) active.set(item.key, 'pointer');
 			};
 			const handleClick = (): void => {
-				if (!disabled && !readonly && !item.disabled) onToggle(item);
+				if (!disabled && !readonly && !pending && !item.disabled) onToggle(item);
 			};
 			node.addEventListener('click', handleClick);
 			node.addEventListener('pointerdown', handlePointerDown);
@@ -292,7 +296,7 @@
 
 <div class={panelClass} data-slot="panel" role="group" aria-labelledby={labelId}>
 	<header class={headerClass}>
-		<span id={labelId}>{label}</span><span>{checked.size} / {totalCount}</span>
+		<span id={labelId}>{label}</span><span>{checkedCount} / {totalCount}</span>
 	</header>
 	{#if filterable}
 		<ZInput

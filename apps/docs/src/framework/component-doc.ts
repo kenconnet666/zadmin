@@ -228,6 +228,23 @@ function appendMetadataApi(
 	}
 }
 
+function validateApiSectionRows(componentName: string, section: ApiSection): void {
+	const paths = new Set<string>();
+	function visit(rows: readonly ApiRow[], prefix = ''): void {
+		for (const row of rows) {
+			const path = prefix ? `${prefix}.${row.name}` : row.name;
+			if (paths.has(path)) {
+				throw new TypeError(
+					`${componentName} ${section.title} repeats API row names at "${path}".`
+				);
+			}
+			paths.add(path);
+			visit(row.members ?? [], path);
+		}
+	}
+	visit(section.rows);
+}
+
 export function defineComponentDoc(
 	metadata: ZuiComponentMetadata,
 	doc: ComponentDocDefinition
@@ -337,13 +354,10 @@ export function defineComponentDoc(
 		if (apiIds.has(section.id)) {
 			throw new TypeError(`${metadata.name} repeats API section id "${section.id}".`);
 		}
-		const rowNames = section.rows.map(({ name }) => name);
-		if (new Set(rowNames).size !== rowNames.length) {
-			throw new TypeError(`${metadata.name} ${section.title} repeats API row names.`);
-		}
 		apiIds.add(section.id);
 		api.push(section);
 	}
+	for (const section of api) validateApiSectionRows(metadata.name, section);
 	const {
 		additionalApi: _additionalApi,
 		memberApis: _memberApis,

@@ -2664,10 +2664,10 @@ export const componentCatalogManifest = Object.freeze([
 			'controlled',
 			'external-clear',
 			'loading',
-			'focus',
-			'resource-cleanup'
+			'resource-cleanup',
+			'focus'
 		],
-		demoCount: 6,
+		demoCount: 7,
 		publicComponentCount: 1
 	},
 	{

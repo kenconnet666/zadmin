@@ -222,10 +222,15 @@ export interface ZuiTagsInputLocale {
 }
 
 export interface ZuiTransferLocale {
+	readonly accepted: (formattedCount: string, count: number, destinationLabel: string) => string;
+	readonly cancelled: (formattedCount: string, count: number, destinationLabel: string) => string;
 	readonly empty: string;
+	readonly error: (formattedCount: string, count: number, destinationLabel: string) => string;
 	readonly filterPlaceholder: string;
 	readonly moveToSource: string;
 	readonly moveToTarget: string;
+	readonly pending: (formattedCount: string, count: number, destinationLabel: string) => string;
+	readonly rejected: (formattedCount: string, count: number, destinationLabel: string) => string;
 	readonly selectedNotLoaded: (formattedCount: string, count: number) => string;
 	readonly sourceTitle: string;
 	readonly targetTitle: string;
@@ -555,10 +560,20 @@ export const enUSLocalePack = Object.freeze({
 			`Step ${formattedCurrent} of ${formattedTotal}`
 	}),
 	transfer: Object.freeze({
+		accepted: (formattedCount: string, count: number, destinationLabel: string) =>
+			`Moved ${formattedCount} ${count === 1 ? 'item' : 'items'} to ${destinationLabel}.`,
+		cancelled: (formattedCount: string, count: number, destinationLabel: string) =>
+			`Cancelled moving ${formattedCount} ${count === 1 ? 'item' : 'items'} to ${destinationLabel}.`,
 		empty: 'No items',
+		error: (formattedCount: string, count: number, destinationLabel: string) =>
+			`Moving ${formattedCount} ${count === 1 ? 'item' : 'items'} to ${destinationLabel} failed.`,
 		filterPlaceholder: 'Filter items',
 		moveToSource: 'Move selected to source',
 		moveToTarget: 'Move selected to target',
+		pending: (formattedCount: string, count: number, destinationLabel: string) =>
+			`Waiting to move ${formattedCount} ${count === 1 ? 'item' : 'items'} to ${destinationLabel}.`,
+		rejected: (formattedCount: string, count: number, destinationLabel: string) =>
+			`Moving ${formattedCount} ${count === 1 ? 'item' : 'items'} to ${destinationLabel} was not accepted.`,
 		selectedNotLoaded: (formattedCount: string, count: number) =>
 			`${formattedCount} selected ${count === 1 ? 'item is' : 'items are'} not loaded`,
 		sourceTitle: 'Available',
@@ -805,10 +820,30 @@ export const zhCNLocalePack = Object.freeze({
 			`第${formattedCurrent}步，共${formattedTotal}步`
 	}),
 	transfer: Object.freeze({
+		accepted: (formattedCount: string, count: number, destinationLabel: string) => {
+			void count;
+			return `已将 ${formattedCount} 个项目移至${destinationLabel}。`;
+		},
+		cancelled: (formattedCount: string, count: number, destinationLabel: string) => {
+			void count;
+			return `已取消将 ${formattedCount} 个项目移至${destinationLabel}的请求。`;
+		},
 		empty: '暂无项目',
+		error: (formattedCount: string, count: number, destinationLabel: string) => {
+			void count;
+			return `将 ${formattedCount} 个项目移至${destinationLabel}时发生错误。`;
+		},
 		filterPlaceholder: '筛选项目',
 		moveToSource: '将所选项目移至来源列表',
 		moveToTarget: '将所选项目移至目标列表',
+		pending: (formattedCount: string, count: number, destinationLabel: string) => {
+			void count;
+			return `正在请求将 ${formattedCount} 个项目移至${destinationLabel}。`;
+		},
+		rejected: (formattedCount: string, count: number, destinationLabel: string) => {
+			void count;
+			return `将 ${formattedCount} 个项目移至${destinationLabel}的请求未被接受。`;
+		},
 		selectedNotLoaded: (formattedCount: string, count: number) => {
 			// Keep the shared pluralization signature even though Chinese does not branch on count.
 			void count;

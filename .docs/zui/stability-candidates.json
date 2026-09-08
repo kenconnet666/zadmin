@@ -2294,7 +2294,7 @@
 				"ProductionVerified pending for current revision"
 			],
 			"docs": "apps/docs/src/content/components/input/transfer/doc.ts",
-			"ssrContractCount": 1
+			"ssrContractCount": 2
 		},
 		{
 			"id": "tree-select",

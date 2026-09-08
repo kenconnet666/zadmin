@@ -1599,6 +1599,191 @@ function validateCallableMetadataShape(filename, eventName, callable) {
 		);
 }
 
+function localFilterKeys(node, declarations, seen = new Set()) {
+	if (!node) return undefined;
+	if (ts.isParenthesizedTypeNode(node)) return localFilterKeys(node.type, declarations, seen);
+	if (node.kind === ts.SyntaxKind.NeverKeyword) return new Set();
+	if (ts.isLiteralTypeNode(node)) {
+		const literal = node.literal;
+		return ts.isStringLiteral(literal) || ts.isNumericLiteral(literal)
+			? new Set([literal.text])
+			: undefined;
+	}
+	if (ts.isUnionTypeNode(node)) {
+		const result = new Set();
+		for (const member of node.types) {
+			const keys = localFilterKeys(member, declarations, seen);
+			if (!keys) return undefined;
+			for (const key of keys) result.add(key);
+		}
+		return result;
+	}
+	if (!ts.isTypeReferenceNode(node) || !ts.isIdentifier(node.typeName)) return undefined;
+	const name = node.typeName.text;
+	if (seen.has(name)) return undefined;
+	const declaration = declarations.get(name);
+	if (!declaration || !ts.isTypeAliasDeclaration(declaration)) return undefined;
+	return localFilterKeys(declaration.type, declarations, new Set(seen).add(name));
+}
+
+function localComposedPropertySignatures(root, property, declarations, filename) {
+	const signatures = [];
+	const seen = new Set();
+	const filterKey = (values) => (values ? [...values].sort().join(',') : '*');
+	const selected = (include, exclude) =>
+		!exclude.has(property) && (!include || include.has(property));
+	const intersect = (left, right) =>
+		left ? new Set([...left].filter((value) => right.has(value))) : right;
+
+	function visitReference(name, typeArguments, include, exclude, unsupported) {
+		if ((name === 'Omit' || name === 'Pick') && typeArguments?.[0]) {
+			const names = localFilterKeys(typeArguments[1], declarations);
+			if (!names) {
+				visitType(
+					typeArguments[0],
+					include,
+					exclude,
+					unsupported ?? `${name} uses an unresolved key type`
+				);
+				return;
+			}
+			visitType(
+				typeArguments[0],
+				name === 'Pick' ? intersect(include, names) : include,
+				name === 'Omit' ? new Set([...exclude, ...names]) : exclude,
+				unsupported
+			);
+			return;
+		}
+		const declaration = declarations.get(name);
+		if (declaration)
+			visitDeclaration(
+				declaration,
+				include,
+				exclude,
+				unsupported ??
+					(declaration.typeParameters?.length
+						? `local generic ${declaration.name.text} is not instantiated by the callable provenance check`
+						: undefined)
+			);
+	}
+
+	function visitType(node, include, exclude, unsupported) {
+		if (ts.isParenthesizedTypeNode(node)) {
+			visitType(node.type, include, exclude, unsupported);
+			return;
+		}
+		if (ts.isTypeLiteralNode(node)) {
+			if (!selected(include, exclude)) return;
+			for (const member of node.members) {
+				if (ts.isPropertySignature(member) && propertyName(member) === property) {
+					if (unsupported)
+						throw new Error(
+							`${filename} callable ${property} is unsupported because ${unsupported}.`
+						);
+					signatures.push(member);
+				}
+			}
+			return;
+		}
+		if (ts.isUnionTypeNode(node) || ts.isIntersectionTypeNode(node)) {
+			for (const member of node.types) visitType(member, include, exclude, unsupported);
+			return;
+		}
+		if (ts.isTypeReferenceNode(node))
+			visitReference(
+				referenceName(node.typeName),
+				node.typeArguments,
+				include,
+				exclude,
+				unsupported
+			);
+	}
+
+	function visitDeclaration(declaration, include, exclude, unsupported) {
+		const identity = `${declaration.name.text}|${filterKey(include)}|${filterKey(exclude)}|${unsupported ?? ''}`;
+		if (seen.has(identity)) return;
+		seen.add(identity);
+		if (ts.isTypeAliasDeclaration(declaration)) {
+			visitType(declaration.type, include, exclude, unsupported);
+		} else {
+			for (const heritage of declaration.heritageClauses ?? [])
+				for (const type of heritage.types)
+					visitReference(
+						referenceName(type.expression),
+						type.typeArguments,
+						include,
+						exclude,
+						unsupported
+					);
+			if (selected(include, exclude))
+				for (const member of declaration.members) {
+					if (ts.isPropertySignature(member) && propertyName(member) === property) {
+						if (unsupported)
+							throw new Error(
+								`${filename} callable ${property} is unsupported because ${unsupported}.`
+							);
+						signatures.push(member);
+					}
+				}
+		}
+		seen.delete(identity);
+	}
+
+	visitDeclaration(root, undefined, new Set(), undefined);
+	return signatures;
+}
+
+function isLocalNeverType(node, declarations, seen = new Set()) {
+	if (!node) return false;
+	if (ts.isParenthesizedTypeNode(node)) return isLocalNeverType(node.type, declarations, seen);
+	if (node.kind === ts.SyntaxKind.NeverKeyword) return true;
+	if (!ts.isTypeReferenceNode(node) || !ts.isIdentifier(node.typeName)) return false;
+	const name = node.typeName.text;
+	if (seen.has(name)) return false;
+	const declaration = declarations.get(name);
+	return Boolean(
+		declaration &&
+		ts.isTypeAliasDeclaration(declaration) &&
+		isLocalNeverType(declaration.type, declarations, new Set(seen).add(name))
+	);
+}
+
+async function resolveLocalComposedCallableProperty({
+	declaration,
+	declarations,
+	filename,
+	graph,
+	modulePath,
+	property
+}) {
+	const signatures = localComposedPropertySignatures(declaration, property, declarations, filename);
+	const callable = [];
+	for (const signature of signatures) {
+		if (isLocalNeverType(signature.type, declarations)) continue;
+		const resolved = await resolveCallableSignature(graph, modulePath, signature.type);
+		if (!resolved)
+			throw new Error(
+				`${filename} callable ${property} has a non-callable property in its local Props composition.`
+			);
+		callable.push({ resolved, signature });
+	}
+	if (callable.length === 0) return undefined;
+	const firstType = callable[0].signature.type?.getText(callable[0].signature.getSourceFile());
+	if (
+		!firstType ||
+		callable.some(
+			({ signature }) =>
+				!signature.type ||
+				!equivalentCallableType(firstType, signature.type.getText(signature.getSourceFile()))
+		)
+	)
+		throw new Error(
+			`${filename} callable ${property} has incompatible callable branches in its local Props composition.`
+		);
+	return callable[0];
+}
+
 async function callableContractSelfTest() {
 	const parse = (source) =>
 		ts.createSourceFile('callable-self-test.ts', source, ts.ScriptTarget.Latest, true);
@@ -1708,6 +1893,29 @@ async function callableContractSelfTest() {
 			"import type { Alias, InterfaceCallback, Items, Payload } from './types.js'; export type Imported = Alias; export interface Props { direct: (payload: Payload) => void; alias: Alias; imported: Imported; iface: InterfaceCallback; items: (items: Items) => void; }",
 			'utf8'
 		);
+		await writeFile(
+			resolve(root, 'src/external.ts'),
+			'export interface HTMLAttributes { onclick: (event: Event) => void; }',
+			'utf8'
+		);
+		await writeFile(
+			resolve(root, 'src/composed.ts'),
+			`import type { HTMLAttributes } from './external.js';
+			interface Shared { onEnd?: (detail: string) => void; }
+			type Immediate = { onRequest?: never; neverOnly?: never };
+			interface Requested { onRequest: (request: string) => Promise<boolean>; }
+			interface Unrelated { ghost: (value: string) => void; }
+			type Mixed = { mixed: (value: string) => void } | { mixed: string };
+			type Compatible = { compatible: (value: string) => void } | { compatible: (value: string) => void };
+			type Incompatible = { divergent: (value: string) => void } | { divergent: (value: number) => void };
+			interface Filtered { kept: (value: string) => void; removed: (value: string) => void; }
+			type Removed = 'removed';
+			export type Props = Shared & (Immediate | Requested) & Omit<HTMLAttributes, 'children'> & Mixed & Compatible & Incompatible & Omit<Filtered, Removed> & { opaque: unknown };
+			type Generic<T> = { generic: (value: T) => void };
+			export type GenericProps = Generic<string>;
+			export type AmbiguousFilterProps = Omit<Filtered, keyof Filtered>;`,
+			'utf8'
+		);
 		const graph = new WorkspaceTypeGraph({ workspaceRoot: root });
 		const host = await graph.load(resolve(root, 'src/host.ts'));
 		for (const name of ['direct', 'alias', 'imported', 'iface', 'items']) {
@@ -1726,6 +1934,69 @@ async function callableContractSelfTest() {
 				))
 			)
 				throw new Error('alias array self-test failed');
+		}
+		const composed = await graph.load(resolve(root, 'src/composed.ts'));
+		const composedDeclarations = declarationMap(composed.file);
+		const composedProps = composedDeclarations.get('Props');
+		for (const name of ['onEnd', 'onRequest', 'compatible', 'kept']) {
+			const property = await resolveLocalComposedCallableProperty({
+				declaration: composedProps,
+				declarations: composedDeclarations,
+				filename: 'callable-composition-self-test',
+				graph,
+				modulePath: composed.path,
+				property: name
+			});
+			if (!property?.resolved || !ts.isPropertySignature(property.signature))
+				throw new Error(`Callable composition self-test missed ${name}.`);
+		}
+		for (const name of ['ghost', 'onclick', 'neverOnly', 'removed']) {
+			if (
+				await resolveLocalComposedCallableProperty({
+					declaration: composedProps,
+					declarations: composedDeclarations,
+					filename: 'callable-composition-self-test',
+					graph,
+					modulePath: composed.path,
+					property: name
+				})
+			)
+				throw new Error(`Callable composition self-test accepted ${name}.`);
+		}
+		for (const name of ['divergent', 'mixed', 'opaque']) {
+			let rejected = false;
+			try {
+				await resolveLocalComposedCallableProperty({
+					declaration: composedProps,
+					declarations: composedDeclarations,
+					filename: 'callable-composition-self-test',
+					graph,
+					modulePath: composed.path,
+					property: name
+				});
+			} catch {
+				rejected = true;
+			}
+			if (!rejected) throw new Error(`Callable composition self-test accepted ${name}.`);
+		}
+		for (const [declarationName, propertyName] of [
+			['GenericProps', 'generic'],
+			['AmbiguousFilterProps', 'kept']
+		]) {
+			let rejected = false;
+			try {
+				await resolveLocalComposedCallableProperty({
+					declaration: composedDeclarations.get(declarationName),
+					declarations: composedDeclarations,
+					filename: 'callable-composition-self-test',
+					graph,
+					modulePath: composed.path,
+					property: propertyName
+				});
+			} catch {
+				rejected = true;
+			}
+			if (!rejected) throw new Error(`Callable composition self-test accepted ${declarationName}.`);
 		}
 		for (const source of [
 			'export interface Empty {}',
@@ -1898,15 +2169,24 @@ async function componentFacts(source, filename, path) {
 	]) {
 		const eventName = objectStringProperty(event, 'name');
 		const eventType = objectStringProperty(event, 'type');
-		const signature = declaration.members?.find((member) => propertyName(member) === eventName);
 		if (!objectPropertyPresent(event, 'callable')) continue;
-		if (!eventName || !signature || !ts.isPropertySignature(signature))
+		const property = eventName
+			? await resolveLocalComposedCallableProperty({
+					declaration,
+					declarations,
+					filename,
+					graph: workspaceTypeGraph,
+					modulePath: path,
+					property: eventName
+				})
+			: undefined;
+		if (!eventName || !property)
 			throw new Error(
-				`${filename} callable ${eventName || '<unnamed>'} must target a property declared directly by ${propsType}.`
+				`${filename} callable ${eventName || '<unnamed>'} must target a property declared by the local composition of ${propsType}.`
 			);
+		const { resolved: declared, signature } = property;
 		const callable = objectObjectProperty(event, 'callable');
 		validateCallableMetadataShape(filename, eventName, callable);
-		const declared = await resolveCallableSignature(workspaceTypeGraph, path, signature.type);
 		const declaredParameters = declared?.parameters ?? [];
 		const metadataParameters = metadataItems(callable, 'parameters');
 		validateCallableParameterFacts(filename, eventName, declared?.parameters, metadataParameters);

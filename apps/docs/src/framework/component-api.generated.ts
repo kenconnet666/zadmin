@@ -14071,7 +14071,10 @@ export const toggleGroupApiFacts = {
 export const transferApiFacts = {
 	declaration: 'ZTransferProps',
 	id: 'transfer',
-	inheritedFrom: ['HTMLAttributes<HTMLDivElement>'],
+	inheritedFrom: [
+		'HTMLAttributes<HTMLDivElement>',
+		'TransferImmediateMove | TransferRequestedMove'
+	],
 	name: 'ZTransfer',
 	props: [
 		{
@@ -14145,9 +14148,9 @@ export const transferApiFacts = {
 			type: 'string'
 		},
 		{
-			name: 'onValueChange',
+			name: 'onMoveEnd',
 			required: false,
-			type: '(value: readonly SelectionKey[]) => void'
+			type: '(detail: TransferMoveEnd) => void'
 		},
 		{
 			name: 'readonly',
@@ -14208,6 +14211,24 @@ export const transferApiFacts = {
 			name: 'virtualOverscan',
 			required: false,
 			type: 'number'
+		},
+		{
+			name: 'moveMode',
+			required: false,
+			type: "'immediate' | 'request'",
+			inheritedFrom: 'TransferImmediateMove'
+		},
+		{
+			name: 'onMoveRequest',
+			required: false,
+			type: '(request: TransferMoveRequest) => boolean | Promise<boolean>',
+			inheritedFrom: 'TransferRequestedMove'
+		},
+		{
+			name: 'onValueChange',
+			required: false,
+			type: '(value: readonly SelectionKey[]) => void',
+			inheritedFrom: 'TransferImmediateMove'
 		}
 	],
 	source: 'ui/zui/src/components/input/ZTransfer.svelte',

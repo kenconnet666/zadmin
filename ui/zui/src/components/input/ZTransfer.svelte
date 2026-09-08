@@ -2,7 +2,12 @@
 	import type { ZControlSize } from '../../runtime/foundation/control-size.js';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import type { ZuiComponentMetadata } from '../../metadata/types.js';
+	import type {
+		CollectionMutationResult,
+		CollectionMutationSource
+	} from '../../runtime/collection/mutation.js';
 	import type { SelectionKey } from '../../runtime/collection/selection.js';
+	import type { TransferDestination } from '../../runtime/collection/transfer.js';
 
 	export interface TransferItem {
 		readonly description?: string;
@@ -11,7 +16,25 @@
 		readonly label: string;
 	}
 
-	export interface ZTransferProps extends Omit<
+	export type TransferMoveSource = CollectionMutationSource;
+	export type TransferMoveResult = CollectionMutationResult;
+
+	export interface TransferMoveRequest {
+		readonly destination: TransferDestination;
+		readonly movingKeys: readonly SelectionKey[];
+		readonly value: readonly SelectionKey[];
+		readonly nextValue: readonly SelectionKey[];
+		readonly source: TransferMoveSource;
+		readonly signal: AbortSignal;
+	}
+
+	export interface TransferMoveEnd {
+		readonly request: TransferMoveRequest;
+		readonly result: TransferMoveResult;
+		readonly error?: unknown;
+	}
+
+	interface ZTransferSharedProps extends Omit<
 		HTMLAttributes<HTMLDivElement>,
 		'children' | 'onchange'
 	> {
@@ -29,7 +52,7 @@
 		readonly moveToSourceLabel?: string;
 		readonly moveToTargetLabel?: string;
 		readonly name?: string;
-		readonly onValueChange?: (value: readonly SelectionKey[]) => void;
+		readonly onMoveEnd?: (detail: TransferMoveEnd) => void;
 		readonly readonly?: boolean;
 		ref?: HTMLDivElement | null;
 		readonly required?: boolean;
@@ -44,6 +67,21 @@
 		readonly virtualOverscan?: number;
 	}
 
+	interface TransferImmediateMove {
+		readonly moveMode?: 'immediate';
+		readonly onMoveRequest?: never;
+		readonly onValueChange?: (value: readonly SelectionKey[]) => void;
+	}
+
+	interface TransferRequestedMove {
+		readonly moveMode: 'request';
+		readonly onMoveRequest: (request: TransferMoveRequest) => boolean | Promise<boolean>;
+		readonly onValueChange?: never;
+	}
+
+	export type ZTransferProps = ZTransferSharedProps &
+		(TransferImmediateMove | TransferRequestedMove);
+
 	export const zuiMetadata = {
 		category: 'input',
 		id: 'transfer',
@@ -55,6 +93,7 @@
 		],
 		dependencies: [
 			'LogicalCollection',
+			'Transfer membership transaction',
 			'SelectionModel',
 			'CollectionNavigation',
 			'ActiveDescendant',
@@ -63,9 +102,19 @@
 		],
 		events: [
 			{
-				description: '用户移动项目后调用一次，loaded key按items顺序、异步孤儿按原顺序保留。',
+				description: 'immediate模式用户移动项目后调用一次；request模式不调用。',
 				name: 'onValueChange',
 				type: '(value: readonly SelectionKey[]) => void'
+			},
+			{
+				description: 'request模式把冻结候选交给唯一外部value owner接受或拒绝。',
+				name: 'onMoveRequest',
+				type: '(request: TransferMoveRequest) => boolean | Promise<boolean>'
+			},
+			{
+				description: '已发出的移动请求以接受、拒绝、取消、过期或异常结束。',
+				name: 'onMoveEnd',
+				type: '(detail: TransferMoveEnd) => void'
 			}
 		],
 		keyboard: [
@@ -87,6 +136,103 @@
 			{ description: '加载、空集合或异步孤儿状态。', name: 'status' }
 		],
 		props: [
+			{
+				default: "'immediate'",
+				description: 'immediate由组件写value一次；request由外部owner写入nextValue并回声确认。',
+				name: 'moveMode',
+				requiredWhen: "request分支必须显式为'request'；immediate可省略",
+				type: "'immediate' | 'request'"
+			},
+			{
+				default: 'undefined',
+				description: 'immediate模式禁止；返回true仍需外部value与nextValue精确同序回声才accepted。',
+				name: 'onMoveRequest',
+				requiredWhen: "moveMode='request'时必填",
+				type: '(request: TransferMoveRequest) => boolean | Promise<boolean>',
+				callable: {
+					parameters: [
+						{
+							name: 'request',
+							type: 'TransferMoveRequest',
+							required: true,
+							description: '本次冻结的membership候选与取消信号；调用方决定是否写回nextValue。',
+							members: [
+								{
+									name: 'destination',
+									type: 'TransferDestination',
+									required: true,
+									description: '逻辑source或target，不因RTL交换业务含义。'
+								},
+								{
+									name: 'movingKeys',
+									type: 'readonly SelectionKey[]',
+									required: true,
+									description: '本次实际可移动的loaded enabled key。'
+								},
+								{
+									name: 'value',
+									type: 'readonly SelectionKey[]',
+									required: true,
+									description: '请求开始时的目标成员快照。'
+								},
+								{
+									name: 'nextValue',
+									type: 'readonly SelectionKey[]',
+									required: true,
+									description: '接受时应精确写回的有序目标成员；保留未加载key。'
+								},
+								{
+									name: 'source',
+									type: 'TransferMoveSource',
+									required: true,
+									description: '操作来源；当前中间按钮产生action，未承诺跨栏drop。'
+								},
+								{
+									name: 'signal',
+									type: 'AbortSignal',
+									required: true,
+									description: '过期、禁用、模式切换、reset或卸载时中止；业务据此释放等待资源。'
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				default: 'undefined',
+				description: '两种模式的移动终态通知；不拥有或回滚canonical value。',
+				name: 'onMoveEnd',
+				type: '(detail: TransferMoveEnd) => void',
+				callable: {
+					parameters: [
+						{
+							name: 'detail',
+							type: 'TransferMoveEnd',
+							required: true,
+							description: '唯一终态快照；卸载后不会调用。',
+							members: [
+								{
+									name: 'request',
+									type: 'TransferMoveRequest',
+									required: true,
+									description: '原始请求对象，与onMoveRequest收到的对象相同。'
+								},
+								{
+									name: 'result',
+									type: 'TransferMoveResult',
+									required: true,
+									description: 'accepted、rejected、cancelled、stale或error。'
+								},
+								{
+									name: 'error',
+									type: 'unknown',
+									description: '处理器抛出的原始错误；组件公告不直接暴露其内容。'
+								}
+							]
+						}
+					]
+				}
+			},
 			{
 				name: 'size',
 				type: "'xsmall' | 'small' | 'medium' | 'large' | 'xlarge'",
@@ -257,6 +403,12 @@
 		source: 'ui/zui/src/components/input/ZTransfer.svelte',
 		states: [
 			{
+				description:
+					'根节点为idle/pending移动事务状态，项目为selected/unselected临时勾选；与数据loading分开。',
+				name: 'data-state',
+				values: ['idle', 'pending', 'selected', 'unselected']
+			},
+			{
 				description: '解析尺寸。',
 				name: 'data-size',
 				values: ['xsmall', 'small', 'medium', 'large', 'xlarge']
@@ -264,16 +416,11 @@
 			{ description: '整个Transfer或项目禁用。', name: 'data-disabled', values: ['true'] },
 			{ description: '整个Transfer只读。', name: 'data-readonly', values: ['true'] },
 			{ description: '整个Transfer无效。', name: 'data-invalid', values: ['true'] },
-			{ description: '异步数据仍在加载。', name: 'data-loading', values: ['true'] },
-			{
-				description: '项目是否被临时勾选。',
-				name: 'data-state',
-				values: ['selected', 'unselected']
-			}
+			{ description: '异步数据仍在加载。', name: 'data-loading', values: ['true'] }
 		],
 		status: 'stable',
 		summary:
-			'以一个完整LogicalCollection派生双pane view、以独立SelectionModel管理临时勾选，并支持异步孤儿、多值FormData和固定行虚拟化的Transfer。'
+			'从唯一LogicalCollection派生双pane，以独立SelectionModel管理临时勾选；支持显式immediate/request移动事务、异步孤儿、多值FormData和固定行虚拟化。'
 	} as const satisfies ZuiComponentMetadata;
 </script>
 
@@ -281,7 +428,7 @@
 	/* eslint-disable svelte/prefer-svelte-reactivity -- Sets use immutable replacement or are local normalization scratch. */
 	import ArrowLeft from '@lucide/svelte/icons/arrow-left';
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
-	import { onDestroy, untrack } from 'svelte';
+	import { onDestroy, tick, untrack } from 'svelte';
 	import { defineRecipe, registerRecipeHmr } from '../../recipes/define.js';
 	import { ActiveDescendant } from '../../runtime/collection/active-descendant.svelte.js';
 	import {
@@ -292,12 +439,24 @@
 	import { MountedElements } from '../../runtime/collection/mounted-elements.svelte.js';
 	import { SelectionModel } from '../../runtime/collection/selection-model.js';
 	import type { Selection } from '../../runtime/collection/selection.js';
+	import {
+		createTransferMoveCandidate,
+		matchesTransferItemsSnapshot,
+		matchesTransferValueEcho,
+		matchesTransferValueSnapshot,
+		type TransferMoveCandidate
+	} from '../../runtime/collection/transfer.js';
 	import { Typeahead } from '../../runtime/collection/typeahead.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { resolveControlSize } from '../../runtime/foundation/control-size.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
+	import {
+		containsComposedNode,
+		getActiveElement,
+		isDomHtmlElement
+	} from '../../runtime/layer/dom-realm.js';
 	import {
 		applyIcssRootStyle,
 		mergeStyles,
@@ -311,6 +470,7 @@
 		type ChoiceVirtualController
 	} from '../compound/choice-virtualization.js';
 	import ZButton from '../gene/ZButton.svelte';
+	import ZVisuallyHidden from '../gene/ZVisuallyHidden.svelte';
 	import TransferPane from './TransferPane.svelte';
 
 	type Side = 'source' | 'target';
@@ -387,6 +547,7 @@
 	}
 
 	let {
+		'aria-busy': ariaBusy,
 		'aria-describedby': ariaDescribedBy,
 		'aria-labelledby': ariaLabelledBy,
 		class: className,
@@ -404,7 +565,10 @@
 		loadingText,
 		moveToSourceLabel,
 		moveToTargetLabel,
+		moveMode = 'immediate',
 		name: nameProp,
+		onMoveEnd,
+		onMoveRequest,
 		onValueChange,
 		readonly: readonlyProp = false,
 		ref = $bindable(null),
@@ -449,8 +613,21 @@
 	);
 	const resolvedSourceTitle = $derived(sourceTitle ?? zui.localePack.transfer.sourceTitle);
 	const resolvedTargetTitle = $derived(targetTitle ?? zui.localePack.transfer.targetTitle);
-	const collection = $derived(
-		new LogicalCollection<SelectionKey, TransferItem>(
+	function resolveMoveMode(): 'immediate' | 'request' {
+		if (moveMode !== 'immediate' && moveMode !== 'request')
+			throw new TypeError('ZTransfer moveMode must be immediate or request.');
+		if (moveMode === 'request') {
+			if (typeof onMoveRequest !== 'function')
+				throw new TypeError('ZTransfer request mode requires onMoveRequest.');
+			if (onValueChange !== undefined)
+				throw new TypeError('ZTransfer request mode cannot use onValueChange.');
+		} else if (onMoveRequest !== undefined) {
+			throw new TypeError('ZTransfer immediate mode cannot use onMoveRequest.');
+		}
+		return moveMode;
+	}
+	const collection = $derived.by(() => {
+		return new LogicalCollection<SelectionKey, TransferItem>(
 			items,
 			{
 				disabled: (item) => item.disabled ?? false,
@@ -458,8 +635,8 @@
 				textValue: (item) => item.label
 			},
 			{ name: 'ZTransfer items' }
-		)
-	);
+		);
+	});
 	const valueState = new ControllableState<readonly SelectionKey[]>({
 		defaultValue: () => normalizeKeys(defaultValue, 'ZTransfer defaultValue'),
 		onChange: () => onValueChange,
@@ -522,10 +699,41 @@
 	);
 	let sourceChecked = $state<ReadonlySet<SelectionKey>>(new Set());
 	let targetChecked = $state<ReadonlySet<SelectionKey>>(new Set());
+	const sourceCheckedCount = $derived(
+		sourceFullView.keys.filter((key) => sourceChecked.has(key)).length
+	);
+	const targetCheckedCount = $derived(
+		targetFullView.keys.filter((key) => targetChecked.has(key)).length
+	);
 	let sourceActiveKey = $state<SelectionKey>();
 	let targetActiveKey = $state<SelectionKey>();
 	let sourceListRef = $state<HTMLDivElement | null>(null);
 	let targetListRef = $state<HTMLDivElement | null>(null);
+	interface PendingTransferMove {
+		readonly candidate: TransferMoveCandidate;
+		readonly controller: AbortController;
+		readonly focusElement: Element | null;
+		readonly focusKey: SelectionKey | undefined;
+		readonly generation: number;
+		readonly mode: 'immediate' | 'request';
+		readonly origin: Side;
+		readonly request: TransferMoveRequest;
+		readonly root: HTMLDivElement;
+		completed: boolean;
+	}
+	let live = true;
+	let moveGeneration = 0;
+	let pending = $state.raw<PendingTransferMove | null>(null);
+	let announcement = $state('');
+	let announcementId = $state(0);
+	function resolvePhase(): 'idle' | 'pending' {
+		switch (resolveMoveMode()) {
+			case 'immediate':
+			case 'request':
+				return pending ? 'pending' : 'idle';
+		}
+	}
+	const formatter = $derived(new Intl.NumberFormat(zui.locale));
 	const sourceMounted = new MountedElements<SelectionKey>();
 	const targetMounted = new MountedElements<SelectionKey>();
 	const sourceNavigation = new CollectionNavigation<SelectionKey, TransferItem>({
@@ -562,7 +770,7 @@
 	});
 	const sourceSelection = new SelectionModel<SelectionKey, TransferItem>({
 		collection: () => collection,
-		mode: () => (disabled || readonly ? 'none' : 'multiple'),
+		mode: () => (disabled || readonly || pending ? 'none' : 'multiple'),
 		read: () => new Set(sourceChecked),
 		selectAllScope: () => 'view',
 		view: () => sourceView,
@@ -570,7 +778,7 @@
 	});
 	const targetSelection = new SelectionModel<SelectionKey, TransferItem>({
 		collection: () => collection,
-		mode: () => (disabled || readonly ? 'none' : 'multiple'),
+		mode: () => (disabled || readonly || pending ? 'none' : 'multiple'),
 		read: () => new Set(targetChecked),
 		selectAllScope: () => 'view',
 		view: () => targetView,
@@ -639,22 +847,116 @@
 		runtime.active.set(target, 'keyboard');
 	}
 
-	function move(to: Side): void {
-		if (disabled || readonly) return;
-		const moving = to === 'target' ? sourceChecked : targetChecked;
-		if (moving.size === 0) return;
-		const nextKeys = new Set(targetKeys);
-		for (const item of collection.full) {
-			if (!moving.has(item.key) || item.disabled) continue;
-			if (to === 'target') nextKeys.add(item.key);
-			else nextKeys.delete(item.key);
-		}
-		const loaded = collection.full.keys.filter((key) => nextKeys.has(key));
-		const orphans = resolvedValue.filter(
-			(key) => collection.get(key) === undefined && nextKeys.has(key)
+	function announce(message: string): void {
+		if (!live) return;
+		announcement = message;
+		announcementId += 1;
+	}
+
+	function destinationLabel(destination: Side): string {
+		return destination === 'target' ? resolvedTargetTitle : resolvedSourceTitle;
+	}
+
+	function announcePending(entry: PendingTransferMove): void {
+		const count = entry.request.movingKeys.length;
+		announce(
+			zui.localePack.transfer.pending(
+				formatter.format(count),
+				count,
+				destinationLabel(entry.request.destination)
+			)
 		);
-		valueState.setFromUser(Object.freeze([...loaded, ...orphans]));
-		if (to === 'target') {
+	}
+
+	function announceTerminal(entry: PendingTransferMove, result: TransferMoveResult): void {
+		const count = entry.request.movingKeys.length;
+		const formattedCount = formatter.format(count);
+		const label = destinationLabel(entry.request.destination);
+		announce(
+			result === 'accepted'
+				? zui.localePack.transfer.accepted(formattedCount, count, label)
+				: result === 'rejected'
+					? zui.localePack.transfer.rejected(formattedCount, count, label)
+					: result === 'error'
+						? zui.localePack.transfer.error(formattedCount, count, label)
+						: zui.localePack.transfer.cancelled(formattedCount, count, label)
+		);
+	}
+
+	function sideActive(side: Side) {
+		return side === 'source' ? sourceActive : targetActive;
+	}
+
+	function sideList(side: Side): HTMLDivElement | null {
+		return side === 'source' ? sourceListRef : targetListRef;
+	}
+
+	function focusable(element: Element | null, root: HTMLDivElement): element is HTMLElement {
+		return Boolean(
+			element?.isConnected &&
+			isDomHtmlElement(element) &&
+			containsComposedNode(root, element) &&
+			!element.matches(':disabled') &&
+			!element.closest('[inert]')
+		);
+	}
+
+	function meaningfulFocus(element: Element | null, root: HTMLDivElement): boolean {
+		return Boolean(
+			element &&
+			element !== root.ownerDocument.body &&
+			element !== root.ownerDocument.documentElement &&
+			element.isConnected &&
+			isDomHtmlElement(element) &&
+			!element.matches(':disabled') &&
+			!element.closest('[inert]')
+		);
+	}
+
+	async function focusPane(
+		side: Side,
+		key: SelectionKey | undefined,
+		entry: PendingTransferMove
+	): Promise<void> {
+		if (key !== undefined) {
+			sideActive(side).set(key, 'programmatic');
+			await tick();
+			if (!live || moveGeneration !== entry.generation || ref !== entry.root) return;
+			const current = getActiveElement(entry.root);
+			if (meaningfulFocus(current, entry.root) && current !== entry.focusElement) return;
+		}
+		sideList(side)?.focus({ preventScroll: true });
+	}
+
+	async function restoreTerminalFocus(
+		entry: PendingTransferMove,
+		result: TransferMoveResult
+	): Promise<void> {
+		if (!live || moveGeneration !== entry.generation || ref !== entry.root || !ref?.isConnected)
+			return;
+		const current = getActiveElement(entry.root);
+		if (meaningfulFocus(current, entry.root) && current !== entry.focusElement) return;
+		if (result === 'accepted') {
+			await focusPane(entry.request.destination, entry.focusKey, entry);
+			return;
+		}
+		if (focusable(entry.focusElement, entry.root)) {
+			entry.focusElement.focus({ preventScroll: true });
+			return;
+		}
+		await focusPane(entry.origin, entry.focusKey, entry);
+	}
+
+	function reserveTerminal(entry: PendingTransferMove, abort: boolean): boolean {
+		if (entry.completed) return false;
+		entry.completed = true;
+		if (abort && !entry.controller.signal.aborted) entry.controller.abort();
+		if (pending === entry) pending = null;
+		return true;
+	}
+
+	function clearAcceptedSelection(origin: Side): void {
+		if (origin === 'source') {
 			sourceChecked = new Set();
 			sourceSelection.resetTransient();
 		} else {
@@ -663,7 +965,138 @@
 		}
 	}
 
+	function publishTerminal(
+		entry: PendingTransferMove,
+		result: TransferMoveResult,
+		error: unknown,
+		restoreFocus: boolean
+	): boolean {
+		const accepted = result === 'accepted';
+		if (accepted) clearAcceptedSelection(entry.origin);
+		if (live) {
+			announceTerminal(entry, result);
+			onMoveEnd?.(
+				Object.freeze({
+					request: entry.request,
+					result,
+					...(error === undefined ? {} : { error })
+				})
+			);
+			if (restoreFocus) void tick().then(() => restoreTerminalFocus(entry, result));
+		}
+		return accepted;
+	}
+
+	function finish(
+		entry: PendingTransferMove,
+		result: TransferMoveResult,
+		error?: unknown,
+		restoreFocus = true
+	): boolean {
+		if (!reserveTerminal(entry, result === 'cancelled' || result === 'stale')) return false;
+		return publishTerminal(entry, result, error, restoreFocus);
+	}
+
+	function snapshotFailure(entry: PendingTransferMove): 'cancelled' | 'stale' | undefined {
+		if (disabled || readonly) return 'cancelled';
+		if (resolveMoveMode() !== entry.mode) return 'cancelled';
+		if (ref !== entry.root) return 'stale';
+		if (!matchesTransferItemsSnapshot(items, entry.candidate)) return 'stale';
+		const currentValue = entry.mode === 'request' && value !== undefined ? value : resolvedValue;
+		const original = matchesTransferValueEcho(currentValue, entry.candidate.value);
+		const expected = matchesTransferValueEcho(currentValue, entry.candidate.nextValue);
+		return original || expected ? undefined : 'stale';
+	}
+
+	async function requestTransferMove(
+		destination: Side,
+		source: TransferMoveSource
+	): Promise<boolean> {
+		if (!live || !ref || disabled || readonly || pending) return false;
+		const mode = resolveMoveMode();
+		const origin: Side = destination === 'target' ? 'source' : 'target';
+		const checked = origin === 'source' ? sourceChecked : targetChecked;
+		const originView = origin === 'source' ? sourceFullView : targetFullView;
+		const movingKeys = originView.items
+			.filter((item) => checked.has(item.key) && !item.disabled)
+			.map((item) => item.key);
+		if (movingKeys.length === 0) return false;
+		const currentValue =
+			mode === 'request' && value !== undefined
+				? normalizeKeys(value, 'ZTransfer value')
+				: resolvedValue;
+		const candidate = createTransferMoveCandidate({
+			destination,
+			items,
+			movingKeys,
+			value: currentValue
+		});
+		if (matchesTransferValueSnapshot(candidate.nextValue, candidate.value)) return false;
+		const Controller = ref.ownerDocument.defaultView?.AbortController;
+		if (!Controller) return false;
+		const controller = new Controller();
+		const activeKey = sideActive(origin).activeKey;
+		const moving = new Set<SelectionKey>(candidate.movingKeys);
+		const request = Object.freeze({
+			destination: candidate.destination,
+			movingKeys: candidate.movingKeys,
+			nextValue: candidate.nextValue,
+			signal: controller.signal,
+			source,
+			value: candidate.value
+		}) satisfies TransferMoveRequest;
+		const entry: PendingTransferMove = {
+			candidate,
+			completed: false,
+			controller,
+			focusElement: getActiveElement(ref),
+			focusKey:
+				activeKey !== undefined && moving.has(activeKey) ? activeKey : candidate.movingKeys[0],
+			generation: (moveGeneration += 1),
+			mode,
+			origin,
+			request,
+			root: ref
+		};
+		pending = entry;
+		announcePending(entry);
+		let callbackAccepted = false;
+		let failed = false;
+		let failure: unknown;
+		try {
+			if (entry.mode === 'immediate') {
+				valueState.setFromUser(candidate.nextValue);
+				callbackAccepted = true;
+			} else {
+				const result = await onMoveRequest!(request);
+				if (typeof result !== 'boolean')
+					throw new TypeError('ZTransfer onMoveRequest must return a boolean.');
+				callbackAccepted = result;
+			}
+		} catch (error) {
+			failed = true;
+			failure = error;
+		}
+		await tick();
+		if (!live || pending !== entry || entry.completed || controller.signal.aborted) return false;
+		const invalid = snapshotFailure(entry);
+		if (invalid) return finish(entry, invalid, undefined, invalid !== 'cancelled');
+		if (failed) return finish(entry, 'error', failure);
+		if (!callbackAccepted) return finish(entry, 'rejected');
+		return finish(
+			entry,
+			matchesTransferValueEcho(
+				entry.mode === 'request' && value !== undefined ? value : resolvedValue,
+				candidate.nextValue
+			)
+				? 'accepted'
+				: 'rejected'
+		);
+	}
+
 	function resetFromForm(): void {
+		const entry = pending;
+		const cancelled = entry ? reserveTerminal(entry, true) : false;
 		valueState.reset();
 		sourceChecked = new Set();
 		targetChecked = new Set();
@@ -675,6 +1108,7 @@
 		targetTypeahead.clear();
 		sourceNavigation.set(undefined, 'programmatic');
 		targetNavigation.set(undefined, 'programmatic');
+		if (entry && cancelled) publishTerminal(entry, 'cancelled', undefined, false);
 	}
 
 	function focusPrimaryControl(): void {
@@ -683,7 +1117,14 @@
 		sourceActive.reconcile();
 	}
 
-	onDestroy(fieldOwner.registerFocusOwner(focusPrimaryControl));
+	const unregisterFocusOwner = fieldOwner.registerFocusOwner(focusPrimaryControl);
+	onDestroy(() => {
+		live = false;
+		moveGeneration += 1;
+		const entry = pending;
+		if (entry) reserveTerminal(entry, true);
+		unregisterFocusOwner();
+	});
 	$effect(() => {
 		void sourceQuery;
 		sourceTypeahead.clear();
@@ -693,11 +1134,47 @@
 		targetTypeahead.clear();
 	});
 	$effect(() => {
+		const entry = pending;
+		const currentItems = items.map((item) => ({
+			disabled: item.disabled,
+			key: item.key
+		}));
+		const currentValue = resolvedValue;
+		const externalValue = value;
+		const currentRoot = ref;
+		const currentMode = resolveMoveMode();
+		const unavailable = disabled || readonly;
+		untrack(() => {
+			if (!entry || entry.completed) return;
+			if (unavailable) {
+				finish(entry, 'cancelled', undefined, false);
+				return;
+			}
+			if (currentMode !== entry.mode) {
+				finish(entry, 'cancelled', undefined, false);
+				return;
+			}
+			const ownerValue =
+				entry.mode === 'request' && externalValue !== undefined ? externalValue : currentValue;
+			const valueMatches =
+				matchesTransferValueEcho(ownerValue, entry.candidate.value) ||
+				matchesTransferValueEcho(ownerValue, entry.candidate.nextValue);
+			if (
+				currentRoot !== entry.root ||
+				!matchesTransferItemsSnapshot(currentItems, entry.candidate) ||
+				!valueMatches
+			)
+				finish(entry, 'stale', undefined, currentRoot === entry.root);
+		});
+	});
+	$effect(() => {
 		const keys = collection.full.keys;
+		const movePending = pending !== null;
 		sourceActive.prune(keys);
 		targetActive.prune(keys);
 		sourceActive.reconcile();
 		targetActive.reconcile();
+		if (movePending) return;
 
 		const sourcePaneKeys = new Set(sourceFullView.keys);
 		const targetPaneKeys = new Set(targetFullView.keys);
@@ -732,13 +1209,14 @@
 	use:applyIcssRootStyle={{ style, variables }}
 	id={resolvedRootId}
 	role="group"
-	aria-busy={loading || undefined}
+	aria-busy={loading || pending ? true : ariaBusy}
 	aria-disabled={disabled || undefined}
 	aria-describedby={resolvedDescribedBy}
 	aria-labelledby={resolvedLabelledBy}
 	data-disabled={disabled || undefined}
 	data-invalid={resolvedInvalid || undefined}
 	data-loading={loading || undefined}
+	data-state={resolvePhase()}
 	data-readonly={readonly || undefined}
 	data-size={resolvedSize}
 >
@@ -748,6 +1226,7 @@
 		bind:listRef={sourceListRef}
 		bind:query={sourceQuery}
 		checked={sourceChecked}
+		checkedCount={sourceCheckedCount}
 		controlId={resolvedControlId}
 		describedBy={resolvedDescribedBy}
 		{disabled}
@@ -765,6 +1244,7 @@
 		onFilterKeydown={(event) => handleFilterKey(event, 'source')}
 		onListKeydown={(event) => handleListKey(event, 'source')}
 		onToggle={(item) => sourceSelection.toggle(item.key)}
+		pending={pending !== null}
 		{readonly}
 		required={resolvedRequired}
 		searchPlaceholder={resolvedSearchPlaceholder}
@@ -780,16 +1260,18 @@
 		<ZButton
 			size={resolvedSize}
 			aria-label={resolvedMoveToTargetLabel}
-			disabled={disabled || readonly || sourceChecked.size === 0}
-			onclick={() => move('target')}
+			disabled={disabled || readonly || pending !== null || sourceChecked.size === 0}
+			loading={pending?.request.destination === 'target'}
+			onclick={() => void requestTransferMove('target', 'action')}
 		>
 			<MoveToTargetIcon aria-hidden="true" size="1em" />
 		</ZButton>
 		<ZButton
 			size={resolvedSize}
 			aria-label={resolvedMoveToSourceLabel}
-			disabled={disabled || readonly || targetChecked.size === 0}
-			onclick={() => move('source')}
+			disabled={disabled || readonly || pending !== null || targetChecked.size === 0}
+			loading={pending?.request.destination === 'source'}
+			onclick={() => void requestTransferMove('source', 'action')}
 			variant="outline"
 		>
 			<MoveToSourceIcon aria-hidden="true" size="1em" />
@@ -802,6 +1284,7 @@
 		bind:listRef={targetListRef}
 		bind:query={targetQuery}
 		checked={targetChecked}
+		checkedCount={targetCheckedCount}
 		controlId={`${idBase}-target-list`}
 		{disabled}
 		emptyText={resolvedEmptyText}
@@ -818,6 +1301,7 @@
 		onListKeydown={(event) => handleListKey(event, 'target')}
 		onToggle={(item) => targetSelection.toggle(item.key)}
 		{orphanText}
+		pending={pending !== null}
 		{readonly}
 		required={false}
 		searchPlaceholder={resolvedSearchPlaceholder}
@@ -829,6 +1313,9 @@
 		{virtualOverscan}
 	/>
 </div>
+<ZVisuallyHidden role="status" aria-live="polite" aria-atomic="true">
+	{#key announcementId}{announcement}{/key}
+</ZVisuallyHidden>
 <FormValueBridge
 	{disabled}
 	{form}

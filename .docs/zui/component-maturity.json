@@ -4,7 +4,7 @@
 		"metadataComponents": 187,
 		"documentationPages": 117,
 		"contractComponents": 187,
-		"testFiles": 387
+		"testFiles": 390
 	},
 	"stageNames": [
 		"MetadataDeclared",
@@ -19984,7 +19984,7 @@
 				"ApiContractDeclared": [
 					{
 						"path": ".docs/zui/api-contract.json",
-						"detail": "c0ab0501f9a734999e1a878400bbfda62241bfe7fd1ec31f62fd57e9cdac1f46 API snapshot entry"
+						"detail": "49e12ac89655ce2878173016b088264fc72bdc1e4d91b24d963fe7f55acd952a API snapshot entry"
 					}
 				],
 				"RuntimeImplemented": [
@@ -20008,6 +20008,14 @@
 					},
 					{
 						"path": "ui/zui/tests/TransferProductionFixture.svelte",
+						"detail": "ZTransfer explicit rendered fixture usage"
+					},
+					{
+						"path": "ui/zui/tests/transfer-request.browser.spec.ts",
+						"detail": "ZTransfer browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/TransferRequestFixture.svelte",
 						"detail": "ZTransfer explicit rendered fixture usage"
 					}
 				],
@@ -20033,6 +20041,10 @@
 				],
 				"SsrContractsDeclared": [
 					{
+						"path": "ui/zui/tests/transfer-request-ssr.spec.ts",
+						"detail": "ZTransfer SSR assertions"
+					},
+					{
 						"path": "ui/zui/tests/components.spec.ts",
 						"detail": "ZTransfer SSR assertions"
 					}
@@ -20055,6 +20067,10 @@
 				"detail": "catalog component documentation module"
 			},
 			"ssrContracts": [
+				{
+					"path": "ui/zui/tests/transfer-request-ssr.spec.ts",
+					"detail": "ZTransfer SSR assertions"
+				},
 				{
 					"path": "ui/zui/tests/components.spec.ts",
 					"detail": "ZTransfer SSR assertions"

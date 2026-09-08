@@ -15,6 +15,22 @@ import { defineComponentDoc } from './component-doc.js';
 import { componentRoute } from './router.js';
 
 describe('ZUI component documentation catalog', () => {
+	it('documents the Transfer request snapshot and terminal detail from callable metadata', () => {
+		const props = componentDocsById.get('transfer')?.api.find(({ id }) => id === 'props');
+		const request = props?.rows.find(({ name }) => name === 'onMoveRequest')?.members?.[0];
+		expect(request?.name).toBe('request');
+		expect(request?.members?.map(({ name }) => name)).toEqual([
+			'destination',
+			'movingKeys',
+			'value',
+			'nextValue',
+			'source',
+			'signal'
+		]);
+		const detail = props?.rows.find(({ name }) => name === 'onMoveEnd')?.members?.[0];
+		expect(detail?.members?.map(({ name }) => name)).toEqual(['request', 'result', 'error']);
+	});
+
 	it('exposes only the current pre-release API without deprecated compatibility rows', () => {
 		const deprecated = componentDocs.flatMap((doc) =>
 			doc.api.flatMap((section) => section.rows.filter((row) => row.deprecatedSince))
@@ -251,6 +267,101 @@ describe('ZUI component documentation catalog', () => {
 				}
 			})
 		).toThrow(/unknown public props/u);
+	});
+
+	it('rejects duplicate API row paths across metadata, appended rows and nested members', () => {
+		const dataTable = componentDocsById.get('data-table');
+		const definition = {
+			accessibility: ['test'],
+			demos: dataTable?.demos.slice(0, 2) ?? [],
+			profiles: ['data-view'] as const
+		};
+		const duplicateStateMetadata: ZuiComponentMetadata = {
+			...dataTableMetadata,
+			states: [
+				...dataTableMetadata.states,
+				{
+					description: 'duplicate one',
+					name: 'data-api-test-duplicate',
+					values: ['one']
+				},
+				{
+					description: 'duplicate two',
+					name: 'data-api-test-duplicate',
+					values: ['two']
+				}
+			]
+		};
+
+		expect(() => defineComponentDoc(duplicateStateMetadata, definition)).toThrow(
+			/ZDataTable.*States.*repeats API row names at "data-api-test-duplicate"/u
+		);
+		expect(() =>
+			defineComponentDoc(dataTableMetadata, {
+				...definition,
+				additionalApi: [
+					{
+						id: 'duplicate-rows',
+						rows: [
+							{ description: 'one', name: 'value', type: 'string' },
+							{ description: 'two', name: 'value', type: 'string' }
+						],
+						title: 'Duplicate rows'
+					}
+				]
+			})
+		).toThrow(/ZDataTable.*Duplicate rows.*repeats API row names at "value"/u);
+		expect(() =>
+			defineComponentDoc(dataTableMetadata, {
+				...definition,
+				additionalApi: [
+					{
+						id: 'nested-conflict',
+						rows: [
+							{
+								description: 'parent',
+								members: [{ description: 'child', name: 'label', type: 'string' }],
+								name: 'value',
+								type: 'object'
+							},
+							{ description: 'path collision', name: 'value.label', type: 'string' }
+						],
+						title: 'Nested conflict'
+					}
+				]
+			})
+		).toThrow(/ZDataTable.*Nested conflict.*repeats API row names at "value.label"/u);
+	});
+
+	it('allows equal leaf names under different nested parents', () => {
+		const dataTable = componentDocsById.get('data-table');
+		expect(() =>
+			defineComponentDoc(dataTableMetadata, {
+				accessibility: ['test'],
+				demos: dataTable?.demos.slice(0, 2) ?? [],
+				profiles: ['data-view'],
+				additionalApi: [
+					{
+						id: 'nested-distinct',
+						rows: [
+							{
+								description: 'source',
+								members: [{ description: 'value', name: 'value', type: 'string' }],
+								name: 'source',
+								type: 'object'
+							},
+							{
+								description: 'target',
+								members: [{ description: 'value', name: 'value', type: 'string' }],
+								name: 'target',
+								type: 'object'
+							}
+						],
+						title: 'Nested distinct'
+					}
+				]
+			})
+		).not.toThrow();
 	});
 
 	it('requires capability evidence for graduated component docs', () => {

@@ -2,7 +2,10 @@ import { describe, expect, it } from 'vitest';
 
 import {
 	createTransferMoveCandidate,
+	matchesTransferValueEcho,
+	matchesTransferItemsSnapshot,
 	matchesTransferSnapshot,
+	matchesTransferValueSnapshot,
 	type TransferItemInput,
 	type TransferMoveCandidateInput
 } from '../src/runtime/collection/transfer.js';
@@ -100,6 +103,25 @@ describe('Transfer move candidate', () => {
 			)
 		).toBe(false);
 		expect(matchesTransferSnapshot(items, ['orphan-a', 0], candidate)).toBe(false);
+		expect(matchesTransferItemsSnapshot(items, candidate)).toBe(true);
+		expect(matchesTransferValueSnapshot(candidate.nextValue, candidate.nextValue)).toBe(true);
+		expect(matchesTransferValueSnapshot(candidate.value, candidate.nextValue)).toBe(false);
+		expect(matchesTransferValueEcho(candidate.nextValue, candidate.nextValue)).toBe(true);
+		expect(
+			matchesTransferValueEcho(
+				[...candidate.nextValue, candidate.nextValue[0]],
+				candidate.nextValue
+			)
+		).toBe(false);
+		expect(matchesTransferValueEcho(Array(candidate.nextValue.length), candidate.nextValue)).toBe(
+			false
+		);
+		const partial = [...candidate.nextValue];
+		delete partial[0];
+		expect(matchesTransferValueEcho(partial, candidate.nextValue)).toBe(false);
+		expect(matchesTransferValueEcho([undefined], [0])).toBe(false);
+		expect(matchesTransferValueEcho([Number.NaN], [0])).toBe(false);
+		expect(matchesTransferValueEcho([-0], [0])).toBe(false);
 	});
 
 	it('copies mutable item metadata into an immutable snapshot', () => {
