@@ -2,12 +2,14 @@
 	import { onDestroy } from 'svelte';
 	import {
 		ZButton,
+		ZProvider,
 		ZStack,
 		ZText,
 		ZTransfer,
 		type SelectionKey,
 		type TransferItem,
-		type TransferMoveRequest
+		type TransferMoveRequest,
+		type ZuiMotion
 	} from '@zadmin/zui';
 
 	type PendingMove = {
@@ -23,6 +25,7 @@
 		{ description: '灾备资源', key: 'backup', label: '灾备集群' }
 	];
 	const defaultValue: readonly SelectionKey[] = ['stable'];
+	const motionChoices = ['auto', 'full', 'reduced'] as const satisfies readonly ZuiMotion[];
 	let items = $state<readonly TransferItem[]>(initialItems);
 	let value = $state<readonly SelectionKey[]>(defaultValue);
 	let pending = $state.raw<PendingMove | null>(null);
@@ -30,6 +33,7 @@
 	let form = $state<HTMLFormElement | null>(null);
 	let formDataValue = $state('尚未提交');
 	let revision = $state(0);
+	let motion = $state<ZuiMotion>('auto');
 
 	function clearPending(nextStatus: string): void {
 		const current = pending;
@@ -114,20 +118,32 @@
 	}}
 >
 	<ZStack gap="small">
-		<ZTransfer
-			aria-label="需要外部确认的发布通道转移"
-			bind:value
-			{defaultValue}
-			dragDrop
-			{items}
-			moveMode="request"
-			name="cluster"
-			onMoveEnd={(detail) =>
-				(status = `移动结果：${detail.result} · source=${detail.request.source}`)}
-			onMoveRequest={handleMove}
-			sourceTitle="可请求移动"
-			targetTitle="已确认移动"
-		/>
+		<ZStack direction="row" gap="small" wrap>
+			{#each motionChoices as choice (choice)}
+				<ZButton
+					aria-pressed={motion === choice}
+					variant={motion === choice ? 'solid' : 'outline'}
+					onclick={() => (motion = choice)}>动画：{choice}</ZButton
+				>
+			{/each}
+		</ZStack>
+		<ZText data-testid="transfer-motion-state" tone="muted">motion={motion}</ZText>
+		<ZProvider {motion}>
+			<ZTransfer
+				aria-label="需要外部确认的发布通道转移"
+				bind:value
+				{defaultValue}
+				dragDrop
+				{items}
+				moveMode="request"
+				name="cluster"
+				onMoveEnd={(detail) =>
+					(status = `移动结果：${detail.result} · source=${detail.request.source}`)}
+				onMoveRequest={handleMove}
+				sourceTitle="可请求移动"
+				targetTitle="已确认移动"
+			/>
+		</ZProvider>
 		<ZStack direction="row" gap="small" wrap>
 			<ZButton type="button" variant="outline" disabled={!pending} onclick={accept}
 				>接受请求</ZButton
@@ -146,7 +162,7 @@
 			<ZButton type="reset" variant="outline">Reset</ZButton>
 		</ZStack>
 		<ZText data-testid="transfer-request-status" tone="muted">
-			{status} · value={value.join(',') || '[]'} · FormData={formDataValue} · 启用dragDrop后支持pointer跨栏，listbox也支持Alt+方向键快捷跨栏；接受前不预写canonical。本演示验证pointer/keyboard，真实touch与跨栏动画仍待后续验收。
+			{status} · value={value.join(',') || '[]'} · FormData={formDataValue} · 启用dragDrop后支持pointer跨栏，listbox也支持Alt+方向键快捷跨栏；接受前不预写canonical。本演示验证pointer/keyboard与motion策略，CDP拖放和真实touch仍待后续验收。
 		</ZText>
 	</ZStack>
 </form>

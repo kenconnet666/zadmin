@@ -1,11 +1,18 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
 	import {
+		ZProvider,
 		ZTransfer,
+		defaultTheme,
+		extendTheme,
 		type TransferItem,
 		type TransferMoveEnd,
 		type TransferMoveRequest
 	} from '../src/entrypoints/index.js';
+	const motionTheme = extendTheme(defaultTheme, {
+		duration: { normal: 1_000 },
+		easing: { standard: 'linear' }
+	});
 
 	let items = $state<TransferItem[]>([
 		{ key: 1, label: 'Number one' },
@@ -23,6 +30,7 @@
 	let request = $state<TransferMoveRequest | null>(null);
 	let resolveRequest: ((accepted: boolean) => void) | undefined;
 	let gestureObserved = $state(false);
+	let reduced = $state(false);
 	let {
 		cancelShortcut = false,
 		scenario,
@@ -76,10 +84,22 @@
 	}
 
 	export function echoAndResolveRequest(): void {
+		echoRequest();
+		resolveOwnerRequest(true);
+	}
+
+	export function echoRequest(): void {
 		if (!request) return;
 		requestValue = request.nextValue;
-		resolveRequest?.(true);
+	}
+
+	export function resolveOwnerRequest(accepted: boolean): void {
+		resolveRequest?.(accepted);
 		resolveRequest = undefined;
+	}
+
+	export function setReduced(value: boolean): void {
+		reduced = value;
 	}
 
 	export function lastRequest(): TransferMoveRequest | null {
@@ -103,61 +123,63 @@
 	}
 </script>
 
-{#if scenario === 'immediate'}
-	<ZTransfer
-		data-testid="transfer-drag-immediate"
-		dragDrop
-		filterable={false}
-		{items}
-		onMoveEnd={(detail) => (immediateEnds = [...immediateEnds, detail])}
-		onValueChange={(next) => (immediateValue = next)}
-		sourceTitle="Pointer source"
-		targetTitle="Pointer target"
-		value={immediateValue}
-		{virtual}
-	/>
-{:else if scenario === 'rtl'}
-	<form data-testid="transfer-drag-rtl-form">
+<ZProvider motion={reduced ? 'reduced' : 'full'} theme={motionTheme}>
+	{#if scenario === 'immediate'}
 		<ZTransfer
-			data-testid="transfer-drag-rtl"
-			dir="rtl"
+			data-testid="transfer-drag-immediate"
 			dragDrop
 			filterable={false}
 			{items}
-			name="rtl-transfer"
-			onkeydowncapture={(event) => {
-				if (cancelShortcut && event.altKey) event.preventDefault();
-			}}
-			onMoveEnd={(detail) => (rtlEnds = [...rtlEnds, detail])}
-			onValueChange={(next) => (rtlValue = next)}
-			sourceTitle="RTL source"
-			targetTitle="RTL target"
-			value={rtlValue}
+			onMoveEnd={(detail) => (immediateEnds = [...immediateEnds, detail])}
+			onValueChange={(next) => (immediateValue = next)}
+			sourceTitle="Pointer source"
+			targetTitle="Pointer target"
+			value={immediateValue}
 			{virtual}
 		/>
-	</form>
-{:else}
-	<ZTransfer
-		data-testid="transfer-drag-request"
-		dragDrop
-		filterable={false}
-		{items}
-		moveMode="request"
-		onMoveEnd={(detail) => (requestEnds = [...requestEnds, detail])}
-		onMoveRequest={onRequest}
-		readonly={requestReadonly}
-		sourceTitle="Request source"
-		targetTitle="Request target"
-		value={requestValue}
-		{virtual}
-	/>
-	<button data-testid="clone-transfer-snapshot" onclick={cloneRequestSnapshot} type="button">
-		Clone snapshot
-	</button>
-	<button data-testid="change-transfer-value" onclick={changeRequestValue} type="button">
-		Change value
-	</button>
-	<button data-testid="make-transfer-readonly" onclick={makeRequestReadonly} type="button">
-		Make readonly
-	</button>
-{/if}
+	{:else if scenario === 'rtl'}
+		<form data-testid="transfer-drag-rtl-form">
+			<ZTransfer
+				data-testid="transfer-drag-rtl"
+				dir="rtl"
+				dragDrop
+				filterable={false}
+				{items}
+				name="rtl-transfer"
+				onkeydowncapture={(event) => {
+					if (cancelShortcut && event.altKey) event.preventDefault();
+				}}
+				onMoveEnd={(detail) => (rtlEnds = [...rtlEnds, detail])}
+				onValueChange={(next) => (rtlValue = next)}
+				sourceTitle="RTL source"
+				targetTitle="RTL target"
+				value={rtlValue}
+				{virtual}
+			/>
+		</form>
+	{:else}
+		<ZTransfer
+			data-testid="transfer-drag-request"
+			dragDrop
+			filterable={false}
+			{items}
+			moveMode="request"
+			onMoveEnd={(detail) => (requestEnds = [...requestEnds, detail])}
+			onMoveRequest={onRequest}
+			readonly={requestReadonly}
+			sourceTitle="Request source"
+			targetTitle="Request target"
+			value={requestValue}
+			{virtual}
+		/>
+		<button data-testid="clone-transfer-snapshot" onclick={cloneRequestSnapshot} type="button">
+			Clone snapshot
+		</button>
+		<button data-testid="change-transfer-value" onclick={changeRequestValue} type="button">
+			Change value
+		</button>
+		<button data-testid="make-transfer-readonly" onclick={makeRequestReadonly} type="button">
+			Make readonly
+		</button>
+	{/if}
+</ZProvider>

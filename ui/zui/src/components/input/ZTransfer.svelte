@@ -109,7 +109,8 @@
 			'ActiveDescendant',
 			'ZVirtualList',
 			'FormValueBridge',
-			'@dnd-kit/dom cross-pane adapter'
+			'@dnd-kit/dom cross-pane adapter',
+			'Keyed layout motion'
 		],
 		events: [
 			{
@@ -486,11 +487,18 @@
 		type TransferMoveCandidate
 	} from '../../runtime/collection/transfer.js';
 	import { Typeahead } from '../../runtime/collection/typeahead.js';
+	import {
+		animateKeyedLayout,
+		captureKeyedLayout,
+		type KeyedLayoutElement,
+		type ReorderLayoutSnapshot
+	} from '../../runtime/drag-drop/layout-motion.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { useZui } from '../../runtime/foundation/context.js';
 	import { resolveControlSize } from '../../runtime/foundation/control-size.js';
 	import { createZuiId } from '../../runtime/foundation/ids.js';
+	import { ReducedMotionState } from '../../runtime/foundation/motion.svelte.js';
 	import {
 		containsComposedNode,
 		getActiveElement,
@@ -505,6 +513,7 @@
 	import { claimZFieldControlOwner } from '../../runtime/form/field-context.js';
 	import { mergeAriaIds } from '../../runtime/form/form-control.svelte.js';
 	import FormValueBridge from '../../runtime/form/FormValueBridge.svelte';
+	import { durationMilliseconds } from '../../theme/units.js';
 	import {
 		createChoiceVirtualMountBridge,
 		type ChoiceVirtualController
@@ -760,17 +769,25 @@
 		readonly candidate: TransferMoveCandidate;
 		readonly root: HTMLDivElement | null;
 	}
+	interface TransferLayoutMotion {
+		readonly before: ReadonlyMap<SelectionKey, ReorderLayoutSnapshot>;
+		readonly invalidate: () => void;
+		readonly valid: () => boolean;
+		readonly stop: () => void;
+	}
 	interface PendingTransferMove {
 		readonly candidate: TransferMoveCandidate;
 		readonly controller: AbortController;
 		readonly focusElement: Element | null;
 		readonly focusKey: SelectionKey | undefined;
 		readonly generation: number;
+		readonly layoutMotion: TransferLayoutMotion;
 		readonly mode: 'immediate' | 'request';
 		readonly origin: Side;
 		readonly request: TransferMoveRequest;
 		readonly root: HTMLDivElement;
 		completed: boolean;
+		ownerSettled: boolean;
 	}
 	let live = true;
 	let moveGeneration = 0;
@@ -787,6 +804,11 @@
 	const formatter = $derived(new Intl.NumberFormat(zui.locale));
 	const sourceMounted = new MountedElements<SelectionKey>();
 	const targetMounted = new MountedElements<SelectionKey>();
+	const motion = new ReducedMotionState(() => zui.motion);
+	let layoutAnimationCleanup: (() => void) | undefined;
+	let layoutAnimationGeneration = 0;
+	let animatedCandidate: TransferMoveCandidate | undefined;
+	let animatedRoot: HTMLDivElement | undefined;
 	const sourceNavigation = new CollectionNavigation<SelectionKey, TransferItem>({
 		direction: () => zui.direction,
 		disabled: () => disabled,
@@ -998,6 +1020,74 @@
 		return side === 'source' ? sourceListRef : targetListRef;
 	}
 
+	function mountedLayoutElements(): readonly KeyedLayoutElement<SelectionKey>[] {
+		return collection.full.keys.flatMap((key) => {
+			const mounted = sourceMounted.get(key) ?? targetMounted.get(key);
+			return mounted ? [{ element: mounted.element, key }] : [];
+		});
+	}
+
+	function captureTransferLayout(root: HTMLDivElement): TransferLayoutMotion {
+		const before = captureKeyedLayout(mountedLayoutElements());
+		const ownerWindow = root.ownerDocument.defaultView;
+		let invalid = false;
+		let listening = true;
+		const invalidate = (): void => {
+			invalid = true;
+		};
+		root.addEventListener('scroll', invalidate, { capture: true, passive: true });
+		ownerWindow?.addEventListener('scroll', invalidate, { capture: true, passive: true });
+		ownerWindow?.addEventListener('resize', invalidate, { passive: true });
+		return {
+			before,
+			invalidate,
+			valid: () => !invalid,
+			stop: () => {
+				if (!listening) return;
+				listening = false;
+				root.removeEventListener('scroll', invalidate, true);
+				ownerWindow?.removeEventListener('scroll', invalidate, true);
+				ownerWindow?.removeEventListener('resize', invalidate);
+			}
+		};
+	}
+
+	function cancelLayoutAnimation(): void {
+		layoutAnimationGeneration += 1;
+		layoutAnimationCleanup?.();
+		layoutAnimationCleanup = undefined;
+		animatedCandidate = undefined;
+		animatedRoot = undefined;
+	}
+
+	function queueLayoutAnimation(entry: PendingTransferMove): void {
+		const generation = (layoutAnimationGeneration += 1);
+		void tick().then(() => {
+			entry.layoutMotion.stop();
+			if (
+				!live ||
+				generation !== layoutAnimationGeneration ||
+				motion.current ||
+				!entry.layoutMotion.valid() ||
+				ref !== entry.root ||
+				!matchesTransferItemsSnapshot(items, entry.candidate) ||
+				!matchesTransferValueSnapshot(resolvedValue, entry.candidate.nextValue)
+			)
+				return;
+			animatedCandidate = entry.candidate;
+			animatedRoot = entry.root;
+			layoutAnimationCleanup = animateKeyedLayout(
+				entry.layoutMotion.before,
+				mountedLayoutElements(),
+				{
+					duration: durationMilliseconds(zui.theme.duration.normal),
+					easing: zui.theme.easing.standard,
+					reduced: motion.current
+				}
+			);
+		});
+	}
+
 	function focusable(element: Element | null, root: HTMLDivElement): element is HTMLElement {
 		return Boolean(
 			element?.isConnected &&
@@ -1080,7 +1170,10 @@
 		restoreFocus: boolean
 	): boolean {
 		const accepted = result === 'accepted';
-		if (accepted) clearAcceptedSelection(entry.origin, entry.request.movingKeys);
+		if (accepted) {
+			clearAcceptedSelection(entry.origin, entry.request.movingKeys);
+			queueLayoutAnimation(entry);
+		} else entry.layoutMotion.stop();
 		if (live) {
 			announceTerminal(entry, result);
 			onMoveEnd?.(
@@ -1147,7 +1240,9 @@
 		if (matchesTransferValueSnapshot(candidate.nextValue, candidate.value)) return false;
 		const Controller = ref.ownerDocument.defaultView?.AbortController;
 		if (!Controller) return false;
+		cancelLayoutAnimation();
 		const controller = new Controller();
+		const layoutMotion = captureTransferLayout(ref);
 		const activeKey = focusKeyOverride ?? sideActive(origin).activeKey;
 		const moving = new Set<SelectionKey>(candidate.movingKeys);
 		const request = Object.freeze({
@@ -1166,8 +1261,10 @@
 			focusKey:
 				activeKey !== undefined && moving.has(activeKey) ? activeKey : candidate.movingKeys[0],
 			generation: (moveGeneration += 1),
+			layoutMotion,
 			mode,
 			origin,
+			ownerSettled: false,
 			request,
 			root: ref
 		};
@@ -1200,6 +1297,7 @@
 			failed = true;
 			failure = error;
 		}
+		entry.ownerSettled = true;
 		await tick();
 		if (!live || pending !== entry || entry.completed || controller.signal.aborted) return false;
 		const invalid = snapshotFailure(entry);
@@ -1215,6 +1313,7 @@
 	}
 
 	function resetFromForm(): void {
+		cancelLayoutAnimation();
 		const entry = pending;
 		const cancelled = entry ? reserveTerminal(entry, true) : false;
 		valueState.reset();
@@ -1241,10 +1340,31 @@
 	onDestroy(() => {
 		live = false;
 		moveGeneration += 1;
+		cancelLayoutAnimation();
 		const entry = pending;
-		if (entry) reserveTerminal(entry, true);
+		if (entry) {
+			reserveTerminal(entry, true);
+			entry.layoutMotion.stop();
+		}
 		transferDragDrop.destroy();
 		unregisterFocusOwner();
+	});
+	$effect(() => motion.connect(ref?.ownerDocument.defaultView));
+	$effect(() => {
+		const currentItems = items.map((item) => ({ disabled: item.disabled, key: item.key }));
+		const currentValue = resolvedValue;
+		const currentRoot = ref;
+		const reduced = motion.current;
+		untrack(() => {
+			if (!layoutAnimationCleanup || !animatedCandidate) return;
+			if (
+				reduced ||
+				currentRoot !== animatedRoot ||
+				!matchesTransferItemsSnapshot(currentItems, animatedCandidate) ||
+				!matchesTransferValueSnapshot(currentValue, animatedCandidate.nextValue)
+			)
+				cancelLayoutAnimation();
+		});
 	});
 	$effect(() => {
 		const currentItems = items.map((item) => ({ disabled: item.disabled, key: item.key }));
@@ -1288,9 +1408,14 @@
 			}
 			const ownerValue =
 				entry.mode === 'request' && externalValue !== undefined ? externalValue : currentValue;
+			const expectedEcho = matchesTransferValueEcho(ownerValue, entry.candidate.nextValue);
+			if (entry.mode === 'request' && expectedEcho)
+				void tick().then(() => {
+					if (pending === entry && !entry.completed && !entry.ownerSettled)
+						entry.layoutMotion.invalidate();
+				});
 			const valueMatches =
-				matchesTransferValueEcho(ownerValue, entry.candidate.value) ||
-				matchesTransferValueEcho(ownerValue, entry.candidate.nextValue);
+				matchesTransferValueEcho(ownerValue, entry.candidate.value) || expectedEcho;
 			if (
 				currentRoot !== entry.root ||
 				!matchesTransferItemsSnapshot(currentItems, entry.candidate) ||

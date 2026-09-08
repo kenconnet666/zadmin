@@ -10,6 +10,11 @@ export interface ReorderLayoutAnimationOptions {
 	readonly reduced: boolean;
 }
 
+export interface KeyedLayoutElement<TKey> {
+	readonly element: HTMLElement;
+	readonly key: TKey;
+}
+
 function layoutScale(rectSize: number, offsetSize: number): number {
 	const scale = offsetSize > 0 ? rectSize / offsetSize : 1;
 	return Number.isFinite(scale) && scale > 0 ? scale : 1;
@@ -34,6 +39,18 @@ export function captureReorderLayout(
 	return result;
 }
 
+/** Captures viewport geometry by logical key so a replacement DOM node can consume it later. */
+export function captureKeyedLayout<TKey>(
+	elements: Iterable<KeyedLayoutElement<TKey>>
+): ReadonlyMap<TKey, ReorderLayoutSnapshot> {
+	const result = new Map<TKey, ReorderLayoutSnapshot>();
+	for (const { element, key } of elements) {
+		if (result.has(key)) throw new TypeError('Keyed layout elements must have unique keys.');
+		result.set(key, snapshot(element));
+	}
+	return result;
+}
+
 function animationOptions(options: ReorderLayoutAnimationOptions): KeyframeAnimationOptions {
 	if (!Number.isFinite(options.duration) || options.duration < 0)
 		throw new RangeError('Reorder layout duration must be a finite non-negative number.');
@@ -42,12 +59,8 @@ function animationOptions(options: ReorderLayoutAnimationOptions): KeyframeAnima
 	return { duration: options.duration, easing: options.easing };
 }
 
-/**
- * Animates connected elements from their captured viewport position to their current layout.
- * Additive transform keyframes retain class/computed transforms and coexist with caller animations.
- */
-export function animateReorderLayout(
-	before: ReadonlyMap<HTMLElement, ReorderLayoutSnapshot>,
+function animateEntries(
+	entries: Iterable<readonly [HTMLElement, ReorderLayoutSnapshot]>,
 	options: ReorderLayoutAnimationOptions
 ): () => void {
 	const timing = animationOptions(options);
@@ -58,19 +71,17 @@ export function animateReorderLayout(
 		animations.clear();
 	};
 	try {
-		for (const [element, previous] of before) {
+		for (const [element, previous] of entries) {
 			if (!element.isConnected) continue;
 			const current = snapshot(element);
 			const deltaX = previous.rect.left - current.rect.left;
 			const deltaY = previous.rect.top - current.rect.top;
 			if (Math.abs(deltaX) < 0.01 && Math.abs(deltaY) < 0.01) continue;
-			const translateX = deltaX / current.scaleX;
-			const translateY = deltaY / current.scaleY;
 			const animation = element.animate(
 				[
 					{
 						composite: 'add',
-						transform: `translate(${translateX}px, ${translateY}px)`
+						transform: `translate(${deltaX / current.scaleX}px, ${deltaY / current.scaleY}px)`
 					},
 					{ composite: 'add', transform: 'translate(0px, 0px)' }
 				],
@@ -85,4 +96,36 @@ export function animateReorderLayout(
 		throw error;
 	}
 	return cancel;
+}
+
+/**
+ * Animates connected elements from their captured viewport position to their current layout.
+ * Additive transform keyframes retain class/computed transforms and coexist with caller animations.
+ */
+export function animateReorderLayout(
+	before: ReadonlyMap<HTMLElement, ReorderLayoutSnapshot>,
+	options: ReorderLayoutAnimationOptions
+): () => void {
+	return animateEntries(before, options);
+}
+
+/** Animates current keyed nodes from earlier keyed geometry, including across DOM replacement. */
+export function animateKeyedLayout<TKey>(
+	before: ReadonlyMap<TKey, ReorderLayoutSnapshot>,
+	elements: Iterable<KeyedLayoutElement<TKey>>,
+	options: ReorderLayoutAnimationOptions
+): () => void {
+	const current = new Map<TKey, HTMLElement>();
+	for (const { element, key } of elements) {
+		if (current.has(key))
+			throw new TypeError('Current keyed layout elements must have unique keys.');
+		current.set(key, element);
+	}
+	return animateEntries(
+		[...before].flatMap(([key, previous]) => {
+			const element = current.get(key);
+			return element ? [[element, previous] as const] : [];
+		}),
+		options
+	);
 }

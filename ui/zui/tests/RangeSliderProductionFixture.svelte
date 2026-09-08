@@ -14,6 +14,9 @@
 	let inputs = $state(0);
 	let nativeChanges = $state(0);
 	let cancelPointerUp = $state(false);
+	let overlapPointerPhase = $state<'idle' | 'down' | 'move' | 'up'>('idle');
+	let overlapPointerMoves = $state(0);
+	let overlapCaptureSeen = $state(false);
 
 	export function setCollision(next: SliderCollision): void {
 		collision = next;
@@ -89,7 +92,18 @@
 <ZRangeSlider
 	data-testid="range-overlap"
 	defaultValue={[50, 50]}
+	style="width: 640px; max-width: 100%;"
 	thumbLabels={['Overlap lower', 'Overlap upper']}
+	onpointerdown={() => (overlapPointerPhase = 'down')}
+	onpointermove={(event) => {
+		overlapPointerPhase = 'move';
+		overlapPointerMoves += 1;
+		overlapCaptureSeen = event.currentTarget.hasPointerCapture(event.pointerId);
+	}}
+	onpointerup={() => (overlapPointerPhase = 'up')}
+	data-pointer-phase={overlapPointerPhase}
+	data-pointer-moves={overlapPointerMoves}
+	data-capture-seen={overlapCaptureSeen || undefined}
 />
 
 <ZRangeSlider

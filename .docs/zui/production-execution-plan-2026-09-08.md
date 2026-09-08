@@ -150,8 +150,9 @@ Charts、RichText、Markdown、CodeEditor、DiffViewer、Scheduler进入接受�
 | P08  | 已提交，CI发现阻断       | `9b9756a`三浏览器Docs与其余组件/构建门禁通过，仍有Chromium整库连接中断和coverage预算缺口                                                         |
 | P09  | 已提交，CI继续定位       | `8a914f1`只读范围/周期规则验收及API/pool/GC诊断已推送，整库断连仍复现；不算已修复                                                                |
 | P10  | 基础本地通过，E19B实现中 | Chromium新headless、周期范围/焦点合同先独立提交；Transfer跨栏adapter、request-owner演示和回归独立收口                                            |
-| P11  | 本地通过，待组合SHA CI   | Vitest/browser/coverage5.0与renderer3.1迁移，API监听归属、sequential及隐藏工件路径已同步，完整远端执行待验证                                     |
-| P12+ | 待执行                   | 继续CI与覆盖缺口、Transfer触屏/动画、其余依赖组、一致性及G2–G4；不缩减接受能力                                                                   |
+| P11  | 局部通过，完整CI未闭合   | Vitest5迁移已提交；三浏览器Docs及WebKit组件通过，Chromium仍断连、Firefox两处断言失败、coverage超预算                                             |
+| P12  | 局部已验证，触屏未闭合   | Transfer布局动画、Docs策略和RangeSlider回归定向通过；Chromium触屏原型保留明确失败/未执行边界，未作为发布门禁                                     |
+| P13+ | 待执行                   | 继续CI与覆盖缺口、其余依赖组、Transfer剩余验收、一致性及G2–G4；不缩减接受能力                                                                    |
 
 ### P01 集成记录
 
@@ -324,5 +325,17 @@ P10后续收口：
 - Reporter实际Vitest5 API仍兼容，无需改自有schema；reporter/composer/verifier自测通过，composer22负例与verifier3篡改负例保留。独立真实CI输入仍待新SHA采集，不伪造GITHUB_RUN_ID制造本地产物。
 - 本地最终验证见`.codex/production-p11-final.json`：ZUI/Docs/WebView/Miniapp类型均通过；Core35、WebView24、Miniapp41、SvelteKit19、Docs35共154项消费者unit通过；ZUI混合23项与独立Tooltip9项通过。静态生成、lifecycle guard、改动格式/lint和audit:system通过。没有本地重复全库coverage或三浏览器大矩阵。
 - 下一轮先核对新SHA的整库连接与coverage，不把局部成功当成Vitest5已修复断连。随后继续Playwright成对升级、E19B真实触屏/滚动/动画与剩余能力矩阵；任何新增失败按实际合同处理，不降门槛，不回退到已知不受支持的API。
+
+### P12 跨栏动画、触屏模拟与真实 CI 失败审查
+
+- 前置提交为`87907ab9fd3bb1a080165347a1c566341b4ff2ea`，[完整CI 34247029272](https://github.com/kenconnet666/zadmin/actions/runs/34247029272)已结束：Static、build、外部包、Windows、Drizzle、三浏览器Docs与WebKit组件通过。证据合并任务成功仅代表如实生成部分证据，不代表所有组件通过；Required aggregate失败。
+- Chromium在`choice-input-size-production`创建tester后orchestrator断连，294/318文件、2062项通过。首次关闭前没有crash、SIG或heap-limit证据；GC日志中`triggered=false`、临时目录尚有约57GB。不能仅因最后文件名变化就归因于该组件，Vitest5也未解决整库断连。
+- Firefox为164文件通过、2文件失败，816项通过、2项失败、1项跳过。失败分别是Popover退出DOM仍连接，以及RangeSlider真实拖动后值停在`50,50`。Coverage318文件2101项全通过，但global未覆盖lines/functions/statements/branches为1563/432/2910/3730，components为1324/378/2472/3111，仍超过原有预算；不下调门槛。
+- Transfer触摸原型单独使用`vite.touch.config.ts`和`.cdp.ts`入口，手动命令为`pnpm --filter @zadmin/zui exec vitest --run --config vite.touch.config.ts`。报告独立保存为`test-results/transfer-touch-chromium.json`，不覆盖原三浏览器`component-execution`报告。原型尚未稳定，不接入必须CI步骤；不通过skip或放宽断言把它伪装成已通过的正式套件。CDP触摸输入不是物理设备证据，也不代表Firefox/WebKit触屏已验收。
+- 共享keyed布局动画已实现：由同一移动事务驱动，接受后才匹配目标新DOM；外部提前呈现的echo、取消/拒绝、窗口resize/scroll旧几何、减弱动画及卸载清理均有明确边界。Sortable旧identity入口与keyed入口复用同一WAAPI实现，保留调用者动画，不写inline style、不复制DOM。验证包含virtual replacement、same-batch接受、跨render早echo不倒拉、拒绝和滚动失效。最后测试直接检查真实动画target/keyframes与Theme的normal=1000、easing=linear，暂停真实动画避免依赖短暂活跃窗口；通过真实1024×768 viewport建立横向布局，没有覆盖组件内部CSS。
+- RangeSlider的原轨道宽1024、viewport宽1024，而endRatio=1.1将鼠标发送到x=1126.4。修正夹具宽度并加入“轨道外但视口内”的几何前置、真实pointer move/capture/up断言；组件运行时不变。Chromium/Firefox各13项通过；Juggler日志警告仍有出现，不能以该警告作为原失败的唯一根因。Popover退出本轮未复现，保留CI失败记录，不改时限。
+- Docs复用原RequestOwner，增加公开ZuiMotion与ZProvider控制，默认auto尊重系统偏好；同一个Transfer/value owner覆盖full与reduced，保留接受前/后FormData。真实原生animate探针记录调用和关键帧，不只断言文案；Chromium2项通过，无新增重复业务演示。
+- 本地收口：ZUI/Docs类型均0 errors/0 warnings，事务/SSR14项、共享动画/Sortable前轮14项与最后Transfer motion3项、上述Range/Popover两引擎各13项、Docs2项通过；API/Token生成、lifecycle、格式/lint和audit:system通过。首次夹具SelectionKey类型、动画spy的this类型、Docs choices泛化错误均已修正；失败日志分别保留在`.codex/production-p12-types.json`、`production-p12-final.json`和`production-p12-reviewed.json`，最终ZUI成功见reviewed，Docs与其余成功见`production-p12-reviewed-final.json`。
+- 触屏独立冻结运行见`.codex/p12-transfer-touch-isolated-final.log`：横向跨栏通过，canonical按items顺序为`item-3,item-24`；tap/cancel未改value，但纵向内部scrollTop仍0。readonly/disabled两项在runner断连后未完成，不能记为通过。微任务事件记录未观察到dragging并不能排除sensor异步激活/转移pointer capture；下一批应在CDP事件后的帧边界独立读取dragging和滚动状态，先定位再决定是否采用上游touch长按激活策略。参考[Pointer Events触控行为边界](https://www.w3.org/TR/pointerevents3/#determining-supported-direct-manipulation-behavior)，触摸行为与最近滚动容器及touch-action有关；本批没有未经证实修改生产touch-action或阈值。
 
 每条完成记录提交、命令/CI链接、结果和未验证边界。目标模式不能把一次局部测试通过当作全库完成，也不授权未经确认的生产发布。

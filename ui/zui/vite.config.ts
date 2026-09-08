@@ -1,7 +1,7 @@
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { playwright } from '@vitest/browser-playwright';
 import { fileURLToPath } from 'node:url';
-import { defineConfig } from 'vitest/config';
+import { defineConfig, type TestProjectConfiguration } from 'vitest/config';
 import { createComponentExecutionReporter } from './scripts/component-execution-reporter.js';
 import { dragElements, dragSliderTrack } from './tests/browser-commands.js';
 
@@ -41,6 +41,37 @@ const browserInstances: { browser: 'chromium' | 'firefox' | 'webkit' }[] = colle
 const requiresSerialBrowserFiles =
 	browserInstances.some(({ browser }) => browser === 'firefox') ||
 	(process.env.CI === 'true' && !collectingCoverage);
+
+// Shared browser infrastructure; specialized probes replace only their scope and commands.
+export const browserProject = {
+	extends: true,
+	test: {
+		// API belongs to this browser project, not the root/unit server.
+		api: {
+			host: '127.0.0.1',
+			port: configuredBrowserPort,
+			strictPort: true
+		},
+		browser: {
+			commands: { dragElements, dragSliderTrack },
+			enabled: true,
+			headless: true,
+			// Full Chromium uses modern headless; other engines and concurrency stay unchanged.
+			instances: browserInstances.map((instance) =>
+				instance.browser === 'chromium'
+					? {
+							...instance,
+							provider: playwright({ launchOptions: { channel: 'chromium' } })
+						}
+					: instance
+			),
+			provider: playwright()
+		},
+		include: ['tests/**/*.browser.spec.ts'],
+		name: 'browser',
+		setupFiles: ['./tests/browser.setup.ts']
+	}
+} satisfies TestProjectConfiguration;
 
 export default defineConfig({
 	optimizeDeps: {
@@ -111,37 +142,7 @@ export default defineConfig({
 					name: 'unit'
 				}
 			},
-			{
-				extends: true,
-				test: {
-					// API belongs to this browser project, not the root/unit server.
-					api: {
-						host: '127.0.0.1',
-						port: configuredBrowserPort,
-						strictPort: true
-					},
-					browser: {
-						commands: { dragElements, dragSliderTrack },
-						enabled: true,
-						headless: true,
-						// Use the full Chromium binary's modern headless mode, matching the
-						// browser users run instead of the separate headless-shell build.
-						// Keep Firefox/WebKit and the existing file-concurrency policy unchanged.
-						instances: browserInstances.map((instance) =>
-							instance.browser === 'chromium'
-								? {
-										...instance,
-										provider: playwright({ launchOptions: { channel: 'chromium' } })
-									}
-								: instance
-						),
-						provider: playwright()
-					},
-					include: ['tests/**/*.browser.spec.ts'],
-					name: 'browser',
-					setupFiles: ['./tests/browser.setup.ts']
-				}
-			}
+			browserProject
 		]
 	}
 });

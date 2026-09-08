@@ -116,7 +116,15 @@ describe('ZRangeSlider production contract', () => {
 		const overlap = target.querySelector<HTMLElement>('[data-testid="range-overlap"]')!;
 		const [overlapLower, overlapUpper] = inputs(overlap);
 		overlapUpper.focus();
+		const overlapTrack = overlap.querySelector<HTMLElement>('[data-slot="track"]')!;
+		const overlapBox = overlapTrack.getBoundingClientRect();
+		expect(overlapBox.width).toBeLessThan(window.innerWidth);
+		expect(overlapBox.x + overlapBox.width * 1.1).toBeGreaterThan(overlapBox.x + overlapBox.width);
+		expect(overlapBox.x + overlapBox.width * 1.1).toBeLessThan(window.innerWidth);
 		await commands.dragSliderTrack('[data-testid="range-overlap"] [data-slot="track"]', 0.5, 1.1);
+		expect(overlap.dataset.pointerPhase).toBe('up');
+		expect(Number(overlap.dataset.pointerMoves)).toBeGreaterThan(0);
+		expect(overlap.dataset.captureSeen).toBe('true');
 		await expect.poll(() => overlap.dataset.value).toBe('50,100');
 		expect(overlapLower.valueAsNumber).toBe(50);
 		expect(document.activeElement).toBe(overlapUpper);

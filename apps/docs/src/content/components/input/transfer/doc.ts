@@ -123,7 +123,7 @@ export const transferDoc = defineComponentDoc(transferMetadata, {
 				'resource-cleanup'
 			],
 			description:
-				'request模式由外部owner人工写回nextValue并确认；启用dragDrop后pointer与Alt+方向键可发起跨栏事务，也可拒绝/抛错；外部快照变化自动终止过期请求，原生FormData不做去重或预期值替代。',
+				'request模式由外部owner人工写回nextValue并确认；启用dragDrop后pointer与Alt+方向键可发起跨栏事务，auto/full/reduced只控制布局反馈，也可拒绝/抛错；外部快照变化自动终止过期请求，原生FormData不做去重或预期值替代。',
 			id: 'transfer-request-owner',
 			source: requestOwnerSource,
 			title: '外部请求确认与结算'
@@ -155,7 +155,7 @@ export const transferDoc = defineComponentDoc(transferMetadata, {
 		'accepted只清理来源侧本次movingKeys，保留其他checked；pointer保留拖起锚点，焦点仍由listbox容器与语义active key表达。用户等待期间主动移焦时不抢回；唯一live region只公告真实终态。',
 		'virtual为两个pane各建一个固定行ZVirtualList、MountedElements和ActiveDescendant握手；虚拟器只拥有窗口/scroll，SelectionModel和最终value不会迁入虚拟器。',
 		'dragDrop=true时可选pointer跨栏membership；pointer不预写canonical，仍进入同一immediate/request事务。',
-		'listbox上的Alt+逻辑方向箭头是键盘跨栏快捷键；拖checked项移动该pane全部enabled checked，未checked项只移动自身。同栏reorder、分组数据结构、sticky和动态行高不属于该API；真实touch与跨栏动画仍待后续验收。',
+		'listbox上的Alt+逻辑方向箭头是键盘跨栏快捷键；拖checked项移动该pane全部enabled checked，未checked项只移动自身。同栏reorder、分组数据结构、sticky和动态行高不属于该API；布局动画只随auto/full/reduced反馈，不接管canonical，CDP拖放与真实touch仍待验收。',
 		'readonly保持listbox可聚焦、可滚动、可typeahead且value继续提交，但筛选input只读、SelectionModel为none、移动按钮禁用；disabled另行退出焦点和FormData。',
 		'form reset恢复defaultValue，清空两侧查询、临时勾选和导航瞬态，不触发onValueChange。',
 		'API取舍：保留value/defaultValue和immediate模式的onValueChange，不创建values复数别名；请求模式显式区分membership事务与数据加载，保持单一value owner。吸收双栏、筛选、typed key/view/selection和locale分层，不增加大型transfer DSL。'

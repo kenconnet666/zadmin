@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+	animateKeyedLayout,
 	animateReorderLayout,
+	captureKeyedLayout,
 	captureReorderLayout
 } from '../src/runtime/drag-drop/layout-motion.js';
 
@@ -109,6 +111,63 @@ describe('reorder layout motion', () => {
 			expect(first.getAnimations()).toHaveLength(0);
 			cancel();
 			expect(first.hasAttribute('style')).toBe(false);
+		} finally {
+			remove();
+		}
+	});
+
+	it('maps captured geometry to a replacement DOM node by typed key', () => {
+		const { first, host, remove, second } = fixture();
+		try {
+			const before = captureKeyedLayout<number | string>([
+				{ element: first, key: 1 },
+				{ element: second, key: '1' }
+			]);
+			const previousLeft = before.get(1)!.rect.left;
+			first.remove();
+			const replacement = document.createElement('div');
+			replacement.dataset.replacement = '';
+			host.append(replacement);
+
+			const caller = replacement.animate([{ opacity: 0.5 }, { opacity: 1 }], {
+				duration: 1_000
+			});
+			const currentLeft = replacement.getBoundingClientRect().left;
+			const cancel = animateKeyedLayout(
+				before,
+				[
+					{ element: replacement, key: 1 },
+					{ element: second, key: '1' }
+				],
+				{ duration: 200, easing: 'ease-out', reduced: false }
+			);
+			const owned = replacement.getAnimations().find((animation) => animation !== caller)!;
+			const firstFrame = (owned.effect as KeyframeEffect).getKeyframes()[0]!;
+			const delta = previousLeft - currentLeft;
+			const scale = replacement.getBoundingClientRect().width / replacement.offsetWidth;
+			expect(new DOMMatrixReadOnly(String(firstFrame.transform)).m41).toBeCloseTo(delta / scale, 1);
+			expect(first.getAnimations()).toHaveLength(0);
+			expect(replacement.hasAttribute('style')).toBe(false);
+
+			cancel();
+			expect(replacement.getAnimations()).toEqual([caller]);
+			caller.cancel();
+			expect(() =>
+				captureKeyedLayout([
+					{ element: replacement, key: 1 },
+					{ element: second, key: 1 }
+				])
+			).toThrow(/unique keys/u);
+			expect(() =>
+				animateKeyedLayout(
+					before,
+					[
+						{ element: replacement, key: 1 },
+						{ element: second, key: 1 }
+					],
+					{ duration: 200, easing: 'linear', reduced: false }
+				)
+			).toThrow(/unique keys/u);
 		} finally {
 			remove();
 		}
