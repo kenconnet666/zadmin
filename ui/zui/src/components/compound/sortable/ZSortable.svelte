@@ -232,9 +232,13 @@
 	import { classOnlyDragDropPlugins } from '../../../runtime/drag-drop/plugins.js';
 	import { connectDragGeometry } from '../../../runtime/drag-drop/geometry.js';
 	import {
-		captureReorderLayout,
-		animateReorderLayout
+		animateKeyedLayout,
+		type KeyedLayoutElement
 	} from '../../../runtime/drag-drop/layout-motion.js';
+	import {
+		captureLayoutMotion,
+		type LayoutMotionCapture
+	} from '../../../runtime/drag-drop/layout-motion-capture.js';
 	import ZStack from '../../layout/ZStack.svelte';
 	import ZVisuallyHidden from '../../gene/ZVisuallyHidden.svelte';
 	import ZButton from '../../gene/ZButton.svelte';
@@ -311,10 +315,12 @@
 		request: SortableMoveRequest<T, TKey>;
 		expected: readonly TKey[];
 		controller: AbortController;
+		layoutMotion?: LayoutMotionCapture<TKey>;
 		focus: Element | null;
 		abortDrop?: () => void;
 		resumeDrop?: () => void;
 		completed: boolean;
+		ownerSettled: boolean;
 	}
 	let session = $state.raw<Session | null>(null);
 	let pending = $state.raw<Pending | null>(null);
@@ -340,6 +346,21 @@
 			stopHandle();
 			stopRow();
 		};
+	}
+	function layoutElements(): readonly KeyedLayoutElement<TKey>[] {
+		return keys.flatMap((key) => {
+			const row = rows.get(key);
+			return row ? [{ element: row.element, key }] : [];
+		});
+	}
+	function captureSortableLayout(
+		root: HTMLElement,
+		signal: AbortSignal
+	): LayoutMotionCapture<TKey> {
+		return captureLayoutMotion(root, layoutElements, {
+			enabled: !motion.current && durationMilliseconds(zui.theme.duration.normal) > 0,
+			signal
+		});
 	}
 	function restoreFocus(key: TKey, before: Element | null, fallbackIndex = 0): void {
 		if (!live || !ref?.isConnected) return;
@@ -384,6 +405,7 @@
 	): boolean {
 		if (entry.completed) return false;
 		entry.completed = true;
+		entry.layoutMotion?.stop();
 		if (pending === entry) pending = null;
 		session = null;
 		const accepted = result === 'accepted';
@@ -477,6 +499,7 @@
 			controller,
 			completed: false,
 			focus: session?.focus ?? getActiveElement(ref),
+			ownerSettled: false,
 			abortDrop: drop?.abort,
 			resumeDrop: drop?.resume
 		};
@@ -487,22 +510,22 @@
 		let result: SortableMoveEnd<T, TKey>['result'] = 'rejected';
 		let failure: unknown;
 		try {
-			const before = captureReorderLayout(
-				keys.flatMap((key) => {
-					const row = rows.get(key);
-					return row ? [row.element] : [];
-				})
-			);
+			entry.layoutMotion = captureSortableLayout(ref, controller.signal);
 			const accepted = await onMoveRequest(request);
+			entry.ownerSettled = true;
 			await tick();
 			if (!live || entry.completed || controller.signal.aborted) return false;
 			if (accepted && sameKeys(keys, expected)) {
-				animationCleanup = animateReorderLayout(before, {
-					duration: durationMilliseconds(zui.theme.duration.normal),
-					easing: zui.theme.easing.standard,
-					reduced: motion.current
-				});
 				result = 'accepted';
+				const layoutMotion = entry.layoutMotion;
+				layoutMotion?.stop();
+				if (!motion.current && layoutMotion?.valid()) {
+					animationCleanup = animateKeyedLayout(layoutMotion.before, layoutElements(), {
+						duration: durationMilliseconds(zui.theme.duration.normal),
+						easing: zui.theme.easing.standard,
+						reduced: motion.current
+					});
+				}
 			}
 		} catch (error) {
 			result = 'error';
@@ -594,6 +617,11 @@
 				cancel();
 				return;
 			}
+			if (entry && sameKeys(currentKeys, entry.expected) && !entry.ownerSettled)
+				void tick().then(() => {
+					if (pending === entry && !entry.completed && !entry.ownerSettled)
+						entry.layoutMotion?.invalidate();
+				});
 			if (
 				entry &&
 				!sameKeys(currentKeys, entry.request.keys) &&

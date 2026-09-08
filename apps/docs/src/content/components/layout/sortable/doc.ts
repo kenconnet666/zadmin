@@ -39,6 +39,7 @@ export const sortableDoc = defineComponentDoc(sortableMetadata, {
 		'在手柄按Space/Enter开始和放下，方向键选择目标，Escape取消。等待异步接受时也提供取消按钮。',
 		'位置、接受、拒绝和异常只由根live region公告；没有第二个依赖默认公告区域。',
 		'所有结构修改交给onMoveRequest，返回true后仍核对实际items顺序；不会偷偷回滚调用方已经写入的数据。',
+		'等待期间滚动、容器或已测量行尺寸变化会废弃旧布局动画，不改变owner确认结果；已独立呈现的提前回写不会在稍后接受时倒播。reduced或零时长不采集历史几何。',
 		'默认样式使用Theme/ICSS；布局移动使用可取消Web Animations，reduced变化立即取消本组件的动画。'
 	],
 	keywords: ['sortable', 'reorder', 'drag', 'touch', 'keyboard', 'form list', 'async']

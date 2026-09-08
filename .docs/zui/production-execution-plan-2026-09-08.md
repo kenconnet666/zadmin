@@ -154,7 +154,8 @@ Charts、RichText、Markdown、CodeEditor、DiffViewer、Scheduler进入接受�
 | P12  | 局部已验证，触屏未闭合   | Transfer布局动画、Docs策略和RangeSlider回归定向通过；Chromium触屏原型保留明确失败/未执行边界，未作为发布门禁                                     |
 | P13  | 本地通过，待精确SHA CI   | 修复触屏滚动/长按焦点冲突，普通/虚拟模式10项模拟通过；补容器resize失效和脱敏浏览器生命周期诊断                                                   |
 | P14  | 本地通过，待精确SHA CI   | Playwright/test1.63成对升级，通用触屏驱动供Transfer/Sortable复用，17项模拟回归通过；主CI配置保持对照                                             |
-| P15+ | 待执行                   | 继续整库连接/覆盖缺口、Sortable异步几何一致性、剩余依赖组及G2–G4；预算停止线不变                                                                 |
+| P15  | 局部通过，待新CI         | 共享布局捕获/失效/清理、Sortable early echo一致性、诊断启用路径unit与可选CDP网络错误采集                                                         |
+| P16+ | 待执行                   | 继续连接/coverage与剩余接受能力；接近33%停止新批次，30%停止开发并交接                                                                            |
 
 ### P01 集成记录
 
@@ -360,5 +361,17 @@ P10后续收口：
 - 触屏命令提取为`tests/touch-commands.ts`与独立类型声明，供Transfer和Sortable共享；不保留未发布旧名字的deprecated别名。专属config输出改为`test-results/touch-input-chromium.json`，主三浏览器证据协议不变。健康tester在文件隔离时会关闭WS，诊断现在标记Page仍active，不误称为异常Page关闭。
 - Sortable直接使用已有readonly/disabled/itemDisabled和onMoveRequest合同：内容区短滑滚动，独立grip长按跨行，cancel、整体禁用、单项禁用、只读与owner拒绝各有真实协议输入和实际顺序/终态断言。起终点先验证可见，锁定项先滚入视口；修正了content选择器误匹配嵌套ZButton content的问题，采用row直接子部件。既有组件实现通过，不为了测试额外制造API或定制一套手势。新增7项与Transfer10项合计17项Chromium模拟通过；真机与其他引擎触屏仍未验收。
 - 本地验证见`.codex/production-p14-final.json`：API等生成、ZUI/Docs类型0 errors/0 warnings、26项Chromium组件回归、2项Docs E2E、证据composer/verifier自测、3项诊断unit、lifecycle、格式/lint与audit:system全通过；触屏17项见`.codex/p14-touch-combined.log`。旧的Sortable选择器失败保留在`p14-sortable-touch.log`。没有本地整库三浏览器或coverage重跑，下一步用新SHA完整CI确认1.63的稳定性及覆盖情况。
+
+### P15 共享动画几何与诊断覆盖
+
+- 前置`9ddb8b5666bb726048031116dabbc36cb8943387`的[CI 34264653813](https://github.com/kenconnet666/zadmin/actions/runs/34264653813)已结束：Firefox/WebKit组件、三浏览器Docs、Static、build、外部包、Windows、Drizzle和独立触屏17项通过。Chromium主套件114个browser文件完成后，在carousel新tester连接阶段再次出现Vite/control WS失败；267/321总文件1991项通过。Page无异常导航/crash，1.63并未解决整库连接问题。Coverage321文件2110项全过，但未覆盖global1615/448/2970/3756、components1322/376/2470/3115仍超预算，未降低门槛。
+- 新增内部`layout-motion-capture.ts`供Transfer与Sortable共享，统一stable-key几何、root/已测量元素尺寸、scroll、owner-window resize及AbortSignal的生命周期；首次同尺寸ResizeObserver通知不使快照失效，失效/停止即释放监听与元素引用。纯`layout-motion.ts`仍只负责几何与WAAPI，不拥有业务items或事务。reduced/零时长/预先abort不调用元素getter或读取几何，避免无用布局读取。
+- Sortable对齐Transfer：接受与“能否播放动画”分离；same-batch owner echo+resolve仍动画，已跨render呈现的早echo在晚到接受时不倒播。正常/rejected/error/cancel/stale/unmount均清理捕获。保留先取消旧owned动画、再采集的位置，以及setup错误进入原onMoveEnd(error)路径，不增加公开API或生产帧延迟。
+- 初次联合25项通过但helper的测试观察器在自己的ResizeObserver回调微任务内接着写尺寸，产生undelivered notifications告警；改为在下一帧恢复测试变更后，helper6项通过且无此告警。测试只记录真实row/option的transform，不把Spinner计入；尺寸与滚动使用实际浏览器通知，不以tick代替render事件。
+- 诊断启用分支补真实wrapper unit，使用有类型的provider/page替身驱动实现，覆盖factory同步/descriptor保留、页面生命周期、WS、console过滤、脱敏和终止分类。未排除诊断脚本或下调coverage。1.63仍未给出net error，因此增加独立开关的Chromium CDP Network错误取证；只记录脱敏路径/错误和资源类型，不读取请求头、响应体或WS帧payload。新SHA的网络证据仍待采集，不能由空socketerror猜测错误码。
+
+- 最终定向验证见`.codex/production-p15-recheck-final.json`：ZUI/Docs类型0 errors/0 warnings、15项unit/SSR、26项Chromium、17项触屏模拟、2项Docs、lifecycle、生成/格式/lint与audit:system均通过；border-box及border-only尺寸变化也有真实回归。首次类型失败日志保留，测试替身保持同一显式provider结构类型，不放宽生产factory合同。
+- 真实浏览器发现诊断在Page正常关闭后重复detach会误报。独立session仅在Page仍打开时detach，并对期间关闭做窄处理；活着的Page上的真正清理异常仍报告。最终14项unit+browser复验与ZUI类型/格式/lint通过，日志含network-ready且没有setup/cleanup误报，见`.codex/p15-diagnostics-final.json`。这只证明诊断可运行，不等于整库WS断连已修复。完整CI与coverage仍待新SHA。
+- 03:38与收尾实时查询主周额度均剩34%，未到停止线；不继续扩大本批或派新子代理。[阶段交接](./handoff-2026-09-09.md)保留现有预算规则、代码边界与下次CI取证入口。
 
 每条完成记录提交、命令/CI链接、结果和未验证边界。目标模式不能把一次局部测试通过当作全库完成，也不授权未经确认的生产发布。

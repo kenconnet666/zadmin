@@ -159,6 +159,7 @@ jobs:
           DEBUG: pw:browser,vitest:browser:api,vitest:browser:pool,vitest:browser:gc
           ZUI_BROWSER_DIAGNOSTICS: '1'
           ZUI_BROWSER: ${{ matrix.browser }}
+          ZUI_BROWSER_NETWORK_DIAGNOSTICS: '1'
           ZUI_EXECUTION_REPORT: test-results/component-execution-vitest-${{ matrix.browser }}.json
         run: |
           if [ "$ZUI_BROWSER" = chromium ]; then
@@ -389,6 +390,7 @@ jobs:
           # The successful coverage runner is the control for the non-coverage disconnect.
           DEBUG: pw:browser,vitest:browser:api,vitest:browser:pool,vitest:browser:gc
           ZUI_BROWSER_DIAGNOSTICS: '1'
+          ZUI_BROWSER_NETWORK_DIAGNOSTICS: '1'
         run: pnpm --filter @zadmin/zui test:coverage
 
       - name: Run SvelteKit integration coverage

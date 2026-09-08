@@ -489,10 +489,12 @@
 	import { Typeahead } from '../../runtime/collection/typeahead.js';
 	import {
 		animateKeyedLayout,
-		captureKeyedLayout,
-		type KeyedLayoutElement,
-		type ReorderLayoutSnapshot
+		type KeyedLayoutElement
 	} from '../../runtime/drag-drop/layout-motion.js';
+	import {
+		captureLayoutMotion,
+		type LayoutMotionCapture
+	} from '../../runtime/drag-drop/layout-motion-capture.js';
 	import { readIcssCarrier } from '../../runtime/foundation/compiler-bridge.js';
 	import { ControllableState } from '../../runtime/foundation/controllable-state.svelte.js';
 	import { useZui } from '../../runtime/foundation/context.js';
@@ -769,19 +771,13 @@
 		readonly candidate: TransferMoveCandidate;
 		readonly root: HTMLDivElement | null;
 	}
-	interface TransferLayoutMotion {
-		readonly before: ReadonlyMap<SelectionKey, ReorderLayoutSnapshot>;
-		readonly invalidate: () => void;
-		readonly valid: () => boolean;
-		readonly stop: () => void;
-	}
 	interface PendingTransferMove {
 		readonly candidate: TransferMoveCandidate;
 		readonly controller: AbortController;
 		readonly focusElement: Element | null;
 		readonly focusKey: SelectionKey | undefined;
 		readonly generation: number;
-		readonly layoutMotion: TransferLayoutMotion;
+		readonly layoutMotion: LayoutMotionCapture<SelectionKey>;
 		readonly mode: 'immediate' | 'request';
 		readonly origin: Side;
 		readonly request: TransferMoveRequest;
@@ -1027,43 +1023,14 @@
 		});
 	}
 
-	function captureTransferLayout(root: HTMLDivElement): TransferLayoutMotion {
-		const before = captureKeyedLayout(mountedLayoutElements());
-		const ownerWindow = root.ownerDocument.defaultView;
-		const borderBox = root.getBoundingClientRect();
-		let invalid = false;
-		let listening = true;
-		const invalidate = (): void => {
-			invalid = true;
-		};
-		const resize = ownerWindow?.ResizeObserver
-			? new ownerWindow.ResizeObserver((entries) => {
-					if (!entries.some((entry) => entry.target === root)) return;
-					const current = root.getBoundingClientRect();
-					if (
-						Math.abs(current.width - borderBox.width) > 0.01 ||
-						Math.abs(current.height - borderBox.height) > 0.01
-					)
-						invalidate();
-				})
-			: undefined;
-		resize?.observe(root);
-		root.addEventListener('scroll', invalidate, { capture: true, passive: true });
-		ownerWindow?.addEventListener('scroll', invalidate, { capture: true, passive: true });
-		ownerWindow?.addEventListener('resize', invalidate, { passive: true });
-		return {
-			before,
-			invalidate,
-			valid: () => !invalid,
-			stop: () => {
-				if (!listening) return;
-				listening = false;
-				resize?.disconnect();
-				root.removeEventListener('scroll', invalidate, true);
-				ownerWindow?.removeEventListener('scroll', invalidate, true);
-				ownerWindow?.removeEventListener('resize', invalidate);
-			}
-		};
+	function captureTransferLayout(
+		root: HTMLDivElement,
+		signal: AbortSignal
+	): LayoutMotionCapture<SelectionKey> {
+		return captureLayoutMotion(root, mountedLayoutElements, {
+			enabled: !motion.current && durationMilliseconds(zui.theme.duration.normal) > 0,
+			signal
+		});
 	}
 
 	function cancelLayoutAnimation(): void {
@@ -1256,7 +1223,7 @@
 		if (!Controller) return false;
 		cancelLayoutAnimation();
 		const controller = new Controller();
-		const layoutMotion = captureTransferLayout(ref);
+		const layoutMotion = captureTransferLayout(ref, controller.signal);
 		const activeKey = focusKeyOverride ?? sideActive(origin).activeKey;
 		const moving = new Set<SelectionKey>(candidate.movingKeys);
 		const request = Object.freeze({

@@ -4,7 +4,7 @@
 		"metadataComponents": 187,
 		"documentationPages": 117,
 		"contractComponents": 187,
-		"testFiles": 399
+		"testFiles": 401
 	},
 	"stageNames": [
 		"MetadataDeclared",
@@ -8643,6 +8643,14 @@
 					}
 				],
 				"BrowserBehaviorContractsDeclared": [
+					{
+						"path": "ui/zui/tests/sortable-layout-motion.browser.spec.ts",
+						"detail": "ZSortable browser behavior assertions"
+					},
+					{
+						"path": "ui/zui/tests/SortableLayoutMotionFixture.svelte",
+						"detail": "ZSortable explicit rendered fixture usage"
+					},
 					{
 						"path": "ui/zui/tests/sortable-production.browser.spec.ts",
 						"detail": "ZSortable browser behavior assertions"

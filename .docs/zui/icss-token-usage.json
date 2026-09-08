@@ -3,7 +3,7 @@
 	"scope": ["ui/zui/src/components", "ui/zui/src/runtime", "apps/docs/src"],
 	"limitations": "AST source inventory, not runtime coverage. Numeric equality only identifies review candidates, not semantic equivalence. Dynamic/indexed theme reads and raw CSS returned from helpers require manual review. Entries without a direct reference are NOT proof of dead tokens.",
 	"summary": {
-		"files": 1075,
+		"files": 1076,
 		"registeredProperties": 166,
 		"themeGroups": 18,
 		"themeTokens": 185,
@@ -20356,119 +20356,119 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 532,
+			"line": 534,
 			"property": "fontFamily",
 			"expression": "s.fontFamily._sans",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 533,
+			"line": 535,
 			"property": "lineHeight",
 			"expression": "s.lineHeight._compact",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 534,
+			"line": 536,
 			"property": "alignItems",
 			"expression": "s.alignItems.stretch",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 535,
+			"line": 537,
 			"property": "display",
 			"expression": "s.display.flex",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 536,
+			"line": 538,
 			"property": "flexWrap",
 			"expression": "s.flexWrap.wrap",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 537,
+			"line": 539,
 			"property": "gap",
 			"expression": "s.gap._medium",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 542,
+			"line": 544,
 			"property": "fontSize",
 			"expression": "s.fontSize._xsmall",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 545,
+			"line": 547,
 			"property": "fontSize",
 			"expression": "s.fontSize._small",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 548,
+			"line": 550,
 			"property": "fontSize",
 			"expression": "s.fontSize._medium",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 551,
+			"line": 553,
 			"property": "fontSize",
 			"expression": "s.fontSize._large",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 554,
+			"line": 556,
 			"property": "fontSize",
 			"expression": "s.fontSize._large",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 557,
+			"line": 559,
 			"property": "opacity",
 			"expression": "s.opacity._disabled",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 563,
+			"line": 565,
 			"property": "alignItems",
 			"expression": "s.alignItems.center",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 564,
+			"line": 566,
 			"property": "display",
 			"expression": "s.display.flex",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 565,
+			"line": 567,
 			"property": "flexDirection",
 			"expression": "s.flexDirection.column",
 			"kind": "system-keyword"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 566,
+			"line": 568,
 			"property": "gap",
 			"expression": "s.gap._small",
 			"kind": "theme-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 567,
+			"line": 569,
 			"property": "justifyContent",
 			"expression": "s.justifyContent.center",
 			"kind": "system-keyword"
@@ -32363,13 +32363,19 @@
 		},
 		{
 			"path": "ui/zui/src/components/compound/sortable/ZSortable.svelte",
-			"line": 501,
+			"line": 361,
 			"token": "duration.normal",
 			"via": "direct-theme-read"
 		},
 		{
 			"path": "ui/zui/src/components/compound/sortable/ZSortable.svelte",
-			"line": 502,
+			"line": 524,
+			"token": "duration.normal",
+			"via": "direct-theme-read"
+		},
+		{
+			"path": "ui/zui/src/components/compound/sortable/ZSortable.svelte",
+			"line": 525,
 			"token": "easing.standard",
 			"via": "direct-theme-read"
 		},
@@ -40271,73 +40277,79 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 532,
+			"line": 534,
 			"token": "fontFamily.sans",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 533,
+			"line": 535,
 			"token": "lineHeight.compact",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 537,
+			"line": 539,
 			"token": "space.medium",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 542,
+			"line": 544,
 			"token": "fontSize.xsmall",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 545,
+			"line": 547,
 			"token": "fontSize.small",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 548,
+			"line": 550,
 			"token": "fontSize.medium",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 551,
+			"line": 553,
 			"token": "fontSize.large",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 554,
+			"line": 556,
 			"token": "fontSize.large",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 557,
+			"line": 559,
 			"token": "opacity.disabled",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 566,
+			"line": 568,
 			"token": "space.small",
 			"via": "icss-accessor"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 1097,
+			"line": 1031,
 			"token": "duration.normal",
 			"via": "direct-theme-read"
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 1098,
+			"line": 1064,
+			"token": "duration.normal",
+			"via": "direct-theme-read"
+		},
+		{
+			"path": "ui/zui/src/components/input/ZTransfer.svelte",
+			"line": 1065,
 			"token": "easing.standard",
 			"via": "direct-theme-read"
 		},
@@ -44565,7 +44577,7 @@
 		},
 		{
 			"path": "ui/zui/src/components/input/ZTransfer.svelte",
-			"line": 1479
+			"line": 1446
 		},
 		{
 			"path": "ui/zui/src/components/layout/ZAffix.svelte",
