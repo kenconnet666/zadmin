@@ -36,7 +36,8 @@ export const dataTableDoc = defineComponentDoc(dataTableMetadata, {
 			},
 			defaultColumnWidths: {
 				default: '{}',
-				description: '非受控列宽初值；记录用户调整后的有限正数像素宽度。'
+				description:
+					'非受控列宽初值及controller.resetColumnWidths()目标；空映射会清除用户覆盖并回退到列自身的宽度配置。'
 			},
 			defaultExpandedKeys: {
 				default: '[]',
@@ -228,6 +229,7 @@ export const dataTableDoc = defineComponentDoc(dataTableMetadata, {
 		'列宽separator支持pointer、ArrowLeft/ArrowRight、Home/End并公开aria-valuenow。',
 		'列宽拖动只接受发起pointer的移动、抬起和取消；无关触点不改变列宽或中止手势，卸载会释放全部监听。LTR与RTL共用该事件归属合同。',
 		'原生dir显式值优先于Provider方向，并同步至外层viewport与内部ZTable；拖动和键盘调宽都按分隔线的实际方向解释左右。',
+		'controller.resetColumnWidths()写回defaultColumnWidths；状态实际变化时通知onColumnWidthsChange，重复重置不重复通知。外部columnWidths同步不触发该用户变更通知；此方法不是原生form reset。',
 		'loading/error只表达当前表面；请求、重试、筛选、分页和缓存仍由外部owner持有。',
 		'DataTable不声明grid角色，也不截获单元格方向键；交互控件继续使用原生Tab顺序。'
 	],

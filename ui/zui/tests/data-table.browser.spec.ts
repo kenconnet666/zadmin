@@ -3,9 +3,12 @@ import { describe, expect, it } from 'vitest';
 import { commands } from 'vitest/browser';
 import { tick } from 'svelte';
 import { mount, unmount } from './browser-lifecycle.js';
+import type { DataTableColumnWidths } from '../src/entrypoints/index.js';
 
 import DataTableProductionFixture from './DataTableProductionFixture.svelte';
 import DataTableBoundaryFixture from './DataTableBoundaryFixture.svelte';
+
+const widthResetDefaults: readonly DataTableColumnWidths[] = [{}, { name: 192 }];
 
 describe('ZDataTable production contracts', () => {
 	it('rejects invalid state keys, column models, sort descriptors and server offsets', async () => {
@@ -152,6 +155,70 @@ describe('ZDataTable production contracts', () => {
 			await expect.poll(() => Number(separator.getAttribute('aria-valuenow'))).toBeLessThan(160);
 		}
 	);
+
+	it.each(widthResetDefaults)(
+		'resets bound column widths to the configured defaults without duplicate notifications: %j',
+		async (defaultWidths) => {
+			const target = document.createElement('div');
+			document.body.append(target);
+			const component = mount(DataTableProductionFixture, { target, props: { defaultWidths } });
+			try {
+				await tick();
+				const table = target.querySelector<HTMLElement>('[data-testid="data-table-production"]')!;
+				const separator = table.querySelector<HTMLButtonElement>('[data-slot="column-resizer"]')!;
+				const row = table.querySelector('[data-slot="row"]');
+				const controller = component.widthState().controller!;
+				expect(controller.range).toBeNull();
+				separator.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'ArrowRight' }));
+				await tick();
+				expect(separator.getAttribute('aria-valuenow')).toBe('168');
+				expect(component.widthState().notifications).toEqual([{ name: 168 }]);
+
+				controller.resetColumnWidths();
+				await tick();
+				expect(component.widthState().widths).toEqual(defaultWidths);
+				expect(separator.getAttribute('aria-valuenow')).toBe(String(defaultWidths.name ?? 160));
+				expect(component.widthState().notifications).toEqual([{ name: 168 }, defaultWidths]);
+				expect(Object.isFrozen(component.widthState().notifications[1])).toBe(true);
+				expect(component.widthState().controller).toBe(controller);
+				expect(table.querySelector('[data-slot="row"]')).toBe(row);
+
+				controller.resetColumnWidths();
+				await tick();
+				expect(component.widthState().notifications).toHaveLength(2);
+			} finally {
+				await unmount(component);
+				target.remove();
+			}
+		}
+	);
+
+	it('keeps external width synchronization quiet and publishes a subsequent controller reset once', async () => {
+		const target = document.createElement('div');
+		document.body.append(target);
+		const component = mount(DataTableProductionFixture, {
+			target,
+			props: { defaultWidths: { name: 192 } }
+		});
+		try {
+			await tick();
+			component.synchronizeWidths({ name: 232 });
+			await tick();
+			const separator = target.querySelector<HTMLButtonElement>(
+				'[data-testid="data-table-production"] [data-slot="column-resizer"]'
+			)!;
+			expect(separator.getAttribute('aria-valuenow')).toBe('232');
+			expect(component.widthState().notifications).toEqual([]);
+			component.widthState().controller!.resetColumnWidths();
+			await tick();
+			expect(separator.getAttribute('aria-valuenow')).toBe('192');
+			expect(component.widthState().widths).toEqual({ name: 192 });
+			expect(component.widthState().notifications).toEqual([{ name: 192 }]);
+		} finally {
+			await unmount(component);
+			target.remove();
+		}
+	});
 
 	it('does not reclaim focus after the user leaves, but repairs a disabled focused target', async () => {
 		const outsideHost = document.createElement('div');

@@ -10,7 +10,10 @@
 		type SelectionKey,
 		type ZDataTableController
 	} from '../src/entrypoints/index.js';
-	let { direction }: { direction?: 'ltr' | 'rtl' } = $props();
+	let {
+		direction,
+		defaultWidths = {}
+	}: { direction?: 'ltr' | 'rtl'; defaultWidths?: DataTableColumnWidths } = $props();
 
 	interface Row {
 		detail: string;
@@ -51,12 +54,21 @@
 	let expandedKeys = $state<readonly SelectionKey[]>([]);
 	let columnVisibility = $state<DataTableColumnVisibility>({});
 	let columnWidths = $state<DataTableColumnWidths>({});
+	let widthChanges = $state.raw<readonly DataTableColumnWidths[]>([]);
 	let controller = $state<ZDataTableController<SelectionKey> | null>(null);
 	let loading = $state(false);
 	let error = $state<string | null>(null);
 	let numericDisabled = $state(false);
 	let focusOuts = $state(0);
 	let focusOutTarget = $state('none');
+
+	export function widthState() {
+		return { controller, notifications: widthChanges, widths: columnWidths };
+	}
+
+	export function synchronizeWidths(next: DataTableColumnWidths): void {
+		columnWidths = next;
+	}
 
 	function captureFocusOut(event: FocusEvent): void {
 		focusOuts += 1;
@@ -126,6 +138,7 @@
 	<ZDataTable
 		caption="Production rows"
 		dir={direction}
+		defaultColumnWidths={defaultWidths}
 		{columns}
 		{defaultSort}
 		{error}
@@ -142,6 +155,7 @@
 		bind:controller
 		bind:expandedKeys
 		bind:selectedKeys
+		onColumnWidthsChange={(next) => (widthChanges = [...widthChanges, next])}
 		onSortChange={(next) => (observedSort = next)}
 		onfocusout={captureFocusOut}
 		data-testid="data-table-production"

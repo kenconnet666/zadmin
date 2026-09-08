@@ -391,3 +391,7 @@ P10后续收口：
 - P16已推送`f0e71706e5eda473682c216834c3c777108eba84`，[CI 34273892722](https://github.com/kenconnet666/zadmin/actions/runs/34273892722) 已全部结束，最终仅Coverage独立门槛失败并使Required aggregate失败。三浏览器组件、Static、build、外部包、Windows、Drizzle与证据合并通过，三浏览器Docs各227项通过。Chromium主套件323文件2133项与独立触屏17项通过，DataTable14项实际执行通过。Coverage同样全过测试，但global1560/456/2921/3734、components1290/374/2432/3094仍超原门槛。只补交接证据，不再开启新组件族；P15 WebKit DatePicker用例本轮原样通过，未修改其实现/测试，故点击拦截/坐标变化线索仍保留，未冒称根因修复。后续doc-only提交不另算功能验收批次。
 
 每条完成记录提交、命令/CI链接、结果和未验证边界。目标模式不能把一次局部测试通过当作全库完成，也不授权未经确认的生产发布。
+
+#### P16 现有controller合同补齐
+
+在剩余32%的当前家族收尾范围中，仅补resetColumnWidths已有合同，不开启新组件族/API。3项新增回归直接使用真实controller，验证配置默认值/空映射重置、外部同步静默、重复重置不重复通知、冻结payload与controller/row身份；现有sameStateValue实现正确，没有修改生产源码。DataTable本地17项通过，ZUI/Docs类型0 errors/0 warnings、生成、lifecycle、lint/format和audit:system通过。首轮测试数据的record推断错误已用公开DataTableColumnWidths显式类型修正，日志见`.codex/p16-controller-recheck-final.json`；远端验证留给新SHA，不下调覆盖率门槛。
