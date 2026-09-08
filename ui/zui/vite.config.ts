@@ -63,7 +63,8 @@ export default defineConfig({
 		coverage: {
 			exclude: ['dist/**', 'tests/**', 'src/entrypoints/**'],
 			provider: 'v8',
-			reporter: ['text', 'json-summary'],
+			// Retain exact uncovered statement/branch locations for the remote coverage gate.
+			reporter: ['text', 'json-summary', 'json'],
 			thresholds: {
 				// Mature target: 95% lines/statements/functions and 90% branches.
 				// The current suite is below those targets, so negative thresholds

@@ -48,6 +48,7 @@
 	let submitError = $state('无');
 	let processingCount = $state(0);
 	let disposed = false;
+	// eslint-disable-next-line svelte/prefer-svelte-reactivity -- Imperative timer cleanup registry; it does not drive rendered state.
 	const pendingDelays = new Set<{ readonly resolve: () => void; readonly timer: number }>();
 
 	function delay(milliseconds: number): Promise<void> {

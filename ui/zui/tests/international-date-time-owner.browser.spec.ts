@@ -22,7 +22,7 @@ function input(owner: HTMLElement, label: string, value: string): void {
 
 describe('international DateTime owner calendars', () => {
 	it('remembers a Hebrew owner across clear for Field input and Panel Now callbacks', async () => {
-		render(InternationalDateTimeOwnerFixture);
+		await render(InternationalDateTimeOwnerFixture);
 		const owner = section('owner-local');
 		owner.querySelector<HTMLButtonElement>('[data-slot="clear"]')!.click();
 		await tick();
@@ -48,7 +48,7 @@ describe('international DateTime owner calendars', () => {
 	});
 
 	it('syncs a same-instant calendar change and preserves it through clear and zoned Now', async () => {
-		render(InternationalDateTimeOwnerFixture);
+		await render(InternationalDateTimeOwnerFixture);
 		document.querySelector<HTMLButtonElement>('[data-testid="switch-zoned-calendar"]')!.click();
 		await tick();
 		const owner = section('owner-zoned');
@@ -66,7 +66,7 @@ describe('international DateTime owner calendars', () => {
 	});
 
 	it('restores each mixed-calendar range endpoint before preset validation and commit', async () => {
-		render(InternationalDateTimeOwnerFixture);
+		await render(InternationalDateTimeOwnerFixture);
 		action(section('owner-range'), 'Owner range').click();
 		await tick();
 		expect(document.querySelector('[data-testid="owner-range-output"]')?.textContent).toBe(

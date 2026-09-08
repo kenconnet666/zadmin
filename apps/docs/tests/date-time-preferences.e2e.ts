@@ -53,7 +53,10 @@ test('DateTimePicker family keeps logical RTL navigation, reduced popup exit, ex
 	await draftDialog.locator('button[id$="-2026-09-12"]').click();
 	await expect(state).toContainText('owner=2026-09-07T10:30:00');
 	await expect(state).toContainText('commit=0');
-	await demo.getByTestId('date-time-family-reset').click();
+	await expect(draftDialog).toHaveAttribute('data-state', 'open');
+	// Keep the draft open until the native reset event itself. Clicking a covered
+	// external button can dismiss the popup first, testing a different lifecycle.
+	await demo.locator('form').evaluate((element) => (element as HTMLFormElement).reset());
 	await expect(draftDialog).toHaveCount(0);
 	await trigger.click();
 	const resetDialog = await dialogForTrigger();
