@@ -146,8 +146,9 @@ Charts、RichText、Markdown、CodeEditor、DiffViewer、Scheduler进入接受�
 | P04  | 已提交，CI发现后续阻断 | `6576d4d` + `2d72d1e` + `6fda5ab`：Transfer E19A、状态比较、API生成与诊断；精确CI仍有外部声明、immediate行为及浏览器断连失败                     |
 | P05  | 已提交，CI发现后续阻断 | `1d7bf25` + `b163154`：Transfer声明/行为与独立包已通过新CI；覆盖率预算、整库browser断连及Docs WebKit首击仍未闭合                                 |
 | P06  | 已提交，CI发现后续阻断 | `1cb7356` + `1b3f6fd` + `1eb6277`：render所有权与组件回归推进；新CI定位Select重入、TimeField WebKit及Docs旧locator，仍有断连和coverage缺口       |
-| P07  | 本地通过，待新SHA CI   | `7969859`组件修复与Docs，`c21f3cb`浏览器隔离与证据链；工具依赖/记录提交组成最终候选                                                              |
-| P08+ | 待执行                 | 根据新SHA结果继续阻断与覆盖率，推进其余依赖组、一致性、G2–G4与D；不缩减接受能力                                                                  |
+| P07  | 已提交，CI安装被拦截   | `7969859`组件修复、`c21f3cb`浏览器隔离、`7ae21cd`工具组；新CI因typescript-eslint发布等待期未进入组件验证                                         |
+| P08  | 执行中                 | 修正依赖等待策略与锁，审计DataTable焦点所有权、DateField/TimeField segment一致性，补齐既有DataTable演示验收                                      |
+| P09+ | 待执行                 | 根据新SHA结果继续阻断与覆盖率，推进其余依赖组、一致性、G2–G4与D；不缩减接受能力                                                                  |
 
 ### P01 集成记录
 
@@ -268,6 +269,6 @@ Coverage的2052项测试全通过，但未覆盖预算失败。下载当前和�
 - 集成发现support parser仅统计安装命令中的字面量浏览器，未识别matrix；已改为分别解析workspace/Docs各自job的matrix与install，防止借别的job凑齐浏览器。自测涵盖动态安装、缺matrix、仅部分Docs环境、CRLF；没有跳过支持矩阵校验。
 - 工具依赖组已安装：ESLint10.10、typescript-eslint8.70、globals17.12、Changesets3.0.2、tsx4.23.13；@types/semver原已锁7.8，本次收归catalog，不冒充版本升级。Core类型与35项unit、release version self-test通过。未改变Svelte/TypeScript/Vitest/Playwright版本或发布包。最终ZUI/Docs类型0 errors/0 warnings，29项组件Chromium、Docs unit35项、reporter/composer/verifier、release coherence、全部修改格式/lint及audit:system均通过，日志见`.codex/production-p07-v2-final.json`。首次support parser失败保留在`.codex/production-p07-final.json`，不算已通过。
 
-P07阶段提交为`7969859`（组件/Docs）与`c21f3cb`（CI/证据链），再与工具依赖/记录形成组合候选。当前主周额度仍高于30%停止线；预算约定保存在本计划第8节，不改变完整目标。
+P07阶段提交为`7969859`（组件/Docs）、`c21f3cb`（CI/证据链）及`7ae21cd`（工具依赖/记录）。[精确CI 34228715125](https://github.com/kenconnet666/zadmin/actions/runs/34228715125)安装被typescript-eslint8.70.0整组未满24小时拦截，尚无本批组件矩阵结果。P08保留安全窗口并收敛至合格版本；细节见[依赖审计](./dependency-upgrade-audit-2026-09-08.md)。当前主周额度仍高于30%停止线；预算约定保存在本计划第8节，不改变完整目标。
 
 每条完成记录提交、命令/CI链接、结果和未验证边界。目标模式不能把一次局部测试通过当作全库完成，也不授权未经确认的生产发布。

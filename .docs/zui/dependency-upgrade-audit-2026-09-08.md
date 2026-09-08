@@ -230,6 +230,16 @@ P07工具组实施：
 
 Core类型、35项unit与release version self-test通过；该self-test没有执行版本提升或发布。lock变化包括ESLint缓存依赖、TypeScript-eslint配套包和新peer解析，不是只替换顶层版本文本；最终workspace与CI验证仍绑定本批新SHA。
 
+### P08 发布等待期修正
+
+[CI 34228715125](https://github.com/kenconnet666/zadmin/actions/runs/34228715125)对应`7ae21cd9efc2a124b4abdaba29b7e7dc6b40bf8c`。依赖安装被`ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION`拦截：typescript-eslint 8.70.0及其10个配套包在运行时尚未满24小时；组件和新增浏览器矩阵尚未执行，不能将此结果计为组件失败或通过。
+
+- 将当前catalog及完整解析锁收敛为typescript-eslint 8.69.0（2026-08-31发布）；保留ESLint10.10.0、Changesets3.0.2、globals17.12.0、tsx4.23.13等已批准升级。8.69仍支持TypeScript6与ESLint10，上方P07表保留为历史实施快照。
+- 显式配置`minimumReleaseAge: 1440`和`minimumReleaseAgeStrict: true`。pnpm 11虽默认有24小时等待期，但未显式设置age时strict默认关闭；范围内没有合格版本时可能解析到过新的版本，再被干净安装的锁校验拒绝。参见[官方依赖解析设置](https://pnpm.io/settings/dependency-resolution)。
+- 不增加8.70等待例外、不关闭锁可信度或完整性校验。升级后必须校验真实解析锁及干净供应链检查，不能以本机热缓存的“Already up to date”证明CI可安装。
+- 本次修复用P06已验证锁作临时解析种子，再按当前catalog正常解析；最终diff经机械比对，仅8.70→8.69整组及对应integrity变化，没有退回其他P07工具版本。旧锁不合规时不循环执行同一失败更新，也不清除用户代码或node_modules。
+- 已验证：19个workspace正常更新安装成功；将manifest与锁复制到独立目录，以空cache/store运行`pnpm install --frozen-lockfile --lockfile-only --ignore-scripts`，527条供应链记录全部通过（75.2秒），锁SHA256保持不变。此检查不下载/运行所有包或生命周期脚本，完整干净安装与构建仍交新SHA CI。定向ESLint及文档/YAML格式检查通过。
+
 1. 日期/编译及工具补丁组已先行；下一组AWS SDK client/presigner一起升级，Windows WebView2单独验证。
 2. Svelte运行时与测试渲染器：先检查Miniapp精确peer及特殊compiler来源，保留平台边界，不只改普通catalog。
 3. Vitest 5与Playwright：按[官方迁移说明](https://vitest.dev/guide/migration/)核实配置API、sequential、测试产物路径及自定义reporter/command；按实际import owner处理async render，不机械修改所有同名函数。不得把升级当作已证明的浏览器断连修复。
