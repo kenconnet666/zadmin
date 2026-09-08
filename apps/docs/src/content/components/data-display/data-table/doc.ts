@@ -226,6 +226,8 @@ export const dataTableDoc = defineComponentDoc(dataTableMetadata, {
 		'禁用行只退出选择操作，数据内容仍可被阅读；逐行和全选控件需要本地化名称。',
 		'虚拟模式通过aria-rowcount/aria-rowindex保留全局位置，并按key测量动态主行与详情行。',
 		'列宽separator支持pointer、ArrowLeft/ArrowRight、Home/End并公开aria-valuenow。',
+		'列宽拖动只接受发起pointer的移动、抬起和取消；无关触点不改变列宽或中止手势，卸载会释放全部监听。LTR与RTL共用该事件归属合同。',
+		'原生dir显式值优先于Provider方向，并同步至外层viewport与内部ZTable；拖动和键盘调宽都按分隔线的实际方向解释左右。',
 		'loading/error只表达当前表面；请求、重试、筛选、分页和缓存仍由外部owner持有。',
 		'DataTable不声明grid角色，也不截获单元格方向键；交互控件继续使用原生Tab顺序。'
 	],

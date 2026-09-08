@@ -154,8 +154,9 @@ Charts、RichText、Markdown、CodeEditor、DiffViewer、Scheduler进入接受�
 | P12  | 局部已验证，触屏未闭合   | Transfer布局动画、Docs策略和RangeSlider回归定向通过；Chromium触屏原型保留明确失败/未执行边界，未作为发布门禁                                     |
 | P13  | 本地通过，待精确SHA CI   | 修复触屏滚动/长按焦点冲突，普通/虚拟模式10项模拟通过；补容器resize失效和脱敏浏览器生命周期诊断                                                   |
 | P14  | 本地通过，待精确SHA CI   | Playwright/test1.63成对升级，通用触屏驱动供Transfer/Sortable复用，17项模拟回归通过；主CI配置保持对照                                             |
-| P15  | 已提交，CI部分通过       | 共享布局捕获/失效/清理、Sortable early echo一致性、诊断启用路径unit与可选CDP网络错误采集                                                         |
-| P16+ | 待执行                   | 继续连接/coverage与剩余接受能力；接近33%停止新批次，30%停止开发并交接                                                                            |
+| P15  | 已提交，CI仍有阻断       | 共享布局捕获/失效/清理、Sortable early echo一致性、诊断启用路径unit与可选CDP网络错误采集                                                         |
+| P16  | 局部通过，待CI           | DataTable pointer归属与实例dir向ZTable传递已复现修复，14项Chromium通过；33%阶段只做必要收尾                                                      |
+| P17+ | 待执行                   | 继续连接/coverage与剩余接受能力；接近33%停止新批次，30%停止开发并交接                                                                            |
 
 ### P01 集成记录
 
@@ -378,6 +379,14 @@ P10后续收口：
 
 - `7180baa8c89c08a0d8617b3ef10fd547ed806363` 的 [CI 34270838463](https://github.com/kenconnet666/zadmin/actions/runs/34270838463) 已确认三浏览器组件任务通过，Chromium 主套件为323文件2127项，独立触屏17项通过。本轮没有中途断连，Network诊断实际启用且无错误；只记为本轮通过，不把新增观察器后的单轮成功当作历史WS断连根因已解决。
 - Coverage同样323文件2127项全过，但global未覆盖lines/functions/statements/branches为1595/459/2960/3755、components为1325/377/2471/3115，仍超原有预算。已读取本次完整coverage JSON，优先核对DataTable pointer调宽与resetColumnWidths、Tree公开controller、NavigationMenu overflow请求取消/关闭透传；这些是验证缺口，不直接推断实现错误，详见交接。
-- Static、build、外部包、Windows、Drizzle通过；Docs三浏览器与最终汇总尚未结束。文档更新先本地提交，等此轮完整结束后推送，避免同分支CI并发策略取消仍在运行的Docs任务。下一轮先核对同一run的终态，不重启本地整库检查。
+- 本轮已全部结束，最终failure。Static、build、外部包、Windows、Drizzle、三浏览器组件、Docs Chromium/Firefox和证据合并通过；Docs WebKit为226通过/1失败。失败是DatePicker选择20日后trigger未聚焦，而截图值仍是18日、popup仍open，不能只认定是焦点延迟。完整trace/screenshot已下载至`.codex/p16-docs-webkit-7180`，先保留待定位；没有放宽timeout。此前文档提交`40cbaef`保留在本地，待这一轮结束后随下一次已审阅提交推送，未主动取消运行中的Docs证据。
+
+### P16 DataTable 指针归属与方向一致性收尾
+
+- 从 P15 的真实coverage定位`beginResize`未执行，再在浏览器复现无关pointer影响当前列宽。按[Pointer Events 的 pointerId](https://www.w3.org/TR/pointerevents3/#dom-pointerevent-pointerid)保持手势身份，过滤无关move/up/cancel；结束监听不再被无关事件的once提前消费。原宽度canonical owner、clamp、键盘和结束语义保持，不新建公开API。
+- 真实鼠标检查继续发现实例`dir="rtl"`没有传递给内部ZTable。已用公开prop复现“外层rtl、内部ltr”，统一外层/内部的解析方向并让pointer与keyboard均读取分隔线实际方向。测试先确保分隔线进入视口且实际命中，不通过改内部样式或增大超时绕过。
+- 最终定向Chromium14项通过；原有8项保留，新增4项pointer身份/终态回归和2项真实鼠标LTR/RTL。浏览器事件派发不是物理多触点设备验收，其他引擎和完整coverage仍交新SHA CI。首轮失败记录、类型/资源审计/生成收尾结果见`.codex/p16-datatable-recheck-final.json`与交接。
+- 04:10主周额度剩33%，仅完成此批已确认问题的必要收尾，不派新代理或开启DatePicker/其他组件族修复；保留新CI与WebKit失败入口，30%停止线不变。
+- 04:15本地收尾全部通过：14项Chromium、ZUI/Docs类型0 errors/0 warnings、生成/token同步、lifecycle、lint/format和audit:system；其余验证交新SHA CI，不以旧轮绿任务代替本批完整验收。
 
 每条完成记录提交、命令/CI链接、结果和未验证边界。目标模式不能把一次局部测试通过当作全库完成，也不授权未经确认的生产发布。

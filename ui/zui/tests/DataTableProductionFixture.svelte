@@ -10,6 +10,7 @@
 		type SelectionKey,
 		type ZDataTableController
 	} from '../src/entrypoints/index.js';
+	let { direction }: { direction?: 'ltr' | 'rtl' } = $props();
 
 	interface Row {
 		detail: string;
@@ -124,6 +125,7 @@
 	</ZButton>
 	<ZDataTable
 		caption="Production rows"
+		dir={direction}
 		{columns}
 		{defaultSort}
 		{error}

@@ -669,6 +669,7 @@
 		defaultSelectedKeys = [],
 		defaultSort,
 		density: densityProp,
+		dir,
 		empty,
 		emptyLabel = 'No rows',
 		error = null,
@@ -715,6 +716,7 @@
 	}: ZDataTableProps<TRow, TRowKey> = $props();
 
 	const zui = useZui();
+	const resolvedDirection = $derived(dir ?? zui.direction);
 	const componentDefaults = $derived(zui.componentDefaults.dataTable);
 	const density = $derived(densityProp ?? componentDefaults?.density ?? 'comfortable');
 	const overscan = $derived(overscanProp ?? componentDefaults?.overscan ?? 4);
@@ -1421,17 +1423,20 @@
 		const view = ownerDocument.defaultView;
 		if (!view) return;
 		const startX = event.clientX;
+		const pointerId = event.pointerId;
 		const header = event.currentTarget.closest('th');
 		const resolved = effectiveWidth(column);
 		const startWidth =
 			typeof resolved === 'number'
 				? resolved
 				: (header?.getBoundingClientRect().width ?? DEFAULT_RESIZABLE_WIDTH);
-		const direction =
-			view.getComputedStyle(ref ?? event.currentTarget).direction === 'rtl' ? -1 : 1;
-		const move = (moveEvent: PointerEvent): void =>
+		const direction = view.getComputedStyle(event.currentTarget).direction === 'rtl' ? -1 : 1;
+		const move = (moveEvent: PointerEvent): void => {
+			if (moveEvent.pointerId !== pointerId) return;
 			setColumnWidth(column, startWidth + (moveEvent.clientX - startX) * direction);
-		const end = (): void => {
+		};
+		const end = (endEvent?: PointerEvent): void => {
+			if (endEvent && endEvent.pointerId !== pointerId) return;
 			ownerDocument.removeEventListener('pointermove', move);
 			ownerDocument.removeEventListener('pointerup', end);
 			ownerDocument.removeEventListener('pointercancel', end);
@@ -1439,8 +1444,9 @@
 		};
 		stopColumnResize = end;
 		ownerDocument.addEventListener('pointermove', move);
-		ownerDocument.addEventListener('pointerup', end, { once: true });
-		ownerDocument.addEventListener('pointercancel', end, { once: true });
+		// An unrelated pointer ending must not consume this gesture's terminal listener.
+		ownerDocument.addEventListener('pointerup', end);
+		ownerDocument.addEventListener('pointercancel', end);
 	}
 
 	function resizeWithKeyboard(
@@ -1598,6 +1604,7 @@
 	{...rest}
 	bind:this={ref}
 	class={[viewportClass, className]}
+	dir={resolvedDirection}
 	style={initialStyle}
 	use:applyIcssRootStyle={{ style, variables }}
 	aria-busy={(loading && !errorMessage) || undefined}
@@ -1629,6 +1636,7 @@
 		{caption}
 		captionHidden
 		{density}
+		dir={resolvedDirection}
 		{striped}
 		aria-rowcount={rootAriaRowCount}
 		class="zui-data-table"

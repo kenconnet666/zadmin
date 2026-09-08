@@ -44233,15 +44233,11 @@
 		},
 		{
 			"path": "ui/zui/src/components/data-display/ZDataTable.svelte",
-			"line": 1601
+			"line": 1608
 		},
 		{
 			"path": "ui/zui/src/components/data-display/ZDataTable.svelte",
-			"line": 1637
-		},
-		{
-			"path": "ui/zui/src/components/data-display/ZDataTable.svelte",
-			"line": 1642
+			"line": 1645
 		},
 		{
 			"path": "ui/zui/src/components/data-display/ZDataTable.svelte",
@@ -44249,31 +44245,35 @@
 		},
 		{
 			"path": "ui/zui/src/components/data-display/ZDataTable.svelte",
-			"line": 1673
+			"line": 1658
 		},
 		{
 			"path": "ui/zui/src/components/data-display/ZDataTable.svelte",
-			"line": 1718
+			"line": 1681
 		},
 		{
 			"path": "ui/zui/src/components/data-display/ZDataTable.svelte",
-			"line": 1732
+			"line": 1726
 		},
 		{
 			"path": "ui/zui/src/components/data-display/ZDataTable.svelte",
-			"line": 1737
+			"line": 1740
 		},
 		{
 			"path": "ui/zui/src/components/data-display/ZDataTable.svelte",
-			"line": 1759
+			"line": 1745
 		},
 		{
 			"path": "ui/zui/src/components/data-display/ZDataTable.svelte",
-			"line": 1781
+			"line": 1767
 		},
 		{
 			"path": "ui/zui/src/components/data-display/ZDataTable.svelte",
-			"line": 1808
+			"line": 1789
+		},
+		{
+			"path": "ui/zui/src/components/data-display/ZDataTable.svelte",
+			"line": 1816
 		},
 		{
 			"path": "ui/zui/src/components/data-display/ZDescriptionList.svelte",

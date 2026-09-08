@@ -1,5 +1,6 @@
 import { render } from 'vitest-browser-svelte';
 import { describe, expect, it } from 'vitest';
+import { commands } from 'vitest/browser';
 import { tick } from 'svelte';
 import { mount, unmount } from './browser-lifecycle.js';
 
@@ -84,6 +85,73 @@ describe('ZDataTable production contracts', () => {
 		await tick();
 		expect(table?.querySelector('[role="alert"]')?.textContent).toContain('Rows failed');
 	});
+
+	it.each([
+		['ltr', 'pointerup'],
+		['rtl', 'pointerup'],
+		['ltr', 'pointercancel'],
+		['rtl', 'pointercancel']
+	] as const)(
+		'keeps column resizing owned by its initiating pointer in %s until %s',
+		async (direction, terminal) => {
+			await render(DataTableProductionFixture, { direction });
+			const table = document.querySelector<HTMLElement>('[data-testid="data-table-production"]')!;
+			const separator = table.querySelector<HTMLButtonElement>('[data-slot="column-resizer"]')!;
+			const width = (): number => Number(separator.getAttribute('aria-valuenow'));
+			const pointer = (type: string, pointerId: number, clientX: number): PointerEvent =>
+				new PointerEvent(type, {
+					bubbles: true,
+					button: 0,
+					buttons: type === 'pointerup' || type === 'pointercancel' ? 0 : 1,
+					cancelable: true,
+					clientX,
+					isPrimary: pointerId === 41,
+					pointerId,
+					pointerType: 'touch'
+				});
+			separator.dispatchEvent(pointer('pointerdown', 41, 100));
+			document.dispatchEvent(pointer('pointermove', 42, 260));
+			await tick();
+			expect(width()).toBe(160);
+
+			// Neither a second contact ending nor being cancelled owns this resize.
+			document.dispatchEvent(pointer('pointerup', 42, 260));
+			document.dispatchEvent(pointer('pointercancel', 42, 260));
+			document.dispatchEvent(pointer('pointermove', 41, direction === 'rtl' ? 68 : 132));
+			await tick();
+			expect(width()).toBe(192);
+
+			document.dispatchEvent(pointer(terminal, 41, 132));
+			document.dispatchEvent(pointer('pointermove', 41, 300));
+			await tick();
+			expect(width()).toBe(192);
+		}
+	);
+
+	it.each(['ltr', 'rtl'] as const)(
+		'retains real mouse column resizing in %s',
+		async (direction) => {
+			await render(DataTableProductionFixture, { direction });
+			const table = document.querySelector<HTMLElement>('[data-testid="data-table-production"]')!;
+			const selector = '[data-testid="data-table-production"] th[data-column-id="name"]';
+			const separator = table.querySelector<HTMLButtonElement>('[data-slot="column-resizer"]')!;
+			expect(getComputedStyle(table).direction).toBe(direction);
+			expect(getComputedStyle(separator).direction).toBe(direction);
+			separator.scrollIntoView({ block: 'center', inline: 'nearest' });
+			const box = separator.getBoundingClientRect();
+			const x = box.left + box.width / 2;
+			const y = box.top + box.height / 2;
+			expect(x).toBeGreaterThan(0);
+			expect(x).toBeLessThan(window.innerWidth);
+			expect(y).toBeGreaterThan(0);
+			expect(y).toBeLessThan(window.innerHeight);
+			const hit = document.elementFromPoint(x, y);
+			expect(hit === separator || separator.contains(hit)).toBe(true);
+			expect(Number(separator.getAttribute('aria-valuenow'))).toBe(160);
+			await commands.dragElements(`${selector} [data-slot="column-resizer"]`, selector);
+			await expect.poll(() => Number(separator.getAttribute('aria-valuenow'))).toBeLessThan(160);
+		}
+	);
 
 	it('does not reclaim focus after the user leaves, but repairs a disabled focused target', async () => {
 		const outsideHost = document.createElement('div');
