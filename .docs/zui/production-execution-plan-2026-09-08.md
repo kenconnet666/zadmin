@@ -155,7 +155,7 @@ Charts、RichText、Markdown、CodeEditor、DiffViewer、Scheduler进入接受�
 | P13  | 本地通过，待精确SHA CI   | 修复触屏滚动/长按焦点冲突，普通/虚拟模式10项模拟通过；补容器resize失效和脱敏浏览器生命周期诊断                                                   |
 | P14  | 本地通过，待精确SHA CI   | Playwright/test1.63成对升级，通用触屏驱动供Transfer/Sortable复用，17项模拟回归通过；主CI配置保持对照                                             |
 | P15  | 已提交，CI仍有阻断       | 共享布局捕获/失效/清理、Sortable early echo一致性、诊断启用路径unit与可选CDP网络错误采集                                                         |
-| P16  | 局部通过，待CI           | DataTable pointer归属与实例dir向ZTable传递已复现修复，14项Chromium通过；33%阶段只做必要收尾                                                      |
+| P16  | 功能CI通过，覆盖未达     | DataTable pointer归属与实例dir向ZTable传递已复现修复，14项Chromium通过；33%阶段只做必要收尾                                                      |
 | P17+ | 待执行                   | 继续连接/coverage与剩余接受能力；接近33%停止新批次，30%停止开发并交接                                                                            |
 
 ### P01 集成记录
@@ -388,6 +388,6 @@ P10后续收口：
 - 最终定向Chromium14项通过；原有8项保留，新增4项pointer身份/终态回归和2项真实鼠标LTR/RTL。浏览器事件派发不是物理多触点设备验收，其他引擎和完整coverage仍交新SHA CI。首轮失败记录、类型/资源审计/生成收尾结果见`.codex/p16-datatable-recheck-final.json`与交接。
 - 04:10主周额度剩33%，仅完成此批已确认问题的必要收尾，不派新代理或开启DatePicker/其他组件族修复；保留新CI与WebKit失败入口，30%停止线不变。
 - 04:15本地收尾全部通过：14项Chromium、ZUI/Docs类型0 errors/0 warnings、生成/token同步、lifecycle、lint/format和audit:system；其余验证交新SHA CI，不以旧轮绿任务代替本批完整验收。
-- P16已推送`f0e71706e5eda473682c216834c3c777108eba84`，[CI 34273892722](https://github.com/kenconnet666/zadmin/actions/runs/34273892722) 的Chromium主套件323文件2133项与独立触屏17项通过；DataTable14项实际执行通过。Coverage同样全过测试，但global1560/456/2921/3734、components1290/374/2432/3094仍超原门槛，其余任务尚需终态。只补交接证据，不再开启新组件族；P15 WebKit trace的点击拦截/坐标变化线索已保留在交接，未冒称根因修复。
+- P16已推送`f0e71706e5eda473682c216834c3c777108eba84`，[CI 34273892722](https://github.com/kenconnet666/zadmin/actions/runs/34273892722) 已全部结束，最终仅Coverage独立门槛失败并使Required aggregate失败。三浏览器组件、Static、build、外部包、Windows、Drizzle与证据合并通过，三浏览器Docs各227项通过。Chromium主套件323文件2133项与独立触屏17项通过，DataTable14项实际执行通过。Coverage同样全过测试，但global1560/456/2921/3734、components1290/374/2432/3094仍超原门槛。只补交接证据，不再开启新组件族；P15 WebKit DatePicker用例本轮原样通过，未修改其实现/测试，故点击拦截/坐标变化线索仍保留，未冒称根因修复。后续doc-only提交不另算功能验收批次。
 
 每条完成记录提交、命令/CI链接、结果和未验证边界。目标模式不能把一次局部测试通过当作全库完成，也不授权未经确认的生产发布。
